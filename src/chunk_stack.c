@@ -3,51 +3,66 @@
 #include <malloc.h>
 
 
-void cs_reset(void)
+chunk_stack_t *cs_new(void)
 {
-   cpd.cs_len = 0;
+   return(calloc(1, sizeof(chunk_stack_t)));
 }
 
-void cs_push(chunk_t *pc)
+void cs_delete(chunk_stack_t *cs)
 {
-   chunk_stack_t *tmp;
+   if (cs->pc != NULL)
+   {
+      free(cs->pc);
+      memset(cs, 0, sizeof(*cs));
+   }
+   free(cs);
+}
 
-   if (cpd.cs_len >= cpd.cs_size)
+void cs_reset(chunk_stack_t *cs)
+{
+   cs->len = 0;
+}
+
+void cs_push(chunk_stack_t *cs, chunk_t *pc)
+{
+   chunk_t **tmp;
+
+   if (cs->len >= cs->size)
    {
       /* double the size */
-      if (cpd.cs != NULL)
+      if (cs->pc != NULL)
       {
-         tmp = realloc(cpd.cs, (cpd.cs_size + 256) * sizeof(chunk_stack_t));
+         tmp = realloc(cs->pc, (cs->size + 256) * sizeof(chunk_t *));
       }
       else
       {
-         tmp = malloc(256 * sizeof(chunk_stack_t));
+         tmp = malloc(256 * sizeof(chunk_t *));
       }
       if (tmp != NULL)
       {
-         cpd.cs       = tmp;
-         cpd.cs_size += 256;
+         cs->pc    = tmp;
+         cs->size += 256;
       }
    }
 
-   if (cpd.cs_len < cpd.cs_size)
+   if (cs->len < cs->size)
    {
-      cpd.cs[cpd.cs_len++].pc = pc;
+      cs->pc[cs->len++] = pc;
    }
 }
 
-chunk_t *cs_pop(void)
+chunk_t *cs_pop(chunk_stack_t *cs)
 {
-   if (cpd.cs_len > 0)
+   if (cs->len > 0)
    {
-      cpd.cs_len--;
-      return(cpd.cs[cpd.cs_len].pc);
+      cs->len--;
+      return(cs->pc[cs->len]);
    }
    return(NULL);
 }
 
-int cs_len(void)
+int cs_len(chunk_stack_t *cs)
 {
-   return(cpd.cs_len);
+   return(cs->len);
 }
 

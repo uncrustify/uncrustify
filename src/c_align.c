@@ -33,10 +33,10 @@ static void align_stack(int col, BOOL align_single, log_sev_t sev)
 {
    chunk_t *pc;
 
-   if ((cs_len() > 1) || (align_single && (cs_len() == 1)))
+   if ((cs_len(&cpd.cs) > 1) || (align_single && (cs_len(&cpd.cs) == 1)))
    {
       LOG_FMT(sev, "%s: max_col=%d\n", __func__, col);
-      while ((pc = cs_pop()) != NULL)
+      while ((pc = cs_pop(&cpd.cs)) != NULL)
       {
          indent_column(pc, col);
          pc->flags |= PCF_WAS_ALIGNED;
@@ -46,7 +46,7 @@ static void align_stack(int col, BOOL align_single, log_sev_t sev)
                  pc->orig_line, pc->column);
       }
    }
-   cs_reset();
+   cs_reset(&cpd.cs);
 }
 
 
@@ -85,12 +85,12 @@ static void align_add(chunk_t *pc, int *max_col, int min_pad)
               __func__, pc->column, *max_col, min_pad, min_col, prev->column);
    }
 
-   if (cs_len() == 0)
+   if (cs_len(&cpd.cs) == 0)
    {
       *max_col = 0;
    }
 
-   cs_push(pc);
+   cs_push(&cpd.cs, pc);
    if (min_col > *max_col)
    {
       *max_col = min_col;
@@ -138,14 +138,14 @@ void align_func_proto(int span)
    int     max_col  = 0;
    int     span_cnt = 0;
 
-   cs_reset();
+   cs_reset(&cpd.cs);
 
    pc = chunk_get_head();
    while (pc != NULL)
    {
       if (chunk_is_newline(pc))
       {
-         if (cs_len() > 0)
+         if (cs_len(&cpd.cs) > 0)
          {
             span_cnt += pc->nl_count;
             if (span_cnt > span)
@@ -237,12 +237,12 @@ void align_preprocessor(void)
    BOOL    pmf      = FALSE;
 
 
-   cs_reset();
+   cs_reset(&cpd.cs);
 
    pc = chunk_get_head();
    while (pc != NULL)
    {
-      if ((pc->type == CT_NEWLINE) && (cs_len() > 0))
+      if ((pc->type == CT_NEWLINE) && (cs_len(&cpd.cs) > 0))
       {
          nl_count += pc->nl_count;
          if (nl_count > cpd.settings[UO_align_pp_define_span])
@@ -284,7 +284,7 @@ void align_preprocessor(void)
       }
 
       /* flush if changing between a macro func and regular macro */
-      if ((cs_len() > 0) && (mf != pmf))
+      if ((cs_len(&cpd.cs) > 0) && (mf != pmf))
       {
          align_stack(max_col, TRUE, LALPP);
       }
@@ -787,7 +787,7 @@ chunk_t *align_nl_cont(chunk_t *start)
    LOG_FMT(LALNLC, "%s: start on [%s] on line %d\n", __func__,
            get_token_name(start->type), start->orig_line);
 
-   cs_reset();
+   cs_reset(&cpd.cs);
 
    /* Find the max column */
    while ((pc != NULL) &&
@@ -805,7 +805,7 @@ chunk_t *align_nl_cont(chunk_t *start)
    max_col = align_tab_column(max_col);
 
    /* NL_CONT is always the last thing on a line */
-   while ((tmp = cs_pop()) != NULL)
+   while ((tmp = cs_pop(&cpd.cs)) != NULL)
    {
       tmp->column = max_col;
    }
@@ -827,7 +827,7 @@ chunk_t *align_trailing_comments(chunk_t *start)
    chunk_t *pc      = start;
    int     nl_count = 0;
 
-   cs_reset();
+   cs_reset(&cpd.cs);
 
    /* Find the max column */
    while ((pc != NULL) && (nl_count < cpd.settings[UO_align_right_cmt_span]))
@@ -1167,7 +1167,7 @@ static void align_typedefs(int span)
    int     span_ctr   = 0;
 
    /* use the chunk stack */
-   cs_reset();
+   cs_reset(&cpd.cs);
 
    pc = chunk_get_head();
    while (pc != NULL)
@@ -1190,7 +1190,8 @@ static void align_typedefs(int span)
                align_add(c_type, &max_col, cpd.settings[UO_align_typedef_gap]);
                span_ctr = 0;
 
-               LOG_FMT(LALTD, "%s: max_col=%d cs_len=%d\n", __func__, max_col, cs_len());
+               LOG_FMT(LALTD, "%s: max_col=%d cs_len=%d\n",
+                       __func__, max_col, cs_len(&cpd.cs));
             }
             c_type    = NULL;
             c_typedef = NULL;
@@ -1211,7 +1212,7 @@ static void align_typedefs(int span)
       }
 
       /* Check to see if the span is exceeded */
-      if (cs_len() > 0)
+      if (cs_len(&cpd.cs) > 0)
       {
          if (chunk_is_newline(pc))
          {

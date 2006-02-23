@@ -138,20 +138,12 @@ enum
    FLAG_PP = 0x80,  /*<< only appears in a preprocessor */
 };
 
-struct keyword_tag
-{
-   const char *str;
-   int        flags;
-   c_token_t  type;
-   uint8_t    lang_flags;
-};
-
-struct symbol_tag
+typedef struct
 {
    const char *tag;
    c_token_t  type;
    uint8_t    lang_flags;
-};
+} chunk_tag_t;
 
 enum pp_type
 {
@@ -175,7 +167,9 @@ struct align_t
 
 typedef struct chunk_stack
 {
-   chunk_t *pc;
+   chunk_t **pc;
+   int     len;
+   int     size;
 } chunk_stack_t;
 
 struct cp_data
@@ -204,7 +198,7 @@ struct cp_data
    int                frame_count;
 
    /* a very simple chunk stack - managed in chunk_list.c/h */
-   chunk_stack_t      *cs;
+   chunk_stack_t      cs;
    int                cs_len;    /* active entries */
    int                cs_size;   /* total entry count (private) */
 };

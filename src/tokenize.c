@@ -239,8 +239,8 @@ BOOL parse_string(chunk_t *pc)
  */
 BOOL parse_word(chunk_t *pc)
 {
-   int                      len = 1;
-   const struct keyword_tag *tag;
+   int               len = 1;
+   const chunk_tag_t *tag;
 
    if ((get_char_table(*pc->str) & CT_KW1) == 0)
    {
@@ -347,7 +347,7 @@ BOOL parse_whitespace(chunk_t *pc)
  */
 BOOL parse_next(chunk_t *pc)
 {
-   const struct symbol_tag *punc;
+   const chunk_tag_t *punc;
 
    if ((pc == NULL) || (pc->str == NULL) || (*pc->str == 0))
    {

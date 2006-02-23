@@ -776,13 +776,13 @@ static void mark_variable_stack(log_sev_t sev)
    chunk_t *word_type;
 
    /* throw out the last word and mark the rest */
-   var_name = cs_pop();
+   var_name = cs_pop(&cpd.cs);
    if (var_name != NULL)
    {
       LOG_FMT(LFCNP, "%s: parameter on line %d :",
               __func__, var_name->orig_line);
 
-      while ((word_type = cs_pop()) != NULL)
+      while ((word_type = cs_pop(&cpd.cs)) != NULL)
       {
          LOG_FMT(LFCNP, " <%s>", word_type->str);
          word_type->type = CT_TYPE;
@@ -800,7 +800,7 @@ static void fix_fcn_def_params(chunk_t *pc)
 {
    LOG_FMT(LFCNP, "%s: %s on line %d\n", __func__, pc->str, pc->orig_line);
 
-   cs_reset();
+   cs_reset(&cpd.cs);
 
    while ((pc != NULL) && (pc->type != CT_FPAREN_CLOSE))
    {
@@ -810,7 +810,7 @@ static void fix_fcn_def_params(chunk_t *pc)
       }
       else if (pc->type == CT_WORD)
       {
-         cs_push(pc);
+         cs_push(&cpd.cs, pc);
       }
       else if (pc->type == CT_COMMA)
       {

@@ -12,7 +12,7 @@
 
 
 /* 4-char symbols */
-static const struct symbol_tag symbols4[] =
+static const chunk_tag_t symbols4[] =
 {
    { "%:%:", CT_PP,      LANG_C },
    { ">>>=", CT_ASSIGN,  LANG_D },
@@ -20,7 +20,7 @@ static const struct symbol_tag symbols4[] =
 };
 
 /* 3-char symbols */
-static const struct symbol_tag symbols3[] =
+static const chunk_tag_t symbols3[] =
 {
    { "<<=", CT_ASSIGN,  LANG_ALL },
    { ">>=", CT_ASSIGN,  LANG_ALL },
@@ -34,7 +34,7 @@ static const struct symbol_tag symbols3[] =
 };
 
 /* 2-char symbols */
-static const struct symbol_tag symbols2[] =
+static const chunk_tag_t symbols2[] =
 {
    { "++", CT_INCDEC_AFTER, LANG_ALL }, /* may change to CT_INCDEC_BEFORE */
    { "--", CT_INCDEC_AFTER, LANG_ALL }, /* may change to CT_INCDEC_BEFORE */
@@ -69,7 +69,7 @@ static const struct symbol_tag symbols2[] =
 };
 
 /* 1-char symbols */
-static const struct symbol_tag symbols1[] =
+static const chunk_tag_t symbols1[] =
 {
    { "#", CT_POUND,        LANG_C | LANG_CPP },
    { "%", CT_ARITH,        LANG_ALL },
@@ -99,7 +99,7 @@ static const struct symbol_tag symbols1[] =
    { "}", CT_BRACE_CLOSE,  LANG_ALL },
 };
 
-const struct symbol_tag *find_punctuator(const char *str, uint8_t lang_flags)
+const chunk_tag_t *find_punctuator(const char *str, uint8_t lang_flags)
 {
    int i;
 

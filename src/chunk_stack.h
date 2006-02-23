@@ -22,16 +22,15 @@
  *
  * Would be even better to make this a class that can be put on the stack.
  * Maybe this should be my first D project?
- *
  */
 
-void           cs_reset(void);
+void cs_reset(chunk_stack_t *cs);
 
-void           cs_push(chunk_t *pc);
+void cs_push(chunk_stack_t *cs, chunk_t *pc);
 
-chunk_t *cs_pop(void);
+chunk_t *cs_pop(chunk_stack_t *cs);
 
-int            cs_len(void);
+int cs_len(chunk_stack_t *cs);
 
 
 #endif   /* CHUNK_STACK_H_INCLUDED */

@@ -78,8 +78,8 @@ void parse_buffer(const char *data, int data_len);
 BOOL parse_next(chunk_t *pc);
 
 
-const struct keyword_tag *find_keyword(const char *word, int len);
-const struct symbol_tag *find_punctuator(const char *str, uint8_t lang_flags);
+const chunk_tag_t *find_keyword(const char *word, int len);
+const chunk_tag_t *find_punctuator(const char *str, uint8_t lang_flags);
 
 void indent_comments(void);
 void mark_comments(void);
