@@ -1,0 +1,188 @@
+This is a list of TODO items:
+
+Most important features (in order):
+----------------------------------------------------------------------------
+
+ - Indenting lines correctly
+   + continuing on parens, assignment ops, and strings
+
+ - Add/remove spaces around operators
+
+ - aligning
+   + struct/union definitions
+       struct foo_t {
+          const char *name;
+	  uint32_t   age;
+       };
+
+   + static struct variable definitions
+       struct foo_t bar = {
+          .name = "bar",
+	  .age  = 21
+       };
+       struct foo_t bars[] = {
+          [0] = { .name = "bar",
+	          .age  = 21 },
+          [1] = { .name = "barley",
+	          .age  = 55 },
+       };
+
+   + enum definition
+       enum fruits {
+          apple     = 1,
+	  orange    = 2,
+	  pineapple = 4,
+       };
+
+   + variable definitions
+      int           a;
+      unsigned char b;
+
+   + assignments
+      a.latitude  = 1;
+      a.longitude = 2;
+      a.altitude  = 3;
+
+   + trailing comments
+      int a;  // this is a variable that has
+              // a multi-line C++ comment
+
+ - adding and removing parens around return expressions (safe code change)
+   + add in all cases
+   + remove in all cases
+   + remove for simple cases
+
+ - adding braces to do the fully braced format (dangerous code change)
+
+ - removing braces to do the un-braced format (dangerous code change)
+
+
+Here's the stuff that needs doing that I consider important:
+----------------------------------------------------------------------------
+
+0. Keep track of if a tab was right before the token so that it can be outputted
+   without changing tabs to spaces
+
+1. Fix the #define aligning crap. it's broken.
+   It's adding 4 spaces all the time and the align threshold hasn't been
+   implemented.  In short, it sucks.
+
+2. Finish the comment indenting and aligning so it isn't such a POS.
+
+3. Preprocessor crap
+
+ * indent levels for if/else/endif preprocessors
+
+ * Ignore #define body by default
+
+ * add option to space and/or line break, etc #define bodies
+
+ * indent preprocessor bodies
+
+4. General aligning
+
+   - thresholds!  I hate seeing silly alignments:
+
+   This:
+{
+   char c                = 0;
+   int  really_long_name = 1;
+}
+
+   Should be this, assuming a sane align threshold, like 3 or so.
+{
+   char c = 0;
+   int  really_long_name = 1;
+}
+
+
+5. Splitting lines
+
+   - Figure out some sort of sane approach (ie, look at the indent source)
+
+   - Not sure I want to go there...
+
+
+For when I really get bored:
+----------------------------------------------------------------------------
+
+ - Look into trying out D support.  Shouldn't be too hard.
+
+
+
+For when I get bored of all my games and have a really long vacation:
+----------------------------------------------------------------------------
+
+ - Look into C++ support
+   + templates scare me
+     - need to figure out how to (reliably) tell the difference between
+       a template variable and a useless comparison
+
+   + may be impossible to do right without some type-awareness
+
+
+
+
+============================================================================
+============================================================================
+
+Test Plan
+
+============================================================================
+============================================================================
+
+Create ".test" files that contain test entries as follows:
+[test name]
+config	configfile.cfg
+input	sourcefile.c
+output	outputfile.c
+
+Of maybe just put it all on one line (easier to parse?)
+test name : configfile.cfg sourcefile.c outputfile.c
+
+Basically, the test would be to run uncrustify with these options:
+$ uncrustify -c configfile.cfg -f sourcefile.c > temp.c
+
+If the temp.c and outputfile.c differ, the test failed.
+
+The test driver would be a simple python script or something.
+
+Maybe it would create a nice list of all the test that failed.
+
+
+The types of test could be created:
+ - tests for stuff that DOES work now, to detect regressions
+ - tests for future features, to know when I finally get it right
+
+
+
+
+============================================================================
+============================================================================
+
+Configuration files
+
+============================================================================
+============================================================================
+
+Create working config files for these categories:
+
+ - K&R
+ - GNU
+ - Linux kernel
+ - Ben's favorite (used in uncrustify)
+ - xsupplicant (weird almost-GNU style)
+
+That should be enough examples.
+
+I plan to add any style that people want.
+I mean, throwing in another config file won't hurt anything...
+
+Add some smarts to uncrustify so that it scans for config files as follows:
+ - check in the current folder (exact name only)
+ - check in ~/.uncrustify
+ - check in /etc/uncrustify
+
+If the -c option doesn't end in a '.cfg' it'll try first without and then with the .cfg
+If the config contains a path component, then only check that path.
+

@@ -1,0 +1,6 @@
+BUGS:
+
+If something goes terribly wrong, uncrustify will not output anything to stdout.
+This could cause some problems if you automate with a script.
+Don't blindly copy the 'new' file over the old file.
+
