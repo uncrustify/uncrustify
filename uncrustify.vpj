@@ -153,6 +153,7 @@
 		<F N="AUTHORS"/>
 		<F N="BUGS"/>
 		<F N="check_settings.sh"/>
+		<F N="configure"/>
 		<F N="configure.in"/>
 		<F N="COPYING"/>
 		<F N="INSTALL"/>
