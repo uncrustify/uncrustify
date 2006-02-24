@@ -111,6 +111,7 @@
 			<F N="src/token_names.h"/>
 			<F N="src/tokenize.c"/>
 			<F N="src/uncrustify.c"/>
+			<F N="src/word_hash.c"/>
 		</Folder>
 		<Folder Name="tests">
 			<Folder Name="config">
@@ -119,35 +120,26 @@
 			</Folder>
 			<Folder Name="input">
 				<F N="tests/input/comment-indent.c"/>
+				<F N="tests/input/define-if-indent.c"/>
+				<F N="tests/input/enum-struct-init.c"/>
 			</Folder>
 			<Folder Name="output">
 				<F N="tests/output/00000-comment-indent.c"/>
+				<F N="tests/output/00020-define-if-indent.c"/>
 			</Folder>
-			<F N="tests/align-define.c"/>
 			<F N="tests/align-struct-init.c"/>
-			<F N="tests/bug-11.c"/>
-			<F N="tests/bug-12.c"/>
-			<F N="tests/bug-13.c"/>
-			<F N="tests/bug-14.c"/>
 			<F N="tests/bugs-1.c"/>
-			<F N="tests/bugs-10.c"/>
 			<F N="tests/bugs-2.c"/>
 			<F N="tests/bugs-3.c"/>
 			<F N="tests/bugs-4.c"/>
 			<F N="tests/bugs-5.c"/>
 			<F N="tests/bugs-6.c"/>
-			<F N="tests/bugs-7.c"/>
-			<F N="tests/bugs-8.c"/>
-			<F N="tests/bugs-9.c"/>
 			<F N="tests/bugs.c"/>
 			<F N="tests/comment-indent.c"/>
-			<F N="tests/enum.c"/>
 			<F N="tests/event_core.h"/>
 			<F N="tests/i2c-core.c"/>
-			<F N="tests/right-comments.c"/>
 			<F N="tests/run_tests.py"/>
 			<F N="tests/run_tests.sh"/>
-			<F N="tests/sometests.test"/>
 			<F N="tests/vb-do.c"/>
 		</Folder>
 		<F N="AUTHORS"/>
