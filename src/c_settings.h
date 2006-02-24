@@ -39,7 +39,7 @@ enum uncrustify_options
    UO_output_tab_size,      // tab size for output: usually 8
 
    UO_indent_columns,       // ie 3 or 8
-   UO_indent_with_tabs,     // 1=use tabs for indenting, 2=only to the 'level' indent
+   UO_indent_with_tabs,     // 1=only to the 'level' indent, 2=use tabs for indenting
    UO_align_with_tabs,      // use tabs for aligning (0/1)
    UO_align_on_tabstop,     // always align on tabstops
    UO_indent_brace_struct,  //TODO: spaces to indent brace after struct/enum/union def

@@ -151,19 +151,7 @@ void output_text(FILE *pfile)
             if (cpd.settings[UO_indent_with_tabs] == 1)
             {
                lvlcol = 1 + (pc->brace_level * cpd.settings[UO_indent_columns]);
-               if (pc->type == CT_CASE)
-               {
-                  lvlcol -= cpd.settings[UO_indent_columns];
-               }
-               if (lvlcol <= pc->column)
-               {
-                  output_to_column(lvlcol, TRUE);
-               }
-               if (lvlcol != pc->column)
-               {
-                  //fprintf(stderr, "Indent mismatch on line %d - %s : %d vs %d for lvl %d\n",
-                  //        pc->orig_line, pc->str, lvlcol, pc->column, pc->level);
-               }
+               output_to_column(lvlcol, TRUE);
             }
             allow_tabs = (cpd.settings[UO_indent_with_tabs] == 2) ||
                          (chunk_is_comment(pc) &&
@@ -175,11 +163,7 @@ void output_text(FILE *pfile)
             allow_tabs = (cpd.settings[UO_align_with_tabs] &&
                           ((pc->flags & PCF_WAS_ALIGNED) != 0));
          }
-         //if (chunk_is_comment(pc))
-         //{
-         //   LOG_FMT(LSYS, "%s: indent comment on line %d to col %d\n",
-         //           __func__, pc->orig_line, pc->column);
-         //}
+
          output_to_column(pc->column, allow_tabs);
          add_text(pc->str);
          cpd.did_newline = chunk_is_newline(pc);

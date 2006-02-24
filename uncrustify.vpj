@@ -122,6 +122,7 @@
 				<F N="tests/input/comment-indent.c"/>
 				<F N="tests/input/define-if-indent.c"/>
 				<F N="tests/input/enum-struct-init.c"/>
+				<F N="tests/input/struct-brace.c"/>
 			</Folder>
 			<Folder Name="output">
 				<F N="tests/output/00000-comment-indent.c"/>

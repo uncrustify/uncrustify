@@ -489,8 +489,17 @@ void indent_text(void)
            (pc->type == CT_CASE)))
       {
          frm.pse_tos--;
-         //         fprintf(stderr, "%3d] CLOSE(3) on %s, tos=%d\n", pc->orig_line,
-         //                 c_chunk_names[pc->type], pse_tos);
+         //fprintf(stderr, "%3d] CLOSE(3) on %s, tos=%d\n", pc->orig_line,
+         //        c_chunk_names[pc->type], pse_tos);
+      }
+
+      /* a return is ended with a semicolon */
+      if ((frm.pse[frm.pse_tos].type == CT_RETURN) &&
+          (pc->type == CT_SEMICOLON))
+      {
+         frm.pse_tos--;
+         //fprintf(stderr, "%3d] CLOSE(3) on %s, tos=%d\n", pc->orig_line,
+         //        c_chunk_names[pc->type], pse_tos);
       }
 
       if (pc->type == CT_CASE)
@@ -505,8 +514,20 @@ void indent_text(void)
          //         fprintf(stderr, "%3d] OPEN(4) on %s, tos=%d\n", pc->orig_line,
          //                 c_chunk_names[pc->type], pse_tos);
       }
+      else if (pc->type == CT_RETURN)
+      {
+         frm.pse_tos++;
+         frm.pse[frm.pse_tos].type       = pc->type;
+         frm.pse[frm.pse_tos].indent     = frm.pse[frm.pse_tos - 1].indent + pc->len + 1;
+         frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos - 1].indent;
+         frm.pse[frm.pse_tos].open_line  = pc->orig_line;
+         frm.pse[frm.pse_tos].ref        = ++ref;
+         frm.pse[frm.pse_tos].in_preproc = (pc->flags & PCF_IN_PREPROC) != 0;
+         //         fprintf(stderr, "%3d] OPEN(4) on %s, tos=%d\n", pc->orig_line,
+         //                 c_chunk_names[pc->type], pse_tos);
+      }
 
-      if (pc->type == CT_BRACE_CLOSE)
+      else if (pc->type == CT_BRACE_CLOSE)
       {
          if (frm.pse[frm.pse_tos].type == CT_BRACE_OPEN)
          {
@@ -670,6 +691,7 @@ void indent_text(void)
       }
       else if (pc->type == CT_BRACE_OPEN)
       {
+         //prev = chunk_get_prev_ncnl(pc);
          frm.level++;
          frm.pse_tos++;
          frm.pse[frm.pse_tos].type       = pc->type;
@@ -680,8 +702,12 @@ void indent_text(void)
 
          if (frm.paren_count == 0)
          {
-            frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent + tabsize;
-            //               1 + (level * tabsize);
+            frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent;
+            if (prev->type != CT_CASE_COLON)
+            {
+               frm.pse[frm.pse_tos].indent += tabsize;
+            }
+            // 1 + (level * tabsize);
             if ((pc->parent_type == CT_IF) ||
                 (pc->parent_type == CT_ELSE) ||
                 (pc->parent_type == CT_DO) ||
@@ -691,6 +717,7 @@ void indent_text(void)
             {
                frm.pse[frm.pse_tos].indent += cpd.settings[UO_brace_indent];
             }
+
          }
          else
          {
