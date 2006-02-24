@@ -6,6 +6,8 @@
  *
  * If a log statement ends in a newline, the current log is ended.
  * When the log severity changes, an implicit newline is inserted.
+ *
+ * $Id$
  */
 #ifndef LOGGER_H_INCLUDED
 #define LOGGER_H_INCLUDED

@@ -3,6 +3,8 @@
  *
  * Enum for log levels.
  * Use these for the log severities in LOG_FMT(), etc.
+ *
+ * $Id$
  */
 #ifndef LOG_LEVELS_H_INCLUDED
 #define LOG_LEVELS_H_INCLUDED

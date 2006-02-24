@@ -2,6 +2,8 @@
  * @file logmask.h
  *
  * Functions to manipulate a log severity mask.
+ *
+ * $Id$
  */
 
 #ifndef LOGMASK_H_INCLUDED

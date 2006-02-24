@@ -1,6 +1,6 @@
 dnl> this is a test comment
 AC_INIT(src/uncrustify.c)
-AM_INIT_AUTOMAKE(uncrustify, 0.0.5)
+AM_INIT_AUTOMAKE(uncrustify, 0.0.6)
 AC_CANONICAL_HOST
 AC_PROG_RANLIB
 AC_PROG_CC

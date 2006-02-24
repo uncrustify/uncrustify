@@ -2,9 +2,7 @@
  * @file punctuators.c
  * Manages the table of punctutators.
  *
- * TODO: add a 'language' field for C/C++/D/Java
- *
- * $Id: punctuators.c,v 1.8 2006/02/10 05:41:32 bengardner Exp $
+ * $Id$
  */
 
 #include "cparse_types.h"

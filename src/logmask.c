@@ -2,8 +2,9 @@
  * @file logmask.c
  *
  * Functions to convert between a string and a severity mask.
+ *
+ * $Id$
  */
-
 
 #include "logmask.h"
 #include <stdio.h>      /* snprintf() */

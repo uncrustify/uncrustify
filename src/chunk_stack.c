@@ -1,3 +1,9 @@
+/**
+ * @file chunk_stack.c
+ * Manages a chunk stack
+ *
+ * $Id$
+ */
 
 #include "chunk_stack.h"
 #include <malloc.h>
