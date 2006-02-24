@@ -127,7 +127,8 @@ static chunk_t *newline_add_between2(chunk_t *start, chunk_t *end,
  * @param start   The starting chunk (cannot be a newline)
  * @param end     The ending chunk (cannot be a newline)
  */
-#define newline_del_between(start, end)     newline_del_between2(start, end, __func__, __LINE__)
+#define newline_del_between(start, end) \
+   newline_del_between2(start, end, __func__, __LINE__)
 
 static void newline_del_between2(chunk_t *start, chunk_t *end,
                                  const char *func, int line)
@@ -164,7 +165,8 @@ static void newlines_if_for_while_switch(chunk_t *start, argval_t nl_opt)
    chunk_t *brace_open;
 
    if ((nl_opt == AV_IGNORE) ||
-       (((start->flags & PCF_IN_PREPROC) != 0) && !cpd.settings[UO_nl_define_macro]))
+       (((start->flags & PCF_IN_PREPROC) != 0) &&
+        !cpd.settings[UO_nl_define_macro]))
    {
       return;
    }
@@ -203,18 +205,18 @@ static void newlines_if_for_while_switch(chunk_t *start, argval_t nl_opt)
  *
  * "struct [name] {" or "struct [name] \n {"
  */
-static void newlines_struct_enum_union(chunk_t *start, int nl_opt)
+static void newlines_struct_enum_union(chunk_t *start, argval_t nl_opt)
 {
    chunk_t *pc;
    chunk_t *next;
 
-   if ((nl_opt == 0) ||
+   if ((nl_opt == AV_IGNORE) ||
        (((start->flags & PCF_IN_PREPROC) != 0) && !cpd.settings[UO_nl_define_macro]))
    {
       return;
    }
 
-   //    fprintf(stderr, "%s(%s, %d)\n", __func__, start->str, need_nl);
+   //fprintf(stderr, "%s(%s, %d)\n", __func__, start->str, nl_opt);
 
    pc = chunk_get_next_ncnl(start);
 
@@ -236,14 +238,14 @@ static void newlines_struct_enum_union(chunk_t *start, int nl_opt)
       }
       if (!chunk_is_comment(next) && !chunk_is_newline(next))
       {
-         nl_opt = -1;
+         nl_opt = AV_IGNORE;
       }
 
-      if (nl_opt > 0)
+      if ((nl_opt & AV_ADD) != 0)
       {
          newline_add_between(start, pc);
       }
-      else
+      else if ((nl_opt & AV_REMOVE) != 0)
       {
          newline_del_between(start, pc);
       }
@@ -293,7 +295,8 @@ static void newlines_do_else(chunk_t *start, argval_t nl_opt)
    chunk_t *next;
 
    if ((nl_opt == AV_IGNORE) ||
-       (((start->flags & PCF_IN_PREPROC) != 0) && !cpd.settings[UO_nl_define_macro]))
+       (((start->flags & PCF_IN_PREPROC) != 0) &&
+        !cpd.settings[UO_nl_define_macro]))
    {
       return;
    }
@@ -301,11 +304,11 @@ static void newlines_do_else(chunk_t *start, argval_t nl_opt)
    next = chunk_get_next_ncnl(start);
    if ((next != NULL) && (next->type == CT_BRACE_OPEN))
    {
-      if (nl_opt & AV_ADD)
+      if ((nl_opt & AV_ADD) != 0)
       {
          newline_add_between(start, next);
       }
-      else
+      else if ((nl_opt & AV_REMOVE) != 0)
       {
          newline_del_between(start, next);
       }
