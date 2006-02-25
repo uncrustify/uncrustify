@@ -760,6 +760,10 @@ void combine_labels(void)
             {
                /* ignore it, as it is inside a paren */
             }
+            else if (cur->type == CT_TYPE)
+            {
+               /* ignore it - anonymous bit field? */
+            }
             else
             {
                LOG_FMT(LWARN, "%s: unexpected colon on line %d, col %d parent=%s l=%d bl=%d\n",
