@@ -2,7 +2,7 @@
  * @file c_settings.c
  * Settings for all the options.
  *
- * $Id: c_settings.h,v 1.20 2006/02/12 02:18:21 bengardner Exp $
+ * $Id$
  */
 #ifndef C_SETTINGS_H_INCLUDED
 #define C_SETTINGS_H_INCLUDED
@@ -44,6 +44,7 @@ enum uncrustify_options
    UO_align_on_tabstop,     // always align on tabstops
    UO_indent_brace_struct,  //TODO: spaces to indent brace after struct/enum/union def
    UO_indent_paren,         //TODO: indent for open paren on next line (1)
+   UO_indent_paren_nl,      // indent-align under paren for open followed by nl
    UO_leave_preproc_space,  //TODO: if true, leave the spaces between '#' and preprocessor commands
    UO_pp_indent,            //TODO: spaces to indent preprocessors (0)
    UO_indent_if_body,       //TODO: indent non-braced if/while/for bodies
@@ -302,6 +303,7 @@ struct options_name_tab option_name_table[] =
    OPTDEF(indent_func_param,             AT_NUM),
    OPTDEF(indent_if_body,                AT_NUM),  // unknown use
    OPTDEF(indent_paren,                  AT_NUM),
+   OPTDEF(indent_paren_nl,               AT_BOOL),
    OPTDEF(indent_with_tabs,              AT_NUM),
    OPTDEF(input_tab_size,                AT_NUM),
    OPTDEF(label_indent,                  AT_NUM),

@@ -2,7 +2,7 @@
  * @file c_indent.c
  * Does all the indenting stuff.
  *
- * $Id: c_indent.c,v 1.22 2006/02/21 02:55:58 bengardner Exp $
+ * $Id$
  */
 #include "cparse_types.h"
 #include "chunk_list.h"
@@ -741,11 +741,21 @@ void indent_text(void)
          frm.pse_tos++;
          frm.pse[frm.pse_tos].type       = pc->type;
          frm.pse[frm.pse_tos].indent     = pc->column + pc->len;
-         frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
          frm.pse[frm.pse_tos].open_line  = pc->orig_line;
          frm.pse[frm.pse_tos].ref        = ++ref;
          frm.pse[frm.pse_tos].in_preproc = (pc->flags & PCF_IN_PREPROC) != 0;
+
+         if (!cpd.settings[UO_indent_paren_nl])
+         {
+            next = chunk_get_next_nc(pc);
+            if (chunk_is_newline(next))
+            {
+               frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent + tabsize;
+            }
+         }
+         frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
          frm.paren_count++;
+
          //fprintf(stderr, "%3d] OPEN(%d) on %s, tos=%d col=%d\n",
          //        pc->orig_line, frm.pse[frm.pse_tos].ref,
          //        get_token_name(pc->type), frm.pse_tos, frm.pse[frm.pse_tos].indent);
