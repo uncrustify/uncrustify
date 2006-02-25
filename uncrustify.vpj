@@ -119,6 +119,7 @@
 				<F N="tests/config/indent.cfg"/>
 			</Folder>
 			<Folder Name="input">
+				<F N="tests/input/colon-asm.c"/>
 				<F N="tests/input/comment-indent.c"/>
 				<F N="tests/input/define-if-indent.c"/>
 				<F N="tests/input/enum-struct-init.c"/>
