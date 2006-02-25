@@ -2,7 +2,7 @@
  * @file c_combine.c
  * Labels the chunks as needed.
  *
- * $Id: c_combine.c,v 1.28 2006/02/14 03:30:02 bengardner Exp $
+ * $Id$
  */
 #include "cparse_types.h"
 #include "chunk_list.h"
@@ -756,10 +756,16 @@ void combine_labels(void)
                   next->type = CT_BIT_COLON;
                }
             }
+            else if (next->level > next->brace_level)
+            {
+               /* ignore it, as it is inside a paren */
+            }
             else
             {
-               LOG_FMT(LWARN, "%s: unexpected colon on line %d, col %d\n",
-                       __func__, next->orig_line, next->orig_col);
+               LOG_FMT(LWARN, "%s: unexpected colon on line %d, col %d parent=%s l=%d bl=%d\n",
+                       __func__, next->orig_line, next->orig_col,
+                       get_token_name(next->parent_type),
+                       next->level, next->brace_level);
             }
          }
       }
