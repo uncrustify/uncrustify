@@ -435,6 +435,9 @@ void indent_text(void)
       was_preproc = in_preproc;
       in_preproc  = (pc->flags & PCF_IN_PREPROC) != 0;
 
+      LOG_FMT(LINDENT, "%s: %d] %s - tos %s\n", __func__, pc->orig_line, get_token_name(pc->type),
+              get_token_name(frm.pse[frm.pse_tos].type));
+
       /* Clean up after a #define */
       if (!in_preproc)
       {
@@ -471,6 +474,7 @@ void indent_text(void)
              ((pc->type == CT_BRACE_CLOSE) ||
               (pc->type == CT_PAREN_CLOSE) ||
               (pc->type == CT_SPAREN_CLOSE) ||
+              (pc->type == CT_FPAREN_CLOSE) ||
               (pc->type == CT_SQUARE_CLOSE) ||
               (pc->type == CT_BRACE_OPEN) ||
               (pc->type == CT_COMMA) ||
@@ -543,12 +547,15 @@ void indent_text(void)
                 (pc->type == CT_FPAREN_CLOSE) ||
                 (pc->type == CT_SQUARE_CLOSE)))
       {
-         //          fprintf(stderr, "%3d] CLOSE(%d) on %s, ",
-         //                  pc->orig_line, pse[pse_tos].ref, get_token_name(pc->type));
+         LOG_FMT(LINDENT, "%3d] CLOSE(%d) on %s, ",
+                 pc->orig_line, frm.pse[frm.pse_tos].ref, get_token_name(pc->type));
+
          frm.pse_tos--;
          frm.paren_count--;
-         //          fprintf(stderr, "now at tos=%d col=%d top=%s\n",
-         //                  pse_tos, pse[pse_tos].indent, get_token_name(pse[pse_tos].type));
+
+         LOG_FMT(LINDENT, "now at tos=%d col=%d top=%s\n",
+                 frm.pse_tos, frm.pse[frm.pse_tos].indent,
+                 get_token_name(frm.pse[frm.pse_tos].type));
       }
       else if ((pc->type == CT_BRACE_OPEN) &&
                ((pc->parent_type == CT_IF) ||
@@ -691,7 +698,6 @@ void indent_text(void)
       }
       else if (pc->type == CT_BRACE_OPEN)
       {
-         //prev = chunk_get_prev_ncnl(pc);
          frm.level++;
          frm.pse_tos++;
          frm.pse[frm.pse_tos].type       = pc->type;
@@ -703,11 +709,12 @@ void indent_text(void)
          if (frm.paren_count == 0)
          {
             frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent;
+            prev = chunk_get_prev_ncnl(pc);
             if (prev->type != CT_CASE_COLON)
             {
                frm.pse[frm.pse_tos].indent += tabsize;
             }
-            // 1 + (level * tabsize);
+
             if ((pc->parent_type == CT_IF) ||
                 (pc->parent_type == CT_ELSE) ||
                 (pc->parent_type == CT_DO) ||
@@ -717,7 +724,6 @@ void indent_text(void)
             {
                frm.pse[frm.pse_tos].indent += cpd.settings[UO_brace_indent];
             }
-
          }
          else
          {
@@ -756,9 +762,9 @@ void indent_text(void)
          frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
          frm.paren_count++;
 
-         //fprintf(stderr, "%3d] OPEN(%d) on %s, tos=%d col=%d\n",
-         //        pc->orig_line, frm.pse[frm.pse_tos].ref,
-         //        get_token_name(pc->type), frm.pse_tos, frm.pse[frm.pse_tos].indent);
+         LOG_FMT(LINDENT, "%3d] OPEN(%d) on %s, tos=%d col=%d\n",
+                 pc->orig_line, frm.pse[frm.pse_tos].ref,
+                 get_token_name(pc->type), frm.pse_tos, frm.pse[frm.pse_tos].indent);
       }
       else if (pc->type == CT_ASSIGN)
       {
@@ -781,8 +787,9 @@ void indent_text(void)
             frm.pse[frm.pse_tos].open_line  = pc->orig_line;
             frm.pse[frm.pse_tos].ref        = ++ref;
             frm.pse[frm.pse_tos].in_preproc = (pc->flags & PCF_IN_PREPROC) != 0;
-            //fprintf(stderr, "%3d] OPEN(10) on %s, tos=%d\n", pc->orig_line,
-            //        c_chunk_names[pc->type], pse_tos);
+
+            LOG_FMT(LINDENT, "%3d] OPEN(10) on %s, tos=%d\n", pc->orig_line,
+                    get_token_name(pc->type), frm.pse_tos);
          }
       }
 
