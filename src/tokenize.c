@@ -4,7 +4,7 @@
  *
  * Each routine needs to set pc->len and pc->type.
  *
- * $Id: tokenize.c,v 1.15 2006/02/21 02:57:14 bengardner Exp $
+ * $Id$
  */
 
 #include "cparse_types.h"
@@ -434,7 +434,7 @@ BOOL parse_next(chunk_t *pc)
    pc->type = CT_UNKNOWN;
    pc->len  = 1;
 
-   LOG_FMT(LWARN, "Garbage: %x\n", *pc->str);
+   LOG_FMT(LWARN, "Garbage: %x on line %d\n", *pc->str, pc->orig_line);
 
    return(TRUE);
 }
@@ -535,6 +535,7 @@ void parse_buffer(const char *data, int data_len)
       {
          pc->flags |= PCF_IN_PREPROC;
 
+
          /* Count words after the preprocessor */
          if (!chunk_is_comment(pc) && !chunk_is_newline(pc))
          {
@@ -603,6 +604,22 @@ void parse_buffer(const char *data, int data_len)
             pc->type       = CT_PREPROC;
             pc->flags     |= PCF_IN_PREPROC;
             cpd.in_preproc = PP_UNKNOWN;
+
+            //fprintf(stderr, "%s: %d] %s - tos %s\n", __func__,
+            //        pc->orig_line, get_token_name(pc->type),
+            //        get_token_name(frm.pse[frm.pse_tos].type));
+
+            if ((frm.pse[frm.pse_tos].type == CT_VBRACE_OPEN) ||
+                (frm.pse[frm.pse_tos].type == CT_IF) ||
+                (frm.pse[frm.pse_tos].type == CT_FOR) ||
+                (frm.pse[frm.pse_tos].type == CT_SWITCH) ||
+                (frm.pse[frm.pse_tos].type == CT_DO) ||
+                (frm.pse[frm.pse_tos].type == CT_WHILE))
+            {
+               //fprintf(stderr, "%s: closing on token %s\n",
+               //        __func__, get_token_name(pc->type));
+               close_statement(&frm, prev);
+            }
          }
 
          if ((cpd.in_preproc == PP_NONE) ||
