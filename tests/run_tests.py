@@ -2,7 +2,10 @@
 #
 # Scans the .test files on the command line and parses each, running
 # the tests listed.  Results are printed out.
-# 
+#
+# This could all be done with bash, but I wanted to use python. =)
+# Anyway, this was all done while waiting in the Denver airport.
+#
 
 import sys
 import os
@@ -45,7 +48,7 @@ def process_test_file(filename):
 
 #
 # entry point
-# 
+#
 
 if len(sys.argv) < 2:
     usage_exit()
