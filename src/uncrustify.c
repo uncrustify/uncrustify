@@ -1,7 +1,7 @@
 /**
  * This file takes an input C/C++/D/Java file and reformats it.
  *
- * $Id: uncrustify.c,v 1.23 2006/02/14 03:17:53 bengardner Exp $
+ * $Id$
  */
 #define DEFINE_GLOBAL_DATA
 
@@ -32,12 +32,13 @@ static void usage_exit(const char *msg, const char *argv0, int code)
    }
    fprintf(stderr,
            "Usage:\n"
-           "%s [-c cfg] [-f file] [-p parsed] [--version] [-L sev] [-s]\n"
+           "%s [-c cfg] [-f file] [-p parsed] [-t typefile] [--version] [-L sev] [-s]\n"
            " c : specify the config file\n"
            " f : specify the file to format\n"
            " p : debug - dump parsed tokens to this file\n"
            " L : debug log severities 0-255 for everything\n"
            " s : show log severities\n"
+           " t : load a file with types\n"
            "--version : print the version and exit\n"
            "The output is dumped to stdout, errors are dumped to stderr\n",
            argv0);
@@ -85,7 +86,7 @@ int main(int argc, char *argv[])
 
    chunk_list_init();
 
-   while ((op = getopt_long(argc, argv, "c:p:f:L:",
+   while ((op = getopt_long(argc, argv, "c:p:f:L:t:",
                             long_options, &option_index)) != EOF)
    {
       switch (op)
@@ -119,6 +120,10 @@ int main(int argc, char *argv[])
 
       case 's':
          log_show_sev(TRUE);
+         break;
+
+      case 't':
+         load_keyword_file(optarg);
          break;
 
       default:

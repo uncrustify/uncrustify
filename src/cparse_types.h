@@ -3,7 +3,7 @@
  *
  * Defines some types for the uncrustify program
  *
- * $Id: cparse_types.h,v 1.22 2006/02/14 04:25:21 bengardner Exp $
+ * $Id$
  */
 
 #ifndef CPARSE_TYPES_H_INCLUDED
@@ -130,12 +130,14 @@ struct chunk_s
 
 enum
 {
-   LANG_C   = 1,
-   LANG_CPP = 2,
-   LANG_D   = 4,
-   LANG_ALL = 7,
+   LANG_C    = 0x01,
+   LANG_CPP  = 0x02,
+   LANG_D    = 0x04,
+   LANG_CS   = 0x08,     /*<< C# */
+   LANG_JAVA = 0x10,
+   LANG_ALL  = 0x1f,
 
-   FLAG_PP = 0x80,  /*<< only appears in a preprocessor */
+   FLAG_PP   = 0x80,  /*<< only appears in a preprocessor */
 };
 
 typedef struct

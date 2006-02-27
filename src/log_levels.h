@@ -44,6 +44,7 @@ enum
    LFCN     = 31,    /* function detection */
    LFCNP    = 32,    /* function parameters */
    LPCU     = 33,    /* parse cleanup */
+   LDYNKW   = 34,    /* dynamic keywords */
 };
 
 #endif   /* LOG_LEVELS_H_INCLUDED */

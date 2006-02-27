@@ -2,7 +2,7 @@
  * @file token_enum.c
  * List of the different tokens used in the program.
  *
- * $Id: token_enum.h,v 1.11 2006/02/14 03:24:40 bengardner Exp $
+ * $Id$
  */
 #ifndef TOKEN_ENUM_H_INCLUDED
 #define TOKEN_ENUM_H_INCLUDED
@@ -24,7 +24,7 @@ typedef enum
 
    CT_WHITESPACE,    /* whitespace without any newlines */
    CT_NEWLINE,       /* CRA, one or more newlines */
-   CT_NL_CONT,       /* CRA, bashslash-newline */
+   CT_NL_CONT,       /* CRA, backslash-newline */
    CT_COMMENT_CPP,   /* C++ comment (always followed by CT_NEWLINE) */
    CT_COMMENT,       /* C-comment, single line */
    CT_COMMENT_MULTI, /* Multi-lined comment */
@@ -147,6 +147,9 @@ typedef enum
    CT_PP_ELSE,          /* #else or #elif */
    CT_PP_ENDIF,         /* #endif */
    CT_PP_OTHER,         /* #line, #error, #pragma, etc */
+
+   /* C-sharp crap */
+   CT_REF,
 } c_token_t;
 
 #endif   /* TOKEN_ENUM_H_INCLUDED */

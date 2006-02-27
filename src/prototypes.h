@@ -2,88 +2,122 @@
  * @file prototypes.c
  * Big jumble of prototypes used in Uncrustify.
  *
- * $Id: prototypes.h,v 1.19 2006/02/13 03:30:20 bengardner Exp $
+ * $Id$
  */
 #ifndef C_PARSE_PROTOTYPES_H_INCLUDED
 #define C_PARSE_PROTOTYPES_H_INCLUDED
 
 #include "cparse_types.h"
 
-BOOL chunk_comment(chunk_t *pc);
-BOOL chunk_number(chunk_t *pc);
-BOOL chunk_string(chunk_t *pc);
-BOOL chunk_word(chunk_t *pc);
-BOOL chunk_next(chunk_t *pc);
-BOOL chunk_whitespace(chunk_t *pc);
+
+/*
+ *  uncrustify.c
+ */
+
+const char *get_token_name(c_token_t token);
 
 
-chunk_t *output_square(chunk_t *pc);
-chunk_t *output_brace(chunk_t *pc);
-chunk_t *output_paren(chunk_t *pc);
-chunk_t *output_preproc(chunk_t *pc);
-chunk_t *output_incdec(chunk_t *pc);
-chunk_t *output_return(chunk_t *pc);
-chunk_t *output_sizeof(chunk_t *pc);
-chunk_t *output_enum(chunk_t *pc);
-chunk_t *output_struct(chunk_t *pc);
-chunk_t *output_typedef(chunk_t *pc);
-chunk_t *output_do(chunk_t *pc);
-chunk_t *output_switch(chunk_t *pc);
-chunk_t *output_while(chunk_t *pc);
-chunk_t *output_for(chunk_t *pc);
-chunk_t *output_else(chunk_t *pc);
-chunk_t *output_if(chunk_t *pc);
-chunk_t *output_junk(chunk_t *pc);
-chunk_t *output_word(chunk_t *pc);
-chunk_t *output_comment(chunk_t *pc);
-
+/*
+ *  c_output.c
+ */
 
 void output_text(FILE *pfile);
 void output_parsed(FILE *pfile);
 void output_comment_multi(chunk_t *pc);
 void output_options(FILE *pfile);
-void output_indent(int level, BOOL allow_tabs);
 void output_to_column(int column, BOOL allow_tabs);
 void add_text(const char *text);
 void add_char(char ch);
+
+
+/*
+ *  c_args.c
+ */
+
 void set_arg_defaults(void);
+int load_config_file(const char *filename);
+int set_option_value(const char *name, const char *value);
+const char *get_option_name(enum uncrustify_options uo);
 
 
-chunk_t *reformat_typedef(chunk_t *pc);
+/*
+ *  c_indent.c
+ */
 
-
+void indent_text(void);
 void indent_column(chunk_t *pc, int column);
 void reindent_line(chunk_t *pc, int column);
-void indent_level(void);
+
+
+/*
+ *  c_align.c
+ */
+
 void align_all(void);
 void align_backslash_newline(void);
 void align_right_comments(void);
 void align_func_proto(int span);
 void align_preprocessor(void);
 void align_struct_initializers(void);
-
-
 chunk_t *align_nl_cont(chunk_t *start);
 chunk_t *align_assign(chunk_t *first, int span);
 
 
-void combine_labels(void);
+/*
+ *  braces.c
+ */
+
 void do_braces(void);
+
+
+/*
+ *  c_space.c
+ */
+
 void space_text(void);
+
+
+/*
+ *  c_combine.c
+ */
+
 void fix_symbols(void);
+void combine_labels(void);
+void mark_comments(void);
+
+
+/*
+ *  c_newlines.c
+ */
+
 void newlines_cleanup_braces(void);
 void newlines_squeeze_ifdef(void);
-void do_stuff(void);
+
+
+/*
+ *  tokenize.c
+ */
+
 void parse_buffer(const char *data, int data_len);
 BOOL parse_next(chunk_t *pc);
 
 
+/*
+ *  keywords.c
+ */
+int load_keyword_file(const char *filename);
 const chunk_tag_t *find_keyword(const char *word, int len);
+
+
+/*
+ *  punctuators.c
+ */
 const chunk_tag_t *find_punctuator(const char *str, uint8_t lang_flags);
 
-void indent_comments(void);
-void mark_comments(void);
 
+/*
+ *  parse_frame.c
+ */
 
 void pf_copy(struct parse_frame *dst, const struct parse_frame *src);
 void pf_push(struct parse_frame *pf);
@@ -93,7 +127,6 @@ void pf_trash_tos(void);
 void pf_pop(struct parse_frame *pf);
 void pf_check(struct parse_frame *frm, chunk_t *pc);
 
-void indent_text(void);
 
 
 /**
@@ -143,12 +176,6 @@ int align_tab_column(int col)
    return(col);
 }
 
-int load_config_file(const char *filename);
-int set_option_value(const char *name, const char *value);
-
-
-const char *get_option_name(enum uncrustify_options uo);
-const char *get_token_name(c_token_t token);
 
 #endif   /* C_PARSE_PROTOTYPES_H_INCLUDED */
 

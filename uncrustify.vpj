@@ -75,7 +75,9 @@
 		</Folder>
 		<Folder Name="etc">
 			<F N="etc/ben.cfg"/>
+			<F N="etc/dofiles.sh"/>
 			<F N="etc/linux.cfg"/>
+			<F N="etc/types.txt"/>
 			<F N="etc/uncrust-files.sh"/>
 			<F N="etc/uncrustify.cfg"/>
 			<F N="etc/xsupplicant.cfg"/>
@@ -111,11 +113,11 @@
 			<F N="src/token_names.h"/>
 			<F N="src/tokenize.c"/>
 			<F N="src/uncrustify.c"/>
-			<F N="src/word_hash.c"/>
 		</Folder>
 		<Folder Name="tests">
 			<Folder Name="config">
 				<F N="tests/config/ben.cfg"/>
+				<F N="tests/config/cast-types.txt"/>
 				<F N="tests/config/indent.cfg"/>
 			</Folder>
 			<Folder Name="input">
@@ -123,7 +125,12 @@
 				<F N="tests/input/comment-indent.c"/>
 				<F N="tests/input/define-if-indent.c"/>
 				<F N="tests/input/enum-struct-init.c"/>
+				<F N="tests/input/ifdef-indent.c"/>
+				<F N="tests/input/indent-assign.c"/>
+				<F N="tests/input/return-multi.c"/>
 				<F N="tests/input/struct-brace.c"/>
+				<F N="tests/input/switch-case.c"/>
+				<F N="tests/input/type-cast.c"/>
 			</Folder>
 			<Folder Name="output">
 				<F N="tests/output/00000-comment-indent.c"/>
