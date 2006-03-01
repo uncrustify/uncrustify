@@ -2,7 +2,7 @@
  * @file c_space.c
  * Adds or removes inter-chunk spaces.
  *
- * $Id: c_space.c,v 1.19 2006/02/15 03:35:22 bengardner Exp $
+ * $Id$
  */
 #include "cparse_types.h"
 #include "chunk_list.h"
@@ -136,6 +136,12 @@ argval_t do_space(chunk_t *first, chunk_t *second)
       return(cpd.settings[UO_sp_before_sparen]);
    }
 
+   /* "byte [" vs "byte[" */
+   if (second->type == CT_SQUARE_OPEN)
+   {
+      return(cpd.settings[UO_sp_before_square]);
+   }
+
    /* "for (...) {...}" vs "for (...){...}" */
    if (first->type == CT_SPAREN_CLOSE)
    {
@@ -216,6 +222,12 @@ argval_t do_space(chunk_t *first, chunk_t *second)
    if ((first->type == CT_PAREN_OPEN) || (second->type == CT_PAREN_CLOSE))
    {
       return(cpd.settings[UO_sp_inside_paren]);
+   }
+
+   /* "[3]" vs "[ 3 ]" */
+   if ((first->type == CT_SQUARE_OPEN) || (second->type == CT_SQUARE_CLOSE))
+   {
+      return(cpd.settings[UO_sp_inside_square]);
    }
 
    /* "if(...)" vs "if( ... )" */

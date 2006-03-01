@@ -966,6 +966,7 @@ void parse_cleanup(struct parse_frame *frm,
        (pc->type == CT_COMPARE) ||
        (pc->type == CT_RETURN) ||
        (pc->type == CT_GOTO) ||
+       (pc->type == CT_CONTINUE) ||
        (pc->type == CT_PAREN_OPEN) ||
        (pc->type == CT_FPAREN_OPEN) ||
        (pc->type == CT_SPAREN_OPEN) ||

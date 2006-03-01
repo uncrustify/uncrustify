@@ -33,30 +33,31 @@ enum uncrustify_options
    /*
     * Basic Indenting stuff
     */
-   UO_indent,               //TODO: 0=don't change indentation, 1=change indentation
+   UO_indent,                   //TODO: 0=don't change indentation, 1=change indentation
 
-   UO_input_tab_size,       // tab size on input file: usually 8
-   UO_output_tab_size,      // tab size for output: usually 8
+   UO_input_tab_size,           // tab size on input file: usually 8
+   UO_output_tab_size,          // tab size for output: usually 8
 
-   UO_indent_columns,       // ie 3 or 8
-   UO_indent_with_tabs,     // 1=only to the 'level' indent, 2=use tabs for indenting
-   UO_align_with_tabs,      // use tabs for aligning (0/1)
-   UO_align_on_tabstop,     // always align on tabstops
-   UO_indent_brace_struct,  //TODO: spaces to indent brace after struct/enum/union def
-   UO_indent_paren,         //TODO: indent for open paren on next line (1)
-   UO_indent_paren_nl,      // indent-align under paren for open followed by nl
-   UO_leave_preproc_space,  //TODO: if true, leave the spaces between '#' and preprocessor commands
-   UO_pp_indent,            //TODO: spaces to indent preprocessors (0)
-   UO_indent_if_body,       //TODO: indent non-braced if/while/for bodies
-   UO_case_indent,          //TODO: spaces to indent case from switch (indent_columns)
-   UO_case_brace_indent,    //TODO: spaces to indent '{' from case
-   UO_brace_indent,         // spaces to indent '{' from level (usually 0)
-   UO_indent_func_param,    //TODO: if newline after '(' in func decl, indent to this level (-1 = use paren indent
-   UO_label_indent,         // 0=left >0=col from left, <0=sub from brace indent
+   UO_indent_columns,           // ie 3 or 8
+   UO_indent_with_tabs,         // 1=only to the 'level' indent, 2=use tabs for indenting
+   UO_align_with_tabs,          // use tabs for aligning (0/1)
+   UO_align_on_tabstop,         // always align on tabstops
+   UO_indent_brace_struct,      //TODO: spaces to indent brace after struct/enum/union def
+   UO_indent_paren,             //TODO: indent for open paren on next line (1)
+   UO_indent_paren_nl,          // indent-align under paren for open followed by nl
+   UO_leave_preproc_space,      //TODO: if true, leave the spaces between '#' and preprocessor commands
+   UO_pp_indent,                //TODO: spaces to indent preprocessors (0)
+   UO_indent_if_body,           //TODO: indent non-braced if/while/for bodies
+   UO_case_indent,              //TODO: spaces to indent case from switch (indent_columns)
+   UO_case_brace_indent,        //TODO: spaces to indent '{' from case
+   UO_brace_indent,             // spaces to indent '{' from level (usually 0)
+   UO_label_indent,             // 0=left >0=col from left, <0=sub from brace indent
 
-   UO_indent_align_string,  // True/False - indent align broken strings
+   UO_indent_align_string,      // True/False - indent align broken strings
 
-   UO_indent_col1_comment,  // indent comments in column 1
+   UO_indent_col1_comment,      // indent comments in column 1
+
+   UO_indent_func_call_param,   // indent continued function calls to indent_columns
 
    /*
     * Misc inter-element spacing
@@ -72,6 +73,8 @@ enum uncrustify_options
    UO_sp_inside_sparen,     // space inside 'if( xxx )' vs 'if(xxx)'
    UO_sp_inside_fparen,     // space inside 'foo( xxx )' vs 'foo(xxx)'
    UO_sp_inside_paren,      // space inside '+ ( xxx )' vs '+ (xxx)'
+   UO_sp_inside_square,     // space inside 'byte[ 5 ]' vs 'byte[5]'
+   UO_sp_before_square,     // space before all '['
 
    UO_sp_paren_paren,       // space between nested parens - '( (' vs '(('
 
@@ -300,7 +303,7 @@ struct options_name_tab option_name_table[] =
    OPTDEF(indent_brace_struct,           AT_NUM),
    OPTDEF(indent_col1_comment,           AT_BOOL),
    OPTDEF(indent_columns,                AT_NUM),
-   OPTDEF(indent_func_param,             AT_NUM),
+   OPTDEF(indent_func_call_param,        AT_BOOL),
    OPTDEF(indent_if_body,                AT_NUM),  // unknown use
    OPTDEF(indent_paren,                  AT_NUM),
    OPTDEF(indent_paren_nl,               AT_BOOL),
@@ -350,6 +353,7 @@ struct options_name_tab option_name_table[] =
    OPTDEF(sp_assign,                     AT_IARF),
    OPTDEF(sp_before_semi,                AT_IARF),
    OPTDEF(sp_before_sparen,              AT_IARF),
+   OPTDEF(sp_before_square,              AT_IARF),
    OPTDEF(sp_bool,                       AT_IARF),
    OPTDEF(sp_compare,                    AT_IARF),
    OPTDEF(sp_func_call_paren,            AT_IARF),
@@ -361,6 +365,7 @@ struct options_name_tab option_name_table[] =
    OPTDEF(sp_inside_fparen,              AT_IARF),
    OPTDEF(sp_inside_paren,               AT_IARF),
    OPTDEF(sp_inside_sparen,              AT_IARF),
+   OPTDEF(sp_inside_square,              AT_IARF),
    OPTDEF(sp_paren_brace,                AT_IARF),
    OPTDEF(sp_paren_paren,                AT_IARF),
    OPTDEF(sp_return_paren,               AT_IARF),

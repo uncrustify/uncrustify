@@ -52,6 +52,7 @@ typedef enum
    CT_BREAK,
    CT_UNION,
    CT_GOTO,
+   CT_CONTINUE,
    CT_CAST,                /* cast(exp) -- as used in D */
    CT_TYPE_CAST,           /* static_cast<type>(exp) */
    CT_TYPENAME,            /* typename type */

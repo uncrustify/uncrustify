@@ -137,7 +137,7 @@ enum
    LANG_JAVA = 0x10,
    LANG_ALL  = 0x1f,
 
-   FLAG_PP   = 0x80,  /*<< only appears in a preprocessor */
+   FLAG_PP = 0x80,  /*<< only appears in a preprocessor */
 };
 
 typedef struct

@@ -82,6 +82,7 @@ int main(int argc, char *argv[])
 
    memset(&cpd, 0, sizeof(cpd));
 
+   /* TODO: add some sort of language detection */
    cpd.lang_flags = LANG_C;
 
    chunk_list_init();

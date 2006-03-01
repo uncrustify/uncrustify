@@ -24,7 +24,6 @@ static const chunk_tag_t symbols3[] =
    { ">>=", CT_ASSIGN,  LANG_ALL },
    { "...", CT_ELIPSIS, LANG_ALL },
    { "->*", CT_MEMBER,  LANG_ALL },
-   { "!is", CT_COMPARE, LANG_D },
    { ">>>", CT_ARITH,   LANG_D },
    { "!<>", CT_COMPARE, LANG_D },
    { "!>=", CT_COMPARE, LANG_D },

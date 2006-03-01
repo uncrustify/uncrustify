@@ -1282,6 +1282,7 @@ static void mark_define_expressions(void)
                  (prev->type == CT_COMPARE) ||
                  (prev->type == CT_RETURN) ||
                  (prev->type == CT_GOTO) ||
+                 (prev->type == CT_CONTINUE) ||
                  (prev->type == CT_PAREN_OPEN) ||
                  (prev->type == CT_FPAREN_OPEN) ||
                  (prev->type == CT_SPAREN_OPEN) ||
