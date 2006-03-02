@@ -1,294 +1,427 @@
-All items are integers.
-All items default to 0, unless otherwise specified.
+Quick documentation (probably out of date - see c_settings.h)
 
-Values can be one of:
-	n : number parsed with strtoul()
-	0 : anything not covered below
-	1 : "true", "yes", "add", "insert", "on" == 1
-	2 : "del", "rem", "remove" == 2
-	3 : "force"
-
-
-indent:
-	Control whether re-indenting is done.
-	Most other features won't work without this option.
-	0 = don't change indentation
-	1 = change indentation
-	default: 0
-
-input_tab_size:
-	tab size on input file.
-	default: 8
-
-output_tab_size:
-	tab size for output.
-	default: 8
-
-indent_columns:
-	The number of columns to indent per level.
-	Typically matches the tab size.
-	default: 8
-
-indent_with_tabs:
-	Controls whether left-column indenting is done with tabs, spaces, or
-	a combination of the two.
-	0 = use spaces
-	1 = use tabs to indent to the 'level', use spaces afterwards
-	2 = always use tabs for indenting
-	default: 1
-
-align_with_tabs:
-	Use tabs for aligning code.
-	0 = Use spaces only
-	1 = use tabs and spaces
-	default: 0
+There are three type of arguments:
+	- boolean (true/false)
+	- numeric
+	- ignore/add/remove/force
 	
-align_on_tabstop:
-	Shift alignment right to a tabstop
-	0 = don't
-	1 = align on tabstop
-	default: 0
+Ignore means do not change it.
+Add in the context of spaces means make sure there is at least 1.
+Add elsewhere means make sure one is present.
+Remove mean remove the space/brace/newline/etc.
+Force in the context of spaces means ensure that there is exactly 1.
+Force in other contexts means the same as add.
 
-indent_brace_struct:
-	The number of columns to indent the open brace after struct/enum/union
-	definition.
-	default: 0
+
+All items default to false/0/ignore except:
+	- input_tab_size = 8
+	- output_tab_size = 8
+	- indent_columns = 8
+	- indent_with_tabs = 1
+	
+	Refer to set_arg_defaults()
+	
+Terminology:
+	There are three types of parenthesis: sparen, fparen, paren.
+	sparen are found with if/for/switch/while statements.
+	fparen are found with function prototypes, calls and implementations.
+	paren are everything else, such as those found with arithmetic ops.
+	
+	A 'span' is the maximum number of lines that a aligning feature will be
+	considered.  This is done to limit the scope of the aligning.
+
+	A 'gap' is the minimum spacing for aligned items.
+
+	A 'threshold' is the maximum number of columns that a aligning feature
+	will be considered.  This is done to limit the scope of the aligning.
+
+
+Here's a list of all the options from c_settings.h and a brief description.
+
+   indent:			bool
+	Not used
+
+   input_tab_size:		number
+	The original tab space value. Used to determine what was already
+	aligned.
+	
+   output_tab_size:		number
+	Size of tabs in the output.
+	Only important if indent_with_tabs=2.
+
+   indent_columns:		number
+	The number of columns to indent.
+	Usually 2, 3, 4, or 8.
+	
+   indent_with_tabs:		number		* Not usable *
+	How to use tabs when indenting code.
+	 0 = Use spaces only
+	 1 = Use tabs to the brace-level indent (very portable)
+	 2 = Use tabs whenever possible
+	
+   align_with_tabs:		bool
+	Use tabs for aligning.
+	Doesn't work quite right, yet.
+
+   align_on_tabstop:		bool
+	When aligning, bump out to the next tabstop.
 	
 
-# UO_indent_paren,         // indent for open paren on next line (1)
-# UO_leave_preproc_space,  // if true, leave the spaces between '#' and preprocessor commands
-# UO_pp_indent,            // spaces to indent preprocessors (0)
-# UO_indent_if_body,       // indent non-braced if/while/for bodies
-
-case_indent:
-	The number of columns to indent case from switch.
-	Usually 0 or the tab size.
-	default: 0
-
-# UO_case_brace_indent,    // spaces to indent '{' from case
-
-brace_indent:
-	Columns to indent '{' from level.  Usually 0.
-	Non-zero values don't mesh well with a cuddled else.
-	default: 0
-
-indent_func_param:
-	If a newline immediately follows the '(' in a function declaration,
-	indent to this column.
-	0 = use paren indent
-	1 = column 1, etc
-	default: 0
+   indent_brace_struct:		number		* Not implemented *
+	Spaces to indent brace after struct/enum/union definition.
 	
-label_indent:
-	Declares how to indent labels.
-	>=0 = columns from the left (0=column 1, 1=column 2, etc)
-	<0  = add to brace indent level (-8=back out 8 columns)
-        default: 0
+   indent_paren:		number		* Not implemented *
+	Indent for open paren on the next line.
 	
-indent_align_string:
-	Align broken strings on the opening of the previous string.
-	0 = do not align
-	1 = align
-	default: 0
 
-
-INTER-SYMBOL SPACING
---------------------
-All inter-symbol spacing options take one of three values:
-  0 : don't change it
-  1 : add a space (will not remove excess; ensures at least 1 space/tab)
-  2 : remove spaces
-  3 : insert exactly one space (remove excess)
-
-These options are prefixed with "sp_".
-The default is 0.
-
-sp_before_sparen:
-	Space before the '(' of 'if/for/while/switch' statements
+   indent_paren_nl:		bool
+	If an open paren is followed by a newline, indent the next line
+	so that it lines up after the open paren.
+	Not recommended.
 	
-sp_after_sparen:
-	Space after  ')' of 'if/for/while/switch'.
-        This does not affect ')' of do-while statemenst.
+   leave_preproc_space:		bool		* Not implemented *
+	If true, leave the spaces between '#' and preprocessor commands.
+	For example, don't remove the spaces in "# define FOO".
 	
-sp_paren_brace:
+   pp_indent:			number		* Not implemented *
+	Spaces to indent preprocessors on nested #ifdef/#elif.
+	
+   case_indent:			number		* Not implemented *
+	Spaces to indent case from switch (indent_columns).
+	
+   case_brace_indent:		number		* Not implemented *
+	Spaces to indent '{' from case.
+	
+   brace_indent:		number
+	Spaces to indent '{' from level (usually 0). For GNU style, set to 2.
+	
+   label_indent:		number
+	How to indent goto labels.
+	>= 0 : Columns from the left
+	< 0  : Subtract from brace indent
+
+   indent_align_string:		bool
+	Whether to indent broken strings so that they line up.
+	
+	Example:
+	fprintf(stderr, "Some really long explination "
+	                "that is broken in two");
+		vs
+	fprintf(stderr, "Some really long explination "
+	        "that is broken in two");
+
+   indent_col1_comment:		bool
+	Whether to indent comments found in column 1.
+
+   indent_func_call_param:	bool
+	If true, indent continued function call parameters one indent level.
+	
+	Example:
+	thisisareallylongfunctionname(param1,
+	    param2, param3, param4);
+
+
+#
+#  Spacing Options
+#
+
+   sp_before_sparen:		IARF
+	Space before '(' of 'if/for/while/switch'.
+	Example: "if (" vs "if("
+	
+   sp_after_sparen:		IARF
+	Space after  ')' of 'if/for/while/switch'
+	Example "if (a) a--;" vs "if (a)a--;"
+	
+   sp_paren_brace:		IARF
 	Space between ')' and '{'
 
-sp_after_cast:
+   sp_after_cast:		IARF
 	Space after cast - "(int) a" vs "(int)a"
 
-sp_inside_paren:
-	Space inside parens - '( x )' vs '(x)'
+   sp_inside_sparen:		IARF
+	Space inside 'if( xxx )' vs 'if(xxx)'
 	
-sp_paren_paren:
-	Space between open/close parens - '( (' vs '(('
+   sp_inside_fparen:		IARF
+	Space inside 'foo( xxx )' vs 'foo(xxx)'
+	
+   sp_inside_paren:		IARF
+	space inside '+ ( xxx )' vs '+ (xxx)'
+	
+   sp_inside_square:		IARF
+	space inside 'byte[ 5 ]' vs 'byte[5]'
 
-sp_return_paren:
-	Space between 'return' and '(' - 'return (a)' vs 'return(a)'
-	
-sp_sizeof_paren:
-	Space between 'sizeof' and '(' - 'sizeof (a)' vs 'sizeof(a)'
+   sp_before_square:		IARF
+	space before all '['
 
-sp_func_def_paren:
-	Space between function definition and '(' - "int foo (..." vs "int foo(..."
-	
-sp_func_call_paren:
-	Space between function call and '(' - "foo (" vs "foo("
-	
-sp_func_proto_paren:
-	Space between function prototype and '(' - "int foo (" vs "int foo("
-	
-sp_special_semi:
-	Space before empty statement - "while (*a++) ;" vs "while (*a++);"
-	Example "while (*p++ = ' ') ;"
-	
-sp_before_semi:
-	Space before all ';' - "i = 5 ;" vs "i = 5;"
-	
-sp_inside_braces:
-	Space inside '{' and '}' - "{ 1, 2, 3 }" vs "{1, 2, 3}"
-	
-sp_inside_braces_enum:
-	Space inside enum defintion '{' and '}' - "{ a, b, c }"
-	
-sp_inside_braces_struct:
-	Space inside struct/union definition '{' and '}'
+   sp_paren_paren:		IARF
+	space between nested parens - '( (' vs '(('
 
-TODO:
-sp_arith:
-	Spaces around arithmetic punctuators +, -, /, *, <<, etc
+   sp_return_paren:		IARF
+	space between 'return' and '('
 
-sp_after_comma:
-	Space after all commas - "a, b, c" vs "a,b,c"
+   sp_sizeof_paren:		IARF
+	space between 'sizeof' and '('
+
+   sp_after_comma:		IARF
+	space after ','
+
+   sp_arith:			IARF
+	space around + - / * etc
+	
+   sp_bool:			IARF
+	space around || &&
+	
+   sp_compare:			IARF
+	space around < > ==, etc
+	
+   sp_assign:			IARF
+	space around =, +=, etc
+
+   sp_func_def_paren:		IARF
+	space between 'func' and '(' - "foo (" vs "foo("
+	
+   sp_func_call_paren:		IARF
+	space between 'func' and '(' - "foo (" vs "foo("
+	
+   sp_func_proto_paren:		IARF
+	space between 'func' and '(' - "foo (" vs "foo("
+
+   sp_type_func:		IARF
+	Space between return type and 'func'
+        A minimum of 1 is forced except for '*'
+
+   sp_special_semi:		IARF
+	Space empty stmt ';' on while, if, for
+	example "while (*p++ = ' ') ;" */
+
+   sp_before_semi:		IARF
+	Space before all ';'
+
+   sp_inside_braces:		IARF
+	Space inside '{' and '}' - "{ 1, 2, 3 }"
+
+   sp_inside_braces_enum:	IARF
+	Space inside enum '{' and '}' - "{ a, b, c }"
+
+   sp_inside_braces_struct:	IARF
+	Space inside struct/union '{' and '}'
 
 
    /*
     * Line splitting options (for long lines)
     */
 
-   UO_code_width,           // ie 80 columns
-   UO_ls_before_bool_op,    // break line before of after boolean op
-   UO_ls_before_paren,      // break before open paren
-   UO_ls_after_arith,       // break after arith op '+', etc
-   UO_ls_honor_newlines,    // don't remove newlines on split lines
+   code_width:			number		* Not implemented *
+	If the line width exceeds this number of columns,
+	splitting is considered.
+	
+   ls_before_bool_op:		bool		* Not implemented *
+	Split before boolean ops instead of after.
+	
+   ls_before_paren:		bool		* Not implemented *
+	Split before open paren
+	
+   ls_after_arith:		bool		* Not implemented *
+	Split after arith op '+', etc, instead of before
+	
+   ls_honor_newlines:		bool		* Not implemented *
+	Pointless, as I don't plan on combining lines.
+
+#
+#  Code alignment (not left column spaces/tabs)
+#
+
+   align_nl_cont:		bool
+	Align the back-slash \n combo (macros)
+	
+   align_enum_equ:		bool
+	Align the '=' in enums
+	
+   align_assign_span:		number
+	 The span for aligning on '=' in assignments. 0=don't align
+	
+   align_right_cmt_span:	number
+	Span for aligning comments that end lines. 0=don't align
+
+   align_var_def_span		number
+	Span for aligning variable definitions
+	
+   align_var_def_inline:	bool
+	Whether to align inline struct/enum/union var defs
+	
+   align_var_def_star:		bool
+	Whether the star is part of the variable name or not.
+	"int *   var;" vs "int    *var;"
+	
+   align_var_def_colon:		bool
+	Align the colon in struct bit fields
+	
+   align_var_struct_span:	number
+	Span for struct/union (0=don't align)
+	
+   align_pp_define_span:	number
+	align bodies in #define statments
+	
+   align_pp_define_col_min	number		* Not implemented *
+	Min column for a #define value
+	
+   align_pp_define_col_max:	number		* Not implemented *
+	Max column for a #define value
+	
+   align_pp_define_gap:		number
+	Min space between define label and value "#define a <---> 16"
+	
+   align_enum_col_min:		number		* Not implemented *
+	The min column for enum '=' alignment
+	
+   align_enum_col_max:		number		* Not implemented *
+	The max column for enum '=' alignment
+	
+   align_struct_init_span:	number
+	Align structure initializer values
+	
+   align_func_proto_span:	number
+	Align function prototypes
+	
+   align_number_left:		bool		* buggy *
+	left-align numbers
+	
+   align_typedef_span:		number
+	align single-line typedefs
+	
+   align_typedef_gap:		number
+	minimum spacing
 
 
-   /*
-    * code alignment (not left column spaces/tabs)
-    */
+#
+#  Newline adding and removing options
+#
 
-   UO_align_nl_cont,              // align the back-slash \n combo (in macros)
-   UO_align_enum_equ,             // align the '=' in enums
-   UO_align_assign_span,          // align on '='. 0=don't align
-   UO_align_right_cmt_span,       // align comment that end lines. 0=don't align
-   UO_align_var_def_span,         // align variable defs on variable (span for regular stuff)
-   UO_align_var_def_inline,       // also align inline struct/enum/union var defs
-   UO_align_var_def_star,         // the star is part of the variable name
-   UO_align_var_def_colon,        // align the colon in struct bit fields
-   UO_align_var_struct_span,      // span for struct/union (0=don't align)
-   UO_align_pp_define_span,       // align bodies in #define statments
-   UO_align_pp_define_col_min,
-   UO_align_pp_define_col_max,
-   UO_align_pp_define_gap,
-   UO_align_enum_col_min,        // the minimum column for enum '=' alignment
-   UO_align_enum_col_max,
-   UO_align_struct_init_span,    // align structure initializer values
-   UO_align_func_proto_span,     // align function prototypes
+   nl_fdef_brace:		IARF
+	"int foo() {" vs "int foo()\n{"
+	
+   nl_func_decl_args:		IARF		* Not implemented *
+	Newline after each ',' in a function decl
+	
+   nl_func_decl_end:		IARF		* Not implemented *
+	Newline before the ')' in a function decl
+	
+   nl_func_type_name:		IARF		* Not implemented *
+	Newline between return type and func name in def
+	
+   nl_func_var_def_blk:		number
+	Newline after a block of variable defs
+	
+   nl_before_case:		bool
+	newline before 'case' statement
+	
+   nl_after_return:		bool
+	newline after return statement
+	
+   nl_after_case:		bool
+	Disallow nested "case 1: a=3;"
+	
+   nl_fcall_brace:		IARF
+	newline between function call and open brace
+	Seems pretty useless.
+	
+   nl_squeeze_ifdef:		bool
+	No blanks after #ifxx, #elxx, or before #endif
+	
+   nl_enum_brace:		IARF
+	nl between enum and brace
+	
+   nl_struct_brace:		IARF
+	nl between struct and brace
+	
+   nl_union_brace:		IARF
+	nl between union and brace
+
+   nl_do_brace:			IARF
+	nl between do and {
+	
+   nl_if_brace:			IARF
+	nl between if and {
+	
+   nl_for_brace:		IARF
+	nl between for and {
+	
+   nl_else_brace:		IARF
+	nl between else and {
+	
+   nl_while_brace:		IARF
+	nl between while and {
+	
+   nl_switch_brace:		IARF
+	nl between switch and {
+	
+   nl_brace_else:		IARF
+	nl between } and else
+	
+   nl_brace_while:		IARF
+	nl between } and while of do stmt
+
+   nl_define_macro:		bool
+	Alter newlines in #define macros
+
+#
+#  Blank line options
+#
+
+   blc_before_block_comment:	number			* Not implemented *
+	before a block comment (stand-alone comment-multi)
+	
+   blc_after_func_body:		number			* Not implemented *
+	after the closing brace of a function body
+	
+   blc_after_func_proto:	number			* Not implemented *
+	after each prototype
+	
+   blc_after_func_proto_group:	number			* Not implemented *
+	after a block of prototypes
+	
+   blc_after_var_def_group:	number			* Not implemented *
+	after a group of variable defs at top of proc
+	
+   blc_after_ifdef:		number			* Not implemented *
+	after #if or #ifdef - but not if covers whole file
+	
+   blc_max:			number			* Not implemented *
+	maximum consecutive newlines (3 is good)
+
+   eat_blanks_after_open_brace:	bool
+	Remove blank lines after {
+	
+   eat_blanks_before_close_brace: bool
+	Remove blank lines before }
+
+#
+#  code modifying options (non-whitespace)
+#
+
+   mod_paren_on_return:		IARF
+	Add or remove unecessary paren on return.
+	"return(0);" vs "return 0;"
+	
+   mod_full_brace_if:		IARF
+	add or remove braces on single-statement if
+	
+   mod_full_brace_for:		IARF
+	add or remove braces on single-statement for
+	
+   mod_full_brace_do:		IARF
+	add or remove braces on single-statement do
+	
+   mod_full_brace_while:	IARF
+	add or remove braces on single-statement while
 
 
-   /*
-    * Newline adding and removing options
-    */
+#
+#  Comment modifications
+#
 
-   UO_nl_fdef_brace,          // "int foo() {" vs "int foo()\n{"
-   UO_nl_func_decl_args,      // newline after each ',' in a function decl
-   UO_nl_func_decl_end,       // newline before the ')' in a multi-line function decl
-   UO_nl_func_type_name,      // newline between return type and func name in def
-   UO_nl_func_var_def_blk,    // newline after a block of variable defs
-   UO_nl_before_case,         // newline before 'case' statement
-   UO_nl_after_return,        /* newline after return statement */
-   UO_nl_after_case,          /* disallow nested "case 1: a=3;" */
-   UO_nl_fcall_brace,         /* newline between function call and open brace */
+   cmt_star_cont:		bool
+	Put a star on subsequent comment lines
 
-   UO_nl_squeeze_ifdef,       /* no blanks after #ifxx, #elxx, or before #endf */
-
-   UO_nl_enum_brace,          /* nl between enum and brace */
-   UO_nl_struct_brace,        /* nl between struct and brace */
-   UO_nl_union_brace,         /* nl between union and brace */
-
-   UO_nl_do_brace,            /* nl between do and brace */
-   UO_nl_if_brace,            /* nl between if and brace */
-   UO_nl_for_brace,           /* nl between for and brace */
-   UO_nl_else_brace,          /* nl between else and brace */
-   UO_nl_while_brace,         /* nl between while and brace */
-   UO_nl_switch_brace,        /* nl between switch and brace */
-   UO_nl_brace_while,         // nl between brace and while of do
-   UO_nl_brace_else,          // nl between brace and else
-
-   /*
-    * Blank line options
-    */
-
-   UO_blc_before_block_comment,
-   UO_blc_after_func_body,
-   UO_blc_after_func_proto,         // after each prototype
-   UO_blc_after_func_proto_group,   // after a block of prototypes
-   UO_blc_after_var_def_group,      // after a group of variable defs at top of proc
-   UO_blc_after_ifdef,              // after #if or #ifdef - but not if covers whole file
-   UO_bl_max_count,                 // maximum consecutive newlines (3 is good)
-
-   UO_eat_blanks_after_open_brace,
-   UO_eat_blanks_before_close_brace,
-
-   /*
-    * code modifying options (non-whitespace)
-    */
-
-   UO_mod_paren_on_return,
-   UO_mod_full_brace,
-
-
-   /*
-    * Comment modifications
-    */
-
-   UO_cmt_reformat,        // reformat non-col 1 comments (FALSE)
-   UO_cmt_reformat_col1,   // reformat col-1 comments (FALSE)
-   UO_cmt_star_cont,       // put a star on subsequent comment lines
-   UO_cmt_nl_multi_open,   // newline after opening slash-star in multi-line comments
-   UO_cmt_nl_multi_close,  // newline before closing star-slash in multi-line comments
-   UO_cmt_columns,         // max column for comments
-   UO_cmt_else_endif_col,  // column for comments following #else or #endif
-   UO_cmt_left_col_min,    // min column for comments following code
-
-   UO_verbose,             /* when true, non-essential error messages are printed */
-   UO_use_stdout,          /* Where does output go. */
-   UO_preserve_mtime,      /* True when the modification time of the files should  be preserved. */
-
-   UO_lineup_to_parens,    /* if true, continued code within parens will be lined up to the open paren */
-
-//?   int ljust_decl,          /* true if declarations should be left justified */
-
-   UO_break_function_decl_args,     /* true if declarations should have args on new lines */
-   UO_break_function_decl_args_end, /* true if declarations should have
-                                     * ")" after args on new lines */
-   UO_leave_comma,                  /* if true, never break declarations after commas */
-   UO_break_before_boolean_operator,       /* True when we prefer to break a long line
-                                            * before a '&&' or '||', instead of behind it.
-                                            */
-
-   UO_blanklines_around_conditional_compilation,
-
-//?   int indent_parameters,  /* Number of spaces to indent parameters.  */
-//?   int decl_indent,        /* column to indent declared identifiers to */
-//?   int unindent_displace,  /* comments not to the right of code will be placed this many indentation levels to the left of code */
-
-//?   int continuation_indent, /* set to the indentation between the edge of code and continuation lines in spaces */
-//?   int decl_com_ind,        /* the column in which comments after declarations should be put */
-
-   UO_com_ind,             /* the column in which comments to the right of code should start */
-
-   UO_expect_output_file,  /* Means "-o" was specified. */
-
-   /* This is used to get the enumeration count */
-   UO_option_count
 

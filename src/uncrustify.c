@@ -107,7 +107,7 @@ int main(int argc, char *argv[])
          // Path to parse output.
          parsed_file = optarg;
          break;
-      
+
       case 'l':   // language override
          cpd.lang_flags = language_from_tag(optarg);
          if (cpd.lang_flags == 0)
@@ -173,7 +173,7 @@ int main(int argc, char *argv[])
    data[data_len] = 0;
    fclose(p_file);
 
-   LOG_FMT(LSYS, "Parsing: %s as language %s\n", 
+   LOG_FMT(LSYS, "Parsing: %s as language %s\n",
            source_file, language_to_string(cpd.lang_flags));
 
    /**

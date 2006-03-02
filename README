@@ -17,7 +17,7 @@ Configuring the program
 -----------------------
 
 Examine the example config files in etc and/or read 
-documentation/configuration.txt. 
+documentation/configuration.txt.
 Copy the existing config file that closely matches your style and put in 
 ~/.uncrustify/.  Modify to your liking.
 
@@ -44,4 +44,13 @@ Running the program (once you've found your style)
 --------------------------------------------------
 
 Write a script to automate the above.
+Check out etc/dofiles.txt for an example.
+That script is used as follows:
+1. navigate one level above your project 
+2. make a list of file to process
+  $ find myproj -name "*.[ch]" > files.txt
+3. sh etc/dofiles.sh files.txt
+4. Use your favorite diff/merge program to merge in the changes
+  $ xxdiff out/myproj myproj
+
 

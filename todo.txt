@@ -60,16 +60,10 @@ Most important features (in order):
 Here's the stuff that needs doing that I consider important:
 ----------------------------------------------------------------------------
 
-0. Keep track of if a tab was right before the token so that it can be outputted
+1. Keep track of if a tab was right before the token so that it can be outputted
    without changing tabs to spaces
 
-1. Fix the #define aligning crap. it's broken.
-   It's adding 4 spaces all the time and the align threshold hasn't been
-   implemented.  In short, it sucks.
-
-2. Finish the comment indenting and aligning so it isn't such a POS.
-
-3. Preprocessor crap
+2. Preprocessor crap
 
  * indent levels for if/else/endif preprocessors
 
@@ -79,7 +73,7 @@ Here's the stuff that needs doing that I consider important:
 
  * indent preprocessor bodies
 
-4. General aligning
+3. General aligning
 
    - thresholds!  I hate seeing silly alignments:
 
@@ -96,7 +90,7 @@ Here's the stuff that needs doing that I consider important:
 }
 
 
-5. Splitting lines
+4. Splitting lines
 
    - Figure out some sort of sane approach (ie, look at the indent source)
 
@@ -107,6 +101,7 @@ For when I really get bored:
 ----------------------------------------------------------------------------
 
  - Look into trying out D support.  Shouldn't be too hard.
+ - maybe also add some sort of Java or C# support (unlikely)
 
 
 
@@ -122,41 +117,6 @@ For when I get bored of all my games and have a really long vacation:
 
 
 
-
-============================================================================
-============================================================================
-
-Test Plan
-
-============================================================================
-============================================================================
-
-Create ".test" files that contain test entries as follows:
-[test name]
-config	configfile.cfg
-input	sourcefile.c
-output	outputfile.c
-
-Of maybe just put it all on one line (easier to parse?)
-test name : configfile.cfg sourcefile.c outputfile.c
-
-Basically, the test would be to run uncrustify with these options:
-$ uncrustify -c configfile.cfg -f sourcefile.c > temp.c
-
-If the temp.c and outputfile.c differ, the test failed.
-
-The test driver would be a simple python script or something.
-
-Maybe it would create a nice list of all the test that failed.
-
-
-The types of test could be created:
- - tests for stuff that DOES work now, to detect regressions
- - tests for future features, to know when I finally get it right
-
-
-
-
 ============================================================================
 ============================================================================
 
@@ -167,11 +127,11 @@ Configuration files
 
 Create working config files for these categories:
 
- - K&R
- - GNU
- - Linux kernel
- - Ben's favorite (used in uncrustify)
- - xsupplicant (weird almost-GNU style)
+ - K&R (started)
+ - GNU (started)
+ - Linux kernel (started)
+ - Ben's favorite (used in uncrustify) - work in progress
+ - xsupplicant (weird almost-GNU style) - done (unless I find a bug...)
 
 That should be enough examples.
 

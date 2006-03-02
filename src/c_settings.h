@@ -47,7 +47,6 @@ enum uncrustify_options
    UO_indent_paren_nl,          // indent-align under paren for open followed by nl
    UO_leave_preproc_space,      //TODO: if true, leave the spaces between '#' and preprocessor commands
    UO_pp_indent,                //TODO: spaces to indent preprocessors (0)
-   UO_indent_if_body,           //TODO: indent non-braced if/while/for bodies
    UO_case_indent,              //TODO: spaces to indent case from switch (indent_columns)
    UO_case_brace_indent,        //TODO: spaces to indent '{' from case
    UO_brace_indent,             // spaces to indent '{' from level (usually 0)
@@ -169,6 +168,7 @@ enum uncrustify_options
 
    UO_nl_define_macro,           // alter newlines in #define macros
 
+
    /*
     * Blank line options
     */
@@ -183,6 +183,7 @@ enum uncrustify_options
 
    UO_eat_blanks_after_open_brace,   // remove blank lines after {
    UO_eat_blanks_before_close_brace, // remove blank lines before }
+
 
    /*
     * code modifying options (non-whitespace)
@@ -199,41 +200,8 @@ enum uncrustify_options
     * Comment modifications
     */
 
-   UO_cmt_reformat,        // reformat non-col 1 comments (FALSE)
-   UO_cmt_reformat_col1,   // reformat col-1 comments (FALSE)
    UO_cmt_star_cont,       // put a star on subsequent comment lines
-   UO_cmt_nl_multi_open,   // newline after opening slash-star in multi-line comments
-   UO_cmt_nl_multi_close,  // newline before closing star-slash in multi-line comments
-   UO_cmt_columns,         // max column for comments
-   UO_cmt_else_endif_col,  // column for comments following #else or #endif
-   UO_cmt_left_col_min,    // min column for comments following code
 
-   UO_verbose,             /* when true, non-essential error messages are printed */
-   UO_use_stdout,          /* Where does output go. */
-//   UO_preserve_mtime,      /* True when the modification time of the files should  be preserved. */
-
-   UO_lineup_to_parens,    /* if true, continued code within parens will be lined up to the open paren */
-
-   //?   int ljust_decl,          /* true if declarations should be left justified */
-
-   UO_break_function_decl_args,     /* true if declarations should have args on new lines */
-   UO_break_function_decl_args_end, /* true if declarations should have
-                                     * ")" after args on new lines */
-   UO_leave_comma,                  /* if true, never break declarations after commas */
-   UO_break_before_boolean_operator,       /* True when we prefer to break a long line
-                                            * before a '&&' or '||', instead of behind it.
-                                            */
-
-   //?   int indent_parameters,  /* Number of spaces to indent parameters.  */
-   //?   int decl_indent,        /* column to indent declared identifiers to */
-   //?   int unindent_displace,  /* comments not to the right of code will be placed this many indentation levels to the left of code */
-
-   //?   int continuation_indent, /* set to the indentation between the edge of code and continuation lines in spaces */
-   //?   int decl_com_ind,        /* the column in which comments after declarations should be put */
-
-//   UO_com_ind,             /* the column in which comments to the right of code should start */
-
-//   UO_expect_output_file,  /* Means "-o" was specified. */
 
    /* This is used to get the enumeration count */
    UO_option_count
@@ -282,18 +250,8 @@ struct options_name_tab option_name_table[] =
    OPTDEF(blc_before_block_comment,      AT_NUM),
    OPTDEF(blc_max,                       AT_NUM),
    OPTDEF(brace_indent,                  AT_NUM),
-   OPTDEF(break_before_boolean_operator, AT_BOOL),
-   OPTDEF(break_function_decl_args,      AT_BOOL),
-   OPTDEF(break_function_decl_args_end,  AT_BOOL),
    OPTDEF(case_brace_indent,             AT_NUM),
    OPTDEF(case_indent,                   AT_NUM),
-   OPTDEF(cmt_columns,                   AT_NUM),
-   OPTDEF(cmt_else_endif_col,            AT_NUM),
-   OPTDEF(cmt_left_col_min,              AT_NUM),
-   OPTDEF(cmt_nl_multi_close,            AT_BOOL),
-   OPTDEF(cmt_nl_multi_open,             AT_BOOL),
-   OPTDEF(cmt_reformat,                  AT_BOOL),
-   OPTDEF(cmt_reformat_col1,             AT_BOOL),
    OPTDEF(cmt_star_cont,                 AT_BOOL),
    OPTDEF(code_width,                    AT_NUM),
    OPTDEF(eat_blanks_after_open_brace,   AT_BOOL),
@@ -304,15 +262,12 @@ struct options_name_tab option_name_table[] =
    OPTDEF(indent_col1_comment,           AT_BOOL),
    OPTDEF(indent_columns,                AT_NUM),
    OPTDEF(indent_func_call_param,        AT_BOOL),
-   OPTDEF(indent_if_body,                AT_NUM),  // unknown use
    OPTDEF(indent_paren,                  AT_NUM),
    OPTDEF(indent_paren_nl,               AT_BOOL),
    OPTDEF(indent_with_tabs,              AT_NUM),
    OPTDEF(input_tab_size,                AT_NUM),
    OPTDEF(label_indent,                  AT_NUM),
-   OPTDEF(leave_comma,                   AT_BOOL),
    OPTDEF(leave_preproc_space,           AT_BOOL),
-   OPTDEF(lineup_to_parens,              AT_BOOL),
    OPTDEF(ls_after_arith,                AT_BOOL),
    OPTDEF(ls_before_bool_op,             AT_BOOL),
    OPTDEF(ls_before_paren,               AT_BOOL),
@@ -372,8 +327,6 @@ struct options_name_tab option_name_table[] =
    OPTDEF(sp_sizeof_paren,               AT_IARF),
    OPTDEF(sp_special_semi,               AT_IARF),
    OPTDEF(sp_type_func,                  AT_IARF),
-   OPTDEF(use_stdout,                    AT_BOOL),
-   OPTDEF(verbose,                       AT_BOOL),
 };
 
 #endif   /* DEFINE_OPTION_NAME_TABLE */
