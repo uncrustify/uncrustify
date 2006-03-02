@@ -20,8 +20,9 @@
 #include <sys/stat.h>
 
 
-void process_chunk(chunk_t *pc);
-void parse_file(char *data, int data_len);
+static int language_from_tag(const char *tag);
+static int language_from_filename(const char *filename);
+static const char *language_to_string(int lang);
 
 
 static void usage_exit(const char *msg, const char *argv0, int code)
@@ -32,13 +33,14 @@ static void usage_exit(const char *msg, const char *argv0, int code)
    }
    fprintf(stderr,
            "Usage:\n"
-           "%s [-c cfg] [-f file] [-p parsed] [-t typefile] [--version] [-L sev] [-s]\n"
+           "%s [-c cfg] [-f file] [-p parsed] [-t typefile] [--version] [-l lang] [-L sev] [-s]\n"
            " c : specify the config file\n"
            " f : specify the file to format\n"
            " p : debug - dump parsed tokens to this file\n"
            " L : debug log severities 0-255 for everything\n"
            " s : show log severities\n"
            " t : load a file with types\n"
+           " l : language overried: C, CPP, D, CS, JAVA\n"
            "--version : print the version and exit\n"
            "The output is dumped to stdout, errors are dumped to stderr\n",
            argv0);
@@ -82,12 +84,9 @@ int main(int argc, char *argv[])
 
    memset(&cpd, 0, sizeof(cpd));
 
-   /* TODO: add some sort of language detection */
-   cpd.lang_flags = LANG_C;
-
    chunk_list_init();
 
-   while ((op = getopt_long(argc, argv, "c:p:f:L:t:",
+   while ((op = getopt_long(argc, argv, "c:p:f:L:t:l:",
                             long_options, &option_index)) != EOF)
    {
       switch (op)
@@ -107,6 +106,14 @@ int main(int argc, char *argv[])
       case 'p':
          // Path to parse output.
          parsed_file = optarg;
+         break;
+      
+      case 'l':   // language override
+         cpd.lang_flags = language_from_tag(optarg);
+         if (cpd.lang_flags == 0)
+         {
+            fprintf(stderr, "Ignoring unknown language: %s\n", optarg);
+         }
          break;
 
       case 'f':
@@ -133,6 +140,11 @@ int main(int argc, char *argv[])
       }
    }
 
+   if (source_file == NULL)
+   {
+      usage_exit("Specify the file to process: -f file", argv[0], 57);
+   }
+
    set_arg_defaults();
 
    if (load_config_file(cfg_file) < 0)
@@ -140,9 +152,10 @@ int main(int argc, char *argv[])
       usage_exit(NULL, argv[0], 56);
    }
 
-   if (source_file == NULL)
+   /* Do some simple language detection based on the filename */
+   if (cpd.lang_flags == 0)
    {
-      usage_exit("Specify the file to process: -f file", argv[0], 57);
+      cpd.lang_flags = language_from_filename(source_file);
    }
 
    p_file = fopen(source_file, "r");
@@ -160,7 +173,8 @@ int main(int argc, char *argv[])
    data[data_len] = 0;
    fclose(p_file);
 
-   LOG_FMT(LSYS, "Parsing: %s\n", source_file);
+   LOG_FMT(LSYS, "Parsing: %s as language %s\n", 
+           source_file, language_to_string(cpd.lang_flags));
 
    /**
     * Parse the text into chunks
@@ -244,6 +258,96 @@ const char *get_token_name(c_token_t token)
        (token_names[token] != NULL))
    {
       return(token_names[token]);
+   }
+   return("???");
+}
+
+static BOOL ends_with(const char *filename, const char *tag)
+{
+   int len1 = strlen(filename);
+   int len2 = strlen(tag);
+
+   if ((len2 <= len1) && (strcmp(&filename[len1 - len2], tag) == 0))
+   {
+      return(TRUE);
+   }
+   return(FALSE);
+}
+
+struct file_lang
+{
+   const char *ext;
+   const char *tag;
+   int        lang;
+};
+struct file_lang languages[] =
+{
+   { ".c",    "C",    LANG_C },
+   { ".h",    "",     LANG_C },
+   { ".cpp",  "CPP",  LANG_CPP },
+   { ".d",    "D",    LANG_D },
+   { ".cs",   "CS",   LANG_CS },
+   { ".java", "JAVA", LANG_JAVA },
+};
+
+/**
+ * Find the language for the file extension
+ * Default to C
+ *
+ * @param filename   The name of the file
+ * @return           LANG_xxx
+ */
+static int language_from_filename(const char *filename)
+{
+   int i;
+
+   for (i = 0; i < ARRAY_SIZE(languages); i++)
+   {
+      if (ends_with(filename, languages[i].ext))
+      {
+         return(languages[i].lang);
+      }
+   }
+   return(LANG_C);
+}
+
+/**
+ * Find the language for the file extension
+ * Default to C
+ *
+ * @param filename   The name of the file
+ * @return           LANG_xxx
+ */
+static int language_from_tag(const char *tag)
+{
+   int i;
+
+   for (i = 0; i < ARRAY_SIZE(languages); i++)
+   {
+      if (strcasecmp(tag, languages[i].tag) == 0)
+      {
+         return(languages[i].lang);
+      }
+   }
+   return(0);
+}
+
+/**
+ * Gets the tag text for a language
+ *
+ * @param lang    The LANG_xxx enum
+ * @return        A string
+ */
+static const char *language_to_string(int lang)
+{
+   int i;
+
+   for (i = 0; i < ARRAY_SIZE(languages); i++)
+   {
+      if ((languages[i].lang & lang) != 0)
+      {
+         return(languages[i].tag);
+      }
    }
    return("???");
 }
