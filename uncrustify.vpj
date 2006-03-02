@@ -76,7 +76,11 @@
 		<Folder Name="etc">
 			<F N="etc/ben.cfg"/>
 			<F N="etc/dofiles.sh"/>
+			<F N="etc/gnu-indent.cfg"/>
+			<F N="etc/kr-indent.cfg"/>
+			<F N="etc/linux-indent.cfg"/>
 			<F N="etc/linux.cfg"/>
+			<F N="etc/mono.cfg"/>
 			<F N="etc/types.txt"/>
 			<F N="etc/uncrust-files.sh"/>
 			<F N="etc/uncrustify.cfg"/>
