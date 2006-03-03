@@ -200,15 +200,19 @@ void indent_text(void)
       }
       else if (pc->type == CT_RETURN)
       {
-         frm.pse_tos++;
-         frm.pse[frm.pse_tos].type       = pc->type;
-         frm.pse[frm.pse_tos].indent     = frm.pse[frm.pse_tos - 1].indent + pc->len + 1;
-         frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos - 1].indent;
-         frm.pse[frm.pse_tos].open_line  = pc->orig_line;
-         frm.pse[frm.pse_tos].ref        = ++ref;
-         frm.pse[frm.pse_tos].in_preproc = (pc->flags & PCF_IN_PREPROC) != 0;
-         //         fprintf(stderr, "%3d] OPEN(4) on %s, tos=%d\n", pc->orig_line,
-         //                 c_chunk_names[pc->type], pse_tos);
+         /* don't count returns inside a () or [] */
+         if (pc->level == pc->brace_level)
+         {
+            frm.pse_tos++;
+            frm.pse[frm.pse_tos].type       = pc->type;
+            frm.pse[frm.pse_tos].indent     = frm.pse[frm.pse_tos - 1].indent + pc->len + 1;
+            frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos - 1].indent;
+            frm.pse[frm.pse_tos].open_line  = pc->orig_line;
+            frm.pse[frm.pse_tos].ref        = ++ref;
+            frm.pse[frm.pse_tos].in_preproc = (pc->flags & PCF_IN_PREPROC) != 0;
+            //         fprintf(stderr, "%3d] OPEN(4) on %s, tos=%d\n", pc->orig_line,
+            //                 c_chunk_names[pc->type], pse_tos);
+         }
       }
 
       else if (pc->type == CT_BRACE_CLOSE)

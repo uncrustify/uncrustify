@@ -595,11 +595,11 @@ static void fix_enum_struct_union(chunk_t *pc)
       if (next != NULL)
       {
          next->parent_type = pc->type;
+         next              = chunk_get_next_ncnl(next);
       }
-      next = chunk_get_next_ncnl(next);
    }
 
-   if (next->type == CT_PAREN_CLOSE)
+   if ((next == NULL) || (next->type == CT_PAREN_CLOSE))
    {
       return;
    }
@@ -712,6 +712,7 @@ void combine_labels(void)
    chunk_t *cur;
    chunk_t *prev;
    chunk_t *next;
+   chunk_t *tmp;
    int     question_count = 0;
    BOOL    hit_case       = FALSE;
 
@@ -766,10 +767,18 @@ void combine_labels(void)
             }
             else
             {
-               LOG_FMT(LWARN, "%s: unexpected colon on line %d, col %d parent=%s l=%d bl=%d\n",
-                       __func__, next->orig_line, next->orig_col,
-                       get_token_name(next->parent_type),
-                       next->level, next->brace_level);
+               tmp = chunk_get_next_ncnl(next);
+               if ((tmp != NULL) && (tmp->type == CT_BASE))
+               {
+                  /* ignore it, as it is a C# base thingy */
+               }
+               else
+               {
+                  LOG_FMT(LWARN, "%s: unexpected colon on line %d, col %d parent=%s l=%d bl=%d\n",
+                          __func__, next->orig_line, next->orig_col,
+                          get_token_name(next->parent_type),
+                          next->level, next->brace_level);
+               }
             }
          }
       }

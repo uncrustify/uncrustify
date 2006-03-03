@@ -47,7 +47,7 @@ static chunk_tag_t keywords[] =
    { "asm",              CT_ASM,        LANG_C | LANG_CPP | LANG_D },
    { "assert",           CT_FUNCTION,   LANG_D },
    { "auto",             CT_QUALIFIER,  LANG_C | LANG_CPP | LANG_D },
-   { "base",             CT_QUALIFIER,  LANG_CS },
+   { "base",             CT_BASE,       LANG_CS },
    { "bit",              CT_TYPE,       LANG_D },
    { "bitand",           CT_ARITH,      LANG_C | LANG_CPP },
    { "bitor",            CT_ARITH,      LANG_C | LANG_CPP },

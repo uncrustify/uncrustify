@@ -166,6 +166,7 @@ typedef enum
    CT_VBRACED,          /* some value followed by braces: namespace foo { */
    CT_VERSION,          /* turns into CT_IF if not followed by '=' */
    CT_THIS,             /* may turn into CT_PBRACED if followed by a '(' */
+   CT_BASE,             /* C# thingy */
 } c_token_t;
 
 #endif   /* TOKEN_ENUM_H_INCLUDED */
