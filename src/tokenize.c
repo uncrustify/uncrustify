@@ -231,6 +231,31 @@ BOOL parse_string(chunk_t *pc)
 
 
 /**
+ * Literal string, ends with single "
+ * Two "" don't end the string.
+ */
+static BOOL parse_cs_string(chunk_t *pc)
+{
+   int len = 2;
+
+   /* go until we hit a zero (end of file) or a single " */
+   while (pc->str[len] != 0)
+   {
+      len++;
+      if ((pc->str[len - 1] == '"') && (pc->str[len] != '"'))
+      {
+         break;
+      }
+   }
+
+   pc->len     = len;
+   pc->type    = CT_STRING;
+   cpd.column += len;
+   return(TRUE);
+}
+
+
+/**
  * Count the number of characters in a word.
  * The first character is already valid for a keyword
  *
@@ -397,8 +422,17 @@ BOOL parse_next(chunk_t *pc)
       return(TRUE);
    }
 
+   /* Check for C# literal strings, ie @"hello" */
+   if (((cpd.lang_flags & LANG_CS) != 0) &&
+       (*pc->str == '@') && (pc->str[1] == '"'))
+   {
+      parse_cs_string(pc);
+      return(TRUE);
+   }
+
    /* Check for L'a', L"abc", 'a', "abc", <abc> strings */
    if (((*pc->str == 'L') && ((pc->str[1] == '"') || (pc->str[1] == '\''))) ||
+       ((*pc->str == '@') && (pc->str[1] == '"')) ||
        (*pc->str == '"') ||
        (*pc->str == '\'') ||
        ((*pc->str == '<') && (cpd.in_preproc == PP_INCLUDE)))
