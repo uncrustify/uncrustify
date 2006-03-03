@@ -118,7 +118,7 @@ typedef enum
    CT_SPAREN_OPEN,      /* 'special' paren after if/for/switch/while */
    CT_SPAREN_CLOSE,
 
-   CT_FPAREN_OPEN,      /* 'special' paren after fcn/macro fcn */
+   CT_FPAREN_OPEN,      /* 'function' paren after fcn/macro fcn */
    CT_FPAREN_CLOSE,
 
    CT_BRACE_OPEN,
@@ -166,7 +166,6 @@ typedef enum
    CT_VBRACED,          /* some value followed by braces: namespace foo { */
    CT_VERSION,          /* turns into CT_IF if not followed by '=' */
    CT_THIS,             /* may turn into CT_PBRACED if followed by a '(' */
-
 } c_token_t;
 
 #endif   /* TOKEN_ENUM_H_INCLUDED */
