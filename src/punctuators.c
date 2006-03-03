@@ -22,8 +22,8 @@ static const chunk_tag_t symbols3[] =
 {
    { "<<=", CT_ASSIGN,  LANG_ALL },
    { ">>=", CT_ASSIGN,  LANG_ALL },
-   { "...", CT_ELIPSIS, LANG_ALL }, // not CS, Java
-   { "->*", CT_MEMBER,  LANG_ALL }, // not CS, Java
+   { "...", CT_ELIPSIS, LANG_C | LANG_CPP | LANG_D },
+   { "->*", CT_MEMBER,  LANG_C | LANG_CPP | LANG_D },
    { ">>>", CT_ARITH,   LANG_D | LANG_JAVA },
    { "!<>", CT_COMPARE, LANG_D },
    { "!>=", CT_COMPARE, LANG_D },
@@ -52,9 +52,9 @@ static const chunk_tag_t symbols2[] =
    { ">=", CT_COMPARE,      LANG_ALL },
    { "<<", CT_ARITH,        LANG_ALL },
    { ">>", CT_ARITH,        LANG_ALL },
-   { "->", CT_MEMBER,       LANG_ALL }, // not Java
-   { ".*", CT_MEMBER,       LANG_ALL }, // not CS, Java
-   { "::", CT_MEMBER,       LANG_ALL }, // not CS, Java
+   { "->", CT_MEMBER,       LANG_C | LANG_CPP | LANG_CS | LANG_D },
+   { ".*", CT_MEMBER,       LANG_C | LANG_CPP | LANG_D },
+   { "::", CT_MEMBER,       LANG_C | LANG_CPP | LANG_D },
    { "||", CT_BOOL,         LANG_ALL },
    { "&&", CT_BOOL,         LANG_ALL },
    { "##", CT_PP,           LANG_C | LANG_CPP },
@@ -75,7 +75,7 @@ static const chunk_tag_t symbols2[] =
 /* 1-char symbols */
 static const chunk_tag_t symbols1[] =
 {
-   { "#", CT_POUND,        LANG_C | LANG_CPP },
+   { "#", CT_POUND,        LANG_C | LANG_CPP | LANG_CS | LANG_D },
    { "%", CT_ARITH,        LANG_ALL },
    { "&", CT_AMP,          LANG_ALL },
    { "*", CT_STAR,         LANG_ALL },  /* changed to CT_DEREF or CT_ARITH */
