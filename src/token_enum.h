@@ -59,9 +59,13 @@ typedef enum
    CT_TEMPLATE,            /* template<...> */
 
    CT_ASSIGN,              /* =, +=, /=, etc */
+   CT_SASSIGN,             /* 'and_eq' */
    CT_COMPARE,             /* ==, !=, <=, >= */
+   CT_SCOMPARE,            /* compare op that is a string 'is', 'neq' */
    CT_BOOL,                /* || or && */
+   CT_SBOOL,               /* or, and */
    CT_ARITH,               /* +, -, /, <<, etc */
+   CT_SARITH,              /* 'not', 'xor' */
    CT_DEREF,               /* * dereference */
    CT_INCDEC_BEFORE,       /* ++a or --a */
    CT_INCDEC_AFTER,        /* a++ or a-- */
@@ -97,7 +101,7 @@ typedef enum
    CT_FRIEND,
    CT_MUTABLE,
    CT_NAMESPACE,
-   CT_NEW,
+   CT_NEW,              /* may turn into CT_PBRACED if followed by a '(' */
    CT_OPERATOR,
    CT_PRIVATE,
    CT_THROW,
@@ -136,6 +140,7 @@ typedef enum
    CT_MACRO_FUNC,       /* function-like macro */
    CT_MACRO,            /* a macro def */
    CT_QUALIFIER,        /* static, const, etc */
+   CT_PQUALIFIER,       /* paren'd qualifier: align(4) struct a { } */
    CT_TYPE,
    CT_PTR_TYPE,         /* a '*' as part of a type */
 
@@ -149,8 +154,19 @@ typedef enum
    CT_PP_ENDIF,         /* #endif */
    CT_PP_OTHER,         /* #line, #error, #pragma, etc */
 
+   CT_PRAGMA,
+
    /* C-sharp crap */
-   CT_REF,
+   CT_LOCK,             /* lock/unlock */
+   CT_AS,
+   CT_IN,               /* "foreach (T c in x)" or "foo(in char c)" or "in { ..." */
+   CT_BRACED,           /* simple braced items: try {} */
+   CT_PBRACED,          /* simple paren-braced: version (x) { } */
+   CT_POBRACED,         /* simple optional-paren-braced: catch (x) { } */
+   CT_VBRACED,          /* some value followed by braces: namespace foo { */
+   CT_VERSION,          /* turns into CT_IF if not followed by '=' */
+   CT_THIS,             /* may turn into CT_PBRACED if followed by a '(' */
+
 } c_token_t;
 
 #endif   /* TOKEN_ENUM_H_INCLUDED */

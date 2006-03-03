@@ -13,7 +13,7 @@
 static const chunk_tag_t symbols4[] =
 {
    { "%:%:", CT_PP,      LANG_C },
-   { ">>>=", CT_ASSIGN,  LANG_D },
+   { ">>>=", CT_ASSIGN,  LANG_D | LANG_JAVA },
    { "!<>=", CT_COMPARE, LANG_D },
 };
 
@@ -22,12 +22,15 @@ static const chunk_tag_t symbols3[] =
 {
    { "<<=", CT_ASSIGN,  LANG_ALL },
    { ">>=", CT_ASSIGN,  LANG_ALL },
-   { "...", CT_ELIPSIS, LANG_ALL },
-   { "->*", CT_MEMBER,  LANG_ALL },
-   { ">>>", CT_ARITH,   LANG_D },
+   { "...", CT_ELIPSIS, LANG_ALL }, // not CS, Java
+   { "->*", CT_MEMBER,  LANG_ALL }, // not CS, Java
+   { ">>>", CT_ARITH,   LANG_D  | LANG_JAVA },
    { "!<>", CT_COMPARE, LANG_D },
    { "!>=", CT_COMPARE, LANG_D },
    { "!<=", CT_COMPARE, LANG_D },
+   { "!==", CT_COMPARE, LANG_D },
+   { "===", CT_COMPARE, LANG_D },
+   { "<>=", CT_COMPARE, LANG_D },
 };
 
 /* 2-char symbols */
@@ -49,9 +52,9 @@ static const chunk_tag_t symbols2[] =
    { ">=", CT_COMPARE,      LANG_ALL },
    { "<<", CT_ARITH,        LANG_ALL },
    { ">>", CT_ARITH,        LANG_ALL },
-   { "->", CT_MEMBER,       LANG_ALL },
-   { ".*", CT_MEMBER,       LANG_ALL },
-   { "::", CT_MEMBER,       LANG_ALL },
+   { "->", CT_MEMBER,       LANG_ALL }, // not Java
+   { ".*", CT_MEMBER,       LANG_ALL }, // not CS, Java
+   { "::", CT_MEMBER,       LANG_ALL }, // not CS, Java
    { "||", CT_BOOL,         LANG_ALL },
    { "&&", CT_BOOL,         LANG_ALL },
    { "##", CT_PP,           LANG_C | LANG_CPP },
@@ -63,6 +66,10 @@ static const chunk_tag_t symbols2[] =
    { "<>", CT_COMPARE,      LANG_D },
    { "!>", CT_COMPARE,      LANG_D },
    { "!<", CT_COMPARE,      LANG_D },
+   { "!~", CT_COMPARE,      LANG_D },
+   { "~~", CT_COMPARE,      LANG_D },
+   { "~=", CT_COMPARE,      LANG_D },
+   { "..", CT_ELIPSIS,      LANG_D },
 };
 
 /* 1-char symbols */
@@ -94,6 +101,7 @@ static const chunk_tag_t symbols1[] =
    { "]", CT_SQUARE_CLOSE, LANG_ALL },
    { "{", CT_BRACE_OPEN,   LANG_ALL },
    { "}", CT_BRACE_CLOSE,  LANG_ALL },
+   { "$", CT_COMPARE,      LANG_D },
 };
 
 const chunk_tag_t *find_punctuator(const char *str, uint8_t lang_flags)
