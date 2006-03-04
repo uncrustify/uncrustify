@@ -262,15 +262,10 @@ static BOOL parse_cs_string(chunk_t *pc)
  * @param text    The text to look at (zero terminated)
  * @return        The number of bytes in the word
  */
-BOOL parse_word(chunk_t *pc)
+BOOL parse_word(chunk_t *pc, BOOL skipcheck)
 {
    int               len = 1;
    const chunk_tag_t *tag;
-
-   if ((get_char_table(*pc->str) & CT_KW1) == 0)
-   {
-      return(FALSE);
-   }
 
    while ((pc->str[len] < 127) &&
           ((get_char_table(pc->str[len]) & CT_KW2) != 0))
@@ -280,6 +275,11 @@ BOOL parse_word(chunk_t *pc)
    cpd.column += len;
    pc->len     = len;
    pc->type    = CT_WORD;
+
+   if (skipcheck)
+   {
+      return(TRUE);
+   }
 
    /* Detect pre-processor functions now */
    if ((cpd.in_preproc == PP_DEFINE) &&
@@ -423,16 +423,22 @@ BOOL parse_next(chunk_t *pc)
    }
 
    /* Check for C# literal strings, ie @"hello" */
-   if (((cpd.lang_flags & LANG_CS) != 0) &&
-       (*pc->str == '@') && (pc->str[1] == '"'))
+   if (((cpd.lang_flags & LANG_CS) != 0) && (*pc->str == '@'))
    {
-      parse_cs_string(pc);
-      return(TRUE);
+      if (pc->str[1] == '"')
+      {
+         parse_cs_string(pc);
+         return(TRUE);
+      }
+      if (((get_char_table(pc->str[1]) & CT_KW1) != 0) &&
+          parse_word(pc, TRUE))
+      {
+         return(TRUE);
+      }
    }
 
    /* Check for L'a', L"abc", 'a', "abc", <abc> strings */
    if (((*pc->str == 'L') && ((pc->str[1] == '"') || (pc->str[1] == '\''))) ||
-       ((*pc->str == '@') && (pc->str[1] == '"')) ||
        (*pc->str == '"') ||
        (*pc->str == '\'') ||
        ((*pc->str == '<') && (cpd.in_preproc == PP_INCLUDE)))
@@ -441,7 +447,8 @@ BOOL parse_next(chunk_t *pc)
       return(TRUE);
    }
 
-   if (parse_word(pc))
+   if (((get_char_table(*pc->str) & CT_KW1) != 0) &&
+       parse_word(pc, FALSE))
    {
       return(TRUE);
    }
