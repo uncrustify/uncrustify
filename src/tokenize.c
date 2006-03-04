@@ -241,10 +241,17 @@ static BOOL parse_cs_string(chunk_t *pc)
    /* go until we hit a zero (end of file) or a single " */
    while (pc->str[len] != 0)
    {
-      len++;
-      if ((pc->str[len - 1] == '"') && (pc->str[len] != '"'))
+      if ((pc->str[len] == '"') && (pc->str[len + 1] == '"'))
       {
-         break;
+         len += 2;
+      }
+      else
+      {
+         len++;
+         if (pc->str[len - 1] == '"')
+         {
+            break;
+         }
       }
    }
 
@@ -475,7 +482,7 @@ BOOL parse_next(chunk_t *pc)
    pc->type = CT_UNKNOWN;
    pc->len  = 1;
 
-   LOG_FMT(LWARN, "Garbage: %x on line %d\n", *pc->str, pc->orig_line);
+   LOG_FMT(LWARN, "Garbage: %x on line %d, col %d\n", *pc->str, pc->orig_line, cpd.column);
 
    return(TRUE);
 }
@@ -613,7 +620,9 @@ void parse_buffer(const char *data, int data_len)
                cpd.in_preproc = PP_DEFINE;
                pc->type       = CT_PP_DEFINE;
             }
-            else if (strncmp(pc->str, "if", 2) == 0)
+            else if ((strcmp(pc->str, "if") == 0) ||
+                     (strcmp(pc->str, "ifdef") == 0) ||
+                     (strcmp(pc->str, "region") == 0))
             {
                cpd.in_preproc = PP_IF;
                pc->type       = CT_PP_IF;
@@ -1005,6 +1014,8 @@ void parse_cleanup(struct parse_frame *frm,
    if ((pc->type == CT_ARITH) ||
        (pc->type == CT_ASSIGN) ||
        (pc->type == CT_COMPARE) ||
+       (pc->type == CT_ANGLE_OPEN) ||
+       (pc->type == CT_ANGLE_CLOSE) ||
        (pc->type == CT_RETURN) ||
        (pc->type == CT_GOTO) ||
        (pc->type == CT_CONTINUE) ||
@@ -1054,8 +1065,9 @@ static chunk_t *insert_vbrace(chunk_t *pc, BOOL after,
       {
          ref = chunk_get_prev(ref);
       }
-      chunk.type = CT_VBRACE_OPEN;
-      rv         = chunk_add_after(&chunk, ref);
+      chunk.column = ref->column + ref->len + 1;
+      chunk.type   = CT_VBRACE_OPEN;
+      rv           = chunk_add_after(&chunk, ref);
    }
    return(rv);
 }

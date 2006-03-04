@@ -2,7 +2,7 @@
  * @file parse_frame.c
  * @brief Does the parse frame stuff, which is used to handle #ifdef stuff
  *
- * $Id: parse_frame.c,v 1.8 2006/02/13 03:30:20 bengardner Exp $
+ * $Id$
  */
 
 #include "cparse_types.h"
@@ -48,8 +48,10 @@ void pf_push_under(struct parse_frame *pf)
    struct parse_frame *npf1;
    struct parse_frame *npf2;
 
+   LOG_FMT(LPF, "%s: before count = %d\n", __func__, cpd.frame_count);
+
    if ((cpd.frame_count < ARRAY_SIZE(cpd.frames)) &&
-       (cpd.frame_count > 1))
+       (cpd.frame_count >= 1))
    {
       npf1 = &cpd.frames[cpd.frame_count - 1];
       npf2 = &cpd.frames[cpd.frame_count];
@@ -57,7 +59,8 @@ void pf_push_under(struct parse_frame *pf)
       pf_copy(npf1, pf);
       cpd.frame_count++;
    }
-   LOG_FMT(LPF, "%s: count = %d\n", __func__, cpd.frame_count);
+
+   LOG_FMT(LPF, "%s: after count = %d\n", __func__, cpd.frame_count);
 }
 
 
@@ -114,7 +117,7 @@ void pf_check(struct parse_frame *frm, chunk_t *pc)
       {
          pf_push(frm);
          frm->in_ifdef = PP_IF;
-         txt           = "push";
+         txt           = "if-push";
       }
       else if (pc->type == CT_PP_ELSE)
       {
@@ -123,13 +126,13 @@ void pf_check(struct parse_frame *frm, chunk_t *pc)
             /* need to switch */
             pf_push_under(frm);
             frm->in_ifdef = PP_ELSE;
-            txt           = "push_under";
+            txt           = "else-push_under";
          }
          else if (frm->in_ifdef == PP_ELSE)
          {
             pf_copy_tos(frm);
             frm->in_ifdef = PP_ELSE;
-            txt           = "copy";
+            txt           = "else-copy";
          }
          else
          {
@@ -142,12 +145,12 @@ void pf_check(struct parse_frame *frm, chunk_t *pc)
          {
             pf_trash_tos();
             pf_pop(frm);
-            txt = "trash/pop";
+            txt = "endif-trash/pop";
          }
          else if (frm->in_ifdef == PP_IF)
          {
             pf_pop(frm);
-            txt = "pop";
+            txt = "endif-pop";
          }
          else
          {

@@ -25,7 +25,7 @@ static chunk_t *mark_variable_definition(chunk_t *start);
 static void mark_define_expressions(void);
 static void process_returns(void);
 static chunk_t *process_return(chunk_t *pc);
-
+static void check_template(chunk_t *pc);
 
 
 /**
@@ -115,6 +115,10 @@ void fix_symbols(void)
 
    while ((pc != NULL) && (next != NULL))
    {
+      if ((pc->type == CT_GETSET) && (next->type != CT_BRACE_OPEN))
+      {
+         pc->type = CT_WORD;
+      }
       if ((pc->type == CT_WORD) && (next->type == CT_PAREN_OPEN))
       {
          pc->type = CT_FUNCTION;
@@ -133,6 +137,15 @@ void fix_symbols(void)
       if ((pc->flags & PCF_STMT_START) != 0)
       {
          /* Mark variable definitions */
+      }
+
+      if (pc->type == CT_ANGLE_OPEN)
+      {
+         check_template(pc);
+      }
+      if ((pc->type == CT_ANGLE_CLOSE) && (pc->parent_type != CT_TEMPLATE))
+      {
+         pc->type = CT_COMPARE;
       }
 
       /* Check for stuff that can only occur at the start of an expression */
@@ -715,6 +728,7 @@ void combine_labels(void)
    chunk_t *tmp;
    int     question_count = 0;
    BOOL    hit_case       = FALSE;
+   BOOL    hit_class      = FALSE;
 
    prev = chunk_get_head();
    cur  = chunk_get_next_nc(prev);
@@ -723,16 +737,37 @@ void combine_labels(void)
    /* unlikely that the file will start with a label... */
    while (next != NULL)
    {
+      if ((next->type == CT_CLASS) || (next->type == CT_TEMPLATE))
+      {
+         hit_class = TRUE;
+      }
+      if ((next->type == CT_SEMICOLON) || (next->type == CT_BRACE_OPEN))
+      {
+         hit_class = FALSE;
+      }
       if (next->type == CT_QUESTION)
       {
          question_count++;
       }
       else if (next->type == CT_CASE)
       {
-         hit_case = TRUE;
+         if (cur->type == CT_GOTO)
+         {
+            /* handle "goto case x;" */
+            next->type = CT_QUALIFIER;
+         }
+         else
+         {
+            hit_case = TRUE;
+         }
       }
       else if (next->type == CT_COLON)
       {
+         if (cur->type == CT_DEFAULT)
+         {
+            cur->type = CT_CASE;
+            hit_case  = TRUE;
+         }
          if (question_count > 0)
          {
             next->type = CT_Q_COLON;
@@ -765,10 +800,15 @@ void combine_labels(void)
             {
                /* ignore it - anonymous bit field? */
             }
+            else if ((cur->type == CT_ANGLE_CLOSE) || hit_class)
+            {
+               /* ignore it - template thingy */
+            }
             else
             {
                tmp = chunk_get_next_ncnl(next);
-               if ((tmp != NULL) && (tmp->type == CT_BASE))
+               if ((tmp != NULL) && ((tmp->type == CT_BASE) ||
+                                     (tmp->type == CT_THIS)))
                {
                   /* ignore it, as it is a C# base thingy */
                }
@@ -1311,4 +1351,40 @@ static void mark_define_expressions(void)
       pc   = chunk_get_next(pc);
    }
 }
+
+/**
+ * If there is nothing but CT_WORD and CT_MEMBER, then it's probably a
+ * template thingy.  Otherwise, it's likely a comparison.
+ */
+static void check_template(chunk_t *start)
+{
+   chunk_t *pc;
+   chunk_t *end;
+
+   for (pc = chunk_get_next_ncnl(start); pc != NULL; pc = chunk_get_next_ncnl(pc))
+   {
+      if ((pc->type != CT_WORD) && (pc->type != CT_MEMBER))
+      {
+         break;
+      }
+   }
+
+   end = pc;
+   if (end != NULL)
+   {
+      if (end->type == CT_ANGLE_CLOSE)
+      {
+         for (pc = start; pc != end; pc = chunk_get_next_ncnl(pc))
+         {
+            pc->parent_type = CT_TEMPLATE;
+         }
+         end->parent_type = CT_TEMPLATE;
+      }
+      else
+      {
+         start->type = CT_COMPARE;
+      }
+   }
+}
+
 

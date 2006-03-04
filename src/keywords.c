@@ -72,7 +72,7 @@ static chunk_tag_t keywords[] =
    { "creal",            CT_TYPE,       LANG_D },
    { "dchar",            CT_TYPE,       LANG_D },
    { "debug",            CT_PBRACED,    LANG_D },
-   { "default",          CT_CASE,       LANG_ALL },
+   { "default",          CT_DEFAULT,    LANG_ALL },
    { "defined",          CT_PP_DEFINED, LANG_ALL | FLAG_PP },
    { "delegate",         CT_QUALIFIER,  LANG_CS | LANG_D },
    { "delete",           CT_DELETE,     LANG_CPP | LANG_D },
@@ -81,6 +81,7 @@ static chunk_tag_t keywords[] =
    { "double",           CT_TYPE,       LANG_ALL },
    { "dynamic_cast",     CT_TYPE_CAST,  LANG_CPP },
    { "else",             CT_ELSE,       LANG_ALL },
+   { "endregion",        CT_PP_ENDIF,   LANG_CS | FLAG_PP },
    { "enum",             CT_ENUM,       LANG_ALL },
    { "event",            CT_TYPE,       LANG_CS },
    { "explicit",         CT_TYPE,       LANG_C | LANG_CPP | LANG_CS },
@@ -93,6 +94,7 @@ static chunk_tag_t keywords[] =
    { "foreach",          CT_FOR,        LANG_CS | LANG_D },
    { "friend",           CT_FRIEND,     LANG_CPP },
    { "function",         CT_FUNCTION,   LANG_D },
+   { "get",              CT_GETSET,     LANG_CS },
    { "goto",             CT_GOTO,       LANG_ALL },
    { "idouble",          CT_TYPE,       LANG_D },
    { "if",               CT_IF,         LANG_ALL },
@@ -136,12 +138,14 @@ static chunk_tag_t keywords[] =
    { "readonly",         CT_QUALIFIER,  LANG_CS },
    { "real",             CT_TYPE,       LANG_D },
    { "ref",              CT_QUALIFIER,  LANG_CS },
+   { "region",           CT_PP_IF,      LANG_CS | FLAG_PP },
    { "register",         CT_QUALIFIER,  LANG_C | LANG_CPP },
    { "reinterpret_cast", CT_TYPE_CAST,  LANG_C | LANG_CPP },
    { "restrict",         CT_QUALIFIER,  LANG_C | LANG_CPP },
    { "return",           CT_RETURN,     LANG_ALL },
    { "sbyte",            CT_TYPE,       LANG_CS },
    { "sealed",           CT_QUALIFIER,  LANG_CS },
+   { "set",              CT_GETSET,     LANG_CS },
    { "short",            CT_TYPE,       LANG_ALL },
    { "signed",           CT_TYPE,       LANG_C | LANG_CPP },
    { "sizeof",           CT_SIZEOF,     LANG_C | LANG_CPP | LANG_CS },
@@ -251,12 +255,12 @@ void add_keyword(const char *tag, c_token_t type, uint8_t lang_flags)
 const chunk_tag_t *find_keyword(const char *word, int len)
 {
    chunk_tag_t       tag;
-   char              buf[64];
+   char              buf[32];
    const chunk_tag_t *p_ret;
 
    if (len > (sizeof(buf) - 1))
    {
-      fprintf(stderr, "%s: keyword too long at %d char (%d max) : %*.s\n",
+      LOG_FMT(LNOTE, "%s: keyword too long at %d char (%d max) : %*.s\n",
               __func__, len, sizeof(buf), len, word);
       return(NULL);
    }

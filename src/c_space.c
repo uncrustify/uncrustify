@@ -92,6 +92,11 @@ argval_t do_space(chunk_t *first, chunk_t *second)
       return(AV_IGNORE);
    }
 
+   if (second->type == CT_VBRACE_OPEN)
+   {
+      return(AV_ADD);
+   }
+
    if (second->type == CT_SEMICOLON)
    {
       arg = cpd.settings[UO_sp_before_semi];

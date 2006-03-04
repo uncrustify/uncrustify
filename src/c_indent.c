@@ -488,6 +488,14 @@ void indent_text(void)
       pc = chunk_get_next(pc);
    }
 
+   if (in_preproc)
+   {
+      while ((frm.pse_tos > 0) && frm.pse[frm.pse_tos].in_preproc)
+      {
+         frm.pse_tos--;
+      }
+   }
+
    for (idx = 1; idx <= frm.pse_tos; idx++)
    {
       LOG_FMT(LWARN, "Unmatched %s near line %d\n",
