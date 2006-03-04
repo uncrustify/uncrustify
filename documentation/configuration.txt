@@ -232,6 +232,10 @@ Here's a list of all the options from c_settings.h and a brief description.
 #  Code alignment (not left column spaces/tabs)
 #
 
+   align_keep_tabs:		bool
+	Keep non-indenting tabs. Useful to minimize changes if not aligning
+	anything.
+
    align_nl_cont:		bool
 	Align the back-slash \n combo (macros)
 	

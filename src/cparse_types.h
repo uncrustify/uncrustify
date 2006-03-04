@@ -125,6 +125,7 @@ struct chunk_s
    int        len;
    int        level;            /* nest level in {, (, or [ */
    int        brace_level;
+   BOOL       after_tab;
    const char *str;
 };
 

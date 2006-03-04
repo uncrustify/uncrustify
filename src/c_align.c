@@ -2,7 +2,7 @@
  * @file c_align.c
  * Does all the aligning stuff.
  *
- * $Id: c_align.c,v 1.24 2006/02/21 02:55:00 bengardner Exp $
+ * $Id$
  */
 #include "cparse_types.h"
 #include "chunk_list.h"
@@ -32,6 +32,16 @@ static void align_typedefs(int span);
 static void align_stack(int col, BOOL align_single, log_sev_t sev)
 {
    chunk_t *pc;
+
+   if (cpd.settings[UO_align_on_tabstop])
+   {
+      int rem = (col - 1) % cpd.settings[UO_output_tab_size];
+      if (rem != 0)
+      {
+         LOG_FMT(sev, "%s: col=%d rem=%d", __func__, col, rem);
+         col += cpd.settings[UO_output_tab_size] - rem;
+      }
+   }
 
    if ((cs_len(&cpd.cs) > 1) || (align_single && (cs_len(&cpd.cs) == 1)))
    {
@@ -1120,6 +1130,17 @@ static void align_init_brace(chunk_t *start)
 
    /* debug dump the current frame */
    align_log_al(LALBR, start->orig_line);
+
+   if (cpd.settings[UO_align_on_tabstop] && (cpd.al_cnt >= 1) &&
+       (cpd.al[0].type == CT_ASSIGN))
+   {
+      int rem = (cpd.al[0].col - 1) % cpd.settings[UO_output_tab_size];
+      if (rem != 0)
+      {
+         LOG_FMT(LALBR, "%s: col=%d rem=%d", __func__, cpd.al[0].col, rem);
+         cpd.al[0].col += cpd.settings[UO_output_tab_size] - rem;
+      }
+   }
 
    pc  = start;
    idx = 0;

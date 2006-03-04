@@ -328,10 +328,12 @@ BOOL parse_whitespace(chunk_t *pc)
 {
    int len      = 0;
    int nl_count = 0;
+   BOOL last_was_tab = FALSE;
 
    while ((pc->str[len] != 0) &&
           ((pc->str[len] <= ' ') || (pc->str[len] >= 127)))
    {
+      last_was_tab = FALSE;
       switch (pc->str[len])
       {
       case '\n':
@@ -343,6 +345,7 @@ BOOL parse_whitespace(chunk_t *pc)
       case '\t':
          cpd.column = calc_next_tab_column(cpd.column,
                                            cpd.settings[UO_input_tab_size]);
+         last_was_tab = TRUE;
          break;
 
       case ' ':
@@ -361,6 +364,7 @@ BOOL parse_whitespace(chunk_t *pc)
       pc->type     = nl_count ? CT_NEWLINE : CT_WHITESPACE;
       pc->len      = len;
       pc->str      = "";
+      pc->after_tab = last_was_tab;
    }
    return(len != 0);
 }
@@ -504,6 +508,7 @@ void parse_buffer(const char *data, int data_len)
    chunk_t            *rprev = NULL;
    chunk_t            *prev  = NULL;
    struct parse_frame frm;
+   BOOL               last_was_tab = FALSE;
 
    memset(&frm, 0, sizeof(frm));
    memset(&chunk, 0, sizeof(chunk));
@@ -526,7 +531,18 @@ void parse_buffer(const char *data, int data_len)
       /* Don't create an entry for whitespace */
       if (chunk.type == CT_WHITESPACE)
       {
+         last_was_tab = chunk.after_tab;
          continue;
+      }
+      if (chunk.type == CT_NEWLINE)
+      {
+         last_was_tab = chunk.after_tab;
+         chunk.after_tab = FALSE;
+      }
+      else
+      {
+         chunk.after_tab = last_was_tab;
+         last_was_tab = FALSE;
       }
 
       /* Strip trailing whitespace (for CPP comments and PP blocks) */

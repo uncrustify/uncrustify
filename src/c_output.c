@@ -2,7 +2,7 @@
  * @file c_output.c
  * Does all the output & comment formatting.
  *
- * $Id: c_output.c,v 1.12 2006/02/13 03:30:20 bengardner Exp $
+ * $Id$
  */
 
 #include "cparse_types.h"
@@ -83,11 +83,11 @@ void output_parsed(FILE *pfile)
    fprintf(pfile, "Line      Tag          Parent     Columns  Br/Lvl Flg Nl  Text");
    for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next(pc))
    {
-      fprintf(pfile, "\n%3d> %13.13s[%13.13s][%2d/%2d/%2d][%d/%d][%4x][%d]",
+      fprintf(pfile, "\n%3d> %13.13s[%13.13s][%2d/%2d/%2d][%d/%d][%4x][%d-%d]",
               pc->orig_line, get_token_name(pc->type),
               get_token_name(pc->parent_type),
               pc->column, pc->orig_col, pc->orig_col_end,
-              pc->brace_level, pc->level, pc->flags, pc->nl_count);
+              pc->brace_level, pc->level, pc->flags, pc->nl_count, pc->after_tab);
 
       if ((pc->type != CT_NEWLINE) && (*pc->str != 0))
       {
@@ -119,6 +119,7 @@ void output_options(FILE *pfile)
 void output_text(FILE *pfile)
 {
    chunk_t *pc;
+   chunk_t *prev;
    int     cnt;
    int     lvlcol;
    BOOL    allow_tabs;
@@ -160,8 +161,18 @@ void output_text(FILE *pfile)
          else
          {
             /* not the first item on a line */
-            allow_tabs = (cpd.settings[UO_align_with_tabs] &&
-                          ((pc->flags & PCF_WAS_ALIGNED) != 0));
+            if (cpd.settings[UO_align_keep_tabs])
+            {
+               allow_tabs = pc->after_tab;
+            }
+            else
+            {
+               prev = chunk_get_prev(pc);
+               allow_tabs = (cpd.settings[UO_align_with_tabs] &&
+                             ((pc->flags & PCF_WAS_ALIGNED) != 0) &&
+                             (((pc->column - 1) % cpd.settings[UO_output_tab_size]) == 0) &&
+                             ((prev->column + prev->len + 1) != pc->column));
+            }
          }
 
          output_to_column(pc->column, allow_tabs);

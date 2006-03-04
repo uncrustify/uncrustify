@@ -40,8 +40,6 @@ enum uncrustify_options
 
    UO_indent_columns,           // ie 3 or 8
    UO_indent_with_tabs,         // 1=only to the 'level' indent, 2=use tabs for indenting
-   UO_align_with_tabs,          // use tabs for aligning (0/1)
-   UO_align_on_tabstop,         // always align on tabstops
    UO_indent_brace_struct,      //TODO: spaces to indent brace after struct/enum/union def
    UO_indent_paren,             //TODO: indent for open paren on next line (1)
    UO_indent_paren_nl,          // indent-align under paren for open followed by nl
@@ -117,6 +115,8 @@ enum uncrustify_options
     * code alignment (not left column spaces/tabs)
     */
 
+   UO_align_with_tabs,            // use tabs for aligning (0/1)
+   UO_align_on_tabstop,           // always align on tabstops
    UO_align_nl_cont,              // align the back-slash \n combo (macros)
    UO_align_enum_equ,             // align the '=' in enums
    UO_align_assign_span,          // align on '='. 0=don't align
@@ -137,6 +137,7 @@ enum uncrustify_options
    UO_align_number_left,          // left-align numbers (not fully supported, yet)
    UO_align_typedef_span,         // align single-line typedefs
    UO_align_typedef_gap,          // minimum spacing
+   UO_align_keep_tabs,            // keep non-indenting tabs
 
 
    /*
@@ -225,6 +226,7 @@ struct options_name_tab option_name_table[] =
    OPTDEF(align_enum_col_min,            AT_NUM),
    OPTDEF(align_enum_equ,                AT_NUM),
    OPTDEF(align_func_proto_span,         AT_NUM),
+   OPTDEF(align_keep_tabs,               AT_BOOL),
    OPTDEF(align_nl_cont,                 AT_BOOL),
    OPTDEF(align_number_left,             AT_BOOL),
    OPTDEF(align_on_tabstop,              AT_BOOL),
