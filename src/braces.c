@@ -2,7 +2,7 @@
  * @file braces.c
  * Adds or removes braces.
  *
- * $Id: braces.c,v 1.5 2006/02/21 01:44:30 bengardner Exp $
+ * $Id$
  */
 #include "cparse_types.h"
 #include "chunk_list.h"
@@ -42,11 +42,14 @@ void do_braces(void)
 }
 
 
+/**
+ * Go backwards to honor brace newline removal limits
+ */
 static void examine_braces(void)
 {
    chunk_t *pc;
 
-   pc = chunk_get_head();
+   pc = chunk_get_tail();
    while (pc != NULL)
    {
       if ((pc->type == CT_BRACE_OPEN) &&
@@ -64,7 +67,7 @@ static void examine_braces(void)
             examine_brace(pc);
          }
       }
-      pc = chunk_get_next_type(pc, CT_BRACE_OPEN, -1);
+      pc = chunk_get_prev_type(pc, CT_BRACE_OPEN, -1);
    }
 }
 
@@ -81,10 +84,12 @@ static void examine_brace(chunk_t *bopen)
    int     level      = bopen->level + 1;
    BOOL    hit_semi   = FALSE;
    BOOL    was_fcn    = FALSE;
+   int     nl_max     = cpd.settings[UO_mod_full_brace_nl];
+   int     nl_count   = 0;
 
    LOG_FMT(LBRDEL, "%s: start on %d : ", __func__, bopen->orig_line);
 
-   pc = chunk_get_next_ncnl(bopen);
+   pc = chunk_get_next_nc(bopen);
    while ((pc != NULL) && (pc->level >= level))
    {
       if ((pc->flags & PCF_IN_PREPROC) != 0)
@@ -93,37 +98,49 @@ static void examine_brace(chunk_t *bopen)
          return;
       }
 
-      if (pc->level == level)
+      if (chunk_is_newline(pc))
       {
-         if ((semi_count > 0) && hit_semi)
+         nl_count += pc->nl_count;
+         if ((nl_max > 0) && (nl_count > nl_max))
          {
-            /* should have bailed due to close brace level drop */
-            LOG_FMT(LBRDEL, " no close brace\n");
+            LOG_FMT(LBRDEL, " exceeded %d newlines\n", nl_max);
             return;
          }
-
-         LOG_FMT(LBRDEL, " [%s %d-%d]", pc->str, pc->orig_line, semi_count);
-
-         was_fcn = (prev != NULL) && (prev->type == CT_FPAREN_CLOSE);
-
-         if ((pc->type == CT_SEMICOLON) ||
-             (pc->type == CT_IF) ||
-             (pc->type == CT_FOR) ||
-             (pc->type == CT_DO) ||
-             (pc->type == CT_WHILE) ||
-             ((pc->type == CT_BRACE_OPEN) && was_fcn))
+      }
+      else
+      {
+         if (pc->level == level)
          {
-            hit_semi |= (pc->type == CT_SEMICOLON);
-            if (++semi_count > 1)
+            if ((semi_count > 0) && hit_semi)
             {
-               LOG_FMT(LBRDEL, " bailed on %d because of %s on line %d\n",
-                       bopen->orig_line, pc->str, pc->orig_line);
+               /* should have bailed due to close brace level drop */
+               LOG_FMT(LBRDEL, " no close brace\n");
                return;
+            }
+
+            LOG_FMT(LBRDEL, " [%s %d-%d]", pc->str, pc->orig_line, semi_count);
+
+            was_fcn = (prev != NULL) && (prev->type == CT_FPAREN_CLOSE);
+
+            if ((pc->type == CT_SEMICOLON) ||
+                (pc->type == CT_IF) ||
+                (pc->type == CT_FOR) ||
+                (pc->type == CT_DO) ||
+                (pc->type == CT_WHILE) ||
+                ((pc->type == CT_BRACE_OPEN) && was_fcn))
+            {
+               hit_semi |= (pc->type == CT_SEMICOLON);
+               if (++semi_count > 1)
+               {
+                  LOG_FMT(LBRDEL, " bailed on %d because of %s on line %d\n",
+                          bopen->orig_line, pc->str, pc->orig_line);
+                  return;
+               }
             }
          }
       }
       prev = pc;
-      pc   = chunk_get_next_ncnl(pc);
+      pc   = chunk_get_next_nc(pc);
    }
 
    if (pc == NULL)
@@ -142,7 +159,7 @@ static void examine_brace(chunk_t *bopen)
       pc->type    = CT_VBRACE_CLOSE;
       pc->len     = 0;
 
-      LOG_FMT(LBRDEL, " removed braces on line %d and %d\n",
+      LOG_FMT(LBRDEL, " removing braces on line %d and %d\n",
               bopen->orig_line, pc->orig_line);
    }
    else

@@ -208,9 +208,9 @@ Here's a list of all the options from c_settings.h and a brief description.
 	Space inside struct/union '{' and '}'
 
 
-   /*
-    * Line splitting options (for long lines)
-    */
+#
+#  Line splitting options (for long lines)
+#
 
    code_width:			number		* Not implemented *
 	If the line width exceeds this number of columns,
@@ -420,6 +420,8 @@ Here's a list of all the options from c_settings.h and a brief description.
    mod_full_brace_while:	IARF
 	add or remove braces on single-statement while
 
+   mod_full_brace_nl:		number
+	don't remove braces around statements that span X newlines
 
 #
 #  Comment modifications

@@ -191,6 +191,7 @@ enum uncrustify_options
     */
 
    UO_mod_paren_on_return,       // add or remove paren on return
+   UO_mod_full_brace_nl,         // max number of newlines to span w/o braces
    UO_mod_full_brace_if,         // add or remove braces on if
    UO_mod_full_brace_for,        // add or remove braces on for
    UO_mod_full_brace_do,         // add or remove braces on do
@@ -277,6 +278,7 @@ struct options_name_tab option_name_table[] =
    OPTDEF(mod_full_brace_do,             AT_IARF),
    OPTDEF(mod_full_brace_for,            AT_IARF),
    OPTDEF(mod_full_brace_if,             AT_IARF),
+   OPTDEF(mod_full_brace_nl,             AT_NUM),
    OPTDEF(mod_full_brace_while,          AT_IARF),
    OPTDEF(mod_paren_on_return,           AT_IARF),
    OPTDEF(nl_after_case,                 AT_BOOL),
