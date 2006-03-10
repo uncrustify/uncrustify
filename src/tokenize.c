@@ -326,8 +326,8 @@ BOOL parse_word(chunk_t *pc, BOOL skipcheck)
  */
 BOOL parse_whitespace(chunk_t *pc)
 {
-   int len      = 0;
-   int nl_count = 0;
+   int  len          = 0;
+   int  nl_count     = 0;
    BOOL last_was_tab = FALSE;
 
    while ((pc->str[len] != 0) &&
@@ -360,10 +360,10 @@ BOOL parse_whitespace(chunk_t *pc)
 
    if (len > 0)
    {
-      pc->nl_count = nl_count;
-      pc->type     = nl_count ? CT_NEWLINE : CT_WHITESPACE;
-      pc->len      = len;
-      pc->str      = "";
+      pc->nl_count  = nl_count;
+      pc->type      = nl_count ? CT_NEWLINE : CT_WHITESPACE;
+      pc->len       = len;
+      pc->str       = "";
       pc->after_tab = last_was_tab;
    }
    return(len != 0);
@@ -536,13 +536,13 @@ void parse_buffer(const char *data, int data_len)
       }
       if (chunk.type == CT_NEWLINE)
       {
-         last_was_tab = chunk.after_tab;
+         last_was_tab    = chunk.after_tab;
          chunk.after_tab = FALSE;
       }
       else
       {
          chunk.after_tab = last_was_tab;
-         last_was_tab = FALSE;
+         last_was_tab    = FALSE;
       }
 
       /* Strip trailing whitespace (for CPP comments and PP blocks) */
@@ -892,6 +892,10 @@ void parse_cleanup(struct parse_frame *frm,
          {
             parent = CT_ELSE;
          }
+         else if (prev->type == CT_DO)
+         {
+            parent = CT_DO;
+         }
       }
 
       /* Change a WORD after ENUM/UNION/STRUCT to TYPE
@@ -1081,9 +1085,10 @@ static chunk_t *insert_vbrace(chunk_t *pc, BOOL after,
       {
          ref = chunk_get_prev(ref);
       }
-      chunk.column = ref->column + ref->len + 1;
-      chunk.type   = CT_VBRACE_OPEN;
-      rv           = chunk_add_after(&chunk, ref);
+      chunk.orig_line = ref->orig_line;
+      chunk.column    = ref->column + ref->len + 1;
+      chunk.type      = CT_VBRACE_OPEN;
+      rv              = chunk_add_after(&chunk, ref);
    }
    return(rv);
 }
