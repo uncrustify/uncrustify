@@ -184,8 +184,8 @@ Estimated:  4 hours
 This is needed to preserve already aligned stuff without aligning more than is
 needed.  Ie, this is needed to minimize changes, while cleaning up existing
 code.
-We can assume that code can be aligned that has either a tab of more than 1 
-space before it was intended to be aligned.  Maybe add a threshold, like 3 
+We can assume that code can be aligned that has either a tab of more than 1
+space before it was intended to be aligned.  Maybe add a threshold, like 3
 columns.
 
 Difficulty: Moderate
@@ -204,4 +204,11 @@ Note sure why this isn't workign right.
 
 Difficulty: Moderate
 Estimated:  4 hours
+
+
+8. Add a threshold for brace adding
+Should be fairly easy. Already have code for removal.
+
+Difficulty: Low
+Estimated:  2 hours
 
