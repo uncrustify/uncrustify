@@ -12,4 +12,6 @@
 
 00000  indent.cfg  comment-indent.c  00000-comment-indent.c
 00020  ben.cfg  define-if-indent.c  00020-define-if-indent.c
+00050  brace-remove-2.cfg  brace-remove.c  00050-brace-remove-2.c
+00051  brace-remove-all.cfg  brace-remove.c  00051-brace-remove-all.c
 
