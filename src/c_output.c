@@ -167,7 +167,7 @@ void output_text(FILE *pfile)
             }
             else
             {
-               prev = chunk_get_prev(pc);
+               prev       = chunk_get_prev(pc);
                allow_tabs = (cpd.settings[UO_align_with_tabs] &&
                              ((pc->flags & PCF_WAS_ALIGNED) != 0) &&
                              (((pc->column - 1) % cpd.settings[UO_output_tab_size]) == 0) &&
