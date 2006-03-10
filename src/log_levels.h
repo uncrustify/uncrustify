@@ -9,8 +9,6 @@
 #ifndef LOG_LEVELS_H_INCLUDED
 #define LOG_LEVELS_H_INCLUDED
 
-#include "logmask.h"
-
 enum
 {
    LSYS  = 0,
