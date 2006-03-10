@@ -121,10 +121,13 @@
 		<Folder Name="tests">
 			<Folder Name="config">
 				<F N="tests/config/ben.cfg"/>
+				<F N="tests/config/brace-remove-2.cfg"/>
+				<F N="tests/config/brace-remove-all.cfg"/>
 				<F N="tests/config/cast-types.txt"/>
 				<F N="tests/config/indent.cfg"/>
 			</Folder>
 			<Folder Name="input">
+				<F N="tests/input/brace-remove.c"/>
 				<F N="tests/input/colon-asm.c"/>
 				<F N="tests/input/comment-indent.c"/>
 				<F N="tests/input/define-if-indent.c"/>
@@ -151,6 +154,7 @@
 			<F N="tests/comment-indent.c"/>
 			<F N="tests/event_core.h"/>
 			<F N="tests/i2c-core.c"/>
+			<F N="tests/my.test"/>
 			<F N="tests/run_tests.py"/>
 			<F N="tests/run_tests.sh"/>
 			<F N="tests/vb-do.c"/>
