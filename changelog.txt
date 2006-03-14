@@ -1,5 +1,5 @@
 #
-# $Id: $
+# $Id$
 #
 
 Changes from uncrustify-0.0.7
