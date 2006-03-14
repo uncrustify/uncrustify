@@ -16,25 +16,8 @@
 #include "c_settings.h"
 #include <stdio.h>
 
-#ifndef ARRAY_SIZE
-#define ARRAY_SIZE(x)     (sizeof(x) / sizeof((x)[0]))
-#endif
-
-#define static_inline     static inline
 
 #include "token_enum.h"
-
-// typedef enum
-// {
-//    ST_START,
-//    ST_WORD,
-//    ST_DEF,
-//    ST_DEF_VAR,
-//    ST_DEF_FCN,
-//    ST_LVAL,
-//    ST_EXP
-// } stmt_t;
-
 
 
 typedef enum
@@ -73,7 +56,6 @@ struct parse_frame
    int                      sparen_count;
 
    struct paren_stack_entry pse[64];
-   //   int                        pse_count;
    int                      pse_tos;
    int                      paren_count;
 
@@ -134,7 +116,7 @@ enum
    LANG_C    = 0x01,
    LANG_CPP  = 0x02,
    LANG_D    = 0x04,
-   LANG_CS   = 0x08,     /*<< C# */
+   LANG_CS   = 0x08,     /*<< C# or C-sharp */
    LANG_JAVA = 0x10,
    LANG_ALL  = 0x1f,
 

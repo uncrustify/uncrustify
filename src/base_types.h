@@ -3,7 +3,7 @@
  *
  * Defines some base types
  *
- * $Id: base_types.h,v 1.1 2006/02/11 02:22:59 bengardner Exp $
+ * $Id$
  */
 
 #ifndef BASE_TYPES_H_INCLUDED
@@ -44,6 +44,10 @@ typedef uint64_t   UINT64;
 
 #define static_inline     static inline
 
+/* and the ever-so-important array size macro */
+#ifndef ARRAY_SIZE
+#define ARRAY_SIZE(x)     (sizeof(x) / sizeof((x)[0]))
+#endif
 
 #endif   /* BASE_TYPES_H_INCLUDED */
 
