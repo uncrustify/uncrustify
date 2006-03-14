@@ -195,12 +195,12 @@ Estimated:  8 hours
 6. Possibly split out tokenizing and initial labeling
 May not be any reason to do this, since all languages are C-like.
 
-Difficulty: Difficult
+Difficulty: High
 Estimated:  12 hours
 
 
 7. Fix #ifdef indenting for ifdef-nest.c (line 19 not indented correctly)
-Note sure why this isn't workign right.
+Note sure why this isn't working right.
 
 Difficulty: Moderate
 Estimated:  4 hours
