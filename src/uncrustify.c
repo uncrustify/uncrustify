@@ -86,7 +86,7 @@ int main(int argc, char *argv[])
 
    chunk_list_init();
 
-   while ((op = getopt_long(argc, argv, "c:p:f:L:t:l:",
+   while ((op = getopt_long(argc, argv, "c:p:f:L:t:l:s",
                             long_options, &option_index)) != EOF)
    {
       switch (op)
