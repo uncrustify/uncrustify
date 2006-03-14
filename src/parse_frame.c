@@ -12,7 +12,6 @@
 #include <string.h>
 #include <stdlib.h>
 
-//#define DEBUG_PF
 
 /**
  * Copies src to dst.
