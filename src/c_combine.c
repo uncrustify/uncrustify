@@ -80,6 +80,24 @@ static void flag_parens(chunk_t *po, uint16_t flags,
 
 
 /**
+ * Sets the parent of the open paren/brace/square/angle and the closing.
+ * Note - it is assumed that pc really does point to an open item and the
+ * close must be open + 1.
+ */
+void set_paren_parent(chunk_t *start, c_token_t parent)
+{
+   chunk_t *end;
+
+   end = chunk_get_next_type(start, start->type + 1, start->level);
+   if (end != NULL)
+   {
+      start->parent_type = parent;
+      end->parent_type = parent;
+   }
+}
+
+
+/**
  * Change CT_INCDEC_AFTER + WORD to CT_INCDEC_BEFORE
  * Change number/word + CT_ADDR to CT_ARITH
  * Change number/word + CT_STAR to CT_ARITH
@@ -148,23 +166,34 @@ void fix_symbols(void)
          pc->type = CT_COMPARE;
       }
 
+      /* D stuff */
+      if ((next->type == CT_PAREN_OPEN) &&
+          ((pc->type == CT_CAST) || (pc->type == CT_DELEGATE)))
+      {
+         /*TODO: mark the parenthesis parent */
+         set_paren_parent(next, pc->type);
+      }
+
       /* Check for stuff that can only occur at the start of an expression */
       if ((pc->flags & PCF_EXPR_START) != 0)
       {
-         /**
-          * Check a paren pair to see if it is a cast.
-          * Note that SPAREN and FPAREN have already been marked.
-          */
-         if ((pc->type == CT_PAREN_OPEN) &&
-             ((next->type == CT_WORD) ||
-              (next->type == CT_TYPE) ||
-              (next->type == CT_STRUCT) ||
-              (next->type == CT_ENUM) ||
-              (next->type == CT_UNION)) &&
-             (prev->type != CT_SIZEOF) &&
-             (prev->type != CT_TYPE)) /*TODO: why check for CT_TYPE? */
+         if ((cpd.lang_flags & LANG_D) == 0)
          {
-            fix_casts(pc);
+            /**
+             * Check a paren pair to see if it is a cast.
+             * Note that SPAREN and FPAREN have already been marked.
+             */
+            if ((pc->type == CT_PAREN_OPEN) &&
+                ((next->type == CT_WORD) ||
+                 (next->type == CT_TYPE) ||
+                 (next->type == CT_STRUCT) ||
+                 (next->type == CT_ENUM) ||
+                 (next->type == CT_UNION)) &&
+                (prev->type != CT_SIZEOF) &&
+                (prev->type != CT_TYPE)) /*TODO: why check for CT_TYPE? */
+            {
+               fix_casts(pc);
+            }
          }
 
          /* Change STAR, MINUS, and PLUS in the easy cases */

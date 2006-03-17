@@ -202,6 +202,27 @@ argval_t do_space(chunk_t *first, chunk_t *second)
       return(cpd.settings[UO_sp_func_call_paren]);
    }
 
+   if (first->type == CT_CAST)
+   {
+      return AV_REMOVE;
+   }
+
+   if ((first->type == CT_THIS) && (second->type == CT_PAREN_OPEN))
+   {
+      return AV_REMOVE;
+   }
+
+   if ((first->type == CT_DELEGATE) && (second->type == CT_PAREN_OPEN))
+   {
+      return AV_REMOVE;
+   }
+
+   if ((first->type == CT_SUPER) &&
+       ((second->type == CT_PAREN_OPEN) || (second->type == CT_MEMBER)))
+   {
+      return AV_REMOVE;
+   }
+
    if (first->type == CT_PAREN_CLOSE)
    {
       /* "(int)a" vs "(int) a" */
@@ -214,6 +235,15 @@ argval_t do_space(chunk_t *first, chunk_t *second)
       if (second->type == CT_BRACE_OPEN)
       {
          return(cpd.settings[UO_sp_paren_brace]);
+      }
+
+      LOG_FMT(0, "%s: %d: parent=%s\n", __func__, first->orig_line,
+              get_token_name(second->parent_type));
+
+      /* D-specific: "delegate(some thing) dg */
+      if (first->parent_type == CT_DELEGATE)
+      {
+         return(AV_ADD);
       }
    }
 

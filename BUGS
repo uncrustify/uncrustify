@@ -7,3 +7,39 @@ Don't blindly copy the 'new' file over the old file.
 'align_with_tabs' doesn't work quite right, yet.
 Don't use it.
 
+
+----------------====----------------
+   List of minor formatting bugs
+----------------====----------------
+
+* Assignments in variable definitions should not be aligned with
+  assignments in non-variable defs.  Or at least there should be
+  an option to determine whether to do it or not.
+
+        uint h = typeid(char[]).getHash(&x);
+        h     += ~(h << 9);
+        h     ^= (h >>> 14);
+
+* When NOT adding the '*' in comments, we are adding spaces/tabs to blank
+  lines.  Also, comments are being indented incorrectly:
+
+   /***********************************
+
+   A multi-line comment that should not have the closing line indented
+
+   ***********************************/
+
+* In D, C#, and maybe Java, an empty [] should be counted as a type.
+  Failure to do so prevents the following from properly aligning:
+
+        int       nextTableIndex;
+        HashEntry[] currentTable;
+        HashEntry nextEntry;
+
+  should be:
+
+        int       nextTableIndex;
+        HashEntry[] currentTable;
+        HashEntry nextEntry;
+
+

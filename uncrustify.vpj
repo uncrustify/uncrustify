@@ -75,6 +75,7 @@
 		</Folder>
 		<Folder Name="etc">
 			<F N="etc/ben.cfg"/>
+			<F N="etc/d.cfg"/>
 			<F N="etc/dofiles.sh"/>
 			<F N="etc/gnu-indent.cfg"/>
 			<F N="etc/kr-indent.cfg"/>
@@ -132,6 +133,7 @@
 				<F N="tests/input/comment-indent.c"/>
 				<F N="tests/input/define-if-indent.c"/>
 				<F N="tests/input/enum-struct-init.c"/>
+				<F N="tests/input/HashMap.d"/>
 				<F N="tests/input/ifdef-indent.c"/>
 				<F N="tests/input/indent-assign.c"/>
 				<F N="tests/input/return-multi.c"/>
@@ -142,22 +144,16 @@
 			<Folder Name="output">
 				<F N="tests/output/00000-comment-indent.c"/>
 				<F N="tests/output/00020-define-if-indent.c"/>
+				<F N="tests/output/40000-HashMap.d"/>
 			</Folder>
-			<F N="tests/align-struct-init.c"/>
-			<F N="tests/bugs-1.c"/>
-			<F N="tests/bugs-2.c"/>
-			<F N="tests/bugs-3.c"/>
-			<F N="tests/bugs-4.c"/>
-			<F N="tests/bugs-5.c"/>
-			<F N="tests/bugs-6.c"/>
-			<F N="tests/bugs.c"/>
-			<F N="tests/comment-indent.c"/>
-			<F N="tests/event_core.h"/>
-			<F N="tests/i2c-core.c"/>
-			<F N="tests/my.test"/>
+			<F N="tests/c-sharp.test"/>
+			<F N="tests/c.test"/>
+			<F N="tests/cpp.test"/>
+			<F N="tests/d.test"/>
+			<F N="tests/general.test"/>
+			<F N="tests/java.test"/>
 			<F N="tests/run_tests.py"/>
 			<F N="tests/run_tests.sh"/>
-			<F N="tests/vb-do.c"/>
 		</Folder>
 		<F N="AUTHORS"/>
 		<F N="BUGS"/>

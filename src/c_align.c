@@ -716,7 +716,8 @@ static chunk_t *align_var_def_brace(chunk_t *start, int span)
       }
 
       /* If this is a variable def, update the max_col */
-      if ((pc->flags & align_mask) == PCF_VAR_1ST)
+      if (((pc->flags & align_mask) == PCF_VAR_1ST) &&
+          (pc->level == (start->level + 1)))
       {
          nl_count = 0;
          if (first_match == NULL)

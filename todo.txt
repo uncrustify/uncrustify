@@ -160,6 +160,9 @@ Estimated:  2 hours
 Involves running against large quantities of D code and working out all the bugs.
 May need to add more options to support unique formatting.
 
+ - volatile needs special handling
+ - delegate handling
+
 Difficulty: Moderate
 Estimated:  8 hours
 

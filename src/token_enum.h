@@ -44,6 +44,7 @@ typedef enum
    CT_SWITCH,
    CT_CASE,
    CT_DO,
+   CT_VOLATILE,
    CT_TYPEDEF,
    CT_STRUCT,
    CT_ENUM,
@@ -107,6 +108,8 @@ typedef enum
    CT_THROW,
    CT_TRY,
    CT_USING,
+   CT_SUPER,
+   CT_DELEGATE,
 
    /* note for paren/brace/square pairs: close MUST be open + 1 */
    CT_PAREN_OPEN,

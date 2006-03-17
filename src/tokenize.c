@@ -104,6 +104,7 @@ BOOL parse_comment(chunk_t *pc)
 BOOL parse_number(chunk_t *pc)
 {
    int len = 0;
+   BOOL allow_underscore = ((cpd.lang_flags & LANG_D) != 0);
 
    if (!isdigit(*pc->str))
    {
@@ -117,7 +118,8 @@ BOOL parse_number(chunk_t *pc)
       {
       case 'X':               /* hex */
          len = 2;
-         while (isxdigit(pc->str[len]))
+         while (isxdigit(pc->str[len]) ||
+                (allow_underscore && (pc->str[len] == '_')))
          {
             len++;
          }
@@ -125,7 +127,8 @@ BOOL parse_number(chunk_t *pc)
 
       case 'B':               /* binary? */
          len = 2;
-         while ((pc->str[len] == '0') || (pc->str[len] == '1'))
+         while ((pc->str[len] == '0') || (pc->str[len] == '1') ||
+                (allow_underscore && (pc->str[len] == '_')))
          {
             len++;
          }
@@ -133,7 +136,8 @@ BOOL parse_number(chunk_t *pc)
 
       default:                /* octal */
          len = 1;
-         while ((pc->str[len] >= '0') && (pc->str[len] <= '7'))
+         while (((pc->str[len] >= '0') && (pc->str[len] <= '7')) ||
+                (allow_underscore && (pc->str[len] == '_')))
          {
             len++;
          }
@@ -144,7 +148,9 @@ BOOL parse_number(chunk_t *pc)
    {
       int dotcount = 0;
       len          = 1;
-      while (isdigit(pc->str[len]) || ((pc->str[len] == '.') && (dotcount == 0)))
+      while (isdigit(pc->str[len]) ||
+             ((pc->str[len] == '.') && (dotcount == 0)) ||
+             (allow_underscore && (pc->str[len] == '_')))
       {
          len++;
          if (pc->str[len] == '.')
@@ -176,6 +182,10 @@ BOOL parse_number(chunk_t *pc)
       len++;
    }
    if (toupper(pc->str[len]) == 'L')
+   {
+      len++;
+   }
+   if (toupper(pc->str[len]) == 'F')
    {
       len++;
    }
@@ -680,7 +690,8 @@ void parse_buffer(const char *data, int data_len)
                 (frm.pse[frm.pse_tos].type == CT_FOR) ||
                 (frm.pse[frm.pse_tos].type == CT_SWITCH) ||
                 (frm.pse[frm.pse_tos].type == CT_DO) ||
-                (frm.pse[frm.pse_tos].type == CT_WHILE))
+                (frm.pse[frm.pse_tos].type == CT_WHILE) ||
+                (frm.pse[frm.pse_tos].type == CT_VOLATILE))
             {
                //fprintf(stderr, "%s: closing on token %s\n",
                //        __func__, get_token_name(pc->type));
@@ -888,13 +899,11 @@ void parse_cleanup(struct parse_frame *frm,
          {
             parent = prev->parent_type;
          }
-         else if (prev->type == CT_ELSE)
+         else if ((prev->type == CT_ELSE) ||
+                  (prev->type == CT_DO) ||
+                  (prev->type == CT_VOLATILE))
          {
-            parent = CT_ELSE;
-         }
-         else if (prev->type == CT_DO)
-         {
-            parent = CT_DO;
+            parent = prev->type;
          }
       }
 
@@ -1002,11 +1011,13 @@ void parse_cleanup(struct parse_frame *frm,
        (pc->type == CT_DO) ||
        (pc->type == CT_FOR) ||
        (pc->type == CT_WHILE) ||
+       (pc->type == CT_VOLATILE) ||
        (pc->type == CT_SWITCH))
    {
       frm->pse_tos++;
       frm->pse[frm->pse_tos].type  = pc->type;
-      frm->pse[frm->pse_tos].stage = (pc->type == CT_DO) ? BS_BRACE_DO : BS_PAREN1;
+      frm->pse[frm->pse_tos].stage = (pc->type == CT_DO) ? BS_BRACE_DO :
+                                     (pc->type == CT_VOLATILE) ? BS_BRACE2 : BS_PAREN1;
       //fprintf(stderr, "opening %s\n", pc->str);
 
       print_stack(frm, pc);
