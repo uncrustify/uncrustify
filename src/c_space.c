@@ -223,7 +223,8 @@ argval_t do_space(chunk_t *first, chunk_t *second)
       return AV_REMOVE;
    }
 
-   if (second->type == CT_MEMBER)
+   if ((second->type == CT_MEMBER) &&
+       ((first->type != CT_COMMA) && (first->type != CT_BRACE_OPEN)))
    {
       return AV_REMOVE;
    }
