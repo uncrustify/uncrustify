@@ -446,9 +446,9 @@ chunk_t *align_assign(chunk_t *first, int span)
       }
       else if ((equ_count == 0) && (pc->type == CT_ASSIGN))
       {
-         //         fprintf(stderr, "%s:  ** %s level=%d line=%d col=%d prev=%d count=%d\n",
-         //                 __func__, pc->str, pc->level, pc->orig_line, pc->orig_col, prev_equ_type,
-         //                 equ_count);
+         //fprintf(stderr, "%s:  ** %s level=%d line=%d col=%d prev=%d count=%d\n",
+         //        __func__, pc->str, pc->level, pc->orig_line, pc->orig_col, prev_equ_type,
+         //        equ_count);
 
          /* Don't align variable def assigns and regular assignments together */
          if (start != NULL)
@@ -486,6 +486,7 @@ chunk_t *align_assign(chunk_t *first, int span)
 
          if (start == NULL)
          {
+            prev_equ_type = (var_def_cnt != 0) ? 1 : 2;
             start = pc;
          }
          end = pc;
