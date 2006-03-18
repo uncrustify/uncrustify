@@ -223,8 +223,12 @@ argval_t do_space(chunk_t *first, chunk_t *second)
       return AV_REMOVE;
    }
 
-   if ((first->type == CT_SUPER) &&
-       ((second->type == CT_PAREN_OPEN) || (second->type == CT_MEMBER)))
+   if (second->type == CT_MEMBER)
+   {
+      return AV_REMOVE;
+   }
+
+   if ((first->type == CT_SUPER) && (second->type == CT_PAREN_OPEN))
    {
       return AV_REMOVE;
    }

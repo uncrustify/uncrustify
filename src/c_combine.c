@@ -142,6 +142,16 @@ void fix_symbols(void)
          pc->type = CT_FUNCTION;
       }
 
+      /* D stuff */
+      if ((next->type == CT_PAREN_OPEN) &&
+          ((pc->type == CT_CAST) ||
+           (pc->type == CT_DELEGATE) ||
+           (pc->type == CT_ALIGN)))
+      {
+         /*TODO: mark the parenthesis parent */
+         set_paren_parent(next, pc->type);
+      }
+
       if ((pc->type == CT_SQUARE_OPEN) && (next->type == CT_SQUARE_CLOSE))
       {
          /* Combine the [ and ] into [] and delete next */
@@ -189,14 +199,6 @@ void fix_symbols(void)
       if ((pc->type == CT_ANGLE_CLOSE) && (pc->parent_type != CT_TEMPLATE))
       {
          pc->type = CT_COMPARE;
-      }
-
-      /* D stuff */
-      if ((next->type == CT_PAREN_OPEN) &&
-          ((pc->type == CT_CAST) || (pc->type == CT_DELEGATE)))
-      {
-         /*TODO: mark the parenthesis parent */
-         set_paren_parent(next, pc->type);
       }
 
       /* Check for stuff that can only occur at the start of an expression */
@@ -850,9 +852,13 @@ void combine_labels(void)
             {
                /* ignore it, as it is inside a paren */
             }
-            else if (cur->type == CT_TYPE)
+            else if ((cur->type == CT_TYPE) ||
+                     (cur->type == CT_ENUM) ||
+                     (cur->type == CT_PRIVATE) ||
+                     (cur->type == CT_QUALIFIER) ||
+                     (cur->parent_type == CT_ALIGN))
             {
-               /* ignore it - anonymous bit field? */
+               /* ignore it - bit field, align or public/private, etc */
             }
             else if ((cur->type == CT_ANGLE_CLOSE) || hit_class)
             {
@@ -868,9 +874,10 @@ void combine_labels(void)
                }
                else
                {
-                  LOG_FMT(LWARN, "%s: unexpected colon on line %d, col %d parent=%s l=%d bl=%d\n",
+                  LOG_FMT(LWARN, "%s: unexpected colon on line %d, col %d n-parent=%s c-parent=%s l=%d bl=%d\n",
                           __func__, next->orig_line, next->orig_col,
                           get_token_name(next->parent_type),
+                          get_token_name(cur->parent_type),
                           next->level, next->brace_level);
                }
             }

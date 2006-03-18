@@ -184,8 +184,8 @@ int main(int argc, char *argv[])
    /**
     * Re-type chunks, combine chunks, insert virtual braces
     */
-   combine_labels();
    fix_symbols();
+   combine_labels();
 
    do_braces();
 

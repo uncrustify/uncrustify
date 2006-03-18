@@ -32,8 +32,7 @@ static chunk_t *insert_vbrace(chunk_t *pc, BOOL after,
 #define insert_vbrace_after(pc, frm)      insert_vbrace(pc, TRUE, frm)
 #define insert_vbrace_before(pc, frm)     insert_vbrace(pc, FALSE, frm)
 
-void parse_cleanup(struct parse_frame *frm,
-                   chunk_t *pc, chunk_t *prev);
+void parse_cleanup(struct parse_frame *frm, chunk_t *pc);
 
 void close_statement(struct parse_frame *frm, chunk_t *pc);
 void handle_close_stage(struct parse_frame *frm, chunk_t *pc);
@@ -629,7 +628,7 @@ void parse_buffer(const char *data, int data_len)
 
             if (cpd.in_preproc == PP_DEFINE_BODY)
             {
-               parse_cleanup(&frm, pc, prev);
+               parse_cleanup(&frm, pc);
             }
          }
 
@@ -691,7 +690,8 @@ void parse_buffer(const char *data, int data_len)
                 (frm.pse[frm.pse_tos].type == CT_SWITCH) ||
                 (frm.pse[frm.pse_tos].type == CT_DO) ||
                 (frm.pse[frm.pse_tos].type == CT_WHILE) ||
-                (frm.pse[frm.pse_tos].type == CT_VOLATILE))
+                (frm.pse[frm.pse_tos].type == CT_VOLATILE) ||
+                (frm.pse[frm.pse_tos].type == CT_BRACED))
             {
                //fprintf(stderr, "%s: closing on token %s\n",
                //        __func__, get_token_name(pc->type));
@@ -704,7 +704,7 @@ void parse_buffer(const char *data, int data_len)
          {
             if (!chunk_is_newline(pc) && !chunk_is_comment(pc))
             {
-               parse_cleanup(&frm, pc, prev);
+               parse_cleanup(&frm, pc);
             }
          }
       }
@@ -728,12 +728,25 @@ static void print_stack(struct parse_frame *frm, chunk_t *pc)
    }
 }
 
-void parse_cleanup(struct parse_frame *frm,
-                   chunk_t *pc, chunk_t *prev)
+void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
 {
    c_token_t parent = CT_NONE;
+   chunk_t *prev;
 
    prev = chunk_get_prev_ncnl(pc);
+
+   if ((prev != NULL) && (prev->type == CT_VERSION) &&
+       (frm->pse[frm->pse_tos].type == CT_VERSION))
+   {
+      if (pc->type == CT_PAREN_OPEN)
+      {
+         frm->pse[frm->pse_tos].type = CT_IF;
+      }
+      else
+      {
+         frm->pse_tos--;
+      }
+   }
 
    /* Mark statement starts */
    if (((frm->stmt_count == 0) || (frm->expr_count == 0)) &&
@@ -901,7 +914,8 @@ void parse_cleanup(struct parse_frame *frm,
          }
          else if ((prev->type == CT_ELSE) ||
                   (prev->type == CT_DO) ||
-                  (prev->type == CT_VOLATILE))
+                  (prev->type == CT_VOLATILE) ||
+                  (prev->type == CT_BRACED))
          {
             parent = prev->type;
          }
@@ -1012,12 +1026,15 @@ void parse_cleanup(struct parse_frame *frm,
        (pc->type == CT_FOR) ||
        (pc->type == CT_WHILE) ||
        (pc->type == CT_VOLATILE) ||
-       (pc->type == CT_SWITCH))
+       (pc->type == CT_SWITCH) ||
+       (pc->type == CT_VERSION) ||
+       (pc->type == CT_BRACED))
    {
       frm->pse_tos++;
       frm->pse[frm->pse_tos].type  = pc->type;
       frm->pse[frm->pse_tos].stage = (pc->type == CT_DO) ? BS_BRACE_DO :
-                                     (pc->type == CT_VOLATILE) ? BS_BRACE2 : BS_PAREN1;
+                                     ((pc->type == CT_VOLATILE) ||
+                                      (pc->type == CT_BRACED)) ? BS_BRACE2 : BS_PAREN1;
       //fprintf(stderr, "opening %s\n", pc->str);
 
       print_stack(frm, pc);
