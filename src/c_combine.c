@@ -142,6 +142,31 @@ void fix_symbols(void)
          pc->type = CT_FUNCTION;
       }
 
+      if ((pc->type == CT_SQUARE_OPEN) && (next->type == CT_SQUARE_CLOSE))
+      {
+         /* Combine the [ and ] into [] and delete next */
+         pc->type   = CT_TSQUARE;
+         pc->str    = "[]";
+         pc->len    = 2;
+         tmp = next;
+         next = chunk_get_next_ncnl(next);
+         chunk_del(tmp);
+      }
+
+      /* A [] in C# and D only follows a type */
+      if ((pc->type == CT_TSQUARE) &&
+          ((cpd.lang_flags & (LANG_D | LANG_CS)) != 0))
+      {
+         if ((prev != NULL) && (prev->type == CT_WORD))
+         {
+            prev->type = CT_TYPE;
+         }
+         if ((next != NULL) && (next->type == CT_WORD))
+         {
+            next->flags |= PCF_VAR_1ST_DEF;
+         }
+      }
+
       /**
        * A word before an open paren is a function call or definition.
        * CT_WORD => CT_FUNC_CALL or CT_FUNC_DEF
@@ -904,16 +929,6 @@ static void fix_fcn_def_params(chunk_t *pc)
       {
          mark_variable_stack(LFCNP);
       }
-      //if ((pc->type == CT_COMMA) && (prev != NULL))
-      //{
-      //   if (!chunk_is_star(prev))
-      //   {
-      //      LOG_FMT(LFCNP, "%s: marked %s on line %d\n", __func__,
-      //              prev->str, prev->orig_line);
-      //      prev->flags |= PCF_VAR_DEF;
-      //   }
-      //}
-      //prev = pc;
       pc = chunk_get_next_ncnl(pc);
    }
    mark_variable_stack(LFCNP);

@@ -109,6 +109,7 @@ const char *token_names[] =
    [CT_VBRACE_CLOSE]  = "VBRACE_CLOSE",
    [CT_SQUARE_OPEN]   = "SQUARE_OPEN",
    [CT_SQUARE_CLOSE]  = "SQUARE_CLOSE",
+   [CT_TSQUARE]       = "TSQUARE",
    [CT_LABEL]         = "LABEL",
    [CT_LABEL_COLON]   = "LABEL_COLON",
    [CT_FUNCTION]      = "FUNCTION",

@@ -133,6 +133,8 @@ typedef enum
    CT_SQUARE_OPEN,
    CT_SQUARE_CLOSE,
 
+   CT_TSQUARE,          /* special case of [] */
+
    /* agregate types */
    CT_LABEL,            /* a non-case label */
    CT_LABEL_COLON,      /* the colon for a label */

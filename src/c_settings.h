@@ -71,7 +71,8 @@ enum uncrustify_options
    UO_sp_inside_fparen,     // space inside 'foo( xxx )' vs 'foo(xxx)'
    UO_sp_inside_paren,      // space inside '+ ( xxx )' vs '+ (xxx)'
    UO_sp_inside_square,     // space inside 'byte[ 5 ]' vs 'byte[5]'
-   UO_sp_before_square,     // space before all '['
+   UO_sp_before_square,     // space before single '['
+   UO_sp_before_squares,    // space before '[]', as in 'byte []'
 
    UO_sp_paren_paren,       // space between nested parens - '( (' vs '(('
 
@@ -313,6 +314,7 @@ struct options_name_tab option_name_table[] =
    OPTDEF(sp_before_semi,                AT_IARF),
    OPTDEF(sp_before_sparen,              AT_IARF),
    OPTDEF(sp_before_square,              AT_IARF),
+   OPTDEF(sp_before_squares,             AT_IARF),
    OPTDEF(sp_bool,                       AT_IARF),
    OPTDEF(sp_compare,                    AT_IARF),
    OPTDEF(sp_func_call_paren,            AT_IARF),

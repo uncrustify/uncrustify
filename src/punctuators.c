@@ -70,6 +70,7 @@ static const chunk_tag_t symbols2[] =
    { "~~", CT_COMPARE,      LANG_D },
    { "~=", CT_COMPARE,      LANG_D },
    { "..", CT_ELIPSIS,      LANG_D },
+   { "[]", CT_TSQUARE,      LANG_ALL },
 };
 
 /* 1-char symbols */
