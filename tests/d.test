@@ -5,4 +5,5 @@
 # test.name  config.file  input.file  output.file
 
 40000  d.cfg  HashMap.d  40000-HashMap.d
+40001  d.cfg  imports.d  40001-imports.d
 

@@ -37,12 +37,7 @@ static LIST_HEAD(drivers);
 static DECLARE_MUTEX(core_lists);
 static DEFINE_IDR(i2c_adapter_idr);
 
-static int i2c_device_match(struct device *dev, struct device_driver *drv);
-
-/* match always succeeds, as we want the probe() to tell if we really accept this match */
-static int i2c_device_match(dev, drv)
-struct device *dev;
-struct device_driver *drv;
+static int i2c_device_match(struct device *dev, struct device_driver *drv)
 {
 	return 1;
 }

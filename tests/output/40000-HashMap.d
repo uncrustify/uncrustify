@@ -347,7 +347,7 @@ class HashMap
         final V         value;
         final HashEntry next;
 
-        this (K key, uint hash, HashEntry next, V value)
+        this(K key, uint hash, HashEntry next, V value)
         {
             this.key   = key;
             this.hash  = hash;
@@ -426,7 +426,7 @@ class HashMap
          */
         final float loadFactor;
 
-        this (int initialCapacity, float lf)
+        this(int initialCapacity, float lf)
         {
             loadFactor = lf;
             setTable(new HashEntry[initialCapacity]);
@@ -472,7 +472,6 @@ class HashMap
 
             // read-volatile
             volatile c = count;
-
             if (c)
             {
                 HashEntry e = getFirst(hash);
@@ -501,7 +500,6 @@ class HashMap
 
             // read-volatile
             volatile c = count;
-
             if (c)
             {
                 HashEntry e = getFirst(hash);
@@ -541,15 +539,14 @@ class HashMap
             int c;
 
             volatile c = count;
-
             if (c++ > threshold)
                 rehash();
 
             HashEntry[] tab;
             volatile tab = table;
-            uint      index = hash & (tab.length - 1);
-            HashEntry first = tab[index];
-            HashEntry e     = first;
+            uint        index = hash & (tab.length - 1);
+            HashEntry   first = tab[index];
+            HashEntry   e     = first;
 
             while (e && (e.hash != hash || !matchKey(key, e.key)))
                 e = e.next;
@@ -597,8 +594,8 @@ class HashMap
              */
 
             HashEntry[] newTable = new HashEntry[oldCapacity << 1];
-            threshold            = cast(int)(newTable.length * loadFactor);
-            int      sizeMask = newTable.length - 1;
+            threshold = cast(int)(newTable.length * loadFactor);
+            int         sizeMask = newTable.length - 1;
 
             for (int i = 0; i < oldCapacity; ++i)
             {
@@ -648,7 +645,7 @@ class HashMap
          */
         final synchronized V remove(K key, uint hash, V value)
         {
-            int c;
+            int         c;
 
             HashEntry[] tab;
 
@@ -665,7 +662,7 @@ class HashMap
             V oldValue = null;
             if (e)
             {
-                V  v;
+                V v;
                 volatile v = e.value;
                 if (value is null || value == v)
                 {
@@ -721,7 +718,7 @@ class HashMap
      * negative or the load factor or concurrencyLevel are
      * nonpositive.
      */
-    public this (uint initialCapacity, float loadFactor, uint concurrencyLevel)
+    public this(uint initialCapacity, float loadFactor, uint concurrencyLevel)
     {
         assert(loadFactor > 0);
 
@@ -1014,7 +1011,7 @@ class HashMap
         HashEntry   lastReturned;
         HashMap     map;
 
-        this (HashMap map)
+        this(HashMap map)
         {
             this.map         = map;
             nextSegmentIndex = map.segments.length - 1;
@@ -1037,17 +1034,17 @@ class HashMap
             {
                 Segment seg = map.segments[nextSegmentIndex--];
                 volatile if (seg.count)
-                {
-                    currentTable = seg.table;
-                    for (int j = currentTable.length - 1; j >= 0; --j)
                     {
-                        if ((nextEntry = currentTable[j]) !is null)
+                        currentTable = seg.table;
+                        for (int j = currentTable.length - 1; j >= 0; --j)
                         {
-                            nextTableIndex = j - 1;
-                            return;
+                            if ((nextEntry = currentTable[j]) !is null)
+                            {
+                                nextTableIndex = j - 1;
+                                return;
+                            }
                         }
                     }
-                }
             }
         }
 
@@ -1069,7 +1066,7 @@ class HashMap
 
     static class KeyIterator : HashIterator
     {
-        this (HashMap map) { super(map); }
+        this(HashMap map) { super(map); }
         public K next()
         {
             return super.nextElement().key;
@@ -1078,7 +1075,7 @@ class HashMap
 
     static class ValueIterator : HashIterator
     {
-        this (HashMap map) { super(map); }
+        this(HashMap map) { super(map); }
         public V next()
         {
             volatile return super.nextElement().value;
