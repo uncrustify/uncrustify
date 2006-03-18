@@ -141,10 +141,16 @@ argval_t do_space(chunk_t *first, chunk_t *second)
       return(cpd.settings[UO_sp_before_sparen]);
    }
 
-   /* "byte [" vs "byte[" */
+   /* "a [x]" vs "a[x]" */
    if (second->type == CT_SQUARE_OPEN)
    {
       return(cpd.settings[UO_sp_before_square]);
+   }
+
+   /* "byte[]" vs "byte []" */
+   if (second->type == CT_TSQUARE)
+   {
+      return(cpd.settings[UO_sp_before_squares]);
    }
 
    /* "for (...) {...}" vs "for (...){...}" */
@@ -236,9 +242,6 @@ argval_t do_space(chunk_t *first, chunk_t *second)
       {
          return(cpd.settings[UO_sp_paren_brace]);
       }
-
-      LOG_FMT(0, "%s: %d: parent=%s\n", __func__, first->orig_line,
-              get_token_name(second->parent_type));
 
       /* D-specific: "delegate(some thing) dg */
       if (first->parent_type == CT_DELEGATE)
