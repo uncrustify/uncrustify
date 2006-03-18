@@ -125,6 +125,7 @@
 				<F N="tests/config/brace-remove-2.cfg"/>
 				<F N="tests/config/brace-remove-all.cfg"/>
 				<F N="tests/config/cast-types.txt"/>
+				<F N="tests/config/d.cfg"/>
 				<F N="tests/config/indent.cfg"/>
 			</Folder>
 			<Folder Name="input">
@@ -135,6 +136,7 @@
 				<F N="tests/input/enum-struct-init.c"/>
 				<F N="tests/input/HashMap.d"/>
 				<F N="tests/input/ifdef-indent.c"/>
+				<F N="tests/input/imports.d"/>
 				<F N="tests/input/indent-assign.c"/>
 				<F N="tests/input/return-multi.c"/>
 				<F N="tests/input/struct-brace.c"/>
@@ -145,6 +147,7 @@
 				<F N="tests/output/00000-comment-indent.c"/>
 				<F N="tests/output/00020-define-if-indent.c"/>
 				<F N="tests/output/40000-HashMap.d"/>
+				<F N="tests/output/40001-imports.d"/>
 			</Folder>
 			<F N="tests/c-sharp.test"/>
 			<F N="tests/c.test"/>
