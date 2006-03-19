@@ -73,6 +73,7 @@ static chunk_tag_t keywords[] =
    { "dchar",            CT_TYPE,       LANG_D },
    { "debug",            CT_PBRACED,    LANG_D },
    { "default",          CT_DEFAULT,    LANG_ALL },
+   { "define",           CT_PP_DEFINE,  LANG_ALL | FLAG_PP },
    { "defined",          CT_PP_DEFINED, LANG_ALL | FLAG_PP },
    { "delegate",         CT_DELEGATE,   LANG_CS | LANG_D },
    { "delete",           CT_DELETE,     LANG_CPP | LANG_D },
@@ -80,7 +81,10 @@ static chunk_tag_t keywords[] =
    { "do",               CT_DO,         LANG_ALL },
    { "double",           CT_TYPE,       LANG_ALL },
    { "dynamic_cast",     CT_TYPE_CAST,  LANG_CPP },
+   { "elif",             CT_PP_ELSE,    LANG_ALL | FLAG_PP},
    { "else",             CT_ELSE,       LANG_ALL },
+   { "else",             CT_PP_ELSE,    LANG_ALL | FLAG_PP},
+   { "endif",            CT_PP_ENDIF,   LANG_ALL | FLAG_PP },
    { "endregion",        CT_PP_ENDIF,   LANG_CS | FLAG_PP },
    { "enum",             CT_ENUM,       LANG_ALL },
    { "event",            CT_TYPE,       LANG_CS },
@@ -99,11 +103,14 @@ static chunk_tag_t keywords[] =
    { "goto",             CT_GOTO,       LANG_ALL },
    { "idouble",          CT_TYPE,       LANG_D },
    { "if",               CT_IF,         LANG_ALL },
+   { "if",               CT_PP_IF,      LANG_ALL | FLAG_PP },
+   { "ifdef",            CT_PP_IF,      LANG_ALL | FLAG_PP },
    { "ifloat",           CT_TYPE,       LANG_D },
    { "implements",       CT_QUALIFIER,  LANG_JAVA },
    { "implicit",         CT_QUALIFIER,  LANG_CS },
    { "import",           CT_USING,      LANG_D | LANG_JAVA },
    { "in",               CT_IN,         LANG_D | LANG_CS },
+   { "include",          CT_PP_INCLUDE, LANG_C | LANG_CPP | FLAG_PP},
    { "inline",           CT_QUALIFIER,  LANG_C | LANG_CPP },
    { "inout",            CT_QUALIFIER,  LANG_D },
    { "instanceof",       CT_SIZEOF,     LANG_JAVA },
@@ -245,6 +252,40 @@ void add_keyword(const char *tag, c_token_t type, uint8_t lang_flags)
    }
 }
 
+/**
+ * Backs up to the first string match in keywords.
+ */
+static const chunk_tag_t *kw_static_first(const chunk_tag_t *tag)
+{
+   const chunk_tag_t *prev = tag - 1;
+   while ((prev >= &keywords[0]) && (strcmp(prev->tag, tag->tag) == 0))
+   {
+      tag = prev;
+      prev--;
+   }
+   return tag;
+}
+
+static const chunk_tag_t *kw_static_match(const chunk_tag_t *tag)
+{
+   BOOL  in_pp = (cpd.in_preproc != PP_NONE);
+   BOOL  pp_iter;
+   const chunk_tag_t *iter;
+
+   for (iter = kw_static_first(tag);
+        iter < &keywords[ARRAY_SIZE(keywords)];
+        iter++)
+   {
+      pp_iter = (iter->lang_flags & FLAG_PP) != 0;
+      if ((strcmp(iter->tag, tag->tag) == 0) &&
+          ((cpd.lang_flags & iter->lang_flags) != 0) &&
+          (in_pp == pp_iter))
+      {
+         return iter;
+      }
+   }
+   return NULL;
+}
 
 /**
  * Search first the dynamic and then the static table for a matching keyword
@@ -270,11 +311,17 @@ const chunk_tag_t *find_keyword(const char *word, int len)
 
    tag.tag = buf;
 
+   /* check the dynamic word list first */
    p_ret = bsearch(&tag, wl.p_tags, wl.active, sizeof(chunk_tag_t), kw_compare);
    if (p_ret == NULL)
    {
+      /* check the static word list */
       p_ret = bsearch(&tag, keywords, ARRAY_SIZE(keywords), sizeof(keywords[0]),
                       kw_compare);
+      if (p_ret != NULL)
+      {
+         p_ret = kw_static_match(p_ret);
+      }
    }
    return(p_ret);
 }
