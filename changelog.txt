@@ -2,6 +2,16 @@
 # $Id$
 #
 
+Current version: uncrustify-0.0.9
+
+
+Changes from uncrustify-0.0.8
+-------------------------------------------------------------------------------
+ - Major enhancements for D
+ - Add handling for special "[]" sequence fr C#/D
+ - add some more tests
+
+
 Changes from uncrustify-0.0.7
 -------------------------------------------------------------------------------
  - update TODO list
