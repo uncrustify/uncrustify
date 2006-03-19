@@ -179,14 +179,39 @@ int main(int argc, char *argv[])
    /**
     * Parse the text into chunks
     */
-   parse_buffer(data, data_len);
+   tokenize(data, data_len);
 
    /**
-    * Re-type chunks, combine chunks, insert virtual braces
+    * Change certain token types based on simple sequence.
+    * Example: change '[' + ']' to '[]'
+    * Note that level info is not yet available, so it is OK to do all
+    * processing that doesn't need to know level info. (that's very little!)
+    */
+   tokenize_cleanup();
+
+   /**
+    * Detect the brace and paren levels and insert virtual braces.
+    * This handles all that nasty preprocessor stuff
+    */
+   brace_cleanup();
+
+   /**
+    * At this point, the level information is available and accurate.
+    */
+
+   /**
+    * Re-type chunks, combine chunks
     */
    fix_symbols();
+
+   /**
+    * Look at all colons ':' and mark labels, :? sequences, etc.
+    */
    combine_labels();
 
+   /**
+    * Change virtual braces into real braces...
+    */
    do_braces();
 
    /**

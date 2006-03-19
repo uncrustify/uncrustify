@@ -43,54 +43,64 @@
 				MenuCaption="E&amp;xecute"
 				SaveOption="SaveNone"
 				RunFromDir="%rw">
-				<Exec CmdLine='"uncrustify.exe"'/>
+				<Exec CmdLine='"extras.exe"'/>
 			</Target>
 		</Menu>
 	</Config>
-	<Files>
+	<CustomFolders>
 		<Folder
 			Name="Source Files"
 			Filters="*.c;*.C;*.cc;*.cpp;*.cp;*.cxx;*.prg;*.pas;*.dpr;*.asm;*.s;*.bas;*.java;*.cs;*.sc;*.e;*.cob;*.html;*.rc;*.tcl;*.py;*.pl">
-			<F N="src/brace_cleanup.c"/>
-			<F N="src/braces.c"/>
-			<F N="src/c_align.c"/>
-			<F N="src/c_args.c"/>
-			<F N="src/c_combine.c"/>
-			<F N="src/c_indent.c"/>
-			<F N="src/c_newlines.c"/>
-			<F N="src/c_output.c"/>
-			<F N="src/c_space.c"/>
-			<F N="src/chunk_list.c"/>
-			<F N="src/chunk_stack.c"/>
-			<F N="src/keywords.c"/>
-			<F N="src/logger.c"/>
-			<F N="src/logmask.c"/>
-			<F N="src/parse_frame.c"/>
-			<F N="src/punctuators.c"/>
-			<F N="src/tokenize.c"/>
-			<F N="src/tokenize_cleanup.c"/>
-			<F N="src/uncrustify.c"/>
 		</Folder>
 		<Folder
 			Name="Header Files"
 			Filters="*.h;*.H;*.hh;*.hpp;*.hxx;*.inc;*.sh;*.cpy;*.if">
-			<F N="src/base_types.h"/>
-			<F N="src/c_settings.h"/>
-			<F N="src/char_table.h"/>
-			<F N="src/chunk_list.h"/>
-			<F N="src/chunk_stack.h"/>
-			<F N="src/cparse_types.h"/>
-			<F N="src/log_levels.h"/>
-			<F N="src/logger.h"/>
-			<F N="src/logmask.h"/>
-			<F N="src/prototypes.h"/>
-			<F N="src/token_enum.h"/>
-			<F N="src/token_names.h"/>
 		</Folder>
+		<Folder
+			Name="Resource Files"
+			Filters="*.ico;*.cur;*.dlg"/>
+		<Folder
+			Name="Bitmaps"
+			Filters="*.bmp"/>
 		<Folder
 			Name="Other Files"
 			Filters="">
-			<F N="src/Makefile.am"/>
 		</Folder>
+	</CustomFolders>
+	<Files AutoFolders="DirectoryView">
+		<Folder Name="documentation">
+			<F N="documentation/configuration.txt"/>
+			<F N="documentation/goals.txt"/>
+			<F N="documentation/theory.txt"/>
+		</Folder>
+		<Folder Name="etc">
+			<F N="etc/ben.cfg"/>
+			<F N="etc/ben2.cfg"/>
+			<F N="etc/d.cfg"/>
+			<F N="etc/dofiles.sh"/>
+			<F N="etc/gnu-indent.cfg"/>
+			<F N="etc/kr-indent.cfg"/>
+			<F N="etc/linux-indent.cfg"/>
+			<F N="etc/linux.cfg"/>
+			<F N="etc/mono.cfg"/>
+			<F N="etc/types.txt"/>
+			<F N="etc/uncrust-files.sh"/>
+			<F N="etc/uncrustify.cfg"/>
+			<F N="etc/xsupplicant.cfg"/>
+		</Folder>
+		<F N="AUTHORS"/>
+		<F N="BUGS"/>
+		<F N="ChangeLog"/>
+		<F N="changelog.txt"/>
+		<F N="check_settings.sh"/>
+		<F N="COPYING"/>
+		<F N="do-c.sh"/>
+		<F N="do-d.sh"/>
+		<F N="INSTALL"/>
+		<F N="make_token_names.sh"/>
+		<F N="Makefile.am"/>
+		<F N="NEWS"/>
+		<F N="README"/>
+		<F N="todo.txt"/>
 	</Files>
 </Project>

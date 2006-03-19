@@ -414,7 +414,7 @@ BOOL parse_whitespace(chunk_t *pc)
  * @param pc      The structure to update, str is an input.
  * @return        TRUE/FALSE - whether anything was parsed
  */
-BOOL parse_next(chunk_t *pc)
+static BOOL parse_next(chunk_t *pc)
 {
    const chunk_tag_t *punc;
 
@@ -533,7 +533,7 @@ BOOL parse_next(chunk_t *pc)
  *  - trailing whitespace are removed.
  *  - leading space & tabs are converted to the appropriate format.
  */
-void parse_buffer(const char *data, int data_len)
+void tokenize(const char *data, int data_len)
 {
    int                idx = 0;
    chunk_t            chunk;

@@ -1,0 +1,115 @@
+<!DOCTYPE Project SYSTEM "http://www.slickedit.com/dtd/vse/8.1/vpj.dtd">
+<Project
+	Version="8.1"
+	VendorName="SlickEdit"
+	WorkingDir=".">
+	<Config
+		Name="Release"
+		OutputFile="">
+		<Menu>
+			<Target
+				Name="Compile"
+				MenuCaption="&amp;Compile"
+				CaptureOutputWith="ProcessBuffer"
+				SaveOption="SaveCurrent"
+				RunFromDir="%rw">
+				<Exec/>
+			</Target>
+			<Target
+				Name="Build"
+				MenuCaption="&amp;Build"
+				CaptureOutputWith="ProcessBuffer"
+				SaveOption="SaveWorkspaceFiles"
+				RunFromDir="%rw">
+				<Exec/>
+			</Target>
+			<Target
+				Name="Rebuild"
+				MenuCaption="&amp;Rebuild"
+				CaptureOutputWith="ProcessBuffer"
+				SaveOption="SaveWorkspaceFiles"
+				RunFromDir="%rw">
+				<Exec/>
+			</Target>
+			<Target
+				Name="Debug"
+				MenuCaption="&amp;Debug"
+				SaveOption="SaveNone"
+				RunFromDir="%rw">
+				<Exec/>
+			</Target>
+			<Target
+				Name="Execute"
+				MenuCaption="E&amp;xecute"
+				SaveOption="SaveNone"
+				RunFromDir="%rw">
+				<Exec CmdLine='"tests.exe"'/>
+			</Target>
+		</Menu>
+	</Config>
+	<CustomFolders>
+		<Folder
+			Name="Source Files"
+			Filters="*.c;*.C;*.cc;*.cpp;*.cp;*.cxx;*.prg;*.pas;*.dpr;*.asm;*.s;*.bas;*.java;*.cs;*.sc;*.e;*.cob;*.html;*.rc;*.tcl;*.py;*.pl">
+		</Folder>
+		<Folder
+			Name="Header Files"
+			Filters="*.h;*.H;*.hh;*.hpp;*.hxx;*.inc;*.sh;*.cpy;*.if">
+		</Folder>
+		<Folder
+			Name="Resource Files"
+			Filters="*.ico;*.cur;*.dlg"/>
+		<Folder
+			Name="Bitmaps"
+			Filters="*.bmp"/>
+		<Folder
+			Name="Other Files"
+			Filters="">
+		</Folder>
+	</CustomFolders>
+	<Files AutoFolders="DirectoryView">
+		<Folder Name="config">
+			<F N="config/ben.cfg"/>
+			<F N="config/brace-remove-2.cfg"/>
+			<F N="config/brace-remove-all.cfg"/>
+			<F N="config/cast-types.txt"/>
+			<F N="config/d.cfg"/>
+			<F N="config/indent.cfg"/>
+		</Folder>
+		<Folder Name="input">
+			<F N="input/brace-remove.c"/>
+			<F N="input/colon-asm.c"/>
+			<F N="input/comment-indent.c"/>
+			<F N="input/define-if-indent.c"/>
+			<F N="input/enum-struct-init.c"/>
+			<F N="input/HashMap.d"/>
+			<F N="input/i2c-core.c"/>
+			<F N="input/ifdef-indent.c"/>
+			<F N="input/ifdef-nest.c"/>
+			<F N="input/imports.d"/>
+			<F N="input/indent-assign.c"/>
+			<F N="input/return-multi.c"/>
+			<F N="input/simple.cs"/>
+			<F N="input/struct-brace.c"/>
+			<F N="input/switch-case.c"/>
+			<F N="input/type-cast.c"/>
+		</Folder>
+		<Folder Name="output">
+			<F N="output/00000-comment-indent.c"/>
+			<F N="output/00020-define-if-indent.c"/>
+			<F N="output/00050-brace-remove-2.c"/>
+			<F N="output/00051-brace-remove-all.c"/>
+			<F N="output/20000-i2c-core.c"/>
+			<F N="output/40000-HashMap.d"/>
+			<F N="output/40001-imports.d"/>
+		</Folder>
+		<F N="c-sharp.test"/>
+		<F N="c.test"/>
+		<F N="cpp.test"/>
+		<F N="d.test"/>
+		<F N="general.test"/>
+		<F N="java.test"/>
+		<F N="run_tests.py"/>
+		<F N="run_tests.sh"/>
+	</Files>
+</Project>

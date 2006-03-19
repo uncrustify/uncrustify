@@ -98,8 +98,21 @@ void newlines_squeeze_ifdef(void);
  *  tokenize.c
  */
 
-void parse_buffer(const char *data, int data_len);
-BOOL parse_next(chunk_t *pc);
+void tokenize(const char *data, int data_len);
+
+
+/*
+ *  tokenize_cleanup.c
+ */
+
+void tokenize_cleanup(void);
+
+
+/*
+ *  brace_cleanup.c
+ */
+
+void brace_cleanup(void);
 
 
 /*
