@@ -78,6 +78,7 @@
 		</Folder>
 		<Folder Name="input">
 			<F N="input/brace-remove.c"/>
+			<F N="input/braces.c"/>
 			<F N="input/colon-asm.c"/>
 			<F N="input/comment-indent.c"/>
 			<F N="input/define-if-indent.c"/>
@@ -96,6 +97,7 @@
 		</Folder>
 		<Folder Name="output">
 			<F N="output/00000-comment-indent.c"/>
+			<F N="output/00010-braces.c"/>
 			<F N="output/00020-define-if-indent.c"/>
 			<F N="output/00050-brace-remove-2.c"/>
 			<F N="output/00051-brace-remove-all.c"/>
