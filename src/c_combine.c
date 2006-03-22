@@ -25,7 +25,6 @@ static chunk_t *mark_variable_definition(chunk_t *start);
 static void mark_define_expressions(void);
 static void process_returns(void);
 static chunk_t *process_return(chunk_t *pc);
-static void check_template(chunk_t *pc);
 
 
 /**
@@ -190,15 +189,6 @@ void fix_symbols(void)
       if ((pc->flags & PCF_STMT_START) != 0)
       {
          /* Mark variable definitions */
-      }
-
-      if (pc->type == CT_ANGLE_OPEN)
-      {
-         check_template(pc);
-      }
-      if ((pc->type == CT_ANGLE_CLOSE) && (pc->parent_type != CT_TEMPLATE))
-      {
-         pc->type = CT_COMPARE;
       }
 
       /* Check for stuff that can only occur at the start of an expression */
@@ -1402,40 +1392,4 @@ static void mark_define_expressions(void)
       pc   = chunk_get_next(pc);
    }
 }
-
-/**
- * If there is nothing but CT_WORD and CT_MEMBER, then it's probably a
- * template thingy.  Otherwise, it's likely a comparison.
- */
-static void check_template(chunk_t *start)
-{
-   chunk_t *pc;
-   chunk_t *end;
-
-   for (pc = chunk_get_next_ncnl(start); pc != NULL; pc = chunk_get_next_ncnl(pc))
-   {
-      if ((pc->type != CT_WORD) && (pc->type != CT_MEMBER))
-      {
-         break;
-      }
-   }
-
-   end = pc;
-   if (end != NULL)
-   {
-      if (end->type == CT_ANGLE_CLOSE)
-      {
-         for (pc = start; pc != end; pc = chunk_get_next_ncnl(pc))
-         {
-            pc->parent_type = CT_TEMPLATE;
-         }
-         end->parent_type = CT_TEMPLATE;
-      }
-      else
-      {
-         start->type = CT_COMPARE;
-      }
-   }
-}
-
 

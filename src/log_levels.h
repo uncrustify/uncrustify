@@ -43,6 +43,7 @@ enum
    LFCNP    = 32,    /* function parameters */
    LPCU     = 33,    /* parse cleanup */
    LDYNKW   = 34,    /* dynamic keywords */
+   LOUTIND  = 35,    /* output indent */
 };
 
 #endif   /* LOG_LEVELS_H_INCLUDED */

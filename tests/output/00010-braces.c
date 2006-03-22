@@ -21,11 +21,7 @@ void foo(void)
    do
    {
       a--;
-   }
-   while (a > 0)
-   {
-      ;
-   }
+   } while (a > 0);
 
    for (a = 0; a < 10; a++)
    {
@@ -50,9 +46,13 @@ void foo(void)
          {
             a *= a;
          }
-         else
+         else if (b != 0)
          {
             a /= b;
+         }
+         else
+         {
+            a += b;
          }
       }
    }

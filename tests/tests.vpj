@@ -94,6 +94,7 @@
 			<F N="input/struct-brace.c"/>
 			<F N="input/switch-case.c"/>
 			<F N="input/type-cast.c"/>
+			<F N="input/volatile.d"/>
 		</Folder>
 		<Folder Name="output">
 			<F N="output/00000-comment-indent.c"/>
@@ -104,6 +105,7 @@
 			<F N="output/20000-i2c-core.c"/>
 			<F N="output/40000-HashMap.d"/>
 			<F N="output/40001-imports.d"/>
+			<F N="output/40002-volatile.d"/>
 		</Folder>
 		<F N="c-sharp.test"/>
 		<F N="c.test"/>

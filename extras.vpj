@@ -71,6 +71,7 @@
 		<Folder Name="documentation">
 			<F N="documentation/configuration.txt"/>
 			<F N="documentation/goals.txt"/>
+			<F N="documentation/paren_stack.txt"/>
 			<F N="documentation/theory.txt"/>
 		</Folder>
 		<Folder Name="etc">

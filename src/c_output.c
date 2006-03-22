@@ -135,6 +135,8 @@ void output_text(FILE *pfile)
             add_text("\n");
          }
          cpd.did_newline = 1;
+         cpd.column = 1;
+         LOG_FMT(LOUTIND, " xx\n");
       }
       else if (pc->type == CT_COMMENT_MULTI)
       {
@@ -143,6 +145,7 @@ void output_text(FILE *pfile)
       else if (pc->len == 0)
       {
          /* don't do anything for non-visible stuff */
+         LOG_FMT(LOUTIND, " <%d> -", pc->column);
       }
       else
       {
@@ -157,6 +160,8 @@ void output_text(FILE *pfile)
             allow_tabs = (cpd.settings[UO_indent_with_tabs] == 2) ||
                          (chunk_is_comment(pc) &&
                           (cpd.settings[UO_indent_with_tabs] != 0));
+
+            LOG_FMT(LOUTIND, "  %d> col %d/%d - ", pc->orig_line, pc->column, cpd.column);
          }
          else
          {
@@ -173,6 +178,7 @@ void output_text(FILE *pfile)
                              (((pc->column - 1) % cpd.settings[UO_output_tab_size]) == 0) &&
                              ((prev->column + prev->len + 1) != pc->column));
             }
+            LOG_FMT(LOUTIND, " %d -", pc->column);
          }
 
          output_to_column(pc->column, allow_tabs);

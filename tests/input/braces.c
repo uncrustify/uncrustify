@@ -14,7 +14,7 @@ void foo(void)
    {
       a--;
    } while (a > 0);
-   
+
    do
       a--;
    while (a > 0);
@@ -42,10 +42,10 @@ void foo(void)
          {
             a *= a;
          }
-		 else if (b != 0)
-             a /= b;
-		 else
-			 a += b;
+         else if (b != 0)
+            a /= b;
+         else
+            a += b;
       }
    }
 }

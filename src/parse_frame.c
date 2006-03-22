@@ -12,6 +12,42 @@
 #include <string.h>
 #include <stdlib.h>
 
+/**
+ * Logs one parse frame
+ */
+void pf_log(int logsev, struct parse_frame *pf)
+{
+   int idx;
+
+   //LOG_FMT(logsev, "BrLevel=%d Level=%d PseTos=%d\n", pf->brace_level,
+   //        pf->level, pf->pse_tos);
+
+   for (idx = 1; idx <= pf->pse_tos; idx++)
+   {
+      LOG_FMT(logsev, " [%s-%d]",
+              get_token_name(pf->pse[idx].type),
+              pf->pse[idx].stage);
+   }
+   LOG_FMT(logsev, "\n");
+}
+
+
+/**
+ * Logs the entire parse frame stack
+ */
+void pf_log_all(int logsev)
+{
+   int idx;
+
+   LOG_FMT(logsev, "##=- Parse Frame : %d entries\n", cpd.frame_count);
+
+   for (idx = 0; idx < cpd.frame_count; idx++)
+   {
+      LOG_FMT(logsev, " <%d> ", idx);
+
+      pf_log(logsev, &cpd.frames[idx]);
+   }
+}
 
 /**
  * Copies src to dst.
@@ -112,6 +148,9 @@ void pf_check(struct parse_frame *frm, chunk_t *pc)
 
    if ((pc->flags & PCF_IN_PREPROC) != 0)
    {
+      LOG_FMT(LPF, " <In> ");
+      pf_log(LPF, frm);
+
       if (pc->type == CT_PP_IF)
       {
          pf_push(frm);
@@ -124,6 +163,7 @@ void pf_check(struct parse_frame *frm, chunk_t *pc)
          {
             /* need to switch */
             pf_push_under(frm);
+            pf_copy_tos(frm);
             frm->in_ifdef = PP_ELSE;
             txt           = "else-push_under";
          }
@@ -163,6 +203,10 @@ void pf_check(struct parse_frame *frm, chunk_t *pc)
       LOG_FMT(LPF, "%s: %d> %s: %s in_ifdef=%d/%d counts=%d/%d\n", __func__,
               pc->orig_line, get_token_name(pc->type), txt,
               in_ifdef, frm->in_ifdef, b4_cnt, cpd.frame_count);
+      pf_log_all(LPF);
+      LOG_FMT(LPF, " <Out>");
+      pf_log(LPF, frm);
    }
+
 }
 

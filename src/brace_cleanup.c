@@ -23,31 +23,89 @@ static chunk_t *insert_vbrace(chunk_t *pc, BOOL after,
 #define insert_vbrace_after(pc, frm)      insert_vbrace(pc, TRUE, frm)
 #define insert_vbrace_before(pc, frm)     insert_vbrace(pc, FALSE, frm)
 
-void parse_cleanup(struct parse_frame *frm, chunk_t *pc);
+chunk_t *parse_cleanup(struct parse_frame *frm, chunk_t *pc);
 
 void close_statement(struct parse_frame *frm, chunk_t *pc);
-void handle_close_stage(struct parse_frame *frm, chunk_t *pc);
+
+static BOOL check_complex_statements(struct parse_frame *frm, chunk_t *pc);
+static void handle_complex_close(struct parse_frame *frm, chunk_t *pc);
+
+
+static void preproc_start(struct parse_frame *frm, chunk_t *pc)
+{
+//   chunk_t *prev;
+   chunk_t *next;
+
+   /* Close any virtual braces - they can't cross preprocessors
+    * this seems dumb!!!
+    */
+//   prev = chunk_get_prev_ncnl(pc);
+//   if (prev != NULL)
+//   {
+//      if ((frm->pse[frm->pse_tos].type == CT_VBRACE_OPEN) ||
+//          (frm->pse[frm->pse_tos].type == CT_IF) ||
+//          (frm->pse[frm->pse_tos].type == CT_FOR) ||
+//          (frm->pse[frm->pse_tos].type == CT_SWITCH) ||
+//          (frm->pse[frm->pse_tos].type == CT_DO) ||
+//          (frm->pse[frm->pse_tos].type == CT_WHILE) ||
+//          (frm->pse[frm->pse_tos].type == CT_VOLATILE) ||
+//          (frm->pse[frm->pse_tos].type == CT_BRACED))
+//      {
+//         //fprintf(stderr, "%s: closing on token %s\n",
+//         //        __func__, get_token_name(pc->type));
+//         close_statement(frm, prev);
+//      }
+//   }
+
+   /* Get the type of preprocessor and handle it */
+   next = chunk_get_next_ncnl(pc);
+   if (next != NULL)
+   {
+      cpd.in_preproc = next->type;
+
+      /**
+       * If we are in a define, push the frame stack.
+       */
+      if (cpd.in_preproc == CT_PP_DEFINE)
+      {
+         pf_push(frm);
+
+         /* a preproc body starts a new, blank frame */
+         memset(frm, 0, sizeof(*frm));
+         frm->level       = 1;
+         frm->brace_level = 1;
+
+         /*TODO: not sure about the next 3 lines */
+         frm->pse_tos = 1;
+         frm->pse[frm->pse_tos].type  = CT_PP_DEFINE;
+         frm->pse[frm->pse_tos].stage = BS_NONE;
+      }
+      else
+      {
+         /* Check for #if, #else, #endif, etc */
+         pf_check(frm, next);
+      }
+   }
+}
 
 
 /**
  * Scans through the whole list and does stuff.
  * It has to do some tricks to parse preprocessors.
- * 
+ *
  * TODO: This can be cleaned up and simplified - we can look both forward and backward!
  */
 void brace_cleanup(void)
 {
    chunk_t            *pc;
-   chunk_t            *next;
-   chunk_t            *prev  = NULL;
    struct parse_frame frm;
-
 
    memset(&frm, 0, sizeof(frm));
 
    cpd.in_preproc = CT_NONE;
 
-   for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next(pc))
+   pc = chunk_get_head();
+   while (pc != NULL)
    {
       /* Check for leaving a #define body */
       if ((cpd.in_preproc != CT_NONE) && ((pc->flags & PCF_IN_PREPROC) == 0))
@@ -64,76 +122,22 @@ void brace_cleanup(void)
       /* Check for a preprocessor start */
       if (pc->type == CT_PREPROC)
       {
-         /* Close any virtual braces - they can't cross preprocessors */
-         prev = chunk_get_prev_ncnl(pc);
-         if (prev != NULL)
-         {
-            if ((frm.pse[frm.pse_tos].type == CT_VBRACE_OPEN) ||
-                (frm.pse[frm.pse_tos].type == CT_IF) ||
-                (frm.pse[frm.pse_tos].type == CT_FOR) ||
-                (frm.pse[frm.pse_tos].type == CT_SWITCH) ||
-                (frm.pse[frm.pse_tos].type == CT_DO) ||
-                (frm.pse[frm.pse_tos].type == CT_WHILE) ||
-                (frm.pse[frm.pse_tos].type == CT_VOLATILE) ||
-                (frm.pse[frm.pse_tos].type == CT_BRACED))
-            {
-               //fprintf(stderr, "%s: closing on token %s\n",
-               //        __func__, get_token_name(pc->type));
-               close_statement(&frm, prev);
-            }
-         }
-
-         /* Get the type of preprocessor and handle it */
-         next = chunk_get_next_ncnl(pc);
-         if (next != NULL)
-         {
-            cpd.in_preproc = next->type;
-
-            /**
-             * If we are in a define, push the frame stack.
-             */
-            if (cpd.in_preproc == CT_PP_DEFINE)
-            {
-               pf_push(&frm);
-
-               /* a preproc body starts a new, blank frame */
-               memset(&frm, 0, sizeof(frm));
-               frm.level       = 1;
-               frm.brace_level = 1;
-
-               /*TODO: not sure about the next 3 lines */
-               frm.pse_tos = 1;
-               frm.pse[frm.pse_tos].type  = CT_PP_DEFINE;
-               frm.pse[frm.pse_tos].stage = BS_NONE;
-            }
-            else
-            {
-               /* Check for #if, #else, #endif, etc */
-               pf_check(&frm, next);
-            }
-         }
+         preproc_start(&frm, pc);
       }
 
       /* Assume the level won't change */
       pc->level       = frm.level;
       pc->brace_level = frm.brace_level;
 
-      /* Special handling for preprocessor stuff */
-      if (cpd.in_preproc != CT_NONE)
+      /* #define bodies get the full formatting treatment */
+      if (!chunk_is_comment(pc) && !chunk_is_newline(pc) &&
+         ((cpd.in_preproc == CT_PP_DEFINE) || (cpd.in_preproc == CT_NONE)))
       {
-         /* #define bodies get the full formatting treatment */
-         if ((cpd.in_preproc == CT_PP_DEFINE) &&
-             !chunk_is_comment(pc) && !chunk_is_newline(pc))
-         {
-            parse_cleanup(&frm, pc);
-         }
+         pc = parse_cleanup(&frm, pc);
       }
       else
       {
-         if (!chunk_is_newline(pc) && !chunk_is_comment(pc))
-         {
-            parse_cleanup(&frm, pc);
-         }
+         pc = chunk_get_next(pc);
       }
    }
 }
@@ -156,25 +160,71 @@ static void print_stack(struct parse_frame *frm, chunk_t *pc)
    }
 }
 
-void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
+
+/**
+ * At the heart of this algorithm are two stacks.
+ * There is the Paren Stack (PS) and the Frame stack.
+ *
+ * The PS (pse in the code) keeps track of braces, parens,
+ * if/else/switch/do/while/etc items -- anything that is nestable.
+ * Complex statements go through stages.
+ * Take this simple if statment as an example:
+ *   if ( x ) { x--; }
+ *
+ * The stack would change like so: 'token' stack afterwards
+ * 'if' [IF - 1]
+ * '('  [IF - 1] [PAREN OPEN]
+ * 'x'  [IF - 1] [PAREN OPEN]
+ * ')'  [IF - 2]       <- note that the state was incremented
+ * '{'  [IF - 2] [BRACE OPEN]
+ * 'x'  [IF - 2] [BRACE OPEN]
+ * '--' [IF - 2] [BRACE OPEN]
+ * ';'  [IF - 2] [BRACE OPEN]
+ * '}'  [IF - 3]
+ *                             <- lack of else kills the IF, closes statement
+ *
+ * Virtual braces example:
+ *   if ( x ) x--; else x++;
+ *
+ * 'if'   [IF - 1]
+ * '('    [IF - 1] [PAREN OPEN]
+ * 'x'    [IF - 1] [PAREN OPEN]
+ * ')'    [IF - 2]
+ * 'x'    [IF - 2] [VBRACE OPEN]   <- VBrace open inserted before because '{' was not next
+ * '--'   [IF - 2] [VBRACE OPEN]
+ * ';'    [IF - 3]                 <- VBrace close inserted after semicolon
+ * 'else' [ELSE - 0]               <- IF changed into ELSE
+ * 'x'    [ELSE - 0] [VBRACE OPEN] <- lack of '{' -> VBrace
+ * '++'   [ELSE - 0] [VBRACE OPEN]
+ * ';'    [ELSE - 0]               <- VBrace close inserted after semicolon
+ *                                 <- ELSE removed after statment close
+ *
+ * The pse stack is kept on a frame stack.
+ * The frame stack is need for languages that support preprocessors (C, C++, C#)
+ * that can arbitrarily change code flow. It also isolates #define macros so
+ * that they are indented independently and do not affect the rest of the program.
+ *
+ * When an #if is hit, a copy of the current frame is push on the frame stack.
+ * When an #else/#elif is hit, a copy of the current stack is pushed under the
+ * #if frame and the original (pre-#if) frame is copied to the current frame.
+ * When #endif is hit, the top frame is popped.
+ * This has the following effects:
+ *  - a simple #if / #endif does not affect program flow
+ *  - #if / #else /#endif - continues from the #if clause
+ *
+ * When a #define is entered, the current frame is pushed and cleared.
+ * When a #define is exited, the frame is popped.
+ */
+chunk_t *parse_cleanup(struct parse_frame *frm, chunk_t *pc)
 {
    c_token_t parent = CT_NONE;
-   chunk_t *prev;
+   chunk_t   *prev;
 
-   prev = chunk_get_prev_ncnl(pc);
+   LOG_FMT(LTOK, "%s:%d] %16s - tos:%d/%16s stg:%d\n",
+           __func__, pc->orig_line, get_token_name(pc->type),
+           frm->pse_tos, get_token_name(frm->pse[frm->pse_tos].type),
+           frm->pse[frm->pse_tos].stage);
 
-   if ((prev != NULL) && (prev->type == CT_VERSION) &&
-       (frm->pse[frm->pse_tos].type == CT_VERSION))
-   {
-      if (pc->type == CT_PAREN_OPEN)
-      {
-         frm->pse[frm->pse_tos].type = CT_IF;
-      }
-      else
-      {
-         frm->pse_tos--;
-      }
-   }
 
    /* Mark statement starts */
    if (((frm->stmt_count == 0) || (frm->expr_count == 0)) &&
@@ -194,192 +244,41 @@ void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
       pc->flags |= PCF_IN_SPAREN;
    }
 
-   LOG_FMT(LTOK, "%s:%d] %16s - tos:%d/%16s stg:%d\n",
-           __func__, pc->orig_line, get_token_name(pc->type),
-           frm->pse_tos, get_token_name(frm->pse[frm->pse_tos].type),
-           frm->pse[frm->pse_tos].stage);
-
-   /* Check for an else after after the close of an if */
-   while (frm->pse[frm->pse_tos].stage == BS_ELSE)
+   /**
+    * Check for a virtual brace close due to semicolon
+    * Virtual braces also may be added on a complex statement close.
+    */
+   if ((pc->type == CT_SEMICOLON) &&
+       (frm->pse[frm->pse_tos].type == CT_VBRACE_OPEN))
    {
-      //fprintf(stderr, "Checking for else\n");
-      if (pc->type == CT_ELSE)
-      {
-         //fprintf(stderr, "%2d> found else for if\n", pc->orig_line);
-         frm->pse[frm->pse_tos].type  = CT_ELSE;
-         frm->pse[frm->pse_tos].stage = BS_ELSEIF;
-         print_stack(frm, pc);
-         return;
-      }
-      else
-      {
-         //fprintf(stderr, "%2d> did not find else for if\n", pc->orig_line);
-         /* the previous chunk ended the statment */
-         close_statement(frm, prev);
-      }
-   }
-
-   /* change CT_ELSE to CT_IF when we hit an "else if" */
-   if ((frm->pse[frm->pse_tos].type == CT_ELSE) &&
-       (frm->pse[frm->pse_tos].stage == BS_ELSEIF))
-   {
-      if (pc->type == CT_IF)
-      {
-         //fprintf(stderr, " -- Changed else to if --\n");
-         frm->pse[frm->pse_tos].type  = CT_IF;
-         frm->pse[frm->pse_tos].stage = BS_PAREN1;
-         return;
-      }
-      frm->pse[frm->pse_tos].stage = BS_BRACE2;
-   }
-
-   if (frm->pse[frm->pse_tos].stage == BS_WHILE)
-   {
-      if (pc->type == CT_WHILE)
-      {
-         pc->type                     = CT_WHILE_OF_DO;
-         frm->pse[frm->pse_tos].stage = BS_PAREN2;
-         return;
-      }
-      else
-      {
-         LOG_FMT(LWARN, "%s: Error: Expected 'while', got '%s'\n",
-                 __func__, pc->str);
-         frm->pse_tos--;
-      }
-   }
-
-   /* Insert an opening virtual brace */
-   if (((frm->pse[frm->pse_tos].stage == BS_BRACE_DO) ||
-        (frm->pse[frm->pse_tos].stage == BS_BRACE2)) &&
-       (pc->type != CT_BRACE_OPEN))
-   {
-      parent = frm->pse[frm->pse_tos].type;
-      insert_vbrace_before(pc, frm);
-      frm->level++;
-      frm->brace_level++;
-      frm->pse_tos++;
-      frm->pse[frm->pse_tos].type   = CT_VBRACE_OPEN;
-      frm->pse[frm->pse_tos].stage  = BS_NONE;
-      frm->pse[frm->pse_tos].parent = parent;
-
-      print_stack(frm, pc);
-
-      /* update the level of pc */
-      pc->level       = frm->level;
-      pc->brace_level = frm->brace_level;
-
-      /* Mark as a start of a statment */
-      frm->stmt_count = 0;
-      frm->expr_count = 0;
-      pc->flags      |= PCF_STMT_START | PCF_EXPR_START;
-      frm->stmt_count = 1;
-      frm->expr_count = 1;
-      //fprintf(stderr, "%d] 2.marked %s as stmt start\n", pc->orig_line, pc->str);
-   }
-
-   /* Handle an end-of-statement */
-   if (pc->type == CT_SEMICOLON)
-   {
-      close_statement(frm, pc);
-   }
-
-   if (prev != NULL)
-   {
-      /* Detect simple cases of CT_STAR -> CT_PTR_TYPE
-       * Change "TYPE *", "QUAL *" and "TYPE **" into
+      /**
+       * Insert a virtual brace (pc points to the new CT_VBRACE_CLOSE).
+       * This skips the semicolon.
+       * TODO: may need to float VBRACE past comments until newline?
+       * TODO: reset statement and expression counters
        */
-      if ((pc->type == CT_STAR) &&
-          ((prev->type == CT_TYPE) ||
-           (prev->type == CT_QUALIFIER) ||
-           (prev->type == CT_PTR_TYPE)))
-      {
-         pc->type = CT_PTR_TYPE;
-      }
+      pc = insert_vbrace_after(pc, frm);
+   }
 
-      /* Set the parent of a brace when preceeded by a '=' */
-      if ((prev->type == CT_ASSIGN) && (prev->str[0] == '=') &&
-          (pc->type == CT_BRACE_OPEN))
+   /* Check the progression of complex statements */
+   if (frm->pse[frm->pse_tos].stage != BS_NONE)
+   {
+      if (check_complex_statements(frm, pc))
       {
-         parent = CT_ASSIGN;
-      }
-
-      /* Set parent type for parens and change paren type */
-      if (pc->type == CT_PAREN_OPEN)
-      {
-         if (prev->type == CT_WORD)
-         {
-            prev->type = CT_FUNCTION;
-            pc->type   = CT_FPAREN_OPEN;
-            parent     = CT_FUNCTION;
-         }
-         else if ((prev->type == CT_IF) ||
-                  (prev->type == CT_FOR) ||
-                  (prev->type == CT_WHILE) ||
-                  (prev->type == CT_WHILE_OF_DO) ||
-                  (prev->type == CT_SWITCH))
-         {
-            pc->type = CT_SPAREN_OPEN;
-            parent   = prev->type;
-            frm->sparen_count++;
-         }
-         else
-         {
-            /* no need to change the parens */
-         }
-      }
-
-      /* Set the parent for open braces */
-      if (pc->type == CT_BRACE_OPEN)
-      {
-         if (prev->type == CT_FPAREN_CLOSE)
-         {
-            parent = CT_FUNCTION;
-         }
-         else if (prev->type == CT_SPAREN_CLOSE)
-         {
-            parent = prev->parent_type;
-         }
-         else if ((prev->type == CT_ELSE) ||
-                  (prev->type == CT_DO) ||
-                  (prev->type == CT_VOLATILE) ||
-                  (prev->type == CT_BRACED))
-         {
-            parent = prev->type;
-         }
-      }
-
-      /* Change a WORD after ENUM/UNION/STRUCT to TYPE
-       * Also change the first word in 'WORD WORD' to a type.
-       */
-      if (pc->type == CT_WORD)
-      {
-         if ((prev->type == CT_ENUM) ||
-             (prev->type == CT_UNION) ||
-             (prev->type == CT_STRUCT))
-         {
-            pc->type = CT_TYPE;
-         }
-         if (prev->type == CT_WORD)
-         {
-            prev->type = CT_TYPE;
-         }
-      }
-
-      /* restart the current IF sequence if we hit an "else if" */
-      if ((pc->type == CT_IF) && (prev->type == CT_ELSE))
-      {
-         frm->pse[frm->pse_tos].type  = CT_IF;
-         frm->pse[frm->pse_tos].stage = 0;
+         return(chunk_get_next(pc));
       }
    }
 
-   /* If we close a paren, change the type to match the open */
-   if (pc->type == CT_PAREN_CLOSE)
+   /* Handle close paren, vbrace, brace, and square */
+   if ((pc->type == CT_PAREN_CLOSE) ||
+       (pc->type == CT_BRACE_CLOSE) ||
+       (pc->type == CT_VBRACE_CLOSE) ||
+       (pc->type == CT_SQUARE_CLOSE))
    {
-      if ((frm->pse[frm->pse_tos].type == CT_PAREN_OPEN) ||
-          (frm->pse[frm->pse_tos].type == CT_FPAREN_OPEN) ||
-          (frm->pse[frm->pse_tos].type == CT_SPAREN_OPEN))
+      /* Change CT_PAREN_CLOSE into CT_SPAREN_CLOSE or CT_FPAREN_CLOSE */
+      if ((pc->type == CT_PAREN_CLOSE) &&
+          ((frm->pse[frm->pse_tos].type == CT_FPAREN_OPEN) ||
+           (frm->pse[frm->pse_tos].type == CT_SPAREN_OPEN)))
       {
          pc->type = frm->pse[frm->pse_tos].type + 1;
          if (pc->type == CT_SPAREN_CLOSE)
@@ -388,46 +287,99 @@ void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
             pc->flags &= ~PCF_IN_SPAREN;
          }
       }
-   }
 
-   /* For closing braces/parens/squares, set the parent and handle the close.
-    * Adjust the level.
-    */
-   if ((pc->type == CT_PAREN_CLOSE) ||
-       (pc->type == CT_FPAREN_CLOSE) ||
-       (pc->type == CT_SPAREN_CLOSE) ||
-       (pc->type == CT_SQUARE_CLOSE) ||
-       (pc->type == CT_BRACE_CLOSE))
-   {
-      if (pc->type == (frm->pse[frm->pse_tos].type + 1))
+      /* Make sure the open / close match */
+      if (pc->type != (frm->pse[frm->pse_tos].type + 1))
       {
-         //fprintf(stderr, "%2d> closed on %s\n", pc->orig_line, get_token_name(pc->type));
-
-         pc->parent_type = frm->pse[frm->pse_tos].parent;
-         frm->level--;
-         frm->pse_tos--;
-         if (pc->type == CT_BRACE_CLOSE)
-         {
-            frm->brace_level--;
-         }
-
-         /* Update the close paren/brace level */
-         pc->level       = frm->level;
-         pc->brace_level = frm->brace_level;
-
+         LOG_FMT(LWARN, "%s:%d Error: Unexpected '%s' for '%s'\n",
+                 __func__, pc->orig_line, pc->str,
+                 get_token_name(frm->pse[frm->pse_tos].type));
          print_stack(frm, pc);
-
-         handle_close_stage(frm, pc);
       }
       else
       {
-         LOG_FMT(LWARN, "%s: Error: Unexpected '%s' on line %d- %s\n",
-                 __func__, pc->str, pc->orig_line,
-                 get_token_name(frm->pse[frm->pse_tos].type));
+         /* Copy the parent, update the paren/brace levels */
+         pc->parent_type = frm->pse[frm->pse_tos].parent;
+         frm->level--;
+         if ((pc->type == CT_BRACE_CLOSE) ||
+             (pc->type == CT_VBRACE_CLOSE))
+         {
+            frm->brace_level--;
+         }
+         pc->level       = frm->level;
+         pc->brace_level = frm->brace_level;
+
+         /* Pop the entry */
+         frm->pse_tos--;
+
+         /* See if we are in a complex statement */
+         if (frm->pse[frm->pse_tos].stage != BS_NONE)
+         {
+            handle_complex_close(frm, pc);
+         }
+      }
+      return (chunk_get_next(pc));
+   }
+
+
+   /* Get the parent type for brace and paren open */
+   parent = CT_NONE;
+   if ((pc->type == CT_PAREN_OPEN) ||
+       (pc->type == CT_FPAREN_OPEN) ||
+       (pc->type == CT_SPAREN_OPEN) ||
+       (pc->type == CT_BRACE_OPEN))
+   {
+      prev = chunk_get_prev_ncnl(pc);
+      if (prev != NULL)
+      {
+         if ((pc->type == CT_PAREN_OPEN) ||
+             (pc->type == CT_FPAREN_OPEN) ||
+             (pc->type == CT_SPAREN_OPEN))
+         {
+            /* Set the parent for parens and change paren type */
+            if (frm->pse[frm->pse_tos].stage != BS_NONE)
+            {
+               pc->type = CT_SPAREN_OPEN;
+               parent   = frm->pse[frm->pse_tos].type;
+               frm->sparen_count++;
+            }
+            else if (prev->type == CT_FUNCTION)
+            {
+               pc->type = CT_FPAREN_OPEN;
+               parent   = CT_FUNCTION;
+            }
+            else
+            {
+               /* no need to set parent */
+            }
+         }
+         else  /* must be CT_BRACE_OPEN */
+         {
+            /* Set the parent for open braces */
+            if (frm->pse[frm->pse_tos].stage != BS_NONE)
+            {
+               parent = frm->pse[frm->pse_tos].type;
+            }
+            else if ((prev->type == CT_ASSIGN) && (prev->str[0] == '='))
+            {
+               parent = CT_ASSIGN;
+            }
+            else if (prev->type == CT_FPAREN_CLOSE)
+            {
+               parent = CT_FUNCTION;
+            }
+            else
+            {
+               /* no need to set parent */
+            }
+         }
       }
    }
 
-   /* Adjust the level for opens & create a stack entry */
+   /**
+    * Adjust the level for opens & create a stack entry
+    * Note that CT_VBRACE_OPEN has already been handled.
+    */
    if ((pc->type == CT_BRACE_OPEN) ||
        (pc->type == CT_PAREN_OPEN) ||
        (pc->type == CT_FPAREN_OPEN) ||
@@ -441,22 +393,21 @@ void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
       }
       frm->pse_tos++;
       frm->pse[frm->pse_tos].type   = pc->type;
-      frm->pse[frm->pse_tos].stage  = 0;
+      frm->pse[frm->pse_tos].stage  = BS_NONE;
       frm->pse[frm->pse_tos].parent = parent;
       pc->parent_type               = parent;
 
       print_stack(frm, pc);
    }
 
-   /* Create a stack entry for complex statments IF/DO/FOR/WHILE/SWITCH */
+   /** Create a stack entry for complex statments IF/DO/FOR/WHILE/SWITCH */
    if ((pc->type == CT_IF) ||
        (pc->type == CT_DO) ||
        (pc->type == CT_FOR) ||
        (pc->type == CT_WHILE) ||
-       (pc->type == CT_VOLATILE) ||
        (pc->type == CT_SWITCH) ||
-       (pc->type == CT_VERSION) ||
-       (pc->type == CT_BRACED))
+       (pc->type == CT_BRACED) ||
+       (pc->type == CT_VOLATILE))
    {
       frm->pse_tos++;
       frm->pse[frm->pse_tos].type  = pc->type;
@@ -507,6 +458,170 @@ void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
       frm->expr_count = 0;
       //fprintf(stderr, "%s: %d> reset expr on %s\n", __func__, pc->orig_line, pc->str);
    }
+   return (chunk_get_next(pc));
+}
+
+
+/**
+ * Checks the progression of complex statements.
+ * - checks for else after if
+ * - checks for if after else
+ * - checks for while after do
+ * - checks for open brace in BRACE2 and BRACE_DO stages, inserts open VBRACE
+ * - checks for open paren in PAREN1 and PAREN2 stages, complains
+ *
+ * @param frm  The parse frame
+ * @param pc   The current chunk
+ * @return     TRUE - done with this chunk, FALSE - keep processing
+ */
+static BOOL check_complex_statements(struct parse_frame *frm, chunk_t *pc)
+{
+   c_token_t  parent;
+   chunk_t    *vbrace;
+
+   /* Check for CT_ELSE after CT_IF */
+   while (frm->pse[frm->pse_tos].stage == BS_ELSE)
+   {
+      if (pc->type == CT_ELSE)
+      {
+         /* Replace CT_IF with CT_ELSE on the stack & we are done */
+         frm->pse[frm->pse_tos].type  = CT_ELSE;
+         frm->pse[frm->pse_tos].stage = BS_ELSEIF;
+         print_stack(frm, pc);
+         return(TRUE);
+      }
+
+      /* Remove the CT_IF and close the statement */
+      frm->pse_tos--;
+      close_statement(frm, pc);
+   }
+
+   /* Check for CT_IF after CT_ELSE */
+   if (frm->pse[frm->pse_tos].stage == BS_ELSEIF)
+   {
+      if (pc->type == CT_IF)
+      {
+         /* Replace CT_ELSE with CT_IF */
+         frm->pse[frm->pse_tos].type  = CT_IF;
+         frm->pse[frm->pse_tos].stage = BS_PAREN1;
+         return(TRUE);
+      }
+
+      /* Jump to the 'expecting brace' stage */
+      frm->pse[frm->pse_tos].stage = BS_BRACE2;
+   }
+
+   /* Check for CT_WHILE after the CT_DO */
+   if (frm->pse[frm->pse_tos].stage == BS_WHILE)
+   {
+      if (pc->type == CT_WHILE)
+      {
+         pc->type                     = CT_WHILE_OF_DO;
+         frm->pse[frm->pse_tos].type  = CT_WHILE;
+         frm->pse[frm->pse_tos].stage = BS_PAREN2;
+         return(TRUE);
+      }
+
+      LOG_FMT(LWARN, "%s:%d Error: Expected 'while', got '%s'\n",
+              __func__, pc->orig_line, pc->str);
+      frm->pse_tos--;
+   }
+
+   /* Insert a CT_VBRACE_OPEN, if needed */
+   if ((pc->type != CT_BRACE_OPEN) &&
+       ((frm->pse[frm->pse_tos].stage == BS_BRACE2) ||
+        (frm->pse[frm->pse_tos].stage == BS_BRACE_DO)))
+   {
+      parent = frm->pse[frm->pse_tos].type;
+
+      vbrace = insert_vbrace_before(pc, frm);
+      vbrace->parent_type = parent;
+
+      frm->level++;
+      frm->brace_level++;
+
+      frm->pse_tos++;
+      frm->pse[frm->pse_tos].type   = CT_VBRACE_OPEN;
+      frm->pse[frm->pse_tos].stage  = BS_NONE;
+      frm->pse[frm->pse_tos].parent = parent;
+
+      print_stack(frm, pc);
+
+      /* update the level of pc */
+      pc->level       = frm->level;
+      pc->brace_level = frm->brace_level;
+
+      /* Mark as a start of a statment */
+      frm->stmt_count = 0;
+      frm->expr_count = 0;
+      pc->flags      |= PCF_STMT_START | PCF_EXPR_START;
+      frm->stmt_count = 1;
+      frm->expr_count = 1;
+      //fprintf(stderr, "%d] 2.marked %s as stmt start\n", pc->orig_line, pc->str);
+   }
+
+   /* Verify open paren in complex statement */
+   if ((pc->type != CT_PAREN_OPEN) &&
+       ((frm->pse[frm->pse_tos].stage == BS_PAREN1) ||
+        (frm->pse[frm->pse_tos].stage == BS_PAREN2)))
+   {
+      LOG_FMT(LWARN, "%s:%d Error: Expected '(', got '%s' for '%s'\n",
+              __func__, pc->orig_line, pc->str,
+              get_token_name(frm->pse[frm->pse_tos].type));
+
+      /* Throw out the complex statement */
+      frm->pse_tos--;
+   }
+
+   return(FALSE);
+}
+
+
+/**
+ * Handles a close paren or brace - just progress the stage, if the end
+ * of the statement is hit, call close_statement()
+ *
+ * @param frm  The parse frame
+ * @param pc   The current chunk
+ */
+static void handle_complex_close(struct parse_frame *frm, chunk_t *pc)
+{
+   if (frm->pse[frm->pse_tos].stage == BS_PAREN1)
+   {
+      /* PAREN1 always => BRACE2 */
+      frm->pse[frm->pse_tos].stage = BS_BRACE2;
+   }
+   else if (frm->pse[frm->pse_tos].stage == BS_BRACE2)
+   {
+      /* BRACE2: IF => ELSE, anyting else => close */
+      if (frm->pse[frm->pse_tos].type == CT_IF)
+      {
+         frm->pse[frm->pse_tos].stage = BS_ELSE;
+      }
+      else
+      {
+         frm->pse_tos--;
+         close_statement(frm, pc);
+      }
+   }
+   else if (frm->pse[frm->pse_tos].stage == BS_BRACE_DO)
+   {
+      frm->pse[frm->pse_tos].stage = BS_WHILE;
+   }
+   else if (frm->pse[frm->pse_tos].stage == BS_PAREN2)
+   {
+      frm->pse_tos--;
+      close_statement(frm, pc);
+   }
+   else
+   {
+      /* PROBLEM */
+      LOG_FMT(LWARN, "%s:%d Error: TOS.type='%s' TOS.stage=%d\n",
+              __func__, pc->orig_line,
+              get_token_name(frm->pse[frm->pse_tos].type),
+              frm->pse[frm->pse_tos].stage);
+   }
+   print_stack(frm, pc);
 }
 
 
@@ -549,18 +664,13 @@ static chunk_t *insert_vbrace(chunk_t *pc, BOOL after,
    return(rv);
 }
 
-/*TODO */
 
 /**
- * Called on the last chunk in a statement.
+ * Called when a statement was just closed and the pse_tos was just
+ * decremented.
  *
- * This should be called on:
- *  - semicolons
- *  - CT_BRACE_CLOSE '}'
- *  - CT_VBRACE_CLOSE
- *
- * The action taken depends on top item on the stack.
- *  - if (tos.type == CT_IF) and (tos.stage == )
+ * - if the TOS is now VBRACE, insert a CT_VBRACE_CLOSE and recurse.
+ * - if the TOS is a complex statement, call handle_complex_close()
  */
 void close_statement(struct parse_frame *frm, chunk_t *pc)
 {
@@ -572,28 +682,15 @@ void close_statement(struct parse_frame *frm, chunk_t *pc)
            get_token_name(frm->pse[frm->pse_tos].type),
            frm->pse[frm->pse_tos].stage);
 
-   if (pc->type != CT_VBRACE_CLOSE)
-   {
-      frm->expr_count = 1;
-      if (frm->pse[frm->pse_tos].type != CT_SPAREN_OPEN)
-      {
-         frm->stmt_count = 1;
-      }
-   }
-
-   /* See if we are done with a complex statement */
-   if ((frm->pse[frm->pse_tos].stage == BS_PAREN2) ||
-       (frm->pse[frm->pse_tos].stage == BS_BRACE2) ||
-       (frm->pse[frm->pse_tos].stage == BS_ELSE))
-   {
-      frm->pse_tos--;
-
-      //fprintf(stderr, "%2d> CS1: closed on %s\n", pc->orig_line, get_token_name(pc->type));
-
-      print_stack(frm, pc);
-
-      handle_close_stage(frm, vbc);
-   }
+   /*TODO: not sure I follow this */
+//   if (pc->type != CT_VBRACE_CLOSE)
+//   {
+//      frm->expr_count = 1;
+//      if (frm->pse[frm->pse_tos].type != CT_SPAREN_OPEN)
+//      {
+//         frm->stmt_count = 1;
+//      }
+//   }
 
    /* If we are in a virtual brace -- close it */
    if (frm->pse[frm->pse_tos].type == CT_VBRACE_OPEN)
@@ -606,62 +703,20 @@ void close_statement(struct parse_frame *frm, chunk_t *pc)
 
       print_stack(frm, pc);
 
-      vbc             = insert_vbrace_after(pc, frm);
+      vbc = insert_vbrace_after(pc, frm);
+
       frm->stmt_count = 1;
       frm->expr_count = 1;
-      handle_close_stage(frm, vbc);
+      handle_complex_close(frm, vbc);
+      return;
    }
-}
 
-void handle_close_stage(struct parse_frame *frm, chunk_t *pc)
-{
-   LOG_FMT(LTOK, "%s-top: line %d pse_tos=%12s stage=%d pc=%s\n",
-           __func__, pc->orig_line,
-           get_token_name(frm->pse[frm->pse_tos].type),
-           frm->pse[frm->pse_tos].stage,
-           get_token_name(pc->type));
-
-   /* see if we just closed a do/if/else/for/switch/while section */
-   switch (frm->pse[frm->pse_tos].stage)
+   /* See if we are done with a complex statement */
+   if (frm->pse[frm->pse_tos].stage != BS_NONE)
    {
-   case BS_PAREN1:   /* if/for/switch/while () ended */
-      frm->pse[frm->pse_tos].stage = BS_BRACE2;
-      break;
-
-   case BS_PAREN2:   /* do/while () ended */
-      close_statement(frm, pc);
-      break;
-
-   case BS_BRACE_DO:   /* do {} ended */
-      frm->pse[frm->pse_tos].stage = BS_WHILE;
-      break;
-
-   case BS_BRACE2:   /* if/else/for/while/switch {} ended */
-      if (frm->pse[frm->pse_tos].type == CT_IF)
-      {
-         frm->pse[frm->pse_tos].stage = BS_ELSE;
-      }
-      else
-      {
-         close_statement(frm, pc);
-      }
-      break;
-
-   case BS_ELSE:     /* else {} ended */
-   case BS_WHILE:    /* do/while () ended */
-      LOG_FMT(LWARN, "Unexpect stage %d on line %d\n",
-              frm->pse[frm->pse_tos].stage, pc->orig_line);
-      break;
-
-   case BS_NONE:
-   default:
-      /* nothing to do */
-      break;
+      handle_complex_close(frm, vbc);
+      print_stack(frm, pc);
+      //fprintf(stderr, "%2d> CS1: closed on %s\n", pc->orig_line, get_token_name(pc->type));
    }
-
-   //   fprintf(stderr, "%s-end: line %d pse_tos=%12s stage=%d\n",
-   //        __func__,  pc->orig_line,
-   //        get_token_name(frm->pse[frm->pse_tos].type),
-   //        frm->pse[frm->pse_tos].stage);
 }
 
