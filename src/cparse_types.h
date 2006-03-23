@@ -166,6 +166,8 @@ struct cp_data
    uint16_t           line_number;
    uint16_t           column;  /* column for parsing */
 
+   BOOL               consumed;
+
    int                did_newline;
    enum pp_type       in_preproc;
    int                preproc_ncnl_count;

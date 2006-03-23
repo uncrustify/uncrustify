@@ -1,3 +1,5 @@
+void foo(void)
+{
 while (nextSegmentIndex >= 0)
 {
     Segment seg = map.segments[nextSegmentIndex--];
@@ -15,3 +17,11 @@ while (nextSegmentIndex >= 0)
         }
 }
 
+if (e)
+    volatile
+    {
+        oldValue = e.value;
+        e.value  = newValue;
+    }
+return oldValue;
+}

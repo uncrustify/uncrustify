@@ -20,15 +20,15 @@
 
 static chunk_t *insert_vbrace(chunk_t *pc, BOOL after,
                               struct parse_frame *frm);
-#define insert_vbrace_after(pc, frm)      insert_vbrace(pc, TRUE, frm)
-#define insert_vbrace_before(pc, frm)     insert_vbrace(pc, FALSE, frm)
+#define insert_vbrace_close_after(pc, frm)     insert_vbrace(pc, TRUE, frm)
+#define insert_vbrace_open_before(pc, frm)     insert_vbrace(pc, FALSE, frm)
 
-chunk_t *parse_cleanup(struct parse_frame *frm, chunk_t *pc);
+static void parse_cleanup(struct parse_frame *frm, chunk_t *pc);
 
-void close_statement(struct parse_frame *frm, chunk_t *pc);
+static BOOL close_statement(struct parse_frame *frm, chunk_t *pc);
 
 static BOOL check_complex_statements(struct parse_frame *frm, chunk_t *pc);
-static void handle_complex_close(struct parse_frame *frm, chunk_t *pc);
+static BOOL handle_complex_close(struct parse_frame *frm, chunk_t *pc);
 
 
 static void preproc_start(struct parse_frame *frm, chunk_t *pc)
@@ -88,6 +88,31 @@ static void preproc_start(struct parse_frame *frm, chunk_t *pc)
    }
 }
 
+static void print_stack(int logsev, const char *str,
+                        struct parse_frame *frm, chunk_t *pc)
+{
+   if (log_sev_on(logsev))
+   {
+      int idx;
+
+      log_fmt(logsev, "%8.8s", str);
+
+      for (idx = 1 ; idx <= frm->pse_tos; idx++)
+      {
+         if (frm->pse[idx].stage != BS_NONE)
+         {
+            LOG_FMT(logsev, " [%s - %d]", get_token_name(frm->pse[idx].type),
+                    frm->pse[idx].stage);
+         }
+         else
+         {
+            LOG_FMT(logsev, " [%s]", get_token_name(frm->pse[idx].type));
+         }
+      }
+      log_fmt(logsev, "\n");
+   }
+}
+
 
 /**
  * Scans through the whole list and does stuff.
@@ -131,32 +156,13 @@ void brace_cleanup(void)
 
       /* #define bodies get the full formatting treatment */
       if (!chunk_is_comment(pc) && !chunk_is_newline(pc) &&
-         ((cpd.in_preproc == CT_PP_DEFINE) || (cpd.in_preproc == CT_NONE)))
+          ((cpd.in_preproc == CT_PP_DEFINE) || (cpd.in_preproc == CT_NONE)))
       {
-         pc = parse_cleanup(&frm, pc);
+         cpd.consumed = FALSE;
+         parse_cleanup(&frm, pc);
+         print_stack(LBCSAFTER, (pc->type == CT_VBRACE_CLOSE) ? "Virt-}" : pc->str, &frm, pc);
       }
-      else
-      {
-         pc = chunk_get_next(pc);
-      }
-   }
-}
-
-
-static void print_stack(struct parse_frame *frm, chunk_t *pc)
-{
-   if (log_sev_on(LFRMSTK))
-   {
-      int idx;
-
-      log_fmt(LFRMSTK, "%2d> %2d", pc->orig_line, frm->pse_tos);
-
-      for (idx = 1; idx <= frm->pse_tos; idx++)
-      {
-         log_fmt(LFRMSTK, " [%s/%d]",
-                 get_token_name(frm->pse[idx].type), frm->pse[idx].stage);
-      }
-      log_fmt(LFRMSTK, "\n");
+      pc = chunk_get_next(pc);
    }
 }
 
@@ -215,7 +221,7 @@ static void print_stack(struct parse_frame *frm, chunk_t *pc)
  * When a #define is entered, the current frame is pushed and cleared.
  * When a #define is exited, the frame is popped.
  */
-chunk_t *parse_cleanup(struct parse_frame *frm, chunk_t *pc)
+static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
 {
    c_token_t parent = CT_NONE;
    chunk_t   *prev;
@@ -225,11 +231,11 @@ chunk_t *parse_cleanup(struct parse_frame *frm, chunk_t *pc)
            frm->pse_tos, get_token_name(frm->pse[frm->pse_tos].type),
            frm->pse[frm->pse_tos].stage);
 
-
    /* Mark statement starts */
    if (((frm->stmt_count == 0) || (frm->expr_count == 0)) &&
        (pc->type != CT_SEMICOLON) &&
-       (pc->type != CT_BRACE_CLOSE))
+       (pc->type != CT_BRACE_CLOSE) &&
+       (pc->type != CT_VBRACE_CLOSE))
    {
       pc->flags |= PCF_EXPR_START;
       pc->flags |= (frm->stmt_count == 0) ? PCF_STMT_START : 0;
@@ -245,19 +251,16 @@ chunk_t *parse_cleanup(struct parse_frame *frm, chunk_t *pc)
    }
 
    /**
-    * Check for a virtual brace close due to semicolon
-    * Virtual braces also may be added on a complex statement close.
+    * Check for a virtual brace statement close due to a semicolon.
+    * The virtual brace will get handled the next time through.
+    * The semicolon isn't handled at all.
+    * TODO: may need to float VBRACE past comments until newline?
     */
-   if ((pc->type == CT_SEMICOLON) &&
-       (frm->pse[frm->pse_tos].type == CT_VBRACE_OPEN))
+   if ((frm->pse[frm->pse_tos].type == CT_VBRACE_OPEN) &&
+       (pc->type == CT_SEMICOLON))
    {
-      /**
-       * Insert a virtual brace (pc points to the new CT_VBRACE_CLOSE).
-       * This skips the semicolon.
-       * TODO: may need to float VBRACE past comments until newline?
-       * TODO: reset statement and expression counters
-       */
-      pc = insert_vbrace_after(pc, frm);
+      cpd.consumed = TRUE;
+      close_statement(frm, pc);
    }
 
    /* Check the progression of complex statements */
@@ -265,7 +268,7 @@ chunk_t *parse_cleanup(struct parse_frame *frm, chunk_t *pc)
    {
       if (check_complex_statements(frm, pc))
       {
-         return(chunk_get_next(pc));
+         return;
       }
    }
 
@@ -294,10 +297,12 @@ chunk_t *parse_cleanup(struct parse_frame *frm, chunk_t *pc)
          LOG_FMT(LWARN, "%s:%d Error: Unexpected '%s' for '%s'\n",
                  __func__, pc->orig_line, pc->str,
                  get_token_name(frm->pse[frm->pse_tos].type));
-         print_stack(frm, pc);
+         print_stack(LBCSPOP, "=Error  ", frm, pc);
       }
       else
       {
+         cpd.consumed = TRUE;
+
          /* Copy the parent, update the paren/brace levels */
          pc->parent_type = frm->pse[frm->pse_tos].parent;
          frm->level--;
@@ -311,6 +316,7 @@ chunk_t *parse_cleanup(struct parse_frame *frm, chunk_t *pc)
 
          /* Pop the entry */
          frm->pse_tos--;
+         print_stack(LBCSPOP, "-Close  ", frm, pc);
 
          /* See if we are in a complex statement */
          if (frm->pse[frm->pse_tos].stage != BS_NONE)
@@ -318,7 +324,6 @@ chunk_t *parse_cleanup(struct parse_frame *frm, chunk_t *pc)
             handle_complex_close(frm, pc);
          }
       }
-      return (chunk_get_next(pc));
    }
 
 
@@ -397,7 +402,7 @@ chunk_t *parse_cleanup(struct parse_frame *frm, chunk_t *pc)
       frm->pse[frm->pse_tos].parent = parent;
       pc->parent_type               = parent;
 
-      print_stack(frm, pc);
+      print_stack(LBCSPUSH, "+Open   ", frm, pc);
    }
 
    /** Create a stack entry for complex statments IF/DO/FOR/WHILE/SWITCH */
@@ -416,7 +421,7 @@ chunk_t *parse_cleanup(struct parse_frame *frm, chunk_t *pc)
                                       (pc->type == CT_BRACED)) ? BS_BRACE2 : BS_PAREN1;
       //fprintf(stderr, "opening %s\n", pc->str);
 
-      print_stack(frm, pc);
+      print_stack(LBCSPUSH, "+Complex", frm, pc);
    }
 
    /* Mark simple statement/expression starts
@@ -426,6 +431,7 @@ chunk_t *parse_cleanup(struct parse_frame *frm, chunk_t *pc)
     */
    if (((pc->type == CT_BRACE_OPEN) && (pc->parent_type != CT_ASSIGN)) ||
        (pc->type == CT_BRACE_CLOSE) ||
+       (pc->type == CT_VBRACE_CLOSE) ||
        ((pc->type == CT_SPAREN_OPEN) && (pc->parent_type == CT_FOR)) ||
        ((pc->type == CT_SEMICOLON) &&
         (frm->pse[frm->pse_tos].type != CT_PAREN_OPEN) &&
@@ -458,7 +464,6 @@ chunk_t *parse_cleanup(struct parse_frame *frm, chunk_t *pc)
       frm->expr_count = 0;
       //fprintf(stderr, "%s: %d> reset expr on %s\n", __func__, pc->orig_line, pc->str);
    }
-   return (chunk_get_next(pc));
 }
 
 
@@ -487,13 +492,17 @@ static BOOL check_complex_statements(struct parse_frame *frm, chunk_t *pc)
          /* Replace CT_IF with CT_ELSE on the stack & we are done */
          frm->pse[frm->pse_tos].type  = CT_ELSE;
          frm->pse[frm->pse_tos].stage = BS_ELSEIF;
-         print_stack(frm, pc);
+         print_stack(LBCSSWAP, "=Swap   ", frm, pc);
          return(TRUE);
       }
 
       /* Remove the CT_IF and close the statement */
       frm->pse_tos--;
-      close_statement(frm, pc);
+      print_stack(LBCSPOP, "-IF-CCS ", frm, pc);
+      if (close_statement(frm, pc))
+      {
+         return(TRUE);
+      }
    }
 
    /* Check for CT_IF after CT_ELSE */
@@ -525,6 +534,7 @@ static BOOL check_complex_statements(struct parse_frame *frm, chunk_t *pc)
       LOG_FMT(LWARN, "%s:%d Error: Expected 'while', got '%s'\n",
               __func__, pc->orig_line, pc->str);
       frm->pse_tos--;
+      print_stack(LBCSPOP, "-Error  ", frm, pc);
    }
 
    /* Insert a CT_VBRACE_OPEN, if needed */
@@ -534,7 +544,7 @@ static BOOL check_complex_statements(struct parse_frame *frm, chunk_t *pc)
    {
       parent = frm->pse[frm->pse_tos].type;
 
-      vbrace = insert_vbrace_before(pc, frm);
+      vbrace = insert_vbrace_open_before(pc, frm);
       vbrace->parent_type = parent;
 
       frm->level++;
@@ -545,7 +555,7 @@ static BOOL check_complex_statements(struct parse_frame *frm, chunk_t *pc)
       frm->pse[frm->pse_tos].stage  = BS_NONE;
       frm->pse[frm->pse_tos].parent = parent;
 
-      print_stack(frm, pc);
+      print_stack(LBCSPUSH, "+VBrace ", frm, pc);
 
       /* update the level of pc */
       pc->level       = frm->level;
@@ -571,6 +581,7 @@ static BOOL check_complex_statements(struct parse_frame *frm, chunk_t *pc)
 
       /* Throw out the complex statement */
       frm->pse_tos--;
+      print_stack(LBCSPOP, "-Error  ", frm, pc);
    }
 
    return(FALSE);
@@ -583,8 +594,9 @@ static BOOL check_complex_statements(struct parse_frame *frm, chunk_t *pc)
  *
  * @param frm  The parse frame
  * @param pc   The current chunk
+ * @return     TRUE - done with this chunk, FALSE - keep processing
  */
-static void handle_complex_close(struct parse_frame *frm, chunk_t *pc)
+static BOOL handle_complex_close(struct parse_frame *frm, chunk_t *pc)
 {
    if (frm->pse[frm->pse_tos].stage == BS_PAREN1)
    {
@@ -600,8 +612,14 @@ static void handle_complex_close(struct parse_frame *frm, chunk_t *pc)
       }
       else
       {
+         LOG_FMT(LNOTE, "%s: close_statement on %s BS_BRACE2\n", __func__,
+                 get_token_name(frm->pse[frm->pse_tos].type));
          frm->pse_tos--;
-         close_statement(frm, pc);
+         print_stack(LBCSPOP, "-HCC B2 ", frm, pc);
+         if (close_statement(frm, pc))
+         {
+            return(TRUE);
+         }
       }
    }
    else if (frm->pse[frm->pse_tos].stage == BS_BRACE_DO)
@@ -610,8 +628,15 @@ static void handle_complex_close(struct parse_frame *frm, chunk_t *pc)
    }
    else if (frm->pse[frm->pse_tos].stage == BS_PAREN2)
    {
+      LOG_FMT(LNOTE, "%s: close_statement on %s BS_PAREN2\n", __func__,
+              get_token_name(frm->pse[frm->pse_tos].type));
       frm->pse_tos--;
-      close_statement(frm, pc);
+      print_stack(LBCSPOP, "-HCC P2 ", frm, pc);
+
+      if (close_statement(frm, pc))
+      {
+         return(TRUE);
+      }
    }
    else
    {
@@ -621,7 +646,7 @@ static void handle_complex_close(struct parse_frame *frm, chunk_t *pc)
               get_token_name(frm->pse[frm->pse_tos].type),
               frm->pse[frm->pse_tos].stage);
    }
-   print_stack(frm, pc);
+   return(FALSE);
 }
 
 
@@ -647,7 +672,9 @@ static chunk_t *insert_vbrace(chunk_t *pc, BOOL after,
    if (after)
    {
       chunk.type = CT_VBRACE_CLOSE;
+      chunk.str  = "#}#";
       rv         = chunk_add_after(&chunk, pc);
+      LOG_FMT(LSYS, "-=# INSERTED VBRACE CLOSE #=-\n");
    }
    else
    {
@@ -656,10 +683,12 @@ static chunk_t *insert_vbrace(chunk_t *pc, BOOL after,
       {
          ref = chunk_get_prev(ref);
       }
+      chunk.str  = "#{#";
       chunk.orig_line = ref->orig_line;
       chunk.column    = ref->column + ref->len + 1;
       chunk.type      = CT_VBRACE_OPEN;
       rv              = chunk_add_after(&chunk, ref);
+      LOG_FMT(LSYS, "-=# INSERTED VBRACE OPEN #=-\n");
    }
    return(rv);
 }
@@ -671,52 +700,64 @@ static chunk_t *insert_vbrace(chunk_t *pc, BOOL after,
  *
  * - if the TOS is now VBRACE, insert a CT_VBRACE_CLOSE and recurse.
  * - if the TOS is a complex statement, call handle_complex_close()
+ *
+ * @return     TRUE - done with this chunk, FALSE - keep processing
  */
-void close_statement(struct parse_frame *frm, chunk_t *pc)
+BOOL close_statement(struct parse_frame *frm, chunk_t *pc)
 {
    chunk_t *vbc = pc;
 
-   LOG_FMT(LTOK, "%s:%d] %s'%s' type %s stage %d\n", __func__,
+   LOG_FMT(LSYS, "%s:%d] %s'%s' type %s stage %d\n", __func__,
            pc->orig_line,
            get_token_name(pc->type), pc->str,
            get_token_name(frm->pse[frm->pse_tos].type),
            frm->pse[frm->pse_tos].stage);
 
-   /*TODO: not sure I follow this */
-//   if (pc->type != CT_VBRACE_CLOSE)
-//   {
-//      frm->expr_count = 1;
-//      if (frm->pse[frm->pse_tos].type != CT_SPAREN_OPEN)
-//      {
-//         frm->stmt_count = 1;
-//      }
-//   }
+   frm->stmt_count = 0;
+   frm->expr_count = 0;
 
-   /* If we are in a virtual brace -- close it */
+   /**
+    * If we are in a virtual brace and we are not ON a CT_VBRACE_CLOSE add one
+    */
    if (frm->pse[frm->pse_tos].type == CT_VBRACE_OPEN)
    {
-      frm->level--;
-      frm->brace_level--;
-      frm->pse_tos--;
+      /* If the current token has already been consumed, then add after it */
+      if (cpd.consumed)
+      {
+         insert_vbrace_close_after(pc, frm);
+      }
+      else
+      {
+         /* otherwise, add before it and consume the vbrace */
+         vbc = chunk_get_prev_ncnl(pc);
+         insert_vbrace_close_after(vbc, frm);
 
-      //fprintf(stderr, "%2d> CS1: closed on %s\n", pc->orig_line, get_token_name(pc->type));
+         frm->level--;
+         frm->brace_level--;
+         frm->pse_tos--;
 
-      print_stack(frm, pc);
+         /* Update the token level */
+         pc->level       = frm->level;
+         pc->brace_level = frm->brace_level;
 
-      vbc = insert_vbrace_after(pc, frm);
+         print_stack(LBCSPOP, "-CS VB  ", frm, pc);
 
-      frm->stmt_count = 1;
-      frm->expr_count = 1;
-      handle_complex_close(frm, vbc);
-      return;
+         /* And repeat the close */
+         close_statement(frm, pc);
+         return TRUE;
+     }
    }
 
    /* See if we are done with a complex statement */
    if (frm->pse[frm->pse_tos].stage != BS_NONE)
    {
-      handle_complex_close(frm, vbc);
-      print_stack(frm, pc);
+      if (handle_complex_close(frm, vbc))
+      {
+         return(TRUE);
+      }
+      //print_stack(frm, pc);
       //fprintf(stderr, "%2d> CS1: closed on %s\n", pc->orig_line, get_token_name(pc->type));
    }
+   return(FALSE);
 }
 

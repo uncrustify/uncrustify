@@ -108,7 +108,7 @@ static chunk_tag_t keywords[] =
 	{ "ifloat",           CT_TYPE,       LANG_D},
 	{ "implements",       CT_QUALIFIER,  LANG_JAVA},
 	{ "implicit",         CT_QUALIFIER,  LANG_CS},
-	{ "import",           CT_USING,      LANG_D | LANG_JAVA},
+	{ "import",           CT_TYPE,       LANG_D | LANG_JAVA}, // fudged to get indenting
 	{ "in",               CT_IN,         LANG_D | LANG_CS},
 	{ "include",          CT_PP_INCLUDE, LANG_C | LANG_CPP | FLAG_PP},
 	{ "inline",           CT_QUALIFIER,  LANG_C | LANG_CPP},

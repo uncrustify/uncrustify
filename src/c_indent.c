@@ -183,7 +183,7 @@ void indent_text(void)
       {
          frm.pse_tos--;
          //fprintf(stderr, "%3d] CLOSE(3) on %s, tos=%d\n", pc->orig_line,
-         //        c_chunk_names[pc->type], pse_tos);
+         //        get_token_name(pc->type), frm.pse_tos);
       }
 
       if (pc->type == CT_CASE)
@@ -388,7 +388,7 @@ void indent_text(void)
          {
             frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent;
             prev                        = chunk_get_prev_ncnl(pc);
-            if (prev->type != CT_CASE_COLON)
+            if ((prev == NULL) || (prev->type != CT_CASE_COLON))
             {
                frm.pse[frm.pse_tos].indent += tabsize;
             }

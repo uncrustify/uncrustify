@@ -128,6 +128,39 @@ do/while
 DO-BRACE_DO, DO-WHILE, WHILE-PAREN2
 
 
+Another example:
+
+{
+    if (x)
+        volatile
+        {
+	    y++;
+        }
+    return y;
+}
+
+'{'        [BRACE OPEN]
+'if'       [BRACE OPEN] [IF - PAREN1]
+'('        [BRACE OPEN] [IF - PAREN1] [PAREN OPEN]
+'x'        [BRACE OPEN] [IF - PAREN1] [PAREN OPEN]
+')'        [BRACE OPEN] [IF - BRACE2]
+'volatile' [BRACE OPEN] [IF - BRACE2] [VBRACE OPEN] [VOLATILE - BRACE2]
+'{'        [BRACE OPEN] [IF - BRACE2] [VBRACE OPEN] [VOLATILE - BRACE2] [BRACE OPEN]
+'if'   [IF - BRACE2] [VBRACE OPEN] [IF - PAREN1] <- VBrace on BRACE2, IF opened
+'('    [IF - BRACE2] [VBRACE OPEN] [IF - PAREN1] [SPAREN OPEN]
+'y'    [IF - BRACE2] [VBRACE OPEN] [IF - PAREN1] [SPAREN OPEN]
+')'    [IF - BRACE2] [VBRACE OPEN] [IF - BRACE2]
+'y'    [IF - BRACE2] [VBRACE OPEN] [IF - BRACE2] [VBRACE OPEN]
+'--'   [IF - BRACE2] [VBRACE OPEN] [IF - BRACE2] [VBRACE OPEN]
+';'    [IF - BRACE2] [VBRACE OPEN] [IF - ELSE]
+'else' [IF - BRACE2] [VBRACE OPEN] [ELSE - ELSEIF]
+'z'    [IF - BRACE2] [VBRACE OPEN] [ELSE - BRACE2] [VBRACE OPEN]
+'++'   [IF - BRACE2] [VBRACE OPEN] [ELSE - BRACE2] [VBRACE OPEN]
+';'    [IF - BRACE2] [VBRACE OPEN] [ELSE - BRACE2]  - step1
+       [IF - BRACE2] [VBRACE OPEN]                  - step2
+       [IF - ELSE]                                  - step3
+
+
 =-----------------------------------------------------------------------------=
 *                                                                             *
 *  Parse Frames                                                               *

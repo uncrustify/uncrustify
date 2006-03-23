@@ -44,6 +44,10 @@ enum
    LPCU     = 33,    /* parse cleanup */
    LDYNKW   = 34,    /* dynamic keywords */
    LOUTIND  = 35,    /* output indent */
+   LBCSAFTER= 36,    /* Brace cleanup stack - after each token */
+   LBCSPOP  = 37,    /* Brace cleanup stack - log pops */
+   LBCSPUSH = 38,    /* Brace cleanup stack - log push */
+   LBCSSWAP = 39,    /* Brace cleanup stack - log swaps */
 };
 
 #endif   /* LOG_LEVELS_H_INCLUDED */

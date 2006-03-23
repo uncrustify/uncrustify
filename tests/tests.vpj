@@ -78,6 +78,7 @@
 		</Folder>
 		<Folder Name="input">
 			<F N="input/brace-remove.c"/>
+			<F N="input/braces-2.c"/>
 			<F N="input/braces.c"/>
 			<F N="input/colon-asm.c"/>
 			<F N="input/comment-indent.c"/>
@@ -94,6 +95,9 @@
 			<F N="input/struct-brace.c"/>
 			<F N="input/switch-case.c"/>
 			<F N="input/type-cast.c"/>
+			<F N="input/volatile-1.d"/>
+			<F N="input/volatile-2.d"/>
+			<F N="input/volatile-3.d"/>
 			<F N="input/volatile.d"/>
 		</Folder>
 		<Folder Name="output">
@@ -106,6 +110,9 @@
 			<F N="output/40000-HashMap.d"/>
 			<F N="output/40001-imports.d"/>
 			<F N="output/40002-volatile.d"/>
+			<F N="output/40003-volatile-1.d"/>
+			<F N="output/40004-volatile-2.d"/>
+			<F N="output/40005-volatile-3.d"/>
 		</Folder>
 		<F N="c-sharp.test"/>
 		<F N="c.test"/>
