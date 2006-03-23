@@ -681,9 +681,13 @@ BOOL close_statement(struct parse_frame *frm, chunk_t *pc)
            get_token_name(frm->pse[frm->pse_tos].type),
            frm->pse[frm->pse_tos].stage);
 
-   frm->stmt_count = 0;
-   frm->expr_count = 0;
-   LOG_FMT(LSTMT, "%s: %d> reset stmt on %s\n", __func__, pc->orig_line, pc->str);
+   if (cpd.consumed)
+   {
+      frm->stmt_count = 0;
+      frm->expr_count = 0;
+      LOG_FMT(LSTMT, "%s: %d> reset stmt on %s\n",
+              __func__, pc->orig_line, pc->str);
+   }
 
    /**
     * If we are in a virtual brace and we are not ON a CT_VBRACE_CLOSE add one
@@ -698,8 +702,9 @@ BOOL close_statement(struct parse_frame *frm, chunk_t *pc)
       else
       {
          /* otherwise, add before it and consume the vbrace */
-         vbc = chunk_get_prev_ncnl(pc);
-         insert_vbrace_close_after(vbc, frm);
+         vbc              = chunk_get_prev_ncnl(pc);
+         vbc              = insert_vbrace_close_after(vbc, frm);
+         vbc->parent_type = frm->pse[frm->pse_tos].parent;
 
          frm->level--;
          frm->brace_level--;
