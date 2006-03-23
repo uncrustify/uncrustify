@@ -102,7 +102,7 @@ BOOL parse_comment(chunk_t *pc)
  */
 BOOL parse_number(chunk_t *pc)
 {
-   int len = 0;
+   int  len              = 0;
    BOOL allow_underscore = ((cpd.lang_flags & LANG_D) != 0);
 
    if (!isdigit(*pc->str))
@@ -146,7 +146,7 @@ BOOL parse_number(chunk_t *pc)
    else
    {
       int dotcount = 0;
-      len          = 1;
+      len = 1;
       while (isdigit(pc->str[len]) ||
              ((pc->str[len] == '.') && (dotcount == 0)) ||
              (allow_underscore && (pc->str[len] == '_')))
@@ -731,7 +731,7 @@ static void print_stack(struct parse_frame *frm, chunk_t *pc)
 void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
 {
    c_token_t parent = CT_NONE;
-   chunk_t *prev;
+   chunk_t   *prev;
 
    prev = chunk_get_prev_ncnl(pc);
 

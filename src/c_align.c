@@ -487,7 +487,7 @@ chunk_t *align_assign(chunk_t *first, int span)
          if (start == NULL)
          {
             prev_equ_type = (var_def_cnt != 0) ? 1 : 2;
-            start = pc;
+            start         = pc;
          }
          end = pc;
       }
@@ -540,8 +540,8 @@ static void indent_var_def_brace(chunk_t *first, chunk_t *last,
    if (cpd.settings[UO_align_on_tabstop])
    {
       int new_column = align_tab_column(var_column);
-      bit_column    += (new_column - var_column);
-      var_column     = new_column;
+      bit_column += (new_column - var_column);
+      var_column  = new_column;
    }
 
    //fprintf(stderr, "%s: first=%s line=%d col=%d level=%d  "
@@ -559,7 +559,7 @@ static void indent_var_def_brace(chunk_t *first, chunk_t *last,
          if ((pc->flags & align_mask) == PCF_VAR_1ST)
          {
             int my_col = var_column + 1;
-            prev       = pc;
+            prev = pc;
             do
             {
                my_col--;

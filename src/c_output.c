@@ -135,7 +135,7 @@ void output_text(FILE *pfile)
             add_text("\n");
          }
          cpd.did_newline = 1;
-         cpd.column = 1;
+         cpd.column      = 1;
          LOG_FMT(LOUTIND, " xx\n");
       }
       else if (pc->type == CT_COMMENT_MULTI)

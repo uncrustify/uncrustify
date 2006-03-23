@@ -18,11 +18,11 @@ static void check_template(chunk_t *start);
 
 void tokenize_cleanup(void)
 {
-   chunk_t *pc = chunk_get_head();
+   chunk_t *pc   = chunk_get_head();
    chunk_t *prev = NULL;
    chunk_t *next;
 
-   pc = chunk_get_head();
+   pc   = chunk_get_head();
    next = chunk_get_next_ncnl(pc);
    while ((pc != NULL) && (next != NULL))
    {

@@ -91,7 +91,7 @@ void set_paren_parent(chunk_t *start, c_token_t parent)
    if (end != NULL)
    {
       start->parent_type = parent;
-      end->parent_type = parent;
+      end->parent_type   = parent;
    }
 }
 
@@ -154,11 +154,11 @@ void fix_symbols(void)
       if ((pc->type == CT_SQUARE_OPEN) && (next->type == CT_SQUARE_CLOSE))
       {
          /* Combine the [ and ] into [] and delete next */
-         pc->type   = CT_TSQUARE;
-         pc->str    = "[]";
-         pc->len    = 2;
-         tmp = next;
-         next = chunk_get_next_ncnl(next);
+         pc->type = CT_TSQUARE;
+         pc->str  = "[]";
+         pc->len  = 2;
+         tmp      = next;
+         next     = chunk_get_next_ncnl(next);
          chunk_del(tmp);
       }
 
@@ -1191,7 +1191,7 @@ static void mark_function(chunk_t *pc)
       if (pc->type == CT_FUNC_DEF)
       {
          BOOL on_first = TRUE;
-         tmp           = chunk_get_next_ncnl(paren_close);
+         tmp = chunk_get_next_ncnl(paren_close);
          while ((tmp != NULL) && (tmp->type != CT_BRACE_OPEN))
          {
             tmp->parent_type = CT_FUNC_DEF;

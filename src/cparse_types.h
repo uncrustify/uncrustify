@@ -192,7 +192,7 @@ struct cp_data
 
 
 #ifdef DEFINE_GLOBAL_DATA
-struct cp_data        cpd;
+struct cp_data cpd;
 #else
 extern struct cp_data cpd;
 #endif

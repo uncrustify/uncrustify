@@ -210,28 +210,28 @@ argval_t do_space(chunk_t *first, chunk_t *second)
 
    if (first->type == CT_CAST)
    {
-      return AV_REMOVE;
+      return(AV_REMOVE);
    }
 
    if ((first->type == CT_THIS) && (second->type == CT_PAREN_OPEN))
    {
-      return AV_REMOVE;
+      return(AV_REMOVE);
    }
 
    if ((first->type == CT_DELEGATE) && (second->type == CT_PAREN_OPEN))
    {
-      return AV_REMOVE;
+      return(AV_REMOVE);
    }
 
    if ((second->type == CT_MEMBER) &&
        ((first->type != CT_COMMA) && (first->type != CT_BRACE_OPEN)))
    {
-      return AV_REMOVE;
+      return(AV_REMOVE);
    }
 
    if ((first->type == CT_SUPER) && (second->type == CT_PAREN_OPEN))
    {
-      return AV_REMOVE;
+      return(AV_REMOVE);
    }
 
    if (first->type == CT_PAREN_CLOSE)

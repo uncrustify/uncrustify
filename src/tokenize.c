@@ -31,8 +31,8 @@
  */
 BOOL parse_comment(chunk_t *pc)
 {
-   int  len = 2;
-   BOOL is_d = (cpd.lang_flags & LANG_D) != 0;
+   int  len     = 2;
+   BOOL is_d    = (cpd.lang_flags & LANG_D) != 0;
    int  d_level = 0;
 
    if ((pc->str[0] != '/') ||
@@ -56,7 +56,7 @@ BOOL parse_comment(chunk_t *pc)
    else if (pc->str[len] == 0)
    {
       /* unexpected end of file */
-      return FALSE;
+      return(FALSE);
    }
    else if (pc->str[1] == '+')
    {
@@ -66,7 +66,7 @@ BOOL parse_comment(chunk_t *pc)
       {
          if ((pc->str[len] == '+') && (pc->str[len + 1] == '/'))
          {
-            len += 2;
+            len        += 2;
             cpd.column += 2;
             d_level--;
             continue;
@@ -74,7 +74,7 @@ BOOL parse_comment(chunk_t *pc)
 
          if ((pc->str[len] == '/') && (pc->str[len + 1] == '+'))
          {
-            len += 2;
+            len        += 2;
             cpd.column += 2;
             d_level++;
             continue;
@@ -97,7 +97,7 @@ BOOL parse_comment(chunk_t *pc)
       {
          if ((pc->str[len] == '*') && (pc->str[len + 1] == '/'))
          {
-            len += 2;
+            len        += 2;
             cpd.column += 2;
             break;
          }
@@ -129,7 +129,7 @@ BOOL parse_comment(chunk_t *pc)
  */
 BOOL parse_number(chunk_t *pc)
 {
-   int len = 0;
+   int  len              = 0;
    BOOL allow_underscore = ((cpd.lang_flags & LANG_D) != 0);
 
    if (!isdigit(*pc->str))
@@ -173,7 +173,7 @@ BOOL parse_number(chunk_t *pc)
    else
    {
       int dotcount = 0;
-      len          = 1;
+      len = 1;
       while (isdigit(pc->str[len]) ||
              ((pc->str[len] == '.') && (dotcount == 0)) ||
              (allow_underscore && (pc->str[len] == '_')))

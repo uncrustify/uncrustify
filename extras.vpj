@@ -94,6 +94,8 @@
 		<F N="ChangeLog"/>
 		<F N="changelog.txt"/>
 		<F N="check_settings.sh"/>
+		<F N="configure"/>
+		<F N="configure.in"/>
 		<F N="COPYING"/>
 		<F N="do-c.sh"/>
 		<F N="do-d.sh"/>

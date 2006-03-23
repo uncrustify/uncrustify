@@ -207,6 +207,5 @@ void pf_check(struct parse_frame *frm, chunk_t *pc)
       LOG_FMT(LPF, " <Out>");
       pf_log(LPF, frm);
    }
-
 }
 

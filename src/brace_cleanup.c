@@ -54,7 +54,7 @@ static void preproc_start(struct parse_frame *frm, chunk_t *pc)
          frm->brace_level = 1;
 
          /*TODO: not sure about the next 3 lines */
-         frm->pse_tos = 1;
+         frm->pse_tos                 = 1;
          frm->pse[frm->pse_tos].type  = CT_PP_DEFINE;
          frm->pse[frm->pse_tos].stage = BS_NONE;
       }
@@ -75,7 +75,7 @@ static void print_stack(int logsev, const char *str,
 
       log_fmt(logsev, "%8.8s", str);
 
-      for (idx = 1 ; idx <= frm->pse_tos; idx++)
+      for (idx = 1; idx <= frm->pse_tos; idx++)
       {
          if (frm->pse[idx].stage != BS_NONE)
          {
@@ -458,8 +458,8 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
  */
 static BOOL check_complex_statements(struct parse_frame *frm, chunk_t *pc)
 {
-   c_token_t  parent;
-   chunk_t    *vbrace;
+   c_token_t parent;
+   chunk_t   *vbrace;
 
    /* Check for CT_ELSE after CT_IF */
    while (frm->pse[frm->pse_tos].stage == BS_ELSE)
@@ -521,7 +521,7 @@ static BOOL check_complex_statements(struct parse_frame *frm, chunk_t *pc)
    {
       parent = frm->pse[frm->pse_tos].type;
 
-      vbrace = insert_vbrace_open_before(pc, frm);
+      vbrace              = insert_vbrace_open_before(pc, frm);
       vbrace->parent_type = parent;
 
       frm->level++;
@@ -713,8 +713,8 @@ BOOL close_statement(struct parse_frame *frm, chunk_t *pc)
 
          /* And repeat the close */
          close_statement(frm, pc);
-         return TRUE;
-     }
+         return(TRUE);
+      }
    }
 
    /* See if we are done with a complex statement */

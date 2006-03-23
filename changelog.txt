@@ -2,13 +2,22 @@
 # $Id$
 #
 
-Current version: uncrustify-0.0.9
+Current version: uncrustify-0.0.10
+
+
+Changes from uncrustify-0.0.9
+-------------------------------------------------------------------------------
+ - Complete rewrite of tokenizer and brace parser
+ - Added support for D nested comments
+ - Fixed some virtual brace bugs
+ - Added some documentation for the brace parsing stuff
+ - Add more tests to improve coverage (still lacking)
 
 
 Changes from uncrustify-0.0.8
 -------------------------------------------------------------------------------
  - Major enhancements for D
- - Add handling for special "[]" sequence fr C#/D
+ - Add handling for special "[]" sequence for C#/D
  - add some more tests
 
 
