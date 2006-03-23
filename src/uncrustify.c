@@ -65,7 +65,8 @@ int main(int argc, char *argv[])
    log_mask_t           mask;
    int                  op;
    int                  option_index   = 0;
-   static struct option long_options[] = {
+   static struct option long_options[] =
+   {
       { "version", 0, 0,   0 },
       { "file",    1, 0, 'f' },
       { "config",  1, 0, 'c' },

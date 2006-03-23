@@ -207,11 +207,14 @@ static void convert_vbrace_to_brace(void)
    for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next_ncnl(pc))
    {
       if ((((pc->parent_type == CT_IF) || (pc->parent_type == CT_ELSE)) &&
-           ((cpd.settings[UO_mod_full_brace_if] & AV_ADD) != 0)) ||
+           ((cpd.settings[UO_mod_full_brace_if] & AV_ADD) != 0))
+          ||
           ((pc->parent_type == CT_FOR) &&
-           ((cpd.settings[UO_mod_full_brace_for] & AV_ADD) != 0)) ||
+           ((cpd.settings[UO_mod_full_brace_for] & AV_ADD) != 0))
+          ||
           ((pc->parent_type == CT_DO) &&
-           ((cpd.settings[UO_mod_full_brace_do] & AV_ADD) != 0)) ||
+           ((cpd.settings[UO_mod_full_brace_do] & AV_ADD) != 0))
+          ||
           ((pc->parent_type == CT_WHILE) &&
            ((cpd.settings[UO_mod_full_brace_while] & AV_ADD) != 0)))
       {
