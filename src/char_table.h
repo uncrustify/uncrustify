@@ -3,7 +3,7 @@
  * A simple table to help tokenize stuff.
  * Used to parse strings (paired char) and words.
  *
- * $Id: char_table.h,v 1.7 2006/02/13 03:30:20 bengardner Exp $
+ * $Id$
  */
 #ifndef CHAR_TABLE_H_INCLUDED
 #define CHAR_TABLE_H_INCLUDED

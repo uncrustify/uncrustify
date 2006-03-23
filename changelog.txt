@@ -4,6 +4,14 @@
 
 Current version: uncrustify-0.0.10
 
+Changes from uncrustify-0.0.10
+-------------------------------------------------------------------------------
+ - fix spacing bug "a++;" vs "a ++;" due to statement start misdetect
+ - add nl_assign_brace
+ - fix parent of vbrace close
+ - more test enhancements
+ - trailing comments seem a bit broken?
+
 
 Changes from uncrustify-0.0.9
 -------------------------------------------------------------------------------

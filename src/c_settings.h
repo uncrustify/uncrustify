@@ -158,6 +158,7 @@ enum uncrustify_options
    UO_nl_enum_brace,             /* nl between enum and brace */
    UO_nl_struct_brace,           /* nl between struct and brace */
    UO_nl_union_brace,            /* nl between union and brace */
+   UO_nl_assign_brace,           /* nl between '=' and brace */
 
    UO_nl_do_brace,               /* nl between do and { */
    UO_nl_if_brace,               /* nl between if and { */
@@ -284,6 +285,7 @@ struct options_name_tab option_name_table[] =
    OPTDEF(mod_paren_on_return,           AT_IARF),
    OPTDEF(nl_after_case,                 AT_BOOL),
    OPTDEF(nl_after_return,               AT_BOOL),
+   OPTDEF(nl_assign_brace,               AT_IARF),
    OPTDEF(nl_before_case,                AT_BOOL),
    OPTDEF(nl_brace_else,                 AT_IARF),
    OPTDEF(nl_brace_while,                AT_IARF),

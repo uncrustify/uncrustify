@@ -341,6 +341,9 @@ Here's a list of all the options from c_settings.h and a brief description.
 	
    nl_union_brace:		IARF
 	nl between union and brace
+	
+   nl_assign_brace:		IARF
+	nl between = and {
 
    nl_do_brace:			IARF
 	nl between do and {

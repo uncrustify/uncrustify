@@ -2,7 +2,7 @@
  * @file c_newlines.c
  * Adds or removes newlines.
  *
- * $Id: c_newlines.c,v 1.19 2006/02/14 03:27:55 bengardner Exp $
+ * $Id$
  */
 #include "cparse_types.h"
 #include "chunk_list.h"
@@ -382,6 +382,19 @@ static void newlines_brace_pair(chunk_t *br_open)
       return;
    }
 
+   if (br_open->parent_type == CT_ASSIGN)
+   {
+      prev = chunk_get_prev_ncnl(br_open);
+      if ((cpd.settings[UO_nl_assign_brace] & AV_ADD) != 0)
+      {
+         newline_add_between(prev, br_open);
+      }
+      else if ((cpd.settings[UO_nl_assign_brace] & AV_REMOVE) != 0)
+      {
+         newline_del_between(prev, br_open);
+      }
+   }
+
    if (cpd.settings[UO_eat_blanks_after_open_brace])
    {
       pc = chunk_get_next_nc(br_open);
@@ -655,14 +668,13 @@ void newlines_cleanup_braces(void)
          next = chunk_get_next_ncnl(pc);
          if ((next != NULL) && (next->type == CT_BRACE_OPEN))
          {
-            if (cpd.settings[UO_nl_fcall_brace])
+            if ((cpd.settings[UO_nl_fcall_brace] & AV_ADD) != 0)
             {
-               if (cpd.settings[UO_nl_fcall_brace] > 0)
-               {
-               }
-               else
-               {
-               }
+               /*TODO: insert a brace? */
+            }
+            else if ((cpd.settings[UO_nl_fcall_brace] & AV_REMOVE) != 0)
+            {
+               /*TODO: insert a brace? */
             }
          }
       }
@@ -673,25 +685,9 @@ void newlines_cleanup_braces(void)
             newline_return(pc);
          }
       }
-      //      else if (pc->type == CT_BRACE_OPEN)
-      //      {
-      //      //   if (pc->parent_type == CT_FUNC_DEF)
-      //         {
-      //            fprintf(stderr, "%s: add nl after func brace\n", __func__);
-      //            tmp = chunk_get_next_ncnl(pc);
-      //            newline_add_between(pc, tmp);
-      //         }
-      //      }
-      //      else if (pc->type == CT_BRACE_CLOSE)
-      //      {
-      //         if (pc->parent_type == CT_FUNC_DEF)
-      //         {
-      //            tmp = chunk_get_prev_ncnl(pc);
-      //            newline_add_between(tmp, pc);
-      //         }
-      //      }
       else
       {
+         /* ignore it */
       }
    }
 }
