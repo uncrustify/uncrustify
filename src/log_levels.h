@@ -31,7 +31,7 @@ enum
    LINDENT  = 20,    /* indent_text */
    LNEWLINE = 21,    /* newlines */
    LPF      = 22,    /* Parse Frame */
-   LFRMSTK  = 23,    /* Frame Stack */
+   LSTMT    = 23,    /* Marking statements/expressions */
    LTOK     = 24,    /* Tokenize */
    LALRC    = 25,    /* align right comment */
    LCMTIND  = 26,    /* Comment Indent */
