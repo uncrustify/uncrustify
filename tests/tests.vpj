@@ -106,6 +106,7 @@
 			<F N="output/00020-define-if-indent.c"/>
 			<F N="output/00050-brace-remove-2.c"/>
 			<F N="output/00051-brace-remove-all.c"/>
+			<F N="output/00060-braces-2.c"/>
 			<F N="output/20000-i2c-core.c"/>
 			<F N="output/40000-HashMap.d"/>
 			<F N="output/40001-imports.d"/>
