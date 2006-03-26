@@ -64,7 +64,8 @@ static int i2c_bus_resume(struct device *dev)
    return(rc);
 }
 
-struct bus_type i2c_bus_type = {
+struct bus_type i2c_bus_type =
+{
    .name    = "i2c",
    .match   = i2c_device_match,
    .suspend = i2c_bus_suspend,
@@ -88,7 +89,8 @@ void i2c_adapter_dev_release(struct device *dev)
    complete(&adap->dev_released);
 }
 
-struct device_driver i2c_adapter_driver = {
+struct device_driver i2c_adapter_driver =
+{
    .name   = "i2c_adapter",
    .bus    = &i2c_bus_type,
    .probe  = i2c_device_probe,
@@ -102,7 +104,8 @@ static void i2c_adapter_class_dev_release(struct class_device *dev)
    complete(&adap->class_dev_released);
 }
 
-struct class i2c_adapter_class = {
+struct class i2c_adapter_class =
+{
    .name    = "i2c-adapter",
    .release = &i2c_adapter_class_dev_release,
 };
@@ -135,7 +138,8 @@ static ssize_t show_client_name(struct device *dev, struct device_attribute *att
  * different type of a device.  So beware if the DEVICE_ATTR() macro ever
  * changes, this definition will also have to change.
  */
-static struct device_attribute dev_attr_client_name = {
+static struct device_attribute dev_attr_client_name =
+{
    .attr = { .name = "name", .mode = S_IRUGO, .owner = THIS_MODULE },
    .show = &show_client_name,
 };
