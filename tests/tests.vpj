@@ -77,12 +77,20 @@
 			<F N="config/indent.cfg"/>
 		</Folder>
 		<Folder Name="input">
+			<F N="input/align-struct-init.c"/>
 			<F N="input/brace-remove.c"/>
 			<F N="input/braces-2.c"/>
 			<F N="input/braces-3.c"/>
 			<F N="input/braces-4.c"/>
 			<F N="input/braces-5.c"/>
 			<F N="input/braces.c"/>
+			<F N="input/bugs-1.c"/>
+			<F N="input/bugs-2.c"/>
+			<F N="input/bugs-3.c"/>
+			<F N="input/bugs-4.c"/>
+			<F N="input/bugs-5.c"/>
+			<F N="input/bugs-6.c"/>
+			<F N="input/bugs.c"/>
 			<F N="input/colon-asm.c"/>
 			<F N="input/comment-indent.c"/>
 			<F N="input/define-if-indent.c"/>
@@ -98,6 +106,7 @@
 			<F N="input/struct-brace.c"/>
 			<F N="input/switch-case.c"/>
 			<F N="input/type-cast.c"/>
+			<F N="input/vb-do.c"/>
 			<F N="input/volatile-1.d"/>
 			<F N="input/volatile-2.d"/>
 			<F N="input/volatile-3.d"/>

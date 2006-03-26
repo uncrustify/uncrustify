@@ -20,7 +20,7 @@ static void set_md_connected(CHAR *msg_data)
    LOG(LFTR,"%s CONNECTED Loco %s, IP Addr %s,MAC Addr %s, AP Name %s",
        status_str,mobile_device_id,ip_addr,mac_addr,ap_name);
 #else
-#error Unknown device type most be DB_MGR_ORACLE or DB_MGR_FILE
+#error Unknown device type must be DB_MGR_ORACLE or DB_MGR_FILE
 #endif
 }
 

@@ -32,16 +32,3 @@ int main(int argc, char *argv[])
     {"green",{0,0,255}},{"purple",{255,255,0}},
  };
 
-/*
-
-align '{'   then
-
-{ s
-, #
-, #
-, s
-} ,
-
-
-*/
-
