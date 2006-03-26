@@ -115,6 +115,10 @@ void brace_cleanup(void)
       {
          if (cpd.in_preproc == CT_PP_DEFINE)
          {
+            cpd.consumed = FALSE;
+            parse_cleanup(&frm, pc);
+            print_stack(LBCSAFTER, (pc->type == CT_VBRACE_CLOSE) ? "Virt-}" : pc->str, &frm, pc);
+
             /* out of the #define body, restore the frame */
             pf_pop(&frm);
          }
@@ -137,9 +141,7 @@ void brace_cleanup(void)
        * Also need to pass in the initial '#' to close out any virtual braces.
        */
       if (!chunk_is_comment(pc) && !chunk_is_newline(pc) &&
-          ((cpd.in_preproc == CT_PP_DEFINE) ||
-           (cpd.in_preproc == CT_NONE) ||
-           (pc->type == CT_PREPROC)))
+          ((cpd.in_preproc == CT_PP_DEFINE) || (cpd.in_preproc == CT_NONE)))
       {
          cpd.consumed = FALSE;
          parse_cleanup(&frm, pc);
@@ -580,6 +582,8 @@ static BOOL check_complex_statements(struct parse_frame *frm, chunk_t *pc)
  */
 static BOOL handle_complex_close(struct parse_frame *frm, chunk_t *pc)
 {
+   chunk_t *next;
+
    if (frm->pse[frm->pse_tos].stage == BS_PAREN1)
    {
       /* PAREN1 always => BRACE2 */
@@ -591,6 +595,18 @@ static BOOL handle_complex_close(struct parse_frame *frm, chunk_t *pc)
       if (frm->pse[frm->pse_tos].type == CT_IF)
       {
          frm->pse[frm->pse_tos].stage = BS_ELSE;
+
+         /* If the next chunk isn't CT_ELSE, close the statement */
+         next = chunk_get_next_ncnl(pc);
+         if ((next != NULL) && (next->type != CT_ELSE))
+         {
+            frm->pse_tos--;
+            print_stack(LBCSPOP, "-IF-HCS ", frm, pc);
+            if (close_statement(frm, pc))
+            {
+               return(TRUE);
+            }
+         }
       }
       else
       {
