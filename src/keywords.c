@@ -106,6 +106,7 @@ static chunk_tag_t keywords[] =
    { "if",               CT_PP_IF,      LANG_ALL | FLAG_PP },
    { "ifdef",            CT_PP_IF,      LANG_ALL | FLAG_PP },
    { "ifloat",           CT_TYPE,       LANG_D },
+   { "ifndef",           CT_PP_IF,      LANG_ALL | FLAG_PP },
    { "implements",       CT_QUALIFIER,  LANG_JAVA },
    { "implicit",         CT_QUALIFIER,  LANG_CS },
    { "import",           CT_TYPE,       LANG_D | LANG_JAVA },     // fudged to get indenting
@@ -191,8 +192,8 @@ static chunk_tag_t keywords[] =
    { "version",          CT_VERSION,    LANG_D },
    { "virtual",          CT_QUALIFIER,  LANG_CPP | LANG_CS },
    { "void",             CT_TYPE,       LANG_ALL },
-   { "volatile",         CT_VOLATILE,   LANG_D },
    { "volatile",         CT_QUALIFIER,  LANG_C | LANG_CPP | LANG_CS | LANG_JAVA },
+   { "volatile",         CT_VOLATILE,   LANG_D },
    { "wchar",            CT_TYPE,       LANG_D },
    { "wchar_t",          CT_TYPE,       LANG_C | LANG_CPP },
    { "while",            CT_WHILE,      LANG_ALL },
