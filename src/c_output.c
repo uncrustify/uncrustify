@@ -237,7 +237,7 @@ void output_comment_multi(chunk_t *pc)
          }
          else
          {
-            //             fprintf(stderr, "%d] Text starts in col %d\n", line_count, ccol);
+            //fprintf(stderr, "%d] Text starts in col %d\n", line_count, ccol);
          }
       }
       line[len++] = ch;
@@ -270,12 +270,12 @@ void output_comment_multi(chunk_t *pc)
             /* this is the first line - add unchanged */
             output_to_column(cmt_col, cpd.settings[UO_indent_with_tabs]);
             add_text(line);
-            //fprintf(stderr, "Indented 1st line comment to %d\n", cmt_col);
          }
          else
          {
             /* This is not the first line, so we need to indent to the right
-             * column */
+             * column
+             */
 
             if (lead_width < 0)
             {
@@ -302,13 +302,12 @@ void output_comment_multi(chunk_t *pc)
                ccol = cmt_col;
             }
 
-            if (len == 1)
+            if ((line[0] == '\n') || (line[0] == '\r'))
             {
                /* Emtpy line - just a '\n' */
                if (cpd.settings[UO_cmt_star_cont])
                {
                   output_to_column(cmt_col, cpd.settings[UO_indent_with_tabs]);
-                  //fprintf(stderr, "Indented star comment to %d\n", cmt_col);
                   add_text(" *");
                }
                add_char(ch);
@@ -329,19 +328,14 @@ void output_comment_multi(chunk_t *pc)
                      add_text("   ");
                   }
                   output_to_column(ccol, cpd.settings[UO_indent_with_tabs]);
-                  //                   fprintf(stderr, "Indented non-star comment to %d *, then %d\n", cmt_col, ccol);
                }
                else
                {
-                  //fprintf(stderr, "%d> lead_width = %d\n",
-                  //        pc->orig_line, lead_width);
-
                   if ((line[0] == '*') && (line[1] == '/'))
                   {
                      xtra = (lead_width <= 1) ? 1 : 0;
                   }
                   output_to_column(cmt_col + xtra, cpd.settings[UO_indent_with_tabs]);
-                  //fprintf(stderr, "Indented already-star comment to %d\n", cmt_col + tmp);
                }
                add_text(line);
             }
