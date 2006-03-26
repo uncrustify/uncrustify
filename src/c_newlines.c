@@ -374,6 +374,7 @@ static void newlines_brace_pair(chunk_t *br_open)
 {
    chunk_t  *br_close;
    chunk_t  *prev;
+   chunk_t  *next;
    chunk_t  *pc;
    argval_t val = AV_IGNORE;
 
@@ -384,14 +385,19 @@ static void newlines_brace_pair(chunk_t *br_open)
 
    if (br_open->parent_type == CT_ASSIGN)
    {
-      prev = chunk_get_prev_ncnl(br_open);
-      if ((cpd.settings[UO_nl_assign_brace] & AV_ADD) != 0)
+      /* Only mess with it if the open brace is followed by a newline */
+      next = chunk_get_next_nc(br_open);
+      if ((next != NULL) && (next->type == CT_NEWLINE))
       {
-         newline_add_between(prev, br_open);
-      }
-      else if ((cpd.settings[UO_nl_assign_brace] & AV_REMOVE) != 0)
-      {
-         newline_del_between(prev, br_open);
+         prev = chunk_get_prev_ncnl(br_open);
+         if ((cpd.settings[UO_nl_assign_brace] & AV_ADD) != 0)
+         {
+            newline_add_between(prev, br_open);
+         }
+         else if ((cpd.settings[UO_nl_assign_brace] & AV_REMOVE) != 0)
+         {
+            newline_del_between(prev, br_open);
+         }
       }
    }
 
