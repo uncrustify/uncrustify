@@ -1,10 +1,3 @@
-
-typedef unsigned char BOOL;
-#define TRUE      (BOOL)1
-#define FALSE     (BOOL)0
-
-
-
 /**
  * This is your typical header comment
  */
@@ -25,7 +18,5 @@ typedef unsigned char BOOL;
    return(res);
 }
 
-
    // col1 comment in level 0
-
 

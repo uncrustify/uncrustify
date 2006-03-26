@@ -4,3 +4,5 @@
 
 # test.name  config.file  input.file  output.file
 
+10000 mono.cfg cs/simple.cs cs/10000-simple.cs
+

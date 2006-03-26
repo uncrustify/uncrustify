@@ -4,5 +4,29 @@
 
 # test.name  config.file  input.file  output.file
 
-20000 ben.cfg i2c-core.c 20000-i2c-core.c
+
+# little general tests
+
+00000  indent.cfg  c/comment-indent.c  c/00000-comment-indent.c
+00010  ben.cfg  c/braces.c  c/00010-braces.c
+00020  ben.cfg  c/define-if-indent.c  c/00020-define-if-indent.c
+00050  brace-remove-2.cfg  c/brace-remove.c  c/00050-brace-remove-2.c
+00051  brace-remove-all.cfg  c/brace-remove.c  c/00051-brace-remove-all.c
+00060  ben.cfg  c/braces-2.c  c/00060-braces-2.c
+00061  ben.cfg  c/braces-3.c  c/00061-braces-3.c
+00062  ben.cfg  c/braces-4.c  c/00062-braces-4.c
+00065  ben.cfg  c/braces-5.c  c/00065-braces-5.c
+
+00101  ben.cfg  c/bugs-1.c  c/00101-bugs-1.c
+00102  ben.cfg  c/bugs-2.c  c/00102-bugs-2.c
+00103  ben.cfg  c/bugs-3.c  c/00103-bugs-3.c
+00104  ben.cfg  c/bugs-4.c  c/00104-bugs-4.c
+00105  ben.cfg  c/bugs-5.c  c/00105-bugs-5.c
+00106  ben.cfg  c/bugs-6.c  c/00106-bugs-6.c
+
+
+
+# big general tests
+
+20000 ben.cfg c/i2c-core.c c/20000-i2c-core.c
 

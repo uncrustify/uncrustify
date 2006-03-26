@@ -1,4 +1,3 @@
-
 /**
  * This is your typical header comment
  */
@@ -16,8 +15,8 @@ int foo(int bar)
    // almost continued, but a NL in between
 
 // col1 comment in level 1
-   return res;
+   return(res);
 }
 
-// non-col1 comment in level 0
+// col1 comment in level 0
 
