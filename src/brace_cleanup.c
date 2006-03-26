@@ -115,10 +115,6 @@ void brace_cleanup(void)
       {
          if (cpd.in_preproc == CT_PP_DEFINE)
          {
-            cpd.consumed = FALSE;
-            parse_cleanup(&frm, pc);
-            print_stack(LBCSAFTER, (pc->type == CT_VBRACE_CLOSE) ? "Virt-}" : pc->str, &frm, pc);
-
             /* out of the #define body, restore the frame */
             pf_pop(&frm);
          }
