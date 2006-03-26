@@ -174,6 +174,7 @@ typedef enum
    CT_BASE,             /* C# thingy */
    CT_DEFAULT,          /* may be changed into CT_CASE */
    CT_GETSET,           /* must be followed by CT_BRACE_OPEN or reverts to CT_WORD */
+   CT_CONCAT,           /* The '~' between strings */
 } c_token_t;
 
 #endif   /* TOKEN_ENUM_H_INCLUDED */

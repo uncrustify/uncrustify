@@ -143,6 +143,7 @@ const char *token_names[] =
    [CT_BASE]          = "BASE",
    [CT_DEFAULT]       = "DEFAULT",
    [CT_GETSET]        = "GETSET",
+   [CT_CONCAT]        = "CONCAT",
 };
 
 #endif  /* TOKEN_NAMES_H_INCLUDED */

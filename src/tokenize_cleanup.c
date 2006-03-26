@@ -102,6 +102,15 @@ void tokenize_cleanup(void)
          pc->type = CT_COMPARE;
       }
 
+
+      if (((cpd.lang_flags & LANG_D) != 0) &&
+          (pc->type == CT_INV) &&
+          ((prev->type == CT_STRING) ||
+           (next->type == CT_STRING)))
+      {
+         pc->type = CT_CONCAT;
+      }
+
       /* TODO: determine other stuff here */
 
       prev = pc;
