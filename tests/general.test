@@ -10,4 +10,7 @@
 00050  brace-remove-2.cfg  brace-remove.c  00050-brace-remove-2.c
 00051  brace-remove-all.cfg  brace-remove.c  00051-brace-remove-all.c
 00060  ben.cfg  braces-2.c  00060-braces-2.c
+00061  ben.cfg  braces-3.c  00061-braces-3.c
+00062  ben.cfg  braces-4.c  00062-braces-4.c
+
 

@@ -79,6 +79,7 @@
 		<Folder Name="input">
 			<F N="input/brace-remove.c"/>
 			<F N="input/braces-2.c"/>
+			<F N="input/braces-4.c"/>
 			<F N="input/braces.c"/>
 			<F N="input/colon-asm.c"/>
 			<F N="input/comment-indent.c"/>
@@ -108,6 +109,7 @@
 			<F N="output/00051-brace-remove-all.c"/>
 			<F N="output/00060-braces-2.c"/>
 			<F N="output/20000-i2c-core.c"/>
+			<F N="output/20010-braces-4.c"/>
 			<F N="output/40000-HashMap.d"/>
 			<F N="output/40001-imports.d"/>
 			<F N="output/40002-volatile.d"/>

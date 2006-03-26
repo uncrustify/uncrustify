@@ -48,5 +48,7 @@ void foo(void)
             a += b;
       }
    }
+
+   while (1); /* hang forever */
 }
 
