@@ -132,9 +132,14 @@ void brace_cleanup(void)
       pc->level       = frm.level;
       pc->brace_level = frm.brace_level;
 
-      /* #define bodies get the full formatting treatment */
+      /**
+       * #define bodies get the full formatting treatment
+       * Also need to pass in the initial '#' to close out any virtual braces.
+       */
       if (!chunk_is_comment(pc) && !chunk_is_newline(pc) &&
-          ((cpd.in_preproc == CT_PP_DEFINE) || (cpd.in_preproc == CT_NONE)))
+          ((cpd.in_preproc == CT_PP_DEFINE) ||
+           (cpd.in_preproc == CT_NONE) ||
+           (pc->type == CT_PREPROC)))
       {
          cpd.consumed = FALSE;
          parse_cleanup(&frm, pc);
@@ -228,6 +233,15 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
       pc->flags |= PCF_IN_SPAREN;
    }
 
+   /* Check the progression of complex statements */
+   if (frm->pse[frm->pse_tos].stage != BS_NONE)
+   {
+      if (check_complex_statements(frm, pc))
+      {
+         return;
+      }
+   }
+
    /**
     * Check for a virtual brace statement close due to a semicolon.
     * The virtual brace will get handled the next time through.
@@ -239,15 +253,6 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
    {
       cpd.consumed = TRUE;
       close_statement(frm, pc);
-   }
-
-   /* Check the progression of complex statements */
-   if (frm->pse[frm->pse_tos].stage != BS_NONE)
-   {
-      if (check_complex_statements(frm, pc))
-      {
-         return;
-      }
    }
 
    /* Handle close paren, vbrace, brace, and square */
