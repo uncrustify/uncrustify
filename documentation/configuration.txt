@@ -12,6 +12,13 @@ Remove mean remove the space/brace/newline/etc.
 Force in the context of spaces means ensure that there is exactly 1.
 Force in other contexts means the same as add.
 
+Configuration items may reference previously defined configuration items.
+Numeric items may be prefixed with a '-' to invert the number.
+Boolean items may be prefixed with a '-' or '~' to invert the value.
+For example, the following is valid:
+  output_tab_size = 4
+  indent_columns  = output_tab_size
+
 
 All items default to false/0/ignore except:
 	- input_tab_size = 8
