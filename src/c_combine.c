@@ -823,6 +823,16 @@ void combine_labels(void)
          {
             hit_case   = FALSE;
             next->type = CT_CASE_COLON;
+            tmp        = chunk_get_next_ncnl(next);
+            if ((tmp != NULL) && (tmp->type == CT_BRACE_OPEN))
+            {
+               tmp->parent_type = CT_CASE;
+               tmp              = chunk_get_next_type(tmp, CT_BRACE_CLOSE, tmp->level);
+               if (tmp != NULL)
+               {
+                  tmp->parent_type = CT_CASE;
+               }
+            }
          }
          else
          {
