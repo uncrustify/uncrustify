@@ -4,5 +4,5 @@
 
 # test.name  config.file  input.file  output.file
 
-# 30000 ben.cfg cpp/test.cpp cpp/30000-test.cpp
+30000 ben.cfg cpp/cout.cpp cpp/30000-cout.cpp
 

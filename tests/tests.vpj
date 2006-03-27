@@ -111,6 +111,9 @@
 				<F N="input/c/type-cast.c"/>
 				<F N="input/c/vb-do.c"/>
 			</Folder>
+			<Folder Name="cpp">
+				<F N="input/cpp/cout.cpp"/>
+			</Folder>
 			<Folder Name="cs">
 				<F N="input/cs/simple.cs"/>
 			</Folder>
@@ -144,6 +147,9 @@
 				<F N="output/c/00202-case-2.c"/>
 				<F N="output/c/00203-case-3.c"/>
 				<F N="output/c/20000-i2c-core.c"/>
+			</Folder>
+			<Folder Name="cpp">
+				<F N="output/cpp/30000-cout.cpp"/>
 			</Folder>
 			<Folder Name="cs">
 				<F N="output/cs/10000-simple.cs"/>
