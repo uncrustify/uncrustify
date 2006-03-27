@@ -45,10 +45,13 @@ enum uncrustify_options
    UO_indent_paren_nl,          // indent-align under paren for open followed by nl
    UO_leave_preproc_space,      //TODO: if true, leave the spaces between '#' and preprocessor commands
    UO_pp_indent,                //TODO: spaces to indent preprocessors (0)
-   UO_case_indent,              //TODO: spaces to indent case from switch (indent_columns)
-   UO_case_brace_indent,        //TODO: spaces to indent '{' from case
-   UO_brace_indent,             // spaces to indent '{' from level (usually 0)
-   UO_label_indent,             // 0=left >0=col from left, <0=sub from brace indent
+
+   UO_indent_switch_case,       // spaces to indent case from switch
+   UO_indent_case_body,         // spaces to indent case body from case
+   UO_indent_case_brace,        //TODO: spaces to indent '{' from case (usually 0 or indent_columns)
+
+   UO_indent_brace,             // spaces to indent '{' from level (usually 0)
+   UO_indent_label,             // 0=left >0=col from left, <0=sub from brace indent
 
    UO_indent_align_string,      // True/False - indent align broken strings
 
@@ -254,24 +257,25 @@ struct options_name_tab option_name_table[] =
    OPTDEF(blc_after_var_def_group,       AT_NUM),
    OPTDEF(blc_before_block_comment,      AT_NUM),
    OPTDEF(blc_max,                       AT_NUM),
-   OPTDEF(brace_indent,                  AT_NUM),
-   OPTDEF(case_brace_indent,             AT_NUM),
-   OPTDEF(case_indent,                   AT_NUM),
    OPTDEF(cmt_star_cont,                 AT_BOOL),
    OPTDEF(code_width,                    AT_NUM),
    OPTDEF(eat_blanks_after_open_brace,   AT_BOOL),
    OPTDEF(eat_blanks_before_close_brace, AT_BOOL),
    OPTDEF(indent,                        AT_BOOL),
    OPTDEF(indent_align_string,           AT_BOOL),
+   OPTDEF(indent_brace,                  AT_NUM),
    OPTDEF(indent_brace_struct,           AT_NUM),
+   OPTDEF(indent_case_body,              AT_NUM),
+   OPTDEF(indent_case_brace,             AT_NUM),
    OPTDEF(indent_col1_comment,           AT_BOOL),
    OPTDEF(indent_columns,                AT_NUM),
    OPTDEF(indent_func_call_param,        AT_BOOL),
+   OPTDEF(indent_label,                  AT_NUM),
    OPTDEF(indent_paren,                  AT_NUM),
    OPTDEF(indent_paren_nl,               AT_BOOL),
+   OPTDEF(indent_switch_case,            AT_NUM),
    OPTDEF(indent_with_tabs,              AT_NUM),
    OPTDEF(input_tab_size,                AT_NUM),
-   OPTDEF(label_indent,                  AT_NUM),
    OPTDEF(leave_preproc_space,           AT_BOOL),
    OPTDEF(ls_after_arith,                AT_BOOL),
    OPTDEF(ls_before_bool_op,             AT_BOOL),
