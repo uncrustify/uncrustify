@@ -25,6 +25,11 @@
 00106  ben.cfg  c/bugs-6.c  c/00106-bugs-6.c
 
 
+# switch & case stuff
+00201	case-1.cfg	c/case.c	c/00201-case-1.c
+00202	case-2.cfg	c/case.c	c/00202-case-2.c
+00203	case-3.cfg	c/case.c	c/00203-case-3.c
+
 
 # big general tests
 

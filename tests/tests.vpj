@@ -72,9 +72,13 @@
 			<F N="config/ben.cfg"/>
 			<F N="config/brace-remove-2.cfg"/>
 			<F N="config/brace-remove-all.cfg"/>
+			<F N="config/case-1.cfg"/>
+			<F N="config/case-2.cfg"/>
+			<F N="config/case-3.cfg"/>
 			<F N="config/cast-types.txt"/>
 			<F N="config/d.cfg"/>
 			<F N="config/indent.cfg"/>
+			<F N="config/mono.cfg"/>
 		</Folder>
 		<Folder Name="input">
 			<Folder Name="c">
@@ -92,6 +96,7 @@
 				<F N="input/c/bugs-5.c"/>
 				<F N="input/c/bugs-6.c"/>
 				<F N="input/c/bugs.c"/>
+				<F N="input/c/case-1.c"/>
 				<F N="input/c/colon-asm.c"/>
 				<F N="input/c/comment-indent.c"/>
 				<F N="input/c/define-if-indent.c"/>
@@ -135,6 +140,9 @@
 				<F N="output/c/00104-bugs-4.c"/>
 				<F N="output/c/00105-bugs-5.c"/>
 				<F N="output/c/00106-bugs-6.c"/>
+				<F N="output/c/00201-case-1.c"/>
+				<F N="output/c/00202-case-2.c"/>
+				<F N="output/c/00203-case-3.c"/>
 				<F N="output/c/20000-i2c-core.c"/>
 			</Folder>
 			<Folder Name="cs">
