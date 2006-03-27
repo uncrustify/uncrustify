@@ -318,8 +318,9 @@ void indent_text(void)
          }
          did_newline = FALSE;
 
-         if ((frm.pse[frm.pse_tos].type == CT_BRACE_OPEN) ||
-             (frm.pse[frm.pse_tos].type == CT_VBRACE_OPEN))
+         if (((frm.pse[frm.pse_tos].type == CT_BRACE_OPEN) ||
+              (frm.pse[frm.pse_tos].type == CT_VBRACE_OPEN)) &&
+             (frm.pse[frm.pse_tos].min_col <= 0))
          {
             /* Set it up for detection */
             frm.pse[frm.pse_tos].min_col = -1;
