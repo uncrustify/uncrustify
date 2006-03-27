@@ -2,7 +2,7 @@
  * @file c_args.c
  * Parses command line arguments.
  *
- * $Id: c_args.c,v 1.12 2006/02/21 02:55:28 bengardner Exp $
+ * $Id$
  */
 
 #define DEFINE_OPTION_NAME_TABLE
@@ -62,9 +62,27 @@ static int convert_value(struct options_name_tab *entry, const char *val)
 {
    if (entry->type == AT_NUM)
    {
-      if (isdigit(*val) || (*val == '-') || (*val == '+'))
+      if (isdigit(*val) ||
+          (isdigit(val[1]) && ((*val == '-') || (*val == '+'))))
       {
          return(strtol(val, NULL, 0));
+      }
+      else
+      {
+         /* Try to see if it is a variable */
+         struct options_name_tab *tmp;
+         int                     mult = 1;
+
+         if (*val == '-')
+         {
+            mult = -1;
+            val++;
+         }
+
+         if (((tmp = find_entry(val)) != NULL) && (tmp->type == entry->type))
+         {
+            return(cpd.settings[tmp->id] * mult);
+         }
       }
       LOG_FMT(LWARN, "Expected a number for %s, got %s\n", entry->name, val);
       return(0);
