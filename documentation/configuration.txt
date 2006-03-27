@@ -86,16 +86,52 @@ Here's a list of all the options from c_settings.h and a brief description.
    pp_indent:			number		* Not implemented *
 	Spaces to indent preprocessors on nested #ifdef/#elif.
 	
-   case_indent:			number		* Not implemented *
-	Spaces to indent case from switch (indent_columns).
+   indent_switch_case:		number		* REVISIT: make TRUE/FALSE? *
+	Spaces to indent case from switch (usually 0 or indent_columns).
 	
-   case_brace_indent:		number		* Not implemented *
+	If set to 0 (the default):
+	switch (a) {
+	case 34:
+	
+	
+	If set to 3:
+	switch (a) {
+	   case 34:
+	
+   indent_case_body:		number		* REVISIT: seems pointless *
+	Spaces to indent body from case.
+	
+	Default (0, assuming indent_columns is 3):
+	switch (a) {
+	   case 34:
+	      break;
+	
+	If set to -indent_columns:
+	switch (a) {
+	   case 34:
+	   break;
+	
+   indent_case_brace:		number
 	Spaces to indent '{' from case.
 	
-   brace_indent:		number
+	Default (0, assuming indent_columns is 3):
+	switch (a) {
+	   case 34:
+	      {
+	         break;
+	      }
+	
+	If set to -indent_columns:
+	switch (a) {
+	   case 34:
+	   {
+	      break;
+	   }
+	
+   indent_brace:		number
 	Spaces to indent '{' from level (usually 0). For GNU style, set to 2.
 	
-   label_indent:		number
+   indent_label:		number
 	How to indent goto labels.
 	>= 0 : Columns from the left
 	< 0  : Subtract from brace indent
