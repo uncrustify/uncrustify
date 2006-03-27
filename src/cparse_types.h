@@ -42,6 +42,7 @@ struct paren_stack_entry
    int       indent;       /**< indent level (depends on use) */
    int       indent_tmp;   /**< temporary indent level (depends on use) */
    int       ref;
+   int       min_col;
    c_token_t parent;       /**< if, for, function, etc */
    brstage_t stage;
    BOOL      in_preproc;   /**> whether this was created in a preprocessor */

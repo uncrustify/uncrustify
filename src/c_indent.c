@@ -306,7 +306,7 @@ void indent_text(void)
             LOG_FMT(LINDENT, "%s: %d] preproc indent\n", __func__, pc->orig_line);
             reindent_line(pc, 1);
          }
-         else if ((pc->column != frm.pse[frm.pse_tos].indent_tmp) &&
+         else if ((pc->column != (frm.pse[frm.pse_tos].indent_tmp)) &&
                   ((pc->column != 1) ||
                    !((pc->type == CT_COMMENT) ||
                      (pc->type == CT_COMMENT_CPP) ||
@@ -317,6 +317,40 @@ void indent_text(void)
             reindent_line(pc, frm.pse[frm.pse_tos].indent_tmp);
          }
          did_newline = FALSE;
+
+         if ((frm.pse[frm.pse_tos].type == CT_BRACE_OPEN) ||
+             (frm.pse[frm.pse_tos].type == CT_VBRACE_OPEN))
+         {
+            /* Set it up for detection */
+            frm.pse[frm.pse_tos].min_col = -1;
+         }
+      }
+
+      /* Handle C++ cout-style crap '<<' line continuation */
+      if ((frm.pse[frm.pse_tos].min_col == -1) && (pc->type != CT_WORD))
+      {
+         LOG_FMT(LSYS, "%s: BAILED: pc=%s col=%d\n", __func__, pc->str, pc->column);
+         frm.pse[frm.pse_tos].min_col = 0;
+      }
+      if (frm.pse[frm.pse_tos].min_col <= -1)
+      {
+         if ((pc->type != CT_WORD) &&
+             (pc->type != CT_MEMBER) &&
+             (pc->type != CT_ARITH))
+         {
+            /* Done with the tmp_indent */
+            frm.pse[frm.pse_tos].min_col = -frm.pse[frm.pse_tos].min_col;
+         }
+         else
+         {
+            /* include this in the class name */
+            frm.pse[frm.pse_tos].min_col = -pc->column;
+         }
+      }
+
+      if (pc->type == CT_SEMICOLON)
+      {
+         frm.pse[frm.pse_tos].min_col = 0;
       }
 
       if ((pc->type == CT_STRING) && cpd.settings[UO_indent_align_string])
@@ -359,6 +393,10 @@ void indent_text(void)
       {
          did_newline                     = TRUE;
          frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
+         if (frm.pse[frm.pse_tos].min_col > 0)
+         {
+            frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].min_col;
+         }
 
          /**
           * Handle the case of a multi-line #define w/o a reference on the
@@ -382,6 +420,7 @@ void indent_text(void)
          frm.pse[frm.pse_tos].open_line  = pc->orig_line;
          frm.pse[frm.pse_tos].ref        = ++ref;
          frm.pse[frm.pse_tos].in_preproc = (pc->flags & PCF_IN_PREPROC) != 0;
+         frm.pse[frm.pse_tos].min_col    = 0;
          LOG_FMT(LINDENT, "%3d] OPEN(7) on %s, tos=%d\n", pc->orig_line,
                  get_token_name(pc->type), frm.pse_tos);
       }
@@ -392,6 +431,7 @@ void indent_text(void)
          frm.pse[frm.pse_tos].type       = pc->type;
          frm.pse[frm.pse_tos].ref        = ++ref;
          frm.pse[frm.pse_tos].in_preproc = (pc->flags & PCF_IN_PREPROC) != 0;
+         frm.pse[frm.pse_tos].min_col    = 0;
          LOG_FMT(LINDENT, "%3d] OPEN(8) on %s, tos=%d\n", pc->orig_line,
                  get_token_name(pc->type), frm.pse_tos);
 
