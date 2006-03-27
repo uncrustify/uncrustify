@@ -112,6 +112,7 @@
 				<F N="input/c/vb-do.c"/>
 			</Folder>
 			<Folder Name="cpp">
+				<F N="input/cpp/alt_tokens.cpp"/>
 				<F N="input/cpp/cout.cpp"/>
 			</Folder>
 			<Folder Name="cs">
@@ -150,6 +151,7 @@
 			</Folder>
 			<Folder Name="cpp">
 				<F N="output/cpp/30000-cout.cpp"/>
+				<F N="output/cpp/30001-alt_tokens.cpp"/>
 			</Folder>
 			<Folder Name="cs">
 				<F N="output/cs/10000-simple.cs"/>
