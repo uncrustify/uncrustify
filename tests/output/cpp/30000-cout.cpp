@@ -4,6 +4,9 @@ void foo()
    cout.setf(ios::floatfield, ios::fixed);
 
    what.the.hell.cout << "hello"
-                      << "world";
+                      << "world!"
+                      << "This"
+                      << "is a"
+                      << "test!";
 }
 
