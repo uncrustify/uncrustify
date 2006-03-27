@@ -60,6 +60,10 @@ static struct options_name_tab *find_entry(const char *name)
  */
 static int convert_value(struct options_name_tab *entry, const char *val)
 {
+   struct options_name_tab *tmp;
+   BOOL                    btrue;
+   int                     mult;
+
    if (entry->type == AT_NUM)
    {
       if (isdigit(*val) ||
@@ -70,9 +74,7 @@ static int convert_value(struct options_name_tab *entry, const char *val)
       else
       {
          /* Try to see if it is a variable */
-         struct options_name_tab *tmp;
-         int                     mult = 1;
-
+         mult = 1;
          if (*val == '-')
          {
             mult = -1;
@@ -96,11 +98,24 @@ static int convert_value(struct options_name_tab *entry, const char *val)
       {
          return(1);
       }
+
       if ((strcasecmp(val, "false") == 0) ||
           (strcasecmp(val, "f") == 0) ||
           (strcmp(val, "0") == 0))
       {
          return(0);
+      }
+
+      btrue = TRUE;
+      if ((*val == '-') || (*val == '~'))
+      {
+         btrue = FALSE;
+         val++;
+      }
+
+      if (((tmp = find_entry(val)) != NULL) && (tmp->type == entry->type))
+      {
+         return(cpd.settings[tmp->id] ? btrue : !btrue);
       }
       LOG_FMT(LWARN, "Expected 'True' or 'False' for %s, got %s\n", entry->name, val);
       return(0);
@@ -121,6 +136,10 @@ static int convert_value(struct options_name_tab *entry, const char *val)
    if ((strcasecmp(val, "ignore") == 0) || (strcasecmp(val, "i") == 0))
    {
       return(AV_IGNORE);
+   }
+   if (((tmp = find_entry(val)) != NULL) && (tmp->type == entry->type))
+   {
+      return(cpd.settings[tmp->id]);
    }
    LOG_FMT(LWARN, "Expected 'Add', 'Remove', 'Force', or 'Ignore' for %s, got %s\n",
            entry->name, val);
