@@ -12,7 +12,7 @@
 /* 4-char symbols */
 static const chunk_tag_t symbols4[] =
 {
-   { "%:%:", CT_PP,      LANG_C },
+   { "%:%:", CT_PP,      LANG_C | LANG_CPP },
    { ">>>=", CT_ASSIGN,  LANG_D | LANG_JAVA },
    { "!<>=", CT_COMPARE, LANG_D },
 };
@@ -58,11 +58,11 @@ static const chunk_tag_t symbols2[] =
    { "||", CT_BOOL,         LANG_ALL },
    { "&&", CT_BOOL,         LANG_ALL },
    { "##", CT_PP,           LANG_C | LANG_CPP },
-   { "<:", CT_SQUARE_OPEN,  LANG_C },
-   { ":>", CT_SQUARE_CLOSE, LANG_C },
-   { "<%", CT_BRACE_OPEN,   LANG_C },
-   { "%>", CT_BRACE_CLOSE,  LANG_C },
-   { "%:", CT_POUND,        LANG_C },
+   { "<:", CT_SQUARE_OPEN,  LANG_C | LANG_CPP },
+   { ":>", CT_SQUARE_CLOSE, LANG_C | LANG_CPP },
+   { "<%", CT_BRACE_OPEN,   LANG_C | LANG_CPP },
+   { "%>", CT_BRACE_CLOSE,  LANG_C | LANG_CPP },
+   { "%:", CT_POUND,        LANG_C | LANG_CPP },
    { "<>", CT_COMPARE,      LANG_D },
    { "!>", CT_COMPARE,      LANG_D },
    { "!<", CT_COMPARE,      LANG_D },
