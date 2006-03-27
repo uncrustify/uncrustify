@@ -99,6 +99,7 @@ void indent_text(void)
    int                last_cpp_col = -1;
    int                tabsize      = cpd.settings[UO_output_tab_size];
    int                ref          = 0;
+   int                tmp;
    struct parse_frame frm;
    BOOL               in_preproc = FALSE, was_preproc = FALSE;
 
@@ -149,7 +150,7 @@ void indent_text(void)
          pc = chunk_get_next(pc);
       }
 
-      /* adjust the indent level based on the character */
+      /* End any assign operations */
       while ((frm.pse[frm.pse_tos].type == CT_ASSIGN) &&
              ((pc->type == CT_BRACE_CLOSE) ||
               (pc->type == CT_PAREN_CLOSE) ||
@@ -186,12 +187,15 @@ void indent_text(void)
          //        get_token_name(pc->type), frm.pse_tos);
       }
 
+      /* Start a case - indent UO_indent_switch_case from the switch level */
       if (pc->type == CT_CASE)
       {
+         tmp = frm.pse[frm.pse_tos].indent + cpd.settings[UO_indent_switch_case];
+
          frm.pse_tos++;
          frm.pse[frm.pse_tos].type       = pc->type;
-         frm.pse[frm.pse_tos].indent     = frm.pse[frm.pse_tos - 1].indent;
-         frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos - 1].indent - tabsize;
+         frm.pse[frm.pse_tos].indent     = tmp + cpd.settings[UO_indent_case_body];
+         frm.pse[frm.pse_tos].indent_tmp = tmp - tabsize;
          frm.pse[frm.pse_tos].open_line  = pc->orig_line;
          frm.pse[frm.pse_tos].ref        = ++ref;
          frm.pse[frm.pse_tos].in_preproc = (pc->flags & PCF_IN_PREPROC) != 0;
@@ -241,15 +245,22 @@ void indent_text(void)
                  frm.pse_tos, frm.pse[frm.pse_tos].indent,
                  get_token_name(frm.pse[frm.pse_tos].type));
       }
-      else if ((pc->type == CT_BRACE_OPEN) &&
-               ((pc->parent_type == CT_IF) ||
-                (pc->parent_type == CT_ELSE) ||
-                (pc->parent_type == CT_DO) ||
-                (pc->parent_type == CT_WHILE) ||
-                (pc->parent_type == CT_SWITCH) ||
-                (pc->parent_type == CT_FOR)))
+      else if (pc->type == CT_BRACE_OPEN)
       {
-         frm.pse[frm.pse_tos].indent_tmp += cpd.settings[UO_brace_indent];
+         if ((pc->parent_type == CT_IF) ||
+             (pc->parent_type == CT_ELSE) ||
+             (pc->parent_type == CT_DO) ||
+             (pc->parent_type == CT_WHILE) ||
+             (pc->parent_type == CT_SWITCH) ||
+             (pc->parent_type == CT_FOR))
+         {
+            frm.pse[frm.pse_tos].indent_tmp += cpd.settings[UO_indent_brace];
+         }
+         else if (pc->parent_type == CT_CASE)
+         {
+            /* The indent_case_brace setting affects the parent CT_CASE */
+            frm.pse[frm.pse_tos].indent_tmp += cpd.settings[UO_indent_case_brace];
+         }
       }
       else
       {
@@ -259,14 +270,14 @@ void indent_text(void)
       /* Labels get sent to the left or backed up */
       if (pc->type == CT_LABEL)
       {
-         if (cpd.settings[UO_label_indent] >= 0)
+         if (cpd.settings[UO_indent_label] >= 0)
          {
-            frm.pse[frm.pse_tos].indent_tmp = 1 + cpd.settings[UO_label_indent];
+            frm.pse[frm.pse_tos].indent_tmp = 1 + cpd.settings[UO_indent_label];
          }
          else
          {
             frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent +
-                                              cpd.settings[UO_label_indent];
+                                              cpd.settings[UO_indent_label];
          }
       }
 
@@ -400,7 +411,14 @@ void indent_text(void)
                 (pc->parent_type == CT_SWITCH) ||
                 (pc->parent_type == CT_FOR))
             {
-               frm.pse[frm.pse_tos].indent += cpd.settings[UO_brace_indent];
+               frm.pse[frm.pse_tos].indent += cpd.settings[UO_indent_brace];
+            }
+            else if (pc->parent_type == CT_CASE)
+            {
+               /* The indent_case_brace setting affects the parent CT_CASE */
+               frm.pse[frm.pse_tos - 1].indent += cpd.settings[UO_indent_case_brace];
+               frm.pse[frm.pse_tos].indent_tmp += tabsize + cpd.settings[UO_indent_case_brace];
+               frm.pse[frm.pse_tos].indent     += tabsize + cpd.settings[UO_indent_case_brace];
             }
          }
          else
