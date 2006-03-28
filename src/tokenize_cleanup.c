@@ -102,13 +102,23 @@ void tokenize_cleanup(void)
          pc->type = CT_COMPARE;
       }
 
-      /* Check for the D string concat symbol '~' */
-      if (((cpd.lang_flags & LANG_D) != 0) &&
-          (pc->type == CT_INV) &&
-          ((prev->type == CT_STRING) ||
-           (next->type == CT_STRING)))
+      if ((cpd.lang_flags & LANG_D) != 0)
       {
-         pc->type = CT_CONCAT;
+         /* Check for the D string concat symbol '~' */
+         if ((pc->type == CT_INV) &&
+             ((prev->type == CT_STRING) ||
+              (next->type == CT_STRING)))
+         {
+            pc->type = CT_CONCAT;
+         }
+
+         /* Check for the D template symbol '!' */
+         if ((pc->type == CT_NOT) &&
+             (prev->type == CT_WORD) &&
+             (next->type == CT_PAREN_OPEN))
+         {
+            pc->type = CT_D_TEMPLATE;
+         }
       }
 
       /* Change get/set to CT_WORD if not followed by a brace open */
@@ -130,6 +140,7 @@ void tokenize_cleanup(void)
             pc->type = CT_QUALIFIER;
          }
       }
+
 
       /* TODO: determine other stuff here */
 

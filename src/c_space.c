@@ -28,6 +28,8 @@ struct no_space_table_s no_space_table[] =
    { CT_UNKNOWN,       CT_INCDEC_AFTER },
    { CT_UNKNOWN,       CT_LABEL_COLON },
    { CT_UNKNOWN,       CT_SEMICOLON },
+   { CT_UNKNOWN,       CT_D_TEMPLATE },
+   { CT_D_TEMPLATE,    CT_UNKNOWN },
    { CT_UNKNOWN,       CT_MEMBER },
    { CT_MEMBER,        CT_UNKNOWN },
    { CT_UNKNOWN,       CT_DC_MEMBER },

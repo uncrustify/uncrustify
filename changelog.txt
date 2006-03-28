@@ -2,7 +2,11 @@
 # $Id$
 #
 
-Current version: uncrustify-0.0.11
+
+
+Changes from uncrustify-0.0.11
+-------------------------------------------------------------------------------
+ - Add support for D template format "Foo!(int,char)"
 
 
 Changes from uncrustify-0.0.10

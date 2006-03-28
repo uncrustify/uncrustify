@@ -75,6 +75,7 @@ typedef enum
    CT_INV,                 /* ~ */
    CT_DESTRUCTOR,          /* ~ */
    CT_NOT,                 /* ! */
+   CT_D_TEMPLATE,          /* ! as in Foo!(A) */
    CT_ADDR,                /* & */
    CT_NEG,                 /* - as in -1 */
    CT_POS,                 /* + as in +1 */
