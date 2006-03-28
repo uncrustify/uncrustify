@@ -6,4 +6,6 @@
 
 30000 ben.cfg cpp/cout.cpp cpp/30000-cout.cpp
 30001 ben.cfg cpp/alt_tokens.cpp cpp/30001-alt_tokens.cpp
-
+30002 ben.cfg cpp/constructor.cpp cpp/30002-constructor.cpp
+30003 ben.cfg cpp/strings.cpp cpp/30003-strings.cpp
+30010 ben.cfg cpp/class.h cpp/30010-class.h
