@@ -2,15 +2,31 @@
 # $Id$
 #
 
-Current version: uncrustify-0.0.10
+Current version: uncrustify-0.0.11
+
 
 Changes from uncrustify-0.0.10
 -------------------------------------------------------------------------------
+ - fix brace analysis on else statement
+ - allow options to depend on other options
+ - set the parent for case braces
+ - handle/indent the C++ class colon thingy
+ - handle C++ constructors and function defs
+ - special handling for '::' operator
+ - implement case indenting
+ - handle cout '<<' indenting
+ - handle DOS and MAC line endings in multiline comments
+ - rename some indent options
+ - fix ifndef handling
+ - fix volatile handling
+ - fix private/public/protected 'label' handling
+ - alternate punctuators are also part of C++
+ - handle C++ wide L"strings"
+ - improve C# get/set handling
  - fix spacing bug "a++;" vs "a ++;" due to statement start misdetect
  - add nl_assign_brace
  - fix parent of vbrace close
  - more test enhancements
- - trailing comments seem a bit broken?
 
 
 Changes from uncrustify-0.0.9
