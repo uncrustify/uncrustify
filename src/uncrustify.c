@@ -40,7 +40,7 @@ static void usage_exit(const char *msg, const char *argv0, int code)
            " L : debug log severities 0-255 for everything\n"
            " s : show log severities\n"
            " t : load a file with types\n"
-           " l : language overried: C, CPP, D, CS, JAVA\n"
+           " l : language override: C, CPP, D, CS, JAVA\n"
            "--version : print the version and exit\n"
            "The output is dumped to stdout, errors are dumped to stderr\n",
            argv0);
