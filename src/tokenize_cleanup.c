@@ -102,13 +102,33 @@ void tokenize_cleanup(void)
          pc->type = CT_COMPARE;
       }
 
-
+      /* Check for the D string concat symbol '~' */
       if (((cpd.lang_flags & LANG_D) != 0) &&
           (pc->type == CT_INV) &&
           ((prev->type == CT_STRING) ||
            (next->type == CT_STRING)))
       {
          pc->type = CT_CONCAT;
+      }
+
+      /* Change get/set to CT_WORD if not followed by a brace open */
+      if ((pc->type == CT_GETSET) && (next->type != CT_BRACE_OPEN))
+      {
+         pc->type = CT_WORD;
+      }
+
+      /* Change private, public, protected into either a qualifier or label */
+      if (pc->type == CT_PRIVATE)
+      {
+         if (next->type == CT_COLON)
+         {
+            pc->type   = CT_LABEL;
+            next->type = CT_LABEL_COLON;
+         }
+         else
+         {
+            pc->type = CT_QUALIFIER;
+         }
       }
 
       /* TODO: determine other stuff here */
@@ -131,7 +151,9 @@ static void check_template(chunk_t *start)
 
    for (pc = chunk_get_next_ncnl(start); pc != NULL; pc = chunk_get_next_ncnl(pc))
    {
-      if ((pc->type != CT_WORD) && (pc->type != CT_MEMBER))
+      if ((pc->type != CT_WORD) &&
+          (pc->type != CT_MEMBER) &&
+          (pc->type != CT_DC_MEMBER))
       {
          break;
       }

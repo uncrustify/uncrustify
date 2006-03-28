@@ -141,9 +141,9 @@ static chunk_tag_t keywords[] =
    { "package",          CT_NAMESPACE,  LANG_D | LANG_JAVA },
    { "params",           CT_TYPE,       LANG_CS },
    { "pragma",           CT_PRAGMA,     LANG_D | FLAG_PP },
-   { "private",          CT_QUALIFIER,  LANG_ALL },     // not C
-   { "protected",        CT_QUALIFIER,  LANG_ALL },     // not C
-   { "public",           CT_QUALIFIER,  LANG_ALL },     // not C
+   { "private",          CT_PRIVATE,    LANG_ALL },     // not C
+   { "protected",        CT_PRIVATE,    LANG_ALL },     // not C
+   { "public",           CT_PRIVATE,    LANG_ALL },     // not C
    { "readonly",         CT_QUALIFIER,  LANG_CS },
    { "real",             CT_TYPE,       LANG_D },
    { "ref",              CT_QUALIFIER,  LANG_CS },

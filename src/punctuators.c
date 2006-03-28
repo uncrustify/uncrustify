@@ -54,7 +54,7 @@ static const chunk_tag_t symbols2[] =
    { ">>", CT_ARITH,        LANG_ALL },
    { "->", CT_MEMBER,       LANG_C | LANG_CPP | LANG_CS | LANG_D },
    { ".*", CT_MEMBER,       LANG_C | LANG_CPP | LANG_D },
-   { "::", CT_MEMBER,       LANG_C | LANG_CPP | LANG_CS | LANG_D },
+   { "::", CT_DC_MEMBER,    LANG_C | LANG_CPP | LANG_CS | LANG_D },
    { "||", CT_BOOL,         LANG_ALL },
    { "&&", CT_BOOL,         LANG_ALL },
    { "##", CT_PP,           LANG_C | LANG_CPP },

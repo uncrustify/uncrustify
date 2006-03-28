@@ -235,11 +235,16 @@ BOOL parse_string(chunk_t *pc)
 {
    int escaped = 0;
    int end_ch;
-   int len = 1;
+   int len = 0;
 
-   end_ch = get_char_table(*pc->str) & 0xff;
+   if (*pc->str == 'L')
+   {
+      len++;
+   }
+   end_ch = get_char_table(pc->str[len]) & 0xff;
+   len++;
 
-   for (len = 1; pc->str[len] != 0; len++)
+   for ( /* nada */ ; pc->str[len] != 0; len++)
    {
       if (!escaped)
       {

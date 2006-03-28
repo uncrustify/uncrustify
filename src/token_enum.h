@@ -71,7 +71,9 @@ typedef enum
    CT_INCDEC_BEFORE,       /* ++a or --a */
    CT_INCDEC_AFTER,        /* a++ or a-- */
    CT_MEMBER,              /* . or -> */
+   CT_DC_MEMBER,           /* :: */
    CT_INV,                 /* ~ */
+   CT_DESTRUCTOR,          /* ~ */
    CT_NOT,                 /* ! */
    CT_ADDR,                /* & */
    CT_NEG,                 /* - as in -1 */
@@ -90,6 +92,7 @@ typedef enum
    CT_SEMICOLON,
    CT_COLON,
    CT_CASE_COLON,
+   CT_CLASS_COLON,         /* colon after a class def or constructor */
    CT_Q_COLON,
    CT_QUESTION,
    CT_COMMA,

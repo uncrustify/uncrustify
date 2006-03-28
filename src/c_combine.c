@@ -132,10 +132,6 @@ void fix_symbols(void)
 
    while ((pc != NULL) && (next != NULL))
    {
-      if ((pc->type == CT_GETSET) && (next->type != CT_BRACE_OPEN))
-      {
-         pc->type = CT_WORD;
-      }
       if ((pc->type == CT_WORD) && (next->type == CT_PAREN_OPEN))
       {
          pc->type = CT_FUNCTION;
@@ -836,6 +832,8 @@ void combine_labels(void)
          }
          else
          {
+            chunk_t *nextprev = chunk_get_prev_ncnl(next);
+
             if (cur->type == CT_WORD)
             {
                if (chunk_is_newline(prev))
@@ -847,6 +845,11 @@ void combine_labels(void)
                {
                   next->type = CT_BIT_COLON;
                }
+            }
+            else if (nextprev->type == CT_FPAREN_CLOSE)
+            {
+               /* it's a class colon */
+               next->type = CT_CLASS_COLON;
             }
             else if (next->level > next->brace_level)
             {
@@ -1122,13 +1125,15 @@ static void mark_function(chunk_t *pc)
     * Scan to see if this is a function variable def:
     * const struct bar * (*func)(param_list)
     * int (*foo)(void);
+    * CFoo::CFoo(int bar) <- constructor
     * bar_t (word)(...);  <- flagged as a function call
     *
     * These need to be identified BEFORE checking for casts.
-    *
     */
+
    /* point to the next item after the '(' */
    tmp = chunk_get_next_ncnlnp(next);
+
    /* Skip any leading '*' characters */
    while (chunk_is_star(tmp))
    {
@@ -1161,18 +1166,58 @@ static void mark_function(chunk_t *pc)
 
    /* Assume it is a function call */
    pc->type = CT_FUNC_CALL;
-   while ((prev != NULL) &&
-          ((prev->type == CT_TYPE) ||
-           (prev->type == CT_WORD) ||
-           chunk_is_star(prev)))
-   {
-      LOG_FMT(LFCN, "FCN_DEF due to %s[%s] ", prev->str, get_token_name(prev->type));
 
-      pc->type = CT_FUNC_DEF;
-      make_type(prev);
-      prev = chunk_get_prev_ncnlnp(prev);
+   /* Check for C++ function def */
+   if ((prev != NULL) && ((prev->type == CT_DC_MEMBER) ||
+                          (prev->type == CT_INV)))
+   {
+      chunk_t *destr = NULL;
+      if (prev->type == CT_INV)
+      {
+         /* TODO: do we care that this is the destructor? */
+         destr = prev;
+         prev = chunk_get_prev_ncnlnp(prev);
+      }
+
+      if ((prev != NULL) && (prev->type == CT_DC_MEMBER))
+      {
+         prev = chunk_get_prev_ncnlnp(prev);
+         if ((prev != NULL) && (prev->type == CT_WORD))
+         {
+            if ((pc->len == prev->len) && (strcmp(pc->str, prev->str) == 0))
+            {
+               LOG_FMT(LFCN, "FOUND [DE|CON]STRUCTOR for %s[%s] ", prev->str, get_token_name(prev->type));
+               pc->type = CT_FUNC_DEF;
+               if (destr != NULL)
+               {
+                  destr->type = CT_DESTRUCTOR;
+               }
+            }
+            else
+            {
+               /* Point to the item previous to the class name */
+               prev = chunk_get_prev_ncnlnp(prev);
+            }
+         }
+      }
    }
-   LOG_FMT(LFCN, "\n");
+
+   if (pc->type == CT_FUNC_CALL)
+   {
+      while ((prev != NULL) &&
+             ((prev->type == CT_TYPE) ||
+              (prev->type == CT_WORD) ||
+              (prev->type == CT_DC_MEMBER) ||
+              chunk_is_star(prev)))
+      {
+         LOG_FMT(LFCN, "FCN_DEF due to %s[%s] ", prev->str, get_token_name(prev->type));
+
+         pc->type = CT_FUNC_DEF;
+         make_type(prev);
+         prev = chunk_get_prev_ncnlnp(prev);
+      }
+      LOG_FMT(LFCN, "\n");
+   }
 
    if (pc->type != CT_FUNC_DEF)
    {
@@ -1402,4 +1447,5 @@ static void mark_define_expressions(void)
       pc   = chunk_get_next(pc);
    }
 }
+
 

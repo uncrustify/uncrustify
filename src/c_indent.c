@@ -166,6 +166,14 @@ void indent_text(void)
          //                 c_chunk_names[pc->type], pse_tos);
       }
 
+      /* End any CPP class colon crap */
+      while ((frm.pse[frm.pse_tos].type == CT_CLASS_COLON) &&
+             ((pc->type == CT_BRACE_OPEN) ||
+              (pc->type == CT_SEMICOLON)))
+      {
+         frm.pse_tos--;
+      }
+
       pf_check(&frm, pc);
 
       /* a case is ended with another case or a close brace */
@@ -280,6 +288,20 @@ void indent_text(void)
                                               cpd.settings[UO_indent_label];
          }
       }
+      else if (pc->type == CT_CLASS_COLON)
+      {
+         /* just indent one level */
+         frm.pse_tos++;
+         frm.pse[frm.pse_tos].type       = pc->type;
+         frm.pse[frm.pse_tos].indent     = frm.pse[frm.pse_tos - 1].indent_tmp + tabsize;
+         frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
+         frm.pse[frm.pse_tos].open_line  = pc->orig_line;
+         frm.pse[frm.pse_tos].ref        = ++ref;
+         frm.pse[frm.pse_tos].in_preproc = (pc->flags & PCF_IN_PREPROC) != 0;
+
+         LOG_FMT(LINDENT, "%3d] OPEN(10) on %s, tos=%d\n", pc->orig_line,
+                 get_token_name(pc->type), frm.pse_tos);
+      }
 
       /* Are we right after a newline? */
       if (did_newline && !chunk_is_newline(pc) && (pc->len != 0))
@@ -330,13 +352,14 @@ void indent_text(void)
       /* Handle C++ cout-style crap '<<' line continuation */
       if ((frm.pse[frm.pse_tos].min_col == -1) && (pc->type != CT_WORD))
       {
-         LOG_FMT(LSYS, "%s: BAILED: pc=%s col=%d\n", __func__, pc->str, pc->column);
+         //LOG_FMT(LSYS, "%s: BAILED: pc=%s col=%d\n", __func__, pc->str, pc->column);
          frm.pse[frm.pse_tos].min_col = 0;
       }
       if (frm.pse[frm.pse_tos].min_col <= -1)
       {
          if ((pc->type != CT_WORD) &&
              (pc->type != CT_MEMBER) &&
+             (pc->type != CT_DC_MEMBER) &&
              (pc->type != CT_ARITH))
          {
             /* Done with the tmp_indent */
