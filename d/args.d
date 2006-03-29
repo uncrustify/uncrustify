@@ -6,7 +6,6 @@ module uncrustify.args;
 
 class Args
 {
-   int         m_idx;
    char [][]   m_args;
    bool []     m_used;
 
