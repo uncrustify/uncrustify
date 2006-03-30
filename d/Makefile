@@ -9,6 +9,6 @@ PROGRAM=uncrustify-d
 
 .default: $(PROGRAM)
 
-$(PROGRAM): main.d args.d
+$(PROGRAM): main.d args.d log.d
 	$(DCC) $^ -of$@
 

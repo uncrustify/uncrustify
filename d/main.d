@@ -8,6 +8,7 @@ module uncrustify.main;
 
 import std.cstream;
 import uncrustify.args;
+import uncrustify.log;
 
 char [] str_version = "0.0.11";
 char [] str_package = "uncrustify-d";
@@ -73,6 +74,8 @@ int main(char [][] args)
       return 101;
    }
 
+   Uncrustify unc = new Uncrustify();
+
    /* Load the type files */
    int idx = 0;
    char [] tmp_str;
@@ -87,10 +90,14 @@ int main(char [][] args)
       printf("Parsed file: %.*s\n", parsed_file);
    }
 
-   if (((tmp_str = arg.Param("-L")) !is null) &&
+   if (((tmp_str = arg.Param("-L")) !is null) ||
        ((tmp_str = arg.Param("--log")) !is null))
    {
       printf("Log Sev: %.*s\n", tmp_str);
+
+      unc.log.mask.FromString(tmp_str);
+
+      //printf("Result: %.*s\n", unc.log.mask.ToString());
    }
 
    if ((tmp_str = arg.Param("-l")) !is null)
@@ -111,6 +118,18 @@ int main(char [][] args)
 
    return 0;
 }
+
+class Uncrustify
+{
+   Log log;
+
+   this()
+   {
+      log = new Log();
+   }
+}
+
+
 //    struct stat          my_stat;
 //    char                 *data;
 //    int                  data_len;

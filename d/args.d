@@ -1,6 +1,8 @@
 /**
  * @file args.d
  * A Class to parse command-line arguments
+ *
+ * $Id: $
  */
 module uncrustify.args;
 

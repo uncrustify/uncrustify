@@ -67,6 +67,7 @@
 	</CustomFolders>
 	<Files AutoFolders="DirectoryView">
 		<F N="args.d"/>
+		<F N="log.d"/>
 		<F N="main.d"/>
 		<F
 			N="Makefile"
