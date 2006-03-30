@@ -992,10 +992,17 @@ void ib_shift_out(int idx, int num)
  */
 static chunk_t *scan_ib_line(chunk_t *start, BOOL first)
 {
-   chunk_t *pc = start;
+   chunk_t *pc;
    chunk_t *next;
    int     idx              = 0;
    BOOL    last_was_comment = FALSE;
+
+   if (start->type == CT_SQUARE_OPEN)
+   {
+      start = chunk_get_next_type(start, CT_ASSIGN, start->level);
+      start = chunk_get_next_ncnl(start);
+   }
+   pc = start;
 
    while ((pc != NULL) && !chunk_is_newline(pc) &&
           !((pc->type == CT_BRACE_CLOSE) &&
@@ -1097,6 +1104,15 @@ static void align_log_al(log_sev_t sev, int line)
  *    {"green", {  0, 0, 255}}, {"purple", {255, 255, 0}},
  * };
  *
+ * For the C99 indexed array assignment, the leading []= is skipped (no aligning)
+ * struct foo_t bars[] =
+ * {
+ *    [0] = { .name = "bar",
+ *            .age  = 21 },
+ *    [1] = { .name = "barley",
+ *            .age  = 55 },
+ * };
+ *
  * @param start   Points to the open brace chunk
  */
 static void align_init_brace(chunk_t *start)
@@ -1159,7 +1175,8 @@ static void align_init_brace(chunk_t *start)
 
             next->flags |= PCF_WAS_ALIGNED;
 
-            if ((next->type == CT_NUMBER) && cpd.settings[UO_align_number_left])
+            if ((pc->type != CT_ASSIGN) &&
+                (next->type == CT_NUMBER) && cpd.settings[UO_align_number_left])
             {
                reindent_line(next, cpd.al[idx].col + (cpd.al[idx].len - next->len));
             }
