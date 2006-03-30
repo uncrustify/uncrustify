@@ -26,6 +26,7 @@ struct no_space_table_s no_space_table[] =
 {
    { CT_INCDEC_BEFORE, CT_WORD },
    { CT_UNKNOWN,       CT_INCDEC_AFTER },
+   { CT_UNKNOWN,       CT_ELIPSIS },
    { CT_UNKNOWN,       CT_LABEL_COLON },
    { CT_UNKNOWN,       CT_SEMICOLON },
    { CT_UNKNOWN,       CT_D_TEMPLATE },

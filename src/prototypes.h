@@ -34,8 +34,8 @@ void add_char(char ch);
  *  c_args.c
  */
 
-void set_arg_defaults(void);
-int load_config_file(const char *filename);
+void set_option_defaults(void);
+int load_option_file(const char *filename);
 int set_option_value(const char *name, const char *value);
 const char *get_option_name(enum uncrustify_options uo);
 

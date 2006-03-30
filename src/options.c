@@ -1,14 +1,15 @@
 /**
- * @file c_args.c
- * Parses command line arguments.
+ * @file options.c
+ * Parses the options from the config file.
  *
- * $Id$
+ * $Id: c_args.c 121 2006-03-27 02:24:45Z bengardner $
  */
 
 #define DEFINE_OPTION_NAME_TABLE
 
 #include "cparse_types.h"
 #include <string.h>
+#include <strings.h> /* strcasecmp() */
 #include <stdio.h>
 #include <stdlib.h>
 #include <errno.h>
@@ -176,7 +177,7 @@ int set_option_value(const char *name, const char *value)
    return(-1);
 }
 
-int load_config_file(const char *filename)
+int load_option_file(const char *filename)
 {
    FILE *pfile;
    char buffer[256];
@@ -257,7 +258,7 @@ int load_config_file(const char *filename)
  *
  * TODO: select from various sets? - ie, K&R, GNU, Linux, Ben
  */
-void set_arg_defaults(void)
+void set_option_defaults(void)
 {
    cpd.settings[UO_input_tab_size]   = 8;
    cpd.settings[UO_output_tab_size]  = 8;

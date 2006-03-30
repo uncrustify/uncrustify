@@ -51,10 +51,10 @@
 		<Folder
 			Name="Source Files"
 			Filters="*.c;*.C;*.cc;*.cpp;*.cp;*.cxx;*.prg;*.pas;*.dpr;*.asm;*.s;*.bas;*.java;*.cs;*.sc;*.e;*.cob;*.html;*.rc;*.tcl;*.py;*.pl">
+			<F N="src/args.c"/>
 			<F N="src/brace_cleanup.c"/>
 			<F N="src/braces.c"/>
 			<F N="src/c_align.c"/>
-			<F N="src/c_args.c"/>
 			<F N="src/c_combine.c"/>
 			<F N="src/c_indent.c"/>
 			<F N="src/c_newlines.c"/>
@@ -65,6 +65,7 @@
 			<F N="src/keywords.c"/>
 			<F N="src/logger.c"/>
 			<F N="src/logmask.c"/>
+			<F N="src/options.c"/>
 			<F N="src/parse_frame.c"/>
 			<F N="src/punctuators.c"/>
 			<F N="src/tokenize.c"/>
@@ -74,6 +75,7 @@
 		<Folder
 			Name="Header Files"
 			Filters="*.h;*.H;*.hh;*.hpp;*.hxx;*.inc;*.sh;*.cpy;*.if">
+			<F N="src/args.h"/>
 			<F N="src/base_types.h"/>
 			<F N="src/c_settings.h"/>
 			<F N="src/char_table.h"/>

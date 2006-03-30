@@ -10,11 +10,12 @@
 #include "chunk_list.h"
 #include "prototypes.h"
 #include "token_names.h"
+#include "args.h"
 
 #include <stdio.h>
-#include <getopt.h>
 #include <stdlib.h>
 #include <string.h>
+#include <strings.h> /* strcasecmp() */
 #include <errno.h>
 #include <ctype.h>
 #include <sys/stat.h>
@@ -63,92 +64,94 @@ int main(int argc, char *argv[])
    const char           *parsed_file = NULL;
    const char           *source_file = NULL;
    log_mask_t           mask;
-   int                  op;
-   int                  option_index   = 0;
-   static struct option long_options[] =
-   {
-      { "version", 0, 0,   0 },
-      { "file",    1, 0, 'f' },
-      { "config",  1, 0, 'c' },
-      { "parsed",  1, 0, 'p' },
-      { "log",     1, 0, 'L' },
-      { "show",    1, 0, 's' },
-      { NULL,      0, 0,   0 }
-   };
+   int         idx;
+   const char  *p_arg;
+
 
    if (argc < 2)
    {
       usage_exit(NULL, argv[0], 0);
    }
 
-   log_init(stderr);
+   arg_init(argc, argv);
 
-   memset(&cpd, 0, sizeof(cpd));
-
-   chunk_list_init();
-
-   while ((op = getopt_long(argc, argv, "c:p:f:L:t:l:s",
-                            long_options, &option_index)) != EOF)
+   if (arg_present("--version") || arg_present("-v"))
    {
-      switch (op)
-      {
-      case 0:
-         if (option_index == 0)
-         {
-            version_exit();
-         }
-         break;
-
-      case 'c':
-         // Path to config file.
-         cfg_file = optarg;
-         break;
-
-      case 'p':
-         // Path to parse output.
-         parsed_file = optarg;
-         break;
-
-      case 'l':   // language override
-         cpd.lang_flags = language_from_tag(optarg);
-         if (cpd.lang_flags == 0)
-         {
-            fprintf(stderr, "Ignoring unknown language: %s\n", optarg);
-         }
-         break;
-
-      case 'f':
-         // Path to input file.
-         source_file = optarg;
-         break;
-
-      case 'L':
-         logmask_from_string(optarg, &mask);
-         log_set_mask(&mask);
-         break;
-
-      case 's':
-         log_show_sev(TRUE);
-         break;
-
-      case 't':
-         load_keyword_file(optarg);
-         break;
-
-      default:
-         usage_exit("Bad command line option", argv[0], 1);
-         break;
-      }
+      version_exit();
+   }
+   if (arg_present("--help") || arg_present("-h") ||
+       arg_present("--usage") || arg_present("-?"))
+   {
+      usage_exit(NULL, argv[0], 0);
    }
 
-   if (source_file == NULL)
+   /* Init logging */
+   log_init(stderr);
+   if (((p_arg = arg_param("-L")) != NULL) ||
+       ((p_arg = arg_param("--log")) != NULL))
+   {
+      logmask_from_string(p_arg, &mask);
+         log_set_mask(&mask);
+   }
+
+   /* Get the source file name */
+   if (((source_file = arg_param("--file")) == NULL) &&
+       ((source_file = arg_param("-f")) == NULL))
    {
       usage_exit("Specify the file to process: -f file", argv[0], 57);
    }
 
-   set_arg_defaults();
+   /* Get the config file name */
+   if (((cfg_file = arg_param("--config")) == NULL) &&
+       ((cfg_file = arg_param("-c")) == NULL))
+   {
+      usage_exit("Specify the config file: -c file", argv[0], 58);
+   }
 
-   if (load_config_file(cfg_file) < 0)
+   /* Get the parsed file name */
+   if (((parsed_file = arg_param("--parsed")) == NULL) ||
+       ((parsed_file = arg_param("-p")) == NULL))
+   {
+      LOG_FMT(LNOTE, "Will export parsed data to: %s\n", parsed_file);
+   }
+
+   /* Enable log sevs? */
+   if (arg_present("-s") || arg_present("--show"))
+   {
+         log_show_sev(TRUE);
+   }
+
+   /* Load type files */
+   idx = 0;
+   while ((p_arg = arg_params("-t", &idx)) != NULL)
+   {
+      load_keyword_file(p_arg);
+   }
+
+   /* Check for a language override */
+   if ((p_arg = arg_param("-l")) != NULL)
+   {
+      cpd.lang_flags = language_from_tag(p_arg);
+      if (cpd.lang_flags == 0)
+      {
+         fprintf(stderr, "Ignoring unknown language: %s\n", p_arg);
+      }
+   }
+
+   /* Prepare to load chunks */
+   chunk_list_init();
+
+
+   /* Check for unused args (ignore them) */
+   idx = 1;
+   while ((p_arg = arg_unused(&idx)) != NULL)
+   {
+      LOG_FMT(LWARN, "Unused argument: %s\n", p_arg);
+   }
+
+   /* Load the config file */
+   set_option_defaults();
+   if (load_option_file(cfg_file) < 0)
    {
       usage_exit(NULL, argv[0], 56);
    }
@@ -159,6 +162,7 @@ int main(int argc, char *argv[])
       cpd.lang_flags = language_from_filename(source_file);
    }
 
+   /* Try to read in the source file */
    p_file = fopen(source_file, "r");
    if (p_file == NULL)
    {
@@ -166,6 +170,7 @@ int main(int argc, char *argv[])
       return(1);
    }
 
+   /*note: could have also just MMAP'd the file */
    fstat(fileno(p_file), &my_stat);
 
    data_len = my_stat.st_size;

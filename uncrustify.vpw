@@ -1,6 +1,7 @@
 <!DOCTYPE Workspace SYSTEM "http://www.slickedit.com/dtd/vse/8.1/vpw.dtd">
 <Workspace Version="8.1" VendorName="SlickEdit">
 	<Projects>
+		<Project File="d/d.vpj"/>
 		<Project File="extras.vpj"/>
 		<Project File="tests/tests.vpj"/>
 		<Project File="uncrustify.vpj"/>
