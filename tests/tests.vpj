@@ -149,6 +149,7 @@
 				<F N="output/c/00201-case-1.c"/>
 				<F N="output/c/00202-case-2.c"/>
 				<F N="output/c/00203-case-3.c"/>
+				<F N="output/c/00301-align-struct-init.c"/>
 				<F N="output/c/20000-i2c-core.c"/>
 			</Folder>
 			<Folder Name="cpp">

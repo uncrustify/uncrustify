@@ -30,6 +30,8 @@
 00202	case-2.cfg	c/case.c	c/00202-case-2.c
 00203	case-3.cfg	c/case.c	c/00203-case-3.c
 
+# structure initializers
+00301	ben.cfg 	c/align-struct-init.c	c/00301-align-struct-init.c
 
 # big general tests
 

@@ -32,3 +32,17 @@ int main(int argc, char *argv[])
     {"green",{0,0,255}},{"purple",{255,255,0}},
  };
 
+ struct foo_t bar = {
+    .name = "bar",
+   .age  = 21
+};
+
+
+
+struct foo_t bars[] = {
+    [0] = { .name = "bar",
+        .age  = 21 },
+   [1] = { .name = "barley",
+             .age  = 55 },
+};
+
