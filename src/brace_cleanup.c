@@ -670,6 +670,13 @@ static chunk_t *insert_vbrace(chunk_t *pc, BOOL after,
       {
          ref = chunk_get_prev(ref);
       }
+
+      /* Don't back into a preprocessor */
+      if ((ref->flags & PCF_IN_PREPROC) != (pc->flags & PCF_IN_PREPROC))
+      {
+         ref = chunk_get_next(ref);
+      }
+
       chunk.orig_line = ref->orig_line;
       chunk.column    = ref->column + ref->len + 1;
       chunk.type      = CT_VBRACE_OPEN;
