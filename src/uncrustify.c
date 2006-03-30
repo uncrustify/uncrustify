@@ -109,8 +109,8 @@ int main(int argc, char *argv[])
    }
 
    /* Get the parsed file name */
-   if (((parsed_file = arg_param("--parsed")) == NULL) ||
-       ((parsed_file = arg_param("-p")) == NULL))
+   if (((parsed_file = arg_param("--parsed")) != NULL) ||
+       ((parsed_file = arg_param("-p")) != NULL))
    {
       LOG_FMT(LNOTE, "Will export parsed data to: %s\n", parsed_file);
    }
