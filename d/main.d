@@ -10,7 +10,7 @@ import std.cstream;
 import uncrustify.args;
 import uncrustify.log;
 
-char [] str_version = "0.0.11";
+char [] str_version = "0.0.12";
 char [] str_package = "uncrustify-d";
 
 

@@ -4,12 +4,17 @@
 
 
 
-Changes from uncrustify-0.0.11
+Changes in uncrustify-0.0.12
 -------------------------------------------------------------------------------
  - Add support for D template format "Foo!(int,char)"
+ - Fix a format bug in a log
+ - Fix elipsis spacing (remove space before elipsis)
+ - Don't use getopt as it isn't all that portable (at least for QNX)
+ - Bugfix: don't add virtual braces on the same line as a preprocessor
+ - Bugfix: clean up indexed array aligning
 
 
-Changes from uncrustify-0.0.10
+Changes in uncrustify-0.0.11
 -------------------------------------------------------------------------------
  - fix brace analysis on else statement
  - allow options to depend on other options
@@ -33,7 +38,7 @@ Changes from uncrustify-0.0.10
  - more test enhancements
 
 
-Changes from uncrustify-0.0.9
+Changes in uncrustify-0.0.10
 -------------------------------------------------------------------------------
  - Complete rewrite of tokenizer and brace parser
  - Added support for D nested comments
@@ -42,14 +47,14 @@ Changes from uncrustify-0.0.9
  - Add more tests to improve coverage (still lacking)
 
 
-Changes from uncrustify-0.0.8
+Changes in uncrustify-0.0.9
 -------------------------------------------------------------------------------
  - Major enhancements for D
  - Add handling for special "[]" sequence for C#/D
  - add some more tests
 
 
-Changes from uncrustify-0.0.7
+Changes in uncrustify-0.0.8
 -------------------------------------------------------------------------------
  - update TODO list
  - add a threshold for brace removal
@@ -71,9 +76,4 @@ Changes from uncrustify-0.0.7
  - partially implement align on tabstop
  - fix virtual brace spacing (no more "else return;" => "elsereturn;")
  - add some more tests
-
-
-Changes from uncrustify-0.0.6
--------------------------------------------------------------------------------
- - I don't care, do you?
 

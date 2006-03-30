@@ -81,14 +81,14 @@ AUTOCONF = ${SHELL} /home/ben/projects/sf/uncrustify/missing --run autoconf
 AUTOHEADER = ${SHELL} /home/ben/projects/sf/uncrustify/missing --run autoheader
 AUTOMAKE = ${SHELL} /home/ben/projects/sf/uncrustify/missing --run automake-1.9
 AWK = gawk
-CC = gcc
+CC = ccache gcc
 CCDEPMODE = depmode=none
 CFLAGS =  -g -O2 -Wall 
 CORELIBS = 
-CPP = gcc -E
+CPP = ccache gcc -E
 CPPFLAGS = 
 CYGPATH_W = echo
-DEFS = -DPACKAGE_NAME=\"\" -DPACKAGE_TARNAME=\"\" -DPACKAGE_VERSION=\"\" -DPACKAGE_STRING=\"\" -DPACKAGE_BUGREPORT=\"\" -DPACKAGE=\"uncrustify\" -DVERSION=\"0.0.11\" -DSTDC_HEADERS=1 
+DEFS = -DPACKAGE_NAME=\"\" -DPACKAGE_TARNAME=\"\" -DPACKAGE_VERSION=\"\" -DPACKAGE_STRING=\"\" -DPACKAGE_BUGREPORT=\"\" -DPACKAGE=\"uncrustify\" -DVERSION=\"0.0.12\" -DSTDC_HEADERS=1 
 DEPDIR = .deps
 ECHO_C = 
 ECHO_N = -n
@@ -120,8 +120,8 @@ RANLIB = ranlib
 SET_MAKE = 
 SHELL = /bin/sh
 STRIP = 
-VERSION = 0.0.11
-ac_ct_CC = gcc
+VERSION = 0.0.12
+ac_ct_CC = ccache gcc
 ac_ct_RANLIB = ranlib
 ac_ct_STRIP = 
 am__fastdepCC_FALSE = 
