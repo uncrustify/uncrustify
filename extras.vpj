@@ -70,6 +70,7 @@
 	<Files AutoFolders="DirectoryView">
 		<Folder Name="documentation">
 			<F N="documentation/configuration.txt"/>
+			<F N="documentation/example.c"/>
 			<F N="documentation/goals.txt"/>
 			<F N="documentation/paren_stack.txt"/>
 			<F N="documentation/theory.txt"/>

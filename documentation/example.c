@@ -43,3 +43,75 @@ struct foo_t bars[] =
            .age  = 55 },
 };
 
+void foo(void)
+{
+   int  i;
+   char *name;
+
+   i    = 5;
+   name = "bob";
+}
+
+/**
+ * This is your typical header comment
+ */
+int foo(int bar)
+{
+   int idx;
+   int res = 0;      // trailing comment
+                     // that spans two lines
+   for (idx = 1; idx < bar; idx++)
+      /* comment in virtual braces */
+      res += idx;
+
+   res *= idx;        // some comment
+
+   // almost continued, but a NL in between
+
+// col1 comment in level 1
+   return(res);
+}
+
+// col1 comment in level 0
+
+
+#define foobar(x)             \
+   {                          \
+      for (i = 0; i < x; i++) \
+      {                       \
+         junk(i, x);          \
+      }                       \
+   }
+
+
+void foo(void)
+{
+   switch(ch)
+   {
+   case 'a':
+      {
+         handle_a();
+         break;
+      }
+
+   case 'b':
+      handle_b();
+      break;
+
+   case 'c':
+   case 'd':
+      handle_cd();
+      break;
+
+   case 'e':
+      {
+         handle_a();
+      }
+      break;
+
+   default:
+      handle_default();
+      break;
+   }
+}
+
