@@ -72,5 +72,8 @@
 		<F
 			N="Makefile"
 			Type="Makefile"/>
+		<F N="options.d"/>
+		<F N="settings.d"/>
+		<F N="struct-array.d"/>
 	</Files>
 </Project>

@@ -1,7 +1,7 @@
 /**
  * This file takes an input C/C++/D/Java file and reformats it.
  *
- * $Id: uncrustify.c 134 2006-03-28 01:24:47Z bengardner $
+ * $Id$
  */
 
 module uncrustify.main;
@@ -9,6 +9,8 @@ module uncrustify.main;
 import std.cstream;
 import uncrustify.args;
 import uncrustify.log;
+import uncrustify.settings;
+import uncrustify.options;
 
 char [] str_version = "0.0.12";
 char [] str_package = "uncrustify-d";
@@ -74,7 +76,13 @@ int main(char [][] args)
       return 101;
    }
 
-   Uncrustify unc = new Uncrustify();
+   if (!std.file.exists(source_file))
+   {
+      printf("File not found: %.*s\n", source_file);
+      return 102;
+   }
+
+   unc = new Uncrustify();
 
    /* Load the type files */
    int idx = 0;
@@ -116,19 +124,43 @@ int main(char [][] args)
       printf("Unused param at index %d: %.*s\n", idx, tmp_str);
    }
 
+   byte [] filedata = cast(byte []) std.file.read(source_file);
+
+   unc.log.LogHexBlock(0, filedata);
+
+   //for (int idx = 0; idx < options_table.length; idx++)
+   //{
+   //   OptionEntry *oe;
+   //
+   //   oe = FindOptionEntry(options_table[idx].name);
+   //   if (oe is null)
+   //   {
+   //      printf("%d] didn't find %.*s\n", idx, options_table[idx].name);
+   //   }
+   //   else
+   //   {
+   //      printf("%d] found it: id=%d name=%.*s type=%d\n", idx, oe.id, oe.name, oe.type);
+   //   }
+   //}
+
+   LoadOptionFile(cfg_file);
+
    return 0;
 }
 
 class Uncrustify
 {
-   Log log;
+   public Log     log;
+   public int []  settings;
 
    this()
    {
       log = new Log();
+      settings.length = Option.option_count;
    }
 }
 
+public Uncrustify unc;
 
 //    struct stat          my_stat;
 //    char                 *data;

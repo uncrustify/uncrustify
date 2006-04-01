@@ -2,7 +2,7 @@
  * @file log.d
  * Logging utilities
  *
- * $Id: SelLog.cs,v 1.4 2006/03/28 22:05:24 bgardner Exp $
+ * $Id$
  */
 
 module uncrustify.log;
@@ -11,6 +11,7 @@ import std.cstream;
 import std.string;
 import std.format;
 import std.date;
+
 
 /* These are the 'standard' named log severities */
 enum LogSev : byte
@@ -194,10 +195,10 @@ class Log
    char [][] sev_names;
 
    /*TODO: consolidate into one 'show_flags' variable */
-   bool      show_name = true;
+   bool      show_name = false;
    bool      show_sev = true;
-   bool      show_date = true;
-   bool      show_time = true;
+   bool      show_date = false;
+   bool      show_time = false;
 
    bool      m_in_log;
 
