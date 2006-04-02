@@ -11,6 +11,7 @@ import uncrustify.args;
 import uncrustify.log;
 import uncrustify.settings;
 import uncrustify.options;
+import std.stdio;
 
 char [] str_version = "0.0.12";
 char [] str_package = "uncrustify-d";
@@ -20,11 +21,10 @@ static void usage_exit(char [] msg, char [] argv0, int code)
 {
    if ((msg !is null) && (msg.length > 0))
    {
-      fprintf(stderr, "\n%.*s\n", msg);
+      writef("\n%s\n", msg);
    }
-   fprintf(stderr,
-           "\nUsage:\n"
-           "%.*s [-c cfg] [-f file] [-p parsed] [-t typefile] [--version] [-l lang] [-L sev] [-s]\n"
+   writef("\nUsage:\n"
+           "%s [-c cfg] [-f file] [-p parsed] [-t typefile] [--version] [-l lang] [-L sev] [-s]\n"
            " c : specify the config file\n"
            " f : specify the file to format\n"
            " p : debug - dump parsed tokens to this file\n"
@@ -40,7 +40,7 @@ static void usage_exit(char [] msg, char [] argv0, int code)
 
 static void version_exit()
 {
-   printf("%.*s %.*s\n", str_package, str_version);
+   writef("%s %s\n", str_package, str_version);
    //exit(0);
 }
 
@@ -78,7 +78,7 @@ int main(char [][] args)
 
    if (!std.file.exists(source_file))
    {
-      printf("File not found: %.*s\n", source_file);
+      writef("File not found: %s\n", source_file);
       return 102;
    }
 
@@ -89,19 +89,19 @@ int main(char [][] args)
    char [] tmp_str;
    while ((tmp_str = arg.Params("-t", idx)) !is null)
    {
-      printf("Type file: %.*s\n", tmp_str);
+      writef("Type file: %s\n", tmp_str);
    }
 
    char [] parsed_file;
    if ((parsed_file = arg.Param("-p")) !is null)
    {
-      printf("Parsed file: %.*s\n", parsed_file);
+      writef("Parsed file: %s\n", parsed_file);
    }
 
    if (((tmp_str = arg.Param("-L")) !is null) ||
        ((tmp_str = arg.Param("--log")) !is null))
    {
-      printf("Log Sev: %.*s\n", tmp_str);
+      writef("Log Sev: %s\n", tmp_str);
 
       unc.log.mask.FromString(tmp_str);
 
@@ -110,18 +110,18 @@ int main(char [][] args)
 
    if ((tmp_str = arg.Param("-l")) !is null)
    {
-      printf("Language: %.*s\n", tmp_str);
+      writef("Language: %s\n", tmp_str);
    }
 
    if (arg.Present("-s") || arg.Present("--show"))
    {
-      printf("Enable Sev display\n");
+      writef("Enable Sev display\n");
    }
 
    idx = 0;
    while ((tmp_str = arg.GetUnused(idx)) !is null)
    {
-      printf("Unused param at index %d: %.*s\n", idx, tmp_str);
+      writef("Unused param at index %d: %s\n", idx, tmp_str);
    }
 
    byte [] filedata = cast(byte []) std.file.read(source_file);
@@ -135,11 +135,11 @@ int main(char [][] args)
    //   oe = FindOptionEntry(options_table[idx].name);
    //   if (oe is null)
    //   {
-   //      printf("%d] didn't find %.*s\n", idx, options_table[idx].name);
+   //      writef("%d] didn't find %s\n", idx, options_table[idx].name);
    //   }
    //   else
    //   {
-   //      printf("%d] found it: id=%d name=%.*s type=%d\n", idx, oe.id, oe.name, oe.type);
+   //      writef("%d] found it: id=%d name=%s type=%d\n", idx, oe.id, oe.name, oe.type);
    //   }
    //}
 

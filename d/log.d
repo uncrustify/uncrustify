@@ -9,6 +9,7 @@ module uncrustify.log;
 
 import std.cstream;
 import std.string;
+import std.stdio;
 import std.format;
 import std.date;
 
@@ -233,7 +234,7 @@ class Log
     */
    void ProcessLog(char [] str)
    {
-      printf("%.*s", str);
+      writef("%s", str);
    }
 
 private:
