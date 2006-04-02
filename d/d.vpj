@@ -68,6 +68,9 @@
 	<Files AutoFolders="DirectoryView">
 		<F N="args.d"/>
 		<F N="log.d"/>
+		<F N="Logger.d"/>
+		<F N="LogMask.d"/>
+		<F N="LogSev.d"/>
 		<F N="main.d"/>
 		<F
 			N="Makefile"
@@ -75,5 +78,7 @@
 		<F N="options.d"/>
 		<F N="settings.d"/>
 		<F N="struct-array.d"/>
+		<F N="TokenEnum.d"/>
+		<F N="TokenName.d"/>
 	</Files>
 </Project>

@@ -46,6 +46,8 @@ static void version_exit()
 
 int main(char [][] args)
 {
+   LogInit();
+
    Args arg = new Args(args[1..args.length]);
 
    if ((args.length == 1) ||
@@ -103,8 +105,8 @@ int main(char [][] args)
    {
       writef("Log Sev: %s\n", tmp_str);
 
-      unc.log.mask.FromString(tmp_str);
-
+      LogSetMask(tmp_str);
+      //unc.log.mask.FromString(tmp_str);
       //printf("Result: %.*s\n", unc.log.mask.ToString());
    }
 
@@ -126,7 +128,7 @@ int main(char [][] args)
 
    byte [] filedata = cast(byte []) std.file.read(source_file);
 
-   unc.log.LogHexBlock(0, filedata);
+   LogHexBlock(0, filedata);
 
    //for (int idx = 0; idx < options_table.length; idx++)
    //{
@@ -150,12 +152,12 @@ int main(char [][] args)
 
 class Uncrustify
 {
-   public Log     log;
+   //public Logger  log;
    public int []  settings;
 
    this()
    {
-      log = new Log();
+      //log = new Log();
       settings.length = Option.option_count;
    }
 }
@@ -395,93 +397,103 @@ public Uncrustify unc;
 //    return("???");
 // }
 //
-// static BOOL ends_with(const char *filename, const char *tag)
-// {
-//    int len1 = strlen(filename);
-//    int len2 = strlen(tag);
-//
-//    if ((len2 <= len1) && (strcmp(&filename[len1 - len2], tag) == 0))
-//    {
-//       return(TRUE);
-//    }
-//    return(FALSE);
-// }
-//
-// struct file_lang
-// {
-//    const char *ext;
-//    const char *tag;
-//    int        lang;
-// };
-// struct file_lang languages[] =
-// {
-//    { ".c",    "C",    LANG_C },
-//    { ".h",    "",     LANG_C },
-//    { ".cpp",  "CPP",  LANG_CPP },
-//    { ".d",    "D",    LANG_D },
-//    { ".cs",   "CS",   LANG_CS },
-//    { ".java", "JAVA", LANG_JAVA },
-// };
-//
-// /**
-//  * Find the language for the file extension
-//  * Default to C
-//  *
-//  * @param filename   The name of the file
-//  * @return           LANG_xxx
-//  */
-// static int language_from_filename(const char *filename)
-// {
-//    int i;
-//
-//    for (i = 0; i < ARRAY_SIZE(languages); i++)
-//    {
-//       if (ends_with(filename, languages[i].ext))
-//       {
-//          return(languages[i].lang);
-//       }
-//    }
-//    return(LANG_C);
-// }
-//
-// /**
-//  * Find the language for the file extension
-//  * Default to C
-//  *
-//  * @param filename   The name of the file
-//  * @return           LANG_xxx
-//  */
-// static int language_from_tag(const char *tag)
-// {
-//    int i;
-//
-//    for (i = 0; i < ARRAY_SIZE(languages); i++)
-//    {
-//       if (strcasecmp(tag, languages[i].tag) == 0)
-//       {
-//          return(languages[i].lang);
-//       }
-//    }
-//    return(0);
-// }
-//
-// /**
-//  * Gets the tag text for a language
-//  *
-//  * @param lang    The LANG_xxx enum
-//  * @return        A string
-//  */
-// static const char *language_to_string(int lang)
-// {
-//    int i;
-//
-//    for (i = 0; i < ARRAY_SIZE(languages); i++)
-//    {
-//       if ((languages[i].lang & lang) != 0)
-//       {
-//          return(languages[i].tag);
-//       }
-//    }
-//    return("???");
-// }
-//
+bool ends_with(char [] filename, char [] tag)
+{
+   if ((tag.length <= filename.length) &&
+       (cmp(filename[filename.length - tag.length .. $], tag) == 0))
+   {
+      return true;
+   }
+   return false;
+}
+
+enum
+{
+   LANG_C    = 0x01,
+   LANG_CPP  = 0x02,
+   LANG_D    = 0x04,
+   LANG_CS   = 0x08,     /*<< C# or C-sharp */
+   LANG_JAVA = 0x10,
+   LANG_ALL  = 0x1f,
+
+   FLAG_PP = 0x80,  /*<< only appears in a preprocessor */
+};
+
+struct file_lang
+{
+   char [] ext;
+   char [] tag;
+   int     lang;
+};
+file_lang [] languages =
+[
+   { ".c",    "C",    LANG_C },
+   { ".h",    "",     LANG_C },
+   { ".cpp",  "CPP",  LANG_CPP },
+   { ".d",    "D",    LANG_D },
+   { ".cs",   "CS",   LANG_CS },
+   { ".java", "JAVA", LANG_JAVA },
+];
+
+/**
+ * Find the language for the file extension
+ * Default to C
+ *
+ * @param filename   The name of the file
+ * @return           LANG_xxx
+ */
+static int language_from_filename(char [] filename)
+{
+   int i;
+
+   for (i = 0; i < languages.length; i++)
+   {
+      if (ends_with(filename, languages[i].ext))
+      {
+         return(languages[i].lang);
+      }
+   }
+   return(LANG_C);
+}
+
+/**
+ * Find the language for the file extension
+ * Default to C
+ *
+ * @param filename   The name of the file
+ * @return           LANG_xxx
+ */
+static int language_from_tag(char [] tag)
+{
+   int i;
+
+   for (i = 0; i < languages.length; i++)
+   {
+      if (icmp(tag, languages[i].tag) == 0)
+      {
+         return(languages[i].lang);
+      }
+   }
+   return(0);
+}
+
+/**
+ * Gets the tag text for a language
+ *
+ * @param lang    The LANG_xxx enum
+ * @return        A string
+ */
+static char [] language_to_string(int lang)
+{
+   int i;
+
+   for (i = 0; i < languages.length; i++)
+   {
+      if ((languages[i].lang & lang) != 0)
+      {
+         return(languages[i].tag);
+      }
+   }
+   return("???");
+}
+

@@ -44,7 +44,7 @@ int ConvertOptionValue(OptionEntry *entry, char [] val)
             return(unc.settings[tmp.id] * mult);
          }
       }
-      unc.log.LogFmt(LogSev.Warn, "Expected a number for %.*s, got %.*s\n", entry.name, val);
+      Log(LogSev.Warn, "Expected a number for %.*s, got %.*s\n", entry.name, val);
       return(0);
    }
 
@@ -75,7 +75,7 @@ int ConvertOptionValue(OptionEntry *entry, char [] val)
       {
          return(unc.settings[tmp.id] ? btrue : !btrue);
       }
-      unc.log.LogFmt(LogSev.Warn, "Expected 'True' or 'False' for %.*s, got %.*s\n",
+      Log(LogSev.Warn, "Expected 'True' or 'False' for %.*s, got %.*s\n",
               entry.name, val);
       return(0);
    }
@@ -100,7 +100,7 @@ int ConvertOptionValue(OptionEntry *entry, char [] val)
    {
       return(unc.settings[tmp.id]);
    }
-   unc.log.LogFmt(LogSev.Warn, "Expected 'Add', 'Remove', 'Force', or 'Ignore' for %.*s, got %.*s\n",
+   Log(LogSev.Warn, "Expected 'Add', 'Remove', 'Force', or 'Ignore' for %.*s, got %.*s\n",
            entry.name, val);
    return(0);
 }
@@ -193,7 +193,7 @@ int LoadOptionFile(char [] filename)
       theline = ltrim(theline);
       if ((theline.length == 0) || (theline[0] != '='))
       {
-         unc.log.LogFmt(LogSev.Warn, "%s:%d - Didn't find a '=' for '%s'\n",
+         Log(LogSev.Warn, "%s:%d - Didn't find a '=' for '%s'\n",
                  filename, line_num, name);
          /* TODO: default to some sane ON value - maybe 1? */
          continue;
@@ -207,7 +207,7 @@ int LoadOptionFile(char [] filename)
 
       if (theline.length == 0)
       {
-         unc.log.LogFmt(LogSev.Warn, "%s:%d - Didn't find a value for '%s'\n",
+         Log(LogSev.Warn, "%s:%d - Didn't find a value for '%s'\n",
                  filename, line_num, name);
          continue;
       }
@@ -217,12 +217,12 @@ int LoadOptionFile(char [] filename)
       /* Set the value */
       if ((id = SetOptionValue(name, val)) < 0)
       {
-         unc.log.LogFmt(LogSev.Warn, "%s:%d - Unknown symbol '%s'\n",
+         Log(LogSev.Warn, "%s:%d - Unknown symbol '%s'\n",
                  filename, line_num, name);
       }
       else
       {
-         unc.log.LogFmt(LogSev.Note, "%s:%d - Set '%s' to %d\n",
+         Log(LogSev.Note, "%s:%d - Set '%s' to %d\n",
                  filename, line_num, name, unc.settings[id]);
       }
    }
