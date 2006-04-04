@@ -1,11 +1,11 @@
 /**
- * @file c_settings.c
- * Settings for all the options.
+ * @file options.h
+ * Enum and settings for all the options.
  *
  * $Id$
  */
-#ifndef C_SETTINGS_H_INCLUDED
-#define C_SETTINGS_H_INCLUDED
+#ifndef OPTIONS_H_INCLUDED
+#define OPTIONS_H_INCLUDED
 
 
 typedef enum
@@ -51,6 +51,7 @@ enum uncrustify_options
    UO_indent_case_brace,        //TODO: spaces to indent '{' from case (usually 0 or indent_columns)
 
    UO_indent_brace,             // spaces to indent '{' from level (usually 0)
+   UO_indent_braces,            // whether to indent the braces of not
    UO_indent_label,             // 0=left >0=col from left, <0=sub from brace indent
 
    UO_indent_align_string,      // True/False - indent align broken strings
@@ -265,6 +266,7 @@ struct options_name_tab option_name_table[] =
    OPTDEF(indent_align_string,           AT_BOOL),
    OPTDEF(indent_brace,                  AT_NUM),
    OPTDEF(indent_brace_struct,           AT_NUM),
+   OPTDEF(indent_braces,                 AT_BOOL),
    OPTDEF(indent_case_body,              AT_NUM),
    OPTDEF(indent_case_brace,             AT_NUM),
    OPTDEF(indent_col1_comment,           AT_BOOL),
@@ -343,5 +345,5 @@ struct options_name_tab option_name_table[] =
 
 #endif   /* DEFINE_OPTION_NAME_TABLE */
 
-#endif   /* C_SETTINGS_H_INCLUDED */
+#endif   /* OPTIONS_H_INCLUDED */
 

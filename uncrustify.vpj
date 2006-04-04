@@ -77,7 +77,6 @@
 			Filters="*.h;*.H;*.hh;*.hpp;*.hxx;*.inc;*.sh;*.cpy;*.if">
 			<F N="src/args.h"/>
 			<F N="src/base_types.h"/>
-			<F N="src/c_settings.h"/>
 			<F N="src/char_table.h"/>
 			<F N="src/chunk_list.h"/>
 			<F N="src/chunk_stack.h"/>
@@ -85,6 +84,7 @@
 			<F N="src/log_levels.h"/>
 			<F N="src/logger.h"/>
 			<F N="src/logmask.h"/>
+			<F N="src/options.h"/>
 			<F N="src/prototypes.h"/>
 			<F N="src/token_enum.h"/>
 			<F N="src/token_names.h"/>

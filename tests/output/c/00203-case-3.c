@@ -3,10 +3,10 @@ void foo(void)
    switch(ch)
    {
       case 'a':
-      {
+         {
          handle_a();
          break;
-      }
+         }
 
       case 'b':
          handle_b();
@@ -18,10 +18,10 @@ void foo(void)
          break;
 
       case 'e':
-      {
+         {
          handle_a();
-      }
-      break;
+         }
+         break;
 
       default:
          handle_default();

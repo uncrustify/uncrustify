@@ -49,7 +49,6 @@ enum Option
    pp_indent,                //TODO: spaces to indent preprocessors (0)
 
    indent_switch_case,       // spaces to indent case from switch
-   indent_case_body,         // spaces to indent case body from case
    indent_case_brace,        //TODO: spaces to indent '{' from case (usually 0 or indent_columns)
 
    indent_brace,             // spaces to indent '{' from level (usually 0)
@@ -264,7 +263,6 @@ static OptionEntry [] options_table =
    { Option.indent_align_string,           "indent_align_string",           ArgType.BOOL },
    { Option.indent_brace,                  "indent_brace",                  ArgType.NUM  },
    { Option.indent_brace_struct,           "indent_brace_struct",           ArgType.NUM  },
-   { Option.indent_case_body,              "indent_case_body",              ArgType.NUM  },
    { Option.indent_case_brace,             "indent_case_brace",             ArgType.NUM  },
    { Option.indent_col1_comment,           "indent_col1_comment",           ArgType.BOOL },
    { Option.indent_columns,                "indent_columns",                ArgType.NUM  },

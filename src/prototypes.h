@@ -45,7 +45,7 @@ const char *get_option_name(enum uncrustify_options uo);
  */
 
 void indent_text(void);
-void indent_column(chunk_t *pc, int column);
+void indent_to_column(chunk_t *pc, int column);
 void reindent_line(chunk_t *pc, int column);
 
 

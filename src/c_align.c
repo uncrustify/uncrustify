@@ -48,7 +48,7 @@ static void align_stack(int col, BOOL align_single, log_sev_t sev)
       LOG_FMT(sev, "%s: max_col=%d\n", __func__, col);
       while ((pc = cs_pop(&cpd.cs)) != NULL)
       {
-         indent_column(pc, col);
+         indent_to_column(pc, col);
          pc->flags |= PCF_WAS_ALIGNED;
 
          LOG_FMT(sev, "%s: indented [%s] on line %d to %d\n",
@@ -338,14 +338,14 @@ static void align_assign_group(chunk_t *start, chunk_t *end,
           (pc->type == CT_ASSIGN) &&
           ((pc->flags & PCF_WAS_ALIGNED) != 0))
       {
-         indent_column(pc, max_col - pc->len);
+         indent_to_column(pc, max_col - pc->len);
       }
    }
    if ((end->level == my_level) &&
        (end->type == CT_ASSIGN) &&
        ((end->flags & PCF_WAS_ALIGNED) != 0))
    {
-      indent_column(end, max_col - pc->len);
+      indent_to_column(end, max_col - pc->len);
    }
 }
 
@@ -580,7 +580,7 @@ static void indent_var_def_brace(chunk_t *first, chunk_t *last,
                   (pc->type == CT_BIT_COLON) &&
                   ((pc->flags & PCF_WAS_ALIGNED) != 0))
          {
-            indent_column(pc, bit_column);
+            indent_to_column(pc, bit_column);
          }
       }
    }

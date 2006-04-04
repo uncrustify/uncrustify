@@ -1,4 +1,4 @@
-Quick documentation (probably out of date - see c_settings.h)
+Quick documentation (probably out of date - see options.h)
 
 There are three type of arguments:
 	- boolean (true/false)
@@ -43,7 +43,7 @@ Terminology:
 	will be considered.  This is done to limit the scope of the aligning.
 
 
-Here's a list of all the options from c_settings.h and a brief description.
+Here's a list of all the options from options.h and a brief description.
 
    indent:			bool
 	Not used
@@ -105,19 +105,6 @@ Here's a list of all the options from c_settings.h and a brief description.
 	switch (a) {
 	   case 34:
 	
-   indent_case_body:		number		* REVISIT: seems pointless *
-	Spaces to indent body from case.
-	
-	Default (0, assuming indent_columns is 3):
-	switch (a) {
-	   case 34:
-	      break;
-	
-	If set to -indent_columns:
-	switch (a) {
-	   case 34:
-	   break;
-	
    indent_case_brace:		number
 	Spaces to indent '{' from case.
 	
@@ -131,9 +118,9 @@ Here's a list of all the options from c_settings.h and a brief description.
 	If set to -indent_columns:
 	switch (a) {
 	   case 34:
-	   {
+	      {
 	      break;
-	   }
+	      }
 	
    indent_brace:		number
 	Spaces to indent '{' from level (usually 0). For GNU style, set to 2.

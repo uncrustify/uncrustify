@@ -1,11 +1,11 @@
 #! /bin/sh
 #
-# Scans src/c_settings.h and sees if any enum items aren't in the table
+# Scans src/options.h and sees if any enum items aren't in the table
 #
-# $Id: check_settings.sh,v 1.1 2006/02/11 22:48:55 bengardner Exp $
+# $Id$
 #
 
-in_file="src/c_settings.h"
+in_file="src/options.h"
 tmp_file="settings.txt"
 
 bad_file=""

@@ -18,7 +18,7 @@
 static void indent_comment(chunk_t *pc, int col);
 
 
-void indent_column(chunk_t *pc, int column)
+void indent_to_column(chunk_t *pc, int column)
 {
    if (column < pc->column)
    {
@@ -95,13 +95,12 @@ void indent_text(void)
    BOOL               did_newline = TRUE;
    int                idx;
    int                vardefcol    = 0;
-   int                last_str_col = -1;
-   int                last_cpp_col = -1;
    int                tabsize      = cpd.settings[UO_output_tab_size];
    int                ref          = 0;
    int                tmp;
    struct parse_frame frm;
    BOOL               in_preproc = FALSE, was_preproc = FALSE;
+   int                indent_column;
 
    memset(&frm, 0, sizeof(frm));
 
@@ -113,11 +112,12 @@ void indent_text(void)
    pc = chunk_get_head();
    while (pc != NULL)
    {
-      was_preproc = in_preproc;
-      in_preproc  = (pc->flags & PCF_IN_PREPROC) != 0;
-
       LOG_FMT(LINDENT, "%s: %d] %s - tos %s\n", __func__, pc->orig_line, get_token_name(pc->type),
               get_token_name(frm.pse[frm.pse_tos].type));
+
+      /* Handle proprocessor transitions */
+      was_preproc = in_preproc;
+      in_preproc  = (pc->flags & PCF_IN_PREPROC) != 0;
 
       /* Clean up after a #define */
       if (!in_preproc)
@@ -127,19 +127,27 @@ void indent_text(void)
             frm.pse_tos--;
          }
       }
-
-      /* Add a dummy indent level */
-      if (in_preproc && !was_preproc)
+      else
       {
-         frm.level++;
-         frm.pse_tos++;
-         frm.pse[frm.pse_tos].type       = CT_PP;
-         frm.pse[frm.pse_tos].indent     = 1 + tabsize;
-         frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
-         frm.pse[frm.pse_tos].open_line  = pc->orig_line;
-         frm.pse[frm.pse_tos].ref        = ++ref;
-         frm.pse[frm.pse_tos].in_preproc = TRUE;
+         pf_check(&frm, pc);
+
+         if (!was_preproc)
+         {
+            /* Transition into a preproc by creating a dummy indent */
+            frm.level++;
+            frm.pse_tos++;
+            frm.pse[frm.pse_tos].type       = CT_PP;
+            frm.pse[frm.pse_tos].indent     = 1 + tabsize;
+            frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
+            frm.pse[frm.pse_tos].open_line  = pc->orig_line;
+            frm.pse[frm.pse_tos].ref        = ++ref;
+            frm.pse[frm.pse_tos].in_preproc = TRUE;
+         }
       }
+
+      /**
+       * Handle non-brace closures
+       */
 
       /* process virtual braces closes first (no text output) */
       while ((pc->type == CT_VBRACE_CLOSE) &&
@@ -162,8 +170,6 @@ void indent_text(void)
               (pc->type == CT_SEMICOLON)))
       {
          frm.pse_tos--;
-         //         fprintf(stderr, "%3d] CLOSE(2) on %s, tos=%d\n", pc->orig_line,
-         //                 c_chunk_names[pc->type], pse_tos);
       }
 
       /* End any CPP class colon crap */
@@ -174,16 +180,12 @@ void indent_text(void)
          frm.pse_tos--;
       }
 
-      pf_check(&frm, pc);
-
       /* a case is ended with another case or a close brace */
       if ((frm.pse[frm.pse_tos].type == CT_CASE) &&
           ((pc->type == CT_BRACE_CLOSE) ||
            (pc->type == CT_CASE)))
       {
          frm.pse_tos--;
-         //fprintf(stderr, "%3d] CLOSE(3) on %s, tos=%d\n", pc->orig_line,
-         //        c_chunk_names[pc->type], pse_tos);
       }
 
       /* a return is ended with a semicolon */
@@ -191,57 +193,14 @@ void indent_text(void)
           (pc->type == CT_SEMICOLON))
       {
          frm.pse_tos--;
-         //fprintf(stderr, "%3d] CLOSE(3) on %s, tos=%d\n", pc->orig_line,
-         //        get_token_name(pc->type), frm.pse_tos);
       }
 
-      /* Start a case - indent UO_indent_switch_case from the switch level */
-      if (pc->type == CT_CASE)
-      {
-         tmp = frm.pse[frm.pse_tos].indent + cpd.settings[UO_indent_switch_case];
-
-         frm.pse_tos++;
-         frm.pse[frm.pse_tos].type       = pc->type;
-         frm.pse[frm.pse_tos].indent     = tmp + cpd.settings[UO_indent_case_body];
-         frm.pse[frm.pse_tos].indent_tmp = tmp - tabsize;
-         frm.pse[frm.pse_tos].open_line  = pc->orig_line;
-         frm.pse[frm.pse_tos].ref        = ++ref;
-         frm.pse[frm.pse_tos].in_preproc = (pc->flags & PCF_IN_PREPROC) != 0;
-         //         fprintf(stderr, "%3d] OPEN(4) on %s, tos=%d\n", pc->orig_line,
-         //                 c_chunk_names[pc->type], pse_tos);
-      }
-      else if (pc->type == CT_RETURN)
-      {
-         /* don't count returns inside a () or [] */
-         if (pc->level == pc->brace_level)
-         {
-            frm.pse_tos++;
-            frm.pse[frm.pse_tos].type       = pc->type;
-            frm.pse[frm.pse_tos].indent     = frm.pse[frm.pse_tos - 1].indent + pc->len + 1;
-            frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos - 1].indent;
-            frm.pse[frm.pse_tos].open_line  = pc->orig_line;
-            frm.pse[frm.pse_tos].ref        = ++ref;
-            frm.pse[frm.pse_tos].in_preproc = (pc->flags & PCF_IN_PREPROC) != 0;
-            //         fprintf(stderr, "%3d] OPEN(4) on %s, tos=%d\n", pc->orig_line,
-            //                 c_chunk_names[pc->type], pse_tos);
-         }
-      }
-
-      else if (pc->type == CT_BRACE_CLOSE)
-      {
-         if (frm.pse[frm.pse_tos].type == CT_BRACE_OPEN)
-         {
-            frm.level--;
-            frm.pse_tos--;
-            LOG_FMT(LINDENT, "%3d] CLOSE(5) on %s, tos=%d\n", pc->orig_line,
-                    get_token_name(pc->type), frm.pse_tos);
-         }
-      }
-      else if ((frm.pse[frm.pse_tos].type == (pc->type - 1)) &&
-               ((pc->type == CT_PAREN_CLOSE) ||
-                (pc->type == CT_SPAREN_CLOSE) ||
-                (pc->type == CT_FPAREN_CLOSE) ||
-                (pc->type == CT_SQUARE_CLOSE)))
+      /* Close out parens and squares */
+      if ((frm.pse[frm.pse_tos].type == (pc->type - 1)) &&
+          ((pc->type == CT_PAREN_CLOSE) ||
+           (pc->type == CT_SPAREN_CLOSE) ||
+           (pc->type == CT_FPAREN_CLOSE) ||
+           (pc->type == CT_SQUARE_CLOSE)))
       {
          LOG_FMT(LINDENT, "%3d] CLOSE(%d) on %s, ",
                  pc->orig_line, frm.pse[frm.pse_tos].ref, get_token_name(pc->type));
@@ -253,39 +212,153 @@ void indent_text(void)
                  frm.pse_tos, frm.pse[frm.pse_tos].indent,
                  get_token_name(frm.pse[frm.pse_tos].type));
       }
+
+      /* Grab a copy of the current indent */
+      indent_column = frm.pse[frm.pse_tos].indent_tmp;
+
+      /**
+       * Handle stuff that can affect the current indent:
+       *  - brace close
+       *  - vbrace open
+       *  - brace open
+       *  - case         (immediate)
+       *  - labels       (immediate)
+       *  - class colons (immediate)
+       *
+       * And some stuff that can't
+       *  - open paren
+       *  - open square
+       *  - assignment
+       *  - return
+       */
+
+      if (pc->type == CT_BRACE_CLOSE)
+      {
+         if (frm.pse[frm.pse_tos].type == CT_BRACE_OPEN)
+         {
+            frm.level--;
+            frm.pse_tos--;
+
+            /* Update the indent_column if needed */
+            if (!cpd.settings[UO_indent_braces])
+            {
+               indent_column = frm.pse[frm.pse_tos].indent_tmp;
+            }
+
+            LOG_FMT(LINDENT, "%3d] %s col=%d, tos=%d\n", pc->orig_line,
+                    get_token_name(pc->type), indent_column, frm.pse_tos);
+         }
+      }
+      else if (pc->type == CT_VBRACE_OPEN)
+      {
+         frm.level++;
+         frm.pse_tos++;
+         frm.pse[frm.pse_tos].type       = pc->type;
+         frm.pse[frm.pse_tos].indent     = frm.pse[frm.pse_tos - 1].indent + tabsize;
+         frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
+         frm.pse[frm.pse_tos].open_line  = pc->orig_line;
+         frm.pse[frm.pse_tos].ref        = ++ref;
+         frm.pse[frm.pse_tos].in_preproc = (pc->flags & PCF_IN_PREPROC) != 0;
+         frm.pse[frm.pse_tos].min_col    = 0;
+
+         /* Always indent on virtual braces */
+         indent_column = frm.pse[frm.pse_tos].indent_tmp;
+
+         LOG_FMT(LINDENT, "%3d] %s col=%d, tos=%d\n", pc->orig_line,
+                 get_token_name(pc->type), indent_column, frm.pse_tos);
+      }
       else if (pc->type == CT_BRACE_OPEN)
       {
-         if ((pc->parent_type == CT_IF) ||
-             (pc->parent_type == CT_ELSE) ||
-             (pc->parent_type == CT_DO) ||
-             (pc->parent_type == CT_WHILE) ||
-             (pc->parent_type == CT_SWITCH) ||
-             (pc->parent_type == CT_FOR))
-         {
-            frm.pse[frm.pse_tos].indent_tmp += cpd.settings[UO_indent_brace];
-         }
-         else if (pc->parent_type == CT_CASE)
-         {
-            /* The indent_case_brace setting affects the parent CT_CASE */
-            frm.pse[frm.pse_tos].indent_tmp += cpd.settings[UO_indent_case_brace];
-         }
-      }
-      else
-      {
-         /* nada */
-      }
+         frm.level++;
+         frm.pse_tos++;
+         frm.pse[frm.pse_tos].type       = pc->type;
+         frm.pse[frm.pse_tos].ref        = ++ref;
+         frm.pse[frm.pse_tos].in_preproc = (pc->flags & PCF_IN_PREPROC) != 0;
+         frm.pse[frm.pse_tos].min_col    = 0;
 
-      /* Labels get sent to the left or backed up */
-      if (pc->type == CT_LABEL)
-      {
-         if (cpd.settings[UO_indent_label] >= 0)
+         if (frm.paren_count != 0)
          {
-            frm.pse[frm.pse_tos].indent_tmp = 1 + cpd.settings[UO_indent_label];
+            /* We are inside ({ ... }) -- indent one tab from the paren */
+            frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent_tmp + tabsize;
          }
          else
          {
-            frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent +
-                                              cpd.settings[UO_indent_label];
+            /* Use the prev indent level + tabsize. */
+            frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent + tabsize;
+
+            /* If this brace is part of a statement, bump it out by indent_brace */
+            if ((pc->parent_type == CT_IF) ||
+                (pc->parent_type == CT_ELSE) ||
+                (pc->parent_type == CT_DO) ||
+                (pc->parent_type == CT_WHILE) ||
+                (pc->parent_type == CT_SWITCH) ||
+                (pc->parent_type == CT_FOR))
+            {
+               frm.pse[frm.pse_tos].indent += cpd.settings[UO_indent_brace];
+            }
+            else if (pc->parent_type == CT_CASE)
+            {
+               /* The indent_case_brace setting affects the parent CT_CASE */
+               //frm.pse[frm.pse_tos - 1].indent += cpd.settings[UO_indent_case_brace];
+               frm.pse[frm.pse_tos].indent_tmp += cpd.settings[UO_indent_case_brace];
+               frm.pse[frm.pse_tos].indent     += cpd.settings[UO_indent_case_brace];
+            }
+         }
+
+         /**
+          * If there isn't a newline between the open brace and the next
+          * item, just indent to wherever the next token is.
+          * This covers this sort of stuff:
+          * { a++;
+          *   b--; };
+          */
+         next = chunk_get_next_ncnl(pc);
+         if (!chunk_is_newline_between(pc, next))
+         {
+            frm.pse[frm.pse_tos].indent = next->column;
+         }
+         frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
+         frm.pse[frm.pse_tos].open_line  = pc->orig_line;
+
+         /* Update the indent_column if needed */
+         if (cpd.settings[UO_indent_braces])
+         {
+            indent_column = frm.pse[frm.pse_tos].indent_tmp;
+         }
+
+         LOG_FMT(LINDENT, "%3d] %s col=%d, tos=%d\n", pc->orig_line,
+                 get_token_name(pc->type), indent_column, frm.pse_tos);
+      }
+      else if (pc->type == CT_CASE)
+      {
+         /* Start a case - indent UO_indent_switch_case from the switch level */
+         tmp = frm.pse[frm.pse_tos].indent + cpd.settings[UO_indent_switch_case];
+
+         frm.pse_tos++;
+         frm.pse[frm.pse_tos].type       = pc->type;
+         frm.pse[frm.pse_tos].indent     = tmp;
+         frm.pse[frm.pse_tos].indent_tmp = tmp - tabsize;
+         frm.pse[frm.pse_tos].open_line  = pc->orig_line;
+         frm.pse[frm.pse_tos].ref        = ++ref;
+         frm.pse[frm.pse_tos].in_preproc = (pc->flags & PCF_IN_PREPROC) != 0;
+
+         /* Always set on case statements */
+         indent_column = frm.pse[frm.pse_tos].indent_tmp;
+
+         LOG_FMT(LINDENT, "%3d] %s col=%d, tos=%d\n", pc->orig_line,
+                 get_token_name(pc->type), indent_column, frm.pse_tos);
+      }
+      else if (pc->type == CT_LABEL)
+      {
+         /* Labels get sent to the left or backed up */
+         if (cpd.settings[UO_indent_label] >= 0)
+         {
+            indent_column = 1 + cpd.settings[UO_indent_label];
+         }
+         else
+         {
+            indent_column = frm.pse[frm.pse_tos].indent +
+                            cpd.settings[UO_indent_label];
          }
       }
       else if (pc->type == CT_CLASS_COLON)
@@ -299,211 +372,17 @@ void indent_text(void)
          frm.pse[frm.pse_tos].ref        = ++ref;
          frm.pse[frm.pse_tos].in_preproc = (pc->flags & PCF_IN_PREPROC) != 0;
 
-         LOG_FMT(LINDENT, "%3d] OPEN(10) on %s, tos=%d\n", pc->orig_line,
-                 get_token_name(pc->type), frm.pse_tos);
-      }
+         indent_column = frm.pse[frm.pse_tos].indent_tmp;
 
-      /* Are we right after a newline? */
-      if (did_newline && !chunk_is_newline(pc) && (pc->len != 0))
-      {
-         if ((vardefcol > 0) &&
-             (pc->type == CT_WORD) &&
-             ((pc->flags & PCF_VAR_DEF) != 0) &&
-             (prev != NULL) && (prev->type == CT_COMMA))
-         {
-            LOG_FMT(LINDENT, "%s: %d] Vardefcol = %d\n", __func__, pc->orig_line, vardefcol);
-            reindent_line(pc, vardefcol);
-         }
-         else if ((pc->type == CT_STRING) && (last_str_col > 0))
-         {
-            LOG_FMT(LINDENT, "stringcol = %d\n", last_str_col);
-            reindent_line(pc, last_str_col);
-         }
-         else if (chunk_is_comment(pc))
-         {
-            indent_comment(pc, frm.pse[frm.pse_tos].indent_tmp);
-         }
-         else if (pc->type == CT_PREPROC)
-         {
-            LOG_FMT(LINDENT, "%s: %d] preproc indent\n", __func__, pc->orig_line);
-            reindent_line(pc, 1);
-         }
-         else if ((pc->column != (frm.pse[frm.pse_tos].indent_tmp)) &&
-                  ((pc->column != 1) ||
-                   !((pc->type == CT_COMMENT) ||
-                     (pc->type == CT_COMMENT_CPP) ||
-                     (pc->type == CT_COMMENT_MULTI))))
-         {
-            LOG_FMT(LINDENT, "%s: line %d, column %d\n",
-                    __func__, pc->orig_line, frm.pse[frm.pse_tos].indent_tmp);
-            reindent_line(pc, frm.pse[frm.pse_tos].indent_tmp);
-         }
-         did_newline = FALSE;
-
-         if (((frm.pse[frm.pse_tos].type == CT_BRACE_OPEN) ||
-              (frm.pse[frm.pse_tos].type == CT_VBRACE_OPEN)) &&
-             (frm.pse[frm.pse_tos].min_col <= 0))
-         {
-            /* Set it up for detection */
-            frm.pse[frm.pse_tos].min_col = -1;
-         }
-      }
-
-      /* Handle C++ cout-style crap '<<' line continuation */
-      if ((frm.pse[frm.pse_tos].min_col == -1) && (pc->type != CT_WORD))
-      {
-         //LOG_FMT(LSYS, "%s: BAILED: pc=%s col=%d\n", __func__, pc->str, pc->column);
-         frm.pse[frm.pse_tos].min_col = 0;
-      }
-      if (frm.pse[frm.pse_tos].min_col <= -1)
-      {
-         if ((pc->type != CT_WORD) &&
-             (pc->type != CT_MEMBER) &&
-             (pc->type != CT_DC_MEMBER) &&
-             (pc->type != CT_ARITH))
-         {
-            /* Done with the tmp_indent */
-            frm.pse[frm.pse_tos].min_col = -frm.pse[frm.pse_tos].min_col;
-         }
-         else
-         {
-            /* include this in the class name */
-            frm.pse[frm.pse_tos].min_col = -pc->column;
-         }
-      }
-
-      if (pc->type == CT_SEMICOLON)
-      {
-         frm.pse[frm.pse_tos].min_col = 0;
-      }
-
-      if ((pc->type == CT_STRING) && cpd.settings[UO_indent_align_string])
-      {
-         last_str_col = pc->column;
-         //fprintf(stderr, "%s: %d] indent_align_string, stringcol = %d\n",
-         //        __func__, pc->orig_line, last_str_col);
-      }
-      else if (!chunk_is_newline(pc))
-      {
-         last_str_col = -1;
-      }
-
-      if ((pc->column != 1) &&
-          ((pc->type == CT_COMMENT_CPP) || (pc->type == CT_COMMENT)))
-      {
-         last_cpp_col = pc->column;
-      }
-      else if (!chunk_is_newline(pc))
-      {
-         last_cpp_col = -1;
-      }
-
-      if ((pc->type == CT_WORD) &&
-          ((pc->flags & PCF_IN_FCN_DEF) == 0) &&
-          ((pc->flags & PCF_VAR_1ST_DEF) == PCF_VAR_1ST_DEF))
-      {
-         vardefcol = pc->column;
-      }
-      if ((pc->type == CT_SEMICOLON) ||
-          ((pc->type == CT_BRACE_OPEN) && (pc->parent_type == CT_FUNCTION)))
-      {
-         vardefcol = 0;
-      }
-
-      /* if we hit a newline, reset indent_tmp */
-      if (chunk_is_newline(pc) ||
-          (pc->type == CT_COMMENT_MULTI) ||
-          (pc->type == CT_COMMENT_CPP))
-      {
-         did_newline                     = TRUE;
-         frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
-         if (frm.pse[frm.pse_tos].min_col > 0)
-         {
-            frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].min_col;
-         }
-
-         /**
-          * Handle the case of a multi-line #define w/o a reference on the
-          * first line (indent_tmp will be 1 or 0)
-          */
-         if ((pc->type == CT_NL_CONT) &&
-             (frm.pse[frm.pse_tos].indent_tmp <= tabsize))
-         {
-            frm.pse[frm.pse_tos].indent_tmp = tabsize + 1;
-         }
-      }
-
-      /* Process all the brace/paren/square opens after the indent */
-      if (pc->type == CT_VBRACE_OPEN)
-      {
-         frm.level++;
-         frm.pse_tos++;
-         frm.pse[frm.pse_tos].type       = pc->type;
-         frm.pse[frm.pse_tos].indent     = frm.pse[frm.pse_tos - 1].indent + tabsize;
-         frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
-         frm.pse[frm.pse_tos].open_line  = pc->orig_line;
-         frm.pse[frm.pse_tos].ref        = ++ref;
-         frm.pse[frm.pse_tos].in_preproc = (pc->flags & PCF_IN_PREPROC) != 0;
-         frm.pse[frm.pse_tos].min_col    = 0;
-         LOG_FMT(LINDENT, "%3d] OPEN(7) on %s, tos=%d\n", pc->orig_line,
-                 get_token_name(pc->type), frm.pse_tos);
-      }
-      else if (pc->type == CT_BRACE_OPEN)
-      {
-         frm.level++;
-         frm.pse_tos++;
-         frm.pse[frm.pse_tos].type       = pc->type;
-         frm.pse[frm.pse_tos].ref        = ++ref;
-         frm.pse[frm.pse_tos].in_preproc = (pc->flags & PCF_IN_PREPROC) != 0;
-         frm.pse[frm.pse_tos].min_col    = 0;
-         LOG_FMT(LINDENT, "%3d] OPEN(8) on %s, tos=%d\n", pc->orig_line,
-                 get_token_name(pc->type), frm.pse_tos);
-
-         if (frm.paren_count == 0)
-         {
-            frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent;
-            prev                        = chunk_get_prev_ncnl(pc);
-            if ((prev == NULL) || (prev->type != CT_CASE_COLON))
-            {
-               frm.pse[frm.pse_tos].indent += tabsize;
-            }
-
-            if ((pc->parent_type == CT_IF) ||
-                (pc->parent_type == CT_ELSE) ||
-                (pc->parent_type == CT_DO) ||
-                (pc->parent_type == CT_WHILE) ||
-                (pc->parent_type == CT_SWITCH) ||
-                (pc->parent_type == CT_FOR))
-            {
-               frm.pse[frm.pse_tos].indent += cpd.settings[UO_indent_brace];
-            }
-            else if (pc->parent_type == CT_CASE)
-            {
-               /* The indent_case_brace setting affects the parent CT_CASE */
-               frm.pse[frm.pse_tos - 1].indent += cpd.settings[UO_indent_case_brace];
-               frm.pse[frm.pse_tos].indent_tmp += tabsize + cpd.settings[UO_indent_case_brace];
-               frm.pse[frm.pse_tos].indent     += tabsize + cpd.settings[UO_indent_case_brace];
-            }
-         }
-         else
-         {
-            frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent_tmp + tabsize;
-         }
-
-         next = chunk_get_next_ncnl(pc);
-         if (!chunk_is_newline_between(pc, next))
-         {
-            frm.pse[frm.pse_tos].indent = next->column;
-            //            fprintf(stderr, "Same-line scariness on line %d\n", pc->orig_line);
-         }
-         frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
-         frm.pse[frm.pse_tos].open_line  = pc->orig_line;
+         LOG_FMT(LINDENT, "%3d] %s col=%d, tos=%d\n", pc->orig_line,
+                 get_token_name(pc->type), indent_column, frm.pse_tos);
       }
       else if ((pc->type == CT_PAREN_OPEN) ||
                (pc->type == CT_SPAREN_OPEN) ||
                (pc->type == CT_FPAREN_OPEN) ||
                (pc->type == CT_SQUARE_OPEN))
       {
+         /* Open parens and squares - never update indent_column */
          frm.pse_tos++;
          frm.pse[frm.pse_tos].type       = pc->type;
          frm.pse[frm.pse_tos].indent     = pc->column + pc->len;
@@ -532,14 +411,16 @@ void indent_text(void)
          frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
          frm.paren_count++;
 
-         LOG_FMT(LINDENT, "%3d] OPEN(%d) on %s, tos=%d col=%d\n",
-                 pc->orig_line, frm.pse[frm.pse_tos].ref,
-                 get_token_name(pc->type), frm.pse_tos, frm.pse[frm.pse_tos].indent);
+         LOG_FMT(LINDENT, "%3d] %s col=%d, tos=%d\n", pc->orig_line,
+                 get_token_name(pc->type), indent_column, frm.pse_tos);
       }
       else if (pc->type == CT_ASSIGN)
       {
-         /* if there is a newline after the '=', just indent one level,
-          * otherwise align on the '=' */
+         /**
+          * if there is a newline after the '=', just indent one level,
+          * otherwise align on the '='.
+          * Never update indent_column.
+          */
          next = chunk_get_next(pc);
          if (next != NULL)
          {
@@ -562,6 +443,156 @@ void indent_text(void)
                     get_token_name(pc->type), frm.pse_tos);
          }
       }
+      else if (pc->type == CT_RETURN)
+      {
+         /* don't count returns inside a () or [] */
+         if (pc->level == pc->brace_level)
+         {
+            frm.pse_tos++;
+            frm.pse[frm.pse_tos].type       = pc->type;
+            frm.pse[frm.pse_tos].indent     = frm.pse[frm.pse_tos - 1].indent + pc->len + 1;
+            frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos - 1].indent;
+            frm.pse[frm.pse_tos].open_line  = pc->orig_line;
+            frm.pse[frm.pse_tos].ref        = ++ref;
+            frm.pse[frm.pse_tos].in_preproc = (pc->flags & PCF_IN_PREPROC) != 0;
+
+            LOG_FMT(LINDENT, "%3d] %s, tos=%d\n", pc->orig_line,
+                    get_token_name(pc->type), frm.pse_tos);
+         }
+      }
+      else
+      {
+         /* anything else? */
+      }
+
+
+      /**
+       * Indent the line if needed
+       */
+      if (did_newline && !chunk_is_newline(pc) && (pc->len != 0))
+      {
+         /**
+          * Check for special continuations.
+          * Note that some of these could be done as a stack item like
+          * everything else
+          */
+
+         prev = chunk_get_prev_ncnl(pc);
+         if ((vardefcol > 0) &&
+             (pc->type == CT_WORD) &&
+             ((pc->flags & PCF_VAR_DEF) != 0) &&
+             (prev != NULL) && (prev->type == CT_COMMA))
+         {
+            LOG_FMT(LINDENT, "%s: %d] Vardefcol = %d\n", __func__, pc->orig_line, vardefcol);
+            reindent_line(pc, vardefcol);
+         }
+         else if ((pc->type == CT_STRING) && (prev->type == CT_STRING) &&
+                  cpd.settings[UO_indent_align_string])
+         {
+            LOG_FMT(LINDENT, "%s: %d] String Col = %d\n",
+                    __func__, pc->orig_line, prev->column);
+            reindent_line(pc, prev->column);
+         }
+         else if (chunk_is_comment(pc))
+         {
+            indent_comment(pc, frm.pse[frm.pse_tos].indent_tmp);
+         }
+         else if (pc->type == CT_PREPROC)
+         {
+            LOG_FMT(LINDENT, "%s: %d] preproc indent\n", __func__, pc->orig_line);
+
+            /*TODO: indent based on #if depth? */
+            reindent_line(pc, 1);
+         }
+         else if (pc->column != indent_column)
+         {
+            LOG_FMT(LINDENT, "%s: indent line %d to column %d\n",
+                    __func__, pc->orig_line, indent_column);
+            reindent_line(pc, indent_column);
+         }
+         did_newline = FALSE;
+
+         /* Set up for detection of C++ cout << "crap"; */
+         if (((frm.pse[frm.pse_tos].type == CT_BRACE_OPEN) ||
+              (frm.pse[frm.pse_tos].type == CT_VBRACE_OPEN)) &&
+             (frm.pse[frm.pse_tos].min_col <= 0))
+         {
+            /* Set it up for detection */
+            frm.pse[frm.pse_tos].min_col = -1;
+         }
+      }
+
+      /**
+       * Handle C++ cout-style crap '<<' line continuation
+       * Example:
+       * std::cout << "first line"
+       *           << "second line";
+       */
+      if ((frm.pse[frm.pse_tos].min_col == -1) && (pc->type != CT_WORD))
+      {
+         //LOG_FMT(LSYS, "%s: BAILED: pc=%s col=%d\n", __func__, pc->str, pc->column);
+         frm.pse[frm.pse_tos].min_col = 0;
+      }
+      if (frm.pse[frm.pse_tos].min_col <= -1)
+      {
+         if ((pc->type != CT_WORD) &&
+             (pc->type != CT_MEMBER) &&
+             (pc->type != CT_DC_MEMBER) &&
+             (pc->type != CT_ARITH))
+         {
+            /* Done with the tmp_indent */
+            frm.pse[frm.pse_tos].min_col = -frm.pse[frm.pse_tos].min_col;
+         }
+         else
+         {
+            /* include this in the class name */
+            frm.pse[frm.pse_tos].min_col = -pc->column;
+         }
+      }
+      if (pc->type == CT_SEMICOLON)
+      {
+         frm.pse[frm.pse_tos].min_col = 0;
+      }
+
+      /**
+       * Handle variable definition continuation indenting
+       */
+      if ((pc->type == CT_WORD) &&
+          ((pc->flags & PCF_IN_FCN_DEF) == 0) &&
+          ((pc->flags & PCF_VAR_1ST_DEF) == PCF_VAR_1ST_DEF))
+      {
+         vardefcol = pc->column;
+      }
+      if ((pc->type == CT_SEMICOLON) ||
+          ((pc->type == CT_BRACE_OPEN) && (pc->parent_type == CT_FUNCTION)))
+      {
+         vardefcol = 0;
+      }
+
+      /* if we hit a newline, reset indent_tmp */
+      if (chunk_is_newline(pc) ||
+          (pc->type == CT_COMMENT_MULTI) ||
+          (pc->type == CT_COMMENT_CPP))
+      {
+         frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
+         if (frm.pse[frm.pse_tos].min_col > 0)
+         {
+            frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].min_col;
+         }
+
+         /**
+          * Handle the case of a multi-line #define w/o anything on the
+          * first line (indent_tmp will be 1 or 0)
+          */
+         if ((pc->type == CT_NL_CONT) &&
+             (frm.pse[frm.pse_tos].indent_tmp <= tabsize))
+         {
+            frm.pse[frm.pse_tos].indent_tmp = tabsize + 1;
+         }
+
+         /* Get ready to indent the next item */
+         did_newline = TRUE;
+      }
 
       if (!chunk_is_comment(pc) && !chunk_is_newline(pc))
       {
@@ -570,12 +601,10 @@ void indent_text(void)
       pc = chunk_get_next(pc);
    }
 
-   if (in_preproc)
+   /* Throw out any stuff inside a preprocessor - no need to warn */
+   while ((frm.pse_tos > 0) && frm.pse[frm.pse_tos].in_preproc)
    {
-      while ((frm.pse_tos > 0) && frm.pse[frm.pse_tos].in_preproc)
-      {
-         frm.pse_tos--;
-      }
+      frm.pse_tos--;
    }
 
    for (idx = 1; idx <= frm.pse_tos; idx++)

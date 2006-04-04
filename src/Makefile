@@ -165,8 +165,8 @@ uncrustify_SOURCES = uncrustify.c chunk_list.c c_indent.c c_align.c c_combine.c 
 		args.c options.c keywords.c punctuators.c parse_frame.c \
 		logmask.c logger.c chunk_stack.c braces.c brace_cleanup.c
 
-noinst_HEADERS = chunk_list.h c_settings.h char_table.h chunk_list.h \
-		cparse_types.h prototypes.h c_settings.h logmask.h logger.h \
+noinst_HEADERS = chunk_list.h options.h char_table.h chunk_list.h \
+		cparse_types.h prototypes.h logmask.h logger.h \
 		chunk_stack.h args.h
 
 uncrustify_LDADD = $(INTLLIBS)
