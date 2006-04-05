@@ -245,6 +245,16 @@ void indent_text(void)
                indent_column = frm.pse[frm.pse_tos].indent_tmp;
             }
 
+            if ((pc->parent_type == CT_IF) ||
+                (pc->parent_type == CT_ELSE) ||
+                (pc->parent_type == CT_DO) ||
+                (pc->parent_type == CT_WHILE) ||
+                (pc->parent_type == CT_SWITCH) ||
+                (pc->parent_type == CT_FOR))
+            {
+               indent_column += cpd.settings[UO_indent_brace];
+            }
+
             LOG_FMT(LINDENT, "%3d] %s col=%d, tos=%d\n", pc->orig_line,
                     get_token_name(pc->type), indent_column, frm.pse_tos);
          }
@@ -295,6 +305,7 @@ void indent_text(void)
                 (pc->parent_type == CT_FOR))
             {
                frm.pse[frm.pse_tos].indent += cpd.settings[UO_indent_brace];
+               indent_column += cpd.settings[UO_indent_brace];
             }
             else if (pc->parent_type == CT_CASE)
             {
