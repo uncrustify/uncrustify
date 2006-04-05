@@ -70,8 +70,13 @@
 	<Files AutoFolders="DirectoryView">
 		<Folder Name="config">
 			<F N="config/ben.cfg"/>
+			<F N="config/brace-allman.cfg"/>
+			<F N="config/brace-banner.cfg"/>
+			<F N="config/brace-gnu.cfg"/>
+			<F N="config/brace-kr.cfg"/>
 			<F N="config/brace-remove-2.cfg"/>
 			<F N="config/brace-remove-all.cfg"/>
+			<F N="config/brace-ws.cfg"/>
 			<F N="config/case-1.cfg"/>
 			<F N="config/case-2.cfg"/>
 			<F N="config/case-3.cfg"/>
@@ -96,7 +101,7 @@
 				<F N="input/c/bugs-5.c"/>
 				<F N="input/c/bugs-6.c"/>
 				<F N="input/c/bugs.c"/>
-				<F N="input/c/case-1.c"/>
+				<F N="input/c/case.c"/>
 				<F N="input/c/colon-asm.c"/>
 				<F N="input/c/comment-indent.c"/>
 				<F N="input/c/define-if-indent.c"/>
@@ -133,6 +138,11 @@
 			<Folder Name="c">
 				<F N="output/c/00000-comment-indent.c"/>
 				<F N="output/c/00010-braces.c"/>
+				<F N="output/c/00011-braces.c"/>
+				<F N="output/c/00012-braces.c"/>
+				<F N="output/c/00013-braces.c"/>
+				<F N="output/c/00014-braces.c"/>
+				<F N="output/c/00015-braces.c"/>
 				<F N="output/c/00020-define-if-indent.c"/>
 				<F N="output/c/00050-brace-remove-2.c"/>
 				<F N="output/c/00051-brace-remove-all.c"/>
