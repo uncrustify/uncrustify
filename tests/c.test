@@ -32,6 +32,8 @@
 00105  ben.cfg  c/bugs-5.c  c/00105-bugs-5.c
 00106  ben.cfg  c/bugs-6.c  c/00106-bugs-6.c
 
+# casts
+00150  ben.cfg  c/casts.c   c/00150-casts.c
 
 # switch & case stuff
 00201	case-1.cfg	c/case.c	c/00201-case-1.c

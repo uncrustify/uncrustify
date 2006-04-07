@@ -102,6 +102,7 @@
 				<F N="input/c/bugs-6.c"/>
 				<F N="input/c/bugs.c"/>
 				<F N="input/c/case.c"/>
+				<F N="input/c/casts.c"/>
 				<F N="input/c/colon-asm.c"/>
 				<F N="input/c/comment-indent.c"/>
 				<F N="input/c/define-if-indent.c"/>
@@ -156,6 +157,7 @@
 				<F N="output/c/00104-bugs-4.c"/>
 				<F N="output/c/00105-bugs-5.c"/>
 				<F N="output/c/00106-bugs-6.c"/>
+				<F N="output/c/00150-casts.c"/>
 				<F N="output/c/00201-case-1.c"/>
 				<F N="output/c/00202-case-2.c"/>
 				<F N="output/c/00203-case-3.c"/>
