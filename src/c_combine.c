@@ -200,6 +200,7 @@ void fix_symbols(void)
                 ((next->type == CT_WORD) ||
                  (next->type == CT_TYPE) ||
                  (next->type == CT_STRUCT) ||
+                 (next->type == CT_QUALIFIER) ||
                  (next->type == CT_ENUM) ||
                  (next->type == CT_UNION)) &&
                 (prev->type != CT_SIZEOF) &&
@@ -486,11 +487,14 @@ static void fix_casts(chunk_t *start)
 {
    chunk_t    *pc;
    chunk_t    *first;
+   chunk_t    *after;
    chunk_t    *last = NULL;
    chunk_t    *paren_close;
    const char *verb      = "likely";
+   const char *detail    = "";
    int        count      = 0;
    int        word_count = 0;
+   BOOL       nope;
 
 
    /* Make sure there is only WORD, TYPE, and '*' before the close paren */
@@ -535,37 +539,78 @@ static void fix_casts(chunk_t *start)
    {
       /**
        * We are on a potential cast of the form "(word)".
+       * We don't know if the word is a type. So lets guess based on some
+       * simple rules:
+       *  - if all caps, likely a type
+       *  - if it ends in _t, likely a type
+       */
+      verb = "guessed";
+      if ((last->len > 3) &&
+          (last->str[last->len - 2] == '_') &&
+          (last->str[last->len - 1] == 't'))
+      {
+         detail = " -- '_t'";
+      }
+      else if (is_ucase_str(last->str))
+      {
+         detail = " -- upper case";
+      }
+      else
+      {
+         LOG_FMT(LCASTS, "%s: unlikely cast (%s) on line %d\n",
+                 __func__, last->str, start->orig_line);
+         return;
+      }
+
+      /**
+       * If the next item is a * or &, the next item can't be a number or
+       * string.
+       *
+       * If the next item is a +, the next item has to be a number.
+       *
+       * If the next item is a -, the next item can't be a string.
        *
        * For this to be a cast, the close paren must be followed by:
        *  - constant (number or string)
        *  - paren open
        *  - word
        *
-       * It MIGHT be a cast if followed by '*' or '&'
-       * It the word is all CAPS or ends in "_t", we assume it is a cast.
+       * Find the next non-open paren item.
        */
       pc = chunk_get_next_ncnl(paren_close);
+      after = pc;
+      do
+      {
+         after = chunk_get_next_ncnl(after);
+      } while ((after != NULL) && (after->type == CT_PAREN_OPEN));
+
+      if (after == NULL)
+      {
+         LOG_FMT(LCASTS, "%s: not a cast on line %d - hit NULL\n",
+                 __func__, start->orig_line);
+         return;
+      }
+
+      nope = FALSE;
       if (chunk_is_star(pc) || chunk_is_addr(pc))
       {
-         verb = "guessed";
-         /* for now, call it a cast if it ends in '_t' */
-         if ((last->len > 3) &&
-             (last->str[last->len - 2] == '_') &&
-             (last->str[last->len - 1] == 't'))
+         if ((after->type == CT_NUMBER) || (after->type == CT_STRING))
          {
-            LOG_FMT(LCASTS, "%s: guessed cast (%s) on line %d -- '_t'\n",
-                    __func__, last->str, start->orig_line);
+            nope = TRUE;
          }
-         else if (is_ucase_str(last->str))
+      }
+      else if (pc->type == CT_MINUS)
+      {
+         if (after->type == CT_STRING)
          {
-            LOG_FMT(LCASTS, "%s: guessed cast (%s) on line %d -- isupper()\n",
-                    __func__, last->str, start->orig_line);
+            nope = TRUE;
          }
-         else
+      }
+      else if (pc->type == CT_PLUS)
+      {
+         if (after->type != CT_NUMBER)
          {
-            LOG_FMT(LCASTS, "%s: unlikely cast (%s) on line %d\n",
-                    __func__, last->str, start->orig_line);
-            return;
+            nope = TRUE;
          }
       }
       else if ((pc->type != CT_NUMBER) &&
@@ -573,8 +618,15 @@ static void fix_casts(chunk_t *start)
                (pc->type != CT_PAREN_OPEN) &&
                (pc->type != CT_STRING))
       {
-         LOG_FMT(LCASTS, "%s: not a cast on line %d - followed by %s\n",
-                 __func__, start->orig_line, pc->str);
+         LOG_FMT(LCASTS, "%s: not a cast on line %d - followed by '%s' %s\n",
+                 __func__, start->orig_line, pc->str, get_token_name(pc->type));
+         return;
+      }
+
+      if (nope)
+      {
+         LOG_FMT(LCASTS, "%s: not a cast on line %d - '%s' followed by %s\n",
+                 __func__, start->orig_line, pc->str, get_token_name(after->type));
          return;
       }
    }
@@ -597,7 +649,7 @@ static void fix_casts(chunk_t *start)
       }
       LOG_FMT(LCASTS, " %s", pc->str);
    }
-   LOG_FMT(LCASTS, " )\n");
+   LOG_FMT(LCASTS, " )%s\n", detail);
 
    /* Mark the next item as an expression start */
    pc = chunk_get_next_ncnl(paren_close);
@@ -1176,7 +1228,7 @@ static void mark_function(chunk_t *pc)
       {
          /* TODO: do we care that this is the destructor? */
          destr = prev;
-         prev = chunk_get_prev_ncnlnp(prev);
+         prev  = chunk_get_prev_ncnlnp(prev);
       }
 
       if ((prev != NULL) && (prev->type == CT_DC_MEMBER))

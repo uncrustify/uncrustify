@@ -43,6 +43,7 @@ struct no_space_table_s no_space_table[] =
    { CT_SPAREN_OPEN,   CT_UNKNOWN },
    { CT_UNKNOWN,       CT_FPAREN_CLOSE },
    { CT_UNKNOWN,       CT_COMMA },
+   { CT_POS,           CT_UNKNOWN },
    { CT_ADDR,          CT_UNKNOWN },
    { CT_STAR,          CT_UNKNOWN },
    { CT_DEREF,         CT_UNKNOWN },

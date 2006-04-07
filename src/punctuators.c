@@ -80,7 +80,6 @@ static const chunk_tag_t symbols1[] =
    { "%", CT_ARITH,        LANG_ALL },
    { "&", CT_AMP,          LANG_ALL },
    { "*", CT_STAR,         LANG_ALL },  /* changed to CT_DEREF or CT_ARITH */
-   { "+", CT_ARITH,        LANG_ALL },
    { "^", CT_ARITH,        LANG_ALL },
    { "-", CT_MINUS,        LANG_ALL },  /* changed to CT_NEG or CT_ARITH */
    { "+", CT_PLUS,         LANG_ALL },  /* may change to CT_ARITH */

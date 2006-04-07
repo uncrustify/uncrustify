@@ -427,6 +427,8 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
    if ((pc->type == CT_ARITH) ||
        (pc->type == CT_ASSIGN) ||
        (pc->type == CT_COMPARE) ||
+       (pc->type == CT_STAR) ||
+       (pc->type == CT_MINUS) ||
        (pc->type == CT_ANGLE_OPEN) ||
        (pc->type == CT_ANGLE_CLOSE) ||
        (pc->type == CT_RETURN) ||
