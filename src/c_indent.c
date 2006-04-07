@@ -94,9 +94,9 @@ void indent_text(void)
    chunk_t            *prev       = NULL;
    BOOL               did_newline = TRUE;
    int                idx;
-   int                vardefcol    = 0;
-   int                tabsize      = cpd.settings[UO_output_tab_size];
-   int                ref          = 0;
+   int                vardefcol = 0;
+   int                tabsize   = cpd.settings[UO_output_tab_size];
+   int                ref       = 0;
    int                tmp;
    struct parse_frame frm;
    BOOL               in_preproc = FALSE, was_preproc = FALSE;
@@ -305,7 +305,7 @@ void indent_text(void)
                 (pc->parent_type == CT_FOR))
             {
                frm.pse[frm.pse_tos].indent += cpd.settings[UO_indent_brace];
-               indent_column += cpd.settings[UO_indent_brace];
+               indent_column               += cpd.settings[UO_indent_brace];
             }
             else if (pc->parent_type == CT_CASE)
             {

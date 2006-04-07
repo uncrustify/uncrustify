@@ -56,14 +56,14 @@ static void version_exit(void)
 
 int main(int argc, char *argv[])
 {
-   struct stat          my_stat;
-   char                 *data;
-   int                  data_len;
-   FILE                 *p_file;
-   const char           *cfg_file    = "uncrustify.cfg";
-   const char           *parsed_file = NULL;
-   const char           *source_file = NULL;
-   log_mask_t           mask;
+   struct stat my_stat;
+   char        *data;
+   int         data_len;
+   FILE        *p_file;
+   const char  *cfg_file    = "uncrustify.cfg";
+   const char  *parsed_file = NULL;
+   const char  *source_file = NULL;
+   log_mask_t  mask;
    int         idx;
    const char  *p_arg;
 
@@ -91,7 +91,7 @@ int main(int argc, char *argv[])
        ((p_arg = arg_param("--log")) != NULL))
    {
       logmask_from_string(p_arg, &mask);
-         log_set_mask(&mask);
+      log_set_mask(&mask);
    }
 
    /* Get the source file name */
@@ -118,7 +118,7 @@ int main(int argc, char *argv[])
    /* Enable log sevs? */
    if (arg_present("-s") || arg_present("--show"))
    {
-         log_show_sev(TRUE);
+      log_show_sev(TRUE);
    }
 
    /* Load type files */

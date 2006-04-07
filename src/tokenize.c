@@ -244,7 +244,7 @@ BOOL parse_string(chunk_t *pc)
    end_ch = get_char_table(pc->str[len]) & 0xff;
    len++;
 
-   for ( /* nada */ ; pc->str[len] != 0; len++)
+   for ( /* nada */; pc->str[len] != 0; len++)
    {
       if (!escaped)
       {
