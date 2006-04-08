@@ -13,7 +13,7 @@ import uncrustify.settings;
 import uncrustify.options;
 import std.stdio;
 
-char [] str_version = "0.0.12";
+char [] str_version = "0.0.13";
 char [] str_package = "uncrustify-d";
 
 

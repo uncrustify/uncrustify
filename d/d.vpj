@@ -80,5 +80,6 @@
 		<F N="struct-array.d"/>
 		<F N="TokenEnum.d"/>
 		<F N="TokenName.d"/>
+		<F N="uncrustify_types.d"/>
 	</Files>
 </Project>
