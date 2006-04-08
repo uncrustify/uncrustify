@@ -22,6 +22,8 @@ dnl Touch the makefile.in to avoid running automake the next time we
 dnl run.
 touch Makefile.in
 
+AC_CHECK_HEADER(malloc.h, AC_DEFINE(HAVE_MALLOC_H,1,[do we have malloc.h?]))
+
 AC_SUBST(MORELIBS)
 AC_SUBST(CORELIBS)
 AC_SUBST(MOREDEFS)
