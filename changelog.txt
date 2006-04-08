@@ -4,6 +4,14 @@
 
 
 
+Changes in uncrustify-0.0.13
+-------------------------------------------------------------------------------
+ - Rewrite the indent code
+ - Fix a bunch of small problems with C casts
+ - Rename a few files
+ - Add more tests
+
+
 Changes in uncrustify-0.0.12
 -------------------------------------------------------------------------------
  - Add support for D template format "Foo!(int,char)"
