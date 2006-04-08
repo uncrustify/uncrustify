@@ -2,14 +2,18 @@
  * @file chunk_list.c
  * Manages and navigates the list of chunks.
  *
- * $Id: chunk_list.h,v 1.10 2006/02/14 03:27:14 bengardner Exp $
+ * $Id$
  */
 
 #ifndef CHUNK_LIST_H_INCLUDED
 #define CHUNK_LIST_H_INCLUDED
 
 #include "cparse_types.h"
+#ifdef HAVE_MALLOC_H
 #include <malloc.h>
+#else
+#include <stdlib.h>
+#endif
 
 
 void chunk_list_init(void);

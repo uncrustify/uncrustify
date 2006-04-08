@@ -6,7 +6,11 @@
  */
 
 #include "chunk_stack.h"
+#ifdef HAVE_MALLOC_H
 #include <malloc.h>
+#else
+#include <stdlib.h>
+#endif
 
 
 chunk_stack_t *cs_new(void)

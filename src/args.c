@@ -11,8 +11,11 @@
 #include <string.h>
 #include <ctype.h>
 #include <stdio.h>
+#ifdef HAVE_MALLOC_H
 #include <malloc.h>
-
+#else
+#include <stdlib.h>
+#endif
 
 struct args_data
 {
