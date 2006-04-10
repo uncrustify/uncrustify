@@ -4,6 +4,12 @@
 
 
 
+Changes in uncrustify-0.0.14
+-------------------------------------------------------------------------------
+ - Read from stdin if no file is specified
+ - Fix HAVE_MALLOC_H stuff to build on OS X
+
+
 Changes in uncrustify-0.0.13
 -------------------------------------------------------------------------------
  - Rewrite the indent code
