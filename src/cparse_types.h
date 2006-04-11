@@ -153,7 +153,7 @@ struct align_t
 
 typedef struct chunk_stack
 {
-   chunk_t **pc;
+   chunk_t **pc;  /* an array of chunk_t pointers */
    int     len;
    int     size;
 } chunk_stack_t;
