@@ -3,7 +3,7 @@
  *
  * Defines some types for the uncrustify program
  *
- * $Id: cparse_types.h 125 2006-03-27 03:32:30Z bengardner $
+ * $Id$
  */
 
 module uncrustify.types;

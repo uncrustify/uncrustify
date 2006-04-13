@@ -2,7 +2,7 @@
  * @file LogMask.d
  * Logger and LogMask classes
  *
- * $Id: log.d 153 2006-04-02 00:51:25Z bengardner $
+ * $Id$
  */
 
 module uncrustify.LogMask;

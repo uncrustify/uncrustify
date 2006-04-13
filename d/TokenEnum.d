@@ -2,7 +2,7 @@
  * @file TokenEnum.d
  * List of the different tokens used in the program.
  *
- * $Id: token_enum.h 136 2006-03-28 03:23:34Z bengardner $
+ * $Id$
  */
 
 module uncrustify.tokenenum;
