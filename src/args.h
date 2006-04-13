@@ -8,7 +8,7 @@
  *  - this means you can handle args in multiple spots
  *  - it is more portible
  *
- * $Id: c_args.c 121 2006-03-27 02:24:45Z bengardner $
+ * $Id$
  */
 
 #ifndef ARGS_H_INCLUDED

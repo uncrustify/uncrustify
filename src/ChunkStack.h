@@ -2,7 +2,7 @@
  * @file ChunkStack.h
  * Manages a simple stack of chunks
  *
- * $Id: ChunkStack.h 23 2006-02-27 01:54:05Z bengardner $
+ * $Id$
  */
 
 #ifndef CHUNKSTACK_H_INCLUDED
