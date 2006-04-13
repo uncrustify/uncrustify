@@ -6,7 +6,6 @@
  */
 #include "uncrustify_types.h"
 #include "chunk_list.h"
-#include "chunk_stack.h"
 #include "prototypes.h"
 #include <cstdio>
 #include <cstdlib>

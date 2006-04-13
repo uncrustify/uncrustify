@@ -1,25 +1,26 @@
 /**
- * @file cparse_types.h
+ * @file uncrustify_types.h
  *
  * Defines some types for the uncrustify program
  *
- * $Id$
+ * $Id: cparse_types.h 155 2006-04-04 02:01:22Z bengardner $
  */
 
-#ifndef CPARSE_TYPES_H_INCLUDED
-#define CPARSE_TYPES_H_INCLUDED
+#ifndef UNCRUSTIFY_TYPES_H_INCLUDED
+#define UNCRUSTIFY_TYPES_H_INCLUDED
 
 
 #include "base_types.h"
-#include "logger.h"
-#include "log_levels.h"
 #include "options.h"
-#include <stdio.h>
+#include <cstdio>
+#include "token_enum.h"    /* c_token_t */
+#include "log_levels.h"
+#include "logger.h"
 
 
-#include "token_enum.h"
-
-
+/**
+ * Brace stage enum used in brace_cleanup
+ */
 typedef enum
 {
    BS_NONE,
@@ -45,7 +46,7 @@ struct paren_stack_entry
    int       min_col;
    c_token_t parent;       /**< if, for, function, etc */
    brstage_t stage;
-   BOOL      in_preproc;   /**> whether this was created in a preprocessor */
+   bool      in_preproc;   /**> whether this was created in a preprocessor */
 };
 
 /* TODO: put this on a linked list */
@@ -64,8 +65,8 @@ struct parse_frame
    int                      stmt_count;
    int                      expr_count;
 
-   BOOL                     maybe_decl;
-   BOOL                     maybe_cast;
+   bool                     maybe_decl;
+   bool                     maybe_cast;
 };
 
 #define PCF_STMT_START         0x01  /* marks the start of a statment */
@@ -108,7 +109,7 @@ struct chunk_s
    int        len;
    int        level;            /* nest level in {, (, or [ */
    int        brace_level;
-   BOOL       after_tab;
+   bool       after_tab;
    const char *str;
 };
 
@@ -131,18 +132,18 @@ typedef struct
    uint8_t    lang_flags;
 } chunk_tag_t;
 
-enum pp_type
-{
-   PP_NONE,
-   PP_UNKNOWN,
-   PP_OTHER,
-   PP_INCLUDE,
-   PP_DEFINE,
-   PP_DEFINE_BODY,
-   PP_IF,
-   PP_ELSE,
-   PP_ENDIF
-};
+//enum pp_type
+//{
+//   PP_NONE,
+//   PP_UNKNOWN,
+//   PP_OTHER,
+//   PP_INCLUDE,
+//   PP_DEFINE,
+//   PP_DEFINE_BODY,
+//   PP_IF,
+//   PP_ELSE,
+//   PP_ENDIF
+//};
 
 struct align_t
 {
@@ -173,10 +174,11 @@ struct cp_data
    uint16_t           line_number;
    uint16_t           column;  /* column for parsing */
 
-   BOOL               consumed;
+   bool               consumed;
 
    int                did_newline;
-   enum pp_type       in_preproc;
+   //enum pp_type       in_preproc;
+   c_token_t          in_preproc;
    int                preproc_ncnl_count;
 
    /* dummy entries */
@@ -186,7 +188,7 @@ struct cp_data
    int                al_cnt;
 
    /* Here are all the settings */
-   int                settings[UO_option_count];
+   op_val_t           settings[UO_option_count];
 
    struct parse_frame frames[16];
    int                frame_count;
@@ -197,13 +199,7 @@ struct cp_data
    //int                cs_size;   /* total entry count (private) */
 };
 
-
-#ifdef DEFINE_GLOBAL_DATA
-struct cp_data cpd;
-#else
 extern struct cp_data cpd;
-#endif
 
-
-#endif   /* CPARSE_TYPES_H_INCLUDED */
+#endif   /* UNCRUSTIFY_TYPES_H_INCLUDED */
 
