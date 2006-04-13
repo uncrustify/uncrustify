@@ -25,7 +25,7 @@ ChunkStack::~ChunkStack()
    if (m_cse != NULL)
    {
       free(m_cse);
-      m_cse = NULL;
+      m_cse  = NULL;
       m_size = m_len = 0;
    }
 }
@@ -34,18 +34,18 @@ const ChunkStack::Entry *ChunkStack::Top()
 {
    if (m_len > 0)
    {
-      return (&m_cse[m_len - 1]);
+      return(&m_cse[m_len - 1]);
    }
-   return (NULL);
+   return(NULL);
 }
 
 const ChunkStack::Entry *ChunkStack::Get(int idx)
 {
    if ((idx < m_len) && (idx >= 0))
    {
-      return &m_cse[idx];
+      return(&m_cse[idx]);
    }
-   return NULL;
+   return(NULL);
 }
 
 chunk_t *ChunkStack::Pop()
@@ -53,9 +53,9 @@ chunk_t *ChunkStack::Pop()
    if (m_len > 0)
    {
       m_len--;
-      return (m_cse[m_len].m_pc);
+      return(m_cse[m_len].m_pc);
    }
-   return (NULL);
+   return(NULL);
 }
 
 void ChunkStack::Push(chunk_t *pc, int seqnum)
@@ -64,7 +64,7 @@ void ChunkStack::Push(chunk_t *pc, int seqnum)
    {
       Resize(m_len + 64);
    }
-   m_cse[m_len].m_pc = pc;
+   m_cse[m_len].m_pc     = pc;
    m_cse[m_len].m_seqnum = seqnum;
    m_len++;
    if (m_seqnum < seqnum)
@@ -75,7 +75,7 @@ void ChunkStack::Push(chunk_t *pc, int seqnum)
 
 void ChunkStack::Init()
 {
-   m_cse    = NULL;
+   m_cse = NULL;
    m_size   = 0;
    m_len    = 0;
    m_seqnum = 0;
@@ -92,7 +92,7 @@ void ChunkStack::Resize(int newsize)
       }
       else
       {
-         m_cse  = (Entry *)realloc(m_cse, m_size * sizeof(ChunkStackEntry));
+         m_cse = (Entry *)realloc(m_cse, m_size * sizeof(ChunkStackEntry));
       }
       /*TODO: check for out-of-memory? */
    }

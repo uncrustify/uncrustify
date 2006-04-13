@@ -6,7 +6,7 @@
  */
 
 #include "chunk_list.h"
-#include <string.h>
+#include <cstring>
 #include <cstdlib>
 
 

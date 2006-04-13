@@ -1,5 +1,5 @@
 dnl> this is a test comment
-AC_INIT(src/uncrustify.c)
+AC_INIT(src/uncrustify.cpp)
 AM_INIT_AUTOMAKE(uncrustify, 0.0.14)
 AC_CANONICAL_HOST
 AC_PROG_RANLIB

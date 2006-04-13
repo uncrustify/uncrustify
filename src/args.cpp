@@ -5,27 +5,8 @@
  * $Id: c_args.c 121 2006-03-27 02:24:45Z bengardner $
  */
 
-
 #include "args.h"
-
-#include <string.h>
-#include <ctype.h>
-#include <cstdio>
-#ifdef HAVE_MALLOC_H
-#include <malloc.h>
-#else
-#include <cstdlib>
-#endif
-
-struct args_data
-{
-   int  count;
-   char **values;
-   bool *used;      /* lazy - could do an array of bits */
-};
-
-static struct args_data ad;
-
+#include <cstring>
 
 /**
  * Store the values and allocate enough memory for the 'used' flags.
@@ -33,13 +14,27 @@ static struct args_data ad;
  * @param argc The argc that was passed to main()
  * @param argv The argv that was passed to main()
  */
-void arg_init(int argc, char **argv)
+Args::Args(int argc, char **argv)
 {
-   ad.count  = argc;
-   ad.values = argv;
-   ad.used   = (bool *)calloc(1, argc);
+   m_count  = argc;
+   m_values = argv;
+   int len = (argc >> 3) + 1;
+   m_used = new UINT8[len];
+   if (m_used != NULL)
+   {
+      memset(m_used, 0, len);
+   }
 }
 
+Args::~Args()
+{
+   if (m_used != NULL)
+   {
+      delete[] m_used;
+      m_used = NULL;
+   }
+   m_count = 0;
+}
 
 /**
  * Check for an exact match
@@ -47,20 +42,17 @@ void arg_init(int argc, char **argv)
  * @param token   The token string to match
  * @return        true/false -- Whether the argument was present
  */
-bool arg_present(const char *token)
+bool Args::Present(const char *token)
 {
    int idx;
 
    if (token != NULL)
    {
-      for (idx = 0; idx < ad.count; idx++)
+      for (idx = 0; idx < m_count; idx++)
       {
-         if (strcmp(token, ad.values[idx]) == 0)
+         if (strcmp(token, m_values[idx]) == 0)
          {
-            if (ad.used != NULL)
-            {
-               ad.used[idx] = true;
-            }
+            SetUsed(idx);
             return(true);
          }
       }
@@ -77,11 +69,11 @@ bool arg_present(const char *token)
  * @param token   The token string to match
  * @return        NULL or the pointer to the string
  */
-const char *arg_param(const char *token)
+const char *Args::Param(const char *token)
 {
    int idx = 0;
 
-   return(arg_params(token, &idx));
+   return(Params(token, idx));
 }
 
 
@@ -91,7 +83,7 @@ const char *arg_param(const char *token)
  * @param token   The token string to match
  * @return        NULL or the pointer to the string
  */
-const char *arg_params(const char *token, int *index)
+const char *Args::Params(const char *token, int& index)
 {
    int idx;
    int token_len;
@@ -104,41 +96,29 @@ const char *arg_params(const char *token, int *index)
 
    token_len = strlen(token);
 
-   for (idx = index ? *index : 0; idx < ad.count; idx++)
+   for (idx = index; idx < m_count; idx++)
    {
-      arg_len = strlen(ad.values[idx]);
+      arg_len = strlen(m_values[idx]);
 
       if ((arg_len >= token_len) &&
-          (memcmp(token, ad.values[idx], token_len) == 0))
+          (memcmp(token, m_values[idx], token_len) == 0))
       {
-         if (ad.used != NULL)
-         {
-            ad.used[idx] = true;
-         }
+         SetUsed(idx);
          if (arg_len > token_len)
          {
-            if (ad.values[idx][token_len] == '=')
+            if (m_values[idx][token_len] == '=')
             {
                token_len++;
             }
-            if (index != NULL)
-            {
-               *index = idx + 1;
-            }
-            return(&ad.values[idx][token_len]);
+            index = idx + 1;
+            return(&m_values[idx][token_len]);
          }
          idx++;
-         if (index != NULL)
+         index = idx + 1;
+         if (idx < m_count)
          {
-            *index = idx + 1;
-         }
-         if (idx < ad.count)
-         {
-            if (ad.used != NULL)
-            {
-               ad.used[idx] = true;
-            }
-            return(ad.values[idx]);
+            SetUsed(idx);
+            return(m_values[idx]);
          }
          return("");
       }
@@ -153,11 +133,11 @@ const char *arg_params(const char *token, int *index)
  *
  * @param idx  The index of the argument
  */
-bool arg_get_used(int idx)
+bool Args::GetUsed(int idx)
 {
-   if ((ad.used != NULL) && (ad.count > idx))
+   if ((m_used != NULL) && (idx >= 0) && (idx < m_count))
    {
-      return(ad.used[idx]);
+      return((m_used[idx >> 3] & (1 << (idx & 0x07))) != 0);
    }
    return(false);
 }
@@ -168,11 +148,11 @@ bool arg_get_used(int idx)
  *
  * @param idx  The index of the argument
  */
-void arg_set_used(int idx)
+void Args::SetUsed(int idx)
 {
-   if ((ad.used != NULL) && (ad.count > idx))
+   if ((m_used != NULL) && (idx >= 0) && (idx < m_count))
    {
-      ad.used[idx] = true;
+      m_used[idx >> 3] |= (1 << (idx & 0x07));
    }
 }
 
@@ -185,24 +165,24 @@ void arg_set_used(int idx)
  * @param idx  Pointer to the index
  * @return     NULL (done) or the pointer to the string
  */
-const char *arg_unused(int *idx)
+const char *Args::Unused(int& index)
 {
-   int index;
+   int idx;
 
-   if ((idx == NULL) || (ad.used == NULL))
+   if (m_used == NULL)
    {
       return(NULL);
    }
 
-   for (index = *idx; index < ad.count; index++)
+   for (idx = index; idx < m_count; idx++)
    {
-      if (!ad.used[index])
+      if (!GetUsed(idx))
       {
-         *idx = index + 1;
-         return(ad.values[index]);
+         index = idx + 1;
+         return(m_values[idx]);
       }
    }
-   *idx = ad.count;
+   index = m_count;
    return(NULL);
 }
 

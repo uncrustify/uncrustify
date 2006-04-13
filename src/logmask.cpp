@@ -9,7 +9,7 @@
 #include "logmask.h"
 #include <cstdio>      /* snprintf() */
 #include <cstdlib>     /* strtoul() */
-#include <ctype.h>      /* isdigit() */
+#include <cctype>      /* isdigit() */
 
 
 /**

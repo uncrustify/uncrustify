@@ -77,10 +77,15 @@ enum uncrustify_options
 
    UO_sp_after_cast,        // space after cast - "(int) a" vs "(int)a"
 
+   UO_sp_before_byref,      // space before '&' of 'fcn(int& idx)'
+
+   UO_sp_inside_angle,      // space inside '<>', as in '<class T>'
    UO_sp_inside_sparen,     // space inside 'if( xxx )' vs 'if(xxx)'
    UO_sp_inside_fparen,     // space inside 'foo( xxx )' vs 'foo(xxx)'
    UO_sp_inside_paren,      // space inside '+ ( xxx )' vs '+ (xxx)'
    UO_sp_inside_square,     // space inside 'byte[ 5 ]' vs 'byte[5]'
+   UO_sp_after_angle,       // space after  '<>', as in '<class T>'
+   UO_sp_before_angle,      // space before '<>', as in '<class T>'
    UO_sp_before_square,     // space before single '['
    UO_sp_before_squares,    // space before '[]', as in 'byte []'
 
@@ -99,6 +104,7 @@ enum uncrustify_options
    UO_sp_func_def_paren,    // space between 'func' and '(' - "foo (" vs "foo("
    UO_sp_func_call_paren,   // space between 'func' and '(' - "foo (" vs "foo("
    UO_sp_func_proto_paren,  // space between 'func' and '(' - "foo (" vs "foo("
+   UO_sp_func_class_paren,  // space between ctor/dtor and '('
 
    UO_sp_type_func,         // space between return type and 'func'
                             // a minimum of 1 is forced except for '*'
@@ -321,11 +327,14 @@ options_name_tab option_name_table[] =
    OPTDEF(nl_while_brace,                AT_IARF),
    OPTDEF(output_tab_size,               AT_NUM),
    OPTDEF(pp_indent,                     AT_NUM),
+   OPTDEF(sp_after_angle,                AT_IARF),
    OPTDEF(sp_after_cast,                 AT_IARF),
    OPTDEF(sp_after_comma,                AT_IARF),
    OPTDEF(sp_after_sparen,               AT_IARF),
    OPTDEF(sp_arith,                      AT_IARF),
    OPTDEF(sp_assign,                     AT_IARF),
+   OPTDEF(sp_before_angle,               AT_IARF),
+   OPTDEF(sp_before_byref,               AT_IARF),
    OPTDEF(sp_before_semi,                AT_IARF),
    OPTDEF(sp_before_sparen,              AT_IARF),
    OPTDEF(sp_before_square,              AT_IARF),
@@ -333,8 +342,10 @@ options_name_tab option_name_table[] =
    OPTDEF(sp_bool,                       AT_IARF),
    OPTDEF(sp_compare,                    AT_IARF),
    OPTDEF(sp_func_call_paren,            AT_IARF),
+   OPTDEF(sp_func_class_paren,           AT_IARF),
    OPTDEF(sp_func_def_paren,             AT_IARF),
    OPTDEF(sp_func_proto_paren,           AT_IARF),
+   OPTDEF(sp_inside_angle,               AT_IARF),
    OPTDEF(sp_inside_braces,              AT_IARF),
    OPTDEF(sp_inside_braces_enum,         AT_IARF),
    OPTDEF(sp_inside_braces_struct,       AT_IARF),

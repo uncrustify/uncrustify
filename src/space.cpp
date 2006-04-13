@@ -9,9 +9,9 @@
 #include "prototypes.h"
 #include <cstdio>
 #include <cstdlib>
-#include <string.h>
-#include <errno.h>
-#include <ctype.h>
+#include <cstring>
+#include <cerrno>
+#include <cctype>
 
 struct no_space_table_s
 {
@@ -171,6 +171,21 @@ argval_t do_space(chunk_t *first, chunk_t *second)
       return(cpd.settings[UO_sp_before_squares].a);
    }
 
+   /* spacing around template < > stuff */
+   if ((first->type == CT_ANGLE_OPEN) ||
+       (second->type == CT_ANGLE_CLOSE))
+   {
+      return(cpd.settings[UO_sp_inside_angle].a);
+   }
+   if (second->type == CT_ANGLE_OPEN)
+   {
+      return(cpd.settings[UO_sp_before_angle].a);
+   }
+   if (first->type == CT_ANGLE_CLOSE)
+   {
+      return(cpd.settings[UO_sp_after_angle].a);
+   }
+
    /* "for (...) {...}" vs "for (...){...}" */
    if (first->type == CT_SPAREN_CLOSE)
    {
@@ -189,6 +204,10 @@ argval_t do_space(chunk_t *first, chunk_t *second)
    if (first->type == CT_FUNC_PROTO)
    {
       return(cpd.settings[UO_sp_func_proto_paren].a);
+   }
+   if (first->type == CT_FUNC_CLASS)
+   {
+      return(cpd.settings[UO_sp_func_class_paren].a);
    }
 
    if (first->type == CT_BRACE_OPEN)
@@ -400,6 +419,11 @@ argval_t do_space(chunk_t *first, chunk_t *second)
        (first->parent_type == CT_WHILE_OF_DO))
    {
       return(AV_REMOVE); /*TODO: does this need to be configured? */
+   }
+
+   if ((first->type == CT_TYPE) && (second->type == CT_BYREF))
+   {
+      return(cpd.settings[UO_sp_before_byref].a);
    }
 
    if ((first->type == CT_QUALIFIER) || (first->type == CT_TYPE))

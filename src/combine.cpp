@@ -11,9 +11,9 @@
 
 #include <cstdio>
 #include <cstdlib>
-#include <string.h>
-#include <errno.h>
-#include <ctype.h>
+#include <cstring>
+#include <cerrno>
+#include <cctype>
 
 static void fix_fcn_def_params(chunk_t *pc);
 static void fix_typedef(chunk_t *pc);
@@ -26,6 +26,7 @@ static chunk_t *mark_variable_definition(chunk_t *start);
 static void mark_define_expressions(void);
 static void process_returns(void);
 static chunk_t *process_return(chunk_t *pc);
+static void mark_class_ctor(chunk_t *pclass);
 
 
 /**
@@ -133,11 +134,6 @@ void fix_symbols(void)
 
    while ((pc != NULL) && (next != NULL))
    {
-      if ((pc->type == CT_WORD) && (next->type == CT_PAREN_OPEN))
-      {
-         pc->type = CT_FUNCTION;
-      }
-
       /* D stuff */
       if ((next->type == CT_PAREN_OPEN) &&
           ((pc->type == CT_CAST) ||
@@ -180,6 +176,15 @@ void fix_symbols(void)
       if (pc->type == CT_FUNCTION)
       {
          mark_function(pc);
+      }
+
+      if (pc->type == CT_CLASS)
+      {
+         /* do other languages name the ctor the same as the class? */
+         if ((cpd.lang_flags & LANG_CPP) != 0)
+         {
+            mark_class_ctor(pc);
+         }
       }
 
       /* Check for stuff that can only occur at the start of an statement */
@@ -578,7 +583,7 @@ static void fix_casts(chunk_t *start)
        *
        * Find the next non-open paren item.
        */
-      pc = chunk_get_next_ncnl(paren_close);
+      pc    = chunk_get_next_ncnl(paren_close);
       after = pc;
       do
       {
@@ -984,6 +989,10 @@ static void fix_fcn_def_params(chunk_t *pc)
       {
          pc->type = CT_PTR_TYPE;
       }
+      else if (pc->type == CT_AMP)
+      {
+         pc->type = CT_BYREF;
+      }
       else if (pc->type == CT_WORD)
       {
          cs.Push(pc);
@@ -1327,6 +1336,66 @@ static void mark_function(chunk_t *pc)
    }
 }
 
+/**
+ * We're on a 'class'.
+ * Scan for CT_FUNCTION with a string that matches pclass->str
+ */
+static void mark_class_ctor(chunk_t *pclass)
+{
+   pclass = chunk_get_next_ncnl(pclass);
+
+   chunk_t *pc   = chunk_get_next_ncnl(pclass);
+   int     level = pclass->brace_level + 1;
+
+   LOG_FMT(LFTOR, "%s: Called on %s on line %d\n",
+           __func__, pc->str, pc->orig_line);
+
+   /* Find the open brace, abort on semicolon */
+   while ((pc != NULL) && (pc->type != CT_BRACE_OPEN))
+   {
+      if (pc->type == CT_SEMICOLON)
+      {
+         LOG_FMT(LFTOR, "%s: bailed on semicolon on line %d\n",
+                 __func__, pc->orig_line);
+         return;
+      }
+      pc = chunk_get_next_ncnl(pc);
+   }
+
+   if (pc == NULL)
+   {
+      LOG_FMT(LFTOR, "%s: bailed on NULL\n", __func__);
+      return;
+   }
+
+   pc = chunk_get_next_ncnl(pc);
+   while (pc != NULL)
+   {
+      if ((pc->brace_level > level) || ((pc->flags & PCF_IN_PREPROC) != 0))
+      {
+         pc = chunk_get_next_ncnl(pc);
+         continue;
+      }
+
+      if ((pc->type == CT_BRACE_CLOSE) && (pc->brace_level < level))
+      {
+         return;
+      }
+
+      if ((pc->type == CT_FUNCTION) &&
+          (strcmp(pc->str, pclass->str) == 0))
+      {
+         pc->type = CT_FUNC_CLASS;
+         LOG_FMT(LFTOR, "%d] Marked CTor/DTor %s\n", pc->orig_line, pc->str);
+         pc = chunk_get_next_ncnl(pc);
+         fix_fcn_def_params(pc);
+      }
+      else
+      {
+         pc = chunk_get_next_ncnl(pc);
+      }
+   }
+}
 
 /**
  * Examines the stuff between braces { }.

@@ -13,9 +13,9 @@
 #include "chunk_list.h"
 #include <cstdio>
 #include <cstdlib>
-#include <string.h>
-#include <errno.h>
-#include <ctype.h>
+#include <cstring>
+#include <cerrno>
+#include <cctype>
 
 
 /**

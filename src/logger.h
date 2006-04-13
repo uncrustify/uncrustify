@@ -13,7 +13,7 @@
 #define LOGGER_H_INCLUDED
 
 #include "logmask.h"
-#include <string.h>     /* strlen() */
+#include <cstring>     /* strlen() */
 #include <cstdio>      /* FILE */
 
 

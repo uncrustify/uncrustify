@@ -10,9 +10,9 @@
 #include "prototypes.h"
 #include <cstdio>
 #include <cstdlib>
-#include <string.h>
-#include <errno.h>
-#include <ctype.h>
+#include <cstring>
+#include <cerrno>
+#include <cctype>
 
 
 static chunk_t *align_var_def_brace(chunk_t *pc, int span);

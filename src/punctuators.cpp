@@ -6,7 +6,7 @@
  */
 
 #include "uncrustify_types.h"
-#include <string.h>
+#include <cstring>
 
 
 /* 4-char symbols */

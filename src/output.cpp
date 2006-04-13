@@ -8,7 +8,7 @@
 #include "uncrustify_types.h"
 #include "prototypes.h"
 #include "chunk_list.h"
-#include <string.h>
+#include <cstring>
 #include <cstdlib>
 
 
@@ -104,7 +104,7 @@ void output_parsed(FILE *pfile)
 
 void output_options(FILE *pfile)
 {
-   int              idx;
+   int                    idx;
    const options_name_tab *ptr;
 
    for (idx = 0; idx < UO_option_count; idx++)

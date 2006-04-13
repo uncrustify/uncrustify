@@ -3,7 +3,7 @@
 
 
 /** A smart node on a list */
-template <class T> class DoubleLinkedNode
+template < class T > class DoubleLinkedNode
 {
 public:
    DoubleLinkedNode(const T& d)
@@ -33,7 +33,7 @@ public:
       {
          next->prev = this;
       }
-      ref->next  = this;
+      ref->next = this;
    }
 
    /** Adds self before ref */
@@ -46,32 +46,34 @@ public:
       {
          prev->next = this;
       }
-      ref->prev  = this;
+      ref->prev = this;
    }
 
    DoubleLinkedNode *Next()
    {
-      return next;
+      return(next);
    }
 
    DoubleLinkedNode *Prev()
    {
-      return prev;
+      return(prev);
    }
 
 protected:
-   DoubleLinkedNode *next;
+   DoubleLinkedNode * next;
    DoubleLinkedNode *prev;
 public:
-   T                *data;
+   T * data;
 };
 
-class Dummy : public DoubleLinkedNode<Dummy>
+class Dummy : public DoubleLinkedNode < Dummy >
 {
 public:
    int value;
 
-   Dummy(int v=0) : value(v) { };
+   Dummy(int v = 0) : value(v)
+   {
+   };
 
    //~Dummy()
    //{
@@ -97,7 +99,7 @@ int main()
       printf("value=%d\n", tmp->value);
    }
 
-   return 0;
+   return(0);
 }
 
 

@@ -11,7 +11,7 @@
 #include "uncrustify_types.h"
 #include "prototypes.h"
 #include "chunk_list.h"
-#include <string.h>
+#include <cstring>
 
 static void check_template(chunk_t *start);
 
@@ -159,18 +159,28 @@ static void check_template(chunk_t *start)
 {
    chunk_t *pc;
    chunk_t *end;
+   chunk_t *prev;
 
-   for (pc = chunk_get_next_ncnl(start); pc != NULL; pc = chunk_get_next_ncnl(pc))
+   prev = chunk_get_prev_ncnl(start);
+
+   if ((prev != NULL) && (prev->type == CT_TEMPLATE))
    {
-      if ((pc->type != CT_WORD) &&
-          (pc->type != CT_MEMBER) &&
-          (pc->type != CT_DC_MEMBER))
+      end = chunk_get_next_type(start, CT_ANGLE_CLOSE, -1);
+   }
+   else
+   {
+      for (pc = chunk_get_next_ncnl(start); pc != NULL; pc = chunk_get_next_ncnl(pc))
       {
-         break;
+         if ((pc->type != CT_WORD) &&
+             (pc->type != CT_MEMBER) &&
+             (pc->type != CT_DC_MEMBER))
+         {
+            break;
+         }
       }
+      end = pc;
    }
 
-   end = pc;
    if (end != NULL)
    {
       if (end->type == CT_ANGLE_CLOSE)

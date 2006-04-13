@@ -48,6 +48,7 @@ enum
    LBCSPOP   = 37,    /* Brace cleanup stack - log pops */
    LBCSPUSH  = 38,    /* Brace cleanup stack - log push */
    LBCSSWAP  = 39,    /* Brace cleanup stack - log swaps */
+   LFTOR     = 40,    /* Class Ctor or Dtor */
 };
 
 #endif   /* LOG_LEVELS_H_INCLUDED */

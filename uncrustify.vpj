@@ -82,7 +82,6 @@
 			<F N="src/base_types.h"/>
 			<F N="src/char_table.h"/>
 			<F N="src/chunk_list.h"/>
-			<F N="src/chunk_stack.h"/>
 			<F N="src/ChunkStack.h"/>
 			<F N="src/ListManager.h"/>
 			<F N="src/log_levels.h"/>

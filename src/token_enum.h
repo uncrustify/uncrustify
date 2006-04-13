@@ -83,6 +83,7 @@ typedef enum
    CT_PLUS,                /* + : raw char to be changed */
    CT_MINUS,               /* - : raw char to be changed */
    CT_AMP,                 /* & : raw char to be changed */
+   CT_BYREF,               /* & in function def/proto params */
 
    CT_POUND,               /* # */
    CT_PREPROC,             /* # at the start of a line */
@@ -146,6 +147,7 @@ typedef enum
    CT_FUNC_CALL,        /* function call */
    CT_FUNC_DEF,         /* function definition/implementation */
    CT_FUNC_PROTO,       /* function prototype */
+   CT_FUNC_CLASS,       /* ctor or dtor for a class */
    CT_MACRO_FUNC,       /* function-like macro */
    CT_MACRO,            /* a macro def */
    CT_QUALIFIER,        /* static, const, etc */

@@ -19,7 +19,7 @@
 #include <cstring>
 //#include <cstrings> /* strcasecmp() */
 #include <cerrno>
-#include <ctype.h>
+#include <cctype>
 #include <sys/stat.h>
 
 /* Global data */
@@ -78,64 +78,64 @@ int main(int argc, char *argv[])
       usage_exit(NULL, argv[0], 0);
    }
 
-   arg_init(argc, argv);
+   Args arg(argc, argv);
 
-   if (arg_present("--version") || arg_present("-v"))
+   if (arg.Present("--version") || arg.Present("-v"))
    {
       version_exit();
    }
-   if (arg_present("--help") || arg_present("-h") ||
-       arg_present("--usage") || arg_present("-?"))
+   if (arg.Present("--help") || arg.Present("-h") ||
+       arg.Present("--usage") || arg.Present("-?"))
    {
       usage_exit(NULL, argv[0], 0);
    }
 
    /* Init logging */
    log_init(stderr);
-   if (((p_arg = arg_param("-L")) != NULL) ||
-       ((p_arg = arg_param("--log")) != NULL))
+   if (((p_arg = arg.Param("-L")) != NULL) ||
+       ((p_arg = arg.Param("--log")) != NULL))
    {
       logmask_from_string(p_arg, &mask);
       log_set_mask(&mask);
    }
 
    /* Get the source file name */
-   if (((source_file = arg_param("--file")) == NULL) &&
-       ((source_file = arg_param("-f")) == NULL))
+   if (((source_file = arg.Param("--file")) == NULL) &&
+       ((source_file = arg.Param("-f")) == NULL))
    {
       // using stdin
       //usage_exit("Specify the file to process: -f file", argv[0], 57);
    }
 
    /* Get the config file name */
-   if (((cfg_file = arg_param("--config")) == NULL) &&
-       ((cfg_file = arg_param("-c")) == NULL))
+   if (((cfg_file = arg.Param("--config")) == NULL) &&
+       ((cfg_file = arg.Param("-c")) == NULL))
    {
       usage_exit("Specify the config file: -c file", argv[0], 58);
    }
 
    /* Get the parsed file name */
-   if (((parsed_file = arg_param("--parsed")) != NULL) ||
-       ((parsed_file = arg_param("-p")) != NULL))
+   if (((parsed_file = arg.Param("--parsed")) != NULL) ||
+       ((parsed_file = arg.Param("-p")) != NULL))
    {
       LOG_FMT(LNOTE, "Will export parsed data to: %s\n", parsed_file);
    }
 
    /* Enable log sevs? */
-   if (arg_present("-s") || arg_present("--show"))
+   if (arg.Present("-s") || arg.Present("--show"))
    {
       log_show_sev(true);
    }
 
    /* Load type files */
    idx = 0;
-   while ((p_arg = arg_params("-t", &idx)) != NULL)
+   while ((p_arg = arg.Params("-t", idx)) != NULL)
    {
       load_keyword_file(p_arg);
    }
 
    /* Check for a language override */
-   if ((p_arg = arg_param("-l")) != NULL)
+   if ((p_arg = arg.Param("-l")) != NULL)
    {
       cpd.lang_flags = language_from_tag(p_arg);
       if (cpd.lang_flags == 0)
@@ -150,7 +150,7 @@ int main(int argc, char *argv[])
 
    /* Check for unused args (ignore them) */
    idx = 1;
-   while ((p_arg = arg_unused(&idx)) != NULL)
+   while ((p_arg = arg.Unused(idx)) != NULL)
    {
       LOG_FMT(LWARN, "Unused argument: %s\n", p_arg);
    }
@@ -165,7 +165,7 @@ int main(int argc, char *argv[])
    if (source_file == NULL)
    {
       UINT32 data_size;
-      int   len;
+      int    len;
 
       if (cpd.lang_flags == 0)
       {
@@ -174,8 +174,8 @@ int main(int argc, char *argv[])
 
       /* Start with 64k */
       data_size = 64 * 1024;
-      data = (char *)malloc(data_size);
-      data_len = 0;
+      data      = (char *)malloc(data_size);
+      data_len  = 0;
 
       while ((len = fread(&data[data_len], 1, data_size - data_len, stdin)) > 0)
       {
@@ -183,11 +183,11 @@ int main(int argc, char *argv[])
          if (data_len == data_size)
          {
             data_size += 64 * 1024;
-            data = (char *)realloc(data, data_size);
+            data       = (char *)realloc(data, data_size);
             if (data == NULL)
             {
                LOG_FMT(LERR, "Out of memory\n");
-               return 100;
+               return(100);
             }
          }
       }
@@ -328,7 +328,8 @@ int main(int argc, char *argv[])
 }
 
 
-const char *get_token_name(c_token_t token){
+const char *get_token_name(c_token_t token)
+{
    if ((token >= 0) && (token < ARRAY_SIZE(token_names)) &&
        (token_names[token] != NULL))
    {
@@ -337,7 +338,8 @@ const char *get_token_name(c_token_t token){
    return("???");
 }
 
-static bool ends_with(const char *filename, const char *tag){
+static bool ends_with(const char *filename, const char *tag)
+{
    int len1 = strlen(filename);
    int len2 = strlen(tag);
 
@@ -354,7 +356,15 @@ struct file_lang
    const char *tag;
    int        lang;
 };
-struct file_lang languages[] ={{ ".c",    "C",    LANG_C},{ ".h",    "",     LANG_C},{ ".cpp",  "CPP",  LANG_CPP},{ ".d",    "D",    LANG_D},{ ".cs",   "CS",   LANG_CS},{ ".java", "JAVA", LANG_JAVA},
+
+struct file_lang languages[] =
+{
+   { ".c",    "C",    LANG_C },
+   { ".h",    "",     LANG_C },
+   { ".cpp",  "CPP",  LANG_CPP },
+   { ".d",    "D",    LANG_D },
+   { ".cs",   "CS",   LANG_CS },
+   { ".java", "JAVA", LANG_JAVA },
 };
 
 /**
@@ -364,7 +374,8 @@ struct file_lang languages[] ={{ ".c",    "C",    LANG_C},{ ".h",    "",     LAN
  * @param filename   The name of the file
  * @return           LANG_xxx
  */
-static int language_from_filename(const char *filename){
+static int language_from_filename(const char *filename)
+{
    int i;
 
    for (i = 0; i < ARRAY_SIZE(languages); i++)
@@ -384,7 +395,8 @@ static int language_from_filename(const char *filename){
  * @param filename   The name of the file
  * @return           LANG_xxx
  */
-static int language_from_tag(const char *tag){
+static int language_from_tag(const char *tag)
+{
    int i;
 
    for (i = 0; i < ARRAY_SIZE(languages); i++)
@@ -403,7 +415,8 @@ static int language_from_tag(const char *tag){
  * @param lang    The LANG_xxx enum
  * @return        A string
  */
-static const char *language_to_string(int lang){
+static const char *language_to_string(int lang)
+{
    int i;
 
    for (i = 0; i < ARRAY_SIZE(languages); i++)

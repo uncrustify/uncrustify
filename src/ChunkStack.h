@@ -26,10 +26,10 @@ public:
    };
 
 protected:
-   Entry *m_cse;    // the array of entries
-   int   m_size;    // entries allocated
-   int   m_len;     // entries used
-   int   m_seqnum;  // current seq num
+   Entry * m_cse;    // the array of entries
+   int m_size;       // entries allocated
+   int m_len;        // entries used
+   int m_seqnum;     // current seq num
 
 public:
    ChunkStack()
@@ -37,7 +37,7 @@ public:
       Init();
    }
 
-   ChunkStack(const ChunkStack& cs);
+   ChunkStack(const ChunkStack & cs);
 
    ~ChunkStack();
 

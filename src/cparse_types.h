@@ -153,15 +153,15 @@ struct align_t
 
 typedef struct
 {
-   chunk_t  *pc;
-   int      seqnum;
+   chunk_t *pc;
+   int     seqnum;
 } chunk_stack_entry_t;
 
 typedef struct chunk_stack
 {
-   chunk_stack_entry_t  *cse;
-   int                  len;
-   int                  size;
+   chunk_stack_entry_t *cse;
+   int                 len;
+   int                 size;
 } chunk_stack_t;
 
 struct cp_data

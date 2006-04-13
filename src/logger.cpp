@@ -13,7 +13,7 @@
 
 #include <cstdio>
 #include <stdarg.h>
-#include <ctype.h>
+#include <cctype>
 
 
 /** Private log structure */
@@ -242,8 +242,8 @@ void log_fmt(log_sev_t sev, const char *fmt, ...)
 void log_hex(log_sev_t sev, const void *vdata, int len)
 {
    const UINT8 *dat = (const UINT8 *)vdata;
-   int           idx;
-   char          buf[80];
+   int         idx;
+   char        buf[80];
 
    if (vdata == NULL)
    {

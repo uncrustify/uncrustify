@@ -10,7 +10,7 @@
 #define LOGMASK_H_INCLUDED
 
 #include "base_types.h"
-#include <string.h>     /* memset() */
+#include <cstring>     /* memset() */
 
 
 typedef UINT8 log_sev_t;

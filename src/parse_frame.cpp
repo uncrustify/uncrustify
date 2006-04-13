@@ -9,7 +9,7 @@
 #include "prototypes.h"
 #include "chunk_list.h"
 #include <cstdio>
-#include <string.h>
+#include <cstring>
 #include <cstdlib>
 
 /**
