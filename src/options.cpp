@@ -2,7 +2,7 @@
  * @file options.c
  * Parses the options from the config file.
  *
- * $Id: c_args.c 121 2006-03-27 02:24:45Z bengardner $
+ * $Id$
  */
 
 #define DEFINE_OPTION_NAME_TABLE

@@ -3,7 +3,7 @@
  *
  * Functions to convert between a string and a severity mask.
  *
- * $Id: logmask.c 14 2006-02-24 03:36:04Z bengardner $
+ * $Id$
  */
 
 #include "logmask.h"

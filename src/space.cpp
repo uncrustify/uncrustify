@@ -2,7 +2,7 @@
  * @file c_space.c
  * Adds or removes inter-chunk spaces.
  *
- * $Id: c_space.c 161 2006-04-07 22:29:34Z bengardner $
+ * $Id$
  */
 #include "uncrustify_types.h"
 #include "chunk_list.h"

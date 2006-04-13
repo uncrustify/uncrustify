@@ -2,7 +2,7 @@
  * @file keywords.c
  * Manages the table of keywords.
  *
- * $Id: keywords.c 142 2006-03-30 23:00:43Z bengardner $
+ * $Id$
  */
 
 #include "uncrustify_types.h"

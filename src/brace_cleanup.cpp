@@ -4,7 +4,7 @@
  * Inserts virtual braces as needed.
  * Handles all that preprocessor crap.
  *
- * $Id: tokenize.c 74 2006-03-18 05:26:34Z bengardner $
+ * $Id$
  */
 
 #include "uncrustify_types.h"

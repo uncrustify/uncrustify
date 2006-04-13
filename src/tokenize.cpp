@@ -4,7 +4,7 @@
  *
  * Each routine needs to set pc->len and pc->type.
  *
- * $Id: tokenize.c 160 2006-04-07 22:29:08Z bengardner $
+ * $Id$
  */
 
 #include "uncrustify_types.h"

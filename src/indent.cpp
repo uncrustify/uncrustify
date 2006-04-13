@@ -2,7 +2,7 @@
  * @file c_indent.c
  * Does all the indenting stuff.
  *
- * $Id: c_indent.c 160 2006-04-07 22:29:08Z bengardner $
+ * $Id$
  */
 #include "uncrustify_types.h"
 #include "chunk_list.h"

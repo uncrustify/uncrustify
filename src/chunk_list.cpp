@@ -2,7 +2,7 @@
  * @file chunk_list.c
  * Manages and navigates the list of chunks.
  *
- * $Id: chunk_list.c 13 2006-02-24 03:21:49Z bengardner $
+ * $Id$
  */
 
 #include "chunk_list.h"

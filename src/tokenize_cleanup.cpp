@@ -5,7 +5,7 @@
  *  - change '[' + ']' into '[]'/
  *  - detect "version = 10;" vs "version (xxx) {"
  *
- * $Id: tokenize.c 84 2006-03-19 02:45:53Z bengardner $
+ * $Id$
  */
 
 #include "uncrustify_types.h"

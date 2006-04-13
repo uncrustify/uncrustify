@@ -2,7 +2,7 @@
  * @file chunk_stack.c
  * Manages a chunk stack
  *
- * $Id: chunk_stack.c 166 2006-04-08 23:33:23Z bengardner $
+ * $Id$
  */
 
 #include "chunk_stack.h"

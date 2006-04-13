@@ -2,7 +2,7 @@
  * @file c_newlines.c
  * Adds or removes newlines.
  *
- * $Id: c_newlines.c 107 2006-03-26 02:53:56Z bengardner $
+ * $Id$
  */
 #include "uncrustify_types.h"
 #include "chunk_list.h"

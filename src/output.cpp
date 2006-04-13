@@ -2,7 +2,7 @@
  * @file c_output.c
  * Does all the output & comment formatting.
  *
- * $Id: c_output.c 108 2006-03-26 02:54:32Z bengardner $
+ * $Id$
  */
 
 #include "uncrustify_types.h"

@@ -1,7 +1,7 @@
 /**
  * This file takes an input C/C++/D/Java file and reformats it.
  *
- * $Id: uncrustify.c 160 2006-04-07 22:29:08Z bengardner $
+ * $Id$
  */
 #define DEFINE_GLOBAL_DATA
 

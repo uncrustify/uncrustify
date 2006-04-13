@@ -6,7 +6,7 @@
  * If a log statement ends in a newline, the current log is ended.
  * When the log severity changes, an implicit newline is inserted.
  *
- * $Id: logger.c 14 2006-02-24 03:36:04Z bengardner $
+ * $Id$
  */
 
 #include "logger.h"

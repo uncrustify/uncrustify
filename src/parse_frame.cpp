@@ -2,7 +2,7 @@
  * @file parse_frame.c
  * @brief Does the parse frame stuff, which is used to handle #ifdef stuff
  *
- * $Id: parse_frame.c 91 2006-03-23 02:00:04Z bengardner $
+ * $Id$
  */
 
 #include "uncrustify_types.h"

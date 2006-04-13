@@ -2,7 +2,7 @@
  * @file align_stack.c
  * Manages a align stack, which is just a pair of chunk stacks
  *
- * $Id: chunk_stack.c 166 2006-04-08 23:33:23Z bengardner $
+ * $Id$
  */
 
 // #include "chunk_stack.h"

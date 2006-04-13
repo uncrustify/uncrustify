@@ -2,7 +2,7 @@
  * @file c_combine.c
  * Labels the chunks as needed.
  *
- * $Id: c_combine.c 161 2006-04-07 22:29:34Z bengardner $
+ * $Id$
  */
 #include "uncrustify_types.h"
 #include "chunk_list.h"

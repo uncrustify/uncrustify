@@ -2,7 +2,7 @@
  * @file braces.c
  * Adds or removes braces.
  *
- * $Id: braces.c 93 2006-03-23 04:11:00Z bengardner $
+ * $Id$
  */
 #include "uncrustify_types.h"
 #include "chunk_list.h"
