@@ -119,6 +119,9 @@
 			</Folder>
 			<Folder Name="cpp">
 				<F N="input/cpp/alt_tokens.cpp"/>
+				<F N="input/cpp/bool.cpp"/>
+				<F N="input/cpp/byref.cpp"/>
+				<F N="input/cpp/class.h"/>
 				<F N="input/cpp/constructor.cpp"/>
 				<F N="input/cpp/cout.cpp"/>
 				<F N="input/cpp/strings.cpp"/>
@@ -168,6 +171,10 @@
 				<F N="output/cpp/30000-cout.cpp"/>
 				<F N="output/cpp/30001-alt_tokens.cpp"/>
 				<F N="output/cpp/30002-constructor.cpp"/>
+				<F N="output/cpp/30003-strings.cpp"/>
+				<F N="output/cpp/30010-class.h"/>
+				<F N="output/cpp/30020-bool.cpp"/>
+				<F N="output/cpp/30021-byref.cpp"/>
 			</Folder>
 			<Folder Name="cs">
 				<F N="output/cs/10000-simple.cs"/>

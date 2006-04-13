@@ -9,3 +9,7 @@
 30002 ben.cfg cpp/constructor.cpp cpp/30002-constructor.cpp
 30003 ben.cfg cpp/strings.cpp cpp/30003-strings.cpp
 30010 ben.cfg cpp/class.h cpp/30010-class.h
+
+30020 ben.cfg cpp/bool.cpp  cpp/30020-bool.cpp
+30021 ben.cfg cpp/byref.cpp cpp/30021-byref.cpp
+
