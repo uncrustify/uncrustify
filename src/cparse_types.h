@@ -151,11 +151,17 @@ struct align_t
    int       len;
 };
 
+typedef struct
+{
+   chunk_t  *pc;
+   int      seqnum;
+} chunk_stack_entry_t;
+
 typedef struct chunk_stack
 {
-   chunk_t **pc;
-   int     len;
-   int     size;
+   chunk_stack_entry_t  *cse;
+   int                  len;
+   int                  size;
 } chunk_stack_t;
 
 struct cp_data
@@ -186,9 +192,9 @@ struct cp_data
    int                frame_count;
 
    /* a very simple chunk stack - managed in chunk_list.c/h */
-   chunk_stack_t      cs;
-   int                cs_len;    /* active entries */
-   int                cs_size;   /* total entry count (private) */
+   //chunk_stack_t      cs;
+   //int                cs_len;    /* active entries */
+   //int                cs_size;   /* total entry count (private) */
 };
 
 

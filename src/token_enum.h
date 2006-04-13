@@ -1,5 +1,5 @@
 /**
- * @file token_enum.c
+ * @file token_enum.h
  * List of the different tokens used in the program.
  *
  * $Id$
@@ -155,6 +155,7 @@ typedef enum
 
    CT_BIT_COLON,        /* a ':' in a variable declaration */
 
+   /* start PP types */
    CT_PP_DEFINE,        /* #define */
    CT_PP_DEFINED,       /* #if defined */
    CT_PP_INCLUDE,       /* #include */
@@ -162,6 +163,7 @@ typedef enum
    CT_PP_ELSE,          /* #else or #elif */
    CT_PP_ENDIF,         /* #endif */
    CT_PP_OTHER,         /* #line, #error, #pragma, etc */
+   /* end PP types */
 
    CT_PRAGMA,
 

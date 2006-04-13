@@ -8,11 +8,11 @@
 #ifndef CHUNK_LIST_H_INCLUDED
 #define CHUNK_LIST_H_INCLUDED
 
-#include "cparse_types.h"
+#include "uncrustify_types.h"
 #ifdef HAVE_MALLOC_H
 #include <malloc.h>
 #else
-#include <stdlib.h>
+#include <cstdlib>
 #endif
 
 
@@ -68,14 +68,14 @@ chunk_t *chunk_skip_to_match(chunk_t *cur)
         (cur->type == CT_VBRACE_OPEN) ||
         (cur->type == CT_SQUARE_OPEN)))
    {
-      return(chunk_get_next_type(cur, cur->type + 1, cur->level));
+      return(chunk_get_next_type(cur, (c_token_t)(cur->type + 1), cur->level));
    }
    return(cur);
 }
 
 
 static_inline
-BOOL chunk_is_comment(chunk_t *pc)
+bool chunk_is_comment(chunk_t *pc)
 {
    return((pc != NULL) && ((pc->type == CT_COMMENT) ||
                            (pc->type == CT_COMMENT_MULTI) ||
@@ -83,26 +83,26 @@ BOOL chunk_is_comment(chunk_t *pc)
 }
 
 static_inline
-BOOL chunk_is_newline(chunk_t *pc)
+bool chunk_is_newline(chunk_t *pc)
 {
    return((pc != NULL) && ((pc->type == CT_NEWLINE) ||
                            (pc->type == CT_NL_CONT)));
 }
 
 static_inline
-BOOL chunk_is_blank(chunk_t *pc)
+bool chunk_is_blank(chunk_t *pc)
 {
    return((pc != NULL) && (pc->len == 0));
 }
 
 static_inline
-BOOL chunk_is_preproc(chunk_t *pc)
+bool chunk_is_preproc(chunk_t *pc)
 {
    return((pc != NULL) && ((pc->flags & PCF_IN_PREPROC) != 0));
 }
 
 static_inline
-BOOL chunk_is_type(chunk_t *pc)
+bool chunk_is_type(chunk_t *pc)
 {
    return((pc != NULL) && ((pc->type == CT_TYPE) ||
                            (pc->type == CT_PTR_TYPE) ||
@@ -112,19 +112,19 @@ BOOL chunk_is_type(chunk_t *pc)
 }
 
 static_inline
-BOOL chunk_is_star(chunk_t *pc)
+bool chunk_is_star(chunk_t *pc)
 {
    return((pc != NULL) && (pc->len == 1) && (pc->str[0] == '*'));
 }
 
 static_inline
-BOOL chunk_is_addr(chunk_t *pc)
+bool chunk_is_addr(chunk_t *pc)
 {
    return((pc != NULL) && (pc->len == 1) && (pc->str[0] == '&'));
 }
 
 
-BOOL chunk_is_newline_between(chunk_t *start, chunk_t *end);
+bool chunk_is_newline_between(chunk_t *start, chunk_t *end);
 
 
 #endif   /* CHUNK_LIST_H_INCLUDED */

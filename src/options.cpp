@@ -7,16 +7,16 @@
 
 #define DEFINE_OPTION_NAME_TABLE
 
-#include "cparse_types.h"
-#include <string.h>
-#include <strings.h> /* strcasecmp() */
-#include <stdio.h>
-#include <stdlib.h>
-#include <errno.h>
-#include <ctype.h>
+#include "uncrustify_types.h"
+#include <cstring>
+//#include <strings.h> /* strcasecmp() */
+#include <cstdio>
+#include <cstdlib>
+#include <cerrno>
+#include <cctype>
 
 
-const char *get_option_name(enum uncrustify_options uo)
+const options_name_tab *get_option_name(int uo)
 {
    int idx;
 
@@ -24,16 +24,16 @@ const char *get_option_name(enum uncrustify_options uo)
    {
       if (option_name_table[idx].id == uo)
       {
-         return(option_name_table[idx].name);
+         return(&option_name_table[idx]);
       }
    }
-   return("???");
+   return(NULL);
 }
 
 static int name_compare_func(const void *p1, const void *p2)
 {
-   const struct options_name_tab *e1 = p1;
-   const struct options_name_tab *e2 = p2;
+   const options_name_tab *e1 = (const options_name_tab *)p1;
+   const options_name_tab *e2 = (const options_name_tab *)p2;
 
    return(strcmp(e1->name, e2->name));
 }
@@ -42,16 +42,16 @@ static int name_compare_func(const void *p1, const void *p2)
 /**
  * Search the sorted name table to find a match
  */
-static struct options_name_tab *find_entry(const char *name)
+static options_name_tab *find_entry(const char *name)
 {
-   struct options_name_tab *entry;
-   struct options_name_tab tmp;
+   options_name_tab *entry;
+   options_name_tab tmp;
 
    tmp.name = name;
-   entry    = bsearch(&tmp, &option_name_table[0],
-                      ARRAY_SIZE(option_name_table) - 1,
-                      sizeof(option_name_table[0]),
-                      name_compare_func);
+   entry    = (options_name_tab *)bsearch(&tmp, &option_name_table[0],
+                                          ARRAY_SIZE(option_name_table) - 1,
+                                          sizeof(option_name_table[0]),
+                                          name_compare_func);
 
    return(entry);
 }
@@ -62,7 +62,7 @@ static struct options_name_tab *find_entry(const char *name)
 static int convert_value(struct options_name_tab *entry, const char *val)
 {
    struct options_name_tab *tmp;
-   BOOL                    btrue;
+   bool                    btrue;
    int                     mult;
 
    if (entry->type == AT_NUM)
@@ -84,7 +84,7 @@ static int convert_value(struct options_name_tab *entry, const char *val)
 
          if (((tmp = find_entry(val)) != NULL) && (tmp->type == entry->type))
          {
-            return(cpd.settings[tmp->id] * mult);
+            return(cpd.settings[tmp->id].n * mult);
          }
       }
       LOG_FMT(LWARN, "Expected a number for %s, got %s\n", entry->name, val);
@@ -107,16 +107,16 @@ static int convert_value(struct options_name_tab *entry, const char *val)
          return(0);
       }
 
-      btrue = TRUE;
+      btrue = true;
       if ((*val == '-') || (*val == '~'))
       {
-         btrue = FALSE;
+         btrue = false;
          val++;
       }
 
       if (((tmp = find_entry(val)) != NULL) && (tmp->type == entry->type))
       {
-         return(cpd.settings[tmp->id] ? btrue : !btrue);
+         return(cpd.settings[tmp->id].b ? btrue : !btrue);
       }
       LOG_FMT(LWARN, "Expected 'True' or 'False' for %s, got %s\n", entry->name, val);
       return(0);
@@ -140,7 +140,7 @@ static int convert_value(struct options_name_tab *entry, const char *val)
    }
    if (((tmp = find_entry(val)) != NULL) && (tmp->type == entry->type))
    {
-      return(cpd.settings[tmp->id]);
+      return(cpd.settings[tmp->id].a);
    }
    LOG_FMT(LWARN, "Expected 'Add', 'Remove', 'Force', or 'Ignore' for %s, got %s\n",
            entry->name, val);
@@ -171,7 +171,7 @@ int set_option_value(const char *name, const char *value)
 
    if ((entry = find_entry(name)) != NULL)
    {
-      cpd.settings[entry->id] = convert_value(entry, value);
+      cpd.settings[entry->id].n = convert_value(entry, value);
       return(entry->id);
    }
    return(-1);
@@ -260,9 +260,9 @@ int load_option_file(const char *filename)
  */
 void set_option_defaults(void)
 {
-   cpd.settings[UO_input_tab_size]   = 8;
-   cpd.settings[UO_output_tab_size]  = 8;
-   cpd.settings[UO_indent_columns]   = 8;
-   cpd.settings[UO_indent_with_tabs] = 1;
+   cpd.settings[UO_input_tab_size].n   = 8;
+   cpd.settings[UO_output_tab_size].n  = 8;
+   cpd.settings[UO_indent_columns].n   = 8;
+   cpd.settings[UO_indent_with_tabs].n = 1;
 }
 

@@ -7,7 +7,7 @@
 #ifndef C_PARSE_PROTOTYPES_H_INCLUDED
 #define C_PARSE_PROTOTYPES_H_INCLUDED
 
-#include "cparse_types.h"
+#include "uncrustify_types.h"
 
 
 /*
@@ -25,7 +25,7 @@ void output_text(FILE *pfile);
 void output_parsed(FILE *pfile);
 void output_comment_multi(chunk_t *pc);
 void output_options(FILE *pfile);
-void output_to_column(int column, BOOL allow_tabs);
+void output_to_column(int column, bool allow_tabs);
 void add_text(const char *text);
 void add_char(char ch);
 
@@ -37,7 +37,7 @@ void add_char(char ch);
 void set_option_defaults(void);
 int load_option_file(const char *filename);
 int set_option_value(const char *name, const char *value);
-const char *get_option_name(enum uncrustify_options uo);
+const options_name_tab *get_option_name(int uo);
 
 
 /*
@@ -170,7 +170,7 @@ int calc_next_tab_column(int col, int tabsize)
 static_inline
 int next_tab_column(int col)
 {
-   return(calc_next_tab_column(col, cpd.settings[UO_output_tab_size]));
+   return(calc_next_tab_column(col, cpd.settings[UO_output_tab_size].n));
 }
 
 /**
@@ -182,9 +182,9 @@ int next_tab_column(int col)
 static_inline
 int align_tab_column(int col)
 {
-   if ((col % cpd.settings[UO_output_tab_size]) != 1)
+   if ((col % cpd.settings[UO_output_tab_size].n) != 1)
    {
-      calc_next_tab_column(col, cpd.settings[UO_output_tab_size]);
+      calc_next_tab_column(col, cpd.settings[UO_output_tab_size].n);
    }
    return(col);
 }

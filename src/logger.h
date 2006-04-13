@@ -14,7 +14,7 @@
 
 #include "logmask.h"
 #include <string.h>     /* strlen() */
-#include <stdio.h>      /* FILE */
+#include <cstdio>      /* FILE */
 
 
 /**
@@ -29,27 +29,27 @@ void log_init(FILE *log_file);
 /**
  * Show or hide the severity prefix "<1>"
  *
- * @param TRUE=show  FALSE=hide
+ * @param true=show  false=hide
  */
-void log_show_sev(BOOL show);
+void log_show_sev(bool show);
 
 
 /**
  * Returns whether a log severity is active.
  *
  * @param sev  The severity
- * @return     TRUE/FALSE
+ * @return     true/false
  */
-BOOL log_sev_on(log_sev_t sev);
+bool log_sev_on(log_sev_t sev);
 
 
 /**
  * Sets a log sev on or off
  *
  * @param sev  The severity
- * @return     TRUE/FALSE
+ * @return     true/false
  */
-void log_set_sev(log_sev_t sev, BOOL value);
+void log_set_sev(log_sev_t sev, bool value);
 
 
 /**

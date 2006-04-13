@@ -2,14 +2,15 @@
  * @file c_combine.c
  * Labels the chunks as needed.
  *
- * $Id$
+ * $Id: c_combine.c 161 2006-04-07 22:29:34Z bengardner $
  */
-#include "cparse_types.h"
+#include "uncrustify_types.h"
 #include "chunk_list.h"
-#include "chunk_stack.h"
+#include "ChunkStack.h"
 #include "prototypes.h"
-#include <stdio.h>
-#include <stdlib.h>
+
+#include <cstdio>
+#include <cstdlib>
 #include <string.h>
 #include <errno.h>
 #include <ctype.h>
@@ -34,7 +35,7 @@ static chunk_t *process_return(chunk_t *pc);
  */
 static void flag_parens(chunk_t *po, uint16_t flags,
                         c_token_t opentype, c_token_t parenttype,
-                        BOOL parent_all)
+                        bool parent_all)
 {
    chunk_t *paren_close;
    chunk_t *pc;
@@ -63,7 +64,7 @@ static void flag_parens(chunk_t *po, uint16_t flags,
       if (opentype != CT_NONE)
       {
          po->type          = opentype;
-         paren_close->type = opentype + 1;
+         paren_close->type = (c_token_t)(opentype + 1);
       }
 
       if (parenttype != CT_NONE)
@@ -87,7 +88,7 @@ void set_paren_parent(chunk_t *start, c_token_t parent)
 {
    chunk_t *end;
 
-   end = chunk_get_next_type(start, start->type + 1, start->level);
+   end = chunk_get_next_type(start, (c_token_t)(start->type + 1), start->level);
    if (end != NULL)
    {
       start->parent_type = parent;
@@ -266,7 +267,7 @@ void fix_symbols(void)
        */
       if (pc->type == CT_MACRO_FUNC)
       {
-         flag_parens(next, PCF_IN_FCN_CALL, CT_FPAREN_OPEN, CT_MACRO_FUNC, FALSE);
+         flag_parens(next, PCF_IN_FCN_CALL, CT_FPAREN_OPEN, CT_MACRO_FUNC, false);
       }
 
       /* Change CT_STAR to CT_PTR_TYPE or CT_ARITH or SYM_DEREF */
@@ -395,7 +396,7 @@ static chunk_t *process_return(chunk_t *pc)
       semi = chunk_get_next_ncnl(cpar);
       if ((semi != NULL) && (semi->type == CT_SEMICOLON))
       {
-         if (cpd.settings[UO_mod_paren_on_return] == AV_REMOVE)
+         if (cpd.settings[UO_mod_paren_on_return].a == AV_REMOVE)
          {
             LOG_FMT(LRETURN, "%s: removing parens on line %d\n",
                     __func__, pc->orig_line);
@@ -429,7 +430,7 @@ static chunk_t *process_return(chunk_t *pc)
    }
 
    /* We don't have a fully paren'd return. Should we add some? */
-   if ((cpd.settings[UO_mod_paren_on_return] & AV_ADD) == 0)
+   if ((cpd.settings[UO_mod_paren_on_return].a & AV_ADD) == 0)
    {
       return(next);
    }
@@ -467,13 +468,13 @@ static chunk_t *process_return(chunk_t *pc)
 }
 
 
-BOOL is_ucase_str(const char *str)
+bool is_ucase_str(const char *str)
 {
    while (isupper(*str))
    {
       str++;
    }
-   return((*str == 0) ? TRUE : FALSE);
+   return((*str == 0) ? true : false);
 }
 
 /**
@@ -494,7 +495,7 @@ static void fix_casts(chunk_t *start)
    const char *detail    = "";
    int        count      = 0;
    int        word_count = 0;
-   BOOL       nope;
+   bool       nope;
 
 
    /* Make sure there is only WORD, TYPE, and '*' before the close paren */
@@ -591,26 +592,26 @@ static void fix_casts(chunk_t *start)
          return;
       }
 
-      nope = FALSE;
+      nope = false;
       if (chunk_is_star(pc) || chunk_is_addr(pc))
       {
          if ((after->type == CT_NUMBER) || (after->type == CT_STRING))
          {
-            nope = TRUE;
+            nope = true;
          }
       }
       else if (pc->type == CT_MINUS)
       {
          if (after->type == CT_STRING)
          {
-            nope = TRUE;
+            nope = true;
          }
       }
       else if (pc->type == CT_PLUS)
       {
          if (after->type != CT_NUMBER)
          {
-            nope = TRUE;
+            nope = true;
          }
       }
       else if ((pc->type != CT_NUMBER) &&
@@ -821,8 +822,8 @@ void combine_labels(void)
    chunk_t *next;
    chunk_t *tmp;
    int     question_count = 0;
-   BOOL    hit_case       = FALSE;
-   BOOL    hit_class      = FALSE;
+   bool    hit_case       = false;
+   bool    hit_class      = false;
 
    prev = chunk_get_head();
    cur  = chunk_get_next_nc(prev);
@@ -833,11 +834,11 @@ void combine_labels(void)
    {
       if ((next->type == CT_CLASS) || (next->type == CT_TEMPLATE))
       {
-         hit_class = TRUE;
+         hit_class = true;
       }
       if ((next->type == CT_SEMICOLON) || (next->type == CT_BRACE_OPEN))
       {
-         hit_class = FALSE;
+         hit_class = false;
       }
       if (next->type == CT_QUESTION)
       {
@@ -852,7 +853,7 @@ void combine_labels(void)
          }
          else
          {
-            hit_case = TRUE;
+            hit_case = true;
          }
       }
       else if (next->type == CT_COLON)
@@ -860,7 +861,7 @@ void combine_labels(void)
          if (cur->type == CT_DEFAULT)
          {
             cur->type = CT_CASE;
-            hit_case  = TRUE;
+            hit_case  = true;
          }
          if (question_count > 0)
          {
@@ -869,7 +870,7 @@ void combine_labels(void)
          }
          else if (hit_case)
          {
-            hit_case   = FALSE;
+            hit_case   = false;
             next->type = CT_CASE_COLON;
             tmp        = chunk_get_next_ncnl(next);
             if ((tmp != NULL) && (tmp->type == CT_BRACE_OPEN))
@@ -945,19 +946,19 @@ void combine_labels(void)
 }
 
 
-static void mark_variable_stack(log_sev_t sev)
+static void mark_variable_stack(ChunkStack& cs, log_sev_t sev)
 {
    chunk_t *var_name;
    chunk_t *word_type;
 
    /* throw out the last word and mark the rest */
-   var_name = cs_pop(&cpd.cs);
+   var_name = cs.Pop();
    if (var_name != NULL)
    {
       LOG_FMT(LFCNP, "%s: parameter on line %d :",
               __func__, var_name->orig_line);
 
-      while ((word_type = cs_pop(&cpd.cs)) != NULL)
+      while ((word_type = cs.Pop()) != NULL)
       {
          LOG_FMT(LFCNP, " <%s>", word_type->str);
          word_type->type = CT_TYPE;
@@ -975,7 +976,7 @@ static void fix_fcn_def_params(chunk_t *pc)
 {
    LOG_FMT(LFCNP, "%s: %s on line %d\n", __func__, pc->str, pc->orig_line);
 
-   cs_reset(&cpd.cs);
+   ChunkStack cs;
 
    while ((pc != NULL) && (pc->type != CT_FPAREN_CLOSE))
    {
@@ -985,15 +986,15 @@ static void fix_fcn_def_params(chunk_t *pc)
       }
       else if (pc->type == CT_WORD)
       {
-         cs_push(&cpd.cs, pc);
+         cs.Push(pc);
       }
       else if (pc->type == CT_COMMA)
       {
-         mark_variable_stack(LFCNP);
+         mark_variable_stack(cs, LFCNP);
       }
       pc = chunk_get_next_ncnl(pc);
    }
-   mark_variable_stack(LFCNP);
+   mark_variable_stack(cs, LFCNP);
 }
 
 
@@ -1205,7 +1206,7 @@ static void mark_function(chunk_t *pc)
             var->flags |= PCF_VAR_1ST_DEF;
 
             /* Mark parameters */
-            flag_parens(tmp, PCF_IN_FCN_DEF, CT_FPAREN_OPEN, CT_NONE, FALSE);
+            flag_parens(tmp, PCF_IN_FCN_DEF, CT_FPAREN_OPEN, CT_NONE, false);
             next = chunk_get_next_ncnlnp(tmp);
             if (next->level > tmp->level)
             {
@@ -1273,11 +1274,11 @@ static void mark_function(chunk_t *pc)
 
    if (pc->type != CT_FUNC_DEF)
    {
-      flag_parens(next, PCF_IN_FCN_CALL, CT_FPAREN_OPEN, CT_NONE, FALSE);
+      flag_parens(next, PCF_IN_FCN_CALL, CT_FPAREN_OPEN, CT_NONE, false);
    }
    else
    {
-      flag_parens(next, PCF_IN_FCN_DEF, CT_FPAREN_OPEN, CT_NONE, FALSE);
+      flag_parens(next, PCF_IN_FCN_DEF, CT_FPAREN_OPEN, CT_NONE, false);
 
       /* See if this is a prototype or implementation */
       paren_close = chunk_get_next_type(pc, CT_FPAREN_CLOSE, pc->level);
@@ -1297,19 +1298,19 @@ static void mark_function(chunk_t *pc)
       /* Find the brace pair */
       if (pc->type == CT_FUNC_DEF)
       {
-         BOOL on_first = TRUE;
+         bool on_first = true;
          tmp = chunk_get_next_ncnl(paren_close);
          while ((tmp != NULL) && (tmp->type != CT_BRACE_OPEN))
          {
             tmp->parent_type = CT_FUNC_DEF;
             if (tmp->type == CT_SEMICOLON)
             {
-               on_first = TRUE;
+               on_first = true;
             }
             else
             {
                tmp->flags |= PCF_OLD_FCN_PARAMS;
-               on_first    = FALSE;
+               on_first    = false;
             }
             tmp = chunk_get_next_ncnl(tmp);
          }
@@ -1407,8 +1408,8 @@ void mark_comments(void)
 {
    chunk_t *cur;
    chunk_t *next;
-   BOOL    prev_nl = TRUE;
-   BOOL    next_nl;
+   bool    prev_nl = true;
+   bool    next_nl;
 
    cur = chunk_get_head();
 
@@ -1447,8 +1448,8 @@ static void mark_define_expressions(void)
 {
    chunk_t *pc;
    chunk_t *prev;
-   BOOL    in_define = FALSE;
-   BOOL    first     = TRUE;
+   bool    in_define = false;
+   bool    first     = true;
 
    pc   = chunk_get_head();
    prev = pc;
@@ -1459,15 +1460,15 @@ static void mark_define_expressions(void)
       {
          if (pc->type == CT_PP_DEFINE)
          {
-            in_define = TRUE;
-            first     = TRUE;
+            in_define = true;
+            first     = true;
          }
       }
       else
       {
          if (((pc->flags & PCF_IN_PREPROC) == 0) || (pc->type == CT_PREPROC))
          {
-            in_define = FALSE;
+            in_define = false;
          }
          else
          {
@@ -1490,7 +1491,7 @@ static void mark_define_expressions(void)
                  (prev->type == CT_QUESTION)))
             {
                pc->flags |= PCF_EXPR_START;
-               first      = FALSE;
+               first      = false;
             }
          }
       }

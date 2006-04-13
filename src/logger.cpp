@@ -6,12 +6,12 @@
  * If a log statement ends in a newline, the current log is ended.
  * When the log severity changes, an implicit newline is inserted.
  *
- * $Id$
+ * $Id: logger.c 14 2006-02-24 03:36:04Z bengardner $
  */
 
 #include "logger.h"
 
-#include <stdio.h>
+#include <cstdio>
 #include <stdarg.h>
 #include <ctype.h>
 
@@ -25,7 +25,7 @@ struct log_buf
    char       buf[256];
    int        buf_len;
    log_mask_t mask;
-   BOOL       show_hdr;
+   bool       show_hdr;
 };
 static struct log_buf g_log;
 
@@ -41,9 +41,9 @@ void log_init(FILE *log_file)
    memset(&g_log, 0, sizeof(g_log));
 
    /* set the top 3 severities */
-   log_set_sev(0, TRUE);
-   log_set_sev(1, TRUE);
-   log_set_sev(2, TRUE);
+   log_set_sev(0, true);
+   log_set_sev(1, true);
+   log_set_sev(2, true);
 
    g_log.log_file = (log_file != NULL) ? log_file : stderr;
 }
@@ -52,9 +52,9 @@ void log_init(FILE *log_file)
 /**
  * Show or hide the severity prefix "<1>"
  *
- * @param TRUE=show  FALSE=hide
+ * @param true=show  false=hide
  */
-void log_show_sev(BOOL show)
+void log_show_sev(bool show)
 {
    g_log.show_hdr = show;
 }
@@ -64,9 +64,9 @@ void log_show_sev(BOOL show)
  * Returns whether a log severity is active.
  *
  * @param sev  The severity
- * @return     TRUE/FALSE
+ * @return     true/false
  */
-BOOL log_sev_on(log_sev_t sev)
+bool log_sev_on(log_sev_t sev)
 {
    return(logmask_test(&g_log.mask, sev));
 }
@@ -76,9 +76,9 @@ BOOL log_sev_on(log_sev_t sev)
  * Sets a log sev on or off
  *
  * @param sev  The severity
- * @return     TRUE/FALSE
+ * @return     true/false
  */
-void log_set_sev(log_sev_t sev, BOOL value)
+void log_set_sev(log_sev_t sev, bool value)
 {
    logmask_set_sev(&g_log.mask, sev, value);
 }
@@ -117,7 +117,7 @@ void log_get_mask(log_mask_t *mask)
  *
  * @param force_nl   Append NL if not present
  */
-static void log_flush(BOOL force_nl)
+static void log_flush(bool force_nl)
 {
    if (g_log.buf_len > 0)
    {
@@ -144,10 +144,10 @@ static void log_start(log_sev_t sev)
    {
       if (g_log.buf_len > 0)
       {
-         log_flush(TRUE);
+         log_flush(true);
       }
       g_log.sev    = sev;
-      g_log.in_log = FALSE;
+      g_log.in_log = false;
    }
 
    if (!g_log.in_log)
@@ -172,7 +172,7 @@ static void log_end(void)
    g_log.in_log = (g_log.buf[g_log.buf_len - 1] != '\n');
    if (!g_log.in_log || (g_log.buf_len > (sizeof(g_log.buf) / 2)))
    {
-      log_flush(FALSE);
+      log_flush(false);
    }
 }
 
@@ -241,7 +241,7 @@ void log_fmt(log_sev_t sev, const char *fmt, ...)
  */
 void log_hex(log_sev_t sev, const void *vdata, int len)
 {
-   const uint8_t *dat = vdata;
+   const UINT8 *dat = (const UINT8 *)vdata;
    int           idx;
    char          buf[80];
 
@@ -284,7 +284,7 @@ void log_hex(log_sev_t sev, const void *vdata, int len)
 void log_hex_blk(log_sev_t sev, const void *data, int len)
 {
    static char buf[80] = "nnn | XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX | cccccccccccccccc\n";
-   const UINT8 *dat    = data;
+   const UINT8 *dat    = (const UINT8 *)data;
    int         idx;
    int         count;
    int         str_idx = 0;

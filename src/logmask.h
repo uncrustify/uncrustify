@@ -27,9 +27,9 @@ typedef struct
  * Tests whether a sev bit is set in the mask
  *
  * @param sev  The severity to check
- * @return     TRUE (is set) or FALSE (not set)
+ * @return     true (is set) or false (not set)
  */
-static_inline BOOL logmask_test(const log_mask_t *mask, log_sev_t sev)
+static_inline bool logmask_test(const log_mask_t *mask, log_sev_t sev)
 {
    return((mask->bits[sev >> 3] & (1 << (sev & 0x07))) != 0);
 }
@@ -39,9 +39,9 @@ static_inline BOOL logmask_test(const log_mask_t *mask, log_sev_t sev)
  * Sets a set bit in the mask
  *
  * @param sev     The severity to check
- * @param value   TRUE (set bit) or FALSE (clear bit)
+ * @param value   true (set bit) or false (clear bit)
  */
-static_inline void logmask_set_sev(log_mask_t *mask, log_sev_t sev, BOOL value)
+static_inline void logmask_set_sev(log_mask_t *mask, log_sev_t sev, bool value)
 {
    if (value)
    {
@@ -57,9 +57,9 @@ static_inline void logmask_set_sev(log_mask_t *mask, log_sev_t sev, BOOL value)
 /**
  * Sets all bits to the same value
  *
- * @param value   TRUE (set bit) or FALSE (clear bit)
+ * @param value   true (set bit) or false (clear bit)
  */
-static_inline void logmask_set_all(log_mask_t *mask, BOOL value)
+static_inline void logmask_set_all(log_mask_t *mask, bool value)
 {
    memset(mask->bits, value ? 0xff : 0, sizeof(mask->bits));
 }

@@ -4,15 +4,15 @@
  *
  * Each routine needs to set pc->len and pc->type.
  *
- * $Id$
+ * $Id: tokenize.c 160 2006-04-07 22:29:08Z bengardner $
  */
 
-#include "cparse_types.h"
+#include "uncrustify_types.h"
 #include "char_table.h"
 #include "prototypes.h"
 #include "chunk_list.h"
-#include <stdio.h>
-#include <stdlib.h>
+#include <cstdio>
+#include <cstdlib>
 #include <string.h>
 #include <errno.h>
 #include <ctype.h>
@@ -29,17 +29,17 @@
  * @param pc   The structure to update, str is an input.
  * @return     Whether a comment was parsed
  */
-BOOL parse_comment(chunk_t *pc)
+bool parse_comment(chunk_t *pc)
 {
    int  len     = 2;
-   BOOL is_d    = (cpd.lang_flags & LANG_D) != 0;
+   bool is_d    = (cpd.lang_flags & LANG_D) != 0;
    int  d_level = 0;
 
    if ((pc->str[0] != '/') ||
        ((pc->str[1] != '*') && (pc->str[1] != '/') &&
         ((pc->str[1] != '+') || !is_d)))
    {
-      return(FALSE);
+      return(false);
    }
 
    /* account for opening two chars */
@@ -56,7 +56,7 @@ BOOL parse_comment(chunk_t *pc)
    else if (pc->str[len] == 0)
    {
       /* unexpected end of file */
-      return(FALSE);
+      return(false);
    }
    else if (pc->str[1] == '+')
    {
@@ -113,7 +113,7 @@ BOOL parse_comment(chunk_t *pc)
       }
    }
    pc->len = len;
-   return(TRUE);
+   return(true);
 }
 
 
@@ -127,14 +127,14 @@ BOOL parse_comment(chunk_t *pc)
  * @param pc   The structure to update, str is an input.
  * @return     Whether a number was parsed
  */
-BOOL parse_number(chunk_t *pc)
+bool parse_number(chunk_t *pc)
 {
    int  len              = 0;
-   BOOL allow_underscore = ((cpd.lang_flags & LANG_D) != 0);
+   bool allow_underscore = ((cpd.lang_flags & LANG_D) != 0);
 
    if (!isdigit(*pc->str))
    {
-      return(FALSE);
+      return(false);
    }
 
    /* Check for Hex, Octal, or Binary */
@@ -219,7 +219,7 @@ BOOL parse_number(chunk_t *pc)
    pc->len     = len;
    pc->type    = CT_NUMBER;
    cpd.column += len;
-   return(TRUE);
+   return(true);
 }
 
 
@@ -231,7 +231,7 @@ BOOL parse_number(chunk_t *pc)
  * @param pc   The structure to update, str is an input.
  * @return     Whether a string was parsed
  */
-BOOL parse_string(chunk_t *pc)
+bool parse_string(chunk_t *pc)
 {
    int escaped = 0;
    int end_ch;
@@ -267,7 +267,7 @@ BOOL parse_string(chunk_t *pc)
    pc->len     = len;
    pc->type    = CT_STRING;
    cpd.column += len;
-   return(TRUE);
+   return(true);
 }
 
 
@@ -278,7 +278,7 @@ BOOL parse_string(chunk_t *pc)
  * @param pc   The structure to update, str is an input.
  * @return     Whether a string was parsed
  */
-static BOOL parse_cs_string(chunk_t *pc)
+static bool parse_cs_string(chunk_t *pc)
 {
    int len = 2;
 
@@ -302,7 +302,7 @@ static BOOL parse_cs_string(chunk_t *pc)
    pc->len     = len;
    pc->type    = CT_STRING;
    cpd.column += len;
-   return(TRUE);
+   return(true);
 }
 
 
@@ -311,9 +311,9 @@ static BOOL parse_cs_string(chunk_t *pc)
  * The first character is already valid for a keyword
  *
  * @param pc   The structure to update, str is an input.
- * @return     Whether a word was parsed (always TRUE)
+ * @return     Whether a word was parsed (always true)
  */
-BOOL parse_word(chunk_t *pc, BOOL skipcheck)
+bool parse_word(chunk_t *pc, bool skipcheck)
 {
    int               len = 1;
    const chunk_tag_t *tag;
@@ -329,11 +329,11 @@ BOOL parse_word(chunk_t *pc, BOOL skipcheck)
 
    if (skipcheck)
    {
-      return(TRUE);
+      return(true);
    }
 
    /* Detect pre-processor functions now */
-   if ((cpd.in_preproc == PP_DEFINE) &&
+   if ((cpd.in_preproc == CT_PP_DEFINE) &&
        (cpd.preproc_ncnl_count == 1))
    {
       if (pc->str[len] == '(')
@@ -352,7 +352,7 @@ BOOL parse_word(chunk_t *pc, BOOL skipcheck)
    {
       pc->type = tag->type;
    }
-   return(TRUE);
+   return(true);
 }
 
 
@@ -362,16 +362,16 @@ BOOL parse_word(chunk_t *pc, BOOL skipcheck)
  * @param pc   The structure to update, str is an input.
  * @return     Whether whitespace was parsed
  */
-BOOL parse_whitespace(chunk_t *pc)
+bool parse_whitespace(chunk_t *pc)
 {
    int  len          = 0;
    int  nl_count     = 0;
-   BOOL last_was_tab = FALSE;
+   bool last_was_tab = false;
 
    while ((pc->str[len] != 0) &&
           ((pc->str[len] <= ' ') || (pc->str[len] >= 127)))
    {
-      last_was_tab = FALSE;
+      last_was_tab = false;
       switch (pc->str[len])
       {
       case '\n':
@@ -382,8 +382,8 @@ BOOL parse_whitespace(chunk_t *pc)
 
       case '\t':
          cpd.column = calc_next_tab_column(cpd.column,
-                                           cpd.settings[UO_input_tab_size]);
-         last_was_tab = TRUE;
+                                           cpd.settings[UO_input_tab_size].n);
+         last_was_tab = true;
          break;
 
       case ' ':
@@ -417,16 +417,16 @@ BOOL parse_whitespace(chunk_t *pc)
  * pc->column is output column
  *
  * @param pc      The structure to update, str is an input.
- * @return        TRUE/FALSE - whether anything was parsed
+ * @return        true/false - whether anything was parsed
  */
-static BOOL parse_next(chunk_t *pc)
+static bool parse_next(chunk_t *pc)
 {
    const chunk_tag_t *punc;
 
    if ((pc == NULL) || (pc->str == NULL) || (*pc->str == 0))
    {
       //fprintf(stderr, "All done!\n");
-      return(FALSE);
+      return(false);
    }
 
    /* Save off the current column */
@@ -440,10 +440,10 @@ static BOOL parse_next(chunk_t *pc)
    /* Check for whitespace first */
    if (parse_whitespace(pc))
    {
-      return(TRUE);
+      return(true);
    }
 
-   if (cpd.in_preproc == PP_OTHER)
+   if (cpd.in_preproc == CT_PP_OTHER)
    {
       /* Chunk to a newline or comment */
       pc->type = CT_PREPROC_BODY;
@@ -456,7 +456,7 @@ static BOOL parse_next(chunk_t *pc)
       }
       if (pc->len > 0)
       {
-         return(TRUE);
+         return(true);
       }
    }
 
@@ -468,7 +468,7 @@ static BOOL parse_next(chunk_t *pc)
       pc->nl_count = 1;
       cpd.column   = 1;
       cpd.line_number++;
-      return(TRUE);
+      return(true);
    }
 
    /* Check for C# literal strings, ie @"hello" */
@@ -477,12 +477,12 @@ static BOOL parse_next(chunk_t *pc)
       if (pc->str[1] == '"')
       {
          parse_cs_string(pc);
-         return(TRUE);
+         return(true);
       }
       if (((get_char_table(pc->str[1]) & CT_KW1) != 0) &&
-          parse_word(pc, TRUE))
+          parse_word(pc, true))
       {
-         return(TRUE);
+         return(true);
       }
    }
 
@@ -490,21 +490,21 @@ static BOOL parse_next(chunk_t *pc)
    if (((*pc->str == 'L') && ((pc->str[1] == '"') || (pc->str[1] == '\''))) ||
        (*pc->str == '"') ||
        (*pc->str == '\'') ||
-       ((*pc->str == '<') && (cpd.in_preproc == PP_INCLUDE)))
+       ((*pc->str == '<') && (cpd.in_preproc == CT_PP_INCLUDE)))
    {
       parse_string(pc);
-      return(TRUE);
+      return(true);
    }
 
    if (((get_char_table(*pc->str) & CT_KW1) != 0) &&
-       parse_word(pc, FALSE))
+       parse_word(pc, false))
    {
-      return(TRUE);
+      return(true);
    }
 
    if (parse_comment(pc))
    {
-      return(TRUE);
+      return(true);
    }
 
    if ((punc = find_punctuator(pc->str, cpd.lang_flags)) != NULL)
@@ -512,12 +512,12 @@ static BOOL parse_next(chunk_t *pc)
       pc->type    = punc->type;
       pc->len     = strlen(punc->tag);
       cpd.column += pc->len;
-      return(TRUE);
+      return(true);
    }
 
    if (parse_number(pc))
    {
-      return(TRUE);
+      return(true);
    }
 
    /* throw away this character */
@@ -526,7 +526,7 @@ static BOOL parse_next(chunk_t *pc)
 
    LOG_FMT(LWARN, "Garbage: %x on line %d, col %d\n", *pc->str, pc->orig_line, cpd.column);
 
-   return(TRUE);
+   return(true);
 }
 
 
@@ -546,7 +546,7 @@ void tokenize(const char *data, int data_len)
    chunk_t            *rprev = NULL;
    chunk_t            *prev  = NULL;
    struct parse_frame frm;
-   BOOL               last_was_tab = FALSE;
+   bool               last_was_tab = false;
 
    memset(&frm, 0, sizeof(frm));
    memset(&chunk, 0, sizeof(chunk));
@@ -575,12 +575,12 @@ void tokenize(const char *data, int data_len)
       if (chunk.type == CT_NEWLINE)
       {
          last_was_tab    = chunk.after_tab;
-         chunk.after_tab = FALSE;
+         chunk.after_tab = false;
       }
       else
       {
          chunk.after_tab = last_was_tab;
-         last_was_tab    = FALSE;
+         last_was_tab    = false;
       }
 
       /* Strip trailing whitespace (for CPP comments and PP blocks) */
@@ -618,12 +618,12 @@ void tokenize(const char *data, int data_len)
       /* A newline marks the end of a preprocessor */
       if ((pc->type == CT_NEWLINE) || (pc->type == CT_COMMENT_MULTI))
       {
-         cpd.in_preproc         = PP_NONE;
+         cpd.in_preproc         = CT_NONE;
          cpd.preproc_ncnl_count = 0;
       }
 
       /* Special handling for preprocessor stuff */
-      if (cpd.in_preproc != PP_NONE)
+      if (cpd.in_preproc != CT_NONE)
       {
          pc->flags |= PCF_IN_PREPROC;
 
@@ -634,33 +634,13 @@ void tokenize(const char *data, int data_len)
          }
 
          /* Figure out the type of preprocessor for #include parsing */
-         if (cpd.in_preproc == PP_UNKNOWN)
+         if (cpd.in_preproc == CT_PREPROC)
          {
-            if (pc->type == CT_PP_INCLUDE)
+            if ((pc->type < CT_PP_DEFINE) || (pc->type > CT_PP_OTHER))
             {
-               cpd.in_preproc = PP_INCLUDE;
+               pc->type = CT_PP_OTHER;
             }
-            else if (pc->type == CT_PP_DEFINE)
-            {
-               cpd.in_preproc = PP_DEFINE;
-            }
-            else if (pc->type == CT_PP_IF)
-            {
-               cpd.in_preproc = PP_IF;
-            }
-            else if (pc->type == CT_PP_ELSE)
-            {
-               cpd.in_preproc = PP_ELSE;
-            }
-            else if (pc->type == CT_PP_ENDIF)
-            {
-               cpd.in_preproc = PP_ENDIF;
-            }
-            else
-            {
-               cpd.in_preproc = PP_OTHER;
-               pc->type       = CT_PP_OTHER;
-            }
+            cpd.in_preproc = pc->type;
          }
       }
       else
@@ -671,7 +651,7 @@ void tokenize(const char *data, int data_len)
          {
             pc->type       = CT_PREPROC;
             pc->flags     |= PCF_IN_PREPROC;
-            cpd.in_preproc = PP_UNKNOWN;
+            cpd.in_preproc = CT_PREPROC;
          }
       }
    }

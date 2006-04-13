@@ -12,13 +12,6 @@
 #include <stdint.h>
 
 
-/* Define a nice boolean */
-typedef enum
-{
-   FALSE = 0,
-   TRUE  = 1,
-} BOOL;
-
 /* some of my favorite aliases */
 
 typedef char       CHAR;

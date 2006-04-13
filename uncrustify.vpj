@@ -51,26 +51,29 @@
 		<Folder
 			Name="Source Files"
 			Filters="*.c;*.C;*.cc;*.cpp;*.cp;*.cxx;*.prg;*.pas;*.dpr;*.asm;*.s;*.bas;*.java;*.cs;*.sc;*.e;*.cob;*.html;*.rc;*.tcl;*.py;*.pl">
-			<F N="src/args.c"/>
-			<F N="src/brace_cleanup.c"/>
-			<F N="src/braces.c"/>
-			<F N="src/c_align.c"/>
-			<F N="src/c_combine.c"/>
-			<F N="src/c_indent.c"/>
-			<F N="src/c_newlines.c"/>
-			<F N="src/c_output.c"/>
-			<F N="src/c_space.c"/>
-			<F N="src/chunk_list.c"/>
-			<F N="src/chunk_stack.c"/>
-			<F N="src/keywords.c"/>
-			<F N="src/logger.c"/>
-			<F N="src/logmask.c"/>
-			<F N="src/options.c"/>
-			<F N="src/parse_frame.c"/>
-			<F N="src/punctuators.c"/>
-			<F N="src/tokenize.c"/>
-			<F N="src/tokenize_cleanup.c"/>
-			<F N="src/uncrustify.c"/>
+			<F N="src/align.cpp"/>
+			<F N="src/align_stack.cpp"/>
+			<F N="src/args.cpp"/>
+			<F N="src/brace_cleanup.cpp"/>
+			<F N="src/braces.cpp"/>
+			<F N="src/chunk_list.cpp"/>
+			<F N="src/chunk_stack.cpp"/>
+			<F N="src/ChunkStack.cpp"/>
+			<F N="src/combine.cpp"/>
+			<F N="src/cpp-test.cpp"/>
+			<F N="src/indent.cpp"/>
+			<F N="src/keywords.cpp"/>
+			<F N="src/logger.cpp"/>
+			<F N="src/logmask.cpp"/>
+			<F N="src/newlines.cpp"/>
+			<F N="src/options.cpp"/>
+			<F N="src/output.cpp"/>
+			<F N="src/parse_frame.cpp"/>
+			<F N="src/punctuators.cpp"/>
+			<F N="src/space.cpp"/>
+			<F N="src/tokenize.cpp"/>
+			<F N="src/tokenize_cleanup.cpp"/>
+			<F N="src/uncrustify.cpp"/>
 		</Folder>
 		<Folder
 			Name="Header Files"
@@ -80,7 +83,8 @@
 			<F N="src/char_table.h"/>
 			<F N="src/chunk_list.h"/>
 			<F N="src/chunk_stack.h"/>
-			<F N="src/cparse_types.h"/>
+			<F N="src/ChunkStack.h"/>
+			<F N="src/ListManager.h"/>
 			<F N="src/log_levels.h"/>
 			<F N="src/logger.h"/>
 			<F N="src/logmask.h"/>
@@ -88,6 +92,7 @@
 			<F N="src/prototypes.h"/>
 			<F N="src/token_enum.h"/>
 			<F N="src/token_names.h"/>
+			<F N="src/uncrustify_types.h"/>
 		</Folder>
 		<Folder
 			Name="Other Files"

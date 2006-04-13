@@ -2,14 +2,14 @@
  * @file c_output.c
  * Does all the output & comment formatting.
  *
- * $Id$
+ * $Id: c_output.c 108 2006-03-26 02:54:32Z bengardner $
  */
 
-#include "cparse_types.h"
+#include "uncrustify_types.h"
 #include "prototypes.h"
 #include "chunk_list.h"
 #include <string.h>
-#include <stdlib.h>
+#include <cstdlib>
 
 
 
@@ -50,7 +50,7 @@ void add_text(const char *text)
  *
  * @param column  The column to advance to
  */
-void output_to_column(int column, BOOL allow_tabs)
+void output_to_column(int column, bool allow_tabs)
 {
    int nc;
 
@@ -104,12 +104,34 @@ void output_parsed(FILE *pfile)
 
 void output_options(FILE *pfile)
 {
-   int idx;
+   int              idx;
+   const options_name_tab *ptr;
 
    for (idx = 0; idx < UO_option_count; idx++)
    {
-      fprintf(pfile, "%3d) %3d '%s'\n",
-              idx, cpd.settings[idx], get_option_name(idx));
+      ptr = get_option_name(idx);
+      if (ptr != NULL)
+      {
+         if (ptr->type == AT_BOOL)
+         {
+            fprintf(pfile, "%3d) %s = %s\n",
+                    ptr->id, ptr->name,
+                    cpd.settings[ptr->id].b ? "True" : "False");
+         }
+         else if (ptr->type == AT_IARF)
+         {
+            fprintf(pfile, "%3d) %s = %s\n",
+                    ptr->id, ptr->name,
+                    (cpd.settings[ptr->id].a == AV_ADD) ? "Add" :
+                    (cpd.settings[ptr->id].a == AV_REMOVE) ? "Remove" :
+                    (cpd.settings[ptr->id].a == AV_FORCE) ? "Force" : "Ignore");
+         }
+         else  /* AT_NUM */
+         {
+            fprintf(pfile, "%3d) %s = %d\n",
+                    ptr->id, ptr->name, cpd.settings[ptr->id].n);
+         }
+      }
    }
 }
 
@@ -122,7 +144,7 @@ void output_text(FILE *pfile)
    chunk_t *prev;
    int     cnt;
    int     lvlcol;
-   BOOL    allow_tabs;
+   bool    allow_tabs;
 
    cpd.fout = pfile;
 
@@ -152,30 +174,30 @@ void output_text(FILE *pfile)
          /* indent to the 'level' first */
          if (cpd.did_newline)
          {
-            if (cpd.settings[UO_indent_with_tabs] == 1)
+            if (cpd.settings[UO_indent_with_tabs].n == 1)
             {
-               lvlcol = 1 + (pc->brace_level * cpd.settings[UO_indent_columns]);
-               output_to_column(lvlcol, TRUE);
+               lvlcol = 1 + (pc->brace_level * cpd.settings[UO_indent_columns].n);
+               output_to_column(lvlcol, true);
             }
-            allow_tabs = (cpd.settings[UO_indent_with_tabs] == 2) ||
+            allow_tabs = (cpd.settings[UO_indent_with_tabs].n == 2) ||
                          (chunk_is_comment(pc) &&
-                          (cpd.settings[UO_indent_with_tabs] != 0));
+                          (cpd.settings[UO_indent_with_tabs].n != 0));
 
             LOG_FMT(LOUTIND, "  %d> col %d/%d - ", pc->orig_line, pc->column, cpd.column);
          }
          else
          {
             /* not the first item on a line */
-            if (cpd.settings[UO_align_keep_tabs])
+            if (cpd.settings[UO_align_keep_tabs].b)
             {
                allow_tabs = pc->after_tab;
             }
             else
             {
                prev       = chunk_get_prev(pc);
-               allow_tabs = (cpd.settings[UO_align_with_tabs] &&
+               allow_tabs = (cpd.settings[UO_align_with_tabs].b &&
                              ((pc->flags & PCF_WAS_ALIGNED) != 0) &&
-                             (((pc->column - 1) % cpd.settings[UO_output_tab_size]) == 0) &&
+                             (((pc->column - 1) % cpd.settings[UO_output_tab_size].n) == 0) &&
                              ((prev->column + prev->len + 1) != pc->column));
             }
             LOG_FMT(LOUTIND, " %d -", pc->column);
@@ -232,7 +254,7 @@ void output_comment_multi(chunk_t *pc)
          }
          else if (ch == '\t')
          {
-            ccol = calc_next_tab_column(ccol, cpd.settings[UO_input_tab_size]);
+            ccol = calc_next_tab_column(ccol, cpd.settings[UO_input_tab_size].n);
             continue;
          }
          else
@@ -268,7 +290,7 @@ void output_comment_multi(chunk_t *pc)
                first_width++;
             }
             /* this is the first line - add unchanged */
-            output_to_column(cmt_col, cpd.settings[UO_indent_with_tabs]);
+            output_to_column(cmt_col, cpd.settings[UO_indent_with_tabs].b);
             add_text(line);
          }
          else
@@ -305,9 +327,9 @@ void output_comment_multi(chunk_t *pc)
             if ((line[0] == '\n') || (line[0] == '\r'))
             {
                /* Emtpy line - just a '\n' */
-               if (cpd.settings[UO_cmt_star_cont])
+               if (cpd.settings[UO_cmt_star_cont].b)
                {
-                  output_to_column(cmt_col, cpd.settings[UO_indent_with_tabs]);
+                  output_to_column(cmt_col, cpd.settings[UO_indent_with_tabs].b);
                   add_text(" *");
                }
                add_char(ch);
@@ -318,8 +340,8 @@ void output_comment_multi(chunk_t *pc)
                if ((line[0] != '*') && (line[0] != '|') && (line[0] != '#') &&
                    (line[0] != '\\'))
                {
-                  output_to_column(cmt_col, cpd.settings[UO_indent_with_tabs]);
-                  if (cpd.settings[UO_cmt_star_cont])
+                  output_to_column(cmt_col, cpd.settings[UO_indent_with_tabs].b);
+                  if (cpd.settings[UO_cmt_star_cont].b)
                   {
                      add_text(" * ");
                   }
@@ -327,7 +349,7 @@ void output_comment_multi(chunk_t *pc)
                   {
                      add_text("   ");
                   }
-                  output_to_column(ccol, cpd.settings[UO_indent_with_tabs]);
+                  output_to_column(ccol, cpd.settings[UO_indent_with_tabs].b);
                }
                else
                {
@@ -335,7 +357,7 @@ void output_comment_multi(chunk_t *pc)
                   {
                      xtra = (lead_width <= 1) ? 1 : 0;
                   }
-                  output_to_column(cmt_col + xtra, cpd.settings[UO_indent_with_tabs]);
+                  output_to_column(cmt_col + xtra, cpd.settings[UO_indent_with_tabs].b);
                }
                add_text(line);
             }

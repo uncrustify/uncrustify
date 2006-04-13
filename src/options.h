@@ -10,7 +10,7 @@
 
 typedef enum
 {
-   AT_BOOL,    /**< TRUE / FALSE */
+   AT_BOOL,    /**< true / false */
    AT_IARF,    /**< Ignore / Add / Remove / Force */
    AT_NUM,     /**< Number */
 } argtype_t;
@@ -24,6 +24,12 @@ typedef enum
    AV_FORCE  = 3, /**< remove + add */
 } argval_t;
 
+typedef union op_val_t
+{
+   argval_t a;
+   int      n;
+   bool     b;
+} op_val_t;
 
 /**
  * Keep this grouped by functionality
@@ -215,9 +221,6 @@ enum uncrustify_options
    UO_option_count
 };
 
-#ifdef DEFINE_OPTION_NAME_TABLE
-
-#define OPTDEF(_x, t)     { UO_ ## _x, t, # _x }
 struct options_name_tab
 {
    int        id;
@@ -225,8 +228,12 @@ struct options_name_tab
    const char *name;
 };
 
+#ifdef DEFINE_OPTION_NAME_TABLE
+
+#define OPTDEF(_x, t)     { UO_ ## _x, t, # _x }
+
 /* Keep this table sorted! */
-struct options_name_tab option_name_table[] =
+options_name_tab option_name_table[] =
 {
    OPTDEF(align_assign_span,             AT_NUM),
    OPTDEF(align_enum_col_max,            AT_NUM),

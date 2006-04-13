@@ -2,14 +2,14 @@
  * @file braces.c
  * Adds or removes braces.
  *
- * $Id$
+ * $Id: braces.c 93 2006-03-23 04:11:00Z bengardner $
  */
-#include "cparse_types.h"
+#include "uncrustify_types.h"
 #include "chunk_list.h"
 #include "chunk_stack.h"
 #include "prototypes.h"
-#include <stdio.h>
-#include <stdlib.h>
+#include <cstdio>
+#include <cstdlib>
 #include <string.h>
 #include <errno.h>
 #include <ctype.h>
@@ -24,18 +24,18 @@ static void remove_brace(chunk_t *pc);
 void do_braces(void)
 {
    /* covert vbraces if needed */
-   if (((cpd.settings[UO_mod_full_brace_if] |
-         cpd.settings[UO_mod_full_brace_do] |
-         cpd.settings[UO_mod_full_brace_for] |
-         cpd.settings[UO_mod_full_brace_while]) & AV_ADD) != 0)
+   if (((cpd.settings[UO_mod_full_brace_if].a |
+         cpd.settings[UO_mod_full_brace_do].a |
+         cpd.settings[UO_mod_full_brace_for].a |
+         cpd.settings[UO_mod_full_brace_while].a) & AV_ADD) != 0)
    {
       convert_vbrace_to_brace();
    }
 
-   if (((cpd.settings[UO_mod_full_brace_if] |
-         cpd.settings[UO_mod_full_brace_do] |
-         cpd.settings[UO_mod_full_brace_for] |
-         cpd.settings[UO_mod_full_brace_while]) & AV_REMOVE) != 0)
+   if (((cpd.settings[UO_mod_full_brace_if].a |
+         cpd.settings[UO_mod_full_brace_do].a |
+         cpd.settings[UO_mod_full_brace_for].a |
+         cpd.settings[UO_mod_full_brace_while].a) & AV_REMOVE) != 0)
    {
       examine_braces();
    }
@@ -56,13 +56,13 @@ static void examine_braces(void)
           ((pc->flags & PCF_IN_PREPROC) == 0))
       {
          if ((((pc->parent_type == CT_IF) || (pc->parent_type == CT_ELSE)) &&
-              ((cpd.settings[UO_mod_full_brace_if] & AV_REMOVE) != 0)) ||
+              ((cpd.settings[UO_mod_full_brace_if].a & AV_REMOVE) != 0)) ||
              ((pc->parent_type == CT_DO) &&
-              ((cpd.settings[UO_mod_full_brace_do] & AV_REMOVE) != 0)) ||
+              ((cpd.settings[UO_mod_full_brace_do].a & AV_REMOVE) != 0)) ||
              ((pc->parent_type == CT_FOR) &&
-              ((cpd.settings[UO_mod_full_brace_for] & AV_REMOVE) != 0)) ||
+              ((cpd.settings[UO_mod_full_brace_for].a & AV_REMOVE) != 0)) ||
              ((pc->parent_type == CT_WHILE) &&
-              ((cpd.settings[UO_mod_full_brace_while] & AV_REMOVE) != 0)))
+              ((cpd.settings[UO_mod_full_brace_while].a & AV_REMOVE) != 0)))
          {
             examine_brace(pc);
          }
@@ -82,9 +82,9 @@ static void examine_brace(chunk_t *bopen)
    chunk_t *prev      = NULL;
    int     semi_count = 0;
    int     level      = bopen->level + 1;
-   BOOL    hit_semi   = FALSE;
-   BOOL    was_fcn    = FALSE;
-   int     nl_max     = cpd.settings[UO_mod_full_brace_nl];
+   bool    hit_semi   = false;
+   bool    was_fcn    = false;
+   int     nl_max     = cpd.settings[UO_mod_full_brace_nl].n;
    int     nl_count   = 0;
 
    LOG_FMT(LBRDEL, "%s: start on %d : ", __func__, bopen->orig_line);
@@ -207,16 +207,16 @@ static void convert_vbrace_to_brace(void)
    for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next_ncnl(pc))
    {
       if ((((pc->parent_type == CT_IF) || (pc->parent_type == CT_ELSE)) &&
-           ((cpd.settings[UO_mod_full_brace_if] & AV_ADD) != 0))
+           ((cpd.settings[UO_mod_full_brace_if].a & AV_ADD) != 0))
           ||
           ((pc->parent_type == CT_FOR) &&
-           ((cpd.settings[UO_mod_full_brace_for] & AV_ADD) != 0))
+           ((cpd.settings[UO_mod_full_brace_for].a & AV_ADD) != 0))
           ||
           ((pc->parent_type == CT_DO) &&
-           ((cpd.settings[UO_mod_full_brace_do] & AV_ADD) != 0))
+           ((cpd.settings[UO_mod_full_brace_do].a & AV_ADD) != 0))
           ||
           ((pc->parent_type == CT_WHILE) &&
-           ((cpd.settings[UO_mod_full_brace_while] & AV_ADD) != 0)))
+           ((cpd.settings[UO_mod_full_brace_while].a & AV_ADD) != 0)))
       {
          if (pc->type == CT_VBRACE_OPEN)
          {

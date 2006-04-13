@@ -34,9 +34,9 @@ void arg_init(int argc, char **argv);
  * "-c" matches "-c", but not "-call" or "-ec"
  *
  * @param token   The token string to match
- * @return        TRUE/FALSE -- Whether the argument was present
+ * @return        true/false -- Whether the argument was present
  */
-BOOL arg_present(const char *token);
+bool arg_present(const char *token);
 
 
 /**
@@ -71,7 +71,7 @@ const char *arg_params(const char *token, int *idx);
  *
  * @param idx  The index of the argument
  */
-BOOL arg_get_used(int idx);
+bool arg_get_used(int idx);
 
 
 /**

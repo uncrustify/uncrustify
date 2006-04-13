@@ -2,15 +2,15 @@
  * @file parse_frame.c
  * @brief Does the parse frame stuff, which is used to handle #ifdef stuff
  *
- * $Id$
+ * $Id: parse_frame.c 91 2006-03-23 02:00:04Z bengardner $
  */
 
-#include "cparse_types.h"
+#include "uncrustify_types.h"
 #include "prototypes.h"
 #include "chunk_list.h"
-#include <stdio.h>
+#include <cstdio>
 #include <string.h>
-#include <stdlib.h>
+#include <cstdlib>
 
 /**
  * Logs one parse frame
@@ -154,23 +154,23 @@ void pf_check(struct parse_frame *frm, chunk_t *pc)
       if (pc->type == CT_PP_IF)
       {
          pf_push(frm);
-         frm->in_ifdef = PP_IF;
+         frm->in_ifdef = CT_PP_IF;
          txt           = "if-push";
       }
       else if (pc->type == CT_PP_ELSE)
       {
-         if (frm->in_ifdef == PP_IF)
+         if (frm->in_ifdef == CT_PP_IF)
          {
             /* need to switch */
             pf_push_under(frm);
             pf_copy_tos(frm);
-            frm->in_ifdef = PP_ELSE;
+            frm->in_ifdef = CT_PP_ELSE;
             txt           = "else-push_under";
          }
-         else if (frm->in_ifdef == PP_ELSE)
+         else if (frm->in_ifdef == CT_PP_ELSE)
          {
             pf_copy_tos(frm);
-            frm->in_ifdef = PP_ELSE;
+            frm->in_ifdef = CT_PP_ELSE;
             txt           = "else-copy";
          }
          else
@@ -180,13 +180,13 @@ void pf_check(struct parse_frame *frm, chunk_t *pc)
       }
       else if (pc->type == CT_PP_ENDIF)
       {
-         if (frm->in_ifdef == PP_ELSE)
+         if (frm->in_ifdef == CT_PP_ELSE)
          {
             pf_trash_tos();
             pf_pop(frm);
             txt = "endif-trash/pop";
          }
-         else if (frm->in_ifdef == PP_IF)
+         else if (frm->in_ifdef == CT_PP_IF)
          {
             pf_pop(frm);
             txt = "endif-pop";

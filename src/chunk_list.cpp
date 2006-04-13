@@ -2,12 +2,12 @@
  * @file chunk_list.c
  * Manages and navigates the list of chunks.
  *
- * $Id: chunk_list.c,v 1.8 2006/02/13 03:30:20 bengardner Exp $
+ * $Id: chunk_list.c 13 2006-02-24 03:21:49Z bengardner $
  */
 
 #include "chunk_list.h"
 #include <string.h>
-#include <stdlib.h>
+#include <cstdlib>
 
 
 static chunk_t *chunk_dup(const chunk_t *pc_in);
@@ -30,7 +30,7 @@ static chunk_t *chunk_dup(const chunk_t *pc_in)
    char    *text;
 
    /* allocate some memory - 1 extra char for labels */
-   pc = malloc(sizeof(chunk_t) + pc_in->len + 2);
+   pc = (chunk_t *)malloc(sizeof(chunk_t) + pc_in->len + 2);
    if (pc == NULL)
    {
       exit(1);
@@ -359,7 +359,7 @@ chunk_t *chunk_get_prev(chunk_t *cur)
 /**
  * Check to see if there is a newline bewteen the two chunks
  */
-BOOL chunk_is_newline_between(chunk_t *start, chunk_t *end)
+bool chunk_is_newline_between(chunk_t *start, chunk_t *end)
 {
    chunk_t *pc;
 
@@ -367,9 +367,9 @@ BOOL chunk_is_newline_between(chunk_t *start, chunk_t *end)
    {
       if (chunk_is_newline(pc))
       {
-         return(TRUE);
+         return(true);
       }
    }
-   return(FALSE);
+   return(false);
 }
 

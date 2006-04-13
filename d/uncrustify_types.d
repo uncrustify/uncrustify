@@ -148,7 +148,7 @@ struct chunk_stack
    int     size;
 };
 
-struct cp_data
+struct cpd_data
 {
    FILE               *fout;
 
@@ -176,9 +176,9 @@ struct cp_data
    int                frame_count;
 
    /* a very simple chunk stack - managed in chunk_list.c/h */
-   chunk_stack_t      cs;
-   int                cs_len;    /* active entries */
-   int                cs_size;   /* total entry count (private) */
+   //chunk_stack_t      cs;
+   //int                cs_len;    /* active entries */
+   //int                cs_size;   /* total entry count (private) */
 };
 
 

@@ -7,28 +7,28 @@
  * $Id: tokenize.c 74 2006-03-18 05:26:34Z bengardner $
  */
 
-#include "cparse_types.h"
+#include "uncrustify_types.h"
 #include "char_table.h"
 #include "prototypes.h"
 #include "chunk_list.h"
-#include <stdio.h>
-#include <stdlib.h>
+#include <cstdio>
+#include <cstdlib>
 #include <string.h>
 #include <errno.h>
 #include <ctype.h>
 
 
-static chunk_t *insert_vbrace(chunk_t *pc, BOOL after,
+static chunk_t *insert_vbrace(chunk_t *pc, bool after,
                               struct parse_frame *frm);
-#define insert_vbrace_close_after(pc, frm)     insert_vbrace(pc, TRUE, frm)
-#define insert_vbrace_open_before(pc, frm)     insert_vbrace(pc, FALSE, frm)
+#define insert_vbrace_close_after(pc, frm)     insert_vbrace(pc, true, frm)
+#define insert_vbrace_open_before(pc, frm)     insert_vbrace(pc, false, frm)
 
 static void parse_cleanup(struct parse_frame *frm, chunk_t *pc);
 
-static BOOL close_statement(struct parse_frame *frm, chunk_t *pc);
+static bool close_statement(struct parse_frame *frm, chunk_t *pc);
 
-static BOOL check_complex_statements(struct parse_frame *frm, chunk_t *pc);
-static BOOL handle_complex_close(struct parse_frame *frm, chunk_t *pc);
+static bool check_complex_statements(struct parse_frame *frm, chunk_t *pc);
+static bool handle_complex_close(struct parse_frame *frm, chunk_t *pc);
 
 
 static void preproc_start(struct parse_frame *frm, chunk_t *pc)
@@ -139,7 +139,7 @@ void brace_cleanup(void)
       if (!chunk_is_comment(pc) && !chunk_is_newline(pc) &&
           ((cpd.in_preproc == CT_PP_DEFINE) || (cpd.in_preproc == CT_NONE)))
       {
-         cpd.consumed = FALSE;
+         cpd.consumed = false;
          parse_cleanup(&frm, pc);
          print_stack(LBCSAFTER, (pc->type == CT_VBRACE_CLOSE) ? "Virt-}" : pc->str, &frm, pc);
       }
@@ -249,7 +249,7 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
    if ((frm->pse[frm->pse_tos].type == CT_VBRACE_OPEN) &&
        (pc->type == CT_SEMICOLON))
    {
-      cpd.consumed = TRUE;
+      cpd.consumed = true;
       close_statement(frm, pc);
    }
 
@@ -264,7 +264,7 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
           ((frm->pse[frm->pse_tos].type == CT_FPAREN_OPEN) ||
            (frm->pse[frm->pse_tos].type == CT_SPAREN_OPEN)))
       {
-         pc->type = frm->pse[frm->pse_tos].type + 1;
+         pc->type = (c_token_t)(frm->pse[frm->pse_tos].type + 1);
          if (pc->type == CT_SPAREN_CLOSE)
          {
             frm->sparen_count--;
@@ -282,7 +282,7 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
       }
       else
       {
-         cpd.consumed = TRUE;
+         cpd.consumed = true;
 
          /* Copy the parent, update the paren/brace levels */
          pc->parent_type = frm->pse[frm->pse_tos].parent;
@@ -459,9 +459,9 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
  *
  * @param frm  The parse frame
  * @param pc   The current chunk
- * @return     TRUE - done with this chunk, FALSE - keep processing
+ * @return     true - done with this chunk, false - keep processing
  */
-static BOOL check_complex_statements(struct parse_frame *frm, chunk_t *pc)
+static bool check_complex_statements(struct parse_frame *frm, chunk_t *pc)
 {
    c_token_t parent;
    chunk_t   *vbrace;
@@ -475,7 +475,7 @@ static BOOL check_complex_statements(struct parse_frame *frm, chunk_t *pc)
          frm->pse[frm->pse_tos].type  = CT_ELSE;
          frm->pse[frm->pse_tos].stage = BS_ELSEIF;
          print_stack(LBCSSWAP, "=Swap   ", frm, pc);
-         return(TRUE);
+         return(true);
       }
 
       /* Remove the CT_IF and close the statement */
@@ -483,7 +483,7 @@ static BOOL check_complex_statements(struct parse_frame *frm, chunk_t *pc)
       print_stack(LBCSPOP, "-IF-CCS ", frm, pc);
       if (close_statement(frm, pc))
       {
-         return(TRUE);
+         return(true);
       }
    }
 
@@ -495,7 +495,7 @@ static BOOL check_complex_statements(struct parse_frame *frm, chunk_t *pc)
          /* Replace CT_ELSE with CT_IF */
          frm->pse[frm->pse_tos].type  = CT_IF;
          frm->pse[frm->pse_tos].stage = BS_PAREN1;
-         return(TRUE);
+         return(true);
       }
 
       /* Jump to the 'expecting brace' stage */
@@ -510,7 +510,7 @@ static BOOL check_complex_statements(struct parse_frame *frm, chunk_t *pc)
          pc->type                     = CT_WHILE_OF_DO;
          frm->pse[frm->pse_tos].type  = CT_WHILE;
          frm->pse[frm->pse_tos].stage = BS_PAREN2;
-         return(TRUE);
+         return(true);
       }
 
       LOG_FMT(LWARN, "%s:%d Error: Expected 'while', got '%s'\n",
@@ -566,7 +566,7 @@ static BOOL check_complex_statements(struct parse_frame *frm, chunk_t *pc)
       print_stack(LBCSPOP, "-Error  ", frm, pc);
    }
 
-   return(FALSE);
+   return(false);
 }
 
 
@@ -576,9 +576,9 @@ static BOOL check_complex_statements(struct parse_frame *frm, chunk_t *pc)
  *
  * @param frm  The parse frame
  * @param pc   The current chunk
- * @return     TRUE - done with this chunk, FALSE - keep processing
+ * @return     true - done with this chunk, false - keep processing
  */
-static BOOL handle_complex_close(struct parse_frame *frm, chunk_t *pc)
+static bool handle_complex_close(struct parse_frame *frm, chunk_t *pc)
 {
    chunk_t *next;
 
@@ -602,7 +602,7 @@ static BOOL handle_complex_close(struct parse_frame *frm, chunk_t *pc)
             print_stack(LBCSPOP, "-IF-HCS ", frm, pc);
             if (close_statement(frm, pc))
             {
-               return(TRUE);
+               return(true);
             }
          }
       }
@@ -614,7 +614,7 @@ static BOOL handle_complex_close(struct parse_frame *frm, chunk_t *pc)
          print_stack(LBCSPOP, "-HCC B2 ", frm, pc);
          if (close_statement(frm, pc))
          {
-            return(TRUE);
+            return(true);
          }
       }
    }
@@ -631,7 +631,7 @@ static BOOL handle_complex_close(struct parse_frame *frm, chunk_t *pc)
 
       if (close_statement(frm, pc))
       {
-         return(TRUE);
+         return(true);
       }
    }
    else
@@ -642,11 +642,11 @@ static BOOL handle_complex_close(struct parse_frame *frm, chunk_t *pc)
               get_token_name(frm->pse[frm->pse_tos].type),
               frm->pse[frm->pse_tos].stage);
    }
-   return(FALSE);
+   return(false);
 }
 
 
-static chunk_t *insert_vbrace(chunk_t *pc, BOOL after,
+static chunk_t *insert_vbrace(chunk_t *pc, bool after,
                               struct parse_frame *frm)
 {
    chunk_t chunk;
@@ -695,9 +695,9 @@ static chunk_t *insert_vbrace(chunk_t *pc, BOOL after,
  * - if the TOS is now VBRACE, insert a CT_VBRACE_CLOSE and recurse.
  * - if the TOS is a complex statement, call handle_complex_close()
  *
- * @return     TRUE - done with this chunk, FALSE - keep processing
+ * @return     true - done with this chunk, false - keep processing
  */
-BOOL close_statement(struct parse_frame *frm, chunk_t *pc)
+bool close_statement(struct parse_frame *frm, chunk_t *pc)
 {
    chunk_t *vbc = pc;
 
@@ -744,7 +744,7 @@ BOOL close_statement(struct parse_frame *frm, chunk_t *pc)
 
          /* And repeat the close */
          close_statement(frm, pc);
-         return(TRUE);
+         return(true);
       }
    }
 
@@ -753,9 +753,9 @@ BOOL close_statement(struct parse_frame *frm, chunk_t *pc)
    {
       if (handle_complex_close(frm, vbc))
       {
-         return(TRUE);
+         return(true);
       }
    }
-   return(FALSE);
+   return(false);
 }
 

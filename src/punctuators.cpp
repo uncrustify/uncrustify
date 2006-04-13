@@ -2,10 +2,10 @@
  * @file punctuators.c
  * Manages the table of punctutators.
  *
- * $Id$
+ * $Id: punctuators.c 161 2006-04-07 22:29:34Z bengardner $
  */
 
-#include "cparse_types.h"
+#include "uncrustify_types.h"
 #include <string.h>
 
 

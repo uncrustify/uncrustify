@@ -2,14 +2,14 @@
  * @file chunk_stack.c
  * Manages a chunk stack
  *
- * $Id$
+ * $Id: chunk_stack.c 166 2006-04-08 23:33:23Z bengardner $
  */
 
 #include "chunk_stack.h"
 #ifdef HAVE_MALLOC_H
 #include <malloc.h>
 #else
-#include <stdlib.h>
+#include <cstdlib>
 #endif
 
 

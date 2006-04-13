@@ -51,22 +51,22 @@ am__installdirs = "$(DESTDIR)$(bindir)"
 binPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
 PROGRAMS = $(bin_PROGRAMS)
 am_uncrustify_OBJECTS = uncrustify.$(OBJEXT) chunk_list.$(OBJEXT) \
-	c_indent.$(OBJEXT) c_align.$(OBJEXT) c_combine.$(OBJEXT) \
-	tokenize.$(OBJEXT) tokenize_cleanup.$(OBJEXT) \
-	c_space.$(OBJEXT) c_newlines.$(OBJEXT) c_output.$(OBJEXT) \
-	args.$(OBJEXT) options.$(OBJEXT) keywords.$(OBJEXT) \
-	punctuators.$(OBJEXT) parse_frame.$(OBJEXT) logmask.$(OBJEXT) \
-	logger.$(OBJEXT) chunk_stack.$(OBJEXT) braces.$(OBJEXT) \
-	brace_cleanup.$(OBJEXT)
+	indent.$(OBJEXT) align.$(OBJEXT) combine.$(OBJEXT) \
+	tokenize.$(OBJEXT) tokenize_cleanup.$(OBJEXT) space.$(OBJEXT) \
+	newlines.$(OBJEXT) output.$(OBJEXT) args.$(OBJEXT) \
+	options.$(OBJEXT) keywords.$(OBJEXT) punctuators.$(OBJEXT) \
+	parse_frame.$(OBJEXT) logmask.$(OBJEXT) logger.$(OBJEXT) \
+	ChunkStack.$(OBJEXT) braces.$(OBJEXT) brace_cleanup.$(OBJEXT)
 uncrustify_OBJECTS = $(am_uncrustify_OBJECTS)
 uncrustify_DEPENDENCIES =
 DEFAULT_INCLUDES = -I. -I$(srcdir)
 depcomp =
 am__depfiles_maybe =
-COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
-	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
-CCLD = $(CC)
-LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
+CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
+	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
+CXXLD = $(CXX)
+CXXLINK = $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) $(AM_LDFLAGS) $(LDFLAGS) \
+	-o $@
 SOURCES = $(uncrustify_SOURCES)
 DIST_SOURCES = $(uncrustify_SOURCES)
 HEADERS = $(noinst_HEADERS)
@@ -87,6 +87,9 @@ CFLAGS = @CFLAGS@
 CORELIBS = @CORELIBS@
 CPP = @CPP@
 CPPFLAGS = @CPPFLAGS@
+CXX = @CXX@
+CXXDEPMODE = @CXXDEPMODE@
+CXXFLAGS = @CXXFLAGS@
 CYGPATH_W = @CYGPATH_W@
 DEFS = @DEFS@
 DEPDIR = @DEPDIR@
@@ -122,10 +125,13 @@ SHELL = @SHELL@
 STRIP = @STRIP@
 VERSION = @VERSION@
 ac_ct_CC = @ac_ct_CC@
+ac_ct_CXX = @ac_ct_CXX@
 ac_ct_RANLIB = @ac_ct_RANLIB@
 ac_ct_STRIP = @ac_ct_STRIP@
 am__fastdepCC_FALSE = @am__fastdepCC_FALSE@
 am__fastdepCC_TRUE = @am__fastdepCC_TRUE@
+am__fastdepCXX_FALSE = @am__fastdepCXX_FALSE@
+am__fastdepCXX_TRUE = @am__fastdepCXX_TRUE@
 am__include = @am__include@
 am__leading_dot = @am__leading_dot@
 am__quote = @am__quote@
@@ -160,20 +166,20 @@ sharedstatedir = @sharedstatedir@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 AUTOMAKE_OPTIONS = foreign no-dependencies
-uncrustify_SOURCES = uncrustify.c chunk_list.c c_indent.c c_align.c c_combine.c \
-		tokenize.c tokenize_cleanup.c c_space.c c_newlines.c c_output.c \
-		args.c options.c keywords.c punctuators.c parse_frame.c \
-		logmask.c logger.c chunk_stack.c braces.c brace_cleanup.c
+uncrustify_SOURCES = uncrustify.cpp chunk_list.cpp indent.cpp align.cpp combine.cpp \
+		tokenize.cpp tokenize_cleanup.cpp space.cpp newlines.cpp output.cpp \
+		args.cpp options.cpp keywords.cpp punctuators.cpp parse_frame.cpp \
+		logmask.cpp logger.cpp ChunkStack.cpp braces.cpp brace_cleanup.cpp
 
 noinst_HEADERS = chunk_list.h options.h char_table.h chunk_list.h \
-		cparse_types.h prototypes.h logmask.h logger.h \
-		chunk_stack.h args.h
+		uncrustify_types.h prototypes.h logmask.h logger.h \
+		ChunkStack.h args.h
 
 uncrustify_LDADD = $(INTLLIBS)
 all: all-am
 
 .SUFFIXES:
-.SUFFIXES: .c .o .obj
+.SUFFIXES: .cpp .o .obj
 $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
@@ -228,7 +234,7 @@ clean-binPROGRAMS:
 	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS)
 uncrustify$(EXEEXT): $(uncrustify_OBJECTS) $(uncrustify_DEPENDENCIES) 
 	@rm -f uncrustify$(EXEEXT)
-	$(LINK) $(uncrustify_LDFLAGS) $(uncrustify_OBJECTS) $(uncrustify_LDADD) $(LIBS)
+	$(CXXLINK) $(uncrustify_LDFLAGS) $(uncrustify_OBJECTS) $(uncrustify_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -236,11 +242,11 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-.c.o:
-	$(COMPILE) -c $<
+.cpp.o:
+	$(CXXCOMPILE) -c -o $@ $<
 
-.c.obj:
-	$(COMPILE) -c `$(CYGPATH_W) '$<'`
+.cpp.obj:
+	$(CXXCOMPILE) -c -o $@ `$(CYGPATH_W) '$<'`
 uninstall-info-am:
 
 ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)

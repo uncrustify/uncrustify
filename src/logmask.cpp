@@ -3,12 +3,12 @@
  *
  * Functions to convert between a string and a severity mask.
  *
- * $Id$
+ * $Id: logmask.c 14 2006-02-24 03:36:04Z bengardner $
  */
 
 #include "logmask.h"
-#include <stdio.h>      /* snprintf() */
-#include <stdlib.h>     /* strtoul() */
+#include <cstdio>      /* snprintf() */
+#include <cstdlib>     /* strtoul() */
 #include <ctype.h>      /* isdigit() */
 
 
@@ -23,7 +23,7 @@
 char *logmask_to_str(const log_mask_t *mask, char *buf, int size)
 {
    int  last_sev = -1;
-   BOOL is_range = FALSE;
+   bool is_range = false;
    int  sev;
    int  len = 0;
 
@@ -46,7 +46,7 @@ char *logmask_to_str(const log_mask_t *mask, char *buf, int size)
          }
          else
          {
-            is_range = TRUE;
+            is_range = true;
          }
          last_sev = sev;
       }
@@ -56,7 +56,7 @@ char *logmask_to_str(const log_mask_t *mask, char *buf, int size)
          {
             buf[len - 1] = '-';  /* change last comma to a dash */
             len         += snprintf(&buf[len], size - len, "%d,", last_sev);
-            is_range     = FALSE;
+            is_range     = false;
          }
          last_sev = -1;
       }
@@ -92,7 +92,7 @@ char *logmask_to_str(const log_mask_t *mask, char *buf, int size)
 void logmask_from_string(const char *str, log_mask_t *mask)
 {
    char *ptmp;
-   BOOL was_dash   = FALSE;
+   bool was_dash   = false;
    int  last_level = -1;
    int  level;
    int  idx;
@@ -103,7 +103,7 @@ void logmask_from_string(const char *str, log_mask_t *mask)
    }
 
    /* Start with a clean mask */
-   logmask_set_all(mask, FALSE);
+   logmask_set_all(mask, false);
 
    while (*str != 0)
    {
@@ -118,27 +118,27 @@ void logmask_from_string(const char *str, log_mask_t *mask)
          level = strtoul(str, &ptmp, 10);
          str   = ptmp;
 
-         logmask_set_sev(mask, level, TRUE);
+         logmask_set_sev(mask, level, true);
          if (was_dash)
          {
             for (idx = last_level + 1; idx < level; idx++)
             {
-               logmask_set_sev(mask, idx, TRUE);
+               logmask_set_sev(mask, idx, true);
             }
-            was_dash = FALSE;
+            was_dash = false;
          }
 
          last_level = level;
       }
       else if (*str == '-')
       {
-         was_dash = TRUE;
+         was_dash = true;
          str++;
       }
       else  /* probably a comma */
       {
          last_level = -1;
-         was_dash   = FALSE;
+         was_dash   = false;
          str++;
       }
    }

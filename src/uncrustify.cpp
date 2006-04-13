@@ -1,24 +1,29 @@
 /**
  * This file takes an input C/C++/D/Java file and reformats it.
  *
- * $Id$
+ * $Id: uncrustify.c 160 2006-04-07 22:29:08Z bengardner $
  */
 #define DEFINE_GLOBAL_DATA
 
-#include "cparse_types.h"
+#include "uncrustify_types.h"
 #include "char_table.h"
 #include "chunk_list.h"
 #include "prototypes.h"
 #include "token_names.h"
 #include "args.h"
+#include "logger.h"
+#include "log_levels.h"
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <strings.h> /* strcasecmp() */
-#include <errno.h>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+//#include <cstrings> /* strcasecmp() */
+#include <cerrno>
 #include <ctype.h>
 #include <sys/stat.h>
+
+/* Global data */
+struct cp_data cpd;
 
 
 static int language_from_tag(const char *tag);
@@ -34,9 +39,9 @@ static void usage_exit(const char *msg, const char *argv0, int code)
    }
    fprintf(stderr,
            "Usage:\n"
-           "%s [-c cfg] [-f file] [-p parsed] [-t typefile] [--version] [-l lang] [-L sev] [-s]\n"
+           "%s -c cfg [-f file] [-p parsed] [-t typefile] [--version] [-l lang] [-L sev] [-s]\n"
            " c : specify the config file\n"
-           " f : specify the file to format\n"
+           " f : specify the file to format, if omitted, stdin is used\n"
            " p : debug - dump parsed tokens to this file\n"
            " L : debug log severities 0-255 for everything\n"
            " s : show log severities\n"
@@ -98,7 +103,8 @@ int main(int argc, char *argv[])
    if (((source_file = arg_param("--file")) == NULL) &&
        ((source_file = arg_param("-f")) == NULL))
    {
-      usage_exit("Specify the file to process: -f file", argv[0], 57);
+      // using stdin
+      //usage_exit("Specify the file to process: -f file", argv[0], 57);
    }
 
    /* Get the config file name */
@@ -118,7 +124,7 @@ int main(int argc, char *argv[])
    /* Enable log sevs? */
    if (arg_present("-s") || arg_present("--show"))
    {
-      log_show_sev(TRUE);
+      log_show_sev(true);
    }
 
    /* Load type files */
@@ -156,31 +162,70 @@ int main(int argc, char *argv[])
       usage_exit(NULL, argv[0], 56);
    }
 
-   /* Do some simple language detection based on the filename */
-   if (cpd.lang_flags == 0)
+   if (source_file == NULL)
    {
-      cpd.lang_flags = language_from_filename(source_file);
-   }
+      UINT32 data_size;
+      int   len;
 
-   /* Try to read in the source file */
-   p_file = fopen(source_file, "r");
-   if (p_file == NULL)
+      if (cpd.lang_flags == 0)
+      {
+         cpd.lang_flags = LANG_C;
+      }
+
+      /* Start with 64k */
+      data_size = 64 * 1024;
+      data = (char *)malloc(data_size);
+      data_len = 0;
+
+      while ((len = fread(&data[data_len], 1, data_size - data_len, stdin)) > 0)
+      {
+         data_len += len;
+         if (data_len == data_size)
+         {
+            data_size += 64 * 1024;
+            data = (char *)realloc(data, data_size);
+            if (data == NULL)
+            {
+               LOG_FMT(LERR, "Out of memory\n");
+               return 100;
+            }
+         }
+      }
+
+      data[data_len] = 0;
+
+      /* Done reading from stdin */
+      LOG_FMT(LSYS, "Parsing: %d bytes from stdin as language %s\n",
+              data_len, language_to_string(cpd.lang_flags));
+   }
+   else
    {
-      LOG_FMT(LERR, "open(%s) failed: %s\n", source_file, strerror(errno));
-      return(1);
+      /* Do some simple language detection based on the filename */
+      if (cpd.lang_flags == 0)
+      {
+         cpd.lang_flags = language_from_filename(source_file);
+      }
+
+      /* Try to read in the source file */
+      p_file = fopen(source_file, "r");
+      if (p_file == NULL)
+      {
+         LOG_FMT(LERR, "open(%s) failed: %s\n", source_file, strerror(errno));
+         return(1);
+      }
+
+      /*note: could have also just MMAP'd the file */
+      fstat(fileno(p_file), &my_stat);
+
+      data_len = my_stat.st_size;
+      data     = (char *)malloc(data_len + 1);
+      fread(data, data_len, 1, p_file);
+      data[data_len] = 0;
+      fclose(p_file);
+
+      LOG_FMT(LSYS, "Parsing: %s as language %s\n",
+              source_file, language_to_string(cpd.lang_flags));
    }
-
-   /*note: could have also just MMAP'd the file */
-   fstat(fileno(p_file), &my_stat);
-
-   data_len = my_stat.st_size;
-   data     = malloc(data_len + 1);
-   fread(data, data_len, 1, p_file);
-   data[data_len] = 0;
-   fclose(p_file);
-
-   LOG_FMT(LSYS, "Parsing: %s as language %s\n",
-           source_file, language_to_string(cpd.lang_flags));
 
    /**
     * Parse the text into chunks
@@ -224,7 +269,7 @@ int main(int argc, char *argv[])
     * Insert line breaks as needed
     */
    newlines_cleanup_braces();
-   if (cpd.settings[UO_nl_squeeze_ifdef])
+   if (cpd.settings[UO_nl_squeeze_ifdef].b)
    {
       newlines_squeeze_ifdef();
    }
@@ -239,7 +284,7 @@ int main(int argc, char *argv[])
    /**
     * Do any aligning of preprocessors
     */
-   if (cpd.settings[UO_align_pp_define_span] > 0)
+   if (cpd.settings[UO_align_pp_define_span].n > 0)
    {
       align_preprocessor();
    }
@@ -259,7 +304,7 @@ int main(int argc, char *argv[])
     * And finally, align the backslash newline stuff
     */
    align_right_comments();
-   if (cpd.settings[UO_align_nl_cont] != 0)
+   if (cpd.settings[UO_align_nl_cont].b)
    {
       align_backslash_newline();
    }
@@ -283,8 +328,7 @@ int main(int argc, char *argv[])
 }
 
 
-const char *get_token_name(c_token_t token)
-{
+const char *get_token_name(c_token_t token){
    if ((token >= 0) && (token < ARRAY_SIZE(token_names)) &&
        (token_names[token] != NULL))
    {
@@ -293,16 +337,15 @@ const char *get_token_name(c_token_t token)
    return("???");
 }
 
-static BOOL ends_with(const char *filename, const char *tag)
-{
+static bool ends_with(const char *filename, const char *tag){
    int len1 = strlen(filename);
    int len2 = strlen(tag);
 
    if ((len2 <= len1) && (strcmp(&filename[len1 - len2], tag) == 0))
    {
-      return(TRUE);
+      return(true);
    }
-   return(FALSE);
+   return(false);
 }
 
 struct file_lang
@@ -311,14 +354,7 @@ struct file_lang
    const char *tag;
    int        lang;
 };
-struct file_lang languages[] =
-{
-   { ".c",    "C",    LANG_C },
-   { ".h",    "",     LANG_C },
-   { ".cpp",  "CPP",  LANG_CPP },
-   { ".d",    "D",    LANG_D },
-   { ".cs",   "CS",   LANG_CS },
-   { ".java", "JAVA", LANG_JAVA },
+struct file_lang languages[] ={{ ".c",    "C",    LANG_C},{ ".h",    "",     LANG_C},{ ".cpp",  "CPP",  LANG_CPP},{ ".d",    "D",    LANG_D},{ ".cs",   "CS",   LANG_CS},{ ".java", "JAVA", LANG_JAVA},
 };
 
 /**
@@ -328,8 +364,7 @@ struct file_lang languages[] =
  * @param filename   The name of the file
  * @return           LANG_xxx
  */
-static int language_from_filename(const char *filename)
-{
+static int language_from_filename(const char *filename){
    int i;
 
    for (i = 0; i < ARRAY_SIZE(languages); i++)
@@ -349,8 +384,7 @@ static int language_from_filename(const char *filename)
  * @param filename   The name of the file
  * @return           LANG_xxx
  */
-static int language_from_tag(const char *tag)
-{
+static int language_from_tag(const char *tag){
    int i;
 
    for (i = 0; i < ARRAY_SIZE(languages); i++)
@@ -369,8 +403,7 @@ static int language_from_tag(const char *tag)
  * @param lang    The LANG_xxx enum
  * @return        A string
  */
-static const char *language_to_string(int lang)
-{
+static const char *language_to_string(int lang){
    int i;
 
    for (i = 0; i < ARRAY_SIZE(languages); i++)

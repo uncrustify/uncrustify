@@ -10,18 +10,18 @@
 
 #include <string.h>
 #include <ctype.h>
-#include <stdio.h>
+#include <cstdio>
 #ifdef HAVE_MALLOC_H
 #include <malloc.h>
 #else
-#include <stdlib.h>
+#include <cstdlib>
 #endif
 
 struct args_data
 {
    int  count;
    char **values;
-   BOOL *used;      /* lazy - could do an array of bits */
+   bool *used;      /* lazy - could do an array of bits */
 };
 
 static struct args_data ad;
@@ -37,7 +37,7 @@ void arg_init(int argc, char **argv)
 {
    ad.count  = argc;
    ad.values = argv;
-   ad.used   = calloc(1, argc);
+   ad.used   = (bool *)calloc(1, argc);
 }
 
 
@@ -45,9 +45,9 @@ void arg_init(int argc, char **argv)
  * Check for an exact match
  *
  * @param token   The token string to match
- * @return        TRUE/FALSE -- Whether the argument was present
+ * @return        true/false -- Whether the argument was present
  */
-BOOL arg_present(const char *token)
+bool arg_present(const char *token)
 {
    int idx;
 
@@ -59,14 +59,14 @@ BOOL arg_present(const char *token)
          {
             if (ad.used != NULL)
             {
-               ad.used[idx] = TRUE;
+               ad.used[idx] = true;
             }
-            return(TRUE);
+            return(true);
          }
       }
    }
 
-   return(FALSE);
+   return(false);
 }
 
 
@@ -113,7 +113,7 @@ const char *arg_params(const char *token, int *index)
       {
          if (ad.used != NULL)
          {
-            ad.used[idx] = TRUE;
+            ad.used[idx] = true;
          }
          if (arg_len > token_len)
          {
@@ -136,7 +136,7 @@ const char *arg_params(const char *token, int *index)
          {
             if (ad.used != NULL)
             {
-               ad.used[idx] = TRUE;
+               ad.used[idx] = true;
             }
             return(ad.values[idx]);
          }
@@ -153,13 +153,13 @@ const char *arg_params(const char *token, int *index)
  *
  * @param idx  The index of the argument
  */
-BOOL arg_get_used(int idx)
+bool arg_get_used(int idx)
 {
    if ((ad.used != NULL) && (ad.count > idx))
    {
       return(ad.used[idx]);
    }
-   return(FALSE);
+   return(false);
 }
 
 
@@ -172,7 +172,7 @@ void arg_set_used(int idx)
 {
    if ((ad.used != NULL) && (ad.count > idx))
    {
-      ad.used[idx] = TRUE;
+      ad.used[idx] = true;
    }
 }
 
