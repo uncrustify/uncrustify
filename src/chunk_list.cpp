@@ -29,24 +29,17 @@ static chunk_t *chunk_dup(const chunk_t *pc_in)
    chunk_t *pc;
    char    *text;
 
-   /* allocate some memory - 1 extra char for labels */
-   pc = (chunk_t *)malloc(sizeof(chunk_t) + pc_in->len + 2);
+   /* Allocate the entry */
+   pc = new chunk_t;
    if (pc == NULL)
    {
       exit(1);
    }
 
-   /* Text goes after the structure */
-   text = (char *)&pc[1];
-
-   /* Set all fields */
+   /* Copy all fields, except next/prev */
    *pc      = *pc_in;
    pc->prev = pc->next = NULL;
-   pc->str  = text;
-
-   /* Fix the str pointer & copy the string */
-   memcpy(text, pc_in->str, pc_in->len);
-   text[pc->len] = 0;
+   //chunk_init(pc);
 
    return(pc);
 }

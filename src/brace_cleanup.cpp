@@ -220,8 +220,8 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
    {
       pc->flags |= PCF_EXPR_START;
       pc->flags |= (frm->stmt_count == 0) ? PCF_STMT_START : 0;
-      LOG_FMT(LSTMT, "%d] 1.marked %s as stmt start st:%d ex:%d\n",
-              pc->orig_line, pc->str, frm->stmt_count, frm->expr_count);
+      LOG_FMT(LSTMT, "%d] 1.marked %.*s as stmt start st:%d ex:%d\n",
+              pc->orig_line, pc->len, pc->str, frm->stmt_count, frm->expr_count);
    }
    frm->stmt_count++;
    frm->expr_count++;
@@ -275,8 +275,8 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
       /* Make sure the open / close match */
       if (pc->type != (frm->pse[frm->pse_tos].type + 1))
       {
-         LOG_FMT(LWARN, "%s:%d Error: Unexpected '%s' for '%s'\n",
-                 __func__, pc->orig_line, pc->str,
+         LOG_FMT(LWARN, "%s:%d Error: Unexpected '%.*s' for '%s'\n",
+                 __func__, pc->orig_line, pc->len, pc->str,
                  get_token_name(frm->pse[frm->pse_tos].type));
          print_stack(LBCSPOP, "=Error  ", frm, pc);
       }
@@ -418,7 +418,8 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
         (frm->pse[frm->pse_tos].type != CT_FPAREN_OPEN) &&
         (frm->pse[frm->pse_tos].type != CT_SPAREN_OPEN)))
    {
-      LOG_FMT(LSTMT, "%s: %d> reset stmt on %s\n", __func__, pc->orig_line, pc->str);
+      LOG_FMT(LSTMT, "%s: %d> reset stmt on %.*s\n",
+              __func__, pc->orig_line, pc->len, pc->str);
       frm->stmt_count = 0;
       frm->expr_count = 0;
    }
@@ -444,7 +445,8 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
        (pc->type == CT_QUESTION))
    {
       frm->expr_count = 0;
-      LOG_FMT(LSTMT, "%s: %d> reset expr on %s\n", __func__, pc->orig_line, pc->str);
+      LOG_FMT(LSTMT, "%s: %d> reset expr on %.*s\n",
+              __func__, pc->orig_line, pc->len, pc->str);
    }
 }
 
@@ -513,8 +515,8 @@ static bool check_complex_statements(struct parse_frame *frm, chunk_t *pc)
          return(true);
       }
 
-      LOG_FMT(LWARN, "%s:%d Error: Expected 'while', got '%s'\n",
-              __func__, pc->orig_line, pc->str);
+      LOG_FMT(LWARN, "%s:%d Error: Expected 'while', got '%.*s'\n",
+              __func__, pc->orig_line, pc->len, pc->str);
       frm->pse_tos--;
       print_stack(LBCSPOP, "-Error  ", frm, pc);
    }
@@ -549,7 +551,7 @@ static bool check_complex_statements(struct parse_frame *frm, chunk_t *pc)
       pc->flags      |= PCF_STMT_START | PCF_EXPR_START;
       frm->stmt_count = 1;
       frm->expr_count = 1;
-      LOG_FMT(LSTMT, "%d] 2.marked %s as stmt start\n", pc->orig_line, pc->str);
+      LOG_FMT(LSTMT, "%d] 2.marked %.*s as stmt start\n", pc->orig_line, pc->len, pc->str);
    }
 
    /* Verify open paren in complex statement */
@@ -557,8 +559,8 @@ static bool check_complex_statements(struct parse_frame *frm, chunk_t *pc)
        ((frm->pse[frm->pse_tos].stage == BS_PAREN1) ||
         (frm->pse[frm->pse_tos].stage == BS_PAREN2)))
    {
-      LOG_FMT(LWARN, "%s:%d Error: Expected '(', got '%s' for '%s'\n",
-              __func__, pc->orig_line, pc->str,
+      LOG_FMT(LWARN, "%s:%d Error: Expected '(', got '%.*s' for '%s'\n",
+              __func__, pc->orig_line, pc->len, pc->str,
               get_token_name(frm->pse[frm->pse_tos].type));
 
       /* Throw out the complex statement */
@@ -701,9 +703,9 @@ bool close_statement(struct parse_frame *frm, chunk_t *pc)
 {
    chunk_t *vbc = pc;
 
-   LOG_FMT(LTOK, "%s:%d] %s'%s' type %s stage %d\n", __func__,
+   LOG_FMT(LTOK, "%s:%d] %s '%.*s' type %s stage %d\n", __func__,
            pc->orig_line,
-           get_token_name(pc->type), pc->str,
+           get_token_name(pc->type), pc->len, pc->str,
            get_token_name(frm->pse[frm->pse_tos].type),
            frm->pse[frm->pse_tos].stage);
 
@@ -711,8 +713,8 @@ bool close_statement(struct parse_frame *frm, chunk_t *pc)
    {
       frm->stmt_count = 0;
       frm->expr_count = 0;
-      LOG_FMT(LSTMT, "%s: %d> reset stmt on %s\n",
-              __func__, pc->orig_line, pc->str);
+      LOG_FMT(LSTMT, "%s: %d> reset stmt on %.*s\n",
+              __func__, pc->orig_line, pc->len, pc->str);
    }
 
    /**

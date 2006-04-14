@@ -61,8 +61,8 @@ static void newline_min_after2(chunk_t *ref, int32_t count,
    chunk_t *pc = ref;
    chunk_t *next;
 
-   LOG_FMT(LNEWLINE, "%s: %s line %d - count %d : caller=%s:%d\n",
-           __func__, ref->str, ref->orig_line, count, func, line);
+   LOG_FMT(LNEWLINE, "%s: %.*s line %d - count %d : caller=%s:%d\n",
+           __func__, ref->len, ref->str, ref->orig_line, count, func, line);
 
    do
    {
@@ -103,9 +103,9 @@ static chunk_t *newline_add_between2(chunk_t *start, chunk_t *end,
       return(NULL);
    }
 
-   LOG_FMT(LNEWLINE, "%s: '%s' line %d and '%s' line %d : caller=%s:%d\n",
-           __func__, start->str, start->orig_line, end->str, end->orig_line,
-           func, line);
+   LOG_FMT(LNEWLINE, "%s: '%.*s' line %d and '%.*s' line %d : caller=%s:%d\n",
+           __func__, start->len, start->str, start->orig_line,
+           end->len, end->str, end->orig_line, func, line);
 
    /* Scan for a line break */
    for (pc = start; pc != end; pc = chunk_get_next(pc))
@@ -136,9 +136,9 @@ static void newline_del_between2(chunk_t *start, chunk_t *end,
    chunk_t *next;
    chunk_t *pc = start;
 
-   LOG_FMT(LNEWLINE, "%s: '%s' line %d and '%s' line %d : caller=%s:%d\n",
-           __func__, start->str, start->orig_line, end->str, end->orig_line,
-           func, line);
+   LOG_FMT(LNEWLINE, "%s: '%.*s' line %d and '%.*s' line %d : caller=%s:%d\n",
+           __func__, start->len, start->str, start->orig_line,
+           end->len, end->str, end->orig_line, func, line);
 
    do
    {

@@ -51,9 +51,16 @@ static void align_stack(ChunkStack& cs, int col, bool align_single, log_sev_t se
          indent_to_column(pc, col);
          pc->flags |= PCF_WAS_ALIGNED;
 
-         LOG_FMT(sev, "%s: indented [%s] on line %d to %d\n",
-                 __func__, (pc->type == CT_NL_CONT) ? "NL_CONT" : pc->str,
-                 pc->orig_line, pc->column);
+         if (pc->type == CT_NL_CONT)
+         {
+            LOG_FMT(sev, "%s: indented [NL_CONT] on line %d to %d\n",
+                    __func__, pc->orig_line, pc->column);
+         }
+         else
+         {
+            LOG_FMT(sev, "%s: indented [%.*s] on line %d to %d\n",
+                    __func__, pc->len, pc->str, pc->orig_line, pc->column);
+         }
       }
    }
    cs.Reset();
@@ -271,8 +278,8 @@ void align_preprocessor(void)
          break;
       }
 
-      LOG_FMT(LALPP, "%s: define (%s) on line %d col %d\n",
-              __func__, pc->str, pc->orig_line, pc->orig_col);
+      LOG_FMT(LALPP, "%s: define (%.*s) on line %d col %d\n",
+              __func__, pc->len, pc->str, pc->orig_line, pc->orig_col);
 
       pmf = mf;
       if (pc->type == CT_MACRO_FUNC)
@@ -282,8 +289,8 @@ void align_preprocessor(void)
          pc = chunk_get_next_type(pc, CT_FPAREN_CLOSE, pc->level);
          mf = true;
 
-         LOG_FMT(LALPP, "%s: jumped to (%s) on line %d col %d\n",
-                 __func__, pc->str, pc->orig_line, pc->orig_col);
+         LOG_FMT(LALPP, "%s: jumped to (%.*s) on line %d col %d\n",
+                 __func__, pc->len, pc->str, pc->orig_line, pc->orig_col);
       }
       else
       {
@@ -307,8 +314,8 @@ void align_preprocessor(void)
        * a value is given */
       if (!chunk_is_newline(pc))
       {
-         LOG_FMT(LALPP, "%s: align on '%s', line %d col %d\n",
-                 __func__, pc->str, pc->orig_line, pc->orig_col);
+         LOG_FMT(LALPP, "%s: align on '%.*s', line %d col %d\n",
+                 __func__, pc->len, pc->str, pc->orig_line, pc->orig_col);
 
          align_add(cs, pc, &max_col, cpd.settings[UO_align_pp_define_gap].n);
          nl_count   = 0;
@@ -382,8 +389,8 @@ chunk_t *align_assign(chunk_t *first, int span)
       myspan = cpd.settings[UO_align_enum_equ].n;
    }
 
-   LOG_FMT(LALASS, "%s[%d]: checking %s on line %d\n",
-           __func__, my_level, first->str, first->orig_line);
+   LOG_FMT(LALASS, "%s[%d]: checking %.*s on line %d\n",
+           __func__, my_level, first->len, first->str, first->orig_line);
 
    pc = first;
    while ((pc != NULL) && ((pc->level >= my_level) || (pc->level == 0)))
@@ -499,7 +506,8 @@ chunk_t *align_assign(chunk_t *first, int span)
 
    if (pc != NULL)
    {
-      LOG_FMT(LALASS, "%s: done on %s on line %d\n", __func__, pc->str, pc->orig_line);
+      LOG_FMT(LALASS, "%s: done on %.*s on line %d\n",
+              __func__, pc->len, pc->str, pc->orig_line);
    }
    else
    {
@@ -1165,8 +1173,8 @@ static void align_init_brace(chunk_t *start)
          if ((next != NULL) && (pc->type == cpd.al[idx].type) &&
              ((next->flags & PCF_WAS_ALIGNED) != 0))
          {
-            LOG_FMT(LALBR, " -%d- [%s] to col %d\n", next->orig_line,
-                    next->str, cpd.al[idx].col);
+            LOG_FMT(LALBR, " -%d- [%.*s] to col %d\n", next->orig_line,
+                    next->len, next->str, cpd.al[idx].col);
 
             next->flags |= PCF_WAS_ALIGNED;
 

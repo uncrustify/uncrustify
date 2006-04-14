@@ -27,6 +27,7 @@ void output_comment_multi(chunk_t *pc);
 void output_options(FILE *pfile);
 void output_to_column(int column, bool allow_tabs);
 void add_text(const char *text);
+void add_text_len(const char *text, int len);
 void add_char(char ch);
 
 

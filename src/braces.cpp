@@ -117,7 +117,7 @@ static void examine_brace(chunk_t *bopen)
                return;
             }
 
-            LOG_FMT(LBRDEL, " [%s %d-%d]", pc->str, pc->orig_line, semi_count);
+            LOG_FMT(LBRDEL, " [%.*s %d-%d]", pc->len, pc->str, pc->orig_line, semi_count);
 
             was_fcn = (prev != NULL) && (prev->type == CT_FPAREN_CLOSE);
 
@@ -131,8 +131,8 @@ static void examine_brace(chunk_t *bopen)
                hit_semi |= (pc->type == CT_SEMICOLON);
                if (++semi_count > 1)
                {
-                  LOG_FMT(LBRDEL, " bailed on %d because of %s on line %d\n",
-                          bopen->orig_line, pc->str, pc->orig_line);
+                  LOG_FMT(LBRDEL, " bailed on %d because of %.*s on line %d\n",
+                          bopen->orig_line, pc->len, pc->str, pc->orig_line);
                   return;
                }
             }
@@ -163,7 +163,7 @@ static void examine_brace(chunk_t *bopen)
    }
    else
    {
-      LOG_FMT(LBRDEL, " not a close brace? - '%s'\n", pc->str);
+      LOG_FMT(LBRDEL, " not a close brace? - '%.*s'\n", pc->len, pc->str);
    }
 }
 

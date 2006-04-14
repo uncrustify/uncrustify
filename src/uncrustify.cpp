@@ -319,6 +319,8 @@ int main(int argc, char *argv[])
       }
    }
 
+   /* TODO: use freopen() to redirect output to a file */
+
    /**
     * Now render it all to the output file
     */
@@ -360,11 +362,11 @@ struct file_lang
 struct file_lang languages[] =
 {
    { ".c",    "C",    LANG_C },
-   { ".h",    "",     LANG_CPP },
    { ".cpp",  "CPP",  LANG_CPP },
    { ".d",    "D",    LANG_D },
    { ".cs",   "CS",   LANG_CS },
    { ".java", "JAVA", LANG_JAVA },
+   { ".h",    "",     LANG_CPP },
 };
 
 /**

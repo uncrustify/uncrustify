@@ -473,13 +473,17 @@ static chunk_t *process_return(chunk_t *pc)
 }
 
 
-bool is_ucase_str(const char *str)
+static bool is_ucase_str(const char *str, int len)
 {
-   while (isupper(*str))
+   while (len-- > 0)
    {
+      if (!isupper(*str))
+      {
+         return false;
+      }
       str++;
    }
-   return((*str == 0) ? true : false);
+   return(true);
 }
 
 /**
@@ -557,14 +561,14 @@ static void fix_casts(chunk_t *start)
       {
          detail = " -- '_t'";
       }
-      else if (is_ucase_str(last->str))
+      else if (is_ucase_str(last->str, last->len))
       {
          detail = " -- upper case";
       }
       else
       {
-         LOG_FMT(LCASTS, "%s: unlikely cast (%s) on line %d\n",
-                 __func__, last->str, start->orig_line);
+         LOG_FMT(LCASTS, "%s: unlikely cast (%.*s) on line %d\n",
+                 __func__, last->len, last->str, start->orig_line);
          return;
       }
 
@@ -624,15 +628,15 @@ static void fix_casts(chunk_t *start)
                (pc->type != CT_PAREN_OPEN) &&
                (pc->type != CT_STRING))
       {
-         LOG_FMT(LCASTS, "%s: not a cast on line %d - followed by '%s' %s\n",
-                 __func__, start->orig_line, pc->str, get_token_name(pc->type));
+         LOG_FMT(LCASTS, "%s: not a cast on line %d - followed by '%.*s' %s\n",
+                 __func__, start->orig_line, pc->len, pc->str, get_token_name(pc->type));
          return;
       }
 
       if (nope)
       {
-         LOG_FMT(LCASTS, "%s: not a cast on line %d - '%s' followed by %s\n",
-                 __func__, start->orig_line, pc->str, get_token_name(after->type));
+         LOG_FMT(LCASTS, "%s: not a cast on line %d - '%.*s' followed by %s\n",
+                 __func__, start->orig_line, pc->len, pc->str, get_token_name(after->type));
          return;
       }
    }
@@ -653,7 +657,7 @@ static void fix_casts(chunk_t *start)
       {
          pc->type = CT_PTR_TYPE;
       }
-      LOG_FMT(LCASTS, " %s", pc->str);
+      LOG_FMT(LCASTS, " %.*s", pc->len, pc->str);
    }
    LOG_FMT(LCASTS, " )%s\n", detail);
 
@@ -965,11 +969,11 @@ static void mark_variable_stack(ChunkStack& cs, log_sev_t sev)
 
       while ((word_type = cs.Pop()) != NULL)
       {
-         LOG_FMT(LFCNP, " <%s>", word_type->str);
+         LOG_FMT(LFCNP, " <%.*s>", word_type->len, word_type->str);
          word_type->type = CT_TYPE;
       }
 
-      LOG_FMT(LFCNP, " [%s]\n", var_name->str);
+      LOG_FMT(LFCNP, " [%.*s]\n", var_name->len, var_name->str);
       var_name->flags |= PCF_VAR_DEF;
    }
 }
@@ -979,7 +983,7 @@ static void mark_variable_stack(ChunkStack& cs, log_sev_t sev)
  */
 static void fix_fcn_def_params(chunk_t *pc)
 {
-   LOG_FMT(LFCNP, "%s: %s on line %d\n", __func__, pc->str, pc->orig_line);
+   LOG_FMT(LFCNP, "%s: %.*s on line %d\n", __func__, pc->len, pc->str, pc->orig_line);
 
    ChunkStack cs;
 
@@ -1044,7 +1048,7 @@ static void fix_var_def(chunk_t *start)
           (pc->type == CT_QUALIFIER) ||
           chunk_is_star(pc))
    {
-      LOG_FMT(LFVD, " %s[%s]", pc->str, get_token_name(pc->type));
+      LOG_FMT(LFVD, " %.*s[%s]", pc->len, pc->str, get_token_name(pc->type));
       type_count++;
       before_end = pc;
       pc         = chunk_get_next_ncnl(pc);
@@ -1074,7 +1078,7 @@ static void fix_var_def(chunk_t *start)
    for (pc = start; pc != before_end; pc = chunk_get_next_ncnl(pc))
    {
       make_type(pc);
-      LOG_FMT(LFVD, " %s[%s]", pc->str, get_token_name(pc->type));
+      LOG_FMT(LFVD, " %.*s[%s]", pc->len, pc->str, get_token_name(pc->type));
    }
    LOG_FMT(LFVD, "\n");
 
@@ -1181,7 +1185,7 @@ static void mark_function(chunk_t *pc)
    prev = chunk_get_prev_ncnlnp(pc);
    next = chunk_get_next_ncnlnp(pc);
 
-   LOG_FMT(LFCN, "%s: %s[%s]\n", __func__, pc->str, get_token_name(pc->type));
+   LOG_FMT(LFCN, "%s: %.*s[%s]\n", __func__, pc->len, pc->str, get_token_name(pc->type));
 
    /**
     * Scan to see if this is a function variable def:
@@ -1210,8 +1214,8 @@ static void mark_function(chunk_t *pc)
          tmp = chunk_get_next_ncnl(tmp);
          if ((tmp != NULL) && (tmp->type == CT_PAREN_OPEN))
          {
-            LOG_FMT(LFCN, "Detected func var %s on line %d col %d\n",
-                    var->str, var->orig_line, var->orig_col);
+            LOG_FMT(LFCN, "Detected func var %.*s on line %d col %d\n",
+                    var->len, var->str, var->orig_line, var->orig_col);
             var->flags |= PCF_VAR_1ST_DEF;
 
             /* Mark parameters */
@@ -1246,9 +1250,10 @@ static void mark_function(chunk_t *pc)
          prev = chunk_get_prev_ncnlnp(prev);
          if ((prev != NULL) && (prev->type == CT_WORD))
          {
-            if ((pc->len == prev->len) && (strcmp(pc->str, prev->str) == 0))
+            if ((pc->len == prev->len) && (memcmp(pc->str, prev->str, pc->len) == 0))
             {
-               LOG_FMT(LFCN, "FOUND [DE|CON]STRUCTOR for %s[%s] ", prev->str, get_token_name(prev->type));
+               LOG_FMT(LFCN, "FOUND [DE|CON]STRUCTOR for %.*s[%s] ",
+                       prev->len, prev->str, get_token_name(prev->type));
                pc->type = CT_FUNC_DEF;
                if (destr != NULL)
                {
@@ -1272,7 +1277,8 @@ static void mark_function(chunk_t *pc)
               (prev->type == CT_DC_MEMBER) ||
               chunk_is_star(prev)))
       {
-         LOG_FMT(LFCN, "FCN_DEF due to %s[%s] ", prev->str, get_token_name(prev->type));
+         LOG_FMT(LFCN, "FCN_DEF due to %.*s[%s] ",
+                 prev->len, prev->str, get_token_name(prev->type));
 
          pc->type = CT_FUNC_DEF;
          make_type(prev);
@@ -1347,8 +1353,8 @@ static void mark_class_ctor(chunk_t *pclass)
    chunk_t *pc   = chunk_get_next_ncnl(pclass);
    int     level = pclass->brace_level + 1;
 
-   LOG_FMT(LFTOR, "%s: Called on %s on line %d\n",
-           __func__, pc->str, pc->orig_line);
+   LOG_FMT(LFTOR, "%s: Called on %.*s on line %d\n",
+           __func__, pc->len, pc->str, pc->orig_line);
 
    /* Find the open brace, abort on semicolon */
    while ((pc != NULL) && (pc->type != CT_BRACE_OPEN))
@@ -1383,10 +1389,11 @@ static void mark_class_ctor(chunk_t *pclass)
       }
 
       if ((pc->type == CT_FUNCTION) &&
-          (strcmp(pc->str, pclass->str) == 0))
+          (pc->len == pclass->len) &&
+          (memcmp(pc->str, pclass->str, pc->len) == 0))
       {
          pc->type = CT_FUNC_CLASS;
-         LOG_FMT(LFTOR, "%d] Marked CTor/DTor %s\n", pc->orig_line, pc->str);
+         LOG_FMT(LFTOR, "%d] Marked CTor/DTor %.*s\n", pc->orig_line, pc->len, pc->str);
          pc = chunk_get_next_ncnl(pc);
          fix_fcn_def_params(pc);
       }
