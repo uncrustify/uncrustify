@@ -40,7 +40,7 @@ def process_test_file(filename):
     print "Processing " + filename
     for line in fd:
         line = string.rstrip(string.lstrip(line))
-        parts = string.rsplit(line)
+        parts = string.split(line)
         if (len(parts) < 4) or (parts[0][0] == '#'):
             continue
         run_tests(parts[0], parts[1], parts[2], parts[3])
