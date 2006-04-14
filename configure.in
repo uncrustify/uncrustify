@@ -24,7 +24,6 @@ dnl Touch the makefile.in to avoid running automake the next time we
 dnl run.
 touch Makefile.in
 
-# AC_CHECK_HEADER(malloc.h, AC_DEFINE(HAVE_MALLOC_H,1,[do we have malloc.h?]))
 AC_CHECK_HEADER(stdint.h, AC_DEFINE(HAVE_STDINT_H,1,[do we have stdint.h?]))
 AC_CHECK_HEADER(inttypes.h, AC_DEFINE(HAVE_INTTYPES_H,1,[do we have inttypes.h?]))
 

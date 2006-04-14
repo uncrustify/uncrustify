@@ -3876,7 +3876,6 @@ CFLAGS="$GGDBFLAGS $CFLAGS"
 
 touch Makefile.in
 
-# AC_CHECK_HEADER(malloc.h, AC_DEFINE(HAVE_MALLOC_H,1,[do we have malloc.h?]))
 # On IRIX 5.3, sys/types and inttypes.h are conflicting.
 
 
