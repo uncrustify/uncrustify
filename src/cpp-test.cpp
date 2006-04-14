@@ -30,7 +30,7 @@ public:
    void      *pc;
 };
 
-template < class T > class ListManager
+template <class T> class ListManager
 {
 protected:
    T head;
@@ -105,7 +105,7 @@ public:
    }
 };
 
-typedef ListManager < ChunkNode > ChunkNodeList;
+typedef ListManager <ChunkNode> ChunkNodeList;
 
 
 int main(int argc, char **argv)

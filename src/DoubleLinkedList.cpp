@@ -3,7 +3,7 @@
 
 
 /** A smart node on a list */
-template < class T > class DoubleLinkedNode
+template <class T> class DoubleLinkedNode
 {
 public:
    DoubleLinkedNode(const T& d)
@@ -66,7 +66,7 @@ public:
    T * data;
 };
 
-class Dummy : public DoubleLinkedNode < Dummy >
+class Dummy : public DoubleLinkedNode <Dummy>
 {
 public:
    int value;

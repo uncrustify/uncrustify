@@ -9,12 +9,6 @@
 #define CHUNK_LIST_H_INCLUDED
 
 #include "uncrustify_types.h"
-#ifdef HAVE_MALLOC_H
-#include <malloc.h>
-#else
-#include <cstdlib>
-#endif
-
 
 void chunk_list_init(void);
 

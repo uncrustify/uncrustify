@@ -9,7 +9,13 @@
 #ifndef BASE_TYPES_H_INCLUDED
 #define BASE_TYPES_H_INCLUDED
 
+#if defined HAVE_STDINT_H
 #include <stdint.h>
+#elif defined HAVE_INTTYPES_H
+#include <inttypes.h>
+#else
+#error "Don't know where int8_t is defined"
+#endif
 
 
 /* some of my favorite aliases */

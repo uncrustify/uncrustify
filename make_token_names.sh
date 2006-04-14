@@ -26,7 +26,7 @@ EOF
 
 for item in $names ; do
     name=$(echo $item | sed -e 's/CT_//g')
-    echo "   /* [$item] = */ \"$name\"," >> $outfile
+    echo "   \"$name\", /* $item */" >> $outfile
 done
 
 cat >> $outfile <<EOF
