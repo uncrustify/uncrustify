@@ -9,6 +9,11 @@
 #include <cstring>
 #include <cstdlib>
 
+#include "ListManager.h"
+
+typedef ListManager<chunk_t> ChunkList;
+
+ChunkList g_cl;
 
 static chunk_t *chunk_dup(const chunk_t *pc_in);
 
@@ -18,16 +23,32 @@ static chunk_t *chunk_dup(const chunk_t *pc_in);
  */
 void chunk_list_init(void)
 {
-   cpd.list_chunks.str  = "-= LIST =-";
-   cpd.list_chunks.len  = 10;
-   cpd.list_chunks.next = &cpd.list_chunks;
-   cpd.list_chunks.prev = &cpd.list_chunks;
+   //g_cl = new ChunkList();
+}
+
+chunk_t *chunk_get_head(void)
+{
+   return g_cl.GetHead();
+}
+
+chunk_t *chunk_get_tail(void)
+{
+   return g_cl.GetTail();
+}
+
+chunk_t *chunk_get_next(chunk_t *cur)
+{
+   return g_cl.GetNext(cur);
+}
+
+chunk_t *chunk_get_prev(chunk_t *cur)
+{
+   return g_cl.GetPrev(cur);
 }
 
 static chunk_t *chunk_dup(const chunk_t *pc_in)
 {
    chunk_t *pc;
-   char    *text;
 
    /* Allocate the entry */
    pc = new chunk_t;
@@ -36,10 +57,9 @@ static chunk_t *chunk_dup(const chunk_t *pc_in)
       exit(1);
    }
 
-   /* Copy all fields, except next/prev */
-   *pc      = *pc_in;
-   pc->prev = pc->next = NULL;
-   //chunk_init(pc);
+   /* Copy all fields and then init the entry */
+   *pc = *pc_in;
+   g_cl.InitEntry(pc);
 
    return(pc);
 }
@@ -49,7 +69,13 @@ static chunk_t *chunk_dup(const chunk_t *pc_in)
  */
 chunk_t *chunk_add(const chunk_t *pc_in)
 {
-   return(chunk_add_after(pc_in, cpd.list_chunks.prev));
+   chunk_t *pc;
+
+   if ((pc = chunk_dup(pc_in)) != NULL)
+   {
+      g_cl.AddTail(pc);
+   }
+   return(pc);
 }
 
 chunk_t *chunk_add_after(const chunk_t *pc_in,
@@ -59,10 +85,7 @@ chunk_t *chunk_add_after(const chunk_t *pc_in,
 
    if ((pc = chunk_dup(pc_in)) != NULL)
    {
-      pc->next       = ref->next;
-      ref->next      = pc;
-      pc->prev       = ref;
-      pc->next->prev = pc;
+      g_cl.AddAfter(pc, ref);
    }
    return(pc);
 }
@@ -74,19 +97,15 @@ chunk_t *chunk_add_before(const chunk_t *pc_in,
 
    if ((pc = chunk_dup(pc_in)) != NULL)
    {
-      pc->prev       = ref->prev;
-      ref->prev      = pc;
-      pc->next       = ref;
-      pc->prev->next = pc;
+      g_cl.AddBefore(pc, ref);
    }
    return(pc);
 }
 
 void chunk_del(chunk_t *pc)
 {
-   pc->next->prev = pc->prev;
-   pc->prev->next = pc->next;
-   free(pc);
+   g_cl.Pop(pc);
+   delete pc;
 }
 
 /**
@@ -206,6 +225,7 @@ chunk_t *chunk_get_next_nblank(chunk_t *cur)
                              chunk_is_blank(pc)));
    return(pc);
 }
+
 /**
  * Gets the prev non-blank chunk
  */
@@ -313,41 +333,6 @@ chunk_t *chunk_get_prev_type(chunk_t *cur, c_token_t type,
    return(pc);
 }
 
-chunk_t *chunk_get_head(void)
-{
-   if (cpd.list_chunks.next != &cpd.list_chunks)
-   {
-      return(cpd.list_chunks.next);
-   }
-   return(NULL);
-}
-
-chunk_t *chunk_get_tail(void)
-{
-   if (cpd.list_chunks.prev != &cpd.list_chunks)
-   {
-      return(cpd.list_chunks.prev);
-   }
-   return(NULL);
-}
-
-chunk_t *chunk_get_next(chunk_t *cur)
-{
-   if ((cur != NULL) && (cur->next != &cpd.list_chunks))
-   {
-      return(cur->next);
-   }
-   return(NULL);
-}
-
-chunk_t *chunk_get_prev(chunk_t *cur)
-{
-   if ((cur != NULL) && (cur->prev != &cpd.list_chunks))
-   {
-      return(cur->prev);
-   }
-   return(NULL);
-}
 
 /**
  * Check to see if there is a newline bewteen the two chunks
