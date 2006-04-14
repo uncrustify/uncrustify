@@ -4,6 +4,13 @@
 
 
 
+Changes in uncrustify-0.0.15
+-------------------------------------------------------------------------------
+ - Switch to C++
+ - Improve C++ template formatting
+ - Improve C++ class handling
+
+
 Changes in uncrustify-0.0.14
 -------------------------------------------------------------------------------
  - Read from stdin if no file is specified

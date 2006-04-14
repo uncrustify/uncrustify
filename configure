@@ -1617,7 +1617,7 @@ fi
 
 # Define the identity of the package.
  PACKAGE=uncrustify
- VERSION=0.0.14
+ VERSION=0.0.15
 
 
 cat >>confdefs.h <<_ACEOF
