@@ -1,0 +1,26 @@
+#
+# a simple list of stuff that should be detected as a CT_TYPE
+# this usually isn't necessary because types are detected from the context.
+#
+# In the future, I may allow arbitrary CT_xxx stuff to be specified, as
+# well as a language
+#
+
+INT8
+UINT8
+INT16
+UINT16
+INT32
+UINT32
+INT64
+UINT64
+FLOAT
+CHAR
+DOUBLE
+TRUE
+FALSE
+BOOL
+FILE
+DIR
+bat
+

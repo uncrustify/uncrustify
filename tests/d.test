@@ -1,0 +1,14 @@
+#
+# Test cases specifically for the D language.
+#
+
+# test.name  config.file  input.file  output.file
+
+40000  d.cfg  d/HashMap.d     d/40000-HashMap.d
+40001  d.cfg  d/imports.d     d/40001-imports.d
+40002  d.cfg  d/volatile.d    d/40002-volatile.d
+40003  d.cfg  d/volatile-1.d  d/40003-volatile-1.d
+40004  d.cfg  d/volatile-2.d  d/40004-volatile-2.d
+40005  d.cfg  d/volatile-3.d  d/40005-volatile-3.d
+40010  d.cfg  d/template.d    d/40010-template.d
+
