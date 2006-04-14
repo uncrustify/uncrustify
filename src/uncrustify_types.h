@@ -91,9 +91,7 @@ struct parse_frame
 #define PCF_COPY_FLAGS         (PCF_IN_PREPROC | PCF_IN_SPAREN | \
                                 PCF_IN_FCN_DEF | PCF_IN_FCN_CALL)
 
-/* Forward define struct */
-//typedef struct chunk_s chunk_t;
-
+/** This is the main type of this program */
 struct chunk_t
 {
    chunk_t    *next;
@@ -106,10 +104,10 @@ struct chunk_t
    uint16_t   flags;            /* see PCF_xxx */
    int        column;           /* column of chunk */
    int        nl_count;         /* number of newlines in CT_NEWLINE */
-   int        len;
    int        level;            /* nest level in {, (, or [ */
    int        brace_level;
    bool       after_tab;
+   int        len;
    const char *str;
 };
 

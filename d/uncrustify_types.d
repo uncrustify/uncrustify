@@ -81,9 +81,9 @@ const int PCF_COPY_FLAGS       = (PCF_IN_PREPROC | PCF_IN_SPAREN |
                                   PCF_IN_FCN_DEF | PCF_IN_FCN_CALL);
 
 /* Forward define struct */
-typedef struct chunk_s chunk_t;
+//typedef struct chunk_s chunk_t;
 
-struct chunk_s
+struct chunk_t
 {
    chunk_t    *next;
    chunk_t    *prev;
