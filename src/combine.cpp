@@ -34,7 +34,7 @@ static void mark_class_ctor(chunk_t *pclass);
  *
  * @param po   Pointer to the open parenthesis
  */
-static void flag_parens(chunk_t *po, uint16_t flags,
+static void flag_parens(chunk_t *po, UINT16 flags,
                         c_token_t opentype, c_token_t parenttype,
                         bool parent_all)
 {

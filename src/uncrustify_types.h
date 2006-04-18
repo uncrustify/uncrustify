@@ -12,10 +12,10 @@
 
 #include "base_types.h"
 #include "options.h"
-#include <cstdio>
 #include "token_enum.h"    /* c_token_t */
 #include "log_levels.h"
 #include "logger.h"
+#include <cstdio>
 
 
 /**
@@ -98,10 +98,10 @@ struct chunk_t
    chunk_t    *prev;
    c_token_t  type;
    c_token_t  parent_type;     /* usually CT_NONE */
-   uint32_t   orig_line;
-   uint32_t   orig_col;
-   uint32_t   orig_col_end;
-   uint16_t   flags;            /* see PCF_xxx */
+   UINT32     orig_line;
+   UINT32     orig_col;
+   UINT32     orig_col_end;
+   UINT16     flags;            /* see PCF_xxx */
    int        column;           /* column of chunk */
    int        nl_count;         /* number of newlines in CT_NEWLINE */
    int        level;            /* nest level in {, (, or [ */
@@ -127,7 +127,7 @@ typedef struct
 {
    const char *tag;
    c_token_t  type;
-   uint8_t    lang_flags;
+   UINT8      lang_flags;
 } chunk_tag_t;
 
 //enum pp_type
@@ -167,10 +167,10 @@ struct cp_data
 {
    FILE               *fout;
 
-   uint8_t            lang_flags; // LANG_xxx
+   UINT8              lang_flags; // LANG_xxx
 
-   uint16_t           line_number;
-   uint16_t           column;  /* column for parsing */
+   UINT16             line_number;
+   UINT16             column;  /* column for parsing */
 
    bool               consumed;
 

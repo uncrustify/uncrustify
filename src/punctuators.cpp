@@ -104,7 +104,7 @@ static const chunk_tag_t symbols1[] =
    { "$", CT_COMPARE,      LANG_D },
 };
 
-const chunk_tag_t *find_punctuator(const char *str, uint8_t lang_flags)
+const chunk_tag_t *find_punctuator(const char *str, UINT8 lang_flags)
 {
    int i;
 

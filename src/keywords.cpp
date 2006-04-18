@@ -225,7 +225,7 @@ static int kw_compare(const void *p1, const void *p2)
  * @param type       The type, usually CT_TYPE
  * @param lang_flags Language flags, typically LANG_ALL
  */
-void add_keyword(const char *tag, c_token_t type, uint8_t lang_flags)
+void add_keyword(const char *tag, c_token_t type, UINT8 lang_flags)
 {
    /* Do we need to allocate more memory? */
    if ((wl.total == wl.active) || (wl.p_tags == NULL))

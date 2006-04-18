@@ -126,7 +126,7 @@ const chunk_tag_t *find_keyword(const char *word, int len);
 /*
  *  punctuators.c
  */
-const chunk_tag_t *find_punctuator(const char *str, uint8_t lang_flags);
+const chunk_tag_t *find_punctuator(const char *str, UINT8 lang_flags);
 
 
 /*

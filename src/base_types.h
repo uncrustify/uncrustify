@@ -1,7 +1,7 @@
 /**
  * @file base_types.h
  *
- * Defines some base types
+ * Defines some base types, includes config.h
  *
  * $Id$
  */
