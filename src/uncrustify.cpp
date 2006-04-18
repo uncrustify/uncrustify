@@ -17,10 +17,14 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
-//#include <cstrings> /* strcasecmp() */
 #include <cerrno>
 #include <cctype>
+#ifdef HAVE_SYS_STAT_H
 #include <sys/stat.h>
+#endif
+#ifdef HAVE_STRINGS_H
+#include <strings.h> /* strcasecmp() */
+#endif
 
 /* Global data */
 struct cp_data cpd;

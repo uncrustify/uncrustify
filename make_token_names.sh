@@ -5,8 +5,15 @@
 # $Id$
 #
 
-outfile="src/token_names.h"
-names=$(grep "CT_" src/token_enum.h | sed -e 's/,.*//g')
+infile="token_enum.h"
+outfile="token_names.h"
+
+if [ -d src ] ; then
+  infile="src/"$infile
+  outfile="src/"$outfile
+fi
+
+names=$(grep "CT_" $infile | sed -e 's/,.*//g')
 
 # do a little trick to prevent CVS from expanding the id tag
 idstr="Id: $"
@@ -26,7 +33,7 @@ EOF
 
 for item in $names ; do
     name=$(echo $item | sed -e 's/CT_//g')
-    echo "   \"$name\", /* $item */" >> $outfile
+    echo "   \"$name\"," >> $outfile
 done
 
 cat >> $outfile <<EOF

@@ -9,7 +9,9 @@
 
 #include "uncrustify_types.h"
 #include <cstring>
-//#include <strings.h> /* strcasecmp() */
+#ifdef HAVE_STRINGS_H
+#include <strings.h> /* strcasecmp() */
+#endif
 #include <cstdio>
 #include <cstdlib>
 #include <cerrno>

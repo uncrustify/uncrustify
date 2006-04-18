@@ -22,6 +22,7 @@ typedef enum
    CT_EOF,
    CT_UNKNOWN,
 
+
    CT_WHITESPACE,    /* whitespace without any newlines */
    CT_NEWLINE,       /* CRA, one or more newlines */
    CT_NL_CONT,       /* CRA, backslash-newline */

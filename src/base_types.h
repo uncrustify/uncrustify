@@ -9,6 +9,10 @@
 #ifndef BASE_TYPES_H_INCLUDED
 #define BASE_TYPES_H_INCLUDED
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #if defined HAVE_STDINT_H
 #include <stdint.h>
 #elif defined HAVE_INTTYPES_H
