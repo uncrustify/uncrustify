@@ -1,5 +1,5 @@
 /**
- * @file prototypes.c
+ * @file prototypes.h
  * Big jumble of prototypes used in Uncrustify.
  *
  * $Id$
@@ -61,7 +61,7 @@ void align_func_proto(int span);
 void align_preprocessor(void);
 void align_struct_initializers(void);
 chunk_t *align_nl_cont(chunk_t *start);
-chunk_t *align_assign(chunk_t *first, int span);
+chunk_t *align_assign(chunk_t *first, int span, int thresh);
 
 
 /*

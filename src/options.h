@@ -137,6 +137,7 @@ enum uncrustify_options
    UO_align_nl_cont,              // align the back-slash \n combo (macros)
    UO_align_enum_equ,             // align the '=' in enums
    UO_align_assign_span,          // align on '='. 0=don't align
+   UO_align_assign_thresh,        // align on '='. 0=don't align
    UO_align_right_cmt_span,       // align comment that end lines. 0=don't align
    UO_align_var_def_span,         // align variable defs on variable (span for regular stuff)
    UO_align_var_def_inline,       // also align inline struct/enum/union var defs
@@ -242,6 +243,7 @@ struct options_name_tab
 options_name_tab option_name_table[] =
 {
    OPTDEF(align_assign_span,             AT_NUM),
+   OPTDEF(align_assign_thresh,           AT_NUM),
    OPTDEF(align_enum_col_max,            AT_NUM),
    OPTDEF(align_enum_col_min,            AT_NUM),
    OPTDEF(align_enum_equ,                AT_NUM),

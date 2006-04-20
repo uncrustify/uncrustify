@@ -11,13 +11,7 @@
 
 ChunkStack::ChunkStack(const ChunkStack& cs)
 {
-   Init();
-   Resize(cs.m_len);
-   for (int idx = 0; idx < cs.m_len; idx++)
-   {
-      Push(cs.m_cse[idx].m_pc, cs.m_cse[idx].m_seqnum);
-   }
-   m_seqnum = cs.m_seqnum;
+   Set(cs);
 }
 
 ChunkStack::~ChunkStack()
@@ -30,7 +24,18 @@ ChunkStack::~ChunkStack()
    }
 }
 
-const ChunkStack::Entry *ChunkStack::Top()
+void ChunkStack::Set(const ChunkStack & cs)
+{
+   Init();
+   Resize(cs.m_len);
+   for (int idx = 0; idx < cs.m_len; idx++)
+   {
+      Push(cs.m_cse[idx].m_pc, cs.m_cse[idx].m_seqnum);
+   }
+   m_seqnum = cs.m_seqnum;
+}
+
+const ChunkStack::Entry *ChunkStack::Top() const
 {
    if (m_len > 0)
    {
@@ -39,7 +44,7 @@ const ChunkStack::Entry *ChunkStack::Top()
    return(NULL);
 }
 
-const ChunkStack::Entry *ChunkStack::Get(int idx)
+const ChunkStack::Entry *ChunkStack::Get(int idx) const
 {
    if ((idx < m_len) && (idx >= 0))
    {
@@ -95,6 +100,41 @@ void ChunkStack::Resize(int newsize)
          m_cse = (Entry *)realloc(m_cse, m_size * sizeof(ChunkStackEntry));
       }
       /*TODO: check for out-of-memory? */
+   }
+}
+
+
+/**
+ * Mark an entry to be removed by Collapse()
+ *
+ * @param idx  The item to remove
+ */
+void ChunkStack::Zap(int idx)
+{
+   if ((idx < m_len) && (idx >= 0))
+   {
+      m_cse[idx].m_pc = NULL;
+   }
+}
+
+
+/**
+ * Compresses down the stack by removing dead entries
+ */
+void ChunkStack::Collapse()
+{
+   int oldlen = m_len;
+
+   m_len = 0;
+
+   for (int idx = 0; idx < oldlen; idx++)
+   {
+      if (m_cse[idx].m_pc != NULL)
+      {
+         m_cse[m_len].m_pc     = m_cse[idx].m_pc;
+         m_cse[m_len].m_seqnum = m_cse[idx].m_seqnum;
+         m_len++;
+      }
    }
 }
 

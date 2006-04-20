@@ -41,23 +41,25 @@ public:
 
    ~ChunkStack();
 
+   void Set(const ChunkStack & cs);
+
    void Push(chunk_t *pc)
    {
       Push(pc, ++m_seqnum);
    }
 
-   bool Empty()
+   bool Empty() const
    {
       return(m_len == 0);
    }
 
-   int Len()
+   int Len() const
    {
       return(m_len);
    }
 
-   const Entry *Top();
-   const Entry *Get(int idx);
+   const Entry *Top() const;
+   const Entry *Get(int idx) const;
 
    chunk_t *Pop();
    void Push(chunk_t *pc, int seqnum);
@@ -66,6 +68,9 @@ public:
    {
       m_len = 0;
    }
+
+   void Zap(int idx);
+   void Collapse();
 
 protected:
    void Init();

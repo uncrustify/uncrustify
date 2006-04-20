@@ -7,6 +7,7 @@
 #include "uncrustify_types.h"
 #include "chunk_list.h"
 #include "ChunkStack.h"
+#include "align_stack.h"
 #include "prototypes.h"
 #include <cstdio>
 #include <cstdlib>
@@ -130,7 +131,9 @@ void align_all(void)
    }
 
    /* Align assignments */
-   align_assign(chunk_get_head(), cpd.settings[UO_align_assign_span].n);
+   align_assign(chunk_get_head(),
+                cpd.settings[UO_align_assign_span].n,
+                cpd.settings[UO_align_assign_thresh].n);
 
    /* Align structure initiailizers */
    if (cpd.settings[UO_align_struct_init_span].n > 0)
@@ -360,23 +363,22 @@ static void align_assign_group(chunk_t *start, chunk_t *end,
  *
  * For variable definitions, only consider the '=' for the first variable.
  * Otherwise, only look at the first '=' on the line.
- *
- * This is recursive, so I can't use the simple stack stuff (bummer)
  */
-chunk_t *align_assign(chunk_t *first, int span)
+chunk_t *align_assign(chunk_t *first, int span, int thresh)
 {
    int     my_level;
    chunk_t *pc;
-   chunk_t *start       = NULL;
-   chunk_t *end         = NULL;
-   int     max_col      = 0;
-   int     max_col_line = 0;
-   int     nl_count     = 0;
-   int     equ_count    = 0;
+   //chunk_t *start       = NULL;
+   //chunk_t *end         = NULL;
+   //int     max_col      = 0;
+   //int     max_col_line = 0;
+   //int     nl_count     = 0;
    int     tmp;
-   int     prev_equ_type = 0;
+   //int     prev_equ_type = 0;
    int     myspan        = span;
+   int     mythresh      = thresh;
    int     var_def_cnt   = 0;
+   int     equ_count    = 0;
 
    if (first == NULL)
    {
@@ -387,10 +389,22 @@ chunk_t *align_assign(chunk_t *first, int span)
    if (first->parent_type == CT_ENUM)
    {
       myspan = cpd.settings[UO_align_enum_equ].n;
+      //mythresh = cpd..settings[UO_align_enum_equ_thresh].n;
+   }
+
+   if (myspan <= 0)
+   {
+      return chunk_get_next(first);
    }
 
    LOG_FMT(LALASS, "%s[%d]: checking %.*s on line %d\n",
            __func__, my_level, first->len, first->str, first->orig_line);
+
+   AlignStack as;    // regular assigns
+   AlignStack vdas;  // variable def assigns
+
+   as.Start(myspan, mythresh);
+   vdas.Start(myspan, mythresh);
 
    pc = first;
    while ((pc != NULL) && ((pc->level >= my_level) || (pc->level == 0)))
@@ -405,7 +419,8 @@ chunk_t *align_assign(chunk_t *first, int span)
          pc  = chunk_skip_to_match(pc);
          if (pc != NULL)
          {
-            nl_count += (pc->orig_line - tmp);
+            as.NewLines(pc->orig_line - tmp);
+            vdas.NewLines(pc->orig_line - tmp);
          }
          continue;
       }
@@ -415,28 +430,21 @@ chunk_t *align_assign(chunk_t *first, int span)
           (pc->type == CT_VBRACE_OPEN))
       {
          tmp = pc->orig_line;
-         pc  = align_assign(chunk_get_next_ncnl(pc), span);
+         pc  = align_assign(chunk_get_next_ncnl(pc), span, thresh);
          if (pc != NULL)
          {
             /* do a rough count of the number of lines just spanned */
-            nl_count += (pc->orig_line - tmp);
+            as.NewLines(pc->orig_line - tmp);
+            vdas.NewLines(pc->orig_line - tmp);
          }
          continue;
       }
 
       if (chunk_is_newline(pc))
       {
-         nl_count += pc->nl_count;
-         if ((start != NULL) && (myspan >= 0) && (nl_count > myspan))
-         {
-            if (start != end)
-            {
-               align_assign_group(start, end, max_col);
-            }
-            start         = NULL;
-            max_col       = 0;
-            prev_equ_type = 0;
-         }
+         as.NewLines(pc->nl_count);
+         vdas.NewLines(pc->nl_count);
+
          var_def_cnt = 0;
          equ_count   = 0;
       }
@@ -454,55 +462,22 @@ chunk_t *align_assign(chunk_t *first, int span)
          //        __func__, pc->str, pc->level, pc->orig_line, pc->orig_col, prev_equ_type,
          //        equ_count);
 
-         /* Don't align variable def assigns and regular assignments together */
-         if (start != NULL)
-         {
-            if (var_def_cnt != 0)
-            {
-               if (prev_equ_type == 2)
-               {
-                  align_assign_group(start, end, max_col);
-                  start   = NULL;
-                  max_col = 0;
-               }
-               prev_equ_type = 1;
-            }
-            else
-            {
-               if (prev_equ_type == 1)
-               {
-                  align_assign_group(start, end, max_col);
-                  start   = NULL;
-                  max_col = 0;
-               }
-               prev_equ_type = 2;
-            }
-         }
-
-         pc->flags |= PCF_WAS_ALIGNED;
-         if ((pc->column + pc->len) > max_col)
-         {
-            max_col      = pc->column + pc->len;
-            max_col_line = pc->orig_line;
-         }
          equ_count++;
-         nl_count = 0;
-
-         if (start == NULL)
+         if (var_def_cnt != 0)
          {
-            prev_equ_type = (var_def_cnt != 0) ? 1 : 2;
-            start         = pc;
+            vdas.Add(pc);
          }
-         end = pc;
+         else
+         {
+            as.Add(pc);
+         }
       }
 
       pc = chunk_get_next(pc);
    }
 
-   if (start != NULL)
-   {
-      align_assign_group(start, end, max_col);
-   }
+   as.End();
+   vdas.End();
 
    if (pc != NULL)
    {
