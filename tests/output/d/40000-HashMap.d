@@ -1013,7 +1013,7 @@ class HashMap
 
         this(HashMap map)
         {
-            this.map         = map;
+            this.map = map;
             nextSegmentIndex = map.segments.length - 1;
             nextTableIndex   = -1;
             advance();

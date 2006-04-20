@@ -43,6 +43,9 @@
 # structure initializers
 00301	ben.cfg 	c/align-struct-init.c	c/00301-align-struct-init.c
 
+# aligning tresholds
+00401	align.cfg 	c/align-equ.c	c/00401-align-equ.c
+
 # big general tests
 
 20000 ben.cfg c/i2c-core.c c/20000-i2c-core.c

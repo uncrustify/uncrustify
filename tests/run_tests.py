@@ -6,11 +6,12 @@
 # This could all be done with bash, but I wanted to use python. =)
 # Anyway, this was all done while waiting in the Denver airport.
 #
+# $Id: $
+#
 
 import sys
 import os
 import string
-
 
 def usage_exit():
     print "Usage: \n" + sys.argv[0] + " testfile"
@@ -21,15 +22,25 @@ def run_tests(test_name, config_name, input_name, expected_name):
     # print "Config: " + config_name
     # print "Input:  " + input_name
     # print "Output: " + expected_name
-    cmd = "../src/uncrustify -L255 -c config/" + config_name + " -f input/" + input_name + " > results/" + test_name + ".out"
+
+    resultname = 'results/' + expected_name
+    diridx = resultname.rfind('/')
+    resultdir = resultname[0 : diridx]
+    if diridx > 8 and not os.path.exists(resultdir):
+        print "makedirs(" + resultname[0 : diridx] + ")"
+        os.makedirs(resultname[0 : diridx])
+
+    cmd = "../src/uncrustify -L255 -c config/" + config_name + " -f input/" + input_name + " > " + resultname
     a = os.system(cmd)
     if a != 0:
         print "FAILED: " + test_name
         return
-    b = os.system("diff -u results/" + test_name + ".out output/" + expected_name + " > /dev/null")
+
+    b = os.system("diff -u " + resultname + " output/" + expected_name + " > /dev/null")
     if b != 0:
         print "MISMATCH: " + test_name
         return
+
     print "PASSED: " + test_name
 
 def process_test_file(filename):
