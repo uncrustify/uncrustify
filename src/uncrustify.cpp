@@ -371,6 +371,9 @@ struct file_lang languages[] =
    { ".cs",   "CS",   LANG_CS },
    { ".java", "JAVA", LANG_JAVA },
    { ".h",    "",     LANG_CPP },
+   { ".cxx",  "",     LANG_CPP },
+   { ".hpp",  "",     LANG_CPP },
+   { ".hxx",  "",     LANG_CPP },
 };
 
 /**
