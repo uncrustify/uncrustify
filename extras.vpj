@@ -69,6 +69,7 @@
 	</CustomFolders>
 	<Files AutoFolders="DirectoryView">
 		<Folder Name="documentation">
+			<F N="documentation/align-thresholds.txt"/>
 			<F N="documentation/configuration.txt"/>
 			<F N="documentation/example.c"/>
 			<F N="documentation/goals.txt"/>

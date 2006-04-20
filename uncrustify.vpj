@@ -78,6 +78,7 @@
 		<Folder
 			Name="Header Files"
 			Filters="*.h;*.H;*.hh;*.hpp;*.hxx;*.inc;*.sh;*.cpy;*.if">
+			<F N="src/align_stack.h"/>
 			<F N="src/args.h"/>
 			<F N="src/base_types.h"/>
 			<F N="src/char_table.h"/>
