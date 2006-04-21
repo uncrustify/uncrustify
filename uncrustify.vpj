@@ -60,7 +60,6 @@
 			<F N="src/chunk_stack.cpp"/>
 			<F N="src/ChunkStack.cpp"/>
 			<F N="src/combine.cpp"/>
-			<F N="src/cpp-test.cpp"/>
 			<F N="src/indent.cpp"/>
 			<F N="src/keywords.cpp"/>
 			<F N="src/logger.cpp"/>
