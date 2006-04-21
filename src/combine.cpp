@@ -144,17 +144,6 @@ void fix_symbols(void)
          set_paren_parent(next, pc->type);
       }
 
-      if ((pc->type == CT_SQUARE_OPEN) && (next->type == CT_SQUARE_CLOSE))
-      {
-         /* Combine the [ and ] into [] and delete next */
-         pc->type = CT_TSQUARE;
-         pc->str  = "[]";
-         pc->len  = 2;
-         tmp      = next;
-         next     = chunk_get_next_ncnl(next);
-         chunk_del(tmp);
-      }
-
       /* A [] in C# and D only follows a type */
       if ((pc->type == CT_TSQUARE) &&
           ((cpd.lang_flags & (LANG_D | LANG_CS)) != 0))
@@ -166,6 +155,21 @@ void fix_symbols(void)
          if ((next != NULL) && (next->type == CT_WORD))
          {
             next->flags |= PCF_VAR_1ST_DEF;
+         }
+      }
+
+      /* Handle the typedef */
+      if (pc->type == CT_TYPEDEF)
+      {
+         fix_typedef(pc);
+      }
+      else
+      {
+         if ((pc->type == CT_ENUM) ||
+             (pc->type == CT_STRUCT) ||
+             (pc->type == CT_UNION))
+         {
+            fix_enum_struct_union(pc);
          }
       }
 
@@ -298,29 +302,14 @@ void fix_symbols(void)
    }
 
    /**
-    * 2nd pass - handle typedef, struct, enum, union
-    * We need function params marked for those.
+    * 2nd pass - handle variable definitions
+    * REVISIT: We need function params marked to do this (?)
     */
    prev = &dummy;
    pc   = chunk_get_head();
 
    while (pc != NULL)
    {
-      if (prev->type == CT_TYPEDEF)
-      {
-         fix_typedef(prev);
-      }
-      else
-      {
-         if ((pc->type == CT_ENUM) ||
-             (pc->type == CT_STRUCT) ||
-             (pc->type == CT_UNION))
-         {
-            fix_enum_struct_union(pc);
-         }
-      }
-
-
       /**
        * A variable definition is possible after at the start of a statement
        * that starts with: QUALIFIER, TYPE, or WORD
@@ -338,7 +327,9 @@ void fix_symbols(void)
       pc   = chunk_get_next_ncnl(pc);
    }
 
-   /* 3rd pass - flag comments */
+   /* 3rd pass - flag comments.
+    * Not done in first 2 loops because comments are skipped
+    */
    for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next(pc))
    {
       if ((pc->type == CT_COMMENT) || (pc->type == CT_COMMENT_CPP))
@@ -769,8 +760,9 @@ static void fix_typedef(chunk_t *start)
    chunk_t   *next;
    c_token_t tag;
 
-   /* the next item should be enum/struct/union or a type */
    next = chunk_get_next_ncnl(start);
+
+   /* Step over enum/struct/union stuff */
    if ((next->type == CT_ENUM) ||
        (next->type == CT_STRUCT) ||
        (next->type == CT_UNION))
@@ -780,6 +772,7 @@ static void fix_typedef(chunk_t *start)
       next = chunk_get_next_ncnl(next);
       if ((next->type == CT_WORD) || (next->type == CT_TYPE))
       {
+         next->type = CT_TYPE;
          next = chunk_get_next_ncnl(next);
       }
       if (next->type == CT_BRACE_OPEN)
@@ -796,20 +789,15 @@ static void fix_typedef(chunk_t *start)
       /* now step to the first type part */
       next = chunk_get_next_ncnl(next);
    }
-   else
-   {
-      /* now step to the first type part */
-      next = chunk_get_next_ncnl(start);
-   }
 
    /* Change everything up the semi into a type */
    while ((next != NULL) && (next->type != CT_SEMICOLON))
    {
-      if (next->type == CT_STAR)
+      if (chunk_is_star(next))
       {
          next->type = CT_PTR_TYPE;
       }
-      if (next->type == CT_WORD)
+      else if (next->type == CT_WORD)
       {
          next->type = CT_TYPE;
       }
@@ -1520,6 +1508,10 @@ void mark_comments(void)
 }
 
 
+/**
+ * Marks statement starts in a macro body.
+ * REVISIT: this may already be done
+ */
 static void mark_define_expressions(void)
 {
    chunk_t *pc;
@@ -1576,5 +1568,4 @@ static void mark_define_expressions(void)
       pc   = chunk_get_next(pc);
    }
 }
-
 
