@@ -76,7 +76,7 @@ static void align_stack(ChunkStack& cs, int col, bool align_single, log_sev_t se
  * @param max_col    pointer to the column variable
  * @param extra_pad  extra padding
  */
-static void align_add(ChunkStack& cs, chunk_t *pc, int *max_col, int min_pad)
+static void align_add(ChunkStack& cs, chunk_t *pc, int& max_col, int min_pad)
 {
    chunk_t *prev;
    int     min_col;
@@ -86,7 +86,7 @@ static void align_add(ChunkStack& cs, chunk_t *pc, int *max_col, int min_pad)
    {
       min_col = pc->column;
       LOG_FMT(LALADD, "%s: pc->col=%d max_col=%d min_pad=%d min_col=%d\n",
-              __func__, pc->column, *max_col, min_pad, min_col);
+              __func__, pc->column, max_col, min_pad, min_col);
    }
    else
    {
@@ -100,18 +100,18 @@ static void align_add(ChunkStack& cs, chunk_t *pc, int *max_col, int min_pad)
          min_col = pc->column;
       }
       LOG_FMT(LALADD, "%s: pc->col=%d max_col=%d min_pad=%d min_col=%d prev->col=%d\n",
-              __func__, pc->column, *max_col, min_pad, min_col, prev->column);
+              __func__, pc->column, max_col, min_pad, min_col, prev->column);
    }
 
    if (cs.Empty())
    {
-      *max_col = 0;
+      max_col = 0;
    }
 
    cs.Push(pc);
-   if (min_col > *max_col)
+   if (min_col > max_col)
    {
-      *max_col = min_col;
+      max_col = min_col;
    }
 }
 
@@ -176,7 +176,7 @@ void align_func_proto(int span)
       }
       else if (pc->type == CT_FUNC_PROTO)
       {
-         align_add(cs, pc, &max_col, 0);
+         align_add(cs, pc, max_col, 0);
          span_cnt = 0;
       }
       pc = chunk_get_next(pc);
@@ -250,31 +250,34 @@ void align_struct_initializers(void)
 void align_preprocessor(void)
 {
    chunk_t    *pc;
-   int        max_col  = 0;
-   int        nl_count = 0;
-   bool       mf       = false;
-   bool       pmf      = false;
-   ChunkStack cs;
+   AlignStack as;    // value macros
+   AlignStack asf;   // function macros
+   AlignStack *cur_as = &as;
+
+   as.Start(cpd.settings[UO_align_pp_define_span].n);
+   as.m_gap = cpd.settings[UO_align_pp_define_gap].n;
+
+   asf.Start(cpd.settings[UO_align_pp_define_span].n);
+   asf.m_gap = cpd.settings[UO_align_pp_define_gap].n;
 
    pc = chunk_get_head();
    while (pc != NULL)
    {
-      if ((pc->type == CT_NEWLINE) && !cs.Empty())
+      /* Note: not counting back-slash newline combos */
+      if (pc->type == CT_NEWLINE)
       {
-         nl_count += pc->nl_count;
-         if (nl_count > cpd.settings[UO_align_pp_define_span].n)
-         {
-            align_stack(cs, max_col, true, LALPP);
-         }
+         as.NewLines(pc->nl_count);
+         asf.NewLines(pc->nl_count);
       }
 
+      /* If we aren't on a 'define', then skip to the next non-comment */
       if (pc->type != CT_PP_DEFINE)
       {
          pc = chunk_get_next_nc(pc);
          continue;
       }
 
-      /* skip the 'define' */
+      /* step past the 'define' */
       pc = chunk_get_next_nc(pc);
       if (pc == NULL)
       {
@@ -284,29 +287,20 @@ void align_preprocessor(void)
       LOG_FMT(LALPP, "%s: define (%.*s) on line %d col %d\n",
               __func__, pc->len, pc->str, pc->orig_line, pc->orig_col);
 
-      pmf = mf;
+      cur_as = &as;
       if (pc->type == CT_MACRO_FUNC)
       {
-         /* Skip over the paren pair */
+         cur_as = &asf;
+
+         /* Skip to the close paren */
          pc = chunk_get_next_nc(pc); // point to open (
          pc = chunk_get_next_type(pc, CT_FPAREN_CLOSE, pc->level);
-         mf = true;
 
          LOG_FMT(LALPP, "%s: jumped to (%.*s) on line %d col %d\n",
                  __func__, pc->len, pc->str, pc->orig_line, pc->orig_col);
       }
-      else
-      {
-         mf = false;
-      }
 
-      /* flush if changing between a macro func and regular macro */
-      if ((cs.Len() > 0) && (mf != pmf))
-      {
-         align_stack(cs, max_col, true, LALPP);
-      }
-
-      /* step to the value past the close paren or 'define' */
+      /* step to the value past the close paren or the macro name */
       pc = chunk_get_next_nc(pc);
       if (pc == NULL)
       {
@@ -320,40 +314,12 @@ void align_preprocessor(void)
          LOG_FMT(LALPP, "%s: align on '%.*s', line %d col %d\n",
                  __func__, pc->len, pc->str, pc->orig_line, pc->orig_col);
 
-         align_add(cs, pc, &max_col, cpd.settings[UO_align_pp_define_gap].n);
-         nl_count   = 0;
-         pc->flags |= PCF_DEF_ALIGNED;
+         cur_as->Add(pc);
       }
    }
 
-   /* flush just in case we ended on a #define */
-   align_stack(cs, max_col, true, LALPP);
-}
-
-static void align_assign_group(chunk_t *start, chunk_t *end,
-                               int max_col)
-{
-   chunk_t *pc;
-   int     my_level = start->level;
-
-   //   fprintf(stderr, "%s: lines %d - %d to col %d\n", __func__,
-   //           start->orig_line, end->orig_line, max_col);
-
-   for (pc = start; pc != end; pc = chunk_get_next(pc))
-   {
-      if ((pc->level == my_level) &&
-          (pc->type == CT_ASSIGN) &&
-          ((pc->flags & PCF_WAS_ALIGNED) != 0))
-      {
-         indent_to_column(pc, max_col - pc->len);
-      }
-   }
-   if ((end->level == my_level) &&
-       (end->type == CT_ASSIGN) &&
-       ((end->flags & PCF_WAS_ALIGNED) != 0))
-   {
-      indent_to_column(end, max_col - pc->len);
-   }
+   as.End();
+   asf.End();
 }
 
 
@@ -368,13 +334,7 @@ chunk_t *align_assign(chunk_t *first, int span, int thresh)
 {
    int     my_level;
    chunk_t *pc;
-   //chunk_t *start       = NULL;
-   //chunk_t *end         = NULL;
-   //int     max_col      = 0;
-   //int     max_col_line = 0;
-   //int     nl_count     = 0;
    int     tmp;
-   //int     prev_equ_type = 0;
    int     myspan        = span;
    int     mythresh      = thresh;
    int     var_def_cnt   = 0;
@@ -394,7 +354,7 @@ chunk_t *align_assign(chunk_t *first, int span, int thresh)
 
    if (myspan <= 0)
    {
-      return chunk_get_next(first);
+      return (chunk_get_next(first));
    }
 
    LOG_FMT(LALASS, "%s[%d]: checking %.*s on line %d\n",
@@ -404,7 +364,9 @@ chunk_t *align_assign(chunk_t *first, int span, int thresh)
    AlignStack vdas;  // variable def assigns
 
    as.Start(myspan, mythresh);
+   as.m_right_align = true;
    vdas.Start(myspan, mythresh);
+   vdas.m_right_align = true;
 
    pc = first;
    while ((pc != NULL) && ((pc->level >= my_level) || (pc->level == 0)))
@@ -787,7 +749,7 @@ chunk_t *align_nl_cont(chunk_t *start)
    {
       if (pc->type == CT_NL_CONT)
       {
-         align_add(cs, pc, &max_col, 0);
+         align_add(cs, pc, max_col, 0);
       }
       pc = chunk_get_next(pc);
    }
@@ -824,7 +786,7 @@ chunk_t *align_trailing_comments(chunk_t *start)
    {
       if ((pc->flags & PCF_RIGHT_COMMENT) != 0)
       {
-         align_add(cs, pc, &max_col, 0);
+         align_add(cs, pc, max_col, 0);
          nl_count = 0;
       }
       if (chunk_is_newline(pc))
@@ -1176,27 +1138,40 @@ static void align_init_brace(chunk_t *start)
 }
 
 
+/**
+ * Aligns simple typedefs that are contained on a single line each.
+ * This should be called after the typedef target is marked as a type.
+ *
+ * Won't align function typedefs.
+ *
+ * typedef int        foo_t;
+ * typedef char       bar_t;
+ * typedef const char cc_t;
+ */
 static void align_typedefs(int span)
 {
    chunk_t    *pc;
    chunk_t    *next;
    chunk_t    *c_type    = NULL;
    chunk_t    *c_typedef = NULL;
-   int        max_col    = 0;
-   int        span_ctr   = 0;
-   ChunkStack cs;
+   AlignStack as;
+
+   as.Start(span);
+   as.m_gap = cpd.settings[UO_align_typedef_gap].n;
+   as.m_star_style = (AlignStack::StarStyle)cpd.settings[UO_align_typedef_star_style].n;
 
    pc = chunk_get_head();
    while (pc != NULL)
    {
-      if (c_typedef != NULL)
+      if (chunk_is_newline(pc))
       {
-         if (chunk_is_newline(pc))
-         {
-            c_typedef = NULL;
-            LOG_FMT(LALTD, "%s: newline in a typedef on line %d\n", __func__, pc->orig_line);
-         }
-         else if (pc->type == CT_TYPE)
+         as.NewLines(pc->nl_count);
+         c_typedef = NULL;
+      }
+      else if (c_typedef != NULL)
+      {
+         /* Already hit a typedef on this line */
+         if (pc->type == CT_TYPE)
          {
             c_type = pc;
          }
@@ -1204,11 +1179,7 @@ static void align_typedefs(int span)
          {
             if ((c_type != NULL) && (c_typedef->orig_line == c_type->orig_line))
             {
-               align_add(cs, c_type, &max_col, cpd.settings[UO_align_typedef_gap].n);
-               span_ctr = 0;
-
-               LOG_FMT(LALTD, "%s: max_col=%d cs_len=%d\n",
-                       __func__, max_col, cs.Len());
+               as.Add(c_type);
             }
             c_type    = NULL;
             c_typedef = NULL;
@@ -1218,36 +1189,22 @@ static void align_typedefs(int span)
             /* don't care */
          }
       }
-      else if (pc->type == CT_TYPEDEF)
-      {
-         next = chunk_get_next_ncnl(pc);
-         if ((next != NULL) && (next->type == CT_PAREN_OPEN))
-         {
-            LOG_FMT(LALTD, "%s: line %d, col %d - skip function type\n",
-                    __func__, pc->orig_line, pc->orig_col);
-         }
-         else
-         {
-            LOG_FMT(LALTD, "%s: line %d, col %d\n", __func__, pc->orig_line, pc->orig_col);
-            c_typedef = pc;
-         }
-      }
       else
       {
-         /* don't care */
-      }
-
-      /* Check to see if the span is exceeded */
-      if (cs.Len() > 0)
-      {
-         if (chunk_is_newline(pc))
+         if (pc->type == CT_TYPEDEF)
          {
-            c_typedef = NULL;
-            span_ctr += pc->nl_count;
-
-            if (span_ctr > span)
+            next = chunk_get_next_ncnl(pc);
+            if ((next != NULL) && (next->type == CT_PAREN_OPEN))
             {
-               align_stack(cs, max_col, false, LALTD);
+               LOG_FMT(LALTD, "%s: line %d, col %d - skip function type\n",
+                       __func__, pc->orig_line, pc->orig_col);
+            }
+            else
+            {
+               LOG_FMT(LALTD, "%s: line %d, col %d\n",
+                       __func__, pc->orig_line, pc->orig_col);
+               c_typedef = pc;
+               c_type    = NULL;
             }
          }
       }
@@ -1255,6 +1212,6 @@ static void align_typedefs(int span)
       pc = chunk_get_next(pc);
    }
 
-   align_stack(cs, max_col, false, LALTD);
+   as.End();
 }
 

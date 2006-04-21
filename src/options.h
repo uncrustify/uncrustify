@@ -155,8 +155,11 @@ enum uncrustify_options
    UO_align_number_left,          // left-align numbers (not fully supported, yet)
    UO_align_typedef_span,         // align single-line typedefs
    UO_align_typedef_gap,          // minimum spacing
+   UO_align_typedef_star_style,   // Start aligning style
+                                  // 0: '*' not part of type
+                                  // 1: '*' part of the type - no space
+                                  // 2: '*' part of type, dangling
    UO_align_keep_tabs,            // keep non-indenting tabs
-
 
    /*
     * Newline adding and removing options
@@ -260,6 +263,7 @@ options_name_tab option_name_table[] =
    OPTDEF(align_struct_init_span,        AT_NUM),
    OPTDEF(align_typedef_gap,             AT_NUM),
    OPTDEF(align_typedef_span,            AT_NUM),
+   OPTDEF(align_typedef_star_style,      AT_NUM),
    OPTDEF(align_var_def_colon,           AT_BOOL),
    OPTDEF(align_var_def_inline,          AT_BOOL),
    OPTDEF(align_var_def_span,            AT_NUM),

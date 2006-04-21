@@ -89,16 +89,16 @@ struct chunk_t
    chunk_t    *prev;
    c_token_t  type;
    c_token_t  parent_type;     /* usually CT_NONE */
-   uint32_t   orig_line;
-   uint32_t   orig_col;
-   uint32_t   orig_col_end;
-   uint16_t   flags;            /* see PCF_xxx */
+   UINT32     orig_line;
+   UINT32     orig_col;
+   UINT32     orig_col_end;
+   UINT16     flags;            /* see PCF_xxx */
    int        column;           /* column of chunk */
    int        nl_count;         /* number of newlines in CT_NEWLINE */
    int        len;
    int        level;            /* nest level in {, (, or [ */
    int        brace_level;
-   BOOL       after_tab;
+   bool       after_tab;
    char []    str;
 };
 

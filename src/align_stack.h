@@ -11,6 +11,12 @@
 class AlignStack
 {
 public:
+   enum StarStyle {
+      SS_IGNORE,  // don't look for prev stars
+      SS_INCLUDE, // include prev * before add
+      SS_DANGLE   // include prev * after add
+   };
+
    ChunkStack  m_aligned;
    ChunkStack  m_skipped;
    ChunkStack  m_scratch;
@@ -19,11 +25,15 @@ public:
    int         m_thresh;
    int         m_seqnum;
    int         m_nl_seqnum;
+   int         m_gap;
+   bool        m_right_align;
+   StarStyle   m_star_style;
+
 
    AlignStack() {};
    ~AlignStack() {};
 
-   void Start(int span, int threshold);
+   void Start(int span, int threshold = 0);
    void Add(chunk_t *pc, int seqnum = 0);
    void NewLines(int cnt);
    void Flush();

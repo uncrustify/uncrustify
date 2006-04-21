@@ -1,5 +1,5 @@
 /**
- * @file align_stack.c
+ * @file align_stack.cpp
  * Manages a align stack, which is just a pair of chunk stacks.
  * There can be at most 1 item per line in the stack.
  * The seqnum is actually a line counter.
@@ -9,6 +9,7 @@
 
 #include "align_stack.h"
 #include "prototypes.h"
+#include "chunk_list.h"
 
 /**
  * Resets the two ChunkLists and zeroes local vars.
@@ -22,11 +23,13 @@ void AlignStack::Start(int span, int thresh)
 
    m_aligned.Reset();
    m_skipped.Reset();
-   m_span      = span;
-   m_thresh    = thresh;
-   m_max_col   = 0;
-   m_nl_seqnum = 0;
-   m_seqnum    = 0;
+   m_span        = span;
+   m_thresh      = thresh;
+   m_max_col     = 0;
+   m_nl_seqnum   = 0;
+   m_seqnum      = 0;
+   m_gap         = 0;
+   m_right_align = false;
 }
 
 /**
@@ -69,10 +72,12 @@ void AlignStack::Add(chunk_t *pc, int seqnum)
       seqnum = m_seqnum;
    }
 
+   chunk_t *prev;
+
    /* Check threshold limits */
    if ((m_max_col == 0) || (m_thresh == 0) ||
-       ((pc->column <= (m_max_col + m_thresh)) &&
-        (pc->column >= (m_max_col - m_thresh))))
+       (((pc->column + m_gap) <= (m_max_col + m_thresh)) &&
+        ((pc->column + m_gap) >= (m_max_col - m_thresh))))
    {
       /* we are adding it, so update the newline seqnum */
       if (seqnum > m_nl_seqnum)
@@ -80,10 +85,34 @@ void AlignStack::Add(chunk_t *pc, int seqnum)
          m_nl_seqnum = seqnum;
       }
 
+      if (m_star_style == SS_INCLUDE)
+      {
+         /* back up to the first '*' preceding the token */
+         prev = chunk_get_prev(pc);
+         while (chunk_is_star(prev))
+         {
+            pc   = prev;
+            prev = chunk_get_prev(pc);
+         }
+      }
+
       m_aligned.Push(pc, seqnum);
 
       /* See if this pushes out the max_col */
-      int endcol = pc->column + pc->len;
+      int endcol = pc->column + (m_right_align ? pc->len : 0);
+      if (m_gap > 0)
+      {
+         prev = chunk_get_prev(pc);
+         if (prev != NULL)
+         {
+            int tmp = prev->column + prev->len + m_gap;
+            if (endcol < tmp)
+            {
+               endcol = tmp;
+            }
+         }
+      }
+
       if (endcol > m_max_col)
       {
          LOG_FMT(LAS, "Add-aligned [%d/%d/%d]: line %d, col %d : max_col old %d, new %d\n",
@@ -153,8 +182,26 @@ void AlignStack::Flush()
    {
       ce = m_aligned.Get(idx);
 
+      int da_col = m_max_col;
+
+      chunk_t *pc = ce->m_pc;
+      if (m_star_style == SS_DANGLE)
+      {
+
+         /* back up to the first '*' preceding the token */
+         chunk_t *prev = chunk_get_prev(pc);
+         while (chunk_is_star(prev))
+         {
+            pc   = prev;
+            prev = chunk_get_prev(pc);
+            da_col--;
+         }
+
+         LOG_FMT(LSYS, "DNAglin! to %d\n", da_col);
+      }
+
       /* Indent, right aligning the aligned token */
-      indent_to_column(ce->m_pc, m_max_col - ce->m_pc->len);
+      indent_to_column(pc, da_col - (m_right_align ? ce->m_pc->len : 0));
    }
 
    if (ce != NULL)

@@ -7,7 +7,10 @@ T foo(T t, U u) { }
 
 T abc;
 
-typedef T* FooType;
+typedef T*  FooType;
+typedef Tte**  FooType0;
+typedef int* FooType1;
+typedef const char FooType2;
 }
 
 alias Foo!(int, char) f;

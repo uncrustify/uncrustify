@@ -132,6 +132,7 @@
 			<Folder Name="d">
 				<F N="input/d/HashMap.d"/>
 				<F N="input/d/imports.d"/>
+				<F N="input/d/template.d"/>
 				<F N="input/d/volatile-1.d"/>
 				<F N="input/d/volatile-2.d"/>
 				<F N="input/d/volatile-3.d"/>
@@ -186,6 +187,7 @@
 				<F N="output/d/40003-volatile-1.d"/>
 				<F N="output/d/40004-volatile-2.d"/>
 				<F N="output/d/40005-volatile-3.d"/>
+				<F N="output/d/40010-template.d"/>
 			</Folder>
 		</Folder>
 		<F N="c-sharp.test"/>
