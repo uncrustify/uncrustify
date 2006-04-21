@@ -64,14 +64,6 @@ struct no_space_table_s no_space_table[] =
    { CT_PAREN_CLOSE,   CT_FUNC_CALL },
    { CT_PAREN_CLOSE,   CT_ADDR },
    { CT_PAREN_CLOSE,   CT_FPAREN_OPEN },
-   { CT_PTR_TYPE,      CT_WORD },
-   { CT_PTR_TYPE,      CT_FUNC_DEF },
-   { CT_PTR_TYPE,      CT_FUNC_CALL },
-   { CT_PTR_TYPE,      CT_FUNC_PROTO },
-   { CT_PTR_TYPE,      CT_PTR_TYPE },
-
-   // conflict: (type)(val) vs #define fcn(x) (x+1)
-   //   {CT_PAREN_CLOSE,        CT_PAREN_OPEN},
 };
 
 

@@ -29,6 +29,19 @@ static chunk_t *process_return(chunk_t *pc);
 static void mark_class_ctor(chunk_t *pclass);
 
 
+static void make_type(chunk_t *pc)
+{
+   if (pc->type == CT_WORD)
+   {
+      pc->type = CT_TYPE;
+   }
+   else if (chunk_is_star(pc))
+   {
+      pc->type = CT_PTR_TYPE;
+   }
+}
+
+
 /**
  * Flags everything from the open paren to the close paren.
  *
@@ -640,14 +653,7 @@ static void fix_casts(chunk_t *start)
    for (pc = first; pc != paren_close; pc = chunk_get_next_ncnl(pc))
    {
       pc->parent_type = CT_CAST;
-      if (pc->type == CT_WORD)
-      {
-         pc->type = CT_TYPE;
-      }
-      if (pc->type == CT_STAR)
-      {
-         pc->type = CT_PTR_TYPE;
-      }
+      make_type(pc);
       LOG_FMT(LCASTS, " %.*s", pc->len, pc->str);
    }
    LOG_FMT(LCASTS, " )%s\n", detail);
@@ -793,14 +799,7 @@ static void fix_typedef(chunk_t *start)
    /* Change everything up the semi into a type */
    while ((next != NULL) && (next->type != CT_SEMICOLON))
    {
-      if (chunk_is_star(next))
-      {
-         next->type = CT_PTR_TYPE;
-      }
-      else if (next->type == CT_WORD)
-      {
-         next->type = CT_TYPE;
-      }
+      make_type(next);
       //      fprintf(stderr, "%s: type %s on line %d\n", __func__, next->str, next->orig_line);
       next = chunk_get_next_ncnl(next);
    }
@@ -996,19 +995,6 @@ static void fix_fcn_def_params(chunk_t *pc)
       pc = chunk_get_next_ncnl(pc);
    }
    mark_variable_stack(cs, LFCNP);
-}
-
-
-void make_type(chunk_t *pc)
-{
-   if (pc->type == CT_WORD)
-   {
-      pc->type = CT_TYPE;
-   }
-   else if (chunk_is_star(pc))
-   {
-      pc->type = CT_PTR_TYPE;
-   }
 }
 
 //#define DEBUG_FIX_VAR_DEF
