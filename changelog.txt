@@ -4,6 +4,14 @@
 
 
 
+Changes in uncrustify-0.0.16
+-------------------------------------------------------------------------------
+ - Add a stack alignment helper class
+ - Improve typedef formatting
+ - Add aligning thresholds for typedefs and assignments
+ - update the automake/autoconf stuff
+
+
 Changes in uncrustify-0.0.15
 -------------------------------------------------------------------------------
  - Switch to C++
