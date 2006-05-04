@@ -4,6 +4,16 @@
 
 
 
+Changes in uncrustify-0.0.17
+-------------------------------------------------------------------------------
+ - Add nl_eat_start to remove newlines at the start of the file
+ - Add nl_eat_end to remove newlines at the end of the file
+ - Add nl_eof_min to set the minimum number of newlines at the end of file
+ - Add newlines setting to configure the newline output
+ - Add '-q' command line option to turn off logging
+ - Fix bug in nl_func_var_def_blk handling
+
+
 Changes in uncrustify-0.0.16
 -------------------------------------------------------------------------------
  - Add a stack alignment helper class
