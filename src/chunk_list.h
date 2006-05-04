@@ -10,7 +10,6 @@
 
 #include "uncrustify_types.h"
 
-void chunk_list_init(void);
 
 chunk_t *chunk_add(const chunk_t *pc_in);
 chunk_t *chunk_add_after(const chunk_t *pc_in,

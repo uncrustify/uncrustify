@@ -61,7 +61,7 @@ static void newline_min_after2(chunk_t *ref, int32_t count,
    chunk_t *pc = ref;
    chunk_t *next;
 
-   LOG_FMT(LNEWLINE, "%s: %.*s line %d - count %d : caller=%s:%d\n",
+   LOG_FMT(LNEWLINE, "%s: '%.*s' line %d - count %d : caller=%s:%d\n",
            __func__, ref->len, ref->str, ref->orig_line, count, func, line);
 
    do
@@ -69,8 +69,11 @@ static void newline_min_after2(chunk_t *ref, int32_t count,
       pc = chunk_get_next(pc);
    } while ((pc != NULL) && !chunk_is_newline(pc));
 
+   //LOG_FMT(LNEWLINE, "%s: on %s, line %d, col %d\n",
+   //        __func__, get_token_name(pc->type), pc->orig_line, pc->orig_col);
+
    next = chunk_get_next(pc);
-   if (chunk_is_comment(next) &&
+   if (chunk_is_comment(next) && (next->nl_count == 1) &&
        chunk_is_comment(chunk_get_prev(pc)))
    {
       return(newline_min_after(next, count));
@@ -352,11 +355,11 @@ static void newline_fnc_var_def(chunk_t *br_open, int nl_count)
       break;
    }
 
+   /* prev is either NULL or points to a semicolon */
    if (prev != NULL)
    {
       //fprintf(stderr, "%s: inserting a newline after [%s] on line %d col%d\n",
       //        __func__, get_token_name(prev->type), prev->orig_line, prev->orig_col);
-
       newline_min_after(prev, 1 + cpd.settings[UO_nl_func_var_def_blk].n);
    }
 }
@@ -754,4 +757,55 @@ void newlines_squeeze_ifdef(void)
    }
 }
 
+void newlines_eat_start_end(void)
+{
+   chunk_t *pc;
+   chunk_t *tmp;
+
+   if (cpd.settings[UO_nl_eat_start].b)
+   {
+      pc = chunk_get_head();
+      while ((pc != NULL) && (pc->type == CT_NEWLINE))
+      {
+         tmp = chunk_get_next(pc);
+         chunk_del(pc);
+         pc = tmp;
+      }
+   }
+
+   if (cpd.settings[UO_nl_eat_end].b)
+   {
+      pc = chunk_get_tail();
+      while ((pc != NULL) && (pc->type == CT_NEWLINE))
+      {
+         tmp = chunk_get_prev(pc);
+         chunk_del(pc);
+         pc = tmp;
+      }
+   }
+
+   if (cpd.settings[UO_nl_eof_min].n > 0)
+   {
+      pc = chunk_get_tail();
+      if (pc != NULL)
+      {
+         if (pc->type == CT_NEWLINE)
+         {
+            if (pc->nl_count < cpd.settings[UO_nl_eof_min].n)
+            {
+               pc->nl_count = cpd.settings[UO_nl_eof_min].n;
+            }
+         }
+         else
+         {
+            chunk_t chunk;
+            memset(&chunk, 0, sizeof(chunk));
+            chunk.orig_line = pc->orig_line;
+            chunk.type      = CT_NEWLINE;
+            chunk.nl_count  = cpd.settings[UO_nl_eof_min].n;
+            chunk_add_after(&chunk, pc);
+         }
+      }
+   }
+}
 

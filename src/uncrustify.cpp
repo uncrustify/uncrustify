@@ -96,6 +96,11 @@ int main(int argc, char *argv[])
 
    /* Init logging */
    log_init(stderr);
+   if (arg.Present("-q"))
+   {
+      logmask_from_string("", &mask);
+      log_set_mask(&mask);
+   }
    if (((p_arg = arg.Param("-L")) != NULL) ||
        ((p_arg = arg.Param("--log")) != NULL))
    {
@@ -148,10 +153,6 @@ int main(int argc, char *argv[])
       }
    }
 
-   /* Prepare to load chunks */
-   chunk_list_init();
-
-
    /* Check for unused args (ignore them) */
    idx = 1;
    while ((p_arg = arg.Unused(idx)) != NULL)
@@ -164,6 +165,18 @@ int main(int argc, char *argv[])
    if (load_option_file(cfg_file) < 0)
    {
       usage_exit(NULL, argv[0], 56);
+   }
+
+   /* convert the UO_newlines into a string */
+   idx = 0;
+   int nl_mask = cpd.settings[UO_newlines].n & 0xffffff;
+   while (nl_mask != 0)
+   {
+      if ((nl_mask & 0xff0000) != 0)
+      {
+         cpd.newline[idx++] = (nl_mask >> 16);
+      }
+      nl_mask = (nl_mask << 8) & 0xffff00;
    }
 
    if (source_file == NULL)
@@ -277,6 +290,7 @@ int main(int argc, char *argv[])
    {
       newlines_squeeze_ifdef();
    }
+   newlines_eat_start_end();
 
    /**
     * Fix same-line inter-chunk spacing
@@ -399,10 +413,9 @@ static int language_from_filename(const char *filename)
 
 /**
  * Find the language for the file extension
- * Default to C
  *
  * @param filename   The name of the file
- * @return           LANG_xxx
+ * @return           LANG_xxx or 0 (no match)
  */
 static int language_from_tag(const char *tag)
 {

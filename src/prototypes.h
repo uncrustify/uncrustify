@@ -93,6 +93,7 @@ void mark_comments(void);
 
 void newlines_cleanup_braces(void);
 void newlines_squeeze_ifdef(void);
+void newlines_eat_start_end(void);
 
 
 /*

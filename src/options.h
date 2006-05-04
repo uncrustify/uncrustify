@@ -36,6 +36,8 @@ typedef union op_val_t
  */
 enum uncrustify_options
 {
+   UO_newlines,                 // represents up to 3 chars, default 0x0a
+
    /*
     * Basic Indenting stuff
     */
@@ -137,7 +139,7 @@ enum uncrustify_options
    UO_align_nl_cont,              // align the back-slash \n combo (macros)
    UO_align_enum_equ,             // align the '=' in enums
    UO_align_assign_span,          // align on '='. 0=don't align
-   UO_align_assign_thresh,        // align on '='. 0=don't align
+   UO_align_assign_thresh,        // threshold for aligning on '='. 0=no limit
    UO_align_right_cmt_span,       // align comment that end lines. 0=don't align
    UO_align_var_def_span,         // align variable defs on variable (span for regular stuff)
    UO_align_var_def_inline,       // also align inline struct/enum/union var defs
@@ -160,6 +162,8 @@ enum uncrustify_options
                                   // 1: '*' part of the type - no space
                                   // 2: '*' part of type, dangling
    UO_align_keep_tabs,            // keep non-indenting tabs
+   UO_align_struct_array_brace,   // align array of structure initializers
+
 
    /*
     * Newline adding and removing options
@@ -190,6 +194,9 @@ enum uncrustify_options
    UO_nl_brace_while,            // nl between } and while of do stmt
 
    UO_nl_define_macro,           // alter newlines in #define macros
+   UO_nl_eat_start,              // remove newlines at the start of the file
+   UO_nl_eat_end,                // remove newlines at the end of the file
+   UO_nl_eof_min,                // minimum number of newlines at EOF
 
 
    /*
@@ -260,6 +267,7 @@ options_name_tab option_name_table[] =
    OPTDEF(align_pp_define_gap,           AT_NUM),
    OPTDEF(align_pp_define_span,          AT_NUM),
    OPTDEF(align_right_cmt_span,          AT_NUM),
+   OPTDEF(align_struct_array_brace,      AT_BOOL),
    OPTDEF(align_struct_init_span,        AT_NUM),
    OPTDEF(align_typedef_gap,             AT_NUM),
    OPTDEF(align_typedef_span,            AT_NUM),
@@ -308,6 +316,7 @@ options_name_tab option_name_table[] =
    OPTDEF(mod_full_brace_nl,             AT_NUM),
    OPTDEF(mod_full_brace_while,          AT_IARF),
    OPTDEF(mod_paren_on_return,           AT_IARF),
+   OPTDEF(newlines,                      AT_NUM),
    OPTDEF(nl_after_case,                 AT_BOOL),
    OPTDEF(nl_after_return,               AT_BOOL),
    OPTDEF(nl_assign_brace,               AT_IARF),
@@ -316,8 +325,11 @@ options_name_tab option_name_table[] =
    OPTDEF(nl_brace_while,                AT_IARF),
    OPTDEF(nl_define_macro,               AT_BOOL),
    OPTDEF(nl_do_brace,                   AT_IARF),
+   OPTDEF(nl_eat_end,                    AT_BOOL),
+   OPTDEF(nl_eat_start,                  AT_BOOL),
    OPTDEF(nl_else_brace,                 AT_IARF),
    OPTDEF(nl_enum_brace,                 AT_IARF),
+   OPTDEF(nl_eof_min,                    AT_NUM),
    OPTDEF(nl_fcall_brace,                AT_IARF),
    OPTDEF(nl_fdef_brace,                 AT_IARF),
    OPTDEF(nl_for_brace,                  AT_IARF),

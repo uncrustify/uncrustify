@@ -16,19 +16,23 @@
 
 void add_char(char ch)
 {
-   fputc(ch, cpd.fout);
    if (ch == '\n')
    {
+      fputs(cpd.newline, cpd.fout);
       cpd.column      = 1;
       cpd.did_newline = 1;
    }
-   else if (ch == '\t')
-   {
-      cpd.column = next_tab_column(cpd.column);
-   }
    else
    {
-      cpd.column++;
+      fputc(ch, cpd.fout);
+      if (ch == '\t')
+      {
+         cpd.column = next_tab_column(cpd.column);
+      }
+      else
+      {
+         cpd.column++;
+      }
    }
 }
 
@@ -274,7 +278,7 @@ void output_comment_multi(chunk_t *pc)
       line[len++] = ch;
 
       /* If we just hit an end of line OR we just hit end-of-comment... */
-      if ((ch == '\n') || (idx >= pc->len) ||
+      if ((ch == '\n') || (ch == '\r') || (idx >= pc->len) ||
           ((len > 2) && (line[len - 2] == '*') && (ch == '/')))
       {
          line_count++;

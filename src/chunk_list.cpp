@@ -17,14 +17,6 @@ ChunkList g_cl;
 
 static chunk_t *chunk_dup(const chunk_t *pc_in);
 
-/**
- * Create some dummy entries at the head and tail.
- * This makes is so the ops below never hit the end.
- */
-void chunk_list_init(void)
-{
-   //g_cl = new ChunkList();
-}
 
 chunk_t *chunk_get_head(void)
 {
@@ -78,8 +70,7 @@ chunk_t *chunk_add(const chunk_t *pc_in)
    return(pc);
 }
 
-chunk_t *chunk_add_after(const chunk_t *pc_in,
-                         chunk_t *ref)
+chunk_t *chunk_add_after(const chunk_t *pc_in, chunk_t *ref)
 {
    chunk_t *pc;
 
@@ -90,8 +81,7 @@ chunk_t *chunk_add_after(const chunk_t *pc_in,
    return(pc);
 }
 
-chunk_t *chunk_add_before(const chunk_t *pc_in,
-                          chunk_t *ref)
+chunk_t *chunk_add_before(const chunk_t *pc_in, chunk_t *ref)
 {
    chunk_t *pc;
 

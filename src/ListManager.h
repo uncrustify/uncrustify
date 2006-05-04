@@ -25,6 +25,7 @@ public:
 
    ListManager(const ListManager& ref)
    {
+      /* TODO: can't copy the list... what to do?? */
       head.next = head.prev = &head;
    }
 

@@ -262,6 +262,7 @@ int load_option_file(const char *filename)
  */
 void set_option_defaults(void)
 {
+   cpd.settings[UO_newlines].n         = 0x0a;
    cpd.settings[UO_input_tab_size].n   = 8;
    cpd.settings[UO_output_tab_size].n  = 8;
    cpd.settings[UO_indent_columns].n   = 8;

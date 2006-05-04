@@ -197,7 +197,7 @@ void AlignStack::Flush()
             da_col--;
          }
 
-         LOG_FMT(LSYS, "DNAglin! to %d\n", da_col);
+         LOG_FMT(LAS, "DNAglin! to %d\n", da_col);
       }
 
       /* Indent, right aligning the aligned token */

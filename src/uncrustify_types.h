@@ -172,6 +172,8 @@ struct cp_data
    UINT16             line_number;
    UINT16             column;  /* column for parsing */
 
+   char               newline[5];
+
    bool               consumed;
 
    int                did_newline;
