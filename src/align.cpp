@@ -379,7 +379,7 @@ void align_preprocessor(void)
       }
 
       /* step to the value past the close paren or the macro name */
-      pc = chunk_get_next_nc(pc);
+      pc = chunk_get_next(pc);
       if (pc == NULL)
       {
          break;
