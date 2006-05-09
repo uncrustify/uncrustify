@@ -341,3 +341,15 @@ bool chunk_is_newline_between(chunk_t *start, chunk_t *end)
    return(false);
 }
 
+
+/**
+ * Swaps the two chunks.
+ *
+ * @param pc1  The first chunk
+ * @param pc2  The second chunk
+ */
+void chunk_swap(chunk_t *pc1, chunk_t *pc2)
+{
+   g_cl.Swap(pc1, pc2);
+}
+
