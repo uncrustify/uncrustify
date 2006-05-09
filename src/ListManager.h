@@ -70,6 +70,34 @@ public:
       }
    }
 
+   void Swap(T *obj1, T *obj2)
+   {
+      if ((obj1 != NULL) && (obj2 != NULL))
+      {
+         if (obj1->prev == obj2)
+         {
+            Pop(obj1);
+            AddBefore(obj1, obj2);
+         }
+         else if (obj2->prev == obj1)
+         {
+            Pop(obj2);
+            AddBefore(obj2, obj1);
+         }
+         else
+         {
+            T *prev1 = obj1->prev;
+            Pop(obj1);
+
+            T *prev2 = obj2->prev;
+            Pop(obj2);
+
+            AddAfter(obj1, prev2);
+            AddAfter(obj2, prev1);
+         }
+      }
+   }
+
    void AddAfter(T *obj, T *ref)
    {
       if ((obj != NULL) && (ref != NULL))

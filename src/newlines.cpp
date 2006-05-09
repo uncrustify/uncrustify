@@ -809,3 +809,54 @@ void newlines_eat_start_end(void)
    }
 }
 
+
+/**
+ * Searches for CT_BOOL (|| or && or ^^) operators and moves them, if needed.
+ * Will not move CT_BOOL tokens that are on their own line or have other than
+ * exactly 1 newline before (UO_nl_bool_pos == -1) or
+ * after (UO_nl_bool_pos == 1).
+ */
+void newlines_bool_pos(void)
+{
+   chunk_t *pc;
+   chunk_t *next;
+   chunk_t *prev;
+   int     mode = cpd.settings[UO_nl_bool_pos].n;
+
+   if (mode == 0)
+   {
+      return;
+   }
+
+   for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next_ncnl(pc))
+   {
+      if (pc->type == CT_BOOL)
+      {
+         prev = chunk_get_prev(pc);
+         next = chunk_get_next(pc);
+
+         /* if both are newlines or neither are newlines, skip this chunk */
+         if (chunk_is_newline(prev) == chunk_is_newline(next))
+         {
+            continue;
+         }
+
+         /*NOTE: may end up processing a chunk twice if changed */
+         if (mode < 0)
+         {
+            if (chunk_is_newline(prev) && (prev->nl_count == 1))
+            {
+               chunk_swap(pc, prev);
+            }
+         }
+         else  /* (mode > 0) */
+         {
+            if (chunk_is_newline(next) && (next->nl_count == 1))
+            {
+               chunk_swap(pc, next);
+            }
+         }
+      }
+   }
+}
+

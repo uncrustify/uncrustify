@@ -290,6 +290,10 @@ int main(int argc, char *argv[])
    {
       newlines_squeeze_ifdef();
    }
+   if (cpd.settings[UO_nl_bool_pos].n != 0)
+   {
+      newlines_bool_pos();
+   }
    newlines_eat_start_end();
 
    /**

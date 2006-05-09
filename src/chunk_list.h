@@ -24,6 +24,8 @@ chunk_t *chunk_get_tail(void);
 chunk_t *chunk_get_next(chunk_t *cur);
 chunk_t *chunk_get_prev(chunk_t *cur);
 
+void chunk_swap(chunk_t *pc1, chunk_t *pc2);
+
 chunk_t *chunk_get_next_nl(chunk_t *cur);
 chunk_t *chunk_get_next_nc(chunk_t *cur);
 chunk_t *chunk_get_next_nnl(chunk_t *cur);

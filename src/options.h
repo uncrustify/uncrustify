@@ -198,6 +198,8 @@ enum uncrustify_options
    UO_nl_eat_end,                // remove newlines at the end of the file
    UO_nl_eof_min,                // minimum number of newlines at EOF
 
+   UO_nl_bool_pos,               // -1=move &&/|| to EOL 0=ignore, 1=move to SOL
+
 
    /*
     * Blank line options
@@ -321,6 +323,7 @@ options_name_tab option_name_table[] =
    OPTDEF(nl_after_return,               AT_BOOL),
    OPTDEF(nl_assign_brace,               AT_IARF),
    OPTDEF(nl_before_case,                AT_BOOL),
+   OPTDEF(nl_bool_pos,                   AT_NUM),
    OPTDEF(nl_brace_else,                 AT_IARF),
    OPTDEF(nl_brace_while,                AT_IARF),
    OPTDEF(nl_define_macro,               AT_BOOL),
