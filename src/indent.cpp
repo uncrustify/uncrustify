@@ -316,29 +316,39 @@ void indent_text(void)
             }
          }
 
-         /**
-          * If there isn't a newline between the open brace and the next
-          * item, just indent to wherever the next token is.
-          * This covers this sort of stuff:
-          * { a++;
-          *   b--; };
-          */
-         next = chunk_get_next_ncnl(pc);
-         if (!chunk_is_newline_between(pc, next))
+         if ((pc->flags & PCF_DONT_INDENT) != 0)
          {
-            frm.pse[frm.pse_tos].indent = next->column;
+            frm.pse[frm.pse_tos].indent = pc->column;
+            indent_column = pc->column;
+            LOG_FMT(LSYS, "indent aligned: %.*s on line %d, col is %d\n",
+                    pc->len, pc->str, pc->orig_line, pc->column);
          }
-         frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
-         frm.pse[frm.pse_tos].open_line  = pc->orig_line;
-
-         /* Update the indent_column if needed */
-         if (cpd.settings[UO_indent_braces].n)
+         else
          {
-            indent_column = frm.pse[frm.pse_tos].indent_tmp;
-         }
+            /**
+             * If there isn't a newline between the open brace and the next
+             * item, just indent to wherever the next token is.
+             * This covers this sort of stuff:
+             * { a++;
+             *   b--; };
+             */
+            next = chunk_get_next_ncnl(pc);
+            if (!chunk_is_newline_between(pc, next))
+            {
+               frm.pse[frm.pse_tos].indent = next->column;
+            }
+            frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
+            frm.pse[frm.pse_tos].open_line  = pc->orig_line;
 
-         LOG_FMT(LINDENT, "%3d] %s col=%d, tos=%d\n", pc->orig_line,
-                 get_token_name(pc->type), indent_column, frm.pse_tos);
+            /* Update the indent_column if needed */
+            if (cpd.settings[UO_indent_braces].n)
+            {
+               indent_column = frm.pse[frm.pse_tos].indent_tmp;
+            }
+
+            LOG_FMT(LINDENT, "%3d] %s col=%d, tos=%d\n", pc->orig_line,
+                    get_token_name(pc->type), indent_column, frm.pse_tos);
+         }
       }
       else if (pc->type == CT_CASE)
       {

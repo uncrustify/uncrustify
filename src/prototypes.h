@@ -76,6 +76,7 @@ void do_braces(void);
  */
 
 void space_text(void);
+int space_col_align(chunk_t *first, chunk_t *second);
 
 
 /*

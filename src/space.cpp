@@ -527,3 +527,27 @@ void space_text(void)
    }
 }
 
+/**
+ * Calculates the column difference between two chunks.
+ * The rules are bent a bit here, as AV_IGNORE and AV_ADD become AV_FORCE.
+ * So the column difference is either first->len or first->len + 1.
+ *
+ * @param first   The first chunk
+ * @param second  The second chunk
+ * @return        the column difference between the two chunks
+ */
+int space_col_align(chunk_t *first, chunk_t *second)
+{
+   int      coldiff;
+   argval_t av;
+
+   av = do_space(first, second);
+
+   coldiff = first->len;
+   if (av != AV_REMOVE)
+   {
+      coldiff++;
+   }
+   return coldiff;
+}
+

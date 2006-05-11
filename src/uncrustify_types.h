@@ -72,7 +72,7 @@ struct parse_frame
 #define PCF_STMT_START         0x01  /* marks the start of a statment */
 #define PCF_EXPR_START         0x02
 #define PCF_IN_PREPROC         0x04  /* in a preprocessor */
-
+#define PCF_DONT_INDENT        0x08  /* already aligned! */
 #define PCF_MFC_PAREN          0x10  /* macro function close paren */
 #define PCF_VAR_DEF            0x20  /* variable name in a variable def */
 #define PCF_VAR_1ST            0x40  /* 1st variable def in a statement */
@@ -147,7 +147,7 @@ struct align_t
 {
    int       col;
    c_token_t type;
-   int       len;
+   int       len;    // of the token + space
 };
 
 typedef struct
@@ -186,6 +186,7 @@ struct cp_data
 
    struct align_t     al[80];
    int                al_cnt;
+   bool               al_c99_array;
 
    /* Here are all the settings */
    op_val_t           settings[UO_option_count];

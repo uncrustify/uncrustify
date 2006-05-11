@@ -432,7 +432,7 @@ chunk_t *align_assign(chunk_t *first, int span, int thresh)
 
    if (myspan <= 0)
    {
-      return (chunk_get_next(first));
+      return(chunk_get_next(first));
    }
 
    LOG_FMT(LALASS, "%s[%d]: checking %.*s on line %d\n",
@@ -790,15 +790,6 @@ static chunk_t *align_var_def_brace(chunk_t *start, int span)
       }
    }
 
-   //   if (pc != NULL)
-   //   {
-   //      fprintf(stderr, "%s: return=%s line=%d col=%d level=%d max_col=%d\n",
-   //              __func__, pc->str, pc->orig_line, pc->orig_col, pc->level, max_col);
-   //   }
-   //   else
-   //   {
-   //      fprintf(stderr, "%s: return=<NULL>\n", __func__);
-   //   }
    return(pc);
 }
 
@@ -902,83 +893,109 @@ void ib_shift_out(int idx, int num)
  * We trigger on BRACE_OPEN, FPAREN_OPEN, ASSIGN, and COMMA.
  * We want to align the NEXT item.
  */
-static chunk_t *scan_ib_line(chunk_t *start, bool first)
+static chunk_t *scan_ib_line(chunk_t *start, bool first_pass)
 {
    chunk_t *pc;
    chunk_t *next;
+   chunk_t *prev_match = NULL;
+   int     token_width;
    int     idx              = 0;
    bool    last_was_comment = false;
 
+   /* Skip past C99 "[xx] =" stuff */
    if (start->type == CT_SQUARE_OPEN)
    {
+      start->parent_type = CT_TSQUARE;
       start = chunk_get_next_type(start, CT_ASSIGN, start->level);
       start = chunk_get_next_ncnl(start);
+      cpd.al_c99_array = true;
    }
    pc = start;
 
-   while ((pc != NULL) && !chunk_is_newline(pc) &&
-          !((pc->type == CT_BRACE_CLOSE) &&
-            (pc->parent_type == CT_ASSIGN)))
+   if (pc != NULL)
    {
-      if (first)
+      LOG_FMT(LSIB, "%s: start=%s col %d/%d line %d\n", __func__,
+              get_token_name(pc->type), pc->column, pc->orig_col, pc->orig_line);
+   }
+
+   while ((pc != NULL) && !chunk_is_newline(pc) &&
+          (pc->level >= start->level))
+   {
+      //LOG_FMT(LSIB, "%s:     '%.*s'   col %d/%d line %d\n", __func__,
+      //        pc->len, pc->str, pc->column, pc->orig_col, pc->orig_line);
+
+      next = chunk_get_next(pc);
+      if ((next == NULL) || chunk_is_comment(next))
       {
-         if ((pc->type == CT_COMMA) ||
-             (pc->type == CT_BRACE_OPEN) ||
-             (pc->type == CT_FPAREN_OPEN) ||
-             (pc->type == CT_ASSIGN))
-         {
-            /* The next item is of interest */
-            next = chunk_get_next(pc);
-            if ((next != NULL) && !chunk_is_newline(next))
-            {
-               cpd.al[cpd.al_cnt].type = pc->type;
-               cpd.al[cpd.al_cnt].col  = next->column;
-               cpd.al[cpd.al_cnt].len  = next->len;
-               cpd.al_cnt++;
-               next->flags     |= PCF_WAS_ALIGNED;
-               last_was_comment = chunk_is_comment(next);
-            }
-         }
+         /* do nothing */
       }
-      else
+      else if ((pc->type == CT_ASSIGN) ||
+               (pc->type == CT_BRACE_OPEN) ||
+               (pc->type == CT_BRACE_CLOSE) ||
+               (pc->type == CT_COMMA))
       {
-         if (cpd.al[idx].type == pc->type)
+         token_width = space_col_align(pc, next);
+
+         /*TODO: need to handle missing structure defs? ie NULL vs { ... } ?? */
+
+         /* Is this a new entry? */
+         if (idx >= cpd.al_cnt)
          {
-            next = chunk_get_next(pc);
-            if ((next != NULL) && !chunk_is_newline(next))
+            LOG_FMT(LSIB, " - New   [%d] %.2d/%d - %10.10s\n", idx,
+                    pc->column, token_width, get_token_name(pc->type));
+
+            cpd.al[cpd.al_cnt].type  = pc->type;
+            cpd.al[cpd.al_cnt].col   = pc->column;
+            cpd.al[cpd.al_cnt].len   = token_width;
+            cpd.al_cnt++;
+            idx++;
+            last_was_comment = false;
+         }
+         else
+         {
+            /* expect to match stuff */
+            if (cpd.al[idx].type == pc->type)
             {
-               LOG_FMT(LSIB, "Match [%d] %s col %d/%d line %d ", idx,
-                       get_token_name(next->type), next->column, next->orig_col, next->orig_line);
+               LOG_FMT(LSIB, " - Match [%d] %.2d/%d - %10.10s", idx,
+                       pc->column, token_width, get_token_name(pc->type));
 
-               next->flags |= PCF_WAS_ALIGNED;
-               if (next->column > cpd.al[idx].col)
+               /* Shift out based on column */
+               if (prev_match == NULL)
                {
-                  LOG_FMT(LSIB, " [ next->col(%d) > col %d ] ",
-                          next->column, cpd.al[idx].col);
+                  if (pc->column > cpd.al[idx].col)
+                  {
+                     LOG_FMT(LSIB, " [ pc->col(%d) > col(%d) ] ",
+                             pc->column, cpd.al[idx].col);
 
-                  ib_shift_out(idx, next->column - cpd.al[idx].col);
-                  cpd.al[idx].col = next->column;
+                     ib_shift_out(idx, pc->column - cpd.al[idx].col);
+                     cpd.al[idx].col = pc->column;
+                  }
                }
-               if (next->len > cpd.al[idx].len)
+               else
                {
-                  LOG_FMT(LSIB, " [ next->len(%d) > len %d ] ",
-                          next->len, cpd.al[idx].len);
-
-                  ib_shift_out(idx + 1, next->len - cpd.al[idx].len);
-                  cpd.al[idx].len = next->len;
+                  int min_col_diff = pc->column - prev_match->column;
+                  int cur_col_diff = cpd.al[idx].col - cpd.al[idx - 1].col;
+                  if (cur_col_diff < min_col_diff)
+                  {
+                     LOG_FMT(LSIB, " [ min_col_diff(%d) > cur_col_diff(%d) ] ",
+                             min_col_diff, cur_col_diff);
+                     ib_shift_out(idx, min_col_diff - cur_col_diff);
+                  }
                }
                LOG_FMT(LSIB, " - now col %d, len %d\n", cpd.al[idx].col, cpd.al[idx].len);
+               idx++;
             }
-            idx++;
          }
+         prev_match = pc;
       }
+      last_was_comment = chunk_is_comment(pc);
       pc = chunk_get_next_nc(pc);
    }
 
-   if (first && last_was_comment && (cpd.al[cpd.al_cnt - 1].type == CT_COMMA))
-   {
-      cpd.al_cnt--;
-   }
+   //if (last_was_comment && (cpd.al[cpd.al_cnt - 1].type == CT_COMMA))
+   //{
+   //   cpd.al_cnt--;
+   //}
    return(pc);
 }
 
@@ -1025,6 +1042,9 @@ static void align_log_al(log_sev_t sev, int line)
  *            .age  = 55 },
  * };
  *
+ * NOTE: this assumes that spacing is at the minimum correct spacing (ie force)
+ *       if it isn't, some extra spaces will be inserted.
+ *
  * @param start   Points to the open brace chunk
  */
 static void align_init_brace(chunk_t *start)
@@ -1032,8 +1052,13 @@ static void align_init_brace(chunk_t *start)
    int     idx;
    chunk_t *pc;
    chunk_t *next;
+   chunk_t *prev;
+   chunk_t *num_token = NULL;
 
    cpd.al_cnt = 0;
+   cpd.al_c99_array = false;
+
+   LOG_FMT(LALBR, "%s: line %d, col %d\n", __func__, start->orig_line, start->orig_col);
 
    pc = chunk_get_next_ncnl(start);
    pc = scan_ib_line(pc, true);
@@ -1055,8 +1080,7 @@ static void align_init_brace(chunk_t *start)
       {
          pc = chunk_get_next(pc);
       }
-   } while ((pc != NULL) && !((pc->type == CT_BRACE_CLOSE) &&
-                              (pc->parent_type == CT_ASSIGN)));
+   } while ((pc != NULL) && (pc->level > start->level));
 
    /* debug dump the current frame */
    align_log_al(LALBR, start->orig_line);
@@ -1072,41 +1096,112 @@ static void align_init_brace(chunk_t *start)
       }
    }
 
-   pc  = start;
+   pc  = chunk_get_next(start);
    idx = 0;
    do
    {
-      next = chunk_get_next(pc);
+      if ((idx == 0) && (pc->type == CT_SQUARE_OPEN))
+      {
+         pc = chunk_get_next_type(pc, CT_ASSIGN, pc->level);
+         pc = chunk_get_next(pc);
+         if (pc != NULL)
+         {
+            LOG_FMT(LALBR, " -%d- skipped '[] =' to %s\n",
+                    pc->orig_line, get_token_name(pc->type));
+         }
+         continue;
+      }
+
+      next = pc;
       if (idx < cpd.al_cnt)
       {
-         if ((next != NULL) && (pc->type == cpd.al[idx].type) &&
-             ((next->flags & PCF_WAS_ALIGNED) != 0))
+         LOG_FMT(LALBR, " (%d) check %s vs %s -- ",
+                 idx, get_token_name(pc->type), get_token_name(cpd.al[idx].type));
+         if (pc->type == cpd.al[idx].type)
          {
-            LOG_FMT(LALBR, " -%d- [%.*s] to col %d\n", next->orig_line,
-                    next->len, next->str, cpd.al[idx].col);
-
-            next->flags |= PCF_WAS_ALIGNED;
-
-            if ((pc->type != CT_ASSIGN) &&
-                (next->type == CT_NUMBER) && cpd.settings[UO_align_number_left].b)
+            if ((idx == 0) && cpd.al_c99_array)
             {
-               reindent_line(next, cpd.al[idx].col + (cpd.al[idx].len - next->len));
+               prev = chunk_get_prev(pc);
+               if (chunk_is_newline(prev))
+               {
+                  pc->flags |= PCF_DONT_INDENT;
+               }
+            }
+            LOG_FMT(LALBR, " [%.*s] to col %d\n", pc->len, pc->str, cpd.al[idx].col);
+
+            if (num_token != NULL)
+            {
+               int col_diff = pc->column - num_token->column;
+
+               reindent_line(num_token, cpd.al[idx].col - col_diff);
+               LOG_FMT(LSYS, "-= %d =- NUM indent [%.*s] col=%d diff=%d\n",
+                       num_token->orig_line,
+                       num_token->len, num_token->str, cpd.al[idx - 1].col, col_diff);
+
+               num_token->flags |= PCF_WAS_ALIGNED;
+               num_token = NULL;
+            }
+
+            /* Comma's need to 'fall back' to the previous token */
+            if (pc->type == CT_COMMA)
+            {
+               next = chunk_get_next(pc);
+               if ((next != NULL) && !chunk_is_newline(next))
+               {
+                  LOG_FMT(LSYS, "-= %d =- indent [%.*s] col=%d len=%d\n",
+                          next->orig_line,
+                          next->len, next->str, cpd.al[idx].col, cpd.al[idx].len);
+
+                  if ((idx < (cpd.al_cnt - 1)) &&
+                      cpd.settings[UO_align_number_left].b &&
+                      ((next->type == CT_NUMBER) ||
+                       (next->type == CT_POS) ||
+                       (next->type == CT_NEG)))
+                  {
+                     /* Need to wait until the next match to indent numbers */
+                     num_token = next;
+                  }
+                  else
+                  {
+                     reindent_line(next, cpd.al[idx].col + cpd.al[idx].len);
+                     next->flags |= PCF_WAS_ALIGNED;
+                  }
+               }
             }
             else
             {
                /* first item on the line */
-               reindent_line(next, cpd.al[idx].col);
+               reindent_line(pc, cpd.al[idx].col);
+               pc->flags |= PCF_WAS_ALIGNED;
+
+               /* see if we need to right-align a number */
+               if ((idx < (cpd.al_cnt - 1)) &&
+                   cpd.settings[UO_align_number_left].b)
+               {
+                  next = chunk_get_next(pc);
+                  if ((next != NULL) && !chunk_is_newline(next) &&
+                      ((next->type == CT_NUMBER) ||
+                       (next->type == CT_POS) ||
+                       (next->type == CT_NEG)))
+                  {
+                     /* Need to wait until the next match to indent numbers */
+                     num_token = next;
+                  }
+               }
             }
             idx++;
          }
+         else
+         {
+            LOG_FMT(LALBR, " no match\n");
+         }
       }
-      if (chunk_is_newline(pc))
+      if (chunk_is_newline(pc) || chunk_is_newline(next))
       {
          idx = 0;
       }
-      pc = next;
-   } while ((pc != NULL) && !((pc->type == CT_BRACE_CLOSE) &&
-                              (pc->parent_type == CT_ASSIGN)));
+      pc = chunk_get_next(pc);
+   } while ((pc != NULL) && (pc->level > start->level));
 }
 
 
