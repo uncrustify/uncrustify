@@ -324,7 +324,14 @@ argval_t do_space(chunk_t *first, chunk_t *second)
    }
    if ((first->type == CT_BOOL) || (second->type == CT_BOOL))
    {
-      return(cpd.settings[UO_sp_bool].a);
+      arg = cpd.settings[UO_sp_bool].a;
+      if ((cpd.settings[UO_nl_bool_pos].n != 0) &&
+          (first->orig_line != second->orig_line) &&
+          (arg != AV_REMOVE))
+      {
+         arg = (argval_t)(arg | AV_ADD);
+      }
+      return arg;
    }
    if ((first->type == CT_COMPARE) || (second->type == CT_COMPARE))
    {
