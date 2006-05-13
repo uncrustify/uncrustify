@@ -1134,9 +1134,9 @@ static void align_init_brace(chunk_t *start)
                int col_diff = pc->column - num_token->column;
 
                reindent_line(num_token, cpd.al[idx].col - col_diff);
-               LOG_FMT(LSYS, "-= %d =- NUM indent [%.*s] col=%d diff=%d\n",
-                       num_token->orig_line,
-                       num_token->len, num_token->str, cpd.al[idx - 1].col, col_diff);
+               //LOG_FMT(LSYS, "-= %d =- NUM indent [%.*s] col=%d diff=%d\n",
+               //        num_token->orig_line,
+               //        num_token->len, num_token->str, cpd.al[idx - 1].col, col_diff);
 
                num_token->flags |= PCF_WAS_ALIGNED;
                num_token = NULL;
@@ -1148,9 +1148,9 @@ static void align_init_brace(chunk_t *start)
                next = chunk_get_next(pc);
                if ((next != NULL) && !chunk_is_newline(next))
                {
-                  LOG_FMT(LSYS, "-= %d =- indent [%.*s] col=%d len=%d\n",
-                          next->orig_line,
-                          next->len, next->str, cpd.al[idx].col, cpd.al[idx].len);
+                  //LOG_FMT(LSYS, "-= %d =- indent [%.*s] col=%d len=%d\n",
+                  //        next->orig_line,
+                  //        next->len, next->str, cpd.al[idx].col, cpd.al[idx].len);
 
                   if ((idx < (cpd.al_cnt - 1)) &&
                       cpd.settings[UO_align_number_left].b &&

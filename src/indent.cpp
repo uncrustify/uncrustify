@@ -320,8 +320,8 @@ void indent_text(void)
          {
             frm.pse[frm.pse_tos].indent = pc->column;
             indent_column = pc->column;
-            LOG_FMT(LSYS, "indent aligned: %.*s on line %d, col is %d\n",
-                    pc->len, pc->str, pc->orig_line, pc->column);
+            //LOG_FMT(LSYS, "indent aligned: %.*s on line %d, col is %d\n",
+            //        pc->len, pc->str, pc->orig_line, pc->column);
          }
          else
          {
