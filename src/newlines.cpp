@@ -757,53 +757,73 @@ void newlines_squeeze_ifdef(void)
    }
 }
 
+
 void newlines_eat_start_end(void)
 {
    chunk_t *pc;
-   chunk_t *tmp;
 
-   if (cpd.settings[UO_nl_eat_start].b)
+   /* Process newlines at the start of the file */
+   if (((cpd.settings[UO_nl_start_of_file].a & AV_REMOVE) != 0) ||
+       (((cpd.settings[UO_nl_start_of_file].a & AV_ADD) != 0) &&
+        (cpd.settings[UO_nl_start_of_file_min].n > 0)))
    {
       pc = chunk_get_head();
-      while ((pc != NULL) && (pc->type == CT_NEWLINE))
+      if (pc != NULL)
       {
-         tmp = chunk_get_next(pc);
-         chunk_del(pc);
-         pc = tmp;
+         if (pc->type == CT_NEWLINE)
+         {
+            if (cpd.settings[UO_nl_start_of_file].a == AV_REMOVE)
+            {
+               chunk_del(pc);
+            }
+            else if ((cpd.settings[UO_nl_start_of_file].a == AV_FORCE) ||
+                     (pc->nl_count < cpd.settings[UO_nl_start_of_file_min].n))
+            {
+               pc->nl_count = cpd.settings[UO_nl_start_of_file_min].n;
+            }
+         }
+         else if (((cpd.settings[UO_nl_start_of_file].a & AV_ADD) != 0) &&
+                  (cpd.settings[UO_nl_start_of_file_min].n > 0))
+         {
+            chunk_t chunk;
+            memset(&chunk, 0, sizeof(chunk));
+            chunk.orig_line = pc->orig_line;
+            chunk.type      = CT_NEWLINE;
+            chunk.nl_count  = cpd.settings[UO_nl_start_of_file_min].n;
+            chunk_add_before(&chunk, pc);
+         }
       }
    }
 
-   if (cpd.settings[UO_nl_eat_end].b)
-   {
-      pc = chunk_get_tail();
-      while ((pc != NULL) && (pc->type == CT_NEWLINE))
-      {
-         tmp = chunk_get_prev(pc);
-         chunk_del(pc);
-         pc = tmp;
-      }
-   }
-
-   if (cpd.settings[UO_nl_eof_min].n > 0)
+   /* Process newlines at the end of the file */
+   if (((cpd.settings[UO_nl_end_of_file].a & AV_REMOVE) != 0) ||
+       (((cpd.settings[UO_nl_end_of_file].a & AV_ADD) != 0) &&
+        (cpd.settings[UO_nl_end_of_file_min].n > 0)))
    {
       pc = chunk_get_tail();
       if (pc != NULL)
       {
          if (pc->type == CT_NEWLINE)
          {
-            if (pc->nl_count < cpd.settings[UO_nl_eof_min].n)
+            if (cpd.settings[UO_nl_end_of_file].a == AV_REMOVE)
             {
-               pc->nl_count = cpd.settings[UO_nl_eof_min].n;
+               chunk_del(pc);
+            }
+            else if ((cpd.settings[UO_nl_end_of_file].a == AV_FORCE) ||
+                     (pc->nl_count < cpd.settings[UO_nl_end_of_file_min].n))
+            {
+               pc->nl_count = cpd.settings[UO_nl_end_of_file_min].n;
             }
          }
-         else
+         else if (((cpd.settings[UO_nl_end_of_file].a & AV_ADD) != 0) &&
+                  (cpd.settings[UO_nl_end_of_file_min].n > 0))
          {
             chunk_t chunk;
             memset(&chunk, 0, sizeof(chunk));
             chunk.orig_line = pc->orig_line;
             chunk.type      = CT_NEWLINE;
-            chunk.nl_count  = cpd.settings[UO_nl_eof_min].n;
-            chunk_add_after(&chunk, pc);
+            chunk.nl_count  = cpd.settings[UO_nl_end_of_file_min].n;
+            chunk_add(&chunk);
          }
       }
    }

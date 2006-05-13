@@ -194,9 +194,10 @@ enum uncrustify_options
    UO_nl_brace_while,            // nl between } and while of do stmt
 
    UO_nl_define_macro,           // alter newlines in #define macros
-   UO_nl_eat_start,              // remove newlines at the start of the file
-   UO_nl_eat_end,                // remove newlines at the end of the file
-   UO_nl_eof_min,                // minimum number of newlines at EOF
+   UO_nl_start_of_file,          // alter newlines at the start of file
+   UO_nl_start_of_file_min,      // min number of newlines at the start of the file
+   UO_nl_end_of_file,            // alter newlines at the end of file
+   UO_nl_end_of_file_min,        // min number of newlines at the end of the file
 
    UO_nl_bool_pos,               // -1=move &&/|| to EOL 0=ignore, 1=move to SOL
 
@@ -328,11 +329,10 @@ options_name_tab option_name_table[] =
    OPTDEF(nl_brace_while,                AT_IARF),
    OPTDEF(nl_define_macro,               AT_BOOL),
    OPTDEF(nl_do_brace,                   AT_IARF),
-   OPTDEF(nl_eat_end,                    AT_BOOL),
-   OPTDEF(nl_eat_start,                  AT_BOOL),
    OPTDEF(nl_else_brace,                 AT_IARF),
+   OPTDEF(nl_end_of_file,                AT_IARF),
+   OPTDEF(nl_end_of_file_min,            AT_NUM),
    OPTDEF(nl_enum_brace,                 AT_IARF),
-   OPTDEF(nl_eof_min,                    AT_NUM),
    OPTDEF(nl_fcall_brace,                AT_IARF),
    OPTDEF(nl_fdef_brace,                 AT_IARF),
    OPTDEF(nl_for_brace,                  AT_IARF),
@@ -342,6 +342,8 @@ options_name_tab option_name_table[] =
    OPTDEF(nl_func_var_def_blk,           AT_NUM),
    OPTDEF(nl_if_brace,                   AT_IARF),
    OPTDEF(nl_squeeze_ifdef,              AT_BOOL),
+   OPTDEF(nl_start_of_file,              AT_IARF),
+   OPTDEF(nl_start_of_file_min,          AT_NUM),
    OPTDEF(nl_struct_brace,               AT_IARF),
    OPTDEF(nl_switch_brace,               AT_IARF),
    OPTDEF(nl_union_brace,                AT_IARF),

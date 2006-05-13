@@ -94,7 +94,6 @@
 		<F N="AUTHORS"/>
 		<F N="BUGS"/>
 		<F N="ChangeLog"/>
-		<F N="changelog.txt"/>
 		<F N="check_settings.sh"/>
 		<F N="configure"/>
 		<F N="configure.in"/>

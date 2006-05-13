@@ -405,6 +405,33 @@ Here's a list of all the options from options.h and a brief description.
    nl_define_macro:		bool
 	Alter newlines in #define macros
 
+   nl_start_of_file:		IARF
+	Add or remove newlines at the start of the file
+
+   nl_start_of_file_min:	number
+	Number of newlines at the start of the file.
+	Only used if nl_start_of_file is Add or Force
+
+   nl_end_of_file:		IARF
+	Add or remove newlines at the end of the file
+
+   nl_end_of_file_min:		number
+	Number of newlines at the end of the file.
+	Only used if nl_end_of_file is Add or Force
+
+   nl_bool_pos:			number (-1, 0, 1)
+	-1: boolean ops are at the end of the line
+	 0: do not move boolean ops (default)
+	 1: boolean ops are at the start of the line
+	
+	Example: -1 changes this:
+		if (something
+		    && somethingelse)
+	into:
+		if (something &&
+		    somethingelse)
+	1 does the opposite.
+
 #
 #  Blank line options
 #

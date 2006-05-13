@@ -8,6 +8,8 @@ Changes in uncrustify-0.0.18
 -------------------------------------------------------------------------------
  - Add nl_bool_pos to move boolean ops between eol and sol
  - Improve C99 array initializer aligning/formatting
+ - Replace nl_eat_start, nl_eat_end, and nl_eof_min with nl_start_of_file,
+   nl_start_of_file_min, nl_end_of_file, and nl_end_of_file_min
 
 
 Changes in uncrustify-0.0.17
