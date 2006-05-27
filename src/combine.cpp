@@ -481,7 +481,7 @@ static bool is_ucase_str(const char *str, int len)
 {
    while (len-- > 0)
    {
-      if (!isupper(*str))
+      if (toupper(*str) != *str)
       {
          return false;
       }
@@ -509,6 +509,7 @@ static void fix_casts(chunk_t *start)
    int        count      = 0;
    int        word_count = 0;
    bool       nope;
+   bool       doubtful_cast = false;
 
 
    /* Make sure there is only WORD, TYPE, and '*' before the close paren */
@@ -571,14 +572,14 @@ static void fix_casts(chunk_t *start)
       }
       else
       {
-         LOG_FMT(LCASTS, "%s: unlikely cast (%.*s) on line %d\n",
-                 __func__, last->len, last->str, start->orig_line);
-         return;
+         /* If we can't tell for sure whether this is a cast, decide against it */
+         detail        = " -- mixed case";
+         doubtful_cast = true;
       }
 
       /**
-       * If the next item is a * or &, the next item can't be a number or
-       * string.
+       * If the next item is a * or &, the next item after that can't be a
+       * number or string.
        *
        * If the next item is a +, the next item has to be a number.
        *
@@ -608,21 +609,26 @@ static void fix_casts(chunk_t *start)
       nope = false;
       if (chunk_is_star(pc) || chunk_is_addr(pc))
       {
-         if ((after->type == CT_NUMBER) || (after->type == CT_STRING))
+         /* star (*) and addr (&) are ambiguous */
+         if ((after->type == CT_NUMBER) ||
+             (after->type == CT_STRING) ||
+             doubtful_cast)
          {
             nope = true;
          }
       }
       else if (pc->type == CT_MINUS)
       {
-         if (after->type == CT_STRING)
+         /* (UINT8)-1 or (foo)-1 or (FOO)-'a' */
+         if ((after->type == CT_STRING) || doubtful_cast)
          {
             nope = true;
          }
       }
       else if (pc->type == CT_PLUS)
       {
-         if (after->type != CT_NUMBER)
+         /* (UINT8)+1 or (foo)+1 */
+         if ((after->type != CT_NUMBER) || doubtful_cast)
          {
             nope = true;
          }
