@@ -97,8 +97,12 @@ static void flag_parens(chunk_t *po, UINT16 flags,
  * Sets the parent of the open paren/brace/square/angle and the closing.
  * Note - it is assumed that pc really does point to an open item and the
  * close must be open + 1.
+ *
+ * @param start   The open paren
+ * @param parent  The type to assign as the parent
+ * @reutrn        The chunk after the close paren
  */
-void set_paren_parent(chunk_t *start, c_token_t parent)
+chunk_t *set_paren_parent(chunk_t *start, c_token_t parent)
 {
    chunk_t *end;
 
@@ -108,6 +112,7 @@ void set_paren_parent(chunk_t *start, c_token_t parent)
       start->parent_type = parent;
       end->parent_type   = parent;
    }
+   return chunk_get_next_ncnl(end);
 }
 
 
@@ -153,8 +158,29 @@ void fix_symbols(void)
            (pc->type == CT_DELEGATE) ||
            (pc->type == CT_ALIGN)))
       {
-         /*TODO: mark the parenthesis parent */
-         set_paren_parent(next, pc->type);
+         /* mark the parenthesis parent */
+         tmp = set_paren_parent(next, pc->type);
+
+         /* For a D cast - convert the next item */
+         if ((pc->type == CT_CAST) && (tmp != NULL))
+         {
+            if (tmp->type == CT_STAR)
+            {
+               tmp->type = CT_DEREF;
+            }
+            else if (tmp->type == CT_AMP)
+            {
+               tmp->type = CT_ADDR;
+            }
+            else if (tmp->type == CT_MINUS)
+            {
+               tmp->type = CT_NEG;
+            }
+            else if (tmp->type == CT_PLUS)
+            {
+               tmp->type = CT_POS;
+            }
+         }
       }
 
       /* A [] in C# and D only follows a type */
