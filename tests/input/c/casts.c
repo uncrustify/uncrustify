@@ -32,5 +32,17 @@ void foo(void)
 
    a = *(int)&b;
    a = (int)*pb;
+
+   a = (UINT8)'a';
+
+   a = (int)'a';
+   a = (UINT8)'a';
+   a = (Uint)'a';
+   a = (Uint)*'a';
+   a = (Uint)*5;
+   a = (Uint)*ape;
+   a = (UINT)*ape;
+   a = (UINT)ape;
+   a = (Uint)ape;
 }
 
