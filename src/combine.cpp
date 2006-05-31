@@ -112,7 +112,7 @@ chunk_t *set_paren_parent(chunk_t *start, c_token_t parent)
       start->parent_type = parent;
       end->parent_type   = parent;
    }
-   return chunk_get_next_ncnl(end);
+   return(chunk_get_next_ncnl(end));
 }
 
 
@@ -236,29 +236,28 @@ void fix_symbols(void)
          /* Mark variable definitions */
       }
 
+      if ((cpd.lang_flags & LANG_D) == 0)
+      {
+         /**
+          * Check a paren pair to see if it is a cast.
+          * Note that SPAREN and FPAREN have already been marked.
+          */
+         if ((pc->type == CT_PAREN_OPEN) &&
+             ((next->type == CT_WORD) ||
+              (next->type == CT_TYPE) ||
+              (next->type == CT_STRUCT) ||
+              (next->type == CT_QUALIFIER) ||
+              (next->type == CT_ENUM) ||
+              (next->type == CT_UNION)) &&
+             (prev->type != CT_SIZEOF))
+         {
+            fix_casts(pc);
+         }
+      }
+
       /* Check for stuff that can only occur at the start of an expression */
       if ((pc->flags & PCF_EXPR_START) != 0)
       {
-         if ((cpd.lang_flags & LANG_D) == 0)
-         {
-            /**
-             * Check a paren pair to see if it is a cast.
-             * Note that SPAREN and FPAREN have already been marked.
-             */
-            if ((pc->type == CT_PAREN_OPEN) &&
-                ((next->type == CT_WORD) ||
-                 (next->type == CT_TYPE) ||
-                 (next->type == CT_STRUCT) ||
-                 (next->type == CT_QUALIFIER) ||
-                 (next->type == CT_ENUM) ||
-                 (next->type == CT_UNION)) &&
-                (prev->type != CT_SIZEOF) &&
-                (prev->type != CT_TYPE)) /*TODO: why check for CT_TYPE? */
-            {
-               fix_casts(pc);
-            }
-         }
-
          /* Change STAR, MINUS, and PLUS in the easy cases */
          if (pc->type == CT_STAR)
          {
@@ -509,7 +508,7 @@ static bool is_ucase_str(const char *str, int len)
    {
       if (toupper(*str) != *str)
       {
-         return false;
+         return(false);
       }
       str++;
    }
@@ -662,7 +661,10 @@ static void fix_casts(chunk_t *start)
       else if ((pc->type != CT_NUMBER) &&
                (pc->type != CT_WORD) &&
                (pc->type != CT_PAREN_OPEN) &&
-               (pc->type != CT_STRING))
+               (pc->type != CT_STRING) &&
+               (pc->type != CT_SIZEOF) &&
+               (pc->type != CT_FUNC_CALL) &&
+               (pc->type != CT_FUNCTION))
       {
          LOG_FMT(LCASTS, "%s: not a cast on line %d - followed by '%.*s' %s\n",
                  __func__, start->orig_line, pc->len, pc->str, get_token_name(pc->type));
