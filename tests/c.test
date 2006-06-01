@@ -46,6 +46,8 @@
 # aligning tresholds
 00401	align.cfg 	c/align-equ.c	c/00401-align-equ.c
 
+00411	ben.cfg 	c/align-typedef.c	c/00411-align-typedef.c
+
 # boolean positioning
 00501	bool-pos-eol.cfg 	c/bool-pos.c	c/00501-bool-pos-eol.c
 00502	bool-pos-sol.cfg 	c/bool-pos.c	c/00502-bool-pos-sol.c
