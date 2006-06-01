@@ -1246,7 +1246,10 @@ static void align_typedefs(int span)
          {
             if ((c_type != NULL) && (c_typedef->orig_line == c_type->orig_line))
             {
-               as.Add(c_type);
+               if (chunk_get_prev_ncnl(pc) == c_type)
+               {
+                  as.Add(c_type);
+               }
             }
             c_type    = NULL;
             c_typedef = NULL;
