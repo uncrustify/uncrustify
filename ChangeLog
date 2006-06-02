@@ -3,12 +3,36 @@
 #
 
 
+Future plans: (in no particular order)
+-------------------------------------------------------------------------------
+ - autodetect line endings (really easy)
+ - Reorganize the main classes:
+    * UncrustifyOptions
+    * UncrustifyLogger
+    * UncrustifyEngine
+   This is required to...
+ - Process multiple files at a time - reuse the already parsed options
+ - Remove global variables
+ - Add easily pluggable output for logs and file
+ - Build files for windows (dll?)
+ - Build as a shared library on Linux?
+ - Plug into SlickEdit/Gedit/Kedit
+ - Port to D (very low priority) and incorporate with a D IDE
+ - line splitting
+ - Create a configuration GUI that allows you to interactively see what each
+   option does to your source code
+
+
+===============================================================================
+
+
 Changes in uncrustify-0.0.20
 -------------------------------------------------------------------------------
  - Fix cast on a sizeof: (INT32)sizeof(x)
  - Fix this: "#define SOME_JUNK /*lint -e123 */(const mytype_t *)-1"
  - Don't align function typedefs (fixed again)
  - Finally fix the DOS and MAC line-ending support
+ - (TODO) Add line-ending autodetection
 
 
 Changes in uncrustify-0.0.19
