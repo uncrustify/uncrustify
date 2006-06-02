@@ -16,6 +16,7 @@
 
 void add_char(char ch)
 {
+   /* convert a newline into the DOS/MAC/UNIX sequence */
    if (ch == '\n')
    {
       fputs(cpd.newline, cpd.fout);
@@ -167,7 +168,7 @@ void output_text(FILE *pfile)
       {
          for (cnt = 0; cnt < pc->nl_count; cnt++)
          {
-            add_text("\n");
+            add_char('\n');
          }
          cpd.did_newline = 1;
          cpd.column      = 1;
@@ -257,6 +258,17 @@ void output_comment_multi(chunk_t *pc)
    while (idx < pc->len)
    {
       ch = str[idx++];
+
+      /* handle the DOS and MAC endings. convert both to UNIX */
+      if (ch == '\r')
+      {
+         ch = '\n';
+         if (str[idx] == '\n')
+         {
+            idx++;
+         }
+      }
+
       /* Find the start column */
       if (len == 0)
       {
@@ -278,7 +290,7 @@ void output_comment_multi(chunk_t *pc)
       line[len++] = ch;
 
       /* If we just hit an end of line OR we just hit end-of-comment... */
-      if ((ch == '\n') || (ch == '\r') || (idx >= pc->len) ||
+      if ((ch == '\n') || (idx >= pc->len) ||
           ((len > 2) && (line[len - 2] == '*') && (ch == '/')))
       {
          line_count++;
@@ -337,7 +349,7 @@ void output_comment_multi(chunk_t *pc)
                ccol = cmt_col;
             }
 
-            if ((line[0] == '\n') || (line[0] == '\r'))
+            if (line[0] == '\n')
             {
                /* Emtpy line - just a '\n' */
                if (cpd.settings[UO_cmt_star_cont].b)
@@ -345,7 +357,7 @@ void output_comment_multi(chunk_t *pc)
                   output_to_column(cmt_col, cpd.settings[UO_indent_with_tabs].b);
                   add_text(" *");
                }
-               add_char(ch);
+               add_char('\n');
             }
             else
             {
@@ -380,6 +392,3 @@ void output_comment_multi(chunk_t *pc)
       }
    }
 }
-
-
-

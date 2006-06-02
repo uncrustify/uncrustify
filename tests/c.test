@@ -52,6 +52,9 @@
 00501	bool-pos-eol.cfg 	c/bool-pos.c	c/00501-bool-pos-eol.c
 00502	bool-pos-sol.cfg 	c/bool-pos.c	c/00502-bool-pos-sol.c
 
+00600  indent.cfg  c/dos.c  c/00600-dos.c
+00601  indent.cfg  c/mac.c  c/00601-mac.c
+
 # big general tests
 
 20000 ben.cfg c/i2c-core.c c/20000-i2c-core.c

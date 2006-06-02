@@ -92,6 +92,7 @@
 			<Folder Name="c">
 				<F N="input/c/align-equ.c"/>
 				<F N="input/c/align-struct-init.c"/>
+				<F N="input/c/align-typedef.c"/>
 				<F N="input/c/bool-pos.c"/>
 				<F N="input/c/brace-remove.c"/>
 				<F N="input/c/braces-2.c"/>
@@ -111,12 +112,14 @@
 				<F N="input/c/colon-asm.c"/>
 				<F N="input/c/comment-indent.c"/>
 				<F N="input/c/define-if-indent.c"/>
+				<F N="input/c/dos.c"/>
 				<F N="input/c/enum-struct-init.c"/>
 				<F N="input/c/fcn_type.c"/>
 				<F N="input/c/i2c-core.c"/>
 				<F N="input/c/ifdef-indent.c"/>
 				<F N="input/c/ifdef-nest.c"/>
 				<F N="input/c/indent-assign.c"/>
+				<F N="input/c/mac.c"/>
 				<F N="input/c/return-multi.c"/>
 				<F N="input/c/struct-brace.c"/>
 				<F N="input/c/switch-case.c"/>
@@ -136,6 +139,7 @@
 				<F N="input/cs/simple.cs"/>
 			</Folder>
 			<Folder Name="d">
+				<F N="input/d/casts.d"/>
 				<F N="input/d/HashMap.d"/>
 				<F N="input/d/imports.d"/>
 				<F N="input/d/template.d"/>

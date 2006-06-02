@@ -48,7 +48,9 @@ bool parse_comment(chunk_t *pc)
    if (pc->str[1] == '/')
    {
       pc->type = CT_COMMENT_CPP;
-      while ((pc->str[len] != '\n') && (pc->str[len] != 0))
+      while ((pc->str[len] != '\n') &&
+             (pc->str[len] != '\r') &&
+             (pc->str[len] != 0))
       {
          len++;
       }
@@ -374,6 +376,14 @@ bool parse_whitespace(chunk_t *pc)
       last_was_tab = false;
       switch (pc->str[len])
       {
+      case '\r':
+         if (pc->str[len + 1] == '\n')
+         {
+            /* DOS ending */
+            len++;
+         }
+         /* fall through to '\n' */
+
       case '\n':
          nl_count++;
          cpd.column = 1;
