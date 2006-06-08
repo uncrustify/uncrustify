@@ -12,7 +12,7 @@ uncrustify_SOURCES = uncrustify.cpp chunk_list.cpp indent.cpp align.cpp combine.
 
 noinst_HEADERS = chunk_list.h options.h char_table.h chunk_list.h \
 		uncrustify_types.h prototypes.h logmask.h logger.h \
-		ChunkStack.h args.h token_names.h token_enum.h
+		ChunkStack.h args.h token_names.h token_enum.h ListManager.h
 
 token_names.h: token_enum.h ../make_token_names.sh
 	@echo "Rebuilding token_names.h"
