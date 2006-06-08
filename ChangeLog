@@ -33,6 +33,7 @@ Changes in uncrustify-0.0.20
  - Don't align function typedefs (fixed again)
  - Finally fix the DOS and MAC line-ending support
  - (TODO) Add line-ending autodetection
+ - Add Windows build support
 
 
 Changes in uncrustify-0.0.19

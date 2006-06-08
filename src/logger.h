@@ -2,7 +2,8 @@
  * @file logger.h
  *
  * Functions to do logging.
- * The macros will perform conditional logging. Use those.
+ * The macros check whether the logsev is active before evaluating the
+ * parameters.  Use them instead of the functions.
  *
  * If a log statement ends in a newline, the current log is ended.
  * When the log severity changes, an implicit newline is inserted.
@@ -93,8 +94,12 @@ void log_str(log_sev_t sev, const char *str, int len);
  */
 void log_fmt(log_sev_t sev, const char *fmt, ...) __attribute__((format(printf, 2, 3)));
 
+#ifdef NO_MACRO_VARARG
+#define LOG_FMT    log_fmt
+#else
 #define LOG_FMT(sev, args...) \
    do { if (log_sev_on(sev)) { log_fmt(sev, ## args); } } while (0)
+#endif
 
 
 /**

@@ -186,7 +186,7 @@ static void log_end(void)
  */
 void log_str(log_sev_t sev, const char *str, int len)
 {
-   if ((str == NULL) || (len <= 0))
+   if ((str == NULL) || (len <= 0) || !log_sev_on(sev))
    {
       return;
    }
@@ -214,7 +214,7 @@ void log_fmt(log_sev_t sev, const char *fmt, ...)
 {
    va_list args;
 
-   if (fmt == NULL)
+   if ((fmt == NULL) || !log_sev_on(sev))
    {
       return;
    }
@@ -245,7 +245,7 @@ void log_hex(log_sev_t sev, const void *vdata, int len)
    int         idx;
    char        buf[80];
 
-   if (vdata == NULL)
+   if ((vdata == NULL) || !log_sev_on(sev))
    {
       return;
    }
@@ -292,7 +292,7 @@ void log_hex_blk(log_sev_t sev, const void *data, int len)
    int         tmp;
    int         total;
 
-   if ((data == NULL) || (len <= 0))
+   if ((data == NULL) || (len <= 0) || !log_sev_on(sev))
    {
       return;
    }

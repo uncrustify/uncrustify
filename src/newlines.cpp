@@ -55,7 +55,7 @@ static chunk_t *newline_add_before(chunk_t *pc, c_token_t type)
 
 #define newline_min_after(ref, cnt)     newline_min_after2(ref, cnt, __func__, __LINE__)
 
-static void newline_min_after2(chunk_t *ref, int32_t count,
+static void newline_min_after2(chunk_t *ref, INT32 count,
                                const char *func, int line)
 {
    chunk_t *pc = ref;
@@ -76,7 +76,8 @@ static void newline_min_after2(chunk_t *ref, int32_t count,
    if (chunk_is_comment(next) && (next->nl_count == 1) &&
        chunk_is_comment(chunk_get_prev(pc)))
    {
-      return(newline_min_after(next, count));
+      newline_min_after(next, count);
+      return;
    }
    else
    {

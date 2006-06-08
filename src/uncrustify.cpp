@@ -113,7 +113,6 @@ int main(int argc, char *argv[])
        ((source_file = arg.Param("-f")) == NULL))
    {
       // using stdin
-      //usage_exit("Specify the file to process: -f file", argv[0], 57);
    }
 
    /* Get the config file name */
@@ -181,7 +180,7 @@ int main(int argc, char *argv[])
 
    if (source_file == NULL)
    {
-      UINT32 data_size;
+      int    data_size;
       int    len;
 
       if (cpd.lang_flags == 0)
@@ -414,6 +413,7 @@ static int language_from_filename(const char *filename)
    }
    return(LANG_C);
 }
+
 
 /**
  * Find the language for the file extension
