@@ -48,4 +48,4 @@ typedef unsigned int       UINT32;
 #undef strcasecmp
 #define strcasecmp    _strcmpi
 
-#endif	/* WINDOWS_COMPAT_H_INCLUDED */
+#endif   /* WINDOWS_COMPAT_H_INCLUDED */
