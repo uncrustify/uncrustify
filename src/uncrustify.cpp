@@ -5,6 +5,7 @@
  */
 #define DEFINE_GLOBAL_DATA
 
+#include "uncrustify_version.h"
 #include "uncrustify_types.h"
 #include "char_table.h"
 #include "chunk_list.h"
@@ -59,7 +60,7 @@ static void usage_exit(const char *msg, const char *argv0, int code)
 
 static void version_exit(void)
 {
-   printf("%s %s\n", PACKAGE, VERSION);
+   printf("uncrustify %s\n", UNCRUSTIFY_VERSION);
    exit(0);
 }
 
