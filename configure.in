@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.59)
-AC_INIT(uncrustify, 0.0.20)
+AC_INIT(uncrustify, NA)
 AM_INIT_AUTOMAKE([-Wall])
 AC_CONFIG_SRCDIR([src/uncrustify.cpp])
 AC_CONFIG_HEADER([src/config.h])
