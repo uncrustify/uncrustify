@@ -239,6 +239,10 @@ SOURCE=..\src\uncrustify_types.h
 # End Source File
 # Begin Source File
 
+SOURCE=..\src\uncrustify_version.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\windows_compat.h
 # End Source File
 # End Group
