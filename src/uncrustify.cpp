@@ -167,18 +167,6 @@ int main(int argc, char *argv[])
       usage_exit(NULL, argv[0], 56);
    }
 
-   /* convert the UO_newlines into a string */
-   idx = 0;
-   int nl_mask = cpd.settings[UO_newlines].n & 0xffffff;
-   while (nl_mask != 0)
-   {
-      if ((nl_mask & 0xff0000) != 0)
-      {
-         cpd.newline[idx++] = (nl_mask >> 16);
-      }
-      nl_mask = (nl_mask << 8) & 0xffff00;
-   }
-
    if (source_file == NULL)
    {
       int    data_size;

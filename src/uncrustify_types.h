@@ -21,7 +21,7 @@
 /**
  * Brace stage enum used in brace_cleanup
  */
-typedef enum
+enum brstage_e
 {
    BS_NONE,
    BS_PAREN1,   /* if/for/switch/while */
@@ -31,7 +31,8 @@ typedef enum
    BS_ELSE,     /* expecting 'else' after 'if' */
    BS_ELSEIF,   /* expecting 'if' after 'else' */
    BS_WHILE,    /* expecting 'while' after 'do' */
-} brstage_t;
+};
+
 
 /**
  * Structure for counting nested level
@@ -45,7 +46,7 @@ struct paren_stack_entry
    int       ref;
    int       min_col;
    c_token_t parent;       /**< if, for, function, etc */
-   brstage_t stage;
+   brstage_e stage;
    bool      in_preproc;   /**> whether this was created in a preprocessor */
 };
 
@@ -172,12 +173,13 @@ struct cp_data
    UINT16             line_number;
    UINT16             column;  /* column for parsing */
 
+   /* stuff to auto-detect line endings */
+   UINT32             le_counts[LE_AUTO];
    char               newline[5];
 
    bool               consumed;
 
    int                did_newline;
-   //enum pp_type       in_preproc;
    c_token_t          in_preproc;
    int                preproc_ncnl_count;
 
@@ -193,11 +195,6 @@ struct cp_data
 
    struct parse_frame frames[16];
    int                frame_count;
-
-   /* a very simple chunk stack - managed in chunk_list.c/h */
-   //chunk_stack_t      cs;
-   //int                cs_len;    /* active entries */
-   //int                cs_size;   /* total entry count (private) */
 };
 
 extern struct cp_data cpd;

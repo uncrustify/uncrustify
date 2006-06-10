@@ -18,6 +18,7 @@ enum
    LINFO = 4,
    LDATA = 5,
 
+   LLINEENDS = 9,     /* Show which line endings are used */
    LCASTS    = 10,    /* align casts */
    LALBR     = 11,    /* align braces */
    LALTD     = 12,    /* Align Typedef */

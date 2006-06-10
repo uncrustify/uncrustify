@@ -82,11 +82,28 @@ bool parse_comment(chunk_t *pc)
             continue;
          }
 
-         if (pc->str[len] == '\n')
+         if ((pc->str[len] == '\n') || (pc->str[len] == '\r'))
          {
             pc->type   = CT_COMMENT_MULTI;
             cpd.column = 0;
             cpd.line_number++;
+
+            if (pc->str[len] == '\r')
+            {
+               if (pc->str[len + 1] == '\n')
+               {
+                  cpd.le_counts[LE_DOS]++;
+                  len++;
+               }
+               else
+               {
+                  cpd.le_counts[LE_MAC]++;
+               }
+            }
+            else
+            {
+               cpd.le_counts[LE_UNIX]++;
+            }
          }
          len++;
          cpd.column++;
@@ -104,11 +121,28 @@ bool parse_comment(chunk_t *pc)
             break;
          }
 
-         if (pc->str[len] == '\n')
+         if ((pc->str[len] == '\n') || (pc->str[len] == '\r'))
          {
-            pc->type = CT_COMMENT_MULTI;
-            cpd.line_number++;
+            pc->type   = CT_COMMENT_MULTI;
             cpd.column = 0;
+            cpd.line_number++;
+
+            if (pc->str[len] == '\r')
+            {
+               if (pc->str[len + 1] == '\n')
+               {
+                  cpd.le_counts[LE_DOS]++;
+                  len++;
+               }
+               else
+               {
+                  cpd.le_counts[LE_MAC]++;
+               }
+            }
+            else
+            {
+               cpd.le_counts[LE_UNIX]++;
+            }
          }
          len++;
          cpd.column++;
@@ -381,10 +415,21 @@ bool parse_whitespace(chunk_t *pc)
          {
             /* DOS ending */
             len++;
+            cpd.le_counts[LE_DOS]++;
          }
-         /* fall through to '\n' */
+         else
+         {
+            /* MAC ending */
+            cpd.le_counts[LE_MAC]++;
+         }
+         nl_count++;
+         cpd.column = 1;
+         cpd.line_number++;
+         break;
 
       case '\n':
+         /* UNIX ending */
+         cpd.le_counts[LE_UNIX]++;
          nl_count++;
          cpd.column = 1;
          cpd.line_number++;
@@ -665,5 +710,30 @@ void tokenize(const char *data, int data_len)
          }
       }
    }
-}
 
+   /* Set the cpd.newline string for this file */
+   if ((cpd.settings[UO_newlines].le == LE_UNIX) ||
+       ((cpd.settings[UO_newlines].le == LE_AUTO) &&
+        (cpd.le_counts[LE_UNIX] >= cpd.le_counts[LE_DOS]) &&
+        (cpd.le_counts[LE_UNIX] >= cpd.le_counts[LE_MAC])))
+   {
+      /* Unix line ends */
+      strcpy(cpd.newline, "\n");
+      LOG_FMT(LLINEENDS, "Using UNIX line endings\n");
+   }
+   else if ((cpd.settings[UO_newlines].le == LE_DOS) ||
+            ((cpd.settings[UO_newlines].le == LE_AUTO) &&
+             (cpd.le_counts[LE_DOS] >= cpd.le_counts[LE_UNIX]) &&
+             (cpd.le_counts[LE_DOS] >= cpd.le_counts[LE_MAC])))
+   {
+      /* DOS line ends */
+      strcpy(cpd.newline, "\r\n");
+      LOG_FMT(LLINEENDS, "Using DOS line endings\n");
+   }
+   else
+   {
+      /* Mac line ends */
+      strcpy(cpd.newline, "\r");
+      LOG_FMT(LLINEENDS, "Using MAC line endings\n");
+   }
+}

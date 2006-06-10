@@ -8,35 +8,47 @@
 #define OPTIONS_H_INCLUDED
 
 
-typedef enum
+enum argtype_e
 {
    AT_BOOL,    /**< true / false */
    AT_IARF,    /**< Ignore / Add / Remove / Force */
    AT_NUM,     /**< Number */
-} argtype_t;
+   AT_LINE,    /**< Line Endings */
+};
 
 /** Arg values - these are bit fields*/
-typedef enum
+enum argval_t
 {
    AV_IGNORE = 0,
    AV_ADD    = 1,
    AV_REMOVE = 2,
    AV_FORCE  = 3, /**< remove + add */
-} argval_t;
+};
 
-typedef union op_val_t
+/** Line endings */
+enum lineends_e
 {
-   argval_t a;
-   int      n;
-   bool     b;
-} op_val_t;
+   LE_UNIX,    /* "\n"   */
+   LE_DOS,     /* "\r\n" */
+   LE_MAC,     /* "\r"   */
+
+   LE_AUTO,    /* keep last */
+};
+
+union op_val_t
+{
+   argval_t   a;
+   int        n;
+   bool       b;
+   lineends_e le;
+};
 
 /**
  * Keep this grouped by functionality
  */
 enum uncrustify_options
 {
-   UO_newlines,                 // represents up to 3 chars, default 0x0a
+   UO_newlines,                 // Set to AUTO, UNIX, DOS, or MAC
 
    /*
     * Basic Indenting stuff
@@ -244,7 +256,7 @@ enum uncrustify_options
 struct options_name_tab
 {
    int        id;
-   argtype_t  type;
+   argtype_e  type;
    const char *name;
 };
 
@@ -319,7 +331,7 @@ options_name_tab option_name_table[] =
    OPTDEF(mod_full_brace_nl,             AT_NUM),
    OPTDEF(mod_full_brace_while,          AT_IARF),
    OPTDEF(mod_paren_on_return,           AT_IARF),
-   OPTDEF(newlines,                      AT_NUM),
+   OPTDEF(newlines,                      AT_LINE),
    OPTDEF(nl_after_case,                 AT_BOOL),
    OPTDEF(nl_after_return,               AT_BOOL),
    OPTDEF(nl_assign_brace,               AT_IARF),
@@ -387,4 +399,3 @@ options_name_tab option_name_table[] =
 #endif   /* DEFINE_OPTION_NAME_TABLE */
 
 #endif   /* OPTIONS_H_INCLUDED */
-

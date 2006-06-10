@@ -67,6 +67,28 @@ static int convert_value(struct options_name_tab *entry, const char *val)
    bool                    btrue;
    int                     mult;
 
+   if (entry->type == AT_LINE)
+   {
+      if (strcasecmp(val, "dos") == 0)
+      {
+         return(LE_DOS);
+      }
+      if (strcasecmp(val, "unix") == 0)
+      {
+         return(LE_UNIX);
+      }
+      if (strcasecmp(val, "mac") == 0)
+      {
+         return(LE_MAC);
+      }
+      if (strcasecmp(val, "auto") != 0)
+      {
+         LOG_FMT(LWARN, "Expected AUTO, DOS, UNIX, or MAC for %s, got %s\n",
+                 entry->name, val);
+      }
+      return(LE_AUTO);
+   }
+
    if (entry->type == AT_NUM)
    {
       if (isdigit(*val) ||
@@ -123,6 +145,8 @@ static int convert_value(struct options_name_tab *entry, const char *val)
       LOG_FMT(LWARN, "Expected 'True' or 'False' for %s, got %s\n", entry->name, val);
       return(0);
    }
+
+   /* Must be AT_IARF */
 
    if ((strcasecmp(val, "add") == 0) || (strcasecmp(val, "a") == 0))
    {
@@ -262,7 +286,7 @@ int load_option_file(const char *filename)
  */
 void set_option_defaults(void)
 {
-   cpd.settings[UO_newlines].n         = 0x0a;
+   cpd.settings[UO_newlines].le        = LE_AUTO;
    cpd.settings[UO_input_tab_size].n   = 8;
    cpd.settings[UO_output_tab_size].n  = 8;
    cpd.settings[UO_indent_columns].n   = 8;
