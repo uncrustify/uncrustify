@@ -1,0 +1,88 @@
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=utf-8">
+	<TITLE></TITLE>
+</HEAD>
+<BODY LANG="en-US" DIR="LTR">
+<H1>Uncrustify - Source Code Beautifier</H1>
+<H2>For C, C++, C#, D, and Java</H2>
+<HR>
+The goals of this project are simple:<BR>
+Create a highly configurable, easily modifiable source code beautifier.<BR>
+<BR>
+<A HREF="http://sourceforge.net/projects/uncrustify/">Sourceforge project
+web site</A>
+<P><A HREF="http://prdownloads.sourceforge.net/uncrustify/uncrustify-0.0.20.tgz?download">Download
+Uncrustify 0.0.20</A></P>
+<HR>
+<B>What it does:</B>
+<UL>
+	<LI>Ident code, aligning on parens, assignments, etc
+	<LI>Align on '=' and variable definitions
+	<LI>Align structure initializers
+	<LI>Align #define stuff
+	<LI>Align backslash-newline stuff
+	<LI>Reformat comments (a little bit)
+	<LI>Fix inter-character spacing
+	<LI>Add or remove parens on return statements
+	<LI>Add or remove braces on single-statement if/do/while/for statements
+	<LI>Highly configurable - 118 configurable options as of version 0.0.15
+</UL>
+See some example <A HREF="examples/example.c">output</A>.
+<HR>
+<H3>Want to help?</H3>
+The most helpful way is to try it out and give feedback.
+<P>
+Documentation and examples are available in the source tree, so check it out.
+<P>
+You can find a copy of the configurable parameters <A HREF="configuration.txt">here</A>.<BR>
+Here is the config file for my <A HREF="ben.cfg.txt">favorite style</A>.
+And one I set up for <A HREF="linux.cfg.txt">Linux</A>.<BR>
+And here is a <A HREF="examples/c-1.in.c">before</A> and <A HREF="examples/c-1.out.c">after</A> C source example.<BR>
+That should give you a pretty good idea of what Uncrustify can do.<BR>
+<P>
+If you find a bug, please do the following:
+<UL>
+	<LI>Reduce the input source file to the minimum that still has the problem
+	<LI>Use the sourceforget.net bug tracker
+	<LI>Attach the input source file, the configuration file, and a file that contains the expected output
+</UL>
+<P>
+If you want to add a feature, fix a bug, or implement missing functionality, feel free to do so!
+<P>
+Here are some areas that need attention:
+<UL>
+	<LI>This web page (yeah, it's lame)
+	<LI>Examples that can be put on this website to show off what Uncrustify can do
+	<LI>A logo of some sort
+	<LI>Anything marked with "Not Usable" or "Not Implemented" in <A HREF="configuration.txt">configuration.txt</A> could be implemented.
+	<LI>Test Java support and provide feedback (or patches!)
+	<LI>Improve comment formatting (see <code>output_comment_multi()</code> in c_output.c)
+	<LI>Add advanced file ouput (ie, save to a file instead of to stdout)
+	<LI>Add aligning thresholds
+	<LI>Anything else that you want to do to make it better?
+</UL>
+
+<HR>
+<H3>Portability</H3>
+I'm pretty sure that I'm not using anything that is OS-specific.<BR>
+The software has been tested on the following operating systems:
+<UL>
+<LI>Linux (Ubuntu)</LI>
+<LI>QNX (6.2.1)</LI>
+<LI>OS X</LI>
+<LI>OpenBSD 3.4</LI>
+<LI>NetBSD 1.6.1</LI>
+<LI>Sun Solaris 9</LI>
+<LI>Windows XP</LI>
+</UL>
+<HR>
+<H3>Links</H3>
+<UL>
+<LI>Don't know what D is?  Check out the <A HREF="http://www.digitalmars.com/d/">Digital Mars website</A>.</LI>
+<LI><A HREF="http://www.linuxlinks.com">Linux Links</A>.</LI>
+<LI><A HREF="http://freshmeat.net/projects/uncrustify/">Freshmeat Project</A>.</LI>
+</UL>
+
+</BODY>
+</HTML>
