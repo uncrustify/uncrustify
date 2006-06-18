@@ -1,0 +1,266 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 42;
+	objects = {
+
+/* Begin PBXAggregateTarget section */
+		1F15244A0A446C680058B2B7 /* Build_PPC */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 1F15244B0A446C6B0058B2B7 /* Build configuration list for PBXAggregateTarget "Build_PPC" */;
+			buildPhases = (
+				1F15244E0A446C7A0058B2B7 /* ShellScript */,
+			);
+			dependencies = (
+			);
+			name = Build_PPC;
+			productName = Build_PPC;
+		};
+		1F1524570A446E250058B2B7 /* Build_i386 */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 1F15245B0A446E3C0058B2B7 /* Build configuration list for PBXAggregateTarget "Build_i386" */;
+			buildPhases = (
+				1F1524580A446E310058B2B7 /* ShellScript */,
+			);
+			dependencies = (
+			);
+			name = Build_i386;
+			productName = Build_i386;
+		};
+		1F15246C0A446FC60058B2B7 /* Build Universal */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 1F1524750A446FF50058B2B7 /* Build configuration list for PBXAggregateTarget "Build Universal" */;
+			buildPhases = (
+				1F1524710A446FD70058B2B7 /* ShellScript */,
+			);
+			dependencies = (
+				1F15246E0A446FCE0058B2B7 /* PBXTargetDependency */,
+				1F1524700A446FD00058B2B7 /* PBXTargetDependency */,
+			);
+			name = "Build Universal";
+			productName = "Build Universal";
+		};
+/* End PBXAggregateTarget section */
+
+/* Begin PBXContainerItemProxy section */
+		1F15246D0A446FCE0058B2B7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1F15243C0A446BB20058B2B7 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1F15244A0A446C680058B2B7 /* Build_PPC */;
+			remoteInfo = Build_PPC;
+		};
+		1F15246F0A446FD00058B2B7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1F15243C0A446BB20058B2B7 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1F1524570A446E250058B2B7 /* Build_i386 */;
+			remoteInfo = Build_i386;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXGroup section */
+		1F15243A0A446BB20058B2B7 = {
+			isa = PBXGroup;
+			children = (
+			);
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXProject section */
+		1F15243C0A446BB20058B2B7 /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 1F15243D0A446BB20058B2B7 /* Build configuration list for PBXProject "uncrustify" */;
+			hasScannedForEncodings = 0;
+			mainGroup = 1F15243A0A446BB20058B2B7;
+			projectDirPath = "";
+			targets = (
+				1F15244A0A446C680058B2B7 /* Build_PPC */,
+				1F1524570A446E250058B2B7 /* Build_i386 */,
+				1F15246C0A446FC60058B2B7 /* Build Universal */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		1F15244E0A446C7A0058B2B7 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "BUILD_ARCH=build/ppc\nexport CFLAGS=\"-arch ppc\"\nexport LDFLAGS=\"-arch ppc\"\nexport CXXFLAGS=\"-arch ppc\"\n./configure\nmake\nmkdir -p $BUILD_ARCH\nmv src/uncrustify $BUILD_ARCH\necho \"Done\"\nexit 0";
+		};
+		1F1524580A446E310058B2B7 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "BUILD_ARCH=build/i386\nmake clean\nexport CFLAGS=\"-arch i386\"\nexport LDFLAGS=\"-arch i386\"\nexport CXXFLAGS=\"-arch i386\"\n./configure\nmake\nmkdir -p $BUILD_ARCH\nmv src/uncrustify $BUILD_ARCH\necho \"Done\"\nexit 0";
+		};
+		1F1524710A446FD70058B2B7 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = " lipo -create build/*/uncrustify -output build/uncrustify";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		1F15246E0A446FCE0058B2B7 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1F15244A0A446C680058B2B7 /* Build_PPC */;
+			targetProxy = 1F15246D0A446FCE0058B2B7 /* PBXContainerItemProxy */;
+		};
+		1F1524700A446FD00058B2B7 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1F1524570A446E250058B2B7 /* Build_i386 */;
+			targetProxy = 1F15246F0A446FD00058B2B7 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		1F15243E0A446BB20058B2B7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+			};
+			name = Debug;
+		};
+		1F15243F0A446BB20058B2B7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+			};
+			name = Release;
+		};
+		1F15244C0A446C6B0058B2B7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				PRODUCT_NAME = Build_PPC;
+			};
+			name = Debug;
+		};
+		1F15244D0A446C6B0058B2B7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				PRODUCT_NAME = Build_PPC;
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+		1F15245C0A446E3C0058B2B7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				PRODUCT_NAME = Build_i386;
+			};
+			name = Debug;
+		};
+		1F15245D0A446E3C0058B2B7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				PRODUCT_NAME = Build_i386;
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+		1F1524760A446FF50058B2B7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				PRODUCT_NAME = "Build Universal";
+			};
+			name = Debug;
+		};
+		1F1524770A446FF50058B2B7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				PRODUCT_NAME = "Build Universal";
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1F15243D0A446BB20058B2B7 /* Build configuration list for PBXProject "uncrustify" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1F15243E0A446BB20058B2B7 /* Debug */,
+				1F15243F0A446BB20058B2B7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1F15244B0A446C6B0058B2B7 /* Build configuration list for PBXAggregateTarget "Build_PPC" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1F15244C0A446C6B0058B2B7 /* Debug */,
+				1F15244D0A446C6B0058B2B7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1F15245B0A446E3C0058B2B7 /* Build configuration list for PBXAggregateTarget "Build_i386" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1F15245C0A446E3C0058B2B7 /* Debug */,
+				1F15245D0A446E3C0058B2B7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1F1524750A446FF50058B2B7 /* Build configuration list for PBXAggregateTarget "Build Universal" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1F1524760A446FF50058B2B7 /* Debug */,
+				1F1524770A446FF50058B2B7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 1F15243C0A446BB20058B2B7 /* Project object */;
+}
