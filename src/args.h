@@ -96,6 +96,20 @@ public:
     * @return     NULL (done) or the pointer to the string
     */
    const char *Unused(int& idx);
+
+   /**
+    * Takes text and splits it into arguments.
+    * args is an array of char * pointers that will get populated.
+    * num_args is the maximum number of args split off.
+    * If there are more than num_args, the remaining text is ignored.
+    * Note that text is modified (zeroes are inserted)
+    *
+    * @param text       The text to split (modified)
+    * @param args       The char * array to populate
+    * @param num_args   The number of items in args
+    * @return           The number of arguments parsed (always <= num_args)
+    */
+   static int SplitLine(char *text, char *args[], int num_args);
 };
 
 #endif   /* ARGS_H_INCLUDED */

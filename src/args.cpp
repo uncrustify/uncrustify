@@ -7,6 +7,8 @@
 
 #include "args.h"
 #include <cstring>
+#include <cctype>
+
 
 /**
  * Store the values and allocate enough memory for the 'used' flags.
@@ -186,3 +188,83 @@ const char *Args::Unused(int& index)
    return(NULL);
 }
 
+
+/**
+ * Takes text and splits it into arguments.
+ * args is an array of char * pointers that will get populated.
+ * num_args is the maximum number of args split off.
+ * If there are more than num_args, the remaining text is ignored.
+ * Note that text is modified (zeroes are inserted)
+ *
+ * @param text       The text to split (modified)
+ * @param args       The char * array to populate
+ * @param num_args   The number of items in args
+ * @return           The number of arguments parsed (always <= num_args)
+ */
+int Args::SplitLine(char *text, char *args[], int num_args)
+{
+   char cur_quote = 0;
+   bool in_backslash = false;
+   bool in_arg = false;
+   int  argc = 0;
+   char *dest = text;
+
+   int idx;
+
+   while ((*text != 0) && (argc <= num_args))
+   {
+      /* Detect the start of an arg */
+      if (!in_arg && !isspace(*text))
+      {
+         in_arg = true;
+         args[argc] = dest;
+         argc++;
+      }
+
+      if (in_arg)
+      {
+         if (in_backslash)
+         {
+            in_backslash = false;
+            *dest = *text;
+            dest++;
+         }
+         else if (*text == '\\')
+         {
+            in_backslash = true;
+         }
+         else if (*text == cur_quote)
+         {
+            cur_quote = 0;
+         }
+         else if ((*text == '\'') || (*text == '"') || (*text == '`'))
+         {
+            cur_quote = *text;
+         }
+         else if (cur_quote != 0)
+         {
+            *dest = *text;
+            dest++;
+         }
+         else if (isspace(*text))
+         {
+            *dest = 0;
+            dest++;
+            in_arg = false;
+            if (argc == num_args)
+            {
+               break;
+            }
+         }
+         else
+         {
+            *dest = *text;
+            dest++;
+         }
+      }
+      text++;
+   }
+   *dest = 0;
+
+   return(argc);
+}
