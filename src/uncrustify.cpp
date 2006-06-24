@@ -34,6 +34,11 @@ struct cp_data cpd;
 static int language_from_tag(const char *tag);
 static int language_from_filename(const char *filename);
 static const char *language_to_string(int lang);
+static char *read_stdin(int& out_len);
+static void uncrustify_file(const char *data, int data_len, FILE *pfout,
+                            const char *parsed_file);
+static void do_source_file(const char *filename, FILE *pfout, const char *parsed_file);
+static void process_source_list(const char *source_list);
 
 
 static void usage_exit(const char *msg, const char *argv0, int code)
@@ -44,16 +49,19 @@ static void usage_exit(const char *msg, const char *argv0, int code)
    }
    fprintf(stderr,
            "Usage:\n"
-           "%s -c cfg [-f file] [-p parsed] [-t typefile] [--version] [-l lang] [-L sev] [-s]\n"
+           "%s -c cfg [-f file] [-F filelist] [-p parsed] [-t typefile] [--version] [-l lang] [-L sev] [-s] [files ...]\n"
            " c : specify the config file\n"
-           " f : specify the file to format, if omitted, stdin is used\n"
-           " p : debug - dump parsed tokens to this file\n"
-           " L : debug log severities 0-255 for everything\n"
-           " s : show log severities\n"
+           " f : specify the file to format\n"
+           " F : specify a file that contains a list of files to process\n"
+           " files : whitespace-separated list of files to process\n"
            " t : load a file with types\n"
            " l : language override: C, CPP, D, CS, JAVA\n"
            "--version : print the version and exit\n"
-           "The output is dumped to stdout, errors are dumped to stderr\n",
+           "\n"
+           "If no input files are specified, the input is read from stdin\n"
+           "If -F is used, the output is is the filename + .uncrustify\n"
+           "Otherwise, the output is dumped to stdout.\n"
+           "Errors are always dumped to stderr\n",
            argv0);
    exit(code);
 }
@@ -73,6 +81,7 @@ int main(int argc, char *argv[])
    const char  *cfg_file    = "uncrustify.cfg";
    const char  *parsed_file = NULL;
    const char  *source_file = NULL;
+   const char  *source_list = NULL;
    log_mask_t  mask;
    int         idx;
    const char  *p_arg;
@@ -107,13 +116,6 @@ int main(int argc, char *argv[])
    {
       logmask_from_string(p_arg, &mask);
       log_set_mask(&mask);
-   }
-
-   /* Get the source file name */
-   if (((source_file = arg.Param("--file")) == NULL) &&
-       ((source_file = arg.Param("-f")) == NULL))
-   {
-      // using stdin
    }
 
    /* Get the config file name */
@@ -153,85 +155,248 @@ int main(int argc, char *argv[])
       }
    }
 
-   /* Check for unused args (ignore them) */
-   idx = 1;
-   while ((p_arg = arg.Unused(idx)) != NULL)
+   /* Get the source file name */
+   if (((source_file = arg.Param("--file")) == NULL) &&
+       ((source_file = arg.Param("-f")) == NULL))
    {
-      LOG_FMT(LWARN, "Unused argument: %s\n", p_arg);
+      // not using a single file
+   }
+
+   if (((source_list = arg.Param("--files")) == NULL) &&
+       ((source_list = arg.Param("-F")) == NULL))
+   {
+      // not using a file list
+   }
+
+   /* Check for unused args (ignore them) */
+   idx   = 1;
+   p_arg = arg.Unused(idx);
+
+   /* Check args */
+   if ((source_file != NULL) && ((source_list != NULL) || (p_arg != NULL)))
+   {
+      usage_exit("Cannot specify both the single file option and a mulit-file option.",
+                 argv[0], 0);
    }
 
    /* Load the config file */
    set_option_defaults();
    if (load_option_file(cfg_file) < 0)
    {
-      usage_exit(NULL, argv[0], 56);
+      usage_exit("Unable to load the config file", argv[0], 56);
    }
 
-   if (source_file == NULL)
+   if ((source_file == NULL) && (source_list == NULL) && (p_arg == NULL))
    {
-      int    data_size;
-      int    len;
-
+      /* no input specified, so use stdin */
       if (cpd.lang_flags == 0)
       {
          cpd.lang_flags = LANG_C;
       }
 
-      /* Start with 64k */
-      data_size = 64 * 1024;
-      data      = (char *)malloc(data_size);
-      data_len  = 0;
-
-      while ((len = fread(&data[data_len], 1, data_size - data_len, stdin)) > 0)
+      data = read_stdin(data_len);
+      if (data == NULL)
       {
-         data_len += len;
-         if (data_len == data_size)
-         {
-            data_size += 64 * 1024;
-            data       = (char *)realloc(data, data_size);
-            if (data == NULL)
-            {
-               LOG_FMT(LERR, "Out of memory\n");
-               return(100);
-            }
-         }
+         LOG_FMT(LERR, "Out of memory\n");
+         return(100);
       }
-
-      data[data_len] = 0;
 
       /* Done reading from stdin */
       LOG_FMT(LSYS, "Parsing: %d bytes from stdin as language %s\n",
               data_len, language_to_string(cpd.lang_flags));
+
+      uncrustify_file(data, data_len, stdout, parsed_file);
+   }
+   else if (source_file != NULL)
+   {
+      /* Doing a single file, output to stdout */
+      do_source_file(source_file, stdout, parsed_file);
    }
    else
    {
-      /* Do some simple language detection based on the filename */
-      if (cpd.lang_flags == 0)
+      /* Doing multiple files */
+
+      /* Do the files on the command line first */
+      idx = 1;
+      while ((p_arg = arg.Unused(idx)) != NULL)
       {
-         cpd.lang_flags = language_from_filename(source_file);
+         do_source_file(p_arg, NULL, NULL);
       }
 
-      /* Try to read in the source file */
-      p_file = fopen(source_file, "r");
-      if (p_file == NULL)
+      if (source_list != NULL)
       {
-         LOG_FMT(LERR, "open(%s) failed: %s\n", source_file, strerror(errno));
-         return(1);
+         process_source_list(source_list);
       }
-
-      /*note: could have also just MMAP'd the file */
-      fstat(fileno(p_file), &my_stat);
-
-      data_len = my_stat.st_size;
-      data     = (char *)malloc(data_len + 1);
-      fread(data, data_len, 1, p_file);
-      data[data_len] = 0;
-      fclose(p_file);
-
-      LOG_FMT(LSYS, "Parsing: %s as language %s\n",
-              source_file, language_to_string(cpd.lang_flags));
    }
 
+   return(0);
+}
+
+
+static void process_source_list(const char *source_list)
+{
+   FILE *p_file = fopen(source_list, "r");
+
+   if (p_file == NULL)
+   {
+      LOG_FMT(LERR, "Unable to read %s\n", source_list);
+      return;
+   }
+
+   char linebuf[256];
+   int  argc;
+   char *args[3];
+   int  line = 0;
+   int  idx;
+
+   while (fgets(linebuf, sizeof(linebuf), p_file) != NULL)
+   {
+      line++;
+      argc = Args::SplitLine(linebuf, args, ARRAY_SIZE(args));
+
+      LOG_FMT(LFILELIST, "%3d]", line);
+      for (idx = 0; idx < argc; idx++)
+      {
+         LOG_FMT(LFILELIST, " [%s]", args[idx]);
+      }
+      LOG_FMT(LFILELIST, "\n");
+
+      if ((argc == 1) && (*args[0] != '#'))
+      {
+         do_source_file(args[0], NULL, NULL);
+      }
+   }
+}
+
+
+static char *read_stdin(int& out_len)
+{
+   char *data;
+   char *new_data;
+   int  data_size;
+   int  data_len;
+   int  len;
+
+   /* Start with 64k */
+   data_size = 64 * 1024;
+   data      = (char *)malloc(data_size);
+   data_len  = 0;
+
+   if (data == NULL)
+   {
+      return(NULL);
+   }
+
+   while ((len = fread(&data[data_len], 1, data_size - data_len, stdin)) > 0)
+   {
+      data_len += len;
+      if (data_len == data_size)
+      {
+         /* Double the buffer size */
+         data_size *= 2;
+         if ((new_data = (char *)realloc(data, data_size)) == NULL)
+         {
+            free(data);
+            return(NULL);
+         }
+         data = new_data;
+      }
+   }
+
+   /* Make sure the buffer is terminated */
+   data[data_len] = 0;
+
+   out_len = data_len;
+
+   return(data);
+}
+
+
+/**
+ * Does a source file.
+ * If pfout is NULL, the source fileaname + ".uncrustify" is used.
+ *
+ * @param filename the file to read
+ * @param pfout    NULL or the output stream
+ */
+static void do_source_file(const char *filename, FILE *pfout, const char *parsed_file)
+{
+   int         data_len;
+   char        *data;
+   bool        did_open = false;
+   FILE        *p_file;
+   struct stat my_stat;
+
+
+   /* Do some simple language detection based on the filename */
+   if (cpd.lang_flags == 0)
+   {
+      cpd.lang_flags = language_from_filename(filename);
+   }
+
+   /* Try to read in the source file */
+   p_file = fopen(filename, "r");
+   if (p_file == NULL)
+   {
+      LOG_FMT(LERR, "open(%s) failed: %s\n", filename, strerror(errno));
+      return;
+   }
+
+   /*note: could have also just MMAP'd the file, if supported */
+   fstat(fileno(p_file), &my_stat);
+
+   data_len = my_stat.st_size;
+   data     = (char *)malloc(data_len + 1);
+   fread(data, data_len, 1, p_file);
+   data[data_len] = 0;
+   fclose(p_file);
+
+   LOG_FMT(LSYS, "Parsing: %s as language %s\n",
+           filename, language_to_string(cpd.lang_flags));
+
+   if (pfout == NULL)
+   {
+      char outname[strlen(filename) + 16];
+
+      snprintf(outname, sizeof(outname), "%s.uncrustify", filename);
+
+      pfout = fopen(outname, "w");
+      if (pfout == NULL)
+      {
+         LOG_FMT(LERR, "Unable to create %s: %s (%d)\n",
+                 outname, strerror(errno), errno);
+         free(data);
+         return;
+      }
+      did_open = true;
+      //LOG_FMT(LSYS, "Output file %s\n", outname);
+   }
+
+   uncrustify_file(data, data_len, pfout, NULL);
+
+   /* Special hook for dumping parsed data for debugging */
+   if (parsed_file != NULL)
+   {
+      p_file = fopen(parsed_file, "w");
+      if (p_file != NULL)
+      {
+         output_parsed(p_file);
+         fclose(p_file);
+      }
+   }
+
+   free(data);
+
+   if (did_open)
+   {
+      fclose(pfout);
+   }
+}
+
+
+static void uncrustify_file(const char *data, int data_len, FILE *pfout,
+                            const char *parsed_file)
+{
    /**
     * Parse the text into chunks
     */
@@ -319,9 +484,15 @@ int main(int argc, char *argv[])
       align_backslash_newline();
    }
 
+   /**
+    * Now render it all to the output file
+    */
+   output_text(pfout);
+
+   /* Special hook for dumping parsed data for debugging */
    if (parsed_file != NULL)
    {
-      p_file = fopen(parsed_file, "w");
+      FILE *p_file = fopen(parsed_file, "w");
       if (p_file != NULL)
       {
          output_parsed(p_file);
@@ -329,14 +500,12 @@ int main(int argc, char *argv[])
       }
    }
 
-   /* TODO: use freopen() to redirect output to a file */
-
-   /**
-    * Now render it all to the output file
-    */
-   output_text(stdout);
-
-   return(0);
+   /* Free all the memory */
+   chunk_t *pc;
+   while ((pc = chunk_get_head()) != NULL)
+   {
+      chunk_del(pc);
+   }
 }
 
 
@@ -350,6 +519,7 @@ const char *get_token_name(c_token_t token)
    return("???");
 }
 
+
 static bool ends_with(const char *filename, const char *tag)
 {
    int len1 = strlen(filename);
@@ -362,6 +532,7 @@ static bool ends_with(const char *filename, const char *tag)
    return(false);
 }
 
+
 struct file_lang
 {
    const char *ext;
@@ -371,16 +542,17 @@ struct file_lang
 
 struct file_lang languages[] =
 {
-   { ".c",    "C",    LANG_C },
-   { ".cpp",  "CPP",  LANG_CPP },
-   { ".d",    "D",    LANG_D },
-   { ".cs",   "CS",   LANG_CS },
+   { ".c",    "C",    LANG_C    },
+   { ".cpp",  "CPP",  LANG_CPP  },
+   { ".d",    "D",    LANG_D    },
+   { ".cs",   "CS",   LANG_CS   },
    { ".java", "JAVA", LANG_JAVA },
-   { ".h",    "",     LANG_CPP },
-   { ".cxx",  "",     LANG_CPP },
-   { ".hpp",  "",     LANG_CPP },
-   { ".hxx",  "",     LANG_CPP },
+   { ".h",    "",     LANG_CPP  },
+   { ".cxx",  "",     LANG_CPP  },
+   { ".hpp",  "",     LANG_CPP  },
+   { ".hxx",  "",     LANG_CPP  },
 };
+
 
 /**
  * Find the language for the file extension
@@ -424,6 +596,7 @@ static int language_from_tag(const char *tag)
    return(0);
 }
 
+
 /**
  * Gets the tag text for a language
  *
@@ -443,4 +616,3 @@ static const char *language_to_string(int lang)
    }
    return("???");
 }
-

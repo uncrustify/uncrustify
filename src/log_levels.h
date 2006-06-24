@@ -18,6 +18,7 @@ enum
    LINFO = 4,
    LDATA = 5,
 
+   LFILELIST = 8,     /* Files in the file list file */
    LLINEENDS = 9,     /* Show which line endings are used */
    LCASTS    = 10,    /* align casts */
    LALBR     = 11,    /* align braces */
