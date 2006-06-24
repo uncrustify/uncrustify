@@ -30,6 +30,7 @@ void AlignStack::Start(int span, int thresh)
    m_seqnum      = 0;
    m_gap         = 0;
    m_right_align = false;
+   m_star_style  = SS_IGNORE;
 }
 
 /**
