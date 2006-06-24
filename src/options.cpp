@@ -276,6 +276,8 @@ int load_option_file(const char *filename)
          //                 filename, line_num, name, cpd.settings[id]);
       }
    }
+
+   fclose(pfile);
    return(0);
 }
 
