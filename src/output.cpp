@@ -16,7 +16,7 @@
 
 void add_char(char ch)
 {
-   /* convert a newline into the DOS/MAC/UNIX sequence */
+   /* convert a newline into the LF/CRLF/CR sequence */
    if (ch == '\n')
    {
       fputs(cpd.newline, cpd.fout);
@@ -259,7 +259,7 @@ void output_comment_multi(chunk_t *pc)
    {
       ch = str[idx++];
 
-      /* handle the DOS and MAC endings. convert both to UNIX */
+      /* handle the CRLF and CR endings. convert both to LF */
       if (ch == '\r')
       {
          ch = '\n';

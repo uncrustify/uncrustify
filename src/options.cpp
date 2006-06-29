@@ -69,21 +69,21 @@ static int convert_value(struct options_name_tab *entry, const char *val)
 
    if (entry->type == AT_LINE)
    {
-      if (strcasecmp(val, "dos") == 0)
+      if (strcasecmp(val, "CRLF") == 0)
       {
-         return(LE_DOS);
+         return(LE_CRLF);
       }
-      if (strcasecmp(val, "unix") == 0)
+      if (strcasecmp(val, "LF") == 0)
       {
-         return(LE_UNIX);
+         return(LE_LF);
       }
-      if (strcasecmp(val, "mac") == 0)
+      if (strcasecmp(val, "CR") == 0)
       {
-         return(LE_MAC);
+         return(LE_CR);
       }
-      if (strcasecmp(val, "auto") != 0)
+      if (strcasecmp(val, "AUTO") != 0)
       {
-         LOG_FMT(LWARN, "Expected AUTO, DOS, UNIX, or MAC for %s, got %s\n",
+         LOG_FMT(LWARN, "Expected AUTO, LF, CRLF, or CR for %s, got %s\n",
                  entry->name, val);
       }
       return(LE_AUTO);

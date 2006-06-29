@@ -28,9 +28,9 @@ enum argval_t
 /** Line endings */
 enum lineends_e
 {
-   LE_UNIX,    /* "\n"   */
-   LE_DOS,     /* "\r\n" */
-   LE_MAC,     /* "\r"   */
+   LE_LF,      /* "\n"   */
+   LE_CRLF,    /* "\r\n" */
+   LE_CR,      /* "\r"   */
 
    LE_AUTO,    /* keep last */
 };
@@ -48,7 +48,7 @@ union op_val_t
  */
 enum uncrustify_options
 {
-   UO_newlines,                 // Set to AUTO, UNIX, DOS, or MAC
+   UO_newlines,                 // Set to AUTO, LF, CRLF, or CR
 
    /*
     * Basic Indenting stuff
