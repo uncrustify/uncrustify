@@ -1,5 +1,7 @@
 Quick documentation (probably out of date - see options.h)
 
+$Id$
+
 There are three type of arguments:
 	- boolean (true/false)
 	- numeric
@@ -25,6 +27,7 @@ All items default to false/0/ignore except:
 	- output_tab_size = 8
 	- indent_columns = 8
 	- indent_with_tabs = 1
+	- indent_label = 1
 	
 	Refer to set_arg_defaults()
 	
@@ -45,12 +48,16 @@ Terminology:
 
 Here's a list of all the options from options.h and a brief description.
 
+
+   newlines:			AUTO/LF/CRLF/CR
+	Sets the line endings for the output file
+
    indent:			bool
 	Not used
 
    input_tab_size:		number
-	The original tab space value. Used to determine what was already
-	aligned.
+	The original tab space value.
+	Used to determine what was already aligned. (TODO)
 	
    output_tab_size:		number
 	Size of tabs in the output.
@@ -60,26 +67,17 @@ Here's a list of all the options from options.h and a brief description.
 	The number of columns to indent.
 	Usually 2, 3, 4, or 8.
 	
-   indent_with_tabs:		number		* Not usable *
+   indent_with_tabs:		number
 	How to use tabs when indenting code.
 	 0 = Use spaces only
 	 1 = Use tabs to the brace-level indent (very portable)
 	 2 = Use tabs whenever possible
 	
-   align_with_tabs:		bool
-	Use tabs for aligning.
-	Doesn't work quite right, yet.
-
-   align_on_tabstop:		bool
-	When aligning, bump out to the next tabstop.
-	
-
    indent_brace_struct:		number		* Not implemented *
 	Spaces to indent brace after struct/enum/union definition.
 	
    indent_paren:		number		* Not implemented *
 	Indent for open paren on the next line.
-	
 
    indent_paren_nl:		bool
 	If an open paren is followed by a newline, indent the next line
@@ -105,6 +103,17 @@ Here's a list of all the options from options.h and a brief description.
 	switch (a) {
 	   case 34:
 	
+   indent_case_body:		number
+	Spaces to indent case body from case (usually 0).
+	
+	If set to 0 (the default) and indent_columns = 3:
+	case 34:
+	   break;
+	
+	If set to -indent_columns:
+	case 34:
+	break;
+	
    indent_case_brace:		number
 	Spaces to indent '{' from case.
 	
@@ -125,11 +134,50 @@ Here's a list of all the options from options.h and a brief description.
    indent_brace:		number
 	Spaces to indent '{' from level (usually 0). For GNU style, set to 2.
 	
+	Default 0
+	if (x)
+	{
+	}
+	
+	If set to 2
+	if (x)
+	  {
+	  }
+	
+   indent_braces:		bool
+	Whether braces are indented to the body level or not.
+	
+	Default false, indent_columns=3
+	if (x)
+	{
+	   a--;
+	}
+	
+	If set to true and indent_columns=3
+	if (x)
+	   {
+	   a--;
+	   }
+	
    indent_label:		number
 	How to indent goto labels.
-	>= 0 : Columns from the left
-	< 0  : Subtract from brace indent
+	> 0 : Absolute column (1=leftmost column)
+	<= 0  : Subtract from brace indent
+	
+	Default (1):
+	{
+	   a++;
+mylabel:
+	   foo();
+	}
 
+	Set to -indent_columns:
+	{
+	   a++;
+	mylabel:
+	   foo();
+	}
+	
    indent_align_string:		bool
 	Whether to indent broken strings so that they line up.
 	
@@ -146,7 +194,11 @@ Here's a list of all the options from options.h and a brief description.
    indent_func_call_param:	bool
 	If true, indent continued function call parameters one indent level.
 	
-	Example:
+	If set to false (default), it aligns instead of indents:
+	thisisareallylongfunctionname(param1,
+	                              param2, param3, param4);
+
+	If set to true, it indents one level:
 	thisisareallylongfunctionname(param1,
 	    param2, param3, param4);
 
@@ -155,37 +207,54 @@ Here's a list of all the options from options.h and a brief description.
 #  Spacing Options
 #
 
-   sp_before_sparen:		IARF
-	Space before '(' of 'if/for/while/switch'.
-	Example: "if (" vs "if("
-	
-   sp_after_sparen:		IARF
-	Space after  ')' of 'if/for/while/switch'
-	Example "if (a) a--;" vs "if (a)a--;"
-	
    sp_paren_brace:		IARF
 	Space between ')' and '{'
+	Example: "if (a){" vs "if (a) {"
 
    sp_after_cast:		IARF
 	Space after cast - "(int) a" vs "(int)a"
 
-   sp_inside_sparen:		IARF
-	Space inside 'if( xxx )' vs 'if(xxx)'
-	
+   sp_before_byref:		IARF
+	Space before & in function definition param:
+	'foo( int& count )' vs 'foo( int & count )'
+
    sp_inside_fparen:		IARF
 	Space inside 'foo( xxx )' vs 'foo(xxx)'
-	
+
    sp_inside_paren:		IARF
 	space inside '+ ( xxx )' vs '+ (xxx)'
-	
+
    sp_inside_square:		IARF
 	space inside 'byte[ 5 ]' vs 'byte[5]'
 
-   sp_before_squares:		IARF
-	space before '[]'
+   sp_inside_sparen:		IARF
+	Space inside 'if( xxx )' vs 'if(xxx)'
+
+   sp_inside_angle:		IARF
+	Space inside '<>'
+	'<class T>' vs '< class T >'
+
+   sp_before_sparen:		IARF
+	Space before '(' of 'if/for/while/switch'.
+	Example: "if (" vs "if("
+
+   sp_after_sparen:		IARF
+	Space after  ')' of 'if/for/while/switch'
+	Example "if (a) a--;" vs "if (a)a--;"
+
+   sp_before_angle:		IARF
+	Space before '<>'
+	'Foo<class T>' vs 'Foo <class T>'
+
+   sp_after_angle:		IARF
+	Space after '<>'
+	'<class T>(' vs '<class T> ('
 
    sp_before_square:		IARF
 	space before all '[', except '[]'
+
+   sp_before_squares:		IARF
+	space before '[]'
 
    sp_paren_paren:		IARF
 	space between nested parens - '( (' vs '(('
@@ -226,7 +295,7 @@ Here's a list of all the options from options.h and a brief description.
 
    sp_special_semi:		IARF
 	Space empty stmt ';' on while, if, for
-	example "while (*p++ = ' ') ;" */
+	example "while (*p++ = ' ') ;"
 
    sp_before_semi:		IARF
 	Space before all ';'
@@ -265,70 +334,98 @@ Here's a list of all the options from options.h and a brief description.
 #  Code alignment (not left column spaces/tabs)
 #
 
+   align_with_tabs:		bool
+	Use tabs for aligning.
+	Doesn't work quite right, yet.
+
    align_keep_tabs:		bool
-	Keep non-indenting tabs. Useful to minimize changes if not aligning
-	anything.
+	Keep non-indenting tabs.
+	Useful to minimize changes if not aligning anything.
+
+   align_on_tabstop:		bool
+	When aligning, bump out to the next tabstop.
 
    align_nl_cont:		bool
 	Align the back-slash \n combo (macros)
-	
+
    align_enum_equ:		bool
 	Align the '=' in enums
-	
+
    align_assign_span:		number
 	 The span for aligning on '=' in assignments. 0=don't align
-	
+
    align_right_cmt_span:	number
 	Span for aligning comments that end lines. 0=don't align
 
    align_var_def_span		number
 	Span for aligning variable definitions
-	
+
    align_var_def_inline:	bool
 	Whether to align inline struct/enum/union var defs
-	
+
    align_var_def_star:		bool
 	Whether the star is part of the variable name or not.
 	"int *   var;" vs "int    *var;"
-	
+
    align_var_def_colon:		bool
 	Align the colon in struct bit fields
-	
+
    align_var_struct_span:	number
 	Span for struct/union (0=don't align)
-	
+
    align_pp_define_span:	number
 	align bodies in #define statments
-	
+
    align_pp_define_col_min	number		* Not implemented *
 	Min column for a #define value
-	
+
    align_pp_define_col_max:	number		* Not implemented *
 	Max column for a #define value
-	
+
    align_pp_define_gap:		number
 	Min space between define label and value "#define a <---> 16"
-	
+
    align_enum_col_min:		number		* Not implemented *
 	The min column for enum '=' alignment
-	
+
    align_enum_col_max:		number		* Not implemented *
 	The max column for enum '=' alignment
-	
+
    align_struct_init_span:	number
 	Align structure initializer values
-	
+
    align_func_proto_span:	number
 	Align function prototypes
-	
+
    align_number_left:		bool		* buggy *
 	left-align numbers
-	
+
    align_typedef_span:		number
 	align single-line typedefs
-	
+
    align_typedef_gap:		number
 	minimum spacing
+
+   align_typedef_star_styl	number
+	Start aligning style
+	  0: '*' not part of type
+	  1: '*' part of the type - no space
+	  2: '*' part of type, dangling
+	
+	Example: 0
+	typedef int *     PINT;
+	typedef char **   PPCHAR;
+	
+	Example: 1
+	typedef int       *PINT;
+	typedef char      **PPCHAR;
+	
+	Example: 2
+	typedef int      *PINT;
+	typedef char    **PPCHAR;
+
+   UO_align_struct_array_brace	bool		* Not Implemented *
+	align array of structure initializers
 
 
 #
@@ -338,13 +435,16 @@ Here's a list of all the options from options.h and a brief description.
    nl_fdef_brace:		IARF
 	"int foo() {" vs "int foo()\n{"
 	
-   nl_func_decl_args:		IARF		* Not implemented *
+   nl_func_decl_starts:		IARF
+	Newline after '(' in a function decl
+	
+   nl_func_decl_args:		IARF
 	Newline after each ',' in a function decl
 	
-   nl_func_decl_end:		IARF		* Not implemented *
+   nl_func_decl_end:		IARF
 	Newline before the ')' in a function decl
 	
-   nl_func_type_name:		IARF		* Not implemented *
+   nl_func_type_name:		IARF
 	Newline between return type and func name in def
 	
    nl_func_var_def_blk:		number

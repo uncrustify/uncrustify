@@ -68,10 +68,10 @@ enum uncrustify_options
 
    UO_indent_switch_case,       // spaces to indent case from switch
    UO_indent_case_body,         // spaces to indent case body from case
-   UO_indent_case_brace,        //TODO: spaces to indent '{' from case (usually 0 or indent_columns)
+   UO_indent_case_brace,        // spaces to indent '{' from case (usually 0 or indent_columns)
 
    UO_indent_brace,             // spaces to indent '{' from level (usually 0)
-   UO_indent_braces,            // whether to indent the braces of not
+   UO_indent_braces,            // whether to indent the braces or not
    UO_indent_label,             // 0=left >0=col from left, <0=sub from brace indent
 
    UO_indent_align_string,      // True/False - indent align broken strings
@@ -84,22 +84,24 @@ enum uncrustify_options
     * Misc inter-element spacing
     */
 
-   UO_sp_before_sparen,     // space before '(' of 'if/for/while/switch'
-   UO_sp_after_sparen,      /* space after  ')' of 'if/for/while/switch'
-                             * the do-while does not get set here */
    UO_sp_paren_brace,       // space between ')' and '{'
 
    UO_sp_after_cast,        // space after cast - "(int) a" vs "(int)a"
 
    UO_sp_before_byref,      // space before '&' of 'fcn(int& idx)'
 
-   UO_sp_inside_angle,      // space inside '<>', as in '<class T>'
-   UO_sp_inside_sparen,     // space inside 'if( xxx )' vs 'if(xxx)'
    UO_sp_inside_fparen,     // space inside 'foo( xxx )' vs 'foo(xxx)'
    UO_sp_inside_paren,      // space inside '+ ( xxx )' vs '+ (xxx)'
    UO_sp_inside_square,     // space inside 'byte[ 5 ]' vs 'byte[5]'
-   UO_sp_after_angle,       // space after  '<>', as in '<class T>'
+   UO_sp_inside_sparen,     // space inside 'if( xxx )' vs 'if(xxx)'
+   UO_sp_inside_angle,      // space inside '<>', as in '<class T>'
+
+   UO_sp_before_sparen,     // space before '(' of 'if/for/while/switch'
+   UO_sp_after_sparen,      /* space after  ')' of 'if/for/while/switch'
+                             * the do-while does not get set here */
    UO_sp_before_angle,      // space before '<>', as in '<class T>'
+   UO_sp_after_angle,       // space after  '<>', as in '<class T>'
+
    UO_sp_before_square,     // space before single '['
    UO_sp_before_squares,    // space before '[]', as in 'byte []'
 
@@ -147,6 +149,7 @@ enum uncrustify_options
     */
 
    UO_align_with_tabs,            // use tabs for aligning (0/1)
+   UO_align_keep_tabs,            // keep non-indenting tabs
    UO_align_on_tabstop,           // always align on tabstops
    UO_align_nl_cont,              // align the back-slash \n combo (macros)
    UO_align_enum_equ,             // align the '=' in enums
@@ -173,8 +176,7 @@ enum uncrustify_options
                                   // 0: '*' not part of type
                                   // 1: '*' part of the type - no space
                                   // 2: '*' part of type, dangling
-   UO_align_keep_tabs,            // keep non-indenting tabs
-   UO_align_struct_array_brace,   // align array of structure initializers
+   UO_align_struct_array_brace,   // TODO: align array of structure initializers
 
 
    /*
@@ -182,9 +184,10 @@ enum uncrustify_options
     */
 
    UO_nl_fdef_brace,             // "int foo() {" vs "int foo()\n{"
-   UO_nl_func_decl_args,         //TODO: newline after each ',' in a function decl
-   UO_nl_func_decl_end,          //TODO: newline before the ')' in a function decl
-   UO_nl_func_type_name,         //TODO: newline between return type and func name in def
+   UO_nl_func_decl_start,        // newline after the '(' in a function decl
+   UO_nl_func_decl_args,         // newline after each ',' in a function decl
+   UO_nl_func_decl_end,          // newline before the ')' in a function decl
+   UO_nl_func_type_name,         // newline between return type and func name in def
    UO_nl_func_var_def_blk,       // newline after a block of variable defs
    UO_nl_before_case,            // newline before 'case' statement
    UO_nl_after_return,           /* newline after return statement */
@@ -350,6 +353,7 @@ options_name_tab option_name_table[] =
    OPTDEF(nl_for_brace,                  AT_IARF),
    OPTDEF(nl_func_decl_args,             AT_IARF),
    OPTDEF(nl_func_decl_end,              AT_IARF),
+   OPTDEF(nl_func_decl_start,            AT_IARF),
    OPTDEF(nl_func_type_name,             AT_IARF),
    OPTDEF(nl_func_var_def_blk,           AT_NUM),
    OPTDEF(nl_if_brace,                   AT_IARF),
