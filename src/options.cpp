@@ -293,5 +293,6 @@ void set_option_defaults(void)
    cpd.settings[UO_output_tab_size].n  = 8;
    cpd.settings[UO_indent_columns].n   = 8;
    cpd.settings[UO_indent_with_tabs].n = 1;
+   cpd.settings[UO_indent_label].n     = 1;
 }
 
