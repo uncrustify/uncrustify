@@ -372,18 +372,7 @@ static void do_source_file(const char *filename, FILE *pfout, const char *parsed
       //LOG_FMT(LSYS, "Output file %s\n", outname);
    }
 
-   uncrustify_file(data, data_len, pfout, NULL);
-
-   /* Special hook for dumping parsed data for debugging */
-   if (parsed_file != NULL)
-   {
-      p_file = fopen(parsed_file, "w");
-      if (p_file != NULL)
-      {
-         output_parsed(p_file);
-         fclose(p_file);
-      }
-   }
+   uncrustify_file(data, data_len, pfout, parsed_file);
 
    free(data);
 
