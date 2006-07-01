@@ -74,10 +74,8 @@ static void version_exit(void)
 
 int main(int argc, char *argv[])
 {
-   struct stat my_stat;
    char        *data;
    int         data_len;
-   FILE        *p_file;
    const char  *cfg_file    = "uncrustify.cfg";
    const char  *parsed_file = NULL;
    const char  *source_file = NULL;
@@ -356,7 +354,7 @@ static void do_source_file(const char *filename, FILE *pfout, const char *parsed
 
    if (pfout == NULL)
    {
-      char outname[strlen(filename) + 16];
+      char outname[512];
 
       snprintf(outname, sizeof(outname), "%s.uncrustify", filename);
 

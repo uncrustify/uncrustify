@@ -209,7 +209,6 @@ int Args::SplitLine(char *text, char *args[], int num_args)
    int  argc = 0;
    char *dest = text;
 
-   int idx;
 
    while ((*text != 0) && (argc <= num_args))
    {
