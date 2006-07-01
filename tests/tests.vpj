@@ -85,6 +85,9 @@
 			<F N="config/case-3.cfg"/>
 			<F N="config/cast-types.txt"/>
 			<F N="config/d.cfg"/>
+			<F N="config/func-def-1.cfg"/>
+			<F N="config/func-def-2.cfg"/>
+			<F N="config/func-def-3.cfg"/>
 			<F N="config/indent.cfg"/>
 			<F N="config/mono.cfg"/>
 		</Folder>
@@ -115,6 +118,7 @@
 				<F N="input/c/dos.c"/>
 				<F N="input/c/enum-struct-init.c"/>
 				<F N="input/c/fcn_type.c"/>
+				<F N="input/c/function-def.c"/>
 				<F N="input/c/i2c-core.c"/>
 				<F N="input/c/ifdef-indent.c"/>
 				<F N="input/c/ifdef-nest.c"/>

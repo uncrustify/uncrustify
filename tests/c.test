@@ -55,6 +55,11 @@
 00600  indent.cfg  c/dos.c  c/00600-dos.c
 00601  indent.cfg  c/mac.c  c/00601-mac.c
 
+# function def newlines
+00701  func-def-1.cfg  c/function-def.c  c/00701-func-def-1.c
+00702  func-def-2.cfg  c/function-def.c  c/00702-func-def-2.c
+00703  func-def-3.cfg  c/function-def.c  c/00703-func-def-3.c
+
 # big general tests
 
 20000 ben.cfg c/i2c-core.c c/20000-i2c-core.c
