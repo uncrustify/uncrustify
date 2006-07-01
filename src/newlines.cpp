@@ -606,6 +606,78 @@ static void newline_return(chunk_t *start)
 
 
 /**
+ * Does a simple Ignore, Add, Remove, or Force after the given chunk
+ *
+ * @param pc   The chunk
+ * @param av   The IARF value
+ */
+static void newline_iarf(chunk_t *pc, argval_t av)
+{
+   chunk_t *next;
+
+   if ((av & AV_REMOVE) != 0)
+   {
+      next = chunk_get_next_nnl(pc);
+      if (next != NULL)
+      {
+         newline_del_between(pc, next);
+      }
+   }
+
+   if ((av & AV_ADD) != 0)
+   {
+      next = chunk_get_next_nnl(pc);
+      if (next != NULL)
+      {
+         newline_add_between(pc, next);
+      }
+   }
+}
+
+
+/**
+ * Formats a function declaration
+ * Start points to the open paren
+ */
+static void newline_func_def(chunk_t *start)
+{
+   chunk_t *pc;
+   chunk_t *prev;
+
+   /* Handle break newlines type and function */
+   if (cpd.settings[UO_nl_func_type_name].a != AV_IGNORE)
+   {
+      prev = chunk_get_prev_ncnl(start);
+      prev = chunk_get_prev_ncnl(prev);
+      if (prev != NULL)
+      {
+         newline_iarf(prev, cpd.settings[UO_nl_func_type_name].a);
+      }
+   }
+
+   newline_iarf(start, cpd.settings[UO_nl_func_decl_start].a);
+
+   /* Now scan for commas */
+   for (pc = chunk_get_next_ncnl(start);
+        (pc != NULL) && (pc->level > start->level);
+        pc = chunk_get_next_ncnl(pc))
+   {
+      prev = pc;
+      if ((pc->type == CT_COMMA) && (pc->level == (start->level + 1)))
+      {
+         newline_iarf(pc, cpd.settings[UO_nl_func_decl_args].a);
+      }
+   }
+
+   /* and fix up the close paren */
+   if ((pc != NULL) && (pc->type == CT_FPAREN_CLOSE))
+   {
+      newline_iarf(prev, cpd.settings[UO_nl_func_decl_end].a);
+   }
+}
+
+
+/**
  * Step through all chunks.
  */
 void newlines_cleanup_braces(void)
@@ -695,6 +767,19 @@ void newlines_cleanup_braces(void)
          if (cpd.settings[UO_nl_after_return].b)
          {
             newline_return(pc);
+         }
+      }
+      else if (pc->type == CT_FPAREN_OPEN)
+      {
+         if (((pc->parent_type == CT_FUNC_DEF) ||
+              (pc->parent_type == CT_FUNC_PROTO))
+             &&
+             ((cpd.settings[UO_nl_func_decl_start].a != AV_IGNORE) ||
+              (cpd.settings[UO_nl_func_decl_args].a != AV_IGNORE) ||
+              (cpd.settings[UO_nl_func_decl_end].a != AV_IGNORE) ||
+              (cpd.settings[UO_nl_func_type_name].a != AV_IGNORE)))
+         {
+            newline_func_def(pc);
          }
       }
       else

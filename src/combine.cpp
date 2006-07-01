@@ -221,6 +221,18 @@ void fix_symbols(void)
          mark_function(pc);
       }
 
+      if ((pc->type == CT_FUNC_DEF) ||
+          (pc->type == CT_FUNC_CALL) ||
+          (pc->type == CT_FUNC_PROTO))
+      {
+         next->parent_type = pc->type;
+         tmp = chunk_get_next_type(next, (c_token_t)(next->type + 1), next->level);
+         if (tmp != NULL)
+         {
+            tmp->parent_type = pc->type;
+         }
+      }
+
       if (pc->type == CT_CLASS)
       {
          /* do other languages name the ctor the same as the class? */
