@@ -27,6 +27,9 @@ Changes in uncrustify-0.0.21
  - Clean up some memory leaks & uninitialized variables
  - Add option to process multiple files at once
  - Change the newlines values from [UNIX, DOS, MAC] to [LF, CRLF, CR]
+ - Properly mark the parens for functions
+ - Implement control over the format of the function prototypes and definitions
+ - Update configuration.txt
 
 
 Changes in uncrustify-0.0.20
