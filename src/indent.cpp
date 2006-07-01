@@ -372,9 +372,9 @@ void indent_text(void)
       else if (pc->type == CT_LABEL)
       {
          /* Labels get sent to the left or backed up */
-         if (cpd.settings[UO_indent_label].n >= 0)
+         if (cpd.settings[UO_indent_label].n > 0)
          {
-            indent_column = 1 + cpd.settings[UO_indent_label].n;
+            indent_column = cpd.settings[UO_indent_label].n;
          }
          else
          {
