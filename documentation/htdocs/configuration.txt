@@ -7,12 +7,12 @@ There are three type of arguments:
 	- numeric
 	- ignore/add/remove/force
 	
-Ignore means do not change it.
-Add in the context of spaces means make sure there is at least 1.
-Add elsewhere means make sure one is present.
-Remove mean remove the space/brace/newline/etc.
-Force in the context of spaces means ensure that there is exactly 1.
-Force in other contexts means the same as add.
+"Ignore" means do not change it.
+"Add" in the context of spaces means make sure there is at least 1.
+"Add" elsewhere means make sure one is present.
+"Remove" mean remove the space/brace/newline/etc.
+"Force" in the context of spaces means ensure that there is exactly 1.
+"Force" in other contexts means the same as "add".
 
 Configuration items may reference previously defined configuration items.
 Numeric items may be prefixed with a '-' to invert the number.
@@ -406,7 +406,7 @@ mylabel:
    align_typedef_gap:		number
 	minimum spacing
 
-   align_typedef_star_styl	number
+   align_typedef_star_style:	number
 	Start aligning style
 	  0: '*' not part of type
 	  1: '*' part of the type - no space
@@ -424,7 +424,7 @@ mylabel:
 	typedef int      *PINT;
 	typedef char    **PPCHAR;
 
-   UO_align_struct_array_brace	bool		* Not Implemented *
+   align_struct_array_brace:	bool		* Not Implemented *
 	align array of structure initializers
 
 
