@@ -132,4 +132,3 @@ public:
       AddAfter(obj, &head);
    }
 };
-

@@ -203,10 +203,10 @@ const char *Args::Unused(int& index)
  */
 int Args::SplitLine(char *text, char *args[], int num_args)
 {
-   char cur_quote = 0;
+   char cur_quote    = 0;
    bool in_backslash = false;
-   bool in_arg = false;
-   int  argc = 0;
+   bool in_arg       = false;
+   int  argc  = 0;
    char *dest = text;
 
 

@@ -37,11 +37,11 @@ public:
       Init();
    }
 
-   ChunkStack(const ChunkStack & cs);
+   ChunkStack(const ChunkStack& cs);
 
    ~ChunkStack();
 
-   void Set(const ChunkStack & cs);
+   void Set(const ChunkStack& cs);
 
    void Push(chunk_t *pc)
    {
@@ -78,4 +78,3 @@ protected:
 };
 
 #endif   /* CHUNKSTACK_H_INCLUDED */
-

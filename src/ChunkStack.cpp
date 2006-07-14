@@ -24,7 +24,7 @@ ChunkStack::~ChunkStack()
    }
 }
 
-void ChunkStack::Set(const ChunkStack & cs)
+void ChunkStack::Set(const ChunkStack& cs)
 {
    Init();
    Resize(cs.m_len);

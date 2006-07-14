@@ -188,7 +188,6 @@ void AlignStack::Flush()
       chunk_t *pc = ce->m_pc;
       if (m_star_style == SS_DANGLE)
       {
-
          /* back up to the first '*' preceding the token */
          chunk_t *prev = chunk_get_prev(pc);
          while (chunk_is_star(prev))
@@ -248,4 +247,3 @@ void AlignStack::End()
    m_aligned.Reset();
    m_skipped.Reset();
 }
-
