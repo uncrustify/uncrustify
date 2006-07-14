@@ -1272,13 +1272,14 @@ static void mark_function(chunk_t *pc)
          {
             if ((pc->len == prev->len) && (memcmp(pc->str, prev->str, pc->len) == 0))
             {
-               LOG_FMT(LFCN, "FOUND [DE|CON]STRUCTOR for %.*s[%s] ",
-                       prev->len, prev->str, get_token_name(prev->type));
                pc->type = CT_FUNC_DEF;
                if (destr != NULL)
                {
                   destr->type = CT_DESTRUCTOR;
                }
+               LOG_FMT(LFCN, "FOUND %sSTRUCTOR for %.*s[%s] ",
+                       (destr != NULL) ? "DE" : "CON",
+                       prev->len, prev->str, get_token_name(prev->type));
             }
             else
             {
@@ -1317,10 +1318,27 @@ static void mark_function(chunk_t *pc)
 
       /* See if this is a prototype or implementation */
       paren_close = chunk_get_next_type(pc, CT_FPAREN_CLOSE, pc->level);
-      tmp         = chunk_get_next_ncnl(paren_close);
-      if ((tmp != NULL) && (tmp->type == CT_SEMICOLON))
+
+      /* Scan tokens until we hit a brace open (def) or semicolon (proto) */
+      tmp = paren_close;
+      while ((tmp = chunk_get_next_ncnl(tmp)) != NULL)
       {
-         pc->type = CT_FUNC_PROTO;
+         /* Only care about brace or semi on the same level */
+         if (tmp->level == pc->level)
+         {
+            if (tmp->type == CT_BRACE_OPEN)
+            {
+               /* its a funciton def for sure */
+               break;
+            }
+            else if (tmp->type == CT_SEMICOLON)
+            {
+               /* Set the parent for the semi for later */
+               tmp->parent_type = CT_FUNC_PROTO;
+               pc->type = CT_FUNC_PROTO;
+               break;
+            }
+         }
       }
 
       /* Mark parameters */
@@ -1328,6 +1346,19 @@ static void mark_function(chunk_t *pc)
       if (tmp->level > next->level)
       {
          fix_fcn_def_params(tmp);
+      }
+
+      /* Step backwards from pc and mark the parent of the return type */
+      tmp = pc;
+      while ((tmp = chunk_get_prev_ncnl(tmp)) != NULL)
+      {
+         if ((tmp->type != CT_TYPE) &&
+             (tmp->type != CT_QUALIFIER) &&
+             (tmp->type != CT_PTR_TYPE))
+         {
+            break;
+         }
+         tmp->parent_type = pc->type;
       }
 
       /* Find the brace pair */

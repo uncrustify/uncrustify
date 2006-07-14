@@ -221,13 +221,13 @@ enum uncrustify_options
     * Blank line options
     */
 
-   UO_blc_before_block_comment,      //TODO: before a block comment (stand-alone comment-multi)
-   UO_blc_after_func_body,           //TODO: after the closing brace of a function body
-   UO_blc_after_func_proto,          //TODO: after each prototype
-   UO_blc_after_func_proto_group,    //TODO: after a block of prototypes
-   UO_blc_after_var_def_group,       //TODO: after a group of variable defs at top of proc
-   UO_blc_after_ifdef,               //TODO: after #if or #ifdef - but not if covers whole file
-   UO_blc_max,                       //TODO: maximum consecutive newlines (3 is good)
+   UO_nl_before_block_comment,       // before a block comment (stand-alone comment-multi), except after brace open
+   UO_nl_after_func_body,            // after the closing brace of a function body
+   UO_nl_after_func_proto,           // after each prototype
+   UO_nl_after_func_proto_group,     // after a block of prototypes
+   UO_nl_after_var_def_group,        // after a group of variable defs at top of proc
+   UO_nl_after_ifdef,                // after #if or #ifdef - but not if covers whole file
+   UO_nl_max,                        // maximum consecutive newlines (3 = 2 blank lines)
 
    UO_eat_blanks_after_open_brace,   // remove blank lines after {
    UO_eat_blanks_before_close_brace, // remove blank lines before }
@@ -296,13 +296,6 @@ options_name_tab option_name_table[] =
    OPTDEF(align_var_def_star,            AT_BOOL),
    OPTDEF(align_var_struct_span,         AT_NUM),
    OPTDEF(align_with_tabs,               AT_BOOL),
-   OPTDEF(blc_after_func_body,           AT_NUM),
-   OPTDEF(blc_after_func_proto,          AT_NUM),
-   OPTDEF(blc_after_func_proto_group,    AT_NUM),
-   OPTDEF(blc_after_ifdef,               AT_NUM),
-   OPTDEF(blc_after_var_def_group,       AT_NUM),
-   OPTDEF(blc_before_block_comment,      AT_NUM),
-   OPTDEF(blc_max,                       AT_NUM),
    OPTDEF(cmt_star_cont,                 AT_BOOL),
    OPTDEF(code_width,                    AT_NUM),
    OPTDEF(eat_blanks_after_open_brace,   AT_BOOL),
@@ -336,8 +329,14 @@ options_name_tab option_name_table[] =
    OPTDEF(mod_paren_on_return,           AT_IARF),
    OPTDEF(newlines,                      AT_LINE),
    OPTDEF(nl_after_case,                 AT_BOOL),
+   OPTDEF(nl_after_func_body,            AT_NUM),
+   OPTDEF(nl_after_func_proto,           AT_NUM),
+   OPTDEF(nl_after_func_proto_group,     AT_NUM),
+   OPTDEF(nl_after_ifdef,                AT_NUM),
    OPTDEF(nl_after_return,               AT_BOOL),
+   OPTDEF(nl_after_var_def_group,        AT_NUM),
    OPTDEF(nl_assign_brace,               AT_IARF),
+   OPTDEF(nl_before_block_comment,       AT_NUM),
    OPTDEF(nl_before_case,                AT_BOOL),
    OPTDEF(nl_bool_pos,                   AT_NUM),
    OPTDEF(nl_brace_else,                 AT_IARF),
@@ -357,6 +356,7 @@ options_name_tab option_name_table[] =
    OPTDEF(nl_func_type_name,             AT_IARF),
    OPTDEF(nl_func_var_def_blk,           AT_NUM),
    OPTDEF(nl_if_brace,                   AT_IARF),
+   OPTDEF(nl_max,                        AT_NUM),
    OPTDEF(nl_squeeze_ifdef,              AT_BOOL),
    OPTDEF(nl_start_of_file,              AT_IARF),
    OPTDEF(nl_start_of_file_min,          AT_NUM),

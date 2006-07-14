@@ -62,7 +62,7 @@ static void usage_exit(const char *msg, const char *argv0, int code)
            "If -F is used, the output is is the filename + .uncrustify\n"
            "Otherwise, the output is dumped to stdout.\n"
            "Errors are always dumped to stderr\n",
-           argv0);
+           basename(argv0));
    exit(code);
 }
 
@@ -425,6 +425,7 @@ static void uncrustify_file(const char *data, int data_len, FILE *pfout,
    /**
     * Insert line breaks as needed
     */
+   do_blank_lines();
    newlines_cleanup_braces();
    if (cpd.settings[UO_nl_squeeze_ifdef].b)
    {

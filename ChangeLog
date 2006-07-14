@@ -22,6 +22,14 @@ Future plans: (in no particular order)
 ===============================================================================
 
 
+Changes in uncrustify-0.0.22
+-------------------------------------------------------------------------------
+ - Implement nl_max, nl_before_block_comment, nl_after_func_body,
+    nl_after_func_proto, nl_after_func_proto_group
+ - Improve detection of function prototypes
+ - Improve marking of function prototype-related tokens
+
+
 Changes in uncrustify-0.0.21
 -------------------------------------------------------------------------------
  - Clean up some memory leaks & uninitialized variables

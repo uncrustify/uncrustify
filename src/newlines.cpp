@@ -966,3 +966,75 @@ void newlines_bool_pos(void)
    }
 }
 
+
+/**
+ * Scans for newline tokens and limits the nl_count.
+ * A newline token has a minimum nl_count of 1.
+ * Note that a blank line is actually 2 newlines, unless the newline is the
+ * first chunk.  But we don't handle the first chunk.
+ * So, most comparisons have +1 below.
+ */
+void do_blank_lines(void)
+{
+   chunk_t *pc;
+   chunk_t *next;
+   chunk_t *prev;
+
+   /* Don't process the first token, as we don't care if it is a newline */
+   pc = chunk_get_head();
+
+   while ((pc = chunk_get_next(pc)) != NULL)
+   {
+      if (pc->type != CT_NEWLINE)
+      {
+         continue;
+      }
+
+      next = chunk_get_next(pc);
+      prev = chunk_get_prev(pc);
+
+      /* Limit consecutive newlines */
+      if ((cpd.settings[UO_nl_max].n > 0) &&
+          (pc->nl_count > (cpd.settings[UO_nl_max].n)))
+      {
+         pc->nl_count = cpd.settings[UO_nl_max].n ;
+      }
+
+      /** Control blanks before multi-line comments */
+      if ((cpd.settings[UO_nl_before_block_comment].n > pc->nl_count) &&
+          (next != NULL) &&
+          (next->type == CT_COMMENT_MULTI))
+      {
+         /* Don't add blanks after a open brace */
+         if ((prev == NULL) || (prev->type != CT_BRACE_OPEN))
+         {
+            pc->nl_count = cpd.settings[UO_nl_before_block_comment].n;
+         }
+      }
+
+      /* Add blanks after function bodies */
+      if ((cpd.settings[UO_nl_after_func_body].n > pc->nl_count) &&
+          (prev != NULL) &&
+          (prev->type == CT_BRACE_CLOSE) &&
+          (prev->parent_type == CT_FUNC_DEF))
+      {
+         pc->nl_count = cpd.settings[UO_nl_after_func_body].n;
+      }
+
+      /* Add blanks after function prototypes */
+      if ((prev != NULL) &&
+          (prev->parent_type == CT_FUNC_PROTO))
+      {
+         if (cpd.settings[UO_nl_after_func_proto].n > pc->nl_count)
+         {
+            pc->nl_count = cpd.settings[UO_nl_after_func_proto].n;
+         }
+         if ((cpd.settings[UO_nl_after_func_proto_group].n > pc->nl_count) &&
+             (next != NULL) &&
+             (next->parent_type != CT_FUNC_PROTO))
+         {
+            pc->nl_count = cpd.settings[UO_nl_after_func_proto_group].n;
+         }
+      }
+   }
+}

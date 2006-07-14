@@ -96,6 +96,7 @@ void newlines_cleanup_braces(void);
 void newlines_squeeze_ifdef(void);
 void newlines_eat_start_end(void);
 void newlines_bool_pos(void);
+void do_blank_lines(void);
 
 
 /*
