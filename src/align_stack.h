@@ -22,6 +22,7 @@ public:
    ChunkStack m_skipped;
    ChunkStack m_scratch;
    int        m_max_col;
+   int        m_min_col;
    int        m_span;
    int        m_thresh;
    int        m_seqnum;

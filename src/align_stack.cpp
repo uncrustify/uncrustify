@@ -25,6 +25,7 @@ void AlignStack::Start(int span, int thresh)
    m_skipped.Reset();
    m_span        = span;
    m_thresh      = thresh;
+   m_min_col     = 9999;
    m_max_col     = 0;
    m_nl_seqnum   = 0;
    m_seqnum      = 0;
@@ -81,7 +82,8 @@ void AlignStack::Add(chunk_t *pc, int seqnum)
    /* Check threshold limits */
    if ((m_max_col == 0) || (m_thresh == 0) ||
        (((pc->column + m_gap) <= (m_max_col + m_thresh)) &&
-        ((pc->column + m_gap) >= (m_max_col - m_thresh))))
+        (((pc->column + m_gap) >= (m_max_col - m_thresh)) ||
+         (pc->column >= m_min_col))))
    {
       /* we are adding it, so update the newline seqnum */
       if (seqnum > m_nl_seqnum)
@@ -118,11 +120,16 @@ void AlignStack::Add(chunk_t *pc, int seqnum)
          }
       }
 
+      if (m_min_col > endcol)
+      {
+         m_min_col = endcol;
+      }
+
       if (endcol > m_max_col)
       {
-         LOG_FMT(LAS, "Add-aligned [%d/%d/%d]: line %d, col %d : max_col old %d, new %d\n",
+         LOG_FMT(LAS, "Add-aligned [%d/%d/%d]: line %d, col %d : max_col old %d, new %d - min_col %d\n",
                  seqnum, m_nl_seqnum, m_seqnum,
-                 pc->orig_line, pc->column, m_max_col, endcol);
+                 pc->orig_line, pc->column, m_max_col, endcol, m_min_col);
          m_max_col = endcol;
 
          /**
@@ -136,9 +143,9 @@ void AlignStack::Add(chunk_t *pc, int seqnum)
       }
       else
       {
-         LOG_FMT(LAS, "Add-aligned [%d/%d/%d]: line %d, col %d : col %d <= %d\n",
+         LOG_FMT(LAS, "Add-aligned [%d/%d/%d]: line %d, col %d : col %d <= %d - min_col %d\n",
                  seqnum, m_nl_seqnum, m_seqnum,
-                 pc->orig_line, pc->column, endcol, m_max_col);
+                 pc->orig_line, pc->column, endcol, m_max_col, m_min_col);
       }
    }
    else
@@ -195,10 +202,10 @@ void AlignStack::NewLines(int cnt)
  */
 void AlignStack::Flush()
 {
-   int                     last_seqnum = 0;
-   int                     idx;
+   int last_seqnum = 0;
+   int idx;
    const ChunkStack::Entry *ce = NULL;
-   ChunkStack              trailer_cs;
+   ChunkStack trailer_cs;
 
    LOG_FMT(LAS, "Flush\n");
 
@@ -239,6 +246,7 @@ void AlignStack::Flush()
       last_seqnum = ce->m_seqnum;
       m_aligned.Reset();
    }
+   m_min_col = 9999;
    m_max_col = 0;
 
    if (m_skipped.Empty())
