@@ -337,7 +337,7 @@ static void newline_fnc_var_def(chunk_t *br_open, int nl_count)
    {
       //printf("%s: [%s] line %d\n", __func__, pc->str, pc->orig_line);
 
-      if (chunk_is_type(pc) || (pc->type == CT_QUALIFIER))
+      if (chunk_is_type(pc) || (pc->type == CT_QUALIFIER) || (pc->type == CT_DC_MEMBER))
       {
          //printf("%s: type [%s] line %d\n", __func__, pc->str, pc->orig_line);
          pc = chunk_get_next_ncnl(pc);
@@ -997,7 +997,7 @@ void do_blank_lines(void)
       if ((cpd.settings[UO_nl_max].n > 0) &&
           (pc->nl_count > (cpd.settings[UO_nl_max].n)))
       {
-         pc->nl_count = cpd.settings[UO_nl_max].n ;
+         pc->nl_count = cpd.settings[UO_nl_max].n;
       }
 
       /** Control blanks before multi-line comments */

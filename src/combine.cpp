@@ -242,11 +242,7 @@ void fix_symbols(void)
          }
       }
 
-      /* Check for stuff that can only occur at the start of an statement */
-      if ((pc->flags & PCF_STMT_START) != 0)
-      {
-         /* Mark variable definitions */
-      }
+      /*TODO: Check for stuff that can only occur at the start of an statement */
 
       if ((cpd.lang_flags & LANG_D) == 0)
       {
@@ -750,12 +746,12 @@ static void fix_enum_struct_union(chunk_t *pc)
 
       /* Skip to the closing brace */
       next->parent_type = pc->type;
-      next              = chunk_get_next_type(next, CT_BRACE_CLOSE, pc->level);
-      flags            |= PCF_VAR_INLINE;
+      next   = chunk_get_next_type(next, CT_BRACE_CLOSE, pc->level);
+      flags |= PCF_VAR_INLINE;
       if (next != NULL)
       {
          next->parent_type = pc->type;
-         next              = chunk_get_next_ncnl(next);
+         next = chunk_get_next_ncnl(next);
       }
    }
 
@@ -825,7 +821,7 @@ static void fix_typedef(chunk_t *start)
       if ((next->type == CT_WORD) || (next->type == CT_TYPE))
       {
          next->type = CT_TYPE;
-         next = chunk_get_next_ncnl(next);
+         next       = chunk_get_next_ncnl(next);
       }
       if (next->type == CT_BRACE_OPEN)
       {
@@ -918,7 +914,7 @@ void combine_labels(void)
             if ((tmp != NULL) && (tmp->type == CT_BRACE_OPEN))
             {
                tmp->parent_type = CT_CASE;
-               tmp              = chunk_get_next_type(tmp, CT_BRACE_CLOSE, tmp->level);
+               tmp = chunk_get_next_type(tmp, CT_BRACE_CLOSE, tmp->level);
                if (tmp != NULL)
                {
                   tmp->parent_type = CT_CASE;
@@ -1066,6 +1062,7 @@ static void fix_var_def(chunk_t *start)
    while ((pc->type == CT_TYPE) ||
           (pc->type == CT_WORD) ||
           (pc->type == CT_QUALIFIER) ||
+          (pc->type == CT_DC_MEMBER) ||
           chunk_is_star(pc))
    {
       LOG_FMT(LFVD, " %.*s[%s]", pc->len, pc->str, get_token_name(pc->type));
@@ -1335,7 +1332,7 @@ static void mark_function(chunk_t *pc)
             {
                /* Set the parent for the semi for later */
                tmp->parent_type = CT_FUNC_PROTO;
-               pc->type = CT_FUNC_PROTO;
+               pc->type         = CT_FUNC_PROTO;
                break;
             }
          }
@@ -1383,7 +1380,7 @@ static void mark_function(chunk_t *pc)
          if ((tmp != NULL) && (tmp->type == CT_BRACE_OPEN))
          {
             tmp->parent_type = CT_FUNC_DEF;
-            tmp              = chunk_skip_to_match(tmp);
+            tmp = chunk_skip_to_match(tmp);
             if (tmp != NULL)
             {
                tmp->parent_type = CT_FUNC_DEF;
@@ -1631,4 +1628,3 @@ static void mark_define_expressions(void)
       pc   = chunk_get_next(pc);
    }
 }
-
