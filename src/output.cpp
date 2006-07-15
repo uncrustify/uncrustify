@@ -237,21 +237,131 @@ void output_text(FILE *pfile)
 }
 
 
+/**
+ * Given a multi-line comemnt block that starts in column X, figure out how
+ * much subsequent lines should be indented.
+ *
+ * The answer is either 0 or 1.
+ *
+ * The decision is based on:
+ *  - the first line length
+ *  - the second line leader length
+ *  - the last line length
+ *
+ * If the first and last line are the same length and don't contain any alnum
+ * chars and (the first line len > 2 or the second leader is the same as the
+ * first line length), then the indent is 0.
+ *
+ * If the leader on the second line is 1 wide or missing, then the indent is 1.
+ *
+ * Otherwise, the indent is 0.
+ *
+ * @param str       The comment string
+ * @param len       Length of the comment
+ * @param start_col Starting column
+ * @return 0 or 1
+ */
+static int calculate_comment_body_indent(const char *str, int len, int start_col)
+{
+   int idx       = 0;
+   int first_len = 0;
+   int last_len  = 0;
+   int width     = 0;
+
+   /* find the last line length */
+   for (idx = len - 1; idx > 0; idx--)
+   {
+      if ((str[idx] == '\n') || (str[idx] == '\r'))
+      {
+         idx++;
+         while ((idx < len) && ((str[idx] == ' ') || (str[idx] == '\t')))
+         {
+            idx++;
+         }
+         last_len = len - idx;
+         break;
+      }
+   }
+
+   /* find the first line length */
+   for (idx = 0; idx < len; idx++)
+   {
+      if ((str[idx] == '\n') || (str[idx] == '\r'))
+      {
+         first_len = idx;
+         while ((str[first_len - 1] == ' ') || (str[first_len - 1] == '\t'))
+         {
+            first_len--;
+         }
+
+         /* handle DOS endings */
+         if ((str[idx] == '\r') && (str[idx + 1] == '\n'))
+         {
+            idx++;
+         }
+         idx++;
+         break;
+      }
+   }
+
+   /* Scan the second line */
+   width = 0;
+   for ( /* nada */; idx < len; idx++)
+   {
+      if ((str[idx] == ' ') || (str[idx] == '\t'))
+      {
+         if (width > 0)
+         {
+            break;
+         }
+         continue;
+      }
+      if ((str[idx] == '\n') || (str[idx] == '\r'))
+      {
+         /* Done with second line */
+         break;
+      }
+
+      /* Count the leading chars */
+      if ((str[idx] == '*') ||
+          (str[idx] == '|') ||
+          (str[idx] == '\\') ||
+          (str[idx] == '#') ||
+          (str[idx] == '+'))
+      {
+         width++;
+      }
+      else
+      {
+         break;
+      }
+   }
+
+   //LOG_FMT(LSYS, "%s: first=%d last=%d width=%d\n", __func__, first_len, last_len, width);
+
+   /*TODO: make the first_len minimum (4) configurable? */
+   if ((first_len == last_len) && ((first_len > 4) || first_len == width))
+   {
+      return(0);
+   }
+
+   return((width == 2) ? 0 : 1);
+}
+
+
 void output_comment_multi(chunk_t *pc)
 {
-   int        idx     = 0;
    int        cmt_col = pc->column;
-   const char *str    = pc->str;
+   const char *cmt_str;
+   int        remaining;
    char       ch;
    chunk_t    *prev;
    char       line[1024];
-   int        len        = 0;
+   int        line_len;
    int        line_count = 0;
    int        ccol;
-   int        col_diff    = 0;
-   int        lead_width  = -1;
-   int        first_width = 2;
-   int        xtra        = 1;
+   int        col_diff = 0;
+   int        xtra     = 1;
 
    prev = chunk_get_prev(pc);
    if ((prev != NULL) && (prev->type != CT_NEWLINE))
@@ -266,23 +376,31 @@ void output_comment_multi(chunk_t *pc)
    //   fprintf(stderr, "Indenting1 line %d to col %d (orig=%d) col_diff=%d\n",
    //           pc->orig_line, cmt_col, pc->orig_col, col_diff);
 
-   ccol = 1;
-   while (idx < pc->len)
+   xtra = calculate_comment_body_indent(pc->str, pc->len, pc->column);
+
+   ccol      = 1;
+   remaining = pc->len;
+   cmt_str   = pc->str;
+   line_len  = 0;
+   while (remaining > 0)
    {
-      ch = str[idx++];
+      ch = *cmt_str;
+      cmt_str++;
+      remaining--;
 
       /* handle the CRLF and CR endings. convert both to LF */
       if (ch == '\r')
       {
          ch = '\n';
-         if (str[idx] == '\n')
+         if (*cmt_str == '\n')
          {
-            idx++;
+            cmt_str++;
+            remaining--;
          }
       }
 
       /* Find the start column */
-      if (len == 0)
+      if (line_len == 0)
       {
          if (ch == ' ')
          {
@@ -299,62 +417,41 @@ void output_comment_multi(chunk_t *pc)
             //fprintf(stderr, "%d] Text starts in col %d\n", line_count, ccol);
          }
       }
-      line[len++] = ch;
+
+      line[line_len++] = ch;
 
       /* If we just hit an end of line OR we just hit end-of-comment... */
-      if ((ch == '\n') || (idx >= pc->len) ||
-          ((len > 2) && (line[len - 2] == '*') && (ch == '/')))
+      if ((ch == '\n') || (remaining == 0))
       {
          line_count++;
 
          /* strip trailing tabs and spaces before the newline */
          if (ch == '\n')
          {
-            len--;
-            while ((len > 0) && ((line[len - 1] == ' ') || (line[len - 1] == '\t')))
+            line_len--;
+            while ((line_len > 0) &&
+                   ((line[line_len - 1] == ' ') ||
+                    (line[line_len - 1] == '\t')))
             {
-               len--;
+               line_len--;
             }
-            line[len++] = ch;
+            line[line_len++] = ch;
          }
-         line[len] = 0;
+         line[line_len] = 0;
 
-         /* Recognized line starts: ' *', '**', '||', or nothing */
          if (line_count == 1)
          {
-            while (line[first_width] == '*')
-            {
-               first_width++;
-            }
             /* this is the first line - add unchanged */
+
+            /*TODO: need to support indent_with_tabs mode 1 */
             output_to_column(cmt_col, cpd.settings[UO_indent_with_tabs].b);
-            add_text_len(line, len);
+            add_text_len(line, line_len);
          }
          else
          {
-            /* This is not the first line, so we need to indent to the right
-             * column
+            /* This is not the first line, so we need to indent to the
+             * correct column.
              */
-
-            if (lead_width < 0)
-            {
-               /** count the number of lead chars */
-               lead_width = 0;
-               while ((line[lead_width] == '*') ||
-                      (line[lead_width] == '|') ||
-                      (line[lead_width] == '\\') ||
-                      (line[lead_width] == '#'))
-               {
-                  lead_width++;
-               }
-
-               xtra = 0;
-               if ((lead_width <= 1) || (lead_width == (first_width - 1)))
-               {
-                  xtra = 1;
-               }
-            }
-
             ccol -= col_diff;
             if (ccol < cmt_col)
             {
@@ -367,7 +464,7 @@ void output_comment_multi(chunk_t *pc)
                if (cpd.settings[UO_cmt_star_cont].b)
                {
                   output_to_column(cmt_col, cpd.settings[UO_indent_with_tabs].b);
-                  add_text(" *");
+                  add_text((xtra == 1) ? " *" : "*");
                }
                add_char('\n');
             }
@@ -375,12 +472,12 @@ void output_comment_multi(chunk_t *pc)
             {
                /* If this doesn't start with a '*' or '|' */
                if ((line[0] != '*') && (line[0] != '|') && (line[0] != '#') &&
-                   (line[0] != '\\'))
+                   (line[0] != '\\') && (line[0] != '+'))
                {
                   output_to_column(cmt_col, cpd.settings[UO_indent_with_tabs].b);
                   if (cpd.settings[UO_cmt_star_cont].b)
                   {
-                     add_text(" * ");
+                     add_text((xtra == 1) ? " * " : "*  ");
                   }
                   else
                   {
@@ -390,17 +487,13 @@ void output_comment_multi(chunk_t *pc)
                }
                else
                {
-                  if ((line[0] == '*') && (line[1] == '/'))
-                  {
-                     xtra = (lead_width <= 1) ? 1 : 0;
-                  }
                   output_to_column(cmt_col + xtra, cpd.settings[UO_indent_with_tabs].b);
                }
-               add_text_len(line, len);
+               add_text_len(line, line_len);
             }
          }
-         len  = 0;
-         ccol = 1;
+         line_len = 0;
+         ccol     = 1;
       }
    }
 }
