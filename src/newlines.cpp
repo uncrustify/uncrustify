@@ -642,7 +642,7 @@ static void newline_iarf(chunk_t *pc, argval_t av)
 static void newline_func_def(chunk_t *start)
 {
    chunk_t *pc;
-   chunk_t *prev;
+   chunk_t *prev = NULL;
 
    /* Handle break newlines type and function */
    if (cpd.settings[UO_nl_func_type_name].a != AV_IGNORE)
@@ -670,7 +670,7 @@ static void newline_func_def(chunk_t *start)
    }
 
    /* and fix up the close paren */
-   if ((pc != NULL) && (pc->type == CT_FPAREN_CLOSE))
+   if ((prev != NULL) && (pc != NULL) && (pc->type == CT_FPAREN_CLOSE))
    {
       newline_iarf(prev, cpd.settings[UO_nl_func_decl_end].a);
    }

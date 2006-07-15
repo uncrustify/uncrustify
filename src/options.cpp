@@ -22,7 +22,7 @@ const options_name_tab *get_option_name(int uo)
 {
    int idx;
 
-   for (idx = 0; idx < ARRAY_SIZE(option_name_table); idx++)
+   for (idx = 0; idx < (int)ARRAY_SIZE(option_name_table); idx++)
    {
       if (option_name_table[idx].id == uo)
       {

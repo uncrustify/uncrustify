@@ -499,7 +499,7 @@ static void uncrustify_file(const char *data, int data_len, FILE *pfout,
 
 const char *get_token_name(c_token_t token)
 {
-   if ((token >= 0) && (token < ARRAY_SIZE(token_names)) &&
+   if ((token >= 0) && (token < (int)ARRAY_SIZE(token_names)) &&
        (token_names[token] != NULL))
    {
       return(token_names[token]);
@@ -553,7 +553,7 @@ static int language_from_filename(const char *filename)
 {
    int i;
 
-   for (i = 0; i < ARRAY_SIZE(languages); i++)
+   for (i = 0; i < (int)ARRAY_SIZE(languages); i++)
    {
       if (ends_with(filename, languages[i].ext))
       {
@@ -574,7 +574,7 @@ static int language_from_tag(const char *tag)
 {
    int i;
 
-   for (i = 0; i < ARRAY_SIZE(languages); i++)
+   for (i = 0; i < (int)ARRAY_SIZE(languages); i++)
    {
       if (strcasecmp(tag, languages[i].tag) == 0)
       {
@@ -595,7 +595,7 @@ static const char *language_to_string(int lang)
 {
    int i;
 
-   for (i = 0; i < ARRAY_SIZE(languages); i++)
+   for (i = 0; i < (int)ARRAY_SIZE(languages); i++)
    {
       if ((languages[i].lang & lang) != 0)
       {

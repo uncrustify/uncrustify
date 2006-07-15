@@ -436,7 +436,7 @@ argval_t do_space(chunk_t *first, chunk_t *second)
    }
 
 
-   for (idx = 0; idx < ARRAY_SIZE(no_space_table); idx++)
+   for (idx = 0; idx < (int)ARRAY_SIZE(no_space_table); idx++)
    {
       if (((no_space_table[idx].first == CT_UNKNOWN) ||
            (no_space_table[idx].first == first->type))

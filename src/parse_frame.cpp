@@ -64,7 +64,7 @@ void pf_copy(struct parse_frame *dst, const struct parse_frame *src)
  */
 void pf_push(struct parse_frame *pf)
 {
-   if (cpd.frame_count < ARRAY_SIZE(cpd.frames))
+   if (cpd.frame_count < (int)ARRAY_SIZE(cpd.frames))
    {
       pf_copy(&cpd.frames[cpd.frame_count], pf);
       cpd.frame_count++;
@@ -85,7 +85,7 @@ void pf_push_under(struct parse_frame *pf)
 
    LOG_FMT(LPF, "%s: before count = %d\n", __func__, cpd.frame_count);
 
-   if ((cpd.frame_count < ARRAY_SIZE(cpd.frames)) &&
+   if ((cpd.frame_count < (int)ARRAY_SIZE(cpd.frames)) &&
        (cpd.frame_count >= 1))
    {
       npf1 = &cpd.frames[cpd.frame_count - 1];

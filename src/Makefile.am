@@ -18,3 +18,4 @@ token_names.h: token_enum.h ../make_token_names.sh
 	@echo "Rebuilding token_names.h"
 	@sh ../make_token_names.sh
 
+# uncrustify_CPPFLAGS = -Wall

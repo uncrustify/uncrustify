@@ -109,7 +109,7 @@ const chunk_tag_t *find_punctuator(const char *str, UINT8 lang_flags)
    int i;
 
    /* Check 4 char symbols */
-   for (i = 0; i < ARRAY_SIZE(symbols4); i++)
+   for (i = 0; i < (int)ARRAY_SIZE(symbols4); i++)
    {
       if (((lang_flags & symbols4[i].lang_flags) != 0) &&
           (strncmp(str, symbols4[i].tag, 4) == 0))
@@ -119,7 +119,7 @@ const chunk_tag_t *find_punctuator(const char *str, UINT8 lang_flags)
    }
 
    /* Check 3 char symbols */
-   for (i = 0; i < ARRAY_SIZE(symbols3); i++)
+   for (i = 0; i < (int)ARRAY_SIZE(symbols3); i++)
    {
       if (((lang_flags & symbols3[i].lang_flags) != 0) &&
           (strncmp(str, symbols3[i].tag, 3) == 0))
@@ -129,7 +129,7 @@ const chunk_tag_t *find_punctuator(const char *str, UINT8 lang_flags)
    }
 
    /* Check 2 char symbols */
-   for (i = 0; i < ARRAY_SIZE(symbols2); i++)
+   for (i = 0; i < (int)ARRAY_SIZE(symbols2); i++)
    {
       if (((lang_flags & symbols2[i].lang_flags) != 0) &&
           (strncmp(str, symbols2[i].tag, 2) == 0))
@@ -139,7 +139,7 @@ const chunk_tag_t *find_punctuator(const char *str, UINT8 lang_flags)
    }
 
    /* Check 1 char symbols */
-   for (i = 0; i < ARRAY_SIZE(symbols1); i++)
+   for (i = 0; i < (int)ARRAY_SIZE(symbols1); i++)
    {
       if (((lang_flags & symbols1[i].lang_flags) != 0) &&
           (*str == *symbols1[i].tag))

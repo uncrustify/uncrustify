@@ -170,7 +170,7 @@ static void log_start(log_sev_t sev)
 static void log_end(void)
 {
    g_log.in_log = (g_log.buf[g_log.buf_len - 1] != '\n');
-   if (!g_log.in_log || (g_log.buf_len > (sizeof(g_log.buf) / 2)))
+   if (!g_log.in_log || (g_log.buf_len > (int)(sizeof(g_log.buf) / 2)))
    {
       log_flush(false);
    }
@@ -191,7 +191,7 @@ void log_str(log_sev_t sev, const char *str, int len)
       return;
    }
 
-   if ((g_log.buf_len + len) < sizeof(g_log.buf))
+   if ((g_log.buf_len + len) < (int)sizeof(g_log.buf))
    {
       log_start(sev);
 
@@ -257,7 +257,7 @@ void log_hex(log_sev_t sev, const void *vdata, int len)
       buf[idx++] = to_hex_char(*dat);
       dat++;
 
-      if (idx >= (sizeof(buf) - 3))
+      if (idx >= (int)(sizeof(buf) - 3))
       {
          buf[idx] = 0;
          log_str(sev, buf, idx);
