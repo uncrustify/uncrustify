@@ -561,9 +561,9 @@ static chunk_t *align_var_def_brace(chunk_t *start, int span)
 {
    chunk_t    *pc;
    chunk_t    *next;
-   int        align_mask   = PCF_IN_FCN_DEF | PCF_VAR_1ST;
-   int        myspan       = span;
-   int        mythresh     = 0;
+   int        align_mask = PCF_IN_FCN_DEF | PCF_VAR_1ST;
+   int        myspan     = span;
+   int        mythresh   = 0;
    AlignStack as;
 
 
@@ -771,15 +771,15 @@ static chunk_t *scan_ib_line(chunk_t *start, bool first_pass)
    chunk_t *next;
    chunk_t *prev_match = NULL;
    int     token_width;
-   int     idx = 0;
+   int     idx              = 0;
    bool    last_was_comment = false;
 
    /* Skip past C99 "[xx] =" stuff */
    if (start->type == CT_SQUARE_OPEN)
    {
       start->parent_type = CT_TSQUARE;
-      start = chunk_get_next_type(start, CT_ASSIGN, start->level);
-      start = chunk_get_next_ncnl(start);
+      start            = chunk_get_next_type(start, CT_ASSIGN, start->level);
+      start            = chunk_get_next_ncnl(start);
       cpd.al_c99_array = true;
    }
    pc = start;
@@ -1011,7 +1011,7 @@ static void align_init_brace(chunk_t *start)
                //        num_token->len, num_token->str, cpd.al[idx - 1].col, col_diff);
 
                num_token->flags |= PCF_WAS_ALIGNED;
-               num_token = NULL;
+               num_token         = NULL;
             }
 
             /* Comma's need to 'fall back' to the previous token */

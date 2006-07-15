@@ -187,4 +187,3 @@ typedef enum
 } c_token_t;
 
 #endif   /* TOKEN_ENUM_H_INCLUDED */
-

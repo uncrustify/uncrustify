@@ -24,46 +24,46 @@ struct no_space_table_s
  */
 struct no_space_table_s no_space_table[] =
 {
-   { CT_INCDEC_BEFORE, CT_WORD },
+   { CT_INCDEC_BEFORE, CT_WORD         },
    { CT_UNKNOWN,       CT_INCDEC_AFTER },
-   { CT_UNKNOWN,       CT_ELIPSIS },
-   { CT_UNKNOWN,       CT_LABEL_COLON },
-   { CT_UNKNOWN,       CT_SEMICOLON },
-   { CT_UNKNOWN,       CT_D_TEMPLATE },
-   { CT_D_TEMPLATE,    CT_UNKNOWN },
-   { CT_UNKNOWN,       CT_MEMBER },
-   { CT_MEMBER,        CT_UNKNOWN },
-   { CT_UNKNOWN,       CT_DC_MEMBER },
-   { CT_DC_MEMBER,     CT_UNKNOWN },
-   { CT_MACRO_FUNC,    CT_FPAREN_OPEN },
-   { CT_PAREN_OPEN,    CT_UNKNOWN },
-   { CT_UNKNOWN,       CT_PAREN_CLOSE },
-   { CT_FPAREN_OPEN,   CT_UNKNOWN },
+   { CT_UNKNOWN,       CT_ELIPSIS      },
+   { CT_UNKNOWN,       CT_LABEL_COLON  },
+   { CT_UNKNOWN,       CT_SEMICOLON    },
+   { CT_UNKNOWN,       CT_D_TEMPLATE   },
+   { CT_D_TEMPLATE,    CT_UNKNOWN      },
+   { CT_UNKNOWN,       CT_MEMBER       },
+   { CT_MEMBER,        CT_UNKNOWN      },
+   { CT_UNKNOWN,       CT_DC_MEMBER    },
+   { CT_DC_MEMBER,     CT_UNKNOWN      },
+   { CT_MACRO_FUNC,    CT_FPAREN_OPEN  },
+   { CT_PAREN_OPEN,    CT_UNKNOWN      },
+   { CT_UNKNOWN,       CT_PAREN_CLOSE  },
+   { CT_FPAREN_OPEN,   CT_UNKNOWN      },
    { CT_UNKNOWN,       CT_SPAREN_CLOSE },
-   { CT_SPAREN_OPEN,   CT_UNKNOWN },
+   { CT_SPAREN_OPEN,   CT_UNKNOWN      },
    { CT_UNKNOWN,       CT_FPAREN_CLOSE },
-   { CT_UNKNOWN,       CT_COMMA },
-   { CT_POS,           CT_UNKNOWN },
-   { CT_ADDR,          CT_UNKNOWN },
-   { CT_STAR,          CT_UNKNOWN },
-   { CT_DEREF,         CT_UNKNOWN },
-   { CT_NOT,           CT_UNKNOWN },
-   { CT_INV,           CT_UNKNOWN },
-   { CT_VBRACE_CLOSE,  CT_UNKNOWN },
-   { CT_VBRACE_OPEN,   CT_UNKNOWN },
+   { CT_UNKNOWN,       CT_COMMA        },
+   { CT_POS,           CT_UNKNOWN      },
+   { CT_ADDR,          CT_UNKNOWN      },
+   { CT_STAR,          CT_UNKNOWN      },
+   { CT_DEREF,         CT_UNKNOWN      },
+   { CT_NOT,           CT_UNKNOWN      },
+   { CT_INV,           CT_UNKNOWN      },
+   { CT_VBRACE_CLOSE,  CT_UNKNOWN      },
+   { CT_VBRACE_OPEN,   CT_UNKNOWN      },
    { CT_UNKNOWN,       CT_VBRACE_CLOSE },
-   { CT_UNKNOWN,       CT_VBRACE_OPEN },
-   { CT_PREPROC,       CT_UNKNOWN },
-   { CT_NEG,           CT_UNKNOWN },
-   { CT_UNKNOWN,       CT_SQUARE_OPEN },
+   { CT_UNKNOWN,       CT_VBRACE_OPEN  },
+   { CT_PREPROC,       CT_UNKNOWN      },
+   { CT_NEG,           CT_UNKNOWN      },
+   { CT_UNKNOWN,       CT_SQUARE_OPEN  },
    { CT_UNKNOWN,       CT_SQUARE_CLOSE },
-   { CT_UNKNOWN,       CT_CASE_COLON },
-   { CT_SQUARE_OPEN,   CT_UNKNOWN },
-   { CT_PAREN_CLOSE,   CT_WORD },
-   { CT_PAREN_CLOSE,   CT_FUNC_DEF },
-   { CT_PAREN_CLOSE,   CT_FUNC_CALL },
-   { CT_PAREN_CLOSE,   CT_ADDR },
-   { CT_PAREN_CLOSE,   CT_FPAREN_OPEN },
+   { CT_UNKNOWN,       CT_CASE_COLON   },
+   { CT_SQUARE_OPEN,   CT_UNKNOWN      },
+   { CT_PAREN_CLOSE,   CT_WORD         },
+   { CT_PAREN_CLOSE,   CT_FUNC_DEF     },
+   { CT_PAREN_CLOSE,   CT_FUNC_CALL    },
+   { CT_PAREN_CLOSE,   CT_ADDR         },
+   { CT_PAREN_CLOSE,   CT_FPAREN_OPEN  },
 };
 
 
@@ -331,7 +331,7 @@ argval_t do_space(chunk_t *first, chunk_t *second)
       {
          arg = (argval_t)(arg | AV_ADD);
       }
-      return arg;
+      return(arg);
    }
    if ((first->type == CT_COMPARE) || (second->type == CT_COMPARE))
    {
@@ -470,6 +470,7 @@ void space_text(void)
       {
          break;
       }
+
       /* If the current chunk contains a newline, do not change the column
        * of the next item */
       if ((pc->type == CT_NEWLINE) ||
@@ -555,6 +556,5 @@ int space_col_align(chunk_t *first, chunk_t *second)
    {
       coldiff++;
    }
-   return coldiff;
+   return(coldiff);
 }
-

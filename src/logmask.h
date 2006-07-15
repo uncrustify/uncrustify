@@ -13,7 +13,7 @@
 #include <cstring>     /* memset() */
 
 
-typedef UINT8 log_sev_t;
+typedef UINT8   log_sev_t;
 
 
 /** A simple array of 256 bits (done it C) */
@@ -88,4 +88,3 @@ void logmask_from_string(const char *str, log_mask_t *mask);
 
 
 #endif   /* LOGMASK_H_INCLUDED */
-

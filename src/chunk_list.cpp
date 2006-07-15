@@ -11,7 +11,7 @@
 
 #include "ListManager.h"
 
-typedef ListManager<chunk_t> ChunkList;
+typedef ListManager <chunk_t>   ChunkList;
 
 ChunkList g_cl;
 
@@ -20,22 +20,22 @@ static chunk_t *chunk_dup(const chunk_t *pc_in);
 
 chunk_t *chunk_get_head(void)
 {
-   return g_cl.GetHead();
+   return(g_cl.GetHead());
 }
 
 chunk_t *chunk_get_tail(void)
 {
-   return g_cl.GetTail();
+   return(g_cl.GetTail());
 }
 
 chunk_t *chunk_get_next(chunk_t *cur)
 {
-   return g_cl.GetNext(cur);
+   return(g_cl.GetNext(cur));
 }
 
 chunk_t *chunk_get_prev(chunk_t *cur)
 {
-   return g_cl.GetPrev(cur);
+   return(g_cl.GetPrev(cur));
 }
 
 static chunk_t *chunk_dup(const chunk_t *pc_in)
@@ -352,4 +352,3 @@ void chunk_swap(chunk_t *pc1, chunk_t *pc2)
 {
    g_cl.Swap(pc1, pc2);
 }
-

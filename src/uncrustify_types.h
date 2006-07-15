@@ -200,4 +200,3 @@ struct cp_data
 extern struct cp_data cpd;
 
 #endif   /* UNCRUSTIFY_TYPES_H_INCLUDED */
-

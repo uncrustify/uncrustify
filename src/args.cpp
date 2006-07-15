@@ -206,8 +206,8 @@ int Args::SplitLine(char *text, char *args[], int num_args)
    char cur_quote    = 0;
    bool in_backslash = false;
    bool in_arg       = false;
-   int  argc  = 0;
-   char *dest = text;
+   int  argc         = 0;
+   char *dest        = text;
 
 
    while ((*text != 0) && (argc <= num_args))
@@ -215,7 +215,7 @@ int Args::SplitLine(char *text, char *args[], int num_args)
       /* Detect the start of an arg */
       if (!in_arg && !isspace(*text))
       {
-         in_arg = true;
+         in_arg     = true;
          args[argc] = dest;
          argc++;
       }
@@ -225,7 +225,7 @@ int Args::SplitLine(char *text, char *args[], int num_args)
          if (in_backslash)
          {
             in_backslash = false;
-            *dest = *text;
+            *dest        = *text;
             dest++;
          }
          else if (*text == '\\')

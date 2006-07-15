@@ -305,7 +305,7 @@ void indent_text(void)
                 (pc->parent_type == CT_FOR))
             {
                frm.pse[frm.pse_tos].indent += cpd.settings[UO_indent_brace].n;
-               indent_column               += cpd.settings[UO_indent_brace].n;
+               indent_column += cpd.settings[UO_indent_brace].n;
             }
             else if (pc->parent_type == CT_CASE)
             {
@@ -711,4 +711,3 @@ static void indent_comment(chunk_t *pc, int col)
 
    pc->column = col;
 }
-

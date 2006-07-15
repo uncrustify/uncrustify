@@ -13,7 +13,6 @@
 
 
 
-
 void add_char(char ch)
 {
    /* convert a newline into the LF/CRLF/CR sequence */
@@ -118,7 +117,7 @@ void output_parsed(FILE *pfile)
 
 void output_options(FILE *pfile)
 {
-   int                    idx;
+   int idx;
    const options_name_tab *ptr;
 
    for (idx = 0; idx < UO_option_count; idx++)

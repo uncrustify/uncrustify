@@ -19,8 +19,8 @@
 class Args
 {
 protected:
-   int    m_count;
-   char **m_values;
+   int   m_count;
+   char  **m_values;
    UINT8 *m_used;      /* array of bits */
 
 public:
@@ -113,4 +113,3 @@ public:
 };
 
 #endif   /* ARGS_H_INCLUDED */
-

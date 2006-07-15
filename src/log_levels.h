@@ -55,4 +55,3 @@ enum
 };
 
 #endif   /* LOG_LEVELS_H_INCLUDED */
-

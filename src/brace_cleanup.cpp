@@ -20,6 +20,7 @@
 
 static chunk_t *insert_vbrace(chunk_t *pc, bool after,
                               struct parse_frame *frm);
+
 #define insert_vbrace_close_after(pc, frm)     insert_vbrace(pc, true, frm)
 #define insert_vbrace_open_before(pc, frm)     insert_vbrace(pc, false, frm)
 
@@ -54,7 +55,7 @@ static void preproc_start(struct parse_frame *frm, chunk_t *pc)
          frm->brace_level = 1;
 
          /*TODO: not sure about the next 3 lines */
-         frm->pse_tos                 = 1;
+         frm->pse_tos = 1;
          frm->pse[frm->pse_tos].type  = CT_PP_DEFINE;
          frm->pse[frm->pse_tos].stage = BS_NONE;
       }
@@ -381,7 +382,7 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
       frm->pse[frm->pse_tos].type   = pc->type;
       frm->pse[frm->pse_tos].stage  = BS_NONE;
       frm->pse[frm->pse_tos].parent = parent;
-      pc->parent_type               = parent;
+      pc->parent_type = parent;
 
       print_stack(LBCSPUSH, "+Open   ", frm, pc);
    }
@@ -509,7 +510,7 @@ static bool check_complex_statements(struct parse_frame *frm, chunk_t *pc)
    {
       if (pc->type == CT_WHILE)
       {
-         pc->type                     = CT_WHILE_OF_DO;
+         pc->type = CT_WHILE_OF_DO;
          frm->pse[frm->pse_tos].type  = CT_WHILE;
          frm->pse[frm->pse_tos].stage = BS_PAREN2;
          return(true);
@@ -684,7 +685,7 @@ static chunk_t *insert_vbrace(chunk_t *pc, bool after,
       chunk.orig_line = ref->orig_line;
       chunk.column    = ref->column + ref->len + 1;
       chunk.type      = CT_VBRACE_OPEN;
-      rv              = chunk_add_after(&chunk, ref);
+      rv = chunk_add_after(&chunk, ref);
    }
    return(rv);
 }
@@ -760,4 +761,3 @@ bool close_statement(struct parse_frame *frm, chunk_t *pc)
    }
    return(false);
 }
-

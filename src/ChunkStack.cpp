@@ -88,7 +88,7 @@ void ChunkStack::Push(chunk_t *pc, int seqnum)
 
 void ChunkStack::Init()
 {
-   m_cse = NULL;
+   m_cse    = NULL;
    m_size   = 0;
    m_len    = 0;
    m_seqnum = 0;

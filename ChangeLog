@@ -30,6 +30,8 @@ Changes in uncrustify-0.0.22
  - Improve marking of function prototype-related tokens
  - Improve variable definition aligning
  - fix align_var_def threshold
+ - Improve handling of "private:" style stuff
+ - Handle types with "::" in them
  ** add line breaks for long lines
 
 

@@ -64,8 +64,8 @@ static options_name_tab *find_entry(const char *name)
 static int convert_value(struct options_name_tab *entry, const char *val)
 {
    struct options_name_tab *tmp;
-   bool                    btrue;
-   int                     mult;
+   bool btrue;
+   int  mult;
 
    if (entry->type == AT_LINE)
    {
@@ -295,4 +295,3 @@ void set_option_defaults(void)
    cpd.settings[UO_indent_with_tabs].n = 1;
    cpd.settings[UO_indent_label].n     = 1;
 }
-

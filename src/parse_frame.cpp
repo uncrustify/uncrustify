@@ -208,4 +208,3 @@ void pf_check(struct parse_frame *frm, chunk_t *pc)
       pf_log(LPF, frm);
    }
 }
-

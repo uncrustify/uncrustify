@@ -150,4 +150,3 @@ static_inline char to_hex_char(int nibble)
 
 
 #endif   /* LOGGER_H_INCLUDED */
-

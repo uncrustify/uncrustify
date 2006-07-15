@@ -74,15 +74,15 @@ static void version_exit(void)
 
 int main(int argc, char *argv[])
 {
-   char        *data;
-   int         data_len;
-   const char  *cfg_file    = "uncrustify.cfg";
-   const char  *parsed_file = NULL;
-   const char  *source_file = NULL;
-   const char  *source_list = NULL;
-   log_mask_t  mask;
-   int         idx;
-   const char  *p_arg;
+   char       *data;
+   int        data_len;
+   const char *cfg_file    = "uncrustify.cfg";
+   const char *parsed_file = NULL;
+   const char *source_file = NULL;
+   const char *source_list = NULL;
+   log_mask_t mask;
+   int        idx;
+   const char *p_arg;
 
 
    if (argc < 2)

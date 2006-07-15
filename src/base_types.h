@@ -59,4 +59,3 @@ typedef uint32_t   UINT32;
 #endif
 
 #endif   /* BASE_TYPES_H_INCLUDED */
-

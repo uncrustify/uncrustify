@@ -232,4 +232,3 @@ static void convert_vbrace_to_brace(void)
       }
    }
 }
-

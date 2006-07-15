@@ -353,4 +353,3 @@ void log_hex_blk(log_sev_t sev, const void *data, int len)
       log_str(sev, buf, 73);
    }
 }
-

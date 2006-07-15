@@ -143,4 +143,3 @@ void logmask_from_string(const char *str, log_mask_t *mask)
       }
    }
 }
-

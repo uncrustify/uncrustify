@@ -351,7 +351,7 @@ static bool parse_cs_string(chunk_t *pc)
  */
 bool parse_word(chunk_t *pc, bool skipcheck)
 {
-   int               len = 1;
+   int len = 1;
    const chunk_tag_t *tag;
 
    while ((pc->str[len] < 127) &&
