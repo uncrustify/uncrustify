@@ -21,6 +21,7 @@ void tokenize_cleanup(void)
    chunk_t *pc   = chunk_get_head();
    chunk_t *prev = NULL;
    chunk_t *next;
+   chunk_t *tmp;
 
    pc   = chunk_get_head();
    next = chunk_get_next_ncnl(pc);
@@ -134,6 +135,10 @@ void tokenize_cleanup(void)
          {
             pc->type   = CT_LABEL;
             next->type = CT_LABEL_COLON;
+            if ((tmp = chunk_get_next_ncnl(next)) != NULL)
+            {
+               tmp->flags |= PCF_STMT_START | PCF_EXPR_START;
+            }
          }
          else
          {
@@ -197,4 +202,3 @@ static void check_template(chunk_t *start)
       }
    }
 }
-
