@@ -23,83 +23,83 @@ static void align_init_brace(chunk_t *start);
 static void align_typedefs(int span);
 
 /*
-   Here are the items aligned:
-
-   - enum value assignments
-     enum {
-        cat  = 1,
-        fred = 2,
-     };
-
-   - struct/union variable & bit definitions
-     struct foo {
-        char cat;
-        int  id       : 5;
-        int  name_len : 6;
-        int  heigth   : 12;
-     };
-
-   - variable definitions & assignments in normal code
-     const char *cat = "feline";
-     int        id   = 4;
-     a   = 5;
-     bat = 14;
-
-   - simple array initializers
-     int a[] = {
-        1, 2, 3, 4, 5,
-        6, 7, 8, 9, 10
-     };
-
-   - c99 array initializers
-     const char *name[] = {
-        [FRED]  = "fred",
-        [JOE]   = "joe",
-        [PETER] = "peter",
-     };
-     struct foo b[] = {
-        { .id = 1,   .name = "text 1" },
-        { .id = 567, .name = "text 2" },
-     };
-     struct foo_t bars[] =
-     {
-        [0] = { .name = "bar",
-                .age  = 21 },
-        [1] = { .name = "barley",
-                .age  = 55 },
-     };
-
-   - compact array initializers
-     struct foo b[] = {
-        { 3, "dog" },      { 6, "spider" },
-        { 8, "elephant" }, { 3, "cat" },
-     };
-
-   - multiline array initializers (2nd line indented, not aligned)
-     struct foo b[] = {
-        { AD_NOT_ALLOWED, "Sorry, you failed to guess the password.",
-          "Try again?", "Yes", "No" },
-        { AD_SW_ERROR,    "A software error has occured.", "Bye!", NULL, NULL },
-     };
-
-   - Trailing comments
-
-   - Back-slash newline groups
-
-   - Function prototypes
-     int  foo();
-     void bar();
-
-   - Preprocessors
-     #define FOO_VAL        15
-     #define MAX_TIMEOUT    60
-     #define FOO(x)         ((x) * 65)
-
-   - typedefs
-     typedef uint8_t     BYTE;
-     typedef int32_t     INT32;
-     typedef uint32_t    UINT32;
-*/
+ *   Here are the items aligned:
+ *
+ *   - enum value assignments
+ *     enum {
+ *        cat  = 1,
+ *        fred = 2,
+ *     };
+ *
+ *   - struct/union variable & bit definitions
+ *     struct foo {
+ *        char cat;
+ *        int  id       : 5;
+ *        int  name_len : 6;
+ *        int  heigth   : 12;
+ *     };
+ *
+ *   - variable definitions & assignments in normal code
+ *     const char *cat = "feline";
+ *     int        id   = 4;
+ *     a   = 5;
+ *     bat = 14;
+ *
+ *   - simple array initializers
+ *     int a[] = {
+ *        1, 2, 3, 4, 5,
+ *        6, 7, 8, 9, 10
+ *     };
+ *
+ *   - c99 array initializers
+ *     const char *name[] = {
+ *        [FRED]  = "fred",
+ *        [JOE]   = "joe",
+ *        [PETER] = "peter",
+ *     };
+ *     struct foo b[] = {
+ *        { .id = 1,   .name = "text 1" },
+ *        { .id = 567, .name = "text 2" },
+ *     };
+ *     struct foo_t bars[] =
+ *     {
+ *        [0] = { .name = "bar",
+ *                .age  = 21 },
+ *        [1] = { .name = "barley",
+ *                .age  = 55 },
+ *     };
+ *
+ *   - compact array initializers
+ *     struct foo b[] = {
+ *        { 3, "dog" },      { 6, "spider" },
+ *        { 8, "elephant" }, { 3, "cat" },
+ *     };
+ *
+ *   - multiline array initializers (2nd line indented, not aligned)
+ *     struct foo b[] = {
+ *        { AD_NOT_ALLOWED, "Sorry, you failed to guess the password.",
+ *          "Try again?", "Yes", "No" },
+ *        { AD_SW_ERROR,    "A software error has occured.", "Bye!", NULL, NULL },
+ *     };
+ *
+ *   - Trailing comments
+ *
+ *   - Back-slash newline groups
+ *
+ *   - Function prototypes
+ *     int  foo();
+ *     void bar();
+ *
+ *   - Preprocessors
+ *     #define FOO_VAL        15
+ *     #define MAX_TIMEOUT    60
+ *     #define FOO(x)         ((x) * 65)
+ *
+ *   - typedefs
+ *     typedef uint8_t     BYTE;
+ *     typedef int32_t     INT32;
+ *     typedef uint32_t    UINT32;
+ */
 
 /**
  * Aligns everything in the chunk stack to a particular column.
@@ -555,11 +555,7 @@ int count_prev_ptr_type(chunk_t *pc)
 /**
  * Scan everything at the current level until the close brace and find the
  * variable def align column.  Also aligns bit-colons, but that assumes that
- * bit-types are the same! (ie, same definition indent)
- *
- * Can't use the stack stuff here, because there is only one stack and
- * this stuff may be recursive.
- * If only I had a simple stack class...
+ * bit-types are the same! But that should always be the case...
  */
 static chunk_t *align_var_def_brace(chunk_t *start, int span)
 {
