@@ -44,6 +44,14 @@ const ChunkStack::Entry *ChunkStack::Top() const
    return(NULL);
 }
 
+void ChunkStack::SetTopTrailer(chunk_t *pc)
+{
+   if (m_len > 0)
+   {
+      m_cse[m_len - 1].m_trailer = pc;
+   }
+}
+
 const ChunkStack::Entry *ChunkStack::Get(int idx) const
 {
    if ((idx < m_len) && (idx >= 0))
@@ -93,11 +101,11 @@ void ChunkStack::Resize(int newsize)
       m_size = newsize;
       if (m_cse == NULL)
       {
-         m_cse = (Entry *)malloc(m_size * sizeof(ChunkStackEntry));
+         m_cse = (Entry *)malloc(m_size * sizeof(ChunkStack::Entry));
       }
       else
       {
-         m_cse = (Entry *)realloc(m_cse, m_size * sizeof(ChunkStackEntry));
+         m_cse = (Entry *)realloc(m_cse, m_size * sizeof(ChunkStack::Entry));
       }
       /*TODO: check for out-of-memory? */
    }

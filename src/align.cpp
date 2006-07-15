@@ -413,10 +413,10 @@ chunk_t *align_assign(chunk_t *first, int span, int thresh)
    int     my_level;
    chunk_t *pc;
    int     tmp;
-   int     myspan        = span;
-   int     mythresh      = thresh;
-   int     var_def_cnt   = 0;
-   int     equ_count    = 0;
+   int     myspan      = span;
+   int     mythresh    = thresh;
+   int     var_def_cnt = 0;
+   int     equ_count   = 0;
 
    if (first == NULL)
    {
@@ -534,80 +534,6 @@ chunk_t *align_assign(chunk_t *first, int span, int thresh)
 
 
 /**
- * Aligns the variable definitions in a range.
- * If I had a stack class, I could just use one for variables and one for bits
- *
- * @param first      First item to look at
- * @param last       Last item to look at
- * @param var_column column for the variable
- * @param bit_column column for the bit colon
- */
-static void indent_var_def_brace(chunk_t *first, chunk_t *last,
-                                 int var_column, int bit_column)
-{
-   chunk_t *pc;
-   chunk_t *end = chunk_get_next_ncnl(last);
-   chunk_t *last_star;
-   chunk_t *prev;
-   int     align_mask = PCF_IN_FCN_DEF | PCF_VAR_1ST;
-
-   if (!cpd.settings[UO_align_var_def_inline].b)
-   {
-      align_mask |= PCF_VAR_INLINE;
-   }
-
-   /* Shift out to the next tabstop */
-   if (cpd.settings[UO_align_on_tabstop].b)
-   {
-      int new_column = align_tab_column(var_column);
-      bit_column += (new_column - var_column);
-      var_column  = new_column;
-   }
-
-   //fprintf(stderr, "%s: first=%s line=%d col=%d level=%d  "
-   //        "last=%s line=%d col=%d level=%d  var=%d bit=%d\n",
-   //        __func__,
-   //        first->str, first->orig_line, first->orig_col, first->level,
-   //        last->str, last->orig_line, last->orig_col, last->level,
-   //        var_column, bit_column);
-
-   /* now indent */
-   for (pc = first; pc != end; pc = chunk_get_next_ncnl(pc))
-   {
-      if (pc->level == first->level)
-      {
-         if ((pc->flags & align_mask) == PCF_VAR_1ST)
-         {
-            int my_col = var_column + 1;
-            prev = pc;
-            do
-            {
-               my_col--;
-               last_star = prev;
-               prev      = chunk_get_prev_ncnl(prev);
-            } while ((prev->type == CT_PTR_TYPE) || (prev->type == CT_PAREN_OPEN));
-
-            if (cpd.settings[UO_align_var_def_star].b)
-            {
-               my_col = var_column;
-            }
-
-            //fprintf(stderr, "%s: indenting=%s to col=%d\n", __func__, last_star->str, my_col);
-
-            reindent_line(last_star, my_col);
-         }
-         else if (cpd.settings[UO_align_var_def_colon].b &&
-                  (pc->type == CT_BIT_COLON) &&
-                  ((pc->flags & PCF_WAS_ALIGNED) != 0))
-         {
-            indent_to_column(pc, bit_column);
-         }
-      }
-   }
-}
-
-
-/**
  * Counts how many '*' pointers are in a row, going backwards
  *
  * @param pc   Pointer to the last '*' in the series
@@ -637,21 +563,13 @@ int count_prev_ptr_type(chunk_t *pc)
  */
 static chunk_t *align_var_def_brace(chunk_t *start, int span)
 {
-   chunk_t *pc;
-   chunk_t *next;
-   chunk_t *prev;
-   chunk_t *first_match = NULL;
-   chunk_t *last_match  = NULL;
-   int     max_col      = 0;
-   int     max_bit_col  = 0;
-   int     align_mask   = PCF_IN_FCN_DEF | PCF_VAR_1ST;
-   bool    did_one;
-   int     max_line     = 0;
-   int     max_bit_line = 0;
-   int     nl_count     = 0;
-   int     myspan       = span;
-   int     tmpcol;
-   int     minvarcol = 0;
+   chunk_t    *pc;
+   chunk_t    *next;
+   int        align_mask   = PCF_IN_FCN_DEF | PCF_VAR_1ST;
+   int        myspan       = span;
+   int        mythresh     = 0;
+   AlignStack as;
+
 
    if (start == NULL)
    {
@@ -664,6 +582,10 @@ static chunk_t *align_var_def_brace(chunk_t *start, int span)
    {
       myspan = cpd.settings[UO_align_var_struct_span].n;
    }
+   else
+   {
+      mythresh = cpd.settings[UO_align_var_def_thresh].n;
+   }
 
    /* can't be any variable definitions in a "= {" block */
    if (start->parent_type == CT_ASSIGN)
@@ -671,6 +593,7 @@ static chunk_t *align_var_def_brace(chunk_t *start, int span)
       pc = chunk_get_next_type(start, CT_BRACE_CLOSE, start->level);
       return(chunk_get_next_ncnl(pc));
    }
+
 
    if (!cpd.settings[UO_align_var_def_inline].b)
    {
@@ -680,9 +603,19 @@ static chunk_t *align_var_def_brace(chunk_t *start, int span)
    //fprintf(stderr, "%s: start=%s line=%d col=%d level=%d\n",
    //        __func__, start->str, start->orig_line, start->orig_col, start->level);
 
-   did_one = false;
-   prev    = start;
-   pc      = chunk_get_next_ncnl(start);
+   as.Start(myspan, mythresh);
+
+   if (cpd.settings[UO_align_var_def_star].b)
+   {
+      as.m_star_style = AlignStack::SS_INCLUDE;
+   }
+   else
+   {
+      as.m_star_style = AlignStack::SS_DANGLE;
+   }
+
+   bool did_this_line = false;
+   pc = chunk_get_next_ncnl(start);
    while ((pc != NULL) && ((pc->level >= start->level) || (pc->level == 0)))
    {
       /* process nested braces */
@@ -699,34 +632,10 @@ static chunk_t *align_var_def_brace(chunk_t *start, int span)
          break;
       }
 
-      if (!did_one)
-      {
-         minvarcol = pc->column;
-      }
-      else
-      {
-         minvarcol += pc->len + 1;
-      }
-
       if (chunk_is_newline(pc))
       {
-         did_one = false;
-         if (first_match != NULL)
-         {
-            nl_count += pc->nl_count;
-            if (nl_count > myspan)
-            {
-               if (first_match != last_match)
-               {
-                  indent_var_def_brace(first_match, last_match,
-                                       max_col, max_bit_col);
-               }
-               first_match = NULL;
-               nl_count    = 0;
-               max_col     = 0;
-               max_bit_col = 0;
-            }
-         }
+         did_this_line = false;
+         as.NewLines(pc->nl_count);
       }
 
       /* don't align stuff inside of a function call */
@@ -740,55 +649,22 @@ static chunk_t *align_var_def_brace(chunk_t *start, int span)
       if (((pc->flags & align_mask) == PCF_VAR_1ST) &&
           (pc->level == (start->level + 1)))
       {
-         nl_count = 0;
-         if (first_match == NULL)
+         if (!did_this_line)
          {
-            first_match = pc;
-         }
-
-         /* TODO: need to add up the column on the line */
-         tmpcol = pc->column; // + 1; // + prev->len + 1;
-         //fprintf(stderr, "%s: [%d] %s - tmpcol=%d mincol=%d\n", __func__, pc->orig_line, pc->str, tmpcol, minvarcol);
-         if (!did_one)
-         {
-            last_match = pc;
-
-            if (cpd.settings[UO_align_var_def_star].b)
-            {
-               tmpcol -= count_prev_ptr_type(prev);
-            }
-
-            if (tmpcol > max_col)
-            {
-               max_col  = tmpcol;
-               max_line = pc->orig_line;
-            }
+            as.Add(pc);
 
             next = chunk_get_next_nc(pc);
             if (next->type == CT_BIT_COLON)
             {
-               next->flags |= PCF_WAS_ALIGNED;
-               if (next->column > max_bit_col)
-               {
-                  max_bit_col  = next->column;
-                  max_bit_line = next->orig_line;
-               }
+               as.AddTrailer(next);
             }
          }
-         did_one = true;
+         did_this_line = true;
       }
-      prev = pc;
-      pc   = chunk_get_next_nc(pc);
+      pc = chunk_get_next_nc(pc);
    }
 
-   if (first_match != NULL)
-   {
-      if (first_match != last_match)
-      {
-         indent_var_def_brace(first_match, last_match,
-                              max_col, max_bit_col);
-      }
-   }
+   as.End();
 
    return(pc);
 }
@@ -899,7 +775,7 @@ static chunk_t *scan_ib_line(chunk_t *start, bool first_pass)
    chunk_t *next;
    chunk_t *prev_match = NULL;
    int     token_width;
-   int     idx              = 0;
+   int     idx = 0;
    bool    last_was_comment = false;
 
    /* Skip past C99 "[xx] =" stuff */
@@ -944,9 +820,9 @@ static chunk_t *scan_ib_line(chunk_t *start, bool first_pass)
             LOG_FMT(LSIB, " - New   [%d] %.2d/%d - %10.10s\n", idx,
                     pc->column, token_width, get_token_name(pc->type));
 
-            cpd.al[cpd.al_cnt].type  = pc->type;
-            cpd.al[cpd.al_cnt].col   = pc->column;
-            cpd.al[cpd.al_cnt].len   = token_width;
+            cpd.al[cpd.al_cnt].type = pc->type;
+            cpd.al[cpd.al_cnt].col  = pc->column;
+            cpd.al[cpd.al_cnt].len  = token_width;
             cpd.al_cnt++;
             idx++;
             last_was_comment = false;
@@ -1055,7 +931,7 @@ static void align_init_brace(chunk_t *start)
    chunk_t *prev;
    chunk_t *num_token = NULL;
 
-   cpd.al_cnt = 0;
+   cpd.al_cnt       = 0;
    cpd.al_c99_array = false;
 
    LOG_FMT(LALBR, "%s: line %d, col %d\n", __func__, start->orig_line, start->orig_col);
@@ -1224,7 +1100,7 @@ static void align_typedefs(int span)
    AlignStack as;
 
    as.Start(span);
-   as.m_gap = cpd.settings[UO_align_typedef_gap].n;
+   as.m_gap        = cpd.settings[UO_align_typedef_gap].n;
    as.m_star_style = (AlignStack::StarStyle)cpd.settings[UO_align_typedef_star_style].n;
 
    pc = chunk_get_head();
@@ -1284,4 +1160,3 @@ static void align_typedefs(int span)
 
    as.End();
 }
-

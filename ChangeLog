@@ -28,6 +28,9 @@ Changes in uncrustify-0.0.22
     nl_after_func_proto, nl_after_func_proto_group
  - Improve detection of function prototypes
  - Improve marking of function prototype-related tokens
+ - Improve variable definition aligning
+ - fix align_var_def threshold
+ ** add line breaks for long lines
 
 
 Changes in uncrustify-0.0.21

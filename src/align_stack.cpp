@@ -52,6 +52,7 @@ void AlignStack::ReAddSkipped()
          ce = m_scratch.Get(idx);
          LOG_FMT(LAS, "ReAddSkipped [%d] - ", ce->m_seqnum);
          Add(ce->m_pc, ce->m_seqnum);
+         AddTrailer(ce->m_trailer);
       }
 
       /* Check to see if we need to flush right away */
@@ -74,6 +75,8 @@ void AlignStack::Add(chunk_t *pc, int seqnum)
    }
 
    chunk_t *prev;
+
+   m_last_added = 0;
 
    /* Check threshold limits */
    if ((m_max_col == 0) || (m_thresh == 0) ||
@@ -98,6 +101,7 @@ void AlignStack::Add(chunk_t *pc, int seqnum)
       }
 
       m_aligned.Push(pc, seqnum);
+      m_last_added = 1;
 
       /* See if this pushes out the max_col */
       int endcol = pc->column + (m_right_align ? pc->len : 0);
@@ -141,9 +145,27 @@ void AlignStack::Add(chunk_t *pc, int seqnum)
    {
       /* The threshold check failed, so add it to the skipped list */
       m_skipped.Push(pc, seqnum);
+      m_last_added = 2;
+
       LOG_FMT(LAS, "Add-skipped [%d/%d/%d]: line %d, col %d <= %d + %d\n",
               seqnum, m_nl_seqnum, m_seqnum,
               pc->orig_line, pc->column, m_max_col, m_thresh);
+   }
+}
+
+/**
+ * Tacks on a trailer to the last added chunk
+ * This is currently only used to align colons after variable defs
+ */
+void AlignStack::AddTrailer(chunk_t *pc)
+{
+   if (m_last_added == 2)
+   {
+      m_skipped.SetTopTrailer(pc);
+   }
+   else if (m_last_added == 1)
+   {
+      m_aligned.SetTopTrailer(pc);
    }
 }
 
@@ -176,12 +198,20 @@ void AlignStack::Flush()
    int                     last_seqnum = 0;
    int                     idx;
    const ChunkStack::Entry *ce = NULL;
+   ChunkStack              trailer_cs;
 
    LOG_FMT(LAS, "Flush\n");
+
+   m_last_added = 0;
 
    for (idx = 0; idx < m_aligned.Len(); idx++)
    {
       ce = m_aligned.Get(idx);
+
+      if (ce->m_trailer != NULL)
+      {
+         trailer_cs.Push(ce->m_trailer);
+      }
 
       int da_col = m_max_col;
 
@@ -230,6 +260,25 @@ void AlignStack::Flush()
 
       /* Add all items from the skipped list */
       ReAddSkipped();
+   }
+
+   /* find the trailer column */
+   int trailer_col = 0;
+   for (idx = 0; idx < trailer_cs.Len(); idx++)
+   {
+      ce = trailer_cs.Get(idx);
+
+      if (trailer_col < ce->m_pc->column)
+      {
+         trailer_col = ce->m_pc->column;
+      }
+   }
+
+   /* and align the trailers */
+   chunk_t *pc;
+   while ((pc = trailer_cs.Pop()) != NULL)
+   {
+      indent_to_column(pc, trailer_col);
    }
 }
 

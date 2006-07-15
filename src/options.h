@@ -157,6 +157,7 @@ enum uncrustify_options
    UO_align_assign_thresh,        // threshold for aligning on '='. 0=no limit
    UO_align_right_cmt_span,       // align comment that end lines. 0=don't align
    UO_align_var_def_span,         // align variable defs on variable (span for regular stuff)
+   UO_align_var_def_thresh,       // align variable defs threshold
    UO_align_var_def_inline,       // also align inline struct/enum/union var defs
    UO_align_var_def_star,         // the star is part of the variable name
    UO_align_var_def_colon,        // align the colon in struct bit fields
@@ -294,6 +295,7 @@ options_name_tab option_name_table[] =
    OPTDEF(align_var_def_inline,          AT_BOOL),
    OPTDEF(align_var_def_span,            AT_NUM),
    OPTDEF(align_var_def_star,            AT_BOOL),
+   OPTDEF(align_var_def_thresh,          AT_NUM),
    OPTDEF(align_var_struct_span,         AT_NUM),
    OPTDEF(align_with_tabs,               AT_BOOL),
    OPTDEF(cmt_star_cont,                 AT_BOOL),
