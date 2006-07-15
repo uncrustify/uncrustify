@@ -6,7 +6,7 @@
  *  - parameters cannot mixed "-e -f" is not the same as "-ef"
  *  - knowledge of the complete set of parameters is not required
  *  - this means you can handle args in multiple spots
- *  - it is more portible
+ *  - it is more portable
  *
  * $Id$
  */
