@@ -711,3 +711,140 @@ static void indent_comment(chunk_t *pc, int col)
 
    pc->column = col;
 }
+
+
+/**
+ * Put spaces on either side of the preproc (#) symbol.
+ * This is done by pointing pc->str into pp_str and adjusting the
+ * length.
+ */
+void indent_preproc(void)
+{
+   chunk_t *pc;
+   chunk_t *next;
+   int     pp_level;
+   int     pp_level_sub = 0;
+   int     tmp;
+
+   /* Define a string of 16 spaces + # + 16 spaces */
+   static const char *pp_str  = "                #                ";
+   static const char *alt_str = "                %:                ";
+
+   /* Scan to see if the whole file is covered by one #ifdef */
+   int stage = 0;
+
+   for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next(pc))
+   {
+      if (chunk_is_comment(pc) || chunk_is_newline(pc))
+      {
+         continue;
+      }
+
+      if (stage == 0)
+      {
+         /* Check the first PP, make sure it is an #if type */
+         if (pc->type != CT_PREPROC)
+         {
+            break;
+         }
+         next = chunk_get_next(pc);
+         if ((next == NULL) || (next->type != CT_PP_IF))
+         {
+            break;
+         }
+         stage = 1;
+      }
+      else if (stage == 1)
+      {
+         /* Scan until a PP at level 0 is found - the close to the #if */
+         if ((pc->type == CT_PREPROC) &&
+             (pc->pp_level == 0))
+         {
+            stage = 2;
+         }
+         continue;
+      }
+      else if (stage == 2)
+      {
+         /* We should only see the rest of the preprocessor */
+         if ((pc->type == CT_PREPROC) ||
+             ((pc->flags & PCF_IN_PREPROC) == 0))
+         {
+            stage = 0;
+            break;
+         }
+      }
+   }
+
+   if (stage == 2)
+   {
+      LOG_FMT(LINFO, "The whole file is covered by a #IF\n");
+      pp_level_sub = 1;
+   }
+
+   for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next(pc))
+   {
+      if (pc->type != CT_PREPROC)
+      {
+         continue;
+      }
+
+      if (pc->column != 1)
+      {
+         /* Don't handle preprocessors that aren't in column 1 */
+         LOG_FMT(LINFO, "%s: Line %d doesn't start in column 1 (%d)\n",
+                 __func__, pc->orig_line, pc->column);
+         continue;
+      }
+
+      /* point into pp_str */
+      if (pc->len == 2)
+      {
+         /* alternate token crap */
+         pc->str = &alt_str[16];
+      }
+      else
+      {
+         pc->str = &pp_str[16];
+      }
+
+      pp_level = pc->pp_level - pp_level_sub;
+      if (pp_level < 0)
+      {
+         pp_level = 0;
+      }
+      else if (pp_level > 16)
+      {
+         pp_level = 16;
+      }
+
+      /* Note that the indent is removed by default */
+      if ((cpd.settings[UO_pp_indent].a & AV_ADD) != 0)
+      {
+         /* Need to add some spaces */
+         pc->str -= pp_level;
+         pc->len += pp_level;
+      }
+      else if (cpd.settings[UO_pp_indent].a == AV_IGNORE)
+      {
+         tmp      = (pc->orig_col <= 16) ? pc->orig_col - 1 : 16;
+         pc->str -= tmp;
+         pc->len += tmp;
+      }
+
+      /* Add spacing by adjusting the length */
+      if ((cpd.settings[UO_pp_space].a & AV_ADD) != 0)
+      {
+         pc->len += pp_level;
+      }
+
+      next = chunk_get_next(pc);
+      if (next != NULL)
+      {
+         reindent_line(next, pc->len + 1);
+      }
+
+      log_fmt(LPPIS, "%s: Indent line %d to %d (len %d, next->col %d)\n",
+              __func__, pc->orig_line, pp_level, pc->len, next->column);
+   }
+}
