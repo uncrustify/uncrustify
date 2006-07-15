@@ -49,14 +49,19 @@ CONFIG_CLEAN_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 binPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
 PROGRAMS = $(bin_PROGRAMS)
-am_uncrustify_OBJECTS = uncrustify.$(OBJEXT) chunk_list.$(OBJEXT) \
-	indent.$(OBJEXT) align.$(OBJEXT) combine.$(OBJEXT) \
-	tokenize.$(OBJEXT) tokenize_cleanup.$(OBJEXT) space.$(OBJEXT) \
-	newlines.$(OBJEXT) output.$(OBJEXT) args.$(OBJEXT) \
-	options.$(OBJEXT) keywords.$(OBJEXT) punctuators.$(OBJEXT) \
-	parse_frame.$(OBJEXT) logmask.$(OBJEXT) logger.$(OBJEXT) \
-	ChunkStack.$(OBJEXT) braces.$(OBJEXT) brace_cleanup.$(OBJEXT) \
-	align_stack.$(OBJEXT)
+am_uncrustify_OBJECTS = uncrustify-uncrustify.$(OBJEXT) \
+	uncrustify-chunk_list.$(OBJEXT) uncrustify-indent.$(OBJEXT) \
+	uncrustify-align.$(OBJEXT) uncrustify-combine.$(OBJEXT) \
+	uncrustify-tokenize.$(OBJEXT) \
+	uncrustify-tokenize_cleanup.$(OBJEXT) \
+	uncrustify-space.$(OBJEXT) uncrustify-newlines.$(OBJEXT) \
+	uncrustify-output.$(OBJEXT) uncrustify-args.$(OBJEXT) \
+	uncrustify-options.$(OBJEXT) uncrustify-keywords.$(OBJEXT) \
+	uncrustify-punctuators.$(OBJEXT) \
+	uncrustify-parse_frame.$(OBJEXT) uncrustify-logmask.$(OBJEXT) \
+	uncrustify-logger.$(OBJEXT) uncrustify-ChunkStack.$(OBJEXT) \
+	uncrustify-braces.$(OBJEXT) uncrustify-brace_cleanup.$(OBJEXT) \
+	uncrustify-align_stack.$(OBJEXT)
 uncrustify_OBJECTS = $(am_uncrustify_OBJECTS)
 uncrustify_LDADD = $(LDADD)
 DEFAULT_INCLUDES = 
@@ -162,6 +167,7 @@ noinst_HEADERS = chunk_list.h options.h char_table.h chunk_list.h \
 		uncrustify_types.h prototypes.h logmask.h logger.h \
 		ChunkStack.h args.h token_names.h token_enum.h ListManager.h
 
+uncrustify_CPPFLAGS = -Wall
 all: $(BUILT_SOURCES) config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-am
 
@@ -251,6 +257,132 @@ distclean-compile:
 
 .cpp.obj:
 	$(CXXCOMPILE) -c -o $@ `$(CYGPATH_W) '$<'`
+
+uncrustify-uncrustify.o: uncrustify.cpp
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(uncrustify_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o uncrustify-uncrustify.o `test -f 'uncrustify.cpp' || echo '$(srcdir)/'`uncrustify.cpp
+
+uncrustify-uncrustify.obj: uncrustify.cpp
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(uncrustify_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o uncrustify-uncrustify.obj `if test -f 'uncrustify.cpp'; then $(CYGPATH_W) 'uncrustify.cpp'; else $(CYGPATH_W) '$(srcdir)/uncrustify.cpp'; fi`
+
+uncrustify-chunk_list.o: chunk_list.cpp
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(uncrustify_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o uncrustify-chunk_list.o `test -f 'chunk_list.cpp' || echo '$(srcdir)/'`chunk_list.cpp
+
+uncrustify-chunk_list.obj: chunk_list.cpp
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(uncrustify_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o uncrustify-chunk_list.obj `if test -f 'chunk_list.cpp'; then $(CYGPATH_W) 'chunk_list.cpp'; else $(CYGPATH_W) '$(srcdir)/chunk_list.cpp'; fi`
+
+uncrustify-indent.o: indent.cpp
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(uncrustify_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o uncrustify-indent.o `test -f 'indent.cpp' || echo '$(srcdir)/'`indent.cpp
+
+uncrustify-indent.obj: indent.cpp
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(uncrustify_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o uncrustify-indent.obj `if test -f 'indent.cpp'; then $(CYGPATH_W) 'indent.cpp'; else $(CYGPATH_W) '$(srcdir)/indent.cpp'; fi`
+
+uncrustify-align.o: align.cpp
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(uncrustify_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o uncrustify-align.o `test -f 'align.cpp' || echo '$(srcdir)/'`align.cpp
+
+uncrustify-align.obj: align.cpp
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(uncrustify_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o uncrustify-align.obj `if test -f 'align.cpp'; then $(CYGPATH_W) 'align.cpp'; else $(CYGPATH_W) '$(srcdir)/align.cpp'; fi`
+
+uncrustify-combine.o: combine.cpp
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(uncrustify_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o uncrustify-combine.o `test -f 'combine.cpp' || echo '$(srcdir)/'`combine.cpp
+
+uncrustify-combine.obj: combine.cpp
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(uncrustify_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o uncrustify-combine.obj `if test -f 'combine.cpp'; then $(CYGPATH_W) 'combine.cpp'; else $(CYGPATH_W) '$(srcdir)/combine.cpp'; fi`
+
+uncrustify-tokenize.o: tokenize.cpp
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(uncrustify_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o uncrustify-tokenize.o `test -f 'tokenize.cpp' || echo '$(srcdir)/'`tokenize.cpp
+
+uncrustify-tokenize.obj: tokenize.cpp
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(uncrustify_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o uncrustify-tokenize.obj `if test -f 'tokenize.cpp'; then $(CYGPATH_W) 'tokenize.cpp'; else $(CYGPATH_W) '$(srcdir)/tokenize.cpp'; fi`
+
+uncrustify-tokenize_cleanup.o: tokenize_cleanup.cpp
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(uncrustify_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o uncrustify-tokenize_cleanup.o `test -f 'tokenize_cleanup.cpp' || echo '$(srcdir)/'`tokenize_cleanup.cpp
+
+uncrustify-tokenize_cleanup.obj: tokenize_cleanup.cpp
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(uncrustify_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o uncrustify-tokenize_cleanup.obj `if test -f 'tokenize_cleanup.cpp'; then $(CYGPATH_W) 'tokenize_cleanup.cpp'; else $(CYGPATH_W) '$(srcdir)/tokenize_cleanup.cpp'; fi`
+
+uncrustify-space.o: space.cpp
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(uncrustify_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o uncrustify-space.o `test -f 'space.cpp' || echo '$(srcdir)/'`space.cpp
+
+uncrustify-space.obj: space.cpp
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(uncrustify_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o uncrustify-space.obj `if test -f 'space.cpp'; then $(CYGPATH_W) 'space.cpp'; else $(CYGPATH_W) '$(srcdir)/space.cpp'; fi`
+
+uncrustify-newlines.o: newlines.cpp
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(uncrustify_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o uncrustify-newlines.o `test -f 'newlines.cpp' || echo '$(srcdir)/'`newlines.cpp
+
+uncrustify-newlines.obj: newlines.cpp
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(uncrustify_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o uncrustify-newlines.obj `if test -f 'newlines.cpp'; then $(CYGPATH_W) 'newlines.cpp'; else $(CYGPATH_W) '$(srcdir)/newlines.cpp'; fi`
+
+uncrustify-output.o: output.cpp
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(uncrustify_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o uncrustify-output.o `test -f 'output.cpp' || echo '$(srcdir)/'`output.cpp
+
+uncrustify-output.obj: output.cpp
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(uncrustify_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o uncrustify-output.obj `if test -f 'output.cpp'; then $(CYGPATH_W) 'output.cpp'; else $(CYGPATH_W) '$(srcdir)/output.cpp'; fi`
+
+uncrustify-args.o: args.cpp
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(uncrustify_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o uncrustify-args.o `test -f 'args.cpp' || echo '$(srcdir)/'`args.cpp
+
+uncrustify-args.obj: args.cpp
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(uncrustify_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o uncrustify-args.obj `if test -f 'args.cpp'; then $(CYGPATH_W) 'args.cpp'; else $(CYGPATH_W) '$(srcdir)/args.cpp'; fi`
+
+uncrustify-options.o: options.cpp
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(uncrustify_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o uncrustify-options.o `test -f 'options.cpp' || echo '$(srcdir)/'`options.cpp
+
+uncrustify-options.obj: options.cpp
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(uncrustify_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o uncrustify-options.obj `if test -f 'options.cpp'; then $(CYGPATH_W) 'options.cpp'; else $(CYGPATH_W) '$(srcdir)/options.cpp'; fi`
+
+uncrustify-keywords.o: keywords.cpp
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(uncrustify_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o uncrustify-keywords.o `test -f 'keywords.cpp' || echo '$(srcdir)/'`keywords.cpp
+
+uncrustify-keywords.obj: keywords.cpp
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(uncrustify_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o uncrustify-keywords.obj `if test -f 'keywords.cpp'; then $(CYGPATH_W) 'keywords.cpp'; else $(CYGPATH_W) '$(srcdir)/keywords.cpp'; fi`
+
+uncrustify-punctuators.o: punctuators.cpp
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(uncrustify_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o uncrustify-punctuators.o `test -f 'punctuators.cpp' || echo '$(srcdir)/'`punctuators.cpp
+
+uncrustify-punctuators.obj: punctuators.cpp
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(uncrustify_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o uncrustify-punctuators.obj `if test -f 'punctuators.cpp'; then $(CYGPATH_W) 'punctuators.cpp'; else $(CYGPATH_W) '$(srcdir)/punctuators.cpp'; fi`
+
+uncrustify-parse_frame.o: parse_frame.cpp
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(uncrustify_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o uncrustify-parse_frame.o `test -f 'parse_frame.cpp' || echo '$(srcdir)/'`parse_frame.cpp
+
+uncrustify-parse_frame.obj: parse_frame.cpp
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(uncrustify_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o uncrustify-parse_frame.obj `if test -f 'parse_frame.cpp'; then $(CYGPATH_W) 'parse_frame.cpp'; else $(CYGPATH_W) '$(srcdir)/parse_frame.cpp'; fi`
+
+uncrustify-logmask.o: logmask.cpp
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(uncrustify_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o uncrustify-logmask.o `test -f 'logmask.cpp' || echo '$(srcdir)/'`logmask.cpp
+
+uncrustify-logmask.obj: logmask.cpp
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(uncrustify_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o uncrustify-logmask.obj `if test -f 'logmask.cpp'; then $(CYGPATH_W) 'logmask.cpp'; else $(CYGPATH_W) '$(srcdir)/logmask.cpp'; fi`
+
+uncrustify-logger.o: logger.cpp
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(uncrustify_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o uncrustify-logger.o `test -f 'logger.cpp' || echo '$(srcdir)/'`logger.cpp
+
+uncrustify-logger.obj: logger.cpp
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(uncrustify_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o uncrustify-logger.obj `if test -f 'logger.cpp'; then $(CYGPATH_W) 'logger.cpp'; else $(CYGPATH_W) '$(srcdir)/logger.cpp'; fi`
+
+uncrustify-ChunkStack.o: ChunkStack.cpp
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(uncrustify_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o uncrustify-ChunkStack.o `test -f 'ChunkStack.cpp' || echo '$(srcdir)/'`ChunkStack.cpp
+
+uncrustify-ChunkStack.obj: ChunkStack.cpp
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(uncrustify_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o uncrustify-ChunkStack.obj `if test -f 'ChunkStack.cpp'; then $(CYGPATH_W) 'ChunkStack.cpp'; else $(CYGPATH_W) '$(srcdir)/ChunkStack.cpp'; fi`
+
+uncrustify-braces.o: braces.cpp
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(uncrustify_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o uncrustify-braces.o `test -f 'braces.cpp' || echo '$(srcdir)/'`braces.cpp
+
+uncrustify-braces.obj: braces.cpp
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(uncrustify_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o uncrustify-braces.obj `if test -f 'braces.cpp'; then $(CYGPATH_W) 'braces.cpp'; else $(CYGPATH_W) '$(srcdir)/braces.cpp'; fi`
+
+uncrustify-brace_cleanup.o: brace_cleanup.cpp
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(uncrustify_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o uncrustify-brace_cleanup.o `test -f 'brace_cleanup.cpp' || echo '$(srcdir)/'`brace_cleanup.cpp
+
+uncrustify-brace_cleanup.obj: brace_cleanup.cpp
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(uncrustify_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o uncrustify-brace_cleanup.obj `if test -f 'brace_cleanup.cpp'; then $(CYGPATH_W) 'brace_cleanup.cpp'; else $(CYGPATH_W) '$(srcdir)/brace_cleanup.cpp'; fi`
+
+uncrustify-align_stack.o: align_stack.cpp
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(uncrustify_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o uncrustify-align_stack.o `test -f 'align_stack.cpp' || echo '$(srcdir)/'`align_stack.cpp
+
+uncrustify-align_stack.obj: align_stack.cpp
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(uncrustify_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o uncrustify-align_stack.obj `if test -f 'align_stack.cpp'; then $(CYGPATH_W) 'align_stack.cpp'; else $(CYGPATH_W) '$(srcdir)/align_stack.cpp'; fi`
 uninstall-info-am:
 
 ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
@@ -425,8 +557,6 @@ uninstall-am: uninstall-binPROGRAMS uninstall-info-am
 token_names.h: token_enum.h ../make_token_names.sh
 	@echo "Rebuilding token_names.h"
 	@sh ../make_token_names.sh
-
-# uncrustify_CPPFLAGS = -Wall
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:
