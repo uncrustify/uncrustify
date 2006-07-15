@@ -69,6 +69,18 @@
 	</CustomFolders>
 	<Files AutoFolders="DirectoryView">
 		<Folder Name="documentation">
+			<Folder Name="htdocs">
+				<Folder Name="examples">
+					<F N="documentation/htdocs/examples/c-1.in.c"/>
+					<F N="documentation/htdocs/examples/c-1.out.c"/>
+					<F N="documentation/htdocs/examples/example.c"/>
+				</Folder>
+				<F N="documentation/htdocs/ben.cfg.txt"/>
+				<F N="documentation/htdocs/configuration.txt"/>
+				<F N="documentation/htdocs/index.html"/>
+				<F N="documentation/htdocs/linux.cfg.txt"/>
+				<F N="documentation/htdocs/uncrustify.html"/>
+			</Folder>
 			<F N="documentation/align-thresholds.txt"/>
 			<F N="documentation/configuration.txt"/>
 			<F N="documentation/example.c"/>
