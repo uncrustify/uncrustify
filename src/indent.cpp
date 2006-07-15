@@ -844,7 +844,7 @@ void indent_preproc(void)
          reindent_line(next, pc->len + 1);
       }
 
-      log_fmt(LPPIS, "%s: Indent line %d to %d (len %d, next->col %d)\n",
+      LOG_FMT(LPPIS, "%s: Indent line %d to %d (len %d, next->col %d)\n",
               __func__, pc->orig_line, pp_level, pc->len, next->column);
    }
 }
