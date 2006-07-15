@@ -14,7 +14,6 @@ Future plans: (in no particular order)
  - Add easily pluggable output for logs and file
  - Build as a shared library on Linux and maybe a dll on windows?
  - Plug into SlickEdit/Gedit/Kedit
- - Port to D (very low priority) and incorporate with a D IDE
  - Create a configuration GUI that allows you to interactively see what each
    option does to your source code
 
@@ -32,7 +31,8 @@ Changes in uncrustify-0.0.22
  - fix align_var_def threshold
  - Improve handling of "private:" style stuff
  - Handle types with "::" in them
- ** add line breaks for long lines
+ - Add preprocessor spacing and indenting
+ - Fix tab indenting style 1 (tab indent, space align)
 
 
 Changes in uncrustify-0.0.21

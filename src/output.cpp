@@ -93,14 +93,15 @@ void output_parsed(FILE *pfile)
    fprintf(pfile, "-== Options ==-\n");
    output_options(pfile);
    fprintf(pfile, "-=====-\n");
-   fprintf(pfile, "Line      Tag          Parent     Columns  Br/Lvl Flg Nl  Text");
+   fprintf(pfile, "Line      Tag          Parent     Columns  Br/Lvl/pp Flg Nl  Text");
    for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next(pc))
    {
-      fprintf(pfile, "\n%3d> %13.13s[%13.13s][%2d/%2d/%2d][%d/%d][%4x][%d-%d]",
+      fprintf(pfile, "\n%3d> %13.13s[%13.13s][%2d/%2d/%2d][%d/%d/%d][%4x][%d-%d]",
               pc->orig_line, get_token_name(pc->type),
               get_token_name(pc->parent_type),
               pc->column, pc->orig_col, pc->orig_col_end,
-              pc->brace_level, pc->level, pc->flags, pc->nl_count, pc->after_tab);
+              pc->brace_level, pc->level, pc->pp_level,
+              pc->flags, pc->nl_count, pc->after_tab);
 
       if ((pc->type != CT_NEWLINE) && (pc->len != 0))
       {
@@ -199,7 +200,10 @@ void output_text(FILE *pfile)
             if (cpd.settings[UO_indent_with_tabs].n == 1)
             {
                lvlcol = 1 + (pc->brace_level * cpd.settings[UO_indent_columns].n);
-               output_to_column(lvlcol, true);
+               if ((pc->column >= lvlcol) && (lvlcol > 1))
+               {
+                  output_to_column(lvlcol, true);
+               }
             }
             allow_tabs = (cpd.settings[UO_indent_with_tabs].n == 2) ||
                          (chunk_is_comment(pc) &&

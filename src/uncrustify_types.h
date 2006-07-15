@@ -55,6 +55,7 @@ struct parse_frame
 {
    int                      level;           // level of paren
    int                      brace_level;     // level of brace/vbrace
+   int                      pp_level;        // level of preproc #if stuff
 
    int                      sparen_count;
 
@@ -106,7 +107,8 @@ struct chunk_t
    int        column;           /* column of chunk */
    int        nl_count;         /* number of newlines in CT_NEWLINE */
    int        level;            /* nest level in {, (, or [ */
-   int        brace_level;
+   int        brace_level;      /* nest level in braces only */
+   int        pp_level;         /* nest level in #if stuff */
    bool       after_tab;
    int        len;
    const char *str;
@@ -195,6 +197,7 @@ struct cp_data
 
    struct parse_frame frames[16];
    int                frame_count;
+   int                pp_level;
 };
 
 extern struct cp_data cpd;

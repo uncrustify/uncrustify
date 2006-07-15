@@ -53,18 +53,18 @@ enum uncrustify_options
    /*
     * Basic Indenting stuff
     */
-   UO_indent,                   //TODO: 0=don't change indentation, 1=change indentation
+   //UO_indent,                   //TODO: 0=don't change indentation, 1=change indentation
 
    UO_input_tab_size,           // tab size on input file: usually 8
    UO_output_tab_size,          // tab size for output: usually 8
 
    UO_indent_columns,           // ie 3 or 8
    UO_indent_with_tabs,         // 1=only to the 'level' indent, 2=use tabs for indenting
-   UO_indent_brace_struct,      //TODO: spaces to indent brace after struct/enum/union def
-   UO_indent_paren,             //TODO: indent for open paren on next line (1)
+   //UO_indent_brace_struct,      //TODO: spaces to indent brace after struct/enum/union def
+   //UO_indent_paren,             //TODO: indent for open paren on next line (1)
    UO_indent_paren_nl,          // indent-align under paren for open followed by nl
-   UO_leave_preproc_space,      //TODO: if true, leave the spaces between '#' and preprocessor commands
-   UO_pp_indent,                //TODO: spaces to indent preprocessors (0)
+   UO_pp_indent,                // indent preproc 1 space per level (add/ignore/remove)
+   UO_pp_space,                 // spaces between # and word (add/ignore/remove)
 
    UO_indent_switch_case,       // spaces to indent case from switch
    UO_indent_case_body,         // spaces to indent case body from case
@@ -137,11 +137,11 @@ enum uncrustify_options
     * Line splitting options (for long lines)
     */
 
-   UO_code_width,           //TODO: ie 80 columns
-   UO_ls_before_bool_op,    //TODO: break line before of after boolean op
-   UO_ls_before_paren,      //TODO: break before open paren
-   UO_ls_after_arith,       //TODO: break after arith op '+', etc
-   UO_ls_honor_newlines,    //TODO: don't remove newlines on split lines
+   //UO_code_width,           //TODO: ie 80 columns
+   //UO_ls_before_bool_op,    //TODO: break line before of after boolean op
+   //UO_ls_before_paren,      //TODO: break before open paren
+   //UO_ls_after_arith,       //TODO: break after arith op '+', etc
+   //UO_ls_honor_newlines,    //TODO: don't remove newlines on split lines
 
 
    /*
@@ -163,11 +163,11 @@ enum uncrustify_options
    UO_align_var_def_colon,        // align the colon in struct bit fields
    UO_align_var_struct_span,      // span for struct/union (0=don't align)
    UO_align_pp_define_span,       // align bodies in #define statments
-   UO_align_pp_define_col_min,    //TODO: min column for a #define value
-   UO_align_pp_define_col_max,    //TODO: max column for a #define value
+   //UO_align_pp_define_col_min,    //TODO: min column for a #define value
+   //UO_align_pp_define_col_max,    //TODO: max column for a #define value
    UO_align_pp_define_gap,        // min space between define label and value "#define a <---> 16"
-   UO_align_enum_col_min,         //TODO: the min column for enum '=' alignment
-   UO_align_enum_col_max,         //TODO: the max column for enum '=' alignment
+   //UO_align_enum_col_min,         //TODO: the min column for enum '=' alignment
+   //UO_align_enum_col_max,         //TODO: the max column for enum '=' alignment
    UO_align_struct_init_span,     // align structure initializer values
    UO_align_func_proto_span,      // align function prototypes
    UO_align_number_left,          // left-align numbers (not fully supported, yet)
@@ -177,7 +177,7 @@ enum uncrustify_options
                                   // 0: '*' not part of type
                                   // 1: '*' part of the type - no space
                                   // 2: '*' part of type, dangling
-   UO_align_struct_array_brace,   // TODO: align array of structure initializers
+   //UO_align_struct_array_brace,   // TODO: align array of structure initializers
 
 
    /*
@@ -273,20 +273,15 @@ options_name_tab option_name_table[] =
 {
    OPTDEF(align_assign_span,             AT_NUM),
    OPTDEF(align_assign_thresh,           AT_NUM),
-   OPTDEF(align_enum_col_max,            AT_NUM),
-   OPTDEF(align_enum_col_min,            AT_NUM),
    OPTDEF(align_enum_equ,                AT_NUM),
    OPTDEF(align_func_proto_span,         AT_NUM),
    OPTDEF(align_keep_tabs,               AT_BOOL),
    OPTDEF(align_nl_cont,                 AT_BOOL),
    OPTDEF(align_number_left,             AT_BOOL),
    OPTDEF(align_on_tabstop,              AT_BOOL),
-   OPTDEF(align_pp_define_col_max,       AT_NUM),
-   OPTDEF(align_pp_define_col_min,       AT_NUM),
    OPTDEF(align_pp_define_gap,           AT_NUM),
    OPTDEF(align_pp_define_span,          AT_NUM),
    OPTDEF(align_right_cmt_span,          AT_NUM),
-   OPTDEF(align_struct_array_brace,      AT_BOOL),
    OPTDEF(align_struct_init_span,        AT_NUM),
    OPTDEF(align_typedef_gap,             AT_NUM),
    OPTDEF(align_typedef_span,            AT_NUM),
@@ -299,13 +294,10 @@ options_name_tab option_name_table[] =
    OPTDEF(align_var_struct_span,         AT_NUM),
    OPTDEF(align_with_tabs,               AT_BOOL),
    OPTDEF(cmt_star_cont,                 AT_BOOL),
-   OPTDEF(code_width,                    AT_NUM),
    OPTDEF(eat_blanks_after_open_brace,   AT_BOOL),
    OPTDEF(eat_blanks_before_close_brace, AT_BOOL),
-   OPTDEF(indent,                        AT_BOOL),
    OPTDEF(indent_align_string,           AT_BOOL),
    OPTDEF(indent_brace,                  AT_NUM),
-   OPTDEF(indent_brace_struct,           AT_NUM),
    OPTDEF(indent_braces,                 AT_BOOL),
    OPTDEF(indent_case_body,              AT_NUM),
    OPTDEF(indent_case_brace,             AT_NUM),
@@ -313,16 +305,10 @@ options_name_tab option_name_table[] =
    OPTDEF(indent_columns,                AT_NUM),
    OPTDEF(indent_func_call_param,        AT_BOOL),
    OPTDEF(indent_label,                  AT_NUM),
-   OPTDEF(indent_paren,                  AT_NUM),
    OPTDEF(indent_paren_nl,               AT_BOOL),
    OPTDEF(indent_switch_case,            AT_NUM),
    OPTDEF(indent_with_tabs,              AT_NUM),
    OPTDEF(input_tab_size,                AT_NUM),
-   OPTDEF(leave_preproc_space,           AT_BOOL),
-   OPTDEF(ls_after_arith,                AT_BOOL),
-   OPTDEF(ls_before_bool_op,             AT_BOOL),
-   OPTDEF(ls_before_paren,               AT_BOOL),
-   OPTDEF(ls_honor_newlines,             AT_BOOL),
    OPTDEF(mod_full_brace_do,             AT_IARF),
    OPTDEF(mod_full_brace_for,            AT_IARF),
    OPTDEF(mod_full_brace_if,             AT_IARF),
@@ -367,7 +353,8 @@ options_name_tab option_name_table[] =
    OPTDEF(nl_union_brace,                AT_IARF),
    OPTDEF(nl_while_brace,                AT_IARF),
    OPTDEF(output_tab_size,               AT_NUM),
-   OPTDEF(pp_indent,                     AT_NUM),
+   OPTDEF(pp_indent,                     AT_IARF),
+   OPTDEF(pp_space,                      AT_IARF),
    OPTDEF(sp_after_angle,                AT_IARF),
    OPTDEF(sp_after_cast,                 AT_IARF),
    OPTDEF(sp_after_comma,                AT_IARF),

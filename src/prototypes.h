@@ -46,6 +46,7 @@ const options_name_tab *get_option_name(int uo);
  */
 
 void indent_text(void);
+void indent_preproc(void);
 void indent_to_column(chunk_t *pc, int column);
 void reindent_line(chunk_t *pc, int column);
 
@@ -143,7 +144,7 @@ void pf_push_under(struct parse_frame *pf);
 void pf_copy_tos(struct parse_frame *pf);
 void pf_trash_tos(void);
 void pf_pop(struct parse_frame *pf);
-void pf_check(struct parse_frame *frm, chunk_t *pc);
+int  pf_check(struct parse_frame *frm, chunk_t *pc);
 
 
 

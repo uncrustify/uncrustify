@@ -32,9 +32,10 @@ static bool check_complex_statements(struct parse_frame *frm, chunk_t *pc);
 static bool handle_complex_close(struct parse_frame *frm, chunk_t *pc);
 
 
-static void preproc_start(struct parse_frame *frm, chunk_t *pc)
+static int preproc_start(struct parse_frame *frm, chunk_t *pc)
 {
    chunk_t *next;
+   int     pp_level = cpd.pp_level;
 
    /* Get the type of preprocessor and handle it */
    next = chunk_get_next_ncnl(pc);
@@ -62,9 +63,10 @@ static void preproc_start(struct parse_frame *frm, chunk_t *pc)
       else
       {
          /* Check for #if, #else, #endif, etc */
-         pf_check(frm, next);
+         pp_level = pf_check(frm, next);
       }
    }
+   return(pp_level);
 }
 
 static void print_stack(int logsev, const char *str,
@@ -103,10 +105,12 @@ void brace_cleanup(void)
 {
    chunk_t            *pc;
    struct parse_frame frm;
+   int pp_level;
 
    memset(&frm, 0, sizeof(frm));
 
    cpd.in_preproc = CT_NONE;
+   cpd.pp_level   = 0;
 
    pc = chunk_get_head();
    while (pc != NULL)
@@ -124,14 +128,16 @@ void brace_cleanup(void)
       }
 
       /* Check for a preprocessor start */
+      pp_level = cpd.pp_level;
       if (pc->type == CT_PREPROC)
       {
-         preproc_start(&frm, pc);
+         pp_level = preproc_start(&frm, pc);
       }
 
       /* Assume the level won't change */
       pc->level       = frm.level;
       pc->brace_level = frm.brace_level;
+      pc->pp_level    = pp_level;
 
       /**
        * #define bodies get the full formatting treatment

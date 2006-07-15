@@ -95,6 +95,16 @@ argval_t do_space(chunk_t *first, chunk_t *second)
       return(AV_ADD);
    }
 
+   if (first->type == CT_PREPROC)
+   {
+      /* Remove spaces, unless we are ignoring. See indent_preproc() */
+      if (cpd.settings[UO_pp_space].a == AV_IGNORE)
+      {
+         return(AV_IGNORE);
+      }
+      return(AV_REMOVE);
+   }
+
    if (second->type == CT_SEMICOLON)
    {
       arg = cpd.settings[UO_sp_before_semi].a;
@@ -479,17 +489,6 @@ void space_text(void)
       {
          column = next->column;
       }
-      //      /* The the next guy is a comment, make sure there is a space */
-      //      else if ((next->type == CT_COMMENT) ||
-      //               (next->type == CT_COMMENT_CPP) ||
-      //               (next->type == CT_COMMENT_MULTI))
-      //      {
-      //         column += pc->len + 1;
-      //         if (next->column < column)
-      //         {
-      //            next->column = column;
-      //         }
-      //      }
       else
       {
          /* Set to the minimum allowed column */

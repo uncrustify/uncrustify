@@ -54,6 +54,9 @@
 
 00600  indent.cfg  c/dos.c  c/00600-dos.c
 00601  indent.cfg  c/mac.c  c/00601-mac.c
+00611  pp-indent-1.cfg	c/pp-space.c	c/00611-pp-space-1.c
+00612  pp-indent-2.cfg	c/pp-space.c	c/00612-pp-space-2.c
+00613  pp-indent-3.cfg	c/pp-space.c	c/00613-pp-space-3.c
 
 # function def newlines
 00701  func-def-1.cfg  c/function-def.c  c/00701-func-def-1.c

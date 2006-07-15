@@ -52,6 +52,7 @@ enum
    LBCSSWAP  = 39,    /* Brace cleanup stack - log swaps */
    LFTOR     = 40,    /* Class Ctor or Dtor */
    LAS       = 41,    /* align_stack */
+   LPPIS     = 42,    /* Preprocessor Indent and Space */
 };
 
 #endif   /* LOG_LEVELS_H_INCLUDED */

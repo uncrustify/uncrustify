@@ -140,10 +140,14 @@ void pf_pop(struct parse_frame *pf)
    //fprintf(stderr, "%s: count = %d\n", __func__, cpd.frame_count);
 }
 
-void pf_check(struct parse_frame *frm, chunk_t *pc)
+/**
+ * Returns the pp_indent to use for this line
+ */
+int pf_check(struct parse_frame *frm, chunk_t *pc)
 {
    int        in_ifdef = frm->in_ifdef;
    int        b4_cnt   = cpd.frame_count;
+   int        pp_level = cpd.pp_level;
    const char *txt     = NULL;
 
    if ((pc->flags & PCF_IN_PREPROC) != 0)
@@ -153,12 +157,14 @@ void pf_check(struct parse_frame *frm, chunk_t *pc)
 
       if (pc->type == CT_PP_IF)
       {
+         cpd.pp_level++;
          pf_push(frm);
          frm->in_ifdef = CT_PP_IF;
          txt           = "if-push";
       }
       else if (pc->type == CT_PP_ELSE)
       {
+         pp_level--;
          if (frm->in_ifdef == CT_PP_IF)
          {
             /* need to switch */
@@ -180,6 +186,9 @@ void pf_check(struct parse_frame *frm, chunk_t *pc)
       }
       else if (pc->type == CT_PP_ENDIF)
       {
+         cpd.pp_level--;
+         pp_level--;
+
          if (frm->in_ifdef == CT_PP_ELSE)
          {
             pf_trash_tos();
@@ -207,4 +216,6 @@ void pf_check(struct parse_frame *frm, chunk_t *pc)
       LOG_FMT(LPF, " <Out>");
       pf_log(LPF, frm);
    }
+
+   return(pp_level);
 }

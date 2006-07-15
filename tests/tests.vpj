@@ -71,6 +71,7 @@
 		<Folder Name="config">
 			<F N="config/align.cfg"/>
 			<F N="config/ben.cfg"/>
+			<F N="config/blc-1.cfg"/>
 			<F N="config/bool-pos-eol.cfg"/>
 			<F N="config/bool-pos-sol.cfg"/>
 			<F N="config/brace-allman.cfg"/>
@@ -90,6 +91,9 @@
 			<F N="config/func-def-3.cfg"/>
 			<F N="config/indent.cfg"/>
 			<F N="config/mono.cfg"/>
+			<F N="config/pp-indent-1.cfg"/>
+			<F N="config/pp-indent-2.cfg"/>
+			<F N="config/pp-indent-3.cfg"/>
 		</Folder>
 		<Folder Name="input">
 			<Folder Name="c">
