@@ -76,13 +76,13 @@
 					<F N="documentation/htdocs/examples/example.c"/>
 				</Folder>
 				<F N="documentation/htdocs/ben.cfg.txt"/>
+				<F N="documentation/htdocs/ChangeLog"/>
 				<F N="documentation/htdocs/configuration.txt"/>
 				<F N="documentation/htdocs/index.html"/>
 				<F N="documentation/htdocs/linux.cfg.txt"/>
 				<F N="documentation/htdocs/uncrustify.html"/>
 			</Folder>
 			<F N="documentation/align-thresholds.txt"/>
-			<F N="documentation/configuration.txt"/>
 			<F N="documentation/example.c"/>
 			<F N="documentation/goals.txt"/>
 			<F N="documentation/paren_stack.txt"/>
