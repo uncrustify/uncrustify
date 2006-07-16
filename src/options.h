@@ -226,8 +226,8 @@ enum uncrustify_options
    UO_nl_after_func_body,            // after the closing brace of a function body
    UO_nl_after_func_proto,           // after each prototype
    UO_nl_after_func_proto_group,     // after a block of prototypes
-   UO_nl_after_var_def_group,        // after a group of variable defs at top of proc
-   UO_nl_after_ifdef,                // after #if or #ifdef - but not if covers whole file
+   //UO_nl_after_var_def_group,        // after a group of variable defs at top of proc
+   //UO_nl_after_ifdef,                // after #if or #ifdef - but not if covers whole file
    UO_nl_max,                        // maximum consecutive newlines (3 = 2 blank lines)
 
    UO_eat_blanks_after_open_brace,   // remove blank lines after {
@@ -320,9 +320,7 @@ options_name_tab option_name_table[] =
    OPTDEF(nl_after_func_body,            AT_NUM),
    OPTDEF(nl_after_func_proto,           AT_NUM),
    OPTDEF(nl_after_func_proto_group,     AT_NUM),
-   OPTDEF(nl_after_ifdef,                AT_NUM),
    OPTDEF(nl_after_return,               AT_BOOL),
-   OPTDEF(nl_after_var_def_group,        AT_NUM),
    OPTDEF(nl_assign_brace,               AT_IARF),
    OPTDEF(nl_before_block_comment,       AT_NUM),
    OPTDEF(nl_before_case,                AT_BOOL),
