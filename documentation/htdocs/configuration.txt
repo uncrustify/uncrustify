@@ -1,6 +1,6 @@
 Quick documentation (probably out of date - see options.h)
 
-$Id: configuration.txt 267 2006-07-01 16:01:14Z bengardner $
+$Id$
 
 There are three type of arguments:
 	- boolean (true/false)
