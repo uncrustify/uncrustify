@@ -52,9 +52,6 @@ Here's a list of all the options from options.h and a brief description.
    newlines:			AUTO/LF/CRLF/CR
 	Sets the line endings for the output file
 
-   indent:			bool
-	Not used
-
    input_tab_size:		number
 	The original tab space value.
 	Used to determine what was already aligned. (TODO)
@@ -73,23 +70,18 @@ Here's a list of all the options from options.h and a brief description.
 	 1 = Use tabs to the brace-level indent (very portable)
 	 2 = Use tabs whenever possible
 	
-   indent_brace_struct:		number		* Not implemented *
-	Spaces to indent brace after struct/enum/union definition.
-	
-   indent_paren:		number		* Not implemented *
-	Indent for open paren on the next line.
-
    indent_paren_nl:		bool
 	If an open paren is followed by a newline, indent the next line
 	so that it lines up after the open paren.
 	Not recommended.
 	
-   leave_preproc_space:		bool		* Not implemented *
-	If true, leave the spaces between '#' and preprocessor commands.
-	For example, don't remove the spaces in "# define FOO".
+   pp_space:			IARF
+	Changes the space between # and, say, define.
+	One space per #if level.
 	
-   pp_indent:			number		* Not implemented *
-	Spaces to indent preprocessors on nested #ifdef/#elif.
+   pp_indent:			IARF
+	Changes the indent of preprocessors.
+	One space per #if level.
 	
    indent_switch_case:		number		* REVISIT: make TRUE/FALSE? *
 	Spaces to indent case from switch (usually 0 or indent_columns).
@@ -311,26 +303,6 @@ mylabel:
 
 
 #
-#  Line splitting options (for long lines)
-#
-
-   code_width:			number		* Not implemented *
-	If the line width exceeds this number of columns,
-	splitting is considered.
-	
-   ls_before_bool_op:		bool		* Not implemented *
-	Split before boolean ops instead of after.
-	
-   ls_before_paren:		bool		* Not implemented *
-	Split before open paren
-	
-   ls_after_arith:		bool		* Not implemented *
-	Split after arith op '+', etc, instead of before
-	
-   ls_honor_newlines:		bool		* Not implemented *
-	Pointless, as I don't plan on combining lines.
-
-#
 #  Code alignment (not left column spaces/tabs)
 #
 
@@ -376,20 +348,8 @@ mylabel:
    align_pp_define_span:	number
 	align bodies in #define statments
 
-   align_pp_define_col_min	number		* Not implemented *
-	Min column for a #define value
-
-   align_pp_define_col_max:	number		* Not implemented *
-	Max column for a #define value
-
    align_pp_define_gap:		number
 	Min space between define label and value "#define a <---> 16"
-
-   align_enum_col_min:		number		* Not implemented *
-	The min column for enum '=' alignment
-
-   align_enum_col_max:		number		* Not implemented *
-	The max column for enum '=' alignment
 
    align_struct_init_span:	number
 	Align structure initializer values
@@ -397,7 +357,7 @@ mylabel:
    align_func_proto_span:	number
 	Align function prototypes
 
-   align_number_left:		bool		* buggy *
+   align_number_left:		bool		* a little buggy *
 	left-align numbers
 
    align_typedef_span:		number
@@ -423,9 +383,6 @@ mylabel:
 	Example: 2
 	typedef int      *PINT;
 	typedef char    **PPCHAR;
-
-   align_struct_array_brace:	bool		* Not Implemented *
-	align array of structure initializers
 
 
 #
@@ -534,28 +491,24 @@ mylabel:
 
 #
 #  Blank line options
+#  Note that it takes 2 newlines to get a blank line.
 #
 
-   blc_before_block_comment:	number			* Not implemented *
-	before a block comment (stand-alone comment-multi)
+   nl_before_block_comment:	number
+	Minimum number of newlines before a multi-line comment.
+	Doesn't apply if after a brace open.
+
+   nl_after_func_body:		number
+	Newlines after the closing brace of a function body
 	
-   blc_after_func_body:		number			* Not implemented *
-	after the closing brace of a function body
+   nl_after_func_proto:		number
+	Newlines after a single function prototype.
 	
-   blc_after_func_proto:	number			* Not implemented *
-	after each prototype
+   nl_after_func_proto_group:	number
+	Newlines after a prototype, if not followed by another prototype.
 	
-   blc_after_func_proto_group:	number			* Not implemented *
-	after a block of prototypes
-	
-   blc_after_var_def_group:	number			* Not implemented *
-	after a group of variable defs at top of proc
-	
-   blc_after_ifdef:		number			* Not implemented *
-	after #if or #ifdef - but not if covers whole file
-	
-   blc_max:			number			* Not implemented *
-	maximum consecutive newlines (3 is good)
+   nl_max:			number
+	The maximum consecutive newlines.
 
    eat_blanks_after_open_brace:	bool
 	Remove blank lines after {
