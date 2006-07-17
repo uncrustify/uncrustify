@@ -40,6 +40,40 @@ static void uncrustify_file(const char *data, int data_len, FILE *pfout,
 static void do_source_file(const char *filename, FILE *pfout, const char *parsed_file);
 static void process_source_list(const char *source_list);
 
+/**
+ * Replace the brain-dead and non-portable basename().
+ * Returns a pointer to the character after the last '/'.
+ * The returned value always points into path, unless path is NULL.
+ *
+ * Input            Returns
+ * NULL          => ""
+ * "/some/path/" => ""
+ * "/some/path"  => "path"
+ * "afile"       => "afile"
+ *
+ * @param path The path to look at
+ * @return     Pointer to the character after the last path seperator
+ */
+const char *path_basename(const char *path)
+{
+   if (path == NULL)
+   {
+      return("");
+   }
+
+   const char *last_path = path;
+   char       ch;
+
+   while ((ch = *path) != 0)
+   {
+      path++;
+      if (ch == '/')
+      {
+         last_path = path;
+      }
+   }
+   return(last_path);
+}
 
 static void usage_exit(const char *msg, const char *argv0, int code)
 {
@@ -62,7 +96,7 @@ static void usage_exit(const char *msg, const char *argv0, int code)
            "If -F is used, the output is is the filename + .uncrustify\n"
            "Otherwise, the output is dumped to stdout.\n"
            "Errors are always dumped to stderr\n",
-           basename(argv0));
+           path_basename(argv0));
    exit(code);
 }
 
