@@ -63,6 +63,9 @@
 00702  func-def-2.cfg  c/function-def.c  c/00702-func-def-2.c
 00703  func-def-3.cfg  c/function-def.c  c/00703-func-def-3.c
 
+# function types
+00801  ben.cfg  c/fcn_type.c  c/00801-func_type.c
+
 # big general tests
 
 20000 ben.cfg c/i2c-core.c c/20000-i2c-core.c

@@ -8,5 +8,5 @@ typedef BOOL (my_fcn_ptr)(char *, int);
 SMU foo(void)
 {
    a = 4;
-   return SMUIFY(a);
+   return(SMUIFY(a));
 }
