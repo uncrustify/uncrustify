@@ -55,12 +55,6 @@ void tokenize_cleanup(void)
          }
       }
 
-      /* CT_WORD followed by CT_PAREN_OPEN is CT_FUNCTION */
-      if ((pc->type == CT_WORD) && (next->type == CT_PAREN_OPEN))
-      {
-         pc->type = CT_FUNCTION;
-      }
-
       /**
        * Change CT_WORD after CT_ENUM, CT_UNION, or CT_STRUCT to CT_TYPE
        * Change CT_WORD before CT_WORD to CT_TYPE

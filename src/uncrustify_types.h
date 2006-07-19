@@ -71,27 +71,52 @@ struct parse_frame
    bool                     maybe_cast;
 };
 
-#define PCF_STMT_START         0x01  /* marks the start of a statment */
-#define PCF_EXPR_START         0x02
-#define PCF_IN_PREPROC         0x04  /* in a preprocessor */
-#define PCF_DONT_INDENT        0x08  /* already aligned! */
-#define PCF_MFC_PAREN          0x10  /* macro function close paren */
-#define PCF_VAR_DEF            0x20  /* variable name in a variable def */
-#define PCF_VAR_1ST            0x40  /* 1st variable def in a statement */
+#define PCF_STMT_START         (1 << 0)  /* marks the start of a statment */
+#define PCF_EXPR_START         (1 << 1)
+#define PCF_IN_PREPROC         (1 << 2)  /* in a preprocessor */
+#define PCF_DONT_INDENT        (1 << 3)  /* already aligned! */
+#define PCF_MFC_PAREN          (1 << 4)  /* macro function close paren */
+#define PCF_VAR_DEF            (1 << 5)  /* variable name in a variable def */
+#define PCF_VAR_1ST            (1 << 6)  /* 1st variable def in a statement */
 #define PCF_VAR_1ST_DEF        (PCF_VAR_DEF | PCF_VAR_1ST)
-#define PCF_VAR_INLINE         0x80  /* type was an inline struct/enum/union */
-#define PCF_DEF_ALIGNED        0x100
-#define PCF_IN_FCN_DEF         0x200 /* inside function def parens */
-#define PCF_IN_FCN_CALL        0x400 /* inside function call parens */
-#define PCF_IN_SPAREN          0x800 /* inside for/if/while/switch parens */
-#define PCF_RIGHT_COMMENT      0x1000
-#define PCF_OLD_FCN_PARAMS     0x2000
-#define PCF_WAS_ALIGNED        0x4000
-#define PCF_OPTIONAL           0x8000
+#define PCF_VAR_INLINE         (1 << 7)  /* type was an inline struct/enum/union */
+#define PCF_DEF_ALIGNED        (1 << 8)
+#define PCF_IN_FCN_DEF         (1 << 9)  /* inside function def parens */
+#define PCF_IN_FCN_CALL        (1 << 10) /* inside function call parens */
+#define PCF_IN_SPAREN          (1 << 11) /* inside for/if/while/switch parens */
+#define PCF_RIGHT_COMMENT      (1 << 12)
+#define PCF_OLD_FCN_PARAMS     (1 << 13)
+#define PCF_WAS_ALIGNED        (1 << 14)
+#define PCF_OPTIONAL           (1 << 15)
+#define PCF_IN_TYPEDEF         (1 << 16)
 
 /* flags that get copied when a new chunk is inserted */
 #define PCF_COPY_FLAGS         (PCF_IN_PREPROC | PCF_IN_SPAREN | \
                                 PCF_IN_FCN_DEF | PCF_IN_FCN_CALL)
+
+#ifdef DEFINE_PCF_NAMES
+static const char *pcf_names[32] =
+{
+   "STMT_START",
+   "EXPR_START",
+   "IN_PREPROC",
+   "DONT_INDENT",
+   "MFC_PAREN",
+   "VAR_DEF",
+   "VAR_1ST",
+   "VAR_1ST_DEF",
+   "VAR_INLINE",
+   "DEF_ALIGNED",
+   "IN_FCN_DEF",
+   "IN_FCN_CALL",
+   "IN_SPAREN",
+   "RIGHT_COMMENT",
+   "OLD_FCN_PARAMS",
+   "WAS_ALIGNED",
+   "OPTIONAL",
+   "IN_TYPEDEF",
+};
+#endif
 
 /** This is the main type of this program */
 struct chunk_t
@@ -103,7 +128,7 @@ struct chunk_t
    UINT32     orig_line;
    UINT32     orig_col;
    UINT32     orig_col_end;
-   UINT16     flags;            /* see PCF_xxx */
+   UINT32     flags;            /* see PCF_xxx */
    int        column;           /* column of chunk */
    int        nl_count;         /* number of newlines in CT_NEWLINE */
    int        level;            /* nest level in {, (, or [ */

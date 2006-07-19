@@ -175,12 +175,23 @@ chunk_t *chunk_get_next_ncnlnp(chunk_t *cur)
 {
    chunk_t *pc = cur;
 
-   do
+   if (chunk_is_preproc(cur))
    {
-      pc = chunk_get_next(pc);
-   } while ((pc != NULL) && (chunk_is_comment(pc) ||
-                             chunk_is_newline(pc) ||
-                             chunk_is_preproc(pc)));
+      do
+      {
+         pc = chunk_get_next(pc);
+      } while ((pc != NULL) && chunk_is_preproc(pc) &&
+               (chunk_is_comment(pc) || chunk_is_newline(pc)));
+   }
+   else
+   {
+      do
+      {
+         pc = chunk_get_next(pc);
+      } while ((pc != NULL) && (chunk_is_comment(pc) ||
+                                chunk_is_newline(pc) ||
+                                chunk_is_preproc(pc)));
+   }
    return(pc);
 }
 
@@ -191,12 +202,23 @@ chunk_t *chunk_get_prev_ncnlnp(chunk_t *cur)
 {
    chunk_t *pc = cur;
 
-   do
+   if (chunk_is_preproc(cur))
    {
-      pc = chunk_get_prev(pc);
-   } while ((pc != NULL) && (chunk_is_comment(pc) ||
-                             chunk_is_newline(pc) ||
-                             chunk_is_preproc(pc)));
+      do
+      {
+         pc = chunk_get_prev(pc);
+      } while ((pc != NULL) && chunk_is_preproc(pc) &&
+               (chunk_is_comment(pc) || chunk_is_newline(pc)));
+   }
+   else
+   {
+      do
+      {
+         pc = chunk_get_prev(pc);
+      } while ((pc != NULL) && (chunk_is_comment(pc) ||
+                                chunk_is_newline(pc) ||
+                                chunk_is_preproc(pc)));
+   }
    return(pc);
 }
 

@@ -15,6 +15,7 @@
  */
 
 const char *get_token_name(c_token_t token);
+void log_pcf_flags(log_sev_t sev, UINT32 flags);
 
 
 /*
@@ -87,6 +88,7 @@ int space_col_align(chunk_t *first, chunk_t *second);
 void fix_symbols(void);
 void combine_labels(void);
 void mark_comments(void);
+void make_type(chunk_t *pc);
 
 
 /*

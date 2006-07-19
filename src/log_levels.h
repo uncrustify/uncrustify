@@ -53,6 +53,8 @@ enum
    LFTOR     = 40,    /* Class Ctor or Dtor */
    LAS       = 41,    /* align_stack */
    LPPIS     = 42,    /* Preprocessor Indent and Space */
+   LTYPEDEF  = 43,    /* Typedef and function types */
+   LVARDEF   = 44,    /* Variable def marking */
 };
 
 #endif   /* LOG_LEVELS_H_INCLUDED */

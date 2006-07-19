@@ -14,6 +14,7 @@
 #include <cstring>
 #include <cerrno>
 #include <cctype>
+#include <cassert>
 
 static void fix_fcn_def_params(chunk_t *pc);
 static void fix_typedef(chunk_t *pc);
@@ -27,9 +28,10 @@ static void mark_define_expressions(void);
 static void process_returns(void);
 static chunk_t *process_return(chunk_t *pc);
 static void mark_class_ctor(chunk_t *pclass);
+static void mark_function_type(chunk_t *pc);
 
 
-static void make_type(chunk_t *pc)
+void make_type(chunk_t *pc)
 {
    if (pc->type == CT_WORD)
    {
@@ -204,11 +206,14 @@ void fix_symbols(void)
       }
       else
       {
-         if ((pc->type == CT_ENUM) ||
-             (pc->type == CT_STRUCT) ||
-             (pc->type == CT_UNION))
+         if ((next->type == CT_ENUM) ||
+             (next->type == CT_STRUCT) ||
+             (next->type == CT_UNION))
          {
-            fix_enum_struct_union(pc);
+            if ((next->flags & PCF_IN_TYPEDEF) == 0)
+            {
+               fix_enum_struct_union(next);
+            }
          }
       }
 
@@ -216,6 +221,10 @@ void fix_symbols(void)
        * A word before an open paren is a function call or definition.
        * CT_WORD => CT_FUNC_CALL or CT_FUNC_DEF
        */
+      if ((pc->type == CT_WORD) && (next->type == CT_PAREN_OPEN))
+      {
+         pc->type = CT_FUNCTION;
+      }
       if (pc->type == CT_FUNCTION)
       {
          mark_function(pc);
@@ -231,6 +240,20 @@ void fix_symbols(void)
          {
             tmp->parent_type = pc->type;
          }
+      }
+
+      /* Check for a close paren followed by an open paren, which means that
+       * we are on a function type declaration (C/C++ only?).
+       * Note that typedefs are already taken card of.
+       */
+      if ((next != NULL) &&
+          ((pc->flags & PCF_IN_TYPEDEF) == 0) &&
+          (pc->parent_type != CT_CAST) &&
+          ((pc->flags & PCF_IN_PREPROC) == 0) &&
+          (*pc->str == ')') &&
+          (*next->str == '('))
+      {
+         mark_function_type(pc);
       }
 
       if (pc->type == CT_CLASS)
@@ -257,7 +280,8 @@ void fix_symbols(void)
               (next->type == CT_QUALIFIER) ||
               (next->type == CT_ENUM) ||
               (next->type == CT_UNION)) &&
-             (prev->type != CT_SIZEOF))
+             (prev->type != CT_SIZEOF) &&
+             ((pc->flags & PCF_IN_TYPEDEF) == 0))
          {
             fix_casts(pc);
          }
@@ -292,7 +316,7 @@ void fix_symbols(void)
       }
 
       /* Detect a variable definition that starts with struct/enum/union */
-      if ((prev->type != CT_TYPEDEF) &&
+      if (((pc->flags & PCF_IN_TYPEDEF) == 0) &&
           (prev->parent_type != CT_CAST) &&
           ((prev->flags & PCF_IN_FCN_DEF) == 0) &&
           ((pc->type == CT_STRUCT) ||
@@ -311,7 +335,6 @@ void fix_symbols(void)
          }
          if ((tmp != NULL) && (chunk_is_star(tmp) || (tmp->type == CT_WORD)))
          {
-            //            fprintf(stderr, "%s:%d mark_variable_definition\n", __func__, __LINE__);
             mark_variable_definition(tmp);
          }
       }
@@ -388,6 +411,46 @@ void fix_symbols(void)
          {
             pc->flags |= PCF_RIGHT_COMMENT;
          }
+      }
+   }
+}
+
+/**
+ * Process a function type that is not in a typedef
+ *
+ * @param pc   Points to the closing paren
+ */
+static void mark_function_type(chunk_t *pc)
+{
+   chunk_t *tmp;
+
+   pc->type        = CT_PAREN_CLOSE;
+   pc->parent_type = CT_NONE;
+
+   /* Step backwards to the previous open paren and mark everything a
+   */
+   tmp = pc;
+   while ((tmp = chunk_get_prev_ncnl(tmp)) != NULL)
+   {
+      if (*tmp->str == '(')
+      {
+         tmp->flags      |= PCF_VAR_1ST_DEF;
+         tmp->type        = CT_PAREN_OPEN;
+         tmp->parent_type = CT_NONE;
+
+         tmp = chunk_get_prev_ncnl(tmp);
+         if (tmp != NULL)
+         {
+            if ((tmp->type == CT_FUNCTION) ||
+                (tmp->type == CT_FUNC_CALL) ||
+                (tmp->type == CT_FUNC_DEF) ||
+                (tmp->type == CT_FUNC_PROTO))
+            {
+               tmp->type = CT_TYPE;
+               tmp->flags &= ~PCF_VAR_1ST_DEF;
+            }
+         }
+         break;
       }
    }
 }
@@ -710,7 +773,7 @@ static void fix_casts(chunk_t *start)
 
 
 /**
- * We are on an enum/struct/union tag that does NOT follow a typedef tag.
+ * We are on an enum/struct/union tag that is NOT inside a typedef.
  * If there is a {...} and words before the ';', then they are variables.
  *
  * tag { ... } [*] word [, [*]word] ;
@@ -718,6 +781,8 @@ static void fix_casts(chunk_t *start)
  * tag [word/type] [word]; -- this gets caught later.
  * fcn(tag [word/type] [word])
  * a = (tag [word/type] [*])&b;
+ *
+ * REVISIT: should this be consolidated with the typedef code?
  */
 static void fix_enum_struct_union(chunk_t *pc)
 {
@@ -765,16 +830,10 @@ static void fix_enum_struct_union(chunk_t *pc)
           (next->type != CT_ASSIGN) &&
           ((in_fcn_paren ^ (next->flags & PCF_IN_FCN_DEF)) == 0))
    {
-      //      fprintf(stderr, "%s: checking %s on line %d col %d\n",
-      //              __func__, next->str, next->orig_line, next->orig_col);
-
       if (next->type == CT_WORD)
       {
          next->flags |= flags;
          flags       &= ~PCF_VAR_1ST;/* clear the first flag for the next items */
-
-         //         fprintf(stderr, "%s: var %s on line %d\n", __func__,
-         //                 next->str, next->orig_line);
       }
 
       if (next->type == CT_STAR)
@@ -794,6 +853,7 @@ static void fix_enum_struct_union(chunk_t *pc)
    }
 }
 
+
 /**
  * We are on a typedef.
  * If the next word is not enum/union/struct, then the last word before the
@@ -806,44 +866,77 @@ static void fix_enum_struct_union(chunk_t *pc)
 static void fix_typedef(chunk_t *start)
 {
    chunk_t   *next;
+   chunk_t   *prev;
    c_token_t tag;
+   bool      is_fcn_type = false;
 
-   next = chunk_get_next_ncnl(start);
-
-   /* Step over enum/struct/union stuff */
-   if ((next->type == CT_ENUM) ||
-       (next->type == CT_STRUCT) ||
-       (next->type == CT_UNION))
+   /* Mark everything in the typedef and scan for ")(", which makes it a
+    * function type
+    */
+   prev = start;
+   next = start;
+   while ((next = chunk_get_next_ncnl(next)) != NULL)
    {
-      tag = next->type;
-      /* the next item should be either a word or { */
-      next = chunk_get_next_ncnl(next);
-      if ((next->type == CT_WORD) || (next->type == CT_TYPE))
+      if (start->level == next->level)
       {
-         next->type = CT_TYPE;
-         next       = chunk_get_next_ncnl(next);
-      }
-      if (next->type == CT_BRACE_OPEN)
-      {
-         next->parent_type = tag;
-         /* Skip to the closing brace */
-         next = chunk_get_next_type(next, CT_BRACE_CLOSE, next->level);
-         if (next != NULL)
+         next->flags |= PCF_IN_TYPEDEF;
+         if (next->type == CT_SEMICOLON)
          {
-            next->parent_type = tag;
+            next->parent_type = CT_TYPEDEF;
+            break;
+         }
+         make_type(next);
+         next->flags &= ~PCF_VAR_1ST_DEF;
+         if ((*prev->str == ')') && (*next->str == '('))
+         {
+            is_fcn_type = true;
+            LOG_FMT(LTYPEDEF, "%s: fcn typedef on line %d\n", __func__, next->orig_line);
          }
       }
-
-      /* now step to the first type part */
-      next = chunk_get_next_ncnl(next);
+      prev = next;
    }
 
-   /* Change everything up the semi into a type */
-   while ((next != NULL) && (next->type != CT_SEMICOLON))
+   if (is_fcn_type)
    {
-      make_type(next);
-      //      fprintf(stderr, "%s: type %s on line %d\n", __func__, next->str, next->orig_line);
+      /* already did everything we need to do */
+      return;
+   }
+
+   /**
+    * Skip over enum/struct/union stuff, as we know it isn't a return type
+    * for a function type
+    */
+   next = chunk_get_next_ncnl(start);
+   if ((next->type != CT_ENUM) &&
+       (next->type != CT_STRUCT) &&
+       (next->type != CT_UNION))
+   {
+      /* We have just a regular typedef */
+      LOG_FMT(LTYPEDEF, "%s: regular typedef on line %d\n", __func__, next->orig_line);
+      return;
+   }
+
+   /* We have a struct/union/enum type, set the parent */
+   tag = next->type;
+
+   LOG_FMT(LTYPEDEF, "%s: %s typedef on line %d\n",
+           __func__, get_token_name(tag), next->orig_line);
+
+   /* the next item should be either a type or { */
+   next = chunk_get_next_ncnl(next);
+   if (next->type == CT_TYPE)
+   {
       next = chunk_get_next_ncnl(next);
+   }
+   if (next->type == CT_BRACE_OPEN)
+   {
+      next->parent_type = tag;
+      /* Skip to the closing brace */
+      next = chunk_get_next_type(next, CT_BRACE_CLOSE, next->level);
+      if (next != NULL)
+      {
+         next->parent_type = tag;
+      }
    }
 }
 
@@ -1009,15 +1102,30 @@ static void mark_variable_stack(ChunkStack& cs, log_sev_t sev)
 
 /**
  * Simply change any STAR to PTR_TYPE and WORD to TYPE
+ *
+ * @param start points to the open paren
  */
-static void fix_fcn_def_params(chunk_t *pc)
+static void fix_fcn_def_params(chunk_t *start)
 {
-   LOG_FMT(LFCNP, "%s: %.*s on line %d\n", __func__, pc->len, pc->str, pc->orig_line);
+   LOG_FMT(LFCNP, "%s: %.*s [%s] on line %d, level %d\n",
+           __func__, start->len, start->str,  get_token_name(start->type), start->orig_line, start->level);
+
+   assert((start->len == 1) && (*start->str == '('));
 
    ChunkStack cs;
 
-   while ((pc != NULL) && (pc->type != CT_FPAREN_CLOSE))
+   chunk_t *pc = start;
+   while ((pc = chunk_get_next_ncnl(pc)) != NULL)
    {
+      LOG_FMT(LFCNP, "%s: looking at %.*s on line %d, level %d\n", __func__, pc->len, pc->str, pc->orig_line, pc->level);
+
+      if (((start->len == 1) && (*start->str == ')')) ||
+          (pc->level <= start->level))
+      {
+         LOG_FMT(LFCNP, "%s: bailed on %.*s on line %d\n", __func__, pc->len, pc->str, pc->orig_line);
+         break;
+      }
+
       if (chunk_is_star(pc))
       {
          pc->type = CT_PTR_TYPE;
@@ -1026,7 +1134,7 @@ static void fix_fcn_def_params(chunk_t *pc)
       {
          pc->type = CT_BYREF;
       }
-      else if (pc->type == CT_WORD)
+      else if ((pc->type == CT_WORD) || (pc->type == CT_TYPE))
       {
          cs.Push(pc);
       }
@@ -1034,7 +1142,6 @@ static void fix_fcn_def_params(chunk_t *pc)
       {
          mark_variable_stack(cs, LFCNP);
       }
-      pc = chunk_get_next_ncnl(pc);
    }
    mark_variable_stack(cs, LFCNP);
 }
@@ -1102,7 +1209,6 @@ static void fix_var_def(chunk_t *start)
    /**
     * OK we have two or more items, mark types up to the end.
     */
-   //   fprintf(stderr, "%s:%d mark_variable_definition\n", __func__, __LINE__);
    mark_variable_definition(before_end);
 }
 
@@ -1162,9 +1268,9 @@ static chunk_t *mark_variable_definition(chunk_t *start)
          pc->flags |= flags;
          flags     &= ~PCF_VAR_1ST;
 
-         //         fprintf(stderr, "%s:%d marked '%s'[%s] in col %d\n",
-         //                 __func__, pc->orig_line, pc->str,
-         //                 get_token_name(pc->type), pc->orig_col);
+         LOG_FMT(LVARDEF, "%s:%d marked '%.*s'[%s] in col %d\n",
+                 __func__, pc->orig_line, pc->len, pc->str,
+                 get_token_name(pc->type), pc->orig_col);
       }
       else if (chunk_is_star(pc))
       {
@@ -1202,7 +1308,30 @@ static void mark_function(chunk_t *pc)
    prev = chunk_get_prev_ncnlnp(pc);
    next = chunk_get_next_ncnlnp(pc);
 
-   LOG_FMT(LFCN, "%s: %.*s[%s]\n", __func__, pc->len, pc->str, get_token_name(pc->type));
+   LOG_FMT(LFCN, "%s: %d] %.*s[%s] - level=%d\n", __func__, pc->orig_line, pc->len, pc->str, get_token_name(pc->type), pc->level);
+   LOG_FMT(LFCN, "%s: next=%.*s[%s] - level=%d\n", __func__, next->len, next->str, get_token_name(next->type), next->level);
+
+   /* Find the close paren */
+   paren_close = chunk_get_next_type(pc, CT_FPAREN_CLOSE, pc->level);
+
+   /*FIXME: This should never happen - remove when I am sure it isn't */
+   tmp = chunk_get_next_ncnl(paren_close);
+   if ((tmp != NULL) && (tmp->type == CT_PAREN_OPEN))
+   {
+      LOG_FMT(LERR, "%s: unexpected function variable def on line %d, level=%d\n",
+              __func__, tmp->orig_line, tmp->level);
+      pc->type = CT_TYPE;
+      paren_close->type = CT_PAREN_CLOSE;
+      paren_close->parent_type = CT_NONE;
+      next = chunk_get_next_ncnl(pc);
+      next->type = CT_PAREN_OPEN;
+      next->parent_type = CT_NONE;
+      next->flags |= PCF_VAR_1ST_DEF;
+
+      log_pcf_flags(LSYS, pc->flags);
+      return;
+   }
+
 
    /**
     * Scan to see if this is a function variable def:
@@ -1237,11 +1366,7 @@ static void mark_function(chunk_t *pc)
 
             /* Mark parameters */
             flag_parens(tmp, PCF_IN_FCN_DEF, CT_FPAREN_OPEN, CT_NONE, false);
-            next = chunk_get_next_ncnlnp(tmp);
-            if (next->level > tmp->level)
-            {
-               fix_fcn_def_params(next);
-            }
+            fix_fcn_def_params(tmp);
             return;
          }
       }
@@ -1339,11 +1464,7 @@ static void mark_function(chunk_t *pc)
       }
 
       /* Mark parameters */
-      tmp = chunk_get_next_ncnl(next);
-      if (tmp->level > next->level)
-      {
-         fix_fcn_def_params(tmp);
-      }
+      fix_fcn_def_params(next);
 
       /* Step backwards from pc and mark the parent of the return type */
       tmp = pc;
@@ -1396,17 +1517,28 @@ static void mark_function(chunk_t *pc)
  */
 static void mark_class_ctor(chunk_t *pclass)
 {
+   chunk_t *next;
+
    pclass = chunk_get_next_ncnl(pclass);
 
    chunk_t *pc   = chunk_get_next_ncnl(pclass);
    int     level = pclass->brace_level + 1;
 
    LOG_FMT(LFTOR, "%s: Called on %.*s on line %d\n",
-           __func__, pc->len, pc->str, pc->orig_line);
+           __func__, pclass->len, pclass->str, pclass->orig_line);
+
+   pclass->parent_type = CT_CLASS;
 
    /* Find the open brace, abort on semicolon */
    while ((pc != NULL) && (pc->type != CT_BRACE_OPEN))
    {
+      if ((pc->len == 1) && (*pc->str == ':'))
+      {
+         pc->type = CT_CLASS_COLON;
+         LOG_FMT(LFTOR, "%s: class colon on line %d\n",
+                 __func__, pc->orig_line);
+      }
+
       if (pc->type == CT_SEMICOLON)
       {
          LOG_FMT(LFTOR, "%s: bailed on semicolon on line %d\n",
@@ -1422,6 +1554,8 @@ static void mark_class_ctor(chunk_t *pclass)
       return;
    }
 
+   set_paren_parent(pc, CT_CLASS);
+
    pc = chunk_get_next_ncnl(pc);
    while (pc != NULL)
    {
@@ -1433,22 +1567,22 @@ static void mark_class_ctor(chunk_t *pclass)
 
       if ((pc->type == CT_BRACE_CLOSE) && (pc->brace_level < level))
       {
+         LOG_FMT(LFTOR, "%s: %d] Hit brace close\n", __func__, pc->orig_line);
          return;
       }
 
-      if ((pc->type == CT_FUNCTION) &&
+      next = chunk_get_next_ncnl(pc);
+      if ((next != NULL) && (next->len == 1) && (*next->str == '(') &&
           (pc->len == pclass->len) &&
           (memcmp(pc->str, pclass->str, pc->len) == 0))
       {
          pc->type = CT_FUNC_CLASS;
          LOG_FMT(LFTOR, "%d] Marked CTor/DTor %.*s\n", pc->orig_line, pc->len, pc->str);
          pc = chunk_get_next_ncnl(pc);
+         set_paren_parent(pc, CT_FUNC_CLASS);
          fix_fcn_def_params(pc);
       }
-      else
-      {
-         pc = chunk_get_next_ncnl(pc);
-      }
+      pc = next;
    }
 }
 
@@ -1474,9 +1608,6 @@ static void mark_struct_union_body(chunk_t *start)
          pc = chunk_get_next_ncnlnp(pc);
          continue;
       }
-      //      fprintf(stderr, "%s: line %d '%s' [%s]\n",
-      //              __func__, pc->orig_line, pc->str,
-      //              get_token_name(pc->type));
 
       if ((pc->type == CT_STRUCT) || (pc->type == CT_UNION))
       {

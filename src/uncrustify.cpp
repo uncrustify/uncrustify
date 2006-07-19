@@ -3,7 +3,7 @@
  *
  * $Id$
  */
-#define DEFINE_GLOBAL_DATA
+#define DEFINE_PCF_NAMES
 
 #include "uncrustify_version.h"
 #include "uncrustify_types.h"
@@ -638,4 +638,35 @@ static const char *language_to_string(int lang)
       }
    }
    return("???");
+}
+
+void log_pcf_flags(log_sev_t sev, UINT32 flags)
+{
+   if (!log_sev_on(sev))
+   {
+      return;
+   }
+
+   log_str(sev, "[", 1);
+
+   const char *tolog = NULL;
+   for (int i = 0; i < (int)ARRAY_SIZE(pcf_names); i++)
+   {
+      if ((flags & (1 << i)) != 0)
+      {
+         if (tolog != NULL)
+         {
+            log_str(sev, tolog, strlen(tolog));
+            log_str(sev, ",", 1);
+         }
+         tolog = pcf_names[i];
+      }
+   }
+
+   if (tolog != NULL)
+   {
+      log_str(sev, tolog, strlen(tolog));
+   }
+
+   log_str(sev, "]\n", 2);
 }
