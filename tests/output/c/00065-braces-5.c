@@ -11,9 +11,9 @@ void foo(void)
    {
       ROOT_DEV = Root_RAM0;
    }
-#elif defined(CONFIG_ROOT_NFS)
+#elif defined (CONFIG_ROOT_NFS)
    ROOT_DEV = Root_NFS;
-#elif defined(CONFIG_BLK_DEV_IDEDISK)
+#elif defined (CONFIG_BLK_DEV_IDEDISK)
    ROOT_DEV = Root_HDA1;
 #else
    ROOT_DEV = Root_SDA1;

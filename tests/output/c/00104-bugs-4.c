@@ -12,11 +12,11 @@ static void set_md_connected(CHAR *msg_data)
    rdc_strz(msg_data, MAX_SIZE, &rd_idx, mac_addr, 0);
    rdc_strz(msg_data, MAX_SIZE, &rd_idx, ap_name, 0);
 
-#if defined(DB_MGR_ORACLE)
-   (void) db_set_md_connected(mobile_device_id, ip_addr, mac_addr, ap_name);
+#if defined (DB_MGR_ORACLE)
+   (void)db_set_md_connected(mobile_device_id, ip_addr, mac_addr, ap_name);
    LOG(LFTR, "CONNECTED Loco %s, IP Addr %s,MAC Addr %s, AP Name %s",
        mobile_device_id, ip_addr, mac_addr, ap_name);
-#elif defined(DB_MGR_FILE)
+#elif defined (DB_MGR_FILE)
    LOG(LFTR, "%s CONNECTED Loco %s, IP Addr %s,MAC Addr %s, AP Name %s",
        status_str, mobile_device_id, ip_addr, mac_addr, ap_name);
 #else
