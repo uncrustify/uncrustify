@@ -30,7 +30,7 @@ def run_tests(test_name, config_name, input_name, expected_name):
         print "makedirs(" + resultname[0 : diridx] + ")"
         os.makedirs(resultname[0 : diridx])
 
-    cmd = "../src/uncrustify -L255 -c config/" + config_name + " -f input/" + input_name + " > " + resultname
+    cmd = "../src/uncrustify -q -c config/" + config_name + " -f input/" + input_name + " > " + resultname
     a = os.system(cmd)
     if a != 0:
         print "FAILED: " + test_name
