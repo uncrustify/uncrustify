@@ -669,6 +669,7 @@ static chunk_t *insert_vbrace(chunk_t *pc, bool after,
    chunk.level       = frm->level;
    chunk.brace_level = frm->brace_level;
    chunk.flags       = pc->flags & PCF_COPY_FLAGS;
+   chunk.str         = "";
    if (after)
    {
       chunk.type = CT_VBRACE_CLOSE;

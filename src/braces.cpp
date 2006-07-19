@@ -155,8 +155,10 @@ static void examine_brace(chunk_t *bopen)
       remove_brace(pc);
       bopen->type = CT_VBRACE_OPEN;
       bopen->len  = 0;
+      bopen->str  = "";
       pc->type    = CT_VBRACE_CLOSE;
       pc->len     = 0;
+      pc->str     = "";
 
       LOG_FMT(LBRDEL, " removing braces on line %d and %d\n",
               bopen->orig_line, pc->orig_line);
