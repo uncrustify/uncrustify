@@ -202,6 +202,8 @@ enum uncrustify_options
    UO_nl_struct_brace,           /* nl between struct and brace */
    UO_nl_union_brace,            /* nl between union and brace */
    UO_nl_assign_brace,           /* nl between '=' and brace */
+   UO_nl_class_brace,            /* nl between class name and brace */
+   UO_nl_namespace_brace,        /* nl between namespace name and brace */
 
    UO_nl_do_brace,               /* nl between do and { */
    UO_nl_if_brace,               /* nl between if and { */
@@ -332,6 +334,7 @@ options_name_tab option_name_table[] =
    OPTDEF(nl_bool_pos,                   AT_NUM),
    OPTDEF(nl_brace_else,                 AT_IARF),
    OPTDEF(nl_brace_while,                AT_IARF),
+   OPTDEF(nl_class_brace,                AT_IARF),
    OPTDEF(nl_define_macro,               AT_BOOL),
    OPTDEF(nl_do_brace,                   AT_IARF),
    OPTDEF(nl_else_brace,                 AT_IARF),
@@ -348,6 +351,7 @@ options_name_tab option_name_table[] =
    OPTDEF(nl_func_var_def_blk,           AT_NUM),
    OPTDEF(nl_if_brace,                   AT_IARF),
    OPTDEF(nl_max,                        AT_NUM),
+   OPTDEF(nl_namespace_brace,            AT_IARF),
    OPTDEF(nl_squeeze_ifdef,              AT_BOOL),
    OPTDEF(nl_start_of_file,              AT_IARF),
    OPTDEF(nl_start_of_file_min,          AT_NUM),

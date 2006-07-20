@@ -226,7 +226,7 @@ static void newlines_struct_enum_union(chunk_t *start, argval_t nl_opt)
    pc = chunk_get_next_ncnl(start);
 
    /* step past the named struct/enum/union */
-   if ((pc != NULL) && (pc->type == CT_TYPE))
+   if ((pc != NULL) && ((pc->type == CT_TYPE) || (pc->type == CT_WORD)))
    {
       start = pc;
       pc    = chunk_get_next_ncnl(pc);
@@ -781,6 +781,14 @@ void newlines_cleanup_braces(void)
          {
             newline_func_def(pc);
          }
+      }
+      else if (pc->type == CT_CLASS)
+      {
+         newlines_struct_enum_union(pc, cpd.settings[UO_nl_class_brace].a);
+      }
+      else if (pc->type == CT_NAMESPACE)
+      {
+         newlines_struct_enum_union(pc, cpd.settings[UO_nl_namespace_brace].a);
       }
       else
       {
