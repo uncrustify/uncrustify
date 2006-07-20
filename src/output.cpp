@@ -171,6 +171,14 @@ void output_text(FILE *pfile)
 
    cpd.fout = pfile;
 
+#ifdef WIN32
+   if (cpd.fout == stdout)
+   {
+      strcpy(cpd.newline, "\n");
+      LOG_FMT(LLINEENDS, "Windows stdout line endings work-around enabled\n");
+   }
+#endif
+
    for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next(pc))
    {
       if (pc->type == CT_NEWLINE)
