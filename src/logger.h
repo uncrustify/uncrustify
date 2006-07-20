@@ -112,7 +112,7 @@ void log_fmt(log_sev_t sev, const char *fmt, ...) __attribute__((format(printf, 
 void log_hex(log_sev_t sev, const void *vdata, int len);
 
 #define LOG_HEX(sev, ptr, len) \
-   do { if (log_active(sev)) { log_hex(sev, ptr, len); } } while (0)
+   do { if (log_sev_on(sev)) { log_hex(sev, ptr, len); } } while (0)
 
 
 /**
@@ -131,7 +131,7 @@ void log_hex(log_sev_t sev, const void *vdata, int len);
 void log_hex_blk(log_sev_t sev, const void *data, int len);
 
 #define LOG_HEX_BLK(sev, ptr, len) \
-   do { if (log_active(sev)) { log_hex_blk(sev, ptr, len); } } while (0)
+   do { if (log_sev_on(sev)) { log_hex_blk(sev, ptr, len); } } while (0)
 
 
 /**
