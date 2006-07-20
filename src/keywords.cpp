@@ -126,7 +126,7 @@ static chunk_tag_t keywords[] =
    { "mixin",            CT_CLASS,      LANG_D                                  }, // may need special handling
    { "module",           CT_USING,      LANG_D                                  },
    { "mutable",          CT_MUTABLE,    LANG_C | LANG_CPP                       },
-   { "namespace",        CT_VBRACED,    LANG_C | LANG_CPP | LANG_CS             },
+   { "namespace",        CT_NAMESPACE,  LANG_C | LANG_CPP | LANG_CS             },
    { "native",           CT_QUALIFIER,  LANG_JAVA                               },
    { "new",              CT_NEW,        LANG_CPP | LANG_CS | LANG_D | LANG_JAVA },
    { "not",              CT_SARITH,     LANG_C | LANG_CPP                       },

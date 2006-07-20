@@ -80,6 +80,9 @@ enum uncrustify_options
 
    UO_indent_func_call_param,   // indent continued function calls to indent_columns
 
+   UO_indent_namespace,         // indent stuff inside namespace braces
+   UO_indent_class,             // indent stuff inside class braces
+
    /*
     * Misc inter-element spacing
     */
@@ -301,10 +304,12 @@ options_name_tab option_name_table[] =
    OPTDEF(indent_braces,                 AT_BOOL),
    OPTDEF(indent_case_body,              AT_NUM),
    OPTDEF(indent_case_brace,             AT_NUM),
+   OPTDEF(indent_class,                  AT_BOOL),
    OPTDEF(indent_col1_comment,           AT_BOOL),
    OPTDEF(indent_columns,                AT_NUM),
    OPTDEF(indent_func_call_param,        AT_BOOL),
    OPTDEF(indent_label,                  AT_NUM),
+   OPTDEF(indent_namespace,              AT_BOOL),
    OPTDEF(indent_paren_nl,               AT_BOOL),
    OPTDEF(indent_switch_case,            AT_NUM),
    OPTDEF(indent_with_tabs,              AT_NUM),

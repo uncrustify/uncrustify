@@ -28,6 +28,7 @@ static void mark_define_expressions(void);
 static void process_returns(void);
 static chunk_t *process_return(chunk_t *pc);
 static void mark_class_ctor(chunk_t *pclass);
+static void mark_namespace(chunk_t *pns);
 static void mark_function_type(chunk_t *pc);
 
 
@@ -263,6 +264,11 @@ void fix_symbols(void)
          {
             mark_class_ctor(pc);
          }
+      }
+
+      if (pc->type == CT_NAMESPACE)
+      {
+         mark_namespace(pc);
       }
 
       /*TODO: Check for stuff that can only occur at the start of an statement */
@@ -1585,6 +1591,24 @@ static void mark_class_ctor(chunk_t *pclass)
       pc = next;
    }
 }
+
+
+/**
+ * We're on a 'namespace' skip the word and then set the parent of the braces.
+ */
+static void mark_namespace(chunk_t *pns)
+{
+   pns = chunk_get_next_ncnl(pns);
+   if (pns != NULL)
+   {
+      chunk_t *pc = chunk_get_next_ncnl(pns);
+      if ((pc != NULL) && (pc->type == CT_BRACE_OPEN))
+      {
+         set_paren_parent(pc, CT_NAMESPACE);
+      }
+   }
+}
+
 
 /**
  * Examines the stuff between braces { }.
