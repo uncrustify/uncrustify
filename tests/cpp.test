@@ -13,3 +13,5 @@
 30020 ben.cfg cpp/bool.cpp  cpp/30020-bool.cpp
 30021 ben.cfg cpp/byref.cpp cpp/30021-byref.cpp
 
+30030 avalon.cfg cpp/Timestamp.h cpp/30030-avalon-Timestamp.h
+

@@ -70,6 +70,7 @@
 	<Files AutoFolders="DirectoryView">
 		<Folder Name="config">
 			<F N="config/align.cfg"/>
+			<F N="config/avalon.cfg"/>
 			<F N="config/ben.cfg"/>
 			<F N="config/blc-1.cfg"/>
 			<F N="config/bool-pos-eol.cfg"/>
@@ -142,6 +143,7 @@
 				<F N="input/cpp/constructor.cpp"/>
 				<F N="input/cpp/cout.cpp"/>
 				<F N="input/cpp/strings.cpp"/>
+				<F N="input/cpp/Timestamp.h"/>
 			</Folder>
 			<Folder Name="cs">
 				<F N="input/cs/simple.cs"/>
