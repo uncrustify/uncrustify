@@ -317,14 +317,14 @@ void indent_text(void)
             else if ((pc->parent_type == CT_CLASS) && !cpd.settings[UO_indent_class].b)
             {
                frm.pse[frm.pse_tos].indent -= tabsize;
-               LOG_FMT(LSYS, "!indent_class: %.*s on line %d, indent is %d\n",
-                       pc->len, pc->str, pc->orig_line, frm.pse[frm.pse_tos].indent);
+               //LOG_FMT(LSYS, "!indent_class: %.*s on line %d, indent is %d\n",
+               //        pc->len, pc->str, pc->orig_line, frm.pse[frm.pse_tos].indent);
             }
             else if ((pc->parent_type == CT_NAMESPACE) && !cpd.settings[UO_indent_namespace].b)
             {
                frm.pse[frm.pse_tos].indent -= tabsize;
-               LOG_FMT(LSYS, "!indent_namespace: %.*s on line %d, indent is %d\n",
-                       pc->len, pc->str, pc->orig_line, frm.pse[frm.pse_tos].indent);
+               //LOG_FMT(LSYS, "!indent_namespace: %.*s on line %d, indent is %d\n",
+               //        pc->len, pc->str, pc->orig_line, frm.pse[frm.pse_tos].indent);
             }
          }
 
