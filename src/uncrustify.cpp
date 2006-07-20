@@ -367,7 +367,7 @@ static void do_source_file(const char *filename, FILE *pfout, const char *parsed
    }
 
    /* Try to read in the source file */
-   p_file = fopen(filename, "r");
+   p_file = fopen(filename, "rb");
    if (p_file == NULL)
    {
       LOG_FMT(LERR, "open(%s) failed: %s\n", filename, strerror(errno));
@@ -392,7 +392,7 @@ static void do_source_file(const char *filename, FILE *pfout, const char *parsed
 
       snprintf(outname, sizeof(outname), "%s.uncrustify", filename);
 
-      pfout = fopen(outname, "w");
+      pfout = fopen(outname, "wb");
       if (pfout == NULL)
       {
          LOG_FMT(LERR, "Unable to create %s: %s (%d)\n",
