@@ -223,13 +223,19 @@ static void newlines_struct_enum_union(chunk_t *start, argval_t nl_opt)
 
    //fprintf(stderr, "%s(%s, %d)\n", __func__, start->str, nl_opt);
 
-   pc = chunk_get_next_ncnl(start);
-
-   /* step past the named struct/enum/union */
-   if ((pc != NULL) && ((pc->type == CT_TYPE) || (pc->type == CT_WORD)))
+   /* step past any junk between the keyword and the open brace
+    * Quit if we hit a semicolon, which is not expected.
+    */
+   int level = start->level;
+   pc = start;
+   while (((pc = chunk_get_next_ncnl(pc)) != NULL) && (pc->level >= level))
    {
+      if ((pc->level == level) &&
+          ((pc->type == CT_BRACE_OPEN) || (pc->type == CT_SEMICOLON)))
+      {
+         break;
+      }
       start = pc;
-      pc    = chunk_get_next_ncnl(pc);
    }
 
    /* If we hit a brace open, then we need to toy with the newlines */
