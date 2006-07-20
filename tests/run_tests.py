@@ -13,6 +13,12 @@ import sys
 import os
 import string
 
+NORMAL = "\033[0m"
+GREEN  = "\033[92m"
+YELLOW = "\033[93m"
+
+quiet = False
+
 def usage_exit():
     print "Usage: \n" + sys.argv[0] + " testfile"
     sys.exit()
@@ -23,25 +29,28 @@ def run_tests(test_name, config_name, input_name, expected_name):
     # print "Input:  " + input_name
     # print "Output: " + expected_name
 
-    resultname = 'results/' + expected_name
-    diridx = resultname.rfind('/')
-    resultdir = resultname[0 : diridx]
-    if diridx > 8 and not os.path.exists(resultdir):
-        print "makedirs(" + resultname[0 : diridx] + ")"
-        os.makedirs(resultname[0 : diridx])
+    resultname = os.path.join('results', expected_name)
+    try:
+        os.makedirs(os.path.dirname(resultname))
+    except:
+        pass
 
-    cmd = "../src/uncrustify -q -c config/" + config_name + " -f input/" + input_name + " > " + resultname
+    cmd = "../src/uncrustify -q -c config/%s -f input/%s > %s" % (config_name, input_name, resultname)
+    #print "RUN: " + cmd
     a = os.system(cmd)
     if a != 0:
-        print "FAILED: " + test_name
+        print RED + "FAILED: " + NORMAL + test_name
         return
 
-    b = os.system("diff -u " + resultname + " output/" + expected_name + " > /dev/null")
+    cmd = "diff -u %s output/%s > /dev/null" % (resultname, expected_name)
+    #print "RUN: " + cmd
+    b = os.system(cmd)
     if b != 0:
-        print "MISMATCH: " + test_name
+        print YELLOW + "MISMATCH: " + NORMAL + test_name
         return
 
-    print "PASSED: " + test_name
+    if not quiet:
+        print GREEN + "PASSED: " + NORMAL + test_name
 
 def process_test_file(filename):
     fd = open(filename, "r")
@@ -61,11 +70,21 @@ def process_test_file(filename):
 # entry point
 #
 
-if len(sys.argv) < 2:
-    usage_exit()
+if __name__ == '__main__':
 
-for item in sys.argv[1:]:
-    process_test_file(item)
+    args = []
+    the_tests = []
+    for arg in sys.argv[1:]:
+        if arg == '-q':
+            quiet = True
+        else:
+            args.append(arg)
 
-sys.exit()
+    if len(args) == 0:
+        the_tests += "c-sharp c cpp d java".split()
+
+    for item in the_tests:
+        process_test_file(item + '.test')
+
+    sys.exit()
 
