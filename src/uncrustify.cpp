@@ -136,6 +136,11 @@ int main(int argc, char *argv[])
       usage_exit(NULL, argv[0], 0);
    }
 
+#ifdef WIN32
+   /* tell windoze not to change what I write to stdout */
+   _setmode(_fileno(stdout), _O_BINARY);
+#endif
+
    /* Init logging */
    log_init(stderr);
    if (arg.Present("-q"))

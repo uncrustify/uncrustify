@@ -48,4 +48,8 @@ typedef unsigned int       UINT32;
 #undef strcasecmp
 #define strcasecmp    _strcmpi
 
+/* includes for _setmode() */
+#include <io.h>
+#include <fcntl.h>
+
 #endif   /* WINDOWS_COMPAT_H_INCLUDED */
