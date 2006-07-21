@@ -17,7 +17,7 @@ NORMAL = "\033[0m"
 GREEN  = "\033[92m"
 YELLOW = "\033[93m"
 
-quiet = False
+log_level = 1
 
 def usage_exit():
     print "Usage: \n" + sys.argv[0] + " testfile"
@@ -36,20 +36,22 @@ def run_tests(test_name, config_name, input_name, expected_name):
         pass
 
     cmd = "../src/uncrustify -q -c config/%s -f input/%s > %s" % (config_name, input_name, resultname)
-    #print "RUN: " + cmd
+    if log_level >= 2:
+        print "RUN: " + cmd
     a = os.system(cmd)
     if a != 0:
         print RED + "FAILED: " + NORMAL + test_name
         return
 
     cmd = "diff -u %s output/%s > /dev/null" % (resultname, expected_name)
-    #print "RUN: " + cmd
+    if log_level >= 2:
+        print "RUN: " + cmd
     b = os.system(cmd)
     if b != 0:
         print YELLOW + "MISMATCH: " + NORMAL + test_name
         return
 
-    if not quiet:
+    if log_level >= 1:
         print GREEN + "PASSED: " + NORMAL + test_name
 
 def process_test_file(filename):
@@ -76,12 +78,19 @@ if __name__ == '__main__':
     the_tests = []
     for arg in sys.argv[1:]:
         if arg == '-q':
-            quiet = True
+            log_level = 0
+        elif arg == '-v':
+            log_level = 2
         else:
             args.append(arg)
 
     if len(args) == 0:
         the_tests += "c-sharp c cpp d java".split()
+    else:
+        the_tests += args
+
+    #print args
+    print "Tests: " + str(the_tests)
 
     for item in the_tests:
         process_test_file(item + '.test')
