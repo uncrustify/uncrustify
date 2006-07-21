@@ -24,7 +24,11 @@ Future plans: (in no particular order)
 Changes in uncrustify-0.0.23
 -------------------------------------------------------------------------------
  - Fix some crash bug and some formatting problems
+ - Fix Windows CRLF issues (binary vs text mode)
  - Add indent_class and indent_namespace
+ - Add nl_class_brace and nl_namespace_brace
+ - Add handling of operator stuff in CPP
+ - Improve the test script a bit
 
 
 Changes in uncrustify-0.0.22
