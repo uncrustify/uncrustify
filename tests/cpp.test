@@ -14,6 +14,7 @@
 30021 ben.cfg cpp/byref.cpp cpp/30021-byref.cpp
 
 30030 avalon.cfg cpp/Timestamp.h cpp/30030-avalon-Timestamp.h
+30031 avalon.cfg cpp/operator.cpp cpp/30031-operator.cpp
 
 30040 nl_class-r.cfg cpp/nl-class.h cpp/30040-nl_class-r.h
 30041 nl_class-a.cfg cpp/nl-class.h cpp/30041-nl_class-a.h

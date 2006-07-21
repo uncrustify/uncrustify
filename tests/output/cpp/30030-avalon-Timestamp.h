@@ -45,7 +45,7 @@ virtual ~Timestamp();
  * @param rhs The other timestamp
  * @return The resulting timestamp
  */
-Timestamp operator + (const Timestamp & rhs) const;
+Timestamp operator +(const Timestamp& rhs) const;
 
 /**
  * Substracts two timestamps.
@@ -53,7 +53,7 @@ Timestamp operator + (const Timestamp & rhs) const;
  * @param rhs The other timestamp
  * @return The resulting timestamp
  */
-Timestamp operator - (const Timestamp & rhs) const;
+Timestamp operator -(const Timestamp& rhs) const;
 
 /**
  * Compares two timestamps.
@@ -61,7 +61,7 @@ Timestamp operator - (const Timestamp & rhs) const;
  * @param rhs The other timestamp
  * @return true if timestamp is smaller than the given timestamp
  */
-bool operator < (const Timestamp & rhs) const;
+bool operator <(const Timestamp& rhs) const;
 
 /**
  * Compares two timestamps.
@@ -69,7 +69,7 @@ bool operator < (const Timestamp & rhs) const;
  * @param rhs The other timestamp
  * @return true if timestamp is greater than the given timestamp
  */
-bool operator > (const Timestamp & rhs) const;
+bool operator >(const Timestamp& rhs) const;
 
 /**
  * Compares two timestamps.
@@ -77,7 +77,7 @@ bool operator > (const Timestamp & rhs) const;
  * @param rhs The other timestamp
  * @return true if timestamp is equal to the given timestamp
  */
-bool operator == (const Timestamp & rhs) const;
+bool operator ==(const Timestamp& rhs) const;
 
 /**
  * Compares two timestamps.
@@ -85,14 +85,14 @@ bool operator == (const Timestamp & rhs) const;
  * @param rhs The other timestamp
  * @return true if timestamp is not equal to the given timestamp
  */
-bool operator != (const Timestamp & rhs) const;
+bool operator !=(const Timestamp& rhs) const;
 
 /**
  * Adds an other timestamp.
  *
  * @param rhs The other timestamp
  */
-void operator += (const Timestamp & rhs);
+void operator +=(const Timestamp& rhs);
 
 /**
  * Adds milliseconds.
@@ -157,9 +157,9 @@ long sec;
 /** The nanoseconds */
 unsigned long nsec;
 
-InStream & operator << (InStream & in);
+InStream& operator <<(InStream& in);
 
-OutStream & operator >> (OutStream & out) const;
+OutStream& operator >>(OutStream& out) const;
 };
 } // namespace
 
