@@ -1424,6 +1424,8 @@ static void mark_function(chunk_t *pc)
              ((prev->type == CT_TYPE) ||
               (prev->type == CT_WORD) ||
               (prev->type == CT_DC_MEMBER) ||
+              (prev->type == CT_OPERATOR) ||
+              chunk_is_addr(prev) ||
               chunk_is_star(prev)))
       {
          LOG_FMT(LFCN, "FCN_DEF due to %.*s[%s] ",

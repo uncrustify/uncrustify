@@ -122,6 +122,18 @@ void tokenize_cleanup(void)
          pc->type = CT_WORD;
       }
 
+      /* Change item after operator (>=, ==, etc) to a FUNC_OPERATOR */
+      if (pc->type == CT_OPERATOR)
+      {
+         next->type        = CT_FUNCTION;
+         next->parent_type = CT_OPERATOR;
+
+         if (chunk_is_addr(prev))
+         {
+            prev->type = CT_BYREF;
+         }
+      }
+
       /* Change private, public, protected into either a qualifier or label */
       if (pc->type == CT_PRIVATE)
       {
