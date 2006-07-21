@@ -151,6 +151,36 @@ Here's a list of all the options from options.h and a brief description.
 	   a--;
 	   }
 	
+   indent_class:		bool
+	Whether the class body is indented.
+	
+	Default false:
+	class foo
+	{
+	int bar();
+	}
+	
+	If set to true and indent_columns=3
+	class foo
+	{
+	   int bar();
+	}
+	
+   indent_namespace:		bool
+	Whether the namespace body is indented.
+	
+	Default false:
+	namespace foo
+	{
+	int bar();
+	}
+	
+	If set to true and indent_columns=3
+	namespace foo
+	{
+	   int bar();
+	}
+	
    indent_label:		number
 	How to indent goto labels.
 	> 0 : Absolute column (1=leftmost column)
@@ -488,6 +518,13 @@ mylabel:
 		if (something &&
 		    somethingelse)
 	1 does the opposite.
+
+   nl_class_brace:		IARF
+	nl between class and {
+	
+   nl_namespace_brace:		IARF
+	nl between namespace and {
+	
 
 #
 #  Blank line options
