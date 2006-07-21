@@ -92,6 +92,10 @@
 			<F N="config/func-def-3.cfg"/>
 			<F N="config/indent.cfg"/>
 			<F N="config/mono.cfg"/>
+			<F N="config/nl_class-a.cfg"/>
+			<F N="config/nl_class-r.cfg"/>
+			<F N="config/nl_namespace-a.cfg"/>
+			<F N="config/nl_namespace-r.cfg"/>
 			<F N="config/pp-indent-1.cfg"/>
 			<F N="config/pp-indent-2.cfg"/>
 			<F N="config/pp-indent-3.cfg"/>
@@ -142,6 +146,8 @@
 				<F N="input/cpp/class.h"/>
 				<F N="input/cpp/constructor.cpp"/>
 				<F N="input/cpp/cout.cpp"/>
+				<F N="input/cpp/nl-class.h"/>
+				<F N="input/cpp/nl-namespace.h"/>
 				<F N="input/cpp/strings.cpp"/>
 				<F N="input/cpp/Timestamp.h"/>
 			</Folder>
@@ -196,6 +202,11 @@
 				<F N="output/cpp/30010-class.h"/>
 				<F N="output/cpp/30020-bool.cpp"/>
 				<F N="output/cpp/30021-byref.cpp"/>
+				<F N="output/cpp/30030-avalon-Timestamp.h"/>
+				<F N="output/cpp/30040-nl_class-r.h"/>
+				<F N="output/cpp/30041-nl_class-a.h"/>
+				<F N="output/cpp/30050-nl_namespace-r.h"/>
+				<F N="output/cpp/30051-nl_namespace-a.h"/>
 			</Folder>
 			<Folder Name="cs">
 				<F N="output/cs/10000-simple.cs"/>

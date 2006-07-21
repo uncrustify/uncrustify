@@ -15,3 +15,9 @@
 
 30030 avalon.cfg cpp/Timestamp.h cpp/30030-avalon-Timestamp.h
 
+30040 nl_class-r.cfg cpp/nl-class.h cpp/30040-nl_class-r.h
+30041 nl_class-a.cfg cpp/nl-class.h cpp/30041-nl_class-a.h
+
+30050 nl_namespace-r.cfg cpp/nl-namespace.h cpp/30050-nl_namespace-r.h
+30051 nl_namespace-a.cfg cpp/nl-namespace.h cpp/30051-nl_namespace-a.h
+
