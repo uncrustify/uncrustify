@@ -1,5 +1,5 @@
 /**
- * @file keywords.c
+ * @file keywords.cpp
  * Manages the table of keywords.
  *
  * $Id$
@@ -7,6 +7,7 @@
 
 #include "uncrustify_types.h"
 #include "char_table.h"
+#include "args.h"
 #include <cstring>
 #include <cerrno>
 #include <cstdlib>
@@ -346,44 +347,60 @@ int load_keyword_file(const char *filename)
 {
    FILE *pf;
    char buf[160];
-   int  idx;
-   char *ptag;
+   char *ptr;
+   char *args[3];
+   int  argc;
+   int  line_no = 0;
 
    pf = fopen(filename, "r");
    if (pf == NULL)
    {
-      fprintf(stderr, "%s: open(%s) failed: %s (%d)\n",
+      LOG_FMT(LERR, "%s: open(%s) failed: %s (%d)\n",
               __func__, filename, strerror(errno), errno);
       return(FAILURE);
    }
 
    while (fgets(buf, sizeof(buf), pf) != NULL)
    {
-      idx = 0;
-      /* Skip leading whitespace */
-      while ((buf[idx] != 0) && isspace(buf[idx]))
-      {
-         idx++;
-      }
-      if ((buf[idx] == '#') || (buf[idx] == 0))
-      {
-         continue;
-      }
-      if ((get_char_table(buf[idx]) & CT_KW1) != 0)
-      {
-         ptag = &buf[idx];
-         while ((buf[idx] != 0) && !isspace(buf[idx]))
-         {
-            idx++;
-         }
-         buf[idx] = 0;
+      line_no++;
 
-         /* TODO: parse off the type and language */
+     /* remove comments */
+     if ((ptr = strchr(buf, '#')) != NULL)
+     {
+        *ptr = 0;
+     }
 
-         add_keyword(ptag, CT_TYPE, LANG_ALL);
-      }
+     argc = Args::SplitLine(buf, args, ARRAY_SIZE(args) - 1);
+     args[argc] = 0;
+
+     if (argc > 0)
+     {
+        if ((argc == 1) && ((get_char_table(*args[0]) & CT_KW1) != 0))
+        {
+           add_keyword(args[0], CT_TYPE, LANG_ALL);
+        }
+        else
+        {
+           LOG_FMT(LWARN, "%s: line %d invalid (starts with '%s')\n",
+               filename, line_no, args[0]);
+        }
+     }
    }
 
    fclose(pf);
    return(SUCCESS);
+}
+
+void output_types(FILE *pfile)
+{
+   int idx;
+
+   if (wl.active > 0)
+   {
+      fprintf(pfile, "-== User Types ==-\n");
+   }
+   for (idx = 0; idx < wl.active; idx++)
+   {
+      fprintf(pfile, "%s\n", wl.p_tags[idx].tag);
+   }
 }

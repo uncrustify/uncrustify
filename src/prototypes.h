@@ -126,8 +126,21 @@ void brace_cleanup(void);
 /*
  *  keywords.c
  */
+
 int load_keyword_file(const char *filename);
 const chunk_tag_t *find_keyword(const char *word, int len);
+void add_keyword(const char *tag, c_token_t type, UINT8 lang_flags);
+void output_types(FILE *pfile);
+
+
+/*
+ *  defines.c
+ */
+
+int load_define_file(const char *filename);
+const define_tag_t *find_define(const char *word, int len);
+void add_define(const char *tag, const char *value);
+void output_defines(FILE *pfile);
 
 
 /*

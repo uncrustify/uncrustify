@@ -158,18 +158,12 @@ typedef struct
    UINT8      lang_flags;
 } chunk_tag_t;
 
-//enum pp_type
-//{
-//   PP_NONE,
-//   PP_UNKNOWN,
-//   PP_OTHER,
-//   PP_INCLUDE,
-//   PP_DEFINE,
-//   PP_DEFINE_BODY,
-//   PP_IF,
-//   PP_ELSE,
-//   PP_ENDIF
-//};
+typedef struct
+{
+   const char *tag;
+   const char *value;
+} define_tag_t;
+
 
 struct align_t
 {

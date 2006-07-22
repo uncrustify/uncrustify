@@ -8,6 +8,8 @@
 #define DEFINE_OPTION_NAME_TABLE
 
 #include "uncrustify_types.h"
+#include "args.h"
+#include "prototypes.h"
 #include <cstring>
 #ifdef HAVE_STRINGS_H
 #include <strings.h> /* strcasecmp() */
@@ -173,24 +175,6 @@ static int convert_value(struct options_name_tab *entry, const char *val)
    return(0);
 }
 
-static char *skip_blanks(char *ptr)
-{
-   while ((*ptr == ' ') || (*ptr == '\t'))
-   {
-      ptr++;
-   }
-   return(ptr);
-}
-
-static char *skip_word(char *ptr)
-{
-   while (isalnum(*ptr) || (*ptr == '_') || (*ptr == '-'))
-   {
-      ptr++;
-   }
-   return(ptr);
-}
-
 int set_option_value(const char *name, const char *value)
 {
    struct options_name_tab *entry;
@@ -208,10 +192,11 @@ int load_option_file(const char *filename)
    FILE *pfile;
    char buffer[256];
    char *ptr;
-   char *name;
-   char *val;
    int  line_num = 0;
    int  id;
+   char *args[32];
+   int  argc;
+   int  idx;
 
    pfile = fopen(filename, "r");
    if (pfile == NULL)
@@ -232,48 +217,51 @@ int load_option_file(const char *filename)
          *ptr = 0;
       }
 
-      /* Check for a blank line */
-      ptr = skip_blanks(buffer);
-      if ((*ptr == 0) || (*ptr == '\n') || (*ptr == '\r'))
+      /* Blow away the '=' to make things simple */
+      if ((ptr = strchr(buffer, '=')) != NULL)
       {
-         continue;
+         *ptr = ' ';
       }
-      name = ptr;
-      ptr  = skip_word(name);
-      /* zero everything until the '=' */
-      while ((*ptr != '=') && (*ptr != 0))
-      {
-         *ptr = 0;
-         ptr++;
-      }
-      if (*ptr != '=')
-      {
-         LOG_FMT(LWARN, "%s:%d - Didn't find a '=' for '%s'\n",
-                 filename, line_num, name);
-         /* TODO: default to some sane ON value - maybe 1? */
-         continue;
-      }
-      *ptr = 0;
-      val  = skip_blanks(ptr + 1);
-      if (*val == 0)
-      {
-         LOG_FMT(LWARN, "%s:%d - Didn't find a value for '%s'\n",
-                 filename, line_num, name);
-         continue;
-      }
-      ptr  = skip_word(val);
-      *ptr = 0;
 
-      /* Set the value */
-      if ((id = set_option_value(name, val)) < 0)
+      /* Blow away all commas */
+      ptr = buffer;
+      while ((ptr = strchr(ptr, ',')) != NULL)
       {
-         LOG_FMT(LWARN, "%s:%d - Unknown symbol '%s'\n",
-                 filename, line_num, name);
+         *ptr = ' ';
+      }
+
+      /* Split the line */
+      argc = Args::SplitLine(buffer, args, ARRAY_SIZE(args) - 1);
+      if (argc < 2)
+      {
+         if (argc > 0)
+         {
+            LOG_FMT(LWARN, "%s:Ignoring line %d: wrong number of arguments: %s...\n",
+                    filename, line_num, buffer);
+         }
+         continue;
+      }
+      args[argc] = NULL;
+
+      if (strcasecmp(args[0], "type") == 0)
+      {
+         for (idx = 1; idx < argc; idx++)
+         {
+            add_keyword(args[idx], CT_TYPE, LANG_ALL);
+         }
+      }
+      else if (strcasecmp(args[0], "define") == 0)
+      {
+         add_define(args[1], args[2]);
       }
       else
       {
-         //         fprintf(stderr, "%s:%d - Set '%s' to %d\n",
-         //                 filename, line_num, name, cpd.settings[id]);
+         /* must be a regular option = value */
+         if ((id = set_option_value(args[0], args[1])) < 0)
+         {
+            LOG_FMT(LWARN, "%s:%d - Unknown symbol '%s'\n",
+                    filename, line_num, args[0]);
+         }
       }
    }
 

@@ -90,8 +90,10 @@ void output_parsed(FILE *pfile)
    chunk_t *pc;
    int     cnt;
 
-   fprintf(pfile, "-== Options ==-\n");
    output_options(pfile);
+   output_defines(pfile);
+   output_types(pfile);
+
    fprintf(pfile, "-=====-\n");
    fprintf(pfile, "Line      Tag          Parent     Columns  Br/Lvl/pp Flg Nl  Text");
    for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next(pc))
@@ -121,6 +123,7 @@ void output_options(FILE *pfile)
    int idx;
    const options_name_tab *ptr;
 
+   fprintf(pfile, "-== Options ==-\n");
    for (idx = 0; idx < UO_option_count; idx++)
    {
       ptr = get_option_name(idx);

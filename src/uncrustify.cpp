@@ -89,6 +89,7 @@ static void usage_exit(const char *msg, const char *argv0, int code)
            " F : specify a file that contains a list of files to process\n"
            " files : whitespace-separated list of files to process\n"
            " t : load a file with types\n"
+           " d : load a file with defines\n"
            " l : language override: C, CPP, D, CS, JAVA\n"
            "--version : print the version and exit\n"
            "\n"
@@ -180,6 +181,27 @@ int main(int argc, char *argv[])
    while ((p_arg = arg.Params("-t", idx)) != NULL)
    {
       load_keyword_file(p_arg);
+   }
+
+   /* add types */
+   idx = 0;
+   while ((p_arg = arg.Params("--type", idx)) != NULL)
+   {
+      add_keyword(p_arg, CT_TYPE, LANG_ALL);
+   }
+
+   /* Load define files */
+   idx = 0;
+   while ((p_arg = arg.Params("-d", idx)) != NULL)
+   {
+      load_define_file(p_arg);
+   }
+
+   /* add defines */
+   idx = 0;
+   while ((p_arg = arg.Params("--define", idx)) != NULL)
+   {
+      add_define(p_arg, NULL);
    }
 
    /* Check for a language override */

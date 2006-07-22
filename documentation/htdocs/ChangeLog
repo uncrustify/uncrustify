@@ -43,6 +43,8 @@ Changes in uncrustify-0.0.23
  - Add handling of operator stuff in CPP
  - Improve the test script a bit
  - Add sp_space_fparens
+ - Add ability to define types in the config file
+ - Started work on improving #ifdef handling by evaluating the preprocessor
 
 
 Changes in uncrustify-0.0.22

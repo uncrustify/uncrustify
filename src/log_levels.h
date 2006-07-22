@@ -55,6 +55,7 @@ enum
    LPPIS     = 42,    /* Preprocessor Indent and Space */
    LTYPEDEF  = 43,    /* Typedef and function types */
    LVARDEF   = 44,    /* Variable def marking */
+   LDEFVAL   = 45,    /* define values */
 };
 
 #endif   /* LOG_LEVELS_H_INCLUDED */
