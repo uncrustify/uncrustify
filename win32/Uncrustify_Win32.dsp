@@ -119,6 +119,10 @@ SOURCE=..\src\combine.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\src\defines.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\src\indent.cpp
 # End Source File
 # Begin Source File
