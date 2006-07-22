@@ -2,7 +2,7 @@
  * @file defines.cpp
  * Manages the table of keywords.
  *
- * $Id: keywords.cpp 318 2006-07-20 02:49:42Z bengardner $
+ * $Id$
  */
 
 #include "uncrustify_types.h"
