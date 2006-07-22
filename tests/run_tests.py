@@ -13,9 +13,60 @@ import sys
 import os
 import string
 
-NORMAL = "\033[0m"
-GREEN  = "\033[92m"
-YELLOW = "\033[93m"
+# OK, so I just had way too much fun with the colors..
+NORMAL      = "\033[0m"
+BOLD        = "\033[1m"
+UNDERSCORE  = "\033[1m"
+REVERSE     = "\033[7m"
+
+FG_BLACK    = "\033[30m"
+FG_RED      = "\033[31m"
+FG_GREEN    = "\033[32m"
+FG_YELLOW   = "\033[33m"
+FG_BLUE     = "\033[34m"
+FG_MAGNETA  = "\033[35m"
+FG_CYAN     = "\033[36m"
+FG_WHITE    = "\033[37m"
+
+FGB_BLACK   = "\033[90m"
+FGB_RED     = "\033[91m"
+FGB_GREEN   = "\033[92m"
+FGB_YELLOW  = "\033[93m"
+FGB_BLUE    = "\033[94m"
+FGB_MAGNETA = "\033[95m"
+FGB_CYAN    = "\033[96m"
+FGB_WHITE   = "\033[97m"
+
+
+BG_BLACK    = "\033[40m"
+BG_RED      = "\033[41m"
+BG_GREEN    = "\033[42m"
+BG_YELLOW   = "\033[43m"
+BG_BLUE     = "\033[44m"
+BG_MAGNETA  = "\033[45m"
+BG_CYAN     = "\033[46m"
+BG_WHITE    = "\033[47m"
+
+BGB_BLACK   = "\033[100m"
+BGB_RED     = "\033[101m"
+BGB_GREEN   = "\033[102m"
+BGB_YELLOW  = "\033[103m"
+BGB_BLUE    = "\033[104m"
+BGB_MAGNETA = "\033[105m"
+BGB_CYAN    = "\033[106m"
+BGB_WHITE   = "\033[107m"
+
+# after all that, I chose c
+FAIL_COLOR     = UNDERSCORE
+PASS_COLOR     = FG_GREEN
+MISMATCH_COLOR = FG_RED #REVERSE
+
+#for i in range(0, 63):
+#    a = NORMAL + '\033[' + str(i) + 'm' + str(i) + '     '
+#    b = NORMAL + '\033[' + str(i+64) + 'm' + str(i+64) + '     '
+#    c = NORMAL + '\033[' + str(i+128) + 'm' + str(i+128) + '     '
+#    d = NORMAL + '\033[' + str(i+192) + 'm' + str(i+192) + '     '
+#    print a + b + c + d
 
 log_level = 1
 
@@ -40,33 +91,39 @@ def run_tests(test_name, config_name, input_name, expected_name):
         print "RUN: " + cmd
     a = os.system(cmd)
     if a != 0:
-        print RED + "FAILED: " + NORMAL + test_name
-        return
+        print FAIL_COLOR + "FAILED: " + NORMAL + test_name
+        return -1
 
     cmd = "diff -u %s output/%s > /dev/null" % (resultname, expected_name)
     if log_level >= 2:
         print "RUN: " + cmd
     b = os.system(cmd)
     if b != 0:
-        print YELLOW + "MISMATCH: " + NORMAL + test_name
-        return
+        print MISMATCH_COLOR + "MISMATCH: " + NORMAL + test_name
+        return -1
 
     if log_level >= 1:
-        print GREEN + "PASSED: " + NORMAL + test_name
+        print PASS_COLOR + "PASSED: " + NORMAL + test_name
+    return 0
 
 def process_test_file(filename):
     fd = open(filename, "r")
     if fd == None:
         print "Unable to open " + filename
-        return
+        return None
     print "Processing " + filename
+    pass_count = 0
+    fail_count = 0
     for line in fd:
         line = string.rstrip(string.lstrip(line))
         parts = string.split(line)
         if (len(parts) < 4) or (parts[0][0] == '#'):
             continue
-        run_tests(parts[0], parts[1], parts[2], parts[3])
-
+        if run_tests(parts[0], parts[1], parts[2], parts[3]) < 0:
+            fail_count += 1
+        else:
+            pass_count += 1
+    return [pass_count, fail_count]
 
 #
 # entry point
@@ -91,9 +148,19 @@ if __name__ == '__main__':
 
     #print args
     print "Tests: " + str(the_tests)
+    pass_count = 0
+    fail_count = 0
 
     for item in the_tests:
-        process_test_file(item + '.test')
+        passfail = process_test_file(item + '.test')
+        if passfail != None:
+            pass_count += passfail[0]
+            fail_count += passfail[1]
 
+    print "Passed %d / %d tests" % (pass_count, pass_count + fail_count)
+    if fail_count > 0:
+        print BOLD + "Failed %d test(s)" % (fail_count) + NORMAL
+    else:
+        print BOLD + "All tests passed" + NORMAL
     sys.exit()
 
