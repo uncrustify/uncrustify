@@ -297,6 +297,10 @@ argval_t do_space(chunk_t *first, chunk_t *second)
    /* "foo(...)" vs "foo( ... )" */
    if ((first->type == CT_FPAREN_OPEN) || (second->type == CT_FPAREN_CLOSE))
    {
+      if ((first->type == CT_FPAREN_OPEN) && (second->type == CT_FPAREN_CLOSE))
+      {
+         return(cpd.settings[UO_sp_inside_fparens].a);
+      }
       return(cpd.settings[UO_sp_inside_fparen].a);
    }
 

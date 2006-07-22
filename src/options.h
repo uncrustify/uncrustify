@@ -94,6 +94,7 @@ enum uncrustify_options
    UO_sp_before_byref,      // space before '&' of 'fcn(int& idx)'
 
    UO_sp_inside_fparen,     // space inside 'foo( xxx )' vs 'foo(xxx)'
+   UO_sp_inside_fparens,    // space inside 'foo( )' vs 'foo()'
    UO_sp_inside_paren,      // space inside '+ ( xxx )' vs '+ (xxx)'
    UO_sp_inside_square,     // space inside 'byte[ 5 ]' vs 'byte[5]'
    UO_sp_inside_sparen,     // space inside 'if( xxx )' vs 'if(xxx)'
@@ -385,6 +386,7 @@ options_name_tab option_name_table[] =
    OPTDEF(sp_inside_braces_enum,         AT_IARF),
    OPTDEF(sp_inside_braces_struct,       AT_IARF),
    OPTDEF(sp_inside_fparen,              AT_IARF),
+   OPTDEF(sp_inside_fparens,             AT_IARF),
    OPTDEF(sp_inside_paren,               AT_IARF),
    OPTDEF(sp_inside_sparen,              AT_IARF),
    OPTDEF(sp_inside_square,              AT_IARF),
