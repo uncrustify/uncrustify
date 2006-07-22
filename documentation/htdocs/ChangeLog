@@ -18,6 +18,19 @@ Future plans: (in no particular order)
    option does to your source code
 
 
+Plans for 0.0.25 (hopefully the last in the 0.0 series)
+-------------------------------------------------------------------------------
+ - add simple line-splitting options
+ - misc cleanup before jumping to 0.1.0
+
+
+Plans for 0.0.24
+-------------------------------------------------------------------------------
+ - add -o option to write to a file instead of stdout
+ - add --folder=XXX to set the output folder (useful when processing multiple files)
+ - add --suffix=XXX to set the output file suffix (ie, --suffix=".unc")
+
+
 ===============================================================================
 
 
@@ -29,6 +42,7 @@ Changes in uncrustify-0.0.23
  - Add nl_class_brace and nl_namespace_brace
  - Add handling of operator stuff in CPP
  - Improve the test script a bit
+ - Add sp_space_fparens
 
 
 Changes in uncrustify-0.0.22
