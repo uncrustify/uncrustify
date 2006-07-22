@@ -143,11 +143,13 @@
 				<F N="input/cpp/alt_tokens.cpp"/>
 				<F N="input/cpp/bool.cpp"/>
 				<F N="input/cpp/byref.cpp"/>
+				<F N="input/cpp/cDisConnnection.h"/>
 				<F N="input/cpp/class.h"/>
 				<F N="input/cpp/constructor.cpp"/>
 				<F N="input/cpp/cout.cpp"/>
 				<F N="input/cpp/nl-class.h"/>
 				<F N="input/cpp/nl-namespace.h"/>
+				<F N="input/cpp/operator.cpp"/>
 				<F N="input/cpp/strings.cpp"/>
 				<F N="input/cpp/Timestamp.h"/>
 			</Folder>
@@ -227,6 +229,5 @@
 		<F N="d.test"/>
 		<F N="java.test"/>
 		<F N="run_tests.py"/>
-		<F N="run_tests.sh"/>
 	</Files>
 </Project>
