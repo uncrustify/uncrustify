@@ -243,6 +243,9 @@ mylabel:
    sp_inside_fparen:		IARF
 	Space inside 'foo( xxx )' vs 'foo(xxx)'
 
+   sp_inside_fparens:		IARF
+	Space inside 'foo( )' vs 'foo()'
+
    sp_inside_paren:		IARF
 	space inside '+ ( xxx )' vs '+ (xxx)'
 
