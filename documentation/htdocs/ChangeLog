@@ -36,13 +36,13 @@ Plans for 0.0.24
 
 Changes in uncrustify-0.0.23
 -------------------------------------------------------------------------------
- - Fix some crash bug and some formatting problems
+ - Fix some crash bugs and some formatting problems
  - Fix Windows CRLF issues (binary vs text mode)
  - Add indent_class and indent_namespace
  - Add nl_class_brace and nl_namespace_brace
  - Add handling of operator stuff in CPP
  - Improve the test script a bit
- - Add sp_space_fparens
+ - Add sp_inside_fparens
  - Add ability to define types in the config file
  - Started work on improving #ifdef handling by evaluating the preprocessor
 
