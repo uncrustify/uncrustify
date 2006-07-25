@@ -90,7 +90,7 @@ static void usage_exit(const char *msg, const char *argv0, int code)
            " files : whitespace-separated list of files to process\n"
            " t : load a file with types\n"
            " d : load a file with defines\n"
-           " l : language override: C, CPP, D, CS, JAVA\n"
+           " l : language override: C, CPP, D, CS, JAVA, PAWN\n"
            "--version : print the version and exit\n"
            "\n"
            "If no input files are specified, the input is read from stdin\n"
@@ -597,6 +597,8 @@ struct file_lang languages[] =
    { ".d",    "D",    LANG_D    },
    { ".cs",   "CS",   LANG_CS   },
    { ".java", "JAVA", LANG_JAVA },
+   { ".pawn", "PAWN", LANG_PAWN },
+   { ".p",    "PAWN", LANG_PAWN },
    { ".h",    "",     LANG_CPP  },
    { ".cxx",  "",     LANG_CPP  },
    { ".hpp",  "",     LANG_CPP  },

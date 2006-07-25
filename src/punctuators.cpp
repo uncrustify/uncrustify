@@ -12,32 +12,32 @@
 /* 4-char symbols */
 static const chunk_tag_t symbols4[] =
 {
-   { "%:%:", CT_PP,      LANG_C | LANG_CPP  },
-   { ">>>=", CT_ASSIGN,  LANG_D | LANG_JAVA },
-   { "!<>=", CT_COMPARE, LANG_D             },
+   { "%:%:", CT_PP,      LANG_C | LANG_CPP              },
+   { ">>>=", CT_ASSIGN,  LANG_D | LANG_JAVA | LANG_PAWN },
+   { "!<>=", CT_COMPARE, LANG_D                         },
 };
 
 /* 3-char symbols */
 static const chunk_tag_t symbols3[] =
 {
-   { "<<=", CT_ASSIGN,  LANG_ALL                   },
-   { ">>=", CT_ASSIGN,  LANG_ALL                   },
-   { "...", CT_ELIPSIS, LANG_C | LANG_CPP | LANG_D },
-   { "->*", CT_MEMBER,  LANG_C | LANG_CPP | LANG_D },
-   { ">>>", CT_ARITH,   LANG_D | LANG_JAVA         },
-   { "!<>", CT_COMPARE, LANG_D                     },
-   { "!>=", CT_COMPARE, LANG_D                     },
-   { "!<=", CT_COMPARE, LANG_D                     },
-   { "!==", CT_COMPARE, LANG_D                     },
-   { "===", CT_COMPARE, LANG_D                     },
-   { "<>=", CT_COMPARE, LANG_D                     },
+   { "<<=", CT_ASSIGN,  LANG_ALL                       },
+   { ">>=", CT_ASSIGN,  LANG_ALL                       },
+   { "...", CT_ELIPSIS, LANG_C | LANG_CPP | LANG_D     },
+   { "->*", CT_MEMBER,  LANG_C | LANG_CPP | LANG_D     },
+   { ">>>", CT_ARITH,   LANG_D | LANG_JAVA | LANG_PAWN },
+   { "!<>", CT_COMPARE, LANG_D                         },
+   { "!>=", CT_COMPARE, LANG_D                         },
+   { "!<=", CT_COMPARE, LANG_D                         },
+   { "!==", CT_COMPARE, LANG_D                         },
+   { "===", CT_COMPARE, LANG_D                         },
+   { "<>=", CT_COMPARE, LANG_D                         },
 };
 
 /* 2-char symbols */
 static const chunk_tag_t symbols2[] =
 {
-   { "++", CT_INCDEC_AFTER, LANG_ALL                             }, /* may change to CT_INCDEC_BEFORE */
-   { "--", CT_INCDEC_AFTER, LANG_ALL                             }, /* may change to CT_INCDEC_BEFORE */
+   { "++", CT_INCDEC_AFTER, LANG_ALL                             },
+   { "--", CT_INCDEC_AFTER, LANG_ALL                             },
    { "%=", CT_ASSIGN,       LANG_ALL                             },
    { "&=", CT_ASSIGN,       LANG_ALL                             },
    { "*=", CT_ASSIGN,       LANG_ALL                             },
@@ -76,32 +76,32 @@ static const chunk_tag_t symbols2[] =
 /* 1-char symbols */
 static const chunk_tag_t symbols1[] =
 {
-   { "#", CT_POUND,        LANG_C | LANG_CPP | LANG_CS | LANG_D },
-   { "%", CT_ARITH,        LANG_ALL                             },
-   { "&", CT_AMP,          LANG_ALL                             },
-   { "*", CT_STAR,         LANG_ALL                             }, /* changed to CT_DEREF or CT_ARITH */
-   { "^", CT_ARITH,        LANG_ALL                             },
-   { "-", CT_MINUS,        LANG_ALL                             }, /* changed to CT_NEG or CT_ARITH */
-   { "+", CT_PLUS,         LANG_ALL                             }, /* may change to CT_ARITH */
-   { "|", CT_ARITH,        LANG_ALL                             },
-   { "/", CT_ARITH,        LANG_ALL                             },
-   { "!", CT_NOT,          LANG_ALL                             },
-   { "~", CT_INV,          LANG_ALL                             },
-   { ",", CT_COMMA,        LANG_ALL                             },
-   { ".", CT_MEMBER,       LANG_ALL                             },
-   { ":", CT_COLON,        LANG_ALL                             },
-   { ";", CT_SEMICOLON,    LANG_ALL                             },
-   { "<", CT_ANGLE_OPEN,   LANG_ALL                             },
-   { ">", CT_ANGLE_CLOSE,  LANG_ALL                             },
-   { "=", CT_ASSIGN,       LANG_ALL                             },
-   { "?", CT_QUESTION,     LANG_ALL                             },
-   { "(", CT_PAREN_OPEN,   LANG_ALL                             },
-   { ")", CT_PAREN_CLOSE,  LANG_ALL                             },
-   { "[", CT_SQUARE_OPEN,  LANG_ALL                             },
-   { "]", CT_SQUARE_CLOSE, LANG_ALL                             },
-   { "{", CT_BRACE_OPEN,   LANG_ALL                             },
-   { "}", CT_BRACE_CLOSE,  LANG_ALL                             },
-   { "$", CT_COMPARE,      LANG_D                               },
+   { "#", CT_POUND,        LANG_C | LANG_CPP | LANG_CS | LANG_D | LANG_PAWN },
+   { "%", CT_ARITH,        LANG_ALL                                         },
+   { "&", CT_AMP,          LANG_ALL                                         },
+   { "*", CT_STAR,         LANG_ALL                                         },
+   { "^", CT_ARITH,        LANG_ALL                                         },
+   { "-", CT_MINUS,        LANG_ALL                                         },
+   { "+", CT_PLUS,         LANG_ALL                                         },
+   { "|", CT_ARITH,        LANG_ALL                                         },
+   { "/", CT_ARITH,        LANG_ALL                                         },
+   { "!", CT_NOT,          LANG_ALL                                         },
+   { "~", CT_INV,          LANG_ALL                                         },
+   { ",", CT_COMMA,        LANG_ALL                                         },
+   { ".", CT_MEMBER,       LANG_ALLC                                        },
+   { ":", CT_COLON,        LANG_ALL                                         },
+   { ";", CT_SEMICOLON,    LANG_ALL                                         },
+   { "<", CT_ANGLE_OPEN,   LANG_ALL                                         },
+   { ">", CT_ANGLE_CLOSE,  LANG_ALL                                         },
+   { "=", CT_ASSIGN,       LANG_ALL                                         },
+   { "?", CT_QUESTION,     LANG_ALL                                         },
+   { "(", CT_PAREN_OPEN,   LANG_ALL                                         },
+   { ")", CT_PAREN_CLOSE,  LANG_ALL                                         },
+   { "[", CT_SQUARE_OPEN,  LANG_ALL                                         },
+   { "]", CT_SQUARE_CLOSE, LANG_ALL                                         },
+   { "{", CT_BRACE_OPEN,   LANG_ALL                                         },
+   { "}", CT_BRACE_CLOSE,  LANG_ALL                                         },
+   { "$", CT_COMPARE,      LANG_D                                           },
 };
 
 const chunk_tag_t *find_punctuator(const char *str, UINT8 lang_flags)

@@ -165,10 +165,25 @@ typedef enum
    CT_PP_IF,            /* #if, #ifdef, or #ifndef */
    CT_PP_ELSE,          /* #else or #elif */
    CT_PP_ENDIF,         /* #endif */
+   CT_PP_ASSERT,
+   CT_PP_EMIT,
+   CT_PP_ENDINPUT,
+   CT_PP_ERROR,
+   CT_PP_FILE,
+   CT_PP_LINE,
+   CT_PP_SECTION,
+   CT_PP_UNDEF,
+   CT_PP_PRAGMA,
    CT_PP_OTHER,         /* #line, #error, #pragma, etc */
    /* end PP types */
 
-   CT_PRAGMA,
+   /* PAWN stuff */
+   CT_CHAR,
+   CT_DEFINED,
+   CT_FORWARD,
+   CT_STATE,
+   CT_STOCK,
+   CT_TAGOF,
 
    /* C-sharp crap */
    CT_LOCK,             /* lock/unlock */

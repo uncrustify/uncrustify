@@ -267,16 +267,12 @@ bool parse_number(chunk_t *pc)
  * @param pc   The structure to update, str is an input.
  * @return     Whether a string was parsed
  */
-bool parse_string(chunk_t *pc)
+static bool parse_string(chunk_t *pc, int quote_idx, bool allow_escape)
 {
-   int escaped = 0;
-   int end_ch;
-   int len = 0;
+   bool escaped = 0;
+   int  end_ch;
+   int  len = quote_idx;
 
-   if (*pc->str == 'L')
-   {
-      len++;
-   }
    end_ch = get_char_table(pc->str[len]) & 0xff;
    len++;
 
@@ -286,7 +282,7 @@ bool parse_string(chunk_t *pc)
       {
          if (pc->str[len] == '\\')
          {
-            escaped = 1;
+            escaped = allow_escape;
          }
          else if (pc->str[len] == end_ch)
          {
@@ -297,7 +293,7 @@ bool parse_string(chunk_t *pc)
       }
       else
       {
-         escaped = 0;
+         escaped = false;
       }
    }
    pc->len     = len;
@@ -541,13 +537,41 @@ static bool parse_next(chunk_t *pc)
       }
    }
 
+   /* PAWN specific stuff */
+   if ((cpd.lang_flags & LANG_PAWN) != 0)
+   {
+      /* Check for PAWN strings: \"hi" or !"hi" or !\"hi" or \!"hi" */
+      if ((pc->str[0] == '\\') || (pc->str[0] == '!'))
+      {
+         if (pc->str[1] == '"')
+         {
+            parse_string(pc, 1, (*pc->str == '!'));
+            return true;
+         }
+         else if (((pc->str[1] == '\\') || (pc->str[1] == '!')) &&
+                  (pc->str[2] == '"'))
+         {
+            parse_string(pc, 2, false);
+            return true;
+         }
+      }
+
+      /* Check for pawn keywords */
+      if ((*pc->str == '@') &&
+          ((get_char_table(pc->str[1]) & CT_KW2) != 0) &&
+          parse_word(pc, true))
+      {
+         return(true);
+      }
+   }
+
    /* Check for L'a', L"abc", 'a', "abc", <abc> strings */
    if (((*pc->str == 'L') && ((pc->str[1] == '"') || (pc->str[1] == '\''))) ||
        (*pc->str == '"') ||
        (*pc->str == '\'') ||
        ((*pc->str == '<') && (cpd.in_preproc == CT_PP_INCLUDE)))
    {
-      parse_string(pc);
+      parse_string(pc, (*pc->str == 'L') ? 1 : 0, true);
       return(true);
    }
 
