@@ -32,6 +32,8 @@
 00105  ben.cfg  c/bugs-5.c  c/00105-bugs-5.c
 00106  ben.cfg  c/bugs-6.c  c/00106-bugs-6.c
 
+00130  ben.cfg  c/minus-minus.c  c/00130-minus-minus.c
+
 # casts
 00150  ben.cfg  c/casts.c   c/00150-casts.c
 

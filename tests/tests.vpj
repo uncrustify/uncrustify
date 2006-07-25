@@ -133,6 +133,8 @@
 				<F N="input/c/ifdef-nest.c"/>
 				<F N="input/c/indent-assign.c"/>
 				<F N="input/c/mac.c"/>
+				<F N="input/c/minus-minus.c"/>
+				<F N="input/c/pp-space.c"/>
 				<F N="input/c/return-multi.c"/>
 				<F N="input/c/struct-brace.c"/>
 				<F N="input/c/switch-case.c"/>
@@ -189,11 +191,25 @@
 				<F N="output/c/00104-bugs-4.c"/>
 				<F N="output/c/00105-bugs-5.c"/>
 				<F N="output/c/00106-bugs-6.c"/>
+				<F N="output/c/00130-minus-minus.c"/>
 				<F N="output/c/00150-casts.c"/>
 				<F N="output/c/00201-case-1.c"/>
 				<F N="output/c/00202-case-2.c"/>
 				<F N="output/c/00203-case-3.c"/>
 				<F N="output/c/00301-align-struct-init.c"/>
+				<F N="output/c/00401-align-equ.c"/>
+				<F N="output/c/00411-align-typedef.c"/>
+				<F N="output/c/00501-bool-pos-eol.c"/>
+				<F N="output/c/00502-bool-pos-sol.c"/>
+				<F N="output/c/00600-dos.c"/>
+				<F N="output/c/00601-mac.c"/>
+				<F N="output/c/00611-pp-space-1.c"/>
+				<F N="output/c/00612-pp-space-2.c"/>
+				<F N="output/c/00613-pp-space-3.c"/>
+				<F N="output/c/00701-func-def-1.c"/>
+				<F N="output/c/00702-func-def-2.c"/>
+				<F N="output/c/00703-func-def-3.c"/>
+				<F N="output/c/00801-func_type.c"/>
 				<F N="output/c/20000-i2c-core.c"/>
 			</Folder>
 			<Folder Name="cpp">
