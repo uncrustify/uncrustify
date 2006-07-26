@@ -1,4 +1,5 @@
-int a = 5;
+int a  = 5;
+int *b = &a;
 int negneg(void)
 {
    return(- -a);
@@ -22,5 +23,10 @@ int posneg(void)
 int negnegneg(void)
 {
    return(- - -a);
+}
+
+int negat(void)
+{
+   return(-*b);
 }
 
