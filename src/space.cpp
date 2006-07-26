@@ -115,6 +115,12 @@ argval_t do_space(chunk_t *first, chunk_t *second)
       return(arg);
    }
 
+   if (((first->type == CT_NEG) || (first->type == CT_POS) || (first->type == CT_ARITH)) &&
+       ((second->type == CT_NEG) || (second->type == CT_POS) || (second->type == CT_ARITH)))
+   {
+      return(AV_ADD);
+   }
+
    /* "return(a);" vs "return (foo_t)a + 3;" vs "return a;" vs "return;" */
    if (first->type == CT_RETURN)
    {

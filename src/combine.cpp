@@ -368,7 +368,14 @@ void fix_symbols(void)
       if ((pc->type == CT_MINUS) ||
           (pc->type == CT_PLUS))
       {
-         pc->type = CT_ARITH;
+         if ((prev->type == CT_POS) || (prev->type == CT_NEG))
+         {
+            pc->type = (pc->type == CT_MINUS) ? CT_NEG : CT_POS;
+         }
+         else
+         {
+            pc->type = CT_ARITH;
+         }
       }
 
       prev = pc;
