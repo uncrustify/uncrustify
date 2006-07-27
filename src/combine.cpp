@@ -22,6 +22,7 @@ static void fix_enum_struct_union(chunk_t *pc);
 static void fix_casts(chunk_t *pc);
 static void fix_var_def(chunk_t *pc);
 static void mark_function(chunk_t *pc);
+static void mark_pawn_function(chunk_t *pc);
 static void mark_struct_union_body(chunk_t *start);
 static chunk_t *mark_variable_definition(chunk_t *start);
 static void mark_define_expressions(void);
@@ -49,50 +50,43 @@ void make_type(chunk_t *pc)
  * Flags everything from the open paren to the close paren.
  *
  * @param po   Pointer to the open parenthesis
+ * @return     The token after the close paren
  */
-static void flag_parens(chunk_t *po, UINT16 flags,
-                        c_token_t opentype, c_token_t parenttype,
-                        bool parent_all)
+static chunk_t *flag_parens(chunk_t *po, UINT16 flags,
+                            c_token_t opentype, c_token_t parenttype,
+                            bool parent_all)
 {
    chunk_t *paren_close;
    chunk_t *pc;
 
-
-   //   po->flags  |= flags;
    paren_close = chunk_skip_to_match(po);
    if (paren_close != NULL)
    {
-      if (po == paren_close)
+      if (po != paren_close)
       {
-         //         fprintf(stderr, "Called on %s on line %d\n",
-         //                 get_token_name(po->type), po->orig_line);
-         return;
-      }
-      for (pc = chunk_get_next(po); pc != paren_close; pc = chunk_get_next(pc))
-      {
-         pc->flags |= flags;
-         if (parent_all)
+         for (pc = chunk_get_next(po); pc != paren_close; pc = chunk_get_next(pc))
          {
-            pc->parent_type = parenttype;
+            pc->flags |= flags;
+            if (parent_all)
+            {
+               pc->parent_type = parenttype;
+            }
+         }
+
+         if (opentype != CT_NONE)
+         {
+            po->type          = opentype;
+            paren_close->type = (c_token_t)(opentype + 1);
+         }
+
+         if (parenttype != CT_NONE)
+         {
+            po->parent_type          = parenttype;
+            paren_close->parent_type = parenttype;
          }
       }
-      //      paren_close->flags |= flags;
-
-      if (opentype != CT_NONE)
-      {
-         po->type          = opentype;
-         paren_close->type = (c_token_t)(opentype + 1);
-      }
-
-      if (parenttype != CT_NONE)
-      {
-         po->parent_type          = parenttype;
-         paren_close->parent_type = parenttype;
-      }
-
-      //      fprintf(stderr, "%s: from line %d to line %d flg=%x\n", __func__,
-      //              po->orig_line, paren_close->orig_line, flags);
    }
+   return(chunk_get_next_ncnl(paren_close));
 }
 
 
@@ -228,18 +222,25 @@ void fix_symbols(void)
       }
       if (pc->type == CT_FUNCTION)
       {
-         mark_function(pc);
+         if ((cpd.lang_flags & LANG_PAWN) != 0)
+         {
+            mark_pawn_function(pc);
+         }
+         else
+         {
+            mark_function(pc);
+         }
       }
 
+      /* Mark function parens and braces */
       if ((pc->type == CT_FUNC_DEF) ||
           (pc->type == CT_FUNC_CALL) ||
           (pc->type == CT_FUNC_PROTO))
       {
-         next->parent_type = pc->type;
-         tmp = chunk_get_next_type(next, (c_token_t)(next->type + 1), next->level);
-         if (tmp != NULL)
+         tmp = flag_parens(next, 0, CT_FPAREN_OPEN, pc->type, false);
+         if ((tmp != NULL) && (tmp->type == CT_BRACE_OPEN))
          {
-            tmp->parent_type = pc->type;
+            set_paren_parent(tmp, pc->type);
          }
       }
 
@@ -441,7 +442,7 @@ static void mark_function_type(chunk_t *pc)
    pc->parent_type = CT_NONE;
 
    /* Step backwards to the previous open paren and mark everything a
-   */
+    */
    tmp = pc;
    while ((tmp = chunk_get_prev_ncnl(tmp)) != NULL)
    {
@@ -459,7 +460,7 @@ static void mark_function_type(chunk_t *pc)
                 (tmp->type == CT_FUNC_DEF) ||
                 (tmp->type == CT_FUNC_PROTO))
             {
-               tmp->type = CT_TYPE;
+               tmp->type   = CT_TYPE;
                tmp->flags &= ~PCF_VAR_1ST_DEF;
             }
          }
@@ -502,7 +503,7 @@ static chunk_t *process_return(chunk_t *pc)
 
    /* grab next and bail if it is a semicolon */
    next = chunk_get_next_ncnl(pc);
-   if ((next == NULL) || (next->type == CT_SEMICOLON))
+   if ((next == NULL) || chunk_is_semicolon(next))
    {
       return(next);
    }
@@ -512,7 +513,7 @@ static chunk_t *process_return(chunk_t *pc)
       /* See if the return is fully paren'd */
       cpar = chunk_get_next_type(next, CT_PAREN_CLOSE, next->level);
       semi = chunk_get_next_ncnl(cpar);
-      if ((semi != NULL) && (semi->type == CT_SEMICOLON))
+      if (chunk_is_semicolon(semi))
       {
          if (cpd.settings[UO_mod_paren_on_return].a == AV_REMOVE)
          {
@@ -554,7 +555,14 @@ static chunk_t *process_return(chunk_t *pc)
    }
 
    /* find the next semicolon on the same level */
-   semi = chunk_get_next_type(next, CT_SEMICOLON, next->level);
+   semi = next;
+   while ((semi = chunk_get_next(semi)) != NULL)
+   {
+      if (chunk_is_semicolon(semi) && (next->level == semi->level))
+      {
+         break;
+      }
+   }
    if (semi != NULL)
    {
       /* add the parens */
@@ -839,7 +847,7 @@ static void fix_enum_struct_union(chunk_t *pc)
    }
 
    /* We are either pointing to a ';' or a variable */
-   while ((next != NULL) && (next->type != CT_SEMICOLON) &&
+   while ((next != NULL) && !chunk_is_semicolon(next) &&
           (next->type != CT_ASSIGN) &&
           ((in_fcn_paren ^ (next->flags & PCF_IN_FCN_DEF)) == 0))
    {
@@ -893,7 +901,7 @@ static void fix_typedef(chunk_t *start)
       if (start->level == next->level)
       {
          next->flags |= PCF_IN_TYPEDEF;
-         if (next->type == CT_SEMICOLON)
+         if (chunk_is_semicolon(next))
          {
             next->parent_type = CT_TYPEDEF;
             break;
@@ -980,7 +988,7 @@ void combine_labels(void)
       {
          hit_class = true;
       }
-      if ((next->type == CT_SEMICOLON) || (next->type == CT_BRACE_OPEN))
+      if (chunk_is_semicolon(next) || (next->type == CT_BRACE_OPEN))
       {
          hit_class = false;
       }
@@ -1121,7 +1129,7 @@ static void mark_variable_stack(ChunkStack& cs, log_sev_t sev)
 static void fix_fcn_def_params(chunk_t *start)
 {
    LOG_FMT(LFCNP, "%s: %.*s [%s] on line %d, level %d\n",
-           __func__, start->len, start->str,  get_token_name(start->type), start->orig_line, start->level);
+           __func__, start->len, start->str, get_token_name(start->type), start->orig_line, start->level);
 
    assert((start->len == 1) && (*start->str == '('));
 
@@ -1237,7 +1245,7 @@ static chunk_t *skip_expression(chunk_t *start)
    while ((pc != NULL) && (pc->level >= start->level))
    {
       if ((pc->level == start->level) &&
-          ((pc->type == CT_SEMICOLON) || (pc->type == CT_COMMA)))
+          (chunk_is_semicolon(pc) || (pc->type == CT_COMMA)))
       {
          return(pc);
       }
@@ -1273,7 +1281,7 @@ static chunk_t *mark_variable_definition(chunk_t *start)
    //            get_token_name(start->type), start->orig_col);
 
    pc = start;
-   while ((pc != NULL) && (pc->type != CT_SEMICOLON) &&
+   while ((pc != NULL) && !chunk_is_semicolon(pc) &&
           (pc->level >= start->level))
    {
       if (pc->type == CT_WORD)
@@ -1301,6 +1309,26 @@ static chunk_t *mark_variable_definition(chunk_t *start)
       pc = chunk_get_next_ncnl(pc);
    }
    return(pc);
+}
+
+
+/**
+ * We are on a function word. we need to:
+ *  - find out if this is a call or prototype or implementation
+ *  - mark return type
+ *  - mark parameter types
+ *  - mark brace pair
+ */
+static void mark_pawn_function(chunk_t *pc)
+{
+   if (pc->brace_level == 0)
+   {
+      pc->type = CT_FUNC_DEF;
+   }
+   else
+   {
+      pc->type = CT_FUNC_CALL;
+   }
 }
 
 /**
@@ -1333,18 +1361,17 @@ static void mark_function(chunk_t *pc)
    {
       LOG_FMT(LERR, "%s: unexpected function variable def on line %d, level=%d\n",
               __func__, tmp->orig_line, tmp->level);
-      pc->type = CT_TYPE;
-      paren_close->type = CT_PAREN_CLOSE;
+      pc->type                 = CT_TYPE;
+      paren_close->type        = CT_PAREN_CLOSE;
       paren_close->parent_type = CT_NONE;
-      next = chunk_get_next_ncnl(pc);
-      next->type = CT_PAREN_OPEN;
+      next              = chunk_get_next_ncnl(pc);
+      next->type        = CT_PAREN_OPEN;
       next->parent_type = CT_NONE;
-      next->flags |= PCF_VAR_1ST_DEF;
+      next->flags      |= PCF_VAR_1ST_DEF;
 
       log_pcf_flags(LSYS, pc->flags);
       return;
    }
-
 
    /**
     * Scan to see if this is a function variable def:
@@ -1468,7 +1495,7 @@ static void mark_function(chunk_t *pc)
                /* its a funciton def for sure */
                break;
             }
-            else if (tmp->type == CT_SEMICOLON)
+            else if (chunk_is_semicolon(tmp))
             {
                /* Set the parent for the semi for later */
                tmp->parent_type = CT_FUNC_PROTO;
@@ -1502,7 +1529,7 @@ static void mark_function(chunk_t *pc)
          while ((tmp != NULL) && (tmp->type != CT_BRACE_OPEN))
          {
             tmp->parent_type = CT_FUNC_DEF;
-            if (tmp->type == CT_SEMICOLON)
+            if (chunk_is_semicolon(tmp))
             {
                on_first = true;
             }
@@ -1554,7 +1581,7 @@ static void mark_class_ctor(chunk_t *pclass)
                  __func__, pc->orig_line);
       }
 
-      if (pc->type == CT_SEMICOLON)
+      if (chunk_is_semicolon(pc))
       {
          LOG_FMT(LFTOR, "%s: bailed on semicolon on line %d\n",
                  __func__, pc->orig_line);
@@ -1636,7 +1663,7 @@ static void mark_struct_union_body(chunk_t *start)
           (pc->level >= start->level) &&
           (pc->type != CT_BRACE_CLOSE))
    {
-      if (pc->type == CT_SEMICOLON)
+      if (chunk_is_semicolon(pc))
       {
          pc = chunk_get_next_ncnlnp(pc);
          continue;
@@ -1777,7 +1804,7 @@ static void mark_define_expressions(void)
                  (prev->type == CT_FPAREN_OPEN) ||
                  (prev->type == CT_SPAREN_OPEN) ||
                  (prev->type == CT_BRACE_OPEN) ||
-                 (prev->type == CT_SEMICOLON) ||
+                 chunk_is_semicolon(prev) ||
                  (prev->type == CT_COMMA) ||
                  (prev->type == CT_COLON) ||
                  (prev->type == CT_QUESTION)))

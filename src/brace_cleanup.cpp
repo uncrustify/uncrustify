@@ -104,10 +104,13 @@ static void print_stack(int logsev, const char *str,
 void brace_cleanup(void)
 {
    chunk_t            *pc;
+   chunk_t            *prev;
+   chunk_t            vs_chunk;
    struct parse_frame frm;
    int pp_level;
 
    memset(&frm, 0, sizeof(frm));
+   memset(&vs_chunk, 0, sizeof(vs_chunk));
 
    cpd.in_preproc = CT_NONE;
    cpd.pp_level   = 0;
@@ -138,6 +141,47 @@ void brace_cleanup(void)
       pc->level       = frm.level;
       pc->brace_level = frm.brace_level;
       pc->pp_level    = pp_level;
+
+      /* Add virtual semi if needed */
+      if ((pc->type == CT_NEWLINE) && ((cpd.lang_flags & LANG_PAWN) != 0) &&
+          (frm.sparen_count == 0) && (frm.level == frm.brace_level))
+      {
+         if ((frm.pse[frm.pse_tos].type == CT_NONE) ||
+             (frm.pse[frm.pse_tos].type == CT_BRACE_OPEN) ||
+             (frm.pse[frm.pse_tos].type == CT_VBRACE_OPEN))
+         {
+            prev = chunk_get_prev_ncnl(pc);
+            if (prev != NULL)
+            {
+               //LOG_FMT(LSYS, "%d] frm.pse_tos=%d type=%s stage=%d prev=%s",
+               //        pc->orig_line,
+               //        frm.pse_tos,
+               //        get_token_name(frm.pse[frm.pse_tos].type),
+               //        frm.pse[frm.pse_tos].stage,
+               //        get_token_name(prev->type));
+
+               if (((prev->flags & PCF_IN_PREPROC) == 0) &&
+                   (prev->type != CT_VSEMICOLON) &&
+                   (prev->type != CT_SEMICOLON) &&
+                   (prev->type != CT_SPAREN_CLOSE) &&
+                   ((prev->type != CT_PAREN_CLOSE) || (frm.brace_level > 0)) &&
+                   (prev->type != CT_BRACE_CLOSE) &&
+                   (prev->type != CT_VBRACE_CLOSE) &&
+                   (prev->type != CT_BRACE_OPEN) &&
+                   (prev->type != CT_VBRACE_OPEN))
+               {
+                  vs_chunk          = *pc;
+                  vs_chunk.type     = CT_VSEMICOLON;
+                  vs_chunk.nl_count = 0;
+                  vs_chunk.len      = 3;
+                  vs_chunk.str      = ";;;";
+                  pc = chunk_add_after(&vs_chunk, prev);
+                  //LOG_FMT(LSYS, " :: added");
+               }
+               //LOG_FMT(LSYS, "\n");
+            }
+         }
+      }
 
       /**
        * #define bodies get the full formatting treatment
@@ -221,7 +265,7 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
 
    /* Mark statement starts */
    if (((frm->stmt_count == 0) || (frm->expr_count == 0)) &&
-       (pc->type != CT_SEMICOLON) &&
+       !chunk_is_semicolon(pc) &&
        (pc->type != CT_BRACE_CLOSE) &&
        (pc->type != CT_VBRACE_CLOSE))
    {
@@ -254,7 +298,7 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
     * TODO: may need to float VBRACE past comments until newline?
     */
    if ((frm->pse[frm->pse_tos].type == CT_VBRACE_OPEN) &&
-       (pc->type == CT_SEMICOLON))
+       chunk_is_semicolon(pc))
    {
       cpd.consumed = true;
       close_statement(frm, pc);
@@ -420,7 +464,7 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
        (pc->type == CT_BRACE_CLOSE) ||
        (pc->type == CT_VBRACE_CLOSE) ||
        ((pc->type == CT_SPAREN_OPEN) && (pc->parent_type == CT_FOR)) ||
-       ((pc->type == CT_SEMICOLON) &&
+       (chunk_is_semicolon(pc) &&
         (frm->pse[frm->pse_tos].type != CT_PAREN_OPEN) &&
         (frm->pse[frm->pse_tos].type != CT_FPAREN_OPEN) &&
         (frm->pse[frm->pse_tos].type != CT_SPAREN_OPEN)))
@@ -446,7 +490,7 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
        (pc->type == CT_FPAREN_OPEN) ||
        (pc->type == CT_SPAREN_OPEN) ||
        (pc->type == CT_BRACE_OPEN) ||
-       (pc->type == CT_SEMICOLON) ||
+       chunk_is_semicolon(pc) ||
        (pc->type == CT_COMMA) ||
        (pc->type == CT_COLON) ||
        (pc->type == CT_QUESTION))
