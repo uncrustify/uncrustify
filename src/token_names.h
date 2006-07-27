@@ -78,6 +78,7 @@ const char *token_names[] =
    "PP",
    "ELIPSIS",
    "SEMICOLON",
+   "VSEMICOLON",
    "COLON",
    "CASE_COLON",
    "CLASS_COLON",

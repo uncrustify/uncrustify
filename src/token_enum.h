@@ -93,6 +93,7 @@ typedef enum
    CT_ELIPSIS,             /* ... */
 
    CT_SEMICOLON,
+   CT_VSEMICOLON,          /* virtual semicolon for PAWN */
    CT_COLON,
    CT_CASE_COLON,
    CT_CLASS_COLON,         /* colon after a class def or constructor */
