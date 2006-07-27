@@ -1114,7 +1114,7 @@ static void align_typedefs(int span)
          {
             c_type = pc;
          }
-         else if (pc->type == CT_SEMICOLON)
+         else if (chunk_is_semicolon(pc))
          {
             if ((c_type != NULL) && (c_typedef->orig_line == c_type->orig_line))
             {

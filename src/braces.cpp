@@ -121,14 +121,14 @@ static void examine_brace(chunk_t *bopen)
 
             was_fcn = (prev != NULL) && (prev->type == CT_FPAREN_CLOSE);
 
-            if ((pc->type == CT_SEMICOLON) ||
+            if (chunk_is_semicolon(pc) ||
                 (pc->type == CT_IF) ||
                 (pc->type == CT_FOR) ||
                 (pc->type == CT_DO) ||
                 (pc->type == CT_WHILE) ||
                 ((pc->type == CT_BRACE_OPEN) && was_fcn))
             {
-               hit_semi |= (pc->type == CT_SEMICOLON);
+               hit_semi |= chunk_is_semicolon(pc);
                if (++semi_count > 1)
                {
                   LOG_FMT(LBRDEL, " bailed on %d because of %.*s on line %d\n",

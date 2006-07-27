@@ -231,7 +231,7 @@ static void newlines_struct_enum_union(chunk_t *start, argval_t nl_opt)
    while (((pc = chunk_get_next_ncnl(pc)) != NULL) && (pc->level >= level))
    {
       if ((pc->level == level) &&
-          ((pc->type == CT_BRACE_OPEN) || (pc->type == CT_SEMICOLON)))
+          ((pc->type == CT_BRACE_OPEN) || chunk_is_semicolon(pc)))
       {
          break;
       }
@@ -510,6 +510,7 @@ static void newlines_brace_pair(chunk_t *br_open)
 /**
  * Put a empty line between the 'case' statement and the previous case colon
  * or semicolon.
+ * Does not work with PAWN (?)
  */
 static void newline_case(chunk_t *start)
 {
@@ -579,6 +580,8 @@ static void newline_case_colon(chunk_t *start)
 /**
  * Put a empty line after a return statement, unless it is followed by a
  * close brace.
+ *
+ * May not work with PAWN
  */
 static void newline_return(chunk_t *start)
 {

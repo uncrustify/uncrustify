@@ -167,7 +167,7 @@ void indent_text(void)
               (pc->type == CT_SQUARE_CLOSE) ||
               (pc->type == CT_BRACE_OPEN) ||
               (pc->type == CT_COMMA) ||
-              (pc->type == CT_SEMICOLON)))
+              chunk_is_semicolon(pc)))
       {
          frm.pse_tos--;
       }
@@ -175,7 +175,7 @@ void indent_text(void)
       /* End any CPP class colon crap */
       while ((frm.pse[frm.pse_tos].type == CT_CLASS_COLON) &&
              ((pc->type == CT_BRACE_OPEN) ||
-              (pc->type == CT_SEMICOLON)))
+              chunk_is_semicolon(pc)))
       {
          frm.pse_tos--;
       }
@@ -190,7 +190,7 @@ void indent_text(void)
 
       /* a return is ended with a semicolon */
       if ((frm.pse[frm.pse_tos].type == CT_RETURN) &&
-          (pc->type == CT_SEMICOLON))
+          chunk_is_semicolon(pc))
       {
          frm.pse_tos--;
       }
@@ -582,7 +582,7 @@ void indent_text(void)
             frm.pse[frm.pse_tos].min_col = -pc->column;
          }
       }
-      if (pc->type == CT_SEMICOLON)
+      if (chunk_is_semicolon(pc))
       {
          frm.pse[frm.pse_tos].min_col = 0;
       }
@@ -596,7 +596,7 @@ void indent_text(void)
       {
          vardefcol = pc->column;
       }
-      if ((pc->type == CT_SEMICOLON) ||
+      if (chunk_is_semicolon(pc) ||
           ((pc->type == CT_BRACE_OPEN) && (pc->parent_type == CT_FUNCTION)))
       {
          vardefcol = 0;
