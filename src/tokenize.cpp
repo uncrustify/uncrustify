@@ -214,11 +214,11 @@ bool parse_number(chunk_t *pc)
              ((pc->str[len] == '.') && (dotcount == 0)) ||
              (allow_underscore && (pc->str[len] == '_')))
       {
-         len++;
          if (pc->str[len] == '.')
          {
             dotcount++;
          }
+         len++;
       }
    }
 
@@ -271,7 +271,8 @@ static bool parse_string(chunk_t *pc, int quote_idx, bool allow_escape)
 {
    bool escaped = 0;
    int  end_ch;
-   int  len = quote_idx;
+   int  len     = quote_idx;
+   bool is_pawn = (cpd.lang_flags & LANG_PAWN) != 0;
 
    end_ch = get_char_table(pc->str[len]) & 0xff;
    len++;
@@ -280,7 +281,7 @@ static bool parse_string(chunk_t *pc, int quote_idx, bool allow_escape)
    {
       if (!escaped)
       {
-         if (pc->str[len] == '\\')
+         if ((pc->str[len] == '\\') || (is_pawn && (pc->str[len] == '^')))
          {
             escaped = allow_escape;
          }
