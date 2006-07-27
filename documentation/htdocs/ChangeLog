@@ -39,6 +39,7 @@ Changes in uncrustify-0.0.24
  - Add initial PAWN support
  - Add sp_fparen_brace and sp_sparen_brace
  - Fix parsing of numbers like 10.0
+ - Fix double negative (- -x) vs (--x)
 
 
 Changes in uncrustify-0.0.23
