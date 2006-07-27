@@ -88,6 +88,8 @@ enum uncrustify_options
     */
 
    UO_sp_paren_brace,       // space between ')' and '{'
+   UO_sp_fparen_brace,      // space between ')' and '{' of function
+   UO_sp_sparen_brace,      // space between ')' and '{' of if, while, etc
 
    UO_sp_after_cast,        // space after cast - "(int) a" vs "(int)a"
 
@@ -377,6 +379,7 @@ options_name_tab option_name_table[] =
    OPTDEF(sp_before_squares,             AT_IARF),
    OPTDEF(sp_bool,                       AT_IARF),
    OPTDEF(sp_compare,                    AT_IARF),
+   OPTDEF(sp_fparen_brace,               AT_IARF),
    OPTDEF(sp_func_call_paren,            AT_IARF),
    OPTDEF(sp_func_class_paren,           AT_IARF),
    OPTDEF(sp_func_def_paren,             AT_IARF),
@@ -394,6 +397,7 @@ options_name_tab option_name_table[] =
    OPTDEF(sp_paren_paren,                AT_IARF),
    OPTDEF(sp_return_paren,               AT_IARF),
    OPTDEF(sp_sizeof_paren,               AT_IARF),
+   OPTDEF(sp_sparen_brace,               AT_IARF),
    OPTDEF(sp_special_semi,               AT_IARF),
    OPTDEF(sp_type_func,                  AT_IARF),
 };

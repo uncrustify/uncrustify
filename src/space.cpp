@@ -80,6 +80,10 @@ argval_t do_space(chunk_t *first, chunk_t *second)
    int      idx;
    argval_t arg;
 
+   if (second->type == CT_VSEMICOLON)
+   {
+      return(AV_REMOVE);
+   }
    if (first->type == CT_MACRO_FUNC)
    {
       return(AV_REMOVE);
@@ -277,6 +281,16 @@ argval_t do_space(chunk_t *first, chunk_t *second)
    if ((first->type == CT_SUPER) && (second->type == CT_PAREN_OPEN))
    {
       return(AV_REMOVE);
+   }
+
+   if ((first->type == CT_FPAREN_CLOSE) && (second->type == CT_BRACE_OPEN))
+   {
+      return(cpd.settings[UO_sp_fparen_brace].a);
+   }
+
+   if ((first->type == CT_SPAREN_CLOSE) && (second->type == CT_BRACE_OPEN))
+   {
+      return(cpd.settings[UO_sp_sparen_brace].a);
    }
 
    if (first->type == CT_PAREN_CLOSE)
