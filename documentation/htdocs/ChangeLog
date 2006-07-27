@@ -24,7 +24,7 @@ Plans for 0.0.25 (hopefully the last in the 0.0 series)
  - misc cleanup before jumping to 0.1.0
 
 
-Plans for 0.0.24
+Plans for 0.0.25
 -------------------------------------------------------------------------------
  - add -o option to write to a file instead of stdout
  - add --folder=XXX to set the output folder (useful when processing multiple files)
@@ -32,6 +32,13 @@ Plans for 0.0.24
 
 
 ===============================================================================
+
+
+Changes in uncrustify-0.0.24
+-------------------------------------------------------------------------------
+ - Add initial PAWN support
+ - Add sp_fparen_brace and sp_sparen_brace
+ - Fix parsing of numbers like 10.0
 
 
 Changes in uncrustify-0.0.23
