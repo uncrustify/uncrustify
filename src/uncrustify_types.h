@@ -53,13 +53,13 @@ struct paren_stack_entry
 /* TODO: put this on a linked list */
 struct parse_frame
 {
-   int                      level;           // level of paren
+   int                      level;           // level of parens/square/angle/brace
    int                      brace_level;     // level of brace/vbrace
    int                      pp_level;        // level of preproc #if stuff
 
    int                      sparen_count;
 
-   struct paren_stack_entry pse[64];
+   struct paren_stack_entry pse[128];
    int                      pse_tos;
    int                      paren_count;
 
