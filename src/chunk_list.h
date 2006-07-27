@@ -85,6 +85,13 @@ bool chunk_is_newline(chunk_t *pc)
 }
 
 static_inline
+bool chunk_is_semicolon(chunk_t *pc)
+{
+   return((pc != NULL) && ((pc->type == CT_SEMICOLON) ||
+                           (pc->type == CT_VSEMICOLON)));
+}
+
+static_inline
 bool chunk_is_blank(chunk_t *pc)
 {
    return((pc != NULL) && (pc->len == 0));
