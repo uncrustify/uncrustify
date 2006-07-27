@@ -170,7 +170,7 @@ int load_define_file(const char *filename)
          *ptr = 0;
       }
 
-      argc = Args::SplitLine(buf, args, ARRAY_SIZE(args) - 1);
+      argc       = Args::SplitLine(buf, args, ARRAY_SIZE(args) - 1);
       args[argc] = 0;
 
       if (argc > 0)
@@ -204,11 +204,11 @@ void output_defines(FILE *pfile)
    {
       if (*dl.p_tags[idx].value != 0)
       {
-         fprintf(pfile, "%s = %s\n",dl.p_tags[idx].tag, dl.p_tags[idx].value);
+         fprintf(pfile, "%s = %s\n", dl.p_tags[idx].tag, dl.p_tags[idx].value);
       }
       else
       {
-         fprintf(pfile, "%s\n",dl.p_tags[idx].tag);
+         fprintf(pfile, "%s\n", dl.p_tags[idx].tag);
       }
    }
 }
