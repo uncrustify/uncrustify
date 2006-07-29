@@ -1,0 +1,8 @@
+#
+# Test cases specifically for the Pawn language.
+#
+
+# test.name  config.file  input.file  output.file
+
+60000 pawn.cfg pawn/functions.pawn pawn/60000-functions.pawn
+
