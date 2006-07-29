@@ -86,6 +86,9 @@
 			<F N="config/case-2.cfg"/>
 			<F N="config/case-3.cfg"/>
 			<F N="config/cast-types.txt"/>
+			<F N="config/cpp_to_c-1.cfg"/>
+			<F N="config/cpp_to_c-2.cfg"/>
+			<F N="config/cpp_to_c-3.cfg"/>
 			<F N="config/d.cfg"/>
 			<F N="config/func-def-1.cfg"/>
 			<F N="config/func-def-2.cfg"/>

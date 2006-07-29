@@ -15,8 +15,10 @@
                       // almost continued, but a NL in between
 
 // col1 comment in level 1
+// second comment
    return(res);
 }
 
    // col1 comment in level 0
+ // and another
 

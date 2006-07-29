@@ -8,6 +8,9 @@
 # little general tests
 
 00000  indent.cfg  c/comment-indent.c  c/00000-comment-indent.c
+00001  cpp_to_c-1.cfg c/comment-indent.c c/00001-cpp_to_c-1.c
+00002  cpp_to_c-2.cfg c/comment-indent.c c/00002-cpp_to_c-2.c
+00003  cpp_to_c-3.cfg c/comment-indent.c c/00003-cpp_to_c-3.c
 
 # brace styles
 00010  ben.cfg           c/braces.c  c/00010-braces.c
