@@ -77,7 +77,7 @@ const char *token_names[] =
    "PREPROC",
    "PREPROC_BODY",
    "PP",
-   "ELIPSIS",
+   "ELLIPSIS",
    "SEMICOLON",
    "VSEMICOLON",
    "COLON",
