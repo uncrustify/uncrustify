@@ -96,6 +96,7 @@
 			<F N="config/nl_class-r.cfg"/>
 			<F N="config/nl_namespace-a.cfg"/>
 			<F N="config/nl_namespace-r.cfg"/>
+			<F N="config/pawn.cfg"/>
 			<F N="config/pp-indent-1.cfg"/>
 			<F N="config/pp-indent-2.cfg"/>
 			<F N="config/pp-indent-3.cfg"/>
@@ -167,6 +168,10 @@
 				<F N="input/d/volatile-2.d"/>
 				<F N="input/d/volatile-3.d"/>
 				<F N="input/d/volatile.d"/>
+			</Folder>
+			<Folder Name="pawn">
+				<F N="input/pawn/functions.pawn"/>
+				<F N="input/pawn/test1.pawn"/>
 			</Folder>
 		</Folder>
 		<Folder Name="output">
@@ -244,6 +249,7 @@
 		<F N="cpp.test"/>
 		<F N="d.test"/>
 		<F N="java.test"/>
+		<F N="pawn.test"/>
 		<F N="run_tests.py"/>
 	</Files>
 </Project>
