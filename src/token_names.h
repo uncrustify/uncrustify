@@ -150,6 +150,7 @@ const char *token_names[] =
    "CHAR",
    "DEFINED",
    "FORWARD",
+   "NATIVE",
    "STATE",
    "STOCK",
    "TAGOF",

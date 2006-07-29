@@ -348,6 +348,10 @@ argval_t do_space(chunk_t *first, chunk_t *second)
    {
       return(cpd.settings[UO_sp_inside_square].a);
    }
+   if ((first->type == CT_SQUARE_CLOSE) && (second->type == CT_FPAREN_OPEN))
+   {
+      return(cpd.settings[UO_sp_square_fparen].a);
+   }
 
    /* "if(...)" vs "if( ... )" */
    if ((first->type == CT_SPAREN_OPEN) || (second->type == CT_SPAREN_CLOSE))

@@ -26,6 +26,7 @@ void do_braces(void)
    if (((cpd.settings[UO_mod_full_brace_if].a |
          cpd.settings[UO_mod_full_brace_do].a |
          cpd.settings[UO_mod_full_brace_for].a |
+         cpd.settings[UO_mod_full_brace_function].a |
          cpd.settings[UO_mod_full_brace_while].a) & AV_ADD) != 0)
    {
       convert_vbrace_to_brace();
@@ -210,6 +211,11 @@ static void convert_vbrace_to_brace(void)
 
    for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next_ncnl(pc))
    {
+      if ((pc->type != CT_VBRACE_OPEN) && (pc->type != CT_VBRACE_CLOSE))
+      {
+         continue;
+      }
+
       if ((((pc->parent_type == CT_IF) ||
             (pc->parent_type == CT_ELSE) ||
             (pc->parent_type == CT_ELSEIF)) &&
@@ -222,7 +228,10 @@ static void convert_vbrace_to_brace(void)
            ((cpd.settings[UO_mod_full_brace_do].a & AV_ADD) != 0))
           ||
           ((pc->parent_type == CT_WHILE) &&
-           ((cpd.settings[UO_mod_full_brace_while].a & AV_ADD) != 0)))
+           ((cpd.settings[UO_mod_full_brace_while].a & AV_ADD) != 0))
+          ||
+          ((pc->parent_type == CT_FUNC_DEF) &&
+           ((cpd.settings[UO_mod_full_brace_function].a & AV_ADD) != 0)))
       {
          if (pc->type == CT_VBRACE_OPEN)
          {
@@ -230,7 +239,7 @@ static void convert_vbrace_to_brace(void)
             pc->len  = 1;
             pc->str  = "{";
          }
-         if (pc->type == CT_VBRACE_CLOSE)
+         else
          {
             pc->type = CT_BRACE_CLOSE;
             pc->len  = 1;

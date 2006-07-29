@@ -141,6 +141,8 @@ enum uncrustify_options
    UO_sp_macro,                // space between macro and value, ie '#define a 6'
    UO_sp_macro_func,           // space between macro and value, ie '#define a 6'
 
+   UO_sp_square_fparen,        // weird pawn stuff: native yark[rect](a[rect])
+
    /*
     * Line splitting options (for long lines)
     */
@@ -257,6 +259,7 @@ enum uncrustify_options
    UO_mod_full_brace_do,         // add or remove braces on do
    UO_mod_full_brace_while,      // add or remove braces on while
    UO_mod_pawn_semicolon,        // add optional semicolons
+   UO_mod_full_brace_function,   // add optional braces on Pawn functions
 
 
    /*
@@ -334,6 +337,7 @@ options_name_tab option_name_table[] =
    OPTDEF(input_tab_size,                AT_NUM),
    OPTDEF(mod_full_brace_do,             AT_IARF),
    OPTDEF(mod_full_brace_for,            AT_IARF),
+   OPTDEF(mod_full_brace_function,       AT_IARF),
    OPTDEF(mod_full_brace_if,             AT_IARF),
    OPTDEF(mod_full_brace_nl,             AT_NUM),
    OPTDEF(mod_full_brace_while,          AT_IARF),
@@ -416,6 +420,7 @@ options_name_tab option_name_table[] =
    OPTDEF(sp_sizeof_paren,               AT_IARF),
    OPTDEF(sp_sparen_brace,               AT_IARF),
    OPTDEF(sp_special_semi,               AT_IARF),
+   OPTDEF(sp_square_fparen,              AT_IARF),
    OPTDEF(sp_type_func,                  AT_IARF),
 };
 

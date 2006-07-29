@@ -385,15 +385,15 @@ static int calculate_comment_body_indent(const char *str, int len, int start_col
  *
  * @return the last chunk output'd
  */
-chunk_t *output_comment_cpp(chunk_t *pc)
+chunk_t *output_comment_cpp(chunk_t *first)
 {
-   int col    = pc->column;
-   int col_br = 1 + (pc->brace_level * cpd.settings[UO_indent_columns].n);
+   int     col    = first->column;
+   int     col_br = 1 + (first->brace_level * cpd.settings[UO_indent_columns].n);
 
    /* Make sure we have at least one space past the last token */
-   if (pc->parent_type == CT_COMMENT_END)
+   if (first->parent_type == CT_COMMENT_END)
    {
-      chunk_t *prev = chunk_get_prev(pc);
+      chunk_t *prev = chunk_get_prev(first);
       if (prev != NULL)
       {
          int col_min = prev->column + prev->len + 1;
@@ -409,8 +409,8 @@ chunk_t *output_comment_cpp(chunk_t *pc)
 
    if (!cpd.settings[UO_cmt_cpp_to_c].b)
    {
-      add_text_len(pc->str, pc->len);
-      return(pc);
+      add_text_len(first->str, first->len);
+      return(first);
    }
 
    /* If we are grouping, see if there is something to group */
@@ -418,18 +418,23 @@ chunk_t *output_comment_cpp(chunk_t *pc)
    if (cpd.settings[UO_cmt_cpp_group].b)
    {
       /* next is a newline by definition */
-      chunk_t *next = chunk_get_next(pc);
+      chunk_t *next = chunk_get_next(first);
       if ((next != NULL) && (next->nl_count == 1))
       {
          next = chunk_get_next(next);
 
-         /* Only combine the next comment if they are both at indent level or
+         /**
+          * Only combine the next comment if they are both at indent level or
           * the second one is NOT at indent or less
+          *
+          * A trailing comment cannot be combined with a comment at indent
+          * level or less
           */
          if ((next != NULL) &&
              (next->type == CT_COMMENT_CPP) &&
-             (next->column >= col_br) &&
-             ((next->column != col_br) || (pc->parent_type == CT_COMMENT_END)))
+             (((next->column == 1) && (first->column == 1)) ||
+              ((next->column == col_br) && (first->column == col_br)) ||
+              ((next->column > col_br) && (first->parent_type == CT_COMMENT_END))))
          {
             combined = true;
          }
@@ -440,16 +445,17 @@ chunk_t *output_comment_cpp(chunk_t *pc)
    {
       /* nothing to group: just output a single line */
       add_text_len("/*", 2);
-      if ((pc->str[2] != ' ') && (pc->str[2] != '\t'))
+      if ((first->str[2] != ' ') && (first->str[2] != '\t'))
       {
          add_char(' ');
       }
-      add_text_len(&pc->str[2], pc->len-2);
+      add_text_len(&first->str[2], first->len - 2);
       add_text_len(" */", 3);
-      return(pc);
+      return(first);
    }
 
-   chunk_t *last = pc;
+   chunk_t *pc   = first;
+   chunk_t *last = first;
 
    /* Output the first line */
    add_text_len("/*", 2);
@@ -473,7 +479,9 @@ chunk_t *output_comment_cpp(chunk_t *pc)
       {
          break;
       }
-      if (pc->column >= col_br)
+      if (((pc->column == 1) && (first->column == 1)) ||
+          ((pc->column == col_br) && (first->column == col_br)) ||
+          ((pc->column > col_br) && (first->parent_type == CT_COMMENT_END)))
       {
          last = pc;
 cpp_newline:

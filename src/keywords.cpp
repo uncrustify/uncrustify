@@ -140,7 +140,8 @@ static chunk_tag_t keywords[] =
    { "module",           CT_USING,       LANG_D                                              },
    { "mutable",          CT_MUTABLE,     LANG_C | LANG_CPP                                   },
    { "namespace",        CT_NAMESPACE,   LANG_C | LANG_CPP | LANG_CS                         },
-   { "native",           CT_QUALIFIER,   LANG_JAVA | LANG_PAWN                               }, // PAWN
+   { "native",           CT_QUALIFIER,   LANG_JAVA                                           },
+   { "native",           CT_NATIVE,      LANG_PAWN                                           }, // PAWN
    { "new",              CT_NEW,         LANG_CPP | LANG_CS | LANG_D | LANG_JAVA | LANG_PAWN }, // PAWN
    { "not",              CT_SARITH,      LANG_C | LANG_CPP                                   },
    { "not_eq",           CT_SCOMPARE,    LANG_C | LANG_CPP                                   },

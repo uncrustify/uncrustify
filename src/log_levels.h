@@ -56,6 +56,8 @@ enum
    LTYPEDEF  = 43,    /* Typedef and function types */
    LVARDEF   = 44,    /* Variable def marking */
    LDEFVAL   = 45,    /* define values */
+   LPVSEMI   = 46,    /* Pawn: virtual semicolons */
+   LPFUNC    = 47,    /* Pawn: fucntion recognition */
 };
 
 #endif   /* LOG_LEVELS_H_INCLUDED */

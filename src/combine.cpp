@@ -22,7 +22,6 @@ static void fix_enum_struct_union(chunk_t *pc);
 static void fix_casts(chunk_t *pc);
 static void fix_var_def(chunk_t *pc);
 static void mark_function(chunk_t *pc);
-static void mark_pawn_function(chunk_t *pc);
 static void mark_struct_union_body(chunk_t *start);
 static chunk_t *mark_variable_definition(chunk_t *start);
 static void mark_define_expressions(void);
@@ -31,6 +30,9 @@ static chunk_t *process_return(chunk_t *pc);
 static void mark_class_ctor(chunk_t *pclass);
 static void mark_namespace(chunk_t *pns);
 static void mark_function_type(chunk_t *pc);
+
+static void pawn_add_virtual_semicolons();
+static void pawn_mark_function(chunk_t *pc);
 
 
 void make_type(chunk_t *pc)
@@ -220,13 +222,17 @@ void fix_symbols(void)
       {
          pc->type = CT_FUNCTION;
       }
-      if (pc->type == CT_FUNCTION)
+      if ((cpd.lang_flags & LANG_PAWN) != 0)
       {
-         if ((cpd.lang_flags & LANG_PAWN) != 0)
+         if ((pc->type == CT_FUNCTION) ||
+             (prev->type == CT_NATIVE))
          {
-            mark_pawn_function(pc);
+            pawn_mark_function(pc);
          }
-         else
+      }
+      else
+      {
+         if (pc->type == CT_FUNCTION)
          {
             mark_function(pc);
          }
@@ -237,10 +243,23 @@ void fix_symbols(void)
           (pc->type == CT_FUNC_CALL) ||
           (pc->type == CT_FUNC_PROTO))
       {
-         tmp = flag_parens(next, 0, CT_FPAREN_OPEN, pc->type, false);
-         if ((tmp != NULL) && (tmp->type == CT_BRACE_OPEN))
+         tmp = next;
+         if (tmp->type == CT_SQUARE_OPEN)
          {
-            set_paren_parent(tmp, pc->type);
+            tmp = set_paren_parent(tmp, pc->type);
+         }
+
+         tmp = flag_parens(tmp, 0, CT_FPAREN_OPEN, pc->type, false);
+         if (tmp != NULL)
+         {
+            if (tmp->type == CT_BRACE_OPEN)
+            {
+               set_paren_parent(tmp, pc->type);
+            }
+            else if ((tmp->type == CT_SEMICOLON) && (pc->type == CT_FUNC_PROTO))
+            {
+               tmp->parent_type = pc->type;
+            }
          }
       }
 
@@ -384,6 +403,8 @@ void fix_symbols(void)
       next = chunk_get_next_ncnl(next);
    }
 
+   pawn_add_virtual_semicolons();
+
    /**
     * 2nd pass - handle variable definitions
     * REVISIT: We need function params marked to do this (?)
@@ -424,6 +445,72 @@ void fix_symbols(void)
              ((next == NULL) || (next->type == CT_NEWLINE)))
          {
             pc->flags |= PCF_RIGHT_COMMENT;
+         }
+      }
+   }
+}
+
+
+static void pawn_add_virtual_semicolons()
+{
+   chunk_t *prev;
+   chunk_t *pc;
+
+   /** Add Pawn virtual semicolons */
+   prev = NULL;
+   if ((cpd.lang_flags & LANG_PAWN) != 0)
+   {
+      pc = chunk_get_head();
+      while ((pc = chunk_get_next(pc)) != NULL)
+      {
+         if (!chunk_is_comment(pc) &&
+             !chunk_is_newline(pc) &&
+             (pc->type != CT_VBRACE_CLOSE) &&
+             (pc->type != CT_VBRACE_OPEN))
+         {
+            prev = pc;
+         }
+         if ((prev == NULL) ||
+             ((pc->type != CT_NEWLINE)  &&
+              (pc->type != CT_BRACE_CLOSE) &&
+              (pc->type != CT_VBRACE_CLOSE)))
+         {
+            continue;
+         }
+
+         /* we just hit a newline and we have a previous token */
+         if ((prev->parent_type != CT_FUNC_DEF) &&
+             (prev->type != CT_VSEMICOLON) &&
+             (prev->type != CT_SEMICOLON) &&
+             (prev->type != CT_BRACE_CLOSE) &&
+             (prev->type != CT_VBRACE_CLOSE) &&
+             (prev->type != CT_BRACE_OPEN) &&
+             (prev->type != CT_VBRACE_OPEN) &&
+             (prev->brace_level == prev->level) &&
+             (prev->type != CT_ARITH) &&
+             (prev->type != CT_ASSIGN) &&
+             (prev->type != CT_BOOL) &&
+             (prev->type != CT_COMMA) &&
+             (prev->type != CT_COMPARE))
+         {
+            chunk_t chunk;
+
+            chunk = *prev;
+            chunk.type  = CT_VSEMICOLON;
+            chunk.len   = cpd.settings[UO_mod_pawn_semicolon].b ? 1 : 0;
+            chunk.str   = ";";
+            chunk.column += prev->len;
+            chunk.parent_type = CT_NONE;
+            chunk_add_after(&chunk, prev);
+
+            LOG_FMT(LPVSEMI, "Added VSEMI on line %d, prev='%.*s' [%s]\n",
+                    prev->orig_line, prev->len, prev->str, get_token_name(prev->type));
+            prev = NULL;
+         }
+         else
+         {
+            LOG_FMT(LPVSEMI, "check VSEMI on line %d, prev='%.*s' [%s]\n",
+                    prev->orig_line, prev->len, prev->str, get_token_name(prev->type));
          }
       }
    }
@@ -1319,17 +1406,106 @@ static chunk_t *mark_variable_definition(chunk_t *start)
  *  - mark parameter types
  *  - mark brace pair
  */
-static void mark_pawn_function(chunk_t *pc)
+static void pawn_mark_function(chunk_t *pc)
 {
+   chunk_t *prev;
+   chunk_t *last = pc;
+
+   prev = pc;
+
+   // find the first token on this line
+   while (((prev = chunk_get_prev(prev)) != NULL) &&
+          (prev->type != CT_NEWLINE))
+   {
+      last = prev;
+   }
+
+   /* If the function name is the first thing on the line, then
+    * we need to check for a semicolon after the close paren
+    */
+   if (last == pc)
+   {
+      last = chunk_get_next_type(pc, CT_PAREN_CLOSE, pc->level);
+      last = chunk_get_next(last);
+      if ((last != NULL) && (last->type == CT_SEMICOLON))
+      {
+         LOG_FMT(LPFUNC, "%s: %d] '%.*s' proto due to semicolon\n", __func__,
+                 pc->orig_line, pc->len, pc->str);
+         pc->type = CT_FUNC_PROTO;
+         return;
+      }
+   }
+   else
+   {
+      if ((last->type == CT_FORWARD) ||
+          (last->type == CT_NATIVE))
+      {
+         LOG_FMT(LPFUNC, "%s: %d] '%.*s' proto due to %s\n", __func__,
+                 pc->orig_line, pc->len, pc->str, get_token_name(last->type));
+         pc->type = CT_FUNC_PROTO;
+         return;
+      }
+   }
+
+   /* At this point its either a function definition or a function call
+    * If the brace level is 0, then it is a definition, otherwise its a call.
+    */
    if (pc->brace_level == 0)
    {
+      chunk_t *clp;
       pc->type = CT_FUNC_DEF;
+
+      /* If we don't have a brace open right after the close fparen, then
+       * we need to add virtual braces around the function body.
+       */
+      clp = chunk_get_next_type(pc, CT_PAREN_CLOSE, 0);
+      last = chunk_get_next_ncnl(clp);
+      if ((last != NULL) && (last->type != CT_BRACE_OPEN))
+      {
+         LOG_FMT(LPFUNC, "%s: %d] '%.*s' fdef: expected brace open: %s\n", __func__,
+                 pc->orig_line, pc->len, pc->str, get_token_name(last->type));
+
+         chunk_t chunk;
+         chunk         = *clp;
+         chunk.str     = "{";
+         chunk.len     = 0;
+         chunk.column += clp->len;
+         chunk.type    = CT_VBRACE_OPEN;
+         chunk.parent_type = CT_FUNC_DEF;
+
+         prev = chunk_add_after(&chunk, clp);
+         last = prev;
+
+         /* find the next newline at level 0 */
+         prev = chunk_get_next_ncnl(prev);
+         do
+         {
+            if (prev->type == CT_NEWLINE)
+            {
+               break;
+            }
+            prev->level++;
+            prev->brace_level++;
+            last = prev;
+         } while ((prev = chunk_get_next(prev)) != NULL);
+
+         chunk         = *last;
+         chunk.str     = "}";
+         chunk.len     = 0;
+         chunk.column += last->len;
+         chunk.type    = CT_VBRACE_CLOSE;
+         chunk.level   = 0;
+         chunk.brace_level = 0;
+         chunk.parent_type = CT_FUNC_DEF;
+         chunk_add_after(&chunk, last);
+      }
    }
    else
    {
       pc->type = CT_FUNC_CALL;
    }
 }
+
 
 /**
  * We are on a function word. we need to:

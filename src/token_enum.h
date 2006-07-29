@@ -183,6 +183,7 @@ typedef enum
    CT_CHAR,
    CT_DEFINED,
    CT_FORWARD,
+   CT_NATIVE,
    CT_STATE,
    CT_STOCK,
    CT_TAGOF,
