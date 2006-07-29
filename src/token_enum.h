@@ -39,6 +39,7 @@ typedef enum
    CT_STRING,        /* quoted string "hi" or 'a' or <in> for include */
    CT_IF,            /* built-in keywords */
    CT_ELSE,
+   CT_ELSEIF,
    CT_FOR,
    CT_WHILE,
    CT_WHILE_OF_DO,

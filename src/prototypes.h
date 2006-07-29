@@ -25,6 +25,7 @@ void log_pcf_flags(log_sev_t sev, UINT32 flags);
 void output_text(FILE *pfile);
 void output_parsed(FILE *pfile);
 void output_comment_multi(chunk_t *pc);
+chunk_t *output_comment_cpp(chunk_t *pc);
 void output_options(FILE *pfile);
 void output_to_column(int column, bool allow_tabs);
 void add_text(const char *text);

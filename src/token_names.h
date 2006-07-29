@@ -27,6 +27,7 @@ const char *token_names[] =
    "STRING",
    "IF",
    "ELSE",
+   "ELSEIF",
    "FOR",
    "WHILE",
    "WHILE_OF_DO",

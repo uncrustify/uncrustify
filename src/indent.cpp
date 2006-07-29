@@ -247,6 +247,7 @@ void indent_text(void)
 
             if ((pc->parent_type == CT_IF) ||
                 (pc->parent_type == CT_ELSE) ||
+                (pc->parent_type == CT_ELSEIF) ||
                 (pc->parent_type == CT_DO) ||
                 (pc->parent_type == CT_WHILE) ||
                 (pc->parent_type == CT_SWITCH) ||
@@ -299,6 +300,7 @@ void indent_text(void)
             /* If this brace is part of a statement, bump it out by indent_brace */
             if ((pc->parent_type == CT_IF) ||
                 (pc->parent_type == CT_ELSE) ||
+                (pc->parent_type == CT_ELSEIF) ||
                 (pc->parent_type == CT_DO) ||
                 (pc->parent_type == CT_WHILE) ||
                 (pc->parent_type == CT_SWITCH) ||

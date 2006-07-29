@@ -83,6 +83,30 @@ void output_to_column(int column, bool allow_tabs)
    }
 }
 
+void output_indent(int column, int brace_col)
+{
+   if ((cpd.column == 1) && (cpd.settings[UO_indent_with_tabs].n != 0))
+   {
+      if (cpd.settings[UO_indent_with_tabs].n == 2)
+      {
+         brace_col = column;
+      }
+
+      /* tab out as far as possible and then use spaces */
+      int nc;
+      while ((nc = next_tab_column(cpd.column)) <= brace_col)
+      {
+         add_text("\t");
+      }
+   }
+
+   /* space out the rest */
+   while (cpd.column < column)
+   {
+      add_text(" ");
+   }
+}
+
 
 
 void output_parsed(FILE *pfile)
@@ -189,6 +213,10 @@ void output_text(FILE *pfile)
       else if (pc->type == CT_COMMENT_MULTI)
       {
          output_comment_multi(pc);
+      }
+      else if (pc->type == CT_COMMENT_CPP)
+      {
+         pc = output_comment_cpp(pc);
       }
       else if (pc->len == 0)
       {
@@ -351,6 +379,125 @@ static int calculate_comment_body_indent(const char *str, int len, int start_col
    return((width == 2) ? 0 : 1);
 }
 
+/**
+ * Outputs the CPP comment at pc.
+ * CPP comment combining is done here
+ *
+ * @return the last chunk output'd
+ */
+chunk_t *output_comment_cpp(chunk_t *pc)
+{
+   int col    = pc->column;
+   int col_br = 1 + (pc->brace_level * cpd.settings[UO_indent_columns].n);
+
+   /* Make sure we have at least one space past the last token */
+   if (pc->parent_type == CT_COMMENT_END)
+   {
+      chunk_t *prev = chunk_get_prev(pc);
+      if (prev != NULL)
+      {
+         int col_min = prev->column + prev->len + 1;
+         if (col < col_min)
+         {
+            col = col_min;
+         }
+      }
+   }
+
+   /* Bump out to the column */
+   output_indent(col, col_br);
+
+   if (!cpd.settings[UO_cmt_cpp_to_c].b)
+   {
+      add_text_len(pc->str, pc->len);
+      return(pc);
+   }
+
+   /* If we are grouping, see if there is something to group */
+   bool combined = false;
+   if (cpd.settings[UO_cmt_cpp_group].b)
+   {
+      /* next is a newline by definition */
+      chunk_t *next = chunk_get_next(pc);
+      if ((next != NULL) && (next->nl_count == 1))
+      {
+         next = chunk_get_next(next);
+
+         /* Only combine the next comment if they are both at indent level or
+          * the second one is NOT at indent or less
+          */
+         if ((next != NULL) &&
+             (next->type == CT_COMMENT_CPP) &&
+             (next->column >= col_br) &&
+             ((next->column != col_br) || (pc->parent_type == CT_COMMENT_END)))
+         {
+            combined = true;
+         }
+      }
+   }
+
+   if (!combined)
+   {
+      /* nothing to group: just output a single line */
+      add_text_len("/*", 2);
+      if ((pc->str[2] != ' ') && (pc->str[2] != '\t'))
+      {
+         add_char(' ');
+      }
+      add_text_len(&pc->str[2], pc->len-2);
+      add_text_len(" */", 3);
+      return(pc);
+   }
+
+   chunk_t *last = pc;
+
+   /* Output the first line */
+   add_text_len("/*", 2);
+   if (combined && cpd.settings[UO_cmt_cpp_nl_start].b)
+   {
+      /* I suppose someone more clever could do this without a goto or
+       * repeating too much code...
+       */
+      goto cpp_newline;
+   }
+   goto cpp_addline;
+
+   /* Output combined lines */
+   while ((pc = chunk_get_next(pc)) != NULL)
+   {
+      if ((pc->type == CT_NEWLINE) && (pc->nl_count == 1))
+      {
+         continue;
+      }
+      if (pc->type != CT_COMMENT_CPP)
+      {
+         break;
+      }
+      if (pc->column >= col_br)
+      {
+         last = pc;
+cpp_newline:
+         add_char('\n');
+         output_indent(col, col_br);
+         add_char(' ');
+         add_char(cpd.settings[UO_cmt_star_cont].b ? '*' : ' ');
+cpp_addline:
+         if ((pc->str[2] != ' ') && (pc->str[2] != '\t'))
+         {
+            add_char(' ');
+         }
+         add_text_len(&pc->str[2], pc->len - 2);
+      }
+   }
+
+   if (cpd.settings[UO_cmt_cpp_nl_end].b)
+   {
+      add_char('\n');
+      output_indent(col, col_br);
+   }
+   add_text_len(" */", 3);
+   return(last);
+}
 
 void output_comment_multi(chunk_t *pc)
 {

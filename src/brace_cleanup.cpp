@@ -153,13 +153,6 @@ void brace_cleanup(void)
             prev = chunk_get_prev_ncnl(pc);
             if (prev != NULL)
             {
-               //LOG_FMT(LSYS, "%d] frm.pse_tos=%d type=%s stage=%d prev=%s",
-               //        pc->orig_line,
-               //        frm.pse_tos,
-               //        get_token_name(frm.pse[frm.pse_tos].type),
-               //        frm.pse[frm.pse_tos].stage,
-               //        get_token_name(prev->type));
-
                if (((prev->flags & PCF_IN_PREPROC) == 0) &&
                    (prev->type != CT_VSEMICOLON) &&
                    (prev->type != CT_SEMICOLON) &&
@@ -173,12 +166,10 @@ void brace_cleanup(void)
                   vs_chunk          = *pc;
                   vs_chunk.type     = CT_VSEMICOLON;
                   vs_chunk.nl_count = 0;
-                  vs_chunk.len      = 3;
-                  vs_chunk.str      = ";;;";
+                  vs_chunk.len      = cpd.settings[UO_mod_pawn_semicolon].b ? 1 : 0;
+                  vs_chunk.str      = ";";
                   pc = chunk_add_after(&vs_chunk, prev);
-                  //LOG_FMT(LSYS, " :: added");
                }
-               //LOG_FMT(LSYS, "\n");
             }
          }
       }
@@ -546,7 +537,8 @@ static bool check_complex_statements(struct parse_frame *frm, chunk_t *pc)
       if (pc->type == CT_IF)
       {
          /* Replace CT_ELSE with CT_IF */
-         frm->pse[frm->pse_tos].type  = CT_IF;
+         pc->type = CT_ELSEIF;
+         frm->pse[frm->pse_tos].type  = CT_ELSEIF;
          frm->pse[frm->pse_tos].stage = BS_PAREN1;
          return(true);
       }
@@ -643,7 +635,8 @@ static bool handle_complex_close(struct parse_frame *frm, chunk_t *pc)
    else if (frm->pse[frm->pse_tos].stage == BS_BRACE2)
    {
       /* BRACE2: IF => ELSE, anyting else => close */
-      if (frm->pse[frm->pse_tos].type == CT_IF)
+      if ((frm->pse[frm->pse_tos].type == CT_IF) ||
+          (frm->pse[frm->pse_tos].type == CT_ELSEIF))
       {
          frm->pse[frm->pse_tos].stage = BS_ELSE;
 

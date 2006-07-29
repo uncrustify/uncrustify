@@ -54,7 +54,9 @@ static void examine_braces(void)
       if ((pc->type == CT_BRACE_OPEN) &&
           ((pc->flags & PCF_IN_PREPROC) == 0))
       {
-         if ((((pc->parent_type == CT_IF) || (pc->parent_type == CT_ELSE)) &&
+         if ((((pc->parent_type == CT_IF) ||
+               (pc->parent_type == CT_ELSE) ||
+               (pc->parent_type == CT_ELSEIF)) &&
               ((cpd.settings[UO_mod_full_brace_if].a & AV_REMOVE) != 0)) ||
              ((pc->parent_type == CT_DO) &&
               ((cpd.settings[UO_mod_full_brace_do].a & AV_REMOVE) != 0)) ||
@@ -123,6 +125,7 @@ static void examine_brace(chunk_t *bopen)
 
             if (chunk_is_semicolon(pc) ||
                 (pc->type == CT_IF) ||
+                (pc->type == CT_ELSEIF) ||
                 (pc->type == CT_FOR) ||
                 (pc->type == CT_DO) ||
                 (pc->type == CT_WHILE) ||
@@ -207,7 +210,9 @@ static void convert_vbrace_to_brace(void)
 
    for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next_ncnl(pc))
    {
-      if ((((pc->parent_type == CT_IF) || (pc->parent_type == CT_ELSE)) &&
+      if ((((pc->parent_type == CT_IF) ||
+            (pc->parent_type == CT_ELSE) ||
+            (pc->parent_type == CT_ELSEIF)) &&
            ((cpd.settings[UO_mod_full_brace_if].a & AV_ADD) != 0))
           ||
           ((pc->parent_type == CT_FOR) &&

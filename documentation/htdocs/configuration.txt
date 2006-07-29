@@ -6,7 +6,7 @@ There are three type of arguments:
 	- boolean (true/false)
 	- numeric
 	- ignore/add/remove/force
-	
+
 "Ignore" means do not change it.
 "Add" in the context of spaces means make sure there is at least 1.
 "Add" elsewhere means make sure one is present.
@@ -28,9 +28,9 @@ All items default to false/0/ignore except:
 	- indent_columns = 8
 	- indent_with_tabs = 1
 	- indent_label = 1
-	
+
 	Refer to set_arg_defaults()
-	
+
 Terminology:
 	There are three types of parenthesis: sparen, fparen, paren.
 	sparen are found with if/for/switch/while statements.
@@ -55,7 +55,7 @@ Here's a list of all the options from options.h and a brief description.
    input_tab_size:		number
 	The original tab space value.
 	Used to determine what was already aligned. (TODO)
-	
+
    output_tab_size:		number
 	Size of tabs in the output.
 	Only important if indent_with_tabs=2.
@@ -63,109 +63,109 @@ Here's a list of all the options from options.h and a brief description.
    indent_columns:		number
 	The number of columns to indent.
 	Usually 2, 3, 4, or 8.
-	
+
    indent_with_tabs:		number
 	How to use tabs when indenting code.
 	 0 = Use spaces only
 	 1 = Use tabs to the brace-level indent (very portable)
 	 2 = Use tabs whenever possible
-	
+
    indent_paren_nl:		bool
 	If an open paren is followed by a newline, indent the next line
 	so that it lines up after the open paren.
 	Not recommended.
-	
+
    pp_space:			IARF
 	Changes the space between # and, say, define.
 	One space per #if level.
-	
+
    pp_indent:			IARF
 	Changes the indent of preprocessors.
 	One space per #if level.
-	
+
    indent_switch_case:		number		* REVISIT: make TRUE/FALSE? *
 	Spaces to indent case from switch (usually 0 or indent_columns).
-	
+
 	If set to 0 (the default):
 	switch (a) {
 	case 34:
-	
-	
+
+
 	If set to 3:
 	switch (a) {
 	   case 34:
-	
+
    indent_case_body:		number
 	Spaces to indent case body from case (usually 0).
-	
+
 	If set to 0 (the default) and indent_columns = 3:
 	case 34:
 	   break;
-	
+
 	If set to -indent_columns:
 	case 34:
 	break;
-	
+
    indent_case_brace:		number
 	Spaces to indent '{' from case.
-	
+
 	Default (0, assuming indent_columns is 3):
 	switch (a) {
 	   case 34:
 	      {
 	         break;
 	      }
-	
+
 	If set to -indent_columns:
 	switch (a) {
 	   case 34:
 	      {
 	      break;
 	      }
-	
+
    indent_brace:		number
 	Spaces to indent '{' from level (usually 0). For GNU style, set to 2.
-	
+
 	Default 0
 	if (x)
 	{
 	}
-	
+
 	If set to 2
 	if (x)
 	  {
 	  }
-	
+
    indent_braces:		bool
 	Whether braces are indented to the body level or not.
-	
+
 	Default false, indent_columns=3
 	if (x)
 	{
 	   a--;
 	}
-	
+
 	If set to true and indent_columns=3
 	if (x)
 	   {
 	   a--;
 	   }
-	
+
    indent_class:		bool
 	Whether the class body is indented.
-	
+
 	Default false:
 	class foo
 	{
 	int bar();
 	}
-	
+
 	If set to true and indent_columns=3
 	class foo
 	{
 	   int bar();
 	}
-	
+
    indent_namespace:		bool
 	Whether the namespace body is indented.
 	
@@ -174,18 +174,18 @@ Here's a list of all the options from options.h and a brief description.
 	{
 	int bar();
 	}
-	
+
 	If set to true and indent_columns=3
 	namespace foo
 	{
 	   int bar();
 	}
-	
+
    indent_label:		number
 	How to indent goto labels.
 	> 0 : Absolute column (1=leftmost column)
 	<= 0  : Subtract from brace indent
-	
+
 	Default (1):
 	{
 	   a++;
@@ -199,7 +199,7 @@ mylabel:
 	mylabel:
 	   foo();
 	}
-	
+
    indent_align_string:		bool
 	Whether to indent broken strings so that they line up.
 	
@@ -295,28 +295,28 @@ mylabel:
 
    sp_arith:			IARF
 	space around + - / * etc
-	
+
    sp_bool:			IARF
 	space around || &&
-	
+
    sp_compare:			IARF
 	space around < > ==, etc
-	
+
    sp_assign:			IARF
 	space around =, +=, etc
 
    sp_func_def_paren:		IARF
 	space between 'func' and '(' - "foo (" vs "foo("
-	
+
    sp_func_call_paren:		IARF
 	space between 'func' and '(' - "foo (" vs "foo("
-	
+
    sp_func_proto_paren:		IARF
 	space between 'func' and '(' - "foo (" vs "foo("
 
    sp_type_func:		IARF
 	Space between return type and 'func'
-        A minimum of 1 is forced except for '*'
+	A minimum of 1 is forced except for '*'
 
    sp_special_semi:		IARF
 	Space empty stmt ';' on while, if, for
@@ -333,6 +333,20 @@ mylabel:
 
    sp_inside_braces_struct:	IARF
 	Space inside struct/union '{' and '}'
+
+   sp_fparen_brace:		IARF
+	Space between function close paren and open brace
+
+   sp_macro:			IARF
+	Space between macro and value.
+	REMOVE is the same as FORCE
+	#define MACRO   value
+	             ^^^
+   sp_marco_func:		IARF
+	Space between macro function close paren and value.
+	REMOVE is the same as FORCE
+	#define MACRO_FUNC(x)   ((x) * 3)
+	                     ^^^
 
 
 #
@@ -404,15 +418,15 @@ mylabel:
 	  0: '*' not part of type
 	  1: '*' part of the type - no space
 	  2: '*' part of type, dangling
-	
+
 	Example: 0
 	typedef int *     PINT;
 	typedef char **   PPCHAR;
-	
+
 	Example: 1
 	typedef int       *PINT;
 	typedef char      **PPCHAR;
-	
+
 	Example: 2
 	typedef int      *PINT;
 	typedef char    **PPCHAR;
@@ -424,71 +438,71 @@ mylabel:
 
    nl_fdef_brace:		IARF
 	"int foo() {" vs "int foo()\n{"
-	
+
    nl_func_decl_starts:		IARF
 	Newline after '(' in a function decl
-	
+
    nl_func_decl_args:		IARF
 	Newline after each ',' in a function decl
-	
+
    nl_func_decl_end:		IARF
 	Newline before the ')' in a function decl
-	
+
    nl_func_type_name:		IARF
 	Newline between return type and func name in def
-	
+
    nl_func_var_def_blk:		number
 	Newline after a block of variable defs
-	
+
    nl_before_case:		bool
 	newline before 'case' statement
-	
+
    nl_after_return:		bool
 	newline after return statement
-	
+
    nl_after_case:		bool
 	Disallow nested "case 1: a=3;"
-	
+
    nl_fcall_brace:		IARF
 	newline between function call and open brace
 	Seems pretty useless.
-	
+
    nl_squeeze_ifdef:		bool
 	No blanks after #ifxx, #elxx, or before #endif
-	
+
    nl_enum_brace:		IARF
 	nl between enum and brace
-	
+
    nl_struct_brace:		IARF
 	nl between struct and brace
-	
+
    nl_union_brace:		IARF
 	nl between union and brace
-	
+
    nl_assign_brace:		IARF
 	nl between = and {
 
    nl_do_brace:			IARF
 	nl between do and {
-	
+
    nl_if_brace:			IARF
 	nl between if and {
-	
+
    nl_for_brace:		IARF
 	nl between for and {
-	
+
    nl_else_brace:		IARF
 	nl between else and {
-	
+
    nl_while_brace:		IARF
 	nl between while and {
-	
+
    nl_switch_brace:		IARF
 	nl between switch and {
-	
+
    nl_brace_else:		IARF
 	nl between } and else
-	
+
    nl_brace_while:		IARF
 	nl between } and while of do stmt
 
@@ -524,10 +538,18 @@ mylabel:
 
    nl_class_brace:		IARF
 	nl between class and {
-	
+
    nl_namespace_brace:		IARF
 	nl between namespace and {
-	
+
+   nl_elseif_brace:		IARF
+	nl between else if and {
+	If set to ignore, nl_if_brace is used instead.
+
+	else if (x) {
+	  vs
+	else if (x)
+	{
 
 #
 #  Blank line options
@@ -579,10 +601,42 @@ mylabel:
    mod_full_brace_nl:		number
 	don't remove braces around statements that span X newlines
 
+   mod_pawn_semicolon:		bool
+	If true, change optional semicolons to real semicolons.
+
+
 #
 #  Comment modifications
 #
 
    cmt_star_cont:		bool
 	Put a star on subsequent comment lines
+
+   cmt_cpp_to_c:		bool
+	Change CPP comments into C comments
+	Example:
+	// comment
+	/* comment */
+
+   cmt_cpp_group:		bool
+	Whether to group CPP comments that look like they are in a block.
+	cmt_star_cont, cmt_cpp_nl_start, and cmt_cpp_nl_end affect the
+	way that comments are converted.
+
+	Assuming all sub-options are true:
+	Example: // line 1
+	         // line 2
+	         // line 3
+
+	Becomes: /*
+	          * line 1
+	          * line 2
+	          * line 3
+	          */
+
+   cmt_cpp_nl_start:		bool
+	Put an empty /* on the first line of the combined CPP comments
+
+   cmt_cpp_nl_end:		bool
+	Put a newline before the closing */ of the combined CPP comments
 

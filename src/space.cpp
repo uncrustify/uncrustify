@@ -89,6 +89,19 @@ argval_t do_space(chunk_t *first, chunk_t *second)
       return(AV_REMOVE);
    }
 
+   /* Macro stuff can only return IGNORE, ADD, or FORCE */
+   if (first->type == CT_MACRO)
+   {
+      arg = cpd.settings[UO_sp_macro].a;
+      return((argval_t)(arg | ((arg != AV_IGNORE) ? AV_ADD : AV_IGNORE)));
+   }
+
+   if ((first->type == CT_FPAREN_CLOSE) && (first->parent_type == CT_MACRO_FUNC))
+   {
+      arg = cpd.settings[UO_sp_macro_func].a;
+      return((argval_t)(arg | ((arg != AV_IGNORE) ? AV_ADD : AV_IGNORE)));
+   }
+
    if (chunk_is_comment(second))
    {
       return(AV_IGNORE);

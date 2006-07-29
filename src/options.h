@@ -138,6 +138,8 @@ enum uncrustify_options
    UO_sp_inside_braces_enum,   // space inside enum '{' and '}' - "{ a, b, c }"
    UO_sp_inside_braces_struct, // space inside struct/union '{' and '}'
 
+   UO_sp_macro,                // space between macro and value, ie '#define a 6'
+   UO_sp_macro_func,           // space between macro and value, ie '#define a 6'
 
    /*
     * Line splitting options (for long lines)
@@ -217,6 +219,8 @@ enum uncrustify_options
    UO_nl_brace_else,             // nl between } and else
    UO_nl_brace_while,            // nl between } and while of do stmt
 
+   UO_nl_elseif_brace,           // nl between close paren and open brace in 'else if () {'
+
    UO_nl_define_macro,           // alter newlines in #define macros
    UO_nl_start_of_file,          // alter newlines at the start of file
    UO_nl_start_of_file_min,      // min number of newlines at the start of the file
@@ -252,6 +256,7 @@ enum uncrustify_options
    UO_mod_full_brace_for,        // add or remove braces on for
    UO_mod_full_brace_do,         // add or remove braces on do
    UO_mod_full_brace_while,      // add or remove braces on while
+   UO_mod_pawn_semicolon,        // add optional semicolons
 
 
    /*
@@ -259,6 +264,10 @@ enum uncrustify_options
     */
 
    UO_cmt_star_cont,       // put a star on subsequent comment lines
+   UO_cmt_cpp_to_c,        // convert CPP comments to C comments
+   UO_cmt_cpp_group,       // if UO_cmt_cpp_to_c, try to group in one big C comment
+   UO_cmt_cpp_nl_start,    // put a blank /* at the start of a converted group
+   UO_cmt_cpp_nl_end,      // put a nl before the */ in a converted group
 
 
    /* This is used to get the enumeration count */
@@ -301,6 +310,10 @@ options_name_tab option_name_table[] =
    OPTDEF(align_var_def_thresh,          AT_NUM),
    OPTDEF(align_var_struct_span,         AT_NUM),
    OPTDEF(align_with_tabs,               AT_BOOL),
+   OPTDEF(cmt_cpp_group,                 AT_BOOL),
+   OPTDEF(cmt_cpp_nl_end,                AT_BOOL),
+   OPTDEF(cmt_cpp_nl_start,              AT_BOOL),
+   OPTDEF(cmt_cpp_to_c,                  AT_BOOL),
    OPTDEF(cmt_star_cont,                 AT_BOOL),
    OPTDEF(eat_blanks_after_open_brace,   AT_BOOL),
    OPTDEF(eat_blanks_before_close_brace, AT_BOOL),
@@ -325,6 +338,7 @@ options_name_tab option_name_table[] =
    OPTDEF(mod_full_brace_nl,             AT_NUM),
    OPTDEF(mod_full_brace_while,          AT_IARF),
    OPTDEF(mod_paren_on_return,           AT_IARF),
+   OPTDEF(mod_pawn_semicolon,            AT_BOOL),
    OPTDEF(newlines,                      AT_LINE),
    OPTDEF(nl_after_case,                 AT_BOOL),
    OPTDEF(nl_after_func_body,            AT_NUM),
@@ -341,6 +355,7 @@ options_name_tab option_name_table[] =
    OPTDEF(nl_define_macro,               AT_BOOL),
    OPTDEF(nl_do_brace,                   AT_IARF),
    OPTDEF(nl_else_brace,                 AT_IARF),
+   OPTDEF(nl_elseif_brace,               AT_IARF),
    OPTDEF(nl_end_of_file,                AT_IARF),
    OPTDEF(nl_end_of_file_min,            AT_NUM),
    OPTDEF(nl_enum_brace,                 AT_IARF),
@@ -393,6 +408,8 @@ options_name_tab option_name_table[] =
    OPTDEF(sp_inside_paren,               AT_IARF),
    OPTDEF(sp_inside_sparen,              AT_IARF),
    OPTDEF(sp_inside_square,              AT_IARF),
+   OPTDEF(sp_macro,                      AT_IARF),
+   OPTDEF(sp_macro_func,                 AT_IARF),
    OPTDEF(sp_paren_brace,                AT_IARF),
    OPTDEF(sp_paren_paren,                AT_IARF),
    OPTDEF(sp_return_paren,               AT_IARF),

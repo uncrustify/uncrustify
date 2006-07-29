@@ -693,12 +693,19 @@ void newlines_cleanup_braces(void)
 {
    chunk_t *pc;
    chunk_t *next;
+   argval_t arg;
 
    for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next_ncnl(pc))
    {
       if (pc->type == CT_IF)
       {
          newlines_if_for_while_switch(pc, cpd.settings[UO_nl_if_brace].a);
+      }
+      else if (pc->type == CT_ELSEIF)
+      {
+         arg = cpd.settings[UO_nl_elseif_brace].a;
+         newlines_if_for_while_switch(
+            pc, (arg != AV_IGNORE) ? arg : cpd.settings[UO_nl_if_brace].a);
       }
       else if (pc->type == CT_FOR)
       {
