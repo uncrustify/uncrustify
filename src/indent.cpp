@@ -95,7 +95,7 @@ void indent_text(void)
    bool               did_newline = true;
    int                idx;
    int                vardefcol = 0;
-   int                tabsize   = cpd.settings[UO_output_tab_size].n;
+   int                indent_size = cpd.settings[UO_indent_columns].n;
    int                ref       = 0;
    int                tmp;
    struct parse_frame frm;
@@ -137,7 +137,7 @@ void indent_text(void)
             frm.level++;
             frm.pse_tos++;
             frm.pse[frm.pse_tos].type       = CT_PP;
-            frm.pse[frm.pse_tos].indent     = 1 + tabsize;
+            frm.pse[frm.pse_tos].indent     = 1 + indent_size;
             frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
             frm.pse[frm.pse_tos].open_line  = pc->orig_line;
             frm.pse[frm.pse_tos].ref        = ++ref;
@@ -265,7 +265,7 @@ void indent_text(void)
          frm.level++;
          frm.pse_tos++;
          frm.pse[frm.pse_tos].type       = pc->type;
-         frm.pse[frm.pse_tos].indent     = frm.pse[frm.pse_tos - 1].indent + tabsize;
+         frm.pse[frm.pse_tos].indent     = frm.pse[frm.pse_tos - 1].indent + indent_size;
          frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
          frm.pse[frm.pse_tos].open_line  = pc->orig_line;
          frm.pse[frm.pse_tos].ref        = ++ref;
@@ -290,12 +290,12 @@ void indent_text(void)
          if (frm.paren_count != 0)
          {
             /* We are inside ({ ... }) -- indent one tab from the paren */
-            frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent_tmp + tabsize;
+            frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent_tmp + indent_size;
          }
          else
          {
-            /* Use the prev indent level + tabsize. */
-            frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent + tabsize;
+            /* Use the prev indent level + indent_size. */
+            frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent + indent_size;
 
             /* If this brace is part of a statement, bump it out by indent_brace */
             if ((pc->parent_type == CT_IF) ||
@@ -318,13 +318,13 @@ void indent_text(void)
             }
             else if ((pc->parent_type == CT_CLASS) && !cpd.settings[UO_indent_class].b)
             {
-               frm.pse[frm.pse_tos].indent -= tabsize;
+               frm.pse[frm.pse_tos].indent -= indent_size;
                //LOG_FMT(LSYS, "!indent_class: %.*s on line %d, indent is %d\n",
                //        pc->len, pc->str, pc->orig_line, frm.pse[frm.pse_tos].indent);
             }
             else if ((pc->parent_type == CT_NAMESPACE) && !cpd.settings[UO_indent_namespace].b)
             {
-               frm.pse[frm.pse_tos].indent -= tabsize;
+               frm.pse[frm.pse_tos].indent -= indent_size;
                //LOG_FMT(LSYS, "!indent_namespace: %.*s on line %d, indent is %d\n",
                //        pc->len, pc->str, pc->orig_line, frm.pse[frm.pse_tos].indent);
             }
@@ -372,7 +372,7 @@ void indent_text(void)
          frm.pse_tos++;
          frm.pse[frm.pse_tos].type       = pc->type;
          frm.pse[frm.pse_tos].indent     = tmp;
-         frm.pse[frm.pse_tos].indent_tmp = tmp - tabsize;
+         frm.pse[frm.pse_tos].indent_tmp = tmp - indent_size;
          frm.pse[frm.pse_tos].open_line  = pc->orig_line;
          frm.pse[frm.pse_tos].ref        = ++ref;
          frm.pse[frm.pse_tos].in_preproc = (pc->flags & PCF_IN_PREPROC) != 0;
@@ -401,7 +401,7 @@ void indent_text(void)
          /* just indent one level */
          frm.pse_tos++;
          frm.pse[frm.pse_tos].type       = pc->type;
-         frm.pse[frm.pse_tos].indent     = frm.pse[frm.pse_tos - 1].indent_tmp + tabsize;
+         frm.pse[frm.pse_tos].indent     = frm.pse[frm.pse_tos - 1].indent_tmp + indent_size;
          frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
          frm.pse[frm.pse_tos].open_line  = pc->orig_line;
          frm.pse[frm.pse_tos].ref        = ++ref;
@@ -431,7 +431,7 @@ void indent_text(void)
             prev = chunk_get_prev_ncnl(pc);
             if (prev->type == CT_FUNC_CALL)
             {
-               frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent + tabsize;
+               frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent + indent_size;
             }
          }
 
@@ -440,7 +440,7 @@ void indent_text(void)
             next = chunk_get_next_nc(pc);
             if (chunk_is_newline(next))
             {
-               frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent + tabsize;
+               frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent + indent_size;
             }
          }
          frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
@@ -463,7 +463,7 @@ void indent_text(void)
             frm.pse[frm.pse_tos].type = pc->type;
             if (chunk_is_newline(next))
             {
-               frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent_tmp + tabsize;
+               frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent_tmp + indent_size;
             }
             else
             {
@@ -620,9 +620,9 @@ void indent_text(void)
           * first line (indent_tmp will be 1 or 0)
           */
          if ((pc->type == CT_NL_CONT) &&
-             (frm.pse[frm.pse_tos].indent_tmp <= tabsize))
+             (frm.pse[frm.pse_tos].indent_tmp <= indent_size))
          {
-            frm.pse[frm.pse_tos].indent_tmp = tabsize + 1;
+            frm.pse[frm.pse_tos].indent_tmp = indent_size + 1;
          }
 
          /* Get ready to indent the next item */
