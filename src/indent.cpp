@@ -15,6 +15,107 @@
 
 //#define DBG_BRACE
 
+/**
+ * General indenting approach:
+ * Indenting levels are put into a stack.
+ * 
+ * The stack entries contain:
+ *  - opening type
+ *  - brace column
+ *  - continuation column
+ * 
+ * Items that start a new stack item:
+ *  - preprocessor (new parse frame)
+ *  - Brace Open (Virtual brace also)
+ *  - Paren, Square, Angle open
+ *  - Assignments
+ *  - C++ '<<' operator (ie, cout << "blah")
+ *  - case
+ *  - class colon
+ *  - return
+ *  - types
+ *  - any other continued statement
+ * 
+ * Note that the column of items marked 'PCF_WAS_ALIGNED' is not changed.
+ * 
+ * For an open brace:
+ *  - indent increases by indent_columns
+ *  - if part of if/else/do/while/switch/etc, an extra indent may be applied
+ *  - if in a paren, then cont-col is set to column + 1, ie "({ some code })"
+ * 
+ * Open paren/square/angle:
+ * cont-col is set to the column of the item after the open paren, unless 
+ * followed by a newline, then it is set to (brace-col + indent_columns).
+ * Examples:
+ *    a_really_long_funcion_name(
+ *       param1, param2);
+ *    a_really_long_funcion_name(param1, 
+ *                               param2);
+ *
+ * Assignments:
+ * Assignments are continued aligned with the first item after the assignment,
+ * unless the assign is followed by a newline.
+ * Examples:
+ *    some.variable = asdf + asdf +
+ *                    asdf;
+ *    some.variable =
+ *       asdf + asdf + asdf;
+ * 
+ * C++ << operator:
+ * Handled the same as assignment.
+ * Examples:
+ *    cout << "this is test number: " 
+ *         << test_number;
+ * 
+ * case:
+ * Started with case or default.
+ * Terminated with close brace at level or another case or default.
+ * Special indenting according to various rules.
+ *  - indent of case label
+ *  - indent of case body
+ *  - how to handle optional braces
+ * Examples:
+ * { 
+ * case x: {
+ *    a++;
+ *    break;
+ *    }
+ * case y:
+ *    b--;
+ *    break;
+ * default:
+ *    c++;
+ *    break;
+ * }
+ * 
+ * Class colon:
+ * Indent continuation by indent_columns:
+ * class my_class :
+ *    baseclass1,
+ *    baseclass2
+ * {
+ * 
+ * Return: same as assignemts
+ * If the return statement is not fully paren'd, then the indent continues at
+ * the column of the item after the return. If it is paren'd, then the paren
+ * rules apply.
+ * return somevalue +
+ *        othervalue;
+ *
+ * Type: pretty much the same as assignments
+ * Examples:
+ * int foo,
+ *     bar,
+ *     baz;
+ * 
+ * Any other continued item:
+ * There shouldn't be anything not covered by the above cases, but any other
+ * continued item is indented by indent_columns:
+ * Example:
+ * somereallycrazylongname.with[lotsoflongstuff].
+ *    thatreallyannoysme.whenIhavetomaintain[thecode] = 3;
+ */
+
 static void indent_comment(chunk_t *pc, int col);
 
 
@@ -652,6 +753,8 @@ void indent_text(void)
 
 
 /**
+ * REVISIT: This needs to be re-checked, maybe cleaned up
+ *
  * Indents comments in a (hopefully) smart manner.
  *
  * There are two type of comments that get indented:
