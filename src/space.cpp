@@ -280,6 +280,11 @@ argval_t do_space(chunk_t *first, chunk_t *second)
       return(AV_REMOVE);
    }
 
+   if ((first->type == CT_STATE) && (second->type == CT_PAREN_OPEN))
+   {
+      return(AV_ADD);
+   }
+
    if ((first->type == CT_DELEGATE) && (second->type == CT_PAREN_OPEN))
    {
       return(AV_REMOVE);
@@ -325,6 +330,12 @@ argval_t do_space(chunk_t *first, chunk_t *second)
       {
          return(AV_ADD);
       }
+
+      /* PAWN-specific: "state (condition) next" */
+      if (first->parent_type == CT_STATE)
+      {
+         return(AV_ADD);
+      }
    }
 
    /* "foo(...)" vs "foo( ... )" */
@@ -367,6 +378,15 @@ argval_t do_space(chunk_t *first, chunk_t *second)
    if (second->type == CT_COMMA)
    {
       return(AV_REMOVE);
+   }
+
+   if (first->type == CT_DOT)
+   {
+      return(AV_REMOVE);
+   }
+   if (second->type == CT_DOT)
+   {
+      return(AV_ADD);
    }
 
    if ((first->type == CT_ARITH) || (second->type == CT_ARITH))

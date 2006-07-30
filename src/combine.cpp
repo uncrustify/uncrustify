@@ -229,6 +229,12 @@ void fix_symbols(void)
          {
             pawn_mark_function(pc);
          }
+         if ((pc->type == CT_STATE) &&
+             (next != NULL) &&
+             (next->type == CT_PAREN_OPEN))
+         {
+            set_paren_parent(next, pc->type);
+         }
       }
       else
       {
@@ -261,6 +267,14 @@ void fix_symbols(void)
                tmp->parent_type = pc->type;
             }
          }
+      }
+
+      /* Mark the braces in: "for_each_entry(xxx) { }" */
+      if ((pc->type == CT_BRACE_OPEN) &&
+          (prev->type == CT_FPAREN_CLOSE) &&
+          (prev->parent_type == CT_FUNC_CALL))
+      {
+         set_paren_parent(pc, CT_FUNC_CALL);
       }
 
       /* Check for a close paren followed by an open paren, which means that
@@ -451,7 +465,7 @@ void fix_symbols(void)
 }
 
 
-static void pawn_add_virtual_semicolons()
+static void pawn_add_virtual_semicolons(void)
 {
    chunk_t *prev;
    chunk_t *pc;
@@ -479,13 +493,17 @@ static void pawn_add_virtual_semicolons()
          }
 
          /* we just hit a newline and we have a previous token */
-         if ((prev->parent_type != CT_FUNC_DEF) &&
+         if (((prev->flags & PCF_IN_PREPROC) == 0) &&
+             (prev->parent_type != CT_FUNC_DEF) &&
              (prev->type != CT_VSEMICOLON) &&
              (prev->type != CT_SEMICOLON) &&
              (prev->type != CT_BRACE_CLOSE) &&
              (prev->type != CT_VBRACE_CLOSE) &&
              (prev->type != CT_BRACE_OPEN) &&
              (prev->type != CT_VBRACE_OPEN) &&
+             (prev->type != CT_SPAREN_OPEN) &&
+             (prev->type != CT_SPAREN_CLOSE) &&
+             (prev->type != CT_FPAREN_OPEN) &&
              (prev->brace_level == prev->level) &&
              (prev->type != CT_ARITH) &&
              (prev->type != CT_ASSIGN) &&
@@ -503,14 +521,10 @@ static void pawn_add_virtual_semicolons()
             chunk.parent_type = CT_NONE;
             chunk_add_after(&chunk, prev);
 
-            LOG_FMT(LPVSEMI, "Added VSEMI on line %d, prev='%.*s' [%s]\n",
+            LOG_FMT(LPVSEMI, "%s: Added VSEMI on line %d, prev='%.*s' [%s]\n",
+                    __func__,
                     prev->orig_line, prev->len, prev->str, get_token_name(prev->type));
             prev = NULL;
-         }
-         else
-         {
-            LOG_FMT(LPVSEMI, "check VSEMI on line %d, prev='%.*s' [%s]\n",
-                    prev->orig_line, prev->len, prev->str, get_token_name(prev->type));
          }
       }
    }
@@ -1450,59 +1464,85 @@ static void pawn_mark_function(chunk_t *pc)
    /* At this point its either a function definition or a function call
     * If the brace level is 0, then it is a definition, otherwise its a call.
     */
-   if (pc->brace_level == 0)
-   {
-      chunk_t *clp;
-      pc->type = CT_FUNC_DEF;
-
-      /* If we don't have a brace open right after the close fparen, then
-       * we need to add virtual braces around the function body.
-       */
-      clp = chunk_get_next_type(pc, CT_PAREN_CLOSE, 0);
-      last = chunk_get_next_ncnl(clp);
-      if ((last != NULL) && (last->type != CT_BRACE_OPEN))
-      {
-         LOG_FMT(LPFUNC, "%s: %d] '%.*s' fdef: expected brace open: %s\n", __func__,
-                 pc->orig_line, pc->len, pc->str, get_token_name(last->type));
-
-         chunk_t chunk;
-         chunk         = *clp;
-         chunk.str     = "{";
-         chunk.len     = 0;
-         chunk.column += clp->len;
-         chunk.type    = CT_VBRACE_OPEN;
-         chunk.parent_type = CT_FUNC_DEF;
-
-         prev = chunk_add_after(&chunk, clp);
-         last = prev;
-
-         /* find the next newline at level 0 */
-         prev = chunk_get_next_ncnl(prev);
-         do
-         {
-            if (prev->type == CT_NEWLINE)
-            {
-               break;
-            }
-            prev->level++;
-            prev->brace_level++;
-            last = prev;
-         } while ((prev = chunk_get_next(prev)) != NULL);
-
-         chunk         = *last;
-         chunk.str     = "}";
-         chunk.len     = 0;
-         chunk.column += last->len;
-         chunk.type    = CT_VBRACE_CLOSE;
-         chunk.level   = 0;
-         chunk.brace_level = 0;
-         chunk.parent_type = CT_FUNC_DEF;
-         chunk_add_after(&chunk, last);
-      }
-   }
-   else
+   if (pc->brace_level != 0)
    {
       pc->type = CT_FUNC_CALL;
+      return;
+   }
+
+   /* We are on a function definition */
+   chunk_t *clp;
+   pc->type = CT_FUNC_DEF;
+
+   /* If we don't have a brace open right after the close fparen, then
+    * we need to add virtual braces around the function body.
+    */
+   clp = chunk_get_next_type(pc, CT_PAREN_CLOSE, 0);
+   last = chunk_get_next_ncnl(clp);
+
+   /* See if there is a state clause after the function */
+   if ((last != NULL) && (last->len == 1) && (*last->str == '<'))
+   {
+      LOG_FMT(LPFUNC, "%s: %d] '%.*s' has state angle open %s\n", __func__,
+              pc->orig_line, pc->len, pc->str, get_token_name(last->type));
+
+      last->type        = CT_ANGLE_OPEN;
+      last->parent_type = CT_FUNC_DEF;
+      while ((last = chunk_get_next(last)) != NULL)
+      {
+         if ((last->len == 1) && (*last->str == '>'))
+         {
+            break;
+         }
+      }
+
+      if (last != NULL)
+      {
+         LOG_FMT(LPFUNC, "%s: %d] '%.*s' has state angle close %s\n", __func__,
+                 pc->orig_line, pc->len, pc->str, get_token_name(last->type));
+         last->type        = CT_ANGLE_CLOSE;
+         last->parent_type = CT_FUNC_DEF;
+      }
+      last = chunk_get_next_ncnl(last);
+   }
+
+   if ((last != NULL) && (last->type != CT_BRACE_OPEN))
+   {
+      LOG_FMT(LPFUNC, "%s: %d] '%.*s' fdef: expected brace open: %s\n", __func__,
+              pc->orig_line, pc->len, pc->str, get_token_name(last->type));
+
+      chunk_t chunk;
+      chunk         = *last;
+      chunk.str     = "{";
+      chunk.len     = 0;
+      chunk.type    = CT_VBRACE_OPEN;
+      chunk.parent_type = CT_FUNC_DEF;
+
+      prev = chunk_add_before(&chunk, last);
+      last = prev;
+
+      /* find the next newline at level 0 */
+      prev = chunk_get_next_ncnl(prev);
+      do
+      {
+         if (prev->type == CT_NEWLINE)
+         {
+            break;
+         }
+         prev->level++;
+         prev->brace_level++;
+         last = prev;
+      } while ((prev = chunk_get_next(prev)) != NULL);
+
+      chunk         = *last;
+      chunk.str     = "}";
+      chunk.len     = 0;
+      chunk.column += last->len;
+      chunk.type    = CT_VBRACE_CLOSE;
+      chunk.level   = 0;
+      chunk.brace_level = 0;
+      chunk.parent_type = CT_FUNC_DEF;
+      chunk_add_after(&chunk, last);
    }
 }
 

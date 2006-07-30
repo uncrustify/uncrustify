@@ -378,28 +378,45 @@ static void newline_fnc_var_def(chunk_t *br_open, int nl_count)
  * The only case where the closing brace shouldn't be the first thing on a line
  * is where the opening brace has junk after it.
  *
- * Example
+ * General rule for break before close brace:
+ * If the brace is part of a function (call or definition) OR if the only
+ * thing after the opening brace is comments, the there must be a newline
+ * before the close brace.
+ *
+ * Example of no newline before close
  * struct mystring { int  len;
  *                   char str[]; };
+ * while (*(++ptr) != 0) { }
+ *
+ * Examples of newline before close
+ * void foo() {
+ * }
+ *
  */
 static void newlines_brace_pair(chunk_t *br_open)
 {
-   chunk_t  *br_close;
    chunk_t  *prev;
    chunk_t  *next;
    chunk_t  *pc;
    argval_t val = AV_IGNORE;
+   bool     nl_close_brace = false;
 
-   if (((br_open->flags & PCF_IN_PREPROC) != 0) && !cpd.settings[UO_nl_define_macro].b)
+   if (((br_open->flags & PCF_IN_PREPROC) != 0) &&
+       !cpd.settings[UO_nl_define_macro].b)
    {
       return;
    }
 
+   LOG_FMT(LSYS, "%s: br_open: line %d, parent %s\n",
+           __func__, br_open->orig_line, get_token_name(br_open->parent_type));
+
+   next = chunk_get_next_nc(br_open);
+
+   /** Insert a newline between the '=' and open brace, if needed */
    if (br_open->parent_type == CT_ASSIGN)
    {
       /* Only mess with it if the open brace is followed by a newline */
-      next = chunk_get_next_nc(br_open);
-      if ((next != NULL) && (next->type == CT_NEWLINE))
+      if (chunk_is_newline(next))
       {
          prev = chunk_get_prev_ncnl(br_open);
          if ((cpd.settings[UO_nl_assign_brace].a & AV_ADD) != 0)
@@ -413,25 +430,26 @@ static void newlines_brace_pair(chunk_t *br_open)
       }
    }
 
+   /* Eat any extra newlines after the brace open */
    if (cpd.settings[UO_eat_blanks_after_open_brace].b)
    {
-      pc = chunk_get_next_nc(br_open);
-      if (chunk_is_newline(pc))
+      if (chunk_is_newline(next))
       {
-         if (pc->nl_count > 1)
+         if (next->nl_count > 1)
          {
-            pc->nl_count = 1;
+            next->nl_count = 1;
          }
       }
    }
 
-   /* Grab the chunk before the open brace */
-   prev = chunk_get_prev_ncnl(br_open);
-
-   /* Handle weird function as for() stuff: "for_each_entry(a, b,c ) {" */
-   if ((prev != NULL) && (prev->type == CT_FPAREN_CLOSE))
+   /* Handle the cases where the brace is part of a function call or definition */
+   if ((br_open->parent_type == CT_FUNC_DEF) ||
+       (br_open->parent_type == CT_FUNC_CALL))
    {
-      /* Make sure nothing follows the open brace */
+      /* Need to force a newline before the close brace */
+      nl_close_brace = true;
+
+      /* handle newlines after the open brace */
       pc = chunk_get_next_ncnl(br_open);
       newline_add_between(br_open, pc);
 
@@ -439,10 +457,11 @@ static void newlines_brace_pair(chunk_t *br_open)
             cpd.settings[UO_nl_fdef_brace].a :
             cpd.settings[UO_nl_fcall_brace].a;
 
-      //      fprintf(stderr, "%s: val=%d for brace on line %d - parent=%s\n", __func__,
-      //              val, br_open->orig_line, get_token_name(br_open->parent_type));
       if (val != AV_IGNORE)
       {
+         /* Grab the chunk before the open brace */
+         prev = chunk_get_prev_ncnl(br_open);
+
          if (val & AV_ADD)
          {
             newline_add_between(prev, br_open);
@@ -459,39 +478,44 @@ static void newlines_brace_pair(chunk_t *br_open)
       }
    }
 
-   /* Find the closing brace */
+   /* Grab the matching brace close */
+   chunk_t  *br_close;
    br_close = chunk_get_next_type(br_open, CT_BRACE_CLOSE, br_open->level);
-   if ((br_close != NULL) &&
-       ((br_close->parent_type == CT_FUNC_DEF) ||
-        (br_close->parent_type == CT_FUNC_CALL) ||
-        (br_close->parent_type == CT_FUNCTION)))
+   if (br_close == NULL)
    {
-      pc = chunk_get_prev_ncnl(br_close);
-      newline_add_between(pc, br_close);
+      return;
    }
 
-   /**
-    * If the open brace hits a CT_NEWLINE, CT_NL_CONT, CT_COMMENT_MULTI, or
-    * CT_COMMENT_CPP without hitting anything other than CT_COMMENT, then
-    * there should be a newline before the close brace.
-    */
-   pc = chunk_get_next(br_open);
-   while ((pc != NULL) && (pc->type == CT_COMMENT))
+   if (!nl_close_brace)
    {
-      pc = chunk_get_next(pc);
-   }
-
-   if ((pc != NULL) && (br_close != NULL))
-   {
-      prev = chunk_get_prev_nblank(br_close);
+      /**
+       * If the open brace hits a CT_NEWLINE, CT_NL_CONT, CT_COMMENT_MULTI, or
+       * CT_COMMENT_CPP without hitting anything other than CT_COMMENT, then
+       * there should be a newline before the close brace.
+       */
+      pc = chunk_get_next(br_open);
+      while ((pc != NULL) && (pc->type == CT_COMMENT))
+      {
+         pc = chunk_get_next(pc);
+      }
       if (chunk_is_newline(pc) || chunk_is_comment(pc))
       {
-         newline_add_between(prev, br_close);
+         nl_close_brace = true;
       }
-      else
-      {
-         newline_del_between(prev, br_close);
-      }
+   }
+
+   prev = chunk_get_prev_nblank(br_close);
+   if (nl_close_brace)
+   {
+      LOG_FMT(LSYS, " -=> ADD newlines: br_close: line %d\n",
+              br_close->orig_line);
+      newline_add_between(prev, br_close);
+   }
+   else
+   {
+      LOG_FMT(LSYS, " -=> REMOVE newlines: br_close: line %d\n",
+               br_close->orig_line);
+      newline_del_between(prev, br_close);
    }
 
    if (cpd.settings[UO_eat_blanks_before_close_brace].b)

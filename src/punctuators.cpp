@@ -89,6 +89,7 @@ static const chunk_tag_t symbols1[] =
    { "~", CT_INV,          LANG_ALL                                         },
    { ",", CT_COMMA,        LANG_ALL                                         },
    { ".", CT_MEMBER,       LANG_ALLC                                        },
+   { ".", CT_DOT,          LANG_PAWN                                        },
    { ":", CT_COLON,        LANG_ALL                                         },
    { ";", CT_SEMICOLON,    LANG_ALL                                         },
    { "<", CT_ANGLE_OPEN,   LANG_ALL                                         },

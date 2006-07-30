@@ -31,6 +31,7 @@ static bool close_statement(struct parse_frame *frm, chunk_t *pc);
 static bool check_complex_statements(struct parse_frame *frm, chunk_t *pc);
 static bool handle_complex_close(struct parse_frame *frm, chunk_t *pc);
 
+chunk_t *pawn_check_vsemicolon(chunk_t *pc);
 
 static int preproc_start(struct parse_frame *frm, chunk_t *pc)
 {
@@ -136,10 +137,21 @@ void brace_cleanup(void)
          pp_level = preproc_start(&frm, pc);
       }
 
+      /* Do before assigning stuff from the frame */
+      if ((cpd.lang_flags & LANG_PAWN) != 0)
+      {
+         if ((frm.pse[frm.pse_tos].type == CT_VBRACE_OPEN) &&
+             (pc->type == CT_NEWLINE))
+         {
+            pc = pawn_check_vsemicolon(pc);
+         }
+      }
+
       /* Assume the level won't change */
       pc->level       = frm.level;
       pc->brace_level = frm.brace_level;
       pc->pp_level    = pp_level;
+
 
       /**
        * #define bodies get the full formatting treatment
@@ -255,11 +267,20 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
     * The semicolon isn't handled at all.
     * TODO: may need to float VBRACE past comments until newline?
     */
-   if ((frm->pse[frm->pse_tos].type == CT_VBRACE_OPEN) &&
-       chunk_is_semicolon(pc))
+   if (frm->pse[frm->pse_tos].type == CT_VBRACE_OPEN)
    {
-      cpd.consumed = true;
-      close_statement(frm, pc);
+      if (chunk_is_semicolon(pc))
+      {
+         cpd.consumed = true;
+         close_statement(frm, pc);
+      }
+      else if ((cpd.lang_flags & LANG_PAWN) != 0)
+      {
+         if (pc->type == CT_BRACE_CLOSE)
+         {
+            close_statement(frm, pc);
+         }
+      }
    }
 
    /* Handle close paren, vbrace, brace, and square */
@@ -772,3 +793,64 @@ bool close_statement(struct parse_frame *frm, chunk_t *pc)
    }
    return(false);
 }
+
+
+
+/**
+ * We are in a virtual brace and hit a newline.
+ * If this should end the vbrace, then insert a VSEMICOLON and return that.
+ *
+ * @param pc   The newline (CT_NEWLINE)
+ * @return     Either the newline or the newly inserted virtual semicolon
+ */
+chunk_t *pawn_check_vsemicolon(chunk_t *pc)
+{
+   chunk_t *vb_open;
+   chunk_t *prev;
+
+   /* Grab the open VBrace */
+   vb_open = chunk_get_prev_type(pc, CT_VBRACE_OPEN, -1);
+
+   /**
+    * Grab the item before the newline
+    * Don't do anything if:
+    *  - the only thing previous is the V-Brace open
+    *  - in a preprocessor
+    *  - level > (vb_open->level + 1) -- ie, in () or []
+    *  - it is something that needs a continuation
+    *    + arith, assign, bool, comma, compare
+    */
+   prev = chunk_get_prev_ncnl(pc);
+   if ((prev == NULL) ||
+       (prev == vb_open) ||
+       ((prev->flags & PCF_IN_PREPROC) != 0) ||
+       (prev->level > (vb_open->level + 1)) ||
+       (prev->type == CT_ARITH) ||
+       (prev->type == CT_ASSIGN) ||
+       (prev->type == CT_BOOL) ||
+       (prev->type == CT_COMMA) ||
+       (prev->type == CT_COMPARE))
+   {
+      if (prev != NULL)
+      {
+         LOG_FMT(LPVSEMI, "%s:  no  VSEMI on line %d, prev='%.*s' [%s]\n",
+                 __func__, prev->orig_line, prev->len, prev->str, get_token_name(prev->type));
+      }
+      return(pc);
+   }
+
+   chunk_t chunk;
+
+   chunk = *pc;
+   chunk.type = CT_VSEMICOLON;
+   chunk.len  = cpd.settings[UO_mod_pawn_semicolon].b ? 1 : 0;
+   chunk.str  = ";";
+   chunk.parent_type = CT_NONE;
+   pc = chunk_add_before(&chunk, pc);
+
+   LOG_FMT(LPVSEMI, "%s: Added VSEMI on line %d, prev='%.*s' [%s]\n",
+           __func__, prev->orig_line, prev->len, prev->str, get_token_name(prev->type));
+
+   return(pc);
+}
+

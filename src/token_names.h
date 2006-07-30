@@ -154,6 +154,7 @@ const char *token_names[] =
    "STATE",
    "STOCK",
    "TAGOF",
+   "DOT",
    "LOCK",
    "AS",
    "IN",

@@ -187,6 +187,7 @@ typedef enum
    CT_STATE,
    CT_STOCK,
    CT_TAGOF,
+   CT_DOT,
 
    /* C-sharp crap */
    CT_LOCK,             /* lock/unlock */
