@@ -1,0 +1,41 @@
+
+enum token
+	{
+	t_type,
+	Rational: t_value,
+	t_word[20],
+	}
+
+
+new bool:flag = true     /* "flag" can only hold "true" or "false" */
+const error:success = 0
+const error:fatal= 1
+const error:nonfatal = 2
+error:errno = fatal
+
+
+main() {
+	new Float:xpos
+	new Float:ypos
+
+	new apple:elstar    /* variable "elstar" with tag "apple" */
+	new orange:valencia /* variable "valencia" with tag "orange" */
+	new x               /* untagged variable "x" */
+	elstar = valencia   /* tag mismatch */
+	elstar = x          /* tag mismatch */
+	x = valencia        /* ok */
+
+	if (apple:valencia < elstar)
+		valencia = orange:elstar
+
+	#pragma rational Float
+	
+	new Float:limit = -5.0
+	new Float:value = -1.0
+	if (value < limit)
+	     printf("Value %f below limit %f\n", _:value, _:limit)
+	else
+	     printf("Value above limit\n")
+
+}
+
