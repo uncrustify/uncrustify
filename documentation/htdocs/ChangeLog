@@ -43,7 +43,7 @@ Changes in uncrustify-0.0.24
  - Fix usage of indent_columns; output_tab_size is only needed if using tabs
  - New options: sp_fparen_brace, sp_macro, sp_marco_func,
    nl_elseif_brace, mod_pawn_semicolon, cmt_cpp_to_c, cmt_cpp_group,
-   cmt_cpp_nl_start, cmt_cpp_nl_end
+   cmt_cpp_nl_start, cmt_cpp_nl_end, sp_after_tag
 
 
 Changes in uncrustify-0.0.23

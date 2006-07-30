@@ -80,7 +80,7 @@ struct parse_frame
 #define PCF_VAR_1ST            (1 << 6)  /* 1st variable def in a statement */
 #define PCF_VAR_1ST_DEF        (PCF_VAR_DEF | PCF_VAR_1ST)
 #define PCF_VAR_INLINE         (1 << 7)  /* type was an inline struct/enum/union */
-#define PCF_DEF_ALIGNED        (1 << 8)
+#define PCF_IN_ENUM            (1 << 8)  /* in enum */
 #define PCF_IN_FCN_DEF         (1 << 9)  /* inside function def parens */
 #define PCF_IN_FCN_CALL        (1 << 10) /* inside function call parens */
 #define PCF_IN_SPAREN          (1 << 11) /* inside for/if/while/switch parens */

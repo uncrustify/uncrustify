@@ -155,6 +155,8 @@ const char *token_names[] =
    "STOCK",
    "TAGOF",
    "DOT",
+   "TAG",
+   "TAG_COLON",
    "LOCK",
    "AS",
    "IN",

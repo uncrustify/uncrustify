@@ -142,6 +142,8 @@ enum uncrustify_options
    UO_sp_macro_func,           // space between macro and value, ie '#define a 6'
 
    UO_sp_square_fparen,        // weird pawn stuff: native yark[rect](a[rect])
+   UO_sp_after_tag,            // pawn: space after a tag colon
+
 
    /*
     * Line splitting options (for long lines)
@@ -388,6 +390,7 @@ options_name_tab option_name_table[] =
    OPTDEF(sp_after_cast,                 AT_IARF),
    OPTDEF(sp_after_comma,                AT_IARF),
    OPTDEF(sp_after_sparen,               AT_IARF),
+   OPTDEF(sp_after_tag,                  AT_IARF),
    OPTDEF(sp_arith,                      AT_IARF),
    OPTDEF(sp_assign,                     AT_IARF),
    OPTDEF(sp_before_angle,               AT_IARF),

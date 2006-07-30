@@ -166,6 +166,19 @@ argval_t do_space(chunk_t *first, chunk_t *second)
       return(AV_REMOVE);
    }
 
+   if (first->type == CT_TAG_COLON)
+   {
+      if (second->type == CT_ELLIPSIS)
+      {
+         return(AV_FORCE);
+      }
+      return(cpd.settings[UO_sp_after_tag].a);
+   }
+   if (second->type == CT_TAG_COLON)
+   {
+      return(AV_REMOVE);
+   }
+
    /* handle '~' */
    if (first->type == CT_DESTRUCTOR)
    {

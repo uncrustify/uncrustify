@@ -348,6 +348,9 @@ mylabel:
 	#define MACRO_FUNC(x)   ((x) * 3)
 	                     ^^^
 
+   sp_after_tag:		IARF
+	PAWN only.  Control the space after the tag colon.
+
 
 #
 #  Code alignment (not left column spaces/tabs)

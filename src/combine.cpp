@@ -495,11 +495,15 @@ static void pawn_add_virtual_semicolons(void)
          /* we just hit a newline and we have a previous token */
          if (((prev->flags & PCF_IN_PREPROC) == 0) &&
              (prev->parent_type != CT_FUNC_DEF) &&
+             (prev->parent_type != CT_ENUM) &&
+             ((prev->flags & PCF_IN_ENUM) == 0) &&
              (prev->type != CT_VSEMICOLON) &&
              (prev->type != CT_SEMICOLON) &&
              (prev->type != CT_BRACE_CLOSE) &&
              (prev->type != CT_VBRACE_CLOSE) &&
              (prev->type != CT_BRACE_OPEN) &&
+             (prev->type != CT_ELSE) &&
+             (prev->type != CT_DO) &&
              (prev->type != CT_VBRACE_OPEN) &&
              (prev->type != CT_SPAREN_OPEN) &&
              (prev->type != CT_SPAREN_CLOSE) &&
@@ -509,6 +513,7 @@ static void pawn_add_virtual_semicolons(void)
              (prev->type != CT_ASSIGN) &&
              (prev->type != CT_BOOL) &&
              (prev->type != CT_COMMA) &&
+             (prev->type != CT_COLON) &&
              (prev->type != CT_COMPARE))
          {
             chunk_t chunk;
@@ -922,7 +927,14 @@ static void fix_enum_struct_union(chunk_t *pc)
    next = chunk_get_next_ncnl(pc);
    if (next->type == CT_TYPE)
    {
+      next->parent_type = pc->type;
       next = chunk_get_next_ncnl(next);
+
+      if (((cpd.lang_flags & LANG_PAWN) != 0) &&
+          (next->type == CT_PAREN_OPEN))
+      {
+         next = set_paren_parent(next, CT_ENUM);
+      }
    }
    if (next->type == CT_BRACE_OPEN)
    {
@@ -930,6 +942,8 @@ static void fix_enum_struct_union(chunk_t *pc)
       {
          mark_struct_union_body(next);
       }
+
+      flag_parens(next, PCF_IN_ENUM, CT_NONE, CT_NONE, false);
 
       /* Skip to the closing brace */
       next->parent_type = pc->type;
@@ -1140,7 +1154,30 @@ void combine_labels(void)
          {
             chunk_t *nextprev = chunk_get_prev_ncnl(next);
 
-            if (cur->type == CT_WORD)
+            if ((cpd.lang_flags & LANG_PAWN) != 0)
+            {
+               if ((cur->type == CT_WORD) ||
+                   (cur->type == CT_BRACE_CLOSE))
+               {
+                  c_token_t new_type = CT_TAG;
+
+                  tmp = chunk_get_next_nc(next);
+                  if (chunk_is_newline(prev) && chunk_is_newline(tmp))
+                  {
+                     new_type   = CT_LABEL;
+                     next->type = CT_LABEL_COLON;
+                  }
+                  else
+                  {
+                     next->type = CT_TAG_COLON;
+                  }
+                  if (cur->type == CT_WORD)
+                  {
+                     cur->type = new_type;
+                  }
+               }
+            }
+            else if (cur->type == CT_WORD)
             {
                if (chunk_is_newline(prev))
                {

@@ -188,6 +188,8 @@ typedef enum
    CT_STOCK,
    CT_TAGOF,
    CT_DOT,
+   CT_TAG,
+   CT_TAG_COLON,
 
    /* C-sharp crap */
    CT_LOCK,             /* lock/unlock */
