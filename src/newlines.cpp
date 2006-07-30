@@ -507,14 +507,10 @@ static void newlines_brace_pair(chunk_t *br_open)
    prev = chunk_get_prev_nblank(br_close);
    if (nl_close_brace)
    {
-      LOG_FMT(LSYS, " -=> ADD newlines: br_close: line %d\n",
-              br_close->orig_line);
       newline_add_between(prev, br_close);
    }
    else
    {
-      LOG_FMT(LSYS, " -=> REMOVE newlines: br_close: line %d\n",
-               br_close->orig_line);
       newline_del_between(prev, br_close);
    }
 
