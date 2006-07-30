@@ -407,9 +407,6 @@ static void newlines_brace_pair(chunk_t *br_open)
       return;
    }
 
-   LOG_FMT(LSYS, "%s: br_open: line %d, parent %s\n",
-           __func__, br_open->orig_line, get_token_name(br_open->parent_type));
-
    next = chunk_get_next_nc(br_open);
 
    /** Insert a newline between the '=' and open brace, if needed */
