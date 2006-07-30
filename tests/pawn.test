@@ -7,5 +7,6 @@
 60000 pawn.cfg pawn/functions.pawn pawn/60000-functions.pawn
 60001 pawn.cfg pawn/comment.p pawn/60001-comment.p
 60002 pawn.cfg pawn/traffic.p pawn/60002-traffic.p
-
+60003 pawn.cfg pawn/tags.pawn pawn/60003-tags.pawn
+60004 pawn.cfg pawn/enum.pawn pawn/60004-enum.pawn
 

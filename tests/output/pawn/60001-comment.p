@@ -6,8 +6,7 @@ main()
 @keypressed(key) <plain>
 {
     state (key == '/') slash;
-    if (key != '/')
-    {
+    if (key != '/') {
         echo key;
     }
 }
@@ -16,8 +15,7 @@ main()
     state (key != '/') plain;
     state (key == '*') comment;
     echo '/';    /* print '/' held back from previous state */
-    if (key != '/')
-    {
+    if (key != '/') {
         echo key;
     }
 }

@@ -3,6 +3,11 @@ enum rect { left, top , right, bottom }
 
 enum boot (<<= 1) { a=1, b, c, d }
 
+enum booty (<<= 1)
+{
+a=1, b, c, d
+}
+
 forward addvector(a[], const b[], size)
 
 enum message {

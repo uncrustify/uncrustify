@@ -13,6 +13,7 @@ const error:fatal= 1
 const error:nonfatal = 2
 error:errno = fatal
 
+native printf(const format[], {Float, _}: ...);
 
 main() {
 	new Float:xpos
@@ -27,7 +28,8 @@ main() {
 
 	if (apple:valencia < elstar)
 		valencia = orange:elstar
-
+		
+some_label:	// target for a goto
 	#pragma rational Float
 	
 	new Float:limit = -5.0
@@ -36,6 +38,6 @@ main() {
 	     printf("Value %f below limit %f\n", _:value, _:limit)
 	else
 	     printf("Value above limit\n")
-
+	goto some_label
 }
 
