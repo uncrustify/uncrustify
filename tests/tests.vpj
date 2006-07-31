@@ -99,6 +99,7 @@
 			<F N="config/nl_class-r.cfg"/>
 			<F N="config/nl_namespace-a.cfg"/>
 			<F N="config/nl_namespace-r.cfg"/>
+			<F N="config/pawn-escape.cfg"/>
 			<F N="config/pawn.cfg"/>
 			<F N="config/pp-indent-1.cfg"/>
 			<F N="config/pp-indent-2.cfg"/>
@@ -173,8 +174,13 @@
 				<F N="input/d/volatile.d"/>
 			</Folder>
 			<Folder Name="pawn">
+				<F N="input/pawn/comment.p"/>
+				<F N="input/pawn/enum.pawn"/>
 				<F N="input/pawn/functions.pawn"/>
+				<F N="input/pawn/rpn_calc.pawn"/>
+				<F N="input/pawn/tags.pawn"/>
 				<F N="input/pawn/test1.pawn"/>
+				<F N="input/pawn/traffic.p"/>
 			</Folder>
 		</Folder>
 		<Folder Name="output">

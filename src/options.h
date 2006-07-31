@@ -274,6 +274,7 @@ enum uncrustify_options
    UO_cmt_cpp_nl_start,    // put a blank /* at the start of a converted group
    UO_cmt_cpp_nl_end,      // put a nl before the */ in a converted group
 
+   UO_string_escape_char,       // the string escape char to use
 
    /* This is used to get the enumeration count */
    UO_option_count
@@ -425,6 +426,7 @@ options_name_tab option_name_table[] =
    OPTDEF(sp_special_semi,               AT_IARF),
    OPTDEF(sp_square_fparen,              AT_IARF),
    OPTDEF(sp_type_func,                  AT_IARF),
+   OPTDEF(string_escape_char,            AT_NUM),
 };
 
 #endif   /* DEFINE_OPTION_NAME_TABLE */

@@ -21,7 +21,7 @@ foo()
 
 stock ts_is_waiting(id)
 {
-    return (ts_get_message(id) == TSMSG_WAITING);
+    return(ts_get_message(id) == TSMSG_WAITING);
 }
 
 // regular old functions

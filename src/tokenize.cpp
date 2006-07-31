@@ -271,8 +271,8 @@ static bool parse_string(chunk_t *pc, int quote_idx, bool allow_escape)
 {
    bool escaped = 0;
    int  end_ch;
-   int  len     = quote_idx;
-   bool is_pawn = (cpd.lang_flags & LANG_PAWN) != 0;
+   int  len         = quote_idx;
+   char escape_char = cpd.settings[UO_string_escape_char].n;
 
    end_ch = get_char_table(pc->str[len]) & 0xff;
    len++;
@@ -281,7 +281,7 @@ static bool parse_string(chunk_t *pc, int quote_idx, bool allow_escape)
    {
       if (!escaped)
       {
-         if ((pc->str[len] == '\\') || (is_pawn && (pc->str[len] == '^')))
+         if (pc->str[len] == escape_char)
          {
             escaped = allow_escape;
          }

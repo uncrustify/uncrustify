@@ -53,7 +53,7 @@ static options_name_tab *find_entry(const char *name)
 
    tmp.name = name;
    entry    = (options_name_tab *)bsearch(&tmp, &option_name_table[0],
-                                          ARRAY_SIZE(option_name_table) - 1,
+                                          ARRAY_SIZE(option_name_table),
                                           sizeof(option_name_table[0]),
                                           name_compare_func);
 
@@ -276,10 +276,11 @@ int load_option_file(const char *filename)
  */
 void set_option_defaults(void)
 {
-   cpd.settings[UO_newlines].le        = LE_AUTO;
-   cpd.settings[UO_input_tab_size].n   = 8;
-   cpd.settings[UO_output_tab_size].n  = 8;
-   cpd.settings[UO_indent_columns].n   = 8;
-   cpd.settings[UO_indent_with_tabs].n = 1;
-   cpd.settings[UO_indent_label].n     = 1;
+   cpd.settings[UO_newlines].le          = LE_AUTO;
+   cpd.settings[UO_input_tab_size].n     = 8;
+   cpd.settings[UO_output_tab_size].n    = 8;
+   cpd.settings[UO_indent_columns].n     = 8;
+   cpd.settings[UO_indent_with_tabs].n   = 1;
+   cpd.settings[UO_indent_label].n       = 1;
+   cpd.settings[UO_string_escape_char].n = '\\';
 }
