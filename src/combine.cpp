@@ -139,8 +139,6 @@ void fix_symbols(void)
    chunk_t dummy;
 
 
-   process_returns();
-
    mark_define_expressions();
 
    memset(&dummy, 0, sizeof(dummy));
@@ -418,6 +416,7 @@ void fix_symbols(void)
    }
 
    pawn_add_virtual_semicolons();
+   process_returns();
 
    /**
     * 2nd pass - handle variable definitions
