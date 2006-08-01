@@ -705,6 +705,8 @@ static chunk_t *insert_vbrace(chunk_t *pc, bool after,
       ref = chunk_get_prev(pc);
       while (chunk_is_newline(ref) || chunk_is_comment(ref))
       {
+         ref->level++;
+         ref->brace_level++;
          ref = chunk_get_prev(ref);
       }
 
