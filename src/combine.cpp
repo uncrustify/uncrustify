@@ -1459,9 +1459,17 @@ static chunk_t *mark_variable_definition(chunk_t *start)
 static void pawn_mark_function(chunk_t *pc)
 {
    chunk_t *prev;
+   chunk_t *next;
    chunk_t *last = pc;
 
    prev = pc;
+
+   /* If followed by a colon, this can't be a function (native exception) */
+   next = chunk_get_next_ncnl(pc);
+   if (chunk_is_str(next, ":", 1))
+   {
+      return;
+   }
 
    // find the first token on this line
    while (((prev = chunk_get_prev(prev)) != NULL) &&
@@ -1496,8 +1504,9 @@ static void pawn_mark_function(chunk_t *pc)
       if ((last->type == CT_FORWARD) ||
           (last->type == CT_NATIVE))
       {
-         LOG_FMT(LPFUNC, "%s: %d] '%.*s' proto due to %s\n", __func__,
-                 pc->orig_line, pc->len, pc->str, get_token_name(last->type));
+         LOG_FMT(LPFUNC, "%s: %d] '%.*s' [%s] proto due to %s\n", __func__,
+                 pc->orig_line, pc->len, pc->str, get_token_name(pc->type),
+                 get_token_name(last->type));
          pc->type = CT_FUNC_PROTO;
          return;
       }
