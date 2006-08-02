@@ -1470,6 +1470,12 @@ static void pawn_mark_function(chunk_t *pc)
       last = prev;
    }
 
+   if (last != NULL)
+   {
+      LOG_FMT(LPFUNC, "%s: %d] first item on the line is '%.*s' [%s]\n", __func__,
+              last->orig_line, last->len, last->str, get_token_name(last->type));
+   }
+
    /* If the function name is the first thing on the line, then
     * we need to check for a semicolon after the close paren
     */
@@ -1513,8 +1519,14 @@ static void pawn_mark_function(chunk_t *pc)
    /* If we don't have a brace open right after the close fparen, then
     * we need to add virtual braces around the function body.
     */
-   clp = chunk_get_next_type(pc, CT_PAREN_CLOSE, 0);
+   clp = chunk_get_next_str(pc, ")", 1, 0);
    last = chunk_get_next_ncnl(clp);
+
+   if (last != NULL)
+   {
+      LOG_FMT(LPFUNC, "%s: %d] last is '%.*s' [%s]\n", __func__,
+              last->orig_line, last->len, last->str, get_token_name(last->type));
+   }
 
    /* See if there is a state clause after the function */
    if ((last != NULL) && (last->len == 1) && (*last->str == '<'))
@@ -1561,7 +1573,10 @@ static void pawn_mark_function(chunk_t *pc)
       prev = chunk_get_next_ncnl(prev);
       do
       {
-         if (prev->type == CT_NEWLINE)
+         LOG_FMT(LPFUNC, "%s:%d] check %s, level %d\n", __func__,
+                 prev->orig_line, get_token_name(prev->type), prev->level);
+         if ((prev->type == CT_NEWLINE) &&
+             (prev->level == 0))
          {
             break;
          }
@@ -1569,6 +1584,9 @@ static void pawn_mark_function(chunk_t *pc)
          prev->brace_level++;
          last = prev;
       } while ((prev = chunk_get_next(prev)) != NULL);
+
+      LOG_FMT(LPFUNC, "%s:%d] ended on %s, level %d\n", __func__,
+              prev->orig_line, get_token_name(prev->type), prev->level);
 
       chunk         = *last;
       chunk.str     = "}";

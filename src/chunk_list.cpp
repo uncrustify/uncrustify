@@ -320,6 +320,23 @@ chunk_t *chunk_get_next_type(chunk_t *cur, c_token_t type,
    return(pc);
 }
 
+chunk_t *chunk_get_next_str(chunk_t *cur, const char *str, int len, int level)
+{
+   chunk_t *pc = cur;
+
+   do
+   {
+      pc = chunk_get_next(pc);
+      if ((pc == NULL) ||
+          ((pc->len == len) && (memcmp(str, pc->str, len) == 0) &&
+           ((pc->level == level) || (level < 0))))
+      {
+         break;
+      }
+   } while (pc != NULL);
+   return(pc);
+}
+
 /**
  * Grabs the prev chunk of the given type at the level.
  *
@@ -345,6 +362,22 @@ chunk_t *chunk_get_prev_type(chunk_t *cur, c_token_t type,
    return(pc);
 }
 
+chunk_t *chunk_get_prev_str(chunk_t *cur, const char *str, int len, int level)
+{
+   chunk_t *pc = cur;
+
+   do
+   {
+      pc = chunk_get_prev(pc);
+      if ((pc == NULL) ||
+          ((pc->len == len) && (memcmp(str, pc->str, len) == 0) &&
+           ((pc->level == level) || (level < 0))))
+      {
+         break;
+      }
+   } while (pc != NULL);
+   return(pc);
+}
 
 /**
  * Check to see if there is a newline bewteen the two chunks

@@ -41,10 +41,11 @@ chunk_t *chunk_get_prev_nnl(chunk_t *cur);
 chunk_t *chunk_get_prev_ncnl(chunk_t *cur);
 chunk_t *chunk_get_prev_ncnlnp(chunk_t *cur);
 
-chunk_t *chunk_get_next_type(chunk_t *cur, c_token_t type,
-                             int level);
-chunk_t *chunk_get_prev_type(chunk_t *cur, c_token_t type,
-                             int level);
+chunk_t *chunk_get_next_type(chunk_t *cur, c_token_t type, int level);
+chunk_t *chunk_get_prev_type(chunk_t *cur, c_token_t type, int level);
+
+chunk_t *chunk_get_next_str(chunk_t *cur, const char *str, int len, int level);
+chunk_t *chunk_get_prev_str(chunk_t *cur, const char *str, int len, int level);
 
 /**
  * Skips to the closing match for the current paren/brace/square.

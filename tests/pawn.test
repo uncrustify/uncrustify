@@ -9,6 +9,7 @@
 60002 pawn.cfg pawn/traffic.p pawn/60002-traffic.p
 60003 pawn.cfg pawn/tags.pawn pawn/60003-tags.pawn
 60004 pawn.cfg pawn/enum.pawn pawn/60004-enum.pawn
+60005 pawn.cfg pawn/unbraced.p pawn/60005-unbraced.p
 
 60010 pawn-escape.cfg pawn/str-escape.p pawn/60010-str-escape.p
 
