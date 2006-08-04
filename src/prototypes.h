@@ -11,7 +11,7 @@
 
 
 /*
- *  uncrustify.c
+ *  uncrustify.cpp
  */
 
 const char *get_token_name(c_token_t token);
@@ -19,7 +19,7 @@ void log_pcf_flags(log_sev_t sev, UINT32 flags);
 
 
 /*
- *  c_output.c
+ *  output.cpp
  */
 
 void output_text(FILE *pfile);
@@ -34,7 +34,7 @@ void add_char(char ch);
 
 
 /*
- *  c_args.c
+ *  args.cpp
  */
 
 void set_option_defaults(void);
@@ -44,7 +44,7 @@ const options_name_tab *get_option_name(int uo);
 
 
 /*
- *  c_indent.c
+ *  indent.cpp
  */
 
 void indent_text(void);
@@ -54,7 +54,7 @@ void reindent_line(chunk_t *pc, int column);
 
 
 /*
- *  c_align.c
+ *  align.cpp
  */
 
 void align_all(void);
@@ -68,14 +68,14 @@ chunk_t *align_assign(chunk_t *first, int span, int thresh);
 
 
 /*
- *  braces.c
+ *  braces.cpp
  */
 
 void do_braces(void);
 
 
 /*
- *  c_space.c
+ *  space.cpp
  */
 
 void space_text(void);
@@ -83,7 +83,7 @@ int space_col_align(chunk_t *first, chunk_t *second);
 
 
 /*
- *  c_combine.c
+ *  combine.cpp
  */
 
 void fix_symbols(void);
@@ -93,7 +93,7 @@ void make_type(chunk_t *pc);
 
 
 /*
- *  c_newlines.c
+ *  newlines.cpp
  */
 
 void newlines_cleanup_braces(void);
@@ -104,28 +104,28 @@ void do_blank_lines(void);
 
 
 /*
- *  tokenize.c
+ *  tokenize.cpp
  */
 
 void tokenize(const char *data, int data_len);
 
 
 /*
- *  tokenize_cleanup.c
+ *  tokenize_cleanup.cpp
  */
 
 void tokenize_cleanup(void);
 
 
 /*
- *  brace_cleanup.c
+ *  brace_cleanup.cpp
  */
 
 void brace_cleanup(void);
 
 
 /*
- *  keywords.c
+ *  keywords.cpp
  */
 
 int load_keyword_file(const char *filename);
@@ -135,7 +135,7 @@ void output_types(FILE *pfile);
 
 
 /*
- *  defines.c
+ *  defines.cpp
  */
 
 int load_define_file(const char *filename);
@@ -145,13 +145,13 @@ void output_defines(FILE *pfile);
 
 
 /*
- *  punctuators.c
+ *  punctuators.cpp
  */
 const chunk_tag_t *find_punctuator(const char *str, UINT8 lang_flags);
 
 
 /*
- *  parse_frame.c
+ *  parse_frame.cpp
  */
 
 void pf_copy(struct parse_frame *dst, const struct parse_frame *src);
