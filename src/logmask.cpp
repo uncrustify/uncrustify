@@ -1,5 +1,5 @@
 /**
- * @file logmask.c
+ * @file logmask.cpp
  *
  * Functions to convert between a string and a severity mask.
  *

@@ -1,5 +1,5 @@
 /**
- * @file c_output.c
+ * @file output.cpp
  * Does all the output & comment formatting.
  *
  * $Id$

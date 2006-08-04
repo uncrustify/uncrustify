@@ -1,5 +1,5 @@
 /**
- * @file brace_cleanup.c
+ * @file brace_cleanup.cpp
  * Determines the brace level and paren level.
  * Inserts virtual braces as needed.
  * Handles all that preprocessor crap.

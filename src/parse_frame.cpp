@@ -1,5 +1,5 @@
 /**
- * @file parse_frame.c
+ * @file parse_frame.cpp
  * @brief Does the parse frame stuff, which is used to handle #ifdef stuff
  *
  * $Id$

@@ -1,5 +1,5 @@
 /**
- * @file tokenize_cleanup.c
+ * @file tokenize_cleanup.cpp
  * Looks at simple sequences to refine the chunk types.
  * Examples:
  *  - change '[' + ']' into '[]'/

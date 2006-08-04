@@ -1,5 +1,5 @@
 /**
- * @file c_space.c
+ * @file space.cpp
  * Adds or removes inter-chunk spaces.
  *
  * $Id$

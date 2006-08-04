@@ -1,5 +1,5 @@
 /**
- * @file chunk_list.c
+ * @file chunk_list.cpp
  * Manages and navigates the list of chunks.
  *
  * $Id$

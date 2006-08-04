@@ -1,5 +1,5 @@
 /**
- * @file c_combine.c
+ * @file combine.cpp
  * Labels the chunks as needed.
  *
  * $Id$

@@ -1,5 +1,5 @@
 /**
- * @file punctuators.c
+ * @file punctuators.cpp
  * Manages the table of punctutators.
  *
  * $Id$

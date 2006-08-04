@@ -1,5 +1,5 @@
 /**
- * @file ChunkStack.c
+ * @file ChunkStack.cpp
  * Manages a chunk stack
  *
  * $Id$

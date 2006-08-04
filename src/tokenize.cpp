@@ -1,5 +1,5 @@
 /**
- * @file tokenize.c
+ * @file tokenize.cpp
  * This file breaks up the text stream into tokens or chunks.
  *
  * Each routine needs to set pc->len and pc->type.

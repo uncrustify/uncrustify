@@ -1,5 +1,5 @@
 /**
- * @file c_align.c
+ * @file align.cpp
  * Does all the aligning stuff.
  *
  * $Id$

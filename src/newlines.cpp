@@ -1,5 +1,5 @@
 /**
- * @file c_newlines.c
+ * @file newlines.cpp
  * Adds or removes newlines.
  *
  * $Id$

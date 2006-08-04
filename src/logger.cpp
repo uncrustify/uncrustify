@@ -1,5 +1,5 @@
 /**
- * @file logger.c
+ * @file logger.cpp
  *
  * Functions to do logging.
  *

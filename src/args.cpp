@@ -1,5 +1,5 @@
 /**
- * @file args.c
+ * @file args.cpp
  * Parses command line arguments.
  *
  * $Id$

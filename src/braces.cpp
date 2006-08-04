@@ -1,5 +1,5 @@
 /**
- * @file braces.c
+ * @file braces.cpp
  * Adds or removes braces.
  *
  * $Id$

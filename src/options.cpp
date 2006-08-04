@@ -1,5 +1,5 @@
 /**
- * @file options.c
+ * @file options.cpp
  * Parses the options from the config file.
  *
  * $Id$
