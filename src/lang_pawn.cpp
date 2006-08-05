@@ -16,6 +16,19 @@ static chunk_t *pawn_process_func_def(chunk_t *pc);
 
 static chunk_t *pawn_add_vsemi_after(chunk_t *pc)
 {
+   if ((pc->type == CT_VSEMICOLON) ||
+       (pc->type == CT_SEMICOLON))
+   {
+      return(pc);
+   }
+
+   chunk_t *next = chunk_get_next_nc(pc);
+   if ((next != NULL) &&
+       ((next->type == CT_VSEMICOLON) ||
+        (next->type == CT_SEMICOLON)))
+   {
+      return(pc);
+   }
    chunk_t chunk;
 
    chunk = *pc;
@@ -25,12 +38,18 @@ static chunk_t *pawn_add_vsemi_after(chunk_t *pc)
    chunk.column += pc->len;
    chunk.parent_type = CT_NONE;
 
+   LOG_FMT(LPVSEMI, "%s: Added VSEMI on line %d, prev='%.*s' [%s]\n",
+           __func__, pc->orig_line, pc->len, pc->str,
+           get_token_name(pc->type));
+
    return(chunk_add_after(&chunk, pc));
 }
 
 
 /**
- * Checks to see if a token continues a statement to the next line
+ * Checks to see if a token continues a statement to the next line.
+ * We need to check for 'open' braces/paren/etc because the level doesn't
+ * change until the token after the open.
  */
 bool pawn_continued(chunk_t *pc, int br_level)
 {
@@ -55,7 +74,9 @@ bool pawn_continued(chunk_t *pc, int br_level)
        (pc->type == CT_FPAREN_OPEN) ||
        (pc->parent_type == CT_IF) ||
        (pc->parent_type == CT_ELSE) ||
+       (pc->parent_type == CT_ELSEIF) ||
        (pc->parent_type == CT_DO) ||
+       (pc->parent_type == CT_FOR) ||
        (pc->parent_type == CT_SWITCH) ||
        (pc->parent_type == CT_WHILE) ||
        (pc->parent_type == CT_FUNC_DEF) ||
@@ -182,30 +203,32 @@ static chunk_t *pawn_process_line(chunk_t *start)
    return(start);
 }
 
+
+/**
+ * follows a variable definition at level 0 until the end.
+ * Adds a semicolon at the end, if needed.
+ */
 static chunk_t *pawn_process_variable(chunk_t *start)
 {
-   //LOG_FMT(LSYS, "%s: %d]", __func__, start->orig_line);
-
    chunk_t *prev = NULL;
    chunk_t *pc = start;
    while ((pc = chunk_get_next_nc(pc)) != NULL)
    {
-      if ((pc->type == CT_NEWLINE) && !pawn_continued(prev, start->level))
+      if ((pc->type == CT_NEWLINE) &&
+          !pawn_continued(prev, start->level))
       {
-         pawn_add_vsemi_after(prev);
+         if ((prev->type != CT_VSEMICOLON) &&
+             (prev->type != CT_SEMICOLON))
+         {
+            pawn_add_vsemi_after(prev);
+         }
          break;
       }
-
-      //if (!chunk_is_newline(pc) && !chunk_is_comment(pc))
-      //{
-      //   LOG_FMT(LSYS, " [%.*s]", pc->len, pc->str);
-      //}
-
       prev = pc;
    }
-   //LOG_FMT(LSYS, "\n");
    return pc;
 }
+
 
 void pawn_add_virtual_semicolons(void)
 {
@@ -236,36 +259,12 @@ void pawn_add_virtual_semicolons(void)
 
          /* we just hit a newline and we have a previous token */
          if (((prev->flags & PCF_IN_PREPROC) == 0) &&
-             (prev->parent_type != CT_FUNC_DEF) &&
-             (prev->parent_type != CT_ENUM) &&
              ((prev->flags & PCF_IN_ENUM) == 0) &&
              (prev->type != CT_VSEMICOLON) &&
              (prev->type != CT_SEMICOLON) &&
-             (prev->type != CT_BRACE_CLOSE) &&
-             (prev->type != CT_VBRACE_CLOSE) &&
-             (prev->type != CT_BRACE_OPEN) &&
-             (prev->type != CT_ELSE) &&
-             (prev->type != CT_DO) &&
-             (prev->type != CT_VBRACE_OPEN) &&
-             (prev->type != CT_SPAREN_OPEN) &&
-             (prev->type != CT_SPAREN_CLOSE) &&
-             (prev->type != CT_FPAREN_OPEN) &&
-             (prev->brace_level == prev->level) &&
-             (prev->type != CT_ARITH) &&
-             (prev->type != CT_ASSIGN) &&
-             (prev->type != CT_BOOL) &&
-             (prev->type != CT_QUESTION) &&
-             !chunk_is_str(prev, "+", 1) &&
-             !chunk_is_str(prev, "-", 1) &&
-             (prev->type != CT_COMMA) &&
-             (prev->type != CT_COLON) &&
-             (prev->type != CT_COMPARE))
+             !pawn_continued(prev, prev->brace_level))
          {
             pawn_add_vsemi_after(prev);
-
-            LOG_FMT(LPVSEMI, "%s: Added VSEMI on line %d, prev='%.*s' [%s]\n",
-                    __func__,
-                    prev->orig_line, prev->len, prev->str, get_token_name(prev->type));
             prev = NULL;
          }
       }
@@ -310,83 +309,6 @@ static chunk_t *pawn_mark_function0(chunk_t *start, chunk_t *fcn)
    return pawn_process_func_def(fcn);
 }
 
-
-/**
- * We are on a function word. we need to:
- *  - find out if this is a call or prototype or implementation
- *  - mark return type
- *  - mark parameter types
- *  - mark brace pair
- */
-void pawn_mark_function(chunk_t *pc)
-{
-   //chunk_t *prev;
-   //chunk_t *next;
-   //chunk_t *last = pc;
-   //
-   //prev = pc;
-   //
-   ///* If followed by a colon, this can't be a function (native exception) */
-   //next = chunk_get_next_ncnl(pc);
-   //if (chunk_is_str(next, ":", 1))
-   //{
-   //   return;
-   //}
-   //
-   //// find the first token on this line
-   //while (((prev = chunk_get_prev(prev)) != NULL) &&
-   //       (prev->type != CT_NEWLINE))
-   //{
-   //   last = prev;
-   //}
-   //
-   //if (last != NULL)
-   //{
-   //   LOG_FMT(LPFUNC, "%s: %d] first item on the line is '%.*s' [%s]\n", __func__,
-   //           last->orig_line, last->len, last->str, get_token_name(last->type));
-   //
-   //   /* Make sure the previous token is a */
-   //}
-   //
-   ///* If the function name is the first thing on the line, then
-   // * we need to check for a semicolon after the close paren
-   // */
-   //if (last == pc)
-   //{
-   //   last = chunk_get_next_type(pc, CT_PAREN_CLOSE, pc->level);
-   //   last = chunk_get_next(last);
-   //   if ((last != NULL) && (last->type == CT_SEMICOLON))
-   //   {
-   //      LOG_FMT(LPFUNC, "%s: %d] '%.*s' proto due to semicolon\n", __func__,
-   //              pc->orig_line, pc->len, pc->str);
-   //      pc->type = CT_FUNC_PROTO;
-   //      return;
-   //   }
-   //}
-   //else
-   //{
-   //   if ((last->type == CT_FORWARD) ||
-   //       (last->type == CT_NATIVE))
-   //   {
-   //      LOG_FMT(LPFUNC, "%s: %d] '%.*s' [%s] proto due to %s\n", __func__,
-   //              pc->orig_line, pc->len, pc->str, get_token_name(pc->type),
-   //              get_token_name(last->type));
-   //      pc->type = CT_FUNC_PROTO;
-   //      return;
-   //   }
-   //}
-   //
-   ///* At this point its either a function definition or a function call
-   // * If the brace level is 0, then it is a definition, otherwise its a call.
-   // */
-   if (pc->brace_level != 0)
-   {
-      pc->type = CT_FUNC_CALL;
-      return;
-   }
-   //
-   //pawn_process_func_def(pc);
-}
 
 static chunk_t *pawn_process_func_def(chunk_t *pc)
 {
@@ -438,7 +360,12 @@ static chunk_t *pawn_process_func_def(chunk_t *pc)
    }
    if (last->type == CT_BRACE_OPEN)
    {
+      last->parent_type = CT_FUNC_DEF;
       last = chunk_get_next_type(last, CT_BRACE_CLOSE, last->level);
+      if (last != NULL)
+      {
+         last->parent_type = CT_FUNC_DEF;
+      }
    }
    else
    {
@@ -496,3 +423,44 @@ static chunk_t *pawn_process_func_def(chunk_t *pc)
    return last;
 }
 
+
+/**
+ * We are in a virtual brace and hit a newline.
+ * If this should end the vbrace, then insert a VSEMICOLON and return that.
+ *
+ * @param pc   The newline (CT_NEWLINE)
+ * @return     Either the newline or the newly inserted virtual semicolon
+ */
+chunk_t *pawn_check_vsemicolon(chunk_t *pc)
+{
+   chunk_t *vb_open;
+   chunk_t *prev;
+
+   /* Grab the open VBrace */
+   vb_open = chunk_get_prev_type(pc, CT_VBRACE_OPEN, -1);
+
+   /**
+    * Grab the item before the newline
+    * Don't do anything if:
+    *  - the only thing previous is the V-Brace open
+    *  - in a preprocessor
+    *  - level > (vb_open->level + 1) -- ie, in () or []
+    *  - it is something that needs a continuation
+    *    + arith, assign, bool, comma, compare
+    */
+   prev = chunk_get_prev_ncnl(pc);
+   if ((prev == NULL) ||
+       (prev == vb_open) ||
+       ((prev->flags & PCF_IN_PREPROC) != 0) ||
+       pawn_continued(prev, vb_open->level + 1))
+   {
+      if (prev != NULL)
+      {
+         LOG_FMT(LPVSEMI, "%s:  no  VSEMI on line %d, prev='%.*s' [%s]\n",
+                 __func__, prev->orig_line, prev->len, prev->str, get_token_name(prev->type));
+      }
+      return(pc);
+   }
+
+   return pawn_add_vsemi_after(prev);
+}

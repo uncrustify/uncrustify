@@ -218,10 +218,9 @@ void fix_symbols(void)
       }
       if ((cpd.lang_flags & LANG_PAWN) != 0)
       {
-         if ((pc->type == CT_FUNCTION) ||
-             (prev->type == CT_NATIVE))
+         if ((pc->type == CT_FUNCTION) && (pc->brace_level > 0))
          {
-            pawn_mark_function(pc);
+            pc->type = CT_FUNC_CALL;
          }
          if ((pc->type == CT_STATE) &&
              (next != NULL) &&

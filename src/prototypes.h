@@ -176,7 +176,7 @@ void do_code_width(void);
  */
 void pawn_prescan(void);
 void pawn_add_virtual_semicolons();
-void pawn_mark_function(chunk_t *pc);
+chunk_t *pawn_check_vsemicolon(chunk_t *pc);
 
 
 /**
