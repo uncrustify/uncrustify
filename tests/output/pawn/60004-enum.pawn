@@ -29,7 +29,7 @@ increment(&value, incr=1)
     value += incr;
 }
 
-new msg[message] = { !"My Text", 1 }
+new msg[message] = { !"My Text", 1 };
 main()
 {
     new my_rect[rect];
