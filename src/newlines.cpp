@@ -34,23 +34,54 @@
  *  - do/while before braces
  */
 
-static chunk_t *newline_add_before(chunk_t *pc, c_token_t type)
+chunk_t *newline_add_before(chunk_t *pc)
 {
    chunk_t nl;
 
    //fprintf(stderr, "%s: %s line %d\n", __func__, pc->str, pc->orig_line);
 
    memset(&nl, 0, sizeof(nl));
-   nl.type     = type;
-   nl.str      = "\\\n";
    nl.nl_count = 1;
    nl.flags    = pc->flags & PCF_COPY_FLAGS;
-   if (type != CT_NEWLINE)
+   if ((pc->flags & PCF_IN_PREPROC) != 0)
    {
-      nl.len = 2;
+      nl.type = CT_NL_CONT;
+      nl.str  = "\\\n";
+      nl.len  = 2;
+   }
+   else
+   {
+      nl.type = CT_NEWLINE;
+      nl.str  = "\n";
+      nl.len  = 1;
    }
 
    return(chunk_add_before(&nl, pc));
+}
+
+chunk_t *newline_add_after(chunk_t *pc)
+{
+   chunk_t nl;
+
+   //fprintf(stderr, "%s: %s line %d\n", __func__, pc->str, pc->orig_line);
+
+   memset(&nl, 0, sizeof(nl));
+   nl.nl_count = 1;
+   nl.flags    = pc->flags & PCF_COPY_FLAGS;
+   if ((pc->flags & PCF_IN_PREPROC) != 0)
+   {
+      nl.type = CT_NL_CONT;
+      nl.str  = "\\\n";
+      nl.len  = 2;
+   }
+   else
+   {
+      nl.type = CT_NEWLINE;
+      nl.str  = "\n";
+      nl.len  = 1;
+   }
+
+   return(chunk_add_after(&nl, pc));
 }
 
 #define newline_min_after(ref, cnt)     newline_min_after2(ref, cnt, __func__, __LINE__)
@@ -120,7 +151,7 @@ static chunk_t *newline_add_between2(chunk_t *start, chunk_t *end,
       }
    }
 
-   return(newline_add_before(end, (end->flags & PCF_IN_PREPROC) ? CT_NL_CONT : CT_NEWLINE));
+   return(newline_add_before(end));
 }
 
 
@@ -588,8 +619,7 @@ static void newline_case_colon(chunk_t *start)
 
    if ((pc != NULL) && !chunk_is_newline(pc))
    {
-      newline_add_before(pc, (start->flags & PCF_IN_PREPROC) ?
-                         CT_NL_CONT : CT_NEWLINE);
+      newline_add_before(pc);
    }
 }
 

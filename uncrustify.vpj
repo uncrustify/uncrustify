@@ -73,6 +73,7 @@
 			<F N="src/tokenize.cpp"/>
 			<F N="src/tokenize_cleanup.cpp"/>
 			<F N="src/uncrustify.cpp"/>
+			<F N="src/width.cpp"/>
 		</Folder>
 		<Folder
 			Name="Header Files"

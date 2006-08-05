@@ -61,7 +61,8 @@ am_uncrustify_OBJECTS = uncrustify-uncrustify.$(OBJEXT) \
 	uncrustify-parse_frame.$(OBJEXT) uncrustify-logmask.$(OBJEXT) \
 	uncrustify-logger.$(OBJEXT) uncrustify-ChunkStack.$(OBJEXT) \
 	uncrustify-braces.$(OBJEXT) uncrustify-brace_cleanup.$(OBJEXT) \
-	uncrustify-align_stack.$(OBJEXT) uncrustify-defines.$(OBJEXT)
+	uncrustify-align_stack.$(OBJEXT) uncrustify-defines.$(OBJEXT) \
+	uncrustify-width.$(OBJEXT)
 uncrustify_OBJECTS = $(am_uncrustify_OBJECTS)
 uncrustify_LDADD = $(LDADD)
 DEFAULT_INCLUDES = 
@@ -161,7 +162,7 @@ uncrustify_SOURCES = uncrustify.cpp chunk_list.cpp indent.cpp align.cpp combine.
 		tokenize.cpp tokenize_cleanup.cpp space.cpp newlines.cpp output.cpp \
 		args.cpp options.cpp keywords.cpp punctuators.cpp parse_frame.cpp \
 		logmask.cpp logger.cpp ChunkStack.cpp braces.cpp brace_cleanup.cpp \
-		align_stack.cpp defines.cpp
+		align_stack.cpp defines.cpp width.cpp
 
 noinst_HEADERS = chunk_list.h options.h char_table.h chunk_list.h \
 		uncrustify_types.h prototypes.h logmask.h logger.h \
@@ -389,6 +390,12 @@ uncrustify-defines.o: defines.cpp
 
 uncrustify-defines.obj: defines.cpp
 	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(uncrustify_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o uncrustify-defines.obj `if test -f 'defines.cpp'; then $(CYGPATH_W) 'defines.cpp'; else $(CYGPATH_W) '$(srcdir)/defines.cpp'; fi`
+
+uncrustify-width.o: width.cpp
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(uncrustify_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o uncrustify-width.o `test -f 'width.cpp' || echo '$(srcdir)/'`width.cpp
+
+uncrustify-width.obj: width.cpp
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(uncrustify_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o uncrustify-width.obj `if test -f 'width.cpp'; then $(CYGPATH_W) 'width.cpp'; else $(CYGPATH_W) '$(srcdir)/width.cpp'; fi`
 uninstall-info-am:
 
 ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)

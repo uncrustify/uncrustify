@@ -91,8 +91,8 @@ struct parse_frame
 #define PCF_IN_TYPEDEF         (1 << 16)
 
 /* flags that get copied when a new chunk is inserted */
-#define PCF_COPY_FLAGS         (PCF_IN_PREPROC | PCF_IN_SPAREN | \
-                                PCF_IN_FCN_DEF | PCF_IN_FCN_CALL)
+#define PCF_COPY_FLAGS         (PCF_IN_PREPROC | PCF_IN_SPAREN | PCF_IN_ENUM | \
+                                PCF_IN_FCN_DEF | PCF_IN_FCN_CALL | PCF_IN_TYPEDEF)
 
 #ifdef DEFINE_PCF_NAMES
 static const char *pcf_names[32] =
@@ -205,6 +205,9 @@ struct cp_data
    int                did_newline;
    c_token_t          in_preproc;
    int                preproc_ncnl_count;
+
+   /* bumped up when a line is split or indented */
+   int                changes;
 
    /* dummy entries */
    chunk_t            list_chunks;

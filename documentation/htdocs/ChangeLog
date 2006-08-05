@@ -20,15 +20,12 @@ Future plans: (in no particular order)
 
 Plans for 0.0.25 (hopefully the last in the 0.0 series)
 -------------------------------------------------------------------------------
- - add simple line-splitting options
- - misc cleanup before jumping to 0.1.0
-
-
-Plans for 0.0.25
--------------------------------------------------------------------------------
  - add -o option to write to a file instead of stdout
  - add --folder=XXX to set the output folder (useful when processing multiple files)
  - add --suffix=XXX to set the output file suffix (ie, --suffix=".unc")
+ - improve code width logic
+   + add options to remove newlines inside parens before splitting long lines
+ - misc cleanup before jumping to 0.1.0
 
 
 ===============================================================================
@@ -41,6 +38,7 @@ Changes in uncrustify-0.0.24
  - Fix double negative (- -x) vs (--x)
  - Add ability to convert C++ (//) comments into C (/* */) comments
  - Fix usage of indent_columns; output_tab_size is only needed if using tabs
+ - Add first small step in code width handling
  - New options: sp_fparen_brace, sp_macro, sp_marco_func,
    nl_elseif_brace, mod_pawn_semicolon, cmt_cpp_to_c, cmt_cpp_group,
    cmt_cpp_nl_start, cmt_cpp_nl_end, sp_after_tag

@@ -526,6 +526,21 @@ static void uncrustify_file(const char *data, int data_len, FILE *pfout,
    align_all();
    indent_text();
 
+   if (cpd.settings[UO_code_width].n > 0)
+   {
+      int max_passes = 3;
+      int prev_changes;
+      do
+      {
+         prev_changes = cpd.changes;
+         do_code_width();
+         if (prev_changes != cpd.changes)
+         {
+            indent_text();
+         }
+      } while ((prev_changes != cpd.changes) && (--max_passes > 0));
+   }
+
    /**
     * And finally, align the backslash newline stuff
     */

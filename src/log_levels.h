@@ -58,6 +58,7 @@ enum
    LDEFVAL   = 45,    /* define values */
    LPVSEMI   = 46,    /* Pawn: virtual semicolons */
    LPFUNC    = 47,    /* Pawn: fucntion recognition */
+   LSPLIT    = 48,    /* Line splitting */
 };
 
 #endif   /* LOG_LEVELS_H_INCLUDED */

@@ -149,7 +149,7 @@ enum uncrustify_options
     * Line splitting options (for long lines)
     */
 
-   //UO_code_width,           //TODO: ie 80 columns
+   UO_code_width,           // ie 80 columns
    //UO_ls_before_bool_op,    //TODO: break line before of after boolean op
    //UO_ls_before_paren,      //TODO: break before open paren
    //UO_ls_after_arith,       //TODO: break after arith op '+', etc
@@ -321,6 +321,7 @@ options_name_tab option_name_table[] =
    OPTDEF(cmt_cpp_nl_start,              AT_BOOL),
    OPTDEF(cmt_cpp_to_c,                  AT_BOOL),
    OPTDEF(cmt_star_cont,                 AT_BOOL),
+   OPTDEF(code_width,                    AT_NUM),
    OPTDEF(eat_blanks_after_open_brace,   AT_BOOL),
    OPTDEF(eat_blanks_before_close_brace, AT_BOOL),
    OPTDEF(indent_align_string,           AT_BOOL),

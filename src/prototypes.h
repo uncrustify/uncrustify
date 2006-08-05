@@ -101,6 +101,8 @@ void newlines_squeeze_ifdef(void);
 void newlines_eat_start_end(void);
 void newlines_bool_pos(void);
 void do_blank_lines(void);
+chunk_t *newline_add_before(chunk_t *pc);
+chunk_t *newline_add_after(chunk_t *pc);
 
 
 /*
@@ -162,6 +164,11 @@ void pf_trash_tos(void);
 void pf_pop(struct parse_frame *pf);
 int  pf_check(struct parse_frame *frm, chunk_t *pc);
 
+
+/*
+ * width.cpp
+ */
+void do_code_width(void);
 
 
 /**

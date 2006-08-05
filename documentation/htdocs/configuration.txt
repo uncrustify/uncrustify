@@ -554,6 +554,10 @@ mylabel:
 	else if (x)
 	{
 
+   code_width:			number
+	Try to limit code to this number of columns by adding newlines
+	
+
 #
 #  Blank line options
 #  Note that it takes 2 newlines to get a blank line.
