@@ -12,7 +12,9 @@ main()
 {
     state red_walk;
 }
-@keypressed(key) <>                   { } /* fallback */
+@keypressed(key) <>
+{
+}                                        /* fallback */
 @timer()         <yellow_wait>
 {
     state red_walk;
@@ -25,7 +27,9 @@ main()
 {
     state green_wait;
 }
-@timer()         <>                   { } /* fallback */
+@timer()         <>
+{
+}                                        /* fallback */
 entry() <green_wait>
 {
     print "Green / Don't walk\n";

@@ -43,7 +43,7 @@ main()
         my_rect[rect:i] *= 2;
     }
 
-    new vect[3] = { 1, 2, 3 }
+    new vect[3] = { 1, 2, 3 };
     addvector(vect, { 5, 5, 5 }, 3);
 
     new Float:xpos;
