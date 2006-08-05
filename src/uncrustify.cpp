@@ -92,6 +92,7 @@ static void usage_exit(const char *msg, const char *argv0, int code)
            " t : load a file with types\n"
            " d : load a file with defines\n"
            " l : language override: C, CPP, D, CS, JAVA, PAWN\n"
+           "--show-config : print out a list of all available options and exit\n"
            "--version : print the version and exit\n"
            "\n"
            "If no input files are specified, the input is read from stdin\n"
@@ -136,6 +137,12 @@ int main(int argc, char *argv[])
        arg.Present("--usage") || arg.Present("-?"))
    {
       usage_exit(NULL, argv[0], 0);
+   }
+
+   if (arg.Present("--show-config"))
+   {
+      print_options(stdout);
+      return(0);
    }
 
 #ifdef WIN32

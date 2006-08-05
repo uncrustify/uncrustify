@@ -269,6 +269,42 @@ int load_option_file(const char *filename)
    return(0);
 }
 
+void print_options(FILE *pfile)
+{
+   int max_width = 0;
+   int cur_width;
+   UINT32 i;
+
+   const char *names[] =
+   {
+      "{ False, True }",
+      "{ Ignore, Add, Remove, Force }",
+      "Number",
+      "{ Auto, LF, CR, CRLF }"
+   };
+
+   /* Find the max width of the names */
+   for (i = 0; i < ARRAY_SIZE(option_name_table); i++)
+   {
+      cur_width = strlen(option_name_table[i].name);
+      if (cur_width > max_width)
+      {
+         max_width = cur_width;
+      }
+   }
+   max_width++;
+
+   /* Print the all out */
+   for (i = 0; i < ARRAY_SIZE(option_name_table); i++)
+   {
+      cur_width = strlen(option_name_table[i].name);
+      fprintf(pfile, "%s%*c%s\n",
+              option_name_table[i].name,
+              max_width - cur_width, ' ',
+              names[option_name_table[i].type]);
+   }
+}
+
 /**
  * Sets non-zero settings defaults
  *
