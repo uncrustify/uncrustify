@@ -469,6 +469,11 @@ static void uncrustify_file(const char *data, int data_len, FILE *pfout,
     * At this point, the level information is available and accurate.
     */
 
+   if ((cpd.lang_flags & LANG_PAWN) != 0)
+   {
+      pawn_prescan();
+   }
+
    /**
     * Re-type chunks, combine chunks
     */

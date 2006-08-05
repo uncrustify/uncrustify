@@ -62,6 +62,7 @@
 			<F N="src/defines.cpp"/>
 			<F N="src/indent.cpp"/>
 			<F N="src/keywords.cpp"/>
+			<F N="src/lang_pawn.cpp"/>
 			<F N="src/logger.cpp"/>
 			<F N="src/logmask.cpp"/>
 			<F N="src/newlines.cpp"/>

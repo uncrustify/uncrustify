@@ -171,6 +171,14 @@ int  pf_check(struct parse_frame *frm, chunk_t *pc);
 void do_code_width(void);
 
 
+/*
+ * lang_pawn.cpp
+ */
+void pawn_prescan(void);
+void pawn_add_virtual_semicolons();
+void pawn_mark_function(chunk_t *pc);
+
+
 /**
  * Advances to the next tab stop.
  * Column 1 is the left-most column.
