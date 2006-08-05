@@ -33,7 +33,7 @@ Plans for 0.0.25 (hopefully the last in the 0.0 series)
 
 Changes in uncrustify-0.0.24
 -------------------------------------------------------------------------------
- - Add initial PAWN support (thanks to Derek Evan Mart)
+ - Add initial PAWN support (thanks to Derek Evan Mart for testing and motivation!)
  - Fix parsing of numbers like 10.0
  - Fix double negative (- -x) vs (--x)
  - Add ability to convert C++ (//) comments into C (/* */) comments
