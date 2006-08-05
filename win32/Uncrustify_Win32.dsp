@@ -131,6 +131,10 @@ SOURCE=..\src\keywords.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\src\lang_pawn.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\src\logger.cpp
 # End Source File
 # Begin Source File
@@ -172,6 +176,10 @@ SOURCE=..\src\tokenize_cleanup.cpp
 # Begin Source File
 
 SOURCE=..\src\uncrustify.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\width.cpp
 # End Source File
 # End Group
 # Begin Group "Header Files"
