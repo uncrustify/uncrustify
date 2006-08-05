@@ -71,6 +71,9 @@
 # function types
 00801  ben.cfg  c/fcn_type.c  c/00801-func_type.c
 
+# code width
+00901  width.cfg  c/code_width.c  c/00901-code_width.c
+
 # big general tests
 
 20000 ben.cfg c/i2c-core.c c/20000-i2c-core.c
