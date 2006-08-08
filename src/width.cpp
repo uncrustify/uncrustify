@@ -110,6 +110,7 @@ static void split_line(chunk_t *start)
        (pc->type == CT_BRACE_CLOSE) ||
        (pc->type == CT_COMMA) ||
        (pc->type == CT_SEMICOLON) ||
+       (pc->type == CT_VSEMICOLON) ||
        (pc->len == 0))
    {
       return;
