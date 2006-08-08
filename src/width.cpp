@@ -146,7 +146,7 @@ static void split_line(chunk_t *start)
 
    /* add a newline before pc */
    prev = chunk_get_prev(pc);
-   if ((prev != NULL) && !chunk_is_newline(pc))
+   if ((prev != NULL) && !chunk_is_newline(pc) && !chunk_is_newline(prev))
    {
       int plen = (pc->len < 5) ? pc->len : 5;
       int slen = (start->len < 5) ? start->len : 5;

@@ -126,6 +126,7 @@
 				<F N="input/c/bugs.c"/>
 				<F N="input/c/case.c"/>
 				<F N="input/c/casts.c"/>
+				<F N="input/c/code_width.c"/>
 				<F N="input/c/colon-asm.c"/>
 				<F N="input/c/comment-indent.c"/>
 				<F N="input/c/define-if-indent.c"/>
@@ -139,6 +140,7 @@
 				<F N="input/c/indent-assign.c"/>
 				<F N="input/c/mac.c"/>
 				<F N="input/c/minus-minus.c"/>
+				<F N="input/c/nl-ver-def.c"/>
 				<F N="input/c/pp-space.c"/>
 				<F N="input/c/return-multi.c"/>
 				<F N="input/c/struct-brace.c"/>
