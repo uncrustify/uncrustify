@@ -99,11 +99,13 @@
 			<F N="config/nl_class-r.cfg"/>
 			<F N="config/nl_namespace-a.cfg"/>
 			<F N="config/nl_namespace-r.cfg"/>
+			<F N="config/pascal_ptr.cfg"/>
 			<F N="config/pawn-escape.cfg"/>
 			<F N="config/pawn.cfg"/>
 			<F N="config/pp-indent-1.cfg"/>
 			<F N="config/pp-indent-2.cfg"/>
 			<F N="config/pp-indent-3.cfg"/>
+			<F N="config/width.cfg"/>
 		</Folder>
 		<Folder Name="input">
 			<Folder Name="c">
@@ -140,7 +142,7 @@
 				<F N="input/c/indent-assign.c"/>
 				<F N="input/c/mac.c"/>
 				<F N="input/c/minus-minus.c"/>
-				<F N="input/c/nl-ver-def.c"/>
+				<F N="input/c/pascal_ptr.c"/>
 				<F N="input/c/pp-space.c"/>
 				<F N="input/c/return-multi.c"/>
 				<F N="input/c/struct-brace.c"/>
@@ -152,10 +154,10 @@
 				<F N="input/cpp/alt_tokens.cpp"/>
 				<F N="input/cpp/bool.cpp"/>
 				<F N="input/cpp/byref.cpp"/>
-				<F N="input/cpp/cDisConnnection.h"/>
 				<F N="input/cpp/class.h"/>
 				<F N="input/cpp/constructor.cpp"/>
 				<F N="input/cpp/cout.cpp"/>
+				<F N="input/cpp/extern_c.h"/>
 				<F N="input/cpp/nl-class.h"/>
 				<F N="input/cpp/nl-namespace.h"/>
 				<F N="input/cpp/operator.cpp"/>
@@ -180,14 +182,19 @@
 				<F N="input/pawn/enum.pawn"/>
 				<F N="input/pawn/functions.pawn"/>
 				<F N="input/pawn/rpn_calc.pawn"/>
+				<F N="input/pawn/str-escape.p"/>
 				<F N="input/pawn/tags.pawn"/>
 				<F N="input/pawn/test1.pawn"/>
 				<F N="input/pawn/traffic.p"/>
+				<F N="input/pawn/unbraced.p"/>
 			</Folder>
 		</Folder>
 		<Folder Name="output">
 			<Folder Name="c">
 				<F N="output/c/00000-comment-indent.c"/>
+				<F N="output/c/00001-cpp_to_c-1.c"/>
+				<F N="output/c/00002-cpp_to_c-2.c"/>
+				<F N="output/c/00003-cpp_to_c-3.c"/>
 				<F N="output/c/00010-braces.c"/>
 				<F N="output/c/00011-braces.c"/>
 				<F N="output/c/00012-braces.c"/>
@@ -226,6 +233,8 @@
 				<F N="output/c/00702-func-def-2.c"/>
 				<F N="output/c/00703-func-def-3.c"/>
 				<F N="output/c/00801-func_type.c"/>
+				<F N="output/c/00901-code_width.c"/>
+				<F N="output/c/00910-pascal_ptr.c"/>
 				<F N="output/c/20000-i2c-core.c"/>
 			</Folder>
 			<Folder Name="cpp">
@@ -236,7 +245,9 @@
 				<F N="output/cpp/30010-class.h"/>
 				<F N="output/cpp/30020-bool.cpp"/>
 				<F N="output/cpp/30021-byref.cpp"/>
+				<F N="output/cpp/30022-extern_c.h"/>
 				<F N="output/cpp/30030-avalon-Timestamp.h"/>
+				<F N="output/cpp/30031-operator.cpp"/>
 				<F N="output/cpp/30040-nl_class-r.h"/>
 				<F N="output/cpp/30041-nl_class-a.h"/>
 				<F N="output/cpp/30050-nl_namespace-r.h"/>
@@ -253,6 +264,15 @@
 				<F N="output/d/40004-volatile-2.d"/>
 				<F N="output/d/40005-volatile-3.d"/>
 				<F N="output/d/40010-template.d"/>
+			</Folder>
+			<Folder Name="pawn">
+				<F N="output/pawn/60000-functions.pawn"/>
+				<F N="output/pawn/60001-comment.p"/>
+				<F N="output/pawn/60002-traffic.p"/>
+				<F N="output/pawn/60003-tags.pawn"/>
+				<F N="output/pawn/60004-enum.pawn"/>
+				<F N="output/pawn/60005-unbraced.p"/>
+				<F N="output/pawn/60010-str-escape.p"/>
 			</Folder>
 		</Folder>
 		<F N="c-sharp.test"/>

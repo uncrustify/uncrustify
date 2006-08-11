@@ -901,7 +901,7 @@ int i2c_probe(struct i2c_adapter *adapter,
    return(0);
 }
 
-struct i2c_adapter * i2c_get_adapter(int id)
+struct i2c_adapter *i2c_get_adapter(int id)
 {
    struct i2c_adapter *adapter;
 

@@ -21,6 +21,8 @@ struct no_space_table_s
 
 /** this table lists out all combos where a space should NOT be present
  * CT_UNKNOWN is a wildcard.
+ *
+ * TODO: some of these are no longer needed.
  */
 struct no_space_table_s no_space_table[] =
 {
@@ -431,6 +433,25 @@ argval_t do_space(chunk_t *first, chunk_t *second)
       return(AV_REMOVE);
    }
 
+   if ((first->type == CT_PTR_TYPE) &&
+       (second->type == CT_PTR_TYPE) &&
+       (cpd.settings[UO_sp_between_ptr_star].a != AV_IGNORE))
+   {
+      return cpd.settings[UO_sp_between_ptr_star].a;
+   }
+
+   if ((first->type == CT_PTR_TYPE) &&
+       (cpd.settings[UO_sp_after_ptr_star].a != AV_IGNORE))
+   {
+      return cpd.settings[UO_sp_after_ptr_star].a;
+   }
+
+   if ((second->type == CT_PTR_TYPE) &&
+       (cpd.settings[UO_sp_before_ptr_star].a != AV_IGNORE))
+   {
+      return cpd.settings[UO_sp_before_ptr_star].a;
+   }
+
    if ((second->type == CT_FUNC_PROTO) || (second->type == CT_FUNC_DEF))
    {
       if (first->type != CT_PTR_TYPE)
@@ -512,11 +533,6 @@ argval_t do_space(chunk_t *first, chunk_t *second)
    if ((first->type == CT_QUALIFIER) || (first->type == CT_TYPE))
    {
       return(AV_FORCE);
-   }
-
-   if (first->type == CT_PTR_TYPE)
-   {
-      return(AV_REMOVE);
    }
 
 

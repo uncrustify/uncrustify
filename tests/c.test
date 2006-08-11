@@ -74,6 +74,9 @@
 # code width
 00901  width.cfg  c/code_width.c  c/00901-code_width.c
 
+# pascal ptr_type
+00910  pascal_ptr.cfg c/pascal_ptr.c c/00910-pascal_ptr.c
+
 # big general tests
 
 20000 ben.cfg c/i2c-core.c c/20000-i2c-core.c

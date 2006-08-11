@@ -130,6 +130,9 @@ enum uncrustify_options
 
    UO_sp_type_func,         // space between return type and 'func'
                             // a minimum of 1 is forced except for '*'
+   UO_sp_before_ptr_star,   // space before a '*' that is part of a type
+   UO_sp_after_ptr_star,    // space after a '*' that is part of a type
+   UO_sp_between_ptr_star,  // space between two '*' that are part of a type
 
    UO_sp_special_semi,      /* space empty stmt ';' on while, if, for
                              * example "while (*p++ = ' ') ;" */
@@ -391,16 +394,19 @@ options_name_tab option_name_table[] =
    OPTDEF(sp_after_angle,                AT_IARF),
    OPTDEF(sp_after_cast,                 AT_IARF),
    OPTDEF(sp_after_comma,                AT_IARF),
+   OPTDEF(sp_after_ptr_star,             AT_IARF),
    OPTDEF(sp_after_sparen,               AT_IARF),
    OPTDEF(sp_after_tag,                  AT_IARF),
    OPTDEF(sp_arith,                      AT_IARF),
    OPTDEF(sp_assign,                     AT_IARF),
    OPTDEF(sp_before_angle,               AT_IARF),
    OPTDEF(sp_before_byref,               AT_IARF),
+   OPTDEF(sp_before_ptr_star,            AT_IARF),
    OPTDEF(sp_before_semi,                AT_IARF),
    OPTDEF(sp_before_sparen,              AT_IARF),
    OPTDEF(sp_before_square,              AT_IARF),
    OPTDEF(sp_before_squares,             AT_IARF),
+   OPTDEF(sp_between_ptr_star,           AT_IARF),
    OPTDEF(sp_bool,                       AT_IARF),
    OPTDEF(sp_compare,                    AT_IARF),
    OPTDEF(sp_fparen_brace,               AT_IARF),
