@@ -297,6 +297,10 @@ static bool parse_string(chunk_t *pc, int quote_idx, bool allow_escape)
          escaped = false;
       }
    }
+   if (((cpd.lang_flags & LANG_D) != 0) && (pc->str[len] == 'c'))
+   {
+	   len++;
+   }
    pc->len     = len;
    pc->type    = CT_STRING;
    cpd.column += len;
@@ -521,6 +525,14 @@ static bool parse_next(chunk_t *pc)
       cpd.column   = 1;
       cpd.line_number++;
       return(true);
+   }
+
+   /* Check for single-char D stuff */
+   if (((cpd.lang_flags & LANG_D) != 0) && (*pc->str == '\\'))
+   {
+	   pc->type     = CT_STRING;
+	   pc->len      = 2;
+	   return(true);
    }
 
    /* Check for C# literal strings, ie @"hello" */
