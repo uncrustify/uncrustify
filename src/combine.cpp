@@ -1502,6 +1502,7 @@ static void mark_function(chunk_t *pc)
               (prev->type == CT_WORD) ||
               (prev->type == CT_DC_MEMBER) ||
               (prev->type == CT_OPERATOR) ||
+              (prev->type == CT_TSQUARE) ||
               chunk_is_addr(prev) ||
               chunk_is_star(prev)))
       {
