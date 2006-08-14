@@ -16,5 +16,6 @@ int foo(int bar)
    a = \u1234 ~ \U12345678;
    a = \&amp; ~ 'a';
 
-   a = \r\n;
+   /+ test back to back EscapeSequences +/
+   a = \r\n\xff\&amp;\u1234;
 }

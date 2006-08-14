@@ -287,65 +287,68 @@ bool d_parse_string(chunk_t *pc)
    else if (pc->str[0] == '\\')
    {
       pc->len = 0;
-
-      /* Check for end of file */
-      switch (pc->str[1])
+      while (pc->str[pc->len] == '\\')
       {
-      case 'x':
-         /* \x HexDigit HexDigit */
-         pc->len = 4;
-         break;
-
-      case 'u':
-         /* \x HexDigit HexDigit HexDigit HexDigit */
-         pc->len = 6;
-         break;
-
-      case 'U':
-         /* \x HexDigit (x8) */
-         pc->len = 10;
-         break;
-
-      case '0':
-      case '1':
-      case '2':
-      case '3':
-      case '4':
-      case '5':
-      case '6':
-      case '7':
-         /* handle up to 3 octal digits */
-         pc->len = 2;
-         if ((pc->str[2] >= '0') && (pc->str[2] <= '7'))
+         pc->len++;
+         /* Check for end of file */
+         switch (pc->str[pc->len])
          {
+         case 'x':
+            /* \x HexDigit HexDigit */
+            pc->len += 3;
+            break;
+
+         case 'u':
+            /* \x HexDigit HexDigit HexDigit HexDigit */
+            pc->len += 5;
+            break;
+
+         case 'U':
+            /* \x HexDigit (x8) */
+            pc->len += 9;
+            break;
+
+         case '0':
+         case '1':
+         case '2':
+         case '3':
+         case '4':
+         case '5':
+         case '6':
+         case '7':
+            /* handle up to 3 octal digits */
             pc->len++;
-            if ((pc->str[3] >= '0') && (pc->str[3] <= '7'))
+            if ((pc->str[pc->len] >= '0') && (pc->str[pc->len] <= '7'))
+            {
+               pc->len++;
+               if ((pc->str[pc->len] >= '0') && (pc->str[pc->len] <= '7'))
+               {
+                  pc->len++;
+               }
+            }
+            break;
+
+         case '&':
+            /* \& NamedCharacterEntity ; */
+            pc->len++;
+            while (isalpha(pc->str[pc->len]))
             {
                pc->len++;
             }
-         }
-         break;
+            if (pc->str[pc->len] == ';')
+            {
+               pc->len++;
+            }
+            break;
 
-      case '&':
-         /* \& NamedCharacterEntity ; */
-         pc->len = 2;
-         while (isalpha(pc->str[pc->len]))
-         {
+         default:
+            /* Everything else is a single character */
             pc->len++;
+            break;
          }
-         if (pc->str[pc->len] == ';')
-         {
-            pc->len++;
-         }
-         break;
-
-      default:
-         /* Everything else is a single character */
-         pc->len = 2;
-         break;
       }
 
-      if (pc->len > 0)
+      if (pc->len > 1)
       {
          pc->type    = CT_STRING;
          cpd.column += pc->len;
