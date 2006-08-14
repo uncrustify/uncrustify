@@ -18,6 +18,11 @@
 #include <cctype>
 
 
+static bool parse_string(chunk_t *pc, int quote_idx, bool allow_escape);
+
+#include "d.tokenize.cpp"
+
+
 /**
  * Figure of the length of the comment at text.
  * The next bit of text starts with a '/', so it might be a comment.
@@ -290,16 +295,23 @@ static bool parse_string(chunk_t *pc, int quote_idx, bool allow_escape)
             len++;
             break;
          }
-         /* TODO: detect a newline in the string -- for an error condition? */
+         /* TODO: detect a newline in the string -- for an error condition?
+          * Some languages allow newlines in strings.
+          */
       }
       else
       {
          escaped = false;
       }
    }
-   if (((cpd.lang_flags & LANG_D) != 0) && (pc->str[len] == 'c'))
+
+   /* D can have suffixes */
+   if (((cpd.lang_flags & LANG_D) != 0) &&
+       ((pc->str[len] == 'c') ||
+        (pc->str[len] == 'w') ||
+        (pc->str[len] == 'd')))
    {
-	   len++;
+      len++;
    }
    pc->len     = len;
    pc->type    = CT_STRING;
@@ -493,12 +505,18 @@ static bool parse_next(chunk_t *pc)
    pc->type      = CT_NONE;
    pc->nl_count  = 0;
 
-   /* Check for whitespace first */
+
+   /**
+    *  Parse whitespace
+    */
    if (parse_whitespace(pc))
    {
       return(true);
    }
 
+   /**
+    *  Handle unknown/unhandled preprocessors
+    */
    if (cpd.in_preproc == CT_PP_OTHER)
    {
       /* Chunk to a newline or comment */
@@ -516,7 +534,11 @@ static bool parse_next(chunk_t *pc)
       }
    }
 
-   /* Detect backslash-newline */
+   /**
+    *   Detect backslash-newline
+    *
+    * REVISIT: does this need to handle other line endings?
+    */
    if ((pc->str[0] == '\\') && (pc->str[1] == '\n'))
    {
       pc->type     = CT_NL_CONT;
@@ -527,12 +549,12 @@ static bool parse_next(chunk_t *pc)
       return(true);
    }
 
-   /* Check for single-char D stuff */
-   if (((cpd.lang_flags & LANG_D) != 0) && (*pc->str == '\\'))
+   /**
+    *  Parse comments
+    */
+   if (parse_comment(pc))
    {
-	   pc->type     = CT_STRING;
-	   pc->len      = 2;
-	   return(true);
+      return(true);
    }
 
    /* Check for C# literal strings, ie @"hello" */
@@ -569,7 +591,7 @@ static bool parse_next(chunk_t *pc)
          }
       }
 
-      /* Check for pawn keywords */
+      /* Check for pawn identifiers */
       if ((*pc->str == '@') &&
           ((get_char_table(pc->str[1]) & CT_KW2) != 0) &&
           parse_word(pc, true))
@@ -578,23 +600,35 @@ static bool parse_next(chunk_t *pc)
       }
    }
 
-   /* Check for L'a', L"abc", 'a', "abc", <abc> strings */
-   if (((*pc->str == 'L') && ((pc->str[1] == '"') || (pc->str[1] == '\''))) ||
-       (*pc->str == '"') ||
-       (*pc->str == '\'') ||
-       ((*pc->str == '<') && (cpd.in_preproc == CT_PP_INCLUDE)))
+   /**
+    *  Parse strings and character constants
+    */
+
+   if ((cpd.lang_flags & LANG_D) != 0)
    {
-      parse_string(pc, (*pc->str == 'L') ? 1 : 0, true);
-      return(true);
+      /* D specific stuff */
+      if (d_parse_string(pc))
+      {
+         return(true);
+      }
+   }
+   else
+   {
+      /* Not D stuff */
+
+      /* Check for L'a', L"abc", 'a', "abc", <abc> strings */
+      if (((*pc->str == 'L') && ((pc->str[1] == '"') || (pc->str[1] == '\''))) ||
+          (*pc->str == '"') ||
+          (*pc->str == '\'') ||
+          ((*pc->str == '<') && (cpd.in_preproc == CT_PP_INCLUDE)))
+      {
+         parse_string(pc, (*pc->str == 'L') ? 1 : 0, true);
+         return(true);
+      }
    }
 
    if (((get_char_table(*pc->str) & CT_KW1) != 0) &&
        parse_word(pc, false))
-   {
-      return(true);
-   }
-
-   if (parse_comment(pc))
    {
       return(true);
    }

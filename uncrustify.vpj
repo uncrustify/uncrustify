@@ -59,6 +59,7 @@
 			<F N="src/chunk_list.cpp"/>
 			<F N="src/ChunkStack.cpp"/>
 			<F N="src/combine.cpp"/>
+			<F N="src/d.tokenize.cpp"/>
 			<F N="src/defines.cpp"/>
 			<F N="src/indent.cpp"/>
 			<F N="src/keywords.cpp"/>
