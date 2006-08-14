@@ -18,4 +18,8 @@ int foo(int bar)
 
     /+ test back to back EscapeSequences +/
     a = \r\n\xff\&amp;\u1234;
+
+    a = "char"c;
+    a = "wchar"w;
+    a = "dchar"d;
 }
