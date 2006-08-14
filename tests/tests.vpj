@@ -171,6 +171,7 @@
 				<F N="input/d/casts.d"/>
 				<F N="input/d/HashMap.d"/>
 				<F N="input/d/imports.d"/>
+				<F N="input/d/strings.d"/>
 				<F N="input/d/template.d"/>
 				<F N="input/d/volatile-1.d"/>
 				<F N="input/d/volatile-2.d"/>
