@@ -15,6 +15,7 @@ int foo(int bar)
    a = \x1B ~ \0 ~ \74 ~ \123;
    a = \u1234 ~ \U12345678;
    a = \&amp; ~ 'a';
+   a = "Another" " " "Test";
 
    /+ test back to back EscapeSequences +/
    a = \r\n\xff\&amp;\u1234;
@@ -22,4 +23,10 @@ int foo(int bar)
    a = "char"c;
    a = "wchar"w;
    a = "dchar"d;
+
+   /*
+    * multi line string
+    */
+   a = r"Line 1
+         line 2";
 }
