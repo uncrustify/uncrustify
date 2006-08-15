@@ -1094,6 +1094,7 @@ void do_blank_lines(void)
 
       /* Add blanks after function prototypes */
       if ((prev != NULL) &&
+          (prev->type == CT_SEMICOLON) &&
           (prev->parent_type == CT_FUNC_PROTO))
       {
          if (cpd.settings[UO_nl_after_func_proto].n > pc->nl_count)
