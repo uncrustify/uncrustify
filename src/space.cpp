@@ -582,7 +582,14 @@ void space_text(void)
       else
       {
          /* Set to the minimum allowed column */
-         column += pc->len;
+         if (pc->nl_count == 0)
+         {
+            column += pc->len;
+         }
+         else
+         {
+            column = pc->orig_col_end;
+         }
 
          switch (do_space(pc, next))
          {

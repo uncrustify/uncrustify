@@ -89,7 +89,8 @@ bool parse_comment(chunk_t *pc)
 
          if ((pc->str[len] == '\n') || (pc->str[len] == '\r'))
          {
-            pc->type   = CT_COMMENT_MULTI;
+            pc->type = CT_COMMENT_MULTI;
+            pc->nl_count++;
             cpd.column = 0;
             cpd.line_number++;
 
@@ -128,7 +129,8 @@ bool parse_comment(chunk_t *pc)
 
          if ((pc->str[len] == '\n') || (pc->str[len] == '\r'))
          {
-            pc->type   = CT_COMMENT_MULTI;
+            pc->type = CT_COMMENT_MULTI;
+            pc->nl_count++;
             cpd.column = 0;
             cpd.line_number++;
 
@@ -279,6 +281,8 @@ static bool parse_string(chunk_t *pc, int quote_idx, bool allow_escape)
    int  len         = quote_idx;
    char escape_char = cpd.settings[UO_string_escape_char].n;
 
+   pc->type = CT_STRING;
+
    end_ch = get_char_table(pc->str[len]) & 0xff;
    len++;
 
@@ -286,9 +290,17 @@ static bool parse_string(chunk_t *pc, int quote_idx, bool allow_escape)
    {
       if (!escaped)
       {
+         cpd.column++;
          if (pc->str[len] == escape_char)
          {
             escaped = allow_escape;
+         }
+         else if (pc->str[len] == '\n')
+         {
+            cpd.line_number++;
+            cpd.column = 1;
+            pc->nl_count++;
+            pc->type = CT_STRING_MULTI;
          }
          else if (pc->str[len] == end_ch)
          {
@@ -313,9 +325,7 @@ static bool parse_string(chunk_t *pc, int quote_idx, bool allow_escape)
    {
       len++;
    }
-   pc->len     = len;
-   pc->type    = CT_STRING;
-   cpd.column += len;
+   pc->len = len;
    return(true);
 }
 
@@ -611,10 +621,18 @@ static bool parse_next(chunk_t *pc)
       {
          return(true);
       }
+      if (d_parse_number(pc))
+      {
+         return(true);
+      }
    }
    else
    {
       /* Not D stuff */
+      if (parse_number(pc))
+      {
+         return(true);
+      }
 
       /* Check for L'a', L"abc", 'a', "abc", <abc> strings */
       if (((*pc->str == 'L') && ((pc->str[1] == '"') || (pc->str[1] == '\''))) ||
@@ -641,10 +659,6 @@ static bool parse_next(chunk_t *pc)
       return(true);
    }
 
-   if (parse_number(pc))
-   {
-      return(true);
-   }
 
    /* throw away this character */
    pc->type = CT_UNKNOWN;

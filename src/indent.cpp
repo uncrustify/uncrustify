@@ -176,10 +176,7 @@ void reindent_line(chunk_t *pc, int column)
             }
          }
       }
-   } while ((pc != NULL) &&
-            (pc->type != CT_NEWLINE) &&
-            (pc->type != CT_NL_CONT) &&
-            (pc->type != CT_COMMENT_MULTI));
+   } while ((pc != NULL) && (pc->nl_count == 0));
 }
 
 

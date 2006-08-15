@@ -36,7 +36,9 @@ typedef enum
 
    CT_WORD,          /* variable, type, function name, etc */
    CT_NUMBER,
+   CT_NUMBER_FP,
    CT_STRING,        /* quoted string "hi" or 'a' or <in> for include */
+   CT_STRING_MULTI,  /* quoted string with embedded newline */
    CT_IF,            /* built-in keywords */
    CT_ELSE,
    CT_ELSEIF,

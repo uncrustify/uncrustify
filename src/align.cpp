@@ -1026,7 +1026,8 @@ static void align_init_brace(chunk_t *start)
 
                   if ((idx < (cpd.al_cnt - 1)) &&
                       cpd.settings[UO_align_number_left].b &&
-                      ((next->type == CT_NUMBER) ||
+                      ((next->type == CT_NUMBER_FP) ||
+                       (next->type == CT_NUMBER) ||
                        (next->type == CT_POS) ||
                        (next->type == CT_NEG)))
                   {
@@ -1052,7 +1053,8 @@ static void align_init_brace(chunk_t *start)
                {
                   next = chunk_get_next(pc);
                   if ((next != NULL) && !chunk_is_newline(next) &&
-                      ((next->type == CT_NUMBER) ||
+                      ((next->type == CT_NUMBER_FP) ||
+                       (next->type == CT_NUMBER) ||
                        (next->type == CT_POS) ||
                        (next->type == CT_NEG)))
                   {

@@ -34,6 +34,7 @@ Plans for 0.0.25 (hopefully the last in the 0.0 series)
 Changes in uncrustify-0.0.25
 -------------------------------------------------------------------------------
  - Add sp_after_ptr_star, sp_before_ptr_star, sp_between_ptr_star
+ - Fix D tokenizing for numbers and strings
 
 
 Changes in uncrustify-0.0.24

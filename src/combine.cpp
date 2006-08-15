@@ -757,7 +757,8 @@ static void fix_casts(chunk_t *start)
       if (chunk_is_star(pc) || chunk_is_addr(pc))
       {
          /* star (*) and addr (&) are ambiguous */
-         if ((after->type == CT_NUMBER) ||
+         if ((after->type == CT_NUMBER_FP) ||
+             (after->type == CT_NUMBER) ||
              (after->type == CT_STRING) ||
              doubtful_cast)
          {
@@ -775,12 +776,14 @@ static void fix_casts(chunk_t *start)
       else if (pc->type == CT_PLUS)
       {
          /* (UINT8)+1 or (foo)+1 */
-         if ((after->type != CT_NUMBER) || doubtful_cast)
+         if (((after->type != CT_NUMBER) &&
+              (after->type != CT_NUMBER_FP)) || doubtful_cast)
          {
             nope = true;
          }
       }
-      else if ((pc->type != CT_NUMBER) &&
+      else if ((pc->type != CT_NUMBER_FP) &&
+               (pc->type != CT_NUMBER) &&
                (pc->type != CT_WORD) &&
                (pc->type != CT_PAREN_OPEN) &&
                (pc->type != CT_STRING) &&
