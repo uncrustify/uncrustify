@@ -59,6 +59,7 @@ enum
    LPVSEMI   = 46,    /* Pawn: virtual semicolons */
    LPFUNC    = 47,    /* Pawn: fucntion recognition */
    LSPLIT    = 48,    /* Line splitting */
+   LFTYPE    = 49,    /* Function type detection */
 };
 
 #endif   /* LOG_LEVELS_H_INCLUDED */

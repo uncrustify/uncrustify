@@ -70,6 +70,7 @@
 
 # function types
 00801  ben.cfg  c/fcn_type.c  c/00801-func_type.c
+00802  ben.cfg  c/funcfunc.c  c/00802-funcfunc.c
 
 # code width
 00901  width.cfg  c/code_width.c  c/00901-code_width.c

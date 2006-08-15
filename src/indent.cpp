@@ -259,9 +259,7 @@ void indent_text(void)
       /* End any assign operations */
       while ((frm.pse[frm.pse_tos].type == CT_ASSIGN) &&
              ((pc->type == CT_BRACE_CLOSE) ||
-              (pc->type == CT_PAREN_CLOSE) ||
-              (pc->type == CT_SPAREN_CLOSE) ||
-              (pc->type == CT_FPAREN_CLOSE) ||
+              chunk_is_str(pc, ")", 1) ||
               (pc->type == CT_SQUARE_CLOSE) ||
               (pc->type == CT_BRACE_OPEN) ||
               (pc->type == CT_COMMA) ||

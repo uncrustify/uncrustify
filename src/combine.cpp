@@ -278,10 +278,17 @@ void fix_symbols(void)
           ((pc->flags & PCF_IN_TYPEDEF) == 0) &&
           (pc->parent_type != CT_CAST) &&
           ((pc->flags & PCF_IN_PREPROC) == 0) &&
-          (*pc->str == ')') &&
-          (*next->str == '('))
+          chunk_is_str(pc, ")", 1) &&
+          chunk_is_str(next, "(", 1))
       {
-         mark_function_type(pc);
+         if ((cpd.lang_flags & LANG_D) != 0)
+         {
+            flag_parens(next, 0, CT_FPAREN_OPEN, CT_FUNC_CALL, false);
+         }
+         else
+         {
+            mark_function_type(pc);
+         }
       }
 
       if (pc->type == CT_CLASS)
@@ -460,13 +467,69 @@ void fix_symbols(void)
 
 
 /**
- * Process a function type that is not in a typedef
+ * Process a function type that is not in a typedef.
+ * pc points to the first close paren.
+ *
+ * void (*func)(params);
  *
  * @param pc   Points to the closing paren
  */
 static void mark_function_type(chunk_t *pc)
 {
    chunk_t *tmp;
+
+   LOG_FMT(LFTYPE, "%s: [%s] %.*s on line %d, col %d\n",
+           __func__, get_token_name(pc->type), pc->len, pc->str,
+           pc->orig_line, pc->orig_col);
+
+   int star_count = 0;
+   int word_count = 0;
+   bool nogo = false;
+
+   /* Scan backwards across the name, which can only be a word and single star */
+   tmp = chunk_get_prev_ncnl(pc);
+   while ((tmp = chunk_get_prev_ncnl(tmp)) != NULL)
+   {
+      LOG_FMT(LFTYPE, " -- [%s] %.*s on line %d, col %d\n",
+              get_token_name(tmp->type), tmp->len, tmp->str,
+              tmp->orig_line, tmp->orig_col);
+
+      if (chunk_is_star(tmp))
+      {
+         star_count++;
+      }
+      else if (tmp->type == CT_WORD)
+      {
+         word_count++;
+      }
+      else if (chunk_is_str(tmp, "(", 1))
+      {
+         break;
+      }
+      else
+      {
+         LOG_FMT(LFTYPE, "%s: unexpected token [%s] %.*s on line %d, col %d\n",
+                 __func__, get_token_name(tmp->type), tmp->len, tmp->str,
+                 tmp->orig_line, tmp->orig_col);
+         nogo = true;
+      }
+   }
+
+   if (!nogo && ((star_count > 1) ||
+                 (word_count > 1) ||
+                 ((star_count + word_count) == 0)))
+   {
+      LOG_FMT(LFTYPE, "%s: bad counts word:%d, star:%d\n", __func__,
+              word_count, star_count);
+      nogo = true;
+   }
+
+   if (nogo)
+   {
+      tmp = chunk_get_next_ncnl(pc);
+      flag_parens(tmp, 0, CT_FPAREN_OPEN, CT_FUNC_CALL, false);
+      return;
+   }
 
    pc->type        = CT_PAREN_CLOSE;
    pc->parent_type = CT_NONE;
@@ -1521,7 +1584,12 @@ static void mark_function(chunk_t *pc)
 
    if (pc->type != CT_FUNC_DEF)
    {
+      LOG_FMT(LFCN, "Detected [%s] %.*s on line %d col %d\n",
+              get_token_name(pc->type),
+              pc->len, pc->str, pc->orig_line, pc->orig_col);
+
       flag_parens(next, PCF_IN_FCN_CALL, CT_FPAREN_OPEN, CT_NONE, false);
+      return;
    }
    else
    {
