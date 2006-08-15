@@ -107,7 +107,6 @@ static bool d_parse_number(chunk_t *pc)
 
    /* Check exponent */
    tmp = toupper(pc->str[len]);
-   LOG_FMT(LSYS, "Exp: %c\n", pc->str[len]);
    if ((tmp == 'E') || (tmp == 'P'))
    {
       is_float = true;
