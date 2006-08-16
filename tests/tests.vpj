@@ -125,6 +125,7 @@
 				<F N="input/c/bugs-4.c"/>
 				<F N="input/c/bugs-5.c"/>
 				<F N="input/c/bugs-6.c"/>
+				<F N="input/c/bugs-7.c"/>
 				<F N="input/c/bugs.c"/>
 				<F N="input/c/case.c"/>
 				<F N="input/c/casts.c"/>
@@ -135,6 +136,7 @@
 				<F N="input/c/dos.c"/>
 				<F N="input/c/enum-struct-init.c"/>
 				<F N="input/c/fcn_type.c"/>
+				<F N="input/c/funcfunc.c"/>
 				<F N="input/c/function-def.c"/>
 				<F N="input/c/i2c-core.c"/>
 				<F N="input/c/ifdef-indent.c"/>

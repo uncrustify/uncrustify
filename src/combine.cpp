@@ -714,13 +714,16 @@ static void fix_casts(chunk_t *start)
    chunk_t    *after;
    chunk_t    *last = NULL;
    chunk_t    *paren_close;
-   const char *verb      = "likely";
-   const char *detail    = "";
-   int        count      = 0;
-   int        word_count = 0;
+   const char *verb       = "likely";
+   const char *detail     = "";
+   int        count       = 0;
+   int        word_count  = 0;
+   int        word_consec = 0;
    bool       nope;
    bool       doubtful_cast = false;
 
+
+   LOG_FMT(LCASTS, "%s:line %d, col %d:", __func__, start->orig_line, start->orig_col);
 
    /* Make sure there is only WORD, TYPE, and '*' before the close paren */
    pc    = chunk_get_next_ncnl(start);
@@ -728,27 +731,40 @@ static void fix_casts(chunk_t *start)
    while ((pc != NULL) && (chunk_is_type(pc) ||
                            (pc->type == CT_WORD) ||
                            (pc->type == CT_QUALIFIER) ||
+                           (pc->type == CT_DC_MEMBER) ||
                            (pc->type == CT_STAR)))
    {
-      last = pc;
-      pc   = chunk_get_next_ncnl(pc);
+      LOG_FMT(LCASTS, " [%s]", get_token_name(pc->type));
+
       if (pc->type == CT_WORD)
       {
          word_count++;
+         word_consec++;
       }
+      else if (pc->type == CT_DC_MEMBER)
+      {
+         word_count--;
+      }
+      else
+      {
+         word_consec = 0;
+      }
+
+      last = pc;
+      pc   = chunk_get_next_ncnl(pc);
       count++;
    }
 
    if ((pc == NULL) || (pc->type != CT_PAREN_CLOSE))
    {
-      LOG_FMT(LCASTS, "%s: not a cast on line %d\n", __func__, start->orig_line);
+      LOG_FMT(LCASTS, " -- not a cast, hit [%s]\n",
+              pc == NULL ? "NULL"  : get_token_name(pc->type));
       return;
    }
 
    if (word_count > 1)
    {
-      LOG_FMT(LCASTS, "%s: too many words %d on line %d\n", __func__,
-              word_count, start->orig_line);
+      LOG_FMT(LCASTS, " -- too many words: %d\n", word_count);
       return;
    }
    paren_close = pc;
@@ -811,8 +827,7 @@ static void fix_casts(chunk_t *start)
 
       if (after == NULL)
       {
-         LOG_FMT(LCASTS, "%s: not a cast on line %d - hit NULL\n",
-                 __func__, start->orig_line);
+         LOG_FMT(LCASTS, " -- not a cast - hit NULL\n");
          return;
       }
 
@@ -854,15 +869,15 @@ static void fix_casts(chunk_t *start)
                (pc->type != CT_FUNC_CALL) &&
                (pc->type != CT_FUNCTION))
       {
-         LOG_FMT(LCASTS, "%s: not a cast on line %d - followed by '%.*s' %s\n",
-                 __func__, start->orig_line, pc->len, pc->str, get_token_name(pc->type));
+         LOG_FMT(LCASTS, " -- not a cast - followed by '%.*s' %s\n",
+                 pc->len, pc->str, get_token_name(pc->type));
          return;
       }
 
       if (nope)
       {
-         LOG_FMT(LCASTS, "%s: not a cast on line %d - '%.*s' followed by %s\n",
-                 __func__, start->orig_line, pc->len, pc->str, get_token_name(after->type));
+         LOG_FMT(LCASTS, " -- not a cast - '%.*s' followed by %s\n",
+                 pc->len, pc->str, get_token_name(after->type));
          return;
       }
    }
@@ -870,7 +885,7 @@ static void fix_casts(chunk_t *start)
    start->parent_type       = CT_CAST;
    paren_close->parent_type = CT_CAST;
 
-   LOG_FMT(LCASTS, "%s: %s cast on line %d: (", __func__, verb, start->orig_line);
+   LOG_FMT(LCASTS, " -- %s cast: (", verb);
 
    for (pc = first; pc != paren_close; pc = chunk_get_next_ncnl(pc))
    {
