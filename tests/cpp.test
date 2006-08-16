@@ -13,6 +13,7 @@
 30020 ben.cfg cpp/bool.cpp  cpp/30020-bool.cpp
 30021 ben.cfg cpp/byref.cpp cpp/30021-byref.cpp
 30022 ben.cfg cpp/extern_c.h cpp/30022-extern_c.h
+30023 ben.cfg cpp/templates.cpp cpp/30023-templates.cpp
 
 30030 avalon.cfg cpp/Timestamp.h cpp/30030-avalon-Timestamp.h
 30031 avalon.cfg cpp/operator.cpp cpp/30031-operator.cpp

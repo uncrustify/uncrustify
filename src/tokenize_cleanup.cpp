@@ -184,6 +184,8 @@ static void check_template(chunk_t *start)
       {
          if ((pc->type != CT_WORD) &&
              (pc->type != CT_MEMBER) &&
+             (pc->type != CT_COMMA) &&
+             (pc->type != CT_STAR) &&
              (pc->type != CT_DC_MEMBER))
          {
             break;

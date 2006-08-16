@@ -36,6 +36,7 @@ Changes in uncrustify-0.0.25
  - Add sp_after_ptr_star, sp_before_ptr_star, sp_between_ptr_star
  - Fix D tokenizing for numbers and strings
  - Fix a bug with cast detection and with nl_after_func_proto
+ - Improve template detection
 
 
 Changes in uncrustify-0.0.24
