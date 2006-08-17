@@ -37,6 +37,11 @@ void tokenize_cleanup(void)
          next = chunk_get_next_ncnl(pc);
       }
 
+      if ((pc->type == CT_DOT) && ((cpd.lang_flags & LANG_ALLC) != 0))
+      {
+         pc->type = CT_MEMBER;
+      }
+
       /* Determine the version stuff (D only) */
       if (pc->type == CT_VERSION)
       {

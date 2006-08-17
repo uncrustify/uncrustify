@@ -162,6 +162,13 @@ typedef struct
 
 typedef struct
 {
+   char              ch;
+   UINT16            next_idx;
+   const chunk_tag_t *tag;
+} lookup_entry_t;
+
+typedef struct
+{
    const char *tag;
    const char *value;
 } define_tag_t;
