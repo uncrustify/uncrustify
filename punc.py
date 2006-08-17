@@ -1,4 +1,5 @@
 #! /usr/bin/env python
+# $Id$
 #
 #  Creates a possibly faster lookup table for tokens, etc.
 #
