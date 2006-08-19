@@ -115,6 +115,7 @@
 		<F N="make_token_names.sh"/>
 		<F N="Makefile.am"/>
 		<F N="NEWS"/>
+		<F N="punc.py"/>
 		<F N="README"/>
 		<F N="todo.txt"/>
 	</Files>
