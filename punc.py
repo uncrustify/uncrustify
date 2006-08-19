@@ -32,26 +32,24 @@ def build_table (db, prev, arr):
 	start_idx = len(arr)
 
 	# do the current level first
-	did_one = 0
 	k = db.keys();
 	if len(k) <= 0:
 		return
 
 	k.sort()
+	num_left = len(k)
 	for i in k:
 		did_one = 1
 		en = db[i]
-		# [ char, string, next_index, something ]
-		#print 'doin', prev + en[0]
-		arr.append([en[0], prev + en[0], 0, en[2]])
+		# [ char, full-string, left-in-group, next_index, table-entry ]
+		num_left -= 1
+		arr.append([en[0], prev + en[0], num_left, 0, en[2]])
 
-	arr.append(['', '', 0, None])
 	# update the one-up level index
 	if len(prev) > 0:
 		for idx in range(0, len(arr)):
 			if arr[idx][1] == prev:
-				#print 'updated', prev, 'to', start_idx
-				arr[idx][2] = start_idx
+				arr[idx][3] = start_idx
 				break
 
 	# Now do each sub level
@@ -94,18 +92,18 @@ if __name__ == '__main__':
 	print "{"
 	max_len = 0
 	for i in arr:
-		rec = i[3]
+		rec = i[4]
 		if rec != None and len(rec[1]) > max_len:
 			max_len = len(rec[1])
 		
 	for i in arr:
-		rec = i[3]
+		rec = i[4]
 		if len(i[0]) == 0:
-			print "   {   0,   0, NULL %s },   // %3d:" % ((max_len - 4) * ' ', idx)
+			print "   {   0,   0,   0, NULL %s },   // %3d:" % ((max_len - 4) * ' ', idx)
 		elif rec == None:
-			print "   { '%s', %3d, NULL %s },   // %3d: '%s'" % (i[0], i[2], (max_len - 4) * ' ', idx, i[1])
+			print "   { '%s', %3d, %3d, NULL %s },   // %3d: '%s'" % (i[0], i[2], i[3], (max_len - 4) * ' ', idx, i[1])
 		else:
-			print "   { '%s', %3d, &%s%s },   // %3d: '%s'" % (i[0], i[2], rec[1], (max_len - len(rec[1])) * ' ', idx, i[1])
+			print "   { '%s', %3d, %3d, &%s%s },   // %3d: '%s'" % (i[0], i[2], i[3], rec[1], (max_len - len(rec[1])) * ' ', idx, i[1])
 		idx += 1
 	print '};'
 

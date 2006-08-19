@@ -93,6 +93,7 @@
 			<F N="src/logmask.h"/>
 			<F N="src/options.h"/>
 			<F N="src/prototypes.h"/>
+			<F N="src/punctuators.h"/>
 			<F N="src/token_enum.h"/>
 			<F N="src/token_names.h"/>
 			<F N="src/uncrustify_types.h"/>

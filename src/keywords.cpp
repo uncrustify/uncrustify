@@ -28,7 +28,7 @@ static dynamic_word_list_t wl;
  * interesting static keywords - keep sorted.
  * Table should include the Name, Type, and Language flags.
  */
-static chunk_tag_t keywords[] =
+static const chunk_tag_t keywords[] =
 {
    { "__const__",        CT_QUALIFIER,   LANG_C | LANG_CPP                                   },
    { "__inline__",       CT_QUALIFIER,   LANG_C | LANG_CPP                                   },

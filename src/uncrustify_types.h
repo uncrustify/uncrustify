@@ -163,6 +163,7 @@ typedef struct
 typedef struct
 {
    char              ch;
+   char              left_in_group;
    UINT16            next_idx;
    const chunk_tag_t *tag;
 } lookup_entry_t;
