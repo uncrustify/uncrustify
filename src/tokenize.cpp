@@ -162,105 +162,156 @@ bool parse_comment(chunk_t *pc)
 
 /**
  * Count the number of characters in the number.
- * The next bit of text starts with a number (0-9), so it is a number.
+ * The next bit of text starts with a number (0-9 or '.'), so it is a number.
  * Count the number of characters in the number.
  *
- * TODO: I don't think this covers ALL number formats...
+ * This should cover all number formats for all languages.
+ * Note that this is not a strict parser. It will happily parse numbers in
+ * an invalid format.
+ *
+ * For example, only D allows underscores in the numbers, but they are
+ * allowed in all formats.
  *
  * @param pc   The structure to update, str is an input.
  * @return     Whether a number was parsed
  */
-bool parse_number(chunk_t *pc)
+static bool parse_number(chunk_t *pc)
 {
-   int  len              = 0;
-   bool allow_underscore = ((cpd.lang_flags & LANG_D) != 0);
+   int  len;
+   int  tmp;
+   bool is_float;
+   bool did_hex = false;
 
-   if (!isdigit(*pc->str))
+   /* A number must start with a digit or a dot, followed by a digit */
+   if (!isdigit(pc->str[0]) &&
+       ((pc->str[0] != '.') || !isdigit(pc->str[1])))
    {
       return(false);
    }
+   len = 1;
 
-   /* Check for Hex, Octal, or Binary */
-   if ((pc->str[0] == '0') && (pc->str[1] != '.'))
+   is_float = (pc->str[0] == '.');
+
+   /* Check for Hex, Octal, or Binary
+    * Note that only D and Pawn support binary, but who cares?
+    */
+   if (pc->str[0] == '0')
    {
       switch (toupper(pc->str[1]))
       {
       case 'X':               /* hex */
-         len = 2;
-         while (isxdigit(pc->str[len]) ||
-                (allow_underscore && (pc->str[len] == '_')))
+         did_hex = true;
+         do
          {
             len++;
-         }
+         } while (isxdigit(pc->str[len]) || (pc->str[len] == '_'));
          break;
 
-      case 'B':               /* binary? */
-         len = 2;
-         while ((pc->str[len] == '0') || (pc->str[len] == '1') ||
-                (allow_underscore && (pc->str[len] == '_')))
+      case 'B':               /* binary */
+         do
          {
             len++;
-         }
+         } while ((pc->str[len] == '0') || (pc->str[len] == '1') ||
+                  (pc->str[len] == '_'));
          break;
 
-      default:                /* octal */
-         len = 1;
-         while (((pc->str[len] >= '0') && (pc->str[len] <= '7')) ||
-                (allow_underscore && (pc->str[len] == '_')))
+      case '0':                /* octal */
+      case '1':
+      case '2':
+      case '3':
+      case '4':
+      case '5':
+      case '6':
+      case '7':
+         do
          {
             len++;
-         }
+         } while (((pc->str[len] >= '0') && (pc->str[len] <= '7')) ||
+                  (pc->str[len] == '_'));
+         break;
+
+      default:
+         /* either just 0 or 0.1 or 0UL, etc */
          break;
       }
    }
    else
    {
-      int dotcount = 0;
-      len = 1;
-      while (isdigit(pc->str[len]) ||
-             ((pc->str[len] == '.') && (dotcount == 0)) ||
-             (allow_underscore && (pc->str[len] == '_')))
+      /* Regular int or float */
+      while (isdigit(pc->str[len]) || (pc->str[len] == '_'))
       {
-         if (pc->str[len] == '.')
-         {
-            dotcount++;
-         }
          len++;
       }
    }
 
-   /* do a suffix check */
-   if (toupper(pc->str[len]) == 'E')
+   /* Check if we stopped on a decimal point */
+   if (pc->str[len] == '.')
    {
       len++;
-      if ((pc->str[len] == '-') || (pc->str[len] == '+'))
+      is_float = true;
+      if (did_hex)
+      {
+         while (isxdigit(pc->str[len]) || (pc->str[len] == '_'))
+         {
+            len++;
+         }
+      }
+      else
+      {
+         while (isdigit(pc->str[len]) || (pc->str[len] == '_'))
+         {
+            len++;
+         }
+      }
+   }
+
+   /* Check exponent
+    * Valid exponents per language (not that it matters):
+    * C/C++/D/Java: eEpP
+    * C#/Pawn:      eE
+    */
+   tmp = toupper(pc->str[len]);
+   if ((tmp == 'E') || (tmp == 'P'))
+   {
+      is_float = true;
+      len++;
+      if ((pc->str[len] == '+') || (pc->str[len] == '-'))
       {
          len++;
       }
-      while (isdigit(pc->str[len]))
+      while (isdigit(pc->str[len]) || (pc->str[len] == '_'))
       {
          len++;
       }
    }
-   if (toupper(pc->str[len]) == 'U')
+
+   /* Check the suffixes
+    * Valid suffixes per language (not that it matters):
+    *        Integer       Float
+    * C/C++: uUlL          lLfF
+    * C#:    uUlL          fFdDMm
+    * D:     uUL           ifFL
+    * Java:  lL            fFdD
+    * Pawn:  (none)        (none)
+    *
+    * Note that i, f, d, and m only appear in floats.
+    */
+   while (1)
    {
-      len++;
-   }
-   if (toupper(pc->str[len]) == 'L')
-   {
-      len++;
-   }
-   if (toupper(pc->str[len]) == 'L')
-   {
-      len++;
-   }
-   if (toupper(pc->str[len]) == 'F')
-   {
+      tmp = toupper(pc->str[len]);
+      if ((tmp == 'I') || (tmp == 'F') || (tmp == 'D') || (tmp == 'M'))
+      {
+         is_float = true;
+      }
+      else if ((tmp != 'L') && (tmp != 'U'))
+      {
+         break;
+      }
       len++;
    }
 
    pc->len     = len;
-   pc->type    = CT_NUMBER;
+   pc->type    = is_float ? CT_NUMBER_FP : CT_NUMBER;
    cpd.column += len;
    return(true);
 }
@@ -614,6 +665,11 @@ static bool parse_next(chunk_t *pc)
     *  Parse strings and character constants
     */
 
+   if (parse_number(pc))
+   {
+      return(true);
+   }
+
    if ((cpd.lang_flags & LANG_D) != 0)
    {
       /* D specific stuff */
@@ -621,18 +677,10 @@ static bool parse_next(chunk_t *pc)
       {
          return(true);
       }
-      if (d_parse_number(pc))
-      {
-         return(true);
-      }
    }
    else
    {
       /* Not D stuff */
-      if (parse_number(pc))
-      {
-         return(true);
-      }
 
       /* Check for L'a', L"abc", 'a', "abc", <abc> strings */
       if (((*pc->str == 'L') && ((pc->str[1] == '"') || (pc->str[1] == '\''))) ||
