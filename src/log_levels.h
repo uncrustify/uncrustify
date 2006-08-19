@@ -60,6 +60,7 @@ enum
    LPFUNC    = 47,    /* Pawn: fucntion recognition */
    LSPLIT    = 48,    /* Line splitting */
    LFTYPE    = 49,    /* Function type detection */
+   LTEMPL    = 50,    /* Template detection */
 };
 
 #endif   /* LOG_LEVELS_H_INCLUDED */

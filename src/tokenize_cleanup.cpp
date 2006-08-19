@@ -91,7 +91,7 @@ void tokenize_cleanup(void)
       }
 
       /**
-       * Change angle open followed by
+       * Change angle open/close to CT_COMPARE, if not a template thingy
        */
       if (pc->type == CT_ANGLE_OPEN)
       {
@@ -176,22 +176,62 @@ static void check_template(chunk_t *start)
    chunk_t *pc;
    chunk_t *end;
    chunk_t *prev;
+   int     level = 1;
+
+   LOG_FMT(LTEMPL, "%s: Line %d, col %d:", __func__, start->orig_line, start->orig_col);
 
    prev = chunk_get_prev_ncnl(start);
 
    if ((prev != NULL) && (prev->type == CT_TEMPLATE))
    {
+      LOG_FMT(LTEMPL, " CT_TEMPLATE:");
       end = chunk_get_next_type(start, CT_ANGLE_CLOSE, -1);
    }
    else
    {
+      /* Scan backwards until we hit a semicolon, start of file, or brace open/close */
+      do
+      {
+         prev = chunk_get_prev_ncnl(prev);
+
+      } while ((prev != NULL) && ((prev->type == CT_WORD) ||
+                                  (prev->type == CT_TYPE) ||
+                                  (prev->type == CT_DC_MEMBER)));
+
+      if (prev != NULL)
+      {
+         if (chunk_is_str(prev, "(", 1) ||
+             chunk_is_str(prev, "[", 1) ||
+              (prev->type == CT_ASSIGN))
+         {
+            LOG_FMT(LTEMPL, " - after %s - Not a template\n", get_token_name(prev->type));
+            start->type = CT_COMPARE;
+            return;
+         }
+         LOG_FMT(LTEMPL, " - prev %s -", get_token_name(prev->type));
+      }
+
       for (pc = chunk_get_next_ncnl(start); pc != NULL; pc = chunk_get_next_ncnl(pc))
       {
-         if ((pc->type != CT_WORD) &&
-             (pc->type != CT_MEMBER) &&
-             (pc->type != CT_COMMA) &&
-             (pc->type != CT_STAR) &&
-             (pc->type != CT_DC_MEMBER))
+         LOG_FMT(LTEMPL, " [%s,%d]", get_token_name(pc->type), level);
+
+         if (chunk_is_str(pc, "<", 1))
+         {
+            level++;
+         }
+         else if (chunk_is_str(pc, ">", 1))
+         {
+            level--;
+            if (level == 0)
+            {
+               break;
+            }
+         }
+         else if ((pc->type != CT_WORD) &&
+                  (pc->type != CT_MEMBER) &&
+                  (pc->type != CT_COMMA) &&
+                  (pc->type != CT_STAR) &&
+                  (pc->type != CT_DC_MEMBER))
          {
             break;
          }
@@ -203,6 +243,8 @@ static void check_template(chunk_t *start)
    {
       if (end->type == CT_ANGLE_CLOSE)
       {
+         LOG_FMT(LTEMPL, " - Template Detected\n");
+
          for (pc = start; pc != end; pc = chunk_get_next_ncnl(pc))
          {
             pc->parent_type = CT_TEMPLATE;
@@ -211,6 +253,8 @@ static void check_template(chunk_t *start)
       }
       else
       {
+         LOG_FMT(LTEMPL, " - Not a template\n");
+
          start->type = CT_COMPARE;
       }
    }

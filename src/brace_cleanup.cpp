@@ -286,6 +286,7 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
    if ((pc->type == CT_PAREN_CLOSE) ||
        (pc->type == CT_BRACE_CLOSE) ||
        (pc->type == CT_VBRACE_CLOSE) ||
+       (pc->type == CT_ANGLE_CLOSE) ||
        (pc->type == CT_SQUARE_CLOSE))
    {
       /* Change CT_PAREN_CLOSE into CT_SPAREN_CLOSE or CT_FPAREN_CLOSE */
@@ -338,7 +339,7 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
 
 
    /* Get the parent type for brace and paren open */
-   parent = CT_NONE;
+   parent = pc->parent_type;
    if ((pc->type == CT_PAREN_OPEN) ||
        (pc->type == CT_FPAREN_OPEN) ||
        (pc->type == CT_SPAREN_OPEN) ||
@@ -399,6 +400,7 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
        (pc->type == CT_PAREN_OPEN) ||
        (pc->type == CT_FPAREN_OPEN) ||
        (pc->type == CT_SPAREN_OPEN) ||
+       (pc->type == CT_ANGLE_OPEN) ||
        (pc->type == CT_SQUARE_OPEN))
    {
       frm->level++;

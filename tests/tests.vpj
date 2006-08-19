@@ -164,6 +164,7 @@
 				<F N="input/cpp/nl-namespace.h"/>
 				<F N="input/cpp/operator.cpp"/>
 				<F N="input/cpp/strings.cpp"/>
+				<F N="input/cpp/templates.cpp"/>
 				<F N="input/cpp/Timestamp.h"/>
 			</Folder>
 			<Folder Name="cs">

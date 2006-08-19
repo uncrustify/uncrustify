@@ -211,6 +211,13 @@ argval_t do_space(chunk_t *first, chunk_t *second)
       return(cpd.settings[UO_sp_before_squares].a);
    }
 
+   /* spacing around template > > stuff */
+   if ((first->type == CT_ANGLE_CLOSE) &&
+       (second->type == CT_ANGLE_CLOSE))
+   {
+      return(AV_FORCE);
+   }
+
    /* spacing around template < > stuff */
    if ((first->type == CT_ANGLE_OPEN) ||
        (second->type == CT_ANGLE_CLOSE))
