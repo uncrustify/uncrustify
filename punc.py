@@ -29,31 +29,33 @@ def scan_file (filename):
 	return args
 
 def build_table (db, prev, arr):
-	#print 'prev "%s"' % prev, 'len(arr)', len(arr)
-
 	start_idx = len(arr)
 
 	# do the current level first
 	did_one = 0
-	for i in db:
+	k = db.keys();
+	if len(k) <= 0:
+		return
+
+	k.sort()
+	for i in k:
 		did_one = 1
 		en = db[i]
 		# [ char, string, next_index, something ]
 		#print 'doin', prev + en[0]
 		arr.append([en[0], prev + en[0], 0, en[2]])
 
-	if did_one > 0:
-		arr.append(['', '', 0, None])
-		# update the one-up level index
-		if len(prev) > 0:
-			for idx in range(0, len(arr)):
-				if arr[idx][1] == prev:
-					#print 'updated', prev, 'to', start_idx
-					arr[idx][2] = start_idx
-					break
+	arr.append(['', '', 0, None])
+	# update the one-up level index
+	if len(prev) > 0:
+		for idx in range(0, len(arr)):
+			if arr[idx][1] == prev:
+				#print 'updated', prev, 'to', start_idx
+				arr[idx][2] = start_idx
+				break
 
 	# Now do each sub level
-	for i in db:
+	for i in k:
 		en = db[i]
 		build_table(en[3], prev + en[0], arr)
 
