@@ -184,6 +184,17 @@ static void newline_del_between2(chunk_t *start, chunk_t *end,
       }
       pc = next;
    } while (pc != end);
+
+   if (chunk_is_str(end, "{", 1) &&
+       (chunk_is_str(start, ")", 1) ||
+        (start->type == CT_DO) ||
+        (start->type == CT_ELSE)))
+   {
+      if (chunk_get_prev_nl(end) != start)
+      {
+         chunk_move_after(end, start);
+      }
+   }
 }
 
 

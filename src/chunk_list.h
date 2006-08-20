@@ -18,6 +18,7 @@ chunk_t *chunk_add_before(const chunk_t *pc_in,
                           chunk_t *ref);
 
 void chunk_del(chunk_t *pc);
+void chunk_move_after(chunk_t *pc_in, chunk_t *ref);
 
 chunk_t *chunk_get_head(void);
 chunk_t *chunk_get_tail(void);

@@ -98,6 +98,12 @@ void chunk_del(chunk_t *pc)
    delete pc;
 }
 
+void chunk_move_after(chunk_t *pc_in, chunk_t *ref)
+{
+   g_cl.Pop(pc_in);
+   g_cl.AddAfter(pc_in, ref);
+}
+
 /**
  * Gets the next NEWLINE chunk
  */
