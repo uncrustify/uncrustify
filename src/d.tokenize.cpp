@@ -30,7 +30,7 @@ static bool d_parse_string(chunk_t *pc)
    else if ((pc->str[0] == '\'') ||
             (pc->str[0] == '`'))
    {
-      return parse_string(pc, 0, false);
+      return parse_string(pc, 0, true);
    }
    else if (pc->str[0] == '\\')
    {
