@@ -6,7 +6,7 @@
 # This could all be done with bash, but I wanted to use python. =)
 # Anyway, this was all done while waiting in the Denver airport.
 #
-# $Id: $
+# $Id$
 #
 
 import sys
@@ -61,106 +61,99 @@ FAIL_COLOR     = UNDERSCORE
 PASS_COLOR     = FG_GREEN
 MISMATCH_COLOR = FG_RED #REVERSE
 
-#for i in range(0, 63):
-#    a = NORMAL + '\033[' + str(i) + 'm' + str(i) + '     '
-#    b = NORMAL + '\033[' + str(i+64) + 'm' + str(i+64) + '     '
-#    c = NORMAL + '\033[' + str(i+128) + 'm' + str(i+128) + '     '
-#    d = NORMAL + '\033[' + str(i+192) + 'm' + str(i+192) + '     '
-#    print a + b + c + d
-
 log_level = 1
 
 def usage_exit():
-    print "Usage: \n" + sys.argv[0] + " testfile"
-    sys.exit()
+	print "Usage: \n" + sys.argv[0] + " testfile"
+	sys.exit()
 
-def run_tests(test_name, config_name, input_name, expected_name):
-    # print "Test:   " + test_name
-    # print "Config: " + config_name
-    # print "Input:  " + input_name
-    # print "Output: " + expected_name
+def run_tests(test_name, config_name, input_name):
+	expected_name = os.path.join(os.path.dirname(input_name), test_name + '-' + os.path.basename(input_name))
+	# print "Test:  ", test_name
+	# print "Config:", config_name
+	# print "Input: ", input_name
+	# print 'Output:', expected_name
 
-    resultname = os.path.join('results', expected_name)
-    try:
-        os.makedirs(os.path.dirname(resultname))
-    except:
-        pass
+	resultname = os.path.join('results', expected_name)
+	try:
+		os.makedirs(os.path.dirname(resultname))
+	except:
+		pass
 
-    cmd = "../src/uncrustify -q -c config/%s -f input/%s > %s" % (config_name, input_name, resultname)
-    if log_level >= 2:
-        print "RUN: " + cmd
-    a = os.system(cmd)
-    if a != 0:
-        print FAIL_COLOR + "FAILED: " + NORMAL + test_name
-        return -1
+	cmd = "../src/uncrustify -q -c config/%s -f input/%s > %s" % (config_name, input_name, resultname)
+	if log_level >= 2:
+		print "RUN: " + cmd
+	a = os.system(cmd)
+	if a != 0:
+		print FAIL_COLOR + "FAILED: " + NORMAL + test_name
+		return -1
 
-    cmd = "diff -u %s output/%s > /dev/null" % (resultname, expected_name)
-    if log_level >= 2:
-        print "RUN: " + cmd
-    b = os.system(cmd)
-    if b != 0:
-        print MISMATCH_COLOR + "MISMATCH: " + NORMAL + test_name
-        return -1
+	cmd = "diff -u %s output/%s > /dev/null" % (resultname, expected_name)
+	if log_level >= 2:
+		print "RUN: " + cmd
+	b = os.system(cmd)
+	if b != 0:
+		print MISMATCH_COLOR + "MISMATCH: " + NORMAL + test_name
+		return -1
 
-    if log_level >= 1:
-        print PASS_COLOR + "PASSED: " + NORMAL + test_name
-    return 0
+	if log_level >= 1:
+		print PASS_COLOR + "PASSED: " + NORMAL + test_name
+	return 0
 
 def process_test_file(filename):
-    fd = open(filename, "r")
-    if fd == None:
-        print "Unable to open " + filename
-        return None
-    print "Processing " + filename
-    pass_count = 0
-    fail_count = 0
-    for line in fd:
-        line = string.rstrip(string.lstrip(line))
-        parts = string.split(line)
-        if (len(parts) < 4) or (parts[0][0] == '#'):
-            continue
-        if run_tests(parts[0], parts[1], parts[2], parts[3]) < 0:
-            fail_count += 1
-        else:
-            pass_count += 1
-    return [pass_count, fail_count]
+	fd = open(filename, "r")
+	if fd == None:
+		print "Unable to open " + filename
+		return None
+	print "Processing " + filename
+	pass_count = 0
+	fail_count = 0
+	for line in fd:
+		line = string.rstrip(string.lstrip(line))
+		parts = string.split(line)
+		if (len(parts) < 3) or (parts[0][0] == '#'):
+			continue
+		if run_tests(parts[0], parts[1], parts[2]) < 0:
+			fail_count += 1
+		else:
+			pass_count += 1
+	return [pass_count, fail_count]
 
 #
 # entry point
 #
 
 if __name__ == '__main__':
+	args = []
+	the_tests = []
+	for arg in sys.argv[1:]:
+		if arg == '-q':
+			log_level = 0
+		elif arg == '-v':
+			log_level = 2
+		else:
+			args.append(arg)
 
-    args = []
-    the_tests = []
-    for arg in sys.argv[1:]:
-        if arg == '-q':
-            log_level = 0
-        elif arg == '-v':
-            log_level = 2
-        else:
-            args.append(arg)
+	if len(args) == 0:
+		the_tests += "c-sharp c cpp d java pawn".split()
+	else:
+		the_tests += args
 
-    if len(args) == 0:
-        the_tests += "c-sharp c cpp d java pawn".split()
-    else:
-        the_tests += args
+	#print args
+	print "Tests: " + str(the_tests)
+	pass_count = 0
+	fail_count = 0
 
-    #print args
-    print "Tests: " + str(the_tests)
-    pass_count = 0
-    fail_count = 0
+	for item in the_tests:
+		passfail = process_test_file(item + '.test')
+		if passfail != None:
+			pass_count += passfail[0]
+			fail_count += passfail[1]
 
-    for item in the_tests:
-        passfail = process_test_file(item + '.test')
-        if passfail != None:
-            pass_count += passfail[0]
-            fail_count += passfail[1]
-
-    print "Passed %d / %d tests" % (pass_count, pass_count + fail_count)
-    if fail_count > 0:
-        print BOLD + "Failed %d test(s)" % (fail_count) + NORMAL
-    else:
-        print BOLD + "All tests passed" + NORMAL
-    sys.exit()
+	print "Passed %d / %d tests" % (pass_count, pass_count + fail_count)
+	if fail_count > 0:
+		print BOLD + "Failed %d test(s)" % (fail_count) + NORMAL
+	else:
+		print BOLD + "All tests passed" + NORMAL
+	sys.exit()
 

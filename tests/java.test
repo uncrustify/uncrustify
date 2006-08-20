@@ -1,8 +1,8 @@
 #
 # Test cases specifically for the Java language.
+# $Id$
 #
+# test.name  config.file  input.file
 
-# test.name  config.file  input.file  output.file
-
-# 50000 java.cfg java/test.java java/50000-test.java
+# 50000 java.cfg                 java/test.java
 

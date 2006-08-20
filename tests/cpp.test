@@ -1,26 +1,26 @@
 #
 # Test cases specifically for the C++ language.
+# $Id$
 #
+# test.name  config.file  input.file
 
-# test.name  config.file  input.file  output.file
+30000 ben.cfg                  cpp/cout.cpp
+30001 ben.cfg                  cpp/alt_tokens.cpp
+30002 ben.cfg                  cpp/constructor.cpp
+30003 ben.cfg                  cpp/strings.cpp
+30010 ben.cfg                  cpp/class.h
 
-30000 ben.cfg cpp/cout.cpp cpp/30000-cout.cpp
-30001 ben.cfg cpp/alt_tokens.cpp cpp/30001-alt_tokens.cpp
-30002 ben.cfg cpp/constructor.cpp cpp/30002-constructor.cpp
-30003 ben.cfg cpp/strings.cpp cpp/30003-strings.cpp
-30010 ben.cfg cpp/class.h cpp/30010-class.h
+30020 ben.cfg                  cpp/bool.cpp
+30021 ben.cfg                  cpp/byref.cpp
+30022 ben.cfg                  cpp/extern_c.h
+30023 ben.cfg                  cpp/templates.cpp
 
-30020 ben.cfg cpp/bool.cpp  cpp/30020-bool.cpp
-30021 ben.cfg cpp/byref.cpp cpp/30021-byref.cpp
-30022 ben.cfg cpp/extern_c.h cpp/30022-extern_c.h
-30023 ben.cfg cpp/templates.cpp cpp/30023-templates.cpp
+30030 avalon.cfg               cpp/Timestamp.h
+30031 avalon.cfg               cpp/operator.cpp
 
-30030 avalon.cfg cpp/Timestamp.h cpp/30030-avalon-Timestamp.h
-30031 avalon.cfg cpp/operator.cpp cpp/30031-operator.cpp
+30040 nl_class-r.cfg           cpp/nl-class.h
+30041 nl_class-a.cfg           cpp/nl-class.h
 
-30040 nl_class-r.cfg cpp/nl-class.h cpp/30040-nl_class-r.h
-30041 nl_class-a.cfg cpp/nl-class.h cpp/30041-nl_class-a.h
-
-30050 nl_namespace-r.cfg cpp/nl-namespace.h cpp/30050-nl_namespace-r.h
-30051 nl_namespace-a.cfg cpp/nl-namespace.h cpp/30051-nl_namespace-a.h
+30050 nl_namespace-r.cfg       cpp/nl-namespace.h
+30051 nl_namespace-a.cfg       cpp/nl-namespace.h
 

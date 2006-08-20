@@ -1,85 +1,84 @@
 #
 # Test cases specifically for the C language.
+# $Id$
 #
-
-# test.name  config.file  input.file  output.file
+# test.name  config.file  input.file
 
 
 # little general tests
 
-00000  indent.cfg  c/comment-indent.c  c/00000-comment-indent.c
-00001  cpp_to_c-1.cfg c/comment-indent.c c/00001-cpp_to_c-1.c
-00002  cpp_to_c-2.cfg c/comment-indent.c c/00002-cpp_to_c-2.c
-00003  cpp_to_c-3.cfg c/comment-indent.c c/00003-cpp_to_c-3.c
+00000  indent.cfg              c/comment-indent.c
+00001  cpp_to_c-1.cfg          c/comment-indent.c
+00002  cpp_to_c-2.cfg          c/comment-indent.c
+00003  cpp_to_c-3.cfg          c/comment-indent.c
 
 # brace styles
-00010  ben.cfg           c/braces.c  c/00010-braces.c
-00011  brace-allman.cfg  c/braces.c  c/00011-braces.c
-00012  brace-banner.cfg  c/braces.c  c/00012-braces.c
-00013  brace-gnu.cfg     c/braces.c  c/00013-braces.c
-00014  brace-kr.cfg      c/braces.c  c/00014-braces.c
-00015  brace-ws.cfg      c/braces.c  c/00015-braces.c
+00010  ben.cfg                 c/braces.c
+00011  brace-allman.cfg        c/braces.c
+00012  brace-banner.cfg        c/braces.c
+00013  brace-gnu.cfg           c/braces.c
+00014  brace-kr.cfg            c/braces.c
+00015  brace-ws.cfg            c/braces.c
 
-00020  ben.cfg  c/define-if-indent.c  c/00020-define-if-indent.c
-00050  brace-remove-2.cfg  c/brace-remove.c  c/00050-brace-remove-2.c
-00051  brace-remove-all.cfg  c/brace-remove.c  c/00051-brace-remove-all.c
-00060  ben.cfg  c/braces-2.c  c/00060-braces-2.c
-00061  ben.cfg  c/braces-3.c  c/00061-braces-3.c
-00062  ben.cfg  c/braces-4.c  c/00062-braces-4.c
-00065  ben.cfg  c/braces-5.c  c/00065-braces-5.c
+00020  ben.cfg                 c/define-if-indent.c
+00050  brace-remove-2.cfg      c/brace-remove.c
+00051  brace-remove-all.cfg    c/brace-remove.c
+00060  ben.cfg                 c/braces-2.c
+00061  ben.cfg                 c/braces-3.c
+00062  ben.cfg                 c/braces-4.c
+00065  ben.cfg                 c/braces-5.c
 
-00101  ben.cfg  c/bugs-1.c  c/00101-bugs-1.c
-00102  ben.cfg  c/bugs-2.c  c/00102-bugs-2.c
-00103  ben.cfg  c/bugs-3.c  c/00103-bugs-3.c
-00104  ben.cfg  c/bugs-4.c  c/00104-bugs-4.c
-00105  ben.cfg  c/bugs-5.c  c/00105-bugs-5.c
-00106  ben.cfg  c/bugs-6.c  c/00106-bugs-6.c
-00107  ben.cfg  c/bugs-7.c  c/00107-bugs-7.c
+00101  ben.cfg                 c/bugs-1.c
+00102  ben.cfg                 c/bugs-2.c
+00103  ben.cfg                 c/bugs-3.c
+00104  ben.cfg                 c/bugs-4.c
+00105  ben.cfg                 c/bugs-5.c
+00106  ben.cfg                 c/bugs-6.c
+00107  ben.cfg                 c/bugs-7.c
 
-00130  ben.cfg  c/minus-minus.c  c/00130-minus-minus.c
+00130  ben.cfg                 c/minus-minus.c
 
 # casts
-00150  ben.cfg  c/casts.c   c/00150-casts.c
+00150  ben.cfg                 c/casts.c
 
 # switch & case stuff
-00201	case-1.cfg	c/case.c	c/00201-case-1.c
-00202	case-2.cfg	c/case.c	c/00202-case-2.c
-00203	case-3.cfg	c/case.c	c/00203-case-3.c
+00201   case-1.cfg             c/case.c
+00202   case-2.cfg             c/case.c
+00203   case-3.cfg             c/case.c
 
 # structure initializers
-00301	ben.cfg 	c/align-struct-init.c	c/00301-align-struct-init.c
+00301   ben.cfg                c/align-struct-init.c
 
 # aligning tresholds
-00401	align.cfg 	c/align-equ.c	c/00401-align-equ.c
+00401   align.cfg              c/align-equ.c
 
-00411	ben.cfg 	c/align-typedef.c	c/00411-align-typedef.c
+00411   ben.cfg                c/align-typedef.c
 
 # boolean positioning
-00501	bool-pos-eol.cfg 	c/bool-pos.c	c/00501-bool-pos-eol.c
-00502	bool-pos-sol.cfg 	c/bool-pos.c	c/00502-bool-pos-sol.c
+00501   bool-pos-eol.cfg       c/bool-pos.c
+00502   bool-pos-sol.cfg       c/bool-pos.c
 
-00600  indent.cfg  c/dos.c  c/00600-dos.c
-00601  indent.cfg  c/mac.c  c/00601-mac.c
-00611  pp-indent-1.cfg	c/pp-space.c	c/00611-pp-space-1.c
-00612  pp-indent-2.cfg	c/pp-space.c	c/00612-pp-space-2.c
-00613  pp-indent-3.cfg	c/pp-space.c	c/00613-pp-space-3.c
+00600  indent.cfg              c/dos.c
+00601  indent.cfg              c/mac.c
+00611  pp-indent-1.cfg         c/pp-space.c
+00612  pp-indent-2.cfg         c/pp-space.c
+00613  pp-indent-3.cfg         c/pp-space.c
 
 # function def newlines
-00701  func-def-1.cfg  c/function-def.c  c/00701-func-def-1.c
-00702  func-def-2.cfg  c/function-def.c  c/00702-func-def-2.c
-00703  func-def-3.cfg  c/function-def.c  c/00703-func-def-3.c
+00701  func-def-1.cfg          c/function-def.c
+00702  func-def-2.cfg          c/function-def.c
+00703  func-def-3.cfg          c/function-def.c
 
 # function types
-00801  ben.cfg  c/fcn_type.c  c/00801-func_type.c
-00802  ben.cfg  c/funcfunc.c  c/00802-funcfunc.c
+00801  ben.cfg                 c/fcn_type.c
+00802  ben.cfg                 c/funcfunc.c
 
 # code width
-00901  width.cfg  c/code_width.c  c/00901-code_width.c
+00901  width.cfg               c/code_width.c
 
 # pascal ptr_type
-00910  pascal_ptr.cfg c/pascal_ptr.c c/00910-pascal_ptr.c
+00910  pascal_ptr.cfg          c/pascal_ptr.c
 
 # big general tests
-
-20000 ben.cfg c/i2c-core.c c/20000-i2c-core.c
+20000 ben.cfg                  c/i2c-core.c
 

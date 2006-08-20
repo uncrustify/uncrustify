@@ -1,15 +1,15 @@
 #
 # Test cases specifically for the Pawn language.
+# $Id$
 #
+# test.name  config.file  input.file
 
-# test.name  config.file  input.file  output.file
+60000 pawn.cfg                 pawn/functions.pawn
+60001 pawn.cfg                 pawn/comment.p
+60002 pawn.cfg                 pawn/traffic.p
+60003 pawn.cfg                 pawn/tags.pawn
+60004 pawn.cfg                 pawn/enum.pawn
+60005 pawn.cfg                 pawn/unbraced.p
 
-60000 pawn.cfg pawn/functions.pawn pawn/60000-functions.pawn
-60001 pawn.cfg pawn/comment.p pawn/60001-comment.p
-60002 pawn.cfg pawn/traffic.p pawn/60002-traffic.p
-60003 pawn.cfg pawn/tags.pawn pawn/60003-tags.pawn
-60004 pawn.cfg pawn/enum.pawn pawn/60004-enum.pawn
-60005 pawn.cfg pawn/unbraced.p pawn/60005-unbraced.p
-
-60010 pawn-escape.cfg pawn/str-escape.p pawn/60010-str-escape.p
+60010 pawn-escape.cfg          pawn/str-escape.p
 
