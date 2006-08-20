@@ -5,10 +5,10 @@ void foo(void) {
 		a++;
 	  }
 
-	while (b < a)
+	while (b < a)   // trailing C++ comment
 		b++;
 
-	do {
+	do { // trailing C++ comment
 		a--;
 	  }
 	while (a > 0);
@@ -17,14 +17,14 @@ void foo(void) {
 		a--;
 	while (a > 0);
 
-	for (a = 0; a < 10; a++) {
+	for (a = 0; a < 10; a++) { // trailing C++ comment
 		printf("a=%d\n", a);
 	  }
 
-	if (a == 10) {
+	if (a == 10) { // trailing C++ comment
 		printf("a looks good\n");
 	  }
-	else {
+	else { // trailing C++ comment
 		printf("not so good\n");
 	  }
 
@@ -36,7 +36,7 @@ void foo(void) {
 			  }
 			else if (b != 0)
 				a /= b;
-			else
+			else    // trailing C++ comment
 				a += b;
 		  }
 	  }

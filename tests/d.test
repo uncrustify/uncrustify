@@ -11,6 +11,8 @@
 40004  d.cfg                   d/volatile-2.d
 40005  d.cfg                   d/volatile-3.d
 40006  d.cfg                   d/Lexer.d
+40007  d2.cfg                  d/Lexer.d
+
 40010  d.cfg                   d/template.d
 40020  d.cfg                   d/funcfunc.d
 
