@@ -53,8 +53,8 @@ void tokenize_cleanup(void)
          {
             if (next->type != CT_ASSIGN)
             {
-               LOG_FMT(LERR, "%s: [%d] version: Unexpected token %s\n",
-                       __func__, pc->orig_line, get_token_name(next->type));
+               LOG_FMT(LERR, "%s:%d %s: version: Unexpected token %s\n",
+                       cpd.filename, pc->orig_line, __func__, get_token_name(next->type));
                cpd.error_count++;
             }
             pc->type = CT_WORD;

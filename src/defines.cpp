@@ -155,7 +155,7 @@ int load_define_file(const char *filename)
    pf = fopen(filename, "r");
    if (pf == NULL)
    {
-      LOG_FMT(LERR, "%s: open(%s) failed: %s (%d)\n",
+      LOG_FMT(LERR, "%s: fopen(%s) failed: %s (%d)\n",
               __func__, filename, strerror(errno), errno);
       cpd.error_count++;
       return(FAILURE);

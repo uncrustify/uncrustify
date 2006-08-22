@@ -308,7 +308,7 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
          if (frm->pse[frm->pse_tos].type != CT_NONE)
          {
             LOG_FMT(LWARN, "%s:%d Error: Unexpected '%.*s' for '%s'\n",
-                    __func__, pc->orig_line, pc->len, pc->str,
+                    cpd.filename, pc->orig_line, pc->len, pc->str,
                     get_token_name(frm->pse[frm->pse_tos].type));
             print_stack(LBCSPOP, "=Error  ", frm, pc);
             cpd.error_count++;
@@ -552,7 +552,7 @@ static bool check_complex_statements(struct parse_frame *frm, chunk_t *pc)
       }
 
       LOG_FMT(LWARN, "%s:%d Error: Expected 'while', got '%.*s'\n",
-              __func__, pc->orig_line, pc->len, pc->str);
+              cpd.filename, pc->orig_line, pc->len, pc->str);
       frm->pse_tos--;
       print_stack(LBCSPOP, "-Error  ", frm, pc);
       cpd.error_count++;
@@ -597,7 +597,7 @@ static bool check_complex_statements(struct parse_frame *frm, chunk_t *pc)
         (frm->pse[frm->pse_tos].stage == BS_PAREN2)))
    {
       LOG_FMT(LWARN, "%s:%d Error: Expected '(', got '%.*s' for '%s'\n",
-              __func__, pc->orig_line, pc->len, pc->str,
+              cpd.filename, pc->orig_line, pc->len, pc->str,
               get_token_name(frm->pse[frm->pse_tos].type));
 
       /* Throw out the complex statement */
@@ -679,7 +679,7 @@ static bool handle_complex_close(struct parse_frame *frm, chunk_t *pc)
    {
       /* PROBLEM */
       LOG_FMT(LWARN, "%s:%d Error: TOS.type='%s' TOS.stage=%d\n",
-              __func__, pc->orig_line,
+              cpd.filename, pc->orig_line,
               get_token_name(frm->pse[frm->pse_tos].type),
               frm->pse[frm->pse_tos].stage);
       cpd.error_count++;

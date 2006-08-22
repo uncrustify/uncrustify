@@ -1225,8 +1225,8 @@ void combine_labels(void)
                }
                else
                {
-                  LOG_FMT(LWARN, "%s: unexpected colon on line %d, col %d n-parent=%s c-parent=%s l=%d bl=%d\n",
-                          __func__, next->orig_line, next->orig_col,
+                  LOG_FMT(LWARN, "%s:%d unexpected colon in col %d n-parent=%s c-parent=%s l=%d bl=%d\n",
+                          cpd.filename, next->orig_line, next->orig_col,
                           get_token_name(next->parent_type),
                           get_token_name(cur->parent_type),
                           next->level, next->brace_level);
@@ -1484,8 +1484,8 @@ static void mark_function(chunk_t *pc)
    tmp = chunk_get_next_ncnl(paren_close);
    if ((tmp != NULL) && (tmp->type == CT_PAREN_OPEN))
    {
-      LOG_FMT(LERR, "%s: unexpected function variable def on line %d, level=%d\n",
-              __func__, tmp->orig_line, tmp->level);
+      LOG_FMT(LERR, "%s:%d %s: unexpected function variable def, level=%d\n",
+              cpd.filename, tmp->orig_line, __func__, tmp->level);
       cpd.error_count++;
 
       pc->type                 = CT_TYPE;

@@ -740,8 +740,9 @@ void indent_text(void)
 
    for (idx = 1; idx <= frm.pse_tos; idx++)
    {
-      LOG_FMT(LWARN, "Unmatched %s near line %d\n",
-              get_token_name(frm.pse[idx].type), frm.pse[idx].open_line);
+      LOG_FMT(LWARN, "%s:%d Unmatched %s\n",
+              cpd.filename, frm.pse[idx].open_line,
+              get_token_name(frm.pse[idx].type));
       cpd.error_count++;
    }
 }

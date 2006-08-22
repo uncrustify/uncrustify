@@ -248,6 +248,7 @@ int main(int argc, char *argv[])
 
    /* Load the config file */
    set_option_defaults();
+   cpd.filename = cfg_file;
    if (load_option_file(cfg_file) < 0)
    {
       usage_exit("Unable to load the config file", argv[0], 56);
@@ -267,6 +268,8 @@ int main(int argc, char *argv[])
          LOG_FMT(LERR, "Out of memory\n");
          return(100);
       }
+
+      cpd.filename = "stdin";
 
       /* Done reading from stdin */
       LOG_FMT(LSYS, "Parsing: %d bytes from stdin as language %s\n",
@@ -306,7 +309,8 @@ static void process_source_list(const char *source_list)
 
    if (p_file == NULL)
    {
-      LOG_FMT(LERR, "Unable to read %s\n", source_list);
+      LOG_FMT(LERR, "%s: fopen(%s) failed: %s (%d)\n",
+              __func__, source_list, strerror(errno), errno);
       cpd.error_count++;
       return;
    }
@@ -405,7 +409,8 @@ static void do_source_file(const char *filename, FILE *pfout, const char *parsed
    p_file = fopen(filename, "rb");
    if (p_file == NULL)
    {
-      LOG_FMT(LERR, "open(%s) failed: %s\n", filename, strerror(errno));
+      LOG_FMT(LERR, "%s: fopen(%s) failed: %s (%d)\n",
+              __func__, filename, strerror(errno), errno);
       cpd.error_count++;
       return;
    }
@@ -431,8 +436,8 @@ static void do_source_file(const char *filename, FILE *pfout, const char *parsed
       pfout = fopen(outname, "wb");
       if (pfout == NULL)
       {
-         LOG_FMT(LERR, "Unable to create %s: %s (%d)\n",
-                 outname, strerror(errno), errno);
+         LOG_FMT(LERR, "%s: Unable to create %s: %s (%d)\n",
+                 __func__, outname, strerror(errno), errno);
          cpd.error_count++;
          free(data);
          return;
@@ -441,6 +446,7 @@ static void do_source_file(const char *filename, FILE *pfout, const char *parsed
       //LOG_FMT(LSYS, "Output file %s\n", outname);
    }
 
+   cpd.filename = filename;
    uncrustify_file(data, data_len, pfout, parsed_file);
 
    free(data);

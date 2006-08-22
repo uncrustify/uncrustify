@@ -85,8 +85,8 @@ static int convert_value(struct options_name_tab *entry, const char *val)
       }
       if (strcasecmp(val, "AUTO") != 0)
       {
-         LOG_FMT(LWARN, "Expected AUTO, LF, CRLF, or CR for %s, got %s\n",
-                 entry->name, val);
+         LOG_FMT(LWARN, "%s:%d Expected AUTO, LF, CRLF, or CR for %s, got %s\n",
+                 cpd.filename, cpd.line_number, entry->name, val);
          cpd.error_count++;
       }
       return(LE_AUTO);
@@ -114,7 +114,8 @@ static int convert_value(struct options_name_tab *entry, const char *val)
             return(cpd.settings[tmp->id].n * mult);
          }
       }
-      LOG_FMT(LWARN, "Expected a number for %s, got %s\n", entry->name, val);
+      LOG_FMT(LWARN, "%s:%d Expected a number for %s, got %s\n",
+              cpd.filename, cpd.line_number, entry->name, val);
       cpd.error_count++;
       return(0);
    }
@@ -146,7 +147,8 @@ static int convert_value(struct options_name_tab *entry, const char *val)
       {
          return(cpd.settings[tmp->id].b ? btrue : !btrue);
       }
-      LOG_FMT(LWARN, "Expected 'True' or 'False' for %s, got %s\n", entry->name, val);
+      LOG_FMT(LWARN, "%s:%d Expected 'True' or 'False' for %s, got %s\n",
+              cpd.filename, cpd.line_number, entry->name, val);
       cpd.error_count++;
       return(0);
    }
@@ -173,8 +175,8 @@ static int convert_value(struct options_name_tab *entry, const char *val)
    {
       return(cpd.settings[tmp->id].a);
    }
-   LOG_FMT(LWARN, "Expected 'Add', 'Remove', 'Force', or 'Ignore' for %s, got %s\n",
-           entry->name, val);
+   LOG_FMT(LWARN, "%s:%d Expected 'Add', 'Remove', 'Force', or 'Ignore' for %s, got %s\n",
+           cpd.filename, cpd.line_number, entry->name, val);
    cpd.error_count++;
    return(0);
 }
@@ -196,17 +198,18 @@ int load_option_file(const char *filename)
    FILE *pfile;
    char buffer[256];
    char *ptr;
-   int  line_num = 0;
    int  id;
    char *args[32];
    int  argc;
    int  idx;
 
+   cpd.line_number = 0;
+
    pfile = fopen(filename, "r");
    if (pfile == NULL)
    {
-      LOG_FMT(LERR, "failed to open config file %s: %s\n",
-              filename, strerror(errno));
+      LOG_FMT(LERR, "%s: fopen(%s) failed: %s (%d)\n",
+              __func__, filename, strerror(errno), errno);
       cpd.error_count++;
       return(-1);
    }
@@ -214,7 +217,7 @@ int load_option_file(const char *filename)
    /* Read in the file line by line */
    while (fgets(buffer, sizeof(buffer), pfile) != NULL)
    {
-      line_num++;
+      cpd.line_number++;
 
       /* Chop off trailing comments */
       if ((ptr = strchr(buffer, '#')) != NULL)
@@ -241,8 +244,8 @@ int load_option_file(const char *filename)
       {
          if (argc > 0)
          {
-            LOG_FMT(LWARN, "%s:Ignoring line %d: wrong number of arguments: %s...\n",
-                    filename, line_num, buffer);
+            LOG_FMT(LWARN, "%s:%d Wrong number of arguments: %s...\n",
+                    filename, cpd.line_number, buffer);
             cpd.error_count++;
          }
          continue;
@@ -265,8 +268,8 @@ int load_option_file(const char *filename)
          /* must be a regular option = value */
          if ((id = set_option_value(args[0], args[1])) < 0)
          {
-            LOG_FMT(LWARN, "%s:%d - Unknown symbol '%s'\n",
-                    filename, line_num, args[0]);
+            LOG_FMT(LWARN, "%s:%d Unknown symbol '%s'\n",
+                    filename, cpd.line_number, args[0]);
             cpd.error_count++;
          }
       }

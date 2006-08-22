@@ -200,6 +200,7 @@ struct cp_data
    FILE               *fout;
 
    UINT32             error_count;
+   const char         *filename;
 
    UINT8              lang_flags; // LANG_xxx
 

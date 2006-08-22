@@ -712,7 +712,8 @@ static bool parse_next(chunk_t *pc)
    pc->type = CT_UNKNOWN;
    pc->len  = 1;
 
-   LOG_FMT(LWARN, "Garbage: %x on line %d, col %d\n", *pc->str, pc->orig_line, cpd.column);
+   LOG_FMT(LWARN, "%s:%d Garbage in col %d: %x\n",
+           cpd.filename, pc->orig_line, cpd.column, *pc->str);
    cpd.error_count++;
    return(true);
 }
@@ -747,7 +748,8 @@ void tokenize(const char *data, int data_len)
       chunk.str = &data[idx];
       if (!parse_next(&chunk))
       {
-         LOG_FMT(LERR, "Bailed before the end?\n");
+         LOG_FMT(LERR, "%s:%d Bailed before the end?\n",
+                 cpd.filename, cpd.line_number);
          cpd.error_count++;
          break;
       }
