@@ -55,6 +55,7 @@ void tokenize_cleanup(void)
             {
                LOG_FMT(LERR, "%s: [%d] version: Unexpected token %s\n",
                        __func__, pc->orig_line, get_token_name(next->type));
+               cpd.error_count++;
             }
             pc->type = CT_WORD;
          }

@@ -305,10 +305,14 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
       /* Make sure the open / close match */
       if (pc->type != (frm->pse[frm->pse_tos].type + 1))
       {
-         LOG_FMT(LWARN, "%s:%d Error: Unexpected '%.*s' for '%s'\n",
-                 __func__, pc->orig_line, pc->len, pc->str,
-                 get_token_name(frm->pse[frm->pse_tos].type));
-         print_stack(LBCSPOP, "=Error  ", frm, pc);
+         if (frm->pse[frm->pse_tos].type != CT_NONE)
+         {
+            LOG_FMT(LWARN, "%s:%d Error: Unexpected '%.*s' for '%s'\n",
+                    __func__, pc->orig_line, pc->len, pc->str,
+                    get_token_name(frm->pse[frm->pse_tos].type));
+            print_stack(LBCSPOP, "=Error  ", frm, pc);
+            cpd.error_count++;
+         }
       }
       else
       {
@@ -551,6 +555,7 @@ static bool check_complex_statements(struct parse_frame *frm, chunk_t *pc)
               __func__, pc->orig_line, pc->len, pc->str);
       frm->pse_tos--;
       print_stack(LBCSPOP, "-Error  ", frm, pc);
+      cpd.error_count++;
    }
 
    /* Insert a CT_VBRACE_OPEN, if needed */
@@ -598,6 +603,7 @@ static bool check_complex_statements(struct parse_frame *frm, chunk_t *pc)
       /* Throw out the complex statement */
       frm->pse_tos--;
       print_stack(LBCSPOP, "-Error  ", frm, pc);
+      cpd.error_count++;
    }
 
    return(false);
@@ -676,6 +682,7 @@ static bool handle_complex_close(struct parse_frame *frm, chunk_t *pc)
               __func__, pc->orig_line,
               get_token_name(frm->pse[frm->pse_tos].type),
               frm->pse[frm->pse_tos].stage);
+      cpd.error_count++;
    }
    return(false);
 }

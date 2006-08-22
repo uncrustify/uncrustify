@@ -296,7 +296,7 @@ int main(int argc, char *argv[])
       }
    }
 
-   return(0);
+   return((cpd.error_count != 0) ? 1 : 0);
 }
 
 
@@ -307,6 +307,7 @@ static void process_source_list(const char *source_list)
    if (p_file == NULL)
    {
       LOG_FMT(LERR, "Unable to read %s\n", source_list);
+      cpd.error_count++;
       return;
    }
 
@@ -394,7 +395,6 @@ static void do_source_file(const char *filename, FILE *pfout, const char *parsed
    FILE        *p_file;
    struct stat my_stat;
 
-
    /* Do some simple language detection based on the filename */
    if (cpd.lang_flags == 0)
    {
@@ -406,6 +406,7 @@ static void do_source_file(const char *filename, FILE *pfout, const char *parsed
    if (p_file == NULL)
    {
       LOG_FMT(LERR, "open(%s) failed: %s\n", filename, strerror(errno));
+      cpd.error_count++;
       return;
    }
 
@@ -432,6 +433,7 @@ static void do_source_file(const char *filename, FILE *pfout, const char *parsed
       {
          LOG_FMT(LERR, "Unable to create %s: %s (%d)\n",
                  outname, strerror(errno), errno);
+         cpd.error_count++;
          free(data);
          return;
       }

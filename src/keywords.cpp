@@ -377,6 +377,7 @@ int load_keyword_file(const char *filename)
    {
       LOG_FMT(LERR, "%s: open(%s) failed: %s (%d)\n",
               __func__, filename, strerror(errno), errno);
+      cpd.error_count++;
       return(FAILURE);
    }
 
@@ -403,6 +404,7 @@ int load_keyword_file(const char *filename)
          {
             LOG_FMT(LWARN, "%s: line %d invalid (starts with '%s')\n",
                     filename, line_no, args[0]);
+            cpd.error_count++;
          }
       }
    }

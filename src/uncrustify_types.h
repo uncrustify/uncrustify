@@ -199,6 +199,8 @@ struct cp_data
 {
    FILE               *fout;
 
+   UINT32             error_count;
+
    UINT8              lang_flags; // LANG_xxx
 
    UINT16             line_number;

@@ -742,6 +742,7 @@ void indent_text(void)
    {
       LOG_FMT(LWARN, "Unmatched %s near line %d\n",
               get_token_name(frm.pse[idx].type), frm.pse[idx].open_line);
+      cpd.error_count++;
    }
 }
 

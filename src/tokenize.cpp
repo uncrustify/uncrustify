@@ -713,7 +713,7 @@ static bool parse_next(chunk_t *pc)
    pc->len  = 1;
 
    LOG_FMT(LWARN, "Garbage: %x on line %d, col %d\n", *pc->str, pc->orig_line, cpd.column);
-
+   cpd.error_count++;
    return(true);
 }
 
@@ -748,6 +748,7 @@ void tokenize(const char *data, int data_len)
       if (!parse_next(&chunk))
       {
          LOG_FMT(LERR, "Bailed before the end?\n");
+         cpd.error_count++;
          break;
       }
 

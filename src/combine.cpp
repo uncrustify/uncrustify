@@ -1230,6 +1230,7 @@ void combine_labels(void)
                           get_token_name(next->parent_type),
                           get_token_name(cur->parent_type),
                           next->level, next->brace_level);
+                  cpd.error_count++;
                }
             }
          }
@@ -1485,6 +1486,8 @@ static void mark_function(chunk_t *pc)
    {
       LOG_FMT(LERR, "%s: unexpected function variable def on line %d, level=%d\n",
               __func__, tmp->orig_line, tmp->level);
+      cpd.error_count++;
+
       pc->type                 = CT_TYPE;
       paren_close->type        = CT_PAREN_CLOSE;
       paren_close->parent_type = CT_NONE;
