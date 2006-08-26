@@ -253,7 +253,10 @@ void fix_symbols(void)
          {
             if (tmp->type == CT_BRACE_OPEN)
             {
-               set_paren_parent(tmp, pc->type);
+               if ((pc->flags & PCF_IN_CONST_ARGS) == 0)
+               {
+                  set_paren_parent(tmp, pc->type);
+               }
             }
             else if ((tmp->type == CT_SEMICOLON) && (pc->type == CT_FUNC_PROTO))
             {
@@ -265,7 +268,8 @@ void fix_symbols(void)
       /* Mark the braces in: "for_each_entry(xxx) { }" */
       if ((pc->type == CT_BRACE_OPEN) &&
           (prev->type == CT_FPAREN_CLOSE) &&
-          (prev->parent_type == CT_FUNC_CALL))
+          (prev->parent_type == CT_FUNC_CALL) &&
+          ((pc->flags & PCF_IN_CONST_ARGS) == 0))
       {
          set_paren_parent(pc, CT_FUNC_CALL);
       }
@@ -1477,6 +1481,13 @@ static void mark_function(chunk_t *pc)
    LOG_FMT(LFCN, "%s: %d] %.*s[%s] - level=%d\n", __func__, pc->orig_line, pc->len, pc->str, get_token_name(pc->type), pc->level);
    LOG_FMT(LFCN, "%s: next=%.*s[%s] - level=%d\n", __func__, next->len, next->str, get_token_name(next->type), next->level);
 
+   if (pc->flags & PCF_IN_CONST_ARGS)
+   {
+      pc->type = CT_FUNC_CTOR_VAR;
+      flag_parens(next, 0, CT_FPAREN_OPEN, pc->type, true);
+      return;
+   }
+
    /* Find the close paren */
    paren_close = chunk_get_next_type(pc, CT_FPAREN_CLOSE, pc->level);
 
@@ -1561,7 +1572,7 @@ static void mark_function(chunk_t *pc)
          {
             if ((pc->len == prev->len) && (memcmp(pc->str, prev->str, pc->len) == 0))
             {
-               pc->type = CT_FUNC_DEF;
+               pc->type = CT_FUNC_CLASS;
                if (destr != NULL)
                {
                   destr->type = CT_DESTRUCTOR;
@@ -1569,6 +1580,24 @@ static void mark_function(chunk_t *pc)
                LOG_FMT(LFCN, "FOUND %sSTRUCTOR for %.*s[%s] ",
                        (destr != NULL) ? "DE" : "CON",
                        prev->len, prev->str, get_token_name(prev->type));
+
+               /* Mark parameters */
+               fix_fcn_def_params(next);
+               flag_parens(next, PCF_IN_FCN_CALL, CT_FPAREN_OPEN, CT_FUNC_CLASS, false);
+
+               /* Scan until the brace open, mark everything */
+               tmp = chunk_get_next_ncnl(pc);
+               while ((tmp != NULL) && (tmp->type != CT_BRACE_OPEN) &&
+                      (tmp->type != CT_SEMICOLON))
+               {
+                  tmp->flags |= PCF_IN_CONST_ARGS;
+                  tmp = chunk_get_next_ncnl(tmp);
+               }
+               if ((tmp != NULL) && (tmp->type == CT_BRACE_OPEN))
+               {
+                  set_paren_parent(tmp, CT_FUNC_CLASS);
+               }
+               return;
             }
             else
             {

@@ -509,7 +509,8 @@ static void newlines_brace_pair(chunk_t *br_open)
 
    /* Handle the cases where the brace is part of a function call or definition */
    if ((br_open->parent_type == CT_FUNC_DEF) ||
-       (br_open->parent_type == CT_FUNC_CALL))
+       (br_open->parent_type == CT_FUNC_CALL) ||
+       (br_open->parent_type == CT_FUNC_CLASS))
    {
       /* Need to force a newline before the close brace */
       nl_close_brace = true;
@@ -518,7 +519,8 @@ static void newlines_brace_pair(chunk_t *br_open)
       pc = chunk_get_next_ncnl(br_open);
       newline_add_between(br_open, pc);
 
-      val = (br_open->parent_type == CT_FUNC_DEF) ?
+      val = ((br_open->parent_type == CT_FUNC_DEF) ||
+             (br_open->parent_type == CT_FUNC_CLASS)) ?
             cpd.settings[UO_nl_fdef_brace].a :
             cpd.settings[UO_nl_fcall_brace].a;
 
@@ -1086,18 +1088,18 @@ void newlines_class_colon_pos(void)
    chunk_t    *nextnext;
    chunk_t    *prev;
    tokenpos_e mode = cpd.settings[UO_pos_class_colon].tp;
-   bool       in_class_init = false;
+   chunk_t    *ccolon = NULL;
 
    for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next_ncnl(pc))
    {
-      if (!in_class_init && (pc->type != CT_CLASS_COLON))
+      if ((ccolon == NULL) && (pc->type != CT_CLASS_COLON))
       {
          continue;
       }
 
       if (pc->type == CT_CLASS_COLON)
       {
-         in_class_init = true;
+         ccolon = pc;
          prev = chunk_get_prev_nc(pc);
          next = chunk_get_next_nc(pc);
 
@@ -1128,11 +1130,11 @@ void newlines_class_colon_pos(void)
       {
          if ((pc->type == CT_BRACE_OPEN) || (pc->type == CT_SEMICOLON))
          {
-            in_class_init = false;
+            ccolon = NULL;
             continue;
          }
 
-         if (pc->type == CT_COMMA)
+         if ((pc->type == CT_COMMA) && (pc->level == ccolon->level))
          {
             if ((cpd.settings[UO_nl_class_init_args].a & AV_ADD) != 0)
             {

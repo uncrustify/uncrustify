@@ -14,6 +14,8 @@
 30021 ben.cfg                  cpp/byref.cpp
 30022 ben.cfg                  cpp/extern_c.h
 30023 ben.cfg                  cpp/templates.cpp
+30024 class-nl_func-add.cfg    cpp/class-init.cpp
+30025 class-nl_func-del.cfg    cpp/class-init.cpp
 
 30030 avalon.cfg               cpp/Timestamp.h
 30031 avalon.cfg               cpp/operator.cpp
@@ -29,4 +31,6 @@
 30062   class-colon-pos-sol.cfg cpp/class-init.cpp
 30063   class-colon-pos-eol-add.cfg cpp/class-init.cpp
 30064   class-colon-pos-sol-add.cfg cpp/class-init.cpp
+
+
 

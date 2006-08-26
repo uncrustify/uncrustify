@@ -89,6 +89,7 @@ struct parse_frame
 #define PCF_WAS_ALIGNED        (1 << 14)
 #define PCF_OPTIONAL           (1 << 15)
 #define PCF_IN_TYPEDEF         (1 << 16)
+#define PCF_IN_CONST_ARGS      (1 << 17)
 
 /* flags that get copied when a new chunk is inserted */
 #define PCF_COPY_FLAGS         (PCF_IN_PREPROC | PCF_IN_SPAREN | PCF_IN_ENUM | \

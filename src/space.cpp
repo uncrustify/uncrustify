@@ -240,7 +240,8 @@ argval_t do_space(chunk_t *first, chunk_t *second)
    }
 
    /* spaces between function and open paren */
-   if (first->type == CT_FUNC_CALL)
+   if ((first->type == CT_FUNC_CALL) ||
+       (first->type == CT_FUNC_CTOR_VAR))
    {
       return(cpd.settings[UO_sp_func_call_paren].a);
    }
