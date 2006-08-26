@@ -239,6 +239,10 @@ SOURCE=..\src\prototypes.h
 # End Source File
 # Begin Source File
 
+SOURCE=..\src\punctuators.h
+# End Source File
+# Begin Source File
+
 SOURCE=..\src\token_enum.h
 # End Source File
 # Begin Source File
