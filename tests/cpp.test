@@ -24,3 +24,8 @@
 30050 nl_namespace-r.cfg       cpp/nl-namespace.h
 30051 nl_namespace-a.cfg       cpp/nl-namespace.h
 
+# Class colon positioning
+30061   class-colon-pos-eol.cfg cpp/class-init.cpp
+30062   class-colon-pos-sol.cfg cpp/class-init.cpp
+
+

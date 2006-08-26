@@ -92,6 +92,27 @@ static int convert_value(struct options_name_tab *entry, const char *val)
       return(LE_AUTO);
    }
 
+   if (entry->type == AT_POS)
+   {
+      if ((strcasecmp(val, "LEAD") == 0) ||
+          (strcasecmp(val, "START") == 0))
+      {
+         return(TP_LEAD);
+      }
+      if ((strcasecmp(val, "TRAIL") == 0) ||
+          (strcasecmp(val, "END") == 0))
+      {
+         return(TP_TRAIL);
+      }
+      if (strcasecmp(val, "IGNORE") != 0)
+      {
+         LOG_FMT(LWARN, "%s:%d Expected IGNORE, LEAD/START, or TRAIL/END for %s, got %s\n",
+                 cpd.filename, cpd.line_number, entry->name, val);
+         cpd.error_count++;
+      }
+      return(TP_IGNORE);
+   }
+
    if (entry->type == AT_NUM)
    {
       if (isdigit(*val) ||

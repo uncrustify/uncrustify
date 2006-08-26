@@ -101,6 +101,8 @@ void newlines_cleanup_braces(void);
 void newlines_squeeze_ifdef(void);
 void newlines_eat_start_end(void);
 void newlines_bool_pos(void);
+void newlines_class_colon_pos(void);
+void newlines_cleanup_dup(void);
 void do_blank_lines(void);
 chunk_t *newline_add_before(chunk_t *pc);
 chunk_t *newline_add_after(chunk_t *pc);

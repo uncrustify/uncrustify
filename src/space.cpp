@@ -418,7 +418,7 @@ argval_t do_space(chunk_t *first, chunk_t *second)
    if ((first->type == CT_BOOL) || (second->type == CT_BOOL))
    {
       arg = cpd.settings[UO_sp_bool].a;
-      if ((cpd.settings[UO_nl_bool_pos].n != 0) &&
+      if ((cpd.settings[UO_pos_bool].tp != TP_IGNORE) &&
           (first->orig_line != second->orig_line) &&
           (arg != AV_REMOVE))
       {

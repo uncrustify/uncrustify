@@ -513,11 +513,16 @@ static void uncrustify_file(const char *data, int data_len, FILE *pfout,
    {
       newlines_squeeze_ifdef();
    }
-   if (cpd.settings[UO_nl_bool_pos].n != 0)
+   if (cpd.settings[UO_pos_bool].tp != TP_IGNORE)
    {
       newlines_bool_pos();
    }
+   if (cpd.settings[UO_pos_class_colon].tp != TP_IGNORE)
+   {
+      newlines_class_colon_pos();
+   }
    newlines_eat_start_end();
+   newlines_cleanup_dup();
 
    /**
     * Fix same-line inter-chunk spacing

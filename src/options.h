@@ -14,6 +14,7 @@ enum argtype_e
    AT_IARF,    /**< Ignore / Add / Remove / Force */
    AT_NUM,     /**< Number */
    AT_LINE,    /**< Line Endings */
+   AT_POS,     /**< start/end or Trail/Lead */
 };
 
 /** Arg values - these are bit fields*/
@@ -35,12 +36,21 @@ enum lineends_e
    LE_AUTO,    /* keep last */
 };
 
+/** Token position */
+enum tokenpos_e
+{
+   TP_IGNORE,     /* don't change it */
+   TP_LEAD,       /* at the start of a line or leading */
+   TP_TRAIL,      /* at the end of a line or trailing */
+};
+
 union op_val_t
 {
    argval_t   a;
    int        n;
    bool       b;
    lineends_e le;
+   tokenpos_e tp;
 };
 
 /**
@@ -234,7 +244,8 @@ enum uncrustify_options
    UO_nl_end_of_file,            // alter newlines at the end of file
    UO_nl_end_of_file_min,        // min number of newlines at the end of the file
 
-   UO_nl_bool_pos,               // -1=move &&/|| to EOL 0=ignore, 1=move to SOL
+   UO_pos_bool,                  // position of trailing/leading &&/||
+   UO_pos_class_colon,           // position of trailing/leading class colon
 
 
    /*
@@ -359,7 +370,6 @@ options_name_tab option_name_table[] =
    OPTDEF(nl_assign_brace,               AT_IARF),
    OPTDEF(nl_before_block_comment,       AT_NUM),
    OPTDEF(nl_before_case,                AT_BOOL),
-   OPTDEF(nl_bool_pos,                   AT_NUM),
    OPTDEF(nl_brace_else,                 AT_IARF),
    OPTDEF(nl_brace_while,                AT_IARF),
    OPTDEF(nl_class_brace,                AT_IARF),
@@ -389,6 +399,8 @@ options_name_tab option_name_table[] =
    OPTDEF(nl_union_brace,                AT_IARF),
    OPTDEF(nl_while_brace,                AT_IARF),
    OPTDEF(output_tab_size,               AT_NUM),
+   OPTDEF(pos_bool,                      AT_POS),
+   OPTDEF(pos_class_colon,               AT_POS),
    OPTDEF(pp_indent,                     AT_IARF),
    OPTDEF(pp_space,                      AT_IARF),
    OPTDEF(sp_after_angle,                AT_IARF),
