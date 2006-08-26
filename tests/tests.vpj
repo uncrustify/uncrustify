@@ -86,6 +86,10 @@
 			<F N="config/case-2.cfg"/>
 			<F N="config/case-3.cfg"/>
 			<F N="config/cast-types.txt"/>
+			<F N="config/class-colon-pos-eol.cfg"/>
+			<F N="config/class-colon-pos-sol-add.cfg"/>
+			<F N="config/class-colon-pos-sol.cfg"/>
+			<F N="config/class-colon-pos-sol2.cfg"/>
 			<F N="config/cpp_to_c-1.cfg"/>
 			<F N="config/cpp_to_c-2.cfg"/>
 			<F N="config/cpp_to_c-3.cfg"/>
@@ -156,6 +160,7 @@
 				<F N="input/cpp/alt_tokens.cpp"/>
 				<F N="input/cpp/bool.cpp"/>
 				<F N="input/cpp/byref.cpp"/>
+				<F N="input/cpp/class-init.cpp"/>
 				<F N="input/cpp/class.h"/>
 				<F N="input/cpp/constructor.cpp"/>
 				<F N="input/cpp/cout.cpp"/>

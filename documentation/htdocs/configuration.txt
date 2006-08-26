@@ -224,6 +224,18 @@ mylabel:
 	thisisareallylongfunctionname(param1,
 	    param2, param3, param4);
 
+   indent_class_colon:		bool
+	If true, indents the stuff after a leading class colon.
+	
+	Example if true:
+	Foo::Foo(int a)
+	   : myA(a),
+	     var2(-a)
+	
+	Example if false (default):
+	Foo::Foo(int a)
+	   : myA(a),
+	   var2(-a)
 
 #
 #  Spacing Options
@@ -540,6 +552,18 @@ mylabel:
 	  vs
 	else if (x)
 	{
+
+   nl_class_init_args:		IARF
+	Puts a newline after each comma in the constructor arg list.
+	
+	Foo::Foo(int a) : classA(a), classB(a)
+	{
+	  vs
+	Foo::Foo(int a) :
+	   classA(a),
+	   classB(a)
+	{
+	
 
    code_width:			number
 	Try to limit code to this number of columns by adding newlines

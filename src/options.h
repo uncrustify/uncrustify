@@ -92,6 +92,7 @@ enum uncrustify_options
 
    UO_indent_namespace,         // indent stuff inside namespace braces
    UO_indent_class,             // indent stuff inside class braces
+   UO_indent_class_colon,       // indent stuff after a class colon
 
    /*
     * Misc inter-element spacing
@@ -244,6 +245,8 @@ enum uncrustify_options
    UO_nl_end_of_file,            // alter newlines at the end of file
    UO_nl_end_of_file_min,        // min number of newlines at the end of the file
 
+   UO_nl_class_init_args,        // newline after comma in class init args
+
    UO_pos_bool,                  // position of trailing/leading &&/||
    UO_pos_class_colon,           // position of trailing/leading class colon
 
@@ -344,6 +347,7 @@ options_name_tab option_name_table[] =
    OPTDEF(indent_case_body,              AT_NUM),
    OPTDEF(indent_case_brace,             AT_NUM),
    OPTDEF(indent_class,                  AT_BOOL),
+   OPTDEF(indent_class_colon,            AT_BOOL),
    OPTDEF(indent_col1_comment,           AT_BOOL),
    OPTDEF(indent_columns,                AT_NUM),
    OPTDEF(indent_func_call_param,        AT_BOOL),
@@ -373,6 +377,7 @@ options_name_tab option_name_table[] =
    OPTDEF(nl_brace_else,                 AT_IARF),
    OPTDEF(nl_brace_while,                AT_IARF),
    OPTDEF(nl_class_brace,                AT_IARF),
+   OPTDEF(nl_class_init_args,            AT_IARF),
    OPTDEF(nl_define_macro,               AT_BOOL),
    OPTDEF(nl_do_brace,                   AT_IARF),
    OPTDEF(nl_else_brace,                 AT_IARF),

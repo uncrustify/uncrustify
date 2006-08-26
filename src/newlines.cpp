@@ -62,6 +62,14 @@ chunk_t *newline_add_before(chunk_t *pc)
 chunk_t *newline_add_after(chunk_t *pc)
 {
    chunk_t nl;
+   chunk_t *next;
+
+   next = chunk_get_next(pc);
+   if ((next != NULL) && (next->type == CT_NEWLINE))
+   {
+      /* Already has a newline after this chunk */
+      return(next);
+   }
 
    //fprintf(stderr, "%s: %s line %d\n", __func__, pc->str, pc->orig_line);
 
@@ -1069,47 +1077,79 @@ void newlines_bool_pos(void)
 
 /**
  * Searches for CT_CLASS_COLON and moves them, if needed.
+ * Also breaks up the args
  */
 void newlines_class_colon_pos(void)
 {
    chunk_t    *pc;
    chunk_t    *next;
+   chunk_t    *nextnext;
    chunk_t    *prev;
    tokenpos_e mode = cpd.settings[UO_pos_class_colon].tp;
-
-   if (mode == TP_IGNORE)
-   {
-      return;
-   }
+   bool       in_class_init = false;
 
    for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next_ncnl(pc))
    {
-      if (pc->type != CT_CLASS_COLON)
-      {
-         continue;
-      }
-      prev = chunk_get_prev_nc(pc);
-      next = chunk_get_next_nc(pc);
-
-      /* if both are newlines or neither are newlines, skip this chunk */
-      if (chunk_is_newline(prev) == chunk_is_newline(next))
+      if (!in_class_init && (pc->type != CT_CLASS_COLON))
       {
          continue;
       }
 
-      /*NOTE: may end up processing a chunk twice if changed */
-      if (mode == TP_TRAIL)
+      if (pc->type == CT_CLASS_COLON)
       {
-         if (chunk_is_newline(prev) && (prev->nl_count == 1))
+         in_class_init = true;
+         prev = chunk_get_prev_nc(pc);
+         next = chunk_get_next_nc(pc);
+
+         if (!chunk_is_newline(prev) && !chunk_is_newline(next) &&
+             ((cpd.settings[UO_nl_class_init_args].a & AV_ADD) != 0))
          {
-            chunk_swap(pc, prev);
+            newline_add_after(pc);
+            prev = chunk_get_prev_nc(pc);
+            next = chunk_get_next_nc(pc);
+         }
+
+         if (mode == TP_TRAIL)
+         {
+            if (chunk_is_newline(prev) && (prev->nl_count == 1))
+            {
+               chunk_swap(pc, prev);
+            }
+         }
+         else if (mode == TP_LEAD)
+         {
+            if (chunk_is_newline(next) && (next->nl_count == 1))
+            {
+               chunk_swap(pc, next);
+            }
          }
       }
-      else  /* (mode == TP_LEAD) */
+      else
       {
-         if (chunk_is_newline(next) && (next->nl_count == 1))
+         if ((pc->type == CT_BRACE_OPEN) || (pc->type == CT_SEMICOLON))
          {
-            chunk_swap(pc, next);
+            in_class_init = false;
+            continue;
+         }
+
+         if (pc->type == CT_COMMA)
+         {
+            if ((cpd.settings[UO_nl_class_init_args].a & AV_ADD) != 0)
+            {
+               newline_add_after(pc);
+            }
+            else if ((cpd.settings[UO_nl_class_init_args].a & AV_REMOVE) != 0)
+            {
+               next = chunk_get_next(pc);
+               nextnext = chunk_get_next_ncnl(pc);
+               if ((next != NULL) && (nextnext != NULL) &&
+                   (next->type == CT_NEWLINE) &&
+                   ((nextnext->type == CT_BRACE_OPEN) ||
+                    (nextnext->type == CT_SEMICOLON)))
+               {
+                  chunk_del(next);
+               }
+            }
          }
       }
    }

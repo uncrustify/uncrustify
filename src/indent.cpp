@@ -505,6 +505,16 @@ void indent_text(void)
 
          indent_column = frm.pse[frm.pse_tos].indent_tmp;
 
+         if (cpd.settings[UO_indent_class_colon].b)
+         {
+            prev = chunk_get_prev(pc);
+            if (chunk_is_newline(prev))
+            {
+               frm.pse[frm.pse_tos].indent += 2;
+               /* don't change indent of current line */
+            }
+         }
+
          LOG_FMT(LINDENT, "%3d] %s col=%d, tos=%d\n", pc->orig_line,
                  get_token_name(pc->type), indent_column, frm.pse_tos);
       }

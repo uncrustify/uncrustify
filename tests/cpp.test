@@ -27,5 +27,6 @@
 # Class colon positioning
 30061   class-colon-pos-eol.cfg cpp/class-init.cpp
 30062   class-colon-pos-sol.cfg cpp/class-init.cpp
-
+30063   class-colon-pos-eol-add.cfg cpp/class-init.cpp
+30064   class-colon-pos-sol-add.cfg cpp/class-init.cpp
 
