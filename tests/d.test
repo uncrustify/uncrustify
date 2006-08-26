@@ -16,6 +16,9 @@
 40010  d.cfg                   d/template.d
 40020  d.cfg                   d/funcfunc.d
 
+40021  d.cfg                   d/tst01.d
+
 40050  d.cfg                   d/strings.d
 40051  d.cfg                   d/numbers.d
+
 
