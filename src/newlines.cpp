@@ -169,6 +169,7 @@ static void newline_del_between2(chunk_t *start, chunk_t *end,
                                  const char *func, int line)
 {
    chunk_t *next;
+   chunk_t *prev;
    chunk_t *pc = start;
 
    LOG_FMT(LNEWLINE, "%s: '%.*s' line %d and '%.*s' line %d : caller=%s:%d\n",
@@ -180,7 +181,12 @@ static void newline_del_between2(chunk_t *start, chunk_t *end,
       next = chunk_get_next(pc);
       if (chunk_is_newline(pc))
       {
-         chunk_del(pc);
+         prev = chunk_get_prev(pc);
+         if ((prev->type != CT_COMMENT_CPP) &&
+             (next->type != CT_COMMENT_CPP))
+         {
+            chunk_del(pc);
+         }
       }
       pc = next;
    } while (pc != end);
