@@ -73,6 +73,7 @@ enum uncrustify_options
    //UO_indent_brace_struct,      //TODO: spaces to indent brace after struct/enum/union def
    //UO_indent_paren,             //TODO: indent for open paren on next line (1)
    UO_indent_paren_nl,          // indent-align under paren for open followed by nl
+   UO_indent_square_nl,         // indent-align under square for open followed by nl
    UO_pp_indent,                // indent preproc 1 space per level (add/ignore/remove)
    UO_pp_space,                 // spaces between # and word (add/ignore/remove)
 
@@ -355,6 +356,7 @@ options_name_tab option_name_table[] =
    OPTDEF(indent_label,                  AT_NUM),
    OPTDEF(indent_namespace,              AT_BOOL),
    OPTDEF(indent_paren_nl,               AT_BOOL),
+   OPTDEF(indent_square_nl,              AT_BOOL),
    OPTDEF(indent_switch_case,            AT_NUM),
    OPTDEF(indent_with_tabs,              AT_NUM),
    OPTDEF(input_tab_size,                AT_NUM),

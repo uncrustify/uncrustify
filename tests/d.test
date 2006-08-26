@@ -17,6 +17,7 @@
 40020  d.cfg                   d/funcfunc.d
 
 40021  d.cfg                   d/tst01.d
+40022  d-tst2.cfg              d/tst02.d
 
 40050  d.cfg                   d/strings.d
 40051  d.cfg                   d/numbers.d

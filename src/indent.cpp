@@ -541,12 +541,18 @@ void indent_text(void)
             }
          }
 
-         if (!cpd.settings[UO_indent_paren_nl].b)
+         if ((chunk_is_str(pc, "(", 1) && !cpd.settings[UO_indent_paren_nl].b) ||
+             (chunk_is_str(pc, "[", 1) && !cpd.settings[UO_indent_square_nl].b))
          {
             next = chunk_get_next_nc(pc);
             if (chunk_is_newline(next))
             {
-               frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent + indent_size;
+               int sub = 1;
+               if (frm.pse[frm.pse_tos - 1].type == CT_ASSIGN)
+               {
+                  sub = 2;
+               }
+               frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - sub].indent + indent_size;
             }
          }
          frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;

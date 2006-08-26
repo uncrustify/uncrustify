@@ -75,6 +75,11 @@ Here's a list of all the options from options.h and a brief description.
 	so that it lines up after the open paren.
 	Not recommended.
 
+   indent_square_nl:		bool
+	If an open square is followed by a newline, indent the next line
+	so that it lines up after the open square.
+	Not recommended.
+
    pp_space:			IARF
 	Changes the space between # and, say, define.
 	One space per #if level.
