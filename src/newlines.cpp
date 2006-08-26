@@ -475,6 +475,26 @@ static void newlines_brace_pair(chunk_t *br_open)
       return;
    }
 
+   if (cpd.settings[UO_nl_collapse_empty_body].b)
+   {
+      next = chunk_get_next_nnl(br_open);
+      if ((next != NULL) && (next->type == CT_BRACE_CLOSE))
+      {
+         pc = chunk_get_next(br_open);
+
+         while ((pc != NULL) && (pc->type != CT_BRACE_CLOSE))
+         {
+            next = chunk_get_next(pc);
+            if (pc->type == CT_NEWLINE)
+            {
+               chunk_del(pc);
+            }
+            pc = next;
+         }
+         return;
+      }
+   }
+
    next = chunk_get_next_nc(br_open);
 
    /** Insert a newline between the '=' and open brace, if needed */

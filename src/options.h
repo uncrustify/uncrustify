@@ -246,6 +246,7 @@ enum uncrustify_options
    UO_nl_end_of_file_min,        // min number of newlines at the end of the file
 
    UO_nl_class_init_args,        // newline after comma in class init args
+   UO_nl_collapse_empty_body,    // change { \n } into {}
 
    UO_pos_bool,                  // position of trailing/leading &&/||
    UO_pos_class_colon,           // position of trailing/leading class colon
@@ -378,6 +379,7 @@ options_name_tab option_name_table[] =
    OPTDEF(nl_brace_while,                AT_IARF),
    OPTDEF(nl_class_brace,                AT_IARF),
    OPTDEF(nl_class_init_args,            AT_IARF),
+   OPTDEF(nl_collapse_empty_body,        AT_BOOL),
    OPTDEF(nl_define_macro,               AT_BOOL),
    OPTDEF(nl_do_brace,                   AT_IARF),
    OPTDEF(nl_else_brace,                 AT_IARF),

@@ -563,7 +563,9 @@ mylabel:
 	   classA(a),
 	   classB(a)
 	{
-	
+
+   nl_collapse_empty_body:	BOOL
+	If true, changes { \n } into { }.
 
    code_width:			number
 	Try to limit code to this number of columns by adding newlines
