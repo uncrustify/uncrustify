@@ -41,6 +41,7 @@ Changes in uncrustify-0.0.25
  - Add pos_class_colon
  - Add indent_class_colon
  - Add nl_class_init_args
+ - Add nl_collapse_empty_body
 
 
 Changes in uncrustify-0.0.24
