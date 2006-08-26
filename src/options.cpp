@@ -311,7 +311,8 @@ void print_options(FILE *pfile)
       "{ False, True }",
       "{ Ignore, Add, Remove, Force }",
       "Number",
-      "{ Auto, LF, CR, CRLF }"
+      "{ Auto, LF, CR, CRLF }",
+      "{ Ignore, Lead, Trail }",
    };
 
    /* Find the max width of the names */
