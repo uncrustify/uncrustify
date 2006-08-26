@@ -1,88 +1,126 @@
-<HTML>
-<HEAD>
-	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=utf-8">
-	<TITLE></TITLE>
-</HEAD>
-<BODY LANG="en-US" DIR="LTR">
-<H1>Uncrustify - Source Code Beautifier</H1>
-<H2>For C, C++, C#, D, Java, and Pawn</H2>
-<HR>
-The goals of this project are simple:<BR>
-Create a highly configurable, easily modifiable source code beautifier.<BR>
-<BR>
-<A HREF="http://sourceforge.net/projects/uncrustify/">Sourceforge project
-web site</A>
-<P><A HREF="http://prdownloads.sourceforge.net/uncrustify/uncrustify-0.0.24.tgz?download">Download
-Uncrustify 0.0.24 source</A></P>
-The change log is <A HREF="ChangeLog">here</A>.<BR>
-<HR>
-<B>What it does:</B>
-<UL>
-	<LI>Ident code, aligning on parens, assignments, etc
-	<LI>Align on '=' and variable definitions
-	<LI>Align structure initializers
-	<LI>Align #define stuff
-	<LI>Align backslash-newline stuff
-	<LI>Reformat comments (a little bit)
-	<LI>Fix inter-character spacing
-	<LI>Add or remove parens on return statements
-	<LI>Add or remove braces on single-statement if/do/while/for statements
-	<LI>Highly configurable - 134 configurable options as of version 0.0.24
-</UL>
-See some example <A HREF="examples/example.c">output</A>.
-<HR>
-<H3>Want to help?</H3>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Uncrustify - Source Code Beautifier for C, C++, C#, D, Java, and Pawn</title>
+   <link rel="stylesheet" type="text/css" href="uncrustify1.css" />
+   <!-- <link rel="shortcut icon" href="images/favicon.ico" /> -->
+</head>
+<body lang="en-us" dir="ltr">
+
+<div align="center">
+<table>
+<tr>
+<td align="center">
+<div class="node1" align="center">
+<div class="node2" align="left">
+<h1>Uncrustify</h1>
+<h2>Source Code Beautifier for C, C++, C#, D, Java, and Pawn</h2>
+<br />
+
+<h2>Introduction</h2>
+<p>The goals of this project are simple:
+Create a highly configurable, easily modifiable source code beautifier.</p>
+
+<br />
+
+<h2>Features</h2>
+<ul>
+   <li>Ident code, aligning on parens, assignments, etc</li>
+   <li>Align on '=' and variable definitions</li>
+   <li>Align structure initializers</li>
+   <li>Align #define stuff</li>
+   <li>Align backslash-newline stuff</li>
+   <li>Reformat comments (a little bit)</li>
+   <li>Fix inter-character spacing</li>
+   <li>Add or remove parens on return statements</li>
+   <li>Add or remove braces on single-statement if/do/while/for statements</li>
+   <li>Highly configurable - 134 configurable options as of version 0.0.24</li>
+</ul>
+
+<p>
+   See some example <a href="examples/example.c">output</a>.
+</p>
+
+<br />
+
+<h2>Where to get</h2>
+<pre>
+<a href="http://sourceforge.net/projects/uncrustify/">Sourceforge project web site</a>
+<a href="http://prdownloads.sourceforge.net/uncrustify/uncrustify-0.0.24.tgz?download">Download Uncrustify 0.0.24 source</a>
+The change log is <a href="ChangeLog">here</a>
+</pre>
+
+
+<br />
+
+<h2>Want to help?</h2>
+<p>
 The most helpful way is to try it out and give feedback.
-<P>
 Documentation and examples are available in the source tree, so check it out.
-<P>
-You can find a copy of the configurable parameters <A HREF="configuration.txt">here</A>.<BR>
-Here is the config file for my <A HREF="ben.cfg.txt">favorite style</A>.
-And one I set up for <A HREF="linux.cfg.txt">Linux</A>.<BR>
-And here is a <A HREF="examples/c-1.in.c">before</A> and <A HREF="examples/c-1.out.c">after</A> C source example.<BR>
-That should give you a pretty good idea of what Uncrustify can do.<BR>
-<P>
+</p>
+<p>
+You can find a copy of the configurable parameters <a href="configuration.txt">here</a>.<br />
+Here is the config file for my <a href="ben.cfg.txt">favorite style</a>.
+And one I set up for <a href="linux.cfg.txt">Linux</a>.<br />
+And here is a <a href="examples/c-1.in.c">before</a> and <a href="examples/c-1.out.c">after</a> C source example.<br />
+That should give you a pretty good idea of what Uncrustify can do.<br />
+</p>
+
+<p>
 If you find a bug, please do the following:
-<UL>
-	<LI>Reduce the input source file to the minimum that still has the problem
-	<LI>Use the sourceforget.net bug tracker
-	<LI>Attach the input source file, the configuration file, and a file that contains the expected output
-</UL>
-<P>
-If you want to add a feature, fix a bug, or implement missing functionality, feel free to do so!<br>
-Patches are welcome!
-<P>
+</p>
+<ul>
+<li>Reduce the input source file to the minimum that still has the problem</li>
+<li>Use the sourceforget.net bug tracker</li>
+<li>Attach the input source file, the configuration file, and a file that contains the expected output</li>
+</ul>
+
+<p>
+If you want to add a feature, fix a bug, or implement missing functionality, feel free to do so! Patches are welcome!
 Here are some areas that need attention:
-<UL>
-	<LI>Test Java support and provide feedback (or patches!)
-	<LI>This web page need a (re)design
-	<LI>A logo of some sort
-	<LI>Examples that can be put on this website to show off what Uncrustify can do
-	<LI>Anything else that you want to do to make it better?
-</UL>
+</p>
+<ul>
+   <li>Test Java support and provide feedback (or patches!)</li>
+   <li>This web page need a (re)design</li>
+   <li>A logo of some sort</li>
+   <li>Examples that can be put on this website to show off what Uncrustify can do</li>
+   <li>Anything else that you want to do to make it better?</li>
+</ul>
 
-<HR>
-<H3>Portability</H3>
-I'm pretty sure that I'm not using anything that is OS-specific.<BR>
+<br />
+
+<h2>Portability</h2>
+<p>
+I'm pretty sure that I'm not using anything that is OS-specific.<br />
 The software has been tested on the following operating systems:
-<UL>
-<LI>Linux (Ubuntu)</LI>
-<LI>QNX (6.2.1)</LI>
-<LI>OS X (DMG file available thanks to Jim Hopper)</LI>
-<LI>OpenBSD 3.4</LI>
-<LI>NetBSD 1.6.1</LI>
-<LI>Sun Solaris 9</LI>
-<LI>Windows XP (binary available)</LI>
-</UL>
-<HR>
-<H3>Links</H3>
-<UL>
-<LI>Don't know what D is?  Check out the <A HREF="http://www.digitalmars.com/d/">Digital Mars website</A>.</LI>
-<LI><A HREF="http://www.linuxlinks.com">Linux Links</A>.</LI>
-<LI><A HREF="http://freshmeat.net/projects/uncrustify/">Freshmeat Project</A>.</LI>
-</UL>
+</p>
+<ul>
+   <li>Linux (Ubuntu)</li>
+   <li>QNX (6.2.1)</li>
+   <li>OS X (DMG file available thanks to Jim Hopper)</li>
+   <li>OpenBSD 3.4</li>
+   <li>NetBSD 1.6.1</li>
+   <li>Sun Solaris 9</li>
+   <li>Windows XP (binary available)</li>
+</ul>
 
-$Id$
+<br />
 
-</BODY>
-</HTML>
+<h2>Links</h2>
+<ul>
+   <li>Don't know what D is?  Check out the <a href="http://www.digitalmars.com/d/">Digital Mars website</a>.</li>
+   <li><a href="http://www.linuxlinks.com">Linux Links</a></li>
+   <li><a href="http://freshmeat.net/projects/uncrustify/">Freshmeat Project</a></li>
+</ul>
+</div>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<br />
+<small>$Id$</small>
+
+</body>
+</html>
