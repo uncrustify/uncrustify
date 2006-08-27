@@ -30,6 +30,7 @@ static chunk_t *process_return(chunk_t *pc);
 static void mark_class_ctor(chunk_t *pclass);
 static void mark_namespace(chunk_t *pns);
 static void mark_function_type(chunk_t *pc);
+static void mark_cpp_constructor(chunk_t *pc);
 
 void make_type(chunk_t *pc)
 {
@@ -1551,11 +1552,15 @@ static void mark_function(chunk_t *pc)
    }
 
    /* Assume it is a function call */
-   pc->type = CT_FUNC_CALL;
+   if (pc->type == CT_FUNCTION)
+   {
+      pc->type = CT_FUNC_CALL;
+   }
 
    /* Check for C++ function def */
-   if ((prev != NULL) && ((prev->type == CT_DC_MEMBER) ||
-                          (prev->type == CT_INV)))
+   if ((pc->type == CT_FUNC_CLASS) ||
+       ((prev != NULL) && ((prev->type == CT_DC_MEMBER) ||
+                          (prev->type == CT_INV))))
    {
       chunk_t *destr = NULL;
       if (prev->type == CT_INV)
@@ -1580,23 +1585,8 @@ static void mark_function(chunk_t *pc)
                LOG_FMT(LFCN, "FOUND %sSTRUCTOR for %.*s[%s] ",
                        (destr != NULL) ? "DE" : "CON",
                        prev->len, prev->str, get_token_name(prev->type));
-
-               /* Mark parameters */
-               fix_fcn_def_params(next);
-               flag_parens(next, PCF_IN_FCN_CALL, CT_FPAREN_OPEN, CT_FUNC_CLASS, false);
-
-               /* Scan until the brace open, mark everything */
-               tmp = chunk_get_next_ncnl(pc);
-               while ((tmp != NULL) && (tmp->type != CT_BRACE_OPEN) &&
-                      (tmp->type != CT_SEMICOLON))
-               {
-                  tmp->flags |= PCF_IN_CONST_ARGS;
-                  tmp = chunk_get_next_ncnl(tmp);
-               }
-               if ((tmp != NULL) && (tmp->type == CT_BRACE_OPEN))
-               {
-                  set_paren_parent(tmp, CT_FUNC_CLASS);
-               }
+               
+               mark_cpp_constructor(pc);
                return;
             }
             else
@@ -1715,6 +1705,48 @@ static void mark_function(chunk_t *pc)
    }
 }
 
+static void mark_cpp_constructor(chunk_t *pc)
+{
+   chunk_t *paren_open;
+   chunk_t *tmp;
+   chunk_t *after;
+
+   LOG_FMT(LFTOR, "FOUND CONSTRUCTOR for %.*s[%s] ",
+           pc->len, pc->str, get_token_name(pc->type));
+
+   paren_open = chunk_get_next_ncnl(pc);
+   if (!chunk_is_str(paren_open, "(", 1))
+   {
+      LOG_FMT(LWARN, "%s:%d Expected '(', got: [%.*s]\n", 
+              cpd.filename, paren_open->orig_line,
+              paren_open->len, paren_open->str);
+      return;
+   }
+
+   /* Mark parameters */
+   fix_fcn_def_params(paren_open);
+   after = flag_parens(paren_open, PCF_IN_FCN_CALL, CT_FPAREN_OPEN, CT_FUNC_CLASS, false);
+
+   LOG_FMT(LFTOR, "[%.*s]\n", after->len, after->str);
+
+   /* Scan until the brace open, mark everything */
+   tmp = paren_open;
+   while ((tmp != NULL) && (tmp->type != CT_BRACE_OPEN) &&
+          (tmp->type != CT_SEMICOLON))
+   {
+      tmp->flags |= PCF_IN_CONST_ARGS;
+      tmp = chunk_get_next_ncnl(tmp);
+      if (chunk_is_str(tmp, ":", 1))
+      {
+         tmp->type = CT_CLASS_COLON;
+      }
+   }
+   if ((tmp != NULL) && (tmp->type == CT_BRACE_OPEN))
+   {
+      set_paren_parent(tmp, CT_FUNC_CLASS);
+   }
+}
+
 /**
  * We're on a 'class'.
  * Scan for CT_FUNCTION with a string that matches pclass->str
@@ -1728,15 +1760,18 @@ static void mark_class_ctor(chunk_t *pclass)
    chunk_t *pc   = chunk_get_next_ncnl(pclass);
    int     level = pclass->brace_level + 1;
 
-   LOG_FMT(LFTOR, "%s: Called on %.*s on line %d\n",
-           __func__, pclass->len, pclass->str, pclass->orig_line);
+   LOG_FMT(LFTOR, "%s: Called on %.*s on line %d (next='%.*s')\n",
+           __func__, pclass->len, pclass->str, pclass->orig_line,
+           pc->len, pc->str);
 
    pclass->parent_type = CT_CLASS;
 
    /* Find the open brace, abort on semicolon */
    while ((pc != NULL) && (pc->type != CT_BRACE_OPEN))
    {
-      if ((pc->len == 1) && (*pc->str == ':'))
+      LOG_FMT(LFTOR, " [%.*s]", pc->len, pc->str);
+
+      if (chunk_is_str(pc, ":", 1))
       {
          pc->type = CT_CLASS_COLON;
          LOG_FMT(LFTOR, "%s: class colon on line %d\n",
@@ -1782,9 +1817,7 @@ static void mark_class_ctor(chunk_t *pclass)
       {
          pc->type = CT_FUNC_CLASS;
          LOG_FMT(LFTOR, "%d] Marked CTor/DTor %.*s\n", pc->orig_line, pc->len, pc->str);
-         pc = chunk_get_next_ncnl(pc);
-         set_paren_parent(pc, CT_FUNC_CLASS);
-         fix_fcn_def_params(pc);
+         mark_cpp_constructor(pc);
       }
       pc = next;
    }

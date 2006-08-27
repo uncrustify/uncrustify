@@ -31,6 +31,5 @@
 30062   class-colon-pos-sol.cfg cpp/class-init.cpp
 30063   class-colon-pos-eol-add.cfg cpp/class-init.cpp
 30064   class-colon-pos-sol-add.cfg cpp/class-init.cpp
-
-
+30065   class-colon-pos-sol.cfg cpp/Example.h
 

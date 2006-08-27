@@ -7,7 +7,7 @@ static int short_function_name(struct device *dev,
         some_long_parameter1, some_long_parameter2);
 
     abc = call_some_other_really_long_function.of_some_sort(
-              some_long_parameter1, some_long_parameter2);
+        some_long_parameter1, some_long_parameter2);
 
     abc.def.ghi = call_some_other_really_long_function.
                   of_some_sort(some_long_parameter1,
