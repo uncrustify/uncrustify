@@ -336,6 +336,11 @@ argval_t do_space(chunk_t *first, chunk_t *second)
 
    if (first->type == CT_PAREN_CLOSE)
    {
+      if (first->parent_type == CT_D_TEMPLATE)
+      {
+         return(AV_FORCE);
+      }
+
       /* "(int)a" vs "(int) a" */
       if (first->parent_type == CT_CAST)
       {

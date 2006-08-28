@@ -209,6 +209,11 @@ void fix_symbols(void)
          }
       }
 
+      if (pc->type == CT_D_TEMPLATE)
+      {
+         set_paren_parent(next, pc->type);
+      }
+
       /**
        * A word before an open paren is a function call or definition.
        * CT_WORD => CT_FUNC_CALL or CT_FUNC_DEF

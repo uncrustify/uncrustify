@@ -15,7 +15,7 @@ template Foo(T, U)
     typedef const char   FooType2;
 }
 
-alias Foo!(int, char)f;
+alias Foo!(int, char) f;
 f.Bar b;
 f.foo(1, 2);
 f.abc = 3;
