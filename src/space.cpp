@@ -450,19 +450,19 @@ argval_t do_space(chunk_t *first, chunk_t *second)
        (second->type == CT_PTR_TYPE) &&
        (cpd.settings[UO_sp_between_ptr_star].a != AV_IGNORE))
    {
-      return cpd.settings[UO_sp_between_ptr_star].a;
+      return(cpd.settings[UO_sp_between_ptr_star].a);
    }
 
    if ((first->type == CT_PTR_TYPE) &&
        (cpd.settings[UO_sp_after_ptr_star].a != AV_IGNORE))
    {
-      return cpd.settings[UO_sp_after_ptr_star].a;
+      return(cpd.settings[UO_sp_after_ptr_star].a);
    }
 
    if ((second->type == CT_PTR_TYPE) &&
        (cpd.settings[UO_sp_before_ptr_star].a != AV_IGNORE))
    {
-      return cpd.settings[UO_sp_before_ptr_star].a;
+      return(cpd.settings[UO_sp_before_ptr_star].a);
    }
 
    if ((second->type == CT_FUNC_PROTO) || (second->type == CT_FUNC_DEF))
@@ -472,6 +472,16 @@ argval_t do_space(chunk_t *first, chunk_t *second)
          return((argval_t)(cpd.settings[UO_sp_type_func].a | AV_ADD));
       }
       return(cpd.settings[UO_sp_type_func].a);
+   }
+
+   if (first->type == CT_BYREF)
+   {
+      return(cpd.settings[UO_sp_after_byref].a);
+   }
+
+   if (second->type == CT_BYREF)
+   {
+      return(cpd.settings[UO_sp_before_byref].a);
    }
 
    if (first->type == CT_BRACE_OPEN)
@@ -536,11 +546,6 @@ argval_t do_space(chunk_t *first, chunk_t *second)
        (first->parent_type == CT_WHILE_OF_DO))
    {
       return(AV_REMOVE); /*TODO: does this need to be configured? */
-   }
-
-   if ((first->type == CT_TYPE) && (second->type == CT_BYREF))
-   {
-      return(cpd.settings[UO_sp_before_byref].a);
    }
 
    if ((first->type == CT_QUALIFIER) || (first->type == CT_TYPE))

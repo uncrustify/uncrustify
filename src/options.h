@@ -106,6 +106,7 @@ enum uncrustify_options
    UO_sp_after_cast,        // space after cast - "(int) a" vs "(int)a"
 
    UO_sp_before_byref,      // space before '&' of 'fcn(int& idx)'
+   UO_sp_after_byref,       // space after a '&'  as in 'int& var'
 
    UO_sp_inside_fparen,     // space inside 'foo( xxx )' vs 'foo(xxx)'
    UO_sp_inside_fparens,    // space inside 'foo( )' vs 'foo()'
@@ -287,11 +288,11 @@ enum uncrustify_options
     * Comment modifications
     */
 
-   UO_cmt_star_cont,       // put a star on subsequent comment lines
-   UO_cmt_cpp_to_c,        // convert CPP comments to C comments
-   UO_cmt_cpp_group,       // if UO_cmt_cpp_to_c, try to group in one big C comment
-   UO_cmt_cpp_nl_start,    // put a blank /* at the start of a converted group
-   UO_cmt_cpp_nl_end,      // put a nl before the */ in a converted group
+   UO_cmt_star_cont,            // put a star on subsequent comment lines
+   UO_cmt_cpp_to_c,             // convert CPP comments to C comments
+   UO_cmt_cpp_group,            // if UO_cmt_cpp_to_c, try to group in one big C comment
+   UO_cmt_cpp_nl_start,         // put a blank /* at the start of a converted group
+   UO_cmt_cpp_nl_end,           // put a nl before the */ in a converted group
 
    UO_string_escape_char,       // the string escape char to use
 
@@ -413,6 +414,7 @@ options_name_tab option_name_table[] =
    OPTDEF(pp_indent,                     AT_IARF),
    OPTDEF(pp_space,                      AT_IARF),
    OPTDEF(sp_after_angle,                AT_IARF),
+   OPTDEF(sp_after_byref,                AT_IARF),
    OPTDEF(sp_after_cast,                 AT_IARF),
    OPTDEF(sp_after_comma,                AT_IARF),
    OPTDEF(sp_after_ptr_star,             AT_IARF),
