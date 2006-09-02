@@ -312,6 +312,17 @@ void indent_text(void)
       /* Grab a copy of the current indent */
       indent_column = frm.pse[frm.pse_tos].indent_tmp;
 
+      if (!chunk_is_newline(pc) && !chunk_is_comment(pc))
+      {
+         LOG_FMT(LINDPC, " -=[ %.*s ]=- top=%d %s %d/%d/%d\n",
+                 pc->len, pc->str,
+                 frm.pse_tos,
+                 get_token_name(frm.pse[frm.pse_tos].type),
+                 frm.pse[frm.pse_tos].indent_tmp,
+                 frm.pse[frm.pse_tos].indent,
+                 frm.pse[frm.pse_tos].min_col);
+      }
+
       /**
        * Handle stuff that can affect the current indent:
        *  - brace close
@@ -680,6 +691,15 @@ void indent_text(void)
          //LOG_FMT(LSYS, "%s: BAILED: pc=%s col=%d\n", __func__, pc->str, pc->column);
          frm.pse[frm.pse_tos].min_col = 0;
       }
+
+      /* If we hit a function def or proto, we need to stop.
+       * there's really got to be a cleaner way to do this!
+       */
+      if ((pc->type == CT_FUNC_DEF) || (pc->type == CT_FUNC_PROTO))
+      {
+         frm.pse[frm.pse_tos].min_col = 0;
+      }
+
       if (frm.pse[frm.pse_tos].min_col <= -1)
       {
          if ((pc->type != CT_WORD) &&
