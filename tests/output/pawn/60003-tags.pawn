@@ -16,10 +16,10 @@ error:errno = fatal;
 native printf(const format[], { Float, _ }: ...);
 
 new Float:chance_to_avoid = (p_resists[id][RESISTIDX_FIRE] >= RESIST_MAX_VALUE) ?
-    1.00 : (float ( p_resists[id][RESISTIDX_FIRE] ) / float ( RESIST_MAX_VALUE ));
+                            1.00 : (float ( p_resists[id][RESISTIDX_FIRE] ) / float ( RESIST_MAX_VALUE ));
 
 xplevel_lev[j] = XP_PER_LEVEL_BASE_LT + ( (j - 10) * XP_PER_LEVEL_LT) +
-    floatround ( float ( j / 20 ) * XP_PER_LEVEL_LT );
+                 floatround ( float ( j / 20 ) * XP_PER_LEVEL_LT );
 
 
 main()
