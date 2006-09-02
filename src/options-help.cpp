@@ -58,10 +58,6 @@ const char *detailed_help(uncrustify_options op)
       text = "Try to limit code width to this number of columns";
       break;
 
-   case UO_input_tab_size:                // tab size on input file: usually 8
-   case UO_output_tab_size:               // tab size for output: usually 8
-   case UO_indent_columns:                // ie 3 or 8
-   case UO_indent_with_tabs:              // 1=only to the 'level' indent, 2=use tabs for indenting
    case UO_indent_paren_nl:               // indent-align under paren for open followed by nl
    case UO_indent_square_nl:              // indent-align under square for open followed by nl
    case UO_pp_indent:                     // indent preproc 1 space per level (add/ignore/remove)
@@ -78,9 +74,6 @@ const char *detailed_help(uncrustify_options op)
    case UO_indent_namespace:              // indent stuff inside namespace braces
    case UO_indent_class:                  // indent stuff inside class braces
    case UO_indent_class_colon:            // indent stuff after a class colon
-   case UO_sp_paren_brace:                // space between ')' and '{'
-   case UO_sp_fparen_brace:               // space between ')' and '{' of function
-   case UO_sp_sparen_brace:               // space between ')' and '{' of if, while, etc
    case UO_sp_after_cast:                 // space after cast - "(int) a" vs "(int)a"
    case UO_sp_before_byref:               // space before '&' of 'fcn(int& idx)'
    case UO_sp_after_byref:                // space after a '&'  as in 'int& var'
