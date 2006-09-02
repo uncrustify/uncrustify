@@ -188,13 +188,13 @@ static chunk_t *pawn_process_line(chunk_t *start)
    if (fcn != NULL)
    {
       //LOG_FMT(LSYS, "FUNCTION: %.*s\n", fcn->len, fcn->str);
-      return pawn_mark_function0(start, fcn);
+      return(pawn_mark_function0(start, fcn));
    }
 
    if (start->type == CT_ENUM)
    {
       pc = chunk_get_next_type(start, CT_BRACE_CLOSE, start->level);
-      return pc;
+      return(pc);
    }
 
    //LOG_FMT(LSYS, "%s: Don't understand line %d, starting with '%.*s' [%s]\n",
@@ -210,7 +210,8 @@ static chunk_t *pawn_process_line(chunk_t *start)
 static chunk_t *pawn_process_variable(chunk_t *start)
 {
    chunk_t *prev = NULL;
-   chunk_t *pc = start;
+   chunk_t *pc   = start;
+
    while ((pc = chunk_get_next_nc(pc)) != NULL)
    {
       if ((pc->type == CT_NEWLINE) &&
@@ -225,7 +226,7 @@ static chunk_t *pawn_process_variable(chunk_t *start)
       }
       prev = pc;
    }
-   return pc;
+   return(pc);
 }
 
 
@@ -249,7 +250,7 @@ void pawn_add_virtual_semicolons(void)
             prev = pc;
          }
          if ((prev == NULL) ||
-             ((pc->type != CT_NEWLINE)  &&
+             ((pc->type != CT_NEWLINE) &&
               (pc->type != CT_BRACE_CLOSE) &&
               (pc->type != CT_VBRACE_CLOSE)))
          {
@@ -305,7 +306,7 @@ static chunk_t *pawn_mark_function0(chunk_t *start, chunk_t *fcn)
    }
 
    /* Not a prototype, so it must be a function def */
-   return pawn_process_func_def(fcn);
+   return(pawn_process_func_def(fcn));
 }
 
 
@@ -321,7 +322,7 @@ static chunk_t *pawn_process_func_def(chunk_t *pc)
    /* If we don't have a brace open right after the close fparen, then
     * we need to add virtual braces around the function body.
     */
-   clp = chunk_get_next_str(pc, ")", 1, 0);
+   clp  = chunk_get_next_str(pc, ")", 1, 0);
    last = chunk_get_next_ncnl(clp);
 
    if (last != NULL)
@@ -355,7 +356,7 @@ static chunk_t *pawn_process_func_def(chunk_t *pc)
 
    if (last == NULL)
    {
-      return last;
+      return(last);
    }
    if (last->type == CT_BRACE_OPEN)
    {
@@ -372,10 +373,10 @@ static chunk_t *pawn_process_func_def(chunk_t *pc)
               pc->orig_line, pc->len, pc->str, get_token_name(last->type));
 
       chunk_t chunk;
-      chunk         = *last;
-      chunk.str     = "{";
-      chunk.len     = 0;
-      chunk.type    = CT_VBRACE_OPEN;
+      chunk             = *last;
+      chunk.str         = "{";
+      chunk.len         = 0;
+      chunk.type        = CT_VBRACE_OPEN;
       chunk.parent_type = CT_FUNC_DEF;
 
       chunk_t *prev = chunk_add_before(&chunk, last);
@@ -409,17 +410,17 @@ static chunk_t *pawn_process_func_def(chunk_t *pc)
                  last->orig_line, get_token_name(last->type), last->level);
       }
 
-      chunk         = *last;
-      chunk.str     = "}";
-      chunk.len     = 0;
-      chunk.column += last->len;
-      chunk.type    = CT_VBRACE_CLOSE;
-      chunk.level   = 0;
+      chunk             = *last;
+      chunk.str         = "}";
+      chunk.len         = 0;
+      chunk.column     += last->len;
+      chunk.type        = CT_VBRACE_CLOSE;
+      chunk.level       = 0;
       chunk.brace_level = 0;
       chunk.parent_type = CT_FUNC_DEF;
       last = chunk_add_after(&chunk, last);
    }
-   return last;
+   return(last);
 }
 
 
@@ -461,5 +462,5 @@ chunk_t *pawn_check_vsemicolon(chunk_t *pc)
       return(pc);
    }
 
-   return pawn_add_vsemi_after(prev);
+   return(pawn_add_vsemi_after(prev));
 }
