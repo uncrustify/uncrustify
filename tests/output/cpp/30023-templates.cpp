@@ -34,3 +34,13 @@ class MyClass
 {
 }
 
+template<typename A, typename B, typename C> class MyClass : myvar(0),
+   myvar2(0)
+{
+}
+
+template<typename A, typename B, typename C> class MyClass
+   : myvar(0),
+   myvar2(0)
+{
+}
