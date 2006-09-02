@@ -334,6 +334,11 @@ argval_t do_space(chunk_t *first, chunk_t *second)
       return(cpd.settings[UO_sp_sparen_brace].a);
    }
 
+   if ((first->type == CT_D_TEMPLATE) || (second->type == CT_D_TEMPLATE))
+   {
+      return(AV_REMOVE);
+   }
+
    if (first->type == CT_PAREN_CLOSE)
    {
       if (first->parent_type == CT_D_TEMPLATE)
