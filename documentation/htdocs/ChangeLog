@@ -18,7 +18,7 @@ Future plans: (in no particular order)
    option does to your source code
 
 
-Plans for 0.0.26 (hopefully the last in the 0.0 series)
+Plans for 0.1.0
 -------------------------------------------------------------------------------
  - add -o option to write to a file instead of stdout
  - add --folder=XXX to set the output folder (useful when processing multiple files)
@@ -29,6 +29,16 @@ Plans for 0.0.26 (hopefully the last in the 0.0 series)
 
 
 ===============================================================================
+
+Changes in uncrustify-0.0.26
+-------------------------------------------------------------------------------
+ - Fix preprocessor labeling WRT comments
+ - Fix an indenting problem
+ - Add sp_after_byref
+ - Fix alignment of global variable definitions
+ - Fix detection of deref inside squares: a[*p]
+ - Fix a weird indenting bug
+ - Fix D template ! spacing
 
 
 Changes in uncrustify-0.0.25
