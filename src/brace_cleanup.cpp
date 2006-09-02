@@ -444,7 +444,8 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
     *  - after ';', but not if the paren stack top is a paren
     *  - after '(' that has a parent type of CT_FOR
     */
-   if (((pc->type == CT_BRACE_OPEN) && (pc->parent_type != CT_ASSIGN)) ||
+   if ((pc->type == CT_SQUARE_OPEN) ||
+       ((pc->type == CT_BRACE_OPEN) && (pc->parent_type != CT_ASSIGN)) ||
        (pc->type == CT_BRACE_CLOSE) ||
        (pc->type == CT_VBRACE_CLOSE) ||
        ((pc->type == CT_SPAREN_OPEN) && (pc->parent_type == CT_FOR)) ||
