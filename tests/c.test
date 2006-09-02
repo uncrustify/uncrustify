@@ -38,6 +38,8 @@
 
 00130  ben.cfg                 c/minus-minus.c
 
+00140  ben.cfg                 c/global-vars.c
+
 # casts
 00150  ben.cfg                 c/casts.c
 

@@ -142,12 +142,14 @@
 				<F N="input/c/fcn_type.c"/>
 				<F N="input/c/funcfunc.c"/>
 				<F N="input/c/function-def.c"/>
+				<F N="input/c/global-vars.c"/>
 				<F N="input/c/i2c-core.c"/>
 				<F N="input/c/ifdef-indent.c"/>
 				<F N="input/c/ifdef-nest.c"/>
 				<F N="input/c/indent-assign.c"/>
 				<F N="input/c/mac.c"/>
 				<F N="input/c/minus-minus.c"/>
+				<F N="input/c/nl-ver-def.c"/>
 				<F N="input/c/pascal_ptr.c"/>
 				<F N="input/c/pp-space.c"/>
 				<F N="input/c/return-multi.c"/>
