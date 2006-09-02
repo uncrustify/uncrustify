@@ -101,6 +101,7 @@
 			<F N="config/cpp_to_c-3.cfg"/>
 			<F N="config/d-tst2.cfg"/>
 			<F N="config/d.cfg"/>
+			<F N="config/d2.cfg"/>
 			<F N="config/empty_body.cfg"/>
 			<F N="config/func-def-1.cfg"/>
 			<F N="config/func-def-2.cfg"/>
@@ -111,6 +112,8 @@
 			<F N="config/nl_class-r.cfg"/>
 			<F N="config/nl_namespace-a.cfg"/>
 			<F N="config/nl_namespace-r.cfg"/>
+			<F N="config/nl_template_class-force.cfg"/>
+			<F N="config/nl_template_class-remove.cfg"/>
 			<F N="config/op-space-force.cfg"/>
 			<F N="config/op-space-remove.cfg"/>
 			<F N="config/pascal_ptr.cfg"/>

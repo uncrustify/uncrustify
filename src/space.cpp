@@ -258,6 +258,10 @@ argval_t do_space(chunk_t *first, chunk_t *second)
    {
       return(cpd.settings[UO_sp_func_class_paren].a);
    }
+   if (first->type == CT_CLASS)
+   {
+      return(AV_FORCE);
+   }
 
    if (first->type == CT_BRACE_OPEN)
    {

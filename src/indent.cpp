@@ -139,9 +139,9 @@ void reindent_line(chunk_t *pc, int column)
    int col_delta;
    int min_col;
 
-   LOG_FMT(LINDLINE, "%s: %d] col %d on %.*s [%s]\n",
+   LOG_FMT(LINDLINE, "%s: %d] col %d on %.*s [%s] => %d\n",
            __func__, pc->orig_line, pc->column, pc->len, pc->str,
-           get_token_name(pc->type));
+           get_token_name(pc->type), column);
 
    if (column == pc->column)
    {

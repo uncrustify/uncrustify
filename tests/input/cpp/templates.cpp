@@ -24,3 +24,14 @@ A<B<C> > bay;
    a < up_lim() ? do_hi() : do_low;
    a[ a<b>c] = d;
 }
+
+template<typename T> class MyClass
+{
+
+}
+
+  template<typename T>
+  class MyClass
+  {
+  }
+

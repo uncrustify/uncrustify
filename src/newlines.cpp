@@ -169,16 +169,18 @@ static chunk_t *newline_add_between2(chunk_t *start, chunk_t *end,
  *
  * @param start   The starting chunk (cannot be a newline)
  * @param end     The ending chunk (cannot be a newline)
+ * @return        true/false - removed something
  */
 #define newline_del_between(start, end) \
    newline_del_between2(start, end, __func__, __LINE__)
 
-static void newline_del_between2(chunk_t *start, chunk_t *end,
+static bool newline_del_between2(chunk_t *start, chunk_t *end,
                                  const char *func, int line)
 {
    chunk_t *next;
    chunk_t *prev;
-   chunk_t *pc = start;
+   chunk_t *pc    = start;
+   bool    retval = false;
 
    LOG_FMT(LNEWLINE, "%s: '%.*s' line %d and '%.*s' line %d : caller=%s:%d\n",
            __func__, start->len, start->str, start->orig_line,
@@ -194,11 +196,13 @@ static void newline_del_between2(chunk_t *start, chunk_t *end,
              (next->type != CT_COMMENT_CPP))
          {
             chunk_del(pc);
+            retval = true;
          }
          else if (chunk_is_newline(prev) ||
                   chunk_is_newline(next))
          {
             chunk_del(pc);
+            retval = true;
          }
          else
          {
@@ -219,8 +223,10 @@ static void newline_del_between2(chunk_t *start, chunk_t *end,
       if (chunk_get_prev_nl(end) != start)
       {
          chunk_move_after(end, start);
+         retval = true;
       }
    }
+   return(retval);
 }
 
 
@@ -907,6 +913,17 @@ void newlines_cleanup_braces(void)
       else if (pc->type == CT_CLASS)
       {
          newlines_struct_enum_union(pc, cpd.settings[UO_nl_class_brace].a);
+      }
+      else if (pc->type == CT_ANGLE_CLOSE)
+      {
+         if (pc->parent_type == CT_TEMPLATE)
+         {
+            next = chunk_get_next_ncnl(pc);
+            if ((next != NULL) && (next->type == CT_CLASS))
+            {
+               newline_iarf(pc, cpd.settings[UO_nl_template_class].a);
+            }
+         }
       }
       else if (pc->type == CT_NAMESPACE)
       {

@@ -251,6 +251,7 @@ enum uncrustify_options
 
    UO_nl_class_init_args,        // newline after comma in class init args
    UO_nl_collapse_empty_body,    // change { \n } into {}
+   UO_nl_template_class,         // newline between '>' and class in "template <x> class"
 
    UO_pos_bool,                  // position of trailing/leading &&/||
    UO_pos_class_colon,           // position of trailing/leading class colon
@@ -408,6 +409,7 @@ options_name_tab option_name_table[] =
    OPTDEF(nl_start_of_file_min,          AT_NUM),
    OPTDEF(nl_struct_brace,               AT_IARF),
    OPTDEF(nl_switch_brace,               AT_IARF),
+   OPTDEF(nl_template_class,             AT_IARF),
    OPTDEF(nl_union_brace,                AT_IARF),
    OPTDEF(nl_while_brace,                AT_IARF),
    OPTDEF(output_tab_size,               AT_NUM),

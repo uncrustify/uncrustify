@@ -4,38 +4,41 @@
 #
 # test.name  config.file  input.file
 
-30000 ben.cfg                  cpp/cout.cpp
-30001 ben.cfg                  cpp/alt_tokens.cpp
-30002 ben.cfg                  cpp/constructor.cpp
-30003 ben.cfg                  cpp/strings.cpp
-30010 ben.cfg                  cpp/class.h
+30000 ben.cfg                          cpp/cout.cpp
+30001 ben.cfg                          cpp/alt_tokens.cpp
+30002 ben.cfg                          cpp/constructor.cpp
+30003 ben.cfg                          cpp/strings.cpp
+30010 ben.cfg                          cpp/class.h
 
-30020 ben.cfg                  cpp/bool.cpp
-30021 ben.cfg                  cpp/byref.cpp
-30022 ben.cfg                  cpp/extern_c.h
-30023 ben.cfg                  cpp/templates.cpp
-30024 class-nl_func-add.cfg    cpp/class-init.cpp
-30025 class-nl_func-del.cfg    cpp/class-init.cpp
+30020 ben.cfg                          cpp/bool.cpp
+30021 ben.cfg                          cpp/byref.cpp
+30022 ben.cfg                          cpp/extern_c.h
+30023 ben.cfg                          cpp/templates.cpp
+30024 class-nl_func-add.cfg            cpp/class-init.cpp
+30025 class-nl_func-del.cfg            cpp/class-init.cpp
 
-30026 byref-left.cfg           cpp/byref.cpp
-30027 byref-right.cfg          cpp/byref.cpp
-30028 byref-center.cfg         cpp/byref.cpp
+30026 byref-left.cfg                   cpp/byref.cpp
+30027 byref-right.cfg                  cpp/byref.cpp
+30028 byref-center.cfg                 cpp/byref.cpp
 
-30030 avalon.cfg               cpp/Timestamp.h
-30031 avalon.cfg               cpp/operator.cpp
-30032 op-space-force.cfg       cpp/operator.cpp
-30033 op-space-remove.cfg      cpp/operator.cpp
+30030 avalon.cfg                       cpp/Timestamp.h
+30031 avalon.cfg                       cpp/operator.cpp
+30032 op-space-force.cfg               cpp/operator.cpp
+30033 op-space-remove.cfg              cpp/operator.cpp
 
-30040 nl_class-r.cfg           cpp/nl-class.h
-30041 nl_class-a.cfg           cpp/nl-class.h
+30040 nl_class-r.cfg                   cpp/nl-class.h
+30041 nl_class-a.cfg                   cpp/nl-class.h
 
-30050 nl_namespace-r.cfg       cpp/nl-namespace.h
-30051 nl_namespace-a.cfg       cpp/nl-namespace.h
+30050 nl_namespace-r.cfg               cpp/nl-namespace.h
+30051 nl_namespace-a.cfg               cpp/nl-namespace.h
 
 # Class colon positioning
-30061   class-colon-pos-eol.cfg cpp/class-init.cpp
-30062   class-colon-pos-sol.cfg cpp/class-init.cpp
-30063   class-colon-pos-eol-add.cfg cpp/class-init.cpp
-30064   class-colon-pos-sol-add.cfg cpp/class-init.cpp
-30065   class-colon-pos-sol.cfg cpp/Example.h
+30061 class-colon-pos-eol.cfg          cpp/class-init.cpp
+30062 class-colon-pos-sol.cfg          cpp/class-init.cpp
+30063 class-colon-pos-eol-add.cfg      cpp/class-init.cpp
+30064 class-colon-pos-sol-add.cfg      cpp/class-init.cpp
+30065 class-colon-pos-sol.cfg          cpp/Example.h
+
+30100 nl_template_class-force.cfg      cpp/templates.cpp
+30101 nl_template_class-remove.cfg     cpp/templates.cpp
 
