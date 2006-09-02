@@ -358,6 +358,7 @@ static bool parse_string(chunk_t *pc, int quote_idx, bool allow_escape)
             len++;
             break;
          }
+
          /* TODO: detect a newline in the string -- for an error condition?
           * Some languages allow newlines in strings.
           */
@@ -642,13 +643,13 @@ static bool parse_next(chunk_t *pc)
          if (pc->str[1] == '"')
          {
             parse_string(pc, 1, (*pc->str == '!'));
-            return true;
+            return(true);
          }
          else if (((pc->str[1] == '\\') || (pc->str[1] == '!')) &&
                   (pc->str[2] == '"'))
          {
             parse_string(pc, 2, false);
-            return true;
+            return(true);
          }
       }
 

@@ -194,7 +194,6 @@ static void check_template(chunk_t *start)
       do
       {
          prev = chunk_get_prev_ncnl(prev);
-
       } while ((prev != NULL) && ((prev->type == CT_WORD) ||
                                   (prev->type == CT_TYPE) ||
                                   (prev->type == CT_DC_MEMBER)));
@@ -203,7 +202,7 @@ static void check_template(chunk_t *start)
       {
          if (chunk_is_str(prev, "(", 1) ||
              chunk_is_str(prev, "[", 1) ||
-              (prev->type == CT_ASSIGN))
+             (prev->type == CT_ASSIGN))
          {
             LOG_FMT(LTEMPL, " - after %s - Not a template\n", get_token_name(prev->type));
             start->type = CT_COMPARE;

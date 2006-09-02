@@ -21,7 +21,7 @@ void do_code_width(void)
    for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next(pc))
    {
       if (!chunk_is_newline(pc) && !chunk_is_comment(pc) &&
-         ((pc->column + pc->len) > cpd.settings[UO_code_width].n))
+          ((pc->column + pc->len) > cpd.settings[UO_code_width].n))
       {
          split_line(pc);
       }
@@ -196,10 +196,10 @@ static chunk_t *split_fcn_params(chunk_t *start)
    pc = chunk_get_next(fpo);
    if (!chunk_is_newline(pc))
    {
-      int min_col = pc->column;
+      int min_col   = pc->column;
       int max_width = 0;
       int cur_width = 0;
-      int last_col = -1;
+      int last_col  = -1;
 
       LOG_FMT(LSPLIT, " mincol=%d, max_width=%d ",
               min_col,
@@ -218,7 +218,7 @@ static chunk_t *split_fcn_params(chunk_t *start)
                last_col = pc->column;
             }
             cur_width += (pc->column - last_col) + pc->len;
-            last_col = pc->column + pc->len;
+            last_col   = pc->column + pc->len;
 
             if ((pc->type == CT_COMMA) ||
                 (pc->type == CT_FPAREN_CLOSE))
@@ -234,7 +234,7 @@ static chunk_t *split_fcn_params(chunk_t *start)
                   }
                }
                cur_width = 0;
-               last_col = -1;
+               last_col  = -1;
                if (pc->type == CT_FPAREN_CLOSE)
                {
                   break;
@@ -272,4 +272,3 @@ static chunk_t *split_fcn_params(chunk_t *start)
    }
    return(pc);
 }
-

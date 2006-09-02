@@ -25,12 +25,12 @@ static bool d_parse_string(chunk_t *pc)
 {
    if (pc->str[0] == '"')
    {
-      return parse_string(pc, 0, true);
+      return(parse_string(pc, 0, true));
    }
    else if ((pc->str[0] == '\'') ||
             (pc->str[0] == '`'))
    {
-      return parse_string(pc, 0, true);
+      return(parse_string(pc, 0, true));
    }
    else if (pc->str[0] == '\\')
    {
@@ -100,14 +100,14 @@ static bool d_parse_string(chunk_t *pc)
       {
          pc->type    = CT_STRING;
          cpd.column += pc->len;
-         return true;
+         return(true);
       }
    }
    else if (pc->str[1] == '"')
    {
       if ((pc->str[0] == 'r') || (pc->str[0] == 'x'))
       {
-         return parse_string(pc, 1, false);
+         return(parse_string(pc, 1, false));
       }
    }
    return(false);

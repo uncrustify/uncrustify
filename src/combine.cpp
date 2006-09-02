@@ -492,9 +492,9 @@ static void mark_function_type(chunk_t *pc)
            __func__, get_token_name(pc->type), pc->len, pc->str,
            pc->orig_line, pc->orig_col);
 
-   int star_count = 0;
-   int word_count = 0;
-   bool nogo = false;
+   int  star_count = 0;
+   int  word_count = 0;
+   bool nogo       = false;
 
    /* Scan backwards across the name, which can only be a word and single star */
    tmp = chunk_get_prev_ncnl(pc);
@@ -1565,7 +1565,7 @@ static void mark_function(chunk_t *pc)
    /* Check for C++ function def */
    if ((pc->type == CT_FUNC_CLASS) ||
        ((prev != NULL) && ((prev->type == CT_DC_MEMBER) ||
-                          (prev->type == CT_INV))))
+                           (prev->type == CT_INV))))
    {
       chunk_t *destr = NULL;
       if (prev->type == CT_INV)
@@ -1590,7 +1590,7 @@ static void mark_function(chunk_t *pc)
                LOG_FMT(LFCN, "FOUND %sSTRUCTOR for %.*s[%s] ",
                        (destr != NULL) ? "DE" : "CON",
                        prev->len, prev->str, get_token_name(prev->type));
-               
+
                mark_cpp_constructor(pc);
                return;
             }
@@ -1722,7 +1722,7 @@ static void mark_cpp_constructor(chunk_t *pc)
    paren_open = chunk_get_next_ncnl(pc);
    if (!chunk_is_str(paren_open, "(", 1))
    {
-      LOG_FMT(LWARN, "%s:%d Expected '(', got: [%.*s]\n", 
+      LOG_FMT(LWARN, "%s:%d Expected '(', got: [%.*s]\n",
               cpd.filename, paren_open->orig_line,
               paren_open->len, paren_open->str);
       return;
@@ -1740,7 +1740,7 @@ static void mark_cpp_constructor(chunk_t *pc)
           (tmp->type != CT_SEMICOLON))
    {
       tmp->flags |= PCF_IN_CONST_ARGS;
-      tmp = chunk_get_next_ncnl(tmp);
+      tmp         = chunk_get_next_ncnl(tmp);
       if (chunk_is_str(tmp, ":", 1))
       {
          tmp->type = CT_CLASS_COLON;

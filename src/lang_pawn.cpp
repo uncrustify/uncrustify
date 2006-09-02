@@ -31,11 +31,11 @@ static chunk_t *pawn_add_vsemi_after(chunk_t *pc)
    }
    chunk_t chunk;
 
-   chunk = *pc;
-   chunk.type  = CT_VSEMICOLON;
-   chunk.len   = cpd.settings[UO_mod_pawn_semicolon].b ? 1 : 0;
-   chunk.str   = ";";
-   chunk.column += pc->len;
+   chunk             = *pc;
+   chunk.type        = CT_VSEMICOLON;
+   chunk.len         = cpd.settings[UO_mod_pawn_semicolon].b ? 1 : 0;
+   chunk.str         = ";";
+   chunk.column     += pc->len;
    chunk.parent_type = CT_NONE;
 
    LOG_FMT(LPVSEMI, "%s: Added VSEMI on line %d, prev='%.*s' [%s]\n",
@@ -55,7 +55,7 @@ bool pawn_continued(chunk_t *pc, int br_level)
 {
    if (pc == NULL)
    {
-      return false;
+      return(false);
    }
    if ((pc->level > br_level) ||
        (pc->type == CT_ARITH) ||
@@ -86,9 +86,9 @@ bool pawn_continued(chunk_t *pc, int br_level)
        chunk_is_str(pc, "+", 1) ||
        chunk_is_str(pc, "-", 1))
    {
-      return true;
+      return(true);
    }
-   return false;
+   return(false);
 }
 
 
@@ -106,7 +106,6 @@ void pawn_prescan(void)
     */
 
    chunk_t *pc;
-   //chunk_t *prev;
    bool    did_nl = true;
 
    pc = chunk_get_head();

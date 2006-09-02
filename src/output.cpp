@@ -387,8 +387,8 @@ static int calculate_comment_body_indent(const char *str, int len, int start_col
  */
 chunk_t *output_comment_cpp(chunk_t *first)
 {
-   int     col    = first->column;
-   int     col_br = 1 + (first->brace_level * cpd.settings[UO_indent_columns].n);
+   int col    = first->column;
+   int col_br = 1 + (first->brace_level * cpd.settings[UO_indent_columns].n);
 
    /* Make sure we have at least one space past the last token */
    if (first->parent_type == CT_COMMENT_END)

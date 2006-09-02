@@ -302,8 +302,8 @@ int load_option_file(const char *filename)
 
 void print_options(FILE *pfile)
 {
-   int max_width = 0;
-   int cur_width;
+   int    max_width = 0;
+   int    cur_width;
    UINT32 i;
 
    const char *names[] =

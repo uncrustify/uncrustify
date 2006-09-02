@@ -466,7 +466,7 @@ static void newlines_brace_pair(chunk_t *br_open)
    chunk_t  *prev;
    chunk_t  *next;
    chunk_t  *pc;
-   argval_t val = AV_IGNORE;
+   argval_t val            = AV_IGNORE;
    bool     nl_close_brace = false;
 
    if (((br_open->flags & PCF_IN_PREPROC) != 0) &&
@@ -566,7 +566,7 @@ static void newlines_brace_pair(chunk_t *br_open)
    }
 
    /* Grab the matching brace close */
-   chunk_t  *br_close;
+   chunk_t *br_close;
    br_close = chunk_get_next_type(br_open, CT_BRACE_CLOSE, br_open->level);
    if (br_close == NULL)
    {
@@ -797,8 +797,8 @@ static void newline_func_def(chunk_t *start)
  */
 void newlines_cleanup_braces(void)
 {
-   chunk_t *pc;
-   chunk_t *next;
+   chunk_t  *pc;
+   chunk_t  *next;
    argval_t arg;
 
    for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next_ncnl(pc))
@@ -1107,7 +1107,7 @@ void newlines_class_colon_pos(void)
    chunk_t    *next;
    chunk_t    *nextnext;
    chunk_t    *prev;
-   tokenpos_e mode = cpd.settings[UO_pos_class_colon].tp;
+   tokenpos_e mode    = cpd.settings[UO_pos_class_colon].tp;
    chunk_t    *ccolon = NULL;
 
    for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next_ncnl(pc))
@@ -1120,8 +1120,8 @@ void newlines_class_colon_pos(void)
       if (pc->type == CT_CLASS_COLON)
       {
          ccolon = pc;
-         prev = chunk_get_prev_nc(pc);
-         next = chunk_get_next_nc(pc);
+         prev   = chunk_get_prev_nc(pc);
+         next   = chunk_get_next_nc(pc);
 
          if (!chunk_is_newline(prev) && !chunk_is_newline(next) &&
              ((cpd.settings[UO_nl_class_init_args].a & AV_ADD) != 0))
@@ -1162,7 +1162,7 @@ void newlines_class_colon_pos(void)
             }
             else if ((cpd.settings[UO_nl_class_init_args].a & AV_REMOVE) != 0)
             {
-               next = chunk_get_next(pc);
+               next     = chunk_get_next(pc);
                nextnext = chunk_get_next_ncnl(pc);
                if ((next != NULL) && (nextnext != NULL) &&
                    (next->type == CT_NEWLINE) &&
@@ -1253,10 +1253,10 @@ void do_blank_lines(void)
 
 void newlines_cleanup_dup(void)
 {
-   chunk_t    *pc;
-   chunk_t    *next;
+   chunk_t *pc;
+   chunk_t *next;
 
-   pc = chunk_get_head();
+   pc   = chunk_get_head();
    next = pc;
 
    while (pc != NULL)

@@ -192,7 +192,7 @@ void indent_text(void)
    chunk_t            *prev       = NULL;
    bool               did_newline = true;
    int                idx;
-   int                vardefcol = 0;
+   int                vardefcol   = 0;
    int                indent_size = cpd.settings[UO_indent_columns].n;
    int                ref       = 0;
    int                tmp;
