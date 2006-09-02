@@ -142,7 +142,7 @@ int main(int argc, char *argv[])
 
    if (arg.Present("--show-config"))
    {
-      print_options(stdout);
+      print_options(stdout, true);
       return(0);
    }
 

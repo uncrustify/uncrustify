@@ -41,7 +41,8 @@ void set_option_defaults(void);
 int load_option_file(const char *filename);
 int set_option_value(const char *name, const char *value);
 const options_name_tab *get_option_name(int uo);
-void print_options(FILE *pfile);
+void print_options(FILE *pfile, bool verbose);
+const char *detailed_help(uncrustify_options op);
 
 
 /*

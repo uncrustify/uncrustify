@@ -20,6 +20,8 @@
 #include <cctype>
 
 
+#include "options-help.cpp"
+
 const options_name_tab *get_option_name(int uo)
 {
    int idx;
@@ -300,11 +302,12 @@ int load_option_file(const char *filename)
    return(0);
 }
 
-void print_options(FILE *pfile)
+void print_options(FILE *pfile, bool verbose)
 {
-   int    max_width = 0;
-   int    cur_width;
-   UINT32 i;
+   int        max_width = 0;
+   int        cur_width;
+   UINT32     i;
+   const char *text;
 
    const char *names[] =
    {
@@ -334,6 +337,20 @@ void print_options(FILE *pfile)
               option_name_table[i].name,
               max_width - cur_width, ' ',
               names[option_name_table[i].type]);
+
+      text = detailed_help((uncrustify_options)i);
+
+      fputs("  ", pfile);
+      while (*text != 0)
+      {
+         fputc(*text, pfile);
+         if (*text == '\n')
+         {
+            fputs("  ", pfile);
+         }
+         text++;
+      }
+      fputs("\n\n", pfile);
    }
 }
 

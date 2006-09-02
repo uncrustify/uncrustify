@@ -41,6 +41,7 @@ Changes in uncrustify-0.0.26
  - Fix D template ! spacing
  - Add sp_after_operator
  - Add nl_template_class
+ - Add start to detailed docs inside the program
 
 
 Changes in uncrustify-0.0.25
