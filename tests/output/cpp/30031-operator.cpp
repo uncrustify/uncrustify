@@ -8,7 +8,7 @@ bool operator >(const Foo& rhs) const;
 InStream& operator <<(InStream& in);
 }
 
-const Foo & Foo::operator ==(Foo& me)
+const Foo& Foo::operator ==(Foo& me)
 {
 }
 

@@ -3,23 +3,23 @@ bool foo(int& idx)
    if (idx < m_count)
    {
       idx++;
-      return(m_bool[idx - 1]);
+      return m_bool[idx-1];
    }
-   return(false);
+   return false;
 }
 
 class Foo {
- public:
+public:
    Foo();
    Foo(const Foo& f);
 };
 
 template<  class T >  class ListManager
 {
- protected:
+protected:
    T head;
 
- public:
+public:
    ListManager()
    {
       head.next = head.prev = &head;
@@ -31,12 +31,10 @@ template<  class T >  class ListManager
    }
 }
 
-const Foo& Foo::operator ==(Foo& me)
-{
-   return(me);
+const Foo& Foo::operator ==(Foo& me){
+   return me;
 }
 
-MyType& MyClass::myMethode()
-{
+MyType& MyClass::myMethode() {
    const MyType& t = getSomewhere();
 }

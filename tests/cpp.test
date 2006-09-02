@@ -17,6 +17,10 @@
 30024 class-nl_func-add.cfg    cpp/class-init.cpp
 30025 class-nl_func-del.cfg    cpp/class-init.cpp
 
+30026 byref-left.cfg           cpp/byref.cpp
+30027 byref-right.cfg          cpp/byref.cpp
+30028 byref-center.cfg         cpp/byref.cpp
+
 30030 avalon.cfg               cpp/Timestamp.h
 30031 avalon.cfg               cpp/operator.cpp
 

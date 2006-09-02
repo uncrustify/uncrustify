@@ -11,7 +11,7 @@ bool foo(int & idx)
 class Foo {
 public:
    Foo();
-   Foo(const Foo& f);
+   Foo(const Foo & f);
 };
 
 template<  class T >  class ListManager
@@ -25,16 +25,16 @@ public:
       head.next = head.prev = &head;
    }
 
-   ListManager(const ListManager& ref)
+   ListManager(const ListManager & ref)
    {
       head.next = head.prev = &head;
    }
 }
 
-const Foo & Foo::operator ==(Foo& me){
+const Foo & Foo::operator ==(Foo & me){
    return me;
 }
 
-MyType& MyClass::myMethode() {
-  const MyType& t = getSomewhere();
+MyType & MyClass::myMethode() {
+   const MyType & t = getSomewhere();
 }

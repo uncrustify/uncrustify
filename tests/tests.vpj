@@ -82,6 +82,9 @@
 			<F N="config/brace-remove-2.cfg"/>
 			<F N="config/brace-remove-all.cfg"/>
 			<F N="config/brace-ws.cfg"/>
+			<F N="config/byref-center.cfg"/>
+			<F N="config/byref-left.cfg"/>
+			<F N="config/byref-right.cfg"/>
 			<F N="config/case-1.cfg"/>
 			<F N="config/case-2.cfg"/>
 			<F N="config/case-3.cfg"/>
