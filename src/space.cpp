@@ -7,6 +7,7 @@
 #include "uncrustify_types.h"
 #include "chunk_list.h"
 #include "prototypes.h"
+#include "char_table.h"
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -468,6 +469,17 @@ argval_t do_space(chunk_t *first, chunk_t *second)
        (cpd.settings[UO_sp_before_ptr_star].a != AV_IGNORE))
    {
       return(cpd.settings[UO_sp_before_ptr_star].a);
+   }
+
+   if ((first->type == CT_OPERATOR) &&
+       ((second->type == CT_FUNC_DEF) ||
+        (second->type == CT_FUNC_PROTO)))
+   {
+      if (get_char_table(second->str[0]) & CT_KW2)
+      {
+         return(AV_FORCE);
+      }
+      return(cpd.settings[UO_sp_after_operator].a);
    }
 
    if ((second->type == CT_FUNC_PROTO) || (second->type == CT_FUNC_DEF))

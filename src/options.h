@@ -160,6 +160,8 @@ enum uncrustify_options
    UO_sp_square_fparen,        // weird pawn stuff: native yark[rect](a[rect])
    UO_sp_after_tag,            // pawn: space after a tag colon
 
+   UO_sp_after_operator,       // space after operator when followed by a punctuator
+
 
    /*
     * Line splitting options (for long lines)
@@ -417,6 +419,7 @@ options_name_tab option_name_table[] =
    OPTDEF(sp_after_byref,                AT_IARF),
    OPTDEF(sp_after_cast,                 AT_IARF),
    OPTDEF(sp_after_comma,                AT_IARF),
+   OPTDEF(sp_after_operator,             AT_IARF),
    OPTDEF(sp_after_ptr_star,             AT_IARF),
    OPTDEF(sp_after_sparen,               AT_IARF),
    OPTDEF(sp_after_tag,                  AT_IARF),

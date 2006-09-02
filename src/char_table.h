@@ -17,7 +17,8 @@
  * bit12 = open (not used)
  * bit13 = close (not used)
  */
-static const int char_table[128] =
+#ifdef DEFINE_CHAR_TABLE
+extern const int char_table[128] =
 {
    0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,   /* [........] */
    0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,   /* [........] */
@@ -36,6 +37,10 @@ static const int char_table[128] =
    0x0300, 0x0300, 0x0300, 0x0300, 0x0300, 0x0300, 0x0300, 0x0300,   /* [pqrstuvw] */
    0x0300, 0x0300, 0x0300, 0x107d, 0x0000, 0x207b, 0x0000, 0x0000,   /* [xyz{|}~.] */
 };
+#else
+extern const int char_table[128];
+#endif /* DEFINE_CHAR_TABLE */
+
 #define CT_KW1       0x0100
 #define CT_KW2       0x0200
 #define CT_OPEN      0x1000

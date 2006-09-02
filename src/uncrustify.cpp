@@ -5,6 +5,7 @@
  * $Id$
  */
 #define DEFINE_PCF_NAMES
+#define DEFINE_CHAR_TABLE
 
 #include "uncrustify_version.h"
 #include "uncrustify_types.h"

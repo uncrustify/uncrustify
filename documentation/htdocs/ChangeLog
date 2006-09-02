@@ -39,6 +39,7 @@ Changes in uncrustify-0.0.26
  - Fix detection of deref inside squares: a[*p]
  - Fix a weird indenting bug
  - Fix D template ! spacing
+ - Add sp_after_operator
 
 
 Changes in uncrustify-0.0.25
