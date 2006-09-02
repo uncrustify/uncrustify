@@ -599,7 +599,7 @@ class Lexer
                             break;
                         }
                         p++;
-                        if (p[- 2] == '*' && p - 3 != t.ptr)
+                        if (p[-2] == '*' && p - 3 != t.ptr)
                             break;
                     }
 
@@ -2287,7 +2287,7 @@ class Lexer
         {
             for (; q < qend; qend--)
             {
-                if (qend[- 1] != ct)
+                if (qend[-1] != ct)
                     break;
             }
         }
