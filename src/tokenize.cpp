@@ -791,17 +791,14 @@ void tokenize(const char *data, int data_len)
       {
          prev = pc;
       }
-      else
+      if (rprev != NULL)
       {
-         if (prev != NULL)
-         {
-            pc->flags = prev->flags & PCF_COPY_FLAGS;
+         pc->flags = rprev->flags & PCF_COPY_FLAGS;
 
-            /* a newline can't be in a preprocessor */
-            if (pc->type == CT_NEWLINE)
-            {
-               pc->flags &= ~PCF_IN_PREPROC;
-            }
+         /* a newline can't be in a preprocessor */
+         if (pc->type == CT_NEWLINE)
+         {
+            pc->flags &= ~PCF_IN_PREPROC;
          }
       }
       pc = chunk_add(&chunk);
