@@ -31,6 +31,7 @@ static void mark_class_ctor(chunk_t *pclass);
 static void mark_namespace(chunk_t *pns);
 static void mark_function_type(chunk_t *pc);
 static void mark_cpp_constructor(chunk_t *pc);
+static void mark_lvalue(chunk_t *pc);
 
 void make_type(chunk_t *pc)
 {
@@ -41,6 +42,10 @@ void make_type(chunk_t *pc)
    else if (chunk_is_star(pc))
    {
       pc->type = CT_PTR_TYPE;
+   }
+   else if (chunk_is_addr(pc))
+   {
+      pc->type = CT_BYREF;
    }
 }
 
@@ -207,6 +212,11 @@ void fix_symbols(void)
                fix_enum_struct_union(next);
             }
          }
+      }
+
+      if (pc->type == CT_ASSIGN)
+      {
+         mark_lvalue(pc);
       }
 
       if (pc->type == CT_D_TEMPLATE)
@@ -475,6 +485,41 @@ void fix_symbols(void)
    }
 }
 
+/* Just hit an assign. Go backwards until we hit an open brace/paren/square or
+ * semicolon (TODO: other limiter?) and mark as a LValue.
+ */
+static void mark_lvalue(chunk_t *pc)
+{
+   chunk_t *prev;
+
+   if ((pc->flags & PCF_IN_PREPROC) != 0)
+   {
+      return;
+   }
+
+   for (prev = chunk_get_prev_ncnl(pc);
+        prev != NULL;
+        prev = chunk_get_prev_ncnl(prev))
+   {
+      if ((prev->level < pc->level) ||
+          (prev->type == CT_ASSIGN) ||
+          (prev->type == CT_COMMA) ||
+          (prev->type == CT_BOOL) ||
+          (prev->type == CT_SEMICOLON) ||
+          (prev->type == CT_VSEMICOLON) ||
+          chunk_is_str(prev, "(", 1) ||
+          chunk_is_str(prev, "{", 1) ||
+          chunk_is_str(prev, "[", 1))
+      {
+         break;
+      }
+      prev->flags |= PCF_LVALUE;
+      if ((prev->level == pc->level) && chunk_is_str(prev, "&", 1))
+      {
+         make_type(prev);
+      }
+   }
+}
 
 /**
  * Process a function type that is not in a typedef.

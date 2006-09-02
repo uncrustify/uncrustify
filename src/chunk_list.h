@@ -110,6 +110,7 @@ bool chunk_is_type(chunk_t *pc)
 {
    return((pc != NULL) && ((pc->type == CT_TYPE) ||
                            (pc->type == CT_PTR_TYPE) ||
+                           (pc->type == CT_BYREF) ||
                            (pc->type == CT_STRUCT) ||
                            (pc->type == CT_ENUM) ||
                            (pc->type == CT_UNION)));
