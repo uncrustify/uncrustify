@@ -596,8 +596,8 @@ static chunk_t *align_var_def_brace(chunk_t *start, int span)
       align_mask |= PCF_VAR_INLINE;
    }
 
-   //fprintf(stderr, "%s: start=%s line=%d col=%d level=%d\n",
-   //        __func__, start->str, start->orig_line, start->orig_col, start->level);
+   //LOG_FMT(LSYS, "%s: start=[%.*s] line=%d col=%d level=%d\n",
+   //        __func__, start->len, start->str, start->orig_line, start->orig_col, start->level);
 
    as.Start(myspan, mythresh);
 
@@ -643,10 +643,14 @@ static chunk_t *align_var_def_brace(chunk_t *start, int span)
 
       /* If this is a variable def, update the max_col */
       if (((pc->flags & align_mask) == PCF_VAR_1ST) &&
-          (pc->level == (start->level + 1)))
+          ((pc->level == (start->level + 1)) ||
+           (pc->level == 0)))
       {
          if (!did_this_line)
          {
+            //LOG_FMT(LSYS, "    add=[%.*s] line=%d col=%d level=%d\n",
+            //        pc->len, pc->str, pc->orig_line, pc->orig_col, pc->level);
+
             as.Add(pc);
 
             next = chunk_get_next_nc(pc);
