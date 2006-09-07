@@ -54,6 +54,7 @@
 			<F N="src/align.cpp"/>
 			<F N="src/align_stack.cpp"/>
 			<F N="src/args.cpp"/>
+			<F N="src/backup.cpp"/>
 			<F N="src/brace_cleanup.cpp"/>
 			<F N="src/braces.cpp"/>
 			<F N="src/chunk_list.cpp"/>
