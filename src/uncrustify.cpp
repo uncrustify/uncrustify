@@ -39,8 +39,9 @@ static const char *language_to_string(int lang);
 static char *read_stdin(int& out_len);
 static void uncrustify_file(const char *data, int data_len, FILE *pfout,
                             const char *parsed_file);
-static void do_source_file(const char *filename, FILE *pfout, const char *parsed_file);
-static void process_source_list(const char *source_list);
+static void do_source_file(const char *filename, FILE *pfout, const char *parsed_file,
+                           const char *prefix, const char *suffix);
+static void process_source_list(const char *source_list, const char *prefix, const char *suffix);
 
 /**
  * Replace the brain-dead and non-portable basename().
@@ -87,8 +88,10 @@ static void usage_exit(const char *msg, const char *argv0, int code)
            "Usage:\n"
            "%s -c cfg [-f file] [-F filelist] [-p parsed] [-t typefile] [--version] [-l lang] [-L sev] [-s] [files ...]\n"
            " c : specify the config file\n"
-           " f : specify the file to format\n"
+           " f : specify a single file to format (output to stdout)\n"
            " F : specify a file that contains a list of files to process\n"
+           " suffix : specifies the per-file suffix when writing to a file. The default is '.uncrustify'\n"
+           " prefix : specifies the folder prefix when writing to a file.\n"
            " files : whitespace-separated list of files to process\n"
            " t : load a file with types\n"
            " d : load a file with defines\n"
@@ -97,7 +100,7 @@ static void usage_exit(const char *msg, const char *argv0, int code)
            "--version : print the version and exit\n"
            "\n"
            "If no input files are specified, the input is read from stdin\n"
-           "If -F is used, the output is is the filename + .uncrustify\n"
+           "If -F is used or files are specified on the command line, the output is 'prefix/filename' + suffix\n"
            "Otherwise, the output is dumped to stdout.\n"
            "Errors are always dumped to stderr\n",
            path_basename(argv0));
@@ -236,6 +239,14 @@ int main(int argc, char *argv[])
       // not using a file list
    }
 
+   const char *prefix = arg.Param("--prefix");
+   const char *suffix = arg.Param("--suffix");
+
+   if ((prefix == NULL) && (suffix == NULL))
+   {
+      suffix = ".uncrustify";
+   }
+
    /* Check for unused args (ignore them) */
    idx   = 1;
    p_arg = arg.Unused(idx);
@@ -281,22 +292,30 @@ int main(int argc, char *argv[])
    else if (source_file != NULL)
    {
       /* Doing a single file, output to stdout */
-      do_source_file(source_file, stdout, parsed_file);
+      do_source_file(source_file, stdout, parsed_file, NULL, NULL);
    }
    else
    {
       /* Doing multiple files */
+      if (prefix != NULL)
+      {
+         LOG_FMT(LSYS, "Output prefix: %s/\n", prefix);
+      }
+      if (suffix != NULL)
+      {
+         LOG_FMT(LSYS, "Output suffix: %s\n", suffix);
+      }
 
       /* Do the files on the command line first */
       idx = 1;
       while ((p_arg = arg.Unused(idx)) != NULL)
       {
-         do_source_file(p_arg, NULL, NULL);
+         do_source_file(p_arg, NULL, NULL, prefix, suffix);
       }
 
       if (source_list != NULL)
       {
-         process_source_list(source_list);
+         process_source_list(source_list, prefix, suffix);
       }
    }
 
@@ -304,7 +323,8 @@ int main(int argc, char *argv[])
 }
 
 
-static void process_source_list(const char *source_list)
+static void process_source_list(const char *source_list,
+                                const char *prefix, const char *suffix)
 {
    FILE *p_file = fopen(source_list, "r");
 
@@ -336,7 +356,7 @@ static void process_source_list(const char *source_list)
 
       if ((argc == 1) && (*args[0] != '#'))
       {
-         do_source_file(args[0], NULL, NULL);
+         do_source_file(args[0], NULL, NULL, prefix, suffix);
       }
    }
 }
@@ -384,6 +404,32 @@ static char *read_stdin(int& out_len)
    return(data);
 }
 
+static void make_folders(char *outname)
+{
+   int  idx;
+   int  last_idx = 0;
+
+   for (idx = 0; outname[idx] != 0; idx++)
+   {
+      if ((idx > last_idx) && (outname[idx] == '/'))
+      {
+         outname[idx] = 0;
+
+         if ((strcmp(&outname[last_idx], ".") != 0) &&
+             (strcmp(&outname[last_idx], "..") != 0))
+         {
+            //fprintf(stderr, "%s: %s\n", __func__, outname);
+            mkdir(outname, 0750);
+         }
+         outname[idx] = '/';
+      }
+
+      if (outname[idx] == '/')
+      {
+         last_idx = idx + 1;
+      }
+   }
+}
 
 /**
  * Does a source file.
@@ -392,7 +438,8 @@ static char *read_stdin(int& out_len)
  * @param filename the file to read
  * @param pfout    NULL or the output stream
  */
-static void do_source_file(const char *filename, FILE *pfout, const char *parsed_file)
+static void do_source_file(const char *filename, FILE *pfout, const char *parsed_file,
+                           const char *prefix, const char *suffix)
 {
    int         data_len;
    char        *data;
@@ -430,9 +477,18 @@ static void do_source_file(const char *filename, FILE *pfout, const char *parsed
 
    if (pfout == NULL)
    {
-      char outname[512];
+      char outname[1024];
+      int  len = 0;
 
-      snprintf(outname, sizeof(outname), "%s.uncrustify", filename);
+      if (prefix != NULL)
+      {
+         len = snprintf(outname, sizeof(outname), "%s/", prefix);
+      }
+
+      snprintf(&outname[len], sizeof(outname) - len, "%s%s", filename,
+               (suffix != NULL) ? suffix : "");
+
+      make_folders(outname);
 
       pfout = fopen(outname, "wb");
       if (pfout == NULL)
