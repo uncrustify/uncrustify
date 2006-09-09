@@ -11,12 +11,12 @@
 
 enum
 {
-   LSYS  = 0,
-   LERR  = 1,
-   LWARN = 2,
-   LNOTE = 3,
-   LINFO = 4,
-   LDATA = 5,
+   LSYS      = 0,
+   LERR      = 1,
+   LWARN     = 2,
+   LNOTE     = 3,
+   LINFO     = 4,
+   LDATA     = 5,
 
    LFILELIST = 8,     /* Files in the file list file */
    LLINEENDS = 9,     /* Show which line endings are used */

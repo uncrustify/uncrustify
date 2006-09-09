@@ -406,8 +406,8 @@ static char *read_stdin(int& out_len)
 
 static void make_folders(char *outname)
 {
-   int  idx;
-   int  last_idx = 0;
+   int idx;
+   int last_idx = 0;
 
    for (idx = 0; outname[idx] != 0; idx++)
    {

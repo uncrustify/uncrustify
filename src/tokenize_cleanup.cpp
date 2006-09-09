@@ -96,7 +96,7 @@ void tokenize_cleanup(void)
           (next->type == CT_ANGLE_OPEN))
       {
          next->parent_type = CT_TYPE_CAST;
-         in_type_cast = true;
+         in_type_cast      = true;
       }
 
       /**

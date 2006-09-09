@@ -152,7 +152,7 @@ enum
    LANG_ALLC = 0x1f,
    LANG_ALL  = 0x2f,
 
-   FLAG_PP = 0x80,  /*<< only appears in a preprocessor */
+   FLAG_PP   = 0x80,     /*<< only appears in a preprocessor */
 };
 
 typedef struct

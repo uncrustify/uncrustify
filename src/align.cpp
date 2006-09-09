@@ -478,7 +478,7 @@ chunk_t *align_assign(chunk_t *first, int span, int thresh)
             mythresh = cpd.settings[UO_align_assign_thresh].n;
          }
 
-         pc  = align_assign(chunk_get_next_ncnl(pc), myspan, mythresh);
+         pc = align_assign(chunk_get_next_ncnl(pc), myspan, mythresh);
          if (pc != NULL)
          {
             /* do a rough count of the number of lines just spanned */

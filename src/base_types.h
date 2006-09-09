@@ -20,7 +20,7 @@
 
 #else /* not WIN32 */
 
-#define PATH_SEP  '/'
+#define PATH_SEP    '/'
 
 #if defined HAVE_STDINT_H
 #include <stdint.h>
