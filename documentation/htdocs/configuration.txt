@@ -80,6 +80,12 @@ Here's a list of all the options from options.h and a brief description.
 	so that it lines up after the open square.
 	Not recommended.
 
+   indent_member:		number
+	If the previous line ends with of the current line begins with
+	'.' or '->', the line should be indent this number of column.
+	Recommend setting to indent_columns:
+	indent_member = indent_columns
+
    pp_space:			IARF
 	Changes the space between # and, say, define.
 	One space per #if level.
@@ -387,11 +393,17 @@ mylabel:
    align_nl_cont:		bool
 	Align the back-slash \n combo (macros)
 
-   align_enum_equ:		bool
-	Align the '=' in enums
+   align_enum_equ_span:		number
+	 The span for aligning on '=' in enums. 0=don't align
+
+   align_enum_equ_thresh:	number
+	 The threshold for aligning on '=' in enums. 0=no limit
 
    align_assign_span:		number
 	 The span for aligning on '=' in assignments. 0=don't align
+
+   align_assign_thresh:		number
+	 The threshold for aligning on '=' in assignments. 0=no limit
 
    align_right_cmt_span:	number
 	Span for aligning comments that end lines. 0=don't align
