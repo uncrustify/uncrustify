@@ -40,11 +40,11 @@ enum brstage_e
 struct paren_stack_entry
 {
    c_token_t type;         /**< the type that opened the entry */
+   int       level;        /**< Level of opening type */
    int       open_line;    /**< line that open symbol is on */
    int       indent;       /**< indent level (depends on use) */
    int       indent_tmp;   /**< temporary indent level (depends on use) */
    int       ref;
-   int       min_col;
    c_token_t parent;       /**< if, for, function, etc */
    brstage_e stage;
    bool      in_preproc;   /**> whether this was created in a preprocessor */

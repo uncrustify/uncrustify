@@ -95,6 +95,8 @@ enum uncrustify_options
    UO_indent_class,             // indent stuff inside class braces
    UO_indent_class_colon,       // indent stuff after a class colon
 
+   UO_indent_member,            // indent lines broken at a member '.' or '->'
+
    /*
     * Misc inter-element spacing
     */
@@ -360,6 +362,7 @@ options_name_tab option_name_table[] =
    OPTDEF(indent_columns,                AT_NUM),
    OPTDEF(indent_func_call_param,        AT_BOOL),
    OPTDEF(indent_label,                  AT_NUM),
+   OPTDEF(indent_member,                 AT_NUM),
    OPTDEF(indent_namespace,              AT_BOOL),
    OPTDEF(indent_paren_nl,               AT_BOOL),
    OPTDEF(indent_square_nl,              AT_BOOL),
