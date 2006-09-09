@@ -71,6 +71,7 @@
 		<Folder Name="config">
 			<F N="config/align.cfg"/>
 			<F N="config/avalon.cfg"/>
+			<F N="config/avalon2.cfg"/>
 			<F N="config/ben.cfg"/>
 			<F N="config/blc-1.cfg"/>
 			<F N="config/bool-pos-eol.cfg"/>
@@ -182,6 +183,7 @@
 				<F N="input/cpp/Example.h"/>
 				<F N="input/cpp/extern_c.h"/>
 				<F N="input/cpp/misc.cpp"/>
+				<F N="input/cpp/misc2.cpp"/>
 				<F N="input/cpp/nl-class.h"/>
 				<F N="input/cpp/nl-namespace.h"/>
 				<F N="input/cpp/operator.cpp"/>

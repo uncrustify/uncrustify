@@ -21,3 +21,35 @@ typedef std::list<StreamedData *>::iterator iterator;
 unsigned long allocate(unsigned long size, void* & p);
 //unsigned long allocate(unsigned long size, void* & p);
 //------------------------------------------------^ The same here
+
+void foo(void)
+{
+   /* Align assignments */
+   align_assign(chunk_get_head(),
+                cpd.settings[UO_align_assign_span].n,
+                cpd.settings[UO_align_assign_thresh].n);
+}
+
+Args::Args(int argc, char **argv)
+{
+   m_count = argc;
+   m_values = argv;
+   int len = (argc >> 3) + 1;
+   m_used = new UINT8[len];
+   if (m_used != NULL)
+   {
+      memset(m_used, 0, len);
+   }
+}
+
+void Args(int argc, char **argv)
+{
+   m_count = argc;
+   m_values = argv;
+   int len = (argc >> 3) + 1;
+   m_used = new UINT8[len];
+   if (m_used != NULL)
+   {
+      memset(m_used, 0, len);
+   }
+}
