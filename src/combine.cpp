@@ -260,6 +260,15 @@ void fix_symbols(void)
          }
       }
 
+      /* Detect C99 member stuff */
+      if ((pc->type == CT_MEMBER) &&
+          ((prev->type == CT_COMMA) ||
+           (prev->type == CT_BRACE_OPEN)))
+      {
+         pc->type          = CT_C99_MEMBER;
+         next->parent_type = CT_C99_MEMBER;
+      }
+
       /* Mark function parens and braces */
       if ((pc->type == CT_FUNC_DEF) ||
           (pc->type == CT_FUNC_CALL) ||

@@ -76,6 +76,7 @@ typedef enum
    CT_INCDEC_AFTER,        /* a++ or a-- */
    CT_MEMBER,              /* . or -> */
    CT_DC_MEMBER,           /* :: */
+   CT_C99_MEMBER,          /* . in structure stuff */
    CT_INV,                 /* ~ */
    CT_DESTRUCTOR,          /* ~ */
    CT_NOT,                 /* ! */

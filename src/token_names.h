@@ -63,6 +63,7 @@ const char *token_names[] =
    "INCDEC_AFTER",
    "MEMBER",
    "DC_MEMBER",
+   "C99_MEMBER",
    "INV",
    "DESTRUCTOR",
    "NOT",
