@@ -51,5 +51,9 @@ typedef unsigned int       UINT32;
 /* includes for _setmode() */
 #include <io.h>
 #include <fcntl.h>
+#include <direct.h>
+
+#define mkdir(x, y) _mkdir(x)
+#define PATH_SEP  '\\'
 
 #endif   /* WINDOWS_COMPAT_H_INCLUDED */

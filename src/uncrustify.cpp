@@ -411,7 +411,12 @@ static void make_folders(char *outname)
 
    for (idx = 0; outname[idx] != 0; idx++)
    {
-      if ((idx > last_idx) && (outname[idx] == '/'))
+      if ((outname[idx] == '/') || (outname[idx] == '\\'))
+      {
+         outname[idx] = PATH_SEP;
+      }
+
+      if ((idx > last_idx) && (outname[idx] == PATH_SEP))
       {
          outname[idx] = 0;
 
@@ -421,10 +426,10 @@ static void make_folders(char *outname)
             //fprintf(stderr, "%s: %s\n", __func__, outname);
             mkdir(outname, 0750);
          }
-         outname[idx] = '/';
+         outname[idx] = PATH_SEP;
       }
 
-      if (outname[idx] == '/')
+      if (outname[idx] == PATH_SEP)
       {
          last_idx = idx + 1;
       }
