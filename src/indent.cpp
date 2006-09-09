@@ -259,7 +259,7 @@ void indent_text(void)
    bool               in_preproc = false, was_preproc = false;
    int                indent_column;
    int                cout_col   = 0;   // for aligning << stuff
-   int                cout_level = 0; // for aligning << stuff
+   int                cout_level = 0;   // for aligning << stuff
 
    memset(&frm, 0, sizeof(frm));
 
@@ -300,7 +300,7 @@ void indent_text(void)
 
       if ((cout_col > 0) &&
           (chunk_is_semicolon(pc) ||
-          (pc->level < cout_level)))
+           (pc->level < cout_level)))
       {
          cout_col   = 0;
          cout_level = 0;
@@ -315,68 +315,70 @@ void indent_text(void)
       {
          old_pse_tos = frm.pse_tos;
 
-         /* process virtual braces closes first (no text output) */
-         while ((pc->type == CT_VBRACE_CLOSE) &&
-                (frm.pse[frm.pse_tos].type == CT_VBRACE_OPEN))
-         {
-            indent_pse_pop(frm, pc);
-            frm.level--;
-            pc = chunk_get_next(pc);
-         }
-
          /* End anything that drops a level
           * REVISIT: not sure about the preproc check
-         */
+          */
          if (!chunk_is_newline(pc) &&
              !chunk_is_comment(pc) &&
              ((pc->flags & PCF_IN_PREPROC) == 0) &&
-            (frm.pse[frm.pse_tos].level > pc->level))
+             (frm.pse[frm.pse_tos].level > pc->level))
          {
             indent_pse_pop(frm, pc);
          }
 
-         /* End any assign operations with a semicolon on the same level */
-         while ((frm.pse[frm.pse_tos].type == CT_ASSIGN) &&
-                (frm.pse[frm.pse_tos].level == pc->level) &&
+         if (frm.pse[frm.pse_tos].level == pc->level)
+         {
+            /* process virtual braces closes (no text output) */
+            if ((pc->type == CT_VBRACE_CLOSE) &&
+                (frm.pse[frm.pse_tos].type == CT_VBRACE_OPEN))
+            {
+               indent_pse_pop(frm, pc);
+               frm.level--;
+               pc = chunk_get_next(pc);
+            }
+
+            /* End any assign operations with a semicolon on the same level */
+            if ((frm.pse[frm.pse_tos].type == CT_ASSIGN) &&
                 (chunk_is_semicolon(pc) ||
                  (pc->type == CT_COMMA) ||
                  (pc->type == CT_BRACE_OPEN)))
-         {
-            indent_pse_pop(frm, pc);
-         }
+            {
+               indent_pse_pop(frm, pc);
+            }
 
-         /* End any CPP class colon crap */
-         while ((frm.pse[frm.pse_tos].type == CT_CLASS_COLON) &&
+            /* End any CPP class colon crap */
+            if ((frm.pse[frm.pse_tos].type == CT_CLASS_COLON) &&
                 ((pc->type == CT_BRACE_OPEN) ||
                  chunk_is_semicolon(pc)))
-         {
-            indent_pse_pop(frm, pc);
-         }
+            {
+               indent_pse_pop(frm, pc);
+            }
 
-         /* a case is ended with another case or a close brace */
-         if ((frm.pse[frm.pse_tos].type == CT_CASE) &&
-             ((pc->type == CT_BRACE_CLOSE) ||
-              (pc->type == CT_CASE)))
-         {
-            indent_pse_pop(frm, pc);
-         }
+            /* a case is ended with another case or a close brace */
+            if ((frm.pse[frm.pse_tos].type == CT_CASE) &&
+                ((pc->type == CT_BRACE_CLOSE) ||
+                 (pc->type == CT_CASE)))
+            {
+               indent_pse_pop(frm, pc);
+            }
 
-         /* a return is ended with a semicolon */
-         if ((frm.pse[frm.pse_tos].type == CT_RETURN) &&
-             chunk_is_semicolon(pc))
-         {
-            indent_pse_pop(frm, pc);
-         }
+            /* a return is ended with a semicolon */
+            if ((frm.pse[frm.pse_tos].type == CT_RETURN) &&
+                chunk_is_semicolon(pc))
+            {
+               indent_pse_pop(frm, pc);
+            }
 
-         /* Close out parens and squares */
-         if ((frm.pse[frm.pse_tos].type == (pc->type - 1)) &&
-             ((pc->type == CT_PAREN_CLOSE) ||
-              (pc->type == CT_SPAREN_CLOSE) ||
-              (pc->type == CT_FPAREN_CLOSE) ||
-              (pc->type == CT_SQUARE_CLOSE)))
-         {
-            indent_pse_pop(frm, pc);
-            frm.paren_count--;
+            /* Close out parens and squares */
+            if ((frm.pse[frm.pse_tos].type == (pc->type - 1)) &&
+                ((pc->type == CT_PAREN_CLOSE) ||
+                 (pc->type == CT_SPAREN_CLOSE) ||
+                 (pc->type == CT_FPAREN_CLOSE) ||
+                 (pc->type == CT_SQUARE_CLOSE)))
+            {
+               indent_pse_pop(frm, pc);
+               frm.paren_count--;
+            }
          }
       } while (old_pse_tos > frm.pse_tos);
 
@@ -671,9 +673,9 @@ void indent_text(void)
             reindent_line(pc, cout_col);
          }
          else if ((vardefcol > 0) &&
-             (pc->type == CT_WORD) &&
-             ((pc->flags & PCF_VAR_DEF) != 0) &&
-             (prev != NULL) && (prev->type == CT_COMMA))
+                  (pc->type == CT_WORD) &&
+                  ((pc->flags & PCF_VAR_DEF) != 0) &&
+                  (prev != NULL) && (prev->type == CT_COMMA))
          {
             LOG_FMT(LINDENT, "%s: %d] Vardefcol => %d\n",
                     __func__, pc->orig_line, vardefcol);
