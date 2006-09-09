@@ -1420,7 +1420,7 @@ static void fix_var_def(chunk_t *start)
    }
    end = pc;
 
-   LOG_FMT(LFVD, "\n");
+   LOG_FMT(LFVD, " end=[%s]\n", (end != NULL) ? get_token_name(end->type) : "NULL");
 
    /* A single word can only be a type if followed by a function */
    if ((type_count == 1) && (end->type != CT_FUNC_DEF))
@@ -1428,8 +1428,8 @@ static void fix_var_def(chunk_t *start)
       return;
    }
 
-   /* Everything before a function def is a type */
-   if (end->type == CT_FUNC_DEF)
+   /* Everything before a function def or class func is a type */
+   if ((end->type == CT_FUNC_DEF) || (end->type == CT_FUNC_CLASS))
    {
       for (pc = start; pc != end; pc = chunk_get_next_ncnl(pc))
       {
@@ -1496,9 +1496,11 @@ static chunk_t *mark_variable_definition(chunk_t *start)
       return(NULL);
    }
 
-   //    fprintf(stderr, "%s:%d on var '%s'[%s] in col %d\n",
-   //            __func__, start->orig_line, start->str,
-   //            get_token_name(start->type), start->orig_col);
+
+   LOG_FMT(LVARDEF, "%s: line %d, col %d '%.*s' type %s\n",
+           __func__,
+           pc->orig_line, pc->orig_col, pc->len, pc->str,
+           get_token_name(pc->type));
 
    pc = start;
    while ((pc != NULL) && !chunk_is_semicolon(pc) &&
@@ -1516,10 +1518,6 @@ static chunk_t *mark_variable_definition(chunk_t *start)
       else if (chunk_is_star(pc))
       {
          pc->type = CT_PTR_TYPE;
-
-         //         fprintf(stderr, "%s:%d marked '%s'[%s] in col %d\n",
-         //                 __func__, pc->orig_line, pc->str,
-         //                 get_token_name(pc->type), pc->orig_col);
       }
       else if ((pc->type == CT_SQUARE_OPEN) || (pc->type == CT_ASSIGN))
       {
