@@ -179,7 +179,9 @@
 				<F N="input/cpp/class.h"/>
 				<F N="input/cpp/constructor.cpp"/>
 				<F N="input/cpp/cout.cpp"/>
+				<F N="input/cpp/Example.h"/>
 				<F N="input/cpp/extern_c.h"/>
+				<F N="input/cpp/misc.cpp"/>
 				<F N="input/cpp/nl-class.h"/>
 				<F N="input/cpp/nl-namespace.h"/>
 				<F N="input/cpp/operator.cpp"/>
