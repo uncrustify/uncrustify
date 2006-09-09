@@ -22,6 +22,7 @@ void tokenize_cleanup(void)
    chunk_t *prev = NULL;
    chunk_t *next;
    chunk_t *tmp;
+   bool    in_type_cast = false;
 
    pc   = chunk_get_head();
    next = chunk_get_next_ncnl(pc);
@@ -91,16 +92,31 @@ void tokenize_cleanup(void)
          next->type = CT_PTR_TYPE;
       }
 
+      if ((pc->type == CT_TYPE_CAST) &&
+          (next->type == CT_ANGLE_OPEN))
+      {
+         next->parent_type = CT_TYPE_CAST;
+         in_type_cast = true;
+      }
+
       /**
        * Change angle open/close to CT_COMPARE, if not a template thingy
        */
-      if (pc->type == CT_ANGLE_OPEN)
+      if ((pc->type == CT_ANGLE_OPEN) && (pc->parent_type == CT_NONE))
       {
          check_template(pc);
       }
       if ((pc->type == CT_ANGLE_CLOSE) && (pc->parent_type != CT_TEMPLATE))
       {
-         pc->type = CT_COMPARE;
+         if (in_type_cast)
+         {
+            in_type_cast    = false;
+            pc->parent_type = CT_TYPE_CAST;
+         }
+         else
+         {
+            pc->type = CT_COMPARE;
+         }
       }
 
       if ((cpd.lang_flags & LANG_D) != 0)
@@ -248,6 +264,7 @@ static void check_template(chunk_t *start)
          for (pc = start; pc != end; pc = chunk_get_next_ncnl(pc))
          {
             pc->parent_type = CT_TEMPLATE;
+            make_type(pc);
          }
          end->parent_type = CT_TEMPLATE;
       }

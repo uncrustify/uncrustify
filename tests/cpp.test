@@ -10,6 +10,7 @@
 30003 ben.cfg                          cpp/strings.cpp
 30010 ben.cfg                          cpp/class.h
 30011 ben.cfg                          cpp/misc.cpp
+30012 avalon2.cfg                      cpp/misc2.cpp
 
 30020 ben.cfg                          cpp/bool.cpp
 30021 ben.cfg                          cpp/byref.cpp
