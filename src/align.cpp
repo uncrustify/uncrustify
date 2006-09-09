@@ -413,8 +413,6 @@ chunk_t *align_assign(chunk_t *first, int span, int thresh)
    int     my_level;
    chunk_t *pc;
    int     tmp;
-   int     myspan      = span;
-   int     mythresh    = thresh;
    int     var_def_cnt = 0;
    int     equ_count   = 0;
 
@@ -424,26 +422,21 @@ chunk_t *align_assign(chunk_t *first, int span, int thresh)
    }
    my_level = first->level;
 
-   if (first->parent_type == CT_ENUM)
-   {
-      myspan = cpd.settings[UO_align_enum_equ].n;
-      //mythresh = cpd..settings[UO_align_enum_equ_thresh].n;
-   }
-
-   if (myspan <= 0)
+   if (span <= 0)
    {
       return(chunk_get_next(first));
    }
 
-   LOG_FMT(LALASS, "%s[%d]: checking %.*s on line %d\n",
-           __func__, my_level, first->len, first->str, first->orig_line);
+   LOG_FMT(LALASS, "%s[%d]: checking %.*s on line %d - span=%d thresh=%d\n",
+           __func__, my_level, first->len, first->str, first->orig_line,
+           span, thresh);
 
    AlignStack as;    // regular assigns
    AlignStack vdas;  // variable def assigns
 
-   as.Start(myspan, mythresh);
+   as.Start(span, thresh);
    as.m_right_align = true;
-   vdas.Start(myspan, mythresh);
+   vdas.Start(span, thresh);
    vdas.m_right_align = true;
 
    pc = first;
@@ -469,8 +462,23 @@ chunk_t *align_assign(chunk_t *first, int span, int thresh)
       if ((pc->type == CT_BRACE_OPEN) ||
           (pc->type == CT_VBRACE_OPEN))
       {
+         int myspan;
+         int mythresh;
+
          tmp = pc->orig_line;
-         pc  = align_assign(chunk_get_next_ncnl(pc), span, thresh);
+
+         if (pc->parent_type == CT_ENUM)
+         {
+            myspan   = cpd.settings[UO_align_enum_equ_span].n;
+            mythresh = cpd.settings[UO_align_enum_equ_thresh].n;
+         }
+         else
+         {
+            myspan   = cpd.settings[UO_align_assign_span].n;
+            mythresh = cpd.settings[UO_align_assign_thresh].n;
+         }
+
+         pc  = align_assign(chunk_get_next_ncnl(pc), myspan, mythresh);
          if (pc != NULL)
          {
             /* do a rough count of the number of lines just spanned */

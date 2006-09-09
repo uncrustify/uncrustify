@@ -119,7 +119,8 @@ const char *detailed_help(uncrustify_options op)
    case UO_align_keep_tabs:               // keep non-indenting tabs
    case UO_align_on_tabstop:              // always align on tabstops
    case UO_align_nl_cont:                 // align the back-slash \n combo (macros)
-   case UO_align_enum_equ:                // align the '=' in enums
+   case UO_align_enum_equ_span:           // align the '=' in enums
+   case UO_align_enum_equ_thresh:         // align the '=' in enums
    case UO_align_assign_span:             // align on '='. 0=don't align
    case UO_align_assign_thresh:           // threshold for aligning on '='. 0=no limit
    case UO_align_right_cmt_span:          // align comment that end lines. 0=don't align

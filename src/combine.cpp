@@ -64,9 +64,10 @@ static chunk_t *flag_parens(chunk_t *po, UINT16 flags,
    chunk_t *pc;
 
    paren_close = chunk_skip_to_match(po);
-   if (paren_close != NULL)
+   if ((paren_close != NULL) && (po != paren_close))
    {
-      if (po != paren_close)
+      if ((flags != 0) ||
+          (parent_all && (parenttype != CT_NONE)))
       {
          for (pc = chunk_get_next(po); pc != paren_close; pc = chunk_get_next(pc))
          {
@@ -76,18 +77,18 @@ static chunk_t *flag_parens(chunk_t *po, UINT16 flags,
                pc->parent_type = parenttype;
             }
          }
+      }
 
-         if (opentype != CT_NONE)
-         {
-            po->type          = opentype;
-            paren_close->type = (c_token_t)(opentype + 1);
-         }
+      if (opentype != CT_NONE)
+      {
+         po->type          = opentype;
+         paren_close->type = (c_token_t)(opentype + 1);
+      }
 
-         if (parenttype != CT_NONE)
-         {
-            po->parent_type          = parenttype;
-            paren_close->parent_type = parenttype;
-         }
+      if (parenttype != CT_NONE)
+      {
+         po->parent_type          = parenttype;
+         paren_close->parent_type = parenttype;
       }
    }
    return(chunk_get_next_ncnl(paren_close));
@@ -212,6 +213,12 @@ void fix_symbols(void)
                fix_enum_struct_union(next);
             }
          }
+      }
+
+      if ((pc->type == CT_SQUARE_CLOSE) &&
+          (next->type == CT_PAREN_OPEN))
+      {
+         flag_parens(next, 0, CT_FPAREN_OPEN, CT_NONE, false);
       }
 
       if (pc->type == CT_ASSIGN)
@@ -1056,6 +1063,7 @@ static void fix_enum_struct_union(chunk_t *pc)
  * next ',' or ';' is a type.
  *
  * typedef [type...] [*] type [, [*]type] ;
+ * typedef <return type>([*]func)(params);
  * typedef <enum/struct/union> [type] [*] type [, [*]type] ;
  * typedef <enum/struct/union> [type] { ... } [*] type [, [*]type] ;
  */
@@ -1071,11 +1079,12 @@ static void fix_typedef(chunk_t *start)
     */
    prev = start;
    next = start;
-   while ((next = chunk_get_next_ncnl(next)) != NULL)
+   while (((next = chunk_get_next_ncnl(next)) != NULL) &&
+          (next->level >= start->level))
    {
+      next->flags |= PCF_IN_TYPEDEF;
       if (start->level == next->level)
       {
-         next->flags |= PCF_IN_TYPEDEF;
          if (chunk_is_semicolon(next))
          {
             next->parent_type = CT_TYPEDEF;
@@ -1086,6 +1095,9 @@ static void fix_typedef(chunk_t *start)
          if ((*prev->str == ')') && (*next->str == '('))
          {
             is_fcn_type = true;
+
+            fix_fcn_def_params(next);
+
             LOG_FMT(LTYPEDEF, "%s: fcn typedef on line %d\n", __func__, next->orig_line);
          }
       }
@@ -1687,7 +1699,8 @@ static void mark_function(chunk_t *pc)
 
       /* Scan tokens until we hit a brace open (def) or semicolon (proto) */
       tmp = paren_close;
-      while ((tmp = chunk_get_next_ncnl(tmp)) != NULL)
+      while (((tmp = chunk_get_next_ncnl(tmp)) != NULL) &&
+             (tmp->level >= pc->level))
       {
          /* Only care about brace or semi on the same level */
          if (tmp->level == pc->level)
@@ -1714,9 +1727,7 @@ static void mark_function(chunk_t *pc)
       tmp = pc;
       while ((tmp = chunk_get_prev_ncnl(tmp)) != NULL)
       {
-         if ((tmp->type != CT_TYPE) &&
-             (tmp->type != CT_QUALIFIER) &&
-             (tmp->type != CT_PTR_TYPE))
+         if (!chunk_is_type(tmp))
          {
             break;
          }
