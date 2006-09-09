@@ -182,7 +182,8 @@ enum uncrustify_options
    UO_align_keep_tabs,            // keep non-indenting tabs
    UO_align_on_tabstop,           // always align on tabstops
    UO_align_nl_cont,              // align the back-slash \n combo (macros)
-   UO_align_enum_equ,             // align the '=' in enums
+   UO_align_enum_equ_span,        // align the '=' in enums
+   UO_align_enum_equ_thresh,      // threshold for aligning on '=' in enums. 0=no limit
    UO_align_assign_span,          // align on '='. 0=don't align
    UO_align_assign_thresh,        // threshold for aligning on '='. 0=no limit
    UO_align_right_cmt_span,       // align comment that end lines. 0=don't align
@@ -319,7 +320,8 @@ options_name_tab option_name_table[] =
 {
    OPTDEF(align_assign_span,             AT_NUM),
    OPTDEF(align_assign_thresh,           AT_NUM),
-   OPTDEF(align_enum_equ,                AT_NUM),
+   OPTDEF(align_enum_equ_span,           AT_NUM),
+   OPTDEF(align_enum_equ_thresh,         AT_NUM),
    OPTDEF(align_func_proto_span,         AT_NUM),
    OPTDEF(align_keep_tabs,               AT_BOOL),
    OPTDEF(align_nl_cont,                 AT_BOOL),
