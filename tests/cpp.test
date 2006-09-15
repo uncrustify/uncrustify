@@ -43,4 +43,6 @@
 
 30100 nl_template_class-force.cfg      cpp/templates.cpp
 30101 nl_template_class-remove.cfg     cpp/templates.cpp
+30102 template_sp-force.cfg            cpp/templates.cpp
+30103 template_sp-remove.cfg           cpp/templates.cpp
 

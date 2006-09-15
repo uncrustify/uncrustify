@@ -123,6 +123,8 @@
 			<F N="config/pp-indent-1.cfg"/>
 			<F N="config/pp-indent-2.cfg"/>
 			<F N="config/pp-indent-3.cfg"/>
+			<F N="config/template_sp-force.cfg"/>
+			<F N="config/template_sp-remove.cfg"/>
 			<F N="config/width.cfg"/>
 		</Folder>
 		<Folder Name="input">

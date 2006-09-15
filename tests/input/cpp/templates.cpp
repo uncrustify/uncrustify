@@ -1,3 +1,12 @@
+#include <list>
+#include <map>
+
+class MyClass
+{
+public:
+  std::map < int, bool > someData;
+  std::map < int, std::list < bool > > otherData;
+};
 
 void foo()
 {
