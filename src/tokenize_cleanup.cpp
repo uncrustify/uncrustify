@@ -193,7 +193,6 @@ static void check_template(chunk_t *start)
    chunk_t *pc;
    chunk_t *end;
    chunk_t *prev;
-   int     level = 1;
 
    LOG_FMT(LTEMPL, "%s: Line %d, col %d:", __func__, start->orig_line, start->orig_col);
 
@@ -218,7 +217,8 @@ static void check_template(chunk_t *start)
       {
          if (chunk_is_str(prev, "(", 1) ||
              chunk_is_str(prev, "[", 1) ||
-             (prev->type == CT_ASSIGN))
+             (prev->type == CT_ASSIGN) ||
+             (prev->type == CT_BOOL))
          {
             LOG_FMT(LTEMPL, " - after %s - Not a template\n", get_token_name(prev->type));
             start->type = CT_COMPARE;
@@ -227,6 +227,7 @@ static void check_template(chunk_t *start)
          LOG_FMT(LTEMPL, " - prev %s -", get_token_name(prev->type));
       }
 
+      int level = 1;
       for (pc = chunk_get_next_ncnl(start); pc != NULL; pc = chunk_get_next_ncnl(pc))
       {
          LOG_FMT(LTEMPL, " [%s,%d]", get_token_name(pc->type), level);
@@ -244,6 +245,7 @@ static void check_template(chunk_t *start)
             }
          }
          else if ((pc->type != CT_WORD) &&
+                  (pc->type != CT_TYPE) &&
                   (pc->type != CT_MEMBER) &&
                   (pc->type != CT_COMMA) &&
                   (pc->type != CT_STAR) &&
@@ -270,7 +272,7 @@ static void check_template(chunk_t *start)
       }
       else
       {
-         LOG_FMT(LTEMPL, " - Not a template\n");
+         LOG_FMT(LTEMPL, " - Not a template: end = %s\n", get_token_name(end->type));
 
          start->type = CT_COMPARE;
       }
