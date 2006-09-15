@@ -29,6 +29,12 @@ Plans for 0.1.0
 
 ===============================================================================
 
+Changes in uncrustify-0.27
+-------------------------------------------------------------------------------
+ - Improve template detection again (allow CT_TYPE in a template)
+ - Fix improper detection as deref in "[ABC * 123]" and "[0xf & *val]"
+
+
 Changes in uncrustify-0.26 (removed a number from the version)
 -------------------------------------------------------------------------------
  - Fix preprocessor labeling WRT comments

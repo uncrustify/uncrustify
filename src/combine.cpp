@@ -20,7 +20,7 @@ static void fix_fcn_def_params(chunk_t *pc);
 static void fix_typedef(chunk_t *pc);
 static void fix_enum_struct_union(chunk_t *pc);
 static void fix_casts(chunk_t *pc);
-static void fix_var_def(chunk_t *pc);
+static chunk_t *fix_var_def(chunk_t *pc);
 static void mark_function(chunk_t *pc);
 static void mark_struct_union_body(chunk_t *start);
 static chunk_t *mark_variable_definition(chunk_t *start);
@@ -427,7 +427,7 @@ void fix_symbols(void)
       /* Change CT_STAR to CT_PTR_TYPE or CT_ARITH or SYM_DEREF */
       if (pc->type == CT_STAR)
       {
-         pc->type = CT_ARITH;
+         pc->type = (prev->type == CT_ARITH) ? CT_DEREF : CT_ARITH;
       }
 
       if (pc->type == CT_AMP)
@@ -460,9 +460,7 @@ void fix_symbols(void)
     * 2nd pass - handle variable definitions
     * REVISIT: We need function params marked to do this (?)
     */
-   prev = &dummy;
-   pc   = chunk_get_head();
-
+   pc = chunk_get_head();
    while (pc != NULL)
    {
       /**
@@ -475,11 +473,12 @@ void fix_symbols(void)
            (pc->type == CT_WORD)) &&
           (pc->parent_type != CT_ENUM)) // TODO: why this check?
       {
-         fix_var_def(pc);
+         pc = fix_var_def(pc);
       }
-
-      prev = pc;
-      pc   = chunk_get_next_ncnl(pc);
+      else
+      {
+         pc = chunk_get_next_ncnl(pc);
+      }
    }
 
    /* 3rd pass - flag comments.
@@ -1390,13 +1389,27 @@ static void fix_fcn_def_params(chunk_t *start)
 //#define DEBUG_FIX_VAR_DEF
 
 /**
+ * Skips to the start of the next statement.
+ */
+static chunk_t *skip_to_next_statement(chunk_t *pc)
+{
+   while ((pc != NULL) && !chunk_is_semicolon(pc) &&
+          (pc->type != CT_BRACE_OPEN) &&
+          (pc->type != CT_BRACE_CLOSE))
+   {
+      pc = chunk_get_next_ncnl(pc);
+   }
+   return(pc);
+}
+
+/**
  * We are on the start of a sequence that could be a var def
  *  - FPAREN_OPEN (parent == CT_FOR)
  *  - BRACE_OPEN
  *  - SEMICOLON
  *
  */
-static void fix_var_def(chunk_t *start)
+static chunk_t *fix_var_def(chunk_t *start)
 {
    chunk_t *pc = start;
    chunk_t *before_end;
@@ -1425,7 +1438,8 @@ static void fix_var_def(chunk_t *start)
    /* A single word can only be a type if followed by a function */
    if ((type_count == 1) && (end->type != CT_FUNC_DEF))
    {
-      return;
+      /* Scan to the next semicolon or brace open or close */
+      return(skip_to_next_statement(end));
    }
 
    /* Everything before a function def or class func is a type */
@@ -1435,9 +1449,8 @@ static void fix_var_def(chunk_t *start)
       {
          make_type(pc);
       }
-      return;
+      return(skip_to_next_statement(end));
    }
-
 
    LOG_FMT(LFVD, "%s:%d TYPE : ", __func__, start->orig_line);
    for (pc = start; pc != before_end; pc = chunk_get_next_ncnl(pc))
@@ -1451,6 +1464,11 @@ static void fix_var_def(chunk_t *start)
     * OK we have two or more items, mark types up to the end.
     */
    mark_variable_definition(before_end);
+   if (end->type == CT_COMMA)
+   {
+      return(chunk_get_next_ncnl(end));
+   }
+   return(skip_to_next_statement(end));
 }
 
 
