@@ -99,6 +99,10 @@ SOURCE=..\src\args.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\src\backup.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\src\brace_cleanup.cpp
 # End Source File
 # Begin Source File
@@ -140,6 +144,10 @@ SOURCE=..\src\logger.cpp
 # Begin Source File
 
 SOURCE=..\src\logmask.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\md5.cpp
 # End Source File
 # Begin Source File
 
@@ -195,6 +203,10 @@ SOURCE=..\src\args.h
 # End Source File
 # Begin Source File
 
+SOURCE=..\src\backup.h
+# End Source File
+# Begin Source File
+
 SOURCE=..\src\base_types.h
 # End Source File
 # Begin Source File
@@ -228,6 +240,10 @@ SOURCE=..\src\logger.h
 # Begin Source File
 
 SOURCE=..\src\logmask.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\md5.h
 # End Source File
 # Begin Source File
 
