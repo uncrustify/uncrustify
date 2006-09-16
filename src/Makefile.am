@@ -8,11 +8,12 @@ uncrustify_SOURCES = uncrustify.cpp chunk_list.cpp indent.cpp align.cpp combine.
 		tokenize.cpp tokenize_cleanup.cpp space.cpp newlines.cpp output.cpp \
 		args.cpp options.cpp keywords.cpp punctuators.cpp parse_frame.cpp \
 		logmask.cpp logger.cpp ChunkStack.cpp braces.cpp brace_cleanup.cpp \
-		align_stack.cpp defines.cpp width.cpp lang_pawn.cpp
+		align_stack.cpp defines.cpp width.cpp lang_pawn.cpp md5.cpp \
+		backup.cpp
 
 noinst_HEADERS = chunk_list.h options.h char_table.h chunk_list.h \
 		uncrustify_types.h prototypes.h logmask.h logger.h \
-		ChunkStack.h args.h token_names.h token_enum.h ListManager.h
+		ChunkStack.h args.h token_names.h token_enum.h ListManager.h md5.h
 
 token_names.h: token_enum.h ../make_token_names.sh
 	@echo "Rebuilding token_names.h"

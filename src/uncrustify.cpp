@@ -16,6 +16,8 @@
 #include "args.h"
 #include "logger.h"
 #include "log_levels.h"
+#include "md5.h"
+#include "backup.h"
 
 #include <cstdio>
 #include <cstdlib>
@@ -93,6 +95,7 @@ static void usage_exit(const char *msg, const char *argv0, int code)
            " suffix : specifies the per-file suffix when writing to a file. The default is '.uncrustify'\n"
            " prefix : specifies the folder prefix when writing to a file.\n"
            " files : whitespace-separated list of files to process\n"
+           " --replace : replace source files (creates a backup)\n"
            " t : load a file with types\n"
            " d : load a file with defines\n"
            " l : language override: C, CPP, D, CS, JAVA, PAWN\n"
@@ -125,6 +128,9 @@ int main(int argc, char *argv[])
    int        idx;
    const char *p_arg;
 
+   MD5 md5;
+
+   md5.Init();
 
    if (argc < 2)
    {
@@ -222,7 +228,7 @@ int main(int argc, char *argv[])
       cpd.lang_flags = language_from_tag(p_arg);
       if (cpd.lang_flags == 0)
       {
-         fprintf(stderr, "Ignoring unknown language: %s\n", p_arg);
+         LOG_FMT(LWARN, "Ignoring unknown language: %s\n", p_arg);
       }
    }
 
@@ -242,9 +248,19 @@ int main(int argc, char *argv[])
    const char *prefix = arg.Param("--prefix");
    const char *suffix = arg.Param("--suffix");
 
-   if ((prefix == NULL) && (suffix == NULL))
+   if (arg.Present("--replace"))
    {
-      suffix = ".uncrustify";
+      if ((prefix != NULL) || (suffix != NULL))
+      {
+         usage_exit("Cannot use --replace with --prefix or --suffix", argv[0], 66);
+      }
+   }
+   else
+   {
+      if ((prefix == NULL) && (suffix == NULL))
+      {
+         suffix = ".uncrustify";
+      }
    }
 
    /* Check for unused args (ignore them) */
@@ -451,6 +467,7 @@ static void do_source_file(const char *filename, FILE *pfout, const char *parsed
    bool        did_open = false;
    FILE        *p_file;
    struct stat my_stat;
+   bool        need_backup = false;
 
    /* Do some simple language detection based on the filename */
    if (cpd.lang_flags == 0)
@@ -485,6 +502,17 @@ static void do_source_file(const char *filename, FILE *pfout, const char *parsed
       char outname[1024];
       int  len = 0;
 
+      if ((prefix == NULL) && (suffix == NULL))
+      {
+         if (backup_copy_file(filename, data, data_len) != SUCCESS)
+         {
+            LOG_FMT(LERR, "%s: Failed to create backup file for %s\n",
+                    __func__, filename);
+            return;
+         }
+         need_backup = true;
+      }
+
       if (prefix != NULL)
       {
          len = snprintf(outname, sizeof(outname), "%s/", prefix);
@@ -516,6 +544,11 @@ static void do_source_file(const char *filename, FILE *pfout, const char *parsed
    if (did_open)
    {
       fclose(pfout);
+
+      if (need_backup)
+      {
+         backup_create_md5_file(filename);
+      }
    }
 }
 

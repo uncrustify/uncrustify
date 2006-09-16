@@ -24,15 +24,16 @@ Plans for 0.1.0
  - improve code width logic
    + add options to remove newlines inside parens before splitting long lines
  - misc cleanup before jumping to 0.1.0
- - overwrite input file (need a smart backup system)
 
 
 ===============================================================================
 
+
 Changes in uncrustify-0.27
 -------------------------------------------------------------------------------
  - Improve template detection again (allow CT_TYPE in a template)
- - Fix improper detection as deref in "[ABC * 123]" and "[0xf & *val]"
+ - Fix bad formatting in "[ABC * 123]" and "[0xf & *val]"
+ - Add --replace option to convert files in-place
 
 
 Changes in uncrustify-0.26 (removed a number from the version)

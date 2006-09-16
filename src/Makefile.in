@@ -62,7 +62,8 @@ am_uncrustify_OBJECTS = uncrustify-uncrustify.$(OBJEXT) \
 	uncrustify-logger.$(OBJEXT) uncrustify-ChunkStack.$(OBJEXT) \
 	uncrustify-braces.$(OBJEXT) uncrustify-brace_cleanup.$(OBJEXT) \
 	uncrustify-align_stack.$(OBJEXT) uncrustify-defines.$(OBJEXT) \
-	uncrustify-width.$(OBJEXT) uncrustify-lang_pawn.$(OBJEXT)
+	uncrustify-width.$(OBJEXT) uncrustify-lang_pawn.$(OBJEXT) \
+	uncrustify-md5.$(OBJEXT) uncrustify-backup.$(OBJEXT)
 uncrustify_OBJECTS = $(am_uncrustify_OBJECTS)
 uncrustify_LDADD = $(LDADD)
 DEFAULT_INCLUDES = 
@@ -162,11 +163,12 @@ uncrustify_SOURCES = uncrustify.cpp chunk_list.cpp indent.cpp align.cpp combine.
 		tokenize.cpp tokenize_cleanup.cpp space.cpp newlines.cpp output.cpp \
 		args.cpp options.cpp keywords.cpp punctuators.cpp parse_frame.cpp \
 		logmask.cpp logger.cpp ChunkStack.cpp braces.cpp brace_cleanup.cpp \
-		align_stack.cpp defines.cpp width.cpp lang_pawn.cpp
+		align_stack.cpp defines.cpp width.cpp lang_pawn.cpp md5.cpp \
+		backup.cpp
 
 noinst_HEADERS = chunk_list.h options.h char_table.h chunk_list.h \
 		uncrustify_types.h prototypes.h logmask.h logger.h \
-		ChunkStack.h args.h token_names.h token_enum.h ListManager.h
+		ChunkStack.h args.h token_names.h token_enum.h ListManager.h md5.h
 
 uncrustify_CPPFLAGS = -Wall
 all: $(BUILT_SOURCES) config.h
@@ -402,6 +404,18 @@ uncrustify-lang_pawn.o: lang_pawn.cpp
 
 uncrustify-lang_pawn.obj: lang_pawn.cpp
 	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(uncrustify_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o uncrustify-lang_pawn.obj `if test -f 'lang_pawn.cpp'; then $(CYGPATH_W) 'lang_pawn.cpp'; else $(CYGPATH_W) '$(srcdir)/lang_pawn.cpp'; fi`
+
+uncrustify-md5.o: md5.cpp
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(uncrustify_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o uncrustify-md5.o `test -f 'md5.cpp' || echo '$(srcdir)/'`md5.cpp
+
+uncrustify-md5.obj: md5.cpp
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(uncrustify_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o uncrustify-md5.obj `if test -f 'md5.cpp'; then $(CYGPATH_W) 'md5.cpp'; else $(CYGPATH_W) '$(srcdir)/md5.cpp'; fi`
+
+uncrustify-backup.o: backup.cpp
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(uncrustify_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o uncrustify-backup.o `test -f 'backup.cpp' || echo '$(srcdir)/'`backup.cpp
+
+uncrustify-backup.obj: backup.cpp
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(uncrustify_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o uncrustify-backup.obj `if test -f 'backup.cpp'; then $(CYGPATH_W) 'backup.cpp'; else $(CYGPATH_W) '$(srcdir)/backup.cpp'; fi`
 uninstall-info-am:
 
 ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)

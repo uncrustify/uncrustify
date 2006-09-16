@@ -16,6 +16,7 @@
 
 const char *get_token_name(c_token_t token);
 void log_pcf_flags(log_sev_t sev, UINT32 flags);
+const char *path_basename(const char *path);
 
 
 /*

@@ -67,6 +67,7 @@
 			<F N="src/lang_pawn.cpp"/>
 			<F N="src/logger.cpp"/>
 			<F N="src/logmask.cpp"/>
+			<F N="src/md5.cpp"/>
 			<F N="src/newlines.cpp"/>
 			<F N="src/options-help.cpp"/>
 			<F N="src/options.cpp"/>
@@ -84,6 +85,7 @@
 			Filters="*.h;*.H;*.hh;*.hpp;*.hxx;*.inc;*.sh;*.cpy;*.if">
 			<F N="src/align_stack.h"/>
 			<F N="src/args.h"/>
+			<F N="src/backup.h"/>
 			<F N="src/base_types.h"/>
 			<F N="src/char_table.h"/>
 			<F N="src/chunk_list.h"/>
@@ -93,6 +95,7 @@
 			<F N="src/log_levels.h"/>
 			<F N="src/logger.h"/>
 			<F N="src/logmask.h"/>
+			<F N="src/md5.h"/>
 			<F N="src/options.h"/>
 			<F N="src/prototypes.h"/>
 			<F N="src/punctuators.h"/>
