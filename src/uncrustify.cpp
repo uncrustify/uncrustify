@@ -128,14 +128,14 @@ int main(int argc, char *argv[])
    int        idx;
    const char *p_arg;
 
-   MD5 md5;
-
-   md5.Init();
 
    if (argc < 2)
    {
       usage_exit(NULL, argv[0], 0);
    }
+
+   /* Build options map */
+   register_options();
 
    Args arg(argc, argv);
 

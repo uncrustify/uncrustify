@@ -145,7 +145,7 @@ void output_parsed(FILE *pfile)
 void output_options(FILE *pfile)
 {
    int idx;
-   const options_name_tab *ptr;
+   const option_map_value *ptr;
 
    fprintf(pfile, "-== Options ==-\n");
    for (idx = 0; idx < UO_option_count; idx++)

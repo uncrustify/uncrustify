@@ -5,7 +5,7 @@
  * $Id$
  */
 
-#define DEFINE_OPTION_NAME_TABLE
+#define DEFINE_OPTION_NAME_MAP
 
 #include "uncrustify_types.h"
 #include "args.h"
@@ -20,54 +20,200 @@
 #include <cctype>
 
 
-#include "options-help.cpp"
-
-const options_name_tab *get_option_name(int uo)
+void unc_add_option(const char *name, uncrustify_options id, argtype_e type,
+                    const char *short_desc, const char *long_desc)
 {
-   int idx;
+   option_map_value value;
 
-   for (idx = 0; idx < (int)ARRAY_SIZE(option_name_table); idx++)
+   value.id              = id;
+   value.type            = type;
+   value.name            = name;
+   value.short_desc      = short_desc;
+   value.long_desc       = long_desc;
+   option_name_map[name] = value;
+}
+
+const option_map_value *unc_find_option(const char *name)
+{
+   if (option_name_map.find(name) == option_name_map.end())
    {
-      if (option_name_table[idx].id == uo)
+      return(NULL);
+   }
+   return(&option_name_map[name]);
+}
+
+void register_options(void)
+{
+   unc_add_option("align_assign_span", UO_align_assign_span, AT_NUM);
+   unc_add_option("align_assign_thresh", UO_align_assign_thresh, AT_NUM);
+   unc_add_option("align_enum_equ_span", UO_align_enum_equ_span, AT_NUM);
+   unc_add_option("align_enum_equ_thresh", UO_align_enum_equ_thresh, AT_NUM);
+   unc_add_option("align_func_proto_span", UO_align_func_proto_span, AT_NUM);
+   unc_add_option("align_keep_tabs", UO_align_keep_tabs, AT_BOOL);
+   unc_add_option("align_nl_cont", UO_align_nl_cont, AT_BOOL);
+   unc_add_option("align_number_left", UO_align_number_left, AT_BOOL);
+   unc_add_option("align_on_tabstop", UO_align_on_tabstop, AT_BOOL);
+   unc_add_option("align_pp_define_gap", UO_align_pp_define_gap, AT_NUM);
+   unc_add_option("align_pp_define_span", UO_align_pp_define_span, AT_NUM);
+   unc_add_option("align_right_cmt_span", UO_align_right_cmt_span, AT_NUM);
+   unc_add_option("align_struct_init_span", UO_align_struct_init_span, AT_NUM);
+   unc_add_option("align_typedef_gap", UO_align_typedef_gap, AT_NUM);
+   unc_add_option("align_typedef_span", UO_align_typedef_span, AT_NUM);
+   unc_add_option("align_typedef_star_style", UO_align_typedef_star_style, AT_NUM);
+   unc_add_option("align_var_def_colon", UO_align_var_def_colon, AT_BOOL);
+   unc_add_option("align_var_def_inline", UO_align_var_def_inline, AT_BOOL);
+   unc_add_option("align_var_def_span", UO_align_var_def_span, AT_NUM);
+   unc_add_option("align_var_def_star", UO_align_var_def_star, AT_BOOL);
+   unc_add_option("align_var_def_thresh", UO_align_var_def_thresh, AT_NUM);
+   unc_add_option("align_var_struct_span", UO_align_var_struct_span, AT_NUM);
+   unc_add_option("align_with_tabs", UO_align_with_tabs, AT_BOOL);
+   unc_add_option("cmt_cpp_group", UO_cmt_cpp_group, AT_BOOL);
+   unc_add_option("cmt_cpp_nl_end", UO_cmt_cpp_nl_end, AT_BOOL);
+   unc_add_option("cmt_cpp_nl_start", UO_cmt_cpp_nl_start, AT_BOOL);
+   unc_add_option("cmt_cpp_to_c", UO_cmt_cpp_to_c, AT_BOOL);
+   unc_add_option("cmt_star_cont", UO_cmt_star_cont, AT_BOOL);
+   unc_add_option("code_width", UO_code_width, AT_NUM, "Try to limit code width to this number of columns");
+   unc_add_option("eat_blanks_after_open_brace", UO_eat_blanks_after_open_brace, AT_BOOL);
+   unc_add_option("eat_blanks_before_close_brace", UO_eat_blanks_before_close_brace, AT_BOOL);
+   unc_add_option("indent_align_string", UO_indent_align_string, AT_BOOL);
+   unc_add_option("indent_brace", UO_indent_brace, AT_NUM);
+   unc_add_option("indent_braces", UO_indent_braces, AT_BOOL);
+   unc_add_option("indent_case_body", UO_indent_case_body, AT_NUM);
+   unc_add_option("indent_case_brace", UO_indent_case_brace, AT_NUM);
+   unc_add_option("indent_class", UO_indent_class, AT_BOOL);
+   unc_add_option("indent_class_colon", UO_indent_class_colon, AT_BOOL);
+   unc_add_option("indent_col1_comment", UO_indent_col1_comment, AT_BOOL);
+   unc_add_option("indent_columns", UO_indent_columns, AT_NUM, "The number of columns to indent per level.\nUsually 2, 3, 4, or 8.");
+   unc_add_option("indent_func_call_param", UO_indent_func_call_param, AT_BOOL);
+   unc_add_option("indent_label", UO_indent_label, AT_NUM);
+   unc_add_option("indent_member", UO_indent_member, AT_NUM);
+   unc_add_option("indent_namespace", UO_indent_namespace, AT_BOOL);
+   unc_add_option("indent_paren_nl", UO_indent_paren_nl, AT_BOOL);
+   unc_add_option("indent_square_nl", UO_indent_square_nl, AT_BOOL);
+   unc_add_option("indent_switch_case", UO_indent_switch_case, AT_NUM);
+   unc_add_option("indent_with_tabs", UO_indent_with_tabs, AT_NUM, "0=Spaces only.\n1=Indent with tabs, align with spaces.\n2=indent and align with tabs.");
+   unc_add_option("input_tab_size", UO_input_tab_size, AT_NUM, "Sets the size of the tab on input. Usually 8.");
+   unc_add_option("mod_full_brace_do", UO_mod_full_brace_do, AT_IARF);
+   unc_add_option("mod_full_brace_for", UO_mod_full_brace_for, AT_IARF);
+   unc_add_option("mod_full_brace_function", UO_mod_full_brace_function, AT_IARF);
+   unc_add_option("mod_full_brace_if", UO_mod_full_brace_if, AT_IARF);
+   unc_add_option("mod_full_brace_nl", UO_mod_full_brace_nl, AT_NUM);
+   unc_add_option("mod_full_brace_while", UO_mod_full_brace_while, AT_IARF);
+   unc_add_option("mod_paren_on_return", UO_mod_paren_on_return, AT_IARF);
+   unc_add_option("mod_pawn_semicolon", UO_mod_pawn_semicolon, AT_BOOL);
+   unc_add_option("newlines", UO_newlines, AT_LINE);
+   unc_add_option("nl_after_case", UO_nl_after_case, AT_BOOL);
+   unc_add_option("nl_after_func_body", UO_nl_after_func_body, AT_NUM);
+   unc_add_option("nl_after_func_proto", UO_nl_after_func_proto, AT_NUM);
+   unc_add_option("nl_after_func_proto_group", UO_nl_after_func_proto_group, AT_NUM);
+   unc_add_option("nl_after_return", UO_nl_after_return, AT_BOOL);
+   unc_add_option("nl_assign_brace", UO_nl_assign_brace, AT_IARF);
+   unc_add_option("nl_before_block_comment", UO_nl_before_block_comment, AT_NUM);
+   unc_add_option("nl_before_case", UO_nl_before_case, AT_BOOL);
+   unc_add_option("nl_brace_else", UO_nl_brace_else, AT_IARF);
+   unc_add_option("nl_brace_while", UO_nl_brace_while, AT_IARF);
+   unc_add_option("nl_class_brace", UO_nl_class_brace, AT_IARF);
+   unc_add_option("nl_class_init_args", UO_nl_class_init_args, AT_IARF);
+   unc_add_option("nl_collapse_empty_body", UO_nl_collapse_empty_body, AT_BOOL);
+   unc_add_option("nl_define_macro", UO_nl_define_macro, AT_BOOL);
+   unc_add_option("nl_do_brace", UO_nl_do_brace, AT_IARF);
+   unc_add_option("nl_else_brace", UO_nl_else_brace, AT_IARF);
+   unc_add_option("nl_elseif_brace", UO_nl_elseif_brace, AT_IARF);
+   unc_add_option("nl_end_of_file", UO_nl_end_of_file, AT_IARF);
+   unc_add_option("nl_end_of_file_min", UO_nl_end_of_file_min, AT_NUM);
+   unc_add_option("nl_enum_brace", UO_nl_enum_brace, AT_IARF);
+   unc_add_option("nl_fcall_brace", UO_nl_fcall_brace, AT_IARF);
+   unc_add_option("nl_fdef_brace", UO_nl_fdef_brace, AT_IARF);
+   unc_add_option("nl_for_brace", UO_nl_for_brace, AT_IARF);
+   unc_add_option("nl_func_decl_args", UO_nl_func_decl_args, AT_IARF);
+   unc_add_option("nl_func_decl_end", UO_nl_func_decl_end, AT_IARF);
+   unc_add_option("nl_func_decl_start", UO_nl_func_decl_start, AT_IARF);
+   unc_add_option("nl_func_type_name", UO_nl_func_type_name, AT_IARF);
+   unc_add_option("nl_func_var_def_blk", UO_nl_func_var_def_blk, AT_NUM);
+   unc_add_option("nl_if_brace", UO_nl_if_brace, AT_IARF);
+   unc_add_option("nl_max", UO_nl_max, AT_NUM);
+   unc_add_option("nl_namespace_brace", UO_nl_namespace_brace, AT_IARF);
+   unc_add_option("nl_squeeze_ifdef", UO_nl_squeeze_ifdef, AT_BOOL);
+   unc_add_option("nl_start_of_file", UO_nl_start_of_file, AT_IARF);
+   unc_add_option("nl_start_of_file_min", UO_nl_start_of_file_min, AT_NUM);
+   unc_add_option("nl_struct_brace", UO_nl_struct_brace, AT_IARF);
+   unc_add_option("nl_switch_brace", UO_nl_switch_brace, AT_IARF);
+   unc_add_option("nl_template_class", UO_nl_template_class, AT_IARF);
+   unc_add_option("nl_union_brace", UO_nl_union_brace, AT_IARF);
+   unc_add_option("nl_while_brace", UO_nl_while_brace, AT_IARF);
+   unc_add_option("output_tab_size", UO_output_tab_size, AT_NUM, "Sets the output tab size.\nOnly used if using tabs for aligning. Usually 8.");
+   unc_add_option("pos_bool", UO_pos_bool, AT_POS);
+   unc_add_option("pos_class_colon", UO_pos_class_colon, AT_POS);
+   unc_add_option("pp_indent", UO_pp_indent, AT_IARF);
+   unc_add_option("pp_space", UO_pp_space, AT_IARF);
+   unc_add_option("sp_after_angle", UO_sp_after_angle, AT_IARF);
+   unc_add_option("sp_after_byref", UO_sp_after_byref, AT_IARF);
+   unc_add_option("sp_after_cast", UO_sp_after_cast, AT_IARF);
+   unc_add_option("sp_after_comma", UO_sp_after_comma, AT_IARF);
+   unc_add_option("sp_after_operator", UO_sp_after_operator, AT_IARF);
+   unc_add_option("sp_after_ptr_star", UO_sp_after_ptr_star, AT_IARF);
+   unc_add_option("sp_after_sparen", UO_sp_after_sparen, AT_IARF);
+   unc_add_option("sp_after_tag", UO_sp_after_tag, AT_IARF);
+   unc_add_option("sp_arith", UO_sp_arith, AT_IARF);
+   unc_add_option("sp_assign", UO_sp_assign, AT_IARF);
+   unc_add_option("sp_before_angle", UO_sp_before_angle, AT_IARF);
+   unc_add_option("sp_before_byref", UO_sp_before_byref, AT_IARF);
+   unc_add_option("sp_before_ptr_star", UO_sp_before_ptr_star, AT_IARF);
+   unc_add_option("sp_before_semi", UO_sp_before_semi, AT_IARF);
+   unc_add_option("sp_before_sparen", UO_sp_before_sparen, AT_IARF);
+   unc_add_option("sp_before_square", UO_sp_before_square, AT_IARF);
+   unc_add_option("sp_before_squares", UO_sp_before_squares, AT_IARF);
+   unc_add_option("sp_between_ptr_star", UO_sp_between_ptr_star, AT_IARF);
+   unc_add_option("sp_bool", UO_sp_bool, AT_IARF);
+   unc_add_option("sp_compare", UO_sp_compare, AT_IARF);
+   unc_add_option("sp_fparen_brace", UO_sp_fparen_brace, AT_IARF, "Space between ')' and '{' of function");
+   unc_add_option("sp_func_call_paren", UO_sp_func_call_paren, AT_IARF);
+   unc_add_option("sp_func_class_paren", UO_sp_func_class_paren, AT_IARF);
+   unc_add_option("sp_func_def_paren", UO_sp_func_def_paren, AT_IARF);
+   unc_add_option("sp_func_proto_paren", UO_sp_func_proto_paren, AT_IARF);
+   unc_add_option("sp_inside_angle", UO_sp_inside_angle, AT_IARF);
+   unc_add_option("sp_inside_braces", UO_sp_inside_braces, AT_IARF);
+   unc_add_option("sp_inside_braces_enum", UO_sp_inside_braces_enum, AT_IARF);
+   unc_add_option("sp_inside_braces_struct", UO_sp_inside_braces_struct, AT_IARF);
+   unc_add_option("sp_inside_fparen", UO_sp_inside_fparen, AT_IARF);
+   unc_add_option("sp_inside_fparens", UO_sp_inside_fparens, AT_IARF);
+   unc_add_option("sp_inside_paren", UO_sp_inside_paren, AT_IARF);
+   unc_add_option("sp_inside_sparen", UO_sp_inside_sparen, AT_IARF);
+   unc_add_option("sp_inside_square", UO_sp_inside_square, AT_IARF);
+   unc_add_option("sp_macro", UO_sp_macro, AT_IARF);
+   unc_add_option("sp_macro_func", UO_sp_macro_func, AT_IARF);
+   unc_add_option("sp_paren_brace", UO_sp_paren_brace, AT_IARF, "Space between ')' and '{'");
+   unc_add_option("sp_paren_paren", UO_sp_paren_paren, AT_IARF);
+   unc_add_option("sp_return_paren", UO_sp_return_paren, AT_IARF);
+   unc_add_option("sp_sizeof_paren", UO_sp_sizeof_paren, AT_IARF);
+   unc_add_option("sp_sparen_brace", UO_sp_sparen_brace, AT_IARF, "Space between ')' and '{' of if, while, etc");
+   unc_add_option("sp_special_semi", UO_sp_special_semi, AT_IARF);
+   unc_add_option("sp_square_fparen", UO_sp_square_fparen, AT_IARF);
+   unc_add_option("sp_type_func", UO_sp_type_func, AT_IARF);
+   unc_add_option("string_escape_char", UO_string_escape_char, AT_NUM);
+}
+
+const option_map_value *get_option_name(int uo)
+{
+   for (option_name_map_it it = option_name_map.begin();
+        it != option_name_map.end();
+        it++)
+   {
+      if (it->second.id == uo)
       {
-         return(&option_name_table[idx]);
+         return(&it->second);
       }
    }
    return(NULL);
 }
 
-static int name_compare_func(const void *p1, const void *p2)
-{
-   const options_name_tab *e1 = (const options_name_tab *)p1;
-   const options_name_tab *e2 = (const options_name_tab *)p2;
-
-   return(strcmp(e1->name, e2->name));
-}
-
-
-/**
- * Search the sorted name table to find a match
- */
-static options_name_tab *find_entry(const char *name)
-{
-   options_name_tab *entry;
-   options_name_tab tmp;
-
-   tmp.name = name;
-   entry    = (options_name_tab *)bsearch(&tmp, &option_name_table[0],
-                                          ARRAY_SIZE(option_name_table),
-                                          sizeof(option_name_table[0]),
-                                          name_compare_func);
-
-   return(entry);
-}
 
 /**
  * Convert the value string to a number.
  */
-static int convert_value(struct options_name_tab *entry, const char *val)
+static int convert_value(const option_map_value *entry, const char *val)
 {
-   struct options_name_tab *tmp;
+   const option_map_value *tmp;
    bool btrue;
    int  mult;
 
@@ -132,7 +278,7 @@ static int convert_value(struct options_name_tab *entry, const char *val)
             val++;
          }
 
-         if (((tmp = find_entry(val)) != NULL) && (tmp->type == entry->type))
+         if (((tmp = unc_find_option(val)) != NULL) && (tmp->type == entry->type))
          {
             return(cpd.settings[tmp->id].n * mult);
          }
@@ -166,7 +312,7 @@ static int convert_value(struct options_name_tab *entry, const char *val)
          val++;
       }
 
-      if (((tmp = find_entry(val)) != NULL) && (tmp->type == entry->type))
+      if (((tmp = unc_find_option(val)) != NULL) && (tmp->type == entry->type))
       {
          return(cpd.settings[tmp->id].b ? btrue : !btrue);
       }
@@ -194,7 +340,7 @@ static int convert_value(struct options_name_tab *entry, const char *val)
    {
       return(AV_IGNORE);
    }
-   if (((tmp = find_entry(val)) != NULL) && (tmp->type == entry->type))
+   if (((tmp = unc_find_option(val)) != NULL) && (tmp->type == entry->type))
    {
       return(cpd.settings[tmp->id].a);
    }
@@ -206,9 +352,9 @@ static int convert_value(struct options_name_tab *entry, const char *val)
 
 int set_option_value(const char *name, const char *value)
 {
-   struct options_name_tab *entry;
+   const option_map_value *entry;
 
-   if ((entry = find_entry(name)) != NULL)
+   if ((entry = unc_find_option(name)) != NULL)
    {
       cpd.settings[entry->id].n = convert_value(entry, value);
       return(entry->id);
@@ -306,7 +452,6 @@ void print_options(FILE *pfile, bool verbose)
 {
    int        max_width = 0;
    int        cur_width;
-   UINT32     i;
    const char *text;
 
    const char *names[] =
@@ -319,9 +464,9 @@ void print_options(FILE *pfile, bool verbose)
    };
 
    /* Find the max width of the names */
-   for (i = 0; i < ARRAY_SIZE(option_name_table); i++)
+   for (option_name_map_it it = option_name_map.begin(); it != option_name_map.end(); it++)
    {
-      cur_width = strlen(option_name_table[i].name);
+      cur_width = strlen(it->second.name);
       if (cur_width > max_width)
       {
          max_width = cur_width;
@@ -330,25 +475,28 @@ void print_options(FILE *pfile, bool verbose)
    max_width++;
 
    /* Print the all out */
-   for (i = 0; i < ARRAY_SIZE(option_name_table); i++)
+   for (option_name_map_it it = option_name_map.begin(); it != option_name_map.end(); it++)
    {
-      cur_width = strlen(option_name_table[i].name);
+      cur_width = strlen(it->second.name);
       fprintf(pfile, "%s%*c%s\n",
-              option_name_table[i].name,
+              it->second.name,
               max_width - cur_width, ' ',
-              names[option_name_table[i].type]);
+              names[it->second.type]);
 
-      text = detailed_help((uncrustify_options)i);
+      text = it->second.short_desc;
 
-      fputs("  ", pfile);
-      while (*text != 0)
+      if (text != NULL)
       {
-         fputc(*text, pfile);
-         if (*text == '\n')
+         fputs("  ", pfile);
+         while (*text != 0)
          {
-            fputs("  ", pfile);
+            fputc(*text, pfile);
+            if (*text == '\n')
+            {
+               fputs("  ", pfile);
+            }
+            text++;
          }
-         text++;
       }
       fputs("\n\n", pfile);
    }

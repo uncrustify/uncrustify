@@ -38,12 +38,13 @@ void add_char(char ch);
  *  options.cpp
  */
 
+void unc_add_option(const char *name, uncrustify_options id, argtype_e type, const char *short_desc = NULL, const char *long_desc = NULL);
+void register_options(void);
 void set_option_defaults(void);
 int load_option_file(const char *filename);
 int set_option_value(const char *name, const char *value);
-const options_name_tab *get_option_name(int uo);
+const option_map_value *get_option_name(int uo);
 void print_options(FILE *pfile, bool verbose);
-const char *detailed_help(uncrustify_options op);
 
 
 /*

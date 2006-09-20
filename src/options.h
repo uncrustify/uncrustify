@@ -7,6 +7,8 @@
 #ifndef OPTIONS_H_INCLUDED
 #define OPTIONS_H_INCLUDED
 
+#include <map>
+#include <string>
 
 enum argtype_e
 {
@@ -306,169 +308,20 @@ enum uncrustify_options
    UO_option_count
 };
 
-struct options_name_tab
+struct option_map_value
 {
-   int        id;
-   argtype_e  type;
-   const char *name;
+   uncrustify_options id;
+   argtype_e          type;
+   const char         *name;
+   const char         *short_desc;
+   const char         *long_desc;
 };
 
-#ifdef DEFINE_OPTION_NAME_TABLE
+#ifdef DEFINE_OPTION_NAME_MAP
 
-#define OPTDEF(_x, t)     { UO_ ## _x, t, # _x }
+std::map <std::string, option_map_value> option_name_map;
+typedef std::map <std::string, option_map_value>::iterator   option_name_map_it;
 
-/* Keep this table sorted! */
-options_name_tab option_name_table[] =
-{
-   OPTDEF(align_assign_span,             AT_NUM),
-   OPTDEF(align_assign_thresh,           AT_NUM),
-   OPTDEF(align_enum_equ_span,           AT_NUM),
-   OPTDEF(align_enum_equ_thresh,         AT_NUM),
-   OPTDEF(align_func_proto_span,         AT_NUM),
-   OPTDEF(align_keep_tabs,               AT_BOOL),
-   OPTDEF(align_nl_cont,                 AT_BOOL),
-   OPTDEF(align_number_left,             AT_BOOL),
-   OPTDEF(align_on_tabstop,              AT_BOOL),
-   OPTDEF(align_pp_define_gap,           AT_NUM),
-   OPTDEF(align_pp_define_span,          AT_NUM),
-   OPTDEF(align_right_cmt_span,          AT_NUM),
-   OPTDEF(align_struct_init_span,        AT_NUM),
-   OPTDEF(align_typedef_gap,             AT_NUM),
-   OPTDEF(align_typedef_span,            AT_NUM),
-   OPTDEF(align_typedef_star_style,      AT_NUM),
-   OPTDEF(align_var_def_colon,           AT_BOOL),
-   OPTDEF(align_var_def_inline,          AT_BOOL),
-   OPTDEF(align_var_def_span,            AT_NUM),
-   OPTDEF(align_var_def_star,            AT_BOOL),
-   OPTDEF(align_var_def_thresh,          AT_NUM),
-   OPTDEF(align_var_struct_span,         AT_NUM),
-   OPTDEF(align_with_tabs,               AT_BOOL),
-   OPTDEF(cmt_cpp_group,                 AT_BOOL),
-   OPTDEF(cmt_cpp_nl_end,                AT_BOOL),
-   OPTDEF(cmt_cpp_nl_start,              AT_BOOL),
-   OPTDEF(cmt_cpp_to_c,                  AT_BOOL),
-   OPTDEF(cmt_star_cont,                 AT_BOOL),
-   OPTDEF(code_width,                    AT_NUM),
-   OPTDEF(eat_blanks_after_open_brace,   AT_BOOL),
-   OPTDEF(eat_blanks_before_close_brace, AT_BOOL),
-   OPTDEF(indent_align_string,           AT_BOOL),
-   OPTDEF(indent_brace,                  AT_NUM),
-   OPTDEF(indent_braces,                 AT_BOOL),
-   OPTDEF(indent_case_body,              AT_NUM),
-   OPTDEF(indent_case_brace,             AT_NUM),
-   OPTDEF(indent_class,                  AT_BOOL),
-   OPTDEF(indent_class_colon,            AT_BOOL),
-   OPTDEF(indent_col1_comment,           AT_BOOL),
-   OPTDEF(indent_columns,                AT_NUM),
-   OPTDEF(indent_func_call_param,        AT_BOOL),
-   OPTDEF(indent_label,                  AT_NUM),
-   OPTDEF(indent_member,                 AT_NUM),
-   OPTDEF(indent_namespace,              AT_BOOL),
-   OPTDEF(indent_paren_nl,               AT_BOOL),
-   OPTDEF(indent_square_nl,              AT_BOOL),
-   OPTDEF(indent_switch_case,            AT_NUM),
-   OPTDEF(indent_with_tabs,              AT_NUM),
-   OPTDEF(input_tab_size,                AT_NUM),
-   OPTDEF(mod_full_brace_do,             AT_IARF),
-   OPTDEF(mod_full_brace_for,            AT_IARF),
-   OPTDEF(mod_full_brace_function,       AT_IARF),
-   OPTDEF(mod_full_brace_if,             AT_IARF),
-   OPTDEF(mod_full_brace_nl,             AT_NUM),
-   OPTDEF(mod_full_brace_while,          AT_IARF),
-   OPTDEF(mod_paren_on_return,           AT_IARF),
-   OPTDEF(mod_pawn_semicolon,            AT_BOOL),
-   OPTDEF(newlines,                      AT_LINE),
-   OPTDEF(nl_after_case,                 AT_BOOL),
-   OPTDEF(nl_after_func_body,            AT_NUM),
-   OPTDEF(nl_after_func_proto,           AT_NUM),
-   OPTDEF(nl_after_func_proto_group,     AT_NUM),
-   OPTDEF(nl_after_return,               AT_BOOL),
-   OPTDEF(nl_assign_brace,               AT_IARF),
-   OPTDEF(nl_before_block_comment,       AT_NUM),
-   OPTDEF(nl_before_case,                AT_BOOL),
-   OPTDEF(nl_brace_else,                 AT_IARF),
-   OPTDEF(nl_brace_while,                AT_IARF),
-   OPTDEF(nl_class_brace,                AT_IARF),
-   OPTDEF(nl_class_init_args,            AT_IARF),
-   OPTDEF(nl_collapse_empty_body,        AT_BOOL),
-   OPTDEF(nl_define_macro,               AT_BOOL),
-   OPTDEF(nl_do_brace,                   AT_IARF),
-   OPTDEF(nl_else_brace,                 AT_IARF),
-   OPTDEF(nl_elseif_brace,               AT_IARF),
-   OPTDEF(nl_end_of_file,                AT_IARF),
-   OPTDEF(nl_end_of_file_min,            AT_NUM),
-   OPTDEF(nl_enum_brace,                 AT_IARF),
-   OPTDEF(nl_fcall_brace,                AT_IARF),
-   OPTDEF(nl_fdef_brace,                 AT_IARF),
-   OPTDEF(nl_for_brace,                  AT_IARF),
-   OPTDEF(nl_func_decl_args,             AT_IARF),
-   OPTDEF(nl_func_decl_end,              AT_IARF),
-   OPTDEF(nl_func_decl_start,            AT_IARF),
-   OPTDEF(nl_func_type_name,             AT_IARF),
-   OPTDEF(nl_func_var_def_blk,           AT_NUM),
-   OPTDEF(nl_if_brace,                   AT_IARF),
-   OPTDEF(nl_max,                        AT_NUM),
-   OPTDEF(nl_namespace_brace,            AT_IARF),
-   OPTDEF(nl_squeeze_ifdef,              AT_BOOL),
-   OPTDEF(nl_start_of_file,              AT_IARF),
-   OPTDEF(nl_start_of_file_min,          AT_NUM),
-   OPTDEF(nl_struct_brace,               AT_IARF),
-   OPTDEF(nl_switch_brace,               AT_IARF),
-   OPTDEF(nl_template_class,             AT_IARF),
-   OPTDEF(nl_union_brace,                AT_IARF),
-   OPTDEF(nl_while_brace,                AT_IARF),
-   OPTDEF(output_tab_size,               AT_NUM),
-   OPTDEF(pos_bool,                      AT_POS),
-   OPTDEF(pos_class_colon,               AT_POS),
-   OPTDEF(pp_indent,                     AT_IARF),
-   OPTDEF(pp_space,                      AT_IARF),
-   OPTDEF(sp_after_angle,                AT_IARF),
-   OPTDEF(sp_after_byref,                AT_IARF),
-   OPTDEF(sp_after_cast,                 AT_IARF),
-   OPTDEF(sp_after_comma,                AT_IARF),
-   OPTDEF(sp_after_operator,             AT_IARF),
-   OPTDEF(sp_after_ptr_star,             AT_IARF),
-   OPTDEF(sp_after_sparen,               AT_IARF),
-   OPTDEF(sp_after_tag,                  AT_IARF),
-   OPTDEF(sp_arith,                      AT_IARF),
-   OPTDEF(sp_assign,                     AT_IARF),
-   OPTDEF(sp_before_angle,               AT_IARF),
-   OPTDEF(sp_before_byref,               AT_IARF),
-   OPTDEF(sp_before_ptr_star,            AT_IARF),
-   OPTDEF(sp_before_semi,                AT_IARF),
-   OPTDEF(sp_before_sparen,              AT_IARF),
-   OPTDEF(sp_before_square,              AT_IARF),
-   OPTDEF(sp_before_squares,             AT_IARF),
-   OPTDEF(sp_between_ptr_star,           AT_IARF),
-   OPTDEF(sp_bool,                       AT_IARF),
-   OPTDEF(sp_compare,                    AT_IARF),
-   OPTDEF(sp_fparen_brace,               AT_IARF),
-   OPTDEF(sp_func_call_paren,            AT_IARF),
-   OPTDEF(sp_func_class_paren,           AT_IARF),
-   OPTDEF(sp_func_def_paren,             AT_IARF),
-   OPTDEF(sp_func_proto_paren,           AT_IARF),
-   OPTDEF(sp_inside_angle,               AT_IARF),
-   OPTDEF(sp_inside_braces,              AT_IARF),
-   OPTDEF(sp_inside_braces_enum,         AT_IARF),
-   OPTDEF(sp_inside_braces_struct,       AT_IARF),
-   OPTDEF(sp_inside_fparen,              AT_IARF),
-   OPTDEF(sp_inside_fparens,             AT_IARF),
-   OPTDEF(sp_inside_paren,               AT_IARF),
-   OPTDEF(sp_inside_sparen,              AT_IARF),
-   OPTDEF(sp_inside_square,              AT_IARF),
-   OPTDEF(sp_macro,                      AT_IARF),
-   OPTDEF(sp_macro_func,                 AT_IARF),
-   OPTDEF(sp_paren_brace,                AT_IARF),
-   OPTDEF(sp_paren_paren,                AT_IARF),
-   OPTDEF(sp_return_paren,               AT_IARF),
-   OPTDEF(sp_sizeof_paren,               AT_IARF),
-   OPTDEF(sp_sparen_brace,               AT_IARF),
-   OPTDEF(sp_special_semi,               AT_IARF),
-   OPTDEF(sp_square_fparen,              AT_IARF),
-   OPTDEF(sp_type_func,                  AT_IARF),
-   OPTDEF(string_escape_char,            AT_NUM),
-};
-
-#endif   /* DEFINE_OPTION_NAME_TABLE */
+#endif   /* DEFINE_OPTION_NAME_MAP */
 
 #endif   /* OPTIONS_H_INCLUDED */
