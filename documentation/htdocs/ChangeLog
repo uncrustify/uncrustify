@@ -34,6 +34,7 @@ Changes in uncrustify-0.27
  - Improve template detection again (allow CT_TYPE in a template)
  - Fix bad formatting in "[ABC * 123]" and "[0xf & *val]"
  - Add --replace option to convert files in-place
+ - Use a map for the options
 
 
 Changes in uncrustify-0.26 (removed a number from the version)
