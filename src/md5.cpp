@@ -16,7 +16,7 @@
  */
 
 #include "md5.h"
-#include <string.h>		 /* memcpy, memset */
+#include <string.h>               /* memcpy, memset */
 
 
 /**
@@ -35,11 +35,11 @@ void MD5::reverse_u32(UINT8 *buf, int n_u32)
       /* change { 4, 3, 2, 1 } => { 1, 2, 3, 4 } */
       while (n_u32-- > 0)
       {
-         tmp = buf[0];
+         tmp    = buf[0];
          buf[0] = buf[3];
          buf[3] = tmp;
 
-         tmp = buf[1];
+         tmp    = buf[1];
          buf[1] = buf[2];
          buf[2] = tmp;
 
@@ -51,11 +51,11 @@ void MD5::reverse_u32(UINT8 *buf, int n_u32)
       /* change { 4, 3, 2, 1 } => { 3, 4, 1, 2 } */
       while (n_u32-- > 0)
       {
-         tmp = buf[0];
+         tmp    = buf[0];
          buf[0] = buf[1];
          buf[1] = tmp;
 
-         tmp = buf[2];
+         tmp    = buf[2];
          buf[2] = buf[3];
          buf[3] = tmp;
 
@@ -109,7 +109,7 @@ void MD5::Update(const void *data, UINT32 len)
 
    /* Update bitcount */
    t = m_bits[0];
-   if ((m_bits[0] = t + ((UINT32) len << 3)) < t)
+   if ((m_bits[0] = t + ((UINT32)len << 3)) < t)
    {
       m_bits[1]++;   /* Carry from low to high */
    }
@@ -120,7 +120,7 @@ void MD5::Update(const void *data, UINT32 len)
    /* Handle any leading odd-sized chunks */
    if (t)
    {
-      UINT8 *p = (UINT8 *) m_in + t;
+      UINT8 *p = (UINT8 *)m_in + t;
 
       t = 64 - t;
       if (len < t)
@@ -133,7 +133,7 @@ void MD5::Update(const void *data, UINT32 len)
       {
          reverse_u32(m_in, 16);
       }
-      Transform(m_buf, (UINT32 *) m_in);
+      Transform(m_buf, (UINT32 *)m_in);
       buf += t;
       len -= t;
    }
@@ -146,7 +146,7 @@ void MD5::Update(const void *data, UINT32 len)
       {
          reverse_u32(m_in, 16);
       }
-      Transform(m_buf, (UINT32 *) m_in);
+      Transform(m_buf, (UINT32 *)m_in);
       buf += 64;
       len -= 64;
    }
@@ -169,8 +169,8 @@ void MD5::Final(UINT8 digest[16])
    count = (m_bits[0] >> 3) & 0x3F;
 
    /* Set the first char of padding to 0x80.  This is safe since there is
-      always at least one byte free */
-   p = m_in + count;
+    * always at least one byte free */
+   p    = m_in + count;
    *p++ = 0x80;
 
    /* Bytes of padding needed to make 64 bytes */
@@ -185,7 +185,7 @@ void MD5::Final(UINT8 digest[16])
       {
          reverse_u32(m_in, 16);
       }
-      Transform(m_buf, (UINT32 *) m_in);
+      Transform(m_buf, (UINT32 *)m_in);
 
       /* Now fill the next block with 56 bytes */
       memset(m_in, 0, 56);
@@ -201,13 +201,13 @@ void MD5::Final(UINT8 digest[16])
    }
 
    /* Append length in bits and transform */
-   ((UINT32 *) m_in)[14] = m_bits[0];
-   ((UINT32 *) m_in)[15] = m_bits[1];
+   ((UINT32 *)m_in)[14] = m_bits[0];
+   ((UINT32 *)m_in)[15] = m_bits[1];
 
-   Transform(m_buf, (UINT32 *) m_in);
+   Transform(m_buf, (UINT32 *)m_in);
    if (m_need_byteswap)
    {
-      reverse_u32((UINT8 *) m_buf, 4);
+      reverse_u32((UINT8 *)m_buf, 4);
    }
    memcpy(digest, m_buf, 16);
 }
@@ -216,14 +216,14 @@ void MD5::Final(UINT8 digest[16])
 /* The four core functions - F1 is optimized somewhat */
 
 /* #define F1(x, y, z) (x & y | ~x & z) */
-#define F1(x, y, z) (z ^ (x & (y ^ z)))
-#define F2(x, y, z) F1(z, x, y)
-#define F3(x, y, z) (x ^ y ^ z)
-#define F4(x, y, z) (y ^ (x | ~z))
+#define F1(x, y, z)    (z ^ (x & (y ^ z)))
+#define F2(x, y, z)    F1(z, x, y)
+#define F3(x, y, z)    (x ^ y ^ z)
+#define F4(x, y, z)    (y ^ (x | ~z))
 
 /* This is the central step in the MD5 algorithm. */
 #define MD5STEP(f, w, x, y, z, data, s) \
-	( w += f(x, y, z) + data,  w = w<<s | w>>(32-s),  w += x )
+   (w += f(x, y, z) + data, w = w << s | w >> (32 - s), w += x)
 
 /*
  * The core of the MD5 algorithm, this alters an existing MD5 hash to

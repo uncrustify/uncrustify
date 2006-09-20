@@ -91,7 +91,7 @@ int backup_copy_file(const char *filename, const char *file_data, int file_len)
    thefile = fopen(newpath, "wb");
    if (thefile != NULL)
    {
-      int retval = fwrite(file_data, file_len, 1, thefile);
+      int retval   = fwrite(file_data, file_len, 1, thefile);
       int my_errno = errno;
 
       fclose(thefile);
