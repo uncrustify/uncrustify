@@ -100,12 +100,10 @@
 			<F N="etc/mono.cfg"/>
 			<F N="etc/types.txt"/>
 			<F N="etc/uncrust-files.sh"/>
-			<F N="etc/uncrustify.cfg"/>
 			<F N="etc/xsupplicant.cfg"/>
 		</Folder>
 		<F N="AUTHORS"/>
 		<F N="BUGS"/>
-		<F N="check_settings.sh"/>
 		<F N="configure"/>
 		<F N="configure.in"/>
 		<F N="COPYING"/>
@@ -115,7 +113,6 @@
 		<F N="make_token_names.sh"/>
 		<F N="Makefile.am"/>
 		<F N="NEWS"/>
-		<F N="punc.py"/>
 		<F N="README"/>
 		<F N="todo.txt"/>
 	</Files>
