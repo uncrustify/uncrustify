@@ -463,8 +463,10 @@ void print_options(FILE *pfile, bool verbose)
       "{ Ignore, Lead, Trail }",
    };
 
+   option_name_map_it it;
+
    /* Find the max width of the names */
-   for (option_name_map_it it = option_name_map.begin(); it != option_name_map.end(); it++)
+   for (it = option_name_map.begin(); it != option_name_map.end(); it++)
    {
       cur_width = strlen(it->second.name);
       if (cur_width > max_width)
@@ -475,7 +477,7 @@ void print_options(FILE *pfile, bool verbose)
    max_width++;
 
    /* Print the all out */
-   for (option_name_map_it it = option_name_map.begin(); it != option_name_map.end(); it++)
+   for (it = option_name_map.begin(); it != option_name_map.end(); it++)
    {
       cur_width = strlen(it->second.name);
       fprintf(pfile, "%s%*c%s\n",
