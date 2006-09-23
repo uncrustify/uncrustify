@@ -69,7 +69,6 @@
 			<F N="src/logmask.cpp"/>
 			<F N="src/md5.cpp"/>
 			<F N="src/newlines.cpp"/>
-			<F N="src/options-help.cpp"/>
 			<F N="src/options.cpp"/>
 			<F N="src/output.cpp"/>
 			<F N="src/parse_frame.cpp"/>

@@ -7,6 +7,7 @@
 #ifndef OPTIONS_H_INCLUDED
 #define OPTIONS_H_INCLUDED
 
+#include <list>
 #include <map>
 #include <string>
 
@@ -53,6 +54,22 @@ union op_val_t
    bool       b;
    lineends_e le;
    tokenpos_e tp;
+};
+
+/** Groups for options */
+enum uncrustify_groups
+{
+   UG_general,
+   UG_indent,
+   UG_space,
+   UG_align,
+   UG_newline,
+   UG_position,
+   UG_blankline,
+   UG_codemodify,
+   UG_comment,
+   UG_preprocessor,
+   UG_group_count
 };
 
 /**
@@ -308,9 +325,18 @@ enum uncrustify_options
    UO_option_count
 };
 
+struct group_map_value
+{
+   uncrustify_groups id;
+   const char        *short_desc;
+   const char        *long_desc;
+   std::list <uncrustify_options> options;
+};
+
 struct option_map_value
 {
    uncrustify_options id;
+   uncrustify_groups  group_id;
    argtype_e          type;
    const char         *name;
    const char         *short_desc;
@@ -320,7 +346,13 @@ struct option_map_value
 #ifdef DEFINE_OPTION_NAME_MAP
 
 std::map <std::string, option_map_value> option_name_map;
-typedef std::map <std::string, option_map_value>::iterator   option_name_map_it;
+typedef std::map <std::string, option_map_value>::iterator        option_name_map_it;
+
+std::map <uncrustify_groups, group_map_value> group_map;
+typedef std::map <uncrustify_groups, group_map_value>::iterator   group_map_it;
+typedef std::list <uncrustify_options>::iterator                  option_list_it;
+
+uncrustify_groups current_group;
 
 #endif   /* DEFINE_OPTION_NAME_MAP */
 

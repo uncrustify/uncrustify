@@ -20,7 +20,6 @@ Future plans: (in no particular order)
 
 Plans for 0.1.0
 -------------------------------------------------------------------------------
- - add -o option to write to a file instead of stdout (with -f option or stdin)
  - improve code width logic
    + add options to remove newlines inside parens before splitting long lines
  - misc cleanup before jumping to 0.1.0
@@ -35,6 +34,8 @@ Changes in uncrustify-0.27
  - Fix bad formatting in "[ABC * 123]" and "[0xf & *val]"
  - Add --replace option to convert files in-place
  - Use a map for the options
+ - Major configuration/option cleanup
+ - add -o option to write to a file instead of stdout
 
 
 Changes in uncrustify-0.26 (removed a number from the version)

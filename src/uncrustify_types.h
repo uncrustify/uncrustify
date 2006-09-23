@@ -231,6 +231,7 @@ struct cp_data
 
    /* Here are all the settings */
    op_val_t           settings[UO_option_count];
+   int                max_option_name_len;
 
    struct parse_frame frames[16];
    int                frame_count;

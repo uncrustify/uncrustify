@@ -9,6 +9,7 @@
 
 #include "uncrustify_types.h"
 
+#include <string>
 
 /*
  *  uncrustify.cpp
@@ -38,14 +39,24 @@ void add_char(char ch);
  *  options.cpp
  */
 
+void unc_begin_group(uncrustify_groups id, const char *short_desc, const char *long_desc = NULL);
 void unc_add_option(const char *name, uncrustify_options id, argtype_e type, const char *short_desc = NULL, const char *long_desc = NULL);
 void register_options(void);
 void set_option_defaults(void);
 int load_option_file(const char *filename);
+int save_option_file(FILE *pfile, bool withDoc);
 int set_option_value(const char *name, const char *value);
+const group_map_value *get_group_name(int ug);
 const option_map_value *get_option_name(int uo);
 void print_options(FILE *pfile, bool verbose);
 
+std::string argtype_to_string(argtype_e argtype);
+std::string bool_to_string(bool val);
+std::string argval_to_string(argval_t argval);
+std::string number_to_string(int number);
+std::string lineends_to_string(lineends_e linends);
+std::string tokenpos_to_string(tokenpos_e tokenpos);
+std::string op_val_to_string(argtype_e argtype, op_val_t op_val);
 
 /*
  *  indent.cpp

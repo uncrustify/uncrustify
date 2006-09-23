@@ -86,25 +86,42 @@ static void usage_exit(const char *msg, const char *argv0, int code)
    {
       fprintf(stderr, "%s\n", msg);
    }
+   if (code != EXIT_SUCCESS)
+   {
+      fprintf(stderr, "Try running with -h for usage information\n");
+      exit(code);
+   }
    fprintf(stderr,
            "Usage:\n"
-           "%s -c cfg [-f file] [-F filelist] [-p parsed] [-t typefile] [--version] [-l lang] [-L sev] [-s] [files ...]\n"
-           " c : specify the config file\n"
-           " f : specify a single file to format (output to stdout)\n"
-           " F : specify a file that contains a list of files to process\n"
-           " suffix : specifies the per-file suffix when writing to a file. The default is '.uncrustify'\n"
-           " prefix : specifies the folder prefix when writing to a file.\n"
-           " files : whitespace-separated list of files to process\n"
-           " --replace : replace source files (creates a backup)\n"
-           " t : load a file with types\n"
-           " d : load a file with defines\n"
-           " l : language override: C, CPP, D, CS, JAVA, PAWN\n"
-           "--show-config : print out a list of all available options and exit\n"
-           "--version : print the version and exit\n"
+           "%s [options] [files ...]\n"
+           "\n"
+           "Basic Options:\n"
+           " -c CFG       : use the config file CFG\n"
+           " -f FILE      : process the single file FILE (output to stdout, use with -o)\n"
+           " -o FILE      : Redirect stdout to FILE\n"
+           " -F FILE      : read files to process from FILE, one filename per line\n"
+           " files        : files to process (can be combined with -F)\n"
+           " --suffix SFX : Append SFX to the output filename. The default is '.uncrustify'\n"
+           " --prefix PFX : Prepend PFX to the output filename path.\n"
+           " --replace    : replace source files (creates a backup)\n"
+           " -l           : language override: C, CPP, D, CS, JAVA, PAWN\n"
+           " -t           : load a file with types (usually not needed)\n"
+           "\n"
+           "Config/Help Options:\n"
+           "-h -? --help --usage     : print this message and exit\n"
+           "--version                : print the version and exit\n"
+           "--show-config            : print out option documentation and exit\n"
+           "--update-config          : Output a new config file. Use with -o FILE\n"
+           "--update-config-with-doc : Output a new config file. Use with -o FILE\n"
+           "\n"
+           "Debug Options:\n"
+           " -p FILE      : dump debug info to a file\n"
+           " -L SEV       : Set the log severity (see log_levels.h)\n"
+           " -s           : Show the log severity in the logs\n"
            "\n"
            "If no input files are specified, the input is read from stdin\n"
            "If -F is used or files are specified on the command line, the output is 'prefix/filename' + suffix\n"
-           "Otherwise, the output is dumped to stdout.\n"
+           "Otherwise, the output is dumped to stdout, unless redirected with -o FILE.\n"
            "Errors are always dumped to stderr\n",
            path_basename(argv0));
    exit(code);
@@ -123,15 +140,16 @@ int main(int argc, char *argv[])
    const char *cfg_file    = "uncrustify.cfg";
    const char *parsed_file = NULL;
    const char *source_file = NULL;
+   const char *output_file = NULL;
    const char *source_list = NULL;
    log_mask_t mask;
    int        idx;
    const char *p_arg;
 
-
-   if (argc < 2)
+   /* If ran without options... show the usage info */
+   if (argc == 1)
    {
-      usage_exit(NULL, argv[0], 0);
+      usage_exit(NULL, argv[0], EXIT_SUCCESS);
    }
 
    /* Build options map */
@@ -146,7 +164,7 @@ int main(int argc, char *argv[])
    if (arg.Present("--help") || arg.Present("-h") ||
        arg.Present("--usage") || arg.Present("-?"))
    {
-      usage_exit(NULL, argv[0], 0);
+      usage_exit(NULL, argv[0], EXIT_SUCCESS);
    }
 
    if (arg.Present("--show-config"))
@@ -263,15 +281,35 @@ int main(int argc, char *argv[])
       }
    }
 
+   /* Grab the output override */
+   output_file = arg.Param("-o");
+
+   bool update_config    = arg.Present("--update-config");
+   bool update_config_wd = arg.Present("--update-config-with-doc");
+
+   /*
+    *  Done parsing args
+    */
+
    /* Check for unused args (ignore them) */
    idx   = 1;
    p_arg = arg.Unused(idx);
 
-   /* Check args */
-   if ((source_file != NULL) && ((source_list != NULL) || (p_arg != NULL)))
+   /* Check args - for multifile options */
+   if ((source_list != NULL) || (p_arg != NULL))
    {
-      usage_exit("Cannot specify both the single file option and a mulit-file option.",
-                 argv[0], 0);
+      if (source_file != NULL)
+      {
+         usage_exit("Cannot specify both the single file option and a mulit-file option.",
+                    argv[0], 67);
+      }
+
+      if (output_file != NULL)
+      {
+         printf("source_file = %s, p_arg = %s\n", source_file, p_arg);
+         usage_exit("Cannot specify -o with a mulit-file option.",
+                    argv[0], 68);
+      }
    }
 
    /* Load the config file */
@@ -280,6 +318,31 @@ int main(int argc, char *argv[])
    if (load_option_file(cfg_file) < 0)
    {
       usage_exit("Unable to load the config file", argv[0], 56);
+   }
+
+   /* Reopen stdout */
+   FILE *my_stdout = stdout;
+   if (output_file != NULL)
+   {
+      my_stdout = freopen(output_file, "wb", stdout);
+      if (my_stdout == NULL)
+      {
+         LOG_FMT(LERR, "Unable to open %s for write: %s (%d)\n",
+                 output_file, strerror(errno), errno);
+         usage_exit(NULL, argv[0], 56);
+      }
+      LOG_FMT(LNOTE, "Redirecting output to %s\n", output_file);
+   }
+
+   if (update_config)
+   {
+      save_option_file(stdout, false);
+      return(0);
+   }
+   if (update_config_wd)
+   {
+      save_option_file(stdout, true);
+      return(0);
    }
 
    if ((source_file == NULL) && (source_list == NULL) && (p_arg == NULL))

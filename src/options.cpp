@@ -20,17 +20,40 @@
 #include <cctype>
 
 
+void unc_begin_group(uncrustify_groups id, const char *short_desc,
+                     const char *long_desc)
+{
+   current_group = id;
+
+   group_map_value value;
+
+   value.id         = id;
+   value.short_desc = short_desc;
+   value.long_desc  = long_desc;
+
+   group_map[id] = value;
+}
+
 void unc_add_option(const char *name, uncrustify_options id, argtype_e type,
                     const char *short_desc, const char *long_desc)
 {
+   group_map[current_group].options.push_back(id);
+
    option_map_value value;
 
    value.id              = id;
+   value.group_id        = current_group;
    value.type            = type;
    value.name            = name;
    value.short_desc      = short_desc;
    value.long_desc       = long_desc;
    option_name_map[name] = value;
+
+   int name_len = strlen(name);
+   if (name_len > cpd.max_option_name_len)
+   {
+      cpd.max_option_name_len = name_len;
+   }
 }
 
 const option_map_value *unc_find_option(const char *name)
@@ -44,6 +67,13 @@ const option_map_value *unc_find_option(const char *name)
 
 void register_options(void)
 {
+   unc_begin_group(UG_general, "General options");
+   unc_add_option("input_tab_size", UO_input_tab_size, AT_NUM, "Sets the size of the tab on input. Usually 8.");
+   unc_add_option("newlines", UO_newlines, AT_LINE);
+   unc_add_option("output_tab_size", UO_output_tab_size, AT_NUM, "Sets the output tab size. Only used if using tabs for aligning. Usually 8.");
+   unc_add_option("string_escape_char", UO_string_escape_char, AT_NUM);
+
+   unc_begin_group(UG_align, "Code alignment (not left column spaces/tabs)");
    unc_add_option("align_assign_span", UO_align_assign_span, AT_NUM);
    unc_add_option("align_assign_thresh", UO_align_assign_thresh, AT_NUM);
    unc_add_option("align_enum_equ_span", UO_align_enum_equ_span, AT_NUM);
@@ -67,14 +97,24 @@ void register_options(void)
    unc_add_option("align_var_def_thresh", UO_align_var_def_thresh, AT_NUM);
    unc_add_option("align_var_struct_span", UO_align_var_struct_span, AT_NUM);
    unc_add_option("align_with_tabs", UO_align_with_tabs, AT_BOOL);
+
+   unc_begin_group(UG_comment, "Comment modifications");
    unc_add_option("cmt_cpp_group", UO_cmt_cpp_group, AT_BOOL);
    unc_add_option("cmt_cpp_nl_end", UO_cmt_cpp_nl_end, AT_BOOL);
    unc_add_option("cmt_cpp_nl_start", UO_cmt_cpp_nl_start, AT_BOOL);
    unc_add_option("cmt_cpp_to_c", UO_cmt_cpp_to_c, AT_BOOL);
    unc_add_option("cmt_star_cont", UO_cmt_star_cont, AT_BOOL);
-   unc_add_option("code_width", UO_code_width, AT_NUM, "Try to limit code width to this number of columns");
+
+   unc_begin_group(UG_blankline, "Blank line options", "Note that it takes 2 newlines to get a blank line.");
    unc_add_option("eat_blanks_after_open_brace", UO_eat_blanks_after_open_brace, AT_BOOL);
    unc_add_option("eat_blanks_before_close_brace", UO_eat_blanks_before_close_brace, AT_BOOL);
+   unc_add_option("nl_after_func_body", UO_nl_after_func_body, AT_NUM);
+   unc_add_option("nl_after_func_proto", UO_nl_after_func_proto, AT_NUM);
+   unc_add_option("nl_after_func_proto_group", UO_nl_after_func_proto_group, AT_NUM);
+   unc_add_option("nl_before_block_comment", UO_nl_before_block_comment, AT_NUM);
+   unc_add_option("nl_max", UO_nl_max, AT_NUM);
+
+   unc_begin_group(UG_indent, "Indenting");
    unc_add_option("indent_align_string", UO_indent_align_string, AT_BOOL);
    unc_add_option("indent_brace", UO_indent_brace, AT_NUM);
    unc_add_option("indent_braces", UO_indent_braces, AT_BOOL);
@@ -83,7 +123,7 @@ void register_options(void)
    unc_add_option("indent_class", UO_indent_class, AT_BOOL);
    unc_add_option("indent_class_colon", UO_indent_class_colon, AT_BOOL);
    unc_add_option("indent_col1_comment", UO_indent_col1_comment, AT_BOOL);
-   unc_add_option("indent_columns", UO_indent_columns, AT_NUM, "The number of columns to indent per level.\nUsually 2, 3, 4, or 8.");
+   unc_add_option("indent_columns", UO_indent_columns, AT_NUM, "The number of columns to indent per level. Usually 2, 3, 4, or 8.");
    unc_add_option("indent_func_call_param", UO_indent_func_call_param, AT_BOOL);
    unc_add_option("indent_label", UO_indent_label, AT_NUM);
    unc_add_option("indent_member", UO_indent_member, AT_NUM);
@@ -91,8 +131,9 @@ void register_options(void)
    unc_add_option("indent_paren_nl", UO_indent_paren_nl, AT_BOOL);
    unc_add_option("indent_square_nl", UO_indent_square_nl, AT_BOOL);
    unc_add_option("indent_switch_case", UO_indent_switch_case, AT_NUM);
-   unc_add_option("indent_with_tabs", UO_indent_with_tabs, AT_NUM, "0=Spaces only.\n1=Indent with tabs, align with spaces.\n2=indent and align with tabs.");
-   unc_add_option("input_tab_size", UO_input_tab_size, AT_NUM, "Sets the size of the tab on input. Usually 8.");
+   unc_add_option("indent_with_tabs", UO_indent_with_tabs, AT_NUM, "0=Spaces only. 1=Indent with tabs, align with spaces. 2=indent and align with tabs.");
+
+   unc_begin_group(UG_codemodify, "Code modifying options (non-whitespace)");
    unc_add_option("mod_full_brace_do", UO_mod_full_brace_do, AT_IARF);
    unc_add_option("mod_full_brace_for", UO_mod_full_brace_for, AT_IARF);
    unc_add_option("mod_full_brace_function", UO_mod_full_brace_function, AT_IARF);
@@ -101,14 +142,12 @@ void register_options(void)
    unc_add_option("mod_full_brace_while", UO_mod_full_brace_while, AT_IARF);
    unc_add_option("mod_paren_on_return", UO_mod_paren_on_return, AT_IARF);
    unc_add_option("mod_pawn_semicolon", UO_mod_pawn_semicolon, AT_BOOL);
-   unc_add_option("newlines", UO_newlines, AT_LINE);
+
+   unc_begin_group(UG_newline, "Newline adding and removing options");
+   unc_add_option("code_width", UO_code_width, AT_NUM, "Try to limit code width to this number of columns");
    unc_add_option("nl_after_case", UO_nl_after_case, AT_BOOL);
-   unc_add_option("nl_after_func_body", UO_nl_after_func_body, AT_NUM);
-   unc_add_option("nl_after_func_proto", UO_nl_after_func_proto, AT_NUM);
-   unc_add_option("nl_after_func_proto_group", UO_nl_after_func_proto_group, AT_NUM);
    unc_add_option("nl_after_return", UO_nl_after_return, AT_BOOL);
    unc_add_option("nl_assign_brace", UO_nl_assign_brace, AT_IARF);
-   unc_add_option("nl_before_block_comment", UO_nl_before_block_comment, AT_NUM);
    unc_add_option("nl_before_case", UO_nl_before_case, AT_BOOL);
    unc_add_option("nl_brace_else", UO_nl_brace_else, AT_IARF);
    unc_add_option("nl_brace_while", UO_nl_brace_while, AT_IARF);
@@ -131,7 +170,6 @@ void register_options(void)
    unc_add_option("nl_func_type_name", UO_nl_func_type_name, AT_IARF);
    unc_add_option("nl_func_var_def_blk", UO_nl_func_var_def_blk, AT_NUM);
    unc_add_option("nl_if_brace", UO_nl_if_brace, AT_IARF);
-   unc_add_option("nl_max", UO_nl_max, AT_NUM);
    unc_add_option("nl_namespace_brace", UO_nl_namespace_brace, AT_IARF);
    unc_add_option("nl_squeeze_ifdef", UO_nl_squeeze_ifdef, AT_BOOL);
    unc_add_option("nl_start_of_file", UO_nl_start_of_file, AT_IARF);
@@ -141,11 +179,16 @@ void register_options(void)
    unc_add_option("nl_template_class", UO_nl_template_class, AT_IARF);
    unc_add_option("nl_union_brace", UO_nl_union_brace, AT_IARF);
    unc_add_option("nl_while_brace", UO_nl_while_brace, AT_IARF);
-   unc_add_option("output_tab_size", UO_output_tab_size, AT_NUM, "Sets the output tab size.\nOnly used if using tabs for aligning. Usually 8.");
+
+   unc_begin_group(UG_position, "Positioning options");
    unc_add_option("pos_bool", UO_pos_bool, AT_POS);
    unc_add_option("pos_class_colon", UO_pos_class_colon, AT_POS);
+
+   unc_begin_group(UG_preprocessor, "Preprocessor options");
    unc_add_option("pp_indent", UO_pp_indent, AT_IARF);
    unc_add_option("pp_space", UO_pp_space, AT_IARF);
+
+   unc_begin_group(UG_space, "Spacing options");
    unc_add_option("sp_after_angle", UO_sp_after_angle, AT_IARF);
    unc_add_option("sp_after_byref", UO_sp_after_byref, AT_IARF);
    unc_add_option("sp_after_cast", UO_sp_after_cast, AT_IARF);
@@ -190,7 +233,20 @@ void register_options(void)
    unc_add_option("sp_special_semi", UO_sp_special_semi, AT_IARF);
    unc_add_option("sp_square_fparen", UO_sp_square_fparen, AT_IARF);
    unc_add_option("sp_type_func", UO_sp_type_func, AT_IARF);
-   unc_add_option("string_escape_char", UO_string_escape_char, AT_NUM);
+}
+
+const group_map_value *get_group_name(int ug)
+{
+   for (group_map_it it = group_map.begin();
+        it != group_map.end();
+        it++)
+   {
+      if (it->second.id == ug)
+      {
+         return(&it->second);
+      }
+   }
+   return(NULL);
 }
 
 const option_map_value *get_option_name(int uo)
@@ -448,6 +504,54 @@ int load_option_file(const char *filename)
    return(0);
 }
 
+
+int save_option_file(FILE *pfile, bool withDoc)
+{
+   const char *val_str;
+   int        val_len;
+   int        name_len;
+
+   /* Print the all out */
+   for (group_map_it jt = group_map.begin(); jt != group_map.end(); jt++)
+   {
+      if (withDoc)
+      {
+         fputs("\n#\n", pfile);
+         fprintf(pfile, "# %s\n", jt->second.short_desc);
+         fputs("#\n\n", pfile);
+      }
+
+      bool first = true;
+
+      for (option_list_it it = jt->second.options.begin(); it != jt->second.options.end(); it++)
+      {
+         const option_map_value *option = get_option_name(*it);
+
+         if (withDoc && (option->short_desc != NULL) && (*option->short_desc != 0))
+         {
+            fprintf(pfile, "%s# %s\n", first ? "" : "\n", option->short_desc);
+         }
+         first   = false;
+         val_str = op_val_to_string(option->type, cpd.settings[option->id]).c_str();
+         val_len = strlen(val_str);
+         name_len = strlen(option->name);
+
+         fprintf(pfile, "%s %*.s= %s",
+                 option->name, cpd.max_option_name_len - name_len, " ",
+                 val_str);
+         if (withDoc)
+         {
+            fprintf(pfile, "%*.s # %s",
+                    8 - val_len, " ",
+                    argtype_to_string(option->type).c_str());
+         }
+         fputs("\n", pfile);
+      }
+   }
+   fclose(pfile);
+   return(0);
+}
+
 void print_options(FILE *pfile, bool verbose)
 {
    int        max_width = 0;
@@ -477,30 +581,36 @@ void print_options(FILE *pfile, bool verbose)
    max_width++;
 
    /* Print the all out */
-   for (it = option_name_map.begin(); it != option_name_map.end(); it++)
+   for (group_map_it jt = group_map.begin(); jt != group_map.end(); jt++)
    {
-      cur_width = strlen(it->second.name);
-      fprintf(pfile, "%s%*c%s\n",
-              it->second.name,
-              max_width - cur_width, ' ',
-              names[it->second.type]);
+      fprintf(pfile, "#\n# %s\n#\n\n", jt->second.short_desc);
 
-      text = it->second.short_desc;
-
-      if (text != NULL)
+      for (option_list_it it = jt->second.options.begin(); it != jt->second.options.end(); it++)
       {
-         fputs("  ", pfile);
-         while (*text != 0)
+         const option_map_value *option = get_option_name(*it);
+         cur_width = strlen(option->name);
+         fprintf(pfile, "%s%*c%s\n",
+                 option->name,
+                 max_width - cur_width, ' ',
+                 names[option->type]);
+
+         text = option->short_desc;
+
+         if (text != NULL)
          {
-            fputc(*text, pfile);
-            if (*text == '\n')
+            fputs("  ", pfile);
+            while (*text != 0)
             {
-               fputs("  ", pfile);
+               fputc(*text, pfile);
+               if (*text == '\n')
+               {
+                  fputs("  ", pfile);
+               }
+               text++;
             }
-            text++;
          }
+         fputs("\n\n", pfile);
       }
-      fputs("\n\n", pfile);
    }
 }
 
@@ -518,4 +628,137 @@ void set_option_defaults(void)
    cpd.settings[UO_indent_with_tabs].n   = 1;
    cpd.settings[UO_indent_label].n       = 1;
    cpd.settings[UO_string_escape_char].n = '\\';
+}
+
+std::string argtype_to_string(argtype_e argtype)
+{
+   switch (argtype)
+   {
+   case AT_BOOL:
+      return("false/true");
+
+   case AT_IARF:
+      return("ignore/add/remove/force");
+
+   case AT_NUM:
+      return("number");
+
+   case AT_LINE:
+      return("auto/lf/crlf/cr");
+
+   case AT_POS:
+      return("ignore/lead/trail");
+
+   default:
+      LOG_FMT(LWARN, "Unknown argtype '%d'\n", argtype);
+      return("");
+   }
+}
+
+std::string bool_to_string(bool val)
+{
+   if (val)
+   {
+      return("true");
+   }
+   else
+   {
+      return("false");
+   }
+}
+
+std::string argval_to_string(argval_t argval)
+{
+   switch (argval)
+   {
+   case AV_IGNORE:
+      return("ignore");
+
+   case AV_ADD:
+      return("add");
+
+   case AV_REMOVE:
+      return("remove");
+
+   case AV_FORCE:
+      return("force");
+
+   default:
+      LOG_FMT(LWARN, "Unknown argval '%d'\n", argval);
+      return("");
+   }
+}
+
+std::string number_to_string(int number)
+{
+   char buffer[12]; // 11 + 1
+
+   sprintf(buffer, "%d", number);
+   return(buffer);
+}
+
+std::string lineends_to_string(lineends_e linends)
+{
+   switch (linends)
+   {
+   case LE_LF:
+      return("lf");
+
+   case LE_CRLF:
+      return("crlf");
+
+   case LE_CR:
+      return("cr");
+
+   case LE_AUTO:
+      return("auto");
+
+   default:
+      LOG_FMT(LWARN, "Unknown lineends '%d'\n", linends);
+      return("");
+   }
+}
+
+std::string tokenpos_to_string(tokenpos_e tokenpos)
+{
+   switch (tokenpos)
+   {
+   case TP_IGNORE:
+      return("ignore");
+
+   case TP_LEAD:
+      return("lead");
+
+   case TP_TRAIL:
+      return("trail");
+
+   default:
+      LOG_FMT(LWARN, "Unknown tokenpos '%d'\n", tokenpos);
+      return("");
+   }
+}
+
+std::string op_val_to_string(argtype_e argtype, op_val_t op_val)
+{
+   switch (argtype)
+   {
+   case AT_BOOL:
+      return(bool_to_string(op_val.b));
+
+   case AT_IARF:
+      return(argval_to_string(op_val.a));
+
+   case AT_NUM:
+      return(number_to_string(op_val.n));
+
+   case AT_LINE:
+      return(lineends_to_string(op_val.le));
+
+   case AT_POS:
+      return(tokenpos_to_string(op_val.tp));
+
+   default:
+      LOG_FMT(LWARN, "Unknown argtype '%d'\n", argtype);
+      return("");
+   }
 }
