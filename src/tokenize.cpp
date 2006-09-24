@@ -191,6 +191,10 @@ static bool parse_number(chunk_t *pc)
    len = 1;
 
    is_float = (pc->str[0] == '.');
+   if (is_float && (pc->str[1] == '.'))
+   {
+      return(false);
+   }
 
    /* Check for Hex, Octal, or Binary
     * Note that only D and Pawn support binary, but who cares?
@@ -244,8 +248,8 @@ static bool parse_number(chunk_t *pc)
       }
    }
 
-   /* Check if we stopped on a decimal point */
-   if (pc->str[len] == '.')
+   /* Check if we stopped on a decimal point & make sure it isn't '..' */
+   if ((pc->str[len] == '.') && (pc->str[len + 1] != '.'))
    {
       len++;
       is_float = true;

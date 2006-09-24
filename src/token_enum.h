@@ -95,6 +95,7 @@ typedef enum
    CT_PREPROC_BODY,        /* body of every preproc EXCEPT #define */
    CT_PP,                  /* ## */
    CT_ELLIPSIS,            /* ... */
+   CT_RANGE,               /* .. */
 
    CT_SEMICOLON,
    CT_VSEMICOLON,          /* virtual semicolon for PAWN */

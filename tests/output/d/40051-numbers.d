@@ -37,3 +37,10 @@ int foo(int bar)
     e = 3 + 5i;
     e = 3.4 + 5.6i;
 }
+
+/* test '..' ranges */
+void main()
+{
+    char[] c = "kkkkkkkkkkkkkkkkkkkkk";
+    writefln("%s", c[2 .. 3]);
+}

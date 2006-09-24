@@ -62,7 +62,7 @@ static const chunk_tag_t symbols2[] =
    { "-=", CT_ASSIGN,       LANG_ALL                             },
    { "->", CT_MEMBER,       LANG_C | LANG_CPP | LANG_CS | LANG_D },
    { ".*", CT_MEMBER,       LANG_C | LANG_CPP | LANG_D           },
-   { "..", CT_ELLIPSIS,     LANG_D                               },
+   { "..", CT_RANGE,        LANG_D                               },
    { "/=", CT_ASSIGN,       LANG_ALL                             },
    { "::", CT_DC_MEMBER,    LANG_C | LANG_CPP | LANG_CS | LANG_D },
    { ":>", CT_SQUARE_CLOSE, LANG_C | LANG_CPP                    },
