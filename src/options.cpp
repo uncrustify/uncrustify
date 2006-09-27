@@ -71,7 +71,7 @@ void register_options(void)
    unc_add_option("newlines", UO_newlines, AT_LINE, "The type of line endings");
    unc_add_option("input_tab_size", UO_input_tab_size, AT_NUM, "The original size of tabs in the input");
    unc_add_option("output_tab_size", UO_output_tab_size, AT_NUM, "The size of tabs in the output (only used if align_with_tabs=true)");
-   unc_add_option("string_escape_char", UO_string_escape_char, AT_NUM);
+   unc_add_option("string_escape_char", UO_string_escape_char, AT_NUM, "The ascii value of the string escape char, usually 92 (\\). (Pawn)");
 
    unc_begin_group(UG_space, "Spacing options");
    unc_add_option("sp_arith", UO_sp_arith, AT_IARF, "Add or remove space around arithmetic operator '+', '-', '/', '*', etc");
@@ -101,7 +101,7 @@ void register_options(void)
    unc_add_option("sp_after_operator", UO_sp_after_operator, AT_IARF, "Add or remove space between 'operator' and operator sign");
    unc_add_option("sp_after_cast", UO_sp_after_cast, AT_IARF, "Add or remove space after cast");
    unc_add_option("sp_sizeof_paren", UO_sp_sizeof_paren, AT_IARF, "Add or remove space between 'sizeof' and '('");
-   unc_add_option("sp_after_tag", UO_sp_after_tag, AT_IARF);
+   unc_add_option("sp_after_tag", UO_sp_after_tag, AT_IARF, "Add or remove space after the tag keyword (Pawn)");
    unc_add_option("sp_inside_braces_enum", UO_sp_inside_braces_enum, AT_IARF, "Add or remove space inside enum '{' and '}'");
    unc_add_option("sp_inside_braces_struct", UO_sp_inside_braces_struct, AT_IARF, "Add or remove space inside struct/union '{' and '}'");
    unc_add_option("sp_inside_braces", UO_sp_inside_braces, AT_IARF, "Add or remove space inside '{' and '}'");
@@ -111,17 +111,17 @@ void register_options(void)
    unc_add_option("sp_func_def_paren", UO_sp_func_def_paren, AT_IARF, "Add or remove space between function name and '(' on function definition");
    unc_add_option("sp_inside_fparens", UO_sp_inside_fparens, AT_IARF, "Add or remove space inside empty function '()'");
    unc_add_option("sp_inside_fparen", UO_sp_inside_fparen, AT_IARF, "Add or remove space inside function '(' and ')'");
-   unc_add_option("sp_square_fparen", UO_sp_square_fparen, AT_IARF);
+   unc_add_option("sp_square_fparen", UO_sp_square_fparen, AT_IARF, "Add or remove space between ']' and '(' when part of a function call.");
    unc_add_option("sp_fparen_brace", UO_sp_fparen_brace, AT_IARF, "Add or remove space between ')' and '{' of function");
    unc_add_option("sp_func_call_paren", UO_sp_func_call_paren, AT_IARF, "Add or remove space between function name and '(' on function calls");
-   unc_add_option("sp_func_class_paren", UO_sp_func_class_paren, AT_IARF);
+   unc_add_option("sp_func_class_paren", UO_sp_func_class_paren, AT_IARF, "Add or remove space between a constructor/destructor and the open paren");
    unc_add_option("sp_return_paren", UO_sp_return_paren, AT_IARF, "Add or remove space between 'return' and '('");
    unc_add_option("sp_macro", UO_sp_macro, AT_IARF, "Add or remove space between macro and value");
    unc_add_option("sp_macro_func", UO_sp_macro_func, AT_IARF, "Add or remove space between macro function ')' and value");
 
    unc_begin_group(UG_indent, "Indenting");
    unc_add_option("indent_columns", UO_indent_columns, AT_NUM, "The number of columns to indent per level (usually 2, 3, 4, or 8)");
-   unc_add_option("indent_with_tabs", UO_indent_with_tabs, AT_NUM, "How to use tabs when indenting code (0=spaces only, 1=indent with tabs, align with spaces, 2=indent and align with tabs)");
+   unc_add_option("indent_with_tabs", UO_indent_with_tabs, AT_NUM, "How to use tabs when indenting code\n0=spaces only\n1=indent with tabs, align with spaces\n2=indent and align with tabs");
    unc_add_option("indent_align_string", UO_indent_align_string, AT_BOOL, "Whether to indent strings broken by '\\' so that they line up");
    unc_add_option("indent_brace", UO_indent_brace, AT_NUM, "Spaces to indent '{' from level");
    unc_add_option("indent_braces", UO_indent_braces, AT_BOOL, "Whether braces are indented to the body level");
@@ -129,7 +129,7 @@ void register_options(void)
    unc_add_option("indent_class", UO_indent_class, AT_BOOL, "Whether the 'class' body is indented");
    unc_add_option("indent_class_colon", UO_indent_class_colon, AT_BOOL, "Whether to indent the stuff after a leading class colon");
    unc_add_option("indent_func_call_param", UO_indent_func_call_param, AT_BOOL, "Whether to indent continued function call parameters one indent level (true) or aligns instead of indent (false)");
-   unc_add_option("indent_member", UO_indent_member, AT_NUM);
+   unc_add_option("indent_member", UO_indent_member, AT_NUM, "The number of spaces to indent a continued '->' or '.'\nUsually set to indent_columns.");
    unc_add_option("indent_switch_case", UO_indent_switch_case, AT_NUM, "Spaces to indent 'case' from 'switch'");
    unc_add_option("indent_case_body", UO_indent_case_body, AT_NUM, "Spaces to indent 'case' body from 'case'");
    unc_add_option("indent_case_brace", UO_indent_case_brace, AT_NUM, "Spaces to indent '{' from 'case'");
@@ -153,7 +153,7 @@ void register_options(void)
    unc_add_option("nl_union_brace", UO_nl_union_brace, AT_IARF, "Add or remove newline between 'union' and '{'");
    unc_add_option("nl_if_brace", UO_nl_if_brace, AT_IARF, "Add or remove newline between 'if' and '{'");
    unc_add_option("nl_brace_else", UO_nl_brace_else, AT_IARF, "Add or remove newline between '}' and 'else'");
-   unc_add_option("nl_elseif_brace", UO_nl_elseif_brace, AT_IARF, "Add or remove newline between 'else if' and '{' (if set to ignore, nl_if_brace is used instead)");
+   unc_add_option("nl_elseif_brace", UO_nl_elseif_brace, AT_IARF, "Add or remove newline between 'else if' and '{'\nIf set to ignore, nl_if_brace is used instead");
    unc_add_option("nl_else_brace", UO_nl_else_brace, AT_IARF, "Add or remove newline between 'else' and '{'");
    unc_add_option("nl_for_brace", UO_nl_for_brace, AT_IARF, "Add or remove newline between 'for' and '{'");
    unc_add_option("nl_while_brace", UO_nl_while_brace, AT_IARF, "Add or remove newline between 'while' and '{'");
@@ -206,7 +206,7 @@ void register_options(void)
    unc_add_option("align_struct_init_span", UO_align_struct_init_span, AT_NUM, "The span for aligning struct initializer values (0=don't align)");
    unc_add_option("align_typedef_gap", UO_align_typedef_gap, AT_NUM, "The minimum space between the type and the synonym of a typedef");
    unc_add_option("align_typedef_span", UO_align_typedef_span, AT_NUM, "The span for aligning single-line typedefs (0=don't align)");
-   unc_add_option("align_typedef_star_style", UO_align_typedef_star_style, AT_NUM);
+   unc_add_option("align_typedef_star_style", UO_align_typedef_star_style, AT_NUM, "Controls the positioning of the '*' in typedefs. Just try it.\n0: Align on typdef type, ignore '*'\n1: The '*' is part of type name: typedef int  *pint;\n2: The '*' is part of the type: typedef int *  pint;");
    unc_add_option("align_right_cmt_span", UO_align_right_cmt_span, AT_NUM, "The span for aligning comments that end lines (0=don't align)");
    unc_add_option("align_func_proto_span", UO_align_func_proto_span, AT_NUM, "The span for aligning function prototypes (0=don't align)");
    unc_add_option("align_nl_cont", UO_align_nl_cont, AT_BOOL, "Whether to align macros wrapped with a backslash and a newline");
@@ -223,7 +223,7 @@ void register_options(void)
    unc_begin_group(UG_codemodify, "Code modifying options (non-whitespace)");
    unc_add_option("mod_full_brace_do", UO_mod_full_brace_do, AT_IARF, "Add or remove braces on single-line 'do' statement");
    unc_add_option("mod_full_brace_for", UO_mod_full_brace_for, AT_IARF, "Add or remove braces on single-line 'for' statement");
-   unc_add_option("mod_full_brace_function", UO_mod_full_brace_function, AT_IARF);
+   unc_add_option("mod_full_brace_function", UO_mod_full_brace_function, AT_IARF, "Add or remove braces on single-line function defintions. (Pawn)");
    unc_add_option("mod_full_brace_if", UO_mod_full_brace_if, AT_IARF, "Add or remove braces on single-line 'if' statement");
    unc_add_option("mod_full_brace_nl", UO_mod_full_brace_nl, AT_NUM, "Don't remove braces around statements that span N newlines");
    unc_add_option("mod_full_brace_while", UO_mod_full_brace_while, AT_IARF, "Add or remove braces on single-line 'while' statement");
@@ -511,6 +511,7 @@ int save_option_file(FILE *pfile, bool withDoc)
    const char  *val_str;
    int         val_len;
    int         name_len;
+   int         idx;
 
    /* Print the all out */
    for (group_map_it jt = group_map.begin(); jt != group_map.end(); jt++)
@@ -530,7 +531,20 @@ int save_option_file(FILE *pfile, bool withDoc)
 
          if (withDoc && (option->short_desc != NULL) && (*option->short_desc != 0))
          {
-            fprintf(pfile, "%s# %s\n", first ? "" : "\n", option->short_desc);
+            fprintf(pfile, "%s# ", first ? "" : "\n");
+            for (idx = 0; option->short_desc[idx] != 0; idx++)
+            {
+               fputc(option->short_desc[idx], pfile);
+               if ((option->short_desc[idx] == '\n') &&
+                   (option->short_desc[idx + 1] != 0))
+               {
+                  fputs("# ", pfile);
+               }
+            }
+            if (option->short_desc[idx - 1] != '\n')
+            {
+               fputc('\n', pfile);
+            }
          }
          first   = false;
          val_string = op_val_to_string(option->type, cpd.settings[option->id]);
