@@ -507,9 +507,10 @@ int load_option_file(const char *filename)
 
 int save_option_file(FILE *pfile, bool withDoc)
 {
-   const char *val_str;
-   int        val_len;
-   int        name_len;
+   std::string val_string;
+   const char  *val_str;
+   int         val_len;
+   int         name_len;
 
    /* Print the all out */
    for (group_map_it jt = group_map.begin(); jt != group_map.end(); jt++)
@@ -532,7 +533,8 @@ int save_option_file(FILE *pfile, bool withDoc)
             fprintf(pfile, "%s# %s\n", first ? "" : "\n", option->short_desc);
          }
          first   = false;
-         val_str = op_val_to_string(option->type, cpd.settings[option->id]).c_str();
+         val_string = op_val_to_string(option->type, cpd.settings[option->id]);
+         val_str = val_string.c_str();
          val_len = strlen(val_str);
          name_len = strlen(option->name);
 
