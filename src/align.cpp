@@ -642,8 +642,8 @@ static chunk_t *align_var_def_brace(chunk_t *start, int span)
          as.NewLines(pc->nl_count);
       }
 
-      /* don't align stuff inside of a function call */
-      if ((pc->flags & PCF_IN_FCN_CALL) != 0)
+      /* don't align stuff inside parens/squares/angles */
+      if (pc->level > pc->brace_level)
       {
          pc = chunk_get_next_nc(pc);
          continue;

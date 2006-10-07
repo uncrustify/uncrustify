@@ -20,6 +20,8 @@
 40022  d-tst2.cfg              d/tst02.d
 40023  d.cfg                   d/bug-indent.d
 
+40030  d.cfg                   d/delegate.d
+
 40050  d.cfg                   d/strings.d
 40051  d.cfg                   d/numbers.d
 

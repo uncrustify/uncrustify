@@ -181,6 +181,32 @@ void fix_symbols(void)
                tmp->type = CT_POS;
             }
          }
+
+         /* For a delegate, mark previous words as types and the item after the
+          * close paren as a variable def
+          */
+         if (pc->type == CT_DELEGATE)
+         {
+            if (tmp != NULL)
+            {
+               tmp->parent_type = CT_DELEGATE;
+               if (tmp->level == tmp->brace_level)
+               {
+                  tmp->flags |= PCF_VAR_1ST_DEF;
+               }
+            }
+
+            for (tmp = chunk_get_prev_ncnl(pc); tmp != NULL; tmp = chunk_get_prev_ncnl(tmp))
+            {
+               if ((tmp->type == CT_SEMICOLON) ||
+                   (tmp->type == CT_BRACE_OPEN) ||
+                   (tmp->type == CT_VBRACE_OPEN))
+               {
+                  break;
+               }
+               make_type(tmp);
+            }
+         }
       }
 
       /* A [] in C# and D only follows a type */
