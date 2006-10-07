@@ -73,6 +73,9 @@
 00702  func-def-2.cfg          c/function-def.c
 00703  func-def-3.cfg          c/function-def.c
 
+# nl_after_semicolon and nl_after_open_brace
+00721  nl_semicolon.cfg        c/nl-semicolon.c
+
 # function types
 00801  ben.cfg                 c/fcn_type.c
 00802  ben.cfg                 c/funcfunc.c
@@ -86,4 +89,5 @@
 
 # big general tests
 20000 ben.cfg                  c/i2c-core.c
+20001 preproc-cleanup.cfg      c/directfb.h
 

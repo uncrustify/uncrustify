@@ -846,6 +846,10 @@ void newlines_cleanup_braces(void)
       }
       else if (pc->type == CT_BRACE_OPEN)
       {
+         if (cpd.settings[UO_nl_after_brace_open].b)
+         {
+            newline_iarf(pc, AV_ADD);
+         }
          newlines_brace_pair(pc);
       }
       else if (pc->type == CT_STRUCT)
@@ -895,6 +899,14 @@ void newlines_cleanup_braces(void)
          if (cpd.settings[UO_nl_after_return].b)
          {
             newline_return(pc);
+         }
+      }
+      else if (pc->type == CT_SEMICOLON)
+      {
+         if (((pc->flags & PCF_IN_SPAREN) == 0) &&
+             cpd.settings[UO_nl_after_semicolon].b)
+         {
+            newline_iarf(pc, AV_ADD);
          }
       }
       else if (pc->type == CT_FPAREN_OPEN)

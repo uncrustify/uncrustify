@@ -172,6 +172,8 @@ void register_options(void)
    unc_add_option("nl_func_decl_end", UO_nl_func_decl_end, AT_IARF, "Add or remove newline before the ')' in a function declaration");
    unc_add_option("nl_fdef_brace", UO_nl_fdef_brace, AT_IARF, "Add or remove newline between function signature and '{'");
    unc_add_option("nl_after_return", UO_nl_after_return, AT_BOOL, "Whether to put a newline after 'return' statement");
+   unc_add_option("nl_after_semicolon", UO_nl_after_semicolon, AT_BOOL, "Whether to put a newline after semicolons, except in 'for' statements");
+   unc_add_option("nl_after_brace_open", UO_nl_after_brace_open, AT_BOOL, "Whether to put a newline after brace open");
    unc_add_option("nl_define_macro", UO_nl_define_macro, AT_BOOL, "Whether to alter newlines in '#define' macros");
    unc_add_option("nl_squeeze_ifdef", UO_nl_squeeze_ifdef, AT_BOOL, "Whether to not put blanks after '#ifxx', '#elxx', or before '#endif'");
 

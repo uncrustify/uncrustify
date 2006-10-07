@@ -31,6 +31,8 @@ Changes in uncrustify-0.28
 -------------------------------------------------------------------------------
  - Fix D range array detection a[1..4] => a[1 .. 4]
  - Fix D delegate variable aligning
+ - More documentation updates (thanks Dirk!)
+ - New options: nl_after_semicolon and nl_after_open_brace
 
 
 Changes in uncrustify-0.27
