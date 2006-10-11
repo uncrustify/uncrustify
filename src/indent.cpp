@@ -512,6 +512,7 @@ void indent_text(void)
                else
                {
                   frm.pse[frm.pse_tos].indent += cpd.settings[UO_indent_brace].n;
+                  indent_column               += cpd.settings[UO_indent_brace].n;
                }
             }
             else if (pc->parent_type == CT_CASE)
