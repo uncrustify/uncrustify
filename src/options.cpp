@@ -118,6 +118,8 @@ void register_options(void)
    unc_add_option("sp_return_paren", UO_sp_return_paren, AT_IARF, "Add or remove space between 'return' and '('");
    unc_add_option("sp_macro", UO_sp_macro, AT_IARF, "Add or remove space between macro and value");
    unc_add_option("sp_macro_func", UO_sp_macro_func, AT_IARF, "Add or remove space between macro function ')' and value");
+   unc_add_option("sp_else_brace", UO_sp_else_brace, AT_IARF, "Add or remove space between 'else' and '{' if on the same line");
+   unc_add_option("sp_brace_else", UO_sp_brace_else, AT_IARF, "Add or remove space between '}' and 'else' if on the same line");
 
    unc_begin_group(UG_indent, "Indenting");
    unc_add_option("indent_columns", UO_indent_columns, AT_NUM, "The number of columns to indent per level (usually 2, 3, 4, or 8)");
@@ -125,6 +127,7 @@ void register_options(void)
    unc_add_option("indent_align_string", UO_indent_align_string, AT_BOOL, "Whether to indent strings broken by '\\' so that they line up");
    unc_add_option("indent_brace", UO_indent_brace, AT_NUM, "Spaces to indent '{' from level");
    unc_add_option("indent_braces", UO_indent_braces, AT_BOOL, "Whether braces are indented to the body level");
+   unc_add_option("indent_brace_parent", UO_indent_brace_parent, AT_BOOL, "Indent based on the size of the brace parent, ie 'if' => 3 spaces, 'for' => 4 spaces, etc.");
    unc_add_option("indent_namespace", UO_indent_namespace, AT_BOOL, "Whether the 'namespace' body is indented");
    unc_add_option("indent_class", UO_indent_class, AT_BOOL, "Whether the 'class' body is indented");
    unc_add_option("indent_class_colon", UO_indent_class_colon, AT_BOOL, "Whether to indent the stuff after a leading class colon");

@@ -348,6 +348,16 @@ argval_t do_space(chunk_t *first, chunk_t *second)
       return(AV_REMOVE);
    }
 
+   if ((first->type == CT_ELSE) && (second->type == CT_BRACE_OPEN))
+   {
+      return(cpd.settings[UO_sp_else_brace].a);
+   }
+
+   if ((first->type == CT_BRACE_OPEN) && (second->type == CT_ELSE))
+   {
+      return(cpd.settings[UO_sp_brace_else].a);
+   }
+
    if (first->type == CT_PAREN_CLOSE)
    {
       if (first->parent_type == CT_D_TEMPLATE)

@@ -240,6 +240,33 @@ static void indent_pse_pop(struct parse_frame& frm, chunk_t *pc)
 }
 
 
+static int token_indent(c_token_t type)
+{
+   switch (type)
+   {
+   case CT_IF:
+   case CT_DO:
+      return 3;
+
+   case CT_FOR:
+   case CT_ELSE:  // wacky, but that's what is wanted
+      return 4;
+
+   case CT_WHILE:
+      return 6;
+
+   case CT_SWITCH:
+      return 7;
+
+   case CT_ELSEIF:
+      return 8;
+
+   default:
+      return 0; //cpd.settings[UO_indent_braces].n;
+   }
+}
+
+
 /**
  * Change the top-level indentation only by changing the column member in
  * the chunk structures.
@@ -260,6 +287,7 @@ void indent_text(void)
    int                indent_column;
    int                cout_col   = 0;   // for aligning << stuff
    int                cout_level = 0;   // for aligning << stuff
+   int                parent_token_indent = 0;
 
    memset(&frm, 0, sizeof(frm));
 
@@ -274,6 +302,11 @@ void indent_text(void)
       /* Handle proprocessor transitions */
       was_preproc = in_preproc;
       in_preproc  = (pc->flags & PCF_IN_PREPROC) != 0;
+
+      if (cpd.settings[UO_indent_brace_parent].b)
+      {
+         parent_token_indent = token_indent(pc->parent_type);
+      }
 
       /* Clean up after a #define */
       if (!in_preproc)
@@ -419,7 +452,8 @@ void indent_text(void)
             frm.level--;
 
             /* Update the indent_column if needed */
-            if (!cpd.settings[UO_indent_braces].b)
+            if (!cpd.settings[UO_indent_braces].b &&
+                (parent_token_indent == 0))
             {
                indent_column = frm.pse[frm.pse_tos].indent_tmp;
             }
@@ -471,8 +505,14 @@ void indent_text(void)
                 (pc->parent_type == CT_SWITCH) ||
                 (pc->parent_type == CT_FOR))
             {
-               frm.pse[frm.pse_tos].indent += cpd.settings[UO_indent_brace].n;
-               indent_column += cpd.settings[UO_indent_brace].n;
+               if (parent_token_indent != 0)
+               {
+                  frm.pse[frm.pse_tos].indent += parent_token_indent - indent_size;
+               }
+               else
+               {
+                  frm.pse[frm.pse_tos].indent += cpd.settings[UO_indent_brace].n;
+               }
             }
             else if (pc->parent_type == CT_CASE)
             {
@@ -513,7 +553,8 @@ void indent_text(void)
             frm.pse[frm.pse_tos].open_line  = pc->orig_line;
 
             /* Update the indent_column if needed */
-            if (cpd.settings[UO_indent_braces].n)
+            if (cpd.settings[UO_indent_braces].n ||
+                (parent_token_indent != 0))
             {
                indent_column = frm.pse[frm.pse_tos].indent_tmp;
             }
