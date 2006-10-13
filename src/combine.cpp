@@ -1592,8 +1592,11 @@ static void mark_function(chunk_t *pc)
    prev = chunk_get_prev_ncnlnp(pc);
    next = chunk_get_next_ncnlnp(pc);
 
-   LOG_FMT(LFCN, "%s: %d] %.*s[%s] - level=%d\n", __func__, pc->orig_line, pc->len, pc->str, get_token_name(pc->type), pc->level);
-   LOG_FMT(LFCN, "%s: next=%.*s[%s] - level=%d\n", __func__, next->len, next->str, get_token_name(next->type), next->level);
+   LOG_FMT(LFCN, "%s: %d] %.*s[%s] - level=%d/%d\n", __func__,
+           pc->orig_line, pc->len, pc->str,
+           get_token_name(pc->type), pc->level, pc->brace_level);
+   LOG_FMT(LFCN, "%s: next=%.*s[%s] - level=%d\n", __func__,
+           next->len, next->str, get_token_name(next->type), next->level);
 
    if (pc->flags & PCF_IN_CONST_ARGS)
    {
@@ -1711,7 +1714,8 @@ static void mark_function(chunk_t *pc)
       }
    }
 
-   if (pc->type == CT_FUNC_CALL)
+   if ((pc->type == CT_FUNC_CALL) &&
+       (pc->level == pc->brace_level))
    {
       while ((prev != NULL) &&
              ((prev->type == CT_TYPE) ||
