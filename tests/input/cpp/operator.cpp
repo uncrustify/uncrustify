@@ -21,3 +21,17 @@ bool Foo::operator> (const Foo& rhs) const
 {
 }
 
+class Example
+{
+   char m_array[256];
+
+   int operator()(int index)
+   {
+      return index + 1;
+   }
+
+   int operator[](int index)
+   {
+      return m_array[index & 0xff];
+   }
+}
