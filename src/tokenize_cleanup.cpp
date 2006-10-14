@@ -147,9 +147,25 @@ void tokenize_cleanup(void)
       /* Change item after operator (>=, ==, etc) to a FUNC_OPERATOR */
       if (pc->type == CT_OPERATOR)
       {
-         next->type        = CT_FUNCTION;
-         next->parent_type = CT_OPERATOR;
-
+         /* Handle special case of [] and () operators */
+         if ((next->type == CT_PAREN_OPEN) ||
+             (next->type == CT_SQUARE_OPEN))
+         {
+            tmp = chunk_get_next(next);
+            if ((tmp != NULL) && (tmp->type == (next->type + 1)))
+            {
+               next->str         = (next->type == CT_PAREN_OPEN) ? "()" : "[]";
+               next->len         = 2;
+               next->type        = CT_FUNCTION;
+               next->parent_type = CT_OPERATOR;
+               chunk_del(tmp);
+            }
+         }
+         else
+         {
+            next->type        = CT_FUNCTION;
+            next->parent_type = CT_OPERATOR;
+         }
          if (chunk_is_addr(prev))
          {
             prev->type = CT_BYREF;
