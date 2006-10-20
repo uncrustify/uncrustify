@@ -217,7 +217,26 @@ static void check_template(chunk_t *start)
    if ((prev != NULL) && (prev->type == CT_TEMPLATE))
    {
       LOG_FMT(LTEMPL, " CT_TEMPLATE:");
-      end = chunk_get_next_type(start, CT_ANGLE_CLOSE, -1);
+
+      int level = 1;
+      for (pc = chunk_get_next_ncnl(start); pc != NULL; pc = chunk_get_next_ncnl(pc))
+      {
+         LOG_FMT(LTEMPL, " [%s,%d]", get_token_name(pc->type), level);
+
+         if (chunk_is_str(pc, "<", 1))
+         {
+            level++;
+         }
+         else if (chunk_is_str(pc, ">", 1))
+         {
+            level--;
+            if (level == 0)
+            {
+               break;
+            }
+         }
+      }
+      end = pc;
    }
    else
    {
@@ -265,6 +284,7 @@ static void check_template(chunk_t *start)
                   (pc->type != CT_MEMBER) &&
                   (pc->type != CT_COMMA) &&
                   (pc->type != CT_STAR) &&
+                  (pc->type != CT_CLASS) &&
                   (pc->type != CT_DC_MEMBER))
          {
             break;
