@@ -11,7 +11,7 @@ class MD5
 {
 public:
    MD5();
-   ~MD5() {};
+   ~MD5() { };
 
    void Init();
    void Update(const void *data, UINT32 len);

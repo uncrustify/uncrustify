@@ -32,6 +32,7 @@ static void mark_namespace(chunk_t *pns);
 static void mark_function_type(chunk_t *pc);
 static void mark_cpp_constructor(chunk_t *pc);
 static void mark_lvalue(chunk_t *pc);
+static void mark_template_func(chunk_t *pc, chunk_t *pc_next);
 
 void make_type(chunk_t *pc)
 {
@@ -56,7 +57,7 @@ void make_type(chunk_t *pc)
  * @param po   Pointer to the open parenthesis
  * @return     The token after the close paren
  */
-static chunk_t *flag_parens(chunk_t *po, UINT16 flags,
+static chunk_t *flag_parens(chunk_t *po, UINT32 flags,
                             c_token_t opentype, c_token_t parenttype,
                             bool parent_all)
 {
@@ -64,6 +65,12 @@ static chunk_t *flag_parens(chunk_t *po, UINT16 flags,
    chunk_t *pc;
 
    paren_close = chunk_skip_to_match(po);
+   if (paren_close == NULL)
+   {
+      LOG_FMT(LERR, "%s: no match for [%.*s] at  [%d:%d]\n",
+              __func__, po->len, po->str, po->orig_line, po->orig_col);
+   }
+
    if ((paren_close != NULL) && (po != paren_close))
    {
       if ((flags != 0) ||
@@ -241,6 +248,13 @@ void fix_symbols(void)
          }
       }
 
+      if ((pc->type == CT_WORD) &&
+          (next->type == CT_ANGLE_OPEN) &&
+          (next->parent_type == CT_TEMPLATE))
+      {
+         mark_template_func(pc, next);
+      }
+
       if ((pc->type == CT_SQUARE_CLOSE) &&
           (next->type == CT_PAREN_OPEN))
       {
@@ -250,6 +264,14 @@ void fix_symbols(void)
       if (pc->type == CT_ASSIGN)
       {
          mark_lvalue(pc);
+      }
+
+      if (pc->parent_type == CT_ASSIGN &&
+          ((pc->type == CT_BRACE_OPEN) ||
+           (pc->type == CT_SQUARE_OPEN)))
+      {
+         /* Mark everything in here as in assign */
+         flag_parens(pc, PCF_IN_ARRAY_ASSIGN, pc->type, CT_NONE, false);
       }
 
       if (pc->type == CT_D_TEMPLATE)
@@ -353,7 +375,7 @@ void fix_symbols(void)
          }
       }
 
-      if (pc->type == CT_CLASS)
+      if ((pc->type == CT_CLASS) && (pc->level == pc->brace_level))
       {
          /* do other languages name the ctor the same as the class? */
          if ((cpd.lang_flags & LANG_CPP) != 0)
@@ -376,6 +398,7 @@ void fix_symbols(void)
           * Note that SPAREN and FPAREN have already been marked.
           */
          if ((pc->type == CT_PAREN_OPEN) &&
+             (pc->parent_type == CT_NONE) &&
              ((next->type == CT_WORD) ||
               (next->type == CT_TYPE) ||
               (next->type == CT_STRUCT) ||
@@ -1605,69 +1628,64 @@ static void mark_function(chunk_t *pc)
       return;
    }
 
-   /* Find the close paren */
-   paren_close = chunk_get_next_type(pc, CT_FPAREN_CLOSE, pc->level);
-
-   /*FIXME: This should never happen - remove when I am sure it isn't */
-   tmp = chunk_get_next_ncnl(paren_close);
-   if ((tmp != NULL) && (tmp->type == CT_PAREN_OPEN))
+   /* Skip over any template madness */
+   if (next->type == CT_ANGLE_OPEN)
    {
-      LOG_FMT(LERR, "%s:%d %s: unexpected function variable def, level=%d\n",
-              cpd.filename, tmp->orig_line, __func__, tmp->level);
-      cpd.error_count++;
-
-      pc->type                 = CT_TYPE;
-      paren_close->type        = CT_PAREN_CLOSE;
-      paren_close->parent_type = CT_NONE;
-      next              = chunk_get_next_ncnl(pc);
-      next->type        = CT_PAREN_OPEN;
-      next->parent_type = CT_NONE;
-      next->flags      |= PCF_VAR_1ST_DEF;
-
-      log_pcf_flags(LSYS, pc->flags);
-      return;
-   }
-
-   /**
-    * Scan to see if this is a function variable def:
-    * const struct bar * (*func)(param_list)
-    * int (*foo)(void);
-    * CFoo::CFoo(int bar) <- constructor
-    * bar_t (word)(...);  <- flagged as a function call
-    *
-    * These need to be identified BEFORE checking for casts.
-    */
-
-   /* point to the next item after the '(' */
-   tmp = chunk_get_next_ncnlnp(next);
-
-   /* Skip any leading '*' characters */
-   while (chunk_is_star(tmp))
-   {
-      tmp = chunk_get_next_ncnlnp(tmp);
-   }
-   if ((tmp != NULL) && (tmp->type == CT_WORD))
-   {
-      var = tmp;
-      tmp = chunk_get_next_ncnlnp(tmp);
-      if ((tmp != NULL) && (tmp->type == CT_PAREN_CLOSE))
+      next = chunk_get_next_type(next, CT_ANGLE_CLOSE, next->level);
+      if (next != NULL)
       {
-         tmp = chunk_get_next_ncnl(tmp);
-         if ((tmp != NULL) && (tmp->type == CT_PAREN_OPEN))
-         {
-            LOG_FMT(LFCN, "Detected func var %.*s on line %d col %d\n",
-                    var->len, var->str, var->orig_line, var->orig_col);
-            var->flags |= PCF_VAR_1ST_DEF;
-
-            /* Mark parameters */
-            flag_parens(tmp, PCF_IN_FCN_DEF, CT_FPAREN_OPEN, CT_NONE, false);
-            fix_fcn_def_params(tmp);
-            return;
-         }
+         next = chunk_get_next_ncnl(next);
       }
    }
 
-   /* Assume it is a function call */
+   /* Find the close paren */
+   paren_close = chunk_get_next_str(pc, ")", 1, pc->level);
+
+   /**
+    * This part detects either chained function calls or a function definition.
+    * MYTYPE (*func)(void);
+    * mWriter( "class Clst_"c )( somestr.getText() )( " : Cluster {"c ).newline;
+    *
+    * For it to be a function variable def, there must be a '*' followed by a
+    * single word.
+    *
+    * Otherwise, it must be chained function calls.
+    */
+   tmp = chunk_get_next_ncnl(paren_close);
+   if (chunk_is_str(tmp, "(", 1))
+   {
+      chunk_t *tmp1, *tmp2, *tmp3;
+
+      tmp1 = next;
+      do
+      {
+         tmp1 = chunk_get_next_ncnl(tmp1);
+      } while ((tmp1 != NULL) &&
+               ((tmp1->type == CT_WORD) ||
+                (tmp1->type == CT_DC_MEMBER)));
+
+      tmp2 = chunk_get_next_ncnl(tmp1);
+      tmp3 = chunk_get_next_ncnl(tmp2);
+
+      if (chunk_is_str(tmp3, ")", 1) &&
+          chunk_is_star(tmp1) &&
+          (tmp2->type == CT_WORD))
+      {
+         LOG_FMT(LFCN, "%s: [%d/%d] function variable [%.*s], changing [%.*s] into a type\n",
+                 __func__, pc->orig_line, pc->orig_col, tmp2->len, tmp2->str, pc->len, pc->str);
+
+         pc->type     = CT_TYPE;
+         pc->flags   &= ~PCF_VAR_1ST_DEF;
+         tmp2->flags |= PCF_VAR_1ST_DEF;
+         flag_parens(tmp, 0, CT_FPAREN_OPEN, CT_FUNC_PROTO, false);
+         return;
+      }
+
+      LOG_FMT(LFCN, "%s: chained function calls? [%d.%d] [%.*s]\n",
+              __func__, pc->orig_line, pc->orig_col, pc->len, pc->str);
+   }
+
+   /* Assume it is a function call if not already labeled */
    if (pc->type == CT_FUNCTION)
    {
       pc->type = CT_FUNC_CALL;
@@ -1745,77 +1763,80 @@ static void mark_function(chunk_t *pc)
       flag_parens(next, PCF_IN_FCN_CALL, CT_FPAREN_OPEN, CT_NONE, false);
       return;
    }
-   else
+
+   flag_parens(next, PCF_IN_FCN_DEF, CT_FPAREN_OPEN, CT_NONE, false);
+
+   /* See if this is a prototype or implementation */
+   paren_close = chunk_get_next_type(pc, CT_FPAREN_CLOSE, pc->level);
+
+   /* Scan tokens until we hit a brace open (def) or semicolon (proto) */
+   tmp = paren_close;
+   while (((tmp = chunk_get_next_ncnl(tmp)) != NULL) &&
+          (tmp->level >= pc->level))
    {
-      flag_parens(next, PCF_IN_FCN_DEF, CT_FPAREN_OPEN, CT_NONE, false);
-
-      /* See if this is a prototype or implementation */
-      paren_close = chunk_get_next_type(pc, CT_FPAREN_CLOSE, pc->level);
-
-      /* Scan tokens until we hit a brace open (def) or semicolon (proto) */
-      tmp = paren_close;
-      while (((tmp = chunk_get_next_ncnl(tmp)) != NULL) &&
-             (tmp->level >= pc->level))
+      /* Only care about brace or semi on the same level */
+      if (tmp->level == pc->level)
       {
-         /* Only care about brace or semi on the same level */
-         if (tmp->level == pc->level)
+         if (tmp->type == CT_BRACE_OPEN)
          {
-            if (tmp->type == CT_BRACE_OPEN)
-            {
-               /* its a funciton def for sure */
-               break;
-            }
-            else if (chunk_is_semicolon(tmp))
-            {
-               /* Set the parent for the semi for later */
-               tmp->parent_type = CT_FUNC_PROTO;
-               pc->type         = CT_FUNC_PROTO;
-               break;
-            }
-         }
-      }
-
-      /* Mark parameters */
-      fix_fcn_def_params(next);
-
-      /* Step backwards from pc and mark the parent of the return type */
-      tmp = pc;
-      while ((tmp = chunk_get_prev_ncnl(tmp)) != NULL)
-      {
-         if (!chunk_is_type(tmp))
-         {
+            /* its a funciton def for sure */
             break;
          }
-         tmp->parent_type = pc->type;
-      }
-
-      /* Find the brace pair */
-      if (pc->type == CT_FUNC_DEF)
-      {
-         bool on_first = true;
-         tmp = chunk_get_next_ncnl(paren_close);
-         while ((tmp != NULL) && (tmp->type != CT_BRACE_OPEN))
+         else if (chunk_is_semicolon(tmp))
          {
-            tmp->parent_type = CT_FUNC_DEF;
-            if (chunk_is_semicolon(tmp))
-            {
-               on_first = true;
-            }
-            else
-            {
-               tmp->flags |= PCF_OLD_FCN_PARAMS;
-               on_first    = false;
-            }
-            tmp = chunk_get_next_ncnl(tmp);
+            /* Set the parent for the semi for later */
+            tmp->parent_type = CT_FUNC_PROTO;
+            pc->type         = CT_FUNC_PROTO;
+            break;
          }
-         if ((tmp != NULL) && (tmp->type == CT_BRACE_OPEN))
+         else if (chunk_is_str(tmp, ":", 1))
+         {
+            /* mark constuctor colon (?) */
+            tmp->type = CT_CLASS_COLON;
+         }
+      }
+   }
+
+   /* Mark parameters */
+   fix_fcn_def_params(next);
+
+   /* Step backwards from pc and mark the parent of the return type */
+   tmp = pc;
+   while ((tmp = chunk_get_prev_ncnl(tmp)) != NULL)
+   {
+      if (!chunk_is_type(tmp))
+      {
+         break;
+      }
+      tmp->parent_type = pc->type;
+   }
+
+   /* Find the brace pair */
+   if (pc->type == CT_FUNC_DEF)
+   {
+      bool on_first = true;
+      tmp = chunk_get_next_ncnl(paren_close);
+      while ((tmp != NULL) && (tmp->type != CT_BRACE_OPEN))
+      {
+         tmp->parent_type = CT_FUNC_DEF;
+         if (chunk_is_semicolon(tmp))
+         {
+            on_first = true;
+         }
+         else
+         {
+            tmp->flags |= PCF_OLD_FCN_PARAMS;
+            on_first    = false;
+         }
+         tmp = chunk_get_next_ncnl(tmp);
+      }
+      if ((tmp != NULL) && (tmp->type == CT_BRACE_OPEN))
+      {
+         tmp->parent_type = CT_FUNC_DEF;
+         tmp = chunk_skip_to_match(tmp);
+         if (tmp != NULL)
          {
             tmp->parent_type = CT_FUNC_DEF;
-            tmp = chunk_skip_to_match(tmp);
-            if (tmp != NULL)
-            {
-               tmp->parent_type = CT_FUNC_DEF;
-            }
          }
       }
    }
@@ -1914,6 +1935,8 @@ static void mark_class_ctor(chunk_t *pclass)
    pc = chunk_get_next_ncnl(pc);
    while (pc != NULL)
    {
+      pc->flags |= PCF_IN_CLASS;
+
       if ((pc->brace_level > level) || ((pc->flags & PCF_IN_PREPROC) != 0))
       {
          pc = chunk_get_next_ncnl(pc);
@@ -2128,5 +2151,39 @@ static void mark_define_expressions(void)
 
       prev = pc;
       pc   = chunk_get_next(pc);
+   }
+}
+
+/**
+ * We are on a word followed by a angle open which is part of a template.
+ * If the angle close is followed by a open paren, then we are on a template
+ * function:
+ *   Vector2<float>(...) [: ...[, ...]] { ... }
+ * Or we could be on a variable def if it's followed by a word:
+ *   Renderer<rgb32> rend;
+ */
+static void mark_template_func(chunk_t *pc, chunk_t *pc_next)
+{
+   chunk_t *angle_close;
+   chunk_t *after;
+
+   /* We know angle_close must be there... */
+   angle_close = chunk_get_next_type(pc_next, CT_ANGLE_CLOSE, pc->level);
+
+   after = chunk_get_next_ncnl(angle_close);
+   if (after != NULL)
+   {
+      if (chunk_is_str(after, "(", 1))
+      {
+         // its a function!!!
+         pc->type = CT_FUNC_DEF;
+         mark_function(pc);
+      }
+      else if (after->type == CT_WORD)
+      {
+         // its a type!
+         pc->type      = CT_TYPE;
+         after->flags |= PCF_VAR_DEF;
+      }
    }
 }

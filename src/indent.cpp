@@ -246,23 +246,23 @@ static int token_indent(c_token_t type)
    {
    case CT_IF:
    case CT_DO:
-      return 3;
+      return(3);
 
    case CT_FOR:
    case CT_ELSE:  // wacky, but that's what is wanted
-      return 4;
+      return(4);
 
    case CT_WHILE:
-      return 6;
+      return(6);
 
    case CT_SWITCH:
-      return 7;
+      return(7);
 
    case CT_ELSEIF:
-      return 8;
+      return(8);
 
    default:
-      return 0; //cpd.settings[UO_indent_braces].n;
+      return(0); //cpd.settings[UO_indent_braces].n;
    }
 }
 
@@ -285,8 +285,8 @@ void indent_text(void)
    struct parse_frame frm;
    bool               in_preproc = false, was_preproc = false;
    int                indent_column;
-   int                cout_col   = 0;   // for aligning << stuff
-   int                cout_level = 0;   // for aligning << stuff
+   int                cout_col            = 0; // for aligning << stuff
+   int                cout_level          = 0; // for aligning << stuff
    int                parent_token_indent = 0;
 
    memset(&frm, 0, sizeof(frm));
@@ -407,7 +407,8 @@ void indent_text(void)
                 ((pc->type == CT_PAREN_CLOSE) ||
                  (pc->type == CT_SPAREN_CLOSE) ||
                  (pc->type == CT_FPAREN_CLOSE) ||
-                 (pc->type == CT_SQUARE_CLOSE)))
+                 (pc->type == CT_SQUARE_CLOSE) ||
+                 (pc->type == CT_ANGLE_CLOSE)))
             {
                indent_pse_pop(frm, pc);
                frm.paren_count--;
@@ -512,7 +513,7 @@ void indent_text(void)
                else
                {
                   frm.pse[frm.pse_tos].indent += cpd.settings[UO_indent_brace].n;
-                  indent_column               += cpd.settings[UO_indent_brace].n;
+                  indent_column += cpd.settings[UO_indent_brace].n;
                }
             }
             else if (pc->parent_type == CT_CASE)
@@ -609,7 +610,8 @@ void indent_text(void)
       else if ((pc->type == CT_PAREN_OPEN) ||
                (pc->type == CT_SPAREN_OPEN) ||
                (pc->type == CT_FPAREN_OPEN) ||
-               (pc->type == CT_SQUARE_OPEN))
+               (pc->type == CT_SQUARE_OPEN) ||
+               (pc->type == CT_ANGLE_OPEN))
       {
          /* Open parens and squares - never update indent_column */
          indent_pse_push(frm, pc);

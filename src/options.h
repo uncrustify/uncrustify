@@ -278,6 +278,7 @@ enum uncrustify_options
 
    UO_nl_class_init_args,        // newline after comma in class init args
    UO_nl_collapse_empty_body,    // change { \n } into {}
+   UO_nl_class_leave_one_liners, // leave one-line function bodies in "class xx { here }"
    UO_nl_template_class,         // newline between '>' and class in "template <x> class"
 
    UO_pos_bool,                  // position of trailing/leading &&/||

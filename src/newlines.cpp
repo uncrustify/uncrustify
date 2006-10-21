@@ -501,6 +501,25 @@ static void newlines_brace_pair(chunk_t *br_open)
       }
    }
 
+   if (cpd.settings[UO_nl_class_leave_one_liners].b &&
+       ((br_open->flags & PCF_IN_CLASS) != 0))
+   {
+      pc = chunk_get_next_type(next, CT_BRACE_CLOSE, br_open->level);
+      if (pc != NULL)
+      {
+         next = br_open;
+         do
+         {
+            next = chunk_get_next_nc(next);
+         } while ((next != NULL) && (next != pc) && (next->type != CT_NEWLINE));
+
+         if (next == pc)
+         {
+            return;
+         }
+      }
+   }
+
    next = chunk_get_next_nc(br_open);
 
    /** Insert a newline between the '=' and open brace, if needed */
@@ -538,8 +557,11 @@ static void newlines_brace_pair(chunk_t *br_open)
        (br_open->parent_type == CT_FUNC_CALL) ||
        (br_open->parent_type == CT_FUNC_CLASS))
    {
-      /* Need to force a newline before the close brace */
-      nl_close_brace = true;
+      /* Need to force a newline before the close brace, if not in a class body */
+      if ((br_open->flags & PCF_IN_CLASS) == 0)
+      {
+         nl_close_brace = true;
+      }
 
       /* handle newlines after the open brace */
       pc = chunk_get_next_ncnl(br_open);
@@ -846,10 +868,23 @@ void newlines_cleanup_braces(void)
       }
       else if (pc->type == CT_BRACE_OPEN)
       {
-         if (cpd.settings[UO_nl_after_brace_open].b)
+         next = chunk_get_next_ncnl(pc);
+         if (next->type == CT_BRACE_CLOSE)
          {
-            newline_iarf(pc, AV_ADD);
+            //TODO: add an option to split open empty statements? { };
          }
+         else
+         {
+            if (cpd.settings[UO_nl_after_brace_open].b &&
+                ((pc->flags & (PCF_IN_ARRAY_ASSIGN | PCF_IN_PREPROC)) == 0))
+            {
+               if (!chunk_is_str(next, "{", 1))
+               {
+                  newline_iarf(pc, AV_ADD);
+               }
+            }
+         }
+
          newlines_brace_pair(pc);
       }
       else if (pc->type == CT_STRUCT)
@@ -903,10 +938,14 @@ void newlines_cleanup_braces(void)
       }
       else if (pc->type == CT_SEMICOLON)
       {
-         if (((pc->flags & PCF_IN_SPAREN) == 0) &&
+         if (((pc->flags & (PCF_IN_SPAREN | PCF_IN_PREPROC)) == 0) &&
              cpd.settings[UO_nl_after_semicolon].b)
          {
-            newline_iarf(pc, AV_ADD);
+            next = chunk_get_next(pc);
+            if (!chunk_is_comment(next))
+            {
+               newline_iarf(pc, AV_ADD);
+            }
          }
       }
       else if (pc->type == CT_FPAREN_OPEN)

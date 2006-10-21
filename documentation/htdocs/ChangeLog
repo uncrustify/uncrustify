@@ -30,6 +30,8 @@ Plans for 0.1.0
 Changes in uncrustify-0.29
 -------------------------------------------------------------------------------
  - Add support for the 'Klaus' style
+ - Fix a bunch of c++ template bugs
+ - Add option nl_class_leave_one_liners
 
 
 Changes in uncrustify-0.28

@@ -874,7 +874,7 @@ void log_pcf_flags(log_sev_t sev, UINT32 flags)
       return;
    }
 
-   log_str(sev, "[", 1);
+   log_fmt(sev, "[0x%X:", flags);
 
    const char *tolog = NULL;
    for (int i = 0; i < (int)ARRAY_SIZE(pcf_names); i++)
