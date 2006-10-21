@@ -587,11 +587,16 @@ static bool parse_next(chunk_t *pc)
    {
       /* Chunk to a newline or comment */
       pc->type = CT_PREPROC_BODY;
-      while ((pc->str[pc->len] != 0) &&
-             (pc->str[pc->len] != '\n') &&
-             !((pc->str[pc->len] == '/') && ((pc->str[pc->len + 1] == '/') ||
-                                             (pc->str[pc->len + 1] == '*'))))
+      char last = 0;
+      while (pc->str[pc->len] != 0)
       {
+         /* Bail on a non-escaped newline or on a C++ comment start */
+         if (((pc->str[pc->len] == '\n') && (last != '\\')) ||
+             ((pc->str[pc->len] == '/') && (pc->str[pc->len + 1] == '/')))
+         {
+            break;
+         }
+         last = pc->str[pc->len];
          pc->len++;
       }
       if (pc->len > 0)
