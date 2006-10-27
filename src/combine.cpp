@@ -1610,7 +1610,6 @@ static void mark_function(chunk_t *pc)
    chunk_t *next;
    chunk_t *tmp;
    chunk_t *paren_close;
-   chunk_t *var = NULL;
 
    prev = chunk_get_prev_ncnlnp(pc);
    next = chunk_get_next_ncnlnp(pc);

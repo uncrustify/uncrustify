@@ -504,7 +504,7 @@ static void newlines_brace_pair(chunk_t *br_open)
    if (cpd.settings[UO_nl_class_leave_one_liners].b &&
        ((br_open->flags & PCF_IN_CLASS) != 0))
    {
-      pc = chunk_get_next_type(next, CT_BRACE_CLOSE, br_open->level);
+      pc = chunk_get_next_type(br_open, CT_BRACE_CLOSE, br_open->level);
       if (pc != NULL)
       {
          next = br_open;
