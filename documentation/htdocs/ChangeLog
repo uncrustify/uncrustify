@@ -31,6 +31,7 @@ Changes in uncrustify-0.30
 -------------------------------------------------------------------------------
  - Use environment variable UNCRUSTIFY_CONFIG if no '-c' option (non-WIN32)
  - Default to ~/.uncrustify.cfg if no '-c' option and no env var (non-WIN32)
+ - Add '-q' option to the usage info
 
 
 Changes in uncrustify-0.29
