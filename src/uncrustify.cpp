@@ -197,7 +197,9 @@ int main(int argc, char *argv[])
    if (((cfg_file = arg.Param("--config")) == NULL) &&
        ((cfg_file = arg.Param("-c")) == NULL))
    {
+#ifdef WIN32
       usage_exit("Specify the config file: -c file", argv[0], 58);
+#endif
    }
 
    /* Get the parsed file name */
@@ -315,6 +317,27 @@ int main(int argc, char *argv[])
 
    /* Load the config file */
    set_option_defaults();
+
+#ifndef WIN32
+   char buf[512];
+   if (cfg_file == NULL)
+   {
+      cfg_file = getenv("UNCRUSTIFY_CONFIG");
+      if (cfg_file == NULL)
+      {
+         const char *home = getenv("HOME");
+
+         if (home == NULL)
+         {
+            usage_exit("Specify the config file with '-c file' or set UNCRUSTIFY_CONFIG",
+                       argv[0], 58);
+         }
+         snprintf(buf, sizeof(buf), "%s/.uncrustify.cfg", home);
+         cfg_file = buf;
+      }
+   }
+#endif
+
    cpd.filename = cfg_file;
    if (load_option_file(cfg_file) < 0)
    {
