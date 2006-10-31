@@ -106,6 +106,7 @@ static void usage_exit(const char *msg, const char *argv0, int code)
            " --replace    : replace source files (creates a backup)\n"
            " -l           : language override: C, CPP, D, CS, JAVA, PAWN\n"
            " -t           : load a file with types (usually not needed)\n"
+           " -q           : quiet mode - no output on stderr (-L will override)\n"
            "\n"
            "Config/Help Options:\n"
            " -h -? --help --usage     : print this message and exit\n"
