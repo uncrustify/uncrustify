@@ -27,6 +27,12 @@ Plans for 0.1.0
 ===============================================================================
 
 
+Changes in uncrustify-0.30
+-------------------------------------------------------------------------------
+ - Use environment variable UNCRUSTIFY_CONFIG if no '-c' option (non-WIN32)
+ - Default to ~/.uncrustify.cfg if no '-c' option and no env var (non-WIN32)
+
+
 Changes in uncrustify-0.29
 -------------------------------------------------------------------------------
  - Add support for the 'Klaus' style
