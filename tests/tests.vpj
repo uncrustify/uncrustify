@@ -94,7 +94,6 @@
 			<F N="config/class-colon-pos-eol.cfg"/>
 			<F N="config/class-colon-pos-sol-add.cfg"/>
 			<F N="config/class-colon-pos-sol.cfg"/>
-			<F N="config/class-colon-pos-sol2.cfg"/>
 			<F N="config/class-nl_func-add.cfg"/>
 			<F N="config/class-nl_func-del.cfg"/>
 			<F N="config/cpp_to_c-1.cfg"/>
@@ -226,9 +225,6 @@
 		<Folder Name="output">
 			<Folder Name="c">
 				<F N="output/c/00000-comment-indent.c"/>
-				<F N="output/c/00001-cpp_to_c-1.c"/>
-				<F N="output/c/00002-cpp_to_c-2.c"/>
-				<F N="output/c/00003-cpp_to_c-3.c"/>
 				<F N="output/c/00010-braces.c"/>
 				<F N="output/c/00011-braces.c"/>
 				<F N="output/c/00012-braces.c"/>
@@ -236,8 +232,6 @@
 				<F N="output/c/00014-braces.c"/>
 				<F N="output/c/00015-braces.c"/>
 				<F N="output/c/00020-define-if-indent.c"/>
-				<F N="output/c/00050-brace-remove-2.c"/>
-				<F N="output/c/00051-brace-remove-all.c"/>
 				<F N="output/c/00060-braces-2.c"/>
 				<F N="output/c/00061-braces-3.c"/>
 				<F N="output/c/00062-braces-4.c"/>
@@ -250,23 +244,11 @@
 				<F N="output/c/00106-bugs-6.c"/>
 				<F N="output/c/00130-minus-minus.c"/>
 				<F N="output/c/00150-casts.c"/>
-				<F N="output/c/00201-case-1.c"/>
-				<F N="output/c/00202-case-2.c"/>
-				<F N="output/c/00203-case-3.c"/>
 				<F N="output/c/00301-align-struct-init.c"/>
 				<F N="output/c/00401-align-equ.c"/>
 				<F N="output/c/00411-align-typedef.c"/>
-				<F N="output/c/00501-bool-pos-eol.c"/>
-				<F N="output/c/00502-bool-pos-sol.c"/>
 				<F N="output/c/00600-dos.c"/>
 				<F N="output/c/00601-mac.c"/>
-				<F N="output/c/00611-pp-space-1.c"/>
-				<F N="output/c/00612-pp-space-2.c"/>
-				<F N="output/c/00613-pp-space-3.c"/>
-				<F N="output/c/00701-func-def-1.c"/>
-				<F N="output/c/00702-func-def-2.c"/>
-				<F N="output/c/00703-func-def-3.c"/>
-				<F N="output/c/00801-func_type.c"/>
 				<F N="output/c/00901-code_width.c"/>
 				<F N="output/c/00910-pascal_ptr.c"/>
 				<F N="output/c/20000-i2c-core.c"/>
@@ -280,12 +262,7 @@
 				<F N="output/cpp/30020-bool.cpp"/>
 				<F N="output/cpp/30021-byref.cpp"/>
 				<F N="output/cpp/30022-extern_c.h"/>
-				<F N="output/cpp/30030-avalon-Timestamp.h"/>
 				<F N="output/cpp/30031-operator.cpp"/>
-				<F N="output/cpp/30040-nl_class-r.h"/>
-				<F N="output/cpp/30041-nl_class-a.h"/>
-				<F N="output/cpp/30050-nl_namespace-r.h"/>
-				<F N="output/cpp/30051-nl_namespace-a.h"/>
 			</Folder>
 			<Folder Name="cs">
 				<F N="output/cs/10000-simple.cs"/>

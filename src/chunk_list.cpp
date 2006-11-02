@@ -10,6 +10,7 @@
 #include <cstdlib>
 
 #include "ListManager.h"
+#include "prototypes.h"
 
 typedef ListManager <chunk_t>   ChunkList;
 
@@ -102,6 +103,11 @@ void chunk_move_after(chunk_t *pc_in, chunk_t *ref)
 {
    g_cl.Pop(pc_in);
    g_cl.AddAfter(pc_in, ref);
+
+   /* HACK: Adjust the original column */
+   pc_in->column       = ref->column + space_col_align(ref, pc_in);
+   pc_in->orig_col     = pc_in->column;
+   pc_in->orig_col_end = pc_in->orig_col + pc_in->len;
 }
 
 /**

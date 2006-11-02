@@ -22,5 +22,14 @@ void foo(void)
    {
       printf("hi");
    }
+
+   if (!this->writeOwiFile () ||                 // comment1
+       broken () || !saveArchiveData () ||       /* comment2 */
+       broken () || !deleteCentralArchive () ||  // comment3
+       broken () || !copyArchivFiles () ||       // comment4
+       broken () || !appendToPlanetDb ())        // comment5
+   {
+      ;
+   }
 }
 

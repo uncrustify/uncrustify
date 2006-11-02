@@ -1136,8 +1136,8 @@ void newlines_bool_pos(void)
    {
       if (pc->type == CT_BOOL)
       {
-         prev = chunk_get_prev(pc);
-         next = chunk_get_next(pc);
+         prev = chunk_get_prev_nc(pc);
+         next = chunk_get_next_nc(pc);
 
          /* if both are newlines or neither are newlines, skip this chunk */
          if (chunk_is_newline(prev) == chunk_is_newline(next))
@@ -1150,14 +1150,20 @@ void newlines_bool_pos(void)
          {
             if (chunk_is_newline(prev) && (prev->nl_count == 1))
             {
-               chunk_swap(pc, prev);
+               /* Back up to the next non-comment item */
+               prev = chunk_get_prev_nc(prev);
+               if ((prev != NULL) && !chunk_is_newline(prev))
+               {
+                  chunk_move_after(pc, prev);
+               }
             }
          }
          else  /* (mode == TP_LEAD) */
          {
             if (chunk_is_newline(next) && (next->nl_count == 1))
             {
-               chunk_swap(pc, next);
+               /* move the CT_BOOL to after the newline */
+               chunk_move_after(pc, next);
             }
          }
       }
