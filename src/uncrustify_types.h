@@ -109,9 +109,8 @@ static const char *pcf_names[32] =
    "MFC_PAREN",
    "VAR_DEF",
    "VAR_1ST",
-   "VAR_1ST_DEF",
    "VAR_INLINE",
-   "DEF_ALIGNED",
+   "IN_ENUM",
    "IN_FCN_DEF",
    "IN_FCN_CALL",
    "IN_SPAREN",
@@ -120,6 +119,10 @@ static const char *pcf_names[32] =
    "WAS_ALIGNED",
    "OPTIONAL",
    "IN_TYPEDEF",
+   "IN_CONST_ARGS",
+   "LVALUE",
+   "IN_ARRAY_ASSIGN",
+   "IN_CLASS",
 };
 #endif
 
