@@ -123,7 +123,7 @@ class Lexer
 
 
     // generate a unique identifier for this string
-    static Identifier idPool(in char[] str){
+    static Identifier idPool(in char[] str) {
 //	    StringValue sv;
 //	    uint len = s.length;
 //	    StringValue sv = stringtable.update(s, len);
@@ -135,7 +135,7 @@ class Lexer
         return(stringtable[str]);
     }
 
-    static void initKeywords(){
+    static void initKeywords() {
         // build character map
         cmtable_init();
 
@@ -147,7 +147,7 @@ class Lexer
     }
 
     // Combine two document comments into one.
-    static char[] combineComments(char[] c1, char[] c2){
+    static char[] combineComments(char[] c1, char[] c2) {
         char[] c = c2;
         if (c1.length) {
             c = c1;
@@ -160,7 +160,7 @@ class Lexer
 
     // Decode UTF character. Issue error messages for invalid sequences. Return decoded character, advance p to last character in UTF sequence.
     //! fix
-    uint decodeUTF(){
+    uint decodeUTF() {
         ubyte * s = p;
         ubyte c   = *s;
 
@@ -194,7 +194,7 @@ class Lexer
          */
     }
 
-    void error(...){
+    void error(...) {
         if ((mod !is null) && !global.gag) {
             writefln(formatLoc(loc, _arguments, _argptr));
             /*
@@ -211,7 +211,7 @@ class Lexer
         global.errors++;
     }
 
-    void errorLoc(Loc loc, ...){
+    void errorLoc(Loc loc, ...) {
         if ((mod !is null) && !global.gag) {
             writefln(formatLoc(loc, _arguments, _argptr));
             /*
@@ -229,7 +229,7 @@ class Lexer
     }
 
 
-    TOK nextToken(){
+    TOK nextToken() {
         if (token.next) {
             Token * t = token.next;
             memcpy(&token, t, Token.sizeof);
@@ -243,7 +243,7 @@ class Lexer
         return(token.value);
     }
 
-    Token * peek(inout Token ct){
+    Token * peek(inout Token ct) {
         Token * t;
 
         if (ct.next) {
@@ -260,7 +260,7 @@ class Lexer
 
     // Turn next token in buffer into a token.
 
-    void scan(Token * t){
+    void scan(Token * t) {
 //		debug writefln("scan token");
         uint lastLine = loc.linnum;
         uint linnum;
@@ -1018,7 +1018,7 @@ Llen:
 
 
     // Parse escape sequence.
-    uint escapeSequence(){
+    uint escapeSequence() {
         uint c;
         int  n;
         int  ndigits;
@@ -1147,7 +1147,7 @@ Lhex:
     /**************************************
      */
 
-    TOK wysiwygStringConstant(Token * t, int tc){
+    TOK wysiwygStringConstant(Token * t, int tc) {
         uint c;
         Loc  start = loc;
 
@@ -1210,7 +1210,7 @@ Lhex:
      *	x"0A ae 34FE BD"
      */
 
-    TOK hexStringConstant(Token * t){
+    TOK hexStringConstant(Token * t) {
         uint c;
         Loc  start = loc;
         uint n     = 0;
@@ -1297,7 +1297,7 @@ Lhex:
     /**************************************
      */
 
-    TOK escapeStringConstant(Token * t, int wide){
+    TOK escapeStringConstant(Token * t, int wide) {
         uint c;
         Loc  start = loc;
 
@@ -1374,7 +1374,7 @@ Lhex:
     }
 
     //**************************************
-    TOK charConstant(Token * t, int wide){
+    TOK charConstant(Token * t, int wide) {
         uint c;
         TOK  tk = TOK.TOKcharv;
 
@@ -1440,7 +1440,7 @@ L1:
     }
 
     // Get postfix of string literal.
-    void stringPostfix(Token * t){
+    void stringPostfix(Token * t) {
         switch (*p) {
         case 'c':
         case 'w':
@@ -1505,7 +1505,7 @@ L1:
      *	TKdouble,...
      */
 
-    TOK number(Token * t){
+    TOK number(Token * t) {
         //debug writefln("Lexer.number()");
         // We use a state machine to collect numbers
         enum STATE {
@@ -1537,7 +1537,7 @@ L1:
         STATE state   = STATE.STATE_initial;
         ubyte * start = p;
 
-        TOK _isreal(){
+        TOK _isreal() {
             p = start;
             return(inreal(t));
         }
@@ -1937,7 +1937,7 @@ L1:
      *	Too much requested precision is not detected.
      */
 
-    TOK inreal(Token * t){
+    TOK inreal(Token * t) {
         int  dblstate;
         uint c;
         char hex;                       // is this a hexadecimal-floating-constant?
@@ -2086,7 +2086,7 @@ done:
      *	#line linnum [filespec]
      */
 
-    void Pragma(){
+    void Pragma() {
         Token  tok;
         int    linnum;
 
@@ -2205,7 +2205,7 @@ Lerr:
      * Append to previous one for this token.
      */
 
-    void getDocComment(Token * t, uint lineComment){
+    void getDocComment(Token * t, uint lineComment) {
         auto OutBuffer buf       = new OutBuffer;
         ubyte          ct        = t.ptr[2];
         ubyte          * q       = t.ptr + 3; // start of comment text
@@ -2338,7 +2338,7 @@ ubyte isidchar(ubyte c) {
     return(cmtable[c] & CMidchar);
 }
 
-static void cmtable_init(){
+static void cmtable_init() {
     for (uint c = 0; c < cmtable.length; c++) {
         if ('0' <= c && c <= '7') {
             cmtable[c] |= CMoctal;
