@@ -154,18 +154,25 @@ static void examine_brace(chunk_t *bopen)
 
    if (pc->type == CT_BRACE_CLOSE)
    {
-      /* we have a pair of braces with only 1 statement inside */
-      remove_brace(bopen);
-      remove_brace(pc);
-      bopen->type = CT_VBRACE_OPEN;
-      bopen->len  = 0;
-      bopen->str  = "";
-      pc->type    = CT_VBRACE_CLOSE;
-      pc->len     = 0;
-      pc->str     = "";
+      if (semi_count > 0)
+      {
+         /* we have a pair of braces with only 1 statement inside */
+         remove_brace(bopen);
+         remove_brace(pc);
+         bopen->type = CT_VBRACE_OPEN;
+         bopen->len  = 0;
+         bopen->str  = "";
+         pc->type    = CT_VBRACE_CLOSE;
+         pc->len     = 0;
+         pc->str     = "";
 
-      LOG_FMT(LBRDEL, " removing braces on line %d and %d\n",
-              bopen->orig_line, pc->orig_line);
+         LOG_FMT(LBRDEL, " removing braces on line %d and %d\n",
+                 bopen->orig_line, pc->orig_line);
+      }
+      else
+      {
+         LOG_FMT(LBRDEL, " empty statement\n");
+      }
    }
    else
    {
