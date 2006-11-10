@@ -36,5 +36,9 @@ void foo(void)
          }
       }
    }
+
+   while (*ptr++ != ',')
+   {
+   }
 }
 

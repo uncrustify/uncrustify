@@ -27,5 +27,9 @@ void foo(void)
 				a *= a;
 		}
 	}
+
+	while (*ptr++ != ',')
+	{
+	}
 }
 
