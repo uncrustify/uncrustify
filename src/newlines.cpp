@@ -963,7 +963,10 @@ void newlines_cleanup_braces(void)
       }
       else if (pc->type == CT_CLASS)
       {
-         newlines_struct_enum_union(pc, cpd.settings[UO_nl_class_brace].a);
+         if (pc->level == pc->brace_level)
+         {
+            newlines_struct_enum_union(pc, cpd.settings[UO_nl_class_brace].a);
+         }
       }
       else if (pc->type == CT_ANGLE_CLOSE)
       {
