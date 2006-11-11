@@ -212,6 +212,16 @@ argval_t do_space(chunk_t *first, chunk_t *second)
       return(cpd.settings[UO_sp_before_squares].a);
    }
 
+   if (first->type == CT_BYREF)
+   {
+      return(cpd.settings[UO_sp_after_byref].a);
+   }
+
+   if (second->type == CT_BYREF)
+   {
+      return(cpd.settings[UO_sp_before_byref].a);
+   }
+
    /* spacing around template > > stuff */
    if ((first->type == CT_ANGLE_CLOSE) &&
        (second->type == CT_ANGLE_CLOSE))
@@ -507,16 +517,6 @@ argval_t do_space(chunk_t *first, chunk_t *second)
          return((argval_t)(cpd.settings[UO_sp_type_func].a | AV_ADD));
       }
       return(cpd.settings[UO_sp_type_func].a);
-   }
-
-   if (first->type == CT_BYREF)
-   {
-      return(cpd.settings[UO_sp_after_byref].a);
-   }
-
-   if (second->type == CT_BYREF)
-   {
-      return(cpd.settings[UO_sp_before_byref].a);
    }
 
    if (first->type == CT_BRACE_OPEN)

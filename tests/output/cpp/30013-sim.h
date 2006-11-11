@@ -1,6 +1,5 @@
 namespace ns {
-template<typename T, template<typename>
-         class TOtherClass>
+template<typename T, template<typename>class TOtherClass>
 class Example
 {
   int foo;
