@@ -146,9 +146,9 @@ static chunk_t *newline_add_between2(chunk_t *start, chunk_t *end,
       return(NULL);
    }
 
-   LOG_FMT(LNEWLINE, "%s: '%.*s' line %d and '%.*s' line %d : caller=%s:%d\n",
-           __func__, start->len, start->str, start->orig_line,
-           end->len, end->str, end->orig_line, func, line);
+   LOG_FMT(LNEWLINE, "%s: '%.*s' line %d:%d and '%.*s' line %d:%d : caller=%s:%d\n",
+           __func__, start->len, start->str, start->orig_line, start->orig_col,
+           end->len, end->str, end->orig_line, end->orig_col, func, line);
 
    /* Scan for a line break */
    for (pc = start; pc != end; pc = chunk_get_next(pc))
@@ -182,9 +182,9 @@ static bool newline_del_between2(chunk_t *start, chunk_t *end,
    chunk_t *pc    = start;
    bool    retval = false;
 
-   LOG_FMT(LNEWLINE, "%s: '%.*s' line %d and '%.*s' line %d : caller=%s:%d\n",
-           __func__, start->len, start->str, start->orig_line,
-           end->len, end->str, end->orig_line, func, line);
+   LOG_FMT(LNEWLINE, "%s: '%.*s' line %d:%d and '%.*s' line %d:%d : caller=%s:%d\n",
+           __func__, start->len, start->str, start->orig_line, start->orig_col,
+           end->len, end->str, end->orig_line, end->orig_col, func, line);
 
    do
    {
@@ -970,7 +970,8 @@ void newlines_cleanup_braces(void)
          if (pc->parent_type == CT_TEMPLATE)
          {
             next = chunk_get_next_ncnl(pc);
-            if ((next != NULL) && (next->type == CT_CLASS))
+            if ((next != NULL) && (next->type == CT_CLASS) &&
+                (next->level == next->brace_level))
             {
                newline_iarf(pc, cpd.settings[UO_nl_template_class].a);
             }
