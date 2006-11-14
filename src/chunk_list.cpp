@@ -419,3 +419,31 @@ void chunk_swap(chunk_t *pc1, chunk_t *pc2)
 {
    g_cl.Swap(pc1, pc2);
 }
+
+/**
+ * Gets the next non-vbrace chunk
+ */
+chunk_t *chunk_get_next_nvb(chunk_t *cur)
+{
+   chunk_t *pc = cur;
+
+   do
+   {
+      pc = chunk_get_next(pc);
+   } while (chunk_is_vbrace(pc));
+   return(pc);
+}
+
+/**
+ * Gets the prev non-vbrace chunk
+ */
+chunk_t *chunk_get_prev_nvb(chunk_t *cur)
+{
+   chunk_t *pc = cur;
+
+   do
+   {
+      pc = chunk_get_prev(pc);
+   } while (chunk_is_vbrace(pc));
+   return(pc);
+}

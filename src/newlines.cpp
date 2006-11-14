@@ -275,6 +275,263 @@ static void newlines_if_for_while_switch(chunk_t *start, argval_t nl_opt)
    }
 }
 
+/**
+ * Add or remove extra newline before the chunk.
+ * Adds before comments
+ * Doesn't do anything if open brace before it
+ * "code\n\ncomment\nif (...)" or "code\ncomment\nif (...)"
+ */
+static void newlines_if_for_while_switch_pre_blank_lines(chunk_t *start, argval_t nl_opt)
+{
+   chunk_t *pc;
+   chunk_t *prev;
+   chunk_t *last_nl = NULL;
+   int     level    = start->level;
+   bool    do_add   = nl_opt & AV_ADD;
+
+   if ((nl_opt == AV_IGNORE) ||
+       (((start->flags & PCF_IN_PREPROC) != 0) &&
+        !cpd.settings[UO_nl_define_macro].b))
+   {
+      return;
+   }
+
+   /*
+    * look backwards until we find
+    *  open brace (don't add or remove)
+    *  2 newlines in a row (don't add)
+    *  something else (don't remove)
+    */
+   for (pc = chunk_get_prev(start); pc != NULL; pc = chunk_get_prev(pc))
+   {
+      if (chunk_is_newline(pc))
+      {
+         last_nl = pc;
+         /* if we found 2 or more in a row */
+         if (pc->nl_count > 1 || chunk_is_newline(chunk_get_prev_nvb(pc)))
+         {
+            /* need to remove */
+            if (nl_opt & AV_REMOVE)
+            {
+               /* if we're also adding, take care of that here */
+               pc->nl_count = do_add ? 2 : 1;
+               /* can keep using pc because anything other than newline stops loop, and we delete if newline */
+               while (chunk_is_newline(prev = chunk_get_prev_nvb(pc)))
+               {
+                  chunk_del(prev);
+               }
+            }
+
+            return;
+         }
+      }
+      else if (chunk_is_opening_brace(pc) || pc->level < level)
+      {
+         return;
+      }
+      else if (chunk_is_comment(pc))
+      {
+         /* vbrace close is ok because it won't go into output, so we should skip it */
+         last_nl = NULL;
+         continue;
+      }
+      else
+      {
+         if (do_add)/* we found something previously besides a comment or a new line */
+         {
+            /* if we have run across a newline */
+            if (last_nl)
+            {
+               if (last_nl->nl_count < 2)
+               {
+                  last_nl->nl_count = 2;
+               }
+            }
+            else /* if we didn't run into a nl, need to add one */
+            if ((last_nl = newline_add_after(pc)) != NULL)
+            {
+               last_nl->nl_count = 2;
+            }
+         }
+
+         return;
+      }
+   }
+}
+
+static chunk_t *get_closing_brace(chunk_t *start)
+{
+   chunk_t *pc;
+   int     level = start->level;
+
+   for (pc = start; (pc = chunk_get_next(pc)) != NULL;)
+   {
+      if ((pc->type == CT_BRACE_CLOSE || pc->type == CT_VBRACE_CLOSE) && pc->level == level)
+      {
+         return(pc);
+      }
+      /* for some reason, we can have newlines between if and opening brace that are lower level than either */
+      if (!chunk_is_newline(pc) && pc->level < level)
+      {
+         return(NULL);
+      }
+   }
+
+   return(NULL);
+}
+
+/**
+ * remove any consecutive newlines following this chunk
+ * skip vbraces
+ */
+static void remove_next_newlines(chunk_t *start)
+{
+   chunk_t *next;
+
+   while ((next = chunk_get_next(start)) != NULL)
+   {
+      if (chunk_is_newline(next))
+      {
+         chunk_del(next);
+      }
+      else if (chunk_is_vbrace(next))
+      {
+         start = next;
+      }
+      else
+      {
+         break;
+      }
+   }
+}
+
+/**
+ * Add or remove extra newline after end of the block started in chunk.
+ * Doesn't do anything if close brace after it
+ * Interesting issue is that at this point, nls can be before or after vbraces
+ * VBraces will stay VBraces, conversion to real ones should have already happened
+ * "if (...)\ncode\ncode" or "if (...)\ncode\n\ncode"
+ */
+static void newlines_if_for_while_switch_post_blank_lines(chunk_t *start, argval_t nl_opt)
+{
+   chunk_t *pc;
+   chunk_t *next;
+   chunk_t *prev;
+   bool    have_pre_vbrace_nl = false;
+   int     nl_count;
+
+   if ((nl_opt == AV_IGNORE) ||
+       (((start->flags & PCF_IN_PREPROC) != 0) &&
+        !cpd.settings[UO_nl_define_macro].b))
+   {
+      return;
+   }
+
+   /* first find ending brace */
+   if ((pc = get_closing_brace(start)) == NULL)
+   {
+      return;
+   }
+
+   /* if we're dealing with an if, we actually want to add or remove blank lines after any elses */
+   if (start->type == CT_IF)
+   {
+      while (true)
+      {
+         next = chunk_get_next_ncnl(pc);
+         if (next != NULL && (next->type == CT_ELSE || next->type == CT_ELSEIF))
+         {
+            /* point to the closing brace of the else */
+            if ((pc = get_closing_brace(next)) == NULL)
+            {
+               return;
+            }
+         }
+         else
+         {
+            break;
+         }
+      }
+   }
+
+   /* if we're dealing with a do/while, we actually want to add or remove blank lines after while and its condition */
+   if (start->type == CT_DO)
+   {
+      /* point to the next semicolon */
+      if ((pc = chunk_get_next_type(pc, CT_SEMICOLON, start->level)) == NULL)
+      {
+         return;
+      }
+   }
+
+   bool isVBrace = pc->type == CT_VBRACE_CLOSE;
+   if ((prev = chunk_get_prev_nvb(pc)) == NULL)
+   {
+      return;
+   }
+
+   have_pre_vbrace_nl = isVBrace && chunk_is_newline(prev);
+   if (nl_opt & AV_REMOVE)
+   {
+      /* if vbrace, have to check before and after */
+      /* if chunk before vbrace, remove any nls after vbrace */
+      if (have_pre_vbrace_nl)
+      {
+         prev->nl_count = 1;
+         remove_next_newlines(pc);
+      }
+      else if (chunk_is_newline(next = chunk_get_next_nvb(pc)))/* otherwise just deal with nls after brace */
+      {
+         next->nl_count = 1;
+         remove_next_newlines(next);
+      }
+   }
+
+   /* may have a nl before and after vbrace */
+   /* don't do anything with it if the next non nl chunk is a closing brace */
+   if (nl_opt & AV_ADD)
+   {
+      if ((next = chunk_get_next_nnl(pc)) == NULL)
+      {
+         return;
+      }
+
+      if (next->type != CT_BRACE_CLOSE)
+      {
+         /* if vbrace, have to check before and after */
+         /* if chunk before vbrace, check its count */
+         nl_count = have_pre_vbrace_nl ? prev->nl_count : 0;
+         if (chunk_is_newline(next = chunk_get_next_nvb(pc)))
+         {
+            nl_count += next->nl_count;
+         }
+         /* if we have no newlines, add one and make it double */
+         if (nl_count == 0)
+         {
+            if ((next = newline_add_after(pc)) == NULL)
+            {
+               return;
+            }
+
+            next->nl_count = 2;
+         }
+         else if (nl_count == 1)/* if we don't have enough newlines */
+         {
+            /* if we have one before vbrace, need to add one after */
+            if (have_pre_vbrace_nl)
+            {
+               next = newline_add_after(pc);
+            }
+            else
+            {
+               /* make nl after double */
+               next->nl_count = 2;
+            }
+         }
+      }
+   }
+}
+
 
 /**
  * Adds or removes a newline between the keyword and the open brace.
@@ -294,8 +551,6 @@ static void newlines_struct_enum_union(chunk_t *start, argval_t nl_opt)
    {
       return;
    }
-
-   //fprintf(stderr, "%s(%s, %d)\n", __func__, start->str, nl_opt);
 
    /* step past any junk between the keyword and the open brace
     * Quit if we hit a semicolon, which is not expected.
@@ -410,16 +665,11 @@ static void newline_fnc_var_def(chunk_t *br_open, int nl_count)
    chunk_t *prev = NULL;
    chunk_t *pc;
 
-   //printf("%s: line %d\n", __func__, br_open->orig_line);
-
    pc = chunk_get_next_ncnl(br_open);
    while (pc != NULL)
    {
-      //printf("%s: [%s] line %d\n", __func__, pc->str, pc->orig_line);
-
       if (chunk_is_type(pc) || (pc->type == CT_QUALIFIER) || (pc->type == CT_DC_MEMBER))
       {
-         //printf("%s: type [%s] line %d\n", __func__, pc->str, pc->orig_line);
          pc = chunk_get_next_ncnl(pc);
          continue;
       }
@@ -439,8 +689,6 @@ static void newline_fnc_var_def(chunk_t *br_open, int nl_count)
    /* prev is either NULL or points to a semicolon */
    if (prev != NULL)
    {
-      //fprintf(stderr, "%s: inserting a newline after [%s] on line %d col%d\n",
-      //        __func__, get_token_name(prev->type), prev->orig_line, prev->orig_col);
       newline_min_after(prev, 1 + cpd.settings[UO_nl_func_var_def_blk].n);
    }
 }
@@ -990,6 +1238,49 @@ void newlines_cleanup_braces(void)
       }
    }
 }
+
+
+/**
+ * Handle insertion/removal of blank lines before if/for/while/do
+ */
+void newlines_insert_blank_lines(void)
+{
+   chunk_t *pc;
+
+   for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next_ncnl(pc))
+   {
+      if (pc->type == CT_IF)
+      {
+         newlines_if_for_while_switch_pre_blank_lines(pc, cpd.settings[UO_nl_before_if].a);
+         newlines_if_for_while_switch_post_blank_lines(pc, cpd.settings[UO_nl_after_if].a);
+      }
+      else if (pc->type == CT_FOR)
+      {
+         newlines_if_for_while_switch_pre_blank_lines(pc, cpd.settings[UO_nl_before_for].a);
+         newlines_if_for_while_switch_post_blank_lines(pc, cpd.settings[UO_nl_after_for].a);
+      }
+      else if (pc->type == CT_WHILE)
+      {
+         newlines_if_for_while_switch_pre_blank_lines(pc, cpd.settings[UO_nl_before_while].a);
+         newlines_if_for_while_switch_post_blank_lines(pc, cpd.settings[UO_nl_after_while].a);
+      }
+      else if (pc->type == CT_SWITCH)
+      {
+         newlines_if_for_while_switch_pre_blank_lines(pc, cpd.settings[UO_nl_before_switch].a);
+         newlines_if_for_while_switch_post_blank_lines(pc, cpd.settings[UO_nl_after_switch].a);
+      }
+      else if (pc->type == CT_DO)
+      {
+         newlines_if_for_while_switch_pre_blank_lines(pc, cpd.settings[UO_nl_before_do].a);
+         newlines_if_for_while_switch_post_blank_lines(pc, cpd.settings[UO_nl_after_do].a);
+      }
+      else
+      {
+         /* ignore it */
+      }
+   }
+}
+
 
 void newlines_squeeze_ifdef(void)
 {

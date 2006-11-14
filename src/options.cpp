@@ -133,6 +133,7 @@ void register_options(void)
    unc_add_option("indent_class_colon", UO_indent_class_colon, AT_BOOL, "Whether to indent the stuff after a leading class colon");
    unc_add_option("indent_func_call_param", UO_indent_func_call_param, AT_BOOL, "Whether to indent continued function call parameters one indent level (true) or aligns instead of indent (false)");
    unc_add_option("indent_member", UO_indent_member, AT_NUM, "The number of spaces to indent a continued '->' or '.'\nUsually set to indent_columns.");
+   unc_add_option("indent_sing_line_comments", UO_indent_sing_line_comments, AT_NUM, "Spaces to indent single line ('//') comments on lines before code");
    unc_add_option("indent_switch_case", UO_indent_switch_case, AT_NUM, "Spaces to indent 'case' from 'switch'");
    unc_add_option("indent_case_body", UO_indent_case_body, AT_NUM, "Spaces to indent 'case' body from 'case'");
    unc_add_option("indent_case_brace", UO_indent_case_brace, AT_NUM, "Spaces to indent '{' from 'case'");
@@ -180,6 +181,16 @@ void register_options(void)
    unc_add_option("nl_after_brace_open", UO_nl_after_brace_open, AT_BOOL, "Whether to put a newline after brace open");
    unc_add_option("nl_define_macro", UO_nl_define_macro, AT_BOOL, "Whether to alter newlines in '#define' macros");
    unc_add_option("nl_squeeze_ifdef", UO_nl_squeeze_ifdef, AT_BOOL, "Whether to not put blanks after '#ifxx', '#elxx', or before '#endif'");
+   unc_add_option("nl_before_if", UO_nl_before_if, AT_IARF, "Add or remove newline before 'if'");
+   unc_add_option("nl_after_if", UO_nl_after_if, AT_IARF, "Add or remove newline after 'if'");
+   unc_add_option("nl_before_for", UO_nl_before_for, AT_IARF, "Add or remove newline before 'for'");
+   unc_add_option("nl_after_for", UO_nl_after_for, AT_IARF, "Add or remove newline after 'for'");
+   unc_add_option("nl_before_while", UO_nl_before_while, AT_IARF, "Add or remove newline before 'while'");
+   unc_add_option("nl_after_while", UO_nl_after_while, AT_IARF, "Add or remove newline after 'while'");
+   unc_add_option("nl_before_switch", UO_nl_before_switch, AT_IARF, "Add or remove newline before 'switch'");
+   unc_add_option("nl_after_switch", UO_nl_after_switch, AT_IARF, "Add or remove newline after 'switch'");
+   unc_add_option("nl_before_do", UO_nl_before_do, AT_IARF, "Add or remove newline before 'do'");
+   unc_add_option("nl_after_do", UO_nl_after_do, AT_IARF, "Add or remove newline after 'do'");
 
    unc_begin_group(UG_blankline, "Blank line options", "Note that it takes 2 newlines to get a blank line");
    unc_add_option("nl_max", UO_nl_max, AT_NUM, "The maximum consecutive newlines");

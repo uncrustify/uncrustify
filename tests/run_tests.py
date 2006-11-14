@@ -14,10 +14,17 @@ import os
 import string
 
 # OK, so I just had way too much fun with the colors..
-NORMAL      = "\033[0m"
-BOLD        = "\033[1m"
-UNDERSCORE  = "\033[1m"
-REVERSE     = "\033[7m"
+
+if os.name == "nt":	# windoze doesn't support ansi sequences
+	NORMAL      = ""
+	BOLD        = ""
+	UNDERSCORE  = ""
+	REVERSE     = ""
+else:	
+	NORMAL      = "\033[0m"
+	BOLD        = "\033[1m"
+	UNDERSCORE  = "\033[1m"
+	REVERSE     = "\033[7m"
 
 FG_BLACK    = "\033[30m"
 FG_RED      = "\033[31m"
@@ -57,9 +64,15 @@ BGB_CYAN    = "\033[106m"
 BGB_WHITE   = "\033[107m"
 
 # after all that, I chose c
-FAIL_COLOR     = UNDERSCORE
-PASS_COLOR     = FG_GREEN
-MISMATCH_COLOR = FG_RED #REVERSE
+
+if os.name == "nt":	# windoze doesn't support ansi sequences
+	FAIL_COLOR     = ""
+	PASS_COLOR     = ""
+	MISMATCH_COLOR = ""
+else:
+	FAIL_COLOR     = UNDERSCORE
+	PASS_COLOR     = FG_GREEN
+	MISMATCH_COLOR = FG_RED #REVERSE
 
 log_level = 1
 

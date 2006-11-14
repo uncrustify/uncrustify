@@ -46,6 +46,9 @@ chunk_t *chunk_get_prev_type(chunk_t *cur, c_token_t type, int level);
 chunk_t *chunk_get_next_str(chunk_t *cur, const char *str, int len, int level);
 chunk_t *chunk_get_prev_str(chunk_t *cur, const char *str, int len, int level);
 
+chunk_t *chunk_get_next_nvb(chunk_t *cur);
+chunk_t *chunk_get_prev_nvb(chunk_t *cur);
+
 /**
  * Skips to the closing match for the current paren/brace/square.
  *
@@ -74,6 +77,13 @@ bool chunk_is_comment(chunk_t *pc)
 {
    return((pc != NULL) && ((pc->type == CT_COMMENT) ||
                            (pc->type == CT_COMMENT_MULTI) ||
+                           (pc->type == CT_COMMENT_CPP)));
+}
+
+static_inline
+bool chunk_is_single_line_comment(chunk_t *pc)
+{
+   return((pc != NULL) && ((pc->type == CT_COMMENT) ||
                            (pc->type == CT_COMMENT_CPP)));
 }
 
@@ -137,5 +147,25 @@ bool chunk_is_addr(chunk_t *pc)
 
 bool chunk_is_newline_between(chunk_t *start, chunk_t *end);
 
+static_inline
+bool chunk_is_closing_brace(chunk_t *pc)
+{
+   return((pc != NULL) && ((pc->type == CT_BRACE_CLOSE) ||
+                           (pc->type == CT_VBRACE_CLOSE)));
+}
+
+static_inline
+bool chunk_is_opening_brace(chunk_t *pc)
+{
+   return((pc != NULL) && ((pc->type == CT_BRACE_OPEN) ||
+                           (pc->type == CT_VBRACE_OPEN)));
+}
+
+static_inline
+bool chunk_is_vbrace(chunk_t *pc)
+{
+   return((pc != NULL) && ((pc->type == CT_VBRACE_CLOSE) ||
+                           (pc->type == CT_VBRACE_OPEN)));
+}
 
 #endif   /* CHUNK_LIST_H_INCLUDED */

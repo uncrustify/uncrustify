@@ -91,31 +91,33 @@ enum uncrustify_options
    UO_indent_with_tabs,         // 1=only to the 'level' indent, 2=use tabs for indenting
    //UO_indent_brace_struct,      //TODO: spaces to indent brace after struct/enum/union def
    //UO_indent_paren,             //TODO: indent for open paren on next line (1)
-   UO_indent_paren_nl,          // indent-align under paren for open followed by nl
-   UO_indent_square_nl,         // indent-align under square for open followed by nl
-   UO_pp_indent,                // indent preproc 1 space per level (add/ignore/remove)
-   UO_pp_space,                 // spaces between # and word (add/ignore/remove)
+   UO_indent_paren_nl,           // indent-align under paren for open followed by nl
+   UO_indent_square_nl,          // indent-align under square for open followed by nl
+   UO_pp_indent,                 // indent preproc 1 space per level (add/ignore/remove)
+   UO_pp_space,                  // spaces between # and word (add/ignore/remove)
 
-   UO_indent_switch_case,       // spaces to indent case from switch
-   UO_indent_case_body,         // spaces to indent case body from case
-   UO_indent_case_brace,        // spaces to indent '{' from case (usually 0 or indent_columns)
+   UO_indent_switch_case,        // spaces to indent case from switch
+   UO_indent_case_body,          // spaces to indent case body from case
+   UO_indent_case_brace,         // spaces to indent '{' from case (usually 0 or indent_columns)
 
-   UO_indent_brace,             // spaces to indent '{' from level (usually 0)
-   UO_indent_braces,            // whether to indent the braces or not
-   UO_indent_brace_parent,      // indent the braces based on the parent size (if=3, for=4, etc)
-   UO_indent_label,             // 0=left >0=col from left, <0=sub from brace indent
+   UO_indent_brace,              // spaces to indent '{' from level (usually 0)
+   UO_indent_braces,             // whether to indent the braces or not
+   UO_indent_brace_parent,       // indent the braces based on the parent size (if=3, for=4, etc)
+   UO_indent_label,              // 0=left >0=col from left, <0=sub from brace indent
 
-   UO_indent_align_string,      // True/False - indent align broken strings
+   UO_indent_align_string,       // True/False - indent align broken strings
 
-   UO_indent_col1_comment,      // indent comments in column 1
+   UO_indent_col1_comment,       // indent comments in column 1
 
-   UO_indent_func_call_param,   // indent continued function calls to indent_columns
+   UO_indent_func_call_param,    // indent continued function calls to indent_columns
 
-   UO_indent_namespace,         // indent stuff inside namespace braces
-   UO_indent_class,             // indent stuff inside class braces
-   UO_indent_class_colon,       // indent stuff after a class colon
+   UO_indent_namespace,          // indent stuff inside namespace braces
+   UO_indent_class,              // indent stuff inside class braces
+   UO_indent_class_colon,        // indent stuff after a class colon
 
-   UO_indent_member,            // indent lines broken at a member '.' or '->'
+   UO_indent_member,             // indent lines broken at a member '.' or '->'
+
+   UO_indent_sing_line_comments, // indent single line ('//') comments on lines before code
 
    /*
     * Misc inter-element spacing
@@ -269,6 +271,17 @@ enum uncrustify_options
    UO_nl_brace_while,            // nl between } and while of do stmt
 
    UO_nl_elseif_brace,           // nl between close paren and open brace in 'else if () {'
+
+   UO_nl_before_if,              // nl before if
+   UO_nl_after_if,               // nl after if/else
+   UO_nl_before_for,             // nl before for
+   UO_nl_after_for,              // nl after for close
+   UO_nl_before_while,           // nl before while
+   UO_nl_after_while,            // nl after while close
+   UO_nl_before_switch,          // nl before switch
+   UO_nl_after_switch,           // nl after switch close
+   UO_nl_before_do,              // nl before do
+   UO_nl_after_do,               // nl after while of do
 
    UO_nl_define_macro,           // alter newlines in #define macros
    UO_nl_start_of_file,          // alter newlines at the start of file

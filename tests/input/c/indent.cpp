@@ -2,7 +2,7 @@
  * @file indent.cpp
  * Does all the indenting stuff.
  *
- * $Id$
+ * $Id: indent.cpp 548 2006-10-21 02:31:55Z bengardner $
  */
 #include "uncrustify_types.h"
 #include "chunk_list.h"
@@ -816,29 +816,27 @@ void indent_text(void)
    }
 }
 
-
 /**
  * returns true if forward scan reveals only single newlines or comments
  * stops when hits code
  * false if next thing hit is a closing brace, also if 2 newlines in a row
  */
+
+
 static bool single_line_comment_indent_rule_applies(chunk_t *start)
 {
    chunk_t *pc      = start;
    int     nl_count = 0;
-
    if (!chunk_is_single_line_comment(pc))
    {
       return(false);
    }
-
-   /* scan forward, if only single newlines and comments before next line of
-    * code, we want to apply */
+   /* scan forward, if only single newlines and comments before next line of code, we want to apply */
    while ((pc = chunk_get_next(pc)) != NULL)
    {
       if (chunk_is_newline(pc))
       {
-         if ((nl_count > 0) || (pc->nl_count > 1))
+         if (nl_count > 0 || pc->nl_count > 1)
          {
             return(false);
          }
@@ -850,9 +848,8 @@ static bool single_line_comment_indent_rule_applies(chunk_t *start)
          nl_count = 0;
          if (!chunk_is_single_line_comment(pc))
          {
-            /* here we check for things to run into that we wouldn't want to
-             * indent the comment for.  for example, non-single line comment,
-             * closing brace */
+            /* here we check for things to run into that we wouldn't want to indent the comment for */
+            /* for example, non-single line comment, closing brace */
             if (chunk_is_comment(pc) || chunk_is_closing_brace(pc))
             {
                return(false);
@@ -937,10 +934,8 @@ static void indent_comment(chunk_t *pc, int col)
          return;
       }
    }
-
    /* check if special single line comment rule applies */
-   if ((cpd.settings[UO_indent_sing_line_comments].n > 0) &&
-       single_line_comment_indent_rule_applies(pc))
+   if (cpd.settings[UO_indent_sing_line_comments].n > 0 && single_line_comment_indent_rule_applies(pc))
    {
       pc->column = col + cpd.settings[UO_indent_sing_line_comments].n;
       LOG_FMT(LCMTIND, "rule 4 - single line comment indent, now in %d\n", pc->column);
