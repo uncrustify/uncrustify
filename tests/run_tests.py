@@ -12,6 +12,7 @@
 import sys
 import os
 import string
+import filecmp
 
 # OK, so I just had way too much fun with the colors..
 
@@ -101,11 +102,7 @@ def run_tests(test_name, config_name, input_name):
 		print FAIL_COLOR + "FAILED: " + NORMAL + test_name
 		return -1
 
-	cmd = "diff -u %s output/%s > /dev/null" % (resultname, expected_name)
-	if log_level >= 2:
-		print "RUN: " + cmd
-	b = os.system(cmd)
-	if b != 0:
+	if not filecmp.cmp(resultname, expected_name):
 		print MISMATCH_COLOR + "MISMATCH: " + NORMAL + test_name
 		return -1
 
