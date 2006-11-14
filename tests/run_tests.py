@@ -80,7 +80,7 @@ def run_tests(test_name, config_name, input_name):
 	except:
 		pass
 
-	cmd = "../src/uncrustify -q -c config/%s -f input/%s > %s" % (config_name, input_name, resultname)
+	cmd = "%s/uncrustify -q -c config/%s -f input/%s > %s" % (os.path.abspath('../src'), config_name, input_name, resultname)
 	if log_level >= 2:
 		print "RUN: " + cmd
 	a = os.system(cmd)
