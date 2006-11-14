@@ -89,6 +89,7 @@ def run_tests(test_name, config_name, input_name):
 	# print 'Output:', expected_name
 
 	resultname = os.path.join('results', expected_name)
+	outputname = os.path.join('output', expected_name)
 	try:
 		os.makedirs(os.path.dirname(resultname))
 	except:
@@ -102,8 +103,12 @@ def run_tests(test_name, config_name, input_name):
 		print FAIL_COLOR + "FAILED: " + NORMAL + test_name
 		return -1
 
-	if not filecmp.cmp(resultname, expected_name):
-		print MISMATCH_COLOR + "MISMATCH: " + NORMAL + test_name
+	try:
+		if not filecmp.cmp(resultname, outputname):
+			print MISMATCH_COLOR + "MISMATCH: " + NORMAL + test_name
+			return -1
+	except:
+		print MISMATCH_COLOR + "MISSING: " + NORMAL + test_name
 		return -1
 
 	if log_level >= 1:
