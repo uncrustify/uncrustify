@@ -28,6 +28,8 @@
 00062  ben.cfg                 c/braces-4.c
 00065  ben.cfg                 c/braces-5.c
 
+00070  ben.cfg                 c/return-multi.c
+
 00101  ben.cfg                 c/bugs-1.c
 00102  ben.cfg                 c/bugs-2.c
 00103  ben.cfg                 c/bugs-3.c
