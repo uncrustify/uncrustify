@@ -688,7 +688,7 @@ static void process_returns(void)
    pc = chunk_get_head();
    while (pc != NULL)
    {
-      if (pc->type != CT_RETURN)
+      if ((pc->type != CT_RETURN) || (pc->flags & PCF_IN_PREPROC))
       {
          pc = chunk_get_next_type(pc, CT_RETURN, -1);
          continue;
