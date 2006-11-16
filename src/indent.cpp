@@ -262,7 +262,7 @@ static int token_indent(c_token_t type)
       return(8);
 
    default:
-      return(0); //cpd.settings[UO_indent_braces].n;
+      return(0);
    }
 }
 
@@ -555,7 +555,7 @@ void indent_text(void)
             frm.pse[frm.pse_tos].open_line  = pc->orig_line;
 
             /* Update the indent_column if needed */
-            if (cpd.settings[UO_indent_braces].n ||
+            if (cpd.settings[UO_indent_braces].b ||
                 (parent_token_indent != 0))
             {
                indent_column = frm.pse[frm.pse_tos].indent_tmp;
