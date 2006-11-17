@@ -19,6 +19,7 @@
 00013  brace-gnu.cfg           c/braces.c
 00014  brace-kr.cfg            c/braces.c
 00015  brace-ws.cfg            c/braces.c
+00016  brace-ws2.cfg           c/braces.c
 
 00020  ben.cfg                 c/define-if-indent.c
 00050  brace-remove-2.cfg      c/brace-remove.c

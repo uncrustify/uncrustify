@@ -1,6 +1,6 @@
 
 void foo(void)
-	{
+{
 	int a = 0;
 	while (a < 3)
 		{
@@ -62,5 +62,5 @@ void foo(void)
 
 	while (1)
 		; /* hang forever */
-	}
+}
 

@@ -445,6 +445,14 @@ void indent_text(void)
        *  - return
        */
 
+      bool brace_indent = false;
+      if ((pc->type == CT_BRACE_CLOSE) || (pc->type == CT_BRACE_OPEN))
+      {
+         brace_indent = (cpd.settings[UO_indent_braces].b &&
+                         (!cpd.settings[UO_indent_braces_no_func].b ||
+                          (pc->parent_type != CT_FUNC_DEF)));
+      }
+
       if (pc->type == CT_BRACE_CLOSE)
       {
          if (frm.pse[frm.pse_tos].type == CT_BRACE_OPEN)
@@ -453,8 +461,7 @@ void indent_text(void)
             frm.level--;
 
             /* Update the indent_column if needed */
-            if (!cpd.settings[UO_indent_braces].b &&
-                (parent_token_indent == 0))
+            if (!brace_indent && (parent_token_indent == 0))
             {
                indent_column = frm.pse[frm.pse_tos].indent_tmp;
             }
@@ -555,8 +562,7 @@ void indent_text(void)
             frm.pse[frm.pse_tos].open_line  = pc->orig_line;
 
             /* Update the indent_column if needed */
-            if (cpd.settings[UO_indent_braces].b ||
-                (parent_token_indent != 0))
+            if (brace_indent || (parent_token_indent != 0))
             {
                indent_column = frm.pse[frm.pse_tos].indent_tmp;
             }

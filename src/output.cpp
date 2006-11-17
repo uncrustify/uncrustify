@@ -231,6 +231,14 @@ void output_text(FILE *pfile)
             if (cpd.settings[UO_indent_with_tabs].n == 1)
             {
                lvlcol = 1 + (pc->brace_level * cpd.settings[UO_indent_columns].n);
+
+               /* handle indented braces */
+               if (((pc->type == CT_BRACE_OPEN) || (pc->type == CT_BRACE_CLOSE)) &&
+                   ((lvlcol + cpd.settings[UO_indent_columns].n) == pc->column))
+               {
+                  lvlcol = pc->column;
+               }
+
                if ((pc->column >= lvlcol) && (lvlcol > 1))
                {
                   output_to_column(lvlcol, true);

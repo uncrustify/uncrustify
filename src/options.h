@@ -102,6 +102,7 @@ enum uncrustify_options
 
    UO_indent_brace,              // spaces to indent '{' from level (usually 0)
    UO_indent_braces,             // whether to indent the braces or not
+   UO_indent_braces_no_func,     // whether to not indent the function braces (depends on UO_indent_braces)
    UO_indent_brace_parent,       // indent the braces based on the parent size (if=3, for=4, etc)
    UO_indent_label,              // 0=left >0=col from left, <0=sub from brace indent
 

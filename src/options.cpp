@@ -127,6 +127,7 @@ void register_options(void)
    unc_add_option("indent_align_string", UO_indent_align_string, AT_BOOL, "Whether to indent strings broken by '\\' so that they line up");
    unc_add_option("indent_brace", UO_indent_brace, AT_NUM, "Spaces to indent '{' from level");
    unc_add_option("indent_braces", UO_indent_braces, AT_BOOL, "Whether braces are indented to the body level");
+   unc_add_option("indent_braces_no_func", UO_indent_braces_no_func, AT_BOOL, "Disabled indenting function braces if indent_braces is true");
    unc_add_option("indent_brace_parent", UO_indent_brace_parent, AT_BOOL, "Indent based on the size of the brace parent, ie 'if' => 3 spaces, 'for' => 4 spaces, etc.");
    unc_add_option("indent_namespace", UO_indent_namespace, AT_BOOL, "Whether the 'namespace' body is indented");
    unc_add_option("indent_class", UO_indent_class, AT_BOOL, "Whether the 'class' body is indented");
