@@ -196,6 +196,7 @@
 			<Folder Name="d">
 				<F N="input/d/bug-indent.d"/>
 				<F N="input/d/casts.d"/>
+				<F N="input/d/delegate.d"/>
 				<F N="input/d/funcfunc.d"/>
 				<F N="input/d/HashMap.d"/>
 				<F N="input/d/imports.d"/>

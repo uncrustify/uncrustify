@@ -1123,7 +1123,8 @@ void newlines_cleanup_braces(void)
          }
          else
          {
-            if (cpd.settings[UO_nl_after_brace_open].b &&
+            if ((pc->level == pc->brace_level) &&
+                cpd.settings[UO_nl_after_brace_open].b &&
                 ((pc->flags & (PCF_IN_ARRAY_ASSIGN | PCF_IN_PREPROC)) == 0))
             {
                if (!chunk_is_str(next, "{", 1))

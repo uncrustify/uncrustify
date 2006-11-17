@@ -12,3 +12,9 @@ void delegate() dg;
 dg = { int y; };
 
 int opApply(int delegate(inout Type[, ...]) dg);
+
+void main()
+{
+    assert(findIf("bcecg", (int x) { return x == 'a'; }) == 5);
+}
+
