@@ -32,8 +32,7 @@ const char *token_names[] =
 EOF
 
 for item in $names ; do
-    name=$(echo $item | sed -e 's/CT_//g')
-    echo "   \"$name\"," >> $outfile
+    echo "   \"${item#CT_}\"," >> $outfile
 done
 
 cat >> $outfile <<EOF
