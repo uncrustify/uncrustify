@@ -1597,7 +1597,7 @@ void do_blank_lines(void)
       if ((cpd.settings[UO_nl_after_func_body].n > pc->nl_count) &&
           (prev != NULL) &&
           (prev->type == CT_BRACE_CLOSE) &&
-          (prev->parent_type == CT_FUNC_DEF))
+          ((prev->parent_type == CT_FUNC_DEF) || (prev->parent_type == CT_FUNC_CLASS)))
       {
          pc->nl_count = cpd.settings[UO_nl_after_func_body].n;
       }
