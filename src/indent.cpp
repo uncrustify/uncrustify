@@ -913,7 +913,7 @@ static void indent_comment(chunk_t *pc, int col)
    if ((pc->orig_col == 1) && !cpd.settings[UO_indent_col1_comment].b)
    {
       LOG_FMT(LCMTIND, "rule 1 - keep in col 1\n");
-      pc->column = 1;
+      reindent_line(pc, 1);
       return;
    }
 
@@ -925,7 +925,7 @@ static void indent_comment(chunk_t *pc, int col)
       if ((nl != NULL) && (nl->nl_count > 1))
       {
          LOG_FMT(LCMTIND, "rule 2 - level 0, nl before\n");
-         pc->column = 1;
+         reindent_line(pc, 1);
          return;
       }
    }
@@ -937,7 +937,7 @@ static void indent_comment(chunk_t *pc, int col)
 
       if ((coldiff <= 3) && (coldiff >= -3))
       {
-         pc->column = prev->column;
+         reindent_line(pc, prev->column);
          LOG_FMT(LCMTIND, "rule 3 - prev comment, coldiff = %d, now in %d\n",
                  coldiff, pc->column);
          return;
@@ -948,13 +948,13 @@ static void indent_comment(chunk_t *pc, int col)
    if ((cpd.settings[UO_indent_sing_line_comments].n > 0) &&
        single_line_comment_indent_rule_applies(pc))
    {
-      pc->column = col + cpd.settings[UO_indent_sing_line_comments].n;
+      reindent_line(pc, col + cpd.settings[UO_indent_sing_line_comments].n);
       LOG_FMT(LCMTIND, "rule 4 - single line comment indent, now in %d\n", pc->column);
       return;
    }
    LOG_FMT(LCMTIND, "rule 5 - fall-through, stay in %d\n", col);
 
-   pc->column = col;
+   reindent_line(pc, col);
 }
 
 
