@@ -45,6 +45,7 @@
 00140  ben.cfg                 c/global-vars.c
 00141  ben.cfg                 c/deref.c
 00142  ben.cfg                 c/type-cast.c
+00143  ben.cfg                 c/t3.in.c
 
 # casts
 00150  ben.cfg                 c/casts.c
