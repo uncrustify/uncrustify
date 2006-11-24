@@ -294,5 +294,6 @@
 		<F N="java.test"/>
 		<F N="pawn.test"/>
 		<F N="run_tests.py"/>
+		<F N="sql.test"/>
 	</Files>
 </Project>

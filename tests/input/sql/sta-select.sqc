@@ -1,0 +1,74 @@
+/*******************************************************
+**
+** A sample program that demonstrates the use of Static embedded SQL.
+** Before compiling this program, be sure you have created a table
+** called video and inserted some tuples in it. 
+**
+********************************************************/
+#include <stdio.h>
+
+/* sqlca: is the sql communications area. All error codes
+   are returned from db2 in that structure which is filled
+   each time an interaction with db2 takes place.
+*/
+
+EXEC SQL INCLUDE SQLCA;          /* SQL communication area structure */
+
+EXEC SQL BEGIN DECLARE SECTION;  /* declare host variables    */
+ char db_name[8];                /* database name             */
+ char video_title[30];           /* title of the video        */
+ short video_id;                 /* serial number             */
+ char director[20];              /* director name             */
+EXEC SQL END DECLARE SECTION;
+
+/* These lines are redundant here because the default
+   action is to continue. They just show the kind of
+   errors that could arise and one way to control them.
+*/
+
+EXEC SQL WHENEVER SQLWARNING CONTINUE;  /* sqlca.sqlcode > 0    */
+EXEC SQL WHENEVER SQLERROR CONTINUE;    /* sqlca.sqlcode < 0    */
+EXEC SQL WHENEVER NOT FOUND CONTINUE;   /* sqlca.sqlcode = 100  */
+                                        /* sqlca.sqlcode = 0 (no error) */
+
+void main() {
+
+strcpy(db_name, "csc343h");
+
+/* C variables are preceded by a colon when they are passed to DB2 */
+
+EXEC SQL CONNECT TO :db_name;
+
+if (sqlca.sqlcode != 0) {
+        printf("Connect failed!: reason %ld\n", sqlca.sqlcode);
+        exit(1);
+}
+
+/* cursor delcaration. Have to declare a cursor each time you
+   want tuples back from db2
+*/
+
+EXEC SQL DECLARE c1 CURSOR FOR
+        SELECT video_title
+        FROM video;
+
+/* you have to open the cursor in order to get tuples back */
+
+EXEC SQL OPEN c1;
+
+do {
+
+  /* fetch tuples from the cursor. This will execute the statement
+     the cursor implements and will return the results */
+
+  EXEC SQL FETCH c1 into :video_title;
+  if (SQLCODE != 0) break;	/* SQLCODE refers to sqlca.sqlcode */
+
+  /* host variables should have ':' prefix when they are used in DB2 commands */
+
+  printf("%s\n",video_title);
+
+} while (1);
+EXEC SQL CLOSE c1;
+EXEC SQL CONNECT RESET;
+}
