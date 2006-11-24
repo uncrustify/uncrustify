@@ -35,7 +35,8 @@ Create a highly configurable, easily modifiable source code beautifier.</p>
    <li>Fix inter-character spacing</li>
    <li>Add or remove parens on return statements</li>
    <li>Add or remove braces on single-statement if/do/while/for statements</li>
-   <li>Highly configurable - 134 configurable options as of version 0.0.24</li>
+   <li>Supports embedded SQL 'EXEC SQL' stuff</li>
+   <li>Highly configurable - 168 configurable options as of version 0.30</li>
 </ul>
 
 <p>
@@ -60,8 +61,8 @@ The most helpful way is to try it out and give feedback.
 Documentation and examples are available in the source tree, so check it out.
 </p>
 <p>
-You can find a copy of the configurable parameters <a href="configuration.txt">here</a>.<br />
-Here is the config file for my <a href="ben.cfg.txt">favorite style</a>.
+You can find the output from 'uncrustify --show-config' <a href="config.txt">here</a>.<br />
+Here is the <a href="default.cfg">default config file</a>.
 And one I set up for <a href="linux.cfg.txt">Linux</a>.<br />
 And here is a <a href="examples/c-1.in.c">before</a> and <a href="examples/c-1.out.c">after</a> C source example.<br />
 That should give you a pretty good idea of what Uncrustify can do.<br />
@@ -82,6 +83,7 @@ Here are some areas that need attention:
 </p>
 <ul>
    <li>Test Java support and provide feedback (or patches!)</li>
+   <li>Test Embedded SQL to see what works</li>
    <li>This web page need a (re)design</li>
    <li>A logo of some sort</li>
    <li>Examples that can be put on this website to show off what Uncrustify can do</li>

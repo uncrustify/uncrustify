@@ -1,0 +1,543 @@
+#
+# General options
+#
+
+newlines                      { Auto, LF, CR, CRLF }
+  The type of line endings
+
+input_tab_size                Number
+  The original size of tabs in the input
+
+output_tab_size               Number
+  The size of tabs in the output (only used if align_with_tabs=true)
+
+string_escape_char            Number
+  The ascii value of the string escape char, usually 92 (\). (Pawn)
+
+#
+# Indenting
+#
+
+indent_columns                Number
+  The number of columns to indent per level (usually 2, 3, 4, or 8)
+
+indent_with_tabs              Number
+  How to use tabs when indenting code
+  0=spaces only
+  1=indent with tabs, align with spaces
+  2=indent and align with tabs
+
+indent_align_string           { False, True }
+  Whether to indent strings broken by '\' so that they line up
+
+indent_brace                  Number
+  Spaces to indent '{' from level
+
+indent_braces                 { False, True }
+  Whether braces are indented to the body level
+
+indent_braces_no_func         { False, True }
+  Disabled indenting function braces if indent_braces is true
+
+indent_brace_parent           { False, True }
+  Indent based on the size of the brace parent, ie 'if' => 3 spaces, 'for' => 4 spaces, etc.
+
+indent_namespace              { False, True }
+  Whether the 'namespace' body is indented
+
+indent_class                  { False, True }
+  Whether the 'class' body is indented
+
+indent_class_colon            { False, True }
+  Whether to indent the stuff after a leading class colon
+
+indent_func_call_param        { False, True }
+  Whether to indent continued function call parameters one indent level (true) or aligns instead of indent (false)
+
+indent_member                 Number
+  The number of spaces to indent a continued '->' or '.'
+  Usually set to indent_columns.
+
+indent_sing_line_comments     Number
+  Spaces to indent single line ('//') comments on lines before code
+
+indent_switch_case            Number
+  Spaces to indent 'case' from 'switch'
+
+indent_case_body              Number
+  Spaces to indent 'case' body from 'case'
+
+indent_case_brace             Number
+  Spaces to indent '{' from 'case'
+
+indent_col1_comment           { False, True }
+  Whether to indent comments found in first column
+
+indent_label                  Number
+  How to indent goto labels (>0=absolute column where 1 is the leftmost column, <=0=subtract from brace indent)
+
+indent_paren_nl               { False, True }
+  If an open paren is followed by a newline, indent the next line so that it lines up after the open paren (not recommended)
+
+indent_square_nl              { False, True }
+  If an open square is followed by a newline, indent the next line so that it lines up after the open square (not recommended)
+
+#
+# Spacing options
+#
+
+sp_arith                      { Ignore, Add, Remove, Force }
+  Add or remove space around arithmetic operator '+', '-', '/', '*', etc
+
+sp_assign                     { Ignore, Add, Remove, Force }
+  Add or remove space around assignment operator '=', '+=', etc
+
+sp_bool                       { Ignore, Add, Remove, Force }
+  Add or remove space around boolean operators '&&' and '||'
+
+sp_compare                    { Ignore, Add, Remove, Force }
+  Add or remove space around compare operator '<', '>', '==', etc
+
+sp_inside_paren               { Ignore, Add, Remove, Force }
+  Add or remove space inside '(' and ')'
+
+sp_paren_paren                { Ignore, Add, Remove, Force }
+  Add or remove space between nested parens
+
+sp_paren_brace                { Ignore, Add, Remove, Force }
+  Add or remove space between ')' and '{'
+
+sp_before_ptr_star            { Ignore, Add, Remove, Force }
+  Add or remove space before pointer star '*'
+
+sp_between_ptr_star           { Ignore, Add, Remove, Force }
+  Add or remove space between pointer stars '*'
+
+sp_after_ptr_star             { Ignore, Add, Remove, Force }
+  Add or remove space after pointer star '*'
+
+sp_before_byref               { Ignore, Add, Remove, Force }
+  Add or remove space before reference sign '&'
+
+sp_after_byref                { Ignore, Add, Remove, Force }
+  Add or remove space after reference sign '&'
+
+sp_before_angle               { Ignore, Add, Remove, Force }
+  Add or remove space before '<>'
+
+sp_after_angle                { Ignore, Add, Remove, Force }
+  Add or remove space after '<>'
+
+sp_before_sparen              { Ignore, Add, Remove, Force }
+  Add or remove space before '(' of 'if', 'for', 'switch', and 'while'
+
+sp_inside_sparen              { Ignore, Add, Remove, Force }
+  Add or remove space inside if-condition '(' and ')'
+
+sp_after_sparen               { Ignore, Add, Remove, Force }
+  Add or remove space after ')' of 'if', 'for', 'switch', and 'while'
+
+sp_sparen_brace               { Ignore, Add, Remove, Force }
+  Add or remove space between ')' and '{' of 'if', 'for', 'switch', and 'while'
+
+sp_special_semi               { Ignore, Add, Remove, Force }
+  Add or remove space before empty statement ';' on 'if', 'for' and 'while'
+
+sp_before_semi                { Ignore, Add, Remove, Force }
+  Add or remove space before ';'
+
+sp_before_square              { Ignore, Add, Remove, Force }
+  Add or remove space before '[' (except '[]')
+
+sp_before_squares             { Ignore, Add, Remove, Force }
+  Add or remove space before '[]'
+
+sp_inside_square              { Ignore, Add, Remove, Force }
+  Add or remove space inside '[' and ']'
+
+sp_after_comma                { Ignore, Add, Remove, Force }
+  Add or remove space after ','
+
+sp_after_operator             { Ignore, Add, Remove, Force }
+  Add or remove space between 'operator' and operator sign
+
+sp_after_cast                 { Ignore, Add, Remove, Force }
+  Add or remove space after cast
+
+sp_sizeof_paren               { Ignore, Add, Remove, Force }
+  Add or remove space between 'sizeof' and '('
+
+sp_after_tag                  { Ignore, Add, Remove, Force }
+  Add or remove space after the tag keyword (Pawn)
+
+sp_inside_braces_enum         { Ignore, Add, Remove, Force }
+  Add or remove space inside enum '{' and '}'
+
+sp_inside_braces_struct       { Ignore, Add, Remove, Force }
+  Add or remove space inside struct/union '{' and '}'
+
+sp_inside_braces              { Ignore, Add, Remove, Force }
+  Add or remove space inside '{' and '}'
+
+sp_inside_angle               { Ignore, Add, Remove, Force }
+  Add or remove space inside '<' and '>'
+
+sp_type_func                  { Ignore, Add, Remove, Force }
+  Add or remove space between return type and function name (a minimum of 1 is forced except for pointer return types)
+
+sp_func_proto_paren           { Ignore, Add, Remove, Force }
+  Add or remove space between function name and '(' on function declaration
+
+sp_func_def_paren             { Ignore, Add, Remove, Force }
+  Add or remove space between function name and '(' on function definition
+
+sp_inside_fparens             { Ignore, Add, Remove, Force }
+  Add or remove space inside empty function '()'
+
+sp_inside_fparen              { Ignore, Add, Remove, Force }
+  Add or remove space inside function '(' and ')'
+
+sp_square_fparen              { Ignore, Add, Remove, Force }
+  Add or remove space between ']' and '(' when part of a function call.
+
+sp_fparen_brace               { Ignore, Add, Remove, Force }
+  Add or remove space between ')' and '{' of function
+
+sp_func_call_paren            { Ignore, Add, Remove, Force }
+  Add or remove space between function name and '(' on function calls
+
+sp_func_class_paren           { Ignore, Add, Remove, Force }
+  Add or remove space between a constructor/destructor and the open paren
+
+sp_return_paren               { Ignore, Add, Remove, Force }
+  Add or remove space between 'return' and '('
+
+sp_macro                      { Ignore, Add, Remove, Force }
+  Add or remove space between macro and value
+
+sp_macro_func                 { Ignore, Add, Remove, Force }
+  Add or remove space between macro function ')' and value
+
+sp_else_brace                 { Ignore, Add, Remove, Force }
+  Add or remove space between 'else' and '{' if on the same line
+
+sp_brace_else                 { Ignore, Add, Remove, Force }
+  Add or remove space between '}' and 'else' if on the same line
+
+#
+# Code alignment (not left column spaces/tabs)
+#
+
+align_keep_tabs               { False, True }
+  Whether to keep non-indenting tabs
+
+align_with_tabs               { False, True }
+  Whether to use tabs for alinging
+
+align_on_tabstop              { False, True }
+  Whether to bump out to the next tab when aligning
+
+align_number_left             { False, True }
+  Whether to left-align numbers
+
+align_var_def_span            Number
+  The span for aligning variable definitions (0=don't align)
+
+align_var_def_star            { False, True }
+  Whether the pointer star is part of the variable name or not
+
+align_var_def_thresh          Number
+  The threshold for aligning variable definitions (0=no limit)
+
+align_var_def_colon           { False, True }
+  Whether to align the colon in struct bit fields
+
+align_var_def_inline          { False, True }
+  Whether to align inline struct/enum/union variable definitions
+
+align_assign_span             Number
+  The span for aligning on '=' in assignments (0=don't align)
+
+align_assign_thresh           Number
+  The threshold for aligning on '=' in assignments (0=no limit)
+
+align_enum_equ_span           Number
+  The span for aligning on '=' in enums (0=don't align)
+
+align_enum_equ_thresh         Number
+  The threshold for aligning on '=' in enums (0=no limit)
+
+align_var_struct_span         Number
+  The span for aligning struct/union (0=don't align)
+
+align_struct_init_span        Number
+  The span for aligning struct initializer values (0=don't align)
+
+align_typedef_gap             Number
+  The minimum space between the type and the synonym of a typedef
+
+align_typedef_span            Number
+  The span for aligning single-line typedefs (0=don't align)
+
+align_typedef_star_style      Number
+  Controls the positioning of the '*' in typedefs. Just try it.
+  0: Align on typdef type, ignore '*'
+  1: The '*' is part of type name: typedef int  *pint;
+  2: The '*' is part of the type: typedef int *  pint;
+
+align_right_cmt_span          Number
+  The span for aligning comments that end lines (0=don't align)
+
+align_func_proto_span         Number
+  The span for aligning function prototypes (0=don't align)
+
+align_nl_cont                 { False, True }
+  Whether to align macros wrapped with a backslash and a newline
+
+align_pp_define_gap           Number
+  The minimum space between label and value of a preprocessor define
+
+align_pp_define_span          Number
+  The span for aligning on '#define' bodies (0=don't align)
+
+#
+# Newline adding and removing options
+#
+
+code_width                    Number
+  Try to limit code width to N number of columns
+
+nl_collapse_empty_body        { False, True }
+  Whether to collapse empty blocks between '{' and '}'
+
+nl_class_leave_one_liners     { False, True }
+  Don't touch one-line function bodies inside a class xx { } body
+
+nl_start_of_file              { Ignore, Add, Remove, Force }
+  Add or remove newlines at the start of the file
+
+nl_start_of_file_min          Number
+  The number of newlines at the start of the file (only used if nl_start_of_file is 'add' or 'force'
+
+nl_end_of_file                { Ignore, Add, Remove, Force }
+  Add or remove newline at the end of the file
+
+nl_end_of_file_min            Number
+  The number of newlines at the end of the file (only used if nl_end_of_file is 'add' or 'force')
+
+nl_assign_brace               { Ignore, Add, Remove, Force }
+  Add or remove newline between '=' and '{'
+
+nl_func_var_def_blk           Number
+  The number of newlines after a block of variable definitions
+
+nl_fcall_brace                { Ignore, Add, Remove, Force }
+  Add or remove newline between function call and '('
+
+nl_enum_brace                 { Ignore, Add, Remove, Force }
+  Add or remove newline between 'enum' and '{'
+
+nl_struct_brace               { Ignore, Add, Remove, Force }
+  Add or remove newline between 'struct and '{'
+
+nl_union_brace                { Ignore, Add, Remove, Force }
+  Add or remove newline between 'union' and '{'
+
+nl_if_brace                   { Ignore, Add, Remove, Force }
+  Add or remove newline between 'if' and '{'
+
+nl_brace_else                 { Ignore, Add, Remove, Force }
+  Add or remove newline between '}' and 'else'
+
+nl_elseif_brace               { Ignore, Add, Remove, Force }
+  Add or remove newline between 'else if' and '{'
+  If set to ignore, nl_if_brace is used instead
+
+nl_else_brace                 { Ignore, Add, Remove, Force }
+  Add or remove newline between 'else' and '{'
+
+nl_for_brace                  { Ignore, Add, Remove, Force }
+  Add or remove newline between 'for' and '{'
+
+nl_while_brace                { Ignore, Add, Remove, Force }
+  Add or remove newline between 'while' and '{'
+
+nl_do_brace                   { Ignore, Add, Remove, Force }
+  Add or remove newline between 'do' and '{'
+
+nl_brace_while                { Ignore, Add, Remove, Force }
+  Add or remove newline between '}' and 'while' of 'do' statement
+
+nl_switch_brace               { Ignore, Add, Remove, Force }
+  Add or remove newline between 'switch' and '{'
+
+nl_before_case                { False, True }
+  Whether to put a newline before 'case' statement
+
+nl_after_case                 { False, True }
+  Whether to put a newline after 'case' statement
+
+nl_namespace_brace            { Ignore, Add, Remove, Force }
+  Newline between namespace and {
+
+nl_template_class             { Ignore, Add, Remove, Force }
+  Add or remove newline between 'template<>' and 'class'
+
+nl_class_brace                { Ignore, Add, Remove, Force }
+  Add or remove newline between 'class' and '{'
+
+nl_class_init_args            { Ignore, Add, Remove, Force }
+  Add or remove newline after each ',' in the constructor member initialization
+
+nl_func_type_name             { Ignore, Add, Remove, Force }
+  Add or remove newline between return type and function name in definition
+
+nl_func_decl_start            { Ignore, Add, Remove, Force }
+  Add or remove newline after '(' in a function declaration
+
+nl_func_decl_args             { Ignore, Add, Remove, Force }
+  Add or remove newline after each ',' in a function declaration
+
+nl_func_decl_end              { Ignore, Add, Remove, Force }
+  Add or remove newline before the ')' in a function declaration
+
+nl_fdef_brace                 { Ignore, Add, Remove, Force }
+  Add or remove newline between function signature and '{'
+
+nl_after_return               { False, True }
+  Whether to put a newline after 'return' statement
+
+nl_after_semicolon            { False, True }
+  Whether to put a newline after semicolons, except in 'for' statements
+
+nl_after_brace_open           { False, True }
+  Whether to put a newline after brace open
+
+nl_define_macro               { False, True }
+  Whether to alter newlines in '#define' macros
+
+nl_squeeze_ifdef              { False, True }
+  Whether to not put blanks after '#ifxx', '#elxx', or before '#endif'
+
+nl_before_if                  { Ignore, Add, Remove, Force }
+  Add or remove newline before 'if'
+
+nl_after_if                   { Ignore, Add, Remove, Force }
+  Add or remove newline after 'if'
+
+nl_before_for                 { Ignore, Add, Remove, Force }
+  Add or remove newline before 'for'
+
+nl_after_for                  { Ignore, Add, Remove, Force }
+  Add or remove newline after 'for'
+
+nl_before_while               { Ignore, Add, Remove, Force }
+  Add or remove newline before 'while'
+
+nl_after_while                { Ignore, Add, Remove, Force }
+  Add or remove newline after 'while'
+
+nl_before_switch              { Ignore, Add, Remove, Force }
+  Add or remove newline before 'switch'
+
+nl_after_switch               { Ignore, Add, Remove, Force }
+  Add or remove newline after 'switch'
+
+nl_before_do                  { Ignore, Add, Remove, Force }
+  Add or remove newline before 'do'
+
+nl_after_do                   { Ignore, Add, Remove, Force }
+  Add or remove newline after 'do'
+
+#
+# Positioning options
+#
+
+pos_bool                      { Ignore, Lead, Trail }
+  The position of boolean operators in wrapped expressions
+
+pos_class_colon               { Ignore, Lead, Trail }
+  The position of colons between constructor and member initialization
+
+#
+# Blank line options
+#
+
+nl_max                        Number
+  The maximum consecutive newlines
+
+nl_after_func_proto           Number
+  The number of newlines after a function prototype, if followed by another function prototype
+
+nl_after_func_proto_group     Number
+  The number of newlines after a function prototype, if not followed by another function prototype
+
+nl_after_func_body            Number
+  The number of newlines after '}' of the function body
+
+nl_before_block_comment       Number
+  The minimum number of newlines before a multi-line comment (doesn't apply if after a brace open)
+
+eat_blanks_after_open_brace   { False, True }
+  Whether to remove blank lines after '{'
+
+eat_blanks_before_close_brace { False, True }
+  Whether to remove blank lines before '}'
+
+#
+# Code modifying options (non-whitespace)
+#
+
+mod_full_brace_do             { Ignore, Add, Remove, Force }
+  Add or remove braces on single-line 'do' statement
+
+mod_full_brace_for            { Ignore, Add, Remove, Force }
+  Add or remove braces on single-line 'for' statement
+
+mod_full_brace_function       { Ignore, Add, Remove, Force }
+  Add or remove braces on single-line function defintions. (Pawn)
+
+mod_full_brace_if             { Ignore, Add, Remove, Force }
+  Add or remove braces on single-line 'if' statement
+
+mod_full_brace_nl             Number
+  Don't remove braces around statements that span N newlines
+
+mod_full_brace_while          { Ignore, Add, Remove, Force }
+  Add or remove braces on single-line 'while' statement
+
+mod_paren_on_return           { Ignore, Add, Remove, Force }
+  Add or remove unnecessary paren on 'return' statement
+
+mod_pawn_semicolon            { False, True }
+  Whether to change optional semicolons to real semicolons
+
+#
+# Comment modifications
+#
+
+cmt_cpp_group                 { False, True }
+  Whether to group cpp-comments that look like they are in a block
+
+cmt_cpp_nl_start              { False, True }
+  Whether to put an empty '/*' on the first line of the combined cpp-comment
+
+cmt_cpp_nl_end                { False, True }
+  Whether to put a newline before the closing '*/' of the combined cpp-comment
+
+cmt_cpp_to_c                  { False, True }
+  Whether to change cpp-comments into c-comments
+
+cmt_star_cont                 { False, True }
+  Whether to put a star on subsequent comment lines
+
+#
+# Preprocessor options
+#
+
+pp_indent                     { Ignore, Add, Remove, Force }
+  Add or remove indent of preprocessor directives
+
+pp_space                      { Ignore, Add, Remove, Force }
+  Add or remove space between # and, say, define
+
