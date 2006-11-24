@@ -77,7 +77,9 @@
 				</Folder>
 				<F N="documentation/htdocs/ben.cfg.txt"/>
 				<F N="documentation/htdocs/ChangeLog"/>
+				<F N="documentation/htdocs/config.txt"/>
 				<F N="documentation/htdocs/configuration.txt"/>
+				<F N="documentation/htdocs/default.cfg"/>
 				<F N="documentation/htdocs/index.html"/>
 				<F N="documentation/htdocs/linux.cfg.txt"/>
 				<F N="documentation/htdocs/uncrustify.html"/>
@@ -89,11 +91,14 @@
 			<F N="documentation/theory.txt"/>
 		</Folder>
 		<Folder Name="etc">
+			<F N="etc/amxmodx.cfg"/>
 			<F N="etc/ben.cfg"/>
 			<F N="etc/ben2.cfg"/>
 			<F N="etc/d.cfg"/>
+			<F N="etc/defaults.cfg"/>
 			<F N="etc/dofiles.sh"/>
 			<F N="etc/gnu-indent.cfg"/>
+			<F N="etc/klaus.cfg"/>
 			<F N="etc/kr-indent.cfg"/>
 			<F N="etc/linux-indent.cfg"/>
 			<F N="etc/linux.cfg"/>
