@@ -190,6 +190,26 @@ void tokenize_cleanup(void)
          }
       }
 
+      if (chunk_is_str(pc, "EXEC", 4) && chunk_is_str(next, "SQL", 3))
+      {
+         tmp = chunk_get_prev(pc);
+         if (chunk_is_newline(tmp))
+         {
+            tmp = chunk_get_next(next);
+            if (chunk_is_str(tmp, "BEGIN", 5))
+            {
+               pc->type = CT_SQL_BEGIN;
+            }
+            else if (chunk_is_str(tmp, "END", 3))
+            {
+               pc->type = CT_SQL_END;
+            }
+            else
+            {
+               pc->type = CT_SQL_EXEC;
+            }
+         }
+      }
 
       /* TODO: determine other stuff here */
 

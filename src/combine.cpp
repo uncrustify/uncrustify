@@ -33,6 +33,7 @@ static void mark_function_type(chunk_t *pc);
 static void mark_cpp_constructor(chunk_t *pc);
 static void mark_lvalue(chunk_t *pc);
 static void mark_template_func(chunk_t *pc, chunk_t *pc_next);
+static void mark_exec_sql(chunk_t *pc);
 
 void make_type(chunk_t *pc)
 {
@@ -228,6 +229,13 @@ void fix_symbols(void)
          {
             next->flags |= PCF_VAR_1ST_DEF;
          }
+      }
+
+      if ((pc->type == CT_SQL_EXEC) ||
+          (pc->type == CT_SQL_BEGIN) ||
+          (pc->type == CT_SQL_END))
+      {
+         mark_exec_sql(pc);
       }
 
       /* Handle the typedef */
@@ -1339,6 +1347,10 @@ void combine_labels(void)
             {
                /* ignore it - template thingy */
             }
+            else if (cur->parent_type == CT_SQL_EXEC)
+            {
+               /* ignore it - SQL variable name */
+            }
             else
             {
                tmp = chunk_get_next_ncnl(next);
@@ -2184,5 +2196,41 @@ static void mark_template_func(chunk_t *pc, chunk_t *pc_next)
          pc->type      = CT_TYPE;
          after->flags |= PCF_VAR_DEF;
       }
+   }
+}
+
+/**
+ * Just mark every CT_WORD until a semicolon as CT_SQL_WORD.
+ * Adjust the levels if pc is CT_SQL_BEGIN
+ */
+static void mark_exec_sql(chunk_t *pc)
+{
+   chunk_t *tmp;
+
+   /* Change CT_WORD to CT_SQL_WORD */
+   for (tmp = chunk_get_next(pc); tmp != NULL; tmp = chunk_get_next(tmp))
+   {
+      tmp->parent_type = pc->type;
+      if (tmp->type == CT_WORD)
+      {
+         tmp->type = CT_SQL_WORD;
+      }
+      if (tmp->type == CT_SEMICOLON)
+      {
+         break;
+      }
+   }
+
+   if ((pc->type != CT_SQL_BEGIN) ||
+       (tmp == NULL) || (tmp->type != CT_SEMICOLON))
+   {
+      return;
+   }
+
+   for (tmp = chunk_get_next(tmp);
+        (tmp != NULL) && (tmp->type != CT_SQL_END);
+        tmp = chunk_get_next(tmp))
+   {
+      tmp->level++;
    }
 }

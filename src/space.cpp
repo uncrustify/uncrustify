@@ -92,6 +92,11 @@ argval_t do_space(chunk_t *first, chunk_t *second)
       return(AV_REMOVE);
    }
 
+   if ((first->type == CT_COLON) && (first->parent_type == CT_SQL_EXEC))
+   {
+      return(AV_REMOVE);
+   }
+
    /* Macro stuff can only return IGNORE, ADD, or FORCE */
    if (first->type == CT_MACRO)
    {

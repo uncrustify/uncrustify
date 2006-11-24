@@ -402,6 +402,13 @@ void indent_text(void)
                indent_pse_pop(frm, pc);
             }
 
+            /* an SQL EXEC is ended with a semicolon */
+            if ((frm.pse[frm.pse_tos].type == CT_SQL_EXEC) &&
+                chunk_is_semicolon(pc))
+            {
+               indent_pse_pop(frm, pc);
+            }
+
             /* Close out parens and squares */
             if ((frm.pse[frm.pse_tos].type == (pc->type - 1)) &&
                 ((pc->type == CT_PAREN_CLOSE) ||
@@ -567,6 +574,29 @@ void indent_text(void)
                indent_column = frm.pse[frm.pse_tos].indent_tmp;
             }
          }
+      }
+      else if (pc->type == CT_SQL_END)
+      {
+         if (frm.pse[frm.pse_tos].type == CT_SQL_BEGIN)
+         {
+            indent_pse_pop(frm, pc);
+            frm.level--;
+            indent_column = frm.pse[frm.pse_tos].indent_tmp;
+         }
+      }
+      else if (pc->type == CT_SQL_BEGIN)
+      {
+         frm.level++;
+         indent_pse_push(frm, pc);
+         frm.pse[frm.pse_tos].indent     = frm.pse[frm.pse_tos - 1].indent + indent_size;
+         frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
+      }
+      else if (pc->type == CT_SQL_EXEC)
+      {
+         frm.level++;
+         indent_pse_push(frm, pc);
+         frm.pse[frm.pse_tos].indent     = frm.pse[frm.pse_tos - 1].indent + indent_size;
+         frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
       }
       else if (pc->type == CT_CASE)
       {

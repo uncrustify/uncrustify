@@ -210,6 +210,12 @@ typedef enum
    CT_DEFAULT,          /* may be changed into CT_CASE */
    CT_GETSET,           /* must be followed by CT_BRACE_OPEN or reverts to CT_WORD */
    CT_CONCAT,           /* The '~' between strings */
+
+   /* Embedded SQL - always terminated with a semicolon */
+   CT_SQL_EXEC,         /* the 'EXEC' in 'EXEC SQL ...' */
+   CT_SQL_BEGIN,        /* the 'EXEC' in 'EXEC SQL BEGIN ...' */
+   CT_SQL_END,          /* the 'EXEC' in 'EXEC SQL END ...' */
+   CT_SQL_WORD,         /* CT_WORDs in the 'EXEC SQL' statement */
 } c_token_t;
 
 #endif   /* TOKEN_ENUM_H_INCLUDED */
