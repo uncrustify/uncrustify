@@ -42,6 +42,7 @@ struct paren_stack_entry
    c_token_t type;         /**< the type that opened the entry */
    int       level;        /**< Level of opening type */
    int       open_line;    /**< line that open symbol is on */
+   int       brace_indent; /**< indent for braces - may not relate to indent */
    int       indent;       /**< indent level (depends on use) */
    int       indent_tmp;   /**< temporary indent level (depends on use) */
    int       ref;

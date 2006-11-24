@@ -464,25 +464,11 @@ void indent_text(void)
       {
          if (frm.pse[frm.pse_tos].type == CT_BRACE_OPEN)
          {
+            /* Indent the brace to match the open brace */
+            indent_column = frm.pse[frm.pse_tos].brace_indent;
+
             indent_pse_pop(frm, pc);
             frm.level--;
-
-            /* Update the indent_column if needed */
-            if (!brace_indent && (parent_token_indent == 0))
-            {
-               indent_column = frm.pse[frm.pse_tos].indent_tmp;
-            }
-
-            if ((pc->parent_type == CT_IF) ||
-                (pc->parent_type == CT_ELSE) ||
-                (pc->parent_type == CT_ELSEIF) ||
-                (pc->parent_type == CT_DO) ||
-                (pc->parent_type == CT_WHILE) ||
-                (pc->parent_type == CT_SWITCH) ||
-                (pc->parent_type == CT_FOR))
-            {
-               indent_column += cpd.settings[UO_indent_brace].n;
-            }
          }
       }
       else if (pc->type == CT_VBRACE_OPEN)
@@ -574,6 +560,9 @@ void indent_text(void)
                indent_column = frm.pse[frm.pse_tos].indent_tmp;
             }
          }
+
+         /* Save the brace indent */
+         frm.pse[frm.pse_tos].brace_indent = indent_column;
       }
       else if (pc->type == CT_SQL_END)
       {
