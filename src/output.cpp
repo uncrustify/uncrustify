@@ -239,6 +239,12 @@ void output_text(FILE *pfile)
                   lvlcol = pc->column;
                }
 
+               /* cases and labels may drop back a level or two */
+               if ((pc->type == CT_CASE) || (pc->type == CT_LABEL))
+               {
+                  lvlcol = pc->column;
+               }
+
                if ((pc->column >= lvlcol) && (lvlcol > 1))
                {
                   output_to_column(lvlcol, true);
