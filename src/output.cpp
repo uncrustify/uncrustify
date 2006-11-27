@@ -230,19 +230,19 @@ void output_text(FILE *pfile)
          {
             if (cpd.settings[UO_indent_with_tabs].n == 1)
             {
-               lvlcol = 1 + (pc->brace_level * cpd.settings[UO_indent_columns].n);
-
-               /* handle indented braces */
-               if (((pc->type == CT_BRACE_OPEN) || (pc->type == CT_BRACE_CLOSE)) &&
-                   ((lvlcol + cpd.settings[UO_indent_columns].n) == pc->column))
-               {
-                  lvlcol = pc->column;
-               }
-
                /* cases and labels may drop back a level or two */
                if ((pc->type == CT_CASE) || (pc->type == CT_LABEL))
                {
                   lvlcol = pc->column;
+               }
+               else if (pc->level == pc->brace_level)
+               {
+                  /* anything that isn't nested... */
+                  lvlcol = pc->column;
+               }
+               else
+               {
+                  lvlcol = 1 + (pc->brace_level * cpd.settings[UO_indent_columns].n);
                }
 
                if ((pc->column >= lvlcol) && (lvlcol > 1))
