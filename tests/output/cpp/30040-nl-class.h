@@ -13,7 +13,7 @@ namespace example {
  * Timestamp is a timestamp with nanosecond resolution.
  */
 	class Inher
-	        : public IStreamable {
+		: public IStreamable {
 
 public:
 		Inher();
@@ -25,7 +25,7 @@ public:
  * Timestamp is a timestamp with nanosecond resolution.
  */
 	class Inher2
-	        : public IStreamable {
+		: public IStreamable {
 
 public:
 
