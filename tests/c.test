@@ -12,6 +12,8 @@
 00002  cpp_to_c-2.cfg          c/comment-indent.c
 00003  cpp_to_c-3.cfg          c/comment-indent.c
 
+00004  indent-1.cfg            c/switch.c
+
 # brace styles
 00010  ben.cfg                 c/braces.c
 00011  brace-allman.cfg        c/braces.c
