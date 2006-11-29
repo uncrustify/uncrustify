@@ -1040,6 +1040,16 @@ static void newline_func_def(chunk_t *start)
    {
       prev = chunk_get_prev_ncnl(start);
       prev = chunk_get_prev_ncnl(prev);
+
+      /* If we are on a '::', step back two tokens
+       * TODO: do we also need to check for '.' ?
+       */
+      while ((prev != NULL) && (prev->type == CT_DC_MEMBER))
+      {
+         prev = chunk_get_prev_ncnl(prev);
+         prev = chunk_get_prev_ncnl(prev);
+      }
+
       if (prev != NULL)
       {
          newline_iarf(prev, cpd.settings[UO_nl_func_type_name].a);
