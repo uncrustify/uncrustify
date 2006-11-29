@@ -50,3 +50,8 @@
 30103 template_sp-remove.cfg           cpp/templates.cpp
 30104 avalon3.cfg                      cpp/templ_class.h
 
+# function def newlines
+30701  func-def-1.cfg                  cpp/function-def.cpp
+30702  func-def-2.cfg                  cpp/function-def.cpp
+30703  func-def-3.cfg                  cpp/function-def.cpp
+
