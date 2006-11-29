@@ -169,7 +169,7 @@ void output_options(FILE * pfile)
                 (cpd.settings[ptr->id].le == LE_CRLF) ? "CRLF" :
                 (cpd.settings[ptr->id].le == LE_CR) ? "CR" : "???");
         }
-      else     /* AT_NUM */
+      else /* AT_NUM */
         fprintf(pfile, "%3d) %32s = %d\n",
                 ptr->id, ptr->name, cpd.settings[ptr->id].n);
       }
@@ -319,7 +319,7 @@ static int calculate_comment_body_indent(const char * str, int len, int start_co
     /* Scan the second line */
   width = 0;
 
-  for (  /* nada */;idx < len; idx++)
+  for ( /* nada */; idx < len; idx++)
     {
     if ((str[idx] == ' ') || (str[idx] == '\t'))
       {

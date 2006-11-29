@@ -704,12 +704,12 @@ static void uncrustify_file(const char *data, int data_len, FILE *pfout,
    newlines_eat_start_end();
    newlines_cleanup_dup();
 
+   mark_comments();
+
    /**
     * Fix same-line inter-chunk spacing
     */
    space_text();
-
-   mark_comments();
 
    /**
     * Do any aligning of preprocessors

@@ -1034,6 +1034,13 @@ static void newline_func_def(chunk_t *start)
 {
    chunk_t *pc;
    chunk_t *prev = NULL;
+   chunk_t *tmp;
+
+   pc = chunk_get_next_ncnl(start);
+   if (chunk_is_str(pc, ")", 1))
+   {
+      return;
+   }
 
    /* Handle break newlines type and function */
    if (cpd.settings[UO_nl_func_type_name].a != AV_IGNORE)
@@ -1066,6 +1073,11 @@ static void newline_func_def(chunk_t *start)
       prev = pc;
       if ((pc->type == CT_COMMA) && (pc->level == (start->level + 1)))
       {
+         tmp = chunk_get_next(pc);
+         if (chunk_is_comment(tmp))
+         {
+            pc = tmp;
+         }
          newline_iarf(pc, cpd.settings[UO_nl_func_decl_args].a);
       }
    }
@@ -1073,7 +1085,11 @@ static void newline_func_def(chunk_t *start)
    /* and fix up the close paren */
    if ((prev != NULL) && (pc != NULL) && (pc->type == CT_FPAREN_CLOSE))
    {
-      newline_iarf(prev, cpd.settings[UO_nl_func_decl_end].a);
+      prev = chunk_get_prev(pc);
+      if (prev->type != CT_FPAREN_OPEN)
+      {
+         newline_iarf(prev, cpd.settings[UO_nl_func_decl_end].a);
+      }
    }
 }
 

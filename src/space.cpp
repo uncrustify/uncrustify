@@ -97,6 +97,11 @@ argval_t do_space(chunk_t *first, chunk_t *second)
       return(AV_REMOVE);
    }
 
+   if ((second->type == CT_COMMENT) && (second->parent_type == CT_COMMENT_EMBED))
+   {
+      return(AV_FORCE);
+   }
+
    /* Macro stuff can only return IGNORE, ADD, or FORCE */
    if (first->type == CT_MACRO)
    {
@@ -593,6 +598,10 @@ argval_t do_space(chunk_t *first, chunk_t *second)
       return(AV_FORCE);
    }
 
+   if (first->type == CT_COMMENT)
+   {
+      return(AV_FORCE);
+   }
 
    for (idx = 0; idx < (int)ARRAY_SIZE(no_space_table); idx++)
    {

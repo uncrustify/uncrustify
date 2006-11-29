@@ -181,12 +181,16 @@
 				<F N="input/cpp/cout.cpp"/>
 				<F N="input/cpp/Example.h"/>
 				<F N="input/cpp/extern_c.h"/>
+				<F N="input/cpp/function-def.cpp"/>
 				<F N="input/cpp/misc.cpp"/>
 				<F N="input/cpp/misc2.cpp"/>
 				<F N="input/cpp/nl-class.h"/>
 				<F N="input/cpp/nl-namespace.h"/>
+				<F N="input/cpp/nl_func.cpp"/>
 				<F N="input/cpp/operator.cpp"/>
+				<F N="input/cpp/sim.h"/>
 				<F N="input/cpp/strings.cpp"/>
+				<F N="input/cpp/templ_class.h"/>
 				<F N="input/cpp/templates.cpp"/>
 				<F N="input/cpp/Timestamp.h"/>
 			</Folder>
@@ -294,6 +298,5 @@
 		<F N="java.test"/>
 		<F N="pawn.test"/>
 		<F N="run_tests.py"/>
-		<F N="sql.test"/>
 	</Files>
 </Project>

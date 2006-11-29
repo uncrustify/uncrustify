@@ -156,7 +156,7 @@ void reindent_line(chunk_t *pc, int column)
       pc       = chunk_get_next(pc);
       if (pc != NULL)
       {
-         if (chunk_is_comment(pc))
+         if (chunk_is_comment(pc) && (pc->parent_type != CT_COMMENT_EMBED))
          {
             pc->column = pc->orig_col;
             if (pc->column < min_col)
