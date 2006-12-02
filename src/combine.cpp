@@ -1790,7 +1790,7 @@ static void mark_function(chunk_t *pc)
       {
          if (tmp->type == CT_BRACE_OPEN)
          {
-            /* its a funciton def for sure */
+            /* its a function def for sure */
             break;
          }
          else if (chunk_is_semicolon(tmp))
@@ -1800,12 +1800,43 @@ static void mark_function(chunk_t *pc)
             pc->type         = CT_FUNC_PROTO;
             break;
          }
+         else if (pc->type == CT_COMMA)
+         {
+            pc->type = CT_FUNC_CTOR_VAR;
+            break;
+         }
          else if (chunk_is_str(tmp, ":", 1))
          {
             /* mark constuctor colon (?) */
             tmp->type = CT_CLASS_COLON;
          }
       }
+   }
+
+   if ((cpd.lang_flags & LANG_CPP) &&
+       (pc->type == CT_FUNC_PROTO) &&
+       (pc->parent_type != CT_OPERATOR))
+   {
+      prev = chunk_get_prev_ncnl(pc);
+      if (!chunk_is_str(prev, "*", 1) && !chunk_is_str(prev, "&", 1))
+      {
+         int lvl = 1;
+         lvl += (pc->flags & PCF_IN_CLASS) ? 1 : 0;
+         lvl += (pc->flags & PCF_IN_NAMESPACE) ? 1 : 0;
+
+         if ((pc->level == pc->brace_level) && (pc->level == lvl))
+         {
+            pc->type = CT_FUNC_CTOR_VAR;
+         }
+      }
+   }
+
+   if (pc->type == CT_FUNC_CTOR_VAR)
+   {
+      LOG_FMT(LFCN, "Detected [%s] %.*s on line %d col %d\n",
+              get_token_name(pc->type),
+              pc->len, pc->str, pc->orig_line, pc->orig_col);
+      return;
    }
 
    /* Mark parameters */
@@ -1985,7 +2016,7 @@ static void mark_namespace(chunk_t *pns)
       chunk_t *pc = chunk_get_next_ncnl(pns);
       if ((pc != NULL) && (pc->type == CT_BRACE_OPEN))
       {
-         set_paren_parent(pc, CT_NAMESPACE);
+         flag_parens(pc, PCF_IN_NAMESPACE, CT_NONE, CT_NAMESPACE, false);
       }
    }
 }
