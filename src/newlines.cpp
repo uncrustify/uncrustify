@@ -1598,7 +1598,7 @@ void do_blank_lines(void)
       }
 
       next = chunk_get_next(pc);
-      prev = chunk_get_prev(pc);
+      prev = chunk_get_prev_nc(pc);
 
       /* Limit consecutive newlines */
       if ((cpd.settings[UO_nl_max].n > 0) &&

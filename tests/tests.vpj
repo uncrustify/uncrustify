@@ -72,6 +72,7 @@
 			<F N="config/align.cfg"/>
 			<F N="config/avalon.cfg"/>
 			<F N="config/avalon2.cfg"/>
+			<F N="config/avalon3.cfg"/>
 			<F N="config/ben.cfg"/>
 			<F N="config/blc-1.cfg"/>
 			<F N="config/bool-pos-eol.cfg"/>
@@ -83,6 +84,7 @@
 			<F N="config/brace-remove-2.cfg"/>
 			<F N="config/brace-remove-all.cfg"/>
 			<F N="config/brace-ws.cfg"/>
+			<F N="config/brace-ws2.cfg"/>
 			<F N="config/byref-center.cfg"/>
 			<F N="config/byref-left.cfg"/>
 			<F N="config/byref-right.cfg"/>
@@ -90,6 +92,7 @@
 			<F N="config/case-2.cfg"/>
 			<F N="config/case-3.cfg"/>
 			<F N="config/cast-types.txt"/>
+			<F N="config/clark.cfg"/>
 			<F N="config/class-colon-pos-eol-add.cfg"/>
 			<F N="config/class-colon-pos-eol.cfg"/>
 			<F N="config/class-colon-pos-sol-add.cfg"/>
@@ -106,12 +109,15 @@
 			<F N="config/func-def-1.cfg"/>
 			<F N="config/func-def-2.cfg"/>
 			<F N="config/func-def-3.cfg"/>
+			<F N="config/indent-1.cfg"/>
 			<F N="config/indent.cfg"/>
 			<F N="config/mono.cfg"/>
+			<F N="config/nl_after_func_body.cfg"/>
 			<F N="config/nl_class-a.cfg"/>
 			<F N="config/nl_class-r.cfg"/>
 			<F N="config/nl_namespace-a.cfg"/>
 			<F N="config/nl_namespace-r.cfg"/>
+			<F N="config/nl_semicolon.cfg"/>
 			<F N="config/nl_template_class-force.cfg"/>
 			<F N="config/nl_template_class-remove.cfg"/>
 			<F N="config/op-space-force.cfg"/>
@@ -122,6 +128,10 @@
 			<F N="config/pp-indent-1.cfg"/>
 			<F N="config/pp-indent-2.cfg"/>
 			<F N="config/pp-indent-3.cfg"/>
+			<F N="config/preproc-cleanup.cfg"/>
+			<F N="config/sim.cfg"/>
+			<F N="config/template_sp-force.cfg"/>
+			<F N="config/template_sp-remove.cfg"/>
 			<F N="config/width.cfg"/>
 		</Folder>
 		<Folder Name="input">
