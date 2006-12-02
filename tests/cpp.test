@@ -12,6 +12,7 @@
 30011 ben.cfg                          cpp/misc.cpp
 30012 avalon2.cfg                      cpp/misc2.cpp
 30013 sim.cfg                          cpp/sim.h
+30014 ben.cfg                          cpp/ctor-var.cpp
 
 30020 ben.cfg                          cpp/bool.cpp
 30021 ben.cfg                          cpp/byref.cpp
