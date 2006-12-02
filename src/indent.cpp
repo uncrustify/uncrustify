@@ -204,6 +204,7 @@ static void indent_pse_push(struct parse_frame& frm, chunk_t *pc)
       frm.pse[frm.pse_tos].open_line  = pc->orig_line;
       frm.pse[frm.pse_tos].ref        = ++ref;
       frm.pse[frm.pse_tos].in_preproc = (pc->flags & PCF_IN_PREPROC) != 0;
+      frm.pse[frm.pse_tos].indent_tab = frm.pse[frm.pse_tos - 1].indent_tab;
    }
 }
 
@@ -478,6 +479,7 @@ void indent_text(void)
 
          frm.pse[frm.pse_tos].indent     = frm.pse[frm.pse_tos - 1].indent + indent_size;
          frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
+         frm.pse[frm.pse_tos].indent_tab = frm.pse[frm.pse_tos].indent;
 
          /* Always indent on virtual braces */
          indent_column = frm.pse[frm.pse_tos].indent_tmp;
@@ -530,6 +532,8 @@ void indent_text(void)
             {
                frm.pse[frm.pse_tos].indent -= indent_size;
             }
+
+            frm.pse[frm.pse_tos].indent_tab = frm.pse[frm.pse_tos].indent;
          }
 
          if ((pc->flags & PCF_DONT_INDENT) != 0)
@@ -596,6 +600,7 @@ void indent_text(void)
 
          frm.pse[frm.pse_tos].indent     = tmp;
          frm.pse[frm.pse_tos].indent_tmp = tmp - indent_size;
+         frm.pse[frm.pse_tos].indent_tab = tmp;
 
          /* Always set on case statements */
          indent_column = frm.pse[frm.pse_tos].indent_tmp;
@@ -717,6 +722,12 @@ void indent_text(void)
        */
       if (did_newline && !chunk_is_newline(pc) && (pc->len != 0))
       {
+         pc->column_indent = frm.pse[frm.pse_tos].indent_tab;
+
+         LOG_FMT(LINDENT2, "%s: %d] %d for %.*s\n",
+                 __func__, pc->orig_line, pc->column_indent, pc->len, pc->str);
+
+
          /**
           * Check for special continuations.
           * Note that some of these could be done as a stack item like

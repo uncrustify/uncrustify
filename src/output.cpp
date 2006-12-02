@@ -230,22 +230,23 @@ void output_text(FILE *pfile)
          {
             if (cpd.settings[UO_indent_with_tabs].n == 1)
             {
-               /* cases and labels may drop back a level or two */
-               if ((pc->type == CT_CASE) || (pc->type == CT_LABEL))
+               /* FIXME: it would be better to properly set column_indent in
+                * indent_text(), but this hack for '}' and ':' seems to work. */
+               if ((pc->type == CT_BRACE_CLOSE) ||
+                   chunk_is_str(pc, ":", 1))
                {
-                  lvlcol = pc->column;
-               }
-               else if (pc->level == pc->brace_level)
-               {
-                  /* anything that isn't nested... */
                   lvlcol = pc->column;
                }
                else
                {
-                  lvlcol = 1 + (pc->brace_level * cpd.settings[UO_indent_columns].n);
+                  lvlcol = pc->column_indent;
+                  if (lvlcol > pc->column)
+                  {
+                     lvlcol = pc->column;
+                  }
                }
 
-               if ((pc->column >= lvlcol) && (lvlcol > 1))
+               if (lvlcol > 1)
                {
                   output_to_column(lvlcol, true);
                }

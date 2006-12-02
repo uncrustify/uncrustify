@@ -45,6 +45,7 @@ struct paren_stack_entry
    int       brace_indent; /**< indent for braces - may not relate to indent */
    int       indent;       /**< indent level (depends on use) */
    int       indent_tmp;   /**< temporary indent level (depends on use) */
+   int       indent_tab;   /**< the 'tab' indent (always <= real column) */
    int       ref;
    c_token_t parent;       /**< if, for, function, etc */
    brstage_e stage;
@@ -140,6 +141,8 @@ struct chunk_t
    UINT32     orig_col_end;
    UINT32     flags;            /* see PCF_xxx */
    int        column;           /* column of chunk */
+   int        column_indent;    /* if 1st on a line, set to the 'indent'
+                                 * column, which may be less that the real column */
    int        nl_count;         /* number of newlines in CT_NEWLINE */
    int        level;            /* nest level in {, (, or [ */
    int        brace_level;      /* nest level in braces only */

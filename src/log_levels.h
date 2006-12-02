@@ -63,6 +63,7 @@ enum
    LSPLIT    = 50,    /* Line splitting */
    LFTYPE    = 51,    /* Function type detection */
    LTEMPL    = 52,    /* Template detection */
+   LINDENT2  = 53,    /* indent_text tab level */
 };
 
 #endif   /* LOG_LEVELS_H_INCLUDED */
