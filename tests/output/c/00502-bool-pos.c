@@ -7,6 +7,15 @@ void foo(void)
       printf("hi");
    }
 
+   if (flag1
+#ifdef FLAG2
+       || flag2
+#endif
+   )
+   {
+      printf("yar");
+   }
+
    if ((a != 0)
        && (b == 0)
        && (c < 0))
