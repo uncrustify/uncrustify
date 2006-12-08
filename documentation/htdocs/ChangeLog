@@ -31,6 +31,7 @@ Changes in uncrustify-0.31
 -------------------------------------------------------------------------------
  - Improve mixed tab indent / space align
  - Try to fix spacing around embedded comments
+ - add indent_access_spec
 
 
 Changes in uncrustify-0.30

@@ -618,6 +618,19 @@ void indent_text(void)
                             cpd.settings[UO_indent_label].n;
          }
       }
+      else if (pc->type == CT_PRIVATE)
+      {
+         /* Labels get sent to the left or backed up */
+         if (cpd.settings[UO_indent_access_spec].n > 0)
+         {
+            indent_column = cpd.settings[UO_indent_access_spec].n;
+         }
+         else
+         {
+            indent_column = frm.pse[frm.pse_tos].indent +
+                            cpd.settings[UO_indent_access_spec].n;
+         }
+      }
       else if (pc->type == CT_CLASS_COLON)
       {
          /* just indent one level */

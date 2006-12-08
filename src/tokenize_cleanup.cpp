@@ -177,8 +177,7 @@ void tokenize_cleanup(void)
       {
          if (next->type == CT_COLON)
          {
-            pc->type   = CT_LABEL;
-            next->type = CT_LABEL_COLON;
+            next->type = CT_PRIVATE_COLON;
             if ((tmp = chunk_get_next_ncnl(next)) != NULL)
             {
                tmp->flags |= PCF_STMT_START | PCF_EXPR_START;

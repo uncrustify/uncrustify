@@ -140,6 +140,7 @@ void register_options(void)
    unc_add_option("indent_case_brace", UO_indent_case_brace, AT_NUM, "Spaces to indent '{' from 'case'");
    unc_add_option("indent_col1_comment", UO_indent_col1_comment, AT_BOOL, "Whether to indent comments found in first column");
    unc_add_option("indent_label", UO_indent_label, AT_NUM, "How to indent goto labels (>0=absolute column where 1 is the leftmost column, <=0=subtract from brace indent)");
+   unc_add_option("indent_access_spec", UO_indent_access_spec, AT_NUM, "Same as indent_label, but for access specifiers that are followed by a colon");
    unc_add_option("indent_paren_nl", UO_indent_paren_nl, AT_BOOL, "If an open paren is followed by a newline, indent the next line so that it lines up after the open paren (not recommended)");
    unc_add_option("indent_square_nl", UO_indent_square_nl, AT_BOOL, "If an open square is followed by a newline, indent the next line so that it lines up after the open square (not recommended)");
 
@@ -661,6 +662,7 @@ void set_option_defaults(void)
    cpd.settings[UO_indent_columns].n     = 8;
    cpd.settings[UO_indent_with_tabs].n   = 1;
    cpd.settings[UO_indent_label].n       = 1;
+   cpd.settings[UO_indent_access_spec].n = 1;
    cpd.settings[UO_string_escape_char].n = '\\';
 }
 

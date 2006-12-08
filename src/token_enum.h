@@ -117,6 +117,7 @@ typedef enum
    CT_NEW,              /* may turn into CT_PBRACED if followed by a '(' */
    CT_OPERATOR,
    CT_PRIVATE,
+   CT_PRIVATE_COLON,
    CT_THROW,
    CT_TRY,
    CT_USING,
