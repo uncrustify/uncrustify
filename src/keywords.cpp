@@ -154,7 +154,7 @@ static const chunk_tag_t keywords[] =
    { "override",         CT_QUALIFIER,   LANG_CS | LANG_D                                    },
    { "package",          CT_NAMESPACE,   LANG_D | LANG_JAVA                                  },
    { "params",           CT_TYPE,        LANG_CS                                             },
-   { "pragma",           CT_PP_PRAGMA,   LANG_D | LANG_PAWN | FLAG_PP                        }, // PAWN
+   { "pragma",           CT_PP_PRAGMA,   LANG_ALL | FLAG_PP                                  }, // PAWN
    { "private",          CT_PRIVATE,     LANG_ALLC                                           }, // not C
    { "protected",        CT_PRIVATE,     LANG_ALLC                                           }, // not C
    { "public",           CT_PRIVATE,     LANG_ALL                                            }, // PAWN // not C
