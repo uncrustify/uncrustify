@@ -590,13 +590,15 @@ static bool parse_next(chunk_t *pc)
       char last = 0;
       while (pc->str[pc->len] != 0)
       {
+         char ch = pc->str[pc->len];
+
          /* Bail on a non-escaped newline or on a C++ comment start */
-         if (((pc->str[pc->len] == '\n') && (last != '\\')) ||
-             ((pc->str[pc->len] == '/') && (pc->str[pc->len + 1] == '/')))
+         if ((((ch == '\n') || (ch == '\r')) && (last != '\\')) ||
+             ((ch == '/') && (pc->str[pc->len + 1] == '/')))
          {
             break;
          }
-         last = pc->str[pc->len];
+         last = ch;
          pc->len++;
       }
       if (pc->len > 0)
