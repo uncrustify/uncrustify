@@ -3,6 +3,9 @@
  *
  * Defines some types for the uncrustify program
  *
+ * @author  Ben Gardner
+ * @license GPL v2+
+ *
  * $Id$
  */
 

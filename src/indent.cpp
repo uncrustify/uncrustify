@@ -2,6 +2,9 @@
  * @file indent.cpp
  * Does all the indenting stuff.
  *
+ * @author  Ben Gardner
+ * @license GPL v2+
+ *
  * $Id$
  */
 #include "uncrustify_types.h"

@@ -2,6 +2,9 @@
  * @file chunk_list.c
  * Manages and navigates the list of chunks.
  *
+ * @author  Ben Gardner
+ * @license GPL v2+
+ *
  * $Id$
  */
 

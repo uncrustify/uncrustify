@@ -3,6 +3,9 @@
  * A simple table to help tokenize stuff.
  * Used to parse strings (paired char) and words.
  *
+ * @author  Ben Gardner
+ * @license GPL v2+
+ *
  * $Id$
  */
 #ifndef CHAR_TABLE_H_INCLUDED

@@ -2,6 +2,9 @@
  * @file combine.cpp
  * Labels the chunks as needed.
  *
+ * @author  Ben Gardner
+ * @license GPL v2+
+ *
  * $Id$
  */
 #include "uncrustify_types.h"

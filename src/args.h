@@ -8,6 +8,9 @@
  *  - this means you can handle args in multiple spots
  *  - it is more portable
  *
+ * @author  Ben Gardner
+ * @license GPL v2+
+ *
  * $Id$
  */
 

@@ -2,6 +2,9 @@
  * @file uncrustify.cpp
  * This file takes an input C/C++/D/Java file and reformats it.
  *
+ * @author  Ben Gardner
+ * @license GPL v2+
+ *
  * $Id$
  */
 #define DEFINE_PCF_NAMES

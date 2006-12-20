@@ -6,6 +6,9 @@
  * If a log statement ends in a newline, the current log is ended.
  * When the log severity changes, an implicit newline is inserted.
  *
+ * @author  Ben Gardner
+ * @license GPL v2+
+ *
  * $Id$
  */
 

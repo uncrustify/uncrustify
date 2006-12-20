@@ -2,6 +2,9 @@
  * @file defines.cpp
  * Manages the table of keywords.
  *
+ * @author  Ben Gardner
+ * @license GPL v2+
+ *
  * $Id$
  */
 

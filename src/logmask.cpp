@@ -3,6 +3,9 @@
  *
  * Functions to convert between a string and a severity mask.
  *
+ * @author  Ben Gardner
+ * @license GPL v2+
+ *
  * $Id$
  */
 

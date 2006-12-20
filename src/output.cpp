@@ -2,6 +2,9 @@
  * @file output.cpp
  * Does all the output & comment formatting.
  *
+ * @author  Ben Gardner
+ * @license GPL v2+
+ *
  * $Id$
  */
 

@@ -4,6 +4,9 @@
  *
  * Each routine needs to set pc->len and pc->type.
  *
+ * @author  Ben Gardner
+ * @license GPL v2+
+ *
  * $Id$
  */
 

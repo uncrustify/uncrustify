@@ -2,6 +2,9 @@
  * @file ChunkStack.h
  * Manages a simple stack of chunks
  *
+ * @author  Ben Gardner
+ * @license GPL v2+
+ *
  * $Id$
  */
 

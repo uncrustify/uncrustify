@@ -3,6 +3,9 @@
  * Template class that manages items in a double-linked list.
  * If C++ could do it, this would just be a class that worked on an interface.
  *
+ * @author  Ben Gardner
+ * @license GPL v2+
+ *
  * $Id$
  */
 

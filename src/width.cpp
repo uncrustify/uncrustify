@@ -2,6 +2,9 @@
  * @file width.cpp
  * Limits line width.
  *
+ * @author  Ben Gardner
+ * @license GPL v2+
+ *
  * $Id: align.cpp 365 2006-07-27 02:40:27Z bengardner $
  */
 

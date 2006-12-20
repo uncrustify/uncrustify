@@ -19,6 +19,9 @@
  * This will let you run uncrustify multiple times over the same file without
  * losing the original file.  If you edit the file, then a new backup is made.
  *
+ * @author  Ben Gardner
+ * @license GPL v2+
+ *
  * $Id$
  */
 

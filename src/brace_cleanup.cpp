@@ -4,6 +4,9 @@
  * Inserts virtual braces as needed.
  * Handles all that preprocessor crap.
  *
+ * @author  Ben Gardner
+ * @license GPL v2+
+ *
  * $Id$
  */
 

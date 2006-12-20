@@ -2,6 +2,9 @@
  * @file token_enum.h
  * List of the different tokens used in the program.
  *
+ * @author  Ben Gardner
+ * @license GPL v2+
+ *
  * $Id$
  */
 #ifndef TOKEN_ENUM_H_INCLUDED

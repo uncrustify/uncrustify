@@ -2,6 +2,9 @@
  * @file options.h
  * Enum and settings for all the options.
  *
+ * @author  Ben Gardner
+ * @license GPL v2+
+ *
  * $Id$
  */
 #ifndef OPTIONS_H_INCLUDED

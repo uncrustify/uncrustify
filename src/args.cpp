@@ -2,6 +2,9 @@
  * @file args.cpp
  * Parses command line arguments.
  *
+ * @author  Ben Gardner
+ * @license GPL v2+
+ *
  * $Id$
  */
 

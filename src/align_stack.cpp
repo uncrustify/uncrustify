@@ -4,6 +4,9 @@
  * There can be at most 1 item per line in the stack.
  * The seqnum is actually a line counter.
  *
+ * @author  Ben Gardner
+ * @license GPL v2+
+ *
  * $Id$
  */
 

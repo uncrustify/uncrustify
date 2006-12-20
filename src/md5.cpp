@@ -1,4 +1,4 @@
-/*
+/**
  * This code implements the MD5 message-digest algorithm.
  * The algorithm is due to Ron Rivest.	This code was
  * written by Colin Plumb in 1993, no copyright is claimed.
@@ -13,6 +13,8 @@
  * MD5Context structure, pass it to MD5Init, call MD5Update as
  * needed on buffers full of bytes, and then call MD5Final, which
  * will fill a supplied 16-byte array with the digest.
+ *
+ * @license Public Domain / GPL v2+
  */
 
 #include "md5.h"

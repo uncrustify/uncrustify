@@ -3,6 +3,9 @@
  * Manages a align stack, which is just a pair of chunk stacks with a few
  * fancy functions.
  *
+ * @author  Ben Gardner
+ * @license GPL v2+
+ *
  * $Id$
  */
 

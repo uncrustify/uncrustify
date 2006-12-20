@@ -2,6 +2,9 @@
  * @file newlines.cpp
  * Adds or removes newlines.
  *
+ * @author  Ben Gardner
+ * @license GPL v2+
+ *
  * $Id$
  */
 #include "uncrustify_types.h"
@@ -1474,7 +1477,7 @@ void newlines_bool_pos(void)
             {
                /* Back up to the next non-comment item */
                prev = chunk_get_prev_nc(prev);
-               if ((prev != NULL) && !chunk_is_newline(prev) && 
+               if ((prev != NULL) && !chunk_is_newline(prev) &&
                    !(prev->flags & PCF_IN_PREPROC))
                {
                   chunk_move_after(pc, prev);

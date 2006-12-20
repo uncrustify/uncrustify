@@ -2,6 +2,9 @@
  * @file space.cpp
  * Adds or removes inter-chunk spaces.
  *
+ * @author  Ben Gardner
+ * @license GPL v2+
+ *
  * $Id$
  */
 #include "uncrustify_types.h"

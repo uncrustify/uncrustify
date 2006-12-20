@@ -2,6 +2,9 @@
  * @file braces.cpp
  * Adds or removes braces.
  *
+ * @author  Ben Gardner
+ * @license GPL v2+
+ *
  * $Id$
  */
 #include "uncrustify_types.h"

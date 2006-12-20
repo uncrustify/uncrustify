@@ -2,6 +2,9 @@
  * @file options.cpp
  * Parses the options from the config file.
  *
+ * @author  Ben Gardner
+ * @license GPL v2+
+ *
  * $Id$
  */
 

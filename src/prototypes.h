@@ -2,6 +2,9 @@
  * @file prototypes.h
  * Big jumble of prototypes used in Uncrustify.
  *
+ * @author  Ben Gardner
+ * @license GPL v2+
+ *
  * $Id$
  */
 #ifndef C_PARSE_PROTOTYPES_H_INCLUDED

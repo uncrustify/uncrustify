@@ -4,6 +4,9 @@
  * Enum for log levels.
  * Use these for the log severities in LOG_FMT(), etc.
  *
+ * @author  Ben Gardner
+ * @license GPL v2+
+ *
  * $Id$
  */
 #ifndef LOG_LEVELS_H_INCLUDED

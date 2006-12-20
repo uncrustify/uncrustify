@@ -1,6 +1,9 @@
 /**
  * @file parse_frame.cpp
- * @brief Does the parse frame stuff, which is used to handle #ifdef stuff
+ * Does the parse frame stuff, which is used to handle #ifdef stuff
+ *
+ * @author  Ben Gardner
+ * @license GPL v2+
  *
  * $Id$
  */

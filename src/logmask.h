@@ -3,6 +3,9 @@
  *
  * Functions to manipulate a log severity mask.
  *
+ * @author  Ben Gardner
+ * @license GPL v2+
+ *
  * $Id$
  */
 

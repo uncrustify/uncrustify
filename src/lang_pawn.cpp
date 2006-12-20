@@ -2,6 +2,9 @@
  * @file lang_pawn.cpp
  * Special functions for pawn stuff
  *
+ * @author  Ben Gardner
+ * @license GPL v2+
+ *
  * $Id: combine.cpp 391 2006-08-04 02:02:37Z bengardner $
  */
 #include "uncrustify_types.h"

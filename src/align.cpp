@@ -2,6 +2,9 @@
  * @file align.cpp
  * Does all the aligning stuff.
  *
+ * @author  Ben Gardner
+ * @license GPL v2+
+ *
  * $Id$
  */
 #include "uncrustify_types.h"

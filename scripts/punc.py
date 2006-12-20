@@ -3,6 +3,9 @@
 #
 #  Creates a possibly faster lookup table for tokens, etc.
 #
+# @author  Ben Gardner
+# @license GPL v2+
+#
 
 def scan_file (filename):
 	fh = open(filename, 'r')

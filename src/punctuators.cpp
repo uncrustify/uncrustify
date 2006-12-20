@@ -2,6 +2,9 @@
  * @file punctuators.cpp
  * Manages the table of punctutators.
  *
+ * @author  Ben Gardner
+ * @license GPL v2+
+ *
  * $Id$
  */
 

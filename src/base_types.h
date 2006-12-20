@@ -3,6 +3,9 @@
  *
  * Defines some base types, includes config.h
  *
+ * @author  Ben Gardner
+ * @license GPL v2+
+ *
  * $Id$
  */
 

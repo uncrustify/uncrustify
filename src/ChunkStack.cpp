@@ -2,6 +2,9 @@
  * @file ChunkStack.cpp
  * Manages a chunk stack
  *
+ * @author  Ben Gardner
+ * @license GPL v2+
+ *
  * $Id$
  */
 

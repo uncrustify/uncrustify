@@ -2,6 +2,11 @@
  * @file windows_compat.h
  * Hacks to work with different versions of windows.
  * This is only included if WIN32 is set.
+ *
+ * @author  Ben Gardner
+ * @license GPL v2+
+ *
+ * $Id$
  */
 #ifndef WINDOWS_COMPAT_H_INCLUDED
 #define WINDOWS_COMPAT_H_INCLUDED

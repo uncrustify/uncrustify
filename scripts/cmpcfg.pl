@@ -4,6 +4,7 @@
 # Copyright (c) 2006 David Thompson
 # da.thompson@yahoo.com
 # Fri Nov 17 20:41:23 PST 2006
+# License: GPL
 
 # Purpose of this script is to process config files and
 # produce a comparision chart of values.  The input files

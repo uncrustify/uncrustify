@@ -1,6 +1,11 @@
 /**
  * @file md5.h
  * A simple class for MD5 calculation
+ *
+ * @author  Ben Gardner
+ * @license GPL v2+
+ *
+ * $Id$
  */
 #ifndef MD5_H_INCLUDED
 #define MD5_H_INCLUDED

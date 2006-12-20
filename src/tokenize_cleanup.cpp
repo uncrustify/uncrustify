@@ -5,6 +5,9 @@
  *  - change '[' + ']' into '[]'/
  *  - detect "version = 10;" vs "version (xxx) {"
  *
+ * @author  Ben Gardner
+ * @license GPL v2+
+ *
  * $Id$
  */
 
