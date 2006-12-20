@@ -535,7 +535,6 @@ bool parse_whitespace(chunk_t *pc)
       pc->nl_count  = nl_count;
       pc->type      = nl_count ? CT_NEWLINE : CT_WHITESPACE;
       pc->len       = len;
-      pc->str       = "";
       pc->after_tab = last_was_tab;
    }
    return(len != 0);
@@ -775,10 +774,12 @@ void tokenize(const char *data, int data_len)
          last_was_tab = chunk.after_tab;
          continue;
       }
+
       if (chunk.type == CT_NEWLINE)
       {
          last_was_tab    = chunk.after_tab;
          chunk.after_tab = false;
+         chunk.len       = 0;
       }
       else
       {
