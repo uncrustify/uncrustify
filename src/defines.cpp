@@ -77,14 +77,7 @@ void add_define(const char *tag, const char *value)
    if ((dl.total == dl.active) || (dl.p_tags == NULL))
    {
       dl.total += 16;
-      if (dl.p_tags == NULL)
-      {
-         dl.p_tags = (define_tag_t *)malloc(sizeof(define_tag_t) * dl.total);
-      }
-      else
-      {
-         dl.p_tags = (define_tag_t *)realloc(dl.p_tags, sizeof(define_tag_t) * dl.total);
-      }
+      dl.p_tags = (define_tag_t *)realloc(dl.p_tags, sizeof(define_tag_t) * dl.total);
    }
    if (dl.p_tags != NULL)
    {
@@ -216,4 +209,15 @@ void output_defines(FILE *pfile)
          fprintf(pfile, "%s\n", dl.p_tags[idx].tag);
       }
    }
+}
+
+void clear_defines(void)
+{
+   if (dl.p_tags != NULL)
+   {
+      free(dl.p_tags);
+      dl.p_tags = NULL;
+   }
+   dl.total  = 0;
+   dl.active = 0;
 }

@@ -255,14 +255,7 @@ void add_keyword(const char *tag, c_token_t type, UINT8 lang_flags)
    if ((wl.total == wl.active) || (wl.p_tags == NULL))
    {
       wl.total += 16;
-      if (wl.p_tags == NULL)
-      {
-         wl.p_tags = (chunk_tag_t *)malloc(sizeof(chunk_tag_t) * wl.total);
-      }
-      else
-      {
-         wl.p_tags = (chunk_tag_t *)realloc(wl.p_tags, sizeof(chunk_tag_t) * wl.total);
-      }
+      wl.p_tags = (chunk_tag_t *)realloc(wl.p_tags, sizeof(chunk_tag_t) * wl.total);
    }
    if (wl.p_tags != NULL)
    {
@@ -428,4 +421,15 @@ void output_types(FILE *pfile)
    {
       fprintf(pfile, "%s\n", wl.p_tags[idx].tag);
    }
+}
+
+void clear_keyword_file(void)
+{
+   if (wl.p_tags != NULL)
+   {
+      free(wl.p_tags);
+      wl.p_tags = NULL;
+   }
+   wl.total  = 0;
+   wl.active = 0;
 }

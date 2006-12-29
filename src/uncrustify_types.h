@@ -19,6 +19,7 @@
 #include "log_levels.h"
 #include "logger.h"
 #include <cstdio>
+#include <assert.h>
 
 
 /**
@@ -106,7 +107,7 @@ struct parse_frame
                                 PCF_IN_ARRAY_ASSIGN | PCF_IN_CLASS | PCF_IN_NAMESPACE)
 
 #ifdef DEFINE_PCF_NAMES
-static const char *pcf_names[32] =
+static const char *pcf_names[] =
 {
    "STMT_START",
    "EXPR_START",
@@ -129,6 +130,7 @@ static const char *pcf_names[32] =
    "LVALUE",
    "IN_ARRAY_ASSIGN",
    "IN_CLASS",
+   "IN_NAMESPACE"
 };
 #endif
 

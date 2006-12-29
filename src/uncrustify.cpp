@@ -139,8 +139,8 @@ static void version_exit(void)
 
 int main(int argc, char *argv[])
 {
-   char       *data;
-   int        data_len;
+   char       *data = NULL;
+   int        data_len = 0;
    const char *cfg_file    = "uncrustify.cfg";
    const char *parsed_file = NULL;
    const char *source_file = NULL;
@@ -394,6 +394,9 @@ int main(int argc, char *argv[])
               data_len, language_to_string(cpd.lang_flags));
 
       uncrustify_file(data, data_len, stdout, parsed_file);
+      free(data);
+      data_len = 0;
+      data = NULL;
    }
    else if (source_file != NULL)
    {
@@ -424,6 +427,9 @@ int main(int argc, char *argv[])
          process_source_list(source_list, prefix, suffix);
       }
    }
+
+   clear_keyword_file();
+   clear_defines();
 
    return((cpd.error_count != 0) ? 1 : 0);
 }
@@ -502,6 +508,7 @@ static char *read_stdin(int& out_len)
       }
    }
 
+   assert(data_len < data_size);
    /* Make sure the buffer is terminated */
    data[data_len] = 0;
 
@@ -580,6 +587,7 @@ static void do_source_file(const char *filename, FILE *pfout, const char *parsed
 
    data_len = my_stat.st_size;
    data     = (char *)malloc(data_len + 1);
+   assert(data != NULL);
    fread(data, data_len, 1, p_file);
    data[data_len] = 0;
    fclose(p_file);
@@ -598,6 +606,7 @@ static void do_source_file(const char *filename, FILE *pfout, const char *parsed
          {
             LOG_FMT(LERR, "%s: Failed to create backup file for %s\n",
                     __func__, filename);
+            free(data);
             return;
          }
          need_backup = true;
