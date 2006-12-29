@@ -87,6 +87,9 @@
 /* Version number of package */
 #define VERSION "NA"
 
+/* Define to appropriate substitue if compiler doesnt have __func__ */
+/* #undef __func__ */
+
 /* Define to empty if `const' does not conform to ANSI C. */
 /* #undef const */
 
