@@ -31,7 +31,9 @@ Changes in uncrustify-0.31
 -------------------------------------------------------------------------------
  - Improve mixed tab indent / space align
  - Try to fix spacing around embedded comments
- - add indent_access_spec
+ - Add indent_access_spec
+ - Add __func__ and __FUNCTION__ detection for non-C99 compilers
+ - General code cleanup (Thanks Tom!)
 
 
 Changes in uncrustify-0.30
