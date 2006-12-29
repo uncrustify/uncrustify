@@ -192,6 +192,7 @@ void tokenize_cleanup(void)
          }
       }
 
+      /* Look for <newline> 'EXEC' 'SQL' */
       if (chunk_is_str(pc, "EXEC", 4) && chunk_is_str(next, "SQL", 3))
       {
          tmp = chunk_get_prev(pc);
@@ -209,6 +210,20 @@ void tokenize_cleanup(void)
             else
             {
                pc->type = CT_SQL_EXEC;
+            }
+
+            /* Change words into CT_SQL_WORD until CT_SEMICOLON */
+            while (tmp != NULL)
+            {
+               if (tmp->type == CT_SEMICOLON)
+               {
+                  break;
+               }
+               if ((tmp->len > 0) && isalpha(*tmp->str))
+               {
+                  tmp->type = CT_SQL_WORD;
+               }
+               tmp = chunk_get_next_ncnl(tmp);
             }
          }
       }

@@ -35,3 +35,11 @@ void main(void)
 
    EXEC SQL CLOSE csr1;
 }
+
+void foo(void)
+{
+   strcpy(demoquery1, "some SQL statement");
+   EXEC SQL prepare demo3id from :demoquery1;
+   /* a comment */
+   EXEC SQL declare demo3cursor cursor for demo3id;
+}
