@@ -104,6 +104,8 @@
 20102 clark.cfg                c/indent.cpp
 20103 clark.cfg                c/output.cpp
 
+20200 xml-str.cfg              c/xml.c
+
 # some embedded sql stuff
 21000 ben.cfg                  sql/mysql.sqc
 21001 ben.cfg                  sql/sta-select.sqc

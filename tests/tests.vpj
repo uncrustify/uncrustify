@@ -133,6 +133,7 @@
 			<F N="config/template_sp-force.cfg"/>
 			<F N="config/template_sp-remove.cfg"/>
 			<F N="config/width.cfg"/>
+			<F N="config/xml-str.cfg"/>
 		</Folder>
 		<Folder Name="input">
 			<Folder Name="c">
@@ -180,6 +181,7 @@
 				<F N="input/c/switch-case.c"/>
 				<F N="input/c/type-cast.c"/>
 				<F N="input/c/vb-do.c"/>
+				<F N="input/c/xml.c"/>
 			</Folder>
 			<Folder Name="cpp">
 				<F N="input/cpp/alt_tokens.cpp"/>
