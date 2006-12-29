@@ -292,6 +292,7 @@ void indent_text(void)
    int                cout_col            = 0; // for aligning << stuff
    int                cout_level          = 0; // for aligning << stuff
    int                parent_token_indent = 0;
+   int                xml_indent          = 0;
 
    memset(&frm, 0, sizeof(frm));
 
@@ -341,6 +342,28 @@ void indent_text(void)
       {
          cout_col   = 0;
          cout_level = 0;
+      }
+
+      /* Check for close XML tags "</..." */
+      if (cpd.settings[UO_indent_xml_string].n > 0)
+      {
+         if (pc->type == CT_STRING)
+         {
+            if ((pc->len > 4) &&
+                (xml_indent > 0) &&
+                (pc->str[1] == '<') &&
+                (pc->str[2] == '/'))
+            {
+               xml_indent -= cpd.settings[UO_indent_xml_string].n;
+            }
+         }
+         else
+         {
+            if (!chunk_is_comment(pc) && !chunk_is_newline(pc))
+            {
+               xml_indent = 0;
+            }
+         }
       }
 
       /**
@@ -782,7 +805,7 @@ void indent_text(void)
          {
             LOG_FMT(LINDENT, "%s: %d] String => %d\n",
                     __func__, pc->orig_line, prev->column);
-            reindent_line(pc, prev->column);
+            reindent_line(pc, xml_indent);
          }
          else if (chunk_is_comment(pc))
          {
@@ -844,6 +867,25 @@ void indent_text(void)
 
          /* Get ready to indent the next item */
          did_newline = true;
+      }
+
+      /* Check for open XML tags "</..." */
+      if (cpd.settings[UO_indent_xml_string].n > 0)
+      {
+         if (pc->type == CT_STRING)
+         {
+            if ((pc->len > 4) &&
+                (pc->str[1] == '<') &&
+                (pc->str[2] != '/') &&
+                (pc->str[pc->len - 3] != '/'))
+            {
+               if (xml_indent <= 0)
+               {
+                  xml_indent = pc->column;
+               }
+               xml_indent += cpd.settings[UO_indent_xml_string].n;
+            }
+         }
       }
 
       if (!chunk_is_comment(pc) && !chunk_is_newline(pc))

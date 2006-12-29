@@ -128,6 +128,7 @@ void register_options(void)
    unc_add_option("indent_columns", UO_indent_columns, AT_NUM, "The number of columns to indent per level (usually 2, 3, 4, or 8)");
    unc_add_option("indent_with_tabs", UO_indent_with_tabs, AT_NUM, "How to use tabs when indenting code\n0=spaces only\n1=indent with tabs, align with spaces\n2=indent and align with tabs");
    unc_add_option("indent_align_string", UO_indent_align_string, AT_BOOL, "Whether to indent strings broken by '\\' so that they line up");
+   unc_add_option("indent_xml_string", UO_indent_xml_string, AT_NUM, "The number of spaces to indent multi-line XML strings. Requires indent_align_string=True");
    unc_add_option("indent_brace", UO_indent_brace, AT_NUM, "Spaces to indent '{' from level");
    unc_add_option("indent_braces", UO_indent_braces, AT_BOOL, "Whether braces are indented to the body level");
    unc_add_option("indent_braces_no_func", UO_indent_braces_no_func, AT_BOOL, "Disabled indenting function braces if indent_braces is true");

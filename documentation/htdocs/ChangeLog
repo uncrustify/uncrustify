@@ -34,6 +34,7 @@ Changes in uncrustify-0.31
  - Add indent_access_spec
  - Add __func__ and __FUNCTION__ detection for non-C99 compilers
  - General code cleanup (Thanks Tom!)
+ - Add indent_xml_string
 
 
 Changes in uncrustify-0.30

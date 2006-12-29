@@ -111,6 +111,7 @@ enum uncrustify_options
    UO_indent_access_spec,        // same as indent_label, but for "private:", "public:"
 
    UO_indent_align_string,       // True/False - indent align broken strings
+   UO_indent_xml_string,         // Number amount to indent XML strings
 
    UO_indent_col1_comment,       // indent comments in column 1
 
