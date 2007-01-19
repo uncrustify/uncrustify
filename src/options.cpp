@@ -216,6 +216,7 @@ void register_options(void)
    unc_add_option("align_with_tabs", UO_align_with_tabs, AT_BOOL, "Whether to use tabs for alinging");
    unc_add_option("align_on_tabstop", UO_align_on_tabstop, AT_BOOL, "Whether to bump out to the next tab when aligning");
    unc_add_option("align_number_left", UO_align_number_left, AT_BOOL, "Whether to left-align numbers");
+   unc_add_option("align_proto_var_def", UO_align_proto_var_def, AT_BOOL, "Align variable definitions in prototypes");
    unc_add_option("align_var_def_span", UO_align_var_def_span, AT_NUM, "The span for aligning variable definitions (0=don't align)");
    unc_add_option("align_var_def_star", UO_align_var_def_star, AT_BOOL, "Whether the pointer star is part of the variable name or not");
    unc_add_option("align_var_def_thresh", UO_align_var_def_thresh, AT_NUM, "The threshold for aligning variable definitions (0=no limit)");

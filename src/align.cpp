@@ -22,6 +22,8 @@
 static chunk_t *align_var_def_brace(chunk_t *pc, int span);
 chunk_t *align_trailing_comments(chunk_t *start);
 static void align_init_brace(chunk_t *start);
+static chunk_t *align_func_proto_param(chunk_t *start);
+static void align_func_proto_params();
 
 static void align_typedefs(int span);
 
@@ -226,6 +228,12 @@ void align_all(void)
    if (cpd.settings[UO_align_func_proto_span].n > 0)
    {
       align_func_proto(cpd.settings[UO_align_func_proto_span].n);
+   }
+
+   /* Align variable defs in function prototypes */
+   if (cpd.settings[UO_align_proto_var_def].b)
+   {
+      align_func_proto_params();
    }
 }
 
@@ -562,6 +570,59 @@ int count_prev_ptr_type(chunk_t *pc)
    return(count);
 }
 
+
+static chunk_t *align_func_proto_param(chunk_t *start)
+{
+   AlignStack as;
+   chunk_t    *pc = start;
+
+   as.Start(2, 0);
+
+   if (cpd.settings[UO_align_var_def_star].b)
+   {
+      as.m_star_style = AlignStack::SS_INCLUDE;
+   }
+   else
+   {
+      as.m_star_style = AlignStack::SS_DANGLE;
+   }
+
+   bool did_this_line = false;
+
+   while (((pc = chunk_get_next(pc)) != NULL) && (pc->level > start->level))
+   {
+      if (chunk_is_newline(pc))
+      {
+         did_this_line = false;
+      }
+      else if (!did_this_line && (pc->flags & PCF_VAR_DEF))
+      {
+         as.Add(pc);
+         did_this_line = true;
+      }
+   }
+   as.End();
+
+   return(pc);
+}
+
+static void align_func_proto_params()
+{
+   chunk_t    *pc;
+
+
+   pc = chunk_get_head();
+   while ((pc = chunk_get_next(pc)) != NULL)
+   {
+      if ((pc->type != CT_FPAREN_OPEN) || (pc->parent_type != CT_FUNC_PROTO))
+      {
+         continue;
+      }
+
+      /* We're on a open paren of a prototype */
+      pc = align_func_proto_param(pc);
+   }
+}
 
 /**
  * Scan everything at the current level until the close brace and find the
