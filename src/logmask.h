@@ -19,7 +19,7 @@
 typedef UINT8   log_sev_t;
 
 
-/** A simple array of 256 bits (done it C) */
+/** A simple array of 256 bits */
 typedef struct
 {
    UINT8 bits[32];   /* 256 levels */
