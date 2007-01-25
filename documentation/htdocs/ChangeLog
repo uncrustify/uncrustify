@@ -17,11 +17,12 @@ Future plans: (in no particular order)
    option does to your source code
 
 
-Plans for 0.1.0
+Plans for the next release
 -------------------------------------------------------------------------------
+ - Add support for Objective-C
  - improve code width logic
    + add options to remove newlines inside parens before splitting long lines
- - misc cleanup before jumping to 0.1.0
+ - more misc code cleanup
 
 
 ===============================================================================
