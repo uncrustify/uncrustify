@@ -614,7 +614,9 @@ static void align_func_proto_params()
    pc = chunk_get_head();
    while ((pc = chunk_get_next(pc)) != NULL)
    {
-      if ((pc->type != CT_FPAREN_OPEN) || (pc->parent_type != CT_FUNC_PROTO))
+      if ((pc->type != CT_FPAREN_OPEN) ||
+          ((pc->parent_type != CT_FUNC_PROTO) &&
+           (pc->parent_type != CT_FUNC_CLASS)))
       {
          continue;
       }
