@@ -5,7 +5,8 @@ class CFooBarDlg : public CDialog
 {
 // Construction
 public:
-   CFooBarDlg(CFooBar *pDataMan, CWnd* pParent = NULL );
+   CFooBarDlg(CFooBar *pDataMan,
+              CWnd* pParent = NULL );
    virtual ~CFooBarDlg();
 
    void Initialize( BYTE nDelay );

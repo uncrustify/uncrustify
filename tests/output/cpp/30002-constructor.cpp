@@ -1,6 +1,7 @@
 
 IMPLEMENT_DYNAMIC(CPropertiesDlg, CDialog)
-CPropertiesDlg::CPropertiesDlg(CPtcMsgSimControlModule *pcmPtcMsg, CWnd *pParent /*=NULL*/) :
+CPropertiesDlg::CPropertiesDlg(CPtcMsgSimControlModule *pcmPtcMsg,
+                               CWnd                    *pParent /*=NULL*/) :
    CDialog(CPropertiesDlg::IDD, pParent),
    m_pspRouter(pcmPtcMsg),
    m_pspScm(pcmPtcMsg)
