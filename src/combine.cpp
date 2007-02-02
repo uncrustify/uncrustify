@@ -1442,7 +1442,7 @@ static void fix_fcn_def_params(chunk_t *start)
       {
          cs.Push(pc);
       }
-      else if (pc->type == CT_COMMA)
+      else if ((pc->type == CT_COMMA) || (pc->type == CT_ASSIGN))
       {
          mark_variable_stack(cs, LFCNP);
       }
