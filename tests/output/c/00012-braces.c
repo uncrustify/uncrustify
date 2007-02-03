@@ -53,3 +53,15 @@ void foo(void) {
 		;    /* hang forever */
 }
 
+void f() {
+	if (buf[0] == '~' && strchr(tmp, '/') == NULL) {
+		buf = mallocstrcpy(buf, tmp);
+		matches = username_tab_completion(tmp, &num_matches);
+		}
+	/* If we're in the middle of the original line, copy the string
+	   only up to the cursor position into buf, so tab completion
+	   will result in buf's containing only the tab-completed
+	   path/filename. */
+	else if (strlen(buf) > strlen(tmp))
+		buf = mallocstrcpy(buf, tmp);
+}
