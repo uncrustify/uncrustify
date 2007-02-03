@@ -344,6 +344,13 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
       }
    }
 
+   if ((pc->type == CT_SEMICOLON) &&
+       (frm->pse[frm->pse_tos].stage == BS_WOD_SEMI))
+   {
+      cpd.consumed    = true;
+      pc->parent_type = CT_WHILE_OF_DO;
+      handle_complex_close(frm, pc);
+   }
 
    /* Get the parent type for brace and paren open */
    parent = pc->parent_type;
@@ -550,8 +557,8 @@ static bool check_complex_statements(struct parse_frame *frm, chunk_t *pc)
       if (pc->type == CT_WHILE)
       {
          pc->type = CT_WHILE_OF_DO;
-         frm->pse[frm->pse_tos].type  = CT_WHILE;
-         frm->pse[frm->pse_tos].stage = BS_PAREN2;
+         frm->pse[frm->pse_tos].type  = CT_WHILE_OF_DO;//CT_WHILE;
+         frm->pse[frm->pse_tos].stage = BS_WOD_PAREN;
          return(true);
       }
 
@@ -598,7 +605,7 @@ static bool check_complex_statements(struct parse_frame *frm, chunk_t *pc)
    /* Verify open paren in complex statement */
    if ((pc->type != CT_PAREN_OPEN) &&
        ((frm->pse[frm->pse_tos].stage == BS_PAREN1) ||
-        (frm->pse[frm->pse_tos].stage == BS_PAREN2)))
+        (frm->pse[frm->pse_tos].stage == BS_WOD_PAREN)))
    {
       LOG_FMT(LWARN, "%s:%d Error: Expected '(', got '%.*s' for '%s'\n",
               cpd.filename, pc->orig_line, pc->len, pc->str,
@@ -667,12 +674,19 @@ static bool handle_complex_close(struct parse_frame *frm, chunk_t *pc)
    {
       frm->pse[frm->pse_tos].stage = BS_WHILE;
    }
-   else if (frm->pse[frm->pse_tos].stage == BS_PAREN2)
+   else if (frm->pse[frm->pse_tos].stage == BS_WOD_PAREN)
    {
-      LOG_FMT(LNOTE, "%s: close_statement on %s BS_PAREN2\n", __func__,
+      LOG_FMT(LNOTE, "%s: close_statement on %s BS_WOD_PAREN\n", __func__,
+              get_token_name(frm->pse[frm->pse_tos].type));
+      frm->pse[frm->pse_tos].stage = BS_WOD_SEMI;
+      print_stack(LBCSPOP, "-HCC WoDP ", frm, pc);
+   }
+   else if (frm->pse[frm->pse_tos].stage == BS_WOD_SEMI)
+   {
+      LOG_FMT(LNOTE, "%s: close_statement on %s BS_WOD_SEMI\n", __func__,
               get_token_name(frm->pse[frm->pse_tos].type));
       frm->pse_tos--;
-      print_stack(LBCSPOP, "-HCC P2 ", frm, pc);
+      print_stack(LBCSPOP, "-HCC WoDS ", frm, pc);
 
       if (close_statement(frm, pc))
       {

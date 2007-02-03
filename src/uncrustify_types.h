@@ -28,13 +28,14 @@
 enum brstage_e
 {
    BS_NONE,
-   BS_PAREN1,   /* if/for/switch/while */
-   BS_PAREN2,   /* while of do */
-   BS_BRACE_DO, /* do */
-   BS_BRACE2,   /* if/else/for/switch/while */
-   BS_ELSE,     /* expecting 'else' after 'if' */
-   BS_ELSEIF,   /* expecting 'if' after 'else' */
-   BS_WHILE,    /* expecting 'while' after 'do' */
+   BS_PAREN1,    /* if/for/switch/while */
+   BS_WOD_PAREN, /* while of do parens */
+   BS_WOD_SEMI,  /* semicolon after while of do */
+   BS_BRACE_DO,  /* do */
+   BS_BRACE2,    /* if/else/for/switch/while */
+   BS_ELSE,      /* expecting 'else' after 'if' */
+   BS_ELSEIF,    /* expecting 'if' after 'else' */
+   BS_WHILE,     /* expecting 'while' after 'do' */
 };
 
 

@@ -142,7 +142,8 @@ argval_t do_space(chunk_t *first, chunk_t *second)
    if (second->type == CT_SEMICOLON)
    {
       arg = cpd.settings[UO_sp_before_semi].a;
-      if (first->type == CT_SPAREN_CLOSE)
+      if ((first->type == CT_SPAREN_CLOSE) &&
+          (first->parent_type != CT_WHILE_OF_DO))
       {
          arg = (argval_t)(arg | cpd.settings[UO_sp_special_semi].a);
       }
