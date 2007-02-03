@@ -178,7 +178,8 @@ argval_t do_space(chunk_t *first, chunk_t *second)
 
    /* handle '::' */
    if ((first->type == CT_DC_MEMBER) ||
-       ((second->type == CT_DC_MEMBER) && (first->type != CT_ASSIGN)))
+       ((second->type == CT_DC_MEMBER) &&
+        ((first->type == CT_WORD) || (first->type == CT_TYPE))))
    {
       return(AV_REMOVE);
    }
