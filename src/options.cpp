@@ -101,6 +101,7 @@ void register_options(void)
    unc_add_option("sp_before_squares", UO_sp_before_squares, AT_IARF, "Add or remove space before '[]'");
    unc_add_option("sp_inside_square", UO_sp_inside_square, AT_IARF, "Add or remove space inside '[' and ']'");
    unc_add_option("sp_after_comma", UO_sp_after_comma, AT_IARF, "Add or remove space after ','");
+   unc_add_option("sp_before_comma", UO_sp_before_comma, AT_IARF, "Add or remove space before ','");
    unc_add_option("sp_after_operator", UO_sp_after_operator, AT_IARF, "Add or remove space between 'operator' and operator sign");
    unc_add_option("sp_after_cast", UO_sp_after_cast, AT_IARF, "Add or remove space after cast");
    unc_add_option("sp_sizeof_paren", UO_sp_sizeof_paren, AT_IARF, "Add or remove space between 'sizeof' and '('");
@@ -668,6 +669,7 @@ void set_option_defaults(void)
    cpd.settings[UO_indent_with_tabs].n   = 1;
    cpd.settings[UO_indent_label].n       = 1;
    cpd.settings[UO_indent_access_spec].n = 1;
+   cpd.settings[UO_sp_before_comma].a    = AV_REMOVE;
    cpd.settings[UO_string_escape_char].n = '\\';
 }
 

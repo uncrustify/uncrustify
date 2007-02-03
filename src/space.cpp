@@ -453,7 +453,7 @@ argval_t do_space(chunk_t *first, chunk_t *second)
    }
    if (second->type == CT_COMMA)
    {
-      return(AV_REMOVE);
+      return(cpd.settings[UO_sp_before_comma].a);
    }
 
    if (first->type == CT_DOT)

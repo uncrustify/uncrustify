@@ -33,6 +33,7 @@ Changes in uncrustify-0.32
  - Enable align_proto_var_def for constructors
  - Fix while-of-do handling inside virtual braces
  - Fix problem with comments between a close brace and else
+ - Add sp_before_comma
 
 
 Changes in uncrustify-0.31

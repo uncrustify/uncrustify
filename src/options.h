@@ -160,6 +160,7 @@ enum uncrustify_options
    UO_sp_sizeof_paren,      // space between 'sizeof' and '('
 
    UO_sp_after_comma,       // space after ','
+   UO_sp_before_comma,      // space before ','
 
    UO_sp_arith,             // space around + - / * etc
    UO_sp_bool,              // space around || &&
