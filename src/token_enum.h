@@ -15,7 +15,7 @@
  * program can work with.  The parser and scanner assigns one of these to
  * each chunk/token.
  *
- * The script 'make_chunk_names.sh' creates token_names.h, so be sure to run
+ * The script 'make_token_names.sh' creates token_names.h, so be sure to run
  * that after adding or removing an entry.
  */
 typedef enum
@@ -168,6 +168,11 @@ typedef enum
    CT_PTR_TYPE,         /* a '*' as part of a type */
 
    CT_BIT_COLON,        /* a ':' in a variable declaration */
+
+   CT_OC_END,           /* ObjC: @end */
+   CT_OC_IMPL,          /* ObjC: @implementation */
+   CT_OC_INTF,          /* ObjC: @interface */
+   CT_OC_CLASS,         /* ObjC: the name after @interface or @implementation */
 
    /* start PP types */
    CT_PP_DEFINE,        /* #define */

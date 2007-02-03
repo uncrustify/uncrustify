@@ -165,9 +165,11 @@ enum
    LANG_D    = 0x04,
    LANG_CS   = 0x08,     /*<< C# or C-sharp */
    LANG_JAVA = 0x10,
-   LANG_PAWN = 0x20,
-   LANG_ALLC = 0x1f,
-   LANG_ALL  = 0x2f,
+   LANG_OC   = 0x20,     /*<< Objective C */
+   LANG_PAWN = 0x40,
+
+   LANG_ALLC = 0x3f,
+   LANG_ALL  = 0x7f,
 
    FLAG_PP   = 0x80,     /*<< only appears in a preprocessor */
 };

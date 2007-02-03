@@ -227,6 +227,11 @@
 				<F N="input/d/volatile-3.d"/>
 				<F N="input/d/volatile.d"/>
 			</Folder>
+			<Folder Name="oc">
+				<F N="input/oc/Fraction.h"/>
+				<F N="input/oc/Fraction.m"/>
+				<F N="input/oc/main.m"/>
+			</Folder>
 			<Folder Name="pawn">
 				<F N="input/pawn/comment.p"/>
 				<F N="input/pawn/enum.pawn"/>
@@ -312,6 +317,7 @@
 		<F N="cpp.test"/>
 		<F N="d.test"/>
 		<F N="java.test"/>
+		<F N="objective-c.test"/>
 		<F N="pawn.test"/>
 		<F N="run_tests.py"/>
 		<F N="sql.test"/>

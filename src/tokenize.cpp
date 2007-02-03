@@ -665,14 +665,6 @@ static bool parse_next(chunk_t *pc)
             return(true);
          }
       }
-
-      /* Check for pawn identifiers */
-      if ((*pc->str == '@') &&
-          ((get_char_table(pc->str[1]) & CT_KW2) != 0) &&
-          parse_word(pc, true))
-      {
-         return(true);
-      }
    }
 
    /**
@@ -705,6 +697,14 @@ static bool parse_next(chunk_t *pc)
          parse_string(pc, (*pc->str == 'L') ? 1 : 0, true);
          return(true);
       }
+   }
+
+   /* Check for pawn/ObjectiveC identifiers */
+   if ((*pc->str == '@') &&
+       ((get_char_table(pc->str[1]) & CT_KW2) != 0) &&
+       parse_word(pc, false))
+   {
+      return(true);
    }
 
    if (((get_char_table(*pc->str) & CT_KW1) != 0) &&

@@ -228,6 +228,17 @@ void tokenize_cleanup(void)
          }
       }
 
+      /* Detect Objective C class name */
+      if ((pc->type == CT_OC_IMPL) || (pc->type == CT_OC_INTF))
+      {
+         next->type = CT_CLASS;
+         tmp = chunk_get_next_ncnl(next);
+         if (tmp != NULL)
+         {
+            tmp->flags |= PCF_STMT_START | PCF_EXPR_START;
+         }
+      }
+
       /* TODO: determine other stuff here */
 
       prev = pc;

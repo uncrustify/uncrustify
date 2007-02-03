@@ -33,6 +33,9 @@ static dynamic_word_list_t wl;
  */
 static const chunk_tag_t keywords[] =
 {
+   { "@end",             CT_OC_END,      LANG_OC | LANG_CPP | LANG_C                         },
+   { "@implementation",  CT_OC_IMPL,     LANG_OC | LANG_CPP | LANG_C                         },
+   { "@interface",       CT_OC_INTF,     LANG_OC | LANG_CPP | LANG_C                         },
    { "__const__",        CT_QUALIFIER,   LANG_C | LANG_CPP                                   },
    { "__inline__",       CT_QUALIFIER,   LANG_C | LANG_CPP                                   },
    { "__signed__",       CT_TYPE,        LANG_C | LANG_CPP                                   },
@@ -125,6 +128,7 @@ static const chunk_tag_t keywords[] =
    { "implements",       CT_QUALIFIER,   LANG_JAVA                                           },
    { "implicit",         CT_QUALIFIER,   LANG_CS                                             },
    { "import",           CT_TYPE,        LANG_D | LANG_JAVA                                  }, // fudged to get indenting
+   { "import",           CT_PP_INCLUDE,  LANG_OC | FLAG_PP                                   }, // ObjectiveC version of include
    { "in",               CT_IN,          LANG_D | LANG_CS                                    },
    { "include",          CT_PP_INCLUDE,  LANG_C | LANG_CPP | LANG_PAWN | FLAG_PP             }, // PAWN
    { "inline",           CT_QUALIFIER,   LANG_C | LANG_CPP                                   },

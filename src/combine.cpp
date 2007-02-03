@@ -502,6 +502,10 @@ void fix_symbols(void)
          {
             pc->type = (pc->type == CT_MINUS) ? CT_NEG : CT_POS;
          }
+         else if (prev->type == CT_OC_CLASS)
+         {
+            pc->type = CT_NEG;
+         }
          else
          {
             pc->type = CT_ARITH;
@@ -1484,11 +1488,12 @@ static chunk_t *fix_var_def(chunk_t *start)
 
    /* Scan for words and types and stars oh my! */
    before_end = pc;
-   while ((pc->type == CT_TYPE) ||
-          (pc->type == CT_WORD) ||
-          (pc->type == CT_QUALIFIER) ||
-          (pc->type == CT_DC_MEMBER) ||
-          chunk_is_star(pc))
+   while ((pc != NULL) &&
+          ((pc->type == CT_TYPE) ||
+           (pc->type == CT_WORD) ||
+           (pc->type == CT_QUALIFIER) ||
+           (pc->type == CT_DC_MEMBER) ||
+           chunk_is_star(pc)))
    {
       LOG_FMT(LFVD, " %.*s[%s]", pc->len, pc->str, get_token_name(pc->type));
       type_count++;
@@ -1498,6 +1503,11 @@ static chunk_t *fix_var_def(chunk_t *start)
    end = pc;
 
    LOG_FMT(LFVD, " end=[%s]\n", (end != NULL) ? get_token_name(end->type) : "NULL");
+
+   if (end == NULL)
+   {
+      return(NULL);
+   }
 
    /* A single word can only be a type if followed by a function */
    if ((type_count == 1) && (end->type != CT_FUNC_DEF))

@@ -361,14 +361,9 @@ int main(int argc, char *argv[])
       LOG_FMT(LNOTE, "Redirecting output to %s\n", output_file);
    }
 
-   if (update_config)
+   if (update_config || update_config_wd)
    {
-      save_option_file(stdout, false);
-      return(0);
-   }
-   if (update_config_wd)
-   {
-      save_option_file(stdout, true);
+      save_option_file(stdout, update_config_wd);
       return(0);
    }
 
@@ -840,6 +835,7 @@ struct file_lang languages[] =
    { ".hxx",  "",     LANG_CPP  },
    { ".cc",   "",     LANG_CPP  },
    { ".di",   "",     LANG_D    },
+   { ".m",    "OC",   LANG_OC   },
    { ".sqc",  "",     LANG_C    }, // embedded SQL
 };
 
