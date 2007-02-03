@@ -30,6 +30,12 @@ Plans for the next release
 
 Changes in uncrustify-0.31
 -------------------------------------------------------------------------------
+ - Enable align_proto_var_def for constructors
+ - Fix while-of-do handling inside virtual braces
+
+
+Changes in uncrustify-0.31
+-------------------------------------------------------------------------------
  - Improve mixed tab indent / space align
  - Try to fix spacing around embedded comments
  - Add indent_access_spec
