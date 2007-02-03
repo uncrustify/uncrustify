@@ -30,6 +30,8 @@
 00061  ben.cfg                 c/braces-3.c
 00062  ben.cfg                 c/braces-4.c
 00065  ben.cfg                 c/braces-5.c
+00066  ben.cfg                 c/vb-while.c
+00067  ben.cfg                 c/vb-do.c
 
 00070  ben.cfg                 c/return-multi.c
 

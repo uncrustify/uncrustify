@@ -43,3 +43,9 @@ foo(
 {
    printf("boo!\n");
 }
+
+EXPORT int
+DoStuff(
+   int Num
+);
+
