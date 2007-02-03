@@ -30,6 +30,8 @@ const char *names[] =
 
 bool foo(char c)
 {
+   xWindow *pWindow = ::RelatedWindow();
+
    /* space between ] and ( */
    function_list[idx](param);
 
