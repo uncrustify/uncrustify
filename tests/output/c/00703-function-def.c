@@ -13,3 +13,6 @@ void foo(int param1, int param2, char *param2)
 {
    printf("boo!\n");
 }
+
+EXPORT int DoStuff(int Num);
+
