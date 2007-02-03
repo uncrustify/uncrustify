@@ -195,8 +195,7 @@ static bool newline_del_between2(chunk_t *start, chunk_t *end,
       if (chunk_is_newline(pc))
       {
          prev = chunk_get_prev(pc);
-         if ((prev->type != CT_COMMENT_CPP) &&
-             (next->type != CT_COMMENT_CPP))
+         if (!chunk_is_comment(prev) && !chunk_is_comment(next))
          {
             chunk_del(pc);
             retval = true;
