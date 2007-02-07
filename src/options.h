@@ -181,6 +181,7 @@ enum uncrustify_options
    UO_sp_special_semi,      /* space empty stmt ';' on while, if, for
                              * example "while (*p++ = ' ') ;" */
    UO_sp_before_semi,          // space before all ';'
+   UO_sp_before_semi_for,      // space before the two ';' in a for()
    UO_sp_inside_braces,        // space inside '{' and '}' - "{ 1, 2, 3 }"
    UO_sp_inside_braces_enum,   // space inside enum '{' and '}' - "{ a, b, c }"
    UO_sp_inside_braces_struct, // space inside struct/union '{' and '}'

@@ -97,6 +97,7 @@ void register_options(void)
    unc_add_option("sp_sparen_brace", UO_sp_sparen_brace, AT_IARF, "Add or remove space between ')' and '{' of 'if', 'for', 'switch', and 'while'");
    unc_add_option("sp_special_semi", UO_sp_special_semi, AT_IARF, "Add or remove space before empty statement ';' on 'if', 'for' and 'while'");
    unc_add_option("sp_before_semi", UO_sp_before_semi, AT_IARF, "Add or remove space before ';'");
+   unc_add_option("sp_before_semi_for", UO_sp_before_semi_for, AT_IARF, "Add or remove space before ';' in 'for' statements");
    unc_add_option("sp_before_square", UO_sp_before_square, AT_IARF, "Add or remove space before '[' (except '[]')");
    unc_add_option("sp_before_squares", UO_sp_before_squares, AT_IARF, "Add or remove space before '[]'");
    unc_add_option("sp_inside_square", UO_sp_inside_square, AT_IARF, "Add or remove space inside '[' and ']'");

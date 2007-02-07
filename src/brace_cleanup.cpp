@@ -252,6 +252,14 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
    if (frm->sparen_count > 0)
    {
       pc->flags |= PCF_IN_SPAREN;
+
+      /* Mark the parent on semicolons in for() stmts */
+      if ((pc->type == CT_SEMICOLON) &&
+          (frm->pse_tos > 1) &&
+          (frm->pse[frm->pse_tos - 1].type == CT_FOR))
+      {
+         pc->parent_type = CT_FOR;
+      }
    }
 
    /* Check the progression of complex statements */
