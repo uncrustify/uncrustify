@@ -204,7 +204,8 @@ argval_t do_space(chunk_t *first, chunk_t *second)
    }
 
    /* "((" vs "( (" */
-   if ((first->type == CT_PAREN_OPEN) && (second->type == CT_PAREN_OPEN))
+   if (((first->type == CT_PAREN_OPEN) && (second->type == CT_PAREN_OPEN)) ||
+       ((first->type == CT_PAREN_CLOSE) && (second->type == CT_PAREN_CLOSE)))
    {
       return(cpd.settings[UO_sp_paren_paren].a);
    }
@@ -564,10 +565,6 @@ argval_t do_space(chunk_t *first, chunk_t *second)
 
    if (first->type == CT_PAREN_CLOSE)
    {
-      if (second->type == CT_PAREN_CLOSE)
-      {
-         return(cpd.settings[UO_sp_paren_paren].a);
-      }
       if (first->parent_type == CT_CAST)
       {
          return(cpd.settings[UO_sp_after_cast].a);
