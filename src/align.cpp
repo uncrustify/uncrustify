@@ -578,14 +578,7 @@ static chunk_t *align_func_proto_param(chunk_t *start)
 
    as.Start(2, 0);
 
-   if (cpd.settings[UO_align_var_def_star].b)
-   {
-      as.m_star_style = AlignStack::SS_INCLUDE;
-   }
-   else
-   {
-      as.m_star_style = AlignStack::SS_DANGLE;
-   }
+   as.m_star_style = (AlignStack::StarStyle)cpd.settings[UO_align_var_def_star_style].n;
 
    bool did_this_line = false;
 
@@ -675,14 +668,7 @@ static chunk_t *align_var_def_brace(chunk_t *start, int span)
 
    as.Start(myspan, mythresh);
 
-   if (cpd.settings[UO_align_var_def_star].b)
-   {
-      as.m_star_style = AlignStack::SS_INCLUDE;
-   }
-   else
-   {
-      as.m_star_style = AlignStack::SS_DANGLE;
-   }
+   as.m_star_style = (AlignStack::StarStyle)cpd.settings[UO_align_var_def_star_style].n;
 
    bool did_this_line = false;
    pc = chunk_get_next_ncnl(start);

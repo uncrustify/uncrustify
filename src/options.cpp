@@ -220,7 +220,7 @@ void register_options(void)
    unc_add_option("align_number_left", UO_align_number_left, AT_BOOL, "Whether to left-align numbers");
    unc_add_option("align_proto_var_def", UO_align_proto_var_def, AT_BOOL, "Align variable definitions in prototypes");
    unc_add_option("align_var_def_span", UO_align_var_def_span, AT_NUM, "The span for aligning variable definitions (0=don't align)");
-   unc_add_option("align_var_def_star", UO_align_var_def_star, AT_BOOL, "Whether the pointer star is part of the variable name or not");
+   unc_add_option("align_var_def_star_style", UO_align_var_def_star_style, AT_NUM, "How to align the star in variable definitions. 0=Part of the type, 1=Part of the variable, 2=Dangling");
    unc_add_option("align_var_def_thresh", UO_align_var_def_thresh, AT_NUM, "The threshold for aligning variable definitions (0=no limit)");
    unc_add_option("align_var_def_colon", UO_align_var_def_colon, AT_BOOL, "Whether to align the colon in struct bit fields");
    unc_add_option("align_var_def_inline", UO_align_var_def_inline, AT_BOOL, "Whether to align inline struct/enum/union variable definitions");
