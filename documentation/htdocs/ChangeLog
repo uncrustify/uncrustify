@@ -34,6 +34,7 @@ Changes in uncrustify-0.32
  - Fix while-of-do handling inside virtual braces
  - Fix problem with comments between a close brace and else
  - Add sp_before_comma
+ - Change align_var_def_star to align_var_def_star_style
 
 
 Changes in uncrustify-0.31
