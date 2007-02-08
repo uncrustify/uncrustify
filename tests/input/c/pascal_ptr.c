@@ -1,6 +1,8 @@
-int*  a;
-int   *b;
-int  *  c;
+foobar_t*  a;
+int  *b;
+int *  c;
+something no;
+
 char *  main()
 {
  int i = (5*3)+2;
