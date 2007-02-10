@@ -22,8 +22,8 @@
 static chunk_t *align_var_def_brace(chunk_t *pc, int span);
 chunk_t *align_trailing_comments(chunk_t *start);
 static void align_init_brace(chunk_t *start);
-static chunk_t *align_func_proto_param(chunk_t *start);
-static void align_func_proto_params();
+static void align_func_params();
+
 
 static void align_typedefs(int span);
 
@@ -231,9 +231,9 @@ void align_all(void)
    }
 
    /* Align variable defs in function prototypes */
-   if (cpd.settings[UO_align_proto_var_def].b)
+   if (cpd.settings[UO_align_func_params].b)
    {
-      align_func_proto_params();
+      align_func_params();
    }
 }
 
@@ -571,7 +571,7 @@ int count_prev_ptr_type(chunk_t *pc)
 }
 
 
-static chunk_t *align_func_proto_param(chunk_t *start)
+static chunk_t *align_func_param(chunk_t *start)
 {
    AlignStack as;
    chunk_t    *pc = start;
@@ -581,41 +581,63 @@ static chunk_t *align_func_proto_param(chunk_t *start)
    as.m_star_style = (AlignStack::StarStyle)cpd.settings[UO_align_var_def_star_style].n;
 
    bool did_this_line = false;
+   int  comma_count = 0;
 
-   while (((pc = chunk_get_next(pc)) != NULL) && (pc->level > start->level))
+   while ((pc = chunk_get_next(pc)) != NULL)
    {
       if (chunk_is_newline(pc))
       {
          did_this_line = false;
+         comma_count   = 0;
+      }
+      else if (pc->level <= start->level)
+      {
+         break;
       }
       else if (!did_this_line && (pc->flags & PCF_VAR_DEF))
       {
          as.Add(pc);
          did_this_line = true;
       }
+      else if (comma_count > 0)
+      {
+         if (!chunk_is_comment(pc))
+         {
+            comma_count = 2;
+            break;
+         }
+      }
+      else if (pc->type == CT_COMMA)
+      {
+         comma_count++;
+      }
    }
-   as.End();
+
+   if (comma_count <= 1)
+   {
+      as.End();
+   }
 
    return(pc);
 }
 
-static void align_func_proto_params()
+static void align_func_params()
 {
    chunk_t    *pc;
-
 
    pc = chunk_get_head();
    while ((pc = chunk_get_next(pc)) != NULL)
    {
       if ((pc->type != CT_FPAREN_OPEN) ||
           ((pc->parent_type != CT_FUNC_PROTO) &&
+           (pc->parent_type != CT_FUNC_DEF) &&
            (pc->parent_type != CT_FUNC_CLASS)))
       {
          continue;
       }
 
       /* We're on a open paren of a prototype */
-      pc = align_func_proto_param(pc);
+      pc = align_func_param(pc);
    }
 }
 

@@ -218,7 +218,7 @@ void register_options(void)
    unc_add_option("align_with_tabs", UO_align_with_tabs, AT_BOOL, "Whether to use tabs for alinging");
    unc_add_option("align_on_tabstop", UO_align_on_tabstop, AT_BOOL, "Whether to bump out to the next tab when aligning");
    unc_add_option("align_number_left", UO_align_number_left, AT_BOOL, "Whether to left-align numbers");
-   unc_add_option("align_proto_var_def", UO_align_proto_var_def, AT_BOOL, "Align variable definitions in prototypes");
+   unc_add_option("align_func_params", UO_align_func_params, AT_BOOL, "Align variable definitions in prototypes and functions");
    unc_add_option("align_var_def_span", UO_align_var_def_span, AT_NUM, "The span for aligning variable definitions (0=don't align)");
    unc_add_option("align_var_def_star_style", UO_align_var_def_star_style, AT_NUM, "How to align the star in variable definitions. 0=Part of the type, 1=Part of the variable, 2=Dangling");
    unc_add_option("align_var_def_thresh", UO_align_var_def_thresh, AT_NUM, "The threshold for aligning variable definitions (0=no limit)");
@@ -232,7 +232,7 @@ void register_options(void)
    unc_add_option("align_struct_init_span", UO_align_struct_init_span, AT_NUM, "The span for aligning struct initializer values (0=don't align)");
    unc_add_option("align_typedef_gap", UO_align_typedef_gap, AT_NUM, "The minimum space between the type and the synonym of a typedef");
    unc_add_option("align_typedef_span", UO_align_typedef_span, AT_NUM, "The span for aligning single-line typedefs (0=don't align)");
-   unc_add_option("align_typedef_star_style", UO_align_typedef_star_style, AT_NUM, "Controls the positioning of the '*' in typedefs. Just try it.\n0: Align on typdef type, ignore '*'\n1: The '*' is part of type name: typedef int  *pint;\n2: The '*' is part of the type: typedef int *  pint;");
+   unc_add_option("align_typedef_star_style", UO_align_typedef_star_style, AT_NUM, "Controls the positioning of the '*' in typedefs. Just try it.\n0: Align on typdef type, ignore '*'\n1: The '*' is part of type name: typedef int  *pint;\n2: The '*' is part of the type, but dangling: typedef int *pint;");
    unc_add_option("align_right_cmt_span", UO_align_right_cmt_span, AT_NUM, "The span for aligning comments that end lines (0=don't align)");
    unc_add_option("align_func_proto_span", UO_align_func_proto_span, AT_NUM, "The span for aligning function prototypes (0=don't align)");
    unc_add_option("align_nl_cont", UO_align_nl_cont, AT_BOOL, "Whether to align macros wrapped with a backslash and a newline");
