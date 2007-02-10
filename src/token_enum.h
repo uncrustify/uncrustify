@@ -27,6 +27,7 @@ typedef enum
 
 
    CT_WHITESPACE,    /* whitespace without any newlines */
+   CT_SPACE,         /* a fixed number of spaces to support weird spacing rules */
    CT_NEWLINE,       /* CRA, one or more newlines */
    CT_NL_CONT,       /* CRA, backslash-newline */
    CT_COMMENT_CPP,   /* C++ comment (always followed by CT_NEWLINE) */

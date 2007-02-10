@@ -85,6 +85,11 @@ argval_t do_space(chunk_t *first, chunk_t *second)
    int      idx;
    argval_t arg;
 
+   if ((first->type == CT_SPACE) || (second->type == CT_SPACE))
+   {
+      return(AV_REMOVE);
+   }
+
    if (second->type == CT_VSEMICOLON)
    {
       return(AV_REMOVE);
@@ -728,4 +733,47 @@ int space_col_align(chunk_t *first, chunk_t *second)
       coldiff++;
    }
    return(coldiff);
+}
+
+void space_add_after(chunk_t *pc, int count)
+{
+   if (count <= 0)
+   {
+      return;
+   }
+
+   chunk_t *next = chunk_get_next(pc);
+
+   /* don't add at the end of the file or before a newline */
+   if ((next == NULL) || chunk_is_newline(next))
+   {
+      return;
+   }
+
+   /* Limit to 16 spaces */
+   if (count > 16)
+   {
+      count = 16;
+   }
+
+   /* Two CT_SPACE in a row -- use the max of the two */
+   if (next->type == CT_SPACE)
+   {
+      if (next->len < count)
+      {
+         next->len = count;
+      }
+      return;
+   }
+
+   chunk_t sp;
+
+   memset(&sp, 0, sizeof(sp));
+
+   sp.flags = pc->flags & PCF_COPY_FLAGS;
+   sp.type  = CT_SPACE;
+   sp.str   = "                "; // 16 spaces
+   sp.len   = count;
+
+   chunk_add_after(&sp, pc);
 }
