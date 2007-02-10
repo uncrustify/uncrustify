@@ -101,11 +101,13 @@ struct parse_frame
 #define PCF_IN_ARRAY_ASSIGN    (1 << 19)
 #define PCF_IN_CLASS           (1 << 20)
 #define PCF_IN_NAMESPACE       (1 << 21)
+#define PCF_IN_FOR             (1 << 22)
 
 /* flags that get copied when a new chunk is inserted */
 #define PCF_COPY_FLAGS         (PCF_IN_PREPROC | PCF_IN_SPAREN | PCF_IN_ENUM |      \
                                 PCF_IN_FCN_DEF | PCF_IN_FCN_CALL | PCF_IN_TYPEDEF | \
-                                PCF_IN_ARRAY_ASSIGN | PCF_IN_CLASS | PCF_IN_NAMESPACE)
+                                PCF_IN_ARRAY_ASSIGN | PCF_IN_CLASS | PCF_IN_NAMESPACE | \
+                                PCF_IN_FOR)
 
 #ifdef DEFINE_PCF_NAMES
 static const char *pcf_names[] =
@@ -131,7 +133,8 @@ static const char *pcf_names[] =
    "LVALUE",
    "IN_ARRAY_ASSIGN",
    "IN_CLASS",
-   "IN_NAMESPACE"
+   "IN_NAMESPACE",
+   "IN_FOR"
 };
 #endif
 

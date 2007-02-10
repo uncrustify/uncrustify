@@ -213,6 +213,9 @@ void register_options(void)
    unc_add_option("pos_bool", UO_pos_bool, AT_POS, "The position of boolean operators in wrapped expressions");
    unc_add_option("pos_class_colon", UO_pos_class_colon, AT_POS, "The position of colons between constructor and member initialization");
 
+   unc_add_option("ls_for_split_full", UO_ls_for_split_full, AT_BOOL, "Whether to fully split long 'for' statements at semi-colons");
+   unc_add_option("ls_func_split_full", UO_ls_func_split_full, AT_BOOL, "Whether to fully split long function protos/calls at commas");
+
    unc_begin_group(UG_align, "Code alignment (not left column spaces/tabs)");
    unc_add_option("align_keep_tabs", UO_align_keep_tabs, AT_BOOL, "Whether to keep non-indenting tabs");
    unc_add_option("align_with_tabs", UO_align_with_tabs, AT_BOOL, "Whether to use tabs for alinging");

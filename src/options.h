@@ -202,6 +202,8 @@ enum uncrustify_options
     */
 
    UO_code_width,           // ie 80 columns
+   UO_ls_for_split_full,    // try to split long 'for' statements at semi-colons
+   UO_ls_func_split_full,   // try to split long func proto/def at comma
    //UO_ls_before_bool_op,    //TODO: break line before of after boolean op
    //UO_ls_before_paren,      //TODO: break before open paren
    //UO_ls_after_arith,       //TODO: break after arith op '+', etc
