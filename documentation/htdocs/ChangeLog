@@ -40,6 +40,7 @@ Changes in uncrustify-0.32
  - Rework code width code a bit
  - Start Objective C support
  - Add cmt_sp_before_star_cont and cmt_sp_after_star_cont
+ - Fix spacing between (( and ))
 
 
 Changes in uncrustify-0.31

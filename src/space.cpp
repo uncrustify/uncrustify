@@ -210,8 +210,8 @@ argval_t do_space(chunk_t *first, chunk_t *second)
    }
 
    /* "((" vs "( (" */
-   if (((first->type == CT_PAREN_OPEN) && (second->type == CT_PAREN_OPEN)) ||
-       ((first->type == CT_PAREN_CLOSE) && (second->type == CT_PAREN_CLOSE)))
+   if ((chunk_is_str(first, "(", 1) && chunk_is_str(second, "(", 1)) ||
+       (chunk_is_str(first, ")", 1) && chunk_is_str(second, ")", 1)))
    {
       return(cpd.settings[UO_sp_paren_paren].a);
    }
