@@ -1,4 +1,6 @@
 
+static int short_function_name(struct device *dev, struct device_driver *drv);
+
 /* Assuming a 60-column limit */
 static int short_function_name(struct device *dev, struct device_driver *drv)
 {
@@ -18,6 +20,17 @@ static void some_really_long_function_name(struct device *dev, struct device_dri
       asdfghjk = asdfasdfasd.aasdfasd + (asdfasd.asdas * 1234.65);
    }
 
+   for (struct something_really_really_excessive *a_long_ptr_name = get_first_item(); a_long_ptr_name != NULL; a_long_ptr_name = get_next_item(a_long_ptr_name))
+   {
+   }
+
+   for (a = get_first(); a != NULL; a = get_next(a))
+   {
+   }
+
+   for (a_ptr = get_first(); a_ptr != NULL; a_ptr = get_next(a))
+   {
+   }
 
  register_clcmd( "examine", "do_examine", -1,
                       "-Allows a player to examine the health and armor of a teammate" );

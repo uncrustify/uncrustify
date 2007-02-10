@@ -21,8 +21,7 @@ static int short_function_name(struct device *dev,
 }
 
 static void some_really_long_function_name(
-    struct device *dev,
-    struct device_driver *drv)
+    struct device *dev, struct device_driver *drv)
 {
     if ((some_variable_name &&
          somefunction(param1, param2, param3))) {
@@ -41,7 +40,8 @@ static void some_really_long_function_name(
     {
     }
 
-    for (a_ptr = get_first(); a_ptr != NULL;
+    for (a_ptr = get_first();
+         a_ptr != NULL;
          a_ptr = get_next(a))
     {
     }

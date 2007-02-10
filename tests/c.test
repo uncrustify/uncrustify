@@ -92,6 +92,7 @@
 
 # code width
 00901  width.cfg               c/code_width.c
+00902  width-2.cfg             c/code_width.c
 
 # pascal ptr_type
 00910  pascal_ptr.cfg          c/pascal_ptr.c
