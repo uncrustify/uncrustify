@@ -344,6 +344,8 @@ enum uncrustify_options
     */
 
    UO_cmt_star_cont,            // put a star on subsequent comment lines
+   UO_cmt_sp_before_star_cont,  // # of spaces for subsequent comment lines (before possible star)
+   UO_cmt_sp_after_star_cont,   // # of spaces for subsequent comment lines (after star)
    UO_cmt_cpp_to_c,             // convert CPP comments to C comments
    UO_cmt_cpp_group,            // if UO_cmt_cpp_to_c, try to group in one big C comment
    UO_cmt_cpp_nl_start,         // put a blank /* at the start of a converted group

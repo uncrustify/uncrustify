@@ -248,6 +248,8 @@ void register_options(void)
    unc_add_option("cmt_cpp_nl_end", UO_cmt_cpp_nl_end, AT_BOOL, "Whether to put a newline before the closing '*/' of the combined cpp-comment");
    unc_add_option("cmt_cpp_to_c", UO_cmt_cpp_to_c, AT_BOOL, "Whether to change cpp-comments into c-comments");
    unc_add_option("cmt_star_cont", UO_cmt_star_cont, AT_BOOL, "Whether to put a star on subsequent comment lines");
+   unc_add_option("cmt_sp_before_star_cont", UO_cmt_sp_before_star_cont, AT_NUM, "The number of spaces to insert at the start of subsequent comment lines");
+   unc_add_option("cmt_sp_after_star_cont", UO_cmt_sp_after_star_cont, AT_NUM, "The number of spaces to insert after the star on subsequent comment lines");
 
    unc_begin_group(UG_codemodify, "Code modifying options (non-whitespace)");
    unc_add_option("mod_full_brace_do", UO_mod_full_brace_do, AT_IARF, "Add or remove braces on single-line 'do' statement");

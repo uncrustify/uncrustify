@@ -397,6 +397,27 @@ static int calculate_comment_body_indent(const char *str, int len, int start_col
    return((width == 2) ? 0 : 1);
 }
 
+static_inline void add_spaces_before_star()
+{
+   int count = cpd.settings[UO_cmt_sp_before_star_cont].n;
+   while (count-- > 0)
+   {
+      add_char(' ');
+   }
+}
+
+static_inline void add_spaces_after_star()
+{
+   if (cpd.settings[UO_cmt_star_cont].b)
+   {
+      int count = cpd.settings[UO_cmt_sp_after_star_cont].n;
+      while (count-- > 0)
+      {
+         add_char(' ');
+      }
+   }
+}
+
 /**
  * Outputs the CPP comment at pc.
  * CPP comment combining is done here
@@ -502,11 +523,15 @@ chunk_t *output_comment_cpp(chunk_t *first)
           ((pc->column > col_br) && (first->parent_type == CT_COMMENT_END)))
       {
          last = pc;
+
 cpp_newline:
          add_char('\n');
          output_indent(col, col_br);
          add_char(' ');
+         add_spaces_before_star();
          add_char(cpd.settings[UO_cmt_star_cont].b ? '*' : ' ');
+         add_spaces_after_star();
+
 cpp_addline:
          if ((pc->str[2] != ' ') && (pc->str[2] != '\t'))
          {
@@ -640,12 +665,16 @@ void output_comment_multi(chunk_t *pc)
                if (cpd.settings[UO_cmt_star_cont].b)
                {
                   output_to_column(cmt_col, cpd.settings[UO_indent_with_tabs].b);
+                  add_spaces_before_star();
                   add_text((xtra == 1) ? " *" : "*");
+                  add_spaces_after_star();
                }
                add_char('\n');
             }
             else
             {
+               add_spaces_before_star();
+
                /* If this doesn't start with a '*' or '|' */
                if ((line[0] != '*') && (line[0] != '|') && (line[0] != '#') &&
                    (line[0] != '\\') && (line[0] != '+'))
@@ -654,6 +683,7 @@ void output_comment_multi(chunk_t *pc)
                   if (cpd.settings[UO_cmt_star_cont].b)
                   {
                      add_text((xtra == 1) ? " * " : "*  ");
+                     add_spaces_after_star();
                   }
                   else
                   {
