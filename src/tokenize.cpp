@@ -545,6 +545,41 @@ bool parse_whitespace(chunk_t *pc)
 
 
 /**
+ * Called when we hit a backslash.
+ * If there is nothing but whitespace until the newline, then this is a
+ * backslash newline
+ */
+static bool parse_bs_newline(chunk_t *pc)
+{
+   pc->len = 1;
+
+   while (isspace(pc->str[pc->len]))
+   {
+      if ((pc->str[pc->len] == '\r') || (pc->str[pc->len] == '\n'))
+      {
+         if (pc->str[pc->len] == '\n')
+         {
+            pc->len++;
+         }
+         else /* it is '\r' */
+         {
+            pc->len++;
+            if (pc->str[pc->len] == '\n')
+            {
+               pc->len++;
+            }
+         }
+         pc->type     = CT_NL_CONT;
+         pc->nl_count = 1;
+         return(true);
+      }
+      pc->len++;
+   }
+   return(false);
+}
+
+
+/**
  * Skips the next bit of whatever and returns the type of block.
  *
  * pc->str is the input text.
@@ -614,12 +649,9 @@ static bool parse_next(chunk_t *pc)
     *
     * REVISIT: does this need to handle other line endings?
     */
-   if ((pc->str[0] == '\\') && (pc->str[1] == '\n'))
+   if ((pc->str[0] == '\\') && parse_bs_newline(pc))
    {
-      pc->type     = CT_NL_CONT;
-      pc->len      = 2;
-      pc->nl_count = 1;
-      cpd.column   = 1;
+      cpd.column = 1;
       cpd.line_number++;
       return(true);
    }
@@ -783,6 +815,13 @@ void tokenize(const char *data, int data_len)
          last_was_tab    = chunk.after_tab;
          chunk.after_tab = false;
          chunk.len       = 0;
+      }
+      else if (chunk.type == CT_NL_CONT)
+      {
+         last_was_tab    = chunk.after_tab;
+         chunk.after_tab = false;
+         chunk.len       = 2;
+         chunk.str       = "\\\n";
       }
       else
       {
