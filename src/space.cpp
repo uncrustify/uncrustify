@@ -770,10 +770,14 @@ void space_add_after(chunk_t *pc, int count)
 
    memset(&sp, 0, sizeof(sp));
 
-   sp.flags = pc->flags & PCF_COPY_FLAGS;
-   sp.type  = CT_SPACE;
-   sp.str   = "                "; // 16 spaces
-   sp.len   = count;
+   sp.flags       = pc->flags & PCF_COPY_FLAGS;
+   sp.type        = CT_SPACE;
+   sp.str         = "                "; // 16 spaces
+   sp.len         = count;
+   sp.level       = pc->level;
+   sp.brace_level = pc->level;
+   sp.pp_level    = pc->pp_level;
+   sp.column      = pc->column + pc->len;
 
    chunk_add_after(&sp, pc);
 }
