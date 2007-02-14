@@ -929,10 +929,9 @@ static chunk_t *scan_ib_line(chunk_t *start, bool first_pass)
                      cpd.al[idx].col = pc->column;
                   }
                }
-               else
+               else if (idx > 0)
                {
                   int min_col_diff = pc->column - prev_match->column;
-                  assert(idx > 0);
                   int cur_col_diff = cpd.al[idx].col - cpd.al[idx - 1].col;
                   if (cur_col_diff < min_col_diff)
                   {
