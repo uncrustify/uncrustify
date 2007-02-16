@@ -1123,6 +1123,7 @@ void newlines_cleanup_braces(void)
       }
       else if (pc->type == CT_CATCH)
       {
+         newlines_cuddle_uncuddle(pc, cpd.settings[UO_nl_brace_catch].a);
          next = chunk_get_next_ncnl(pc);
          if ((next != NULL) && (next->type == CT_BRACE_OPEN))
          {
@@ -1156,6 +1157,7 @@ void newlines_cleanup_braces(void)
       }
       else if (pc->type == CT_FINALLY)
       {
+         newlines_cuddle_uncuddle(pc, cpd.settings[UO_nl_brace_finally].a);
          newlines_do_else(pc, cpd.settings[UO_nl_finally_brace].a);
       }
       else if (pc->type == CT_WHILE_OF_DO)
