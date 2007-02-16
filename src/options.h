@@ -276,6 +276,9 @@ enum uncrustify_options
    UO_nl_if_brace,               /* nl between if and { */
    UO_nl_for_brace,              /* nl between for and { */
    UO_nl_else_brace,             /* nl between else and { */
+   UO_nl_finally_brace,          /* nl between finally and { */
+   UO_nl_try_brace,              /* nl between try and { */
+   UO_nl_catch_brace,            /* nl between catch and { */
    UO_nl_while_brace,            /* nl between while and { */
    UO_nl_switch_brace,           /* nl between switch and { */
    UO_nl_brace_else,             // nl between } and else

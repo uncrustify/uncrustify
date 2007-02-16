@@ -1121,6 +1121,18 @@ void newlines_cleanup_braces(void)
       {
          newlines_if_for_while_switch(pc, cpd.settings[UO_nl_for_brace].a);
       }
+      else if (pc->type == CT_CATCH)
+      {
+         next = chunk_get_next_ncnl(pc);
+         if ((next != NULL) && (next->type == CT_BRACE_OPEN))
+         {
+            newlines_do_else(pc, cpd.settings[UO_nl_try_brace].a);
+         }
+         else
+         {
+            newlines_if_for_while_switch(pc, cpd.settings[UO_nl_catch_brace].a);
+         }
+      }
       else if (pc->type == CT_WHILE)
       {
          newlines_if_for_while_switch(pc, cpd.settings[UO_nl_while_brace].a);
@@ -1137,6 +1149,14 @@ void newlines_cleanup_braces(void)
       {
          newlines_cuddle_uncuddle(pc, cpd.settings[UO_nl_brace_else].a);
          newlines_do_else(pc, cpd.settings[UO_nl_else_brace].a);
+      }
+      else if (pc->type == CT_TRY)
+      {
+         newlines_do_else(pc, cpd.settings[UO_nl_try_brace].a);
+      }
+      else if (pc->type == CT_FINALLY)
+      {
+         newlines_do_else(pc, cpd.settings[UO_nl_finally_brace].a);
       }
       else if (pc->type == CT_WHILE_OF_DO)
       {

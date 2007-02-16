@@ -451,22 +451,32 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
       print_stack(LBCSPUSH, "+Open   ", frm, pc);
    }
 
+   pattern_class patcls = get_token_pattern_class(pc->type);
+
    /** Create a stack entry for complex statments IF/DO/FOR/WHILE/SWITCH */
-   if ((pc->type == CT_IF) ||
-       (pc->type == CT_DO) ||
-       (pc->type == CT_FOR) ||
-       (pc->type == CT_WHILE) ||
-       (pc->type == CT_SWITCH) ||
-       (pc->type == CT_BRACED) ||
-       (pc->type == CT_VOLATILE))
+   if (patcls == PATCLS_BRACED)
    {
       frm->pse_tos++;
       frm->pse[frm->pse_tos].type  = pc->type;
-      frm->pse[frm->pse_tos].stage = (pc->type == CT_DO) ? BS_BRACE_DO :
-                                     ((pc->type == CT_VOLATILE) ||
-                                      (pc->type == CT_BRACED)) ? BS_BRACE2 : BS_PAREN1;
+      frm->pse[frm->pse_tos].stage = (pc->type == CT_DO) ? BS_BRACE_DO : BS_BRACE2;
 
-      print_stack(LBCSPUSH, "+Complex", frm, pc);
+      print_stack(LBCSPUSH, "+ComplexBraced", frm, pc);
+   }
+   else if (patcls == PATCLS_PBRACED)
+   {
+      frm->pse_tos++;
+      frm->pse[frm->pse_tos].type  = pc->type;
+      frm->pse[frm->pse_tos].stage = BS_PAREN1;
+
+      print_stack(LBCSPUSH, "+ComplexParenBraced", frm, pc);
+   }
+   else if (patcls == PATCLS_OPBRACED)
+   {
+      frm->pse_tos++;
+      frm->pse[frm->pse_tos].type  = pc->type;
+      frm->pse[frm->pse_tos].stage = BS_OP_PAREN1;
+
+      print_stack(LBCSPUSH, "+ComplexOpParenBraced", frm, pc);
    }
 
    /* Mark simple statement/expression starts
@@ -533,6 +543,12 @@ static bool check_complex_statements(struct parse_frame *frm, chunk_t *pc)
 {
    c_token_t parent;
    chunk_t   *vbrace;
+
+   /* Turn an optional paren into either a real paren or a brace */
+   if (frm->pse[frm->pse_tos].stage == BS_OP_PAREN1)
+   {
+      frm->pse[frm->pse_tos].stage = (pc->type != CT_PAREN_OPEN) ? BS_BRACE2 : BS_PAREN1;
+   }
 
    /* Check for CT_ELSE after CT_IF */
    while (frm->pse[frm->pse_tos].stage == BS_ELSE)

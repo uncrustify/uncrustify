@@ -159,7 +159,7 @@ const chunk_tag_t *find_keyword(const char *word, int len);
 void add_keyword(const char *tag, c_token_t type, UINT8 lang_flags);
 void output_types(FILE *pfile);
 void clear_keyword_file(void);
-
+pattern_class get_token_pattern_class(c_token_t tok);
 
 
 /*

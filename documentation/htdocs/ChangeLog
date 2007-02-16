@@ -41,6 +41,7 @@ Changes in uncrustify-0.32
  - Start Objective C support
  - Add cmt_sp_before_star_cont and cmt_sp_after_star_cont
  - Fix spacing between (( and ))
+ - Add nl_try_brace, nl_catch_brace, nl_finally_brace
 
 
 Changes in uncrustify-0.31

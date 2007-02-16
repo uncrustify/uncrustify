@@ -29,6 +29,7 @@ enum brstage_e
 {
    BS_NONE,
    BS_PAREN1,    /* if/for/switch/while */
+   BS_OP_PAREN1, /* optional paren: catch () { */
    BS_WOD_PAREN, /* while of do parens */
    BS_WOD_SEMI,  /* semicolon after while of do */
    BS_BRACE_DO,  /* do */
@@ -175,6 +176,19 @@ enum
    LANG_ALL  = 0x7f,
 
    FLAG_PP   = 0x80,     /*<< only appears in a preprocessor */
+};
+
+/**
+ * Pattern classes for special keywords
+ */
+enum pattern_class
+{
+   PATCLS_NONE,
+   PATCLS_BRACED,   // keyword + braced stmt:          else, do, try
+   PATCLS_PBRACED,  // keyword + parens + braced stmt: switch, if, for, while
+   PATCLS_OPBRACED, // keyword + optional parens + braced stmt: catch, version
+   PATCLS_VBRACED,  // keyword + value + braced stmt: namespace
+   PATCLS_PAREN,    // keyword + parens: while-of-do
 };
 
 typedef struct

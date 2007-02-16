@@ -59,14 +59,14 @@ static const chunk_tag_t keywords[] =
    { "bit",              CT_TYPE,        LANG_D                                              },
    { "bitand",           CT_ARITH,       LANG_C | LANG_CPP                                   },
    { "bitor",            CT_ARITH,       LANG_C | LANG_CPP                                   },
-   { "body",             CT_BRACED,      LANG_D                                              },
+   { "body",             CT_BODY,        LANG_D                                              },
    { "bool",             CT_TYPE,        LANG_CPP | LANG_CS                                  },
    { "boolean",          CT_TYPE,        LANG_JAVA                                           },
    { "break",            CT_BREAK,       LANG_ALL                                            }, // PAWN
    { "byte",             CT_TYPE,        LANG_CS | LANG_D | LANG_JAVA                        },
    { "case",             CT_CASE,        LANG_ALL                                            }, // PAWN
    { "cast",             CT_CAST,        LANG_D                                              },
-   { "catch",            CT_POBRACED,    LANG_CPP | LANG_CS | LANG_D | LANG_JAVA             },
+   { "catch",            CT_CATCH,       LANG_CPP | LANG_CS | LANG_D | LANG_JAVA             },
    { "cdouble",          CT_TYPE,        LANG_D                                              },
    { "cent",             CT_TYPE,        LANG_D                                              },
    { "cfloat",           CT_TYPE,        LANG_D                                              },
@@ -80,7 +80,7 @@ static const chunk_tag_t keywords[] =
    { "continue",         CT_CONTINUE,    LANG_ALL                                            }, // PAWN
    { "creal",            CT_TYPE,        LANG_D                                              },
    { "dchar",            CT_TYPE,        LANG_D                                              },
-   { "debug",            CT_PBRACED,     LANG_D                                              },
+   { "debug",            CT_DEBUG,       LANG_D                                              },
    { "default",          CT_DEFAULT,     LANG_ALL                                            }, // PAWN
    { "define",           CT_PP_DEFINE,   LANG_ALL | FLAG_PP                                  }, // PAWN
    { "defined",          CT_DEFINED,     LANG_PAWN                                           }, // PAWN
@@ -137,11 +137,11 @@ static const chunk_tag_t keywords[] =
    { "int",              CT_TYPE,        LANG_ALLC                                           },
    { "interface",        CT_CLASS,       LANG_CS | LANG_D | LANG_JAVA                        },
    { "internal",         CT_QUALIFIER,   LANG_CS                                             },
-   { "invariant",        CT_BRACED,      LANG_D                                              },
+   { "invariant",        CT_INVARIANT,   LANG_D                                              },
    { "ireal",            CT_TYPE,        LANG_D                                              },
    { "is",               CT_SCOMPARE,    LANG_D | LANG_CS                                    },
    { "line",             CT_PP_LINE,     LANG_PAWN | FLAG_PP                                 }, // PAWN
-   { "lock",             CT_PBRACED,     LANG_CS                                             },
+   { "lock",             CT_LOCK,        LANG_CS                                             },
    { "long",             CT_TYPE,        LANG_ALLC                                           },
    { "mixin",            CT_CLASS,       LANG_D                                              }, // may need special handling
    { "module",           CT_USING,       LANG_D                                              },
@@ -199,7 +199,7 @@ static const chunk_tag_t keywords[] =
    { "throws",           CT_QUALIFIER,   LANG_JAVA                                           },
    { "transient",        CT_QUALIFIER,   LANG_JAVA                                           },
    { "true",             CT_WORD,        LANG_CPP | LANG_CS | LANG_D | LANG_JAVA             },
-   { "try",              CT_BRACED,      LANG_CPP | LANG_CS | LANG_D | LANG_JAVA             },
+   { "try",              CT_TRY,         LANG_CPP | LANG_CS | LANG_D | LANG_JAVA             },
    { "tryinclude",       CT_PP_INCLUDE,  LANG_PAWN | FLAG_PP                                 }, // PAWN
    { "typedef",          CT_TYPEDEF,     LANG_C | LANG_CPP | LANG_D                          },
    { "typeid",           CT_SIZEOF,      LANG_C | LANG_CPP | LANG_D                          },
@@ -212,8 +212,8 @@ static const chunk_tag_t keywords[] =
    { "unchecked",        CT_QUALIFIER,   LANG_CS                                             },
    { "undef",            CT_PP_UNDEF,    LANG_ALL | FLAG_PP                                  }, // PAWN
    { "union",            CT_UNION,       LANG_C | LANG_CPP | LANG_D                          },
-   { "unittest",         CT_BRACED,      LANG_D                                              },
-   { "unsafe",           CT_BRACED,      LANG_CS                                             },
+   { "unittest",         CT_UNITTEST,    LANG_D                                              },
+   { "unsafe",           CT_UNSAFE,      LANG_CS                                             },
    { "unsigned",         CT_TYPE,        LANG_C | LANG_CPP                                   },
    { "ushort",           CT_TYPE,        LANG_CS | LANG_D                                    },
    { "using",            CT_USING,       LANG_CS                                             },
@@ -436,4 +436,47 @@ void clear_keyword_file(void)
    }
    wl.total  = 0;
    wl.active = 0;
+}
+
+
+/**
+ * Returns the pattern that the keyword needs based on the token
+ */
+pattern_class get_token_pattern_class(c_token_t tok)
+{
+   switch (tok)
+   {
+   case CT_IF:
+   case CT_ELSEIF:
+   case CT_SWITCH:
+   case CT_FOR:
+   case CT_WHILE:
+   case CT_LOCK:
+      return(PATCLS_PBRACED);
+
+   case CT_ELSE:
+   case CT_DO:
+   case CT_TRY:
+   case CT_FINALLY:
+   case CT_BODY:
+   case CT_INVARIANT:
+   case CT_UNITTEST:
+   case CT_UNSAFE:
+   case CT_VOLATILE:
+      return(PATCLS_BRACED);
+
+   case CT_CATCH:
+   case CT_VERSION:
+   case CT_DEBUG:
+      return(PATCLS_OPBRACED);
+
+   case CT_NAMESPACE:
+      return(PATCLS_VBRACED);
+
+   case CT_WHILE_OF_DO:
+      return(PATCLS_PAREN);
+
+   default:
+      return(PATCLS_NONE);
+   }
 }

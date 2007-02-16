@@ -168,7 +168,10 @@ void register_options(void)
    unc_add_option("nl_brace_else", UO_nl_brace_else, AT_IARF, "Add or remove newline between '}' and 'else'");
    unc_add_option("nl_elseif_brace", UO_nl_elseif_brace, AT_IARF, "Add or remove newline between 'else if' and '{'\nIf set to ignore, nl_if_brace is used instead");
    unc_add_option("nl_else_brace", UO_nl_else_brace, AT_IARF, "Add or remove newline between 'else' and '{'");
+   unc_add_option("nl_finally_brace", UO_nl_finally_brace, AT_IARF, "Add or remove newline between 'finally' and '{'");
+   unc_add_option("nl_try_brace", UO_nl_try_brace, AT_IARF, "Add or remove newline between 'try' and '{'");
    unc_add_option("nl_for_brace", UO_nl_for_brace, AT_IARF, "Add or remove newline between 'for' and '{'");
+   unc_add_option("nl_catch_brace", UO_nl_catch_brace, AT_IARF, "Add or remove newline between 'catch' and '{'");
    unc_add_option("nl_while_brace", UO_nl_while_brace, AT_IARF, "Add or remove newline between 'while' and '{'");
    unc_add_option("nl_do_brace", UO_nl_do_brace, AT_IARF, "Add or remove newline between 'do' and '{'");
    unc_add_option("nl_brace_while", UO_nl_brace_while, AT_IARF, "Add or remove newline between '}' and 'while' of 'do' statement");

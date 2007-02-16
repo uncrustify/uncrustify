@@ -127,6 +127,12 @@ typedef enum
    CT_USING,
    CT_SUPER,
    CT_DELEGATE,
+   CT_BODY,
+   CT_DEBUG,
+   CT_INVARIANT,
+   CT_UNITTEST,
+   CT_UNSAFE,
+   CT_FINALLY,
 
    /* note for paren/brace/square pairs: close MUST be open + 1 */
    CT_PAREN_OPEN,
@@ -211,9 +217,6 @@ typedef enum
    CT_AS,
    CT_IN,               /* "foreach (T c in x)" or "foo(in char c)" or "in { ..." */
    CT_BRACED,           /* simple braced items: try {} */
-   CT_PBRACED,          /* simple paren-braced: version (x) { } */
-   CT_POBRACED,         /* simple optional-paren-braced: catch (x) { } */
-   CT_VBRACED,          /* some value followed by braces: namespace foo { */
    CT_VERSION,          /* turns into CT_IF if not followed by '=' */
    CT_THIS,             /* may turn into CT_PBRACED if followed by a '(' */
    CT_BASE,             /* C# thingy */
