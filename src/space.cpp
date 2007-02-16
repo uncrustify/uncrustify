@@ -395,6 +395,31 @@ argval_t do_space(chunk_t *first, chunk_t *second)
       return(cpd.settings[UO_sp_brace_else].a);
    }
 
+   if ((first->type == CT_CATCH) && (second->type == CT_BRACE_OPEN))
+   {
+      return(cpd.settings[UO_sp_catch_brace].a);
+   }
+
+   if ((first->type == CT_BRACE_OPEN) && (second->type == CT_CATCH))
+   {
+      return(cpd.settings[UO_sp_brace_catch].a);
+   }
+
+   if ((first->type == CT_FINALLY) && (second->type == CT_BRACE_OPEN))
+   {
+      return(cpd.settings[UO_sp_finally_brace].a);
+   }
+
+   if ((first->type == CT_BRACE_OPEN) && (second->type == CT_FINALLY))
+   {
+      return(cpd.settings[UO_sp_brace_finally].a);
+   }
+
+   if ((first->type == CT_TRY) && (second->type == CT_BRACE_OPEN))
+   {
+      return(cpd.settings[UO_sp_try_brace].a);
+   }
+
    if (first->type == CT_PAREN_CLOSE)
    {
       if (first->parent_type == CT_D_TEMPLATE)

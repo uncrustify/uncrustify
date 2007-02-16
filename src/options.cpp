@@ -125,6 +125,11 @@ void register_options(void)
    unc_add_option("sp_macro_func", UO_sp_macro_func, AT_IARF, "Add or remove space between macro function ')' and value");
    unc_add_option("sp_else_brace", UO_sp_else_brace, AT_IARF, "Add or remove space between 'else' and '{' if on the same line");
    unc_add_option("sp_brace_else", UO_sp_brace_else, AT_IARF, "Add or remove space between '}' and 'else' if on the same line");
+   unc_add_option("sp_catch_brace", UO_sp_catch_brace, AT_IARF, "Add or remove space between 'catch' and '{' if on the same line");
+   unc_add_option("sp_brace_catch", UO_sp_brace_catch, AT_IARF, "Add or remove space between '}' and 'catch' if on the same line");
+   unc_add_option("sp_finally_brace", UO_sp_finally_brace, AT_IARF, "Add or remove space between 'finally' and '{' if on the same line");
+   unc_add_option("sp_brace_finally", UO_sp_brace_finally, AT_IARF, "Add or remove space between '}' and 'finally' if on the same line");
+   unc_add_option("sp_try_brace", UO_sp_try_brace, AT_IARF, "Add or remove space between 'try' and '{' if on the same line");
 
    unc_begin_group(UG_indent, "Indenting");
    unc_add_option("indent_columns", UO_indent_columns, AT_NUM, "The number of columns to indent per level (usually 2, 3, 4, or 8)");

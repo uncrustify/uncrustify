@@ -196,6 +196,11 @@ enum uncrustify_options
    UO_sp_else_brace,
    UO_sp_brace_else,
 
+   UO_sp_catch_brace,
+   UO_sp_brace_catch,
+   UO_sp_finally_brace,
+   UO_sp_brace_finally,
+   UO_sp_try_brace,
 
    /*
     * Line splitting options (for long lines)
