@@ -14,6 +14,7 @@
 #include "uncrustify_types.h"
 #include "prototypes.h"
 #include "chunk_list.h"
+#include "char_table.h"
 #include <cstring>
 
 static void check_template(chunk_t *start);
@@ -145,6 +146,16 @@ void tokenize_cleanup(void)
       if ((pc->type == CT_GETSET) && (next->type != CT_BRACE_OPEN))
       {
          pc->type = CT_WORD;
+      }
+
+      if ((pc->type == CT_ENUM) ||
+          (pc->type == CT_STRUCT) ||
+          (pc->type == CT_UNION))
+      {
+         if (get_char_table(*next->str) & CT_KW1)
+         {
+            next->type = CT_TYPE;
+         }
       }
 
       /* Change item after operator (>=, ==, etc) to a FUNC_OPERATOR */

@@ -11,7 +11,6 @@
 #include "chunk_list.h"
 #include "ChunkStack.h"
 #include "prototypes.h"
-#include "char_table.h"
 
 #include <cstdio>
 #include <cstdlib>
@@ -461,9 +460,8 @@ void fix_symbols(void)
            (pc->type == CT_ENUM)))
       {
          tmp = next;
-         if (get_char_table(*tmp->str) & CT_KW1)
+         if (tmp->type == CT_TYPE)
          {
-            tmp->type = CT_TYPE;
             tmp = chunk_get_next_ncnl(tmp);
          }
          if ((tmp != NULL) && (tmp->type == CT_BRACE_OPEN))
