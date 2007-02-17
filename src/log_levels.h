@@ -68,6 +68,7 @@ enum
    LTEMPL    = 52,    /* Template detection */
    LINDENT2  = 53,    /* indent_text tab level */
    LPARADD   = 54,    /* adding parens in if/while */
+   LCMTNL    = 55,    /* newlines before comments */
 };
 
 #endif   /* LOG_LEVELS_H_INCLUDED */

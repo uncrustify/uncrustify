@@ -1615,6 +1615,7 @@ void do_blank_lines(void)
    chunk_t *pc;
    chunk_t *next;
    chunk_t *prev;
+   chunk_t *pcmt;
 
    /* Don't process the first token, as we don't care if it is a newline */
    pc = chunk_get_head();
@@ -1628,6 +1629,7 @@ void do_blank_lines(void)
 
       next = chunk_get_next(pc);
       prev = chunk_get_prev_nc(pc);
+      pcmt = chunk_get_prev(pc);
 
       /* Limit consecutive newlines */
       if ((cpd.settings[UO_nl_max].n > 0) &&
@@ -1642,9 +1644,44 @@ void do_blank_lines(void)
           (next->type == CT_COMMENT_MULTI))
       {
          /* Don't add blanks after a open brace */
-         if ((prev == NULL) || (prev->type != CT_BRACE_OPEN))
+         if ((prev == NULL) ||
+             ((prev->type != CT_BRACE_OPEN) &&
+              (prev->type != CT_VBRACE_OPEN)))
          {
+            LOG_FMT(LCMTNL, "%s: NL-MLCommentC: line %d\n", __func__, next->orig_line);
             pc->nl_count = cpd.settings[UO_nl_before_block_comment].n;
+         }
+      }
+
+      /** Control blanks before single line C comments */
+      if ((cpd.settings[UO_nl_before_c_comment].n > pc->nl_count) &&
+          (next != NULL) &&
+          (next->type == CT_COMMENT))
+      {
+         /* Don't add blanks after a open brace */
+         if ((prev == NULL) ||
+             ((prev->type != CT_BRACE_OPEN) &&
+              (prev->type != CT_VBRACE_OPEN) &&
+              (pcmt->type != CT_COMMENT)))
+         {
+            LOG_FMT(LCMTNL, "%s: NL-CommentC: line %d\n", __func__, next->orig_line);
+            pc->nl_count = cpd.settings[UO_nl_before_c_comment].n;
+         }
+      }
+
+      /** Control blanks before CPP comments */
+      if ((cpd.settings[UO_nl_before_cpp_comment].n > pc->nl_count) &&
+          (next != NULL) &&
+          (next->type == CT_COMMENT_CPP))
+      {
+         /* Don't add blanks after a open brace */
+         if ((prev == NULL) ||
+             ((prev->type != CT_BRACE_OPEN) &&
+              (prev->type != CT_VBRACE_OPEN) &&
+              (pcmt->type != CT_COMMENT_CPP)))
+         {
+            LOG_FMT(LCMTNL, "%s: NL-CommentCPP: line %d\n", __func__, next->orig_line);
+            pc->nl_count = cpd.settings[UO_nl_before_cpp_comment].n;
          }
       }
 

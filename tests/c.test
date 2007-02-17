@@ -100,6 +100,7 @@
 00911  empty_body.cfg          c/pascal_ptr.c
 
 01000  mod-paren.cfg           c/mod-paren.c
+01001  nl-comment.cfg          c/nl-comment.c
 
 # big general tests
 20000 ben.cfg                  c/i2c-core.c
