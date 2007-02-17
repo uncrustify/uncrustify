@@ -130,6 +130,7 @@ void register_options(void)
    unc_add_option("sp_finally_brace", UO_sp_finally_brace, AT_IARF, "Add or remove space between 'finally' and '{' if on the same line");
    unc_add_option("sp_brace_finally", UO_sp_brace_finally, AT_IARF, "Add or remove space between '}' and 'finally' if on the same line");
    unc_add_option("sp_try_brace", UO_sp_try_brace, AT_IARF, "Add or remove space between 'try' and '{' if on the same line");
+   unc_add_option("sp_getset_brace", UO_sp_getset_brace, AT_IARF, "Add or remove space between get/set and '{' if on the same line");
 
    unc_begin_group(UG_indent, "Indenting");
    unc_add_option("indent_columns", UO_indent_columns, AT_NUM, "The number of columns to indent per level (usually 2, 3, 4, or 8)");
@@ -176,6 +177,7 @@ void register_options(void)
    unc_add_option("nl_brace_finally", UO_nl_brace_finally, AT_IARF, "Add or remove newline between '}' and 'finally'");
    unc_add_option("nl_finally_brace", UO_nl_finally_brace, AT_IARF, "Add or remove newline between 'finally' and '{'");
    unc_add_option("nl_try_brace", UO_nl_try_brace, AT_IARF, "Add or remove newline between 'try' and '{'");
+   unc_add_option("nl_getset_brace", UO_nl_getset_brace, AT_IARF, "Add or remove newline between get/set and '{'");
    unc_add_option("nl_for_brace", UO_nl_for_brace, AT_IARF, "Add or remove newline between 'for' and '{'");
    unc_add_option("nl_catch_brace", UO_nl_catch_brace, AT_IARF, "Add or remove newline between 'catch' and '{'");
    unc_add_option("nl_brace_catch", UO_nl_brace_catch, AT_IARF, "Add or remove newline between '}' and 'catch'");

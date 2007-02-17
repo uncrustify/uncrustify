@@ -463,6 +463,7 @@ pattern_class get_token_pattern_class(c_token_t tok)
    case CT_UNITTEST:
    case CT_UNSAFE:
    case CT_VOLATILE:
+   case CT_GETSET:
       return(PATCLS_BRACED);
 
    case CT_CATCH:

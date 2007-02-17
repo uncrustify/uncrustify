@@ -201,6 +201,7 @@ enum uncrustify_options
    UO_sp_finally_brace,
    UO_sp_brace_finally,
    UO_sp_try_brace,
+   UO_sp_getset_brace,
 
    /*
     * Line splitting options (for long lines)
@@ -284,6 +285,7 @@ enum uncrustify_options
    UO_nl_finally_brace,          /* nl between finally and { */
    UO_nl_brace_finally,          /* nl between } and finally */
    UO_nl_try_brace,              /* nl between try and { */
+   UO_nl_getset_brace,           /* nl between get/set and { */
    UO_nl_catch_brace,            /* nl between catch and { */
    UO_nl_brace_catch,            /* nl between } and catch */
    UO_nl_while_brace,            /* nl between while and { */

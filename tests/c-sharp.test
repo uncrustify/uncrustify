@@ -5,4 +5,5 @@
 # test.name  config.file  input.file
 
 10000 mono.cfg                 cs/simple.cs
+10001 getset.cfg               cs/getset.cs
 

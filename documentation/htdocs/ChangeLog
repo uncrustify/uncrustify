@@ -46,6 +46,7 @@ Changes in uncrustify-0.32
    sp_brace_finally, sp_try_brace
  - Treat typedef functions the same as other function for param aligning
  - Turn any word after a enum/struct/union into a type
+ - Add sp_getset_brace and nl_getset_brace
 
 
 Changes in uncrustify-0.31
