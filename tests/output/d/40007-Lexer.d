@@ -1794,13 +1794,13 @@ done:
             n = 0;
 
             while (true) {
-                if (*p >= '0' && * p <= '9') {
+                if (*p >= '0' && *p <= '9') {
                     d = *p - '0';
                 }
-                else if (*p >= 'a' && * p <= 'z') {
+                else if (*p >= 'a' && *p <= 'z') {
                     d = *p - 'a' + 10;
                 }
-                else if (*p >= 'A' && * p <= 'Z') {
+                else if (*p >= 'A' && *p <= 'Z') {
                     d = *p - 'A' + 10;
                 }
                 else {
@@ -2052,7 +2052,7 @@ done:
             p++;
             break;
         }
-        if (*p == 'i' || * p == 'I') {
+        if (*p == 'i' || *p == 'I') {
             p++;
             switch (result) {
             case TOK.TOKfloat32v:
