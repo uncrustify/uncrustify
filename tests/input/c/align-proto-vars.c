@@ -7,3 +7,6 @@ int doStuff(int i,
 
 MACRO_MODIFIER int doStuff(int   i,
                  float f );
+
+typedef void (*my_callback)(int id,
+void *context);

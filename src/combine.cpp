@@ -1170,6 +1170,8 @@ static void fix_typedef(chunk_t *start)
          {
             is_fcn_type = true;
 
+            flag_parens(next, 0, CT_FPAREN_OPEN, CT_TYPEDEF, false);
+
             fix_fcn_def_params(next);
 
             LOG_FMT(LTYPEDEF, "%s: fcn typedef on line %d\n", __func__, next->orig_line);

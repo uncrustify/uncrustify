@@ -631,7 +631,8 @@ static void align_func_params()
       if ((pc->type != CT_FPAREN_OPEN) ||
           ((pc->parent_type != CT_FUNC_PROTO) &&
            (pc->parent_type != CT_FUNC_DEF) &&
-           (pc->parent_type != CT_FUNC_CLASS)))
+           (pc->parent_type != CT_FUNC_CLASS) &&
+           (pc->parent_type != CT_TYPEDEF)))
       {
          continue;
       }
