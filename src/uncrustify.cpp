@@ -694,6 +694,11 @@ static void uncrustify_file(const char *data, int data_len, FILE *pfout,
    do_braces();
 
    /**
+    * Add parens
+    */
+   do_parens();
+
+   /**
     * Insert line breaks as needed
     */
    do_blank_lines();

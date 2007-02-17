@@ -93,6 +93,13 @@ void do_braces(void);
 
 
 /*
+ *  parens.cpp
+ */
+
+void do_parens(void);
+
+
+/*
  *  space.cpp
  */
 

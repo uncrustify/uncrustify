@@ -349,6 +349,7 @@ enum uncrustify_options
    UO_mod_full_brace_while,      // add or remove braces on while
    UO_mod_pawn_semicolon,        // add optional semicolons
    UO_mod_full_brace_function,   // add optional braces on Pawn functions
+   UO_mod_full_paren_if_bool,
 
 
    /*

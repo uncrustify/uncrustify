@@ -99,6 +99,8 @@
 00910  pascal_ptr.cfg          c/pascal_ptr.c
 00911  empty_body.cfg          c/pascal_ptr.c
 
+01000  mod-paren.cfg           c/mod-paren.c
+
 # big general tests
 20000 ben.cfg                  c/i2c-core.c
 20001 preproc-cleanup.cfg      c/directfb.h

@@ -67,6 +67,7 @@ enum
    LFTYPE    = 51,    /* Function type detection */
    LTEMPL    = 52,    /* Template detection */
    LINDENT2  = 53,    /* indent_text tab level */
+   LPARADD   = 54,    /* adding parens in if/while */
 };
 
 #endif   /* LOG_LEVELS_H_INCLUDED */
