@@ -803,9 +803,11 @@ void indent_text(void)
          else if ((pc->type == CT_STRING) && (prev->type == CT_STRING) &&
                   cpd.settings[UO_indent_align_string].b)
          {
+            tmp = (xml_indent != 0) ? xml_indent : prev->column;
+
             LOG_FMT(LINDENT, "%s: %d] String => %d\n",
-                    __func__, pc->orig_line, prev->column);
-            reindent_line(pc, xml_indent);
+                    __func__, pc->orig_line, tmp);
+            reindent_line(pc, tmp);
          }
          else if (chunk_is_comment(pc))
          {
