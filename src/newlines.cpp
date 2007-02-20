@@ -154,9 +154,9 @@ static chunk_t *newline_add_between2(chunk_t *start, chunk_t *end,
            end->len, end->str, end->orig_line, end->orig_col, func, line);
 
    if (((start->type == CT_BRACE_OPEN) &&
-       ((start->flags & PCF_ONE_CLASS) == PCF_ONE_CLASS)) ||
+        ((start->flags & PCF_ONE_CLASS) == PCF_ONE_CLASS)) ||
        ((end->type == CT_BRACE_CLOSE) &&
-       ((end->flags & PCF_ONE_CLASS) == PCF_ONE_CLASS)))
+        ((end->flags & PCF_ONE_CLASS) == PCF_ONE_CLASS)))
    {
       return(NULL);
    }
@@ -357,8 +357,8 @@ static void newlines_if_for_while_switch_pre_blank_lines(chunk_t *start, argval_
                   last_nl->nl_count = 2;
                }
             }
-            else /* if we didn't run into a nl, need to add one */
-            if ((last_nl = newline_add_after(pc)) != NULL)
+            /* if we didn't run into a nl, need to add one */
+            else if ((last_nl = newline_add_after(pc)) != NULL)
             {
                last_nl->nl_count = 2;
             }
@@ -1727,5 +1727,87 @@ void newlines_cleanup_dup(void)
          chunk_del(pc);
       }
       pc = next;
+   }
+}
+
+
+void newlines_double_space_struct_enum_union(void)
+{
+   chunk_t *pc;
+   chunk_t *next;
+   chunk_t *prev;
+   bool inside_seu = false;
+   int seu_level = 0;
+
+   prev = NULL;
+   pc   = chunk_get_head();
+
+   while (pc != NULL)
+   {
+      next = chunk_get_next(pc);
+
+      if (!inside_seu)
+      {
+         if ((pc->type == CT_BRACE_OPEN) &&
+             ((pc->parent_type == CT_STRUCT) ||
+              (pc->parent_type == CT_ENUM) ||
+              (pc->parent_type == CT_UNION)))
+         {
+            inside_seu = true;
+            seu_level = pc->brace_level;
+         }
+      }
+      else
+      {
+         if (pc->type == CT_NEWLINE)
+         {
+            switch (prev->type)
+            {
+            case CT_COMMENT_WHOLE:
+            case CT_COMMENT_MULTI:
+            case CT_BRACE_OPEN:
+            case CT_COMMENT_CPP:
+            case CT_COMMENT:
+               break;
+
+            default:
+               switch (next->type)
+               {
+               case CT_COMMENT_WHOLE:
+               case CT_COMMENT_MULTI:
+               case CT_COMMENT_CPP:
+               case CT_COMMENT:
+                  if (pc->nl_count < 2)
+                  {
+                     pc->nl_count = 2;
+                  }
+                  break;
+
+               default:
+                  break;
+               }
+               break;
+            }
+         }
+         else if (pc->type == CT_BRACE_CLOSE)
+         {
+            if (prev->type != CT_NEWLINE)
+            {
+               prev = newline_add_before(pc);
+            }
+            if (prev->nl_count < 2)
+            {
+               prev->nl_count = 2;
+            }
+         }
+
+         if ((pc->type == CT_BRACE_CLOSE) && (pc->brace_level == seu_level))
+         {
+            inside_seu = false;
+         }
+      }
+
+      prev = pc;
+      pc   = next;
    }
 }

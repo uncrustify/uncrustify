@@ -704,6 +704,10 @@ static void uncrustify_file(const char *data, int data_len, FILE *pfout,
    do_blank_lines();
    newlines_cleanup_braces();
    newlines_insert_blank_lines();
+   if (cpd.settings[UO_nl_ds_struct_enum_cmt].b)
+   {
+      newlines_double_space_struct_enum_union();
+   }
    if (cpd.settings[UO_nl_squeeze_ifdef].b)
    {
       newlines_squeeze_ifdef();

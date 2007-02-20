@@ -211,6 +211,7 @@ void register_options(void)
    unc_add_option("nl_after_switch", UO_nl_after_switch, AT_IARF, "Add or remove newline after 'switch'");
    unc_add_option("nl_before_do", UO_nl_before_do, AT_IARF, "Add or remove newline before 'do'");
    unc_add_option("nl_after_do", UO_nl_after_do, AT_IARF, "Add or remove newline after 'do'");
+   unc_add_option("nl_ds_struct_enum_cmt", UO_nl_ds_struct_enum_cmt, AT_BOOL, "Whether to double-space commented-entries in struct/enum");
 
    unc_begin_group(UG_blankline, "Blank line options", "Note that it takes 2 newlines to get a blank line");
    unc_add_option("nl_max", UO_nl_max, AT_NUM, "The maximum consecutive newlines");
