@@ -163,6 +163,10 @@ SOURCE=..\src\output.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\src\parens.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\src\parse_frame.cpp
 # End Source File
 # Begin Source File
