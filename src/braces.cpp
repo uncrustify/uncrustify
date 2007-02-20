@@ -42,6 +42,38 @@ void do_braces(void)
    {
       examine_braces();
    }
+
+   /* Need to mark one-liners */
+   if (cpd.settings[UO_nl_class_leave_one_liners].b)
+   {
+      chunk_t *pc;
+      chunk_t *br_open;
+
+      pc = chunk_get_head();
+      while ((pc = chunk_get_next_ncnl(pc)) != NULL)
+      {
+         if (pc->type != CT_BRACE_OPEN)
+         {
+            continue;
+         }
+         br_open = pc;
+
+         /* Scan for the brace close or a newline */
+         while ((pc = chunk_get_next_nc(pc)) != NULL)
+         {
+            if (chunk_is_newline(pc))
+            {
+               break;
+            }
+            if ((pc->type == CT_BRACE_CLOSE) && (br_open->level == pc->level))
+            {
+               br_open->flags |= PCF_ONE_LINER;
+               pc->flags      |= PCF_ONE_LINER;
+               break;
+            }
+         }
+      }
+   }
 }
 
 

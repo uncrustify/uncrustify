@@ -11,10 +11,7 @@ class CFooBarDlg : public CDialog
 
    void Initialize(BYTE nDelay);
 
-   UINT GetCount()
-   {
-      return(m_nCount);
-   }
+   UINT GetCount() { return(m_nCount); }
 
    void SetCount(int count)
    {

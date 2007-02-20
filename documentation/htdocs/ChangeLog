@@ -49,6 +49,7 @@ Changes in uncrustify-0.32
  - Add sp_getset_brace and nl_getset_brace
  - Add mod_full_paren_if_bool
  - Add nl_before_c_comment and nl_before_cpp_comment
+ - Fix nl_class_leave_one_liners
 
 
 Changes in uncrustify-0.31

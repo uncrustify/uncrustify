@@ -153,6 +153,14 @@ static chunk_t *newline_add_between2(chunk_t *start, chunk_t *end,
            __func__, start->len, start->str, start->orig_line, start->orig_col,
            end->len, end->str, end->orig_line, end->orig_col, func, line);
 
+   if (((start->type == CT_BRACE_OPEN) &&
+       ((start->flags & PCF_ONE_CLASS) == PCF_ONE_CLASS)) ||
+       ((end->type == CT_BRACE_CLOSE) &&
+       ((end->flags & PCF_ONE_CLASS) == PCF_ONE_CLASS)))
+   {
+      return(NULL);
+   }
+
    /* Scan for a line break */
    for (pc = start; pc != end; pc = chunk_get_next(pc))
    {
@@ -699,8 +707,9 @@ static void newline_fnc_var_def(chunk_t *br_open, int nl_count)
 /**
  * Handles the brace_on_func_line setting and decides if the closing brace
  * of a pair should be right after a newline.
- * The only case where the closing brace shouldn't be the first thing on a line
- * is where the opening brace has junk after it.
+ * The only cases where the closing brace shouldn't be the first thing on a line
+ * is where the opening brace has junk after it AND where a one-liner in a
+ * class is supposed to be preserved.
  *
  * General rule for break before close brace:
  * If the brace is part of a function (call or definition) OR if the only
@@ -751,23 +760,9 @@ static void newlines_brace_pair(chunk_t *br_open)
       }
    }
 
-   if (cpd.settings[UO_nl_class_leave_one_liners].b &&
-       ((br_open->flags & PCF_IN_CLASS) != 0))
+   if ((br_open->flags & PCF_ONE_CLASS) == PCF_ONE_CLASS)
    {
-      pc = chunk_get_next_type(br_open, CT_BRACE_CLOSE, br_open->level);
-      if (pc != NULL)
-      {
-         next = br_open;
-         do
-         {
-            next = chunk_get_next_nc(next);
-         } while ((next != NULL) && (next != pc) && (next->type != CT_NEWLINE));
-
-         if (next == pc)
-         {
-            return;
-         }
-      }
+      return;
    }
 
    next = chunk_get_next_nc(br_open);
@@ -935,7 +930,7 @@ static void newline_case(chunk_t *start)
    if ((prev->type == CT_SEMICOLON) ||
        (prev->type == CT_BRACE_CLOSE))
    {
-      if (pc->nl_count < 2)
+      if (chunk_is_newline(pc) && (pc->nl_count < 2))
       {
          //         fprintf(stderr, "%s: newline before line %d\n",
          //                 __func__, start->orig_line);
@@ -1179,7 +1174,8 @@ void newlines_cleanup_braces(void)
          {
             if ((pc->level == pc->brace_level) &&
                 cpd.settings[UO_nl_after_brace_open].b &&
-                ((pc->flags & (PCF_IN_ARRAY_ASSIGN | PCF_IN_PREPROC)) == 0))
+                ((pc->flags & (PCF_IN_ARRAY_ASSIGN | PCF_IN_PREPROC)) == 0) &&
+                ((pc->flags & PCF_ONE_CLASS) != PCF_ONE_CLASS))
             {
                if (!chunk_is_str(next, "{", 1))
                {
