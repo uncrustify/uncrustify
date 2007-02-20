@@ -104,6 +104,7 @@ void do_parens(void);
  */
 
 void space_text(void);
+void space_text_balance_nested_parens(void);
 int space_col_align(chunk_t *first, chunk_t *second);
 argval_t do_space(chunk_t *first, chunk_t *second);
 

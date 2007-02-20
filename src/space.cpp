@@ -741,6 +741,66 @@ void space_text(void)
    }
 }
 
+
+/**
+ * Marches through the whole file and adds spaces around nested parens
+ */
+void space_text_balance_nested_parens(void)
+{
+   chunk_t *first;
+   chunk_t *next;
+   chunk_t *cur;
+   chunk_t *prev;
+
+   first = chunk_get_head();
+   while (first != NULL)
+   {
+      next = chunk_get_next(first);
+      if (next == NULL)
+      {
+         break;
+      }
+
+      if (chunk_is_str(first, "(", 1) && chunk_is_str(next, "(", 1))
+      {
+         /* insert a space between the two opening parens */
+         space_add_after(first, 1);
+         /* find the closing paren that matches the 'first' open paren and force
+            a space before it */
+         cur  = next;
+         prev = cur;
+         while ((cur = chunk_get_next(cur)) != NULL)
+         {
+            if (cur->level == first->level)
+            {
+               space_add_after(prev, 1);
+               break;
+            }
+            prev = cur;
+         }
+      }
+      else if (chunk_is_str(first, ")", 1) && chunk_is_str(next, ")", 1))
+      {
+         /* insert a space between the two closing parens */
+         space_add_after(first, 1);
+         /* find the opening paren that matches the 'next' close paren and force
+            a space after it */
+         cur = first;
+         while ((cur = chunk_get_prev(cur)) != NULL)
+         {
+            if (cur->level == next->level)
+            {
+               space_add_after(cur, 1);
+               break;
+            }
+         }
+      }
+
+      first = next;
+   }
+}
+
+
 /**
  * Calculates the column difference between two chunks.
  * The rules are bent a bit here, as AV_IGNORE and AV_ADD become AV_FORCE.

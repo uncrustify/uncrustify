@@ -723,6 +723,14 @@ static void uncrustify_file(const char *data, int data_len, FILE *pfout,
    mark_comments();
 
    /**
+    * Add balanced spaces around nested params
+    */
+   if (cpd.settings[UO_sp_balance_nested_parens].b)
+   {
+      space_text_balance_nested_parens();
+   }
+
+   /**
     * Fix same-line inter-chunk spacing
     */
    space_text();

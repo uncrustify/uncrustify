@@ -83,6 +83,7 @@ void register_options(void)
    unc_add_option("sp_compare", UO_sp_compare, AT_IARF, "Add or remove space around compare operator '<', '>', '==', etc");
    unc_add_option("sp_inside_paren", UO_sp_inside_paren, AT_IARF, "Add or remove space inside '(' and ')'");
    unc_add_option("sp_paren_paren", UO_sp_paren_paren, AT_IARF, "Add or remove space between nested parens");
+   unc_add_option("sp_balance_nested_parens", UO_sp_balance_nested_parens, AT_BOOL, "Whether to balance spaces inside nested parens");
    unc_add_option("sp_paren_brace", UO_sp_paren_brace, AT_IARF, "Add or remove space between ')' and '{'");
    unc_add_option("sp_before_ptr_star", UO_sp_before_ptr_star, AT_IARF, "Add or remove space before pointer star '*'");
    unc_add_option("sp_between_ptr_star", UO_sp_between_ptr_star, AT_IARF, "Add or remove space between pointer stars '*'");
