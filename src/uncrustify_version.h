@@ -1,5 +1,5 @@
 /**
- * @file version.h
+ * @file uncrustify_version.h
  * Simply defines UNCRUSTIFY_VERSION.
  * I don't particularly like how autoconf and friends handle the version...
  *
@@ -8,9 +8,9 @@
  *
  * $Id$
  */
-#ifndef UNCRUSTIFY_VERSION_H
-#define UNCRUSTIFY_VERSION_H
+#ifndef UNCRUSTIFY_VERSION_H_INCLUDED
+#define UNCRUSTIFY_VERSION_H_INCLUDED
 
-#define UNCRUSTIFY_VERSION    "0.31"
+#define UNCRUSTIFY_VERSION    "0.32"
 
-#endif   /* UNCRUSTIFY_VERSION */
+#endif /* UNCRUSTIFY_VERSION_H_INCLUDED */
