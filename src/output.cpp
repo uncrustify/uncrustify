@@ -419,6 +419,22 @@ static_inline void add_spaces_after_star()
 }
 
 /**
+ * adds the body of the C comment, inserting a space inside any embedded
+ * C comment closures... "* /"
+ */
+static void add_converted_comment(chunk_t *pc)
+{
+   for (int idx = 2; idx < pc->len; idx++)
+   {
+      add_char(pc->str[idx]);
+      if ((pc->str[idx] == '*') && (pc->str[idx + 1] == '/'))
+      {
+         add_char(' ');
+      }
+   }
+}
+
+/**
  * Outputs the CPP comment at pc.
  * CPP comment combining is done here
  *
@@ -488,7 +504,7 @@ chunk_t *output_comment_cpp(chunk_t *first)
       {
          add_char(' ');
       }
-      add_text_len(&first->str[2], first->len - 2);
+      add_converted_comment(first);
       add_text_len(" */", 3);
       return(first);
    }
@@ -537,7 +553,7 @@ cpp_addline:
          {
             add_char(' ');
          }
-         add_text_len(&pc->str[2], pc->len - 2);
+         add_converted_comment(pc);
       }
    }
 

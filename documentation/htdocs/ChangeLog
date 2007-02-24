@@ -28,6 +28,11 @@ Plans for the next release
 ===============================================================================
 
 
+Changes in uncrustify-0.33
+-------------------------------------------------------------------------------
+ - Fix converting C++ comments with embedded C comments
+
+
 Changes in uncrustify-0.32
 -------------------------------------------------------------------------------
  - Enable align_proto_var_def for constructors
