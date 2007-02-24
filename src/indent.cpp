@@ -546,9 +546,17 @@ void indent_text(void)
             }
             else if (pc->parent_type == CT_CASE)
             {
-               /* The indent_case_brace setting affects the parent CT_CASE */
-               frm.pse[frm.pse_tos].indent_tmp += cpd.settings[UO_indent_case_brace].n;
-               frm.pse[frm.pse_tos].indent     += cpd.settings[UO_indent_case_brace].n;
+               /* An open brace with the parent of case does not indent by default
+                * UO_indent_case_brace can be used to indent the brace.
+                * So we need to take the CASE indent, subtract off the
+                * indent_size that was added above and then add indent_case_brace.
+                */
+               indent_column = frm.pse[frm.pse_tos - 1].indent - indent_size +
+                               cpd.settings[UO_indent_case_brace].n;
+
+               /* Stuff inside the brace still needs to be indented */
+               frm.pse[frm.pse_tos].indent     = indent_column + indent_size;
+               frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
             }
             else if ((pc->parent_type == CT_CLASS) && !cpd.settings[UO_indent_class].b)
             {
