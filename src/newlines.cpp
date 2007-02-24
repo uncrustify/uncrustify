@@ -701,7 +701,7 @@ static void newline_fnc_var_def(chunk_t *br_open, int nl_count)
    if (prev != NULL)
    {
       next = chunk_get_next_ncnl(prev);
-      if ((next == NULL) && (next->type != CT_BRACE_CLOSE))
+      if ((next != NULL) && (next->type != CT_BRACE_CLOSE))
       {
          newline_min_after(prev, 1 + cpd.settings[UO_nl_func_var_def_blk].n);
       }
