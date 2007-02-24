@@ -14,6 +14,7 @@
 30013 sim.cfg                          cpp/sim.h
 30014 ben.cfg                          cpp/ctor-var.cpp
 30015 ben.cfg                          cpp/exception.cpp
+30016 custom-open.cfg                  cpp/custom-open.cpp
 
 30020 ben.cfg                          cpp/bool.cpp
 30021 ben.cfg                          cpp/byref.cpp

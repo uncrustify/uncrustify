@@ -36,6 +36,8 @@ Changes in uncrustify-0.33
  - Eliminate indent_case_body, which wasn't used
  - Change rules for indenting case braces and the use of indent_case_brace
  - Fix variable declaration detection at the start of a code block
+ - Add support for custom open/close indenting macros
+ - Fix the config updating routines to NOT lose custom types and stuff
 
 
 Changes in uncrustify-0.32

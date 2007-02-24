@@ -646,6 +646,15 @@ argval_t do_space(chunk_t *first, chunk_t *second)
       return(AV_FORCE);
    }
 
+   if ((first->type == CT_CUSTOM_OPEN) || (first->type == CT_CUSTOM_CLOSE))
+   {
+      if (second->type == CT_PAREN_OPEN)
+      {
+         return(cpd.settings[UO_sp_func_call_paren].a);
+      }
+      return(AV_IGNORE);
+   }
+
    for (idx = 0; idx < (int)ARRAY_SIZE(no_space_table); idx++)
    {
       if (((no_space_table[idx].first == CT_UNKNOWN) ||

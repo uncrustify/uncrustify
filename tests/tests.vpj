@@ -102,6 +102,7 @@
 			<F N="config/cpp_to_c-1.cfg"/>
 			<F N="config/cpp_to_c-2.cfg"/>
 			<F N="config/cpp_to_c-3.cfg"/>
+			<F N="config/custom-open.cfg"/>
 			<F N="config/d-tst2.cfg"/>
 			<F N="config/d.cfg"/>
 			<F N="config/d2.cfg"/>
@@ -109,10 +110,12 @@
 			<F N="config/func-def-1.cfg"/>
 			<F N="config/func-def-2.cfg"/>
 			<F N="config/func-def-3.cfg"/>
+			<F N="config/getset.cfg"/>
 			<F N="config/indent-1.cfg"/>
 			<F N="config/indent.cfg"/>
 			<F N="config/mod-paren.cfg"/>
 			<F N="config/mono.cfg"/>
+			<F N="config/nl-comment.cfg"/>
 			<F N="config/nl_after_func_body.cfg"/>
 			<F N="config/nl_class-a.cfg"/>
 			<F N="config/nl_class-r.cfg"/>
@@ -133,6 +136,7 @@
 			<F N="config/sim.cfg"/>
 			<F N="config/template_sp-force.cfg"/>
 			<F N="config/template_sp-remove.cfg"/>
+			<F N="config/width-2.cfg"/>
 			<F N="config/width.cfg"/>
 			<F N="config/xml-str.cfg"/>
 		</Folder>
@@ -185,6 +189,7 @@
 				<F N="input/c/xml.c"/>
 			</Folder>
 			<Folder Name="cpp">
+				<F N="input/cpp/align-func-params.cpp"/>
 				<F N="input/cpp/alt_tokens.cpp"/>
 				<F N="input/cpp/bool.cpp"/>
 				<F N="input/cpp/byref.cpp"/>
@@ -192,7 +197,10 @@
 				<F N="input/cpp/class.h"/>
 				<F N="input/cpp/constructor.cpp"/>
 				<F N="input/cpp/cout.cpp"/>
+				<F N="input/cpp/ctor-var.cpp"/>
+				<F N="input/cpp/custom-open.cpp"/>
 				<F N="input/cpp/Example.h"/>
+				<F N="input/cpp/exception.cpp"/>
 				<F N="input/cpp/extern_c.h"/>
 				<F N="input/cpp/function-def.cpp"/>
 				<F N="input/cpp/misc.cpp"/>

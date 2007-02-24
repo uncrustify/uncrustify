@@ -427,6 +427,18 @@ void output_types(FILE *pfile)
    }
 }
 
+const chunk_tag_t *get_custom_keyword_idx(int &idx)
+{
+   const chunk_tag_t *ct = NULL;
+
+   if ((idx >= 0) && (idx < wl.active))
+   {
+      ct = &wl.p_tags[idx];
+   }
+   idx++;
+   return(ct);
+}
+
 void clear_keyword_file(void)
 {
    if (wl.p_tags != NULL)

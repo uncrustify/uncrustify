@@ -406,6 +406,13 @@ void indent_text(void)
                indent_pse_pop(frm, pc);
             }
 
+            /* End any custom macro-based open/closes */
+            if ((frm.pse[frm.pse_tos].type == CT_CUSTOM_OPEN) &&
+                (pc->type == CT_CUSTOM_CLOSE))
+            {
+               indent_pse_pop(frm, pc);
+            }
+
             /* End any CPP class colon crap */
             if ((frm.pse[frm.pse_tos].type == CT_CLASS_COLON) &&
                 ((pc->type == CT_BRACE_OPEN) ||
@@ -624,6 +631,14 @@ void indent_text(void)
          indent_pse_push(frm, pc);
          frm.pse[frm.pse_tos].indent     = frm.pse[frm.pse_tos - 1].indent + indent_size;
          frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
+      }
+      else if (pc->type == CT_CUSTOM_OPEN)
+      {
+         frm.level++;
+         indent_pse_push(frm, pc);
+         frm.pse[frm.pse_tos].indent     = frm.pse[frm.pse_tos - 1].indent + indent_size;
+         frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
+         frm.pse[frm.pse_tos].indent_tab = frm.pse[frm.pse_tos].indent;
       }
       else if (pc->type == CT_CASE)
       {

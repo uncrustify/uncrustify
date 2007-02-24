@@ -535,6 +535,14 @@ int load_option_file(const char *filename)
       {
          add_define(args[1], args[2]);
       }
+      else if (strcasecmp(args[0], "custom-open") == 0)
+      {
+         add_keyword(args[1], CT_CUSTOM_OPEN, LANG_ALL);
+      }
+      else if (strcasecmp(args[0], "custom-close") == 0)
+      {
+         add_keyword(args[1], CT_CUSTOM_CLOSE, LANG_ALL);
+      }
       else
       {
          /* must be a regular option = value */
@@ -560,7 +568,7 @@ int save_option_file(FILE *pfile, bool withDoc)
    int         name_len;
    int         idx;
 
-   /* Print the all out */
+   /* Print the options by group */
    for (group_map_it jt = group_map.begin(); jt != group_map.end(); jt++)
    {
       if (withDoc)
@@ -611,6 +619,42 @@ int save_option_file(FILE *pfile, bool withDoc)
          fputs("\n", pfile);
       }
    }
+
+   /* Print custom keywords */
+   const chunk_tag_t *ct;
+   idx = 0;
+   while ((ct = get_custom_keyword_idx(idx)) != NULL)
+   {
+      if (ct->type == CT_TYPE)
+      {
+         fprintf(pfile, "type %*.s%s\n",
+                 cpd.max_option_name_len - 4, " ", ct->tag);
+      }
+      else if (ct->type == CT_CUSTOM_OPEN)
+      {
+         fprintf(pfile, "custom-open %*.s%s\n",
+                 cpd.max_option_name_len - 11, " ", ct->tag);
+      }
+      else if (ct->type == CT_CUSTOM_CLOSE)
+      {
+         fprintf(pfile, "custom-close %*.s%s\n",
+                 cpd.max_option_name_len - 12, " ", ct->tag);
+      }
+      else
+      {
+         LOG_FMT(LWARN, "%s: unable to save '%s'\n", __func__, ct->tag);
+      }
+   }
+
+   /* Print custom defines */
+   const define_tag_t *dt;
+   idx = 0;
+   while ((dt = get_define_idx(idx)) != NULL)
+   {
+      fprintf(pfile, "define %*.s%s \"%s\"\n",
+              cpd.max_option_name_len - 6, " ", dt->tag, dt->value);
+   }
+
    fclose(pfile);
    return(0);
 }

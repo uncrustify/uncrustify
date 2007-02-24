@@ -211,6 +211,18 @@ void output_defines(FILE *pfile)
    }
 }
 
+const define_tag_t *get_define_idx(int &idx)
+{
+   const define_tag_t *dt = NULL;
+
+   if ((idx >= 0) && (idx < dl.active))
+   {
+      dt = &dl.p_tags[idx];
+   }
+   idx++;
+   return(dt);
+}
+
 void clear_defines(void)
 {
    if (dl.p_tags != NULL)
