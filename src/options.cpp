@@ -112,7 +112,7 @@ void register_options(void)
    unc_add_option("sp_inside_braces_struct", UO_sp_inside_braces_struct, AT_IARF, "Add or remove space inside struct/union '{' and '}'");
    unc_add_option("sp_inside_braces", UO_sp_inside_braces, AT_IARF, "Add or remove space inside '{' and '}'");
    unc_add_option("sp_inside_angle", UO_sp_inside_angle, AT_IARF, "Add or remove space inside '<' and '>'");
-   unc_add_option("sp_type_func", UO_sp_type_func, AT_IARF, "Add or remove space between return type and function name (a minimum of 1 is forced except for pointer return types)");
+   unc_add_option("sp_type_func", UO_sp_type_func, AT_IARF, "Add or remove space between return type and function name\nA minimum of 1 is forced except for pointer return types.");
    unc_add_option("sp_func_proto_paren", UO_sp_func_proto_paren, AT_IARF, "Add or remove space between function name and '(' on function declaration");
    unc_add_option("sp_func_def_paren", UO_sp_func_def_paren, AT_IARF, "Add or remove space between function name and '(' on function definition");
    unc_add_option("sp_inside_fparens", UO_sp_inside_fparens, AT_IARF, "Add or remove space inside empty function '()'");
@@ -134,10 +134,10 @@ void register_options(void)
    unc_add_option("sp_getset_brace", UO_sp_getset_brace, AT_IARF, "Add or remove space between get/set and '{' if on the same line");
 
    unc_begin_group(UG_indent, "Indenting");
-   unc_add_option("indent_columns", UO_indent_columns, AT_NUM, "The number of columns to indent per level (usually 2, 3, 4, or 8)");
+   unc_add_option("indent_columns", UO_indent_columns, AT_NUM, "The number of columns to indent per level.\nUsually 2, 3, 4, or 8.");
    unc_add_option("indent_with_tabs", UO_indent_with_tabs, AT_NUM, "How to use tabs when indenting code\n0=spaces only\n1=indent with tabs, align with spaces\n2=indent and align with tabs");
    unc_add_option("indent_align_string", UO_indent_align_string, AT_BOOL, "Whether to indent strings broken by '\\' so that they line up");
-   unc_add_option("indent_xml_string", UO_indent_xml_string, AT_NUM, "The number of spaces to indent multi-line XML strings. Requires indent_align_string=True");
+   unc_add_option("indent_xml_string", UO_indent_xml_string, AT_NUM, "The number of spaces to indent multi-line XML strings.\nRequires indent_align_string=True");
    unc_add_option("indent_brace", UO_indent_brace, AT_NUM, "Spaces to indent '{' from level");
    unc_add_option("indent_braces", UO_indent_braces, AT_BOOL, "Whether braces are indented to the body level");
    unc_add_option("indent_braces_no_func", UO_indent_braces_no_func, AT_BOOL, "Disabled indenting function braces if indent_braces is true");
@@ -146,13 +146,12 @@ void register_options(void)
    unc_add_option("indent_class", UO_indent_class, AT_BOOL, "Whether the 'class' body is indented");
    unc_add_option("indent_class_colon", UO_indent_class_colon, AT_BOOL, "Whether to indent the stuff after a leading class colon");
    unc_add_option("indent_func_call_param", UO_indent_func_call_param, AT_BOOL, "Whether to indent continued function call parameters one indent level (true) or aligns instead of indent (false)");
-   unc_add_option("indent_member", UO_indent_member, AT_NUM, "The number of spaces to indent a continued '->' or '.'\nUsually set to indent_columns.");
+   unc_add_option("indent_member", UO_indent_member, AT_NUM, "The number of spaces to indent a continued '->' or '.'\nUsually set to 0, 1, or indent_columns.");
    unc_add_option("indent_sing_line_comments", UO_indent_sing_line_comments, AT_NUM, "Spaces to indent single line ('//') comments on lines before code");
-   unc_add_option("indent_switch_case", UO_indent_switch_case, AT_NUM, "Spaces to indent 'case' from 'switch'");
-   unc_add_option("indent_case_body", UO_indent_case_body, AT_NUM, "Spaces to indent 'case' body from 'case'");
-   unc_add_option("indent_case_brace", UO_indent_case_brace, AT_NUM, "Spaces to indent '{' from 'case'");
+   unc_add_option("indent_switch_case", UO_indent_switch_case, AT_NUM, "Spaces to indent 'case' from 'switch'\nUsually 0 or indent_columns.");
+   unc_add_option("indent_case_brace", UO_indent_case_brace, AT_NUM, "Spaces to indent '{' from 'case'.\nBy default, the brace will appear under the 'c' in case.\nUsually set to 0 or indent_columns.");
    unc_add_option("indent_col1_comment", UO_indent_col1_comment, AT_BOOL, "Whether to indent comments found in first column");
-   unc_add_option("indent_label", UO_indent_label, AT_NUM, "How to indent goto labels (>0=absolute column where 1 is the leftmost column, <=0=subtract from brace indent)");
+   unc_add_option("indent_label", UO_indent_label, AT_NUM, "How to indent goto labels\n >0 : absolute column where 1 is the leftmost column\n <=0 : subtract from brace indent");
    unc_add_option("indent_access_spec", UO_indent_access_spec, AT_NUM, "Same as indent_label, but for access specifiers that are followed by a colon");
    unc_add_option("indent_paren_nl", UO_indent_paren_nl, AT_BOOL, "If an open paren is followed by a newline, indent the next line so that it lines up after the open paren (not recommended)");
    unc_add_option("indent_square_nl", UO_indent_square_nl, AT_BOOL, "If an open square is followed by a newline, indent the next line so that it lines up after the open square (not recommended)");
@@ -219,9 +218,9 @@ void register_options(void)
    unc_add_option("nl_after_func_proto", UO_nl_after_func_proto, AT_NUM, "The number of newlines after a function prototype, if followed by another function prototype");
    unc_add_option("nl_after_func_proto_group", UO_nl_after_func_proto_group, AT_NUM, "The number of newlines after a function prototype, if not followed by another function prototype");
    unc_add_option("nl_after_func_body", UO_nl_after_func_body, AT_NUM, "The number of newlines after '}' of the function body");
-   unc_add_option("nl_before_block_comment", UO_nl_before_block_comment, AT_NUM, "The minimum number of newlines before a multi-line comment (doesn't apply if after a brace open or another multi-line comment)");
-   unc_add_option("nl_before_c_comment", UO_nl_before_c_comment, AT_NUM, "The minimum number of newlines before a single-line C comment (doesn't apply if after a brace open or other single-line C comments)");
-   unc_add_option("nl_before_cpp_comment", UO_nl_before_cpp_comment, AT_NUM, "The minimum number of newlines before a CPP comment (doesn't apply if after a brace open or other CPP comments)");
+   unc_add_option("nl_before_block_comment", UO_nl_before_block_comment, AT_NUM, "The minimum number of newlines before a multi-line comment.\nDoesn't apply if after a brace open or another multi-line comment.");
+   unc_add_option("nl_before_c_comment", UO_nl_before_c_comment, AT_NUM, "The minimum number of newlines before a single-line C comment.\nDoesn't apply if after a brace open or other single-line C comments.");
+   unc_add_option("nl_before_cpp_comment", UO_nl_before_cpp_comment, AT_NUM, "The minimum number of newlines before a CPP comment.\nDoesn't apply if after a brace open or other CPP comments.");
    unc_add_option("eat_blanks_after_open_brace", UO_eat_blanks_after_open_brace, AT_BOOL, "Whether to remove blank lines after '{'");
    unc_add_option("eat_blanks_before_close_brace", UO_eat_blanks_before_close_brace, AT_BOOL, "Whether to remove blank lines before '}'");
 
@@ -239,7 +238,7 @@ void register_options(void)
    unc_add_option("align_number_left", UO_align_number_left, AT_BOOL, "Whether to left-align numbers");
    unc_add_option("align_func_params", UO_align_func_params, AT_BOOL, "Align variable definitions in prototypes and functions");
    unc_add_option("align_var_def_span", UO_align_var_def_span, AT_NUM, "The span for aligning variable definitions (0=don't align)");
-   unc_add_option("align_var_def_star_style", UO_align_var_def_star_style, AT_NUM, "How to align the star in variable definitions. 0=Part of the type, 1=Part of the variable, 2=Dangling");
+   unc_add_option("align_var_def_star_style", UO_align_var_def_star_style, AT_NUM, "How to align the star in variable definitions.\n 0=Part of the type\n 1=Part of the variable\n 2=Dangling");
    unc_add_option("align_var_def_thresh", UO_align_var_def_thresh, AT_NUM, "The threshold for aligning variable definitions (0=no limit)");
    unc_add_option("align_var_def_colon", UO_align_var_def_colon, AT_BOOL, "Whether to align the colon in struct bit fields");
    unc_add_option("align_var_def_inline", UO_align_var_def_inline, AT_BOOL, "Whether to align inline struct/enum/union variable definitions");
