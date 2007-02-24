@@ -1599,7 +1599,7 @@ static chunk_t *mark_variable_definition(chunk_t *start)
 
    pc = start;
    while ((pc != NULL) && !chunk_is_semicolon(pc) &&
-          (pc->level >= start->level))
+          (pc->level >= start->level) && (pc->type != CT_BRACE_OPEN))
    {
       if ((pc->type == CT_WORD) || (pc->type == CT_FUNC_CTOR_VAR))
       {
