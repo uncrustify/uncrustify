@@ -201,6 +201,7 @@ void output_text(FILE *pfile)
 
    cpd.fout = pfile;
 
+   cpd.column = 1;
    for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next(pc))
    {
       if (pc->type == CT_NEWLINE)
@@ -443,7 +444,7 @@ static void add_converted_comment(chunk_t *pc)
 chunk_t *output_comment_cpp(chunk_t *first)
 {
    int col    = first->column;
-   int col_br = 1 + (first->brace_level * cpd.settings[UO_indent_columns].n);
+   int col_br = first->column_indent;
 
    /* Make sure we have at least one space past the last token */
    if (first->parent_type == CT_COMMENT_END)
