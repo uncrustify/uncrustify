@@ -3,12 +3,12 @@ void foo(void)
 	switch(ch)
 	{
 		case 'a':
-			{
-				handle_a();
-				multiline(123,
-				          345);
-				break;
-			}
+		{
+			handle_a();
+			multiline(123,
+			          345);
+			break;
+		}
 
 		case 'b':
 			handle_b();
@@ -24,10 +24,34 @@ void foo(void)
 			break;
 
 		case 'e':
+		{
+			handle_a();
+			multiline(123,
+			          345);
+		}
+			break;
+
+		case (case1):
+		{
+			//do stuff
+			break;
+		}
+
+		case (case2):
+		{
+			//do stuff
+			break;
+		}
+
+		case (case3):
+
+			/*do stuff*/
+			break;
+
+		case (case3):
+			statement();
 			{
-				handle_a();
-				multiline(123,
-				          345);
+				another_statement();
 			}
 			break;
 

@@ -4,8 +4,8 @@ int foo(int op)
 	switch (op)
 	{
 		case 1: {
-				do_something();
-				return 0;
+			do_something();
+			return 0;
 		}
 
 		case 2:

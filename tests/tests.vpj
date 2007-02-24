@@ -111,6 +111,7 @@
 			<F N="config/func-def-3.cfg"/>
 			<F N="config/indent-1.cfg"/>
 			<F N="config/indent.cfg"/>
+			<F N="config/mod-paren.cfg"/>
 			<F N="config/mono.cfg"/>
 			<F N="config/nl_after_func_body.cfg"/>
 			<F N="config/nl_class-a.cfg"/>

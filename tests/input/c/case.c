@@ -31,6 +31,27 @@ void foo(void)
       }
       break;
 
+   case (case1):
+   {
+           //do stuff
+       break;
+   }
+   case (case2):
+       {
+           //do stuff
+       break;
+       }
+   case (case3):
+
+           /*do stuff*/
+       break;
+   case (case3):
+       statement();
+       {
+          another_statement();
+       }
+       break;
+
    default:
       handle_default();
       multiline(123,
