@@ -673,6 +673,7 @@ static void newlines_do_else(chunk_t *start, argval_t nl_opt)
 static void newline_fnc_var_def(chunk_t *br_open, int nl_count)
 {
    chunk_t *prev = NULL;
+   chunk_t *next;
    chunk_t *pc;
 
    pc = chunk_get_next_ncnl(br_open);
@@ -684,7 +685,7 @@ static void newline_fnc_var_def(chunk_t *br_open, int nl_count)
          continue;
       }
 
-      if ((pc->type == CT_WORD) &&
+      if (((pc->type == CT_WORD) || (pc->type == CT_FUNC_CTOR_VAR)) &&
           ((pc->flags & PCF_VAR_1ST) != 0))
       {
          pc   = chunk_get_next_type(pc, CT_SEMICOLON, pc->level);
@@ -699,7 +700,11 @@ static void newline_fnc_var_def(chunk_t *br_open, int nl_count)
    /* prev is either NULL or points to a semicolon */
    if (prev != NULL)
    {
-      newline_min_after(prev, 1 + cpd.settings[UO_nl_func_var_def_blk].n);
+      next = chunk_get_next_ncnl(prev);
+      if ((next == NULL) && (next->type != CT_BRACE_CLOSE))
+      {
+         newline_min_after(prev, 1 + cpd.settings[UO_nl_func_var_def_blk].n);
+      }
    }
 }
 

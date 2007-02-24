@@ -1579,6 +1579,7 @@ static chunk_t *skip_expression(chunk_t *start)
  * int   a = 3, b, c = 2;              ## called with 'a'
  * foo_t f = {1, 2, 3}, g = {5, 6, 7}; ## called with 'f'
  * struct {...} *a, *b;                ## called with 'a' or '*'
+ * myclass a(4);
  */
 static chunk_t *mark_variable_definition(chunk_t *start)
 {
@@ -1600,7 +1601,7 @@ static chunk_t *mark_variable_definition(chunk_t *start)
    while ((pc != NULL) && !chunk_is_semicolon(pc) &&
           (pc->level >= start->level))
    {
-      if (pc->type == CT_WORD)
+      if ((pc->type == CT_WORD) || (pc->type == CT_FUNC_CTOR_VAR))
       {
          pc->flags |= flags;
          flags     &= ~PCF_VAR_1ST;
@@ -1848,6 +1849,8 @@ static void mark_function(chunk_t *pc)
 
    if (pc->type == CT_FUNC_CTOR_VAR)
    {
+      pc->flags |= PCF_VAR_1ST_DEF;
+
       LOG_FMT(LFCN, "Detected [%s] %.*s on line %d col %d\n",
               get_token_name(pc->type),
               pc->len, pc->str, pc->orig_line, pc->orig_col);
