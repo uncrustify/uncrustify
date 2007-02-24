@@ -75,7 +75,7 @@ else:
 	PASS_COLOR     = FG_GREEN
 	MISMATCH_COLOR = FG_RED #REVERSE
 
-log_level = 1
+log_level = 0
 
 def usage_exit():
 	print "Usage: \n" + sys.argv[0] + " testfile"
@@ -142,10 +142,10 @@ if __name__ == '__main__':
 	args = []
 	the_tests = []
 	for arg in sys.argv[1:]:
-		if arg == '-q':
-			log_level = 0
-		elif arg == '-v':
-			log_level = 2
+		if arg == '-v':
+			log_level += 1
+		elif arg == '-vv':
+			log_level += 2
 		else:
 			args.append(arg)
 
