@@ -1495,6 +1495,7 @@ static chunk_t *fix_var_def(chunk_t *start)
            (pc->type == CT_WORD) ||
            (pc->type == CT_QUALIFIER) ||
            (pc->type == CT_DC_MEMBER) ||
+           (pc->type == CT_BYREF) ||
            chunk_is_star(pc)))
    {
       LOG_FMT(LFVD, " %.*s[%s]", pc->len, pc->str, get_token_name(pc->type));
