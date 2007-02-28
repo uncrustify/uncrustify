@@ -324,7 +324,7 @@ static const chunk_tag_t *kw_static_match(const chunk_tag_t *tag)
 const chunk_tag_t *find_keyword(const char *word, int len)
 {
    chunk_tag_t       tag;
-   char              buf[32];
+   char              buf[128];
    const chunk_tag_t *p_ret;
 
    if (len > (int)(sizeof(buf) - 1))
@@ -366,7 +366,7 @@ const chunk_tag_t *find_keyword(const char *word, int len)
 int load_keyword_file(const char *filename)
 {
    FILE *pf;
-   char buf[160];
+   char buf[256];
    char *ptr;
    char *args[3];
    int  argc;
@@ -443,6 +443,11 @@ void clear_keyword_file(void)
 {
    if (wl.p_tags != NULL)
    {
+      for (int idx = 0; idx < wl.active; idx++)
+      {
+         free((void *)wl.p_tags[idx].tag);
+         wl.p_tags[idx].tag = NULL;
+      }
       free(wl.p_tags);
       wl.p_tags = NULL;
    }

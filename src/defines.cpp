@@ -227,6 +227,16 @@ void clear_defines(void)
 {
    if (dl.p_tags != NULL)
    {
+      for (int idx = 0; idx < dl.active; idx++)
+      {
+         free((void *)dl.p_tags[idx].tag);
+         dl.p_tags[idx].tag = NULL;
+         if (dl.p_tags[idx].value != NULL)
+         {
+            free((void *)dl.p_tags[idx].value);
+            dl.p_tags[idx].value = NULL;
+         }
+      }
       free(dl.p_tags);
       dl.p_tags = NULL;
    }
