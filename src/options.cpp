@@ -217,7 +217,8 @@ void register_options(void)
    unc_add_option("nl_max", UO_nl_max, AT_NUM, "The maximum consecutive newlines");
    unc_add_option("nl_after_func_proto", UO_nl_after_func_proto, AT_NUM, "The number of newlines after a function prototype, if followed by another function prototype");
    unc_add_option("nl_after_func_proto_group", UO_nl_after_func_proto_group, AT_NUM, "The number of newlines after a function prototype, if not followed by another function prototype");
-   unc_add_option("nl_after_func_body", UO_nl_after_func_body, AT_NUM, "The number of newlines after '}' of the function body");
+   unc_add_option("nl_after_func_body", UO_nl_after_func_body, AT_NUM, "The number of newlines after '}' of a multi-line function body");
+   unc_add_option("nl_after_func_body_one_liner", UO_nl_after_func_body_one_liner, AT_NUM, "The number of newlines after '}' of a single line function body");
    unc_add_option("nl_before_block_comment", UO_nl_before_block_comment, AT_NUM, "The minimum number of newlines before a multi-line comment.\nDoesn't apply if after a brace open or another multi-line comment.");
    unc_add_option("nl_before_c_comment", UO_nl_before_c_comment, AT_NUM, "The minimum number of newlines before a single-line C comment.\nDoesn't apply if after a brace open or other single-line C comments.");
    unc_add_option("nl_before_cpp_comment", UO_nl_before_cpp_comment, AT_NUM, "The minimum number of newlines before a CPP comment.\nDoesn't apply if after a brace open or other CPP comments.");

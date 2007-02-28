@@ -38,6 +38,7 @@ Changes in uncrustify-0.33
  - Fix variable declaration detection at the start of a code block
  - Add support for custom open/close indenting macros
  - Fix the config updating routines to NOT lose custom types and stuff
+ - Add nl_class_leave_one_liners
 
 
 Changes in uncrustify-0.32

@@ -1,29 +1,38 @@
 class BSRRE1D_file : PhysicalFile
 {
-	public BSRRE1D_file()
-	{
+	int getFoo() {
+		return(m_foo);
+	}
+
+
+
+	void setFoo(int foo) {
+		m_foo = foo;
+	}
+
+
+
+	public BSRRE1D_file() {
 		this.addFormatName("BSRRE1DF");
 	}
 
 
 
-	public void xxx()
-	{
+	private int m_foo;
+	public void xxx() {
 		ahoj();
 	} // comment
 
 
 
-	public void yyy()
-	{
+	public void yyy() {
 		ahoj();
 	}
 
 
 
 	/* comment 2 */
-	public void xxx()
-	{
+	public void xxx() {
 		ahoj();
 	}
 }

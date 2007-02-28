@@ -39,6 +39,7 @@
 30051 nl_namespace-a.cfg               cpp/nl-namespace.h
 
 30055 nl_after_func_body.cfg           cpp/nl_func.cpp
+30056 nl_after_func_body-2.cfg         cpp/nl_func.cpp
 
 # Class colon positioning
 30061 class-colon-pos-eol.cfg          cpp/class-init.cpp

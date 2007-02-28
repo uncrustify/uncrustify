@@ -116,6 +116,7 @@
 			<F N="config/mod-paren.cfg"/>
 			<F N="config/mono.cfg"/>
 			<F N="config/nl-comment.cfg"/>
+			<F N="config/nl_after_func_body-2.cfg"/>
 			<F N="config/nl_after_func_body.cfg"/>
 			<F N="config/nl_class-a.cfg"/>
 			<F N="config/nl_class-r.cfg"/>
