@@ -1531,7 +1531,6 @@ void newlines_class_colon_pos(void)
 {
    chunk_t    *pc;
    chunk_t    *next;
-   chunk_t    *nextnext;
    chunk_t    *prev;
    tokenpos_e mode    = cpd.settings[UO_pos_class_colon].tp;
    chunk_t    *ccolon = NULL;
@@ -1602,10 +1601,8 @@ void newlines_class_colon_pos(void)
             }
             else if (cpd.settings[UO_nl_class_init_args].a == AV_REMOVE)
             {
-               next     = chunk_get_next(pc);
-               nextnext = chunk_get_next_ncnl(pc);
-               if ((next != NULL) && (nextnext != NULL) &&
-                   (next->type == CT_NEWLINE))
+               next = chunk_get_next(pc);
+               if ((next != NULL) && (next->type == CT_NEWLINE))
                {
                   chunk_del(next);
                }
