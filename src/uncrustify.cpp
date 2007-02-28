@@ -122,6 +122,7 @@ static void usage_exit(const char *msg, const char *argv0, int code)
            " -p FILE      : dump debug info to a file\n"
            " -L SEV       : Set the log severity (see log_levels.h)\n"
            " -s           : Show the log severity in the logs\n"
+           " --decode FLAG: Print FLAG as text and exit\n"
            "\n"
            "If no input files are specified, the input is read from stdin\n"
            "If -F is used or files are specified on the command line, the output is 'prefix/filename' + suffix\n"
@@ -194,6 +195,12 @@ int main(int argc, char *argv[])
    {
       logmask_from_string(p_arg, &mask);
       log_set_mask(&mask);
+   }
+
+   if ((p_arg = arg.Param("--decode")) != NULL)
+   {
+      log_pcf_flags(LSYS, strtoul(p_arg, NULL, 16));
+      exit(EXIT_SUCCESS);
    }
 
    /* Get the config file name */
