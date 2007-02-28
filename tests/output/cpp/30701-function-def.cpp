@@ -60,3 +60,19 @@ classname::method2()
    foo2();
 }
 
+const int&
+className::method1(
+   void
+) const
+{
+   // stuff
+}
+
+const longtypename&
+className::method2(
+   void
+) const
+{
+   // stuff
+}
+
