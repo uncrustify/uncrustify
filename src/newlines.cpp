@@ -1605,9 +1605,7 @@ void newlines_class_colon_pos(void)
                next     = chunk_get_next(pc);
                nextnext = chunk_get_next_ncnl(pc);
                if ((next != NULL) && (nextnext != NULL) &&
-                   (next->type == CT_NEWLINE)) /* &&
-                   ((nextnext->type == CT_BRACE_OPEN) ||
-                    (nextnext->type == CT_SEMICOLON))) */
+                   (next->type == CT_NEWLINE))
                {
                   chunk_del(next);
                }
