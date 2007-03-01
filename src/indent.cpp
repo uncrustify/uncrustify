@@ -640,6 +640,13 @@ void indent_text(void)
          frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
          frm.pse[frm.pse_tos].indent_tab = frm.pse[frm.pse_tos].indent;
       }
+      else if (pc->type == CT_CUSTOM_ELSE)
+      {
+         if (frm.pse[frm.pse_tos].type == CT_CUSTOM_OPEN)
+         {
+            indent_column = frm.pse[frm.pse_tos - 1].indent;
+         }
+      }
       else if (pc->type == CT_CASE)
       {
          /* Start a case - indent UO_indent_switch_case from the switch level */

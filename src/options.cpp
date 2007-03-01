@@ -544,6 +544,10 @@ int load_option_file(const char *filename)
       {
          add_keyword(args[1], CT_CUSTOM_CLOSE, LANG_ALL);
       }
+      else if (strcasecmp(args[0], "custom-else") == 0)
+      {
+         add_keyword(args[1], CT_CUSTOM_ELSE, LANG_ALL);
+      }
       else
       {
          /* must be a regular option = value */
@@ -640,6 +644,11 @@ int save_option_file(FILE *pfile, bool withDoc)
       {
          fprintf(pfile, "custom-close %*.s%s\n",
                  cpd.max_option_name_len - 12, " ", ct->tag);
+      }
+      else if (ct->type == CT_CUSTOM_ELSE)
+      {
+         fprintf(pfile, "custom-else %*.s%s\n",
+                 cpd.max_option_name_len - 11, " ", ct->tag);
       }
       else
       {

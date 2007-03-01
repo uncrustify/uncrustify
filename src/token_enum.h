@@ -160,6 +160,7 @@ typedef enum
 
    CT_CUSTOM_OPEN,      /* stuff specified via custom-pair */
    CT_CUSTOM_CLOSE,
+   CT_CUSTOM_ELSE,
 
    /* agregate types */
    CT_LABEL,            /* a non-case label */

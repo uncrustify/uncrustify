@@ -646,7 +646,9 @@ argval_t do_space(chunk_t *first, chunk_t *second)
       return(AV_FORCE);
    }
 
-   if ((first->type == CT_CUSTOM_OPEN) || (first->type == CT_CUSTOM_CLOSE))
+   if ((first->type == CT_CUSTOM_OPEN) ||
+       (first->type == CT_CUSTOM_CLOSE) ||
+       (first->type == CT_CUSTOM_ELSE))
    {
       if (second->type == CT_PAREN_OPEN)
       {
