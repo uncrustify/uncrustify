@@ -293,6 +293,7 @@ void indent_text(void)
    int                cout_level          = 0; // for aligning << stuff
    int                parent_token_indent = 0;
    int                xml_indent          = 0;
+   bool               token_used;
 
    memset(&frm, 0, sizeof(frm));
 
@@ -370,6 +371,7 @@ void indent_text(void)
        * Handle non-brace closures
        */
 
+      token_used = false;
       int old_pse_tos;
       do
       {
@@ -407,9 +409,11 @@ void indent_text(void)
             }
 
             /* End any custom macro-based open/closes */
-            if ((frm.pse[frm.pse_tos].type == CT_CUSTOM_OPEN) &&
+            if (!token_used &&
+                (frm.pse[frm.pse_tos].type == CT_CUSTOM_OPEN) &&
                 (pc->type == CT_CUSTOM_CLOSE))
             {
+               token_used = true;
                indent_pse_pop(frm, pc);
             }
 
