@@ -18,3 +18,9 @@ void className::set(const objectName& obj)
 }
 
 
+MACRO2_BEGIN_STUFF
+	// comment
+MACRO2_ELSE_STUFF
+	/* Comment */
+MACRO2_END_STUFF
+
