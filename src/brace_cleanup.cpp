@@ -310,6 +310,7 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
        (pc->type == CT_BRACE_CLOSE) ||
        (pc->type == CT_VBRACE_CLOSE) ||
        (pc->type == CT_ANGLE_CLOSE) ||
+       (pc->type == CT_CUSTOM_CLOSE) ||
        (pc->type == CT_SQUARE_CLOSE))
    {
       /* Change CT_PAREN_CLOSE into CT_SPAREN_CLOSE or CT_FPAREN_CLOSE */
@@ -435,10 +436,12 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
        (pc->type == CT_FPAREN_OPEN) ||
        (pc->type == CT_SPAREN_OPEN) ||
        (pc->type == CT_ANGLE_OPEN) ||
+       (pc->type == CT_CUSTOM_OPEN) ||
        (pc->type == CT_SQUARE_OPEN))
    {
       frm->level++;
-      if (pc->type == CT_BRACE_OPEN)
+      if ((pc->type == CT_BRACE_OPEN) ||
+          (pc->type == CT_CUSTOM_OPEN))
       {
          frm->brace_level++;
       }
