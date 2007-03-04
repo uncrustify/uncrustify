@@ -21,6 +21,7 @@
 const char *get_token_name(c_token_t token);
 void log_pcf_flags(log_sev_t sev, UINT32 flags);
 const char *path_basename(const char *path);
+const char *get_file_extension(int &idx);
 
 
 /*
@@ -43,7 +44,6 @@ void add_char(char ch);
  */
 
 void unc_begin_group(uncrustify_groups id, const char *short_desc, const char *long_desc = NULL);
-void unc_add_option(const char *name, uncrustify_options id, argtype_e type, const char *short_desc = NULL, const char *long_desc = NULL);
 void register_options(void);
 void set_option_defaults(void);
 int load_option_file(const char *filename);
@@ -215,6 +215,12 @@ void do_code_width(void);
 void pawn_prescan(void);
 void pawn_add_virtual_semicolons();
 chunk_t *pawn_check_vsemicolon(chunk_t *pc);
+
+
+/*
+ * universalindentgui.cpp
+ */
+void print_universal_indent_cfg(FILE *pfile);
 
 
 /**

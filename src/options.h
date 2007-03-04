@@ -387,22 +387,18 @@ struct option_map_value
    uncrustify_options id;
    uncrustify_groups  group_id;
    argtype_e          type;
+   int                min_val;
+   int                max_val;
    const char         *name;
    const char         *short_desc;
    const char         *long_desc;
 };
 
-#ifdef DEFINE_OPTION_NAME_MAP
 
-std::map <std::string, option_map_value> option_name_map;
 typedef std::map <std::string, option_map_value>::iterator        option_name_map_it;
-
-std::map <uncrustify_groups, group_map_value> group_map;
 typedef std::map <uncrustify_groups, group_map_value>::iterator   group_map_it;
 typedef std::list <uncrustify_options>::iterator                  option_list_it;
+typedef std::list <uncrustify_options>::const_iterator            option_list_cit;
 
-uncrustify_groups current_group;
-
-#endif   /* DEFINE_OPTION_NAME_MAP */
 
 #endif   /* OPTIONS_H_INCLUDED */

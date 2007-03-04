@@ -117,6 +117,7 @@ static void usage_exit(const char *msg, const char *argv0, int code)
            " --show-config            : print out option documentation and exit\n"
            " --update-config          : Output a new config file. Use with -o FILE\n"
            " --update-config-with-doc : Output a new config file. Use with -o FILE\n"
+           " --universalindent        : Output a config file for Universal Indent GUI\n"
            "\n"
            "Debug Options:\n"
            " -p FILE      : dump debug info to a file\n"
@@ -225,6 +226,9 @@ int main(int argc, char *argv[])
       log_show_sev(true);
    }
 
+   /* Load the config file */
+   set_option_defaults();
+
    /* Load type files */
    idx = 0;
    while ((p_arg = arg.Params("-t", idx)) != NULL)
@@ -300,6 +304,26 @@ int main(int argc, char *argv[])
    bool update_config    = arg.Present("--update-config");
    bool update_config_wd = arg.Present("--update-config-with-doc");
 
+   if (arg.Present("--universalindent"))
+   {
+      FILE *pfile = stdout;
+
+      if (output_file != NULL)
+      {
+         pfile = fopen(output_file, "w");
+         if (pfile == NULL)
+         {
+            fprintf(stderr, "Unable to open %s for write: %s (%d)\n",
+                    output_file, strerror(errno), errno);
+            return(EXIT_FAILURE);
+         }
+      }
+
+      print_universal_indent_cfg(pfile);
+
+      return(EXIT_SUCCESS);
+   }
+
    /*
     *  Done parsing args
     */
@@ -324,9 +348,6 @@ int main(int argc, char *argv[])
                     argv[0], 68);
       }
    }
-
-   /* Load the config file */
-   set_option_defaults();
 
 #ifndef WIN32
    char buf[512];
@@ -862,6 +883,22 @@ struct file_lang languages[] =
    { ".m",    "OC",   LANG_OC   },
    { ".sqc",  "",     LANG_C    }, // embedded SQL
 };
+
+/**
+ * Set idx = 0 before the first call.
+ * Done when returns NULL
+ */
+const char *get_file_extension(int &idx)
+{
+   const char *val = NULL;
+
+   if (idx < (int)ARRAY_SIZE(languages))
+   {
+      val = languages[idx].ext;
+   }
+   idx++;
+   return(val);
+}
 
 
 /**

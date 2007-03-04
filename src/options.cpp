@@ -7,9 +7,6 @@
  *
  * $Id$
  */
-
-#define DEFINE_OPTION_NAME_MAP
-
 #include "uncrustify_types.h"
 #include "args.h"
 #include "prototypes.h"
@@ -21,6 +18,20 @@
 #include <cstdlib>
 #include <cerrno>
 #include <cctype>
+
+
+static std::map<std::string, option_map_value>      option_name_map;
+static std::map<uncrustify_groups, group_map_value> group_map;
+static uncrustify_groups                            current_group;
+
+
+static void unc_add_option(const char *name,
+                           uncrustify_options id,
+                           argtype_e type,
+                           const char *short_desc = NULL,
+                           const char *long_desc = NULL,
+                           int min_val = 0,
+                           int max_val = 16);
 
 
 void unc_begin_group(uncrustify_groups id, const char *short_desc,
@@ -38,18 +49,50 @@ void unc_begin_group(uncrustify_groups id, const char *short_desc,
 }
 
 void unc_add_option(const char *name, uncrustify_options id, argtype_e type,
-                    const char *short_desc, const char *long_desc)
+                    const char *short_desc, const char *long_desc,
+                    int min_val, int max_val)
 {
    group_map[current_group].options.push_back(id);
 
    option_map_value value;
 
-   value.id              = id;
-   value.group_id        = current_group;
-   value.type            = type;
-   value.name            = name;
-   value.short_desc      = short_desc;
-   value.long_desc       = long_desc;
+   value.id         = id;
+   value.group_id   = current_group;
+   value.type       = type;
+   value.name       = name;
+   value.short_desc = short_desc;
+   value.long_desc  = long_desc;
+   value.min_val    = 0;
+
+   /* Calculate the max/min values */
+   switch (type)
+   {
+   case AT_BOOL:
+      value.max_val = 1;
+      break;
+
+   case AT_IARF:
+      value.max_val = 3;
+      break;
+
+   case AT_NUM:
+      value.min_val = min_val;
+      value.max_val = max_val;
+      break;
+
+   case AT_LINE:
+      value.max_val = 3;
+      break;
+
+   case AT_POS:
+      value.max_val = 2;
+      break;
+
+   default:
+      fprintf(stderr, "FATAL: Illegal option type %d for '%s'\n", type, name);
+      exit(EXIT_FAILURE);
+   }
+
    option_name_map[name] = value;
 
    int name_len = strlen(name);
@@ -72,9 +115,9 @@ void register_options(void)
 {
    unc_begin_group(UG_general, "General options");
    unc_add_option("newlines", UO_newlines, AT_LINE, "The type of line endings");
-   unc_add_option("input_tab_size", UO_input_tab_size, AT_NUM, "The original size of tabs in the input");
-   unc_add_option("output_tab_size", UO_output_tab_size, AT_NUM, "The size of tabs in the output (only used if align_with_tabs=true)");
-   unc_add_option("string_escape_char", UO_string_escape_char, AT_NUM, "The ascii value of the string escape char, usually 92 (\\). (Pawn)");
+   unc_add_option("input_tab_size", UO_input_tab_size, AT_NUM, "The original size of tabs in the input", "", 1, 32);
+   unc_add_option("output_tab_size", UO_output_tab_size, AT_NUM, "The size of tabs in the output (only used if align_with_tabs=true)", "", 1, 32);
+   unc_add_option("string_escape_char", UO_string_escape_char, AT_NUM, "The ascii value of the string escape char, usually 92 (\\). (Pawn)", "", 0, 255);
 
    unc_begin_group(UG_space, "Spacing options");
    unc_add_option("sp_arith", UO_sp_arith, AT_IARF, "Add or remove space around arithmetic operator '+', '-', '/', '*', etc");
@@ -135,7 +178,7 @@ void register_options(void)
 
    unc_begin_group(UG_indent, "Indenting");
    unc_add_option("indent_columns", UO_indent_columns, AT_NUM, "The number of columns to indent per level.\nUsually 2, 3, 4, or 8.");
-   unc_add_option("indent_with_tabs", UO_indent_with_tabs, AT_NUM, "How to use tabs when indenting code\n0=spaces only\n1=indent with tabs, align with spaces\n2=indent and align with tabs");
+   unc_add_option("indent_with_tabs", UO_indent_with_tabs, AT_NUM, "How to use tabs when indenting code\n0=spaces only\n1=indent with tabs, align with spaces\n2=indent and align with tabs", "", 0, 2);
    unc_add_option("indent_align_string", UO_indent_align_string, AT_BOOL, "Whether to indent strings broken by '\\' so that they line up");
    unc_add_option("indent_xml_string", UO_indent_xml_string, AT_NUM, "The number of spaces to indent multi-line XML strings.\nRequires indent_align_string=True");
    unc_add_option("indent_brace", UO_indent_brace, AT_NUM, "Spaces to indent '{' from level");
@@ -151,13 +194,13 @@ void register_options(void)
    unc_add_option("indent_switch_case", UO_indent_switch_case, AT_NUM, "Spaces to indent 'case' from 'switch'\nUsually 0 or indent_columns.");
    unc_add_option("indent_case_brace", UO_indent_case_brace, AT_NUM, "Spaces to indent '{' from 'case'.\nBy default, the brace will appear under the 'c' in case.\nUsually set to 0 or indent_columns.");
    unc_add_option("indent_col1_comment", UO_indent_col1_comment, AT_BOOL, "Whether to indent comments found in first column");
-   unc_add_option("indent_label", UO_indent_label, AT_NUM, "How to indent goto labels\n >0 : absolute column where 1 is the leftmost column\n <=0 : subtract from brace indent");
-   unc_add_option("indent_access_spec", UO_indent_access_spec, AT_NUM, "Same as indent_label, but for access specifiers that are followed by a colon");
+   unc_add_option("indent_label", UO_indent_label, AT_NUM, "How to indent goto labels\n >0 : absolute column where 1 is the leftmost column\n <=0 : subtract from brace indent", "", -16, 16);
+   unc_add_option("indent_access_spec", UO_indent_access_spec, AT_NUM, "Same as indent_label, but for access specifiers that are followed by a colon", "", -16, 16);
    unc_add_option("indent_paren_nl", UO_indent_paren_nl, AT_BOOL, "If an open paren is followed by a newline, indent the next line so that it lines up after the open paren (not recommended)");
    unc_add_option("indent_square_nl", UO_indent_square_nl, AT_BOOL, "If an open square is followed by a newline, indent the next line so that it lines up after the open square (not recommended)");
 
    unc_begin_group(UG_newline, "Newline adding and removing options");
-   unc_add_option("code_width", UO_code_width, AT_NUM, "Try to limit code width to N number of columns");
+   unc_add_option("code_width", UO_code_width, AT_NUM, "Try to limit code width to N number of columns", "", 16, 256);
    unc_add_option("nl_collapse_empty_body", UO_nl_collapse_empty_body, AT_BOOL, "Whether to collapse empty blocks between '{' and '}'");
    unc_add_option("nl_class_leave_one_liners", UO_nl_class_leave_one_liners, AT_BOOL, "Don't touch one-line function bodies inside a class xx { } body");
    unc_add_option("nl_start_of_file", UO_nl_start_of_file, AT_IARF, "Add or remove newlines at the start of the file");
@@ -238,25 +281,25 @@ void register_options(void)
    unc_add_option("align_on_tabstop", UO_align_on_tabstop, AT_BOOL, "Whether to bump out to the next tab when aligning");
    unc_add_option("align_number_left", UO_align_number_left, AT_BOOL, "Whether to left-align numbers");
    unc_add_option("align_func_params", UO_align_func_params, AT_BOOL, "Align variable definitions in prototypes and functions");
-   unc_add_option("align_var_def_span", UO_align_var_def_span, AT_NUM, "The span for aligning variable definitions (0=don't align)");
-   unc_add_option("align_var_def_star_style", UO_align_var_def_star_style, AT_NUM, "How to align the star in variable definitions.\n 0=Part of the type\n 1=Part of the variable\n 2=Dangling");
-   unc_add_option("align_var_def_thresh", UO_align_var_def_thresh, AT_NUM, "The threshold for aligning variable definitions (0=no limit)");
+   unc_add_option("align_var_def_span", UO_align_var_def_span, AT_NUM, "The span for aligning variable definitions (0=don't align)", "", 0, 5000);
+   unc_add_option("align_var_def_star_style", UO_align_var_def_star_style, AT_NUM, "How to align the star in variable definitions.\n 0=Part of the type\n 1=Part of the variable\n 2=Dangling", "", 0, 2);
+   unc_add_option("align_var_def_thresh", UO_align_var_def_thresh, AT_NUM, "The threshold for aligning variable definitions (0=no limit)", "", 0, 5000);
    unc_add_option("align_var_def_colon", UO_align_var_def_colon, AT_BOOL, "Whether to align the colon in struct bit fields");
    unc_add_option("align_var_def_inline", UO_align_var_def_inline, AT_BOOL, "Whether to align inline struct/enum/union variable definitions");
-   unc_add_option("align_assign_span", UO_align_assign_span, AT_NUM, "The span for aligning on '=' in assignments (0=don't align)");
-   unc_add_option("align_assign_thresh", UO_align_assign_thresh, AT_NUM, "The threshold for aligning on '=' in assignments (0=no limit)");
-   unc_add_option("align_enum_equ_span", UO_align_enum_equ_span, AT_NUM, "The span for aligning on '=' in enums (0=don't align)");
-   unc_add_option("align_enum_equ_thresh", UO_align_enum_equ_thresh, AT_NUM, "The threshold for aligning on '=' in enums (0=no limit)");
-   unc_add_option("align_var_struct_span", UO_align_var_struct_span, AT_NUM, "The span for aligning struct/union (0=don't align)");
-   unc_add_option("align_struct_init_span", UO_align_struct_init_span, AT_NUM, "The span for aligning struct initializer values (0=don't align)");
+   unc_add_option("align_assign_span", UO_align_assign_span, AT_NUM, "The span for aligning on '=' in assignments (0=don't align)", "", 0, 5000);
+   unc_add_option("align_assign_thresh", UO_align_assign_thresh, AT_NUM, "The threshold for aligning on '=' in assignments (0=no limit)", "", 0, 5000);
+   unc_add_option("align_enum_equ_span", UO_align_enum_equ_span, AT_NUM, "The span for aligning on '=' in enums (0=don't align)", "", 0, 5000);
+   unc_add_option("align_enum_equ_thresh", UO_align_enum_equ_thresh, AT_NUM, "The threshold for aligning on '=' in enums (0=no limit)", "", 0, 5000);
+   unc_add_option("align_var_struct_span", UO_align_var_struct_span, AT_NUM, "The span for aligning struct/union (0=don't align)", "", 0, 5000);
+   unc_add_option("align_struct_init_span", UO_align_struct_init_span, AT_NUM, "The span for aligning struct initializer values (0=don't align)", "", 0, 5000);
    unc_add_option("align_typedef_gap", UO_align_typedef_gap, AT_NUM, "The minimum space between the type and the synonym of a typedef");
    unc_add_option("align_typedef_span", UO_align_typedef_span, AT_NUM, "The span for aligning single-line typedefs (0=don't align)");
-   unc_add_option("align_typedef_star_style", UO_align_typedef_star_style, AT_NUM, "Controls the positioning of the '*' in typedefs. Just try it.\n0: Align on typdef type, ignore '*'\n1: The '*' is part of type name: typedef int  *pint;\n2: The '*' is part of the type, but dangling: typedef int *pint;");
-   unc_add_option("align_right_cmt_span", UO_align_right_cmt_span, AT_NUM, "The span for aligning comments that end lines (0=don't align)");
-   unc_add_option("align_func_proto_span", UO_align_func_proto_span, AT_NUM, "The span for aligning function prototypes (0=don't align)");
+   unc_add_option("align_typedef_star_style", UO_align_typedef_star_style, AT_NUM, "Controls the positioning of the '*' in typedefs. Just try it.\n0: Align on typdef type, ignore '*'\n1: The '*' is part of type name: typedef int  *pint;\n2: The '*' is part of the type, but dangling: typedef int *pint;", "", 0, 2);
+   unc_add_option("align_right_cmt_span", UO_align_right_cmt_span, AT_NUM, "The span for aligning comments that end lines (0=don't align)", "", 0, 5000);
+   unc_add_option("align_func_proto_span", UO_align_func_proto_span, AT_NUM, "The span for aligning function prototypes (0=don't align)", "", 0, 5000);
    unc_add_option("align_nl_cont", UO_align_nl_cont, AT_BOOL, "Whether to align macros wrapped with a backslash and a newline");
    unc_add_option("align_pp_define_gap", UO_align_pp_define_gap, AT_NUM, "The minimum space between label and value of a preprocessor define");
-   unc_add_option("align_pp_define_span", UO_align_pp_define_span, AT_NUM, "The span for aligning on '#define' bodies (0=don't align)");
+   unc_add_option("align_pp_define_span", UO_align_pp_define_span, AT_NUM, "The span for aligning on '#define' bodies (0=don't align)", "", 0, 5000);
 
    unc_begin_group(UG_comment, "Comment modifications");
    unc_add_option("cmt_cpp_group", UO_cmt_cpp_group, AT_BOOL, "Whether to group cpp-comments that look like they are in a block");
@@ -272,7 +315,7 @@ void register_options(void)
    unc_add_option("mod_full_brace_for", UO_mod_full_brace_for, AT_IARF, "Add or remove braces on single-line 'for' statement");
    unc_add_option("mod_full_brace_function", UO_mod_full_brace_function, AT_IARF, "Add or remove braces on single-line function defintions. (Pawn)");
    unc_add_option("mod_full_brace_if", UO_mod_full_brace_if, AT_IARF, "Add or remove braces on single-line 'if' statement");
-   unc_add_option("mod_full_brace_nl", UO_mod_full_brace_nl, AT_NUM, "Don't remove braces around statements that span N newlines");
+   unc_add_option("mod_full_brace_nl", UO_mod_full_brace_nl, AT_NUM, "Don't remove braces around statements that span N newlines", "", 0, 5000);
    unc_add_option("mod_full_brace_while", UO_mod_full_brace_while, AT_IARF, "Add or remove braces on single-line 'while' statement");
    unc_add_option("mod_paren_on_return", UO_mod_paren_on_return, AT_IARF, "Add or remove unnecessary paren on 'return' statement");
    unc_add_option("mod_pawn_semicolon", UO_mod_pawn_semicolon, AT_BOOL, "Whether to change optional semicolons to real semicolons");

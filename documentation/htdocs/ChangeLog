@@ -40,6 +40,7 @@ Changes in uncrustify-0.33
  - Fix the config updating routines to NOT lose custom types and stuff
  - Add nl_after_func_body_one_liner
  - Fix nl_class_init_args
+ - Add --universalindent option to output an ini file for UniversalIndentGUI
 
 
 Changes in uncrustify-0.32
