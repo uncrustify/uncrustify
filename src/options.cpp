@@ -668,6 +668,23 @@ int save_option_file(FILE *pfile, bool withDoc)
       }
    }
 
+   if (withDoc)
+   {
+      fprintf(pfile,
+              "\n"
+              "# You can force a token to be a type with the 'type' option.\n"
+              "# Example:\n"
+              "# type myfoo1 myfoo2\n"
+              "#\n"
+              "# You can create custom macro-based indentation using custom-open, \n"
+              "# custom-else and custom-close.\n"
+              "# Example:\n"
+              "# custom-open  BEGIN_TEMPLATE_MESSAGE_MAP\n"
+              "# custom-open  BEGIN_MESSAGE_MAP\n"
+              "# custom-close END_MESSAGE_MAP\n"
+              );
+   }
+
    /* Print custom keywords */
    const chunk_tag_t *ct;
    idx = 0;
