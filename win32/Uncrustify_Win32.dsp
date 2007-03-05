@@ -191,6 +191,10 @@ SOURCE=..\src\uncrustify.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\src\universalindentgui.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\src\width.cpp
 # End Source File
 # End Group
