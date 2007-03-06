@@ -4,12 +4,13 @@
 class MyClass
 {
  public:
-   std::map < int, bool > someData;
-   std::map < int, std::list < bool > > otherData;
+   std::map<int, bool> someData;
+   std::map<int, std::list<bool> > otherData;
 };
 
 void foo()
 {
+   List<byte> bob = new List<byte>();
 }
 
 A<B> foo;

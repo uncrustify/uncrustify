@@ -9,7 +9,7 @@ class Example
   }
 
   /** The normal member var based on the template arguments */
-  SpecialClass<T>memberVar;
+  SpecialClass<T> memberVar;
 
 };
 

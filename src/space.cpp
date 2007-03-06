@@ -268,6 +268,15 @@ argval_t do_space(chunk_t *first, chunk_t *second)
    }
    if (first->type == CT_ANGLE_CLOSE)
    {
+      if (second->type == CT_WORD)
+      {
+         return(cpd.settings[UO_sp_angle_word].a);
+      }
+      if ((second->type == CT_FPAREN_OPEN) ||
+          (second->type == CT_PAREN_OPEN))
+      {
+         return(cpd.settings[UO_sp_angle_paren].a);
+      }
       return(cpd.settings[UO_sp_after_angle].a);
    }
 

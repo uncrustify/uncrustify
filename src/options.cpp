@@ -135,6 +135,8 @@ void register_options(void)
    unc_add_option("sp_after_byref", UO_sp_after_byref, AT_IARF, "Add or remove space after reference sign '&'");
    unc_add_option("sp_before_angle", UO_sp_before_angle, AT_IARF, "Add or remove space before '<>'");
    unc_add_option("sp_after_angle", UO_sp_after_angle, AT_IARF, "Add or remove space after '<>'");
+   unc_add_option("sp_angle_paren", UO_sp_angle_paren, AT_IARF, "Add or remove space between '<>' and '(' as found in 'new List<byte>();'");
+   unc_add_option("sp_angle_word", UO_sp_angle_word, AT_IARF, "Add or remove space between '<>' and a word as in 'List<byte> m;'");
    unc_add_option("sp_before_sparen", UO_sp_before_sparen, AT_IARF, "Add or remove space before '(' of 'if', 'for', 'switch', and 'while'");
    unc_add_option("sp_inside_sparen", UO_sp_inside_sparen, AT_IARF, "Add or remove space inside if-condition '(' and ')'");
    unc_add_option("sp_after_sparen", UO_sp_after_sparen, AT_IARF, "Add or remove space after ')' of 'if', 'for', 'switch', and 'while'");

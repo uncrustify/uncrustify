@@ -10,6 +10,8 @@ public:
 
 void foo()
 {
+   List < byte > bob = new List < byte > ();
+
 }
 
 A < B > foo;

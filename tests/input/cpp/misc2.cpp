@@ -24,6 +24,8 @@ unsigned long allocate(unsigned long size, void* & p);
 
 void foo(void)
 {
+   List<byte>bob = new List<byte> ();
+
    /* Align assignments */
    align_assign(chunk_get_head(),
                 cpd.settings[UO_align_assign_span].n,

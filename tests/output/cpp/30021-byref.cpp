@@ -14,7 +14,7 @@ class Foo {
    Foo(const Foo& f);
 };
 
-template<  class T >  class ListManager
+template<class T> class ListManager
 {
  protected:
    T head;
