@@ -579,17 +579,17 @@ int load_option_file(const char *filename)
       {
          add_define(args[1], args[2]);
       }
-      else if (strcasecmp(args[0], "custom-open") == 0)
+      else if (strcasecmp(args[0], "macro-open") == 0)
       {
-         add_keyword(args[1], CT_CUSTOM_OPEN, LANG_ALL);
+         add_keyword(args[1], CT_MACRO_OPEN, LANG_ALL);
       }
-      else if (strcasecmp(args[0], "custom-close") == 0)
+      else if (strcasecmp(args[0], "macro-close") == 0)
       {
-         add_keyword(args[1], CT_CUSTOM_CLOSE, LANG_ALL);
+         add_keyword(args[1], CT_MACRO_CLOSE, LANG_ALL);
       }
-      else if (strcasecmp(args[0], "custom-else") == 0)
+      else if (strcasecmp(args[0], "macro-else") == 0)
       {
-         add_keyword(args[1], CT_CUSTOM_ELSE, LANG_ALL);
+         add_keyword(args[1], CT_MACRO_ELSE, LANG_ALL);
       }
       else
       {
@@ -676,12 +676,12 @@ int save_option_file(FILE *pfile, bool withDoc)
               "# Example:\n"
               "# type myfoo1 myfoo2\n"
               "#\n"
-              "# You can create custom macro-based indentation using custom-open, \n"
-              "# custom-else and custom-close.\n"
+              "# You can create custom macro-based indentation using macro-open, \n"
+              "# macro-else and macro-close.\n"
               "# Example:\n"
-              "# custom-open  BEGIN_TEMPLATE_MESSAGE_MAP\n"
-              "# custom-open  BEGIN_MESSAGE_MAP\n"
-              "# custom-close END_MESSAGE_MAP\n"
+              "# macro-open  BEGIN_TEMPLATE_MESSAGE_MAP\n"
+              "# macro-open  BEGIN_MESSAGE_MAP\n"
+              "# macro-close END_MESSAGE_MAP\n"
               );
    }
 
@@ -695,19 +695,19 @@ int save_option_file(FILE *pfile, bool withDoc)
          fprintf(pfile, "type %*.s%s\n",
                  cpd.max_option_name_len - 4, " ", ct->tag);
       }
-      else if (ct->type == CT_CUSTOM_OPEN)
+      else if (ct->type == CT_MACRO_OPEN)
       {
-         fprintf(pfile, "custom-open %*.s%s\n",
+         fprintf(pfile, "macro-open %*.s%s\n",
                  cpd.max_option_name_len - 11, " ", ct->tag);
       }
-      else if (ct->type == CT_CUSTOM_CLOSE)
+      else if (ct->type == CT_MACRO_CLOSE)
       {
-         fprintf(pfile, "custom-close %*.s%s\n",
+         fprintf(pfile, "macro-close %*.s%s\n",
                  cpd.max_option_name_len - 12, " ", ct->tag);
       }
-      else if (ct->type == CT_CUSTOM_ELSE)
+      else if (ct->type == CT_MACRO_ELSE)
       {
-         fprintf(pfile, "custom-else %*.s%s\n",
+         fprintf(pfile, "macro-else %*.s%s\n",
                  cpd.max_option_name_len - 11, " ", ct->tag);
       }
       else

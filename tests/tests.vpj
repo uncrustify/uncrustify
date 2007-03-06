@@ -103,6 +103,7 @@
 			<F N="config/cpp_to_c-2.cfg"/>
 			<F N="config/cpp_to_c-3.cfg"/>
 			<F N="config/custom-open.cfg"/>
+			<F N="config/custom-open2.cfg"/>
 			<F N="config/d-tst2.cfg"/>
 			<F N="config/d.cfg"/>
 			<F N="config/d2.cfg"/>

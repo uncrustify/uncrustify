@@ -158,9 +158,9 @@ typedef enum
 
    CT_TSQUARE,          /* special case of [] */
 
-   CT_CUSTOM_OPEN,      /* stuff specified via custom-pair */
-   CT_CUSTOM_CLOSE,
-   CT_CUSTOM_ELSE,
+   CT_MACRO_OPEN,       /* stuff specified via custom-pair */
+   CT_MACRO_CLOSE,
+   CT_MACRO_ELSE,
 
    /* agregate types */
    CT_LABEL,            /* a non-case label */

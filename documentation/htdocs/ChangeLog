@@ -37,6 +37,7 @@ Changes in uncrustify-0.33
  - Change rules for indenting case braces and the use of indent_case_brace
  - Fix variable declaration detection at the start of a code block
  - Add support for custom open/close indenting macros
+   MACRO_OPEN, MACRO_ELSE, MACRO_CLOSE
  - Fix the config updating routines to NOT lose custom types and stuff
  - Add nl_after_func_body_one_liner
  - Fix nl_class_init_args
