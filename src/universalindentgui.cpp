@@ -58,6 +58,7 @@ void print_universal_indent_cfg(FILE *pfile)
            "outputFileName=indentoutput\n"
            "outputFileParameter=\"-o \"\n"
            "stringparaminquotes=false\n"
+           "parameterOrder=ipo\n"
            "useCfgFileParameter=\"-c \"\n");
 
    /* Now add each option */
