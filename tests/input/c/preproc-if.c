@@ -15,6 +15,14 @@ else if (b)
 }
 #endif /* SOMEDEF */
 
+/* same thing w/o preprocs for reference */
+if (a)
+{
+}
+else if (b)
+{
+}
+
 #ifdef FOO
 do
 {

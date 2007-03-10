@@ -472,6 +472,8 @@ pattern_class get_token_pattern_class(c_token_t tok)
       return(PATCLS_PBRACED);
 
    case CT_ELSE:
+      return(PATCLS_ELSE);
+
    case CT_DO:
    case CT_TRY:
    case CT_FINALLY:

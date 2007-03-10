@@ -187,11 +187,12 @@ enum
 enum pattern_class
 {
    PATCLS_NONE,
-   PATCLS_BRACED,   // keyword + braced stmt:          else, do, try
+   PATCLS_BRACED,   // keyword + braced stmt:          do, try
    PATCLS_PBRACED,  // keyword + parens + braced stmt: switch, if, for, while
    PATCLS_OPBRACED, // keyword + optional parens + braced stmt: catch, version
    PATCLS_VBRACED,  // keyword + value + braced stmt: namespace
    PATCLS_PAREN,    // keyword + parens: while-of-do
+   PATCLS_ELSE,     // Special case of PATCLS_BRACED for handling CT_IF 
 };
 
 typedef struct
