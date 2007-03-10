@@ -127,7 +127,7 @@ static const chunk_tag_t keywords[] =
    { "ifndef",           CT_PP_IF,       LANG_ALLC | FLAG_PP                                 },
    { "implements",       CT_QUALIFIER,   LANG_JAVA                                           },
    { "implicit",         CT_QUALIFIER,   LANG_CS                                             },
-   { "import",           CT_TYPE,        LANG_D | LANG_JAVA                                  }, // fudged to get indenting
+   { "import",           CT_IMPORT,      LANG_D | LANG_JAVA                                  }, // fudged to get indenting
    { "import",           CT_PP_INCLUDE,  LANG_OC | FLAG_PP                                   }, // ObjectiveC version of include
    { "in",               CT_IN,          LANG_D | LANG_CS                                    },
    { "include",          CT_PP_INCLUDE,  LANG_C | LANG_CPP | LANG_PAWN | FLAG_PP             }, // PAWN

@@ -408,6 +408,12 @@ void indent_text(void)
                indent_pse_pop(frm, pc);
             }
 
+            /* End any assign operations with a semicolon on the same level */
+            if ((frm.pse[frm.pse_tos].type == CT_IMPORT) && chunk_is_semicolon(pc))
+            {
+               indent_pse_pop(frm, pc);
+            }
+
             /* End any custom macro-based open/closes */
             if (!token_used &&
                 (frm.pse[frm.pse_tos].type == CT_MACRO_OPEN) &&
@@ -746,7 +752,7 @@ void indent_text(void)
          frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
          frm.paren_count++;
       }
-      else if (pc->type == CT_ASSIGN)
+      else if ((pc->type == CT_ASSIGN) || (pc->type == CT_IMPORT))
       {
          /**
           * if there is a newline after the '=', just indent one level,

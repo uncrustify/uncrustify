@@ -1495,13 +1495,19 @@ static chunk_t *fix_var_def(chunk_t *start)
            (pc->type == CT_WORD) ||
            (pc->type == CT_QUALIFIER) ||
            (pc->type == CT_DC_MEMBER) ||
+           (pc->type == CT_MEMBER) ||
            (pc->type == CT_BYREF) ||
            chunk_is_star(pc)))
    {
       LOG_FMT(LFVD, " %.*s[%s]", pc->len, pc->str, get_token_name(pc->type));
       type_count++;
       before_end = pc;
-      pc         = chunk_get_next_ncnl(pc);
+      if ((pc->type == CT_DC_MEMBER) ||
+          (pc->type == CT_MEMBER))
+      {
+          type_count = 0;
+      }
+      pc = chunk_get_next_ncnl(pc);
    }
    end = pc;
 
