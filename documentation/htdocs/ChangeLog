@@ -31,6 +31,7 @@ Plans for the next release
 Changes in uncrustify-0.34
 -------------------------------------------------------------------------------
  - Add sp_angle_paren and sp_angle_word
+ - Properly handle multi-line CPP comments
 
 
 Changes in uncrustify-0.33

@@ -56,10 +56,19 @@ bool parse_comment(chunk_t *pc)
    if (pc->str[1] == '/')
    {
       pc->type = CT_COMMENT_CPP;
-      while ((pc->str[len] != '\n') &&
-             (pc->str[len] != '\r') &&
-             (pc->str[len] != 0))
+      while (true)
       {
+         while ((pc->str[len] != '\n') &&
+                (pc->str[len] != '\r') &&
+                (pc->str[len] != 0))
+         {
+            len++;
+         }
+
+         if (pc->str[len - 1] != '\\')
+         {
+            break;
+         }
          len++;
       }
    }
