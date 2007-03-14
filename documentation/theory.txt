@@ -1,3 +1,9 @@
+$Id$
+
+This document is too incomplete to be of much use.
+Patches are welcome!
+
+
 Theory of operation
 -------------------
 
@@ -5,8 +11,8 @@ Uncrustify goes through several steps to reformat code.
 The first step, parsing, is the most complex and important.
 
 
-Step 1 - parsing
-----------------
+Step 1 - Tokenize
+-----------------
 C code must be understood to some degree to be able to be properly indented.
 The parsing step reads in a text buffer and breaks it into chunks and puts
 those chunks in a list.
@@ -22,27 +28,55 @@ These are the chunks that are parsed:
  - whitespace
  - preprocessors
 
+See token_enum.h for a complete list.
+See punctuators.cpp and keywords.cpp for examples of how they
+are used.
+
 In the code, chunk types are prefixed with 'CT_'.
-The interesting chunk type is CT_WORD, which can be types, variables, or
-keywords.
-
-The nesting level is recorded.
-Special care is taken with unbraced do/if/else/for/switch/while bodies.
-Virtual braces are inserted around unbraced bodies to ensure proper indenting.
-
-Also during this step, simple identification is done.
-For example, if a CT_WORD follows CT_ENUM/CT_STRUCT/CT_UNION, then it is marked
-as a CT_TYPE.
-If a '*' follows CT_TYPE, then it is a CT_PTR_TYPE.
-If a CT_WORD is followed by an open parenthesis, the it is a CT_FUNCTION.
-Parenthesis and braces are marked where appropriate.
+A particularly interesting chunk type is CT_WORD, which can be types, variables, 
+or keywords.
 
 
-Step 2 - Indentification
-------------------------
+Step 2 - Tokenize Cleanup
+-------------------------
 
-In the next step, more complicated identification is done.
-This step does the following:
+The second step is to change the token type for certain constructs that need
+to be adjusted early on.
+For example, the '<' token can be either a CT_COMPARE or CT_ANGLE_OPEN.
+Both are handled very differently.
+If a CT_WORD follows CT_ENUM/CT_STRUCT/CT_UNION, then it is marked as a CT_TYPE.
+
+
+Step 3 - Brace Cleanup
+-------------------------
+
+This is possibly the most difficult step.
+do/if/else/for/switch/while bodies are examined and virtual braces are added.
+Brace parent types are set.
+Statement start and expression starts are labeled.
+And #ifdef constructs are handled.
+
+This step determines the levels (brace_level, level, & pp_level).
+
+* The code in brace_cleanup.cpp needs to be reworked to take advantage of being
+  able to scan forward and backward.  The original code was going to be merged
+  into tokenize.cpp, but that was WAY too complex.
+
+
+Step 4 - Fix Symbols (combine.cpp)
+----------------------------------
+
+This step is no longer properly named.
+In the original design, neighboring chunks were to be combined into longer
+chunks.  This proved to be a silly idea.  But the name of the file stuck.
+
+This is where most of the interesting identification stuff goes on.
+Colons type are detected, variables are marked, functions are labeled, etc.
+Also, all the punctuators are classified. Ie, CT_MINUS become CT_NEG or CT_ARITH.
+
+ - Types are marked.
+ - Functions are marked.
+ - Parenthesis and braces are marked where appropriate.
  - finds and marks casts
  - finds and marks variable definitions (for aligning)
  - finds and marks assignments that may be aligned
@@ -50,9 +84,8 @@ This step does the following:
  - changes CT_STAR to either CT_PTR_TYPE, CT_DEREF or CT_ARITH
  - changes CT_MINUS to either CT_NEG or CT_ARITH
  - changes CT_PLUS and CT_ADDR to CT_ARITH, if needed
+ - other stuff?
 
-The chunks must also be identified to be useful.
-This is done through some simple pattern matching.
 
 Casts
 -----
@@ -64,9 +97,30 @@ Casts are detected as follows:
 Tough cases:
 (foo) * bar;
 
+If uncertain about a cast like this: (foo_t), some simple rules are applied.
+If the word ends in '_t', it is a cast, unless followed by '+'.
+If the word is all caps (FOO), it is a cast.
+If you use custom types (very likely) that aren't detected properly (unlikely),
+the add them to the config file like so: (example Using C-Sharp types)
+type UInt32 UInt16 UInt8 Byte
+type Int32 Int16 Int8
 
-A chunk starts a statement if:
- - after { or }
- - after ';', but not if the paren stack top is a paren
- - after '(' that has a parent type of CT_FOR
 
+Step 6+ Everything else
+-------------------------
+
+From this point on, many filters are run on the chunk list to change the
+token columns.
+
+indent.cpp sets the left-most column.
+align.cpp set the column for individual chunks.
+space.cpp sets the spacing between chunks.
+Others insert newlines, change token position, etc.
+
+
+Last Step - Output
+-------------------------
+
+At the final step the list is printed to the output.
+Everything except comments are printed as-is.
+Comments are reformatted in the output stage.
