@@ -477,8 +477,21 @@ argval_t do_space(chunk_t *first, chunk_t *second)
    }
 
    /* "(a + 3)" vs "( a + 3 )" */
-   if ((first->type == CT_PAREN_OPEN) || (second->type == CT_PAREN_CLOSE))
+   if (first->type == CT_PAREN_OPEN)
    {
+      if (first->parent_type == CT_CAST)
+      {
+         return(cpd.settings[UO_sp_inside_paren_cast].a);
+      }
+      return(cpd.settings[UO_sp_inside_paren].a);
+   }
+   
+   if (second->type == CT_PAREN_CLOSE)
+   {
+      if (second->parent_type == CT_CAST)
+      {
+         return(cpd.settings[UO_sp_inside_paren_cast].a);
+      }
       return(cpd.settings[UO_sp_inside_paren].a);
    }
 

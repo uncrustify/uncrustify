@@ -151,6 +151,7 @@ void register_options(void)
    unc_add_option("sp_before_comma", UO_sp_before_comma, AT_IARF, "Add or remove space before ','");
    unc_add_option("sp_after_operator", UO_sp_after_operator, AT_IARF, "Add or remove space between 'operator' and operator sign");
    unc_add_option("sp_after_cast", UO_sp_after_cast, AT_IARF, "Add or remove space after cast");
+   unc_add_option("sp_inside_paren_cast", UO_sp_inside_paren_cast, AT_IARF, "Add or remove spaces inside cast parens");
    unc_add_option("sp_sizeof_paren", UO_sp_sizeof_paren, AT_IARF, "Add or remove space between 'sizeof' and '('");
    unc_add_option("sp_after_tag", UO_sp_after_tag, AT_IARF, "Add or remove space after the tag keyword (Pawn)");
    unc_add_option("sp_inside_braces_enum", UO_sp_inside_braces_enum, AT_IARF, "Add or remove space inside enum '{' and '}'");

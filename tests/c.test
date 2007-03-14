@@ -60,6 +60,9 @@
 
 # casts
 00150  ben.cfg                 c/casts.c
+00151  cast-sp-r.cfg           c/casts.c
+00152  cast-sp-a.cfg           c/casts.c
+00153  cast-type.cfg           c/casts.c
 
 # switch & case stuff
 00201   case-1.cfg             c/case.c

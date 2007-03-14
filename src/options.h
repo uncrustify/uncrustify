@@ -133,6 +133,7 @@ enum uncrustify_options
    UO_sp_sparen_brace,      // space between ')' and '{' of if, while, etc
 
    UO_sp_after_cast,        // space after cast - "(int) a" vs "(int)a"
+   UO_sp_inside_paren_cast, // spaces inside the parens of a cast
 
    UO_sp_before_byref,      // space before '&' of 'fcn(int& idx)'
    UO_sp_after_byref,       // space after a '&'  as in 'int& var'
