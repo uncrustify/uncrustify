@@ -13,9 +13,9 @@ return false;
 
 //
 // This sample helps keep your sanity while using 8-spaces for tabs
-// 
+//
 VeryLongIdentifierWhichTakesManyArguments (
-Argument1, 
+Argument1,
 Argument2, Argument3,
 NestedCallHere (
 MoreNested));
@@ -31,8 +31,12 @@ x = value;
 }
 }
 
-void AnotherMethod () 
+void AnotherMethod ()
 {
+   Logger log = new Logger();
+   log.foo.bar = 5;
+   log.narf.sweat = "cat";
+
 if ((a + 5) != 4) {
 }
 
@@ -46,14 +50,14 @@ b++;
 
 object lockA;
 object lockB;
- 
+
 void Foo () {
    lock (lockA) {
       lock (lockB) {
       }
    }
 }
- 
+
 void Bar () {
    lock (lockB) {
       lock (lockA) {
@@ -70,7 +74,7 @@ class Blah {
            ht.Add (zzz, blah);
        }
     }
- 
+
     void Bar ()
     {
        lock (ht) {
@@ -78,12 +82,12 @@ class Blah {
              EachBar (e);
        }
     }
- 
+
     virtual void EachBar (Entry e)
     {
     }
 }
- 
+
 // User
 class MyBlah {
     byte[] box = new byte[6];
@@ -95,11 +99,11 @@ class MyBlah {
        lock (this) {
           int i = GetNumber ();
           Entry e = GetEntry ();
-          
+
           Foo (i, e);
        }
     }
- 
+
     override void EachBar (Entry e)
     {
         lock (this) {
