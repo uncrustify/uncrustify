@@ -34,6 +34,7 @@ Changes in uncrustify-0.34
  - Properly handle multi-line CPP comments
  - Add sp_inside_paren_cast
  - improve indent_class_colon
+ - fix indenting on open parens
 
 
 Changes in uncrustify-0.33

@@ -15,6 +15,13 @@ class GLOX_API ClientBase : public Class, public OtherClass,
 {
 };
 
+ClientBase::ClientBase (const std::string& ns,
+                        const std::string& ns1,
+                        const std::string& ns2)
+{
+
+}
+
 Foo::Foo(int bar) : someVar(bar), othervar(0)
 {
 }

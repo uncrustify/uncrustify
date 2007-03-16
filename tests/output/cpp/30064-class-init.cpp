@@ -19,38 +19,45 @@ class GLOX_API ClientBase
 {
 };
 
-Foo::Foo(int bar)
-   : someVar(bar),
-     othervar(0)
+ClientBase::ClientBase ( const std::string& ns,
+                         const std::string& ns1,
+                         const std::string& ns2 )
+{
+
+}
+
+Foo::Foo( int bar )
+   : someVar( bar ),
+     othervar( 0 )
 {
 }
 
-Foo::Foo(int bar)
-   : someVar(bar),
-     othervar(0)
+Foo::Foo( int bar )
+   : someVar( bar ),
+     othervar( 0 )
 {
 }
 
-Foo::Foo(int bar)
-   : someVar(bar),
-     othervar(0)
+Foo::Foo( int bar )
+   : someVar( bar ),
+     othervar( 0 )
 {
 }
 
-Foo::Foo(int bar)
-   : someVar(bar),
-     othervar(0)
+Foo::Foo( int bar )
+   : someVar( bar ),
+     othervar( 0 )
 {
 }
 
-Foo::Foo(int bar)
-   : someVar(bar),
-     othervar(0)
+Foo::Foo( int bar )
+   : someVar( bar ),
+     othervar( 0 )
 {
 }
 
-Foo::Foo(int bar)
-   : someVar(bar),
-     othervar(0)
+Foo::Foo( int bar )
+   : someVar( bar ),
+     othervar( 0 )
 {
 }

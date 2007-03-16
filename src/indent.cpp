@@ -756,6 +756,13 @@ void indent_text(void)
                }
                frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - sub].indent + indent_size;
             }
+            else
+            {
+               if (!chunk_is_comment(next))
+               {
+                  frm.pse[frm.pse_tos].indent = next->column;
+               }
+            }
          }
          frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
          frm.paren_count++;
