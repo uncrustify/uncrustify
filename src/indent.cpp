@@ -716,6 +716,14 @@ void indent_text(void)
                frm.pse[frm.pse_tos].indent += 2;
                /* don't change indent of current line */
             }
+            else
+            {
+               next = chunk_get_next(pc);
+               if ((next != NULL) && !chunk_is_newline(next))
+               {
+                  frm.pse[frm.pse_tos].indent = next->column;
+               }
+            }
          }
       }
       else if ((pc->type == CT_PAREN_OPEN) ||

@@ -33,6 +33,7 @@ Changes in uncrustify-0.34
  - Add sp_angle_paren and sp_angle_word
  - Properly handle multi-line CPP comments
  - Add sp_inside_paren_cast
+ - improve indent_class_colon
 
 
 Changes in uncrustify-0.33

@@ -6,6 +6,5 @@
 
 10000 mono.cfg                 cs/simple.cs
 10001 getset.cfg               cs/getset.cs
+10002 ben.cfg                  cs/simple.cs
 10010 ben.cfg                  cs/var-member.cs
-
-
