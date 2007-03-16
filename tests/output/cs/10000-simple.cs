@@ -33,6 +33,11 @@ class X : Y {
 
         void AnotherMethod ()
         {
+                Logger log = new Logger ();
+
+                log.foo.bar = 5;
+                log.narf.sweat = "cat";
+
                 if ((a + 5) != 4) {
                 }
 
