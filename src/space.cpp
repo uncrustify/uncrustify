@@ -144,10 +144,17 @@ argval_t do_space(chunk_t *first, chunk_t *second)
 
    if (second->type == CT_SEMICOLON)
    {
-      if ((second->parent_type == CT_FOR) &&
-          (cpd.settings[UO_sp_before_semi_for].a != AV_IGNORE))
+      if (second->parent_type == CT_FOR)
       {
-         return(cpd.settings[UO_sp_before_semi_for].a);
+         if ((cpd.settings[UO_sp_before_semi_for_empty].a != AV_IGNORE) &&
+             ((first->type == CT_SPAREN_OPEN) || (first->type == CT_SEMICOLON)))
+         {
+            return(cpd.settings[UO_sp_before_semi_for_empty].a);
+         }
+         if (cpd.settings[UO_sp_before_semi_for].a != AV_IGNORE)
+         {
+            return(cpd.settings[UO_sp_before_semi_for].a);
+         }
       }
 
       arg = cpd.settings[UO_sp_before_semi].a;
@@ -485,7 +492,7 @@ argval_t do_space(chunk_t *first, chunk_t *second)
       }
       return(cpd.settings[UO_sp_inside_paren].a);
    }
-   
+
    if (second->type == CT_PAREN_CLOSE)
    {
       if (second->parent_type == CT_CAST)

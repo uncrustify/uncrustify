@@ -35,6 +35,7 @@ Changes in uncrustify-0.34
  - Add sp_inside_paren_cast
  - improve indent_class_colon
  - fix indenting on open parens
+ - Add sp_before_semi_for_empty
 
 
 Changes in uncrustify-0.33
