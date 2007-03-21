@@ -49,12 +49,47 @@ static chunk_t *pawn_add_vsemi_after(chunk_t *pc)
 }
 
 
+/** 
+ * Turns certain virtual semicolons invisible.
+ *  - after a close brace with a parent of switch, case, else, if
+ */
+void pawn_scrub_vsemi(void)
+{
+   if (!cpd.settings[UO_mod_pawn_semicolon].b)
+   {
+      return;
+   }
+
+   chunk_t *pc;
+   chunk_t *prev;
+
+   for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next(pc))
+   {
+      if (pc->type != CT_VSEMICOLON)
+      {
+         continue;
+      }
+      prev = chunk_get_prev_ncnl(pc);
+      if ((prev != NULL) && (prev->type == CT_BRACE_CLOSE))
+      {
+         if ((prev->parent_type == CT_IF) ||
+             (prev->parent_type == CT_ELSE) ||
+             (prev->parent_type == CT_SWITCH) ||
+             (prev->parent_type == CT_CASE) ||
+             (prev->parent_type == CT_WHILE_OF_DO))
+         {
+            pc->len = 0;
+         }
+      }
+   }
+}
+
 /**
  * Checks to see if a token continues a statement to the next line.
  * We need to check for 'open' braces/paren/etc because the level doesn't
  * change until the token after the open.
  */
-bool pawn_continued(chunk_t *pc, int br_level)
+static bool pawn_continued(chunk_t *pc, int br_level)
 {
    if (pc == NULL)
    {

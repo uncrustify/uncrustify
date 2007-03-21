@@ -37,6 +37,7 @@ Changes in uncrustify-0.34
  - fix indenting on open parens
  - Add sp_before_semi_for_empty
  - Fix detection of while if the do is in a preprocessor chunk (1675673)
+ - (pawn) Don't add vsemi after case/switch brace close (1684840)
 
 
 Changes in uncrustify-0.33
