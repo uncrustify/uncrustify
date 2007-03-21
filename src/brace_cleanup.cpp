@@ -172,6 +172,36 @@ void brace_cleanup(void)
 
 
 /**
+ * pc is a CT_WHILE.
+ * Scan backwards to see if we find a brace/vbrace with the parent set to CT_DO
+ */
+static bool maybe_while_of_do(chunk_t *pc)
+{
+   chunk_t *prev;
+
+   prev = chunk_get_prev_ncnl(pc);
+   if ((prev == NULL) || !(prev->flags & PCF_IN_PREPROC))
+   {
+      return(false);
+   }
+
+   /* Find the chunk before the preprocessor */
+   while ((prev != NULL) && (prev->flags & PCF_IN_PREPROC))
+   {
+      prev = chunk_get_prev_ncnl(prev);
+   }
+
+   if ((prev != NULL) && 
+       (prev->parent_type == CT_DO) &&
+       ((prev->type == CT_VBRACE_CLOSE) ||
+        (prev->type == CT_BRACE_CLOSE)))
+   {
+      return(true);
+   }
+   return(false);
+}
+
+/**
  * At the heart of this algorithm are two stacks.
  * There is the Paren Stack (PS) and the Frame stack.
  *
@@ -468,8 +498,16 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
    else if (patcls == PATCLS_PBRACED)
    {
       frm->pse_tos++;
-      frm->pse[frm->pse_tos].type  = pc->type;
-      frm->pse[frm->pse_tos].stage = BS_PAREN1;
+      if ((pc->type == CT_WHILE) && maybe_while_of_do(pc))
+      {
+         pc->type = CT_WHILE_OF_DO;
+         frm->pse[frm->pse_tos].stage = BS_WOD_PAREN;
+      }
+      else
+      {
+         frm->pse[frm->pse_tos].stage = BS_PAREN1;
+      }
+      frm->pse[frm->pse_tos].type = pc->type;
 
       print_stack(LBCSPUSH, "+ComplexParenBraced", frm, pc);
    }

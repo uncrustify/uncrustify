@@ -30,7 +30,7 @@ int main()
         Foo();
     }
 #endif
-    while (Loop--) ;
+    while (Loop--);
 }
 
 
