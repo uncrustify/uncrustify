@@ -1,6 +1,10 @@
 class X : Y {
    bool Method(int argument_1, int argument_2)
    {
+      #region something
+      int foo = 0;
+      #endregion
+
       if (argument_1 == argument_2)
       {
          throw new Exception(Locale.GetText("They are equal!"));
@@ -29,13 +33,9 @@ class X : Y {
    }
 
    bool MyProperty {
-      get {
-         return(x);
-      }
+      get { return(x); }
 
-      set {
-         x = value;
-      }
+      set { x = value; }
    }
 
    void AnotherMethod()

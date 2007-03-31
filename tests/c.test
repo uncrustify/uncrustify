@@ -129,6 +129,8 @@
 20301 d.cfg                    c/preproc-if.c
 20302 cpp_to_c-1.cfg           c/nl-cont.c
 
+20310 ben.cfg                  c/empty-for.c
+
 # some embedded sql stuff
 21000 ben.cfg                  sql/mysql.sqc
 21001 ben.cfg                  sql/sta-select.sqc

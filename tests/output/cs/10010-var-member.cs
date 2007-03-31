@@ -6,7 +6,7 @@ namespace Foo.Man.Chu
    public class MainForm : System.Windows.Forms.Form
    {
       #region Initialize the private properties
-      private System.Windows.Forms.MenuItem    File;
+      private System.Windows.Forms.MenuItem File;
       private System.Windows.Forms.MenuItem    Exit;
       private System.Windows.Forms.Label       label1;
       private System.Windows.Forms.Label       label2;
