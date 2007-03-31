@@ -96,6 +96,7 @@ typedef enum
 
    CT_POUND,               /* # */
    CT_PREPROC,             /* # at the start of a line */
+   CT_PREPROC_INDENT,      /* # at the start of a line that gets indented: #region */
    CT_PREPROC_BODY,        /* body of every preproc EXCEPT #define */
    CT_PP,                  /* ## */
    CT_ELLIPSIS,            /* ... */
@@ -202,6 +203,11 @@ typedef enum
    CT_PP_SECTION,
    CT_PP_UNDEF,
    CT_PP_PRAGMA,
+
+   CT_PP_BODYCHUNK,     /* everything after this gets put in CT_PREPROC_BODY */
+
+   CT_PP_REGION,        /* C# #region */
+   CT_PP_ENDREGION,     /* C# #endregion */
    CT_PP_OTHER,         /* #line, #error, #pragma, etc */
    /* end PP types */
 

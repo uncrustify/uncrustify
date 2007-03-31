@@ -332,7 +332,14 @@ void indent_text(void)
             frm.level++;
             indent_pse_push(frm, pc);
 
-            frm.pse[frm.pse_tos].indent     = 1 + indent_size;
+            if (pc->type == CT_PREPROC_INDENT)
+            {
+               frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent;
+            }
+            else
+            {
+               frm.pse[frm.pse_tos].indent = 1 + indent_size;
+            }
             frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
          }
       }
@@ -872,6 +879,12 @@ void indent_text(void)
                     __func__, pc->orig_line, frm.pse[frm.pse_tos].indent_tmp);
             indent_comment(pc, frm.pse[frm.pse_tos].indent_tmp);
          }
+         else if (pc->type == CT_PREPROC_INDENT)
+         {
+            LOG_FMT(LINDENT, "%s: %d] pp-indent => %d [%.*s]\n",
+                    __func__, pc->orig_line, indent_column, pc->len, pc->str);
+            reindent_line(pc, indent_column);
+         }
          else if (pc->type == CT_PREPROC)
          {
             /* Preprocs are always in column 1. See indent_preproc() */
@@ -1181,6 +1194,8 @@ void indent_preproc(void)
          continue;
       }
 
+      next = chunk_get_next_ncnl(pc);
+
       if (pc->column != 1)
       {
          /* Don't handle preprocessors that aren't in column 1 */
@@ -1211,7 +1226,11 @@ void indent_preproc(void)
       }
 
       /* Note that the indent is removed by default */
-      if ((cpd.settings[UO_pp_indent].a & AV_ADD) != 0)
+      if ((next->type == CT_PP_REGION) || (next->type == CT_PP_ENDREGION))
+      {
+         /* no spaces allowed - this gets indented */
+      }
+      else if ((cpd.settings[UO_pp_indent].a & AV_ADD) != 0)
       {
          /* Need to add some spaces */
          pc->str -= pp_level;

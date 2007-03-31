@@ -588,7 +588,8 @@ static void mark_lvalue(chunk_t *pc)
           (prev->type == CT_VSEMICOLON) ||
           chunk_is_str(prev, "(", 1) ||
           chunk_is_str(prev, "{", 1) ||
-          chunk_is_str(prev, "[", 1))
+          chunk_is_str(prev, "[", 1) ||
+          (prev->flags & PCF_IN_PREPROC))
       {
          break;
       }

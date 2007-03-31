@@ -629,7 +629,8 @@ static bool parse_next(chunk_t *pc)
    /**
     *  Handle unknown/unhandled preprocessors
     */
-   if (cpd.in_preproc == CT_PP_OTHER)
+   if ((cpd.in_preproc > CT_PP_BODYCHUNK) &&
+       (cpd.in_preproc <= CT_PP_OTHER))
    {
       /* Chunk to a newline or comment */
       pc->type = CT_PREPROC_BODY;

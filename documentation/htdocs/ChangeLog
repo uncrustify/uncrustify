@@ -39,6 +39,7 @@ Changes in uncrustify-0.34
  - Fix detection of while if the do is in a preprocessor chunk (1675673)
  - (pawn) Don't add vsemi after case/switch brace close (1684840)
  - Add nl_assign_leave_one_liners to allow "foo_t foo = { 0, 1 };"
+ - Change handling of #region stuff so that it is indented at brace level
 
 
 Changes in uncrustify-0.33

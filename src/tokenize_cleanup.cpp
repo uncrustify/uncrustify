@@ -250,6 +250,18 @@ void tokenize_cleanup(void)
          }
       }
 
+      /* Handle special preprocessor junk */
+      if (pc->type == CT_PREPROC)
+      {
+         pc->parent_type = next->type;
+
+         if ((next->type == CT_PP_REGION) ||
+             (next->type == CT_PP_ENDREGION))
+         {
+            pc->type = CT_PREPROC_INDENT;
+         }
+      }
+
       /* TODO: determine other stuff here */
 
       prev = pc;

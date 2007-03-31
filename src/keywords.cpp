@@ -99,7 +99,7 @@ static const chunk_tag_t keywords[] =
    { "endif",            CT_PP_ENDIF,    LANG_ALL | FLAG_PP                                  }, // PAWN
    { "endinput",         CT_PP_ENDINPUT, LANG_PAWN | FLAG_PP                                 }, // PAWN
    { "endscript",        CT_PP_ENDINPUT, LANG_PAWN | FLAG_PP                                 }, // PAWN
-   { "endregion",        CT_PP_ENDIF,    LANG_CS | FLAG_PP                                   },
+   { "endregion",        CT_PP_ENDREGION,LANG_CS | FLAG_PP                                   },
    { "enum",             CT_ENUM,        LANG_ALL                                            }, // PAWN
    { "error",            CT_PP_ERROR,    LANG_PAWN | FLAG_PP                                 }, // PAWN
    { "event",            CT_TYPE,        LANG_CS                                             },
@@ -168,7 +168,7 @@ static const chunk_tag_t keywords[] =
    { "readonly",         CT_QUALIFIER,   LANG_CS                                             },
    { "real",             CT_TYPE,        LANG_D                                              },
    { "ref",              CT_QUALIFIER,   LANG_CS                                             },
-   { "region",           CT_PP_IF,       LANG_CS | FLAG_PP                                   },
+   { "region",           CT_PP_REGION,   LANG_CS | FLAG_PP                                   },
    { "register",         CT_QUALIFIER,   LANG_C | LANG_CPP                                   },
    { "reinterpret_cast", CT_TYPE_CAST,   LANG_C | LANG_CPP                                   },
    { "restrict",         CT_QUALIFIER,   LANG_C | LANG_CPP                                   },

@@ -59,6 +59,7 @@ struct no_space_table_s no_space_table[] =
    { CT_UNKNOWN,       CT_VBRACE_CLOSE  },
    { CT_UNKNOWN,       CT_VBRACE_OPEN   },
    { CT_PREPROC,       CT_UNKNOWN       },
+   { CT_PREPROC_INDENT,CT_UNKNOWN       },
    { CT_NEG,           CT_UNKNOWN       },
    { CT_UNKNOWN,       CT_SQUARE_OPEN   },
    { CT_UNKNOWN,       CT_SQUARE_CLOSE  },
