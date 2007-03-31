@@ -44,7 +44,8 @@ void do_braces(void)
    }
 
    /* Need to mark one-liners */
-   if (cpd.settings[UO_nl_class_leave_one_liners].b)
+   if (cpd.settings[UO_nl_class_leave_one_liners].b ||
+       cpd.settings[UO_nl_assign_leave_one_liners].b)
    {
       chunk_t *pc;
       chunk_t *br_open;

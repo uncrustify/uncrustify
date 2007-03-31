@@ -206,6 +206,7 @@ void register_options(void)
    unc_begin_group(UG_newline, "Newline adding and removing options");
    unc_add_option("code_width", UO_code_width, AT_NUM, "Try to limit code width to N number of columns", "", 16, 256);
    unc_add_option("nl_collapse_empty_body", UO_nl_collapse_empty_body, AT_BOOL, "Whether to collapse empty blocks between '{' and '}'");
+   unc_add_option("nl_assign_leave_one_liners", UO_nl_assign_leave_one_liners, AT_BOOL, "Don't touch one-line braced assignments - 'foo_t f = { 1, 2 };'");
    unc_add_option("nl_class_leave_one_liners", UO_nl_class_leave_one_liners, AT_BOOL, "Don't touch one-line function bodies inside a class xx { } body");
    unc_add_option("nl_start_of_file", UO_nl_start_of_file, AT_IARF, "Add or remove newlines at the start of the file");
    unc_add_option("nl_start_of_file_min", UO_nl_start_of_file_min, AT_NUM, "The number of newlines at the start of the file (only used if nl_start_of_file is 'add' or 'force'");

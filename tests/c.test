@@ -71,6 +71,8 @@
 
 # structure initializers
 00301   ben.cfg                c/align-struct-init.c
+00302   ben.cfg                c/one-liner-init.c
+00303   1liner-split.cfg       c/one-liner-init.c
 
 # aligning tresholds
 00401   align.cfg              c/align-equ.c

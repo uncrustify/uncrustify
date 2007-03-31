@@ -765,9 +765,19 @@ static void newlines_brace_pair(chunk_t *br_open)
       }
    }
 
-   if ((br_open->flags & PCF_ONE_CLASS) == PCF_ONE_CLASS)
+   if (br_open->flags & PCF_ONE_LINER)
    {
-      return;
+      if (cpd.settings[UO_nl_class_leave_one_liners].b &&
+          (br_open->flags & PCF_IN_CLASS))
+      {
+         return;
+      }
+
+      if (cpd.settings[UO_nl_assign_leave_one_liners].b &&
+          (br_open->parent_type == CT_ASSIGN))
+      {
+         return;
+      }
    }
 
    next = chunk_get_next_nc(br_open);
@@ -1697,7 +1707,9 @@ void do_blank_lines(void)
 
       /* Add blanks after function bodies */
       if ((prev != NULL) && (prev->type == CT_BRACE_CLOSE) &&
-          ((prev->parent_type == CT_FUNC_DEF) || (prev->parent_type == CT_FUNC_CLASS)))
+          ((prev->parent_type == CT_FUNC_DEF) ||
+           (prev->parent_type == CT_FUNC_CLASS) ||
+           (prev->parent_type == CT_ASSIGN)))
       {
          if (prev->flags & PCF_ONE_LINER)
          {
