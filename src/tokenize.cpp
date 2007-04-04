@@ -358,7 +358,11 @@ static bool parse_string(chunk_t *pc, int quote_idx, bool allow_escape)
       if (!escaped)
       {
          cpd.column++;
-         if (pc->str[len] == escape_char)
+         if (pc->str[len] == '\\')
+         {
+            escaped = '\\';
+         }
+         else if (pc->str[len] == escape_char)
          {
             escaped = allow_escape;
          }
@@ -374,10 +378,6 @@ static bool parse_string(chunk_t *pc, int quote_idx, bool allow_escape)
             len++;
             break;
          }
-
-         /* TODO: detect a newline in the string -- for an error condition?
-          * Some languages allow newlines in strings.
-          */
       }
       else
       {
