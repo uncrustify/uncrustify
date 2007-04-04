@@ -191,7 +191,7 @@ static bool maybe_while_of_do(chunk_t *pc)
       prev = chunk_get_prev_ncnl(prev);
    }
 
-   if ((prev != NULL) && 
+   if ((prev != NULL) &&
        (prev->parent_type == CT_DO) &&
        ((prev->type == CT_VBRACE_CLOSE) ||
         (prev->type == CT_BRACE_CLOSE)))
@@ -518,6 +518,14 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
       frm->pse[frm->pse_tos].stage = BS_OP_PAREN1;
 
       print_stack(LBCSPUSH, "+ComplexOpParenBraced", frm, pc);
+   }
+   else if (patcls == PATCLS_ELSE)
+   {
+      frm->pse_tos++;
+      frm->pse[frm->pse_tos].type  = pc->type;
+      frm->pse[frm->pse_tos].stage = BS_ELSEIF;
+
+      print_stack(LBCSPUSH, "+ComplexElse", frm, pc);
    }
 
    /* Mark simple statement/expression starts
