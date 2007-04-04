@@ -362,7 +362,8 @@ static bool parse_string(chunk_t *pc, int quote_idx, bool allow_escape)
          {
             escaped = '\\';
          }
-         else if (pc->str[len] == escape_char)
+         else if ((pc->str[len] == escape_char) &&
+                  (pc->str[len + 1] == end_ch))
          {
             escaped = allow_escape;
          }
