@@ -117,7 +117,8 @@ void register_options(void)
    unc_add_option("newlines", UO_newlines, AT_LINE, "The type of line endings");
    unc_add_option("input_tab_size", UO_input_tab_size, AT_NUM, "The original size of tabs in the input", "", 1, 32);
    unc_add_option("output_tab_size", UO_output_tab_size, AT_NUM, "The size of tabs in the output (only used if align_with_tabs=true)", "", 1, 32);
-   unc_add_option("string_escape_char", UO_string_escape_char, AT_NUM, "The ascii value of the string escape char, usually 92 (\\). (Pawn)", "", 0, 255);
+   unc_add_option("string_escape_char", UO_string_escape_char, AT_NUM, "The ascii value of the string escape char, usually 92 (\\) or 94 (^). (Pawn)", "", 0, 255);
+   unc_add_option("string_escape_char2", UO_string_escape_char2, AT_NUM, "Alternate string escape char for Pawn. Only works right before the quote char.", "", 0, 255);
 
    unc_begin_group(UG_space, "Spacing options");
    unc_add_option("sp_arith", UO_sp_arith, AT_IARF, "Add or remove space around arithmetic operator '+', '-', '/', '*', etc");

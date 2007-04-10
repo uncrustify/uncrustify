@@ -345,8 +345,9 @@ static bool parse_string(chunk_t *pc, int quote_idx, bool allow_escape)
 {
    bool escaped = 0;
    int  end_ch;
-   int  len         = quote_idx;
-   char escape_char = cpd.settings[UO_string_escape_char].n;
+   int  len          = quote_idx;
+   char escape_char  = cpd.settings[UO_string_escape_char].n;
+   char escape_char2 = cpd.settings[UO_string_escape_char2].n;
 
    pc->type = CT_STRING;
 
@@ -358,11 +359,11 @@ static bool parse_string(chunk_t *pc, int quote_idx, bool allow_escape)
       if (!escaped)
       {
          cpd.column++;
-         if (pc->str[len] == '\\')
+         if (pc->str[len] == escape_char)
          {
-            escaped = '\\';
+            escaped = escape_char;
          }
-         else if ((pc->str[len] == escape_char) &&
+         else if ((pc->str[len] == escape_char2) &&
                   (pc->str[len + 1] == end_ch))
          {
             escaped = allow_escape;

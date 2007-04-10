@@ -374,6 +374,7 @@ enum uncrustify_options
    UO_cmt_cpp_nl_end,           // put a nl before the */ in a converted group
 
    UO_string_escape_char,       // the string escape char to use
+   UO_string_escape_char2,      // the string escape char to use
 
    /* This is used to get the enumeration count */
    UO_option_count
