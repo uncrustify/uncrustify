@@ -673,7 +673,7 @@ void indent_text(void)
          indent_pse_push(frm, pc);
 
          frm.pse[frm.pse_tos].indent     = tmp;
-         frm.pse[frm.pse_tos].indent_tmp = tmp - indent_size;
+         frm.pse[frm.pse_tos].indent_tmp = tmp - indent_size + cpd.settings[UO_indent_case_shift].n;
          frm.pse[frm.pse_tos].indent_tab = tmp;
 
          /* Always set on case statements */

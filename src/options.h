@@ -100,6 +100,7 @@ enum uncrustify_options
    UO_pp_space,                  // spaces between # and word (add/ignore/remove)
 
    UO_indent_switch_case,        // spaces to indent case from switch
+   UO_indent_case_shift,         // spaces to shift the line with the 'case'
    UO_indent_case_brace,         // spaces to indent '{' from case (usually 0 or indent_columns)
 
    UO_indent_brace,              // spaces to indent '{' from level (usually 0)

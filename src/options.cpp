@@ -197,6 +197,7 @@ void register_options(void)
    unc_add_option("indent_member", UO_indent_member, AT_NUM, "The number of spaces to indent a continued '->' or '.'\nUsually set to 0, 1, or indent_columns.");
    unc_add_option("indent_sing_line_comments", UO_indent_sing_line_comments, AT_NUM, "Spaces to indent single line ('//') comments on lines before code");
    unc_add_option("indent_switch_case", UO_indent_switch_case, AT_NUM, "Spaces to indent 'case' from 'switch'\nUsually 0 or indent_columns.");
+   unc_add_option("indent_case_shift", UO_indent_case_shift, AT_NUM, "Spaces to shift the 'case' line, without affecting any other lines\nUsually 0.");
    unc_add_option("indent_case_brace", UO_indent_case_brace, AT_NUM, "Spaces to indent '{' from 'case'.\nBy default, the brace will appear under the 'c' in case.\nUsually set to 0 or indent_columns.");
    unc_add_option("indent_col1_comment", UO_indent_col1_comment, AT_BOOL, "Whether to indent comments found in first column");
    unc_add_option("indent_label", UO_indent_label, AT_NUM, "How to indent goto labels\n >0 : absolute column where 1 is the leftmost column\n <=0 : subtract from brace indent", "", -16, 16);
