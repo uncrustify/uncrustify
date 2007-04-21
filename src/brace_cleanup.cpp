@@ -395,12 +395,46 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
       }
    }
 
-   if ((pc->type == CT_SEMICOLON) &&
-       (frm->pse[frm->pse_tos].stage == BS_WOD_SEMI))
+   /* In this state, we expect a semicolon, but we'll also hit the closing
+    * sparen, so we need to check cpd.consumed to see if the close sparen was
+    * aleady handled.
+    */
+   if (frm->pse[frm->pse_tos].stage == BS_WOD_SEMI)
    {
-      cpd.consumed    = true;
-      pc->parent_type = CT_WHILE_OF_DO;
-      handle_complex_close(frm, pc);
+      chunk_t *tmp = pc;
+
+      if (cpd.consumed)
+      {
+         /* If consumed, then we are on the close sparen.
+          * PAWN: Check the next chunk for a semicolon. If it isn't, then
+          * add a virtual semicolon, which will get handled on the next pass.
+          */
+         if (cpd.lang_flags & LANG_PAWN)
+         {
+            tmp = chunk_get_next_ncnl(pc);
+
+             if ((tmp->type != CT_SEMICOLON) && (tmp->type != CT_VSEMICOLON))
+             {
+                pawn_add_vsemi_after(pc);
+             }
+         }
+      }
+      else
+      {
+         /* Complain if this ISN'T a semicolon, but close out WHILE_OF_DO anyway */
+         if ((pc->type == CT_SEMICOLON) || (pc->type == CT_VSEMICOLON))
+         {
+            cpd.consumed    = true;
+            pc->parent_type = CT_WHILE_OF_DO;
+         }
+         else
+         {
+            LOG_FMT(LWARN, "%s:%d: Error: Expected a semicolon for WHILE_OF_DO, but got '%s'\n",
+                    cpd.filename, pc->orig_line, get_token_name(pc->type));
+            cpd.error_count++;
+         }
+         handle_complex_close(frm, pc);
+      }
    }
 
    /* Get the parent type for brace and paren open */

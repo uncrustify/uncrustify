@@ -17,7 +17,7 @@ static chunk_t *pawn_mark_function0(chunk_t *start, chunk_t *fcn);
 static chunk_t *pawn_process_variable(chunk_t *start);
 static chunk_t *pawn_process_func_def(chunk_t *pc);
 
-static chunk_t *pawn_add_vsemi_after(chunk_t *pc)
+chunk_t *pawn_add_vsemi_after(chunk_t *pc)
 {
    if ((pc->type == CT_VSEMICOLON) ||
        (pc->type == CT_SEMICOLON))
@@ -49,7 +49,7 @@ static chunk_t *pawn_add_vsemi_after(chunk_t *pc)
 }
 
 
-/** 
+/**
  * Turns certain virtual semicolons invisible.
  *  - after a close brace with a parent of switch, case, else, if
  */

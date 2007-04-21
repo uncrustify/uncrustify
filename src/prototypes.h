@@ -216,6 +216,7 @@ void pawn_prescan(void);
 void pawn_add_virtual_semicolons();
 chunk_t *pawn_check_vsemicolon(chunk_t *pc);
 void pawn_scrub_vsemi(void);
+chunk_t *pawn_add_vsemi_after(chunk_t *pc);
 
 
 /*
