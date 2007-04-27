@@ -742,7 +742,11 @@ static void uncrustify_file(const char *data, int data_len, FILE *pfout,
    }
    if (cpd.settings[UO_pos_bool].tp != TP_IGNORE)
    {
-      newlines_bool_pos();
+      newlines_chunk_pos(CT_BOOL, cpd.settings[UO_pos_bool].tp);
+   }
+   if (cpd.settings[UO_pos_comma].tp != TP_IGNORE)
+   {
+      newlines_chunk_pos(CT_COMMA, cpd.settings[UO_pos_comma].tp);
    }
    newlines_class_colon_pos();
    newlines_eat_start_end();

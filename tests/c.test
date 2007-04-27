@@ -79,7 +79,7 @@
 
 00411   ben.cfg                c/align-typedef.c
 
-# boolean positioning
+# boolean and comma positioning
 00501   bool-pos-eol.cfg       c/bool-pos.c
 00502   bool-pos-sol.cfg       c/bool-pos.c
 

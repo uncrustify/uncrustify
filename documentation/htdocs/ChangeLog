@@ -41,6 +41,8 @@ Changes in uncrustify-0.34
  - Add nl_assign_leave_one_liners to allow "foo_t foo = { 0, 1 };"
  - Change handling of #region stuff so that it is indented at brace level
  - Fix handling of missing semicolon after while-of-do.
+ - Fix crash-bug in handling bad code: "if (a && );"
+ - Add pos_comma
 
 
 Changes in uncrustify-0.33

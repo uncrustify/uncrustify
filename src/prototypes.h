@@ -129,7 +129,7 @@ void newlines_cleanup_braces(void);
 void newlines_insert_blank_lines(void);
 void newlines_squeeze_ifdef(void);
 void newlines_eat_start_end(void);
-void newlines_bool_pos(void);
+void newlines_chunk_pos(c_token_t chunk_type, tokenpos_e mode);
 void newlines_class_colon_pos(void);
 void newlines_cleanup_dup(void);
 void newlines_double_space_struct_enum_union(void);

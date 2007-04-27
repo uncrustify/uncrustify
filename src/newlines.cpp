@@ -1476,17 +1476,15 @@ void newlines_eat_start_end(void)
 
 
 /**
- * Searches for CT_BOOL (|| or && or ^^) operators and moves them, if needed.
- * Will not move CT_BOOL tokens that are on their own line or have other than
- * exactly 1 newline before (UO_pos_bool == TRAIL) or
- * after (UO_pos_bool == LEAD).
+ * Searches for a chunk of type chunk_type and moves them, if needed.
+ * Will not move tokens that are on their own line or have other than
+ * exactly 1 newline before (UO_pos_comma == TRAIL) or after (UO_pos_comma == LEAD).
  */
-void newlines_bool_pos(void)
+void newlines_chunk_pos(c_token_t chunk_type, tokenpos_e mode)
 {
    chunk_t    *pc;
    chunk_t    *next;
    chunk_t    *prev;
-   tokenpos_e mode = cpd.settings[UO_pos_bool].tp;
 
    if (mode == TP_IGNORE)
    {
@@ -1495,7 +1493,7 @@ void newlines_bool_pos(void)
 
    for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next_ncnl(pc))
    {
-      if (pc->type == CT_BOOL)
+      if (pc->type == chunk_type)
       {
          prev = chunk_get_prev_nc(pc);
          next = chunk_get_next_nc(pc);
