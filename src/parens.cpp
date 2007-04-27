@@ -54,9 +54,15 @@ static void add_parens_between(chunk_t *first, chunk_t *last)
    LOG_FMT(LPARADD, "%s: line %d between %.*s and %.*s\n", __func__,
            first->orig_line, first->len, first->str, last->len, last->str);
 
+   /* Don't do anything if we have a bad sequence, ie "&& )" */
+   first_n = chunk_get_next_ncnl(first);
+   if (first_n == last)
+   {
+      return;
+   }
+
    memset(&pc, 0, sizeof(pc));
 
-   first_n        = chunk_get_next_ncnl(first);
    pc.type        = CT_PAREN_OPEN;
    pc.str         = "(";
    pc.len         = 1;
@@ -98,7 +104,7 @@ static chunk_t *add_bool_parens(chunk_t *popen)
    chunk_t *prev;
 
 
-   LOG_FMT(LPARADD, "%s: start on %d : ", __func__, popen->orig_line);
+   LOG_FMT(LPARADD, "%s: start on %d : \n", __func__, popen->orig_line);
 
    ref = popen;
    pc  = popen;
