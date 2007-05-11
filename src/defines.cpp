@@ -118,7 +118,7 @@ const define_tag_t *find_define(const char *word, int len)
    if (len > (int)(sizeof(buf) - 1))
    {
       LOG_FMT(LNOTE, "%s: define too long at %d char (%d max) : %.*s\n",
-              __func__, len, sizeof(buf), len, word);
+              __func__, len, (int)sizeof(buf), len, word);
       return(NULL);
    }
    memcpy(buf, word, len);
