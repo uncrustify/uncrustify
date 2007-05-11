@@ -19,10 +19,10 @@ Future plans: (in no particular order)
 
 Plans for the next release
 -------------------------------------------------------------------------------
- - Add support for Objective-C
  - improve code width logic
    + add options to remove newlines inside parens before splitting long lines
  - more misc code cleanup
+ - fix pending bugs
 
 
 ===============================================================================
