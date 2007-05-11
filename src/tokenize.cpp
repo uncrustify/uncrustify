@@ -361,7 +361,7 @@ static bool parse_string(chunk_t *pc, int quote_idx, bool allow_escape)
          cpd.column++;
          if (pc->str[len] == escape_char)
          {
-            escaped = escape_char;
+            escaped = (escape_char != 0);
          }
          else if ((pc->str[len] == escape_char2) &&
                   (pc->str[len + 1] == end_ch))
