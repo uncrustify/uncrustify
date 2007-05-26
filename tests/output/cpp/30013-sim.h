@@ -20,7 +20,7 @@ class Example
 
 #if !defined (EVERYTHING_OK)
 #error Define EVERYTHING_OK if you would like to compile your code \
-or not if you would like to stop!
+  or not if you would like to stop!
 #endif
 
 

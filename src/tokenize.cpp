@@ -641,9 +641,18 @@ static bool parse_next(chunk_t *pc)
       {
          char ch = pc->str[pc->len];
 
-         /* Bail on a non-escaped newline or on a C++ comment start */
-         if ((((ch == '\n') || (ch == '\r')) && (last != '\\')) ||
-             ((ch == '/') && (pc->str[pc->len + 1] == '/')))
+         if ((ch == '\n') || (ch == '\r'))
+         {
+            /* Back off if this is an escaped newline */
+            if (last == '\\')
+            {
+               pc->len--;
+            }
+            break;
+         }
+
+         /* Quit on a C++ comment start */
+         if ((ch == '/') && (pc->str[pc->len + 1] == '/'))
          {
             break;
          }

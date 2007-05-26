@@ -130,6 +130,7 @@
 20302 cpp_to_c-1.cfg           c/nl-cont.c
 
 20310 ben.cfg                  c/empty-for.c
+20311 ben.cfg                  c/pragma.c
 
 # some embedded sql stuff
 21000 ben.cfg                  sql/mysql.sqc

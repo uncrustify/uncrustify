@@ -202,10 +202,10 @@ typedef enum
    CT_PP_LINE,
    CT_PP_SECTION,
    CT_PP_UNDEF,
-   CT_PP_PRAGMA,
 
    CT_PP_BODYCHUNK,     /* everything after this gets put in CT_PREPROC_BODY */
 
+   CT_PP_PRAGMA,        /* pragma's should not be altered */
    CT_PP_REGION,        /* C# #region */
    CT_PP_ENDREGION,     /* C# #endregion */
    CT_PP_OTHER,         /* #line, #error, #pragma, etc */
