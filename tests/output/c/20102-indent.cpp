@@ -177,7 +177,6 @@ void reindent_line(chunk_t * pc, int column)
   while ((pc != NULL) && (pc->nl_count == 0));
   }
 
-
 /**
  * Starts a new entry
  *
@@ -205,7 +204,6 @@ static void indent_pse_push(struct parse_frame& frm, chunk_t * pc)
     frm.pse[frm.pse_tos].in_preproc = (pc->flags & PCF_IN_PREPROC) != 0;
     }
   }
-
 
 /**
  * Removes the top entry
@@ -239,7 +237,6 @@ static void indent_pse_pop(struct parse_frame& frm, chunk_t * pc)
     }
   }
 
-
 static int token_indent(c_token_t type)
   {
   switch (type)
@@ -265,7 +262,6 @@ static int token_indent(c_token_t type)
       return 0;  //cpd.settings[UO_indent_braces].n;
     }
   }
-
 
 /**
  * Change the top-level indentation only by changing the column member in
@@ -904,7 +900,6 @@ static void indent_comment(chunk_t * pc, int col)
 
   pc->column = col;
   }
-
 
 /**
  * Put spaces on either side of the preproc (#) symbol.

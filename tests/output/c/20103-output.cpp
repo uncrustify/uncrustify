@@ -53,7 +53,6 @@ void add_text_len(const char * text, int len)
     }
   }
 
-
 /**
  * Advance to a specific column
  * cpd.column is the current column
@@ -96,8 +95,6 @@ void output_indent(int column, int brace_col)
   while (cpd.column < column)
     add_text(" ");
   }
-
-
 
 void output_parsed(FILE * pfile)
   {
@@ -249,7 +246,6 @@ void output_text(FILE * pfile)
       }
     }
   }
-
 
 /**
  * Given a multi-line comemnt block that starts in column X, figure out how

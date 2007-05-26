@@ -220,7 +220,6 @@ out_unlock:
   return res;
   }
 
-
 int i2c_del_adapter(struct i2c_adapter * adap)
   {
   struct list_head * item, * _n;
@@ -297,7 +296,6 @@ out_unlock:
   up(&core_lists);
   return res;
   }
-
 
 /* -----
  * What follows is the "upwards" interface: commands for talking to clients,
@@ -471,7 +469,6 @@ int i2c_attach_client(struct i2c_client * client)
 
   return 0;
   }
-
 
 int i2c_detach_client(struct i2c_client * client)
   {
@@ -698,7 +695,6 @@ int i2c_master_recv(struct i2c_client * client, char * buf, int count)
      transmitted, else error code. */
   return (ret == 1) ? count : ret;
   }
-
 
 int i2c_control(struct i2c_client * client,
                 unsigned int cmd, unsigned long arg)
@@ -1307,7 +1303,6 @@ static s32 i2c_smbus_xfer_emulated(struct i2c_adapter * adapter, u16 addr,
   return 0;
   }
 
-
 s32 i2c_smbus_xfer(struct i2c_adapter * adapter, u16 addr, unsigned short flags,
                    char read_write, u8 command, int size,
                    union i2c_smbus_data * data)
@@ -1361,7 +1356,6 @@ s32 i2c_smbus_xfer(struct i2c_adapter * adapter, u16 addr, unsigned short flags,
 
   return res;
   }
-
 
 /* Next four are needed by i2c-isa */
 EXPORT_SYMBOL_GPL(i2c_adapter_dev_release);
