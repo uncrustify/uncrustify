@@ -138,7 +138,14 @@ void output_parsed(FILE *pfile)
          {
             fprintf(pfile, " ");
          }
-         fprintf(pfile, "%.*s", pc->len, pc->str);
+         if (pc->type != CT_NL_CONT)
+         {
+            fprintf(pfile, "%.*s", pc->len, pc->str);
+         }
+         else
+         {
+            fprintf(pfile, "\\");
+         }
       }
    }
    fprintf(pfile, "\n-=====-\n");
