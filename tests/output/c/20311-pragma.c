@@ -9,3 +9,5 @@
 
 #pragma mark -------- Protected Member Functions ----------------
 
+#pragma some comment follows // comment
+
