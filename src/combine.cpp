@@ -367,7 +367,7 @@ void fix_symbols(void)
 
       /* Check for a close paren followed by an open paren, which means that
        * we are on a function type declaration (C/C++ only?).
-       * Note that typedefs are already taken card of.
+       * Note that typedefs are already taken care of.
        */
       if ((next != NULL) &&
           ((pc->flags & PCF_IN_TYPEDEF) == 0) &&
@@ -633,9 +633,13 @@ static void mark_function_type(chunk_t *pc)
       {
          star_count++;
       }
-      else if (tmp->type == CT_WORD)
+      else if ((tmp->type == CT_WORD) || (tmp->type == CT_TYPE))
       {
          word_count++;
+      }
+      else if (tmp->type == CT_DC_MEMBER)
+      {
+         word_count = 0;
       }
       else if (chunk_is_str(tmp, "(", 1))
       {
@@ -1742,7 +1746,7 @@ static void mark_function(chunk_t *pc)
       if ((prev != NULL) && (prev->type == CT_DC_MEMBER))
       {
          prev = chunk_get_prev_ncnlnp(prev);
-         if ((prev != NULL) && (prev->type == CT_WORD))
+         if ((prev != NULL) && ((prev->type == CT_WORD) || (prev->type == CT_TYPE)))
          {
             if ((pc->len == prev->len) && (memcmp(pc->str, prev->str, pc->len) == 0))
             {

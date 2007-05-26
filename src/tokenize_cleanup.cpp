@@ -142,6 +142,15 @@ void tokenize_cleanup(void)
          }
       }
 
+      if ((cpd.lang_flags & LANG_CPP) != 0)
+      {
+         /* Change Word before '::' into a type */
+         if ((pc->type == CT_WORD) && (next->type == CT_DC_MEMBER))
+         {
+            pc->type = CT_TYPE;
+         }
+      }
+
       /* Change get/set to CT_WORD if not followed by a brace open */
       if ((pc->type == CT_GETSET) && (next->type != CT_BRACE_OPEN))
       {

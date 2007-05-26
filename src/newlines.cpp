@@ -1047,13 +1047,7 @@ static void newline_func_def(chunk_t *start)
    chunk_t *pc;
    chunk_t *prev = NULL;
    chunk_t *tmp;
-
-   pc = chunk_get_next_ncnl(start);
-   if (chunk_is_str(pc, ")", 1))
-   {
-      return;
-   }
-
+   
    /* Handle break newlines type and function */
    if (cpd.settings[UO_nl_func_type_name].a != AV_IGNORE)
    {
@@ -1073,6 +1067,12 @@ static void newline_func_def(chunk_t *start)
       {
          newline_iarf(prev, cpd.settings[UO_nl_func_type_name].a);
       }
+   }
+
+   pc = chunk_get_next_ncnl(start);
+   if (chunk_is_str(pc, ")", 1))
+   {
+      return;
    }
 
    newline_iarf(start, cpd.settings[UO_nl_func_decl_start].a);
