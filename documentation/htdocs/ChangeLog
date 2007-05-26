@@ -28,6 +28,11 @@ Plans for the next release
 ===============================================================================
 
 
+Changes in uncrustify-0.35
+-------------------------------------------------------------------------------
+ - Fix bug with nl_func_type_name and empty param list: int foo() { ... }
+ 
+
 Changes in uncrustify-0.34
 -------------------------------------------------------------------------------
  - Add sp_angle_paren and sp_angle_word
