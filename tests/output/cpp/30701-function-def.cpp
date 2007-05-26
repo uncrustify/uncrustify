@@ -44,9 +44,11 @@ foo(
    printf("boo!\n");
 }
 
-int classname::method();
+int
+classname::method();
 
-int classname::method()
+int
+classname::method()
 {
    foo();
 }

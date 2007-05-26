@@ -22,11 +22,9 @@ int classname::method()
    foo();
 }
 
-int
-classname::method2();
+int classname::method2();
 
-int
-classname::method2()
+int classname::method2()
 {
    foo2();
 }

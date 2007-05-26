@@ -24,9 +24,11 @@ foo(int param1, int param2, char *param2)
    printf("boo!\n");
 }
 
-int classname::method();
+int
+classname::method();
 
-int classname::method()
+int
+classname::method()
 {
    foo();
 }
