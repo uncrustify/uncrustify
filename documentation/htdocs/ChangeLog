@@ -31,6 +31,8 @@ Plans for the next release
 Changes in uncrustify-0.35
 -------------------------------------------------------------------------------
  - Fix bug with nl_func_type_name and empty param list: int foo() { ... }
+ - Don't parse pragma bodies
+ - Properly indent multiline #error and #warning 
  
 
 Changes in uncrustify-0.34
