@@ -687,6 +687,12 @@ argval_t do_space(chunk_t *first, chunk_t *second)
       return(AV_IGNORE);
    }
 
+   /* If nothing claimed the PTR_TYPE, then return ignore */
+   if ((first->type == CT_PTR_TYPE) || (second->type == CT_PTR_TYPE))
+   {
+      return(AV_IGNORE);
+   }
+
    for (idx = 0; idx < (int)ARRAY_SIZE(no_space_table); idx++)
    {
       if (((no_space_table[idx].first == CT_UNKNOWN) ||

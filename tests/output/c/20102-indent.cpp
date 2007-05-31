@@ -115,10 +115,10 @@
  *    thatreallyannoysme.whenIhavetomaintain[thecode] = 3;
  */
 
-static void indent_comment(chunk_t * pc, int col);
+static void indent_comment(chunk_t *pc, int col);
 
 
-void indent_to_column(chunk_t * pc, int column)
+void indent_to_column(chunk_t *pc, int column)
   {
   if (column < pc->column)
     column = pc->column;
@@ -132,7 +132,7 @@ void indent_to_column(chunk_t * pc, int column)
  * @param pc      The chunk at the start of the line
  * @param column  The desired column
  */
-void reindent_line(chunk_t * pc, int column)
+void reindent_line(chunk_t *pc, int column)
   {
   int col_delta;
   int min_col;
@@ -183,7 +183,7 @@ void reindent_line(chunk_t * pc, int column)
  * @param frm  The parse frame
  * @param pc   The chunk causing the push
  */
-static void indent_pse_push(struct parse_frame& frm, chunk_t * pc)
+static void indent_pse_push(struct parse_frame& frm, chunk_t *pc)
   {
   static int ref = 0;
 
@@ -211,7 +211,7 @@ static void indent_pse_push(struct parse_frame& frm, chunk_t * pc)
  * @param frm  The parse frame
  * @param pc   The chunk causing the push
  */
-static void indent_pse_pop(struct parse_frame& frm, chunk_t * pc)
+static void indent_pse_pop(struct parse_frame& frm, chunk_t *pc)
   {
     /* Bump up the index and initialize it */
   if (frm.pse_tos > 0)
@@ -270,9 +270,9 @@ static int token_indent(c_token_t type)
  */
 void indent_text(void)
   {
-  chunk_t * pc;
-  chunk_t * next;
-  chunk_t * prev       = NULL;
+  chunk_t *pc;
+  chunk_t *next;
+  chunk_t *prev       = NULL;
   bool did_newline = true;
   int idx;
   int vardefcol   = 0;
@@ -778,9 +778,9 @@ void indent_text(void)
  */
 
 
-static bool single_line_comment_indent_rule_applies(chunk_t * start)
+static bool single_line_comment_indent_rule_applies(chunk_t *start)
   {
-  chunk_t * pc      = start;
+  chunk_t *pc      = start;
   int nl_count = 0;
 
   if (!chunk_is_single_line_comment(pc))
@@ -844,10 +844,10 @@ static bool single_line_comment_indent_rule_applies(chunk_t * start)
  * @param pc   The comment, which is the first item on a line
  * @param col  The column if this is to be put at indent level
  */
-static void indent_comment(chunk_t * pc, int col)
+static void indent_comment(chunk_t *pc, int col)
   {
-  chunk_t * nl;
-  chunk_t * prev;
+  chunk_t *nl;
+  chunk_t *prev;
 
   LOG_FMT(LCMTIND, "%s: line %d, col %d, level %d: ", __func__,
           pc->orig_line, pc->orig_col, pc->level);
@@ -908,15 +908,15 @@ static void indent_comment(chunk_t * pc, int col)
  */
 void indent_preproc(void)
   {
-  chunk_t * pc;
-  chunk_t * next;
+  chunk_t *pc;
+  chunk_t *next;
   int pp_level;
   int pp_level_sub = 0;
   int tmp;
 
     /* Define a string of 16 spaces + # + 16 spaces */
-  static const char * pp_str  = "                #                ";
-  static const char * alt_str = "                %:                ";
+  static const char *pp_str  = "                #                ";
+  static const char *alt_str = "                %:                ";
 
     /* Scan to see if the whole file is covered by one #ifdef */
   int stage = 0;

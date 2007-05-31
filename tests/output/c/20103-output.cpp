@@ -33,7 +33,7 @@ void add_char(char ch)
     }
   }
 
-void add_text(const char * text)
+void add_text(const char *text)
   {
   char ch;
 
@@ -44,7 +44,7 @@ void add_text(const char * text)
     }
   }
 
-void add_text_len(const char * text, int len)
+void add_text_len(const char *text, int len)
   {
   while (len-- > 0)
     {
@@ -96,9 +96,9 @@ void output_indent(int column, int brace_col)
     add_text(" ");
   }
 
-void output_parsed(FILE * pfile)
+void output_parsed(FILE *pfile)
   {
-  chunk_t * pc;
+  chunk_t *pc;
   int cnt;
 
   output_options(pfile);
@@ -130,10 +130,10 @@ void output_parsed(FILE * pfile)
   fflush(pfile);
   }
 
-void output_options(FILE * pfile)
+void output_options(FILE *pfile)
   {
   int idx;
-  const option_map_value * ptr;
+  const option_map_value *ptr;
 
   fprintf(pfile, "-== Options ==-\n");
 
@@ -176,10 +176,10 @@ void output_options(FILE * pfile)
 /**
  * This renders the chunk list to a file.
  */
-void output_text(FILE * pfile)
+void output_text(FILE *pfile)
   {
-  chunk_t * pc;
-  chunk_t * prev;
+  chunk_t *pc;
+  chunk_t *prev;
   int cnt;
   int lvlcol;
   bool allow_tabs;
@@ -271,7 +271,7 @@ void output_text(FILE * pfile)
  * @param start_col Starting column
  * @return 0 or 1
  */
-static int calculate_comment_body_indent(const char * str, int len, int start_col)
+static int calculate_comment_body_indent(const char *str, int len, int start_col)
   {
   int idx       = 0;
   int first_len = 0;
@@ -355,7 +355,7 @@ static int calculate_comment_body_indent(const char * str, int len, int start_co
  *
  * @return the last chunk output'd
  */
-chunk_t *output_comment_cpp(chunk_t * first)
+chunk_t *output_comment_cpp(chunk_t *first)
   {
   int col    = first->column;
   int col_br = 1 + (first->brace_level * cpd.settings[UO_indent_columns].n);
@@ -363,7 +363,7 @@ chunk_t *output_comment_cpp(chunk_t * first)
     /* Make sure we have at least one space past the last token */
   if (first->parent_type == CT_COMMENT_END)
     {
-    chunk_t * prev = chunk_get_prev(first);
+    chunk_t *prev = chunk_get_prev(first);
 
     if (prev != NULL)
       {
@@ -389,7 +389,7 @@ chunk_t *output_comment_cpp(chunk_t * first)
   if (cpd.settings[UO_cmt_cpp_group].b)
     {
       /* next is a newline by definition */
-    chunk_t * next = chunk_get_next(first);
+    chunk_t *next = chunk_get_next(first);
 
     if ((next != NULL) && (next->nl_count == 1))
       {
@@ -424,8 +424,8 @@ chunk_t *output_comment_cpp(chunk_t * first)
     return first;
     }
 
-  chunk_t * pc   = first;
-  chunk_t * last = first;
+  chunk_t *pc   = first;
+  chunk_t *last = first;
 
     /* Output the first line */
   add_text_len("/*", 2);
@@ -476,13 +476,13 @@ cpp_addline:
   return last;
   }
 
-void output_comment_multi(chunk_t * pc)
+void output_comment_multi(chunk_t *pc)
   {
   int cmt_col = pc->column;
-  const char * cmt_str;
+  const char *cmt_str;
   int remaining;
   char ch;
-  chunk_t * prev;
+  chunk_t *prev;
   char line[1024];
   int line_len;
   int line_count = 0;

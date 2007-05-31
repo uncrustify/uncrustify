@@ -57,9 +57,9 @@ class Lexer
     Token            token;        // current token
     Module           mod;          // current module
     Loc              loc;          // for error messages
-    ubyte            * base;       // pointer to start of buffer
-    ubyte            * end;        // past end of buffer
-    ubyte            * p;          // current character
+    ubyte            *base;        // pointer to start of buffer
+    ubyte            *end;         // past end of buffer
+    ubyte            *p;           // current character
     int              doDocComment; // collect doc comment information
     int              anyToken;     // !=0 means seen at least one token
     int              commentToken; // !=0 means comments are TOKcomment's
@@ -1094,7 +1094,7 @@ Lhex:
             break;
 
         case '&':                                       // named character entity
-            for (ubyte * idstart = ++p; 1; p++) {
+            for (ubyte *idstart = ++p; 1; p++) {
                 switch (*p) {
                 case ';':
                     //!!!
@@ -1147,7 +1147,7 @@ Lhex:
     /**************************************
      */
 
-    TOK wysiwygStringConstant(Token * t, int tc) {
+    TOK wysiwygStringConstant(Token *t, int tc) {
         uint c;
         Loc  start = loc;
 
@@ -1210,7 +1210,7 @@ Lhex:
      *	x"0A ae 34FE BD"
      */
 
-    TOK hexStringConstant(Token * t) {
+    TOK hexStringConstant(Token *t) {
         uint c;
         Loc  start = loc;
         uint n     = 0;
@@ -1297,7 +1297,7 @@ Lhex:
     /**************************************
      */
 
-    TOK escapeStringConstant(Token * t, int wide) {
+    TOK escapeStringConstant(Token *t, int wide) {
         uint c;
         Loc  start = loc;
 
@@ -1374,7 +1374,7 @@ Lhex:
     }
 
     //**************************************
-    TOK charConstant(Token * t, int wide) {
+    TOK charConstant(Token *t, int wide) {
         uint c;
         TOK  tk = TOK.TOKcharv;
 
@@ -1440,7 +1440,7 @@ L1:
     }
 
     // Get postfix of string literal.
-    void stringPostfix(Token * t) {
+    void stringPostfix(Token *t) {
         switch (*p) {
         case 'c':
         case 'w':
@@ -1505,7 +1505,7 @@ L1:
      *	TKdouble,...
      */
 
-    TOK number(Token * t) {
+    TOK number(Token *t) {
         //debug writefln("Lexer.number()");
         // We use a state machine to collect numbers
         enum STATE {
@@ -1937,7 +1937,7 @@ L1:
      *	Too much requested precision is not detected.
      */
 
-    TOK inreal(Token * t) {
+    TOK inreal(Token *t) {
         int  dblstate;
         uint c;
         char hex;                       // is this a hexadecimal-floating-constant?
@@ -2028,7 +2028,7 @@ done:
         stringbuffer.write(cast(byte)0);
 
 //	#if _WIN32 && __DMC__
-        char * save = __locale_decpoint;
+        char *save = __locale_decpoint;
         __locale_decpoint = ".";
 //	#endif
         t.float80value = strtold(cast(char *)stringbuffer.data.ptr, null);
@@ -2205,13 +2205,13 @@ Lerr:
      * Append to previous one for this token.
      */
 
-    void getDocComment(Token * t, uint lineComment) {
+    void getDocComment(Token *t, uint lineComment) {
         auto OutBuffer buf       = new OutBuffer;
         ubyte          ct        = t.ptr[2];
-        ubyte          * q       = t.ptr + 3; // start of comment text
+        ubyte          *q        = t.ptr + 3; // start of comment text
         int            linestart = 0;
 
-        ubyte          * qend = p;
+        ubyte          *qend = p;
 
         if (ct == '*' || ct == '+') {
             qend -= 2;
