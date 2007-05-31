@@ -666,7 +666,8 @@ argval_t do_space(chunk_t *first, chunk_t *second)
       return(AV_REMOVE); /*TODO: does this need to be configured? */
    }
 
-   if ((first->type == CT_QUALIFIER) || (first->type == CT_TYPE))
+   if ((second->type != CT_PTR_TYPE) && 
+       ((first->type == CT_QUALIFIER) || (first->type == CT_TYPE)))
    {
       return(AV_FORCE);
    }
