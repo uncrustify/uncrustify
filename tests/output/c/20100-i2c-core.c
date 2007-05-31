@@ -157,8 +157,8 @@ static struct device_attribute dev_attr_client_name =
 int i2c_add_adapter(struct i2c_adapter *adap)
   {
   int id, res = 0;
-  struct list_head *item;
-  struct i2c_driver *driver;
+  struct list_head   *item;
+  struct i2c_driver  *driver;
 
   down(&core_lists);
 
@@ -222,7 +222,7 @@ out_unlock:
 
 int i2c_del_adapter(struct i2c_adapter *adap)
   {
-  struct list_head *item, *_n;
+  struct list_head  *item, *_n;
   struct i2c_adapter *adap_from_list;
   struct i2c_driver *driver;
   struct i2c_client *client;
@@ -305,7 +305,7 @@ out_unlock:
 
 int i2c_add_driver(struct i2c_driver *driver)
   {
-  struct list_head *item;
+  struct list_head   *item;
   struct i2c_adapter *adapter;
   int res = 0;
 
@@ -341,8 +341,8 @@ out_unlock:
 
 int i2c_del_driver(struct i2c_driver *driver)
   {
-  struct list_head *item1, *item2, *_n;
-  struct i2c_client *client;
+  struct list_head   *item1, *item2, *_n;
+  struct i2c_client  *client;
   struct i2c_adapter *adap;
 
   int res = 0;
@@ -404,8 +404,8 @@ out_unlock:
 
 static int __i2c_check_addr(struct i2c_adapter *adapter, unsigned int addr)
   {
-  struct list_head *item;
-  struct i2c_client *client;
+  struct list_head   *item;
+  struct i2c_client  *client;
 
   list_for_each(item, &adapter->clients) {
     client = list_entry(item, struct i2c_client, list);
@@ -575,7 +575,7 @@ int i2c_release_client(struct i2c_client *client)
 
 void i2c_clients_command(struct i2c_adapter *adap, unsigned int cmd, void *arg)
   {
-  struct list_head *item;
+  struct list_head  *item;
   struct i2c_client *client;
 
   down(&adap->clist_lock);
@@ -869,7 +869,7 @@ int i2c_probe(struct i2c_adapter *adapter,
   return 0;
   }
 
-struct i2c_adapter * i2c_get_adapter(int id)
+struct i2c_adapter* i2c_get_adapter(int id)
   {
   struct i2c_adapter *adapter;
 

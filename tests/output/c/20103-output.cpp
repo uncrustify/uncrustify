@@ -482,7 +482,7 @@ void output_comment_multi(chunk_t *pc)
   const char *cmt_str;
   int remaining;
   char ch;
-  chunk_t *prev;
+  chunk_t    *prev;
   char line[1024];
   int line_len;
   int line_count = 0;

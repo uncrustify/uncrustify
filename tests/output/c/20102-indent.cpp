@@ -270,9 +270,9 @@ static int token_indent(c_token_t type)
  */
 void indent_text(void)
   {
-  chunk_t *pc;
-  chunk_t *next;
-  chunk_t *prev       = NULL;
+  chunk_t            *pc;
+  chunk_t            *next;
+  chunk_t            *prev       = NULL;
   bool did_newline = true;
   int idx;
   int vardefcol   = 0;

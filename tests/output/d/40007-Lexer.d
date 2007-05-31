@@ -36,7 +36,7 @@ int errno = 0;
 //#if _WIN32 && __DMC__
 // from \dm\src\include\setlocal.h
 //extern "C" char * __cdecl __locale_decpoint;
-char * __locale_decpoint;
+char* __locale_decpoint;
 //#endif
 //const uint LS = 0x2028;	// UTF line separator
 //const uint PS = 0x2029;	// UTF paragraph separator
@@ -65,7 +65,7 @@ class Lexer
     int              commentToken; // !=0 means comments are TOKcomment's
 
 
-    this(Module mod, ubyte * base, uint begoffset, uint endoffset, int doDocComment, int commentToken)
+    this(Module mod, ubyte* base, uint begoffset, uint endoffset, int doDocComment, int commentToken)
     {
         if (stringbuffer is null) {
             stringbuffer = new OutBuffer;
@@ -231,7 +231,7 @@ class Lexer
 
     TOK nextToken() {
         if (token.next) {
-            Token * t = token.next;
+            Token* t = token.next;
             memcpy(&token, t, Token.sizeof);
 //			t.next = freelist;
 //			freelist = t;
@@ -243,8 +243,8 @@ class Lexer
         return(token.value);
     }
 
-    Token * peek(inout Token ct) {
-        Token * t;
+    Token* peek(inout Token ct) {
+        Token* t;
 
         if (ct.next) {
             t = ct.next;
@@ -260,7 +260,7 @@ class Lexer
 
     // Turn next token in buffer into a token.
 
-    void scan(Token * t) {
+    void scan(Token* t) {
 //		debug writefln("scan token");
         uint lastLine = loc.linnum;
         uint linnum;
@@ -1771,9 +1771,9 @@ done:
         }
         else {
             // Convert string to integer
-            char * p = cast(char *)stringbuffer.data.ptr;
-            int  r   = 10;
-            int  d;
+            char* p = cast(char*)stringbuffer.data.ptr;
+            int r   = 10;
+            int d;
             if (*p == '0') {
                 if (p[1] == 'x' || p[1] == 'X') {
                     // "0x#"
@@ -2135,7 +2135,7 @@ Lnewline:
                 continue;                                               // skip white space
 
             case '_':
-                if (mod && memcmp(p, cast(char *)"__FILE__", 8) == 0) {
+                if (mod && memcmp(p, cast(char*)"__FILE__", 8) == 0) {
                     p += 8;
 //!					    filespec = mem.strdup(loc.filename ? loc.filename : mod.ident.toChars());
                 }
