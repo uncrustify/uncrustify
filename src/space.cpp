@@ -717,10 +717,15 @@ void space_text(void)
 {
    chunk_t *pc;
    chunk_t *next;
-   int     column = 1;
+   int     column;
    int     delta;
 
    pc = chunk_get_head();
+   if (pc == NULL)
+   {
+      return;
+   }
+   column = pc->column;
    while (pc != NULL)
    {
       next = chunk_get_next(pc);
