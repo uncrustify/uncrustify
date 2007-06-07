@@ -338,6 +338,10 @@ void fix_symbols(void)
          {
             tmp = set_paren_parent(tmp, pc->type);
          }
+         else if (tmp->type == CT_TSQUARE)
+         {
+            tmp = chunk_get_next_ncnl(tmp);
+         }
 
          tmp = flag_parens(tmp, 0, CT_FPAREN_OPEN, pc->type, false);
          if (tmp != NULL)
@@ -417,6 +421,7 @@ void fix_symbols(void)
               (next->type == CT_ENUM) ||
               (next->type == CT_UNION)) &&
              (prev->type != CT_SIZEOF) &&
+             (prev->parent_type != CT_OPERATOR) &&
              ((pc->flags & PCF_IN_TYPEDEF) == 0))
          {
             fix_casts(pc);
@@ -1867,6 +1872,12 @@ static void mark_function(chunk_t *pc)
               get_token_name(pc->type),
               pc->len, pc->str, pc->orig_line, pc->orig_col);
       return;
+   }
+
+   if (next->type == CT_TSQUARE)
+   {
+      next->parent_type = CT_OPERATOR;
+      next = chunk_get_next_ncnl(next);
    }
 
    /* Mark parameters */
