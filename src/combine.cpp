@@ -360,6 +360,11 @@ void fix_symbols(void)
          }
       }
 
+      if ((pc->type == CT_CATCH) && (next->type == CT_SPAREN_OPEN))
+      {
+         fix_fcn_def_params(next);
+      }
+
       /* Mark the braces in: "for_each_entry(xxx) { }" */
       if ((pc->type == CT_BRACE_OPEN) &&
           (prev->type == CT_FPAREN_CLOSE) &&
