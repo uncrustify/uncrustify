@@ -658,6 +658,11 @@ static void newlines_do_else(chunk_t *start, argval_t nl_opt)
       if ((nl_opt & AV_ADD) != 0)
       {
          newline_add_between(start, next);
+         chunk_t * tmp = chunk_get_next(next);
+         if ((tmp != NULL) && !chunk_is_newline(tmp))
+         {
+            newline_add_between(next, tmp);
+         }
       }
       else if ((nl_opt & AV_REMOVE) != 0)
       {

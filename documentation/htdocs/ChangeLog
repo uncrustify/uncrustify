@@ -35,6 +35,10 @@ Changes in uncrustify-0.35
  - Properly indent multiline #error and #warning 
  - Change nl_after_func_body to force the newline count (was a minimum)
  - Fix handling of CT_PTR_STAR when all options are AV_IGNORE
+ - Fix problem when the first token in the file isn't in column 1
+ - Properly mark catch clauses that contain parameters, ie catch (Exception *e)
+ - Add a newline after the open brace for nl_catch_brace, nl_do_brace, 
+   nl_else_brace, nl_try_brace, nl_getset_brace, nl_finally_brace
  
 
 Changes in uncrustify-0.34

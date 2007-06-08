@@ -51,7 +51,8 @@ void foo(void)
             a /= b;
          }
          else
-         {    // trailing C++ comment
+         {
+            // trailing C++ comment
             a += b;
          }
       }

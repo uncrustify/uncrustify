@@ -7,7 +7,8 @@ public hudtext16(textblock[], colr, colg, colb, posx, posy, screen, time, id)
 		show_hudmessage(id, textblock);
 	}
 	else
-	{                                   // more than one line
+	{
+										// more than one line
 		new out[128], rowcounter = 0, tmp[512], textremain = true; y = screen;
 
 		new i = contain(textblock, "^n");
