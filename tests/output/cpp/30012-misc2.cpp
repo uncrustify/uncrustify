@@ -33,7 +33,7 @@ void foo(void)
                cpd.settings [UO_align_assign_thresh].n);
 }
 
-Args::Args(int argc, char** argv)
+Args::Args(int argc, char**argv)
 {
   m_count = argc;
   m_values = argv;
@@ -44,7 +44,7 @@ Args::Args(int argc, char** argv)
   }
 }
 
-void Args(int argc, char** argv)
+void Args(int argc, char**argv)
 {
   m_count = argc;
   m_values = argv;
