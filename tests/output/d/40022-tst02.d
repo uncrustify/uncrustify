@@ -1,4 +1,4 @@
-packagestaticushortcalcHeaderCrc(boolaStartupFrame,boolaSyncFrame,ushortaFrameId, ushort aPayloadWords) {
+package static ushort calcHeaderCrc(bool aStartupFrame, bool aSyncFrame, ushort aFrameId, ushort aPayloadWords) {
     uint crcData = aPayloadWords;
 
     crcData |= (aFrameId << 7);
