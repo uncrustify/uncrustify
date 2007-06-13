@@ -267,6 +267,19 @@ static void newlines_if_for_while_switch(chunk_t *start, argval_t nl_opt)
 
       if ((brace_open != NULL) && (brace_open->type == CT_BRACE_OPEN))
       {
+         if (cpd.settings[UO_nl_multi_line_cond].b)
+         {
+            nl_opt = AV_REMOVE;
+            while ((pc = chunk_get_next(pc)) != close_paren)
+            {
+               if (chunk_is_newline(pc))
+               {
+                  nl_opt = AV_ADD;
+                  break;
+               }
+            }
+         }
+
          if (nl_opt & AV_ADD)
          {
             newline_add_between(close_paren, brace_open);

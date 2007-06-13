@@ -298,6 +298,7 @@ enum uncrustify_options
    UO_nl_brace_else,             // nl between } and else
    UO_nl_brace_while,            // nl between } and while of do stmt
 
+   UO_nl_multi_line_cond,        /* nl between ) and { when cond spans >=2 lines */
    UO_nl_elseif_brace,           // nl between close paren and open brace in 'else if () {'
 
    UO_nl_before_if,              // nl before if

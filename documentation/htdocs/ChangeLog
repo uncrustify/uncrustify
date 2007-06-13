@@ -39,6 +39,7 @@ Changes in uncrustify-0.35
  - Properly mark catch clauses that contain parameters, ie catch (Exception *e)
  - Add a newline after the open brace for nl_catch_brace, nl_do_brace, 
    nl_else_brace, nl_try_brace, nl_getset_brace, nl_finally_brace
+ - Add nl_multi_line_cond
  
 
 Changes in uncrustify-0.34

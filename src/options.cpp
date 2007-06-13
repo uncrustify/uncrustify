@@ -235,6 +235,7 @@ void register_options(void)
    unc_add_option("nl_do_brace", UO_nl_do_brace, AT_IARF, "Add or remove newline between 'do' and '{'");
    unc_add_option("nl_brace_while", UO_nl_brace_while, AT_IARF, "Add or remove newline between '}' and 'while' of 'do' statement");
    unc_add_option("nl_switch_brace", UO_nl_switch_brace, AT_IARF, "Add or remove newline between 'switch' and '{'");
+   unc_add_option("nl_multi_line_cond", UO_nl_multi_line_cond, AT_BOOL, "Add or remove newline when condition spans two or more lines");
    unc_add_option("nl_before_case", UO_nl_before_case, AT_BOOL, "Whether to put a newline before 'case' statement");
    unc_add_option("nl_after_case", UO_nl_after_case, AT_BOOL, "Whether to put a newline after 'case' statement");
    unc_add_option("nl_namespace_brace", UO_nl_namespace_brace, AT_IARF, "Newline between namespace and {");
