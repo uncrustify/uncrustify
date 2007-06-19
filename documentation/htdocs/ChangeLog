@@ -45,6 +45,7 @@ Changes in uncrustify-0.35
  - Fix handling of dynamic_cast<T*>(obj) stuff
  - Fix detection of templates in for() statements:
    for (std::map<Key, Value*>::iterator it = map.begin(); ...
+ - Add --no-backup command-line option to replace w/o a backup file
  
 
 Changes in uncrustify-0.34
