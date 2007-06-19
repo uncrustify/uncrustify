@@ -23,6 +23,7 @@ static void fix_fcn_def_params(chunk_t *pc);
 static void fix_typedef(chunk_t *pc);
 static void fix_enum_struct_union(chunk_t *pc);
 static void fix_casts(chunk_t *pc);
+static void fix_type_cast(chunk_t *pc);
 static chunk_t *fix_var_def(chunk_t *pc);
 static void mark_function(chunk_t *pc);
 static void mark_struct_union_body(chunk_t *start);
@@ -270,6 +271,11 @@ void fix_symbols(void)
           (next->type == CT_PAREN_OPEN))
       {
          flag_parens(next, 0, CT_FPAREN_OPEN, CT_NONE, false);
+      }
+
+      if (pc->type == CT_TYPE_CAST)
+      {
+         fix_type_cast(pc);
       }
 
       if (pc->type == CT_ASSIGN)
@@ -1049,6 +1055,38 @@ static void fix_casts(chunk_t *start)
    if (pc != NULL)
    {
       pc->flags |= PCF_EXPR_START;
+   }
+}
+
+/**
+ * CT_TYPE_CAST follows this pattern:
+ * dynamic_cast<...>(...)
+ * 
+ * Mark everything between the <> as a type and set the paren parent
+ */
+static void fix_type_cast(chunk_t *start)
+{
+   chunk_t *pc;
+
+   pc = chunk_get_next_ncnl(start);
+   if ((pc == NULL) || (pc->type != CT_ANGLE_OPEN))
+   {
+      return;
+   }
+   
+   while (((pc = chunk_get_next_ncnl(pc)) != NULL) &&
+          (pc->level >= start->level))
+   {
+      if ((pc->level == start->level) && (pc->type == CT_ANGLE_CLOSE))
+      {
+         pc = chunk_get_next_ncnl(pc);
+         if (chunk_is_str(pc, "(", 1))
+         {
+            set_paren_parent(pc, CT_TYPE_CAST);
+         }
+         return;
+      }
+      make_type(pc);
    }
 }
 
