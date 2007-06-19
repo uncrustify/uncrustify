@@ -40,6 +40,7 @@ Changes in uncrustify-0.35
  - Add a newline after the open brace for nl_catch_brace, nl_do_brace, 
    nl_else_brace, nl_try_brace, nl_getset_brace, nl_finally_brace
  - Add nl_multi_line_cond
+ - Fix a bug with mod_full_paren_if_bool
  
 
 Changes in uncrustify-0.34

@@ -14,7 +14,7 @@ void fooo()
       value = 1;
    }
 
-   if ((enabled) && (value == 100))
+   if (enabled && (value == 100))
    {
    }
 
@@ -22,7 +22,11 @@ void fooo()
    {
    }
 
-   if ((value == 100) && (i < 15) || (enabled))
+   if ((value == 100) && (i < 15) || enabled)
+   {
+   }
+
+   if (!failed && ((value == 100) && (i < 15)) || enabled)
    {
    }
 }
