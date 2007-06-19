@@ -4,7 +4,7 @@
 class MyClass
 {
  public:
-   std::map<int, bool> someData;
+   std::map<int, bool>             someData;
    std::map<int, std::list<bool> > otherData;
 };
 
@@ -13,16 +13,16 @@ void foo()
    List<byte> bob = new List<byte>();
 }
 
-A<B> foo;
-A<B, C> bar;
-A<B *> baz;
+A<B>     foo;
+A<B, C>  bar;
+A<B *>   baz;
 A<B<C> > bay;
 
 void asd(void)
 {
-   A<B> foo;
-   A<B, C> bar;
-   A<B *> baz;
+   A<B>     foo;
+   A<B, C>  bar;
+   A<B *>   baz;
    A<B<C> > bay;
    if (a < b && b > c)
    {
