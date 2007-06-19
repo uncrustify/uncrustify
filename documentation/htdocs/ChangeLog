@@ -43,6 +43,8 @@ Changes in uncrustify-0.35
  - Fix a bug with mod_full_paren_if_bool
  - Fix handling of templated variables: Buffer<T>* buf
  - Fix handling of dynamic_cast<T*>(obj) stuff
+ - Fix detection of templates in for() statements:
+   for (std::map<Key, Value*>::iterator it = map.begin(); ...
  
 
 Changes in uncrustify-0.34

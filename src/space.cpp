@@ -285,6 +285,10 @@ argval_t do_space(chunk_t *first, chunk_t *second)
       {
          return(cpd.settings[UO_sp_angle_paren].a);
       }
+      if (second->type == CT_DC_MEMBER)
+      {
+         return(AV_REMOVE);
+      }
       return(cpd.settings[UO_sp_after_angle].a);
    }
 
