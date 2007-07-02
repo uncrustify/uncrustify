@@ -627,7 +627,7 @@ static void do_source_file(const char *filename, FILE *pfout, const char *parsed
       char outname[1024];
       int  len = 0;
 
-      if ((prefix == NULL) && (suffix == NULL))
+      if (!no_backup && (prefix == NULL) && (suffix == NULL))
       {
          if (backup_copy_file(filename, data, data_len) != SUCCESS)
          {
