@@ -153,10 +153,11 @@ static chunk_t *newline_add_between2(chunk_t *start, chunk_t *end,
            __func__, start->len, start->str, start->orig_line, start->orig_col,
            end->len, end->str, end->orig_line, end->orig_col, func, line);
 
-   if (((start->type == CT_BRACE_OPEN) &&
+   if (cpd.settings[UO_nl_class_leave_one_liners].b &&
+       (((start->type == CT_BRACE_OPEN) &&
         ((start->flags & PCF_ONE_CLASS) == PCF_ONE_CLASS)) ||
        ((end->type == CT_BRACE_CLOSE) &&
-        ((end->flags & PCF_ONE_CLASS) == PCF_ONE_CLASS)))
+        ((end->flags & PCF_ONE_CLASS) == PCF_ONE_CLASS))))
    {
       return(NULL);
    }
@@ -1208,7 +1209,8 @@ void newlines_cleanup_braces(void)
             if ((pc->level == pc->brace_level) &&
                 cpd.settings[UO_nl_after_brace_open].b &&
                 ((pc->flags & (PCF_IN_ARRAY_ASSIGN | PCF_IN_PREPROC)) == 0) &&
-                ((pc->flags & PCF_ONE_CLASS) != PCF_ONE_CLASS))
+                (((pc->flags & PCF_ONE_CLASS) != PCF_ONE_CLASS) || 
+                 !cpd.settings[UO_nl_class_leave_one_liners].b))
             {
                if (!chunk_is_str(next, "{", 1))
                {
