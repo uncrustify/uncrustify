@@ -89,7 +89,7 @@ if __name__ == '__main__':
 	print "/**"
 	print " * @file punctuators.h"
 	print " * Automatically generated"
-	print " * $Id$"
+	print " * $I" + "d$"
 	print " */"
 	print "static const lookup_entry_t punc_table[] ="
 	print "{"
