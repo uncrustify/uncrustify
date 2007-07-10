@@ -319,6 +319,7 @@ enum uncrustify_options
    UO_nl_end_of_file,            // alter newlines at the end of file
    UO_nl_end_of_file_min,        // min number of newlines at the end of the file
 
+   UO_nl_class_colon,            // nl before/after class colon (tied to UO_pos_class_colon)
    UO_nl_class_init_args,        // newline after comma in class init args
    UO_nl_collapse_empty_body,    // change { \n } into {}
    UO_nl_class_leave_one_liners, // leave one-line function bodies in "class xx { here }"

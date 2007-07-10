@@ -47,6 +47,7 @@ Changes in uncrustify-0.35
    for (std::map<Key, Value*>::iterator it = map.begin(); ...
  - Add --no-backup command-line option to replace w/o a backup file
  - Fix nl_class_leave_one_liners when set to false
+ - Add nl_class_colon, which split the functionality of nl_class_init_args
  
 
 Changes in uncrustify-0.34
