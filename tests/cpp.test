@@ -16,6 +16,7 @@
 30015 ben.cfg                          cpp/exception.cpp
 30016 custom-open.cfg                  cpp/custom-open.cpp
 30017 custom-open2.cfg                 cpp/custom-open.cpp
+30018 ben.cfg                          cpp/class-addr.h
 
 30020 ben.cfg                          cpp/bool.cpp
 30021 ben.cfg                          cpp/byref.cpp
