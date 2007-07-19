@@ -1574,10 +1574,13 @@ static chunk_t *fix_var_def(chunk_t *start)
       }
       pc = chunk_get_next_ncnl(pc);
 
-      /* Skip templates */
-      if ((pc->type == CT_ANGLE_OPEN) && (pc->parent_type == CT_TEMPLATE))
+      if (pc != NULL)
       {
-         pc = chunk_get_next_ncnl(chunk_get_next_type(pc, CT_ANGLE_CLOSE, pc->level));
+         /* Skip templates */
+         if ((pc->type == CT_ANGLE_OPEN) && (pc->parent_type == CT_TEMPLATE))
+         {
+            pc = chunk_get_next_ncnl(chunk_get_next_type(pc, CT_ANGLE_CLOSE, pc->level));
+         }
       }
    }
    end = pc;
