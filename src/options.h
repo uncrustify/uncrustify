@@ -274,6 +274,7 @@ enum uncrustify_options
    UO_nl_after_case,             /* disallow nested "case 1: a=3;" */
    UO_nl_after_semicolon,        // disallow multiple statements on a line "a=1;b=4;"
    UO_nl_after_brace_open,       // force a newline after a brace open
+   UO_nl_after_vbrace_open,      // force a newline after a virtual brace open
    UO_nl_fcall_brace,            /* newline between function call and open brace */
    UO_nl_squeeze_ifdef,          /* no blanks after #ifxx, #elxx, or before #endif */
    UO_nl_enum_brace,             /* nl between enum and brace */

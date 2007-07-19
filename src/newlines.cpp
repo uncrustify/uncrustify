@@ -155,9 +155,9 @@ static chunk_t *newline_add_between2(chunk_t *start, chunk_t *end,
 
    if (cpd.settings[UO_nl_class_leave_one_liners].b &&
        (((start->type == CT_BRACE_OPEN) &&
-        ((start->flags & PCF_ONE_CLASS) == PCF_ONE_CLASS)) ||
-       ((end->type == CT_BRACE_CLOSE) &&
-        ((end->flags & PCF_ONE_CLASS) == PCF_ONE_CLASS))))
+         ((start->flags & PCF_ONE_CLASS) == PCF_ONE_CLASS)) ||
+        ((end->type == CT_BRACE_CLOSE) &&
+         ((end->flags & PCF_ONE_CLASS) == PCF_ONE_CLASS))))
    {
       return(NULL);
    }
@@ -1066,7 +1066,7 @@ static void newline_func_def(chunk_t *start)
    chunk_t *pc;
    chunk_t *prev = NULL;
    chunk_t *tmp;
-   
+
    /* Handle break newlines type and function */
    if (cpd.settings[UO_nl_func_type_name].a != AV_IGNORE)
    {
@@ -1209,7 +1209,7 @@ void newlines_cleanup_braces(void)
             if ((pc->level == pc->brace_level) &&
                 cpd.settings[UO_nl_after_brace_open].b &&
                 ((pc->flags & (PCF_IN_ARRAY_ASSIGN | PCF_IN_PREPROC)) == 0) &&
-                (((pc->flags & PCF_ONE_CLASS) != PCF_ONE_CLASS) || 
+                (((pc->flags & PCF_ONE_CLASS) != PCF_ONE_CLASS) ||
                  !cpd.settings[UO_nl_class_leave_one_liners].b))
             {
                if (!chunk_is_str(next, "{", 1))
@@ -1220,6 +1220,19 @@ void newlines_cleanup_braces(void)
          }
 
          newlines_brace_pair(pc);
+      }
+      else if (pc->type == CT_VBRACE_OPEN)
+      {
+         if (cpd.settings[UO_nl_after_vbrace_open].b)
+         {
+            next = chunk_get_next(pc);
+            if ((next->type != CT_VBRACE_CLOSE) && 
+                !chunk_is_comment(next) &&
+                !chunk_is_newline(next))
+            {
+               newline_iarf(pc, AV_ADD);
+            }
+         }
       }
       else if (pc->type == CT_STRUCT)
       {
