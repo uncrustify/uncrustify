@@ -39,6 +39,7 @@ void tokenize_cleanup(void)
          pc->str  = "[]";
          pc->len  = 2;
          chunk_del(next);
+         pc->orig_col_end += 1;
          next = chunk_get_next_ncnl(pc);
       }
 
@@ -182,6 +183,7 @@ void tokenize_cleanup(void)
                next->type        = CT_FUNCTION;
                next->parent_type = CT_OPERATOR;
                chunk_del(tmp);
+               next->orig_col_end += 1;
             }
          }
          else
