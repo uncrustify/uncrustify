@@ -1635,7 +1635,7 @@ void newlines_class_colon_pos(void)
          {
             if ((cpd.settings[UO_nl_class_init_args].a & AV_ADD) != 0)
             {
-               if (cpd.settings[UO_pos_comma].tp == TP_TRAIL)
+               if (cpd.settings[UO_pos_class_comma].tp == TP_TRAIL)
                {
                   newline_add_after(pc);
                }

@@ -331,7 +331,8 @@ enum uncrustify_options
    UO_nl_template_class,         // newline between '>' and class in "template <x> class"
 
    UO_pos_bool,                  // position of trailing/leading &&/||
-   UO_pos_comma,                 // position of trailing/leading &&/||
+   UO_pos_comma,                 // position of comma in functions
+   UO_pos_class_comma,           // position of comma in constructor init list
    UO_pos_class_colon,           // position of trailing/leading class colon
 
 

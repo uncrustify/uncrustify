@@ -34,6 +34,8 @@ Changes in uncrustify-0.36
  - Improve option descriptions
  - Fix a seg fault (check for NULL)
  - Fix spacing for operators () and []
+ - Add sp_before_dc and sp_after_dc to control spacing around '::'
+ - Split pos_class_comma from pos_comma
  
 
 Changes in uncrustify-0.35
