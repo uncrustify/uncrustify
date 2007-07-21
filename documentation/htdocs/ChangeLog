@@ -28,6 +28,14 @@ Plans for the next release
 ===============================================================================
 
 
+Changes in uncrustify-0.36
+-------------------------------------------------------------------------------
+ - Add nl_after_vbrace_open
+ - Improve option descriptions
+ - Fix a seg fault (check for NULL)
+ - Fix spacing for operators () and []
+ 
+
 Changes in uncrustify-0.35
 -------------------------------------------------------------------------------
  - Fix bug with nl_func_type_name and empty param list: int foo() { ... }
