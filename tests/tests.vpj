@@ -69,11 +69,15 @@
 	</CustomFolders>
 	<Files AutoFolders="DirectoryView">
 		<Folder Name="config">
+			<F N="config/1liner-split.cfg"/>
 			<F N="config/align.cfg"/>
+			<F N="config/amxmodx.cfg"/>
 			<F N="config/avalon.cfg"/>
 			<F N="config/avalon2.cfg"/>
 			<F N="config/avalon3.cfg"/>
+			<F N="config/avalon4.cfg"/>
 			<F N="config/ben.cfg"/>
+			<F N="config/ben.cfg~"/>
 			<F N="config/blc-1.cfg"/>
 			<F N="config/bool-pos-eol.cfg"/>
 			<F N="config/bool-pos-sol.cfg"/>
@@ -91,6 +95,9 @@
 			<F N="config/case-1.cfg"/>
 			<F N="config/case-2.cfg"/>
 			<F N="config/case-3.cfg"/>
+			<F N="config/cast-sp-a.cfg"/>
+			<F N="config/cast-sp-r.cfg"/>
+			<F N="config/cast-type.cfg"/>
 			<F N="config/cast-types.txt"/>
 			<F N="config/clark.cfg"/>
 			<F N="config/class-colon-pos-eol-add.cfg"/>
@@ -126,6 +133,7 @@
 			<F N="config/nl_semicolon.cfg"/>
 			<F N="config/nl_template_class-force.cfg"/>
 			<F N="config/nl_template_class-remove.cfg"/>
+			<F N="config/nl_try-a.cfg"/>
 			<F N="config/op-space-force.cfg"/>
 			<F N="config/op-space-remove.cfg"/>
 			<F N="config/pascal_ptr.cfg"/>

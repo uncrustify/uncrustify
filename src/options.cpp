@@ -180,6 +180,8 @@ void register_options(void)
    unc_add_option("sp_brace_finally", UO_sp_brace_finally, AT_IARF, "Add or remove space between '}' and 'finally' if on the same line");
    unc_add_option("sp_try_brace", UO_sp_try_brace, AT_IARF, "Add or remove space between 'try' and '{' if on the same line");
    unc_add_option("sp_getset_brace", UO_sp_getset_brace, AT_IARF, "Add or remove space between get/set and '{' if on the same line");
+   unc_add_option("sp_before_dc", UO_sp_before_dc, AT_IARF, "Add or remove space before the '::' operator");
+   unc_add_option("sp_after_dc", UO_sp_after_dc, AT_IARF, "Add or remove space after the '::' operator");
 
    unc_begin_group(UG_indent, "Indenting");
    unc_add_option("indent_columns", UO_indent_columns, AT_NUM, "The number of columns to indent per level.\nUsually 2, 3, 4, or 8.");

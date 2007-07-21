@@ -196,11 +196,14 @@ argval_t do_space(chunk_t *first, chunk_t *second)
    }
 
    /* handle '::' */
-   if ((first->type == CT_DC_MEMBER) ||
-       ((second->type == CT_DC_MEMBER) &&
-        ((first->type == CT_WORD) || (first->type == CT_TYPE))))
+   if (first->type == CT_DC_MEMBER)
    {
-      return(AV_REMOVE);
+      return(cpd.settings[UO_sp_after_dc].a);
+   }
+   if ((second->type == CT_DC_MEMBER) &&
+       ((first->type == CT_WORD) || (first->type == CT_TYPE)))
+   {
+      return(cpd.settings[UO_sp_before_dc].a);
    }
 
    if (first->type == CT_TAG_COLON)
@@ -287,7 +290,7 @@ argval_t do_space(chunk_t *first, chunk_t *second)
       }
       if (second->type == CT_DC_MEMBER)
       {
-         return(AV_REMOVE);
+         return(cpd.settings[UO_sp_before_dc].a);
       }
       return(cpd.settings[UO_sp_after_angle].a);
    }

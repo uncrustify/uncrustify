@@ -208,6 +208,9 @@ enum uncrustify_options
    UO_sp_try_brace,
    UO_sp_getset_brace,
 
+   UO_sp_before_dc,
+   UO_sp_after_dc,
+
    /*
     * Line splitting options (for long lines)
     */
