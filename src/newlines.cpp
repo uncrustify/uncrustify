@@ -1266,14 +1266,11 @@ void newlines_cleanup_braces(void)
          next = chunk_get_next_ncnl(pc);
          if ((next != NULL) && (next->type == CT_BRACE_OPEN))
          {
-            if ((cpd.settings[UO_nl_fcall_brace].a & AV_ADD) != 0)
-            {
-               /*TODO: insert a brace? */
-            }
-            else if ((cpd.settings[UO_nl_fcall_brace].a & AV_REMOVE) != 0)
-            {
-               /*TODO: insert a brace? */
-            }
+            /* TODO: 
+             * this could be used to control newlines between the 
+             * the if/while/for/switch close paren and the open brace, but
+             * that is currently handled elsewhere.
+             */
          }
       }
       else if (pc->type == CT_RETURN)

@@ -216,7 +216,9 @@ void register_options(void)
    unc_add_option("nl_end_of_file_min", UO_nl_end_of_file_min, AT_NUM, "The number of newlines at the end of the file (only used if nl_end_of_file is 'add' or 'force')");
    unc_add_option("nl_assign_brace", UO_nl_assign_brace, AT_IARF, "Add or remove newline between '=' and '{'");
    unc_add_option("nl_func_var_def_blk", UO_nl_func_var_def_blk, AT_NUM, "The number of newlines after a block of variable definitions");
-   unc_add_option("nl_fcall_brace", UO_nl_fcall_brace, AT_IARF, "Add or remove newline between function call and '('");
+   unc_add_option("nl_fcall_brace", UO_nl_fcall_brace, AT_IARF, 
+                  "Add or remove newline between a function call's ')' and '{', as in:\n"
+                  "list_for_each(item, &list) { }");
    unc_add_option("nl_enum_brace", UO_nl_enum_brace, AT_IARF, "Add or remove newline between 'enum' and '{'");
    unc_add_option("nl_struct_brace", UO_nl_struct_brace, AT_IARF, "Add or remove newline between 'struct and '{'");
    unc_add_option("nl_union_brace", UO_nl_union_brace, AT_IARF, "Add or remove newline between 'union' and '{'");
