@@ -1204,16 +1204,34 @@ void newlines_cleanup_braces(void)
          {
             //TODO: add an option to split open empty statements? { };
          }
+         else if (next->type == CT_BRACE_OPEN)
+         {
+            //TODO: do something with two brace opens on the same line? "{ {"
+         }
          else
          {
+            // Handle nl_after_brace_open
             if ((pc->level == pc->brace_level) &&
-                cpd.settings[UO_nl_after_brace_open].b &&
-                ((pc->flags & (PCF_IN_ARRAY_ASSIGN | PCF_IN_PREPROC)) == 0) &&
-                (((pc->flags & PCF_ONE_CLASS) != PCF_ONE_CLASS) ||
-                 !cpd.settings[UO_nl_class_leave_one_liners].b))
+                cpd.settings[UO_nl_after_brace_open].b)
             {
-               if (!chunk_is_str(next, "{", 1))
+               if (cpd.settings[UO_nl_class_leave_one_liners].b &&
+                   ((pc->flags & PCF_ONE_CLASS) == PCF_ONE_CLASS))
                {
+                  /* no change - one liner class body */
+               }
+               else if (cpd.settings[UO_nl_assign_leave_one_liners].b &&
+                        (pc->parent_type == CT_ASSIGN) &&
+                        ((pc->flags & PCF_ONE_LINER) != 0))
+               {
+                  /* no change - one liner assignment */
+               }
+               else if ((pc->flags & (PCF_IN_ARRAY_ASSIGN | PCF_IN_PREPROC)) != 0)
+               {
+                  /* no change - don't break up array assignments or preprocessors */
+               }
+               else
+               {
+                  /* Add the newline */
                   newline_iarf(pc, AV_ADD);
                }
             }
@@ -1226,7 +1244,7 @@ void newlines_cleanup_braces(void)
          if (cpd.settings[UO_nl_after_vbrace_open].b)
          {
             next = chunk_get_next(pc);
-            if ((next->type != CT_VBRACE_CLOSE) && 
+            if ((next->type != CT_VBRACE_CLOSE) &&
                 !chunk_is_comment(next) &&
                 !chunk_is_newline(next))
             {
@@ -1266,8 +1284,8 @@ void newlines_cleanup_braces(void)
          next = chunk_get_next_ncnl(pc);
          if ((next != NULL) && (next->type == CT_BRACE_OPEN))
          {
-            /* TODO: 
-             * this could be used to control newlines between the 
+            /* TODO:
+             * this could be used to control newlines between the
              * the if/while/for/switch close paren and the open brace, but
              * that is currently handled elsewhere.
              */
