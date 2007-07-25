@@ -29,7 +29,8 @@ static void split_before_chunk(chunk_t *pc)
 {
    LOG_FMT(LSYS, "%s: %.*s\n", __func__, pc->len, pc->str);
 
-   if (!chunk_is_newline(chunk_get_prev(pc)))
+   if (!chunk_is_newline(pc) &&
+       !chunk_is_newline(chunk_get_prev(pc)))
    {
       newline_add_before(pc);
       reindent_line(pc, pc->brace_level * cpd.settings[UO_indent_columns].n);
@@ -75,8 +76,8 @@ static const token_pri pri_table[] =
    { CT_BOOL,       3 },
    { CT_COMPARE,    4 },
    { CT_ARITH,      5 },
-   { CT_DC_MEMBER, 10 },
-   { CT_MEMBER,    10 },
+   //{ CT_DC_MEMBER, 10 },
+   //{ CT_MEMBER,    10 },
 };
 
 
@@ -158,7 +159,7 @@ static void split_line(chunk_t *start)
 {
    LOG_FMT(LSPLIT, "%s: line %d, col %d token:%.*s (IN_FUNC=%d) ",
            __func__, start->orig_line, start->column, start->len, start->str,
-           (start->flags & PCF_IN_FCN_DEF) != 0);
+           (start->flags & (PCF_IN_FCN_DEF | PCF_IN_FCN_CALL)) != 0);
 
    /* Don't break before a close, comma, or colon */
    if ((start->type == CT_PAREN_CLOSE) ||
@@ -196,7 +197,7 @@ static void split_line(chunk_t *start)
     * after the open paren
     */
    else if (((start->flags & PCF_IN_FCN_DEF) != 0) ||
-            ((start->level == start->brace_level) &&
+            ((start->level == (start->brace_level + 1)) &&
              ((start->flags & PCF_IN_FCN_CALL) != 0)))
    {
       LOG_FMT(LSPLIT, " ** FUNC SPLIT **\n");
