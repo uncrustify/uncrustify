@@ -332,16 +332,20 @@ static void check_template(chunk_t *start)
 
       if (prev != NULL)
       {
-         if (chunk_is_str(prev, "(", 1))
-         {
-            prev = chunk_get_prev_ncnl(prev);
-            if ((prev != NULL) && (prev->type != CT_FOR))
-            {
-               LOG_FMT(LTEMPL, " - after %s + ( - Not a template\n", get_token_name(prev->type));
-               start->type = CT_COMPARE;
-               return;
-            }
-         }
+         /* It seems that a open paren is OK:
+          * return (std::numeric_limits<int>::max)();
+          */
+         // if (chunk_is_str(prev, "(", 1))
+         // {
+         //    prev = chunk_get_prev_ncnl(prev);
+         //    if ((prev != NULL) && (prev->type != CT_FOR))
+         //    {
+         //       LOG_FMT(LTEMPL, " - after %s + ( - Not a template\n", get_token_name(prev->type));
+         //       start->type = CT_COMPARE;
+         //       return;
+         //    }
+         // }
+
          if (chunk_is_str(prev, "[", 1) ||
              (prev->type == CT_ASSIGN) ||
              (prev->type == CT_BOOL))

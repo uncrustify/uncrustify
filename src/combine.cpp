@@ -1574,14 +1574,8 @@ static chunk_t *fix_var_def(chunk_t *start)
       }
       pc = chunk_get_next_ncnl(pc);
 
-      if (pc != NULL)
-      {
-         /* Skip templates */
-         if ((pc->type == CT_ANGLE_OPEN) && (pc->parent_type == CT_TEMPLATE))
-         {
-            pc = chunk_get_next_ncnl(chunk_get_next_type(pc, CT_ANGLE_CLOSE, pc->level));
-         }
-      }
+      /* Skip templates */
+      pc = skip_template_next(pc);
    }
    end = pc;
 
@@ -1737,14 +1731,7 @@ static void mark_function(chunk_t *pc)
    }
 
    /* Skip over any template madness */
-   if (next->type == CT_ANGLE_OPEN)
-   {
-      next = chunk_get_next_type(next, CT_ANGLE_CLOSE, next->level);
-      if (next != NULL)
-      {
-         next = chunk_get_next_ncnl(next);
-      }
-   }
+   next = skip_template_next(next);
 
    /* Find the close paren */
    paren_close = chunk_get_next_str(pc, ")", 1, pc->level);
@@ -1808,6 +1795,9 @@ static void mark_function(chunk_t *pc)
       if (prev->type == CT_INV)
       {
          /* TODO: do we care that this is the destructor? */
+         prev->type = CT_DESTRUCTOR;
+         pc->type = CT_FUNC_CLASS;
+
          destr = prev;
          prev  = chunk_get_prev_ncnlnp(prev);
       }
@@ -1815,6 +1805,12 @@ static void mark_function(chunk_t *pc)
       if ((prev != NULL) && (prev->type == CT_DC_MEMBER))
       {
          prev = chunk_get_prev_ncnlnp(prev);
+         // LOG_FMT(LSYS, "%s: prev1 = %s (%.*s)\n", __func__,
+         //         get_token_name(prev->type), prev->len, prev->str);
+         prev = skip_template_prev(prev);
+         // LOG_FMT(LSYS, "%s: prev2 = %s [%d](%.*s) pc = %s [%d](%.*s)\n", __func__,
+         //         get_token_name(prev->type), prev->len, prev->len, prev->str,
+         //         get_token_name(pc->type), pc->len, pc->len, pc->str);
          if ((prev != NULL) && ((prev->type == CT_WORD) || (prev->type == CT_TYPE)))
          {
             if ((pc->len == prev->len) && (memcmp(pc->str, prev->str, pc->len) == 0))
@@ -1824,7 +1820,7 @@ static void mark_function(chunk_t *pc)
                {
                   destr->type = CT_DESTRUCTOR;
                }
-               LOG_FMT(LFCN, "FOUND %sSTRUCTOR for %.*s[%s] ",
+               LOG_FMT(LFCN, "FOUND %sSTRUCTOR for %.*s[%s]\n",
                        (destr != NULL) ? "DE" : "CON",
                        prev->len, prev->str, get_token_name(prev->type));
 
@@ -1868,14 +1864,15 @@ static void mark_function(chunk_t *pc)
 
          pc->type = CT_FUNC_DEF;
          make_type(prev);
+
          if (prev->type == CT_ANGLE_CLOSE)
          {
-            while ((prev != NULL) && (prev->type != CT_ANGLE_OPEN))
-            {
-               prev = chunk_get_prev_ncnlnp(prev);
-            }
+            prev = skip_template_prev(prev);
          }
-         prev = chunk_get_prev_ncnlnp(prev);
+         else
+         {
+            prev = chunk_get_prev_ncnlnp(prev);
+         }
       }
       LOG_FMT(LFCN, " -- stopped on %.*s[%s]\n",
               prev->len, prev->str, get_token_name(prev->type));
@@ -2388,4 +2385,36 @@ static void mark_exec_sql(chunk_t *pc)
    {
       tmp->level++;
    }
+}
+
+/**
+ * Skips over the rest of the template if ang_open is indeed a CT_ANGLE_OPEN.
+ * Points to the chunk after the CT_ANGLE_CLOSE.
+ * If the chunk isn't an CT_ANGLE_OPEN, then it is returned.
+ */
+chunk_t *skip_template_next(chunk_t *ang_open)
+{
+   if ((ang_open != NULL) && (ang_open->type == CT_ANGLE_OPEN))
+   {
+      chunk_t *pc;
+      pc = chunk_get_next_type(ang_open, CT_ANGLE_CLOSE, ang_open->level);
+      return(chunk_get_next_ncnl(pc));
+   }
+   return(ang_open);
+}
+
+/**
+ * Skips over the rest of the template if ang_close is indeed a CT_ANGLE_CLOSE.
+ * Points to the chunk before the CT_ANGLE_OPEN
+ * If the chunk isn't an CT_ANGLE_CLOSE, then it is returned.
+ */
+chunk_t *skip_template_prev(chunk_t *ang_close)
+{
+   if ((ang_close != NULL) && (ang_close->type == CT_ANGLE_CLOSE))
+   {
+      chunk_t *pc;
+      pc = chunk_get_prev_type(ang_close, CT_ANGLE_OPEN, ang_close->level);
+      return(chunk_get_prev_ncnl(pc));
+   }
+   return(ang_close);
 }

@@ -120,6 +120,9 @@ void combine_labels(void);
 void mark_comments(void);
 void make_type(chunk_t *pc);
 
+chunk_t *skip_template_next(chunk_t *ang_open);
+chunk_t *skip_template_prev(chunk_t *ang_close);
+
 
 /*
  *  newlines.cpp
