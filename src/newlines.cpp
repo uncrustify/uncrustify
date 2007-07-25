@@ -803,6 +803,12 @@ static void newlines_brace_pair(chunk_t *br_open)
       {
          return;
       }
+
+      if (cpd.settings[UO_nl_getset_leave_one_liners].b &&
+          (br_open->parent_type == CT_GETSET))
+      {
+         return;
+      }
    }
 
    next = chunk_get_next_nc(br_open);
@@ -1138,6 +1144,7 @@ void newlines_cleanup_braces(void)
 {
    chunk_t  *pc;
    chunk_t  *next;
+   chunk_t  *tmp;
    argval_t arg;
 
    for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next_ncnl(pc))
@@ -1237,14 +1244,30 @@ void newlines_cleanup_braces(void)
                {
                   /* no change - one liner enum */
                }
+               else if (cpd.settings[UO_nl_getset_leave_one_liners].b &&
+                        (pc->parent_type == CT_GETSET) &&
+                        ((pc->flags & PCF_ONE_LINER) != 0))
+               {
+                  /* no change - one liner get/set */
+               }
                else if ((pc->flags & (PCF_IN_ARRAY_ASSIGN | PCF_IN_PREPROC)) != 0)
                {
                   /* no change - don't break up array assignments or preprocessors */
                }
                else
                {
+                  /* Step back from next to the first non-newline item */
+                  tmp = chunk_get_prev(next);
+                  while (tmp != pc)
+                  {
+                     if (chunk_is_comment(tmp))
+                     {
+                        break;
+                     }
+                     tmp = chunk_get_prev(tmp);
+                  }
                   /* Add the newline */
-                  newline_iarf(pc, AV_ADD);
+                  newline_iarf(tmp, AV_ADD);
                }
             }
          }
@@ -1332,8 +1355,12 @@ void newlines_cleanup_braces(void)
              cpd.settings[UO_nl_after_semicolon].b)
          {
             next = chunk_get_next(pc);
+            while ((next != NULL) && (next->type == CT_VBRACE_CLOSE))
+            {
+               next = chunk_get_next(next);
+            }
             if (!chunk_is_comment(next) &&
-                (next->type != CT_VBRACE_CLOSE))
+                !chunk_is_newline(next))
             {
                newline_iarf(pc, AV_ADD);
             }
