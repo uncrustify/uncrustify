@@ -512,7 +512,7 @@ void fix_symbols(void)
          if (prev->type == CT_WORD)
          {
             tmp = chunk_get_prev_ncnl(prev);
-            if ((tmp->type == CT_SEMICOLON) || 
+            if ((tmp->type == CT_SEMICOLON) ||
                 (tmp->type == CT_BRACE_OPEN) ||
                 (tmp->type == CT_QUALIFIER))
             {
@@ -1073,7 +1073,7 @@ static void fix_casts(chunk_t *start)
 /**
  * CT_TYPE_CAST follows this pattern:
  * dynamic_cast<...>(...)
- * 
+ *
  * Mark everything between the <> as a type and set the paren parent
  */
 static void fix_type_cast(chunk_t *start)
@@ -1085,7 +1085,7 @@ static void fix_type_cast(chunk_t *start)
    {
       return;
    }
-   
+
    while (((pc = chunk_get_next_ncnl(pc)) != NULL) &&
           (pc->level >= start->level))
    {
@@ -1843,28 +1843,47 @@ static void mark_function(chunk_t *pc)
    if ((pc->type == CT_FUNC_CALL) &&
        (pc->level == pc->brace_level))
    {
+      LOG_FMT(LFCN, "Checking func call: prev=%s", get_token_name(prev->type));
+
       while ((prev != NULL) &&
              ((prev->type == CT_TYPE) ||
               (prev->type == CT_WORD) ||
               (prev->type == CT_DC_MEMBER) ||
               (prev->type == CT_OPERATOR) ||
               (prev->type == CT_TSQUARE) ||
+              (prev->type == CT_ANGLE_CLOSE) ||
               chunk_is_addr(prev) ||
               chunk_is_star(prev)))
       {
-         LOG_FMT(LFCN, "FCN_DEF due to %.*s[%s] ",
+         if (pc->type != CT_FUNC_DEF)
+         {
+            LOG_FMT(LFCN, ", FCN_DEF due to %.*s[%s]",
                  prev->len, prev->str, get_token_name(prev->type));
+         }
+         else
+         {
+            LOG_FMT(LFCN, ", %.*s[%s]",
+                    prev->len, prev->str, get_token_name(prev->type));
+         }
 
          pc->type = CT_FUNC_DEF;
          make_type(prev);
+         if (prev->type == CT_ANGLE_CLOSE)
+         {
+            while ((prev != NULL) && (prev->type != CT_ANGLE_OPEN))
+            {
+               prev = chunk_get_prev_ncnlnp(prev);
+            }
+         }
          prev = chunk_get_prev_ncnlnp(prev);
       }
-      LOG_FMT(LFCN, "\n");
+      LOG_FMT(LFCN, " -- stopped on %.*s[%s]\n",
+              prev->len, prev->str, get_token_name(prev->type));
    }
 
    if (pc->type != CT_FUNC_DEF)
    {
-      LOG_FMT(LFCN, "Detected [%s] %.*s on line %d col %d\n",
+      LOG_FMT(LFCN, "Detected non-def [%s] %.*s on line %d col %d\n",
               get_token_name(pc->type),
               pc->len, pc->str, pc->orig_line, pc->orig_col);
 
