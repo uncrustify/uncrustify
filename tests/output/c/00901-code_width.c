@@ -6,16 +6,29 @@ static int short_function_name(struct device *dev,
 static int short_function_name(struct device *dev,
                                struct device_driver *drv)
 {
-    call_some_really_long_function.
-    of_some_sort(some_long_parameter1, some_long_parameter2);
+    this->translateLabels(labelID,
+                          completedLabelID,
+                          selectedLabelID,
+                          text,
+                          selectedText,
+                          completedText,
+                          fontId,
+                          selectedFontId,
+                          completedFontId);
+    call_some_really_long_function.of_some_sort(
+        some_long_parameter1,
+        some_long_parameter2);
 
-    abc = call_some_other_really_long_function.
-          of_some_sort(some_long_parameter1,
-                       some_long_parameter2);
+    abc = call_some_other_really_long_function.of_some_sort(
+        some_long_parameter1,
+        some_long_parameter2);
 
     abc.def.ghi = call_some_other_really_long_function.
                   of_some_sort(some_long_parameter1,
                                some_long_parameter2);
+
+    abcdefghijklmnopqrstuvwxyz = abc + def + ghi + jkl +
+                                 mno + prq + stu + vwx + yz;
 
     return 1;
 }
@@ -46,9 +59,15 @@ static void some_really_long_function_name(
     {
     }
 
-    register_clcmd( "examine", "do_examine", -1,
-                    "-Allows a player to examine the health and armor of a teammate" );
-    register_clcmd( "/examine", "do_examine", -1,
-                    "-Allows a player to examine the health and armor of a teammate" );
+    register_clcmd(
+        "examine",
+        "do_examine",
+        -1,
+        "-Allows a player to examine the health and armor of a teammate" );
+    register_clcmd(
+        "/examine",
+        "do_examine",
+        -1,
+        "-Allows a player to examine the health and armor of a teammate" );
 }
 
