@@ -38,17 +38,18 @@ Changes in uncrustify-0.36
  - Split pos_class_comma from pos_comma
  - Improve line splitting a little - no longer break at '::' or '->' or '.'
  - Add nl_enum_leave_one_liners
+ - Add mod_remove_extra_semicolon
 
 Changes in uncrustify-0.35
 -------------------------------------------------------------------------------
  - Fix bug with nl_func_type_name and empty param list: int foo() { ... }
  - Don't parse pragma bodies
- - Properly indent multiline #error and #warning 
+ - Properly indent multiline #error and #warning
  - Change nl_after_func_body to force the newline count (was a minimum)
  - Fix handling of CT_PTR_STAR when all options are AV_IGNORE
  - Fix problem when the first token in the file isn't in column 1
  - Properly mark catch clauses that contain parameters, ie catch (Exception *e)
- - Add a newline after the open brace for nl_catch_brace, nl_do_brace, 
+ - Add a newline after the open brace for nl_catch_brace, nl_do_brace,
    nl_else_brace, nl_try_brace, nl_getset_brace, nl_finally_brace
  - Add nl_multi_line_cond
  - Fix a bug with mod_full_paren_if_bool
@@ -60,7 +61,7 @@ Changes in uncrustify-0.35
  - Fix nl_class_leave_one_liners when set to false
  - Add nl_class_colon, which split the functionality of nl_class_init_args
  - Improve detection of reference variable declarations (A& B)
- 
+
 
 Changes in uncrustify-0.34
 -------------------------------------------------------------------------------

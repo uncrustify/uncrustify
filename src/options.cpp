@@ -338,6 +338,7 @@ void register_options(void)
    unc_add_option("mod_paren_on_return", UO_mod_paren_on_return, AT_IARF, "Add or remove unnecessary paren on 'return' statement");
    unc_add_option("mod_pawn_semicolon", UO_mod_pawn_semicolon, AT_BOOL, "Whether to change optional semicolons to real semicolons");
    unc_add_option("mod_full_paren_if_bool", UO_mod_full_paren_if_bool, AT_BOOL, "Add parens on 'while' and 'if' statement around bools");
+   unc_add_option("mod_remove_extra_semicolon", UO_mod_remove_extra_semicolon, AT_BOOL, "Whether to remove superfluous semicolons");
 
    unc_begin_group(UG_preprocessor, "Preprocessor options");
    unc_add_option("pp_indent", UO_pp_indent, AT_IARF, "Add or remove indent of preprocessor directives");

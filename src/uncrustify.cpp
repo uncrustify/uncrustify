@@ -773,6 +773,12 @@ static void uncrustify_file(const char *data, int data_len, FILE *pfout,
       pawn_scrub_vsemi();
    }
 
+   /* Scrub extra semicolons */
+   if (cpd.settings[UO_mod_remove_extra_semicolon].b)
+   {
+      remove_extra_semicolons();
+   }
+
    /**
     * Fix same-line inter-chunk spacing
     */

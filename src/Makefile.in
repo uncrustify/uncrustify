@@ -65,7 +65,8 @@ am_uncrustify_OBJECTS = uncrustify-uncrustify.$(OBJEXT) \
 	uncrustify-width.$(OBJEXT) uncrustify-lang_pawn.$(OBJEXT) \
 	uncrustify-md5.$(OBJEXT) uncrustify-backup.$(OBJEXT) \
 	uncrustify-parens.$(OBJEXT) \
-	uncrustify-universalindentgui.$(OBJEXT)
+	uncrustify-universalindentgui.$(OBJEXT) \
+	uncrustify-semicolons.$(OBJEXT)
 uncrustify_OBJECTS = $(am_uncrustify_OBJECTS)
 uncrustify_LDADD = $(LDADD)
 DEFAULT_INCLUDES = 
@@ -106,6 +107,7 @@ ECHO_N = @ECHO_N@
 ECHO_T = @ECHO_T@
 EGREP = @EGREP@
 EXEEXT = @EXEEXT@
+GREP = @GREP@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
 INSTALL_SCRIPT = @INSTALL_SCRIPT@
@@ -129,7 +131,6 @@ STRIP = @STRIP@
 VERSION = @VERSION@
 ac_ct_CC = @ac_ct_CC@
 ac_ct_CXX = @ac_ct_CXX@
-ac_ct_STRIP = @ac_ct_STRIP@
 am__fastdepCC_FALSE = @am__fastdepCC_FALSE@
 am__fastdepCC_TRUE = @am__fastdepCC_TRUE@
 am__fastdepCXX_FALSE = @am__fastdepCXX_FALSE@
@@ -142,19 +143,26 @@ am__untar = @am__untar@
 bindir = @bindir@
 build_alias = @build_alias@
 datadir = @datadir@
+datarootdir = @datarootdir@
+docdir = @docdir@
+dvidir = @dvidir@
 exec_prefix = @exec_prefix@
 host_alias = @host_alias@
+htmldir = @htmldir@
 includedir = @includedir@
 infodir = @infodir@
 install_sh = @install_sh@
 libdir = @libdir@
 libexecdir = @libexecdir@
+localedir = @localedir@
 localstatedir = @localstatedir@
 mandir = @mandir@
 mkdir_p = @mkdir_p@
 oldincludedir = @oldincludedir@
+pdfdir = @pdfdir@
 prefix = @prefix@
 program_transform_name = @program_transform_name@
+psdir = @psdir@
 sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 sysconfdir = @sysconfdir@
@@ -166,7 +174,7 @@ uncrustify_SOURCES = uncrustify.cpp chunk_list.cpp indent.cpp align.cpp combine.
 		args.cpp options.cpp keywords.cpp punctuators.cpp parse_frame.cpp \
 		logmask.cpp logger.cpp ChunkStack.cpp braces.cpp brace_cleanup.cpp \
 		align_stack.cpp defines.cpp width.cpp lang_pawn.cpp md5.cpp \
-		backup.cpp parens.cpp universalindentgui.cpp
+		backup.cpp parens.cpp universalindentgui.cpp semicolons.cpp
 
 noinst_HEADERS = chunk_list.h options.h char_table.h chunk_list.h \
 		uncrustify_types.h prototypes.h logmask.h logger.h \
@@ -430,6 +438,12 @@ uncrustify-universalindentgui.o: universalindentgui.cpp
 
 uncrustify-universalindentgui.obj: universalindentgui.cpp
 	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(uncrustify_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o uncrustify-universalindentgui.obj `if test -f 'universalindentgui.cpp'; then $(CYGPATH_W) 'universalindentgui.cpp'; else $(CYGPATH_W) '$(srcdir)/universalindentgui.cpp'; fi`
+
+uncrustify-semicolons.o: semicolons.cpp
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(uncrustify_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o uncrustify-semicolons.o `test -f 'semicolons.cpp' || echo '$(srcdir)/'`semicolons.cpp
+
+uncrustify-semicolons.obj: semicolons.cpp
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(uncrustify_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o uncrustify-semicolons.obj `if test -f 'semicolons.cpp'; then $(CYGPATH_W) 'semicolons.cpp'; else $(CYGPATH_W) '$(srcdir)/semicolons.cpp'; fi`
 uninstall-info-am:
 
 ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)

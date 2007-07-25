@@ -225,6 +225,12 @@ chunk_t *pawn_add_vsemi_after(chunk_t *pc);
 void print_universal_indent_cfg(FILE *pfile);
 
 
+/*
+ * semicolons.cpp
+ */
+void remove_extra_semicolons(void);
+
+
 /**
  * Advances to the next tab stop.
  * Column 1 is the left-most column.

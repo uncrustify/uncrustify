@@ -75,6 +75,7 @@
 			<F N="src/parse_frame.cpp"/>
 			<F N="scripts/punc.py"/>
 			<F N="src/punctuators.cpp"/>
+			<F N="src/semicolons.cpp"/>
 			<F N="src/space.cpp"/>
 			<F N="src/tokenize.cpp"/>
 			<F N="src/tokenize_cleanup.cpp"/>
