@@ -288,6 +288,7 @@ void register_options(void)
    unc_add_option("pos_class_comma", UO_pos_class_comma, AT_POS, "The position of the comma in the constructor initialization list");
    unc_add_option("pos_class_colon", UO_pos_class_colon, AT_POS, "The position of colons between constructor and member initialization");
 
+   unc_begin_group(UG_linesplit, "Line Splitting options");
    unc_add_option("ls_for_split_full", UO_ls_for_split_full, AT_BOOL, "Whether to fully split long 'for' statements at semi-colons");
    unc_add_option("ls_func_split_full", UO_ls_func_split_full, AT_BOOL, "Whether to fully split long function protos/calls at commas");
 

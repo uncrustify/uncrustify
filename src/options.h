@@ -68,6 +68,7 @@ enum uncrustify_groups
    UG_align,
    UG_newline,
    UG_position,
+   UG_linesplit,
    UG_blankline,
    UG_codemodify,
    UG_comment,
