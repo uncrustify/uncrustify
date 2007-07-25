@@ -2,7 +2,8 @@ package void writeRegister(int aRegisterOffset, ushort aValue)
 in {
     assert(aRegisterOffset >= 0);
     assert(aRegisterOffset < IMAGE_SIZE);
-} body {int  idx = aRegisterOffset / 2;
+} body {
+int  idx = aRegisterOffset / 2;
          mMemCache[idx] = aValue;
          uint readback;
          uint st;

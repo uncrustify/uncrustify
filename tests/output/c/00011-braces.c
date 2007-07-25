@@ -77,3 +77,11 @@ void f()
         else if (strlen(buf) > strlen(tmp))
                 buf = mallocstrcpy(buf, tmp);
 }
+
+void f()
+{
+}
+void g()
+{
+}
+

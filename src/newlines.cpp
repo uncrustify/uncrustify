@@ -1251,6 +1251,22 @@ void newlines_cleanup_braces(void)
 
          newlines_brace_pair(pc);
       }
+      else if (pc->type == CT_BRACE_CLOSE)
+      {
+         /* Force a newline after a function def */
+         if (pc->parent_type == CT_FUNC_DEF)
+         {
+            next = chunk_get_next(pc);
+            if ((next != NULL) &&
+                (next->type != CT_SEMICOLON) &&
+                !chunk_is_newline(next) &&
+                !chunk_is_comment(next))
+            {
+               LOG_FMT(LSYS, "%s: next = %s\n", __func__, get_token_name(next->type));
+               newline_iarf(pc, AV_ADD);
+            }
+         }
+      }
       else if (pc->type == CT_VBRACE_OPEN)
       {
          if (cpd.settings[UO_nl_after_vbrace_open].b)

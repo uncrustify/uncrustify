@@ -92,3 +92,11 @@ void f()
       buf = mallocstrcpy(buf, tmp);
    }
 }
+
+void f()
+{
+}
+void g()
+{
+}
+
