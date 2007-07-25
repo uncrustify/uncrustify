@@ -1,5 +1,6 @@
+static int foo(int bar);
 
-int foo(int bar)
+static int foo(int bar)
 {
 	for (;;)
 	{
@@ -46,5 +47,12 @@ struct narg {
 	char def;
 
 	const char *ghi;
+};
+
+class CFooRun {
+long stick();
+int bar() {
+	m_ick++;
+}
 };
 

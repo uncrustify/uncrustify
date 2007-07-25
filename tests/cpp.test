@@ -64,3 +64,5 @@
 30702  func-def-2.cfg                  cpp/function-def.cpp
 30703  func-def-3.cfg                  cpp/function-def.cpp
 
+30711  del_semicolon.cfg               cpp/semicolons.cpp
+
