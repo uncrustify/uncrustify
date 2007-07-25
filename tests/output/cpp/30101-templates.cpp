@@ -57,3 +57,14 @@ template<typename A, typename B, typename C> class MyClass
 {
 
 }
+
+
+static int max_value()
+{
+   return (std :: numeric_limits  <int >:: max )();
+}
+
+template < class Config_    >
+priority_queue < Config_ >   ::   ~priority_queue ()  {
+
+}
