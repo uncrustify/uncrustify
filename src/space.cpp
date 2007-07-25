@@ -79,7 +79,7 @@ struct no_space_table_s no_space_table[] =
  *
  * @param first   The first chunk
  * @param second  The second chunk
- * @return -1=remove space, 0=no change, 1=add space, 2=force one space
+ * @return        AV_IGNORE, AV_ADD, AV_REMOVE or AV_FORCE
  */
 argval_t do_space(chunk_t *first, chunk_t *second)
 {
@@ -673,7 +673,7 @@ argval_t do_space(chunk_t *first, chunk_t *second)
       return(AV_REMOVE); /*TODO: does this need to be configured? */
    }
 
-   if ((second->type != CT_PTR_TYPE) && 
+   if ((second->type != CT_PTR_TYPE) &&
        ((first->type == CT_QUALIFIER) || (first->type == CT_TYPE)))
    {
       return(AV_FORCE);
