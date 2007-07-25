@@ -219,7 +219,7 @@ void register_options(void)
    unc_add_option("nl_end_of_file_min", UO_nl_end_of_file_min, AT_NUM, "The number of newlines at the end of the file (only used if nl_end_of_file is 'add' or 'force')");
    unc_add_option("nl_assign_brace", UO_nl_assign_brace, AT_IARF, "Add or remove newline between '=' and '{'");
    unc_add_option("nl_func_var_def_blk", UO_nl_func_var_def_blk, AT_NUM, "The number of newlines after a block of variable definitions");
-   unc_add_option("nl_fcall_brace", UO_nl_fcall_brace, AT_IARF, 
+   unc_add_option("nl_fcall_brace", UO_nl_fcall_brace, AT_IARF,
                   "Add or remove newline between a function call's ')' and '{', as in:\n"
                   "list_for_each(item, &list) { }");
    unc_add_option("nl_enum_brace", UO_nl_enum_brace, AT_IARF, "Add or remove newline between 'enum' and '{'");
@@ -254,8 +254,12 @@ void register_options(void)
    unc_add_option("nl_fdef_brace", UO_nl_fdef_brace, AT_IARF, "Add or remove newline between function signature and '{'");
    unc_add_option("nl_after_return", UO_nl_after_return, AT_BOOL, "Whether to put a newline after 'return' statement");
    unc_add_option("nl_after_semicolon", UO_nl_after_semicolon, AT_BOOL, "Whether to put a newline after semicolons, except in 'for' statements");
-   unc_add_option("nl_after_brace_open", UO_nl_after_brace_open, AT_BOOL, "Whether to put a newline after brace open");
-   unc_add_option("nl_after_vbrace_open", UO_nl_after_vbrace_open, AT_BOOL, "Whether to put a newline after a virtual brace open.\nThese occur in un-braced if/while/do/for statement bodies.");
+   unc_add_option("nl_after_brace_open", UO_nl_after_brace_open, AT_BOOL,
+                  "Whether to put a newline after brace open.\n"
+                  "This also adds a newline before the matching brace close.");
+   unc_add_option("nl_after_vbrace_open", UO_nl_after_vbrace_open, AT_BOOL,
+                  "Whether to put a newline after a virtual brace open.\n"
+                  "These occur in un-braced if/while/do/for statement bodies.");
    unc_add_option("nl_define_macro", UO_nl_define_macro, AT_BOOL, "Whether to alter newlines in '#define' macros");
    unc_add_option("nl_squeeze_ifdef", UO_nl_squeeze_ifdef, AT_BOOL, "Whether to not put blanks after '#ifxx', '#elxx', or before '#endif'");
    unc_add_option("nl_before_if", UO_nl_before_if, AT_IARF, "Add or remove newline before 'if'");
