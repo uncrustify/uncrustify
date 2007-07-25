@@ -247,15 +247,15 @@ void fix_symbols(void)
       {
          fix_typedef(pc);
       }
-      else
+      if ((pc->type == CT_ENUM) ||
+          (pc->type == CT_STRUCT) ||
+          (pc->type == CT_UNION))
       {
-         if ((next->type == CT_ENUM) ||
-             (next->type == CT_STRUCT) ||
-             (next->type == CT_UNION))
+         if (prev->type != CT_TYPEDEF)
          {
-            if ((next->flags & PCF_IN_TYPEDEF) == 0)
+            if ((pc->flags & PCF_IN_TYPEDEF) == 0)
             {
-               fix_enum_struct_union(next);
+               fix_enum_struct_union(pc);
             }
          }
       }

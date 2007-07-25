@@ -797,6 +797,12 @@ static void newlines_brace_pair(chunk_t *br_open)
       {
          return;
       }
+
+      if (cpd.settings[UO_nl_enum_leave_one_liners].b &&
+          (br_open->parent_type == CT_ENUM))
+      {
+         return;
+      }
    }
 
    next = chunk_get_next_nc(br_open);
@@ -1224,6 +1230,12 @@ void newlines_cleanup_braces(void)
                         ((pc->flags & PCF_ONE_LINER) != 0))
                {
                   /* no change - one liner assignment */
+               }
+               else if (cpd.settings[UO_nl_enum_leave_one_liners].b &&
+                        (pc->parent_type == CT_ENUM) &&
+                        ((pc->flags & PCF_ONE_LINER) != 0))
+               {
+                  /* no change - one liner enum */
                }
                else if ((pc->flags & (PCF_IN_ARRAY_ASSIGN | PCF_IN_PREPROC)) != 0)
                {

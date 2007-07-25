@@ -37,6 +37,7 @@ Changes in uncrustify-0.36
  - Add sp_before_dc and sp_after_dc to control spacing around '::'
  - Split pos_class_comma from pos_comma
  - Improve line splitting a little - no longer break at '::' or '->' or '.'
+ - Add nl_enum_leave_one_liners
 
 Changes in uncrustify-0.35
 -------------------------------------------------------------------------------

@@ -329,6 +329,7 @@ enum uncrustify_options
    UO_nl_collapse_empty_body,    // change { \n } into {}
    UO_nl_class_leave_one_liners, // leave one-line function bodies in "class xx { here }"
    UO_nl_assign_leave_one_liners,// leave one-line assign bodies in "foo_t f = { a, b, c };"
+   UO_nl_enum_leave_one_liners,  // leave one-line enum bodies in "enum FOO { BAR = 5 };"
    UO_nl_template_class,         // newline between '>' and class in "template <x> class"
 
    UO_pos_bool,                  // position of trailing/leading &&/||
