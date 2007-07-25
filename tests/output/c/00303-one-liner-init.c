@@ -15,3 +15,11 @@ void foo(void)
 
    strcat(str, "foo");
 }
+
+void f()
+{
+   if (bar())
+      baz(1);
+   else
+      baz(2);
+}
