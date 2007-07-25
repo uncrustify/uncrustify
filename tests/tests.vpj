@@ -187,6 +187,7 @@
 				<F N="input/c/indent-assign.c"/>
 				<F N="input/c/mac.c"/>
 				<F N="input/c/minus-minus.c"/>
+				<F N="input/c/nl-semicolon.c"/>
 				<F N="input/c/nl-ver-def.c"/>
 				<F N="input/c/one-liner-init.c"/>
 				<F N="input/c/pascal_ptr.c"/>

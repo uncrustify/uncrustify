@@ -22,3 +22,11 @@ struct foo {
    char *b
 };
 
+void f()
+{
+   for (;;)
+   {
+      nothing();
+   }
+   foobar();
+}

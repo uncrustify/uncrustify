@@ -12,3 +12,10 @@ struct somestruct { int a; char b; foo c; bar *d; };
 
 struct foo { int a; char *b };
 
+void f()
+{
+for (;;)
+nothing();
+foobar();
+}
+;

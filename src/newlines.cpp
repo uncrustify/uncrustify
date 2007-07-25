@@ -1332,7 +1332,8 @@ void newlines_cleanup_braces(void)
              cpd.settings[UO_nl_after_semicolon].b)
          {
             next = chunk_get_next(pc);
-            if (!chunk_is_comment(next))
+            if (!chunk_is_comment(next) &&
+                (next->type != CT_VBRACE_CLOSE))
             {
                newline_iarf(pc, AV_ADD);
             }
