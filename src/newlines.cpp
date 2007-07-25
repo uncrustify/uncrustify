@@ -1285,7 +1285,6 @@ void newlines_cleanup_braces(void)
                 !chunk_is_newline(next) &&
                 !chunk_is_comment(next))
             {
-               LOG_FMT(LSYS, "%s: next = %s\n", __func__, get_token_name(next->type));
                newline_iarf(pc, AV_ADD);
             }
          }
