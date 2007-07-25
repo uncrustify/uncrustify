@@ -359,7 +359,8 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
       /* Make sure the open / close match */
       if (pc->type != (frm->pse[frm->pse_tos].type + 1))
       {
-         if (frm->pse[frm->pse_tos].type != CT_NONE)
+         if ((frm->pse[frm->pse_tos].type != CT_NONE) &&
+             (frm->pse[frm->pse_tos].type != CT_PP_DEFINE))
          {
             LOG_FMT(LWARN, "%s:%d Error: Unexpected '%.*s' for '%s'\n",
                     cpd.filename, pc->orig_line, pc->len, pc->str,
