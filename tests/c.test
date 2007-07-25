@@ -73,6 +73,7 @@
 00301   ben.cfg                c/align-struct-init.c
 00302   ben.cfg                c/one-liner-init.c
 00303   1liner-split.cfg       c/one-liner-init.c
+00304   1liner-no-split.cfg    c/one-liner-init.c
 
 # aligning tresholds
 00401   align.cfg              c/align-equ.c
@@ -112,6 +113,8 @@
 
 01000  mod-paren.cfg           c/mod-paren.c
 01001  nl-comment.cfg          c/nl-comment.c
+
+01011  del_semicolon.cfg       c/semicolons.c
 
 # big general tests
 20000 ben.cfg                  c/i2c-core.c

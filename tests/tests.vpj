@@ -77,7 +77,6 @@
 			<F N="config/avalon3.cfg"/>
 			<F N="config/avalon4.cfg"/>
 			<F N="config/ben.cfg"/>
-			<F N="config/ben.cfg~"/>
 			<F N="config/blc-1.cfg"/>
 			<F N="config/bool-pos-eol.cfg"/>
 			<F N="config/bool-pos-sol.cfg"/>
@@ -189,6 +188,7 @@
 				<F N="input/c/mac.c"/>
 				<F N="input/c/minus-minus.c"/>
 				<F N="input/c/nl-ver-def.c"/>
+				<F N="input/c/one-liner-init.c"/>
 				<F N="input/c/pascal_ptr.c"/>
 				<F N="input/c/pp-space.c"/>
 				<F N="input/c/return-multi.c"/>
@@ -339,6 +339,5 @@
 		<F N="objective-c.test"/>
 		<F N="pawn.test"/>
 		<F N="run_tests.py"/>
-		<F N="sql.test"/>
 	</Files>
 </Project>
