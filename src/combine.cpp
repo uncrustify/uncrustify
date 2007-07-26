@@ -41,17 +41,20 @@ static void mark_exec_sql(chunk_t *pc);
 
 void make_type(chunk_t *pc)
 {
-   if (pc->type == CT_WORD)
+   if (pc != NULL)
    {
-      pc->type = CT_TYPE;
-   }
-   else if (chunk_is_star(pc))
-   {
-      pc->type = CT_PTR_TYPE;
-   }
-   else if (chunk_is_addr(pc))
-   {
-      pc->type = CT_BYREF;
+      if (pc->type == CT_WORD)
+      {
+         pc->type = CT_TYPE;
+      }
+      else if (chunk_is_star(pc))
+      {
+         pc->type = CT_PTR_TYPE;
+      }
+      else if (chunk_is_addr(pc))
+      {
+         pc->type = CT_BYREF;
+      }
    }
 }
 
@@ -1837,7 +1840,8 @@ static void mark_function(chunk_t *pc)
    }
 
    if ((pc->type == CT_FUNC_CALL) &&
-       (pc->level == pc->brace_level))
+       (pc->level == pc->brace_level) &&
+       ((pc->flags & PCF_IN_ARRAY_ASSIGN) == 0))
    {
       LOG_FMT(LFCN, "Checking func call: prev=%s", get_token_name(prev->type));
 

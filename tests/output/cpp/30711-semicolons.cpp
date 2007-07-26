@@ -56,3 +56,14 @@ int bar() {
 }
 };
 
+void f()
+{
+	if (tmp[0] == "disk")
+	{
+		tmp = split (tmp[1], ",");
+		DiskEntry entry = { tmp[0], tmp[2],
+			            stxxl::int64 (str2int (tmp[1])) *
+			            stxxl::int64 (1024 * 1024) };
+		disks_props.push_back (entry);
+	}
+}
