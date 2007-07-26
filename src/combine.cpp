@@ -1845,6 +1845,15 @@ static void mark_function(chunk_t *pc)
    {
       LOG_FMT(LFCN, "Checking func call: prev=%s", get_token_name(prev->type));
 
+      /**
+       * REVISIT:
+       * a function def can only occur at brace level, but not inside an
+       * assignment, structure, enum, or union.
+       * The close paren must be followed by an open brace, with an optional
+       * qualifier (const) in between.
+       * There can be all sorts of template crap and/or '[]' in the type.
+       * This hack mostly checks that.
+       */
       while ((prev != NULL) &&
              ((prev->type == CT_TYPE) ||
               (prev->type == CT_WORD) ||
