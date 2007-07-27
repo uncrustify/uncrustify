@@ -107,12 +107,11 @@ void ChunkStack::Resize(int newsize)
    if (m_size < newsize)
    {
       m_size = newsize;
-      m_cse = (Entry *)realloc(m_cse, m_size * sizeof(ChunkStack::Entry));
+      m_cse  = (Entry *)realloc(m_cse, m_size * sizeof(ChunkStack::Entry));
       assert(m_cse != NULL);
       /*TODO: check for out-of-memory? */
    }
 }
-
 
 /**
  * Mark an entry to be removed by Collapse()
@@ -128,7 +127,6 @@ void ChunkStack::Zap(int idx)
       m_cse[idx].m_trailer = NULL;
    }
 }
-
 
 /**
  * Compresses down the stack by removing dead entries

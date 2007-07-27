@@ -82,7 +82,6 @@ void do_braces(void)
    }
 }
 
-
 /**
  * Go backwards to honor brace newline removal limits
  */
@@ -113,7 +112,6 @@ static void examine_braces(void)
       pc = chunk_get_prev_type(pc, CT_BRACE_OPEN, -1);
    }
 }
-
 
 /**
  * Step forward and count the number of semi colons at the current level.
@@ -221,7 +219,6 @@ static void examine_brace(chunk_t *bopen)
    }
 }
 
-
 static void remove_brace(chunk_t *pc)
 {
    chunk_t *tmp;
@@ -251,7 +248,6 @@ static void remove_brace(chunk_t *pc)
       }
    }
 }
-
 
 static void convert_vbrace_to_brace(void)
 {

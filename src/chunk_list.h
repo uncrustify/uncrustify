@@ -74,7 +74,6 @@ chunk_t *chunk_skip_to_match(chunk_t *cur)
    return(cur);
 }
 
-
 static_inline
 bool chunk_is_comment(chunk_t *pc)
 {
@@ -146,7 +145,6 @@ bool chunk_is_addr(chunk_t *pc)
 {
    return((pc != NULL) && (pc->len == 1) && (pc->str[0] == '&'));
 }
-
 
 bool chunk_is_newline_between(chunk_t *start, chunk_t *end);
 

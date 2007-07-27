@@ -71,11 +71,11 @@ struct token_pri
 
 static const token_pri pri_table[] =
 {
-   { CT_SEMICOLON,  1 },
-   { CT_COMMA,      2 },
-   { CT_BOOL,       3 },
-   { CT_COMPARE,    4 },
-   { CT_ARITH,      5 },
+   { CT_SEMICOLON, 1 },
+   { CT_COMMA,     2 },
+   { CT_BOOL,      3 },
+   { CT_COMPARE,   4 },
+   { CT_ARITH,     5 },
    //{ CT_DC_MEMBER, 10 },
    //{ CT_MEMBER,    10 },
 };

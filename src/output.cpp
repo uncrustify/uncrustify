@@ -59,7 +59,6 @@ void add_text_len(const char *text, int len)
    }
 }
 
-
 /**
  * Advance to a specific column
  * cpd.column is the current column
@@ -109,8 +108,6 @@ void output_indent(int column, int brace_col)
       add_text(" ");
    }
 }
-
-
 
 void output_parsed(FILE *pfile)
 {
@@ -293,7 +290,6 @@ void output_text(FILE *pfile)
    }
 }
 
-
 /**
  * Given a multi-line comemnt block that starts in column X, figure out how
  * much subsequent lines should be indented.
@@ -397,7 +393,7 @@ static int calculate_comment_body_indent(const char *str, int len, int start_col
    //LOG_FMT(LSYS, "%s: first=%d last=%d width=%d\n", __func__, first_len, last_len, width);
 
    /*TODO: make the first_len minimum (4) configurable? */
-   if ((first_len == last_len) && ((first_len > 4) || first_len == width))
+   if ((first_len == last_len) && ((first_len > 4) || (first_len == width)))
    {
       return(0);
    }
@@ -408,6 +404,7 @@ static int calculate_comment_body_indent(const char *str, int len, int start_col
 static_inline void add_spaces_before_star()
 {
    int count = cpd.settings[UO_cmt_sp_before_star_cont].n;
+
    while (count-- > 0)
    {
       add_char(' ');

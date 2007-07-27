@@ -133,7 +133,6 @@ static void newline_min_after2(chunk_t *ref, INT32 count,
    }
 }
 
-
 /**
  * Adds a newline between the two chunks if there isn't one already.
  */
@@ -173,7 +172,6 @@ static chunk_t *newline_add_between2(chunk_t *start, chunk_t *end,
 
    return(newline_add_before(end));
 }
-
 
 /**
  * Removes any CT_NEWLINE or CT_NL_CONT between start and end.
@@ -239,7 +237,6 @@ static bool newline_del_between2(chunk_t *start, chunk_t *end,
    }
    return(retval);
 }
-
 
 /**
  * Add or remove a newline between the closing paren and opening brace.
@@ -332,7 +329,7 @@ static void newlines_if_for_while_switch_pre_blank_lines(chunk_t *start, argval_
       {
          last_nl = pc;
          /* if we found 2 or more in a row */
-         if (pc->nl_count > 1 || chunk_is_newline(chunk_get_prev_nvb(pc)))
+         if ((pc->nl_count > 1) || chunk_is_newline(chunk_get_prev_nvb(pc)))
          {
             /* need to remove */
             if (nl_opt & AV_REMOVE)
@@ -390,12 +387,12 @@ static chunk_t *get_closing_brace(chunk_t *start)
 
    for (pc = start; (pc = chunk_get_next(pc)) != NULL;)
    {
-      if ((pc->type == CT_BRACE_CLOSE || pc->type == CT_VBRACE_CLOSE) && pc->level == level)
+      if (((pc->type == CT_BRACE_CLOSE) || (pc->type == CT_VBRACE_CLOSE)) && (pc->level == level))
       {
          return(pc);
       }
       /* for some reason, we can have newlines between if and opening brace that are lower level than either */
-      if (!chunk_is_newline(pc) && pc->level < level)
+      if (!chunk_is_newline(pc) && (pc->level < level))
       {
          return(NULL);
       }
@@ -463,7 +460,7 @@ static void newlines_if_for_while_switch_post_blank_lines(chunk_t *start, argval
       while (true)
       {
          next = chunk_get_next_ncnl(pc);
-         if (next != NULL && (next->type == CT_ELSE || next->type == CT_ELSEIF))
+         if ((next != NULL) && ((next->type == CT_ELSE) || (next->type == CT_ELSEIF)))
          {
             /* point to the closing brace of the else */
             if ((pc = get_closing_brace(next)) == NULL)
@@ -556,7 +553,6 @@ static void newlines_if_for_while_switch_post_blank_lines(chunk_t *start, argval
    }
 }
 
-
 /**
  * Adds or removes a newline between the keyword and the open brace.
  * If there is something after the '{' on the same line, then
@@ -616,7 +612,6 @@ static void newlines_struct_enum_union(chunk_t *start, argval_t nl_opt)
    }
 }
 
-
 /**
  * Cuddles or un-cuddles a chunk with a previous close brace
  *
@@ -650,7 +645,6 @@ static void newlines_cuddle_uncuddle(chunk_t *start, argval_t nl_opt)
    }
 }
 
-
 /**
  * Adds/removes a newline between else and '{'.
  * "else {" or "else \n {"
@@ -672,7 +666,7 @@ static void newlines_do_else(chunk_t *start, argval_t nl_opt)
       if ((nl_opt & AV_ADD) != 0)
       {
          newline_add_between(start, next);
-         chunk_t * tmp = chunk_get_next(next);
+         chunk_t *tmp = chunk_get_next(next);
          if ((tmp != NULL) && !chunk_is_newline(tmp))
          {
             newline_add_between(next, tmp);
@@ -726,7 +720,6 @@ static void newline_fnc_var_def(chunk_t *br_open, int nl_count)
       }
    }
 }
-
 
 /**
  * Handles the brace_on_func_line setting and decides if the closing brace
@@ -1001,7 +994,6 @@ static void newline_case_colon(chunk_t *start)
    }
 }
 
-
 /**
  * Put a empty line after a return statement, unless it is followed by a
  * close brace.
@@ -1038,7 +1030,6 @@ static void newline_return(chunk_t *start)
    }
 }
 
-
 /**
  * Does a simple Ignore, Add, Remove, or Force after the given chunk
  *
@@ -1067,7 +1058,6 @@ static void newline_iarf(chunk_t *pc, argval_t av)
       }
    }
 }
-
 
 /**
  * Formats a function declaration
@@ -1135,7 +1125,6 @@ static void newline_func_def(chunk_t *start)
       }
    }
 }
-
 
 /**
  * Step through all chunks.
@@ -1408,7 +1397,6 @@ void newlines_cleanup_braces(void)
    }
 }
 
-
 /**
  * Handle insertion/removal of blank lines before if/for/while/do
  */
@@ -1449,7 +1437,6 @@ void newlines_insert_blank_lines(void)
       }
    }
 }
-
 
 void newlines_squeeze_ifdef(void)
 {
@@ -1504,7 +1491,6 @@ void newlines_squeeze_ifdef(void)
       }
    }
 }
-
 
 void newlines_eat_start_end(void)
 {
@@ -1577,7 +1563,6 @@ void newlines_eat_start_end(void)
    }
 }
 
-
 /**
  * Searches for a chunk of type chunk_type and moves them, if needed.
  * Will not move tokens that are on their own line or have other than
@@ -1585,9 +1570,9 @@ void newlines_eat_start_end(void)
  */
 void newlines_chunk_pos(c_token_t chunk_type, tokenpos_e mode)
 {
-   chunk_t    *pc;
-   chunk_t    *next;
-   chunk_t    *prev;
+   chunk_t *pc;
+   chunk_t *next;
+   chunk_t *prev;
 
    if (mode == TP_IGNORE)
    {
@@ -1632,7 +1617,6 @@ void newlines_chunk_pos(c_token_t chunk_type, tokenpos_e mode)
       }
    }
 }
-
 
 /**
  * Searches for CT_CLASS_COLON and moves them, if needed.
@@ -1734,7 +1718,6 @@ void newlines_class_colon_pos(void)
       }
    }
 }
-
 
 /**
  * Scans for newline tokens and limits the nl_count.
@@ -1881,14 +1864,13 @@ void newlines_cleanup_dup(void)
    }
 }
 
-
 void newlines_double_space_struct_enum_union(void)
 {
    chunk_t *pc;
    chunk_t *next;
    chunk_t *prev;
-   bool inside_seu = false;
-   int seu_level = 0;
+   bool    inside_seu = false;
+   int     seu_level  = 0;
 
    prev = NULL;
    pc   = chunk_get_head();
@@ -1905,7 +1887,7 @@ void newlines_double_space_struct_enum_union(void)
               (pc->parent_type == CT_UNION)))
          {
             inside_seu = true;
-            seu_level = pc->brace_level;
+            seu_level  = pc->brace_level;
          }
       }
       else

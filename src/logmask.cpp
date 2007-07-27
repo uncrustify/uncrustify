@@ -85,7 +85,6 @@ char *logmask_to_str(const log_mask_t *mask, char *buf, int size)
    return(buf);
 }
 
-
 /**
  * Parses a string into a log severity
  *

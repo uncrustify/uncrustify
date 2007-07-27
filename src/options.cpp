@@ -22,16 +22,16 @@
 
 static std::map<std::string, option_map_value>      option_name_map;
 static std::map<uncrustify_groups, group_map_value> group_map;
-static uncrustify_groups                            current_group;
+static uncrustify_groups current_group;
 
 
-static void unc_add_option(const char *name,
+static void unc_add_option(const char         *name,
                            uncrustify_options id,
-                           argtype_e type,
-                           const char *short_desc = NULL,
-                           const char *long_desc = NULL,
-                           int min_val = 0,
-                           int max_val = 16);
+                           argtype_e          type,
+                           const char         *short_desc = NULL,
+                           const char         *long_desc = NULL,
+                           int                min_val = 0,
+                           int                max_val = 16);
 
 
 void unc_begin_group(uncrustify_groups id, const char *short_desc,
@@ -378,7 +378,6 @@ const option_map_value *get_option_name(int uo)
    return(NULL);
 }
 
-
 /**
  * Convert the value string to a number.
  */
@@ -631,7 +630,6 @@ int load_option_file(const char *filename)
    return(0);
 }
 
-
 int save_option_file(FILE *pfile, bool withDoc)
 {
    std::string val_string;
@@ -706,7 +704,7 @@ int save_option_file(FILE *pfile, bool withDoc)
               "# macro-open  BEGIN_TEMPLATE_MESSAGE_MAP\n"
               "# macro-open  BEGIN_MESSAGE_MAP\n"
               "# macro-close END_MESSAGE_MAP\n"
-              );
+      );
    }
 
    /* Print custom keywords */

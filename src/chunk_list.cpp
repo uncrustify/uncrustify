@@ -15,7 +15,7 @@
 #include "ListManager.h"
 #include "prototypes.h"
 
-typedef ListManager <chunk_t>   ChunkList;
+typedef ListManager<chunk_t>   ChunkList;
 
 ChunkList g_cl;
 
@@ -410,7 +410,6 @@ bool chunk_is_newline_between(chunk_t *start, chunk_t *end)
    }
    return(false);
 }
-
 
 /**
  * Swaps the two chunks.

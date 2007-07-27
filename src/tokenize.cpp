@@ -171,7 +171,6 @@ bool parse_comment(chunk_t *pc)
    return(true);
 }
 
-
 /**
  * Count the number of characters in the number.
  * The next bit of text starts with a number (0-9 or '.'), so it is a number.
@@ -332,7 +331,6 @@ static bool parse_number(chunk_t *pc)
    return(true);
 }
 
-
 /**
  * Count the number of characters in a quoted string.
  * The next bit of text starts with a quote char " or ' or <.
@@ -399,7 +397,6 @@ static bool parse_string(chunk_t *pc, int quote_idx, bool allow_escape)
    return(true);
 }
 
-
 /**
  * Literal string, ends with single "
  * Two "" don't end the string.
@@ -433,7 +430,6 @@ static bool parse_cs_string(chunk_t *pc)
    cpd.column += len;
    return(true);
 }
-
 
 /**
  * Count the number of characters in a word.
@@ -483,7 +479,6 @@ bool parse_word(chunk_t *pc, bool skipcheck)
    }
    return(true);
 }
-
 
 /**
  * Count the number of whitespace characters.
@@ -554,7 +549,6 @@ bool parse_whitespace(chunk_t *pc)
    return(len != 0);
 }
 
-
 /**
  * Called when we hit a backslash.
  * If there is nothing but whitespace until the newline, then this is a
@@ -588,7 +582,6 @@ static bool parse_bs_newline(chunk_t *pc)
    }
    return(false);
 }
-
 
 /**
  * Skips the next bit of whatever and returns the type of block.
@@ -784,7 +777,6 @@ static bool parse_next(chunk_t *pc)
    cpd.error_count++;
    return(true);
 }
-
 
 /**
  * This function parses or tokenizes the whole buffer into a list.

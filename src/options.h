@@ -130,75 +130,75 @@ enum uncrustify_options
     * Misc inter-element spacing
     */
 
-   UO_sp_paren_brace,       // space between ')' and '{'
-   UO_sp_fparen_brace,      // space between ')' and '{' of function
-   UO_sp_sparen_brace,      // space between ')' and '{' of if, while, etc
+   UO_sp_paren_brace,           // space between ')' and '{'
+   UO_sp_fparen_brace,          // space between ')' and '{' of function
+   UO_sp_sparen_brace,          // space between ')' and '{' of if, while, etc
 
-   UO_sp_after_cast,        // space after cast - "(int) a" vs "(int)a"
-   UO_sp_inside_paren_cast, // spaces inside the parens of a cast
+   UO_sp_after_cast,            // space after cast - "(int) a" vs "(int)a"
+   UO_sp_inside_paren_cast,     // spaces inside the parens of a cast
 
-   UO_sp_before_byref,      // space before '&' of 'fcn(int& idx)'
-   UO_sp_after_byref,       // space after a '&'  as in 'int& var'
+   UO_sp_before_byref,          // space before '&' of 'fcn(int& idx)'
+   UO_sp_after_byref,           // space after a '&'  as in 'int& var'
 
-   UO_sp_inside_fparen,     // space inside 'foo( xxx )' vs 'foo(xxx)'
-   UO_sp_inside_fparens,    // space inside 'foo( )' vs 'foo()'
-   UO_sp_inside_paren,      // space inside '+ ( xxx )' vs '+ (xxx)'
-   UO_sp_inside_square,     // space inside 'byte[ 5 ]' vs 'byte[5]'
-   UO_sp_inside_sparen,     // space inside 'if( xxx )' vs 'if(xxx)'
-   UO_sp_inside_angle,      // space inside '<>', as in '<class T>'
+   UO_sp_inside_fparen,         // space inside 'foo( xxx )' vs 'foo(xxx)'
+   UO_sp_inside_fparens,        // space inside 'foo( )' vs 'foo()'
+   UO_sp_inside_paren,          // space inside '+ ( xxx )' vs '+ (xxx)'
+   UO_sp_inside_square,         // space inside 'byte[ 5 ]' vs 'byte[5]'
+   UO_sp_inside_sparen,         // space inside 'if( xxx )' vs 'if(xxx)'
+   UO_sp_inside_angle,          // space inside '<>', as in '<class T>'
 
-   UO_sp_before_sparen,     // space before '(' of 'if/for/while/switch'
+   UO_sp_before_sparen,         // space before '(' of 'if/for/while/switch'
    UO_sp_after_sparen,      /* space after  ')' of 'if/for/while/switch'
                              * the do-while does not get set here */
-   UO_sp_before_angle,      // space before '<>', as in '<class T>'
-   UO_sp_after_angle,       // space after  '<>', as in '<class T>'
-   UO_sp_angle_paren,       // space between '<>' and '(' in "a = new List<byte>();"
-   UO_sp_angle_word,        // space between '<>' and a word in "List<byte> a;"
+   UO_sp_before_angle,          // space before '<>', as in '<class T>'
+   UO_sp_after_angle,           // space after  '<>', as in '<class T>'
+   UO_sp_angle_paren,           // space between '<>' and '(' in "a = new List<byte>();"
+   UO_sp_angle_word,            // space between '<>' and a word in "List<byte> a;"
 
-   UO_sp_before_square,     // space before single '['
-   UO_sp_before_squares,    // space before '[]', as in 'byte []'
+   UO_sp_before_square,         // space before single '['
+   UO_sp_before_squares,        // space before '[]', as in 'byte []'
 
-   UO_sp_paren_paren,       // space between nested parens - '( (' vs '(('
+   UO_sp_paren_paren,           // space between nested parens - '( (' vs '(('
    UO_sp_balance_nested_parens, // balance spaces inside nested parens
 
-   UO_sp_return_paren,      // space between 'return' and '('
-   UO_sp_sizeof_paren,      // space between 'sizeof' and '('
+   UO_sp_return_paren,          // space between 'return' and '('
+   UO_sp_sizeof_paren,          // space between 'sizeof' and '('
 
-   UO_sp_after_comma,       // space after ','
-   UO_sp_before_comma,      // space before ','
+   UO_sp_after_comma,           // space after ','
+   UO_sp_before_comma,          // space before ','
 
-   UO_sp_arith,             // space around + - / * etc
-   UO_sp_bool,              // space around || &&
-   UO_sp_compare,           // space around < > ==, etc
-   UO_sp_assign,            // space around =, +=, etc
+   UO_sp_arith,                 // space around + - / * etc
+   UO_sp_bool,                  // space around || &&
+   UO_sp_compare,               // space around < > ==, etc
+   UO_sp_assign,                // space around =, +=, etc
 
-   UO_sp_func_def_paren,    // space between 'func' and '(' - "foo (" vs "foo("
-   UO_sp_func_call_paren,   // space between 'func' and '(' - "foo (" vs "foo("
-   UO_sp_func_proto_paren,  // space between 'func' and '(' - "foo (" vs "foo("
-   UO_sp_func_class_paren,  // space between ctor/dtor and '('
+   UO_sp_func_def_paren,        // space between 'func' and '(' - "foo (" vs "foo("
+   UO_sp_func_call_paren,       // space between 'func' and '(' - "foo (" vs "foo("
+   UO_sp_func_proto_paren,      // space between 'func' and '(' - "foo (" vs "foo("
+   UO_sp_func_class_paren,      // space between ctor/dtor and '('
 
-   UO_sp_type_func,         // space between return type and 'func'
-                            // a minimum of 1 is forced except for '*'
-   UO_sp_before_ptr_star,   // space before a '*' that is part of a type
-   UO_sp_after_ptr_star,    // space after a '*' that is part of a type
-   UO_sp_between_ptr_star,  // space between two '*' that are part of a type
+   UO_sp_type_func,             // space between return type and 'func'
+   // a minimum of 1 is forced except for '*'
+   UO_sp_before_ptr_star,       // space before a '*' that is part of a type
+   UO_sp_after_ptr_star,        // space after a '*' that is part of a type
+   UO_sp_between_ptr_star,      // space between two '*' that are part of a type
 
    UO_sp_special_semi,      /* space empty stmt ';' on while, if, for
                              * example "while (*p++ = ' ') ;" */
-   UO_sp_before_semi,          // space before all ';'
-   UO_sp_before_semi_for,      // space before the two ';' in a for() - non-empty
-   UO_sp_before_semi_for_empty,// space before ';' in empty for statment
-   UO_sp_inside_braces,        // space inside '{' and '}' - "{ 1, 2, 3 }"
-   UO_sp_inside_braces_enum,   // space inside enum '{' and '}' - "{ a, b, c }"
-   UO_sp_inside_braces_struct, // space inside struct/union '{' and '}'
+   UO_sp_before_semi,           // space before all ';'
+   UO_sp_before_semi_for,       // space before the two ';' in a for() - non-empty
+   UO_sp_before_semi_for_empty, // space before ';' in empty for statment
+   UO_sp_inside_braces,         // space inside '{' and '}' - "{ 1, 2, 3 }"
+   UO_sp_inside_braces_enum,    // space inside enum '{' and '}' - "{ a, b, c }"
+   UO_sp_inside_braces_struct,  // space inside struct/union '{' and '}'
 
-   UO_sp_macro,                // space between macro and value, ie '#define a 6'
-   UO_sp_macro_func,           // space between macro and value, ie '#define a 6'
+   UO_sp_macro,                 // space between macro and value, ie '#define a 6'
+   UO_sp_macro_func,            // space between macro and value, ie '#define a 6'
 
-   UO_sp_square_fparen,        // weird pawn stuff: native yark[rect](a[rect])
-   UO_sp_after_tag,            // pawn: space after a tag colon
+   UO_sp_square_fparen,         // weird pawn stuff: native yark[rect](a[rect])
+   UO_sp_after_tag,             // pawn: space after a tag colon
 
-   UO_sp_after_operator,       // space after operator when followed by a punctuator
+   UO_sp_after_operator,        // space after operator when followed by a punctuator
    UO_sp_else_brace,
    UO_sp_brace_else,
 
@@ -267,76 +267,76 @@ enum uncrustify_options
     * Newline adding and removing options
     */
 
-   UO_nl_fdef_brace,             // "int foo() {" vs "int foo()\n{"
-   UO_nl_func_decl_start,        // newline after the '(' in a function decl
-   UO_nl_func_decl_args,         // newline after each ',' in a function decl
-   UO_nl_func_decl_end,          // newline before the ')' in a function decl
-   UO_nl_func_type_name,         // newline between return type and func name in def
-   UO_nl_func_var_def_blk,       // newline after a block of variable defs
-   UO_nl_before_case,            // newline before 'case' statement
-   UO_nl_after_return,           /* newline after return statement */
-   UO_nl_after_case,             /* disallow nested "case 1: a=3;" */
-   UO_nl_after_semicolon,        // disallow multiple statements on a line "a=1;b=4;"
-   UO_nl_after_brace_open,       // force a newline after a brace open
-   UO_nl_after_vbrace_open,      // force a newline after a virtual brace open
-   UO_nl_fcall_brace,            /* newline between function call and open brace */
-   UO_nl_squeeze_ifdef,          /* no blanks after #ifxx, #elxx, or before #endif */
-   UO_nl_enum_brace,             /* nl between enum and brace */
-   UO_nl_struct_brace,           /* nl between struct and brace */
-   UO_nl_union_brace,            /* nl between union and brace */
-   UO_nl_assign_brace,           /* nl between '=' and brace */
-   UO_nl_class_brace,            /* nl between class name and brace */
-   UO_nl_namespace_brace,        /* nl between namespace name and brace */
+   UO_nl_fdef_brace,              // "int foo() {" vs "int foo()\n{"
+   UO_nl_func_decl_start,         // newline after the '(' in a function decl
+   UO_nl_func_decl_args,          // newline after each ',' in a function decl
+   UO_nl_func_decl_end,           // newline before the ')' in a function decl
+   UO_nl_func_type_name,          // newline between return type and func name in def
+   UO_nl_func_var_def_blk,        // newline after a block of variable defs
+   UO_nl_before_case,             // newline before 'case' statement
+   UO_nl_after_return,            /* newline after return statement */
+   UO_nl_after_case,              /* disallow nested "case 1: a=3;" */
+   UO_nl_after_semicolon,         // disallow multiple statements on a line "a=1;b=4;"
+   UO_nl_after_brace_open,        // force a newline after a brace open
+   UO_nl_after_vbrace_open,       // force a newline after a virtual brace open
+   UO_nl_fcall_brace,             /* newline between function call and open brace */
+   UO_nl_squeeze_ifdef,           /* no blanks after #ifxx, #elxx, or before #endif */
+   UO_nl_enum_brace,              /* nl between enum and brace */
+   UO_nl_struct_brace,            /* nl between struct and brace */
+   UO_nl_union_brace,             /* nl between union and brace */
+   UO_nl_assign_brace,            /* nl between '=' and brace */
+   UO_nl_class_brace,             /* nl between class name and brace */
+   UO_nl_namespace_brace,         /* nl between namespace name and brace */
 
-   UO_nl_do_brace,               /* nl between do and { */
-   UO_nl_if_brace,               /* nl between if and { */
-   UO_nl_for_brace,              /* nl between for and { */
-   UO_nl_else_brace,             /* nl between else and { */
-   UO_nl_finally_brace,          /* nl between finally and { */
-   UO_nl_brace_finally,          /* nl between } and finally */
-   UO_nl_try_brace,              /* nl between try and { */
-   UO_nl_getset_brace,           /* nl between get/set and { */
-   UO_nl_catch_brace,            /* nl between catch and { */
-   UO_nl_brace_catch,            /* nl between } and catch */
-   UO_nl_while_brace,            /* nl between while and { */
-   UO_nl_switch_brace,           /* nl between switch and { */
-   UO_nl_brace_else,             // nl between } and else
-   UO_nl_brace_while,            // nl between } and while of do stmt
+   UO_nl_do_brace,                /* nl between do and { */
+   UO_nl_if_brace,                /* nl between if and { */
+   UO_nl_for_brace,               /* nl between for and { */
+   UO_nl_else_brace,              /* nl between else and { */
+   UO_nl_finally_brace,           /* nl between finally and { */
+   UO_nl_brace_finally,           /* nl between } and finally */
+   UO_nl_try_brace,               /* nl between try and { */
+   UO_nl_getset_brace,            /* nl between get/set and { */
+   UO_nl_catch_brace,             /* nl between catch and { */
+   UO_nl_brace_catch,             /* nl between } and catch */
+   UO_nl_while_brace,             /* nl between while and { */
+   UO_nl_switch_brace,            /* nl between switch and { */
+   UO_nl_brace_else,              // nl between } and else
+   UO_nl_brace_while,             // nl between } and while of do stmt
 
-   UO_nl_multi_line_cond,        /* nl between ) and { when cond spans >=2 lines */
-   UO_nl_elseif_brace,           // nl between close paren and open brace in 'else if () {'
+   UO_nl_multi_line_cond,         /* nl between ) and { when cond spans >=2 lines */
+   UO_nl_elseif_brace,            // nl between close paren and open brace in 'else if () {'
 
-   UO_nl_before_if,              // nl before if
-   UO_nl_after_if,               // nl after if/else
-   UO_nl_before_for,             // nl before for
-   UO_nl_after_for,              // nl after for close
-   UO_nl_before_while,           // nl before while
-   UO_nl_after_while,            // nl after while close
-   UO_nl_before_switch,          // nl before switch
-   UO_nl_after_switch,           // nl after switch close
-   UO_nl_before_do,              // nl before do
-   UO_nl_after_do,               // nl after while of do
-   UO_nl_ds_struct_enum_cmt,     // nl between commented-elements of struct/enum
+   UO_nl_before_if,               // nl before if
+   UO_nl_after_if,                // nl after if/else
+   UO_nl_before_for,              // nl before for
+   UO_nl_after_for,               // nl after for close
+   UO_nl_before_while,            // nl before while
+   UO_nl_after_while,             // nl after while close
+   UO_nl_before_switch,           // nl before switch
+   UO_nl_after_switch,            // nl after switch close
+   UO_nl_before_do,               // nl before do
+   UO_nl_after_do,                // nl after while of do
+   UO_nl_ds_struct_enum_cmt,      // nl between commented-elements of struct/enum
 
-   UO_nl_define_macro,           // alter newlines in #define macros
-   UO_nl_start_of_file,          // alter newlines at the start of file
-   UO_nl_start_of_file_min,      // min number of newlines at the start of the file
-   UO_nl_end_of_file,            // alter newlines at the end of file
-   UO_nl_end_of_file_min,        // min number of newlines at the end of the file
+   UO_nl_define_macro,            // alter newlines in #define macros
+   UO_nl_start_of_file,           // alter newlines at the start of file
+   UO_nl_start_of_file_min,       // min number of newlines at the start of the file
+   UO_nl_end_of_file,             // alter newlines at the end of file
+   UO_nl_end_of_file_min,         // min number of newlines at the end of the file
 
-   UO_nl_class_colon,            // nl before/after class colon (tied to UO_pos_class_colon)
-   UO_nl_class_init_args,        // newline after comma in class init args
-   UO_nl_collapse_empty_body,    // change { \n } into {}
-   UO_nl_class_leave_one_liners, // leave one-line function bodies in "class xx { here }"
-   UO_nl_assign_leave_one_liners,// leave one-line assign bodies in "foo_t f = { a, b, c };"
-   UO_nl_enum_leave_one_liners,  // leave one-line enum bodies in "enum FOO { BAR = 5 };"
-   UO_nl_getset_leave_one_liners,// leave one-line get/set bodies
-   UO_nl_template_class,         // newline between '>' and class in "template <x> class"
+   UO_nl_class_colon,             // nl before/after class colon (tied to UO_pos_class_colon)
+   UO_nl_class_init_args,         // newline after comma in class init args
+   UO_nl_collapse_empty_body,     // change { \n } into {}
+   UO_nl_class_leave_one_liners,  // leave one-line function bodies in "class xx { here }"
+   UO_nl_assign_leave_one_liners, // leave one-line assign bodies in "foo_t f = { a, b, c };"
+   UO_nl_enum_leave_one_liners,   // leave one-line enum bodies in "enum FOO { BAR = 5 };"
+   UO_nl_getset_leave_one_liners, // leave one-line get/set bodies
+   UO_nl_template_class,          // newline between '>' and class in "template <x> class"
 
-   UO_pos_bool,                  // position of trailing/leading &&/||
-   UO_pos_comma,                 // position of comma in functions
-   UO_pos_class_comma,           // position of comma in constructor init list
-   UO_pos_class_colon,           // position of trailing/leading class colon
+   UO_pos_bool,                   // position of trailing/leading &&/||
+   UO_pos_comma,                  // position of comma in functions
+   UO_pos_class_comma,            // position of comma in constructor init list
+   UO_pos_class_colon,            // position of trailing/leading class colon
 
 
    /*
@@ -362,14 +362,14 @@ enum uncrustify_options
     * code modifying options (non-whitespace)
     */
 
-   UO_mod_paren_on_return,       // add or remove paren on return
-   UO_mod_full_brace_nl,         // max number of newlines to span w/o braces
-   UO_mod_full_brace_if,         // add or remove braces on if
-   UO_mod_full_brace_for,        // add or remove braces on for
-   UO_mod_full_brace_do,         // add or remove braces on do
-   UO_mod_full_brace_while,      // add or remove braces on while
-   UO_mod_pawn_semicolon,        // add optional semicolons
-   UO_mod_full_brace_function,   // add optional braces on Pawn functions
+   UO_mod_paren_on_return,        // add or remove paren on return
+   UO_mod_full_brace_nl,          // max number of newlines to span w/o braces
+   UO_mod_full_brace_if,          // add or remove braces on if
+   UO_mod_full_brace_for,         // add or remove braces on for
+   UO_mod_full_brace_do,          // add or remove braces on do
+   UO_mod_full_brace_while,       // add or remove braces on while
+   UO_mod_pawn_semicolon,         // add optional semicolons
+   UO_mod_full_brace_function,    // add optional braces on Pawn functions
    UO_mod_full_paren_if_bool,
    UO_mod_remove_extra_semicolon, // remove extra semicolons
 
@@ -395,10 +395,10 @@ enum uncrustify_options
 
 struct group_map_value
 {
-   uncrustify_groups id;
-   const char        *short_desc;
-   const char        *long_desc;
-   std::list <uncrustify_options> options;
+   uncrustify_groups             id;
+   const char                    *short_desc;
+   const char                    *long_desc;
+   std::list<uncrustify_options> options;
 };
 
 struct option_map_value
@@ -414,10 +414,10 @@ struct option_map_value
 };
 
 
-typedef std::map <std::string, option_map_value>::iterator        option_name_map_it;
-typedef std::map <uncrustify_groups, group_map_value>::iterator   group_map_it;
-typedef std::list <uncrustify_options>::iterator                  option_list_it;
-typedef std::list <uncrustify_options>::const_iterator            option_list_cit;
+typedef std::map<std::string, option_map_value>::iterator        option_name_map_it;
+typedef std::map<uncrustify_groups, group_map_value>::iterator   group_map_it;
+typedef std::list<uncrustify_options>::iterator                  option_list_it;
+typedef std::list<uncrustify_options>::const_iterator            option_list_cit;
 
 
 #endif   /* OPTIONS_H_INCLUDED */

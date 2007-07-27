@@ -48,7 +48,6 @@ void do_parens(void)
    }
 }
 
-
 /**
  * Add an open paren after first and add a close paren before the last
  */
@@ -100,22 +99,21 @@ static void add_parens_between(chunk_t *first, chunk_t *last)
    last_p->level++;
 }
 
-
 /**
  * Scans between two parens and adds additional parens if needed.
  * This function is recursive. If it hits another open paren, it'll call itself
  * with the new bounds.
- * 
+ *
  * Adds optional parens in an IF or SWITCH conditional statement.
- * 
+ *
  * This basically just checks for a CT_COMPARE that isn't surrounded by parens.
  * The edges for the compare are the open, close and any CT_BOOL tokens.
- * 
+ *
  * This only handleds VERY simple patterns:
  *   (!a && b)         => (!a && b)          -- no change
  *   (a && b == 1)     => (a && (b == 1))
  *   (a == 1 || b > 2) => ((a == 1) || (b > 2))
- * 
+ *
  * FIXME: we really should bail if we transition between a preprocessor and
  *        a non-preprocessor
  */
@@ -126,8 +124,8 @@ static void check_bool_parens(chunk_t *popen, chunk_t *pclose)
    chunk_t *next;
    bool    hit_compare = false;
 
-   LOG_FMT(LPARADD, "%s: popen on %d, col %d, pclose on %d, col %d\n", 
-           __func__, 
+   LOG_FMT(LPARADD, "%s: popen on %d, col %d, pclose on %d, col %d\n",
+           __func__,
            popen->orig_line, popen->orig_col,
            pclose->orig_line, pclose->orig_col);
 

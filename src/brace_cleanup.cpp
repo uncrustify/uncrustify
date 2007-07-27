@@ -97,7 +97,6 @@ static void print_stack(int logsev, const char *str,
    }
 }
 
-
 /**
  * Scans through the whole list and does stuff.
  * It has to do some tricks to parse preprocessors.
@@ -169,7 +168,6 @@ void brace_cleanup(void)
       pc = chunk_get_next(pc);
    }
 }
-
 
 /**
  * pc is a CT_WHILE.
@@ -414,10 +412,10 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
          {
             tmp = chunk_get_next_ncnl(pc);
 
-             if ((tmp->type != CT_SEMICOLON) && (tmp->type != CT_VSEMICOLON))
-             {
-                pawn_add_vsemi_after(pc);
-             }
+            if ((tmp->type != CT_SEMICOLON) && (tmp->type != CT_VSEMICOLON))
+            {
+               pawn_add_vsemi_after(pc);
+            }
          }
       }
       else
@@ -611,7 +609,6 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
    }
 }
 
-
 /**
  * Checks the progression of complex statements.
  * - checks for else after if
@@ -678,7 +675,7 @@ static bool check_complex_statements(struct parse_frame *frm, chunk_t *pc)
       if (pc->type == CT_WHILE)
       {
          pc->type = CT_WHILE_OF_DO;
-         frm->pse[frm->pse_tos].type  = CT_WHILE_OF_DO;//CT_WHILE;
+         frm->pse[frm->pse_tos].type  = CT_WHILE_OF_DO; //CT_WHILE;
          frm->pse[frm->pse_tos].stage = BS_WOD_PAREN;
          return(true);
       }
@@ -740,7 +737,6 @@ static bool check_complex_statements(struct parse_frame *frm, chunk_t *pc)
 
    return(false);
 }
-
 
 /**
  * Handles a close paren or brace - just progress the stage, if the end
@@ -826,7 +822,6 @@ static bool handle_complex_close(struct parse_frame *frm, chunk_t *pc)
    return(false);
 }
 
-
 static chunk_t *insert_vbrace(chunk_t *pc, bool after,
                               struct parse_frame *frm)
 {
@@ -870,7 +865,6 @@ static chunk_t *insert_vbrace(chunk_t *pc, bool after,
    }
    return(rv);
 }
-
 
 /**
  * Called when a statement was just closed and the pse_tos was just

@@ -66,8 +66,6 @@ bool Args::Present(const char *token)
    return(false);
 }
 
-
-
 /**
  * Just call arg_params() with an index of 0.
  *
@@ -80,7 +78,6 @@ const char *Args::Param(const char *token)
 
    return(Params(token, idx));
 }
-
 
 /**
  * Scan for a match
@@ -132,7 +129,6 @@ const char *Args::Params(const char *token, int& index)
    return(NULL);
 }
 
-
 /**
  * Gets whether an argument has been used, by index.
  *
@@ -147,7 +143,6 @@ bool Args::GetUsed(int idx)
    return(false);
 }
 
-
 /**
  * Marks an argument as being used.
  *
@@ -160,7 +155,6 @@ void Args::SetUsed(int idx)
       m_used[idx >> 3] |= (1 << (idx & 0x07));
    }
 }
-
 
 /**
  * This function retrieves all unused parameters.
@@ -190,7 +184,6 @@ const char *Args::Unused(int& index)
    index = m_count;
    return(NULL);
 }
-
 
 /**
  * Takes text and splits it into arguments.

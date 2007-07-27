@@ -254,7 +254,7 @@ void tokenize_cleanup(void)
       if ((pc->type == CT_OC_IMPL) || (pc->type == CT_OC_INTF))
       {
          next->type = CT_CLASS;
-         tmp = chunk_get_next_ncnl(next);
+         tmp        = chunk_get_next_ncnl(next);
          if (tmp != NULL)
          {
             tmp->flags |= PCF_STMT_START | PCF_EXPR_START;
@@ -280,7 +280,6 @@ void tokenize_cleanup(void)
       next = chunk_get_next_ncnl(pc);
    }
 }
-
 
 /**
  * If there is nothing but CT_WORD and CT_MEMBER, then it's probably a

@@ -51,7 +51,6 @@ void log_init(FILE *log_file)
    g_log.log_file = (log_file != NULL) ? log_file : stderr;
 }
 
-
 /**
  * Show or hide the severity prefix "<1>"
  *
@@ -61,7 +60,6 @@ void log_show_sev(bool show)
 {
    g_log.show_hdr = show;
 }
-
 
 /**
  * Returns whether a log severity is active.
@@ -74,7 +72,6 @@ bool log_sev_on(log_sev_t sev)
    return(logmask_test(&g_log.mask, sev));
 }
 
-
 /**
  * Sets a log sev on or off
  *
@@ -85,7 +82,6 @@ void log_set_sev(log_sev_t sev, bool value)
 {
    logmask_set_sev(&g_log.mask, sev, value);
 }
-
 
 /**
  * Sets the log mask
@@ -100,7 +96,6 @@ void log_set_mask(const log_mask_t *mask)
    }
 }
 
-
 /**
  * Gets the log mask
  *
@@ -113,7 +108,6 @@ void log_get_mask(log_mask_t *mask)
       memcpy(mask->bits, g_log.mask.bits, sizeof(g_log.mask.bits));
    }
 }
-
 
 /**
  * Flushes the cached log text to the stream
@@ -134,7 +128,6 @@ static void log_flush(bool force_nl)
       g_log.buf_len = 0;
    }
 }
-
 
 /**
  * Starts the log statment by flushing if needed and printing the header
@@ -165,7 +158,6 @@ static void log_start(log_sev_t sev)
    }
 }
 
-
 /**
  * Cleans up after a log statement by detecting whether the log is done,
  * (it ends in a newline) and possibly flushing the log.
@@ -178,7 +170,6 @@ static void log_end(void)
       log_flush(false);
    }
 }
-
 
 /**
  * Logs a string of known length
@@ -204,7 +195,6 @@ void log_str(log_sev_t sev, const char *str, int len)
       log_end();
    }
 }
-
 
 /**
  * Logs a formatted string -- similiar to printf()
@@ -233,7 +223,6 @@ void log_fmt(log_sev_t sev, const char *fmt, ...)
 
    log_end();
 }
-
 
 /**
  * Dumps hex characters inline, no newlines inserted
@@ -274,7 +263,6 @@ void log_hex(log_sev_t sev, const void *vdata, int len)
       log_str(sev, buf, idx);
    }
 }
-
 
 /**
  * Logs a block of data in a pretty hex format

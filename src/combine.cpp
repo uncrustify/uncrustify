@@ -58,7 +58,6 @@ void make_type(chunk_t *pc)
    }
 }
 
-
 /**
  * Flags everything from the open paren to the close paren.
  *
@@ -109,7 +108,6 @@ static chunk_t *flag_parens(chunk_t *po, UINT32 flags,
    return(chunk_get_next_ncnl(paren_close));
 }
 
-
 /**
  * Sets the parent of the open paren/brace/square/angle and the closing.
  * Note - it is assumed that pc really does point to an open item and the
@@ -131,7 +129,6 @@ chunk_t *set_paren_parent(chunk_t *start, c_token_t parent)
    }
    return(chunk_get_next_ncnl(end));
 }
-
 
 /**
  * Change CT_INCDEC_AFTER + WORD to CT_INCDEC_BEFORE
@@ -286,7 +283,7 @@ void fix_symbols(void)
          mark_lvalue(pc);
       }
 
-      if (pc->parent_type == CT_ASSIGN &&
+      if ((pc->parent_type == CT_ASSIGN) &&
           ((pc->type == CT_BRACE_OPEN) ||
            (pc->type == CT_SQUARE_OPEN)))
       {
@@ -856,7 +853,6 @@ static chunk_t *process_return(chunk_t *pc)
    return(semi);
 }
 
-
 static bool is_ucase_str(const char *str, int len)
 {
    while (len-- > 0)
@@ -1105,7 +1101,6 @@ static void fix_type_cast(chunk_t *start)
    }
 }
 
-
 /**
  * We are on an enum/struct/union tag that is NOT inside a typedef.
  * If there is a {...} and words before the ';', then they are variables.
@@ -1195,7 +1190,6 @@ static void fix_enum_struct_union(chunk_t *pc)
       next = chunk_get_next_ncnl(next);
    }
 }
-
 
 /**
  * We are on a typedef.
@@ -1289,7 +1283,6 @@ static void fix_typedef(chunk_t *start)
       }
    }
 }
-
 
 /**
  * Examines the whole file and changes CT_COLON to
@@ -1454,7 +1447,6 @@ void combine_labels(void)
    }
 }
 
-
 static void mark_variable_stack(ChunkStack& cs, log_sev_t sev)
 {
    chunk_t *var_name;
@@ -1573,7 +1565,7 @@ static chunk_t *fix_var_def(chunk_t *start)
       if ((pc->type == CT_DC_MEMBER) ||
           (pc->type == CT_MEMBER))
       {
-          type_count = 0;
+         type_count = 0;
       }
       pc = chunk_get_next_ncnl(pc);
 
@@ -1625,7 +1617,6 @@ static chunk_t *fix_var_def(chunk_t *start)
    return(skip_to_next_statement(end));
 }
 
-
 /**
  * Skips everything until a comma or semicolon at the same level.
  * Returns the semicolon, comma, or close brace/paren or NULL.
@@ -1645,7 +1636,6 @@ static chunk_t *skip_expression(chunk_t *start)
    }
    return(pc);
 }
-
 
 /**
  * We are on the first word of a variable definition.
@@ -1701,7 +1691,6 @@ static chunk_t *mark_variable_definition(chunk_t *start)
    }
    return(pc);
 }
-
 
 /**
  * We are on a function word. we need to:
@@ -1799,7 +1788,7 @@ static void mark_function(chunk_t *pc)
       {
          /* TODO: do we care that this is the destructor? */
          prev->type = CT_DESTRUCTOR;
-         pc->type = CT_FUNC_CLASS;
+         pc->type   = CT_FUNC_CLASS;
 
          destr = prev;
          prev  = chunk_get_prev_ncnlnp(prev);
@@ -1867,7 +1856,7 @@ static void mark_function(chunk_t *pc)
          if (pc->type != CT_FUNC_DEF)
          {
             LOG_FMT(LFCN, ", FCN_DEF due to %.*s[%s]",
-                 prev->len, prev->str, get_token_name(prev->type));
+                    prev->len, prev->str, get_token_name(prev->type));
          }
          else
          {
@@ -2138,7 +2127,6 @@ static void mark_class_ctor(chunk_t *pclass)
    }
 }
 
-
 /**
  * We're on a 'namespace' skip the word and then set the parent of the braces.
  */
@@ -2154,7 +2142,6 @@ static void mark_namespace(chunk_t *pns)
       }
    }
 }
-
 
 /**
  * Examines the stuff between braces { }.
@@ -2235,8 +2222,6 @@ static void mark_struct_union_body(chunk_t *start)
    }
 }
 
-
-
 /**
  * Sets the parent for comments.
  */
@@ -2278,7 +2263,6 @@ void mark_comments(void)
       cur     = next;
    }
 }
-
 
 /**
  * Marks statement starts in a macro body.

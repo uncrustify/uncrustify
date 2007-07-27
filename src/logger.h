@@ -151,5 +151,4 @@ static_inline char to_hex_char(int nibble)
    return(hex_string[nibble & 0x0F]);
 }
 
-
 #endif   /* LOGGER_H_INCLUDED */

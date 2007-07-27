@@ -30,46 +30,46 @@ struct no_space_table_s
  */
 struct no_space_table_s no_space_table[] =
 {
-   { CT_INCDEC_BEFORE, CT_WORD          },
-   { CT_UNKNOWN,       CT_INCDEC_AFTER  },
-   { CT_UNKNOWN,       CT_ELLIPSIS      },
-   { CT_UNKNOWN,       CT_LABEL_COLON   },
-   { CT_UNKNOWN,       CT_PRIVATE_COLON },
-   { CT_UNKNOWN,       CT_SEMICOLON     },
-   { CT_UNKNOWN,       CT_D_TEMPLATE    },
-   { CT_D_TEMPLATE,    CT_UNKNOWN       },
-   { CT_UNKNOWN,       CT_MEMBER        },
-   { CT_MEMBER,        CT_UNKNOWN       },
-   { CT_MACRO_FUNC,    CT_FPAREN_OPEN   },
-   { CT_PAREN_OPEN,    CT_UNKNOWN       },
-   { CT_UNKNOWN,       CT_PAREN_CLOSE   },
-   { CT_FPAREN_OPEN,   CT_UNKNOWN       },
-   { CT_UNKNOWN,       CT_SPAREN_CLOSE  },
-   { CT_SPAREN_OPEN,   CT_UNKNOWN       },
-   { CT_UNKNOWN,       CT_FPAREN_CLOSE  },
-   { CT_UNKNOWN,       CT_COMMA         },
-   { CT_POS,           CT_UNKNOWN       },
-   { CT_ADDR,          CT_UNKNOWN       },
-   { CT_STAR,          CT_UNKNOWN       },
-   { CT_DEREF,         CT_UNKNOWN       },
-   { CT_NOT,           CT_UNKNOWN       },
-   { CT_INV,           CT_UNKNOWN       },
-   { CT_VBRACE_CLOSE,  CT_UNKNOWN       },
-   { CT_VBRACE_OPEN,   CT_UNKNOWN       },
-   { CT_UNKNOWN,       CT_VBRACE_CLOSE  },
-   { CT_UNKNOWN,       CT_VBRACE_OPEN   },
-   { CT_PREPROC,       CT_UNKNOWN       },
-   { CT_PREPROC_INDENT,CT_UNKNOWN       },
-   { CT_NEG,           CT_UNKNOWN       },
-   { CT_UNKNOWN,       CT_SQUARE_OPEN   },
-   { CT_UNKNOWN,       CT_SQUARE_CLOSE  },
-   { CT_UNKNOWN,       CT_CASE_COLON    },
-   { CT_SQUARE_OPEN,   CT_UNKNOWN       },
-   { CT_PAREN_CLOSE,   CT_WORD          },
-   { CT_PAREN_CLOSE,   CT_FUNC_DEF      },
-   { CT_PAREN_CLOSE,   CT_FUNC_CALL     },
-   { CT_PAREN_CLOSE,   CT_ADDR          },
-   { CT_PAREN_CLOSE,   CT_FPAREN_OPEN   },
+   { CT_INCDEC_BEFORE,  CT_WORD          },
+   { CT_UNKNOWN,        CT_INCDEC_AFTER  },
+   { CT_UNKNOWN,        CT_ELLIPSIS      },
+   { CT_UNKNOWN,        CT_LABEL_COLON   },
+   { CT_UNKNOWN,        CT_PRIVATE_COLON },
+   { CT_UNKNOWN,        CT_SEMICOLON     },
+   { CT_UNKNOWN,        CT_D_TEMPLATE    },
+   { CT_D_TEMPLATE,     CT_UNKNOWN       },
+   { CT_UNKNOWN,        CT_MEMBER        },
+   { CT_MEMBER,         CT_UNKNOWN       },
+   { CT_MACRO_FUNC,     CT_FPAREN_OPEN   },
+   { CT_PAREN_OPEN,     CT_UNKNOWN       },
+   { CT_UNKNOWN,        CT_PAREN_CLOSE   },
+   { CT_FPAREN_OPEN,    CT_UNKNOWN       },
+   { CT_UNKNOWN,        CT_SPAREN_CLOSE  },
+   { CT_SPAREN_OPEN,    CT_UNKNOWN       },
+   { CT_UNKNOWN,        CT_FPAREN_CLOSE  },
+   { CT_UNKNOWN,        CT_COMMA         },
+   { CT_POS,            CT_UNKNOWN       },
+   { CT_ADDR,           CT_UNKNOWN       },
+   { CT_STAR,           CT_UNKNOWN       },
+   { CT_DEREF,          CT_UNKNOWN       },
+   { CT_NOT,            CT_UNKNOWN       },
+   { CT_INV,            CT_UNKNOWN       },
+   { CT_VBRACE_CLOSE,   CT_UNKNOWN       },
+   { CT_VBRACE_OPEN,    CT_UNKNOWN       },
+   { CT_UNKNOWN,        CT_VBRACE_CLOSE  },
+   { CT_UNKNOWN,        CT_VBRACE_OPEN   },
+   { CT_PREPROC,        CT_UNKNOWN       },
+   { CT_PREPROC_INDENT, CT_UNKNOWN       },
+   { CT_NEG,            CT_UNKNOWN       },
+   { CT_UNKNOWN,        CT_SQUARE_OPEN   },
+   { CT_UNKNOWN,        CT_SQUARE_CLOSE  },
+   { CT_UNKNOWN,        CT_CASE_COLON    },
+   { CT_SQUARE_OPEN,    CT_UNKNOWN       },
+   { CT_PAREN_CLOSE,    CT_WORD          },
+   { CT_PAREN_CLOSE,    CT_FUNC_DEF      },
+   { CT_PAREN_CLOSE,    CT_FUNC_CALL     },
+   { CT_PAREN_CLOSE,    CT_ADDR          },
+   { CT_PAREN_CLOSE,    CT_FPAREN_OPEN   },
 };
 
 
@@ -715,7 +715,6 @@ argval_t do_space(chunk_t *first, chunk_t *second)
    return(AV_ADD);
 }
 
-
 /**
  * Marches through the whole file and checks to see how many spaces should be
  * between two chunks
@@ -801,7 +800,6 @@ void space_text(void)
    }
 }
 
-
 /**
  * Marches through the whole file and adds spaces around nested parens
  */
@@ -825,8 +823,9 @@ void space_text_balance_nested_parens(void)
       {
          /* insert a space between the two opening parens */
          space_add_after(first, 1);
+
          /* find the closing paren that matches the 'first' open paren and force
-            a space before it */
+          * a space before it */
          cur  = next;
          prev = cur;
          while ((cur = chunk_get_next(cur)) != NULL)
@@ -843,8 +842,9 @@ void space_text_balance_nested_parens(void)
       {
          /* insert a space between the two closing parens */
          space_add_after(first, 1);
+
          /* find the opening paren that matches the 'next' close paren and force
-            a space after it */
+          * a space after it */
          cur = first;
          while ((cur = chunk_get_prev(cur)) != NULL)
          {
@@ -859,7 +859,6 @@ void space_text_balance_nested_parens(void)
       first = next;
    }
 }
-
 
 /**
  * Calculates the column difference between two chunks.

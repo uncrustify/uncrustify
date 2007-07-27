@@ -39,7 +39,6 @@ static int def_compare(const void *p1, const void *p2)
    return(strcmp(t1->tag, t2->tag));
 }
 
-
 /**
  * Adds an entry to the define list
  *
@@ -101,7 +100,6 @@ void add_define(const char *tag, const char *value)
    }
 }
 
-
 /**
  * Search the define table for a match
  *
@@ -131,7 +129,6 @@ const define_tag_t *find_define(const char *word, int len)
                                          sizeof(define_tag_t), def_compare);
    return(p_ret);
 }
-
 
 /**
  * Loads the defines from a file
@@ -211,7 +208,7 @@ void output_defines(FILE *pfile)
    }
 }
 
-const define_tag_t *get_define_idx(int &idx)
+const define_tag_t *get_define_idx(int& idx)
 {
    const define_tag_t *dt = NULL;
 

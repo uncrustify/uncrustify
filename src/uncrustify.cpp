@@ -143,8 +143,8 @@ static void version_exit(void)
 
 int main(int argc, char *argv[])
 {
-   char       *data = NULL;
-   int        data_len = 0;
+   char       *data        = NULL;
+   int        data_len     = 0;
    const char *cfg_file    = "uncrustify.cfg";
    const char *parsed_file = NULL;
    const char *source_file = NULL;
@@ -422,7 +422,7 @@ int main(int argc, char *argv[])
       uncrustify_file(data, data_len, stdout, parsed_file);
       free(data);
       data_len = 0;
-      data = NULL;
+      data     = NULL;
    }
    else if (source_file != NULL)
    {
@@ -459,7 +459,6 @@ int main(int argc, char *argv[])
 
    return((cpd.error_count != 0) ? 1 : 0);
 }
-
 
 static void process_source_list(const char *source_list,
                                 const char *prefix, const char *suffix,
@@ -499,7 +498,6 @@ static void process_source_list(const char *source_list,
       }
    }
 }
-
 
 static char *read_stdin(int& out_len)
 {
@@ -678,7 +676,6 @@ static void do_source_file(const char *filename, FILE *pfout, const char *parsed
    }
 }
 
-
 static void uncrustify_file(const char *data, int data_len, FILE *pfout,
                             const char *parsed_file)
 {
@@ -852,7 +849,6 @@ static void uncrustify_file(const char *data, int data_len, FILE *pfout,
    }
 }
 
-
 const char *get_token_name(c_token_t token)
 {
    if ((token >= 0) && (token < (int)ARRAY_SIZE(token_names)) &&
@@ -862,7 +858,6 @@ const char *get_token_name(c_token_t token)
    }
    return("???");
 }
-
 
 static bool ends_with(const char *filename, const char *tag)
 {
@@ -875,7 +870,6 @@ static bool ends_with(const char *filename, const char *tag)
    }
    return(false);
 }
-
 
 struct file_lang
 {
@@ -909,7 +903,7 @@ struct file_lang languages[] =
  * Set idx = 0 before the first call.
  * Done when returns NULL
  */
-const char *get_file_extension(int &idx)
+const char *get_file_extension(int& idx)
 {
    const char *val = NULL;
 
@@ -920,7 +914,6 @@ const char *get_file_extension(int &idx)
    idx++;
    return(val);
 }
-
 
 /**
  * Find the language for the file extension
@@ -943,7 +936,6 @@ static int language_from_filename(const char *filename)
    return(LANG_C);
 }
 
-
 /**
  * Find the language for the file extension
  *
@@ -963,7 +955,6 @@ static int language_from_tag(const char *tag)
    }
    return(0);
 }
-
 
 /**
  * Gets the tag text for a language

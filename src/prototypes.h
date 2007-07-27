@@ -21,7 +21,7 @@
 const char *get_token_name(c_token_t token);
 void log_pcf_flags(log_sev_t sev, UINT32 flags);
 const char *path_basename(const char *path);
-const char *get_file_extension(int &idx);
+const char *get_file_extension(int& idx);
 
 
 /*
@@ -170,7 +170,7 @@ int load_keyword_file(const char *filename);
 const chunk_tag_t *find_keyword(const char *word, int len);
 void add_keyword(const char *tag, c_token_t type, UINT8 lang_flags);
 void output_types(FILE *pfile);
-const chunk_tag_t *get_custom_keyword_idx(int &idx);
+const chunk_tag_t *get_custom_keyword_idx(int& idx);
 void clear_keyword_file(void);
 pattern_class get_token_pattern_class(c_token_t tok);
 
@@ -182,7 +182,7 @@ pattern_class get_token_pattern_class(c_token_t tok);
 int load_define_file(const char *filename);
 const define_tag_t *find_define(const char *word, int len);
 void add_define(const char *tag, const char *value);
-const define_tag_t *get_define_idx(int &idx);
+const define_tag_t *get_define_idx(int& idx);
 void output_defines(FILE *pfile);
 void clear_defines(void);
 
@@ -280,6 +280,5 @@ int align_tab_column(int col)
    }
    return(col);
 }
-
 
 #endif   /* C_PARSE_PROTOTYPES_H_INCLUDED */

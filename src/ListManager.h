@@ -14,7 +14,7 @@
  * Class T must define 'next' and 'prev', which must be pointers to type T.
  */
 
-template <class T> class ListManager
+template<class T> class ListManager
 {
 protected:
    /* I hope T isn't big, 'cause this declares a copy of it */
