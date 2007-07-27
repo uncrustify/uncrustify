@@ -2166,8 +2166,8 @@ static void mark_struct_union_body(chunk_t *start)
    chunk_t *first;
    chunk_t *last;
 
-   //    fprintf(stderr, "%s: line %d %s\n",
-   //            __func__, start->orig_line, get_token_name(start->type));
+   // fprintf(stderr, "%s: line %d %s\n",
+   //         __func__, start->orig_line, get_token_name(start->type));
 
    while ((pc != NULL) &&
           (pc->level >= start->level) &&
@@ -2203,10 +2203,21 @@ static void mark_struct_union_body(chunk_t *start)
          first = pc;
          while ((pc != NULL) && ((pc->type == CT_TYPE) ||
                                  (pc->type == CT_WORD) ||
+                                 (pc->type == CT_QUALIFIER) ||
+                                 (pc->type == CT_DC_MEMBER) ||
+                                 (pc->type == CT_MEMBER) ||
+                                 (pc->type == CT_ANGLE_OPEN) ||
                                  chunk_is_star(pc)))
          {
             last = pc;
-            pc   = chunk_get_next_ncnlnp(pc);
+            if (pc->type == CT_ANGLE_OPEN)
+            {
+               pc = skip_template_next(pc);
+            }
+            else
+            {
+               pc = chunk_get_next_ncnlnp(pc);
+            }
          }
          if (last != NULL)
          {
