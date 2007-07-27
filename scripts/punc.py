@@ -102,11 +102,11 @@ if __name__ == '__main__':
 	for i in arr:
 		rec = i[4]
 		if len(i[0]) == 0:
-			print "   {   0,   0,   0, NULL %s },   // %3d:" % ((max_len - 4) * ' ', idx)
+			print "   {   0,  0,  0, NULL %s },   // %3d:" % ((max_len - 4) * ' ', idx)
 		elif rec == None:
-			print "   { '%s', %3d, %3d, NULL %s },   // %3d: '%s'" % (i[0], i[2], i[3], (max_len - 4) * ' ', idx, i[1])
+			print "   { '%s', %2d, %2d, NULL %s },   // %3d: '%s'" % (i[0], i[2], i[3], (max_len - 4) * ' ', idx, i[1])
 		else:
-			print "   { '%s', %3d, %3d, &%s%s },   // %3d: '%s'" % (i[0], i[2], i[3], rec[1], (max_len - len(rec[1])) * ' ', idx, i[1])
+			print "   { '%s', %2d, %2d, &%s%s },   // %3d: '%s'" % (i[0], i[2], i[3], rec[1], (max_len - len(rec[1])) * ' ', idx, i[1])
 		idx += 1
 	print '};'
 
