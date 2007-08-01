@@ -374,8 +374,9 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
          /* Copy the parent, update the paren/brace levels */
          pc->parent_type = frm->pse[frm->pse_tos].parent;
          frm->level--;
-         if ((pc->type == CT_BRACE_CLOSE) ||
-             (pc->type == CT_VBRACE_CLOSE))
+         if ((pc->type == CT_BRACE_CLOSE)  ||
+             (pc->type == CT_VBRACE_CLOSE) ||
+             (pc->type == CT_MACRO_CLOSE))
          {
             frm->brace_level--;
          }
