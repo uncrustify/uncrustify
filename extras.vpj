@@ -107,6 +107,12 @@
 			<F N="etc/uncrust-files.sh"/>
 			<F N="etc/xsupplicant.cfg"/>
 		</Folder>
+		<Folder Name="scripts">
+			<F N="scripts/cmpcfg.pl"/>
+			<F N="scripts/punc.py"/>
+			<F N="scripts/tokenize.py"/>
+			<F N="scripts/update-defaults.sh"/>
+		</Folder>
 		<F N="AUTHORS"/>
 		<F N="BUGS"/>
 		<F N="configure"/>

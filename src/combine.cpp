@@ -500,6 +500,16 @@ void fix_symbols(void)
          flag_parens(next, PCF_IN_FCN_CALL, CT_FPAREN_OPEN, CT_MACRO_FUNC, false);
       }
 
+      if ((pc->type == CT_MACRO_OPEN) ||
+          (pc->type == CT_MACRO_ELSE) ||
+          (pc->type == CT_MACRO_CLOSE))
+      {
+         if (next->type == CT_PAREN_OPEN)
+         {
+            flag_parens(next, 0, CT_FPAREN_OPEN, pc->type, false);
+         }
+      }
+
       /* Change CT_STAR to CT_PTR_TYPE or CT_ARITH or SYM_DEREF */
       if (pc->type == CT_STAR)
       {
@@ -1832,7 +1842,7 @@ static void mark_function(chunk_t *pc)
        (pc->level == pc->brace_level) &&
        ((pc->flags & PCF_IN_ARRAY_ASSIGN) == 0))
    {
-      LOG_FMT(LFCN, "Checking func call: prev=%s", get_token_name(prev->type));
+      LOG_FMT(LFCN, "Checking func call: prev=%s", (prev == NULL) ? "<null>" : get_token_name(prev->type));
 
       /**
        * REVISIT:
@@ -1876,8 +1886,15 @@ static void mark_function(chunk_t *pc)
             prev = chunk_get_prev_ncnlnp(prev);
          }
       }
-      LOG_FMT(LFCN, " -- stopped on %.*s[%s]\n",
-              prev->len, prev->str, get_token_name(prev->type));
+      if (prev == NULL)
+      {
+         LOG_FMT(LFCN, " -- stopped on NULL\n");
+      }
+      else
+      {
+         LOG_FMT(LFCN, " -- stopped on %.*s[%s]\n",
+                 prev->len, prev->str, get_token_name(prev->type));
+      }
    }
 
    if (pc->type != CT_FUNC_DEF)
