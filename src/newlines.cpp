@@ -138,6 +138,21 @@ static void newline_min_after2(chunk_t *ref, INT32 count,
  */
 #define newline_add_between(start, end)     newline_add_between2(start, end, __func__, __LINE__)
 
+/**
+ * Add a newline between two tokens.
+ * If there is already a newline between then, nothing is done.
+ * Otherwise a newline is inserted.
+ *
+ * If end is CT_BRACE_OPEN and a comment and newline follow, then
+ * the brace open is moved instead of inserting a newline.
+ *
+ * In this situation:
+ *    if (...) { //comment
+ *
+ * you get:
+ *    if (...)   //comment
+ *    {
+ */
 static chunk_t *newline_add_between2(chunk_t *start, chunk_t *end,
                                      const char *func, int line)
 {
@@ -152,6 +167,7 @@ static chunk_t *newline_add_between2(chunk_t *start, chunk_t *end,
            __func__, start->len, start->str, start->orig_line, start->orig_col,
            end->len, end->str, end->orig_line, end->orig_col, func, line);
 
+   /* Back-up check for one-liners (should never be true!) */
    if (cpd.settings[UO_nl_class_leave_one_liners].b &&
        (((start->type == CT_BRACE_OPEN) &&
          ((start->flags & PCF_ONE_CLASS) == PCF_ONE_CLASS)) ||
@@ -164,9 +180,27 @@ static chunk_t *newline_add_between2(chunk_t *start, chunk_t *end,
    /* Scan for a line break */
    for (pc = start; pc != end; pc = chunk_get_next(pc))
    {
-      if ((pc->type == CT_NEWLINE) || (pc->type == CT_NL_CONT))
+      if (chunk_is_newline(pc))
       {
          return(pc);
+      }
+   }
+
+   /* If the second one is a brace open, then check to see
+    * if a comment + newline follows
+    */
+   if (end->type == CT_BRACE_OPEN)
+   {
+      pc = chunk_get_next(end);
+      if (chunk_is_comment(pc))
+      {
+         pc = chunk_get_next(pc);
+         if (chunk_is_newline(pc))
+         {
+            /* Move the open brace to after the newline */
+            chunk_move_after(end, pc);
+            return(pc);
+         }
       }
    }
 

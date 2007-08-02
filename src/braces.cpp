@@ -252,6 +252,7 @@ static void remove_brace(chunk_t *pc)
 static void convert_vbrace_to_brace(void)
 {
    chunk_t *pc;
+   chunk_t *tmp;
 
    for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next_ncnl(pc))
    {
@@ -288,6 +289,21 @@ static void convert_vbrace_to_brace(void)
             pc->type = CT_BRACE_CLOSE;
             pc->len  = 1;
             pc->str  = "}";
+
+            /* If the next chunk is a comment, followed by a newline, then
+             * move the brace after the newline and add another newline after
+             * the close brace.
+             */
+            tmp = chunk_get_next(pc);
+            if (chunk_is_comment(tmp))
+            {
+               tmp = chunk_get_next(tmp);
+               if (chunk_is_newline(tmp))
+               {
+                  chunk_move_after(pc, tmp);
+                  newline_add_after(pc);
+               }
+            }
          }
       }
    }

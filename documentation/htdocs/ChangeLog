@@ -41,6 +41,7 @@ Changes in uncrustify-0.36
  - Add mod_remove_extra_semicolon
  - Fix handling of macro-open and macro-close
  - Add align_var_struct_thresh
+ - Improve handling of comments after braces
 
 
 Changes in uncrustify-0.35
