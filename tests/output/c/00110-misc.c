@@ -29,6 +29,10 @@ void hurz(murks)
       bar();
    }
 #endif
+   if (murks = 4)                 // This comment belongs to (murks = 4)
+   {
+      schrott();                  // And this to schrott()
+   }
    return;
 } // hurz()
 
