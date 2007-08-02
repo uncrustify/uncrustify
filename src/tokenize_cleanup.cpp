@@ -200,6 +200,15 @@ void tokenize_cleanup(void)
       /* Change private, public, protected into either a qualifier or label */
       if (pc->type == CT_PRIVATE)
       {
+         /* Handle Qt slots - maybe should just check for a CT_WORD? */
+         if (chunk_is_str(next, "slots", 5))
+         {
+            tmp = chunk_get_next(next);
+            if ((tmp != NULL) && (tmp->type == CT_COLON))
+            {
+               next = tmp;
+            }
+         }
          if (next->type == CT_COLON)
          {
             next->type = CT_PRIVATE_COLON;
@@ -210,7 +219,7 @@ void tokenize_cleanup(void)
          }
          else
          {
-            pc->type = CT_QUALIFIER;
+            pc->type = chunk_is_str(pc, "signals", 7) ? CT_WORD : CT_QUALIFIER;
          }
       }
 
