@@ -25,6 +25,9 @@ static const char    **tmp;
 
 static char          buf[64];
 static unsigned long how_long;
+// comment
+static int           **tmp;
+static char          buf[64];
 
 
 void bar(int          someval,
