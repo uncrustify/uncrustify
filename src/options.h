@@ -245,6 +245,7 @@ enum uncrustify_options
    UO_align_var_def_star_style,   // see UO_align_typedef_star_style
    UO_align_var_def_colon,        // align the colon in struct bit fields
    UO_align_var_struct_span,      // span for struct/union (0=don't align)
+   UO_align_var_struct_thresh,    // threshold for struct/union, 0=no limit
    UO_align_pp_define_span,       // align bodies in #define statments
    //UO_align_pp_define_col_min,    //TODO: min column for a #define value
    //UO_align_pp_define_col_max,    //TODO: max column for a #define value

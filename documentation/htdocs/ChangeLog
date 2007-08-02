@@ -32,13 +32,15 @@ Changes in uncrustify-0.36
 -------------------------------------------------------------------------------
  - Add nl_after_vbrace_open
  - Improve option descriptions
- - Fix a seg fault (check for NULL)
+ - Fix seg faults (check for NULL)
  - Fix spacing for operators () and []
  - Add sp_before_dc and sp_after_dc to control spacing around '::'
  - Split pos_class_comma from pos_comma
  - Improve line splitting a little - no longer break at '::' or '->' or '.'
  - Add nl_enum_leave_one_liners and nl_getset_leave_one_liners
  - Add mod_remove_extra_semicolon
+ - Fix handling of macro-open and macro-close
+ - Add align_var_struct_thresh
 
 
 Changes in uncrustify-0.35

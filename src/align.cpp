@@ -656,7 +656,8 @@ static chunk_t *align_var_def_brace(chunk_t *start, int span)
    if ((start->parent_type == CT_STRUCT) ||
        (start->parent_type == CT_UNION))
    {
-      myspan = cpd.settings[UO_align_var_struct_span].n;
+      myspan   = cpd.settings[UO_align_var_struct_span].n;
+      mythresh = cpd.settings[UO_align_var_struct_thresh].n;
    }
    else
    {

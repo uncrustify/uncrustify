@@ -314,6 +314,7 @@ void register_options(void)
    unc_add_option("align_enum_equ_span", UO_align_enum_equ_span, AT_NUM, "The span for aligning on '=' in enums (0=don't align)", "", 0, 5000);
    unc_add_option("align_enum_equ_thresh", UO_align_enum_equ_thresh, AT_NUM, "The threshold for aligning on '=' in enums (0=no limit)", "", 0, 5000);
    unc_add_option("align_var_struct_span", UO_align_var_struct_span, AT_NUM, "The span for aligning struct/union (0=don't align)", "", 0, 5000);
+   unc_add_option("align_var_struct_thresh", UO_align_var_struct_thresh, AT_NUM, "The threshold for aligning struct/union member definitions (0=no limit)", "", 0, 5000);
    unc_add_option("align_struct_init_span", UO_align_struct_init_span, AT_NUM, "The span for aligning struct initializer values (0=don't align)", "", 0, 5000);
    unc_add_option("align_typedef_gap", UO_align_typedef_gap, AT_NUM, "The minimum space between the type and the synonym of a typedef");
    unc_add_option("align_typedef_span", UO_align_typedef_span, AT_NUM, "The span for aligning single-line typedefs (0=don't align)");
