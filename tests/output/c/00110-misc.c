@@ -19,6 +19,16 @@ void hurz(murks)
       flursen();
    }
 
+   if (murks = 4)              // This comment belongs to (murks = 4)
+#ifdef FOO
+   {
+      foo();
+   }
+#else
+   {
+      bar();
+   }
+#endif
    return;
 } // hurz()
 
