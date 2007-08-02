@@ -585,8 +585,8 @@ Llen:
                     }
                     // if /** but not /**/
                     else  if (doDocComment && t.ptr[2] == '*' && p - 4 != t.ptr) {
-                        getDocComment(t, lastLine == linnum);
-                    }                                                                                   //! ?
+                        getDocComment(t, lastLine == linnum);                                           //! ?
+                    }
                     continue;
 
                 case '/':                                       // do // style comments
@@ -795,8 +795,8 @@ Llen:
                     t.value = TOK.TOKplusplus;                                          // ++
                 }
                 else {
-                    t.value = TOK.TOKadd;
-                }                                                                               // +
+                    t.value = TOK.TOKadd;                                                       // +
+                }
                 return;
 
                 // <, <=, <<=, <<, <>=, <>
@@ -813,8 +813,8 @@ Llen:
                         t.value = TOK.TOKshlass;                                        // <<=
                     }
                     else {
-                        t.value = TOK.TOKshl;
-                    }                                                                   // <<
+                        t.value = TOK.TOKshl;                                           // <<
+                    }
                 }
                 else if (*p == '>') {
                     p++;
@@ -823,12 +823,12 @@ Llen:
                         t.value = TOK.TOKleg;                                           // <>=
                     }
                     else {
-                        t.value = TOK.TOKlg;
-                    }                                                                   // <>
+                        t.value = TOK.TOKlg;                                            // <>
+                    }
                 }
                 else {
-                    t.value = TOK.TOKlt;
-                }                                                                       // <
+                    t.value = TOK.TOKlt;                                                // <
+                }
                 return;
 
                 // >, >>, >>>, >=, >>=, >>>=
@@ -851,16 +851,16 @@ Llen:
                             t.value = TOK.TOKushrass;                           // >>>=
                         }
                         else {
-                            t.value = TOK.TOKushr;
-                        }                                                               // >>>
+                            t.value = TOK.TOKushr;                                      // >>>
+                        }
                     }
                     else {
-                        t.value = TOK.TOKshr;
-                    }                                                                   // >>
+                        t.value = TOK.TOKshr;                                           // >>
+                    }
                 }
                 else {
-                    t.value = TOK.TOKgt;
-                }                                                                       // >
+                    t.value = TOK.TOKgt;                                                // >
+                }
                 return;
 
             case '!':
@@ -872,8 +872,8 @@ Llen:
                         t.value = TOK.TOKnotidentity;                                   // !==
                     }
                     else {
-                        t.value = TOK.TOKnotequal;
-                    }                                                                   // !=
+                        t.value = TOK.TOKnotequal;                                      // !=
+                    }
                 }
                 else if (*p == '<') {
                     p++;
@@ -884,16 +884,16 @@ Llen:
                             t.value = TOK.TOKunord;                             // !<>=
                         }
                         else {
-                            t.value = TOK.TOKue;
-                        }                                                       // !<>
+                            t.value = TOK.TOKue;                                // !<>
+                        }
                     }
                     else if (*p == '=') {
                         p++;
                         t.value = TOK.TOKug;                                    // !<=
                     }
                     else {
-                        t.value = TOK.TOKuge;
-                    }                                                           // !<
+                        t.value = TOK.TOKuge;                                   // !<
+                    }
                 }
                 else if (*p == '>') {
                     p++;
@@ -902,12 +902,12 @@ Llen:
                         t.value = TOK.TOKul;                                    // !>=
                     }
                     else {
-                        t.value = TOK.TOKule;
-                    }                                                           // !>
+                        t.value = TOK.TOKule;                                   // !>
+                    }
                 }
                 else {
-                    t.value = TOK.TOKnot;
-                }                                                               // !
+                    t.value = TOK.TOKnot;                                       // !
+                }
                 return;
 
             case '=':
@@ -919,12 +919,12 @@ Llen:
                         t.value = TOK.TOKidentity;                                      // ===
                     }
                     else {
-                        t.value = TOK.TOKequal;
-                    }                                                                   // ==
+                        t.value = TOK.TOKequal;                                         // ==
+                    }
                 }
                 else {
-                    t.value = TOK.TOKassign;
-                }                                                               // =
+                    t.value = TOK.TOKassign;                                    // =
+                }
                 return;
 
             case '~':
@@ -934,8 +934,8 @@ Llen:
                     t.value = TOK.TOKcatass;                                            // ~=
                 }
                 else {
-                    t.value = TOK.TOKtilde;
-                }                                                                       // ~
+                    t.value = TOK.TOKtilde;                                             // ~
+                }
                 return;
 
                 // SINGLE
@@ -1162,8 +1162,8 @@ Lhex:
 
             case '\r':
                 if (*p == '\n') {
-                    continue;
-                }                                       // ignore
+                    continue;                           // ignore
+                }
                 c = '\n';                               // treat EndOfLine as \n character
                 loc.linnum++;
                 break;
@@ -1229,8 +1229,8 @@ Lhex:
 
             case '\r':
                 if (*p == '\n') {
-                    continue;
-                }                                                       // ignore
+                    continue;                                           // ignore
+                }
 
                 // Treat isolated '\r' as if it were a '\n'
             case '\n':
@@ -1328,8 +1328,8 @@ Lhex:
 
             case '\r':
                 if (*p == '\n') {
-                    continue;
-                }                                       // ignore
+                    continue;                           // ignore
+                }
                 c = '\n';                               // treat EndOfLine as \n character
                 loc.linnum++;
                 break;
@@ -1978,8 +1978,8 @@ Lnext:
                 case 7:                                 // continuing exponent digits
                     if (!isdigit(c) && !(hex && isxdigit(c))) {
                         if (c == '_') {
-                            goto Lnext;
-                        }                                       // ignore embedded '_'
+                            goto Lnext;                         // ignore embedded '_'
+                        }
                         dblstate++;
                         continue;
                     }
@@ -2255,8 +2255,8 @@ Lerr:
 
             case '\r':
                 if (q[1] == '\n') {
-                    continue;
-                }                                               // skip the \r
+                    continue;                                   // skip the \r
+                }
                 goto Lnewline;
 
             default:

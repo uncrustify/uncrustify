@@ -65,9 +65,8 @@ void main()
       EXEC SQL FETCH c1 into :video_title;
       if (SQLCODE != 0)
       {
-         break;
-      }                         /* SQLCODE refers to sqlca.sqlcode */
-
+         break;                 /* SQLCODE refers to sqlca.sqlcode */
+      }
       /* host variables should have ':' prefix when they are used in DB2 commands */
 
       printf("%s\n", video_title);

@@ -1,0 +1,19 @@
+/********************/
+/* Before Unrustify */
+/********************/
+void hurz(murks)
+{
+   if (murks = 4)              // This comment belongs to (murks = 4)
+      schrott();               // And this to schrott()
+#ifdef SCHNIEPEL
+   else if (murks = 6)         // This comment belongs to (murks = 6)
+                               // I had to write more comment than one line
+                               // so I inserted some comment only blocks
+      schniepel();
+#endif // SCHNIEPEL
+   else
+      flursen();
+
+   return;
+} // hurz()
+

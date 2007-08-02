@@ -13,15 +13,15 @@ void get_name(void)
       a--;
    } while (a);
 
-   while (a)
-   {         //something
+   while (a) //something
+   {
       a--;
    }
 
    do
    {
-      while (a)
-      {         //something
+      while (a) //something
+      {
          a--;
       }
    } while (b--);

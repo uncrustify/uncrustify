@@ -50,6 +50,8 @@
 00107  ben.cfg                 c/bugs-7.c
 00108  ben.cfg                 c/bugs-8.c
 
+00110  ben.cfg                 c/misc.c
+
 00130  ben.cfg                 c/minus-minus.c
 
 00140  ben.cfg                 c/global-vars.c
