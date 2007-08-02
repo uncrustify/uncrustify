@@ -98,8 +98,8 @@ static const chunk_tag_t keywords[] =
    { "emit",             CT_PP_EMIT,      LANG_PAWN | FLAG_PP                                 }, // PAWN
    { "endif",            CT_PP_ENDIF,     LANG_ALL | FLAG_PP                                  }, // PAWN
    { "endinput",         CT_PP_ENDINPUT,  LANG_PAWN | FLAG_PP                                 }, // PAWN
-   { "endscript",        CT_PP_ENDINPUT,  LANG_PAWN | FLAG_PP                                 }, // PAWN
    { "endregion",        CT_PP_ENDREGION, LANG_CS | FLAG_PP                                   },
+   { "endscript",        CT_PP_ENDINPUT,  LANG_PAWN | FLAG_PP                                 }, // PAWN
    { "enum",             CT_ENUM,         LANG_ALL                                            }, // PAWN
    { "error",            CT_PP_ERROR,     LANG_PAWN | FLAG_PP                                 }, // PAWN
    { "event",            CT_TYPE,         LANG_CS                                             },
@@ -147,8 +147,8 @@ static const chunk_tag_t keywords[] =
    { "module",           CT_USING,        LANG_D                                              },
    { "mutable",          CT_MUTABLE,      LANG_C | LANG_CPP                                   },
    { "namespace",        CT_NAMESPACE,    LANG_C | LANG_CPP | LANG_CS                         },
-   { "native",           CT_QUALIFIER,    LANG_JAVA                                           },
    { "native",           CT_NATIVE,       LANG_PAWN                                           }, // PAWN
+   { "native",           CT_QUALIFIER,    LANG_JAVA                                           },
    { "new",              CT_NEW,          LANG_CPP | LANG_CS | LANG_D | LANG_JAVA | LANG_PAWN }, // PAWN
    { "not",              CT_SARITH,       LANG_C | LANG_CPP                                   },
    { "not_eq",           CT_SCOMPARE,     LANG_C | LANG_CPP                                   },
@@ -174,8 +174,8 @@ static const chunk_tag_t keywords[] =
    { "restrict",         CT_QUALIFIER,    LANG_C | LANG_CPP                                   },
    { "return",           CT_RETURN,       LANG_ALL                                            }, // PAWN
    { "sbyte",            CT_TYPE,         LANG_CS                                             },
-   { "section",          CT_PP_SECTION,   LANG_PAWN | FLAG_PP                                 }, // PAWN
    { "sealed",           CT_QUALIFIER,    LANG_CS                                             },
+   { "section",          CT_PP_SECTION,   LANG_PAWN | FLAG_PP                                 }, // PAWN
    { "set",              CT_GETSET,       LANG_CS                                             },
    { "short",            CT_TYPE,         LANG_ALLC                                           },
    { "signals",          CT_PRIVATE,      LANG_CPP                                            },
