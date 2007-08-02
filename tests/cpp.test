@@ -61,9 +61,11 @@
 30105 avalon4.cfg                      cpp/av.h
 
 # function def newlines
-30701  func-def-1.cfg                  cpp/function-def.cpp
-30702  func-def-2.cfg                  cpp/function-def.cpp
-30703  func-def-3.cfg                  cpp/function-def.cpp
+30701 func-def-1.cfg                   cpp/function-def.cpp
+30702 func-def-2.cfg                   cpp/function-def.cpp
+30703 func-def-3.cfg                   cpp/function-def.cpp
 
-30711  del_semicolon.cfg               cpp/semicolons.cpp
+30711 del_semicolon.cfg                cpp/semicolons.cpp
+
+30720 wessex.cfg                       cpp/custom-open-2.cpp
 
