@@ -178,6 +178,7 @@ static const chunk_tag_t keywords[] =
    { "sealed",           CT_QUALIFIER,    LANG_CS                                             },
    { "set",              CT_GETSET,       LANG_CS                                             },
    { "short",            CT_TYPE,         LANG_ALLC                                           },
+   { "signals",          CT_PRIVATE,      LANG_CPP                                            },
    { "signed",           CT_TYPE,         LANG_C | LANG_CPP                                   },
    { "sizeof",           CT_SIZEOF,       LANG_C | LANG_CPP | LANG_CS | LANG_PAWN             }, // PAWN
    { "sleep",            CT_FUNCTION,     LANG_C | LANG_CPP | LANG_CS | LANG_PAWN             }, // PAWN
