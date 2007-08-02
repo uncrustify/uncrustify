@@ -70,7 +70,9 @@
 	<Files AutoFolders="DirectoryView">
 		<Folder Name="config">
 			<F N="config/1liner-split.cfg"/>
-			<F N="config/align.cfg"/>
+			<F N="config/align-1.cfg"/>
+			<F N="config/align-2.cfg"/>
+			<F N="config/align-3.cfg"/>
 			<F N="config/amxmodx.cfg"/>
 			<F N="config/avalon.cfg"/>
 			<F N="config/avalon2.cfg"/>
@@ -336,6 +338,7 @@
 		<F N="c.test"/>
 		<F N="cpp.test"/>
 		<F N="d.test"/>
+		<F N="difftest.sh"/>
 		<F N="java.test"/>
 		<F N="objective-c.test"/>
 		<F N="pawn.test"/>

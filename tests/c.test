@@ -76,7 +76,10 @@
 00304   1liner-no-split.cfg    c/one-liner-init.c
 
 # aligning tresholds
-00401   align.cfg              c/align-equ.c
+00401   align-1.cfg            c/align-equ.c
+00402   align-1.cfg            c/align-var.c
+00403   align-2.cfg            c/align-var.c
+00404   align-3.cfg            c/align-var.c
 
 00411   ben.cfg                c/align-typedef.c
 
