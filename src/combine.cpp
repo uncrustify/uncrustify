@@ -563,13 +563,30 @@ void fix_symbols(void)
     * REVISIT: We need function params marked to do this (?)
     */
    pc = chunk_get_head();
+   int square_level = -1;
    while (pc != NULL)
    {
+      /* Can't have a variable definition inside [ ] */
+      if (square_level < 0)
+      {
+         if (pc->type == CT_SQUARE_OPEN)
+         {
+            square_level = pc->level;
+         }
+      }
+      else
+      {
+         if (pc->level <= square_level)
+         {
+            square_level = -1;
+         }
+      }
       /**
        * A variable definition is possible after at the start of a statement
        * that starts with: QUALIFIER, TYPE, or WORD
        */
-      if (((pc->flags & PCF_STMT_START) != 0) &&
+      if ((square_level < 0) &&
+          ((pc->flags & PCF_STMT_START) != 0) &&
           ((pc->type == CT_QUALIFIER) ||
            (pc->type == CT_TYPE) ||
            (pc->type == CT_WORD)) &&
@@ -1566,7 +1583,7 @@ static chunk_t *fix_var_def(chunk_t *start)
            (pc->type == CT_QUALIFIER) ||
            (pc->type == CT_DC_MEMBER) ||
            (pc->type == CT_MEMBER) ||
-           (pc->type == CT_BYREF) ||
+           chunk_is_addr(pc) ||
            chunk_is_star(pc)))
    {
       LOG_FMT(LFVD, " %.*s[%s]", pc->len, pc->str, get_token_name(pc->type));
@@ -1691,6 +1708,10 @@ static chunk_t *mark_variable_definition(chunk_t *start)
       else if (chunk_is_star(pc))
       {
          pc->type = CT_PTR_TYPE;
+      }
+      else if (chunk_is_addr(pc))
+      {
+         pc->type = CT_BYREF;
       }
       else if ((pc->type == CT_SQUARE_OPEN) || (pc->type == CT_ASSIGN))
       {
@@ -2211,7 +2232,8 @@ static void mark_struct_union_body(chunk_t *start)
                                  (pc->type == CT_DC_MEMBER) ||
                                  (pc->type == CT_MEMBER) ||
                                  (pc->type == CT_ANGLE_OPEN) ||
-                                 chunk_is_star(pc)))
+                                 chunk_is_star(pc) ||
+                                 chunk_is_addr(pc)))
          {
             last = pc;
             if (pc->type == CT_ANGLE_OPEN)
