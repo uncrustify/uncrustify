@@ -569,6 +569,7 @@ static chunk_t *align_func_param(chunk_t *start)
    as.Start(2, 0);
 
    as.m_star_style = (AlignStack::StarStyle)cpd.settings[UO_align_var_def_star_style].n;
+   as.m_amp_style  = (AlignStack::StarStyle)cpd.settings[UO_align_var_def_amp_style].n;
 
    bool did_this_line = false;
    int  comma_count   = 0;
@@ -683,6 +684,7 @@ static chunk_t *align_var_def_brace(chunk_t *start, int span)
    as.Start(myspan, mythresh);
 
    as.m_star_style = (AlignStack::StarStyle)cpd.settings[UO_align_var_def_star_style].n;
+   as.m_amp_style  = (AlignStack::StarStyle)cpd.settings[UO_align_var_def_amp_style].n;
 
    bool did_this_line = false;
    pc = chunk_get_next_ncnl(start);
@@ -1173,6 +1175,7 @@ static void align_typedefs(int span)
    as.Start(span);
    as.m_gap        = cpd.settings[UO_align_typedef_gap].n;
    as.m_star_style = (AlignStack::StarStyle)cpd.settings[UO_align_typedef_star_style].n;
+   as.m_amp_style  = (AlignStack::StarStyle)cpd.settings[UO_align_typedef_amp_style].n;
 
    pc = chunk_get_head();
    while (pc != NULL)

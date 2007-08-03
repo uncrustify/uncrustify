@@ -243,6 +243,7 @@ enum uncrustify_options
    UO_align_var_def_thresh,       // align variable defs threshold
    UO_align_var_def_inline,       // also align inline struct/enum/union var defs
    UO_align_var_def_star_style,   // see UO_align_typedef_star_style
+   UO_align_var_def_amp_style,    // see UO_align_typedef_star_style
    UO_align_var_def_colon,        // align the colon in struct bit fields
    UO_align_var_struct_span,      // span for struct/union (0=don't align)
    UO_align_var_struct_thresh,    // threshold for struct/union, 0=no limit
@@ -261,6 +262,7 @@ enum uncrustify_options
                                   // 0: '*' not part of type
                                   // 1: '*' part of the type - no space
                                   // 2: '*' part of type, dangling
+   UO_align_typedef_amp_style,    // align_typedef_star_style for ref '&' stuff
    //UO_align_struct_array_brace,   // TODO: align array of structure initializers
 
 

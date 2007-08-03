@@ -33,6 +33,7 @@ public:
    int        m_gap;
    bool       m_right_align;
    StarStyle  m_star_style;
+   StarStyle  m_amp_style;
 
 
    AlignStack()

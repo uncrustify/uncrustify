@@ -35,6 +35,7 @@ void AlignStack::Start(int span, int thresh)
    m_gap         = 0;
    m_right_align = false;
    m_star_style  = SS_IGNORE;
+   m_amp_style   = SS_IGNORE;
 }
 
 /**
@@ -99,6 +100,16 @@ void AlignStack::Add(chunk_t *pc, int seqnum)
          /* back up to the first '*' preceding the token */
          prev = chunk_get_prev(pc);
          while (chunk_is_star(prev))
+         {
+            pc   = prev;
+            prev = chunk_get_prev(pc);
+         }
+      }
+      if (m_amp_style == SS_INCLUDE)
+      {
+         /* back up to the first '*' preceding the token */
+         prev = chunk_get_prev(pc);
+         while (chunk_is_addr(prev))
          {
             pc   = prev;
             prev = chunk_get_prev(pc);
@@ -237,7 +248,21 @@ void AlignStack::Flush()
             da_col--;
          }
 
-         LOG_FMT(LAS, "DNAglin! to %d\n", da_col);
+         LOG_FMT(LAS, "Star Dangling to %d\n", da_col);
+      }
+
+      if (m_amp_style == SS_DANGLE)
+      {
+         /* back up to the first '*' preceding the token */
+         chunk_t *prev = chunk_get_prev(pc);
+         while (chunk_is_addr(prev))
+         {
+            pc   = prev;
+            prev = chunk_get_prev(pc);
+            da_col--;
+         }
+
+         LOG_FMT(LAS, "Amp Dangling to %d\n", da_col);
       }
 
       /* Indent, right aligning the aligned token */
