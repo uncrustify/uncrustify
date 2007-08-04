@@ -85,6 +85,9 @@
 00404   align-3.cfg            c/align-var.c
 
 00411   ben.cfg                c/align-typedef.c
+00412   align_typedef_func-0.cfg c/align-typedef.c
+00413   align_typedef_func-1.cfg c/align-typedef.c
+00414   align_typedef_func-2.cfg c/align-typedef.c
 
 # boolean and comma positioning
 00501   bool-pos-eol.cfg       c/bool-pos.c
