@@ -175,6 +175,10 @@ SOURCE=..\src\punctuators.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\src\semicolons.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\src\space.cpp
 # End Source File
 # Begin Source File
