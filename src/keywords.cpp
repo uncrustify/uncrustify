@@ -36,6 +36,7 @@ static const chunk_tag_t keywords[] =
    { "@end",             CT_OC_END,       LANG_OC | LANG_CPP | LANG_C                         },
    { "@implementation",  CT_OC_IMPL,      LANG_OC | LANG_CPP | LANG_C                         },
    { "@interface",       CT_OC_INTF,      LANG_OC | LANG_CPP | LANG_C                         },
+   { "__attribute__",    CT_ATTRIBUTE,    LANG_C | LANG_CPP                                   },
    { "__const__",        CT_QUALIFIER,    LANG_C | LANG_CPP                                   },
    { "__inline__",       CT_QUALIFIER,    LANG_C | LANG_CPP                                   },
    { "__signed__",       CT_TYPE,         LANG_C | LANG_CPP                                   },
@@ -107,7 +108,7 @@ static const chunk_tag_t keywords[] =
    { "explicit",         CT_TYPE,         LANG_C | LANG_CPP | LANG_CS                         },
    { "export",           CT_EXPORT,       LANG_C | LANG_CPP | LANG_D                          },
    { "extends",          CT_QUALIFIER,    LANG_JAVA                                           },
-   { "extern",           CT_TYPE,         LANG_C | LANG_CPP | LANG_CS | LANG_D                },
+   { "extern",           CT_QUALIFIER,    LANG_C | LANG_CPP | LANG_CS | LANG_D                },
    { "false",            CT_WORD,         LANG_CPP | LANG_CS | LANG_D | LANG_JAVA             },
    { "file",             CT_PP_FILE,      LANG_PAWN | FLAG_PP                                 }, // PAWN
    { "final",            CT_QUALIFIER,    LANG_D                                              },

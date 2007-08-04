@@ -241,7 +241,9 @@ void AlignStack::Flush()
       {
          /* back up to the first '*' preceding the token */
          chunk_t *prev = chunk_get_prev(pc);
-         while (chunk_is_star(prev))
+         while (chunk_is_star(prev) ||
+                ((prev->type == CT_PAREN_OPEN) &&
+                 (prev->parent_type == CT_TYPEDEF)))
          {
             pc   = prev;
             prev = chunk_get_prev(pc);

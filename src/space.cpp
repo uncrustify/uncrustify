@@ -307,6 +307,10 @@ argval_t do_space(chunk_t *first, chunk_t *second)
    {
       return(cpd.settings[UO_sp_func_call_paren].a);
    }
+   if (first->type == CT_ATTRIBUTE)
+   {
+      return(cpd.settings[UO_sp_attribute_paren].a);
+   }
    if (first->type == CT_FUNC_DEF)
    {
       return(cpd.settings[UO_sp_func_def_paren].a);

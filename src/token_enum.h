@@ -112,6 +112,7 @@ typedef enum
    CT_COMMA,
 
    CT_ASM,
+   CT_ATTRIBUTE,
    CT_CATCH,
    CT_CLASS,
    CT_DELETE,

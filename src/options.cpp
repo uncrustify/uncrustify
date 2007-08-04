@@ -170,6 +170,7 @@ void register_options(void)
    unc_add_option("sp_func_call_paren", UO_sp_func_call_paren, AT_IARF, "Add or remove space between function name and '(' on function calls");
    unc_add_option("sp_func_class_paren", UO_sp_func_class_paren, AT_IARF, "Add or remove space between a constructor/destructor and the open paren");
    unc_add_option("sp_return_paren", UO_sp_return_paren, AT_IARF, "Add or remove space between 'return' and '('");
+   unc_add_option("sp_attribute_paren", UO_sp_attribute_paren, AT_IARF, "Add or remove space between '__attribute__' and '('");
    unc_add_option("sp_macro", UO_sp_macro, AT_IARF, "Add or remove space between macro and value");
    unc_add_option("sp_macro_func", UO_sp_macro_func, AT_IARF, "Add or remove space between macro function ')' and value");
    unc_add_option("sp_else_brace", UO_sp_else_brace, AT_IARF, "Add or remove space between 'else' and '{' if on the same line");
@@ -319,6 +320,11 @@ void register_options(void)
    unc_add_option("align_struct_init_span", UO_align_struct_init_span, AT_NUM, "The span for aligning struct initializer values (0=don't align)", "", 0, 5000);
    unc_add_option("align_typedef_gap", UO_align_typedef_gap, AT_NUM, "The minimum space between the type and the synonym of a typedef");
    unc_add_option("align_typedef_span", UO_align_typedef_span, AT_NUM, "The span for aligning single-line typedefs (0=don't align)");
+   unc_add_option("align_typedef_func", UO_align_typedef_func, AT_NUM,
+                  "How to align typedef'd functions with other typedefs\n"
+                  "0: Don't mix them at all\n"
+                  "1: align the open paren with the types\n"
+                  "2: align the function type name with the other type names\n");
    unc_add_option("align_typedef_star_style", UO_align_typedef_star_style, AT_NUM,
                   "Controls the positioning of the '*' in typedefs. Just try it.\n"
                   "0: Align on typdef type, ignore '*'\n"

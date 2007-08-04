@@ -300,9 +300,31 @@ void fix_symbols(void)
        * A word before an open paren is a function call or definition.
        * CT_WORD => CT_FUNC_CALL or CT_FUNC_DEF
        */
-      if ((pc->type == CT_WORD) && (next->type == CT_PAREN_OPEN))
+      if (next->type == CT_PAREN_OPEN)
       {
-         pc->type = CT_FUNCTION;
+         if (pc->type == CT_WORD)
+         {
+            pc->type = CT_FUNCTION;
+         }
+         else if (pc->type == CT_TYPE)
+         {
+            /**
+             * If we are on a type, then we are either on a C++ style cast or
+             * we are on a function type.
+             * The only way to tell for sure is to find the close paren and see
+             * if it is followed by an open paren.
+             */
+            tmp = chunk_get_next_type(next, CT_PAREN_CLOSE, next->level);
+            tmp = chunk_get_next(tmp);
+            if ((tmp != NULL) && (tmp->type == CT_PAREN_OPEN))
+            {
+               pc->type = CT_FUNCTION;
+            }
+         }
+         else if (pc->type == CT_ATTRIBUTE)
+         {
+            flag_parens(next, 0, CT_FPAREN_OPEN, CT_ATTRIBUTE, false);
+         }
       }
       if ((cpd.lang_flags & LANG_PAWN) != 0)
       {
@@ -1221,7 +1243,7 @@ static void fix_enum_struct_union(chunk_t *pc)
 /**
  * We are on a typedef.
  * If the next word is not enum/union/struct, then the last word before the
- * next ',' or ';' is a type.
+ * next ',' or ';' or '__attribute__' is a type.
  *
  * typedef [type...] [*] type [, [*]type] ;
  * typedef <return type>([*]func)(params);
@@ -1232,8 +1254,12 @@ static void fix_typedef(chunk_t *start)
 {
    chunk_t   *next;
    chunk_t   *prev;
+   chunk_t   *the_type = NULL;
+   chunk_t   *open_paren;
    c_token_t tag;
    bool      is_fcn_type = false;
+
+   LOG_FMT(LTYPEDEF, "%s: looking at line %d\n", __func__, start->orig_line);
 
    /* Mark everything in the typedef and scan for ")(", which makes it a
     * function type
@@ -1252,16 +1278,38 @@ static void fix_typedef(chunk_t *start)
             break;
          }
          make_type(next);
+         if (next->type == CT_TYPE)
+         {
+            the_type = next;
+         }
          next->flags &= ~PCF_VAR_1ST_DEF;
          if ((*prev->str == ')') && (*next->str == '('))
          {
             is_fcn_type = true;
 
+            prev->parent_type = CT_TYPEDEF;
+            open_paren = chunk_get_prev_type(prev, c_token_t(prev->type - 1), prev->level);
+            open_paren->parent_type = CT_TYPEDEF;
+
             flag_parens(next, 0, CT_FPAREN_OPEN, CT_TYPEDEF, false);
 
             fix_fcn_def_params(next);
 
-            LOG_FMT(LTYPEDEF, "%s: fcn typedef on line %d\n", __func__, next->orig_line);
+            /* Grab the type name (right before the close paren */
+            the_type = chunk_get_prev_ncnl(prev);
+
+            LOG_FMT(LTYPEDEF, "%s: fcn typedef [%.*s] on line %d\n", __func__,
+                    the_type->len, the_type->str, the_type->orig_line);
+
+            /* If we are aligning on the open paren, grab that instead */
+            if (cpd.settings[UO_align_typedef_func].n == 1)
+            {
+               the_type = open_paren;
+            }
+            if (cpd.settings[UO_align_typedef_func].n != 0)
+            {
+               the_type->flags |= PCF_ANCHOR;
+            }
          }
       }
       prev = next;
@@ -1283,15 +1331,14 @@ static void fix_typedef(chunk_t *start)
        (next->type != CT_UNION))
    {
       /* We have just a regular typedef */
-      LOG_FMT(LTYPEDEF, "%s: regular typedef on line %d\n", __func__, next->orig_line);
+      LOG_FMT(LTYPEDEF, "%s: regular typedef [%.*s] on line %d\n", __func__,
+              the_type->len, the_type->str, next->orig_line);
+      the_type->flags |= PCF_ANCHOR;
       return;
    }
 
    /* We have a struct/union/enum type, set the parent */
    tag = next->type;
-
-   LOG_FMT(LTYPEDEF, "%s: %s typedef on line %d\n",
-           __func__, get_token_name(tag), next->orig_line);
 
    /* the next item should be either a type or { */
    next = chunk_get_next_ncnl(next);
@@ -1309,6 +1356,10 @@ static void fix_typedef(chunk_t *start)
          next->parent_type = tag;
       }
    }
+
+   LOG_FMT(LTYPEDEF, "%s: %s typedef [%.*s] on line %d\n",
+           __func__, get_token_name(tag), next->len, next->str, next->orig_line);
+   next->flags |= PCF_ANCHOR;
 }
 
 /**
@@ -1596,8 +1647,9 @@ static chunk_t *fix_var_def(chunk_t *start)
       }
       pc = chunk_get_next_ncnl(pc);
 
-      /* Skip templates */
+      /* Skip templates and attributes */
       pc = skip_template_next(pc);
+      pc = skip_attribute_next(pc);
    }
    end = pc;
 
@@ -1753,8 +1805,9 @@ static void mark_function(chunk_t *pc)
       return;
    }
 
-   /* Skip over any template madness */
+   /* Skip over any template and attribute madness */
    next = skip_template_next(next);
+   next = skip_attribute_next(next);
 
    /* Find the close paren */
    paren_close = chunk_get_next_str(pc, ")", 1, pc->level);
@@ -1831,6 +1884,7 @@ static void mark_function(chunk_t *pc)
          // LOG_FMT(LSYS, "%s: prev1 = %s (%.*s)\n", __func__,
          //         get_token_name(prev->type), prev->len, prev->str);
          prev = skip_template_prev(prev);
+         prev = skip_attribute_prev(prev);
          // LOG_FMT(LSYS, "%s: prev2 = %s [%d](%.*s) pc = %s [%d](%.*s)\n", __func__,
          //         get_token_name(prev->type), prev->len, prev->len, prev->str,
          //         get_token_name(pc->type), pc->len, pc->len, pc->str);
@@ -1874,19 +1928,31 @@ static void mark_function(chunk_t *pc)
        * There can be all sorts of template crap and/or '[]' in the type.
        * This hack mostly checks that.
        */
-      while ((prev != NULL) &&
-             ((prev->type == CT_TYPE) ||
-              (prev->type == CT_WORD) ||
-              (prev->type == CT_DC_MEMBER) ||
-              (prev->type == CT_OPERATOR) ||
-              (prev->type == CT_TSQUARE) ||
-              (prev->type == CT_ANGLE_CLOSE) ||
-              chunk_is_addr(prev) ||
-              chunk_is_star(prev)))
+      while (prev != NULL)
       {
+         /* Some code slips an attribute between the type and function */
+         if ((prev->type == CT_FPAREN_CLOSE) &&
+             (prev->parent_type == CT_ATTRIBUTE))
+         {
+            prev = skip_attribute_prev(prev);
+            continue;
+         }
+         if ((prev->type != CT_TYPE) &&
+              (prev->type != CT_WORD) &&
+              (prev->type != CT_DC_MEMBER) &&
+              (prev->type != CT_OPERATOR) &&
+              (prev->type != CT_TSQUARE) &&
+              (prev->type != CT_ANGLE_CLOSE) &&
+              !chunk_is_addr(prev) &&
+              !chunk_is_star(prev))
+         {
+            break;
+         }
+
          if (pc->type != CT_FUNC_DEF)
          {
-            LOG_FMT(LFCN, ", FCN_DEF due to %.*s[%s]",
+            LOG_FMT(LFCN, ", '%.*s' is FCN_DEF due to %.*s[%s]",
+                    pc->len, pc->str,
                     prev->len, prev->str, get_token_name(prev->type));
          }
          else
@@ -1902,7 +1968,13 @@ static void mark_function(chunk_t *pc)
          {
             prev = skip_template_prev(prev);
          }
+         else if ((prev->type == CT_FPAREN_CLOSE) &&
+                  (prev->parent_type == CT_ATTRIBUTE))
+         {
+            prev = skip_attribute_prev(prev);
+         }
          else
+
          {
             prev = chunk_get_prev_ncnlnp(prev);
          }
@@ -2021,6 +2093,7 @@ static void mark_function(chunk_t *pc)
       tmp = chunk_get_next_ncnl(paren_close);
       while ((tmp != NULL) && (tmp->type != CT_BRACE_OPEN))
       {
+         //LOG_FMT(LSYS, "%s: set parent to FUNC_DEF on line %d: [%.*s]\n", __func__, tmp->orig_line, tmp->len, tmp->str);
          tmp->parent_type = CT_FUNC_DEF;
          if (chunk_is_semicolon(tmp))
          {
@@ -2240,6 +2313,10 @@ static void mark_struct_union_body(chunk_t *start)
             {
                pc = skip_template_next(pc);
             }
+            else if (pc->type == CT_ATTRIBUTE)
+            {
+               pc = skip_attribute_next(pc);
+            }
             else
             {
                pc = chunk_get_next_ncnlnp(pc);
@@ -2367,7 +2444,7 @@ static void mark_define_expressions(void)
 /**
  * We are on a word followed by a angle open which is part of a template.
  * If the angle close is followed by a open paren, then we are on a template
- * function:
+ * function def or a template function call:
  *   Vector2<float>(...) [: ...[, ...]] { ... }
  * Or we could be on a variable def if it's followed by a word:
  *   Renderer<rgb32> rend;
@@ -2385,9 +2462,27 @@ static void mark_template_func(chunk_t *pc, chunk_t *pc_next)
    {
       if (chunk_is_str(after, "(", 1))
       {
-         // its a function!!!
-         pc->type = CT_FUNC_DEF;
-         mark_function(pc);
+         if (angle_close->flags & PCF_IN_FCN_CALL)
+         {
+            LOG_FMT(LTEMPFUNC, "%s: marking '%.*s' in line %d as a FUNC_CALL\n",
+                    __func__, pc->len, pc->str, pc->orig_line);
+            pc->type = CT_FUNC_CALL;
+            flag_parens(after, PCF_IN_FCN_CALL, CT_FPAREN_OPEN, CT_FUNC_CALL, false);
+         }
+         else
+         {
+            /* Might be a function def. Must check what is before the template:
+             * Func call:
+             *   BTree.Insert(std::pair<int, double>(*it, double(*it) + 1.0));
+             * Func Def:
+             *   std::pair<int, double>(*it, double(*it) + 1.0));
+             */
+            LOG_FMT(LTEMPFUNC, "%s: marking '%.*s' in line %d as a FUNC_DEF\n",
+                    __func__, pc->len, pc->str, pc->orig_line);
+            // its a function!!!
+            pc->type = CT_FUNC_DEF;
+            mark_function(pc);
+         }
       }
       else if (after->type == CT_WORD)
       {
@@ -2465,3 +2560,38 @@ chunk_t *skip_template_prev(chunk_t *ang_close)
    }
    return(ang_close);
 }
+
+/**
+ * If attr is CT_ATTRIBUTE, then skip it and the parens and return the chunk
+ * after the CT_FPAREN_CLOSE.
+ * If the chunk isn't an CT_ATTRIBUTE, then it is returned.
+ */
+chunk_t *skip_attribute_next(chunk_t *attr)
+{
+   if ((attr != NULL) && (attr->type == CT_ATTRIBUTE))
+   {
+      chunk_t *pc;
+      pc = chunk_get_next_type(attr, CT_FPAREN_CLOSE, attr->level);
+      return(chunk_get_next_ncnl(pc));
+   }
+   return(attr);
+}
+
+/**
+ * If fp_close is a CT_FPAREN_CLOSE with a parent of CT_ATTRIBUTE, then skip it
+ * and the '__attribute__' thingy and return the chunk before CT_ATTRIBUTE.
+ * Otherwise return fp_close.
+ */
+chunk_t *skip_attribute_prev(chunk_t *fp_close)
+{
+   if ((fp_close != NULL) &&
+       (fp_close->type == CT_FPAREN_CLOSE) &&
+       (fp_close->parent_type == CT_ATTRIBUTE))
+   {
+      chunk_t *pc;
+      pc = chunk_get_prev_type(fp_close, CT_ATTRIBUTE, fp_close->level);
+      return(chunk_get_prev_ncnl(pc));
+   }
+   return(fp_close);
+}
+

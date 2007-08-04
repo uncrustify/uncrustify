@@ -44,6 +44,8 @@ Changes in uncrustify-0.36
  - Improve handling of comments after braces
  - Add support for Qt slots and signals
  - Add align_typedef_amp_style and align_var_def_amp_style
+ - Add sp_attribute_paren and handling of the '__attribute__' macro
+ - Add align_typedef_func, improve aligning of typedefs
 
 
 Changes in uncrustify-0.35

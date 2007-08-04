@@ -177,6 +177,8 @@ enum uncrustify_options
    UO_sp_func_proto_paren,      // space between 'func' and '(' - "foo (" vs "foo("
    UO_sp_func_class_paren,      // space between ctor/dtor and '('
 
+   UO_sp_attribute_paren,       // space between '__attribute__' and '('
+
    UO_sp_type_func,             // space between return type and 'func'
    // a minimum of 1 is forced except for '*'
    UO_sp_before_ptr_star,       // space before a '*' that is part of a type
@@ -258,6 +260,7 @@ enum uncrustify_options
    UO_align_number_left,          // left-align numbers (not fully supported, yet)
    UO_align_typedef_span,         // align single-line typedefs
    UO_align_typedef_gap,          // minimum spacing
+   UO_align_typedef_func,         // how to align func type with types
    UO_align_typedef_star_style,   // Start aligning style
                                   // 0: '*' not part of type
                                   // 1: '*' part of the type - no space

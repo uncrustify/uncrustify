@@ -1167,7 +1167,6 @@ static void align_init_brace(chunk_t *start)
 static void align_typedefs(int span)
 {
    chunk_t    *pc;
-   chunk_t    *next;
    chunk_t    *c_type    = NULL;
    chunk_t    *c_typedef = NULL;
    AlignStack as;
@@ -1187,45 +1186,20 @@ static void align_typedefs(int span)
       }
       else if (c_typedef != NULL)
       {
-         /* Already hit a typedef on this line */
-         if (pc->type == CT_TYPE)
+         if (pc->flags & PCF_ANCHOR)
          {
-            c_type = pc;
-         }
-         else if (chunk_is_semicolon(pc))
-         {
-            if ((c_type != NULL) && (c_typedef->orig_line == c_type->orig_line))
-            {
-               if (chunk_get_prev_ncnl(pc) == c_type)
-               {
-                  as.Add(c_type);
-               }
-            }
-            c_type    = NULL;
+            as.Add(pc);
             c_typedef = NULL;
-         }
-         else
-         {
-            /* don't care */
          }
       }
       else
       {
          if (pc->type == CT_TYPEDEF)
          {
-            next = chunk_get_next_ncnl(pc);
-            if ((next != NULL) && (next->type == CT_PAREN_OPEN))
-            {
-               LOG_FMT(LALTD, "%s: line %d, col %d - skip function type\n",
-                       __func__, pc->orig_line, pc->orig_col);
-            }
-            else
-            {
-               LOG_FMT(LALTD, "%s: line %d, col %d\n",
-                       __func__, pc->orig_line, pc->orig_col);
-               c_typedef = pc;
-               c_type    = NULL;
-            }
+            LOG_FMT(LALTD, "%s: line %d, col %d\n",
+                    __func__, pc->orig_line, pc->orig_col);
+            c_typedef = pc;
+            c_type    = NULL;
          }
       }
 

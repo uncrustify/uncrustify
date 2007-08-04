@@ -106,6 +106,7 @@ struct parse_frame
 #define PCF_ONE_LINER          (1 << 23)
 #define PCF_ONE_CLASS          (PCF_ONE_LINER | PCF_IN_CLASS)
 #define PCF_EMPTY_BODY         (1 << 24)
+#define PCF_ANCHOR             (1 << 26)  /* aligning anchor */
 
 /* flags that get copied when a new chunk is inserted */
 #define PCF_COPY_FLAGS         (PCF_IN_PREPROC | PCF_IN_SPAREN | PCF_IN_ENUM |          \
@@ -140,6 +141,8 @@ static const char *pcf_names[] =
    "IN_NAMESPACE",
    "IN_FOR",
    "ONE_LINER",
+   "EMPTY_BODY",
+   "ANCHOR",
 };
 #endif
 
