@@ -1,4 +1,8 @@
 
+#define multilinemacro do { (x+5); } while (0); \
+printf("a multilinemacro"); \
+printf("a multilinemacro2");
+
 int main(int argc, char *argv[])
 {
    int a, b;

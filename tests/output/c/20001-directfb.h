@@ -204,18 +204,18 @@ typedef unsigned long int    ulong;
 typedef unsigned short int   ushort;
 typedef unsigned int         uint;
 #191 "/usr/include/sys/types.h" 3 4
-typedef int int8_t __attribute__ ((__mode__(__QI__)));
-typedef int int16_t __attribute__ ((__mode__(__HI__)));
-typedef int int32_t __attribute__ ((__mode__(__SI__)));
-typedef int int64_t __attribute__ ((__mode__(__DI__)));
+typedef int                  int8_t __attribute__((__mode__(__QI__)));
+typedef int                  int16_t __attribute__((__mode__(__HI__)));
+typedef int                  int32_t __attribute__((__mode__(__SI__)));
+typedef int                  int64_t __attribute__((__mode__(__DI__)));
 
 
-typedef unsigned int u_int8_t __attribute__ ((__mode__(__QI__)));
-typedef unsigned int u_int16_t __attribute__ ((__mode__(__HI__)));
-typedef unsigned int u_int32_t __attribute__ ((__mode__(__SI__)));
-typedef unsigned int u_int64_t __attribute__ ((__mode__(__DI__)));
+typedef unsigned int         u_int8_t __attribute__((__mode__(__QI__)));
+typedef unsigned int         u_int16_t __attribute__((__mode__(__HI__)));
+typedef unsigned int         u_int32_t __attribute__((__mode__(__SI__)));
+typedef unsigned int         u_int64_t __attribute__((__mode__(__DI__)));
 
-typedef int register_t __attribute__ ((__mode__(__word__)));
+typedef int                  register_t __attribute__((__mode__(__word__)));
 #213 "/usr/include/sys/types.h" 3 4
 #1 "/usr/include/endian.h" 1 3 4
 #37 "/usr/include/endian.h" 3 4
@@ -299,9 +299,11 @@ extern int select(int __nfds, fd_set *__restrict __readfds,
 __extension__
 extern __inline unsigned int gnu_dev_major(unsigned long long int __dev)
 __attribute__((__nothrow__));
+
 __extension__
 extern __inline unsigned int gnu_dev_minor(unsigned long long int __dev)
 __attribute__((__nothrow__));
+
 __extension__
 extern __inline unsigned long long int gnu_dev_makedev(unsigned int __major,
                                                        unsigned int __minor)
@@ -327,6 +329,7 @@ __attribute__((__nothrow__)) gnu_dev_makedev(unsigned int __major, unsigned int 
           | (((unsigned long long int)(__minor & ~0xff)) << 12)
           | (((unsigned long long int)(__major & ~0xfff)) << 32));
 }
+
 #220 "/usr/include/sys/types.h" 2 3 4
 #231 "/usr/include/sys/types.h" 3 4
 typedef __blkcnt_t     blkcnt_t;
@@ -360,7 +363,7 @@ struct _pthread_fastlock
 
 
 
-typedef struct _pthread_descr_struct *   _pthread_descr;
+typedef struct _pthread_descr_struct   *_pthread_descr;
 
 
 
@@ -550,7 +553,7 @@ struct timezone
    int tz_dsttime;
 };
 
-typedef struct timezone *__restrict   __timezone_ptr_t;
+typedef struct timezone   *__restrict __timezone_ptr_t;
 #72 "/usr/include/sys/time.h" 3 4
 extern int gettimeofday(struct timeval *__restrict __tv,
                         __timezone_ptr_t __tz) __attribute__((__nothrow__));
