@@ -146,6 +146,7 @@ void register_options(void)
    unc_add_option("sp_before_semi", UO_sp_before_semi, AT_IARF, "Add or remove space before ';'");
    unc_add_option("sp_before_semi_for", UO_sp_before_semi_for, AT_IARF, "Add or remove space before ';' in non-empty 'for' statements");
    unc_add_option("sp_before_semi_for_empty", UO_sp_before_semi_for_empty, AT_IARF, "Add or remove space before a semicolon of an empty part of a for statment.");
+   unc_add_option("sp_after_semi_for_empty", UO_sp_after_semi_for_empty, AT_IARF, "Add or remove space after the final semicolon of an empty part of a for statment: for ( ; ; <here> ).");
    unc_add_option("sp_before_square", UO_sp_before_square, AT_IARF, "Add or remove space before '[' (except '[]')");
    unc_add_option("sp_before_squares", UO_sp_before_squares, AT_IARF, "Add or remove space before '[]'");
    unc_add_option("sp_inside_square", UO_sp_inside_square, AT_IARF, "Add or remove space inside '[' and ']'");

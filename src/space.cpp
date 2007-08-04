@@ -524,6 +524,18 @@ argval_t do_space(chunk_t *first, chunk_t *second)
       return(cpd.settings[UO_sp_square_fparen].a);
    }
 
+   /* "for (;;)" vs "for (;; )" */
+   if ((second->type == CT_SPAREN_CLOSE) &&
+       (first->type == CT_SEMICOLON) &&
+       (second->parent_type == CT_FOR))
+   {
+      arg = cpd.settings[UO_sp_after_semi_for_empty].a;
+      if (arg != AV_IGNORE)
+      {
+         return(arg);
+      }
+   }
+
    /* "if(...)" vs "if( ... )" */
    if ((first->type == CT_SPAREN_OPEN) || (second->type == CT_SPAREN_CLOSE))
    {
@@ -661,13 +673,6 @@ argval_t do_space(chunk_t *first, chunk_t *second)
    if (second->type == CT_SPAREN_OPEN)
    {
       return(cpd.settings[UO_sp_before_sparen].a);
-   }
-
-   if ((second->type == CT_SPAREN_CLOSE) &&
-       (first->type == CT_SEMICOLON) &&
-       (second->parent_type == CT_FOR))
-   {
-      return(AV_ADD);
    }
 
    if ((first->type == CT_SPAREN_CLOSE) &&
