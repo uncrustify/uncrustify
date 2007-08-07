@@ -100,6 +100,12 @@ argval_t do_space(chunk_t *first, chunk_t *second)
       return(AV_REMOVE);
    }
 
+   if ((first->type == CT_D_ARRAY_COLON) ||
+       (second->type == CT_D_ARRAY_COLON))
+   {
+      return(cpd.settings[UO_sp_d_array_colon].a);
+   }
+
    if ((first->type == CT_COLON) && (first->parent_type == CT_SQL_EXEC))
    {
       return(AV_REMOVE);
@@ -238,6 +244,11 @@ argval_t do_space(chunk_t *first, chunk_t *second)
       return(cpd.settings[UO_sp_before_sparen].a);
    }
 
+   if ((first->type == CT_ASSIGN) || (second->type == CT_ASSIGN))
+   {
+      return(cpd.settings[UO_sp_assign].a);
+   }
+
    /* "a [x]" vs "a[x]" */
    if (second->type == CT_SQUARE_OPEN)
    {
@@ -328,20 +339,6 @@ argval_t do_space(chunk_t *first, chunk_t *second)
       return(AV_FORCE);
    }
 
-   if (first->type == CT_BRACE_OPEN)
-   {
-      if (first->parent_type == CT_ENUM)
-      {
-         return(cpd.settings[UO_sp_inside_braces_enum].a);
-      }
-      if ((first->parent_type == CT_STRUCT) ||
-          (first->parent_type == CT_UNION))
-      {
-         return(cpd.settings[UO_sp_inside_braces_struct].a);
-      }
-      return(cpd.settings[UO_sp_inside_braces].a);
-   }
-
    if (second->type == CT_BRACE_CLOSE)
    {
       if (second->parent_type == CT_ENUM)
@@ -354,13 +351,6 @@ argval_t do_space(chunk_t *first, chunk_t *second)
          return(cpd.settings[UO_sp_inside_braces_struct].a);
       }
       return(cpd.settings[UO_sp_inside_braces].a);
-   }
-
-   /* "a = { ... }" vs "a = {...}" */
-   if (((first->type == CT_BRACE_OPEN) && (first->parent_type == CT_ASSIGN)) ||
-       ((second->type == CT_BRACE_CLOSE) && (second->parent_type == CT_ASSIGN)))
-   {
-      return(cpd.settings[UO_sp_func_call_paren].a);
    }
 
    if (first->type == CT_CAST)
@@ -418,29 +408,14 @@ argval_t do_space(chunk_t *first, chunk_t *second)
       return(cpd.settings[UO_sp_else_brace].a);
    }
 
-   if ((first->type == CT_BRACE_OPEN) && (second->type == CT_ELSE))
-   {
-      return(cpd.settings[UO_sp_brace_else].a);
-   }
-
    if ((first->type == CT_CATCH) && (second->type == CT_BRACE_OPEN))
    {
       return(cpd.settings[UO_sp_catch_brace].a);
    }
 
-   if ((first->type == CT_BRACE_OPEN) && (second->type == CT_CATCH))
-   {
-      return(cpd.settings[UO_sp_brace_catch].a);
-   }
-
    if ((first->type == CT_FINALLY) && (second->type == CT_BRACE_OPEN))
    {
       return(cpd.settings[UO_sp_finally_brace].a);
-   }
-
-   if ((first->type == CT_BRACE_OPEN) && (second->type == CT_FINALLY))
-   {
-      return(cpd.settings[UO_sp_brace_finally].a);
    }
 
    if ((first->type == CT_TRY) && (second->type == CT_BRACE_OPEN))
@@ -580,10 +555,6 @@ argval_t do_space(chunk_t *first, chunk_t *second)
    {
       return(cpd.settings[UO_sp_compare].a);
    }
-   if ((first->type == CT_ASSIGN) || (second->type == CT_ASSIGN))
-   {
-      return(cpd.settings[UO_sp_assign].a);
-   }
 
    if ((first->type == CT_PAREN_OPEN) && (second->type == CT_PTR_TYPE))
    {
@@ -631,7 +602,19 @@ argval_t do_space(chunk_t *first, chunk_t *second)
 
    if (first->type == CT_BRACE_OPEN)
    {
-      if (first->parent_type == CT_ENUM)
+      if (second->type == CT_ELSE)
+      {
+         return(cpd.settings[UO_sp_brace_else].a);
+      }
+      else if (second->type == CT_CATCH)
+      {
+         return(cpd.settings[UO_sp_brace_catch].a);
+      }
+      else if (second->type == CT_FINALLY)
+      {
+         return(cpd.settings[UO_sp_brace_finally].a);
+      }
+      else if (first->parent_type == CT_ENUM)
       {
          return(cpd.settings[UO_sp_inside_braces_enum].a);
       }

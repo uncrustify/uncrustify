@@ -70,6 +70,7 @@ enum
    LPARADD   = 54,    /* adding parens in if/while */
    LCMTNL    = 55,    /* newlines before comments */
    LTEMPFUNC = 56,    /* Template function detection */
+   LDELSEMI  = 57,    /* Removing semicolons */
 };
 
 #endif   /* LOG_LEVELS_H_INCLUDED */

@@ -130,6 +130,7 @@ void tokenize_cleanup(void)
          /* Check for the D string concat symbol '~' */
          if ((pc->type == CT_INV) &&
              ((prev->type == CT_STRING) ||
+              (prev->type == CT_WORD) ||
               (next->type == CT_STRING)))
          {
             pc->type = CT_CONCAT;

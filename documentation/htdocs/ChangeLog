@@ -28,6 +28,12 @@ Plans for the next release
 ===============================================================================
 
 
+Changes in uncrustify-0.37
+-------------------------------------------------------------------------------
+ - A bunch of D language improvements
+ - Add sp_d_array_colon, nl_assign_square, nl_after_square_assign
+
+
 Changes in uncrustify-0.36
 -------------------------------------------------------------------------------
  - Add nl_after_vbrace_open

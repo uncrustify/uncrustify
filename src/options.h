@@ -214,6 +214,7 @@ enum uncrustify_options
 
    UO_sp_before_dc,
    UO_sp_after_dc,
+   UO_sp_d_array_colon,
 
    /*
     * Line splitting options (for long lines)
@@ -292,6 +293,8 @@ enum uncrustify_options
    UO_nl_struct_brace,            /* nl between struct and brace */
    UO_nl_union_brace,             /* nl between union and brace */
    UO_nl_assign_brace,            /* nl between '=' and brace */
+   UO_nl_assign_square,           /* nl between '=' and '[' */
+   UO_nl_after_square_assign,     /* nl after '= [' */
    UO_nl_class_brace,             /* nl between class name and brace */
    UO_nl_namespace_brace,         /* nl between namespace name and brace */
 

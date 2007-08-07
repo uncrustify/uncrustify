@@ -219,6 +219,40 @@ void fix_symbols(void)
                make_type(tmp);
             }
          }
+
+         if ((pc->type == CT_ALIGN) && (tmp != NULL))
+         {
+            if (tmp->type == CT_BRACE_OPEN)
+            {
+               set_paren_parent(tmp, pc->type);
+            }
+            else if (tmp->type == CT_COLON)
+            {
+               tmp->parent_type = pc->type;
+            }
+         }
+
+      } /* paren open + cast/align/delegate */
+
+      if ((pc->type == CT_ASSIGN) && (next->type == CT_SQUARE_OPEN))
+      {
+         set_paren_parent(next, CT_ASSIGN);
+
+         /* Mark one-liner assignment */
+         tmp = next;
+         while ((tmp = chunk_get_next_nc(tmp)) != NULL)
+         {
+            if (chunk_is_newline(tmp))
+            {
+               break;
+            }
+            if ((tmp->type == CT_SQUARE_CLOSE) && (next->level == tmp->level))
+            {
+               tmp->flags |= PCF_ONE_LINER;
+               next->flags  |= PCF_ONE_LINER;
+               break;
+            }
+         }
       }
 
       /* A [] in C# and D only follows a type */
@@ -1277,6 +1311,11 @@ static void fix_typedef(chunk_t *start)
             next->parent_type = CT_TYPEDEF;
             break;
          }
+         if ((cpd.lang_flags & LANG_D) && (next->type == CT_ASSIGN))
+         {
+            next->parent_type = CT_TYPEDEF;
+            break;
+         }
          make_type(next);
          if (next->type == CT_TYPE)
          {
@@ -1461,6 +1500,10 @@ void combine_labels(void)
                      cur->type = new_type;
                   }
                }
+            }
+            else if (next->flags & PCF_IN_ARRAY_ASSIGN)
+            {
+               next->type = CT_D_ARRAY_COLON;
             }
             else if (cur->type == CT_WORD)
             {

@@ -1424,6 +1424,35 @@ void newlines_cleanup_braces(void)
       {
          newlines_struct_enum_union(pc, cpd.settings[UO_nl_namespace_brace].a);
       }
+      else if (pc->type == CT_SQUARE_OPEN)
+      {
+         if ((pc->parent_type == CT_ASSIGN) &&
+             ((pc->flags & PCF_ONE_LINER) == 0))
+         {
+            tmp = chunk_get_prev_ncnl(pc);
+            newline_iarf(tmp, cpd.settings[UO_nl_assign_square].a);
+
+            argval_t arg = cpd.settings[UO_nl_after_square_assign].a;
+
+            if (cpd.settings[UO_nl_assign_square].a & AV_ADD)
+            {
+               arg = AV_ADD;
+            }
+            newline_iarf(pc, arg);
+
+            /* if there is a newline after the open, then force a newline
+             * before the close */
+            tmp = chunk_get_next_nc(pc);
+            if (chunk_is_newline(tmp))
+            {
+               tmp = chunk_get_next_type(pc, CT_SQUARE_CLOSE, pc->level);
+               if (tmp != NULL)
+               {
+                  newline_add_before(tmp);
+               }
+            }
+         }
+      }
       else
       {
          /* ignore it */

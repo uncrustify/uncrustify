@@ -318,7 +318,9 @@ void align_struct_initializers(void)
    pc = chunk_get_head();
    while (pc != NULL)
    {
-      if ((pc->type == CT_BRACE_OPEN) && (pc->parent_type == CT_ASSIGN))
+      if ((pc->parent_type == CT_ASSIGN) &&
+          ((pc->type == CT_BRACE_OPEN) ||
+           ((cpd.lang_flags & LANG_D) && (pc->type == CT_SQUARE_OPEN))))
       {
          align_init_brace(pc);
       }

@@ -107,6 +107,7 @@ typedef enum
    CT_COLON,
    CT_CASE_COLON,
    CT_CLASS_COLON,         /* colon after a class def or constructor */
+   CT_D_ARRAY_COLON,       /* D named array initializer colon */
    CT_Q_COLON,
    CT_QUESTION,
    CT_COMMA,

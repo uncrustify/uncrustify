@@ -184,6 +184,8 @@ void register_options(void)
    unc_add_option("sp_getset_brace", UO_sp_getset_brace, AT_IARF, "Add or remove space between get/set and '{' if on the same line");
    unc_add_option("sp_before_dc", UO_sp_before_dc, AT_IARF, "Add or remove space before the '::' operator");
    unc_add_option("sp_after_dc", UO_sp_after_dc, AT_IARF, "Add or remove space after the '::' operator");
+   unc_add_option("sp_d_array_colon", UO_sp_d_array_colon, AT_IARF, "Add or remove around the D named array initializer ':' operator");
+
 
    unc_begin_group(UG_indent, "Indenting");
    unc_add_option("indent_columns", UO_indent_columns, AT_NUM, "The number of columns to indent per level.\nUsually 2, 3, 4, or 8.");
@@ -221,6 +223,8 @@ void register_options(void)
    unc_add_option("nl_end_of_file", UO_nl_end_of_file, AT_IARF, "Add or remove newline at the end of the file");
    unc_add_option("nl_end_of_file_min", UO_nl_end_of_file_min, AT_NUM, "The number of newlines at the end of the file (only used if nl_end_of_file is 'add' or 'force')");
    unc_add_option("nl_assign_brace", UO_nl_assign_brace, AT_IARF, "Add or remove newline between '=' and '{'");
+   unc_add_option("nl_assign_square", UO_nl_assign_square, AT_IARF, "Add or remove newline between '=' and '[' (D only)");
+   unc_add_option("nl_after_square_assign", UO_nl_after_square_assign, AT_IARF, "Add or remove newline after '= [' (D only). Will also affect the newline before the ']'");
    unc_add_option("nl_func_var_def_blk", UO_nl_func_var_def_blk, AT_NUM, "The number of newlines after a block of variable definitions");
    unc_add_option("nl_fcall_brace", UO_nl_fcall_brace, AT_IARF,
                   "Add or remove newline between a function call's ')' and '{', as in:\n"

@@ -22,6 +22,8 @@
 
 static void remove_semicolon(chunk_t *pc)
 {
+   LOG_FMT(LDELSEMI, "%s: Removed semicolon at line %d, col %d\n",
+           __func__, pc->orig_line, pc->orig_col);
    /* TODO: do we want to shift stuff back a column? */
    chunk_del(pc);
 }
@@ -30,6 +32,7 @@ static void remove_semicolon(chunk_t *pc)
  * Removes superfluous semicolons:
  *  - after brace close whose parent is IF, ELSE, SWITCH, WHILE, FOR
  *  - after another semicolon where parent is not FOR
+ *  - (D) after brace close whose parent is ENUM/STRUCT/UNION
  */
 void remove_extra_semicolons(void)
 {
@@ -57,6 +60,13 @@ void remove_extra_semicolons(void)
          }
          else if ((prev->type == CT_SEMICOLON) &&
                   (prev->parent_type != CT_FOR))
+         {
+            remove_semicolon(pc);
+         }
+         else if ((cpd.lang_flags & LANG_D) &&
+                  ((prev->parent_type == CT_ENUM) ||
+                   (prev->parent_type == CT_UNION) ||
+                   (prev->parent_type == CT_STRUCT)))
          {
             remove_semicolon(pc);
          }

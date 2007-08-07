@@ -406,7 +406,8 @@ void indent_text(void)
             if ((frm.pse[frm.pse_tos].type == CT_ASSIGN) &&
                 (chunk_is_semicolon(pc) ||
                  (pc->type == CT_COMMA) ||
-                 (pc->type == CT_BRACE_OPEN)))
+                 (pc->type == CT_BRACE_OPEN) ||
+                 ((pc->type == CT_SQUARE_OPEN) && (pc->parent_type == CT_ASSIGN))))
             {
                indent_pse_pop(frm, pc);
             }
@@ -767,6 +768,7 @@ void indent_text(void)
                }
             }
          }
+
          frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
          frm.paren_count++;
       }
