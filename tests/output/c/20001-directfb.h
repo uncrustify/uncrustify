@@ -363,7 +363,7 @@ struct _pthread_fastlock
 
 
 
-typedef struct _pthread_descr_struct   *_pthread_descr;
+typedef struct _pthread_descr_struct *   _pthread_descr;
 
 
 
@@ -553,7 +553,7 @@ struct timezone
    int tz_dsttime;
 };
 
-typedef struct timezone   *__restrict __timezone_ptr_t;
+typedef struct timezone *__restrict   __timezone_ptr_t;
 #72 "/usr/include/sys/time.h" 3 4
 extern int gettimeofday(struct timeval *__restrict __tv,
                         __timezone_ptr_t __tz) __attribute__((__nothrow__));

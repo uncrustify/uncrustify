@@ -36,15 +36,17 @@ static const chunk_tag_t keywords[] =
    { "@end",             CT_OC_END,       LANG_OC | LANG_CPP | LANG_C                         },
    { "@implementation",  CT_OC_IMPL,      LANG_OC | LANG_CPP | LANG_C                         },
    { "@interface",       CT_OC_INTF,      LANG_OC | LANG_CPP | LANG_C                         },
-   { "__attribute__",    CT_ATTRIBUTE,    LANG_C | LANG_CPP                                   },
-   { "__const__",        CT_QUALIFIER,    LANG_C | LANG_CPP                                   },
-   { "__inline__",       CT_QUALIFIER,    LANG_C | LANG_CPP                                   },
-   { "__signed__",       CT_TYPE,         LANG_C | LANG_CPP                                   },
-   { "__typeof__",       CT_SIZEOF,       LANG_C | LANG_CPP                                   },
-   { "__volatile__",     CT_QUALIFIER,    LANG_C | LANG_CPP                                   },
    { "_Bool",            CT_TYPE,         LANG_CPP                                            },
    { "_Complex",         CT_TYPE,         LANG_CPP                                            },
    { "_Imaginary",       CT_TYPE,         LANG_CPP                                            },
+   { "__attribute__",    CT_ATTRIBUTE,    LANG_C | LANG_CPP                                   },
+   { "__const__",        CT_QUALIFIER,    LANG_C | LANG_CPP                                   },
+   { "__inline__",       CT_QUALIFIER,    LANG_C | LANG_CPP                                   },
+   { "__restrict",       CT_QUALIFIER,    LANG_C | LANG_CPP                                   },
+   { "__signed__",       CT_TYPE,         LANG_C | LANG_CPP                                   },
+   { "__traits",         CT_QUALIFIER,    LANG_D                                              },
+   { "__typeof__",       CT_SIZEOF,       LANG_C | LANG_CPP                                   },
+   { "__volatile__",     CT_QUALIFIER,    LANG_C | LANG_CPP                                   },
    { "abstract",         CT_QUALIFIER,    LANG_CS | LANG_D | LANG_JAVA                        },
    { "alias",            CT_QUALIFIER,    LANG_D                                              },
    { "align",            CT_ALIGN,        LANG_D                                              },
@@ -112,9 +114,11 @@ static const chunk_tag_t keywords[] =
    { "false",            CT_WORD,         LANG_CPP | LANG_CS | LANG_D | LANG_JAVA             },
    { "file",             CT_PP_FILE,      LANG_PAWN | FLAG_PP                                 }, // PAWN
    { "final",            CT_QUALIFIER,    LANG_D                                              },
+   { "finally",          CT_FINALLY,      LANG_D                                              },
    { "float",            CT_TYPE,         LANG_ALLC                                           },
    { "for",              CT_FOR,          LANG_ALL                                            }, // PAWN
    { "foreach",          CT_FOR,          LANG_CS | LANG_D                                    },
+   { "foreach_reverse",  CT_FOR,          LANG_D                                              },
    { "forward",          CT_FORWARD,      LANG_PAWN                                           }, // PAWN
    { "friend",           CT_FRIEND,       LANG_CPP                                            },
    { "function",         CT_FUNCTION,     LANG_D                                              },
@@ -141,9 +145,11 @@ static const chunk_tag_t keywords[] =
    { "invariant",        CT_INVARIANT,    LANG_D                                              },
    { "ireal",            CT_TYPE,         LANG_D                                              },
    { "is",               CT_SCOMPARE,     LANG_D | LANG_CS                                    },
+   { "lazy",             CT_LAZY,         LANG_D                                              },
    { "line",             CT_PP_LINE,      LANG_PAWN | FLAG_PP                                 }, // PAWN
    { "lock",             CT_LOCK,         LANG_CS                                             },
    { "long",             CT_TYPE,         LANG_ALLC                                           },
+   { "macro",            CT_D_MACRO,      LANG_D                                              },
    { "mixin",            CT_CLASS,        LANG_D                                              }, // may need special handling
    { "module",           CT_USING,        LANG_D                                              },
    { "mutable",          CT_MUTABLE,      LANG_C | LANG_CPP                                   },
@@ -175,6 +181,7 @@ static const chunk_tag_t keywords[] =
    { "restrict",         CT_QUALIFIER,    LANG_C | LANG_CPP                                   },
    { "return",           CT_RETURN,       LANG_ALL                                            }, // PAWN
    { "sbyte",            CT_TYPE,         LANG_CS                                             },
+   { "scope",            CT_SCOPE,        LANG_D                                              },
    { "sealed",           CT_QUALIFIER,    LANG_CS                                             },
    { "section",          CT_PP_SECTION,   LANG_PAWN | FLAG_PP                                 }, // PAWN
    { "set",              CT_GETSET,       LANG_CS                                             },
@@ -245,6 +252,23 @@ static int kw_compare(const void *p1, const void *p2)
    const chunk_tag_t *t2 = (const chunk_tag_t *)p2;
 
    return(strcmp(t1->tag, t2->tag));
+}
+
+bool keywords_are_sorted(void)
+{
+   int idx;
+   bool retval = true;
+
+   for (idx = 1; idx < (int)ARRAY_SIZE(keywords); idx++)
+   {
+      if (kw_compare(&keywords[idx - 1], &keywords[idx]) > 0)
+      {
+         LOG_FMT(LERR, "%s: bad sort order at idx %d, words '%s' and '%s'\n",
+                 __func__, idx - 1, keywords[idx - 1].tag, keywords[idx].tag);
+         retval = false;
+      }
+   }
+   return(retval);
 }
 
 /**

@@ -137,6 +137,9 @@ typedef enum
    CT_UNSAFE,
    CT_FINALLY,
    CT_IMPORT,
+   CT_SCOPE,
+   CT_LAZY,
+   CT_D_MACRO,
 
    /* note for paren/brace/square pairs: close MUST be open + 1 */
    CT_PAREN_OPEN,

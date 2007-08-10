@@ -1,3 +1,5 @@
+$Id$
+-------------------------------------------------------------------------------
 Goal:
 
 Do as little or as much reformatting as desired - everything should be configurable
@@ -18,4 +20,6 @@ Non-whitespace modifications
  + Put a '*' on the left in multi-line C comments
  + Add/Remove outter-most parens on return expressions
  + Add braces for 'fully braced' format
+
+(TODO: update the list to include more available features)
 

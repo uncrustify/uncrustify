@@ -32,6 +32,8 @@ Changes in uncrustify-0.37
 -------------------------------------------------------------------------------
  - A bunch of D language improvements
  - Add sp_d_array_colon, nl_assign_square, nl_after_square_assign
+ - Fix static keyword sort order
+ - Improve typedef detection and aligning
 
 
 Changes in uncrustify-0.36

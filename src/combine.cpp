@@ -1291,14 +1291,12 @@ static void fix_typedef(chunk_t *start)
    chunk_t   *the_type = NULL;
    chunk_t   *open_paren;
    c_token_t tag;
-   bool      is_fcn_type = false;
 
    LOG_FMT(LTYPEDEF, "%s: looking at line %d\n", __func__, start->orig_line);
 
    /* Mark everything in the typedef and scan for ")(", which makes it a
     * function type
     */
-   prev = start;
    next = start;
    while (((next = chunk_get_next_ncnl(next)) != NULL) &&
           (next->level >= start->level))
@@ -1309,6 +1307,10 @@ static void fix_typedef(chunk_t *start)
          if (chunk_is_semicolon(next))
          {
             next->parent_type = CT_TYPEDEF;
+            break;
+         }
+         if (next->type == CT_ATTRIBUTE)
+         {
             break;
          }
          if ((cpd.lang_flags & LANG_D) && (next->type == CT_ASSIGN))
@@ -1322,9 +1324,13 @@ static void fix_typedef(chunk_t *start)
             the_type = next;
          }
          next->flags &= ~PCF_VAR_1ST_DEF;
-         if ((*prev->str == ')') && (*next->str == '('))
+         if (*next->str == '(')
          {
-            is_fcn_type = true;
+            prev = chunk_get_prev_ncnl(next);
+            if (*prev->str != ')')
+            {
+               continue;
+            }
 
             prev->parent_type = CT_TYPEDEF;
             open_paren = chunk_get_prev_type(prev, c_token_t(prev->type - 1), prev->level);
@@ -1349,15 +1355,11 @@ static void fix_typedef(chunk_t *start)
             {
                the_type->flags |= PCF_ANCHOR;
             }
+
+            /* already did everything we need to do */
+            return;
          }
       }
-      prev = next;
-   }
-
-   if (is_fcn_type)
-   {
-      /* already did everything we need to do */
-      return;
    }
 
    /**
@@ -1371,7 +1373,7 @@ static void fix_typedef(chunk_t *start)
    {
       /* We have just a regular typedef */
       LOG_FMT(LTYPEDEF, "%s: regular typedef [%.*s] on line %d\n", __func__,
-              the_type->len, the_type->str, next->orig_line);
+              the_type->len, the_type->str, the_type->orig_line);
       the_type->flags |= PCF_ANCHOR;
       return;
    }
@@ -1397,8 +1399,8 @@ static void fix_typedef(chunk_t *start)
    }
 
    LOG_FMT(LTYPEDEF, "%s: %s typedef [%.*s] on line %d\n",
-           __func__, get_token_name(tag), next->len, next->str, next->orig_line);
-   next->flags |= PCF_ANCHOR;
+           __func__, get_token_name(tag), the_type->len, the_type->str, the_type->orig_line);
+   the_type->flags |= PCF_ANCHOR;
 }
 
 /**
@@ -2517,13 +2519,14 @@ static void mark_template_func(chunk_t *pc, chunk_t *pc_next)
             /* Might be a function def. Must check what is before the template:
              * Func call:
              *   BTree.Insert(std::pair<int, double>(*it, double(*it) + 1.0));
-             * Func Def:
+             *   a = Test<int>(j);
              *   std::pair<int, double>(*it, double(*it) + 1.0));
              */
-            LOG_FMT(LTEMPFUNC, "%s: marking '%.*s' in line %d as a FUNC_DEF\n",
+
+            LOG_FMT(LTEMPFUNC, "%s: marking '%.*s' in line %d as a FUNC_CALL\n",
                     __func__, pc->len, pc->str, pc->orig_line);
             // its a function!!!
-            pc->type = CT_FUNC_DEF;
+            pc->type = CT_FUNC_CALL;
             mark_function(pc);
          }
       }

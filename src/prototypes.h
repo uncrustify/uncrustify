@@ -176,6 +176,7 @@ void output_types(FILE *pfile);
 const chunk_tag_t *get_custom_keyword_idx(int& idx);
 void clear_keyword_file(void);
 pattern_class get_token_pattern_class(c_token_t tok);
+bool keywords_are_sorted(void);
 
 
 /*

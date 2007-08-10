@@ -1,5 +1,5 @@
 $Id$
-
+-------------------------------------------------------------------------------
 This document is too incomplete to be of much use.
 Patches are welcome!
 
@@ -29,12 +29,11 @@ These are the chunks that are parsed:
  - preprocessors
 
 See token_enum.h for a complete list.
-See punctuators.cpp and keywords.cpp for examples of how they
-are used.
+See punctuators.cpp and keywords.cpp for examples of how they are used.
 
 In the code, chunk types are prefixed with 'CT_'.
-A particularly interesting chunk type is CT_WORD, which can be types, variables, 
-or keywords.
+The CT_WORD token is changed into a more specific token using the lookup table
+in keywords.cpp
 
 
 Step 2 - Tokenize Cleanup
@@ -45,6 +44,8 @@ to be adjusted early on.
 For example, the '<' token can be either a CT_COMPARE or CT_ANGLE_OPEN.
 Both are handled very differently.
 If a CT_WORD follows CT_ENUM/CT_STRUCT/CT_UNION, then it is marked as a CT_TYPE.
+Basically, anything that doesn't depend on the nesting level can be done at this
+stage.
 
 
 Step 3 - Brace Cleanup
@@ -58,7 +59,8 @@ And #ifdef constructs are handled.
 
 This step determines the levels (brace_level, level, & pp_level).
 
-* The code in brace_cleanup.cpp needs to be reworked to take advantage of being
+REVISIT:
+  The code in brace_cleanup.cpp needs to be reworked to take advantage of being
   able to scan forward and backward.  The original code was going to be merged
   into tokenize.cpp, but that was WAY too complex.
 
@@ -124,3 +126,4 @@ Last Step - Output
 At the final step the list is printed to the output.
 Everything except comments are printed as-is.
 Comments are reformatted in the output stage.
+

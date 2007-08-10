@@ -1,3 +1,5 @@
+$Id$
+
 =-----------------------------------------------------------------------------=
 *                                                                             *
 *  Paren Stack                                                                *
@@ -19,7 +21,7 @@ Complex statements go through some of these BS_ stages:
 	BS_ELSEIF   - expecting 'if' after 'else'
 	BS_WHILE    - expecting 'while' after 'do'
 	
-The file if processed one token at a time to support #if/#else/#endif
+The file is processed one token at a time to support #if/#else/#endif
 preprocessors at any point.
 
 Take this simple if statment as an example:
@@ -31,7 +33,7 @@ Take this simple if statment as an example:
 
 The stack would look like so:
 The format is first the token processed and then the PSE stack as it appears
-AFTER the toke is processed.
+AFTER the token is processed.
 
 'if' [IF - PAREN1]
 '('  [IF - PAREN1] [SPAREN OPEN]
@@ -128,13 +130,13 @@ do/while
 DO-BRACE_DO, DO-WHILE, WHILE-PAREN2
 
 
-Another example:
+Another less-interesting example:
 
 {
     if (x)
         volatile
         {
-	    y++;
+            y++;
         }
     return y;
 }
@@ -146,19 +148,15 @@ Another example:
 ')'        [BRACE OPEN] [IF - BRACE2]
 'volatile' [BRACE OPEN] [IF - BRACE2] [VBRACE OPEN] [VOLATILE - BRACE2]
 '{'        [BRACE OPEN] [IF - BRACE2] [VBRACE OPEN] [VOLATILE - BRACE2] [BRACE OPEN]
-'if'   [IF - BRACE2] [VBRACE OPEN] [IF - PAREN1] <- VBrace on BRACE2, IF opened
-'('    [IF - BRACE2] [VBRACE OPEN] [IF - PAREN1] [SPAREN OPEN]
-'y'    [IF - BRACE2] [VBRACE OPEN] [IF - PAREN1] [SPAREN OPEN]
-')'    [IF - BRACE2] [VBRACE OPEN] [IF - BRACE2]
-'y'    [IF - BRACE2] [VBRACE OPEN] [IF - BRACE2] [VBRACE OPEN]
-'--'   [IF - BRACE2] [VBRACE OPEN] [IF - BRACE2] [VBRACE OPEN]
-';'    [IF - BRACE2] [VBRACE OPEN] [IF - ELSE]
-'else' [IF - BRACE2] [VBRACE OPEN] [ELSE - ELSEIF]
-'z'    [IF - BRACE2] [VBRACE OPEN] [ELSE - BRACE2] [VBRACE OPEN]
-'++'   [IF - BRACE2] [VBRACE OPEN] [ELSE - BRACE2] [VBRACE OPEN]
-';'    [IF - BRACE2] [VBRACE OPEN] [ELSE - BRACE2]  - step1
-       [IF - BRACE2] [VBRACE OPEN]                  - step2
-       [IF - ELSE]                                  - step3
+'y'        [BRACE OPEN] [IF - BRACE2] [VBRACE OPEN] [VOLATILE - BRACE2] [BRACE OPEN]
+'++'       [BRACE OPEN] [IF - BRACE2] [VBRACE OPEN] [VOLATILE - BRACE2] [BRACE OPEN]
+';'        [BRACE OPEN] [IF - BRACE2] [VBRACE OPEN] [VOLATILE - BRACE2] [BRACE OPEN]
+'}'        [BRACE OPEN] [IF - ELSE]  <- the brace close ends brace-open,
+                                        volatile-brace2 and vbrace-open
+'return'   [BRACE OPEN]              <- not else
+'y'        [BRACE OPEN]
+';'        [BRACE OPEN]
+'}'                                  <- empties the stack
 
 
 =-----------------------------------------------------------------------------=
@@ -183,8 +181,9 @@ This has the following effects:
 When a #define is entered, the current frame is pushed and cleared.
 When a #define is exited, the frame is popped.
 
-Take this example:
 
+Take this example, which isn't very exciting, as both the #if and #else parts
+end up with the same paren stack.  This is the usual case.
 
 {
    foo(param1,
@@ -194,5 +193,27 @@ Take this example:
        "release");
 #endif
 }
+
+Right before the #ifdef, we have this for the paren stack:
+  Top>  [BRACE OPEN] [PAREN OPEN]
+
+The #ifdef pushes a copy of the current stack, so we have this:
+  Top>  [BRACE OPEN] [PAREN OPEN]
+        [BRACE OPEN] [PAREN OPEN]
+
+The close paren after "debug" closes out the PAREN-OPEN on the top of the stack.
+  Top>  [BRACE OPEN]
+        [BRACE OPEN] [PAREN OPEN]
+
+The #else swaps the top two frames.
+  Top>  [BRACE OPEN] [PAREN OPEN]
+        [BRACE OPEN]
+
+Right after the #else, we hit another close paren after the "release".
+  Top>  [BRACE OPEN]
+        [BRACE OPEN]
+
+At the #endif, the top of stack is thrown out, which restores us to the #if path.
+  Top>  [BRACE OPEN]
 
 

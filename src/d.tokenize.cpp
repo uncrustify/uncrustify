@@ -11,15 +11,22 @@
 
 
 /**
- * Strings in D can start with:
- * r"Wysiwyg"
- * x"hexstring"
- * `Wysiwyg`
- * 'char'
- * "reg_string"
- * \'
- * The next bit of text starts with a quote char " or ' or <.
- * Count the number of characters until the matching character.
+ * Parses all legal D string constants.
+ *
+ * Quoted strings:
+ *   r"Wysiwyg"      # WYSIWYG string
+ *   x"hexstring"    # Hexadecimal array
+ *   `Wysiwyg`       # WYSIWYG string
+ *   'char'          # single character
+ *   "reg_string"    # regular string
+ *
+ * Non-quoted strings:
+ * \x12              # 1-byte hex constant
+ * \u1234            # 2-byte hex constant
+ * \U12345678        # 4-byte hex constant
+ * \123              # octal constant
+ * \&amp;            # named entity
+ * \n                # single character
  *
  * @param pc   The structure to update, str is an input.
  * @return     Whether a string was parsed
@@ -50,12 +57,12 @@ static bool d_parse_string(chunk_t *pc)
             break;
 
          case 'u':
-            /* \x HexDigit HexDigit HexDigit HexDigit */
+            /* \u HexDigit HexDigit HexDigit HexDigit */
             pc->len += 5;
             break;
 
          case 'U':
-            /* \x HexDigit (x8) */
+            /* \U HexDigit (x8) */
             pc->len += 9;
             break;
 

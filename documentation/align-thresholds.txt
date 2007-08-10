@@ -1,3 +1,5 @@
+$Id$
+-------------------------------------------------------------------------------
 Alignment thresholds:
 
 Alignment threshold are used to prevent aligning of certain text.
