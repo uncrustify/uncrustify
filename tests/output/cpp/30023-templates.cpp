@@ -65,3 +65,19 @@ template<class Config_>
 priority_queue<Config_>::~priority_queue ()
 {
 }
+
+template<class T>
+T test(T a)
+{
+   return(a);
+}
+
+int main()
+{
+   int k, j;
+   h   g<int>;
+
+   k = test<int>(j);
+   return(0);
+}
+
