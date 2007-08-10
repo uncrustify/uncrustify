@@ -305,8 +305,12 @@ static void check_template(chunk_t *start)
    LOG_FMT(LTEMPL, "%s: Line %d, col %d:", __func__, start->orig_line, start->orig_col);
 
    prev = chunk_get_prev_ncnl(start);
+   if (prev == NULL)
+   {
+      return;
+   }
 
-   if ((prev != NULL) && (prev->type == CT_TEMPLATE))
+   if (prev->type == CT_TEMPLATE)
    {
       LOG_FMT(LTEMPL, " CT_TEMPLATE:");
 
@@ -332,41 +336,40 @@ static void check_template(chunk_t *start)
    }
    else
    {
-      /* Scan backwards until we hit a semicolon, start of file, or brace open/close */
-      do
+      /* A template requires a word/type right before the open angle */
+      if ((prev->type != CT_WORD) && (prev->type != CT_TYPE))
       {
-         prev = chunk_get_prev_ncnl(prev);
-      } while ((prev != NULL) && ((prev->type == CT_WORD) ||
-                                  (prev->type == CT_TYPE) ||
-                                  (prev->type == CT_DC_MEMBER)));
+         LOG_FMT(LTEMPL, " - after %s + ( - Not a template\n", get_token_name(prev->type));
+         start->type = CT_COMPARE;
+         return;
+      }
 
-      if (prev != NULL)
+      LOG_FMT(LTEMPL, " - prev %s -", get_token_name(prev->type));
+
+      /* Scan back and make sure we aren't inside square parens */
+      pc = start;
+      while ((pc = chunk_get_prev_ncnl(pc)) != NULL)
       {
-         /* It seems that a open paren is OK:
-          * return (std::numeric_limits<int>::max)();
-          */
-         // if (chunk_is_str(prev, "(", 1))
-         // {
-         //    prev = chunk_get_prev_ncnl(prev);
-         //    if ((prev != NULL) && (prev->type != CT_FOR))
-         //    {
-         //       LOG_FMT(LTEMPL, " - after %s + ( - Not a template\n", get_token_name(prev->type));
-         //       start->type = CT_COMPARE;
-         //       return;
-         //    }
-         // }
-
-         if (chunk_is_str(prev, "[", 1) ||
-             (prev->type == CT_ASSIGN) ||
-             (prev->type == CT_BOOL))
+         if ((pc->type == CT_SEMICOLON) ||
+             (pc->type == CT_BRACE_OPEN) ||
+             (pc->type == CT_BRACE_CLOSE) ||
+             (pc->type == CT_SQUARE_CLOSE) ||
+             (pc->type == CT_SEMICOLON))
          {
-            LOG_FMT(LTEMPL, " - after %s - Not a template\n", get_token_name(prev->type));
+            break;
+         }
+         if (pc->type == CT_SQUARE_OPEN)
+         {
+            LOG_FMT(LTEMPL, " - Not a template: after a square open\n");
             start->type = CT_COMPARE;
             return;
          }
-         LOG_FMT(LTEMPL, " - prev %s -", get_token_name(prev->type));
       }
 
+      /* Scan forward to the angle close
+       * If we have anything other than a word, type, member, comma, star, or
+       * class in there, the it can't be a template.
+       */
       int level = 1;
       for (pc = chunk_get_next_ncnl(start); pc != NULL; pc = chunk_get_next_ncnl(pc))
       {
@@ -398,9 +401,11 @@ static void check_template(chunk_t *start)
       end = pc;
    }
 
-   if (end != NULL)
+   if ((end != NULL) && (end->type == CT_ANGLE_CLOSE))
    {
-      if (end->type == CT_ANGLE_CLOSE)
+      pc = chunk_get_next_ncnl(end);
+      if ((pc != NULL) &&
+          (pc->type != CT_NUMBER))
       {
          LOG_FMT(LTEMPL, " - Template Detected\n");
 
@@ -410,12 +415,11 @@ static void check_template(chunk_t *start)
             make_type(pc);
          }
          end->parent_type = CT_TEMPLATE;
-      }
-      else
-      {
-         LOG_FMT(LTEMPL, " - Not a template: end = %s\n", get_token_name(end->type));
-
-         start->type = CT_COMPARE;
+         return;
       }
    }
+
+   LOG_FMT(LTEMPL, " - Not a template: end = %s\n",
+           (end != NULL) ? get_token_name(end->type) : "<null>");
+   start->type = CT_COMPARE;
 }
