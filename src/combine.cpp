@@ -1832,6 +1832,7 @@ static void mark_function(chunk_t *pc)
    chunk_t *prev;
    chunk_t *next;
    chunk_t *tmp;
+   chunk_t *semi = NULL;
    chunk_t *paren_close;
 
    prev = chunk_get_prev_ncnlnp(pc);
@@ -2066,8 +2067,8 @@ static void mark_function(chunk_t *pc)
          else if (chunk_is_semicolon(tmp))
          {
             /* Set the parent for the semi for later */
-            tmp->parent_type = CT_FUNC_PROTO;
-            pc->type         = CT_FUNC_PROTO;
+            semi     = tmp;
+            pc->type = CT_FUNC_PROTO;
             break;
          }
          else if (pc->type == CT_COMMA)
@@ -2099,6 +2100,11 @@ static void mark_function(chunk_t *pc)
             pc->type = CT_FUNC_CTOR_VAR;
          }
       }
+   }
+
+   if (semi != NULL)
+   {
+      tmp->parent_type = pc->type;
    }
 
    if (pc->type == CT_FUNC_CTOR_VAR)
