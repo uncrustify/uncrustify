@@ -89,6 +89,9 @@
 00413   align_typedef_func-1.cfg c/align-typedef.c
 00414   align_typedef_func-2.cfg c/align-typedef.c
 
+00421   nl_ds_struct_enum-1.cfg c/nl_ds_struct_enum.c
+00422   nl_ds_struct_enum-2.cfg c/nl_ds_struct_enum.c
+
 # boolean and comma positioning
 00501   bool-pos-eol.cfg       c/bool-pos.c
 00502   bool-pos-sol.cfg       c/bool-pos.c
