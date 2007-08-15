@@ -16,6 +16,10 @@
 #include <cerrno>
 #include <cctype>
 
+
+static void newlines_double_space_struct_enum_union(chunk_t *open_brace);
+
+
 /*
  * Basic approach:
  * 1. Find next open brace
@@ -946,18 +950,6 @@ static void newlines_brace_pair(chunk_t *br_open)
    {
       newline_del_between(prev, br_close);
    }
-
-   if (cpd.settings[UO_eat_blanks_before_close_brace].b)
-   {
-      pc = chunk_get_prev_nc(br_close);
-      if (chunk_is_newline(pc))
-      {
-         if (pc->nl_count > 1)
-         {
-            pc->nl_count = 1;
-         }
-      }
-   }
 }
 
 /**
@@ -1167,6 +1159,7 @@ void newlines_cleanup_braces(void)
 {
    chunk_t  *pc;
    chunk_t  *next;
+   chunk_t  *prev;
    chunk_t  *tmp;
    argval_t arg;
 
@@ -1235,6 +1228,14 @@ void newlines_cleanup_braces(void)
       }
       else if (pc->type == CT_BRACE_OPEN)
       {
+         if (cpd.settings[UO_nl_ds_struct_enum_cmt].b &&
+             ((pc->parent_type == CT_ENUM) ||
+              (pc->parent_type == CT_STRUCT) ||
+              (pc->parent_type == CT_UNION)))
+         {
+            newlines_double_space_struct_enum_union(pc);
+         }
+
          next = chunk_get_next_ncnl(pc);
          if (next->type == CT_BRACE_CLOSE)
          {
@@ -1299,6 +1300,35 @@ void newlines_cleanup_braces(void)
       }
       else if (pc->type == CT_BRACE_CLOSE)
       {
+         if (cpd.settings[UO_eat_blanks_before_close_brace].b)
+         {
+            /* Limit the newlines before the close brace to 1 */
+            prev = chunk_get_prev(pc);
+            if (chunk_is_newline(prev))
+            {
+               prev->nl_count = 1;
+            }
+         }
+         else if (cpd.settings[UO_nl_ds_struct_enum_close_brace].b &&
+                  ((pc->parent_type == CT_ENUM) ||
+                   (pc->parent_type == CT_STRUCT) ||
+                   (pc->parent_type == CT_UNION)))
+         {
+            if ((pc->flags & PCF_ONE_LINER) == 0)
+            {
+               /* Make sure the } is preceeded by two newlines */
+               prev = chunk_get_prev(pc);
+               if (!chunk_is_newline(prev))
+               {
+                  prev = newline_add_before(pc);
+               }
+               if (prev->nl_count < 2)
+               {
+                  prev->nl_count = 2;
+               }
+            }
+         }
+
          /* Force a newline after a function def */
          if (pc->parent_type == CT_FUNC_DEF)
          {
@@ -1927,83 +1957,37 @@ void newlines_cleanup_dup(void)
    }
 }
 
-void newlines_double_space_struct_enum_union(void)
+
+/**
+ * Make sure there is a blank line after a commented group of values
+ */
+static void newlines_double_space_struct_enum_union(chunk_t *open_brace)
 {
-   chunk_t *pc;
-   chunk_t *next;
+   chunk_t *pc = open_brace;
    chunk_t *prev;
-   bool    inside_seu = false;
-   int     seu_level  = 0;
 
-   prev = NULL;
-   pc   = chunk_get_head();
-
-   while (pc != NULL)
+   while (((pc = chunk_get_next_nc(pc)) != NULL) &&
+          (pc->level > open_brace->level))
    {
-      next = chunk_get_next(pc);
-
-      if (!inside_seu)
+      if ((pc->level != (open_brace->level + 1)) ||
+          (pc->type != CT_NEWLINE))
       {
-         if ((pc->type == CT_BRACE_OPEN) &&
-             ((pc->parent_type == CT_STRUCT) ||
-              (pc->parent_type == CT_ENUM) ||
-              (pc->parent_type == CT_UNION)))
-         {
-            inside_seu = true;
-            seu_level  = pc->brace_level;
-         }
-      }
-      else
-      {
-         if (pc->type == CT_NEWLINE)
-         {
-            switch (prev->type)
-            {
-            case CT_COMMENT_WHOLE:
-            case CT_COMMENT_MULTI:
-            case CT_BRACE_OPEN:
-            case CT_COMMENT_CPP:
-            case CT_COMMENT:
-               break;
-
-            default:
-               switch (next->type)
-               {
-               case CT_COMMENT_WHOLE:
-               case CT_COMMENT_MULTI:
-               case CT_COMMENT_CPP:
-               case CT_COMMENT:
-                  if (pc->nl_count < 2)
-                  {
-                     pc->nl_count = 2;
-                  }
-                  break;
-
-               default:
-                  break;
-               }
-               break;
-            }
-         }
-         else if (pc->type == CT_BRACE_CLOSE)
-         {
-            if (prev->type != CT_NEWLINE)
-            {
-               prev = newline_add_before(pc);
-            }
-            if (prev->nl_count < 2)
-            {
-               prev->nl_count = 2;
-            }
-         }
-
-         if ((pc->type == CT_BRACE_CLOSE) && (pc->brace_level == seu_level))
-         {
-            inside_seu = false;
-         }
+         continue;
       }
 
-      prev = pc;
-      pc   = next;
+      /* If the newline is NOT after a comment or a brace open and
+       * it is before a comment, then make sure that the newline is
+       * at least doubled
+       */
+      prev = chunk_get_prev(pc);
+      if (!chunk_is_comment(prev) &&
+          (prev->type != CT_BRACE_OPEN) &&
+          chunk_is_comment(chunk_get_next(pc)))
+      {
+         if (pc->nl_count < 2)
+         {
+            pc->nl_count = 2;
+         }
+      }
    }
 }

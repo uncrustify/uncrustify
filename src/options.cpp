@@ -280,6 +280,7 @@ void register_options(void)
    unc_add_option("nl_before_do", UO_nl_before_do, AT_IARF, "Add or remove newline before 'do'");
    unc_add_option("nl_after_do", UO_nl_after_do, AT_IARF, "Add or remove newline after 'do'");
    unc_add_option("nl_ds_struct_enum_cmt", UO_nl_ds_struct_enum_cmt, AT_BOOL, "Whether to double-space commented-entries in struct/enum");
+   unc_add_option("nl_ds_struct_enum_close_brace", UO_nl_ds_struct_enum_close_brace, AT_BOOL, "Whether to double-space before the close brace of a struct/union/enum");
    unc_add_option("nl_class_colon", UO_nl_class_colon, AT_IARF, "Add or remove a newline around a class colon.\nRelated to pos_class_colon, nl_class_init_args, and pos_comma.");
 
    unc_begin_group(UG_blankline, "Blank line options", "Note that it takes 2 newlines to get a blank line");

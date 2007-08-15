@@ -327,6 +327,7 @@ enum uncrustify_options
    UO_nl_before_do,               // nl before do
    UO_nl_after_do,                // nl after while of do
    UO_nl_ds_struct_enum_cmt,      // nl between commented-elements of struct/enum
+   UO_nl_ds_struct_enum_close_brace, // force nl before } of struct/union/enum
 
    UO_nl_define_macro,            // alter newlines in #define macros
    UO_nl_start_of_file,           // alter newlines at the start of file
