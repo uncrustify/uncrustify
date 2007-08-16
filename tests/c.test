@@ -92,6 +92,10 @@
 00421   nl_ds_struct_enum-1.cfg c/nl_ds_struct_enum.c
 00422   nl_ds_struct_enum-2.cfg c/nl_ds_struct_enum.c
 
+00430   indent_paren_close-0.cfg c/paren-indent.c
+00431   indent_paren_close-1.cfg c/paren-indent.c
+00432   indent_paren_close-2.cfg c/paren-indent.c
+
 # boolean and comma positioning
 00501   bool-pos-eol.cfg       c/bool-pos.c
 00502   bool-pos-sol.cfg       c/bool-pos.c
