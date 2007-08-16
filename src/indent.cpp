@@ -936,6 +936,17 @@ void indent_text(void)
                     __func__, pc->orig_line, indent_column, pc->len, pc->str);
             reindent_line(pc, indent_column);
          }
+         else if (pc->type == CT_BOOL)
+         {
+            if (cpd.settings[UO_indent_bool_paren].b &&
+                chunk_is_paren_open(frm.pse[frm.pse_tos].pc))
+            {
+               indent_column = frm.pse[frm.pse_tos].pc->column;
+            }
+            LOG_FMT(LINDENT, "%s: %d] bool => %d [%.*s]\n",
+                    __func__, pc->orig_line, indent_column, pc->len, pc->str);
+            reindent_line(pc, indent_column);
+         }
          else
          {
             if (pc->column != indent_column)

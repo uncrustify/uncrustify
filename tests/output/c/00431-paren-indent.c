@@ -20,7 +20,7 @@ static void *foo
 		   , arg2
 		   );
 		if ( ( abc < bcd )
-		     &&( 123 < abc )
+		   &&( 123 < abc )
 		   )
 		{
 			none( arg1

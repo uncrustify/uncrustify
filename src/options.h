@@ -98,7 +98,8 @@ enum uncrustify_options
    UO_indent_paren_nl,           // indent-align under paren for open followed by nl
    UO_indent_square_nl,          // indent-align under square for open followed by nl
    UO_indent_paren_close,        // indent of close paren after a newline
-   UO_indent_comma_paren,        // indent of command if inside a paren
+   UO_indent_comma_paren,        // indent of comma if inside a paren
+   UO_indent_bool_paren,         // indent of bool if inside a paren
    UO_pp_indent,                 // indent preproc 1 space per level (add/ignore/remove)
    UO_pp_space,                  // spaces between # and word (add/ignore/remove)
 
