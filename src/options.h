@@ -97,6 +97,7 @@ enum uncrustify_options
    //UO_indent_paren,             //TODO: indent for open paren on next line (1)
    UO_indent_paren_nl,           // indent-align under paren for open followed by nl
    UO_indent_square_nl,          // indent-align under square for open followed by nl
+   UO_indent_paren_close,        // indent of close paren after a newline
    UO_pp_indent,                 // indent preproc 1 space per level (add/ignore/remove)
    UO_pp_space,                  // spaces between # and word (add/ignore/remove)
 

@@ -209,6 +209,11 @@ void register_options(void)
    unc_add_option("indent_label", UO_indent_label, AT_NUM, "How to indent goto labels\n >0 : absolute column where 1 is the leftmost column\n <=0 : subtract from brace indent", "", -16, 16);
    unc_add_option("indent_access_spec", UO_indent_access_spec, AT_NUM, "Same as indent_label, but for access specifiers that are followed by a colon", "", -16, 16);
    unc_add_option("indent_paren_nl", UO_indent_paren_nl, AT_BOOL, "If an open paren is followed by a newline, indent the next line so that it lines up after the open paren (not recommended)");
+   unc_add_option("indent_paren_close", UO_indent_paren_close, AT_NUM,
+                  "Controls the indent of a close paren after a newline.\n"
+                  "0: Indent to body level\n"
+                  "1: Align under the open paren\n"
+                  "2: Indent to the brace level");
    unc_add_option("indent_square_nl", UO_indent_square_nl, AT_BOOL, "If an open square is followed by a newline, indent the next line so that it lines up after the open square (not recommended)");
 
    unc_begin_group(UG_newline, "Newline adding and removing options");

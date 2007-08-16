@@ -39,6 +39,7 @@ enum brstage_e
    BS_WHILE,     /* expecting 'while' after 'do' */
 };
 
+struct chunk_t;
 
 /**
  * Structure for counting nested level
@@ -48,6 +49,7 @@ struct paren_stack_entry
    c_token_t type;         /**< the type that opened the entry */
    int       level;        /**< Level of opening type */
    int       open_line;    /**< line that open symbol is on */
+   chunk_t   *pc;          /**< Chunk that opened the level */
    int       brace_indent; /**< indent for braces - may not relate to indent */
    int       indent;       /**< indent level (depends on use) */
    int       indent_tmp;   /**< temporary indent level (depends on use) */
@@ -55,7 +57,7 @@ struct paren_stack_entry
    int       ref;
    c_token_t parent;       /**< if, for, function, etc */
    brstage_e stage;
-   bool      in_preproc;   /**> whether this was created in a preprocessor */
+   bool      in_preproc;   /**< whether this was created in a preprocessor */
 };
 
 /* TODO: put this on a linked list */

@@ -201,6 +201,7 @@ static void indent_pse_push(struct parse_frame& frm, chunk_t *pc)
       LOG_FMT(LINDPSE, "%4d] OPEN  [%d,%s] level=%d\n",
               pc->orig_line, frm.pse_tos, get_token_name(pc->type), pc->level);
 
+      frm.pse[frm.pse_tos].pc         = pc;
       frm.pse[frm.pse_tos].type       = pc->type;
       frm.pse[frm.pse_tos].level      = pc->level;
       frm.pse[frm.pse_tos].open_line  = pc->orig_line;
@@ -296,6 +297,7 @@ void indent_text(void)
    /* dummy top-level entry */
    frm.pse[0].indent     = 1;
    frm.pse[0].indent_tmp = 1;
+   frm.pse[0].indent_tab = 1;
    frm.pse[0].type       = CT_EOF;
 
    pc = chunk_get_head();
@@ -890,6 +892,40 @@ void indent_text(void)
             {
                reindent_line(pc, 1);
             }
+         }
+         else if ((pc->type == CT_PAREN_CLOSE) ||
+                  (pc->type == CT_FPAREN_CLOSE) ||
+                  (pc->type == CT_SPAREN_CLOSE))
+         {
+            /* This is a big hack. We assume that since we hit a paren close,
+             * that we just removed a paren open */
+            if (frm.pse[frm.pse_tos + 1].type == c_token_t(pc->type - 1))
+            {
+               chunk_t *ck1 = frm.pse[frm.pse_tos + 1].pc;
+               chunk_t *ck2 = chunk_get_prev(ck1);
+
+               /* If the open paren was the first thing on the line or we are
+                * doing mode 1, then put the close paren in the same column */
+               if (chunk_is_newline(ck2) ||
+                   (cpd.settings[UO_indent_paren_close].n == 1))
+               {
+                  indent_column = ck1->column;
+               }
+               else
+               {
+                  if (cpd.settings[UO_indent_paren_close].n != 2)
+                  {
+                     indent_column = frm.pse[frm.pse_tos + 1].indent_tmp;
+                     if (cpd.settings[UO_indent_paren_close].n == 1)
+                     {
+                        indent_column--;
+                     }
+                  }
+               }
+            }
+            LOG_FMT(LINDENT, "%s: %d] cl paren => %d [%.*s]\n",
+                    __func__, pc->orig_line, indent_column, pc->len, pc->str);
+            reindent_line(pc, indent_column);
          }
          else
          {
