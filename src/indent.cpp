@@ -893,9 +893,7 @@ void indent_text(void)
                reindent_line(pc, 1);
             }
          }
-         else if ((pc->type == CT_PAREN_CLOSE) ||
-                  (pc->type == CT_FPAREN_CLOSE) ||
-                  (pc->type == CT_SPAREN_CLOSE))
+         else if (chunk_is_paren_close(pc))
          {
             /* This is a big hack. We assume that since we hit a paren close,
              * that we just removed a paren open */
@@ -924,6 +922,17 @@ void indent_text(void)
                }
             }
             LOG_FMT(LINDENT, "%s: %d] cl paren => %d [%.*s]\n",
+                    __func__, pc->orig_line, indent_column, pc->len, pc->str);
+            reindent_line(pc, indent_column);
+         }
+         else if (pc->type == CT_COMMA)
+         {
+            if (cpd.settings[UO_indent_comma_paren].b &&
+                chunk_is_paren_open(frm.pse[frm.pse_tos].pc))
+            {
+               indent_column = frm.pse[frm.pse_tos].pc->column;
+            }
+            LOG_FMT(LINDENT, "%s: %d] comma => %d [%.*s]\n",
                     __func__, pc->orig_line, indent_column, pc->len, pc->str);
             reindent_line(pc, indent_column);
          }

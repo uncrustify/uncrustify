@@ -169,4 +169,22 @@ bool chunk_is_vbrace(chunk_t *pc)
                            (pc->type == CT_VBRACE_OPEN)));
 }
 
+static_inline
+bool chunk_is_paren_open(chunk_t *pc)
+{
+   return((pc != NULL) &&
+          ((pc->type == CT_PAREN_OPEN) ||
+           (pc->type == CT_SPAREN_OPEN) ||
+           (pc->type == CT_FPAREN_OPEN)));
+}
+
+static_inline
+bool chunk_is_paren_close(chunk_t *pc)
+{
+   return((pc != NULL) &&
+          ((pc->type == CT_PAREN_CLOSE) ||
+           (pc->type == CT_SPAREN_CLOSE) ||
+           (pc->type == CT_FPAREN_CLOSE)));
+}
+
 #endif   /* CHUNK_LIST_H_INCLUDED */

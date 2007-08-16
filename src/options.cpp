@@ -214,6 +214,9 @@ void register_options(void)
                   "0: Indent to body level\n"
                   "1: Align under the open paren\n"
                   "2: Indent to the brace level");
+   unc_add_option("indent_comma_paren", UO_indent_comma_paren, AT_BOOL,
+                  "Controls the indent of a comma when inside a paren."
+                  "If TRUE, aligns under the open paren");
    unc_add_option("indent_square_nl", UO_indent_square_nl, AT_BOOL, "If an open square is followed by a newline, indent the next line so that it lines up after the open square (not recommended)");
 
    unc_begin_group(UG_newline, "Newline adding and removing options");
