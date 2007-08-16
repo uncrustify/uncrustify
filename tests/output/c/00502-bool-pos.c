@@ -11,7 +11,7 @@ void foo(void)
 #ifdef FLAG2
        || flag2
 #endif
-   )
+       )
    {
       printf("yar");
    }

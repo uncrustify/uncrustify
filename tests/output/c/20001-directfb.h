@@ -1319,20 +1319,20 @@ typedef struct
 DFBResult DirectFBError(
    const char *msg,
    DFBResult result
-);
+   );
 
 
 
 DFBResult DirectFBErrorFatal(
    const char *msg,
    DFBResult result
-);
+   );
 
 
 
 const char *DirectFBErrorString(
    DFBResult result
-);
+   );
 
 
 
@@ -1343,21 +1343,21 @@ const char *DirectFBUsageString(void);
 DFBResult DirectFBInit(
    int *argc,
    char **argv[]
-);
+   );
 
 
 
 DFBResult DirectFBSetOption(
    const char *name,
    const char *value
-);
+   );
 
 
 
 DFBResult DirectFBCreate(
    IDirectFB **interface
 
-);
+   );
 
 
 typedef unsigned int   DFBScreenID;
@@ -1959,7 +1959,7 @@ typedef DFBEnumerationResult (*DFBVideoModeCallback)(
    int height,
    int bpp,
    void *callbackdata
-);
+   );
 
 
 
@@ -1967,7 +1967,7 @@ typedef DFBEnumerationResult (*DFBScreenCallback)(
    DFBScreenID screen_id,
    DFBScreenDescription desc,
    void *callbackdata
-);
+   );
 
 
 
@@ -1975,7 +1975,7 @@ typedef DFBEnumerationResult (*DFBDisplayLayerCallback)(
    DFBDisplayLayerID layer_id,
    DFBDisplayLayerDescription desc,
    void *callbackdata
-);
+   );
 
 
 
@@ -1983,7 +1983,7 @@ typedef DFBEnumerationResult (*DFBInputDeviceCallback)(
    DFBInputDeviceID device_id,
    DFBInputDeviceDescription desc,
    void *callbackdata
-);
+   );
 
 
 
@@ -1991,7 +1991,7 @@ typedef int (*DFBGetDataCallback)(
    void *buffer,
    unsigned int length,
    void *callbackdata
-);
+   );
 
 
 
