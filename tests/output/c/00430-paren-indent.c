@@ -1,8 +1,6 @@
-static void *foo
-(
-        int param1,
-        char *param2
-);
+static void *foo(int param1,
+                 char *param2
+                 );
 
 
 static void *foo
@@ -33,3 +31,16 @@ static void *foo
 	}
 }
 
+
+void CWarningAnalyzer::SetEffect(int FilterNumber
+                                 ,bool Exclude
+                                 , int Red
+                                 , int Green
+                                 , int Blue
+                                 , bool Italic
+                                 , bool Bold
+                                 , bool Underlined
+                                 )
+{
+	/* TODO */
+}
