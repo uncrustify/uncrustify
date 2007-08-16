@@ -13,8 +13,6 @@ Future plans: (in no particular order)
  - Add easily pluggable output for logs and file
  - Build as a shared library on Linux and maybe a dll on windows?
  - Plug into SlickEdit/Gedit/Kedit
- - Create a configuration GUI that allows you to interactively see what each
-   option does to your source code
 
 
 Plans for the next release
@@ -35,6 +33,7 @@ Changes in uncrustify-0.37
  - Fix static keyword sort order
  - Improve typedef detection and aligning
  - Split nl_ds_struct_enum_close_brace out of nl_ds_struct_enum_cmt
+ - Add indent_paren_close
 
 
 Changes in uncrustify-0.36
