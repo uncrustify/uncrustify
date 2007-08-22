@@ -28,6 +28,12 @@ Plans for the next release
 
 Changes in uncrustify-0.37
 -------------------------------------------------------------------------------
+ - Fix line splitting WRT the CT_SPACE token
+ - Improve function call/prototype/definition detection
+
+
+Changes in uncrustify-0.37
+-------------------------------------------------------------------------------
  - A bunch of D language improvements
  - Add sp_d_array_colon, nl_assign_square, nl_after_square_assign
  - Fix static keyword sort order

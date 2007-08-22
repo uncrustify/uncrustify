@@ -85,7 +85,7 @@ struct parse_frame
 #define PCF_EXPR_START         (1 << 1)
 #define PCF_IN_PREPROC         (1 << 2)  /* in a preprocessor */
 #define PCF_DONT_INDENT        (1 << 3)  /* already aligned! */
-#define PCF_MFC_PAREN          (1 << 4)  /* macro function close paren */
+//#define PCF_MFC_PAREN          (1 << 4)  /* macro function close paren */
 #define PCF_VAR_DEF            (1 << 5)  /* variable name in a variable def */
 #define PCF_VAR_1ST            (1 << 6)  /* 1st variable def in a statement */
 #define PCF_VAR_1ST_DEF        (PCF_VAR_DEF | PCF_VAR_1ST)
@@ -97,7 +97,7 @@ struct parse_frame
 #define PCF_RIGHT_COMMENT      (1 << 12)
 #define PCF_OLD_FCN_PARAMS     (1 << 13)
 #define PCF_WAS_ALIGNED        (1 << 14)
-#define PCF_OPTIONAL           (1 << 15)
+//#define PCF_OPTIONAL           (1 << 15)
 #define PCF_IN_TYPEDEF         (1 << 16)
 #define PCF_IN_CONST_ARGS      (1 << 17)
 #define PCF_LVALUE             (1 << 18) /* left of assignment */

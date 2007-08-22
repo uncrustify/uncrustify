@@ -916,9 +916,10 @@ void space_add_after(chunk_t *pc, int count)
    sp.str         = "                "; // 16 spaces
    sp.len         = count;
    sp.level       = pc->level;
-   sp.brace_level = pc->level;
+   sp.brace_level = pc->brace_level;
    sp.pp_level    = pc->pp_level;
    sp.column      = pc->column + pc->len;
+   sp.orig_line   = pc->orig_line;
 
    chunk_add_after(&sp, pc);
 }

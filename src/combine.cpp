@@ -1838,10 +1838,10 @@ static void mark_function(chunk_t *pc)
    prev = chunk_get_prev_ncnlnp(pc);
    next = chunk_get_next_ncnlnp(pc);
 
-   LOG_FMT(LFCN, "%s: %d] %.*s[%s] - level=%d/%d\n", __func__,
+   LOG_FMT(LFCN, "%s: %d] %.*s[%s] - level=%d/%d, next=%.*s[%s] - level=%d\n",
+           __func__,
            pc->orig_line, pc->len, pc->str,
-           get_token_name(pc->type), pc->level, pc->brace_level);
-   LOG_FMT(LFCN, "%s: next=%.*s[%s] - level=%d\n", __func__,
+           get_token_name(pc->type), pc->level, pc->brace_level,
            next->len, next->str, get_token_name(next->type), next->level);
 
    if (pc->flags & PCF_IN_CONST_ARGS)
@@ -1905,7 +1905,7 @@ static void mark_function(chunk_t *pc)
    /* Assume it is a function call if not already labeled */
    if (pc->type == CT_FUNCTION)
    {
-      pc->type = CT_FUNC_CALL;
+      pc->type = (pc->parent_type == CT_OPERATOR) ? CT_FUNC_DEF : CT_FUNC_CALL;
    }
 
    /* Check for C++ function def */
@@ -1959,11 +1959,14 @@ static void mark_function(chunk_t *pc)
       }
    }
 
+   /* Determine if this is a function call or a function def/proto */
    if ((pc->type == CT_FUNC_CALL) &&
        (pc->level == pc->brace_level) &&
        ((pc->flags & PCF_IN_ARRAY_ASSIGN) == 0))
    {
-      LOG_FMT(LFCN, "Checking func call: prev=%s", (prev == NULL) ? "<null>" : get_token_name(prev->type));
+      bool isa_def  = false;
+      bool hit_star = false;
+      LOG_FMT(LFCN, "  Checking func call: prev=%s", (prev == NULL) ? "<null>" : get_token_name(prev->type));
 
       /**
        * REVISIT:
@@ -1973,6 +1976,13 @@ static void mark_function(chunk_t *pc)
        * qualifier (const) in between.
        * There can be all sorts of template crap and/or '[]' in the type.
        * This hack mostly checks that.
+       *
+       * Examples:
+       * foo->bar(maid);                   -- fcn call
+       * FOO * bar();                      -- fcn def
+       * a = FOO * bar();                  -- fcn call
+       * a.y = foo() * bar();              -- fcn call
+       * static const char * const fizz(); -- fcn def
        */
       while (prev != NULL)
       {
@@ -1983,33 +1993,59 @@ static void mark_function(chunk_t *pc)
             prev = skip_attribute_prev(prev);
             continue;
          }
-         if ((prev->type != CT_TYPE) &&
-              (prev->type != CT_WORD) &&
-              (prev->type != CT_DC_MEMBER) &&
-              (prev->type != CT_OPERATOR) &&
-              (prev->type != CT_TSQUARE) &&
-              (prev->type != CT_ANGLE_CLOSE) &&
-              !chunk_is_addr(prev) &&
-              !chunk_is_star(prev))
+
+         /** Skip the word/type before the '.' or '::' */
+         if ((prev->type == CT_DC_MEMBER) ||
+             (prev->type == CT_MEMBER))
          {
+            prev = chunk_get_prev_ncnl(prev);
+            if ((prev == NULL) ||
+                ((prev->type != CT_WORD) &&
+                 (prev->type != CT_TYPE)))
+            {
+               LOG_FMT(LFCN, " --? Skipped MEMBER and landed on %s\n",
+                       (prev == NULL) ? "<null>" : get_token_name(prev->type));
+               break;
+            }
+            LOG_FMT(LFCN, " <skip %.*s>", prev->len, prev->str);
+            prev = chunk_get_prev_ncnl(prev);
+            continue;
+         }
+
+         /* If we are on a TYPE or WORD, then we must be on a proto or def */
+         if ((prev->type == CT_TYPE) ||
+             (prev->type == CT_WORD))
+         {
+            if (!hit_star)
+            {
+               LOG_FMT(LFCN, " --> For sure a prototype or definition\n");
+               isa_def = true;
+               break;
+            }
+            LOG_FMT(LFCN, " --> maybe a proto/def\n");
+            isa_def = true;
+         }
+
+         if (chunk_is_addr(prev) ||
+             chunk_is_star(prev))
+         {
+            hit_star = true;
+         }
+
+         if ((prev->type != CT_OPERATOR) &&
+             (prev->type != CT_TSQUARE) &&
+             (prev->type != CT_ANGLE_CLOSE) &&
+             (prev->type != CT_TYPE) &&
+             (prev->type != CT_WORD) &&
+             !chunk_is_addr(prev) &&
+             !chunk_is_star(prev))
+         {
+            LOG_FMT(LFCN, " --> Stopping on %.*s [%s]\n",
+                    prev->len, prev->str, get_token_name(prev->type));
             break;
          }
 
-         if (pc->type != CT_FUNC_DEF)
-         {
-            LOG_FMT(LFCN, ", '%.*s' is FCN_DEF due to %.*s[%s]",
-                    pc->len, pc->str,
-                    prev->len, prev->str, get_token_name(prev->type));
-         }
-         else
-         {
-            LOG_FMT(LFCN, ", %.*s[%s]",
-                    prev->len, prev->str, get_token_name(prev->type));
-         }
-
-         pc->type = CT_FUNC_DEF;
-         make_type(prev);
-
+         /* Skip over template and attribute stuff */
          if (prev->type == CT_ANGLE_CLOSE)
          {
             prev = skip_template_prev(prev);
@@ -2020,31 +2056,57 @@ static void mark_function(chunk_t *pc)
             prev = skip_attribute_prev(prev);
          }
          else
-
          {
             prev = chunk_get_prev_ncnlnp(prev);
          }
       }
+
       if (prev == NULL)
       {
          LOG_FMT(LFCN, " -- stopped on NULL\n");
       }
       else
       {
-         LOG_FMT(LFCN, " -- stopped on %.*s[%s]\n",
+         //LOG_FMT(LFCN, " -- stopped on %.*s [%s]\n",
+         //        prev->len, prev->str, get_token_name(prev->type));
+
+         if (isa_def &&
+             (chunk_is_paren_close(prev) ||
+              (prev->type == CT_ASSIGN)))
+         {
+            LOG_FMT(LFCN, " -- overriding DEF due to %.*s [%s]\n",
                  prev->len, prev->str, get_token_name(prev->type));
+            isa_def = false;
+         }
+         if (isa_def)
+         {
+            pc->type = CT_FUNC_DEF;
+            LOG_FMT(LFCN, "%s: '%.*s' is FCN_DEF:", __func__, pc->len, pc->str);
+            for (tmp = prev; tmp != pc; tmp = chunk_get_next_ncnl(tmp))
+            {
+               LOG_FMT(LFCN, ", %.*s[%s]",
+                       tmp->len, tmp->str, get_token_name(tmp->type));
+               make_type(tmp);
+            }
+            LOG_FMT(LFCN, "\n");
+         }
       }
    }
 
    if (pc->type != CT_FUNC_DEF)
    {
-      LOG_FMT(LFCN, "Detected non-def [%s] %.*s on line %d col %d\n",
+      LOG_FMT(LFCN, "  Detected %s '%.*s' on line %d col %d\n",
               get_token_name(pc->type),
               pc->len, pc->str, pc->orig_line, pc->orig_col);
 
       flag_parens(next, PCF_IN_FCN_CALL, CT_FPAREN_OPEN, CT_NONE, false);
       return;
    }
+
+   /* We have a function definition or prototype
+    * Look for a semicolon or a brace open after the close paren to figure
+    * out whether this is a prototype or definition
+    */
 
    flag_parens(next, PCF_IN_FCN_DEF, CT_FPAREN_OPEN, CT_NONE, false);
 
@@ -2084,6 +2146,15 @@ static void mark_function(chunk_t *pc)
       }
    }
 
+   /**
+    * C++ syntax is wacky. We need to check to see if a prototype is really a
+    * variable definition with parameters passed into the constructor.
+    * Unfortunately, the only mostly reliable way to do so is to guess that
+    * it is a constructor variable if inside a function body.
+    * Instead of searching backwards and checking all open braces (the more
+    * correct way t check), we just look at the brace level and whether we
+    * are in a class or namespace.
+    */
    if ((cpd.lang_flags & LANG_CPP) &&
        (pc->type == CT_FUNC_PROTO) &&
        (pc->parent_type != CT_OPERATOR))
