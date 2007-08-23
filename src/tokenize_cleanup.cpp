@@ -388,6 +388,7 @@ static void check_template(chunk_t *start)
             }
          }
          else if ((pc->type != CT_WORD) &&
+                  (pc->type != CT_NUMBER) &&
                   (pc->type != CT_TYPE) &&
                   (pc->type != CT_MEMBER) &&
                   (pc->type != CT_COMMA) &&
