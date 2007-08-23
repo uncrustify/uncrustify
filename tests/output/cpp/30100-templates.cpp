@@ -85,3 +85,27 @@ int main() {
    return 0;
 }
 
+template<typename T, template<typename, unsigned int, unsigned int> class ConcreteStorageClass>
+class RotationMatrix
+   : public StaticBaseMatrix<T, 3, 3, ConcreteStorageClass>
+{
+
+public:
+
+   RotationMatrix()
+      : StaticBaseMatrix<T, 3, 3, ConcreteStorageClass>()
+   {
+      // do some initialization
+   }
+
+   void assign(const OtherClass<T, 3, 3 >& other)
+   {
+      // do something
+   }
+
+};
+
+int main()
+{
+   MyClass<double, 3, 3, MyStorage> foo;
+}
