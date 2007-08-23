@@ -303,6 +303,15 @@ void register_options(void)
    unc_add_option("nl_before_block_comment", UO_nl_before_block_comment, AT_NUM, "The minimum number of newlines before a multi-line comment.\nDoesn't apply if after a brace open or another multi-line comment.");
    unc_add_option("nl_before_c_comment", UO_nl_before_c_comment, AT_NUM, "The minimum number of newlines before a single-line C comment.\nDoesn't apply if after a brace open or other single-line C comments.");
    unc_add_option("nl_before_cpp_comment", UO_nl_before_cpp_comment, AT_NUM, "The minimum number of newlines before a CPP comment.\nDoesn't apply if after a brace open or other CPP comments.");
+
+   unc_add_option("nl_before_access_spec", UO_nl_before_access_spec, AT_NUM,
+                  "The number of newlines before a 'private:', 'public:', 'protected:', 'signals:', or 'slots:' label.\n"
+                  "Will not change the newline count if after a brace open.\n"
+                  "0 = No change.");
+   unc_add_option("nl_after_access_spec", UO_nl_after_access_spec, AT_NUM,
+                  "The number of newlines after a 'private:', 'public:', 'protected:', 'signals:', or 'slots:' label.\n"
+                  "0 = No change.");
+
    unc_add_option("eat_blanks_after_open_brace", UO_eat_blanks_after_open_brace, AT_BOOL, "Whether to remove blank lines after '{'");
    unc_add_option("eat_blanks_before_close_brace", UO_eat_blanks_before_close_brace, AT_BOOL, "Whether to remove blank lines before '}'");
 

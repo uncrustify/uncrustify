@@ -1894,6 +1894,32 @@ void do_blank_lines(void)
          }
       }
 
+      /** Control blanks before an access spec */
+      if ((cpd.settings[UO_nl_before_access_spec].n > 0) &&
+          (cpd.settings[UO_nl_before_access_spec].n != pc->nl_count) &&
+          (next != NULL) &&
+          (next->type == CT_PRIVATE))
+      {
+         /* Don't add blanks after a open brace */
+         if ((prev == NULL) ||
+             ((prev->type != CT_BRACE_OPEN) &&
+              (prev->type != CT_VBRACE_OPEN)))
+         {
+            LOG_FMT(LCMTNL, "%s: NL-BeforePrivate: line %d\n", __func__, next->orig_line);
+            pc->nl_count = cpd.settings[UO_nl_before_access_spec].n;
+         }
+      }
+
+      /** Control blanks after an access spec */
+      if ((cpd.settings[UO_nl_after_access_spec].n > 0) &&
+          (cpd.settings[UO_nl_after_access_spec].n != pc->nl_count) &&
+          (prev != NULL) &&
+          (prev->type == CT_PRIVATE_COLON))
+      {
+         LOG_FMT(LCMTNL, "%s: NL-AfterPrivate: line %d\n", __func__, prev->orig_line);
+         pc->nl_count = cpd.settings[UO_nl_after_access_spec].n;
+      }
+
       /* Add blanks after function bodies */
       if ((prev != NULL) && (prev->type == CT_BRACE_CLOSE) &&
           ((prev->parent_type == CT_FUNC_DEF) ||

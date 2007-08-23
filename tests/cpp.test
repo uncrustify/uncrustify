@@ -70,6 +70,7 @@
 30720 wessex.cfg                       cpp/custom-open-2.cpp
 
 30730 ben.cfg                          cpp/qt-1.cpp
+30731 nl_access_spec.cfg               cpp/qt-1.cpp
 
 30800 star_pos-0.cfg                   cpp/align-star-amp-pos.cpp
 30801 star_pos-1.cfg                   cpp/align-star-amp-pos.cpp
