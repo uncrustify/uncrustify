@@ -457,7 +457,9 @@ void fix_symbols(void)
          }
       }
 
-      if ((pc->type == CT_CLASS) && (pc->level == pc->brace_level))
+      if (((pc->type == CT_CLASS) ||
+           (pc->type == CT_STRUCT)) &&
+          (pc->level == pc->brace_level))
       {
          /* do other languages name the ctor the same as the class? */
          if ((cpd.lang_flags & LANG_CPP) != 0)
@@ -2404,14 +2406,21 @@ static void mark_cpp_constructor(chunk_t *pc)
 }
 
 /**
- * We're on a 'class'.
+ * We're on a 'class' or 'struct'.
  * Scan for CT_FUNCTION with a string that matches pclass->str
  */
-static void mark_class_ctor(chunk_t *pclass)
+static void mark_class_ctor(chunk_t *start)
 {
    chunk_t *next;
+   chunk_t *pclass;
 
-   pclass = chunk_get_next_ncnl(pclass);
+   pclass = chunk_get_next_ncnl(start);
+   if ((pclass == NULL) ||
+       ((pclass->type != CT_TYPE) &&
+        (pclass->type != CT_WORD)))
+   {
+      return;
+   }
 
    chunk_t *pc   = chunk_get_next_ncnl(pclass);
    int     level = pclass->brace_level + 1;
@@ -2420,7 +2429,7 @@ static void mark_class_ctor(chunk_t *pclass)
            __func__, pclass->len, pclass->str, pclass->orig_line,
            pc->len, pc->str);
 
-   pclass->parent_type = CT_CLASS;
+   pclass->parent_type = start->type;
 
    /* Find the open brace, abort on semicolon */
    while ((pc != NULL) && (pc->type != CT_BRACE_OPEN))
@@ -2449,7 +2458,7 @@ static void mark_class_ctor(chunk_t *pclass)
       return;
    }
 
-   set_paren_parent(pc, CT_CLASS);
+   set_paren_parent(pc, start->type);
 
    pc = chunk_get_next_ncnl(pc);
    while (pc != NULL)
