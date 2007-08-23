@@ -30,6 +30,7 @@ Changes in uncrustify-0.37
 -------------------------------------------------------------------------------
  - Fix line splitting WRT the CT_SPACE token
  - Improve function call/prototype/definition detection
+ - Fix some spacing issues
 
 
 Changes in uncrustify-0.37

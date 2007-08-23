@@ -76,4 +76,5 @@
 30802 star_pos-2.cfg                   cpp/align-star-amp-pos.cpp
 
 30810 ben.cfg                          cpp/ptr-star.cpp
+30811 avalon4.cfg                      cpp/misc3.cpp
 

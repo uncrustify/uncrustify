@@ -71,6 +71,7 @@ enum
    LCMTNL    = 55,    /* newlines before comments */
    LTEMPFUNC = 56,    /* Template function detection */
    LDELSEMI  = 57,    /* Removing semicolons */
+   LFPARAM   = 58,    /* Testing for a full parameter */
 };
 
 #endif   /* LOG_LEVELS_H_INCLUDED */

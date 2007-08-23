@@ -569,7 +569,14 @@ void fix_symbols(void)
       /* Change CT_STAR to CT_PTR_TYPE or CT_ARITH or SYM_DEREF */
       if (pc->type == CT_STAR)
       {
-         pc->type = (prev->type == CT_ARITH) ? CT_DEREF : CT_ARITH;
+         if (chunk_is_paren_close(next))
+         {
+            pc->type = CT_PTR_TYPE;
+         }
+         else
+         {
+            pc->type = (prev->type == CT_ARITH) ? CT_DEREF : CT_ARITH;
+         }
       }
 
       if (pc->type == CT_AMP)
@@ -1821,6 +1828,71 @@ static chunk_t *mark_variable_definition(chunk_t *start)
 }
 
 /**
+ * Checks to see if a series of chunks could be a C++ parameter
+ * FOO foo(5, &val);
+ *
+ * WORD means CT_WORD or CT_TYPE
+ *
+ * "WORD WORD"          ==> true
+ * "QUALIFIER ??"       ==> true
+ * "TYPE"               ==> true
+ * "WORD"               ==> true
+ * "WORD.WORD"          ==> true
+ * "WORD::WORD"         ==> true
+ * "WORD * WORD"        ==> true
+ * "NUMBER"             ==> false
+ * "STRING"             ==> false
+ * "OPEN PAREN"         ==> false
+ *
+ * @param start the first chunk to look at
+ * @param end   the chunk after the last one to look at
+ */
+static bool can_be_full_param(chunk_t *start, chunk_t *end)
+{
+   chunk_t *pc;
+   int     word_cnt = 0;
+
+   LOG_FMT(LFPARAM, "%s:", __func__);
+
+   for (pc = start; pc != end; pc = chunk_get_next_ncnl(pc))
+   {
+      LOG_FMT(LFPARAM, " [%.*s]", pc->len, pc->str);
+
+      if ((pc->type == CT_QUALIFIER) ||
+          (pc->type == CT_STRUCT) ||
+          (pc->type == CT_ENUM) ||
+          (pc->type == CT_UNION))
+      {
+         LOG_FMT(LFPARAM, " <== %s!\n", get_token_name(pc->type));
+         return(true);
+      }
+
+      if ((pc->type == CT_WORD) ||
+          (pc->type == CT_TYPE))
+      {
+         word_cnt++;
+      }
+      else if ((pc->type == CT_MEMBER) ||
+               (pc->type == CT_DC_MEMBER))
+      {
+         word_cnt--;
+      }
+      else if ((pc != start) && (chunk_is_star(pc) ||
+                                 chunk_is_addr(pc)))
+      {
+         /* chunk is OK */
+      }
+      else
+      {
+         LOG_FMT(LFPARAM, " <== no way!\n");
+         return(false);
+      }
+   }
+   LOG_FMT(LFPARAM, " <== %s!\n", (word_cnt >= 2) ? "Yup" : "Unlikely");
+   return(word_cnt >= 2);
+}
+
+/**
  * We are on a function word. we need to:
  *  - find out if this is a call or prototype or implementation
  *  - mark return type
@@ -1833,6 +1905,7 @@ static void mark_function(chunk_t *pc)
    chunk_t *next;
    chunk_t *tmp;
    chunk_t *semi = NULL;
+   chunk_t *paren_open;
    chunk_t *paren_close;
 
    prev = chunk_get_prev_ncnlnp(pc);
@@ -1855,11 +1928,12 @@ static void mark_function(chunk_t *pc)
    next = skip_template_next(next);
    next = skip_attribute_next(next);
 
-   /* Find the close paren */
-   paren_close = chunk_get_next_str(pc, ")", 1, pc->level);
+   /* Find the open and close paren */
+   paren_open  = chunk_get_next_str(pc, "(", 1, pc->level);
+   paren_close = chunk_get_next_str(paren_open, ")", 1, pc->level);
 
    /**
-    * This part detects either chained function calls or a function definition.
+    * This part detects either chained function calls or a function ptr definition.
     * MYTYPE (*func)(void);
     * mWriter( "class Clst_"c )( somestr.getText() )( " : Cluster {"c ).newline;
     *
@@ -1979,7 +2053,9 @@ static void mark_function(chunk_t *pc)
        *
        * Examples:
        * foo->bar(maid);                   -- fcn call
-       * FOO * bar();                      -- fcn def
+       * FOO * bar();                      -- fcn proto or class variable
+       * FOO foo();                        -- fcn proto or class variable
+       * FOO foo(1);                       -- class variable
        * a = FOO * bar();                  -- fcn call
        * a.y = foo() * bar();              -- fcn call
        * static const char * const fizz(); -- fcn def
@@ -2075,7 +2151,7 @@ static void mark_function(chunk_t *pc)
               (prev->type == CT_ASSIGN)))
          {
             LOG_FMT(LFCN, " -- overriding DEF due to %.*s [%s]\n",
-                 prev->len, prev->str, get_token_name(prev->type));
+                    prev->len, prev->str, get_token_name(prev->type));
             isa_def = false;
          }
          if (isa_def)
@@ -2159,16 +2235,60 @@ static void mark_function(chunk_t *pc)
        (pc->type == CT_FUNC_PROTO) &&
        (pc->parent_type != CT_OPERATOR))
    {
-      prev = chunk_get_prev_ncnl(pc);
-      if (!chunk_is_str(prev, "*", 1) && !chunk_is_str(prev, "&", 1))
-      {
-         int lvl = 1;
-         lvl += (pc->flags & PCF_IN_CLASS) ? 1 : 0;
-         lvl += (pc->flags & PCF_IN_NAMESPACE) ? 1 : 0;
+      LOG_FMT(LFPARAM, "%s :: checking '%.*s' for contructor variable %s %s\n",
+              __func__, pc->len, pc->str,
+              get_token_name(paren_open->type),
+              get_token_name(paren_close->type));
 
-         if ((pc->level == pc->brace_level) && (pc->level == lvl))
+      /* Scan the parameters looking for:
+       *  - constant strings
+       *  - numbers
+       *  - non-type fields
+       *  - function calls
+       */
+      chunk_t *ref = chunk_get_next_ncnl(paren_open);
+      chunk_t *tmp = ref;
+      chunk_t *tmp2;
+      bool    is_param = true;
+      while (tmp != paren_close)
+      {
+         tmp2 = chunk_get_next_ncnl(tmp);
+         if (tmp->type == CT_COMMA)
          {
-            pc->type = CT_FUNC_CTOR_VAR;
+            if (!can_be_full_param(ref, tmp))
+            {
+               is_param = false;
+               break;
+            }
+            ref = tmp2;
+         }
+         tmp = tmp2;
+      }
+      if (is_param && (ref != tmp))
+      {
+         if (!can_be_full_param(ref, tmp))
+         {
+            is_param = false;
+         }
+      }
+      if (!is_param)
+      {
+         pc->type = CT_FUNC_CTOR_VAR;
+      }
+      else
+      {
+         /* Do a check to see if the level is right */
+         prev = chunk_get_prev_ncnl(pc);
+         if (!chunk_is_str(prev, "*", 1) && !chunk_is_str(prev, "&", 1))
+         {
+            int lvl = 1;
+            lvl += (pc->flags & PCF_IN_CLASS) ? 1 : 0;
+            lvl += (pc->flags & PCF_IN_NAMESPACE) ? 1 : 0;
+
+            if ((pc->level == pc->brace_level) && (pc->level == lvl))
+            {
+               pc->type = CT_FUNC_CTOR_VAR;
+            }
          }
       }
    }
