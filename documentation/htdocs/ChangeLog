@@ -34,6 +34,7 @@ Changes in uncrustify-0.38
  - More template improvements
  - Allow for a C++ struct constructor
  - Add nl_before_access_spec and nl_after_access_spec
+ - Add cmt_width, cmt_c_group, cmt_c_nl_start, cmt_c_nl_end
 
 
 Changes in uncrustify-0.37

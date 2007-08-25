@@ -223,7 +223,6 @@ void register_options(void)
    unc_add_option("indent_square_nl", UO_indent_square_nl, AT_BOOL, "If an open square is followed by a newline, indent the next line so that it lines up after the open square (not recommended)");
 
    unc_begin_group(UG_newline, "Newline adding and removing options");
-   unc_add_option("code_width", UO_code_width, AT_NUM, "Try to limit code width to N number of columns", "", 16, 256);
    unc_add_option("nl_collapse_empty_body", UO_nl_collapse_empty_body, AT_BOOL, "Whether to collapse empty blocks between '{' and '}'");
    unc_add_option("nl_assign_leave_one_liners", UO_nl_assign_leave_one_liners, AT_BOOL, "Don't touch one-line braced assignments - 'foo_t f = { 1, 2 };'");
    unc_add_option("nl_class_leave_one_liners", UO_nl_class_leave_one_liners, AT_BOOL, "Don't touch one-line function bodies inside a class xx { } body");
@@ -322,6 +321,7 @@ void register_options(void)
    unc_add_option("pos_class_colon", UO_pos_class_colon, AT_POS, "The position of colons between constructor and member initialization");
 
    unc_begin_group(UG_linesplit, "Line Splitting options");
+   unc_add_option("code_width", UO_code_width, AT_NUM, "Try to limit code width to N number of columns", "", 16, 256);
    unc_add_option("ls_for_split_full", UO_ls_for_split_full, AT_BOOL, "Whether to fully split long 'for' statements at semi-colons");
    unc_add_option("ls_func_split_full", UO_ls_func_split_full, AT_BOOL, "Whether to fully split long function protos/calls at commas");
 
@@ -368,6 +368,10 @@ void register_options(void)
    unc_add_option("align_pp_define_span", UO_align_pp_define_span, AT_NUM, "The span for aligning on '#define' bodies (0=don't align)", "", 0, 5000);
 
    unc_begin_group(UG_comment, "Comment modifications");
+   unc_add_option("cmt_width", UO_cmt_width, AT_NUM, "Try to wrap comments at cmt_witdth columns", "", 16, 256);
+   unc_add_option("cmt_c_group", UO_cmt_c_group, AT_BOOL, "Whether to group c-comments that look like they are in a block");
+   unc_add_option("cmt_c_nl_start", UO_cmt_c_nl_start, AT_BOOL, "Whether to put an empty '/*' on the first line of the combined c-comment");
+   unc_add_option("cmt_c_nl_end", UO_cmt_c_nl_end, AT_BOOL, "Whether to put a newline before the closing '*/' of the combined c-comment");
    unc_add_option("cmt_cpp_group", UO_cmt_cpp_group, AT_BOOL, "Whether to group cpp-comments that look like they are in a block");
    unc_add_option("cmt_cpp_nl_start", UO_cmt_cpp_nl_start, AT_BOOL, "Whether to put an empty '/*' on the first line of the combined cpp-comment");
    unc_add_option("cmt_cpp_nl_end", UO_cmt_cpp_nl_end, AT_BOOL, "Whether to put a newline before the closing '*/' of the combined cpp-comment");

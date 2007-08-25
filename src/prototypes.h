@@ -31,7 +31,6 @@ const char *get_file_extension(int& idx);
 void output_text(FILE *pfile);
 void output_parsed(FILE *pfile);
 void output_comment_multi(chunk_t *pc);
-chunk_t *output_comment_cpp(chunk_t *pc);
 void output_options(FILE *pfile);
 void output_to_column(int column, bool allow_tabs);
 void add_text(const char *text);

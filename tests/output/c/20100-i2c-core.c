@@ -1199,7 +1199,7 @@ static s32 i2c_smbus_xfer_emulated(struct i2c_adapter * adapter, u16 addr,
       break;
 
     case I2C_SMBUS_PROC_CALL:
-      num = 2;/* Special case */
+      num = 2; /* Special case */
       read_write = I2C_SMBUS_READ;
       msg[0].len = 3;
       msg[1].len = 2;
