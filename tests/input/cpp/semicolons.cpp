@@ -52,6 +52,9 @@ struct narg {
 class CFooRun {
    long stick();
    int bar() { m_ick++; };
+
+   CFooRun();;
+   ~CFooRun() {};
 };
 
 void f()

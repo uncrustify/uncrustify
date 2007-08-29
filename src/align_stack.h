@@ -38,10 +38,10 @@ public:
 
    AlignStack()
    {
-   };
+   }
    ~AlignStack()
    {
-   };
+   }
 
    void Start(int span, int threshold = 0);
    void Add(chunk_t *pc, int seqnum = 0);
