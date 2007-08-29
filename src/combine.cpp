@@ -1894,6 +1894,11 @@ static bool can_be_full_param(chunk_t *start, chunk_t *end)
          LOG_FMT(LFPARAM, " <== template\n");
          return(true);
       }
+      else if (pc->type == CT_ELLIPSIS)
+      {
+         LOG_FMT(LFPARAM, " <== elipses\n");
+         return(true);
+      }
       else
       {
          LOG_FMT(LFPARAM, " <== [%s] no way!\n", get_token_name(pc->type));
