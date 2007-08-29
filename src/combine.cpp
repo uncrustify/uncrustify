@@ -1884,13 +1884,24 @@ static bool can_be_full_param(chunk_t *start, chunk_t *end)
       {
          /* chunk is OK */
       }
+      else if (pc->type == CT_ASSIGN)
+      {
+         /* chunk is OK (default values) */
+         break;
+      }
+      else if (pc->type == CT_ANGLE_OPEN)
+      {
+         LOG_FMT(LFPARAM, " <== template\n");
+         return(true);
+      }
       else
       {
-         LOG_FMT(LFPARAM, " <== no way!\n");
+         LOG_FMT(LFPARAM, " <== [%s] no way!\n", get_token_name(pc->type));
          return(false);
       }
    }
-   LOG_FMT(LFPARAM, " <== %s!\n", (word_cnt >= 2) ? "Yup" : "Unlikely");
+   LOG_FMT(LFPARAM, " <== [%s] %s!\n",
+           get_token_name(pc->type), (word_cnt >= 2) ? "Yup" : "Unlikely");
    return(word_cnt >= 2);
 }
 
