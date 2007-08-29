@@ -2081,6 +2081,12 @@ static void mark_function(chunk_t *pc)
        */
       while (prev != NULL)
       {
+         if (prev->flags & PCF_IN_PREPROC)
+         {
+            prev = chunk_get_prev_ncnlnp(prev);
+            continue;
+         }
+
          /* Some code slips an attribute between the type and function */
          if ((prev->type == CT_FPAREN_CLOSE) &&
              (prev->parent_type == CT_ATTRIBUTE))
@@ -2093,7 +2099,7 @@ static void mark_function(chunk_t *pc)
          if ((prev->type == CT_DC_MEMBER) ||
              (prev->type == CT_MEMBER))
          {
-            prev = chunk_get_prev_ncnl(prev);
+            prev = chunk_get_prev_ncnlnp(prev);
             if ((prev == NULL) ||
                 ((prev->type != CT_WORD) &&
                  (prev->type != CT_TYPE)))
@@ -2103,7 +2109,7 @@ static void mark_function(chunk_t *pc)
                break;
             }
             LOG_FMT(LFCN, " <skip %.*s>", prev->len, prev->str);
-            prev = chunk_get_prev_ncnl(prev);
+            prev = chunk_get_prev_ncnlnp(prev);
             continue;
          }
 
