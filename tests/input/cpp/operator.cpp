@@ -1,4 +1,10 @@
 
+struct bar;
+struct foo
+{
+operator bar*();
+};
+
 class Foo {
    Foo operator+ (const Foo& rhs) const;
 

@@ -192,6 +192,14 @@ void tokenize_cleanup(void)
          {
             next->type        = CT_FUNCTION;
             next->parent_type = CT_OPERATOR;
+
+            /* If the next chunk isn't a '(' , then set the parent */
+            tmp = chunk_get_next_ncnl(next);
+            if (tmp->type != CT_PAREN_OPEN)
+            {
+               tmp->parent_type = CT_OPERATOR;
+               make_type(tmp);
+            }
          }
          if (chunk_is_addr(prev))
          {

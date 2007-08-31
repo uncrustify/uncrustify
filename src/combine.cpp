@@ -400,7 +400,8 @@ void fix_symbols(void)
          {
             tmp = set_paren_parent(tmp, pc->type);
          }
-         else if (tmp->type == CT_TSQUARE)
+         else if ((tmp->type == CT_TSQUARE) ||
+                  (tmp->parent_type == CT_OPERATOR))
          {
             tmp = chunk_get_next_ncnl(tmp);
          }
@@ -1612,6 +1613,11 @@ static void fix_fcn_def_params(chunk_t *start)
    LOG_FMT(LFCNP, "%s: %.*s [%s] on line %d, level %d\n",
            __func__, start->len, start->str, get_token_name(start->type), start->orig_line, start->level);
 
+   if (chunk_is_star(start) || chunk_is_addr(start))
+   {
+      start = chunk_get_next_ncnl(start);
+   }
+
    assert((start->len == 1) && (*start->str == '('));
 
    ChunkStack cs;
@@ -1928,6 +1934,11 @@ static void mark_function(chunk_t *pc)
 
    prev = chunk_get_prev_ncnlnp(pc);
    next = chunk_get_next_ncnlnp(pc);
+
+   if (chunk_is_star(next) || chunk_is_addr(next))
+   {
+      next = chunk_get_next_ncnlnp(next);
+   }
 
    LOG_FMT(LFCN, "%s: %d] %.*s[%s] - level=%d/%d, next=%.*s[%s] - level=%d\n",
            __func__,
