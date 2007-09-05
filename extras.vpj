@@ -126,6 +126,7 @@
 		<F N="Makefile.am"/>
 		<F N="NEWS"/>
 		<F N="README"/>
+		<F N="release-steps.txt"/>
 		<F N="todo.txt"/>
 	</Files>
 </Project>
