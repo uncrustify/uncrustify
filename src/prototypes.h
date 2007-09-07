@@ -137,6 +137,7 @@ void newlines_eat_start_end(void);
 void newlines_chunk_pos(c_token_t chunk_type, tokenpos_e mode);
 void newlines_class_colon_pos(void);
 void newlines_cleanup_dup(void);
+void newline_after_multiline_comment(void);
 void do_blank_lines(void);
 chunk_t *newline_add_before(chunk_t *pc);
 chunk_t *newline_add_after(chunk_t *pc);

@@ -738,6 +738,10 @@ static void uncrustify_file(const char *data, int data_len, FILE *pfout,
     */
    do_blank_lines();
    newlines_cleanup_braces();
+   if (cpd.settings[UO_nl_after_multiline_comment].b)
+   {
+      newline_after_multiline_comment();
+   }
    newlines_insert_blank_lines();
    if (cpd.settings[UO_nl_squeeze_ifdef].b)
    {

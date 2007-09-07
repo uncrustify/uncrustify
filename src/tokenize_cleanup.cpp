@@ -109,7 +109,7 @@ void tokenize_cleanup(void)
       /**
        * Change angle open/close to CT_COMPARE, if not a template thingy
        */
-      if ((pc->type == CT_ANGLE_OPEN) && (pc->parent_type == CT_NONE))
+      if ((pc->type == CT_ANGLE_OPEN) && (pc->parent_type != CT_TYPE_CAST))
       {
          check_template(pc);
       }
@@ -161,27 +161,27 @@ void tokenize_cleanup(void)
          pc->type = CT_WORD;
       }
 
-      if ((pc->type == CT_ENUM) ||
-          (pc->type == CT_STRUCT) ||
-          (pc->type == CT_UNION))
-      {
-         if (get_char_table(*next->str) & CT_KW1)
-         {
-            next->type = CT_TYPE;
-         }
-      }
+      /* REVISIT: This duplicates above logic */
+      // if ((pc->type == CT_ENUM) ||
+      //     (pc->type == CT_STRUCT) ||
+      //     (pc->type == CT_UNION))
+      // {
+      //    if (get_char_table(*next->str) & CT_KW1)
+      //    {
+      //       next->type = CT_TYPE;
+      //    }
+      // }
 
-      /* Change item after operator (>=, ==, etc) to a FUNC_OPERATOR */
+      /* Change item after operator (>=, ==, etc) to a CT_FUNCTION */
       if (pc->type == CT_OPERATOR)
       {
-         /* Handle special case of [] and () operators */
-         if ((next->type == CT_PAREN_OPEN) ||
-             (next->type == CT_SQUARE_OPEN))
+         /* Handle special case of () operator -- [] already handled */
+         if (next->type == CT_PAREN_OPEN)
          {
             tmp = chunk_get_next(next);
-            if ((tmp != NULL) && (tmp->type == (next->type + 1)))
+            if ((tmp != NULL) && (tmp->type == CT_PAREN_CLOSE))
             {
-               next->str         = (next->type == CT_PAREN_OPEN) ? "()" : "[]";
+               next->str         = "()";
                next->len         = 2;
                next->type        = CT_FUNCTION;
                next->parent_type = CT_OPERATOR;
@@ -191,25 +191,29 @@ void tokenize_cleanup(void)
          }
          else
          {
-            /* Mark chunks between 'operator' and '('. The last 'type' present
-             * is the function name. If not present, then the item after the
+            /* Mark chunks between 'operator' and '('.
+             * If 'next' is a WORD, then the last 'type' present
+             * is the function name. Otherwise, the item after the
              * 'operator' is the function name.
              */
             tmp2 = next;
-            tmp  = chunk_get_next_ncnl(next);
-            while ((tmp != NULL) && (tmp->type != CT_PAREN_OPEN))
+            if ((next->flags & PCF_PUNCTUATOR) == 0)
             {
-               tmp->parent_type = CT_OPERATOR;
-               make_type(tmp);
-               if (tmp->type == CT_TYPE)
+               tmp  = chunk_get_next_ncnl(next);
+               while ((tmp != NULL) && (tmp->type != CT_PAREN_OPEN))
                {
-                  tmp2 = tmp;
+                  tmp->parent_type = CT_OPERATOR;
+                  make_type(tmp);
+                  if (tmp->type == CT_TYPE)
+                  {
+                     tmp2 = tmp;
+                  }
+                  tmp = chunk_get_next_ncnl(tmp);
                }
-               tmp = chunk_get_next_ncnl(tmp);
-            }
-            if (tmp2->type != CT_TYPE)
-            {
-               tmp2 = next;
+               if (tmp2->type != CT_TYPE)
+               {
+                  tmp2 = next;
+               }
             }
             tmp2->type        = CT_FUNCTION;
             tmp2->parent_type = CT_OPERATOR;
@@ -358,7 +362,7 @@ static void check_template(chunk_t *start)
    else
    {
       /* A template requires a word/type right before the open angle */
-      if ((prev->type != CT_WORD) && (prev->type != CT_TYPE))
+      if ((prev->type != CT_WORD) && (prev->type != CT_TYPE) && (prev->parent_type != CT_OPERATOR))
       {
          LOG_FMT(LTEMPL, " - after %s + ( - Not a template\n", get_token_name(prev->type));
          start->type = CT_COMPARE;
@@ -431,12 +435,14 @@ static void check_template(chunk_t *start)
       {
          LOG_FMT(LTEMPL, " - Template Detected\n");
 
+         start->parent_type = CT_TEMPLATE;
          for (pc = start; pc != end; pc = chunk_get_next_ncnl(pc))
          {
-            pc->parent_type = CT_TEMPLATE;
+            pc->flags |= PCF_IN_TEMPLATE;
             make_type(pc);
          }
          end->parent_type = CT_TEMPLATE;
+         end->flags      |= PCF_IN_TEMPLATE;
          return;
       }
    }

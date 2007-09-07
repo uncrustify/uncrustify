@@ -611,7 +611,7 @@ static bool parse_next(chunk_t *pc)
    pc->len       = 0;
    pc->type      = CT_NONE;
    pc->nl_count  = 0;
-
+   pc->flags     = 0;
 
    /**
     *  Parse whitespace
@@ -764,6 +764,7 @@ static bool parse_next(chunk_t *pc)
       pc->type    = punc->type;
       pc->len     = strlen(punc->tag);
       cpd.column += pc->len;
+      pc->flags  |= PCF_PUNCTUATOR;
       return(true);
    }
 
@@ -861,7 +862,7 @@ void tokenize(const char *data, int data_len)
       }
       if (rprev != NULL)
       {
-         pc->flags = rprev->flags & PCF_COPY_FLAGS;
+         pc->flags |= rprev->flags & PCF_COPY_FLAGS;
 
          /* a newline can't be in a preprocessor */
          if (pc->type == CT_NEWLINE)

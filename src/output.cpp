@@ -122,10 +122,10 @@ void output_parsed(FILE *pfile)
    output_types(pfile);
 
    fprintf(pfile, "-=====-\n");
-   fprintf(pfile, "Line      Tag          Parent     Columns  Br/Lvl/pp Flg Nl  Text");
+   fprintf(pfile, "Line      Tag          Parent     Columns  Br/Lvl/pp Flag Nl  Text");
    for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next(pc))
    {
-      fprintf(pfile, "\n%3d> %13.13s[%13.13s][%2d/%2d/%2d][%d/%d/%d][%6x][%d-%d]",
+      fprintf(pfile, "\n%3d> %13.13s[%13.13s][%2d/%2d/%2d][%d/%d/%d][%8x][%d-%d]",
               pc->orig_line, get_token_name(pc->type),
               get_token_name(pc->parent_type),
               pc->column, pc->orig_col, pc->orig_col_end,
@@ -274,6 +274,17 @@ void output_text(FILE *pfile)
          }
          else
          {
+            /**
+             * Reformatting multi-line comments can screw up the column.
+             * Make sure we don't mess up the spacing on this line.
+             * This has to be done here because comments are not formatted
+             * until the output phase.
+             */
+            if (pc->column < cpd.column)
+            {
+               reindent_line(pc, cpd.column);
+            }
+
             /* not the first item on a line */
             if (cpd.settings[UO_align_keep_tabs].b)
             {

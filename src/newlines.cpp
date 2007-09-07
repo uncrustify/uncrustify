@@ -1490,6 +1490,31 @@ void newlines_cleanup_braces(void)
    }
 }
 
+
+void newline_after_multiline_comment(void)
+{
+   chunk_t *pc;
+   chunk_t *tmp;
+
+   for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next(pc))
+   {
+      if (pc->type != CT_COMMENT_MULTI)
+      {
+         continue;
+      }
+
+      tmp = pc;
+      while (((tmp = chunk_get_next(tmp)) != NULL) && !chunk_is_newline(tmp))
+      {
+         if (!chunk_is_comment(tmp))
+         {
+            newline_add_before(tmp);
+            break;
+         }
+      }
+   }
+}
+
 /**
  * Handle insertion/removal of blank lines before if/for/while/do
  */

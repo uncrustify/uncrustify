@@ -97,7 +97,7 @@ struct parse_frame
 #define PCF_RIGHT_COMMENT      (1 << 12)
 #define PCF_OLD_FCN_PARAMS     (1 << 13)
 #define PCF_WAS_ALIGNED        (1 << 14)
-//#define PCF_OPTIONAL           (1 << 15)
+#define PCF_IN_TEMPLATE        (1 << 15)
 #define PCF_IN_TYPEDEF         (1 << 16)
 #define PCF_IN_CONST_ARGS      (1 << 17)
 #define PCF_LVALUE             (1 << 18) /* left of assignment */
@@ -109,12 +109,13 @@ struct parse_frame
 #define PCF_ONE_CLASS          (PCF_ONE_LINER | PCF_IN_CLASS)
 #define PCF_EMPTY_BODY         (1 << 24)
 #define PCF_ANCHOR             (1 << 26)  /* aligning anchor */
+#define PCF_PUNCTUATOR         (1 << 27)
 
 /* flags that get copied when a new chunk is inserted */
 #define PCF_COPY_FLAGS         (PCF_IN_PREPROC | PCF_IN_SPAREN | PCF_IN_ENUM |          \
                                 PCF_IN_FCN_DEF | PCF_IN_FCN_CALL | PCF_IN_TYPEDEF |     \
                                 PCF_IN_ARRAY_ASSIGN | PCF_IN_CLASS | PCF_IN_NAMESPACE | \
-                                PCF_IN_CLASS | PCF_IN_FOR)
+                                PCF_IN_CLASS | PCF_IN_FOR | PCF_IN_TEMPLATE)
 
 #ifdef DEFINE_PCF_NAMES
 static const char *pcf_names[] =
@@ -134,7 +135,7 @@ static const char *pcf_names[] =
    "RIGHT_COMMENT",
    "OLD_FCN_PARAMS",
    "WAS_ALIGNED",
-   "OPTIONAL",
+   "IN_TEMPLATE",
    "IN_TYPEDEF",
    "IN_CONST_ARGS",
    "LVALUE",
@@ -145,6 +146,7 @@ static const char *pcf_names[] =
    "ONE_LINER",
    "EMPTY_BODY",
    "ANCHOR",
+   "PCF_PUNCTUATOR",
 };
 #endif
 

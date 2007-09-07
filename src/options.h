@@ -360,6 +360,7 @@ enum uncrustify_options
    UO_nl_before_block_comment,       // before a block comment (stand-alone comment-multi), except after brace open
    UO_nl_before_cpp_comment,
    UO_nl_before_c_comment,
+   UO_nl_after_multiline_comment,    // NL after multiline comment
    UO_nl_after_func_body,            // after the closing brace of a function body
    UO_nl_after_func_body_one_liner,  // after the closing brace of a single line function body
    UO_nl_after_func_proto,           // after each prototype
