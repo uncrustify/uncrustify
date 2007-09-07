@@ -31,8 +31,13 @@ class Example
 {
    char m_array[256];
 
+   operator Foo::Bar();
+   operator Foo::Bar*();
+   operator Foo::Bar&();
+
    int operator()(int index)
    {
+      i = ~ ~3;
       return index + 1;
    }
 

@@ -26,6 +26,12 @@ Plans for the next release
 ===============================================================================
 
 
+Changes in uncrustify-0.39
+-------------------------------------------------------------------------------
+ - Improve conversion operators
+ - Prevent undesired chunk combining ("~ ~" vs "~~" in D)
+
+
 Changes in uncrustify-0.38
 -------------------------------------------------------------------------------
  - Fix line splitting WRT the CT_SPACE token

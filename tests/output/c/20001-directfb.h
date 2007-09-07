@@ -299,11 +299,9 @@ extern int select(int __nfds, fd_set *__restrict __readfds,
 __extension__
 extern __inline unsigned int gnu_dev_major(unsigned long long int __dev)
 __attribute__((__nothrow__));
-
 __extension__
 extern __inline unsigned int gnu_dev_minor(unsigned long long int __dev)
 __attribute__((__nothrow__));
-
 __extension__
 extern __inline unsigned long long int gnu_dev_makedev(unsigned int __major,
                                                        unsigned int __minor)
