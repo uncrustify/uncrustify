@@ -30,6 +30,7 @@ Changes in uncrustify-0.39
 -------------------------------------------------------------------------------
  - Improve conversion operators
  - Prevent undesired chunk combining ("~ ~" vs "~~" in D)
+ - Add nl_after_multiline_comment
 
 
 Changes in uncrustify-0.38
