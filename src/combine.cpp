@@ -1613,7 +1613,7 @@ static void fix_fcn_def_params(chunk_t *start)
    LOG_FMT(LFCNP, "%s: %.*s [%s] on line %d, level %d\n",
            __func__, start->len, start->str, get_token_name(start->type), start->orig_line, start->level);
 
-   if (chunk_is_star(start) || chunk_is_addr(start))
+   while ((start != NULL) && !chunk_is_paren_open(start))
    {
       start = chunk_get_next_ncnl(start);
    }
@@ -2220,10 +2220,9 @@ static void mark_function(chunk_t *pc)
     * out whether this is a prototype or definition
     */
 
-   flag_parens(next, PCF_IN_FCN_DEF, CT_FPAREN_OPEN, CT_NONE, false);
+   flag_parens(paren_open, PCF_IN_FCN_DEF, CT_FPAREN_OPEN, pc->parent_type, false);
 
    /* See if this is a prototype or implementation */
-   paren_close = chunk_get_next_type(pc, CT_FPAREN_CLOSE, pc->level);
 
    /* Scan tokens until we hit a brace open (def) or semicolon (proto) */
    tmp = paren_close;
@@ -2346,7 +2345,6 @@ static void mark_function(chunk_t *pc)
 
    if (next->type == CT_TSQUARE)
    {
-      next->parent_type = CT_OPERATOR;
       next = chunk_get_next_ncnl(next);
    }
 
@@ -2357,14 +2355,18 @@ static void mark_function(chunk_t *pc)
    tmp = pc;
    while ((tmp = chunk_get_prev_ncnl(tmp)) != NULL)
    {
-      if (!chunk_is_type(tmp))
+      if (!chunk_is_type(tmp) &&
+          (tmp->type != CT_OPERATOR) &&
+          (tmp->type != CT_WORD) &&
+          (tmp->type != CT_ADDR))
       {
          break;
       }
       tmp->parent_type = pc->type;
+      make_type(tmp);
    }
 
-   /* Find the brace pair */
+   /* Find the brace pair and set the parent */
    if (pc->type == CT_FUNC_DEF)
    {
       bool on_first = true;

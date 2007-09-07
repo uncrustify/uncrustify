@@ -27,6 +27,7 @@ void tokenize_cleanup(void)
    chunk_t *prev = NULL;
    chunk_t *next;
    chunk_t *tmp;
+   chunk_t *tmp2;
    bool    in_type_cast = false;
 
    pc   = chunk_get_head();
@@ -190,16 +191,28 @@ void tokenize_cleanup(void)
          }
          else
          {
-            next->type        = CT_FUNCTION;
-            next->parent_type = CT_OPERATOR;
-
-            /* If the next chunk isn't a '(' , then set the parent */
-            tmp = chunk_get_next_ncnl(next);
-            if (tmp->type != CT_PAREN_OPEN)
+            /* Mark chunks between 'operator' and '('. The last 'type' present
+             * is the function name. If not present, then the item after the
+             * 'operator' is the function name.
+             */
+            tmp2 = next;
+            tmp  = chunk_get_next_ncnl(next);
+            while ((tmp != NULL) && (tmp->type != CT_PAREN_OPEN))
             {
                tmp->parent_type = CT_OPERATOR;
                make_type(tmp);
+               if (tmp->type == CT_TYPE)
+               {
+                  tmp2 = tmp;
+               }
+               tmp = chunk_get_next_ncnl(tmp);
             }
+            if (tmp2->type != CT_TYPE)
+            {
+               tmp2 = next;
+            }
+            tmp2->type        = CT_FUNCTION;
+            tmp2->parent_type = CT_OPERATOR;
          }
          if (chunk_is_addr(prev))
          {
