@@ -106,3 +106,11 @@ int main()
 {
    MyClass < double, 3, 3, MyStorage > foo;
 }
+
+template < typename CharT, int N, typename Traits >
+inline std::basic_ostream < CharT,Traits >& FWStreamOut(std::basic_ostream < CharT,Traits >& os,
+                                                        const W::S < CharT,N,Traits >& s)
+{
+   return operator << < CharT, N, Traits, char, std::char_traits < char > > ( os, s );
+}
+

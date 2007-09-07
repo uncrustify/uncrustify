@@ -28,3 +28,20 @@ int foo(int bar)
  * and another
  */
 
+void foo()
+{
+    if( bar )
+    {
+        foo();
+    }
+    /*else if( bar2 )
+     * {
+     * foo2();
+     * }
+     */
+    else if( bar3 )
+    {
+        foo3();
+    }
+}
+

@@ -22,3 +22,19 @@ int foo(int bar)
 /* col1 comment in level 0
  * and another */
 
+void foo()
+{
+    if( bar )
+    {
+        foo();
+    }
+    /*else if( bar2 )
+     * {
+     * foo2();
+     * }
+     */else if(bar3)
+    {
+        foo3();
+    }
+}
+
