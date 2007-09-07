@@ -81,11 +81,11 @@ struct parse_frame
    bool                     maybe_cast;
 };
 
-#define PCF_STMT_START         (1 << 0)  /* marks the start of a statment */
-#define PCF_EXPR_START         (1 << 1)
-#define PCF_IN_PREPROC         (1 << 2)  /* in a preprocessor */
-#define PCF_DONT_INDENT        (1 << 3)  /* already aligned! */
-//#define PCF_MFC_PAREN          (1 << 4)  /* macro function close paren */
+#define PCF_FORCE_SPACE        (1 << 0)  /* must have a space after this token */
+#define PCF_STMT_START         (1 << 1)  /* marks the start of a statment */
+#define PCF_EXPR_START         (1 << 2)
+#define PCF_IN_PREPROC         (1 << 3)  /* in a preprocessor */
+#define PCF_DONT_INDENT        (1 << 4)  /* already aligned! */
 #define PCF_VAR_DEF            (1 << 5)  /* variable name in a variable def */
 #define PCF_VAR_1ST            (1 << 6)  /* 1st variable def in a statement */
 #define PCF_VAR_1ST_DEF        (PCF_VAR_DEF | PCF_VAR_1ST)
@@ -119,11 +119,11 @@ struct parse_frame
 #ifdef DEFINE_PCF_NAMES
 static const char *pcf_names[] =
 {
+   "FORCE_SPACE",
    "STMT_START",
    "EXPR_START",
    "IN_PREPROC",
    "DONT_INDENT",
-   "MFC_PAREN",
    "VAR_DEF",
    "VAR_1ST",
    "VAR_INLINE",

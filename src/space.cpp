@@ -261,13 +261,6 @@ argval_t do_space(chunk_t *first, chunk_t *second)
       return(cpd.settings[UO_sp_before_squares].a);
    }
 
-   /* spacing around template > > stuff */
-   if ((first->type == CT_ANGLE_CLOSE) &&
-       (second->type == CT_ANGLE_CLOSE))
-   {
-      return(AV_FORCE);
-   }
-
    /* spacing around template < > stuff */
    if ((first->type == CT_ANGLE_OPEN) ||
        (second->type == CT_ANGLE_CLOSE))
@@ -583,14 +576,8 @@ argval_t do_space(chunk_t *first, chunk_t *second)
       return(cpd.settings[UO_sp_before_ptr_star].a);
    }
 
-   if ((first->type == CT_OPERATOR) &&
-       ((second->type == CT_FUNC_DEF) ||
-        (second->type == CT_FUNC_PROTO)))
+   if (first->type == CT_OPERATOR)
    {
-      if (get_char_table(second->str[0]) & CT_KW2)
-      {
-         return(AV_FORCE);
-      }
       return(cpd.settings[UO_sp_after_operator].a);
    }
 
@@ -718,6 +705,7 @@ void space_text(void)
 {
    chunk_t *pc;
    chunk_t *next;
+   chunk_t *tmp;
    int     column;
    int     delta;
 
@@ -755,7 +743,55 @@ void space_text(void)
             column = pc->orig_col_end;
          }
 
-         switch (do_space(pc, next))
+         /**
+          * Apply a general safety check
+          * If the two chunks combined will tokenize differently, then we
+          * must force a space.
+          */
+         pc->flags &= ~PCF_FORCE_SPACE;
+         if (pc->len > 0)
+         {
+            /* Find the next non-empty chunk on this line */
+            tmp = next;
+            while ((tmp != NULL) && (tmp->len == 0) && !chunk_is_newline(tmp))
+            {
+               tmp = chunk_get_next(tmp);
+            }
+            if ((tmp != NULL) && (tmp->len > 0))
+            {
+               bool kw1 = get_char_table(pc->str[pc->len - 1]) & CT_KW2;
+               bool kw2 = get_char_table(next->str[0]) & CT_KW2;
+               if (kw1 && kw2)
+               {
+                  /* back-to-back words need a space */
+                  pc->flags |= PCF_FORCE_SPACE;
+               }
+               else if (!kw1 && !kw2 && (pc->len < 4) && (next->len < 4))
+               {
+                  /* We aren't dealing with keywords. concat and try punctuators */
+                  char buf[9];
+                  memcpy(buf, pc->str, pc->len);
+                  memcpy(buf + pc->len, next->str, next->len);
+                  buf[pc->len + next->len] = 0;
+
+                  const chunk_tag_t *ct;
+                  ct = find_punctuator(buf, cpd.lang_flags);
+                  if ((ct != NULL) && ((int)strlen(ct->tag) != pc->len))
+                  {
+                     /* punctuator parsed to a different size.. */
+                     pc->flags |= PCF_FORCE_SPACE;
+                  }
+               }
+            }
+         }
+
+         int av = do_space(pc, next);
+         if (pc->flags & PCF_FORCE_SPACE)
+         {
+            av |= AV_ADD;
+         }
+
+         switch (av)
          {
          case AV_FORCE:
             /* add exactly one space */
