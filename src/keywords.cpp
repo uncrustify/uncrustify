@@ -364,8 +364,13 @@ const chunk_tag_t *find_keyword(const char *word, int len)
    tag.tag = buf;
 
    /* check the dynamic word list first */
-   p_ret = (const chunk_tag_t *)bsearch(&tag, wl.p_tags, wl.active,
-                                        sizeof(chunk_tag_t), kw_compare);
+   p_ret = NULL;
+   if (wl.p_tags)
+   {
+      p_ret = (const chunk_tag_t *)bsearch(&tag, wl.p_tags, wl.active,
+                                           sizeof(chunk_tag_t), kw_compare);
+   }
+
    if (p_ret == NULL)
    {
       /* check the static word list */
