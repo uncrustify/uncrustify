@@ -472,7 +472,7 @@ static void add_comment_text(const char *text, int len,
       /* Split the comment */
       if ((text[idx] == '\n') ||
           ((text[idx] == ' ') &&
-           cpd.settings[UO_cmt_width].b &&
+           (cpd.settings[UO_cmt_width].n > 0) &&
            (cpd.column > cpd.settings[UO_code_width].n)))
       {
          in_word = false;
@@ -783,7 +783,7 @@ void output_comment_multi(chunk_t *pc)
             /* this is the first line - add unchanged */
 
             /*TODO: need to support indent_with_tabs mode 1 */
-            output_to_column(cmt_col, cpd.settings[UO_indent_with_tabs].b);
+            output_to_column(cmt_col, cpd.settings[UO_indent_with_tabs].n != 0);
             add_comment_text(line, line_len, cmt, false);
             if (nl_end)
             {
@@ -806,7 +806,7 @@ void output_comment_multi(chunk_t *pc)
                /* Emtpy line - just a '\n' */
                if (cpd.settings[UO_cmt_star_cont].b)
                {
-                  output_to_column(cmt_col, cpd.settings[UO_indent_with_tabs].b);
+                  output_to_column(cmt_col, cpd.settings[UO_indent_with_tabs].n != 0);
                   add_spaces_before_star();
                   add_text((xtra == 1) ? " *" : "*");
                }
@@ -820,7 +820,7 @@ void output_comment_multi(chunk_t *pc)
                if ((line[0] != '*') && (line[0] != '|') && (line[0] != '#') &&
                    (line[0] != '\\') && (line[0] != '+'))
                {
-                  output_to_column(cmt_col, cpd.settings[UO_indent_with_tabs].b);
+                  output_to_column(cmt_col, cpd.settings[UO_indent_with_tabs].n != 0);
                   if (cpd.settings[UO_cmt_star_cont].b)
                   {
                      cmt.cont_text = (xtra == 1) ? " * " : "*  ";
@@ -831,11 +831,11 @@ void output_comment_multi(chunk_t *pc)
                      cmt.cont_text = "   ";
                   }
                   add_text(cmt.cont_text);
-                  output_to_column(ccol, cpd.settings[UO_indent_with_tabs].b);
+                  output_to_column(ccol, cpd.settings[UO_indent_with_tabs].n != 0);
                }
                else
                {
-                  output_to_column(cmt_col + xtra, cpd.settings[UO_indent_with_tabs].b);
+                  output_to_column(cmt_col + xtra, cpd.settings[UO_indent_with_tabs].n != 0);
                   int idx  = 0;
                   int sidx = 0;
                   if (xtra > 0)

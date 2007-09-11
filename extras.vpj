@@ -108,6 +108,7 @@
 			<F N="etc/xsupplicant.cfg"/>
 		</Folder>
 		<Folder Name="scripts">
+			<F N="scripts/check_options.py"/>
 			<F N="scripts/cmpcfg.pl"/>
 			<F N="scripts/punc.py"/>
 			<F N="scripts/tokenize.py"/>

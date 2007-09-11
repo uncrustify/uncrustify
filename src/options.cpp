@@ -428,9 +428,9 @@ const option_map_value *get_option_name(int uo)
 }
 
 /**
- * Convert the value string to a number.
+ * Convert the value string to the correct type in dest.
  */
-static int convert_value(const option_map_value *entry, const char *val)
+static void convert_value(const option_map_value *entry, const char *val, op_val_t* dest)
 {
    const option_map_value *tmp;
    bool btrue;
@@ -440,15 +440,18 @@ static int convert_value(const option_map_value *entry, const char *val)
    {
       if (strcasecmp(val, "CRLF") == 0)
       {
-         return(LE_CRLF);
+         dest->le = LE_CRLF;
+         return;
       }
       if (strcasecmp(val, "LF") == 0)
       {
-         return(LE_LF);
+         dest->le = LE_LF;
+         return;
       }
       if (strcasecmp(val, "CR") == 0)
       {
-         return(LE_CR);
+         dest->le = LE_CR;
+         return;
       }
       if (strcasecmp(val, "AUTO") != 0)
       {
@@ -456,7 +459,8 @@ static int convert_value(const option_map_value *entry, const char *val)
                  cpd.filename, cpd.line_number, entry->name, val);
          cpd.error_count++;
       }
-      return(LE_AUTO);
+      dest->le = LE_AUTO;
+      return;
    }
 
    if (entry->type == AT_POS)
@@ -464,12 +468,14 @@ static int convert_value(const option_map_value *entry, const char *val)
       if ((strcasecmp(val, "LEAD") == 0) ||
           (strcasecmp(val, "START") == 0))
       {
-         return(TP_LEAD);
+         dest->tp = TP_LEAD;
+         return;
       }
       if ((strcasecmp(val, "TRAIL") == 0) ||
           (strcasecmp(val, "END") == 0))
       {
-         return(TP_TRAIL);
+         dest->tp = TP_TRAIL;
+         return;
       }
       if (strcasecmp(val, "IGNORE") != 0)
       {
@@ -477,7 +483,8 @@ static int convert_value(const option_map_value *entry, const char *val)
                  cpd.filename, cpd.line_number, entry->name, val);
          cpd.error_count++;
       }
-      return(TP_IGNORE);
+      dest->tp = TP_IGNORE;
+      return;
    }
 
    if (entry->type == AT_NUM)
@@ -485,7 +492,8 @@ static int convert_value(const option_map_value *entry, const char *val)
       if (isdigit(*val) ||
           (isdigit(val[1]) && ((*val == '-') || (*val == '+'))))
       {
-         return(strtol(val, NULL, 0));
+         dest->n = strtol(val, NULL, 0);
+         return;
       }
       else
       {
@@ -499,13 +507,15 @@ static int convert_value(const option_map_value *entry, const char *val)
 
          if (((tmp = unc_find_option(val)) != NULL) && (tmp->type == entry->type))
          {
-            return(cpd.settings[tmp->id].n * mult);
+            dest->n = cpd.settings[tmp->id].n * mult;
+            return;
          }
       }
       LOG_FMT(LWARN, "%s:%d Expected a number for %s, got %s\n",
               cpd.filename, cpd.line_number, entry->name, val);
       cpd.error_count++;
-      return(0);
+      dest->n = 0;
+      return;
    }
 
    if (entry->type == AT_BOOL)
@@ -514,14 +524,16 @@ static int convert_value(const option_map_value *entry, const char *val)
           (strcasecmp(val, "t") == 0) ||
           (strcmp(val, "1") == 0))
       {
-         return(1);
+         dest->b = true;
+         return;
       }
 
       if ((strcasecmp(val, "false") == 0) ||
           (strcasecmp(val, "f") == 0) ||
           (strcmp(val, "0") == 0))
       {
-         return(0);
+         dest->b = false;
+         return;
       }
 
       btrue = true;
@@ -533,40 +545,48 @@ static int convert_value(const option_map_value *entry, const char *val)
 
       if (((tmp = unc_find_option(val)) != NULL) && (tmp->type == entry->type))
       {
-         return(cpd.settings[tmp->id].b ? btrue : !btrue);
+         dest->b = cpd.settings[tmp->id].b ? btrue : !btrue;
+         return;
       }
       LOG_FMT(LWARN, "%s:%d Expected 'True' or 'False' for %s, got %s\n",
               cpd.filename, cpd.line_number, entry->name, val);
       cpd.error_count++;
-      return(0);
+      dest->b = false;
+      return;
    }
 
    /* Must be AT_IARF */
 
    if ((strcasecmp(val, "add") == 0) || (strcasecmp(val, "a") == 0))
    {
-      return(AV_ADD);
+      dest->a = AV_ADD;
+      return;
    }
    if ((strcasecmp(val, "remove") == 0) || (strcasecmp(val, "r") == 0))
    {
-      return(AV_REMOVE);
+      dest->a = AV_REMOVE;
+      return;
    }
    if ((strcasecmp(val, "force") == 0) || (strcasecmp(val, "f") == 0))
    {
-      return(AV_FORCE);
+      dest->a = AV_FORCE;
+      return;
    }
    if ((strcasecmp(val, "ignore") == 0) || (strcasecmp(val, "i") == 0))
    {
-      return(AV_IGNORE);
+      dest->a = AV_IGNORE;
+      return;
    }
    if (((tmp = unc_find_option(val)) != NULL) && (tmp->type == entry->type))
    {
-      return(cpd.settings[tmp->id].a);
+      dest->a = cpd.settings[tmp->id].a;
+      return;
    }
    LOG_FMT(LWARN, "%s:%d Expected 'Add', 'Remove', 'Force', or 'Ignore' for %s, got %s\n",
            cpd.filename, cpd.line_number, entry->name, val);
    cpd.error_count++;
-   return(0);
+   dest->a = AV_IGNORE;
+   return;
 }
 
 int set_option_value(const char *name, const char *value)
@@ -575,7 +595,7 @@ int set_option_value(const char *name, const char *value)
 
    if ((entry = unc_find_option(name)) != NULL)
    {
-      cpd.settings[entry->id].n = convert_value(entry, value);
+      convert_value(entry, value, &cpd.settings[entry->id]);
       return(entry->id);
    }
    return(-1);
