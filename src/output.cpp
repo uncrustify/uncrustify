@@ -473,7 +473,7 @@ static void add_comment_text(const char *text, int len,
       if ((text[idx] == '\n') ||
           ((text[idx] == ' ') &&
            (cpd.settings[UO_cmt_width].n > 0) &&
-           (cpd.column > cpd.settings[UO_code_width].n)))
+           (cpd.column > cpd.settings[UO_cmt_width].n)))
       {
          in_word = false;
          add_char('\n');
