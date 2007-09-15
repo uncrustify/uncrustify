@@ -37,6 +37,7 @@ enum brstage_e
    BS_ELSE,      /* expecting 'else' after 'if' */
    BS_ELSEIF,    /* expecting 'if' after 'else' */
    BS_WHILE,     /* expecting 'while' after 'do' */
+   BS_CATCH,     /* expecting 'catch' or 'finally' after 'try' */
 };
 
 struct chunk_t;

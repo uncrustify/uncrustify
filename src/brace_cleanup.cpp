@@ -670,6 +670,27 @@ static bool check_complex_statements(struct parse_frame *frm, chunk_t *pc)
       frm->pse[frm->pse_tos].stage = BS_BRACE2;
    }
 
+   /* Check for CT_CATCH or CT_FINALLY after CT_TRY or CT_CATCH */
+   while (frm->pse[frm->pse_tos].stage == BS_CATCH)
+   {
+      if ((pc->type == CT_CATCH) || (pc->type == CT_FINALLY))
+      {
+         /* Replace CT_TRY with CT_CATCH on the stack & we are done */
+         frm->pse[frm->pse_tos].type  = pc->type;
+         frm->pse[frm->pse_tos].stage = (pc->type == CT_CATCH) ? BS_OP_PAREN1 : BS_BRACE2;
+         print_stack(LBCSSWAP, "=Swap   ", frm, pc);
+         return(true);
+      }
+
+      /* Remove the CT_TRY and close the statement */
+      frm->pse_tos--;
+      print_stack(LBCSPOP, "-TRY-CCS ", frm, pc);
+      if (close_statement(frm, pc))
+      {
+         return(true);
+      }
+   }
+
    /* Check for CT_WHILE after the CT_DO */
    if (frm->pse[frm->pse_tos].stage == BS_WHILE)
    {
@@ -770,6 +791,25 @@ static bool handle_complex_close(struct parse_frame *frm, chunk_t *pc)
          {
             frm->pse_tos--;
             print_stack(LBCSPOP, "-IF-HCS ", frm, pc);
+            if (close_statement(frm, pc))
+            {
+               return(true);
+            }
+         }
+      }
+      else if ((frm->pse[frm->pse_tos].type == CT_TRY) ||
+               (frm->pse[frm->pse_tos].type == CT_CATCH))
+      {
+         frm->pse[frm->pse_tos].stage = BS_CATCH;
+
+         /* If the next chunk isn't CT_CATCH or CT_FINALLY, close the statement */
+         next = chunk_get_next_ncnl(pc);
+         if ((next != NULL) &&
+             (next->type != CT_CATCH) &&
+             (next->type != CT_FINALLY))
+         {
+            frm->pse_tos--;
+            print_stack(LBCSPOP, "-TRY-HCS ", frm, pc);
             if (close_statement(frm, pc))
             {
                return(true);
