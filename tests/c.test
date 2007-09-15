@@ -152,6 +152,8 @@
 20310 ben.cfg                  c/empty-for.c
 20311 ben.cfg                  c/pragma.c
 
+20320 nl_create_one_liner.cfg  c/nl_create_one_liner.c
+
 # some embedded sql stuff
 21000 ben.cfg                  sql/mysql.sqc
 21001 ben.cfg                  sql/sta-select.sqc
