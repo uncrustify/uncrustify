@@ -1236,6 +1236,12 @@ void newlines_cleanup_braces(void)
             newlines_double_space_struct_enum_union(pc);
          }
 
+         if ((pc->parent_type == CT_CLASS) && (pc->level == pc->brace_level))
+         {
+            newlines_do_else(chunk_get_prev(pc),
+                             cpd.settings[UO_nl_class_brace].a);
+         }
+
          next = chunk_get_next_ncnl(pc);
          if (next->type == CT_BRACE_CLOSE)
          {
@@ -1431,13 +1437,6 @@ void newlines_cleanup_braces(void)
             newline_func_def(pc);
          }
       }
-      else if (pc->type == CT_CLASS)
-      {
-         if (pc->level == pc->brace_level)
-         {
-            newlines_struct_enum_union(pc, cpd.settings[UO_nl_class_brace].a);
-         }
-      }
       else if (pc->type == CT_ANGLE_CLOSE)
       {
          if (pc->parent_type == CT_TEMPLATE)
@@ -1480,6 +1479,30 @@ void newlines_cleanup_braces(void)
                {
                   newline_add_before(tmp);
                }
+            }
+         }
+      }
+      else if (pc->type == CT_PRIVATE)
+      {
+         /** Make sure there is a newline before an access spec */
+         if (cpd.settings[UO_nl_before_access_spec].n > 0)
+         {
+            prev = chunk_get_prev(pc);
+            if (!chunk_is_newline(prev))
+            {
+               newline_add_before(pc);
+            }
+         }
+      }
+      else if (pc->type == CT_PRIVATE_COLON)
+      {
+         /** Make sure there is a newline after an access spec */
+         if (cpd.settings[UO_nl_after_access_spec].n > 0)
+         {
+            next = chunk_get_next(pc);
+            if (!chunk_is_newline(next))
+            {
+               newline_add_before(next);
             }
          }
       }

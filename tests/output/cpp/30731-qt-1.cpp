@@ -18,3 +18,18 @@ class Foo : public QObject
 	void somesignal();
 
 };
+
+class foo
+{
+	bool b;
+ public:
+	int i;
+};
+class bar : public
+	foo
+{
+	void*p;
+ protected:
+	double d;
+};
+
