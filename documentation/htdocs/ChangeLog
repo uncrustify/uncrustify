@@ -34,6 +34,7 @@ Changes in uncrustify-0.39
  - Fix handling of try/catch/finally blocks in virtual braces
  - Add sp_inv, sp_not, sp_addr, sp_deref (default to remove)
  - Fix nl_class_brace
+ - Fix indent_func_call_param
 
 
 Changes in uncrustify-0.38
