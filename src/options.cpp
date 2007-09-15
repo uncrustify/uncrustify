@@ -185,7 +185,14 @@ void register_options(void)
    unc_add_option("sp_before_dc", UO_sp_before_dc, AT_IARF, "Add or remove space before the '::' operator");
    unc_add_option("sp_after_dc", UO_sp_after_dc, AT_IARF, "Add or remove space after the '::' operator");
    unc_add_option("sp_d_array_colon", UO_sp_d_array_colon, AT_IARF, "Add or remove around the D named array initializer ':' operator");
-
+   unc_add_option("sp_not", UO_sp_not, AT_IARF, "Add or remove space after the '!' (not) operator.");
+   unc_add_option("sp_inv", UO_sp_inv, AT_IARF, "Add or remove space after the '~' (invert) operator.");
+   unc_add_option("sp_addr", UO_sp_addr, AT_IARF,
+                  "Add or remove space after the '&' (address-of) operator.\n"
+                  "This does not affect the spacing after a '&' that is part of a type.");
+   unc_add_option("sp_deref", UO_sp_deref, AT_IARF,
+                  "Add or remove space after the '*' (dereference) operator.\n"
+                  "This does not affect the spacing after a '*' that is part of a type.");
 
    unc_begin_group(UG_indent, "Indenting");
    unc_add_option("indent_columns", UO_indent_columns, AT_NUM, "The number of columns to indent per level.\nUsually 2, 3, 4, or 8.");
@@ -898,6 +905,10 @@ void set_option_defaults(void)
    cpd.settings[UO_indent_access_spec].n = 1;
    cpd.settings[UO_sp_before_comma].a    = AV_REMOVE;
    cpd.settings[UO_string_escape_char].n = '\\';
+   cpd.settings[UO_sp_not].a             = AV_REMOVE;
+   cpd.settings[UO_sp_inv].a             = AV_REMOVE;
+   cpd.settings[UO_sp_addr].a            = AV_REMOVE;
+   cpd.settings[UO_sp_deref].a           = AV_REMOVE;
 }
 
 std::string argtype_to_string(argtype_e argtype)

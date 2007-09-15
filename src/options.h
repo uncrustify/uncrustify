@@ -218,6 +218,10 @@ enum uncrustify_options
    UO_sp_before_dc,
    UO_sp_after_dc,
    UO_sp_d_array_colon,
+   UO_sp_not,
+   UO_sp_inv,
+   UO_sp_addr,
+   UO_sp_deref,
 
    /*
     * Line splitting options (for long lines)

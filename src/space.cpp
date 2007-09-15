@@ -683,6 +683,23 @@ argval_t do_space(chunk_t *first, chunk_t *second)
       return(AV_IGNORE);
    }
 
+   if (first->type == CT_NOT)
+   {
+      return(cpd.settings[UO_sp_not].a);
+   }
+   if (first->type == CT_INV)
+   {
+      return(cpd.settings[UO_sp_inv].a);
+   }
+   if (first->type == CT_ADDR)
+   {
+      return(cpd.settings[UO_sp_addr].a);
+   }
+   if (first->type == CT_DEREF)
+   {
+      return(cpd.settings[UO_sp_deref].a);
+   }
+
    for (idx = 0; idx < (int)ARRAY_SIZE(no_space_table); idx++)
    {
       if (((no_space_table[idx].first == CT_UNKNOWN) ||
