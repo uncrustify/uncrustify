@@ -35,6 +35,7 @@ Changes in uncrustify-0.39
  - Add sp_inv, sp_not, sp_addr, sp_deref (default to remove)
  - Fix nl_class_brace
  - Fix indent_func_call_param
+ - Add nl_create_if_one_liner, nl_create_for_one_liner, nl_create_while_one_liner
 
 
 Changes in uncrustify-0.38

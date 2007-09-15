@@ -351,6 +351,10 @@ enum uncrustify_options
    UO_nl_getset_leave_one_liners, // leave one-line get/set bodies
    UO_nl_template_class,          // newline between '>' and class in "template <x> class"
 
+   UO_nl_create_if_one_liner,
+   UO_nl_create_for_one_liner,
+   UO_nl_create_while_one_liner,
+
    UO_pos_bool,                   // position of trailing/leading &&/||
    UO_pos_comma,                  // position of comma in functions
    UO_pos_class_comma,            // position of comma in constructor init list

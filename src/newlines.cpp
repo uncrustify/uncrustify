@@ -1152,6 +1152,31 @@ static void newline_func_def(chunk_t *start)
    }
 }
 
+
+static void nl_create_one_liner(chunk_t *vbrace_open)
+{
+   chunk_t *tmp;
+   chunk_t *first;
+
+   /* See if we get a newline between the next text and the vbrace_close */
+   tmp   = chunk_get_next_ncnl(vbrace_open);
+   first = tmp;
+   while ((tmp != NULL) && (tmp->type != CT_VBRACE_CLOSE))
+   {
+      if (chunk_is_newline(tmp))
+      {
+         return;
+      }
+      tmp = chunk_get_next(tmp);
+   }
+
+   if (tmp != NULL)
+   {
+      newline_del_between(vbrace_open, first);
+   }
+}
+
+
 /**
  * Step through all chunks.
  */
@@ -1359,6 +1384,16 @@ void newlines_cleanup_braces(void)
             {
                newline_iarf(pc, AV_ADD);
             }
+         }
+
+         if (((pc->parent_type == CT_IF) &&
+              cpd.settings[UO_nl_create_if_one_liner].b) ||
+             ((pc->parent_type == CT_FOR) &&
+              cpd.settings[UO_nl_create_for_one_liner].b) ||
+             ((pc->parent_type == CT_WHILE) &&
+              cpd.settings[UO_nl_create_while_one_liner].b))
+         {
+            nl_create_one_liner(pc);
          }
       }
       else if (pc->type == CT_STRUCT)

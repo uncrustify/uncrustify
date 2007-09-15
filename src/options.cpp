@@ -299,6 +299,15 @@ void register_options(void)
    unc_add_option("nl_ds_struct_enum_cmt", UO_nl_ds_struct_enum_cmt, AT_BOOL, "Whether to double-space commented-entries in struct/enum");
    unc_add_option("nl_ds_struct_enum_close_brace", UO_nl_ds_struct_enum_close_brace, AT_BOOL, "Whether to double-space before the close brace of a struct/union/enum");
    unc_add_option("nl_class_colon", UO_nl_class_colon, AT_IARF, "Add or remove a newline around a class colon.\nRelated to pos_class_colon, nl_class_init_args, and pos_comma.");
+   unc_add_option("nl_create_if_one_liner", UO_nl_create_if_one_liner, AT_BOOL,
+                  "Change simple unbraced if statements into a one-liner\n"
+                  "'if(b)\\n i++;' => 'if(b) i++;'");
+   unc_add_option("nl_create_for_one_liner", UO_nl_create_for_one_liner, AT_BOOL,
+                  "Change simple unbraced for statements into a one-liner\n"
+                  "'for (i=0;i<5;i++)\\n foo(i);' => 'for (i=0;i<5;i++) foo(i);'");
+   unc_add_option("nl_create_while_one_liner", UO_nl_create_while_one_liner, AT_BOOL,
+                  "Change simple unbraced while statements into a one-liner\n"
+                  "'while (i<5)\\n foo(i++);' => 'while (i<5) foo(i++);'");
 
    unc_begin_group(UG_blankline, "Blank line options", "Note that it takes 2 newlines to get a blank line");
    unc_add_option("nl_max", UO_nl_max, AT_NUM, "The maximum consecutive newlines");
