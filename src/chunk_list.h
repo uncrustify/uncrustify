@@ -135,6 +135,12 @@ bool chunk_is_str(chunk_t *pc, const char *str, int len)
 }
 
 static_inline
+bool chunk_is_str_case(chunk_t *pc, const char *str, int len)
+{
+   return((pc != NULL) && (pc->len == len) && (strncasecmp(pc->str, str, len) == 0));
+}
+
+static_inline
 bool chunk_is_star(chunk_t *pc)
 {
    return((pc != NULL) && (pc->len == 1) && (pc->str[0] == '*'));

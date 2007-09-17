@@ -257,11 +257,11 @@ void tokenize_cleanup(void)
          if (chunk_is_newline(tmp))
          {
             tmp = chunk_get_next(next);
-            if (chunk_is_str(tmp, "BEGIN", 5))
+            if (chunk_is_str_case(tmp, "BEGIN", 5))
             {
                pc->type = CT_SQL_BEGIN;
             }
-            else if (chunk_is_str(tmp, "END", 3))
+            else if (chunk_is_str_case(tmp, "END", 3))
             {
                pc->type = CT_SQL_END;
             }
