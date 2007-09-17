@@ -2261,10 +2261,10 @@ static void mark_function(chunk_t *pc)
     * C++ syntax is wacky. We need to check to see if a prototype is really a
     * variable definition with parameters passed into the constructor.
     * Unfortunately, the only mostly reliable way to do so is to guess that
-    * it is a constructor variable if inside a function body.
-    * Instead of searching backwards and checking all open braces (the more
-    * correct way t check), we just look at the brace level and whether we
-    * are in a class or namespace.
+    * it is a constructor variable if inside a function body and scan the
+    * 'parameter list' for items that are not allowed in a prototype.
+    * We search backwards and checking the parent of the containing open braces.
+    * If the parent is a class or namespace, then it probably is a prototype.
     */
    if ((cpd.lang_flags & LANG_CPP) &&
        (pc->type == CT_FUNC_PROTO) &&
@@ -2310,17 +2310,16 @@ static void mark_function(chunk_t *pc)
       {
          pc->type = CT_FUNC_CTOR_VAR;
       }
-      else
+      else if (pc->brace_level > 0)
       {
          /* Do a check to see if the level is right */
          prev = chunk_get_prev_ncnl(pc);
          if (!chunk_is_str(prev, "*", 1) && !chunk_is_str(prev, "&", 1))
          {
-            int lvl = 1;
-            lvl += (pc->flags & PCF_IN_CLASS) ? 1 : 0;
-            lvl += (pc->flags & PCF_IN_NAMESPACE) ? 1 : 0;
-
-            if ((pc->level == pc->brace_level) && (pc->level == lvl))
+            chunk_t *p_op = chunk_get_prev_type(pc, CT_BRACE_OPEN, pc->brace_level - 1);
+            if ((p_op != NULL) &&
+                (p_op->parent_type != CT_CLASS) &&
+                (p_op->parent_type != CT_NAMESPACE))
             {
                pc->type = CT_FUNC_CTOR_VAR;
             }

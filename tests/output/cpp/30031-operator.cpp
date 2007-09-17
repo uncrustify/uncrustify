@@ -33,7 +33,7 @@ operator Foo::Bar();
 operator Foo::Bar*();
 operator Foo::Bar&();
 
-int operator() (int index)
+int operator()(int index)
 {
   i = ~~3;
   return index + 1;

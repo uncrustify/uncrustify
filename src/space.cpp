@@ -760,9 +760,13 @@ void space_text(void)
           * Apply a general safety check
           * If the two chunks combined will tokenize differently, then we
           * must force a space.
+          * Two chunks -- "()" and "[]" will always tokenize differently.
+          * They are always safe to not have a space after them.
           */
          pc->flags &= ~PCF_FORCE_SPACE;
-         if (pc->len > 0)
+         if ((pc->len > 0) &&
+             !chunk_is_str(pc, "[]", 2) &&
+             !chunk_is_str(pc, "()", 2))
          {
             /* Find the next non-empty chunk on this line */
             tmp = next;
