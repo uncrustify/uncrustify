@@ -128,6 +128,7 @@ enum uncrustify_options
    UO_indent_member,             // indent lines broken at a member '.' or '->'
 
    UO_indent_sing_line_comments, // indent single line ('//') comments on lines before code
+   UO_indent_preserve_sql,       // preserve indent of EXEC SQL statement body
 
    /*
     * Misc inter-element spacing

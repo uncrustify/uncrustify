@@ -295,6 +295,8 @@ void indent_text(void)
    int                parent_token_indent = 0;
    int                xml_indent          = 0;
    bool               token_used;
+   int                sql_col             = 0;
+   int                sql_orig_col        = 0;
 
    memset(&frm, 0, sizeof(frm));
 
@@ -842,11 +844,22 @@ void indent_text(void)
           */
 
          prev = chunk_get_prev_ncnl(pc);
-         if ((pc->type == CT_MEMBER) ||
-             (pc->type == CT_DC_MEMBER) ||
-             ((prev != NULL) &&
-              ((prev->type == CT_MEMBER) ||
-               (prev->type == CT_DC_MEMBER))))
+         if ((pc->flags & PCF_DONT_INDENT) != 0)
+         {
+            /* no change */
+         }
+         else if ((pc->parent_type == CT_SQL_EXEC) &&
+                  cpd.settings[UO_indent_preserve_sql].b)
+         {
+            reindent_line(pc, sql_col + (pc->orig_col - sql_orig_col));
+            LOG_FMT(LSYS, "Indent SQL: [%.*s] to %d (%d/%d)\n",
+                    pc->len, pc->str, pc->column, sql_col, sql_orig_col);
+         }
+         else if ((pc->type == CT_MEMBER) ||
+                  (pc->type == CT_DC_MEMBER) ||
+                  ((prev != NULL) &&
+                   ((prev->type == CT_MEMBER) ||
+                    (prev->type == CT_DC_MEMBER))))
          {
             tmp = cpd.settings[UO_indent_member].n + indent_column;
             LOG_FMT(LINDENT, "%s: %d] member => %d\n",
@@ -961,6 +974,14 @@ void indent_text(void)
             }
          }
          did_newline = false;
+
+         if ((pc->type == CT_SQL_EXEC) ||
+             (pc->type == CT_SQL_BEGIN) ||
+             (pc->type == CT_SQL_END))
+         {
+            sql_col      = pc->column;
+            sql_orig_col = pc->orig_col;
+         }
       }
 
       /**

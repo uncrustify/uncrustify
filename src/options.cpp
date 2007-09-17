@@ -228,6 +228,8 @@ void register_options(void)
                   "Controls the indent of a BOOL operator when inside a paren."
                   "If TRUE, aligns under the open paren");
    unc_add_option("indent_square_nl", UO_indent_square_nl, AT_BOOL, "If an open square is followed by a newline, indent the next line so that it lines up after the open square (not recommended)");
+   unc_add_option("indent_preserve_sql", UO_indent_preserve_sql, AT_BOOL,
+                  "Don't change the relative indent of ESQL/C 'EXEC SQL' bodies");
 
    unc_begin_group(UG_newline, "Newline adding and removing options");
    unc_add_option("nl_collapse_empty_body", UO_nl_collapse_empty_body, AT_BOOL, "Whether to collapse empty blocks between '{' and '}'");
