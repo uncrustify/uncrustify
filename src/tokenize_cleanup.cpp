@@ -418,6 +418,7 @@ static void check_template(chunk_t *start)
                   (pc->type != CT_MEMBER) &&
                   (pc->type != CT_COMMA) &&
                   (pc->type != CT_STAR) &&
+                  (pc->type != CT_PTR_TYPE) &&
                   (pc->type != CT_CLASS) &&
                   (pc->type != CT_DC_MEMBER))
          {
