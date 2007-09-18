@@ -117,4 +117,7 @@ inline std::basic_ostream < CharT,Traits >& FWStreamOut(std::basic_ostream < Cha
 struct foo {
    type1 < int& > bar;
 };
+struct foo {
+   type1 < int const > bar;
+};
 

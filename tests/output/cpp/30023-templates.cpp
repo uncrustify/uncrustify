@@ -115,4 +115,8 @@ struct foo
 {
    type1<int&> bar;
 };
+struct foo
+{
+   type1<int const> bar;
+};
 
