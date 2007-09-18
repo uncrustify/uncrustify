@@ -53,6 +53,9 @@ typedef unsigned int       UINT32;
 #undef strcasecmp
 #define strcasecmp    _strcmpi
 
+#undef strncasecmp
+#define strncasecmp   _strnicmp
+
 /* includes for _setmode() */
 #include <io.h>
 #include <fcntl.h>
@@ -62,3 +65,4 @@ typedef unsigned int       UINT32;
 #define PATH_SEP  '\\'
 
 #endif   /* WINDOWS_COMPAT_H_INCLUDED */
+
