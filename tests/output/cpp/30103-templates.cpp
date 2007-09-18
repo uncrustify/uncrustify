@@ -114,3 +114,7 @@ inline std::basic_ostream<CharT,Traits>& FWStreamOut(std::basic_ostream<CharT,Tr
    return operator<<<CharT, N, Traits, char, std::char_traits<char> >( os, s );
 }
 
+struct foo {
+   type1<int&>bar;
+};
+
