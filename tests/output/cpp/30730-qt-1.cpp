@@ -13,7 +13,14 @@ class Foo : public QObject
 };
 
 class foo {
-   bool b; public: int i; }; class bar : public
+   bool b;
+ public:
+   int  i;
+};
+class bar : public
    foo {
-   void *p; protected: double d; };
+   void   *p;
+ protected:
+   double d;
+};
 

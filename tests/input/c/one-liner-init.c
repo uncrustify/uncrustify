@@ -1,3 +1,4 @@
+
 enum boo { FOO = 1 };
 
 void foo(void)
@@ -10,4 +11,6 @@ void foo(void)
 }
 
 void f(){if(bar())baz(1);else baz(2);}
+
+int foo() { return 0; }
 

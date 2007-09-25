@@ -86,7 +86,6 @@ class RotationMatrix
    : public StaticBaseMatrix<T, 3, 3, ConcreteStorageClass>
 {
  public:
-
    RotationMatrix()
       : StaticBaseMatrix<T, 3, 3, ConcreteStorageClass>()
    {

@@ -1,3 +1,4 @@
+
 enum boo { FOO = 1 };
 
 void foo(void)
@@ -19,5 +20,10 @@ void f()
    {
       baz(2);
    }
+}
+
+int foo()
+{
+   return(0);
 }
 

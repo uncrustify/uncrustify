@@ -23,3 +23,8 @@ void f()
    else
       baz(2);
 }
+
+int foo()
+{
+   return 0;
+}

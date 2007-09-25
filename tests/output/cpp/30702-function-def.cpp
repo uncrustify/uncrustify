@@ -1,3 +1,10 @@
+int &
+Function()
+{
+   static int x;
+   return (x);
+}
+
 void
 foo1(int param1, int param2, char *param2);
 
@@ -52,5 +59,17 @@ const longtypename&
 className::method2(void) const
 {
    // stuff
+}
+
+int &
+foo();
+
+int &
+foo()
+{
+   list_for_each(a,b) {
+      bar(a);
+   }
+   return nuts;
 }
 
