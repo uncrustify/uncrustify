@@ -2173,35 +2173,32 @@ static void mark_function(chunk_t *pc)
          }
       }
 
-      if (prev == NULL)
-      {
-         LOG_FMT(LFCN, " -- stopped on NULL\n");
-      }
-      else
-      {
-         //LOG_FMT(LFCN, " -- stopped on %.*s [%s]\n",
-         //        prev->len, prev->str, get_token_name(prev->type));
+      //LOG_FMT(LFCN, " -- stopped on %.*s [%s]\n",
+      //        prev->len, prev->str, get_token_name(prev->type));
 
-         if (isa_def &&
-             (chunk_is_paren_close(prev) ||
-              (prev->type == CT_ASSIGN)))
+      if (isa_def && (prev != NULL) &&
+          (chunk_is_paren_close(prev) ||
+           (prev->type == CT_ASSIGN)))
+      {
+         LOG_FMT(LFCN, " -- overriding DEF due to %.*s [%s]\n",
+                 prev->len, prev->str, get_token_name(prev->type));
+         isa_def = false;
+      }
+      if (isa_def)
+      {
+         pc->type = CT_FUNC_DEF;
+         LOG_FMT(LFCN, "%s: '%.*s' is FCN_DEF:", __func__, pc->len, pc->str);
+         if (prev == NULL)
          {
-            LOG_FMT(LFCN, " -- overriding DEF due to %.*s [%s]\n",
-                    prev->len, prev->str, get_token_name(prev->type));
-            isa_def = false;
+            prev = chunk_get_head();
          }
-         if (isa_def)
+         for (tmp = prev; tmp != pc; tmp = chunk_get_next_ncnl(tmp))
          {
-            pc->type = CT_FUNC_DEF;
-            LOG_FMT(LFCN, "%s: '%.*s' is FCN_DEF:", __func__, pc->len, pc->str);
-            for (tmp = prev; tmp != pc; tmp = chunk_get_next_ncnl(tmp))
-            {
-               LOG_FMT(LFCN, ", %.*s[%s]",
-                       tmp->len, tmp->str, get_token_name(tmp->type));
-               make_type(tmp);
-            }
-            LOG_FMT(LFCN, "\n");
+            LOG_FMT(LFCN, ", %.*s[%s]",
+                    tmp->len, tmp->str, get_token_name(tmp->type));
+            make_type(tmp);
          }
+         LOG_FMT(LFCN, "\n");
       }
    }
 
