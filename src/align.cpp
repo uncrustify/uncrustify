@@ -692,6 +692,16 @@ static chunk_t *align_var_def_brace(chunk_t *start, int span)
    pc = chunk_get_next_ncnl(start);
    while ((pc != NULL) && ((pc->level >= start->level) || (pc->level == 0)))
    {
+      if (chunk_is_comment(pc))
+      {
+         if (pc->nl_count > 0)
+         {
+            as.NewLines(pc->nl_count);
+         }
+         pc = chunk_get_next(pc);
+         continue;
+      }
+
       /* process nested braces */
       if (pc->type == CT_BRACE_OPEN)
       {
@@ -715,7 +725,7 @@ static chunk_t *align_var_def_brace(chunk_t *start, int span)
       /* don't align stuff inside parens/squares/angles */
       if (pc->level > pc->brace_level)
       {
-         pc = chunk_get_next_nc(pc);
+         pc = chunk_get_next(pc);
          continue;
       }
 
@@ -739,7 +749,7 @@ static chunk_t *align_var_def_brace(chunk_t *start, int span)
          }
          did_this_line = true;
       }
-      pc = chunk_get_next_nc(pc);
+      pc = chunk_get_next(pc);
    }
 
    as.End();
