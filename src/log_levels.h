@@ -72,6 +72,7 @@ enum
    LTEMPFUNC = 56,    /* Template function detection */
    LDELSEMI  = 57,    /* Removing semicolons */
    LFPARAM   = 58,    /* Testing for a full parameter */
+   LNL1LINE  = 59,    /* NL check for 1 liners */
 };
 
 #endif   /* LOG_LEVELS_H_INCLUDED */

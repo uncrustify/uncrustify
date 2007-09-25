@@ -37,6 +37,9 @@ Changes in uncrustify-0.39
  - Fix indent_func_call_param
  - Add nl_create_if_one_liner, nl_create_for_one_liner, nl_create_while_one_liner
  - Add indent_preserve_sql
+ - Fix one-liner detection with multiple statements on one line
+ - Add nl_func_leave_one_liners and nl_if_leave_one_liners
+ - More template improvements
 
 
 Changes in uncrustify-0.38

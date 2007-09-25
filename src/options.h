@@ -350,6 +350,9 @@ enum uncrustify_options
    UO_nl_assign_leave_one_liners, // leave one-line assign bodies in "foo_t f = { a, b, c };"
    UO_nl_enum_leave_one_liners,   // leave one-line enum bodies in "enum FOO { BAR = 5 };"
    UO_nl_getset_leave_one_liners, // leave one-line get/set bodies
+   UO_nl_func_leave_one_liners,   // leave one-line function def bodies
+   UO_nl_if_leave_one_liners,
+
    UO_nl_template_class,          // newline between '>' and class in "template <x> class"
 
    UO_nl_create_if_one_liner,

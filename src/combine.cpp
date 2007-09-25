@@ -248,8 +248,8 @@ void fix_symbols(void)
             }
             if ((tmp->type == CT_SQUARE_CLOSE) && (next->level == tmp->level))
             {
-               tmp->flags |= PCF_ONE_LINER;
-               next->flags  |= PCF_ONE_LINER;
+               tmp->flags  |= PCF_ONE_LINER;
+               next->flags |= PCF_ONE_LINER;
                break;
             }
          }

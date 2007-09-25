@@ -18,6 +18,7 @@
 
 
 static void newlines_double_space_struct_enum_union(chunk_t *open_brace);
+static bool one_liner_nl_ok(chunk_t *pc);
 
 
 /*
@@ -167,16 +168,13 @@ static chunk_t *newline_add_between2(chunk_t *start, chunk_t *end,
       return(NULL);
    }
 
-   LOG_FMT(LNEWLINE, "%s: '%.*s' line %d:%d and '%.*s' line %d:%d : caller=%s:%d\n",
-           __func__, start->len, start->str, start->orig_line, start->orig_col,
+   LOG_FMT(LNEWLINE, "%s: '%.*s'[%s] line %d:%d and '%.*s' line %d:%d : caller=%s:%d\n",
+           __func__, start->len, start->str, get_token_name(start->type),
+           start->orig_line, start->orig_col,
            end->len, end->str, end->orig_line, end->orig_col, func, line);
 
    /* Back-up check for one-liners (should never be true!) */
-   if (cpd.settings[UO_nl_class_leave_one_liners].b &&
-       (((start->type == CT_BRACE_OPEN) &&
-         ((start->flags & PCF_ONE_CLASS) == PCF_ONE_CLASS)) ||
-        ((end->type == CT_BRACE_CLOSE) &&
-         ((end->flags & PCF_ONE_CLASS) == PCF_ONE_CLASS))))
+   if (!one_liner_nl_ok(start))
    {
       return(NULL);
    }
@@ -301,7 +299,8 @@ static void newlines_if_for_while_switch(chunk_t *start, argval_t nl_opt)
       close_paren = chunk_get_next_type(pc, CT_SPAREN_CLOSE, pc->level);
       brace_open  = chunk_get_next_ncnl(close_paren);
 
-      if ((brace_open != NULL) && (brace_open->type == CT_BRACE_OPEN))
+      if ((brace_open != NULL) && (brace_open->type == CT_BRACE_OPEN) &&
+          one_liner_nl_ok(brace_open))
       {
          if (cpd.settings[UO_nl_multi_line_cond].b)
          {
@@ -701,6 +700,10 @@ static void newlines_do_else(chunk_t *start, argval_t nl_opt)
    next = chunk_get_next_ncnl(start);
    if ((next != NULL) && (next->type == CT_BRACE_OPEN))
    {
+      if (!one_liner_nl_ok(next))
+      {
+         return;
+      }
       if ((nl_opt & AV_ADD) != 0)
       {
          newline_add_between(start, next);
@@ -815,31 +818,10 @@ static void newlines_brace_pair(chunk_t *br_open)
       }
    }
 
-   if (br_open->flags & PCF_ONE_LINER)
+   /* Make sure we don't break a one-liner */
+   if (!one_liner_nl_ok(br_open))
    {
-      if (cpd.settings[UO_nl_class_leave_one_liners].b &&
-          (br_open->flags & PCF_IN_CLASS))
-      {
-         return;
-      }
-
-      if (cpd.settings[UO_nl_assign_leave_one_liners].b &&
-          (br_open->parent_type == CT_ASSIGN))
-      {
-         return;
-      }
-
-      if (cpd.settings[UO_nl_enum_leave_one_liners].b &&
-          (br_open->parent_type == CT_ENUM))
-      {
-         return;
-      }
-
-      if (cpd.settings[UO_nl_getset_leave_one_liners].b &&
-          (br_open->parent_type == CT_GETSET))
-      {
-         return;
-      }
+      return;
    }
 
    next = chunk_get_next_nc(br_open);
@@ -1153,6 +1135,67 @@ static void newline_func_def(chunk_t *start)
 }
 
 
+/**
+ * Checks to see if it is OK to add a newline around the chunk.
+ * Don't want to break one-liners...
+ */
+static bool one_liner_nl_ok(chunk_t *pc)
+{
+   LOG_FMT(LNL1LINE, "%s: check [%s] parent=[%s] flg=%x, on line %d, col %d - ",
+           __func__, get_token_name(pc->type), get_token_name(pc->parent_type),
+           pc->flags, pc->orig_line, pc->orig_col);
+
+   if ((pc->flags & PCF_ONE_LINER) &&
+       ((pc->type == CT_BRACE_OPEN) ||
+        (pc->type == CT_BRACE_CLOSE)))
+   {
+      if (cpd.settings[UO_nl_class_leave_one_liners].b &&
+          (pc->flags & PCF_IN_CLASS))
+      {
+         LOG_FMT(LNL1LINE, "false (class)\n");
+         return(false);
+      }
+
+      if (cpd.settings[UO_nl_assign_leave_one_liners].b &&
+          (pc->parent_type == CT_ASSIGN))
+      {
+         LOG_FMT(LNL1LINE, "false (assign)\n");
+         return(false);
+      }
+
+      if (cpd.settings[UO_nl_enum_leave_one_liners].b &&
+          (pc->parent_type == CT_ENUM))
+      {
+         LOG_FMT(LNL1LINE, "false (enum)\n");
+         return(false);
+      }
+
+      if (cpd.settings[UO_nl_getset_leave_one_liners].b &&
+          (pc->parent_type == CT_GETSET))
+      {
+         LOG_FMT(LNL1LINE, "false (get/set)\n");
+         return(false);
+      }
+
+      if (cpd.settings[UO_nl_func_leave_one_liners].b &&
+          (pc->parent_type == CT_FUNC_DEF))
+      {
+         LOG_FMT(LNL1LINE, "false (func def)\n");
+         return(false);
+      }
+
+      if (cpd.settings[UO_nl_if_leave_one_liners].b &&
+          ((pc->parent_type == CT_IF) ||
+           (pc->parent_type == CT_ELSE)))
+      {
+         LOG_FMT(LNL1LINE, "false (if/else)\n");
+         return(false);
+      }
+   }
+   LOG_FMT(LNL1LINE, "true\n");
+   return(true);
+}
+
 static void nl_create_one_liner(chunk_t *vbrace_open)
 {
    chunk_t *tmp;
@@ -1282,28 +1325,9 @@ void newlines_cleanup_braces(void)
             if ((pc->level == pc->brace_level) &&
                 cpd.settings[UO_nl_after_brace_open].b)
             {
-               if (cpd.settings[UO_nl_class_leave_one_liners].b &&
-                   ((pc->flags & PCF_ONE_CLASS) == PCF_ONE_CLASS))
+               if (!one_liner_nl_ok(pc))
                {
-                  /* no change - one liner class body */
-               }
-               else if (cpd.settings[UO_nl_assign_leave_one_liners].b &&
-                        (pc->parent_type == CT_ASSIGN) &&
-                        ((pc->flags & PCF_ONE_LINER) != 0))
-               {
-                  /* no change - one liner assignment */
-               }
-               else if (cpd.settings[UO_nl_enum_leave_one_liners].b &&
-                        (pc->parent_type == CT_ENUM) &&
-                        ((pc->flags & PCF_ONE_LINER) != 0))
-               {
-                  /* no change - one liner enum */
-               }
-               else if (cpd.settings[UO_nl_getset_leave_one_liners].b &&
-                        (pc->parent_type == CT_GETSET) &&
-                        ((pc->flags & PCF_ONE_LINER) != 0))
-               {
-                  /* no change - one liner get/set */
+                  /* no change - preserve one liner body */
                }
                else if ((pc->flags & (PCF_IN_ARRAY_ASSIGN | PCF_IN_PREPROC)) != 0)
                {
@@ -1455,7 +1479,10 @@ void newlines_cleanup_braces(void)
             if (!chunk_is_comment(next) &&
                 !chunk_is_newline(next))
             {
-               newline_iarf(pc, AV_ADD);
+               if (one_liner_nl_ok(next))
+               {
+                  newline_iarf(pc, AV_ADD);
+               }
             }
          }
       }
