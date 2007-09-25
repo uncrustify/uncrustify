@@ -46,6 +46,7 @@ void do_braces(void)
    /* Mark one-liners */
    chunk_t *pc;
    chunk_t *br_open;
+   chunk_t *tmp;
 
    pc = chunk_get_head();
    while ((pc = chunk_get_next_ncnl(pc)) != NULL)
@@ -57,25 +58,25 @@ void do_braces(void)
       br_open = pc;
 
       /* Detect empty bodies */
-      pc = chunk_get_next_ncnl(pc);
-      if (pc->type == CT_BRACE_CLOSE)
+      tmp = chunk_get_next_ncnl(pc);
+      if (tmp->type == CT_BRACE_CLOSE)
       {
          br_open->flags |= PCF_EMPTY_BODY;
-         pc->flags      |= PCF_EMPTY_BODY;
+         tmp->flags     |= PCF_EMPTY_BODY;
       }
 
       /* Scan for the brace close or a newline */
-      pc = br_open;
-      while ((pc = chunk_get_next_nc(pc)) != NULL)
+      tmp = br_open;
+      while ((tmp = chunk_get_next_nc(tmp)) != NULL)
       {
-         if (chunk_is_newline(pc))
+         if (chunk_is_newline(tmp))
          {
             break;
          }
-         if ((pc->type == CT_BRACE_CLOSE) && (br_open->level == pc->level))
+         if ((tmp->type == CT_BRACE_CLOSE) && (br_open->level == tmp->level))
          {
             br_open->flags |= PCF_ONE_LINER;
-            pc->flags      |= PCF_ONE_LINER;
+            tmp->flags     |= PCF_ONE_LINER;
             break;
          }
       }
