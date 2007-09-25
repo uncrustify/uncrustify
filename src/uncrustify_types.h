@@ -109,8 +109,14 @@ struct parse_frame
 #define PCF_ONE_LINER          (1 << 23)
 #define PCF_ONE_CLASS          (PCF_ONE_LINER | PCF_IN_CLASS)
 #define PCF_EMPTY_BODY         (1 << 24)
-#define PCF_ANCHOR             (1 << 26)  /* aligning anchor */
-#define PCF_PUNCTUATOR         (1 << 27)
+#define PCF_ANCHOR             (1 << 25)  /* aligning anchor */
+#define PCF_PUNCTUATOR         (1 << 26)
+#define PCF_TBD_27             (1 << 27)
+#define PCF_TBD_28             (1 << 28)
+#define PCF_TBD_29             (1 << 29)
+#define PCF_TBD_30             (1 << 30)
+#define PCF_TBD_31             (1 << 31)
+
 
 /* flags that get copied when a new chunk is inserted */
 #define PCF_COPY_FLAGS         (PCF_IN_PREPROC | PCF_IN_SPAREN | PCF_IN_ENUM |          \
@@ -147,7 +153,12 @@ static const char *pcf_names[] =
    "ONE_LINER",
    "EMPTY_BODY",
    "ANCHOR",
-   "PCF_PUNCTUATOR",
+   "PUNCTUATOR",
+   "TBD_27",
+   "TBD_28",
+   "TBD_29",
+   "TBD_30",
+   "TBD_31",
 };
 #endif
 
