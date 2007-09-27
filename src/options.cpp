@@ -425,6 +425,10 @@ void register_options(void)
    unc_begin_group(UG_preprocessor, "Preprocessor options");
    unc_add_option("pp_indent", UO_pp_indent, AT_IARF, "Add or remove indent of preprocessor directives");
    unc_add_option("pp_space", UO_pp_space, AT_IARF, "Add or remove space between # and, say, define");
+   unc_add_option("pp_indent_region", UO_pp_indent_region, AT_NUM,
+                  "The indent for #region and #endregion in C# and '#pragma region' in C/C++");
+   unc_add_option("pp_region_indent_code", UO_pp_region_indent_code, AT_BOOL,
+                  "Whether to indent the code between #region and #endregion");
 }
 
 const group_map_value *get_group_name(int ug)

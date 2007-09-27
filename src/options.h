@@ -102,6 +102,8 @@ enum uncrustify_options
    UO_indent_bool_paren,         // indent of bool if inside a paren
    UO_pp_indent,                 // indent preproc 1 space per level (add/ignore/remove)
    UO_pp_space,                  // spaces between # and word (add/ignore/remove)
+   UO_pp_indent_region,          // indent of #region and #endregion, see indent_label
+   UO_pp_region_indent_code,     // whether to indent the code inside region stuff
 
    UO_indent_switch_case,        // spaces to indent case from switch
    UO_indent_case_shift,         // spaces to shift the line with the 'case'

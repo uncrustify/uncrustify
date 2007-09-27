@@ -309,6 +309,19 @@ void tokenize_cleanup(void)
          }
       }
 
+      /* Detect "pragma region" and "pragma endregion" */
+      if ((pc->type == CT_PP_PRAGMA) && (next->type == CT_PREPROC_BODY))
+      {
+         if ((memcmp(next->str, "region", 6) == 0) ||
+             (memcmp(next->str, "endregion", 9) == 0))
+         {
+            pc->type = (*next->str == 'r') ? CT_PP_REGION : CT_PP_ENDREGION;
+
+            prev->parent_type = pc->type;
+            prev->type        = CT_PREPROC_INDENT;
+         }
+      }
+
       /* TODO: determine other stuff here */
 
       prev = pc;

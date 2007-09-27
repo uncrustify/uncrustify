@@ -26,6 +26,11 @@ Plans for the next release
 ===============================================================================
 
 
+Changes in uncrustify-0.40
+-------------------------------------------------------------------------------
+ - Add pp_indent_region and pp_region_indent
+
+
 Changes in uncrustify-0.39
 -------------------------------------------------------------------------------
  - Improve conversion operators
