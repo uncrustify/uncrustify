@@ -81,3 +81,9 @@
 
 30815 width-2.cfg                      cpp/cmt-reflow.cpp
 
+
+30900 region-0.cfg                     cpp/region.cpp
+30901 region-1.cfg                     cpp/region.cpp
+30902 region-2.cfg                     cpp/region.cpp
+30903 region-3.cfg                     cpp/region.cpp
+

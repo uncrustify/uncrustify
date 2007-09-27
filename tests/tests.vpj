@@ -229,7 +229,10 @@
 				<F N="input/cpp/Timestamp.h"/>
 			</Folder>
 			<Folder Name="cs">
+				<F N="input/cs/getset.cs"/>
+				<F N="input/cs/region.cs"/>
 				<F N="input/cs/simple.cs"/>
+				<F N="input/cs/var-member.cs"/>
 			</Folder>
 			<Folder Name="d">
 				<F N="input/d/bug-indent.d"/>
