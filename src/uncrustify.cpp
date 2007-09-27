@@ -798,8 +798,8 @@ static void uncrustify_file(const char *data, int data_len, FILE *pfout,
    /**
     * Indent the text
     */
-   indent_text();
    indent_preproc();
+   indent_text();
 
    /**
     * Aligning everything else and reindent

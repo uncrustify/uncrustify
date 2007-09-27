@@ -423,12 +423,23 @@ void register_options(void)
    unc_add_option("mod_remove_extra_semicolon", UO_mod_remove_extra_semicolon, AT_BOOL, "Whether to remove superfluous semicolons");
 
    unc_begin_group(UG_preprocessor, "Preprocessor options");
-   unc_add_option("pp_indent", UO_pp_indent, AT_IARF, "Add or remove indent of preprocessor directives");
-   unc_add_option("pp_space", UO_pp_space, AT_IARF, "Add or remove space between # and, say, define");
+   unc_add_option("pp_indent", UO_pp_indent, AT_IARF,
+                  "Control indent of preprocessors inside #if blocks at brace level 0");
+   unc_add_option("pp_indent_at_level", UO_pp_indent_at_level, AT_BOOL,
+                  "Whether to indent at the brace level (true) or from column 1 (false)\n"
+                  "Region stuff is always explicitly controlled");
+   unc_add_option("pp_space", UO_pp_space, AT_IARF,
+                  "Add or remove space after # based on pp_level of #if blocks");
    unc_add_option("pp_indent_region", UO_pp_indent_region, AT_NUM,
                   "The indent for #region and #endregion in C# and '#pragma region' in C/C++");
    unc_add_option("pp_region_indent_code", UO_pp_region_indent_code, AT_BOOL,
                   "Whether to indent the code between #region and #endregion");
+   unc_add_option("pp_indent_if", UO_pp_indent_if, AT_NUM,
+                  "The indent for #if, #else, and #endif when not at file-level");
+   unc_add_option("pp_indent_if", UO_pp_indent_if, AT_NUM,
+                  "The indent for #if, #else, and #endif when not at file-level");
+   unc_add_option("pp_if_indent_code", UO_pp_if_indent_code, AT_BOOL,
+                  "Whether to indent the code between #if, #else and #endif when not a file-level");
 }
 
 const group_map_value *get_group_name(int ug)

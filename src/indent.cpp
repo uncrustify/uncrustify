@@ -344,7 +344,7 @@ void indent_text(void)
          {
             /* Indent the body of a #region here */
             if (cpd.settings[UO_pp_region_indent_code].b &&
-                (pc->type == CT_PREPROC_INDENT) &&
+                (pc->type == CT_PREPROC) &&
                 (pc->parent_type == CT_PP_REGION))
             {
                next = chunk_get_next(pc);
@@ -364,7 +364,11 @@ void indent_text(void)
             frm.level++;
             indent_pse_push(frm, chunk_get_next(pc));
 
-            if (pc->type == CT_PREPROC_INDENT)
+            if (pc->parent_type == CT_PP_DEFINE)
+            {
+               frm.pse[frm.pse_tos].indent = 1 + indent_size;
+            }
+            else
             {
                if (frm.pse[frm.pse_tos - 1].type == CT_PP_REGION_INDENT)
                {
@@ -387,10 +391,6 @@ void indent_text(void)
                      frm.pse[frm.pse_tos].indent += val;
                   }
                }
-            }
-            else
-            {
-               frm.pse[frm.pse_tos].indent = 1 + indent_size;
             }
             frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
          }
@@ -944,19 +944,11 @@ void indent_text(void)
                     __func__, pc->orig_line, frm.pse[frm.pse_tos].indent_tmp);
             indent_comment(pc, frm.pse[frm.pse_tos].indent_tmp);
          }
-         else if (pc->type == CT_PREPROC_INDENT)
+         else if (pc->type == CT_PREPROC)
          {
             LOG_FMT(LINDENT, "%s: %d] pp-indent => %d [%.*s]\n",
                     __func__, pc->orig_line, indent_column, pc->len, pc->str);
             reindent_line(pc, indent_column);
-         }
-         else if (pc->type == CT_PREPROC)
-         {
-            /* Preprocs are always in column 1. See indent_preproc() */
-            if (pc->column != 1)
-            {
-               reindent_line(pc, 1);
-            }
          }
          else if (chunk_is_paren_close(pc))
          {
@@ -1244,23 +1236,13 @@ static void indent_comment(chunk_t *pc, int col)
 }
 
 /**
- * Put spaces on either side of the preproc (#) symbol.
- * This is done by pointing pc->str into pp_str and adjusting the
- * length.
+ * Scan to see if the whole file is covered by one #ifdef
  */
-void indent_preproc(void)
+static bool ifdef_over_whole_file()
 {
    chunk_t *pc;
    chunk_t *next;
-   int     pp_level;
-   int     pp_level_sub = 0;
-   int     tmp;
 
-   /* Define a string of 16 spaces + # + 16 spaces */
-   static const char *pp_str  = "                #                ";
-   static const char *alt_str = "                %:                ";
-
-   /* Scan to see if the whole file is covered by one #ifdef */
    int stage = 0;
 
    for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next(pc))
@@ -1309,6 +1291,26 @@ void indent_preproc(void)
    if (stage == 2)
    {
       LOG_FMT(LINFO, "The whole file is covered by a #IF\n");
+      return(true);
+   }
+   return(stage == 2);
+}
+
+/**
+ * Indent the preprocessor stuff from column 1.
+ * FIXME: This is broken if there is a comment or escaped newline
+ * between '#' and 'define'.
+ */
+void indent_preproc(void)
+{
+   chunk_t *pc;
+   chunk_t *next;
+   int     pp_level;
+   int     pp_level_sub = 0;
+
+   /* Scan to see if the whole file is covered by one #ifdef */
+   if (ifdef_over_whole_file())
+   {
       pp_level_sub = 1;
    }
 
@@ -1321,66 +1323,45 @@ void indent_preproc(void)
 
       next = chunk_get_next_ncnl(pc);
 
-      if (pc->column != 1)
-      {
-         /* Don't handle preprocessors that aren't in column 1 */
-         LOG_FMT(LINFO, "%s: Line %d doesn't start in column 1 (%d)\n",
-                 __func__, pc->orig_line, pc->column);
-         continue;
-      }
-
-      /* point into pp_str */
-      if (pc->len == 2)
-      {
-         /* alternate token crap */
-         pc->str = &alt_str[16];
-      }
-      else
-      {
-         pc->str = &pp_str[16];
-      }
-
       pp_level = pc->pp_level - pp_level_sub;
       if (pp_level < 0)
       {
          pp_level = 0;
       }
-      else if (pp_level > 16)
-      {
-         pp_level = 16;
-      }
 
-      /* Note that the indent is removed by default */
-      if ((next->type == CT_PP_REGION) || (next->type == CT_PP_ENDREGION))
+      /* Adjust the indent of the '#' */
+      if ((cpd.settings[UO_pp_indent].a & AV_ADD) != 0)
       {
-         /* no spaces allowed - this gets indented */
+         reindent_line(pc, 1 + pp_level);
       }
-      else if ((cpd.settings[UO_pp_indent].a & AV_ADD) != 0)
+      else if ((cpd.settings[UO_pp_indent].a & AV_REMOVE) != 0)
       {
-         /* Need to add some spaces */
-         pc->str -= pp_level;
-         pc->len += pp_level;
-      }
-      else if (cpd.settings[UO_pp_indent].a == AV_IGNORE)
-      {
-         tmp      = (pc->orig_col <= 16) ? pc->orig_col - 1 : 16;
-         pc->str -= tmp;
-         pc->len += tmp;
+         reindent_line(pc, 1);
       }
 
       /* Add spacing by adjusting the length */
-      if ((cpd.settings[UO_pp_space].a & AV_ADD) != 0)
+      if ((cpd.settings[UO_pp_space].a != AV_IGNORE) && (next != NULL))
       {
-         pc->len += pp_level;
+         if ((cpd.settings[UO_pp_space].a & AV_ADD) != 0)
+         {
+            reindent_line(next, pc->column + pc->len + pp_level);
+         }
+         else if ((cpd.settings[UO_pp_space].a & AV_REMOVE) != 0)
+         {
+            reindent_line(next, pc->column + pc->len);
+         }
       }
 
-      next = chunk_get_next(pc);
-      if (next != NULL)
+      /* Mark as already handled if not region stuff or in column 1 */
+      if ((!cpd.settings[UO_pp_indent_at_level].b ||
+           (pc->brace_level <= (pc->parent_type == CT_PP_DEFINE ? 1 : 0))) &&
+          (pc->parent_type != CT_PP_REGION) &&
+          (pc->parent_type != CT_PP_ENDREGION))
       {
-         reindent_line(next, pc->len + 1);
+         pc->flags |= PCF_DONT_INDENT;
       }
 
       LOG_FMT(LPPIS, "%s: Indent line %d to %d (len %d, next->col %d)\n",
-              __func__, pc->orig_line, pp_level, pc->len, next->column);
+              __func__, pc->orig_line, 1 + pp_level, pc->len, next->column);
    }
 }

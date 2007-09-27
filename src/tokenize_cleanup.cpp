@@ -301,12 +301,6 @@ void tokenize_cleanup(void)
       if (pc->type == CT_PREPROC)
       {
          pc->parent_type = next->type;
-
-         if ((next->type == CT_PP_REGION) ||
-             (next->type == CT_PP_ENDREGION))
-         {
-            pc->type = CT_PREPROC_INDENT;
-         }
       }
 
       /* Detect "pragma region" and "pragma endregion" */
@@ -318,7 +312,6 @@ void tokenize_cleanup(void)
             pc->type = (*next->str == 'r') ? CT_PP_REGION : CT_PP_ENDREGION;
 
             prev->parent_type = pc->type;
-            prev->type        = CT_PREPROC_INDENT;
          }
       }
 
