@@ -435,11 +435,9 @@ void register_options(void)
    unc_add_option("pp_region_indent_code", UO_pp_region_indent_code, AT_BOOL,
                   "Whether to indent the code between #region and #endregion");
    unc_add_option("pp_indent_if", UO_pp_indent_if, AT_NUM,
-                  "The indent for #if, #else, and #endif when not at file-level");
-   unc_add_option("pp_indent_if", UO_pp_indent_if, AT_NUM,
-                  "The indent for #if, #else, and #endif when not at file-level");
+                  "If pp_indent_at_level=true, sets the indent for #if, #else, and #endif when not at file-level");
    unc_add_option("pp_if_indent_code", UO_pp_if_indent_code, AT_BOOL,
-                  "Whether to indent the code between #if, #else and #endif when not a file-level");
+                  "If pp_indent_at_level=true, control whether to indent the code between #if, #else and #endif when not a file-level");
 }
 
 const group_map_value *get_group_name(int ug)

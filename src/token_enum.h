@@ -214,6 +214,7 @@ typedef enum
    CT_PP_REGION,        /* C# #region */
    CT_PP_ENDREGION,     /* C# #endregion */
    CT_PP_REGION_INDENT, /* Dummy token for indenting a C# #region */
+   CT_PP_IF_INDENT,     /* Dummy token for indenting a #if stuff */
    CT_PP_OTHER,         /* #line, #error, #pragma, etc */
    /* end PP types */
 

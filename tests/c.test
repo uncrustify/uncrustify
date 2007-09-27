@@ -158,3 +158,9 @@
 21000 ben.cfg                  sql/mysql.sqc
 21001 ben.cfg                  sql/sta-select.sqc
 
+
+21010 pp_if_indent-0.cfg       c/ifdef-indent.c
+21011 pp_if_indent-1.cfg       c/ifdef-indent.c
+21012 pp_if_indent-2.cfg       c/ifdef-indent.c
+21013 pp_if_indent-3.cfg       c/ifdef-indent.c
+

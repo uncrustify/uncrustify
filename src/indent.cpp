@@ -334,6 +334,15 @@ void indent_text(void)
             {
                indent_pse_pop(frm, pc);
             }
+
+            /* If we just removed an #endregion, then check to see if a
+             * PP_REGION_INDENT entry is right below it
+             */
+            if (((type == CT_PP_ENDIF) || (type == CT_PP_ELSE)) &&
+                (frm.pse[frm.pse_tos].type == CT_PP_IF_INDENT))
+            {
+               indent_pse_pop(frm, pc);
+            }
          }
       }
       else
@@ -360,6 +369,24 @@ void indent_text(void)
                frm.pse[frm.pse_tos].in_preproc = false;
             }
 
+            /* Indent the body of a #if here */
+            if (cpd.settings[UO_pp_if_indent_code].b &&
+                (pc->type == CT_PREPROC) &&
+                (pc->parent_type == CT_PP_IF))
+            {
+               next = chunk_get_next(pc);
+               /* Hack to get the logs to look right */
+               next->type = CT_PP_IF_INDENT;
+               indent_pse_push(frm, next);
+               next->type = CT_PP_IF;
+
+               /* Indent one level */
+               frm.pse[frm.pse_tos].indent     = frm.pse[frm.pse_tos - 1].indent + indent_size;
+               frm.pse[frm.pse_tos].indent_tab = frm.pse[frm.pse_tos - 1].indent_tab + indent_size;;
+               frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
+               frm.pse[frm.pse_tos].in_preproc = false;
+            }
+
             /* Transition into a preproc by creating a dummy indent */
             frm.level++;
             indent_pse_push(frm, chunk_get_next(pc));
@@ -370,7 +397,8 @@ void indent_text(void)
             }
             else
             {
-               if (frm.pse[frm.pse_tos - 1].type == CT_PP_REGION_INDENT)
+               if ((frm.pse[frm.pse_tos - 1].type == CT_PP_REGION_INDENT) ||
+                   (frm.pse[frm.pse_tos - 1].type == CT_PP_IF_INDENT))
                {
                   frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 2].indent;
                }
@@ -382,6 +410,20 @@ void indent_text(void)
                    (pc->parent_type == CT_PP_ENDREGION))
                {
                   int val = cpd.settings[UO_pp_indent_region].n;
+                  if (val > 0)
+                  {
+                     frm.pse[frm.pse_tos].indent = val;
+                  }
+                  else
+                  {
+                     frm.pse[frm.pse_tos].indent += val;
+                  }
+               }
+               else if ((pc->parent_type == CT_PP_IF) ||
+                        (pc->parent_type == CT_PP_ELSE) ||
+                        (pc->parent_type == CT_PP_ENDIF))
+               {
+                  int val = cpd.settings[UO_pp_indent_if].n;
                   if (val > 0)
                   {
                      frm.pse[frm.pse_tos].indent = val;

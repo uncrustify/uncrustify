@@ -1,7 +1,7 @@
 #ifdef foo
-#include <foo1.h>
+ #include <foo1.h>
 #else
-#include <foo2.h>
+ #include <foo2.h>
 #endif
 
 int
@@ -11,16 +11,16 @@ show_interrupts(struct seq_file *p, void *v)
 	a++;
 #else
 	for (b = 0; b < 9; b++)
-		if (b & 1)
-			k++;
+	    if (b & 1)
+		k++;
 #endif
 
     if (v)
     {
-       bar(v);
-       #if DEBUG == 1
-       printf("yup\n");
-       #endif
+	bar(v);
+#if DEBUG == 1
+	    printf("yup\n");
+#endif
     }
 }
 
