@@ -257,7 +257,7 @@ void fix_symbols(void)
 
       /* A [] in C# and D only follows a type */
       if ((pc->type == CT_TSQUARE) &&
-          ((cpd.lang_flags & (LANG_D | LANG_CS)) != 0))
+          ((cpd.lang_flags & (LANG_D | LANG_CS | LANG_VALA)) != 0))
       {
          if ((prev != NULL) && (prev->type == CT_WORD))
          {
@@ -462,8 +462,7 @@ void fix_symbols(void)
            (pc->type == CT_STRUCT)) &&
           (pc->level == pc->brace_level))
       {
-         /* do other languages name the ctor the same as the class? */
-         if ((cpd.lang_flags & LANG_CPP) != 0)
+         if ((pc->type != CT_STRUCT) || ((cpd.lang_flags & LANG_C) == 0))
          {
             mark_class_ctor(pc);
          }

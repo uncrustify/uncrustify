@@ -187,18 +187,19 @@ struct chunk_t
 
 enum
 {
-   LANG_C    = 0x01,
-   LANG_CPP  = 0x02,
-   LANG_D    = 0x04,
-   LANG_CS   = 0x08,     /*<< C# or C-sharp */
-   LANG_JAVA = 0x10,
-   LANG_OC   = 0x20,     /*<< Objective C */
-   LANG_PAWN = 0x40,
+   LANG_C    = 0x0001,
+   LANG_CPP  = 0x0002,
+   LANG_D    = 0x0004,
+   LANG_CS   = 0x0008,     /*<< C# or C-sharp */
+   LANG_JAVA = 0x0010,
+   LANG_OC   = 0x0020,     /*<< Objective C */
+   LANG_VALA = 0x0040,     /*<< Like C# */
+   LANG_PAWN = 0x0080,
 
-   LANG_ALLC = 0x3f,
-   LANG_ALL  = 0x7f,
+   LANG_ALLC = 0x007f,
+   LANG_ALL  = 0x00ff,
 
-   FLAG_PP   = 0x80,     /*<< only appears in a preprocessor */
+   FLAG_PP   = 0x8000,     /*<< only appears in a preprocessor */
 };
 
 /**
@@ -219,7 +220,7 @@ typedef struct
 {
    const char *tag;
    c_token_t  type;
-   UINT8      lang_flags;
+   int        lang_flags;
 } chunk_tag_t;
 
 typedef struct

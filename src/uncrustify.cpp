@@ -885,6 +885,7 @@ struct file_lang languages[] =
    { ".cpp",  "CPP",  LANG_CPP  },
    { ".d",    "D",    LANG_D    },
    { ".cs",   "CS",   LANG_CS   },
+   { ".vala", "VALA", LANG_VALA },
    { ".java", "JAVA", LANG_JAVA },
    { ".pawn", "PAWN", LANG_PAWN },
    { ".p",    "",     LANG_PAWN },
