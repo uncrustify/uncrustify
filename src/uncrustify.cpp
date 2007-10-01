@@ -126,7 +126,6 @@ static void usage_exit(const char *msg, const char *argv0, int code)
            " -L SEV       : Set the log severity (see log_levels.h)\n"
            " -s           : Show the log severity in the logs\n"
            " --decode FLAG: Print FLAG (chunk flags) as text and exit\n"
-           " --kw-check   : Check the sort order of the static keyword table\n"
            "\n"
            "If no input files are specified, the input is read from stdin\n"
            "If -F is used or files are specified on the command line, the output is 'prefix/filename' + suffix\n"
@@ -155,9 +154,10 @@ int main(int argc, char *argv[])
    int        idx;
    const char *p_arg;
 
-   /* If ran without options... show the usage info */
+   /* If ran without options... check keywork sort and show the usage info */
    if (argc == 1)
    {
+      keywords_are_sorted();
       usage_exit(NULL, argv[0], EXIT_SUCCESS);
    }
 
@@ -227,11 +227,6 @@ int main(int argc, char *argv[])
    if (arg.Present("-s") || arg.Present("--show"))
    {
       log_show_sev(true);
-   }
-
-   if (arg.Present("--kw-check") && !keywords_are_sorted())
-   {
-      return(EXIT_FAILURE);
    }
 
    /* Load the config file */
