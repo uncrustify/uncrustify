@@ -58,7 +58,7 @@ static void add_parens_between(chunk_t *first, chunk_t *last)
    chunk_t *last_p;
    chunk_t *tmp;
 
-   LOG_FMT(LPARADD, "%s: line %d between %.*s [lvl=%d] and %.*s [vlv=%d]\n",
+   LOG_FMT(LPARADD, "%s: line %d between %.*s [lvl=%d] and %.*s [lvl=%d]\n",
            __func__, first->orig_line,
            first->len, first->str, first->level,
            last->len, last->str, last->level);
