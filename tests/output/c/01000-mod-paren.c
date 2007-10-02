@@ -30,3 +30,17 @@ void fooo()
    {
    }
 }
+
+void foo3()
+{
+   if ((strcmp(a, b) == 0) && (total < 5))
+   {
+      add_item(a);
+   }
+
+   if (glob_add_path(gd, gd->dir, NULL,
+                     (flags & GLOB_MARK) && S_ISDIR(gd->st.st_mode)) != 0)
+   {
+      bar();
+   }
+}
