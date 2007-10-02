@@ -68,11 +68,12 @@ enum
    LTEMPL    = 52,    /* Template detection */
    LINDENT2  = 53,    /* indent_text tab level */
    LPARADD   = 54,    /* adding parens in if/while */
-   LCMTNL    = 55,    /* newlines before comments */
-   LTEMPFUNC = 56,    /* Template function detection */
-   LDELSEMI  = 57,    /* Removing semicolons */
-   LFPARAM   = 58,    /* Testing for a full parameter */
-   LNL1LINE  = 59,    /* NL check for 1 liners */
+   LPARADD2  = 55,    /* adding parens in if/while - details */
+   LCMTNL    = 56,    /* newlines before comments */
+   LTEMPFUNC = 57,    /* Template function detection */
+   LDELSEMI  = 58,    /* Removing semicolons */
+   LFPARAM   = 59,    /* Testing for a full parameter */
+   LNL1LINE  = 60,    /* NL check for 1 liners */
 };
 
 #endif   /* LOG_LEVELS_H_INCLUDED */
