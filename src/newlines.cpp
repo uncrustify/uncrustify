@@ -1077,6 +1077,15 @@ static void newline_func_def(chunk_t *start)
    chunk_t *prev = NULL;
    chunk_t *tmp;
 
+   if (cpd.settings[UO_nl_func_paren].a != AV_IGNORE)
+   {
+      prev = chunk_get_prev_ncnl(start);
+      if (prev != NULL)
+      {
+         newline_iarf(prev, cpd.settings[UO_nl_func_paren].a);
+      }
+   }
+
    /* Handle break newlines type and function */
    if (cpd.settings[UO_nl_func_type_name].a != AV_IGNORE)
    {
@@ -1494,7 +1503,8 @@ void newlines_cleanup_braces(void)
              ((cpd.settings[UO_nl_func_decl_start].a != AV_IGNORE) ||
               (cpd.settings[UO_nl_func_decl_args].a != AV_IGNORE) ||
               (cpd.settings[UO_nl_func_decl_end].a != AV_IGNORE) ||
-              (cpd.settings[UO_nl_func_type_name].a != AV_IGNORE)))
+              (cpd.settings[UO_nl_func_type_name].a != AV_IGNORE) ||
+              (cpd.settings[UO_nl_func_paren].a != AV_IGNORE)))
          {
             newline_func_def(pc);
          }

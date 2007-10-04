@@ -34,6 +34,7 @@ Changes in uncrustify-0.40
  - Add pp_indent_if and pp_if_indent_code
  - Add initial VALA support
  - Fix a problem with mod_full_paren_if_bool and functions
+ - Add nl_func_paren
 
 
 Changes in uncrustify-0.39

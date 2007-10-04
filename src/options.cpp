@@ -284,6 +284,7 @@ void register_options(void)
    unc_add_option("nl_class_brace", UO_nl_class_brace, AT_IARF, "Add or remove newline between 'class' and '{'");
    unc_add_option("nl_class_init_args", UO_nl_class_init_args, AT_IARF, "Add or remove newline after each ',' in the constructor member initialization");
    unc_add_option("nl_func_type_name", UO_nl_func_type_name, AT_IARF, "Add or remove newline between return type and function name in definition");
+   unc_add_option("nl_func_paren", UO_nl_func_paren, AT_IARF, "Add or remove newline between a function name and the opening '('");
    unc_add_option("nl_func_decl_start", UO_nl_func_decl_start, AT_IARF, "Add or remove newline after '(' in a function declaration");
    unc_add_option("nl_func_decl_args", UO_nl_func_decl_args, AT_IARF, "Add or remove newline after each ',' in a function declaration");
    unc_add_option("nl_func_decl_end", UO_nl_func_decl_end, AT_IARF, "Add or remove newline before the ')' in a function declaration");
