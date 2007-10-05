@@ -10,66 +10,85 @@
  */
 
 /**
- * A simple list manager.
+ * A simple list manager for a double-linked list.
  * Class T must define 'next' and 'prev', which must be pointers to type T.
  */
 
 template<class T> class ListManager
 {
 protected:
-   /* I hope T isn't big, 'cause this declares a copy of it */
-   T head;
+   /* Pointers to the head and tail.
+    * They are either both NULL or both non-NULL.
+    */
+   T *first;
+   T *last;
+
+private:
+   /* Hide copy constructor */
+   ListManager(const ListManager& ref)
+   {
+      first = NULL;
+      last  = NULL;
+   }
 
 public:
    ListManager()
    {
-      head.next = head.prev = &head;
-   }
-
-   ListManager(const ListManager& ref)
-   {
-      /* TODO: can't copy the list... what to do?? */
-      head.next = head.prev = &head;
+      first = NULL;
+      last  = NULL;
    }
 
    T *GetHead()
    {
-      return(GetNext(&head));
+      return(first);
    }
 
    T *GetTail()
    {
-      return(GetPrev(&head));
+      return(last);
    }
 
    T *GetNext(T *ref)
    {
-      return(((ref != NULL) && (ref->next != &head)) ? ref->next : NULL);
+      return((ref != NULL) ? ref->next : NULL);
    }
 
    T *GetPrev(T *ref)
    {
-      return(((ref != NULL) && (ref->prev != &head)) ? ref->prev : NULL);
+      return((ref != NULL) ? ref->prev : NULL);
    }
 
    void InitEntry(T *obj) const
    {
       if (obj != NULL)
       {
-         obj->next = obj->prev = obj;
+         obj->next = NULL;
+         obj->prev = NULL;
       }
    }
 
-   void Pop(T *ref)
+   void Pop(T *obj)
    {
-      if (ref != NULL)
+      if (obj != NULL)
       {
-         if (ref->next != ref)
+         if (first == obj)
          {
-            ref->next->prev = ref->prev;
-            ref->prev->next = ref->next;
+            first = obj->next;
          }
-         ref->next = ref->prev = ref;
+         if (last == obj)
+         {
+            last = obj->prev;
+         }
+         if (obj->next != NULL)
+         {
+            obj->next->prev = obj->prev;
+         }
+         if (obj->prev != NULL)
+         {
+            obj->prev->next = obj->next;
+         }
+         obj->next = NULL;
+         obj->prev = NULL;
       }
    }
 
@@ -106,10 +125,17 @@ public:
       if ((obj != NULL) && (ref != NULL))
       {
          Pop(obj);
-         obj->next       = ref->next;
-         obj->prev       = ref;
-         ref->next->prev = obj;
-         ref->next       = obj;
+         obj->next = ref->next;
+         obj->prev = ref;
+         if (ref->next != NULL)
+         {
+            ref->next->prev = obj;
+         }
+         else
+         {
+            last = obj;
+         }
+         ref->next = obj;
       }
    }
 
@@ -118,20 +144,49 @@ public:
       if ((obj != NULL) && (ref != NULL))
       {
          Pop(obj);
-         obj->next       = ref;
-         obj->prev       = ref->prev;
-         ref->prev->next = obj;
-         ref->prev       = obj;
+         obj->next = ref;
+         obj->prev = ref->prev;
+         if (ref->prev != NULL)
+         {
+            ref->prev->next = obj;
+         }
+         else
+         {
+            first = obj;
+         }
+         ref->prev = obj;
       }
    }
 
    void AddTail(T *obj)
    {
-      AddBefore(obj, &head);
+      obj->next = NULL;
+      obj->prev = last;
+      if (last == NULL)
+      {
+         last  = obj;
+         first = obj;
+      }
+      else
+      {
+         last->next = obj;
+      }
+      last = obj;
    }
 
    void AddHead(T *obj)
    {
-      AddAfter(obj, &head);
+      obj->next = first;
+      obj->prev = NULL;
+      if (first == NULL)
+      {
+         last  = obj;
+         first = obj;
+      }
+      else
+      {
+         first->prev = obj;
+      }
+      first = obj;
    }
 };
