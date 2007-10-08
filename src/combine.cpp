@@ -423,6 +423,7 @@ void fix_symbols(void)
          }
       }
 
+      /* Mark the parameters in catch() */
       if ((pc->type == CT_CATCH) && (next->type == CT_SPAREN_OPEN))
       {
          fix_fcn_def_params(next);
@@ -1921,6 +1922,20 @@ static bool can_be_full_param(chunk_t *start, chunk_t *end)
  *  - mark return type
  *  - mark parameter types
  *  - mark brace pair
+ *
+ * REVISIT:
+ * This whole function is a mess.
+ * It needs to be reworked to eliminate duplicate logic and determine the
+ * function type more directly.
+ *  1. Skip to the close paren and see what is after.
+ *     a. semicolon - function call or function proto
+ *     b. open brace - function call (ie, list_for_each) or function def
+ *     c. open paren - function type or chained function call
+ *     d. qualifier - function def or proto, continue to semicolon or open brace
+ *  2. Examine the 'parameters' to see if it can be a proto/def
+ *  3. Examine what is before the function name to see if it is a proto or call
+ * Constructor/destructor detection should have already been done when the
+ * 'class' token was encountered (see mark_class_ctor).
  */
 static void mark_function(chunk_t *pc)
 {
@@ -1998,6 +2013,7 @@ static void mark_function(chunk_t *pc)
          pc->flags   &= ~PCF_VAR_1ST_DEF;
          tmp2->flags |= PCF_VAR_1ST_DEF;
          flag_parens(tmp, 0, CT_FPAREN_OPEN, CT_FUNC_PROTO, false);
+         fix_fcn_def_params(tmp);
          return;
       }
 

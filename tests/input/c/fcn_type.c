@@ -29,3 +29,8 @@ SMU foo(void)
    a = 4;
    return SMUIFY(a);
 }
+
+typedef struct {
+    void (*newObject)(const object_info * info, const IObject * *interface, struct object_h* instance);
+} IObjectFactory;
+

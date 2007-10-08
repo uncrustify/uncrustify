@@ -35,6 +35,7 @@ Changes in uncrustify-0.40
  - Add initial VALA support
  - Fix a problem with mod_full_paren_if_bool and functions
  - Add nl_func_paren
+ - Fix function type parameter marking (broken in the last few releases)
 
 
 Changes in uncrustify-0.39
