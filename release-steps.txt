@@ -5,7 +5,7 @@ Release steps.
 Just in case I don't do a release for a while and forget what to do... =)
 
 UNC_URL=https://uncrustify.svn.sourceforge.net/svnroot/uncrustify
-UNC_REL=0.39
+UNC_REL=0.40
 
 1. Make sure all tests pass
 
