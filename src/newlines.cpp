@@ -212,6 +212,8 @@ static chunk_t *newline_add_between2(chunk_t *start, chunk_t *end,
 /**
  * Removes any CT_NEWLINE or CT_NL_CONT between start and end.
  * Start must be before end on the chunk list.
+ * If the 'PCF_IN_PREPROC' status differs between two tags, we can't remove
+ * the newline.
  *
  * @param start   The starting chunk (cannot be a newline)
  * @param end     The ending chunk (cannot be a newline)
@@ -228,9 +230,17 @@ static bool newline_del_between2(chunk_t *start, chunk_t *end,
    chunk_t *pc    = start;
    bool    retval = false;
 
-   LOG_FMT(LNEWLINE, "%s: '%.*s' line %d:%d and '%.*s' line %d:%d : caller=%s:%d\n",
+   LOG_FMT(LNEWLINE, "%s: '%.*s' line %d:%d and '%.*s' line %d:%d : caller=%s:%d preproc=%d/%d\n",
            __func__, start->len, start->str, start->orig_line, start->orig_col,
-           end->len, end->str, end->orig_line, end->orig_col, func, line);
+           end->len, end->str, end->orig_line, end->orig_col, func, line,
+           ((start->flags & PCF_IN_PREPROC) != 0),
+           ((end->flags & PCF_IN_PREPROC) != 0));
+
+   /* Can't remove anything if the preproc status differs */
+   if (!chunk_same_preproc(start, end))
+   {
+      return(false);
+   }
 
    do
    {
@@ -238,15 +248,14 @@ static bool newline_del_between2(chunk_t *start, chunk_t *end,
       if (chunk_is_newline(pc))
       {
          prev = chunk_get_prev(pc);
-         if (!chunk_is_comment(prev) && !chunk_is_comment(next))
+         if ((!chunk_is_comment(prev) && !chunk_is_comment(next)) ||
+             chunk_is_newline(prev) ||
+             chunk_is_newline(next))
          {
-            chunk_del(pc);
-            retval = true;
-         }
-         else if (chunk_is_newline(prev) ||
-                  chunk_is_newline(next))
-         {
-            chunk_del(pc);
+            if (chunk_safe_to_del_nl(pc))
+            {
+               chunk_del(pc);
+            }
             retval = true;
          }
          else
@@ -376,7 +385,11 @@ static void newlines_if_for_while_switch_pre_blank_lines(chunk_t *start, argval_
                /* can keep using pc because anything other than newline stops loop, and we delete if newline */
                while (chunk_is_newline(prev = chunk_get_prev_nvb(pc)))
                {
-                  chunk_del(prev);
+                  /* Make sure we don't combine a preproc and non-preproc */
+                  if (chunk_safe_to_del_nl(prev))
+                  {
+                     chunk_del(prev);
+                  }
                }
             }
 
@@ -450,7 +463,10 @@ static void remove_next_newlines(chunk_t *start)
    {
       if (chunk_is_newline(next))
       {
-         chunk_del(next);
+         if (chunk_safe_to_del_nl(next))
+         {
+            chunk_del(next);
+         }
       }
       else if (chunk_is_vbrace(next))
       {
@@ -810,7 +826,10 @@ static void newlines_brace_pair(chunk_t *br_open)
             next = chunk_get_next(pc);
             if (pc->type == CT_NEWLINE)
             {
-               chunk_del(pc);
+               if (chunk_safe_to_del_nl(pc))
+               {
+                  chunk_del(pc);
+               }
             }
             pc = next;
          }
@@ -1866,12 +1885,14 @@ void newlines_class_colon_pos(void)
 
          if (cpd.settings[UO_nl_class_colon].a == AV_REMOVE)
          {
-            if (chunk_is_newline(prev))
+            if (chunk_is_newline(prev) &&
+                chunk_safe_to_del_nl(prev))
             {
                chunk_del(prev);
                prev = chunk_get_prev_nc(pc);
             }
-            if (chunk_is_newline(next))
+            if (chunk_is_newline(next) &&
+                chunk_safe_to_del_nl(next))
             {
                chunk_del(next);
                next = chunk_get_next_nc(pc);
@@ -1913,7 +1934,7 @@ void newlines_class_colon_pos(void)
                {
                   newline_add_before(pc);
                   next = chunk_get_next_nc(pc);
-                  if (chunk_is_newline(next))
+                  if (chunk_is_newline(next) && chunk_safe_to_del_nl(next))
                   {
                      chunk_del(next);
                   }
@@ -1922,7 +1943,7 @@ void newlines_class_colon_pos(void)
             else if (cpd.settings[UO_nl_class_init_args].a == AV_REMOVE)
             {
                next = chunk_get_next(pc);
-               if ((next != NULL) && (next->type == CT_NEWLINE))
+               if (chunk_is_newline(next) && chunk_safe_to_del_nl(next))
                {
                   chunk_del(next);
                }

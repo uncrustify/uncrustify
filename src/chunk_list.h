@@ -193,4 +193,25 @@ bool chunk_is_paren_close(chunk_t *pc)
            (pc->type == CT_FPAREN_CLOSE)));
 }
 
+/**
+ * Returns true if either chunk is null or both have the same preproc flags.
+ * If this is true, you can remove a newline/nl_cont between the two.
+ */
+static_inline
+bool chunk_same_preproc(chunk_t *pc1, chunk_t *pc2)
+{
+   return((pc1 == NULL) || (pc2 == NULL) ||
+          ((pc1->flags & PCF_IN_PREPROC) == (pc2->flags & PCF_IN_PREPROC)));
+}
+
+/**
+ * Returns true if it is safe to delete the newline token.
+ * The prev and next chunks must have the same PCF_IN_PREPROC flag.
+ */
+static_inline
+bool chunk_safe_to_del_nl(chunk_t *nl)
+{
+   return(chunk_same_preproc(chunk_get_prev(nl), chunk_get_next(nl)));
+}
+
 #endif   /* CHUNK_LIST_H_INCLUDED */

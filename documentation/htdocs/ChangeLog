@@ -36,6 +36,7 @@ Changes in uncrustify-0.40
  - Fix a problem with mod_full_paren_if_bool and functions
  - Add nl_func_paren
  - Fix function type parameter marking (broken in the last few releases)
+ - Don't remove newline chunks before/after a preprocessor
 
 
 Changes in uncrustify-0.39

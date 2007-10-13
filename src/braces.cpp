@@ -245,7 +245,10 @@ static void remove_brace(chunk_t *pc)
       }
       else
       {
-         chunk_del(tmp);
+         if (chunk_safe_to_del_nl(tmp))
+         {
+            chunk_del(tmp);
+         }
       }
    }
 }
