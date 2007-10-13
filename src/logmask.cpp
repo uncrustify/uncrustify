@@ -107,6 +107,13 @@ void logmask_from_string(const char *str, log_mask_t *mask)
    /* Start with a clean mask */
    logmask_set_all(mask, false);
 
+   /* If the first character is 'A', set all sevs */
+   if (toupper(*str) == 'A')
+   {
+      logmask_set_all(mask, true);
+      str++;
+   }
+
    while (*str != 0)
    {
       if (isspace(*str))
