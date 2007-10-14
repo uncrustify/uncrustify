@@ -265,7 +265,7 @@ struct cp_data
    UINT32             error_count;
    const char         *filename;
 
-   UINT8              lang_flags; // LANG_xxx
+   int                lang_flags; // LANG_xxx
 
    UINT16             line_number;
    UINT16             column;  /* column for parsing */
@@ -282,9 +282,6 @@ struct cp_data
 
    /* bumped up when a line is split or indented */
    int                changes;
-
-   /* dummy entries */
-   chunk_t            list_chunks;
 
    struct align_t     al[80];
    int                al_cnt;
