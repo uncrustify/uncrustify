@@ -683,7 +683,7 @@ static void uncrustify_file(const char *data, int data_len, FILE *pfout,
    /**
     * Parse the text into chunks
     */
-   tokenize(data, data_len);
+   tokenize(data, data_len, NULL);
 
    /**
     * Change certain token types based on simple sequence.

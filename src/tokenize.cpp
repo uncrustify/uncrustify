@@ -786,8 +786,11 @@ static bool parse_next(chunk_t *pc)
  * If output_text() were called immediately after, two things would happen:
  *  - trailing whitespace are removed.
  *  - leading space & tabs are converted to the appropriate format.
+ *
+ * All the tokens are inserted before ref. If ref is NULL, they are inserted
+ * at the end of the list.  Line numbers are relative to the start of the data.
  */
-void tokenize(const char *data, int data_len)
+void tokenize(const char *data, int data_len, chunk_t *ref)
 {
    int                idx = 0;
    chunk_t            chunk;
@@ -870,7 +873,7 @@ void tokenize(const char *data, int data_len)
             pc->flags &= ~PCF_IN_PREPROC;
          }
       }
-      pc = chunk_add(&chunk);
+      pc = chunk_add_before(&chunk, ref);
 
       /* A newline marks the end of a preprocessor */
       if ((pc->type == CT_NEWLINE) || (pc->type == CT_COMMENT_MULTI))

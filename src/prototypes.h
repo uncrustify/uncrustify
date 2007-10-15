@@ -147,7 +147,7 @@ chunk_t *newline_add_after(chunk_t *pc);
  *  tokenize.cpp
  */
 
-void tokenize(const char *data, int data_len);
+void tokenize(const char *data, int data_len, chunk_t *ref);
 
 
 /*

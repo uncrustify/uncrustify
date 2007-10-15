@@ -74,24 +74,46 @@ chunk_t *chunk_add(const chunk_t *pc_in)
    return(pc);
 }
 
+/**
+ * Add a copy after the given chunk.
+ * If ref is NULL, add at the head.
+ */
 chunk_t *chunk_add_after(const chunk_t *pc_in, chunk_t *ref)
 {
    chunk_t *pc;
 
    if ((pc = chunk_dup(pc_in)) != NULL)
    {
-      g_cl.AddAfter(pc, ref);
+      if (ref != NULL)
+      {
+         g_cl.AddAfter(pc, ref);
+      }
+      else
+      {
+         g_cl.AddHead(pc);
+      }
    }
    return(pc);
 }
 
+/**
+ * Add a copy before the given chunk.
+ * If ref is NULL, add at the head.
+ */
 chunk_t *chunk_add_before(const chunk_t *pc_in, chunk_t *ref)
 {
    chunk_t *pc;
 
    if ((pc = chunk_dup(pc_in)) != NULL)
    {
-      g_cl.AddBefore(pc, ref);
+      if (ref != NULL)
+      {
+         g_cl.AddBefore(pc, ref);
+      }
+      else
+      {
+         g_cl.AddTail(pc);
+      }
    }
    return(pc);
 }
