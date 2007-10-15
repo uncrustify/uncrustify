@@ -163,34 +163,9 @@ void output_options(FILE *pfile)
       ptr = get_option_name(idx);
       if (ptr != NULL)
       {
-         if (ptr->type == AT_BOOL)
-         {
-            fprintf(pfile, "%3d) %32s = %s\n",
-                    ptr->id, ptr->name,
-                    cpd.settings[ptr->id].b ? "True" : "False");
-         }
-         else if (ptr->type == AT_IARF)
-         {
-            fprintf(pfile, "%3d) %32s = %s\n",
-                    ptr->id, ptr->name,
-                    (cpd.settings[ptr->id].a == AV_ADD) ? "Add" :
-                    (cpd.settings[ptr->id].a == AV_REMOVE) ? "Remove" :
-                    (cpd.settings[ptr->id].a == AV_FORCE) ? "Force" : "Ignore");
-         }
-         else if (ptr->type == AT_LINE)
-         {
-            fprintf(pfile, "%3d) %32s = %s\n",
-                    ptr->id, ptr->name,
-                    (cpd.settings[ptr->id].le == LE_AUTO) ? "Auto" :
-                    (cpd.settings[ptr->id].le == LE_LF) ? "LF" :
-                    (cpd.settings[ptr->id].le == LE_CRLF) ? "CRLF" :
-                    (cpd.settings[ptr->id].le == LE_CR) ? "CR" : "???");
-         }
-         else  /* AT_NUM */
-         {
-            fprintf(pfile, "%3d) %32s = %d\n",
-                    ptr->id, ptr->name, cpd.settings[ptr->id].n);
-         }
+         fprintf(pfile, "%3d) %32s = %s\n",
+                 ptr->id, ptr->name,
+                 op_val_to_string(ptr->type, cpd.settings[ptr->id]).c_str());
       }
    }
 }

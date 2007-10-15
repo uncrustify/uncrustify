@@ -88,6 +88,10 @@ void unc_add_option(const char *name, uncrustify_options id, argtype_e type,
       value.max_val = 2;
       break;
 
+   case AT_STRING:
+      value.max_val = 0;
+      break;
+
    default:
       fprintf(stderr, "FATAL: Illegal option type %d for '%s'\n", type, name);
       exit(EXIT_FAILURE);
@@ -411,6 +415,11 @@ void register_options(void)
    unc_add_option("cmt_sp_before_star_cont", UO_cmt_sp_before_star_cont, AT_NUM, "The number of spaces to insert at the start of subsequent comment lines");
    unc_add_option("cmt_sp_after_star_cont", UO_cmt_sp_after_star_cont, AT_NUM, "The number of spaces to insert after the star on subsequent comment lines");
 
+   unc_add_option("cmt_insert_file_header", UO_cmt_insert_file_header, AT_STRING,
+                  "The filename that contains text to insert at the head of a file if the file doesn't start with a C++ comment.\n");
+   unc_add_option("cmt_insert_func_header", UO_cmt_insert_func_header, AT_STRING,
+                  "The filename that contains text to insert at the head of a file if the file doesn't start with a C++ comment.\n");
+
    unc_begin_group(UG_codemodify, "Code modifying options (non-whitespace)");
    unc_add_option("mod_full_brace_do", UO_mod_full_brace_do, AT_IARF, "Add or remove braces on single-line 'do' statement");
    unc_add_option("mod_full_brace_for", UO_mod_full_brace_for, AT_IARF, "Add or remove braces on single-line 'for' statement");
@@ -594,6 +603,12 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
               cpd.filename, cpd.line_number, entry->name, val);
       cpd.error_count++;
       dest->b = false;
+      return;
+   }
+
+   if (entry->type == AT_STRING)
+   {
+      dest->str = strdup(val);
       return;
    }
 
@@ -965,6 +980,9 @@ std::string argtype_to_string(argtype_e argtype)
    case AT_POS:
       return("ignore/lead/trail");
 
+   case AT_STRING:
+      return("string");
+
    default:
       LOG_FMT(LWARN, "Unknown argtype '%d'\n", argtype);
       return("");
@@ -1010,6 +1028,10 @@ std::string number_to_string(int number)
    char buffer[12]; // 11 + 1
 
    sprintf(buffer, "%d", number);
+
+   /*NOTE: this creates a std:string class from the char array.
+    *      It isn't returning a pointer to stack memory.
+    */
    return(buffer);
 }
 
@@ -1072,6 +1094,9 @@ std::string op_val_to_string(argtype_e argtype, op_val_t op_val)
 
    case AT_POS:
       return(tokenpos_to_string(op_val.tp));
+
+   case AT_STRING:
+      return(op_val.str);
 
    default:
       LOG_FMT(LWARN, "Unknown argtype '%d'\n", argtype);

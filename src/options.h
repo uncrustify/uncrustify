@@ -21,6 +21,7 @@ enum argtype_e
    AT_NUM,     /**< Number */
    AT_LINE,    /**< Line Endings */
    AT_POS,     /**< start/end or Trail/Lead */
+   AT_STRING,  /**< string value */
 };
 
 /** Arg values - these are bit fields*/
@@ -57,6 +58,7 @@ union op_val_t
    bool       b;
    lineends_e le;
    tokenpos_e tp;
+   const char *str;
 };
 
 /** Groups for options */
@@ -424,6 +426,9 @@ enum uncrustify_options
    UO_cmt_c_nl_end,             // put a nl before the */ in a combined group
    UO_cmt_cpp_nl_start,         // put a blank /* at the start of a converted group
    UO_cmt_cpp_nl_end,           // put a nl before the */ in a converted group
+
+   UO_cmt_insert_file_header,
+   UO_cmt_insert_func_header,
 
    UO_string_escape_char,       // the string escape char to use
    UO_string_escape_char2,      // the string escape char to use

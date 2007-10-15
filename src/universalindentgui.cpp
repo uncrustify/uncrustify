@@ -186,6 +186,13 @@ void print_universal_indent_cfg(FILE *pfile)
                     option->name, option->name, option->name);
             break;
 
+         case AT_STRING:
+            // TODO: figure out what is needed for string options
+            // fprintf(pfile, "EditorType=multiple\n");
+            // fprintf(pfile, "Choices=%s=ignore|%s=lead|%s=trail\n",
+            //         option->name, option->name, option->name);
+            break;
+
          default:
             break;
          }
