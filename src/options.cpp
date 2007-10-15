@@ -1096,7 +1096,7 @@ std::string op_val_to_string(argtype_e argtype, op_val_t op_val)
       return(tokenpos_to_string(op_val.tp));
 
    case AT_STRING:
-      return(op_val.str);
+      return(op_val.str != NULL ? op_val.str : "");
 
    default:
       LOG_FMT(LWARN, "Unknown argtype '%d'\n", argtype);

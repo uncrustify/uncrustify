@@ -258,12 +258,24 @@ typedef struct chunk_stack
    int                 size;
 } chunk_stack_t;
 
+struct file_mem
+{
+   char *data;
+   int  length;
+};
+
 struct cp_data
 {
    FILE               *fout;
 
    UINT32             error_count;
    const char         *filename;
+
+   /* data for option cmt_insert_file_header */
+   file_mem           file_hdr;
+
+   /* data for option cmt_insert_func_header */
+   file_mem           func_hdr;
 
    int                lang_flags; // LANG_xxx
 

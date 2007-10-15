@@ -48,6 +48,7 @@ static void do_source_file(const char *filename, FILE *pfout, const char *parsed
                            const char *prefix, const char *suffix, bool no_backup);
 static void process_source_list(const char *source_list, const char *prefix,
                                 const char *suffix, bool no_backup);
+static int load_header_files();
 
 /**
  * Replace the brain-dead and non-portable basename().
@@ -399,6 +400,8 @@ int main(int argc, char *argv[])
       return(0);
    }
 
+   load_header_files();
+
    if ((source_file == NULL) && (source_list == NULL) && (p_arg == NULL))
    {
       /* no input specified, so use stdin */
@@ -576,6 +579,77 @@ static void make_folders(char *outname)
 }
 
 /**
+ * Loads a file into memory
+ */
+int load_mem_file(const char *filename, file_mem& fm)
+{
+   int         retval = -1;
+   struct stat my_stat;
+   FILE        *p_file;
+
+   fm.data   = NULL;
+   fm.length = 0;
+
+   /* Try to read in the file */
+   p_file = fopen(filename, "rb");
+   if (p_file == NULL)
+   {
+      LOG_FMT(LERR, "%s: fopen(%s) failed: %s (%d)\n",
+              __func__, filename, strerror(errno), errno);
+      cpd.error_count++;
+      return(-1);
+   }
+
+   /* this really can't fail... */
+   (void)fstat(fileno(p_file), &my_stat);
+
+   fm.length = my_stat.st_size;
+   fm.data   = (char *)malloc(fm.length + 1);
+   if (fm.data == NULL)
+   {
+      LOG_FMT(LERR, "%s: fopen(%s) failed: out of memory\n", __func__, filename);
+      cpd.error_count++;
+   }
+   else if (fread(fm.data, fm.length, 1, p_file) != 1)
+   {
+      LOG_FMT(LERR, "%s: fread(%s) failed: %s (%d)\n",
+              __func__, filename, strerror(errno), errno);
+      cpd.error_count++;
+   }
+   else
+   {
+      fm.data[fm.length] = 0;
+      retval = 0;
+   }
+   fclose(p_file);
+
+   if ((retval != 0) && (fm.data != NULL))
+   {
+      free(fm.data);
+      fm.data   = NULL;
+      fm.length = 0;
+   }
+   return(retval);
+}
+
+static int load_header_files()
+{
+   int retval = 0;
+
+   if (cpd.settings[UO_cmt_insert_file_header].str != NULL)
+   {
+      retval |= load_mem_file(cpd.settings[UO_cmt_insert_file_header].str,
+                              cpd.file_hdr);
+   }
+   if (cpd.settings[UO_cmt_insert_func_header].str != NULL)
+   {
+      retval |= load_mem_file(cpd.settings[UO_cmt_insert_func_header].str,
+                              cpd.func_hdr);
+   }
+   return(retval);
+}
+
+/**
  * Does a source file.
  * If pfout is NULL, the source fileaname + ".uncrustify" is used.
  *
@@ -585,12 +659,9 @@ static void make_folders(char *outname)
 static void do_source_file(const char *filename, FILE *pfout, const char *parsed_file,
                            const char *prefix, const char *suffix, bool no_backup)
 {
-   int         data_len;
-   char        *data;
-   bool        did_open = false;
-   FILE        *p_file;
-   struct stat my_stat;
-   bool        need_backup = false;
+   bool     did_open    = false;
+   bool     need_backup = false;
+   file_mem fm;
 
    /* Do some simple language detection based on the filename */
    if (cpd.lang_flags == 0)
@@ -599,24 +670,11 @@ static void do_source_file(const char *filename, FILE *pfout, const char *parsed
    }
 
    /* Try to read in the source file */
-   p_file = fopen(filename, "rb");
-   if (p_file == NULL)
+   if (load_mem_file(filename, fm) < 0)
    {
-      LOG_FMT(LERR, "%s: fopen(%s) failed: %s (%d)\n",
-              __func__, filename, strerror(errno), errno);
-      cpd.error_count++;
+      /* Already logged the error */
       return;
    }
-
-   /*note: could have also just MMAP'd the file, if supported */
-   fstat(fileno(p_file), &my_stat);
-
-   data_len = my_stat.st_size;
-   data     = (char *)malloc(data_len + 1);
-   assert(data != NULL);
-   fread(data, data_len, 1, p_file);
-   data[data_len] = 0;
-   fclose(p_file);
 
    LOG_FMT(LSYS, "Parsing: %s as language %s\n",
            filename, language_to_string(cpd.lang_flags));
@@ -628,11 +686,11 @@ static void do_source_file(const char *filename, FILE *pfout, const char *parsed
 
       if (!no_backup && (prefix == NULL) && (suffix == NULL))
       {
-         if (backup_copy_file(filename, data, data_len) != SUCCESS)
+         if (backup_copy_file(filename, fm.data, fm.length) != SUCCESS)
          {
             LOG_FMT(LERR, "%s: Failed to create backup file for %s\n",
                     __func__, filename);
-            free(data);
+            free(fm.data);
             return;
          }
          need_backup = true;
@@ -654,7 +712,7 @@ static void do_source_file(const char *filename, FILE *pfout, const char *parsed
          LOG_FMT(LERR, "%s: Unable to create %s: %s (%d)\n",
                  __func__, outname, strerror(errno), errno);
          cpd.error_count++;
-         free(data);
+         free(fm.data);
          return;
       }
       did_open = true;
@@ -662,9 +720,9 @@ static void do_source_file(const char *filename, FILE *pfout, const char *parsed
    }
 
    cpd.filename = filename;
-   uncrustify_file(data, data_len, pfout, parsed_file);
+   uncrustify_file(fm.data, fm.length, pfout, parsed_file);
 
-   free(data);
+   free(fm.data);
 
    if (did_open)
    {
@@ -677,6 +735,52 @@ static void do_source_file(const char *filename, FILE *pfout, const char *parsed
    }
 }
 
+static void add_file_header()
+{
+   if (!chunk_is_comment(chunk_get_head()))
+   {
+      /*TODO: detect the typical #ifndef FOO / #define FOO sequence */
+      tokenize(cpd.file_hdr.data, cpd.file_hdr.length, chunk_get_head());
+   }
+}
+
+static void add_func_header()
+{
+   chunk_t *pc;
+   chunk_t *ref;
+
+   for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next_ncnlnp(pc))
+   {
+      if ((pc->type != CT_FUNC_PROTO) && (pc->type != CT_FUNC_DEF))
+      {
+         continue;
+      }
+
+      /* On a function proto or def. Back up to a close brace or semicolon on
+       * the same level
+       */
+      ref = pc;
+      while ((ref = chunk_get_prev(ref)) != NULL)
+      {
+         if (chunk_is_comment(ref) ||
+             ((ref->level != pc->level) &&
+              (ref->flags & PCF_IN_PREPROC)))
+         {
+            break;
+         }
+
+         if ((ref->level == pc->level) &&
+             ((ref->flags & PCF_IN_PREPROC) ||
+              (ref->type == CT_SEMICOLON) ||
+              (ref->type == CT_BRACE_CLOSE)))
+         {
+            tokenize(cpd.func_hdr.data, cpd.func_hdr.length, chunk_get_next_nnl(ref));
+            break;
+         }
+      }
+   }
+}
+
 static void uncrustify_file(const char *data, int data_len, FILE *pfout,
                             const char *parsed_file)
 {
@@ -684,6 +788,12 @@ static void uncrustify_file(const char *data, int data_len, FILE *pfout,
     * Parse the text into chunks
     */
    tokenize(data, data_len, NULL);
+
+   /* Add the file header */
+   if (cpd.file_hdr.data != NULL)
+   {
+      add_file_header();
+   }
 
    /**
     * Change certain token types based on simple sequence.
@@ -712,6 +822,14 @@ static void uncrustify_file(const char *data, int data_len, FILE *pfout,
     * Re-type chunks, combine chunks
     */
    fix_symbols();
+
+   /**
+    * Add comments before function defs/protos
+    */
+   if (cpd.func_hdr.data != NULL)
+   {
+      add_func_header();
+   }
 
    /**
     * Look at all colons ':' and mark labels, :? sequences, etc.
