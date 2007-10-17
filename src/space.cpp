@@ -776,8 +776,8 @@ void space_text(void)
             }
             if ((tmp != NULL) && (tmp->len > 0))
             {
-               bool kw1 = (get_char_table(pc->str[pc->len - 1]) & CT_KW2) != 0;
-               bool kw2 = (get_char_table(next->str[0]) & CT_KW1) != 0;
+               bool kw1 = CharTable::IsKw2(pc->str[pc->len - 1]);
+               bool kw2 = CharTable::IsKw1(next->str[0]);
                if (kw1 && kw2)
                {
                   /* back-to-back words need a space */

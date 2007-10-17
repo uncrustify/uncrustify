@@ -349,7 +349,7 @@ static bool parse_string(chunk_t *pc, int quote_idx, bool allow_escape)
 
    pc->type = CT_STRING;
 
-   end_ch = get_char_table(pc->str[len]) & 0xff;
+   end_ch = CharTable::Get(pc->str[len]) & 0xff;
    len++;
 
    for ( /* nada */; pc->str[len] != 0; len++)
@@ -443,8 +443,7 @@ bool parse_word(chunk_t *pc, bool skipcheck)
    int len = 1;
    const chunk_tag_t *tag;
 
-   while ((pc->str[len] < 127) &&
-          ((get_char_table(pc->str[len]) & CT_KW2) != 0))
+   while ((pc->str[len] < 127) && CharTable::IsKw2(pc->str[len]))
    {
       len++;
    }
@@ -686,8 +685,7 @@ static bool parse_next(chunk_t *pc)
          parse_cs_string(pc);
          return(true);
       }
-      if (((get_char_table(pc->str[1]) & CT_KW1) != 0) &&
-          parse_word(pc, true))
+      if (CharTable::IsKw1(pc->str[1]) && parse_word(pc, true))
       {
          return(true);
       }
@@ -747,14 +745,13 @@ static bool parse_next(chunk_t *pc)
 
    /* Check for pawn/ObjectiveC identifiers */
    if ((*pc->str == '@') &&
-       ((get_char_table(pc->str[1]) & CT_KW2) != 0) &&
+       CharTable::IsKw2(pc->str[1]) &&
        parse_word(pc, false))
    {
       return(true);
    }
 
-   if (((get_char_table(*pc->str) & CT_KW1) != 0) &&
-       parse_word(pc, false))
+   if (CharTable::IsKw1(*pc->str) && parse_word(pc, false))
    {
       return(true);
    }

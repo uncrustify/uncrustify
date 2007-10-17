@@ -431,7 +431,7 @@ int load_keyword_file(const char *filename)
 
       if (argc > 0)
       {
-         if ((argc == 1) && ((get_char_table(*args[0]) & CT_KW1) != 0))
+         if ((argc == 1) && CharTable::IsKw1(*args[0]))
          {
             add_keyword(args[0], CT_TYPE, LANG_ALL);
          }
