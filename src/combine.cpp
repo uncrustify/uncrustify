@@ -1858,6 +1858,7 @@ static chunk_t *mark_variable_definition(chunk_t *start)
 static bool can_be_full_param(chunk_t *start, chunk_t *end)
 {
    chunk_t *pc;
+   chunk_t *last;
    int     word_cnt = 0;
 
    LOG_FMT(LFPARAM, "%s:", __func__);
@@ -1911,6 +1912,14 @@ static bool can_be_full_param(chunk_t *start, chunk_t *end)
          return(false);
       }
    }
+
+   last = chunk_get_prev_ncnl(pc);
+   if (chunk_is_star(last) || chunk_is_addr(last))
+   {
+      LOG_FMT(LFPARAM, " <== [%s] sure!\n", get_token_name(pc->type));
+      return(true);
+   }
+
    LOG_FMT(LFPARAM, " <== [%s] %s!\n",
            get_token_name(pc->type), (word_cnt >= 2) ? "Yup" : "Unlikely");
    return(word_cnt >= 2);
@@ -1963,6 +1972,8 @@ static void mark_function(chunk_t *pc)
    if (pc->flags & PCF_IN_CONST_ARGS)
    {
       pc->type = CT_FUNC_CTOR_VAR;
+      LOG_FMT(LFCN, "  1) Marked [%.*s] as FUNC_CTOR_VAR on line %d col %d\n",
+              pc->len, pc->str, pc->orig_line, pc->orig_col);
       next = skip_template_next(next);
       flag_parens(next, 0, CT_FPAREN_OPEN, pc->type, true);
       return;
@@ -2259,6 +2270,8 @@ static void mark_function(chunk_t *pc)
          else if (pc->type == CT_COMMA)
          {
             pc->type = CT_FUNC_CTOR_VAR;
+            LOG_FMT(LFCN, "  2) Marked [%.*s] as FUNC_CTOR_VAR on line %d col %d\n",
+                    pc->len, pc->str, pc->orig_line, pc->orig_col);
             break;
          }
          else if (chunk_is_str(tmp, ":", 1))
@@ -2321,6 +2334,8 @@ static void mark_function(chunk_t *pc)
       if (!is_param)
       {
          pc->type = CT_FUNC_CTOR_VAR;
+         LOG_FMT(LFCN, "  3) Marked [%.*s] as FUNC_CTOR_VAR on line %d col %d\n",
+                 pc->len, pc->str, pc->orig_line, pc->orig_col);
       }
       else if (pc->brace_level > 0)
       {
@@ -2334,6 +2349,8 @@ static void mark_function(chunk_t *pc)
                 (p_op->parent_type != CT_NAMESPACE))
             {
                pc->type = CT_FUNC_CTOR_VAR;
+               LOG_FMT(LFCN, "  4) Marked [%.*s] as FUNC_CTOR_VAR on line %d col %d\n",
+                       pc->len, pc->str, pc->orig_line, pc->orig_col);
             }
          }
       }
@@ -2347,10 +2364,6 @@ static void mark_function(chunk_t *pc)
    if (pc->type == CT_FUNC_CTOR_VAR)
    {
       pc->flags |= PCF_VAR_1ST_DEF;
-
-      LOG_FMT(LFCN, "Detected [%s] %.*s on line %d col %d\n",
-              get_token_name(pc->type),
-              pc->len, pc->str, pc->orig_line, pc->orig_col);
       return;
    }
 
