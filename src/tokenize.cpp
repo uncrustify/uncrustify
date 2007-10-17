@@ -873,6 +873,14 @@ void tokenize(const char *data, int data_len, chunk_t *ref)
             pc->flags &= ~PCF_IN_PREPROC;
          }
       }
+      if (ref != NULL)
+      {
+         chunk.flags |= PCF_INSERTED;
+      }
+      else
+      {
+         chunk.flags &= ~PCF_INSERTED;
+      }
       pc = chunk_add_before(&chunk, ref);
 
       /* A newline marks the end of a preprocessor */
