@@ -12,6 +12,7 @@
 #define CHUNK_LIST_H_INCLUDED
 
 #include "uncrustify_types.h"
+#include "char_table.h"
 
 
 chunk_t *chunk_add(const chunk_t *pc_in);
@@ -138,6 +139,12 @@ static_inline
 bool chunk_is_str_case(chunk_t *pc, const char *str, int len)
 {
    return((pc != NULL) && (pc->len == len) && (strncasecmp(pc->str, str, len) == 0));
+}
+
+static_inline
+bool chunk_is_word(chunk_t *pc)
+{
+   return((pc != NULL) && (pc->len >= 1) && CharTable::IsKw1(pc->str[0]));
 }
 
 static_inline

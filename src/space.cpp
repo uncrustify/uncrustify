@@ -288,7 +288,7 @@ argval_t do_space(chunk_t *first, chunk_t *second)
       }
    }
 
-   if (first->type == CT_BYREF)
+   if ((first->type == CT_BYREF) && CharTable::IsKw1(second->str[0]))
    {
       return(cpd.settings[UO_sp_after_byref].a);
    }
@@ -318,7 +318,9 @@ argval_t do_space(chunk_t *first, chunk_t *second)
    {
       return(cpd.settings[UO_sp_func_def_paren].a);
    }
-   if (first->type == CT_FUNC_PROTO)
+   if ((first->type == CT_FUNC_PROTO) ||
+       ((second->type == CT_FPAREN_OPEN) &&
+        (second->parent_type == CT_FUNC_PROTO)))
    {
       return(cpd.settings[UO_sp_func_proto_paren].a);
    }
@@ -561,7 +563,8 @@ argval_t do_space(chunk_t *first, chunk_t *second)
    }
 
    if ((first->type == CT_PTR_TYPE) &&
-       (cpd.settings[UO_sp_after_ptr_star].a != AV_IGNORE))
+       (cpd.settings[UO_sp_after_ptr_star].a != AV_IGNORE) &&
+       CharTable::IsKw1(second->str[0]))
    {
       return(cpd.settings[UO_sp_after_ptr_star].a);
    }

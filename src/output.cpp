@@ -163,9 +163,18 @@ void output_options(FILE *pfile)
       ptr = get_option_name(idx);
       if (ptr != NULL)
       {
-         fprintf(pfile, "%3d) %32s = %s\n",
-                 ptr->id, ptr->name,
-                 op_val_to_string(ptr->type, cpd.settings[ptr->id]).c_str());
+         if (ptr->type == AT_STRING)
+         {
+            fprintf(pfile, "%3d) %32s = \"%s\"\n",
+                    ptr->id, ptr->name,
+                    op_val_to_string(ptr->type, cpd.settings[ptr->id]).c_str());
+         }
+         else
+         {
+            fprintf(pfile, "%3d) %32s = %s\n",
+                    ptr->id, ptr->name,
+                    op_val_to_string(ptr->type, cpd.settings[ptr->id]).c_str());
+         }
       }
    }
 }

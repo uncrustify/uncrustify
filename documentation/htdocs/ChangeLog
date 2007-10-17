@@ -15,20 +15,24 @@ Future plans: (in no particular order)
  - Plug into SlickEdit/Gedit/Kedit
 
 
-Plans for the next release
+Near-term plans
 -------------------------------------------------------------------------------
  - improve code width logic
    + add options to remove newlines inside parens before splitting long lines
  - more misc code cleanup
  - fix pending bugs
+ - investigate using std:string instead of char arrays
 
 
 ===============================================================================
 
 
-Changes in uncrustify-0.40
+Changes in uncrustify-0.41 (future release)
 -------------------------------------------------------------------------------
  - Add cmt_insert_func_header and cmt_insert_file_header
+ - Fix detection of prototypes without named parameters
+ - sp_after_byref and sp_after_ptr_star only are applied if before a word
+ - internal rework
 
 
 Changes in uncrustify-0.40

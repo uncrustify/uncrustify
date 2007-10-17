@@ -135,9 +135,9 @@ void register_options(void)
    unc_add_option("sp_paren_brace", UO_sp_paren_brace, AT_IARF, "Add or remove space between ')' and '{'");
    unc_add_option("sp_before_ptr_star", UO_sp_before_ptr_star, AT_IARF, "Add or remove space before pointer star '*'");
    unc_add_option("sp_between_ptr_star", UO_sp_between_ptr_star, AT_IARF, "Add or remove space between pointer stars '*'");
-   unc_add_option("sp_after_ptr_star", UO_sp_after_ptr_star, AT_IARF, "Add or remove space after pointer star '*'");
+   unc_add_option("sp_after_ptr_star", UO_sp_after_ptr_star, AT_IARF, "Add or remove space after pointer star '*', if followed by a word.");
    unc_add_option("sp_before_byref", UO_sp_before_byref, AT_IARF, "Add or remove space before reference sign '&'");
-   unc_add_option("sp_after_byref", UO_sp_after_byref, AT_IARF, "Add or remove space after reference sign '&'");
+   unc_add_option("sp_after_byref", UO_sp_after_byref, AT_IARF, "Add or remove space after reference sign '&', if followed by a word.");
    unc_add_option("sp_before_angle", UO_sp_before_angle, AT_IARF, "Add or remove space before '<>'");
    unc_add_option("sp_after_angle", UO_sp_after_angle, AT_IARF, "Add or remove space after '<>'");
    unc_add_option("sp_angle_paren", UO_sp_angle_paren, AT_IARF, "Add or remove space between '<>' and '(' as found in 'new List<byte>();'");
@@ -803,9 +803,16 @@ int save_option_file(FILE *pfile, bool withDoc)
          val_len    = strlen(val_str);
          name_len   = strlen(option->name);
 
-         fprintf(pfile, "%s %*.s= %s",
-                 option->name, cpd.max_option_name_len - name_len, " ",
-                 val_str);
+         fprintf(pfile, "%s %*.s= ",
+                 option->name, cpd.max_option_name_len - name_len, " ");
+         if (option->type == AT_STRING)
+         {
+            fprintf(pfile, "\"%s\"", val_str);
+         }
+         else
+         {
+            fprintf(pfile, "%s", val_str);
+         }
          if (withDoc)
          {
             fprintf(pfile, "%*.s # %s",

@@ -33,7 +33,7 @@ class Example
 
    operator Foo::Bar();
    operator Foo::Bar*();
-   operator Foo::Bar& ();
+   operator Foo::Bar&();
 
    int operator()(int index)
    {

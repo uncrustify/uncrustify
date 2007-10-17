@@ -636,12 +636,14 @@ static int load_header_files()
 {
    int retval = 0;
 
-   if (cpd.settings[UO_cmt_insert_file_header].str != NULL)
+   if ((cpd.settings[UO_cmt_insert_file_header].str != NULL) &&
+       (cpd.settings[UO_cmt_insert_file_header].str[0] != 0))
    {
       retval |= load_mem_file(cpd.settings[UO_cmt_insert_file_header].str,
                               cpd.file_hdr);
    }
-   if (cpd.settings[UO_cmt_insert_func_header].str != NULL)
+   if ((cpd.settings[UO_cmt_insert_func_header].str != NULL) &&
+       (cpd.settings[UO_cmt_insert_func_header].str[0] != 0))
    {
       retval |= load_mem_file(cpd.settings[UO_cmt_insert_func_header].str,
                               cpd.func_hdr);
