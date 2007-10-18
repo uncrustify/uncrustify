@@ -15,8 +15,21 @@
 #include <cstdlib>
 
 
+struct cmt_reflow
+{
+   chunk_t    *pc;
+   int        column;      /* Column of the comment start */
+   int        br_column;   /* Brace column (for indenting with tabs) */
+   int        word_count;  /* number of words on this line */
+   bool       kw_subst;    /* do keyword substitution */
+   const char *cont_text;  /* fixed text to output at the start of the line (3-chars) */
+};
+
+
 static chunk_t *output_comment_c(chunk_t *pc);
 static chunk_t *output_comment_cpp(chunk_t *pc);
+static void add_comment_text(const char *text, int len,
+                             cmt_reflow& cmt, bool esc_close);
 
 
 void add_char(char ch)
@@ -425,13 +438,142 @@ static_inline void add_spaces_after_star()
    }
 }
 
-struct cmt_reflow
+
+static chunk_t *get_next_function(chunk_t *pc)
 {
-   int        column;      /* Column of the comment start */
-   int        br_column;   /* Brace column (for indenting with tabs) */
-   int        word_count;  /* number of words on this line */
-   const char *cont_text;  /* fixed text to output at the start of the line (3-chars) */
-};
+   while ((pc = chunk_get_next(pc)) != NULL)
+   {
+      if ((pc->type == CT_FUNC_DEF) ||
+          (pc->type == CT_FUNC_PROTO))
+      {
+         return(pc);
+      }
+   }
+   return(NULL);
+}
+
+/**
+ * Adds the javadoc-style @param and @return stuff, based on the params and
+ * return value for pc.
+ * If the arg list is '()' or '(void)', then no @params are added.
+ * Likewise, if the reutrn value is 'void', then no @return is added.
+ */
+static void add_comment_javaparam(chunk_t *pc, cmt_reflow& cmt)
+{
+   chunk_t *fpo;
+   chunk_t *fpc;
+   chunk_t *tmp;
+   chunk_t *prev;
+   bool    has_param = true;
+   bool    need_nl   = false;
+   int     col       = cpd.column;
+
+   fpo = chunk_get_next_type(pc, CT_FPAREN_OPEN, pc->level);
+   if (fpo == NULL)
+   {
+      return;
+   }
+   fpc = chunk_get_next_type(fpo, CT_FPAREN_CLOSE, pc->level);
+   if (fpc == NULL)
+   {
+      return;
+   }
+
+   /* Check for 'foo()' and 'foo(void)' */
+   if (chunk_get_next_ncnl(fpo) == fpc)
+   {
+      has_param = false;
+   }
+   else
+   {
+      tmp = chunk_get_next_ncnl(fpo);
+      if ((tmp == chunk_get_prev_ncnl(fpc)) &&
+          chunk_is_str(tmp, "void", 4))
+      {
+         has_param = false;
+      }
+   }
+
+   if (has_param)
+   {
+      tmp  = fpo;
+      prev = NULL;
+      while ((tmp = chunk_get_next(tmp)) != NULL)
+      {
+         if ((tmp->type == CT_COMMA) || (tmp == fpc))
+         {
+            if (need_nl)
+            {
+               add_comment_text("\n", 1, cmt, false);
+               output_to_column(col, false);
+            }
+            need_nl = true;
+            add_text("@param");
+            if (prev != NULL)
+            {
+               add_text(" ");
+               add_text_len(prev->str, prev->len);
+               add_text(" TODO");
+            }
+            prev = NULL;
+            if (tmp == fpc)
+            {
+               break;
+            }
+         }
+         if (tmp->type == CT_WORD)
+         {
+            prev = tmp;
+         }
+      }
+   }
+
+   /* Do the return stuff */
+   tmp = chunk_get_prev_ncnl(pc);
+   if ((tmp != NULL) && !chunk_is_str(tmp, "void", 4))
+   {
+      if (need_nl)
+      {
+         add_comment_text("\n", 1, cmt, false);
+         output_to_column(col, false);
+      }
+      add_text("@return TODO");
+   }
+}
+
+
+/**
+ * text starts with '$('. see if this matches a keyword and add text based
+ * on that keyword.
+ * @return the number of characters eaten from the text
+ */
+static int add_comment_kw(const char *text, int len, cmt_reflow& cmt)
+{
+   if ((len >= 11) && (memcmp(text, "$(filename)", 11) == 0))
+   {
+      add_text(path_basename(cpd.filename));
+      return(11);
+   }
+   if ((len >= 11) && (memcmp(text, "$(function)", 11) == 0))
+   {
+      chunk_t *tmp = get_next_function(cmt.pc);
+      if (tmp != NULL)
+      {
+         add_text_len(tmp->str, tmp->len);
+         return(11);
+      }
+   }
+   if ((len >= 12) && (memcmp(text, "$(javaparam)", 12) == 0))
+   {
+      chunk_t *tmp = get_next_function(cmt.pc);
+      if (tmp != NULL)
+      {
+         add_comment_javaparam(tmp, cmt);
+         return(12);
+      }
+   }
+   return(0);
+}
 
 /**
  * Outputs a comment. The initial opening '//' may be included in the text.
@@ -448,11 +590,22 @@ struct cmt_reflow
 static void add_comment_text(const char *text, int len,
                              cmt_reflow& cmt, bool esc_close)
 {
-   bool was_star = false;
-   bool in_word  = false;
+   bool was_star   = false;
+   bool was_dollar = false;
+   bool in_word    = false;
 
    for (int idx = 0; idx < len; idx++)
    {
+      if (!was_dollar && cmt.kw_subst &&
+          (text[idx] == '$') && (len > (idx + 3)) && (text[idx + 1] == '('))
+      {
+         idx += add_comment_kw(&text[idx], len - idx, cmt);
+         if (idx >= len)
+         {
+            break;
+         }
+      }
+
       /* Split the comment */
       if ((text[idx] == '\n') ||
           ((text[idx] == ' ') &&
@@ -477,7 +630,8 @@ static void add_comment_text(const char *text, int len,
          }
          in_word = !isspace(text[idx]);
          add_char(text[idx]);
-         was_star = (text[idx] == '*');
+         was_star   = (text[idx] == '*');
+         was_dollar = (text[idx] == '$');
       }
    }
 }
@@ -485,6 +639,7 @@ static void add_comment_text(const char *text, int len,
 static void output_cmt_start(cmt_reflow& cmt, chunk_t *pc)
 {
    cmt.word_count = 0;
+   cmt.pc         = pc;
    cmt.column     = pc->column;
    cmt.br_column  = pc->column_indent;
 
@@ -514,6 +669,8 @@ static void output_cmt_start(cmt_reflow& cmt, chunk_t *pc)
 
    /* Bump out to the column */
    output_indent(cmt.column, cmt.br_column);
+
+   cmt.kw_subst = (pc->flags & PCF_INSERTED) != 0;
 }
 
 /**

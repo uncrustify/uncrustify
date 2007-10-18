@@ -77,12 +77,24 @@ const char *path_basename(const char *path)
    while ((ch = *path) != 0)
    {
       path++;
-      if (ch == '/')
+      if (ch == PATH_SEP)
       {
          last_path = path;
       }
    }
    return(last_path);
+}
+
+/**
+ * Returns the length of the directory part of the filename.
+ */
+int path_dirname_len(const char *filename)
+{
+   if (filename == NULL)
+   {
+      return(0);
+   }
+   return(path_basename(filename) - filename);
 }
 
 static void usage_exit(const char *msg, const char *argv0, int code)
@@ -400,6 +412,7 @@ int main(int argc, char *argv[])
       return(0);
    }
 
+   /* This relies on cpd.filename being the config file name */
    load_header_files();
 
    if ((source_file == NULL) && (source_list == NULL) && (p_arg == NULL))
@@ -594,9 +607,6 @@ int load_mem_file(const char *filename, file_mem& fm)
    p_file = fopen(filename, "rb");
    if (p_file == NULL)
    {
-      LOG_FMT(LERR, "%s: fopen(%s) failed: %s (%d)\n",
-              __func__, filename, strerror(errno), errno);
-      cpd.error_count++;
       return(-1);
    }
 
@@ -632,6 +642,32 @@ int load_mem_file(const char *filename, file_mem& fm)
    return(retval);
 }
 
+
+/**
+ * Try to load the file from the config folder first and then by name
+ */
+static int load_mem_file_config(const char *filename, file_mem& fm)
+{
+   int  retval;
+   char buf[1024];
+
+   snprintf(buf, sizeof(buf), "%.*s%s",
+            path_dirname_len(cpd.filename), cpd.filename, filename);
+
+   retval = load_mem_file(buf, fm);
+   if (retval < 0)
+   {
+      retval = load_mem_file(filename, fm);
+      if (retval < 0)
+      {
+         LOG_FMT(LERR, "Failed to load (%s) or (%s)\n", buf, filename);
+         cpd.error_count++;
+      }
+   }
+   return(retval);
+}
+
+
 static int load_header_files()
 {
    int retval = 0;
@@ -639,14 +675,14 @@ static int load_header_files()
    if ((cpd.settings[UO_cmt_insert_file_header].str != NULL) &&
        (cpd.settings[UO_cmt_insert_file_header].str[0] != 0))
    {
-      retval |= load_mem_file(cpd.settings[UO_cmt_insert_file_header].str,
-                              cpd.file_hdr);
+      retval |= load_mem_file_config(cpd.settings[UO_cmt_insert_file_header].str,
+                                     cpd.file_hdr);
    }
    if ((cpd.settings[UO_cmt_insert_func_header].str != NULL) &&
        (cpd.settings[UO_cmt_insert_func_header].str[0] != 0))
    {
-      retval |= load_mem_file(cpd.settings[UO_cmt_insert_func_header].str,
-                              cpd.func_hdr);
+      retval |= load_mem_file_config(cpd.settings[UO_cmt_insert_func_header].str,
+                                     cpd.func_hdr);
    }
    return(retval);
 }
@@ -674,7 +710,8 @@ static void do_source_file(const char *filename, FILE *pfout, const char *parsed
    /* Try to read in the source file */
    if (load_mem_file(filename, fm) < 0)
    {
-      /* Already logged the error */
+      LOG_FMT(LERR, "Failed to load (%s)\n", filename);
+      cpd.error_count++;
       return;
    }
 

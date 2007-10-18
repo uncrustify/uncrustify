@@ -132,6 +132,8 @@
 
 01011  del_semicolon.cfg       c/semicolons.c
 
+01020  kw_subst.cfg            c/kw_subst.c
+
 # big general tests
 20000 ben.cfg                  c/i2c-core.c
 20001 preproc-cleanup.cfg      c/directfb.h
