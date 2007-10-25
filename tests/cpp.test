@@ -81,6 +81,7 @@
 
 30815 width-2.cfg                      cpp/cmt-reflow.cpp
 
+30820 pp_define_at_level-1.cfg         cpp/pp-define-indent.cpp
 
 30900 region-0.cfg                     cpp/region.cpp
 30901 region-1.cfg                     cpp/region.cpp
