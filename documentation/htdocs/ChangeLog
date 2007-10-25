@@ -33,6 +33,7 @@ Changes in uncrustify-0.41 (future release)
  - Fix detection of prototypes without named parameters
  - sp_after_byref and sp_after_ptr_star only are applied if before a word
  - internal rework
+ - Add pp_define_at_level
 
 
 Changes in uncrustify-0.40
