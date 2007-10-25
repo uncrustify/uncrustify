@@ -29,7 +29,7 @@ Near-term plans
 
 Changes in uncrustify-0.41 (future release)
 -------------------------------------------------------------------------------
- - Add cmt_insert_func_header and cmt_insert_file_header
+ - Add cmt_insert_func_header, cmt_insert_file_header, and cmt_insert_class_header
  - Fix detection of prototypes without named parameters
  - sp_after_byref and sp_after_ptr_star only are applied if before a word
  - internal rework
