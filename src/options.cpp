@@ -416,9 +416,11 @@ void register_options(void)
    unc_add_option("cmt_sp_after_star_cont", UO_cmt_sp_after_star_cont, AT_NUM, "The number of spaces to insert after the star on subsequent comment lines");
 
    unc_add_option("cmt_insert_file_header", UO_cmt_insert_file_header, AT_STRING,
-                  "The filename that contains text to insert at the head of a file if the file doesn't start with a C++ comment.\n");
+                  "The filename that contains text to insert at the head of a file if the file doesn't start with a C++ comment.\n"
+                  "Will substitue $(filename) with the current file's name.\n");
    unc_add_option("cmt_insert_func_header", UO_cmt_insert_func_header, AT_STRING,
-                  "The filename that contains text to insert at the head of a file if the file doesn't start with a C++ comment.\n");
+                  "The filename that contains text to insert at the head of a file if the file doesn't start with a C++ comment.\n"
+                  "Will substitue $(function) with the function name and $(javaparam) with the javadoc @param and @return stuff.\n");
 
    unc_begin_group(UG_codemodify, "Code modifying options (non-whitespace)");
    unc_add_option("mod_full_brace_do", UO_mod_full_brace_do, AT_IARF, "Add or remove braces on single-line 'do' statement");
