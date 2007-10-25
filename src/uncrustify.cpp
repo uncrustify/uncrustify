@@ -684,6 +684,12 @@ static int load_header_files()
       retval |= load_mem_file_config(cpd.settings[UO_cmt_insert_func_header].str,
                                      cpd.func_hdr);
    }
+   if ((cpd.settings[UO_cmt_insert_class_header].str != NULL) &&
+       (cpd.settings[UO_cmt_insert_class_header].str[0] != 0))
+   {
+      retval |= load_mem_file_config(cpd.settings[UO_cmt_insert_class_header].str,
+                                     cpd.class_hdr);
+   }
    return(retval);
 }
 
@@ -783,14 +789,14 @@ static void add_file_header()
    }
 }
 
-static void add_func_header()
+static void add_func_header(c_token_t type, file_mem& fm)
 {
    chunk_t *pc;
    chunk_t *ref;
 
    for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next_ncnlnp(pc))
    {
-      if ((pc->type != CT_FUNC_PROTO) && (pc->type != CT_FUNC_DEF))
+      if (pc->type != type)
       {
          continue;
       }
@@ -813,7 +819,7 @@ static void add_func_header()
               (ref->type == CT_SEMICOLON) ||
               (ref->type == CT_BRACE_CLOSE)))
          {
-            tokenize(cpd.func_hdr.data, cpd.func_hdr.length, chunk_get_next_nnl(ref));
+            tokenize(fm.data, fm.length, chunk_get_next_nnl(ref));
             break;
          }
       }
@@ -863,11 +869,15 @@ static void uncrustify_file(const char *data, int data_len, FILE *pfout,
    fix_symbols();
 
    /**
-    * Add comments before function defs/protos
+    * Add comments before function defs and classes
     */
    if (cpd.func_hdr.data != NULL)
    {
-      add_func_header();
+      add_func_header(CT_FUNC_DEF, cpd.func_hdr);
+   }
+   if (cpd.class_hdr.data != NULL)
+   {
+      add_func_header(CT_CLASS, cpd.class_hdr);
    }
 
    /**

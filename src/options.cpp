@@ -419,8 +419,12 @@ void register_options(void)
                   "The filename that contains text to insert at the head of a file if the file doesn't start with a C++ comment.\n"
                   "Will substitue $(filename) with the current file's name.\n");
    unc_add_option("cmt_insert_func_header", UO_cmt_insert_func_header, AT_STRING,
-                  "The filename that contains text to insert at the head of a file if the file doesn't start with a C++ comment.\n"
-                  "Will substitue $(function) with the function name and $(javaparam) with the javadoc @param and @return stuff.\n");
+                  "The filename that contains text to insert before a function implementation if the function isn't preceeded with a C++ comment.\n"
+                  "Will substitue $(function) with the function name and $(javaparam) with the javadoc @param and @return stuff.\n"
+                  "Will also substitute $(fclass) with the class name: void CFoo::Bar() { ... }");
+   unc_add_option("cmt_insert_class_header", UO_cmt_insert_class_header, AT_STRING,
+                  "The filename that contains text to insert before a class if the class isn't preceeded with a C++ comment.\n"
+                  "Will substitue $(class) with the class name.\n");
 
    unc_begin_group(UG_codemodify, "Code modifying options (non-whitespace)");
    unc_add_option("mod_full_brace_do", UO_mod_full_brace_do, AT_IARF, "Add or remove braces on single-line 'do' statement");

@@ -452,6 +452,18 @@ static chunk_t *get_next_function(chunk_t *pc)
    return(NULL);
 }
 
+static chunk_t *get_next_class(chunk_t *pc)
+{
+   while ((pc = chunk_get_next(pc)) != NULL)
+   {
+      if (pc->type == CT_CLASS)
+      {
+         return(chunk_get_next(pc));
+      }
+   }
+   return(NULL);
+}
+
 /**
  * Adds the javadoc-style @param and @return stuff, based on the params and
  * return value for pc.
@@ -554,22 +566,42 @@ static int add_comment_kw(const char *text, int len, cmt_reflow& cmt)
       add_text(path_basename(cpd.filename));
       return(11);
    }
-   if ((len >= 11) && (memcmp(text, "$(function)", 11) == 0))
+   if ((len >= 8) && (memcmp(text, "$(class)", 8) == 0))
    {
-      chunk_t *tmp = get_next_function(cmt.pc);
+      chunk_t *tmp = get_next_class(cmt.pc);
       if (tmp != NULL)
       {
          add_text_len(tmp->str, tmp->len);
-         return(11);
+         return(8);
       }
+   }
+
+   /* If we can't find the function, we are done */
+   chunk_t *fcn = get_next_function(cmt.pc);
+   if (fcn == NULL)
+   {
+      return(0);
+   }
+
+   if ((len >= 11) && (memcmp(text, "$(function)", 11) == 0))
+   {
+      add_text_len(fcn->str, fcn->len);
+      return(11);
    }
    if ((len >= 12) && (memcmp(text, "$(javaparam)", 12) == 0))
    {
-      chunk_t *tmp = get_next_function(cmt.pc);
-      if (tmp != NULL)
+      add_comment_javaparam(fcn, cmt);
+      return(12);
+   }
+   if ((len >= 9) && (memcmp(text, "$(fclass)", 9) == 0))
+   {
+      chunk_t *tmp = chunk_get_prev_ncnl(fcn);
+      if ((tmp != NULL) && ((tmp->type == CT_DC_MEMBER) ||
+                            (tmp->type == CT_MEMBER)))
       {
-         add_comment_javaparam(tmp, cmt);
-         return(12);
+         tmp = chunk_get_prev_ncnl(tmp);
+         add_text_len(tmp->str, tmp->len);
+         return(9);
       }
    }
    return(0);

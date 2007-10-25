@@ -271,11 +271,9 @@ struct cp_data
    UINT32             error_count;
    const char         *filename;
 
-   /* data for option cmt_insert_file_header */
-   file_mem           file_hdr;
-
-   /* data for option cmt_insert_func_header */
-   file_mem           func_hdr;
+   file_mem           file_hdr;  /* for cmt_insert_file_header */
+   file_mem           func_hdr;  /* for cmt_insert_func_header */
+   file_mem           class_hdr; /* for cmt_insert_class_header */
 
    int                lang_flags; // LANG_xxx
 
