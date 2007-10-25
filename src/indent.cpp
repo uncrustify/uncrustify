@@ -393,7 +393,9 @@ void indent_text(void)
 
             if (pc->parent_type == CT_PP_DEFINE)
             {
-               frm.pse[frm.pse_tos].indent = 1 + indent_size;
+               frm.pse[frm.pse_tos].indent_tmp = cpd.settings[UO_pp_define_at_level].b ?
+                                                 frm.pse[frm.pse_tos - 1].indent_tmp : 1;
+               frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos].indent_tmp + indent_size;
             }
             else
             {
@@ -433,8 +435,8 @@ void indent_text(void)
                      frm.pse[frm.pse_tos].indent += val;
                   }
                }
+               frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
             }
-            frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
          }
       }
 
@@ -1400,7 +1402,11 @@ void indent_preproc(void)
           (pc->parent_type != CT_PP_REGION) &&
           (pc->parent_type != CT_PP_ENDREGION))
       {
-         pc->flags |= PCF_DONT_INDENT;
+         if (!cpd.settings[UO_pp_define_at_level].b ||
+             (pc->parent_type != CT_PP_DEFINE))
+         {
+            pc->flags |= PCF_DONT_INDENT;
+         }
       }
 
       LOG_FMT(LPPIS, "%s: Indent line %d to %d (len %d, next->col %d)\n",

@@ -436,8 +436,7 @@ void register_options(void)
    unc_add_option("pp_indent", UO_pp_indent, AT_IARF,
                   "Control indent of preprocessors inside #if blocks at brace level 0");
    unc_add_option("pp_indent_at_level", UO_pp_indent_at_level, AT_BOOL,
-                  "Whether to indent at the brace level (true) or from column 1 (false)\n"
-                  "Region stuff is always explicitly controlled");
+                  "Whether to indent #if/#else/#endif at the brace level (true) or from column 1 (false)");
    unc_add_option("pp_space", UO_pp_space, AT_IARF,
                   "Add or remove space after # based on pp_level of #if blocks");
    unc_add_option("pp_indent_region", UO_pp_indent_region, AT_NUM,
@@ -448,6 +447,8 @@ void register_options(void)
                   "If pp_indent_at_level=true, sets the indent for #if, #else, and #endif when not at file-level");
    unc_add_option("pp_if_indent_code", UO_pp_if_indent_code, AT_BOOL,
                   "If pp_indent_at_level=true, control whether to indent the code between #if, #else and #endif when not a file-level");
+   unc_add_option("pp_define_at_level", UO_pp_define_at_level, AT_BOOL,
+                  "Whether to indent '#define' at the brace level (true) or from column 1 (false)");
 }
 
 const group_map_value *get_group_name(int ug)
