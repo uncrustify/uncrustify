@@ -218,6 +218,15 @@ void output_text(FILE *pfile)
          cpd.column      = 1;
          LOG_FMT(LOUTIND, " xx\n");
       }
+      else if (pc->type == CT_NL_CONT)
+      {
+         output_to_column(pc->column, (cpd.settings[UO_indent_with_tabs].n == 2));
+         add_char('\\');
+         add_char('\n');
+         cpd.did_newline = 1;
+         cpd.column      = 1;
+         LOG_FMT(LOUTIND, " \\xx\n");
+      }
       else if (pc->type == CT_COMMENT_MULTI)
       {
          output_comment_multi(pc);
