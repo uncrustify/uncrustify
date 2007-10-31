@@ -136,14 +136,14 @@ void indent_to_column(chunk_t *pc, int column)
  * @param pc      The chunk at the start of the line
  * @param column  The desired column
  */
-void reindent_line(chunk_t *pc, int column)
+void reindent_line2(chunk_t *pc, int column, const char *fcn_name, int lineno)
 {
    int col_delta;
    int min_col;
 
-   LOG_FMT(LINDLINE, "%s: %d] col %d on %.*s [%s] => %d\n",
+   LOG_FMT(LINDLINE, "%s: %d] col %d on %.*s [%s] => %d <called from '%s' line %d\n",
            __func__, pc->orig_line, pc->column, pc->len, pc->str,
-           get_token_name(pc->type), column);
+           get_token_name(pc->type), column, fcn_name, lineno);
 
    if (column == pc->column)
    {
