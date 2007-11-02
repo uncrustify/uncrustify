@@ -24,3 +24,12 @@ show_interrupts(struct seq_file *p, void *v)
     }
 }
 
+void foo()
+{
+    int i=0;
+    #if DEBUG == 1
+    i--;
+    #endif
+    i++;
+}
+
