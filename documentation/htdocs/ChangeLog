@@ -36,6 +36,7 @@ Changes in uncrustify-0.41 (future release)
  - Add pp_define_at_level
  - Fix detection of deref in "sizeof *x"
  - Fix broken output of backslash-newline in certain situations
+ - Fix pp_indent_if stuff
 
 
 Changes in uncrustify-0.40
