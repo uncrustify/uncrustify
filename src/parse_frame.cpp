@@ -147,19 +147,27 @@ int pf_check(struct parse_frame *frm, chunk_t *pc)
    int        pp_level = cpd.pp_level;
    const char *txt     = NULL;
 
+   if (pc->type != CT_PREPROC)
+   {
+      return(pp_level);
+   }
+
+   LOG_FMT(LPFCHK, "%s: %5d] %s\n",
+           __func__, pc->orig_line, get_token_name(pc->parent_type));
+
    if ((pc->flags & PCF_IN_PREPROC) != 0)
    {
       LOG_FMT(LPF, " <In> ");
       pf_log(LPF, frm);
 
-      if (pc->type == CT_PP_IF)
+      if (pc->parent_type == CT_PP_IF)
       {
          cpd.pp_level++;
          pf_push(frm);
          frm->in_ifdef = CT_PP_IF;
          txt           = "if-push";
       }
-      else if (pc->type == CT_PP_ELSE)
+      else if (pc->parent_type == CT_PP_ELSE)
       {
          pp_level--;
          if (frm->in_ifdef == CT_PP_IF)
@@ -181,7 +189,7 @@ int pf_check(struct parse_frame *frm, chunk_t *pc)
             txt = "???";
          }
       }
-      else if (pc->type == CT_PP_ENDIF)
+      else if (pc->parent_type == CT_PP_ENDIF)
       {
          cpd.pp_level--;
          pp_level--;
@@ -207,7 +215,7 @@ int pf_check(struct parse_frame *frm, chunk_t *pc)
    if (txt != NULL)
    {
       LOG_FMT(LPF, "%s: %d> %s: %s in_ifdef=%d/%d counts=%d/%d\n", __func__,
-              pc->orig_line, get_token_name(pc->type), txt,
+              pc->orig_line, get_token_name(pc->parent_type), txt,
               in_ifdef, frm->in_ifdef, b4_cnt, cpd.frame_count);
       pf_log_all(LPF);
       LOG_FMT(LPF, " <Out>");

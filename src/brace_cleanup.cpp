@@ -66,7 +66,7 @@ static int preproc_start(struct parse_frame *frm, chunk_t *pc)
       else
       {
          /* Check for #if, #else, #endif, etc */
-         pp_level = pf_check(frm, next);
+         pp_level = pf_check(frm, pc);
       }
    }
    return(pp_level);

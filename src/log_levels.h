@@ -74,6 +74,7 @@ enum
    LDELSEMI  = 58,    /* Removing semicolons */
    LFPARAM   = 59,    /* Testing for a full parameter */
    LNL1LINE  = 60,    /* NL check for 1 liners */
+   LPFCHK    = 61,    /* Parse Frame check fcn call */
 };
 
 #endif   /* LOG_LEVELS_H_INCLUDED */

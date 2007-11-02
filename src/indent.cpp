@@ -202,8 +202,8 @@ static void indent_pse_push(struct parse_frame& frm, chunk_t *pc)
       frm.pse_tos++;
       memset(&frm.pse[frm.pse_tos], 0, sizeof(frm.pse[frm.pse_tos]));
 
-      LOG_FMT(LINDPSE, "%4d] OPEN  [%d,%s] level=%d\n",
-              pc->orig_line, frm.pse_tos, get_token_name(pc->type), pc->level);
+      LOG_FMT(LINDPSE, "%4d] (pp=%d) OPEN  [%d,%s] level=%d\n",
+              pc->orig_line, cpd.pp_level, frm.pse_tos, get_token_name(pc->type), pc->level);
 
       frm.pse[frm.pse_tos].pc         = pc;
       frm.pse[frm.pse_tos].type       = pc->type;
@@ -228,8 +228,8 @@ static void indent_pse_pop(struct parse_frame& frm, chunk_t *pc)
    {
       if (pc != NULL)
       {
-         LOG_FMT(LINDPSE, "%4d] CLOSE [%d,%s] on %s, started on line %d, level=%d/%d\n",
-                 pc->orig_line, frm.pse_tos,
+         LOG_FMT(LINDPSE, "%4d] (pp=%d) CLOSE [%d,%s] on %s, started on line %d, level=%d/%d\n",
+                 pc->orig_line, cpd.pp_level, frm.pse_tos,
                  get_token_name(frm.pse[frm.pse_tos].type),
                  get_token_name(pc->type),
                  frm.pse[frm.pse_tos].open_line,
@@ -242,6 +242,10 @@ static void indent_pse_pop(struct parse_frame& frm, chunk_t *pc)
                  frm.pse_tos, get_token_name(frm.pse[frm.pse_tos].type),
                  frm.pse[frm.pse_tos].open_line);
       }
+
+      /* Don't clear the stack entry because some code 'cheats' and uses the
+       * just-popped indent values
+       */
       frm.pse_tos--;
    }
 }
@@ -345,99 +349,104 @@ void indent_text(void)
             }
          }
       }
-      else
+      else if (pc->type == CT_PREPROC)
       {
+         /* Close out PP_IF_INDENT before playing with the parse frames */
+         if ((frm.pse[frm.pse_tos].type == CT_PP_IF_INDENT) &&
+             ((pc->parent_type == CT_PP_ENDIF) ||
+              (pc->parent_type == CT_PP_ELSE)))
+         {
+            indent_pse_pop(frm, pc);
+         }
+
          pf_check(&frm, pc);
 
-         if (!was_preproc)
+         /* Indent the body of a #region here */
+         if (cpd.settings[UO_pp_region_indent_code].b &&
+             (pc->parent_type == CT_PP_REGION))
          {
-            /* Indent the body of a #region here */
-            if (cpd.settings[UO_pp_region_indent_code].b &&
-                (pc->type == CT_PREPROC) &&
-                (pc->parent_type == CT_PP_REGION))
+            next = chunk_get_next(pc);
+            /* Hack to get the logs to look right */
+            next->type = CT_PP_REGION_INDENT;
+            indent_pse_push(frm, next);
+            next->type = CT_PP_REGION;
+
+            /* Indent one level */
+            frm.pse[frm.pse_tos].indent     = frm.pse[frm.pse_tos - 1].indent + indent_size;
+            frm.pse[frm.pse_tos].indent_tab = frm.pse[frm.pse_tos - 1].indent_tab + indent_size;;
+            frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
+            frm.pse[frm.pse_tos].in_preproc = false;
+         }
+
+         /* Indent the body of a #if here */
+         if (cpd.settings[UO_pp_if_indent_code].b &&
+             ((pc->parent_type == CT_PP_IF) ||
+              (pc->parent_type == CT_PP_ELSE)))
+         {
+            next = chunk_get_next(pc);
+            /* Hack to get the logs to look right */
+            next->type = CT_PP_IF_INDENT;
+            indent_pse_push(frm, next);
+            next->type = CT_PP_IF;
+
+            /* Indent one level */
+            frm.pse[frm.pse_tos].indent     = frm.pse[frm.pse_tos - 1].indent + indent_size;
+            frm.pse[frm.pse_tos].indent_tab = frm.pse[frm.pse_tos - 1].indent_tab + indent_size;;
+            frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
+            frm.pse[frm.pse_tos].in_preproc = false;
+         }
+
+         /* Transition into a preproc by creating a dummy indent */
+         frm.level++;
+         indent_pse_push(frm, chunk_get_next(pc));
+
+         if (pc->parent_type == CT_PP_DEFINE)
+         {
+            frm.pse[frm.pse_tos].indent_tmp = cpd.settings[UO_pp_define_at_level].b ?
+                                              frm.pse[frm.pse_tos - 1].indent_tmp : 1;
+            frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos].indent_tmp + indent_size;
+         }
+         else
+         {
+            if ((frm.pse[frm.pse_tos - 1].type == CT_PP_REGION_INDENT) ||
+                (frm.pse[frm.pse_tos - 1].type == CT_PP_IF_INDENT))
             {
-               next = chunk_get_next(pc);
-               /* Hack to get the logs to look right */
-               next->type = CT_PP_REGION_INDENT;
-               indent_pse_push(frm, next);
-               next->type = CT_PP_REGION;
-
-               /* Indent one level */
-               frm.pse[frm.pse_tos].indent     = frm.pse[frm.pse_tos - 1].indent + indent_size;
-               frm.pse[frm.pse_tos].indent_tab = frm.pse[frm.pse_tos - 1].indent_tab + indent_size;;
-               frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
-               frm.pse[frm.pse_tos].in_preproc = false;
-            }
-
-            /* Indent the body of a #if here */
-            if (cpd.settings[UO_pp_if_indent_code].b &&
-                (pc->type == CT_PREPROC) &&
-                (pc->parent_type == CT_PP_IF))
-            {
-               next = chunk_get_next(pc);
-               /* Hack to get the logs to look right */
-               next->type = CT_PP_IF_INDENT;
-               indent_pse_push(frm, next);
-               next->type = CT_PP_IF;
-
-               /* Indent one level */
-               frm.pse[frm.pse_tos].indent     = frm.pse[frm.pse_tos - 1].indent + indent_size;
-               frm.pse[frm.pse_tos].indent_tab = frm.pse[frm.pse_tos - 1].indent_tab + indent_size;;
-               frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
-               frm.pse[frm.pse_tos].in_preproc = false;
-            }
-
-            /* Transition into a preproc by creating a dummy indent */
-            frm.level++;
-            indent_pse_push(frm, chunk_get_next(pc));
-
-            if (pc->parent_type == CT_PP_DEFINE)
-            {
-               frm.pse[frm.pse_tos].indent_tmp = cpd.settings[UO_pp_define_at_level].b ?
-                                                 frm.pse[frm.pse_tos - 1].indent_tmp : 1;
-               frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos].indent_tmp + indent_size;
+               frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 2].indent;
             }
             else
             {
-               if ((frm.pse[frm.pse_tos - 1].type == CT_PP_REGION_INDENT) ||
-                   (frm.pse[frm.pse_tos - 1].type == CT_PP_IF_INDENT))
+               frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent;
+            }
+            if ((pc->parent_type == CT_PP_REGION) ||
+                (pc->parent_type == CT_PP_ENDREGION))
+            {
+               int val = cpd.settings[UO_pp_indent_region].n;
+               if (val > 0)
                {
-                  frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 2].indent;
+                  frm.pse[frm.pse_tos].indent = val;
                }
                else
                {
-                  frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent;
+                  frm.pse[frm.pse_tos].indent += val;
                }
-               if ((pc->parent_type == CT_PP_REGION) ||
-                   (pc->parent_type == CT_PP_ENDREGION))
-               {
-                  int val = cpd.settings[UO_pp_indent_region].n;
-                  if (val > 0)
-                  {
-                     frm.pse[frm.pse_tos].indent = val;
-                  }
-                  else
-                  {
-                     frm.pse[frm.pse_tos].indent += val;
-                  }
-               }
-               else if ((pc->parent_type == CT_PP_IF) ||
-                        (pc->parent_type == CT_PP_ELSE) ||
-                        (pc->parent_type == CT_PP_ENDIF))
-               {
-                  int val = cpd.settings[UO_pp_indent_if].n;
-                  if (val > 0)
-                  {
-                     frm.pse[frm.pse_tos].indent = val;
-                  }
-                  else
-                  {
-                     frm.pse[frm.pse_tos].indent += val;
-                  }
-               }
-               frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
             }
+            else if ((pc->parent_type == CT_PP_IF) ||
+                     (pc->parent_type == CT_PP_ELSE) ||
+                     (pc->parent_type == CT_PP_ENDIF))
+            {
+               int val = cpd.settings[UO_pp_indent_if].n;
+               if (val > 0)
+               {
+                  frm.pse[frm.pse_tos].indent = val;
+               }
+               else
+               {
+                  frm.pse[frm.pse_tos].indent += val;
+               }
+            }
+            frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
          }
+
       }
 
       if ((cout_col > 0) &&
