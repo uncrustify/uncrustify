@@ -2558,10 +2558,15 @@ static void mark_class_ctor(chunk_t *start)
  */
 static void mark_namespace(chunk_t *pns)
 {
-   pns = chunk_get_next_ncnl(pns);
-   if (pns != NULL)
+   chunk_t *pc;
+
+   pc = chunk_get_next_ncnl(pns);
+   if (pc != NULL)
    {
-      chunk_t *pc = chunk_get_next_ncnl(pns);
+      if (pc->type != CT_BRACE_OPEN)
+      {
+         pc = chunk_get_next_ncnl(pc);
+      }
       if ((pc != NULL) && (pc->type == CT_BRACE_OPEN))
       {
          flag_parens(pc, PCF_IN_NAMESPACE, CT_NONE, CT_NAMESPACE, false);
