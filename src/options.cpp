@@ -300,7 +300,7 @@ void register_options(void)
                   "This also adds a newline before the matching brace close.");
    unc_add_option("nl_after_brace_open_cmt", UO_nl_after_brace_open_cmt, AT_BOOL,
                   "If nl_after_brace_open and nl_after_brace_open_cmt are true, a newline is\n"
-                  "placed between the open brace and a trailing comment.\n");
+                  "placed between the open brace and a trailing single-line comment.\n");
    unc_add_option("nl_after_vbrace_open", UO_nl_after_vbrace_open, AT_BOOL,
                   "Whether to put a newline after a virtual brace open.\n"
                   "These occur in un-braced if/while/do/for statement bodies.");
@@ -455,7 +455,7 @@ void register_options(void)
    unc_add_option("pp_indent_if", UO_pp_indent_if, AT_NUM,
                   "If pp_indent_at_level=true, sets the indent for #if, #else, and #endif when not at file-level");
    unc_add_option("pp_if_indent_code", UO_pp_if_indent_code, AT_BOOL,
-                  "If pp_indent_at_level=true, control whether to indent the code between #if, #else and #endif when not a file-level");
+                  "Control whether to indent the code between #if, #else and #endif when not at file-level");
    unc_add_option("pp_define_at_level", UO_pp_define_at_level, AT_BOOL,
                   "Whether to indent '#define' at the brace level (true) or from column 1 (false)");
 }

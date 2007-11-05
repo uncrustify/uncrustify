@@ -1371,7 +1371,8 @@ void newlines_cleanup_braces(void)
                   {
                      if (chunk_is_comment(tmp))
                      {
-                        if (!cpd.settings[UO_nl_after_brace_open_cmt].b)
+                        if (!cpd.settings[UO_nl_after_brace_open_cmt].b &&
+                            (tmp->type != CT_COMMENT_MULTI))
                         {
                            break;
                         }
