@@ -1338,7 +1338,7 @@ void newlines_cleanup_braces(void)
                              cpd.settings[UO_nl_class_brace].a);
          }
 
-         next = chunk_get_next_ncnl(pc);
+         next = chunk_get_next_nnl(pc);
          if (next->type == CT_BRACE_CLOSE)
          {
             //TODO: add an option to split open empty statements? { };
@@ -1349,6 +1349,8 @@ void newlines_cleanup_braces(void)
          }
          else
          {
+            next = chunk_get_next_ncnl(pc);
+
             // Handle nl_after_brace_open
             if ((pc->level == pc->brace_level) &&
                 cpd.settings[UO_nl_after_brace_open].b)
@@ -1369,7 +1371,10 @@ void newlines_cleanup_braces(void)
                   {
                      if (chunk_is_comment(tmp))
                      {
-                        break;
+                        if (!cpd.settings[UO_nl_after_brace_open_cmt].b)
+                        {
+                           break;
+                        }
                      }
                      tmp = chunk_get_prev(tmp);
                   }

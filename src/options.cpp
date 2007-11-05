@@ -298,6 +298,9 @@ void register_options(void)
    unc_add_option("nl_after_brace_open", UO_nl_after_brace_open, AT_BOOL,
                   "Whether to put a newline after brace open.\n"
                   "This also adds a newline before the matching brace close.");
+   unc_add_option("nl_after_brace_open_cmt", UO_nl_after_brace_open_cmt, AT_BOOL,
+                  "If nl_after_brace_open and nl_after_brace_open_cmt are true, a newline is\n"
+                  "placed between the open brace and a trailing comment.\n");
    unc_add_option("nl_after_vbrace_open", UO_nl_after_vbrace_open, AT_BOOL,
                   "Whether to put a newline after a virtual brace open.\n"
                   "These occur in un-braced if/while/do/for statement bodies.");

@@ -27,7 +27,7 @@ Near-term plans
 ===============================================================================
 
 
-Changes in uncrustify-0.41 (future release)
+Changes in uncrustify-0.41
 -------------------------------------------------------------------------------
  - Add cmt_insert_func_header, cmt_insert_file_header, and cmt_insert_class_header
  - Fix detection of prototypes without named parameters
@@ -37,6 +37,7 @@ Changes in uncrustify-0.41 (future release)
  - Fix detection of deref in "sizeof *x"
  - Fix broken output of backslash-newline in certain situations
  - Fix pp_indent_if stuff
+ - Add nl_after_brace_open_cmt
 
 
 Changes in uncrustify-0.40
