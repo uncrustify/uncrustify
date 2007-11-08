@@ -39,6 +39,7 @@ Copy to the release folder on Linux
 9. Copy the files to sourceforge
 $ ftp upload.sourceforge.net
 $ bin
+# cd /incoming
 $ put uncrustify-$UNC_REL.tgz
 $ put uncrustify-$UNC_REL-win32.zip
 $ quit
