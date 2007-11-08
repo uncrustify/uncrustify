@@ -1397,7 +1397,13 @@ void indent_preproc(void)
       {
          if ((cpd.settings[UO_pp_space].a & AV_ADD) != 0)
          {
-            reindent_line(next, pc->column + pc->len + pp_level);
+            int mult = cpd.settings[UO_pp_space_count].n;
+
+            if (mult < 1)
+            {
+               mult = 1;
+            }
+            reindent_line(next, pc->column + pc->len + (pp_level * mult));
          }
          else if ((cpd.settings[UO_pp_space].a & AV_REMOVE) != 0)
          {

@@ -39,6 +39,7 @@ Changes in uncrustify-0.41
  - Fix pp_indent_if stuff
  - Add nl_after_brace_open_cmt
  - Properly handle anonymous namespaces
+ - Add pp_space_count
 
 
 Changes in uncrustify-0.40
