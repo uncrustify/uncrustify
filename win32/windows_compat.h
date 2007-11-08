@@ -56,6 +56,12 @@ typedef unsigned int       UINT32;
 #undef strncasecmp
 #define strncasecmp   _strnicmp
 
+#undef strdup
+#define strdup        _strdup
+
+#undef fileno
+#define fileno        _fileno
+
 /* includes for _setmode() */
 #include <io.h>
 #include <fcntl.h>
