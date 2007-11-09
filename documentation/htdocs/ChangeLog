@@ -27,6 +27,11 @@ Near-term plans
 ===============================================================================
 
 
+Changes in uncrustify-0.42
+-------------------------------------------------------------------------------
+ - Fix bug that would remove a newline after a C++ comment
+
+
 Changes in uncrustify-0.41
 -------------------------------------------------------------------------------
  - Add cmt_insert_func_header, cmt_insert_file_header, and cmt_insert_class_header

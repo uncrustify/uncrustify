@@ -213,11 +213,18 @@ bool chunk_same_preproc(chunk_t *pc1, chunk_t *pc2)
 
 /**
  * Returns true if it is safe to delete the newline token.
- * The prev and next chunks must have the same PCF_IN_PREPROC flag.
+ * The prev and next chunks must have the same PCF_IN_PREPROC flag AND
+ * the newline can't be after a C++ comment.
  */
 static_inline
 bool chunk_safe_to_del_nl(chunk_t *nl)
 {
+   chunk_t *tmp = chunk_get_prev(nl);
+
+   if ((tmp != NULL) && (tmp->type == CT_COMMENT_CPP))
+   {
+      return(false);
+   }
    return(chunk_same_preproc(chunk_get_prev(nl), chunk_get_next(nl)));
 }
 

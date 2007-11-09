@@ -1907,14 +1907,16 @@ void newlines_class_colon_pos(void)
 
          if (mode == TP_TRAIL)
          {
-            if (chunk_is_newline(prev) && (prev->nl_count == 1))
+            if (chunk_is_newline(prev) && (prev->nl_count == 1) &&
+                chunk_safe_to_del_nl(prev))
             {
                chunk_swap(pc, prev);
             }
          }
          else if (mode == TP_LEAD)
          {
-            if (chunk_is_newline(next) && (next->nl_count == 1))
+            if (chunk_is_newline(next) && (next->nl_count == 1) &&
+                chunk_safe_to_del_nl(next))
             {
                chunk_swap(pc, next);
             }
