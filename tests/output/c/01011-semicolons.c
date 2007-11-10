@@ -44,7 +44,6 @@ enum FPP {
 struct narg {
 	int abc;
 	char def;
-
 	const char *ghi;
 };
 
