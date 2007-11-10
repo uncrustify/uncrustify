@@ -28,6 +28,7 @@ static chunk_t *fix_var_def(chunk_t *pc);
 static void mark_function(chunk_t *pc);
 static void mark_struct_union_body(chunk_t *start);
 static chunk_t *mark_variable_definition(chunk_t *start);
+
 static void mark_define_expressions(void);
 static void process_returns(void);
 static chunk_t *process_return(chunk_t *pc);
@@ -231,7 +232,6 @@ void fix_symbols(void)
                tmp->parent_type = pc->type;
             }
          }
-
       } /* paren open + cast/align/delegate */
 
       if ((pc->type == CT_ASSIGN) && (next->type == CT_SQUARE_OPEN))
@@ -651,6 +651,7 @@ void fix_symbols(void)
             square_level = -1;
          }
       }
+
       /**
        * A variable definition is possible after at the start of a statement
        * that starts with: QUALIFIER, TYPE, or WORD
@@ -1268,7 +1269,7 @@ static void fix_enum_struct_union(chunk_t *pc)
       if (next->type == CT_WORD)
       {
          next->flags |= flags;
-         flags       &= ~PCF_VAR_1ST;/* clear the first flag for the next items */
+         flags       &= ~PCF_VAR_1ST; /* clear the first flag for the next items */
       }
 
       if (next->type == CT_STAR)
@@ -1346,8 +1347,8 @@ static void fix_typedef(chunk_t *start)
                continue;
             }
 
-            prev->parent_type = CT_TYPEDEF;
-            open_paren = chunk_get_prev_type(prev, c_token_t(prev->type - 1), prev->level);
+            prev->parent_type       = CT_TYPEDEF;
+            open_paren              = chunk_get_prev_type(prev, c_token_t(prev->type - 1), prev->level);
             open_paren->parent_type = CT_TYPEDEF;
 
             flag_parens(next, 0, CT_FPAREN_OPEN, CT_TYPEDEF, false);
@@ -2915,4 +2916,3 @@ chunk_t *skip_attribute_prev(chunk_t *fp_close)
    }
    return(fp_close);
 }
-

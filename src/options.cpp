@@ -12,7 +12,7 @@
 #include "prototypes.h"
 #include <cstring>
 #ifdef HAVE_STRINGS_H
-#include <strings.h> /* strcasecmp() */
+ #include <strings.h> /* strcasecmp() */
 #endif
 #include <cstdio>
 #include <cstdlib>
@@ -729,7 +729,7 @@ const option_map_value *get_option_name(int uo)
 /**
  * Convert the value string to the correct type in dest.
  */
-static void convert_value(const option_map_value *entry, const char *val, op_val_t* dest)
+static void convert_value(const option_map_value *entry, const char *val, op_val_t *dest)
 {
    const option_map_value *tmp;
    bool btrue;
@@ -1085,7 +1085,7 @@ int save_option_file(FILE *pfile, bool withDoc)
               "# macro-open  BEGIN_TEMPLATE_MESSAGE_MAP\n"
               "# macro-open  BEGIN_MESSAGE_MAP\n"
               "# macro-close END_MESSAGE_MAP\n"
-      );
+              );
    }
 
    /* Print custom keywords */
@@ -1210,10 +1210,10 @@ void set_option_defaults(void)
    cpd.settings[UO_indent_access_spec].n = 1;
    cpd.settings[UO_sp_before_comma].a    = AV_REMOVE;
    cpd.settings[UO_string_escape_char].n = '\\';
-   cpd.settings[UO_sp_not].a             = AV_REMOVE;
-   cpd.settings[UO_sp_inv].a             = AV_REMOVE;
-   cpd.settings[UO_sp_addr].a            = AV_REMOVE;
-   cpd.settings[UO_sp_deref].a           = AV_REMOVE;
+   cpd.settings[UO_sp_not].a   = AV_REMOVE;
+   cpd.settings[UO_sp_inv].a   = AV_REMOVE;
+   cpd.settings[UO_sp_addr].a  = AV_REMOVE;
+   cpd.settings[UO_sp_deref].a = AV_REMOVE;
 }
 
 std::string argtype_to_string(argtype_e argtype)

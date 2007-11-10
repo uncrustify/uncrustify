@@ -447,7 +447,6 @@ static_inline void add_spaces_after_star()
    }
 }
 
-
 static chunk_t *get_next_function(chunk_t *pc)
 {
    while ((pc = chunk_get_next(pc)) != NULL)
@@ -561,7 +560,6 @@ static void add_comment_javaparam(chunk_t *pc, cmt_reflow& cmt)
       add_text("@return TODO");
    }
 }
-
 
 /**
  * text starts with '$('. see if this matches a keyword and add text based
@@ -756,6 +754,7 @@ static bool can_combine_comment(chunk_t *pc, cmt_reflow& cmt)
 static chunk_t *output_comment_c(chunk_t *first)
 {
    cmt_reflow cmt;
+
    output_cmt_start(cmt, first);
 
    cmt.cont_text = cpd.settings[UO_cmt_star_cont].b ? " *" : "  ";
@@ -800,6 +799,7 @@ static chunk_t *output_comment_c(chunk_t *first)
 static chunk_t *output_comment_cpp(chunk_t *first)
 {
    cmt_reflow cmt;
+
    output_cmt_start(cmt, first);
 
    /* CPP comments can't be grouped unless they are converted to C comments */
@@ -880,6 +880,7 @@ void output_comment_multi(chunk_t *pc)
    bool       nl_end = false;
 
    cmt_reflow cmt;
+
    output_cmt_start(cmt, pc);
    cmt.cont_text = cpd.settings[UO_cmt_star_cont].b ? " * " : "   ";
 
@@ -1028,7 +1029,7 @@ void output_comment_multi(chunk_t *pc)
                   {
                      lead[idx++] = line[sidx++];
                   }
-                  lead[idx] = 0;
+                  lead[idx]     = 0;
                   cmt.cont_text = lead;
                }
 

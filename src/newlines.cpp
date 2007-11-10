@@ -408,7 +408,7 @@ static void newlines_if_for_while_switch_pre_blank_lines(chunk_t *start, argval_
       }
       else
       {
-         if (do_add)/* we found something previously besides a comment or a new line */
+         if (do_add) /* we found something previously besides a comment or a new line */
          {
             /* if we have run across a newline */
             if (last_nl)
@@ -554,7 +554,7 @@ static void newlines_if_for_while_switch_post_blank_lines(chunk_t *start, argval
          prev->nl_count = 1;
          remove_next_newlines(pc);
       }
-      else if (chunk_is_newline(next = chunk_get_next_nvb(pc)))/* otherwise just deal with nls after brace */
+      else if (chunk_is_newline(next = chunk_get_next_nvb(pc))) /* otherwise just deal with nls after brace */
       {
          next->nl_count = 1;
          remove_next_newlines(next);
@@ -589,7 +589,7 @@ static void newlines_if_for_while_switch_post_blank_lines(chunk_t *start, argval
 
             next->nl_count = 2;
          }
-         else if (nl_count == 1)/* if we don't have enough newlines */
+         else if (nl_count == 1) /* if we don't have enough newlines */
          {
             /* if we have one before vbrace, need to add one after */
             if (have_pre_vbrace_nl)
@@ -1162,7 +1162,6 @@ static void newline_func_def(chunk_t *start)
    }
 }
 
-
 /**
  * Checks to see if it is OK to add a newline around the chunk.
  * Don't want to break one-liners...
@@ -1246,7 +1245,6 @@ static void nl_create_one_liner(chunk_t *vbrace_open)
       newline_del_between(vbrace_open, first);
    }
 }
-
 
 /**
  * Step through all chunks.
@@ -1609,7 +1607,6 @@ void newlines_cleanup_braces(void)
       }
    }
 }
-
 
 void newline_after_multiline_comment(void)
 {
@@ -2131,7 +2128,6 @@ void newlines_cleanup_dup(void)
       pc = next;
    }
 }
-
 
 /**
  * Make sure there is a blank line after a commented group of values

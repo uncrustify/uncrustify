@@ -199,7 +199,7 @@ void tokenize_cleanup(void)
             tmp2 = next;
             if ((next->flags & PCF_PUNCTUATOR) == 0)
             {
-               tmp  = chunk_get_next_ncnl(next);
+               tmp = chunk_get_next_ncnl(next);
                while ((tmp != NULL) && (tmp->type != CT_PAREN_OPEN))
                {
                   tmp->parent_type = CT_OPERATOR;

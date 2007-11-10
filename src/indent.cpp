@@ -299,8 +299,8 @@ void indent_text(void)
    int                parent_token_indent = 0;
    int                xml_indent          = 0;
    bool               token_used;
-   int                sql_col             = 0;
-   int                sql_orig_col        = 0;
+   int                sql_col      = 0;
+   int                sql_orig_col = 0;
 
    memset(&frm, 0, sizeof(frm));
 
@@ -373,7 +373,7 @@ void indent_text(void)
 
             /* Indent one level */
             frm.pse[frm.pse_tos].indent     = frm.pse[frm.pse_tos - 1].indent + indent_size;
-            frm.pse[frm.pse_tos].indent_tab = frm.pse[frm.pse_tos - 1].indent_tab + indent_size;;
+            frm.pse[frm.pse_tos].indent_tab = frm.pse[frm.pse_tos - 1].indent_tab + indent_size;
             frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
             frm.pse[frm.pse_tos].in_preproc = false;
          }
@@ -391,7 +391,7 @@ void indent_text(void)
 
             /* Indent one level */
             frm.pse[frm.pse_tos].indent     = frm.pse[frm.pse_tos - 1].indent + indent_size;
-            frm.pse[frm.pse_tos].indent_tab = frm.pse[frm.pse_tos - 1].indent_tab + indent_size;;
+            frm.pse[frm.pse_tos].indent_tab = frm.pse[frm.pse_tos - 1].indent_tab + indent_size;
             frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
             frm.pse[frm.pse_tos].in_preproc = false;
          }
@@ -446,7 +446,6 @@ void indent_text(void)
             }
             frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
          }
-
       }
 
       if ((cout_col > 0) &&
@@ -1013,7 +1012,7 @@ void indent_text(void)
                chunk_t *ck2 = chunk_get_prev(ck1);
 
                /* If the open paren was the first thing on the line or we are
-                * doing mode 1, then put the close paren in the same column */
+               * doing mode 1, then put the close paren in the same column */
                if (chunk_is_newline(ck2) ||
                    (cpd.settings[UO_indent_paren_close].n == 1))
                {

@@ -28,10 +28,10 @@
 #include <cerrno>
 #include <cctype>
 #ifdef HAVE_SYS_STAT_H
-#include <sys/stat.h>
+ #include <sys/stat.h>
 #endif
 #ifdef HAVE_STRINGS_H
-#include <strings.h> /* strcasecmp() */
+ #include <strings.h> /* strcasecmp() */
 #endif
 
 /* Global data */
@@ -654,7 +654,6 @@ int load_mem_file(const char *filename, file_mem& fm)
    return(retval);
 }
 
-
 /**
  * Try to load the file from the config folder first and then by name
  */
@@ -678,7 +677,6 @@ static int load_mem_file_config(const char *filename, file_mem& fm)
    }
    return(retval);
 }
-
 
 static int load_header_files()
 {
