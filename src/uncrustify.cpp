@@ -791,9 +791,12 @@ static void do_source_file(const char *filename, FILE *pfout, const char *parsed
       }
 
 #ifdef HAVE_UTIME_H
-      /* update mtime -- don't care if it fails */
-      fm.utb.actime = time(NULL);
-      (void)utime(filename, &fm.utb);
+      if (keep_mtime)
+      {
+         /* update mtime -- don't care if it fails */
+         fm.utb.actime = time(NULL);
+         (void)utime(filename, &fm.utb);
+      }
 #endif
    }
 }
@@ -898,6 +901,12 @@ static void uncrustify_file(const char *data, int data_len, FILE *pfout,
       add_func_header(CT_CLASS, cpd.class_hdr);
    }
 
+   /* Scrub extra semicolons */
+   if (cpd.settings[UO_mod_remove_extra_semicolon].b)
+   {
+      remove_extra_semicolons();
+   }
+
    /**
     * Look at all colons ':' and mark labels, :? sequences, etc.
     */
@@ -954,12 +963,6 @@ static void uncrustify_file(const char *data, int data_len, FILE *pfout,
        cpd.settings[UO_mod_pawn_semicolon].b)
    {
       pawn_scrub_vsemi();
-   }
-
-   /* Scrub extra semicolons */
-   if (cpd.settings[UO_mod_remove_extra_semicolon].b)
-   {
-      remove_extra_semicolons();
    }
 
    /**
