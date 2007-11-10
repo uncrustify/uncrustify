@@ -75,6 +75,7 @@ enum
    LFPARAM   = 59,    /* Testing for a full parameter */
    LNL1LINE  = 60,    /* NL check for 1 liners */
    LPFCHK    = 61,    /* Parse Frame check fcn call */
+   LAVDB     = 62,    /* align var def braces */
 };
 
 #endif   /* LOG_LEVELS_H_INCLUDED */

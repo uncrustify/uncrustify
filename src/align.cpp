@@ -314,11 +314,13 @@ void align_right_comments(void)
 void align_struct_initializers(void)
 {
    chunk_t *pc;
+   chunk_t *prev;
 
    pc = chunk_get_head();
    while (pc != NULL)
    {
-      if ((pc->parent_type == CT_ASSIGN) &&
+      prev = chunk_get_prev_ncnl(pc);
+      if ((prev != NULL) && (prev->type == CT_ASSIGN) &&
           ((pc->type == CT_BRACE_OPEN) ||
            ((cpd.lang_flags & LANG_D) && (pc->type == CT_SQUARE_OPEN))))
       {
@@ -644,6 +646,7 @@ static chunk_t *align_var_def_brace(chunk_t *start, int span)
 {
    chunk_t    *pc;
    chunk_t    *next;
+   chunk_t    *prev;
    int        align_mask = PCF_IN_FCN_DEF | PCF_VAR_1ST;
    int        myspan     = span;
    int        mythresh   = 0;
@@ -668,12 +671,18 @@ static chunk_t *align_var_def_brace(chunk_t *start, int span)
    }
 
    /* can't be any variable definitions in a "= {" block */
-   if (start->parent_type == CT_ASSIGN)
+   prev = chunk_get_prev_ncnl(start);
+   if ((prev != NULL) && (prev->type == CT_ASSIGN))
    {
+      LOG_FMT(LAVDB, "%s: start=%.*s [%s] on line %d (abort due to assign)\n", __func__,
+              start->len, start->str, get_token_name(start->type), start->orig_line);
+
       pc = chunk_get_next_type(start, CT_BRACE_CLOSE, start->level);
       return(chunk_get_next_ncnl(pc));
    }
 
+   LOG_FMT(LAVDB, "%s: start=%.*s [%s] on line %d\n", __func__,
+           start->len, start->str, get_token_name(start->type), start->orig_line);
 
    if (!cpd.settings[UO_align_var_def_inline].b)
    {
