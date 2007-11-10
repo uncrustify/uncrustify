@@ -17,6 +17,8 @@ AC_PROG_CC
 AC_HEADER_STDC
 AC_CHECK_HEADERS([inttypes.h stdint.h])
 
+AC_CHECK_HEADERS([utime.h])
+
 # Checks for typedefs, structures, and compiler characteristics.
 AC_HEADER_STDBOOL
 AC_C_CONST
