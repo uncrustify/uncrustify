@@ -20,6 +20,7 @@
 #include "logger.h"
 #include <cstdio>
 #include <assert.h>
+#include <utime.h>
 
 
 /**
@@ -260,8 +261,9 @@ typedef struct chunk_stack
 
 struct file_mem
 {
-   char *data;
-   int  length;
+   char           *data;
+   int            length;
+   struct utimbuf utb;
 };
 
 struct cp_data

@@ -45,9 +45,9 @@ static char *read_stdin(int& out_len);
 static void uncrustify_file(const char *data, int data_len, FILE *pfout,
                             const char *parsed_file);
 static void do_source_file(const char *filename, FILE *pfout, const char *parsed_file,
-                           const char *prefix, const char *suffix, bool no_backup);
+                           const char *prefix, const char *suffix, bool no_backup, bool keep_mtime);
 static void process_source_list(const char *source_list, const char *prefix,
-                                const char *suffix, bool no_backup);
+                                const char *suffix, bool no_backup, bool keep_mtime);
 static int load_header_files();
 
 /**
@@ -122,6 +122,7 @@ static void usage_exit(const char *msg, const char *argv0, int code)
            " --prefix PFX : Prepend PFX to the output filename path.\n"
            " --replace    : replace source files (creates a backup)\n"
            " --no-backup  : replace files, no backup. Useful if files are under source control\n"
+           " --mtime      : preserve mtime on replaced files\n"
            " -l           : language override: C, CPP, D, CS, JAVA, PAWN\n"
            " -t           : load a file with types (usually not needed)\n"
            " -q           : quiet mode - no output on stderr (-L will override)\n"
@@ -314,6 +315,7 @@ int main(int argc, char *argv[])
          suffix = ".uncrustify";
       }
    }
+   bool keep_mtime = arg.Present("--mtime");
 
    /* Grab the output override */
    output_file = arg.Param("-o");
@@ -444,7 +446,7 @@ int main(int argc, char *argv[])
    else if (source_file != NULL)
    {
       /* Doing a single file, output to stdout */
-      do_source_file(source_file, stdout, parsed_file, NULL, NULL, no_backup);
+      do_source_file(source_file, stdout, parsed_file, NULL, NULL, no_backup, false);
    }
    else
    {
@@ -462,12 +464,12 @@ int main(int argc, char *argv[])
       idx = 1;
       while ((p_arg = arg.Unused(idx)) != NULL)
       {
-         do_source_file(p_arg, NULL, NULL, prefix, suffix, no_backup);
+         do_source_file(p_arg, NULL, NULL, prefix, suffix, no_backup, keep_mtime);
       }
 
       if (source_list != NULL)
       {
-         process_source_list(source_list, prefix, suffix, no_backup);
+         process_source_list(source_list, prefix, suffix, no_backup, keep_mtime);
       }
    }
 
@@ -479,7 +481,7 @@ int main(int argc, char *argv[])
 
 static void process_source_list(const char *source_list,
                                 const char *prefix, const char *suffix,
-                                bool no_backup)
+                                bool no_backup, bool keep_mtime)
 {
    FILE *p_file = fopen(source_list, "r");
 
@@ -511,7 +513,7 @@ static void process_source_list(const char *source_list,
 
       if ((argc == 1) && (*args[0] != '#'))
       {
-         do_source_file(args[0], NULL, NULL, prefix, suffix, no_backup);
+         do_source_file(args[0], NULL, NULL, prefix, suffix, no_backup, keep_mtime);
       }
    }
 }
@@ -603,15 +605,21 @@ int load_mem_file(const char *filename, file_mem& fm)
    fm.data   = NULL;
    fm.length = 0;
 
+   /* Grab the stat info for the file */
+   if (stat(filename, &my_stat) < 0)
+   {
+      return(-1);
+   }
+
+   /* Save off mtime */
+   fm.utb.modtime = my_stat.st_mtime;
+
    /* Try to read in the file */
    p_file = fopen(filename, "rb");
    if (p_file == NULL)
    {
       return(-1);
    }
-
-   /* this really can't fail... */
-   (void)fstat(fileno(p_file), &my_stat);
 
    fm.length = my_stat.st_size;
    fm.data   = (char *)malloc(fm.length + 1);
@@ -701,7 +709,7 @@ static int load_header_files()
  * @param pfout    NULL or the output stream
  */
 static void do_source_file(const char *filename, FILE *pfout, const char *parsed_file,
-                           const char *prefix, const char *suffix, bool no_backup)
+                           const char *prefix, const char *suffix, bool no_backup, bool keep_mtime)
 {
    bool     did_open    = false;
    bool     need_backup = false;
@@ -777,6 +785,10 @@ static void do_source_file(const char *filename, FILE *pfout, const char *parsed
       {
          backup_create_md5_file(filename);
       }
+
+      /* update mtime -- don't care if it fails */
+      fm.utb.actime = time(NULL);
+      (void)utime(filename, &fm.utb);
    }
 }
 

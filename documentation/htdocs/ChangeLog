@@ -30,6 +30,7 @@ Near-term plans
 Changes in uncrustify-0.42
 -------------------------------------------------------------------------------
  - Fix bug that would remove a newline after a C++ comment
+ - Add "--mtime" command line option to preserve the mtime
 
 
 Changes in uncrustify-0.41
