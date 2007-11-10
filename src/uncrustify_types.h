@@ -20,7 +20,9 @@
 #include "logger.h"
 #include <cstdio>
 #include <assert.h>
+#ifdef HAVE_UTIME_H
 #include <utime.h>
+#endif
 
 
 /**
@@ -263,7 +265,9 @@ struct file_mem
 {
    char           *data;
    int            length;
+#ifdef HAVE_UTIME_H
    struct utimbuf utb;
+#endif
 };
 
 struct cp_data

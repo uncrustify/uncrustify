@@ -122,7 +122,9 @@ static void usage_exit(const char *msg, const char *argv0, int code)
            " --prefix PFX : Prepend PFX to the output filename path.\n"
            " --replace    : replace source files (creates a backup)\n"
            " --no-backup  : replace files, no backup. Useful if files are under source control\n"
+#ifdef HAVE_UTIME_H
            " --mtime      : preserve mtime on replaced files\n"
+#endif
            " -l           : language override: C, CPP, D, CS, JAVA, PAWN\n"
            " -t           : load a file with types (usually not needed)\n"
            " -q           : quiet mode - no output on stderr (-L will override)\n"
@@ -611,8 +613,10 @@ int load_mem_file(const char *filename, file_mem& fm)
       return(-1);
    }
 
+#ifdef HAVE_UTIME_H
    /* Save off mtime */
    fm.utb.modtime = my_stat.st_mtime;
+#endif
 
    /* Try to read in the file */
    p_file = fopen(filename, "rb");
@@ -786,9 +790,11 @@ static void do_source_file(const char *filename, FILE *pfout, const char *parsed
          backup_create_md5_file(filename);
       }
 
+#ifdef HAVE_UTIME_H
       /* update mtime -- don't care if it fails */
       fm.utb.actime = time(NULL);
       (void)utime(filename, &fm.utb);
+#endif
    }
 }
 
