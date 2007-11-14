@@ -5,6 +5,11 @@ class Foo
 
 };
 
+#define CTOR( i, _ )\
+      : T( X()), \
+        y() \
+   { }
+
 class Foo2
    : public Bar
 {
