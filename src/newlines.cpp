@@ -42,11 +42,20 @@ static bool one_liner_nl_ok(chunk_t *pc);
  *  - do/while before braces
  */
 
-chunk_t *newline_add_before(chunk_t *pc)
+chunk_t *newline_add_before2(chunk_t *pc, const char *fcn, int line)
 {
    chunk_t nl;
+   chunk_t *prev;
 
-   //fprintf(stderr, "%s: %s line %d\n", __func__, pc->str, pc->orig_line);
+   prev = chunk_get_prev(pc);
+   if (chunk_is_newline(prev))
+   {
+      /* Already has a newline before this chunk */
+      return(prev);
+   }
+
+   LOG_FMT(LNEWLINE, "%s: '%.*s' on line %d (called from %s line %d)\n",
+           __func__, pc->len, pc->str, pc->orig_line, fcn, line);
 
    memset(&nl, 0, sizeof(nl));
    nl.nl_count = 1;
@@ -67,19 +76,20 @@ chunk_t *newline_add_before(chunk_t *pc)
    return(chunk_add_before(&nl, pc));
 }
 
-chunk_t *newline_add_after(chunk_t *pc)
+chunk_t *newline_add_after2(chunk_t *pc, const char *fcn, int line)
 {
    chunk_t nl;
    chunk_t *next;
 
    next = chunk_get_next(pc);
-   if ((next != NULL) && (next->type == CT_NEWLINE))
+   if (chunk_is_newline(next))
    {
       /* Already has a newline after this chunk */
       return(next);
    }
 
-   //fprintf(stderr, "%s: %s line %d\n", __func__, pc->str, pc->orig_line);
+   LOG_FMT(LNEWLINE, "%s: '%.*s' on line %d (called from %s line %d)\n",
+           __func__, pc->len, pc->str, pc->orig_line, fcn, line);
 
    memset(&nl, 0, sizeof(nl));
    nl.nl_count = 1;
@@ -1935,7 +1945,7 @@ void newlines_class_colon_pos(void)
                {
                   newline_add_after(pc);
                }
-               else
+               else if (cpd.settings[UO_pos_class_comma].tp == TP_LEAD)
                {
                   newline_add_before(pc);
                   next = chunk_get_next_nc(pc);

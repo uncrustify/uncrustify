@@ -141,8 +141,12 @@ void newlines_class_colon_pos(void);
 void newlines_cleanup_dup(void);
 void newline_after_multiline_comment(void);
 void do_blank_lines(void);
-chunk_t *newline_add_before(chunk_t *pc);
-chunk_t *newline_add_after(chunk_t *pc);
+
+#define newline_add_before(pc)   newline_add_before2(pc, __func__, __LINE__)
+chunk_t *newline_add_before2(chunk_t *pc, const char *fcn, int line);
+
+#define newline_add_after(pc)    newline_add_after2(pc, __func__, __LINE__)
+chunk_t *newline_add_after2(chunk_t *pc, const char *fcn, int line);
 
 
 /*
