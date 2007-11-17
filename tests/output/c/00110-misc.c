@@ -1,6 +1,10 @@
 /********************/
 /* Before Unrustify */
 /********************/
+
+#define MACRO(cond, action)    if ((cond))  \
+      (action)
+
 void hurz(murks)
 {
    if (murks = 4)              // This comment belongs to (murks = 4)
