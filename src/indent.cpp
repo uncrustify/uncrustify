@@ -871,7 +871,8 @@ void indent_text(void)
             {
                idx--;
             }
-            frm.pse[frm.pse_tos].indent = frm.pse[idx].indent + indent_size;
+            frm.pse[frm.pse_tos].indent     = frm.pse[idx].indent + indent_size;
+            frm.pse[frm.pse_tos].indent_tab = frm.pse[frm.pse_tos].indent;
          }
 
          else if ((chunk_is_str(pc, "(", 1) && !cpd.settings[UO_indent_paren_nl].b) ||
