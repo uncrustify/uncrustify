@@ -67,6 +67,12 @@
 00152  cast-sp-a.cfg           c/casts.c
 00153  cast-type.cfg           c/casts.c
 
+# fcn indents
+00160  indent_func_param.cfg       c/fcn_indent.c
+00161  indent_func_call_param.cfg  c/fcn_indent.c
+00162  indent_func_def_param.cfg   c/fcn_indent.c
+00163  indent_func_proto_param.cfg c/fcn_indent.c
+
 # switch & case stuff
 00201   case-1.cfg             c/case.c
 00202   case-2.cfg             c/case.c
