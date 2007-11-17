@@ -436,6 +436,8 @@ void register_options(void)
                   "Add or remove newline after each ',' in the constructor member initialization");
    unc_add_option("nl_func_type_name", UO_nl_func_type_name, AT_IARF,
                   "Add or remove newline between return type and function name in definition");
+   unc_add_option("nl_func_proto_type_name", UO_nl_func_proto_type_name, AT_IARF,
+                  "Add or remove newline between return type and function name in a prototype");
    unc_add_option("nl_func_paren", UO_nl_func_paren, AT_IARF,
                   "Add or remove newline between a function name and the opening '('");
    unc_add_option("nl_func_decl_start", UO_nl_func_decl_start, AT_IARF,

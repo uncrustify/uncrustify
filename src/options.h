@@ -300,6 +300,7 @@ enum uncrustify_options
    UO_nl_func_decl_args,          // newline after each ',' in a function decl
    UO_nl_func_decl_end,           // newline before the ')' in a function decl
    UO_nl_func_type_name,          // newline between return type and func name in def
+   UO_nl_func_proto_type_name,    // nl_func_type_name, but for prottypes
    UO_nl_func_var_def_blk,        // newline after a block of variable defs
    UO_nl_before_case,             // newline before 'case' statement
    UO_nl_after_return,            /* newline after return statement */
