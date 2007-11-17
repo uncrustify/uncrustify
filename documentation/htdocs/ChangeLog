@@ -34,6 +34,7 @@ Changes in uncrustify-0.42
  - Remove extra semicolons before inserting newlines after semicolons
  - Fix broken struct initializer alignment
  - Fix problem with pos_class_comma in a #define
+ - Fix problem with an incomplete statement in a #define and virtual braces
 
 
 Changes in uncrustify-0.41
