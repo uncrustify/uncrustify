@@ -257,10 +257,12 @@ static void convert_vbrace_to_brace(void)
 {
    chunk_t *pc;
    chunk_t *tmp;
+   chunk_t *vbc;
 
+   /* Find every vbrace open */
    for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next_ncnl(pc))
    {
-      if ((pc->type != CT_VBRACE_OPEN) && (pc->type != CT_VBRACE_CLOSE))
+      if (pc->type != CT_VBRACE_OPEN)
       {
          continue;
       }
@@ -282,31 +284,46 @@ static void convert_vbrace_to_brace(void)
           ((pc->parent_type == CT_FUNC_DEF) &&
            ((cpd.settings[UO_mod_full_brace_function].a & AV_ADD) != 0)))
       {
-         if (pc->type == CT_VBRACE_OPEN)
+         /* Find the matching vbrace close */
+         vbc = NULL;
+         tmp = pc;
+         while ((tmp = chunk_get_next(tmp)) != NULL)
          {
-            pc->type = CT_BRACE_OPEN;
-            pc->len  = 1;
-            pc->str  = "{";
-         }
-         else
-         {
-            pc->type = CT_BRACE_CLOSE;
-            pc->len  = 1;
-            pc->str  = "}";
-
-            /* If the next chunk is a comment, followed by a newline, then
-             * move the brace after the newline and add another newline after
-             * the close brace.
-             */
-            tmp = chunk_get_next(pc);
-            if (chunk_is_comment(tmp))
+            if ((tmp->flags & PCF_IN_PREPROC) != (pc->flags & PCF_IN_PREPROC))
             {
-               tmp = chunk_get_next(tmp);
-               if (chunk_is_newline(tmp))
-               {
-                  chunk_move_after(pc, tmp);
-                  newline_add_after(pc);
-               }
+               break;
+            }
+            if (tmp->type == CT_VBRACE_CLOSE)
+            {
+               vbc = tmp;
+               break;
+            }
+         }
+         if (vbc == NULL)
+         {
+            continue;
+         }
+
+         pc->type = CT_BRACE_OPEN;
+         pc->len  = 1;
+         pc->str  = "{";
+
+         vbc->type = CT_BRACE_CLOSE;
+         vbc->len  = 1;
+         vbc->str  = "}";
+
+         /* If the next chunk is a comment, followed by a newline, then
+          * move the brace after the newline and add another newline after
+          * the close brace.
+          */
+         tmp = chunk_get_next(vbc);
+         if (chunk_is_comment(tmp))
+         {
+            tmp = chunk_get_next(tmp);
+            if (chunk_is_newline(tmp))
+            {
+               chunk_move_after(vbc, tmp);
+               newline_add_after(vbc);
             }
          }
       }
