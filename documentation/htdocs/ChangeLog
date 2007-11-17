@@ -35,6 +35,7 @@ Changes in uncrustify-0.42
  - Fix broken struct initializer alignment
  - Fix problem with pos_class_comma in a #define
  - Fix problem with an incomplete statement in a #define and virtual braces
+ - Add indent_func_proto_param and indent_func_def_param
 
 
 Changes in uncrustify-0.41

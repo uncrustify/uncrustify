@@ -297,8 +297,15 @@ void register_options(void)
                   "Whether the 'class' body is indented");
    unc_add_option("indent_class_colon", UO_indent_class_colon, AT_BOOL,
                   "Whether to indent the stuff after a leading class colon");
+
    unc_add_option("indent_func_call_param", UO_indent_func_call_param, AT_BOOL,
-                  "Whether to indent continued function call parameters one indent level (true) or aligns instead of indent (false)");
+                  "True:  indent continued function call parameters one indent level\n"
+                  "False: align parameters under the open paren");
+   unc_add_option("indent_func_def_param", UO_indent_func_def_param, AT_BOOL,
+                  "Same as indent_func_call_param, but for function defs");
+   unc_add_option("indent_func_proto_param", UO_indent_func_proto_param, AT_BOOL,
+                  "Same as indent_func_call_param, but for function protos");
+
    unc_add_option("indent_member", UO_indent_member, AT_NUM,
                   "The number of spaces to indent a continued '->' or '.'\n"
                   "Usually set to 0, 1, or indent_columns.");

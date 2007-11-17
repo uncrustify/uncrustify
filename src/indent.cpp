@@ -848,11 +848,30 @@ void indent_text(void)
          indent_pse_push(frm, pc);
          frm.pse[frm.pse_tos].indent = pc->column + pc->len;
 
-         if (cpd.settings[UO_indent_func_call_param].b &&
-             (pc->type == CT_FPAREN_OPEN) &&
-             (pc->parent_type == CT_FUNC_CALL))
+         if ((pc->type == CT_FPAREN_OPEN) &&
+             ((cpd.settings[UO_indent_func_call_param].b &&
+               (pc->parent_type == CT_FUNC_CALL))
+              ||
+              (cpd.settings[UO_indent_func_proto_param].b &&
+               (pc->parent_type == CT_FUNC_PROTO))
+              ||
+              (cpd.settings[UO_indent_func_def_param].b &&
+               (pc->parent_type == CT_FUNC_DEF))))
          {
-            frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent + indent_size;
+            /* Skip any continuation indents */
+            idx = frm.pse_tos - 1;
+            while ((idx > 0) &&
+                   (frm.pse[idx].type != CT_BRACE_OPEN) &&
+                   (frm.pse[idx].type != CT_VBRACE_OPEN) &&
+                   (frm.pse[idx].type != CT_PAREN_OPEN) &&
+                   (frm.pse[idx].type != CT_FPAREN_OPEN) &&
+                   (frm.pse[idx].type != CT_SPAREN_OPEN) &&
+                   (frm.pse[idx].type != CT_SQUARE_OPEN) &&
+                   (frm.pse[idx].type != CT_ANGLE_OPEN))
+            {
+               idx--;
+            }
+            frm.pse[frm.pse_tos].indent = frm.pse[idx].indent + indent_size;
          }
 
          else if ((chunk_is_str(pc, "(", 1) && !cpd.settings[UO_indent_paren_nl].b) ||
