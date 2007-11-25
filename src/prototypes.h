@@ -91,6 +91,7 @@ chunk_t *align_assign(chunk_t *first, int span, int thresh);
  */
 
 void do_braces(void);
+void add_long_closebrace_comment(void);
 
 
 /*

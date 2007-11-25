@@ -685,6 +685,12 @@ void register_options(void)
                   "Add parens on 'while' and 'if' statement around bools");
    unc_add_option("mod_remove_extra_semicolon", UO_mod_remove_extra_semicolon, AT_BOOL,
                   "Whether to remove superfluous semicolons");
+   unc_add_option("mod_add_long_function_closebrace_comment", UO_mod_add_long_function_closebrace_comment, AT_NUM,
+                  "If a function body exceeds the specified number of newlines and doesn't have a comment after\n"
+                  "the close brace, a comment will be added.");
+   unc_add_option("mod_add_long_switch_closebrace_comment", UO_mod_add_long_switch_closebrace_comment, AT_NUM,
+                  "If a switch body exceeds the specified number of newlines and doesn't have a comment after\n"
+                  "the close brace, a comment will be added.");
 
    unc_begin_group(UG_preprocessor, "Preprocessor options");
    unc_add_option("pp_indent", UO_pp_indent, AT_IARF,

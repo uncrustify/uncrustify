@@ -329,3 +329,126 @@ static void convert_vbrace_to_brace(void)
       }
    }
 }
+
+/**
+ * Adds a comment after the ref chunk
+ * Returns the added chunk or NULL
+ */
+chunk_t *insert_comment_after(chunk_t *ref, c_token_t cmt_type,
+                              int cmt_len, const char *cmt_text)
+{
+   chunk_t new_cmt;
+   char    *txt;
+   int     txt_len;
+
+   if (cmt_len <= 0)
+   {
+      cmt_len = strlen(cmt_text);
+   }
+   txt_len = cmt_len + 8; /* 8 is big enough for all types */
+
+   memset(&new_cmt, 0, sizeof(new_cmt));
+   new_cmt.flags = ref->flags & PCF_COPY_FLAGS;
+   new_cmt.type  = cmt_type;
+
+   /* FIXME: this creates a memory leak */
+   txt = new char[txt_len];
+   if (txt == NULL)
+   {
+      return(NULL);
+   }
+
+   new_cmt.str = txt;
+   if (cmt_type == CT_COMMENT_CPP)
+   {
+      new_cmt.len = snprintf(txt, txt_len, "// %.*s", cmt_len, cmt_text);
+   }
+   else
+   {
+      new_cmt.len = snprintf(txt, txt_len, "/* %.*s */", cmt_len, cmt_text);
+   }
+   /* TODO: expand comment type to cover other comment styles? */
+
+   new_cmt.column   = ref->column + ref->len + 1;
+   new_cmt.orig_col = new_cmt.column;
+
+   return(chunk_add_after(&new_cmt, ref));
+}
+
+void add_long_closebrace_comment(void)
+{
+   chunk_t *pc;
+   chunk_t *tmp;
+   chunk_t *br_open;
+   chunk_t *br_close;
+   chunk_t *fcn_pc = NULL;
+   chunk_t *sw_pc  = NULL;
+   int     nl_count;
+
+   pc = chunk_get_head();
+   while ((pc = chunk_get_next_ncnl(pc)) != NULL)
+   {
+      if (pc->type == CT_FUNC_DEF)
+      {
+         fcn_pc = pc;
+      }
+      else if (pc->type == CT_SWITCH)
+      {
+         /* kinda pointless, since it always has the text "switch" */
+         sw_pc = pc;
+      }
+      if ((pc->type != CT_BRACE_OPEN) || ((pc->flags & PCF_IN_PREPROC) != 0))
+      {
+         continue;
+      }
+
+      br_open  = pc;
+      nl_count = 0;
+
+      tmp = pc;
+      while ((tmp = chunk_get_next(tmp)) != NULL)
+      {
+         if (chunk_is_newline(tmp))
+         {
+            nl_count += tmp->nl_count;
+         }
+         else if ((tmp->level == br_open->level) &&
+                  (tmp->type == CT_BRACE_CLOSE))
+         {
+            br_close = tmp;
+
+            //LOG_FMT(LSYS, "found brace pair on lines %d and %d, nl_count=%d\n",
+            //        br_open->orig_line, br_close->orig_line, nl_count);
+
+            /* Found the matching close brace - make sure a newline is next */
+            tmp = chunk_get_next(tmp);
+            if (chunk_is_newline(tmp))
+            {
+               int     nl_min  = 0;
+               chunk_t *tag_pc = NULL;
+
+               if (br_open->parent_type == CT_SWITCH)
+               {
+                  nl_min = cpd.settings[UO_mod_add_long_switch_closebrace_comment].n;
+                  tag_pc = sw_pc;
+               }
+               else if (br_open->parent_type == CT_FUNC_DEF)
+               {
+                  nl_min = cpd.settings[UO_mod_add_long_function_closebrace_comment].n;
+                  tag_pc = fcn_pc;
+               }
+
+               if ((nl_min > 0) && (nl_count >= nl_min) && (tag_pc != NULL))
+               {
+                  /* TODO: determine the added comment style */
+
+                  /* Add a comment after the close brace */
+                  insert_comment_after(br_close, CT_COMMENT,
+                                       tag_pc->len, tag_pc->str);
+               }
+            }
+            break;
+         }
+      }
+   }
+}
