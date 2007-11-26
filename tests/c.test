@@ -117,6 +117,8 @@
 00702  func-def-2.cfg          c/function-def.c
 00703  func-def-3.cfg          c/function-def.c
 
+00710  add_long_closebrace_comment_1.cfg c/add_long_comment.c
+
 # nl_after_semicolon and nl_after_open_brace
 00721  nl_semicolon.cfg        c/nl-semicolon.c
 

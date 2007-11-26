@@ -24,6 +24,8 @@
 
 40030  d.cfg                   d/delegate.d
 
+40040  sort_imports.cfg        d/sort_import.d
+
 40050  d.cfg                   d/strings.d
 40051  d.cfg                   d/numbers.d
 
