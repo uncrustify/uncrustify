@@ -450,6 +450,74 @@ void chunk_swap(chunk_t *pc1, chunk_t *pc2)
 }
 
 /**
+ * Swaps two lines that are started with the specified chunks.
+ *
+ * @param pc1  The first chunk of line 1
+ * @param pc2  The first chunk of line 2
+ */
+void chunk_swap_lines(chunk_t *pc1, chunk_t *pc2)
+{
+   chunk_t *ref2;
+   chunk_t *tmp;
+
+   if ((pc1 == NULL) || (pc2 == NULL) || (pc1 == pc2))
+   {
+      return;
+   }
+
+   /**
+    * Example start:
+    * ? - start1 - a1 - b1 - nl1 - ? - ref2 - start2 - a2 - b2 - nl2 - ?
+    *      ^- pc1                              ^- pc2
+    */
+   ref2 = chunk_get_prev(pc2);
+
+   /* Move the line started at pc2 before pc1 */
+   while ((pc2 != NULL) && !chunk_is_newline(pc2))
+   {
+      tmp = chunk_get_next(pc2);
+      g_cl.Pop(pc2);
+      g_cl.AddBefore(pc2, pc1);
+      pc2 = tmp;
+   }
+
+   /**
+    * Should now be:
+    * ? - start2 - a2 - b2 - start1 - a1 - b1 - nl1 - ? - ref2 - nl2 - ?
+    *                         ^- pc1                              ^- pc2
+    */
+
+   /* Now move the line started at pc1 after ref2 */
+   while ((pc1 != NULL) && !chunk_is_newline(pc1))
+   {
+      tmp = chunk_get_next(pc1);
+      g_cl.Pop(pc1);
+      if (ref2 != NULL)
+      {
+         g_cl.AddAfter(pc1, ref2);
+      }
+      else
+      {
+         g_cl.AddHead(pc1);
+      }
+      ref2 = pc1;
+      pc1  = tmp;
+   }
+
+   /**
+    * Should now be:
+    * ? - start2 - a2 - b2 - nl1 - ? - ref2 - start1 - a1 - b1 - nl2 - ?
+    *                         ^- pc1                              ^- pc2
+    */
+
+   /* pc1 and pc2 should be the newlines for their lines */
+   if ((pc1 != NULL) && (pc2 != NULL))
+   {
+      chunk_swap(pc1, pc2);
+   }
+}
+
+/**
  * Gets the next non-vbrace chunk
  */
 chunk_t *chunk_get_next_nvb(chunk_t *cur)
