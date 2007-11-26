@@ -118,7 +118,7 @@ struct parse_frame
 #define PCF_TBD_28             (1 << 28)
 #define PCF_TBD_29             (1 << 29)
 #define PCF_TBD_30             (1 << 30)
-#define PCF_TBD_31             (1 << 31)
+#define PCF_OWN_STR            (1 << 31)  /* chunk owns the memory at str */
 
 
 /* flags that get copied when a new chunk is inserted */
@@ -161,7 +161,7 @@ static const char *pcf_names[] =
    "TBD_28",
    "TBD_29",
    "TBD_30",
-   "TBD_31",
+   "OWN_STR",
 };
 #endif
 

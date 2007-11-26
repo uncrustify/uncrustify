@@ -348,10 +348,10 @@ chunk_t *insert_comment_after(chunk_t *ref, c_token_t cmt_type,
    txt_len = cmt_len + 8; /* 8 is big enough for all types */
 
    memset(&new_cmt, 0, sizeof(new_cmt));
-   new_cmt.flags = ref->flags & PCF_COPY_FLAGS;
+   new_cmt.flags = (ref->flags & PCF_COPY_FLAGS) | PCF_OWN_STR;
    new_cmt.type  = cmt_type;
 
-   /* FIXME: this creates a memory leak */
+   /* allocate memory for the string */
    txt = new char[txt_len];
    if (txt == NULL)
    {

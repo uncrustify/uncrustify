@@ -121,6 +121,11 @@ chunk_t *chunk_add_before(const chunk_t *pc_in, chunk_t *ref)
 void chunk_del(chunk_t *pc)
 {
    g_cl.Pop(pc);
+   if ((pc->flags & PCF_OWN_STR) && (pc->str != NULL))
+   {
+      delete[] pc->str;
+      pc->str = NULL;
+   }
    delete pc;
 }
 
