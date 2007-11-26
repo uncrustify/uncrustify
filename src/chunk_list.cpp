@@ -450,6 +450,26 @@ void chunk_swap(chunk_t *pc1, chunk_t *pc2)
 }
 
 /**
+ * Finds the first chunk on the line that pc is on.
+ * This just backs up until a newline or NULL is hit.
+ *
+ * given: [ a - b - c - n1 - d - e - n2 ]
+ * input: [ a | b | c | n1 ] => a
+ * input: [ d | e | n2 ]     => d
+ */
+chunk_t *chunk_first_on_line(chunk_t *pc)
+{
+   chunk_t *first = pc;
+
+   while (((pc = chunk_get_prev(pc)) != NULL) && !chunk_is_newline(pc))
+   {
+      first = pc;
+   }
+
+   return(first);
+}
+
+/**
  * Swaps two lines that are started with the specified chunks.
  *
  * @param pc1  The first chunk of line 1
@@ -459,6 +479,9 @@ void chunk_swap_lines(chunk_t *pc1, chunk_t *pc2)
 {
    chunk_t *ref2;
    chunk_t *tmp;
+
+   pc1 = chunk_first_on_line(pc1);
+   pc2 = chunk_first_on_line(pc2);
 
    if ((pc1 == NULL) || (pc2 == NULL) || (pc1 == pc2))
    {
@@ -510,9 +533,16 @@ void chunk_swap_lines(chunk_t *pc1, chunk_t *pc2)
     *                         ^- pc1                              ^- pc2
     */
 
-   /* pc1 and pc2 should be the newlines for their lines */
+   /* pc1 and pc2 should be the newlines for their lines.
+    * swap the chunks and the nl_count so that the spacing remains the same.
+    */
    if ((pc1 != NULL) && (pc2 != NULL))
    {
+      int nl_count = pc1->nl_count;
+
+      pc1->nl_count = pc2->nl_count;
+      pc2->nl_count = nl_count;
+
       chunk_swap(pc1, pc2);
    }
 }

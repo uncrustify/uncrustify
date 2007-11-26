@@ -76,6 +76,7 @@ enum
    LNL1LINE  = 60,    /* NL check for 1 liners */
    LPFCHK    = 61,    /* Parse Frame check fcn call */
    LAVDB     = 62,    /* align var def braces */
+   LSORT     = 63,    /* Sorting */
 };
 
 #endif   /* LOG_LEVELS_H_INCLUDED */

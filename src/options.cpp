@@ -691,6 +691,8 @@ void register_options(void)
    unc_add_option("mod_add_long_switch_closebrace_comment", UO_mod_add_long_switch_closebrace_comment, AT_NUM,
                   "If a switch body exceeds the specified number of newlines and doesn't have a comment after\n"
                   "the close brace, a comment will be added.");
+   unc_add_option("mod_sort_import", UO_mod_sort_import, AT_BOOL,
+                  "If TRUE, will sort consecutive single-line 'import' statements [Java, D]");
 
    unc_begin_group(UG_preprocessor, "Preprocessor options");
    unc_add_option("pp_indent", UO_pp_indent, AT_IARF,

@@ -970,6 +970,12 @@ static void uncrustify_file(const char *data, int data_len, FILE *pfout,
       add_long_closebrace_comment();
    }
 
+   /* Sort imports */
+   if (cpd.settings[UO_mod_sort_import].b)
+   {
+      sort_imports();
+   }
+
    /**
     * Fix same-line inter-chunk spacing
     */

@@ -29,6 +29,7 @@ chunk_t *chunk_get_prev(chunk_t *cur);
 
 void chunk_swap(chunk_t *pc1, chunk_t *pc2);
 void chunk_swap_lines(chunk_t *pc1, chunk_t *pc2);
+chunk_t *chunk_first_on_line(chunk_t *pc);
 
 chunk_t *chunk_get_next_nl(chunk_t *cur);
 chunk_t *chunk_get_next_nc(chunk_t *cur);

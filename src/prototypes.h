@@ -95,6 +95,13 @@ void add_long_closebrace_comment(void);
 
 
 /*
+ *  sorting.cpp
+ */
+
+void sort_imports(void);
+
+
+/*
  *  parens.cpp
  */
 

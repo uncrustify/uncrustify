@@ -417,6 +417,7 @@ enum uncrustify_options
    UO_mod_remove_extra_semicolon, // remove extra semicolons
    UO_mod_add_long_function_closebrace_comment,
    UO_mod_add_long_switch_closebrace_comment,
+   UO_mod_sort_import,
 
 
    /*
