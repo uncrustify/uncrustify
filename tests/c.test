@@ -165,6 +165,7 @@
 20315 pp_ret.cfg               c/pp_ret.c
 
 20320 nl_create_one_liner.cfg  c/nl_create_one_liner.c
+20325 sort_imports.cfg         c/sort_include.c
 
 # some embedded sql stuff
 21000 ben.cfg                  sql/mysql.sqc
