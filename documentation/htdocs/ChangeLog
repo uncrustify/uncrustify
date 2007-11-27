@@ -38,7 +38,9 @@ Changes in uncrustify-0.42
  - Add indent_func_proto_param and indent_func_def_param
  - Add nl_func_proto_type_name, split from nl_func_type_name
  - Add mod_add_long_switch_closebrace_comment, mod_add_long_function_closebrace_comment
- - Add mod_sort_import to sort imports
+ - Add mod_sort_import to sort import statements (Java/D)
+ - Add mod_sort_using to sort using statements (C#)
+ - Add mod_sort_include to sort #include (C/C++) and #import (ObjC) statements
 
 
 Changes in uncrustify-0.41

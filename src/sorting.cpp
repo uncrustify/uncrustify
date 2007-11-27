@@ -117,7 +117,8 @@ void sort_imports(void)
          bool did_import = false;
 
          if ((p_imp != NULL) && (p_last != NULL) &&
-             (p_last->type == CT_SEMICOLON))
+             ((p_last->type == CT_SEMICOLON) ||
+              (p_imp->flags & PCF_IN_PREPROC)))
          {
             if (num_chunks < (int)ARRAY_SIZE(chunks))
             {
@@ -139,7 +140,25 @@ void sort_imports(void)
       }
       else if (pc->type == CT_IMPORT)
       {
-         p_imp = chunk_get_next(pc);
+         if (cpd.settings[UO_mod_sort_import].b)
+         {
+            p_imp = chunk_get_next(pc);
+         }
+      }
+      else if (pc->type == CT_USING)
+      {
+         if (cpd.settings[UO_mod_sort_using].b)
+         {
+            p_imp = chunk_get_next(pc);
+         }
+      }
+      else if (pc->type == CT_PP_INCLUDE)
+      {
+         if (cpd.settings[UO_mod_sort_include].b)
+         {
+            p_imp  = chunk_get_next(pc);
+            p_last = pc;
+         }
       }
       else if (!chunk_is_comment(pc))
       {

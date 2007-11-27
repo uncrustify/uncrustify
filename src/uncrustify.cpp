@@ -970,8 +970,10 @@ static void uncrustify_file(const char *data, int data_len, FILE *pfout,
       add_long_closebrace_comment();
    }
 
-   /* Sort imports */
-   if (cpd.settings[UO_mod_sort_import].b)
+   /* Sort imports/using/include */
+   if (cpd.settings[UO_mod_sort_import].b ||
+       cpd.settings[UO_mod_sort_include].b ||
+       cpd.settings[UO_mod_sort_using].b)
    {
       sort_imports();
    }

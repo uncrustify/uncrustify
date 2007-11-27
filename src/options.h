@@ -418,6 +418,8 @@ enum uncrustify_options
    UO_mod_add_long_function_closebrace_comment,
    UO_mod_add_long_switch_closebrace_comment,
    UO_mod_sort_import,
+   UO_mod_sort_using,
+   UO_mod_sort_include,
 
 
    /*

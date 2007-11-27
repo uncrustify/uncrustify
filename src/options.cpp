@@ -693,6 +693,11 @@ void register_options(void)
                   "the close brace, a comment will be added.");
    unc_add_option("mod_sort_import", UO_mod_sort_import, AT_BOOL,
                   "If TRUE, will sort consecutive single-line 'import' statements [Java, D]");
+   unc_add_option("mod_sort_using", UO_mod_sort_using, AT_BOOL,
+                  "If TRUE, will sort consecutive single-line 'using' statements [C#]");
+   unc_add_option("mod_sort_include", UO_mod_sort_include, AT_BOOL,
+                  "If TRUE, will sort consecutive single-line '#include' statements [C/C++] and '#import' statements [Obj-C]\n"
+                  "This is generally a bad idea, as it may break your code.");
 
    unc_begin_group(UG_preprocessor, "Preprocessor options");
    unc_add_option("pp_indent", UO_pp_indent, AT_IARF,
