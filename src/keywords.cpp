@@ -154,7 +154,7 @@ static const chunk_tag_t keywords[] =
    { "long",             CT_TYPE,         LANG_ALLC                                                       },
    { "macro",            CT_D_MACRO,      LANG_D                                                          },
    { "mixin",            CT_CLASS,        LANG_D                                                          }, // may need special handling
-   { "module",           CT_USING,        LANG_D                                                          },
+   { "module",           CT_D_MODULE,     LANG_D                                                          },
    { "mutable",          CT_MUTABLE,      LANG_C | LANG_CPP                                               },
    { "namespace",        CT_NAMESPACE,    LANG_C | LANG_CPP | LANG_CS | LANG_VALA                         },
    { "native",           CT_NATIVE,       LANG_PAWN                                                       }, // PAWN
@@ -240,7 +240,7 @@ static const chunk_tag_t keywords[] =
    { "wchar_t",          CT_TYPE,         LANG_C | LANG_CPP                                               },
    { "weak",             CT_QUALIFIER,    LANG_VALA                                                       },
    { "while",            CT_WHILE,        LANG_ALL                                                        }, // PAWN
-   { "with",             CT_USING,        LANG_D                                                          },
+   { "with",             CT_D_WITH,       LANG_D                                                          },
    { "xor",              CT_SARITH,       LANG_C | LANG_CPP                                               },
    { "xor_eq",           CT_SASSIGN,      LANG_C | LANG_CPP                                               },
 };
@@ -503,6 +503,7 @@ pattern_class get_token_pattern_class(c_token_t tok)
    case CT_FOR:
    case CT_WHILE:
    case CT_LOCK:
+   case CT_D_WITH:
       return(PATCLS_PBRACED);
 
    case CT_ELSE:

@@ -128,6 +128,8 @@ typedef enum
    CT_THROW,
    CT_TRY,
    CT_USING,
+   CT_D_WITH,           /* D: paren+braced */
+   CT_D_MODULE,
    CT_SUPER,
    CT_DELEGATE,
    CT_BODY,
