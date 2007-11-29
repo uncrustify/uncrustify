@@ -305,6 +305,12 @@ void register_options(void)
                   "Same as indent_func_call_param, but for function defs");
    unc_add_option("indent_func_proto_param", UO_indent_func_proto_param, AT_BOOL,
                   "Same as indent_func_call_param, but for function protos");
+   unc_add_option("indent_func_class_param", UO_indent_func_class_param, AT_BOOL,
+                  "Same as indent_func_call_param, but for class declarations");
+   unc_add_option("indent_func_ctor_var_param", UO_indent_func_ctor_var_param, AT_BOOL,
+                  "Same as indent_func_call_param, but for class variable constructors");
+   unc_add_option("indent_func_param_double", UO_indent_func_param_double, AT_BOOL,
+                  "Double the indent for indent_func_xxx_param options");
 
    unc_add_option("indent_member", UO_indent_member, AT_NUM,
                   "The number of spaces to indent a continued '->' or '.'\n"
