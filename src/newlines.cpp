@@ -34,6 +34,29 @@ static bool one_liner_nl_ok(chunk_t *pc);
 
 //#define DEBUG_NEWLINES
 
+static void setup_newline_add(const chunk_t *prev, chunk_t *nl, const chunk_t *next)
+{
+   memset(nl, 0, sizeof(*nl));
+   nl->nl_count = 1;
+   nl->flags    = (prev->flags & PCF_COPY_FLAGS) & ~PCF_IN_PREPROC;
+   if ((prev->flags & PCF_IN_PREPROC) && (next->flags & PCF_IN_PREPROC))
+   {
+      nl->flags |= PCF_IN_PREPROC;
+   }
+   if ((nl->flags & PCF_IN_PREPROC) != 0)
+   {
+      nl->type = CT_NL_CONT;
+      nl->str  = "\\\n";
+      nl->len  = 2;
+   }
+   else
+   {
+      nl->type = CT_NEWLINE;
+      nl->str  = "\n";
+      nl->len  = 1;
+   }
+}
+
 /**
  * 2 parts:
  *  - if/switch/while/for after braces
@@ -57,21 +80,7 @@ chunk_t *newline_add_before2(chunk_t *pc, const char *fcn, int line)
    LOG_FMT(LNEWLINE, "%s: '%.*s' on line %d (called from %s line %d)\n",
            __func__, pc->len, pc->str, pc->orig_line, fcn, line);
 
-   memset(&nl, 0, sizeof(nl));
-   nl.nl_count = 1;
-   nl.flags    = pc->flags & PCF_COPY_FLAGS;
-   if ((pc->flags & PCF_IN_PREPROC) != 0)
-   {
-      nl.type = CT_NL_CONT;
-      nl.str  = "\\\n";
-      nl.len  = 2;
-   }
-   else
-   {
-      nl.type = CT_NEWLINE;
-      nl.str  = "\n";
-      nl.len  = 1;
-   }
+   setup_newline_add(prev, &nl, pc);
 
    return(chunk_add_before(&nl, pc));
 }
@@ -91,21 +100,7 @@ chunk_t *newline_add_after2(chunk_t *pc, const char *fcn, int line)
    LOG_FMT(LNEWLINE, "%s: '%.*s' on line %d (called from %s line %d)\n",
            __func__, pc->len, pc->str, pc->orig_line, fcn, line);
 
-   memset(&nl, 0, sizeof(nl));
-   nl.nl_count = 1;
-   nl.flags    = pc->flags & PCF_COPY_FLAGS;
-   if ((pc->flags & PCF_IN_PREPROC) != 0)
-   {
-      nl.type = CT_NL_CONT;
-      nl.str  = "\\\n";
-      nl.len  = 2;
-   }
-   else
-   {
-      nl.type = CT_NEWLINE;
-      nl.str  = "\n";
-      nl.len  = 1;
-   }
+   setup_newline_add(pc, &nl, next);
 
    return(chunk_add_after(&nl, pc));
 }
