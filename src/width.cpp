@@ -448,10 +448,18 @@ static void split_fcn_params(chunk_t *start)
    while ((prev = chunk_get_prev(prev)) != NULL)
    {
       if (chunk_is_newline(prev) ||
-          (prev->type == CT_COMMA) ||
-          (prev->type == CT_FPAREN_OPEN))
+          (prev->type == CT_COMMA))
       {
          break;
+      }
+      if (prev->type == CT_FPAREN_OPEN)
+      {
+         /* Don't split "()" */
+         pc = chunk_get_next(prev);
+         if (pc->type != c_token_t(prev->type + 1))
+         {
+            break;
+         }
       }
    }
    if (prev != NULL)
