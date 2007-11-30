@@ -43,6 +43,8 @@ Changes in uncrustify-0.42
  - Add mod_sort_include to sort #include (C/C++) and #import (ObjC) statements
  - Add indent_func_class_param, indent_func_ctor_var_param, and
    indent_func_param_double
+ - Fix inserting a newline before a preprocessor
+ - Don't split empty function parens for code_width stuff
 
 
 Changes in uncrustify-0.41
