@@ -179,6 +179,10 @@ SOURCE=..\src\semicolons.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\src\sorting.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\src\space.cpp
 # End Source File
 # Begin Source File
