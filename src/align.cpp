@@ -807,6 +807,34 @@ chunk_t *align_nl_cont(chunk_t *start)
    return(pc);
 }
 
+enum CmtAlignType
+{
+   CAT_REGULAR,
+   CAT_BRACE,
+   CAT_ENDIF,
+};
+
+static CmtAlignType get_comment_align_type(chunk_t *cmt)
+{
+   chunk_t      *prev;
+   CmtAlignType cmt_type = CAT_REGULAR;
+
+   if (!cpd.settings[UO_align_right_cmt_mix].b &&
+       ((prev = chunk_get_prev(cmt)) != NULL))
+   {
+      if ((prev->type == CT_PP_ENDIF) ||
+          (prev->type == CT_BRACE_CLOSE))
+      {
+         /* REVISIT: someone may want this configurable */
+         if ((cmt->column - (prev->column + prev->len)) < 3)
+         {
+            cmt_type = (prev->type == CT_PP_ENDIF) ? CAT_ENDIF : CAT_BRACE;
+         }
+      }
+   }
+   return(cmt_type);
+}
+
 /**
  * For a series of lines ending in a comment, align them.
  * The series ends when more than align_right_cmt_span newlines are found.
@@ -816,18 +844,26 @@ chunk_t *align_nl_cont(chunk_t *start)
  */
 chunk_t *align_trailing_comments(chunk_t *start)
 {
-   int        max_col  = 0;
-   chunk_t    *pc      = start;
-   int        nl_count = 0;
-   ChunkStack cs;
+   int          max_col  = 0;
+   chunk_t      *pc      = start;
+   int          nl_count = 0;
+   ChunkStack   cs;
+   CmtAlignType cmt_type_start, cmt_type_cur;
+
+   cmt_type_start = get_comment_align_type(pc);
 
    /* Find the max column */
    while ((pc != NULL) && (nl_count < cpd.settings[UO_align_right_cmt_span].n))
    {
       if ((pc->flags & PCF_RIGHT_COMMENT) != 0)
       {
-         align_add(cs, pc, max_col, 0);
-         nl_count = 0;
+         cmt_type_cur = get_comment_align_type(pc);
+
+         if (cmt_type_cur == cmt_type_start)
+         {
+            align_add(cs, pc, max_col, 0);
+            nl_count = 0;
+         }
       }
       if (chunk_is_newline(pc))
       {

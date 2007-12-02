@@ -27,6 +27,11 @@ Near-term plans
 ===============================================================================
 
 
+Changes in uncrustify-0.43 (not yet released)
+-------------------------------------------------------------------------------
+ - Add align_right_cmt_mix to control aligning of comments after '}' and '#endif'
+
+
 Changes in uncrustify-0.42
 -------------------------------------------------------------------------------
  - Fix bug that would remove a newline after a C++ comment

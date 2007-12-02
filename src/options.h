@@ -264,6 +264,7 @@ enum uncrustify_options
    UO_align_assign_span,          // align on '='. 0=don't align
    UO_align_assign_thresh,        // threshold for aligning on '='. 0=no limit
    UO_align_right_cmt_span,       // align comment that end lines. 0=don't align
+   UO_align_right_cmt_mix,        // mix comments after '}' and preproc with others
    UO_align_func_params,          // align prototype variable defs on variable
    UO_align_var_def_span,         // align variable defs on variable (span for regular stuff)
    UO_align_var_def_thresh,       // align variable defs threshold
