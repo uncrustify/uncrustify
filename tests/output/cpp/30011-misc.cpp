@@ -48,4 +48,4 @@ bool foo(char c)
 
 #define abc    123 /* some comment */
 
-#endif             /* another comment
+#endif /* another comment
