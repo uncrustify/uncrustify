@@ -32,7 +32,7 @@ Changes in uncrustify-0.43 (not yet released)
  - Add align_right_cmt_mix to control aligning of comments after '}' and '#endif'
 
 
-Changes in uncrustify-0.42
+Changes in uncrustify-0.42 (30-Nov-2007)
 -------------------------------------------------------------------------------
  - Fix bug that would remove a newline after a C++ comment
  - Add "--mtime" command line option to preserve the mtime
@@ -52,7 +52,7 @@ Changes in uncrustify-0.42
  - Don't split empty function parens for code_width stuff
 
 
-Changes in uncrustify-0.41
+Changes in uncrustify-0.41 (07-Nov-2007)
 -------------------------------------------------------------------------------
  - Add cmt_insert_func_header, cmt_insert_file_header, and cmt_insert_class_header
  - Fix detection of prototypes without named parameters
@@ -67,7 +67,7 @@ Changes in uncrustify-0.41
  - Add pp_space_count
 
 
-Changes in uncrustify-0.40
+Changes in uncrustify-0.40 (12-Oct-2007)
 -------------------------------------------------------------------------------
  - Simplify preprocessor indenting
  - Add pp_indent_region and pp_region_indent_code
@@ -80,7 +80,7 @@ Changes in uncrustify-0.40
  - Don't remove newline chunks before/after a preprocessor
 
 
-Changes in uncrustify-0.39
+Changes in uncrustify-0.39 (25-Sep-2007)
 -------------------------------------------------------------------------------
  - Improve conversion operators
  - Prevent undesired chunk combining ("~ ~" vs "~~" in D)
@@ -96,7 +96,7 @@ Changes in uncrustify-0.39
  - More template improvements
 
 
-Changes in uncrustify-0.38
+Changes in uncrustify-0.38 (04-Sep-2007)
 -------------------------------------------------------------------------------
  - Fix line splitting WRT the CT_SPACE token
  - Improve function call/prototype/definition detection
@@ -108,7 +108,7 @@ Changes in uncrustify-0.38
  - Handle conversion operators
 
 
-Changes in uncrustify-0.37
+Changes in uncrustify-0.37 (16-Aug-2007)
 -------------------------------------------------------------------------------
  - A bunch of D language improvements
  - Add sp_d_array_colon, nl_assign_square, nl_after_square_assign
@@ -119,7 +119,7 @@ Changes in uncrustify-0.37
  - Add indent_comma_paren and indent_bool_paren
 
 
-Changes in uncrustify-0.36
+Changes in uncrustify-0.36 (04-Aug-2007)
 -------------------------------------------------------------------------------
  - Add nl_after_vbrace_open
  - Improve option descriptions
@@ -140,7 +140,7 @@ Changes in uncrustify-0.36
  - Add sp_after_semi_for_empty
 
 
-Changes in uncrustify-0.35
+Changes in uncrustify-0.35 (14-Jul-2007)
 -------------------------------------------------------------------------------
  - Fix bug with nl_func_type_name and empty param list: int foo() { ... }
  - Don't parse pragma bodies
@@ -163,7 +163,7 @@ Changes in uncrustify-0.35
  - Improve detection of reference variable declarations (A& B)
 
 
-Changes in uncrustify-0.34
+Changes in uncrustify-0.34 (11-May-2007)
 -------------------------------------------------------------------------------
  - Add sp_angle_paren and sp_angle_word
  - Properly handle multi-line CPP comments
@@ -180,7 +180,7 @@ Changes in uncrustify-0.34
  - Add pos_comma
 
 
-Changes in uncrustify-0.33
+Changes in uncrustify-0.33 (05-Mar-2007)
 -------------------------------------------------------------------------------
  - Fix converting C++ comments with embedded C comments
  - Fix nl_func_var_def_blk with class variables
@@ -196,7 +196,7 @@ Changes in uncrustify-0.33
  - Add --universalindent option to output an ini file for UniversalIndentGUI
 
 
-Changes in uncrustify-0.32
+Changes in uncrustify-0.32 (20-Feb-2007)
 -------------------------------------------------------------------------------
  - Enable align_proto_var_def for constructors
  - Fix while-of-do handling inside virtual braces
@@ -222,7 +222,7 @@ Changes in uncrustify-0.32
  - Add sp_balance_nested_parens
 
 
-Changes in uncrustify-0.31
+Changes in uncrustify-0.31 (24-Jan-2007)
 -------------------------------------------------------------------------------
  - Improve mixed tab indent / space align
  - Try to fix spacing around embedded comments
@@ -233,7 +233,7 @@ Changes in uncrustify-0.31
  - Add align_proto_var_def to align variables in prototypes
 
 
-Changes in uncrustify-0.30
+Changes in uncrustify-0.30 (24-Nov-2006)
 -------------------------------------------------------------------------------
  - Use environment variable UNCRUSTIFY_CONFIG if no '-c' option (non-WIN32)
  - Default to ~/.uncrustify.cfg if no '-c' option and no env var (non-WIN32)
@@ -245,14 +245,14 @@ Changes in uncrustify-0.30
    nl_before_switch, nl_after_switch, nl_before_do, nl_after_do
 
 
-Changes in uncrustify-0.29
+Changes in uncrustify-0.29 (26-Oct-2006)
 -------------------------------------------------------------------------------
  - Add support for the 'Klaus' style
  - Fix a bunch of c++ template bugs
  - Add option nl_class_leave_one_liners
 
 
-Changes in uncrustify-0.28
+Changes in uncrustify-0.28 (06-Oct-2006)
 -------------------------------------------------------------------------------
  - Fix D range array detection a[1..4] => a[1 .. 4]
  - Fix D delegate variable aligning
@@ -260,7 +260,7 @@ Changes in uncrustify-0.28
  - New options: nl_after_semicolon and nl_after_open_brace
 
 
-Changes in uncrustify-0.27
+Changes in uncrustify-0.27 (23-Sep-2006)
 -------------------------------------------------------------------------------
  - Improve template detection again (allow CT_TYPE in a template)
  - Fix bad formatting in "[ABC * 123]" and "[0xf & *val]"
@@ -270,7 +270,7 @@ Changes in uncrustify-0.27
  - add -o option to write to a file instead of stdout
 
 
-Changes in uncrustify-0.26 (removed a number from the version)
+Changes in uncrustify-0.26 (09-Sep-2006) (removed a number from the version)
 -------------------------------------------------------------------------------
  - Fix preprocessor labeling WRT comments
  - Fix an indenting problem
@@ -290,7 +290,7 @@ Changes in uncrustify-0.26 (removed a number from the version)
  - Improve type_cast stuff (ie, dynamic_cast<> or static_cast<>) and templates
 
 
-Changes in uncrustify-0.0.25
+Changes in uncrustify-0.0.25 (26-Aug-2006)
 -------------------------------------------------------------------------------
  - Add sp_after_ptr_star, sp_before_ptr_star, sp_between_ptr_star
  - Fix D tokenizing for numbers and strings
@@ -304,7 +304,7 @@ Changes in uncrustify-0.0.25
  - Add indent_square_nl
 
 
-Changes in uncrustify-0.0.24
+Changes in uncrustify-0.0.24 (05-Aug-2006)
 -------------------------------------------------------------------------------
  - Add initial PAWN support (thanks to Derek Evan Mart for testing and motivation!)
  - Fix parsing of numbers like 10.0
@@ -317,7 +317,7 @@ Changes in uncrustify-0.0.24
    cmt_cpp_nl_start, cmt_cpp_nl_end, sp_after_tag
 
 
-Changes in uncrustify-0.0.23
+Changes in uncrustify-0.0.23 (22-Jul-2006)
 -------------------------------------------------------------------------------
  - Fix some crash bugs and some formatting problems
  - Fix Windows CRLF issues (binary vs text mode)
@@ -330,7 +330,7 @@ Changes in uncrustify-0.0.23
  - Started work on improving #ifdef handling by evaluating the preprocessor
 
 
-Changes in uncrustify-0.0.22
+Changes in uncrustify-0.0.22 (15-Jul-2006)
 -------------------------------------------------------------------------------
  - Implement nl_max, nl_before_block_comment, nl_after_func_body,
     nl_after_func_proto, nl_after_func_proto_group
@@ -345,7 +345,7 @@ Changes in uncrustify-0.0.22
  - Improve multi-line comment formatting
 
 
-Changes in uncrustify-0.0.21
+Changes in uncrustify-0.0.21 (01-Jul-2006)
 -------------------------------------------------------------------------------
  - Clean up some memory leaks & uninitialized variables
  - Add option to process multiple files at once
@@ -355,7 +355,7 @@ Changes in uncrustify-0.0.21
  - Update configuration.txt
 
 
-Changes in uncrustify-0.0.20
+Changes in uncrustify-0.0.20 (10-Jun-2006)
 -------------------------------------------------------------------------------
  - Fix cast on a sizeof: (INT32)sizeof(x)
  - Fix this: "#define SOME_JUNK /*lint -e123 */(const mytype_t *)-1"
@@ -365,13 +365,13 @@ Changes in uncrustify-0.0.20
  - Add Windows build support
 
 
-Changes in uncrustify-0.0.19
+Changes in uncrustify-0.0.19 (27-May-2006)
 -------------------------------------------------------------------------------
  - Fix C/C++/C# casts
  - Improve D casts
 
 
-Changes in uncrustify-0.0.18
+Changes in uncrustify-0.0.18 (12-May-2006)
 -------------------------------------------------------------------------------
  - Add nl_bool_pos to move boolean ops between eol and sol
  - Improve C99 array initializer aligning/formatting
@@ -379,7 +379,7 @@ Changes in uncrustify-0.0.18
    nl_start_of_file_min, nl_end_of_file, and nl_end_of_file_min
 
 
-Changes in uncrustify-0.0.17
+Changes in uncrustify-0.0.17 (03-May-2006)
 -------------------------------------------------------------------------------
  - Add nl_eat_start to remove newlines at the start of the file
  - Add nl_eat_end to remove newlines at the end of the file
@@ -389,7 +389,7 @@ Changes in uncrustify-0.0.17
  - Fix bug in nl_func_var_def_blk handling
 
 
-Changes in uncrustify-0.0.16
+Changes in uncrustify-0.0.16 (21-Apr-2006)
 -------------------------------------------------------------------------------
  - Add a stack alignment helper class
  - Improve typedef formatting
@@ -397,20 +397,20 @@ Changes in uncrustify-0.0.16
  - update the automake/autoconf stuff
 
 
-Changes in uncrustify-0.0.15
+Changes in uncrustify-0.0.15 (14-Apr-2006)
 -------------------------------------------------------------------------------
  - Switch to C++
  - Improve C++ template formatting
  - Improve C++ class handling
 
 
-Changes in uncrustify-0.0.14
+Changes in uncrustify-0.0.14 (09-Apr-2006)
 -------------------------------------------------------------------------------
  - Read from stdin if no file is specified
  - Build on OS X
 
 
-Changes in uncrustify-0.0.13
+Changes in uncrustify-0.0.13 (07-Apr-2006)
 -------------------------------------------------------------------------------
  - Rewrite the indent code
  - Fix a bunch of small problems with C casts
@@ -418,7 +418,7 @@ Changes in uncrustify-0.0.13
  - Add more tests
 
 
-Changes in uncrustify-0.0.12
+Changes in uncrustify-0.0.12 (30-Mar-2006)
 -------------------------------------------------------------------------------
  - Add support for D template format "Foo!(int,char)"
  - Fix a format bug in a log
@@ -429,7 +429,7 @@ Changes in uncrustify-0.0.12
  - Bugfix: clean up indexed array aligning
 
 
-Changes in uncrustify-0.0.11
+Changes in uncrustify-0.0.11 (27-Mar-2006)
 -------------------------------------------------------------------------------
  - fix brace analysis on else statement
  - allow options to depend on other options
@@ -453,7 +453,7 @@ Changes in uncrustify-0.0.11
  - more test enhancements
 
 
-Changes in uncrustify-0.0.10
+Changes in uncrustify-0.0.10 (22-Mar-2006)
 -------------------------------------------------------------------------------
  - Complete rewrite of tokenizer and brace parser
  - Added support for D nested comments
@@ -462,14 +462,14 @@ Changes in uncrustify-0.0.10
  - Add more tests to improve coverage (still lacking)
 
 
-Changes in uncrustify-0.0.9
+Changes in uncrustify-0.0.9 (18-Mar-2006)
 -------------------------------------------------------------------------------
  - Major enhancements for D
  - Add handling for special "[]" sequence for C#/D
  - add some more tests
 
 
-Changes in uncrustify-0.0.8
+Changes in uncrustify-0.0.8 (13-Mar-2006)
 -------------------------------------------------------------------------------
  - update TODO list
  - add a threshold for brace removal
