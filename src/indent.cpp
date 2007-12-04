@@ -511,7 +511,8 @@ void indent_text(void)
             }
 
             /* End any assign operations with a semicolon on the same level */
-            if ((frm.pse[frm.pse_tos].type == CT_ASSIGN) &&
+            if (((frm.pse[frm.pse_tos].type == CT_ASSIGN_NL) ||
+                 (frm.pse[frm.pse_tos].type == CT_ASSIGN)) &&
                 (chunk_is_semicolon(pc) ||
                  (pc->type == CT_COMMA) ||
                  (pc->type == CT_BRACE_OPEN) ||
@@ -876,7 +877,8 @@ void indent_text(void)
                    (frm.pse[idx].type != CT_SPAREN_OPEN) &&
                    (frm.pse[idx].type != CT_SQUARE_OPEN) &&
                    (frm.pse[idx].type != CT_ANGLE_OPEN) &&
-                   (frm.pse[idx].type != CT_CLASS_COLON))
+                   (frm.pse[idx].type != CT_CLASS_COLON) &&
+                   (frm.pse[idx].type != CT_ASSIGN_NL))
             {
                idx--;
             }
@@ -929,6 +931,10 @@ void indent_text(void)
             if (chunk_is_newline(next))
             {
                frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent_tmp + indent_size;
+               if (pc->type == CT_ASSIGN)
+               {
+                  frm.pse[frm.pse_tos].type = CT_ASSIGN_NL;
+               }
             }
             else
             {

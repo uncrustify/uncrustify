@@ -79,6 +79,7 @@ static const token_pri pri_table[] =
    { CT_BOOL,      3 },
    { CT_COMPARE,   4 },
    { CT_ARITH,     5 },
+   { CT_ASSIGN,    6 },
    //{ CT_DC_MEMBER, 10 },
    //{ CT_MEMBER,    10 },
 };
@@ -109,6 +110,7 @@ static int get_split_pri(c_token_t tok)
  *  - boolean op
  *  - comparison
  *  - arithmetic op
+ *  - assignment
  */
 static void try_split_here(cw_entry& ent, chunk_t *pc)
 {

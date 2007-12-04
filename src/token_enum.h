@@ -68,6 +68,7 @@ typedef enum
    CT_TEMPLATE,            /* template<...> */
 
    CT_ASSIGN,              /* =, +=, /=, etc */
+   CT_ASSIGN_NL,           /* Assign followed by a newline - fake item for indenting */
    CT_SASSIGN,             /* 'and_eq' */
    CT_COMPARE,             /* ==, !=, <=, >= */
    CT_SCOMPARE,            /* compare op that is a string 'is', 'neq' */
