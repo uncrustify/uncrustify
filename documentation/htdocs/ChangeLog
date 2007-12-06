@@ -31,6 +31,7 @@ Changes in uncrustify-0.43 (not yet released)
 -------------------------------------------------------------------------------
  - Add align_right_cmt_mix to control aligning of comments after '}' and '#endif'
  - Allow a line split after an assignment
+ - Fix infinite loop bug
 
 
 Changes in uncrustify-0.42 (30-Nov-2007)

@@ -466,12 +466,9 @@ static void remove_next_newlines(chunk_t *start)
 
    while ((next = chunk_get_next(start)) != NULL)
    {
-      if (chunk_is_newline(next))
+      if (chunk_is_newline(next) && chunk_safe_to_del_nl(next))
       {
-         if (chunk_safe_to_del_nl(next))
-         {
-            chunk_del(next);
-         }
+         chunk_del(next);
       }
       else if (chunk_is_vbrace(next))
       {
