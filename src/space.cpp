@@ -698,6 +698,14 @@ argval_t do_space(chunk_t *first, chunk_t *second)
    {
       return(cpd.settings[UO_sp_deref].a);
    }
+   if ((first->type == CT_POS) || (first->type == CT_NEG))
+   {
+      return(cpd.settings[UO_sp_sign].a);
+   }
+   if ((first->type == CT_INCDEC_BEFORE) || (second->type == CT_INCDEC_AFTER))
+   {
+      return(cpd.settings[UO_sp_incdec].a);
+   }
 
    for (idx = 0; idx < (int)ARRAY_SIZE(no_space_table); idx++)
    {

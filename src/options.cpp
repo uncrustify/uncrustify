@@ -268,6 +268,10 @@ void register_options(void)
    unc_add_option("sp_deref", UO_sp_deref, AT_IARF,
                   "Add or remove space after the '*' (dereference) operator.\n"
                   "This does not affect the spacing after a '*' that is part of a type.");
+   unc_add_option("sp_sign", UO_sp_sign, AT_IARF,
+                  "Add or remove space after '+' or '-', as in 'x = -5' or 'y = +7'");
+   unc_add_option("sp_incdec", UO_sp_incdec, AT_IARF,
+                  "Add or remove space before or after '++' and '--', as in '(--x)' or 'y++;'");
 
    unc_begin_group(UG_indent, "Indenting");
    unc_add_option("indent_columns", UO_indent_columns, AT_NUM,
@@ -1240,10 +1244,12 @@ void set_option_defaults(void)
    cpd.settings[UO_indent_access_spec].n = 1;
    cpd.settings[UO_sp_before_comma].a    = AV_REMOVE;
    cpd.settings[UO_string_escape_char].n = '\\';
-   cpd.settings[UO_sp_not].a   = AV_REMOVE;
-   cpd.settings[UO_sp_inv].a   = AV_REMOVE;
-   cpd.settings[UO_sp_addr].a  = AV_REMOVE;
-   cpd.settings[UO_sp_deref].a = AV_REMOVE;
+   cpd.settings[UO_sp_not].a    = AV_REMOVE;
+   cpd.settings[UO_sp_inv].a    = AV_REMOVE;
+   cpd.settings[UO_sp_addr].a   = AV_REMOVE;
+   cpd.settings[UO_sp_deref].a  = AV_REMOVE;
+   cpd.settings[UO_sp_sign].a   = AV_REMOVE;
+   cpd.settings[UO_sp_incdec].a = AV_REMOVE;
 }
 
 std::string argtype_to_string(argtype_e argtype)
