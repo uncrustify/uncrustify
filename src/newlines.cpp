@@ -227,13 +227,12 @@ static chunk_t *newline_add_between2(chunk_t *start, chunk_t *end,
 #define newline_del_between(start, end) \
    newline_del_between2(start, end, __func__, __LINE__)
 
-static bool newline_del_between2(chunk_t *start, chunk_t *end,
+static void newline_del_between2(chunk_t *start, chunk_t *end,
                                  const char *func, int line)
 {
    chunk_t *next;
    chunk_t *prev;
    chunk_t *pc    = start;
-   bool    retval = false;
 
    LOG_FMT(LNEWLINE, "%s: '%.*s' line %d:%d and '%.*s' line %d:%d : caller=%s:%d preproc=%d/%d\n",
            __func__, start->len, start->str, start->orig_line, start->orig_col,
@@ -244,7 +243,7 @@ static bool newline_del_between2(chunk_t *start, chunk_t *end,
    /* Can't remove anything if the preproc status differs */
    if (!chunk_same_preproc(start, end))
    {
-      return(false);
+      return;
    }
 
    do
@@ -260,7 +259,6 @@ static bool newline_del_between2(chunk_t *start, chunk_t *end,
             if (chunk_safe_to_del_nl(pc))
             {
                chunk_del(pc);
-               retval = true;
             }
          }
          else
@@ -282,10 +280,8 @@ static bool newline_del_between2(chunk_t *start, chunk_t *end,
       if (chunk_get_prev_nl(end) != start)
       {
          chunk_move_after(end, start);
-         retval = true;
       }
    }
-   return(retval);
 }
 
 /**
