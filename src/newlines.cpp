@@ -260,8 +260,8 @@ static bool newline_del_between2(chunk_t *start, chunk_t *end,
             if (chunk_safe_to_del_nl(pc))
             {
                chunk_del(pc);
+               retval = true;
             }
-            retval = true;
          }
          else
          {
@@ -391,10 +391,11 @@ static void newlines_if_for_while_switch_pre_blank_lines(chunk_t *start, argval_
                while (chunk_is_newline(prev = chunk_get_prev_nvb(pc)))
                {
                   /* Make sure we don't combine a preproc and non-preproc */
-                  if (chunk_safe_to_del_nl(prev))
+                  if (!chunk_safe_to_del_nl(prev))
                   {
-                     chunk_del(prev);
+                     break;
                   }
+                  chunk_del(prev);
                }
             }
 
