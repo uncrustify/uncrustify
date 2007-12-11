@@ -239,6 +239,9 @@ enum uncrustify_options
    UO_sp_deref,
    UO_sp_sign,
    UO_sp_incdec,
+   UO_sp_after_oc_scope,
+   UO_sp_before_oc_colon,
+   UO_sp_after_oc_type,
 
    /*
     * Line splitting options (for long lines)
@@ -284,6 +287,7 @@ enum uncrustify_options
    //UO_align_enum_col_max,         //TODO: the max column for enum '=' alignment
    UO_align_struct_init_span,     // align structure initializer values
    UO_align_func_proto_span,      // align function prototypes
+   UO_align_oc_msg_spec_span,     // align ObjC msg spec
    UO_align_number_left,          // left-align numbers (not fully supported, yet)
    UO_align_typedef_span,         // align single-line typedefs
    UO_align_typedef_gap,          // minimum spacing

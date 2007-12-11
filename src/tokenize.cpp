@@ -691,6 +691,16 @@ static bool parse_next(chunk_t *pc)
       }
    }
 
+   /* Check for Obj-C NSString constants, ie @"hello" */
+   if (((cpd.lang_flags & LANG_OC) != 0) && (*pc->str == '@'))
+   {
+      if (pc->str[1] == '"')
+      {
+         parse_string(pc, 1, true);
+         return(true);
+      }
+   }
+
    /* PAWN specific stuff */
    if ((cpd.lang_flags & LANG_PAWN) != 0)
    {

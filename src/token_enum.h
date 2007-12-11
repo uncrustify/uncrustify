@@ -194,6 +194,10 @@ typedef enum
    CT_OC_IMPL,          /* ObjC: @implementation */
    CT_OC_INTF,          /* ObjC: @interface */
    CT_OC_CLASS,         /* ObjC: the name after @interface or @implementation */
+   CT_OC_SCOPE,         /* ObjC: the '-' or '+' in '-(void) func: (int) i;' */
+   CT_OC_MSG_SPEC,      /* ObjC: msg spec '-(void) func: (int) i;' */
+   CT_OC_MSG_DECL,      /* ObjC: msg decl '-(void) func: (int) i { }' */
+   CT_OC_COLON,         /* ObjC: the colon in a msg spec */
 
    /* start PP types */
    CT_PP_DEFINE,        /* #define */

@@ -79,7 +79,7 @@ void reindent_line2(chunk_t *pc, int column, const char *fcn_name, int lineno);
 void align_all(void);
 void align_backslash_newline(void);
 void align_right_comments(void);
-void align_func_proto(int span);
+void align_func_proto(c_token_t ctok, int span);
 void align_preprocessor(void);
 void align_struct_initializers(void);
 chunk_t *align_nl_cont(chunk_t *start);

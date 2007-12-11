@@ -225,7 +225,15 @@ void align_all(void)
    /* Align function prototypes */
    if (cpd.settings[UO_align_func_proto_span].n > 0)
    {
-      align_func_proto(cpd.settings[UO_align_func_proto_span].n);
+      align_func_proto(CT_FUNC_PROTO,
+                       cpd.settings[UO_align_func_proto_span].n);
+   }
+
+   /* Align function prototypes */
+   if (cpd.settings[UO_align_oc_msg_spec_span].n > 0)
+   {
+      align_func_proto(CT_OC_MSG_SPEC,
+                       cpd.settings[UO_align_oc_msg_spec_span].n);
    }
 
    /* Align variable defs in function prototypes */
@@ -238,7 +246,7 @@ void align_all(void)
 /**
  * Aligns all function prototypes in the file.
  */
-void align_func_proto(int span)
+void align_func_proto(c_token_t ctok, int span)
 {
    chunk_t    *pc;
    int        max_col  = 0;
@@ -260,7 +268,7 @@ void align_func_proto(int span)
             }
          }
       }
-      else if (pc->type == CT_FUNC_PROTO)
+      else if (pc->type == ctok)
       {
          align_add(cs, pc, max_col, 0);
          span_cnt = 0;

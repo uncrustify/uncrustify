@@ -4,10 +4,11 @@
 #
 # test.name  config.file  input.file
 
+# The .h file needs a language override
+00001  obj-c.cfg           oc/Fraction.h     OC
+00002  obj-c.cfg           oc/Fraction.m     OC
+00003  obj-c.cfg           oc/main.m
+00004  obj-c.cfg           oc/string.m
 
-00001  ben.cfg                 oc/Fraction.h
-00002  ben.cfg                 oc/Fraction.m
-00003  ben.cfg                 oc/main.m
-
-00030  sort_imports.cfg        oc/sort_import.m
+00030  sort_imports.cfg    oc/sort_import.m
 

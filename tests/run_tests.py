@@ -81,7 +81,7 @@ def usage_exit():
 	print "Usage: \n" + sys.argv[0] + " testfile"
 	sys.exit()
 
-def run_tests(test_name, config_name, input_name):
+def run_tests(test_name, config_name, input_name, lang):
 	expected_name = os.path.join(os.path.dirname(input_name), test_name + '-' + os.path.basename(input_name))
 	# print "Test:  ", test_name
 	# print "Config:", config_name
@@ -95,7 +95,7 @@ def run_tests(test_name, config_name, input_name):
 	except:
 		pass
 
-	cmd = "%s/uncrustify -q -c config/%s -f input/%s > %s" % (os.path.abspath('../src'), config_name, input_name, resultname)
+	cmd = "%s/uncrustify -q -c config/%s -f input/%s %s > %s" % (os.path.abspath('../src'), config_name, input_name, lang, resultname)
 	if log_level >= 2:
 		print "RUN: " + cmd
 	a = os.system(cmd)
@@ -128,7 +128,10 @@ def process_test_file(filename):
 		parts = string.split(line)
 		if (len(parts) < 3) or (parts[0][0] == '#'):
 			continue
-		if run_tests(parts[0], parts[1], parts[2]) < 0:
+		lang = ""
+		if len(parts) > 3:
+			lang = "-l " + parts[3]
+		if run_tests(parts[0], parts[1], parts[2], lang) < 0:
 			fail_count += 1
 		else:
 			pass_count += 1

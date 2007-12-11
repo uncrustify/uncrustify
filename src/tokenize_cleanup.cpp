@@ -289,7 +289,7 @@ void tokenize_cleanup(void)
       /* Detect Objective C class name */
       if ((pc->type == CT_OC_IMPL) || (pc->type == CT_OC_INTF))
       {
-         next->type = CT_CLASS;
+         next->type = CT_OC_CLASS;
          tmp        = chunk_get_next_ncnl(next);
          if (tmp != NULL)
          {

@@ -39,6 +39,9 @@ static void mark_cpp_constructor(chunk_t *pc);
 static void mark_lvalue(chunk_t *pc);
 static void mark_template_func(chunk_t *pc, chunk_t *pc_next);
 static void mark_exec_sql(chunk_t *pc);
+static void handle_oc_class(chunk_t *pc);
+static void handle_oc_message(chunk_t *pc);
+
 
 void make_type(chunk_t *pc)
 {
@@ -233,6 +236,18 @@ void fix_symbols(void)
             }
          }
       } /* paren open + cast/align/delegate */
+
+      /* Objective C stuff */
+      if (cpd.lang_flags & LANG_OC)
+      {
+         /* Check for message declarations */
+         if ((pc->flags & PCF_STMT_START) &&
+             (chunk_is_str(pc, "-", 1) || chunk_is_str(pc, "+", 1)) &&
+             chunk_is_str(next, "(", 1))
+         {
+            handle_oc_message(pc);
+         }
+      }
 
       if ((pc->type == CT_ASSIGN) && (next->type == CT_SQUARE_OPEN))
       {
@@ -467,6 +482,11 @@ void fix_symbols(void)
          {
             mark_class_ctor(pc);
          }
+      }
+
+      if (pc->type == CT_OC_CLASS)
+      {
+         handle_oc_class(pc);
       }
 
       if (pc->type == CT_NAMESPACE)
@@ -1440,7 +1460,9 @@ void combine_labels(void)
    /* unlikely that the file will start with a label... */
    while (next != NULL)
    {
-      if ((next->type == CT_CLASS) || (next->type == CT_TEMPLATE))
+      if ((next->type == CT_CLASS) ||
+          (next->type == CT_OC_CLASS) ||
+          (next->type == CT_TEMPLATE))
       {
          hit_class = true;
       }
@@ -2916,3 +2938,127 @@ chunk_t *skip_attribute_prev(chunk_t *fp_close)
    }
    return(fp_close);
 }
+
+/**
+ * Process an ObjC 'class'
+ * pc is the chunk after '@implementation' or '@interface'.
+ * Change colons, etc.
+ */
+static void handle_oc_class(chunk_t *pc)
+{
+   chunk_t *tmp = pc;
+
+   while ((tmp = chunk_get_next(tmp)) != NULL)
+   {
+      if ((tmp->type == CT_SEMICOLON) ||
+          (tmp->type == CT_BRACE_OPEN))
+      {
+         tmp->parent_type = CT_OC_CLASS;
+         break;
+      }
+      else if (tmp->type == CT_COLON)
+      {
+         tmp->type = CT_CLASS_COLON;
+      }
+   }
+
+   if ((tmp != NULL) && (tmp->type == CT_BRACE_OPEN))
+   {
+      tmp = chunk_get_next_type(tmp, CT_BRACE_CLOSE, tmp->level);
+      if (tmp != NULL)
+      {
+         tmp->parent_type = CT_OC_CLASS;
+      }
+   }
+}
+
+/**
+ * Process an ObjC message spec/dec
+ *
+ * Specs:
+ * -(void) foo ARGS;
+ *
+ * Decl:
+ * -(void) foo ARGS {  }
+ *
+ * ARGS is ': (type) name [name]'
+ * -(void) foo: (int) arg: {  }
+ */
+static void handle_oc_message(chunk_t *pc)
+{
+   chunk_t *tmp;
+   bool    in_paren  = false;
+   int     paren_cnt = 0;
+   c_token_t pt;
+
+   /* Figure out if this is a spec or decl */
+   tmp = pc;
+   while ((tmp = chunk_get_next(tmp)) != NULL)
+   {
+      if ((tmp->type == CT_SEMICOLON) ||
+          (tmp->type == CT_BRACE_OPEN))
+      {
+         pt = (tmp->type == CT_SEMICOLON) ? CT_OC_MSG_SPEC : CT_OC_MSG_DECL;
+         break;
+      }
+   }
+   if (tmp == NULL)
+   {
+      return;
+   }
+   pc->type        = CT_OC_SCOPE;
+   pc->parent_type = pt;
+
+   /* Mark everything */
+   tmp = pc;
+   while ((tmp = chunk_get_next(tmp)) != NULL)
+   {
+      if ((tmp->type == CT_SEMICOLON) ||
+          (tmp->type == CT_BRACE_OPEN))
+      {
+         tmp->parent_type = pt;
+         break;
+      }
+
+      if ((tmp->type == CT_PAREN_OPEN) ||
+          (tmp->type == CT_PAREN_CLOSE))
+      {
+         tmp->parent_type = pt;
+         in_paren         = (tmp->type == CT_PAREN_OPEN);
+         if (!in_paren)
+         {
+            paren_cnt++;
+         }
+      }
+      else if (tmp->type == CT_WORD)
+      {
+         if (in_paren)
+         {
+            tmp->type = CT_TYPE;
+         }
+         else if (paren_cnt == 1)
+         {
+            tmp->type = pt;
+         }
+         else
+         {
+            tmp->flags |= PCF_VAR_DEF;
+         }
+      }
+      else if (tmp->type == CT_COLON)
+      {
+         tmp->type        = CT_OC_COLON;
+         tmp->parent_type = pt;
+      }
+   }
+
+   if ((tmp != NULL) && (tmp->type == CT_BRACE_OPEN))
+   {
+      tmp = chunk_get_next_type(tmp, CT_BRACE_CLOSE, tmp->level);
+      if (tmp != NULL)
+      {
+         tmp->parent_type = pt;
+      }
+   }
+}
+

@@ -464,6 +464,13 @@ argval_t do_space(chunk_t *first, chunk_t *second)
       return(cpd.settings[UO_sp_inside_fparen].a);
    }
 
+   if ((first->type == CT_PAREN_CLOSE) &&
+       ((first->parent_type == CT_OC_MSG_SPEC) ||
+        (first->parent_type == CT_OC_MSG_DECL)))
+   {
+      return(cpd.settings[UO_sp_after_oc_type].a);
+   }
+
    /* "(a + 3)" vs "( a + 3 )" */
    if (first->type == CT_PAREN_OPEN)
    {
@@ -705,6 +712,14 @@ argval_t do_space(chunk_t *first, chunk_t *second)
    if ((first->type == CT_INCDEC_BEFORE) || (second->type == CT_INCDEC_AFTER))
    {
       return(cpd.settings[UO_sp_incdec].a);
+   }
+   if (first->type == CT_OC_SCOPE)
+   {
+      return(cpd.settings[UO_sp_after_oc_scope].a);
+   }
+   if (second->type == CT_OC_COLON)
+   {
+      return(cpd.settings[UO_sp_before_oc_colon].a);
    }
 
    for (idx = 0; idx < (int)ARRAY_SIZE(no_space_table); idx++)

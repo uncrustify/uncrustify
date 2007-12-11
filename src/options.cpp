@@ -273,6 +273,15 @@ void register_options(void)
    unc_add_option("sp_incdec", UO_sp_incdec, AT_IARF,
                   "Add or remove space before or after '++' and '--', as in '(--x)' or 'y++;'");
 
+   unc_add_option("sp_after_oc_scope", UO_sp_after_oc_scope, AT_IARF,
+                  "Add or remove space after the scope '+' or '-', as in '-(void) foo;' or '+(int) bar;'");
+   unc_add_option("sp_before_oc_colon", UO_sp_before_oc_colon, AT_IARF,
+                  "Add or remove space after the colon in message specs\n"
+                  "'-(int) f: (int) x;' vs '+(int) f : (int) x;'");
+   unc_add_option("sp_after_oc_type", UO_sp_after_oc_type, AT_IARF,
+                  "Add or remove space after the (type) in message specs\n"
+                  "'-(int) f: (int) x;' vs '+(int)f : (int)x;'");
+
    unc_begin_group(UG_indent, "Indenting");
    unc_add_option("indent_columns", UO_indent_columns, AT_NUM,
                   "The number of columns to indent per level.\n"
@@ -633,6 +642,8 @@ void register_options(void)
    unc_add_option("align_right_cmt_mix", UO_align_right_cmt_mix, AT_BOOL,
                   "If aligning comments, mix with comments after '}' and #endif with less than 3 spaces before the comment");
    unc_add_option("align_func_proto_span", UO_align_func_proto_span, AT_NUM,
+                  "The span for aligning function prototypes (0=don't align)", "", 0, 5000);
+   unc_add_option("align_oc_msg_spec_span", UO_align_oc_msg_spec_span, AT_NUM,
                   "The span for aligning function prototypes (0=don't align)", "", 0, 5000);
    unc_add_option("align_nl_cont", UO_align_nl_cont, AT_BOOL,
                   "Whether to align macros wrapped with a backslash and a newline");
