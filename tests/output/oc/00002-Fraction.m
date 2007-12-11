@@ -2,23 +2,23 @@
 #import <stdio.h>
 
 @implementation Fraction
--(void)print {
+-(void) print {
    printf("%i/%i", numerator, denominator);
 }
 
--(void)setNumerator : (int)n {
+-(void) setNumerator: (int) n {
    numerator = n;
 }
 
--(void)setDenominator : (int)d {
+-(void) setDenominator: (int) d {
    denominator = d;
 }
 
--(int)denominator {
+-(int) denominator {
    return(denominator);
 }
 
--(int)numerator {
+-(int) numerator {
    return(numerator);
 }
 @end
