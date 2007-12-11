@@ -34,6 +34,7 @@ Changes in uncrustify-0.43 (not yet released)
  - Fix infinite loop bug
  - Add sp_sign and sp_incdec
  - Fix vbrace conversion where some are converted and some aren't
+ - Add a vbrace before a #pragma instead of after
 
 
 Changes in uncrustify-0.42 (30-Nov-2007)

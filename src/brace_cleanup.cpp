@@ -159,7 +159,9 @@ void brace_cleanup(void)
        * Also need to pass in the initial '#' to close out any virtual braces.
        */
       if (!chunk_is_comment(pc) && !chunk_is_newline(pc) &&
-          ((cpd.in_preproc == CT_PP_DEFINE) || (cpd.in_preproc == CT_NONE)))
+          ((cpd.in_preproc == CT_PP_DEFINE) ||
+           (cpd.in_preproc == CT_PP_PRAGMA) ||
+           (cpd.in_preproc == CT_NONE)))
       {
          cpd.consumed = false;
          parse_cleanup(&frm, pc);
@@ -886,6 +888,11 @@ static chunk_t *insert_vbrace(chunk_t *pc, bool after,
    else
    {
       ref = chunk_get_prev(pc);
+      if ((ref->flags & PCF_IN_PREPROC) == 0)
+      {
+         chunk.flags &= ~PCF_IN_PREPROC;
+      }
+
       while (chunk_is_newline(ref) || chunk_is_comment(ref))
       {
          ref->level++;
@@ -894,7 +901,8 @@ static chunk_t *insert_vbrace(chunk_t *pc, bool after,
       }
 
       /* Don't back into a preprocessor */
-      if ((ref->flags & PCF_IN_PREPROC) != (pc->flags & PCF_IN_PREPROC))
+      if (((pc->flags & PCF_IN_PREPROC) == 0) &&
+          ((ref->flags & PCF_IN_PREPROC) != 0))
       {
          ref = chunk_get_next(ref);
       }

@@ -258,6 +258,7 @@ static void convert_vbrace_to_brace(void)
    chunk_t *pc;
    chunk_t *tmp;
    chunk_t *vbc;
+   bool    in_preproc;
 
    /* Find every vbrace open */
    for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next_ncnl(pc))
@@ -266,6 +267,8 @@ static void convert_vbrace_to_brace(void)
       {
          continue;
       }
+
+      in_preproc = (pc->flags & PCF_IN_PREPROC) != 0;
 
       if ((((pc->parent_type == CT_IF) ||
             (pc->parent_type == CT_ELSE) ||
@@ -289,13 +292,15 @@ static void convert_vbrace_to_brace(void)
          tmp = pc;
          while ((tmp = chunk_get_next(tmp)) != NULL)
          {
-            if ((tmp->flags & PCF_IN_PREPROC) != (pc->flags & PCF_IN_PREPROC))
+            if (in_preproc && ((tmp->flags & PCF_IN_PREPROC) == 0))
             {
+               /* Can't leave a preprocessor */
                break;
             }
             if ((pc->brace_level == tmp->brace_level) &&
                 (tmp->type == CT_VBRACE_CLOSE) &&
-                (pc->parent_type == tmp->parent_type))
+                (pc->parent_type == tmp->parent_type) &&
+                ((tmp->flags & PCF_IN_PREPROC) == (pc->flags & PCF_IN_PREPROC)))
             {
                vbc = tmp;
                break;

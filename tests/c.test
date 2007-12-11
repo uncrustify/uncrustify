@@ -40,6 +40,7 @@
 00066  ben.cfg                 c/vb-while.c
 00067  ben.cfg                 c/vb-do.c
 00068  ben.cfg                 c/bsnl.c
+00069  ben.cfg                 c/vb-pp.c
 
 00070  ben.cfg                 c/return-multi.c
 
