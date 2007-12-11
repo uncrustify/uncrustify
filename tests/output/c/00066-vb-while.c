@@ -34,3 +34,19 @@ unsigned long xdl_adler32(unsigned long adler, unsigned char const *buf,
 
    return((s2 << 16) | s1);
 }
+
+void f()
+{
+   while (1)
+   {
+      if (2)
+      {
+         3;
+      }
+      else
+      {
+         4;
+      }
+   }
+}
+

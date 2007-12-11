@@ -33,6 +33,7 @@ Changes in uncrustify-0.43 (not yet released)
  - Allow a line split after an assignment
  - Fix infinite loop bug
  - Add sp_sign and sp_incdec
+ - Fix vbrace conversion where some are converted and some aren't
 
 
 Changes in uncrustify-0.42 (30-Nov-2007)
