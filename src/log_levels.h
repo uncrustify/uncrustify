@@ -62,7 +62,7 @@ enum
    LVARDEF   = 46,    /* Variable def marking */
    LDEFVAL   = 47,    /* define values */
    LPVSEMI   = 48,    /* Pawn: virtual semicolons */
-   LPFUNC    = 49,    /* Pawn: fucntion recognition */
+   LPFUNC    = 49,    /* Pawn: function recognition */
    LSPLIT    = 50,    /* Line splitting */
    LFTYPE    = 51,    /* Function type detection */
    LTEMPL    = 52,    /* Template detection */
