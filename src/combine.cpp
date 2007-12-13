@@ -41,6 +41,7 @@ static void mark_template_func(chunk_t *pc, chunk_t *pc_next);
 static void mark_exec_sql(chunk_t *pc);
 static void handle_oc_class(chunk_t *pc);
 static void handle_oc_message(chunk_t *pc);
+static void handle_template(chunk_t *pc);
 
 
 void make_type(chunk_t *pc)
@@ -307,6 +308,11 @@ void fix_symbols(void)
                fix_enum_struct_union(pc);
             }
          }
+      }
+
+      if (pc->type == CT_TEMPLATE)
+      {
+         handle_template(pc);
       }
 
       if ((pc->type == CT_WORD) &&
@@ -2276,11 +2282,16 @@ static void mark_function(chunk_t *pc)
 
    /* Scan tokens until we hit a brace open (def) or semicolon (proto) */
    tmp = paren_close;
-   while (((tmp = chunk_get_next_ncnl(tmp)) != NULL) &&
-          (tmp->level >= pc->level))
+   while ((tmp = chunk_get_next_ncnl(tmp)) != NULL)
    {
       /* Only care about brace or semi on the same level */
-      if (tmp->level == pc->level)
+      if (tmp->level < pc->level)
+      {
+         /* No semicolon - probably a function call? */
+         pc->type = CT_FUNC_CALL;
+         break;
+      }
+      else if (tmp->level == pc->level)
       {
          if (tmp->type == CT_BRACE_OPEN)
          {
@@ -2322,7 +2333,7 @@ static void mark_function(chunk_t *pc)
        (pc->type == CT_FUNC_PROTO) &&
        (pc->parent_type != CT_OPERATOR))
    {
-      LOG_FMT(LFPARAM, "%s :: checking '%.*s' for contructor variable %s %s\n",
+      LOG_FMT(LFPARAM, "%s :: checking '%.*s' for constructor variable %s %s\n",
               __func__, pc->len, pc->str,
               get_token_name(paren_open->type),
               get_token_name(paren_close->type));
@@ -2422,7 +2433,8 @@ static void mark_function(chunk_t *pc)
    {
       bool on_first = true;
       tmp = chunk_get_next_ncnl(paren_close);
-      while ((tmp != NULL) && (tmp->type != CT_BRACE_OPEN))
+      while ((tmp != NULL) &&
+             (tmp->type != CT_BRACE_OPEN))
       {
          //LOG_FMT(LSYS, "%s: set parent to FUNC_DEF on line %d: [%.*s]\n", __func__, tmp->orig_line, tmp->len, tmp->str);
          tmp->parent_type = CT_FUNC_DEF;
@@ -2781,6 +2793,62 @@ static void mark_define_expressions(void)
 
       prev = pc;
       pc   = chunk_get_next(pc);
+   }
+}
+
+/**
+ * We are on the 'template' C++ keyword.
+ * What follows should be the following:
+ *
+ * template <class identifier> function_declaration;
+ * template <typename identifier> function_declaration;
+ * template <class identifier> class class_declaration;
+ * template <typename identifier> class class_declaration;
+ *
+ * Change the 'class' inside the <> to CT_TYPE.
+ * Set the parent to the class after the <> to CT_TEMPLATE.
+ * Set the parent of the semicolon to CT_TEMPLATE.
+ */
+static void handle_template(chunk_t *pc)
+{
+   chunk_t *tmp;
+   int     level;
+
+   tmp = chunk_get_next_ncnl(pc);
+   if (tmp->type != CT_ANGLE_OPEN)
+   {
+      return;
+   }
+   tmp->parent_type = CT_TEMPLATE;
+
+   level = tmp->level;
+
+   while ((tmp = chunk_get_next(tmp)) != NULL)
+   {
+      if (tmp->type == CT_CLASS)
+      {
+         tmp->type = CT_TYPE;
+      }
+      else if ((tmp->type == CT_ANGLE_CLOSE) && (tmp->level == level))
+      {
+         tmp->parent_type = CT_TEMPLATE;
+         break;
+      }
+   }
+   if (tmp != NULL)
+   {
+      tmp = chunk_get_next_ncnl(tmp);
+      if ((tmp != NULL) && (tmp->type == CT_CLASS))
+      {
+         tmp->parent_type = CT_TEMPLATE;
+
+         /* REVISTI: This may be a bit risky - might need to track the { }; */
+         tmp = chunk_get_next_type(tmp, CT_SEMICOLON, tmp->level);
+         if (tmp != NULL)
+         {
+            tmp->parent_type = CT_TEMPLATE;
+         }
+      }
    }
 }
 
