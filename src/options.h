@@ -237,6 +237,7 @@ enum uncrustify_options
    UO_sp_inv,
    UO_sp_addr,
    UO_sp_deref,
+   UO_sp_member,
    UO_sp_sign,
    UO_sp_incdec,
    UO_sp_after_oc_scope,

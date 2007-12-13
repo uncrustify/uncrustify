@@ -38,6 +38,7 @@ Changes in uncrustify-0.43 (not yet released)
  - Improve Objective C support
  - Add sp_before_oc_colon, sp_after_oc_scope, and sp_after_oc_type for ObjC
  - Add align_oc_msg_spec_span for ObjC
+ - Add sp_member for spacing around '->' and '.'
 
 
 Changes in uncrustify-0.42 (30-Nov-2007)

@@ -38,8 +38,6 @@ struct no_space_table_s no_space_table[] =
    { CT_UNKNOWN,        CT_SEMICOLON     },
    { CT_UNKNOWN,        CT_D_TEMPLATE    },
    { CT_D_TEMPLATE,     CT_UNKNOWN       },
-   { CT_UNKNOWN,        CT_MEMBER        },
-   { CT_MEMBER,         CT_UNKNOWN       },
    { CT_MACRO_FUNC,     CT_FPAREN_OPEN   },
    { CT_PAREN_OPEN,     CT_UNKNOWN       },
    { CT_UNKNOWN,        CT_PAREN_CLOSE   },
@@ -367,9 +365,9 @@ argval_t do_space(chunk_t *first, chunk_t *second)
       return(AV_REMOVE);
    }
 
-   if (second->type == CT_MEMBER)
+   if ((first->type == CT_MEMBER) || (second->type == CT_MEMBER))
    {
-      return(AV_REMOVE);
+      return(cpd.settings[UO_sp_member].a);
    }
 
    if (first->type == CT_C99_MEMBER)

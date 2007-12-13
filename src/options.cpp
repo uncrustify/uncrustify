@@ -265,6 +265,8 @@ void register_options(void)
    unc_add_option("sp_addr", UO_sp_addr, AT_IARF,
                   "Add or remove space after the '&' (address-of) operator.\n"
                   "This does not affect the spacing after a '&' that is part of a type.");
+   unc_add_option("sp_member", UO_sp_member, AT_IARF,
+                  "Add or remove space around the '.' or '->' operators\n");
    unc_add_option("sp_deref", UO_sp_deref, AT_IARF,
                   "Add or remove space after the '*' (dereference) operator.\n"
                   "This does not affect the spacing after a '*' that is part of a type.");
@@ -1259,6 +1261,7 @@ void set_option_defaults(void)
    cpd.settings[UO_sp_inv].a    = AV_REMOVE;
    cpd.settings[UO_sp_addr].a   = AV_REMOVE;
    cpd.settings[UO_sp_deref].a  = AV_REMOVE;
+   cpd.settings[UO_sp_member].a = AV_REMOVE;
    cpd.settings[UO_sp_sign].a   = AV_REMOVE;
    cpd.settings[UO_sp_incdec].a = AV_REMOVE;
 }
