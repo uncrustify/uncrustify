@@ -1439,9 +1439,12 @@ static void fix_typedef(chunk_t *start)
       }
    }
 
-   LOG_FMT(LTYPEDEF, "%s: %s typedef [%.*s] on line %d\n",
-           __func__, get_token_name(tag), the_type->len, the_type->str, the_type->orig_line);
-   the_type->flags |= PCF_ANCHOR;
+   if (the_type != NULL)
+   {
+      LOG_FMT(LTYPEDEF, "%s: %s typedef [%.*s] on line %d\n",
+              __func__, get_token_name(tag), the_type->len, the_type->str, the_type->orig_line);
+      the_type->flags |= PCF_ANCHOR;
+   }
 }
 
 /**
