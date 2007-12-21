@@ -40,6 +40,7 @@ Changes in uncrustify-0.43 (not yet released)
  - Add align_oc_msg_spec_span for ObjC
  - Add sp_member for spacing around '->' and '.'
  - More template handling improvements
+ - Fix a NULL dereference related to __attribute__
 
 
 Changes in uncrustify-0.42 (30-Nov-2007)
