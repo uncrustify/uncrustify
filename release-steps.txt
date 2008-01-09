@@ -7,14 +7,14 @@ Just in case I don't do a release for a while and forget what to do... =)
 0. Update the following two lines and paste into a terminal:
 
 UNC_URL=https://uncrustify.svn.sourceforge.net/svnroot/uncrustify
-UNC_REL=0.42
+UNC_REL=0.43
 
 1. Make sure all tests pass
 
 2. Make sure it builds on Windows
 
 3. Update the config files
-scripts/update-defaults.sh
+$ scripts/update-defaults.sh
 
 4. Update the version number.
 Replace the old version with the new version everywhere except in ChangeLog.
@@ -24,24 +24,29 @@ Specific files to update:
     src/uncrustify_version.h
 Re-run autoconf and ./configure.
 
-5. Copy the trunk to a tag
+5. Update the ChangeLog to indicate the release date
+Don't forget to check it in.
+
+6. Make sure there are no modified files in the workspace.
+
+7. Copy the trunk to a tag
 $ svn cp $UNC_URL/trunk/uncrustify $UNC_URL/tags/uncrustify-$UNC_REL -m "uncrustify-$UNC_REL"
 
-6. Export to the release folder
+8. Export to the release folder
 $ svn export $UNC_URL/tags/uncrustify-$UNC_REL
 
-7. Tar up the files
+9. Tar up the files
 $ tar czf uncrustify-$UNC_REL.tgz uncrustify-$UNC_REL
 
 REVISIT: consider splitting the tests out from the source
 
-8. Update and build on windows
+10. Update and build on windows
 Copy the exe, ChangeLog, index.html, and all the .cfg files in etc into a
 folder named "uncrustify-$UNC_REL-win32".
 Zip up that folder using the folder name + ".zip"
 Copy to the release folder on Linux
 
-9. Copy the files to sourceforge
+11. Copy the files to sourceforge
 $ ftp upload.sourceforge.net
 $ bin
 # cd /incoming
@@ -49,15 +54,15 @@ $ put uncrustify-$UNC_REL.tgz
 $ put uncrustify-$UNC_REL-win32.zip
 $ quit
 
-10. Update the web page
+12. Update the web page
 $ ssh USER@shell.sourceforge.net
 $ cd /home/groups/u/un/uncrustify/htdocs
 $ svn up
 $ exit
 
-11. Use the web interface to create the release and attach the files
+13. Use the web interface to create the release and attach the files
 
-12. (optional) Create a news item
+14. (optional) Create a news item
 
-13. (optional) Update freshmeat.net project
+15. (optional) Update freshmeat.net project
 

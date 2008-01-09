@@ -27,7 +27,7 @@ Near-term plans
 ===============================================================================
 
 
-Changes in uncrustify-0.43 (not yet released)
+Changes in uncrustify-0.43 (08-Jan-2008)
 -------------------------------------------------------------------------------
  - Add align_right_cmt_mix to control aligning of comments after '}' and '#endif'
  - Allow a line split after an assignment
