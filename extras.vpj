@@ -115,6 +115,7 @@
 			<F N="scripts/update-defaults.sh"/>
 		</Folder>
 		<F N="AUTHORS"/>
+		<F N="autogen.sh"/>
 		<F N="BUGS"/>
 		<F N="configure"/>
 		<F N="configure.in"/>
