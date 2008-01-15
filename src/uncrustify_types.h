@@ -67,6 +67,7 @@ struct paren_stack_entry
 /* TODO: put this on a linked list */
 struct parse_frame
 {
+   int                      ref_no;
    int                      level;           // level of parens/square/angle/brace
    int                      brace_level;     // level of brace/vbrace
    int                      pp_level;        // level of preproc #if stuff
@@ -77,7 +78,7 @@ struct parse_frame
    int                      pse_tos;
    int                      paren_count;
 
-   int                      in_ifdef;
+   c_token_t                in_ifdef;
    int                      stmt_count;
    int                      expr_count;
 
