@@ -115,6 +115,8 @@
 00612  pp-indent-2.cfg         c/pp-space.c
 00613  pp-indent-3.cfg         c/pp-space.c
 
+00615  pp-indent-2.cfg         c/pp-nest.c
+
 # function def newlines
 00701  func-def-1.cfg          c/function-def.c
 00702  func-def-2.cfg          c/function-def.c
