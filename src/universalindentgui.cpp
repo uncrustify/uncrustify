@@ -5,6 +5,7 @@
  * $Id$
  */
 #include "prototypes.h"
+#include "uncrustify_version.h"
 #include <stdio.h>
 
 
@@ -55,11 +56,16 @@ void print_universal_indent_cfg(FILE *pfile)
            "indenterName=Uncrustify\n"
            "inputFileName=indentinput\n"
            "inputFileParameter=\"-f \"\n"
+           "manual=http://uncrustify.sourceforge.net/config.txt\n"
            "outputFileName=indentoutput\n"
            "outputFileParameter=\"-o \"\n"
            "stringparaminquotes=false\n"
            "parameterOrder=ipo\n"
-           "useCfgFileParameter=\"-c \"\n");
+           "showHelpParameter=-h\n"
+           "stringparaminquotes=false\n"
+           "useCfgFileParameter=\"-c \"\n"
+           "version=%s\n",
+           UNCRUSTIFY_VERSION);
 
    /* Now add each option */
    for (idx = 0; idx < UG_group_count; idx++)
@@ -129,7 +135,7 @@ void print_universal_indent_cfg(FILE *pfile)
 
          case AT_IARF:
             fprintf(pfile, "EditorType=multiple\n");
-            fprintf(pfile, "Choices=%s=ignore|%s=add|%s=remove|%s=force\n",
+            fprintf(pfile, "Choices=\"%s=ignore|%s=add|%s=remove|%s=force\"\n",
                     option->name, option->name, option->name, option->name);
             // [nl_after_switch]
             // Category=4
@@ -168,8 +174,9 @@ void print_universal_indent_cfg(FILE *pfile)
             // EditorType=multiple
             // Choices="newlines=auto|newlines=lf|newlines=crlf|newlines=cr"
             fprintf(pfile, "EditorType=multiple\n");
-            fprintf(pfile, "Choices=%s=lf|%s=crlf|%s=cr|%s=auto\n",
+            fprintf(pfile, "Choices=\"%s=lf|%s=crlf|%s=cr|%s=auto\"\n",
                     option->name, option->name, option->name, option->name);
+            fprintf(pfile, "ChoicesReadable=\"Newlines Mac|Newlines Win|Newlines Unix|Newlines Auto\"\n");
             break;
 
          case AT_POS:
@@ -182,7 +189,7 @@ void print_universal_indent_cfg(FILE *pfile)
             // EditorType=multiple
             // Choices="pos_bool=ignore|pos_bool=lead|pos_bool=trail"
             fprintf(pfile, "EditorType=multiple\n");
-            fprintf(pfile, "Choices=%s=ignore|%s=lead|%s=trail\n",
+            fprintf(pfile, "Choices=\"%s=ignore|%s=lead|%s=trail\"\n",
                     option->name, option->name, option->name);
             break;
 
