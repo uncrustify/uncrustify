@@ -583,6 +583,9 @@ nl_switch_brace                          { Ignore, Add, Remove, Force }
 nl_multi_line_cond                       { False, True }
   Add or remove newline when condition spans two or more lines
 
+nl_multi_line_define                     { False, True }
+  Force a newline in a define after the macro name for multi-line defines.
+
 nl_before_case                           { False, True }
   Whether to put a newline before 'case' statement
 

@@ -19,6 +19,7 @@
 
 static void newlines_double_space_struct_enum_union(chunk_t *open_brace);
 static bool one_liner_nl_ok(chunk_t *pc);
+static void nl_handle_define(chunk_t *pc);
 
 
 /*
@@ -1605,9 +1606,46 @@ void newlines_cleanup_braces(void)
             }
          }
       }
+      else if (pc->type == CT_PP_DEFINE)
+      {
+         if (cpd.settings[UO_nl_multi_line_define].b)
+         {
+            nl_handle_define(pc);
+         }
+      }
       else
       {
          /* ignore it */
+      }
+   }
+}
+
+/**
+ * Find the next newline or nl_cont
+ */
+static void nl_handle_define(chunk_t *pc)
+{
+   chunk_t *nl  = pc;
+   chunk_t *ref = NULL;
+
+   while ((nl = chunk_get_next(nl)) != NULL)
+   {
+      if (nl->type == CT_NEWLINE)
+      {
+         return;
+      }
+      if ((nl->type == CT_MACRO) ||
+          ((nl->type == CT_FPAREN_CLOSE) && (nl->parent_type == CT_MACRO_FUNC)))
+      {
+         ref = nl;
+      }
+      if (nl->type == CT_NL_CONT)
+      {
+         if (ref != NULL)
+         {
+            newline_add_after(ref);
+         }
+         return;
       }
    }
 }

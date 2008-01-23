@@ -444,6 +444,8 @@ void register_options(void)
                   "Add or remove newline between 'switch' and '{'");
    unc_add_option("nl_multi_line_cond", UO_nl_multi_line_cond, AT_BOOL,
                   "Add or remove newline when condition spans two or more lines");
+   unc_add_option("nl_multi_line_define", UO_nl_multi_line_define, AT_BOOL,
+                  "Force a newline in a define after the macro name for multi-line defines.");
    unc_add_option("nl_before_case", UO_nl_before_case, AT_BOOL,
                   "Whether to put a newline before 'case' statement");
    unc_add_option("nl_after_case", UO_nl_after_case, AT_BOOL,
