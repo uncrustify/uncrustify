@@ -278,7 +278,7 @@ void align_func_proto(c_token_t ctok, int span)
 }
 
 /**
- * Aligns all backslah-newline combos in the file.
+ * Aligns all backslash-newline combos in the file.
  * This should be done LAST.
  */
 void align_backslash_newline(void)
