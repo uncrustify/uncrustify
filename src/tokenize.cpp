@@ -751,6 +751,16 @@ static bool parse_next(chunk_t *pc)
          parse_string(pc, (*pc->str == 'L') ? 1 : 0, true);
          return(true);
       }
+
+      if ((*pc->str == '<') && (cpd.in_preproc == CT_PP_DEFINE))
+      {
+         if (chunk_get_tail()->type == CT_MACRO)
+         {
+            /* We have "#define XXX <", assume '<' starts an include string */
+            parse_string(pc, 0, false);
+            return(true);
+         }
+      }
    }
 
    /* Check for pawn/ObjectiveC identifiers */
