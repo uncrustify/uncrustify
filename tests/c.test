@@ -44,6 +44,7 @@
 
 00070  ben.cfg                 c/return-multi.c
 00071  ben.cfg                 c/include_define.h
+00072  star_pos-0.cfg          c/align-proto.c
 
 00101  ben.cfg                 c/bugs-1.c
 00102  ben.cfg                 c/bugs-2.c

@@ -1956,6 +1956,12 @@ static bool can_be_full_param(chunk_t *start, chunk_t *end)
       return(true);
    }
 
+   if (chunk_is_type(last))
+   {
+      LOG_FMT(LFPARAM, " <== [%s] probably!\n", get_token_name(pc->type));
+      return(true);
+   }
+
    LOG_FMT(LFPARAM, " <== [%s] %s!\n",
            get_token_name(pc->type), (word_cnt >= 2) ? "Yup" : "Unlikely");
    return(word_cnt >= 2);

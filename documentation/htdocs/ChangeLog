@@ -35,6 +35,7 @@ Changes in uncrustify-0.44 (not yet released)
  - Add nl_multi_line_define
  - Minimize distance between code and the backslash-newline in macros
  - Properly handle stuff like '#define MYHEADER <asm/arm.h>'
+ - Fix detection of 'int foo(int);' in C++ (func proto, not class variable)
 
 
 Changes in uncrustify-0.43 (08-Jan-2008)
