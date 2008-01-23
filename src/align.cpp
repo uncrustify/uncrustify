@@ -158,7 +158,7 @@ static void align_stack(ChunkStack& cs, int col, bool align_single, log_sev_t se
  * @param max_col    pointer to the column variable
  * @param extra_pad  extra padding
  */
-static void align_add(ChunkStack& cs, chunk_t *pc, int& max_col, int min_pad)
+static void align_add(ChunkStack& cs, chunk_t *pc, int& max_col, int min_pad, bool squeeze)
 {
    chunk_t *prev;
    int     min_col;
@@ -166,20 +166,19 @@ static void align_add(ChunkStack& cs, chunk_t *pc, int& max_col, int min_pad)
    prev = chunk_get_prev(pc);
    if ((prev == NULL) || chunk_is_newline(prev))
    {
-      min_col = pc->column;
+      min_col = squeeze ? 1 : pc->column;
       LOG_FMT(LALADD, "%s: pc->col=%d max_col=%d min_pad=%d min_col=%d\n",
               __func__, pc->column, max_col, min_pad, min_col);
    }
    else
    {
-      min_col = prev->column + prev->len + 1 + min_pad;
-      if (min_pad > 0)
+      min_col = prev->column + prev->len + min_pad;
+      if (!squeeze)
       {
-         min_col--;
-      }
-      if (min_col < pc->column)
-      {
-         min_col = pc->column;
+         if (min_col < pc->column)
+         {
+            min_col = pc->column;
+         }
       }
       LOG_FMT(LALADD, "%s: pc->col=%d max_col=%d min_pad=%d min_col=%d prev->col=%d\n",
               __func__, pc->column, max_col, min_pad, min_col, prev->column);
@@ -270,7 +269,7 @@ void align_func_proto(c_token_t ctok, int span)
       }
       else if (pc->type == ctok)
       {
-         align_add(cs, pc, max_col, 0);
+         align_add(cs, pc, max_col, 1, true);
          span_cnt = 0;
       }
       pc = chunk_get_next(pc);
@@ -798,7 +797,7 @@ chunk_t *align_nl_cont(chunk_t *start)
    {
       if (pc->type == CT_NL_CONT)
       {
-         align_add(cs, pc, max_col, 0);
+         align_add(cs, pc, max_col, 1, true);
       }
       pc = chunk_get_next(pc);
    }
@@ -869,7 +868,7 @@ chunk_t *align_trailing_comments(chunk_t *start)
 
          if (cmt_type_cur == cmt_type_start)
          {
-            align_add(cs, pc, max_col, 0);
+            align_add(cs, pc, max_col, 1, false);
             nl_count = 0;
          }
       }
