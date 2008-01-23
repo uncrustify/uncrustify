@@ -651,7 +651,8 @@ void register_options(void)
    unc_add_option("align_oc_msg_spec_span", UO_align_oc_msg_spec_span, AT_NUM,
                   "The span for aligning function prototypes (0=don't align)", "", 0, 5000);
    unc_add_option("align_nl_cont", UO_align_nl_cont, AT_BOOL,
-                  "Whether to align macros wrapped with a backslash and a newline");
+                  "Whether to align macros wrapped with a backslash and a newline."
+                  "This will not work right if the macro contains a multi-line comment.");
    unc_add_option("align_pp_define_gap", UO_align_pp_define_gap, AT_NUM,
                   "The minimum space between label and value of a preprocessor define");
    unc_add_option("align_pp_define_span", UO_align_pp_define_span, AT_NUM,

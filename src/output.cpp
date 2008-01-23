@@ -957,6 +957,19 @@ void output_comment_multi(chunk_t *pc)
             {
                line_len--;
             }
+            if (line[line_len - 1] == '\\')
+            {
+               /* Kill off the backslash-newline */
+               line_len--;
+               while ((line_len > 0) &&
+                      ((line[line_len - 1] == ' ') ||
+                       (line[line_len - 1] == '\t')))
+               {
+                  line_len--;
+               }
+               line[line_len++] = ' ';
+               line[line_len++] = '\\';
+            }
             nl_end = true;
          }
          line[line_len] = 0;
