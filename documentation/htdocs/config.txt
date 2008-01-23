@@ -464,7 +464,8 @@ align_oc_msg_spec_span                   Number
   The span for aligning function prototypes (0=don't align)
 
 align_nl_cont                            { False, True }
-  Whether to align macros wrapped with a backslash and a newline
+  Whether to align macros wrapped with a backslash and a newline.
+  This will not work right if the macro contains a multi-line comment.
 
 align_pp_define_gap                      Number
   The minimum space between label and value of a preprocessor define
