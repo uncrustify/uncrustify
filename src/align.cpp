@@ -172,7 +172,14 @@ static void align_add(ChunkStack& cs, chunk_t *pc, int& max_col, int min_pad, bo
    }
    else
    {
-      min_col = prev->column + prev->len + min_pad;
+      if (prev->type == CT_COMMENT_MULTI)
+      {
+         min_col = prev->orig_col_end + min_pad;
+      }
+      else
+      {
+         min_col = prev->column + prev->len + min_pad;
+      }
       if (!squeeze)
       {
          if (min_col < pc->column)
