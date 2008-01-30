@@ -1198,6 +1198,7 @@ void print_options(FILE *pfile, bool verbose)
       "Number",
       "{ Auto, LF, CR, CRLF }",
       "{ Ignore, Lead, Trail }",
+      "String",
    };
 
    option_name_map_it it;
