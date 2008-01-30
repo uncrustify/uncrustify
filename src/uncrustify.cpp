@@ -26,7 +26,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <cerrno>
-#include <cctype>
+#include "unc_ctype.h"
 #ifdef HAVE_SYS_STAT_H
  #include <sys/stat.h>
 #endif

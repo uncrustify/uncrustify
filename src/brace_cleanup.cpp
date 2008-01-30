@@ -18,7 +18,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <cerrno>
-#include <cctype>
+#include "unc_ctype.h"
 
 
 static chunk_t *insert_vbrace(chunk_t *pc, bool after,

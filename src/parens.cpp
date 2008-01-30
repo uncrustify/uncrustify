@@ -14,7 +14,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <cerrno>
-#include <cctype>
+#include "unc_ctype.h"
 
 
 static void add_parens_between(chunk_t *first, chunk_t *last);

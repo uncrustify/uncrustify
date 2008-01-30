@@ -14,7 +14,7 @@
 #include <cstring>
 #include <cerrno>
 #include <cstdlib>
-#include <cctype>
+#include "unc_ctype.h"
 
 typedef struct
 {

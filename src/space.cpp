@@ -15,7 +15,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <cerrno>
-#include <cctype>
+#include "unc_ctype.h"
 
 struct no_space_table_s
 {

@@ -18,7 +18,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <cerrno>
-#include <cctype>
+#include "unc_ctype.h"
 
 
 static bool parse_string(chunk_t *pc, int quote_idx, bool allow_escape);
@@ -194,8 +194,8 @@ static bool parse_number(chunk_t *pc)
    bool did_hex = false;
 
    /* A number must start with a digit or a dot, followed by a digit */
-   if (!isdigit(pc->str[0]) &&
-       ((pc->str[0] != '.') || !isdigit(pc->str[1])))
+   if (!unc_isdigit(pc->str[0]) &&
+       ((pc->str[0] != '.') || !unc_isdigit(pc->str[1])))
    {
       return(false);
    }
@@ -212,14 +212,14 @@ static bool parse_number(chunk_t *pc)
     */
    if (pc->str[0] == '0')
    {
-      switch (toupper(pc->str[1]))
+      switch (unc_toupper(pc->str[1]))
       {
       case 'X':               /* hex */
          did_hex = true;
          do
          {
             len++;
-         } while (isxdigit(pc->str[len]) || (pc->str[len] == '_'));
+         } while (unc_isxdigit(pc->str[len]) || (pc->str[len] == '_'));
          break;
 
       case 'B':               /* binary */
@@ -253,7 +253,7 @@ static bool parse_number(chunk_t *pc)
    else
    {
       /* Regular int or float */
-      while (isdigit(pc->str[len]) || (pc->str[len] == '_'))
+      while (unc_isdigit(pc->str[len]) || (pc->str[len] == '_'))
       {
          len++;
       }
@@ -266,14 +266,14 @@ static bool parse_number(chunk_t *pc)
       is_float = true;
       if (did_hex)
       {
-         while (isxdigit(pc->str[len]) || (pc->str[len] == '_'))
+         while (unc_isxdigit(pc->str[len]) || (pc->str[len] == '_'))
          {
             len++;
          }
       }
       else
       {
-         while (isdigit(pc->str[len]) || (pc->str[len] == '_'))
+         while (unc_isdigit(pc->str[len]) || (pc->str[len] == '_'))
          {
             len++;
          }
@@ -285,7 +285,7 @@ static bool parse_number(chunk_t *pc)
     * C/C++/D/Java: eEpP
     * C#/Pawn:      eE
     */
-   tmp = toupper(pc->str[len]);
+   tmp = unc_toupper(pc->str[len]);
    if ((tmp == 'E') || (tmp == 'P'))
    {
       is_float = true;
@@ -294,7 +294,7 @@ static bool parse_number(chunk_t *pc)
       {
          len++;
       }
-      while (isdigit(pc->str[len]) || (pc->str[len] == '_'))
+      while (unc_isdigit(pc->str[len]) || (pc->str[len] == '_'))
       {
          len++;
       }
@@ -313,7 +313,7 @@ static bool parse_number(chunk_t *pc)
     */
    while (1)
    {
-      tmp = toupper(pc->str[len]);
+      tmp = unc_toupper(pc->str[len]);
       if ((tmp == 'I') || (tmp == 'F') || (tmp == 'D') || (tmp == 'M'))
       {
          is_float = true;
@@ -557,7 +557,7 @@ static bool parse_bs_newline(chunk_t *pc)
 {
    pc->len = 1;
 
-   while (isspace(pc->str[pc->len]))
+   while (unc_isspace(pc->str[pc->len]))
    {
       if ((pc->str[pc->len] == '\r') || (pc->str[pc->len] == '\n'))
       {

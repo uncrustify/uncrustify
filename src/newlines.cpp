@@ -14,7 +14,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <cerrno>
-#include <cctype>
+#include "unc_ctype.h"
 
 
 static void newlines_double_space_struct_enum_union(chunk_t *open_brace);

@@ -31,7 +31,7 @@
 #include "logger.h"
 #include <cstdio>
 #include <cerrno>
-#include <cctype>
+#include "unc_ctype.h"
 #include <cstring>
 
 /**
@@ -65,9 +65,9 @@ int backup_copy_file(const char *filename, const char *file_data, int file_len)
       {
          for (int i = 0; buffer[i] != 0; i++)
          {
-            if (isxdigit(buffer[i]))
+            if (unc_isxdigit(buffer[i]))
             {
-               md5_str_in[i] = tolower(buffer[i]);
+               md5_str_in[i] = unc_tolower(buffer[i]);
             }
             else
             {

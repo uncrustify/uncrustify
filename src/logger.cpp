@@ -16,7 +16,7 @@
 
 #include <cstdio>
 #include <stdarg.h>
-#include <cctype>
+#include "unc_ctype.h"
 
 
 /** Private log structure */
@@ -314,7 +314,7 @@ void log_hex_blk(log_sev_t sev, const void *data, int len)
       buf[str_idx + 1] = to_hex_char(tmp);
       str_idx         += 3;
 
-      buf[chr_idx++] = isprint(tmp) ? tmp : '.';
+      buf[chr_idx++] = unc_isprint(tmp) ? tmp : '.';
 
       total++;
       count++;

@@ -14,7 +14,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <cerrno>
-#include <cctype>
+#include "unc_ctype.h"
 
 
 static void convert_vbrace_to_brace(void);

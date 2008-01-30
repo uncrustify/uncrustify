@@ -18,7 +18,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cerrno>
-#include <cctype>
+#include "unc_ctype.h"
 
 
 static std::map<std::string, option_map_value>      option_name_map;
@@ -839,8 +839,8 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
 
    if (entry->type == AT_NUM)
    {
-      if (isdigit(*val) ||
-          (isdigit(val[1]) && ((*val == '-') || (*val == '+'))))
+      if (unc_isdigit(*val) ||
+          (unc_isdigit(val[1]) && ((*val == '-') || (*val == '+'))))
       {
          dest->n = strtol(val, NULL, 0);
          return;

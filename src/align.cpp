@@ -16,7 +16,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <cerrno>
-#include <cctype>
+#include "unc_ctype.h"
 
 
 static chunk_t *align_var_def_brace(chunk_t *pc, int span);

@@ -11,6 +11,7 @@
 #include "uncrustify_types.h"
 #include "prototypes.h"
 #include "chunk_list.h"
+#include "unc_ctype.h"
 #include <cstring>
 #include <cstdlib>
 
@@ -663,11 +664,11 @@ static void add_comment_text(const char *text, int len,
          {
             add_char(' ');
          }
-         if (!in_word && !isspace(text[idx]))
+         if (!in_word && !unc_isspace(text[idx]))
          {
             cmt.word_count++;
          }
-         in_word = !isspace(text[idx]);
+         in_word = !unc_isspace(text[idx]);
          add_char(text[idx]);
          was_star   = (text[idx] == '*');
          was_dollar = (text[idx] == '$');
@@ -819,7 +820,7 @@ static chunk_t *output_comment_cpp(chunk_t *first)
    {
       /* nothing to group: just output a single line */
       add_text_len("/*", 2);
-      if (!isspace(first->str[2]))
+      if (!unc_isspace(first->str[2]))
       {
          add_char(' ');
       }
@@ -842,12 +843,12 @@ static chunk_t *output_comment_cpp(chunk_t *first)
    int offs;
    while (can_combine_comment(pc, cmt))
    {
-      offs = isspace(pc->str[2]) ? 1 : 0;
+      offs = unc_isspace(pc->str[2]) ? 1 : 0;
       add_comment_text(pc->str + 2 + offs, pc->len - (2 + offs), cmt, true);
       add_comment_text("\n", 1, cmt, false);
       pc = chunk_get_next(chunk_get_next(pc));
    }
-   offs = isspace(pc->str[2]) ? 1 : 0;
+   offs = unc_isspace(pc->str[2]) ? 1 : 0;
    add_comment_text(pc->str + 2 + offs, pc->len - (2 + offs), cmt, true);
    if (cpd.settings[UO_cmt_cpp_nl_end].b)
    {
@@ -1038,7 +1039,7 @@ void output_comment_multi(chunk_t *pc)
                   {
                      lead[idx++] = ' ';
                   }
-                  while ((idx < 3) && !isspace(line[sidx]))
+                  while ((idx < 3) && !unc_isspace(line[sidx]))
                   {
                      lead[idx++] = line[sidx++];
                   }
