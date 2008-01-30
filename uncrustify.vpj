@@ -105,6 +105,7 @@
 			<F N="src/punctuators.h"/>
 			<F N="src/token_enum.h"/>
 			<F N="src/token_names.h"/>
+			<F N="src/unc_ctype.h"/>
 			<F N="src/uncrustify_types.h"/>
 			<F N="src/uncrustify_version.h"/>
 			<F N="win32/windows_compat.h"/>
