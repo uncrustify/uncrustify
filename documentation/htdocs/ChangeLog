@@ -37,6 +37,7 @@ Changes in uncrustify-0.44 (not yet released)
  - Properly handle stuff like '#define MYHEADER <asm/arm.h>'
  - Fix detection of 'int foo(int);' in C++ (func proto, not class variable)
  - Improve handling of multi-line comments in a macro
+ - Fix crash bug with some ctype implementations
 
 
 Changes in uncrustify-0.43 (08-Jan-2008)
