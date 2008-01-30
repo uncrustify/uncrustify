@@ -1512,7 +1512,8 @@ void newlines_cleanup_braces(void)
             {
                next = chunk_get_next(next);
             }
-            if (!chunk_is_comment(next) &&
+            if ((next != NULL) &&
+                !chunk_is_comment(next) &&
                 !chunk_is_newline(next))
             {
                if (one_liner_nl_ok(next))
