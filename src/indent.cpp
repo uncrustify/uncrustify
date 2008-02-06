@@ -409,7 +409,8 @@ void indent_text(void)
          else
          {
             if ((frm.pse[frm.pse_tos - 1].type == CT_PP_REGION_INDENT) ||
-                (frm.pse[frm.pse_tos - 1].type == CT_PP_IF_INDENT))
+                ((frm.pse[frm.pse_tos - 1].type == CT_PP_IF_INDENT) &&
+                 (frm.pse[frm.pse_tos].type != CT_PP_ENDIF)))
             {
                frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 2].indent;
             }
