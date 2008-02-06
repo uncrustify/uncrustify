@@ -354,6 +354,7 @@ static void newlines_if_for_while_switch_pre_blank_lines(chunk_t *start, argval_
 {
    chunk_t *pc;
    chunk_t *prev;
+   chunk_t *next;
    chunk_t *last_nl = NULL;
    int     level    = start->level;
    bool    do_add   = nl_opt & AV_ADD;
@@ -414,17 +415,25 @@ static void newlines_if_for_while_switch_pre_blank_lines(chunk_t *start, argval_
          if (do_add) /* we found something previously besides a comment or a new line */
          {
             /* if we have run across a newline */
-            if (last_nl)
+            if (last_nl != NULL)
             {
                if (last_nl->nl_count < 2)
                {
                   last_nl->nl_count = 2;
                }
             }
-            /* if we didn't run into a nl, need to add one */
-            else if ((last_nl = newline_add_after(pc)) != NULL)
+            else
             {
-               last_nl->nl_count = 2;
+               /* we didn't run into a nl, so we need to add one */
+               if (((next = chunk_get_next(pc)) != NULL) &&
+                   chunk_is_comment(next))
+               {
+                  pc = next;
+               }
+               if ((last_nl = newline_add_after(pc)) != NULL)
+               {
+                  last_nl->nl_count = 2;
+               }
             }
          }
 
@@ -582,6 +591,13 @@ static void newlines_if_for_while_switch_post_blank_lines(chunk_t *start, argval
          /* if we have no newlines, add one and make it double */
          if (nl_count == 0)
          {
+
+            if (((next = chunk_get_next(pc)) != NULL) &&
+                chunk_is_comment(next))
+            {
+               pc = next;
+            }
+
             if ((next = newline_add_after(pc)) == NULL)
             {
                return;
