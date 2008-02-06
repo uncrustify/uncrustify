@@ -184,3 +184,5 @@
 21012 pp_if_indent-2.cfg       c/ifdef-indent.c
 21013 pp_if_indent-3.cfg       c/ifdef-indent.c
 
+21015 endif.cfg                c/endif.c
+
