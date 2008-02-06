@@ -11,6 +11,19 @@ int do_this
          x += y;
       #endif
    #endif
+a++;
+ #ifdef ABC
+b++;
+      #ifdef DEF
+         c++;
+ #ifdef HIJ
+         d++;
+      #endif
+e++;
+      #endif
+f++;
+   #endif
+g++;
 
    return (x)
 }
