@@ -338,15 +338,6 @@ void indent_text(void)
             {
                indent_pse_pop(frm, pc);
             }
-
-            /* If we just removed an #endregion, then check to see if a
-             * PP_REGION_INDENT entry is right below it
-             */
-            if (((type == CT_PP_ENDIF) || (type == CT_PP_ELSE)) &&
-                (frm.pse[frm.pse_tos].type == CT_PP_IF_INDENT))
-            {
-               indent_pse_pop(frm, pc);
-            }
          }
       }
       else if (pc->type == CT_PREPROC)
