@@ -2435,28 +2435,28 @@ static void cmtable_init()
         case TOKcomplex32: case TOKcomplex64: case TOKcomplex80:
         case TOKvoid:
 
- #define CASE_BASIC_TYPES_X(t)					\
-        case TOKvoid:	 t = Type::tvoid;  goto LabelX;		\
-        case TOKint8:	 t = Type::tint8;  goto LabelX;		\
-        case TOKuns8:	 t = Type::tuns8;  goto LabelX;		\
-        case TOKint16:	 t = Type::tint16; goto LabelX;		\
-        case TOKuns16:	 t = Type::tuns16; goto LabelX;		\
-        case TOKint32:	 t = Type::tint32; goto LabelX;		\
-        case TOKuns32:	 t = Type::tuns32; goto LabelX;		\
-        case TOKint64:	 t = Type::tint64; goto LabelX;		\
-        case TOKuns64:	 t = Type::tuns64; goto LabelX;		\
-        case TOKfloat32: t = Type::tfloat32; goto LabelX;	\
-        case TOKfloat64: t = Type::tfloat64; goto LabelX;	\
-        case TOKfloat80: t = Type::tfloat80; goto LabelX;	\
-        case TOKimaginary32: t = Type::timaginary32; goto LabelX;	\
-        case TOKimaginary64: t = Type::timaginary64; goto LabelX;	\
-        case TOKimaginary80: t = Type::timaginary80; goto LabelX;	\
-        case TOKcomplex32: t = Type::tcomplex32; goto LabelX;	\
-        case TOKcomplex64: t = Type::tcomplex64; goto LabelX;	\
-        case TOKcomplex80: t = Type::tcomplex80; goto LabelX;	\
-        case TOKbit:	 t = Type::tbit;     goto LabelX;	\
-        case TOKchar:	 t = Type::tchar;    goto LabelX;	\
-        case TOKwchar:	 t = Type::twchar; goto LabelX;	\
-        case TOKdchar:	 t = Type::tdchar; goto LabelX;	\
+ #define CASE_BASIC_TYPES_X(t) \
+        case TOKvoid:	 t = Type::tvoid;  goto LabelX; \
+        case TOKint8:	 t = Type::tint8;  goto LabelX; \
+        case TOKuns8:	 t = Type::tuns8;  goto LabelX; \
+        case TOKint16:	 t = Type::tint16; goto LabelX; \
+        case TOKuns16:	 t = Type::tuns16; goto LabelX; \
+        case TOKint32:	 t = Type::tint32; goto LabelX; \
+        case TOKuns32:	 t = Type::tuns32; goto LabelX; \
+        case TOKint64:	 t = Type::tint64; goto LabelX; \
+        case TOKuns64:	 t = Type::tuns64; goto LabelX; \
+        case TOKfloat32: t = Type::tfloat32; goto LabelX; \
+        case TOKfloat64: t = Type::tfloat64; goto LabelX; \
+        case TOKfloat80: t = Type::tfloat80; goto LabelX; \
+        case TOKimaginary32: t = Type::timaginary32; goto LabelX; \
+        case TOKimaginary64: t = Type::timaginary64; goto LabelX; \
+        case TOKimaginary80: t = Type::timaginary80; goto LabelX; \
+        case TOKcomplex32: t = Type::tcomplex32; goto LabelX; \
+        case TOKcomplex64: t = Type::tcomplex64; goto LabelX; \
+        case TOKcomplex80: t = Type::tcomplex80; goto LabelX; \
+        case TOKbit:	 t = Type::tbit;     goto LabelX; \
+        case TOKchar:	 t = Type::tchar;    goto LabelX; \
+        case TOKwchar:	 t = Type::twchar; goto LabelX; \
+        case TOKdchar:	 t = Type::tdchar; goto LabelX; \
         LabelX
  +/
