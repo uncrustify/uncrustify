@@ -27,7 +27,7 @@ Near-term plans
 ===============================================================================
 
 
-Changes in uncrustify-0.44 (not yet released)
+Changes in uncrustify-0.44 (12-Feb-2008)
 -------------------------------------------------------------------------------
  - Fix issue with #else and unmatched braces (issue 1868493)
  - Update UnivarsalIndentGUI config output
