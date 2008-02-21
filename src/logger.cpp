@@ -133,8 +133,9 @@ static void log_flush(bool force_nl)
  * Starts the log statment by flushing if needed and printing the header
  *
  * @param sev  The log severity
+ * @return     The number of bytes available
  */
-static void log_start(log_sev_t sev)
+static size_t log_start(log_sev_t sev)
 {
    if (sev != g_log.sev)
    {
@@ -146,16 +147,15 @@ static void log_start(log_sev_t sev)
       g_log.in_log = false;
    }
 
-   if (!g_log.in_log)
+   /* If not in a log, the buffer is empty. Add the header, if enabled. */
+   if (!g_log.in_log && g_log.show_hdr)
    {
-      /* Add the header, if enabled */
-      if (g_log.show_hdr)
-      {
-         g_log.buf_len += snprintf(&g_log.buf[g_log.buf_len],
-                                   sizeof(g_log.buf) - g_log.buf_len,
-                                   "<%d>", sev);
-      }
+      g_log.buf_len = snprintf(g_log.buf, sizeof(g_log.buf), "<%d>", sev);
    }
+
+   int cap = ((int)sizeof(g_log.buf) - 2) - g_log.buf_len;
+
+   return((cap > 0) ? (size_t)cap : 0);
 }
 
 /**
@@ -185,15 +185,18 @@ void log_str(log_sev_t sev, const char *str, int len)
       return;
    }
 
-   if ((g_log.buf_len + len) < (int)sizeof(g_log.buf))
+   size_t cap = log_start(sev);
+   if (cap > 0)
    {
-      log_start(sev);
-
-      memcpy(&g_log.buf[g_log.buf_len], str, len + 1);
-      g_log.buf_len += len;
-
-      log_end();
+      if (len > (int)cap)
+      {
+         len = cap;
+      }
+      memcpy(&g_log.buf[g_log.buf_len], str, len);
+      g_log.buf_len           += len;
+      g_log.buf[g_log.buf_len] = 0;
    }
+   log_end();
 }
 
 /**
@@ -206,20 +209,34 @@ void log_str(log_sev_t sev, const char *str, int len)
 void log_fmt(log_sev_t sev, const char *fmt, ...)
 {
    va_list args;
+   int     len;
+   size_t  cap;
 
    if ((fmt == NULL) || !log_sev_on(sev))
    {
       return;
    }
 
-   log_start(sev);
+   /* Some implementation of vsnprintf() return the number of characters
+    * that would have been stored if the buffer was large enough instead of
+    * the number of characters actually stored.
+    */
+   cap = log_start(sev);
 
    /* Add on the variable log parameters to the log string */
    va_start(args, fmt);
-   g_log.buf_len += vsnprintf(&g_log.buf[g_log.buf_len],
-                              sizeof(g_log.buf) - g_log.buf_len,
-                              fmt, args);
+   len = vsnprintf(&g_log.buf[g_log.buf_len], cap, fmt, args);
    va_end(args);
+
+   if (len > 0)
+   {
+      if (len > (int)cap)
+      {
+         len = cap;
+      }
+      g_log.buf_len += len;
+      g_log.buf[g_log.buf_len] = 0;
+   }
 
    log_end();
 }
