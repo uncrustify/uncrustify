@@ -135,6 +135,8 @@ void register_options(void)
                   "Add or remove space around arithmetic operator '+', '-', '/', '*', etc");
    unc_add_option("sp_assign", UO_sp_assign, AT_IARF,
                   "Add or remove space around assignment operator '=', '+=', etc");
+   unc_add_option("sp_enum_assign", UO_sp_enum_assign, AT_IARF,
+                  "Add or remove space around assignment '=' in enum");
    unc_add_option("sp_bool", UO_sp_bool, AT_IARF,
                   "Add or remove space around boolean operators '&&' and '||'");
    unc_add_option("sp_compare", UO_sp_compare, AT_IARF,

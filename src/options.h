@@ -189,6 +189,7 @@ enum uncrustify_options
    UO_sp_bool,                  // space around || &&
    UO_sp_compare,               // space around < > ==, etc
    UO_sp_assign,                // space around =, +=, etc
+   UO_sp_enum_assign,           // space around = in enum
 
    UO_sp_func_def_paren,        // space between 'func' and '(' - "foo (" vs "foo("
    UO_sp_func_call_paren,       // space between 'func' and '(' - "foo (" vs "foo("
