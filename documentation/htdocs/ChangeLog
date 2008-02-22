@@ -13,6 +13,7 @@ Future plans: (in no particular order)
  - Add easily pluggable output for logs and file
  - Build as a shared library on Linux and maybe a dll on windows?
  - Plug into SlickEdit/Gedit/Kedit
+ - Add an option to create a configuration file based on a source file
 
 
 Near-term plans
@@ -25,6 +26,14 @@ Near-term plans
 
 
 ===============================================================================
+
+
+Changes in uncrustify-0.45 (not yet released)
+-------------------------------------------------------------------------------
+ - Fix buffer overflow in logger code
+ - Add sp_enum_assign
+ - For elipses handling in the GCC extension "case 1 ... 5:"
+ -
 
 
 Changes in uncrustify-0.44 (12-Feb-2008)
