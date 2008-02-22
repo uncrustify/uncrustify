@@ -158,6 +158,8 @@ enum uncrustify_options
    UO_sp_before_byref,          // space before '&' of 'fcn(int& idx)'
    UO_sp_after_byref,           // space after a '&'  as in 'int& var'
 
+   UO_sp_after_type,            // space between type and word
+
    UO_sp_inside_fparen,         // space inside 'foo( xxx )' vs 'foo(xxx)'
    UO_sp_inside_fparens,        // space inside 'foo( )' vs 'foo()'
    UO_sp_inside_paren,          // space inside '+ ( xxx )' vs '+ (xxx)'
@@ -190,6 +192,9 @@ enum uncrustify_options
    UO_sp_compare,               // space around < > ==, etc
    UO_sp_assign,                // space around =, +=, etc
    UO_sp_enum_assign,           // space around = in enum
+
+   UO_sp_after_class_colon,     // space after class ':'
+   UO_sp_before_class_colon,    // space before class ':'
 
    UO_sp_func_def_paren,        // space between 'func' and '(' - "foo (" vs "foo("
    UO_sp_func_call_paren,       // space between 'func' and '(' - "foo (" vs "foo("

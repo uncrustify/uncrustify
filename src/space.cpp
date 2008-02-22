@@ -529,6 +529,17 @@ argval_t do_space(chunk_t *first, chunk_t *second)
       return(cpd.settings[UO_sp_before_comma].a);
    }
 
+   if ((cpd.settings[UO_sp_after_class_colon].a != AV_IGNORE) &&
+       (first->type == CT_CLASS_COLON))
+   {
+      return(cpd.settings[UO_sp_after_class_colon].a);
+   }
+   if ((cpd.settings[UO_sp_before_class_colon].a != AV_IGNORE) &&
+       (second->type == CT_CLASS_COLON))
+   {
+      return(cpd.settings[UO_sp_before_class_colon].a);
+   }
+
    if (first->type == CT_DOT)
    {
       return(AV_REMOVE);
@@ -665,7 +676,8 @@ argval_t do_space(chunk_t *first, chunk_t *second)
    if ((second->type != CT_PTR_TYPE) &&
        ((first->type == CT_QUALIFIER) || (first->type == CT_TYPE)))
    {
-      return(AV_FORCE);
+      arg = cpd.settings[UO_sp_after_type].a;
+      return((arg != AV_REMOVE) ? arg : AV_FORCE);
    }
 
    if (first->type == CT_COMMENT)

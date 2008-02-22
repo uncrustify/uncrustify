@@ -159,6 +159,8 @@ void register_options(void)
                   "Add or remove space before reference sign '&'");
    unc_add_option("sp_after_byref", UO_sp_after_byref, AT_IARF,
                   "Add or remove space after reference sign '&', if followed by a word.");
+   unc_add_option("sp_after_type", UO_sp_after_type, AT_IARF,
+                  "Add or remove space between type and word");
    unc_add_option("sp_before_angle", UO_sp_before_angle, AT_IARF,
                   "Add or remove space before '<>'");
    unc_add_option("sp_after_angle", UO_sp_after_angle, AT_IARF,
@@ -195,6 +197,10 @@ void register_options(void)
                   "Add or remove space after ','");
    unc_add_option("sp_before_comma", UO_sp_before_comma, AT_IARF,
                   "Add or remove space before ','");
+   unc_add_option("sp_after_class_colon", UO_sp_after_class_colon, AT_IARF,
+                  "Add or remove space after class ':'");
+   unc_add_option("sp_before_class_colon", UO_sp_before_class_colon, AT_IARF,
+                  "Add or remove space before class ':'");
    unc_add_option("sp_after_operator", UO_sp_after_operator, AT_IARF,
                   "Add or remove space between 'operator' and operator sign");
    unc_add_option("sp_after_cast", UO_sp_after_cast, AT_IARF,
@@ -1268,13 +1274,14 @@ void set_option_defaults(void)
    cpd.settings[UO_indent_access_spec].n = 1;
    cpd.settings[UO_sp_before_comma].a    = AV_REMOVE;
    cpd.settings[UO_string_escape_char].n = '\\';
-   cpd.settings[UO_sp_not].a    = AV_REMOVE;
-   cpd.settings[UO_sp_inv].a    = AV_REMOVE;
-   cpd.settings[UO_sp_addr].a   = AV_REMOVE;
-   cpd.settings[UO_sp_deref].a  = AV_REMOVE;
-   cpd.settings[UO_sp_member].a = AV_REMOVE;
-   cpd.settings[UO_sp_sign].a   = AV_REMOVE;
-   cpd.settings[UO_sp_incdec].a = AV_REMOVE;
+   cpd.settings[UO_sp_not].a             = AV_REMOVE;
+   cpd.settings[UO_sp_inv].a             = AV_REMOVE;
+   cpd.settings[UO_sp_addr].a            = AV_REMOVE;
+   cpd.settings[UO_sp_deref].a           = AV_REMOVE;
+   cpd.settings[UO_sp_member].a          = AV_REMOVE;
+   cpd.settings[UO_sp_sign].a            = AV_REMOVE;
+   cpd.settings[UO_sp_incdec].a          = AV_REMOVE;
+   cpd.settings[UO_sp_after_type].a      = AV_FORCE;
 }
 
 std::string argtype_to_string(argtype_e argtype)
