@@ -81,6 +81,7 @@ static chunk_t *flag_parens(chunk_t *po, UINT32 flags,
    {
       LOG_FMT(LERR, "%s: no match for [%.*s] at  [%d:%d]\n",
               __func__, po->len, po->str, po->orig_line, po->orig_col);
+      return(NULL);
    }
 
    if ((paren_close != NULL) && (po != paren_close))
@@ -2028,6 +2029,13 @@ static void mark_function(chunk_t *pc)
    /* Find the open and close paren */
    paren_open  = chunk_get_next_str(pc, "(", 1, pc->level);
    paren_close = chunk_get_next_str(paren_open, ")", 1, pc->level);
+
+   if ((paren_open == NULL) || (paren_close == NULL))
+   {
+      LOG_FMT(LFCN, "No parens found for [%.*s] on line %d col %d\n",
+              pc->len, pc->str, pc->orig_line, pc->orig_col);
+      return;
+   }
 
    /**
     * This part detects either chained function calls or a function ptr definition.
