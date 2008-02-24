@@ -34,6 +34,9 @@ Changes in uncrustify-0.45 (not yet released)
  - Add sp_enum_assign
  - For elipses handling in the GCC extension "case 1 ... 5:"
  - Add sp_after_class_colon, sp_before_class_colon, and sp_after_type
+ - Send usage text to stdout instead of stderr
+ - Fix mod_add_long_function_closebrace_comment if the file doesn't end in a newline
+ - Redo alignments after splitting long lines
 
 
 Changes in uncrustify-0.44 (12-Feb-2008)
