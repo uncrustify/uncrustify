@@ -341,6 +341,9 @@ void register_options(void)
                   "Usually set to 0, 1, or indent_columns.");
    unc_add_option("indent_sing_line_comments", UO_indent_sing_line_comments, AT_NUM,
                   "Spaces to indent single line ('//') comments on lines before code");
+   unc_add_option("indent_relative_single_line_comments", UO_indent_relative_single_line_comments, AT_BOOL,
+                  "If set, will indent trailing single line ('//') comments relative\n"
+                  "to the code instead of trying to keep the same absolute column");
    unc_add_option("indent_switch_case", UO_indent_switch_case, AT_NUM,
                   "Spaces to indent 'case' from 'switch'\n"
                   "Usually 0 or indent_columns.");

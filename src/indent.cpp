@@ -163,7 +163,11 @@ void reindent_line2(chunk_t *pc, int column, const char *fcn_name, int lineno)
       pc = chunk_get_next(pc);
       if (pc != NULL)
       {
-         if (chunk_is_comment(pc) && (pc->parent_type != CT_COMMENT_EMBED))
+         bool is_comment = chunk_is_comment(pc);
+         bool keep = is_comment && chunk_is_single_line_comment(pc) &&
+                     cpd.settings[UO_indent_relative_single_line_comments].b;
+
+         if (is_comment && (pc->parent_type != CT_COMMENT_EMBED) && !keep)
          {
             pc->column = pc->orig_col;
             if (pc->column < min_col)
