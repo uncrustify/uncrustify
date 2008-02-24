@@ -38,6 +38,7 @@ Changes in uncrustify-0.45 (not yet released)
  - Fix mod_add_long_function_closebrace_comment if the file doesn't end in a newline
  - Redo alignments after splitting long lines
  - Add indent_relative_single_line_comments
+ - Add indent_access_spec_body
 
 
 Changes in uncrustify-0.44 (12-Feb-2008)

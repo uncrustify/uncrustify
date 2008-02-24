@@ -362,6 +362,9 @@ void register_options(void)
                   " <=0 : subtract from brace indent", "", -16, 16);
    unc_add_option("indent_access_spec", UO_indent_access_spec, AT_NUM,
                   "Same as indent_label, but for access specifiers that are followed by a colon", "", -16, 16);
+   unc_add_option("indent_access_spec_body", UO_indent_access_spec_body, AT_BOOL,
+                  "Indent the code after an access specifier by one level.\n"
+                  "If set, this option forces 'indent_access_spec=0'");
    unc_add_option("indent_paren_nl", UO_indent_paren_nl, AT_BOOL,
                   "If an open paren is followed by a newline, indent the next line so that it lines up after the open paren (not recommended)");
    unc_add_option("indent_paren_close", UO_indent_paren_close, AT_NUM,

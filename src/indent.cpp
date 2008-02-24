@@ -557,6 +557,15 @@ void indent_text(void)
                indent_pse_pop(frm, pc);
             }
 
+            /* a class scope is ended with another class scope or a close brace */
+            if (cpd.settings[UO_indent_access_spec_body].b &&
+                (frm.pse[frm.pse_tos].type == CT_PRIVATE) &&
+                ((pc->type == CT_BRACE_CLOSE) ||
+                 (pc->type == CT_PRIVATE)))
+            {
+               indent_pse_pop(frm, pc);
+            }
+
             /* a return is ended with a semicolon */
             if ((frm.pse[frm.pse_tos].type == CT_RETURN) &&
                 chunk_is_semicolon(pc))
@@ -805,15 +814,33 @@ void indent_text(void)
       }
       else if (pc->type == CT_PRIVATE)
       {
-         /* Labels get sent to the left or backed up */
-         if (cpd.settings[UO_indent_access_spec].n > 0)
+         if (cpd.settings[UO_indent_access_spec_body].b)
          {
-            indent_column_set(cpd.settings[UO_indent_access_spec].n);
+            tmp = frm.pse[frm.pse_tos].indent + indent_size;
+
+            indent_pse_push(frm, pc);
+
+            frm.pse[frm.pse_tos].indent     = tmp;
+            frm.pse[frm.pse_tos].indent_tmp = tmp - indent_size;
+            frm.pse[frm.pse_tos].indent_tab = tmp;
+
+            /* If we are indenting the body, then we must leave the access spec
+             * indented at brace level
+             */
+            indent_column_set(frm.pse[frm.pse_tos].indent_tmp);
          }
          else
          {
-            indent_column_set(frm.pse[frm.pse_tos].indent +
-                              cpd.settings[UO_indent_access_spec].n);
+            /* Access spec labels get sent to the left or backed up */
+            if (cpd.settings[UO_indent_access_spec].n > 0)
+            {
+               indent_column_set(cpd.settings[UO_indent_access_spec].n);
+            }
+            else
+            {
+               indent_column_set(frm.pse[frm.pse_tos].indent +
+                                 cpd.settings[UO_indent_access_spec].n);
+            }
          }
       }
       else if (pc->type == CT_CLASS_COLON)
