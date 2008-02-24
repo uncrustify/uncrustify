@@ -429,7 +429,7 @@ void add_long_closebrace_comment(void)
 
             /* Found the matching close brace - make sure a newline is next */
             tmp = chunk_get_next(tmp);
-            if (chunk_is_newline(tmp))
+            if ((tmp == NULL) || chunk_is_newline(tmp))
             {
                int     nl_min  = 0;
                chunk_t *tag_pc = NULL;
