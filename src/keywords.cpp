@@ -229,7 +229,7 @@ static const chunk_tag_t keywords[] =
    { "unsafe",           CT_UNSAFE,       LANG_CS                                                         },
    { "unsigned",         CT_TYPE,         LANG_C | LANG_CPP                                               },
    { "ushort",           CT_TYPE,         LANG_CS | LANG_D                                                },
-   { "using",            CT_USING,        LANG_CS | LANG_VALA                                             },
+   { "using",            CT_USING,        LANG_CPP | LANG_CS | LANG_VALA                                  },
    { "var",              CT_TYPE,         LANG_VALA                                                       },
    { "version",          CT_VERSION,      LANG_D                                                          },
    { "virtual",          CT_QUALIFIER,    LANG_CPP | LANG_CS | LANG_VALA                                  },
