@@ -16,11 +16,14 @@ UNC_REL=0.44
 3. Update the config files
 $ scripts/update-defaults.sh
 
+3a. Update the man file, if any command-line options have changed.
+
 4. Update the version number.
 Replace the old version with the new version everywhere except in ChangeLog.
 Specific files to update:
     configure.in
     documentation/htdocs/index.html
+    documentation/uncrustify.1 (man file)
     src/uncrustify_version.h
 Re-run autoconf and ./configure.
 
