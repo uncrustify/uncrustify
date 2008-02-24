@@ -77,6 +77,7 @@ enum
    LPFCHK    = 61,    /* Parse Frame check fcn call */
    LAVDB     = 62,    /* align var def braces */
    LSORT     = 63,    /* Sorting */
+   LSPACE    = 64,    /* Space */
 };
 
 #endif   /* LOG_LEVELS_H_INCLUDED */

@@ -842,6 +842,12 @@ void space_text(void)
          }
 
          int av = do_space(pc, next);
+
+         LOG_FMT(LSPACE, "%s: [%s] %.*s <==> [%s] %.*s = %d\n",
+                 __func__,
+                 get_token_name(pc->type), pc->len, pc->str,
+                 get_token_name(next->type), next->len, next->str, av);
+
          if (pc->flags & PCF_FORCE_SPACE)
          {
             av |= AV_ADD;
