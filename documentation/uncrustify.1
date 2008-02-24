@@ -1,0 +1,89 @@
+.TH UNCRUSTIFY "1" "February 2008" "uncrustify 0.44" "User Commands"
+.SH NAME
+uncrustify \- C, C++, C#, D, Java and Pawn source code beautifier
+
+.SH SYNOPSIS
+.B uncrustify
+[\fIOPTIONS\fR] [\fIFILES\fR]
+
+.SH DESCRIPTION
+
+Process all \fIFILES\fR (can be combined with \fB\-F\fR).
+.br
+If no input files are specified, the input is read from stdin.
+.br
+If \fB\-F\fR is used or files are specified on the command line, the output is 'prefix/filename' + suffix.
+Otherwise, the output is dumped to stdout, unless redirected with \fB\-o\fR FILE.
+.br
+Errors are always dumped to stderr.
+
+.SH OPTIONS
+.SS "Basic Options:"
+.TP
+\fB\-c\fI CFG
+Use the config file \fICFG
+.TP
+\fB\-f\fI FILE
+Process the single file \fIFILE\fR (output to stdout, use with \fB\-o\fR)
+.TP
+\fB\-o\fI FILE
+Redirect stdout to \fIFILE
+.TP
+\fB\-F\fI FILE
+Read files to process from \fIFILE\fR, one filename per line
+.TP
+\fB\-\-suffix\fI SFX
+Append \fISFX\fR to the output filename. The default is '.uncrustify'
+.TP
+\fB\-\-prefix\fI PFX
+Prepend \fIPFX\fR to the output filename path.
+.TP
+\fB\-\-replace\fR
+Replace source files (creates a backup)
+.TP
+\fB\-\-no\-backup\fR
+Replace files, no backup. Useful if files are under source control
+.TP
+\fB\-\-mtime\fR
+Preserve mtime on replaced files.
+.TP
+\fB\-l\fR
+Language override: C, CPP, D, CS, JAVA, PAWN
+.TP
+\fB\-t\fR
+Load a file with types (usually not needed)
+.TP
+\fB\-q\fR
+Quiet mode \- no output on stderr (\fB\-L\fR will override)
+.SS "Config/Help Options:"
+.TP
+\fB\-h\fR \-? \fB\-\-help\fR \fB\-\-usage\fR
+Print this message and exit
+.TP
+\fB\-\-version\fR
+Print the version and exit
+.TP
+\fB\-\-show\-config\fR
+Print out option documentation and exit
+.TP
+\fB\-\-update\-config\fR
+Output a new config file. Use with \fB\-o\fI FILE
+.TP
+\fB\-\-update\-config\-with\-doc\fR
+Output a new config file. Use with \fB\-o\fI FILE
+.TP
+\fB\-\-universalindent\fR
+Output a config file for Universal Indent GUI
+.SS "Debug Options:"
+.TP
+\fB\-p\fI FILE
+Dump debug info to a file
+.TP
+\fB\-L\fI SEV
+Set the log severity (see log_levels.h)
+.TP
+\fB\-s\fR
+Show the log severity in the logs
+.TP
+\fB\-\-decode\fI FLAG
+Print \fIFLAG\fR as text and exit
