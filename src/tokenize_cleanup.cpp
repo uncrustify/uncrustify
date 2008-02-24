@@ -191,32 +191,44 @@ void tokenize_cleanup(void)
          }
          else
          {
-            /* Mark chunks between 'operator' and '('.
-             * If 'next' is a WORD, then the last 'type' present
-             * is the function name. Otherwise, the item after the
-             * 'operator' is the function name.
-             */
-            tmp2 = next;
-            if ((next->flags & PCF_PUNCTUATOR) == 0)
+            /* Scan until we hit a '(' or ';' */
+            tmp = next;
+            while ((tmp != NULL) &&
+                   (tmp->type != CT_PAREN_OPEN) &&
+                   (tmp->type != CT_SEMICOLON))
             {
-               tmp = chunk_get_next_ncnl(next);
-               while ((tmp != NULL) && (tmp->type != CT_PAREN_OPEN))
-               {
-                  tmp->parent_type = CT_OPERATOR;
-                  make_type(tmp);
-                  if (tmp->type == CT_TYPE)
-                  {
-                     tmp2 = tmp;
-                  }
-                  tmp = chunk_get_next_ncnl(tmp);
-               }
-               if (tmp2->type != CT_TYPE)
-               {
-                  tmp2 = next;
-               }
+               tmp = chunk_get_next_ncnl(tmp);
             }
-            tmp2->type        = CT_FUNCTION;
-            tmp2->parent_type = CT_OPERATOR;
+
+            if ((tmp != NULL) && (tmp->type == CT_PAREN_OPEN))
+            {
+               /* Mark chunks between 'operator' and '('.
+                * If 'next' is a WORD, then the last 'type' present
+                * is the function name. Otherwise, the item after the
+                * 'operator' is the function name.
+                */
+               tmp2 = next;
+               if ((next->flags & PCF_PUNCTUATOR) == 0)
+               {
+                  tmp = chunk_get_next_ncnl(next);
+                  while ((tmp != NULL) && (tmp->type != CT_PAREN_OPEN))
+                  {
+                     tmp->parent_type = CT_OPERATOR;
+                     make_type(tmp);
+                     if (tmp->type == CT_TYPE)
+                     {
+                        tmp2 = tmp;
+                     }
+                     tmp = chunk_get_next_ncnl(tmp);
+                  }
+                  if (tmp2->type != CT_TYPE)
+                  {
+                     tmp2 = next;
+                  }
+               }
+               tmp2->type        = CT_FUNCTION;
+               tmp2->parent_type = CT_OPERATOR;
+            }
          }
          if (chunk_is_addr(prev))
          {
