@@ -99,19 +99,16 @@ int path_dirname_len(const char *filename)
 
 static void usage_exit(const char *msg, const char *argv0, int code)
 {
-   FILE *pf = stdout;
-
    if (msg != NULL)
    {
       fprintf(stderr, "%s\n", msg);
-      pf = stderr;
    }
    if (code != EXIT_SUCCESS)
    {
-      fprintf(pf, "Try running with -h for usage information\n");
+      fprintf(stderr, "Try running with -h for usage information\n");
       exit(code);
    }
-   fprintf(pf,
+   fprintf(stdout,
            "Usage:\n"
            "%s [options] [files ...]\n"
            "\n"
