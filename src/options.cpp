@@ -662,6 +662,11 @@ void register_options(void)
                   "If aligning comments, mix with comments after '}' and #endif with less than 3 spaces before the comment");
    unc_add_option("align_func_proto_span", UO_align_func_proto_span, AT_NUM,
                   "The span for aligning function prototypes (0=don't align)", "", 0, 5000);
+   unc_add_option("align_single_line_func", UO_align_single_line_func, AT_BOOL,
+                  "Align single-line functions with function prototypes, uses align_func_proto_span");
+   unc_add_option("align_single_line_brace", UO_align_single_line_brace, AT_BOOL,
+                  "Aligning the open brace of single-line functions.\n"
+                  "Requires align_single_line_func=true, uses align_func_proto_span");
    unc_add_option("align_oc_msg_spec_span", UO_align_oc_msg_spec_span, AT_NUM,
                   "The span for aligning function prototypes (0=don't align)", "", 0, 5000);
    unc_add_option("align_nl_cont", UO_align_nl_cont, AT_BOOL,

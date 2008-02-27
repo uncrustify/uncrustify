@@ -23,6 +23,8 @@ static chunk_t *align_var_def_brace(chunk_t *pc, int span);
 chunk_t *align_trailing_comments(chunk_t *start);
 static void align_init_brace(chunk_t *start);
 static void align_func_params();
+static void align_func_proto(int span);
+static void align_oc_msg_spec(int span);
 
 
 static void align_typedefs(int span);
@@ -231,15 +233,13 @@ void align_all(void)
    /* Align function prototypes */
    if (cpd.settings[UO_align_func_proto_span].n > 0)
    {
-      align_func_proto(CT_FUNC_PROTO,
-                       cpd.settings[UO_align_func_proto_span].n);
+      align_func_proto(cpd.settings[UO_align_func_proto_span].n);
    }
 
    /* Align function prototypes */
    if (cpd.settings[UO_align_oc_msg_spec_span].n > 0)
    {
-      align_func_proto(CT_OC_MSG_SPEC,
-                       cpd.settings[UO_align_oc_msg_spec_span].n);
+      align_oc_msg_spec(cpd.settings[UO_align_oc_msg_spec_span].n);
    }
 
    /* Align variable defs in function prototypes */
@@ -252,7 +252,46 @@ void align_all(void)
 /**
  * Aligns all function prototypes in the file.
  */
-void align_func_proto(c_token_t ctok, int span)
+static void align_func_proto(int span)
+{
+   chunk_t    *pc;
+   bool       look_bro = false;
+   AlignStack as;
+
+   as.Start(span, 0);
+
+   pc = chunk_get_head();
+   while (pc != NULL)
+   {
+      if (chunk_is_newline(pc))
+      {
+         look_bro = false;
+         as.NewLines(pc->nl_count);
+      }
+      else if ((pc->type == CT_FUNC_PROTO) ||
+               ((pc->type == CT_FUNC_DEF) &&
+                cpd.settings[UO_align_single_line_func].b))
+      {
+         as.Add(pc);
+         look_bro = (pc->type == CT_FUNC_DEF) &&
+                    cpd.settings[UO_align_single_line_brace].b;
+      }
+      else if (look_bro &&
+               (pc->type == CT_BRACE_OPEN) &&
+               (pc->flags & PCF_ONE_LINER))
+      {
+         as.AddTrailer(pc);
+         look_bro = false;
+      }
+      pc = chunk_get_next(pc);
+   }
+   as.End();
+}
+
+/**
+ * Aligns all function prototypes in the file.
+ */
+static void align_oc_msg_spec(int span)
 {
    chunk_t    *pc;
    int        max_col  = 0;
@@ -274,7 +313,7 @@ void align_func_proto(c_token_t ctok, int span)
             }
          }
       }
-      else if (pc->type == ctok)
+      else if (pc->type == CT_OC_MSG_SPEC)
       {
          align_add(cs, pc, max_col, 1, true);
          span_cnt = 0;

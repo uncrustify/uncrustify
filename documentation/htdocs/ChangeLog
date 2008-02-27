@@ -41,6 +41,7 @@ Changes in uncrustify-0.45 (not yet released)
  - Add indent_access_spec_body
  - Fix indent_func_proto_param to work on constructors
  - Add cmt_indent_multi
+ - Add align_single_line_brace and align_single_line_func
 
 
 Changes in uncrustify-0.44 (12-Feb-2008)
