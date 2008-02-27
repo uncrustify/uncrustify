@@ -149,6 +149,8 @@
 
 01020  kw_subst.cfg            c/kw_subst.c
 
+01030  multi.cfg               c/multi.h
+
 # big general tests
 20000 ben.cfg                  c/i2c-core.c
 20001 preproc-cleanup.cfg      c/directfb.h
