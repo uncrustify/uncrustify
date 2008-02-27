@@ -886,7 +886,8 @@ void indent_text(void)
                (pc->parent_type == CT_FUNC_CALL))
               ||
               (cpd.settings[UO_indent_func_proto_param].b &&
-               (pc->parent_type == CT_FUNC_PROTO))
+               ((pc->parent_type == CT_FUNC_PROTO) ||
+                (pc->parent_type == CT_FUNC_CLASS)))
               ||
               (cpd.settings[UO_indent_func_class_param].b &&
                (pc->parent_type == CT_FUNC_CLASS))

@@ -39,6 +39,7 @@ Changes in uncrustify-0.45 (not yet released)
  - Redo alignments after splitting long lines
  - Add indent_relative_single_line_comments
  - Add indent_access_spec_body
+ - Fix indent_func_proto_param to work on constructors
 
 
 Changes in uncrustify-0.44 (12-Feb-2008)
