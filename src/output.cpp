@@ -346,6 +346,11 @@ static int calculate_comment_body_indent(const char *str, int len, int start_col
    int last_len  = 0;
    int width     = 0;
 
+   if (!cpd.settings[UO_cmt_indent_multi].b)
+   {
+      return(0);
+   }
+
    /* find the last line length */
    for (idx = len - 1; idx > 0; idx--)
    {
@@ -883,7 +888,8 @@ void output_comment_multi(chunk_t *pc)
    cmt_reflow cmt;
 
    output_cmt_start(cmt, pc);
-   cmt.cont_text = cpd.settings[UO_cmt_star_cont].b ? " * " : "   ";
+   cmt.cont_text = !cpd.settings[UO_cmt_indent_multi].b ? "" :
+                   cpd.settings[UO_cmt_star_cont].b ? " * " : "   ";
 
    prev = chunk_get_prev(pc);
    if ((prev != NULL) && (prev->type != CT_NEWLINE))
@@ -895,10 +901,10 @@ void output_comment_multi(chunk_t *pc)
       col_diff = pc->orig_col - pc->column;
    }
 
-   //   fprintf(stderr, "Indenting1 line %d to col %d (orig=%d) col_diff=%d\n",
-   //           pc->orig_line, cmt_col, pc->orig_col, col_diff);
-
    xtra = calculate_comment_body_indent(pc->str, pc->len, pc->column);
+
+   // fprintf(stderr, "Indenting1 line %d to col %d (orig=%d) col_diff=%d xtra=%d\n",
+   //         pc->orig_line, cmt_col, pc->orig_col, col_diff, xtra);
 
    ccol      = 1;
    remaining = pc->len;
@@ -1014,7 +1020,8 @@ void output_comment_multi(chunk_t *pc)
                add_spaces_before_star();
 
                /* If this doesn't start with a '*' or '|' */
-               if ((line[0] != '*') && (line[0] != '|') && (line[0] != '#') &&
+               if (cpd.settings[UO_cmt_indent_multi].b &&
+                   (line[0] != '*') && (line[0] != '|') && (line[0] != '#') &&
                    (line[0] != '\\') && (line[0] != '+'))
                {
                   output_to_column(cmt_col, cpd.settings[UO_indent_with_tabs].n != 0);

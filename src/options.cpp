@@ -674,7 +674,9 @@ void register_options(void)
 
    unc_begin_group(UG_comment, "Comment modifications");
    unc_add_option("cmt_width", UO_cmt_width, AT_NUM,
-                  "Try to wrap comments at cmt_witdth columns", "", 16, 256);
+                  "Try to wrap comments at cmt_width columns", "", 16, 256);
+   unc_add_option("cmt_indent_multi", UO_cmt_indent_multi, AT_BOOL,
+                  "Whether to mess with the indent of multi-line comments");
    unc_add_option("cmt_c_group", UO_cmt_c_group, AT_BOOL,
                   "Whether to group c-comments that look like they are in a block");
    unc_add_option("cmt_c_nl_start", UO_cmt_c_nl_start, AT_BOOL,
@@ -1288,6 +1290,7 @@ void set_option_defaults(void)
    cpd.settings[UO_sp_sign].a            = AV_REMOVE;
    cpd.settings[UO_sp_incdec].a          = AV_REMOVE;
    cpd.settings[UO_sp_after_type].a      = AV_FORCE;
+   cpd.settings[UO_cmt_indent_multi].b   = true;
 }
 
 std::string argtype_to_string(argtype_e argtype)
