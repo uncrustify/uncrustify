@@ -89,6 +89,7 @@
 			<F N="documentation/goals.txt"/>
 			<F N="documentation/paren_stack.txt"/>
 			<F N="documentation/theory.txt"/>
+			<F N="documentation/uncrustify.1"/>
 		</Folder>
 		<Folder Name="etc">
 			<F N="etc/amxmodx.cfg"/>
