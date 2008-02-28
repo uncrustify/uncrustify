@@ -2,8 +2,8 @@
 void f()
 {
    if (0)
-   {
 #pragma omp atomic
+   {
       i++;
    }
 }
@@ -21,5 +21,21 @@ void f()
       i += 2;
    }
 #endif
+}
+
+void f()
+{
+   while (108)
+   {
+      if (42)
+#pragma omp critical
+      { }
+      if (23)
+#pragma omp critical
+      { }
+      while (16)
+      {
+      }
+   }
 }
 
