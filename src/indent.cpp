@@ -502,7 +502,7 @@ void indent_text(void)
             indent_pse_pop(frm, pc);
          }
 
-         if (frm.pse[frm.pse_tos].level == pc->level)
+         if (frm.pse[frm.pse_tos].level >= pc->level)
          {
             /* process virtual braces closes (no text output) */
             if ((pc->type == CT_VBRACE_CLOSE) &&
@@ -519,6 +519,8 @@ void indent_text(void)
                 (chunk_is_semicolon(pc) ||
                  (pc->type == CT_COMMA) ||
                  (pc->type == CT_BRACE_OPEN) ||
+                 (pc->type == CT_SPAREN_CLOSE) ||
+                 (pc->type == CT_FPAREN_CLOSE) ||
                  ((pc->type == CT_SQUARE_OPEN) && (pc->parent_type == CT_ASSIGN))))
             {
                indent_pse_pop(frm, pc);

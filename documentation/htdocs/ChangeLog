@@ -43,6 +43,7 @@ Changes in uncrustify-0.45 (not yet released)
  - Add cmt_indent_multi
  - Add align_single_line_brace and align_single_line_func
  - Fix interaction of virtual braces and #pragma
+ - Fix indenting problem with an assignment the last part of a for()
 
 
 Changes in uncrustify-0.44 (12-Feb-2008)
