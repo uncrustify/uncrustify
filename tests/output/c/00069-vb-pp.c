@@ -2,8 +2,8 @@
 void f()
 {
    if (0)
-#pragma omp atomic
    {
+#pragma omp atomic
       i++;
    }
 }
@@ -35,6 +35,12 @@ void f()
       { }
       while (16)
       {
+      }
+      int i = 15;
+      if (8)
+      {
+#pragma omp atomic
+         i += 4;
       }
    }
 }

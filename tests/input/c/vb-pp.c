@@ -26,6 +26,10 @@ if(23)
 { }
 while (16)
 { }
+int i = 15;
+if(8)
+#pragma omp atomic
+i += 4;
 }
 }
 
