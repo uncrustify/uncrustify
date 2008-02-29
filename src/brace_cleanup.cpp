@@ -903,7 +903,17 @@ static chunk_t *insert_vbrace(chunk_t *pc, bool after,
       if (((pc->flags & PCF_IN_PREPROC) == 0) &&
           ((ref->flags & PCF_IN_PREPROC) != 0))
       {
-         ref = chunk_get_next(ref);
+         if (ref->type == CT_PREPROC_BODY)
+         {
+            do
+            {
+               ref = chunk_get_prev(ref);
+            } while ((ref != NULL) && ((ref->flags & PCF_IN_PREPROC) != 0));
+         }
+         else
+         {
+            ref = chunk_get_next(ref);
+         }
       }
 
       chunk.orig_line = ref->orig_line;
