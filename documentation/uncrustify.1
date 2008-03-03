@@ -3,52 +3,75 @@
 uncrustify \- C, C++, C#, D, Java and Pawn source code beautifier
 
 .SH SYNOPSIS
-.B uncrustify
-[\fIOPTIONS\fR] [\fIFILES\fR]
+.B uncrustify \fR[\fIOPTIONS\fR] [\fIFILES\fR]
 
 .SH DESCRIPTION
 
-Process all \fIFILES\fR (can be combined with \fB\-F\fR).
-.br
 If no input files are specified, the input is read from stdin.
 .br
-If \fB\-F\fR is used or files are specified on the command line, the output is 'prefix/filename' + suffix.
-Otherwise, the output is dumped to stdout, unless redirected with \fB\-o\fR FILE.
+If reading from stdin, you should specify the language using -l.
+
+If -F is used or files are specified on the command line, the output filename is
+\fIPFX\fR + "/" + filename + \fISFX\fR.
 .br
-Errors are always dumped to stderr.
+Unless, of course, the options \fB--replace\fR or \fB--no-backup\fR are used.
+
+When reading from stdin or doing a single file via the '-f' option,
+the output is dumped to stdout, unless redirected with -o FILE.
+
+Errors are always dumped to stderr
 
 .SH OPTIONS
 .SS "Basic Options:"
 .TP
 \fB\-c\fI CFG
-Use the config file \fICFG
+Use the config file \fICFG\fR.
+.br
+If not specified, uncrustify will use \fB$UNCRUSTIFY_CONFIG\fR or \fB$HOME\\.uncrustify.cfg\fR.
 .TP
 \fB\-f\fI FILE
-Process the single file \fIFILE\fR (output to stdout, use with \fB\-o\fR)
+Process the single file \fIFILE\fR, sending output to stdout or the file specified with \fB\-o\fR.
 .TP
 \fB\-o\fI FILE
-Redirect stdout to \fIFILE
+Redirect output to \fIFILE\fR.
+.br
+Use with \fB\-f\fR, \fB\-\-update\-config\fR, \fB\-\-update\-config\-with\-doc\fR,
+\fB\-\-universalindent\fR.
 .TP
 \fB\-F\fI FILE
-Read files to process from \fIFILE\fR, one filename per line
-.TP
-\fB\-\-suffix\fI SFX
-Append \fISFX\fR to the output filename. The default is '.uncrustify'
+Read files to process from \fIFILE\fR, one filename per line.
+.br
+You can create this file using something like \'\fBfind . -name "*.c" > list.txt\fR\'.
+.br
+This cannot be combined with \fB\-f\fR.
 .TP
 \fB\-\-prefix\fI PFX
 Prepend \fIPFX\fR to the output filename path.
+.br
+This cannot be combined with \fB\-f\fR, \fB\-\-replace\fR, or \fB\-\-no\-backup\fR.
+.TP
+\fB\-\-suffix\fI SFX
+Append \fISFX\fR to the output filename.
+.br
+The default is '.uncrustify' if neither \fISFX\fR or \fIPFX\fR are specified.
+.br
+This cannot be combined with \fB\-f\fR, \fB\-\-replace\fR, or \fB\-\-no\-backup\fR.
 .TP
 \fB\-\-replace\fR
-Replace source files (creates a backup)
+Replace source files (creates a backup).
+.br
+This cannot be combined with \fB\-f\fR, \fB\-\-prefix\fR, or \fB\-\-suffix\fR.
 .TP
 \fB\-\-no\-backup\fR
 Replace files, no backup. Useful if files are under source control
+.br
+This cannot be combined with \fB\-f\fR, \fB\-\-prefix\fR, or \fB\-\-suffix\fR.
 .TP
 \fB\-\-mtime\fR
 Preserve mtime on replaced files.
 .TP
 \fB\-l\fR
-Language override: C, CPP, D, CS, JAVA, PAWN
+Language override: C, CPP, D, CS, JAVA, PAWN, VALA, OC
 .TP
 \fB\-t\fR
 Load a file with types (usually not needed)
@@ -67,13 +90,13 @@ Print the version and exit
 Print out option documentation and exit
 .TP
 \fB\-\-update\-config\fR
-Output a new config file. Use with \fB\-o\fI FILE
+Output a new config file.
 .TP
 \fB\-\-update\-config\-with\-doc\fR
-Output a new config file. Use with \fB\-o\fI FILE
+Output a new config file with embedded usage comments.
 .TP
 \fB\-\-universalindent\fR
-Output a config file for Universal Indent GUI
+Output a config file for Universal Indent GUI.
 .SS "Debug Options:"
 .TP
 \fB\-p\fI FILE
@@ -87,6 +110,22 @@ Show the log severity in the logs
 .TP
 \fB\-\-decode\fI FLAG
 Print \fIFLAG\fR as text and exit
+
+.SH EXAMPLES
+.TP
+Read a D file from stdin, output to stdout.
+cat foo.d | uncrustify -q -c my.cfg -l d
+.TP
+Process a file, output to stdout.
+uncrustify -c my.cfg -d foo.d
+.TP
+Process a source tree, output to a different tree.
+find src -name "*.[ch]" > files.txt
+.br
+uncrustify -c my.cfg -F files.txt --prefix out
+.TP
+Process a source tree in-place.
+uncrustify -c my.cfg --no-backup $(find src -name "*.[ch]")
 
 .SH AUTHOR
 Written by Ben Gardner
