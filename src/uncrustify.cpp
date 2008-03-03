@@ -290,24 +290,44 @@ int main(int argc, char *argv[])
    if (((source_file = arg.Param("--file")) == NULL) &&
        ((source_file = arg.Param("-f")) == NULL))
    {
-      // not using a single file
+      // not using a single file, source_file is NULL
    }
 
    if (((source_list = arg.Param("--files")) == NULL) &&
        ((source_list = arg.Param("-F")) == NULL))
    {
-      // not using a file list
+      // not using a file list, source_list is NULL
    }
 
    const char *prefix = arg.Param("--prefix");
    const char *suffix = arg.Param("--suffix");
 
-   bool no_backup = arg.Present("--no-backup");
-   if (arg.Present("--replace") || no_backup)
+   bool no_backup        = arg.Present("--no-backup");
+   bool replace          = arg.Present("--replace");
+   bool keep_mtime       = arg.Present("--mtime");
+   bool update_config    = arg.Present("--update-config");
+   bool update_config_wd = arg.Present("--update-config-with-doc");
+
+   /* Grab the output override */
+   output_file = arg.Param("-o");
+
+   LOG_FMT(LDATA, "output_file = %s\n", (output_file != NULL) ? output_file : "null");
+   LOG_FMT(LDATA, "source_file = %s\n", (source_file != NULL) ? source_file : "null");
+   LOG_FMT(LDATA, "source_list = %s\n", (source_list != NULL) ? source_list : "null");
+   LOG_FMT(LDATA, "prefix      = %s\n", (prefix != NULL) ? prefix : "null");
+   LOG_FMT(LDATA, "suffix      = %s\n", (suffix != NULL) ? suffix : "null");
+   LOG_FMT(LDATA, "replace     = %d\n", replace);
+   LOG_FMT(LDATA, "no_backup   = %d\n", no_backup);
+
+   if (replace || no_backup)
    {
       if ((prefix != NULL) || (suffix != NULL))
       {
          usage_exit("Cannot use --replace with --prefix or --suffix", argv[0], 66);
+      }
+      if ((source_file != NULL) || (output_file != NULL))
+      {
+         usage_exit("Cannot use --replace or --no-backup with -f or -o", argv[0], 66);
       }
    }
    else
@@ -317,13 +337,6 @@ int main(int argc, char *argv[])
          suffix = ".uncrustify";
       }
    }
-   bool keep_mtime = arg.Present("--mtime");
-
-   /* Grab the output override */
-   output_file = arg.Param("-o");
-
-   bool update_config    = arg.Present("--update-config");
-   bool update_config_wd = arg.Present("--update-config-with-doc");
 
    if (arg.Present("--universalindent"))
    {
@@ -364,7 +377,6 @@ int main(int argc, char *argv[])
 
       if (output_file != NULL)
       {
-         printf("source_file = %s, p_arg = %s\n", source_file, p_arg);
          usage_exit("Cannot specify -o with a mulit-file option.",
                     argv[0], 68);
       }
