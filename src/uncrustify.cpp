@@ -44,11 +44,19 @@ static const char *language_to_string(int lang);
 static char *read_stdin(int& out_len);
 static void uncrustify_file(const char *data, int data_len, FILE *pfout,
                             const char *parsed_file);
-static void do_source_file(const char *filename, FILE *pfout, const char *parsed_file,
-                           const char *prefix, const char *suffix, bool no_backup, bool keep_mtime);
+static void do_source_file(const char *filename_in,
+                           const char *filename_out,
+                           const char *parsed_file,
+                           bool no_backup, bool keep_mtime);
 static void process_source_list(const char *source_list, const char *prefix,
                                 const char *suffix, bool no_backup, bool keep_mtime);
 static int load_header_files();
+
+static const char *make_output_filename(char *buf, int buf_size,
+                                        const char *filename,
+                                        const char *prefix,
+                                        const char *suffix);
+
 
 /**
  * Replace the brain-dead and non-portable basename().
@@ -103,7 +111,7 @@ static void usage_exit(const char *msg, const char *argv0, int code)
    {
       fprintf(stderr, "%s\n", msg);
    }
-   if (code != EXIT_SUCCESS)
+   if ((code != EXIT_SUCCESS) || (argv0 == NULL))
    {
       fprintf(stderr, "Try running with -h for usage information\n");
       exit(code);
@@ -155,6 +163,23 @@ static void version_exit(void)
 {
    printf("uncrustify %s\n", UNCRUSTIFY_VERSION);
    exit(0);
+}
+
+static void redir_stdout(const char *output_file)
+{
+   /* Reopen stdout */
+   FILE *my_stdout = stdout;
+   if (output_file != NULL)
+   {
+      my_stdout = freopen(output_file, "wb", stdout);
+      if (my_stdout == NULL)
+      {
+         LOG_FMT(LERR, "Unable to open %s for write: %s (%d)\n",
+                 output_file, strerror(errno), errno);
+         usage_exit(NULL, NULL, 56);
+      }
+      LOG_FMT(LNOTE, "Redirecting output to %s\n", output_file);
+   }
 }
 
 int main(int argc, char *argv[])
@@ -408,22 +433,9 @@ int main(int argc, char *argv[])
       usage_exit("Unable to load the config file", argv[0], 56);
    }
 
-   /* Reopen stdout */
-   FILE *my_stdout = stdout;
-   if (output_file != NULL)
-   {
-      my_stdout = freopen(output_file, "wb", stdout);
-      if (my_stdout == NULL)
-      {
-         LOG_FMT(LERR, "Unable to open %s for write: %s (%d)\n",
-                 output_file, strerror(errno), errno);
-         usage_exit(NULL, argv[0], 56);
-      }
-      LOG_FMT(LNOTE, "Redirecting output to %s\n", output_file);
-   }
-
    if (update_config || update_config_wd)
    {
+      redir_stdout(output_file);
       save_option_file(stdout, update_config_wd);
       return(0);
    }
@@ -438,6 +450,8 @@ int main(int argc, char *argv[])
       {
          cpd.lang_flags = LANG_C;
       }
+
+      redir_stdout(output_file);
 
       data = read_stdin(data_len);
       if (data == NULL)
@@ -459,8 +473,8 @@ int main(int argc, char *argv[])
    }
    else if (source_file != NULL)
    {
-      /* Doing a single file, output to stdout */
-      do_source_file(source_file, stdout, parsed_file, NULL, NULL, no_backup, false);
+      /* Doing a single file */
+      do_source_file(source_file, output_file, parsed_file, no_backup, false);
    }
    else
    {
@@ -478,7 +492,10 @@ int main(int argc, char *argv[])
       idx = 1;
       while ((p_arg = arg.Unused(idx)) != NULL)
       {
-         do_source_file(p_arg, NULL, NULL, prefix, suffix, no_backup, keep_mtime);
+         char outbuf[1024];
+         do_source_file(p_arg,
+                        make_output_filename(outbuf, sizeof(outbuf), p_arg, prefix, suffix),
+                        NULL, no_backup, keep_mtime);
       }
 
       if (source_list != NULL)
@@ -527,7 +544,10 @@ static void process_source_list(const char *source_list,
 
       if ((argc == 1) && (*args[0] != '#'))
       {
-         do_source_file(args[0], NULL, NULL, prefix, suffix, no_backup, keep_mtime);
+         char outbuf[1024];
+         do_source_file(args[0],
+                        make_output_filename(outbuf, sizeof(outbuf), args[0], prefix, suffix),
+                        NULL, no_backup, keep_mtime);
       }
    }
 }
@@ -575,10 +595,13 @@ static char *read_stdin(int& out_len)
    return(data);
 }
 
-static void make_folders(char *outname)
+static void make_folders(const char *filename)
 {
    int idx;
    int last_idx = 0;
+   char outname[1024];
+
+   snprintf(outname, sizeof(outname), "%s", filename);
 
    for (idx = 0; outname[idx] != 0; idx++)
    {
@@ -715,78 +738,96 @@ static int load_header_files()
    return(retval);
 }
 
+static const char *make_output_filename(char *buf, int buf_size,
+                                        const char *filename,
+                                        const char *prefix,
+                                        const char *suffix)
+{
+   int len = 0;
+
+   if (prefix != NULL)
+   {
+      len = snprintf(buf, buf_size, "%s/", prefix);
+   }
+
+   snprintf(&buf[len], buf_size - len, "%s%s", filename,
+            (suffix != NULL) ? suffix : "");
+
+   return(buf);
+}
+
+
 /**
  * Does a source file.
- * If pfout is NULL, the source fileaname + ".uncrustify" is used.
  *
- * @param filename the file to read
- * @param pfout    NULL or the output stream
+ * @param filename_in  the file to read
+ * @param filename_out NULL (stdout) or the file to write
+ * @param parsed_file  NULL or the filename for the parsed debug info
+ * @param no_backup    don't create a backup, if filename_out == filename_in
+ * @param keep_mtime   don't change the mtime (dangerous)
  */
-static void do_source_file(const char *filename, FILE *pfout, const char *parsed_file,
-                           const char *prefix, const char *suffix, bool no_backup, bool keep_mtime)
+static void do_source_file(const char *filename_in,
+                           const char *filename_out,
+                           const char *parsed_file,
+                           bool no_backup,
+                           bool keep_mtime)
 {
+   FILE     *pfout;
    bool     did_open    = false;
    bool     need_backup = false;
    file_mem fm;
 
-   /* Do some simple language detection based on the filename */
+   /* Do some simple language detection based on the filename extension */
    if (cpd.lang_flags == 0)
    {
-      cpd.lang_flags = language_from_filename(filename);
+      cpd.lang_flags = language_from_filename(filename_in);
    }
 
    /* Try to read in the source file */
-   if (load_mem_file(filename, fm) < 0)
+   if (load_mem_file(filename_in, fm) < 0)
    {
-      LOG_FMT(LERR, "Failed to load (%s)\n", filename);
+      LOG_FMT(LERR, "Failed to load (%s)\n", filename_in);
       cpd.error_count++;
       return;
    }
 
    LOG_FMT(LSYS, "Parsing: %s as language %s\n",
-           filename, language_to_string(cpd.lang_flags));
+           filename_in, language_to_string(cpd.lang_flags));
 
-   if (pfout == NULL)
+   if (filename_out == NULL)
    {
-      char outname[1024];
-      int  len = 0;
-
-      if (!no_backup && (prefix == NULL) && (suffix == NULL))
+      pfout = stdout;
+   }
+   else
+   {
+      if (!no_backup && (strcmp(filename_in, filename_out) == 0))
       {
-         if (backup_copy_file(filename, fm.data, fm.length) != SUCCESS)
+         if (backup_copy_file(filename_in, fm.data, fm.length) != SUCCESS)
          {
             LOG_FMT(LERR, "%s: Failed to create backup file for %s\n",
-                    __func__, filename);
+                    __func__, filename_in);
             free(fm.data);
+            cpd.error_count++;
             return;
          }
          need_backup = true;
       }
+      make_folders(filename_out);
 
-      if (prefix != NULL)
-      {
-         len = snprintf(outname, sizeof(outname), "%s/", prefix);
-      }
-
-      snprintf(&outname[len], sizeof(outname) - len, "%s%s", filename,
-               (suffix != NULL) ? suffix : "");
-
-      make_folders(outname);
-
-      pfout = fopen(outname, "wb");
+      pfout = fopen(filename_out, "wb");
       if (pfout == NULL)
       {
          LOG_FMT(LERR, "%s: Unable to create %s: %s (%d)\n",
-                 __func__, outname, strerror(errno), errno);
+                 __func__, filename_out, strerror(errno), errno);
          cpd.error_count++;
          free(fm.data);
          return;
       }
       did_open = true;
-      //LOG_FMT(LSYS, "Output file %s\n", outname);
+      //LOG_FMT(LSYS, "Output file %s\n", filename_out);
    }
 
-   cpd.filename = filename;
+   cpd.filename = filename_in;
    uncrustify_file(fm.data, fm.length, pfout, parsed_file);
 
    free(fm.data);
@@ -795,9 +836,9 @@ static void do_source_file(const char *filename, FILE *pfout, const char *parsed
    {
       fclose(pfout);
 
-      if (need_backup && !no_backup)
+      if (need_backup)
       {
-         backup_create_md5_file(filename);
+         backup_create_md5_file(filename_in);
       }
 
 #ifdef HAVE_UTIME_H
@@ -805,7 +846,7 @@ static void do_source_file(const char *filename, FILE *pfout, const char *parsed
       {
          /* update mtime -- don't care if it fails */
          fm.utb.actime = time(NULL);
-         (void)utime(filename, &fm.utb);
+         (void)utime(filename_in, &fm.utb);
       }
 #endif
    }
