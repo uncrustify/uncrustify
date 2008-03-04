@@ -46,6 +46,7 @@ Changes in uncrustify-0.45 (not yet released)
  - Fix indenting problem with an assignment the last part of a for()
  - Fix the order of opening files so that '-f' and '-o' can be used together
  - Added a man file
+ - Many improvements thanks to Stas Grabois
 
 
 Changes in uncrustify-0.44 (12-Feb-2008)
