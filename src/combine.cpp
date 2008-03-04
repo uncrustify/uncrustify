@@ -136,6 +136,46 @@ chunk_t *set_paren_parent(chunk_t *start, c_token_t parent)
    return(chunk_get_next_ncnl(end));
 }
 
+/* Scan backwards to see if we might be on a type declaration */
+static bool chunk_ends_type(chunk_t *pc)
+{
+    bool ret = false;
+
+    for (/* nada */; pc != NULL; pc = chunk_get_prev_ncnl(pc))
+    {
+       LOG_FMT(LFTYPE, "%s: [%s] %.*s flags %x on line %d, col %d\n",
+               __func__, get_token_name(pc->type), pc->len, pc->str,
+               pc->flags, pc->orig_line, pc->orig_col);
+
+       if ((pc->type == CT_WORD) ||
+           (pc->type == CT_TYPE) ||
+           (pc->type == CT_STRUCT) ||
+           (pc->type == CT_DC_MEMBER) ||
+           (pc->type == CT_QUALIFIER))
+       {
+          continue;
+       }
+
+       if ((pc->type == CT_SEMICOLON) ||
+           (pc->type == CT_BRACE_OPEN) ||
+           (pc->type == CT_BRACE_CLOSE))
+       {
+          ret = true;
+       }
+       break;
+    }
+
+    if (pc == NULL)
+    {
+        /* first token */
+        ret = true;
+    }
+
+    LOG_FMT(LFTYPE, "%s verdict: %s\n", __func__, ret ? "yes" : "no");
+
+    return(ret);
+}
+
 /**
  * Change CT_INCDEC_AFTER + WORD to CT_INCDEC_BEFORE
  * Change number/word + CT_ADDR to CT_ARITH
@@ -606,6 +646,10 @@ void fix_symbols(void)
          else if (prev->type == CT_SIZEOF)
          {
             pc->type = CT_DEREF;
+         }
+         else if ((prev->type == CT_WORD) && chunk_ends_type(prev))
+         {
+            pc->type = CT_PTR_TYPE;
          }
          else
          {
@@ -1716,15 +1760,15 @@ static chunk_t *skip_to_next_statement(chunk_t *pc)
  */
 static chunk_t *fix_var_def(chunk_t *start)
 {
-   chunk_t *pc = start;
-   chunk_t *before_end;
-   chunk_t *end;
-   int     type_count = 0;
+   chunk_t    *pc = start;
+   chunk_t    *end;
+   chunk_t    *tmp_pc;
+   ChunkStack cs;
+   int        idx, ref_idx;
 
    LOG_FMT(LFVD, "%s: top[%d]", __func__, pc->orig_line);
 
    /* Scan for words and types and stars oh my! */
-   before_end = pc;
    while ((pc != NULL) &&
           ((pc->type == CT_TYPE) ||
            (pc->type == CT_WORD) ||
@@ -1735,13 +1779,7 @@ static chunk_t *fix_var_def(chunk_t *start)
            chunk_is_star(pc)))
    {
       LOG_FMT(LFVD, " %.*s[%s]", pc->len, pc->str, get_token_name(pc->type));
-      type_count++;
-      before_end = pc;
-      if ((pc->type == CT_DC_MEMBER) ||
-          (pc->type == CT_MEMBER))
-      {
-         type_count = 0;
-      }
+      cs.Push(pc);
       pc = chunk_get_next_ncnl(pc);
 
       /* Skip templates and attributes */
@@ -1757,35 +1795,66 @@ static chunk_t *fix_var_def(chunk_t *start)
       return(NULL);
    }
 
-   /* A single word can only be a type if followed by a function */
-   if ((type_count == 1) && (end->type != CT_FUNC_DEF))
+   /* Function defs are handled elsewhere */
+   if ((cs.Len() <= 1) ||
+       (end->type == CT_FUNC_DEF) ||
+       (end->type == CT_FUNC_PROTO) ||
+       (end->type == CT_FUNC_CLASS))
    {
-      /* Scan to the next semicolon or brace open or close */
       return(skip_to_next_statement(end));
    }
 
-   /* Everything before a function def or class func is a type */
-   if ((end->type == CT_FUNC_DEF) || (end->type == CT_FUNC_CLASS))
+   /* ref_idx points to the alignable part of the var def */
+   ref_idx = cs.Len() - 1;
+
+   /* Check for the '::' stuff: "char *Engine::name" */
+   if ((cs.Len() >= 3) &&
+       ((cs.Get(cs.Len() - 2)->m_pc->type == CT_MEMBER) ||
+        (cs.Get(cs.Len() - 2)->m_pc->type == CT_DC_MEMBER)))
    {
-      for (pc = start; pc != end; pc = chunk_get_next_ncnl(pc))
+      idx = cs.Len() - 2;
+      while (idx > 0)
       {
-         make_type(pc);
+         tmp_pc = cs.Get(idx)->m_pc;
+         if ((tmp_pc->type != CT_DC_MEMBER) &&
+             (tmp_pc->type != CT_MEMBER))
+         {
+            break;
+         }
+         idx--;
+         tmp_pc = cs.Get(idx)->m_pc;
+         if ((tmp_pc->type != CT_WORD) &&
+             (tmp_pc->type != CT_TYPE))
+         {
+            break;
+         }
+         make_type(tmp_pc);
+         idx--;
       }
+      ref_idx = idx + 1;
+   }
+   tmp_pc = cs.Get(ref_idx)->m_pc;
+   LOG_FMT(LFVD, " ref_idx(%d) => %.*s\n", ref_idx, tmp_pc->len, tmp_pc->str);
+
+   /* No type part found! */
+   if (ref_idx <= 0)
+   {
       return(skip_to_next_statement(end));
    }
 
-   LOG_FMT(LFVD, "%s:%d TYPE : ", __func__, start->orig_line);
-   for (pc = start; pc != before_end; pc = chunk_get_next_ncnl(pc))
+   LOG_FMT(LFVD2, "%s:%d TYPE : ", __func__, start->orig_line);
+   for (idx = 0; idx < cs.Len() - 1; idx++)
    {
-      make_type(pc);
-      LOG_FMT(LFVD, " %.*s[%s]", pc->len, pc->str, get_token_name(pc->type));
+      tmp_pc = cs.Get(idx)->m_pc;
+      make_type(tmp_pc);
+      LOG_FMT(LFVD2, " %.*s[%s]", tmp_pc->len, tmp_pc->str, get_token_name(tmp_pc->type));
    }
-   LOG_FMT(LFVD, "\n");
+   LOG_FMT(LFVD2, "\n");
 
    /**
     * OK we have two or more items, mark types up to the end.
     */
-   mark_variable_definition(before_end);
+   mark_variable_definition(cs.Get(cs.Len() - 1)->m_pc);
    if (end->type == CT_COMMA)
    {
       return(chunk_get_next_ncnl(end));
@@ -1897,6 +1966,8 @@ static bool can_be_full_param(chunk_t *start, chunk_t *end)
    chunk_t *pc;
    chunk_t *last;
    int     word_cnt = 0;
+   int     type_count = 0;
+   bool    ret;
 
    LOG_FMT(LFPARAM, "%s:", __func__);
 
@@ -1917,6 +1988,10 @@ static bool can_be_full_param(chunk_t *start, chunk_t *end)
           (pc->type == CT_TYPE))
       {
          word_cnt++;
+         if (pc->type == CT_TYPE)
+         {
+            type_count++;
+         }
       }
       else if ((pc->type == CT_MEMBER) ||
                (pc->type == CT_DC_MEMBER))
@@ -1957,15 +2032,11 @@ static bool can_be_full_param(chunk_t *start, chunk_t *end)
       return(true);
    }
 
-   if (chunk_is_type(last))
-   {
-      LOG_FMT(LFPARAM, " <== [%s] probably!\n", get_token_name(pc->type));
-      return(true);
-   }
+   ret = ((word_cnt >= 2) || ((word_cnt == 1) && (type_count == 1)));
 
    LOG_FMT(LFPARAM, " <== [%s] %s!\n",
-           get_token_name(pc->type), (word_cnt >= 2) ? "Yup" : "Unlikely");
-   return(word_cnt >= 2);
+           get_token_name(pc->type), ret ? "Yup" : "Unlikely");
+   return(ret);
 }
 
 /**
@@ -2401,6 +2472,7 @@ static void mark_function(chunk_t *pc)
             chunk_t *p_op = chunk_get_prev_type(pc, CT_BRACE_OPEN, pc->brace_level - 1);
             if ((p_op != NULL) &&
                 (p_op->parent_type != CT_CLASS) &&
+                (p_op->parent_type != CT_STRUCT) &&
                 (p_op->parent_type != CT_NAMESPACE))
             {
                pc->type = CT_FUNC_CTOR_VAR;
@@ -2842,7 +2914,8 @@ static void handle_template(chunk_t *pc)
 
    while ((tmp = chunk_get_next(tmp)) != NULL)
    {
-      if (tmp->type == CT_CLASS)
+      if ((tmp->type == CT_CLASS) ||
+          (tmp->type == CT_STRUCT))
       {
          tmp->type = CT_TYPE;
       }
@@ -2855,7 +2928,8 @@ static void handle_template(chunk_t *pc)
    if (tmp != NULL)
    {
       tmp = chunk_get_next_ncnl(tmp);
-      if ((tmp != NULL) && (tmp->type == CT_CLASS))
+      if ((tmp != NULL) &&
+          ((tmp->type == CT_CLASS) || (tmp->type == CT_STRUCT)))
       {
          tmp->parent_type = CT_TEMPLATE;
 
