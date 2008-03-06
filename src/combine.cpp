@@ -156,7 +156,7 @@ static bool chunk_ends_type(chunk_t *pc)
           continue;
        }
 
-       if ((pc->type == CT_SEMICOLON) ||
+       if (chunk_is_semicolon(pc) ||
            (pc->type == CT_BRACE_OPEN) ||
            (pc->type == CT_BRACE_CLOSE))
        {
@@ -256,7 +256,7 @@ void fix_symbols(void)
 
             for (tmp = chunk_get_prev_ncnl(pc); tmp != NULL; tmp = chunk_get_prev_ncnl(tmp))
             {
-               if ((tmp->type == CT_SEMICOLON) ||
+               if (chunk_is_semicolon(tmp) ||
                    (tmp->type == CT_BRACE_OPEN) ||
                    (tmp->type == CT_VBRACE_OPEN))
                {
@@ -478,7 +478,7 @@ void fix_symbols(void)
                   set_paren_parent(tmp, pc->type);
                }
             }
-            else if ((tmp->type == CT_SEMICOLON) && (pc->type == CT_FUNC_PROTO))
+            else if (chunk_is_semicolon(tmp) && (pc->type == CT_FUNC_PROTO))
             {
                tmp->parent_type = pc->type;
             }
@@ -663,7 +663,7 @@ void fix_symbols(void)
          if (prev->type == CT_WORD)
          {
             tmp = chunk_get_prev_ncnl(prev);
-            if ((tmp->type == CT_SEMICOLON) ||
+            if (chunk_is_semicolon(tmp) ||
                 (tmp->type == CT_BRACE_OPEN) ||
                 (tmp->type == CT_QUALIFIER))
             {
@@ -781,8 +781,7 @@ static void mark_lvalue(chunk_t *pc)
           (prev->type == CT_ASSIGN) ||
           (prev->type == CT_COMMA) ||
           (prev->type == CT_BOOL) ||
-          (prev->type == CT_SEMICOLON) ||
-          (prev->type == CT_VSEMICOLON) ||
+          chunk_is_semicolon(prev) ||
           chunk_is_str(prev, "(", 1) ||
           chunk_is_str(prev, "{", 1) ||
           chunk_is_str(prev, "[", 1) ||
@@ -1330,6 +1329,11 @@ static void fix_enum_struct_union(chunk_t *pc)
    if ((next == NULL) || (next->type == CT_PAREN_CLOSE))
    {
       return;
+   }
+
+   if ((cpd.lang_flags & LANG_D) && !chunk_is_semicolon(next))
+   {
+      next = pawn_add_vsemi_after(chunk_get_prev_ncnl(next));
    }
 
    /* We are either pointing to a ';' or a variable */
@@ -2577,7 +2581,7 @@ static void mark_cpp_constructor(chunk_t *pc)
    /* Scan until the brace open, mark everything */
    tmp = paren_open;
    while ((tmp != NULL) && (tmp->type != CT_BRACE_OPEN) &&
-          (tmp->type != CT_SEMICOLON))
+          !chunk_is_semicolon(tmp))
    {
       tmp->flags |= PCF_IN_CONST_ARGS;
       tmp         = chunk_get_next_ncnl(tmp);
