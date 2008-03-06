@@ -1,7 +1,7 @@
 /**
  * @file unc_ctype.h
  * The ctype function are only required to handle values 0-255 and EOF.
- * A char get sign-extended when cast to an int.
+ * A char is sign-extended when cast to an int.
  * With some C libraries, these values cause a crash.
  * These wrappers will properly handle all char values.
  *
