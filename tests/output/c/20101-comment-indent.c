@@ -31,7 +31,7 @@ void foo()
     {
     foo2();
     }
-  */else if(bar3)
+  */else if (bar3)
     foo3();
   }
 

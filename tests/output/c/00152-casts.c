@@ -1,9 +1,9 @@
 
-#define SOME_VAL1      (( MYINT )-1)
-#define SOME_VAL2      (-2)
-#define SOME_VAL3      -3
-#define MULT(X, Y)      ( X )*(Y)
-#define SOME_JUNK      /*lint -e123 */ ( const mytype * )-1
+#define SOME_VAL1    (( MYINT )-1)
+#define SOME_VAL2    (-2)
+#define SOME_VAL3    -3
+#define MULT(X, Y)    ( X )*(Y)
+#define SOME_JUNK    /*lint -e123 */ ( const mytype * )-1
 
 typedef (*my_fcn_ptr_t)(char *, int);
 typedef (my_fcn_t)(char *, int);
