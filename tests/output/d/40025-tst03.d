@@ -121,14 +121,14 @@ int[ 3 ] a = [ 2:0, 0:3, 2 ];     // if not supplied, the index is the
                                   // previous one plus one.
 
 enum color { black, red, green }
-int[ 3 ] c           = [ black:3, green:2, red:5 ];
+int[ 3 ] c = [ black:3, green:2, red:5 ];
 
-char[]   file        = `c:\root\file.c`;
-char[]   quoteString = \"  r"[^\\]*(\\.[^\\]*)*"  \";
+char[]  file        = `c:\root\file.c`;
+char[]  quoteString = \"  r"[^\\]*(\\.[^\\]*)*"  \";
 
-char[]   hello       = "hello world" \n;
-char[]   foo_ascii   = "hello";   // string is taken to be ascii
-wchar[]  foo_wchar   = "hello";   // string is taken to be wchar
+char[]  hello       = "hello world" \n;
+char[]  foo_ascii   = "hello";    // string is taken to be ascii
+wchar[] foo_wchar   = "hello";    // string is taken to be wchar
 
 enum COLORS { red, blue, green };
 
