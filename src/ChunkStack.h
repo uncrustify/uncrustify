@@ -60,6 +60,7 @@ public:
 
    const Entry *Top() const;
    const Entry *Get(int idx) const;
+   chunk_t *GetChunk(int idx) const;
 
    chunk_t *Pop();
    void Push(chunk_t *pc, int seqnum);

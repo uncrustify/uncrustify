@@ -116,7 +116,7 @@ struct parse_frame
 #define PCF_ANCHOR             (1 << 25)  /* aligning anchor */
 #define PCF_PUNCTUATOR         (1 << 26)
 #define PCF_INSERTED           (1 << 27)  /* chunk was inserted from another file */
-#define PCF_TBD_28             (1 << 28)
+#define PCF_ALIGN_START        (1 << 28)
 #define PCF_TBD_29             (1 << 29)
 #define PCF_TBD_30             (1 << 30)
 #define PCF_OWN_STR            (1 << 31)  /* chunk owns the memory at str */
@@ -159,34 +159,44 @@ static const char *pcf_names[] =
    "ANCHOR",
    "PUNCTUATOR",
    "INSERTED",
-   "TBD_28",
+   "ALIGN_START",
    "TBD_29",
    "TBD_30",
    "OWN_STR",
 };
 #endif
 
+struct align_ptr_t
+{
+   chunk_t *next; /* NULL or the chunk that should be under this one */
+   bool    right_align;
+   int     star_style;
+   int     amp_style;
+   int     gap;
+};
+
 /** This is the main type of this program */
 struct chunk_t
 {
-   chunk_t    *next;
-   chunk_t    *prev;
-   c_token_t  type;
-   c_token_t  parent_type;     /* usually CT_NONE */
-   UINT32     orig_line;
-   UINT32     orig_col;
-   UINT32     orig_col_end;
-   UINT32     flags;            /* see PCF_xxx */
-   int        column;           /* column of chunk */
-   int        column_indent;    /* if 1st on a line, set to the 'indent'
-                                 * column, which may be less that the real column */
-   int        nl_count;         /* number of newlines in CT_NEWLINE */
-   int        level;            /* nest level in {, (, or [ */
-   int        brace_level;      /* nest level in braces only */
-   int        pp_level;         /* nest level in #if stuff */
-   bool       after_tab;
-   int        len;
-   const char *str;
+   chunk_t     *next;
+   chunk_t     *prev;
+   align_ptr_t align;
+   c_token_t   type;
+   c_token_t   parent_type;     /* usually CT_NONE */
+   UINT32      orig_line;
+   UINT32      orig_col;
+   UINT32      orig_col_end;
+   UINT32      flags;            /* see PCF_xxx */
+   int         column;           /* column of chunk */
+   int         column_indent;    /* if 1st on a line, set to the 'indent'
+                                  * column, which may be less that the real column */
+   int         nl_count;         /* number of newlines in CT_NEWLINE */
+   int         level;            /* nest level in {, (, or [ */
+   int         brace_level;      /* nest level in braces only */
+   int         pp_level;         /* nest level in #if stuff */
+   bool        after_tab;
+   int         len;
+   const char  *str;
 };
 
 enum

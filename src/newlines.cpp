@@ -260,6 +260,7 @@ static void newline_del_between2(chunk_t *start, chunk_t *end,
             if (chunk_safe_to_del_nl(pc))
             {
                chunk_del(pc);
+               align_to_column(next, prev->column + space_col_align(prev, next));
             }
          }
          else

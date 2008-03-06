@@ -970,9 +970,22 @@ int space_col_align(chunk_t *first, chunk_t *second)
    av = do_space(first, second);
 
    coldiff = first->len;
-   if (av != AV_REMOVE)
+   switch (av)
    {
+   case AV_ADD:
+   case AV_FORCE:
       coldiff++;
+      break;
+
+   case AV_REMOVE:
+      break;
+
+   case AV_IGNORE:
+      if (second->orig_col> (first->orig_col + first->len))
+      {
+         coldiff++;
+      }
+      break;
    }
    return(coldiff);
 }

@@ -68,6 +68,15 @@ const ChunkStack::Entry *ChunkStack::Get(int idx) const
    return(NULL);
 }
 
+chunk_t *ChunkStack::GetChunk(int idx) const
+{
+   if ((idx < m_len) && (idx >= 0))
+   {
+      return(m_cse[idx].m_pc);
+   }
+   return(NULL);
+}
+
 chunk_t *ChunkStack::Pop()
 {
    if (m_len > 0)

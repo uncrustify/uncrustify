@@ -80,6 +80,7 @@ void AlignStack::Add(chunk_t *pc, int seqnum)
    }
 
    chunk_t *prev;
+   chunk_t *next;
 
    m_last_added = 0;
 
@@ -121,11 +122,42 @@ void AlignStack::Add(chunk_t *pc, int seqnum)
 
       /* See if this pushes out the max_col */
       int endcol = pc->column + (m_right_align ? pc->len : 0);
-      if (m_gap > 0)
+
+      /* Step backward until we hit something other than a '*' or '&' or '('.
+       * Keep track of the minimum distance.
+       */
+      chunk_t *prev = chunk_get_prev(pc);
+      chunk_t *ref  = prev;
+
+      while (chunk_is_star(prev) || chunk_is_addr(prev) || chunk_is_str(prev, "(", 1))
       {
-         prev = chunk_get_prev(pc);
-         if (prev != NULL)
+         prev = chunk_get_prev(prev);
+      }
+      if ((prev != NULL) && !chunk_is_newline(prev))
+      {
+         int tmp_col;
+
+         ref     = prev;
+         next    = chunk_get_next(ref);
+         tmp_col = ref->column;
+         while (prev != pc)
          {
+            tmp_col += space_col_align(prev, next);
+            if (next->column != tmp_col)
+            {
+               align_to_column(next, tmp_col);
+            }
+
+            // LOG_FMT(LSYS, "[%.*s] vs [%.*s] => %d\n",
+            //         prev->len, prev->str, next->len, next->str, next->column);
+            prev = next;
+            next = chunk_get_next(prev);
+         }
+         endcol = tmp_col + (m_right_align ? pc->len : 0);
+
+         if (m_gap > 0)
+         {
+            prev = chunk_get_prev(pc);
             int tmp = prev->column + prev->len + m_gap;
             if (endcol < tmp)
             {
@@ -133,6 +165,10 @@ void AlignStack::Add(chunk_t *pc, int seqnum)
             }
          }
       }
+
+      LOG_FMT(LAS, "Add-[%.*s]: line %d, col %d : ref=[%.*s] endcol=%d\n",
+              pc->len, pc->str, pc->orig_line, pc->column,
+              ref->len, ref->str, endcol);
 
       if (m_min_col > endcol)
       {
@@ -220,14 +256,25 @@ void AlignStack::Flush()
    int idx;
    const ChunkStack::Entry *ce = NULL;
    ChunkStack trailer_cs;
+   chunk_t    *pc;
 
-   LOG_FMT(LAS, "Flush\n");
+   LOG_FMT(LAS, "Flush (min=%d, max=%d)\n", m_min_col, m_max_col);
 
    m_last_added = 0;
 
    for (idx = 0; idx < m_aligned.Len(); idx++)
    {
       ce = m_aligned.Get(idx);
+
+      if (idx == 0)
+      {
+         ce->m_pc->flags |= PCF_ALIGN_START;
+
+         ce->m_pc->align.right_align = m_right_align;
+         ce->m_pc->align.amp_style   = (int)m_amp_style;
+         ce->m_pc->align.star_style  = (int)m_star_style;
+         ce->m_pc->align.gap         = m_gap;
+      }
 
       if (ce->m_trailer != NULL)
       {
@@ -236,7 +283,10 @@ void AlignStack::Flush()
 
       int da_col = m_max_col;
 
-      chunk_t *pc = ce->m_pc;
+      pc = ce->m_pc;
+
+      pc->align.next = m_aligned.GetChunk(idx + 1);
+
       if (m_star_style == SS_DANGLE)
       {
          /* back up to the first '*' preceding the token */
@@ -268,7 +318,7 @@ void AlignStack::Flush()
       }
 
       /* Indent, right aligning the aligned token */
-      indent_to_column(pc, da_col - (m_right_align ? ce->m_pc->len : 0));
+      align_to_column(pc, da_col - (m_right_align ? ce->m_pc->len : 0));
    }
 
    if (ce != NULL)
@@ -302,21 +352,19 @@ void AlignStack::Flush()
 
    /* find the trailer column */
    int trailer_col = 0;
-   for (idx = 0; idx < trailer_cs.Len(); idx++)
+   for (idx = 0; (pc = trailer_cs.GetChunk(idx)) != NULL; idx++)
    {
-      ce = trailer_cs.Get(idx);
-
-      if (trailer_col < ce->m_pc->column)
+      pc->align.next = m_aligned.GetChunk(idx + 1);
+      if (trailer_col < pc->column)
       {
-         trailer_col = ce->m_pc->column;
+         trailer_col = pc->column;
       }
    }
 
    /* and align the trailers */
-   chunk_t *pc;
    while ((pc = trailer_cs.Pop()) != NULL)
    {
-      indent_to_column(pc, trailer_col);
+      align_to_column(pc, trailer_col);
    }
 }
 

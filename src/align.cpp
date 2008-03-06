@@ -205,6 +205,35 @@ static void align_add(ChunkStack& cs, chunk_t *pc, int& max_col, int min_pad, bo
    }
 }
 
+void quick_align_again(void)
+{
+   chunk_t *pc;
+   chunk_t *tmp;
+   AlignStack as;
+
+   for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next(pc))
+   {
+      if ((pc->align.next != NULL) && (pc->flags & PCF_ALIGN_START))
+      {
+         as.Start(100, 0);
+         as.m_right_align = pc->align.right_align;
+         as.m_star_style  = (AlignStack::StarStyle)pc->align.star_style;
+         as.m_amp_style   = (AlignStack::StarStyle)pc->align.amp_style;
+         as.m_gap         = pc->align.gap;
+
+         // LOG_FMT(LSYS, "[%.*s]", pc->len, pc->str);
+         as.Add(pc);
+         for (tmp = pc->align.next; tmp != NULL; tmp = tmp->align.next)
+         {
+            as.Add(tmp);
+            // LOG_FMT(LSYS, " => [%.*s]", tmp->len, tmp->str);
+         }
+         // LOG_FMT(LSYS, "\n");
+         as.End();
+      }
+   }
+}
+
 void align_all(void)
 {
    if (cpd.settings[UO_align_typedef_span].n > 0)
@@ -247,6 +276,9 @@ void align_all(void)
    {
       align_func_params();
    }
+
+   /* Just in case something was aligned out of order... do it again */
+   quick_align_again();
 }
 
 /**
@@ -258,10 +290,10 @@ static void align_func_proto(int span)
    bool       look_bro = false;
    AlignStack as;
 
+   LOG_FMT(LALIGN, "%s\n", __func__);
    as.Start(span, 0);
 
-   pc = chunk_get_head();
-   while (pc != NULL)
+   for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next(pc))
    {
       if (chunk_is_newline(pc))
       {
@@ -283,7 +315,6 @@ static void align_func_proto(int span)
          as.AddTrailer(pc);
          look_bro = false;
       }
-      pc = chunk_get_next(pc);
    }
    as.End();
 }
@@ -294,33 +325,23 @@ static void align_func_proto(int span)
 static void align_oc_msg_spec(int span)
 {
    chunk_t    *pc;
-   int        max_col  = 0;
-   int        span_cnt = 0;
-   ChunkStack cs;    /* TODO: grab from a cached list */
+   AlignStack as;
 
-   pc = chunk_get_head();
-   while (pc != NULL)
+   LOG_FMT(LALIGN, "%s\n", __func__);
+   as.Start(span, 0);
+
+   for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next(pc))
    {
       if (chunk_is_newline(pc))
       {
-         if (cs.Len() > 0)
-         {
-            span_cnt += pc->nl_count;
-            if (span_cnt > span)
-            {
-               align_stack(cs, max_col, false, LALPROTO);
-               max_col = 0;
-            }
-         }
+         as.NewLines(pc->nl_count);
       }
       else if (pc->type == CT_OC_MSG_SPEC)
       {
-         align_add(cs, pc, max_col, 1, true);
-         span_cnt = 0;
+         as.Add(pc);
       }
-      pc = chunk_get_next(pc);
    }
-   align_stack(cs, max_col, false, LALPROTO);
+   as.End();
 }
 
 /**

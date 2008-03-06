@@ -130,6 +130,59 @@ void indent_to_column(chunk_t *pc, int column)
    reindent_line(pc, column);
 }
 
+/* Same as indent_to_column, except we can move both ways */
+void align_to_column(chunk_t *pc, int column)
+{
+   if (column == pc->column)
+   {
+      return;
+   }
+
+   int col_delta;
+   int min_col;
+
+   LOG_FMT(LINDLINE, "%s: %d] col %d on %.*s [%s] => %d\n",
+           __func__, pc->orig_line, pc->column, pc->len, pc->str,
+           get_token_name(pc->type), column);
+
+   col_delta  = column - pc->column;
+   pc->column = column;
+   min_col    = column;
+
+   do
+   {
+      chunk_t *next = chunk_get_next(pc);
+
+      if (next != NULL)
+      {
+         min_col += space_col_align(pc, next);
+         pc = next;
+         bool is_comment = chunk_is_comment(pc);
+         bool keep = is_comment && chunk_is_single_line_comment(pc) &&
+                     cpd.settings[UO_indent_relative_single_line_comments].b;
+
+         if (is_comment && (pc->parent_type != CT_COMMENT_EMBED) && !keep)
+         {
+            pc->column = pc->orig_col;
+            if (pc->column < min_col)
+            {
+               pc->column = min_col;// + 1;
+            }
+            LOG_FMT(LINDLINE, "%s: set comment on line %d to col %d (orig %d)\n",
+                    __func__, pc->orig_line, pc->column, pc->orig_col);
+         }
+         else
+         {
+            pc->column += col_delta;
+            if (pc->column < min_col)
+            {
+               pc->column = min_col;
+            }
+         }
+      }
+   } while ((pc != NULL) && (pc->nl_count == 0));
+}
+
 /**
  * Changes the initial indent for a line to the given column
  *
@@ -151,18 +204,17 @@ void reindent_line2(chunk_t *pc, int column, const char *fcn_name, int lineno)
    }
    col_delta  = column - pc->column;
    pc->column = column;
-   min_col    = pc->column;
+   min_col    = column;
 
    do
    {
-      min_col += pc->len;
-      if (pc->flags & PCF_FORCE_SPACE)
+      chunk_t *next = chunk_get_next(pc);
+
+      if (next != NULL)
       {
-         min_col++;
-      }
-      pc = chunk_get_next(pc);
-      if (pc != NULL)
-      {
+         min_col += space_col_align(pc, next);
+         pc = next;
+
          bool is_comment = chunk_is_comment(pc);
          bool keep = is_comment && chunk_is_single_line_comment(pc) &&
                      cpd.settings[UO_indent_relative_single_line_comments].b;
@@ -172,7 +224,7 @@ void reindent_line2(chunk_t *pc, int column, const char *fcn_name, int lineno)
             pc->column = pc->orig_col;
             if (pc->column < min_col)
             {
-               pc->column = min_col + 1;
+               pc->column = min_col;// + 1;
             }
             LOG_FMT(LINDLINE, "%s: set comment on line %d to col %d (orig %d)\n",
                     __func__, pc->orig_line, pc->column, pc->orig_col);
@@ -1026,7 +1078,7 @@ void indent_text(void)
                   cpd.settings[UO_indent_preserve_sql].b)
          {
             reindent_line(pc, sql_col + (pc->orig_col - sql_orig_col));
-            LOG_FMT(LSYS, "Indent SQL: [%.*s] to %d (%d/%d)\n",
+            LOG_FMT(LINDENT, "Indent SQL: [%.*s] to %d (%d/%d)\n",
                     pc->len, pc->str, pc->column, sql_col, sql_orig_col);
          }
          else if ((pc->type == CT_MEMBER) ||
@@ -1225,6 +1277,8 @@ void indent_text(void)
               get_token_name(frm.pse[idx].type));
       cpd.error_count++;
    }
+
+   quick_align_again();
 }
 
 /**

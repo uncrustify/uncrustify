@@ -79,6 +79,7 @@ enum
    LAVDB     = 63,    /* align var def braces */
    LSORT     = 64,    /* Sorting */
    LSPACE    = 65,    /* Space */
+   LALIGN    = 66,    /* align */
 };
 
 #endif   /* LOG_LEVELS_H_INCLUDED */
