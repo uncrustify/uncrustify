@@ -28,7 +28,7 @@ Near-term plans
 ===============================================================================
 
 
-Changes in uncrustify-0.45 (not yet released)
+Changes in uncrustify-0.45 (7-Mar-2008)
 -------------------------------------------------------------------------------
  - Fix buffer overflow in logger code
  - Add sp_enum_assign
