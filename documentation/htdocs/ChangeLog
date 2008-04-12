@@ -31,7 +31,9 @@ Near-term plans
 Changes in uncrustify-0.46 (not yet released)
 -------------------------------------------------------------------------------
  - Load the config file, if available, before handling '--universalindent'
-
+ - Add align_var_def_gap, align_var_def_colon_gap, align_var_struct_gap,
+   align_func_proto_gap, align_func_proto_var_mix, align_single_line_brace_gap
+ - (internal) Eliminate the 'trailer' stuff
 
 Changes in uncrustify-0.45 (7-Mar-2008)
 -------------------------------------------------------------------------------

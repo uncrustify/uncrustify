@@ -211,6 +211,7 @@ void quick_align_again(void)
    chunk_t *tmp;
    AlignStack as;
 
+   LOG_FMT(LALAGAIN, "%s\n", __func__);
    for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next(pc))
    {
       if ((pc->align.next != NULL) && (pc->flags & PCF_ALIGN_START))
@@ -221,14 +222,14 @@ void quick_align_again(void)
          as.m_amp_style   = (AlignStack::StarStyle)pc->align.amp_style;
          as.m_gap         = pc->align.gap;
 
-         // LOG_FMT(LSYS, "[%.*s]", pc->len, pc->str);
+         LOG_FMT(LALAGAIN, "   [%.*s:%d]", pc->len, pc->str, pc->orig_line);
          as.Add(pc);
          for (tmp = pc->align.next; tmp != NULL; tmp = tmp->align.next)
          {
             as.Add(tmp);
-            // LOG_FMT(LSYS, " => [%.*s]", tmp->len, tmp->str);
+            LOG_FMT(LALAGAIN, " => [%.*s:%d]", tmp->len, tmp->str, tmp->orig_line);
          }
-         // LOG_FMT(LSYS, "\n");
+         LOG_FMT(LALAGAIN, "\n");
          as.End();
       }
    }
@@ -260,7 +261,8 @@ void align_all(void)
    }
 
    /* Align function prototypes */
-   if (cpd.settings[UO_align_func_proto_span].n > 0)
+   if ((cpd.settings[UO_align_func_proto_span].n > 0) &&
+       !cpd.settings[UO_align_mix_var_proto].b)
    {
       align_func_proto(cpd.settings[UO_align_func_proto_span].n);
    }
@@ -279,44 +281,6 @@ void align_all(void)
 
    /* Just in case something was aligned out of order... do it again */
    quick_align_again();
-}
-
-/**
- * Aligns all function prototypes in the file.
- */
-static void align_func_proto(int span)
-{
-   chunk_t    *pc;
-   bool       look_bro = false;
-   AlignStack as;
-
-   LOG_FMT(LALIGN, "%s\n", __func__);
-   as.Start(span, 0);
-
-   for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next(pc))
-   {
-      if (chunk_is_newline(pc))
-      {
-         look_bro = false;
-         as.NewLines(pc->nl_count);
-      }
-      else if ((pc->type == CT_FUNC_PROTO) ||
-               ((pc->type == CT_FUNC_DEF) &&
-                cpd.settings[UO_align_single_line_func].b))
-      {
-         as.Add(pc);
-         look_bro = (pc->type == CT_FUNC_DEF) &&
-                    cpd.settings[UO_align_single_line_brace].b;
-      }
-      else if (look_bro &&
-               (pc->type == CT_BRACE_OPEN) &&
-               (pc->flags & PCF_ONE_LINER))
-      {
-         as.AddTrailer(pc);
-         look_bro = false;
-      }
-   }
-   as.End();
 }
 
 /**
@@ -712,6 +676,51 @@ static void align_func_params()
 }
 
 /**
+ * Aligns all function prototypes in the file.
+ */
+static void align_func_proto(int span)
+{
+   chunk_t    *pc;
+   bool       look_bro = false;
+   AlignStack as;
+   AlignStack as_br;
+
+   LOG_FMT(LALIGN, "%s\n", __func__);
+   as.Start(span, 0);
+   as.m_gap = cpd.settings[UO_align_func_proto_gap].n;
+
+   as_br.Start(span, 0);
+   as_br.m_gap = cpd.settings[UO_align_single_line_brace_gap].n;
+
+   for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next(pc))
+   {
+      if (chunk_is_newline(pc))
+      {
+         look_bro = false;
+         as.NewLines(pc->nl_count);
+         as_br.NewLines(pc->nl_count);
+      }
+      else if ((pc->type == CT_FUNC_PROTO) ||
+               ((pc->type == CT_FUNC_DEF) &&
+                cpd.settings[UO_align_single_line_func].b))
+      {
+         as.Add(pc);
+         look_bro = (pc->type == CT_FUNC_DEF) &&
+                    cpd.settings[UO_align_single_line_brace].b;
+      }
+      else if (look_bro &&
+               (pc->type == CT_BRACE_OPEN) &&
+               (pc->flags & PCF_ONE_LINER))
+      {
+         as_br.Add(pc);
+         look_bro = false;
+      }
+   }
+   as.End();
+   as_br.End();
+}
+
+/**
  * Scan everything at the current level until the close brace and find the
  * variable def align column.  Also aligns bit-colons, but that assumes that
  * bit-types are the same! But that should always be the case...
@@ -724,7 +733,12 @@ static chunk_t *align_var_def_brace(chunk_t *start, int span)
    int        align_mask = PCF_IN_FCN_DEF | PCF_VAR_1ST;
    int        myspan     = span;
    int        mythresh   = 0;
-   AlignStack as;
+   int        mygap      = 0;
+   AlignStack as;    /* var/proto/def */
+   AlignStack as_bc; /* bit-colon */
+   AlignStack as_br; /* one-liner brace open */
+   bool       fp_active   = cpd.settings[UO_align_mix_var_proto].b;
+   bool       fp_look_bro = false;
 
 
    if (start == NULL)
@@ -738,10 +752,12 @@ static chunk_t *align_var_def_brace(chunk_t *start, int span)
    {
       myspan   = cpd.settings[UO_align_var_struct_span].n;
       mythresh = cpd.settings[UO_align_var_struct_thresh].n;
+      mygap    = cpd.settings[UO_align_var_struct_gap].n;
    }
    else
    {
       mythresh = cpd.settings[UO_align_var_def_thresh].n;
+      mygap    = cpd.settings[UO_align_var_def_gap].n;
    }
 
    /* can't be any variable definitions in a "= {" block */
@@ -763,13 +779,22 @@ static chunk_t *align_var_def_brace(chunk_t *start, int span)
       align_mask |= PCF_VAR_INLINE;
    }
 
-   //LOG_FMT(LSYS, "%s: start=[%.*s] line=%d col=%d level=%d\n",
-   //        __func__, start->len, start->str, start->orig_line, start->orig_col, start->level);
+   LOG_FMT(LSYS, "%s: start=[%.*s] line=%d col=%d level=%d\n",
+           __func__, start->len, start->str, start->orig_line, start->orig_col, start->level);
 
+   /* Set up the var/proto/def aligner */
    as.Start(myspan, mythresh);
-
+   as.m_gap        = mygap;
    as.m_star_style = (AlignStack::StarStyle)cpd.settings[UO_align_var_def_star_style].n;
    as.m_amp_style  = (AlignStack::StarStyle)cpd.settings[UO_align_var_def_amp_style].n;
+
+   /* Set up the bit colon aligner */
+   as_bc.Start(myspan, 0);
+   as_bc.m_gap = cpd.settings[UO_align_var_def_colon_gap].n;
+
+   /* Set up the brace open aligner */
+   as_br.Start(myspan, mythresh);
+   as_br.m_gap = cpd.settings[UO_align_single_line_brace_gap].n;
 
    bool did_this_line = false;
    pc = chunk_get_next_ncnl(start);
@@ -780,9 +805,33 @@ static chunk_t *align_var_def_brace(chunk_t *start, int span)
          if (pc->nl_count > 0)
          {
             as.NewLines(pc->nl_count);
+            as_bc.NewLines(pc->nl_count);
+            as_br.NewLines(pc->nl_count);
          }
          pc = chunk_get_next(pc);
          continue;
+      }
+
+      if (fp_active)
+      {
+         if ((pc->type == CT_FUNC_PROTO) ||
+             ((pc->type == CT_FUNC_DEF) &&
+              cpd.settings[UO_align_single_line_func].b))
+         {
+            LOG_FMT(LSYS, "    add=[%.*s] line=%d col=%d level=%d\n",
+                    pc->len, pc->str, pc->orig_line, pc->orig_col, pc->level);
+
+            as.Add(pc);
+            fp_look_bro = (pc->type == CT_FUNC_DEF) &&
+                          cpd.settings[UO_align_single_line_brace].b;
+         }
+         else if (fp_look_bro &&
+                  (pc->type == CT_BRACE_OPEN) &&
+                  (pc->flags & PCF_ONE_LINER))
+         {
+            as_br.Add(pc);
+            fp_look_bro = false;
+         }
       }
 
       /* process nested braces */
@@ -801,8 +850,11 @@ static chunk_t *align_var_def_brace(chunk_t *start, int span)
 
       if (chunk_is_newline(pc))
       {
+         fp_look_bro   = false;
          did_this_line = false;
          as.NewLines(pc->nl_count);
+         as_bc.NewLines(pc->nl_count);
+         as_br.NewLines(pc->nl_count);
       }
 
       /* don't align stuff inside parens/squares/angles */
@@ -819,15 +871,18 @@ static chunk_t *align_var_def_brace(chunk_t *start, int span)
       {
          if (!did_this_line)
          {
-            //LOG_FMT(LSYS, "    add=[%.*s] line=%d col=%d level=%d\n",
-            //        pc->len, pc->str, pc->orig_line, pc->orig_col, pc->level);
+            LOG_FMT(LSYS, "    add=[%.*s] line=%d col=%d level=%d\n",
+                    pc->len, pc->str, pc->orig_line, pc->orig_col, pc->level);
 
             as.Add(pc);
 
-            next = chunk_get_next_nc(pc);
-            if (next->type == CT_BIT_COLON)
+            if (cpd.settings[UO_align_var_def_colon].b)
             {
-               as.AddTrailer(next);
+               next = chunk_get_next_nc(pc);
+               if (next->type == CT_BIT_COLON)
+               {
+                  as_bc.Add(next);
+               }
             }
          }
          did_this_line = true;
@@ -836,6 +891,8 @@ static chunk_t *align_var_def_brace(chunk_t *start, int span)
    }
 
    as.End();
+   as_bc.End();
+   as_br.End();
 
    return(pc);
 }

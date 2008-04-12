@@ -282,12 +282,15 @@ enum uncrustify_options
    UO_align_func_params,          // align prototype variable defs on variable
    UO_align_var_def_span,         // align variable defs on variable (span for regular stuff)
    UO_align_var_def_thresh,       // align variable defs threshold
+   UO_align_var_def_gap,          // align variable defs gap
+   UO_align_var_def_colon_gap,    // align variable defs gap for bit colons
    UO_align_var_def_inline,       // also align inline struct/enum/union var defs
    UO_align_var_def_star_style,   // see UO_align_typedef_star_style
    UO_align_var_def_amp_style,    // see UO_align_typedef_star_style
    UO_align_var_def_colon,        // align the colon in struct bit fields
    UO_align_var_struct_span,      // span for struct/union (0=don't align)
    UO_align_var_struct_thresh,    // threshold for struct/union, 0=no limit
+   UO_align_var_struct_gap,       // gap for struct/union
    UO_align_pp_define_span,       // align bodies in #define statments
    //UO_align_pp_define_col_min,    //TODO: min column for a #define value
    //UO_align_pp_define_col_max,    //TODO: max column for a #define value
@@ -296,8 +299,11 @@ enum uncrustify_options
    //UO_align_enum_col_max,         //TODO: the max column for enum '=' alignment
    UO_align_struct_init_span,     // align structure initializer values
    UO_align_func_proto_span,      // align function prototypes
+   UO_align_func_proto_gap,       // align function prototypes
+   UO_align_mix_var_proto,        // mix function prototypes and variable decl
    UO_align_single_line_func,     // mix single line function with prototypes
    UO_align_single_line_brace,    // align the open brace of single line functions
+   UO_align_single_line_brace_gap,// gap for align_single_line_brace
    UO_align_oc_msg_spec_span,     // align ObjC msg spec
    UO_align_number_left,          // left-align numbers (not fully supported, yet)
    UO_align_typedef_span,         // align single-line typedefs

@@ -80,6 +80,7 @@ enum
    LSORT     = 64,    /* Sorting */
    LSPACE    = 65,    /* Space */
    LALIGN    = 66,    /* align */
+   LALAGAIN  = 67,    /* align again */
 };
 
 #endif   /* LOG_LEVELS_H_INCLUDED */

@@ -20,7 +20,6 @@ public:
    {
       int     m_seqnum;
       chunk_t *m_pc;
-      chunk_t *m_trailer;  /* for AlignStack class */
    };
 
 protected:
@@ -55,8 +54,6 @@ public:
    {
       return(m_len);
    }
-
-   void SetTopTrailer(chunk_t *pc);
 
    const Entry *Top() const;
    const Entry *Get(int idx) const;

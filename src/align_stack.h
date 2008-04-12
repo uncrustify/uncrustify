@@ -45,7 +45,6 @@ public:
 
    void Start(int span, int threshold = 0);
    void Add(chunk_t *pc, int seqnum = 0);
-   void AddTrailer(chunk_t *pc);
    void NewLines(int cnt);
    void Flush();
    void End();

@@ -619,6 +619,8 @@ void register_options(void)
                   " 2=Dangling", "", 0, 2);
    unc_add_option("align_var_def_thresh", UO_align_var_def_thresh, AT_NUM,
                   "The threshold for aligning variable definitions (0=no limit)", "", 0, 5000);
+   unc_add_option("align_var_def_gap", UO_align_var_def_gap, AT_NUM,
+                  "The gap for aligning variable definitions");
    unc_add_option("align_var_def_colon", UO_align_var_def_colon, AT_BOOL,
                   "Whether to align the colon in struct bit fields");
    unc_add_option("align_var_def_inline", UO_align_var_def_inline, AT_BOOL,
@@ -635,6 +637,8 @@ void register_options(void)
                   "The span for aligning struct/union (0=don't align)", "", 0, 5000);
    unc_add_option("align_var_struct_thresh", UO_align_var_struct_thresh, AT_NUM,
                   "The threshold for aligning struct/union member definitions (0=no limit)", "", 0, 5000);
+   unc_add_option("align_var_struct_gap", UO_align_var_struct_gap, AT_NUM,
+                  "The gap for aligning struct/union member definitions");
    unc_add_option("align_struct_init_span", UO_align_struct_init_span, AT_NUM,
                   "The span for aligning struct initializer values (0=don't align)", "", 0, 5000);
    unc_add_option("align_typedef_gap", UO_align_typedef_gap, AT_NUM,
@@ -662,11 +666,18 @@ void register_options(void)
                   "If aligning comments, mix with comments after '}' and #endif with less than 3 spaces before the comment");
    unc_add_option("align_func_proto_span", UO_align_func_proto_span, AT_NUM,
                   "The span for aligning function prototypes (0=don't align)", "", 0, 5000);
+   unc_add_option("align_func_proto_gap", UO_align_func_proto_gap, AT_NUM,
+                  "Minimum gap between the return type and the function name.");
+   unc_add_option("align_mix_var_proto", UO_align_mix_var_proto, AT_BOOL,
+                  "Whether to mix aligning prototype and variable declarations.\n"
+                  "If true, align_var_def_XXX options are used instead of align_func_proto_XXX options.");
    unc_add_option("align_single_line_func", UO_align_single_line_func, AT_BOOL,
                   "Align single-line functions with function prototypes, uses align_func_proto_span");
    unc_add_option("align_single_line_brace", UO_align_single_line_brace, AT_BOOL,
                   "Aligning the open brace of single-line functions.\n"
                   "Requires align_single_line_func=true, uses align_func_proto_span");
+   unc_add_option("align_single_line_brace_gap", UO_align_single_line_brace_gap, AT_NUM,
+                  "Gap for align_single_line_brace.\n");
    unc_add_option("align_oc_msg_spec_span", UO_align_oc_msg_spec_span, AT_NUM,
                   "The span for aligning ObjC msg spec (0=don't align)", "", 0, 5000);
    unc_add_option("align_nl_cont", UO_align_nl_cont, AT_BOOL,

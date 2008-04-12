@@ -57,7 +57,6 @@ void AlignStack::ReAddSkipped()
          ce = m_scratch.Get(idx);
          LOG_FMT(LAS, "ReAddSkipped [%d] - ", ce->m_seqnum);
          Add(ce->m_pc, ce->m_seqnum);
-         AddTrailer(ce->m_trailer);
       }
 
       /* Check to see if we need to flush right away */
@@ -211,22 +210,6 @@ void AlignStack::Add(chunk_t *pc, int seqnum)
 }
 
 /**
- * Tacks on a trailer to the last added chunk
- * This is currently only used to align colons after variable defs
- */
-void AlignStack::AddTrailer(chunk_t *pc)
-{
-   if (m_last_added == 2)
-   {
-      m_skipped.SetTopTrailer(pc);
-   }
-   else if (m_last_added == 1)
-   {
-      m_aligned.SetTopTrailer(pc);
-   }
-}
-
-/**
  * Adds some newline and calls Flush() if needed
  */
 void AlignStack::NewLines(int cnt)
@@ -255,7 +238,6 @@ void AlignStack::Flush()
    int last_seqnum = 0;
    int idx;
    const ChunkStack::Entry *ce = NULL;
-   ChunkStack trailer_cs;
    chunk_t    *pc;
 
    LOG_FMT(LAS, "Flush (min=%d, max=%d)\n", m_min_col, m_max_col);
@@ -274,11 +256,6 @@ void AlignStack::Flush()
          ce->m_pc->align.amp_style   = (int)m_amp_style;
          ce->m_pc->align.star_style  = (int)m_star_style;
          ce->m_pc->align.gap         = m_gap;
-      }
-
-      if (ce->m_trailer != NULL)
-      {
-         trailer_cs.Push(ce->m_trailer);
       }
 
       int da_col = m_max_col;
@@ -348,23 +325,6 @@ void AlignStack::Flush()
 
       /* Add all items from the skipped list */
       ReAddSkipped();
-   }
-
-   /* find the trailer column */
-   int trailer_col = 0;
-   for (idx = 0; (pc = trailer_cs.GetChunk(idx)) != NULL; idx++)
-   {
-      pc->align.next = m_aligned.GetChunk(idx + 1);
-      if (trailer_col < pc->column)
-      {
-         trailer_col = pc->column;
-      }
-   }
-
-   /* and align the trailers */
-   while ((pc = trailer_cs.Pop()) != NULL)
-   {
-      align_to_column(pc, trailer_col);
    }
 }
 

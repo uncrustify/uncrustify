@@ -34,10 +34,6 @@ void ChunkStack::Set(const ChunkStack& cs)
    for (int idx = 0; idx < cs.m_len; idx++)
    {
       Push(cs.m_cse[idx].m_pc, cs.m_cse[idx].m_seqnum);
-      if (cs.m_cse[idx].m_trailer != NULL)
-      {
-         SetTopTrailer(cs.m_cse[idx].m_trailer);
-      }
    }
    m_seqnum = cs.m_seqnum;
 }
@@ -49,14 +45,6 @@ const ChunkStack::Entry *ChunkStack::Top() const
       return(&m_cse[m_len - 1]);
    }
    return(NULL);
-}
-
-void ChunkStack::SetTopTrailer(chunk_t *pc)
-{
-   if (m_len > 0)
-   {
-      m_cse[m_len - 1].m_trailer = pc;
-   }
 }
 
 const ChunkStack::Entry *ChunkStack::Get(int idx) const
@@ -95,7 +83,6 @@ void ChunkStack::Push(chunk_t *pc, int seqnum)
    }
    m_cse[m_len].m_pc      = pc;
    m_cse[m_len].m_seqnum  = seqnum;
-   m_cse[m_len].m_trailer = NULL;
    m_len++;
    if (m_seqnum < seqnum)
    {
@@ -132,8 +119,7 @@ void ChunkStack::Zap(int idx)
    if ((idx < m_len) && (idx >= 0))
    {
       assert(m_cse != NULL);
-      m_cse[idx].m_pc      = NULL;
-      m_cse[idx].m_trailer = NULL;
+      m_cse[idx].m_pc = NULL;
    }
 }
 
@@ -151,9 +137,8 @@ void ChunkStack::Collapse()
       assert(m_cse != NULL);
       if (m_cse[idx].m_pc != NULL)
       {
-         m_cse[m_len].m_pc      = m_cse[idx].m_pc;
-         m_cse[m_len].m_trailer = m_cse[idx].m_trailer;
-         m_cse[m_len].m_seqnum  = m_cse[idx].m_seqnum;
+         m_cse[m_len].m_pc     = m_cse[idx].m_pc;
+         m_cse[m_len].m_seqnum = m_cse[idx].m_seqnum;
          m_len++;
       }
    }
