@@ -779,9 +779,6 @@ static chunk_t *align_var_def_brace(chunk_t *start, int span)
       align_mask |= PCF_VAR_INLINE;
    }
 
-   LOG_FMT(LSYS, "%s: start=[%.*s] line=%d col=%d level=%d\n",
-           __func__, start->len, start->str, start->orig_line, start->orig_col, start->level);
-
    /* Set up the var/proto/def aligner */
    as.Start(myspan, mythresh);
    as.m_gap        = mygap;
@@ -818,7 +815,7 @@ static chunk_t *align_var_def_brace(chunk_t *start, int span)
              ((pc->type == CT_FUNC_DEF) &&
               cpd.settings[UO_align_single_line_func].b))
          {
-            LOG_FMT(LSYS, "    add=[%.*s] line=%d col=%d level=%d\n",
+            LOG_FMT(LAVDB, "    add=[%.*s] line=%d col=%d level=%d\n",
                     pc->len, pc->str, pc->orig_line, pc->orig_col, pc->level);
 
             as.Add(pc);
@@ -871,7 +868,7 @@ static chunk_t *align_var_def_brace(chunk_t *start, int span)
       {
          if (!did_this_line)
          {
-            LOG_FMT(LSYS, "    add=[%.*s] line=%d col=%d level=%d\n",
+            LOG_FMT(LAVDB, "    add=[%.*s] line=%d col=%d level=%d\n",
                     pc->len, pc->str, pc->orig_line, pc->orig_col, pc->level);
 
             as.Add(pc);
