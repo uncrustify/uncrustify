@@ -273,10 +273,32 @@ int main(int argc, char *argv[])
    if (((cfg_file = arg.Param("--config")) == NULL) &&
        ((cfg_file = arg.Param("-c")) == NULL))
    {
-#ifdef WIN32
-      usage_exit("Specify the config file: -c file", argv[0], 58);
-#endif
+      /* Handled later */
    }
+
+#ifndef WIN32
+   /* Try to file a config at an alternate location */
+   char buf[512];
+   if (cfg_file == NULL)
+   {
+      cfg_file = getenv("UNCRUSTIFY_CONFIG");
+      if (cfg_file == NULL)
+      {
+         const char *home = getenv("HOME");
+
+         if (home != NULL)
+         {
+            struct stat tmp_stat;
+
+            snprintf(buf, sizeof(buf), "%s/.uncrustify.cfg", home);
+            if (stat(buf, &tmp_stat) == 0)
+            {
+               cfg_file = buf;
+            }
+         }
+      }
+   }
+#endif
 
    /* Get the parsed file name */
    if (((parsed_file = arg.Param("--parsed")) != NULL) ||
@@ -384,6 +406,18 @@ int main(int argc, char *argv[])
       }
    }
 
+   /* Try to load the config file, if available.
+    * It is optional for "--universalindent", but required for everything else.
+    */
+   if (cfg_file != NULL)
+   {
+      cpd.filename = cfg_file;
+      if (load_option_file(cfg_file) < 0)
+      {
+         usage_exit("Unable to load the config file", argv[0], 56);
+      }
+   }
+
    if (arg.Present("--universalindent"))
    {
       FILE *pfile = stdout;
@@ -404,9 +438,29 @@ int main(int argc, char *argv[])
       return(EXIT_SUCCESS);
    }
 
+   /* Everything beyond this point requires a config file, so complain and
+    * bail if we don't have one.
+    */
+   if (cfg_file == NULL)
+   {
+#ifdef WIN32
+      usage_exit("Specify the config file: -c file", argv[0], 58);
+#else
+      usage_exit("Specify the config file with '-c file' or set UNCRUSTIFY_CONFIG",
+                 argv[0], 58);
+#endif
+   }
+
    /*
     *  Done parsing args
     */
+
+   if (update_config || update_config_wd)
+   {
+      redir_stdout(output_file);
+      save_option_file(stdout, update_config_wd);
+      return(0);
+   }
 
    /* Check for unused args (ignore them) */
    idx   = 1;
@@ -426,39 +480,6 @@ int main(int argc, char *argv[])
          usage_exit("Cannot specify -o with a mulit-file option.",
                     argv[0], 68);
       }
-   }
-
-#ifndef WIN32
-   char buf[512];
-   if (cfg_file == NULL)
-   {
-      cfg_file = getenv("UNCRUSTIFY_CONFIG");
-      if (cfg_file == NULL)
-      {
-         const char *home = getenv("HOME");
-
-         if (home == NULL)
-         {
-            usage_exit("Specify the config file with '-c file' or set UNCRUSTIFY_CONFIG",
-                       argv[0], 58);
-         }
-         snprintf(buf, sizeof(buf), "%s/.uncrustify.cfg", home);
-         cfg_file = buf;
-      }
-   }
-#endif
-
-   cpd.filename = cfg_file;
-   if (load_option_file(cfg_file) < 0)
-   {
-      usage_exit("Unable to load the config file", argv[0], 56);
-   }
-
-   if (update_config || update_config_wd)
-   {
-      redir_stdout(output_file);
-      save_option_file(stdout, update_config_wd);
-      return(0);
    }
 
    /* This relies on cpd.filename being the config file name */
