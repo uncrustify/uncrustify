@@ -7,7 +7,7 @@ Just in case I don't do a release for a while and forget what to do... =)
 0. Update the following two lines and paste into a terminal:
 
 UNC_URL=https://uncrustify.svn.sourceforge.net/svnroot/uncrustify
-UNC_REL=0.45
+UNC_REL=0.46
 
 1. Make sure all tests pass
 

@@ -14,26 +14,27 @@ Future plans: (in no particular order)
  - Build as a shared library on Linux and maybe a dll on windows?
  - Plug into SlickEdit/Gedit/Kedit
  - Add an option to create a configuration file based on a source file
+ - Add a 'live' mode where Uncrustify gives the indent for a single line or
+   the next 'align' point
 
 
-Near-term plans
+What's left before 1.0
 -------------------------------------------------------------------------------
- - improve code width logic
-   + add options to remove newlines inside parens before splitting long lines
- - more misc code cleanup
- - fix pending bugs
- - investigate using std:string instead of char arrays
+ - Improve test coverage (so boring!)
+ - Clean up documentation
+ - Bug fixes...
 
 
 ===============================================================================
 
 
-Changes in uncrustify-0.46 (not yet released)
+Changes in uncrustify-0.46 (22-Apr-2008)
 -------------------------------------------------------------------------------
  - Load the config file, if available, before handling '--universalindent'
  - Add align_var_def_gap, align_var_def_colon_gap, align_var_struct_gap,
    align_func_proto_gap, align_mix_var_proto, align_single_line_brace_gap
- - (internal) Eliminate the 'trailer' stuff
+ - (internal) Eliminate the 'trailer' stuff, simplify aligning
+
 
 Changes in uncrustify-0.45 (7-Mar-2008)
 -------------------------------------------------------------------------------
