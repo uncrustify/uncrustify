@@ -153,31 +153,32 @@ void align_to_column(chunk_t *pc, int column)
    {
       chunk_t *next = chunk_get_next(pc);
 
-      if (next != NULL)
+      if (next == NULL)
       {
-         min_col += space_col_align(pc, next);
-         pc = next;
-         bool is_comment = chunk_is_comment(pc);
-         bool keep = is_comment && chunk_is_single_line_comment(pc) &&
-                     cpd.settings[UO_indent_relative_single_line_comments].b;
+         break;
+      }
+      min_col += space_col_align(pc, next);
+      pc = next;
+      bool is_comment = chunk_is_comment(pc);
+      bool keep = is_comment && chunk_is_single_line_comment(pc) &&
+                  cpd.settings[UO_indent_relative_single_line_comments].b;
 
-         if (is_comment && (pc->parent_type != CT_COMMENT_EMBED) && !keep)
+      if (is_comment && (pc->parent_type != CT_COMMENT_EMBED) && !keep)
+      {
+         pc->column = pc->orig_col;
+         if (pc->column < min_col)
          {
-            pc->column = pc->orig_col;
-            if (pc->column < min_col)
-            {
-               pc->column = min_col;// + 1;
-            }
-            LOG_FMT(LINDLINE, "%s: set comment on line %d to col %d (orig %d)\n",
-                    __func__, pc->orig_line, pc->column, pc->orig_col);
+            pc->column = min_col;// + 1;
          }
-         else
+         LOG_FMT(LINDLINE, "%s: set comment on line %d to col %d (orig %d)\n",
+                 __func__, pc->orig_line, pc->column, pc->orig_col);
+      }
+      else
+      {
+         pc->column += col_delta;
+         if (pc->column < min_col)
          {
-            pc->column += col_delta;
-            if (pc->column < min_col)
-            {
-               pc->column = min_col;
-            }
+            pc->column = min_col;
          }
       }
    } while ((pc != NULL) && (pc->nl_count == 0));
