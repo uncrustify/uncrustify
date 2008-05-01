@@ -2443,7 +2443,7 @@ static void mark_function(chunk_t *pc)
       while (tmp != paren_close)
       {
          tmp2 = chunk_get_next_ncnl(tmp);
-         if (tmp->type == CT_COMMA)
+         if ((tmp->type == CT_COMMA) && (tmp->level == (paren_open->level + 1)))
          {
             if (!can_be_full_param(ref, tmp))
             {
