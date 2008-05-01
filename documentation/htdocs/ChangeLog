@@ -28,6 +28,12 @@ What's left before 1.0
 ===============================================================================
 
 
+Changes in uncrustify-0.47 (not yet released)
+-------------------------------------------------------------------------------
+ - Fix inifinite loop bug in reindent_line
+ - Fix prototype detection with template parameter types
+
+
 Changes in uncrustify-0.46 (22-Apr-2008)
 -------------------------------------------------------------------------------
  - Load the config file, if available, before handling '--universalindent'
