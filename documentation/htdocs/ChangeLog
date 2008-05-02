@@ -35,6 +35,7 @@ Changes in uncrustify-0.47 (not yet released)
  - Fix off-by-1 error on positive values for indent_access_spec and indent_label
  - Add indent_extern to control indent extern-type namespaces
  - Add initial support for Objective C++ (extension '.mm')
+ - Add nl_before_throw and indent 'throw' if after a prototype
 
 
 Changes in uncrustify-0.46 (22-Apr-2008)

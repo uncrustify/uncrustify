@@ -583,6 +583,7 @@ void indent_text(void)
             /* End any assign operations with a semicolon on the same level */
             if (chunk_is_semicolon(pc) &&
                 ((frm.pse[frm.pse_tos].type == CT_IMPORT) ||
+                 (frm.pse[frm.pse_tos].type == CT_THROW) ||
                  (frm.pse[frm.pse_tos].type == CT_USING)))
             {
                indent_pse_pop(frm, pc);
@@ -1050,6 +1051,18 @@ void indent_text(void)
          {
             cout_col   = pc->column;
             cout_level = pc->level;
+         }
+      }
+      else if (pc->type == CT_THROW)
+      {
+         if (pc->parent_type == CT_FUNC_PROTO)
+         {
+            indent_pse_push(frm, pc);
+            frm.pse[frm.pse_tos].indent     = frm.pse[frm.pse_tos - 1].indent_tmp + indent_size;
+            frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
+            frm.pse[frm.pse_tos].indent_tab = frm.pse[frm.pse_tos].indent;
+
+            indent_column_set(frm.pse[frm.pse_tos].indent_tmp);
          }
       }
       else

@@ -1493,6 +1493,10 @@ void newlines_cleanup_braces(void)
             newline_case(pc);
          }
       }
+      else if (pc->type == CT_THROW)
+      {
+         newline_iarf(chunk_get_prev_ncnl(pc), cpd.settings[UO_nl_before_throw].a);
+      }
       else if (pc->type == CT_CASE_COLON)
       {
          if (cpd.settings[UO_nl_after_case].b)

@@ -464,6 +464,8 @@ void register_options(void)
                   "Force a newline in a define after the macro name for multi-line defines.");
    unc_add_option("nl_before_case", UO_nl_before_case, AT_BOOL,
                   "Whether to put a newline before 'case' statement");
+   unc_add_option("nl_before_throw", UO_nl_before_throw, AT_IARF,
+                  "Add or remove newline between ')' and 'throw'");
    unc_add_option("nl_after_case", UO_nl_after_case, AT_BOOL,
                   "Whether to put a newline after 'case' statement");
    unc_add_option("nl_namespace_brace", UO_nl_namespace_brace, AT_IARF,

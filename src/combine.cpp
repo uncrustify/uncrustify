@@ -500,6 +500,15 @@ void fix_symbols(void)
          fix_fcn_def_params(next);
       }
 
+      if ((pc->type == CT_THROW) && (prev->type == CT_FPAREN_CLOSE))
+      {
+         pc->parent_type = prev->parent_type;
+         if (next->type == CT_PAREN_OPEN)
+         {
+            set_paren_parent(next, CT_THROW);
+         }
+      }
+
       /* Mark the braces in: "for_each_entry(xxx) { }" */
       if ((pc->type == CT_BRACE_OPEN) &&
           (prev->type == CT_FPAREN_CLOSE) &&
