@@ -87,6 +87,30 @@ void tokenize_cleanup(void)
          }
       }
 
+      /* change extern to qualifier if extern isn't followed by a string or
+       * an open paren
+       */
+      if (pc->type == CT_EXTERN)
+      {
+         if (next->type == CT_STRING)
+         {
+            /* Probably 'extern "C"' */
+         }
+         else if (next->type == CT_PAREN_OPEN)
+         {
+            /* Probably 'extern (C)' */
+         }
+         else
+         {
+            /* Something else followed by a open brace */
+            tmp = chunk_get_next_ncnl(next);
+            if ((tmp != NULL) || (tmp->type != CT_BRACE_OPEN))
+            {
+               pc->type = CT_QUALIFIER;
+            }
+         }
+      }
+
       /**
        * Change CT_STAR to CT_PTR_TYPE if preceeded by CT_TYPE,
        * CT_QUALIFIER, or CT_PTR_TYPE.
@@ -160,17 +184,6 @@ void tokenize_cleanup(void)
       {
          pc->type = CT_WORD;
       }
-
-      /* REVISIT: This duplicates above logic */
-      // if ((pc->type == CT_ENUM) ||
-      //     (pc->type == CT_STRUCT) ||
-      //     (pc->type == CT_UNION))
-      // {
-      //    if (get_char_table(*next->str) & CT_KW1)
-      //    {
-      //       next->type = CT_TYPE;
-      //    }
-      // }
 
       /* Change item after operator (>=, ==, etc) to a CT_FUNCTION */
       if (pc->type == CT_OPERATOR)

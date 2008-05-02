@@ -112,7 +112,7 @@ static const chunk_tag_t keywords[] =
    { "explicit",         CT_TYPE,         LANG_C | LANG_CPP | LANG_CS                                     },
    { "export",           CT_EXPORT,       LANG_C | LANG_CPP | LANG_D                                      },
    { "extends",          CT_QUALIFIER,    LANG_JAVA                                                       },
-   { "extern",           CT_QUALIFIER,    LANG_C | LANG_CPP | LANG_CS | LANG_D | LANG_VALA                },
+   { "extern",           CT_EXTERN,       LANG_C | LANG_CPP | LANG_CS | LANG_D | LANG_VALA                },
    { "false",            CT_WORD,         LANG_CPP | LANG_CS | LANG_D | LANG_JAVA | LANG_VALA             },
    { "file",             CT_PP_FILE,      LANG_PAWN | FLAG_PP                                             }, // PAWN
    { "final",            CT_QUALIFIER,    LANG_D                                                          },

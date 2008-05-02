@@ -45,7 +45,7 @@ module mango.cache.HashMap;
 
 extern (C)
 {
-    int memcmp(char *, char *, uint);
+int memcmp(char *, char *, uint);
 }
 
 

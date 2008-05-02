@@ -766,6 +766,10 @@ void indent_text(void)
             {
                frm.pse[frm.pse_tos].indent -= indent_size;
             }
+            else if ((pc->parent_type == CT_EXTERN) && !cpd.settings[UO_indent_extern].b)
+            {
+               frm.pse[frm.pse_tos].indent -= indent_size;
+            }
 
             frm.pse[frm.pse_tos].indent_tab = frm.pse[frm.pse_tos].indent;
          }

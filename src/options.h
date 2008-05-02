@@ -137,6 +137,7 @@ enum uncrustify_options
    UO_indent_func_param_double,  // double the tab indent for
 
    UO_indent_namespace,          // indent stuff inside namespace braces
+   UO_indent_extern,
    UO_indent_class,              // indent stuff inside class braces
    UO_indent_class_colon,        // indent stuff after a class colon
 

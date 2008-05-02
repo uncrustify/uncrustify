@@ -351,6 +351,15 @@ void fix_symbols(void)
          }
       }
 
+      if (pc->type == CT_EXTERN)
+      {
+         tmp = chunk_get_next_type(next, CT_BRACE_OPEN, next->level);
+         if (tmp != NULL)
+         {
+            set_paren_parent(tmp, CT_EXTERN);
+         }
+      }
+
       if (pc->type == CT_TEMPLATE)
       {
          handle_template(pc);
