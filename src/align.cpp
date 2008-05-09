@@ -951,6 +951,7 @@ static CmtAlignType get_comment_align_type(chunk_t *cmt)
        ((prev = chunk_get_prev(cmt)) != NULL))
    {
       if ((prev->type == CT_PP_ENDIF) ||
+          (prev->type == CT_PP_ELSE) ||
           (prev->type == CT_BRACE_CLOSE))
       {
          /* REVISIT: someone may want this configurable */
