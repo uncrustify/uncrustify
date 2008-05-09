@@ -203,15 +203,21 @@ static bool maybe_while_of_do(chunk_t *pc)
 static void push_fmr_pse(struct parse_frame *frm, chunk_t *pc,
                          brstage_e stage, const char *logtext)
 {
-   //LOG_FMT(LSYS, "%s: pc=%.*s line=%d col=%d stage=%d log=%s\n",
-   //        __func__, pc->len, pc->str, pc->orig_line, pc->orig_col, stage, logtext);
+   if (frm->pse_tos < (int)ARRAY_SIZE(frm->pse))
+   {
+      frm->pse_tos++;
+      frm->pse[frm->pse_tos].type  = pc->type;
+      frm->pse[frm->pse_tos].stage = stage;
+      frm->pse[frm->pse_tos].pc    = pc;
 
-   frm->pse_tos++;
-   frm->pse[frm->pse_tos].type  = pc->type;
-   frm->pse[frm->pse_tos].stage = stage;
-   frm->pse[frm->pse_tos].pc    = pc;
-
-   print_stack(LBCSPUSH, logtext, frm, pc);
+      print_stack(LBCSPUSH, logtext, frm, pc);
+   }
+   else
+   {
+      LOG_FMT(LWARN, "%s:%d Error: Frame stack overflow,  Unable to properly process this file.\n",
+              cpd.filename, cpd.line_number);
+      cpd.error_count++;
+   }
 }
 
 /**
