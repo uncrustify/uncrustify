@@ -21,6 +21,7 @@ static void convert_vbrace_to_brace(void);
 static void examine_braces(void);
 static void examine_brace(chunk_t *bopen);
 static void remove_brace(chunk_t *pc);
+static void move_case_break();
 
 
 void do_braces(void)
@@ -80,6 +81,11 @@ void do_braces(void)
             break;
          }
       }
+   }
+
+   if (cpd.settings[UO_mod_move_case_break].b)
+   {
+      move_case_break();
    }
 }
 
@@ -457,5 +463,27 @@ void add_long_closebrace_comment(void)
             break;
          }
       }
+   }
+}
+
+static void move_case_break()
+{
+   chunk_t *pc;
+   chunk_t *prev = NULL;
+
+   for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next_ncnl(pc))
+   {
+      if ((pc->type == CT_BREAK) &&
+          (prev != NULL) &&
+          (prev->type == CT_BRACE_CLOSE) &&
+          (prev->parent_type == CT_CASE))
+      {
+         if (chunk_is_newline(chunk_get_prev(pc)) &&
+             chunk_is_newline(chunk_get_prev(prev)))
+         {
+            chunk_swap_lines(prev, pc);
+         }
+      }
+      prev = pc;
    }
 }

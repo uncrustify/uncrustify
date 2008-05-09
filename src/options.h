@@ -451,6 +451,7 @@ enum uncrustify_options
    UO_mod_sort_import,
    UO_mod_sort_using,
    UO_mod_sort_include,
+   UO_mod_move_case_break,
 
 
    /*

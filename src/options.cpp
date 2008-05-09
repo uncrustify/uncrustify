@@ -763,6 +763,8 @@ void register_options(void)
    unc_add_option("mod_sort_include", UO_mod_sort_include, AT_BOOL,
                   "If TRUE, will sort consecutive single-line '#include' statements [C/C++] and '#import' statements [Obj-C]\n"
                   "This is generally a bad idea, as it may break your code.");
+   unc_add_option("mod_move_case_break", UO_mod_move_case_break, AT_BOOL,
+                  "If TRUE, it will move a 'break' that appears after a fully braced 'case' before the close brace.");
 
    unc_begin_group(UG_preprocessor, "Preprocessor options");
    unc_add_option("pp_indent", UO_pp_indent, AT_IARF,
