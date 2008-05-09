@@ -294,7 +294,7 @@ struct cp_data
 
    int                lang_flags; // LANG_xxx
 
-   UINT16             line_number;
+   UINT32             line_number;
    UINT16             column;  /* column for parsing */
 
    /* stuff to auto-detect line endings */
