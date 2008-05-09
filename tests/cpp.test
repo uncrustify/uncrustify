@@ -5,7 +5,7 @@
 # test.name  config.file  input.file
 
 30000 ben.cfg                          cpp/cout.cpp
-30001 ben.cfg                          cpp/alt_tokens.cpp
+#30001 ben.cfg                          cpp/alt_tokens.cpp
 30002 ben.cfg                          cpp/constructor.cpp
 30003 ben.cfg                          cpp/strings.cpp
 30010 ben.cfg                          cpp/class.h
