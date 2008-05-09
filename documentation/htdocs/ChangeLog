@@ -36,6 +36,8 @@ Changes in uncrustify-0.47 (not yet released)
  - Add indent_extern to control indent extern-type namespaces
  - Add initial support for Objective C++ (extension '.mm')
  - Add nl_before_throw and indent 'throw' if after a prototype
+ - Extend line numbers to 32 bits (used for logging)
+ - Remove alternate token support for '<%', '%>', '<:', ':>', '%:', and '%:%:'
 
 
 Changes in uncrustify-0.46 (22-Apr-2008)
