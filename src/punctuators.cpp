@@ -25,7 +25,6 @@
 static const chunk_tag_t symbols4[] =
 {
    { "!<>=", CT_COMPARE, LANG_D                         },
-   { "%:%:", CT_PP,      LANG_C | LANG_CPP              },
    { ">>>=", CT_ASSIGN,  LANG_D | LANG_JAVA | LANG_PAWN },
 };
 
@@ -53,9 +52,7 @@ static const chunk_tag_t symbols2[] =
    { "!>", CT_COMPARE,      LANG_D                               },
    { "!~", CT_COMPARE,      LANG_D                               },
    { "##", CT_PP,           LANG_C | LANG_CPP                    },
-   { "%:", CT_POUND,        LANG_C | LANG_CPP                    },
    { "%=", CT_ASSIGN,       LANG_ALL                             },
-   { "%>", CT_BRACE_CLOSE,  LANG_C | LANG_CPP                    },
    { "&&", CT_BOOL,         LANG_ALL                             },
    { "&=", CT_ASSIGN,       LANG_ALL                             },
    { "*=", CT_ASSIGN,       LANG_ALL                             },
@@ -68,9 +65,6 @@ static const chunk_tag_t symbols2[] =
    { "..", CT_RANGE,        LANG_D                               },
    { "/=", CT_ASSIGN,       LANG_ALL                             },
    { "::", CT_DC_MEMBER,    LANG_C | LANG_CPP | LANG_CS | LANG_D },
-   { ":>", CT_SQUARE_CLOSE, LANG_C | LANG_CPP                    },
-   { "<%", CT_BRACE_OPEN,   LANG_C | LANG_CPP                    },
-   { "<:", CT_SQUARE_OPEN,  LANG_C | LANG_CPP                    },
    { "<<", CT_ARITH,        LANG_ALL                             },
    { "<=", CT_COMPARE,      LANG_ALL                             },
    { "<>", CT_COMPARE,      LANG_D                               },
