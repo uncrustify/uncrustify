@@ -29,7 +29,7 @@ void foo(void)
 		multiline(123,
 		          345);
 	}
-			break;
+	break;
 
 		case (case1):
 	{

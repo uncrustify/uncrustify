@@ -28,8 +28,8 @@ void foo(void)
 			handle_a();
 			multiline(123,
 			          345);
-		}
 			break;
+		}
 
 		case (case1):
 		{
