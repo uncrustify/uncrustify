@@ -860,6 +860,17 @@ void indent_text(void)
          /* Always set on case statements */
          indent_column_set(frm.pse[frm.pse_tos].indent_tmp);
       }
+      else if (pc->type == CT_BREAK)
+      {
+         prev = chunk_get_prev_ncnl(pc);
+         if ((prev != NULL) &&
+             (prev->type == CT_BRACE_CLOSE) &&
+             (prev->parent_type == CT_CASE))
+         {
+            /* This only affects the 'break', so no need for a stack entry */
+            indent_column_set(prev->column);
+         }
+      }
       else if (pc->type == CT_LABEL)
       {
          /* Labels get sent to the left or backed up */
