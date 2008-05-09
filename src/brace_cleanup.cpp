@@ -200,6 +200,20 @@ static bool maybe_while_of_do(chunk_t *pc)
    return(false);
 }
 
+static void push_fmr_pse(struct parse_frame *frm, chunk_t *pc,
+                         brstage_e stage, const char *logtext)
+{
+   //LOG_FMT(LSYS, "%s: pc=%.*s line=%d col=%d stage=%d log=%s\n",
+   //        __func__, pc->len, pc->str, pc->orig_line, pc->orig_col, stage, logtext);
+
+   frm->pse_tos++;
+   frm->pse[frm->pse_tos].type  = pc->type;
+   frm->pse[frm->pse_tos].stage = stage;
+   frm->pse[frm->pse_tos].pc    = pc;
+
+   print_stack(LBCSPUSH, logtext, frm, pc);
+}
+
 /**
  * At the heart of this algorithm are two stacks.
  * There is the Paren Stack (PS) and the Frame stack.
@@ -361,9 +375,10 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
          if ((frm->pse[frm->pse_tos].type != CT_NONE) &&
              (frm->pse[frm->pse_tos].type != CT_PP_DEFINE))
          {
-            LOG_FMT(LWARN, "%s:%d Error: Unexpected '%.*s' for '%s'\n",
+            LOG_FMT(LWARN, "%s:%d Error: Unexpected '%.*s' for '%s', which was on line %d\n",
                     cpd.filename, pc->orig_line, pc->len, pc->str,
-                    get_token_name(frm->pse[frm->pse_tos].type));
+                    get_token_name(frm->pse[frm->pse_tos].pc->type),
+                    frm->pse[frm->pse_tos].pc->orig_line);
             print_stack(LBCSPOP, "=Error  ", frm, pc);
             cpd.error_count++;
          }
@@ -510,13 +525,9 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
       {
          frm->brace_level++;
       }
-      frm->pse_tos++;
-      frm->pse[frm->pse_tos].type   = pc->type;
-      frm->pse[frm->pse_tos].stage  = BS_NONE;
+      push_fmr_pse(frm, pc, BS_NONE, "+Open   ");
       frm->pse[frm->pse_tos].parent = parent;
       pc->parent_type = parent;
-
-      print_stack(LBCSPUSH, "+Open   ", frm, pc);
    }
 
    pattern_class patcls = get_token_pattern_class(pc->type);
@@ -524,43 +535,28 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
    /** Create a stack entry for complex statments IF/DO/FOR/WHILE/SWITCH */
    if (patcls == PATCLS_BRACED)
    {
-      frm->pse_tos++;
-      frm->pse[frm->pse_tos].type  = pc->type;
-      frm->pse[frm->pse_tos].stage = (pc->type == CT_DO) ? BS_BRACE_DO : BS_BRACE2;
-
-      print_stack(LBCSPUSH, "+ComplexBraced", frm, pc);
+      push_fmr_pse(frm, pc,
+                   (pc->type == CT_DO) ? BS_BRACE_DO : BS_BRACE2,
+                   "+ComplexBraced");
    }
    else if (patcls == PATCLS_PBRACED)
    {
-      frm->pse_tos++;
+      brstage_e bs = BS_PAREN1;
+
       if ((pc->type == CT_WHILE) && maybe_while_of_do(pc))
       {
          pc->type = CT_WHILE_OF_DO;
-         frm->pse[frm->pse_tos].stage = BS_WOD_PAREN;
+         bs       = BS_WOD_PAREN;
       }
-      else
-      {
-         frm->pse[frm->pse_tos].stage = BS_PAREN1;
-      }
-      frm->pse[frm->pse_tos].type = pc->type;
-
-      print_stack(LBCSPUSH, "+ComplexParenBraced", frm, pc);
+      push_fmr_pse(frm, pc, bs, "+ComplexParenBraced");
    }
    else if (patcls == PATCLS_OPBRACED)
    {
-      frm->pse_tos++;
-      frm->pse[frm->pse_tos].type  = pc->type;
-      frm->pse[frm->pse_tos].stage = BS_OP_PAREN1;
-
-      print_stack(LBCSPUSH, "+ComplexOpParenBraced", frm, pc);
+      push_fmr_pse(frm, pc, BS_OP_PAREN1, "+ComplexOpParenBraced");
    }
    else if (patcls == PATCLS_ELSE)
    {
-      frm->pse_tos++;
-      frm->pse[frm->pse_tos].type  = pc->type;
-      frm->pse[frm->pse_tos].stage = BS_ELSEIF;
-
-      print_stack(LBCSPUSH, "+ComplexElse", frm, pc);
+      push_fmr_pse(frm, pc, BS_ELSEIF, "+ComplexElse");
    }
 
    /* Mark simple statement/expression starts
@@ -723,12 +719,8 @@ static bool check_complex_statements(struct parse_frame *frm, chunk_t *pc)
       frm->level++;
       frm->brace_level++;
 
-      frm->pse_tos++;
-      frm->pse[frm->pse_tos].type   = CT_VBRACE_OPEN;
-      frm->pse[frm->pse_tos].stage  = BS_NONE;
+      push_fmr_pse(frm, vbrace, BS_NONE, "+VBrace ");
       frm->pse[frm->pse_tos].parent = parent;
-
-      print_stack(LBCSPUSH, "+VBrace ", frm, pc);
 
       /* update the level of pc */
       pc->level       = frm->level;
