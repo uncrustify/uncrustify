@@ -661,7 +661,7 @@ void fix_symbols(void)
          {
             pc->type = CT_PTR_TYPE;
          }
-         else if (prev->type == CT_SIZEOF)
+         else if ((prev->type == CT_SIZEOF) || (prev->type == CT_DELETE))
          {
             pc->type = CT_DEREF;
          }
@@ -677,17 +677,24 @@ void fix_symbols(void)
 
       if (pc->type == CT_AMP)
       {
-         pc->type = CT_ARITH;
-         if (prev->type == CT_WORD)
+         if (prev->type == CT_DELETE)
          {
-            tmp = chunk_get_prev_ncnl(prev);
-            if (chunk_is_semicolon(tmp) ||
-                (tmp->type == CT_BRACE_OPEN) ||
-                (tmp->type == CT_QUALIFIER))
+            pc->type = CT_DEREF;
+         }
+         else
+         {
+            pc->type = CT_ARITH;
+            if (prev->type == CT_WORD)
             {
-               prev->type   = CT_TYPE;
-               pc->type     = CT_ADDR;
-               next->flags |= PCF_VAR_1ST;
+               tmp = chunk_get_prev_ncnl(prev);
+               if (chunk_is_semicolon(tmp) ||
+                   (tmp->type == CT_BRACE_OPEN) ||
+                   (tmp->type == CT_QUALIFIER))
+               {
+                  prev->type   = CT_TYPE;
+                  pc->type     = CT_ADDR;
+                  next->flags |= PCF_VAR_1ST;
+               }
             }
          }
       }
