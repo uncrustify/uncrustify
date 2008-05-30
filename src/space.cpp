@@ -334,6 +334,11 @@ argval_t do_space(chunk_t *first, chunk_t *second)
       return(AV_FORCE);
    }
 
+   if ((first->type == CT_BRACE_OPEN) && (second->type == CT_BRACE_CLOSE))
+   {
+      return(cpd.settings[UO_sp_inside_braces_empty].a);
+   }
+
    if (second->type == CT_BRACE_CLOSE)
    {
       if (second->parent_type == CT_ENUM)

@@ -217,6 +217,8 @@ void register_options(void)
                   "Add or remove space inside struct/union '{' and '}'");
    unc_add_option("sp_inside_braces", UO_sp_inside_braces, AT_IARF,
                   "Add or remove space inside '{' and '}'");
+   unc_add_option("sp_inside_braces_empty", UO_sp_inside_braces_empty, AT_IARF,
+                  "Add or remove space inside '{}'");
    unc_add_option("sp_inside_angle", UO_sp_inside_angle, AT_IARF,
                   "Add or remove space inside '<' and '>'");
    unc_add_option("sp_type_func", UO_sp_type_func, AT_IARF,

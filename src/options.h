@@ -219,6 +219,7 @@ enum uncrustify_options
    UO_sp_before_semi_for_empty, // space before ';' in empty for statement
    UO_sp_after_semi_for_empty,  // space after final ';' in empty for statement
    UO_sp_inside_braces,         // space inside '{' and '}' - "{ 1, 2, 3 }"
+   UO_sp_inside_braces_empty,   // space inside '{' and '}' - "{ }"
    UO_sp_inside_braces_enum,    // space inside enum '{' and '}' - "{ a, b, c }"
    UO_sp_inside_braces_struct,  // space inside struct/union '{' and '}'
 
