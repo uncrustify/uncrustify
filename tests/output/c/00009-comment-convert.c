@@ -8,13 +8,13 @@ int foo(int bar)
                       */
 
 
-    /* Comment with embedded /* C comment * / */
+    /* Comment with embedded / * C comment * / */
     for (idx = 1; idx < bar; idx++)
         /* comment in virtual braces */
         res += idx;
 
     /*
-     * Multi-line comment with embedded /* C comment * / and junk
+     * Multi-line comment with embedded / * C comment * / and junk
      * afterwards
      */
     res *= idx;       /* some comment */

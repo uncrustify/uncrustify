@@ -636,6 +636,7 @@ static void add_comment_text(const char *text, int len,
                              cmt_reflow& cmt, bool esc_close)
 {
    bool was_star   = false;
+   bool was_slash  = false;
    bool was_dollar = false;
    bool in_word    = false;
 
@@ -665,7 +666,9 @@ static void add_comment_text(const char *text, int len,
       else
       {
          /* Escape a C closure in a CPP comment */
-         if (esc_close && was_star && (text[idx] == '/'))
+         if (esc_close &&
+             ((was_star && (text[idx] == '/')) ||
+              (was_slash && (text[idx] == '*'))))
          {
             add_char(' ');
          }
@@ -676,6 +679,7 @@ static void add_comment_text(const char *text, int len,
          in_word = !unc_isspace(text[idx]);
          add_char(text[idx]);
          was_star   = (text[idx] == '*');
+         was_slash  = (text[idx] == '/');
          was_dollar = (text[idx] == '$');
       }
    }
