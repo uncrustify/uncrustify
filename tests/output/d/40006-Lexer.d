@@ -1386,7 +1386,7 @@ class Lexer
                 break;
 
             case '"':
-//			    	writefln( "end of string: ", stringbuffer.toString );
+//			        writefln( "end of string: ", stringbuffer.toString );
                 t.ustring = stringbuffer.toString().dup;
                 //				t.len = stringbuffer.offset;
                 //				stringbuffer.write(cast(byte)0);

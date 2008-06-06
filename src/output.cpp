@@ -35,6 +35,8 @@ static void add_comment_text(const char *text, int len,
 
 void add_char(char ch)
 {
+   static char last_char = 0;
+
    /* convert a newline into the LF/CRLF/CR sequence */
    if (ch == '\n')
    {
@@ -44,16 +46,30 @@ void add_char(char ch)
    }
    else
    {
-      fputc(ch, cpd.fout);
-      if (ch == '\t')
+      /* Explicitly disallow a tab after a space */
+      if ((ch == '\t') && (last_char == ' '))
       {
-         cpd.column = next_tab_column(cpd.column);
+         int endcol = next_tab_column(cpd.column);
+         while (cpd.column < endcol)
+         {
+            add_char(' ');
+         }
+         return;
       }
       else
       {
-         cpd.column++;
+         fputc(ch, cpd.fout);
+         if (ch == '\t')
+         {
+            cpd.column = next_tab_column(cpd.column);
+         }
+         else
+         {
+            cpd.column++;
+         }
       }
    }
+   last_char = ch;
 }
 
 void add_text(const char *text)
