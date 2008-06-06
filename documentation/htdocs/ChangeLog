@@ -49,6 +49,7 @@ Changes in uncrustify-0.47 (not yet released)
  - Fix cmt_sp_before_star_cont
  - Explicitly disallow a tab after a space
  - Improve multi-line comment indenting a bit
+ - Add sp_before_unnamed_byref and sp_before_unnamed_ptr_star
 
 
 Changes in uncrustify-0.46 (22-Apr-2008)

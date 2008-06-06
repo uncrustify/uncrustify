@@ -151,12 +151,18 @@ void register_options(void)
                   "Add or remove space between ')' and '{'");
    unc_add_option("sp_before_ptr_star", UO_sp_before_ptr_star, AT_IARF,
                   "Add or remove space before pointer star '*'");
+   unc_add_option("sp_before_unnamed_ptr_star", UO_sp_before_unnamed_ptr_star, AT_IARF,
+                  "Add or remove space before pointer star '*' that isn't followed by a variable name\n"
+                  "If set to 'ignore', sp_before_ptr_star is used instead.");
    unc_add_option("sp_between_ptr_star", UO_sp_between_ptr_star, AT_IARF,
                   "Add or remove space between pointer stars '*'");
    unc_add_option("sp_after_ptr_star", UO_sp_after_ptr_star, AT_IARF,
                   "Add or remove space after pointer star '*', if followed by a word.");
    unc_add_option("sp_before_byref", UO_sp_before_byref, AT_IARF,
                   "Add or remove space before reference sign '&'");
+   unc_add_option("sp_before_unnamed_byref", UO_sp_before_unnamed_byref, AT_IARF,
+                  "Add or remove space before reference sign '&' that isn't followed by a variable name\n"
+                  "If set to 'ignore', sp_before_byref is used instead.");
    unc_add_option("sp_after_byref", UO_sp_after_byref, AT_IARF,
                   "Add or remove space after reference sign '&', if followed by a word.");
    unc_add_option("sp_after_type", UO_sp_after_type, AT_IARF,

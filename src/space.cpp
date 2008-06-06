@@ -296,6 +296,14 @@ argval_t do_space(chunk_t *first, chunk_t *second)
 
    if (second->type == CT_BYREF)
    {
+      if (cpd.settings[UO_sp_before_unnamed_byref].a != AV_IGNORE)
+      {
+         chunk_t *next = chunk_get_next_nc(second);
+         if ((next != NULL) && (next->type != CT_WORD))
+         {
+            return(cpd.settings[UO_sp_before_unnamed_byref].a);
+         }
+      }
       return(cpd.settings[UO_sp_before_byref].a);
    }
 
@@ -593,10 +601,20 @@ argval_t do_space(chunk_t *first, chunk_t *second)
       return(cpd.settings[UO_sp_after_ptr_star].a);
    }
 
-   if ((second->type == CT_PTR_TYPE) &&
-       (cpd.settings[UO_sp_before_ptr_star].a != AV_IGNORE))
+   if (second->type == CT_PTR_TYPE)
    {
-      return(cpd.settings[UO_sp_before_ptr_star].a);
+      if (cpd.settings[UO_sp_before_unnamed_ptr_star].a != AV_IGNORE)
+      {
+         chunk_t *next = chunk_get_next_nc(second);
+         if ((next != NULL) && (next->type != CT_WORD))
+         {
+            return(cpd.settings[UO_sp_before_unnamed_ptr_star].a);
+         }
+      }
+      if (cpd.settings[UO_sp_before_ptr_star].a != AV_IGNORE)
+      {
+         return(cpd.settings[UO_sp_before_ptr_star].a);
+      }
    }
 
    if (first->type == CT_OPERATOR)

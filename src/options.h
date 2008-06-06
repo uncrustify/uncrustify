@@ -159,6 +159,7 @@ enum uncrustify_options
    UO_sp_inside_paren_cast,     // spaces inside the parens of a cast
 
    UO_sp_before_byref,          // space before '&' of 'fcn(int& idx)'
+   UO_sp_before_unnamed_byref,
    UO_sp_after_byref,           // space after a '&'  as in 'int& var'
 
    UO_sp_after_type,            // space between type and word
@@ -209,6 +210,7 @@ enum uncrustify_options
    UO_sp_type_func,             // space between return type and 'func'
    // a minimum of 1 is forced except for '*'
    UO_sp_before_ptr_star,       // space before a '*' that is part of a type
+   UO_sp_before_unnamed_ptr_star,
    UO_sp_after_ptr_star,        // space after a '*' that is part of a type
    UO_sp_between_ptr_star,      // space between two '*' that are part of a type
 
