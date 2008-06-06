@@ -1,7 +1,7 @@
 /*
-    2) There seems to be a problem handling .h-files compared to .cpp-files.
-    The following problem only occurs in header-files, in source-files the
-    output is as desired.
+   2) There seems to be a problem handling .h-files compared to .cpp-files.
+   The following problem only occurs in header-files, in source-files the
+   output is as desired.
  */
 
 static inline void foo()
@@ -21,7 +21,7 @@ static inline void foo()
 
 
 /*
-    3) The spacing around pointer stars is not always maintained as desired.
+   3) The spacing around pointer stars is not always maintained as desired.
  */
 //BEFORE:
   Buffer<T>* buffer;
@@ -30,7 +30,7 @@ static inline void foo()
 
 
 /*
-    4) Inside of casts the types are not formatted as outside.
+   4) Inside of casts the types are not formatted as outside.
  */
 //BEFORE:
   T* t = dynamic_cast<T*>(obj);
@@ -38,8 +38,8 @@ static inline void foo()
   T* t = dynamic_cast<T*>(obj);
 
 /*
-    5) Inside some template-stuff the spacing goes weird. Multiple spaces
-    are inserted, although the configuration (should) say otherwise.
+   5) Inside some template-stuff the spacing goes weird. Multiple spaces
+   are inserted, although the configuration (should) say otherwise.
  */
 //BEFORE:
   for (std::map<Key, Value*>::iterator it = map.begin(); it != map.end(); it++) {
