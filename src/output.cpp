@@ -1028,17 +1028,22 @@ void output_comment_multi(chunk_t *pc)
                    (line[0] != '*') && (line[0] != '|') && (line[0] != '#') &&
                    (line[0] != '\\') && (line[0] != '+'))
                {
+                  bool do_sp_add = false;
                   output_to_column(cmt_col, cpd.settings[UO_indent_with_tabs].n != 0);
                   if (cpd.settings[UO_cmt_star_cont].b)
                   {
                      cmt.cont_text = (xtra == 1) ? " * " : "*  ";
-                     add_spaces_after_star();
+                     do_sp_add = true;
                   }
                   else
                   {
                      cmt.cont_text = "   ";
                   }
                   add_text(cmt.cont_text);
+                  if (do_sp_add)
+                  {
+                     add_spaces_after_star();
+                  }
                   output_to_column(ccol, cpd.settings[UO_indent_with_tabs].n != 0);
                }
                else
