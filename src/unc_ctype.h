@@ -31,6 +31,10 @@ static inline int unc_isprint(int ch)
 {
    return(isprint(unc_fix_ctype(ch)));
 }
+static inline int unc_isalpha(int ch)
+{
+   return(isalpha(unc_fix_ctype(ch)));
+}
 static inline int unc_toupper(int ch)
 {
    return(toupper(unc_fix_ctype(ch)));

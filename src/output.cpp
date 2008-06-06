@@ -923,10 +923,10 @@ void output_comment_multi(chunk_t *pc)
 
    xtra = calculate_comment_body_indent(pc->str, pc->len, pc->column);
 
-   // fprintf(stderr, "Indenting1 line %d to col %d (orig=%d) col_diff=%d xtra=%d\n",
-   //         pc->orig_line, cmt_col, pc->orig_col, col_diff, xtra);
+   //LOG_FMT(LSYS, "Indenting1 line %d to col %d (orig=%d) col_diff=%d xtra=%d\n",
+   //        pc->orig_line, cmt_col, pc->orig_col, col_diff, xtra);
 
-   ccol      = 1;
+   ccol      = pc->column;
    remaining = pc->len;
    cmt_str   = pc->str;
    line_len  = 0;
@@ -963,7 +963,7 @@ void output_comment_multi(chunk_t *pc)
          }
          else
          {
-            //fprintf(stderr, "%d] Text starts in col %d\n", line_count, ccol);
+            //LOG_FMT(LSYS, "%d] Text starts in col %d\n", line_count, ccol);
          }
       }
 
@@ -1010,7 +1010,7 @@ void output_comment_multi(chunk_t *pc)
             add_comment_text(line, line_len, cmt, false);
             if (nl_end)
             {
-               add_text_len("\n", 1);
+               add_char('\n');
             }
          }
          else
@@ -1037,10 +1037,12 @@ void output_comment_multi(chunk_t *pc)
             }
             else
             {
-               /* If this doesn't start with a '*' or '|' */
+               /* If this doesn't start with a '*' or '|'.
+                * '\name' is a common parameter documentation thing.
+                */
                if (cpd.settings[UO_cmt_indent_multi].b &&
                    (line[0] != '*') && (line[0] != '|') && (line[0] != '#') &&
-                   (line[0] != '\\') && (line[0] != '+'))
+                   ((line[0] != '\\') || unc_isalpha(line[1])) && (line[0] != '+'))
                {
                   bool do_sp_add = false;
                   output_to_column(cmt_col, cpd.settings[UO_indent_with_tabs].n != 0);
