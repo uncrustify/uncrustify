@@ -49,12 +49,8 @@ Zip up that folder using the folder name + ".zip"
 Copy to the release folder on Linux
 
 11. Copy the files to sourceforge
-$ ftp upload.sourceforge.net
-$ bin
-# cd /incoming
-$ put uncrustify-$UNC_REL.tgz
-$ put uncrustify-$UNC_REL-win32.zip
-$ quit
+UPDATE: sourceforge no longer supports ftp
+Use the web upload or sftp.
 
 12. Update the web page
 $ ssh USER@shell.sourceforge.net
