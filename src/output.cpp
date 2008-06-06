@@ -1021,8 +1021,6 @@ void output_comment_multi(chunk_t *pc)
             }
             else
             {
-               add_spaces_before_star();
-
                /* If this doesn't start with a '*' or '|' */
                if (cpd.settings[UO_cmt_indent_multi].b &&
                    (line[0] != '*') && (line[0] != '|') && (line[0] != '#') &&
@@ -1030,6 +1028,8 @@ void output_comment_multi(chunk_t *pc)
                {
                   bool do_sp_add = false;
                   output_to_column(cmt_col, cpd.settings[UO_indent_with_tabs].n != 0);
+                  add_spaces_before_star();
+
                   if (cpd.settings[UO_cmt_star_cont].b)
                   {
                      cmt.cont_text = (xtra == 1) ? " * " : "*  ";
@@ -1049,6 +1049,8 @@ void output_comment_multi(chunk_t *pc)
                else
                {
                   output_to_column(cmt_col + xtra, cpd.settings[UO_indent_with_tabs].n != 0);
+                  add_spaces_before_star();
+
                   int idx  = 0;
                   int sidx = 0;
                   if (xtra > 0)
