@@ -82,6 +82,10 @@
 30801 star_pos-1.cfg                   cpp/align-star-amp-pos.cpp
 30802 star_pos-2.cfg                   cpp/align-star-amp-pos.cpp
 
+30805 ptr_star-1.cfg                   cpp/ptr-star.cpp
+30806 ptr_star-2.cfg                   cpp/ptr-star.cpp
+30807 ptr_star-3.cfg                   cpp/ptr-star.cpp
+
 30810 ben.cfg                          cpp/ptr-star.cpp
 30811 avalon4.cfg                      cpp/misc3.cpp
 
