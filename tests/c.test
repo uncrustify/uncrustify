@@ -120,6 +120,7 @@
 00615  pp-indent-2.cfg         c/pp-nest.c
 
 00620  ben.cfg         c/indent-assign.c
+00621  nl_endif.cfg         c/nl_endif.c
 
 # function def newlines
 00701  func-def-1.cfg          c/function-def.c
