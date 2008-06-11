@@ -1069,6 +1069,7 @@ static bool is_ucase_str(const char *str, int len)
 static void fix_casts(chunk_t *start)
 {
    chunk_t    *pc;
+   chunk_t    *prev;
    chunk_t    *first;
    chunk_t    *after;
    chunk_t    *last = NULL;
@@ -1083,6 +1084,13 @@ static void fix_casts(chunk_t *start)
 
 
    LOG_FMT(LCASTS, "%s:line %d, col %d:", __func__, start->orig_line, start->orig_col);
+
+   prev = chunk_get_prev_ncnl(start);
+   if ((prev != NULL) && (prev->type == CT_PP_DEFINED))
+   {
+      LOG_FMT(LCASTS, " -- not a cast - after defined\n");
+      return;
+   }
 
    /* Make sure there is only WORD, TYPE, and '*' before the close paren */
    pc    = chunk_get_next_ncnl(start);
