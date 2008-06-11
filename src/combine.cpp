@@ -2879,7 +2879,9 @@ static void mark_define_expressions(void)
    {
       if (!in_define)
       {
-         if (pc->type == CT_PP_DEFINE)
+         if ((pc->type == CT_PP_DEFINE) ||
+             (pc->type == CT_PP_IF) ||
+             (pc->type == CT_PP_ELSE))
          {
             in_define = true;
             first     = true;

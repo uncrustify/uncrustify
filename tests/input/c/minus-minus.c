@@ -20,13 +20,14 @@ int posneg(void)
    return + -a;
 }
 
+#if VERSION < -5
 int negnegneg(void)
 {
    return - - -a;
 }
-
+#else
 int negat(void)
 {
    return - *b;
 }
-
+#endif
