@@ -12,7 +12,7 @@ int foo()
 	if (false)
 		try
 		{
-			throw int ();
+			throw int();
 		}
 		catch(...)
 		{
