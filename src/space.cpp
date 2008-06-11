@@ -366,6 +366,11 @@ argval_t do_space(chunk_t *first, chunk_t *second)
       return(AV_REMOVE);
    }
 
+   if ((first->type == CT_PP_DEFINED) && (second->type == CT_PAREN_OPEN))
+   {
+      return(cpd.settings[UO_sp_defined_paren].a);
+   }
+
    if ((first->type == CT_THIS) && (second->type == CT_PAREN_OPEN))
    {
       return(AV_REMOVE);
