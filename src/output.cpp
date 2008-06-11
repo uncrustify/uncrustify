@@ -271,7 +271,8 @@ void output_text(FILE *pfile)
                /* FIXME: it would be better to properly set column_indent in
                 * indent_text(), but this hack for '}' and ':' seems to work. */
                if ((pc->type == CT_BRACE_CLOSE) ||
-                   chunk_is_str(pc, ":", 1))
+                   chunk_is_str(pc, ":", 1) ||
+                   (pc->type == CT_PREPROC))
                {
                   lvlcol = pc->column;
                }
