@@ -589,10 +589,10 @@ static void newlines_if_for_while_switch_post_blank_lines(chunk_t *start, argval
          {
             nl_count += next->nl_count;
          }
+
          /* if we have no newlines, add one and make it double */
          if (nl_count == 0)
          {
-
             if (((next = chunk_get_next(pc)) != NULL) &&
                 chunk_is_comment(next))
             {
@@ -615,8 +615,20 @@ static void newlines_if_for_while_switch_post_blank_lines(chunk_t *start, argval
             }
             else
             {
-               /* make nl after double */
-               next->nl_count = 2;
+               prev = chunk_get_prev_nnl(next);
+               pc   = chunk_get_next_nnl(next);
+               if ((pc != NULL) && (pc->type == CT_PREPROC) &&
+                   cpd.settings[UO_nl_squeeze_ifdef].b)
+               {
+                  LOG_FMT(LNEWLINE, "%s: cannot add newline after line %d due to nl_squeeze_ifdef\n",
+                          __func__, prev->orig_line);
+               }
+               else
+               {
+                  /* make nl after double */
+                  next->nl_count = 2;
+                  LOG_FMT(LNEWLINE, "%s: doubled after line %d\n", __func__, prev->orig_line);
+               }
             }
          }
       }
@@ -1743,14 +1755,14 @@ void newlines_squeeze_ifdef(void)
    chunk_t *ppr;
    chunk_t *pnl;
    chunk_t *nnl;
+   chunk_t *tmp1;
+   chunk_t *tmp2;
 
    for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next_ncnl(pc))
    {
       if ((pc->type == CT_PREPROC) && (pc->level > 0))
       {
          ppr = chunk_get_next(pc);
-         //          fprintf(stderr, "%s: %s online %d\n",
-         //                  __func__, get_token_name(ppr->type), ppr->orig_line);
 
          if ((ppr->type == CT_PP_IF) ||
              (ppr->type == CT_PP_ELSE) ||
@@ -1765,23 +1777,27 @@ void newlines_squeeze_ifdef(void)
 
             if (nnl != NULL)
             {
-               //                fprintf(stderr, "%s: next nl on line %d, count=%d\n",
-               //                        __func__, nnl->orig_line, nnl->nl_count);
-
                if (pnl != NULL)
                {
-                  //                  fprintf(stderr, "%s: prev nl on line %d, count=%d\n",
-                  //                          __func__, pnl->orig_line, pnl->nl_count);
                   if (pnl->nl_count > 1)
                   {
                      nnl->nl_count += pnl->nl_count - 1;
                      pnl->nl_count  = 1;
+
+                     tmp1 = chunk_get_prev_nnl(pnl);
+                     tmp2 = chunk_get_prev_nnl(nnl);
+
+                     LOG_FMT(LNEWLINE, "%s: moved from after line %d to after %d\n",
+                             __func__, tmp1->orig_line, tmp2->orig_line);
                   }
                }
                else
                {
                   if (nnl->nl_count > 1)
                   {
+                     tmp1 = chunk_get_prev_nnl(nnl);
+                     LOG_FMT(LNEWLINE, "%s: trimmed newlines after line %d from %d\n",
+                             __func__, tmp1->orig_line, nnl->nl_count);
                      nnl->nl_count = 1;
                   }
                }
