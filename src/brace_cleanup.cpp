@@ -732,7 +732,7 @@ static bool check_complex_statements(struct parse_frame *frm, chunk_t *pc)
       pc->level       = frm->level;
       pc->brace_level = frm->brace_level;
 
-      /* Mark as a start of a statment */
+      /* Mark as a start of a statement */
       frm->stmt_count = 0;
       frm->expr_count = 0;
       pc->flags      |= PCF_STMT_START | PCF_EXPR_START;
