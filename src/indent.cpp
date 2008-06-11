@@ -1541,7 +1541,7 @@ void indent_preproc(void)
       /* Adjust the indent of the '#' */
       if ((cpd.settings[UO_pp_indent].a & AV_ADD) != 0)
       {
-         reindent_line(pc, 1 + pp_level);
+         reindent_line(pc, 1 + pp_level * cpd.settings[UO_pp_indent_count].n);
       }
       else if ((cpd.settings[UO_pp_indent].a & AV_REMOVE) != 0)
       {

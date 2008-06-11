@@ -781,6 +781,8 @@ void register_options(void)
                   "Control indent of preprocessors inside #if blocks at brace level 0");
    unc_add_option("pp_indent_at_level", UO_pp_indent_at_level, AT_BOOL,
                   "Whether to indent #if/#else/#endif at the brace level (true) or from column 1 (false)");
+   unc_add_option("pp_indent_count", UO_pp_indent_count, AT_NUM,
+                  "If pp_indent_at_level=false, specifies the number of columns to indent per level. Default=1.");
    unc_add_option("pp_space", UO_pp_space, AT_IARF,
                   "Add or remove space after # based on pp_level of #if blocks");
    unc_add_option("pp_space_count", UO_pp_space_count, AT_NUM,
@@ -1323,6 +1325,7 @@ void set_option_defaults(void)
    cpd.settings[UO_sp_incdec].a          = AV_REMOVE;
    cpd.settings[UO_sp_after_type].a      = AV_FORCE;
    cpd.settings[UO_cmt_indent_multi].b   = true;
+   cpd.settings[UO_pp_indent_count].n    = 1;
 }
 
 std::string argtype_to_string(argtype_e argtype)
