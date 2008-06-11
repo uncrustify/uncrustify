@@ -425,6 +425,15 @@ void fix_symbols(void)
             {
                pc->type = CT_FUNCTION;
             }
+            else
+            {
+               if ((pc->parent_type == CT_NONE) &&
+                  ((pc->flags & (PCF_IN_TYPEDEF | PCF_IN_ENUM)) == 0))
+               {
+                  pc->type = CT_CAST;
+                  set_paren_parent(next, CT_CAST);
+               }
+            }
          }
          else if (pc->type == CT_ATTRIBUTE)
          {
