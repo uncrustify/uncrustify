@@ -116,6 +116,7 @@
 00611  pp-indent-1.cfg         c/pp-space.c
 00612  pp-indent-2.cfg         c/pp-space.c
 00613  pp-indent-3.cfg         c/pp-space.c
+00614  pp-space.cfg            c/pp-space.c
 
 00615  pp-indent-2.cfg         c/pp-nest.c
 
