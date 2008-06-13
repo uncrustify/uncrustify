@@ -121,3 +121,13 @@ struct foo {
 type1 < int  const > bar;
 };
 
+
+template <int i> void f();
+template <int i> void g() {
+f<i-1>();
+f< i >();
+f<i+1>();
+f<bar()>();
+}
+void h() { g<42>(); }
+

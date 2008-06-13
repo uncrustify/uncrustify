@@ -28,7 +28,7 @@ void asd(void)
    {
       a = b < c > 0;
    }
-   if (a < bar() > c)
+   if (a<bar()> c)
    {
    }
    a < up_lim() ? do_hi() : do_low;
@@ -118,4 +118,18 @@ struct foo
 {
    type1<int const> bar;
 };
+
+
+template<int i> void f();
+template<int i> void g()
+{
+   f<i - 1>();
+   f<i>();
+   f<i + 1>();
+   f<bar()>();
+}
+void h()
+{
+   g<42>();
+}
 
