@@ -423,39 +423,50 @@ static void check_template(chunk_t *start)
       }
 
       /* Scan forward to the angle close
-       * If we have anything other than a word, type, member, comma, star, or
-       * class in there, the it can't be a template.
+       * If we have a comparison in there, then it can't be a template.
        */
-      int level = 1;
+      c_token_t tokens[16];
+      int       num_tokens = 1;
+
+      tokens[0] = CT_ANGLE_OPEN;
       for (pc = chunk_get_next_ncnl(start); pc != NULL; pc = chunk_get_next_ncnl(pc))
       {
-         LOG_FMT(LTEMPL, " [%s,%d]", get_token_name(pc->type), level);
+         LOG_FMT(LTEMPL, " [%s,%d]", get_token_name(pc->type), num_tokens);
 
          if (chunk_is_str(pc, "<", 1))
          {
-            level++;
+            tokens[num_tokens++] = CT_ANGLE_OPEN;
          }
          else if (chunk_is_str(pc, ">", 1))
          {
-            level--;
-            if (level == 0)
+            if (--num_tokens <= 0)
             {
                break;
             }
          }
-         else if ((pc->type != CT_WORD) &&
-                  (pc->type != CT_NUMBER) &&
-                  (pc->type != CT_TYPE) &&
-                  (pc->type != CT_QUALIFIER) &&
-                  (pc->type != CT_MEMBER) &&
-                  (pc->type != CT_COMMA) &&
-                  (pc->type != CT_STAR) &&
-                  (pc->type != CT_AMP) &&
-                  (pc->type != CT_PTR_TYPE) &&
-                  (pc->type != CT_CLASS) &&
-                  (pc->type != CT_DC_MEMBER))
+         else if ((pc->type == CT_COMPARE) ||
+                  (pc->type == CT_BOOL) ||
+                  (pc->type == CT_SEMICOLON))
          {
             break;
+         }
+         else if ((pc->type == CT_PAREN_OPEN) ||
+                  (pc->type == CT_BRACE_OPEN))
+         {
+            if (num_tokens >= (int)(ARRAY_SIZE(tokens) - 1))
+            {
+               break;
+            }
+            tokens[num_tokens++] = pc->type;
+         }
+         else if ((pc->type == CT_PAREN_CLOSE) ||
+                  (pc->type == CT_BRACE_CLOSE))
+         {
+            num_tokens--;
+            if (tokens[num_tokens] != (pc->type - 1))
+            {
+               break;
+            }
          }
       }
       end = pc;
