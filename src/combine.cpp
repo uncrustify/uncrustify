@@ -428,7 +428,7 @@ void fix_symbols(void)
             else
             {
                if ((pc->parent_type == CT_NONE) &&
-                  ((pc->flags & (PCF_IN_TYPEDEF | PCF_IN_ENUM)) == 0))
+                   ((pc->flags & PCF_IN_TYPEDEF) == 0))
                {
                   pc->type = CT_CAST;
                   set_paren_parent(next, CT_CAST);
