@@ -29,9 +29,22 @@ class Example
 {
 char m_array [256];
 
-operator Foo::Bar();
-operator Foo::Bar*();
-operator Foo::Bar&();
+Example& operator=(const Example&rhs);
+Example& operator+=(const Example&rhs);
+const Example operator+(const Example&other) const;
+bool operator==(const Example&other) const;
+bool operator!=(const Example&other) const;
+Example operator+(const Example& x, const Example& y);
+Example operator*(const Example& x, const Example& y);
+
+double& operator()(int row, int col);
+double operator()(int row, int col) const;
+void operator++();
+int& operator*  ();
+Example& operator++();        // prefix ++
+Example operator++(int);      // postfix ++
+
+bool operator <(const Example& lhs, const Example& rhs) const;
 
 int operator()(int index)
 {
@@ -39,8 +52,18 @@ int operator()(int index)
   return index + 1;
 }
 
-int operator[](int index)
+char& operator[](unsigned i)
 {
-  return m_array [index & 0xff];
+  return m_array [i & 0xff];
 }
+}
+bool Example::operator==(const Example&other) const
+{
+  /*TODO: compare something? */
+  return false;
+}
+
+bool Example::operator!=(const Example&other) const
+{
+  return !operator ==(other);
 }
