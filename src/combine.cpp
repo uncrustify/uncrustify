@@ -2123,7 +2123,7 @@ static void mark_function(chunk_t *pc)
    if (pc->parent_type == CT_OPERATOR)
    {
       pc_op = chunk_get_prev_type(pc, CT_OPERATOR, pc->level);
-      if ((pc_op != NULL) && (pc_op->flags & PCF_STMT_START))
+      if ((pc_op != NULL) && (pc_op->flags & PCF_EXPR_START))
       {
          pc->type = CT_FUNC_CALL;
       }

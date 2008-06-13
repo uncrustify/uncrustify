@@ -604,6 +604,8 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
        (pc->type == CT_BRACE_OPEN) ||
        chunk_is_semicolon(pc) ||
        (pc->type == CT_COMMA) ||
+       (pc->type == CT_NOT) ||
+       (pc->type == CT_INV) ||
        (pc->type == CT_COLON) ||
        (pc->type == CT_QUESTION))
    {
