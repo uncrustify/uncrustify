@@ -81,6 +81,7 @@ enum
    LSPACE    = 65,    /* Space */
    LALIGN    = 66,    /* align */
    LALAGAIN  = 67,    /* align again */
+   LOPERATOR = 68,    /* operator */
 };
 
 #endif   /* LOG_LEVELS_H_INCLUDED */

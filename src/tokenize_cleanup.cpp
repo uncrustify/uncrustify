@@ -188,6 +188,8 @@ void tokenize_cleanup(void)
       /* Change item after operator (>=, ==, etc) to a CT_FUNCTION */
       if (pc->type == CT_OPERATOR)
       {
+         LOG_FMT(LOPERATOR, "%s: %d:%d operator", __func__, pc->orig_line, pc->orig_col);
+
          /* Handle special case of () operator -- [] already handled */
          if (next->type == CT_PAREN_OPEN)
          {
@@ -200,6 +202,7 @@ void tokenize_cleanup(void)
                next->parent_type = CT_OPERATOR;
                chunk_del(tmp);
                next->orig_col_end += 1;
+               LOG_FMT(LOPERATOR, " ()");
             }
          }
          else
@@ -210,6 +213,7 @@ void tokenize_cleanup(void)
                    (tmp->type != CT_PAREN_OPEN) &&
                    (tmp->type != CT_SEMICOLON))
             {
+               LOG_FMT(LOPERATOR, " %.*s", tmp->len, tmp->str);
                tmp = chunk_get_next_ncnl(tmp);
             }
 
@@ -239,9 +243,13 @@ void tokenize_cleanup(void)
                      tmp2 = next;
                   }
                }
+
+               LOG_FMT(LOPERATOR, " [%.*s]", tmp2->len, tmp2->str);
+
                tmp2->type        = CT_FUNCTION;
                tmp2->parent_type = CT_OPERATOR;
             }
+            LOG_FMT(LOPERATOR, "\n");
          }
          if (chunk_is_addr(prev))
          {
