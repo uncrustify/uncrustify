@@ -254,6 +254,7 @@ enum uncrustify_options
    UO_sp_member,
    UO_sp_sign,
    UO_sp_incdec,
+   UO_sp_before_nl_cont,
    UO_sp_after_oc_scope,
    UO_sp_before_oc_colon,
    UO_sp_after_oc_type,

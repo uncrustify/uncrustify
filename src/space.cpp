@@ -92,6 +92,10 @@ argval_t do_space(chunk_t *first, chunk_t *second)
    {
       return(AV_REMOVE);
    }
+   if (second->type == CT_NL_CONT)
+   {
+      return(cpd.settings[UO_sp_before_nl_cont].a);
+   }
 
    if ((first->type == CT_D_ARRAY_COLON) ||
        (second->type == CT_D_ARRAY_COLON))

@@ -39,6 +39,7 @@ Changes in uncrustify-0.48 (not yet released)
  - Add pp_indent_count
  - Handle C++ style casts, such as 'int(42.0)' a bit better
  - Another rework of template detection
+ - Add sp_before_nl_cont, defaults to 'add'
 
 
 Changes in uncrustify-0.47 (06-Jun-2008)

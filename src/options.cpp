@@ -294,6 +294,9 @@ void register_options(void)
    unc_add_option("sp_incdec", UO_sp_incdec, AT_IARF,
                   "Add or remove space before or after '++' and '--', as in '(--x)' or 'y++;'");
 
+   unc_add_option("sp_before_nl_cont", UO_sp_before_nl_cont, AT_IARF,
+                  "Add or remove space before a backslash-newline at the end of a line");
+
    unc_add_option("sp_after_oc_scope", UO_sp_after_oc_scope, AT_IARF,
                   "Add or remove space after the scope '+' or '-', as in '-(void) foo;' or '+(int) bar;'");
    unc_add_option("sp_before_oc_colon", UO_sp_before_oc_colon, AT_IARF,
@@ -1324,6 +1327,7 @@ void set_option_defaults(void)
    cpd.settings[UO_sp_sign].a            = AV_REMOVE;
    cpd.settings[UO_sp_incdec].a          = AV_REMOVE;
    cpd.settings[UO_sp_after_type].a      = AV_FORCE;
+   cpd.settings[UO_sp_before_nl_cont].a  = AV_ADD;
    cpd.settings[UO_cmt_indent_multi].b   = true;
    cpd.settings[UO_pp_indent_count].n    = 1;
 }
