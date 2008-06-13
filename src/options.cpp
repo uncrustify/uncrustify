@@ -209,6 +209,8 @@ void register_options(void)
                   "Add or remove space before class ':'");
    unc_add_option("sp_after_operator", UO_sp_after_operator, AT_IARF,
                   "Add or remove space between 'operator' and operator sign");
+   unc_add_option("sp_after_operator_sym", UO_sp_after_operator_sym, AT_IARF,
+                  "Add or remove space between the operator symbol and the open paren, as in 'operator ++('");
    unc_add_option("sp_after_cast", UO_sp_after_cast, AT_IARF,
                   "Add or remove space after cast");
    unc_add_option("sp_inside_paren_cast", UO_sp_inside_paren_cast, AT_IARF,

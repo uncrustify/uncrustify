@@ -234,6 +234,7 @@ enum uncrustify_options
    UO_sp_after_tag,             // pawn: space after a tag colon
 
    UO_sp_after_operator,        // space after operator when followed by a punctuator
+   UO_sp_after_operator_sym,    // space after operator when followed by a punctuator
    UO_sp_else_brace,
    UO_sp_brace_else,
 
