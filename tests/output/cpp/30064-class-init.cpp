@@ -5,7 +5,7 @@ class Foo
 
 };
 
-#define CTOR( i, _ )\
+#define CTOR( i, _ ) \
       : T( X()), \
         y() \
    { }

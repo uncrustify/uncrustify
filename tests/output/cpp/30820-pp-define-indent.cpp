@@ -1,6 +1,6 @@
 
 #define outpsize
-#define some(f)\
+#define some(f) \
     foo(f)
 
 class CRC
