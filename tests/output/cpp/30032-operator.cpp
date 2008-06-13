@@ -2,17 +2,17 @@
 struct bar;
 struct foo
 {
-   operator bar*();
+   operator bar* ();
 };
 
 class Foo {
-   Foo operator +(const Foo& rhs) const;
+   Foo operator + (const Foo& rhs) const;
 
-   const Foo& operator ==(Foo& me);
+   const Foo& operator == (Foo& me);
 
-   bool operator >(const Foo& rhs) const;
+   bool operator > (const Foo& rhs) const;
 
-   InStream& operator <<(InStream& in);
+   InStream& operator << (InStream& in);
 }
 
 const Foo& Foo::operator ==(Foo& me)
@@ -31,22 +31,22 @@ class Example
 {
    char m_array[256];
 
-   Example& operator =(const Example& rhs);
-   Example& operator +=(const Example& rhs);
-   const Example operator +(const Example& other) const;
-   bool operator ==(const Example& other) const;
-   bool operator !=(const Example& other) const;
-   Example operator +(const Example& x, const Example& y);
-   Example operator *(const Example& x, const Example& y);
+   Example& operator = (const Example& rhs);
+   Example& operator += (const Example& rhs);
+   const Example operator + (const Example& other) const;
+   bool operator == (const Example& other) const;
+   bool operator != (const Example& other) const;
+   Example operator + (const Example& x, const Example& y);
+   Example operator * (const Example& x, const Example& y);
 
-   double& operator ()(int row, int col);
-   double operator ()(int row, int col) const;
-   void operator ++();
-   int& operator *  ();
-   Example& operator ++();    // prefix ++
-   Example operator ++(int); // postfix ++
+   double& operator () (int row, int col);
+   double operator () (int row, int col) const;
+   void operator ++ ();
+   int& operator * ();
+   Example& operator ++ ();    // prefix ++
+   Example operator ++ (int); // postfix ++
 
-   bool operator <(const Example& lhs, const Example& rhs) const;
+   bool operator < (const Example& lhs, const Example& rhs) const;
 
    int operator ()(int index)
    {

@@ -42,7 +42,7 @@ class Example
    double& operator()(int row, int col);
    double operator()(int row, int col) const;
    void operator++();
-   int& operator*  ();
+   int& operator*();
    Example& operator++();    // prefix ++
    Example operator++(int); // postfix ++
 
