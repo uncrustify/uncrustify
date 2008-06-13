@@ -2114,19 +2114,31 @@ static void mark_function(chunk_t *pc)
    chunk_t *semi = NULL;
    chunk_t *paren_open;
    chunk_t *paren_close;
+   chunk_t *pc_op = NULL;
 
    prev = chunk_get_prev_ncnlnp(pc);
    next = chunk_get_next_ncnlnp(pc);
+
+   /* Find out what is before the operator */
+   if (pc->parent_type == CT_OPERATOR)
+   {
+      pc_op = chunk_get_prev_type(pc, CT_OPERATOR, pc->level);
+      if ((pc_op != NULL) && (pc_op->flags & PCF_STMT_START))
+      {
+         pc->type = CT_FUNC_CALL;
+      }
+   }
 
    if (chunk_is_star(next) || chunk_is_addr(next))
    {
       next = chunk_get_next_ncnlnp(next);
    }
 
-   LOG_FMT(LFCN, "%s: %d] %.*s[%s] - level=%d/%d, next=%.*s[%s] - level=%d\n",
+   LOG_FMT(LFCN, "%s: %d] %.*s[%s] - parent=%s level=%d/%d, next=%.*s[%s] - level=%d\n",
            __func__,
            pc->orig_line, pc->len, pc->str,
-           get_token_name(pc->type), pc->level, pc->brace_level,
+           get_token_name(pc->type), get_token_name(pc->parent_type),
+           pc->level, pc->brace_level,
            next->len, next->str, get_token_name(next->type), next->level);
 
    if (pc->flags & PCF_IN_CONST_ARGS)
