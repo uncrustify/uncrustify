@@ -274,9 +274,12 @@ argval_t do_space(chunk_t *first, chunk_t *second)
    }
    if (first->type == CT_ANGLE_CLOSE)
    {
-      if (second->type == CT_WORD)
+      if ((second->type == CT_WORD) || CharTable::IsKw1(second->str[0]))
       {
-         return(cpd.settings[UO_sp_angle_word].a);
+         if (cpd.settings[UO_sp_angle_word].a != AV_IGNORE)
+         {
+            return(cpd.settings[UO_sp_angle_word].a);
+         }
       }
       if ((second->type == CT_FPAREN_OPEN) ||
           (second->type == CT_PAREN_OPEN))
