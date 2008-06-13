@@ -133,3 +133,9 @@ void h()
    g<42>();
 }
 
+#include <vector>
+std::vector<int> A(2);
+std::vector<int> B;
+std::vector<int> C(2);
+std::vector<int> D;
+
