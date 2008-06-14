@@ -64,13 +64,11 @@ static int max_value()
    return (std :: numeric_limits  <int >:: max )();
 }
 
-template < class Config_    >
-priority_queue < Config_ >   ::   ~priority_queue ()  {
+template < class Config_    > priority_queue < Config_ >   ::   ~priority_queue ()  {
 
 }
 
-template<class T>
-T test(T a) {
+template<class T> T test(T a) {
    return a;
 }
 
@@ -105,9 +103,8 @@ int main()
    MyClass<double, 3, 3, MyStorage> foo;
 }
 
-template< typename CharT, int N, typename Traits >
-inline std::basic_ostream<CharT,Traits>& FWStreamOut(std::basic_ostream<CharT,Traits>& os,
-                                                     const W::S<CharT,N,Traits>& s)
+template< typename CharT, int N, typename Traits > inline std::basic_ostream<CharT,Traits>& FWStreamOut(std::basic_ostream<CharT,Traits>& os,
+                                                                                                        const W::S<CharT,N,Traits>& s)
 {
    return operator << <CharT, N, Traits, char, std::char_traits<char> >( os, s );
 }
@@ -136,4 +133,8 @@ std::vector<int> A(2);
 std::vector<int> B;
 std::vector<int> C(2);
 std::vector<int> D;
+
+template<class T> struct X {template<class U> void operator ()(U);};
+
+template<class T> class Y {template<class V> void f(V);};
 

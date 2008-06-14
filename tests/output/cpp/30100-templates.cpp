@@ -125,8 +125,10 @@ struct foo {
 };
 
 
-template <int i> void f();
-template <int i> void g() {
+template <int i>
+void f();
+template <int i>
+void g() {
    f<i - 1>();
    f< i >();
    f<i + 1>();
@@ -141,4 +143,12 @@ std::vector<int> A(2);
 std::vector<int> B;
 std::vector<int> C(2);
 std::vector<int> D;
+
+template<class T>
+struct X {template<class U>
+          void operator ()(U);};
+
+template<class T>
+class Y {template<class V>
+         void f(V);};
 
