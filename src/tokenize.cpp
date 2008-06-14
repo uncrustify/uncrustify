@@ -25,6 +25,24 @@ static bool parse_string(chunk_t *pc, int quote_idx, bool allow_escape);
 
 #include "d.tokenize.cpp"
 
+/**
+ * A string-in-string search.  Like strstr() with a haystack length.
+ */
+static const char *str_search(const char *needle, const char *haystack, int haystack_len)
+{
+   int needle_len = strlen(needle);
+
+   while (haystack_len-- >= needle_len)
+   {
+      if (memcmp(needle, haystack, needle_len) == 0)
+      {
+         return(haystack);
+      }
+      haystack++;
+   }
+   return(NULL);
+}
+
 
 /**
  * Figure of the length of the comment at text.
@@ -37,7 +55,7 @@ static bool parse_string(chunk_t *pc, int quote_idx, bool allow_escape);
  * @param pc   The structure to update, str is an input.
  * @return     Whether a comment was parsed
  */
-bool parse_comment(chunk_t *pc)
+static bool parse_comment(chunk_t *pc)
 {
    int  len     = 2;
    bool is_d    = (cpd.lang_flags & LANG_D) != 0;
@@ -168,6 +186,20 @@ bool parse_comment(chunk_t *pc)
       }
    }
    pc->len = len;
+   if (cpd.unc_off)
+   {
+      if (str_search(UNCRUSTIFY_ON_TEXT, pc->str, pc->len) != NULL)
+      {
+         cpd.unc_off = false;
+      }
+   }
+   else
+   {
+      if (str_search(UNCRUSTIFY_OFF_TEXT, pc->str, pc->len) != NULL)
+      {
+         cpd.unc_off = true;
+      }
+   }
    return(true);
 }
 
@@ -485,7 +517,7 @@ bool parse_word(chunk_t *pc, bool skipcheck)
  * @param pc   The structure to update, str is an input.
  * @return     Whether whitespace was parsed
  */
-bool parse_whitespace(chunk_t *pc)
+static bool parse_whitespace(chunk_t *pc)
 {
    int  len          = 0;
    int  nl_count     = 0;
@@ -583,6 +615,80 @@ static bool parse_bs_newline(chunk_t *pc)
 }
 
 /**
+ * Parses any number of tab or space chars followed by a newline.
+ * Does not change pc->len if a newline isn't found.
+ * This is not the same as parse_whitespace() because it only consumes until
+ * a single newline is encountered.
+ */
+static bool parse_newline(chunk_t *pc)
+{
+   int len = pc->len;
+
+   while ((pc->str[len] == ' ') || (pc->str[len] == '\t'))
+   {
+      len++;
+   }
+   if ((pc->str[len] == '\r') || (pc->str[len] == '\n'))
+   {
+      if (pc->str[len] == '\n')
+      {
+         len++;
+      }
+      else /* it is '\r' */
+      {
+         len++;
+         if (pc->str[len] == '\n')
+         {
+            len++;
+         }
+      }
+      pc->len = len;
+      return(true);
+   }
+   return(false);
+}
+
+static bool parse_ignored(chunk_t *pc)
+{
+   int nl_count = 0;
+
+   /* Parse off newlines */
+   while (parse_newline(pc))
+   {
+      nl_count++;
+   }
+   if (nl_count > 0)
+   {
+      cpd.column       = 1;
+      cpd.line_number += nl_count;
+      pc->nl_count     = nl_count;
+      pc->type         = CT_NEWLINE;
+      return(true);
+   }
+
+   /* Look for the ending comment and let it pass */
+   if (parse_comment(pc) && !cpd.unc_off)
+   {
+      return(true);
+   }
+   pc->len = 0;
+
+   /* Reset the chunk & scan to until a newline */
+   while ((pc->str[pc->len] != 0) &&
+          (pc->str[pc->len] != '\r') &&
+          (pc->str[pc->len] != '\n'))
+   {
+      pc->len++;
+   }
+   if (pc->len > 0)
+   {
+      pc->type = CT_IGNORED;
+      return(true);
+   }
+   return(false);
+}
+
+/**
  * Skips the next bit of whatever and returns the type of block.
  *
  * pc->str is the input text.
@@ -611,6 +717,15 @@ static bool parse_next(chunk_t *pc)
    pc->type      = CT_NONE;
    pc->nl_count  = 0;
    pc->flags     = 0;
+
+   /* If it is turned off, we put everything except newlines into CT_UNKNOWN */
+   if (cpd.unc_off)
+   {
+      if (parse_ignored(pc))
+      {
+         return(true);
+      }
+   }
 
    /**
     *  Parse whitespace

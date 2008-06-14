@@ -44,6 +44,7 @@ Changes in uncrustify-0.48 (not yet released)
  - Change sp_angle_word to be more generic
  - Add sp_after_operator_sym for "operator ++(" vs "operator ++ ("
  - Add sp_template_angle for "template<" vs "template <"
+ - Add support for " *INDENT-OFF* " and " *INDENT-ON* "
 
 
 Changes in uncrustify-0.47 (06-Jun-2008)

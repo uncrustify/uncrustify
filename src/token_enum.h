@@ -38,6 +38,8 @@ typedef enum
    CT_COMMENT_END,   /* comment parent_type: newline after */
    CT_COMMENT_WHOLE, /* comment parent_type: newline before and after */
 
+   CT_IGNORED,       /* a chunk of ignored text */
+
    CT_WORD,          /* variable, type, function name, etc */
    CT_NUMBER,
    CT_NUMBER_FP,

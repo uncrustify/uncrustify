@@ -24,6 +24,8 @@
 #include <utime.h>
 #endif
 
+#define UNCRUSTIFY_OFF_TEXT   " *INDENT-OFF* "
+#define UNCRUSTIFY_ON_TEXT    " *INDENT-ON* "
 
 /**
  * Brace stage enum used in brace_cleanup
@@ -294,6 +296,7 @@ struct cp_data
 
    int                lang_flags; // LANG_xxx
 
+   bool               unc_off;
    UINT32             line_number;
    UINT16             column;  /* column for parsing */
 
