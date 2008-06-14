@@ -169,6 +169,8 @@ void register_options(void)
                   "Add or remove space between type and word");
    unc_add_option("sp_before_angle", UO_sp_before_angle, AT_IARF,
                   "Add or remove space before '<>'");
+   unc_add_option("sp_inside_angle", UO_sp_inside_angle, AT_IARF,
+                  "Add or remove space inside '<' and '>'");
    unc_add_option("sp_after_angle", UO_sp_after_angle, AT_IARF,
                   "Add or remove space after '<>'");
    unc_add_option("sp_angle_paren", UO_sp_angle_paren, AT_IARF,
@@ -227,8 +229,6 @@ void register_options(void)
                   "Add or remove space inside '{' and '}'");
    unc_add_option("sp_inside_braces_empty", UO_sp_inside_braces_empty, AT_IARF,
                   "Add or remove space inside '{}'");
-   unc_add_option("sp_inside_angle", UO_sp_inside_angle, AT_IARF,
-                  "Add or remove space inside '<' and '>'");
    unc_add_option("sp_type_func", UO_sp_type_func, AT_IARF,
                   "Add or remove space between return type and function name\n"
                   "A minimum of 1 is forced except for pointer return types.");
