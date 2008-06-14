@@ -36,23 +36,23 @@ void asd(void)
    a[ a<b>c] = d;
 }
 
-template < typename T > class MyClass
+template< typename T > class MyClass
 {
 
 }
 
-template < typename T >
+template< typename T >
 class MyClass
 {
 }
 
-template < typename A, typename B, typename C > class MyClass : myvar(0),
+template< typename A, typename B, typename C > class MyClass : myvar(0),
    myvar2(0)
 {
 
 }
 
-template < typename A, typename B, typename C > class MyClass
+template< typename A, typename B, typename C > class MyClass
    : myvar(0),
    myvar2(0)
 {
@@ -65,12 +65,12 @@ static int max_value()
    return (std :: numeric_limits < int >:: max )();
 }
 
-template < class Config_ >
+template< class Config_ >
 priority_queue < Config_ >   ::   ~priority_queue ()  {
 
 }
 
-template < class T >
+template< class T >
 T test(T a) {
    return a;
 }
@@ -82,7 +82,7 @@ int main() {
    return 0;
 }
 
-template < typename T, template < typename, unsigned int, unsigned int > class ConcreteStorageClass >
+template< typename T, template< typename, unsigned int, unsigned int > class ConcreteStorageClass >
 class RotationMatrix
    : public StaticBaseMatrix < T, 3, 3, ConcreteStorageClass >
 {
@@ -107,7 +107,7 @@ int main()
    MyClass < double, 3, 3, MyStorage > foo;
 }
 
-template < typename CharT, int N, typename Traits >
+template< typename CharT, int N, typename Traits >
 inline std::basic_ostream < CharT,Traits >& FWStreamOut(std::basic_ostream < CharT,Traits >& os,
                                                         const W::S < CharT,N,Traits >& s)
 {
@@ -122,8 +122,8 @@ struct foo {
 };
 
 
-template < int i > void f();
-template < int i > void g() {
+template< int i > void f();
+template< int i > void g() {
    f < i - 1 > ();
    f < i > ();
    f < i + 1 > ();
