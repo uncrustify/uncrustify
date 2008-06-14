@@ -135,6 +135,7 @@ enum uncrustify_options
    UO_indent_func_def_param,     // same, but for function defs
    UO_indent_func_class_param,   // same, but for classes
    UO_indent_func_ctor_var_param,
+   UO_indent_template_param,
    UO_indent_func_param_double,  // double the tab indent for
 
    UO_indent_namespace,          // indent stuff inside namespace braces

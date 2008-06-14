@@ -353,6 +353,8 @@ void register_options(void)
                   "Same as indent_func_call_param, but for class declarations");
    unc_add_option("indent_func_ctor_var_param", UO_indent_func_ctor_var_param, AT_BOOL,
                   "Same as indent_func_call_param, but for class variable constructors");
+   unc_add_option("indent_template_param", UO_indent_template_param, AT_BOOL,
+                  "Same as indent_func_call_param, but for templates");
    unc_add_option("indent_func_param_double", UO_indent_func_param_double, AT_BOOL,
                   "Double the indent for indent_func_xxx_param options");
 

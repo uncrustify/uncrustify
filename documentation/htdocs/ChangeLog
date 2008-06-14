@@ -48,6 +48,8 @@ Changes in uncrustify-0.48 (not yet released)
  - Shuffle around spacing priorities
  - Add handling for '...' in variadic templates
  - Extend nl_template_class to handle anything after 'template <...>'
+ - Treat the template '<' the same as '(' for indenting
+ - Add indent_template_param
 
 
 Changes in uncrustify-0.47 (06-Jun-2008)

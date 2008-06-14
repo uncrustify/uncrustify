@@ -952,7 +952,7 @@ void indent_text(void)
          indent_pse_push(frm, pc);
          frm.pse[frm.pse_tos].indent = pc->column + pc->len;
 
-         if ((pc->type == CT_FPAREN_OPEN) &&
+         if (((pc->type == CT_FPAREN_OPEN) || (pc->type == CT_ANGLE_OPEN)) &&
              ((cpd.settings[UO_indent_func_call_param].b &&
                (pc->parent_type == CT_FUNC_CALL))
               ||
@@ -962,6 +962,9 @@ void indent_text(void)
               ||
               (cpd.settings[UO_indent_func_class_param].b &&
                (pc->parent_type == CT_FUNC_CLASS))
+              ||
+              (cpd.settings[UO_indent_template_param].b &&
+               (pc->parent_type == CT_TEMPLATE))
               ||
               (cpd.settings[UO_indent_func_ctor_var_param].b &&
                (pc->parent_type == CT_FUNC_CTOR_VAR))
@@ -993,6 +996,7 @@ void indent_text(void)
          }
 
          else if ((chunk_is_str(pc, "(", 1) && !cpd.settings[UO_indent_paren_nl].b) ||
+                  (chunk_is_str(pc, "<", 1) && !cpd.settings[UO_indent_paren_nl].b) || /* TODO: add indent_angle_nl? */
                   (chunk_is_str(pc, "[", 1) && !cpd.settings[UO_indent_square_nl].b))
          {
             next = chunk_get_next_nc(pc);
@@ -1157,7 +1161,7 @@ void indent_text(void)
                     __func__, pc->orig_line, indent_column, pc->len, pc->str);
             reindent_line(pc, indent_column);
          }
-         else if (chunk_is_paren_close(pc))
+         else if (chunk_is_paren_close(pc) || (pc->type == CT_ANGLE_CLOSE))
          {
             /* This is a big hack. We assume that since we hit a paren close,
              * that we just removed a paren open */
