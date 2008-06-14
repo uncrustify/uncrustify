@@ -330,15 +330,15 @@ argval_t do_space(chunk_t *first, chunk_t *second)
    {
       return(cpd.settings[UO_sp_attribute_paren].a);
    }
-   if (first->type == CT_FUNC_DEF)
-   {
-      return(cpd.settings[UO_sp_func_def_paren].a);
-   }
    if ((second->type == CT_FPAREN_OPEN) &&
        (first->parent_type == CT_OPERATOR) &&
        (cpd.settings[UO_sp_after_operator_sym].a != AV_IGNORE))
    {
       return(cpd.settings[UO_sp_after_operator_sym].a);
+   }
+   if (first->type == CT_FUNC_DEF)
+   {
+      return(cpd.settings[UO_sp_func_def_paren].a);
    }
    if ((first->type == CT_FUNC_PROTO) ||
        ((second->type == CT_FPAREN_OPEN) &&
