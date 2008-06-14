@@ -175,6 +175,7 @@ enum uncrustify_options
    UO_sp_before_sparen,         // space before '(' of 'if/for/while/switch'
    UO_sp_after_sparen,      /* space after  ')' of 'if/for/while/switch'
                              * the do-while does not get set here */
+   UO_sp_template_angle,
    UO_sp_before_angle,          // space before '<>', as in '<class T>'
    UO_sp_after_angle,           // space after  '<>', as in '<class T>'
    UO_sp_angle_paren,           // space between '<>' and '(' in "a = new List<byte>();"

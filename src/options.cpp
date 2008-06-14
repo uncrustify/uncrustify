@@ -167,6 +167,9 @@ void register_options(void)
                   "Add or remove space after reference sign '&', if followed by a word.");
    unc_add_option("sp_after_type", UO_sp_after_type, AT_IARF,
                   "Add or remove space between type and word");
+   unc_add_option("sp_template_angle", UO_sp_template_angle, AT_IARF,
+                  "Add or remove space in 'template <' vs 'template<'.\n"
+                  "If set to ignore, sp_before_angle is used.");
    unc_add_option("sp_before_angle", UO_sp_before_angle, AT_IARF,
                   "Add or remove space before '<>'");
    unc_add_option("sp_inside_angle", UO_sp_inside_angle, AT_IARF,

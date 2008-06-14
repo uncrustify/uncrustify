@@ -43,6 +43,7 @@ Changes in uncrustify-0.48 (not yet released)
  - If a statement starts with 'operator', it is a function call
  - Change sp_angle_word to be more generic
  - Add sp_after_operator_sym for "operator ++(" vs "operator ++ ("
+ - Add sp_template_angle for "template<" vs "template <"
 
 
 Changes in uncrustify-0.47 (06-Jun-2008)

@@ -270,6 +270,11 @@ argval_t do_space(chunk_t *first, chunk_t *second)
    }
    if (second->type == CT_ANGLE_OPEN)
    {
+      if ((first->type == CT_TEMPLATE) &&
+          (cpd.settings[UO_sp_template_angle].a != AV_IGNORE))
+      {
+         return(cpd.settings[UO_sp_template_angle].a);
+      }
       return(cpd.settings[UO_sp_before_angle].a);
    }
    if (first->type == CT_ANGLE_CLOSE)
