@@ -2203,6 +2203,7 @@ void newlines_cleanup_dup(void)
           (pc->type == CT_NEWLINE) &&
           (next->type == CT_NEWLINE))
       {
+         next->nl_count += pc->nl_count;
          chunk_del(pc);
       }
       pc = next;
