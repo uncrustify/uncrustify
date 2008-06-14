@@ -1576,8 +1576,10 @@ void newlines_cleanup_braces(void)
          if (pc->parent_type == CT_TEMPLATE)
          {
             next = chunk_get_next_ncnl(pc);
-            if ((next != NULL) && (next->type == CT_CLASS) &&
-                (next->level == next->brace_level))
+            if ((next != NULL) &&
+                (next->level == next->brace_level) &&
+                ((next->type == CT_CLASS) ||
+                 (next->type == CT_STRUCT)))
             {
                newline_iarf(pc, cpd.settings[UO_nl_template_class].a);
             }
