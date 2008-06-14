@@ -45,6 +45,8 @@ Changes in uncrustify-0.48 (not yet released)
  - Add sp_after_operator_sym for "operator ++(" vs "operator ++ ("
  - Add sp_template_angle for "template<" vs "template <"
  - Add support for " *INDENT-OFF* " and " *INDENT-ON* "
+ - Shuffle around spacing priorities
+ - Add handling for '...' in variadic templates
 
 
 Changes in uncrustify-0.47 (06-Jun-2008)

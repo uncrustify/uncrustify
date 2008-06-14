@@ -209,6 +209,16 @@ argval_t do_space(chunk_t *first, chunk_t *second)
       return(cpd.settings[UO_sp_before_dc].a);
    }
 
+   /* "a,b" vs "a, b" */
+   if (first->type == CT_COMMA)
+   {
+      return(cpd.settings[UO_sp_after_comma].a);
+   }
+   if (second->type == CT_COMMA)
+   {
+      return(cpd.settings[UO_sp_before_comma].a);
+   }
+
    if (first->type == CT_TAG_COLON)
    {
       if (second->type == CT_ELLIPSIS)
@@ -216,6 +226,14 @@ argval_t do_space(chunk_t *first, chunk_t *second)
          return(AV_FORCE);
       }
       return(cpd.settings[UO_sp_after_tag].a);
+   }
+   if ((first->type == CT_ELLIPSIS) && CharTable::IsKw1(second->str[0]))
+   {
+      return(AV_FORCE);
+   }
+   if (second->type == CT_ELLIPSIS)
+   {
+      return(AV_REMOVE);
    }
    if (second->type == CT_TAG_COLON)
    {
@@ -553,16 +571,6 @@ argval_t do_space(chunk_t *first, chunk_t *second)
    if ((first->type == CT_SPAREN_OPEN) || (second->type == CT_SPAREN_CLOSE))
    {
       return(cpd.settings[UO_sp_inside_sparen].a);
-   }
-
-   /* "a,b" vs "a, b" */
-   if (first->type == CT_COMMA)
-   {
-      return(cpd.settings[UO_sp_after_comma].a);
-   }
-   if (second->type == CT_COMMA)
-   {
-      return(cpd.settings[UO_sp_before_comma].a);
    }
 
    if ((cpd.settings[UO_sp_after_class_colon].a != AV_IGNORE) &&
