@@ -1577,11 +1577,13 @@ void newlines_cleanup_braces(void)
          {
             next = chunk_get_next_ncnl(pc);
             if ((next != NULL) &&
-                (next->level == next->brace_level) &&
-                ((next->type == CT_CLASS) ||
-                 (next->type == CT_STRUCT)))
+                (next->level == next->brace_level))
             {
-               newline_iarf(pc, cpd.settings[UO_nl_template_class].a);
+               tmp = chunk_get_prev_ncnl(chunk_get_prev_type(pc, CT_ANGLE_OPEN, pc->level));
+               if ((tmp != NULL) && (tmp->type == CT_TEMPLATE))
+               {
+                  newline_iarf(pc, cpd.settings[UO_nl_template_class].a);
+               }
             }
          }
       }

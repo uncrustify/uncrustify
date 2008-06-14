@@ -489,7 +489,7 @@ void register_options(void)
    unc_add_option("nl_namespace_brace", UO_nl_namespace_brace, AT_IARF,
                   "Newline between namespace and {");
    unc_add_option("nl_template_class", UO_nl_template_class, AT_IARF,
-                  "Add or remove newline between 'template<>' and 'class'");
+                  "Add or remove newline between 'template<>' and whatever follows.");
    unc_add_option("nl_class_brace", UO_nl_class_brace, AT_IARF,
                   "Add or remove newline between 'class' and '{'");
    unc_add_option("nl_class_init_args", UO_nl_class_init_args, AT_IARF,
