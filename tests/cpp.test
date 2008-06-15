@@ -91,6 +91,7 @@
 30810 ben.cfg                          cpp/ptr-star.cpp
 30811 avalon4.cfg                      cpp/misc3.cpp
 30812 ben.cfg                          cpp/misc4.cpp
+30813 ben.cfg                          cpp/misc5.cpp
 
 30815 width-2.cfg                      cpp/cmt-reflow.cpp
 
