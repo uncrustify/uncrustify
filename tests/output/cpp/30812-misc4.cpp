@@ -29,3 +29,8 @@ struct X
    }
 };
 
+inline value_type operator ()() const
+{
+   return(double(rnd32()) * (0.5 / 0x80000000));
+}
+
