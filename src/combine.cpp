@@ -212,7 +212,7 @@ void fix_symbols(void)
    {
       /* D stuff */
       if ((next->type == CT_PAREN_OPEN) &&
-          ((pc->type == CT_CAST) ||
+          ((pc->type == CT_D_CAST) ||
            (pc->type == CT_DELEGATE) ||
            (pc->type == CT_ALIGN)))
       {
@@ -220,7 +220,7 @@ void fix_symbols(void)
          tmp = set_paren_parent(next, pc->type);
 
          /* For a D cast - convert the next item */
-         if ((pc->type == CT_CAST) && (tmp != NULL))
+         if ((pc->type == CT_D_CAST) && (tmp != NULL))
          {
             if (tmp->type == CT_STAR)
             {
@@ -414,15 +414,21 @@ void fix_symbols(void)
          else if (pc->type == CT_TYPE)
          {
             /**
-             * If we are on a type, then we are either on a C++ style cast or
-             * we are on a function type.
+             * If we are on a type, then we are either on a C++ style cast, a
+             * function or we are on a function type.
              * The only way to tell for sure is to find the close paren and see
              * if it is followed by an open paren.
+             * "int(5.6)"
+             * "int()"
+             * "int(foo)(void)"
+             *
+             * FIXME: this check can be done better...
              */
             tmp = chunk_get_next_type(next, CT_PAREN_CLOSE, next->level);
             tmp = chunk_get_next(tmp);
             if ((tmp != NULL) && (tmp->type == CT_PAREN_OPEN))
             {
+               /* we have "TYPE(...)(" */
                pc->type = CT_FUNCTION;
             }
             else
@@ -430,8 +436,18 @@ void fix_symbols(void)
                if ((pc->parent_type == CT_NONE) &&
                    ((pc->flags & PCF_IN_TYPEDEF) == 0))
                {
-                  pc->type = CT_CAST;
-                  set_paren_parent(next, CT_CAST);
+                  tmp = chunk_get_next_ncnl(next);
+                  if ((tmp != NULL) && (tmp->type == CT_PAREN_CLOSE))
+                  {
+                     /* we have TYPE() */
+                     pc->type = CT_FUNCTION;
+                  }
+                  else
+                  {
+                     /* we have TYPE(...) */
+                     pc->type = CT_CPP_CAST;
+                     set_paren_parent(next, CT_CPP_CAST);
+                  }
                }
             }
          }
@@ -533,7 +549,7 @@ void fix_symbols(void)
        */
       if ((next != NULL) &&
           ((pc->flags & PCF_IN_TYPEDEF) == 0) &&
-          (pc->parent_type != CT_CAST) &&
+          (pc->parent_type != CT_CPP_CAST) &&
           ((pc->flags & PCF_IN_PREPROC) == 0) &&
           chunk_is_str(pc, ")", 1) &&
           chunk_is_str(next, "(", 1))
@@ -622,7 +638,7 @@ void fix_symbols(void)
 
       /* Detect a variable definition that starts with struct/enum/union */
       if (((pc->flags & PCF_IN_TYPEDEF) == 0) &&
-          (prev->parent_type != CT_CAST) &&
+          (prev->parent_type != CT_CPP_CAST) &&
           ((prev->flags & PCF_IN_FCN_DEF) == 0) &&
           ((pc->type == CT_STRUCT) ||
            (pc->type == CT_UNION) ||
@@ -1258,14 +1274,14 @@ static void fix_casts(chunk_t *start)
       }
    }
 
-   start->parent_type       = CT_CAST;
-   paren_close->parent_type = CT_CAST;
+   start->parent_type       = CT_C_CAST;
+   paren_close->parent_type = CT_C_CAST;
 
-   LOG_FMT(LCASTS, " -- %s cast: (", verb);
+   LOG_FMT(LCASTS, " -- %s c-cast: (", verb);
 
    for (pc = first; pc != paren_close; pc = chunk_get_next_ncnl(pc))
    {
-      pc->parent_type = CT_CAST;
+      pc->parent_type = CT_C_CAST;
       make_type(pc);
       LOG_FMT(LCASTS, " %.*s", pc->len, pc->str);
    }
@@ -1330,7 +1346,7 @@ static void fix_enum_struct_union(chunk_t *pc)
    int     in_fcn_paren = pc->flags & PCF_IN_FCN_DEF;
 
    /* Make sure this wasn't a cast */
-   if (pc->parent_type == CT_CAST)
+   if (pc->parent_type == CT_C_CAST)
    {
       return;
    }

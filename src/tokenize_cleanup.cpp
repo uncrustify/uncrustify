@@ -365,6 +365,7 @@ static void check_template(chunk_t *start)
    chunk_t *pc;
    chunk_t *end;
    chunk_t *prev;
+   chunk_t *next;
 
    LOG_FMT(LTEMPL, "%s: Line %d, col %d:", __func__, start->orig_line, start->orig_col);
 
@@ -378,6 +379,7 @@ static void check_template(chunk_t *start)
    {
       LOG_FMT(LTEMPL, " CT_TEMPLATE:");
 
+      /* We have: "template< ... >", which is a template declaration */
       int level = 1;
       for (pc = chunk_get_next_ncnl(start); pc != NULL; pc = chunk_get_next_ncnl(pc))
       {
@@ -400,6 +402,8 @@ static void check_template(chunk_t *start)
    }
    else
    {
+      /* We may have something like "a< ... >", which is a template use */
+
       /* A template requires a word/type right before the open angle */
       if ((prev->type != CT_WORD) && (prev->type != CT_TYPE) && (prev->parent_type != CT_OPERATOR))
       {
@@ -489,10 +493,17 @@ static void check_template(chunk_t *start)
          LOG_FMT(LTEMPL, " - Template Detected\n");
 
          start->parent_type = CT_TEMPLATE;
-         for (pc = start; pc != end; pc = chunk_get_next_ncnl(pc))
+
+         pc = start;
+         while (pc != end)
          {
+            next = chunk_get_next_ncnl(pc);
             pc->flags |= PCF_IN_TEMPLATE;
-            make_type(pc);
+            if (next->type != CT_PAREN_OPEN)
+            {
+               make_type(pc);
+            }
+            pc = next;
          }
          end->parent_type = CT_TEMPLATE;
          end->flags      |= PCF_IN_TEMPLATE;

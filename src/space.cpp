@@ -359,8 +359,9 @@ argval_t do_space(chunk_t *first, chunk_t *second)
    {
       return(cpd.settings[UO_sp_after_operator_sym].a);
    }
-   if (first->type == CT_FUNC_DEF)
+   if ((first->type == CT_FUNC_DEF) || (first->type == CT_CPP_CAST))
    {
+      /* TODO: create new option UO_sp_cpp_cast_paren */
       return(cpd.settings[UO_sp_func_def_paren].a);
    }
    if ((first->type == CT_FUNC_PROTO) ||
@@ -397,7 +398,7 @@ argval_t do_space(chunk_t *first, chunk_t *second)
       return(cpd.settings[UO_sp_inside_braces].a);
    }
 
-   if (first->type == CT_CAST)
+   if (first->type == CT_D_CAST)
    {
       return(AV_REMOVE);
    }
@@ -484,8 +485,15 @@ argval_t do_space(chunk_t *first, chunk_t *second)
          return(AV_FORCE);
       }
 
-      /* "(int)a" vs "(int) a" */
-      if (first->parent_type == CT_CAST)
+      /* Arith after a cast comes first */
+      if (second->type == CT_ARITH)
+      {
+         return(cpd.settings[UO_sp_arith].a);
+      }
+
+      /* "(int)a" vs "(int) a" or "cast(int)a" vs "cast(int) a" */
+      if ((first->parent_type == CT_C_CAST) ||
+          (first->parent_type == CT_D_CAST))
       {
          return(cpd.settings[UO_sp_after_cast].a);
       }
@@ -526,10 +534,15 @@ argval_t do_space(chunk_t *first, chunk_t *second)
       return(cpd.settings[UO_sp_after_oc_type].a);
    }
 
-   /* "(a + 3)" vs "( a + 3 )" */
+   /* C cast:   "(int)"      vs "( int )"
+    * D cast:   "cast(int)"  vs "cast( int )"
+    * CPP cast: "int(a + 3)" vs "int( a + 3 )"
+    */
    if (first->type == CT_PAREN_OPEN)
    {
-      if (first->parent_type == CT_CAST)
+      if ((first->parent_type == CT_C_CAST) ||
+          (first->parent_type == CT_CPP_CAST) ||
+          (first->parent_type == CT_D_CAST))
       {
          return(cpd.settings[UO_sp_inside_paren_cast].a);
       }
@@ -538,7 +551,9 @@ argval_t do_space(chunk_t *first, chunk_t *second)
 
    if (second->type == CT_PAREN_CLOSE)
    {
-      if (second->parent_type == CT_CAST)
+      if ((second->parent_type == CT_C_CAST) ||
+          (second->parent_type == CT_CPP_CAST) ||
+          (second->parent_type == CT_D_CAST))
       {
          return(cpd.settings[UO_sp_inside_paren_cast].a);
       }
@@ -702,17 +717,11 @@ argval_t do_space(chunk_t *first, chunk_t *second)
       return(cpd.settings[UO_sp_inside_braces].a);
    }
 
-   if (first->type == CT_PAREN_CLOSE)
+   if ((first->type == CT_PAREN_CLOSE) &&
+       (second->type == CT_PAREN_OPEN))
    {
-      if (first->parent_type == CT_CAST)
-      {
-         return(cpd.settings[UO_sp_after_cast].a);
-      }
-      /* Must be an indirect function call */
-      if (second->type == CT_PAREN_OPEN)
-      {
-         return(AV_REMOVE);  /* TODO: make this configurable? */
-      }
+      /* Must be an indirect/chained function call? */
+      return(AV_REMOVE);  /* TODO: make this configurable? */
    }
 
    if (second->type == CT_SPAREN_OPEN)

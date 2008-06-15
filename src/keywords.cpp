@@ -69,7 +69,7 @@ static const chunk_tag_t keywords[] =
    { "byte",             CT_TYPE,         LANG_CS | LANG_D | LANG_JAVA                                    },
    { "callback",         CT_QUALIFIER,    LANG_VALA                                                       },
    { "case",             CT_CASE,         LANG_ALL                                                        }, // PAWN
-   { "cast",             CT_CAST,         LANG_D                                                          },
+   { "cast",             CT_D_CAST,       LANG_D                                                          },
    { "catch",            CT_CATCH,        LANG_CPP | LANG_CS | LANG_D | LANG_JAVA                         },
    { "cdouble",          CT_TYPE,         LANG_D                                                          },
    { "cent",             CT_TYPE,         LANG_D                                                          },

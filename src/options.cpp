@@ -217,7 +217,7 @@ void register_options(void)
    unc_add_option("sp_after_operator_sym", UO_sp_after_operator_sym, AT_IARF,
                   "Add or remove space between the operator symbol and the open paren, as in 'operator ++('");
    unc_add_option("sp_after_cast", UO_sp_after_cast, AT_IARF,
-                  "Add or remove space after cast");
+                  "Add or remove space after C/D cast, ie 'cast(int)a' vs 'cast(int) a' or '(int)a' vs '(int) a'");
    unc_add_option("sp_inside_paren_cast", UO_sp_inside_paren_cast, AT_IARF,
                   "Add or remove spaces inside cast parens");
    unc_add_option("sp_sizeof_paren", UO_sp_sizeof_paren, AT_IARF,
