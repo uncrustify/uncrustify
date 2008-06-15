@@ -618,6 +618,7 @@ static void newlines_if_for_while_switch_post_blank_lines(chunk_t *start, argval
                prev = chunk_get_prev_nnl(next);
                pc   = chunk_get_next_nnl(next);
                if ((pc != NULL) && (pc->type == CT_PREPROC) &&
+                   (pc->parent_type == CT_PP_ENDIF) &&
                    cpd.settings[UO_nl_squeeze_ifdef].b)
                {
                   LOG_FMT(LNEWLINE, "%s: cannot add newline after line %d due to nl_squeeze_ifdef\n",
