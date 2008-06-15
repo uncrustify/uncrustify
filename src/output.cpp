@@ -15,6 +15,8 @@
 #include <cstring>
 #include <cstdlib>
 
+static void output_comment_multi(chunk_t *pc);
+static void output_comment_multi_simple(chunk_t *pc);
 
 struct cmt_reflow
 {
@@ -246,7 +248,14 @@ void output_text(FILE *pfile)
       }
       else if (pc->type == CT_COMMENT_MULTI)
       {
-         output_comment_multi(pc);
+         if (cpd.settings[UO_cmt_indent_multi].b)
+         {
+            output_comment_multi(pc);
+         }
+         else
+         {
+            output_comment_multi_simple(pc);
+         }
       }
       else if (pc->type == CT_COMMENT_CPP)
       {
@@ -890,7 +899,7 @@ static chunk_t *output_comment_cpp(chunk_t *first)
  * The only trick here is that we have to trim out whitespace characters
  * to get the comment to line up.
  */
-void output_comment_multi(chunk_t *pc)
+static void output_comment_multi(chunk_t *pc)
 {
    int        cmt_col = pc->column;
    const char *cmt_str;
@@ -1090,6 +1099,136 @@ void output_comment_multi(chunk_t *pc)
                   add_text_len("\n", 1);
                }
             }
+         }
+         line_len = 0;
+         ccol     = 1;
+      }
+   }
+}
+
+/**
+ * Output a multiline comment without any reformatting other than shifting
+ * it left or right to get the column right.
+ * Oh, and trim trailing whitespace.
+ */
+static void output_comment_multi_simple(chunk_t *pc)
+{
+   int        cmt_col = pc->column;
+   const char *cmt_str;
+   int        remaining;
+   char       ch;
+   char       line[1024];
+   int        line_len;
+   int        line_count = 0;
+   int        ccol;
+   int        col_diff = 0;
+   bool       nl_end = false;
+
+   if (chunk_is_newline(chunk_get_prev(pc)))
+   {
+      /* The comment should be indented correctly */
+      cmt_col  = pc->column;
+      col_diff = pc->orig_col - pc->column;
+   }
+   else
+   {
+      /* The comment starts after something else */
+      cmt_col  = pc->orig_col;
+      col_diff = 0;
+   }
+
+   //LOG_FMT(LSYS, "Indenting1 line %d to col %d (orig=%d) col_diff=%d xtra=%d\n",
+   //        pc->orig_line, cmt_col, pc->orig_col, col_diff, xtra);
+
+   ccol      = pc->column;
+   remaining = pc->len;
+   cmt_str   = pc->str;
+   line_len  = 0;
+   while (remaining > 0)
+   {
+      ch = *cmt_str;
+      cmt_str++;
+      remaining--;
+
+      /* handle the CRLF and CR endings. convert both to LF */
+      if (ch == '\r')
+      {
+         ch = '\n';
+         if (*cmt_str == '\n')
+         {
+            cmt_str++;
+            remaining--;
+         }
+      }
+
+      /* Find the start column */
+      if (line_len == 0)
+      {
+         nl_end = false;
+         if (ch == ' ')
+         {
+            ccol++;
+            continue;
+         }
+         else if (ch == '\t')
+         {
+            ccol = calc_next_tab_column(ccol, cpd.settings[UO_input_tab_size].n);
+            continue;
+         }
+         else
+         {
+            //LOG_FMT(LSYS, "%d] Text starts in col %d, col_diff=%d, real=%d\n",
+            //        line_count, ccol, col_diff, ccol - col_diff);
+         }
+      }
+
+      line[line_len++] = ch;
+
+      /* If we just hit an end of line OR we just hit end-of-comment... */
+      if ((ch == '\n') || (remaining == 0))
+      {
+         line_count++;
+
+         /* strip trailing tabs and spaces before the newline */
+         if (ch == '\n')
+         {
+            line_len--;
+            while ((line_len > 0) &&
+                   ((line[line_len - 1] == ' ') ||
+                    (line[line_len - 1] == '\t')))
+            {
+               line_len--;
+            }
+            /* REVISIT: the check for '*' seem unnecessary */
+            if ((line[line_len - 1] == '\\') && (line[line_len - 2] != '*'))
+            {
+               /* Kill off the backslash-newline */
+               line_len--;
+               while ((line_len > 0) &&
+                      ((line[line_len - 1] == ' ') ||
+                       (line[line_len - 1] == '\t')))
+               {
+                  line_len--;
+               }
+               line[line_len++] = ' ';
+               line[line_len++] = '\\';
+            }
+            nl_end = true;
+         }
+         line[line_len] = 0;
+
+         if (line_count > 1)
+         {
+            ccol -= col_diff;
+         }
+
+         /*TODO: need to support indent_with_tabs mode 1 */
+         output_to_column(cmt_col, cpd.settings[UO_indent_with_tabs].n != 0);
+         output_to_column(ccol, cpd.settings[UO_indent_with_tabs].n == 2);
+         add_text_len(line, line_len);
+         if (nl_end)
+         {
+            add_char('\n');
          }
          line_len = 0;
          ccol     = 1;

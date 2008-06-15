@@ -716,7 +716,8 @@ void register_options(void)
    unc_add_option("cmt_width", UO_cmt_width, AT_NUM,
                   "Try to wrap comments at cmt_width columns", "", 16, 256);
    unc_add_option("cmt_indent_multi", UO_cmt_indent_multi, AT_BOOL,
-                  "Whether to mess with the indent of multi-line comments");
+                  "If false, disable all multi-line comment changes, including cmt_width and leading chars.\n"
+                  "Default is true.");
    unc_add_option("cmt_c_group", UO_cmt_c_group, AT_BOOL,
                   "Whether to group c-comments that look like they are in a block");
    unc_add_option("cmt_c_nl_start", UO_cmt_c_nl_start, AT_BOOL,
