@@ -51,6 +51,7 @@ Changes in uncrustify-0.48 (not yet released)
  - Treat the template '<' the same as '(' for indenting
  - Add indent_template_param
  - Split internal CT_CAST into CT_C_CAST, CT_CPP_CAST and CT_D_CAST
+ - Swap priority of sp_after_angle and sp_before_ptr_star
 
 
 Changes in uncrustify-0.47 (06-Jun-2008)

@@ -313,7 +313,8 @@ argval_t do_space(chunk_t *first, chunk_t *second)
       {
          return(cpd.settings[UO_sp_before_dc].a);
       }
-      if (second->type != CT_BYREF)
+      if ((second->type != CT_BYREF) &&
+          (second->type != CT_PTR_TYPE))
       {
          return(cpd.settings[UO_sp_after_angle].a);
       }
