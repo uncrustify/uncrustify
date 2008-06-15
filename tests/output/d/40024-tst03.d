@@ -52,7 +52,7 @@ void foo()
 
     if (string < "betty")
         ;
-    int    *p = address;
+    int *p = address;
 
     volatile { i = *p; }
 

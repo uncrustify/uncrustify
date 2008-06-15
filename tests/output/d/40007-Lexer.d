@@ -2300,7 +2300,7 @@ Lnewline:
 //				 ? &t.lineComment
 //				 : &t.blockComment;
 
-        char[]         dc = (lineComment && anyToken) ? t.lineComment : t.blockComment;
+        char[] dc = (lineComment && anyToken) ? t.lineComment : t.blockComment;
 
         // Combine with previous doc comment, if any
         if (dc.length) {
