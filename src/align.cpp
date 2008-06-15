@@ -19,7 +19,7 @@
 #include "unc_ctype.h"
 
 
-static chunk_t *align_var_def_brace(chunk_t *pc, int span);
+static chunk_t *align_var_def_brace(chunk_t *pc, int span, int *nl_count);
 chunk_t *align_trailing_comments(chunk_t *start);
 static void align_init_brace(chunk_t *start);
 static void align_func_params();
@@ -246,7 +246,7 @@ void align_all(void)
    if ((cpd.settings[UO_align_var_def_span].n > 0) ||
        (cpd.settings[UO_align_var_struct_span].n > 0))
    {
-      align_var_def_brace(chunk_get_head(), cpd.settings[UO_align_var_def_span].n);
+      align_var_def_brace(chunk_get_head(), cpd.settings[UO_align_var_def_span].n, NULL);
    }
 
    /* Align assignments */
@@ -725,7 +725,7 @@ static void align_func_proto(int span)
  * variable def align column.  Also aligns bit-colons, but that assumes that
  * bit-types are the same! But that should always be the case...
  */
-static chunk_t *align_var_def_brace(chunk_t *start, int span)
+static chunk_t *align_var_def_brace(chunk_t *start, int span, int *p_nl_count)
 {
    chunk_t    *pc;
    chunk_t    *next;
@@ -794,7 +794,7 @@ static chunk_t *align_var_def_brace(chunk_t *start, int span)
    as_br.m_gap = cpd.settings[UO_align_single_line_brace_gap].n;
 
    bool did_this_line = false;
-   pc = chunk_get_next_ncnl(start);
+   pc = chunk_get_next(start);
    while ((pc != NULL) && ((pc->level >= start->level) || (pc->level == 0)))
    {
       if (chunk_is_comment(pc))
@@ -834,14 +834,28 @@ static chunk_t *align_var_def_brace(chunk_t *start, int span)
       /* process nested braces */
       if (pc->type == CT_BRACE_OPEN)
       {
-         pc = align_var_def_brace(pc, span);
+         int sub_nl_count = 0;
+
+         pc = align_var_def_brace(pc, span, &sub_nl_count);
+         if (sub_nl_count > 0)
+         {
+            fp_look_bro   = false;
+            did_this_line = false;
+            as.NewLines(sub_nl_count);
+            as_bc.NewLines(sub_nl_count);
+            as_br.NewLines(sub_nl_count);
+            if (p_nl_count != NULL)
+            {
+               *p_nl_count += sub_nl_count;
+            }
+         }
          continue;
       }
 
       /* Done with this brace set? */
       if (pc->type == CT_BRACE_CLOSE)
       {
-         pc = chunk_get_next_ncnl(pc);
+         pc = chunk_get_next(pc);
          break;
       }
 
@@ -852,6 +866,10 @@ static chunk_t *align_var_def_brace(chunk_t *start, int span)
          as.NewLines(pc->nl_count);
          as_bc.NewLines(pc->nl_count);
          as_br.NewLines(pc->nl_count);
+         if (p_nl_count != NULL)
+         {
+            *p_nl_count += pc->nl_count;
+         }
       }
 
       /* don't align stuff inside parens/squares/angles */
