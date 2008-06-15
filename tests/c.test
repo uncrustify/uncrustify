@@ -155,6 +155,8 @@
 
 01030  multi.cfg               c/multi.h
 
+01040  newline_after_endif.cfg c/newline_after_endif.c
+
 # big general tests
 20000 ben.cfg                  c/i2c-core.c
 20001 preproc-cleanup.cfg      c/directfb.h
