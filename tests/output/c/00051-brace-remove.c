@@ -19,14 +19,10 @@ void foo(void)
 		printf("a looks good\n");
 
 	if (state == ST_RUN)
-	{
 		if ((foo < bar) &&
 		    (bar > foo2))
-		{
 			if (a < 5)
 				a *= a;
-		}
-	}
 
 	while (*ptr++ != ',')
 	{

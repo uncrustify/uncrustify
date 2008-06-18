@@ -33,6 +33,8 @@
 00020  ben.cfg                 c/define-if-indent.c
 00050  brace-remove-2.cfg      c/brace-remove.c
 00051  brace-remove-all.cfg    c/brace-remove.c
+00052  brace-remove-all.cfg    c/brace-remove2.c
+
 00060  ben.cfg                 c/braces-2.c
 00061  ben.cfg                 c/braces-3.c
 00062  ben.cfg                 c/braces-4.c
