@@ -157,6 +157,18 @@ chunk_t *newline_add_before2(chunk_t *pc, const char *fcn, int line);
 chunk_t *newline_add_after2(chunk_t *pc, const char *fcn, int line);
 
 
+#define newline_del_between(start, end) \
+   newline_del_between2(start, end, __func__, __LINE__)
+
+void newline_del_between2(chunk_t *start, chunk_t *end,
+                          const char *func, int line);
+
+#define newline_add_between(start, end) \
+   newline_add_between2(start, end, __func__, __LINE__)
+
+chunk_t *newline_add_between2(chunk_t *start, chunk_t *end,
+                              const char *func, int line);
+
 /*
  *  tokenize.cpp
  */

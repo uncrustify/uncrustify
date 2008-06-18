@@ -95,10 +95,12 @@ void do_braces(void)
 static void examine_braces(void)
 {
    chunk_t *pc;
+   chunk_t *prev;
 
    pc = chunk_get_tail();
    while (pc != NULL)
    {
+      prev = chunk_get_prev_type(pc, CT_BRACE_OPEN, -1);
       if ((pc->type == CT_BRACE_OPEN) &&
           ((pc->flags & PCF_IN_PREPROC) == 0))
       {
@@ -116,7 +118,7 @@ static void examine_braces(void)
             examine_brace(pc);
          }
       }
-      pc = chunk_get_prev_type(pc, CT_BRACE_OPEN, -1);
+      pc = prev;
    }
 }
 
@@ -127,6 +129,7 @@ static void examine_braces(void)
 static void examine_brace(chunk_t *bopen)
 {
    chunk_t *pc;
+   chunk_t *next;
    chunk_t *prev      = NULL;
    int     semi_count = 0;
    int     level      = bopen->level + 1;
@@ -134,6 +137,7 @@ static void examine_brace(chunk_t *bopen)
    bool    was_fcn    = false;
    int     nl_max     = cpd.settings[UO_mod_full_brace_nl].n;
    int     nl_count   = 0;
+   int     if_count   = 0;
 
    LOG_FMT(LBRDEL, "%s: start on %d : ", __func__, bopen->orig_line);
 
@@ -167,6 +171,18 @@ static void examine_brace(chunk_t *bopen)
             }
 
             LOG_FMT(LBRDEL, " [%.*s %d-%d]", pc->len, pc->str, pc->orig_line, semi_count);
+
+            if (pc->type == CT_ELSE)
+            {
+               LOG_FMT(LBRDEL, " bailed on %.*s on line %d\n",
+                       pc->len, pc->str, pc->orig_line);
+               return;
+            }
+
+            if ((pc->type == CT_IF) || (pc->type == CT_ELSEIF))
+            {
+               if_count++;
+            }
 
             was_fcn = (prev != NULL) && (prev->type == CT_FPAREN_CLOSE);
 
@@ -202,6 +218,33 @@ static void examine_brace(chunk_t *bopen)
    {
       if (semi_count > 0)
       {
+         next = chunk_get_next_ncnl(pc);
+         if ((next->type == CT_ELSE) && (if_count > 0))
+         {
+            LOG_FMT(LBRDEL, " bailed on because 'else' is next and %d ifs\n", if_count);
+            return;
+         }
+
+         if (bopen->parent_type == CT_ELSE)
+         {
+            next = chunk_get_next_ncnl(bopen);
+            if (next->type == CT_IF)
+            {
+               prev = chunk_get_prev_ncnl(bopen);
+               LOG_FMT(LBRDEL, " else-if removing braces on line %d and %d\n",
+                       bopen->orig_line, pc->orig_line);
+
+               chunk_del(bopen);
+               chunk_del(pc);
+               newline_del_between(prev, next);
+               if (cpd.settings[UO_nl_else_if].a & AV_ADD)
+               {
+                  newline_add_between(prev, next);
+               }
+               return;
+            }
+         }
+
          /* we have a pair of braces with only 1 statement inside */
          remove_brace(bopen);
          remove_brace(pc);

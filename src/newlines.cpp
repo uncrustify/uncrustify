@@ -145,11 +145,6 @@ static void newline_min_after2(chunk_t *ref, INT32 count,
 }
 
 /**
- * Adds a newline between the two chunks if there isn't one already.
- */
-#define newline_add_between(start, end)     newline_add_between2(start, end, __func__, __LINE__)
-
-/**
  * Add a newline between two tokens.
  * If there is already a newline between then, nothing is done.
  * Otherwise a newline is inserted.
@@ -164,8 +159,8 @@ static void newline_min_after2(chunk_t *ref, INT32 count,
  *    if (...)   //comment
  *    {
  */
-static chunk_t *newline_add_between2(chunk_t *start, chunk_t *end,
-                                     const char *func, int line)
+chunk_t *newline_add_between2(chunk_t *start, chunk_t *end,
+                              const char *func, int line)
 {
    chunk_t *pc;
 
@@ -225,11 +220,8 @@ static chunk_t *newline_add_between2(chunk_t *start, chunk_t *end,
  * @param end     The ending chunk (cannot be a newline)
  * @return        true/false - removed something
  */
-#define newline_del_between(start, end) \
-   newline_del_between2(start, end, __func__, __LINE__)
-
-static void newline_del_between2(chunk_t *start, chunk_t *end,
-                                 const char *func, int line)
+void newline_del_between2(chunk_t *start, chunk_t *end,
+                          const char *func, int line)
 {
    chunk_t *next;
    chunk_t *prev;
@@ -1335,6 +1327,18 @@ void newlines_cleanup_braces(void)
       else if (pc->type == CT_ELSE)
       {
          newlines_cuddle_uncuddle(pc, cpd.settings[UO_nl_brace_else].a);
+         next = chunk_get_next_ncnl(pc);
+         if ((next != NULL) && (next->type == CT_ELSEIF))
+         {
+            if (cpd.settings[UO_nl_else_if].a & AV_REMOVE)
+            {
+               newline_del_between(pc, next);
+            }
+            if (cpd.settings[UO_nl_else_if].a & AV_ADD)
+            {
+               newline_add_between(pc, next);
+            }
+         }
          newlines_do_else(pc, cpd.settings[UO_nl_else_brace].a);
       }
       else if (pc->type == CT_TRY)

@@ -456,6 +456,8 @@ void register_options(void)
                   "If set to ignore, nl_if_brace is used instead");
    unc_add_option("nl_else_brace", UO_nl_else_brace, AT_IARF,
                   "Add or remove newline between 'else' and '{'");
+   unc_add_option("nl_else_if", UO_nl_else_if, AT_IARF,
+                  "Add or remove newline between 'else' and 'if'");
    unc_add_option("nl_brace_finally", UO_nl_brace_finally, AT_IARF,
                   "Add or remove newline between '}' and 'finally'");
    unc_add_option("nl_finally_brace", UO_nl_finally_brace, AT_IARF,
@@ -758,7 +760,7 @@ void register_options(void)
    unc_add_option("mod_full_brace_function", UO_mod_full_brace_function, AT_IARF,
                   "Add or remove braces on single-line function defintions. (Pawn)");
    unc_add_option("mod_full_brace_if", UO_mod_full_brace_if, AT_IARF,
-                  "Add or remove braces on single-line 'if' statement");
+                  "Add or remove braces on single-line 'if' statement. Will not remove the braces if they contain an 'else'.");
    unc_add_option("mod_full_brace_nl", UO_mod_full_brace_nl, AT_NUM,
                   "Don't remove braces around statements that span N newlines", "", 0, 5000);
    unc_add_option("mod_full_brace_while", UO_mod_full_brace_while, AT_IARF,

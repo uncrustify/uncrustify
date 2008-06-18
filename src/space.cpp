@@ -459,6 +459,11 @@ argval_t do_space(chunk_t *first, chunk_t *second)
       return(cpd.settings[UO_sp_else_brace].a);
    }
 
+   if ((first->type == CT_ELSE) && (second->type == CT_ELSEIF))
+   {
+      return(AV_FORCE);
+   }
+
    if ((first->type == CT_CATCH) && (second->type == CT_BRACE_OPEN))
    {
       return(cpd.settings[UO_sp_catch_brace].a);
