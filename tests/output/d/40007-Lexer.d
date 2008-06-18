@@ -584,7 +584,7 @@ Llen:
                         return;
                     }
                     // if /** but not /**/
-                    else  if (doDocComment && t.ptr[2] == '*' && p - 4 != t.ptr) {
+                    else if (doDocComment && t.ptr[2] == '*' && p - 4 != t.ptr) {
                         getDocComment(t, lastLine == linnum);                                           //! ?
                     }
                     continue;
