@@ -7,3 +7,12 @@ struct X {
         typedef typename T<a || b>::result result;
 };
 
+template <class T>
+class new_alloc {
+public:
+    void deallocate (int* p, int /*num*/)
+    {
+        T::operator delete((void *)p);
+    }
+};
+

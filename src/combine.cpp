@@ -2158,6 +2158,11 @@ static void mark_function(chunk_t *pc)
                {
                   pc->type = CT_FUNC_CALL;
                }
+               if ((tmp->parent_type == CT_CLASS) ||
+                   (tmp->parent_type == CT_STRUCT))
+               {
+                  pc->type = CT_FUNC_DEF;
+               }
                break;
             }
          }
