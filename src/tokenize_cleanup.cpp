@@ -366,6 +366,7 @@ static void check_template(chunk_t *start)
    chunk_t *end;
    chunk_t *prev;
    chunk_t *next;
+   bool    in_if = false;
 
    LOG_FMT(LTEMPL, "%s: Line %d, col %d:", __func__, start->orig_line, start->orig_col);
 
@@ -402,7 +403,12 @@ static void check_template(chunk_t *start)
    }
    else
    {
-      /* We may have something like "a< ... >", which is a template use */
+      /* We may have something like "a< ... >", which is a template use
+       * '...' may consist of anything except braces {}, a semicolon, and
+       * unbalanced parens.
+       * if we are inside an 'if' statement and hit a CT_BOOL, then it isn't a
+       * template.
+       */
 
       /* A template requires a word/type right before the open angle */
       if ((prev->type != CT_WORD) && (prev->type != CT_TYPE) && (prev->parent_type != CT_OPERATOR))
@@ -424,6 +430,11 @@ static void check_template(chunk_t *start)
              (pc->type == CT_SQUARE_CLOSE) ||
              (pc->type == CT_SEMICOLON))
          {
+            break;
+         }
+         if (pc->type == CT_IF)
+         {
+            in_if = true;
             break;
          }
          if (pc->type == CT_SQUARE_OPEN)
@@ -456,14 +467,16 @@ static void check_template(chunk_t *start)
                break;
             }
          }
+         else if (in_if && (pc->type == CT_BOOL))
+         {
+            break;
+         }
          else if ((pc->type == CT_COMPARE) ||
-                  (pc->type == CT_BOOL) ||
                   (pc->type == CT_SEMICOLON))
          {
             break;
          }
-         else if ((pc->type == CT_PAREN_OPEN) ||
-                  (pc->type == CT_BRACE_OPEN))
+         else if (pc->type == CT_PAREN_OPEN)
          {
             if (num_tokens >= (int)(ARRAY_SIZE(tokens) - 1))
             {
@@ -471,8 +484,7 @@ static void check_template(chunk_t *start)
             }
             tokens[num_tokens++] = pc->type;
          }
-         else if ((pc->type == CT_PAREN_CLOSE) ||
-                  (pc->type == CT_BRACE_CLOSE))
+         else if (pc->type == CT_PAREN_CLOSE)
          {
             num_tokens--;
             if (tokens[num_tokens] != (pc->type - 1))
