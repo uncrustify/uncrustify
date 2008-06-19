@@ -2143,6 +2143,25 @@ static void mark_function(chunk_t *pc)
       {
          pc->type = CT_FUNC_CALL;
       }
+      if (cpd.lang_flags & LANG_CPP)
+      {
+         tmp = pc;
+         while ((tmp = chunk_get_prev_ncnl(tmp)) != NULL)
+         {
+            if (tmp->type == CT_BRACE_CLOSE)
+            {
+               break;
+            }
+            if (tmp->type == CT_BRACE_OPEN)
+            {
+               if (tmp->parent_type == CT_FUNC_DEF)
+               {
+                  pc->type = CT_FUNC_CALL;
+               }
+               break;
+            }
+         }
+      }
    }
 
    if (chunk_is_star(next) || chunk_is_addr(next))
