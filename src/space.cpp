@@ -84,6 +84,19 @@ argval_t do_space(chunk_t *first, chunk_t *second)
       return(AV_REMOVE);
    }
 
+   if ((second->type == CT_NEWLINE) ||
+       (second->type == CT_VBRACE_OPEN))
+   {
+      return(AV_REMOVE);
+   }
+   if (first->type == CT_VBRACE_OPEN)
+   {
+      return(AV_ADD);
+   }
+   if (first->type == CT_VBRACE_CLOSE)
+   {
+      return(AV_REMOVE);
+   }
    if (second->type == CT_VSEMICOLON)
    {
       return(AV_REMOVE);
@@ -129,11 +142,6 @@ argval_t do_space(chunk_t *first, chunk_t *second)
    if (chunk_is_comment(second))
    {
       return(AV_IGNORE);
-   }
-
-   if (second->type == CT_VBRACE_OPEN)
-   {
-      return(AV_ADD);
    }
 
    if (first->type == CT_PREPROC)
@@ -912,7 +920,7 @@ void space_text(void)
 
          int av = do_space(pc, next);
 
-         LOG_FMT(LSPACE, "%s: [%s] %.*s <==> [%s] %.*s = %d\n",
+         LOG_FMT(LSPACE, "%s: [%s] %.*s <==> [%s] '%.*s' = %d\n",
                  __func__,
                  get_token_name(pc->type), pc->len, pc->str,
                  get_token_name(next->type), next->len, next->str, av);
