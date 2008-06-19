@@ -7,7 +7,7 @@ void foo(void)
 		a++;
 		}
 
-	while (b < a)  // trailing C++ comment
+	while (b < a) // trailing C++ comment
 		b++;
 
 	do // trailing C++ comment
@@ -45,7 +45,7 @@ void foo(void)
 				}
 			else if (b != 0)
 				a /= b;
-			else  // trailing C++ comment
+			else // trailing C++ comment
 				a += b;
 			}
 		}
