@@ -466,12 +466,20 @@ static void check_template(chunk_t *start)
             {
                break;
             }
+            if (tokens[num_tokens] != CT_ANGLE_OPEN)
+            {
+               /* unbalanced parens */
+               break;
+            }
          }
-         else if (in_if && (pc->type == CT_BOOL))
+         else if (in_if &&
+                  ((pc->type == CT_BOOL) ||
+                   (pc->type == CT_COMPARE)))
          {
             break;
          }
-         else if ((pc->type == CT_COMPARE) ||
+         else if ((pc->type == CT_BRACE_OPEN) ||
+                  (pc->type == CT_BRACE_CLOSE) ||
                   (pc->type == CT_SEMICOLON))
          {
             break;
@@ -489,6 +497,7 @@ static void check_template(chunk_t *start)
             num_tokens--;
             if (tokens[num_tokens] != (pc->type - 1))
             {
+               /* unbalanced parens */
                break;
             }
          }
