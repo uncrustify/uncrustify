@@ -57,6 +57,7 @@ Changes in uncrustify-0.48 (not yet released)
  - Add nl_else_if
  - mod_full_brace_if: Don't remove braces around certain 'else' statements
  - Tweak template detection a bit more
+ - Rework and simplify multi-line comment indenting
 
 
 Changes in uncrustify-0.47 (06-Jun-2008)

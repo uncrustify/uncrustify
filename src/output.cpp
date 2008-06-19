@@ -464,28 +464,6 @@ static int calculate_comment_body_indent(const char *str, int len, int start_col
    return((width == 2) ? 0 : 1);
 }
 
-static_inline void add_spaces_before_star()
-{
-   int count = cpd.settings[UO_cmt_sp_before_star_cont].n;
-
-   while (count-- > 0)
-   {
-      add_char(' ');
-   }
-}
-
-static_inline void add_spaces_after_star()
-{
-   if (cpd.settings[UO_cmt_star_cont].b)
-   {
-      int count = cpd.settings[UO_cmt_sp_after_star_cont].n;
-      while (count-- > 0)
-      {
-         add_char(' ');
-      }
-   }
-}
-
 static chunk_t *get_next_function(chunk_t *pc)
 {
    while ((pc = chunk_get_next(pc)) != NULL)
@@ -1031,12 +1009,14 @@ static void output_comment_multi(chunk_t *pc)
          else
          {
             /* This is not the first line, so we need to indent to the
-             * correct column.
+             * correct column. Each line is indented a minimum of three spaces.
+             * Those three spaces are filled with whatever lead char should be
+             * there.
              */
             ccol -= col_diff;
-            if (ccol < cmt_col)
+            if (ccol < (cmt_col + 3))
             {
-               ccol = cmt_col;
+               ccol = cmt_col + 3;
             }
 
             if (line_len == 0)
@@ -1044,9 +1024,9 @@ static void output_comment_multi(chunk_t *pc)
                /* Emtpy line - just a '\n' */
                if (cpd.settings[UO_cmt_star_cont].b)
                {
-                  output_indent(ccol, cmt_col);
-                  add_spaces_before_star();
-                  add_text((xtra == 1) ? " *" : "*");
+                  output_indent(cmt_col + xtra + cpd.settings[UO_cmt_sp_before_star_cont].n,
+                                cmt_col);
+                  add_char('*');
                }
                add_char('\n');
             }
@@ -1059,32 +1039,24 @@ static void output_comment_multi(chunk_t *pc)
                    (line[0] != '*') && (line[0] != '|') && (line[0] != '#') &&
                    ((line[0] != '\\') || unc_isalpha(line[1])) && (line[0] != '+'))
                {
-                  bool do_sp_add = false;
-
-                  output_to_column(cmt_col, cpd.settings[UO_indent_with_tabs].n != 0);
-                  add_spaces_before_star();
+                  int start_col = cmt_col + xtra + cpd.settings[UO_cmt_sp_before_star_cont].n;
 
                   if (cpd.settings[UO_cmt_star_cont].b)
                   {
-                     /* REVISIT: shouldn't have leading spaces if indent_with_tabs!=0 */
-                     cmt.cont_text = (xtra == 1) ? " * " : "*  ";
-                     do_sp_add = true;
+                     output_indent(start_col, cmt_col);
+                     add_text("* ");
+                     output_to_column(ccol + cpd.settings[UO_cmt_sp_after_star_cont].n,
+                                      false);
                   }
                   else
                   {
-                     cmt.cont_text = "   ";
+                     output_indent(ccol, cmt_col);
                   }
-                  add_text(cmt.cont_text);
-                  if (do_sp_add)
-                  {
-                     add_spaces_after_star();
-                  }
-                  output_to_column(ccol, cpd.settings[UO_indent_with_tabs].n != 0);
                }
                else
                {
-                  output_to_column(cmt_col + xtra, cpd.settings[UO_indent_with_tabs].n != 0);
-                  add_spaces_before_star();
+                  output_indent(cmt_col + xtra + cpd.settings[UO_cmt_sp_before_star_cont].n,
+                                cmt_col);
 
                   int idx  = 0;
                   int sidx = 0;
