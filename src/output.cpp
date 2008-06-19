@@ -100,7 +100,7 @@ void add_text_len(const char *text, int len)
  *
  * @param column  The column to advance to
  */
-void output_to_column(int column, bool allow_tabs)
+static void output_to_column(int column, bool allow_tabs)
 {
    int nc;
 
@@ -120,8 +120,15 @@ void output_to_column(int column, bool allow_tabs)
    }
 }
 
-void output_indent(int column, int brace_col)
+/**
+ * Output to the column using indent_with_tabs as the rule.
+ *
+ * @param column    the column that we should end up in
+ * @param brace_col the level that indent_with_tabs=1 should tab to
+ */
+static void output_indent(int column, int brace_col)
 {
+   cpd.did_newline = 0;
    if ((cpd.column == 1) && (cpd.settings[UO_indent_with_tabs].n != 0))
    {
       if (cpd.settings[UO_indent_with_tabs].n == 2)
@@ -1014,9 +1021,7 @@ static void output_comment_multi(chunk_t *pc)
          if (line_count == 1)
          {
             /* this is the first line - add unchanged */
-
-            /*TODO: need to support indent_with_tabs mode 1 */
-            output_to_column(cmt_col, cpd.settings[UO_indent_with_tabs].n != 0);
+            output_indent(cmt_col, cmt_col);
             add_comment_text(line, line_len, cmt, false);
             if (nl_end)
             {
@@ -1034,12 +1039,12 @@ static void output_comment_multi(chunk_t *pc)
                ccol = cmt_col;
             }
 
-            if (line[0] == 0)
+            if (line_len == 0)
             {
                /* Emtpy line - just a '\n' */
                if (cpd.settings[UO_cmt_star_cont].b)
                {
-                  output_to_column(cmt_col, cpd.settings[UO_indent_with_tabs].n != 0);
+                  output_indent(ccol, cmt_col);
                   add_spaces_before_star();
                   add_text((xtra == 1) ? " *" : "*");
                }
@@ -1055,11 +1060,13 @@ static void output_comment_multi(chunk_t *pc)
                    ((line[0] != '\\') || unc_isalpha(line[1])) && (line[0] != '+'))
                {
                   bool do_sp_add = false;
+
                   output_to_column(cmt_col, cpd.settings[UO_indent_with_tabs].n != 0);
                   add_spaces_before_star();
 
                   if (cpd.settings[UO_cmt_star_cont].b)
                   {
+                     /* REVISIT: shouldn't have leading spaces if indent_with_tabs!=0 */
                      cmt.cont_text = (xtra == 1) ? " * " : "*  ";
                      do_sp_add = true;
                   }
@@ -1224,15 +1231,7 @@ static void output_comment_multi_simple(chunk_t *pc)
 
          if (line_len > 0)
          {
-            if (cpd.settings[UO_indent_with_tabs].n == 2)
-            {
-               output_to_column(ccol, true);
-            }
-            else
-            {
-               output_to_column(cmt_col, cpd.settings[UO_indent_with_tabs].n != 0);
-               output_to_column(ccol, false);
-            }
+            output_indent(ccol, cmt_col);
             add_text_len(line, line_len);
          }
          if (nl_end)
