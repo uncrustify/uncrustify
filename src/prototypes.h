@@ -32,9 +32,6 @@ const char *get_file_extension(int& idx);
 void output_text(FILE *pfile);
 void output_parsed(FILE *pfile);
 void output_options(FILE *pfile);
-void add_text(const char *text);
-void add_text_len(const char *text, int len);
-void add_char(char ch);
 
 
 /*

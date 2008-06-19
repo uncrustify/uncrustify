@@ -35,7 +35,7 @@ static void add_comment_text(const char *text, int len,
                              cmt_reflow& cmt, bool esc_close);
 
 
-void add_char(char ch)
+static void add_char(char ch)
 {
    static char last_char = 0;
 
@@ -74,7 +74,7 @@ void add_char(char ch)
    last_char = ch;
 }
 
-void add_text(const char *text)
+static void add_text(const char *text)
 {
    char ch;
 
@@ -85,7 +85,7 @@ void add_text(const char *text)
    }
 }
 
-void add_text_len(const char *text, int len)
+static void add_text_len(const char *text, int len)
 {
    while (len-- > 0)
    {
