@@ -1222,10 +1222,19 @@ static void output_comment_multi_simple(chunk_t *pc)
             ccol -= col_diff;
          }
 
-         /*TODO: need to support indent_with_tabs mode 1 */
-         output_to_column(cmt_col, cpd.settings[UO_indent_with_tabs].n != 0);
-         output_to_column(ccol, cpd.settings[UO_indent_with_tabs].n == 2);
-         add_text_len(line, line_len);
+         if (line_len > 0)
+         {
+            if (cpd.settings[UO_indent_with_tabs].n == 2)
+            {
+               output_to_column(ccol, true);
+            }
+            else
+            {
+               output_to_column(cmt_col, cpd.settings[UO_indent_with_tabs].n != 0);
+               output_to_column(ccol, false);
+            }
+            add_text_len(line, line_len);
+         }
          if (nl_end)
          {
             add_char('\n');
