@@ -2152,6 +2152,11 @@ static void mark_function(chunk_t *pc)
             {
                break;
             }
+            if (tmp->type == CT_TEMPLATE)
+            {
+               pc->type = CT_FUNC_DEF;
+               break;
+            }
             if (tmp->type == CT_BRACE_OPEN)
             {
                if (tmp->parent_type == CT_FUNC_DEF)
