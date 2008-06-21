@@ -94,6 +94,8 @@
 00303   1liner-split.cfg       c/one-liner-init.c
 00304   1liner-no-split.cfg    c/one-liner-init.c
 
+00310   /dev/null              c/sp_embed_comment.c
+
 # aligning tresholds
 00401   align-1.cfg            c/align-equ.c
 00402   align-1.cfg            c/align-var.c

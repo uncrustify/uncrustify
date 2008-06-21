@@ -315,7 +315,7 @@ static int calculate_comment_body_indent(const char *str, int len, int start_col
     /* Scan the second line */
   width = 0;
 
-  for ( /* nada */; idx < len; idx++)
+  for (/* nada */; idx < len; idx++)
     {
     if ((str[idx] == ' ') || (str[idx] == '\t'))
       {
