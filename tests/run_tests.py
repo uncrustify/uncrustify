@@ -88,6 +88,9 @@ def run_tests(test_name, config_name, input_name, lang):
 	# print "Input: ", input_name
 	# print 'Output:', expected_name
 
+	if not config_name.startswith(os.sep):
+		config_name = os.path.join('config', config_name)
+
 	resultname = os.path.join('results', expected_name)
 	outputname = os.path.join('output', expected_name)
 	try:
@@ -95,7 +98,7 @@ def run_tests(test_name, config_name, input_name, lang):
 	except:
 		pass
 
-	cmd = "%s/uncrustify -q -c config/%s -f input/%s %s > %s" % (os.path.abspath('../src'), config_name, input_name, lang, resultname)
+	cmd = "%s/uncrustify -q -c %s -f input/%s %s > %s" % (os.path.abspath('../src'), config_name, input_name, lang, resultname)
 	if log_level >= 2:
 		print "RUN: " + cmd
 	a = os.system(cmd)
