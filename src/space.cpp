@@ -17,6 +17,9 @@
 #include <cerrno>
 #include "unc_ctype.h"
 
+
+argval_t do_space(chunk_t *first, chunk_t *second, bool complete);
+
 struct no_space_table_s
 {
    c_token_t first;
@@ -65,15 +68,16 @@ struct no_space_table_s no_space_table[] =
    { CT_PAREN_CLOSE,    CT_FPAREN_OPEN   },
 };
 
-#define log_rule(rule) log_rule2(__LINE__, (rule), first, second)
-static void log_rule2(int line, const char *rule, chunk_t *first, chunk_t *second)
+#define log_rule(rule) log_rule2(__LINE__, (rule), first, second, complete)
+static void log_rule2(int line, const char *rule, chunk_t *first, chunk_t *second, bool complete)
 {
-   LOG_FMT(LSPACE, "Spacing: [%s/%s] '%.*s' <===> [%s/%s] '%.*s' : %s[%d]",
+   LOG_FMT(LSPACE, "Spacing: [%s/%s] '%.*s' <===> [%s/%s] '%.*s' : %s[%d]%s",
            get_token_name(first->type), get_token_name(first->parent_type),
            first->len, first->str,
            get_token_name(second->type), get_token_name(second->parent_type),
            second->len, second->str,
-           rule, line);
+           rule, line,
+           complete ? "\n" : "");
 }
 
 /**
@@ -84,7 +88,7 @@ static void log_rule2(int line, const char *rule, chunk_t *first, chunk_t *secon
  * @param second  The second chunk
  * @return        AV_IGNORE, AV_ADD, AV_REMOVE or AV_FORCE
  */
-argval_t do_space(chunk_t *first, chunk_t *second)
+argval_t do_space(chunk_t *first, chunk_t *second, bool complete=true)
 {
    int      idx;
    argval_t arg;
@@ -140,12 +144,6 @@ argval_t do_space(chunk_t *first, chunk_t *second)
       return(AV_REMOVE);
    }
 
-   if ((second->type == CT_COMMENT) && (second->parent_type == CT_COMMENT_EMBED))
-   {
-      log_rule("FORCE");
-      return(AV_FORCE);
-   }
-
    /* Macro stuff can only return IGNORE, ADD, or FORCE */
    if (first->type == CT_MACRO)
    {
@@ -159,12 +157,6 @@ argval_t do_space(chunk_t *first, chunk_t *second)
       log_rule("sp_macro_func");
       arg = cpd.settings[UO_sp_macro_func].a;
       return((argval_t)(arg | ((arg != AV_IGNORE) ? AV_ADD : AV_IGNORE)));
-   }
-
-   if (chunk_is_comment(second))
-   {
-      log_rule("IGNORE");
-      return(AV_IGNORE);
    }
 
    if (first->type == CT_PREPROC)
@@ -891,12 +883,6 @@ argval_t do_space(chunk_t *first, chunk_t *second)
       return((arg != AV_REMOVE) ? arg : AV_FORCE);
    }
 
-   if (first->type == CT_COMMENT)
-   {
-      log_rule("FORCE");
-      return(AV_FORCE);
-   }
-
    if ((first->type == CT_MACRO_OPEN) ||
        (first->type == CT_MACRO_CLOSE) ||
        (first->type == CT_MACRO_ELSE))
@@ -956,6 +942,24 @@ argval_t do_space(chunk_t *first, chunk_t *second)
    {
       log_rule("sp_before_oc_scope");
       return(cpd.settings[UO_sp_before_oc_colon].a);
+   }
+
+   if ((second->type == CT_COMMENT) && (second->parent_type == CT_COMMENT_EMBED))
+   {
+      log_rule("FORCE");
+      return(AV_FORCE);
+   }
+
+   if (chunk_is_comment(second))
+   {
+      log_rule("IGNORE");
+      return(AV_IGNORE);
+   }
+
+   if (first->type == CT_COMMENT)
+   {
+      log_rule("FORCE");
+      return(AV_FORCE);
    }
 
    for (idx = 0; idx < (int)ARRAY_SIZE(no_space_table); idx++)
@@ -1067,7 +1071,7 @@ void space_text(void)
             }
          }
 
-         int av = do_space(pc, next);
+         int av = do_space(pc, next, false);
          if (pc->flags & PCF_FORCE_SPACE)
          {
             av |= AV_ADD;
