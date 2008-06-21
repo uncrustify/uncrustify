@@ -664,11 +664,15 @@ static bool check_complex_statements(struct parse_frame *frm, chunk_t *pc)
    {
       if (pc->type == CT_IF)
       {
-         /* Replace CT_ELSE with CT_IF */
-         pc->type = CT_ELSEIF;
-         frm->pse[frm->pse_tos].type  = CT_ELSEIF;
-         frm->pse[frm->pse_tos].stage = BS_PAREN1;
-         return(true);
+         if (!cpd.settings[UO_indent_else_if].b ||
+             !chunk_is_newline(chunk_get_prev_nc(pc)))
+         {
+            /* Replace CT_ELSE with CT_IF */
+            pc->type = CT_ELSEIF;
+            frm->pse[frm->pse_tos].type  = CT_ELSEIF;
+            frm->pse[frm->pse_tos].stage = BS_PAREN1;
+            return(true);
+         }
       }
 
       /* Jump to the 'expecting brace' stage */
