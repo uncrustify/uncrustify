@@ -71,7 +71,8 @@ struct no_space_table_s no_space_table[] =
 #define log_rule(rule) log_rule2(__LINE__, (rule), first, second, complete)
 static void log_rule2(int line, const char *rule, chunk_t *first, chunk_t *second, bool complete)
 {
-   LOG_FMT(LSPACE, "Spacing: [%s/%s] '%.*s' <===> [%s/%s] '%.*s' : %s[%d]%s",
+   LOG_FMT(LSPACE, "Spacing: line %d [%s/%s] '%.*s' <===> [%s/%s] '%.*s' : %s[%d]%s",
+           first->orig_line,
            get_token_name(first->type), get_token_name(first->parent_type),
            first->len, first->str,
            get_token_name(second->type), get_token_name(second->parent_type),
@@ -399,7 +400,7 @@ argval_t do_space(chunk_t *first, chunk_t *second, bool complete=true)
    }
 
    /* "for (...) {...}" vs "for (...){...}" */
-   if (first->type == CT_SPAREN_CLOSE)
+   if ((first->type == CT_SPAREN_CLOSE) && !chunk_is_comment(second))
    {
       log_rule("sp_after_sparen");
       return(cpd.settings[UO_sp_after_sparen].a);
