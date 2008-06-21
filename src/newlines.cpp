@@ -22,6 +22,35 @@ static bool one_liner_nl_ok(chunk_t *pc);
 static void nl_handle_define(chunk_t *pc);
 
 
+/**
+ * Check to see if we are allowed to double the newline.
+ * The only case where we can't is if nl_squeeze_ifdef=true and a preproc is
+ * after the next newline.
+ */
+static void double_newline(chunk_t *nl)
+{
+   chunk_t *prev = chunk_get_prev(nl);
+
+   LOG_FMT(LNEWLINE, "%s: add newline after %.*s on line %d",
+           __func__, prev->len, prev->str, prev->orig_line);
+
+   if (cpd.settings[UO_nl_squeeze_ifdef].b)
+   {
+      chunk_t *pc = chunk_get_next(nl);
+
+      LOG_FMT(LNEWLINE, " [%s]", get_token_name(pc->type));
+
+      if ((pc != NULL) && (pc->type == CT_PREPROC) &&
+          (pc->parent_type == CT_PP_ENDIF))
+      {
+         LOG_FMT(LNEWLINE, " - denied\n");
+         return;
+      }
+   }
+   LOG_FMT(LNEWLINE, " - done\n");
+   nl->nl_count = 2;
+}
+
 /*
  * Basic approach:
  * 1. Find next open brace
@@ -412,7 +441,7 @@ static void newlines_if_for_while_switch_pre_blank_lines(chunk_t *start, argval_
             {
                if (last_nl->nl_count < 2)
                {
-                  last_nl->nl_count = 2;
+                  double_newline(last_nl);
                }
             }
             else
@@ -425,7 +454,7 @@ static void newlines_if_for_while_switch_pre_blank_lines(chunk_t *start, argval_
                }
                if ((last_nl = newline_add_after(pc)) != NULL)
                {
-                  last_nl->nl_count = 2;
+                  double_newline(last_nl);
                }
             }
          }
@@ -595,8 +624,7 @@ static void newlines_if_for_while_switch_post_blank_lines(chunk_t *start, argval
             {
                return;
             }
-
-            next->nl_count = 2;
+            double_newline(next);
          }
          else if (nl_count == 1) /* if we don't have enough newlines */
          {
@@ -608,7 +636,11 @@ static void newlines_if_for_while_switch_post_blank_lines(chunk_t *start, argval
             else
             {
                prev = chunk_get_prev_nnl(next);
-               pc   = chunk_get_next_nnl(next);
+               pc   = chunk_get_next_nl(next);
+               LOG_FMT(LSYS, "  -- pc1=%.*s [%s]\n", pc->len, pc->str, get_token_name(pc->type));
+
+               pc   = chunk_get_next(pc);
+               LOG_FMT(LSYS, "  -- pc2=%.*s [%s]\n", pc->len, pc->str, get_token_name(pc->type));
                if ((pc != NULL) && (pc->type == CT_PREPROC) &&
                    (pc->parent_type == CT_PP_ENDIF) &&
                    cpd.settings[UO_nl_squeeze_ifdef].b)
@@ -619,8 +651,7 @@ static void newlines_if_for_while_switch_post_blank_lines(chunk_t *start, argval
                else
                {
                   /* make nl after double */
-                  next->nl_count = 2;
-                  LOG_FMT(LNEWLINE, "%s: doubled after line %d\n", __func__, prev->orig_line);
+                  double_newline(next);
                }
             }
          }
@@ -1020,9 +1051,7 @@ static void newline_case(chunk_t *start)
    {
       if (chunk_is_newline(pc) && (pc->nl_count < 2))
       {
-         //         fprintf(stderr, "%s: newline before line %d\n",
-         //                 __func__, start->orig_line);
-         pc->nl_count = 2;
+         double_newline(pc);
       }
    }
 }
@@ -1072,7 +1101,7 @@ static void newline_return(chunk_t *start)
       {
          if (pc->nl_count < 2)
          {
-            pc->nl_count = 2;
+            double_newline(pc);
          }
          return;
       }
@@ -1449,7 +1478,7 @@ void newlines_cleanup_braces(void)
                }
                if (prev->nl_count < 2)
                {
-                  prev->nl_count = 2;
+                  double_newline(prev);
                }
             }
          }
@@ -2246,7 +2275,7 @@ static void newlines_double_space_struct_enum_union(chunk_t *open_brace)
       {
          if (pc->nl_count < 2)
          {
-            pc->nl_count = 2;
+            double_newline(pc);
          }
       }
    }
