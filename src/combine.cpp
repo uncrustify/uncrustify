@@ -2397,6 +2397,7 @@ static void mark_function(chunk_t *pc)
          if ((prev->type != CT_OPERATOR) &&
              (prev->type != CT_TSQUARE) &&
              (prev->type != CT_ANGLE_CLOSE) &&
+             (prev->type != CT_QUALIFIER) &&
              (prev->type != CT_TYPE) &&
              (prev->type != CT_WORD) &&
              !chunk_is_addr(prev) &&

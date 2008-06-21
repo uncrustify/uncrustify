@@ -59,6 +59,8 @@ Changes in uncrustify-0.48 (not yet released)
  - Tweak template detection a bit more
  - Rework and simplify multi-line comment indenting
  - Add indent_else_if
+ - Improve right-comment aligning
+ - Fix detection of functions with a 'const' return type
 
 
 Changes in uncrustify-0.47 (06-Jun-2008)
