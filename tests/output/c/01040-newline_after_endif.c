@@ -19,7 +19,7 @@ int main
 
    #ifdef ABC
       if(y < 3)
-         y++
+         y++ // comment
    #endif
 
    if(y < 3)
