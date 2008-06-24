@@ -69,6 +69,7 @@
 30201 cmt_indent-1.cfg                 cpp/cmt_indent.cpp
 30202 cmt_indent-2.cfg                 cpp/cmt_indent.cpp
 30203 cmt_indent-3.cfg                 cpp/cmt_indent.cpp
+30204 comment-align.cfg                cpp/comment-align.cpp
 
 # function def newlines
 30701 func-def-1.cfg                   cpp/function-def.cpp
