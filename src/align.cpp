@@ -996,8 +996,11 @@ chunk_t *align_trailing_comments(chunk_t *start)
    int          nl_count = 0;
    ChunkStack   cs;
    CmtAlignType cmt_type_start, cmt_type_cur;
+   int          last_col, col;
 
    cmt_type_start = get_comment_align_type(pc);
+
+   last_col = pc->column;
 
    /* Find the max column */
    while ((pc != NULL) && (nl_count < cpd.settings[UO_align_right_cmt_span].n))
@@ -1005,7 +1008,8 @@ chunk_t *align_trailing_comments(chunk_t *start)
       if ((pc->parent_type == CT_COMMENT_END) ||
           (pc->parent_type == CT_COMMENT_WHOLE))
       {
-         if (pc->column > (pc->column_indent + 1))
+         if ((pc->column > (last_col - 1)) ||
+             (pc->column > (pc->column_indent + 1)))
          {
             pc->flags |= PCF_RIGHT_COMMENT;
          }
@@ -1017,6 +1021,13 @@ chunk_t *align_trailing_comments(chunk_t *start)
 
          if (cmt_type_cur == cmt_type_start)
          {
+            last_col = pc->column;
+
+            col = 1 + (pc->brace_level * cpd.settings[UO_indent_columns].n);
+            if (pc->column < col)
+            {
+               pc->column = col;
+            }
             align_add(cs, pc, max_col, 1, false);
             nl_count = 0;
          }
