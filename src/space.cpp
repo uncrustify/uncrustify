@@ -833,8 +833,11 @@ argval_t do_space(chunk_t *first, chunk_t *second, bool complete=true)
          log_rule("sp_inside_braces_struct");
          return(cpd.settings[UO_sp_inside_braces_struct].a);
       }
-      log_rule("sp_inside_braces");
-      return(cpd.settings[UO_sp_inside_braces].a);
+      else if (!chunk_is_comment(second))
+      {
+         log_rule("sp_inside_braces");
+         return(cpd.settings[UO_sp_inside_braces].a);
+      }
    }
 
    if (second->type == CT_BRACE_CLOSE)
@@ -1109,6 +1112,20 @@ void space_text(void)
                column += next->orig_col - pc->orig_col_end;
             }
             break;
+         }
+
+         if (chunk_is_comment(next) &&
+             chunk_is_newline(chunk_get_next(next)) &&
+             (column < (int)next->orig_col))
+         {
+            if (cpd.settings[UO_indent_relative_single_line_comments].b)
+            {
+               column = pc->column + (next->orig_col - pc->orig_col_end);
+            }
+            else
+            {
+               column = next->orig_col;
+            }
          }
          next->column = column;
 
