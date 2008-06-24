@@ -7,7 +7,7 @@ int do_this
    x += y;              // x = x + y
 
    if(x == 3)
-      x++; // x plus 1
+      x++;      // x plus 1
 
    return (x)
 }
