@@ -1005,12 +1005,17 @@ chunk_t *align_trailing_comments(chunk_t *start)
    /* Find the max column */
    while ((pc != NULL) && (nl_count < cpd.settings[UO_align_right_cmt_span].n))
    {
-      if ((pc->parent_type == CT_COMMENT_END) ||
-          (pc->parent_type == CT_COMMENT_WHOLE))
+      /* Change certain WHOLE comments into RIGHT-alignable comments */
+      if (pc->parent_type == CT_COMMENT_WHOLE)
       {
-         if ((pc->column > (last_col - 1)) ||
-             (pc->column > (pc->column_indent + 1)))
+         int tmp_col = 1 + (pc->brace_level * cpd.settings[UO_indent_columns].n);
+
+         /* If the comment is further right than the brace level... */
+         if (pc->column > (tmp_col + 1))
          {
+            LOG_FMT(LALTC, "Changing comment on line %d into a RIGHT-comment\n",
+                    pc->orig_line);
+
             pc->flags |= PCF_RIGHT_COMMENT;
          }
       }

@@ -62,6 +62,7 @@ Changes in uncrustify-0.48 (not yet released)
  - Improve right-comment aligning
  - Fix detection of functions with a 'const' return type
  - Add sp_cond_colon and sp_cond_question
+ - Fine-tune the right comment align stuff
 
 
 Changes in uncrustify-0.47 (06-Jun-2008)
