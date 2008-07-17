@@ -51,6 +51,9 @@
 00081  else-if-1.cfg           c/else-if.c
 00082  else-if-2.cfg           c/else-if.c
 
+00091  cond-1.cfg              c/cond.c
+00092  cond-2.cfg              c/cond.c
+
 00101  ben.cfg                 c/bugs-1.c
 00102  ben.cfg                 c/bugs-2.c
 00103  ben.cfg                 c/bugs-3.c
