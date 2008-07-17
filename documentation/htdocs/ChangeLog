@@ -61,6 +61,7 @@ Changes in uncrustify-0.48 (not yet released)
  - Add indent_else_if
  - Improve right-comment aligning
  - Fix detection of functions with a 'const' return type
+ - Add sp_cond_colon and sp_cond_question
 
 
 Changes in uncrustify-0.47 (06-Jun-2008)

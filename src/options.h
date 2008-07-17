@@ -263,6 +263,8 @@ enum uncrustify_options
    UO_sp_after_oc_scope,
    UO_sp_before_oc_colon,
    UO_sp_after_oc_type,
+   UO_sp_cond_colon,
+   UO_sp_cond_question,
 
    /*
     * Line splitting options (for long lines)

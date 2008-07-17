@@ -1611,7 +1611,7 @@ void combine_labels(void)
          }
          if (question_count > 0)
          {
-            next->type = CT_Q_COLON;
+            next->type = CT_COND_COLON;
             question_count--;
          }
          else if (hit_case)

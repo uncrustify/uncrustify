@@ -139,6 +139,21 @@ argval_t do_space(chunk_t *first, chunk_t *second, bool complete=true)
       return(cpd.settings[UO_sp_d_array_colon].a);
    }
 
+   if ((first->type == CT_QUESTION) || (second->type == CT_QUESTION))
+   {
+      if (cpd.settings[UO_sp_cond_question].a != AV_IGNORE)
+      {
+         return(cpd.settings[UO_sp_cond_question].a);
+      }
+   }
+   if ((first->type == CT_COND_COLON) || (second->type == CT_COND_COLON))
+   {
+      if (cpd.settings[UO_sp_cond_colon].a != AV_IGNORE)
+      {
+         return(cpd.settings[UO_sp_cond_colon].a);
+      }
+   }
+
    if ((first->type == CT_COLON) && (first->parent_type == CT_SQL_EXEC))
    {
       log_rule("REMOVE");
