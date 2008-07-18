@@ -68,6 +68,7 @@ Changes in uncrustify-0.48 (not yet released)
  - Add nl_return_expr
  - Indent FPAREN_OPEN if after a newline but not before a newline
  - Give sp_after_operator_sym priority over sp_func_call_paren
+ - Add align_same_func_call_params
 
 
 Changes in uncrustify-0.47 (06-Jun-2008)

@@ -295,6 +295,7 @@ enum uncrustify_options
    UO_align_right_cmt_mix,        // mix comments after '}' and preproc with others
    UO_align_right_cmt_gap,
    UO_align_func_params,          // align prototype variable defs on variable
+   UO_align_same_func_call_params,
    UO_align_var_def_span,         // align variable defs on variable (span for regular stuff)
    UO_align_var_def_thresh,       // align variable defs threshold
    UO_align_var_def_gap,          // align variable defs gap

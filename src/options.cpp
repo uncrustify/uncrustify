@@ -642,6 +642,9 @@ void register_options(void)
                   "Whether to left-align numbers");
    unc_add_option("align_func_params", UO_align_func_params, AT_BOOL,
                   "Align variable definitions in prototypes and functions");
+   unc_add_option("align_same_func_call_params", UO_align_same_func_call_params, AT_BOOL,
+                  "Align parameters in single-line functions that have the same name.\n"
+                  "The function names must already be aligned with each other.");
    unc_add_option("align_var_def_span", UO_align_var_def_span, AT_NUM,
                   "The span for aligning variable definitions (0=don't align)", "", 0, 5000);
    unc_add_option("align_var_def_star_style", UO_align_var_def_star_style, AT_NUM,
