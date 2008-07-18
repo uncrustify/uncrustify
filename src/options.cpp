@@ -695,10 +695,15 @@ void register_options(void)
                   "0: Align on typdef type, ignore '&'\n"
                   "1: The '&' is part of type name: typedef int  &pint;\n"
                   "2: The '&' is part of the type, but dangling: typedef int &pint;", "", 0, 2);
+
    unc_add_option("align_right_cmt_span", UO_align_right_cmt_span, AT_NUM,
                   "The span for aligning comments that end lines (0=don't align)", "", 0, 5000);
    unc_add_option("align_right_cmt_mix", UO_align_right_cmt_mix, AT_BOOL,
                   "If aligning comments, mix with comments after '}' and #endif with less than 3 spaces before the comment");
+   unc_add_option("align_right_cmt_gap", UO_align_right_cmt_gap, AT_NUM,
+                  "If a trailing comment is more than this number of columns away from the text it follows,\n"
+                  "it will qualify for being aligned.");
+
    unc_add_option("align_func_proto_span", UO_align_func_proto_span, AT_NUM,
                   "The span for aligning function prototypes (0=don't align)", "", 0, 5000);
    unc_add_option("align_func_proto_gap", UO_align_func_proto_gap, AT_NUM,

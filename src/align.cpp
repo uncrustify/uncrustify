@@ -331,6 +331,47 @@ void align_backslash_newline(void)
 void align_right_comments(void)
 {
    chunk_t *pc;
+   chunk_t *prev;
+   bool    skip;
+
+   for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next(pc))
+   {
+      if ((pc->type == CT_COMMENT) || (pc->type == CT_COMMENT_CPP))
+      {
+         skip = false;
+         if (pc->parent_type == CT_COMMENT_END)
+         {
+            prev = chunk_get_prev(pc);
+            if (pc->orig_col <= (prev->orig_col_end + cpd.settings[UO_align_right_cmt_gap].n))
+            {
+               LOG_FMT(LALTC, "NOT changing END comment on line %d\n",
+                       pc->orig_line);
+               skip = true;
+            }
+            if (!skip)
+            {
+               LOG_FMT(LALTC, "Changing END comment on line %d into a RIGHT-comment\n",
+                       pc->orig_line);
+               pc->flags |= PCF_RIGHT_COMMENT;
+            }
+         }
+
+         /* Change certain WHOLE comments into RIGHT-alignable comments */
+         if (pc->parent_type == CT_COMMENT_WHOLE)
+         {
+            int tmp_col = 1 + (pc->brace_level * cpd.settings[UO_indent_columns].n);
+
+            /* If the comment is further right than the brace level... */
+            if (pc->column > (tmp_col + cpd.settings[UO_align_right_cmt_gap].n))
+            {
+               LOG_FMT(LALTC, "Changing WHOLE comment on line %d into a RIGHT-comment\n",
+                       pc->orig_line);
+
+               pc->flags |= PCF_RIGHT_COMMENT;
+            }
+         }
+      }
+   }
 
    pc = chunk_get_head();
    while (pc != NULL)
@@ -1005,21 +1046,6 @@ chunk_t *align_trailing_comments(chunk_t *start)
    /* Find the max column */
    while ((pc != NULL) && (nl_count < cpd.settings[UO_align_right_cmt_span].n))
    {
-      /* Change certain WHOLE comments into RIGHT-alignable comments */
-      if (pc->parent_type == CT_COMMENT_WHOLE)
-      {
-         int tmp_col = 1 + (pc->brace_level * cpd.settings[UO_indent_columns].n);
-
-         /* If the comment is further right than the brace level... */
-         if (pc->column > (tmp_col + 1))
-         {
-            LOG_FMT(LALTC, "Changing comment on line %d into a RIGHT-comment\n",
-                    pc->orig_line);
-
-            pc->flags |= PCF_RIGHT_COMMENT;
-         }
-      }
-
       if ((pc->flags & PCF_RIGHT_COMMENT) != 0)
       {
          cmt_type_cur = get_comment_align_type(pc);

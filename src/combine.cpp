@@ -791,24 +791,6 @@ void fix_symbols(void)
          pc = chunk_get_next_ncnl(pc);
       }
    }
-
-   /* 3rd pass - flag comments.
-    * Not done in first 2 loops because comments are skipped
-    */
-   for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next(pc))
-   {
-      if ((pc->type == CT_COMMENT) || (pc->type == CT_COMMENT_CPP))
-      {
-         prev = chunk_get_prev(pc);
-         next = chunk_get_next(pc);
-
-         if (!chunk_is_newline(prev) &&
-             ((next == NULL) || (next->type == CT_NEWLINE)))
-         {
-            pc->flags |= PCF_RIGHT_COMMENT;
-         }
-      }
-   }
 }
 
 /* Just hit an assign. Go backwards until we hit an open brace/paren/square or
