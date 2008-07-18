@@ -211,3 +211,8 @@
 21031 align_right_cmt_gap-1.cfg c/cmt_right_align.c
 21032 align_right_cmt_gap-2.cfg c/cmt_right_align.c
 
+21051 return-1.cfg              c/nl_return_expr.c
+21052 return-2.cfg              c/nl_return_expr.c
+21053 return-3.cfg              c/nl_return_expr.c
+21054 return-4.cfg              c/nl_return_expr.c
+
