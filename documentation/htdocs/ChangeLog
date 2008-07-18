@@ -65,6 +65,7 @@ Changes in uncrustify-0.48 (not yet released)
  - Fine-tune the right comment align stuff
  - Add cmt_multi_check_last
  - Add align_right_cmt_gap
+ - Add nl_return_expr
 
 
 Changes in uncrustify-0.47 (06-Jun-2008)

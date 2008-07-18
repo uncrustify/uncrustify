@@ -523,6 +523,8 @@ void register_options(void)
                   "Add or remove newline between function signature and '{'");
    unc_add_option("nl_after_return", UO_nl_after_return, AT_BOOL,
                   "Whether to put a newline after 'return' statement");
+   unc_add_option("nl_return_expr", UO_nl_return_expr, AT_IARF,
+                  "Add or remove a newline between the return keyword and return expression.");
    unc_add_option("nl_after_semicolon", UO_nl_after_semicolon, AT_BOOL,
                   "Whether to put a newline after semicolons, except in 'for' statements");
    unc_add_option("nl_after_brace_open", UO_nl_after_brace_open, AT_BOOL,

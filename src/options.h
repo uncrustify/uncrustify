@@ -347,6 +347,7 @@ enum uncrustify_options
    UO_nl_before_case,             // newline before 'case' statement
    UO_nl_before_throw,
    UO_nl_after_return,            /* newline after return statement */
+   UO_nl_return_expr,
    UO_nl_after_case,              /* disallow nested "case 1: a=3;" */
    UO_nl_after_semicolon,         // disallow multiple statements on a line "a=1;b=4;"
    UO_nl_after_brace_open,        // force a newline after a brace open

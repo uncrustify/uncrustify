@@ -144,6 +144,7 @@ void newlines_class_colon_pos(void);
 void newlines_cleanup_dup(void);
 void newline_after_multiline_comment(void);
 void do_blank_lines(void);
+void newline_iarf(chunk_t *pc, argval_t av);
 
 #define newline_add_before(pc)   newline_add_before2(pc, __func__, __LINE__)
 chunk_t *newline_add_before2(chunk_t *pc, const char *fcn, int line);

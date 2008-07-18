@@ -1114,7 +1114,7 @@ static void newline_return(chunk_t *start)
  * @param pc   The chunk
  * @param av   The IARF value
  */
-static void newline_iarf(chunk_t *pc, argval_t av)
+void newline_iarf(chunk_t *pc, argval_t av)
 {
    chunk_t *next;
 

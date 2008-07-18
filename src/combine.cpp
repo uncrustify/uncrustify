@@ -968,6 +968,11 @@ static chunk_t *process_return(chunk_t *pc)
       return(next);
    }
 
+   if (cpd.settings[UO_nl_return_expr].a != AV_IGNORE)
+   {
+      newline_iarf(pc, cpd.settings[UO_nl_return_expr].a);
+   }
+
    if (next->type == CT_PAREN_OPEN)
    {
       /* See if the return is fully paren'd */
@@ -1035,7 +1040,7 @@ static chunk_t *process_return(chunk_t *pc)
       chunk.orig_line   = pc->orig_line;
       chunk.parent_type = CT_RETURN;
       chunk.flags       = pc->flags & PCF_COPY_FLAGS;
-      chunk_add_after(&chunk, pc);
+      chunk_add_before(&chunk, next);
 
       chunk.type      = CT_PAREN_CLOSE;
       chunk.str       = ")";
