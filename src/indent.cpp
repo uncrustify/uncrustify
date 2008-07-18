@@ -1055,7 +1055,14 @@ void indent_text(void)
          if (pc->level == pc->brace_level)
          {
             indent_pse_push(frm, pc);
-            frm.pse[frm.pse_tos].indent     = frm.pse[frm.pse_tos - 1].indent + pc->len + 1;
+            if (chunk_is_newline(chunk_get_next(pc)))
+            {
+               frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent + indent_size;
+            }
+            else
+            {
+               frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent + pc->len + 1;
+            }
             frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos - 1].indent;
          }
       }
