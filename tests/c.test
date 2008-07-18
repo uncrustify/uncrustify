@@ -204,3 +204,7 @@
 
 21015 endif.cfg                c/endif.c
 21016 cmt_nl_end.cfg           c/cmt_nl_end.c
+
+21021 cmt_multi-1.cfg          c/cmt_multi.c
+21022 cmt_multi-2.cfg          c/cmt_multi.c
+
