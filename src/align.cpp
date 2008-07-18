@@ -833,6 +833,16 @@ static void align_same_func_call_params()
             if (idx > max_idx)
             {
                as[idx].Start(3);
+               if (!cpd.settings[UO_align_number_left].b)
+               {
+                  if ((chunks[idx]->type == CT_NUMBER_FP) ||
+                      (chunks[idx]->type == CT_NUMBER) ||
+                      (chunks[idx]->type == CT_POS) ||
+                      (chunks[idx]->type == CT_NEG))
+                  {
+                     as[idx].m_right_align = true;
+                  }
+               }
                max_idx = idx;
             }
             as[idx].Add(chunks[idx]);

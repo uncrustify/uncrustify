@@ -282,7 +282,7 @@ void AlignStack::Flush()
 
       if (m_amp_style == SS_DANGLE)
       {
-         /* back up to the first '*' preceding the token */
+         /* back up to the first '&' preceding the token */
          chunk_t *prev = chunk_get_prev(pc);
          while (chunk_is_addr(prev))
          {
@@ -292,6 +292,17 @@ void AlignStack::Flush()
          }
 
          LOG_FMT(LAS, "Amp Dangling to %d\n", da_col);
+      }
+
+      if (m_right_align && (pc->type == CT_NEG))
+      {
+         chunk_t *next = chunk_get_next(pc);
+         if ((next != NULL) && (next->type == CT_NUMBER))
+         {
+            da_col -= next->len;
+         }
+
+         LOG_FMT(LAS, "Neg Dangling to %d\n", da_col);
       }
 
       /* Indent, right aligning the aligned token */
