@@ -948,7 +948,9 @@ void indent_text(void)
                (pc->type == CT_SQUARE_OPEN) ||
                (pc->type == CT_ANGLE_OPEN))
       {
-         /* Open parens and squares - never update indent_column */
+         /* Open parens and squares - never update indent_column, unless right
+          * after a newline.
+          */
          indent_pse_push(frm, pc);
          frm.pse[frm.pse_tos].indent = pc->column + pc->len;
 
@@ -1018,6 +1020,13 @@ void indent_text(void)
             }
          }
 
+         if ((pc->type == CT_FPAREN_OPEN) &&
+             chunk_is_newline(chunk_get_prev(pc)) &&
+             !chunk_is_newline(chunk_get_next(pc)))
+         {
+            frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos].indent + indent_size;
+            indent_column_set(frm.pse[frm.pse_tos].indent);
+         }
          frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
          frm.paren_count++;
       }
