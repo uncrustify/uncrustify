@@ -66,6 +66,6 @@ bool Example::operator == (const Example& other) const
 }
 bool Example::operator != (const Example& other) const
 {
-   return !operator ==(other);
+   return !operator == (other);
 }
 
