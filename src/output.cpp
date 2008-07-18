@@ -384,18 +384,21 @@ static int calculate_comment_body_indent(const char *str, int len, int start_col
       return(0);
    }
 
-   /* find the last line length */
-   for (idx = len - 1; idx > 0; idx--)
+   if (cpd.settings[UO_cmt_multi_check_last].b)
    {
-      if ((str[idx] == '\n') || (str[idx] == '\r'))
+      /* find the last line length */
+      for (idx = len - 1; idx > 0; idx--)
       {
-         idx++;
-         while ((idx < len) && ((str[idx] == ' ') || (str[idx] == '\t')))
+         if ((str[idx] == '\n') || (str[idx] == '\r'))
          {
             idx++;
+            while ((idx < len) && ((str[idx] == ' ') || (str[idx] == '\t')))
+            {
+               idx++;
+            }
+            last_len = len - idx;
+            break;
          }
-         last_len = len - idx;
-         break;
       }
    }
 

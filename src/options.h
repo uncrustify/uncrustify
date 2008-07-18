@@ -484,6 +484,7 @@ enum uncrustify_options
    UO_cmt_c_nl_end,             // put a nl before the */ in a combined group
    UO_cmt_cpp_nl_start,         // put a blank /* at the start of a converted group
    UO_cmt_cpp_nl_end,           // put a nl before the */ in a converted group
+   UO_cmt_multi_check_last,
 
    UO_cmt_insert_file_header,
    UO_cmt_insert_func_header,

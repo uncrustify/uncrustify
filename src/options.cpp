@@ -750,6 +750,10 @@ void register_options(void)
    unc_add_option("cmt_sp_after_star_cont", UO_cmt_sp_after_star_cont, AT_NUM,
                   "The number of spaces to insert after the star on subsequent comment lines");
 
+   unc_add_option("cmt_multi_check_last", UO_cmt_multi_check_last, AT_BOOL,
+                  "For multi-line comments with a '*' lead, remove leading spaces if the first and last lines of\n"
+                  "the comment are the same length. Default=True");
+
    unc_add_option("cmt_insert_file_header", UO_cmt_insert_file_header, AT_STRING,
                   "The filename that contains text to insert at the head of a file if the file doesn't start with a C/C++ comment.\n"
                   "Will substitue $(filename) with the current file's name.");
@@ -1329,26 +1333,27 @@ void print_options(FILE *pfile, bool verbose)
  */
 void set_option_defaults(void)
 {
-   cpd.settings[UO_newlines].le          = LE_AUTO;
-   cpd.settings[UO_input_tab_size].n     = 8;
-   cpd.settings[UO_output_tab_size].n    = 8;
-   cpd.settings[UO_indent_columns].n     = 8;
-   cpd.settings[UO_indent_with_tabs].n   = 1;
-   cpd.settings[UO_indent_label].n       = 1;
-   cpd.settings[UO_indent_access_spec].n = 1;
-   cpd.settings[UO_sp_before_comma].a    = AV_REMOVE;
-   cpd.settings[UO_string_escape_char].n = '\\';
-   cpd.settings[UO_sp_not].a             = AV_REMOVE;
-   cpd.settings[UO_sp_inv].a             = AV_REMOVE;
-   cpd.settings[UO_sp_addr].a            = AV_REMOVE;
-   cpd.settings[UO_sp_deref].a           = AV_REMOVE;
-   cpd.settings[UO_sp_member].a          = AV_REMOVE;
-   cpd.settings[UO_sp_sign].a            = AV_REMOVE;
-   cpd.settings[UO_sp_incdec].a          = AV_REMOVE;
-   cpd.settings[UO_sp_after_type].a      = AV_FORCE;
-   cpd.settings[UO_sp_before_nl_cont].a  = AV_ADD;
-   cpd.settings[UO_cmt_indent_multi].b   = true;
-   cpd.settings[UO_pp_indent_count].n    = 1;
+   cpd.settings[UO_newlines].le            = LE_AUTO;
+   cpd.settings[UO_input_tab_size].n       = 8;
+   cpd.settings[UO_output_tab_size].n      = 8;
+   cpd.settings[UO_indent_columns].n       = 8;
+   cpd.settings[UO_indent_with_tabs].n     = 1;
+   cpd.settings[UO_indent_label].n         = 1;
+   cpd.settings[UO_indent_access_spec].n   = 1;
+   cpd.settings[UO_sp_before_comma].a      = AV_REMOVE;
+   cpd.settings[UO_string_escape_char].n   = '\\';
+   cpd.settings[UO_sp_not].a               = AV_REMOVE;
+   cpd.settings[UO_sp_inv].a               = AV_REMOVE;
+   cpd.settings[UO_sp_addr].a              = AV_REMOVE;
+   cpd.settings[UO_sp_deref].a             = AV_REMOVE;
+   cpd.settings[UO_sp_member].a            = AV_REMOVE;
+   cpd.settings[UO_sp_sign].a              = AV_REMOVE;
+   cpd.settings[UO_sp_incdec].a            = AV_REMOVE;
+   cpd.settings[UO_sp_after_type].a        = AV_FORCE;
+   cpd.settings[UO_sp_before_nl_cont].a    = AV_ADD;
+   cpd.settings[UO_cmt_indent_multi].b     = true;
+   cpd.settings[UO_cmt_multi_check_last].b = true;
+   cpd.settings[UO_pp_indent_count].n      = 1;
 }
 
 std::string argtype_to_string(argtype_e argtype)
