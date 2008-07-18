@@ -208,3 +208,6 @@
 21021 cmt_multi-1.cfg          c/cmt_multi.c
 21022 cmt_multi-2.cfg          c/cmt_multi.c
 
+21031 align_right_cmt_gap-1.cfg c/cmt_right_align.c
+21032 align_right_cmt_gap-2.cfg c/cmt_right_align.c
+
