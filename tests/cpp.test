@@ -72,6 +72,8 @@
 30204 comment-align.cfg                cpp/comment-align.cpp
 30205 cmt_right.cfg                    cpp/cmt_right.cpp
 
+30250 align_fcall.cfg                  cpp/align_fcall.cpp
+
 # function def newlines
 30701 func-def-1.cfg                   cpp/function-def.cpp
 30702 func-def-2.cfg                   cpp/function-def.cpp
