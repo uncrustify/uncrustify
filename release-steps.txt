@@ -7,7 +7,7 @@ Just in case I don't do a release for a while and forget what to do... =)
 0. Update the following two lines and paste into a terminal:
 
 UNC_URL=https://uncrustify.svn.sourceforge.net/svnroot/uncrustify
-UNC_REL=0.47
+UNC_REL=0.48
 
 1. Make sure all tests pass
 
@@ -18,7 +18,7 @@ Replace the old version with the new version everywhere except in ChangeLog.
 Specific files to update:
     configure.in
     documentation/htdocs/index.html
-    documentation/uncrustify.1 (man file)
+    man/uncrustify.1 (man file)
     src/uncrustify_version.h
 Re-run autoconf and ./configure.
 
