@@ -28,6 +28,12 @@ What's left before 1.0
 ===============================================================================
 
 
+Changes in uncrustify-0.48 (not yet released)
+-------------------------------------------------------------------------------
+ - Allow the MSVC++ '64' suffix on numbers
+ - Initialize align_stack class members for the MSVC++ compiler
+
+
 Changes in uncrustify-0.48 (18-Jul-2008)
 -------------------------------------------------------------------------------
  - Fix classification of '(' in '#if defined (FOO)'
