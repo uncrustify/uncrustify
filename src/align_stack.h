@@ -36,9 +36,14 @@ public:
    StarStyle  m_amp_style;
 
 
-   AlignStack()
+   AlignStack() :
+      m_max_col(0), m_min_col(0), m_span(0), m_thresh(0), m_seqnum(0),
+      m_nl_seqnum(0), m_gap(0), m_right_align(false),
+      m_star_style(SS_IGNORE), m_amp_style(SS_IGNORE),
+      m_last_added(0)
    {
    }
+
    ~AlignStack()
    {
    }
