@@ -764,7 +764,7 @@ static void align_same_func_call_params()
    chunk_t    *chunks[16];
    AlignStack as[16];
    AlignStack fcn_as;
-   int        max_idx = 0;
+   int        max_idx = -1;
    int        cur_as;
    int        idx;
    const char *add_str = NULL;
