@@ -335,7 +335,7 @@ static bool parse_number(chunk_t *pc)
    /* Check the suffixes
     * Valid suffixes per language (not that it matters):
     *        Integer       Float
-    * C/C++: uUlL          lLfF
+    * C/C++: uUlL64        lLfF
     * C#:    uUlL          fFdDMm
     * D:     uUL           ifFL
     * Java:  lL            fFdD
@@ -355,6 +355,12 @@ static bool parse_number(chunk_t *pc)
          break;
       }
       len++;
+   }
+
+   /* skip the Microsoft-specific '64' suffix */
+   if ((pc->str[len] == '6') && (pc->str[len + 1] == '4'))
+   {
+      len += 2;
    }
 
    pc->len     = len;
