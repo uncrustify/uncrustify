@@ -62,7 +62,8 @@ am_uncrustify_OBJECTS = uncrustify-uncrustify.$(OBJEXT) \
 	uncrustify-md5.$(OBJEXT) uncrustify-backup.$(OBJEXT) \
 	uncrustify-parens.$(OBJEXT) \
 	uncrustify-universalindentgui.$(OBJEXT) \
-	uncrustify-semicolons.$(OBJEXT) uncrustify-sorting.$(OBJEXT)
+	uncrustify-semicolons.$(OBJEXT) uncrustify-sorting.$(OBJEXT) \
+	uncrustify-detect.$(OBJEXT)
 uncrustify_OBJECTS = $(am_uncrustify_OBJECTS)
 uncrustify_LDADD = $(LDADD)
 DEFAULT_INCLUDES = 
@@ -176,7 +177,7 @@ uncrustify_SOURCES = uncrustify.cpp chunk_list.cpp indent.cpp align.cpp combine.
 		logmask.cpp logger.cpp ChunkStack.cpp braces.cpp brace_cleanup.cpp \
 		align_stack.cpp defines.cpp width.cpp lang_pawn.cpp md5.cpp \
 		backup.cpp parens.cpp universalindentgui.cpp semicolons.cpp \
-		sorting.cpp
+		sorting.cpp detect.cpp
 
 noinst_HEADERS = chunk_list.h options.h char_table.h chunk_list.h \
 		uncrustify_types.h prototypes.h logmask.h logger.h \
@@ -452,6 +453,12 @@ uncrustify-sorting.o: sorting.cpp
 
 uncrustify-sorting.obj: sorting.cpp
 	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(uncrustify_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o uncrustify-sorting.obj `if test -f 'sorting.cpp'; then $(CYGPATH_W) 'sorting.cpp'; else $(CYGPATH_W) '$(srcdir)/sorting.cpp'; fi`
+
+uncrustify-detect.o: detect.cpp
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(uncrustify_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o uncrustify-detect.o `test -f 'detect.cpp' || echo '$(srcdir)/'`detect.cpp
+
+uncrustify-detect.obj: detect.cpp
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(uncrustify_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o uncrustify-detect.obj `if test -f 'detect.cpp'; then $(CYGPATH_W) 'detect.cpp'; else $(CYGPATH_W) '$(srcdir)/detect.cpp'; fi`
 
 ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
 	list='$(SOURCES) $(HEADERS) $(LISP) $(TAGS_FILES)'; \

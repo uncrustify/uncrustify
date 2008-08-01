@@ -57,6 +57,8 @@ static const char *make_output_filename(char *buf, int buf_size,
                                         const char *prefix,
                                         const char *suffix);
 
+static int load_mem_file(const char *filename, file_mem& fm);
+
 
 /**
  * Replace the brain-dead and non-portable basename().
@@ -158,6 +160,8 @@ static void usage_exit(const char *msg, const char *argv0, int code)
            " --update-config          : Output a new config file. Use with -o FILE\n"
            " --update-config-with-doc : Output a new config file. Use with -o FILE\n"
            " --universalindent        : Output a config file for Universal Indent GUI\n"
+           " --detect                 : detects the config from a source file. Use with '-f FILE'\n"
+           "                            Detection is fairly limited.\n"
            "\n"
            "Debug Options:\n"
            " -p FILE      : dump debug info to a file\n"
@@ -375,6 +379,7 @@ int main(int argc, char *argv[])
    bool keep_mtime       = arg.Present("--mtime");
    bool update_config    = arg.Present("--update-config");
    bool update_config_wd = arg.Present("--update-config-with-doc");
+   bool detect           = arg.Present("--detect");
 
    /* Grab the output override */
    output_file = arg.Param("-o");
@@ -386,6 +391,7 @@ int main(int argc, char *argv[])
    LOG_FMT(LDATA, "suffix      = %s\n", (suffix != NULL) ? suffix : "null");
    LOG_FMT(LDATA, "replace     = %d\n", replace);
    LOG_FMT(LDATA, "no_backup   = %d\n", no_backup);
+   LOG_FMT(LDATA, "detect      = %d\n", detect);
 
    if (replace || no_backup)
    {
@@ -407,7 +413,8 @@ int main(int argc, char *argv[])
    }
 
    /* Try to load the config file, if available.
-    * It is optional for "--universalindent", but required for everything else.
+    * It is optional for "--universalindent" and "--detect", but required for
+    * everything else.
     */
    if (cfg_file != NULL)
    {
@@ -435,6 +442,39 @@ int main(int argc, char *argv[])
 
       print_universal_indent_cfg(pfile);
 
+      return(EXIT_SUCCESS);
+   }
+
+   if (detect)
+   {
+      file_mem fm;
+
+      if ((source_file == NULL) || (source_list != NULL))
+      {
+         fprintf(stderr, "The --detect option requires a single input file\n");
+         return(EXIT_FAILURE);
+      }
+
+      /* Do some simple language detection based on the filename extension */
+      if (cpd.lang_flags == 0)
+      {
+         cpd.lang_flags = language_from_filename(source_file);
+      }
+
+      /* Try to read in the source file */
+      if (load_mem_file(source_file, fm) < 0)
+      {
+         LOG_FMT(LERR, "Failed to load (%s)\n", source_file);
+         cpd.error_count++;
+         return(EXIT_FAILURE);
+      }
+
+      uncrustify_file(fm.data, fm.length, NULL, NULL);
+      detect_options();
+      free(fm.data);
+
+      redir_stdout(output_file);
+      save_option_file(stdout, update_config_wd);
       return(EXIT_SUCCESS);
    }
 
@@ -675,7 +715,7 @@ static void make_folders(const char *filename)
 /**
  * Loads a file into memory
  */
-int load_mem_file(const char *filename, file_mem& fm)
+static int load_mem_file(const char *filename, file_mem& fm)
 {
    int         retval = -1;
    struct stat my_stat;
@@ -983,150 +1023,157 @@ static void uncrustify_file(const char *data, int data_len, FILE *pfout,
    fix_symbols();
 
    /**
-    * Add comments before function defs and classes
-    */
-   if (cpd.func_hdr.data != NULL)
-   {
-      add_func_header(CT_FUNC_DEF, cpd.func_hdr);
-   }
-   if (cpd.class_hdr.data != NULL)
-   {
-      add_func_header(CT_CLASS, cpd.class_hdr);
-   }
-
-   /* Scrub extra semicolons */
-   if (cpd.settings[UO_mod_remove_extra_semicolon].b)
-   {
-      remove_extra_semicolons();
-   }
-
-   /**
     * Look at all colons ':' and mark labels, :? sequences, etc.
     */
    combine_labels();
 
    /**
-    * Change virtual braces into real braces...
+    * Done with detection. Do the rest only if the file will go somewhere.
+    * The detection code needs as few changes as possible.
     */
-   do_braces();
-
-   /**
-    * Add parens
-    */
-   do_parens();
-
-   /**
-    * Insert line breaks as needed
-    */
-   do_blank_lines();
-   newlines_cleanup_braces();
-   if (cpd.settings[UO_nl_after_multiline_comment].b)
+   if (pfout != NULL)
    {
-      newline_after_multiline_comment();
-   }
-   newlines_insert_blank_lines();
-   if (cpd.settings[UO_nl_squeeze_ifdef].b)
-   {
-      newlines_squeeze_ifdef();
-   }
-   if (cpd.settings[UO_pos_bool].tp != TP_IGNORE)
-   {
-      newlines_chunk_pos(CT_BOOL, cpd.settings[UO_pos_bool].tp);
-   }
-   if (cpd.settings[UO_pos_comma].tp != TP_IGNORE)
-   {
-      newlines_chunk_pos(CT_COMMA, cpd.settings[UO_pos_comma].tp);
-   }
-   newlines_class_colon_pos();
-   newlines_eat_start_end();
-   newlines_cleanup_dup();
-
-   mark_comments();
-
-   /**
-    * Add balanced spaces around nested params
-    */
-   if (cpd.settings[UO_sp_balance_nested_parens].b)
-   {
-      space_text_balance_nested_parens();
-   }
-
-   /* Scrub certain added semicolons */
-   if (((cpd.lang_flags & LANG_PAWN) != 0) &&
-       cpd.settings[UO_mod_pawn_semicolon].b)
-   {
-      pawn_scrub_vsemi();
-   }
-
-   /* Insert trailing comments after certain close braces */
-   if ((cpd.settings[UO_mod_add_long_switch_closebrace_comment].n > 0) ||
-       (cpd.settings[UO_mod_add_long_function_closebrace_comment].n > 0))
-   {
-      add_long_closebrace_comment();
-   }
-
-   /* Sort imports/using/include */
-   if (cpd.settings[UO_mod_sort_import].b ||
-       cpd.settings[UO_mod_sort_include].b ||
-       cpd.settings[UO_mod_sort_using].b)
-   {
-      sort_imports();
-   }
-
-   /**
-    * Fix same-line inter-chunk spacing
-    */
-   space_text();
-
-   /**
-    * Do any aligning of preprocessors
-    */
-   if (cpd.settings[UO_align_pp_define_span].n > 0)
-   {
-      align_preprocessor();
-   }
-
-   /**
-    * Indent the text
-    */
-   indent_preproc();
-   indent_text();
-
-   /**
-    * Aligning everything else and reindent
-    */
-   align_all();
-   indent_text();
-
-   if (cpd.settings[UO_code_width].n > 0)
-   {
-      int max_passes = 3;
-      int prev_changes;
-      do
+      /**
+       * Add comments before function defs and classes
+       */
+      if (cpd.func_hdr.data != NULL)
       {
-         prev_changes = cpd.changes;
-         do_code_width();
-         if (prev_changes != cpd.changes)
+         add_func_header(CT_FUNC_DEF, cpd.func_hdr);
+      }
+      if (cpd.class_hdr.data != NULL)
+      {
+         add_func_header(CT_CLASS, cpd.class_hdr);
+      }
+
+      /* Scrub extra semicolons */
+      if (cpd.settings[UO_mod_remove_extra_semicolon].b)
+      {
+         remove_extra_semicolons();
+      }
+
+      /**
+       * Change virtual braces into real braces...
+       */
+      do_braces();
+
+      /**
+       * Add parens
+       */
+      do_parens();
+
+      /**
+       * Insert line breaks as needed
+       */
+      do_blank_lines();
+      newlines_cleanup_braces();
+      if (cpd.settings[UO_nl_after_multiline_comment].b)
+      {
+         newline_after_multiline_comment();
+      }
+      newlines_insert_blank_lines();
+      if (cpd.settings[UO_nl_squeeze_ifdef].b)
+      {
+         newlines_squeeze_ifdef();
+      }
+      if (cpd.settings[UO_pos_bool].tp != TP_IGNORE)
+      {
+         newlines_chunk_pos(CT_BOOL, cpd.settings[UO_pos_bool].tp);
+      }
+      if (cpd.settings[UO_pos_comma].tp != TP_IGNORE)
+      {
+         newlines_chunk_pos(CT_COMMA, cpd.settings[UO_pos_comma].tp);
+      }
+      newlines_class_colon_pos();
+      newlines_eat_start_end();
+      newlines_cleanup_dup();
+
+      mark_comments();
+
+      /**
+       * Add balanced spaces around nested params
+       */
+      if (cpd.settings[UO_sp_balance_nested_parens].b)
+      {
+         space_text_balance_nested_parens();
+      }
+
+      /* Scrub certain added semicolons */
+      if (((cpd.lang_flags & LANG_PAWN) != 0) &&
+          cpd.settings[UO_mod_pawn_semicolon].b)
+      {
+         pawn_scrub_vsemi();
+      }
+
+      /* Insert trailing comments after certain close braces */
+      if ((cpd.settings[UO_mod_add_long_switch_closebrace_comment].n > 0) ||
+          (cpd.settings[UO_mod_add_long_function_closebrace_comment].n > 0))
+      {
+         add_long_closebrace_comment();
+      }
+
+      /* Sort imports/using/include */
+      if (cpd.settings[UO_mod_sort_import].b ||
+          cpd.settings[UO_mod_sort_include].b ||
+          cpd.settings[UO_mod_sort_using].b)
+      {
+         sort_imports();
+      }
+
+      /**
+       * Fix same-line inter-chunk spacing
+       */
+      space_text();
+
+      /**
+       * Do any aligning of preprocessors
+       */
+      if (cpd.settings[UO_align_pp_define_span].n > 0)
+      {
+         align_preprocessor();
+      }
+
+      /**
+       * Indent the text
+       */
+      indent_preproc();
+      indent_text();
+
+      /**
+       * Aligning everything else and reindent
+       */
+      align_all();
+      indent_text();
+
+      if (cpd.settings[UO_code_width].n > 0)
+      {
+         int max_passes = 3;
+         int prev_changes;
+         do
          {
-            align_all();
-            indent_text();
-         }
-      } while ((prev_changes != cpd.changes) && (--max_passes > 0));
-   }
+            prev_changes = cpd.changes;
+            do_code_width();
+            if (prev_changes != cpd.changes)
+            {
+               align_all();
+               indent_text();
+            }
+         } while ((prev_changes != cpd.changes) && (--max_passes > 0));
+      }
 
-   /**
-    * And finally, align the backslash newline stuff
-    */
-   align_right_comments();
-   if (cpd.settings[UO_align_nl_cont].b)
-   {
-      align_backslash_newline();
-   }
+      /**
+       * And finally, align the backslash newline stuff
+       */
+      align_right_comments();
+      if (cpd.settings[UO_align_nl_cont].b)
+      {
+         align_backslash_newline();
+      }
 
-   /**
-    * Now render it all to the output file
-    */
-   output_text(pfout);
+      /**
+       * Now render it all to the output file
+       */
+      output_text(pfout);
+   }
 
    /* Special hook for dumping parsed data for debugging */
    if (parsed_file != NULL)
