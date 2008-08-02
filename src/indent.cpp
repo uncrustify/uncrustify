@@ -1035,10 +1035,18 @@ void indent_text(void)
                (pc->type == CT_USING))
       {
          /**
-          * if there is a newline after the '=', just indent one level,
+          * if there is a newline after the '=' or the line starts with a '=',
+          * just indent one level,
           * otherwise align on the '='.
-          * Never update indent_column.
           */
+         if ((pc->type == CT_ASSIGN) && chunk_is_newline(chunk_get_prev(pc)))
+         {
+            frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent + indent_size;
+            indent_column_set(frm.pse[frm.pse_tos].indent_tmp);
+            LOG_FMT(LINDENT, "%s: %d] assign => %d [%.*s]\n",
+                    __func__, pc->orig_line, indent_column, pc->len, pc->str);
+            reindent_line(pc, frm.pse[frm.pse_tos].indent_tmp);
+         }
          next = chunk_get_next(pc);
          if (next != NULL)
          {
