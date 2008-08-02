@@ -252,7 +252,20 @@ static void split_line(chunk_t *start)
               ent.pc->len, ent.pc->str, get_token_name(ent.pc->type), ent.pc->orig_line);
    }
 
-   pc = chunk_get_next(ent.pc);
+   /* Break before the token instead of after it according to the pos_xxx rules */
+   if ((chunk_is_token(ent.pc, CT_ARITH) &&
+        (cpd.settings[UO_pos_arith].tp == TP_LEAD)) ||
+       (chunk_is_token(ent.pc, CT_ASSIGN) &&
+        (cpd.settings[UO_pos_assign].tp == TP_LEAD)) ||
+       (chunk_is_token(ent.pc, CT_BOOL) &&
+        (cpd.settings[UO_pos_bool].tp == TP_LEAD)))
+   {
+      pc = ent.pc;
+   }
+   else
+   {
+      pc = chunk_get_next(ent.pc);
+   }
    if (pc == NULL)
    {
       pc = start;

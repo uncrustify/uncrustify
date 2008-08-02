@@ -614,6 +614,10 @@ void register_options(void)
                   "Whether to remove blank lines before '}'");
 
    unc_begin_group(UG_position, "Positioning options");
+   unc_add_option("pos_arith", UO_pos_arith, AT_POS,
+                  "The position of arithmetic operators in wrapped expressions");
+   unc_add_option("pos_assign", UO_pos_assign, AT_POS,
+                  "The position of assignment in wrapped expressions");
    unc_add_option("pos_bool", UO_pos_bool, AT_POS,
                   "The position of boolean operators in wrapped expressions");
    unc_add_option("pos_comma", UO_pos_comma, AT_POS,

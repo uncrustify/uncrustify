@@ -132,6 +132,12 @@ bool chunk_is_type(chunk_t *pc)
 }
 
 static_inline
+bool chunk_is_token(chunk_t *pc, c_token_t c_token)
+{
+   return((pc != NULL) && (pc->type == c_token));
+}
+
+static_inline
 bool chunk_is_str(chunk_t *pc, const char *str, int len)
 {
    return((pc != NULL) && (pc->len == len) && (memcmp(pc->str, str, len) == 0));

@@ -33,6 +33,8 @@ Changes in uncrustify-0.48 (not yet released)
  - Allow the MSVC++ '64' suffix on numbers
  - Initialize align_stack class members for the MSVC++ compiler
  - Indent a line that starts with '='
+ - Add pos_arith and pos_assign (Thanks, Ron!)
+ - Fix pos_bool & code_width interaction (Thanks, Ron!)
 
 
 Changes in uncrustify-0.48 (18-Jul-2008)

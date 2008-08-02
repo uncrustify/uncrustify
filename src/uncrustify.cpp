@@ -1083,6 +1083,14 @@ static void uncrustify_file(const char *data, int data_len, FILE *pfout,
       {
          newlines_chunk_pos(CT_COMMA, cpd.settings[UO_pos_comma].tp);
       }
+      if (cpd.settings[UO_pos_assign].tp != TP_IGNORE)
+      {
+         newlines_chunk_pos(CT_ASSIGN, cpd.settings[UO_pos_assign].tp);
+      }
+      if (cpd.settings[UO_pos_arith].tp != TP_IGNORE)
+      {
+         newlines_chunk_pos(CT_ARITH, cpd.settings[UO_pos_arith].tp);
+      }
       newlines_class_colon_pos();
       newlines_eat_start_end();
       newlines_cleanup_dup();
