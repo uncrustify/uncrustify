@@ -95,6 +95,31 @@ static void add_text_len(const char *text, int len)
 }
 
 /**
+ * Count the number of characters to the end of the next chunk of text.
+ * If it exceeds the limit, return true.
+ */
+static bool next_word_exceeds_limit(const char *text)
+{
+   int length = 0;
+
+   /* Count any whitespace */
+   while ((*text != 0) && unc_isspace(*text))
+   {
+      text++;
+      length++;
+   }
+
+   /* Count non-whitespace */
+   while ((*text != 0) && !unc_isspace(*text))
+   {
+      text++;
+      length++;
+   }
+   return((cpd.column + length) > cpd.settings[UO_cmt_width].n);
+}
+
+
+/**
  * Advance to a specific column
  * cpd.column is the current column
  *
@@ -670,7 +695,8 @@ static void add_comment_text(const char *text, int len,
       if ((text[idx] == '\n') ||
           ((text[idx] == ' ') &&
            (cpd.settings[UO_cmt_width].n > 0) &&
-           (cpd.column > cpd.settings[UO_cmt_width].n)))
+           ((cpd.column > cpd.settings[UO_cmt_width].n) ||
+            next_word_exceeds_limit(text + idx))))
       {
          in_word = false;
          add_char('\n');

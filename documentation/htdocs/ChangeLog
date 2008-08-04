@@ -35,6 +35,7 @@ Changes in uncrustify-0.48 (not yet released)
  - Indent a line that starts with '='
  - Add pos_arith and pos_assign (Thanks, Ron!)
  - Fix pos_bool & code_width interaction (Thanks, Ron!)
+ - Fix cmt_width, which was going one word over the limit. (Thanks, Ron!)
 
 
 Changes in uncrustify-0.48 (18-Jul-2008)
