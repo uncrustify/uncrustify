@@ -133,7 +133,7 @@ static void check_bool_parens(chunk_t *popen, chunk_t *pclose, int nest)
            popen->level);
 
    pc = popen;
-   while ((pc = chunk_get_next_ncnl(pc)) != pclose)
+   while (((pc = chunk_get_next_ncnl(pc)) != NULL) && (pc != pclose))
    {
       if (pc->type == CT_BOOL)
       {
