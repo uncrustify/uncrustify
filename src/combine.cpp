@@ -960,7 +960,6 @@ static chunk_t *process_return(chunk_t *pc)
    chunk_t *cpar;
    chunk_t chunk;
 
-
    /* grab next and bail if it is a semicolon */
    next = chunk_get_next_ncnl(pc);
    if ((next == NULL) || chunk_is_semicolon(next))
@@ -1023,12 +1022,13 @@ static chunk_t *process_return(chunk_t *pc)
    semi = next;
    while ((semi = chunk_get_next(semi)) != NULL)
    {
-      if (chunk_is_semicolon(semi) && (next->level == semi->level))
+      if ((chunk_is_semicolon(semi) && (pc->level == semi->level)) ||
+          (semi->level < pc->level))
       {
          break;
       }
    }
-   if (semi != NULL)
+   if (chunk_is_semicolon(semi) && (pc->level == semi->level))
    {
       /* add the parens */
       memset(&chunk, 0, sizeof(chunk));
