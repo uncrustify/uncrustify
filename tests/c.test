@@ -161,6 +161,7 @@
 
 01000  mod-paren.cfg           c/mod-paren.c
 01001  nl-comment.cfg          c/nl-comment.c
+01002  mod-paren2.cfg          c/mod-paren.c
 
 01011  del_semicolon.cfg       c/semicolons.c
 

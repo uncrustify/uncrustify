@@ -1,38 +1,39 @@
-
 int foo(int a, int b)
 {
-if ( ! (a || b) )
-{
-return (1);
-}
-return 0;
+   if (!(a || b))
+   {
+      return 1;
+   }
+   return 0;
 }
 
 void fooo()
 {
-if(enabled) value = 1;
+   if (enabled)
+   {
+      value = 1;
+   }
 
-if(enabled && value==100)
-{
-}
+   if (enabled && (value == 100))
+   {
+   }
 
-if(value==100)
-{
-}
+   if (value == 100)
+   {
+   }
 
-if(value==100 && i<15 || enabled)
-{
-}
+   if ((value == 100) && (i < 15) || enabled)
+   {
+   }
 
-if(!failed && (value==100 && i<15) || enabled)
-{
-}
-
+   if (!failed && ((value == 100) && (i < 15)) || enabled)
+   {
+   }
 }
 
 void foo3()
 {
-   if (strcmp(a, b) == 0 && total < 5)
+   if ((strcmp(a, b) == 0) && (total < 5))
    {
       add_item(a);
    }
@@ -42,17 +43,15 @@ void foo3()
    {
       bar();
    }
-  return ;
 }
 
 int foo1(void)
 {
    FOO_ERROR("connect: can only connected from state CLOSED", pcb->state == CLOSED, return ERR_ISCONN);
-return ERR_OK;
+   return ERR_OK;
 }
 
 int foo2(void)
 {
-
-return (-1);
+   return -1;
 }
