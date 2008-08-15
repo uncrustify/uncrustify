@@ -43,6 +43,7 @@ void foo3()
    {
       bar();
    }
+   return;
 }
 
 int foo1(void)

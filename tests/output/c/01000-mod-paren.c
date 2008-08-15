@@ -43,4 +43,16 @@ void foo3()
    {
       bar();
    }
+   return;
+}
+
+int foo1(void)
+{
+   FOO_ERROR("connect: can only connected from state CLOSED", pcb->state == CLOSED, return ERR_ISCONN);
+   return(ERR_OK);
+}
+
+int foo2(void)
+{
+   return(-1);
 }
