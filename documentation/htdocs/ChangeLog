@@ -38,6 +38,7 @@ Changes in uncrustify-0.48 (not yet released)
  - Fix cmt_width, which was going one word over the limit. (Thanks, Ron!)
  - Major rework of the aligning code to better handle the gap options
  - Indent comments before 'case' at the same level as 'case'
+ - mod_add_long_*_closebrace_comment adds the right comment type. (Thanks, Ron!)
 
 
 Changes in uncrustify-0.48 (18-Jul-2008)

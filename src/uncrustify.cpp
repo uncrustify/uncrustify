@@ -1112,13 +1112,6 @@ static void uncrustify_file(const char *data, int data_len, FILE *pfout,
          pawn_scrub_vsemi();
       }
 
-      /* Insert trailing comments after certain close braces */
-      if ((cpd.settings[UO_mod_add_long_switch_closebrace_comment].n > 0) ||
-          (cpd.settings[UO_mod_add_long_function_closebrace_comment].n > 0))
-      {
-         add_long_closebrace_comment();
-      }
-
       /* Sort imports/using/include */
       if (cpd.settings[UO_mod_sort_import].b ||
           cpd.settings[UO_mod_sort_include].b ||
@@ -1145,6 +1138,13 @@ static void uncrustify_file(const char *data, int data_len, FILE *pfout,
        */
       indent_preproc();
       indent_text();
+
+      /* Insert trailing comments after certain close braces */
+      if ((cpd.settings[UO_mod_add_long_switch_closebrace_comment].n > 0) ||
+          (cpd.settings[UO_mod_add_long_function_closebrace_comment].n > 0))
+      {
+         add_long_closebrace_comment();
+      }
 
       /**
        * Aligning everything else and reindent

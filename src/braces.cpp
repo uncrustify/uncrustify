@@ -496,10 +496,12 @@ void add_long_closebrace_comment(void)
 
                if ((nl_min > 0) && (nl_count >= nl_min) && (tag_pc != NULL))
                {
-                  /* TODO: determine the added comment style */
+                  /* determine the added comment style */
+                  c_token_t style = (cpd.lang_flags & (LANG_CPP | LANG_CS)) ?
+                                    CT_COMMENT_CPP : CT_COMMENT;
 
                   /* Add a comment after the close brace */
-                  insert_comment_after(br_close, CT_COMMENT,
+                  insert_comment_after(br_close, style,
                                        tag_pc->len, tag_pc->str);
                }
             }
