@@ -21,9 +21,8 @@ public:
       SS_DANGLE   // include prev * after add
    };
 
-   ChunkStack m_aligned;
-   ChunkStack m_skipped;
-   ChunkStack m_scratch;
+   ChunkStack m_aligned;   /* contains the token that is aligned */
+   ChunkStack m_skipped;   /* contains the tokens sent to Add() */
    int        m_max_col;
    int        m_min_col;
    int        m_span;
@@ -57,4 +56,5 @@ public:
 protected:
    int m_last_added; /* 0=none, 1=aligned, 2=skipped */
    void ReAddSkipped();
+   ChunkStack m_scratch; /* used in ReAddSkipped() */
 };
