@@ -105,62 +105,10 @@ static void detect_sp_arith()
 
 
 /**
- * Scan the parsed file and detect some options
+ * Call all the detect_xxxx() functions
  */
 void detect_options(const char *data, int data_len)
 {
-   /**
-    * Parse the text into chunks
-    */
-   tokenize(data, data_len, NULL);
-
-   /**
-    * Change certain token types based on simple sequence.
-    * Example: change '[' + ']' to '[]'
-    * Note that level info is not yet available, so it is OK to do all
-    * processing that doesn't need to know level info. (that's very little!)
-    */
-   tokenize_cleanup();
-
-   /**
-    * Detect the brace and paren levels and insert virtual braces.
-    * This handles all that nasty preprocessor stuff
-    */
-   brace_cleanup();
-
-   /**
-    * At this point, the level information is available and accurate.
-    */
-
-   if ((cpd.lang_flags & LANG_PAWN) != 0)
-   {
-      pawn_prescan();
-   }
-
-   /**
-    * Re-type chunks, combine chunks
-    */
-   fix_symbols();
-
-   /**
-    * Look at all colons ':' and mark labels, :? sequences, etc.
-    */
-   combine_labels();
-
-   /**
-    * Call all the detect_xxx functions
-    */
    detect_sp_arith();
-
-   /**
-    * Clean up
-    */
-
-   /* Free all the memory */
-   chunk_t *pc;
-   while ((pc = chunk_get_head()) != NULL)
-   {
-      chunk_del(pc);
-   }
 }
 

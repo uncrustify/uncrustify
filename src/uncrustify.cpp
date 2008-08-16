@@ -42,6 +42,8 @@ static int language_from_tag(const char *tag);
 static int language_from_filename(const char *filename);
 static const char *language_to_string(int lang);
 static char *read_stdin(int& out_len);
+static void uncrustify_start(const char *data, int data_len);
+static void uncrustify_end();
 static void uncrustify_file(const char *data, int data_len, FILE *pfout,
                             const char *parsed_file);
 static void do_source_file(const char *filename_in,
@@ -469,8 +471,9 @@ int main(int argc, char *argv[])
          return(EXIT_FAILURE);
       }
 
-      // uncrustify_file(fm.data, fm.length, NULL, NULL);
+      uncrustify_start(fm.data, fm.length);
       detect_options(fm.data, fm.length);
+      uncrustify_end();
       free(fm.data);
 
       redir_stdout(output_file);
@@ -980,8 +983,7 @@ static void add_func_header(c_token_t type, file_mem& fm)
    }
 }
 
-static void uncrustify_file(const char *data, int data_len, FILE *pfout,
-                            const char *parsed_file)
+static void uncrustify_start(const char *data, int data_len)
 {
    /**
     * Parse the text into chunks
@@ -1026,6 +1028,12 @@ static void uncrustify_file(const char *data, int data_len, FILE *pfout,
     * Look at all colons ':' and mark labels, :? sequences, etc.
     */
    combine_labels();
+}
+
+static void uncrustify_file(const char *data, int data_len, FILE *pfout,
+                            const char *parsed_file)
+{
+   uncrustify_start(data, data_len);
 
    /**
     * Done with detection. Do the rest only if the file will go somewhere.
@@ -1194,6 +1202,11 @@ static void uncrustify_file(const char *data, int data_len, FILE *pfout,
       }
    }
 
+   uncrustify_end();
+}
+
+static void uncrustify_end()
+{
    /* Free all the memory */
    chunk_t *pc;
    while ((pc = chunk_get_head()) != NULL)
