@@ -3,7 +3,7 @@
 
 #include "DIS/cPduSnapshot.h"
 
-typedef void *   disConnectionH;
+typedef void * disConnectionH;
 
 #ifdef __cplusplus
 extern "C"

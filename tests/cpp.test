@@ -75,6 +75,8 @@
 30250 align_fcall.cfg                  cpp/align_fcall.cpp
 30251 align_fcall-2.cfg                cpp/align_fcall.cpp
 
+30260 var_def_gap.cfg                  cpp/var_def_gap.cpp
+
 # function def newlines
 30701 func-def-1.cfg                   cpp/function-def.cpp
 30702 func-def-2.cfg                   cpp/function-def.cpp

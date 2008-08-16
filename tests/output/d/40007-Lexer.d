@@ -52,7 +52,7 @@ class Lexer
 {
     static           Identifier[char[]]       stringtable;
     static OutBuffer stringbuffer;
-    static Token     *                       freelist;
+    static Token     * freelist;
 
     Token            token;        // current token
     Module           mod;          // current module

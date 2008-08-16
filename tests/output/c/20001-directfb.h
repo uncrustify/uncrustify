@@ -361,7 +361,7 @@ struct _pthread_fastlock
 
 
 
-typedef struct _pthread_descr_struct *   _pthread_descr;
+typedef struct _pthread_descr_struct * _pthread_descr;
 
 
 
