@@ -210,7 +210,6 @@ void AlignStack::Add(chunk_t *start, int seqnum)
          tmp_col += space_col_align(tmp, next);
          if (next->column != tmp_col)
          {
-            LOG_FMT(LSYS, "Tighten\n");
             align_to_column(next, tmp_col);
          }
          tmp = next;
@@ -242,13 +241,13 @@ void AlignStack::Add(chunk_t *start, int seqnum)
          endcol += m_gap - gap;
       }
 
-      LOG_FMT(LSYS, "[%p] line %d pc='%.*s' [%s] col:%d ali='%.*s' [%s] col:%d ref='%.*s' [%s] col:%d  col_adj=%d  endcol=%d, ss=%d as=%d, gap=%d\n",
-              this,
-              start->orig_line,
-              start->len, start->str, get_token_name(start->type), start->column,
-              ali->len, ali->str, get_token_name(ali->type), ali->column,
-              ref->len, ref->str, get_token_name(ref->type), ref->column,
-              col_adj, endcol, m_star_style, m_amp_style, gap);
+      // LOG_FMT(LSYS, "[%p] line %d pc='%.*s' [%s] col:%d ali='%.*s' [%s] col:%d ref='%.*s' [%s] col:%d  col_adj=%d  endcol=%d, ss=%d as=%d, gap=%d\n",
+      //         this,
+      //         start->orig_line,
+      //         start->len, start->str, get_token_name(start->type), start->column,
+      //         ali->len, ali->str, get_token_name(ali->type), ali->column,
+      //         ref->len, ref->str, get_token_name(ref->type), ref->column,
+      //         col_adj, endcol, m_star_style, m_amp_style, gap);
 
       ali->align.col_adj = col_adj;
       ali->align.ref     = ref;
