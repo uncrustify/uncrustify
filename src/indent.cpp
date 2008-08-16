@@ -180,6 +180,8 @@ void align_to_column(chunk_t *pc, int column)
          {
             pc->column = min_col;
          }
+         LOG_FMT(LINDLINED, "   set column of '%.*s' to %d (orig %d)\n",
+                 pc->len, pc->str, pc->column, pc->orig_col);
       }
    } while ((pc != NULL) && (pc->nl_count == 0));
 }
@@ -239,6 +241,8 @@ void reindent_line2(chunk_t *pc, int column, const char *fcn_name, int lineno)
          {
             pc->column = min_col;
          }
+         LOG_FMT(LINDLINED, "   set column of '%.*s' to %d (orig %d)\n",
+                 pc->len, pc->str, pc->column, pc->orig_col);
       }
    } while ((pc != NULL) && (pc->nl_count == 0));
 }

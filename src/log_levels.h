@@ -83,6 +83,7 @@ enum
    LALAGAIN  = 67,    /* align again */
    LOPERATOR = 68,    /* operator */
    LASFCP    = 69,    /* Align Same Function Call Params */
+   LINDLINED = 70,    /* indent line details */
 };
 
 #endif   /* LOG_LEVELS_H_INCLUDED */
