@@ -29,7 +29,7 @@ const char *get_file_extension(int& idx);
  * detect.cpp
  */
 
-void detect_options();
+void detect_options(const char *data, int data_len);
 
 
 /*

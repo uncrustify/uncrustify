@@ -469,8 +469,8 @@ int main(int argc, char *argv[])
          return(EXIT_FAILURE);
       }
 
-      uncrustify_file(fm.data, fm.length, NULL, NULL);
-      detect_options();
+      // uncrustify_file(fm.data, fm.length, NULL, NULL);
+      detect_options(fm.data, fm.length);
       free(fm.data);
 
       redir_stdout(output_file);
