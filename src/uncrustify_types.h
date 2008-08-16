@@ -170,11 +170,19 @@ static const char *pcf_names[] =
 
 struct align_ptr_t
 {
-   chunk_t *next; /* NULL or the chunk that should be under this one */
-   bool    right_align;
-   int     star_style;
-   int     amp_style;
-   int     gap;
+   chunk_t *next;       /* NULL or the chunk that should be under this one */
+   bool    right_align; /* AlignStack.m_right_align */
+   int     star_style;  /* AlignStack.m_star_style */
+   int     amp_style;   /* AlignStack.m_amp_style */
+   int     gap;         /* AlignStack.m_gap */
+
+   /* col_adj is the amount to alter the column for the token.
+    * For example, a dangling '*' would be set to -1.
+    * A right-aligned word would be a positive value.
+    */
+   int     col_adj;
+   chunk_t *ref;
+   chunk_t *start;
 };
 
 /** This is the main type of this program */
@@ -196,9 +204,9 @@ struct chunk_t
    int         level;            /* nest level in {, (, or [ */
    int         brace_level;      /* nest level in braces only */
    int         pp_level;         /* nest level in #if stuff */
-   bool        after_tab;
-   int         len;
-   const char  *str;
+   bool        after_tab;        /* whether this token was after a tab */
+   int         len;              /* # of bytes at str that make up the token */
+   const char  *str;             /* pointer to the token text */
 };
 
 enum

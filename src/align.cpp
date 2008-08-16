@@ -212,7 +212,7 @@ void quick_align_again(void)
    chunk_t *tmp;
    AlignStack as;
 
-   LOG_FMT(LALAGAIN, "%s\n", __func__);
+   LOG_FMT(LALAGAIN, "%s:\n", __func__);
    for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next(pc))
    {
       if ((pc->align.next != NULL) && (pc->flags & PCF_ALIGN_START))
@@ -224,10 +224,10 @@ void quick_align_again(void)
          as.m_gap         = pc->align.gap;
 
          LOG_FMT(LALAGAIN, "   [%.*s:%d]", pc->len, pc->str, pc->orig_line);
-         as.Add(pc);
+         as.Add(pc->align.start);
          for (tmp = pc->align.next; tmp != NULL; tmp = tmp->align.next)
          {
-            as.Add(tmp);
+            as.Add(tmp->align.start);
             LOG_FMT(LALAGAIN, " => [%.*s:%d]", tmp->len, tmp->str, tmp->orig_line);
          }
          LOG_FMT(LALAGAIN, "\n");

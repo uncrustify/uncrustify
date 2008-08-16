@@ -653,9 +653,9 @@ void register_options(void)
                   "The span for aligning variable definitions (0=don't align)", "", 0, 5000);
    unc_add_option("align_var_def_star_style", UO_align_var_def_star_style, AT_NUM,
                   "How to align the star in variable definitions.\n"
-                  " 0=Part of the type\n"
-                  " 1=Part of the variable\n"
-                  " 2=Dangling", "", 0, 2);
+                  " 0=Part of the type     'void *   foo;'\n"
+                  " 1=Part of the variable 'void     *foo;'\n"
+                  " 2=Dangling             'void    *foo;'", "", 0, 2);
    unc_add_option("align_var_def_amp_style", UO_align_var_def_amp_style, AT_NUM,
                   "How to align the '&' in variable definitions.\n"
                   " 0=Part of the type\n"

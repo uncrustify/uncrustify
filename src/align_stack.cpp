@@ -70,7 +70,7 @@ void AlignStack::ReAddSkipped()
  * @param pc      The chunk
  * @param seqnum  Optional seqnum (0=assign one)
  */
-void AlignStack::Add(chunk_t *pc, int seqnum)
+void AlignStack::Add(chunk_t *start, int seqnum)
 {
    /* Assign a seqnum if needed */
    if (seqnum == 0)
@@ -78,16 +78,24 @@ void AlignStack::Add(chunk_t *pc, int seqnum)
       seqnum = m_seqnum;
    }
 
+   chunk_t *ali;
+   chunk_t *ref;
+   chunk_t *tmp;
    chunk_t *prev;
    chunk_t *next;
+
+   int col_adj = 0;  /* Amount the column is shifted for 'dangle' mode */
+   int tmp_col;
+   int endcol;
+   int gap;
 
    m_last_added = 0;
 
    /* Check threshold limits */
    if ((m_max_col == 0) || (m_thresh == 0) ||
-       (((pc->column + m_gap) <= (m_max_col + m_thresh)) &&
-        (((pc->column + m_gap) >= (m_max_col - m_thresh)) ||
-         (pc->column >= m_min_col))))
+       (((start->column + m_gap) <= (m_max_col + m_thresh)) &&
+        (((start->column + m_gap) >= (m_max_col - m_thresh)) ||
+         (start->column >= m_min_col))))
    {
       /* we are adding it, so update the newline seqnum */
       if (seqnum > m_nl_seqnum)
@@ -95,78 +103,161 @@ void AlignStack::Add(chunk_t *pc, int seqnum)
          m_nl_seqnum = seqnum;
       }
 
-      if (m_star_style == SS_INCLUDE)
+      /**
+       * SS_IGNORE: no special handling of '*' or '&', only 'foo' is aligned
+       *     void     foo;  // gap=5, 'foo' is aligned
+       *     char *   foo;  // gap=3, 'foo' is aligned
+       *     foomatic foo;  // gap=1, 'foo' is aligned
+       *  The gap is the columns between 'foo' and the previous token.
+       *  [void - foo], ['*' - foo], etc
+       *
+       * SS_INCLUDE: - space between variable and '*' or '&' is eaten
+       *     void     foo;  // gap=5, 'foo' is aligned
+       *     char     *foo; // gap=5, '*' is aligned
+       *     foomatic foo;  // gap=1, 'foo' is aligned
+       *  The gap is the columns between the first '*' or '&' before foo
+       *  and the previous token. [void - foo], [char - '*'], etc
+       *
+       * SS_DANGLE: - space between variable and '*' or '&' is eaten
+       *     void     foo;  // gap=5
+       *     char    *bar;  // gap=5, as the '*' doesn't count
+       *     foomatic foo;  // gap=1
+       *  The gap is the columns between 'foo' and the chunk before the first
+       *  '*' or '&'. [void - foo], [char - bar], etc
+       *
+       * If the gap < m_gap, then the column is bumped out by the difference.
+       * So, if m_gap is 2, then the above would be:
+       * SS_IGNORE:
+       *     void      foo;  // gap=6
+       *     char *    foo;  // gap=4
+       *     foomatic  foo;  // gap=2
+       * SS_INCLUDE:
+       *     void      foo;  // gap=6
+       *     char      *foo; // gap=6
+       *     foomatic  foo;  // gap=2
+       * SS_DANGLE:
+       *     void      foo;  // gap=6
+       *     char     *bar;  // gap=6, as the '*' doesn't count
+       *     foomatic  foo;  // gap=2
+       * Right aligned numbers:
+       *     #define A    -1
+       *     #define B   631
+       *     #define C     3
+       * Left aligned numbers:
+       *     #define A     -1
+       *     #define B     631
+       *     #define C     3
+       *
+       * In the code below, pc is set to the item that is aligned.
+       * In the above examples, that is 'foo', '*', '-', or 63.
+       *
+       * Ref is set to the last part of the type.
+       * In the above examples, that is 'void', 'char', 'foomatic', 'A', or 'B'.
+       *
+       * The '*' and '&' can float between the two.
+       */
+
+      /* Find ref. Back up to the real item that is aligned. */
+      int hits = 0;
+      prev = start;
+      while (((prev = chunk_get_prev(prev)) != NULL) &&
+             (chunk_is_star(prev) ||
+              chunk_is_addr(prev) ||
+              (chunk_is_str(prev, "(", 1) && (prev->parent_type == CT_TYPEDEF))))
+      {
+         /* do nothing - we want prev when this exits */
+      }
+      ref = prev;
+      if (chunk_is_newline(ref))
+      {
+         ref = chunk_get_next(ref);
+      }
+
+      /* Find the item that we are going to align. */
+      ali = start;
+      if (m_star_style != SS_IGNORE)
       {
          /* back up to the first '*' preceding the token */
-         prev = chunk_get_prev(pc);
+         prev = chunk_get_prev(ali);
          while (chunk_is_star(prev))
          {
-            pc   = prev;
-            prev = chunk_get_prev(pc);
+            ali  = prev;
+            prev = chunk_get_prev(ali);
+         }
+         if (chunk_is_str(prev, "(", 1) && (prev->parent_type == CT_TYPEDEF))
+         {
+            ali  = prev;
+            prev = chunk_get_prev(ali);
          }
       }
-      if (m_amp_style == SS_INCLUDE)
+      if (m_amp_style != SS_IGNORE)
       {
-         /* back up to the first '*' preceding the token */
-         prev = chunk_get_prev(pc);
+         /* back up to the first '&' preceding the token */
+         prev = chunk_get_prev(ali);
          while (chunk_is_addr(prev))
          {
-            pc   = prev;
-            prev = chunk_get_prev(pc);
+            ali  = prev;
+            prev = chunk_get_prev(ali);
          }
       }
 
-      m_aligned.Push(pc, seqnum);
-      m_last_added = 1;
+      /* Tighten down the spacing between ref and start */
+      tmp_col = ref->column;
+      tmp     = ref;
+      while (tmp != start)
+      {
+         next     = chunk_get_next(tmp);
+         tmp_col += space_col_align(tmp, next);
+         if (next->column != tmp_col)
+         {
+            LOG_FMT(LSYS, "Tighten\n");
+            align_to_column(next, tmp_col);
+         }
+         tmp = next;
+      }
+
+      /* Set the column adjust and gap */
+      col_adj = 0;
+      gap     = 0;
+      if (ref != ali)
+      {
+         gap = ali->column - (ref->column + ref->len);
+      }
+      tmp = ali;
+      if (chunk_is_str(tmp, "(", 1) && (tmp->parent_type == CT_TYPEDEF))
+      {
+         tmp = chunk_get_next(tmp);
+      }
+      if ((chunk_is_star(tmp) && (m_star_style == SS_DANGLE)) ||
+          (chunk_is_addr(tmp) && (m_amp_style == SS_DANGLE)))
+      {
+         col_adj = start->column - ali->column;
+         gap     = start->column - (ref->column + ref->len);
+      }
 
       /* See if this pushes out the max_col */
-      int endcol = pc->column + (m_right_align ? pc->len : 0);
-
-      /* Step backward until we hit something other than a '*' or '&' or '('.
-       * Keep track of the minimum distance.
-       */
-      chunk_t *prev = chunk_get_prev(pc);
-      chunk_t *ref  = prev;
-
-      while (chunk_is_star(prev) || chunk_is_addr(prev) || chunk_is_str(prev, "(", 1))
+      endcol = ali->column + col_adj;
+      if (gap < m_gap)
       {
-         prev = chunk_get_prev(prev);
-      }
-      if ((prev != NULL) && !chunk_is_newline(prev))
-      {
-         int tmp_col;
-
-         ref     = prev;
-         next    = chunk_get_next(ref);
-         tmp_col = ref->column;
-         while (prev != pc)
-         {
-            tmp_col += space_col_align(prev, next);
-            if (next->column != tmp_col)
-            {
-               align_to_column(next, tmp_col);
-            }
-
-            // LOG_FMT(LSYS, "[%.*s] vs [%.*s] => %d\n",
-            //         prev->len, prev->str, next->len, next->str, next->column);
-            prev = next;
-            next = chunk_get_next(prev);
-         }
-         endcol = tmp_col + (m_right_align ? pc->len : 0);
-
-         if (m_gap > 0)
-         {
-            prev = chunk_get_prev(pc);
-            int tmp = prev->column + prev->len + m_gap;
-            if (endcol < tmp)
-            {
-               endcol = tmp;
-            }
-         }
+         endcol += m_gap - gap;
       }
 
-      LOG_FMT(LAS, "Add-[%.*s]: line %d, col %d : ref=[%.*s] endcol=%d\n",
-              pc->len, pc->str, pc->orig_line, pc->column,
+      LOG_FMT(LSYS, "[%p] line %d pc='%.*s' [%s] col:%d ali='%.*s' [%s] col:%d ref='%.*s' [%s] col:%d  col_adj=%d  endcol=%d, ss=%d as=%d, gap=%d\n",
+              this,
+              start->orig_line,
+              start->len, start->str, get_token_name(start->type), start->column,
+              ali->len, ali->str, get_token_name(ali->type), ali->column,
+              ref->len, ref->str, get_token_name(ref->type), ref->column,
+              col_adj, endcol, m_star_style, m_amp_style, gap);
+
+      ali->align.col_adj = col_adj;
+      ali->align.ref     = ref;
+      ali->align.start   = start;
+      m_aligned.Push(ali, seqnum);
+      m_last_added = 1;
+
+      LOG_FMT(LAS, "Add-[%.*s]: line %d, col %d, adj %d : ref=[%.*s] endcol=%d\n",
+              ali->len, ali->str, ali->orig_line, ali->column, ali->align.col_adj,
               ref->len, ref->str, endcol);
 
       if (m_min_col > endcol)
@@ -178,7 +269,7 @@ void AlignStack::Add(chunk_t *pc, int seqnum)
       {
          LOG_FMT(LAS, "Add-aligned [%d/%d/%d]: line %d, col %d : max_col old %d, new %d - min_col %d\n",
                  seqnum, m_nl_seqnum, m_seqnum,
-                 pc->orig_line, pc->column, m_max_col, endcol, m_min_col);
+                 ali->orig_line, ali->column, m_max_col, endcol, m_min_col);
          m_max_col = endcol;
 
          /**
@@ -194,18 +285,18 @@ void AlignStack::Add(chunk_t *pc, int seqnum)
       {
          LOG_FMT(LAS, "Add-aligned [%d/%d/%d]: line %d, col %d : col %d <= %d - min_col %d\n",
                  seqnum, m_nl_seqnum, m_seqnum,
-                 pc->orig_line, pc->column, endcol, m_max_col, m_min_col);
+                 ali->orig_line, ali->column, endcol, m_max_col, m_min_col);
       }
    }
    else
    {
       /* The threshold check failed, so add it to the skipped list */
-      m_skipped.Push(pc, seqnum);
+      m_skipped.Push(start, seqnum);
       m_last_added = 2;
 
       LOG_FMT(LAS, "Add-skipped [%d/%d/%d]: line %d, col %d <= %d + %d\n",
               seqnum, m_nl_seqnum, m_seqnum,
-              pc->orig_line, pc->column, m_max_col, m_thresh);
+              start->orig_line, start->column, m_max_col, m_thresh);
    }
 }
 
@@ -237,76 +328,87 @@ void AlignStack::Flush()
 {
    int last_seqnum = 0;
    int idx;
+   int tmp_col;
    const ChunkStack::Entry *ce = NULL;
-   chunk_t    *pc;
+   chunk_t *pc;
 
    LOG_FMT(LAS, "Flush (min=%d, max=%d)\n", m_min_col, m_max_col);
 
    m_last_added = 0;
+   m_max_col    = 0;
+
+   /* Recalculate the max_col - it may have shifted since the last Add() */
+   for (idx = 0; idx < m_aligned.Len(); idx++)
+   {
+      pc = m_aligned.Get(idx)->m_pc;
+
+      /* Set the column adjust and gap */
+      int col_adj = 0;
+      int gap     = 0;
+      if (pc != pc->align.ref)
+      {
+         gap = pc->column - (pc->align.ref->column + pc->align.ref->len);
+      }
+      chunk_t *tmp = pc;
+      if (chunk_is_str(tmp, "(", 1) && (tmp->parent_type == CT_TYPEDEF))
+      {
+         tmp = chunk_get_next(tmp);
+      }
+      if ((chunk_is_star(tmp) && (m_star_style == SS_DANGLE)) ||
+          (chunk_is_addr(tmp) && (m_amp_style == SS_DANGLE)))
+      {
+         col_adj = pc->align.start->column - pc->column;
+         gap     = pc->align.start->column - (pc->align.ref->column + pc->align.ref->len);
+      }
+      if (m_right_align)
+      {
+         /* Adjust the width for signed numbers */
+         int start_len = pc->align.start->len;
+         if (pc->align.start->type == CT_NEG)
+         {
+            tmp = chunk_get_next(pc->align.start);
+            if ((tmp != NULL) && (tmp->type == CT_NUMBER))
+            {
+               start_len += tmp->len;
+            }
+         }
+         col_adj += start_len;
+      }
+
+      pc->align.col_adj = col_adj;
+
+      /* See if this pushes out the max_col */
+      int endcol = pc->column + col_adj;
+      if (gap < m_gap)
+      {
+         endcol += m_gap - gap;
+      }
+      if (endcol > m_max_col)
+      {
+         m_max_col = endcol;
+      }
+   }
 
    for (idx = 0; idx < m_aligned.Len(); idx++)
    {
       ce = m_aligned.Get(idx);
-
+      pc = ce->m_pc;
       if (idx == 0)
       {
-         ce->m_pc->flags |= PCF_ALIGN_START;
+         pc->flags |= PCF_ALIGN_START;
 
-         ce->m_pc->align.right_align = m_right_align;
-         ce->m_pc->align.amp_style   = (int)m_amp_style;
-         ce->m_pc->align.star_style  = (int)m_star_style;
-         ce->m_pc->align.gap         = m_gap;
+         pc->align.right_align = m_right_align;
+         pc->align.amp_style   = (int)m_amp_style;
+         pc->align.star_style  = (int)m_star_style;
+         pc->align.gap         = m_gap;
       }
-
-      int da_col = m_max_col;
-
-      pc = ce->m_pc;
-
       pc->align.next = m_aligned.GetChunk(idx + 1);
 
-      if (m_star_style == SS_DANGLE)
-      {
-         /* back up to the first '*' preceding the token */
-         chunk_t *prev = chunk_get_prev(pc);
-         while (chunk_is_star(prev) ||
-                ((prev->type == CT_PAREN_OPEN) &&
-                 (prev->parent_type == CT_TYPEDEF)))
-         {
-            pc   = prev;
-            prev = chunk_get_prev(pc);
-            da_col--;
-         }
-
-         LOG_FMT(LAS, "Star Dangling to %d\n", da_col);
-      }
-
-      if (m_amp_style == SS_DANGLE)
-      {
-         /* back up to the first '&' preceding the token */
-         chunk_t *prev = chunk_get_prev(pc);
-         while (chunk_is_addr(prev))
-         {
-            pc   = prev;
-            prev = chunk_get_prev(pc);
-            da_col--;
-         }
-
-         LOG_FMT(LAS, "Amp Dangling to %d\n", da_col);
-      }
-
-      if (m_right_align && (pc->type == CT_NEG))
-      {
-         chunk_t *next = chunk_get_next(pc);
-         if ((next != NULL) && (next->type == CT_NUMBER))
-         {
-            da_col -= next->len;
-         }
-
-         LOG_FMT(LAS, "Neg Dangling to %d\n", da_col);
-      }
-
-      /* Indent, right aligning the aligned token */
-      align_to_column(pc, da_col - (m_right_align ? ce->m_pc->len : 0));
+      /* Indent the token, taking col_adj into account */
+      tmp_col = m_max_col - pc->align.col_adj;
+      LOG_FMT(LAS, "%s: line %d: '%.*s' to col %d (adj=%d)\n", __func__,
+              pc->orig_line, pc->len, pc->str, tmp_col, pc->align.col_adj);
+      align_to_column(pc, tmp_col);
    }
 
    if (ce != NULL)
