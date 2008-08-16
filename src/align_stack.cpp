@@ -158,7 +158,6 @@ void AlignStack::Add(chunk_t *start, int seqnum)
        */
 
       /* Find ref. Back up to the real item that is aligned. */
-      int hits = 0;
       prev = start;
       while (((prev = chunk_get_prev(prev)) != NULL) &&
              (chunk_is_star(prev) ||
