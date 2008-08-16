@@ -222,7 +222,7 @@ int i2c_add_adapter(struct i2c_adapter *adap)
  out_unlock:
    up(&core_lists);
    return(res);
-}
+} /* i2c_add_adapter */
 
 
 int i2c_del_adapter(struct i2c_adapter *adap)
@@ -304,7 +304,7 @@ int i2c_del_adapter(struct i2c_adapter *adap)
  out_unlock:
    up(&core_lists);
    return(res);
-}
+} /* i2c_del_adapter */
 
 
 /* -----
@@ -412,7 +412,7 @@ int i2c_del_driver(struct i2c_driver *driver)
  out_unlock:
    up(&core_lists);
    return(0);
-}
+} /* i2c_del_driver */
 
 static int __i2c_check_addr(struct i2c_adapter *adapter, unsigned int addr)
 {
@@ -482,7 +482,7 @@ int i2c_attach_client(struct i2c_client *client)
    device_create_file(&client->dev, &dev_attr_client_name);
 
    return(0);
-}
+} /* i2c_attach_client */
 
 
 int i2c_detach_client(struct i2c_client *client)
@@ -899,7 +899,7 @@ int i2c_probe(struct i2c_adapter *adapter,
    }
 
    return(0);
-}
+} /* i2c_probe */
 
 struct i2c_adapter *i2c_get_adapter(int id)
 {
@@ -1051,7 +1051,7 @@ static int i2c_smbus_check_pec(u16 addr, u8 command, int size, u8 partial,
    default:
       cpec = rpec = 0;
       break;
-   }
+   } /* switch */
    if (rpec != cpec)
    {
       pr_debug("i2c-core: Bad PEC 0x%02x vs. 0x%02x\n",
@@ -1059,7 +1059,7 @@ static int i2c_smbus_check_pec(u16 addr, u8 command, int size, u8 partial,
       return(-1);
    }
    return(0);
-}
+} /* i2c_smbus_check_pec */
 
 s32 i2c_smbus_write_quick(struct i2c_client *client, u8 value)
 {
@@ -1314,7 +1314,7 @@ static s32 i2c_smbus_xfer_emulated(struct i2c_adapter *adapter, u16 addr,
       dev_err(&adapter->dev, "smbus_access called with invalid size (%d)\n",
               size);
       return(-1);
-   }
+   } /* switch */
 
    if (i2c_transfer(adapter, msg, num) < 0)
    {
@@ -1349,7 +1349,7 @@ static s32 i2c_smbus_xfer_emulated(struct i2c_adapter *adapter, u16 addr,
       }
    }
    return(0);
-}
+} /* i2c_smbus_xfer_emulated */
 
 
 s32 i2c_smbus_xfer(struct i2c_adapter *adapter, u16 addr, unsigned short flags,
@@ -1413,7 +1413,7 @@ s32 i2c_smbus_xfer(struct i2c_adapter *adapter, u16 addr, unsigned short flags,
       }
    }
    return(res);
-}
+} /* i2c_smbus_xfer */
 
 
 /* Next four are needed by i2c-isa */

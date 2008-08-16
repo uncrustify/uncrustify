@@ -81,5 +81,5 @@ void foo(void)
    a = (int)*(x);
    a = (CHAR)*(x);
    a = (Uint) * (x);
-}
+} /* foo */
 

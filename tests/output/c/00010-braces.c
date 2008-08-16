@@ -73,7 +73,7 @@ void foo(void)
    {
       ;  /* hang forever */
    }
-}
+} /* foo */
 
 void f()
 {
