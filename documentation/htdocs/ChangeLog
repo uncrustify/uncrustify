@@ -37,6 +37,7 @@ Changes in uncrustify-0.48 (not yet released)
  - Fix pos_bool & code_width interaction (Thanks, Ron!)
  - Fix cmt_width, which was going one word over the limit. (Thanks, Ron!)
  - Major rework of the aligning code to better handle the gap options
+ - Indent comments before 'case' at the same level as 'case'
 
 
 Changes in uncrustify-0.48 (18-Jul-2008)
