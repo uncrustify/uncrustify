@@ -312,32 +312,32 @@ class Lexer
                 t.value = number(t);
                 return;
 
-/*
- #if CSTRINGS
- *                          case '\'':
- *                              t.value = charConstant(t, 0);
- *                              return;
- *
- *                          case '"':
- *                              t.value = stringConstant(t,0);
- *                              return;
- *
- *                          case 'l':
- *                          case 'L':
- *                              if( p[1] == '\'')
- *                              {
- *                                  p++;
- *                                  t.value = charConstant(t, 1);
- *                                  return;
- *                              }
- *                              else if( p[1] == '"')
- *                              {
- *                                  p++;
- *                                  t.value = stringConstant(t, 1);
- *                                  return;
- *                              }
- #else
- */
+            /*
+             #if CSTRINGS
+             *                          case '\'':
+             *                              t.value = charConstant(t, 0);
+             *                              return;
+             *
+             *                          case '"':
+             *                              t.value = stringConstant(t,0);
+             *                              return;
+             *
+             *                          case 'l':
+             *                          case 'L':
+             *                              if( p[1] == '\'')
+             *                              {
+             *                                  p++;
+             *                                  t.value = charConstant(t, 1);
+             *                                  return;
+             *                              }
+             *                              else if( p[1] == '"')
+             *                              {
+             *                                  p++;
+             *                                  t.value = stringConstant(t, 1);
+             *                                  return;
+             *                              }
+             #else
+             */
             case '\'':
 //					debug writefln( "    char" );
                 t.value = charConstant(t, 0);
@@ -523,7 +523,7 @@ Llen:
                     return;
                 }
 
-                // comments
+            // comments
             case '/':
                 p++;
                 switch (*p) {
@@ -752,7 +752,7 @@ Llen:
                 }
                 return;
 
-                // |, ||, |=
+            // |, ||, |=
             case '|':
                 p++;
                 if (*p == '=') {
@@ -783,7 +783,7 @@ Llen:
                 }
                 return;
 
-                // +, +=, ++
+            // +, +=, ++
             case '+':
                 p++;
                 if (*p == '=') {
@@ -799,7 +799,7 @@ Llen:
                 }
                 return;
 
-                // <, <=, <<=, <<, <>=, <>
+            // <, <=, <<=, <<, <>=, <>
             case '<':
                 p++;
                 if (*p == '=') {
@@ -831,7 +831,7 @@ Llen:
                 }
                 return;
 
-                // >, >>, >>>, >=, >>=, >>>=
+            // >, >>, >>>, >=, >>=, >>>=
             case '>':
                 p++;
                 if (*p == '=') {
@@ -938,7 +938,7 @@ Llen:
                 }
                 return;
 
-                // SINGLE
+            // SINGLE
             case '(': p++; t.value = TOK.TOKlparen;      return;
 
             case ')': p++; t.value = TOK.TOKrparen;      return;
@@ -961,7 +961,7 @@ Llen:
 
             case '$': p++; t.value = TOK.TOKdollar;      return;
 
-                // DOUBLE
+            // DOUBLE
             case '*': p++; if (*p == '=') {
                     p++; t.value = TOK.TOKmulass;
             }
@@ -1232,7 +1232,7 @@ Lhex:
                     continue;                                           // ignore
                 }
 
-                // Treat isolated '\r' as if it were a '\n'
+            // Treat isolated '\r' as if it were a '\n'
             case '\n':
                 loc.linnum++;
                 continue;
@@ -1557,11 +1557,11 @@ L1:
             case STATE.STATE_0:
                 flags = cast(FLAGS)(flags & ~FLAGS.FLAGS_decimal);
                 switch (c) {
-                    //	#if ZEROH
+                //	#if ZEROH
 //					    case 'H':			// 0h
 //					    case 'h':
 //							goto hexh;
-                    //	#endif
+                //	#endif
                 case 'X':
                 case 'x':
                     state = STATE.STATE_hex0;
@@ -1577,11 +1577,11 @@ L1:
                 case 'F':
                     goto _Real;
 
-                    //	#if ZEROH
+                //	#if ZEROH
 //					    case 'E':
 //					    case 'e':
 //							goto case_hex;
-                    //	#endif
+                //	#endif
                 case 'B':
                 case 'b':
                     state = STATE.STATE_binary0;
@@ -1598,14 +1598,14 @@ L1:
                     state = STATE.STATE_octal;
                     break;
 
-                    //	#if ZEROH
+                //	#if ZEROH
 //					    case '8': case '9': case 'A':
 //					    case 'C': case 'D': case 'F':
 //					    case 'a': case 'c': case 'd': case 'f':
 //						    case_hex:
 //							state = STATE.STATE_hexh;
 //							break;
-                    //	#endif
+                //	#endif
                 case '_':
                     state = STATE.STATE_octal;
                     p++;
@@ -1669,7 +1669,7 @@ _Real:                                                  // It's a real number. B
                 state = STATE.STATE_hex;
                 break;
 
-                //	#if ZEROH
+            //	#if ZEROH
 //				    hexh:
 //						state = STATE.STATE_hexh;
 //
@@ -1692,7 +1692,7 @@ _Real:                                                  // It's a real number. B
 //						    }
 //						}
 //						break;
-                //		#endif
+            //		#endif
 
             case STATE.STATE_octal:                                             // reading octal number
             case STATE.STATE_octale:                                            // reading octal number with non-octal digits

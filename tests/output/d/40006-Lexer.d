@@ -327,32 +327,32 @@ class Lexer
                 t.value = number(t);
                 return;
 
-/*
- #if CSTRINGS
-                            case '\'':
-                                t.value = charConstant(t, 0);
-                                return;
+            /*
+             #if CSTRINGS
+                                        case '\'':
+                                            t.value = charConstant(t, 0);
+                                            return;
 
-                            case '"':
-                                t.value = stringConstant(t,0);
-                                return;
+                                        case '"':
+                                            t.value = stringConstant(t,0);
+                                            return;
 
-                            case 'l':
-                            case 'L':
-                                if( p[1] == '\'')
-                                {
-                                    p++;
-                                    t.value = charConstant(t, 1);
-                                    return;
-                                }
-                                else if( p[1] == '"')
-                                {
-                                    p++;
-                                    t.value = stringConstant(t, 1);
-                                    return;
-                                }
- #else
- */
+                                        case 'l':
+                                        case 'L':
+                                            if( p[1] == '\'')
+                                            {
+                                                p++;
+                                                t.value = charConstant(t, 1);
+                                                return;
+                                            }
+                                            else if( p[1] == '"')
+                                            {
+                                                p++;
+                                                t.value = stringConstant(t, 1);
+                                                return;
+                                            }
+             #else
+             */
             case '\'':
 //					debug writefln( "    char" );
                 t.value = charConstant(t, 0);
@@ -545,7 +545,7 @@ class Lexer
                     return;
                 }
 
-                // comments
+            // comments
             case '/':
                 p++;
                 switch (*p)
@@ -785,7 +785,7 @@ class Lexer
                     t.value = TOK.TOKand;
                 return;
 
-                // |, ||, |=
+            // |, ||, |=
             case '|':
                 p++;
                 if (*p == '=')
@@ -818,7 +818,7 @@ class Lexer
                     t.value = TOK.TOKmin;
                 return;
 
-                // +, +=, ++
+            // +, +=, ++
             case '+':
                 p++;
                 if (*p == '=')
@@ -835,7 +835,7 @@ class Lexer
                     t.value = TOK.TOKadd;                                                       // +
                 return;
 
-                // <, <=, <<=, <<, <>=, <>
+            // <, <=, <<=, <<, <>=, <>
             case '<':
                 p++;
                 if (*p == '=')
@@ -869,7 +869,7 @@ class Lexer
                     t.value = TOK.TOKlt;                                                // <
                 return;
 
-                // >, >>, >>>, >=, >>=, >>>=
+            // >, >>, >>>, >=, >>=, >>>=
             case '>':
                 p++;
                 if (*p == '=')
@@ -981,7 +981,7 @@ class Lexer
                     t.value = TOK.TOKtilde;                                             // ~
                 return;
 
-                // SINGLE
+            // SINGLE
             case '(': p++; t.value = TOK.TOKlparen;      return;
 
             case ')': p++; t.value = TOK.TOKrparen;      return;
@@ -1004,7 +1004,7 @@ class Lexer
 
             case '$': p++; t.value = TOK.TOKdollar;      return;
 
-                // DOUBLE
+            // DOUBLE
             case '*': p++; if (*p == '=')
                 {
                     p++; t.value = TOK.TOKmulass;
@@ -1284,7 +1284,7 @@ class Lexer
                 if (*p == '\n')
                     continue;                                           // ignore
 
-                // Treat isolated '\r' as if it were a '\n'
+            // Treat isolated '\r' as if it were a '\n'
             case '\n':
                 loc.linnum++;
                 continue;
@@ -1619,11 +1619,11 @@ class Lexer
                 flags = cast(FLAGS)(flags & ~FLAGS.FLAGS_decimal);
                 switch (c)
                 {
-                    //	#if ZEROH
+                //	#if ZEROH
 //					    case 'H':			// 0h
 //					    case 'h':
 //							goto hexh;
-                    //	#endif
+                //	#endif
                 case 'X':
                 case 'x':
                     state = STATE.STATE_hex0;
@@ -1638,11 +1638,11 @@ class Lexer
                 case 'F':
                     goto _Real;
 
-                    //	#if ZEROH
+                //	#if ZEROH
 //					    case 'E':
 //					    case 'e':
 //							goto case_hex;
-                    //	#endif
+                //	#endif
                 case 'B':
                 case 'b':
                     state = STATE.STATE_binary0;
@@ -1659,14 +1659,14 @@ class Lexer
                     state = STATE.STATE_octal;
                     break;
 
-                    //	#if ZEROH
+                //	#if ZEROH
 //					    case '8': case '9': case 'A':
 //					    case 'C': case 'D': case 'F':
 //					    case 'a': case 'c': case 'd': case 'f':
 //						    case_hex:
 //							state = STATE.STATE_hexh;
 //							break;
-                    //	#endif
+                //	#endif
                 case '_':
                     state = STATE.STATE_octal;
                     p++;
@@ -1731,7 +1731,7 @@ class Lexer
                 state = STATE.STATE_hex;
                 break;
 
-                //	#if ZEROH
+            //	#if ZEROH
 //				    hexh:
 //						state = STATE.STATE_hexh;
 //
@@ -1754,7 +1754,7 @@ class Lexer
 //						    }
 //						}
 //						break;
-                //		#endif
+            //		#endif
 
             case STATE.STATE_octal:                                             // reading octal number
             case STATE.STATE_octale:                                            // reading octal number with non-octal digits
