@@ -7,8 +7,8 @@ int main(int argc, const char *argv[])
    Fraction *frac = [[Fraction alloc] init];
 
    // set the values
-   [frac setNumerator : 1];
-   [frac setDenominator : 3];
+   [frac setNumerator: 1];
+   [frac setDenominator: 3];
 
    // print it
    printf("The fraction is: ");
