@@ -363,6 +363,14 @@ static bool parse_number(chunk_t *pc)
       len += 2;
    }
 
+   /* It there is anything left, then we are probably dealing with garbage or
+    * some sick macro junk. Eat it.
+    */
+   while (unc_isalnum(pc->str[len]))
+   {
+      len++;
+   }
+
    pc->len     = len;
    pc->type    = is_float ? CT_NUMBER_FP : CT_NUMBER;
    cpd.column += len;
