@@ -40,6 +40,7 @@ Changes in uncrustify-0.48 (not yet released)
  - Indent comments before 'case' at the same level as 'case'
  - mod_add_long_*_closebrace_comment adds the right comment type. (Thanks, Ron!)
  - Relax number parsing even further to accept stuff like "3A"
+ - Add sp_after_oc_colon (Thanks, Kevin!)
 
 
 Changes in uncrustify-0.48 (18-Jul-2008)

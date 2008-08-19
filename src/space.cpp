@@ -958,9 +958,14 @@ argval_t do_space(chunk_t *first, chunk_t *second, bool complete=true)
       log_rule("sp_after_oc_scope");
       return(cpd.settings[UO_sp_after_oc_scope].a);
    }
+   if (first->type == CT_OC_COLON)
+   {
+      log_rule("sp_after_oc_colon");
+      return(cpd.settings[UO_sp_after_oc_colon].a);
+   }
    if (second->type == CT_OC_COLON)
    {
-      log_rule("sp_before_oc_scope");
+      log_rule("sp_before_oc_colon");
       return(cpd.settings[UO_sp_before_oc_colon].a);
    }
 

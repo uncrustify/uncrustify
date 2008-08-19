@@ -304,12 +304,15 @@ void register_options(void)
 
    unc_add_option("sp_after_oc_scope", UO_sp_after_oc_scope, AT_IARF,
                   "Add or remove space after the scope '+' or '-', as in '-(void) foo;' or '+(int) bar;'");
-   unc_add_option("sp_before_oc_colon", UO_sp_before_oc_colon, AT_IARF,
+   unc_add_option("sp_after_oc_colon", UO_sp_after_oc_colon, AT_IARF,
                   "Add or remove space after the colon in message specs\n"
-                  "'-(int) f: (int) x;' vs '+(int) f : (int) x;'");
+                  "'-(int) f:(int) x;' vs '-(int) f: (int) x;'");
+   unc_add_option("sp_before_oc_colon", UO_sp_before_oc_colon, AT_IARF,
+                  "Add or remove space before the colon in message specs\n"
+                  "'-(int) f: (int) x;' vs '-(int) f : (int) x;'");
    unc_add_option("sp_after_oc_type", UO_sp_after_oc_type, AT_IARF,
                   "Add or remove space after the (type) in message specs\n"
-                  "'-(int) f: (int) x;' vs '+(int)f : (int)x;'");
+                  "'-(int) f: (int) x;' vs '-(int) f: (int)x;'");
 
    unc_add_option("sp_cond_colon", UO_sp_cond_colon, AT_IARF,
                   "Add or remove space around the ':' in 'b ? t : f'");
