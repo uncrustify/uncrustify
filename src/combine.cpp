@@ -40,7 +40,8 @@ static void mark_lvalue(chunk_t *pc);
 static void mark_template_func(chunk_t *pc, chunk_t *pc_next);
 static void mark_exec_sql(chunk_t *pc);
 static void handle_oc_class(chunk_t *pc);
-static void handle_oc_message(chunk_t *pc);
+static void handle_oc_message_decl(chunk_t *pc);
+static void handle_oc_message_send(chunk_t *pc);
 static void handle_template(chunk_t *pc);
 
 
@@ -283,11 +284,18 @@ void fix_symbols(void)
       if (cpd.lang_flags & LANG_OC)
       {
          /* Check for message declarations */
-         if ((pc->flags & PCF_STMT_START) &&
-             (chunk_is_str(pc, "-", 1) || chunk_is_str(pc, "+", 1)) &&
-             chunk_is_str(next, "(", 1))
+         if (pc->flags & PCF_STMT_START)
          {
-            handle_oc_message(pc);
+            if ((chunk_is_str(pc, "-", 1) || chunk_is_str(pc, "+", 1)) &&
+                chunk_is_str(next, "(", 1))
+            {
+               handle_oc_message_decl(pc);
+            }
+
+            if (pc->type == CT_SQUARE_OPEN)
+            {
+               handle_oc_message_send(pc);
+            }
          }
       }
 
@@ -3236,7 +3244,7 @@ static void handle_oc_class(chunk_t *pc)
  * ARGS is ': (type) name [name]'
  * -(void) foo: (int) arg: {  }
  */
-static void handle_oc_message(chunk_t *pc)
+static void handle_oc_message_decl(chunk_t *pc)
 {
    chunk_t *tmp;
    bool    in_paren  = false;
@@ -3310,6 +3318,48 @@ static void handle_oc_message(chunk_t *pc)
       if (tmp != NULL)
       {
          tmp->parent_type = pt;
+      }
+   }
+}
+
+/**
+ * Process an ObjC message send statement:
+ * [ server setStringValue : @"" ] ;
+ *
+ * Just find the matching ']' and ';' and mark the colon.
+ *
+ * @param os points to the open square '['
+ */
+static void handle_oc_message_send(chunk_t *os)
+{
+   chunk_t *tmp;
+   chunk_t *cs = chunk_get_next(os);
+
+   while ((cs != NULL) && (cs->level > os->level))
+   {
+      cs = chunk_get_next(cs);
+   }
+
+   if ((cs == NULL) || (cs->type != CT_SQUARE_CLOSE))
+   {
+      return;
+   }
+
+   os->parent_type = CT_OBJC_MSG;
+   cs->parent_type = CT_OBJC_MSG;
+
+   tmp = chunk_get_next_ncnl(cs);
+   if (chunk_is_semicolon(tmp))
+   {
+      tmp->parent_type = CT_OBJC_MSG;
+   }
+
+   for (tmp = chunk_get_next(os); tmp != cs; tmp = chunk_get_next(tmp))
+   {
+      tmp->parent_type = CT_OBJC_MSG;
+      if (tmp->type == CT_COLON)
+      {
+         tmp->type = CT_OBJC_COLON;
       }
    }
 }

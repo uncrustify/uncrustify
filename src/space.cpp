@@ -68,7 +68,9 @@ struct no_space_table_s no_space_table[] =
    { CT_PAREN_CLOSE,    CT_FPAREN_OPEN   },
 };
 
-#define log_rule(rule) log_rule2(__LINE__, (rule), first, second, complete)
+#define log_rule(rule) \
+   do { if (log_sev_on(LSPACE)) { log_rule2(__LINE__, (rule), first, second, complete); } } while (0)
+
 static void log_rule2(int line, const char *rule, chunk_t *first, chunk_t *second, bool complete)
 {
    LOG_FMT(LSPACE, "Spacing: line %d [%s/%s] '%.*s' <===> [%s/%s] '%.*s' : %s[%d]%s",

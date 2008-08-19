@@ -41,6 +41,7 @@ Changes in uncrustify-0.48 (not yet released)
  - mod_add_long_*_closebrace_comment adds the right comment type. (Thanks, Ron!)
  - Relax number parsing even further to accept stuff like "3A"
  - Add sp_after_oc_colon (Thanks, Kevin!)
+ - Add better detection and labeling of Objective C messages
 
 
 Changes in uncrustify-0.48 (18-Jul-2008)

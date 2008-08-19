@@ -114,6 +114,7 @@ typedef enum
    CT_CLASS_COLON,         /* colon after a class def or constructor */
    CT_D_ARRAY_COLON,       /* D named array initializer colon */
    CT_COND_COLON,          /* conditional colon in  'b ? t : f' */
+   CT_OBJC_COLON,          /* colon in a OBJ msg send [server foo : @""] */
    CT_QUESTION,
    CT_COMMA,
 
@@ -263,6 +264,8 @@ typedef enum
    /* Vala stuff */
    CT_CONSTRUCT,        /* braced "construct { }" or qualifier "(construct int x)" */
    CT_LAMBDA,
+
+   CT_OBJC_MSG,         /* for use as a parent type to [ : ]; stuff */
 } c_token_t;
 
 #endif   /* TOKEN_ENUM_H_INCLUDED */
