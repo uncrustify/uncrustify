@@ -3345,21 +3345,22 @@ static void handle_oc_message_send(chunk_t *os)
       return;
    }
 
-   os->parent_type = CT_OBJC_MSG;
-   cs->parent_type = CT_OBJC_MSG;
-
    tmp = chunk_get_next_ncnl(cs);
-   if (chunk_is_semicolon(tmp))
+   if (!chunk_is_semicolon(tmp))
    {
-      tmp->parent_type = CT_OBJC_MSG;
+      return;
    }
+
+   tmp->parent_type = CT_OC_MSG;
+   os->parent_type  = CT_OC_MSG;
+   cs->parent_type  = CT_OC_MSG;
 
    for (tmp = chunk_get_next(os); tmp != cs; tmp = chunk_get_next(tmp))
    {
-      tmp->parent_type = CT_OBJC_MSG;
+      tmp->parent_type = CT_OC_MSG;
       if (tmp->type == CT_COLON)
       {
-         tmp->type = CT_OBJC_COLON;
+         tmp->type = CT_OC_COLON;
       }
    }
 }

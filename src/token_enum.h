@@ -114,7 +114,6 @@ typedef enum
    CT_CLASS_COLON,         /* colon after a class def or constructor */
    CT_D_ARRAY_COLON,       /* D named array initializer colon */
    CT_COND_COLON,          /* conditional colon in  'b ? t : f' */
-   CT_OBJC_COLON,          /* colon in a OBJ msg send [server foo : @""] */
    CT_QUESTION,
    CT_COMMA,
 
@@ -201,6 +200,7 @@ typedef enum
    CT_OC_INTF,          /* ObjC: @interface */
    CT_OC_CLASS,         /* ObjC: the name after @interface or @implementation */
    CT_OC_SCOPE,         /* ObjC: the '-' or '+' in '-(void) func: (int) i;' */
+   CT_OC_MSG,           /* ObjC: parent type to '[class func : param];' stuff */
    CT_OC_MSG_SPEC,      /* ObjC: msg spec '-(void) func: (int) i;' */
    CT_OC_MSG_DECL,      /* ObjC: msg decl '-(void) func: (int) i { }' */
    CT_OC_COLON,         /* ObjC: the colon in a msg spec */
@@ -264,8 +264,6 @@ typedef enum
    /* Vala stuff */
    CT_CONSTRUCT,        /* braced "construct { }" or qualifier "(construct int x)" */
    CT_LAMBDA,
-
-   CT_OBJC_MSG,         /* for use as a parent type to [ : ]; stuff */
 } c_token_t;
 
 #endif   /* TOKEN_ENUM_H_INCLUDED */
