@@ -310,6 +310,12 @@ void register_options(void)
    unc_add_option("sp_before_oc_colon", UO_sp_before_oc_colon, AT_IARF,
                   "Add or remove space before the colon in message specs\n"
                   "'-(int) f: (int) x;' vs '-(int) f : (int) x;'");
+   unc_add_option("sp_after_send_oc_colon", UO_sp_after_send_oc_colon, AT_IARF,
+                  "Add or remove space after the colon in message specs\n"
+                  "'[object setValue:1];' vs '[object setValue: 1];'");
+   unc_add_option("sp_before_send_oc_colon", UO_sp_before_send_oc_colon, AT_IARF,
+                  "Add or remove space before the colon in message specs\n"
+                  "'[object setValue:1];' vs '[object setValue :1];'");
    unc_add_option("sp_after_oc_type", UO_sp_after_oc_type, AT_IARF,
                   "Add or remove space after the (type) in message specs\n"
                   "'-(int) f: (int) x;' vs '-(int) f: (int)x;'");
