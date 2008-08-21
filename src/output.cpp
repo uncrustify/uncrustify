@@ -115,7 +115,7 @@ static bool next_word_exceeds_limit(const char *text)
       text++;
       length++;
    }
-   return((cpd.column + length) > cpd.settings[UO_cmt_width].n);
+   return((cpd.column + length - 1) > cpd.settings[UO_cmt_width].n);
 }
 
 
