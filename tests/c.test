@@ -171,6 +171,8 @@
 
 01040  newline_after_endif.cfg c/newline_after_endif.c
 
+01050  func_call_user.cfg      c/func_call_user.c
+
 # big general tests
 20000 ben.cfg                  c/i2c-core.c
 20001 preproc-cleanup.cfg      c/directfb.h
