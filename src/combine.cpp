@@ -2424,7 +2424,8 @@ static void mark_function(chunk_t *pc)
 
       if (isa_def && (prev != NULL) &&
           (chunk_is_paren_close(prev) ||
-           (prev->type == CT_ASSIGN)))
+           (prev->type == CT_ASSIGN) ||
+           (prev->type == CT_RETURN)))
       {
          LOG_FMT(LFCN, " -- overriding DEF due to %.*s [%s]\n",
                  prev->len, prev->str, get_token_name(prev->type));

@@ -43,6 +43,7 @@ Changes in uncrustify-0.48 (not yet released)
  - Add sp_after_oc_colon (Thanks, Kevin!)
  - Add better detection and labeling of Objective C messages
  - Add sp_after_send_oc_colon and sp_before_send_oc_colon (Thanks, Kevin!)
+ - Fix detection of '*' in "return n * f();"
 
 
 Changes in uncrustify-0.48 (18-Jul-2008)

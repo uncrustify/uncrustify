@@ -43,5 +43,5 @@ case DCRMIB_LICENSE_ ## f: \
       DCRP_LICENSE_FOREACH_FEATURES(CHECKFEATURE);
    }
 
-   return(0);
+   return(n * foo(5));
 }
