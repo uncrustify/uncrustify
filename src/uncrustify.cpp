@@ -1225,6 +1225,27 @@ const char *get_token_name(c_token_t token)
    return("???");
 }
 
+/**
+ * Grab the token id for the text.
+ * returns CT_NONE on failure t match
+ */
+c_token_t find_token_name(const char *text)
+{
+   int idx;
+
+   if ((text != NULL) && (*text != 0))
+   {
+      for (idx = 1; idx < (int)ARRAY_SIZE(token_names); idx++)
+      {
+         if (strcasecmp(text, token_names[idx]) == 0)
+         {
+            return((c_token_t)idx);
+         }
+      }
+   }
+   return(CT_NONE);
+}
+
 static bool ends_with(const char *filename, const char *tag)
 {
    int len1 = strlen(filename);

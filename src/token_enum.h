@@ -181,6 +181,7 @@ typedef enum
    CT_LABEL_COLON,      /* the colon for a label */
    CT_FUNCTION,         /* function - unspecified, call mark_function() */
    CT_FUNC_CALL,        /* function call */
+   CT_FUNC_CALL_USER,   /* function call (special user) */
    CT_FUNC_DEF,         /* function definition/implementation */
    CT_FUNC_PROTO,       /* function prototype */
    CT_FUNC_CLASS,       /* ctor or dtor for a class */

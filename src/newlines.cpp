@@ -931,6 +931,7 @@ static void newlines_brace_pair(chunk_t *br_open)
    /* Handle the cases where the brace is part of a function call or definition */
    if ((br_open->parent_type == CT_FUNC_DEF) ||
        (br_open->parent_type == CT_FUNC_CALL) ||
+       (br_open->parent_type == CT_FUNC_CALL_USER) ||
        (br_open->parent_type == CT_FUNC_CLASS))
    {
       /* Need to force a newline before the close brace, if not in a class body */

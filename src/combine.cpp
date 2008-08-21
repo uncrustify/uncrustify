@@ -497,6 +497,7 @@ void fix_symbols(void)
       /* Mark function parens and braces */
       if ((pc->type == CT_FUNC_DEF) ||
           (pc->type == CT_FUNC_CALL) ||
+          (pc->type == CT_FUNC_CALL_USER) ||
           (pc->type == CT_FUNC_PROTO))
       {
          tmp = next;
@@ -545,7 +546,8 @@ void fix_symbols(void)
       /* Mark the braces in: "for_each_entry(xxx) { }" */
       if ((pc->type == CT_BRACE_OPEN) &&
           (prev->type == CT_FPAREN_CLOSE) &&
-          (prev->parent_type == CT_FUNC_CALL) &&
+          ((prev->parent_type == CT_FUNC_CALL) ||
+           (prev->parent_type == CT_FUNC_CALL_USER)) &&
           ((pc->flags & PCF_IN_CONST_ARGS) == 0))
       {
          set_paren_parent(pc, CT_FUNC_CALL);
@@ -925,6 +927,7 @@ static void mark_function_type(chunk_t *pc)
          {
             if ((tmp->type == CT_FUNCTION) ||
                 (tmp->type == CT_FUNC_CALL) ||
+                (tmp->type == CT_FUNC_CALL_USER) ||
                 (tmp->type == CT_FUNC_DEF) ||
                 (tmp->type == CT_FUNC_PROTO))
             {
@@ -1254,6 +1257,7 @@ static void fix_casts(chunk_t *start)
                (pc->type != CT_STRING) &&
                (pc->type != CT_SIZEOF) &&
                (pc->type != CT_FUNC_CALL) &&
+               (pc->type != CT_FUNC_CALL_USER) &&
                (pc->type != CT_FUNCTION))
       {
          LOG_FMT(LCASTS, " -- not a cast - followed by '%.*s' %s\n",

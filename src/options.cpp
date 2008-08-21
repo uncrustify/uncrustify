@@ -249,6 +249,9 @@ void register_options(void)
                   "Add or remove space between ')' and '{' of function");
    unc_add_option("sp_func_call_paren", UO_sp_func_call_paren, AT_IARF,
                   "Add or remove space between function name and '(' on function calls");
+   unc_add_option("sp_func_call_user_paren", UO_sp_func_call_user_paren, AT_IARF,
+                  "Add or remove space between the user function name and '(' on function calls\n"
+                  "You need to set a keyword to be a user function, like this: 'set func_call_user _' in the config file.");
    unc_add_option("sp_func_class_paren", UO_sp_func_class_paren, AT_IARF,
                   "Add or remove space between a constructor/destructor and the open paren");
    unc_add_option("sp_return_paren", UO_sp_return_paren, AT_IARF,
@@ -1138,6 +1141,28 @@ int load_option_file(const char *filename)
       {
          add_keyword(args[1], CT_MACRO_ELSE, LANG_ALL);
       }
+      else if (strcasecmp(args[0], "set") == 0)
+      {
+         if (argc < 3)
+         {
+            LOG_FMT(LWARN, "%s:%d 'set' requires at least three arguments\n",
+                    filename, cpd.line_number);
+         }
+         else
+         {
+            c_token_t id = find_token_name(args[1]);
+            if (id != CT_NONE)
+            {
+               LOG_FMT(LNOTE, "%s:%d set '%s':", filename, cpd.line_number, args[1]);
+               for (idx = 2; idx < argc; idx++)
+               {
+                  LOG_FMT(LNOTE, " '%s'", args[idx]);
+                  add_keyword(args[idx], id, LANG_ALL);
+               }
+               LOG_FMT(LNOTE, "\n");
+            }
+         }
+      }
       else
       {
          /* must be a regular option = value */
@@ -1237,6 +1262,9 @@ int save_option_file(FILE *pfile, bool withDoc)
               "# macro-open  BEGIN_TEMPLATE_MESSAGE_MAP\n"
               "# macro-open  BEGIN_MESSAGE_MAP\n"
               "# macro-close END_MESSAGE_MAP\n"
+              "#\n"
+              "# You can assign any keyword to any type with the set option.\n"
+              "# set func_call_user _ N_\n"
               );
    }
 
@@ -1267,7 +1295,10 @@ int save_option_file(FILE *pfile, bool withDoc)
       }
       else
       {
-         LOG_FMT(LWARN, "%s: unable to save '%s'\n", __func__, ct->tag);
+         const char *tn = get_token_name(ct->type);
+
+         fprintf(pfile, "set %s %*.s%s\n", tn,
+                 int(cpd.max_option_name_len - (4 + strlen(tn))), " ", ct->tag);
       }
    }
 

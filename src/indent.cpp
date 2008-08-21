@@ -973,7 +973,8 @@ void indent_text(void)
 
          if (((pc->type == CT_FPAREN_OPEN) || (pc->type == CT_ANGLE_OPEN)) &&
              ((cpd.settings[UO_indent_func_call_param].b &&
-               (pc->parent_type == CT_FUNC_CALL))
+               ((pc->parent_type == CT_FUNC_CALL) ||
+                (pc->parent_type == CT_FUNC_CALL_USER)))
               ||
               (cpd.settings[UO_indent_func_proto_param].b &&
                ((pc->parent_type == CT_FUNC_PROTO) ||
