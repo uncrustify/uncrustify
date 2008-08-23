@@ -22,6 +22,8 @@ Specific files to update:
     src/uncrustify_version.h
 Re-run autoconf and ./configure.
 
+3a. Rebuild from scratch (make clean && make)
+
 4. Update the config files
 $ scripts/update-defaults.sh
 
