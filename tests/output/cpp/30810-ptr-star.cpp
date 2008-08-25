@@ -10,3 +10,8 @@ int MyFunc(std::string& s, char *)
    char *c = const_cast<char *>(s.c_str());
 }
 
+int YerFunc(std::string& s, char **)
+{
+   char **c;
+}
+
