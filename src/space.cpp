@@ -798,6 +798,10 @@ argval_t do_space(chunk_t *first, chunk_t *second, bool complete=true)
       if (cpd.settings[UO_sp_before_unnamed_ptr_star].a != AV_IGNORE)
       {
          chunk_t *next = chunk_get_next_nc(second);
+         while ((next != NULL) && (next->type == CT_PTR_TYPE))
+         {
+            next = chunk_get_next_nc(next);
+         }
          if ((next != NULL) && (next->type != CT_WORD))
          {
             log_rule("sp_before_unnamed_ptr_star");
