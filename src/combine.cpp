@@ -291,7 +291,9 @@ void fix_symbols(void)
             {
                handle_oc_message_decl(pc);
             }
-
+         }
+         if (pc->flags & PCF_EXPR_START)
+         {
             if (pc->type == CT_SQUARE_OPEN)
             {
                handle_oc_message_send(pc);
