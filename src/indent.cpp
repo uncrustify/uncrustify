@@ -601,9 +601,10 @@ void indent_text(void)
                indent_pse_pop(frm, pc);
             }
 
-            /* End any CPP class colon crap */
+            /* End any CPP/ObjC class colon stuff */
             if ((frm.pse[frm.pse_tos].type == CT_CLASS_COLON) &&
                 ((pc->type == CT_BRACE_OPEN) ||
+                 (pc->type == CT_OC_END) ||
                  chunk_is_semicolon(pc)))
             {
                indent_pse_pop(frm, pc);

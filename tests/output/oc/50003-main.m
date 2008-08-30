@@ -20,3 +20,10 @@ int main(int argc, const char *argv[])
 
    return(0);
 }
+
+@interface EmptyClass : NSObject
+@end
+
+@interface EmptyClass : NSObject {}
+@end
+

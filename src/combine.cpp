@@ -3223,7 +3223,8 @@ static void handle_oc_class(chunk_t *pc)
       }
       else if (tmp->type == CT_COLON)
       {
-         tmp->type = CT_CLASS_COLON;
+         tmp->type        = CT_CLASS_COLON;
+         tmp->parent_type = CT_OC_CLASS;
       }
    }
 
