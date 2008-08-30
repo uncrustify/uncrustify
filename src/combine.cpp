@@ -3359,12 +3359,11 @@ static void handle_oc_message_send(chunk_t *os)
    }
 
    tmp = chunk_get_next_ncnl(cs);
-   if (!chunk_is_semicolon(tmp))
+   if (chunk_is_semicolon(tmp))
    {
-      return;
+      tmp->parent_type = CT_OC_MSG;
    }
 
-   tmp->parent_type = CT_OC_MSG;
    os->parent_type  = CT_OC_MSG;
    cs->parent_type  = CT_OC_MSG;
 
