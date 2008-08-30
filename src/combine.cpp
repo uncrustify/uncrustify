@@ -3226,6 +3226,11 @@ static void handle_oc_class(chunk_t *pc)
          tmp->type        = CT_CLASS_COLON;
          tmp->parent_type = CT_OC_CLASS;
       }
+      else if (chunk_is_str(tmp, "-", 1))
+      {
+         tmp->flags |= PCF_STMT_START;
+         break;
+      }
    }
 
    if ((tmp != NULL) && (tmp->type == CT_BRACE_OPEN))
