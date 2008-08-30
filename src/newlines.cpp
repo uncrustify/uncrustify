@@ -1405,7 +1405,11 @@ void newlines_cleanup_braces(void)
          }
 
          next = chunk_get_next_nnl(pc);
-         if (next->type == CT_BRACE_CLOSE)
+         if (next == NULL)
+         {
+            // do nothing
+         }
+         else if (next->type == CT_BRACE_CLOSE)
          {
             //TODO: add an option to split open empty statements? { };
          }

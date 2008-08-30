@@ -60,7 +60,7 @@ void do_braces(void)
 
       /* Detect empty bodies */
       tmp = chunk_get_next_ncnl(pc);
-      if (tmp->type == CT_BRACE_CLOSE)
+      if ((tmp != NULL) && (tmp->type == CT_BRACE_CLOSE))
       {
          br_open->flags |= PCF_EMPTY_BODY;
          tmp->flags     |= PCF_EMPTY_BODY;

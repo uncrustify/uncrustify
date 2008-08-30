@@ -31,6 +31,7 @@ What's left before 1.0
 Changes in uncrustify-0.50 (not released)
 -------------------------------------------------------------------------------
  - Fix sp_before_unnamed_ptr_star in 'char ** n'
+ - Fix crash when a open brace is at the end of a file
 
 
 Changes in uncrustify-0.49 (22-Aug-2008)
