@@ -158,6 +158,8 @@ void register_options(void)
                   "Add or remove space between pointer stars '*'");
    unc_add_option("sp_after_ptr_star", UO_sp_after_ptr_star, AT_IARF,
                   "Add or remove space after pointer star '*', if followed by a word.");
+   unc_add_option("sp_after_ptr_star_func", UO_sp_after_ptr_star_func, AT_IARF,
+                  "Add or remove space after pointer star '*', if followed by a func proto/def.");
    unc_add_option("sp_before_byref", UO_sp_before_byref, AT_IARF,
                   "Add or remove space before reference sign '&'");
    unc_add_option("sp_before_unnamed_byref", UO_sp_before_unnamed_byref, AT_IARF,

@@ -219,6 +219,7 @@ enum uncrustify_options
    UO_sp_before_ptr_star,       // space before a '*' that is part of a type
    UO_sp_before_unnamed_ptr_star,
    UO_sp_after_ptr_star,        // space after a '*' that is part of a type
+   UO_sp_after_ptr_star_func,   // space between a '*' and a function proto/def
    UO_sp_between_ptr_star,      // space between two '*' that are part of a type
 
    UO_sp_special_semi,      /* space empty stmt ';' on while, if, for
