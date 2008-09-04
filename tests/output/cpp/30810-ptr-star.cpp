@@ -15,3 +15,5 @@ int YerFunc(std::string& s, char **)
    char **c;
 }
 
+int *X(int *i, int *);
+
