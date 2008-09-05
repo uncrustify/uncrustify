@@ -118,6 +118,30 @@ static void detect_space_options()
    SP_VOTE_VAR(sp_angle_word);
    SP_VOTE_VAR(sp_before_square);
    SP_VOTE_VAR(sp_before_squares);
+   SP_VOTE_VAR(sp_inside_square);
+   SP_VOTE_VAR(sp_before_sparen);
+   SP_VOTE_VAR(sp_inside_sparen);
+   SP_VOTE_VAR(sp_after_sparen);
+   SP_VOTE_VAR(sp_sparen_brace);
+   SP_VOTE_VAR(sp_special_semi);
+   SP_VOTE_VAR(sp_before_semi);
+   SP_VOTE_VAR(sp_before_semi_for);
+   SP_VOTE_VAR(sp_before_semi_for_empty);
+   SP_VOTE_VAR(sp_after_semi_for_empty);
+   SP_VOTE_VAR(sp_after_comma);
+   SP_VOTE_VAR(sp_before_comma);
+   SP_VOTE_VAR(sp_after_class_colon);
+   SP_VOTE_VAR(sp_before_class_colon);
+   SP_VOTE_VAR(sp_inside_braces);
+   SP_VOTE_VAR(sp_inside_braces_empty);
+   SP_VOTE_VAR(sp_else_brace);
+   SP_VOTE_VAR(sp_brace_else);
+   SP_VOTE_VAR(sp_catch_brace);
+   SP_VOTE_VAR(sp_brace_catch);
+   SP_VOTE_VAR(sp_finally_brace);
+   SP_VOTE_VAR(sp_brace_finally);
+   SP_VOTE_VAR(sp_try_brace);
+   SP_VOTE_VAR(sp_getset_brace);
 
    chunk_t *prev = chunk_get_head();
    chunk_t *pc   = chunk_get_next(prev);
@@ -152,6 +176,11 @@ static void detect_space_options()
       if (pc->type == CT_SQUARE_OPEN)
       {
          vote_sp_before_square.vote(prev, pc);
+         vote_sp_inside_square.vote(pc, next);
+      }
+      if (pc->type == CT_SQUARE_CLOSE)
+      {
+         vote_sp_inside_square.vote(prev, pc);
       }
       if (pc->type == CT_TSQUARE)
       {
@@ -249,43 +278,114 @@ static void detect_space_options()
          }
       }
 
+      if (pc->type == CT_SPAREN_OPEN)
+      {
+         vote_sp_before_sparen.vote(prev, pc);
+         vote_sp_inside_sparen.vote(pc, next);
+      }
+      if (pc->type == CT_SPAREN_CLOSE)
+      {
+         vote_sp_inside_sparen.vote(prev, pc);
+         if (next->type == CT_BRACE_OPEN)
+         {
+            vote_sp_sparen_brace.vote(pc, next);
+         }
+         else
+         {
+            vote_sp_after_sparen.vote(pc, next);
+         }
+      }
+      if (pc->type == CT_SEMICOLON)
+      {
+         if (pc->parent_type == CT_FOR)
+         {
+            if (prev->type == CT_SPAREN_OPEN)
+            {
+               /* emtpy, ie for (;;) */
+               vote_sp_before_semi_for_empty.vote(prev, pc);
+            }
+            else if (next->type == CT_SPAREN_CLOSE)
+            {
+               /* emtpy, ie for (;;) */
+               vote_sp_after_semi_for_empty.vote(pc, next);
+            }
+            else if (prev->type != CT_SEMICOLON)
+            {
+               vote_sp_before_semi_for.vote(prev, pc);
+            }
+         }
+         else if (prev->type == CT_VBRACE_OPEN)
+         {
+            vote_sp_special_semi.vote(chunk_get_prev(prev), pc);
+         }
+         else
+         {
+            vote_sp_before_semi.vote(prev, pc);
+         }
+      }
+      if (pc->type == CT_COMMA)
+      {
+         vote_sp_before_comma.vote(prev, pc);
+         vote_sp_after_comma.vote(pc, next);
+      }
+      if (pc->type == CT_CLASS_COLON)
+      {
+         vote_sp_before_class_colon.vote(prev, pc);
+         vote_sp_after_class_colon.vote(pc, next);
+      }
+      if (pc->type == CT_BRACE_OPEN)
+      {
+         if (prev->type == CT_ELSE)
+         {
+            vote_sp_else_brace.vote(prev, pc);
+         }
+         else if (prev->type == CT_CATCH)
+         {
+            vote_sp_catch_brace.vote(prev, pc);
+         }
+         else if (prev->type == CT_FINALLY)
+         {
+            vote_sp_catch_brace.vote(prev, pc);
+         }
+         else if (prev->type == CT_TRY)
+         {
+            vote_sp_catch_brace.vote(prev, pc);
+         }
+         else if (prev->type == CT_GETSET)
+         {
+            vote_sp_catch_brace.vote(prev, pc);
+         }
+         if (next->type == CT_BRACE_CLOSE)
+         {
+            vote_sp_inside_braces_empty.vote(pc, next);
+         }
+         else
+         {
+            vote_sp_inside_braces.vote(pc, next);
+         }
+      }
+      if (pc->type == CT_BRACE_CLOSE)
+      {
+         vote_sp_inside_braces.vote(prev, pc);
+         if (next->type == CT_ELSE)
+         {
+            vote_sp_brace_else.vote(pc, next);
+         }
+         else if (next->type == CT_CATCH)
+         {
+            vote_sp_brace_catch.vote(pc, next);
+         }
+         else if (next->type == CT_FINALLY)
+         {
+            vote_sp_brace_finally.vote(pc, next);
+         }
+      }
+
       prev = pc;
       pc   = next;
    }
 }
 
-// unc_add_option("sp_before_sparen", UO_sp_before_sparen, AT_IARF,
-//                "Add or remove space before '(' of 'if', 'for', 'switch', and 'while'");
-// unc_add_option("sp_inside_sparen", UO_sp_inside_sparen, AT_IARF,
-//                "Add or remove space inside if-condition '(' and ')'");
-// unc_add_option("sp_after_sparen", UO_sp_after_sparen, AT_IARF,
-//                "Add or remove space after ')' of 'if', 'for', 'switch', and 'while'");
-// unc_add_option("sp_sparen_brace", UO_sp_sparen_brace, AT_IARF,
-//                "Add or remove space between ')' and '{' of 'if', 'for', 'switch', and 'while'");
-// unc_add_option("sp_special_semi", UO_sp_special_semi, AT_IARF,
-//                "Add or remove space before empty statement ';' on 'if', 'for' and 'while'");
-// unc_add_option("sp_before_semi", UO_sp_before_semi, AT_IARF,
-//                "Add or remove space before ';'");
-// unc_add_option("sp_before_semi_for", UO_sp_before_semi_for, AT_IARF,
-//                "Add or remove space before ';' in non-empty 'for' statements");
-// unc_add_option("sp_before_semi_for_empty", UO_sp_before_semi_for_empty, AT_IARF,
-//                "Add or remove space before a semicolon of an empty part of a for statment.");
-// unc_add_option("sp_after_semi_for_empty", UO_sp_after_semi_for_empty, AT_IARF,
-//                "Add or remove space after the final semicolon of an empty part of a for statment: for ( ; ; <here> ).");
-// unc_add_option("sp_before_square", UO_sp_before_square, AT_IARF,
-//                "Add or remove space before '[' (except '[]')");
-// unc_add_option("sp_before_squares", UO_sp_before_squares, AT_IARF,
-//                "Add or remove space before '[]'");
-// unc_add_option("sp_inside_square", UO_sp_inside_square, AT_IARF,
-//                "Add or remove space inside '[' and ']'");
-// unc_add_option("sp_after_comma", UO_sp_after_comma, AT_IARF,
-//                "Add or remove space after ','");
-// unc_add_option("sp_before_comma", UO_sp_before_comma, AT_IARF,
-//                "Add or remove space before ','");
-// unc_add_option("sp_after_class_colon", UO_sp_after_class_colon, AT_IARF,
-//                "Add or remove space after class ':'");
-// unc_add_option("sp_before_class_colon", UO_sp_before_class_colon, AT_IARF,
-//                "Add or remove space before class ':'");
 // unc_add_option("sp_after_operator", UO_sp_after_operator, AT_IARF,
 //                "Add or remove space between 'operator' and operator sign");
 // unc_add_option("sp_after_operator_sym", UO_sp_after_operator_sym, AT_IARF,
@@ -302,10 +402,6 @@ static void detect_space_options()
 //                "Add or remove space inside enum '{' and '}'");
 // unc_add_option("sp_inside_braces_struct", UO_sp_inside_braces_struct, AT_IARF,
 //                "Add or remove space inside struct/union '{' and '}'");
-// unc_add_option("sp_inside_braces", UO_sp_inside_braces, AT_IARF,
-//                "Add or remove space inside '{' and '}'");
-// unc_add_option("sp_inside_braces_empty", UO_sp_inside_braces_empty, AT_IARF,
-//                "Add or remove space inside '{}'");
 // unc_add_option("sp_type_func", UO_sp_type_func, AT_IARF,
 //                "Add or remove space between return type and function name\n"
 //                "A minimum of 1 is forced except for pointer return types.");
@@ -335,22 +431,6 @@ static void detect_space_options()
 //                "Add or remove space between macro and value");
 // unc_add_option("sp_macro_func", UO_sp_macro_func, AT_IARF,
 //                "Add or remove space between macro function ')' and value");
-// unc_add_option("sp_else_brace", UO_sp_else_brace, AT_IARF,
-//                "Add or remove space between 'else' and '{' if on the same line");
-// unc_add_option("sp_brace_else", UO_sp_brace_else, AT_IARF,
-//                "Add or remove space between '}' and 'else' if on the same line");
-// unc_add_option("sp_catch_brace", UO_sp_catch_brace, AT_IARF,
-//                "Add or remove space between 'catch' and '{' if on the same line");
-// unc_add_option("sp_brace_catch", UO_sp_brace_catch, AT_IARF,
-//                "Add or remove space between '}' and 'catch' if on the same line");
-// unc_add_option("sp_finally_brace", UO_sp_finally_brace, AT_IARF,
-//                "Add or remove space between 'finally' and '{' if on the same line");
-// unc_add_option("sp_brace_finally", UO_sp_brace_finally, AT_IARF,
-//                "Add or remove space between '}' and 'finally' if on the same line");
-// unc_add_option("sp_try_brace", UO_sp_try_brace, AT_IARF,
-//                "Add or remove space between 'try' and '{' if on the same line");
-// unc_add_option("sp_getset_brace", UO_sp_getset_brace, AT_IARF,
-//                "Add or remove space between get/set and '{' if on the same line");
 // unc_add_option("sp_before_dc", UO_sp_before_dc, AT_IARF,
 //                "Add or remove space before the '::' operator");
 // unc_add_option("sp_after_dc", UO_sp_after_dc, AT_IARF,
