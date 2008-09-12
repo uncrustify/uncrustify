@@ -55,6 +55,7 @@ void remove_extra_semicolons(void)
               (prev->parent_type == CT_WHILE) ||
               (prev->parent_type == CT_FOR) ||
               (prev->parent_type == CT_FUNC_DEF) ||
+              (prev->parent_type == CT_OC_MSG_DECL) ||
               (prev->parent_type == CT_FUNC_CLASS)))
          {
             remove_semicolon(pc);

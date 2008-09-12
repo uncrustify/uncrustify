@@ -444,7 +444,8 @@ void add_long_closebrace_comment(void)
    pc = chunk_get_head();
    while ((pc = chunk_get_next_ncnl(pc)) != NULL)
    {
-      if (pc->type == CT_FUNC_DEF)
+      if ((pc->type == CT_FUNC_DEF) ||
+          (pc->type == CT_OC_MSG_DECL))
       {
          fcn_pc = pc;
       }
@@ -488,7 +489,8 @@ void add_long_closebrace_comment(void)
                   nl_min = cpd.settings[UO_mod_add_long_switch_closebrace_comment].n;
                   tag_pc = sw_pc;
                }
-               else if (br_open->parent_type == CT_FUNC_DEF)
+               else if ((br_open->parent_type == CT_FUNC_DEF) ||
+                        (br_open->parent_type == CT_OC_MSG_DECL))
                {
                   nl_min = cpd.settings[UO_mod_add_long_function_closebrace_comment].n;
                   tag_pc = fcn_pc;
