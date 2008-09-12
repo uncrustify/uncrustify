@@ -159,14 +159,20 @@ void register_options(void)
    unc_add_option("sp_after_ptr_star", UO_sp_after_ptr_star, AT_IARF,
                   "Add or remove space after pointer star '*', if followed by a word.");
    unc_add_option("sp_after_ptr_star_func", UO_sp_after_ptr_star_func, AT_IARF,
-                  "Add or remove space after pointer star '*', if followed by a func proto/def.");
+                  "Add or remove space after a pointer star '*', if followed by a func proto/def.");
+   unc_add_option("sp_before_ptr_star_func", UO_sp_before_ptr_star_func, AT_IARF,
+                  "Add or remove space before a pointer star '*', if followed by a func proto/def.");
    unc_add_option("sp_before_byref", UO_sp_before_byref, AT_IARF,
-                  "Add or remove space before reference sign '&'");
+                  "Add or remove space before a reference sign '&'");
    unc_add_option("sp_before_unnamed_byref", UO_sp_before_unnamed_byref, AT_IARF,
-                  "Add or remove space before reference sign '&' that isn't followed by a variable name\n"
+                  "Add or remove space before a reference sign '&' that isn't followed by a variable name\n"
                   "If set to 'ignore', sp_before_byref is used instead.");
    unc_add_option("sp_after_byref", UO_sp_after_byref, AT_IARF,
                   "Add or remove space after reference sign '&', if followed by a word.");
+   unc_add_option("sp_after_byref_func", UO_sp_after_byref_func, AT_IARF,
+                  "Add or remove space after a reference sign '&', if followed by a func proto/def.");
+   unc_add_option("sp_before_byref_func", UO_sp_before_byref_func, AT_IARF,
+                  "Add or remove space before a reference sign '&', if followed by a func proto/def.");
    unc_add_option("sp_after_type", UO_sp_after_type, AT_IARF,
                   "Add or remove space between type and word");
    unc_add_option("sp_template_angle", UO_sp_template_angle, AT_IARF,

@@ -34,7 +34,8 @@ Changes in uncrustify-0.50 (not released)
  - Fix crash when a open brace is at the end of a file
  - ObjC class definitions do not need { }
  - Fix ObjC msg detection
- - Add sp_after_ptr_star_func
+ - Add sp_after_ptr_star_func, sp_before_ptr_star_func
+ - Add sp_after_byref_func, sp_before_byref_func
  - Treat an ObjC msg decl more like a function def
 
 

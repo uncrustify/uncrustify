@@ -95,6 +95,7 @@ argval_t do_space(chunk_t *first, chunk_t *second, bool complete=true)
 {
    int      idx;
    argval_t arg;
+   chunk_t  *next;
 
    if ((first->type == CT_SPACE) || (second->type == CT_SPACE))
    {
@@ -395,6 +396,15 @@ argval_t do_space(chunk_t *first, chunk_t *second, bool complete=true)
       }
    }
 
+   if ((first->type == CT_BYREF) &&
+       (cpd.settings[UO_sp_after_byref_func].a != AV_IGNORE) &&
+       ((second->type == CT_FUNC_DEF) ||
+        (second->type == CT_FUNC_PROTO)))
+   {
+      log_rule("sp_after_byref_func");
+      return(cpd.settings[UO_sp_after_byref_func].a);
+   }
+
    if ((first->type == CT_BYREF) && CharTable::IsKw1(second->str[0]))
    {
       log_rule("sp_after_byref");
@@ -403,9 +413,20 @@ argval_t do_space(chunk_t *first, chunk_t *second, bool complete=true)
 
    if (second->type == CT_BYREF)
    {
+      if (cpd.settings[UO_sp_before_byref_func].a != AV_IGNORE)
+      {
+         next = chunk_get_next(second);
+         if ((next != NULL) &&
+             ((next->type == CT_FUNC_DEF) ||
+              (next->type == CT_FUNC_PROTO)))
+         {
+            return(cpd.settings[UO_sp_before_byref_func].a);
+         }
+      }
+
       if (cpd.settings[UO_sp_before_unnamed_byref].a != AV_IGNORE)
       {
-         chunk_t *next = chunk_get_next_nc(second);
+         next = chunk_get_next_nc(second);
          if ((next != NULL) && (next->type != CT_WORD))
          {
             log_rule("sp_before_unnamed_byref");
@@ -804,9 +825,26 @@ argval_t do_space(chunk_t *first, chunk_t *second, bool complete=true)
 
    if (second->type == CT_PTR_TYPE)
    {
+      if (cpd.settings[UO_sp_before_ptr_star_func].a != AV_IGNORE)
+      {
+         /* Find the next non-'*' chunk */
+         next = second;
+         do
+         {
+            next = chunk_get_next(next);
+         } while ((next != NULL) && (next->type == CT_PTR_TYPE));
+
+         if ((next != NULL) &&
+             ((next->type == CT_FUNC_DEF) ||
+              (next->type == CT_FUNC_PROTO)))
+         {
+            return(cpd.settings[UO_sp_before_ptr_star_func].a);
+         }
+      }
+
       if (cpd.settings[UO_sp_before_unnamed_ptr_star].a != AV_IGNORE)
       {
-         chunk_t *next = chunk_get_next_nc(second);
+         next = chunk_get_next_nc(second);
          while ((next != NULL) && (next->type == CT_PTR_TYPE))
          {
             next = chunk_get_next_nc(next);
