@@ -77,6 +77,8 @@
 
 30260 var_def_gap.cfg                  cpp/var_def_gap.cpp
 
+30270 const_throw.cfg                  cpp/const_throw.cpp
+
 # function def newlines
 30701 func-def-1.cfg                   cpp/function-def.cpp
 30702 func-def-2.cfg                   cpp/function-def.cpp

@@ -138,6 +138,9 @@ enum uncrustify_options
    UO_indent_template_param,
    UO_indent_func_param_double,  // double the tab indent for
 
+   UO_indent_func_const,         // indentation for standalone "const" qualifier
+   UO_indent_func_throw,         // indentation for standalone "throw" qualifier
+
    UO_indent_namespace,          // indent stuff inside namespace braces
    UO_indent_extern,
    UO_indent_class,              // indent stuff inside class braces

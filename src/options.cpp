@@ -387,6 +387,11 @@ void register_options(void)
    unc_add_option("indent_func_param_double", UO_indent_func_param_double, AT_BOOL,
                   "Double the indent for indent_func_xxx_param options");
 
+   unc_add_option("indent_func_const", UO_indent_func_const, AT_NUM,
+                  "Indentation column for standalone 'const' function decl/proto qualifier");
+   unc_add_option("indent_func_throw", UO_indent_func_throw, AT_NUM,
+                  "Indentation column for standalone 'throw' function decl/proto qualifier");
+
    unc_add_option("indent_member", UO_indent_member, AT_NUM,
                   "The number of spaces to indent a continued '->' or '.'\n"
                   "Usually set to 0, 1, or indent_columns.");
