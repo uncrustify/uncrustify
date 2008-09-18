@@ -24,4 +24,10 @@ int* Aclass::X(int* i, int*);
 class Aclass {
 int* X(int* i, int*);
 }
+extern "C" {
+int foo1(int* a);
+int foo2(sometype* a);
+}
+int bar1(int* a);
+int bar2(sometype* a);
 
