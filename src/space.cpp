@@ -398,8 +398,8 @@ argval_t do_space(chunk_t *first, chunk_t *second, bool complete=true)
 
    if ((first->type == CT_BYREF) &&
        (cpd.settings[UO_sp_after_byref_func].a != AV_IGNORE) &&
-       ((second->type == CT_FUNC_DEF) ||
-        (second->type == CT_FUNC_PROTO)))
+       ((first->parent_type == CT_FUNC_DEF) ||
+        (first->parent_type == CT_FUNC_PROTO)))
    {
       log_rule("sp_after_byref_func");
       return(cpd.settings[UO_sp_after_byref_func].a);
@@ -808,8 +808,8 @@ argval_t do_space(chunk_t *first, chunk_t *second, bool complete=true)
 
    if ((first->type == CT_PTR_TYPE) &&
        (cpd.settings[UO_sp_after_ptr_star_func].a != AV_IGNORE) &&
-       ((second->type == CT_FUNC_DEF) ||
-        (second->type == CT_FUNC_PROTO)))
+       ((first->parent_type == CT_FUNC_DEF) ||
+        (first->parent_type == CT_FUNC_PROTO)))
    {
       log_rule("sp_after_ptr_star_func");
       return(cpd.settings[UO_sp_after_ptr_star_func].a);
