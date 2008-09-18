@@ -39,6 +39,7 @@ Changes in uncrustify-0.50 (not released)
  - Treat an ObjC msg decl more like a function def
  - Add indent_func_const, indent_func_throw (Thanks, Ron)
  - Fix detection of prototype inside extern or namespace braces
+ - Add align_left_shift to handle aligning of '<<'
 
 
 Changes in uncrustify-0.49 (22-Aug-2008)

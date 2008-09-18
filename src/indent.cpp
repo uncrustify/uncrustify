@@ -1102,7 +1102,8 @@ void indent_text(void)
             frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos - 1].indent;
          }
       }
-      else if (chunk_is_str(pc, "<<", 2))
+      else if (chunk_is_str(pc, "<<", 2) &&
+               cpd.settings[UO_align_left_shift].b)
       {
          if (cout_col == 0)
          {

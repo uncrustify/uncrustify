@@ -761,6 +761,8 @@ void register_options(void)
                   "The minimum space between label and value of a preprocessor define");
    unc_add_option("align_pp_define_span", UO_align_pp_define_span, AT_NUM,
                   "The span for aligning on '#define' bodies (0=don't align)", "", 0, 5000);
+   unc_add_option("align_left_shift", UO_align_left_shift, AT_BOOL,
+                  "Align lines that start with '<<' with previous '<<'. Default=true");
 
    unc_begin_group(UG_comment, "Comment modifications");
    unc_add_option("cmt_width", UO_cmt_width, AT_NUM,
@@ -1421,6 +1423,7 @@ void set_option_defaults(void)
    cpd.settings[UO_cmt_indent_multi].b     = true;
    cpd.settings[UO_cmt_multi_check_last].b = true;
    cpd.settings[UO_pp_indent_count].n      = 1;
+   cpd.settings[UO_align_left_shift].b     = true;
 }
 
 std::string argtype_to_string(argtype_e argtype)
