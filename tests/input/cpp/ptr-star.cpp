@@ -15,3 +15,13 @@ char **c;
 
 int*X(int *i, int*);
 
+int *i = &a;
+int *i = *b;
+int *i = &*c;
+
+int *Aclass::X(int* i, int *);
+
+class Aclass {
+int *X(int* i, int *);
+}
+
