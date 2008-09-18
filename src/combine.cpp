@@ -708,7 +708,12 @@ void fix_symbols(void)
          }
          else
          {
-            pc->type = (prev->type == CT_ARITH) ? CT_DEREF : CT_ARITH;
+            /* most PCF_PUNCTUATOR chunks except a paren close would make this
+             * a deref. A paren close may end a cast.
+             */
+            pc->type = ((prev->flags & PCF_PUNCTUATOR) &&
+                        !chunk_is_paren_close(prev) &&
+                        (prev->type != CT_DC_MEMBER)) ? CT_DEREF : CT_ARITH;
          }
       }
 
