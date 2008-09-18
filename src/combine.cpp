@@ -2576,19 +2576,26 @@ static void mark_function(chunk_t *pc)
       }
       else if (pc->brace_level > 0)
       {
-         /* Do a check to see if the level is right */
-         prev = chunk_get_prev_ncnl(pc);
-         if (!chunk_is_str(prev, "*", 1) && !chunk_is_str(prev, "&", 1))
+         chunk_t *br_open = chunk_get_prev_type(pc, CT_BRACE_OPEN, pc->brace_level - 1);
+
+         if ((br_open != NULL) &&
+             (br_open->parent_type != CT_EXTERN) &&
+             (br_open->parent_type != CT_NAMESPACE))
          {
-            chunk_t *p_op = chunk_get_prev_type(pc, CT_BRACE_OPEN, pc->brace_level - 1);
-            if ((p_op != NULL) &&
-                (p_op->parent_type != CT_CLASS) &&
-                (p_op->parent_type != CT_STRUCT) &&
-                (p_op->parent_type != CT_NAMESPACE))
+            /* Do a check to see if the level is right */
+            prev = chunk_get_prev_ncnl(pc);
+            if (!chunk_is_str(prev, "*", 1) && !chunk_is_str(prev, "&", 1))
             {
-               pc->type = CT_FUNC_CTOR_VAR;
-               LOG_FMT(LFCN, "  4) Marked [%.*s] as FUNC_CTOR_VAR on line %d col %d\n",
-                       pc->len, pc->str, pc->orig_line, pc->orig_col);
+               chunk_t *p_op = chunk_get_prev_type(pc, CT_BRACE_OPEN, pc->brace_level - 1);
+               if ((p_op != NULL) &&
+                   (p_op->parent_type != CT_CLASS) &&
+                   (p_op->parent_type != CT_STRUCT) &&
+                   (p_op->parent_type != CT_NAMESPACE))
+               {
+                  pc->type = CT_FUNC_CTOR_VAR;
+                  LOG_FMT(LFCN, "  4) Marked [%.*s] as FUNC_CTOR_VAR on line %d col %d\n",
+                          pc->len, pc->str, pc->orig_line, pc->orig_col);
+               }
             }
          }
       }

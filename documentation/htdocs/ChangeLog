@@ -38,6 +38,7 @@ Changes in uncrustify-0.50 (not released)
  - Add sp_after_byref_func, sp_before_byref_func
  - Treat an ObjC msg decl more like a function def
  - Add indent_func_const, indent_func_throw (Thanks, Ron)
+ - Fix detection of prototype inside extern or namespace braces
 
 
 Changes in uncrustify-0.49 (22-Aug-2008)
