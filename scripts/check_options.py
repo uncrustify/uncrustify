@@ -18,6 +18,7 @@ opt_suffix = {
 opts = { }
 
 def check_file (fn):
+    problems = 0
     fd = open(fn, 'r')
     line_no = 0
     for line in fd:
@@ -30,6 +31,8 @@ def check_file (fn):
             if opt in opts and mem in opt_suffix:
                 if opts[opt] != opt_suffix[mem]:
                     print fn + '[%d]' % (line_no) , opt, 'should use', opts[opt], 'not', opt_suffix[mem]
+                    problems += 1
+    return problems
 
 def main (argv):
     # Read in all the options
@@ -46,9 +49,13 @@ def main (argv):
     src_files = fnmatch.filter(ld, '*.cpp')
     src_files.extend(fnmatch.filter(ld, '*.h'))
 
+
     # Check each source file
+    problems = 0
     for fn in src_files:
-        check_file(os.path.join('src', fn))
+        problems += check_file(os.path.join('src', fn))
+    if problems == 0:
+        print 'No problems found'
 
 if __name__ == '__main__':
     main(sys.argv)
