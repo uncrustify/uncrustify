@@ -338,6 +338,21 @@ void tokenize_cleanup(void)
          }
       }
 
+      /**
+       * Objective C @dynamic and @synthesize
+       *  @dynamic xxx, yyy;
+       *  @synthesize xxx, yyy;
+       * Just find the semicolon and mark it.
+       */
+      if (pc->type == CT_OC_DYNAMIC)
+      {
+         tmp = chunk_get_next_type(pc, CT_SEMICOLON, pc->level);
+         if (tmp != NULL)
+         {
+            tmp->parent_type = pc->type;
+         }
+      }
+
       /* Detect Objective C @property
        *  @property NSString *stringProperty;
        *  @property(nonatomic, retain) NSMutableDictionary *shareWith;

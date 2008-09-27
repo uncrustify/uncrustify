@@ -196,6 +196,7 @@ typedef enum
 
    CT_BIT_COLON,        /* a ':' in a variable declaration */
 
+   CT_OC_DYNAMIC,
    CT_OC_END,           /* ObjC: @end */
    CT_OC_IMPL,          /* ObjC: @implementation */
    CT_OC_INTF,          /* ObjC: @interface */
