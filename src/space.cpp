@@ -469,11 +469,15 @@ argval_t do_space(chunk_t *first, chunk_t *second, bool complete=true)
       log_rule("sp_attribute_paren");
       return(cpd.settings[UO_sp_attribute_paren].a);
    }
-   if ((first->type == CT_FUNC_DEF) || (first->type == CT_CPP_CAST))
+   if (first->type == CT_FUNC_DEF)
    {
-      /* TODO: create new option UO_sp_cpp_cast_paren */
       log_rule("sp_func_def_paren");
       return(cpd.settings[UO_sp_func_def_paren].a);
+   }
+   if (first->type == CT_CPP_CAST)
+   {
+      log_rule("sp_cpp_cast_paren");
+      return(cpd.settings[UO_sp_cpp_cast_paren].a);
    }
    if ((first->type == CT_FUNC_PROTO) ||
        ((second->type == CT_FPAREN_OPEN) &&

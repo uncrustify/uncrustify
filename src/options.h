@@ -164,6 +164,7 @@ enum uncrustify_options
 
    UO_sp_after_cast,            // space after C & D cast - "(int) a" vs "(int)a"
    UO_sp_inside_paren_cast,     // spaces inside the parens of a cast
+   UO_sp_cpp_cast_paren,
 
    UO_sp_before_byref,          // space before '&' of 'fcn(int& idx)'
    UO_sp_before_unnamed_byref,

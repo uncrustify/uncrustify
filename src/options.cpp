@@ -228,6 +228,8 @@ void register_options(void)
                   "Add or remove space after C/D cast, ie 'cast(int)a' vs 'cast(int) a' or '(int)a' vs '(int) a'");
    unc_add_option("sp_inside_paren_cast", UO_sp_inside_paren_cast, AT_IARF,
                   "Add or remove spaces inside cast parens");
+   unc_add_option("sp_cpp_cast_paren", UO_sp_cpp_cast_paren, AT_IARF,
+                  "Add or remove space between the type and open paren in a C++ cast, ie 'int(exp)' vs 'int (exp)'");
    unc_add_option("sp_sizeof_paren", UO_sp_sizeof_paren, AT_IARF,
                   "Add or remove space between 'sizeof' and '('");
    unc_add_option("sp_after_tag", UO_sp_after_tag, AT_IARF,
