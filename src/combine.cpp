@@ -3227,8 +3227,6 @@ static void handle_oc_class(chunk_t *pc)
 {
    chunk_t *tmp = pc;
 
-   printf("%s: %.*s\n", __func__, pc->len, pc->str);
-
    while ((tmp = chunk_get_next(tmp)) != NULL)
    {
       if (tmp->type == CT_OC_END)
