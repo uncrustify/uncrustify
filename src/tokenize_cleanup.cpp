@@ -338,6 +338,39 @@ void tokenize_cleanup(void)
          }
       }
 
+      /* Detect Objective C @property
+       *  @property NSString *stringProperty;
+       *  @property(nonatomic, retain) NSMutableDictionary *shareWith;
+       */
+      if (pc->type == CT_OC_PROPERTY)
+      {
+         if (next->type != CT_PAREN_OPEN)
+         {
+            next->flags |= PCF_STMT_START | PCF_EXPR_START;
+         }
+         else
+         {
+            next->parent_type = pc->type;
+
+            tmp = chunk_get_next_type(pc, CT_PAREN_CLOSE, pc->level);
+            if (tmp != NULL)
+            {
+               tmp->parent_type = pc->type;
+               tmp = chunk_get_next_ncnl(tmp);
+               if (tmp != NULL)
+               {
+                  tmp->flags |= PCF_STMT_START | PCF_EXPR_START;
+
+                  tmp = chunk_get_next_type(tmp, CT_SEMICOLON, pc->level);
+                  if (tmp != NULL)
+                  {
+                     tmp->parent_type = pc->type;
+                  }
+               }
+            }
+         }
+      }
+
       /* Handle special preprocessor junk */
       if (pc->type == CT_PREPROC)
       {

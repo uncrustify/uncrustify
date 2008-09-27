@@ -36,6 +36,7 @@ static const chunk_tag_t keywords[] =
    { "@end",             CT_OC_END,       LANG_OC | LANG_CPP | LANG_C                                     },
    { "@implementation",  CT_OC_IMPL,      LANG_OC | LANG_CPP | LANG_C                                     },
    { "@interface",       CT_OC_INTF,      LANG_OC | LANG_CPP | LANG_C                                     },
+   { "@property",        CT_OC_PROPERTY,  LANG_OC | LANG_CPP | LANG_C                                     },
    { "_Bool",            CT_TYPE,         LANG_CPP                                                        },
    { "_Complex",         CT_TYPE,         LANG_CPP                                                        },
    { "_Imaginary",       CT_TYPE,         LANG_CPP                                                        },

@@ -199,6 +199,7 @@ typedef enum
    CT_OC_END,           /* ObjC: @end */
    CT_OC_IMPL,          /* ObjC: @implementation */
    CT_OC_INTF,          /* ObjC: @interface */
+   CT_OC_PROPERTY,      /* ObjC: @property */
    CT_OC_CLASS,         /* ObjC: the name after @interface or @implementation */
    CT_OC_SCOPE,         /* ObjC: the '-' or '+' in '-(void) func: (int) i;' */
    CT_OC_MSG,           /* ObjC: parent type to '[class func : param];' stuff */
