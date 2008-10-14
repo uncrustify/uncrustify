@@ -935,6 +935,16 @@ argval_t do_space(chunk_t *first, chunk_t *second, bool complete=true)
       return(cpd.settings[UO_sp_inside_braces].a);
    }
 
+   if ((first->type == CT_BRACE_CLOSE) &&
+       (first->flags & PCF_IN_TYPEDEF) &&
+       ((first->parent_type == CT_ENUM) ||
+        (first->parent_type == CT_STRUCT) ||
+        (first->parent_type == CT_UNION)))
+   {
+      log_rule("sp_brace_typedef");
+      return(cpd.settings[UO_sp_brace_typedef].a);
+   }
+
    if ((first->type == CT_PAREN_CLOSE) &&
        (second->type == CT_PAREN_OPEN))
    {

@@ -278,6 +278,8 @@ void register_options(void)
                   "Add or remove space between 'else' and '{' if on the same line");
    unc_add_option("sp_brace_else", UO_sp_brace_else, AT_IARF,
                   "Add or remove space between '}' and 'else' if on the same line");
+   unc_add_option("sp_brace_typedef", UO_sp_brace_typedef, AT_IARF,
+                  "Add or remove space between '}' and the name of a typedef on the same line");
    unc_add_option("sp_catch_brace", UO_sp_catch_brace, AT_IARF,
                   "Add or remove space between 'catch' and '{' if on the same line");
    unc_add_option("sp_brace_catch", UO_sp_brace_catch, AT_IARF,
