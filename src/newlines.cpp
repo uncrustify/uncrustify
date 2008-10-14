@@ -707,13 +707,13 @@ static void newlines_struct_enum_union(chunk_t *start, argval_t nl_opt)
          nl_opt = AV_IGNORE;
       }
 
+      if ((nl_opt & AV_REMOVE) != 0)
+      {
+         newline_del_between(start, pc);
+      }
       if ((nl_opt & AV_ADD) != 0)
       {
          newline_add_between(start, pc);
-      }
-      else if ((nl_opt & AV_REMOVE) != 0)
-      {
-         newline_del_between(start, pc);
       }
    }
 }
