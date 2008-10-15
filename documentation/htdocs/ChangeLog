@@ -42,7 +42,7 @@ Changes in uncrustify-0.50 (not released)
  - Add align_left_shift to handle aligning of '<<'
  - Add sp_cpp_cast_paren
  - Add support for ObjC '@property' statements
- - Add sp_brace_typedef
+ - Add sp_brace_typedef and sp_case_label
 
 
 Changes in uncrustify-0.49 (22-Aug-2008)
