@@ -142,7 +142,7 @@ argval_t do_space(chunk_t *first, chunk_t *second, bool complete=true)
       return(cpd.settings[UO_sp_d_array_colon].a);
    }
 
-   if (first->type == CT_CASE)
+   if ((first->type == CT_CASE) && CharTable::IsKw1(second->str[0]))
    {
       log_rule("sp_case_label");
       return(argval_t(cpd.settings[UO_sp_case_label].a | AV_ADD));
