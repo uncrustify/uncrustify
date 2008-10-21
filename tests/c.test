@@ -86,6 +86,8 @@
 00162  indent_func_def_param.cfg   c/fcn_indent.c
 00163  indent_func_proto_param.cfg c/fcn_indent.c
 
+00170  /dev/null               c/beautifier-off.c
+
 # switch & case stuff
 00201   case-1.cfg             c/case.c
 00202   case-2.cfg             c/case.c
