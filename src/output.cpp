@@ -313,6 +313,11 @@ void output_text(FILE *pfile)
       {
          pc = output_comment_c(pc);
       }
+      else if (pc->type == CT_JUNK)
+      {
+         /* do not adjust the column for junk */
+         add_text_len(pc->str, pc->len);
+      }
       else if (pc->len == 0)
       {
          /* don't do anything for non-visible stuff */

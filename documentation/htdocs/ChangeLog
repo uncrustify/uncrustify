@@ -46,6 +46,8 @@ Changes in uncrustify-0.50 (not released)
  - Merge in the lastest UniversalIndent support (Thanks, Thomas!)
  - Fix extra '\r' in multi-line comments and strings
  - Add sp_force_paren
+ - Add ability to turn off processing via comments containing "*BEAUTIFIER-OFF*"
+   and "*BEAUTIFIER-ON*". Must appear as a set.
 
 
 Changes in uncrustify-0.49 (22-Aug-2008)

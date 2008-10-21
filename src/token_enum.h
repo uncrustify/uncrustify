@@ -25,6 +25,7 @@ typedef enum
    CT_EOF,
    CT_UNKNOWN,
 
+   CT_JUNK,          /* junk collected when parsing is disabled */
 
    CT_WHITESPACE,    /* whitespace without any newlines */
    CT_SPACE,         /* a fixed number of spaces to support weird spacing rules */

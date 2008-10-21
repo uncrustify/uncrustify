@@ -22,6 +22,7 @@
 
 
 static bool parse_string(chunk_t *pc, int quote_idx, bool allow_escape);
+static void create_junk();
 
 #include "d.tokenize.cpp"
 
@@ -1114,5 +1115,92 @@ void tokenize(const char *data, int data_len, chunk_t *ref)
       /* CR line ends */
       strcpy(cpd.newline, "\r");
       LOG_FMT(LLINEENDS, "Using CR line endings\n");
+   }
+
+   create_junk();
+}
+
+/**
+ * A simplistic fixed-sized needle in the fixed-size haystack string search.
+ */
+int str_find(const char *needle, int needle_len,
+             const char *haystack, int haystack_len)
+{
+   int idx;
+
+   for (idx = 0; idx < (haystack_len - needle_len); idx++)
+   {
+      if (memcmp(needle, haystack + idx, needle_len) == 0)
+      {
+         return(idx);
+      }
+   }
+   return(-1);
+}
+
+/**
+ * Turns any chunks between two comments that contain magic strings into
+ * one big CT_JUNK.
+ *
+ * NOTE: This relies on all the text being in one big array.
+ * If that ever changes, then this may need to be moved into the tokenizer.
+ */
+static void create_junk()
+{
+   chunk_t    *pc;
+   chunk_t    *tmp;
+   chunk_t    *prev;
+   chunk_t    *next;
+   chunk_t    *junk_start = NULL;
+   const char *min_ptr = NULL;
+
+   for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next(pc))
+   {
+      if (chunk_is_comment(pc))
+      {
+         if (junk_start == NULL)
+         {
+            if (str_find("*BEAUTIFIER-OFF*", 16, pc->str, pc->len) >= 0)
+            {
+               LOG_FMT(LBCTRL, "Found *BEAUTIFIER-OFF* on line %d\n", pc->orig_line);
+               min_ptr    = pc->str + pc->len;
+               junk_start = chunk_get_next_nnl(pc);
+            }
+         }
+         else
+         {
+            /* don't do anything until the 'on' text is found */
+            if (str_find("*BEAUTIFIER-ON*", 15, pc->str, pc->len) >= 0)
+            {
+               LOG_FMT(LBCTRL, "Found *BEAUTIFIER-ON* on line %d\n", pc->orig_line);
+               prev = chunk_get_prev_nnl(pc);
+               if (pc != junk_start)
+               {
+                  /* Back up to the newline, since junk must include whitespace */
+                  while ((junk_start->str > min_ptr) &&
+                         (*junk_start->str != '\r') &&
+                         (*junk_start->str != '\n'))
+                  {
+                     junk_start->str--;
+                  }
+                  junk_start->str++;
+
+                  /* Delete all the chunks after the start */
+                  tmp = chunk_get_next(junk_start);
+                  while (tmp != prev)
+                  {
+                     next = chunk_get_next(tmp);
+                     chunk_del(tmp);
+                     tmp = next;
+                  }
+                  /* adjust the junk string length */
+                  junk_start->len  = prev->len + (prev->str - junk_start->str);
+                  junk_start->type = CT_JUNK;
+                  chunk_del(prev);
+               }
+               junk_start = NULL;
+            }
+         }
+      }
    }
 }
