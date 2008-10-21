@@ -60,6 +60,7 @@ static bool parse_comment(chunk_t *pc)
    int  len     = 2;
    bool is_d    = (cpd.lang_flags & LANG_D) != 0;
    int  d_level = 0;
+   int  bs_cnt;
 
    if ((pc->str[0] != '/') ||
        ((pc->str[1] != '*') && (pc->str[1] != '/') &&
@@ -76,18 +77,37 @@ static bool parse_comment(chunk_t *pc)
       pc->type = CT_COMMENT_CPP;
       while (true)
       {
+         bs_cnt = 0;
          while ((pc->str[len] != '\n') &&
                 (pc->str[len] != '\r') &&
                 (pc->str[len] != 0))
          {
+            if (pc->str[len] == '\\')
+            {
+               bs_cnt++;
+            }
+            else
+            {
+               bs_cnt = 0;
+            }
             len++;
          }
 
-         if (pc->str[len - 1] != '\\')
+         /* If we hit an odd number of backslashes right before the newline,
+          * then we keep going.
+          */
+         if (((bs_cnt & 1) == 0) || (pc->str[len] == 0))
          {
             break;
          }
-         len++;
+         if (pc->str[len] == '\r')
+         {
+            len++;
+         }
+         if (pc->str[len] == '\n')
+         {
+            len++;
+         }
       }
    }
    else if (pc->str[len] == 0)

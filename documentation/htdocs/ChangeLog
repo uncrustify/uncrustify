@@ -44,6 +44,7 @@ Changes in uncrustify-0.50 (not released)
  - Add support for ObjC '@property' statements
  - Add sp_brace_typedef and sp_case_label
  - Merge in the lastest UniversalIndent support (Thanks, Thomas!)
+ - Fix extra '\r' in multi-line comments and strings
 
 
 Changes in uncrustify-0.49 (22-Aug-2008)

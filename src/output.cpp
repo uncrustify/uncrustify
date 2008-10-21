@@ -34,15 +34,31 @@ static chunk_t *output_comment_cpp(chunk_t *pc);
 static void add_comment_text(const char *text, int len,
                              cmt_reflow& cmt, bool esc_close);
 
-
+/**
+ * All output text is sent here, one char at a time.
+ */
 static void add_char(char ch)
 {
    static char last_char = 0;
+
+   /* If we did a '\r' and it isn't followed by a '\n', then output a newline */
+   if ((last_char == '\r') && (ch != '\n'))
+   {
+      fputs(cpd.newline, cpd.fout);
+      cpd.column      = 1;
+      cpd.did_newline = 1;
+   }
 
    /* convert a newline into the LF/CRLF/CR sequence */
    if (ch == '\n')
    {
       fputs(cpd.newline, cpd.fout);
+      cpd.column      = 1;
+      cpd.did_newline = 1;
+   }
+   else if (ch == '\r')
+   {
+      /* do not output '\r' */
       cpd.column      = 1;
       cpd.did_newline = 1;
    }
