@@ -538,6 +538,12 @@ argval_t do_space(chunk_t *first, chunk_t *second, bool complete=true)
       return(cpd.settings[UO_sp_defined_paren].a);
    }
 
+   if ((first->type == CT_THROW) && (second->type == CT_PAREN_OPEN))
+   {
+      log_rule("sp_throw_paren");
+      return(cpd.settings[UO_sp_throw_paren].a);
+   }
+
    if ((first->type == CT_THIS) && (second->type == CT_PAREN_OPEN))
    {
       log_rule("REMOVE");
