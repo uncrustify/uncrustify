@@ -189,6 +189,7 @@
 20300 ben.cfg                  c/preproc-if.c
 20301 d.cfg                    c/preproc-if.c
 20302 cpp_to_c-1.cfg           c/nl-cont.c
+20303 cpp_to_c-1.cfg           c/nl-cont2.c
 
 20310 ben.cfg                  c/empty-for.c
 20311 ben.cfg                  c/pragma.c
