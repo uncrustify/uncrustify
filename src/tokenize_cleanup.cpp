@@ -135,7 +135,14 @@ void tokenize_cleanup(void)
        */
       if ((pc->type == CT_ANGLE_OPEN) && (pc->parent_type != CT_TYPE_CAST))
       {
-         check_template(pc);
+         if (pc->flags & PCF_IN_PREPROC)
+         {
+            pc->type = CT_COMPARE;
+         }
+         else
+         {
+            check_template(pc);
+         }
       }
       if ((pc->type == CT_ANGLE_CLOSE) && (pc->parent_type != CT_TEMPLATE))
       {
