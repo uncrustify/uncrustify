@@ -75,6 +75,8 @@
 30250 align_fcall.cfg                  cpp/align_fcall.cpp
 30251 align_fcall-2.cfg                cpp/align_fcall.cpp
 
+30255 ben.cfg                          cpp/align_constr.cpp
+
 30260 var_def_gap.cfg                  cpp/var_def_gap.cpp
 
 30270 const_throw.cfg                  cpp/const_throw.cpp
