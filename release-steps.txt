@@ -37,6 +37,7 @@ $ scripts/update-defaults.sh
 $ svn cp $UNC_URL/trunk/uncrustify $UNC_URL/tags/uncrustify-$UNC_REL -m "uncrustify-$UNC_REL"
 
 8. Export to the release folder
+$ cd ../releases
 $ svn export $UNC_URL/tags/uncrustify-$UNC_REL
 
 9. Tar up the files
@@ -57,11 +58,9 @@ sftp> put uncrustify-0.XX.tgz
 sftp> put uncrustify-0.XX-win32.tgz
 sftp> exit
 
-12. Update the web page
-$ ssh USER@shell.sourceforge.net
-$ cd /home/groups/u/un/uncrustify/htdocs
-$ svn up
-$ exit
+12. Update the web page files
+$ cd uncrustify-$UNC_REL/documentation/htdocs
+$ scp -r * USER,uncrustify@web.sourceforge.net:htdocs/
 
 13. Use the web interface to create the release and attach the files
 
