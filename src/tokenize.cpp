@@ -419,11 +419,12 @@ static bool parse_string(chunk_t *pc, int quote_idx, bool allow_escape)
    end_ch = CharTable::Get(pc->str[len]) & 0xff;
    len++;
 
+   cpd.column += len;
    for ( /* nada */; pc->str[len] != 0; len++)
    {
+      cpd.column++;
       if (!escaped)
       {
-         cpd.column++;
          if (pc->str[len] == escape_char)
          {
             escaped = (escape_char != 0);
@@ -459,6 +460,7 @@ static bool parse_string(chunk_t *pc, int quote_idx, bool allow_escape)
         (pc->str[len] == 'd')))
    {
       len++;
+      cpd.column++;
    }
    pc->len = len;
    return(true);

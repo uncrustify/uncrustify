@@ -50,6 +50,7 @@ Changes in uncrustify-0.50 (not released)
    and "*BEAUTIFIER-ON*". Must appear as a set.
  - Assume a '<' in a preprocessor can't be part of a template
  - Don't align a constructor with class variables
+ - Fix ending column error when tokenizing strings
 
 
 Changes in uncrustify-0.49 (22-Aug-2008)
