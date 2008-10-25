@@ -127,8 +127,8 @@ char[]  file        = `c:\root\file.c`;
 char[]  quoteString = \"  r"[^\\]*(\\.[^\\]*)*"  \";
 
 char[]  hello       = "hello world" \n;
-char[]  foo_ascii   = "hello";    // string is taken to be ascii
-wchar[] foo_wchar   = "hello";    // string is taken to be wchar
+char[]  foo_ascii   = "hello";     // string is taken to be ascii
+wchar[] foo_wchar   = "hello";     // string is taken to be wchar
 
 enum COLORS { red, blue, green };
 

@@ -288,7 +288,7 @@ class Lexer
             case '\r':
 //					debug writefln( "    cr" );
                 p++;
-                if (*p != '\n') {                                       // if CR stands by itself
+                if (*p != '\n') {                                               // if CR stands by itself
                     loc.linnum++;
                 }
                 continue;                                                               // skip white space
@@ -406,12 +406,12 @@ class Lexer
             case 'n':
             case 'o':
             case 'p':
-            case 'q':                            /*case 'r':*/
+            case 'q':                             /*case 'r':*/
             case 's':
             case 't':
             case 'u':
             case 'v':
-            case 'w':                                       /*case 'x':*/
+            case 'w':                                         /*case 'x':*/
             case 'y':
             case 'z':
             case 'A':
@@ -939,27 +939,27 @@ Llen:
                 return;
 
             // SINGLE
-            case '(': p++; t.value = TOK.TOKlparen;      return;
+            case '(': p++; t.value = TOK.TOKlparen;     return;
 
-            case ')': p++; t.value = TOK.TOKrparen;      return;
+            case ')': p++; t.value = TOK.TOKrparen;     return;
 
-            case '[': p++; t.value = TOK.TOKlbracket;    return;
+            case '[': p++; t.value = TOK.TOKlbracket;   return;
 
-            case ']': p++; t.value = TOK.TOKrbracket;    return;
+            case ']': p++; t.value = TOK.TOKrbracket;   return;
 
-            case '{': p++; t.value = TOK.TOKlcurly;      return;
+            case '{': p++; t.value = TOK.TOKlcurly;     return;
 
-            case '}': p++; t.value = TOK.TOKrcurly;      return;
+            case '}': p++; t.value = TOK.TOKrcurly;     return;
 
-            case '?': p++; t.value = TOK.TOKquestion;    return;
+            case '?': p++; t.value = TOK.TOKquestion;   return;
 
-            case ',': p++; t.value = TOK.TOKcomma;               return;
+            case ',': p++; t.value = TOK.TOKcomma;              return;
 
-            case ';': p++; t.value = TOK.TOKsemicolon;   return;
+            case ';': p++; t.value = TOK.TOKsemicolon;  return;
 
-            case ':': p++; t.value = TOK.TOKcolon;               return;
+            case ':': p++; t.value = TOK.TOKcolon;              return;
 
-            case '$': p++; t.value = TOK.TOKdollar;      return;
+            case '$': p++; t.value = TOK.TOKdollar;     return;
 
             // DOUBLE
             case '*': p++; if (*p == '=') {
@@ -1033,19 +1033,19 @@ Lconsume:
             p++;
             break;
 
-        case 'a':        c = 7;          goto Lconsume;
+        case 'a':       c = 7;          goto Lconsume;
 
-        case 'b':        c = 8;          goto Lconsume;
+        case 'b':       c = 8;          goto Lconsume;
 
-        case 'f':        c = 12;         goto Lconsume;
+        case 'f':       c = 12;         goto Lconsume;
 
-        case 'n':        c = 10;         goto Lconsume;
+        case 'n':       c = 10;         goto Lconsume;
 
-        case 'r':        c = 13;         goto Lconsume;
+        case 'r':       c = 13;         goto Lconsume;
 
-        case 't':        c = 9;          goto Lconsume;
+        case 't':       c = 9;          goto Lconsume;
 
-        case 'v':        c = 11;         goto Lconsume;
+        case 'v':       c = 11;         goto Lconsume;
 
         case 'u':
             ndigits = 4;
@@ -1568,7 +1568,7 @@ L1:
                     break;
 
                 case '.':
-                    if (p[1] == '.') {                                  // .. is a separate token
+                    if (p[1] == '.') {                                          // .. is a separate token
                         goto done;
                     }
 
@@ -2272,7 +2272,7 @@ Lerr:
                 break;
 
 Lnewline:
-                c = '\n';                       // replace all newlines with \n
+                c = '\n';                               // replace all newlines with \n
 
             case '\n':
                 linestart = 1;
