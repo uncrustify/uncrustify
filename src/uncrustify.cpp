@@ -181,6 +181,9 @@ static void usage_exit(const char *msg, const char *argv0, int code)
            "uncrustify -c my.cfg --no-backup foo.d\n"
            "uncrustify -c my.cfg --prefix=out -F files.txt\n"
            "\n"
+           "Note: Use comments containing ' *INDENT-OFF*' and ' *INDENT-ON*' to disable\n"
+           "      processing of parts of the source file.\n"
+           "\n"
            ,
            path_basename(argv0));
    exit(code);

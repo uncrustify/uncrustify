@@ -1,4 +1,4 @@
-.TH UNCRUSTIFY "1" "August 2008" "uncrustify 0.49" "User Commands"
+.TH UNCRUSTIFY "1" "August 2008" "uncrustify 0.50" "User Commands"
 .SH NAME
 uncrustify \- C, C++, C#, D, Java and Pawn source code beautifier
 
@@ -131,6 +131,10 @@ uncrustify -c my.cfg -F files.txt --prefix out
 .TP
 Process a source tree in-place.
 uncrustify -c my.cfg --no-backup $(find src -name "*.[ch]")
+
+.SH NOTES
+Use comments containing ' *INDENT-OFF*' and ' *INDENT-ON*' to disable
+processing of parts of the source file.
 
 .SH AUTHOR
 Written by Ben Gardner
