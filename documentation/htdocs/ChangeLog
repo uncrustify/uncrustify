@@ -46,8 +46,6 @@ Changes in uncrustify-0.50 (not released)
  - Merge in the lastest UniversalIndent support (Thanks, Thomas!)
  - Fix extra '\r' in multi-line comments and strings
  - Add sp_force_paren
- - Add ability to turn off processing via comments containing "*BEAUTIFIER-OFF*"
-   and "*BEAUTIFIER-ON*". Must appear as a set.
  - Assume a '<' in a preprocessor can't be part of a template
  - Don't align a constructor with class variables
  - Fix ending column error when tokenizing strings
