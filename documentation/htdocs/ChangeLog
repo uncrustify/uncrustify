@@ -45,7 +45,7 @@ Changes in uncrustify-0.50 (25-Oct-2008)
  - Add sp_brace_typedef and sp_case_label
  - Merge in the lastest UniversalIndent support (Thanks, Thomas!)
  - Fix extra '\r' in multi-line comments and strings
- - Add sp_force_paren
+ - Add sp_throw_paren
  - Assume a '<' in a preprocessor can't be part of a template
  - Don't align a constructor with class variables
  - Fix ending column error when tokenizing strings
