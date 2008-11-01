@@ -288,17 +288,45 @@ static void split_line(chunk_t *start)
 /**
  * A for statment is too long.
  * Step backwards and forwards to find the semicolons
+ * Try splitting at the semicolons first.
+ * If that doesn't work, then look for a comma at paren level.
+ * If that doesn't work, then look for an assignment at paren level.
+ * If that doesn't work, then give up.
  */
 static void split_for_stmt(chunk_t *start)
 {
    int     count   = 0;
    int     max_cnt = cpd.settings[UO_ls_for_split_full].b ? 2 : 1;
    chunk_t *st[2];
-   chunk_t *pc = start;
+   chunk_t *pc;
+   chunk_t *open_paren = NULL;
+   int     nl_cnt = 0;
 
-   LOG_FMT(LSPLIT, "%s: starting on %.*s\n", __func__, pc->len, pc->str);
+   LOG_FMT(LSPLIT, "%s: starting on %.*s, line %d\n",
+           __func__, start->len, start->str, start->orig_line);
+
+   /* Find the open paren so we know the level and count newlines */
+   pc = start;
+   while ((pc = chunk_get_prev(pc)) != NULL)
+   {
+      if (pc->type == CT_SPAREN_OPEN)
+      {
+         open_paren = pc;
+         break;
+      }
+      if (pc->nl_count > 0)
+      {
+         nl_cnt += pc->nl_count;
+      }
+   }
+   if (open_paren == NULL)
+   {
+      LOG_FMT(LSYS, "No open paren\n");
+      return;
+   }
 
    /* see if we started on the semicolon */
+   pc = start;
    if ((pc->type == CT_SEMICOLON) && (pc->parent_type == CT_FOR))
    {
       st[count++] = pc;
@@ -327,9 +355,43 @@ static void split_for_stmt(chunk_t *start)
 
    while (--count >= 0)
    {
-      LOG_FMT(LSPLIT, "%s: %.*s\n", __func__, st[count]->len, st[count]->str);
+      LOG_FMT(LSPLIT, "%s: split before %.*s\n", __func__, st[count]->len, st[count]->str);
       split_before_chunk(chunk_get_next(st[count]));
    }
+
+   if (!is_past_width(start) || (nl_cnt > 0))
+   {
+      return;
+   }
+
+   /* Still past width, check for commas at paren level */
+   pc = open_paren;
+   while ((pc = chunk_get_next(pc)) != start)
+   {
+      if ((pc->type == CT_COMMA) && (pc->level == (open_paren->level + 1)))
+      {
+         split_before_chunk(chunk_get_next(pc));
+         if (!is_past_width(pc))
+         {
+            return;
+         }
+      }
+   }
+
+   /* Still past width, check for a assignments at paren level */
+   pc = open_paren;
+   while ((pc = chunk_get_next(pc)) != start)
+   {
+      if ((pc->type == CT_ASSIGN) && (pc->level == (open_paren->level + 1)))
+      {
+         split_before_chunk(chunk_get_next(pc));
+         if (!is_past_width(pc))
+         {
+            return;
+         }
+      }
+   }
+   /* Oh, well. We tried. */
 }
 
 /**

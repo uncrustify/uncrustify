@@ -28,6 +28,11 @@ What's left before 1.0
 ===============================================================================
 
 
+Changes in uncrustify-0.51 (not released)
+-------------------------------------------------------------------------------
+ - Prefer to split at ',' and then '=' in for() statements if at paren level
+
+
 Changes in uncrustify-0.50 (25-Oct-2008)
 -------------------------------------------------------------------------------
  - Fix sp_before_unnamed_ptr_star in 'char ** n'
