@@ -666,7 +666,7 @@ static void newlines_if_for_while_switch_post_blank_lines(chunk_t *start, argval
  *
  * "struct [name] {" or "struct [name] \n {"
  */
-static void newlines_struct_enum_union(chunk_t *start, argval_t nl_opt)
+static void newlines_struct_enum_union(chunk_t *start, argval_t nl_opt, bool leave_trailing)
 {
    chunk_t *pc;
    chunk_t *next;
@@ -702,7 +702,9 @@ static void newlines_struct_enum_union(chunk_t *start, argval_t nl_opt)
       {
          next = chunk_get_next(next);
       }
-      if (!chunk_is_comment(next) && !chunk_is_newline(next))
+      if (leave_trailing &&
+          !chunk_is_comment(next) &&
+          !chunk_is_newline(next))
       {
          nl_opt = AV_IGNORE;
       }
@@ -1529,15 +1531,15 @@ void newlines_cleanup_braces(void)
       }
       else if (pc->type == CT_STRUCT)
       {
-         newlines_struct_enum_union(pc, cpd.settings[UO_nl_struct_brace].a);
+         newlines_struct_enum_union(pc, cpd.settings[UO_nl_struct_brace].a, true);
       }
       else if (pc->type == CT_UNION)
       {
-         newlines_struct_enum_union(pc, cpd.settings[UO_nl_union_brace].a);
+         newlines_struct_enum_union(pc, cpd.settings[UO_nl_union_brace].a, true);
       }
       else if (pc->type == CT_ENUM)
       {
-         newlines_struct_enum_union(pc, cpd.settings[UO_nl_enum_brace].a);
+         newlines_struct_enum_union(pc, cpd.settings[UO_nl_enum_brace].a, true);
       }
       else if (pc->type == CT_CASE)
       {
@@ -1631,7 +1633,7 @@ void newlines_cleanup_braces(void)
       }
       else if (pc->type == CT_NAMESPACE)
       {
-         newlines_struct_enum_union(pc, cpd.settings[UO_nl_namespace_brace].a);
+         newlines_struct_enum_union(pc, cpd.settings[UO_nl_namespace_brace].a, false);
       }
       else if (pc->type == CT_SQUARE_OPEN)
       {
