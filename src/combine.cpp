@@ -729,9 +729,10 @@ void fix_symbols(void)
             if (prev->type == CT_WORD)
             {
                tmp = chunk_get_prev_ncnl(prev);
-               if (chunk_is_semicolon(tmp) ||
-                   (tmp->type == CT_BRACE_OPEN) ||
-                   (tmp->type == CT_QUALIFIER))
+               if ((tmp != NULL) &&
+                   (chunk_is_semicolon(tmp) ||
+                    (tmp->type == CT_BRACE_OPEN) ||
+                    (tmp->type == CT_QUALIFIER)))
                {
                   prev->type   = CT_TYPE;
                   pc->type     = CT_ADDR;
