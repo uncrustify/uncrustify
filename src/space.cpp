@@ -443,11 +443,20 @@ argval_t do_space(chunk_t *first, chunk_t *second, bool complete=true)
       return(cpd.settings[UO_sp_before_byref].a);
    }
 
-   /* "for (...) {...}" vs "for (...){...}" */
-   if ((first->type == CT_SPAREN_CLOSE) && !chunk_is_comment(second))
+   if (first->type == CT_SPAREN_CLOSE)
    {
-      log_rule("sp_after_sparen");
-      return(cpd.settings[UO_sp_after_sparen].a);
+      if ((second->type == CT_BRACE_OPEN) &&
+          (cpd.settings[UO_sp_sparen_brace].a != AV_IGNORE))
+      {
+         log_rule("sp_sparen_brace");
+         return(cpd.settings[UO_sp_sparen_brace].a);
+      }
+      if (!chunk_is_comment(second) &&
+          (cpd.settings[UO_sp_after_sparen].a != AV_IGNORE))
+      {
+         log_rule("sp_after_sparen");
+         return(cpd.settings[UO_sp_after_sparen].a);
+      }
    }
 
    if ((second->type == CT_FPAREN_OPEN) &&
@@ -584,12 +593,6 @@ argval_t do_space(chunk_t *first, chunk_t *second, bool complete=true)
    {
       log_rule("sp_fparen_brace");
       return(cpd.settings[UO_sp_fparen_brace].a);
-   }
-
-   if ((first->type == CT_SPAREN_CLOSE) && (second->type == CT_BRACE_OPEN))
-   {
-      log_rule("sp_sparen_brace");
-      return(cpd.settings[UO_sp_sparen_brace].a);
    }
 
    if ((first->type == CT_D_TEMPLATE) || (second->type == CT_D_TEMPLATE))
@@ -969,14 +972,6 @@ argval_t do_space(chunk_t *first, chunk_t *second, bool complete=true)
    {
       log_rule("sp_before_sparen");
       return(cpd.settings[UO_sp_before_sparen].a);
-   }
-
-   if ((first->type == CT_SPAREN_CLOSE) &&
-       (second->type == CT_SEMICOLON) &&
-       (first->parent_type == CT_WHILE_OF_DO))
-   {
-      log_rule("REMOVE");
-      return(AV_REMOVE); /*TODO: does this need to be configured? */
    }
 
    if ((second->type != CT_PTR_TYPE) &&
