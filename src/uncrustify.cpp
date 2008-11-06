@@ -184,8 +184,11 @@ static void usage_exit(const char *msg, const char *argv0, int code)
            "Note: Use comments containing ' *INDENT-OFF*' and ' *INDENT-ON*' to disable\n"
            "      processing of parts of the source file.\n"
            "\n"
+           "There are currently %d options and minimal documentation.\n"
+           "Try UniversalIndentGUI and good luck.\n"
+           "\n"
            ,
-           path_basename(argv0));
+           path_basename(argv0), UO_option_count);
    exit(code);
 }
 
