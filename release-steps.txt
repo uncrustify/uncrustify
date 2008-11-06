@@ -11,6 +11,11 @@ UNC_REL=0.51
 
 1. Make sure all tests pass
 
+   Run all tests (requires python):
+
+     cd tests
+     ./run_tests.py
+
 2. Make sure it builds on Windows
 
 3. Update the version number.
