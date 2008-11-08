@@ -3275,10 +3275,10 @@ static void handle_oc_class(chunk_t *pc)
  */
 static void handle_oc_message_decl(chunk_t *pc)
 {
-   chunk_t *tmp;
-   bool    in_paren  = false;
-   int     paren_cnt = 0;
-   c_token_t pt;
+   chunk_t   *tmp;
+   bool      in_paren  = false;
+   int       paren_cnt = 0;
+   c_token_t pt = CT_OC_MSG_SPEC;
 
    /* Figure out if this is a spec or decl */
    tmp = pc;
