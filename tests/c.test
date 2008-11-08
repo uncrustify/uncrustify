@@ -168,6 +168,7 @@
 01011  del_semicolon.cfg       c/semicolons.c
 
 01020  kw_subst.cfg            c/kw_subst.c
+01021  kw_subst3.cfg           c/hello.c
 
 01030  multi.cfg               c/multi.h
 
