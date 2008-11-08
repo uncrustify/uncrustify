@@ -970,9 +970,14 @@ static void add_func_header(c_token_t type, file_mem& fm)
       ref = pc;
       while ((ref = chunk_get_prev(ref)) != NULL)
       {
-         if (chunk_is_comment(ref) ||
-             ((ref->level != pc->level) &&
-              (ref->flags & PCF_IN_PREPROC)))
+         if ((ref->level != pc->level) &&
+             (ref->flags & PCF_IN_PREPROC))
+         {
+            break;
+         }
+
+         /* Ignore 'right' comments */
+         if (chunk_is_comment(ref) && chunk_is_newline(chunk_get_prev(ref)))
          {
             break;
          }
@@ -982,7 +987,7 @@ static void add_func_header(c_token_t type, file_mem& fm)
               (ref->type == CT_SEMICOLON) ||
               (ref->type == CT_BRACE_CLOSE)))
          {
-            tokenize(fm.data, fm.length, chunk_get_next_nnl(ref));
+            tokenize(fm.data, fm.length, chunk_get_next_ncnl(ref));
             break;
          }
       }
