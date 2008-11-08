@@ -813,6 +813,10 @@ void register_options(void)
    unc_add_option("cmt_insert_class_header", UO_cmt_insert_class_header, AT_STRING,
                   "The filename that contains text to insert before a class if the class isn't preceeded with a C/C++ comment.\n"
                   "Will substitue $(class) with the class name.");
+   unc_add_option("cmt_insert_before_preproc", UO_cmt_insert_before_preproc, AT_BOOL,
+                  "If a preprocessor is encountered when stepping backwards from a function name, then\n"
+                  "this option decides whether the comment should be inserted.\n"
+                  "Affects cmt_insert_func_header and cmt_insert_class_header.");
 
    unc_begin_group(UG_codemodify, "Code modifying options (non-whitespace)");
    unc_add_option("mod_full_brace_do", UO_mod_full_brace_do, AT_IARF,

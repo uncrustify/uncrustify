@@ -36,6 +36,7 @@ Changes in uncrustify-0.51 (not released)
  - Get sp_after_sparen and sp_sparen_brace to play well together
  - Ignore trailing comments when inserting the function header comment
  - Combine two C comments when they have no space between them "/***//***/"
+ - Add cmt_insert_before_preproc
 
 
 Changes in uncrustify-0.50 (25-Oct-2008)

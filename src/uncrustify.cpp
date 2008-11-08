@@ -970,8 +970,15 @@ static void add_func_header(c_token_t type, file_mem& fm)
       ref = pc;
       while ((ref = chunk_get_prev(ref)) != NULL)
       {
-         if ((ref->level != pc->level) &&
-             (ref->flags & PCF_IN_PREPROC))
+         /* Bail if we change level */
+         if (ref->level != pc->level)
+         {
+            break;
+         }
+
+         /* Bail if we hit a preprocessor and cmt_insert_before_preproc is false */
+         if ((ref->flags & PCF_IN_PREPROC) &&
+             !cpd.settings[UO_cmt_insert_before_preproc].b)
          {
             break;
          }
