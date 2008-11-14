@@ -641,6 +641,10 @@ void register_options(void)
                   "The number of newlines after a 'private:', 'public:', 'protected:', 'signals:', or 'slots:' label.\n"
                   "0 = No change.");
 
+   unc_add_option("nl_comment_func_def", UO_nl_comment_func_def, AT_NUM,
+                  "The number of newlines between a function def and the function comment.\n"
+                  "0 = No change.");
+
    unc_add_option("eat_blanks_after_open_brace", UO_eat_blanks_after_open_brace, AT_BOOL,
                   "Whether to remove blank lines after '{'");
    unc_add_option("eat_blanks_before_close_brace", UO_eat_blanks_before_close_brace, AT_BOOL,

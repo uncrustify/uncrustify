@@ -462,6 +462,7 @@ enum uncrustify_options
    UO_nl_max,                        // maximum consecutive newlines (3 = 2 blank lines)
    UO_nl_before_access_spec,         // number of newlines before "private:", "public:" (0=no change)
    UO_nl_after_access_spec,          // number of newlines after "private:", "public:" (0=no change)
+   UO_nl_comment_func_def,
 
    UO_eat_blanks_after_open_brace,   // remove blank lines after {
    UO_eat_blanks_before_close_brace, // remove blank lines before }

@@ -2234,6 +2234,18 @@ void do_blank_lines(void)
             pc->nl_count = cpd.settings[UO_nl_after_func_proto_group].n;
          }
       }
+
+      /* Change blanks between a function comment and body */
+      if ((cpd.settings[UO_nl_comment_func_def].n != 0) &&
+          chunk_is_comment(pcmt) &&
+          (next->parent_type == CT_FUNC_DEF))
+      {
+         if (cpd.settings[UO_nl_comment_func_def].n != pc->nl_count)
+         {
+            LOG_FMT(LCMTNL, "%s: nl_comment_func_def affected line %d\n", __func__, pc->orig_line);
+            pc->nl_count = cpd.settings[UO_nl_comment_func_def].n;
+         }
+      }
    }
 }
 
