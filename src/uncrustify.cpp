@@ -956,6 +956,7 @@ static void add_func_header(c_token_t type, file_mem& fm)
 {
    chunk_t *pc;
    chunk_t *ref;
+   chunk_t *tmp;
 
    for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next_ncnlnp(pc))
    {
@@ -977,10 +978,18 @@ static void add_func_header(c_token_t type, file_mem& fm)
          }
 
          /* Bail if we hit a preprocessor and cmt_insert_before_preproc is false */
-         if ((ref->flags & PCF_IN_PREPROC) &&
-             !cpd.settings[UO_cmt_insert_before_preproc].b)
+         if (ref->flags & PCF_IN_PREPROC)
          {
-            break;
+            tmp = chunk_get_prev_type(ref, CT_PREPROC, ref->level);
+            if ((tmp != NULL) && (tmp->parent_type == CT_PP_IF))
+            {
+               tmp = chunk_get_prev_nnl(tmp);
+               if (chunk_is_comment(tmp) &&
+                   !cpd.settings[UO_cmt_insert_before_preproc].b)
+               {
+                  break;
+               }
+            }
          }
 
          /* Ignore 'right' comments */
