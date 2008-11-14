@@ -138,6 +138,8 @@ chunk_t *skip_template_prev(chunk_t *ang_close);
 chunk_t *skip_attribute_next(chunk_t *attr);
 chunk_t *skip_attribute_prev(chunk_t *fp_close);
 
+void remove_extra_returns();
+
 
 /*
  *  newlines.cpp

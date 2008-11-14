@@ -1077,6 +1077,12 @@ static void uncrustify_file(const char *data, int data_len, FILE *pfout,
          remove_extra_semicolons();
       }
 
+      /* Remove unnecessary returns */
+      if (cpd.settings[UO_mod_remove_empty_return].b)
+      {
+         remove_extra_returns();
+      }
+
       /**
        * Change virtual braces into real braces...
        */
@@ -1097,10 +1103,6 @@ static void uncrustify_file(const char *data, int data_len, FILE *pfout,
          newline_after_multiline_comment();
       }
       newlines_insert_blank_lines();
-      if (cpd.settings[UO_nl_squeeze_ifdef].b)
-      {
-         newlines_squeeze_ifdef();
-      }
       if (cpd.settings[UO_pos_bool].tp != TP_IGNORE)
       {
          newlines_chunk_pos(CT_BOOL, cpd.settings[UO_pos_bool].tp);
@@ -1118,6 +1120,10 @@ static void uncrustify_file(const char *data, int data_len, FILE *pfout,
          newlines_chunk_pos(CT_ARITH, cpd.settings[UO_pos_arith].tp);
       }
       newlines_class_colon_pos();
+      if (cpd.settings[UO_nl_squeeze_ifdef].b)
+      {
+         newlines_squeeze_ifdef();
+      }
       newlines_eat_start_end();
       newlines_cleanup_dup();
 

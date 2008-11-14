@@ -854,6 +854,8 @@ void register_options(void)
                   "This is generally a bad idea, as it may break your code.");
    unc_add_option("mod_move_case_break", UO_mod_move_case_break, AT_BOOL,
                   "If TRUE, it will move a 'break' that appears after a fully braced 'case' before the close brace.");
+   unc_add_option("mod_remove_empty_return", UO_mod_remove_empty_return, AT_BOOL,
+                  "If TRUE, it will remove a void 'return;' that appears as the last statement in a function.");
 
    unc_begin_group(UG_preprocessor, "Preprocessor options");
    unc_add_option("pp_indent", UO_pp_indent, AT_IARF,

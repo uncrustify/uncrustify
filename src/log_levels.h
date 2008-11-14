@@ -85,6 +85,7 @@ enum
    LASFCP    = 69,    /* Align Same Function Call Params */
    LINDLINED = 70,    /* indent line details */
    LBCTRL    = 71,    /* beautifier control */
+   LRMRETURN = 72,    /* remove 'return;' */
 };
 
 #endif   /* LOG_LEVELS_H_INCLUDED */

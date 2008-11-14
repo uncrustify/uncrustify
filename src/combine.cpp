@@ -3393,3 +3393,35 @@ static void handle_oc_message_send(chunk_t *os)
    }
 }
 
+/**
+ * Remove 'return;' that appears as the last statement in a function
+ */
+void remove_extra_returns()
+{
+   chunk_t *pc;
+   chunk_t *semi;
+   chunk_t *cl_br;
+
+   pc = chunk_get_head();
+   while (pc != NULL)
+   {
+      if ((pc->type == CT_RETURN) && (pc->flags & PCF_IN_PREPROC) == 0)
+      {
+         semi = chunk_get_next_ncnl(pc);
+         cl_br = chunk_get_next_ncnl(semi);
+
+         if ((semi != NULL) && (semi->type == CT_SEMICOLON) &&
+             (cl_br != NULL) && (cl_br->type == CT_BRACE_CLOSE) &&
+             ((cl_br->parent_type == CT_FUNC_DEF) ||
+              (cl_br->parent_type == CT_FUNC_CLASS)))
+         {
+            LOG_FMT(LRMRETURN, "Removed 'return;' on line %d\n", pc->orig_line);
+            chunk_del(pc);
+            chunk_del(semi);
+            pc = cl_br;
+         }
+      }
+
+      pc = chunk_get_next(pc);
+   }
+}
