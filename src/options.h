@@ -151,6 +151,7 @@ enum uncrustify_options
    UO_indent_sing_line_comments, // indent single line ('//') comments on lines before code
    UO_indent_relative_single_line_comments, // indent single line ('//') comments after code
    UO_indent_preserve_sql,       // preserve indent of EXEC SQL statement body
+   UO_indent_align_assign,
 
    UO_indent_else_if,
 

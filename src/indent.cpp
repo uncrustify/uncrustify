@@ -1066,11 +1066,12 @@ void indent_text(void)
                     __func__, pc->orig_line, indent_column, pc->len, pc->str);
             reindent_line(pc, frm.pse[frm.pse_tos].indent_tmp);
          }
+
          next = chunk_get_next(pc);
          if (next != NULL)
          {
             indent_pse_push(frm, pc);
-            if (chunk_is_newline(next))
+            if (chunk_is_newline(next) || !cpd.settings[UO_indent_align_assign].b)
             {
                frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent_tmp + indent_size;
                if (pc->type == CT_ASSIGN)

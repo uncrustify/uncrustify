@@ -446,6 +446,9 @@ void register_options(void)
                   "If an open square is followed by a newline, indent the next line so that it lines up after the open square (not recommended)");
    unc_add_option("indent_preserve_sql", UO_indent_preserve_sql, AT_BOOL,
                   "Don't change the relative indent of ESQL/C 'EXEC SQL' bodies");
+   unc_add_option("indent_align_assign", UO_indent_align_assign, AT_BOOL,
+                  "Align continued statements at the '='. Default=True\n"
+                  "If FALSE or the '=' is followed by a newline, the next line is indent one tab.");
 
    unc_begin_group(UG_newline, "Newline adding and removing options");
    unc_add_option("nl_collapse_empty_body", UO_nl_collapse_empty_body, AT_BOOL,
@@ -1442,6 +1445,7 @@ void set_option_defaults(void)
    cpd.settings[UO_cmt_multi_check_last].b = true;
    cpd.settings[UO_pp_indent_count].n      = 1;
    cpd.settings[UO_align_left_shift].b     = true;
+   cpd.settings[UO_indent_align_assign].b  = true;
 }
 
 std::string argtype_to_string(argtype_e argtype)
