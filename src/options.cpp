@@ -1289,7 +1289,7 @@ int save_option_file(FILE *pfile, bool withDoc)
               "# Example:\n"
               "# type myfoo1 myfoo2\n"
               "#\n"
-              "# You can create custom macro-based indentation using macro-open, \n"
+              "# You can create custom macro-based indentation using macro-open,\n"
               "# macro-else and macro-close.\n"
               "# Example:\n"
               "# macro-open  BEGIN_TEMPLATE_MESSAGE_MAP\n"
