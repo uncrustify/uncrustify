@@ -220,6 +220,8 @@ void register_options(void)
                   "Add or remove space after class ':'");
    unc_add_option("sp_before_class_colon", UO_sp_before_class_colon, AT_IARF,
                   "Add or remove space before class ':'");
+   unc_add_option("sp_before_case_colon", UO_sp_before_case_colon, AT_IARF,
+                  "Add or remove space before case ':'");
    unc_add_option("sp_after_operator", UO_sp_after_operator, AT_IARF,
                   "Add or remove space between 'operator' and operator sign");
    unc_add_option("sp_after_operator_sym", UO_sp_after_operator_sym, AT_IARF,

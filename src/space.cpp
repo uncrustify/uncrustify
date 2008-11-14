@@ -59,7 +59,6 @@ struct no_space_table_s no_space_table[] =
    { CT_NEG,            CT_UNKNOWN       },
    { CT_UNKNOWN,        CT_SQUARE_OPEN   },
    { CT_UNKNOWN,        CT_SQUARE_CLOSE  },
-   { CT_UNKNOWN,        CT_CASE_COLON    },
    { CT_SQUARE_OPEN,    CT_UNKNOWN       },
    { CT_PAREN_CLOSE,    CT_WORD          },
    { CT_PAREN_CLOSE,    CT_FUNC_DEF      },
@@ -775,6 +774,12 @@ argval_t do_space(chunk_t *first, chunk_t *second, bool complete=true)
    {
       log_rule("sp_before_class_colon");
       return(cpd.settings[UO_sp_before_class_colon].a);
+   }
+   if ((cpd.settings[UO_sp_before_case_colon].a != AV_IGNORE) &&
+       (second->type == CT_CASE_COLON))
+   {
+      log_rule("sp_before_case_colon");
+      return(cpd.settings[UO_sp_before_case_colon].a);
    }
 
    if (first->type == CT_DOT)

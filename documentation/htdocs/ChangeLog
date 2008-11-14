@@ -41,6 +41,7 @@ Changes in uncrustify-0.51 (not released)
  - Add nl_comment_func_def
  - Fix aligning of anonymous bit fields
  - Add indent_align_assign
+ - Add sp_before_case_colon
 
 
 Changes in uncrustify-0.50 (25-Oct-2008)

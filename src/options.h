@@ -209,6 +209,7 @@ enum uncrustify_options
 
    UO_sp_after_class_colon,     // space after class ':'
    UO_sp_before_class_colon,    // space before class ':'
+   UO_sp_before_case_colon,
 
    UO_sp_func_def_paren,        // space between 'func' and '(' - "foo (" vs "foo("
    UO_sp_func_call_paren,       // space between 'func' and '(' - "foo (" vs "foo("
