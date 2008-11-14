@@ -1677,6 +1677,19 @@ void combine_labels(void)
                else
                {
                   next->type = CT_BIT_COLON;
+
+                  tmp = chunk_get_next(next);
+                  while ((tmp = chunk_get_next(tmp)) != NULL)
+                  {
+                     if (tmp->type == CT_SEMICOLON)
+                     {
+                        break;
+                     }
+                     if (tmp->type == CT_COLON)
+                     {
+                        tmp->type = CT_BIT_COLON;
+                     }
+                  }
                }
             }
             else if (nextprev->type == CT_FPAREN_CLOSE)
