@@ -15,6 +15,8 @@ int foo1()
 {
 }
 
+/** header comment */
+#if 2
 /**
  * foo2
  * TODO: DESCRIPTION
@@ -23,7 +25,9 @@ int foo1()
 int foo2(void)
 {
 }
+#endif
 
+#if 1
 /**
  * foo3
  * TODO: DESCRIPTION
@@ -32,6 +36,7 @@ int foo2(void)
 void foo3(int a)
 {
 }
+#endif
 
 /**
  * foo4
