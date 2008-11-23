@@ -517,7 +517,6 @@ pattern_class get_token_pattern_class(c_token_t tok)
    case CT_TRY:
    case CT_FINALLY:
    case CT_BODY:
-   case CT_INVARIANT:
    case CT_UNITTEST:
    case CT_UNSAFE:
    case CT_VOLATILE:
@@ -534,6 +533,9 @@ pattern_class get_token_pattern_class(c_token_t tok)
 
    case CT_WHILE_OF_DO:
       return(PATCLS_PAREN);
+
+   case CT_INVARIANT:
+      return(PATCLS_OPPAREN);
 
    default:
       return(PATCLS_NONE);

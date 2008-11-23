@@ -196,6 +196,10 @@ void register_options(void)
                   "Add or remove space after ')' of 'if', 'for', 'switch', and 'while'");
    unc_add_option("sp_sparen_brace", UO_sp_sparen_brace, AT_IARF,
                   "Add or remove space between ')' and '{' of 'if', 'for', 'switch', and 'while'");
+   unc_add_option("sp_invariant_paren", UO_sp_invariant_paren, AT_IARF,
+                  "Add or remove space between 'invariant' and '(' in the D language.");
+   unc_add_option("sp_after_invariant_paren", UO_sp_after_invariant_paren, AT_IARF,
+                  "Add or remove space after the ')' in 'invariant (C) c' in the D language.");
    unc_add_option("sp_special_semi", UO_sp_special_semi, AT_IARF,
                   "Add or remove space before empty statement ';' on 'if', 'for' and 'while'");
    unc_add_option("sp_before_semi", UO_sp_before_semi, AT_IARF,

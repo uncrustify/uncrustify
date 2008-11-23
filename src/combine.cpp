@@ -280,6 +280,29 @@ void fix_symbols(void)
          }
       } /* paren open + cast/align/delegate */
 
+      if (pc->type == CT_INVARIANT)
+      {
+         if (next->type == CT_PAREN_OPEN)
+         {
+            next->parent_type = pc->type;
+            tmp = chunk_get_next(next);
+            while (tmp != NULL)
+            {
+               if (tmp->type == CT_PAREN_CLOSE)
+               {
+                  tmp->parent_type = pc->type;
+                  break;
+               }
+               make_type(tmp);
+               tmp = chunk_get_next(tmp);
+            }
+         }
+         else
+         {
+            pc->type = CT_QUALIFIER;
+         }
+      }
+
       /* Objective C stuff */
       if (cpd.lang_flags & LANG_OC)
       {

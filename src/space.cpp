@@ -636,12 +636,25 @@ argval_t do_space(chunk_t *first, chunk_t *second, bool complete=true)
       return(cpd.settings[UO_sp_getset_brace].a);
    }
 
+   if ((second->type == CT_PAREN_OPEN) &&
+       (second->parent_type == CT_INVARIANT))
+   {
+      log_rule("sp_invariant_paren");
+      return(cpd.settings[UO_sp_invariant_paren].a);
+   }
+
    if (first->type == CT_PAREN_CLOSE)
    {
       if (first->parent_type == CT_D_TEMPLATE)
       {
          log_rule("FORCE");
          return(AV_FORCE);
+      }
+
+      if (first->parent_type == CT_INVARIANT)
+      {
+         log_rule("sp_after_invariant_paren");
+         return(cpd.settings[UO_sp_after_invariant_paren].a);
       }
 
       /* Arith after a cast comes first */

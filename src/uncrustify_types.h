@@ -237,6 +237,7 @@ enum pattern_class
    PATCLS_OPBRACED, // keyword + optional parens + braced stmt: catch, version
    PATCLS_VBRACED,  // keyword + value + braced stmt: namespace
    PATCLS_PAREN,    // keyword + parens: while-of-do
+   PATCLS_OPPAREN,  // keyword + optional parens: invariant (D lang)
    PATCLS_ELSE,     // Special case of PATCLS_BRACED for handling CT_IF
 };
 
