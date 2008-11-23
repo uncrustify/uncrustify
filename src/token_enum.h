@@ -258,6 +258,8 @@ typedef enum
    CT_DEFAULT,          /* may be changed into CT_CASE */
    CT_GETSET,           /* must be followed by CT_BRACE_OPEN or reverts to CT_WORD */
    CT_CONCAT,           /* The '~' between strings */
+   CT_CS_SQ_STMT,       /* '[assembly: xxx]' or '[Attribute()]' or '[Help()]', etc */
+   CT_CS_SQ_COLON,      /* the colon in one of those [] thingys */
 
    /* Embedded SQL - always terminated with a semicolon */
    CT_SQL_EXEC,         /* the 'EXEC' in 'EXEC SQL ...' */

@@ -42,6 +42,7 @@ static void mark_exec_sql(chunk_t *pc);
 static void handle_oc_class(chunk_t *pc);
 static void handle_oc_message_decl(chunk_t *pc);
 static void handle_oc_message_send(chunk_t *pc);
+static void handle_cs_square_stmt(chunk_t *pc);
 static void handle_template(chunk_t *pc);
 
 
@@ -321,6 +322,16 @@ void fix_symbols(void)
             {
                handle_oc_message_send(pc);
             }
+         }
+      }
+
+      /* C# '[assembly: xxx]' stuff */
+      if (cpd.lang_flags & LANG_CS)
+      {
+         if ((pc->flags & PCF_EXPR_START) &&
+             (pc->type == CT_SQUARE_OPEN))
+         {
+            handle_cs_square_stmt(pc);
          }
       }
 
@@ -3426,6 +3437,50 @@ static void handle_oc_message_send(chunk_t *os)
       {
          tmp->type = CT_OC_COLON;
       }
+   }
+}
+
+/**
+ * Process an C# [] thingy:
+ *    [assembly: xxx]
+ *    [AttributeUsage()]
+ *    [@X]
+ *
+ * Set the next chunk to a statement start after the close ']'
+ *
+ * @param os points to the open square '['
+ */
+static void handle_cs_square_stmt(chunk_t *os)
+{
+   chunk_t *tmp;
+   chunk_t *cs = chunk_get_next(os);
+
+   while ((cs != NULL) && (cs->level > os->level))
+   {
+      cs = chunk_get_next(cs);
+   }
+
+   if ((cs == NULL) || (cs->type != CT_SQUARE_CLOSE))
+   {
+      return;
+   }
+
+   os->parent_type = CT_CS_SQ_STMT;
+   cs->parent_type = CT_CS_SQ_STMT;
+
+   for (tmp = chunk_get_next(os); tmp != cs; tmp = chunk_get_next(tmp))
+   {
+      tmp->parent_type = CT_CS_SQ_STMT;
+      if (tmp->type == CT_COLON)
+      {
+         tmp->type = CT_CS_SQ_COLON;
+      }
+   }
+
+   tmp = chunk_get_next_ncnl(cs);
+   if (tmp != NULL)
+   {
+      tmp->flags |= PCF_STMT_START | PCF_EXPR_START;
    }
 }
 

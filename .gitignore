@@ -8,4 +8,6 @@ src/stamp-h1
 *~
 config.log
 config.status
+*.vtg
+*.vpwh*
 

@@ -1050,6 +1050,16 @@ argval_t do_space(chunk_t *first, chunk_t *second, bool complete=true)
       log_rule("sp_incdec");
       return(cpd.settings[UO_sp_incdec].a);
    }
+   if (second->type == CT_CS_SQ_COLON)
+   {
+      log_rule("REMOVE");
+      return(AV_REMOVE);
+   }
+   if (first->type == CT_CS_SQ_COLON)
+   {
+      log_rule("FORCE");
+      return(AV_FORCE);
+   }
    if (first->type == CT_OC_SCOPE)
    {
       log_rule("sp_after_oc_scope");
