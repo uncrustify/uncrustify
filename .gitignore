@@ -1,0 +1,11 @@
+.svn
+*.o
+src/uncrustify
+Makefile
+man/Makefile
+src/Makefile
+src/stamp-h1
+*~
+config.log
+config.status
+
