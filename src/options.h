@@ -285,6 +285,7 @@ enum uncrustify_options
    UO_sp_cond_colon,
    UO_sp_cond_question,
    UO_sp_case_label,
+   UO_sp_range,
 
    /*
     * Line splitting options (for long lines)

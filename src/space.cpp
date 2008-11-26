@@ -161,6 +161,10 @@ argval_t do_space(chunk_t *first, chunk_t *second, bool complete=true)
          return(cpd.settings[UO_sp_cond_colon].a);
       }
    }
+   if ((first->type == CT_RANGE) || (second->type == CT_RANGE))
+   {
+      return(cpd.settings[UO_sp_range].a);
+   }
 
    if ((first->type == CT_COLON) && (first->parent_type == CT_SQL_EXEC))
    {

@@ -349,6 +349,8 @@ void register_options(void)
                   "Add or remove space around the '?' in 'b ? t : f'");
    unc_add_option("sp_case_label", UO_sp_case_label, AT_IARF,
                   "Fix the spacing between 'case' and the label. Only 'ignore' and 'force' make sense here.");
+   unc_add_option("sp_range", UO_sp_range, AT_IARF,
+                  "Control the space around the D '..' operator.");
 
 
    unc_begin_group(UG_indent, "Indenting");
