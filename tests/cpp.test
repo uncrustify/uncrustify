@@ -119,6 +119,7 @@
 30820 pp_define_at_level-1.cfg         cpp/pp-define-indent.cpp
 
 30830 kw_subst2.cfg                    cpp/kw_subst.cpp
+30831 kw_subst.cfg                     cpp/kw_subst2.cpp
 
 30900 region-0.cfg                     cpp/region.cpp
 30901 region-1.cfg                     cpp/region.cpp
