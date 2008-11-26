@@ -70,6 +70,16 @@ void tokenize_cleanup(void)
       }
 
       /**
+       * Change CT_BASE before CT_PAREN_OPEN to CT_WORD.
+       * public myclass() : base() {
+       * }
+       */
+      if ((pc->type == CT_BASE) && (next->type == CT_PAREN_OPEN))
+      {
+         pc->type = CT_WORD;
+      }
+
+      /**
        * Change CT_WORD after CT_ENUM, CT_UNION, or CT_STRUCT to CT_TYPE
        * Change CT_WORD before CT_WORD to CT_TYPE
        */
