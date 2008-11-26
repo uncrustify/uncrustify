@@ -1449,6 +1449,7 @@ void set_option_defaults(void)
    cpd.settings[UO_sp_incdec].a            = AV_REMOVE;
    cpd.settings[UO_sp_after_type].a        = AV_FORCE;
    cpd.settings[UO_sp_before_nl_cont].a    = AV_ADD;
+   cpd.settings[UO_sp_before_case_colon].a = AV_REMOVE;
    cpd.settings[UO_cmt_indent_multi].b     = true;
    cpd.settings[UO_cmt_multi_check_last].b = true;
    cpd.settings[UO_pp_indent_count].n      = 1;
