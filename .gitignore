@@ -10,4 +10,4 @@ config.log
 config.status
 *.vtg
 *.vpwh*
-
+tests/results
