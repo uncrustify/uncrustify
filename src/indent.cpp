@@ -1486,7 +1486,8 @@ static void indent_comment(chunk_t *pc, int col)
            pc->orig_line, pc->orig_col, pc->level);
 
    /* force column 1 comment to column 1 if not changing them */
-   if ((pc->orig_col == 1) && !cpd.settings[UO_indent_col1_comment].b)
+   if ((pc->orig_col == 1) && !cpd.settings[UO_indent_col1_comment].b &&
+       ((pc->flags & PCF_INSERTED) == 0))
    {
       LOG_FMT(LCMTIND, "rule 1 - keep in col 1\n");
       reindent_line(pc, 1);

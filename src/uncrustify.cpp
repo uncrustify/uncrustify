@@ -957,6 +957,7 @@ static void add_func_header(c_token_t type, file_mem& fm)
    chunk_t *pc;
    chunk_t *ref;
    chunk_t *tmp;
+   bool    do_insert;
 
    for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next_ncnlnp(pc))
    {
@@ -965,6 +966,7 @@ static void add_func_header(c_token_t type, file_mem& fm)
          continue;
       }
 
+      do_insert = false;
       /* On a function proto or def. Back up to a close brace or semicolon on
        * the same level
        */
@@ -974,6 +976,7 @@ static void add_func_header(c_token_t type, file_mem& fm)
          /* Bail if we change level */
          if (ref->level != pc->level)
          {
+            do_insert = true;
             break;
          }
 
@@ -1003,8 +1006,18 @@ static void add_func_header(c_token_t type, file_mem& fm)
               (ref->type == CT_SEMICOLON) ||
               (ref->type == CT_BRACE_CLOSE)))
          {
-            tokenize(fm.data, fm.length, chunk_get_next_ncnl(ref));
+            do_insert = true;
             break;
+         }
+      }
+      if (do_insert)
+      {
+         /* Insert between after and ref */
+         chunk_t *after = chunk_get_next_ncnl(ref);
+         tokenize(fm.data, fm.length, after);
+         for (tmp = chunk_get_next(ref); tmp != after; tmp = chunk_get_next(tmp))
+         {
+            tmp->level = after->level;
          }
       }
    }

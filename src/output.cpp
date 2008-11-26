@@ -553,7 +553,6 @@ static void add_comment_javaparam(chunk_t *pc, cmt_reflow& cmt)
    chunk_t *prev;
    bool    has_param = true;
    bool    need_nl   = false;
-   int     col       = cpd.column;
 
    fpo = chunk_get_next_type(pc, CT_FPAREN_OPEN, pc->level);
    if (fpo == NULL)
@@ -591,8 +590,7 @@ static void add_comment_javaparam(chunk_t *pc, cmt_reflow& cmt)
          {
             if (need_nl)
             {
-               add_comment_text("\n", 1, cmt, false);
-               output_to_column(col, false);
+               add_comment_text("\n ", 2, cmt, false);
             }
             need_nl = true;
             add_text("@param");
@@ -621,8 +619,7 @@ static void add_comment_javaparam(chunk_t *pc, cmt_reflow& cmt)
    {
       if (need_nl)
       {
-         add_comment_text("\n", 1, cmt, false);
-         output_to_column(col, false);
+         add_comment_text("\n ", 2, cmt, false);
       }
       add_text("@return TODO");
    }
@@ -980,10 +977,12 @@ static void output_comment_multi(chunk_t *pc)
    //LOG_FMT(LSYS, "Indenting1 line %d to col %d (orig=%d) col_diff=%d xtra=%d\n",
    //        pc->orig_line, cmt_col, pc->orig_col, col_diff, xtra);
 
-   ccol      = pc->column;
-   remaining = pc->len;
-   cmt_str   = pc->str;
-   line_len  = 0;
+   ccol          = pc->column;
+   remaining     = pc->len;
+   cmt_str       = pc->str;
+   line_len      = 0;
+   cmt.column    = ccol;
+   cmt.br_column = ccol;
    while (remaining > 0)
    {
       ch = *cmt_str;
