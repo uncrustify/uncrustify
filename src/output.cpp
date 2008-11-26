@@ -659,6 +659,10 @@ static int add_comment_kw(const char *text, int len, cmt_reflow& cmt)
 
    if ((len >= 11) && (memcmp(text, "$(function)", 11) == 0))
    {
+      if (fcn->parent_type == CT_OPERATOR)
+      {
+         add_text_len("operator ", 9);
+      }
       add_text_len(fcn->str, fcn->len);
       return(11);
    }
@@ -670,6 +674,10 @@ static int add_comment_kw(const char *text, int len, cmt_reflow& cmt)
    if ((len >= 9) && (memcmp(text, "$(fclass)", 9) == 0))
    {
       chunk_t *tmp = chunk_get_prev_ncnl(fcn);
+      if ((tmp != NULL) && (tmp->type == CT_OPERATOR))
+      {
+         tmp = chunk_get_prev_ncnl(tmp);
+      }
       if ((tmp != NULL) && ((tmp->type == CT_DC_MEMBER) ||
                             (tmp->type == CT_MEMBER)))
       {
