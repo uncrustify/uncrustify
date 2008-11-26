@@ -14,6 +14,9 @@ int CFoo::foo2()
 {
 }
 
+int CFoo::operator +()
+{
+}
 
 int some_func(void)
 {

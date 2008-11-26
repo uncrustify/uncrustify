@@ -37,6 +37,15 @@ int CFoo::foo2()
 {
 }
 
+/**
+ * CLASS:  CFoo
+ * METHOD: operator +
+ * TODO: DESCRIPTION
+ * @return TODO
+ */
+int CFoo::operator +()
+{
+}
 
 /**
  * CLASS:  $(fclass)
