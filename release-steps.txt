@@ -37,6 +37,7 @@ $ scripts/update-defaults.sh
 5. Update the ChangeLog to indicate the release date
 
 6. Make sure there are no modified files in the workspace.
+   Check in all the changes you just made.
 
 7. Copy the trunk to a tag
 $ svn cp $UNC_URL/trunk/uncrustify $UNC_URL/tags/uncrustify-$UNC_REL -m "uncrustify-$UNC_REL"
