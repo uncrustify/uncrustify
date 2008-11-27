@@ -2246,6 +2246,24 @@ void do_blank_lines(void)
             pc->nl_count = cpd.settings[UO_nl_comment_func_def].n;
          }
       }
+
+      /* Change blanks after a try-catch-finally block */
+      if ((cpd.settings[UO_nl_after_try_catch_finally].n != 0) &&
+          (cpd.settings[UO_nl_after_try_catch_finally].n != pc->nl_count) &&
+          (prev != NULL) && (next != NULL))
+      {
+         if ((prev->type == CT_BRACE_CLOSE) &&
+             ((prev->parent_type == CT_CATCH) ||
+              (prev->parent_type == CT_FINALLY)))
+         {
+            if ((next->type != CT_BRACE_CLOSE) &&
+                (next->type != CT_CATCH) &&
+                (next->type != CT_FINALLY))
+            {
+               pc->nl_count = cpd.settings[UO_nl_after_try_catch_finally].n;
+            }
+         }
+      }
    }
 }
 

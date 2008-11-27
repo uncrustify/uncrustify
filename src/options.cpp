@@ -656,6 +656,10 @@ void register_options(void)
                   "The number of newlines between a function def and the function comment.\n"
                   "0 = No change.");
 
+   unc_add_option("nl_after_try_catch_finally", UO_nl_after_try_catch_finally, AT_NUM,
+                  "The number of newlines after a try-catch-finally block that isn't followed by a brace close.\n"
+                  "0 = No change.");
+
    unc_add_option("eat_blanks_after_open_brace", UO_eat_blanks_after_open_brace, AT_BOOL,
                   "Whether to remove blank lines after '{'");
    unc_add_option("eat_blanks_before_close_brace", UO_eat_blanks_before_close_brace, AT_BOOL,

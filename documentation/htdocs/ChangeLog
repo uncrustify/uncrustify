@@ -50,6 +50,7 @@ Changes in uncrustify-0.51 (not released)
  - Update $(fclass) and $(function) to handle operators
  - Improve handling of inserted comments
  - Enable 'finally' blocks for C#
+ - Add nl_after_try_catch_finally
 
 
 Changes in uncrustify-0.50 (25-Oct-2008)
