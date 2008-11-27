@@ -43,6 +43,7 @@ static void handle_oc_class(chunk_t *pc);
 static void handle_oc_message_decl(chunk_t *pc);
 static void handle_oc_message_send(chunk_t *pc);
 static void handle_cs_square_stmt(chunk_t *pc);
+static void handle_cs_property(chunk_t *pc);
 static void handle_template(chunk_t *pc);
 
 
@@ -325,13 +326,21 @@ void fix_symbols(void)
          }
       }
 
-      /* C# '[assembly: xxx]' stuff */
+      /* C# stuff */
       if (cpd.lang_flags & LANG_CS)
       {
+         /* '[assembly: xxx]' stuff */
          if ((pc->flags & PCF_EXPR_START) &&
              (pc->type == CT_SQUARE_OPEN))
          {
             handle_cs_square_stmt(pc);
+         }
+
+         if ((next != NULL) && (next->type == CT_BRACE_OPEN) &&
+             ((pc->type == CT_SQUARE_CLOSE) ||
+              (pc->type == CT_WORD)))
+         {
+            handle_cs_property(next);
          }
       }
 
@@ -3481,6 +3490,41 @@ static void handle_cs_square_stmt(chunk_t *os)
    if (tmp != NULL)
    {
       tmp->flags |= PCF_STMT_START | PCF_EXPR_START;
+   }
+}
+
+/**
+ * We are on a brace open that is preceeded by a word or square close.
+ * Set the brace parent to CT_CS_PROPERTY and find the first item in the
+ * property and set its parent, too.
+ */
+static void handle_cs_property(chunk_t *bro)
+{
+   chunk_t *pc;
+   bool    did_prop = false;
+
+   set_paren_parent(bro, CT_CS_PROPERTY);
+
+   pc = bro;
+   while ((pc = chunk_get_prev_ncnl(pc)) != NULL)
+   {
+      if (pc->level == bro->level)
+      {
+         if (!did_prop && ((pc->type == CT_WORD) || (pc->type == CT_THIS)))
+         {
+            pc->type = CT_CS_PROPERTY;
+            did_prop = true;
+         }
+         else
+         {
+            pc->parent_type = CT_CS_PROPERTY;
+            make_type(pc);
+         }
+         if (pc->flags & PCF_STMT_START)
+         {
+            break;
+         }
+      }
    }
 }
 

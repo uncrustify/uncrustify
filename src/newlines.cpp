@@ -2264,6 +2264,38 @@ void do_blank_lines(void)
             }
          }
       }
+
+      /* Change blanks after a try-catch-finally block */
+      if ((cpd.settings[UO_nl_between_get_set].n != 0) &&
+          (cpd.settings[UO_nl_between_get_set].n != pc->nl_count) &&
+          (prev != NULL) && (next != NULL))
+      {
+         if ((prev->parent_type == CT_GETSET) &&
+             (next->type != CT_BRACE_CLOSE) &&
+             ((prev->type == CT_BRACE_CLOSE) ||
+              (prev->type == CT_SEMICOLON)))
+         {
+            pc->nl_count = cpd.settings[UO_nl_between_get_set].n;
+         }
+      }
+
+      /* Change blanks after a try-catch-finally block */
+      if ((cpd.settings[UO_nl_around_cs_property].n != 0) &&
+          (cpd.settings[UO_nl_around_cs_property].n != pc->nl_count) &&
+          (prev != NULL) && (next != NULL))
+      {
+         if ((prev->type == CT_BRACE_CLOSE) &&
+             (prev->parent_type == CT_CS_PROPERTY) &&
+             (next->type != CT_BRACE_CLOSE))
+         {
+            pc->nl_count = cpd.settings[UO_nl_around_cs_property].n;
+         }
+         else if ((next->parent_type == CT_CS_PROPERTY) &&
+                  (next->flags & PCF_STMT_START))
+         {
+            pc->nl_count = cpd.settings[UO_nl_around_cs_property].n;
+         }
+      }
    }
 }
 

@@ -659,6 +659,12 @@ void register_options(void)
    unc_add_option("nl_after_try_catch_finally", UO_nl_after_try_catch_finally, AT_NUM,
                   "The number of newlines after a try-catch-finally block that isn't followed by a brace close.\n"
                   "0 = No change.");
+   unc_add_option("nl_around_cs_property", UO_nl_around_cs_property, AT_NUM,
+                  "The number of newlines before and after a property, indexer or event decl.\n"
+                  "0 = No change.");
+   unc_add_option("nl_between_get_set", UO_nl_between_get_set, AT_NUM,
+                  "The number of newlines between the get/set/add/remove handlers in C#.\n"
+                  "0 = No change.");
 
    unc_add_option("eat_blanks_after_open_brace", UO_eat_blanks_after_open_brace, AT_BOOL,
                   "Whether to remove blank lines after '{'");

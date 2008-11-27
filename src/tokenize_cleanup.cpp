@@ -199,7 +199,18 @@ void tokenize_cleanup(void)
       /* Change get/set to CT_WORD if not followed by a brace open */
       if ((pc->type == CT_GETSET) && (next->type != CT_BRACE_OPEN))
       {
-         pc->type = CT_WORD;
+         if ((next->type == CT_SEMICOLON) &&
+             ((prev->type == CT_BRACE_CLOSE) ||
+              (prev->type == CT_BRACE_OPEN) ||
+              (prev->type == CT_SEMICOLON)))
+         {
+            pc->type          = CT_GETSET_EMPTY;
+            next->parent_type = CT_GETSET;
+         }
+         else
+         {
+            pc->type = CT_WORD;
+         }
       }
 
       /* Change item after operator (>=, ==, etc) to a CT_FUNCTION */

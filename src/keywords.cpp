@@ -52,6 +52,7 @@ static const chunk_tag_t keywords[] =
    { "__typeof__",       CT_SIZEOF,       LANG_C | LANG_CPP                                               },
    { "__volatile__",     CT_QUALIFIER,    LANG_C | LANG_CPP                                               },
    { "abstract",         CT_QUALIFIER,    LANG_CS | LANG_D | LANG_JAVA | LANG_VALA                        },
+   { "add",              CT_GETSET,       LANG_CS                                                         },
    { "alias",            CT_QUALIFIER,    LANG_D                                                          },
    { "align",            CT_ALIGN,        LANG_D                                                          },
    { "alignof",          CT_SIZEOF,       LANG_C | LANG_CPP                                               },
@@ -185,6 +186,7 @@ static const chunk_tag_t keywords[] =
    { "region",           CT_PP_REGION,    LANG_ALL | FLAG_PP                                              },
    { "register",         CT_QUALIFIER,    LANG_C | LANG_CPP                                               },
    { "reinterpret_cast", CT_TYPE_CAST,    LANG_C | LANG_CPP                                               },
+   { "remove",           CT_GETSET,       LANG_CS                                                         },
    { "restrict",         CT_QUALIFIER,    LANG_C | LANG_CPP                                               },
    { "return",           CT_RETURN,       LANG_ALL                                                        }, // PAWN
    { "sbyte",            CT_TYPE,         LANG_CS                                                         },

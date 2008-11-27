@@ -257,9 +257,11 @@ typedef enum
    CT_BASE,             /* C# thingy */
    CT_DEFAULT,          /* may be changed into CT_CASE */
    CT_GETSET,           /* must be followed by CT_BRACE_OPEN or reverts to CT_WORD */
+   CT_GETSET_EMPTY,     /* get/set/add/remove followed by a semicolon */
    CT_CONCAT,           /* The '~' between strings */
    CT_CS_SQ_STMT,       /* '[assembly: xxx]' or '[Attribute()]' or '[Help()]', etc */
    CT_CS_SQ_COLON,      /* the colon in one of those [] thingys */
+   CT_CS_PROPERTY,      /* word or ']' followed by '{' */
 
    /* Embedded SQL - always terminated with a semicolon */
    CT_SQL_EXEC,         /* the 'EXEC' in 'EXEC SQL ...' */
