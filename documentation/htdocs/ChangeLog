@@ -28,7 +28,7 @@ What's left before 1.0
 ===============================================================================
 
 
-Changes in uncrustify-0.51 (not released)
+Changes in uncrustify-0.51 (27 Nov 2008)
 -------------------------------------------------------------------------------
  - Prefer to split at ',' and then '=' in for() statements if at paren level
  - Fix a NULL deref crash
