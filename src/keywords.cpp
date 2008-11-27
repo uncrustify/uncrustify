@@ -120,7 +120,7 @@ static const chunk_tag_t keywords[] =
    { "false",            CT_WORD,         LANG_CPP | LANG_CS | LANG_D | LANG_JAVA | LANG_VALA             },
    { "file",             CT_PP_FILE,      LANG_PAWN | FLAG_PP                                             }, // PAWN
    { "final",            CT_QUALIFIER,    LANG_D                                                          },
-   { "finally",          CT_FINALLY,      LANG_D                                                          },
+   { "finally",          CT_FINALLY,      LANG_D | LANG_CS                                                },
    { "flags",            CT_TYPE,         LANG_VALA                                                       },
    { "float",            CT_TYPE,         LANG_ALLC                                                       },
    { "for",              CT_FOR,          LANG_ALL                                                        }, // PAWN
