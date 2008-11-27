@@ -17,3 +17,5 @@
 
 10030 sort_imports.cfg         cs/sort_using.cs
 
+10040 tcf.cfg                  cs/tcf.cs
+
