@@ -28,6 +28,12 @@ What's left before 1.0
 ===============================================================================
 
 
+Changes in uncrustify-0.52 (not released)
+-------------------------------------------------------------------------------
+ - Add sp_before_assign and sp_after_assign
+ - Add sp_enum_before_assign and sp_enum_after_assign
+
+
 Changes in uncrustify-0.51 (27 Nov 2008)
 -------------------------------------------------------------------------------
  - Prefer to split at ',' and then '=' in for() statements if at paren level
