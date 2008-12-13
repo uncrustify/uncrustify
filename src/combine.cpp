@@ -1801,7 +1801,8 @@ static void mark_variable_stack(ChunkStack& cs, log_sev_t sev)
       while ((word_type = cs.Pop()) != NULL)
       {
          LOG_FMT(LFCNP, " <%.*s>", word_type->len, word_type->str);
-         word_type->type = CT_TYPE;
+         word_type->type   = CT_TYPE;
+         word_type->flags |= PCF_VAR_TYPE;
       }
 
       LOG_FMT(LFCNP, " [%.*s]\n", var_name->len, var_name->str);
@@ -1972,6 +1973,7 @@ static chunk_t *fix_var_def(chunk_t *start)
    {
       tmp_pc = cs.Get(idx)->m_pc;
       make_type(tmp_pc);
+      tmp_pc->flags |= PCF_VAR_TYPE;
       LOG_FMT(LFVD2, " %.*s[%s]", tmp_pc->len, tmp_pc->str, get_token_name(tmp_pc->type));
    }
    LOG_FMT(LFVD2, "\n");
@@ -2028,7 +2030,6 @@ static chunk_t *mark_variable_definition(chunk_t *start)
    {
       return(NULL);
    }
-
 
    LOG_FMT(LVARDEF, "%s: line %d, col %d '%.*s' type %s\n",
            __func__,
@@ -3168,6 +3169,7 @@ static void mark_template_func(chunk_t *pc, chunk_t *pc_next)
       {
          // its a type!
          pc->type      = CT_TYPE;
+         pc->flags    |= PCF_VAR_TYPE;
          after->flags |= PCF_VAR_DEF;
       }
    }

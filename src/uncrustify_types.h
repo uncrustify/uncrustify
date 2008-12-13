@@ -64,6 +64,7 @@ struct paren_stack_entry
    c_token_t parent;       /**< if, for, function, etc */
    brstage_e stage;
    bool      in_preproc;   /**< whether this was created in a preprocessor */
+   bool      non_vardef;   /**< Hit a non-vardef line */
 };
 
 /* TODO: put this on a linked list */
@@ -119,7 +120,7 @@ struct parse_frame
 #define PCF_PUNCTUATOR         (1 << 26)
 #define PCF_INSERTED           (1 << 27)  /* chunk was inserted from another file */
 #define PCF_ALIGN_START        (1 << 28)
-#define PCF_TBD_29             (1 << 29)
+#define PCF_VAR_TYPE           (1 << 29)  /* part of a variable def type */
 #define PCF_TBD_30             (1 << 30)
 #define PCF_OWN_STR            (1 << 31)  /* chunk owns the memory at str */
 
@@ -162,7 +163,7 @@ static const char *pcf_names[] =
    "PUNCTUATOR",
    "INSERTED",
    "ALIGN_START",
-   "TBD_29",
+   "VAR_TYPE",
    "TBD_30",
    "OWN_STR",
 };

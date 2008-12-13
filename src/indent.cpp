@@ -274,6 +274,7 @@ static void indent_pse_push(struct parse_frame& frm, chunk_t *pc)
       frm.pse[frm.pse_tos].ref        = ++ref;
       frm.pse[frm.pse_tos].in_preproc = (pc->flags & PCF_IN_PREPROC) != 0;
       frm.pse[frm.pse_tos].indent_tab = frm.pse[frm.pse_tos - 1].indent_tab;
+      frm.pse[frm.pse_tos].non_vardef = false;
    }
 }
 
@@ -1151,7 +1152,6 @@ void indent_text(void)
          /* anything else? */
       }
 
-
       /**
        * Indent the line if needed
        */
@@ -1161,7 +1161,6 @@ void indent_text(void)
 
          LOG_FMT(LINDENT2, "%s: %d] %d for %.*s\n",
                  __func__, pc->orig_line, pc->column_indent, pc->len, pc->str);
-
 
          /**
           * Check for special continuations.
@@ -1317,6 +1316,34 @@ void indent_text(void)
          {
             sql_col      = pc->column;
             sql_orig_col = pc->orig_col;
+         }
+
+         /* Handle indent for variable defs at the top of a block of code */
+         if (pc->flags & PCF_VAR_TYPE)
+         {
+            if (!frm.pse[frm.pse_tos].non_vardef &&
+                (frm.pse[frm.pse_tos].type == CT_BRACE_OPEN))
+            {
+               int tmp = indent_column;
+               if (cpd.settings[UO_indent_var_def_blk].n > 0)
+               {
+                  tmp = cpd.settings[UO_indent_var_def_blk].n;
+               }
+               else
+               {
+                  tmp += cpd.settings[UO_indent_var_def_blk].n;
+               }
+               reindent_line(pc, tmp);
+               LOG_FMT(LINDENT, "%s: %d] var_type indent => %d [%.*s]\n",
+                       __func__, pc->orig_line, tmp, pc->len, pc->str);
+            }
+         }
+         else
+         {
+            if (pc != frm.pse[frm.pse_tos].pc)
+            {
+               frm.pse[frm.pse_tos].non_vardef = true;
+            }
          }
       }
 
