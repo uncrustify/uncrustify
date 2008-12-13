@@ -200,6 +200,8 @@ void register_options(void)
                   "Add or remove space before '(' of 'if', 'for', 'switch', and 'while'");
    unc_add_option("sp_inside_sparen", UO_sp_inside_sparen, AT_IARF,
                   "Add or remove space inside if-condition '(' and ')'");
+   unc_add_option("sp_inside_sparen_close", UO_sp_inside_sparen_close, AT_IARF,
+                  "Add or remove space before if-condition ')'. Overrides sp_inside_sparen.");
    unc_add_option("sp_after_sparen", UO_sp_after_sparen, AT_IARF,
                   "Add or remove space after ')' of 'if', 'for', 'switch', and 'while'");
    unc_add_option("sp_sparen_brace", UO_sp_sparen_brace, AT_IARF,
