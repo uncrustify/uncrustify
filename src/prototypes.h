@@ -202,7 +202,7 @@ void brace_cleanup(void);
 
 int load_keyword_file(const char *filename);
 const chunk_tag_t *find_keyword(const char *word, int len);
-void add_keyword(const char *tag, c_token_t type, UINT8 lang_flags);
+void add_keyword(const char *tag, c_token_t type, int lang_flags);
 void output_types(FILE *pfile);
 const chunk_tag_t *get_custom_keyword_idx(int& idx);
 void clear_keyword_file(void);
@@ -225,7 +225,7 @@ void clear_defines(void);
 /*
  *  punctuators.cpp
  */
-const chunk_tag_t *find_punctuator(const char *str, UINT8 lang_flags);
+const chunk_tag_t *find_punctuator(const char *str, int lang_flags);
 
 
 /*

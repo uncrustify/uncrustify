@@ -1332,6 +1332,7 @@ struct file_lang languages[] =
    { ".m",    "OC",   LANG_OC            },
    { ".mm",   "OC+",  LANG_OC | LANG_CPP },
    { ".sqc",  "",     LANG_C             }, // embedded SQL
+   { ".es",   "ECMA", LANG_ECMA          },
 };
 
 /**

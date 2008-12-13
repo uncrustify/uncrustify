@@ -34,6 +34,7 @@ Changes in uncrustify-0.52 (not released)
  - Add sp_enum_before_assign and sp_enum_after_assign
  - Add indent_var_def_blk
  - Add sp_inside_sparen_close for the 'CGAL' style
+ - First pass at supporting ECMAScript (.es) files
 
 
 Changes in uncrustify-0.51 (27 Nov 2008)

@@ -220,9 +220,10 @@ enum
    LANG_OC   = 0x0020,     /*<< Objective C */
    LANG_VALA = 0x0040,     /*<< Like C# */
    LANG_PAWN = 0x0080,
+   LANG_ECMA = 0x0100,
 
-   LANG_ALLC = 0x007f,
-   LANG_ALL  = 0x00ff,
+   LANG_ALLC = 0x017f,
+   LANG_ALL  = 0x0fff,
 
    FLAG_PP   = 0x8000,     /*<< only appears in a preprocessor */
 };

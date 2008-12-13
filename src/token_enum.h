@@ -140,6 +140,7 @@ typedef enum
    CT_DELEGATE,
    CT_BODY,
    CT_DEBUG,
+   CT_DEBUGGER,
    CT_INVARIANT,
    CT_UNITTEST,
    CT_UNSAFE,
