@@ -132,3 +132,5 @@
 30920 ben.cfg                          cpp/indent-off.cpp
 30921 ben.cfg                          cpp/variadic-template.h
 
+30930 indent_var_def.cfg               cpp/indent_var_def.cpp
+
