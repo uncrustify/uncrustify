@@ -95,8 +95,10 @@ sp_votes::~sp_votes()
 static void detect_space_options()
 {
    SP_VOTE_VAR(sp_arith);
-   SP_VOTE_VAR(sp_assign);
-   SP_VOTE_VAR(sp_enum_assign);
+   SP_VOTE_VAR(sp_before_assign);
+   SP_VOTE_VAR(sp_after_assign);
+   SP_VOTE_VAR(sp_enum_before_assign);
+   SP_VOTE_VAR(sp_enum_after_assign);
    SP_VOTE_VAR(sp_bool);
    SP_VOTE_VAR(sp_compare);
    SP_VOTE_VAR(sp_inside_paren);
@@ -164,13 +166,13 @@ static void detect_space_options()
       {
          if ((pc->flags & PCF_IN_ENUM) == 0)
          {
-            vote_sp_assign.vote(pc, next);
-            vote_sp_assign.vote(prev, pc);
+            vote_sp_before_assign.vote(prev, pc);
+            vote_sp_after_assign.vote(pc, next);
          }
          else
          {
-            vote_sp_enum_assign.vote(pc, next);
-            vote_sp_enum_assign.vote(prev, pc);
+            vote_sp_enum_before_assign.vote(prev, pc);
+            vote_sp_enum_after_assign.vote(pc, next);
          }
       }
       if (pc->type == CT_SQUARE_OPEN)

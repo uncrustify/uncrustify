@@ -333,12 +333,43 @@ argval_t do_space(chunk_t *first, chunk_t *second, bool complete=true)
       return(cpd.settings[UO_sp_before_sparen].a);
    }
 
-   if ((first->type == CT_ASSIGN) || (second->type == CT_ASSIGN))
+   if (second->type == CT_ASSIGN)
+   {
+      if (second->flags & PCF_IN_ENUM)
+      {
+         if (cpd.settings[UO_sp_enum_before_assign].a != AV_IGNORE)
+         {
+            log_rule("sp_enum_before_assign");
+            return(cpd.settings[UO_sp_enum_before_assign].a);
+         }
+         log_rule("sp_enum_assign");
+         return(cpd.settings[UO_sp_enum_assign].a);
+      }
+      if (cpd.settings[UO_sp_before_assign].a != AV_IGNORE)
+      {
+         log_rule("sp_before_assign");
+         return(cpd.settings[UO_sp_before_assign].a);
+      }
+      log_rule("sp_assign");
+      return(cpd.settings[UO_sp_assign].a);
+   }
+
+   if (first->type == CT_ASSIGN)
    {
       if (first->flags & PCF_IN_ENUM)
       {
+         if (cpd.settings[UO_sp_enum_after_assign].a != AV_IGNORE)
+         {
+            log_rule("sp_enum_after_assign");
+            return(cpd.settings[UO_sp_enum_after_assign].a);
+         }
          log_rule("sp_enum_assign");
          return(cpd.settings[UO_sp_enum_assign].a);
+      }
+      if (cpd.settings[UO_sp_after_assign].a != AV_IGNORE)
+      {
+         log_rule("sp_after_assign");
+         return(cpd.settings[UO_sp_after_assign].a);
       }
       log_rule("sp_assign");
       return(cpd.settings[UO_sp_assign].a);
