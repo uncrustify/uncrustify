@@ -78,6 +78,7 @@ static const chunk_tag_t symbols2[] =
    { "~=", CT_COMPARE,      LANG_D                               },
    { "~~", CT_COMPARE,      LANG_D                               },
    { "=>", CT_LAMBDA,       LANG_VALA                            },
+   { "??", CT_COMPARE,      LANG_CS                              },
 };
 
 /* 1-char symbols */

@@ -35,6 +35,7 @@ Changes in uncrustify-0.52 (not released)
  - Add indent_var_def_blk
  - Add sp_inside_sparen_close for the 'CGAL' style
  - First pass at supporting ECMAScript (.es) files
+ - Add support for the C# '??' operator
 
 
 Changes in uncrustify-0.51 (27 Nov 2008)
