@@ -438,12 +438,23 @@ void tokenize_cleanup(void)
           (next->orig_col == (pc->orig_col + pc->len)))
       {
          tmp = chunk_get_next_ncnl(next);
-         if ((tmp != NULL) && (tmp->type == CT_WORD))
+         if (tmp != NULL)
          {
-            tmp2 = chunk_get_next_ncnl(tmp);
-            if ((tmp2 != NULL) &&
-                ((tmp2->type == CT_SEMICOLON) ||
-                 (tmp2->type == CT_ASSIGN)))
+            bool doit = ((tmp->type == CT_PAREN_CLOSE) ||
+                         (tmp->type == CT_ANGLE_CLOSE));
+
+            if (tmp->type == CT_WORD)
+            {
+               tmp2 = chunk_get_next_ncnl(tmp);
+               if ((tmp2 != NULL) &&
+                   ((tmp2->type == CT_SEMICOLON) ||
+                    (tmp2->type == CT_ASSIGN)))
+               {
+                  doit = true;
+               }
+            }
+
+            if (doit)
             {
                pc->len++;
                chunk_del(next);
