@@ -432,6 +432,26 @@ void tokenize_cleanup(void)
          }
       }
 
+      /* Check for C# nullable types '?' is in next */
+      if ((cpd.lang_flags & LANG_CS) &&
+          (next->type == CT_QUESTION) &&
+          (next->orig_col == (pc->orig_col + pc->len)))
+      {
+         tmp = chunk_get_next_ncnl(next);
+         if ((tmp != NULL) && (tmp->type == CT_WORD))
+         {
+            tmp2 = chunk_get_next_ncnl(tmp);
+            if ((tmp2 != NULL) &&
+                ((tmp2->type == CT_SEMICOLON) ||
+                 (tmp2->type == CT_ASSIGN)))
+            {
+               pc->len++;
+               chunk_del(next);
+               next = tmp;
+            }
+         }
+      }
+
       /* TODO: determine other stuff here */
 
       prev = pc;
