@@ -448,7 +448,8 @@ void tokenize_cleanup(void)
                tmp2 = chunk_get_next_ncnl(tmp);
                if ((tmp2 != NULL) &&
                    ((tmp2->type == CT_SEMICOLON) ||
-                    (tmp2->type == CT_ASSIGN)))
+                    (tmp2->type == CT_ASSIGN) ||
+                    (tmp2->type == CT_COMMA)))
                {
                   doit = true;
                }
