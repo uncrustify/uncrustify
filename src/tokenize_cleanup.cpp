@@ -479,6 +479,14 @@ void tokenize_cleanup(void)
          next = tmp;
       }
 
+      /* Change 'default(' into a sizeof-like statement */
+      if ((cpd.lang_flags & LANG_CS) &&
+          (pc->type == CT_DEFAULT) &&
+          (next->type == CT_PAREN_OPEN))
+      {
+         pc->type = CT_SIZEOF;
+      }
+
       /* TODO: determine other stuff here */
 
       prev = pc;
