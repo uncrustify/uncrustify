@@ -464,6 +464,21 @@ void tokenize_cleanup(void)
          }
       }
 
+      /* Convert '>' + '>' into '>>' */
+      if ((cpd.lang_flags & LANG_CS) &&
+          (pc->type == CT_ANGLE_CLOSE) &&
+          (next->type == CT_ANGLE_CLOSE) &&
+          (pc->parent_type == CT_NONE) &&
+          ((pc->orig_col + pc->len) == next->orig_col) &&
+          (next->parent_type == CT_NONE))
+      {
+         pc->len++;
+         pc->type = CT_ARITH;
+         tmp = chunk_get_next_ncnl(next);
+         chunk_del(next);
+         next = tmp;
+      }
+
       /* TODO: determine other stuff here */
 
       prev = pc;
