@@ -333,6 +333,13 @@ argval_t do_space(chunk_t *first, chunk_t *second, bool complete=true)
       return(cpd.settings[UO_sp_before_sparen].a);
    }
 
+   if ((first->type == CT_LAMBDA) ||
+       (second->type == CT_LAMBDA))
+   {
+      log_rule("sp_assign (lambda)");
+      return(cpd.settings[UO_sp_assign].a);
+   }
+
    if (second->type == CT_ASSIGN)
    {
       if (second->flags & PCF_IN_ENUM)
