@@ -397,10 +397,7 @@ void fix_symbols(void)
       {
          if (prev->type != CT_TYPEDEF)
          {
-            if ((pc->flags & PCF_IN_TYPEDEF) == 0)
-            {
-               fix_enum_struct_union(pc);
-            }
+            fix_enum_struct_union(pc);
          }
       }
 
