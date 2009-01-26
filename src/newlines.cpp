@@ -21,11 +21,28 @@ static void newlines_double_space_struct_enum_union(chunk_t *open_brace);
 static bool one_liner_nl_ok(chunk_t *pc);
 static void nl_handle_define(chunk_t *pc);
 
+/**
+ * Check to see if we are allowed to increase the newline count.
+ * The only case where we can't is if nl_squeeze_ifdef=true and a preproc is
+ * after the newline.
+ */
+static bool can_increase_nl(chunk_t *nl)
+{
+   if (cpd.settings[UO_nl_squeeze_ifdef].b)
+   {
+      chunk_t *pc = chunk_get_next(nl);
+
+      if ((pc != NULL) && (pc->type == CT_PREPROC) &&
+          (pc->parent_type == CT_PP_ENDIF))
+      {
+         return(false);
+      }
+   }
+   return(true);
+}
 
 /**
- * Check to see if we are allowed to double the newline.
- * The only case where we can't is if nl_squeeze_ifdef=true and a preproc is
- * after the next newline.
+ * Double the newline, if allowed.
  */
 static void double_newline(chunk_t *nl)
 {
@@ -34,18 +51,10 @@ static void double_newline(chunk_t *nl)
    LOG_FMT(LNEWLINE, "%s: add newline after %.*s on line %d",
            __func__, prev->len, prev->str, prev->orig_line);
 
-   if (cpd.settings[UO_nl_squeeze_ifdef].b)
+   if (!can_increase_nl(nl))
    {
-      chunk_t *pc = chunk_get_next(nl);
-
-      LOG_FMT(LNEWLINE, " [%s]", get_token_name(pc->type));
-
-      if ((pc != NULL) && (pc->type == CT_PREPROC) &&
-          (pc->parent_type == CT_PP_ENDIF))
-      {
-         LOG_FMT(LNEWLINE, " - denied\n");
-         return;
-      }
+      LOG_FMT(LNEWLINE, " - denied\n");
+      return;
    }
    LOG_FMT(LNEWLINE, " - done\n");
    nl->nl_count = 2;
@@ -163,7 +172,7 @@ static void newline_min_after2(chunk_t *ref, INT32 count,
    }
    else
    {
-      if (chunk_is_newline(pc))
+      if (chunk_is_newline(pc) && can_increase_nl(pc))
       {
          if (pc->nl_count < count)
          {
@@ -2229,7 +2238,8 @@ void do_blank_lines(void)
          }
          if ((cpd.settings[UO_nl_after_func_proto_group].n > pc->nl_count) &&
              (next != NULL) &&
-             (next->parent_type != CT_FUNC_PROTO))
+             (next->parent_type != CT_FUNC_PROTO) &&
+             can_increase_nl(pc))
          {
             pc->nl_count = cpd.settings[UO_nl_after_func_proto_group].n;
          }

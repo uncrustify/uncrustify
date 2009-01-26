@@ -49,6 +49,7 @@
 00070  ben.cfg                 c/return-multi.c
 00071  ben.cfg                 c/include_define.h
 00072  star_pos-0.cfg          c/align-proto.c
+00073  ben.cfg                 c/nl_proto_endif.c
 
 00081  else-if-1.cfg           c/else-if.c
 00082  else-if-2.cfg           c/else-if.c
