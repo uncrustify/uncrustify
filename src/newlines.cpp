@@ -1171,27 +1171,39 @@ static void newline_func_def(chunk_t *start)
    }
 
    /* Handle break newlines type and function */
-   argval_t a = (start->parent_type == CT_FUNC_PROTO) ?
-                cpd.settings[UO_nl_func_proto_type_name].a :
-                cpd.settings[UO_nl_func_type_name].a;
+   prev = chunk_get_prev_ncnl(start);
+   prev = chunk_get_prev_ncnl(prev);
 
-   if (a != AV_IGNORE)
+   if (prev != NULL)
    {
-      prev = chunk_get_prev_ncnl(start);
-      prev = chunk_get_prev_ncnl(prev);
-
-      /* If we are on a '::', step back two tokens
-       * TODO: do we also need to check for '.' ?
-       */
-      while ((prev != NULL) && (prev->type == CT_DC_MEMBER))
+      if (prev->type == CT_OPERATOR)
       {
-         prev = chunk_get_prev_ncnl(prev);
+         tmp  = prev;
          prev = chunk_get_prev_ncnl(prev);
       }
-
-      if (prev != NULL)
+      else
       {
-         newline_iarf(prev, a);
+         tmp = start;
+      }
+      argval_t a = (tmp->parent_type == CT_FUNC_PROTO) ?
+          cpd.settings[UO_nl_func_proto_type_name].a :
+          cpd.settings[UO_nl_func_type_name].a;
+
+      if (a != AV_IGNORE)
+      {
+         /* If we are on a '::', step back two tokens
+          * TODO: do we also need to check for '.' ?
+          */
+         while ((prev != NULL) && (prev->type == CT_DC_MEMBER))
+         {
+            prev = chunk_get_prev_ncnl(prev);
+            prev = chunk_get_prev_ncnl(prev);
+         }
+
+         if (prev != NULL)
+         {
+            newline_iarf(prev, a);
+         }
       }
    }
 
@@ -1612,7 +1624,8 @@ void newlines_cleanup_braces(void)
       else if (pc->type == CT_FPAREN_OPEN)
       {
          if (((pc->parent_type == CT_FUNC_DEF) ||
-              (pc->parent_type == CT_FUNC_PROTO))
+              (pc->parent_type == CT_FUNC_PROTO) ||
+              (pc->parent_type == CT_OPERATOR))
              &&
              ((cpd.settings[UO_nl_func_decl_start].a != AV_IGNORE) ||
               (cpd.settings[UO_nl_func_decl_args].a != AV_IGNORE) ||
