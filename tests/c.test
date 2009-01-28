@@ -69,6 +69,10 @@
 00110  ben.cfg                 c/misc.c
 00111  brace-kr-br.cfg         c/misc.c
 
+00120  sp_cmt_cpp_start_remove.cfg c/sp_cmt_cpp_start.c
+00121  sp_cmt_cpp_start_add.cfg    c/sp_cmt_cpp_start.c
+00122  sp_cmt_cpp_start_force.cfg  c/sp_cmt_cpp_start.c
+
 00130  ben.cfg                 c/minus-minus.c
 
 00140  ben.cfg                 c/global-vars.c
