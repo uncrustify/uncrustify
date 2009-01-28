@@ -367,15 +367,15 @@ typedef struct _pthread_descr_struct * _pthread_descr;
 
 typedef struct __pthread_attr_s
 {
-   int    __detachstate;
-   int    __schedpolicy;
+   int                  __detachstate;
+   int                  __schedpolicy;
    struct __sched_param __schedparam;
-   int    __inheritsched;
-   int    __scope;
-   size_t __guardsize;
-   int    __stackaddr_set;
-   void   *__stackaddr;
-   size_t __stacksize;
+   int                  __inheritsched;
+   int                  __scope;
+   size_t               __guardsize;
+   int                  __stackaddr_set;
+   void                 *__stackaddr;
+   size_t               __stacksize;
 } pthread_attr_t;
 
 
@@ -387,10 +387,10 @@ __extension__ typedef long long   __pthread_cond_align_t;
 typedef struct
 {
    struct _pthread_fastlock __c_lock;
-   _pthread_descr         __c_waiting;
-   char                   __padding[48 - sizeof(struct _pthread_fastlock)
-                                    - sizeof(_pthread_descr) - sizeof(__pthread_cond_align_t)];
-   __pthread_cond_align_t __align;
+   _pthread_descr           __c_waiting;
+   char                     __padding[48 - sizeof(struct _pthread_fastlock)
+                                      - sizeof(_pthread_descr) - sizeof(__pthread_cond_align_t)];
+   __pthread_cond_align_t   __align;
 } pthread_cond_t;
 
 
@@ -407,10 +407,10 @@ typedef unsigned int   pthread_key_t;
 
 typedef struct
 {
-   int            __m_reserved;
-   int            __m_count;
-   _pthread_descr __m_owner;
-   int            __m_kind;
+   int                      __m_reserved;
+   int                      __m_count;
+   _pthread_descr           __m_owner;
+   int                      __m_kind;
    struct _pthread_fastlock __m_lock;
 } pthread_mutex_t;
 
@@ -1822,13 +1822,13 @@ typedef struct
    {
       void *data;
       int  pitch;
-   } preallocated[2];
+   }                          preallocated[2];
 
    struct
    {
       DFBColor     *entries;
       unsigned int size;
-   } palette;
+   }                          palette;
 } DFBSurfaceDescription;
 
 
@@ -1939,7 +1939,7 @@ typedef struct
    {
       const void   *data;
       unsigned int length;
-   } memory;
+   }                             memory;
 } DFBDataBufferDescription;
 
 
@@ -2732,7 +2732,7 @@ typedef struct
 
 
 
-   struct timeval timestamp;
+   struct timeval                 timestamp;
 
 
    int                            key_code;
@@ -2858,7 +2858,7 @@ typedef struct
    DFBInputDeviceButtonMask       buttons;
 
 
-   struct timeval timestamp;
+   struct timeval                 timestamp;
 } DFBWindowEvent;
 
 
