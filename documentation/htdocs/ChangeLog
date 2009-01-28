@@ -38,6 +38,7 @@ Changes in uncrustify-0.52 (not released)
  - Add support for the C# '??' operator
  - Fix conflict between nl_after_func_proto_group and nl_squeeze_ifdef
  - Add sp_cmt_cpp_start
+ - Add align_on_operator
 
 
 Changes in uncrustify-0.51 (27 Nov 2008)

@@ -789,6 +789,8 @@ void register_options(void)
                   "The span for aligning function prototypes (0=don't align)", "", 0, 5000);
    unc_add_option("align_func_proto_gap", UO_align_func_proto_gap, AT_NUM,
                   "Minimum gap between the return type and the function name.");
+   unc_add_option("align_on_operator", UO_align_on_operator, AT_BOOL,
+                  "Align function protos on the 'operator' keyword instead of what follows");
    unc_add_option("align_mix_var_proto", UO_align_mix_var_proto, AT_BOOL,
                   "Whether to mix aligning prototype and variable declarations.\n"
                   "If true, align_var_def_XXX options are used instead of align_func_proto_XXX options.");

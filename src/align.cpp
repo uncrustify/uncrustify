@@ -886,7 +886,15 @@ static void align_func_proto(int span)
                ((pc->type == CT_FUNC_DEF) &&
                 cpd.settings[UO_align_single_line_func].b))
       {
-         as.Add(pc);
+         if ((pc->parent_type == CT_OPERATOR) &&
+             cpd.settings[UO_align_on_operator].b)
+         {
+            as.Add(chunk_get_prev_ncnl(pc));
+         }
+         else
+         {
+            as.Add(pc);
+         }
          look_bro = (pc->type == CT_FUNC_DEF) &&
                     cpd.settings[UO_align_single_line_brace].b;
       }

@@ -343,6 +343,7 @@ enum uncrustify_options
    UO_align_struct_init_span,     // align structure initializer values
    UO_align_func_proto_span,      // align function prototypes
    UO_align_func_proto_gap,       // align function prototypes
+   UO_align_on_operator,
    UO_align_mix_var_proto,        // mix function prototypes and variable decl
    UO_align_single_line_func,     // mix single line function with prototypes
    UO_align_single_line_brace,    // align the open brace of single line functions
