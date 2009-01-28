@@ -362,6 +362,8 @@ void register_options(void)
    unc_add_option("sp_range", UO_sp_range, AT_IARF,
                   "Control the space around the D '..' operator.");
 
+   unc_add_option("sp_cmt_cpp_start", UO_sp_cmt_cpp_start, AT_IARF,
+                  "Control the space after the opening of a C++ comment '// A' vs '//A'");
 
    unc_begin_group(UG_indent, "Indenting");
    unc_add_option("indent_columns", UO_indent_columns, AT_NUM,

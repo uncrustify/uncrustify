@@ -291,6 +291,7 @@ enum uncrustify_options
    UO_sp_cond_question,
    UO_sp_case_label,
    UO_sp_range,
+   UO_sp_cmt_cpp_start,
 
    /*
     * Line splitting options (for long lines)

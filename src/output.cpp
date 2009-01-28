@@ -882,8 +882,40 @@ static chunk_t *output_comment_cpp(chunk_t *first)
    /* CPP comments can't be grouped unless they are converted to C comments */
    if (!cpd.settings[UO_cmt_cpp_to_c].b)
    {
-      cmt.cont_text = "// ";
-      add_comment_text(first->str, first->len, cmt, false);
+      cmt.cont_text = (cpd.settings[UO_sp_cmt_cpp_start].a & AV_REMOVE) ? "//" : "// ";
+
+      if (cpd.settings[UO_sp_cmt_cpp_start].a == AV_IGNORE)
+      {
+         add_comment_text(first->str, first->len, cmt, false);
+      }
+      else
+      {
+         add_comment_text(first->str, 2, cmt, false);
+
+         const char *tmp = first->str + 2;
+         int        len = first->len - 2;
+
+         if (cpd.settings[UO_sp_cmt_cpp_start].a & AV_REMOVE)
+         {
+            while ((len > 0) && unc_isspace(*tmp))
+            {
+               len--;
+               tmp++;
+            }
+         }
+         if (len > 0)
+         {
+            if (cpd.settings[UO_sp_cmt_cpp_start].a & AV_ADD)
+            {
+               if (!unc_isspace(*tmp))
+               {
+                  add_comment_text(" ", 1, cmt, false);
+               }
+            }
+            add_comment_text(tmp, len, cmt, false);
+         }
+      }
+
       return(first);
    }
 
