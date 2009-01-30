@@ -40,6 +40,7 @@ Changes in uncrustify-0.52 (not released)
  - Add sp_cmt_cpp_start
  - Add align_on_operator
  - Fix nl_func_type_name for operators
+ - Allow '$' to be part of identifiers (global change)
 
 
 Changes in uncrustify-0.51 (27 Nov 2008)
