@@ -1059,7 +1059,7 @@ void tokenize(const char *data, int data_len, chunk_t *ref)
       pc = chunk_add_before(&chunk, ref);
 
       /* A newline marks the end of a preprocessor */
-      if ((pc->type == CT_NEWLINE) || (pc->type == CT_COMMENT_MULTI))
+      if (pc->type == CT_NEWLINE) // || (pc->type == CT_COMMENT_MULTI))
       {
          cpd.in_preproc         = CT_NONE;
          cpd.preproc_ncnl_count = 0;
