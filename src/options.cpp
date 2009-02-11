@@ -548,7 +548,8 @@ void register_options(void)
    unc_add_option("nl_switch_brace", UO_nl_switch_brace, AT_IARF,
                   "Add or remove newline between 'switch' and '{'");
    unc_add_option("nl_multi_line_cond", UO_nl_multi_line_cond, AT_BOOL,
-                  "Add or remove newline when condition spans two or more lines");
+                  "Add a newline between ')' and '{' if the ')' is on a different line than the if/for/etc.\n"
+                  "Overrides nl_for_brace, nl_if_brace, nl_switch_brace, nl_while_switch, and nl_catch_brace.");
    unc_add_option("nl_multi_line_define", UO_nl_multi_line_define, AT_BOOL,
                   "Force a newline in a define after the macro name for multi-line defines.");
    unc_add_option("nl_before_case", UO_nl_before_case, AT_BOOL,

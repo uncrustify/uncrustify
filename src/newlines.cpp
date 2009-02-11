@@ -346,7 +346,6 @@ static void newlines_if_for_while_switch(chunk_t *start, argval_t nl_opt)
       {
          if (cpd.settings[UO_nl_multi_line_cond].b)
          {
-            nl_opt = AV_REMOVE;
             while ((pc = chunk_get_next(pc)) != close_paren)
             {
                if (chunk_is_newline(pc))
@@ -357,13 +356,13 @@ static void newlines_if_for_while_switch(chunk_t *start, argval_t nl_opt)
             }
          }
 
+         if (nl_opt & AV_REMOVE)
+         {
+            newline_del_between(close_paren, brace_open);
+         }
          if (nl_opt & AV_ADD)
          {
             newline_add_between(close_paren, brace_open);
-         }
-         else if (nl_opt & AV_REMOVE)
-         {
-            newline_del_between(close_paren, brace_open);
          }
 
          newline_add_between(brace_open, chunk_get_next_ncnl(brace_open));
