@@ -1181,11 +1181,12 @@ void indent_text(void)
             LOG_FMT(LINDENT, "Indent SQL: [%.*s] to %d (%d/%d)\n",
                     pc->len, pc->str, pc->column, sql_col, sql_orig_col);
          }
-         else if ((pc->type == CT_MEMBER) ||
-                  (pc->type == CT_DC_MEMBER) ||
-                  ((prev != NULL) &&
-                   ((prev->type == CT_MEMBER) ||
-                    (prev->type == CT_DC_MEMBER))))
+         else if (((pc->flags & PCF_STMT_START) == 0) &&
+                  ((pc->type == CT_MEMBER) ||
+                   (pc->type == CT_DC_MEMBER) ||
+                   ((prev != NULL) &&
+                    ((prev->type == CT_MEMBER) ||
+                     (prev->type == CT_DC_MEMBER)))))
          {
             tmp = cpd.settings[UO_indent_member].n + indent_column;
             LOG_FMT(LINDENT, "%s: %d] member => %d\n",

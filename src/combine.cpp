@@ -650,6 +650,8 @@ void fix_symbols(void)
               (next->type == CT_TYPE) ||
               (next->type == CT_STRUCT) ||
               (next->type == CT_QUALIFIER) ||
+              (next->type == CT_MEMBER) ||
+              (next->type == CT_DC_MEMBER) ||
               (next->type == CT_ENUM) ||
               (next->type == CT_UNION)) &&
              (prev->type != CT_SIZEOF) &&

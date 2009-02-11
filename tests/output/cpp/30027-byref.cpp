@@ -32,6 +32,7 @@ public:
 }
 
 const Foo& Foo::operator ==(Foo& me){
+   ::sockaddr* ptr = (::sockaddr*)&host;
    return me;
 }
 
