@@ -34,6 +34,7 @@
 00050  brace-remove-2.cfg      c/brace-remove.c
 00051  brace-remove-all.cfg    c/brace-remove.c
 00052  brace-remove-all.cfg    c/brace-remove2.c
+00053  nl_brace_test.cfg       c/brace.c
 
 00055  cgal.cfg                c/braces-2.c
 
