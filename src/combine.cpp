@@ -753,6 +753,7 @@ void fix_symbols(void)
              */
             pc->type = ((prev->flags & PCF_PUNCTUATOR) &&
                         !chunk_is_paren_close(prev) &&
+                        (prev->type != CT_SQUARE_CLOSE) &&
                         (prev->type != CT_DC_MEMBER)) ? CT_DEREF : CT_ARITH;
          }
       }

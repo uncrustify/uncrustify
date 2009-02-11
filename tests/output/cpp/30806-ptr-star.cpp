@@ -11,6 +11,7 @@ int MyFunc(std::string &s, char *) {
 
 int YerFunc(std::string &s, char **) {
 	char **c;
+	int a = b[0] * c;
 }
 
 int *X(int *i, int *);

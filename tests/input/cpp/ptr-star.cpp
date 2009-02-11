@@ -11,6 +11,7 @@ char *c = const_cast<char*>(s.c_str());
 
 int YerFunc(std::string& s, char**) {
 char **c;
+int a = b[0] * c;
 }
 
 int*X(int *i, int*);
