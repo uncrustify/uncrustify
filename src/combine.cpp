@@ -744,7 +744,8 @@ void fix_symbols(void)
          {
             pc->type = CT_DEREF;
          }
-         else if ((prev->type == CT_WORD) && chunk_ends_type(prev))
+         else if (((prev->type == CT_WORD) && chunk_ends_type(prev)) ||
+                  (prev->type == CT_DC_MEMBER))
          {
             pc->type = CT_PTR_TYPE;
          }
