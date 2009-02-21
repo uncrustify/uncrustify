@@ -735,6 +735,8 @@ void indent_text(void)
             if ((pc->parent_type == CT_IF) ||
                 (pc->parent_type == CT_ELSE) ||
                 (pc->parent_type == CT_ELSEIF) ||
+                (pc->parent_type == CT_TRY) ||
+                (pc->parent_type == CT_CATCH) ||
                 (pc->parent_type == CT_DO) ||
                 (pc->parent_type == CT_WHILE) ||
                 (pc->parent_type == CT_SWITCH) ||
