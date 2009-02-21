@@ -17,6 +17,8 @@ typedef std::list<StreamedData *>::iterator iterator;
 //typedef std::list<StreamedData *>::iterator iterator;
 //------------------------------^ This space show not be there
 
+typedef void (T::*Routine)(void);
+
 //Similar with "sp_before_byref = remove":
 unsigned long allocate(unsigned long size, void* & p);
 //unsigned long allocate(unsigned long size, void* & p);
