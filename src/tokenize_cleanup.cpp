@@ -487,6 +487,11 @@ void tokenize_cleanup(void)
          pc->type = CT_SIZEOF;
       }
 
+      if ((pc->type == CT_UNSAFE) && (next->type != CT_BRACE_OPEN))
+      {
+         pc->type = CT_QUALIFIER;
+      }
+
       /* TODO: determine other stuff here */
 
       prev = pc;

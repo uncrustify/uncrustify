@@ -22,3 +22,4 @@
 
 10050 cs_generics.cfg          cs/generics.cs
 
+10060 /dev/null                cs/unsafe.cs
