@@ -535,6 +535,16 @@ argval_t do_space(chunk_t *first, chunk_t *second, bool complete=true)
       log_rule("sp_cpp_cast_paren");
       return(cpd.settings[UO_sp_cpp_cast_paren].a);
    }
+
+   if ((first->type == CT_PAREN_CLOSE) &&
+       ((second->type == CT_PAREN_OPEN) ||
+        (second->type == CT_FPAREN_OPEN)))
+   {
+      /* Must be an indirect/chained function call? */
+      log_rule("REMOVE");
+      return(AV_REMOVE);  /* TODO: make this configurable? */
+   }
+
    if ((first->type == CT_FUNC_PROTO) ||
        ((second->type == CT_FPAREN_OPEN) &&
         (second->parent_type == CT_FUNC_PROTO)))
@@ -1024,14 +1034,6 @@ argval_t do_space(chunk_t *first, chunk_t *second, bool complete=true)
    {
       log_rule("sp_brace_typedef");
       return(cpd.settings[UO_sp_brace_typedef].a);
-   }
-
-   if ((first->type == CT_PAREN_CLOSE) &&
-       (second->type == CT_PAREN_OPEN))
-   {
-      /* Must be an indirect/chained function call? */
-      log_rule("REMOVE");
-      return(AV_REMOVE);  /* TODO: make this configurable? */
    }
 
    if (second->type == CT_SPAREN_OPEN)
