@@ -568,6 +568,9 @@ void register_options(void)
                   "Add or remove newline after each ',' in the constructor member initialization");
    unc_add_option("nl_func_type_name", UO_nl_func_type_name, AT_IARF,
                   "Add or remove newline between return type and function name in definition");
+   unc_add_option("nl_func_scope_name", UO_nl_func_scope_name, AT_IARF,
+                  "Add or remove newline between function scope and name in a definition\n"
+                  "Controls the newline after '::' in 'void A::f() { }'");
    unc_add_option("nl_func_proto_type_name", UO_nl_func_proto_type_name, AT_IARF,
                   "Add or remove newline between return type and function name in a prototype");
    unc_add_option("nl_func_paren", UO_nl_func_paren, AT_IARF,
