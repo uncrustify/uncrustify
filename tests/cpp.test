@@ -124,6 +124,8 @@
 30840 nl_func_type_name_remove.cfg     cpp/nl_func_type_name.cpp
 30841 nl_func_type_name_force.cfg      cpp/nl_func_type_name.cpp
 
+30845 ben.cfg                          cpp/deref.cpp
+
 30900 region-0.cfg                     cpp/region.cpp
 30901 region-1.cfg                     cpp/region.cpp
 30902 region-2.cfg                     cpp/region.cpp
