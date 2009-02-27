@@ -139,7 +139,7 @@ std::vector < int > B;
 std::vector < int > C(2);
 std::vector < int > D;
 
-template< class T > struct X {template< class U > void operator ()(U);};
+template< class T > struct X { template< class U > void operator ()(U); };
 
-template< class T > class Y {template< class V > void f(V);};
+template< class T > class Y { template< class V > void f(V); };
 

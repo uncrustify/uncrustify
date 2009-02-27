@@ -9,7 +9,9 @@ public bool delegate(ushort a)  TVerifier;
 public typedef ushort   TAddr;
 
 void delegate() dg;
-dg = { int y; };
+dg = {
+    int y;
+};
 
 int opApply(int delegate(inout Type[, ...]) dg);
 

@@ -139,7 +139,7 @@ static ssize_t show_client_name(struct device *dev, struct device_attribute *att
  */
 static struct device_attribute dev_attr_client_name =
   {
-  .attr = {.name = "name", .mode = S_IRUGO, .owner = THIS_MODULE },
+  .attr = { .name = "name", .mode = S_IRUGO, .owner = THIS_MODULE },
   .show = &show_client_name,
   };
 

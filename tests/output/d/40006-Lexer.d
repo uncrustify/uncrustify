@@ -669,75 +669,77 @@ class Lexer
                     continue;
 
                 case '+':
-                    { int nest;
-                      linnum = loc.linnum;
-                      p++;
-                      nest = 1;
-                      while (1)
-                      {
-                          ubyte c = *p;
-                          switch (c)
-                          {
-                          case '/':
-                              p++;
-                              if (*p == '+')
-                              {
-                                  p++;
-                                  nest++;
-                              }
-                              continue;
+                    {
+                        int nest;
+                        linnum = loc.linnum;
+                        p++;
+                        nest = 1;
+                        while (1)
+                        {
+                            ubyte c = *p;
+                            switch (c)
+                            {
+                            case '/':
+                                p++;
+                                if (*p == '+')
+                                {
+                                    p++;
+                                    nest++;
+                                }
+                                continue;
 
-                          case '+':
-                              p++;
-                              if (*p == '/')
-                              {
-                                  p++;
-                                  if (--nest == 0)
-                                      break;
-                              }
-                              continue;
+                            case '+':
+                                p++;
+                                if (*p == '/')
+                                {
+                                    p++;
+                                    if (--nest == 0)
+                                        break;
+                                }
+                                continue;
 
-                          case '\r':
-                              p++;
-                              if (*p != '\n')
-                                  loc.linnum++;
-                              continue;
+                            case '\r':
+                                p++;
+                                if (*p != '\n')
+                                    loc.linnum++;
+                                continue;
 
-                          case '\n':
-                              loc.linnum++;
-                              p++;
-                              continue;
+                            case '\n':
+                                loc.linnum++;
+                                p++;
+                                continue;
 
-                          case 0:
-                          case 0x1A:
-                              error("unterminated /+ +/ comment");
-                              p       = end;
-                              t.value = TOK.TOKeof;
-                              return;
+                            case 0:
+                            case 0x1A:
+                                error("unterminated /+ +/ comment");
+                                p       = end;
+                                t.value = TOK.TOKeof;
+                                return;
 
-                          default:
-                              if (c & 0x80)
-                              {
-                                  uint u = decodeUTF();
-                                  if (u == PS || u == LS)
-                                      loc.linnum++;
-                              }
-                              p++;
-                              continue;
-                          }
-                          break;
-                      }
-                      if (commentToken)
-                      {
-                          t.value = TOK.TOKcomment;
-                          return;
-                      }
-                      if (doDocComment && t.ptr[2] == '+' && p - 4 != t.ptr)
-                      {
-                          // if /++ but not /++/
-                          getDocComment(t, lastLine == linnum);
-                      }
-                      continue; }
+                            default:
+                                if (c & 0x80)
+                                {
+                                    uint u = decodeUTF();
+                                    if (u == PS || u == LS)
+                                        loc.linnum++;
+                                }
+                                p++;
+                                continue;
+                            }
+                            break;
+                        }
+                        if (commentToken)
+                        {
+                            t.value = TOK.TOKcomment;
+                            return;
+                        }
+                        if (doDocComment && t.ptr[2] == '+' && p - 4 != t.ptr)
+                        {
+                            // if /++ but not /++/
+                            getDocComment(t, lastLine == linnum);
+                        }
+                        continue;
+                    }
 
                 default:
                     break;

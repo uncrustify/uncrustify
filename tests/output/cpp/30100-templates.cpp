@@ -145,10 +145,10 @@ std::vector<int> C(2);
 std::vector<int> D;
 
 template<class T>
-struct X {template<class U>
-          void operator ()(U);};
+struct X { template<class U>
+           void operator ()(U); };
 
 template<class T>
-class Y {template<class V>
-         void f(V);};
+class Y { template<class V>
+          void f(V); };
 

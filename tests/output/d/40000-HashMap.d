@@ -1066,7 +1066,9 @@ class HashMap
 
     static class KeyIterator : HashIterator
     {
-        this(HashMap map) { super(map); }
+        this(HashMap map) {
+            super(map);
+        }
         public K next()
         {
             return super.nextElement().key;
@@ -1075,7 +1077,9 @@ class HashMap
 
     static class ValueIterator : HashIterator
     {
-        this(HashMap map) { super(map); }
+        this(HashMap map) {
+            super(map);
+        }
         public V next()
         {
             volatile return super.nextElement().value;
