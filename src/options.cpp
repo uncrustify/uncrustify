@@ -595,6 +595,9 @@ void register_options(void)
    unc_add_option("nl_after_vbrace_open", UO_nl_after_vbrace_open, AT_BOOL,
                   "Whether to put a newline after a virtual brace open.\n"
                   "These occur in un-braced if/while/do/for statement bodies.");
+   unc_add_option("nl_after_brace_close", UO_nl_after_brace_close, AT_BOOL,
+                  "Whether to put a newline after a brace close.\n"
+                  "Does not apply if followed by a necessary ';'.");
    unc_add_option("nl_define_macro", UO_nl_define_macro, AT_BOOL,
                   "Whether to alter newlines in '#define' macros");
    unc_add_option("nl_squeeze_ifdef", UO_nl_squeeze_ifdef, AT_BOOL,

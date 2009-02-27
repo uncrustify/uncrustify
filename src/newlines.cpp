@@ -1513,12 +1513,15 @@ void newlines_cleanup_braces(void)
          }
 
          /* Force a newline after a function def */
-         if ((pc->parent_type == CT_FUNC_DEF) ||
+         if (cpd.settings[UO_nl_after_brace_close].b ||
+             (pc->parent_type == CT_FUNC_DEF) ||
              (pc->parent_type == CT_OC_MSG_DECL))
          {
             next = chunk_get_next(pc);
             if ((next != NULL) &&
                 (next->type != CT_SEMICOLON) &&
+                (next->type != CT_COMMA) &&
+                ((pc->flags & (PCF_IN_ARRAY_ASSIGN | PCF_IN_TYPEDEF)) == 0) &&
                 !chunk_is_newline(next) &&
                 !chunk_is_comment(next))
             {

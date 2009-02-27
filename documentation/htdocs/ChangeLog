@@ -44,6 +44,7 @@ Changes in uncrustify-0.52 (not released)
  - Fix detection of the '*' in 'int a = b[0] * c;'
  - Fix and improve the description of nl_multi_line_cond
  - Fix handling of global namespace type such as '::sockaddr'
+ - Add nl_after_brace_close
 
 
 Changes in uncrustify-0.51 (27 Nov 2008)
