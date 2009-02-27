@@ -974,7 +974,7 @@ argval_t do_space(chunk_t *first, chunk_t *second, bool complete=true)
       return(cpd.settings[UO_sp_type_func].a);
    }
 
-   if (first->type == CT_BRACE_OPEN)
+   if (first->type == CT_BRACE_CLOSE)
    {
       if (second->type == CT_ELSE)
       {
