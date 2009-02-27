@@ -337,6 +337,7 @@ void fix_symbols(void)
          }
 
          if ((next != NULL) && (next->type == CT_BRACE_OPEN) &&
+             (next->parent_type == CT_NONE) &&
              ((pc->type == CT_SQUARE_CLOSE) ||
               (pc->type == CT_WORD)))
          {
