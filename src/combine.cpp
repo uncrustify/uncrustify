@@ -1831,18 +1831,26 @@ static void fix_fcn_def_params(chunk_t *start)
 
    ChunkStack cs;
 
+   int level = start->level + 1;
+
    chunk_t *pc = start;
    while ((pc = chunk_get_next_ncnl(pc)) != NULL)
    {
-      LOG_FMT(LFCNP, "%s: looking at %.*s on line %d, level %d\n", __func__, pc->len, pc->str, pc->orig_line, pc->level);
-
       if (((start->len == 1) && (*start->str == ')')) ||
-          (pc->level <= start->level))
+          (pc->level < level))
       {
          LOG_FMT(LFCNP, "%s: bailed on %.*s on line %d\n", __func__, pc->len, pc->str, pc->orig_line);
          break;
       }
 
+      LOG_FMT(LFCNP, "%s: %s %.*s on line %d, level %d\n", __func__,
+              (pc->level > level) ? "skipping" : "looking at",
+              pc->len, pc->str, pc->orig_line, pc->level);
+
+      if (pc->level > level)
+      {
+         continue;
+      }
       if (chunk_is_star(pc))
       {
          pc->type = CT_PTR_TYPE;
