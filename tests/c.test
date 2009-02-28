@@ -178,6 +178,7 @@
 
 01020  kw_subst.cfg            c/kw_subst.c
 01021  kw_subst3.cfg           c/hello.c
+01022  kw_subst3.cfg           c/kw_subst.c
 
 01030  multi.cfg               c/multi.h
 
