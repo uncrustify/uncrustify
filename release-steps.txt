@@ -25,7 +25,7 @@ Specific files to update:
     documentation/htdocs/index.html
     man/uncrustify.1 (man file)
     src/uncrustify_version.h
-Run "sh autogen.sh".
+Run "sh autogen.sh" and then "./configure".
 
 3a. Rebuild from scratch (make clean && make)
 
