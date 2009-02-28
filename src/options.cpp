@@ -854,6 +854,9 @@ void register_options(void)
    unc_add_option("cmt_insert_file_header", UO_cmt_insert_file_header, AT_STRING,
                   "The filename that contains text to insert at the head of a file if the file doesn't start with a C/C++ comment.\n"
                   "Will substitue $(filename) with the current file's name.");
+   unc_add_option("cmt_insert_file_footer", UO_cmt_insert_file_footer, AT_STRING,
+                  "The filename that contains text to insert at the end of a file if the file doesn't end with a C/C++ comment.\n"
+                  "Will substitue $(filename) with the current file's name.");
    unc_add_option("cmt_insert_func_header", UO_cmt_insert_func_header, AT_STRING,
                   "The filename that contains text to insert before a function implementation if the function isn't preceeded with a C/C++ comment.\n"
                   "Will substitue $(function) with the function name and $(javaparam) with the javadoc @param and @return stuff.\n"

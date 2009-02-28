@@ -46,6 +46,7 @@ Changes in uncrustify-0.52 (not released)
  - Fix handling of global namespace type such as '::sockaddr'
  - Add nl_after_brace_close
  - Add nl_func_scope_name
+ - Add cmt_insert_file_footer
 
 
 Changes in uncrustify-0.51 (27 Nov 2008)

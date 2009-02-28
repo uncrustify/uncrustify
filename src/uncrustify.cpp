@@ -814,6 +814,12 @@ static int load_header_files()
       retval |= load_mem_file_config(cpd.settings[UO_cmt_insert_file_header].str,
                                      cpd.file_hdr);
    }
+   if ((cpd.settings[UO_cmt_insert_file_footer].str != NULL) &&
+       (cpd.settings[UO_cmt_insert_file_footer].str[0] != 0))
+   {
+      retval |= load_mem_file_config(cpd.settings[UO_cmt_insert_file_footer].str,
+                                     cpd.file_ftr);
+   }
    if ((cpd.settings[UO_cmt_insert_func_header].str != NULL) &&
        (cpd.settings[UO_cmt_insert_func_header].str[0] != 0))
    {
@@ -952,6 +958,28 @@ static void add_file_header()
    }
 }
 
+static void add_file_footer()
+{
+   chunk_t *pc = chunk_get_tail();
+
+   /* Back up if the file ends with a newline */
+   if ((pc != NULL) && chunk_is_newline(pc))
+   {
+      pc = chunk_get_prev(pc);
+   }
+   if ((pc != NULL) &&
+       (!chunk_is_comment(pc) || !chunk_is_newline(chunk_get_prev(pc))))
+   {
+      pc = chunk_get_tail();
+      if (!chunk_is_newline(pc))
+      {
+         LOG_FMT(LSYS, "Adding a newline at the end of the file\n");
+         newline_add_after(pc);
+      }
+      tokenize(cpd.file_ftr.data, cpd.file_ftr.length, NULL);
+   }
+}
+
 static void add_func_header(c_token_t type, file_mem& fm)
 {
    chunk_t *pc;
@@ -1034,6 +1062,12 @@ static void uncrustify_start(const char *data, int data_len)
    if (cpd.file_hdr.data != NULL)
    {
       add_file_header();
+   }
+
+   /* Add the file header */
+   if (cpd.file_ftr.data != NULL)
+   {
+      add_file_footer();
    }
 
    /**

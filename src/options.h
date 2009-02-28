@@ -528,6 +528,7 @@ enum uncrustify_options
    UO_cmt_multi_check_last,
 
    UO_cmt_insert_file_header,
+   UO_cmt_insert_file_footer,
    UO_cmt_insert_func_header,
    UO_cmt_insert_class_header,
    UO_cmt_insert_before_preproc,
