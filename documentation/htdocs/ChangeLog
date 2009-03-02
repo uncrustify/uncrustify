@@ -28,6 +28,11 @@ What's left before 1.0
 ===============================================================================
 
 
+Changes in uncrustify-0.53 (not yet released)
+-------------------------------------------------------------------------------
+ - Fix sp_inside_braces* options, which were broken by the fix to issue #2629652
+
+
 Changes in uncrustify-0.52 (28 Feb 2009)
 -------------------------------------------------------------------------------
  - Add sp_before_assign and sp_after_assign

@@ -991,7 +991,11 @@ argval_t do_space(chunk_t *first, chunk_t *second, bool complete=true)
          log_rule("sp_brace_finally");
          return(cpd.settings[UO_sp_brace_finally].a);
       }
-      else if (first->parent_type == CT_ENUM)
+   }
+
+   if (first->type == CT_BRACE_OPEN)
+   {
+      if (first->parent_type == CT_ENUM)
       {
          log_rule("sp_inside_braces_enum");
          return(cpd.settings[UO_sp_inside_braces_enum].a);
