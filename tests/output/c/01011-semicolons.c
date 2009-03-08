@@ -47,3 +47,11 @@ struct narg {
 	const char *ghi;
 };
 
+void f2(void)
+{
+	{ i++; }
+
+	for (;;) ;
+
+	for (;;) {   }
+}

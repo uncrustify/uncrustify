@@ -19,7 +19,7 @@ class CFooBarDlg : public CDialog
       {
          m_nCount = count;
       }
-   };
+   }
 
    // Dialog Data
    //{{AFX_DATA(CATCSMgrDlg)

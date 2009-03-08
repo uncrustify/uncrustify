@@ -176,6 +176,7 @@
 01002  mod-paren2.cfg          c/mod-paren.c
 
 01011  del_semicolon.cfg       c/semicolons.c
+01012  ben.cfg                 c/semicolons.c
 
 01020  kw_subst.cfg            c/kw_subst.c
 01021  kw_subst3.cfg           c/hello.c
