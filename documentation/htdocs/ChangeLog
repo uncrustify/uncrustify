@@ -31,6 +31,7 @@ What's left before 1.0
 Changes in uncrustify-0.53 (not yet released)
 -------------------------------------------------------------------------------
  - Fix sp_inside_braces* options, which were broken by the fix to issue #2629652
+ - Fix sp_after_cast, which was broken by a previous fix
 
 
 Changes in uncrustify-0.52 (28 Feb 2009)

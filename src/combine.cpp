@@ -603,6 +603,7 @@ void fix_symbols(void)
       if ((next != NULL) &&
           ((pc->flags & PCF_IN_TYPEDEF) == 0) &&
           (pc->parent_type != CT_CPP_CAST) &&
+          (pc->parent_type != CT_C_CAST) &&
           ((pc->flags & PCF_IN_PREPROC) == 0) &&
           chunk_is_str(pc, ")", 1) &&
           chunk_is_str(next, "(", 1))

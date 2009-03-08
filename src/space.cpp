@@ -540,6 +540,14 @@ argval_t do_space(chunk_t *first, chunk_t *second, bool complete=true)
        ((second->type == CT_PAREN_OPEN) ||
         (second->type == CT_FPAREN_OPEN)))
    {
+      /* "(int)a" vs "(int) a" or "cast(int)a" vs "cast(int) a" */
+      if ((first->parent_type == CT_C_CAST) ||
+          (first->parent_type == CT_D_CAST))
+      {
+         log_rule("sp_after_cast");
+         return(cpd.settings[UO_sp_after_cast].a);
+      }
+
       /* Must be an indirect/chained function call? */
       log_rule("REMOVE");
       return(AV_REMOVE);  /* TODO: make this configurable? */
