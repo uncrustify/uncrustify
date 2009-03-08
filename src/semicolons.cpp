@@ -33,6 +33,7 @@ static void remove_semicolon(chunk_t *pc)
  *  - after brace close whose parent is IF, ELSE, SWITCH, WHILE, FOR
  *  - after another semicolon where parent is not FOR
  *  - (D) after brace close whose parent is ENUM/STRUCT/UNION
+ *  - after an open brace
  */
 void remove_extra_semicolons(void)
 {
@@ -48,6 +49,10 @@ void remove_extra_semicolons(void)
       if ((pc->type == CT_SEMICOLON) &&
           ((prev = chunk_get_prev_ncnl(pc)) != NULL))
       {
+         LOG_FMT(LSCANSEMI, "Semi on %d:%d, prev = '%.*s' [%s/%s]\n",
+                 pc->orig_line, pc->orig_col, prev->len, prev->str,
+                 get_token_name(prev->type), get_token_name(prev->parent_type));
+
          if ((prev->type == CT_BRACE_CLOSE) &&
              ((prev->parent_type == CT_IF) ||
               (prev->parent_type == CT_ELSE) ||
@@ -55,6 +60,7 @@ void remove_extra_semicolons(void)
               (prev->parent_type == CT_WHILE) ||
               (prev->parent_type == CT_FOR) ||
               (prev->parent_type == CT_FUNC_DEF) ||
+              (prev->parent_type == CT_NONE) ||
               (prev->parent_type == CT_OC_MSG_DECL) ||
               (prev->parent_type == CT_FUNC_CLASS)))
          {
@@ -69,6 +75,10 @@ void remove_extra_semicolons(void)
                   ((prev->parent_type == CT_ENUM) ||
                    (prev->parent_type == CT_UNION) ||
                    (prev->parent_type == CT_STRUCT)))
+         {
+            remove_semicolon(pc);
+         }
+         else if (prev->type == CT_BRACE_OPEN)
          {
             remove_semicolon(pc);
          }

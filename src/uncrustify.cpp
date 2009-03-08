@@ -1127,6 +1127,11 @@ static void uncrustify_file(const char *data, int data_len, FILE *pfout,
          add_func_header(CT_CLASS, cpd.class_hdr);
       }
 
+      /**
+       * Change virtual braces into real braces...
+       */
+      do_braces();
+
       /* Scrub extra semicolons */
       if (cpd.settings[UO_mod_remove_extra_semicolon].b)
       {
@@ -1138,11 +1143,6 @@ static void uncrustify_file(const char *data, int data_len, FILE *pfout,
       {
          remove_extra_returns();
       }
-
-      /**
-       * Change virtual braces into real braces...
-       */
-      do_braces();
 
       /**
        * Add parens

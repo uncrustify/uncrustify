@@ -32,6 +32,7 @@ Changes in uncrustify-0.53 (not yet released)
 -------------------------------------------------------------------------------
  - Fix sp_inside_braces* options, which were broken by the fix to issue #2629652
  - Fix sp_after_cast, which was broken by a previous fix
+ - Be a little more agressive in removing unecessary semicolons
 
 
 Changes in uncrustify-0.52 (28 Feb 2009)

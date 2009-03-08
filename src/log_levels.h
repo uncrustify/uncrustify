@@ -72,20 +72,21 @@ enum
    LPARADD2  = 56,    /* adding parens in if/while - details */
    LCMTNL    = 57,    /* newlines before comments */
    LTEMPFUNC = 58,    /* Template function detection */
-   LDELSEMI  = 59,    /* Removing semicolons */
-   LFPARAM   = 60,    /* Testing for a full parameter */
-   LNL1LINE  = 61,    /* NL check for 1 liners */
-   LPFCHK    = 62,    /* Parse Frame check fcn call */
-   LAVDB     = 63,    /* align var def braces */
-   LSORT     = 64,    /* Sorting */
-   LSPACE    = 65,    /* Space */
-   LALIGN    = 66,    /* align */
-   LALAGAIN  = 67,    /* align again */
-   LOPERATOR = 68,    /* operator */
-   LASFCP    = 69,    /* Align Same Function Call Params */
-   LINDLINED = 70,    /* indent line details */
-   LBCTRL    = 71,    /* beautifier control */
-   LRMRETURN = 72,    /* remove 'return;' */
+   LSCANSEMI = 59,    /* scan semi colon removal */
+   LDELSEMI  = 60,    /* Removing semicolons */
+   LFPARAM   = 61,    /* Testing for a full parameter */
+   LNL1LINE  = 62,    /* NL check for 1 liners */
+   LPFCHK    = 63,    /* Parse Frame check fcn call */
+   LAVDB     = 64,    /* align var def braces */
+   LSORT     = 65,    /* Sorting */
+   LSPACE    = 66,    /* Space */
+   LALIGN    = 67,    /* align */
+   LALAGAIN  = 68,    /* align again */
+   LOPERATOR = 69,    /* operator */
+   LASFCP    = 70,    /* Align Same Function Call Params */
+   LINDLINED = 71,    /* indent line details */
+   LBCTRL    = 72,    /* beautifier control */
+   LRMRETURN = 73,    /* remove 'return;' */
 };
 
 #endif   /* LOG_LEVELS_H_INCLUDED */
