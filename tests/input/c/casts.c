@@ -81,5 +81,9 @@ void foo(void)
    a = (int)*(x);
    a = (CHAR)*(x);
    a = (Uint)*(x);
+
+   a = (unsigned int)(1 + 4);
+   a = (int)(1 + 1);
+   a = (void *)(&str);
 }
 
