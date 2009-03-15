@@ -2796,6 +2796,14 @@ static void mark_class_ctor(chunk_t *start)
       return;
    }
 
+   /* HACK alert: make sure we don't enter/leave a preprocessor */
+   next = chunk_get_next(pclass);
+   if ((next != NULL) &&
+       ((next->flags & PCF_IN_PREPROC) != (pclass->flags & PCF_IN_PREPROC)))
+   {
+      return;
+   }
+
    chunk_t *pc   = chunk_get_next_ncnl(pclass);
    int     level = pclass->brace_level + 1;
 
