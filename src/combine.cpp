@@ -2788,7 +2788,7 @@ static void mark_class_ctor(chunk_t *start)
    chunk_t *next;
    chunk_t *pclass;
 
-   pclass = chunk_get_next_ncnl(start);
+   pclass = chunk_get_next_ncnl(start, CNAV_PREPROC);
    if ((pclass == NULL) ||
        ((pclass->type != CT_TYPE) &&
         (pclass->type != CT_WORD)))
@@ -2796,15 +2796,7 @@ static void mark_class_ctor(chunk_t *start)
       return;
    }
 
-   /* HACK alert: make sure we don't enter/leave a preprocessor */
-   next = chunk_get_next(pclass);
-   if ((next != NULL) &&
-       ((next->flags & PCF_IN_PREPROC) != (pclass->flags & PCF_IN_PREPROC)))
-   {
-      return;
-   }
-
-   chunk_t *pc   = chunk_get_next_ncnl(pclass);
+   chunk_t *pc   = chunk_get_next_ncnl(pclass, CNAV_PREPROC);
    int     level = pclass->brace_level + 1;
 
    LOG_FMT(LFTOR, "%s: Called on %.*s on line %d (next='%.*s')\n",
@@ -2831,7 +2823,7 @@ static void mark_class_ctor(chunk_t *start)
                  __func__, pc->orig_line);
          return;
       }
-      pc = chunk_get_next_ncnl(pc);
+      pc = chunk_get_next_ncnl(pc, CNAV_PREPROC);
    }
 
    if (pc == NULL)
@@ -2842,7 +2834,7 @@ static void mark_class_ctor(chunk_t *start)
 
    set_paren_parent(pc, start->type);
 
-   pc = chunk_get_next_ncnl(pc);
+   pc = chunk_get_next_ncnl(pc, CNAV_PREPROC);
    while (pc != NULL)
    {
       pc->flags |= PCF_IN_CLASS;
@@ -2859,7 +2851,7 @@ static void mark_class_ctor(chunk_t *start)
          return;
       }
 
-      next = chunk_get_next_ncnl(pc);
+      next = chunk_get_next_ncnl(pc, CNAV_PREPROC);
       if ((next != NULL) && (next->len == 1) && (*next->str == '(') &&
           (pc->len == pclass->len) &&
           (memcmp(pc->str, pclass->str, pc->len) == 0))
