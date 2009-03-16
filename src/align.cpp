@@ -926,6 +926,7 @@ static chunk_t *align_var_def_brace(chunk_t *start, int span, int *p_nl_count)
    int        mygap      = 0;
    AlignStack as;    /* var/proto/def */
    AlignStack as_bc; /* bit-colon */
+   AlignStack as_at; /* attribute */
    AlignStack as_br; /* one-liner brace open */
    bool       fp_active   = cpd.settings[UO_align_mix_var_proto].b;
    bool       fp_look_bro = false;
@@ -979,6 +980,8 @@ static chunk_t *align_var_def_brace(chunk_t *start, int span, int *p_nl_count)
    as_bc.Start(myspan, 0);
    as_bc.m_gap = cpd.settings[UO_align_var_def_colon_gap].n;
 
+   as_at.Start(myspan, 0);
+
    /* Set up the brace open aligner */
    as_br.Start(myspan, mythresh);
    as_br.m_gap = cpd.settings[UO_align_single_line_brace_gap].n;
@@ -993,6 +996,7 @@ static chunk_t *align_var_def_brace(chunk_t *start, int span, int *p_nl_count)
          {
             as.NewLines(pc->nl_count);
             as_bc.NewLines(pc->nl_count);
+            as_at.NewLines(pc->nl_count);
             as_br.NewLines(pc->nl_count);
          }
          pc = chunk_get_next(pc);
@@ -1033,6 +1037,7 @@ static chunk_t *align_var_def_brace(chunk_t *start, int span, int *p_nl_count)
             did_this_line = false;
             as.NewLines(sub_nl_count);
             as_bc.NewLines(sub_nl_count);
+            as_at.NewLines(sub_nl_count);
             as_br.NewLines(sub_nl_count);
             if (p_nl_count != NULL)
             {
@@ -1055,6 +1060,7 @@ static chunk_t *align_var_def_brace(chunk_t *start, int span, int *p_nl_count)
          did_this_line = false;
          as.NewLines(pc->nl_count);
          as_bc.NewLines(pc->nl_count);
+         as_at.NewLines(pc->nl_count);
          as_br.NewLines(pc->nl_count);
          if (p_nl_count != NULL)
          {
@@ -1090,6 +1096,22 @@ static chunk_t *align_var_def_brace(chunk_t *start, int span, int *p_nl_count)
                   as_bc.Add(next);
                }
             }
+            if (cpd.settings[UO_align_var_def_attribute].b)
+            {
+               next = pc;
+               while ((next = chunk_get_next_nc(next)) != NULL)
+               {
+                  if (next->type == CT_ATTRIBUTE)
+                  {
+                     as_at.Add(next);
+                     break;
+                  }
+                  if ((next->type == CT_SEMICOLON) || chunk_is_newline(next))
+                  {
+                     break;
+                  }
+               }
+            }
          }
          did_this_line = true;
       }
@@ -1106,6 +1128,7 @@ static chunk_t *align_var_def_brace(chunk_t *start, int span, int *p_nl_count)
 
    as.End();
    as_bc.End();
+   as_at.End();
    as_br.End();
 
    return(pc);

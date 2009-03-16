@@ -746,6 +746,8 @@ void register_options(void)
                   "The gap for aligning variable definitions");
    unc_add_option("align_var_def_colon", UO_align_var_def_colon, AT_BOOL,
                   "Whether to align the colon in struct bit fields");
+   unc_add_option("align_var_def_attribute", UO_align_var_def_attribute, AT_BOOL,
+                  "Whether to align any attribute after the variable name");
    unc_add_option("align_var_def_inline", UO_align_var_def_inline, AT_BOOL,
                   "Whether to align inline struct/enum/union variable definitions");
    unc_add_option("align_assign_span", UO_align_assign_span, AT_NUM,

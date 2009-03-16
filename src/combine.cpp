@@ -3263,9 +3263,13 @@ chunk_t *skip_attribute_next(chunk_t *attr)
 {
    if ((attr != NULL) && (attr->type == CT_ATTRIBUTE))
    {
-      chunk_t *pc;
-      pc = chunk_get_next_type(attr, CT_FPAREN_CLOSE, attr->level);
-      return(chunk_get_next_ncnl(pc));
+      chunk_t *pc = chunk_get_next(attr);
+      if ((pc != NULL) && (pc->type == CT_FPAREN_OPEN))
+      {
+         pc = chunk_get_next_type(attr, CT_FPAREN_CLOSE, attr->level);
+         return(chunk_get_next_ncnl(pc));
+      }
+      return(pc);
    }
    return(attr);
 }
