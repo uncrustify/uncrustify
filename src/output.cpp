@@ -273,6 +273,12 @@ void output_text(FILE *pfile)
    cpd.fout = pfile;
 
    cpd.column = 1;
+
+   if (cpd.bom != NULL)
+   {
+      add_text_len(cpd.bom->str, cpd.bom->len);
+   }
+
    for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next(pc))
    {
       if (pc->type == CT_NEWLINE)

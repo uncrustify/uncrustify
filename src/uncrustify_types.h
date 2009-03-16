@@ -322,6 +322,8 @@ struct cp_data
    c_token_t          in_preproc;
    int                preproc_ncnl_count;
 
+   chunk_t            *bom;
+
    /* bumped up when a line is split or indented */
    int                changes;
 

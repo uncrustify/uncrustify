@@ -1293,6 +1293,12 @@ static void uncrustify_end()
    {
       chunk_del(pc);
    }
+
+   if (cpd.bom != NULL)
+   {
+      chunk_del(cpd.bom);
+      cpd.bom = NULL;
+   }
 }
 
 const char *get_token_name(c_token_t token)

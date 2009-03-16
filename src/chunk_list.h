@@ -30,6 +30,9 @@ enum chunk_nav_t
    CNAV_PREPROC,
 };
 
+
+chunk_t *chunk_dup(const chunk_t *pc_in);
+
 chunk_t *chunk_add(const chunk_t *pc_in);
 chunk_t *chunk_add_after(const chunk_t *pc_in, chunk_t *ref);
 chunk_t *chunk_add_before(const chunk_t *pc_in, chunk_t *ref);

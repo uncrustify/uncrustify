@@ -19,9 +19,6 @@ typedef ListManager<chunk_t>   ChunkList;
 
 ChunkList g_cl;
 
-static chunk_t *chunk_dup(const chunk_t *pc_in);
-
-
 chunk_t *chunk_get_head(void)
 {
    return(g_cl.GetHead());
@@ -88,7 +85,7 @@ chunk_t *chunk_get_prev(chunk_t *cur, chunk_nav_t nav)
    return(pc);
 }
 
-static chunk_t *chunk_dup(const chunk_t *pc_in)
+chunk_t *chunk_dup(const chunk_t *pc_in)
 {
    chunk_t *pc;
 
