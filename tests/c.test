@@ -178,6 +178,8 @@
 01011  del_semicolon.cfg       c/semicolons.c
 01012  ben.cfg                 c/semicolons.c
 
+01015  /dev/null               c/paren_indent.c
+
 01020  kw_subst.cfg            c/kw_subst.c
 01021  kw_subst3.cfg           c/hello.c
 01022  kw_subst3.cfg           c/kw_subst.c
