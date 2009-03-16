@@ -1046,7 +1046,7 @@ void indent_text(void)
              chunk_is_newline(chunk_get_prev(pc)) &&
              !chunk_is_newline(chunk_get_next(pc)))
          {
-            frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos].indent + indent_size;
+            frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent + indent_size;
             indent_column_set(frm.pse[frm.pse_tos].indent);
          }
          frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;

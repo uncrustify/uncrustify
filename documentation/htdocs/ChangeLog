@@ -34,6 +34,7 @@ Changes in uncrustify-0.53 (not yet released)
  - Fix sp_after_cast, which was broken by a previous fix
  - Be a little more agressive in removing unecessary semicolons
  - Fix one case where the parser leaves a preprocessor #define
+ - Fix indent of line starting with '(' after a function name
 
 
 Changes in uncrustify-0.52 (28 Feb 2009)
