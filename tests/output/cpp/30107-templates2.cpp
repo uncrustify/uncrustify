@@ -15,12 +15,12 @@ void f()
    call_a_template_function<int,
                             int,
                             int>
-        (42);
+      (42);
    call_a_template_function<int,
                             int,
                             int
                             >
-        (42);
+      (42);
    call_a_template_function<int,
                             int,
                             int>(42);
@@ -34,7 +34,7 @@ void f()
       int,
       int
       >
-        (42);
+      (42);
 }
 template<class T,
          class U> class W;
