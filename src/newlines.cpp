@@ -1207,7 +1207,9 @@ static void newline_func_def(chunk_t *start)
             prev = chunk_get_prev_ncnl(prev);
          }
 
-         if (prev != NULL)
+         if ((prev != NULL) &&
+             (prev->type != CT_BRACE_CLOSE) &&
+             (prev->type != CT_SEMICOLON))
          {
             newline_iarf(prev, a);
          }
