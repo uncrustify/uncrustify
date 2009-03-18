@@ -19,6 +19,8 @@
 #include "unc_ctype.h"
 #include <cassert>
 
+static void check_unknown_brace_close(chunk_t *semi, chunk_t *brace_close);
+
 
 static void remove_semicolon(chunk_t *pc)
 {
@@ -60,11 +62,15 @@ void remove_extra_semicolons(void)
               (prev->parent_type == CT_WHILE) ||
               (prev->parent_type == CT_FOR) ||
               (prev->parent_type == CT_FUNC_DEF) ||
-              (prev->parent_type == CT_NONE) ||
               (prev->parent_type == CT_OC_MSG_DECL) ||
               (prev->parent_type == CT_FUNC_CLASS)))
          {
             remove_semicolon(pc);
+         }
+         else if ((prev->type == CT_BRACE_CLOSE) &&
+                  (prev->parent_type == CT_NONE))
+         {
+            check_unknown_brace_close(pc, prev);
          }
          else if ((prev->type == CT_SEMICOLON) &&
                   (prev->parent_type != CT_FOR))
@@ -85,5 +91,26 @@ void remove_extra_semicolons(void)
       }
 
       pc = next;
+   }
+}
+
+/**
+ * We are on a semicolon that is after an unidentified brace close.
+ * Check for what is before the brace open.
+ * Do not remove if it is a square close, word or type.
+ */
+static void check_unknown_brace_close(chunk_t *semi, chunk_t *brace_close)
+{
+   chunk_t *pc;
+
+   pc = chunk_get_prev_type(brace_close, CT_BRACE_OPEN, brace_close->level);
+   pc = chunk_get_prev_ncnl(pc);
+   if ((pc != NULL) &&
+       (pc->type != CT_WORD) &&
+       (pc->type != CT_TYPE) &&
+       (pc->type != CT_SQUARE_CLOSE) &&
+       (pc->type != CT_TSQUARE))
+   {
+      remove_semicolon(semi);
    }
 }
