@@ -272,7 +272,8 @@ void output_text(FILE *pfile)
 
    cpd.fout = pfile;
 
-   cpd.column = 1;
+   cpd.did_newline = 1;
+   cpd.column      = 1;
 
    if (cpd.bom != NULL)
    {

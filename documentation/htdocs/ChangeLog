@@ -37,6 +37,7 @@ Changes in uncrustify-0.53 (not yet released)
  - Fix indent of line starting with '(' after a function name
  - Add align_var_def_attribute
  - Fix nl_func_type_name for function without a return type (ie, cast operator)
+ - Reset up state variables after processing a file
 
 
 Changes in uncrustify-0.52 (28 Feb 2009)

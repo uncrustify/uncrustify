@@ -1299,6 +1299,18 @@ static void uncrustify_end()
       chunk_del(cpd.bom);
       cpd.bom = NULL;
    }
+
+   /* Clean up some state variables */
+   cpd.unc_off     = false;
+   cpd.al_cnt      = 0;
+   cpd.did_newline = true;
+   cpd.frame_count = 0;
+   cpd.pp_level    = 0;
+   cpd.changes     = 0;
+   cpd.in_preproc  = CT_NONE;
+   cpd.consumed    = false;
+   memset(cpd.le_counts, 0, sizeof(cpd.le_counts));
+   cpd.preproc_ncnl_count = 0;
 }
 
 const char *get_token_name(c_token_t token)
