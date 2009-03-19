@@ -39,6 +39,7 @@ Changes in uncrustify-0.53 (not yet released)
  - Fix nl_func_type_name for function without a return type (ie, cast operator)
  - Reset up state variables after processing a file
  - Fix a case where a semicolon was incorrectly removed
+ - Fix a case where braces were incorrectly removed
 
 
 Changes in uncrustify-0.52 (28 Feb 2009)

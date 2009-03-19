@@ -138,6 +138,7 @@ static void examine_brace(chunk_t *bopen)
    int     nl_max     = cpd.settings[UO_mod_full_brace_nl].n;
    int     nl_count   = 0;
    int     if_count   = 0;
+   int     br_count   = 0;
 
    LOG_FMT(LBRDEL, "%s: start on %d : ", __func__, bopen->orig_line);
 
@@ -161,6 +162,22 @@ static void examine_brace(chunk_t *bopen)
       }
       else
       {
+         if (pc->type == CT_BRACE_OPEN)
+         {
+            br_count++;
+         }
+         else if (pc->type == CT_BRACE_CLOSE)
+         {
+            br_count--;
+         }
+         else if ((pc->type == CT_IF) || (pc->type == CT_ELSEIF))
+         {
+            if (br_count == 0)
+            {
+               if_count++;
+            }
+         }
+
          if (pc->level == level)
          {
             if ((semi_count > 0) && hit_semi)
@@ -177,11 +194,6 @@ static void examine_brace(chunk_t *bopen)
                LOG_FMT(LBRDEL, " bailed on %.*s on line %d\n",
                        pc->len, pc->str, pc->orig_line);
                return;
-            }
-
-            if ((pc->type == CT_IF) || (pc->type == CT_ELSEIF))
-            {
-               if_count++;
             }
 
             was_fcn = (prev != NULL) && (prev->type == CT_FPAREN_CLOSE);
@@ -214,17 +226,26 @@ static void examine_brace(chunk_t *bopen)
       return;
    }
 
+   LOG_FMT(LBRDEL, " - end on '%s' on line %d. if_count=%d semi_count=%d\n",
+           get_token_name(pc->type), pc->orig_line, if_count, semi_count);
+
    if (pc->type == CT_BRACE_CLOSE)
    {
+      next = chunk_get_next_ncnl(pc);
+      while ((next != NULL) && (next->type == CT_VBRACE_CLOSE))
+      {
+         next = chunk_get_next_ncnl(next);
+      }
+      LOG_FMT(LBRDEL, " next is '%s'\n", get_token_name(next->type));
+      if ((if_count > 0) &&
+          ((next->type == CT_ELSE) || (next->type == CT_ELSEIF)))
+      {
+         LOG_FMT(LBRDEL, " bailed on because 'else' is next and %d ifs\n", if_count);
+         return;
+      }
+
       if (semi_count > 0)
       {
-         next = chunk_get_next_ncnl(pc);
-         if ((next->type == CT_ELSE) && (if_count > 0))
-         {
-            LOG_FMT(LBRDEL, " bailed on because 'else' is next and %d ifs\n", if_count);
-            return;
-         }
-
          if (bopen->parent_type == CT_ELSE)
          {
             next = chunk_get_next_ncnl(bopen);
