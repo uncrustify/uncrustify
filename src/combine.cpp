@@ -45,7 +45,7 @@ static void handle_oc_message_send(chunk_t *pc);
 static void handle_cs_square_stmt(chunk_t *pc);
 static void handle_cs_property(chunk_t *pc);
 static void handle_template(chunk_t *pc);
-
+static void handle_func_wrap(chunk_t *pc);
 
 void make_type(chunk_t *pc)
 {
@@ -385,6 +385,12 @@ void fix_symbols(void)
           (pc->type == CT_SQL_END))
       {
          mark_exec_sql(pc);
+      }
+
+      if (pc->type == CT_FUNC_WRAP)
+      {
+         handle_func_wrap(pc);
+         next = chunk_get_next_ncnl(pc);
       }
 
       /* Handle the typedef */
@@ -3575,5 +3581,43 @@ void remove_extra_returns()
       }
 
       pc = chunk_get_next(pc);
+   }
+}
+
+
+/**
+ * A func wrap chunk and what follows should be treated as a function name.
+ * Create new text for the chunk and call it a CT_FUNCTION.
+ */
+static void handle_func_wrap(chunk_t *pc)
+{
+   chunk_t *opp  = chunk_get_next(pc);
+   chunk_t *name = chunk_get_next(opp);
+   chunk_t *clp  = chunk_get_next(name);
+   char *new_name;
+
+   if ((clp != NULL) &&
+       (opp->type == CT_PAREN_OPEN) &&
+       ((name->type == CT_WORD) || (name->type == CT_TYPE)) &&
+       (clp->type == CT_PAREN_CLOSE))
+   {
+      new_name = new char[pc->len + 2 + name->len + 2];
+      if (new_name != NULL)
+      {
+         const char *fsp = (cpd.settings[UO_sp_inside_fparen].a & AV_ADD) ? " " : "";
+
+         sprintf(new_name, "%.*s(%s%.*s%s)",
+                 pc->len, pc->str, fsp, name->len, name->str, fsp);
+         pc->type   = CT_FUNCTION;
+         pc->str    = new_name;
+         pc->len    = strlen(new_name);
+         pc->flags |= PCF_OWN_STR;
+
+         pc->orig_col_end = pc->orig_col + pc->len;
+
+         chunk_del(opp);
+         chunk_del(name);
+         chunk_del(clp);
+      }
    }
 }

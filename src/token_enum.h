@@ -188,6 +188,7 @@ typedef enum
    CT_FUNC_PROTO,       /* function prototype */
    CT_FUNC_CLASS,       /* ctor or dtor for a class */
    CT_FUNC_CTOR_VAR,    /* variable or class initialization */
+   CT_FUNC_WRAP,        /* macro that wraps the function name */
    CT_MACRO_FUNC,       /* function-like macro */
    CT_MACRO,            /* a macro def */
    CT_QUALIFIER,        /* static, const, etc */

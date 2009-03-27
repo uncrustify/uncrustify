@@ -1243,6 +1243,10 @@ int load_option_file(const char *filename)
                }
                LOG_FMT(LNOTE, "\n");
             }
+            else
+            {
+               LOG_FMT(LWARN, "%s:%d unknown type '%s':", filename, cpd.line_number, args[1]);
+            }
          }
       }
       else

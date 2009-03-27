@@ -41,6 +41,7 @@ Changes in uncrustify-0.53 (not yet released)
  - Fix a case where a semicolon was incorrectly removed
  - Fix a case where braces were incorrectly removed
  - Fix handling of 'force' setting for many newline options
+ - Add func_wrap type for use with 'set func_wrap FSUB'
 
 
 Changes in uncrustify-0.52 (28 Feb 2009)
