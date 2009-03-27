@@ -26,6 +26,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <cerrno>
+#include <fcntl.h>
 #include "unc_ctype.h"
 #ifdef HAVE_SYS_STAT_H
  #include <sys/stat.h>
@@ -853,6 +854,76 @@ static const char *make_output_filename(char *buf, int buf_size,
    return(buf);
 }
 
+/**
+ * Reinvent the wheel with a file comparision function...
+ */
+static bool file_content_matches(const char *filename1, const char *filename2)
+{
+   struct stat st1, st2;
+   int         fd1, fd2;
+   uint8_t     buf1[1024], buf2[1024];
+   int         len1 = 0, len2 = 0;
+   int         minlen;
+
+   /* Check the sizes first */
+   if ((stat(filename1, &st1) != 0) ||
+       (stat(filename2, &st2) != 0) ||
+       (st1.st_size != st2.st_size))
+   {
+      return(false);
+   }
+
+   if ((fd1 = open(filename1, O_RDONLY)) < 0)
+   {
+      return(false);
+   }
+   if ((fd2 = open(filename2, O_RDONLY)) < 0)
+   {
+      close(fd1);
+      return(false);
+   }
+
+   while ((len1 >= 0) && (len2 >= 0))
+   {
+      if (len1 == 0)
+      {
+         len1 = read(fd1, buf1, sizeof(buf1));
+      }
+      if (len2 == 0)
+      {
+         len2 = read(fd2, buf2, sizeof(buf2));
+      }
+      if ((len1 <= 0) || (len2 <= 0))
+      {
+         break;
+      }
+      minlen = (len1 < len2) ? len1 : len2;
+      if (memcmp(buf1, buf2, minlen) != 0)
+      {
+         break;
+      }
+      len1 -= minlen;
+      len2 -= minlen;
+   }
+
+   close(fd1);
+   close(fd2);
+
+   return((len1 == 0) && (len2 == 0));
+}
+
+const char *fix_filename(const char *filename)
+{
+   char *tmp_file;
+
+   /* Create 'outfile.uncrustify' */
+   tmp_file = new char[strlen(filename) + 16];
+   if (tmp_file != NULL)
+   {
+      sprintf(tmp_file, "%s.uncrustify", filename);
+   }
+   return(tmp_file);
+}
 
 /**
  * Does a source file.
@@ -869,10 +940,11 @@ static void do_source_file(const char *filename_in,
                            bool no_backup,
                            bool keep_mtime)
 {
-   FILE     *pfout;
-   bool     did_open    = false;
-   bool     need_backup = false;
-   file_mem fm;
+   FILE       *pfout;
+   bool       did_open    = false;
+   bool       need_backup = false;
+   file_mem   fm;
+   const char *filename_tmp = NULL;
 
    /* Do some simple language detection based on the filename extension */
    if (cpd.lang_flags == 0)
@@ -897,25 +969,40 @@ static void do_source_file(const char *filename_in,
    }
    else
    {
-      if (!no_backup && (strcmp(filename_in, filename_out) == 0))
+      /* If the out file is the same as the in file, then use a temp file */
+      filename_tmp = filename_out;
+      if (strcmp(filename_in, filename_out) == 0)
       {
-         if (backup_copy_file(filename_in, fm.data, fm.length) != SUCCESS)
+         /* Create 'outfile.uncrustify' */
+         filename_tmp = fix_filename(filename_out);
+         if (filename_tmp == NULL)
          {
-            LOG_FMT(LERR, "%s: Failed to create backup file for %s\n",
-                    __func__, filename_in);
-            free(fm.data);
+            LOG_FMT(LERR, "%s: Out of memory\n", __func__);
             cpd.error_count++;
+            free(fm.data);
             return;
          }
-         need_backup = true;
-      }
-      make_folders(filename_out);
 
-      pfout = fopen(filename_out, "wb");
+         if (!no_backup)
+         {
+            if (backup_copy_file(filename_in, fm.data, fm.length) != SUCCESS)
+            {
+               LOG_FMT(LERR, "%s: Failed to create backup file for %s\n",
+                       __func__, filename_in);
+               free(fm.data);
+               cpd.error_count++;
+               return;
+            }
+            need_backup = true;
+         }
+      }
+      make_folders(filename_tmp);
+
+      pfout = fopen(filename_tmp, "wb");
       if (pfout == NULL)
       {
          LOG_FMT(LERR, "%s: Unable to create %s: %s (%d)\n",
-                 __func__, filename_out, strerror(errno), errno);
+                 __func__, filename_tmp, strerror(errno), errno);
          cpd.error_count++;
          free(fm.data);
          return;
@@ -936,6 +1023,28 @@ static void do_source_file(const char *filename_in,
       if (need_backup)
       {
          backup_create_md5_file(filename_in);
+      }
+
+      if ((filename_tmp != NULL) && (filename_tmp != filename_out))
+      {
+         /* We need to compare and then do a rename */
+         if (file_content_matches(filename_tmp, filename_out))
+         {
+            /* No change - remove tmp file */
+            (void)unlink(filename_tmp);
+         }
+         else
+         {
+            /* Change - rename filename_tmp to filename_out */
+            if (rename(filename_tmp, filename_out) != 0)
+            {
+               LOG_FMT(LERR, "%s: Unable to rename '%s' to '%s'\n",
+                       __func__, filename_tmp, filename_out);
+               cpd.error_count++;
+            }
+         }
+         delete [] filename_tmp;
+         filename_tmp = NULL;
       }
 
 #ifdef HAVE_UTIME_H
