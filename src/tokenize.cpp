@@ -933,12 +933,13 @@ static bool parse_next(chunk_t *pc)
       /* Not D stuff */
 
       /* Check for L'a', L"abc", 'a', "abc", <abc> strings */
-      if (((*pc->str == 'L') && ((pc->str[1] == '"') || (pc->str[1] == '\''))) ||
+      if ((((*pc->str == 'L') || (*pc->str == 'S')) &&
+           ((pc->str[1] == '"') || (pc->str[1] == '\''))) ||
           (*pc->str == '"') ||
           (*pc->str == '\'') ||
           ((*pc->str == '<') && (cpd.in_preproc == CT_PP_INCLUDE)))
       {
-         parse_string(pc, (*pc->str == 'L') ? 1 : 0, true);
+         parse_string(pc, unc_isalpha(*pc->str) ? 1 : 0, true);
          return(true);
       }
 
