@@ -9,6 +9,7 @@
 10002 ben.cfg                  cs/simple.cs
 10003 ben.cfg                  cs/region.cs
 10010 ben.cfg                  cs/var-member.cs
+10011 ben.cfg                  cs/strings.cs
 
 10020 region-0.cfg             cs/region.cs
 10021 region-1.cfg             cs/region.cs
