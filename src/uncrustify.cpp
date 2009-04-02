@@ -861,7 +861,7 @@ static bool file_content_matches(const char *filename1, const char *filename2)
 {
    struct stat st1, st2;
    int         fd1, fd2;
-   uint8_t     buf1[1024], buf2[1024];
+   UINT8       buf1[1024], buf2[1024];
    int         len1 = 0, len2 = 0;
    int         minlen;
 
@@ -1035,6 +1035,13 @@ static void do_source_file(const char *filename_in,
          }
          else
          {
+#ifdef WIN32
+            /* windows can't rename a file if the target exists, so delete it
+             * first. This may cause data loss if the tmp file gets deleted
+             * or can't be renamed.
+             */
+            (void)unlink(filename_out);
+#endif
             /* Change - rename filename_tmp to filename_out */
             if (rename(filename_tmp, filename_out) != 0)
             {
@@ -1043,7 +1050,7 @@ static void do_source_file(const char *filename_in,
                cpd.error_count++;
             }
          }
-         delete [] filename_tmp;
+         delete [] (char *)filename_tmp;
          filename_tmp = NULL;
       }
 
