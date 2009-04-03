@@ -39,6 +39,7 @@ static const chunk_tag_t keywords[] =
    { "@interface",       CT_OC_INTF,      LANG_OC | LANG_CPP | LANG_C                                     },
    { "@private",         CT_PRIVATE,      LANG_OC | LANG_CPP | LANG_C                                     },
    { "@property",        CT_OC_PROPERTY,  LANG_OC | LANG_CPP | LANG_C                                     },
+   { "@protocol",        CT_OC_INTF,      LANG_OC | LANG_CPP | LANG_C                                     },
    { "@synthesize",      CT_OC_DYNAMIC,   LANG_OC | LANG_CPP | LANG_C                                     },
    { "_Bool",            CT_TYPE,         LANG_CPP                                                        },
    { "_Complex",         CT_TYPE,         LANG_CPP                                                        },

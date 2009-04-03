@@ -45,6 +45,7 @@ Changes in uncrustify-0.53 (not yet released)
  - Make file replacement more atomic - write to a temp file then rename
  - With the 'replace' option, only replace if the file content changes
  - Handle C# wide literal string prefix S"foo"
+ - Handle the ObjC '@protocol' the same as '@interface'
 
 
 Changes in uncrustify-0.52 (28 Feb 2009)
