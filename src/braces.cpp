@@ -534,7 +534,7 @@ void add_long_closebrace_comment(void)
    }
 }
 
-static void move_case_break()
+static void move_case_break(void)
 {
    chunk_t *pc;
    chunk_t *prev = NULL;

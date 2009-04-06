@@ -402,7 +402,7 @@ void output_text(FILE *pfile)
 }
 
 /**
- * Given a multi-line comemnt block that starts in column X, figure out how
+ * Given a multi-line comment block that starts in column X, figure out how
  * much subsequent lines should be indented.
  *
  * The answer is either 0 or 1.

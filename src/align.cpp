@@ -255,7 +255,7 @@ void align_all(void)
                 cpd.settings[UO_align_assign_span].n,
                 cpd.settings[UO_align_assign_thresh].n);
 
-   /* Align structure initiailizers */
+   /* Align structure initializers */
    if (cpd.settings[UO_align_struct_init_span].n > 0)
    {
       align_struct_initializers();

@@ -107,7 +107,7 @@ int path_dirname_len(const char *filename)
    {
       return(0);
    }
-   return(path_basename(filename) - filename);
+   return((int)(path_basename(filename) - filename));
 }
 
 static void usage_exit(const char *msg, const char *argv0, int code)
@@ -259,7 +259,7 @@ int main(int argc, char *argv[])
 
 #ifdef WIN32
    /* tell windoze not to change what I write to stdout */
-   _setmode(_fileno(stdout), _O_BINARY);
+   (void)_setmode(_fileno(stdout), _O_BINARY);
 #endif
 
    /* Init logging */
@@ -566,7 +566,7 @@ int main(int argc, char *argv[])
    else if (source_file != NULL)
    {
       /* Doing a single file */
-      do_source_file(source_file, output_file, parsed_file, no_backup, false);
+      do_source_file(source_file, output_file, parsed_file, no_backup, keep_mtime);
    }
    else
    {
@@ -1395,6 +1395,11 @@ static void uncrustify_file(const char *data, int data_len, FILE *pfout,
       {
          output_parsed(p_file);
          fclose(p_file);
+      }
+      else
+      {
+         LOG_FMT(LERR, "%s: Failed to open '%s' for write: %s (%d)\n",
+                 __func__, parsed_file, strerror(errno), errno);
       }
    }
 
