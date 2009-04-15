@@ -8,3 +8,8 @@ pkgdata_DATA = etc/ben.cfg etc/d.cfg etc/gnu-indent.cfg etc/kr-indent.cfg etc/li
 
 # INCLUDES = @INCLUDES@
 
+testdir = tests
+TESTS = run_tests.sh
+
+check-local:
+
