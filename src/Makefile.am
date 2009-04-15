@@ -1,5 +1,9 @@
 AUTOMAKE_OPTIONS = foreign no-dependencies nostdinc
 
+DISTCLEANFILES = 
+CLEANFILES = *.o *~ *.bak
+MAINTAINERCLEANFILES = Makefile.in
+
 bin_PROGRAMS = uncrustify
 
 BUILT_SOURCES = token_names.h
@@ -14,7 +18,12 @@ uncrustify_SOURCES = uncrustify.cpp chunk_list.cpp indent.cpp align.cpp combine.
 
 noinst_HEADERS = chunk_list.h options.h char_table.h chunk_list.h \
 		uncrustify_types.h prototypes.h logmask.h logger.h \
-		ChunkStack.h args.h token_names.h token_enum.h ListManager.h md5.h
+		ChunkStack.h args.h token_names.h token_enum.h ListManager.h md5.h \
+		align_stack.h backup.h base_types.h log_levels.h \
+		punctuators.h \
+		uncrustify_version.h \
+		unc_ctype.h \
+		d.tokenize.cpp
 
 token_names.h: token_enum.h ../make_token_names.sh
 	@echo "Rebuilding token_names.h"

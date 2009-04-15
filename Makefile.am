@@ -13,3 +13,6 @@ TESTS = run_tests.sh
 
 check-local:
 
+DISTCLEANFILES = 
+CLEANFILES = *~ *.bak
+MAINTAINERCLEANFILES = aclocal.m4 Makefile.in
