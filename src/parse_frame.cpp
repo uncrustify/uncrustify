@@ -36,6 +36,7 @@ void pf_log(int logsev, struct parse_frame *pf)
    LOG_FMT(logsev, "\n");
 }
 
+
 static void pf_log_frms(int logsev, const char *txt, struct parse_frame *pf)
 {
    int idx;
@@ -49,6 +50,7 @@ static void pf_log_frms(int logsev, const char *txt, struct parse_frame *pf)
    }
    LOG_FMT(logsev, "-[%s-%d]\n", get_token_name(pf->in_ifdef), pf->ref_no);
 }
+
 
 /**
  * Logs the entire parse frame stack
@@ -68,6 +70,7 @@ void pf_log_all(int logsev)
    LOG_FMT(logsev, "##=-\n");
 }
 
+
 /**
  * Copies src to dst.
  */
@@ -75,6 +78,7 @@ void pf_copy(struct parse_frame *dst, const struct parse_frame *src)
 {
    memcpy(dst, src, sizeof(struct parse_frame));
 }
+
 
 /**
  * Push a copy of the parse frame onto the stack.
@@ -92,6 +96,7 @@ void pf_push(struct parse_frame *pf)
    }
    LOG_FMT(LPF, "%s: count = %d\n", __func__, cpd.frame_count);
 }
+
 
 /**
  * Push a copy of the parse frame onto the stack, under the tos.
@@ -118,6 +123,7 @@ void pf_push_under(struct parse_frame *pf)
    LOG_FMT(LPF, "%s: after count = %d\n", __func__, cpd.frame_count);
 }
 
+
 /**
  * Copy the top item off the stack into pf.
  * This is called on #else and #elif.
@@ -130,6 +136,7 @@ void pf_copy_tos(struct parse_frame *pf)
    }
    LOG_FMT(LPF, "%s: count = %d\n", __func__, cpd.frame_count);
 }
+
 
 /**
  * Copy the 2nd top item off the stack into pf.
@@ -146,6 +153,7 @@ static void pf_copy_2nd_tos(struct parse_frame *pf)
    LOG_FMT(LPF, "%s: count = %d\n", __func__, cpd.frame_count);
 }
 
+
 /**
  * Deletes the top frame from the stack.
  */
@@ -157,6 +165,7 @@ void pf_trash_tos(void)
    }
    LOG_FMT(LPF, "%s: count = %d\n", __func__, cpd.frame_count);
 }
+
 
 /**
  * Pop the top item off the stack and copy into pf.
@@ -171,6 +180,7 @@ void pf_pop(struct parse_frame *pf)
    }
    //fprintf(stderr, "%s: count = %d\n", __func__, cpd.frame_count);
 }
+
 
 /**
  * Returns the pp_indent to use for this line
@@ -207,6 +217,7 @@ int pf_check(struct parse_frame *frm, chunk_t *pc)
       else if (pc->parent_type == CT_PP_ELSE)
       {
          pp_level--;
+
          /**
           * For #else of #elif, we want to keep the #if part and throw out the
           * else parts.

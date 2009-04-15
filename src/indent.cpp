@@ -130,6 +130,7 @@ void indent_to_column(chunk_t *pc, int column)
    reindent_line(pc, column);
 }
 
+
 /* Same as indent_to_column, except we can move both ways */
 void align_to_column(chunk_t *pc, int column)
 {
@@ -158,17 +159,17 @@ void align_to_column(chunk_t *pc, int column)
          break;
       }
       min_col += space_col_align(pc, next);
-      pc = next;
+      pc       = next;
       bool is_comment = chunk_is_comment(pc);
-      bool keep = is_comment && chunk_is_single_line_comment(pc) &&
-                  cpd.settings[UO_indent_relative_single_line_comments].b;
+      bool keep       = is_comment && chunk_is_single_line_comment(pc) &&
+                        cpd.settings[UO_indent_relative_single_line_comments].b;
 
       if (is_comment && (pc->parent_type != CT_COMMENT_EMBED) && !keep)
       {
          pc->column = pc->orig_col;
          if (pc->column < min_col)
          {
-            pc->column = min_col;// + 1;
+            pc->column = min_col; // + 1;
          }
          LOG_FMT(LINDLINE, "%s: set comment on line %d to col %d (orig %d)\n",
                  __func__, pc->orig_line, pc->column, pc->orig_col);
@@ -185,6 +186,7 @@ void align_to_column(chunk_t *pc, int column)
       }
    } while ((pc != NULL) && (pc->nl_count == 0));
 }
+
 
 /**
  * Changes the initial indent for a line to the given column
@@ -218,18 +220,18 @@ void reindent_line2(chunk_t *pc, int column, const char *fcn_name, int lineno)
          break;
       }
       min_col += space_col_align(pc, next);
-      pc = next;
+      pc       = next;
 
       bool is_comment = chunk_is_comment(pc);
-      bool keep = is_comment && chunk_is_single_line_comment(pc) &&
-                  cpd.settings[UO_indent_relative_single_line_comments].b;
+      bool keep       = is_comment && chunk_is_single_line_comment(pc) &&
+                        cpd.settings[UO_indent_relative_single_line_comments].b;
 
       if (is_comment && (pc->parent_type != CT_COMMENT_EMBED) && !keep)
       {
          pc->column = pc->orig_col;
          if (pc->column < min_col)
          {
-            pc->column = min_col;// + 1;
+            pc->column = min_col; // + 1;
          }
          LOG_FMT(LINDLINE, "%s: set comment on line %d to col %d (orig %d)\n",
                  __func__, pc->orig_line, pc->column, pc->orig_col);
@@ -246,6 +248,7 @@ void reindent_line2(chunk_t *pc, int column, const char *fcn_name, int lineno)
       }
    } while ((pc != NULL) && (pc->nl_count == 0));
 }
+
 
 /**
  * Starts a new entry
@@ -277,6 +280,7 @@ static void indent_pse_push(struct parse_frame& frm, chunk_t *pc)
       frm.pse[frm.pse_tos].non_vardef = false;
    }
 }
+
 
 /**
  * Removes the top entry
@@ -313,6 +317,7 @@ static void indent_pse_pop(struct parse_frame& frm, chunk_t *pc)
    }
 }
 
+
 static int token_indent(c_token_t type)
 {
    switch (type)
@@ -339,11 +344,12 @@ static int token_indent(c_token_t type)
    }
 }
 
-#define indent_column_set(X) \
-   do { \
-      indent_column = (X); \
-       LOG_FMT(LINDENT2, "[line %d] indent_column = %d\n", \
-               __LINE__, indent_column); \
+
+#define indent_column_set(X)                              \
+   do {                                                   \
+      indent_column = (X);                                \
+      LOG_FMT(LINDENT2, "[line %d] indent_column = %d\n", \
+              __LINE__, indent_column);                   \
    } while (0)
 
 /**
@@ -1429,6 +1435,7 @@ void indent_text(void)
    quick_align_again();
 }
 
+
 /**
  * returns true if forward scan reveals only single newlines or comments
  * stops when hits code
@@ -1477,6 +1484,7 @@ static bool single_line_comment_indent_rule_applies(chunk_t *start)
 
    return(false);
 }
+
 
 /**
  * REVISIT: This needs to be re-checked, maybe cleaned up
@@ -1564,6 +1572,7 @@ static void indent_comment(chunk_t *pc, int col)
    reindent_line(pc, col);
 }
 
+
 /**
  * Scan to see if the whole file is covered by one #ifdef
  */
@@ -1624,6 +1633,7 @@ static bool ifdef_over_whole_file()
    }
    return(stage == 2);
 }
+
 
 /**
  * Indent the preprocessor stuff from column 1.

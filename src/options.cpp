@@ -13,7 +13,7 @@
 #include "uncrustify_version.h"
 #include <cstring>
 #ifdef HAVE_STRINGS_H
- #include <strings.h> /* strcasecmp() */
+#include <strings.h>  /* strcasecmp() */
 #endif
 #include <cstdio>
 #include <cstdlib>
@@ -48,6 +48,7 @@ void unc_begin_group(uncrustify_groups id, const char *short_desc,
 
    group_map[id] = value;
 }
+
 
 void unc_add_option(const char *name, uncrustify_options id, argtype_e type,
                     const char *short_desc, const char *long_desc,
@@ -107,6 +108,7 @@ void unc_add_option(const char *name, uncrustify_options id, argtype_e type,
    }
 }
 
+
 const option_map_value *unc_find_option(const char *name)
 {
    if (option_name_map.find(name) == option_name_map.end())
@@ -115,6 +117,7 @@ const option_map_value *unc_find_option(const char *name)
    }
    return(&option_name_map[name]);
 }
+
 
 void register_options(void)
 {
@@ -944,11 +947,12 @@ void register_options(void)
                   "Whether to indent '#define' at the brace level (true) or from column 1 (false)");
 }
 
+
 const group_map_value *get_group_name(int ug)
 {
    for (group_map_it it = group_map.begin();
-       it != group_map.end();
-       it++)
+        it != group_map.end();
+        it++)
    {
       if (it->second.id == ug)
       {
@@ -958,11 +962,12 @@ const group_map_value *get_group_name(int ug)
    return(NULL);
 }
 
+
 const option_map_value *get_option_name(int uo)
 {
    for (option_name_map_it it = option_name_map.begin();
-       it != option_name_map.end();
-       it++)
+        it != option_name_map.end();
+        it++)
    {
       if (it->second.id == uo)
       {
@@ -971,6 +976,7 @@ const option_map_value *get_option_name(int uo)
    }
    return(NULL);
 }
+
 
 /**
  * Convert the value string to the correct type in dest.
@@ -1137,8 +1143,8 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
            cpd.filename, cpd.line_number, entry->name, val);
    cpd.error_count++;
    dest->a = AV_IGNORE;
-   return;
 }
+
 
 int set_option_value(const char *name, const char *value)
 {
@@ -1151,6 +1157,7 @@ int set_option_value(const char *name, const char *value)
    }
    return(-1);
 }
+
 
 int load_option_file(const char *filename)
 {
@@ -1276,6 +1283,7 @@ int load_option_file(const char *filename)
    return(0);
 }
 
+
 int save_option_file(FILE *pfile, bool withDoc)
 {
    std::string val_string;
@@ -1386,7 +1394,7 @@ int save_option_file(FILE *pfile, bool withDoc)
               "# all tokens are separated by any mix of ',' commas, '=' equal signs\n"
               "# and whitespace (space, tab)\n"
               "#\n"
-             );
+              );
    }
 
    /* Print custom keywords */
@@ -1435,6 +1443,7 @@ int save_option_file(FILE *pfile, bool withDoc)
    fclose(pfile);
    return(0);
 }
+
 
 void print_options(FILE *pfile, bool verbose)
 {
@@ -1501,6 +1510,7 @@ void print_options(FILE *pfile, bool verbose)
    }
 }
 
+
 /**
  * Sets non-zero settings defaults
  *
@@ -1536,6 +1546,7 @@ void set_option_defaults(void)
    cpd.settings[UO_sp_pp_stringify].a      = AV_ADD;
 }
 
+
 std::string argtype_to_string(argtype_e argtype)
 {
    switch (argtype)
@@ -1564,6 +1575,7 @@ std::string argtype_to_string(argtype_e argtype)
    }
 }
 
+
 std::string bool_to_string(bool val)
 {
    if (val)
@@ -1575,6 +1587,7 @@ std::string bool_to_string(bool val)
       return("false");
    }
 }
+
 
 std::string argval_to_string(argval_t argval)
 {
@@ -1598,6 +1611,7 @@ std::string argval_to_string(argval_t argval)
    }
 }
 
+
 std::string number_to_string(int number)
 {
    char buffer[12]; // 11 + 1
@@ -1609,6 +1623,7 @@ std::string number_to_string(int number)
     */
    return(buffer);
 }
+
 
 std::string lineends_to_string(lineends_e linends)
 {
@@ -1632,6 +1647,7 @@ std::string lineends_to_string(lineends_e linends)
    }
 }
 
+
 std::string tokenpos_to_string(tokenpos_e tokenpos)
 {
    switch (tokenpos)
@@ -1650,6 +1666,7 @@ std::string tokenpos_to_string(tokenpos_e tokenpos)
       return("");
    }
 }
+
 
 std::string op_val_to_string(argtype_e argtype, op_val_t op_val)
 {

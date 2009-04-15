@@ -24,8 +24,8 @@
 #include <utime.h>
 #endif
 
-#define UNCRUSTIFY_OFF_TEXT   " *INDENT-OFF* "
-#define UNCRUSTIFY_ON_TEXT    " *INDENT-ON* "
+#define UNCRUSTIFY_OFF_TEXT    " *INDENT-OFF*"
+#define UNCRUSTIFY_ON_TEXT     " *INDENT-ON*"
 
 /**
  * Brace stage enum used in brace_cleanup
@@ -126,10 +126,11 @@ struct parse_frame
 
 
 /* flags that get copied when a new chunk is inserted */
-#define PCF_COPY_FLAGS         (PCF_IN_PREPROC | PCF_IN_SPAREN | PCF_IN_ENUM |          \
-                                PCF_IN_FCN_DEF | PCF_IN_FCN_CALL | PCF_IN_TYPEDEF |     \
-                                PCF_IN_ARRAY_ASSIGN | PCF_IN_CLASS | PCF_IN_NAMESPACE | \
-                                PCF_IN_CLASS | PCF_IN_FOR | PCF_IN_TEMPLATE)
+#define PCF_COPY_FLAGS                                      \
+   (PCF_IN_PREPROC | PCF_IN_SPAREN | PCF_IN_ENUM |          \
+    PCF_IN_FCN_DEF | PCF_IN_FCN_CALL | PCF_IN_TYPEDEF |     \
+    PCF_IN_ARRAY_ASSIGN | PCF_IN_CLASS | PCF_IN_NAMESPACE | \
+    PCF_IN_CLASS | PCF_IN_FOR | PCF_IN_TEMPLATE)
 
 #ifdef DEFINE_PCF_NAMES
 static const char *pcf_names[] =
@@ -301,10 +302,10 @@ struct cp_data
    UINT32             error_count;
    const char         *filename;
 
-   file_mem           file_hdr;  /* for cmt_insert_file_header */
-   file_mem           file_ftr;  /* for cmt_insert_file_footer */
-   file_mem           func_hdr;  /* for cmt_insert_func_header */
-   file_mem           class_hdr; /* for cmt_insert_class_header */
+   file_mem           file_hdr;   /* for cmt_insert_file_header */
+   file_mem           file_ftr;   /* for cmt_insert_file_footer */
+   file_mem           func_hdr;   /* for cmt_insert_func_header */
+   file_mem           class_hdr;  /* for cmt_insert_class_header */
 
    int                lang_flags; // LANG_xxx
 

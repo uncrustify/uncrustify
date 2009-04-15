@@ -114,6 +114,7 @@ int backup_copy_file(const char *filename, const char *file_data, int file_len)
    return(FAILURE);
 }
 
+
 /**
  * This should be called after the file was written to disk.
  * It will be read back and an md5 will be calculated over it.

@@ -59,6 +59,7 @@ static int compare_chunks(chunk_t *pc1, chunk_t *pc2)
    return(0);
 }
 
+
 /**
  * Sorting should be pretty rare and should usually only include a few chunks.
  * We need to minimize the number of swaps, as those are expensive.
@@ -97,6 +98,7 @@ static void do_the_sort(chunk_t **chunks, int num_chunks)
       }
    }
 }
+
 
 void sort_imports(void)
 {

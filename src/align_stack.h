@@ -43,9 +43,11 @@ public:
    {
    }
 
+
    ~AlignStack()
    {
    }
+
 
    void Start(int span, int threshold = 0);
    void Add(chunk_t *pc, int seqnum = 0);
@@ -56,5 +58,6 @@ public:
 protected:
    int m_last_added; /* 0=none, 1=aligned, 2=skipped */
    void ReAddSkipped();
+
    ChunkStack m_scratch; /* used in ReAddSkipped() */
 };

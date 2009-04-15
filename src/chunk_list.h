@@ -95,6 +95,7 @@ chunk_t *chunk_skip_to_match(chunk_t *cur, chunk_nav_t nav = CNAV_ALL)
    return(cur);
 }
 
+
 static_inline
 bool chunk_is_comment(chunk_t *pc)
 {
@@ -103,12 +104,14 @@ bool chunk_is_comment(chunk_t *pc)
                            (pc->type == CT_COMMENT_CPP)));
 }
 
+
 static_inline
 bool chunk_is_single_line_comment(chunk_t *pc)
 {
    return((pc != NULL) && ((pc->type == CT_COMMENT) ||
                            (pc->type == CT_COMMENT_CPP)));
 }
+
 
 static_inline
 bool chunk_is_newline(chunk_t *pc)
@@ -117,6 +120,7 @@ bool chunk_is_newline(chunk_t *pc)
                            (pc->type == CT_NL_CONT)));
 }
 
+
 static_inline
 bool chunk_is_semicolon(chunk_t *pc)
 {
@@ -124,17 +128,20 @@ bool chunk_is_semicolon(chunk_t *pc)
                            (pc->type == CT_VSEMICOLON)));
 }
 
+
 static_inline
 bool chunk_is_blank(chunk_t *pc)
 {
    return((pc != NULL) && (pc->len == 0));
 }
 
+
 static_inline
 bool chunk_is_preproc(chunk_t *pc)
 {
    return((pc != NULL) && ((pc->flags & PCF_IN_PREPROC) != 0));
 }
+
 
 static_inline
 bool chunk_is_type(chunk_t *pc)
@@ -149,11 +156,13 @@ bool chunk_is_type(chunk_t *pc)
                            (pc->type == CT_UNION)));
 }
 
+
 static_inline
 bool chunk_is_token(chunk_t *pc, c_token_t c_token)
 {
    return((pc != NULL) && (pc->type == c_token));
 }
+
 
 static_inline
 bool chunk_is_str(chunk_t *pc, const char *str, int len)
@@ -161,11 +170,13 @@ bool chunk_is_str(chunk_t *pc, const char *str, int len)
    return((pc != NULL) && (pc->len == len) && (memcmp(pc->str, str, len) == 0));
 }
 
+
 static_inline
 bool chunk_is_str_case(chunk_t *pc, const char *str, int len)
 {
    return((pc != NULL) && (pc->len == len) && (strncasecmp(pc->str, str, len) == 0));
 }
+
 
 static_inline
 bool chunk_is_word(chunk_t *pc)
@@ -173,17 +184,20 @@ bool chunk_is_word(chunk_t *pc)
    return((pc != NULL) && (pc->len >= 1) && CharTable::IsKw1(pc->str[0]));
 }
 
+
 static_inline
 bool chunk_is_star(chunk_t *pc)
 {
    return((pc != NULL) && (pc->len == 1) && (pc->str[0] == '*'));
 }
 
+
 static_inline
 bool chunk_is_addr(chunk_t *pc)
 {
    return((pc != NULL) && (pc->len == 1) && (pc->str[0] == '&'));
 }
+
 
 bool chunk_is_newline_between(chunk_t *start, chunk_t *end);
 
@@ -194,6 +208,7 @@ bool chunk_is_closing_brace(chunk_t *pc)
                            (pc->type == CT_VBRACE_CLOSE)));
 }
 
+
 static_inline
 bool chunk_is_opening_brace(chunk_t *pc)
 {
@@ -201,12 +216,14 @@ bool chunk_is_opening_brace(chunk_t *pc)
                            (pc->type == CT_VBRACE_OPEN)));
 }
 
+
 static_inline
 bool chunk_is_vbrace(chunk_t *pc)
 {
    return((pc != NULL) && ((pc->type == CT_VBRACE_CLOSE) ||
                            (pc->type == CT_VBRACE_OPEN)));
 }
+
 
 static_inline
 bool chunk_is_paren_open(chunk_t *pc)
@@ -217,6 +234,7 @@ bool chunk_is_paren_open(chunk_t *pc)
            (pc->type == CT_FPAREN_OPEN)));
 }
 
+
 static_inline
 bool chunk_is_paren_close(chunk_t *pc)
 {
@@ -225,6 +243,7 @@ bool chunk_is_paren_close(chunk_t *pc)
            (pc->type == CT_SPAREN_CLOSE) ||
            (pc->type == CT_FPAREN_CLOSE)));
 }
+
 
 /**
  * Returns true if either chunk is null or both have the same preproc flags.
@@ -236,6 +255,7 @@ bool chunk_same_preproc(chunk_t *pc1, chunk_t *pc2)
    return((pc1 == NULL) || (pc2 == NULL) ||
           ((pc1->flags & PCF_IN_PREPROC) == (pc2->flags & PCF_IN_PREPROC)));
 }
+
 
 /**
  * Returns true if it is safe to delete the newline token.
@@ -253,5 +273,6 @@ bool chunk_safe_to_del_nl(chunk_t *nl)
    }
    return(chunk_same_preproc(chunk_get_prev(nl), chunk_get_next(nl)));
 }
+
 
 #endif   /* CHUNK_LIST_H_INCLUDED */

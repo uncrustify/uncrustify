@@ -17,6 +17,7 @@ ChunkStack::ChunkStack(const ChunkStack& cs)
    Set(cs);
 }
 
+
 ChunkStack::~ChunkStack()
 {
    if (m_cse != NULL)
@@ -26,6 +27,7 @@ ChunkStack::~ChunkStack()
       m_size = m_len = 0;
    }
 }
+
 
 void ChunkStack::Set(const ChunkStack& cs)
 {
@@ -38,6 +40,7 @@ void ChunkStack::Set(const ChunkStack& cs)
    m_seqnum = cs.m_seqnum;
 }
 
+
 const ChunkStack::Entry *ChunkStack::Top() const
 {
    if (m_len > 0)
@@ -46,6 +49,7 @@ const ChunkStack::Entry *ChunkStack::Top() const
    }
    return(NULL);
 }
+
 
 const ChunkStack::Entry *ChunkStack::Get(int idx) const
 {
@@ -56,6 +60,7 @@ const ChunkStack::Entry *ChunkStack::Get(int idx) const
    return(NULL);
 }
 
+
 chunk_t *ChunkStack::GetChunk(int idx) const
 {
    if ((idx < m_len) && (idx >= 0))
@@ -64,6 +69,7 @@ chunk_t *ChunkStack::GetChunk(int idx) const
    }
    return(NULL);
 }
+
 
 chunk_t *ChunkStack::Pop()
 {
@@ -75,20 +81,22 @@ chunk_t *ChunkStack::Pop()
    return(NULL);
 }
 
+
 void ChunkStack::Push(chunk_t *pc, int seqnum)
 {
    if (m_len >= m_size)
    {
       Resize(m_len + 64);
    }
-   m_cse[m_len].m_pc      = pc;
-   m_cse[m_len].m_seqnum  = seqnum;
+   m_cse[m_len].m_pc     = pc;
+   m_cse[m_len].m_seqnum = seqnum;
    m_len++;
    if (m_seqnum < seqnum)
    {
       m_seqnum = seqnum;
    }
 }
+
 
 void ChunkStack::Init()
 {
@@ -97,6 +105,7 @@ void ChunkStack::Init()
    m_len    = 0;
    m_seqnum = 0;
 }
+
 
 void ChunkStack::Resize(int newsize)
 {
@@ -108,6 +117,7 @@ void ChunkStack::Resize(int newsize)
       /*TODO: check for out-of-memory? */
    }
 }
+
 
 /**
  * Mark an entry to be removed by Collapse()
@@ -122,6 +132,7 @@ void ChunkStack::Zap(int idx)
       m_cse[idx].m_pc = NULL;
    }
 }
+
 
 /**
  * Compresses down the stack by removing dead entries
@@ -143,6 +154,7 @@ void ChunkStack::Collapse()
       }
    }
 }
+
 
 //
 //int main(int argc, char **argv)

@@ -42,6 +42,7 @@ static bool can_increase_nl(chunk_t *nl)
    return(true);
 }
 
+
 /**
  * Double the newline, if allowed.
  */
@@ -61,6 +62,7 @@ static void double_newline(chunk_t *nl)
    nl->nl_count = 2;
 }
 
+
 /*
  * Basic approach:
  * 1. Find next open brace
@@ -73,7 +75,6 @@ static void double_newline(chunk_t *nl)
  */
 
 //#define DEBUG_NEWLINES
-
 static void setup_newline_add(const chunk_t *prev, chunk_t *nl, const chunk_t *next)
 {
    memset(nl, 0, sizeof(*nl));
@@ -97,6 +98,7 @@ static void setup_newline_add(const chunk_t *prev, chunk_t *nl, const chunk_t *n
    }
 }
 
+
 /**
  * 2 parts:
  *  - if/switch/while/for after braces
@@ -104,7 +106,6 @@ static void setup_newline_add(const chunk_t *prev, chunk_t *nl, const chunk_t *n
  *  - do after braces
  *  - do/while before braces
  */
-
 chunk_t *newline_add_before2(chunk_t *pc, const char *fcn, int line)
 {
    chunk_t nl;
@@ -124,6 +125,7 @@ chunk_t *newline_add_before2(chunk_t *pc, const char *fcn, int line)
 
    return(chunk_add_before(&nl, pc));
 }
+
 
 chunk_t *newline_add_after2(chunk_t *pc, const char *fcn, int line)
 {
@@ -145,7 +147,8 @@ chunk_t *newline_add_after2(chunk_t *pc, const char *fcn, int line)
    return(chunk_add_after(&nl, pc));
 }
 
-#define newline_min_after(ref, cnt)     newline_min_after2(ref, cnt, __func__, __LINE__)
+
+#define newline_min_after(ref, cnt)    newline_min_after2(ref, cnt, __func__, __LINE__)
 
 static void newline_min_after2(chunk_t *ref, INT32 count,
                                const char *func, int line)
@@ -182,6 +185,7 @@ static void newline_min_after2(chunk_t *ref, INT32 count,
       }
    }
 }
+
 
 /**
  * Add a newline between two tokens.
@@ -249,6 +253,7 @@ chunk_t *newline_add_between2(chunk_t *start, chunk_t *end,
    return(newline_add_before(end));
 }
 
+
 /**
  * Removes any CT_NEWLINE or CT_NL_CONT between start and end.
  * Start must be before end on the chunk list.
@@ -264,7 +269,7 @@ void newline_del_between2(chunk_t *start, chunk_t *end,
 {
    chunk_t *next;
    chunk_t *prev;
-   chunk_t *pc    = start;
+   chunk_t *pc = start;
 
    LOG_FMT(LNEWLINE, "%s: '%.*s' line %d:%d and '%.*s' line %d:%d : caller=%s:%d preproc=%d/%d\n",
            __func__, start->len, start->str, start->orig_line, start->orig_col,
@@ -317,6 +322,7 @@ void newline_del_between2(chunk_t *start, chunk_t *end,
    }
 }
 
+
 /**
  * Add or remove a newline between the closing paren and opening brace.
  * Also uncuddles anything on the closing brace. (may get fixed later)
@@ -367,6 +373,7 @@ static void newlines_if_for_while_switch(chunk_t *start, argval_t nl_opt)
       }
    }
 }
+
 
 /**
  * Add or remove extra newline before the chunk.
@@ -466,6 +473,7 @@ static void newlines_if_for_while_switch_pre_blank_lines(chunk_t *start, argval_
    }
 }
 
+
 static chunk_t *get_closing_brace(chunk_t *start)
 {
    chunk_t *pc;
@@ -486,6 +494,7 @@ static chunk_t *get_closing_brace(chunk_t *start)
 
    return(NULL);
 }
+
 
 /**
  * remove any consecutive newlines following this chunk
@@ -511,6 +520,7 @@ static void remove_next_newlines(chunk_t *start)
       }
    }
 }
+
 
 /**
  * Add or remove extra newline after end of the block started in chunk.
@@ -641,7 +651,7 @@ static void newlines_if_for_while_switch_post_blank_lines(chunk_t *start, argval
                pc   = chunk_get_next_nl(next);
                //LOG_FMT(LSYS, "  -- pc1=%.*s [%s]\n", pc->len, pc->str, get_token_name(pc->type));
 
-               pc   = chunk_get_next(pc);
+               pc = chunk_get_next(pc);
                //LOG_FMT(LSYS, "  -- pc2=%.*s [%s]\n", pc->len, pc->str, get_token_name(pc->type));
                if ((pc != NULL) && (pc->type == CT_PREPROC) &&
                    (pc->parent_type == CT_PP_ENDIF) &&
@@ -660,6 +670,7 @@ static void newlines_if_for_while_switch_post_blank_lines(chunk_t *start, argval
       }
    }
 }
+
 
 /**
  * Adds or removes a newline between the keyword and the open brace.
@@ -715,6 +726,7 @@ static void newlines_struct_enum_union(chunk_t *start, argval_t nl_opt, bool lea
    }
 }
 
+
 /**
  * Cuddles or un-cuddles a chunk with a previous close brace
  *
@@ -739,6 +751,7 @@ static void newlines_cuddle_uncuddle(chunk_t *start, argval_t nl_opt)
       newline_iarf_pair(br_close, start, nl_opt);
    }
 }
+
 
 /**
  * Adds/removes a newline between else and '{'.
@@ -773,6 +786,7 @@ static void newlines_do_else(chunk_t *start, argval_t nl_opt)
       }
    }
 }
+
 
 /**
  * We are at the open brace for a function body.
@@ -815,6 +829,7 @@ static void newline_fnc_var_def(chunk_t *br_open, int nl_count)
       }
    }
 }
+
 
 /**
  * Handles the brace_on_func_line setting and decides if the closing brace
@@ -981,6 +996,7 @@ static void newlines_brace_pair(chunk_t *br_open)
    }
 }
 
+
 /**
  * Put a empty line between the 'case' statement and the previous case colon
  * or semicolon.
@@ -1031,6 +1047,7 @@ static void newline_case(chunk_t *start)
    }
 }
 
+
 static void newline_case_colon(chunk_t *start)
 {
    chunk_t *pc = start;
@@ -1046,6 +1063,7 @@ static void newline_case_colon(chunk_t *start)
       newline_add_before(pc);
    }
 }
+
 
 /**
  * Put a empty line after a return statement, unless it is followed by a
@@ -1083,6 +1101,7 @@ static void newline_return(chunk_t *start)
    }
 }
 
+
 /**
  * Does the Ignore, Add, Remove, or Force thing between two chunks
  *
@@ -1106,6 +1125,7 @@ static void newline_iarf_pair(chunk_t *before, chunk_t *after, argval_t av)
    }
 }
 
+
 /**
  * Does a simple Ignore, Add, Remove, or Force after the given chunk
  *
@@ -1116,6 +1136,7 @@ void newline_iarf(chunk_t *pc, argval_t av)
 {
    newline_iarf_pair(pc, chunk_get_next_nnl(pc), av);
 }
+
 
 /**
  * Formats a function declaration
@@ -1160,8 +1181,8 @@ static void newline_func_def(chunk_t *start)
       }
 
       argval_t a = (tmp->parent_type == CT_FUNC_PROTO) ?
-          cpd.settings[UO_nl_func_proto_type_name].a :
-          cpd.settings[UO_nl_func_type_name].a;
+                   cpd.settings[UO_nl_func_proto_type_name].a :
+                   cpd.settings[UO_nl_func_type_name].a;
 
       if (a != AV_IGNORE)
       {
@@ -1218,6 +1239,7 @@ static void newline_func_def(chunk_t *start)
       }
    }
 }
+
 
 /**
  * Checks to see if it is OK to add a newline around the chunk.
@@ -1280,6 +1302,7 @@ static bool one_liner_nl_ok(chunk_t *pc)
    return(true);
 }
 
+
 static void nl_create_one_liner(chunk_t *vbrace_open)
 {
    chunk_t *tmp;
@@ -1302,6 +1325,7 @@ static void nl_create_one_liner(chunk_t *vbrace_open)
       newline_del_between(vbrace_open, first);
    }
 }
+
 
 /**
  * Step through all chunks.
@@ -1697,6 +1721,7 @@ void newlines_cleanup_braces(void)
    }
 }
 
+
 /**
  * Find the next newline or nl_cont
  */
@@ -1727,6 +1752,7 @@ static void nl_handle_define(chunk_t *pc)
    }
 }
 
+
 void newline_after_multiline_comment(void)
 {
    chunk_t *pc;
@@ -1750,6 +1776,7 @@ void newline_after_multiline_comment(void)
       }
    }
 }
+
 
 /**
  * Handle insertion/removal of blank lines before if/for/while/do
@@ -1791,6 +1818,7 @@ void newlines_insert_blank_lines(void)
       }
    }
 }
+
 
 void newlines_squeeze_ifdef(void)
 {
@@ -1849,6 +1877,7 @@ void newlines_squeeze_ifdef(void)
       }
    }
 }
+
 
 void newlines_eat_start_end(void)
 {
@@ -1921,6 +1950,7 @@ void newlines_eat_start_end(void)
    }
 }
 
+
 /**
  * Searches for a chunk of type chunk_type and moves them, if needed.
  * Will not move tokens that are on their own line or have other than
@@ -1975,6 +2005,7 @@ void newlines_chunk_pos(c_token_t chunk_type, tokenpos_e mode)
       }
    }
 }
+
 
 /**
  * Searches for CT_CLASS_COLON and moves them, if needed.
@@ -2080,6 +2111,7 @@ void newlines_class_colon_pos(void)
       }
    }
 }
+
 
 /**
  * Scans for newline tokens and limits the nl_count.
@@ -2295,6 +2327,7 @@ void do_blank_lines(void)
    }
 }
 
+
 void newlines_cleanup_dup(void)
 {
    chunk_t *pc;
@@ -2315,6 +2348,7 @@ void newlines_cleanup_dup(void)
       pc = next;
    }
 }
+
 
 /**
  * Make sure there is a blank line after a commented group of values

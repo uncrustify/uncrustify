@@ -37,6 +37,7 @@ static_inline bool logmask_test(const log_mask_t *mask, log_sev_t sev)
    return((mask->bits[sev >> 3] & (1 << (sev & 0x07))) != 0);
 }
 
+
 /**
  * Sets a set bit in the mask
  *
@@ -55,6 +56,7 @@ static_inline void logmask_set_sev(log_mask_t *mask, log_sev_t sev, bool value)
    }
 }
 
+
 /**
  * Sets all bits to the same value
  *
@@ -64,6 +66,7 @@ static_inline void logmask_set_all(log_mask_t *mask, bool value)
 {
    memset(mask->bits, value ? 0xff : 0, sizeof(mask->bits));
 }
+
 
 /**
  * Convert a logmask into a string.

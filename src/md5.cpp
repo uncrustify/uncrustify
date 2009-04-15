@@ -66,6 +66,7 @@ void MD5::reverse_u32(UINT8 *buf, int n_u32)
    }
 }
 
+
 MD5::MD5()
 {
    m_buf[0] = 0x01020304;
@@ -82,6 +83,7 @@ MD5::MD5()
    m_big_endian    = *(UINT8 *)m_buf == 1;
 }
 
+
 /**
  * Start MD5 accumulation.  Set bit count to 0 and buffer to mysterious
  * initialization constants.
@@ -96,6 +98,7 @@ void MD5::Init()
    m_bits[0] = 0;
    m_bits[1] = 0;
 }
+
 
 /**
  * Update context to reflect the concatenation of another buffer full
@@ -154,6 +157,7 @@ void MD5::Update(const void *data, UINT32 len)
    memcpy(m_in, buf, len);
 }
 
+
 /**
  * Final wrapup - pad to 64-byte boundary with the bit pattern
  * 1 0* (64-bit count of bits processed, MSB-first)
@@ -209,6 +213,7 @@ void MD5::Final(UINT8 digest[16])
    }
    memcpy(digest, m_buf, 16);
 }
+
 
 /* The four core functions - F1 is optimized somewhat */
 
@@ -309,6 +314,7 @@ void MD5::Transform(UINT32 buf[4], UINT32 in_data[16])
    buf[2] += c;
    buf[3] += d;
 }
+
 
 void MD5::Calc(const void *data, UINT32 length, UINT8 digest[16])
 {

@@ -38,6 +38,7 @@ void AlignStack::Start(int span, int thresh)
    m_amp_style   = SS_IGNORE;
 }
 
+
 /**
  * Calls Add on all the skipped items
  */
@@ -63,6 +64,7 @@ void AlignStack::ReAddSkipped()
       NewLines(0);
    }
 }
+
 
 /**
  * Adds an entry to the appropriate stack.
@@ -298,6 +300,7 @@ void AlignStack::Add(chunk_t *start, int seqnum)
    }
 }
 
+
 /**
  * Adds some newline and calls Flush() if needed
  */
@@ -318,6 +321,7 @@ void AlignStack::NewLines(int cnt)
    }
 }
 
+
 /**
  * Aligns all the stuff in m_aligned.
  * Re-adds 'newer' items in m_skipped.
@@ -328,7 +332,7 @@ void AlignStack::Flush()
    int idx;
    int tmp_col;
    const ChunkStack::Entry *ce = NULL;
-   chunk_t *pc;
+   chunk_t                 *pc;
 
    LOG_FMT(LAS, "Flush (min=%d, max=%d)\n", m_min_col, m_max_col);
 
@@ -438,6 +442,7 @@ void AlignStack::Flush()
       ReAddSkipped();
    }
 }
+
 
 /**
  * Aligns everything else and resets the lists.

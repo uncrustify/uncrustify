@@ -90,6 +90,7 @@ static void add_char(char ch)
    last_char = ch;
 }
 
+
 static void add_text(const char *text)
 {
    char ch;
@@ -101,6 +102,7 @@ static void add_text(const char *text)
    }
 }
 
+
 static void add_text_len(const char *text, int len)
 {
    while (len-- > 0)
@@ -109,6 +111,7 @@ static void add_text_len(const char *text, int len)
       text++;
    }
 }
+
 
 /**
  * Count the number of characters to the end of the next chunk of text.
@@ -161,6 +164,7 @@ static void output_to_column(int column, bool allow_tabs)
    }
 }
 
+
 /**
  * Output to the column using indent_with_tabs as the rule.
  *
@@ -191,6 +195,7 @@ static void output_indent(int column, int brace_col)
       add_text(" ");
    }
 }
+
 
 void output_parsed(FILE *pfile)
 {
@@ -232,6 +237,7 @@ void output_parsed(FILE *pfile)
    fflush(pfile);
 }
 
+
 void output_options(FILE *pfile)
 {
    int idx;
@@ -258,6 +264,7 @@ void output_options(FILE *pfile)
       }
    }
 }
+
 
 /**
  * This renders the chunk list to a file.
@@ -401,6 +408,7 @@ void output_text(FILE *pfile)
    }
 }
 
+
 /**
  * Given a multi-line comment block that starts in column X, figure out how
  * much subsequent lines should be indented.
@@ -478,7 +486,7 @@ static int calculate_comment_body_indent(const char *str, int len, int start_col
 
    /* Scan the second line */
    width = 0;
-   for ( /* nada */; idx < len; idx++)
+   for (/* nada */; idx < len; idx++)
    {
       if ((str[idx] == ' ') || (str[idx] == '\t'))
       {
@@ -520,6 +528,7 @@ static int calculate_comment_body_indent(const char *str, int len, int start_col
    return((width == 2) ? 0 : 1);
 }
 
+
 static chunk_t *get_next_function(chunk_t *pc)
 {
    while ((pc = chunk_get_next(pc)) != NULL)
@@ -534,6 +543,7 @@ static chunk_t *get_next_function(chunk_t *pc)
    return(NULL);
 }
 
+
 static chunk_t *get_next_class(chunk_t *pc)
 {
    while ((pc = chunk_get_next(pc)) != NULL)
@@ -545,6 +555,7 @@ static chunk_t *get_next_class(chunk_t *pc)
    }
    return(NULL);
 }
+
 
 /**
  * Adds the javadoc-style @param and @return stuff, based on the params and
@@ -632,6 +643,7 @@ static void add_comment_javaparam(chunk_t *pc, cmt_reflow& cmt)
    }
 }
 
+
 /**
  * text starts with '$('. see if this matches a keyword and add text based
  * on that keyword.
@@ -692,6 +704,7 @@ static int add_comment_kw(const char *text, int len, cmt_reflow& cmt)
    }
    return(0);
 }
+
 
 /**
  * Outputs a comment. The initial opening '//' may be included in the text.
@@ -759,6 +772,7 @@ static void add_comment_text(const char *text, int len,
    }
 }
 
+
 static void output_cmt_start(cmt_reflow& cmt, chunk_t *pc)
 {
    cmt.word_count = 0;
@@ -796,6 +810,7 @@ static void output_cmt_start(cmt_reflow& cmt, chunk_t *pc)
    cmt.kw_subst = (pc->flags & PCF_INSERTED) != 0;
 }
 
+
 /**
  * Checks to see if the current comment can be combined with the next comment.
  * The two can be combined if:
@@ -828,6 +843,7 @@ static bool can_combine_comment(chunk_t *pc, cmt_reflow& cmt)
    }
    return(false);
 }
+
 
 /**
  * Outputs the C comment at pc.
@@ -874,6 +890,7 @@ static chunk_t *output_comment_c(chunk_t *first)
    return(pc);
 }
 
+
 /**
  * Outputs the CPP comment at pc.
  * CPP comment combining is done here
@@ -900,7 +917,7 @@ static chunk_t *output_comment_cpp(chunk_t *first)
          add_comment_text(first->str, 2, cmt, false);
 
          const char *tmp = first->str + 2;
-         int        len = first->len - 2;
+         int        len  = first->len - 2;
 
          if (cpd.settings[UO_sp_cmt_cpp_start].a & AV_REMOVE)
          {
@@ -973,6 +990,7 @@ static chunk_t *output_comment_cpp(chunk_t *first)
    add_comment_text(" */", 3, cmt, false);
    return(pc);
 }
+
 
 /**
  * A multiline comment -- woopeee!
@@ -1182,6 +1200,7 @@ static void output_comment_multi(chunk_t *pc)
    }
 }
 
+
 /**
  * Output a multiline comment without any reformatting other than shifting
  * it left or right to get the column right.
@@ -1198,7 +1217,7 @@ static void output_comment_multi_simple(chunk_t *pc)
    int        line_count = 0;
    int        ccol;
    int        col_diff = 0;
-   bool       nl_end = false;
+   bool       nl_end   = false;
 
    if (chunk_is_newline(chunk_get_prev(pc)))
    {

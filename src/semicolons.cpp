@@ -30,6 +30,7 @@ static void remove_semicolon(chunk_t *pc)
    chunk_del(pc);
 }
 
+
 /**
  * Removes superfluous semicolons:
  *  - after brace close whose parent is IF, ELSE, SWITCH, WHILE, FOR
@@ -93,6 +94,7 @@ void remove_extra_semicolons(void)
       pc = next;
    }
 }
+
 
 /**
  * We are on a semicolon that is after an unidentified brace close.

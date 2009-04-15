@@ -230,6 +230,7 @@ static bool parse_comment(chunk_t *pc)
    return(true);
 }
 
+
 /**
  * Count the number of characters in the number.
  * The next bit of text starts with a number (0-9 or '.'), so it is a number.
@@ -404,6 +405,7 @@ static bool parse_number(chunk_t *pc)
    return(true);
 }
 
+
 /**
  * Count the number of characters in a quoted string.
  * The next bit of text starts with a quote char " or ' or <.
@@ -426,7 +428,7 @@ static bool parse_string(chunk_t *pc, int quote_idx, bool allow_escape)
    len++;
 
    cpd.column += len;
-   for ( /* nada */; pc->str[len] != 0; len++)
+   for (/* nada */; pc->str[len] != 0; len++)
    {
       cpd.column++;
       if (!escaped)
@@ -472,6 +474,7 @@ static bool parse_string(chunk_t *pc, int quote_idx, bool allow_escape)
    return(true);
 }
 
+
 /**
  * Literal string, ends with single "
  * Two "" don't end the string.
@@ -506,6 +509,7 @@ static bool parse_cs_string(chunk_t *pc)
    return(true);
 }
 
+
 /**
  * Count the number of characters in a word.
  * The first character is already valid for a keyword
@@ -515,7 +519,7 @@ static bool parse_cs_string(chunk_t *pc)
  */
 bool parse_word(chunk_t *pc, bool skipcheck)
 {
-   int len = 1;
+   int               len = 1;
    const chunk_tag_t *tag;
 
    while ((pc->str[len] < 127) && CharTable::IsKw2(pc->str[len]))
@@ -553,6 +557,7 @@ bool parse_word(chunk_t *pc, bool skipcheck)
    }
    return(true);
 }
+
 
 /**
  * Count the number of whitespace characters.
@@ -623,6 +628,7 @@ static bool parse_whitespace(chunk_t *pc)
    return(len != 0);
 }
 
+
 /**
  * Count the number of non-ascii characters at the start of a file.
  *
@@ -646,6 +652,7 @@ static bool parse_bom(chunk_t *pc)
    }
    return(len != 0);
 }
+
 
 /**
  * Called when we hit a backslash.
@@ -681,6 +688,7 @@ static bool parse_bs_newline(chunk_t *pc)
    return(false);
 }
 
+
 /**
  * Parses any number of tab or space chars followed by a newline.
  * Does not change pc->len if a newline isn't found.
@@ -714,6 +722,7 @@ static bool parse_newline(chunk_t *pc)
    }
    return(false);
 }
+
 
 static bool parse_ignored(chunk_t *pc)
 {
@@ -754,6 +763,7 @@ static bool parse_ignored(chunk_t *pc)
    }
    return(false);
 }
+
 
 /**
  * Skips the next bit of whatever and returns the type of block.
@@ -987,6 +997,7 @@ static bool parse_next(chunk_t *pc)
    return(true);
 }
 
+
 /**
  * This function parses or tokenizes the whole buffer into a list.
  * It has to do some tricks to parse preprocessors.
@@ -1164,6 +1175,7 @@ void tokenize(const char *data, int data_len, chunk_t *ref)
       LOG_FMT(LLINEENDS, "Using CR line endings\n");
    }
 }
+
 
 /**
  * A simplistic fixed-sized needle in the fixed-size haystack string search.

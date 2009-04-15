@@ -23,37 +23,53 @@ static inline int unc_fix_ctype(int ch)
    return((ch == -1) ? -1 : (ch & 0xff));
 }
 
+
 static inline int unc_isspace(int ch)
 {
    return(isspace(unc_fix_ctype(ch)));
 }
+
+
 static inline int unc_isprint(int ch)
 {
    return(isprint(unc_fix_ctype(ch)));
 }
+
+
 static inline int unc_isalpha(int ch)
 {
    return(isalpha(unc_fix_ctype(ch)));
 }
+
+
 static inline int unc_isalnum(int ch)
 {
    return(isalnum(unc_fix_ctype(ch)));
 }
+
+
 static inline int unc_toupper(int ch)
 {
    return(toupper(unc_fix_ctype(ch)));
 }
+
+
 static inline int unc_tolower(int ch)
 {
    return(tolower(unc_fix_ctype(ch)));
 }
+
+
 static inline int unc_isxdigit(int ch)
 {
    return(isxdigit(unc_fix_ctype(ch)));
 }
+
+
 static inline int unc_isdigit(int ch)
 {
    return(isdigit(unc_fix_ctype(ch)));
 }
+
 
 #endif /* UNC_CTYPE_H_INCLUDED */

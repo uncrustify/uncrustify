@@ -41,6 +41,7 @@ static int def_compare(const void *p1, const void *p2)
    return(strcmp(t1->tag, t2->tag));
 }
 
+
 /**
  * Adds an entry to the define list
  *
@@ -102,6 +103,7 @@ void add_define(const char *tag, const char *value)
    }
 }
 
+
 /**
  * Search the define table for a match
  *
@@ -131,6 +133,7 @@ const define_tag_t *find_define(const char *word, int len)
                                          sizeof(define_tag_t), def_compare);
    return(p_ret);
 }
+
 
 /**
  * Loads the defines from a file
@@ -189,6 +192,7 @@ int load_define_file(const char *filename)
    return(SUCCESS);
 }
 
+
 void output_defines(FILE *pfile)
 {
    int idx;
@@ -210,6 +214,7 @@ void output_defines(FILE *pfile)
    }
 }
 
+
 const define_tag_t *get_define_idx(int& idx)
 {
    const define_tag_t *dt = NULL;
@@ -221,6 +226,7 @@ const define_tag_t *get_define_idx(int& idx)
    idx++;
    return(dt);
 }
+
 
 void clear_defines(void)
 {
@@ -247,10 +253,10 @@ void clear_defines(void)
 /**
  * This renders the #if condition to a string buffer.
  */
-static void generate_if_conditional_as_text(std::string &dst, chunk_t *ifdef)
+static void generate_if_conditional_as_text(std::string& dst, chunk_t *ifdef)
 {
    chunk_t *pc;
-   int column = -1;
+   int     column = -1;
 
    dst.clear();
    for (pc = ifdef; pc != NULL; pc = chunk_get_next(pc))
@@ -259,9 +265,9 @@ static void generate_if_conditional_as_text(std::string &dst, chunk_t *ifdef)
       {
          column = pc->column;
       }
-      if (pc->type == CT_NEWLINE
-          || pc->type == CT_COMMENT_MULTI
-          || pc->type == CT_COMMENT_CPP)
+      if ((pc->type == CT_NEWLINE) ||
+          (pc->type == CT_COMMENT_MULTI) ||
+          (pc->type == CT_COMMENT_CPP))
       {
          break;
       }
@@ -270,8 +276,8 @@ static void generate_if_conditional_as_text(std::string &dst, chunk_t *ifdef)
          dst.push_back(' ');
          column = -1;
       }
-      else if (pc->type == CT_COMMENT
-               || pc->type == CT_COMMENT_EMBED)
+      else if ((pc->type == CT_COMMENT) ||
+               (pc->type == CT_COMMENT_EMBED))
       {
       }
       else // if (pc->type == CT_JUNK) || else
@@ -289,19 +295,20 @@ static void generate_if_conditional_as_text(std::string &dst, chunk_t *ifdef)
    }
 }
 
+
 /*
-   See also it's preprocessor counterpart
-     add_long_closebrace_comment
-   in braces.cpp
-
-   Note: since this concerns itself with the preprocessor -- which is line-oriented --
-   it turns out that just looking at pc->pp_level is NOT the right thing to do.
-   See a --parsed dump if you don't believe this: an '#endif' will be one level
-   UP from the corresponding #ifdef when you look at the tokens 'ifdef' versus 'endif',
-   but it's a whole another story when you look at their CT_PREPROC ('#') tokens!
-
-   Hence we need to track and seek matching CT_PREPROC pp_levels here, which complicates
-   things a little bit, but not much.
+ * See also it's preprocessor counterpart
+ *   add_long_closebrace_comment
+ * in braces.cpp
+ *
+ * Note: since this concerns itself with the preprocessor -- which is line-oriented --
+ * it turns out that just looking at pc->pp_level is NOT the right thing to do.
+ * See a --parsed dump if you don't believe this: an '#endif' will be one level
+ * UP from the corresponding #ifdef when you look at the tokens 'ifdef' versus 'endif',
+ * but it's a whole another story when you look at their CT_PREPROC ('#') tokens!
+ *
+ * Hence we need to track and seek matching CT_PREPROC pp_levels here, which complicates
+ * things a little bit, but not much.
  */
 void add_long_preprocessor_conditional_block_comment(void)
 {
@@ -310,7 +317,7 @@ void add_long_preprocessor_conditional_block_comment(void)
    chunk_t *br_open;
    chunk_t *br_close;
    chunk_t *pp_start = NULL;
-   chunk_t *pp_end = NULL;
+   chunk_t *pp_end   = NULL;
    int     nl_count;
 
    for (pc = chunk_get_head(); pc; pc = chunk_get_next_ncnl(pc))
@@ -364,9 +371,9 @@ void add_long_preprocessor_conditional_block_comment(void)
             LOG_FMT(LPPIF, "next item type %d (is %s)\n",
                     (tmp ? tmp->type : -1), (tmp ? chunk_is_newline(tmp) ? "newline"
                                              : chunk_is_comment(tmp) ? "comment" : "other" : "---"));
-            if ((tmp == NULL) || tmp->type == CT_NEWLINE /* chunk_is_newline(tmp) */ )
+            if ((tmp == NULL) || (tmp->type == CT_NEWLINE) /* chunk_is_newline(tmp) */)
             {
-               int     nl_min;
+               int nl_min;
 
                if (br_close->type == CT_PP_ENDIF)
                {
@@ -403,11 +410,10 @@ void add_long_preprocessor_conditional_block_comment(void)
 
             /* checks both the #else and #endif for a given level, only then look further in the main loop */
             if (br_close->type == CT_PP_ENDIF)
+            {
                break;
+            }
          }
       }
    }
 }
-
-
-

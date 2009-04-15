@@ -34,6 +34,7 @@ public:
       Init();
    }
 
+
    ChunkStack(const ChunkStack& cs);
 
    ~ChunkStack();
@@ -45,15 +46,18 @@ public:
       Push(pc, ++m_seqnum);
    }
 
+
    bool Empty() const
    {
       return(m_len == 0);
    }
 
+
    int Len() const
    {
       return(m_len);
    }
+
 
    const Entry *Top() const;
    const Entry *Get(int idx) const;
@@ -66,6 +70,7 @@ public:
    {
       m_len = 0;
    }
+
 
    void Zap(int idx);
    void Collapse();

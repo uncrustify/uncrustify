@@ -22,6 +22,7 @@ static_inline bool is_past_width(chunk_t *pc)
    return((pc->column + pc->len) > cpd.settings[UO_code_width].n);
 }
 
+
 /**
  * Split right after the chunk
  */
@@ -37,6 +38,7 @@ static void split_before_chunk(chunk_t *pc)
       cpd.changes++;
    }
 }
+
 
 /**
  * Step forward until a token goes beyond the limit and then call split_line()
@@ -59,6 +61,7 @@ void do_code_width(void)
       }
    }
 }
+
 
 struct cw_entry
 {
@@ -98,6 +101,7 @@ static int get_split_pri(c_token_t tok)
    }
    return(0);
 }
+
 
 /**
  * Checks to see if pc is a better spot to split.
@@ -150,6 +154,7 @@ static void try_split_here(cw_entry& ent, chunk_t *pc)
       ent.pri = pc_pri;
    }
 }
+
 
 /**
  * Scan backwards to find the most appropriate spot to split the line
@@ -285,6 +290,7 @@ static void split_line(chunk_t *start)
    }
 }
 
+
 /**
  * A for statment is too long.
  * Step backwards and forwards to find the semicolons
@@ -300,7 +306,7 @@ static void split_for_stmt(chunk_t *start)
    chunk_t *st[2];
    chunk_t *pc;
    chunk_t *open_paren = NULL;
-   int     nl_cnt = 0;
+   int     nl_cnt      = 0;
 
    LOG_FMT(LSPLIT, "%s: starting on %.*s, line %d\n",
            __func__, start->len, start->str, start->orig_line);
@@ -394,6 +400,7 @@ static void split_for_stmt(chunk_t *start)
    /* Oh, well. We tried. */
 }
 
+
 /**
  * Splits the parameters at every comma that is at the fparen level.
  *
@@ -428,6 +435,7 @@ static void split_fcn_params_full(chunk_t *start)
       }
    }
 }
+
 
 /**
  * Figures out where to split a function def/proto/call

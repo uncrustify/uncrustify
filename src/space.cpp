@@ -67,8 +67,10 @@ struct no_space_table_s no_space_table[] =
    { CT_PAREN_CLOSE,    CT_FPAREN_OPEN   },
 };
 
-#define log_rule(rule) \
-   do { if (log_sev_on(LSPACE)) { log_rule2(__LINE__, (rule), first, second, complete); } } while (0)
+#define log_rule(rule)                                        \
+   do { if (log_sev_on(LSPACE)) {                             \
+      log_rule2(__LINE__, (rule), first, second, complete); } \
+   } while (0)
 
 static void log_rule2(int line, const char *rule, chunk_t *first, chunk_t *second, bool complete)
 {
@@ -82,6 +84,7 @@ static void log_rule2(int line, const char *rule, chunk_t *first, chunk_t *secon
            complete ? "\n" : "");
 }
 
+
 /**
  * Decides how to change inter-chunk spacing.
  * Note that the order of the if statements is VERY important.
@@ -90,7 +93,7 @@ static void log_rule2(int line, const char *rule, chunk_t *first, chunk_t *secon
  * @param second  The second chunk
  * @return        AV_IGNORE, AV_ADD, AV_REMOVE or AV_FORCE
  */
-argval_t do_space(chunk_t *first, chunk_t *second, bool complete=true)
+argval_t do_space(chunk_t *first, chunk_t *second, bool complete = true)
 {
    int      idx;
    argval_t arg;
@@ -1199,6 +1202,7 @@ argval_t do_space(chunk_t *first, chunk_t *second, bool complete=true)
    return(AV_ADD);
 }
 
+
 /**
  * Marches through the whole file and checks to see how many spaces should be
  * between two chunks
@@ -1357,6 +1361,7 @@ void space_text(void)
    }
 }
 
+
 /**
  * Marches through the whole file and adds spaces around nested parens
  */
@@ -1417,6 +1422,7 @@ void space_text_balance_nested_parens(void)
    }
 }
 
+
 /**
  * Calculates the column difference between two chunks.
  * The rules are bent a bit here, as AV_IGNORE and AV_ADD become AV_FORCE.
@@ -1445,7 +1451,7 @@ int space_col_align(chunk_t *first, chunk_t *second)
       break;
 
    case AV_IGNORE:
-      if (second->orig_col> (first->orig_col + first->len))
+      if (second->orig_col > (first->orig_col + first->len))
       {
          coldiff++;
       }
@@ -1453,6 +1459,7 @@ int space_col_align(chunk_t *first, chunk_t *second)
    }
    return(coldiff);
 }
+
 
 void space_add_after(chunk_t *pc, int count)
 {

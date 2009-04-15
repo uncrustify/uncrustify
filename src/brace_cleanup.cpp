@@ -24,8 +24,8 @@
 static chunk_t *insert_vbrace(chunk_t *pc, bool after,
                               struct parse_frame *frm);
 
-#define insert_vbrace_close_after(pc, frm)     insert_vbrace(pc, true, frm)
-#define insert_vbrace_open_before(pc, frm)     insert_vbrace(pc, false, frm)
+#define insert_vbrace_close_after(pc, frm)    insert_vbrace(pc, true, frm)
+#define insert_vbrace_open_before(pc, frm)    insert_vbrace(pc, false, frm)
 
 static void parse_cleanup(struct parse_frame *frm, chunk_t *pc);
 
@@ -72,6 +72,7 @@ static int preproc_start(struct parse_frame *frm, chunk_t *pc)
    return(pp_level);
 }
 
+
 static void print_stack(int logsev, const char *str,
                         struct parse_frame *frm, chunk_t *pc)
 {
@@ -97,6 +98,7 @@ static void print_stack(int logsev, const char *str,
    }
 }
 
+
 /**
  * Scans through the whole list and does stuff.
  * It has to do some tricks to parse preprocessors.
@@ -108,7 +110,7 @@ void brace_cleanup(void)
    chunk_t            *pc;
    chunk_t            vs_chunk;
    struct parse_frame frm;
-   int pp_level;
+   int                pp_level;
 
    memset(&frm, 0, sizeof(frm));
    memset(&vs_chunk, 0, sizeof(vs_chunk));
@@ -170,6 +172,7 @@ void brace_cleanup(void)
    }
 }
 
+
 /**
  * pc is a CT_WHILE.
  * Scan backwards to see if we find a brace/vbrace with the parent set to CT_DO
@@ -200,6 +203,7 @@ static bool maybe_while_of_do(chunk_t *pc)
    return(false);
 }
 
+
 static void push_fmr_pse(struct parse_frame *frm, chunk_t *pc,
                          brstage_e stage, const char *logtext)
 {
@@ -219,6 +223,7 @@ static void push_fmr_pse(struct parse_frame *frm, chunk_t *pc,
       cpd.error_count++;
    }
 }
+
 
 /**
  * At the heart of this algorithm are two stacks.
@@ -615,6 +620,7 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
    }
 }
 
+
 /**
  * Checks the progression of complex statements.
  * - checks for else after if
@@ -725,7 +731,7 @@ static bool check_complex_statements(struct parse_frame *frm, chunk_t *pc)
    {
       parent = frm->pse[frm->pse_tos].type;
 
-      vbrace              = insert_vbrace_open_before(pc, frm);
+      vbrace = insert_vbrace_open_before(pc, frm);
       vbrace->parent_type = parent;
 
       frm->level++;
@@ -764,6 +770,7 @@ static bool check_complex_statements(struct parse_frame *frm, chunk_t *pc)
 
    return(false);
 }
+
 
 /**
  * Handles a close paren or brace - just progress the stage, if the end
@@ -868,6 +875,7 @@ static bool handle_complex_close(struct parse_frame *frm, chunk_t *pc)
    return(false);
 }
 
+
 static chunk_t *insert_vbrace(chunk_t *pc, bool after,
                               struct parse_frame *frm)
 {
@@ -928,6 +936,7 @@ static chunk_t *insert_vbrace(chunk_t *pc, bool after,
    return(rv);
 }
 
+
 /**
  * Called when a statement was just closed and the pse_tos was just
  * decremented.
@@ -968,8 +977,8 @@ bool close_statement(struct parse_frame *frm, chunk_t *pc)
       else
       {
          /* otherwise, add before it and consume the vbrace */
-         vbc              = chunk_get_prev_ncnl(pc);
-         vbc              = insert_vbrace_close_after(vbc, frm);
+         vbc = chunk_get_prev_ncnl(pc);
+         vbc = insert_vbrace_close_after(vbc, frm);
          vbc->parent_type = frm->pse[frm->pse_tos].parent;
 
          frm->level--;

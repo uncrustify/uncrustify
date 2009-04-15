@@ -29,10 +29,10 @@
 #include <fcntl.h>
 #include "unc_ctype.h"
 #ifdef HAVE_SYS_STAT_H
- #include <sys/stat.h>
+#include <sys/stat.h>
 #endif
 #ifdef HAVE_STRINGS_H
- #include <strings.h> /* strcasecmp() */
+#include <strings.h>  /* strcasecmp() */
 #endif
 
 /* Global data */
@@ -98,6 +98,7 @@ const char *path_basename(const char *path)
    return(last_path);
 }
 
+
 /**
  * Returns the length of the directory part of the filename.
  */
@@ -109,6 +110,7 @@ int path_dirname_len(const char *filename)
    }
    return((int)(path_basename(filename) - filename));
 }
+
 
 static void usage_exit(const char *msg, const char *argv0, int code)
 {
@@ -193,16 +195,19 @@ static void usage_exit(const char *msg, const char *argv0, int code)
    exit(code);
 }
 
+
 static void version_exit(void)
 {
    printf("uncrustify %s\n", UNCRUSTIFY_VERSION);
    exit(0);
 }
 
+
 static void redir_stdout(const char *output_file)
 {
    /* Reopen stdout */
    FILE *my_stdout = stdout;
+
    if (output_file != NULL)
    {
       my_stdout = freopen(output_file, "wb", stdout);
@@ -215,6 +220,7 @@ static void redir_stdout(const char *output_file)
       LOG_FMT(LNOTE, "Redirecting output to %s\n", output_file);
    }
 }
+
 
 int main(int argc, char *argv[])
 {
@@ -259,7 +265,7 @@ int main(int argc, char *argv[])
 
 #ifdef WIN32
    /* tell windoze not to change what I write to stdout */
-   (void)_setmode(_fileno(stdout), _O_BINARY);
+      (void) _setmode(_fileno(stdout), _O_BINARY);
 #endif
 
    /* Init logging */
@@ -602,6 +608,7 @@ int main(int argc, char *argv[])
    return((cpd.error_count != 0) ? 1 : 0);
 }
 
+
 static void process_source_list(const char *source_list,
                                 const char *prefix, const char *suffix,
                                 bool no_backup, bool keep_mtime)
@@ -643,6 +650,7 @@ static void process_source_list(const char *source_list,
       }
    }
 }
+
 
 static char *read_stdin(int& out_len)
 {
@@ -687,10 +695,11 @@ static char *read_stdin(int& out_len)
    return(data);
 }
 
+
 static void make_folders(const char *filename)
 {
-   int idx;
-   int last_idx = 0;
+   int  idx;
+   int  last_idx = 0;
    char outname[1024];
 
    snprintf(outname, sizeof(outname), "%s", filename);
@@ -721,6 +730,7 @@ static void make_folders(const char *filename)
       }
    }
 }
+
 
 /**
  * Loads a file into memory
@@ -768,7 +778,7 @@ static int load_mem_file(const char *filename, file_mem& fm)
    else
    {
       fm.data[fm.length] = 0;
-      retval = 0;
+      retval             = 0;
    }
    fclose(p_file);
 
@@ -780,6 +790,7 @@ static int load_mem_file(const char *filename, file_mem& fm)
    }
    return(retval);
 }
+
 
 /**
  * Try to load the file from the config folder first and then by name
@@ -804,6 +815,7 @@ static int load_mem_file_config(const char *filename, file_mem& fm)
    }
    return(retval);
 }
+
 
 static int load_header_files()
 {
@@ -836,6 +848,7 @@ static int load_header_files()
    return(retval);
 }
 
+
 static const char *make_output_filename(char *buf, int buf_size,
                                         const char *filename,
                                         const char *prefix,
@@ -853,6 +866,7 @@ static const char *make_output_filename(char *buf, int buf_size,
 
    return(buf);
 }
+
 
 /**
  * Reinvent the wheel with a file comparision function...
@@ -912,6 +926,7 @@ static bool file_content_matches(const char *filename1, const char *filename2)
    return((len1 == 0) && (len2 == 0));
 }
 
+
 const char *fix_filename(const char *filename)
 {
    char *tmp_file;
@@ -925,6 +940,7 @@ const char *fix_filename(const char *filename)
    return(tmp_file);
 }
 
+
 /**
  * Does a source file.
  *
@@ -937,8 +953,8 @@ const char *fix_filename(const char *filename)
 static void do_source_file(const char *filename_in,
                            const char *filename_out,
                            const char *parsed_file,
-                           bool no_backup,
-                           bool keep_mtime)
+                           bool       no_backup,
+                           bool       keep_mtime)
 {
    FILE       *pfout;
    bool       did_open    = false;
@@ -1040,7 +1056,7 @@ static void do_source_file(const char *filename_in,
              * first. This may cause data loss if the tmp file gets deleted
              * or can't be renamed.
              */
-            (void)unlink(filename_out);
+               (void) unlink(filename_out);
 #endif
             /* Change - rename filename_tmp to filename_out */
             if (rename(filename_tmp, filename_out) != 0)
@@ -1065,6 +1081,7 @@ static void do_source_file(const char *filename_in,
    }
 }
 
+
 static void add_file_header()
 {
    if (!chunk_is_comment(chunk_get_head()))
@@ -1073,6 +1090,7 @@ static void add_file_header()
       tokenize(cpd.file_hdr.data, cpd.file_hdr.length, chunk_get_head());
    }
 }
+
 
 static void add_file_footer()
 {
@@ -1096,6 +1114,7 @@ static void add_file_footer()
    }
 }
 
+
 static void add_func_header(c_token_t type, file_mem& fm)
 {
    chunk_t *pc;
@@ -1111,6 +1130,7 @@ static void add_func_header(c_token_t type, file_mem& fm)
       }
 
       do_insert = false;
+
       /* On a function proto or def. Back up to a close brace or semicolon on
        * the same level
        */
@@ -1167,6 +1187,7 @@ static void add_func_header(c_token_t type, file_mem& fm)
    }
 }
 
+
 static void uncrustify_start(const char *data, int data_len)
 {
    /**
@@ -1219,6 +1240,7 @@ static void uncrustify_start(const char *data, int data_len)
     */
    combine_labels();
 }
+
 
 static void uncrustify_file(const char *data, int data_len, FILE *pfout,
                             const char *parsed_file)
@@ -1413,10 +1435,12 @@ static void uncrustify_file(const char *data, int data_len, FILE *pfout,
    uncrustify_end();
 }
 
+
 static void uncrustify_end()
 {
    /* Free all the memory */
    chunk_t *pc;
+
    while ((pc = chunk_get_head()) != NULL)
    {
       chunk_del(pc);
@@ -1441,6 +1465,7 @@ static void uncrustify_end()
    cpd.preproc_ncnl_count = 0;
 }
 
+
 const char *get_token_name(c_token_t token)
 {
    if ((token >= 0) && (token < (int)ARRAY_SIZE(token_names)) &&
@@ -1450,6 +1475,7 @@ const char *get_token_name(c_token_t token)
    }
    return("???");
 }
+
 
 /**
  * Grab the token id for the text.
@@ -1472,6 +1498,7 @@ c_token_t find_token_name(const char *text)
    return(CT_NONE);
 }
 
+
 static bool ends_with(const char *filename, const char *tag)
 {
    int len1 = strlen(filename);
@@ -1483,6 +1510,7 @@ static bool ends_with(const char *filename, const char *tag)
    }
    return(false);
 }
+
 
 struct file_lang
 {
@@ -1531,6 +1559,7 @@ const char *get_file_extension(int& idx)
    return(val);
 }
 
+
 /**
  * Find the language for the file extension
  * Default to C
@@ -1552,6 +1581,7 @@ static int language_from_filename(const char *filename)
    return(LANG_C);
 }
 
+
 /**
  * Find the language for the file extension
  *
@@ -1571,6 +1601,7 @@ static int language_from_tag(const char *tag)
    }
    return(0);
 }
+
 
 /**
  * Gets the tag text for a language
@@ -1601,6 +1632,7 @@ static const char *language_to_string(int lang)
    }
    return("???");
 }
+
 
 void log_pcf_flags(log_sev_t sev, UINT32 flags)
 {

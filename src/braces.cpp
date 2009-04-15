@@ -89,6 +89,7 @@ void do_braces(void)
    }
 }
 
+
 /**
  * Go backwards to honor brace newline removal limits
  */
@@ -121,6 +122,7 @@ static void examine_braces(void)
       pc = prev;
    }
 }
+
 
 /**
  * Step forward and count the number of semi colons at the current level.
@@ -290,6 +292,7 @@ static void examine_brace(chunk_t *bopen)
    }
 }
 
+
 static void remove_brace(chunk_t *pc)
 {
    chunk_t *tmp;
@@ -322,6 +325,7 @@ static void remove_brace(chunk_t *pc)
       }
    }
 }
+
 
 static void convert_vbrace_to_brace(void)
 {
@@ -407,6 +411,7 @@ static void convert_vbrace_to_brace(void)
    }
 }
 
+
 /**
  * Adds a comment after the ref chunk
  * Returns the added chunk or NULL
@@ -422,7 +427,7 @@ chunk_t *insert_comment_after(chunk_t *ref, c_token_t cmt_type,
    {
       cmt_len = strlen(cmt_text);
    }
-   txt_len = cmt_len + 8; /* 8 is big enough for all types */
+   txt_len = cmt_len + 8;                  /* 8 is big enough for all types */
 
    memcpy(&new_cmt, ref, sizeof(new_cmt)); /* [i_a] clone levels, etc. */
    new_cmt.prev = NULL;
@@ -455,10 +460,11 @@ chunk_t *insert_comment_after(chunk_t *ref, c_token_t cmt_type,
    return(chunk_add_after(&new_cmt, ref));
 }
 
+
 /*
-   See also it's preprocessor counterpart
-     add_long_preprocessor_conditional_block_comment
-   in defines.cpp
+ * See also it's preprocessor counterpart
+ *   add_long_preprocessor_conditional_block_comment
+ * in defines.cpp
  */
 void add_long_closebrace_comment(void)
 {
@@ -541,6 +547,7 @@ void add_long_closebrace_comment(void)
       }
    }
 }
+
 
 static void move_case_break(void)
 {

@@ -66,6 +66,7 @@ void make_type(chunk_t *pc)
    }
 }
 
+
 /**
  * Flags everything from the open paren to the close paren.
  *
@@ -117,6 +118,7 @@ static chunk_t *flag_parens(chunk_t *po, UINT32 flags,
    return(chunk_get_next_ncnl(paren_close));
 }
 
+
 /**
  * Sets the parent of the open paren/brace/square/angle and the closing.
  * Note - it is assumed that pc really does point to an open item and the
@@ -139,45 +141,47 @@ chunk_t *set_paren_parent(chunk_t *start, c_token_t parent)
    return(chunk_get_next_ncnl(end));
 }
 
+
 /* Scan backwards to see if we might be on a type declaration */
 static bool chunk_ends_type(chunk_t *pc)
 {
-    bool ret = false;
+   bool ret = false;
 
-    for (/* nada */; pc != NULL; pc = chunk_get_prev_ncnl(pc))
-    {
-       LOG_FMT(LFTYPE, "%s: [%s] %.*s flags %x on line %d, col %d\n",
-               __func__, get_token_name(pc->type), pc->len, pc->str,
-               pc->flags, pc->orig_line, pc->orig_col);
+   for (/* nada */; pc != NULL; pc = chunk_get_prev_ncnl(pc))
+   {
+      LOG_FMT(LFTYPE, "%s: [%s] %.*s flags %x on line %d, col %d\n",
+              __func__, get_token_name(pc->type), pc->len, pc->str,
+              pc->flags, pc->orig_line, pc->orig_col);
 
-       if ((pc->type == CT_WORD) ||
-           (pc->type == CT_TYPE) ||
-           (pc->type == CT_STRUCT) ||
-           (pc->type == CT_DC_MEMBER) ||
-           (pc->type == CT_QUALIFIER))
-       {
-          continue;
-       }
+      if ((pc->type == CT_WORD) ||
+          (pc->type == CT_TYPE) ||
+          (pc->type == CT_STRUCT) ||
+          (pc->type == CT_DC_MEMBER) ||
+          (pc->type == CT_QUALIFIER))
+      {
+         continue;
+      }
 
-       if (chunk_is_semicolon(pc) ||
-           (pc->type == CT_BRACE_OPEN) ||
-           (pc->type == CT_BRACE_CLOSE))
-       {
-          ret = true;
-       }
-       break;
-    }
+      if (chunk_is_semicolon(pc) ||
+          (pc->type == CT_BRACE_OPEN) ||
+          (pc->type == CT_BRACE_CLOSE))
+      {
+         ret = true;
+      }
+      break;
+   }
 
-    if (pc == NULL)
-    {
-        /* first token */
-        ret = true;
-    }
+   if (pc == NULL)
+   {
+      /* first token */
+      ret = true;
+   }
 
-    LOG_FMT(LFTYPE, "%s verdict: %s\n", __func__, ret ? "yes" : "no");
+   LOG_FMT(LFTYPE, "%s verdict: %s\n", __func__, ret ? "yes" : "no");
 
-    return(ret);
+   return(ret);
 }
+
 
 /**
  * Change CT_INCDEC_AFTER + WORD to CT_INCDEC_BEFORE
@@ -864,6 +868,7 @@ void fix_symbols(void)
    }
 }
 
+
 /* Just hit an assign. Go backwards until we hit an open brace/paren/square or
  * semicolon (TODO: other limiter?) and mark as a LValue.
  */
@@ -899,6 +904,7 @@ static void mark_lvalue(chunk_t *pc)
       }
    }
 }
+
 
 /**
  * Process a function type that is not in a typedef.
@@ -1001,6 +1007,7 @@ static void mark_function_type(chunk_t *pc)
    }
 }
 
+
 static void process_returns(void)
 {
    chunk_t *pc;
@@ -1017,6 +1024,7 @@ static void process_returns(void)
       pc = process_return(pc);
    }
 }
+
 
 /**
  * Processes a return statment, labeling the parens and marking the parent.
@@ -1130,6 +1138,7 @@ static chunk_t *process_return(chunk_t *pc)
    return(semi);
 }
 
+
 static bool is_ucase_str(const char *str, int len)
 {
    while (len-- > 0)
@@ -1142,6 +1151,7 @@ static bool is_ucase_str(const char *str, int len)
    }
    return(true);
 }
+
 
 /**
  * Checks to see if the current paren is part of a cast.
@@ -1355,6 +1365,7 @@ static void fix_casts(chunk_t *start)
    }
 }
 
+
 /**
  * CT_TYPE_CAST follows this pattern:
  * dynamic_cast<...>(...)
@@ -1386,6 +1397,7 @@ static void fix_type_cast(chunk_t *start)
       make_type(pc);
    }
 }
+
 
 /**
  * We are on an enum/struct/union tag that is NOT inside a typedef.
@@ -1481,6 +1493,7 @@ static void fix_enum_struct_union(chunk_t *pc)
       next = chunk_get_next_ncnl(next);
    }
 }
+
 
 /**
  * We are on a typedef.
@@ -1613,6 +1626,7 @@ static void fix_typedef(chunk_t *start)
       the_type->flags |= PCF_ANCHOR;
    }
 }
+
 
 /**
  * Examines the whole file and changes CT_COLON to
@@ -1796,6 +1810,7 @@ void combine_labels(void)
    }
 }
 
+
 static void mark_variable_stack(ChunkStack& cs, log_sev_t sev)
 {
    chunk_t *var_name;
@@ -1819,6 +1834,7 @@ static void mark_variable_stack(ChunkStack& cs, log_sev_t sev)
       var_name->flags |= PCF_VAR_DEF;
    }
 }
+
 
 /**
  * Simply change any STAR to PTR_TYPE and WORD to TYPE
@@ -1879,6 +1895,7 @@ static void fix_fcn_def_params(chunk_t *start)
    mark_variable_stack(cs, LFCNP);
 }
 
+
 //#define DEBUG_FIX_VAR_DEF
 
 /**
@@ -1894,6 +1911,7 @@ static chunk_t *skip_to_next_statement(chunk_t *pc)
    }
    return(pc);
 }
+
 
 /**
  * We are on the start of a sequence that could be a var def
@@ -2007,6 +2025,7 @@ static chunk_t *fix_var_def(chunk_t *start)
    return(skip_to_next_statement(end));
 }
 
+
 /**
  * Skips everything until a comma or semicolon at the same level.
  * Returns the semicolon, comma, or close brace/paren or NULL.
@@ -2026,6 +2045,7 @@ static chunk_t *skip_expression(chunk_t *start)
    }
    return(pc);
 }
+
 
 /**
  * We are on the first word of a variable definition.
@@ -2085,6 +2105,7 @@ static chunk_t *mark_variable_definition(chunk_t *start)
    return(pc);
 }
 
+
 /**
  * Checks to see if a series of chunks could be a C++ parameter
  * FOO foo(5, &val);
@@ -2109,7 +2130,7 @@ static bool can_be_full_param(chunk_t *start, chunk_t *end)
 {
    chunk_t *pc;
    chunk_t *last;
-   int     word_cnt = 0;
+   int     word_cnt   = 0;
    int     type_count = 0;
    bool    ret;
 
@@ -2182,6 +2203,7 @@ static bool can_be_full_param(chunk_t *start, chunk_t *end)
            get_token_name(pc->type), ret ? "Yup" : "Unlikely");
    return(ret);
 }
+
 
 /**
  * We are on a function word. we need to:
@@ -2744,6 +2766,7 @@ static void mark_function(chunk_t *pc)
    }
 }
 
+
 static void mark_cpp_constructor(chunk_t *pc)
 {
    chunk_t *paren_open;
@@ -2785,6 +2808,7 @@ static void mark_cpp_constructor(chunk_t *pc)
       set_paren_parent(tmp, CT_FUNC_CLASS);
    }
 }
+
 
 /**
  * We're on a 'class' or 'struct'.
@@ -2871,6 +2895,7 @@ static void mark_class_ctor(chunk_t *start)
    }
 }
 
+
 /**
  * We're on a 'namespace' skip the word and then set the parent of the braces.
  */
@@ -2891,6 +2916,7 @@ static void mark_namespace(chunk_t *pns)
       }
    }
 }
+
 
 /**
  * Examines the stuff between braces { }.
@@ -2976,6 +3002,7 @@ static void mark_struct_union_body(chunk_t *start)
    }
 }
 
+
 /**
  * Sets the parent for comments.
  */
@@ -3017,6 +3044,7 @@ void mark_comments(void)
       cur     = next;
    }
 }
+
 
 /**
  * Marks statement starts in a macro body.
@@ -3081,6 +3109,7 @@ static void mark_define_expressions(void)
    }
 }
 
+
 /**
  * We are on the 'template' C++ keyword.
  * What follows should be the following:
@@ -3139,6 +3168,7 @@ static void handle_template(chunk_t *pc)
    }
 }
 
+
 /**
  * We are on a word followed by a angle open which is part of a template.
  * If the angle close is followed by a open paren, then we are on a template
@@ -3193,6 +3223,7 @@ static void mark_template_func(chunk_t *pc, chunk_t *pc_next)
    }
 }
 
+
 /**
  * Just mark every CT_WORD until a semicolon as CT_SQL_WORD.
  * Adjust the levels if pc is CT_SQL_BEGIN
@@ -3229,6 +3260,7 @@ static void mark_exec_sql(chunk_t *pc)
    }
 }
 
+
 /**
  * Skips over the rest of the template if ang_open is indeed a CT_ANGLE_OPEN.
  * Points to the chunk after the CT_ANGLE_CLOSE.
@@ -3245,6 +3277,7 @@ chunk_t *skip_template_next(chunk_t *ang_open)
    return(ang_open);
 }
 
+
 /**
  * Skips over the rest of the template if ang_close is indeed a CT_ANGLE_CLOSE.
  * Points to the chunk before the CT_ANGLE_OPEN
@@ -3260,6 +3293,7 @@ chunk_t *skip_template_prev(chunk_t *ang_close)
    }
    return(ang_close);
 }
+
 
 /**
  * If attr is CT_ATTRIBUTE, then skip it and the parens and return the chunk
@@ -3281,6 +3315,7 @@ chunk_t *skip_attribute_next(chunk_t *attr)
    return(attr);
 }
 
+
 /**
  * If fp_close is a CT_FPAREN_CLOSE with a parent of CT_ATTRIBUTE, then skip it
  * and the '__attribute__' thingy and return the chunk before CT_ATTRIBUTE.
@@ -3298,6 +3333,7 @@ chunk_t *skip_attribute_prev(chunk_t *fp_close)
    }
    return(fp_close);
 }
+
 
 /**
  * Process an ObjC 'class'
@@ -3341,6 +3377,7 @@ static void handle_oc_class(chunk_t *pc)
    }
 }
 
+
 /**
  * Process an ObjC message spec/dec
  *
@@ -3358,7 +3395,7 @@ static void handle_oc_message_decl(chunk_t *pc)
    chunk_t   *tmp;
    bool      in_paren  = false;
    int       paren_cnt = 0;
-   c_token_t pt = CT_OC_MSG_SPEC;
+   c_token_t pt        = CT_OC_MSG_SPEC;
 
    /* Figure out if this is a spec or decl */
    tmp = pc;
@@ -3431,6 +3468,7 @@ static void handle_oc_message_decl(chunk_t *pc)
    }
 }
 
+
 /**
  * Process an ObjC message send statement:
  * [ server setStringValue : @"" ] ;
@@ -3460,8 +3498,8 @@ static void handle_oc_message_send(chunk_t *os)
       tmp->parent_type = CT_OC_MSG;
    }
 
-   os->parent_type  = CT_OC_MSG;
-   cs->parent_type  = CT_OC_MSG;
+   os->parent_type = CT_OC_MSG;
+   cs->parent_type = CT_OC_MSG;
 
    for (tmp = chunk_get_next(os); tmp != cs; tmp = chunk_get_next(tmp))
    {
@@ -3472,6 +3510,7 @@ static void handle_oc_message_send(chunk_t *os)
       }
    }
 }
+
 
 /**
  * Process an C# [] thingy:
@@ -3517,6 +3556,7 @@ static void handle_cs_square_stmt(chunk_t *os)
    }
 }
 
+
 /**
  * We are on a brace open that is preceeded by a word or square close.
  * Set the brace parent to CT_CS_PROPERTY and find the first item in the
@@ -3552,6 +3592,7 @@ static void handle_cs_property(chunk_t *bro)
    }
 }
 
+
 /**
  * Remove 'return;' that appears as the last statement in a function
  */
@@ -3564,9 +3605,9 @@ void remove_extra_returns()
    pc = chunk_get_head();
    while (pc != NULL)
    {
-      if ((pc->type == CT_RETURN) && (pc->flags & PCF_IN_PREPROC) == 0)
+      if ((pc->type == CT_RETURN) && ((pc->flags & PCF_IN_PREPROC) == 0))
       {
-         semi = chunk_get_next_ncnl(pc);
+         semi  = chunk_get_next_ncnl(pc);
          cl_br = chunk_get_next_ncnl(semi);
 
          if ((semi != NULL) && (semi->type == CT_SEMICOLON) &&
@@ -3598,11 +3639,11 @@ static void handle_wrap(chunk_t *pc)
    chunk_t *opp  = chunk_get_next(pc);
    chunk_t *name = chunk_get_next(opp);
    chunk_t *clp  = chunk_get_next(name);
-   char *new_name;
+   char    *new_name;
 
    argval_t av = (pc->type == CT_FUNC_WRAP) ?
-      cpd.settings[UO_sp_inside_fparen].a :
-      cpd.settings[UO_sp_inside_paren_cast].a;
+                 cpd.settings[UO_sp_inside_fparen].a :
+                 cpd.settings[UO_sp_inside_paren_cast].a;
 
    if ((clp != NULL) &&
        (opp->type == CT_PAREN_OPEN) &&

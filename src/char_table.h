@@ -31,10 +31,14 @@ struct CharTable
    {
       return(chars[(int)ch & 0x7f]);
    }
+
+
    static inline bool IsKw1(char ch)
    {
       return((Get(ch) & KW1) != 0);
    }
+
+
    static inline bool IsKw2(char ch)
    {
       return((Get(ch) & KW2) != 0);

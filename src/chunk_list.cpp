@@ -24,10 +24,12 @@ chunk_t *chunk_get_head(void)
    return(g_cl.GetHead());
 }
 
+
 chunk_t *chunk_get_tail(void)
 {
    return(g_cl.GetTail());
 }
+
 
 chunk_t *chunk_get_next(chunk_t *cur, chunk_nav_t nav)
 {
@@ -57,6 +59,7 @@ chunk_t *chunk_get_next(chunk_t *cur, chunk_nav_t nav)
    return(pc);
 }
 
+
 chunk_t *chunk_get_prev(chunk_t *cur, chunk_nav_t nav)
 {
    if (cur == NULL)
@@ -85,6 +88,7 @@ chunk_t *chunk_get_prev(chunk_t *cur, chunk_nav_t nav)
    return(pc);
 }
 
+
 chunk_t *chunk_dup(const chunk_t *pc_in)
 {
    chunk_t *pc;
@@ -103,6 +107,7 @@ chunk_t *chunk_dup(const chunk_t *pc_in)
    return(pc);
 }
 
+
 /**
  * Add to the tail of the list
  */
@@ -116,6 +121,7 @@ chunk_t *chunk_add(const chunk_t *pc_in)
    }
    return(pc);
 }
+
 
 /**
  * Add a copy after the given chunk.
@@ -139,6 +145,7 @@ chunk_t *chunk_add_after(const chunk_t *pc_in, chunk_t *ref)
    return(pc);
 }
 
+
 /**
  * Add a copy before the given chunk.
  * If ref is NULL, add at the head.
@@ -161,6 +168,7 @@ chunk_t *chunk_add_before(const chunk_t *pc_in, chunk_t *ref)
    return(pc);
 }
 
+
 void chunk_del(chunk_t *pc)
 {
    g_cl.Pop(pc);
@@ -172,6 +180,7 @@ void chunk_del(chunk_t *pc)
    delete pc;
 }
 
+
 void chunk_move_after(chunk_t *pc_in, chunk_t *ref)
 {
    g_cl.Pop(pc_in);
@@ -182,6 +191,7 @@ void chunk_move_after(chunk_t *pc_in, chunk_t *ref)
    pc_in->orig_col     = pc_in->column;
    pc_in->orig_col_end = pc_in->orig_col + pc_in->len;
 }
+
 
 /**
  * Gets the next NEWLINE chunk
@@ -197,6 +207,7 @@ chunk_t *chunk_get_next_nl(chunk_t *cur, chunk_nav_t nav)
    return(pc);
 }
 
+
 /**
  * Gets the prev NEWLINE chunk
  */
@@ -210,6 +221,7 @@ chunk_t *chunk_get_prev_nl(chunk_t *cur, chunk_nav_t nav)
    } while ((pc != NULL) && !chunk_is_newline(pc));
    return(pc);
 }
+
 
 /**
  * Gets the next non-NEWLINE chunk
@@ -225,6 +237,7 @@ chunk_t *chunk_get_next_nnl(chunk_t *cur, chunk_nav_t nav)
    return(pc);
 }
 
+
 /**
  * Gets the prev non-NEWLINE chunk
  */
@@ -239,6 +252,7 @@ chunk_t *chunk_get_prev_nnl(chunk_t *cur, chunk_nav_t nav)
    return(pc);
 }
 
+
 /**
  * Gets the next non-NEWLINE and non-comment chunk
  */
@@ -252,6 +266,7 @@ chunk_t *chunk_get_next_ncnl(chunk_t *cur, chunk_nav_t nav)
    } while ((pc != NULL) && (chunk_is_comment(pc) || chunk_is_newline(pc)));
    return(pc);
 }
+
 
 /**
  * Gets the next non-NEWLINE and non-comment chunk, non-preprocessor chunk
@@ -280,6 +295,7 @@ chunk_t *chunk_get_next_ncnlnp(chunk_t *cur, chunk_nav_t nav)
    return(pc);
 }
 
+
 /**
  * Gets the prev non-NEWLINE and non-comment chunk, non-preprocessor chunk
  */
@@ -307,6 +323,7 @@ chunk_t *chunk_get_prev_ncnlnp(chunk_t *cur, chunk_nav_t nav)
    return(pc);
 }
 
+
 /**
  * Gets the next non-blank chunk
  */
@@ -323,6 +340,7 @@ chunk_t *chunk_get_next_nblank(chunk_t *cur, chunk_nav_t nav)
    return(pc);
 }
 
+
 /**
  * Gets the prev non-blank chunk
  */
@@ -338,6 +356,7 @@ chunk_t *chunk_get_prev_nblank(chunk_t *cur, chunk_nav_t nav)
    return(pc);
 }
 
+
 /**
  * Gets the next non-comment chunk
  */
@@ -351,6 +370,7 @@ chunk_t *chunk_get_next_nc(chunk_t *cur, chunk_nav_t nav)
    } while ((pc != NULL) && chunk_is_comment(pc));
    return(pc);
 }
+
 
 /**
  * Gets the prev non-NEWLINE and non-comment chunk
@@ -366,6 +386,7 @@ chunk_t *chunk_get_prev_ncnl(chunk_t *cur, chunk_nav_t nav)
    return(pc);
 }
 
+
 /**
  * Gets the prev non-comment chunk
  */
@@ -379,6 +400,7 @@ chunk_t *chunk_get_prev_nc(chunk_t *cur, chunk_nav_t nav)
    } while ((pc != NULL) && chunk_is_comment(pc));
    return(pc);
 }
+
 
 /**
  * Grabs the next chunk of the given type at the level.
@@ -405,6 +427,7 @@ chunk_t *chunk_get_next_type(chunk_t *cur, c_token_t type,
    return(pc);
 }
 
+
 chunk_t *chunk_get_next_str(chunk_t *cur, const char *str, int len, int level,
                             chunk_nav_t nav)
 {
@@ -422,6 +445,7 @@ chunk_t *chunk_get_next_str(chunk_t *cur, const char *str, int len, int level,
    } while (pc != NULL);
    return(pc);
 }
+
 
 /**
  * Grabs the prev chunk of the given type at the level.
@@ -448,6 +472,7 @@ chunk_t *chunk_get_prev_type(chunk_t *cur, c_token_t type,
    return(pc);
 }
 
+
 chunk_t *chunk_get_prev_str(chunk_t *cur, const char *str, int len, int level,
                             chunk_nav_t nav)
 {
@@ -466,6 +491,7 @@ chunk_t *chunk_get_prev_str(chunk_t *cur, const char *str, int len, int level,
    return(pc);
 }
 
+
 /**
  * Check to see if there is a newline bewteen the two chunks
  */
@@ -483,6 +509,7 @@ bool chunk_is_newline_between(chunk_t *start, chunk_t *end)
    return(false);
 }
 
+
 /**
  * Swaps the two chunks.
  *
@@ -493,6 +520,7 @@ void chunk_swap(chunk_t *pc1, chunk_t *pc2)
 {
    g_cl.Swap(pc1, pc2);
 }
+
 
 /**
  * Finds the first chunk on the line that pc is on.
@@ -513,6 +541,7 @@ chunk_t *chunk_first_on_line(chunk_t *pc)
 
    return(first);
 }
+
 
 /**
  * Swaps two lines that are started with the specified chunks.
@@ -592,6 +621,7 @@ void chunk_swap_lines(chunk_t *pc1, chunk_t *pc2)
    }
 }
 
+
 /**
  * Gets the next non-vbrace chunk
  */
@@ -605,6 +635,7 @@ chunk_t *chunk_get_next_nvb(chunk_t *cur, chunk_nav_t nav)
    } while (chunk_is_vbrace(pc));
    return(pc);
 }
+
 
 /**
  * Gets the prev non-vbrace chunk

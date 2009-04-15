@@ -231,4 +231,3 @@ const char *token_names[] =
 };
 
 #endif  /* TOKEN_NAMES_H_INCLUDED */
-

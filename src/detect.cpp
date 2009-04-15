@@ -35,6 +35,8 @@ public:
       m_force  = 0;
       m_av     = &av;
    }
+
+
    ~sp_votes();
 
    void vote(chunk_t *first, chunk_t *second);
@@ -63,6 +65,7 @@ void sp_votes::vote(chunk_t *first, chunk_t *second)
    }
 }
 
+
 /**
  * Figure out the result of the vote and maybe update *m_av
  */
@@ -88,7 +91,9 @@ sp_votes::~sp_votes()
    }
 }
 
-#define SP_VOTE_VAR(x) sp_votes vote_##x (cpd.settings[ UO_##x ].a)
+
+#define SP_VOTE_VAR(x)    sp_votes vote_ ## x(cpd.settings[UO_ ## x].a)
+
 /**
  * Detect spacing options
  */
@@ -388,6 +393,7 @@ static void detect_space_options()
    }
 }
 
+
 // unc_add_option("sp_after_operator", UO_sp_after_operator, AT_IARF,
 //                "Add or remove space between 'operator' and operator sign");
 // unc_add_option("sp_after_operator_sym", UO_sp_after_operator_sym, AT_IARF,
@@ -480,4 +486,3 @@ void detect_options(const char *data, int data_len)
 {
    detect_space_options();
 }
-

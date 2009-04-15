@@ -160,6 +160,7 @@ static void align_stack(ChunkStack& cs, int col, bool align_single, log_sev_t se
    cs.Reset();
 }
 
+
 /**
  * Adds an item to the align stack and adjust the nl_count and max_col.
  * Adjust max_col as needed
@@ -214,10 +215,11 @@ static void align_add(ChunkStack& cs, chunk_t *pc, int& max_col, int min_pad, bo
    }
 }
 
+
 void quick_align_again(void)
 {
-   chunk_t *pc;
-   chunk_t *tmp;
+   chunk_t    *pc;
+   chunk_t    *tmp;
    AlignStack as;
 
    LOG_FMT(LALAGAIN, "%s:\n", __func__);
@@ -243,6 +245,7 @@ void quick_align_again(void)
       }
    }
 }
+
 
 void align_all(void)
 {
@@ -296,6 +299,7 @@ void align_all(void)
    quick_align_again();
 }
 
+
 /**
  * Aligns all function prototypes in the file.
  */
@@ -321,6 +325,7 @@ static void align_oc_msg_spec(int span)
    as.End();
 }
 
+
 /**
  * Aligns all backslash-newline combos in the file.
  * This should be done LAST.
@@ -340,6 +345,7 @@ void align_backslash_newline(void)
       pc = align_nl_cont(pc);
    }
 }
+
 
 void align_right_comments(void)
 {
@@ -401,6 +407,7 @@ void align_right_comments(void)
    }
 }
 
+
 /**
  * Aligns stuff inside a multi-line "= { ... }" sequence.
  */
@@ -422,6 +429,7 @@ void align_struct_initializers(void)
       pc = chunk_get_next_type(pc, CT_BRACE_OPEN, -1);
    }
 }
+
 
 /**
  * Scans the whole file for #defines. Aligns all within X lines of each other
@@ -500,6 +508,7 @@ void align_preprocessor(void)
    as.End();
    asf.End();
 }
+
 
 /**
  * Aligns all assignment operators on the same level as first, starting with
@@ -640,6 +649,7 @@ chunk_t *align_assign(chunk_t *first, int span, int thresh)
    return(pc);
 }
 
+
 /**
  * Counts how many '*' pointers are in a row, going backwards
  *
@@ -657,6 +667,7 @@ int count_prev_ptr_type(chunk_t *pc)
    }
    return(count);
 }
+
 
 static chunk_t *align_func_param(chunk_t *start)
 {
@@ -709,6 +720,7 @@ static chunk_t *align_func_param(chunk_t *start)
    return(pc);
 }
 
+
 static void align_func_params()
 {
    chunk_t *pc;
@@ -729,6 +741,7 @@ static void align_func_params()
       pc = align_func_param(pc);
    }
 }
+
 
 static int align_params(chunk_t *start, chunk_t *chunks[], int num_chunks)
 {
@@ -753,7 +766,7 @@ static int align_params(chunk_t *start, chunk_t *chunks[], int num_chunks)
          if (hit_comma)
          {
             chunks[count++] = pc;
-            hit_comma   = false;
+            hit_comma       = false;
          }
          else if (pc->type == CT_COMMA)
          {
@@ -764,12 +777,13 @@ static int align_params(chunk_t *start, chunk_t *chunks[], int num_chunks)
    return(count);
 }
 
+
 static void align_same_func_call_params()
 {
-   chunk_t *pc;
-   chunk_t *align_root = NULL;
-   chunk_t *align_cur  = NULL;
-   int     align_len   = 0;
+   chunk_t    *pc;
+   chunk_t    *align_root = NULL;
+   chunk_t    *align_cur  = NULL;
+   int        align_len   = 0;
    chunk_t    *chunks[16];
    AlignStack as[16];
    AlignStack fcn_as;
@@ -826,7 +840,7 @@ static void align_same_func_call_params()
          align_root = pc;
          align_cur  = pc;
          align_len  = 1;
-         add_str = "Start";
+         add_str    = "Start";
       }
 
       if (add_str != NULL)
@@ -865,6 +879,7 @@ static void align_same_func_call_params()
       as[idx].End();
    }
 }
+
 
 /**
  * Aligns all function prototypes in the file.
@@ -918,6 +933,7 @@ static void align_func_proto(int span)
    as.End();
    as_br.End();
 }
+
 
 /**
  * Scan everything at the current level until the close brace and find the
@@ -1143,6 +1159,7 @@ static chunk_t *align_var_def_brace(chunk_t *start, int span, int *p_nl_count)
    return(pc);
 }
 
+
 /**
  * For a series of lines ending in backslash-newline, align them.
  * The series ends when a newline or multi-line C comment is encountered.
@@ -1184,6 +1201,7 @@ chunk_t *align_nl_cont(chunk_t *start)
    return(pc);
 }
 
+
 enum CmtAlignType
 {
    CAT_REGULAR,
@@ -1213,6 +1231,7 @@ static CmtAlignType get_comment_align_type(chunk_t *cmt)
    return(cmt_type);
 }
 
+
 /**
  * For a series of lines ending in a comment, align them.
  * The series ends when more than align_right_cmt_span newlines are found.
@@ -1227,8 +1246,8 @@ chunk_t *align_trailing_comments(chunk_t *start)
    int          nl_count = 0;
    ChunkStack   cs;
    CmtAlignType cmt_type_start, cmt_type_cur;
-   int col;
-   int intended_col = cpd.settings[UO_align_right_cmt_at_col].n;
+   int          col;
+   int          intended_col = cpd.settings[UO_align_right_cmt_at_col].n;
 
    cmt_type_start = get_comment_align_type(pc);
 
@@ -1268,6 +1287,7 @@ chunk_t *align_trailing_comments(chunk_t *start)
    return(chunk_get_next(pc));
 }
 
+
 /**
  * Shifts out all columns by a certain amount.
  *
@@ -1283,6 +1303,7 @@ void ib_shift_out(int idx, int num)
    }
 }
 
+
 /**
  * Scans a line for stuff to align on.
  *
@@ -1295,7 +1316,7 @@ static chunk_t *scan_ib_line(chunk_t *start, bool first_pass)
    chunk_t *next;
    chunk_t *prev_match = NULL;
    int     token_width;
-   int     idx              = 0;
+   int     idx = 0;
    bool    last_was_comment = false;
 
    /* Skip past C99 "[xx] =" stuff */
@@ -1395,6 +1416,7 @@ static chunk_t *scan_ib_line(chunk_t *start, bool first_pass)
    return(pc);
 }
 
+
 static void align_log_al(log_sev_t sev, int line)
 {
    int idx;
@@ -1410,6 +1432,7 @@ static void align_log_al(log_sev_t sev, int line)
       log_fmt(sev, "\n");
    }
 }
+
 
 /**
  * Generically aligns on '=', '{', '(' and item after ','
@@ -1601,6 +1624,7 @@ static void align_init_brace(chunk_t *start)
       pc = chunk_get_next(pc);
    } while ((pc != NULL) && (pc->level > start->level));
 }
+
 
 /**
  * Aligns simple typedefs that are contained on a single line each.

@@ -72,7 +72,8 @@ void indent_text(void);
 void indent_preproc(void);
 void indent_to_column(chunk_t *pc, int column);
 void align_to_column(chunk_t *pc, int column);
-#define reindent_line(pc, col)   reindent_line2(pc, col, __func__, __LINE__)
+
+#define reindent_line(pc, col)    reindent_line2(pc, col, __func__, __LINE__)
 void reindent_line2(chunk_t *pc, int column, const char *fcn_name, int lineno);
 
 
@@ -157,10 +158,10 @@ void newline_after_multiline_comment(void);
 void do_blank_lines(void);
 void newline_iarf(chunk_t *pc, argval_t av);
 
-#define newline_add_before(pc)   newline_add_before2(pc, __func__, __LINE__)
+#define newline_add_before(pc)    newline_add_before2(pc, __func__, __LINE__)
 chunk_t *newline_add_before2(chunk_t *pc, const char *fcn, int line);
 
-#define newline_add_after(pc)    newline_add_after2(pc, __func__, __LINE__)
+#define newline_add_after(pc)     newline_add_after2(pc, __func__, __LINE__)
 chunk_t *newline_add_after2(chunk_t *pc, const char *fcn, int line);
 
 
@@ -240,7 +241,7 @@ void pf_push_under(struct parse_frame *pf);
 void pf_copy_tos(struct parse_frame *pf);
 void pf_trash_tos(void);
 void pf_pop(struct parse_frame *pf);
-int  pf_check(struct parse_frame *frm, chunk_t *pc);
+int pf_check(struct parse_frame *frm, chunk_t *pc);
 
 
 /*
@@ -290,6 +291,7 @@ int calc_next_tab_column(int col, int tabsize)
    return(col);
 }
 
+
 /**
  * Advances to the next tab stop for output.
  *
@@ -301,6 +303,7 @@ int next_tab_column(int col)
 {
    return(calc_next_tab_column(col, cpd.settings[UO_output_tab_size].n));
 }
+
 
 /**
  * Advances to the next tab stop if not currently on one.
@@ -317,5 +320,6 @@ int align_tab_column(int col)
    }
    return(col);
 }
+
 
 #endif   /* C_PARSE_PROTOTYPES_H_INCLUDED */

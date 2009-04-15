@@ -42,7 +42,7 @@ void tokenize_cleanup(void)
          pc->len  = 2;
          chunk_del(next);
          pc->orig_col_end += 1;
-         next = chunk_get_next_ncnl(pc);
+         next              = chunk_get_next_ncnl(pc);
       }
 
       if ((pc->type == CT_DOT) && ((cpd.lang_flags & LANG_ALLC) != 0))
@@ -474,7 +474,7 @@ void tokenize_cleanup(void)
       {
          pc->len++;
          pc->type = CT_ARITH;
-         tmp = chunk_get_next_ncnl(next);
+         tmp      = chunk_get_next_ncnl(next);
          chunk_del(next);
          next = tmp;
       }
@@ -499,6 +499,7 @@ void tokenize_cleanup(void)
       next = chunk_get_next_ncnl(pc);
    }
 }
+
 
 /**
  * If there is nothing but CT_WORD and CT_MEMBER, then it's probably a
@@ -662,7 +663,7 @@ static void check_template(chunk_t *start)
          pc = start;
          while (pc != end)
          {
-            next = chunk_get_next_ncnl(pc);
+            next       = chunk_get_next_ncnl(pc);
             pc->flags |= PCF_IN_TEMPLATE;
             if (next->type != CT_PAREN_OPEN)
             {

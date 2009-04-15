@@ -50,17 +50,17 @@ typedef uint32_t   UINT32;
 
 /* and the good old SUCCESS/FAILURE */
 
-#define SUCCESS     0
-#define FAILURE     -1
+#define SUCCESS    0
+#define FAILURE    -1
 
 
 /* and a nice macro to keep SlickEdit happy */
 
-#define static_inline     static inline
+#define static_inline    static inline
 
 /* and the ever-so-important array size macro */
 #ifndef ARRAY_SIZE
-#define ARRAY_SIZE(x)     (sizeof(x) / sizeof((x)[0]))
+#define ARRAY_SIZE(x)    (sizeof(x) / sizeof((x)[0]))
 #endif
 
 #endif   /* BASE_TYPES_H_INCLUDED */

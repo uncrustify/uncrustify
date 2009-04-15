@@ -136,21 +136,21 @@ enum uncrustify_options
    UO_indent_func_class_param,   // same, but for classes
    UO_indent_func_ctor_var_param,
    UO_indent_template_param,
-   UO_indent_func_param_double,  // double the tab indent for
+   UO_indent_func_param_double,             // double the tab indent for
 
-   UO_indent_func_const,         // indentation for standalone "const" qualifier
-   UO_indent_func_throw,         // indentation for standalone "throw" qualifier
+   UO_indent_func_const,                    // indentation for standalone "const" qualifier
+   UO_indent_func_throw,                    // indentation for standalone "throw" qualifier
 
-   UO_indent_namespace,          // indent stuff inside namespace braces
+   UO_indent_namespace,                     // indent stuff inside namespace braces
    UO_indent_extern,
-   UO_indent_class,              // indent stuff inside class braces
-   UO_indent_class_colon,        // indent stuff after a class colon
+   UO_indent_class,                         // indent stuff inside class braces
+   UO_indent_class_colon,                   // indent stuff after a class colon
 
-   UO_indent_member,             // indent lines broken at a member '.' or '->'
+   UO_indent_member,                        // indent lines broken at a member '.' or '->'
 
-   UO_indent_sing_line_comments, // indent single line ('//') comments on lines before code
+   UO_indent_sing_line_comments,            // indent single line ('//') comments on lines before code
    UO_indent_relative_single_line_comments, // indent single line ('//') comments after code
-   UO_indent_preserve_sql,       // preserve indent of EXEC SQL statement body
+   UO_indent_preserve_sql,                  // preserve indent of EXEC SQL statement body
    UO_indent_align_assign,
 
    UO_indent_else_if,
@@ -344,24 +344,24 @@ enum uncrustify_options
    UO_align_pp_define_gap,        // min space between define label and value "#define a <---> 16"
    //UO_align_enum_col_min,         //TODO: the min column for enum '=' alignment
    //UO_align_enum_col_max,         //TODO: the max column for enum '=' alignment
-   UO_align_struct_init_span,     // align structure initializer values
-   UO_align_func_proto_span,      // align function prototypes
-   UO_align_func_proto_gap,       // align function prototypes
+   UO_align_struct_init_span,      // align structure initializer values
+   UO_align_func_proto_span,       // align function prototypes
+   UO_align_func_proto_gap,        // align function prototypes
    UO_align_on_operator,
-   UO_align_mix_var_proto,        // mix function prototypes and variable decl
-   UO_align_single_line_func,     // mix single line function with prototypes
-   UO_align_single_line_brace,    // align the open brace of single line functions
-   UO_align_single_line_brace_gap,// gap for align_single_line_brace
-   UO_align_oc_msg_spec_span,     // align ObjC msg spec
-   UO_align_number_left,          // left-align numbers (not fully supported, yet)
-   UO_align_typedef_span,         // align single-line typedefs
-   UO_align_typedef_gap,          // minimum spacing
-   UO_align_typedef_func,         // how to align func type with types
-   UO_align_typedef_star_style,   // Start aligning style
-                                  // 0: '*' not part of type
-                                  // 1: '*' part of the type - no space
-                                  // 2: '*' part of type, dangling
-   UO_align_typedef_amp_style,    // align_typedef_star_style for ref '&' stuff
+   UO_align_mix_var_proto,         // mix function prototypes and variable decl
+   UO_align_single_line_func,      // mix single line function with prototypes
+   UO_align_single_line_brace,     // align the open brace of single line functions
+   UO_align_single_line_brace_gap, // gap for align_single_line_brace
+   UO_align_oc_msg_spec_span,      // align ObjC msg spec
+   UO_align_number_left,           // left-align numbers (not fully supported, yet)
+   UO_align_typedef_span,          // align single-line typedefs
+   UO_align_typedef_gap,           // minimum spacing
+   UO_align_typedef_func,          // how to align func type with types
+   UO_align_typedef_star_style,    // Start aligning style
+                                   // 0: '*' not part of type
+                                   // 1: '*' part of the type - no space
+                                   // 2: '*' part of type, dangling
+   UO_align_typedef_amp_style,     // align_typedef_star_style for ref '&' stuff
    //UO_align_struct_array_brace,   // TODO: align array of structure initializers
    UO_align_left_shift,
 
@@ -370,84 +370,84 @@ enum uncrustify_options
     * Newline adding and removing options
     */
 
-   UO_nl_fdef_brace,              // "int foo() {" vs "int foo()\n{"
-   UO_nl_func_paren,              // newline between function and open paren
-   UO_nl_func_decl_start,         // newline after the '(' in a function decl
-   UO_nl_func_decl_args,          // newline after each ',' in a function decl
-   UO_nl_func_decl_end,           // newline before the ')' in a function decl
-   UO_nl_func_type_name,          // newline between return type and func name in def
+   UO_nl_fdef_brace,                 // "int foo() {" vs "int foo()\n{"
+   UO_nl_func_paren,                 // newline between function and open paren
+   UO_nl_func_decl_start,            // newline after the '(' in a function decl
+   UO_nl_func_decl_args,             // newline after each ',' in a function decl
+   UO_nl_func_decl_end,              // newline before the ')' in a function decl
+   UO_nl_func_type_name,             // newline between return type and func name in def
    UO_nl_func_scope_name,
-   UO_nl_func_proto_type_name,    // nl_func_type_name, but for prottypes
-   UO_nl_func_var_def_blk,        // newline after a block of variable defs
-   UO_nl_before_case,             // newline before 'case' statement
+   UO_nl_func_proto_type_name,       // nl_func_type_name, but for prottypes
+   UO_nl_func_var_def_blk,           // newline after a block of variable defs
+   UO_nl_before_case,                // newline before 'case' statement
    UO_nl_before_throw,
-   UO_nl_after_return,            /* newline after return statement */
+   UO_nl_after_return,               /* newline after return statement */
    UO_nl_return_expr,
-   UO_nl_after_case,              /* disallow nested "case 1: a=3;" */
-   UO_nl_after_semicolon,         // disallow multiple statements on a line "a=1;b=4;"
-   UO_nl_after_brace_open,        // force a newline after a brace open
-   UO_nl_after_brace_open_cmt,    // put the newline before the comment
-   UO_nl_after_vbrace_open,       // force a newline after a virtual brace open
-   UO_nl_after_brace_close,       // force a newline after a brace close
-   UO_nl_fcall_brace,             /* newline between function call and open brace */
-   UO_nl_squeeze_ifdef,           /* no blanks after #ifxx, #elxx, or before #endif */
-   UO_nl_enum_brace,              /* nl between enum and brace */
-   UO_nl_struct_brace,            /* nl between struct and brace */
-   UO_nl_union_brace,             /* nl between union and brace */
-   UO_nl_assign_brace,            /* nl between '=' and brace */
-   UO_nl_assign_square,           /* nl between '=' and '[' */
-   UO_nl_after_square_assign,     /* nl after '= [' */
-   UO_nl_class_brace,             /* nl between class name and brace */
-   UO_nl_namespace_brace,         /* nl between namespace name and brace */
+   UO_nl_after_case,                 /* disallow nested "case 1: a=3;" */
+   UO_nl_after_semicolon,            // disallow multiple statements on a line "a=1;b=4;"
+   UO_nl_after_brace_open,           // force a newline after a brace open
+   UO_nl_after_brace_open_cmt,       // put the newline before the comment
+   UO_nl_after_vbrace_open,          // force a newline after a virtual brace open
+   UO_nl_after_brace_close,          // force a newline after a brace close
+   UO_nl_fcall_brace,                /* newline between function call and open brace */
+   UO_nl_squeeze_ifdef,              /* no blanks after #ifxx, #elxx, or before #endif */
+   UO_nl_enum_brace,                 /* nl between enum and brace */
+   UO_nl_struct_brace,               /* nl between struct and brace */
+   UO_nl_union_brace,                /* nl between union and brace */
+   UO_nl_assign_brace,               /* nl between '=' and brace */
+   UO_nl_assign_square,              /* nl between '=' and '[' */
+   UO_nl_after_square_assign,        /* nl after '= [' */
+   UO_nl_class_brace,                /* nl between class name and brace */
+   UO_nl_namespace_brace,            /* nl between namespace name and brace */
 
-   UO_nl_do_brace,                /* nl between do and { */
-   UO_nl_if_brace,                /* nl between if and { */
-   UO_nl_for_brace,               /* nl between for and { */
+   UO_nl_do_brace,                   /* nl between do and { */
+   UO_nl_if_brace,                   /* nl between if and { */
+   UO_nl_for_brace,                  /* nl between for and { */
    UO_nl_else_if,
-   UO_nl_else_brace,              /* nl between else and { */
-   UO_nl_finally_brace,           /* nl between finally and { */
-   UO_nl_brace_finally,           /* nl between } and finally */
-   UO_nl_try_brace,               /* nl between try and { */
-   UO_nl_getset_brace,            /* nl between get/set and { */
-   UO_nl_catch_brace,             /* nl between catch and { */
-   UO_nl_brace_catch,             /* nl between } and catch */
-   UO_nl_while_brace,             /* nl between while and { */
-   UO_nl_switch_brace,            /* nl between switch and { */
-   UO_nl_brace_else,              // nl between } and else
-   UO_nl_brace_while,             // nl between } and while of do stmt
+   UO_nl_else_brace,                 /* nl between else and { */
+   UO_nl_finally_brace,              /* nl between finally and { */
+   UO_nl_brace_finally,              /* nl between } and finally */
+   UO_nl_try_brace,                  /* nl between try and { */
+   UO_nl_getset_brace,               /* nl between get/set and { */
+   UO_nl_catch_brace,                /* nl between catch and { */
+   UO_nl_brace_catch,                /* nl between } and catch */
+   UO_nl_while_brace,                /* nl between while and { */
+   UO_nl_switch_brace,               /* nl between switch and { */
+   UO_nl_brace_else,                 // nl between } and else
+   UO_nl_brace_while,                // nl between } and while of do stmt
 
-   UO_nl_multi_line_cond,         /* nl between ) and { when cond spans >=2 lines */
-   UO_nl_elseif_brace,            // nl between close paren and open brace in 'else if () {'
+   UO_nl_multi_line_cond,            /* nl between ) and { when cond spans >=2 lines */
+   UO_nl_elseif_brace,               // nl between close paren and open brace in 'else if () {'
 
-   UO_nl_multi_line_define,       // nl after define XXX for multi-line define
+   UO_nl_multi_line_define,          // nl after define XXX for multi-line define
 
-   UO_nl_before_if,               // nl before if
-   UO_nl_after_if,                // nl after if/else
-   UO_nl_before_for,              // nl before for
-   UO_nl_after_for,               // nl after for close
-   UO_nl_before_while,            // nl before while
-   UO_nl_after_while,             // nl after while close
-   UO_nl_before_switch,           // nl before switch
-   UO_nl_after_switch,            // nl after switch close
-   UO_nl_before_do,               // nl before do
-   UO_nl_after_do,                // nl after while of do
-   UO_nl_ds_struct_enum_cmt,      // nl between commented-elements of struct/enum
+   UO_nl_before_if,                  // nl before if
+   UO_nl_after_if,                   // nl after if/else
+   UO_nl_before_for,                 // nl before for
+   UO_nl_after_for,                  // nl after for close
+   UO_nl_before_while,               // nl before while
+   UO_nl_after_while,                // nl after while close
+   UO_nl_before_switch,              // nl before switch
+   UO_nl_after_switch,               // nl after switch close
+   UO_nl_before_do,                  // nl before do
+   UO_nl_after_do,                   // nl after while of do
+   UO_nl_ds_struct_enum_cmt,         // nl between commented-elements of struct/enum
    UO_nl_ds_struct_enum_close_brace, // force nl before } of struct/union/enum
 
-   UO_nl_define_macro,            // alter newlines in #define macros
-   UO_nl_start_of_file,           // alter newlines at the start of file
-   UO_nl_start_of_file_min,       // min number of newlines at the start of the file
-   UO_nl_end_of_file,             // alter newlines at the end of file
-   UO_nl_end_of_file_min,         // min number of newlines at the end of the file
+   UO_nl_define_macro,               // alter newlines in #define macros
+   UO_nl_start_of_file,              // alter newlines at the start of file
+   UO_nl_start_of_file_min,          // min number of newlines at the start of the file
+   UO_nl_end_of_file,                // alter newlines at the end of file
+   UO_nl_end_of_file_min,            // min number of newlines at the end of the file
 
-   UO_nl_class_colon,             // nl before/after class colon (tied to UO_pos_class_colon)
-   UO_nl_class_init_args,         // newline after comma in class init args
-   UO_nl_collapse_empty_body,     // change { \n } into {}
-   UO_nl_class_leave_one_liners,  // leave one-line function bodies in "class xx { here }"
-   UO_nl_assign_leave_one_liners, // leave one-line assign bodies in "foo_t f = { a, b, c };"
-   UO_nl_enum_leave_one_liners,   // leave one-line enum bodies in "enum FOO { BAR = 5 };"
-   UO_nl_getset_leave_one_liners, // leave one-line get/set bodies
-   UO_nl_func_leave_one_liners,   // leave one-line function def bodies
+   UO_nl_class_colon,                // nl before/after class colon (tied to UO_pos_class_colon)
+   UO_nl_class_init_args,            // newline after comma in class init args
+   UO_nl_collapse_empty_body,        // change { \n } into {}
+   UO_nl_class_leave_one_liners,     // leave one-line function bodies in "class xx { here }"
+   UO_nl_assign_leave_one_liners,    // leave one-line assign bodies in "foo_t f = { a, b, c };"
+   UO_nl_enum_leave_one_liners,      // leave one-line enum bodies in "enum FOO { BAR = 5 };"
+   UO_nl_getset_leave_one_liners,    // leave one-line get/set bodies
+   UO_nl_func_leave_one_liners,      // leave one-line function def bodies
    UO_nl_if_leave_one_liners,
 
    UO_nl_template_class,          // newline between '>' and class in "template <x> class"
