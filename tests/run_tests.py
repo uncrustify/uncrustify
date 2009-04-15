@@ -109,6 +109,9 @@ def run_tests(test_name, config_name, input_name, lang):
 	try:
 		if not filecmp.cmp(resultname, outputname):
 			print MISMATCH_COLOR + "MISMATCH: " + NORMAL + test_name
+			if log_level >= 3:
+				cmd = "diff -u %s %s" % (outputname, resultname)
+				os.system(cmd)
 			return -1
 	except:
 		print MISMATCH_COLOR + "MISSING: " + NORMAL + test_name
@@ -148,10 +151,10 @@ if __name__ == '__main__':
 	args = []
 	the_tests = []
 	for arg in sys.argv[1:]:
-		if arg == '-v':
-			log_level += 1
-		elif arg == '-vv':
-			log_level += 2
+		if arg.startswith('-v'):
+			for ch in arg[1:]:
+				if ch == 'v':
+					log_level += 1
 		else:
 			args.append(arg)
 
