@@ -793,7 +793,8 @@ void register_options(void)
    unc_add_option("align_right_cmt_gap", UO_align_right_cmt_gap, AT_NUM,
                   "If a trailing comment is more than this number of columns away from the text it follows,\n"
                   "it will qualify for being aligned.");
-
+   unc_add_option("align_right_cmt_at_col", UO_align_right_cmt_at_col, AT_NUM,
+                  "Align trailing comment at or beyond column N; 'pulls in' comments as a bonus side effect (0=ignore)", "", 0, 200);
    unc_add_option("align_func_proto_span", UO_align_func_proto_span, AT_NUM,
                   "The span for aligning function prototypes (0=don't align)", "", 0, 5000);
    unc_add_option("align_func_proto_gap", UO_align_func_proto_gap, AT_NUM,

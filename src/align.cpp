@@ -135,7 +135,14 @@ static void align_stack(ChunkStack& cs, int col, bool align_single, log_sev_t se
       LOG_FMT(sev, "%s: max_col=%d\n", __func__, col);
       while ((pc = cs.Pop()) != NULL)
       {
-         indent_to_column(pc, col);
+         if (cpd.settings[UO_align_right_cmt_at_col].n == 0)
+         {
+            indent_to_column(pc, col);
+         }
+         else
+         {
+            align_to_column(pc, col);
+         }
          pc->flags |= PCF_WAS_ALIGNED;
 
          if (pc->type == CT_NL_CONT)
@@ -190,8 +197,9 @@ static void align_add(ChunkStack& cs, chunk_t *pc, int& max_col, int min_pad, bo
             min_col = pc->column;
          }
       }
-      LOG_FMT(LALADD, "%s: pc->col=%d max_col=%d min_pad=%d min_col=%d prev->col=%d\n",
-              __func__, pc->column, max_col, min_pad, min_col, prev->column);
+      LOG_FMT(LALADD, "%s: pc->col=%d max_col=%d min_pad=%d min_col=%d multi:%s prev->col=%d prev->len=%d %s\n",
+              __func__, pc->column, max_col, min_pad, min_col, (prev->type == CT_COMMENT_MULTI) ? "Y" : "N",
+              (prev->type == CT_COMMENT_MULTI) ? prev->orig_col_end : prev->column, prev->len, get_token_name(prev->type));
    }
 
    if (cs.Empty())
@@ -349,8 +357,9 @@ void align_right_comments(void)
             prev = chunk_get_prev(pc);
             if (pc->orig_col <= (prev->orig_col_end + cpd.settings[UO_align_right_cmt_gap].n))
             {
-               LOG_FMT(LALTC, "NOT changing END comment on line %d\n",
-                       pc->orig_line);
+               LOG_FMT(LALTC, "NOT changing END comment on line %d (%d <= %d + %d)\n",
+                       pc->orig_line,
+                       pc->orig_col, prev->orig_col_end, cpd.settings[UO_align_right_cmt_gap].n);
                skip = true;
             }
             if (!skip)
@@ -1218,11 +1227,10 @@ chunk_t *align_trailing_comments(chunk_t *start)
    int          nl_count = 0;
    ChunkStack   cs;
    CmtAlignType cmt_type_start, cmt_type_cur;
-   int          last_col, col;
+   int col;
+   int intended_col = cpd.settings[UO_align_right_cmt_at_col].n;
 
    cmt_type_start = get_comment_align_type(pc);
-
-   last_col = pc->column;
 
    /* Find the max column */
    while ((pc != NULL) && (nl_count < cpd.settings[UO_align_right_cmt_span].n))
@@ -1233,14 +1241,18 @@ chunk_t *align_trailing_comments(chunk_t *start)
 
          if (cmt_type_cur == cmt_type_start)
          {
-            last_col = pc->column;
-
             col = 1 + (pc->brace_level * cpd.settings[UO_indent_columns].n);
+            LOG_FMT(LALADD, "%s: col=%d max_col=%d pc->col=%d pc->len=%d %s\n",
+                    __func__, col, max_col, pc->column, pc->len, get_token_name(pc->type));
             if (pc->column < col)
             {
                pc->column = col;
             }
-            align_add(cs, pc, max_col, 1, false);
+            if (pc->column < intended_col)
+            {
+               pc->column = intended_col;
+            }
+            align_add(cs, pc, max_col, 1, (intended_col != 0));
             nl_count = 0;
          }
       }
@@ -1251,7 +1263,7 @@ chunk_t *align_trailing_comments(chunk_t *start)
       pc = chunk_get_next(pc);
    }
 
-   align_stack(cs, max_col, false, LALTC);
+   align_stack(cs, max_col, (intended_col != 0), LALTC);
 
    return(chunk_get_next(pc));
 }

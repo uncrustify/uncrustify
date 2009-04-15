@@ -321,6 +321,7 @@ enum uncrustify_options
    UO_align_right_cmt_span,       // align comment that end lines. 0=don't align
    UO_align_right_cmt_mix,        // mix comments after '}' and preproc with others
    UO_align_right_cmt_gap,
+   UO_align_right_cmt_at_col,     // align comment that end lines at or beyond column N; 'pulls in' comments as a bonus side effect
    UO_align_func_params,          // align prototype variable defs on variable
    UO_align_same_func_call_params,
    UO_align_var_def_span,         // align variable defs on variable (span for regular stuff)
