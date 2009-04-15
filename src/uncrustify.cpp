@@ -1350,6 +1350,13 @@ static void uncrustify_file(const char *data, int data_len, FILE *pfout,
          add_long_closebrace_comment();
       }
 
+      /* Insert trailing comments after certain preprocessor conditional blocks */
+      if ((cpd.settings[UO_mod_add_long_ifdef_else_comment].n > 0) ||
+          (cpd.settings[UO_mod_add_long_ifdef_endif_comment].n > 0))
+      {
+         add_long_preprocessor_conditional_block_comment();
+      }
+
       /**
        * Aligning everything else and reindent
        */

@@ -96,6 +96,7 @@ void quick_align_again(void);
 
 void do_braces(void);
 void add_long_closebrace_comment(void);
+chunk_t *insert_comment_after(chunk_t *ref, c_token_t cmt_type, int cmt_len, const char *cmt_text);
 
 
 /*
@@ -220,6 +221,7 @@ void add_define(const char *tag, const char *value);
 const define_tag_t *get_define_idx(int& idx);
 void output_defines(FILE *pfile);
 void clear_defines(void);
+void add_long_preprocessor_conditional_block_comment(void);
 
 
 /*

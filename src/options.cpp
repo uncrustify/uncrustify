@@ -903,6 +903,12 @@ void register_options(void)
    unc_add_option("mod_add_long_switch_closebrace_comment", UO_mod_add_long_switch_closebrace_comment, AT_NUM,
                   "If a switch body exceeds the specified number of newlines and doesn't have a comment after\n"
                   "the close brace, a comment will be added.");
+   unc_add_option("mod_add_long_ifdef_endif_comment", UO_mod_add_long_ifdef_endif_comment, AT_NUM,
+                  "If an #ifdef body exceeds the specified number of newlines and doesn't have a comment after\n"
+                  "the #else, a comment will be added.");
+   unc_add_option("mod_add_long_ifdef_else_comment", UO_mod_add_long_ifdef_else_comment, AT_NUM,
+                  "If an #ifdef or #else body exceeds the specified number of newlines and doesn't have a comment after\n"
+                  "the #endif, a comment will be added.");
    unc_add_option("mod_sort_import", UO_mod_sort_import, AT_BOOL,
                   "If TRUE, will sort consecutive single-line 'import' statements [Java, D]");
    unc_add_option("mod_sort_using", UO_mod_sort_using, AT_BOOL,
@@ -941,8 +947,8 @@ void register_options(void)
 const group_map_value *get_group_name(int ug)
 {
    for (group_map_it it = group_map.begin();
-        it != group_map.end();
-        it++)
+       it != group_map.end();
+       it++)
    {
       if (it->second.id == ug)
       {
@@ -955,8 +961,8 @@ const group_map_value *get_group_name(int ug)
 const option_map_value *get_option_name(int uo)
 {
    for (option_name_map_it it = option_name_map.begin();
-        it != option_name_map.end();
-        it++)
+       it != option_name_map.end();
+       it++)
    {
       if (it->second.id == uo)
       {
@@ -1380,7 +1386,7 @@ int save_option_file(FILE *pfile, bool withDoc)
               "# all tokens are separated by any mix of ',' commas, '=' equal signs\n"
               "# and whitespace (space, tab)\n"
               "#\n"
-              );
+             );
    }
 
    /* Print custom keywords */

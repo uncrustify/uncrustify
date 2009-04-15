@@ -50,6 +50,7 @@ Changes in uncrustify-0.53 (not yet released)
  - Add 'make check' and 'make clean' (Ger Hobbelt)
  - Add align_right_cmt_at_col (Ger Hobbelt)
  - Add sp_pp_concat and sp_pp_stringify (Ger Hobbelt)
+ - Add mod_add_long_ifdef_{else,endif}_comment (Ger Hobbelt)
 
 
 Changes in uncrustify-0.52 (28 Feb 2009)

@@ -15,6 +15,8 @@
 #include <cerrno>
 #include <cstdlib>
 #include "unc_ctype.h"
+#include "chunk_list.h"
+#include "prototypes.h"
 
 typedef struct
 {
@@ -240,3 +242,172 @@ void clear_defines(void)
    dl.total  = 0;
    dl.active = 0;
 }
+
+
+/**
+ * This renders the #if condition to a string buffer.
+ */
+static void generate_if_conditional_as_text(std::string &dst, chunk_t *ifdef)
+{
+   chunk_t *pc;
+   int column = -1;
+
+   dst.clear();
+   for (pc = ifdef; pc != NULL; pc = chunk_get_next(pc))
+   {
+      if (column == -1)
+      {
+         column = pc->column;
+      }
+      if (pc->type == CT_NEWLINE
+          || pc->type == CT_COMMENT_MULTI
+          || pc->type == CT_COMMENT_CPP)
+      {
+         break;
+      }
+      else if (pc->type == CT_NL_CONT)
+      {
+         dst.push_back(' ');
+         column = -1;
+      }
+      else if (pc->type == CT_COMMENT
+               || pc->type == CT_COMMENT_EMBED)
+      {
+      }
+      else // if (pc->type == CT_JUNK) || else
+      {
+         int spacing;
+
+         for (spacing = pc->column - column; spacing > 0; spacing--)
+         {
+            dst.push_back(' ');
+            column++;
+         }
+         dst.append(pc->str, pc->len);
+         column += pc->len;
+      }
+   }
+}
+
+/*
+   See also it's preprocessor counterpart
+     add_long_closebrace_comment
+   in braces.cpp
+
+   Note: since this concerns itself with the preprocessor -- which is line-oriented --
+   it turns out that just looking at pc->pp_level is NOT the right thing to do.
+   See a --parsed dump if you don't believe this: an '#endif' will be one level
+   UP from the corresponding #ifdef when you look at the tokens 'ifdef' versus 'endif',
+   but it's a whole another story when you look at their CT_PREPROC ('#') tokens!
+
+   Hence we need to track and seek matching CT_PREPROC pp_levels here, which complicates
+   things a little bit, but not much.
+ */
+void add_long_preprocessor_conditional_block_comment(void)
+{
+   chunk_t *pc;
+   chunk_t *tmp;
+   chunk_t *br_open;
+   chunk_t *br_close;
+   chunk_t *pp_start = NULL;
+   chunk_t *pp_end = NULL;
+   int     nl_count;
+
+   for (pc = chunk_get_head(); pc; pc = chunk_get_next_ncnl(pc))
+   {
+      /* just track the preproc level: */
+      if (pc->type == CT_PREPROC)
+      {
+         pp_end = pp_start = pc;
+      }
+
+      if (pc->type != CT_PP_IF)
+      {
+         continue;
+      }
+#if 0
+      if ((pc->flags & PCF_IN_PREPROC) != 0)
+      {
+         continue;
+      }
+#endif
+
+      br_open  = pc;
+      nl_count = 0;
+
+      tmp = pc;
+      while ((tmp = chunk_get_next(tmp)) != NULL)
+      {
+         /* just track the preproc level: */
+         if (tmp->type == CT_PREPROC)
+         {
+            pp_end = tmp;
+         }
+
+         if (chunk_is_newline(tmp))
+         {
+            nl_count += tmp->nl_count;
+         }
+         else if ((pp_end->pp_level == pp_start->pp_level) &&
+                  ((tmp->type == CT_PP_ENDIF) ||
+                   (br_open->type == CT_PP_IF ? tmp->type == CT_PP_ELSE : 0)))
+         {
+            br_close = tmp;
+
+            LOG_FMT(LPPIF, "found #if / %s section on lines %d and %d, nl_count=%d\n",
+                    (tmp->type == CT_PP_ENDIF ? "#endif" : "#else"),
+                    br_open->orig_line, br_close->orig_line, nl_count);
+
+            /* Found the matching #else or #endif - make sure a newline is next */
+            tmp = chunk_get_next(tmp);
+
+            LOG_FMT(LPPIF, "next item type %d (is %s)\n",
+                    (tmp ? tmp->type : -1), (tmp ? chunk_is_newline(tmp) ? "newline"
+                                             : chunk_is_comment(tmp) ? "comment" : "other" : "---"));
+            if ((tmp == NULL) || tmp->type == CT_NEWLINE /* chunk_is_newline(tmp) */ )
+            {
+               int     nl_min;
+
+               if (br_close->type == CT_PP_ENDIF)
+               {
+                  nl_min = cpd.settings[UO_mod_add_long_ifdef_endif_comment].n;
+               }
+               else
+               {
+                  nl_min = cpd.settings[UO_mod_add_long_ifdef_else_comment].n;
+               }
+
+               LOG_FMT(LPPIF, "#if / %s section candidate for augmenting when over NL threshold %d != 0 (nl_count=%d)\n",
+                       (tmp->type == CT_PP_ENDIF ? "#endif" : "#else"),
+                       nl_min, nl_count);
+
+               if ((nl_min > 0) && (nl_count > nl_min)) /* nl_count is 1 too large at all times as #if line was counted too */
+               {
+                  /* determine the added comment style */
+                  c_token_t style = (cpd.lang_flags & (LANG_CPP | LANG_CS)) ?
+                                    CT_COMMENT_CPP : CT_COMMENT;
+
+                  std::string str;
+                  generate_if_conditional_as_text(str, br_open);
+
+                  LOG_FMT(LPPIF, "#if / %s section over threshold %d (nl_count=%d) --> insert comment after the %s: %s\n",
+                          (tmp->type == CT_PP_ENDIF ? "#endif" : "#else"),
+                          nl_min, nl_count,
+                          (tmp->type == CT_PP_ENDIF ? "#endif" : "#else"),
+                          str.c_str());
+
+                  /* Add a comment after the close brace */
+                  insert_comment_after(br_close, style, str.length(), str.c_str());
+               }
+            }
+
+            /* checks both the #else and #endif for a given level, only then look further in the main loop */
+            if (br_close->type == CT_PP_ENDIF)
+               break;
+         }
+      }
+   }
+}
+
+
+

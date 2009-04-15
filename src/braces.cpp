@@ -424,7 +424,10 @@ chunk_t *insert_comment_after(chunk_t *ref, c_token_t cmt_type,
    }
    txt_len = cmt_len + 8; /* 8 is big enough for all types */
 
-   memset(&new_cmt, 0, sizeof(new_cmt));
+   memcpy(&new_cmt, ref, sizeof(new_cmt)); /* [i_a] clone levels, etc. */
+   new_cmt.prev = NULL;
+   new_cmt.next = NULL;
+
    new_cmt.flags = (ref->flags & PCF_COPY_FLAGS) | PCF_OWN_STR;
    new_cmt.type  = cmt_type;
 
@@ -452,6 +455,11 @@ chunk_t *insert_comment_after(chunk_t *ref, c_token_t cmt_type,
    return(chunk_add_after(&new_cmt, ref));
 }
 
+/*
+   See also it's preprocessor counterpart
+     add_long_preprocessor_conditional_block_comment
+   in defines.cpp
+ */
 void add_long_closebrace_comment(void)
 {
    chunk_t *pc;
