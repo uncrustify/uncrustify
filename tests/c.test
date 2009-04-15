@@ -189,6 +189,7 @@
 
 01035  func_wrap1.cfg          c/func_wrap.c
 01036  func_wrap2.cfg          c/func_wrap.c
+01037  type_wrap.cfg           c/type_wrap.c
 
 01040  newline_after_endif.cfg c/newline_after_endif.c
 

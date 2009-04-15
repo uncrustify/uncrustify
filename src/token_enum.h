@@ -196,6 +196,7 @@ typedef enum
    CT_ALIGN,            /* paren'd qualifier: align(4) struct a { } */
    CT_TYPE,
    CT_PTR_TYPE,         /* a '*' as part of a type */
+   CT_TYPE_WRAP,        /* macro that wraps a type name */
 
    CT_BIT_COLON,        /* a ':' in a variable declaration */
 
