@@ -96,6 +96,17 @@ argval_t do_space(chunk_t *first, chunk_t *second, bool complete=true)
    argval_t arg;
    chunk_t  *next;
 
+   if ((first->type == CT_PP) || (second->type == CT_PP))
+   {
+      log_rule("sp_pp_concat");
+      return(cpd.settings[UO_sp_pp_concat].a);
+   }
+   if (first->type == CT_POUND)
+   {
+      log_rule("sp_pp_stringify");
+      return(cpd.settings[UO_sp_pp_stringify].a);
+   }
+
    if ((first->type == CT_SPACE) || (second->type == CT_SPACE))
    {
       log_rule("REMOVE");

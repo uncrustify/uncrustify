@@ -145,6 +145,10 @@ void register_options(void)
                   "Add or remove space before assignment '=' in enum. Overrides sp_enum_assign.");
    unc_add_option("sp_enum_after_assign", UO_sp_enum_after_assign, AT_IARF,
                   "Add or remove space after assignment '=' in enum. Overrides sp_enum_assign.");
+   unc_add_option("sp_pp_concat", UO_sp_pp_concat, AT_IARF,
+                  "Add or remove space around preprocessor '##' concatenation operator");
+   unc_add_option("sp_pp_stringify", UO_sp_pp_stringify, AT_IARF,
+                  "Add or remove space after preprocessor '#' stringify operator");
    unc_add_option("sp_bool", UO_sp_bool, AT_IARF,
                   "Add or remove space around boolean operators '&&' and '||'");
    unc_add_option("sp_compare", UO_sp_compare, AT_IARF,
@@ -1522,6 +1526,8 @@ void set_option_defaults(void)
    cpd.settings[UO_pp_indent_count].n      = 1;
    cpd.settings[UO_align_left_shift].b     = true;
    cpd.settings[UO_indent_align_assign].b  = true;
+   cpd.settings[UO_sp_pp_concat].a         = AV_ADD;
+   cpd.settings[UO_sp_pp_stringify].a      = AV_ADD;
 }
 
 std::string argtype_to_string(argtype_e argtype)
