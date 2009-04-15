@@ -47,7 +47,7 @@ Changes in uncrustify-0.53 (not yet released)
  - With the 'replace' option, only replace if the file content changes
  - Handle C# wide literal string prefix S"foo"
  - Handle the ObjC '@protocol' the same as '@interface'
- - Add 'make check' (Ger Hobbelt)
+ - Add 'make check' and 'make clean' (Ger Hobbelt)
  - Add align_right_cmt_at_col (Ger Hobbelt)
  - Add sp_pp_concat and sp_pp_stringify (Ger Hobbelt)
 
