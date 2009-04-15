@@ -171,6 +171,9 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 AUTOMAKE_OPTIONS = foreign no-dependencies nostdinc
+DISTCLEANFILES = 
+CLEANFILES = *.o *~ *.bak
+MAINTAINERCLEANFILES = Makefile.in
 BUILT_SOURCES = token_names.h
 uncrustify_SOURCES = uncrustify.cpp chunk_list.cpp indent.cpp align.cpp combine.cpp \
 		tokenize.cpp tokenize_cleanup.cpp space.cpp newlines.cpp output.cpp \
@@ -182,7 +185,12 @@ uncrustify_SOURCES = uncrustify.cpp chunk_list.cpp indent.cpp align.cpp combine.
 
 noinst_HEADERS = chunk_list.h options.h char_table.h chunk_list.h \
 		uncrustify_types.h prototypes.h logmask.h logger.h \
-		ChunkStack.h args.h token_names.h token_enum.h ListManager.h md5.h
+		ChunkStack.h args.h token_names.h token_enum.h ListManager.h md5.h \
+		align_stack.h backup.h base_types.h log_levels.h \
+		punctuators.h \
+		uncrustify_version.h \
+		unc_ctype.h \
+		d.tokenize.cpp
 
 uncrustify_CPPFLAGS = -Wall
 all: $(BUILT_SOURCES) config.h
@@ -560,14 +568,17 @@ install-strip:
 mostlyclean-generic:
 
 clean-generic:
+	-test -z "$(CLEANFILES)" || rm -f $(CLEANFILES)
 
 distclean-generic:
 	-test -z "$(CONFIG_CLEAN_FILES)" || rm -f $(CONFIG_CLEAN_FILES)
+	-test -z "$(DISTCLEANFILES)" || rm -f $(DISTCLEANFILES)
 
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
 	@echo "it deletes files that may require special tools to rebuild."
 	-test -z "$(BUILT_SOURCES)" || rm -f $(BUILT_SOURCES)
+	-test -z "$(MAINTAINERCLEANFILES)" || rm -f $(MAINTAINERCLEANFILES)
 clean: clean-am
 
 clean-am: clean-binPROGRAMS clean-generic mostlyclean-am
