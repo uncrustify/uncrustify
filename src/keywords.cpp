@@ -33,14 +33,17 @@ static dynamic_word_list_t wl;
  */
 static const chunk_tag_t keywords[] =
 {
+   { "@catch",           CT_CATCH,        LANG_OC | LANG_CPP | LANG_C                                                 },
    { "@dynamic",         CT_OC_DYNAMIC,   LANG_OC | LANG_CPP | LANG_C                                                 },
    { "@end",             CT_OC_END,       LANG_OC | LANG_CPP | LANG_C                                                 },
+   { "@finally",         CT_TRY,          LANG_OC | LANG_CPP | LANG_C                                                 },
    { "@implementation",  CT_OC_IMPL,      LANG_OC | LANG_CPP | LANG_C                                                 },
    { "@interface",       CT_OC_INTF,      LANG_OC | LANG_CPP | LANG_C                                                 },
    { "@private",         CT_PRIVATE,      LANG_OC | LANG_CPP | LANG_C                                                 },
    { "@property",        CT_OC_PROPERTY,  LANG_OC | LANG_CPP | LANG_C                                                 },
    { "@protocol",        CT_OC_INTF,      LANG_OC | LANG_CPP | LANG_C                                                 },
    { "@synthesize",      CT_OC_DYNAMIC,   LANG_OC | LANG_CPP | LANG_C                                                 },
+   { "@try",             CT_TRY,          LANG_OC | LANG_CPP | LANG_C                                                 },
    { "_Bool",            CT_TYPE,         LANG_CPP                                                                    },
    { "_Complex",         CT_TYPE,         LANG_CPP                                                                    },
    { "_Imaginary",       CT_TYPE,         LANG_CPP                                                                    },

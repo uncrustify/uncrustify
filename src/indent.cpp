@@ -612,6 +612,7 @@ void indent_text(void)
             if ((frm.pse[frm.pse_tos].type == CT_CLASS_COLON) &&
                 ((pc->type == CT_BRACE_OPEN) ||
                  (pc->type == CT_OC_END) ||
+                 (pc->type == CT_OC_SCOPE) ||
                  chunk_is_semicolon(pc)))
             {
                indent_pse_pop(frm, pc);
