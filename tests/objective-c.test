@@ -9,6 +9,8 @@
 50002  obj-c.cfg           oc/Fraction.m     OC
 50003  obj-c.cfg           oc/main.m
 50004  obj-c.cfg           oc/string.m
+50005  obj-c.cfg           oc/Declarations.h     OC
+50006  obj-c.cfg           oc/exceptions.m
 
 50030  sort_imports.cfg    oc/sort_import.m
 
