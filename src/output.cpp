@@ -1096,16 +1096,25 @@ static void output_comment_multi(chunk_t *pc)
             }
             if ((line[line_len - 1] == '\\') && (line[line_len - 2] != '*'))
             {
-               /* Kill off the backslash-newline */
-               line_len--;
-               while ((line_len > 0) &&
-                      ((line[line_len - 1] == ' ') ||
-                       (line[line_len - 1] == '\t')))
+               if (pc->flags & PCF_IN_PREPROC)
                {
+                  bool do_space = false;
+
+                  /* Kill off the backslash-newline */
                   line_len--;
+                  while ((line_len > 0) &&
+                         ((line[line_len - 1] == ' ') ||
+                          (line[line_len - 1] == '\t')))
+                  {
+                     do_space = true;
+                     line_len--;
+                  }
+                  if (do_space)
+                  {
+                     line[line_len++] = ' ';
+                  }
+                  line[line_len++] = '\\';
                }
-               line[line_len++] = ' ';
-               line[line_len++] = '\\';
             }
             nl_end = true;
          }
