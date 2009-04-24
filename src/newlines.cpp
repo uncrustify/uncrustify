@@ -1955,6 +1955,7 @@ void newlines_eat_start_end(void)
  * Searches for a chunk of type chunk_type and moves them, if needed.
  * Will not move tokens that are on their own line or have other than
  * exactly 1 newline before (UO_pos_comma == TRAIL) or after (UO_pos_comma == LEAD).
+ * We can't remove a newline if it is right before a preprocessor.
  */
 void newlines_chunk_pos(c_token_t chunk_type, tokenpos_e mode)
 {
@@ -1978,6 +1979,15 @@ void newlines_chunk_pos(c_token_t chunk_type, tokenpos_e mode)
          if (chunk_is_newline(prev) == chunk_is_newline(next))
          {
             continue;
+         }
+
+         if (chunk_is_newline(next))
+         {
+            chunk_t *next2 = chunk_get_next(next);
+            if ((next2 != NULL) && (next2->type == CT_PREPROC))
+            {
+               continue;
+            }
          }
 
          /*NOTE: may end up processing a chunk twice if changed */

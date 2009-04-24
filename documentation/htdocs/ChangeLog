@@ -53,6 +53,7 @@ Changes in uncrustify-0.53 (not yet released)
  - Add mod_add_long_ifdef_{else,endif}_comment (Ger Hobbelt)
  - Objective C improvements (Etienne Samson)
  - Only mess with escaped newlines in a comment if inside a preprocessor
+ - Fix pos_xxx options when a preprocessor is near
 
 
 Changes in uncrustify-0.52 (28 Feb 2009)
