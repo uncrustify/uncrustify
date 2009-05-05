@@ -53,6 +53,7 @@ public:
    void Add(chunk_t *pc, int seqnum = 0);
    void NewLines(int cnt);
    void Flush();
+   void Reset();
    void End();
 
 protected:

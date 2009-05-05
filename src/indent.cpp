@@ -370,8 +370,6 @@ void indent_text(void)
    struct parse_frame frm;
    bool               in_preproc = false, was_preproc = false;
    int                indent_column;
-   int                cout_col            = 0; // for aligning << stuff
-   int                cout_level          = 0; // for aligning << stuff
    int                parent_token_indent = 0;
    int                xml_indent          = 0;
    bool               token_used;
@@ -514,14 +512,6 @@ void indent_text(void)
             }
             frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
          }
-      }
-
-      if ((cout_col > 0) &&
-          (chunk_is_semicolon(pc) ||
-           (pc->level < cout_level)))
-      {
-         cout_col   = 0;
-         cout_level = 0;
       }
 
       /* Check for close XML tags "</..." */
@@ -1113,15 +1103,6 @@ void indent_text(void)
             frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos - 1].indent;
          }
       }
-      else if (chunk_is_str(pc, "<<", 2) &&
-               cpd.settings[UO_align_left_shift].b)
-      {
-         if (cout_col == 0)
-         {
-            cout_col   = pc->column;
-            cout_level = pc->level;
-         }
-      }
       else if (pc->type == CT_THROW)
       {
          // Pick up what was just before this.
@@ -1201,12 +1182,6 @@ void indent_text(void)
             LOG_FMT(LINDENT, "%s: %d] member => %d\n",
                     __func__, pc->orig_line, tmp);
             reindent_line(pc, tmp);
-         }
-         else if (chunk_is_str(pc, "<<", 2) && (cout_col > 0))
-         {
-            LOG_FMT(LINDENT, "%s: %d] cout_col => %d\n",
-                    __func__, pc->orig_line, cout_col);
-            reindent_line(pc, cout_col);
          }
          else if ((vardefcol > 0) &&
                   (pc->type == CT_WORD) &&

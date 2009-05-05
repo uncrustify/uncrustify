@@ -445,6 +445,16 @@ void AlignStack::Flush()
 
 
 /**
+ * Resets the stack, discarding anything that was previously added
+ */
+void AlignStack::Reset()
+{
+   m_aligned.Reset();
+   m_skipped.Reset();
+}
+
+
+/**
  * Aligns everything else and resets the lists.
  */
 void AlignStack::End()

@@ -26,9 +26,9 @@ static void align_func_params();
 static void align_same_func_call_params();
 static void align_func_proto(int span);
 static void align_oc_msg_spec(int span);
-
-
 static void align_typedefs(int span);
+static void align_left_shift(void);
+
 
 /*
  *   Here are the items aligned:
@@ -252,6 +252,11 @@ void align_all(void)
    if (cpd.settings[UO_align_typedef_span].n > 0)
    {
       align_typedefs(cpd.settings[UO_align_typedef_span].n);
+   }
+
+   if (cpd.settings[UO_align_left_shift].b)
+   {
+      align_left_shift();
    }
 
    /* Align variable definitions */
@@ -1679,4 +1684,57 @@ static void align_typedefs(int span)
    }
 
    as.End();
+}
+
+/**
+ * Align '<<' (CT_ARITH?)
+ */
+static void align_left_shift(void)
+{
+   chunk_t    *pc;
+   AlignStack as;
+   bool       skip_stmt = false;
+
+   as.Start(2);
+
+   pc = chunk_get_head();
+   while (pc != NULL)
+   {
+      if (chunk_is_newline(pc))
+      {
+         as.NewLines(pc->nl_count);
+         skip_stmt = as.m_aligned.Empty();
+      }
+      else if (pc->flags & PCF_STMT_START)
+      {
+         as.Reset();
+         skip_stmt = false;
+      }
+      else if (pc->type == CT_SEMICOLON)
+      {
+         as.Flush();
+      }
+      else if (!skip_stmt && chunk_is_str(pc, "<<", 2))
+      {
+         if (as.m_aligned.Empty())
+         {
+            as.Add(pc);
+         }
+         else if (chunk_is_newline(chunk_get_prev(pc)))
+         {
+            as.Add(pc);
+         }
+      }
+
+      pc = chunk_get_next(pc);
+   }
+
+   if (skip_stmt)
+   {
+      as.Reset();
+   }
+   else
+   {
+      as.End();
+   }
 }

@@ -55,6 +55,7 @@ Changes in uncrustify-0.53 (not yet released)
  - Only mess with escaped newlines in a comment if inside a preprocessor
  - Fix pos_xxx options when a preprocessor is near
  - Apply Debian patch to man file
+ - Fix '<<' indenting/aligning (moved from indent.cpp to align.cpp)
 
 
 Changes in uncrustify-0.52 (28 Feb 2009)
