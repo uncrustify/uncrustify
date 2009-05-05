@@ -8,5 +8,10 @@ void foo()
       << "This"
       << "is a"
       << "test!";
-}
 
+   *aaaaaa = (bbbbb(cccccPtr->ddd) & YYYYYYYYYYYYYYYYYYYYYYYY) |
+             ((bbbbb(cccccPtr->nnnnnnnn) << ZZZZZZZZZZZZZZZZZZZZZZZZZZZ)
+             & WWWWWWWWWWWWWWWWWWWWWWWWWW) | ((bbbbb(cccccPtr->hhhhhhhhhhhhhh)
+                       << FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF)
+             & EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE);
+}
