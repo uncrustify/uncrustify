@@ -431,6 +431,15 @@ static bool parse_string(chunk_t *pc, int quote_idx, bool allow_escape)
    for (/* nada */; pc->str[len] != 0; len++)
    {
       cpd.column++;
+
+      if ((pc->str[len] == '\n') ||
+          ((pc->str[len] == '\r') && (pc->str[len + 1] != '\n')))
+      {
+         cpd.line_number++;
+         cpd.column = 1;
+         pc->nl_count++;
+         pc->type = CT_STRING_MULTI;
+      }
       if (!escaped)
       {
          if (pc->str[len] == escape_char)
@@ -441,13 +450,6 @@ static bool parse_string(chunk_t *pc, int quote_idx, bool allow_escape)
                   (pc->str[len + 1] == end_ch))
          {
             escaped = allow_escape;
-         }
-         else if (pc->str[len] == '\n')
-         {
-            cpd.line_number++;
-            cpd.column = 1;
-            pc->nl_count++;
-            pc->type = CT_STRING_MULTI;
          }
          else if (pc->str[len] == end_ch)
          {
