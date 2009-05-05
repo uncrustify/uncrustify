@@ -9,15 +9,15 @@ uncrustify \- C, C++, C#, D, Java and Pawn source code beautifier
 
 If no input files are specified, the input is read from stdin.
 .br
-If reading from stdin, you should specify the language using -l.
+If reading from stdin, you should specify the language using \-l.
 
-If -F is used or files are specified on the command line, the output filename is
+If \-F is used or files are specified on the command line, the output filename is
 \fIPFX\fR + "/" + filename + \fISFX\fR.
 .br
-Unless, of course, the options \fB--replace\fR or \fB--no-backup\fR are used.
+Unless, of course, the options \fB\-\-replace\fR or \fB\-\-no\-backup\fR are used.
 
-When reading from stdin or doing a single file via the '-f' option,
-the output is dumped to stdout, unless redirected with -o FILE.
+When reading from stdin or doing a single file via the '\-f' option,
+the output is dumped to stdout, unless redirected with \-o FILE.
 
 Errors are always dumped to stderr
 
@@ -41,7 +41,7 @@ Use with \fB\-f\fR, \fB\-\-update\-config\fR, \fB\-\-update\-config\-with\-doc\f
 \fB\-F\fI FILE
 Read files to process from \fIFILE\fR, one filename per line.
 .br
-You can create this file using something like \'\fBfind . -name "*.c" > list.txt\fR\'.
+You can create this file using something like \'\fBfind . \-name "*.c" > list.txt\fR\'.
 .br
 This cannot be combined with \fB\-f\fR.
 .TP
@@ -99,7 +99,7 @@ Output a new config file with embedded usage comments.
 Output a config file for Universal Indent GUI.
 .TP
 \fB\-\-detect\fR
-Detects the config from a source file. Use with '-f FILE'.
+Detects the config from a source file. Use with '\-f FILE'.
 Detection is currently fairly limited.
 
 .SS "Debug Options:"
@@ -119,21 +119,21 @@ Print \fIFLAG\fR as text and exit
 .SH EXAMPLES
 .TP
 Read a D file from stdin, output to stdout.
-cat foo.d | uncrustify -q -c my.cfg -l d
+cat foo.d | uncrustify \-q \-c my.cfg \-l d
 .TP
 Process a file, output to stdout.
-uncrustify -c my.cfg -d foo.d
+uncrustify \-c my.cfg \-d foo.d
 .TP
 Process a source tree, output to a different tree.
-find src -name "*.[ch]" > files.txt
+find src \-name "*.[ch]" > files.txt
 .br
-uncrustify -c my.cfg -F files.txt --prefix out
+uncrustify \-c my.cfg \-F files.txt \-\-prefix out
 .TP
-Process a source tree in-place.
-uncrustify -c my.cfg --no-backup $(find src -name "*.[ch]")
+Process a source tree in\(hyplace.
+uncrustify \-c my.cfg \-\-no\-backup $(find src \-name "*.[ch]")
 
 .SH NOTES
-Use comments containing ' *INDENT-OFF*' and ' *INDENT-ON*' to disable
+Use comments containing ' *INDENT\-OFF*' and ' *INDENT\-ON*' to disable
 processing of parts of the source file.
 
 .SH AUTHOR
@@ -143,7 +143,7 @@ Written by Ben Gardner
 Use the issue tracker at <http://sourceforge.net/projects/uncrustify>
 
 .SH COPYRIGHT
-Copyright (C) 2006-2007 Ben Gardner
+Copyright (C) 2006\(hy2009 Ben Gardner
 
 .SH LICENSE
 GNU GPL version 2 or later <http://gnu.org/licenses/gpl.html>
