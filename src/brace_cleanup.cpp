@@ -880,24 +880,18 @@ static chunk_t *insert_vbrace(chunk_t *pc, bool after,
                               struct parse_frame *frm)
 {
    chunk_t chunk;
-   chunk_t *rv;
-   chunk_t *ref;
+   chunk_t *ref = pc;
 
    memset(&chunk, 0, sizeof(chunk));
 
-   chunk.orig_line   = pc->orig_line;
-   chunk.parent_type = frm->pse[frm->pse_tos].type;
-   chunk.level       = frm->level;
-   chunk.brace_level = frm->brace_level;
-   chunk.flags       = pc->flags & PCF_COPY_FLAGS;
-   chunk.str         = "";
    if (after)
    {
       chunk.type = CT_VBRACE_CLOSE;
-      rv         = chunk_add_after(&chunk, pc);
    }
    else
    {
+      chunk.type = CT_VBRACE_OPEN;
+
       ref = chunk_get_prev(pc);
       if ((ref->flags & PCF_IN_PREPROC) == 0)
       {
@@ -906,8 +900,9 @@ static chunk_t *insert_vbrace(chunk_t *pc, bool after,
 
       while (chunk_is_newline(ref) || chunk_is_comment(ref))
       {
-         ref->level++;
-         ref->brace_level++;
+         /* Revisit: what are the next two lines supposed to do? */
+         //ref->level++;
+         //ref->brace_level++;
          ref = chunk_get_prev(ref);
       }
 
@@ -927,13 +922,19 @@ static chunk_t *insert_vbrace(chunk_t *pc, bool after,
             ref = chunk_get_next(ref);
          }
       }
-
-      chunk.orig_line = ref->orig_line;
-      chunk.column    = ref->column + ref->len + 1;
-      chunk.type      = CT_VBRACE_OPEN;
-      rv = chunk_add_after(&chunk, ref);
    }
-   return(rv);
+
+   chunk.orig_line    = ref->orig_line;
+   chunk.parent_type  = frm->pse[frm->pse_tos].type;
+   chunk.level        = frm->level;
+   chunk.brace_level  = frm->brace_level;
+   chunk.flags        = ref->flags & PCF_COPY_FLAGS;
+   chunk.str          = "";
+   chunk.column       = ref->column + ref->len + 1;
+   chunk.orig_col     = chunk.column;
+   chunk.orig_col_end = chunk.column;
+
+   return(chunk_add_after(&chunk, ref));
 }
 
 

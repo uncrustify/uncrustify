@@ -122,12 +122,12 @@ argval_t do_space(chunk_t *first, chunk_t *second, bool complete = true)
       log_rule("REMOVE");
       return(AV_REMOVE);
    }
-   if (first->type == CT_VBRACE_OPEN)
+   if ((first->type == CT_VBRACE_OPEN) && (second->type != CT_NL_CONT))
    {
       log_rule("ADD");
       return(AV_ADD);
    }
-   if (first->type == CT_VBRACE_CLOSE)
+   if ((first->type == CT_VBRACE_CLOSE) && (second->type != CT_NL_CONT))
    {
       log_rule("REMOVE");
       return(AV_REMOVE);
