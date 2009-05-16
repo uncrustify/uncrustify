@@ -1184,6 +1184,7 @@ void indent_text(void)
             reindent_line(pc, tmp);
          }
          else if ((vardefcol > 0) &&
+                  (pc->level == pc->brace_level) &&
                   (pc->type == CT_WORD) &&
                   ((pc->flags & PCF_VAR_DEF) != 0) &&
                   (prev != NULL) && (prev->type == CT_COMMA))
