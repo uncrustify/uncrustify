@@ -3,32 +3,7 @@
 #
 
 
-Future plans: (in no particular order)
--------------------------------------------------------------------------------
- - Reorganize the main classes:
-    * UncrustifyOptions
-    * UncrustifyLogger
-    * UncrustifyEngine
- - Remove global variables
- - Add easily pluggable output for logs and file
- - Build as a shared library on Linux and maybe a dll on windows?
- - Plug into SlickEdit/Gedit/Kedit
- - Add an option to create a configuration file based on a source file
- - Add a 'live' mode where Uncrustify gives the indent for a single line or
-   the next 'align' point
-
-
-What's left before 1.0
--------------------------------------------------------------------------------
- - Improve test coverage (so boring!)
- - Clean up documentation
- - Bug fixes...
-
-
-===============================================================================
-
-
-Changes in uncrustify-0.53 (not yet released)
+Changes in uncrustify-0.53 (16 May 2009)
 -------------------------------------------------------------------------------
  - Fix sp_inside_braces* options, which were broken by the fix to issue #2629652
  - Fix sp_after_cast, which was broken by a previous fix
