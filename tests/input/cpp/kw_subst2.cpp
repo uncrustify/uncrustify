@@ -21,6 +21,11 @@ int CFoo::operator +()
 {
 }
 
+map<string, int> func()
+{
+  // some codes
+}
+
 int some_func(void)
 {
 }

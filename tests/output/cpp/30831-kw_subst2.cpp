@@ -49,6 +49,16 @@ namespace bar
 	}
 
 	/**
+	 * func
+	 * TODO: DESCRIPTION
+	 * @return TODO
+	 */
+	map<string, int> func()
+	{
+		// some codes
+	}
+
+	/**
 	 * some_func
 	 * TODO: DESCRIPTION
 	 * @return TODO

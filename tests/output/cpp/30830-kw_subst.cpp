@@ -49,6 +49,17 @@ int CFoo::operator +()
 
 /**
  * CLASS:  $(fclass)
+ * METHOD: func
+ * TODO: DESCRIPTION
+ * @return TODO
+ */
+map<string, int> func()
+{
+	// some codes
+}
+
+/**
+ * CLASS:  $(fclass)
  * METHOD: some_func
  * TODO: DESCRIPTION
  * @return TODO
