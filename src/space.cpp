@@ -99,6 +99,11 @@ argval_t do_space(chunk_t *first, chunk_t *second, bool complete = true)
    argval_t arg;
    chunk_t  *next;
 
+   if ((first->type == CT_IGNORED) || (second->type == CT_IGNORED))
+   {
+      log_rule("IGNORED");
+      return(AV_REMOVE);
+   }
    if ((first->type == CT_PP) || (second->type == CT_PP))
    {
       log_rule("sp_pp_concat");
