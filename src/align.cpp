@@ -1200,6 +1200,7 @@ chunk_t *align_nl_cont(chunk_t *start)
    /* NL_CONT is always the last thing on a line */
    while ((tmp = cs.Pop()) != NULL)
    {
+      tmp->flags |= PCF_WAS_ALIGNED;
       tmp->column = max_col;
    }
 

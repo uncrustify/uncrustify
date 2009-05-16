@@ -301,6 +301,29 @@ void output_text(FILE *pfile)
       }
       else if (pc->type == CT_NL_CONT)
       {
+         /* FIXME: this really shouldn't be done here! */
+         if ((pc->flags & PCF_WAS_ALIGNED) == 0)
+         {
+            if (cpd.settings[UO_sp_before_nl_cont].a & AV_REMOVE)
+            {
+               pc->column = cpd.column + (cpd.settings[UO_sp_before_nl_cont].a == AV_FORCE);
+            }
+            else
+            {
+               /* Try to keep the same relative spacing */
+               prev = chunk_get_prev(pc);
+               if ((prev != NULL) && (prev->nl_count == 0))
+               {
+                  int orig_sp = (pc->orig_col - prev->orig_col_end);
+                  pc->column = cpd.column + orig_sp;
+                  if ((cpd.settings[UO_sp_before_nl_cont].a != AV_IGNORE) &&
+                      (pc->column < (cpd.column + 1)))
+                  {
+                     pc->column = cpd.column + 1;
+                  }
+               }
+            }
+         }
          output_to_column(pc->column, (cpd.settings[UO_indent_with_tabs].n == 2));
          add_char('\\');
          add_char('\n');

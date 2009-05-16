@@ -56,6 +56,8 @@ Changes in uncrustify-0.53 (not yet released)
  - Fix pos_xxx options when a preprocessor is near
  - Apply Debian patch to man file
  - Fix '<<' indenting/aligning (moved from indent.cpp to align.cpp)
+ - Rework the sp_before_nl_cont option
+ - Fix a few other bugs
 
 
 Changes in uncrustify-0.52 (28 Feb 2009)
