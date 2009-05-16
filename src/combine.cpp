@@ -2349,6 +2349,7 @@ static void mark_function(chunk_t *pc)
                  __func__, pc->orig_line, pc->orig_col, tmp2->len, tmp2->str, pc->len, pc->str);
 
          pc->type     = CT_TYPE;
+         tmp1->type   = CT_PTR_TYPE;
          pc->flags   &= ~PCF_VAR_1ST_DEF;
          tmp2->flags |= PCF_VAR_1ST_DEF;
          flag_parens(tmp, 0, CT_FPAREN_OPEN, CT_FUNC_PROTO, false);
