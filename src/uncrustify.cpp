@@ -1144,6 +1144,13 @@ static void add_func_header(c_token_t type, file_mem& fm)
             break;
          }
 
+         /* If we hit an angle close, back up to the angle open */
+         if (ref->type == CT_ANGLE_CLOSE)
+         {
+            ref = chunk_get_prev_type(ref, CT_ANGLE_OPEN, ref->level, CNAV_PREPROC);
+            continue;
+         }
+
          /* Bail if we hit a preprocessor and cmt_insert_before_preproc is false */
          if (ref->flags & PCF_IN_PREPROC)
          {
@@ -1201,7 +1208,7 @@ static void uncrustify_start(const char *data, int data_len)
       add_file_header();
    }
 
-   /* Add the file header */
+   /* Add the file footer */
    if (cpd.file_ftr.data != NULL)
    {
       add_file_footer();
