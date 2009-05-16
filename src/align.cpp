@@ -686,13 +686,16 @@ static chunk_t *align_func_param(chunk_t *start)
 
    bool did_this_line = false;
    int  comma_count   = 0;
+   int  chunk_count   = 0;
 
    while ((pc = chunk_get_next(pc)) != NULL)
    {
+      chunk_count++;
       if (chunk_is_newline(pc))
       {
          did_this_line = false;
          comma_count   = 0;
+         chunk_count   = 0;
       }
       else if (pc->level <= start->level)
       {
@@ -700,7 +703,10 @@ static chunk_t *align_func_param(chunk_t *start)
       }
       else if (!did_this_line && (pc->flags & PCF_VAR_DEF))
       {
-         as.Add(pc);
+         if (chunk_count > 1)
+         {
+            as.Add(pc);
+         }
          did_this_line = true;
       }
       else if (comma_count > 0)
