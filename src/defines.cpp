@@ -258,7 +258,7 @@ static void generate_if_conditional_as_text(std::string& dst, chunk_t *ifdef)
    chunk_t *pc;
    int     column = -1;
 
-   dst.clear();
+   dst.erase();
    for (pc = ifdef; pc != NULL; pc = chunk_get_next(pc))
    {
       if (column == -1)
@@ -273,7 +273,7 @@ static void generate_if_conditional_as_text(std::string& dst, chunk_t *ifdef)
       }
       else if (pc->type == CT_NL_CONT)
       {
-         dst.push_back(' ');
+         dst += ' ';
          column = -1;
       }
       else if ((pc->type == CT_COMMENT) ||
@@ -286,7 +286,7 @@ static void generate_if_conditional_as_text(std::string& dst, chunk_t *ifdef)
 
          for (spacing = pc->column - column; spacing > 0; spacing--)
          {
-            dst.push_back(' ');
+            dst += ' ';
             column++;
          }
          dst.append(pc->str, pc->len);
