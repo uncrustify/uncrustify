@@ -11,3 +11,10 @@ config.status
 *.vtg
 *.vpwh*
 tests/results
+.waf*
+.lock*
+build
+waf*
+win32/Release
+win32/Debug
+*.obj
