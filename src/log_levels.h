@@ -88,6 +88,7 @@ enum
    LBCTRL    = 72,    /* beautifier control */
    LRMRETURN = 73,    /* remove 'return;' */
    LPPIF     = 74,    /* #if/#else/#endif pair processing */
+   LMCB      = 75,    /* mod_case_brace */
 };
 
 #endif   /* LOG_LEVELS_H_INCLUDED */

@@ -3,6 +3,11 @@
 #
 
 
+Changes in uncrustify-0.54 (Not released)
+-------------------------------------------------------------------------------
+ - Add mod_case_brace
+
+
 Changes in uncrustify-0.53 (16 May 2009)
 -------------------------------------------------------------------------------
  - Fix sp_inside_braces* options, which were broken by the fix to issue #2629652
