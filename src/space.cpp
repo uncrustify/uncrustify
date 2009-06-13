@@ -246,6 +246,32 @@ argval_t do_space(chunk_t *first, chunk_t *second, bool complete = true)
       return(arg);
    }
 
+   /* "for (;;)" vs "for (;; )" and "for (a;b;c)" vs "for (a; b; c)" */
+   if (first->type == CT_SEMICOLON)
+   {
+      if (first->parent_type == CT_FOR)
+      {
+         if ((cpd.settings[UO_sp_after_semi_for_empty].a != AV_IGNORE) &&
+             (second->type == CT_SPAREN_CLOSE))
+         {
+            log_rule("sp_after_semi_for_empty");
+            return(cpd.settings[UO_sp_after_semi_for_empty].a);
+         }
+         if (cpd.settings[UO_sp_after_semi_for].a != AV_IGNORE)
+         {
+            log_rule("sp_after_semi_for");
+            return(cpd.settings[UO_sp_after_semi_for].a);
+         }
+
+      }
+      else if (!chunk_is_comment(second))
+      {
+         log_rule("sp_after_semi");
+         return(cpd.settings[UO_sp_after_semi].a);
+      }
+      /* Let the comment spacing rules handle this */
+   }
+
    if (((first->type == CT_NEG) || (first->type == CT_POS) || (first->type == CT_ARITH)) &&
        ((second->type == CT_NEG) || (second->type == CT_POS) || (second->type == CT_ARITH)))
    {
@@ -833,19 +859,6 @@ argval_t do_space(chunk_t *first, chunk_t *second, bool complete = true)
    {
       log_rule("sp_square_fparen");
       return(cpd.settings[UO_sp_square_fparen].a);
-   }
-
-   /* "for (;;)" vs "for (;; )" */
-   if ((second->type == CT_SPAREN_CLOSE) &&
-       (first->type == CT_SEMICOLON) &&
-       (second->parent_type == CT_FOR))
-   {
-      arg = cpd.settings[UO_sp_after_semi_for_empty].a;
-      if (arg != AV_IGNORE)
-      {
-         log_rule("sp_after_semi_for_empty");
-         return(arg);
-      }
    }
 
    /* "if(...)" vs "if( ... )" */

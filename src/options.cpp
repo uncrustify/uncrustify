@@ -149,9 +149,9 @@ void register_options(void)
    unc_add_option("sp_enum_after_assign", UO_sp_enum_after_assign, AT_IARF,
                   "Add or remove space after assignment '=' in enum. Overrides sp_enum_assign.");
    unc_add_option("sp_pp_concat", UO_sp_pp_concat, AT_IARF,
-                  "Add or remove space around preprocessor '##' concatenation operator");
+                  "Add or remove space around preprocessor '##' concatenation operator. Default=Add");
    unc_add_option("sp_pp_stringify", UO_sp_pp_stringify, AT_IARF,
-                  "Add or remove space after preprocessor '#' stringify operator");
+                  "Add or remove space after preprocessor '#' stringify operator. Default=Add");
    unc_add_option("sp_bool", UO_sp_bool, AT_IARF,
                   "Add or remove space around boolean operators '&&' and '||'");
    unc_add_option("sp_compare", UO_sp_compare, AT_IARF,
@@ -189,7 +189,7 @@ void register_options(void)
    unc_add_option("sp_before_byref_func", UO_sp_before_byref_func, AT_IARF,
                   "Add or remove space before a reference sign '&', if followed by a func proto/def.");
    unc_add_option("sp_after_type", UO_sp_after_type, AT_IARF,
-                  "Add or remove space between type and word");
+                  "Add or remove space between type and word. Default=Force");
    unc_add_option("sp_template_angle", UO_sp_template_angle, AT_IARF,
                   "Add or remove space in 'template <' vs 'template<'.\n"
                   "If set to ignore, sp_before_angle is used.");
@@ -220,11 +220,15 @@ void register_options(void)
    unc_add_option("sp_special_semi", UO_sp_special_semi, AT_IARF,
                   "Add or remove space before empty statement ';' on 'if', 'for' and 'while'");
    unc_add_option("sp_before_semi", UO_sp_before_semi, AT_IARF,
-                  "Add or remove space before ';'");
+                  "Add or remove space before ';'. Default=Remove");
    unc_add_option("sp_before_semi_for", UO_sp_before_semi_for, AT_IARF,
                   "Add or remove space before ';' in non-empty 'for' statements");
    unc_add_option("sp_before_semi_for_empty", UO_sp_before_semi_for_empty, AT_IARF,
                   "Add or remove space before a semicolon of an empty part of a for statment.");
+   unc_add_option("sp_after_semi", UO_sp_after_semi, AT_IARF,
+                  "Add or remove space after ';', except when followed by a comment. Default=Add");
+   unc_add_option("sp_after_semi_for", UO_sp_after_semi_for, AT_IARF,
+                  "Add or remove space after ';' in non-empty 'for' statements. Default=Force");
    unc_add_option("sp_after_semi_for_empty", UO_sp_after_semi_for_empty, AT_IARF,
                   "Add or remove space after the final semicolon of an empty part of a for statment: for ( ; ; <here> ).");
    unc_add_option("sp_before_square", UO_sp_before_square, AT_IARF,
@@ -242,7 +246,7 @@ void register_options(void)
    unc_add_option("sp_before_class_colon", UO_sp_before_class_colon, AT_IARF,
                   "Add or remove space before class ':'");
    unc_add_option("sp_before_case_colon", UO_sp_before_case_colon, AT_IARF,
-                  "Add or remove space before case ':'");
+                  "Add or remove space before case ':'. Default=Remove");
    unc_add_option("sp_after_operator", UO_sp_after_operator, AT_IARF,
                   "Add or remove space between 'operator' and operator sign");
    unc_add_option("sp_after_operator_sym", UO_sp_after_operator_sym, AT_IARF,
@@ -324,23 +328,24 @@ void register_options(void)
    unc_add_option("sp_d_array_colon", UO_sp_d_array_colon, AT_IARF,
                   "Add or remove around the D named array initializer ':' operator");
    unc_add_option("sp_not", UO_sp_not, AT_IARF,
-                  "Add or remove space after the '!' (not) operator.");
-   unc_add_option("sp_inv", UO_sp_inv, AT_IARF, "Add or remove space after the '~' (invert) operator.");
+                  "Add or remove space after the '!' (not) operator. Default=Remove");
+   unc_add_option("sp_inv", UO_sp_inv, AT_IARF,
+                  "Add or remove space after the '~' (invert) operator. Default=Remove");
    unc_add_option("sp_addr", UO_sp_addr, AT_IARF,
-                  "Add or remove space after the '&' (address-of) operator.\n"
+                  "Add or remove space after the '&' (address-of) operator. Default=Remove\n"
                   "This does not affect the spacing after a '&' that is part of a type.");
    unc_add_option("sp_member", UO_sp_member, AT_IARF,
-                  "Add or remove space around the '.' or '->' operators\n");
+                  "Add or remove space around the '.' or '->' operators. Default=Remove");
    unc_add_option("sp_deref", UO_sp_deref, AT_IARF,
-                  "Add or remove space after the '*' (dereference) operator.\n"
+                  "Add or remove space after the '*' (dereference) operator. Default=Remove\n"
                   "This does not affect the spacing after a '*' that is part of a type.");
    unc_add_option("sp_sign", UO_sp_sign, AT_IARF,
-                  "Add or remove space after '+' or '-', as in 'x = -5' or 'y = +7'");
+                  "Add or remove space after '+' or '-', as in 'x = -5' or 'y = +7'. Default=Remove");
    unc_add_option("sp_incdec", UO_sp_incdec, AT_IARF,
-                  "Add or remove space before or after '++' and '--', as in '(--x)' or 'y++;'");
+                  "Add or remove space before or after '++' and '--', as in '(--x)' or 'y++;'. Default=Remove");
 
    unc_add_option("sp_before_nl_cont", UO_sp_before_nl_cont, AT_IARF,
-                  "Add or remove space before a backslash-newline at the end of a line");
+                  "Add or remove space before a backslash-newline at the end of a line. Default=Add");
 
    unc_add_option("sp_after_oc_scope", UO_sp_after_oc_scope, AT_IARF,
                   "Add or remove space after the scope '+' or '-', as in '-(void) foo;' or '+(int) bar;'");
@@ -1540,6 +1545,9 @@ void set_option_defaults(void)
    cpd.settings[UO_sp_after_type].a        = AV_FORCE;
    cpd.settings[UO_sp_before_nl_cont].a    = AV_ADD;
    cpd.settings[UO_sp_before_case_colon].a = AV_REMOVE;
+   cpd.settings[UO_sp_before_semi].a       = AV_REMOVE;
+   cpd.settings[UO_sp_after_semi].a        = AV_ADD;
+   cpd.settings[UO_sp_after_semi_for].a    = AV_FORCE;
    cpd.settings[UO_cmt_indent_multi].b     = true;
    cpd.settings[UO_cmt_multi_check_last].b = true;
    cpd.settings[UO_pp_indent_count].n      = 1;
