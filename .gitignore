@@ -18,3 +18,4 @@ waf*
 win32/Release
 win32/Debug
 *.obj
+autom4te.cache
