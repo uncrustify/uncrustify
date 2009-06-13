@@ -12,5 +12,7 @@
 50005  obj-c.cfg           oc/Declarations.h     OC
 50006  obj-c.cfg           oc/exceptions.m
 
+50010  oc-split.cfg        oc/oc-split.m
+
 50030  sort_imports.cfg    oc/sort_import.m
 
