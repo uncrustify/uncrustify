@@ -1011,19 +1011,19 @@ class Lexer
                 {
                     p++; t.value = TOK.TOKmulass;
                 }
-                else t.value = TOK.TOKmul;return;
+                else t.value = TOK.TOKmul; return;
 
             case '%': p++; if (*p == '=')
                 {
                     p++; t.value = TOK.TOKmodass;
                 }
-                else t.value = TOK.TOKmod;return;
+                else t.value = TOK.TOKmod; return;
 
             case '^': p++; if (*p == '=')
                 {
                     p++; t.value = TOK.TOKxorass;
                 }
-                else t.value = TOK.TOKxor;return;
+                else t.value = TOK.TOKxor; return;
 
 // removed 148	case '~': p++; if( *p == '=' ) { p++; t.value = TOK.TOKcatass; } else t.value = TOK.TOKtilde; return;
 

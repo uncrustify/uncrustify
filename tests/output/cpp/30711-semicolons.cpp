@@ -75,9 +75,9 @@ template < class > struct type;
 
 template < class T >
 class X {
-typedef type < T > base ;
+typedef type < T > base;
 void f () {
-	( base :: operator * () ) ;
+	( base :: operator * () );
 }
 };
 

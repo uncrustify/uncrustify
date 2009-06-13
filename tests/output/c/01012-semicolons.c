@@ -1,7 +1,7 @@
 
 int foo(int bar)
 {
-   for ( ; ;)
+   for ( ; ; )
    {
       break;
    }
@@ -62,11 +62,11 @@ void f2(void)
       i++;
    }
 
-   for ( ; ;)
+   for ( ; ; )
    {
    }
 
-   for ( ; ;)
+   for ( ; ; )
    {
    }
 }
