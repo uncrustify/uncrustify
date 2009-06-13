@@ -28,6 +28,7 @@ static void align_func_proto(int span);
 static void align_oc_msg_spec(int span);
 static void align_typedefs(int span);
 static void align_left_shift(void);
+static void align_oc_msg_colon(void);
 
 
 /*
@@ -257,6 +258,11 @@ void align_all(void)
    if (cpd.settings[UO_align_left_shift].b)
    {
       align_left_shift();
+   }
+
+   if (cpd.settings[UO_align_oc_msg_colon].b)
+   {
+      align_oc_msg_colon();
    }
 
    /* Align variable definitions */
@@ -1743,5 +1749,55 @@ static void align_left_shift(void)
    else
    {
       as.End();
+   }
+}
+
+/**
+ * Aligns OC message
+ */
+static void align_oc_msg_colon(void)
+{
+   chunk_t    *pc = chunk_get_head();
+   chunk_t    *tmp;
+   AlignStack cas;   /* for the colons */
+   AlignStack nas;   /* for the parameter tag */
+   int        level;
+   bool       did_line;
+
+   while (pc != NULL)
+   {
+      if ((pc->type != CT_SQUARE_OPEN) || (pc->parent_type != CT_OC_MSG))
+      {
+         pc = chunk_get_next(pc);
+         continue;
+      }
+
+      cas.Reset();
+      nas.Reset();
+      nas.m_right_align = true;
+
+      level = pc->level;
+      pc = chunk_get_next_ncnl(pc, CNAV_PREPROC);
+      did_line = false;
+      while ((pc != NULL) && (pc->level > level))
+      {
+         if (chunk_is_newline(pc))
+         {
+            did_line = false;
+         }
+         else if (!did_line && (pc->type == CT_OC_COLON))
+         {
+            cas.Add(pc);
+            tmp = chunk_get_prev(pc);
+            if ((tmp != NULL) && ((tmp->type == CT_WORD) || (tmp->type == CT_TYPE)))
+            {
+               nas.Add(tmp);
+            }
+            did_line = true;
+         }
+         pc = chunk_get_next(pc, CNAV_PREPROC);
+      }
+      nas.End();
+      cas.End();
    }
 }
