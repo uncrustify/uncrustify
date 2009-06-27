@@ -11,6 +11,7 @@
 50004  obj-c.cfg           oc/string.m
 50005  obj-c.cfg           oc/Declarations.h     OC
 50006  obj-c.cfg           oc/exceptions.m
+50007  obj-c.cfg           oc/misc.m
 
 50010  oc-split.cfg        oc/oc-split.m
 

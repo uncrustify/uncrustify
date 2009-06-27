@@ -3,8 +3,8 @@ int main(int argc, const char *argv[])
 {
    @try
    {
-      [NSException raise:NSInternalInconsistency
-       format:@"An internal inconsistency was raised"];
+      [NSException raise: NSInternalInconsistency
+       format: @"An internal inconsistency was raised"];
    }
    @catch (NSException *e)
    {
