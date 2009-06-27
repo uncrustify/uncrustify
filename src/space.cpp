@@ -428,7 +428,7 @@ argval_t do_space(chunk_t *first, chunk_t *second, bool complete = true)
    }
 
    /* "a [x]" vs "a[x]" */
-   if (second->type == CT_SQUARE_OPEN)
+   if ((second->type == CT_SQUARE_OPEN) && (second->parent_type != CT_OC_MSG))
    {
       log_rule("sp_before_square");
       return(cpd.settings[UO_sp_before_square].a);
