@@ -10,6 +10,8 @@ Changes in uncrustify-0.54 (Not released)
  - Add align_oc_msg_colon
  - ObjC: Do not set the parent of everything in a message at OC_MSG (was breaking casts)
  - ObjC: sp_before_square does not apply in "if (i < [a count])"
+ - Fix crash bug in chunk_get_prev() at the start of the file
+ - Fix issue with #if COND followed by a cast on the next line
 
 
 Changes in uncrustify-0.53 (16 May 2009)

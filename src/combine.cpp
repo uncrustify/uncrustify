@@ -184,6 +184,622 @@ static bool chunk_ends_type(chunk_t *pc)
 
 
 /**
+ * This is called on every chunk.
+ * First on all non-preprocessor chunks and then on each preprocessor chunk.
+ * It does all the detection and classifying.
+ */
+void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
+{
+   chunk_t *tmp;
+
+   // LOG_FMT(LSYS, " %3d > ['%.*s' %s] ['%.*s' %s] ['%.*s' %s]\n",
+   //         pc->orig_line,
+   //         prev->len, prev->str, get_token_name(prev->type),
+   //         pc->len, pc->str, get_token_name(pc->type),
+   //         next->len, next->str, get_token_name(next->type));
+
+   /* D stuff */
+   if ((next->type == CT_PAREN_OPEN) &&
+       ((pc->type == CT_D_CAST) ||
+        (pc->type == CT_DELEGATE) ||
+        (pc->type == CT_ALIGN)))
+   {
+      /* mark the parenthesis parent */
+      tmp = set_paren_parent(next, pc->type);
+
+      /* For a D cast - convert the next item */
+      if ((pc->type == CT_D_CAST) && (tmp != NULL))
+      {
+         if (tmp->type == CT_STAR)
+         {
+            tmp->type = CT_DEREF;
+         }
+         else if (tmp->type == CT_AMP)
+         {
+            tmp->type = CT_ADDR;
+         }
+         else if (tmp->type == CT_MINUS)
+         {
+            tmp->type = CT_NEG;
+         }
+         else if (tmp->type == CT_PLUS)
+         {
+            tmp->type = CT_POS;
+         }
+      }
+
+      /* For a delegate, mark previous words as types and the item after the
+       * close paren as a variable def
+       */
+      if (pc->type == CT_DELEGATE)
+      {
+         if (tmp != NULL)
+         {
+            tmp->parent_type = CT_DELEGATE;
+            if (tmp->level == tmp->brace_level)
+            {
+               tmp->flags |= PCF_VAR_1ST_DEF;
+            }
+         }
+
+         for (tmp = chunk_get_prev_ncnl(pc); tmp != NULL; tmp = chunk_get_prev_ncnl(tmp))
+         {
+            if (chunk_is_semicolon(tmp) ||
+                (tmp->type == CT_BRACE_OPEN) ||
+                (tmp->type == CT_VBRACE_OPEN))
+            {
+               break;
+            }
+            make_type(tmp);
+         }
+      }
+
+      if ((pc->type == CT_ALIGN) && (tmp != NULL))
+      {
+         if (tmp->type == CT_BRACE_OPEN)
+         {
+            set_paren_parent(tmp, pc->type);
+         }
+         else if (tmp->type == CT_COLON)
+         {
+            tmp->parent_type = pc->type;
+         }
+      }
+   } /* paren open + cast/align/delegate */
+
+   if (pc->type == CT_INVARIANT)
+   {
+      if (next->type == CT_PAREN_OPEN)
+      {
+         next->parent_type = pc->type;
+         tmp = chunk_get_next(next);
+         while (tmp != NULL)
+         {
+            if (tmp->type == CT_PAREN_CLOSE)
+            {
+               tmp->parent_type = pc->type;
+               break;
+            }
+            make_type(tmp);
+            tmp = chunk_get_next(tmp);
+         }
+      }
+      else
+      {
+         pc->type = CT_QUALIFIER;
+      }
+   }
+
+   /* Objective C stuff */
+   if (cpd.lang_flags & LANG_OC)
+   {
+      /* Check for message declarations */
+      if (pc->flags & PCF_STMT_START)
+      {
+         if ((chunk_is_str(pc, "-", 1) || chunk_is_str(pc, "+", 1)) &&
+             chunk_is_str(next, "(", 1))
+         {
+            handle_oc_message_decl(pc);
+         }
+      }
+      if (pc->flags & PCF_EXPR_START)
+      {
+         if (pc->type == CT_SQUARE_OPEN)
+         {
+            handle_oc_message_send(pc);
+         }
+      }
+   }
+
+   /* C# stuff */
+   if (cpd.lang_flags & LANG_CS)
+   {
+      /* '[assembly: xxx]' stuff */
+      if ((pc->flags & PCF_EXPR_START) &&
+          (pc->type == CT_SQUARE_OPEN))
+      {
+         handle_cs_square_stmt(pc);
+      }
+
+      if ((next != NULL) && (next->type == CT_BRACE_OPEN) &&
+          (next->parent_type == CT_NONE) &&
+          ((pc->type == CT_SQUARE_CLOSE) ||
+           (pc->type == CT_WORD)))
+      {
+         handle_cs_property(next);
+      }
+   }
+
+   if ((pc->type == CT_ASSIGN) && (next->type == CT_SQUARE_OPEN))
+   {
+      set_paren_parent(next, CT_ASSIGN);
+
+      /* Mark one-liner assignment */
+      tmp = next;
+      while ((tmp = chunk_get_next_nc(tmp)) != NULL)
+      {
+         if (chunk_is_newline(tmp))
+         {
+            break;
+         }
+         if ((tmp->type == CT_SQUARE_CLOSE) && (next->level == tmp->level))
+         {
+            tmp->flags  |= PCF_ONE_LINER;
+            next->flags |= PCF_ONE_LINER;
+            break;
+         }
+      }
+   }
+
+   /* A [] in C# and D only follows a type */
+   if ((pc->type == CT_TSQUARE) &&
+       ((cpd.lang_flags & (LANG_D | LANG_CS | LANG_VALA)) != 0))
+   {
+      if ((prev != NULL) && (prev->type == CT_WORD))
+      {
+         prev->type = CT_TYPE;
+      }
+      if ((next != NULL) && (next->type == CT_WORD))
+      {
+         next->flags |= PCF_VAR_1ST_DEF;
+      }
+   }
+
+   if ((pc->type == CT_SQL_EXEC) ||
+       (pc->type == CT_SQL_BEGIN) ||
+       (pc->type == CT_SQL_END))
+   {
+      mark_exec_sql(pc);
+   }
+
+   if ((pc->type == CT_FUNC_WRAP) ||
+       (pc->type == CT_TYPE_WRAP))
+   {
+      handle_wrap(pc);
+      next = chunk_get_next_ncnl(pc);
+   }
+
+   /* Handle the typedef */
+   if (pc->type == CT_TYPEDEF)
+   {
+      fix_typedef(pc);
+   }
+   if ((pc->type == CT_ENUM) ||
+       (pc->type == CT_STRUCT) ||
+       (pc->type == CT_UNION))
+   {
+      if (prev->type != CT_TYPEDEF)
+      {
+         fix_enum_struct_union(pc);
+      }
+   }
+
+   if (pc->type == CT_EXTERN)
+   {
+      tmp = chunk_get_next_type(next, CT_BRACE_OPEN, next->level);
+      if (tmp != NULL)
+      {
+         set_paren_parent(tmp, CT_EXTERN);
+      }
+   }
+
+   if (pc->type == CT_TEMPLATE)
+   {
+      handle_template(pc);
+   }
+
+   if ((pc->type == CT_WORD) &&
+       (next->type == CT_ANGLE_OPEN) &&
+       (next->parent_type == CT_TEMPLATE))
+   {
+      mark_template_func(pc, next);
+   }
+
+   if ((pc->type == CT_SQUARE_CLOSE) &&
+       (next->type == CT_PAREN_OPEN))
+   {
+      flag_parens(next, 0, CT_FPAREN_OPEN, CT_NONE, false);
+   }
+
+   if (pc->type == CT_TYPE_CAST)
+   {
+      fix_type_cast(pc);
+   }
+
+   if (pc->type == CT_ASSIGN)
+   {
+      mark_lvalue(pc);
+   }
+
+   if ((pc->parent_type == CT_ASSIGN) &&
+       ((pc->type == CT_BRACE_OPEN) ||
+        (pc->type == CT_SQUARE_OPEN)))
+   {
+      /* Mark everything in here as in assign */
+      flag_parens(pc, PCF_IN_ARRAY_ASSIGN, pc->type, CT_NONE, false);
+   }
+
+   if (pc->type == CT_D_TEMPLATE)
+   {
+      set_paren_parent(next, pc->type);
+   }
+
+   /**
+    * A word before an open paren is a function call or definition.
+    * CT_WORD => CT_FUNC_CALL or CT_FUNC_DEF
+    */
+   if (next->type == CT_PAREN_OPEN)
+   {
+      if (pc->type == CT_WORD)
+      {
+         pc->type = CT_FUNCTION;
+      }
+      else if (pc->type == CT_TYPE)
+      {
+         /**
+          * If we are on a type, then we are either on a C++ style cast, a
+          * function or we are on a function type.
+          * The only way to tell for sure is to find the close paren and see
+          * if it is followed by an open paren.
+          * "int(5.6)"
+          * "int()"
+          * "int(foo)(void)"
+          *
+          * FIXME: this check can be done better...
+          */
+         tmp = chunk_get_next_type(next, CT_PAREN_CLOSE, next->level);
+         tmp = chunk_get_next(tmp);
+         if ((tmp != NULL) && (tmp->type == CT_PAREN_OPEN))
+         {
+            /* we have "TYPE(...)(" */
+            pc->type = CT_FUNCTION;
+         }
+         else
+         {
+            if ((pc->parent_type == CT_NONE) &&
+                ((pc->flags & PCF_IN_TYPEDEF) == 0))
+            {
+               tmp = chunk_get_next_ncnl(next);
+               if ((tmp != NULL) && (tmp->type == CT_PAREN_CLOSE))
+               {
+                  /* we have TYPE() */
+                  pc->type = CT_FUNCTION;
+               }
+               else
+               {
+                  /* we have TYPE(...) */
+                  pc->type = CT_CPP_CAST;
+                  set_paren_parent(next, CT_CPP_CAST);
+               }
+            }
+         }
+      }
+      else if (pc->type == CT_ATTRIBUTE)
+      {
+         flag_parens(next, 0, CT_FPAREN_OPEN, CT_ATTRIBUTE, false);
+      }
+   }
+   if ((cpd.lang_flags & LANG_PAWN) != 0)
+   {
+      if ((pc->type == CT_FUNCTION) && (pc->brace_level > 0))
+      {
+         pc->type = CT_FUNC_CALL;
+      }
+      if ((pc->type == CT_STATE) &&
+          (next != NULL) &&
+          (next->type == CT_PAREN_OPEN))
+      {
+         set_paren_parent(next, pc->type);
+      }
+   }
+   else
+   {
+      if (pc->type == CT_FUNCTION)
+      {
+         mark_function(pc);
+      }
+   }
+
+   /* Detect C99 member stuff */
+   if ((pc->type == CT_MEMBER) &&
+       ((prev->type == CT_COMMA) ||
+        (prev->type == CT_BRACE_OPEN)))
+   {
+      pc->type          = CT_C99_MEMBER;
+      next->parent_type = CT_C99_MEMBER;
+   }
+
+   /* Mark function parens and braces */
+   if ((pc->type == CT_FUNC_DEF) ||
+       (pc->type == CT_FUNC_CALL) ||
+       (pc->type == CT_FUNC_CALL_USER) ||
+       (pc->type == CT_FUNC_PROTO))
+   {
+      tmp = next;
+      if (tmp->type == CT_SQUARE_OPEN)
+      {
+         tmp = set_paren_parent(tmp, pc->type);
+      }
+      else if ((tmp->type == CT_TSQUARE) ||
+               (tmp->parent_type == CT_OPERATOR))
+      {
+         tmp = chunk_get_next_ncnl(tmp);
+      }
+
+      tmp = flag_parens(tmp, 0, CT_FPAREN_OPEN, pc->type, false);
+      if (tmp != NULL)
+      {
+         if (tmp->type == CT_BRACE_OPEN)
+         {
+            if ((pc->flags & PCF_IN_CONST_ARGS) == 0)
+            {
+               set_paren_parent(tmp, pc->type);
+            }
+         }
+         else if (chunk_is_semicolon(tmp) && (pc->type == CT_FUNC_PROTO))
+         {
+            tmp->parent_type = pc->type;
+         }
+      }
+   }
+
+   /* Mark the parameters in catch() */
+   if ((pc->type == CT_CATCH) && (next->type == CT_SPAREN_OPEN))
+   {
+      fix_fcn_def_params(next);
+   }
+
+   if ((pc->type == CT_THROW) && (prev->type == CT_FPAREN_CLOSE))
+   {
+      pc->parent_type = prev->parent_type;
+      if (next->type == CT_PAREN_OPEN)
+      {
+         set_paren_parent(next, CT_THROW);
+      }
+   }
+
+   /* Mark the braces in: "for_each_entry(xxx) { }" */
+   if ((pc->type == CT_BRACE_OPEN) &&
+       (prev->type == CT_FPAREN_CLOSE) &&
+       ((prev->parent_type == CT_FUNC_CALL) ||
+        (prev->parent_type == CT_FUNC_CALL_USER)) &&
+       ((pc->flags & PCF_IN_CONST_ARGS) == 0))
+   {
+      set_paren_parent(pc, CT_FUNC_CALL);
+   }
+
+   /* Check for a close paren followed by an open paren, which means that
+    * we are on a function type declaration (C/C++ only?).
+    * Note that typedefs are already taken care of.
+    */
+   if ((next != NULL) &&
+       ((pc->flags & PCF_IN_TYPEDEF) == 0) &&
+       (pc->parent_type != CT_CPP_CAST) &&
+       (pc->parent_type != CT_C_CAST) &&
+       ((pc->flags & PCF_IN_PREPROC) == 0) &&
+       chunk_is_str(pc, ")", 1) &&
+       chunk_is_str(next, "(", 1))
+   {
+      if ((cpd.lang_flags & LANG_D) != 0)
+      {
+         flag_parens(next, 0, CT_FPAREN_OPEN, CT_FUNC_CALL, false);
+      }
+      else
+      {
+         mark_function_type(pc);
+      }
+   }
+
+   if (((pc->type == CT_CLASS) ||
+        (pc->type == CT_STRUCT)) &&
+       (pc->level == pc->brace_level))
+   {
+      if ((pc->type != CT_STRUCT) || ((cpd.lang_flags & LANG_C) == 0))
+      {
+         mark_class_ctor(pc);
+      }
+   }
+
+   if (pc->type == CT_OC_CLASS)
+   {
+      handle_oc_class(pc);
+   }
+
+   if (pc->type == CT_NAMESPACE)
+   {
+      mark_namespace(pc);
+   }
+
+   /*TODO: Check for stuff that can only occur at the start of an statement */
+
+   if ((cpd.lang_flags & LANG_D) == 0)
+   {
+      /**
+       * Check a paren pair to see if it is a cast.
+       * Note that SPAREN and FPAREN have already been marked.
+       */
+      if ((pc->type == CT_PAREN_OPEN) &&
+          (pc->parent_type == CT_NONE) &&
+          ((next->type == CT_WORD) ||
+           (next->type == CT_TYPE) ||
+           (next->type == CT_STRUCT) ||
+           (next->type == CT_QUALIFIER) ||
+           (next->type == CT_MEMBER) ||
+           (next->type == CT_DC_MEMBER) ||
+           (next->type == CT_ENUM) ||
+           (next->type == CT_UNION)) &&
+          (prev->type != CT_SIZEOF) &&
+          (prev->parent_type != CT_OPERATOR) &&
+          ((pc->flags & PCF_IN_TYPEDEF) == 0))
+      {
+         fix_casts(pc);
+      }
+   }
+
+   /* Check for stuff that can only occur at the start of an expression */
+   if ((pc->flags & PCF_EXPR_START) != 0)
+   {
+      /* Change STAR, MINUS, and PLUS in the easy cases */
+      if (pc->type == CT_STAR)
+      {
+         pc->type = (prev->type == CT_ANGLE_CLOSE) ? CT_PTR_TYPE : CT_DEREF;
+      }
+      if (pc->type == CT_MINUS)
+      {
+         pc->type = CT_NEG;
+      }
+      if (pc->type == CT_PLUS)
+      {
+         pc->type = CT_POS;
+      }
+      if (pc->type == CT_INCDEC_AFTER)
+      {
+         pc->type = CT_INCDEC_BEFORE;
+         //fprintf(stderr, "%s: %d> changed INCDEC_AFTER to INCDEC_BEFORE\n", __func__, pc->orig_line);
+      }
+      if (pc->type == CT_AMP)
+      {
+         //fprintf(stderr, "Changed AMP to ADDR on line %d\n", pc->orig_line);
+         pc->type = CT_ADDR;
+      }
+   }
+
+   /* Detect a variable definition that starts with struct/enum/union */
+   if (((pc->flags & PCF_IN_TYPEDEF) == 0) &&
+       (prev->parent_type != CT_CPP_CAST) &&
+       ((prev->flags & PCF_IN_FCN_DEF) == 0) &&
+       ((pc->type == CT_STRUCT) ||
+        (pc->type == CT_UNION) ||
+        (pc->type == CT_ENUM)))
+   {
+      tmp = next;
+      if (tmp->type == CT_TYPE)
+      {
+         tmp = chunk_get_next_ncnl(tmp);
+      }
+      if ((tmp != NULL) && (tmp->type == CT_BRACE_OPEN))
+      {
+         tmp = chunk_skip_to_match(tmp);
+         tmp = chunk_get_next_ncnl(tmp);
+      }
+      if ((tmp != NULL) && (chunk_is_star(tmp) || (tmp->type == CT_WORD)))
+      {
+         mark_variable_definition(tmp);
+      }
+   }
+
+   /**
+    * Change the paren pair after a function/macrofunc.
+    * CT_PAREN_OPEN => CT_FPAREN_OPEN
+    */
+   if (pc->type == CT_MACRO_FUNC)
+   {
+      flag_parens(next, PCF_IN_FCN_CALL, CT_FPAREN_OPEN, CT_MACRO_FUNC, false);
+   }
+
+   if ((pc->type == CT_MACRO_OPEN) ||
+       (pc->type == CT_MACRO_ELSE) ||
+       (pc->type == CT_MACRO_CLOSE))
+   {
+      if (next->type == CT_PAREN_OPEN)
+      {
+         flag_parens(next, 0, CT_FPAREN_OPEN, pc->type, false);
+      }
+   }
+
+   /* Change CT_STAR to CT_PTR_TYPE or CT_ARITH or SYM_DEREF */
+   if (pc->type == CT_STAR)
+   {
+      if (chunk_is_paren_close(next))
+      {
+         pc->type = CT_PTR_TYPE;
+      }
+      else if ((prev->type == CT_SIZEOF) || (prev->type == CT_DELETE))
+      {
+         pc->type = CT_DEREF;
+      }
+      else if (((prev->type == CT_WORD) && chunk_ends_type(prev)) ||
+               (prev->type == CT_DC_MEMBER))
+      {
+         pc->type = CT_PTR_TYPE;
+      }
+      else
+      {
+         /* most PCF_PUNCTUATOR chunks except a paren close would make this
+          * a deref. A paren close may end a cast.
+          */
+         pc->type = ((prev->flags & PCF_PUNCTUATOR) &&
+                     !chunk_is_paren_close(prev) &&
+                     (prev->type != CT_SQUARE_CLOSE) &&
+                     (prev->type != CT_DC_MEMBER)) ? CT_DEREF : CT_ARITH;
+      }
+   }
+
+   if (pc->type == CT_AMP)
+   {
+      if (prev->type == CT_DELETE)
+      {
+         pc->type = CT_DEREF;
+      }
+      else
+      {
+         pc->type = CT_ARITH;
+         if (prev->type == CT_WORD)
+         {
+            tmp = chunk_get_prev_ncnl(prev);
+            if ((tmp != NULL) &&
+                (chunk_is_semicolon(tmp) ||
+                 (tmp->type == CT_BRACE_OPEN) ||
+                 (tmp->type == CT_QUALIFIER)))
+            {
+               prev->type   = CT_TYPE;
+               pc->type     = CT_ADDR;
+               next->flags |= PCF_VAR_1ST;
+            }
+         }
+      }
+   }
+
+   if ((pc->type == CT_MINUS) ||
+       (pc->type == CT_PLUS))
+   {
+      if ((prev->type == CT_POS) || (prev->type == CT_NEG))
+      {
+         pc->type = (pc->type == CT_MINUS) ? CT_NEG : CT_POS;
+      }
+      else if (prev->type == CT_OC_CLASS)
+      {
+         pc->type = CT_NEG;
+      }
+      else
+      {
+         pc->type = CT_ARITH;
+      }
+   }
+}
+
+
+/**
  * Change CT_INCDEC_AFTER + WORD to CT_INCDEC_BEFORE
  * Change number/word + CT_ADDR to CT_ARITH
  * Change number/word + CT_STAR to CT_ARITH
@@ -203,622 +819,31 @@ void fix_symbols(void)
    chunk_t *pc;
    chunk_t *next;
    chunk_t *prev;
-   chunk_t *tmp;
    chunk_t dummy;
-
 
    mark_define_expressions();
 
    memset(&dummy, 0, sizeof(dummy));
 
-   prev = &dummy;
-   pc   = chunk_get_head();
-   next = chunk_get_next_ncnl(pc);
-
-   while ((pc != NULL) && (next != NULL))
+   pc = chunk_get_head();
+   if (chunk_is_newline(pc) || chunk_is_comment(pc))
    {
-      /* D stuff */
-      if ((next->type == CT_PAREN_OPEN) &&
-          ((pc->type == CT_D_CAST) ||
-           (pc->type == CT_DELEGATE) ||
-           (pc->type == CT_ALIGN)))
+      pc = chunk_get_next_ncnl(pc);
+   }
+   while (pc != NULL)
+   {
+      prev = chunk_get_prev_ncnl(pc, CNAV_PREPROC);
+      if (prev == NULL)
       {
-         /* mark the parenthesis parent */
-         tmp = set_paren_parent(next, pc->type);
-
-         /* For a D cast - convert the next item */
-         if ((pc->type == CT_D_CAST) && (tmp != NULL))
-         {
-            if (tmp->type == CT_STAR)
-            {
-               tmp->type = CT_DEREF;
-            }
-            else if (tmp->type == CT_AMP)
-            {
-               tmp->type = CT_ADDR;
-            }
-            else if (tmp->type == CT_MINUS)
-            {
-               tmp->type = CT_NEG;
-            }
-            else if (tmp->type == CT_PLUS)
-            {
-               tmp->type = CT_POS;
-            }
-         }
-
-         /* For a delegate, mark previous words as types and the item after the
-          * close paren as a variable def
-          */
-         if (pc->type == CT_DELEGATE)
-         {
-            if (tmp != NULL)
-            {
-               tmp->parent_type = CT_DELEGATE;
-               if (tmp->level == tmp->brace_level)
-               {
-                  tmp->flags |= PCF_VAR_1ST_DEF;
-               }
-            }
-
-            for (tmp = chunk_get_prev_ncnl(pc); tmp != NULL; tmp = chunk_get_prev_ncnl(tmp))
-            {
-               if (chunk_is_semicolon(tmp) ||
-                   (tmp->type == CT_BRACE_OPEN) ||
-                   (tmp->type == CT_VBRACE_OPEN))
-               {
-                  break;
-               }
-               make_type(tmp);
-            }
-         }
-
-         if ((pc->type == CT_ALIGN) && (tmp != NULL))
-         {
-            if (tmp->type == CT_BRACE_OPEN)
-            {
-               set_paren_parent(tmp, pc->type);
-            }
-            else if (tmp->type == CT_COLON)
-            {
-               tmp->parent_type = pc->type;
-            }
-         }
-      } /* paren open + cast/align/delegate */
-
-      if (pc->type == CT_INVARIANT)
-      {
-         if (next->type == CT_PAREN_OPEN)
-         {
-            next->parent_type = pc->type;
-            tmp = chunk_get_next(next);
-            while (tmp != NULL)
-            {
-               if (tmp->type == CT_PAREN_CLOSE)
-               {
-                  tmp->parent_type = pc->type;
-                  break;
-               }
-               make_type(tmp);
-               tmp = chunk_get_next(tmp);
-            }
-         }
-         else
-         {
-            pc->type = CT_QUALIFIER;
-         }
+         prev = &dummy;
       }
-
-      /* Objective C stuff */
-      if (cpd.lang_flags & LANG_OC)
+      next = chunk_get_next_ncnl(pc, CNAV_PREPROC);
+      if (next == NULL)
       {
-         /* Check for message declarations */
-         if (pc->flags & PCF_STMT_START)
-         {
-            if ((chunk_is_str(pc, "-", 1) || chunk_is_str(pc, "+", 1)) &&
-                chunk_is_str(next, "(", 1))
-            {
-               handle_oc_message_decl(pc);
-            }
-         }
-         if (pc->flags & PCF_EXPR_START)
-         {
-            if (pc->type == CT_SQUARE_OPEN)
-            {
-               handle_oc_message_send(pc);
-            }
-         }
+         next = &dummy;
       }
-
-      /* C# stuff */
-      if (cpd.lang_flags & LANG_CS)
-      {
-         /* '[assembly: xxx]' stuff */
-         if ((pc->flags & PCF_EXPR_START) &&
-             (pc->type == CT_SQUARE_OPEN))
-         {
-            handle_cs_square_stmt(pc);
-         }
-
-         if ((next != NULL) && (next->type == CT_BRACE_OPEN) &&
-             (next->parent_type == CT_NONE) &&
-             ((pc->type == CT_SQUARE_CLOSE) ||
-              (pc->type == CT_WORD)))
-         {
-            handle_cs_property(next);
-         }
-      }
-
-      if ((pc->type == CT_ASSIGN) && (next->type == CT_SQUARE_OPEN))
-      {
-         set_paren_parent(next, CT_ASSIGN);
-
-         /* Mark one-liner assignment */
-         tmp = next;
-         while ((tmp = chunk_get_next_nc(tmp)) != NULL)
-         {
-            if (chunk_is_newline(tmp))
-            {
-               break;
-            }
-            if ((tmp->type == CT_SQUARE_CLOSE) && (next->level == tmp->level))
-            {
-               tmp->flags  |= PCF_ONE_LINER;
-               next->flags |= PCF_ONE_LINER;
-               break;
-            }
-         }
-      }
-
-      /* A [] in C# and D only follows a type */
-      if ((pc->type == CT_TSQUARE) &&
-          ((cpd.lang_flags & (LANG_D | LANG_CS | LANG_VALA)) != 0))
-      {
-         if ((prev != NULL) && (prev->type == CT_WORD))
-         {
-            prev->type = CT_TYPE;
-         }
-         if ((next != NULL) && (next->type == CT_WORD))
-         {
-            next->flags |= PCF_VAR_1ST_DEF;
-         }
-      }
-
-      if ((pc->type == CT_SQL_EXEC) ||
-          (pc->type == CT_SQL_BEGIN) ||
-          (pc->type == CT_SQL_END))
-      {
-         mark_exec_sql(pc);
-      }
-
-      if ((pc->type == CT_FUNC_WRAP) ||
-          (pc->type == CT_TYPE_WRAP))
-      {
-         handle_wrap(pc);
-         next = chunk_get_next_ncnl(pc);
-      }
-
-      /* Handle the typedef */
-      if (pc->type == CT_TYPEDEF)
-      {
-         fix_typedef(pc);
-      }
-      if ((pc->type == CT_ENUM) ||
-          (pc->type == CT_STRUCT) ||
-          (pc->type == CT_UNION))
-      {
-         if (prev->type != CT_TYPEDEF)
-         {
-            fix_enum_struct_union(pc);
-         }
-      }
-
-      if (pc->type == CT_EXTERN)
-      {
-         tmp = chunk_get_next_type(next, CT_BRACE_OPEN, next->level);
-         if (tmp != NULL)
-         {
-            set_paren_parent(tmp, CT_EXTERN);
-         }
-      }
-
-      if (pc->type == CT_TEMPLATE)
-      {
-         handle_template(pc);
-      }
-
-      if ((pc->type == CT_WORD) &&
-          (next->type == CT_ANGLE_OPEN) &&
-          (next->parent_type == CT_TEMPLATE))
-      {
-         mark_template_func(pc, next);
-      }
-
-      if ((pc->type == CT_SQUARE_CLOSE) &&
-          (next->type == CT_PAREN_OPEN))
-      {
-         flag_parens(next, 0, CT_FPAREN_OPEN, CT_NONE, false);
-      }
-
-      if (pc->type == CT_TYPE_CAST)
-      {
-         fix_type_cast(pc);
-      }
-
-      if (pc->type == CT_ASSIGN)
-      {
-         mark_lvalue(pc);
-      }
-
-      if ((pc->parent_type == CT_ASSIGN) &&
-          ((pc->type == CT_BRACE_OPEN) ||
-           (pc->type == CT_SQUARE_OPEN)))
-      {
-         /* Mark everything in here as in assign */
-         flag_parens(pc, PCF_IN_ARRAY_ASSIGN, pc->type, CT_NONE, false);
-      }
-
-      if (pc->type == CT_D_TEMPLATE)
-      {
-         set_paren_parent(next, pc->type);
-      }
-
-      /**
-       * A word before an open paren is a function call or definition.
-       * CT_WORD => CT_FUNC_CALL or CT_FUNC_DEF
-       */
-      if (next->type == CT_PAREN_OPEN)
-      {
-         if (pc->type == CT_WORD)
-         {
-            pc->type = CT_FUNCTION;
-         }
-         else if (pc->type == CT_TYPE)
-         {
-            /**
-             * If we are on a type, then we are either on a C++ style cast, a
-             * function or we are on a function type.
-             * The only way to tell for sure is to find the close paren and see
-             * if it is followed by an open paren.
-             * "int(5.6)"
-             * "int()"
-             * "int(foo)(void)"
-             *
-             * FIXME: this check can be done better...
-             */
-            tmp = chunk_get_next_type(next, CT_PAREN_CLOSE, next->level);
-            tmp = chunk_get_next(tmp);
-            if ((tmp != NULL) && (tmp->type == CT_PAREN_OPEN))
-            {
-               /* we have "TYPE(...)(" */
-               pc->type = CT_FUNCTION;
-            }
-            else
-            {
-               if ((pc->parent_type == CT_NONE) &&
-                   ((pc->flags & PCF_IN_TYPEDEF) == 0))
-               {
-                  tmp = chunk_get_next_ncnl(next);
-                  if ((tmp != NULL) && (tmp->type == CT_PAREN_CLOSE))
-                  {
-                     /* we have TYPE() */
-                     pc->type = CT_FUNCTION;
-                  }
-                  else
-                  {
-                     /* we have TYPE(...) */
-                     pc->type = CT_CPP_CAST;
-                     set_paren_parent(next, CT_CPP_CAST);
-                  }
-               }
-            }
-         }
-         else if (pc->type == CT_ATTRIBUTE)
-         {
-            flag_parens(next, 0, CT_FPAREN_OPEN, CT_ATTRIBUTE, false);
-         }
-      }
-      if ((cpd.lang_flags & LANG_PAWN) != 0)
-      {
-         if ((pc->type == CT_FUNCTION) && (pc->brace_level > 0))
-         {
-            pc->type = CT_FUNC_CALL;
-         }
-         if ((pc->type == CT_STATE) &&
-             (next != NULL) &&
-             (next->type == CT_PAREN_OPEN))
-         {
-            set_paren_parent(next, pc->type);
-         }
-      }
-      else
-      {
-         if (pc->type == CT_FUNCTION)
-         {
-            mark_function(pc);
-         }
-      }
-
-      /* Detect C99 member stuff */
-      if ((pc->type == CT_MEMBER) &&
-          ((prev->type == CT_COMMA) ||
-           (prev->type == CT_BRACE_OPEN)))
-      {
-         pc->type          = CT_C99_MEMBER;
-         next->parent_type = CT_C99_MEMBER;
-      }
-
-      /* Mark function parens and braces */
-      if ((pc->type == CT_FUNC_DEF) ||
-          (pc->type == CT_FUNC_CALL) ||
-          (pc->type == CT_FUNC_CALL_USER) ||
-          (pc->type == CT_FUNC_PROTO))
-      {
-         tmp = next;
-         if (tmp->type == CT_SQUARE_OPEN)
-         {
-            tmp = set_paren_parent(tmp, pc->type);
-         }
-         else if ((tmp->type == CT_TSQUARE) ||
-                  (tmp->parent_type == CT_OPERATOR))
-         {
-            tmp = chunk_get_next_ncnl(tmp);
-         }
-
-         tmp = flag_parens(tmp, 0, CT_FPAREN_OPEN, pc->type, false);
-         if (tmp != NULL)
-         {
-            if (tmp->type == CT_BRACE_OPEN)
-            {
-               if ((pc->flags & PCF_IN_CONST_ARGS) == 0)
-               {
-                  set_paren_parent(tmp, pc->type);
-               }
-            }
-            else if (chunk_is_semicolon(tmp) && (pc->type == CT_FUNC_PROTO))
-            {
-               tmp->parent_type = pc->type;
-            }
-         }
-      }
-
-      /* Mark the parameters in catch() */
-      if ((pc->type == CT_CATCH) && (next->type == CT_SPAREN_OPEN))
-      {
-         fix_fcn_def_params(next);
-      }
-
-      if ((pc->type == CT_THROW) && (prev->type == CT_FPAREN_CLOSE))
-      {
-         pc->parent_type = prev->parent_type;
-         if (next->type == CT_PAREN_OPEN)
-         {
-            set_paren_parent(next, CT_THROW);
-         }
-      }
-
-      /* Mark the braces in: "for_each_entry(xxx) { }" */
-      if ((pc->type == CT_BRACE_OPEN) &&
-          (prev->type == CT_FPAREN_CLOSE) &&
-          ((prev->parent_type == CT_FUNC_CALL) ||
-           (prev->parent_type == CT_FUNC_CALL_USER)) &&
-          ((pc->flags & PCF_IN_CONST_ARGS) == 0))
-      {
-         set_paren_parent(pc, CT_FUNC_CALL);
-      }
-
-      /* Check for a close paren followed by an open paren, which means that
-       * we are on a function type declaration (C/C++ only?).
-       * Note that typedefs are already taken care of.
-       */
-      if ((next != NULL) &&
-          ((pc->flags & PCF_IN_TYPEDEF) == 0) &&
-          (pc->parent_type != CT_CPP_CAST) &&
-          (pc->parent_type != CT_C_CAST) &&
-          ((pc->flags & PCF_IN_PREPROC) == 0) &&
-          chunk_is_str(pc, ")", 1) &&
-          chunk_is_str(next, "(", 1))
-      {
-         if ((cpd.lang_flags & LANG_D) != 0)
-         {
-            flag_parens(next, 0, CT_FPAREN_OPEN, CT_FUNC_CALL, false);
-         }
-         else
-         {
-            mark_function_type(pc);
-         }
-      }
-
-      if (((pc->type == CT_CLASS) ||
-           (pc->type == CT_STRUCT)) &&
-          (pc->level == pc->brace_level))
-      {
-         if ((pc->type != CT_STRUCT) || ((cpd.lang_flags & LANG_C) == 0))
-         {
-            mark_class_ctor(pc);
-         }
-      }
-
-      if (pc->type == CT_OC_CLASS)
-      {
-         handle_oc_class(pc);
-      }
-
-      if (pc->type == CT_NAMESPACE)
-      {
-         mark_namespace(pc);
-      }
-
-      /*TODO: Check for stuff that can only occur at the start of an statement */
-
-      if ((cpd.lang_flags & LANG_D) == 0)
-      {
-         /**
-          * Check a paren pair to see if it is a cast.
-          * Note that SPAREN and FPAREN have already been marked.
-          */
-         if ((pc->type == CT_PAREN_OPEN) &&
-             (pc->parent_type == CT_NONE) &&
-             ((next->type == CT_WORD) ||
-              (next->type == CT_TYPE) ||
-              (next->type == CT_STRUCT) ||
-              (next->type == CT_QUALIFIER) ||
-              (next->type == CT_MEMBER) ||
-              (next->type == CT_DC_MEMBER) ||
-              (next->type == CT_ENUM) ||
-              (next->type == CT_UNION)) &&
-             (prev->type != CT_SIZEOF) &&
-             (prev->parent_type != CT_OPERATOR) &&
-             ((pc->flags & PCF_IN_TYPEDEF) == 0))
-         {
-            fix_casts(pc);
-         }
-      }
-
-      /* Check for stuff that can only occur at the start of an expression */
-      if ((pc->flags & PCF_EXPR_START) != 0)
-      {
-         /* Change STAR, MINUS, and PLUS in the easy cases */
-         if (pc->type == CT_STAR)
-         {
-            pc->type = (prev->type == CT_ANGLE_CLOSE) ? CT_PTR_TYPE : CT_DEREF;
-         }
-         if (pc->type == CT_MINUS)
-         {
-            pc->type = CT_NEG;
-         }
-         if (pc->type == CT_PLUS)
-         {
-            pc->type = CT_POS;
-         }
-         if (pc->type == CT_INCDEC_AFTER)
-         {
-            pc->type = CT_INCDEC_BEFORE;
-            //fprintf(stderr, "%s: %d> changed INCDEC_AFTER to INCDEC_BEFORE\n", __func__, pc->orig_line);
-         }
-         if (pc->type == CT_AMP)
-         {
-            //fprintf(stderr, "Changed AMP to ADDR on line %d\n", pc->orig_line);
-            pc->type = CT_ADDR;
-         }
-      }
-
-      /* Detect a variable definition that starts with struct/enum/union */
-      if (((pc->flags & PCF_IN_TYPEDEF) == 0) &&
-          (prev->parent_type != CT_CPP_CAST) &&
-          ((prev->flags & PCF_IN_FCN_DEF) == 0) &&
-          ((pc->type == CT_STRUCT) ||
-           (pc->type == CT_UNION) ||
-           (pc->type == CT_ENUM)))
-      {
-         tmp = next;
-         if (tmp->type == CT_TYPE)
-         {
-            tmp = chunk_get_next_ncnl(tmp);
-         }
-         if ((tmp != NULL) && (tmp->type == CT_BRACE_OPEN))
-         {
-            tmp = chunk_skip_to_match(tmp);
-            tmp = chunk_get_next_ncnl(tmp);
-         }
-         if ((tmp != NULL) && (chunk_is_star(tmp) || (tmp->type == CT_WORD)))
-         {
-            mark_variable_definition(tmp);
-         }
-      }
-
-      /**
-       * Change the paren pair after a function/macrofunc.
-       * CT_PAREN_OPEN => CT_FPAREN_OPEN
-       */
-      if (pc->type == CT_MACRO_FUNC)
-      {
-         flag_parens(next, PCF_IN_FCN_CALL, CT_FPAREN_OPEN, CT_MACRO_FUNC, false);
-      }
-
-      if ((pc->type == CT_MACRO_OPEN) ||
-          (pc->type == CT_MACRO_ELSE) ||
-          (pc->type == CT_MACRO_CLOSE))
-      {
-         if (next->type == CT_PAREN_OPEN)
-         {
-            flag_parens(next, 0, CT_FPAREN_OPEN, pc->type, false);
-         }
-      }
-
-      /* Change CT_STAR to CT_PTR_TYPE or CT_ARITH or SYM_DEREF */
-      if (pc->type == CT_STAR)
-      {
-         if (chunk_is_paren_close(next))
-         {
-            pc->type = CT_PTR_TYPE;
-         }
-         else if ((prev->type == CT_SIZEOF) || (prev->type == CT_DELETE))
-         {
-            pc->type = CT_DEREF;
-         }
-         else if (((prev->type == CT_WORD) && chunk_ends_type(prev)) ||
-                  (prev->type == CT_DC_MEMBER))
-         {
-            pc->type = CT_PTR_TYPE;
-         }
-         else
-         {
-            /* most PCF_PUNCTUATOR chunks except a paren close would make this
-             * a deref. A paren close may end a cast.
-             */
-            pc->type = ((prev->flags & PCF_PUNCTUATOR) &&
-                        !chunk_is_paren_close(prev) &&
-                        (prev->type != CT_SQUARE_CLOSE) &&
-                        (prev->type != CT_DC_MEMBER)) ? CT_DEREF : CT_ARITH;
-         }
-      }
-
-      if (pc->type == CT_AMP)
-      {
-         if (prev->type == CT_DELETE)
-         {
-            pc->type = CT_DEREF;
-         }
-         else
-         {
-            pc->type = CT_ARITH;
-            if (prev->type == CT_WORD)
-            {
-               tmp = chunk_get_prev_ncnl(prev);
-               if ((tmp != NULL) &&
-                   (chunk_is_semicolon(tmp) ||
-                    (tmp->type == CT_BRACE_OPEN) ||
-                    (tmp->type == CT_QUALIFIER)))
-               {
-                  prev->type   = CT_TYPE;
-                  pc->type     = CT_ADDR;
-                  next->flags |= PCF_VAR_1ST;
-               }
-            }
-         }
-      }
-
-      if ((pc->type == CT_MINUS) ||
-          (pc->type == CT_PLUS))
-      {
-         if ((prev->type == CT_POS) || (prev->type == CT_NEG))
-         {
-            pc->type = (pc->type == CT_MINUS) ? CT_NEG : CT_POS;
-         }
-         else if (prev->type == CT_OC_CLASS)
-         {
-            pc->type = CT_NEG;
-         }
-         else
-         {
-            pc->type = CT_ARITH;
-         }
-      }
-
-      prev = pc;
-      pc   = next;
-      next = chunk_get_next_ncnl(next);
+      do_symbol_check(prev, pc, next);
+      pc = chunk_get_next_ncnl(pc);
    }
 
    pawn_add_virtual_semicolons();
