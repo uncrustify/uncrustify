@@ -67,7 +67,7 @@ chunk_t *chunk_get_prev(chunk_t *cur, chunk_nav_t nav)
       return(NULL);
    }
    chunk_t *pc = g_cl.GetPrev(cur);
-   if (nav == CNAV_ALL)
+   if ((pc == NULL) || (nav == CNAV_ALL))
    {
       return(pc);
    }
