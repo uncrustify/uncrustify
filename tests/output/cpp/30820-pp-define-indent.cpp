@@ -18,4 +18,18 @@ public:
     ...
 }
 
+{
+#if defined(WIN32)
+    SYSTEMTIME st;
+    DWORD ThreadId;
+#else
+    struct timeval mytv;
+    struct tm *mytm;
+    pid_t ProcessId;
+#endif
+
+#if SOME COND
+    (void)loop;
+#endif
+}
 
