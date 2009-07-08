@@ -207,7 +207,7 @@ static bool maybe_while_of_do(chunk_t *pc)
 static void push_fmr_pse(struct parse_frame *frm, chunk_t *pc,
                          brstage_e stage, const char *logtext)
 {
-   if (frm->pse_tos < (int)ARRAY_SIZE(frm->pse))
+   if (frm->pse_tos < ((int)ARRAY_SIZE(frm->pse) - 1))
    {
       frm->pse_tos++;
       frm->pse[frm->pse_tos].type  = pc->type;

@@ -261,7 +261,7 @@ static void indent_pse_push(struct parse_frame& frm, chunk_t *pc)
    static int ref = 0;
 
    /* check the stack depth */
-   if (frm.pse_tos < (int)ARRAY_SIZE(frm.pse))
+   if (frm.pse_tos < ((int)ARRAY_SIZE(frm.pse) - 1))
    {
       /* Bump up the index and initialize it */
       frm.pse_tos++;
