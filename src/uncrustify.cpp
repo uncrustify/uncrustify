@@ -649,6 +649,7 @@ static void process_source_list(const char *source_list,
                         NULL, no_backup, keep_mtime);
       }
    }
+   fclose(p_file);
 }
 
 
