@@ -1022,6 +1022,11 @@ static void do_source_file(const char *filename_in,
                  __func__, filename_tmp, strerror(errno), errno);
          cpd.error_count++;
          free(fm.data);
+         if ((filename_tmp != NULL) && (filename_tmp != filename_out))
+         {
+            delete [] (char *)filename_tmp;
+            filename_tmp = NULL;
+         }
          return;
       }
       did_open = true;
