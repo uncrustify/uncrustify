@@ -593,6 +593,8 @@ void register_options(void)
                   "Add or remove newline after each ',' in a function declaration");
    unc_add_option("nl_func_decl_end", UO_nl_func_decl_end, AT_IARF,
                   "Add or remove newline before the ')' in a function declaration");
+   unc_add_option("nl_func_decl_empty", UO_nl_func_decl_empty, AT_IARF,
+                  "Add or remove newline between '()' in a function declaration.");
    unc_add_option("nl_fdef_brace", UO_nl_fdef_brace, AT_IARF,
                   "Add or remove newline between function signature and '{'");
    unc_add_option("nl_after_return", UO_nl_after_return, AT_BOOL,

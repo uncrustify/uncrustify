@@ -1208,6 +1208,10 @@ static void newline_func_def(chunk_t *start)
    pc = chunk_get_next_ncnl(start);
    if (chunk_is_str(pc, ")", 1))
    {
+      if (cpd.settings[UO_nl_func_decl_empty].a != AV_IGNORE)
+      {
+         newline_iarf(start, cpd.settings[UO_nl_func_decl_empty].a);
+      }
       return;
    }
 
@@ -1233,7 +1237,7 @@ static void newline_func_def(chunk_t *start)
    /* and fix up the close paren */
    if ((prev != NULL) && (pc != NULL) && (pc->type == CT_FPAREN_CLOSE))
    {
-      prev = chunk_get_prev(pc);
+      prev = chunk_get_prev_nnl(pc);
       if (prev->type != CT_FPAREN_OPEN)
       {
          newline_iarf(prev, cpd.settings[UO_nl_func_decl_end].a);
@@ -1627,6 +1631,7 @@ void newlines_cleanup_braces(void)
              ((cpd.settings[UO_nl_func_decl_start].a != AV_IGNORE) ||
               (cpd.settings[UO_nl_func_decl_args].a != AV_IGNORE) ||
               (cpd.settings[UO_nl_func_decl_end].a != AV_IGNORE) ||
+              (cpd.settings[UO_nl_func_decl_empty].a != AV_IGNORE) ||
               (cpd.settings[UO_nl_func_type_name].a != AV_IGNORE) ||
               (cpd.settings[UO_nl_func_scope_name].a != AV_IGNORE) ||
               (cpd.settings[UO_nl_func_proto_type_name].a != AV_IGNORE) ||
