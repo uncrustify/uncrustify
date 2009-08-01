@@ -40,6 +40,9 @@
 30040 nl_class-r.cfg                   cpp/nl-class.h
 30041 nl_class-a.cfg                   cpp/nl-class.h
 
+30045 nl_func_decl_1.cfg               cpp/nl_func_decl.cpp
+30046 nl_func_decl_2.cfg               cpp/nl_func_decl.cpp
+
 30050 nl_namespace-r.cfg               cpp/nl-namespace.h
 30051 nl_namespace-a.cfg               cpp/nl-namespace.h
 
