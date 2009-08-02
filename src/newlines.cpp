@@ -1184,6 +1184,11 @@ static void newline_func_def(chunk_t *start)
       argval_t a = (tmp->parent_type == CT_FUNC_PROTO) ?
                    cpd.settings[UO_nl_func_proto_type_name].a :
                    cpd.settings[UO_nl_func_type_name].a;
+      if ((tmp->flags & PCF_IN_CLASS) &&
+          (cpd.settings[UO_nl_func_type_name_class].a != AV_IGNORE))
+      {
+         a = cpd.settings[UO_nl_func_type_name_class].a;
+      }
 
       if (a != AV_IGNORE)
       {
@@ -1633,6 +1638,7 @@ void newlines_cleanup_braces(void)
               (cpd.settings[UO_nl_func_decl_end].a != AV_IGNORE) ||
               (cpd.settings[UO_nl_func_decl_empty].a != AV_IGNORE) ||
               (cpd.settings[UO_nl_func_type_name].a != AV_IGNORE) ||
+              (cpd.settings[UO_nl_func_type_name_class].a != AV_IGNORE) ||
               (cpd.settings[UO_nl_func_scope_name].a != AV_IGNORE) ||
               (cpd.settings[UO_nl_func_proto_type_name].a != AV_IGNORE) ||
               (cpd.settings[UO_nl_func_paren].a != AV_IGNORE)))

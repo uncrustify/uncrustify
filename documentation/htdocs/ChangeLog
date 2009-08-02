@@ -13,6 +13,7 @@ Changes in uncrustify-0.54 (Not released)
  - Fix crash bug in chunk_get_prev() at the start of the file
  - Fix issue with #if COND followed by a cast on the next line
  - Add nl_func_decl_empty
+ - Add nl_func_type_name_class
 
 
 Changes in uncrustify-0.53 (16 May 2009)

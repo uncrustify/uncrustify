@@ -380,6 +380,7 @@ enum uncrustify_options
    UO_nl_func_decl_end,              // newline before the ')' in a function decl
    UO_nl_func_decl_empty,            // as above, but for empty parens '()'
    UO_nl_func_type_name,             // newline between return type and func name in def
+   UO_nl_func_type_name_class,       // newline between return type and func name in class
    UO_nl_func_scope_name,
    UO_nl_func_proto_type_name,       // nl_func_type_name, but for prottypes
    UO_nl_func_var_def_blk,           // newline after a block of variable defs
