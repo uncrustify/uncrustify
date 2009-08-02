@@ -22,3 +22,16 @@ operator+(const B& other)
 B foo(const B& other)
 {}
 
+class A
+{
+public:
+int aFunct() { return a; }
+int bFunc();
+};
+
+// Another file
+int
+A::bFunc()
+{
+// some code
+}

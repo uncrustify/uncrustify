@@ -130,6 +130,7 @@
 
 30840 nl_func_type_name_remove.cfg     cpp/nl_func_type_name.cpp
 30841 nl_func_type_name_force.cfg      cpp/nl_func_type_name.cpp
+30842 nl_func_type_name_class.cfg      cpp/nl_func_type_name.cpp
 
 30845 ben.cfg                          cpp/deref.cpp
 

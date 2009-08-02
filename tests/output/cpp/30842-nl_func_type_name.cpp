@@ -4,15 +4,13 @@
 //  two
 //   three
 void
-        foo(void);
+                              foo(void);
 
 struct A
 {
 public:
-	long_complicated_type
-	f();
-	A&
-	operator+(const A& other);
+	long_complicated_type f();
+	A&                    operator+(const A& other);
 };
 
 A&
@@ -33,12 +31,10 @@ foo(const B& other)
 class A
 {
 public:
-int
-aFunct() {
+int aFunct() {
 	return a;
 }
-int
-bFunc();
+int bFunc();
 };
 
 // Another file
