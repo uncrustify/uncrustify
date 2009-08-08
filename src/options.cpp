@@ -129,7 +129,7 @@ void register_options(void)
    unc_add_option("output_tab_size", UO_output_tab_size, AT_NUM,
                   "The size of tabs in the output (only used if align_with_tabs=true)", "", 1, 32);
    unc_add_option("string_escape_char", UO_string_escape_char, AT_NUM,
-                  "The ascii value of the string escape char, usually 92 (\\) or 94 (^). (Pawn)", "", 0, 255);
+                  "The ASCII value of the string escape char, usually 92 (\\) or 94 (^). (Pawn)", "", 0, 255);
    unc_add_option("string_escape_char2", UO_string_escape_char2, AT_NUM,
                   "Alternate string escape char for Pawn. Only works right before the quote char.", "", 0, 255);
 
@@ -224,13 +224,13 @@ void register_options(void)
    unc_add_option("sp_before_semi_for", UO_sp_before_semi_for, AT_IARF,
                   "Add or remove space before ';' in non-empty 'for' statements");
    unc_add_option("sp_before_semi_for_empty", UO_sp_before_semi_for_empty, AT_IARF,
-                  "Add or remove space before a semicolon of an empty part of a for statment.");
+                  "Add or remove space before a semicolon of an empty part of a for statement.");
    unc_add_option("sp_after_semi", UO_sp_after_semi, AT_IARF,
                   "Add or remove space after ';', except when followed by a comment. Default=Add");
    unc_add_option("sp_after_semi_for", UO_sp_after_semi_for, AT_IARF,
                   "Add or remove space after ';' in non-empty 'for' statements. Default=Force");
    unc_add_option("sp_after_semi_for_empty", UO_sp_after_semi_for_empty, AT_IARF,
-                  "Add or remove space after the final semicolon of an empty part of a for statment: for ( ; ; <here> ).");
+                  "Add or remove space after the final semicolon of an empty part of a for statement: for ( ; ; <here> ).");
    unc_add_option("sp_before_square", UO_sp_before_square, AT_IARF,
                   "Add or remove space before '[' (except '[]')");
    unc_add_option("sp_before_squares", UO_sp_before_squares, AT_IARF,
@@ -252,11 +252,11 @@ void register_options(void)
    unc_add_option("sp_after_operator_sym", UO_sp_after_operator_sym, AT_IARF,
                   "Add or remove space between the operator symbol and the open paren, as in 'operator ++('");
    unc_add_option("sp_after_cast", UO_sp_after_cast, AT_IARF,
-                  "Add or remove space after C/D cast, ie 'cast(int)a' vs 'cast(int) a' or '(int)a' vs '(int) a'");
+                  "Add or remove space after C/D cast, i.e. 'cast(int)a' vs 'cast(int) a' or '(int)a' vs '(int) a'");
    unc_add_option("sp_inside_paren_cast", UO_sp_inside_paren_cast, AT_IARF,
                   "Add or remove spaces inside cast parens");
    unc_add_option("sp_cpp_cast_paren", UO_sp_cpp_cast_paren, AT_IARF,
-                  "Add or remove space between the type and open paren in a C++ cast, ie 'int(exp)' vs 'int (exp)'");
+                  "Add or remove space between the type and open paren in a C++ cast, i.e. 'int(exp)' vs 'int (exp)'");
    unc_add_option("sp_sizeof_paren", UO_sp_sizeof_paren, AT_IARF,
                   "Add or remove space between 'sizeof' and '('");
    unc_add_option("sp_after_tag", UO_sp_after_tag, AT_IARF,
@@ -398,7 +398,7 @@ void register_options(void)
    unc_add_option("indent_braces_no_func", UO_indent_braces_no_func, AT_BOOL,
                   "Disabled indenting function braces if indent_braces is true");
    unc_add_option("indent_brace_parent", UO_indent_brace_parent, AT_BOOL,
-                  "Indent based on the size of the brace parent, ie 'if' => 3 spaces, 'for' => 4 spaces, etc.");
+                  "Indent based on the size of the brace parent, i.e. 'if' => 3 spaces, 'for' => 4 spaces, etc.");
    unc_add_option("indent_namespace", UO_indent_namespace, AT_BOOL,
                   "Whether the 'namespace' body is indented");
    unc_add_option("indent_extern", UO_indent_extern, AT_BOOL,
@@ -735,7 +735,7 @@ void register_options(void)
    unc_add_option("align_keep_tabs", UO_align_keep_tabs, AT_BOOL,
                   "Whether to keep non-indenting tabs");
    unc_add_option("align_with_tabs", UO_align_with_tabs, AT_BOOL,
-                  "Whether to use tabs for alinging");
+                  "Whether to use tabs for aligning");
    unc_add_option("align_on_tabstop", UO_align_on_tabstop, AT_BOOL,
                   "Whether to bump out to the next tab when aligning");
    unc_add_option("align_number_left", UO_align_number_left, AT_BOOL,
@@ -794,12 +794,12 @@ void register_options(void)
                   "2: align the function type name with the other type names");
    unc_add_option("align_typedef_star_style", UO_align_typedef_star_style, AT_NUM,
                   "Controls the positioning of the '*' in typedefs. Just try it.\n"
-                  "0: Align on typdef type, ignore '*'\n"
+                  "0: Align on typedef type, ignore '*'\n"
                   "1: The '*' is part of type name: typedef int  *pint;\n"
                   "2: The '*' is part of the type, but dangling: typedef int *pint;", "", 0, 2);
    unc_add_option("align_typedef_amp_style", UO_align_typedef_amp_style, AT_NUM,
                   "Controls the positioning of the '&' in typedefs. Just try it.\n"
-                  "0: Align on typdef type, ignore '&'\n"
+                  "0: Align on typedef type, ignore '&'\n"
                   "1: The '&' is part of type name: typedef int  &pint;\n"
                   "2: The '&' is part of the type, but dangling: typedef int &pint;", "", 0, 2);
 
@@ -876,17 +876,17 @@ void register_options(void)
 
    unc_add_option("cmt_insert_file_header", UO_cmt_insert_file_header, AT_STRING,
                   "The filename that contains text to insert at the head of a file if the file doesn't start with a C/C++ comment.\n"
-                  "Will substitue $(filename) with the current file's name.");
+                  "Will substitute $(filename) with the current file's name.");
    unc_add_option("cmt_insert_file_footer", UO_cmt_insert_file_footer, AT_STRING,
                   "The filename that contains text to insert at the end of a file if the file doesn't end with a C/C++ comment.\n"
-                  "Will substitue $(filename) with the current file's name.");
+                  "Will substitute $(filename) with the current file's name.");
    unc_add_option("cmt_insert_func_header", UO_cmt_insert_func_header, AT_STRING,
-                  "The filename that contains text to insert before a function implementation if the function isn't preceeded with a C/C++ comment.\n"
-                  "Will substitue $(function) with the function name and $(javaparam) with the javadoc @param and @return stuff.\n"
+                  "The filename that contains text to insert before a function implementation if the function isn't preceded with a C/C++ comment.\n"
+                  "Will substitute $(function) with the function name and $(javaparam) with the javadoc @param and @return stuff.\n"
                   "Will also substitute $(fclass) with the class name: void CFoo::Bar() { ... }");
    unc_add_option("cmt_insert_class_header", UO_cmt_insert_class_header, AT_STRING,
-                  "The filename that contains text to insert before a class if the class isn't preceeded with a C/C++ comment.\n"
-                  "Will substitue $(class) with the class name.");
+                  "The filename that contains text to insert before a class if the class isn't preceded with a C/C++ comment.\n"
+                  "Will substitute $(class) with the class name.");
    unc_add_option("cmt_insert_before_preproc", UO_cmt_insert_before_preproc, AT_BOOL,
                   "If a preprocessor is encountered when stepping backwards from a function name, then\n"
                   "this option decides whether the comment should be inserted.\n"
@@ -898,7 +898,7 @@ void register_options(void)
    unc_add_option("mod_full_brace_for", UO_mod_full_brace_for, AT_IARF,
                   "Add or remove braces on single-line 'for' statement");
    unc_add_option("mod_full_brace_function", UO_mod_full_brace_function, AT_IARF,
-                  "Add or remove braces on single-line function defintions. (Pawn)");
+                  "Add or remove braces on single-line function definitions. (Pawn)");
    unc_add_option("mod_full_brace_if", UO_mod_full_brace_if, AT_IARF,
                   "Add or remove braces on single-line 'if' statement. Will not remove the braces if they contain an 'else'.");
    unc_add_option("mod_full_brace_nl", UO_mod_full_brace_nl, AT_NUM,
@@ -1530,7 +1530,7 @@ void print_options(FILE *pfile, bool verbose)
 /**
  * Sets non-zero settings defaults
  *
- * TODO: select from various sets? - ie, K&R, GNU, Linux, Ben
+ * TODO: select from various sets? - i.e., K&R, GNU, Linux, Ben
  */
 void set_option_defaults(void)
 {
