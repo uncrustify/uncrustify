@@ -584,7 +584,7 @@ static chunk_t *get_next_class(chunk_t *pc)
  * Adds the javadoc-style @param and @return stuff, based on the params and
  * return value for pc.
  * If the arg list is '()' or '(void)', then no @params are added.
- * Likewise, if the reutrn value is 'void', then no @return is added.
+ * Likewise, if the return value is 'void', then no @return is added.
  */
 static void add_comment_javaparam(chunk_t *pc, cmt_reflow& cmt)
 {
@@ -1168,7 +1168,7 @@ static void output_comment_multi(chunk_t *pc)
 
             if (line_len == 0)
             {
-               /* Emtpy line - just a '\n' */
+               /* Empty line - just a '\n' */
                if (cpd.settings[UO_cmt_star_cont].b)
                {
                   output_indent(cmt_col + xtra + cpd.settings[UO_cmt_sp_before_star_cont].n,
