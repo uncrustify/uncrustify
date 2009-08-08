@@ -26,6 +26,7 @@ struct cmt_reflow
    int        word_count;  /* number of words on this line */
    bool       kw_subst;    /* do keyword substitution */
    const char *cont_text;  /* fixed text to output at the start of the line (3-chars) */
+   bool       reflow;      /* reflow the current line */
 };
 
 
@@ -762,11 +763,18 @@ static void add_comment_text(const char *text, int len,
       }
 
       /* Split the comment */
-      if ((text[idx] == '\n') ||
-          ((text[idx] == ' ') &&
-           (cpd.settings[UO_cmt_width].n > 0) &&
-           ((cpd.column > cpd.settings[UO_cmt_width].n) ||
-            next_word_exceeds_limit(text + idx))))
+      if (text[idx] == '\n')
+      {
+         in_word = false;
+         add_char('\n');
+         output_indent(cmt.column, cmt.br_column);
+         add_text(cmt.cont_text);
+      }
+      else if (cmt.reflow &&
+               (text[idx] == ' ') &&
+               (cpd.settings[UO_cmt_width].n > 0) &&
+               ((cpd.column > cpd.settings[UO_cmt_width].n) ||
+                next_word_exceeds_limit(text + idx)))
       {
          in_word = false;
          add_char('\n');
@@ -877,6 +885,7 @@ static bool can_combine_comment(chunk_t *pc, cmt_reflow& cmt)
 static chunk_t *output_comment_c(chunk_t *first)
 {
    cmt_reflow cmt;
+   cmt.reflow = (cpd.settings[UO_cmt_reflow_mode].n != 1);
 
    output_cmt_start(cmt, first);
 
@@ -923,6 +932,7 @@ static chunk_t *output_comment_c(chunk_t *first)
 static chunk_t *output_comment_cpp(chunk_t *first)
 {
    cmt_reflow cmt;
+   cmt.reflow = (cpd.settings[UO_cmt_reflow_mode].n != 1);
 
    output_cmt_start(cmt, first);
 
@@ -1027,16 +1037,17 @@ static void output_comment_multi(chunk_t *pc)
    int        remaining;
    char       ch;
    chunk_t    *prev;
-   char       line[1024];
+   char       *line;
    int        line_len;
    int        line_count = 0;
    int        ccol;
    int        col_diff = 0;
    int        xtra     = 1;
-   char       lead[5];
+   char       lead[80];
    bool       nl_end = false;
 
    cmt_reflow cmt;
+   cmt.reflow = (cpd.settings[UO_cmt_reflow_mode].n != 1);
 
    output_cmt_start(cmt, pc);
    cmt.cont_text = !cpd.settings[UO_cmt_indent_multi].b ? "" :
@@ -1063,6 +1074,7 @@ static void output_comment_multi(chunk_t *pc)
    line_len      = 0;
    cmt.column    = ccol;
    cmt.br_column = ccol;
+   line          = new char[remaining + 1024];
    while (remaining > 0)
    {
       ch = *cmt_str;
@@ -1097,6 +1109,106 @@ static void output_comment_multi(chunk_t *pc)
          else
          {
             //LOG_FMT(LSYS, "%d] Text starts in col %d\n", line_count, ccol);
+         }
+      }
+
+      /*
+       * Now see if we need/must fold the next line with the current to enable full reflow
+       */
+      if ((cpd.settings[UO_cmt_reflow_mode].n == 2) &&
+          (ch == '\n') &&
+          (remaining > 0))
+      {
+         int nxt_len = 0;
+         int next_nonempty_line = -1;
+         int prev_nonempty_line = -1;
+         int nwidx = line_len;
+         bool star_is_bullet = false;
+
+         /* strip trailing whitespace from the line collected so far */
+         line[nwidx] = 0; // sentinel
+         while (nwidx > 0)
+         {
+            nwidx--;
+            if ((prev_nonempty_line < 0) &&
+                !unc_isspace(line[nwidx]) &&
+                (line[nwidx] != '*') && // block comment: skip '*' at end of line
+                ((pc->flags & PCF_IN_PREPROC)
+                 ? (line[nwidx] != '\\') ||
+                 ((line[nwidx + 1] != 'r') &&
+                  (line[nwidx + 1] != '\n'))
+                 : true))
+            {
+               prev_nonempty_line = nwidx; // last nonwhitespace char in the previous line
+            }
+         }
+
+         for (nxt_len = 0;
+              (nxt_len <= remaining) &&
+              (cmt_str[nxt_len] != 'r') &&
+              (cmt_str[nxt_len] != '\n');
+              nxt_len++)
+         {
+            if ((next_nonempty_line < 0) &&
+                !unc_isspace(cmt_str[nxt_len]) &&
+                (cmt_str[nxt_len] != '*') &&
+                ((nxt_len == remaining) ||
+                 ((pc->flags & PCF_IN_PREPROC)
+                  ? (cmt_str[nxt_len] != '\\') ||
+                  ((cmt_str[nxt_len+1] != 'r') &&
+                   (cmt_str[nxt_len+1] != '\n'))
+                  : true)))
+            {
+               next_nonempty_line = nxt_len; // first nonwhitespace char in the next line
+            }
+         }
+
+         /*
+          * see if we should fold up; usually that'd be a YES, but there are a few
+          * situations where folding/reflowing by merging lines is frowned upon:
+          *
+          * - ASCII art in the comments (most often, these are drawings done in +-\/|.,*)
+          *
+          * - Doxygen/JavaDoc/etc. parameters: these often start with \ or @, at least
+          *   something clearly non-alphanumeric (you see where we're going with this?)
+          *
+          * - bullet lists that are closely spaced: bullets are always non-alphanumeric
+          *   characters, such as '-' or '+' (or, oh horor, '*' - that's bloody ambiguous
+          *   to parse :-( ... with or without '*' comment start prefix, that's the
+          *   question, then.)
+          *
+          * - semi-HTML formatted code, e.g. <pre>...</pre> comment sections (NDoc, etc.)
+          *
+          * - New lines which form a new paragraph without there having been added an
+          *   extra empty line between the last sentence and the new one.
+          *   A bit like this, really; so it is opportune to check if the last line ended
+          *   in a terminal (that would be the set '.:;!?') and the new line starts with
+          *   a capital.
+          *   Though new lines starting with comment delimiters, such as '(', should be
+          *   pulled up.
+          *
+          * So it bores down to this: the only folding (& reflowing) that's going to happen
+          * is when the next line starts with an alphanumeric character AND the last
+          * line didn't end with an non-alphanumeric character, except: ',' AND the next
+          * line didn't start with a '*' all of a sudden while the previous one didn't
+          * (the ambiguous '*'-for-bullet case!)
+          */
+         if (prev_nonempty_line >= 0 && next_nonempty_line >= 0 &&
+             (((unc_isalnum(line[prev_nonempty_line]) ||
+                strchr(",)]", line[prev_nonempty_line])) &&
+               (unc_isalnum(cmt_str[next_nonempty_line]) ||
+                strchr("([", cmt_str[next_nonempty_line]))) ||
+              (('.' == line[prev_nonempty_line]) &&    // dot followed by non-capital is NOT a new sentence start
+               unc_isupper(cmt_str[next_nonempty_line]))) &&
+             !star_is_bullet)
+         {
+            // rewind the line to the last non-alpha:
+            line_len = prev_nonempty_line + 1;
+            // roll the current line forward to the first non-alpha:
+            cmt_str += next_nonempty_line;
+            remaining -= next_nonempty_line;
+            // override the NL and make it a single whitespace:
+            ch = ' ';
          }
       }
 
@@ -1211,9 +1323,14 @@ static void output_comment_multi(chunk_t *pc)
                   {
                      lead[idx++] = ' ';
                   }
-                  while ((idx < 3) && !unc_isspace(line[sidx]))
+                  /* keep the indentation of the start of the line intact when folding/reflowing. */
+                  while ((idx < int(sizeof(lead) - 1)) && !unc_isspace(line[sidx]))
                   {
                      lead[idx++] = line[sidx++];
+                  }
+                  for (sidx = 0; sidx < cpd.settings[UO_cmt_sp_after_star_cont].n; sidx++)
+                  {
+                     lead[idx++] = ' ';
                   }
                   lead[idx]     = 0;
                   cmt.cont_text = lead;
@@ -1230,6 +1347,7 @@ static void output_comment_multi(chunk_t *pc)
          ccol     = 1;
       }
    }
+   delete[] line;
 }
 
 

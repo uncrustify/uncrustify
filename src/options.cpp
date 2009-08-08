@@ -846,6 +846,11 @@ void register_options(void)
    unc_begin_group(UG_comment, "Comment modifications");
    unc_add_option("cmt_width", UO_cmt_width, AT_NUM,
                   "Try to wrap comments at cmt_width columns", "", 16, 256);
+   unc_add_option("cmt_reflow_mode", UO_cmt_reflow_mode, AT_NUM,
+                  "Set the comment reflow mode (default: 0)\n"
+                  "0: no reflowing (apart from the line wrapping due to cmt_width)\n"
+                  "1: no touching at all\n"
+                  "2: full reflow\n", "", 0, 2);
    unc_add_option("cmt_indent_multi", UO_cmt_indent_multi, AT_BOOL,
                   "If false, disable all multi-line comment changes, including cmt_width and leading chars.\n"
                   "Default is true.");

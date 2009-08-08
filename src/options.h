@@ -526,6 +526,7 @@ enum uncrustify_options
     */
 
    UO_cmt_width,                // column to wrap comments
+   UO_cmt_reflow_mode,          // comment reflow style
    UO_cmt_indent_multi,         // change left indent of multiline comments
    UO_cmt_star_cont,            // put a star on subsequent comment lines
    UO_cmt_sp_before_star_cont,  // # of spaces for subsequent comment lines (before possible star)
