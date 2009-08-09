@@ -746,10 +746,11 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       else
       {
          /* most PCF_PUNCTUATOR chunks except a paren close would make this
-          * a deref. A paren close may end a cast.
+          * a deref. A paren close may end a cast or may be part of a macro fcn.
           */
          pc->type = ((prev->flags & PCF_PUNCTUATOR) &&
-                     !chunk_is_paren_close(prev) &&
+                     (!chunk_is_paren_close(prev) ||
+                      (prev->parent_type == CT_MACRO_FUNC)) &&
                      (prev->type != CT_SQUARE_CLOSE) &&
                      (prev->type != CT_DC_MEMBER)) ? CT_DEREF : CT_ARITH;
       }
