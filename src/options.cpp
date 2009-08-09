@@ -906,6 +906,9 @@ void register_options(void)
                   "Add or remove braces on single-line function definitions. (Pawn)");
    unc_add_option("mod_full_brace_if", UO_mod_full_brace_if, AT_IARF,
                   "Add or remove braces on single-line 'if' statement. Will not remove the braces if they contain an 'else'.");
+   unc_add_option("mod_full_brace_if_chain", UO_mod_full_brace_if_chain, AT_BOOL,
+                  "Make all if/elseif/else statements in a chain be braced or not. Overrides mod_full_brace_if.\n"
+                  "If any must be braced, they are all braced.  If all can be unbraced, then the braces are removed.");
    unc_add_option("mod_full_brace_nl", UO_mod_full_brace_nl, AT_NUM,
                   "Don't remove braces around statements that span N newlines", "", 0, 5000);
    unc_add_option("mod_full_brace_while", UO_mod_full_brace_while, AT_IARF,

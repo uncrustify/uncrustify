@@ -502,6 +502,7 @@ enum uncrustify_options
    UO_mod_paren_on_return,        // add or remove paren on return
    UO_mod_full_brace_nl,          // max number of newlines to span w/o braces
    UO_mod_full_brace_if,          // add or remove braces on if
+   UO_mod_full_brace_if_chain,
    UO_mod_full_brace_for,         // add or remove braces on for
    UO_mod_full_brace_do,          // add or remove braces on do
    UO_mod_full_brace_while,       // add or remove braces on while

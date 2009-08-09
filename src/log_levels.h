@@ -89,6 +89,7 @@ enum
    LRMRETURN = 73,    /* remove 'return;' */
    LPPIF     = 74,    /* #if/#else/#endif pair processing */
    LMCB      = 75,    /* mod_case_brace */
+   LBRCH     = 76,    /* if brace chain */
 };
 
 #endif   /* LOG_LEVELS_H_INCLUDED */
