@@ -1198,6 +1198,7 @@ static void newline_func_def(chunk_t *start)
          while ((prev != NULL) && (prev->type == CT_DC_MEMBER))
          {
             prev = chunk_get_prev_ncnl(prev);
+            prev = skip_template_prev(prev);
             prev = chunk_get_prev_ncnl(prev);
          }
 
