@@ -80,7 +80,7 @@ static chunk_t *flag_parens(chunk_t *po, UINT32 flags,
    chunk_t *paren_close;
    chunk_t *pc;
 
-   paren_close = chunk_skip_to_match(po);
+   paren_close = chunk_skip_to_match(po, CNAV_PREPROC);
    if (paren_close == NULL)
    {
       LOG_FMT(LERR, "%s: no match for [%.*s] at  [%d:%d]\n",
@@ -93,7 +93,9 @@ static chunk_t *flag_parens(chunk_t *po, UINT32 flags,
       if ((flags != 0) ||
           (parent_all && (parenttype != CT_NONE)))
       {
-         for (pc = chunk_get_next(po); pc != paren_close; pc = chunk_get_next(pc))
+         for (pc = chunk_get_next(po, CNAV_PREPROC);
+              pc != paren_close;
+              pc = chunk_get_next(pc, CNAV_PREPROC))
          {
             pc->flags |= flags;
             if (parent_all)
@@ -115,7 +117,7 @@ static chunk_t *flag_parens(chunk_t *po, UINT32 flags,
          paren_close->parent_type = parenttype;
       }
    }
-   return(chunk_get_next_ncnl(paren_close));
+   return(chunk_get_next_ncnl(paren_close, CNAV_PREPROC));
 }
 
 
@@ -132,13 +134,13 @@ chunk_t *set_paren_parent(chunk_t *start, c_token_t parent)
 {
    chunk_t *end;
 
-   end = chunk_get_next_type(start, (c_token_t)(start->type + 1), start->level);
+   end = chunk_get_next_type(start, (c_token_t)(start->type + 1), start->level, CNAV_PREPROC);
    if (end != NULL)
    {
       start->parent_type = parent;
       end->parent_type   = parent;
    }
-   return(chunk_get_next_ncnl(end));
+   return(chunk_get_next_ncnl(end, CNAV_PREPROC));
 }
 
 
