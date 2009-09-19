@@ -12,13 +12,13 @@
 #ifndef BASE_TYPES_H_INCLUDED
 #define BASE_TYPES_H_INCLUDED
 
-#include "config.h"
-
 #ifdef WIN32
 
 #include "windows_compat.h"
 
 #else /* not WIN32 */
+
+#include "config.h"
 
 #define PATH_SEP    '/'
 

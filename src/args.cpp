@@ -100,11 +100,11 @@ const char *Args::Params(const char *token, int& index)
       return(NULL);
    }
 
-   token_len = strlen(token);
+   token_len = (int)strlen(token);
 
    for (idx = index; idx < m_count; idx++)
    {
-      arg_len = strlen(m_values[idx]);
+      arg_len = (int)strlen(m_values[idx]);
 
       if ((arg_len >= token_len) &&
           (memcmp(token, m_values[idx], token_len) == 0))

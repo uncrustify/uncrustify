@@ -183,8 +183,7 @@ static void output_indent(int column, int brace_col)
       }
 
       /* tab out as far as possible and then use spaces */
-      int nc;
-      while ((nc = next_tab_column(cpd.column)) <= brace_col)
+      while (next_tab_column(cpd.column) <= brace_col)
       {
          add_text("\t");
       }
