@@ -47,3 +47,9 @@ A::bFunc()
 {
 // some code
 }
+
+template<typename T>
+typename Foo<T>::Type
+Foo<T>::Func()
+{
+}
