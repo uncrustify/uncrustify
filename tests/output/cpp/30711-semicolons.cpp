@@ -81,3 +81,18 @@ void f () {
 }
 };
 
+namespace N
+{
+class C
+{
+#define NOP(x) { \
+}
+};
+}
+
+namespace N
+{
+class C
+{
+};
+}
