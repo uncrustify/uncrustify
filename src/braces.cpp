@@ -767,7 +767,7 @@ static chunk_t *mod_case_brace_remove(chunk_t *br_open)
 {
    chunk_t *pc;
    chunk_t *br_close;
-   chunk_t *next = chunk_get_next_ncnl(br_open);
+   chunk_t *next = chunk_get_next_ncnl(br_open, CNAV_PREPROC);
 
    LOG_FMT(LMCB, "%s: line %d", __func__, br_open->orig_line);
 
@@ -780,7 +780,7 @@ static chunk_t *mod_case_brace_remove(chunk_t *br_open)
    }
 
    /* Make sure 'break', 'return', 'goto', 'case' or '}' is after the close brace */
-   pc = chunk_get_next_ncnl(br_close);
+   pc = chunk_get_next_ncnl(br_close, CNAV_PREPROC);
    if ((pc == NULL) ||
        ((pc->type != CT_BREAK) &&
         (pc->type != CT_RETURN) &&
@@ -810,10 +810,10 @@ static chunk_t *mod_case_brace_remove(chunk_t *br_open)
       pc->brace_level--;
       pc->level--;
    }
-   next = chunk_get_prev(br_open);
+   next = chunk_get_prev(br_open, CNAV_PREPROC);
    chunk_del(br_open);
    chunk_del(br_close);
-   return(chunk_get_next(next));
+   return(chunk_get_next(next, CNAV_PREPROC));
 }
 
 /**
@@ -823,7 +823,7 @@ static chunk_t *mod_case_brace_add(chunk_t *cl_colon)
 {
    chunk_t *pc   = cl_colon;
    chunk_t *last = NULL;
-   chunk_t *next = chunk_get_next_ncnl(cl_colon);
+   chunk_t *next = chunk_get_next_ncnl(cl_colon, CNAV_PREPROC);
    chunk_t *br_open;
    chunk_t *br_close;
    chunk_t chunk;
@@ -920,7 +920,7 @@ static void mod_case_brace(void)
       }
       else
       {
-         pc = chunk_get_next_ncnl(pc);
+         pc = chunk_get_next_ncnl(pc, CNAV_PREPROC);
       }
    }
 }
