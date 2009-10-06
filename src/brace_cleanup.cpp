@@ -594,6 +594,7 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
    /* Mark expression starts */
    if ((pc->type == CT_ARITH) ||
        (pc->type == CT_ASSIGN) ||
+       (pc->type == CT_CASE) ||
        (pc->type == CT_COMPARE) ||
        (pc->type == CT_STAR) ||
        (pc->type == CT_BOOL) ||
