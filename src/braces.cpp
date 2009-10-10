@@ -512,6 +512,17 @@ static void convert_vbrace(chunk_t *vbr)
       vbr->type = CT_BRACE_OPEN;
       vbr->len  = 1;
       vbr->str  = "{";
+
+      /* If the next chunk is a preprocessor, then move the open brace after the
+       * preprocessor.
+       */
+      chunk_t *tmp = chunk_get_next(vbr);
+      if ((tmp != NULL) && (tmp->type == CT_PREPROC))
+      {
+         tmp = chunk_get_next(vbr, CNAV_PREPROC);
+         chunk_move_after(vbr, tmp);
+         newline_add_after(vbr);
+      }
    }
    else if (vbr->type == CT_VBRACE_CLOSE)
    {
