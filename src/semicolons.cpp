@@ -58,6 +58,7 @@ void remove_extra_semicolons(void)
 
          if ((prev->type == CT_BRACE_CLOSE) &&
              ((prev->parent_type == CT_IF) ||
+              (prev->parent_type == CT_ELSEIF) ||
               (prev->parent_type == CT_ELSE) ||
               (prev->parent_type == CT_SWITCH) ||
               (prev->parent_type == CT_WHILE) ||
