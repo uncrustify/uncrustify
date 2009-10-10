@@ -29,6 +29,7 @@ Changes in uncrustify-0.54 (Not released)
  - Allow any number of spaces between multi-line comments when combining them
  - Add pos_compare
  - Add pos_conditional
+ - Fix indent_relative_single_line_comments
 
 
 Changes in uncrustify-0.53 (16 May 2009)

@@ -130,6 +130,12 @@ void indent_to_column(chunk_t *pc, int column)
    reindent_line(pc, column);
 }
 
+enum align_mode
+{
+   ALMODE_SHIFT,     /* shift relative to the current column */
+   ALMODE_KEEP_ABS,  /* try to keep the original absolute column */
+   ALMODE_KEEP_REL,  /* try to keep the original gap */
+};
 
 /* Same as indent_to_column, except we can move both ways */
 void align_to_column(chunk_t *pc, int column)
@@ -139,51 +145,69 @@ void align_to_column(chunk_t *pc, int column)
       return;
    }
 
-   int col_delta;
-   int min_col;
-
    LOG_FMT(LINDLINE, "%s: %d] col %d on %.*s [%s] => %d\n",
            __func__, pc->orig_line, pc->column, pc->len, pc->str,
            get_token_name(pc->type), column);
 
-   col_delta  = column - pc->column;
-   pc->column = column;
-   min_col    = column;
+   int col_delta = column - pc->column;
+   int min_col   = column;
+   int min_delta;
 
+   pc->column = column;
    do
    {
-      chunk_t *next = chunk_get_next(pc);
+      chunk_t    *next = chunk_get_next(pc);
+      chunk_t    *prev;
+      align_mode almod = ALMODE_SHIFT;
 
       if (next == NULL)
       {
          break;
       }
-      min_col += space_col_align(pc, next);
-      pc       = next;
-      bool is_comment = chunk_is_comment(pc);
-      bool keep       = is_comment && chunk_is_single_line_comment(pc) &&
-                        cpd.settings[UO_indent_relative_single_line_comments].b;
+      min_delta = space_col_align(pc, next);
+      min_col  += min_delta;
+      prev      = pc;
+      pc        = next;
 
-      if (is_comment && (pc->parent_type != CT_COMMENT_EMBED) && !keep)
+      if (chunk_is_comment(pc) && (pc->parent_type != CT_COMMENT_EMBED))
       {
+         almod = (chunk_is_single_line_comment(pc) &&
+                  cpd.settings[UO_indent_relative_single_line_comments].b) ?
+                 ALMODE_KEEP_REL : ALMODE_KEEP_ABS;
+      }
+
+      if (almod == ALMODE_KEEP_ABS)
+      {
+         /* Keep same absolute column */
          pc->column = pc->orig_col;
          if (pc->column < min_col)
          {
-            pc->column = min_col; // + 1;
+            pc->column = min_col;
          }
-         LOG_FMT(LINDLINE, "%s: set comment on line %d to col %d (orig %d)\n",
-                 __func__, pc->orig_line, pc->column, pc->orig_col);
       }
-      else
+      else if (almod == ALMODE_KEEP_REL)
       {
+         /* Keep same relative column */
+         int orig_delta = pc->orig_col - prev->orig_col;
+         if (orig_delta < min_delta)
+         {
+            orig_delta = min_delta;
+         }
+         pc->column = prev->column + orig_delta;
+      }
+      else /* ALMODE_SHIFT */
+      {
+         /* Shift by the same amount */
          pc->column += col_delta;
          if (pc->column < min_col)
          {
             pc->column = min_col;
          }
-         LOG_FMT(LINDLINED, "   set column of '%.*s' to %d (orig %d)\n",
-                 pc->len, pc->str, pc->column, pc->orig_col);
       }
+      LOG_FMT(LINDLINED, "   %s set column of %s on line %d to col %d (orig %d)\n",
+              (almod == ALMODE_KEEP_ABS) ? "abs" :
+              (almod == ALMODE_KEEP_REL) ? "rel" : "sft",
+              get_token_name(pc->type), pc->orig_line, pc->column, pc->orig_col);
    } while ((pc != NULL) && (pc->nl_count == 0));
 }
 
@@ -196,9 +220,6 @@ void align_to_column(chunk_t *pc, int column)
  */
 void reindent_line2(chunk_t *pc, int column, const char *fcn_name, int lineno)
 {
-   int col_delta;
-   int min_col;
-
    LOG_FMT(LINDLINE, "%s: %d] col %d on %.*s [%s] => %d <called from '%s' line %d\n",
            __func__, pc->orig_line, pc->column, pc->len, pc->str,
            get_token_name(pc->type), column, fcn_name, lineno);
@@ -207,10 +228,11 @@ void reindent_line2(chunk_t *pc, int column, const char *fcn_name, int lineno)
    {
       return;
    }
-   col_delta  = column - pc->column;
-   pc->column = column;
-   min_col    = column;
 
+   int col_delta = column - pc->column;
+   int min_col   = column;
+
+   pc->column = column;
    do
    {
       chunk_t *next = chunk_get_next(pc);
