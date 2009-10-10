@@ -1,5 +1,6 @@
 #include <list>
 #include <map>
+#include <vector>
 
 class MyClass
 {
@@ -151,4 +152,7 @@ struct X { template<class U>
 template<class T>
 class Y { template<class V>
           void f(V); };
+
+void (* foobar)(void) = NULL;
+std::vector<void (*)(void)> functions;
 
