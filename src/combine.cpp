@@ -595,7 +595,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
     * Note that typedefs are already taken care of.
     */
    if ((next != NULL) &&
-       ((pc->flags & PCF_IN_TYPEDEF) == 0) &&
+       ((pc->flags & (PCF_IN_TYPEDEF | PCF_IN_TEMPLATE)) == 0) &&
        (pc->parent_type != CT_CPP_CAST) &&
        (pc->parent_type != CT_C_CAST) &&
        ((pc->flags & PCF_IN_PREPROC) == 0) &&
@@ -2367,19 +2367,38 @@ static void mark_function(chunk_t *pc)
                 (tmp1->type == CT_DC_MEMBER)));
 
       tmp2 = chunk_get_next_ncnl(tmp1);
-      tmp3 = chunk_get_next_ncnl(tmp2);
+      if (chunk_is_str(tmp2, ")", 1))
+      {
+         tmp3 = tmp2;
+         tmp2 = NULL;
+      }
+      else
+      {
+         tmp3 = chunk_get_next_ncnl(tmp2);
+      }
 
       if (chunk_is_str(tmp3, ")", 1) &&
           chunk_is_star(tmp1) &&
-          (tmp2->type == CT_WORD))
+          ((tmp2 == NULL) || (tmp2->type == CT_WORD)))
       {
-         LOG_FMT(LFCN, "%s: [%d/%d] function variable [%.*s], changing [%.*s] into a type\n",
-                 __func__, pc->orig_line, pc->orig_col, tmp2->len, tmp2->str, pc->len, pc->str);
+         if (tmp2 != NULL)
+         {
+            LOG_FMT(LFCN, "%s: [%d/%d] function variable [%.*s], changing [%.*s] into a type\n",
+                    __func__, pc->orig_line, pc->orig_col, tmp2->len, tmp2->str, pc->len, pc->str);
+         }
+         else
+         {
+            LOG_FMT(LFCN, "%s: [%d/%d] function type, changing [%.*s] into a type\n",
+                    __func__, pc->orig_line, pc->orig_col, pc->len, pc->str);
+         }
 
-         pc->type     = CT_TYPE;
-         tmp1->type   = CT_PTR_TYPE;
-         pc->flags   &= ~PCF_VAR_1ST_DEF;
-         tmp2->flags |= PCF_VAR_1ST_DEF;
+         pc->type   = CT_TYPE;
+         tmp1->type = CT_PTR_TYPE;
+         pc->flags &= ~PCF_VAR_1ST_DEF;
+         if (tmp2 != NULL)
+         {
+            tmp2->flags |= PCF_VAR_1ST_DEF;
+         }
          flag_parens(tmp, 0, CT_FPAREN_OPEN, CT_FUNC_PROTO, false);
          fix_fcn_def_params(tmp);
          return;
