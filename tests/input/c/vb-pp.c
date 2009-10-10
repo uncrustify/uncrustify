@@ -23,7 +23,7 @@ if(42)
 { }
 if(23)
 #pragma omp critical
-{ }
+++i;
 while (16)
 { }
 int i = 15;
