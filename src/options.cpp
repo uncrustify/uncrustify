@@ -555,6 +555,9 @@ void register_options(void)
                   "Add or remove newline between '}' and 'catch'");
    unc_add_option("nl_while_brace", UO_nl_while_brace, AT_IARF,
                   "Add or remove newline between 'while' and '{'");
+   unc_add_option("nl_brace_brace", UO_nl_brace_brace, AT_IARF,
+                  "Add or remove newline between two open or close braces.\n"
+                  "Due to general newline/brace handling, REMOVE may not work.");
    unc_add_option("nl_do_brace", UO_nl_do_brace, AT_IARF,
                   "Add or remove newline between 'do' and '{'");
    unc_add_option("nl_brace_while", UO_nl_brace_while, AT_IARF,

@@ -1419,6 +1419,15 @@ void newlines_cleanup_braces(void)
       }
       else if (pc->type == CT_BRACE_OPEN)
       {
+         if (cpd.settings[UO_nl_brace_brace].a != AV_IGNORE)
+         {
+            next = chunk_get_next_nc(pc, CNAV_PREPROC);
+            if ((next != NULL) && (next->type == CT_BRACE_OPEN))
+            {
+               newline_iarf_pair(pc, next, cpd.settings[UO_nl_brace_brace].a);
+            }
+         }
+
          if (cpd.settings[UO_nl_ds_struct_enum_cmt].b &&
              ((pc->parent_type == CT_ENUM) ||
               (pc->parent_type == CT_STRUCT) ||
@@ -1444,7 +1453,7 @@ void newlines_cleanup_braces(void)
          }
          else if (next->type == CT_BRACE_OPEN)
          {
-            //TODO: do something with two brace opens on the same line? "{ {"
+            // already handled
          }
          else
          {
@@ -1488,6 +1497,15 @@ void newlines_cleanup_braces(void)
       }
       else if (pc->type == CT_BRACE_CLOSE)
       {
+         if (cpd.settings[UO_nl_brace_brace].a != AV_IGNORE)
+         {
+            next = chunk_get_next_nc(pc, CNAV_PREPROC);
+            if ((next != NULL) && (next->type == CT_BRACE_CLOSE))
+            {
+               newline_iarf_pair(pc, next, cpd.settings[UO_nl_brace_brace].a);
+            }
+         }
+
          if (cpd.settings[UO_eat_blanks_before_close_brace].b)
          {
             /* Limit the newlines before the close brace to 1 */

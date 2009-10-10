@@ -407,6 +407,7 @@ enum uncrustify_options
    UO_nl_class_brace,                /* nl between class name and brace */
    UO_nl_namespace_brace,            /* nl between namespace name and brace */
 
+   UO_nl_brace_brace,                /* nl between '{{' or '}}' */
    UO_nl_do_brace,                   /* nl between do and { */
    UO_nl_if_brace,                   /* nl between if and { */
    UO_nl_for_brace,                  /* nl between for and { */
