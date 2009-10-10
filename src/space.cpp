@@ -330,6 +330,13 @@ argval_t do_space(chunk_t *first, chunk_t *second, bool complete = true)
       return(cpd.settings[UO_sp_before_comma].a);
    }
 
+   if ((second->type == CT_ELLIPSIS) &&
+       (cpd.settings[UO_sp_before_ellipsis].a != AV_IGNORE))
+   {
+      log_rule("sp_before_ellipsis");
+      return(cpd.settings[UO_sp_before_ellipsis].a);
+   }
+
    if (first->type == CT_TAG_COLON)
    {
       if (second->type == CT_ELLIPSIS)
