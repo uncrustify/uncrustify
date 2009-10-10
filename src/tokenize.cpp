@@ -176,10 +176,17 @@ static bool parse_comment(chunk_t *pc)
             cpd.column += 2;
 
             /* If there is another C comment right after this one, combine them */
-            if ((pc->str[len] != '/') || (pc->str[len + 1] != '*'))
+            int tmp_len = len;
+            while ((pc->str[tmp_len] == ' ') ||
+                   (pc->str[tmp_len] == '\t'))
+            {
+               tmp_len++;
+            }
+            if ((pc->str[tmp_len] != '/') || (pc->str[tmp_len + 1] != '*'))
             {
                break;
             }
+            pc->len = tmp_len;
          }
 
          if ((pc->str[len] == '\n') || (pc->str[len] == '\r'))
