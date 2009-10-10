@@ -56,3 +56,20 @@ void f2(void)
 
    for (;;) { ; }
 }
+
+int main(int argc, char *argv[])
+{
+if( argc == 1 )
+{
+printf("one");
+};
+else if( argc == 2 )
+{
+printf("two");
+};
+else
+{
+printf("%d", argc);
+};
+return 0;
+}
