@@ -1632,6 +1632,7 @@ void newlines_cleanup_braces(void)
       {
          if (((pc->parent_type == CT_FUNC_DEF) ||
               (pc->parent_type == CT_FUNC_PROTO) ||
+              (pc->parent_type == CT_FUNC_CLASS) ||
               (pc->parent_type == CT_OPERATOR))
              &&
              ((cpd.settings[UO_nl_func_decl_start].a != AV_IGNORE) ||
