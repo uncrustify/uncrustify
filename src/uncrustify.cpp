@@ -1318,6 +1318,11 @@ static void uncrustify_file(const char *data, int data_len, FILE *pfout,
       {
          newlines_chunk_pos(CT_COMPARE, cpd.settings[UO_pos_compare].tp);
       }
+      if (cpd.settings[UO_pos_conditional].tp != TP_IGNORE)
+      {
+         newlines_chunk_pos(CT_COND_COLON, cpd.settings[UO_pos_conditional].tp);
+         newlines_chunk_pos(CT_QUESTION, cpd.settings[UO_pos_conditional].tp);
+      }
       if (cpd.settings[UO_pos_comma].tp != TP_IGNORE)
       {
          newlines_chunk_pos(CT_COMMA, cpd.settings[UO_pos_comma].tp);

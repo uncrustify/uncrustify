@@ -468,6 +468,7 @@ enum uncrustify_options
    UO_pos_assign,                 // position of trailing/leading =
    UO_pos_bool,                   // position of trailing/leading &&/||
    UO_pos_compare,                // position of trailing/leading <=/>, etc
+   UO_pos_conditional,            // position of trailing/leading (b ? t : f)
    UO_pos_comma,                  // position of comma in functions
    UO_pos_class_comma,            // position of comma in constructor init list
    UO_pos_class_colon,            // position of trailing/leading class colon

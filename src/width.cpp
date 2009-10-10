@@ -264,6 +264,9 @@ static void split_line(chunk_t *start)
         (cpd.settings[UO_pos_assign].tp == TP_LEAD)) ||
        (chunk_is_token(ent.pc, CT_COMPARE) &&
         (cpd.settings[UO_pos_compare].tp == TP_LEAD)) ||
+       ((chunk_is_token(ent.pc, CT_COND_COLON) ||
+         chunk_is_token(ent.pc, CT_QUESTION)) &&
+        (cpd.settings[UO_pos_compare].tp == TP_LEAD)) ||
        (chunk_is_token(ent.pc, CT_BOOL) &&
         (cpd.settings[UO_pos_bool].tp == TP_LEAD)))
    {

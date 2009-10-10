@@ -723,6 +723,8 @@ void register_options(void)
                   "The position of boolean operators in wrapped expressions");
    unc_add_option("pos_compare", UO_pos_compare, AT_POS,
                   "The position of comparison operators in wrapped expressions");
+   unc_add_option("pos_conditional", UO_pos_conditional, AT_POS,
+                  "The position of conditional (b ? t : f) operators in wrapped expressions");
    unc_add_option("pos_comma", UO_pos_comma, AT_POS,
                   "The position of the comma in wrapped expressions");
    unc_add_option("pos_class_comma", UO_pos_class_comma, AT_POS,

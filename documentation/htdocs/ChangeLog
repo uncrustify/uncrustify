@@ -28,6 +28,7 @@ Changes in uncrustify-0.54 (Not released)
  - Add nl_brace_brace
  - Allow any number of spaces between multi-line comments when combining them
  - Add pos_compare
+ - Add pos_conditional
 
 
 Changes in uncrustify-0.53 (16 May 2009)
