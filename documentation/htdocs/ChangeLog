@@ -24,6 +24,10 @@ Changes in uncrustify-0.54 (Not released)
  - fix detection of "std::vector<void (*)(void)> functions;"
  - Remove extra semicolons on an 'else if'
  - Add sp_before_ellipsis
+ - treat a constructor the same as a function regarding nl_func_decl_*
+ - Add nl_brace_brace
+ - Allow any number of spaces between multi-line comments when combining them
+ - Add pos_compare
 
 
 Changes in uncrustify-0.53 (16 May 2009)

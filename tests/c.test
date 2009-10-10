@@ -133,6 +133,9 @@
 00501   bool-pos-eol.cfg       c/bool-pos.c
 00502   bool-pos-sol.cfg       c/bool-pos.c
 
+00503   pos_compare-sol.cfg    c/pos_compare.c
+00504   pos_compare-eol.cfg    c/pos_compare.c
+
 00600  indent.cfg              c/dos.c
 00601  indent.cfg              c/mac.c
 00611  pp-indent-1.cfg         c/pp-space.c
