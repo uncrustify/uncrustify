@@ -4,8 +4,6 @@
  *
  * @author  Ben Gardner
  * @license GPL v2+
- *
- * $Id: combine.cpp 804 2007-07-25 01:06:08Z bengardner $
  */
 #include "uncrustify_types.h"
 #include "chunk_list.h"

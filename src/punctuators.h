@@ -1,7 +1,6 @@
 /**
  * @file punctuators.h
  * Automatically generated
- * $Id$
  */
 static const lookup_entry_t punc_table[] =
 {

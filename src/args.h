@@ -10,10 +10,7 @@
  *
  * @author  Ben Gardner
  * @license GPL v2+
- *
- * $Id$
  */
-
 #ifndef ARGS_H_INCLUDED
 #define ARGS_H_INCLUDED
 

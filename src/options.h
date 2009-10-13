@@ -4,8 +4,6 @@
  *
  * @author  Ben Gardner
  * @license GPL v2+
- *
- * $Id$
  */
 #ifndef OPTIONS_H_INCLUDED
 #define OPTIONS_H_INCLUDED

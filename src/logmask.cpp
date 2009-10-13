@@ -5,10 +5,7 @@
  *
  * @author  Ben Gardner
  * @license GPL v2+
- *
- * $Id$
  */
-
 #include "logmask.h"
 #include <cstdio>      /* snprintf() */
 #include <cstdlib>     /* strtoul() */

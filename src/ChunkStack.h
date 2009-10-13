@@ -4,10 +4,7 @@
  *
  * @author  Ben Gardner
  * @license GPL v2+
- *
- * $Id$
  */
-
 #ifndef CHUNKSTACK_H_INCLUDED
 #define CHUNKSTACK_H_INCLUDED
 

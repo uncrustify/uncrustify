@@ -17,8 +17,6 @@
  *
  * @author  Ben Gardner
  * @license GPL v2+
- *
- * $Id: backup.cpp 487 2006-09-07 03:02:58Z bengardner $
  */
 #ifndef BACKUP_H_INCLUDED
 #define BACKUP_H_INCLUDED

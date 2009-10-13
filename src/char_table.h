@@ -5,8 +5,6 @@
  *
  * @author  Ben Gardner
  * @license GPL v2+
- *
- * $Id$
  */
 #ifndef CHAR_TABLE_H_INCLUDED
 #define CHAR_TABLE_H_INCLUDED

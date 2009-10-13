@@ -5,10 +5,7 @@
  *
  * @author  Ben Gardner
  * @license GPL v2+
- *
- * $Id$
  */
-
 #include "ChunkStack.h"
 
 class AlignStack

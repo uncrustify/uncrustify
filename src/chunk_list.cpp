@@ -4,10 +4,7 @@
  *
  * @author  Ben Gardner
  * @license GPL v2+
- *
- * $Id$
  */
-
 #include "chunk_list.h"
 #include <cstring>
 #include <cstdlib>

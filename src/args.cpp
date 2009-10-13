@@ -4,10 +4,7 @@
  *
  * @author  Ben Gardner
  * @license GPL v2+
- *
- * $Id$
  */
-
 #include "args.h"
 #include <cstring>
 #include "unc_ctype.h"

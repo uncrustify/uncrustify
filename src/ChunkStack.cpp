@@ -4,10 +4,7 @@
  *
  * @author  Ben Gardner
  * @license GPL v2+
- *
- * $Id$
  */
-
 #include "ChunkStack.h"
 #include <cstdio>
 #include <cstdlib>

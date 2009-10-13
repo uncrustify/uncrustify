@@ -1,6 +1,5 @@
 #!/usr/bin/perl
-# $Id$
-
+#
 # Copyright (c) 2006 David Thompson
 # da.thompson@yahoo.com
 # Fri Nov 17 20:41:23 PST 2006

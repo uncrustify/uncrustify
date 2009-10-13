@@ -6,8 +6,6 @@
  *
  * @author  Ben Gardner
  * @license GPL v2+
- *
- * $Id$
  */
 #ifndef LOG_LEVELS_H_INCLUDED
 #define LOG_LEVELS_H_INCLUDED

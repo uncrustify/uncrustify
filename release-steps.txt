@@ -1,6 +1,4 @@
 
-$Id$
-
 Release steps.
 Just in case I don't do a release for a while and forget what to do... =)
 

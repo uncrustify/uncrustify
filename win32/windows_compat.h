@@ -5,8 +5,6 @@
  *
  * @author  Ben Gardner
  * @license GPL v2+
- *
- * $Id$
  */
 #ifndef WINDOWS_COMPAT_H_INCLUDED
 #define WINDOWS_COMPAT_H_INCLUDED

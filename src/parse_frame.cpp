@@ -4,10 +4,7 @@
  *
  * @author  Ben Gardner
  * @license GPL v2+
- *
- * $Id$
  */
-
 #include "uncrustify_types.h"
 #include "prototypes.h"
 #include "chunk_list.h"

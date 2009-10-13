@@ -4,8 +4,6 @@
  *
  * @author  Ben Gardner
  * @license GPL v2+
- *
- * $Id$
  */
 #ifndef TOKEN_ENUM_H_INCLUDED
 #define TOKEN_ENUM_H_INCLUDED

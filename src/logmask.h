@@ -5,10 +5,7 @@
  *
  * @author  Ben Gardner
  * @license GPL v2+
- *
- * $Id$
  */
-
 #ifndef LOGMASK_H_INCLUDED
 #define LOGMASK_H_INCLUDED
 

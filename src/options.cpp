@@ -4,8 +4,6 @@
  *
  * @author  Ben Gardner
  * @license GPL v2+
- *
- * $Id$
  */
 #include "uncrustify_types.h"
 #include "args.h"
@@ -372,7 +370,7 @@ void register_options(void)
    unc_add_option("sp_after_oc_at_sel", UO_sp_after_oc_at_sel, AT_IARF,
                   "Add or remove space between '@selector' and '('\n"
                   "'@selector(msgName).' vs '@selector (msgName)'");
-    
+
    unc_add_option("sp_cond_colon", UO_sp_cond_colon, AT_IARF,
                   "Add or remove space around the ':' in 'b ? t : f'");
    unc_add_option("sp_cond_question", UO_sp_cond_question, AT_IARF,

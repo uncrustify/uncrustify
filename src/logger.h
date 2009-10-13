@@ -10,8 +10,6 @@
  *
  * @author  Ben Gardner
  * @license GPL v2+
- *
- * $Id$
  */
 #ifndef LOGGER_H_INCLUDED
 #define LOGGER_H_INCLUDED

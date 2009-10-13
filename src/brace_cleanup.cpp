@@ -6,10 +6,7 @@
  *
  * @author  Ben Gardner
  * @license GPL v2+
- *
- * $Id$
  */
-
 #include "uncrustify_types.h"
 #include "char_table.h"
 #include "prototypes.h"

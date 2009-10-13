@@ -6,10 +6,7 @@
  *
  * @author  Ben Gardner
  * @license GPL v2+
- *
- * $Id$
  */
-
 #include "align_stack.h"
 #include "prototypes.h"
 #include "chunk_list.h"

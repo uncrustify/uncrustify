@@ -8,10 +8,7 @@
  *
  * @author  Ben Gardner
  * @license GPL v2+
- *
- * $Id$
  */
-
 #include "logger.h"
 
 #include <cstdio>

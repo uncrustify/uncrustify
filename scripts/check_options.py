@@ -1,7 +1,5 @@
 #! /usr/bin/env python
 #
-# $Id$
-#
 # Check the option usage.
 # Make sure the union member matches the option type.
 #

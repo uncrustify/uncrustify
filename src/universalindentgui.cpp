@@ -1,8 +1,6 @@
 /**
  * @file universalindentgui.cpp
  * Exports the config file for UniversalIndentGUI
- *
- * $Id$
  */
 #include "prototypes.h"
 #include "uncrustify_version.h"

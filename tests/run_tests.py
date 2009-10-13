@@ -6,8 +6,6 @@
 # This could all be done with bash, but I wanted to use python. =)
 # Anyway, this was all done while waiting in the Denver airport.
 #
-# $Id$
-#
 
 import sys
 import os

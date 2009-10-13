@@ -1,5 +1,4 @@
 #! /usr/bin/env python
-# $Id$
 #
 #  Creates a possibly faster lookup table for tokens, etc.
 #
@@ -89,7 +88,6 @@ if __name__ == '__main__':
 	print "/**"
 	print " * @file punctuators.h"
 	print " * Automatically generated"
-	print " * $I" + "d$"
 	print " */"
 	print "static const lookup_entry_t punc_table[] ="
 	print "{"

@@ -4,8 +4,6 @@
  *
  * @author  Ben Gardner
  * @license GPL v2+
- *
- * $Id$
  */
 #ifndef MD5_H_INCLUDED
 #define MD5_H_INCLUDED
