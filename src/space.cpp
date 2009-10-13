@@ -65,6 +65,7 @@ struct no_space_table_s no_space_table[] =
    { CT_PAREN_CLOSE,    CT_FUNC_CALL     },
    { CT_PAREN_CLOSE,    CT_ADDR          },
    { CT_PAREN_CLOSE,    CT_FPAREN_OPEN   },
+   { CT_OC_SEL_NAME,    CT_OC_SEL_NAME   },
 };
 
 #define log_rule(rule)                                        \
@@ -617,7 +618,7 @@ argval_t do_space(chunk_t *first, chunk_t *second, bool complete = true)
       log_rule("sp_func_class_paren");
       return(cpd.settings[UO_sp_func_class_paren].a);
    }
-   if (first->type == CT_CLASS)
+   if ((first->type == CT_CLASS) && (first->parent_type != CT_OC_MSG))
    {
       log_rule("FORCE");
       return(AV_FORCE);
@@ -818,12 +819,25 @@ argval_t do_space(chunk_t *first, chunk_t *second, bool complete = true)
       return(cpd.settings[UO_sp_inside_fparen].a);
    }
 
-   if ((first->type == CT_PAREN_CLOSE) &&
-       ((first->parent_type == CT_OC_MSG_SPEC) ||
-        (first->parent_type == CT_OC_MSG_DECL)))
+   if (first->type == CT_PAREN_CLOSE)
    {
-      log_rule("sp_after_oc_type");
-      return(cpd.settings[UO_sp_after_oc_type].a);
+      if (first->parent_type == CT_OC_RTYPE)
+      {
+         log_rule("sp_after_oc_return_type");
+         return(cpd.settings[UO_sp_after_oc_return_type].a);
+      }
+      else if ((first->parent_type == CT_OC_MSG_SPEC) ||
+               (first->parent_type == CT_OC_MSG_DECL))
+      {
+         log_rule("sp_after_oc_type");
+         return(cpd.settings[UO_sp_after_oc_type].a);
+      }
+   }
+
+   if ((first->type == CT_OC_SEL) && (second->type == CT_PAREN_OPEN))
+   {
+      log_rule("sp_after_oc_at_sel");
+      return(cpd.settings[UO_sp_after_oc_at_sel].a);
    }
 
    /* C cast:   "(int)"      vs "( int )"

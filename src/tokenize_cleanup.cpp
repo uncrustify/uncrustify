@@ -414,6 +414,34 @@ void tokenize_cleanup(void)
          }
       }
 
+      /* Detect Objective C @selector
+       *  @selector(msgNameWithNoArg)
+       *  @selector(msgNameWith1Arg:)
+       *  @selector(msgNameWith2Args:arg2Name:)
+       */
+      if ((pc->type == CT_OC_SEL) && (next->type == CT_PAREN_OPEN))
+      {
+         next->parent_type = pc->type;
+
+         tmp = chunk_get_next(next);
+         if (tmp != NULL)
+         {
+            tmp->type        = CT_OC_SEL_NAME;
+            tmp->parent_type = pc->type;
+
+            while ((tmp = chunk_get_next_ncnl(tmp)) != NULL)
+            {
+               if (tmp->type == CT_PAREN_CLOSE)
+               {
+                  tmp->parent_type = CT_OC_SEL;
+                  break;
+               }
+               tmp->type        = CT_OC_SEL_NAME;
+               tmp->parent_type = pc->type;
+            }
+         }
+      }
+
       /* Handle special preprocessor junk */
       if (pc->type == CT_PREPROC)
       {

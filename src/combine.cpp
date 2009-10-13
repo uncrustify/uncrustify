@@ -3443,6 +3443,7 @@ static void handle_oc_message_decl(chunk_t *pc)
    chunk_t   *tmp;
    bool      in_paren  = false;
    int       paren_cnt = 0;
+   int       arg_cnt   = 0;
    c_token_t pt        = CT_OC_MSG_SPEC;
 
    /* Figure out if this is a spec or decl */
@@ -3474,8 +3475,21 @@ static void handle_oc_message_decl(chunk_t *pc)
          break;
       }
 
-      if ((tmp->type == CT_PAREN_OPEN) ||
-          (tmp->type == CT_PAREN_CLOSE))
+      /* Mark first parens as return type */
+      if ((arg_cnt == 0) &&
+          ((tmp->type == CT_PAREN_OPEN) ||
+           (tmp->type == CT_PAREN_CLOSE)))
+      {
+          tmp->parent_type = CT_OC_RTYPE;
+          in_paren         = (tmp->type == CT_PAREN_OPEN);
+          if (!in_paren)
+          {
+              paren_cnt++;
+              arg_cnt++;
+          }
+      }
+      else if ((tmp->type == CT_PAREN_OPEN) ||
+               (tmp->type == CT_PAREN_CLOSE))
       {
          tmp->parent_type = pt;
          in_paren         = (tmp->type == CT_PAREN_OPEN);

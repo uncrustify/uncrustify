@@ -210,7 +210,10 @@ typedef enum
    CT_OC_MSG,           /* ObjC: parent type to '[class func : param];' stuff */
    CT_OC_MSG_SPEC,      /* ObjC: msg spec '-(void) func: (int) i;' */
    CT_OC_MSG_DECL,      /* ObjC: msg decl '-(void) func: (int) i { }' */
+   CT_OC_RTYPE,         /* ObjC: marks closing parens of the return type after scope */
    CT_OC_COLON,         /* ObjC: the colon in a msg spec */
+   CT_OC_SEL,           /* ObjC: @selector */
+   CT_OC_SEL_NAME,      /* ObjC: selector name */
 
    /* start PP types */
    CT_PP_DEFINE,        /* #define */

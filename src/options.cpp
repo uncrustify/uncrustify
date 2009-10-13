@@ -365,8 +365,14 @@ void register_options(void)
                   "'[object setValue:1];' vs '[object setValue :1];'");
    unc_add_option("sp_after_oc_type", UO_sp_after_oc_type, AT_IARF,
                   "Add or remove space after the (type) in message specs\n"
-                  "'-(int) f: (int) x;' vs '-(int) f: (int)x;'");
-
+                  "'-(int)f: (int) x;' vs '-(int)f: (int)x;'");
+   unc_add_option("sp_after_oc_return_type", UO_sp_after_oc_return_type, AT_IARF,
+                  "Add or remove space after the first (type) in message specs\n"
+                  "'-(int) f:(int)x;' vs '-(int)f:(int)x;'");
+   unc_add_option("sp_after_oc_at_sel", UO_sp_after_oc_at_sel, AT_IARF,
+                  "Add or remove space between '@selector' and '('\n"
+                  "'@selector(msgName).' vs '@selector (msgName)'");
+    
    unc_add_option("sp_cond_colon", UO_sp_cond_colon, AT_IARF,
                   "Add or remove space around the ':' in 'b ? t : f'");
    unc_add_option("sp_cond_question", UO_sp_cond_question, AT_IARF,

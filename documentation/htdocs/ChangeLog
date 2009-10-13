@@ -30,6 +30,7 @@ Changes in uncrustify-0.54 (Not released)
  - Add pos_compare
  - Add pos_conditional
  - Fix indent_relative_single_line_comments
+ - Add sp_after_oc_return_type and sp_after_oc_at_sel (Andre Berg)
 
 
 Changes in uncrustify-0.53 (16 May 2009)
