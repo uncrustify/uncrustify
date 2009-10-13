@@ -1,6 +1,6 @@
 
--(void) moreScannedData: (Image *) img from: (int) start to: (int) stop;
--(void) moreScannedData: (Image *) img from: (int) start to: (int) stop;
+-(void)moreScannedData: (Image *) img from: (int) start to: (int) stop;
+-(void)moreScannedData: (Image *) img from: (int) start to: (int) stop;
 
 public bool Enabled
 {
