@@ -409,6 +409,8 @@ void register_options(void)
                   "Indent based on the size of the brace parent, i.e. 'if' => 3 spaces, 'for' => 4 spaces, etc.");
    unc_add_option("indent_namespace", UO_indent_namespace, AT_BOOL,
                   "Whether the 'namespace' body is indented");
+   unc_add_option("indent_namespace_level", UO_indent_namespace_level, AT_NUM,
+                  "The number of spaces to indent a namespace block");
    unc_add_option("indent_extern", UO_indent_extern, AT_BOOL,
                   "Whether the 'extern \"C\"' body is indented");
    unc_add_option("indent_class", UO_indent_class, AT_BOOL,

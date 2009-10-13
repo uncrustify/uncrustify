@@ -793,6 +793,15 @@ void indent_text(void)
             {
                frm.pse[frm.pse_tos].indent -= indent_size;
             }
+            else if ((pc->parent_type == CT_NAMESPACE) && cpd.settings[UO_indent_namespace].b)
+            {
+                if (cpd.settings[UO_indent_namespace_level].n > 0)
+                {
+                    frm.pse[frm.pse_tos].indent -= indent_size;
+                    frm.pse[frm.pse_tos].indent +=
+                        cpd.settings[UO_indent_namespace_level].n;
+                }
+            }
             else if ((pc->parent_type == CT_EXTERN) && !cpd.settings[UO_indent_extern].b)
             {
                frm.pse[frm.pse_tos].indent -= indent_size;
