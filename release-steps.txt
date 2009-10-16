@@ -56,8 +56,8 @@ Zip up that folder using the folder name + ".zip"
 Copy to the release folder on Linux
 
 11. Copy the files to sourceforge
-$ sftp USER@frs.sourceforge.net
-sftp> cd uploads
+$ sftp USER,uncrustify@frs.sourceforge.net
+sftp> cd /home/pfs/project/u/un/uncrustify/uncrustify/uncrustify-0.XX
 sftp> put uncrustify-0.XX.tgz
 sftp> put uncrustify-0.XX-win32.tgz
 sftp> exit
