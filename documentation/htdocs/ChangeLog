@@ -1,6 +1,6 @@
 
 
-Changes in uncrustify-0.54 (Not released)
+Changes in uncrustify-0.54 (16 Oct 2009)
 -------------------------------------------------------------------------------
  - Add mod_case_brace
  - Add sp_after_semi_for and sp_after_semi
