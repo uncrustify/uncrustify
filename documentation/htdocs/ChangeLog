@@ -29,6 +29,7 @@ Changes in uncrustify-0.54 (Not released)
  - Fix indent_relative_single_line_comments
  - Add sp_after_oc_return_type and sp_after_oc_at_sel (Andre Berg)
  - Add indent_namespace_level (James LewisMoss)
+ - Add indent_namespace_limit (Maciej Libera)
 
 
 Changes in uncrustify-0.53 (16 May 2009)

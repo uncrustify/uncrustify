@@ -118,7 +118,7 @@ struct parse_frame
 #define PCF_INSERTED           (1 << 27)  /* chunk was inserted from another file */
 #define PCF_ALIGN_START        (1 << 28)
 #define PCF_VAR_TYPE           (1 << 29)  /* part of a variable def type */
-#define PCF_TBD_30             (1 << 30)
+#define PCF_LONG_BLOCK         (1 << 30)  /* the block is 'long' by some measure */
 #define PCF_OWN_STR            (1 << 31)  /* chunk owns the memory at str */
 
 
@@ -162,7 +162,7 @@ static const char *pcf_names[] =
    "INSERTED",
    "ALIGN_START",
    "VAR_TYPE",
-   "TBD_30",
+   "LONG_BLOCK",
    "OWN_STR",
 };
 #endif

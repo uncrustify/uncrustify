@@ -140,7 +140,8 @@ enum uncrustify_options
    UO_indent_func_throw,                    // indentation for standalone "throw" qualifier
 
    UO_indent_namespace,                     // indent stuff inside namespace braces
-   UO_indent_namespace_level,                     // level to indent namespace blocks
+   UO_indent_namespace_level,               // level to indent namespace blocks
+   UO_indent_namespace_limit,               // no indent if namespace is longer than this
    UO_indent_extern,
    UO_indent_class,                         // indent stuff inside class braces
    UO_indent_class_colon,                   // indent stuff after a class colon

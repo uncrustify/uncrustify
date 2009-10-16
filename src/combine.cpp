@@ -2948,6 +2948,7 @@ static void mark_class_ctor(chunk_t *start)
 static void mark_namespace(chunk_t *pns)
 {
    chunk_t *pc;
+   chunk_t *br_close;
 
    pc = chunk_get_next_ncnl(pns);
    if (pc != NULL)
@@ -2958,6 +2959,17 @@ static void mark_namespace(chunk_t *pns)
       }
       if ((pc != NULL) && (pc->type == CT_BRACE_OPEN))
       {
+         if ((cpd.settings[UO_indent_namespace_limit].n > 0) &&
+             ((br_close = chunk_skip_to_match(pc)) != NULL))
+         {
+            int diff = br_close->orig_line - pc->orig_line;
+
+            if (diff > cpd.settings[UO_indent_namespace_limit].n)
+            {
+               pc->flags       |= PCF_LONG_BLOCK;
+               br_close->flags |= PCF_LONG_BLOCK;
+            }
+         }
          flag_parens(pc, PCF_IN_NAMESPACE, CT_NONE, CT_NAMESPACE, false);
       }
    }

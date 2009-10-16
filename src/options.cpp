@@ -409,6 +409,9 @@ void register_options(void)
                   "Whether the 'namespace' body is indented");
    unc_add_option("indent_namespace_level", UO_indent_namespace_level, AT_NUM,
                   "The number of spaces to indent a namespace block");
+   unc_add_option("indent_namespace_limit", UO_indent_namespace_limit, AT_NUM,
+                  "If the body of the namespace is longer than this number, it won't be indented.\n"
+                  "Requires indent_namespace=true. Default=0 (no limit)", NULL, 0, 255);
    unc_add_option("indent_extern", UO_indent_extern, AT_BOOL,
                   "Whether the 'extern \"C\"' body is indented");
    unc_add_option("indent_class", UO_indent_class, AT_BOOL,
