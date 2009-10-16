@@ -639,7 +639,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
        * Note that SPAREN and FPAREN have already been marked.
        */
       if ((pc->type == CT_PAREN_OPEN) &&
-          (pc->parent_type == CT_NONE) &&
+          ((pc->parent_type == CT_NONE) || (pc->parent_type == CT_OC_MSG)) &&
           ((next->type == CT_WORD) ||
            (next->type == CT_TYPE) ||
            (next->type == CT_STRUCT) ||
@@ -3406,7 +3406,7 @@ static void handle_oc_class(chunk_t *pc)
          tmp->type        = CT_CLASS_COLON;
          tmp->parent_type = CT_OC_CLASS;
       }
-      else if (chunk_is_str(tmp, "-", 1))
+      else if (chunk_is_str(tmp, "-", 1) || chunk_is_str(tmp, "+", 1))
       {
          tmp->flags |= PCF_STMT_START;
          break;
@@ -3563,6 +3563,7 @@ static void handle_oc_message_send(chunk_t *os)
 
    for (tmp = chunk_get_next(os); tmp != cs; tmp = chunk_get_next(tmp))
    {
+      tmp->parent_type = CT_OC_MSG;
       if (tmp->type == CT_COLON)
       {
          tmp->type = CT_OC_COLON;

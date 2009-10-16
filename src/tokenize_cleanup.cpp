@@ -363,6 +363,42 @@ void tokenize_cleanup(void)
          }
       }
 
+      /* Detect Objective-C categories */
+      /* @interface ClassName (CategoryName) */
+      /* @implementation ClassName (CategoryName) */
+      if (((pc->type == CT_OC_IMPL) || (pc->type == CT_OC_INTF)) &&
+          (next->type == CT_PAREN_OPEN))
+      {
+         next->parent_type = pc->type;
+
+         tmp = chunk_get_next_ncnl(next);
+         if (tmp != NULL)
+         {
+            if (tmp->next->type == CT_PAREN_CLOSE)
+            {
+               tmp->type        = CT_OC_CLASS_EXT;
+               tmp->parent_type = pc->type;
+            }
+            else
+            {
+               tmp->type   = CT_OC_CATEGORY;
+               tmp->flags |= PCF_STMT_START | PCF_EXPR_START;
+            }
+         }
+
+         tmp = chunk_get_next_type(pc, CT_PAREN_CLOSE, pc->level);
+         if (tmp != NULL)
+         {
+            tmp->parent_type = pc->type;
+         }
+      }
+
+
+      /* Detect Objective-C class extensions */
+      /* @interface ClassName () */
+      /* @implementation ClassName () */
+
+
       /**
        * Objective C @dynamic and @synthesize
        *  @dynamic xxx, yyy;

@@ -429,7 +429,7 @@ static void newlines_if_for_while_switch_pre_blank_lines(chunk_t *start, argval_
             return;
          }
       }
-      else if (chunk_is_opening_brace(pc) || pc->level < level)
+      else if (chunk_is_opening_brace(pc) || (pc->level < level))
       {
          return;
       }

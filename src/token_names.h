@@ -170,6 +170,8 @@ const char *token_names[] =
    "OC_INTF",
    "OC_PROPERTY",
    "OC_CLASS",
+   "OC_CLASS_EXT",
+   "OC_CATEGORY",
    "OC_SCOPE",
    "OC_MSG",
    "OC_MSG_SPEC",
