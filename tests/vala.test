@@ -1,0 +1,9 @@
+#
+# Test cases specifically for the Vala language.
+# $Id: vala.test 948 2007-10-01 17:48:40Z bengardner $
+#
+# test.name  config.file  input.file
+
+70000 ben.cfg                 vala/list.vala
+70001 ben.cfg                 vala/advanced.vala
+

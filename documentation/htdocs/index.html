@@ -1,0 +1,172 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Uncrustify - Source Code Beautifier for C-like languages</title>
+   <link rel="stylesheet" type="text/css" href="uncrustify1.css" />
+   <!-- <link rel="shortcut icon" href="images/favicon.ico" /> -->
+</head>
+<body lang="en-us" dir="ltr">
+
+<div align="center">
+<table>
+<tr>
+<td align="center">
+<div class="node1" align="center">
+<div class="node2" align="left">
+<h1>Uncrustify</h1>
+<h2>Source Code Beautifier for C, C++, C#, ObjectiveC, D, Java, Pawn and VALA</h2>
+<br />
+
+<h2>Introduction</h2>
+<p>The goals of this project are simple:
+Create a highly configurable, easily modifiable source code beautifier.</p>
+
+<br />
+
+<h2>Features</h2>
+<ul>
+   <li>Ident code, aligning on parens, assignments, etc</li>
+   <li>Align on '=' and variable definitions</li>
+   <li>Align structure initializers</li>
+   <li>Align #define stuff</li>
+   <li>Align backslash-newline stuff</li>
+   <li>Reformat comments (a little bit)</li>
+   <li>Fix inter-character spacing</li>
+   <li>Add or remove parens on return statements</li>
+   <li>Add or remove braces on single-statement if/do/while/for statements</li>
+   <li>Supports embedded SQL 'EXEC SQL' stuff</li>
+   <li>Highly configurable - 366 configurable options as of version 0.54</li>
+</ul>
+
+<p>
+   See some example <a href="examples/example.c">output</a>.
+</p>
+
+<br />
+
+<h2>Where to get Uncrustify</h2>
+
+
+
+<P>
+<h3>Project Websites</h3>
+<a href="http://sourceforge.net/projects/uncrustify/">Sourceforge project web site</a><BR>
+<a href="http://freshmeat.net/projects/uncrustify/">Freshmeat Project</a><BR>
+</P>
+
+<P>
+<h3>Source Code</h3>
+<a href="http://prdownloads.sourceforge.net/uncrustify/uncrustify-0.54.tgz?download">Download Uncrustify 0.54 source</a><BR>
+The change log is <a href="ChangeLog">here</a>
+</P>
+
+<P>
+<h3>Prebuilt binaries</h3>
+Windows (i386) :
+<a href="http://sourceforge.net/project/showfiles.php?group_id=153164">Sourceforge</A><BR>
+
+SPARC/Solaris 2.5-10 and x86/Solaris 8-10 :
+<a href="http://sunfreeware.com/">sunfreeware.com</a><BR>
+
+</P>
+
+<P>
+<h3>Universal Indent GUI</h3>
+<a href="http://universalindent.sourceforge.net/">Universal Indent GUI</a> is a
+cross-platform graphical configuration file editor for many code beautifiers, including Uncrustify.
+</P>
+
+
+<br />
+
+<h2>Want to help?</h2>
+<p>
+The most helpful way is to try it out and give feedback.
+Documentation and examples are available in the source tree, so check it out.
+</p>
+<p>
+You can find the output from 'uncrustify --show-config' <a href="config.txt">here</a>.<br />
+Here is the <a href="default.cfg">default config file</a>.
+And one I set up for <a href="linux.cfg.txt">Linux</a>.<br />
+And here is a <a href="examples/c-1.in.c">before</a> and <a href="examples/c-1.out.c">after</a> C source example.<br />
+That should give you a pretty good idea of what Uncrustify can do.<br />
+</p>
+
+<p>
+If you find a bug, please do the following:
+</p>
+<ul>
+<li>Reduce the input source file to the minimum that still has the problem</li>
+<li>Use the sourceforget.net bug tracker</li>
+<li>Attach the input source file, the configuration file, and a file that contains the expected output</li>
+</ul>
+
+<p>
+If you want to add a feature, fix a bug, or implement missing functionality, feel free to do so! Patches are welcome!<BR/>
+Here are some areas that need attention:
+</p>
+<ul>
+   <li>Test Java support and provide feedback (or patches!)</li>
+   <li>Test Objective C support and provide feedback (or patches!)</li>
+   <li>Test Embedded SQL to see what works</li>
+   <li>This web page need a (re)design</li>
+   <li>A logo of some sort</li>
+   <li>Examples that can be put on this website to show off what Uncrustify can do</li>
+   <li>Anything else that you want to do to make it better?</li>
+</ul>
+
+<h3>Project Mailing list</h3>
+There is one mailing list for Uncrustify.<BR/>
+<a href="http://sourceforge.net/mailarchive/forum.php?forum_name=uncrustify-developer">uncrustify-developer@lists.sourceforge.net</a><br/>
+Despite the name, it is for both users and developers.
+	
+
+<br />
+
+<h2>Portability</h2>
+<p>
+I'm pretty sure that I'm not using anything that is OS-specific.<br />
+The software has been tested on the following operating systems:
+</p>
+<ul>
+   <li>Linux (Ubuntu)</li>
+   <li>QNX (6.2.1)</li>
+   <li>OS X</li>
+   <li>OpenBSD 3.4</li>
+   <li>NetBSD 1.6.1</li>
+   <li>Sun Solaris 9</li>
+   <li>Windows XP (binary available)</li>
+</ul>
+
+<br />
+
+<h2>Links</h2>
+<ul>
+   <li><a href="http://universalindent.sourceforge.net/">Universal Indent GUI</a></li>
+   <li>Don't know what D is?  Check out the <a href="http://www.digitalmars.com/d/">Digital Mars website</a>.</li>
+   <li><a href="http://www.linuxlinks.com">Linux Links</a></li>
+</ul>
+<h2>Distributions that package Uncrustify</h2>
+<ul>
+   <LI><A HREF="http://www.debian.org/">Debian</A>
+   <LI><A href="http://fedora.redhat.com/">Fedora</A></LI>
+   <LI><A href="http://www.altlinux.com/">ALT Linux</A></LI>
+   <LI><A href="http://www.t2-project.org/">T2</A></LI>
+   <LI><A href="http://www.macports.org/">MacPorts</a></li>
+   <LI>Others?</LI>
+</ul>
+</div>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<br />
+<a href="http://sourceforge.net/donate/index.php?group_id=153164"><img src="http://sourceforge.net/images/project-support.jpg" width="88" height="32" border="0" alt="Support This Project"></a>
+<SCRIPT type='text/javascript' language='JavaScript' src='http://www.ohloh.net/projects/4765/badge_js'></SCRIPT>
+<br />
+
+</body>
+</html>
+

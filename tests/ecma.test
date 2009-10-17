@@ -1,0 +1,9 @@
+#
+# Test cases specifically for the C language.
+# $Id: c.test 1455 2008-12-13 21:50:56Z bengardner $
+#
+# test.name  config.file  input.file
+
+
+90000 ben.cfg ecma/example-1.es
+

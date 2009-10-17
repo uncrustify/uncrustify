@@ -1,0 +1,24 @@
+-------------------------------------------------------------------------------
+Goal:
+
+Do as little or as much reformatting as desired - everything should be configurable
+
+Features:
+
+Whitespace modifications
+ + Indent code (tabs, tabs + spaces, spaces)
+   - brace indenting
+   - paren continuation
+   - '=' continuation
+   - broken string continuation
+   - comment indenting
+ + Add/Remove spaces before/after/between symbols
+ + position braces (same line, cuddle else/while, etc)
+
+Non-whitespace modifications
+ + Put a '*' on the left in multi-line C comments
+ + Add/Remove outter-most parens on return expressions
+ + Add braces for 'fully braced' format
+
+(TODO: update the list to include more available features)
+

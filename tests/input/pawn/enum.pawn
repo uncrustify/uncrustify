@@ -1,0 +1,82 @@
+
+enum rect { left, top , right, bottom }
+
+enum boot (<<= 1) { a=1, b, c, d }
+
+enum booty (<<= 1)
+{
+a=1, b, c, d
+}
+
+forward addvector(a[], const b[], size)
+
+enum message {
+	text[40 char],
+	priority
+}
+
+enum token
+	{
+	t_type,
+	Rational: t_value,
+	t_word[20],
+	}
+
+new bool:flag = true
+
+increment(&value, incr=1) value += incr
+
+new msg[message] = { !"My Text", 1 }
+main() {
+	new my_rect[rect]
+	
+	my_rect[left] = 10
+	my_rect[right] = 100
+	my_rect[top] = 10
+	my_rect[bottom] = 100
+
+	for (new i = 0; rect:i < rect; i++)
+		my_rect[rect:i] *= 2
+	
+	new vect[3] = { 1, 2, 3 }
+	addvector(vect, {5, 5, 5}, 3)
+	
+	new Float:xpos
+	new Float:ypos
+	
+	new a = 5
+	increment(a)
+	increment(a, _)
+	increment(a, 1)
+}
+
+sum(a, b)
+	return a + b
+
+power(x, y)
+    {
+    /* returns x raised to the power of y */
+    assert y >= 0
+    new r = 1
+    for (new i = 0; i < y; i++)
+        r *= x
+    return r
+    }
+
+addvector(a[], const b[], size)
+    {
+    for (new i = 0; i < size; i++)
+        a[i] += b[i]
+    }
+
+stock remove_filepath(szFilePath[], szFile[], pMax)
+{
+       new len = strlen(szFilePath);
+
+       while ((--len >= 0) && (szFilePath[len] != '/') &&
+(szFilePath[len] != '\'')) { }
+
+       copy(szFile, pMax, szFilePath[len + 1]);
+
+       return;
+}

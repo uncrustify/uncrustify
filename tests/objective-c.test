@@ -1,0 +1,26 @@
+#
+# Test cases specifically for the Objective C language.
+# $Id: c.test 631 2007-02-03 02:45:22Z bengardner $
+#
+# test.name  config.file  input.file
+
+# The .h file needs a language override
+50001  obj-c.cfg           oc/Fraction.h     OC
+50002  obj-c.cfg           oc/Fraction.m     OC
+50003  obj-c.cfg           oc/main.m
+50004  obj-c.cfg           oc/string.m
+50005  obj-c.cfg           oc/Declarations.h     OC
+50006  obj-c.cfg           oc/exceptions.m
+50007  obj-c.cfg           oc/misc.m
+
+50010  oc-split.cfg        oc/oc-split.m
+
+50030  sort_imports.cfg    oc/sort_import.m
+
+50010  sp_after_oc_return_type_add.cfg      oc/return_type.m
+50011  sp_after_oc_return_type_force.cfg    oc/return_type.m
+50012  sp_after_oc_return_type_remove.cfg   oc/return_type.m
+
+50020  sp_after_oc_at_sel_add.cfg           oc/selector.m
+50021  sp_after_oc_at_sel_force.cfg         oc/selector.m
+50022  sp_after_oc_at_sel_remove.cfg        oc/selector.m

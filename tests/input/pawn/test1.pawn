@@ -1,0 +1,59 @@
+
+#define SCROLLMSG_SIZE 512
+
+#define SCROLLMSG_SIZE  512
+
+#define MIN(%1,%2)  ((%1) < (%2) ? (%1) : (%2))
+#define MAX(%1,%2)   ((%1)>(%2)?(%1):(%2))
+
+
+//Why doesn't it make them all one space?
+
+#define ADMIN_NORMAL   (1<<1)
+#define ADMIN_STEAM            (1<<2)
+
+
+#define ADMIN_NORMAL    (1<<1)
+#define ADMIN_STEAM             (1<<2)
+
+//Why space before and after colon?
+
+new Float:g_xPos
+new Float : g_xPos
+
+// col1
+ // col2
+  // col3
+   // col4
+    // col5
+
+//Why so many tabs?
+main() {
+       remove_task(123)                /* remove current messaging */
+
+       remove_user_flags(0, read_flags("z"))           // Remove 'user' flag from server rights
+
+       new idtype = ADMIN_STEAM | ADMIN_LOOKUP // trail 1
+       new idtype = ADMIN_STEAM|ADMIN_LOOKUP // trail 2
+                                              // trail 3
+                                              // trail 4
+
+       if (idtype & ADMIN_STEAM)
+       {
+       a++
+       }
+       else if (equali(t_arg, "ip"))
+       {
+       b++
+       }
+
+       for (new _i=0; _i<_num; _i++)
+	{
+	c++
+	}
+
+	for (new _i = 0; _i < _num; _i++)
+	{
+	d++
+	}
+}

@@ -1,0 +1,26 @@
+#
+# Test cases specifically for the C# language.
+# $Id: c-sharp.test 1526 2009-03-30 02:11:29Z bengardner $
+#
+# test.name  config.file  input.file
+
+10000 mono.cfg                 cs/simple.cs
+10001 getset.cfg               cs/getset.cs
+10002 ben.cfg                  cs/simple.cs
+10003 ben.cfg                  cs/region.cs
+10010 ben.cfg                  cs/var-member.cs
+10011 ben.cfg                  cs/strings.cs
+
+10020 region-0.cfg             cs/region.cs
+10021 region-1.cfg             cs/region.cs
+10022 region-2.cfg             cs/region.cs
+10023 region-3.cfg             cs/region.cs
+
+10030 sort_imports.cfg         cs/sort_using.cs
+
+10040 tcf.cfg                  cs/tcf.cs
+10041 tcf.cfg                  cs/gs.cs
+
+10050 cs_generics.cfg          cs/generics.cs
+
+10060 ben.cfg                  cs/unsafe.cs

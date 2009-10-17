@@ -1,0 +1,56 @@
+-------------------------------------------------------------------------------
+HELP:
+
+Are you looking to help with uncrustify development? Great!
+
+Here are some tasks that need to be done:
+
+1. New features
+
+Look at the feature requests on the Sourceforge project site.
+Do any interest you?
+Most are easily done, but I haven't had the 'itch' to implement them.
+
+
+2. Test Coverage
+
+The test coverage right now is hardly adequate.
+I would appreciate it if someone could make sure that every option is
+tested and add tests as needed.
+Automated testing is good.  Without it, we can't detect regressions.
+Any option that doesn't have an associated test isn't really supported.
+
+
+3. Code cleanup
+
+I don't have much time to work on uncrustify.
+When I do, it is usually a short span - only an hour or two.
+This leads to unreachable code and doing the same thing in multiple places.
+
+Trace through the code and find these "problems".
+I found one the other day in do_space().  A new feature didn't work because
+several lines of code were not reachable.
+
+
+4. Code redesign
+
+Code gets ugly over time when new features are added willy-nilly.
+The problem is that the requirements are not known before the design is done.
+
+There are a few areas in particular that could benefit from a redesign.
+
+4a. brace_cleanup
+
+The code in brace_cleanup is ugly.  It works, but it is ugly.
+It was written with the assumption that there is no 'next' chunk.
+I had planned to merge that code in with the tokenizer.
+That didn't happen.
+So we are left with code that is more complicated than it needs to be.
+I haven't had the time or energy to revisit that code; I probably never will.
+If you'd like to take a stab at it... the would be wonderful.
+
+4b. indent_text
+
+I think this function could be reworked to better take advantage of the
+paren stack.
+

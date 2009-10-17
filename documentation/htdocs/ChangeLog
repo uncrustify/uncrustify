@@ -1,0 +1,745 @@
+
+
+Changes in uncrustify-0.54 (16 Oct 2009)
+-------------------------------------------------------------------------------
+ - Add mod_case_brace
+ - Add sp_after_semi_for and sp_after_semi
+ - Add align_oc_msg_colon
+ - ObjC: Do not set the parent of everything in a message at OC_MSG (was breaking casts)
+ - ObjC: sp_before_square does not apply in "if (i < [a count])"
+ - Fix crash bug in chunk_get_prev() at the start of the file
+ - Fix issue with #if COND followed by a cast on the next line
+ - Add nl_func_decl_empty
+ - Add nl_func_type_name_class
+ - Add cmt_reflow_mode (Ger Hobbelt)
+ - A case statement starts an expression. Fixes "case -1:"
+ - Improve semicolon removal test
+ - fix marking of brace/paren pairs that have a preproc inside
+ - fix nl_func_type_name where the return type contains a template
+ - Add mod_full_brace_if_chain
+ - fix detection of deref in a macro function
+ - fix detection of "std::vector<void (*)(void)> functions;"
+ - Remove extra semicolons on an 'else if'
+ - Add sp_before_ellipsis
+ - treat a constructor the same as a function regarding nl_func_decl_*
+ - Add nl_brace_brace
+ - Allow any number of spaces between multi-line comments when combining them
+ - Add pos_compare
+ - Add pos_conditional
+ - Fix indent_relative_single_line_comments
+ - Add sp_after_oc_return_type and sp_after_oc_at_sel (Andre Berg)
+ - Add indent_namespace_level (James LewisMoss)
+ - Add indent_namespace_limit (Maciej Libera)
+
+
+Changes in uncrustify-0.53 (16 May 2009)
+-------------------------------------------------------------------------------
+ - Fix sp_inside_braces* options, which were broken by the fix to issue #2629652
+ - Fix sp_after_cast, which was broken by a previous fix
+ - Be a little more agressive in removing unecessary semicolons
+ - Fix one case where the parser leaves a preprocessor #define
+ - Fix indent of line starting with '(' after a function name
+ - Add align_var_def_attribute
+ - Fix nl_func_type_name for function without a return type (ie, cast operator)
+ - Reset up state variables after processing a file
+ - Fix a case where a semicolon was incorrectly removed
+ - Fix a case where braces were incorrectly removed
+ - Fix handling of 'force' setting for many newline options
+ - Add func_wrap type for use with 'set func_wrap FSUB'
+ - Add type_wrap type for use with 'set type_wrap STACK_OF'
+ - Make file replacement more atomic - write to a temp file then rename
+ - With the 'replace' option, only replace if the file content changes
+ - Handle C# wide literal string prefix S"foo"
+ - Handle the ObjC '@protocol' the same as '@interface'
+ - Add 'make check' and 'make clean' (Ger Hobbelt)
+ - Add align_right_cmt_at_col (Ger Hobbelt)
+ - Add sp_pp_concat and sp_pp_stringify (Ger Hobbelt)
+ - Add mod_add_long_ifdef_{else,endif}_comment (Ger Hobbelt)
+ - Objective C improvements (Etienne Samson)
+ - Only mess with escaped newlines in a comment if inside a preprocessor
+ - Fix pos_xxx options when a preprocessor is near
+ - Apply Debian patch to man file
+ - Fix '<<' indenting/aligning (moved from indent.cpp to align.cpp)
+ - Rework the sp_before_nl_cont option
+ - Fix a few other bugs
+
+
+Changes in uncrustify-0.52 (28 Feb 2009)
+-------------------------------------------------------------------------------
+ - Add sp_before_assign and sp_after_assign
+ - Add sp_enum_before_assign and sp_enum_after_assign
+ - Add indent_var_def_blk
+ - Add sp_inside_sparen_close for the 'CGAL' style
+ - First pass at supporting ECMAScript (.es) files
+ - Add support for the C# '??' operator
+ - Fix conflict between nl_after_func_proto_group and nl_squeeze_ifdef
+ - Add sp_cmt_cpp_start
+ - Add align_on_operator
+ - Fix nl_func_type_name for operators
+ - Allow '$' to be part of identifiers (global change)
+ - Fix detection of the '*' in 'int a = b[0] * c;'
+ - Fix and improve the description of nl_multi_line_cond
+ - Fix handling of global namespace type such as '::sockaddr'
+ - Add nl_after_brace_close
+ - Add nl_func_scope_name
+ - Add cmt_insert_file_footer
+
+
+Changes in uncrustify-0.51 (27 Nov 2008)
+-------------------------------------------------------------------------------
+ - Prefer to split at ',' and then '=' in for() statements if at paren level
+ - Fix a NULL deref crash
+ - Fix nl_namespace_brace when something trails the open brace
+ - Get sp_after_sparen and sp_sparen_brace to play well together
+ - Ignore trailing comments when inserting the function header comment
+ - Combine two C comments when they have no space between them "/***//***/"
+ - Add cmt_insert_before_preproc
+ - Add mod_remove_empty_return
+ - Add nl_comment_func_def
+ - Fix aligning of anonymous bit fields
+ - Add indent_align_assign
+ - Add sp_before_case_colon
+ - Fix D 'invariant' handling
+ - Add sp_invariant_after_paren and sp_invariant_paren
+ - Fix handling of the C# [assembly: xxx] construct
+ - Fix handling of the C# 'base()' construct
+ - Add sp_range for the D '..' range operator as in [start .. end]
+ - Update $(fclass) and $(function) to handle operators
+ - Improve handling of inserted comments
+ - Enable 'finally' blocks for C#
+ - Add nl_after_try_catch_finally
+ - Add nl_between_get_set and nl_around_cs_property
+
+
+Changes in uncrustify-0.50 (25-Oct-2008)
+-------------------------------------------------------------------------------
+ - Fix sp_before_unnamed_ptr_star in 'char ** n'
+ - Fix crash when a open brace is at the end of a file
+ - ObjC class definitions do not need { }
+ - Fix ObjC msg detection
+ - Add sp_after_ptr_star_func, sp_before_ptr_star_func
+ - Add sp_after_byref_func, sp_before_byref_func
+ - Treat an ObjC msg decl more like a function def
+ - Add indent_func_const, indent_func_throw (Thanks, Ron)
+ - Fix detection of prototype inside extern or namespace braces
+ - Add align_left_shift to handle aligning of '<<'
+ - Add sp_cpp_cast_paren
+ - Add support for ObjC '@property' statements
+ - Add sp_brace_typedef and sp_case_label
+ - Merge in the lastest UniversalIndent support (Thanks, Thomas!)
+ - Fix extra '\r' in multi-line comments and strings
+ - Add sp_throw_paren
+ - Assume a '<' in a preprocessor can't be part of a template
+ - Don't align a constructor with class variables
+ - Fix ending column error when tokenizing strings
+
+
+Changes in uncrustify-0.49 (22-Aug-2008)
+-------------------------------------------------------------------------------
+ - Allow the MSVC++ '64' suffix on numbers
+ - Initialize align_stack class members for the MSVC++ compiler
+ - Indent a line that starts with '='
+ - Add pos_arith and pos_assign (Thanks, Ron!)
+ - Fix pos_bool & code_width interaction (Thanks, Ron!)
+ - Fix cmt_width, which was going one word over the limit. (Thanks, Ron!)
+ - Major rework of the aligning code to better handle the gap options
+ - Indent comments before 'case' at the same level as 'case'
+ - mod_add_long_*_closebrace_comment adds the right comment type. (Thanks, Ron!)
+ - Relax number parsing even further to accept stuff like "3A"
+ - Add sp_after_oc_colon (Thanks, Kevin!)
+ - Add better detection and labeling of Objective C messages
+ - Add sp_after_send_oc_colon and sp_before_send_oc_colon (Thanks, Kevin!)
+ - Fix detection of '*' in "return n * f();"
+ - Add the 'set' config option which lets you create arbitrary keywords
+ - Add sp_func_call_user_paren and the 'func_call_user' keyword type
+
+
+Changes in uncrustify-0.48 (18-Jul-2008)
+-------------------------------------------------------------------------------
+ - Fix classification of '(' in '#if defined (FOO)'
+ - Add sp_defined_paren
+ - Fix handling of negative in '#if X < -1'
+ - Revert a change that broke indent continuation in an assignment
+ - Fix interaction between nl_squeeze_ifdef and nl_after_{if,for,while,switch,do}
+ - Preprocessor indents are indents, so indent_with_tabs=1 should do tabs
+ - Add pp_indent_count
+ - Handle C++ style casts, such as 'int(42.0)' a bit better
+ - Another rework of template detection
+ - Add sp_before_nl_cont, defaults to 'add'
+ - If a statement starts with 'operator', it is a function call
+ - Change sp_angle_word to be more generic
+ - Add sp_after_operator_sym for "operator ++(" vs "operator ++ ("
+ - Add sp_template_angle for "template<" vs "template <"
+ - Add support for " *INDENT-OFF* " and " *INDENT-ON* "
+ - Shuffle around spacing priorities
+ - Add handling for '...' in variadic templates
+ - Extend nl_template_class to handle anything after 'template <...>'
+ - Treat the template '<' the same as '(' for indenting
+ - Add indent_template_param
+ - Split internal CT_CAST into CT_C_CAST, CT_CPP_CAST and CT_D_CAST
+ - Swap priority of sp_after_angle and sp_before_ptr_star
+ - Change cmt_multi_indent=false to disable all reformatting (needs more work)
+ - Fix align_var_def_span - it wasn't counting newlines when it recursed
+ - Add nl_else_if
+ - mod_full_brace_if: Don't remove braces around certain 'else' statements
+ - Tweak template detection a bit more
+ - Rework and simplify multi-line comment indenting
+ - Add indent_else_if
+ - Improve right-comment aligning
+ - Fix detection of functions with a 'const' return type
+ - Add sp_cond_colon and sp_cond_question
+ - Fine-tune the right comment align stuff
+ - Add cmt_multi_check_last
+ - Add align_right_cmt_gap
+ - Add nl_return_expr
+ - Indent FPAREN_OPEN if after a newline but not before a newline
+ - Give sp_after_operator_sym priority over sp_func_call_paren
+ - Add align_same_func_call_params
+
+
+Changes in uncrustify-0.47 (06-Jun-2008)
+-------------------------------------------------------------------------------
+ - Fix inifinite loop bug in reindent_line
+ - Fix prototype detection with template parameter types
+ - Fix off-by-1 error on positive values for indent_access_spec and indent_label
+ - Add indent_extern to control indent extern-type namespaces
+ - Add initial support for Objective C++ (extension '.mm')
+ - Add nl_before_throw and indent 'throw' if after a prototype
+ - Extend line numbers to 32 bits (used for logging)
+ - Remove alternate token support for '<%', '%>', '<:', ':>', '%:', and '%:%:'
+ - Fix recently-broken mixing of right-comment aligning (PP_ENDIF/PP_ELSE issue)
+ - Indent a 'break' that follows a fully-braced 'case' at the level of the
+   close brace
+ - Add mod_move_case_break
+ - Fix '&' and '*' after 'delete'
+ - Escape opening '/*' when converting C++ comments to C comments
+ - Add sp_inside_braces_empty
+ - Fix cmt_sp_after_star_cont
+ - Fix cmt_sp_before_star_cont
+ - Explicitly disallow a tab after a space
+ - Improve multi-line comment indenting a bit
+ - Add sp_before_unnamed_byref and sp_before_unnamed_ptr_star
+
+
+Changes in uncrustify-0.46 (22-Apr-2008)
+-------------------------------------------------------------------------------
+ - Load the config file, if available, before handling '--universalindent'
+ - Add align_var_def_gap, align_var_def_colon_gap, align_var_struct_gap,
+   align_func_proto_gap, align_mix_var_proto, align_single_line_brace_gap
+ - (internal) Eliminate the 'trailer' stuff, simplify aligning
+
+
+Changes in uncrustify-0.45 (7-Mar-2008)
+-------------------------------------------------------------------------------
+ - Fix buffer overflow in logger code
+ - Add sp_enum_assign
+ - For elipses handling in the GCC extension "case 1 ... 5:"
+ - Add sp_after_class_colon, sp_before_class_colon, and sp_after_type
+ - Send usage text to stdout instead of stderr
+ - Fix mod_add_long_function_closebrace_comment if the file doesn't end in a newline
+ - Redo alignments after splitting long lines
+ - Add indent_relative_single_line_comments
+ - Add indent_access_spec_body
+ - Fix indent_func_proto_param to work on constructors
+ - Add cmt_indent_multi
+ - Add align_single_line_brace and align_single_line_func
+ - Fix interaction of virtual braces and #pragma
+ - Fix indenting problem with an assignment the last part of a for()
+ - Fix the order of opening files so that '-f' and '-o' can be used together
+ - Added a man file
+ - Many improvements thanks to Stas Grabois
+ - Fix a D problem due the lack of semicolons after struct/enum definitions
+ - Improve the way aligning is done
+
+
+Changes in uncrustify-0.44 (12-Feb-2008)
+-------------------------------------------------------------------------------
+ - Fix issue with #else and unmatched braces (issue 1868493)
+ - Update UnivarsalIndentGUI config output
+ - Add the version to generated config files
+ - Add nl_multi_line_define
+ - Minimize distance between code and the backslash-newline in macros
+ - Properly handle stuff like '#define MYHEADER <asm/arm.h>'
+ - Fix detection of 'int foo(int);' in C++ (func proto, not class variable)
+ - Improve handling of multi-line comments in a macro
+ - Fix crash bug with some ctype implementations
+ - Fix incorrect indenting of nested #endif with pp_if_indent_code
+ - Fix problem with nl_after_if and nl_before_if w/ trailing comments
+
+
+Changes in uncrustify-0.43 (08-Jan-2008)
+-------------------------------------------------------------------------------
+ - Add align_right_cmt_mix to control aligning of comments after '}' and '#endif'
+ - Allow a line split after an assignment
+ - Fix infinite loop bug
+ - Add sp_sign and sp_incdec
+ - Fix vbrace conversion where some are converted and some aren't
+ - Add a vbrace before a #pragma instead of after
+ - Improve Objective C support
+ - Add sp_before_oc_colon, sp_after_oc_scope, and sp_after_oc_type for ObjC
+ - Add align_oc_msg_spec_span for ObjC
+ - Add sp_member for spacing around '->' and '.'
+ - More template handling improvements
+ - Fix a NULL dereference related to __attribute__
+
+
+Changes in uncrustify-0.42 (30-Nov-2007)
+-------------------------------------------------------------------------------
+ - Fix bug that would remove a newline after a C++ comment
+ - Add "--mtime" command line option to preserve the mtime
+ - Remove extra semicolons before inserting newlines after semicolons
+ - Fix broken struct initializer alignment
+ - Fix problem with pos_class_comma in a #define
+ - Fix problem with an incomplete statement in a #define and virtual braces
+ - Add indent_func_proto_param and indent_func_def_param
+ - Add nl_func_proto_type_name, split from nl_func_type_name
+ - Add mod_add_long_switch_closebrace_comment, mod_add_long_function_closebrace_comment
+ - Add mod_sort_import to sort import statements (Java/D)
+ - Add mod_sort_using to sort using statements (C#)
+ - Add mod_sort_include to sort #include (C/C++) and #import (ObjC) statements
+ - Add indent_func_class_param, indent_func_ctor_var_param, and
+   indent_func_param_double
+ - Fix inserting a newline before a preprocessor
+ - Don't split empty function parens for code_width stuff
+
+
+Changes in uncrustify-0.41 (07-Nov-2007)
+-------------------------------------------------------------------------------
+ - Add cmt_insert_func_header, cmt_insert_file_header, and cmt_insert_class_header
+ - Fix detection of prototypes without named parameters
+ - sp_after_byref and sp_after_ptr_star only are applied if before a word
+ - internal rework
+ - Add pp_define_at_level
+ - Fix detection of deref in "sizeof *x"
+ - Fix broken output of backslash-newline in certain situations
+ - Fix pp_indent_if stuff
+ - Add nl_after_brace_open_cmt
+ - Properly handle anonymous namespaces
+ - Add pp_space_count
+
+
+Changes in uncrustify-0.40 (12-Oct-2007)
+-------------------------------------------------------------------------------
+ - Simplify preprocessor indenting
+ - Add pp_indent_region and pp_region_indent_code
+ - Add pp_indent_at_level
+ - Add pp_indent_if and pp_if_indent_code
+ - Add initial VALA support
+ - Fix a problem with mod_full_paren_if_bool and functions
+ - Add nl_func_paren
+ - Fix function type parameter marking (broken in the last few releases)
+ - Don't remove newline chunks before/after a preprocessor
+
+
+Changes in uncrustify-0.39 (25-Sep-2007)
+-------------------------------------------------------------------------------
+ - Improve conversion operators
+ - Prevent undesired chunk combining ("~ ~" vs "~~" in D)
+ - Add nl_after_multiline_comment
+ - Fix handling of try/catch/finally blocks in virtual braces
+ - Add sp_inv, sp_not, sp_addr, sp_deref (default to remove)
+ - Fix nl_class_brace
+ - Fix indent_func_call_param
+ - Add nl_create_if_one_liner, nl_create_for_one_liner, nl_create_while_one_liner
+ - Add indent_preserve_sql
+ - Fix one-liner detection with multiple statements on one line
+ - Add nl_func_leave_one_liners and nl_if_leave_one_liners
+ - More template improvements
+
+
+Changes in uncrustify-0.38 (04-Sep-2007)
+-------------------------------------------------------------------------------
+ - Fix line splitting WRT the CT_SPACE token
+ - Improve function call/prototype/definition detection
+ - Fix some spacing issues
+ - More template improvements
+ - Allow for a C++ struct constructor
+ - Add nl_before_access_spec and nl_after_access_spec
+ - Add cmt_width, cmt_c_group, cmt_c_nl_start, cmt_c_nl_end
+ - Handle conversion operators
+
+
+Changes in uncrustify-0.37 (16-Aug-2007)
+-------------------------------------------------------------------------------
+ - A bunch of D language improvements
+ - Add sp_d_array_colon, nl_assign_square, nl_after_square_assign
+ - Fix static keyword sort order
+ - Improve typedef detection and aligning
+ - Split nl_ds_struct_enum_close_brace out of nl_ds_struct_enum_cmt
+ - Add indent_paren_close
+ - Add indent_comma_paren and indent_bool_paren
+
+
+Changes in uncrustify-0.36 (04-Aug-2007)
+-------------------------------------------------------------------------------
+ - Add nl_after_vbrace_open
+ - Improve option descriptions
+ - Fix seg faults (check for NULL)
+ - Fix spacing for operators () and []
+ - Add sp_before_dc and sp_after_dc to control spacing around '::'
+ - Split pos_class_comma from pos_comma
+ - Improve line splitting a little - no longer break at '::' or '->' or '.'
+ - Add nl_enum_leave_one_liners and nl_getset_leave_one_liners
+ - Add mod_remove_extra_semicolon
+ - Fix handling of macro-open and macro-close
+ - Add align_var_struct_thresh
+ - Improve handling of comments after braces
+ - Add support for Qt slots and signals
+ - Add align_typedef_amp_style and align_var_def_amp_style
+ - Add sp_attribute_paren and handling of the '__attribute__' macro
+ - Add align_typedef_func, improve aligning of typedefs
+ - Add sp_after_semi_for_empty
+
+
+Changes in uncrustify-0.35 (14-Jul-2007)
+-------------------------------------------------------------------------------
+ - Fix bug with nl_func_type_name and empty param list: int foo() { ... }
+ - Don't parse pragma bodies
+ - Properly indent multiline #error and #warning
+ - Change nl_after_func_body to force the newline count (was a minimum)
+ - Fix handling of CT_PTR_STAR when all options are AV_IGNORE
+ - Fix problem when the first token in the file isn't in column 1
+ - Properly mark catch clauses that contain parameters, ie catch (Exception *e)
+ - Add a newline after the open brace for nl_catch_brace, nl_do_brace,
+   nl_else_brace, nl_try_brace, nl_getset_brace, nl_finally_brace
+ - Add nl_multi_line_cond
+ - Fix a bug with mod_full_paren_if_bool
+ - Fix handling of templated variables: Buffer<T>* buf
+ - Fix handling of dynamic_cast<T*>(obj) stuff
+ - Fix detection of templates in for() statements:
+   for (std::map<Key, Value*>::iterator it = map.begin(); ...
+ - Add --no-backup command-line option to replace w/o a backup file
+ - Fix nl_class_leave_one_liners when set to false
+ - Add nl_class_colon, which split the functionality of nl_class_init_args
+ - Improve detection of reference variable declarations (A& B)
+
+
+Changes in uncrustify-0.34 (11-May-2007)
+-------------------------------------------------------------------------------
+ - Add sp_angle_paren and sp_angle_word
+ - Properly handle multi-line CPP comments
+ - Add sp_inside_paren_cast
+ - improve indent_class_colon
+ - fix indenting on open parens
+ - Add sp_before_semi_for_empty
+ - Fix detection of while if the do is in a preprocessor chunk (1675673)
+ - (pawn) Don't add vsemi after case/switch brace close (1684840)
+ - Add nl_assign_leave_one_liners to allow "foo_t foo = { 0, 1 };"
+ - Change handling of #region stuff so that it is indented at brace level
+ - Fix handling of missing semicolon after while-of-do.
+ - Fix crash-bug in handling bad code: "if (a && );"
+ - Add pos_comma
+
+
+Changes in uncrustify-0.33 (05-Mar-2007)
+-------------------------------------------------------------------------------
+ - Fix converting C++ comments with embedded C comments
+ - Fix nl_func_var_def_blk with class variables
+ - Fix some output issues with the 1st line and C++ comments
+ - Eliminate indent_case_body, which wasn't used
+ - Change rules for indenting case braces and the use of indent_case_brace
+ - Fix variable declaration detection at the start of a code block
+ - Add support for custom open/close indenting macros
+   MACRO_OPEN, MACRO_ELSE, MACRO_CLOSE
+ - Fix the config updating routines to NOT lose custom types and stuff
+ - Add nl_after_func_body_one_liner
+ - Fix nl_class_init_args
+ - Add --universalindent option to output an ini file for UniversalIndentGUI
+
+
+Changes in uncrustify-0.32 (20-Feb-2007)
+-------------------------------------------------------------------------------
+ - Enable align_proto_var_def for constructors
+ - Fix while-of-do handling inside virtual braces
+ - Fix problem with comments between a close brace and else
+ - Add sp_before_comma
+ - Change align_var_def_star to align_var_def_star_style
+ - Change align_proto_var_def to align_func_params
+ - Add ls_func_split_full and ls_for_split_full
+ - Rework code width code a bit
+ - Start Objective C support
+ - Add cmt_sp_before_star_cont and cmt_sp_after_star_cont
+ - Fix spacing between (( and ))
+ - Add nl_try_brace, nl_catch_brace, nl_finally_brace, nl_brace_catch,
+   nl_brace_finally, sp_catch_brace, sp_brace_catch, sp_finally_brace,
+   sp_brace_finally, sp_try_brace
+ - Treat typedef functions the same as other function for param aligning
+ - Turn any word after a enum/struct/union into a type
+ - Add sp_getset_brace and nl_getset_brace
+ - Add mod_full_paren_if_bool
+ - Add nl_before_c_comment and nl_before_cpp_comment
+ - Fix nl_class_leave_one_liners
+ - Add nl_ds_struct_enum_cmt
+ - Add sp_balance_nested_parens
+
+
+Changes in uncrustify-0.31 (24-Jan-2007)
+-------------------------------------------------------------------------------
+ - Improve mixed tab indent / space align
+ - Try to fix spacing around embedded comments
+ - Add indent_access_spec
+ - Add __func__ and __FUNCTION__ detection for non-C99 compilers
+ - General code cleanup (Thanks Tom!)
+ - Add indent_xml_string
+ - Add align_proto_var_def to align variables in prototypes
+
+
+Changes in uncrustify-0.30 (24-Nov-2006)
+-------------------------------------------------------------------------------
+ - Use environment variable UNCRUSTIFY_CONFIG if no '-c' option (non-WIN32)
+ - Default to ~/.uncrustify.cfg if no '-c' option and no env var (non-WIN32)
+ - Add '-q' option to the usage info
+ - Added initial embedded SQL support
+ - Many bug fixes
+ - New options: indent_braces_no_func, indent_sing_line_comments, nl_before_if,
+   nl_before_for, nl_after_for, nl_before_while, nl_after_while,
+   nl_before_switch, nl_after_switch, nl_before_do, nl_after_do
+
+
+Changes in uncrustify-0.29 (26-Oct-2006)
+-------------------------------------------------------------------------------
+ - Add support for the 'Klaus' style
+ - Fix a bunch of c++ template bugs
+ - Add option nl_class_leave_one_liners
+
+
+Changes in uncrustify-0.28 (06-Oct-2006)
+-------------------------------------------------------------------------------
+ - Fix D range array detection a[1..4] => a[1 .. 4]
+ - Fix D delegate variable aligning
+ - More documentation updates (thanks Dirk!)
+ - New options: nl_after_semicolon and nl_after_open_brace
+
+
+Changes in uncrustify-0.27 (23-Sep-2006)
+-------------------------------------------------------------------------------
+ - Improve template detection again (allow CT_TYPE in a template)
+ - Fix bad formatting in "[ABC * 123]" and "[0xf & *val]"
+ - Add --replace option to convert files in-place
+ - Use a map for the options
+ - Major configuration/option cleanup
+ - add -o option to write to a file instead of stdout
+
+
+Changes in uncrustify-0.26 (09-Sep-2006) (removed a number from the version)
+-------------------------------------------------------------------------------
+ - Fix preprocessor labeling WRT comments
+ - Fix an indenting problem
+ - Add sp_after_byref
+ - Fix alignment of global variable definitions
+ - Fix detection of deref inside squares: a[*p]
+ - Fix a weird indenting bug
+ - Fix D template ! spacing
+ - Add sp_after_operator
+ - Add nl_template_class
+ - Add start to detailed docs inside the program
+ - Add --prefix and --suffix command line args
+ - Add align_enum_equ_thresh and fix align_enum_equ_span
+ - Fix formatting of function typedefs
+ - Add indent_member
+ - Simplify the indenting code a bit
+ - Improve type_cast stuff (ie, dynamic_cast<> or static_cast<>) and templates
+
+
+Changes in uncrustify-0.0.25 (26-Aug-2006)
+-------------------------------------------------------------------------------
+ - Add sp_after_ptr_star, sp_before_ptr_star, sp_between_ptr_star
+ - Fix D tokenizing for numbers and strings
+ - Fix a bug with cast detection and with nl_after_func_proto
+ - Improve template detection
+ - Rename nl_bool_pos to pos_bool
+ - Add pos_class_colon
+ - Add indent_class_colon
+ - Add nl_class_init_args
+ - Add nl_collapse_empty_body
+ - Add indent_square_nl
+
+
+Changes in uncrustify-0.0.24 (05-Aug-2006)
+-------------------------------------------------------------------------------
+ - Add initial PAWN support (thanks to Derek Evan Mart for testing and motivation!)
+ - Fix parsing of numbers like 10.0
+ - Fix double negative (- -x) vs (--x)
+ - Add ability to convert C++ (//) comments into C (/* */) comments
+ - Fix usage of indent_columns; output_tab_size is only needed if using tabs
+ - Add first small step in code width handling
+ - New options: sp_fparen_brace, sp_macro, sp_marco_func,
+   nl_elseif_brace, mod_pawn_semicolon, cmt_cpp_to_c, cmt_cpp_group,
+   cmt_cpp_nl_start, cmt_cpp_nl_end, sp_after_tag
+
+
+Changes in uncrustify-0.0.23 (22-Jul-2006)
+-------------------------------------------------------------------------------
+ - Fix some crash bugs and some formatting problems
+ - Fix Windows CRLF issues (binary vs text mode)
+ - Add indent_class and indent_namespace
+ - Add nl_class_brace and nl_namespace_brace
+ - Add handling of operator stuff in CPP
+ - Improve the test script a bit
+ - Add sp_inside_fparens
+ - Add ability to define types in the config file
+ - Started work on improving #ifdef handling by evaluating the preprocessor
+
+
+Changes in uncrustify-0.0.22 (15-Jul-2006)
+-------------------------------------------------------------------------------
+ - Implement nl_max, nl_before_block_comment, nl_after_func_body,
+    nl_after_func_proto, nl_after_func_proto_group
+ - Improve detection of function prototypes
+ - Improve marking of function prototype-related tokens
+ - Improve variable definition aligning
+ - fix align_var_def threshold
+ - Improve handling of "private:" style stuff
+ - Handle types with "::" in them
+ - Add preprocessor spacing and indenting
+ - Fix tab indenting style 1 (tab indent, space align)
+ - Improve multi-line comment formatting
+
+
+Changes in uncrustify-0.0.21 (01-Jul-2006)
+-------------------------------------------------------------------------------
+ - Clean up some memory leaks & uninitialized variables
+ - Add option to process multiple files at once
+ - Change the newlines values from [UNIX, DOS, MAC] to [LF, CRLF, CR]
+ - Properly mark the parens for functions
+ - Implement control over the format of the function prototypes and definitions
+ - Update configuration.txt
+
+
+Changes in uncrustify-0.0.20 (10-Jun-2006)
+-------------------------------------------------------------------------------
+ - Fix cast on a sizeof: (INT32)sizeof(x)
+ - Fix this: "#define SOME_JUNK /*lint -e123 */(const mytype_t *)-1"
+ - Don't align function typedefs (fixed again)
+ - Finally fix the DOS and MAC line-ending support
+ - Add line-ending autodetection
+ - Add Windows build support
+
+
+Changes in uncrustify-0.0.19 (27-May-2006)
+-------------------------------------------------------------------------------
+ - Fix C/C++/C# casts
+ - Improve D casts
+
+
+Changes in uncrustify-0.0.18 (12-May-2006)
+-------------------------------------------------------------------------------
+ - Add nl_bool_pos to move boolean ops between eol and sol
+ - Improve C99 array initializer aligning/formatting
+ - Replace nl_eat_start, nl_eat_end, and nl_eof_min with nl_start_of_file,
+   nl_start_of_file_min, nl_end_of_file, and nl_end_of_file_min
+
+
+Changes in uncrustify-0.0.17 (03-May-2006)
+-------------------------------------------------------------------------------
+ - Add nl_eat_start to remove newlines at the start of the file
+ - Add nl_eat_end to remove newlines at the end of the file
+ - Add nl_eof_min to set the minimum number of newlines at the end of file
+ - Add newlines setting to configure the newline output
+ - Add '-q' command line option to turn off logging
+ - Fix bug in nl_func_var_def_blk handling
+
+
+Changes in uncrustify-0.0.16 (21-Apr-2006)
+-------------------------------------------------------------------------------
+ - Add a stack alignment helper class
+ - Improve typedef formatting
+ - Add aligning thresholds for typedefs and assignments
+ - update the automake/autoconf stuff
+
+
+Changes in uncrustify-0.0.15 (14-Apr-2006)
+-------------------------------------------------------------------------------
+ - Switch to C++
+ - Improve C++ template formatting
+ - Improve C++ class handling
+
+
+Changes in uncrustify-0.0.14 (09-Apr-2006)
+-------------------------------------------------------------------------------
+ - Read from stdin if no file is specified
+ - Build on OS X
+
+
+Changes in uncrustify-0.0.13 (07-Apr-2006)
+-------------------------------------------------------------------------------
+ - Rewrite the indent code
+ - Fix a bunch of small problems with C casts
+ - Rename a few files
+ - Add more tests
+
+
+Changes in uncrustify-0.0.12 (30-Mar-2006)
+-------------------------------------------------------------------------------
+ - Add support for D template format "Foo!(int,char)"
+ - Fix a format bug in a log
+ - Fix elipsis spacing (remove space before elipsis)
+ - Don't use getopt as it isn't all that portable (at least for QNX)
+ - Rename some files
+ - Bugfix: don't add virtual braces on the same line as a preprocessor
+ - Bugfix: clean up indexed array aligning
+
+
+Changes in uncrustify-0.0.11 (27-Mar-2006)
+-------------------------------------------------------------------------------
+ - fix brace analysis on else statement
+ - allow options to depend on other options
+ - set the parent for case braces
+ - handle/indent the C++ class colon thingy
+ - handle C++ constructors and function defs
+ - special handling for '::' operator
+ - implement case indenting
+ - handle cout '<<' indenting
+ - handle DOS and MAC line endings in multiline comments
+ - rename some indent options
+ - fix ifndef handling
+ - fix volatile handling
+ - fix private/public/protected 'label' handling
+ - alternate punctuators are also part of C++
+ - handle C++ wide L"strings"
+ - improve C# get/set handling
+ - fix spacing bug "a++;" vs "a ++;" due to statement start misdetect
+ - add nl_assign_brace
+ - fix parent of vbrace close
+ - more test enhancements
+
+
+Changes in uncrustify-0.0.10 (22-Mar-2006)
+-------------------------------------------------------------------------------
+ - Complete rewrite of tokenizer and brace parser
+ - Added support for D nested comments
+ - Fixed some virtual brace bugs
+ - Added some documentation for the brace parsing stuff
+ - Add more tests to improve coverage (still lacking)
+
+
+Changes in uncrustify-0.0.9 (18-Mar-2006)
+-------------------------------------------------------------------------------
+ - Major enhancements for D
+ - Add handling for special "[]" sequence for C#/D
+ - add some more tests
+
+
+Changes in uncrustify-0.0.8 (13-Mar-2006)
+-------------------------------------------------------------------------------
+ - update TODO list
+ - add a threshold for brace removal
+ - improve brace removal
+ - keep track of whether a token follows a tab
+ - add option to preserve non-indenting tabs
+ - major keyword and operator cleanup for C++, C#, D, and Java
+ - add 'string' variants for ARITH, COMPARE, etc
+ - add C# get/set detection
+ - add template <type> detection
+ - add colon handling for class stuff and anonymous bitfields
+ - pop the whole indent stack when leaving a preprocessor
+ - fix embedded return handling in C#, ie: [ this should return negative ]
+ - fix a problem with the ifdef frame stack (still a problem lurking...)
+ - handle literal strings (C#)
+ - handle non-keyword words (C#) -- example: @if @switch
+ - set the parent on 'do' braces
+ - handle C# #region preprocessor stuff
+ - partially implement align on tabstop
+ - fix virtual brace spacing (no more "else return;" => "elsereturn;")
+ - add some more tests
+

@@ -1,0 +1,23 @@
+
+// prototypes
+forward bar()
+native baz()
+foo();
+
+enum rect { left, top , right, bottom }
+native intersect[rect](src1[rect], src2[rect])
+
+native getparam(a[], b[], size) = host_getparam
+
+// function w/o brace
+main()
+printf("hello\n")
+foo() bar()
+
+stock ts_is_waiting(id) return(ts_get_message(id) == TSMSG_WAITING)
+
+// regular old functions
+baz() {
+	do_something()
+}
+

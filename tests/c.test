@@ -1,0 +1,258 @@
+#
+# Test cases specifically for the C language.
+# $Id: c.test 1630 2009-10-10 17:18:35Z bengardner $
+#
+# test.name  config.file  input.file
+
+
+# little general tests
+
+00000  indent.cfg              c/comment-indent.c
+00001  cpp_to_c-1.cfg          c/comment-indent.c
+00002  cpp_to_c-2.cfg          c/comment-indent.c
+00003  cpp_to_c-3.cfg          c/comment-indent.c
+
+00004  indent-1.cfg            c/switch.c
+
+00005  ben.cfg                 c/cmt-align.c
+
+00006  indent.cfg              c/comment-convert.c
+00007  cpp_to_c-1.cfg          c/comment-convert.c
+00008  cpp_to_c-2.cfg          c/comment-convert.c
+00009  cpp_to_c-3.cfg          c/comment-convert.c
+
+# brace styles
+00010  ben.cfg                 c/braces.c
+00011  brace-allman.cfg        c/braces.c
+00012  brace-banner.cfg        c/braces.c
+00013  brace-gnu.cfg           c/braces.c
+00014  brace-kr.cfg            c/braces.c
+00015  brace-ws.cfg            c/braces.c
+00016  brace-ws2.cfg           c/braces.c
+
+00020  ben.cfg                 c/define-if-indent.c
+00050  brace-remove-2.cfg      c/brace-remove.c
+00051  brace-remove-all.cfg    c/brace-remove.c
+00052  brace-remove-all.cfg    c/brace-remove2.c
+00053  nl_brace_test.cfg       c/brace.c
+00054  if_chain.cfg            c/if_chain.c
+00055  cgal.cfg                c/braces-2.c
+
+00060  ben.cfg                 c/braces-2.c
+00061  ben.cfg                 c/braces-3.c
+00062  ben.cfg                 c/braces-4.c
+00065  ben.cfg                 c/braces-5.c
+00066  ben.cfg                 c/vb-while.c
+00067  ben.cfg                 c/vb-do.c
+00068  ben.cfg                 c/bsnl.c
+00069  ben.cfg                 c/vb-pp.c
+
+00070  ben.cfg                 c/return-multi.c
+00071  ben.cfg                 c/include_define.h
+00072  star_pos-0.cfg          c/align-proto.c
+00073  ben.cfg                 c/nl_proto_endif.c
+
+00081  else-if-1.cfg           c/else-if.c
+00082  else-if-2.cfg           c/else-if.c
+
+00091  cond-1.cfg              c/cond.c
+00092  cond-2.cfg              c/cond.c
+
+00101  ben.cfg                 c/bugs-1.c
+00102  ben.cfg                 c/bugs-2.c
+00103  ben.cfg                 c/bugs-3.c
+00104  ben.cfg                 c/bugs-4.c
+00105  ben.cfg                 c/bugs-5.c
+00106  ben.cfg                 c/bugs-6.c
+00107  ben.cfg                 c/bugs-7.c
+00108  ben.cfg                 c/bugs-8.c
+
+00110  ben.cfg                 c/misc.c
+00111  brace-kr-br.cfg         c/misc.c
+
+00120  sp_cmt_cpp_start_remove.cfg c/sp_cmt_cpp_start.c
+00121  sp_cmt_cpp_start_add.cfg    c/sp_cmt_cpp_start.c
+00122  sp_cmt_cpp_start_force.cfg  c/sp_cmt_cpp_start.c
+
+00130  ben.cfg                 c/minus-minus.c
+
+00140  ben.cfg                 c/global-vars.c
+00141  ben.cfg                 c/deref.c
+00142  ben.cfg                 c/type-cast.c
+00143  ben.cfg                 c/t3.in.c
+00144  ben.cfg                 c/align-proto-vars.c
+
+# casts
+00150  ben.cfg                 c/casts.c
+00151  cast-sp-r.cfg           c/casts.c
+00152  cast-sp-a.cfg           c/casts.c
+00153  cast-type.cfg           c/casts.c
+00154  sp_after_cast.cfg       c/casts.c
+
+# fcn indents
+00160  indent_func_param.cfg       c/fcn_indent.c
+00161  indent_func_call_param.cfg  c/fcn_indent.c
+00162  indent_func_def_param.cfg   c/fcn_indent.c
+00163  indent_func_proto_param.cfg c/fcn_indent.c
+
+00170  /dev/null               c/beautifier-off.c
+
+# switch & case stuff
+00201   case-1.cfg             c/case.c
+00202   case-2.cfg             c/case.c
+00203   case-3.cfg             c/case.c
+
+# structure initializers
+00301   ben.cfg                c/align-struct-init.c
+00302   ben.cfg                c/one-liner-init.c
+00303   1liner-split.cfg       c/one-liner-init.c
+00304   1liner-no-split.cfg    c/one-liner-init.c
+
+00310   /dev/null              c/sp_embed_comment.c
+
+# aligning tresholds
+00401   align-1.cfg            c/align-equ.c
+00402   align-1.cfg            c/align-var.c
+00403   align-2.cfg            c/align-var.c
+00404   align-3.cfg            c/align-var.c
+00405   align-3.cfg            c/bits.c
+
+00411   ben.cfg                c/align-typedef.c
+00412   align_typedef_func-0.cfg c/align-typedef.c
+00413   align_typedef_func-1.cfg c/align-typedef.c
+00414   align_typedef_func-2.cfg c/align-typedef.c
+
+00421   nl_ds_struct_enum-1.cfg c/nl_ds_struct_enum.c
+00422   nl_ds_struct_enum-2.cfg c/nl_ds_struct_enum.c
+
+00430   indent_paren_close-0.cfg c/paren-indent.c
+00431   indent_paren_close-1.cfg c/paren-indent.c
+00432   indent_paren_close-2.cfg c/paren-indent.c
+
+# boolean and comma positioning
+00501   bool-pos-eol.cfg       c/bool-pos.c
+00502   bool-pos-sol.cfg       c/bool-pos.c
+00503   pos_compare-sol.cfg    c/pos_compare.c
+00504   pos_compare-eol.cfg    c/pos_compare.c
+00505   pos_conditional-sol.cfg c/pos_conditional.c
+00506   pos_conditional-eol.cfg c/pos_conditional.c
+
+00600  indent.cfg              c/dos.c
+00601  indent.cfg              c/mac.c
+00611  pp-indent-1.cfg         c/pp-space.c
+00612  pp-indent-2.cfg         c/pp-space.c
+00613  pp-indent-3.cfg         c/pp-space.c
+00614  pp-space.cfg            c/pp-space.c
+
+00615  pp-indent-2.cfg         c/pp-nest.c
+
+00620  ben.cfg         c/indent-assign.c
+00621  nl_endif.cfg         c/nl_endif.c
+
+00631  nl_assign1.cfg         c/nl_assign.c
+00632  nl_assign2.cfg         c/nl_assign.c
+
+# function def newlines
+00701  func-def-1.cfg          c/function-def.c
+00702  func-def-2.cfg          c/function-def.c
+00703  func-def-3.cfg          c/function-def.c
+
+00710  add_long_closebrace_comment_1.cfg c/add_long_comment.c
+
+# nl_after_semicolon and nl_after_open_brace
+00721  nl_semicolon.cfg        c/nl-semicolon.c
+
+# function types
+00801  ben.cfg                 c/fcn_type.c
+00802  ben.cfg                 c/funcfunc.c
+
+# code width
+00901  width.cfg               c/code_width.c
+00902  width-2.cfg             c/code_width.c
+00903  width-3.cfg             c/code_width.c
+
+# pascal ptr_type
+00910  pascal_ptr.cfg          c/pascal_ptr.c
+00911  empty_body.cfg          c/pascal_ptr.c
+
+01000  mod-paren.cfg           c/mod-paren.c
+01001  nl-comment.cfg          c/nl-comment.c
+01002  mod-paren2.cfg          c/mod-paren.c
+
+01005  mod_case_brace_add.cfg  c/mod_case_brace.c
+01006  mod_case_brace_rm.cfg   c/mod_case_brace.c
+
+01011  del_semicolon.cfg       c/semicolons.c
+01012  ben.cfg                 c/semicolons.c
+
+01015  /dev/null               c/paren_indent.c
+01016  align_attr.cfg          c/align_attr.c
+
+01020  kw_subst.cfg            c/kw_subst.c
+01021  kw_subst3.cfg           c/hello.c
+01022  kw_subst3.cfg           c/kw_subst.c
+
+01030  multi.cfg               c/multi.h
+
+01035  func_wrap1.cfg          c/func_wrap.c
+01036  func_wrap2.cfg          c/func_wrap.c
+01037  type_wrap.cfg           c/type_wrap.c
+
+01040  newline_after_endif.cfg c/newline_after_endif.c
+
+01050  func_call_user.cfg      c/func_call_user.c
+
+# big general tests
+20000 ben.cfg                  c/i2c-core.c
+20001 preproc-cleanup.cfg      c/directfb.h
+
+# clark's style - blank lines before and after flow control, indented comments
+20100 clark.cfg                c/i2c-core.c
+20101 clark.cfg                c/comment-indent.c
+20102 clark.cfg                c/indent.cpp
+20103 clark.cfg                c/output.cpp
+
+20200 xml-str.cfg              c/xml.c
+20201 xml-str.cfg              c/align-string.c
+
+20300 ben.cfg                  c/preproc-if.c
+20301 d.cfg                    c/preproc-if.c
+20302 cpp_to_c-1.cfg           c/nl-cont.c
+20303 cpp_to_c-1.cfg           c/nl-cont2.c
+
+20310 ben.cfg                  c/empty-for.c
+20311 ben.cfg                  c/pragma.c
+
+20315 pp_ret.cfg               c/pp_ret.c
+
+20320 nl_create_one_liner.cfg  c/nl_create_one_liner.c
+20325 sort_imports.cfg         c/sort_include.c
+
+# some embedded sql stuff
+21000 ben.cfg                  sql/mysql.sqc
+21001 ben.cfg                  sql/sta-select.sqc
+
+
+21010 pp_if_indent-0.cfg       c/ifdef-indent.c
+21011 pp_if_indent-1.cfg       c/ifdef-indent.c
+21012 pp_if_indent-2.cfg       c/ifdef-indent.c
+21013 pp_if_indent-3.cfg       c/ifdef-indent.c
+
+21015 endif.cfg                c/endif.c
+21016 cmt_nl_end.cfg           c/cmt_nl_end.c
+
+21021 cmt_multi-1.cfg          c/cmt_multi.c
+21022 cmt_multi-2.cfg          c/cmt_multi.c
+
+21031 align_right_cmt_gap-1.cfg c/cmt_right_align.c
+21032 align_right_cmt_gap-2.cfg c/cmt_right_align.c
+
+21051 return-1.cfg              c/nl_return_expr.c
+21052 return-2.cfg              c/nl_return_expr.c
+21053 return-3.cfg              c/nl_return_expr.c
+21054 return-4.cfg              c/nl_return_expr.c
+
+66601 ger.cfg			c/custom_types_ssl.c
+66602 custom_types_ssl.cfg	c/custom_types_ssl.c
+66603 ger.cfg			c/pp_concat_asn1.h
+

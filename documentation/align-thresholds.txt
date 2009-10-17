@@ -1,0 +1,218 @@
+-------------------------------------------------------------------------------
+Alignment thresholds:
+
+Alignment threshold are used to prevent aligning of certain text.
+
+Consider this example when aligning assignments:
+
+   a = 2;
+   gld.settings[somevariable] = 5;
+
+Without thresholds, this would result in:
+
+   a                          = 2;
+   gld.settings[somevariable] = 5;
+
+However, this is likely not desired.
+
+So to handle this, we set a limit on the number of columns that a alignment
+may move a token.  If we set the threshold to, say, 3 characters, then
+the two would not be aligned together because 'a = 2' would have to be moved
+by 25 columns.
+
+Here's a more complicated case:
+
+   a = 1;
+   bb = 2;
+   ccc = 3;
+   dddd = 4;
+   eeeee = 5;
+   ffffff = 6;
+
+In this case, we may want this output:
+
+   a      = 1;
+   bb     = 2;
+   ccc    = 3;
+   dddd   = 4;
+   eeeee  = 5;
+   ffffff = 6;
+
+But, with a threshold of 3, 'a' and 'ffffff' cannot be aligned together.
+
+So how should these thresholds be implemented?
+
+One approach is to use the threshold as the maximum difference between the
+current maximum and the new maximum.  Using this approach, all 6 lines above
+are aligned, because the change for each is 1 column.
+
+Consider this with a line-span of 3 and a column-threshold of 3.
+Note that we'll now need to keep track of the last line processed.
+(line and column numbers added for clarity)
+
+             111111
+    123456789012345
+   ---------------
+1 | a = 1;
+2 | eeeee = 5;
+3 | ffffff = 6;
+
+On line 1, the maxcol is set to 3.
+On line 2, the maxcol would be set to 7, except that exceeds the threshold.
+On line 3, the maxcol would be set to 8, except that exceeds the threshold.
+
+So, it ends up with one item in the align stack - line 1.
+Then we pick up from where we left off - on line 2.
+On line 2, the maxcol is set to 7.
+On line 3, the maxcol is set to 8.
+
+End result:
+             111111
+    123456789012345
+   ---------------
+1 | a = 1;
+2 | eeeee  = 5;
+3 | ffffff = 6;
+
+
+Now lets get tricky.
+
+             111111
+    123456789012345
+   ---------------
+1 | a = 1;
+2 | eeeee = 5;
+3 | ccc = 3;
+4 | ffffff = 6;
+
+How should this be aligned?
+I think we need to add another list - a 'skipped' list, that runs in parallel
+with the 'aligned' list.
+
+On line 1, the maxcol is set to 3, added to the aligned list.
+On line 2, col exceeds the threshold, so it is added to the skipped list.
+On line 3, the maxcol is set to 5, added to the aligned list.
+Now, after an item is added to the aligned list, the skipped list must be re-scanned.
+We now see that line 2 is only 2 columns different, so it is added and maxcol = 7.
+The skipped list is now empty.
+On line 4, the maxcol is set to 8, added to the aligned list.
+
+So the output is:
+
+             111111
+    123456789012345
+   ---------------
+1 | a      = 1;
+2 | eeeee  = 5;
+3 | ccc    = 3;
+4 | ffffff = 6;
+
+
+Now for a case where the skipped list is not absorbed:
+
+             111111
+    123456789012345
+   ---------------
+1 | a = 1;
+2 | iiiiiiiiiiiiieeeee = 5;
+3 | ccc = 3;
+4 | ffffff = 6;
+
+On line 1, the maxcol is set to 3, added to the aligned list.
+On line 2, col exceeds the threshold, so it is added to the skipped list.
+On line 3, the maxcol is set to 5, added to the aligned list.
+Skipped list is scanned, nothing moved from the skipped list to the aligned list.
+On line 4, the maxcol is set to 8, added to the aligned list.
+
+So the output is:
+
+             111111
+    123456789012345
+   ---------------
+1 | a      = 1;
+2 | iiiiiiiiiiiiieeeee = 5;
+3 | ccc    = 3;
+4 | ffffff = 6;
+
+As a reminder, the old system would have produced:
+
+1 | a                  = 1;
+2 | iiiiiiiiiiiiieeeee = 5;
+3 | ccc                = 3;
+4 | ffffff             = 6;
+
+Which is probably not wanted.
+
+
+
+
+--===---===---===---===--
+How to do this generically in the code...
+
+Easy case - one item per line.
+
+Here's the functions and what each do:
+align_start(line_span, col_thresh)
+align_add(pc)
+align_flush()
+align_newline(count)
+align_end()
+
+For each entry, a sequence number is kept.
+
+align_start(line_span, col_thresh)
+  - initializes the align and skipped lists
+  - zero max_column
+  - zero cur_seqnum
+  - zero nl_count
+
+align_add(pc)
+  - update cur_seqnum, assign to item
+  - if item column is within threshold
+    - zero nl_count
+    - add to the aligned list
+    - if item column is > max_col
+      - update max_col
+      - re-adds all items on the skipped list
+  - if item column is not within threshold, add to skipped list
+
+align_newline(count)
+  - adds count to nl_count
+  - if nl_count > line_span, call align_flush()
+
+align_flush()
+  - step through all the items in aligned list and align the items to max_column
+    - keep the seq_num of the last aligned item
+  - zero max_column
+  - remove all items with a seq_num < last aligned seq_num
+  - call align_add on all remaining items in the skipped list
+
+align_end()
+  - call align_flush
+  - clear the lists
+  - free resources, etc
+
+Example usage:  Aligning trailing comments
+
+void align_trailing_comments(void)
+{
+   chunk_t *pc;
+
+   align_start(cpd.settings[UO_align_right_cmt_span],
+               cpd.settings[UO_align_right_cmt_thresh]);
+
+   for(pc = chunk_get_head(); pc != NULL; pc = chunk_get_next(pc))
+   {
+      if ((pc->flags & PCF_RIGHT_COMMENT) != 0)
+      {
+         align_add(pc);
+      }
+      else if (chunk_is_newline(pc))
+      {
+         align_newline(pc->nl_count);
+      }
+   }
+
+   align_end();
+}
+

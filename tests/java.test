@@ -1,0 +1,8 @@
+#
+# Test cases specifically for the Java language.
+# $Id: java.test 434 2006-08-20 20:47:02Z bengardner $
+#
+# test.name  config.file  input.file
+
+# 50000 java.cfg                 java/test.java
+
