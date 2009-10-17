@@ -3630,7 +3630,7 @@ static void handle_cs_square_stmt(chunk_t *os)
 
 
 /**
- * We are on a brace open that is preceeded by a word or square close.
+ * We are on a brace open that is preceded by a word or square close.
  * Set the brace parent to CT_CS_PROPERTY and find the first item in the
  * property and set its parent, too.
  */

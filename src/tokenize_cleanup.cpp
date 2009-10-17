@@ -119,7 +119,7 @@ void tokenize_cleanup(void)
       }
 
       /**
-       * Change CT_STAR to CT_PTR_TYPE if preceeded by CT_TYPE,
+       * Change CT_STAR to CT_PTR_TYPE if preceded by CT_TYPE,
        * CT_QUALIFIER, or CT_PTR_TYPE.
        */
       if ((next->type == CT_STAR) &&

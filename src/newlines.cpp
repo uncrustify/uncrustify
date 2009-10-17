@@ -1520,7 +1520,7 @@ void newlines_cleanup_braces(void)
          {
             if ((pc->flags & PCF_ONE_LINER) == 0)
             {
-               /* Make sure the } is preceeded by two newlines */
+               /* Make sure the } is preceded by two newlines */
                prev = chunk_get_prev(pc);
                if (!chunk_is_newline(prev))
                {
