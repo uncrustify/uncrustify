@@ -1,0 +1,120 @@
+// !$*UTF8*$!
+{
+	commands = (
+		{
+			directory = .;
+			name = make;
+			script = "#!/bin/sh\n./configure\nmake\n";
+			type = other;
+		},
+		{
+			directory = .;
+			name = "Build uncrustify with configuration Debug";
+			script = "#!/bin/sh\n\nxcodebuild -project uncrustify.xcodeproj -configuration Debug build\n";
+			type = build;
+		},
+		{
+			directory = .;
+			name = "Build uncrustify with configuration Release";
+			script = "#!/bin/sh\n\nxcodebuild -project uncrustify.xcodeproj -configuration Release build\n";
+			type = build;
+		},
+		{
+			directory = .;
+			name = "Build uncrustify with configuration Install (xcodebuild only!)";
+			script = "#!/bin/sh\n\nxcodebuild -project uncrustify.xcodeproj -configuration \"Install (xcodebuild only!)\" build\n";
+			type = build;
+		},
+		{
+			directory = .;
+			name = "Clean uncrustify with configuration Debug";
+			script = "#!/bin/sh\n\nxcodebuild -project uncrustify.xcodeproj -configuration Debug clean\n";
+			type = clean;
+		},
+		{
+			directory = .;
+			name = "Clean uncrustify with configuration Release";
+			script = "#!/bin/sh\n\nxcodebuild -project uncrustify.xcodeproj -configuration Release clean\n";
+			type = clean;
+		},
+		{
+			directory = .;
+			name = "Clean uncrustify with configuration Install (xcodebuild only!)";
+			script = "#!/bin/sh\n\nxcodebuild -project uncrustify.xcodeproj -configuration \"Install (xcodebuild only!)\" clean\n";
+			type = clean;
+		},
+		{
+			directory = selection;
+			name = "----";
+			type = clean;
+		},
+		{
+			directory = .;
+			name = "Clean All in uncrustify with configuration Debug";
+			script = "#!/bin/sh\n\nxcodebuild -project uncrustify.xcodeproj -configuration Debug -alltargets clean\n";
+			type = clean;
+		},
+		{
+			directory = .;
+			name = "Clean All in uncrustify with configuration Release";
+			script = "#!/bin/sh\n\nxcodebuild -project uncrustify.xcodeproj -configuration Release -alltargets clean\n";
+			type = clean;
+		},
+		{
+			directory = .;
+			name = "Clean All in uncrustify with configuration Install (xcodebuild only!)";
+			script = "#!/bin/sh\n\nxcodebuild -project uncrustify.xcodeproj -configuration \"Install (xcodebuild only!)\" -alltargets clean\n";
+			type = clean;
+		},
+		{
+			arguments = "-l oc+ -c $SOURCE_ROOT/etc/objc.cfg -q -f $SOURCE_ROOT/tests/input/oc/Fraction.m";
+			directory = .;
+			name = "Run uncrustify from uncrustify with configuration Debug";
+			script = "/Users/andre/Documents/Xcode/CommandLineUtility/C++Tool/uncrustify/build/Debug/uncrustify";
+			type = run;
+		},
+		{
+			arguments = "-l oc+ -c $SOURCE_ROOT/etc/objc.cfg -q -f $SOURCE_ROOT/tests/input/oc/Fraction.m";
+			directory = .;
+			name = "Run uncrustify from uncrustify with configuration Release";
+			script = "/Users/andre/Documents/Xcode/CommandLineUtility/C++Tool/uncrustify/build/Release/uncrustify";
+			type = run;
+		},
+		{
+			arguments = "-l oc+ -c $SOURCE_ROOT/etc/objc.cfg -q -f $SOURCE_ROOT/tests/input/oc/Fraction.m";
+			directory = .;
+			name = "Run uncrustify from uncrustify with configuration Install (xcodebuild only!)";
+			script = "/Users/andre/Documents/Xcode/CommandLineUtility/C++Tool/uncrustify/build/Install (xcodebuild only!)/uncrustify";
+			type = run;
+		},
+		{
+			directory = selection;
+			name = "----";
+			type = run;
+		},
+		{
+			arguments = "-l oc+ -c $SOURCE_ROOT/etc/objc.cfg -q -f $SOURCE_ROOT/tests/input/oc/Fraction.m";
+			debugger = gdb;
+			directory = .;
+			name = "Debug uncrustify from uncrustify with configuration Debug";
+			script = "/Users/andre/Documents/Xcode/CommandLineUtility/C++Tool/uncrustify/build/Debug/uncrustify";
+			type = run;
+		},
+		{
+			arguments = "-l oc+ -c $SOURCE_ROOT/etc/objc.cfg -q -f $SOURCE_ROOT/tests/input/oc/Fraction.m";
+			debugger = gdb;
+			directory = .;
+			name = "Debug uncrustify from uncrustify with configuration Release";
+			script = "/Users/andre/Documents/Xcode/CommandLineUtility/C++Tool/uncrustify/build/Release/uncrustify";
+			type = run;
+		},
+		{
+			arguments = "-l oc+ -c $SOURCE_ROOT/etc/objc.cfg -q -f $SOURCE_ROOT/tests/input/oc/Fraction.m";
+			debugger = gdb;
+			directory = .;
+			name = "Debug uncrustify from uncrustify with configuration Install (xcodebuild only!)";
+			script = "/Users/andre/Documents/Xcode/CommandLineUtility/C++Tool/uncrustify/build/Install (xcodebuild only!)/uncrustify";
+			type = run;
+		},
+	);
+}
