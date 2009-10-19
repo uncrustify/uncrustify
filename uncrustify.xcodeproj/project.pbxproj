@@ -924,6 +924,9 @@
 		65536846107EB7FA00E08A01 /* width.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = width.cpp; sourceTree = "<group>"; };
 		65536921107EC62D00E08A01 /* Xcode Organizer Actions.xccommands */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "Xcode Organizer Actions.xccommands"; sourceTree = "<group>"; };
 		656E28301082F349007F873A /* selector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = selector.m; sourceTree = "<group>"; };
+		659F8D37108A9A380004E4CB /* complex_method.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = complex_method.m; sourceTree = "<group>"; };
+		659F8DA6108AD5AC0004E4CB /* 50040-complex_method.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "50040-complex_method.m"; sourceTree = "<group>"; };
+		659F8DD8108ADCB30004E4CB /* objc_complex_method.cfg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = objc_complex_method.cfg; sourceTree = "<group>"; };
 		65B887C61082CBBD00D10769 /* example.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = example.c; path = documentation/example.c; sourceTree = "<group>"; };
 		65B887C81082CBBD00D10769 /* align-thresholds.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "align-thresholds.txt"; path = "documentation/align-thresholds.txt"; sourceTree = "<group>"; };
 		65B887C91082CBBD00D10769 /* goals.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = goals.txt; path = documentation/goals.txt; sourceTree = "<group>"; };
@@ -1221,6 +1224,7 @@
 				65536357107EB6D900E08A01 /* nl_template_class-remove.cfg */,
 				65536358107EB6D900E08A01 /* nl_try-a.cfg */,
 				65536359107EB6D900E08A01 /* obj-c.cfg */,
+				659F8DD8108ADCB30004E4CB /* objc_complex_method.cfg */,
 				6553635A107EB6D900E08A01 /* op-space-force.cfg */,
 				6553635B107EB6D900E08A01 /* op-space-remove.cfg */,
 				6553635C107EB6D900E08A01 /* pascal_ptr.cfg */,
@@ -1253,12 +1257,12 @@
 				65536377107EB6D900E08A01 /* sort_imports.cfg */,
 				65536378107EB6D900E08A01 /* sp-for-semi.cfg */,
 				65536379107EB6D900E08A01 /* sp_after_cast.cfg */,
-				65DB4D851084CEDC005E7765 /* sp_after_oc_return_type_add.cfg */,
-				65DB4DA11084D098005E7765 /* sp_after_oc_return_type_force.cfg */,
-				65DB4DA21084D098005E7765 /* sp_after_oc_return_type_remove.cfg */,
 				65DB4DD21084D423005E7765 /* sp_after_oc_at_sel_add.cfg */,
 				65DB4DD31084D423005E7765 /* sp_after_oc_at_sel_force.cfg */,
 				65DB4DD41084D423005E7765 /* sp_after_oc_at_sel_remove.cfg */,
+				65DB4D851084CEDC005E7765 /* sp_after_oc_return_type_add.cfg */,
+				65DB4DA11084D098005E7765 /* sp_after_oc_return_type_force.cfg */,
+				65DB4DA21084D098005E7765 /* sp_after_oc_return_type_remove.cfg */,
 				6553637A107EB6D900E08A01 /* sp_cmt_cpp_start_add.cfg */,
 				6553637B107EB6D900E08A01 /* sp_cmt_cpp_start_force.cfg */,
 				6553637C107EB6D900E08A01 /* sp_cmt_cpp_start_remove.cfg */,
@@ -1291,7 +1295,6 @@
 				65536447107EB6D900E08A01 /* cs */,
 				65536452107EB6D900E08A01 /* d */,
 				65536465107EB6D900E08A01 /* ecma */,
-				65536467107EB6D900E08A01 /* java */,
 				65536468107EB6D900E08A01 /* oc */,
 				65536470107EB6D900E08A01 /* pawn */,
 				6553647C107EB6D900E08A01 /* sql */,
@@ -1540,13 +1543,6 @@
 			path = ecma;
 			sourceTree = "<group>";
 		};
-		65536467107EB6D900E08A01 /* java */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = java;
-			sourceTree = "<group>";
-		};
 		65536468107EB6D900E08A01 /* oc */ = {
 			isa = PBXGroup;
 			children = (
@@ -1559,6 +1555,7 @@
 				6553646F107EB6D900E08A01 /* string.m */,
 				656E28301082F349007F873A /* selector.m */,
 				65DB4DB81084D200005E7765 /* return_type.m */,
+				659F8D37108A9A380004E4CB /* complex_method.m */,
 			);
 			path = oc;
 			sourceTree = "<group>";
@@ -1607,7 +1604,6 @@
 				65536592107EB6DA00E08A01 /* cs */,
 				655365A2107EB6DA00E08A01 /* d */,
 				655365B7107EB6DA00E08A01 /* ecma */,
-				655365B9107EB6DA00E08A01 /* java */,
 				655365BA107EB6DA00E08A01 /* oc */,
 				655365C2107EB6DA00E08A01 /* pawn */,
 				655365CC107EB6DA00E08A01 /* sql */,
@@ -1954,13 +1950,6 @@
 			path = ecma;
 			sourceTree = "<group>";
 		};
-		655365B9107EB6DA00E08A01 /* java */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = java;
-			sourceTree = "<group>";
-		};
 		655365BA107EB6DA00E08A01 /* oc */ = {
 			isa = PBXGroup;
 			children = (
@@ -1977,6 +1966,7 @@
 				65DB4DC61084D2E3005E7765 /* 50020-selector.m */,
 				65DB4DC71084D2E3005E7765 /* 50021-selector.m */,
 				65DB4DC81084D2E3005E7765 /* 50022-selector.m */,
+				659F8DA6108AD5AC0004E4CB /* 50040-complex_method.m */,
 			);
 			path = oc;
 			sourceTree = "<group>";
@@ -2184,6 +2174,7 @@
 				8DD76F660486A84900D96B5E /* Frameworks */,
 				8DD76F690486A84900D96B5E /* Install Man Page */,
 				65DB4DD61084D563005E7765 /* Copy to 'src' where tests expect it */,
+				657D87ED10895CB200C5E4AB /* Run tests via run_tests.py (disabled) */,
 			);
 			buildRules = (
 			);
@@ -2240,6 +2231,20 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "# // !!! Andre Berg 20091012: Don't worry about this script phase...\n# this just copies the objc.cfg file I work on over to the project dir because I almost always forget it\n# before building...\n\nif [[ -e ~/.uncrustify/objc.cfg ]]; then\n\techo \"Replacing project copy of objc.cfg with personal one\"\n\tcp -f ~/.uncrustify/objc.cfg \"${PROJECT_DIR}/etc/objc.cfg\"\nfi";
+		};
+		657D87ED10895CB200C5E4AB /* Run tests via run_tests.py (disabled) */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 12;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Run tests via run_tests.py (disabled)";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# if [[ -x \"${PROJECT_DIR}/tests/results\" ]]; then\n#   echo 'Removing \"tests/results...\"'\n#   rm -rf \"${PROJECT_DIR}/tests/results\"\n# fi\n# \n# if [[ -f \"${PROJECT_DIR}/tests/difftest.patch\" ]]; then\n#   echo 'Removing \"tests/difftest.patch...\"'\n#   rm \"${PROJECT_DIR}/tests/difftest.patch\"\n# fi\n# \n# echo \"Running unit tests via tests/run_tests.py...\"\n# cd \"${PROJECT_DIR}/tests\"\n# TESTS_RESULT=`python \"run_tests.py\"`\n# \n# \n# if [[ $TESTS_RESULT =~ \"FAILED\" || $? == 1 ]]; then\n#   echo \"Tests seem to have failed (output contains \\\"FAILED\\\" or exit status non-zero). Generating difftest.patch...\"\n#   ./difftest.sh > difftest.patch\n# fi";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -2344,7 +2349,7 @@
 			};
 			name = Release;
 		};
-		6553622D107EB39900E08A01 /* Install (xcodebuild only!) */ = {
+		6553622D107EB39900E08A01 /* Install */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -2355,9 +2360,9 @@
 				PREBINDING = NO;
 				SDKROOT = macosx10.6;
 			};
-			name = "Install (xcodebuild only!)";
+			name = Install;
 		};
-		6553622E107EB39900E08A01 /* Install (xcodebuild only!) */ = {
+		6553622E107EB39900E08A01 /* Install */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -2371,8 +2376,10 @@
 				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				INSTALL_PATH = /usr/local/bin;
 				PRODUCT_NAME = uncrustify;
+				SEPARATE_STRIP = YES;
+				STRIP_INSTALLED_PRODUCT = YES;
 			};
-			name = "Install (xcodebuild only!)";
+			name = Install;
 		};
 		65DB4E4D1084DBB7005E7765 /* Debug Clang */ = {
 			isa = XCBuildConfiguration;
@@ -2442,7 +2449,7 @@
 				65DB4E4E1084DBB7005E7765 /* Debug Clang */,
 				1DEB923308733DC60010E9CD /* Release */,
 				65DB4E501084DBC2005E7765 /* Release Clang */,
-				6553622E107EB39900E08A01 /* Install (xcodebuild only!) */,
+				6553622E107EB39900E08A01 /* Install */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -2454,7 +2461,7 @@
 				65DB4E4D1084DBB7005E7765 /* Debug Clang */,
 				1DEB923708733DC60010E9CD /* Release */,
 				65DB4E4F1084DBC2005E7765 /* Release Clang */,
-				6553622D107EB39900E08A01 /* Install (xcodebuild only!) */,
+				6553622D107EB39900E08A01 /* Install */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
