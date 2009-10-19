@@ -363,9 +363,11 @@ void tokenize_cleanup(void)
          }
       }
 
-      /* Detect Objective-C categories */
+      /* Detect Objective-C categories and class extensions */
       /* @interface ClassName (CategoryName) */
       /* @implementation ClassName (CategoryName) */
+      /* @interface ClassName () */
+      /* @implementation ClassName () */
       if (((pc->type == CT_OC_IMPL) || (pc->type == CT_OC_INTF)) &&
           (next->type == CT_PAREN_OPEN))
       {
@@ -382,6 +384,7 @@ void tokenize_cleanup(void)
             else
             {
                tmp->type   = CT_OC_CATEGORY;
+               tmp->parent_type = pc->type;
                tmp->flags |= PCF_STMT_START | PCF_EXPR_START;
             }
          }
@@ -392,11 +395,6 @@ void tokenize_cleanup(void)
             tmp->parent_type = pc->type;
          }
       }
-
-
-      /* Detect Objective-C class extensions */
-      /* @interface ClassName () */
-      /* @implementation ClassName () */
 
 
       /**

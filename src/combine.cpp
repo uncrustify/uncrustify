@@ -734,6 +734,16 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       {
          pc->type = CT_PTR_TYPE;
       }
+      else if (((cpd.lang_flags & LANG_OC) != 0) && next->type == CT_STAR)
+      {
+         /* Change pointer-to-pointer types in OC_MSG_DECLs 
+            from ARITH <===> DEREF to PTR_TYPE <===> PTR_TYPE */
+         pc->type = CT_PTR_TYPE;
+         pc->parent_type = prev->parent_type;
+         
+         next->type = CT_PTR_TYPE;
+         next->parent_type = pc->parent_type;
+      }
       else if ((prev->type == CT_SIZEOF) || (prev->type == CT_DELETE))
       {
          pc->type = CT_DEREF;
@@ -790,7 +800,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       }
       else if (prev->type == CT_OC_CLASS)
       {
-         pc->type = CT_NEG;
+         pc->type = (pc->type == CT_MINUS) ? CT_NEG : CT_POS;
       }
       else
       {
@@ -3513,6 +3523,7 @@ static void handle_oc_message_decl(chunk_t *pc)
          if (in_paren)
          {
             tmp->type = CT_TYPE;
+            tmp->parent_type = pt;
          }
          else if (paren_cnt == 1)
          {
