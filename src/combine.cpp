@@ -1686,9 +1686,10 @@ void combine_labels(void)
    /* unlikely that the file will start with a label... */
    while (next != NULL)
    {
-      if ((next->type == CT_CLASS) ||
-          (next->type == CT_OC_CLASS) ||
-          (next->type == CT_TEMPLATE))
+      if (next->parent_type != CT_OC_MSG && /* filter OC case of [self class] msg send */
+          ((next->type == CT_CLASS) ||
+           (next->type == CT_OC_CLASS) || 
+           (next->type == CT_TEMPLATE)))
       {
          hit_class = true;
       }
