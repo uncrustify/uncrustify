@@ -68,6 +68,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		654C6B42108ED8FC00556CD9 /* real_world_file.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = real_world_file.m; sourceTree = "<group>"; };
 		6553629F107EB5B800E08A01 /* AUTHORS */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = AUTHORS; sourceTree = "<group>"; };
 		655362A0107EB5B900E08A01 /* BUGS */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = BUGS; sourceTree = "<group>"; };
 		655362A1107EB5B900E08A01 /* COPYING */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = COPYING; sourceTree = "<group>"; };
@@ -1556,6 +1557,7 @@
 				656E28301082F349007F873A /* selector.m */,
 				65DB4DB81084D200005E7765 /* return_type.m */,
 				659F8D37108A9A380004E4CB /* complex_method.m */,
+				654C6B42108ED8FC00556CD9 /* real_world_file.m */,
 			);
 			path = oc;
 			sourceTree = "<group>";
@@ -2168,7 +2170,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1DEB923108733DC60010E9CD /* Build configuration list for PBXNativeTarget "uncrustify" */;
 			buildPhases = (
-				656E288E1082F847007F873A /* Replace personal objc.cfg */,
+				656E288E1082F847007F873A /* Replace personal objc.cfg (disabled) */,
 				656E28731082F71E007F873A /* Generate token_names.h */,
 				8DD76F640486A84900D96B5E /* Sources */,
 				8DD76F660486A84900D96B5E /* Frameworks */,
@@ -2218,19 +2220,19 @@
 			shellPath = /bin/sh;
 			shellScript = "echo \"Generating token_names.h ...\"\n\"${PROJECT_DIR}/make_token_names.sh\"";
 		};
-		656E288E1082F847007F873A /* Replace personal objc.cfg */ = {
+		656E288E1082F847007F873A /* Replace personal objc.cfg (disabled) */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Replace personal objc.cfg";
+			name = "Replace personal objc.cfg (disabled)";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# // !!! Andre Berg 20091012: Don't worry about this script phase...\n# this just copies the objc.cfg file I work on over to the project dir because I almost always forget it\n# before building...\n\nif [[ -e ~/.uncrustify/objc.cfg ]]; then\n\techo \"Replacing project copy of objc.cfg with personal one\"\n\tcp -f ~/.uncrustify/objc.cfg \"${PROJECT_DIR}/etc/objc.cfg\"\nfi";
+			shellScript = "# // !!! Andre Berg 20091012: Don't worry about this script phase...\n# this just copies the objc.cfg file I work on over to the project dir because I almost always forget it\n# before building...\n\n#if [[ -e ~/.uncrustify/objc.cfg ]]; then\n#\techo \"Replacing project copy of objc.cfg with personal one\"\n#\tcp -f ~/.uncrustify/objc.cfg \"${PROJECT_DIR}/etc/objc.cfg\"\n#fi";
 		};
 		657D87ED10895CB200C5E4AB /* Run tests via run_tests.py (disabled) */ = {
 			isa = PBXShellScriptBuildPhase;
