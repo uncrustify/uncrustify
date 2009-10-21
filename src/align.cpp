@@ -26,7 +26,7 @@ static void align_func_proto(int span);
 static void align_oc_msg_spec(int span);
 static void align_typedefs(int span);
 static void align_left_shift(void);
-static void align_oc_msg_colon(void);
+static void align_oc_msg_colon(int span);
 
 
 /*
@@ -258,9 +258,9 @@ void align_all(void)
       align_left_shift();
    }
 
-   if (cpd.settings[UO_align_oc_msg_colon].b)
+   if (cpd.settings[UO_align_oc_msg_colon_span].n > 0)
    {
-      align_oc_msg_colon();
+      align_oc_msg_colon(cpd.settings[UO_align_oc_msg_colon_span].n);
    }
 
    /* Align variable definitions */
@@ -1753,7 +1753,7 @@ static void align_left_shift(void)
 /**
  * Aligns OC message
  */
-static void align_oc_msg_colon(void)
+static void align_oc_msg_colon(int span)
 {
    chunk_t    *pc = chunk_get_head();
    chunk_t    *tmp;
@@ -1761,6 +1761,8 @@ static void align_oc_msg_colon(void)
    AlignStack nas;   /* for the parameter tag */
    int        level;
    bool       did_line;
+   int        lcnt;  /* line count with no colon for span */
+   bool       has_colon;
 
    while (pc != NULL)
    {
@@ -1770,21 +1772,32 @@ static void align_oc_msg_colon(void)
          continue;
       }
 
-      cas.Reset();
       nas.Reset();
       nas.m_right_align = true;
 
+      cas.Start(span);
+
       level = pc->level;
       pc = chunk_get_next_ncnl(pc, CNAV_PREPROC);
+       
       did_line = false;
+      has_colon = false;
+      lcnt = 0;
+
       while ((pc != NULL) && (pc->level > level))
       {
          if (chunk_is_newline(pc))
          {
+            if (!has_colon) 
+            {
+               ++lcnt;
+            }
             did_line = false;
+            has_colon = !has_colon;
          }
-         else if (!did_line && (pc->type == CT_OC_COLON))
+         else if (!did_line && lcnt - 1 < span && (pc->type == CT_OC_COLON) )
          {
+            has_colon = true;
             cas.Add(pc);
             tmp = chunk_get_prev(pc);
             if ((tmp != NULL) && ((tmp->type == CT_WORD) || (tmp->type == CT_TYPE)))

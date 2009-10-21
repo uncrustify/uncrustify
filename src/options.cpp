@@ -858,8 +858,10 @@ void register_options(void)
    unc_add_option("align_left_shift", UO_align_left_shift, AT_BOOL,
                   "Align lines that start with '<<' with previous '<<'. Default=true");
 
-   unc_add_option("align_oc_msg_colon", UO_align_oc_msg_colon, AT_BOOL,
-                  "Align parameters in an Obj-C message on the ':'");
+//    unc_add_option("align_oc_msg_colon", UO_align_oc_msg_colon, AT_BOOL,
+//                   "Align parameters in an Obj-C message on the ':'");
+   unc_add_option("align_oc_msg_colon_span", UO_align_oc_msg_colon_span, AT_NUM,
+                  "Span for aligning parameters in an Obj-C message call on the ':' (0=don't align)", 0, 5000);
 
    unc_begin_group(UG_comment, "Comment modifications");
    unc_add_option("cmt_width", UO_cmt_width, AT_NUM,

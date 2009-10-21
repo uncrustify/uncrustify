@@ -178,7 +178,11 @@
     [_window popup];
 
     // Add some watches on the window and application
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_windowClosed:)name:NSWindowWillCloseNotification object:_window];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(_windowClosed:)
+                                                 name:NSWindowWillCloseNotification
+                                               object:_window];
+
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_windowShouldClose:)name:NSApplicationDidResignActiveNotification object:nil];
 
     // Start watching events to figure out when to close the window
@@ -187,15 +191,15 @@
                          NSEvent * result = incomingEvent;
                          NSWindow * targetWindowForEvent = [incomingEvent window];
                          if (targetWindowForEvent != _window) {
-                             [self            _closeAndSendAction:NO];
+                             [self _closeAndSendAction:NO];
                          } else if ([incomingEvent type] == NSKeyDown) {
                              if ([incomingEvent keyCode] == 53) {
                                  // Escape
-                                 [self        _closeAndSendAction:NO];
+                                 [self _closeAndSendAction:NO];
                                  result = nil; // Don't process the event
                              } else if ([incomingEvent keyCode] == 36) {
                                  // Enter
-                                 [self        _closeAndSendAction:YES];
+                                 [self _closeAndSendAction:YES];
                                  result = nil;
                              }
                          }

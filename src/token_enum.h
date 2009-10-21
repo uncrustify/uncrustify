@@ -214,6 +214,7 @@ typedef enum
    CT_OC_COLON,         /* ObjC: the colon in a msg spec */
    CT_OC_SEL,           /* ObjC: @selector */
    CT_OC_SEL_NAME,      /* ObjC: selector name */
+   CT_OC_BLOCK_PTR,     /* ObjC: block pointer caret */
 
    /* start PP types */
    CT_PP_DEFINE,        /* #define */

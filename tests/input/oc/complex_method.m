@@ -19,8 +19,8 @@
                                                @"There's nothing you can do.", NSLocalizedRecoverySuggestionErrorKey, nil];
             
             *outError = [NSError errorWithDomain:LinearInternalErrorDomain
-                                            code:linErrCantFormatDocumentData 
-                                        userInfo:userInfoDict];
+                                                code:linErrCantFormatDocumentData 
+                                                userInfo:userInfoDict];
         } else {
             // No problem. Don't supply an error object.
             *outError = nil;

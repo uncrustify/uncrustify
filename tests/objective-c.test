@@ -13,7 +13,7 @@
 50006  obj-c.cfg           oc/exceptions.m
 50007  obj-c.cfg           oc/misc.m
 
-50010  oc-split.cfg        oc/oc-split.m
+50060  oc-split.cfg        oc/oc-split.m
 
 50030  sort_imports.cfg    oc/sort_import.m
 
