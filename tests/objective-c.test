@@ -26,3 +26,5 @@
 50022  sp_after_oc_at_sel_remove.cfg        oc/selector.m
 
 50040  objc_complex_method.cfg              oc/complex_method.m
+
+50050  objc_complex_method.cfg              oc/real_world_file.m

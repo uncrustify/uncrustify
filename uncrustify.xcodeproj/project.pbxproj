@@ -69,6 +69,7 @@
 
 /* Begin PBXFileReference section */
 		654C6B42108ED8FC00556CD9 /* real_world_file.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = real_world_file.m; sourceTree = "<group>"; };
+		654C6C70108F238800556CD9 /* 50050-real_world_file.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "50050-real_world_file.m"; sourceTree = "<group>"; };
 		6553629F107EB5B800E08A01 /* AUTHORS */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = AUTHORS; sourceTree = "<group>"; };
 		655362A0107EB5B900E08A01 /* BUGS */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = BUGS; sourceTree = "<group>"; };
 		655362A1107EB5B900E08A01 /* COPYING */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = COPYING; sourceTree = "<group>"; };
@@ -1969,6 +1970,7 @@
 				65DB4DC71084D2E3005E7765 /* 50021-selector.m */,
 				65DB4DC81084D2E3005E7765 /* 50022-selector.m */,
 				659F8DA6108AD5AC0004E4CB /* 50040-complex_method.m */,
+				654C6C70108F238800556CD9 /* 50050-real_world_file.m */,
 			);
 			path = oc;
 			sourceTree = "<group>";
