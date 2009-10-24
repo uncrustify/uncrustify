@@ -74,6 +74,8 @@
 		654C6DB3108F62E900556CD9 /* oc-split.cfg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "oc-split.cfg"; sourceTree = "<group>"; };
 		654C6DBD108F63A200556CD9 /* 50007-misc.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "50007-misc.m"; sourceTree = "<group>"; };
 		654C6DBE108F63B000556CD9 /* misc.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = misc.m; sourceTree = "<group>"; };
+		654C6FB2108FB40D00556CD9 /* more_blocks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = more_blocks.m; sourceTree = "<group>"; };
+		654C70BA1090E89400556CD9 /* blocks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = blocks.m; sourceTree = "<group>"; };
 		6553629F107EB5B800E08A01 /* AUTHORS */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = AUTHORS; sourceTree = "<group>"; };
 		655362A0107EB5B900E08A01 /* BUGS */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = BUGS; sourceTree = "<group>"; };
 		655362A1107EB5B900E08A01 /* COPYING */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = COPYING; sourceTree = "<group>"; };
@@ -1025,6 +1027,7 @@
 				655362B1107EB67900E08A01 /* run_tests.sh */,
 				655362B2107EB67900E08A01 /* update-default-cfg.sh */,
 			);
+			includeInIndex = 0;
 			name = "Other Sources";
 			sourceTree = "<group>";
 		};
@@ -1565,6 +1568,8 @@
 				65DB4DB81084D200005E7765 /* return_type.m */,
 				659F8D37108A9A380004E4CB /* complex_method.m */,
 				654C6B42108ED8FC00556CD9 /* real_world_file.m */,
+				654C6FB2108FB40D00556CD9 /* more_blocks.m */,
+				654C70BA1090E89400556CD9 /* blocks.m */,
 			);
 			path = oc;
 			sourceTree = "<group>";
