@@ -38,12 +38,14 @@ static void mark_lvalue(chunk_t *pc);
 static void mark_template_func(chunk_t *pc, chunk_t *pc_next);
 static void mark_exec_sql(chunk_t *pc);
 static void handle_oc_class(chunk_t *pc);
+static void handle_oc_block(chunk_t *pc);
 static void handle_oc_message_decl(chunk_t *pc);
 static void handle_oc_message_send(chunk_t *pc);
 static void handle_cs_square_stmt(chunk_t *pc);
 static void handle_cs_property(chunk_t *pc);
 static void handle_template(chunk_t *pc);
 static void handle_wrap(chunk_t *pc);
+static bool is_oc_block(chunk_t *pc);
 
 void make_type(chunk_t *pc)
 {
@@ -78,6 +80,11 @@ static chunk_t *flag_parens(chunk_t *po, UINT32 flags,
    chunk_t *paren_close;
    chunk_t *pc;
 
+   if (is_oc_block(po)) 
+   {
+      return NULL;
+   }
+   
    paren_close = chunk_skip_to_match(po, CNAV_PREPROC);
    if (paren_close == NULL)
    {
@@ -191,7 +198,7 @@ static bool chunk_ends_type(chunk_t *pc)
 void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
 {
    chunk_t *tmp;
-
+   
    // LOG_FMT(LSYS, " %3d > ['%.*s' %s] ['%.*s' %s] ['%.*s' %s]\n",
    //         pc->orig_line,
    //         prev->len, prev->str, get_token_name(prev->type),
@@ -266,7 +273,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
          }
       }
    } /* paren open + cast/align/delegate */
-
+   
    if (pc->type == CT_INVARIANT)
    {
       if (next->type == CT_PAREN_OPEN)
@@ -308,6 +315,12 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
          {
             handle_oc_message_send(pc);
          }
+      }
+      if (pc->type == CT_OC_BLOCK_CARET && 
+          (pc->parent_type != CT_OC_MSG_SPEC || 
+           pc->parent_type != CT_OC_MSG_DECL)) 
+      {
+         handle_oc_block(pc);
       }
    }
 
@@ -448,7 +461,8 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
     * A word before an open paren is a function call or definition.
     * CT_WORD => CT_FUNC_CALL or CT_FUNC_DEF
     */
-   if (next->type == CT_PAREN_OPEN)
+   if (next->type == CT_PAREN_OPEN && 
+       (next->next && next->next->type != CT_OC_BLOCK_CARET))
    {
       if (pc->type == CT_WORD)
       {
@@ -514,7 +528,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
    }
    else
    {
-      if (pc->type == CT_FUNCTION)
+      if (pc->type == CT_FUNCTION && !is_oc_block(pc))
       {
          mark_function(pc);
       }
@@ -597,6 +611,9 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
        (pc->parent_type != CT_CPP_CAST) &&
        (pc->parent_type != CT_C_CAST) &&
        ((pc->flags & PCF_IN_PREPROC) == 0) &&
+       (!is_oc_block(pc)) &&
+       ((pc->parent_type != CT_OC_MSG_DECL || 
+         pc->parent_type != CT_OC_MSG_SPEC)) &&
        chunk_is_str(pc, ")", 1) &&
        chunk_is_str(next, "(", 1))
    {
@@ -629,7 +646,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
    {
       mark_namespace(pc);
    }
-
+   
    /*TODO: Check for stuff that can only occur at the start of an statement */
 
    if ((cpd.lang_flags & LANG_D) == 0)
@@ -639,7 +656,9 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
        * Note that SPAREN and FPAREN have already been marked.
        */
       if ((pc->type == CT_PAREN_OPEN) &&
-          ((pc->parent_type == CT_NONE) || (pc->parent_type == CT_OC_MSG)) &&
+          ((pc->parent_type == CT_NONE) || 
+           (pc->parent_type == CT_OC_MSG) || 
+           (pc->parent_type == CT_OC_BLOCK_EXPR)) &&
           ((next->type == CT_WORD) ||
            (next->type == CT_TYPE) ||
            (next->type == CT_STRUCT) ||
@@ -655,6 +674,8 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
          fix_casts(pc);
       }
    }
+   
+
 
    /* Check for stuff that can only occur at the start of an expression */
    if ((pc->flags & PCF_EXPR_START) != 0)
@@ -716,7 +737,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
    {
       flag_parens(next, PCF_IN_FCN_CALL, CT_FPAREN_OPEN, CT_MACRO_FUNC, false);
    }
-
+   
    if ((pc->type == CT_MACRO_OPEN) ||
        (pc->type == CT_MACRO_ELSE) ||
        (pc->type == CT_MACRO_CLOSE))
@@ -734,7 +755,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       {
          pc->type = CT_PTR_TYPE;
       }
-      else if (((cpd.lang_flags & LANG_OC) != 0) && next->type == CT_STAR)
+      else if ((cpd.lang_flags & LANG_OC) && next->type == CT_STAR)
       {
          /* Change pointer-to-pointer types in OC_MSG_DECLs 
             from ARITH <===> DEREF to PTR_TYPE <===> PTR_TYPE */
@@ -1188,6 +1209,16 @@ static bool is_ucase_str(const char *str, int len)
    return(true);
 }
 
+static bool is_oc_block(chunk_t *pc)
+{
+   return ((pc != NULL) && 
+           (pc->parent_type == CT_OC_BLOCK_TYPE || 
+            pc->parent_type == CT_OC_BLOCK_EXPR || 
+            pc->parent_type == CT_OC_BLOCK_ARG) ||
+            pc->type == CT_OC_BLOCK_CARET ||
+            (pc->next && pc->next->type == CT_OC_BLOCK_CARET) ||
+            (pc->prev && pc->prev->type == CT_OC_BLOCK_CARET));
+}
 
 /**
  * Checks to see if the current paren is part of a cast.
@@ -1214,7 +1245,7 @@ static void fix_casts(chunk_t *start)
 
 
    LOG_FMT(LCASTS, "%s:line %d, col %d:", __func__, start->orig_line, start->orig_col);
-
+   
    prev = chunk_get_prev_ncnl(start);
    if ((prev != NULL) && (prev->type == CT_PP_DEFINED))
    {
@@ -1252,7 +1283,7 @@ static void fix_casts(chunk_t *start)
       count++;
    }
 
-   if ((pc == NULL) || (pc->type != CT_PAREN_CLOSE))
+   if ((pc == NULL) || (pc->type != CT_PAREN_CLOSE) || prev->type == CT_OC_CLASS)
    {
       LOG_FMT(LCASTS, " -- not a cast, hit [%s]\n",
               pc == NULL ? "NULL"  : get_token_name(pc->type));
@@ -3442,6 +3473,192 @@ static void handle_oc_class(chunk_t *pc)
       if (tmp != NULL)
       {
          tmp->parent_type = CT_OC_CLASS;
+      }
+   }
+}
+
+/* Mark Objective-C blocks (aka lambdas or closures) 
+ *  The syntax and usage is exactly like C function pointers 
+ *  but instead of an asterisk they have a caret as pointer symbol.
+ *  Although it may look expensive this functions if only triggered
+ *  on appearance of an OC_BLOCK_CARET for LANG_OC.
+ *  repeat(10, ^{ putc('0'+d); });
+ *  typedef void (^workBlk_t)(void);
+ */
+static void handle_oc_block(chunk_t *pc)
+{
+   chunk_t * tmp = pc;
+   chunk_t * prev = pc->prev;
+   chunk_t * next = pc->next;
+   
+   if (!pc || !pc->prev || !pc->next)
+   {
+      return; /* let's be paranoid */
+   }
+
+   if (pc->parent_type == CT_OC_BLOCK_TYPE)
+   { 
+      /* mark block declaration, e.g.: return_t (^name)(args) */
+      prev->parent_type = pc->parent_type;
+      prev->type = CT_PAREN_OPEN; /* reset FPAREN to PAREN */
+      
+      tmp = chunk_get_next(pc);
+      if (tmp != NULL) 
+      {
+         if (tmp->type != CT_PAREN_CLOSE && 
+             tmp->type != CT_FPAREN_CLOSE) 
+         {
+            tmp->type = CT_TYPE;
+            tmp->flags |= PCF_STMT_START;
+            tmp->parent_type = pc->parent_type;
+            
+            while ((tmp = chunk_get_next(tmp)) != NULL) 
+            {
+               tmp->parent_type = pc->parent_type;
+               
+               if (!tmp->next) break;
+               if ((tmp->type == CT_PAREN_CLOSE || 
+                    tmp->type == CT_FPAREN_CLOSE) && 
+                    (tmp->next->type == CT_PAREN_OPEN || 
+                     tmp->next->type == CT_FPAREN_OPEN))
+               {
+                  tmp->type = CT_PAREN_CLOSE;
+                  tmp->next->parent_type = pc->parent_type;
+                  break;
+               }
+            }
+            
+            /* mark args in function def parens */
+            tmp = chunk_get_next(tmp);
+            if (tmp != NULL) 
+            {
+               tmp->parent_type = CT_OC_BLOCK_ARG;
+               
+               while ((tmp = chunk_get_next(tmp)) != NULL) 
+               {
+                  tmp->parent_type = CT_OC_BLOCK_ARG;
+                  if (!tmp->next) break;
+                  if ((tmp->next->type == CT_PAREN_CLOSE || 
+                       tmp->next->type == CT_FPAREN_CLOSE) && 
+                      ((tmp->next->level + 1) == pc->level))
+                  {
+                     tmp->parent_type = CT_OC_BLOCK_ARG;
+                     tmp->next->parent_type = CT_OC_BLOCK_ARG;
+                     break;
+                  }
+               }
+            }
+         }
+         else 
+         {
+            tmp->type = CT_PAREN_CLOSE;
+            tmp->parent_type = CT_OC_BLOCK_TYPE;
+         }
+      }
+   }
+   else
+   {
+      /* mark block literal which takes no args, e.g.: ^{...} */
+      if (next->type == CT_BRACE_OPEN) 
+      {
+         tmp = chunk_get_next(pc);
+         if (tmp != NULL) 
+         {
+            /* set correct parent_type then skip over open brace */
+            tmp->parent_type = pc->parent_type;
+            tmp = chunk_get_next(tmp);
+            
+            tmp->flags |= PCF_STMT_START | PCF_EXPR_START;
+            tmp->parent_type = pc->parent_type;
+            
+            while ((tmp = chunk_get_next_nc(tmp)) != NULL)
+            {
+               tmp->parent_type = pc->parent_type;
+               if (tmp->type == CT_BRACE_CLOSE && 
+                   (tmp->brace_level == pc->brace_level))
+               {
+                  tmp->parent_type = pc->parent_type;
+                  break;
+               }
+            }
+         }
+      }
+      else
+      {
+         /* mark block literal with args and optional return type, 
+          e.g.: ... = ^ return_t (args){expr} ... 
+          the 'return_t' is inferred from block content if left out */
+         tmp = chunk_get_next(pc);
+         if (tmp != NULL)
+         {
+            if (tmp->type == CT_PAREN_OPEN || 
+                tmp->type == CT_FPAREN_OPEN)
+            {
+               tmp->parent_type = CT_OC_BLOCK_ARG;
+            }
+            else 
+            {
+               pc->parent_type = CT_OC_BLOCK_EXPR;
+               tmp->parent_type = CT_OC_BLOCK_EXPR;
+               tmp->type = CT_TYPE; /* the first word is definately a type */
+               
+               /* skip over return type until open paren */
+               while ((tmp = chunk_get_next(tmp)) != NULL) 
+               {
+                  tmp->parent_type = CT_OC_BLOCK_EXPR;
+                  
+                  if ((tmp->type == CT_PAREN_OPEN || 
+                       tmp->type == CT_FPAREN_OPEN) 
+                      && tmp->level == pc->level)
+                  {
+                     tmp->parent_type = CT_OC_BLOCK_ARG;
+                     break;
+                  }
+               }
+            }
+            
+
+            /* handle args */
+            tmp = chunk_get_next(tmp);
+            if (tmp != NULL) 
+            {
+               tmp->parent_type = CT_OC_BLOCK_ARG;
+               tmp->flags |= PCF_STMT_START;
+               
+               while ((tmp = chunk_get_next(tmp)) != NULL) 
+               {
+                  tmp->parent_type = CT_OC_BLOCK_ARG;
+                  if (tmp->type == CT_PAREN_CLOSE && tmp->level == pc->level)
+                  {
+                     break;
+                  }
+               }
+               
+               /* mark open brace in expression part as OC_BLOCK, then
+                set parent_type to OC_BLOCK_EXPR so that the stuff inside 
+                the braces can get handled below... */
+               
+               /* handle brace part */ 
+               tmp = chunk_get_next(tmp);
+               if (tmp != NULL) 
+               {
+                  tmp->parent_type = CT_OC_BLOCK_EXPR;
+                  while ((tmp = chunk_get_next(tmp)) != NULL)
+                  {
+                     tmp->parent_type = CT_OC_BLOCK_EXPR;
+                     if (tmp->type == CT_BRACE_CLOSE && tmp->brace_level == 0) 
+                     {
+                        tmp->parent_type = CT_OC_BLOCK_EXPR;
+                        if (tmp->next && tmp->next->type == CT_SEMICOLON)
+                        {
+                           tmp->next->parent_type = CT_OC_BLOCK_EXPR;
+                        }
+                        break;
+                     }
+                  }
+               }
+            }
+         }
       }
    }
 }
