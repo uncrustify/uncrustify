@@ -481,20 +481,13 @@ void tokenize_cleanup(void)
        *  2. block declaration: return_t (^name) (int arg1, int arg2, ...) NB: return_t is optional and name can be optional if found as param in a method declaration.
        *  3. block expression: ^ return_t (int arg) { ... }; NB: return_t is optional 
        *
-       *  See http://developer.apple.com/mac/library/documentation/Cocoa/Conceptual/Blocks/Articles/00_Introduction.html for more info...
+       *  See http://developer.apple.com/mac/library/documentation/Cocoa/Conceptual/Blocks for more info...
        */
       if ((cpd.lang_flags & LANG_OC) && 
           (pc->type == CT_ARITH) && 
           (chunk_is_str(pc, "^", 1)) && 
           (prev->type != CT_NUMBER) &&
           (prev->type != CT_NUMBER_FP))
-//           (prev->type == CT_PAREN_OPEN ||          /* block declaration */ 
-//            next->type == CT_PAREN_OPEN ||          /* block expression without return type */
-//            next->type == CT_BRACE_OPEN ||          /* block literal */
-//            ((next->type == CT_TYPE ||              /* block expression with return type (seldomly used) */
-//              next->type == CT_WORD) && 
-//             (next->next->type == CT_PAREN_OPEN ||       /* covers normal return types */
-//              next->next->next->type == CT_PAREN_OPEN))) /* covers pointer-to return types */
       {
          /* mark objc blocks caret so that we can process it later*/
          pc->type = CT_OC_BLOCK_CARET;
@@ -540,146 +533,6 @@ void tokenize_cleanup(void)
             }
          }
       }
-      
-//       /* Mark Objective-C blocks (aka lambdas or closures) 
-//        *  The syntax and usage is exactly like C function pointers 
-//        *  but instead of an asterisk they have a caret as pointer symbol.
-//        *  repeat(10, ^{ putc('0'+d); });
-//        *  typedef void (^workBlk_t)(void);
-//        */
-//       if ((cpd.lang_flags & LANG_OC) && 
-//           (pc->type == CT_ARITH) && 
-//           (chunk_is_str(pc, "^", 1)))
-//       {  
-//          pc->type = CT_OC_BLOCK_CARET;
-//          pc->parent_type = CT_OC_BLOCK;
-//          
-//          if (prev->type == CT_PAREN_OPEN)
-//          {
-//             /* block declaration, e.g.: return_t (^name)(args) */            
-//             if (prev->prev->type == CT_WORD)
-//             {
-//                /* mark block return type */
-//                prev->prev->type = CT_TYPE; 
-//             }
-//             pc->prev->parent_type = pc->parent_type;
-//             
-//             tmp = chunk_get_next(pc);
-//             if (tmp != NULL) 
-//             {
-//                if (tmp->type != CT_PAREN_CLOSE) 
-//                {
-//                   tmp->parent_type = CT_OC_BLOCK_TYPE;
-//                   tmp->type = CT_TYPE;
-//                   tmp->flags |= PCF_STMT_START;
-//                   
-//                   while ((tmp = chunk_get_next(tmp)) != NULL) 
-//                   {
-//                      /* only step out of the marking loop when a 
-//                         closing parens is followed by an open parens
-//                         since we could have statements wrapped in parens */
-//                      if (tmp->type == CT_PAREN_CLOSE && 
-//                          tmp->next->type == CT_PAREN_OPEN)
-//                      {
-//                         tmp->parent_type = pc->parent_type;
-//                         break;
-//                      }
-//                      tmp->parent_type = CT_OC_BLOCK_TYPE;
-//                   }
-//                   
-//                   /* mark args in function def parens */
-//                   tmp = chunk_get_next(tmp);
-//                   tmp->parent_type = CT_OC_BLOCK;
-//                   
-//                   while ((tmp = chunk_get_next(tmp)) != NULL) 
-//                   {
-//                      tmp->parent_type = CT_OC_BLOCK_TYPE;
-//                      tmp->flags |= PCF_IN_FCN_DEF;
-//                      
-//                      if (tmp->type == CT_PAREN_CLOSE) 
-//                      {
-//                         tmp->parent_type = CT_OC_BLOCK;
-//                         break;
-//                      }
-//                   }
-//                }
-//                else
-//                {
-//                   /* the form return_t (^)(arg_t) only makes sense if found in a
-//                      msg decl/spec, e.g.: - (NSArray *)map:(id (^)(id))xform {...
-//                      might be better to deal with later when combining msg decl/spec */
-//                   tmp->parent_type = pc->parent_type;
-//                }
-//             }
-//          }
-//          else
-//          {
-//             /* block literal which takes no args, e.g.: ^{...} */
-//             if (next->type == CT_BRACE_OPEN) 
-//             {
-//                tmp = chunk_get_next(pc);
-//                if (tmp != NULL) 
-//                {
-//                   /* set correct parent_type then skip over open brace */
-//                   tmp->parent_type = pc->parent_type;
-//                   tmp = chunk_get_next(tmp);
-//                   
-//                   tmp->flags |= PCF_STMT_START | PCF_EXPR_START;
-//                   tmp->parent_type = CT_OC_BLOCK_EXPR;
-//                }
-//             }
-//             else
-//             {
-//                /* block literal with args and optional return type, 
-//                 e.g.: ... = ^ return_t (args){expr} ... 
-//                 the 'return_t' defaults to 'id' if left out */
-//                tmp = chunk_get_next(pc);
-//                if (tmp != NULL)
-//                {
-//                   if ((tmp->type == CT_WORD || tmp->type == CT_TYPE))
-//                   {
-//                      tmp->type = CT_TYPE;
-//                      /* skip over return type until open paren */
-//                      while ((tmp = chunk_get_next(tmp)) != NULL) 
-//                      {
-//                         if (tmp->next && tmp->next->type == CT_PAREN_OPEN) break;
-//                      }
-//                   }
-//                   
-//                   if (tmp != NULL) 
-//                   {
-//                      /* skip over open paren */
-//                      tmp->parent_type = CT_OC_BLOCK;
-//                      tmp = chunk_get_next(tmp);
-//                      
-//                      tmp->flags |= PCF_STMT_START;
-//                      tmp->parent_type = CT_OC_BLOCK_TYPE;
-//                      while ((tmp = chunk_get_next(tmp)) != NULL) 
-//                      {
-//                         /* only step out of the marking loop when a 
-//                            closing parens is followed by an open brace
-//                            since we could have statements wrapped in parens */
-//                         if (tmp->type == CT_PAREN_CLOSE && 
-//                             tmp->next->type == CT_BRACE_OPEN)
-//                         {
-//                            tmp->parent_type = pc->parent_type;
-//                            break;
-//                         }
-//                         tmp->parent_type = CT_OC_BLOCK_TYPE;
-//                      }
-//                      
-//                      /* mark open brace in expression part as OC_BLOCK, then
-//                       set parent_type to OC_BLOCK_EXPR so that the stuff inside 
-//                       the braces can get handled below... */
-//                      tmp = chunk_get_next(tmp);
-//                      tmp->parent_type = CT_OC_BLOCK;
-//                      tmp->next->parent_type = CT_OC_BLOCK_EXPR;
-//                   }
-//                }
-//             }
-//          }
-//       }
-      
        
       /* Handle special preprocessor junk */
       if (pc->type == CT_PREPROC)
