@@ -26,7 +26,7 @@ void AllLinesInFile(char *f, vstr_t block) {
     return result;
 } 
 
-- (NSArray *)collect:(BOOL (^)(id))predicate {
+- (NSArray *)collect:(BOOL ( ^ )(id))predicate {
     id result = [NSMutableArray array]; 
     for (id elem in self)
         if (predicate(elem)) 
@@ -37,6 +37,11 @@ void AllLinesInFile(char *f, vstr_t block) {
 // corner case: block literal in use with return type
 id longLines = [allLines collect: ^ BOOL (id item) {
     return [item length] > 20;
+}];
+
+// corner case: block literal in use with return type
+id longLines = [allLines collect: ^ BOOL* (id item) {
+   return [item length] > 20;
 }];
 
 @end
