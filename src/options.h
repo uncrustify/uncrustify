@@ -295,6 +295,8 @@ enum uncrustify_options
    UO_sp_after_oc_type,
    UO_sp_after_oc_return_type,
    UO_sp_after_oc_at_sel,
+   UO_sp_before_oc_block_caret,
+   UO_sp_after_oc_block_caret,
    UO_sp_cond_colon,
    UO_sp_cond_question,
    UO_sp_case_label,

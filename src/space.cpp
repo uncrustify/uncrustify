@@ -390,7 +390,18 @@ argval_t do_space(chunk_t *first, chunk_t *second, bool complete = true)
       log_rule("sp_assign (lambda)");
       return(cpd.settings[UO_sp_assign].a);
    }
-
+   
+   if (second->type == CT_OC_BLOCK_CARET) 
+   {
+      log_rule("sp_before_oc_block_caret");
+      return(cpd.settings[UO_sp_before_oc_block_caret].a);
+   }
+   if (first->type == CT_OC_BLOCK_CARET) 
+   {
+      log_rule("sp_after_oc_block_caret");
+      return(cpd.settings[UO_sp_after_oc_block_caret].a);
+   }
+   
    if (second->type == CT_ASSIGN)
    {
       if (second->flags & PCF_IN_ENUM)
@@ -1204,7 +1215,7 @@ argval_t do_space(chunk_t *first, chunk_t *second, bool complete = true)
          return(cpd.settings[UO_sp_before_oc_colon].a);
       }
    }
-
+   
    if ((second->type == CT_COMMENT) && (second->parent_type == CT_COMMENT_EMBED))
    {
       log_rule("FORCE");
