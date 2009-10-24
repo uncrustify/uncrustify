@@ -5,11 +5,11 @@
 # test.name  config.file  input.file
 
 # The .h file needs a language override
-50001  obj-c.cfg           oc/Fraction.h     OC
-50002  obj-c.cfg           oc/Fraction.m     OC
+50001  obj-c.cfg           oc/Fraction.h      OC
+50002  obj-c.cfg           oc/Fraction.m      OC
 50003  obj-c.cfg           oc/main.m
 50004  obj-c.cfg           oc/string.m
-50005  obj-c.cfg           oc/Declarations.h     OC
+50005  obj-c.cfg           oc/Declarations.h  OC
 50006  obj-c.cfg           oc/exceptions.m
 50007  obj-c.cfg           oc/misc.m
 
@@ -28,3 +28,19 @@
 50040  objc_complex_method.cfg              oc/complex_method.m
 
 50050  objc_complex_method.cfg              oc/real_world_file.m
+
+50070  sp_before_oc_block_caret_add.cfg             oc/blocks.m
+50071  sp_before_oc_block_caret_force.cfg           oc/blocks.m
+50072  sp_before_oc_block_caret_remove.cfg          oc/blocks.m
+50073  sp_after_oc_block_caret_add.cfg              oc/blocks.m
+50074  sp_after_oc_block_caret_force.cfg            oc/blocks.m
+50075  sp_after_oc_block_caret_remove.cfg           oc/blocks.m
+50076  sp_before_after_oc_block_caret_remove.cfg    oc/blocks.m
+
+50077  sp_before_oc_block_caret_add.cfg             oc/more_blocks.m
+50078  sp_before_oc_block_caret_force.cfg           oc/more_blocks.m
+50079  sp_before_oc_block_caret_remove.cfg          oc/more_blocks.m
+50080  sp_after_oc_block_caret_add.cfg              oc/more_blocks.m
+50081  sp_after_oc_block_caret_force.cfg            oc/more_blocks.m
+50082  sp_after_oc_block_caret_remove.cfg           oc/more_blocks.m
+50083  sp_before_after_oc_block_caret_remove.cfg    oc/more_blocks.m
