@@ -17,7 +17,7 @@ Building the program using Xcode on Mac OS X
 ---------------------------------------------
 
 You can of course just open the Xcode project and build uncrustify using the 
-default 'Debug' configuration but if you want to install it too the 'Install' 
+default 'Debug' configuration but if you want to install it the 'Install' 
 configuration will not work from within Xcode. 
 
 For that you will have to use the Xcode command line tool 'xcodebuild'.
@@ -27,9 +27,10 @@ resides and enter the following command:
 
 sudo xcodebuild -configuration 'Install' 
 
-This will install uncrustify into /usr/local/bin. The location can be changed
-from the build settings for the uncrustify target. The setting you need to change
-is called, suprisingly enough, 'Installation Directory'.
+You will be prompted for the root level password. By doing this you will install 
+uncrustify into /usr/local/bin. The install location can be changed by editing 
+the Build Settings for the uncrustify target. The setting you need to change is 
+called, surprisingly enough, 'Installation Directory'.
 
 
 Configuring the program
