@@ -187,7 +187,7 @@
 
     // Start watching events to figure out when to close the window
     NSAssert(_eventMonitor == nil, @"_eventMonitor should not be created yet");
-    _eventMonitor = [NSEvent addLocalMonitorForEventsMatchingMask:NSLeftMouseDownMask | NSRightMouseDownMask | NSOtherMouseDownMask | NSKeyDownMask handler: ^ (NSEvent * incomingEvent) {
+    _eventMonitor = [NSEvent addLocalMonitorForEventsMatchingMask:NSLeftMouseDownMask | NSRightMouseDownMask | NSOtherMouseDownMask | NSKeyDownMask handler: ^(NSEvent * incomingEvent) {
                          NSEvent * result = incomingEvent;
                          NSWindow * targetWindowForEvent = [incomingEvent window];
                          if (targetWindowForEvent != _window) {
