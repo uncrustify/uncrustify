@@ -368,31 +368,32 @@ void tokenize_cleanup(void)
       /* @implementation ClassName (CategoryName) */
       /* @interface ClassName () */
       /* @implementation ClassName () */
-      if (((pc->type == CT_OC_IMPL) || (pc->type == CT_OC_INTF)) &&
-          (next->type == CT_PAREN_OPEN))
+      if ((pc->parent_type == CT_OC_IMPL || 
+           pc->parent_type == CT_OC_INTF || 
+           pc->type == CT_OC_CLASS) && 
+          next->type == CT_PAREN_OPEN)
       {
-         next->parent_type = pc->type;
+         next->parent_type = pc->parent_type;
 
-         tmp = chunk_get_next_ncnl(next);
-         if (tmp != NULL)
+         tmp = chunk_get_next(next);
+         if (tmp != NULL && tmp->next != NULL)
          {
-            if (tmp->next->type == CT_PAREN_CLOSE)
+            if (tmp->type == CT_PAREN_CLOSE)
             {
                tmp->type        = CT_OC_CLASS_EXT;
-               tmp->parent_type = pc->type;
+               tmp->parent_type = pc->parent_type;
             }
             else
             {
-               tmp->type   = CT_OC_CATEGORY;
-               tmp->parent_type = pc->type;
-               tmp->flags |= PCF_STMT_START | PCF_EXPR_START;
+               tmp->type        = CT_OC_CATEGORY;
+               tmp->parent_type = pc->parent_type;
             }
          }
 
          tmp = chunk_get_next_type(pc, CT_PAREN_CLOSE, pc->level);
          if (tmp != NULL)
          {
-            tmp->parent_type = pc->type;
+            tmp->parent_type = pc->parent_type;
          }
       }
 
