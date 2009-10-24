@@ -2279,7 +2279,7 @@
 		};
 		656E288E1082F847007F873A /* Replace personal objc.cfg (disabled) */ = {
 			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
+			buildActionMask = 8;
 			files = (
 			);
 			inputPaths = (
@@ -2287,13 +2287,13 @@
 			name = "Replace personal objc.cfg (disabled)";
 			outputPaths = (
 			);
-			runOnlyForDeploymentPostprocessing = 0;
+			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /bin/sh;
 			shellScript = "# // !!! Andre Berg 20091012: Don't worry about this script phase...\n# this just copies the objc.cfg file I work on over to the project dir because I almost always forget it\n# before building...\n\n#if [[ -e ~/.uncrustify/objc.cfg ]]; then\n#\techo \"Replacing project copy of objc.cfg with personal one\"\n#\tcp -f ~/.uncrustify/objc.cfg \"${PROJECT_DIR}/etc/objc.cfg\"\n#fi";
 		};
 		657D87ED10895CB200C5E4AB /* Run tests via run_tests.py (disabled) */ = {
 			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 12;
+			buildActionMask = 8;
 			files = (
 			);
 			inputPaths = (
@@ -2301,7 +2301,7 @@
 			name = "Run tests via run_tests.py (disabled)";
 			outputPaths = (
 			);
-			runOnlyForDeploymentPostprocessing = 0;
+			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /bin/sh;
 			shellScript = "# if [[ -x \"${PROJECT_DIR}/tests/results\" ]]; then\n#   echo 'Removing \"tests/results...\"'\n#   rm -rf \"${PROJECT_DIR}/tests/results\"\n# fi\n# \n# if [[ -f \"${PROJECT_DIR}/tests/difftest.patch\" ]]; then\n#   echo 'Removing \"tests/difftest.patch...\"'\n#   rm \"${PROJECT_DIR}/tests/difftest.patch\"\n# fi\n# \n# echo \"Running unit tests via tests/run_tests.py...\"\n# cd \"${PROJECT_DIR}/tests\"\n# TESTS_RESULT=`python \"run_tests.py\"`\n# \n# \n# if [[ $TESTS_RESULT =~ \"FAILED\" || $? == 1 ]]; then\n#   echo \"Tests seem to have failed (output contains \\\"FAILED\\\" or exit status non-zero). Generating difftest.patch...\"\n#   ./difftest.sh > difftest.patch\n# fi";
 		};
