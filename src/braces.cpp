@@ -135,6 +135,7 @@ static void examine_braces(void)
    }
 }
 
+
 /**
  * Checks to see if the virtual braces should be converted to real braces.
  *  - over a certain length
@@ -145,8 +146,8 @@ static void examine_braces(void)
 static bool should_add_braces(chunk_t *vbopen)
 {
    chunk_t *pc;
-   int     nl_max     = cpd.settings[UO_mod_full_brace_nl].n;
-   int     nl_count   = 0;
+   int     nl_max   = cpd.settings[UO_mod_full_brace_nl].n;
+   int     nl_count = 0;
 
    if (nl_max == 0)
    {
@@ -170,6 +171,7 @@ static bool should_add_braces(chunk_t *vbopen)
    }
    return(false);
 }
+
 
 /**
  * Checks to see if the braces can be removed.
@@ -286,6 +288,7 @@ static bool can_remove_braces(chunk_t *bopen)
 
    return((pc->type == CT_BRACE_CLOSE) && (pc->pp_level == bopen->pp_level));
 }
+
 
 /**
  * Step forward and count the number of semi colons at the current level.
@@ -449,6 +452,7 @@ static void examine_brace(chunk_t *bopen)
    }
 }
 
+
 /**
  * Converts a single brace into a virtual brace
  */
@@ -544,6 +548,7 @@ static void convert_vbrace(chunk_t *vbr)
       }
    }
 }
+
 
 static void convert_vbrace_to_brace(void)
 {
@@ -769,6 +774,7 @@ static void move_case_break(void)
    }
 }
 
+
 /**
  * Remove the case brace, if allowable.
  */
@@ -824,6 +830,7 @@ static chunk_t *mod_case_brace_remove(chunk_t *br_open)
    chunk_del(br_close);
    return(chunk_get_next(next, CNAV_PREPROC));
 }
+
 
 /**
  * Add the case brace, if allowable.
@@ -882,9 +889,9 @@ static chunk_t *mod_case_brace_add(chunk_t *cl_colon)
 
    br_open = chunk_add_after(&chunk, cl_colon);
 
-   chunk.type        = CT_BRACE_CLOSE;
-   chunk.orig_line   = last->orig_line;
-   chunk.str         = "}";
+   chunk.type      = CT_BRACE_CLOSE;
+   chunk.orig_line = last->orig_line;
+   chunk.str       = "}";
 
    br_close = chunk_add_before(&chunk, last);
 
@@ -934,6 +941,7 @@ static void mod_case_brace(void)
    }
 }
 
+
 /**
  * Traverse the if chain and see if all can be removed
  */
@@ -976,7 +984,7 @@ static void process_if_chain(chunk_t *br_start)
       }
 
       braces[br_cnt++] = pc;
-      br_close = chunk_get_next_type(pc, (c_token_t)(pc->type + 1), pc->level, CNAV_PREPROC);
+      br_close         = chunk_get_next_type(pc, (c_token_t)(pc->type + 1), pc->level, CNAV_PREPROC);
       if (br_close == NULL)
       {
          break;
@@ -1045,6 +1053,7 @@ static void process_if_chain(chunk_t *br_start)
       LOG_FMT(LBRCH, "\n");
    }
 }
+
 
 static void mod_full_brace_if_chain(void)
 {

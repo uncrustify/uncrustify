@@ -128,6 +128,7 @@ void indent_to_column(chunk_t *pc, int column)
    reindent_line(pc, column);
 }
 
+
 enum align_mode
 {
    ALMODE_SHIFT,     /* shift relative to the current column */
@@ -799,9 +800,9 @@ void indent_text(void)
                {
                   if (cpd.settings[UO_indent_namespace_level].n > 0)
                   {
-                      frm.pse[frm.pse_tos].indent -= indent_size;
-                      frm.pse[frm.pse_tos].indent +=
-                          cpd.settings[UO_indent_namespace_level].n;
+                     frm.pse[frm.pse_tos].indent -= indent_size;
+                     frm.pse[frm.pse_tos].indent +=
+                        cpd.settings[UO_indent_namespace_level].n;
                   }
                }
             }

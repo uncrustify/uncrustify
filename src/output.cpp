@@ -881,6 +881,7 @@ static bool can_combine_comment(chunk_t *pc, cmt_reflow& cmt)
 static chunk_t *output_comment_c(chunk_t *first)
 {
    cmt_reflow cmt;
+
    cmt.reflow = (cpd.settings[UO_cmt_reflow_mode].n != 1);
 
    output_cmt_start(cmt, first);
@@ -928,6 +929,7 @@ static chunk_t *output_comment_c(chunk_t *first)
 static chunk_t *output_comment_cpp(chunk_t *first)
 {
    cmt_reflow cmt;
+
    cmt.reflow = (cpd.settings[UO_cmt_reflow_mode].n != 1);
 
    output_cmt_start(cmt, first);
@@ -1043,6 +1045,7 @@ static void output_comment_multi(chunk_t *pc)
    bool       nl_end = false;
 
    cmt_reflow cmt;
+
    cmt.reflow = (cpd.settings[UO_cmt_reflow_mode].n != 1);
 
    output_cmt_start(cmt, pc);
@@ -1115,10 +1118,10 @@ static void output_comment_multi(chunk_t *pc)
           (ch == '\n') &&
           (remaining > 0))
       {
-         int nxt_len = 0;
-         int next_nonempty_line = -1;
-         int prev_nonempty_line = -1;
-         int nwidx = line_len;
+         int  nxt_len            = 0;
+         int  next_nonempty_line = -1;
+         int  prev_nonempty_line = -1;
+         int  nwidx          = line_len;
          bool star_is_bullet = false;
 
          /* strip trailing whitespace from the line collected so far */
@@ -1151,8 +1154,8 @@ static void output_comment_multi(chunk_t *pc)
                 ((nxt_len == remaining) ||
                  ((pc->flags & PCF_IN_PREPROC)
                   ? (cmt_str[nxt_len] != '\\') ||
-                  ((cmt_str[nxt_len+1] != 'r') &&
-                   (cmt_str[nxt_len+1] != '\n'))
+                  ((cmt_str[nxt_len + 1] != 'r') &&
+                   (cmt_str[nxt_len + 1] != '\n'))
                   : true)))
             {
                next_nonempty_line = nxt_len; // first nonwhitespace char in the next line
@@ -1189,7 +1192,7 @@ static void output_comment_multi(chunk_t *pc)
           * line didn't start with a '*' all of a sudden while the previous one didn't
           * (the ambiguous '*'-for-bullet case!)
           */
-         if (prev_nonempty_line >= 0 && next_nonempty_line >= 0 &&
+         if ((prev_nonempty_line >= 0) && (next_nonempty_line >= 0) &&
              (((unc_isalnum(line[prev_nonempty_line]) ||
                 strchr(",)]", line[prev_nonempty_line])) &&
                (unc_isalnum(cmt_str[next_nonempty_line]) ||
@@ -1201,7 +1204,7 @@ static void output_comment_multi(chunk_t *pc)
             // rewind the line to the last non-alpha:
             line_len = prev_nonempty_line + 1;
             // roll the current line forward to the first non-alpha:
-            cmt_str += next_nonempty_line;
+            cmt_str   += next_nonempty_line;
             remaining -= next_nonempty_line;
             // override the NL and make it a single whitespace:
             ch = ' ';

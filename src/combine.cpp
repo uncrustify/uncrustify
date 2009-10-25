@@ -3490,13 +3490,13 @@ static void handle_oc_message_decl(chunk_t *pc)
           ((tmp->type == CT_PAREN_OPEN) ||
            (tmp->type == CT_PAREN_CLOSE)))
       {
-          tmp->parent_type = CT_OC_RTYPE;
-          in_paren         = (tmp->type == CT_PAREN_OPEN);
-          if (!in_paren)
-          {
-              paren_cnt++;
-              arg_cnt++;
-          }
+         tmp->parent_type = CT_OC_RTYPE;
+         in_paren         = (tmp->type == CT_PAREN_OPEN);
+         if (!in_paren)
+         {
+            paren_cnt++;
+            arg_cnt++;
+         }
       }
       else if ((tmp->type == CT_PAREN_OPEN) ||
                (tmp->type == CT_PAREN_CLOSE))

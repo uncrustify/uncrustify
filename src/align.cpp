@@ -1697,6 +1697,7 @@ static void align_typedefs(int span)
    as.End();
 }
 
+
 /**
  * Align '<<' (CT_ARITH?)
  */
@@ -1750,6 +1751,7 @@ static void align_left_shift(void)
    }
 }
 
+
 /**
  * Aligns OC message
  */
@@ -1774,8 +1776,8 @@ static void align_oc_msg_colon(void)
       nas.Reset();
       nas.m_right_align = true;
 
-      level = pc->level;
-      pc = chunk_get_next_ncnl(pc, CNAV_PREPROC);
+      level    = pc->level;
+      pc       = chunk_get_next_ncnl(pc, CNAV_PREPROC);
       did_line = false;
       while ((pc != NULL) && (pc->level > level))
       {

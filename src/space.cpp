@@ -261,7 +261,6 @@ argval_t do_space(chunk_t *first, chunk_t *second, bool complete = true)
             log_rule("sp_after_semi_for");
             return(cpd.settings[UO_sp_after_semi_for].a);
          }
-
       }
       else if (!chunk_is_comment(second))
       {
