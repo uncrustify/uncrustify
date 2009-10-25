@@ -263,7 +263,7 @@ int main(int argc, char *argv[])
 
 #ifdef WIN32
    /* tell windoze not to change what I write to stdout */
-      (void) _setmode(_fileno(stdout), _O_BINARY);
+   (void)_setmode(_fileno(stdout), _O_BINARY);
 #endif
 
    /* Init logging */
@@ -1060,7 +1060,7 @@ static void do_source_file(const char *filename_in,
              * first. This may cause data loss if the tmp file gets deleted
              * or can't be renamed.
              */
-               (void) unlink(filename_out);
+            (void)unlink(filename_out);
 #endif
             /* Change - rename filename_tmp to filename_out */
             if (rename(filename_tmp, filename_out) != 0)

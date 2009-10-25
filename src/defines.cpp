@@ -270,7 +270,7 @@ static void generate_if_conditional_as_text(std::string& dst, chunk_t *ifdef)
       }
       else if (pc->type == CT_NL_CONT)
       {
-         dst += ' ';
+         dst   += ' ';
          column = -1;
       }
       else if ((pc->type == CT_COMMENT) ||

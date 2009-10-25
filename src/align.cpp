@@ -1697,6 +1697,7 @@ static void align_typedefs(int span)
    as.End();
 }
 
+
 /**
  * Align '<<' (CT_ARITH?)
  */
@@ -1750,6 +1751,7 @@ static void align_left_shift(void)
    }
 }
 
+
 /**
  * Aligns OC message
  */
@@ -1778,24 +1780,24 @@ static void align_oc_msg_colon(int span)
       cas.Start(span);
 
       level = pc->level;
-      pc = chunk_get_next_ncnl(pc, CNAV_PREPROC);
-       
-      did_line = false;
+      pc    = chunk_get_next_ncnl(pc, CNAV_PREPROC);
+
+      did_line  = false;
       has_colon = false;
-      lcnt = 0;
+      lcnt      = 0;
 
       while ((pc != NULL) && (pc->level > level))
       {
          if (chunk_is_newline(pc))
          {
-            if (!has_colon) 
+            if (!has_colon)
             {
                ++lcnt;
             }
-            did_line = false;
+            did_line  = false;
             has_colon = !has_colon;
          }
-         else if (!did_line && lcnt - 1 < span && (pc->type == CT_OC_COLON) )
+         else if (!did_line && (lcnt - 1 < span) && (pc->type == CT_OC_COLON))
          {
             has_colon = true;
             cas.Add(pc);
