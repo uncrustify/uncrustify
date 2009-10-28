@@ -1228,7 +1228,8 @@ static void output_comment_multi(chunk_t *pc)
             {
                line_len--;
             }
-            if ((line[line_len - 1] == '\\') && (line[line_len - 2] != '*'))
+
+            if ((line_len > 1) && (line[line_len - 1] == '\\') && (line[line_len - 2] != '*'))
             {
                if (pc->flags & PCF_IN_PREPROC)
                {

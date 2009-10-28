@@ -175,8 +175,8 @@ if __name__ == '__main__':
 	print "Passed %d / %d tests" % (pass_count, pass_count + fail_count)
 	if fail_count > 0:
 		print BOLD + "Failed %d test(s)" % (fail_count) + NORMAL
-        	sys.exit(1)
+		sys.exit(1)
 	else:
 		print BOLD + "All tests passed" + NORMAL
-        	sys.exit(0)
+		sys.exit(0)
 

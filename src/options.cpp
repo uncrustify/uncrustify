@@ -370,6 +370,12 @@ void register_options(void)
    unc_add_option("sp_after_oc_at_sel", UO_sp_after_oc_at_sel, AT_IARF,
                   "Add or remove space between '@selector' and '('\n"
                   "'@selector(msgName).' vs '@selector (msgName)'");
+   unc_add_option("sp_before_oc_block_caret", UO_sp_before_oc_block_caret, AT_IARF,
+                  "Add or remove space before a block pointer caret\n"
+                  "'^int (int arg){...}' vs. ' ^int (int arg){...}'");
+   unc_add_option("sp_after_oc_block_caret", UO_sp_after_oc_block_caret, AT_IARF,
+                  "Add or remove space after a block pointer caret\n"
+                  "'^int (int arg){...}' vs. '^ int (int arg){...}'");
 
    unc_add_option("sp_cond_colon", UO_sp_cond_colon, AT_IARF,
                   "Add or remove space around the ':' in 'b ? t : f'");
@@ -858,8 +864,8 @@ void register_options(void)
    unc_add_option("align_left_shift", UO_align_left_shift, AT_BOOL,
                   "Align lines that start with '<<' with previous '<<'. Default=true");
 
-   unc_add_option("align_oc_msg_colon", UO_align_oc_msg_colon, AT_BOOL,
-                  "Align parameters in an Obj-C message on the ':'");
+   unc_add_option("align_oc_msg_colon_span", UO_align_oc_msg_colon_span, AT_NUM,
+                  "Span for aligning parameters in an Obj-C message call on the ':' (0=don't align)", 0, 5000);
 
    unc_begin_group(UG_comment, "Comment modifications");
    unc_add_option("cmt_width", UO_cmt_width, AT_NUM,

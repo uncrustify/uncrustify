@@ -68,6 +68,14 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		654C6B42108ED8FC00556CD9 /* real_world_file.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = real_world_file.m; sourceTree = "<group>"; };
+		654C6C70108F238800556CD9 /* 50050-real_world_file.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "50050-real_world_file.m"; sourceTree = "<group>"; };
+		654C6DA7108F629F00556CD9 /* 50060-oc-split.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "50060-oc-split.m"; sourceTree = "<group>"; };
+		654C6DB3108F62E900556CD9 /* oc-split.cfg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "oc-split.cfg"; sourceTree = "<group>"; };
+		654C6DBD108F63A200556CD9 /* 50007-misc.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "50007-misc.m"; sourceTree = "<group>"; };
+		654C6DBE108F63B000556CD9 /* misc.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = misc.m; sourceTree = "<group>"; };
+		654C6FB2108FB40D00556CD9 /* more_blocks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = more_blocks.m; sourceTree = "<group>"; };
+		654C70BA1090E89400556CD9 /* blocks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = blocks.m; sourceTree = "<group>"; };
 		6553629F107EB5B800E08A01 /* AUTHORS */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = AUTHORS; sourceTree = "<group>"; };
 		655362A0107EB5B900E08A01 /* BUGS */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = BUGS; sourceTree = "<group>"; };
 		655362A1107EB5B900E08A01 /* COPYING */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = COPYING; sourceTree = "<group>"; };
@@ -924,6 +932,30 @@
 		65536846107EB7FA00E08A01 /* width.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = width.cpp; sourceTree = "<group>"; };
 		65536921107EC62D00E08A01 /* Xcode Organizer Actions.xccommands */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "Xcode Organizer Actions.xccommands"; sourceTree = "<group>"; };
 		656E28301082F349007F873A /* selector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = selector.m; sourceTree = "<group>"; };
+		659F8D37108A9A380004E4CB /* complex_method.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = complex_method.m; sourceTree = "<group>"; };
+		659F8DA6108AD5AC0004E4CB /* 50040-complex_method.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "50040-complex_method.m"; sourceTree = "<group>"; };
+		659F8DD8108ADCB30004E4CB /* objc_complex_method.cfg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = objc_complex_method.cfg; sourceTree = "<group>"; };
+		65A462A61092CB7F007F6EBA /* sp_after_oc_block_caret_add.cfg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = sp_after_oc_block_caret_add.cfg; sourceTree = "<group>"; };
+		65A462A71092CB7F007F6EBA /* sp_after_oc_block_caret_force.cfg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = sp_after_oc_block_caret_force.cfg; sourceTree = "<group>"; };
+		65A462A81092CB7F007F6EBA /* sp_after_oc_block_caret_remove.cfg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = sp_after_oc_block_caret_remove.cfg; sourceTree = "<group>"; };
+		65A462A91092CB7F007F6EBA /* sp_before_oc_block_caret_add.cfg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = sp_before_oc_block_caret_add.cfg; sourceTree = "<group>"; };
+		65A462AA1092CB7F007F6EBA /* sp_before_oc_block_caret_force.cfg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = sp_before_oc_block_caret_force.cfg; sourceTree = "<group>"; };
+		65A462AB1092CB7F007F6EBA /* sp_before_oc_block_caret_remove.cfg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = sp_before_oc_block_caret_remove.cfg; sourceTree = "<group>"; };
+		65A462CE1092CFCC007F6EBA /* sp_before_after_oc_block_caret_remove.cfg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = sp_before_after_oc_block_caret_remove.cfg; sourceTree = "<group>"; };
+		65A462ED1092D101007F6EBA /* 50070-blocks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "50070-blocks.m"; sourceTree = "<group>"; };
+		65A462EE1092D101007F6EBA /* 50071-blocks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "50071-blocks.m"; sourceTree = "<group>"; };
+		65A462EF1092D101007F6EBA /* 50072-blocks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "50072-blocks.m"; sourceTree = "<group>"; };
+		65A462F01092D101007F6EBA /* 50073-blocks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "50073-blocks.m"; sourceTree = "<group>"; };
+		65A462F11092D101007F6EBA /* 50074-blocks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "50074-blocks.m"; sourceTree = "<group>"; };
+		65A462F21092D101007F6EBA /* 50075-blocks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "50075-blocks.m"; sourceTree = "<group>"; };
+		65A462F31092D101007F6EBA /* 50076-blocks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "50076-blocks.m"; sourceTree = "<group>"; };
+		65A463291092D346007F6EBA /* 50077-more_blocks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "50077-more_blocks.m"; sourceTree = "<group>"; };
+		65A4632A1092D346007F6EBA /* 50078-more_blocks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "50078-more_blocks.m"; sourceTree = "<group>"; };
+		65A4632B1092D346007F6EBA /* 50079-more_blocks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "50079-more_blocks.m"; sourceTree = "<group>"; };
+		65A4632C1092D346007F6EBA /* 50080-more_blocks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "50080-more_blocks.m"; sourceTree = "<group>"; };
+		65A4632D1092D346007F6EBA /* 50081-more_blocks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "50081-more_blocks.m"; sourceTree = "<group>"; };
+		65A4632E1092D346007F6EBA /* 50082-more_blocks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "50082-more_blocks.m"; sourceTree = "<group>"; };
+		65A4632F1092D346007F6EBA /* 50083-more_blocks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "50083-more_blocks.m"; sourceTree = "<group>"; };
 		65B887C61082CBBD00D10769 /* example.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = example.c; path = documentation/example.c; sourceTree = "<group>"; };
 		65B887C81082CBBD00D10769 /* align-thresholds.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "align-thresholds.txt"; path = "documentation/align-thresholds.txt"; sourceTree = "<group>"; };
 		65B887C91082CBBD00D10769 /* goals.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = goals.txt; path = documentation/goals.txt; sourceTree = "<group>"; };
@@ -1016,6 +1048,7 @@
 				655362B1107EB67900E08A01 /* run_tests.sh */,
 				655362B2107EB67900E08A01 /* update-default-cfg.sh */,
 			);
+			includeInIndex = 0;
 			name = "Other Sources";
 			sourceTree = "<group>";
 		};
@@ -1221,6 +1254,8 @@
 				65536357107EB6D900E08A01 /* nl_template_class-remove.cfg */,
 				65536358107EB6D900E08A01 /* nl_try-a.cfg */,
 				65536359107EB6D900E08A01 /* obj-c.cfg */,
+				659F8DD8108ADCB30004E4CB /* objc_complex_method.cfg */,
+				654C6DB3108F62E900556CD9 /* oc-split.cfg */,
 				6553635A107EB6D900E08A01 /* op-space-force.cfg */,
 				6553635B107EB6D900E08A01 /* op-space-remove.cfg */,
 				6553635C107EB6D900E08A01 /* pascal_ptr.cfg */,
@@ -1253,17 +1288,24 @@
 				65536377107EB6D900E08A01 /* sort_imports.cfg */,
 				65536378107EB6D900E08A01 /* sp-for-semi.cfg */,
 				65536379107EB6D900E08A01 /* sp_after_cast.cfg */,
-				65DB4D851084CEDC005E7765 /* sp_after_oc_return_type_add.cfg */,
-				65DB4DA11084D098005E7765 /* sp_after_oc_return_type_force.cfg */,
-				65DB4DA21084D098005E7765 /* sp_after_oc_return_type_remove.cfg */,
 				65DB4DD21084D423005E7765 /* sp_after_oc_at_sel_add.cfg */,
 				65DB4DD31084D423005E7765 /* sp_after_oc_at_sel_force.cfg */,
 				65DB4DD41084D423005E7765 /* sp_after_oc_at_sel_remove.cfg */,
+				65DB4D851084CEDC005E7765 /* sp_after_oc_return_type_add.cfg */,
+				65DB4DA11084D098005E7765 /* sp_after_oc_return_type_force.cfg */,
+				65DB4DA21084D098005E7765 /* sp_after_oc_return_type_remove.cfg */,
 				6553637A107EB6D900E08A01 /* sp_cmt_cpp_start_add.cfg */,
 				6553637B107EB6D900E08A01 /* sp_cmt_cpp_start_force.cfg */,
 				6553637C107EB6D900E08A01 /* sp_cmt_cpp_start_remove.cfg */,
 				6553637D107EB6D900E08A01 /* sp_throw_paren-f.cfg */,
 				6553637E107EB6D900E08A01 /* sp_throw_paren-r.cfg */,
+				65A462A61092CB7F007F6EBA /* sp_after_oc_block_caret_add.cfg */,
+				65A462A71092CB7F007F6EBA /* sp_after_oc_block_caret_force.cfg */,
+				65A462A81092CB7F007F6EBA /* sp_after_oc_block_caret_remove.cfg */,
+				65A462A91092CB7F007F6EBA /* sp_before_oc_block_caret_add.cfg */,
+				65A462AA1092CB7F007F6EBA /* sp_before_oc_block_caret_force.cfg */,
+				65A462AB1092CB7F007F6EBA /* sp_before_oc_block_caret_remove.cfg */,
+				65A462CE1092CFCC007F6EBA /* sp_before_after_oc_block_caret_remove.cfg */,
 				6553637F107EB6D900E08A01 /* star_pos-0.cfg */,
 				65536380107EB6D900E08A01 /* star_pos-1.cfg */,
 				65536381107EB6D900E08A01 /* star_pos-2.cfg */,
@@ -1291,7 +1333,6 @@
 				65536447107EB6D900E08A01 /* cs */,
 				65536452107EB6D900E08A01 /* d */,
 				65536465107EB6D900E08A01 /* ecma */,
-				65536467107EB6D900E08A01 /* java */,
 				65536468107EB6D900E08A01 /* oc */,
 				65536470107EB6D900E08A01 /* pawn */,
 				6553647C107EB6D900E08A01 /* sql */,
@@ -1540,13 +1581,6 @@
 			path = ecma;
 			sourceTree = "<group>";
 		};
-		65536467107EB6D900E08A01 /* java */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = java;
-			sourceTree = "<group>";
-		};
 		65536468107EB6D900E08A01 /* oc */ = {
 			isa = PBXGroup;
 			children = (
@@ -1555,10 +1589,15 @@
 				6553646B107EB6D900E08A01 /* Fraction.h */,
 				6553646C107EB6D900E08A01 /* Fraction.m */,
 				6553646D107EB6D900E08A01 /* main.m */,
+				654C6DBE108F63B000556CD9 /* misc.m */,
 				6553646E107EB6D900E08A01 /* sort_import.m */,
 				6553646F107EB6D900E08A01 /* string.m */,
 				656E28301082F349007F873A /* selector.m */,
 				65DB4DB81084D200005E7765 /* return_type.m */,
+				659F8D37108A9A380004E4CB /* complex_method.m */,
+				654C6B42108ED8FC00556CD9 /* real_world_file.m */,
+				654C6FB2108FB40D00556CD9 /* more_blocks.m */,
+				654C70BA1090E89400556CD9 /* blocks.m */,
 			);
 			path = oc;
 			sourceTree = "<group>";
@@ -1607,7 +1646,6 @@
 				65536592107EB6DA00E08A01 /* cs */,
 				655365A2107EB6DA00E08A01 /* d */,
 				655365B7107EB6DA00E08A01 /* ecma */,
-				655365B9107EB6DA00E08A01 /* java */,
 				655365BA107EB6DA00E08A01 /* oc */,
 				655365C2107EB6DA00E08A01 /* pawn */,
 				655365CC107EB6DA00E08A01 /* sql */,
@@ -1954,13 +1992,6 @@
 			path = ecma;
 			sourceTree = "<group>";
 		};
-		655365B9107EB6DA00E08A01 /* java */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = java;
-			sourceTree = "<group>";
-		};
 		655365BA107EB6DA00E08A01 /* oc */ = {
 			isa = PBXGroup;
 			children = (
@@ -1970,6 +2001,7 @@
 				655365BE107EB6DA00E08A01 /* 50004-string.m */,
 				655365BF107EB6DA00E08A01 /* 50005-Declarations.h */,
 				655365C0107EB6DA00E08A01 /* 50006-exceptions.m */,
+				654C6DBD108F63A200556CD9 /* 50007-misc.m */,
 				655365C1107EB6DA00E08A01 /* 50030-sort_import.m */,
 				65DB4D941084D030005E7765 /* 50010-return_type.m */,
 				65DB4DB41084D174005E7765 /* 50011-return_type.m */,
@@ -1977,6 +2009,23 @@
 				65DB4DC61084D2E3005E7765 /* 50020-selector.m */,
 				65DB4DC71084D2E3005E7765 /* 50021-selector.m */,
 				65DB4DC81084D2E3005E7765 /* 50022-selector.m */,
+				659F8DA6108AD5AC0004E4CB /* 50040-complex_method.m */,
+				654C6C70108F238800556CD9 /* 50050-real_world_file.m */,
+				654C6DA7108F629F00556CD9 /* 50060-oc-split.m */,
+				65A462ED1092D101007F6EBA /* 50070-blocks.m */,
+				65A462EE1092D101007F6EBA /* 50071-blocks.m */,
+				65A462EF1092D101007F6EBA /* 50072-blocks.m */,
+				65A462F01092D101007F6EBA /* 50073-blocks.m */,
+				65A462F11092D101007F6EBA /* 50074-blocks.m */,
+				65A462F21092D101007F6EBA /* 50075-blocks.m */,
+				65A462F31092D101007F6EBA /* 50076-blocks.m */,
+				65A463291092D346007F6EBA /* 50077-more_blocks.m */,
+				65A4632A1092D346007F6EBA /* 50078-more_blocks.m */,
+				65A4632B1092D346007F6EBA /* 50079-more_blocks.m */,
+				65A4632C1092D346007F6EBA /* 50080-more_blocks.m */,
+				65A4632D1092D346007F6EBA /* 50081-more_blocks.m */,
+				65A4632E1092D346007F6EBA /* 50082-more_blocks.m */,
+				65A4632F1092D346007F6EBA /* 50083-more_blocks.m */,
 			);
 			path = oc;
 			sourceTree = "<group>";
@@ -2036,62 +2085,62 @@
 		6553680E107EB7FA00E08A01 /* src */ = {
 			isa = PBXGroup;
 			children = (
+				6553682D107EB7FA00E08A01 /* Makefile.am */,
 				6553680F107EB7FA00E08A01 /* align.cpp */,
 				65536810107EB7FA00E08A01 /* align_stack.cpp */,
-				65536811107EB7FA00E08A01 /* align_stack.h */,
 				65536812107EB7FA00E08A01 /* args.cpp */,
-				65536813107EB7FA00E08A01 /* args.h */,
 				65536814107EB7FA00E08A01 /* backup.cpp */,
-				65536815107EB7FA00E08A01 /* backup.h */,
-				65536816107EB7FA00E08A01 /* base_types.h */,
 				65536817107EB7FA00E08A01 /* brace_cleanup.cpp */,
 				65536818107EB7FA00E08A01 /* braces.cpp */,
-				65536819107EB7FA00E08A01 /* char_table.h */,
 				6553681A107EB7FA00E08A01 /* chunk_list.cpp */,
-				6553681B107EB7FA00E08A01 /* chunk_list.h */,
 				6553681C107EB7FA00E08A01 /* ChunkStack.cpp */,
-				6553681D107EB7FA00E08A01 /* ChunkStack.h */,
 				6553681E107EB7FA00E08A01 /* combine.cpp */,
-				6553681F107EB7FA00E08A01 /* config.h */,
-				65536820107EB7FA00E08A01 /* config.h.in */,
 				65536821107EB7FA00E08A01 /* d.tokenize.cpp */,
 				65536822107EB7FA00E08A01 /* defines.cpp */,
 				65536823107EB7FA00E08A01 /* detect.cpp */,
 				65536824107EB7FA00E08A01 /* indent.cpp */,
 				65536825107EB7FA00E08A01 /* keywords.cpp */,
 				65536826107EB7FA00E08A01 /* lang_pawn.cpp */,
-				65536827107EB7FA00E08A01 /* ListManager.h */,
-				65536828107EB7FA00E08A01 /* log_levels.h */,
 				65536829107EB7FA00E08A01 /* logger.cpp */,
-				6553682A107EB7FA00E08A01 /* logger.h */,
 				6553682B107EB7FA00E08A01 /* logmask.cpp */,
-				6553682C107EB7FA00E08A01 /* logmask.h */,
-				6553682D107EB7FA00E08A01 /* Makefile.am */,
-				6553682E107EB7FA00E08A01 /* Makefile.in */,
 				6553682F107EB7FA00E08A01 /* md5.cpp */,
-				65536830107EB7FA00E08A01 /* md5.h */,
 				65536831107EB7FA00E08A01 /* newlines.cpp */,
 				65536832107EB7FA00E08A01 /* options.cpp */,
-				65536833107EB7FA00E08A01 /* options.h */,
 				65536834107EB7FA00E08A01 /* output.cpp */,
 				65536835107EB7FA00E08A01 /* parens.cpp */,
 				65536836107EB7FA00E08A01 /* parse_frame.cpp */,
-				65536837107EB7FA00E08A01 /* prototypes.h */,
 				65536838107EB7FA00E08A01 /* punctuators.cpp */,
-				65536839107EB7FA00E08A01 /* punctuators.h */,
 				6553683A107EB7FA00E08A01 /* semicolons.cpp */,
 				6553683B107EB7FA00E08A01 /* sorting.cpp */,
 				6553683C107EB7FA00E08A01 /* space.cpp */,
-				6553683D107EB7FA00E08A01 /* token_enum.h */,
-				6553683E107EB7FA00E08A01 /* token_names.h */,
 				6553683F107EB7FA00E08A01 /* tokenize.cpp */,
 				65536840107EB7FA00E08A01 /* tokenize_cleanup.cpp */,
-				65536841107EB7FA00E08A01 /* unc_ctype.h */,
 				65536842107EB7FA00E08A01 /* uncrustify.cpp */,
-				65536843107EB7FA00E08A01 /* uncrustify_types.h */,
-				65536844107EB7FA00E08A01 /* uncrustify_version.h */,
 				65536845107EB7FA00E08A01 /* universalindentgui.cpp */,
 				65536846107EB7FA00E08A01 /* width.cpp */,
+				65536811107EB7FA00E08A01 /* align_stack.h */,
+				65536813107EB7FA00E08A01 /* args.h */,
+				65536815107EB7FA00E08A01 /* backup.h */,
+				65536816107EB7FA00E08A01 /* base_types.h */,
+				65536819107EB7FA00E08A01 /* char_table.h */,
+				6553681B107EB7FA00E08A01 /* chunk_list.h */,
+				6553681D107EB7FA00E08A01 /* ChunkStack.h */,
+				6553681F107EB7FA00E08A01 /* config.h */,
+				65536827107EB7FA00E08A01 /* ListManager.h */,
+				65536828107EB7FA00E08A01 /* log_levels.h */,
+				6553682A107EB7FA00E08A01 /* logger.h */,
+				6553682C107EB7FA00E08A01 /* logmask.h */,
+				65536830107EB7FA00E08A01 /* md5.h */,
+				65536833107EB7FA00E08A01 /* options.h */,
+				65536837107EB7FA00E08A01 /* prototypes.h */,
+				65536839107EB7FA00E08A01 /* punctuators.h */,
+				6553683D107EB7FA00E08A01 /* token_enum.h */,
+				6553683E107EB7FA00E08A01 /* token_names.h */,
+				65536841107EB7FA00E08A01 /* unc_ctype.h */,
+				65536843107EB7FA00E08A01 /* uncrustify_types.h */,
+				65536844107EB7FA00E08A01 /* uncrustify_version.h */,
+				65536820107EB7FA00E08A01 /* config.h.in */,
+				6553682E107EB7FA00E08A01 /* Makefile.in */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -2178,12 +2227,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1DEB923108733DC60010E9CD /* Build configuration list for PBXNativeTarget "uncrustify" */;
 			buildPhases = (
-				656E288E1082F847007F873A /* Replace personal objc.cfg */,
+				656E288E1082F847007F873A /* Replace personal objc.cfg (disabled) */,
 				656E28731082F71E007F873A /* Generate token_names.h */,
 				8DD76F640486A84900D96B5E /* Sources */,
 				8DD76F660486A84900D96B5E /* Frameworks */,
 				8DD76F690486A84900D96B5E /* Install Man Page */,
 				65DB4DD61084D563005E7765 /* Copy to 'src' where tests expect it */,
+				657D87ED10895CB200C5E4AB /* Run tests via run_tests.py (disabled) */,
 			);
 			buildRules = (
 			);
@@ -2227,19 +2277,33 @@
 			shellPath = /bin/sh;
 			shellScript = "echo \"Generating token_names.h ...\"\n\"${PROJECT_DIR}/make_token_names.sh\"";
 		};
-		656E288E1082F847007F873A /* Replace personal objc.cfg */ = {
+		656E288E1082F847007F873A /* Replace personal objc.cfg (disabled) */ = {
 			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
+			buildActionMask = 8;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Replace personal objc.cfg";
+			name = "Replace personal objc.cfg (disabled)";
 			outputPaths = (
 			);
-			runOnlyForDeploymentPostprocessing = 0;
+			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /bin/sh;
-			shellScript = "# // !!! Andre Berg 20091012: Don't worry about this script phase...\n# this just copies the objc.cfg file I work on over to the project dir because I almost always forget it\n# before building...\n\nif [[ -e ~/.uncrustify/objc.cfg ]]; then\n\techo \"Replacing project copy of objc.cfg with personal one\"\n\tcp -f ~/.uncrustify/objc.cfg \"${PROJECT_DIR}/etc/objc.cfg\"\nfi";
+			shellScript = "# // !!! Andre Berg 20091012: Don't worry about this script phase...\n# this just copies the objc.cfg file I work on over to the project dir because I almost always forget it\n# before building...\n\n#if [[ -e ~/.uncrustify/objc.cfg ]]; then\n#\techo \"Replacing project copy of objc.cfg with personal one\"\n#\tcp -f ~/.uncrustify/objc.cfg \"${PROJECT_DIR}/etc/objc.cfg\"\n#fi";
+		};
+		657D87ED10895CB200C5E4AB /* Run tests via run_tests.py (disabled) */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 8;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Run tests via run_tests.py (disabled)";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+			shellPath = /bin/sh;
+			shellScript = "# if [[ -x \"${PROJECT_DIR}/tests/results\" ]]; then\n#   echo 'Removing \"tests/results...\"'\n#   rm -rf \"${PROJECT_DIR}/tests/results\"\n# fi\n# \n# if [[ -f \"${PROJECT_DIR}/tests/difftest.patch\" ]]; then\n#   echo 'Removing \"tests/difftest.patch...\"'\n#   rm \"${PROJECT_DIR}/tests/difftest.patch\"\n# fi\n# \n# echo \"Running unit tests via tests/run_tests.py...\"\n# cd \"${PROJECT_DIR}/tests\"\n# TESTS_RESULT=`python \"run_tests.py\"`\n# \n# \n# if [[ $TESTS_RESULT =~ \"FAILED\" || $? == 1 ]]; then\n#   echo \"Tests seem to have failed (output contains \\\"FAILED\\\" or exit status non-zero). Generating difftest.patch...\"\n#   ./difftest.sh > difftest.patch\n# fi";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -2344,7 +2408,7 @@
 			};
 			name = Release;
 		};
-		6553622D107EB39900E08A01 /* Install (xcodebuild only!) */ = {
+		6553622D107EB39900E08A01 /* Install */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -2355,9 +2419,9 @@
 				PREBINDING = NO;
 				SDKROOT = macosx10.6;
 			};
-			name = "Install (xcodebuild only!)";
+			name = Install;
 		};
-		6553622E107EB39900E08A01 /* Install (xcodebuild only!) */ = {
+		6553622E107EB39900E08A01 /* Install */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -2371,8 +2435,10 @@
 				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				INSTALL_PATH = /usr/local/bin;
 				PRODUCT_NAME = uncrustify;
+				SEPARATE_STRIP = YES;
+				STRIP_INSTALLED_PRODUCT = YES;
 			};
-			name = "Install (xcodebuild only!)";
+			name = Install;
 		};
 		65DB4E4D1084DBB7005E7765 /* Debug Clang */ = {
 			isa = XCBuildConfiguration;
@@ -2442,7 +2508,7 @@
 				65DB4E4E1084DBB7005E7765 /* Debug Clang */,
 				1DEB923308733DC60010E9CD /* Release */,
 				65DB4E501084DBC2005E7765 /* Release Clang */,
-				6553622E107EB39900E08A01 /* Install (xcodebuild only!) */,
+				6553622E107EB39900E08A01 /* Install */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -2454,7 +2520,7 @@
 				65DB4E4D1084DBB7005E7765 /* Debug Clang */,
 				1DEB923708733DC60010E9CD /* Release */,
 				65DB4E4F1084DBC2005E7765 /* Release Clang */,
-				6553622D107EB39900E08A01 /* Install (xcodebuild only!) */,
+				6553622D107EB39900E08A01 /* Install */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

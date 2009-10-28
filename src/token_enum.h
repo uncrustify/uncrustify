@@ -214,6 +214,10 @@ typedef enum
    CT_OC_COLON,         /* ObjC: the colon in a msg spec */
    CT_OC_SEL,           /* ObjC: @selector */
    CT_OC_SEL_NAME,      /* ObjC: selector name */
+   CT_OC_BLOCK_ARG,     /* ObjC: block arguments parent type. */
+   CT_OC_BLOCK_TYPE,    /* ObjC: block declaration parent type, e.g. mainly the '(^block_t)' in 'void (^block_t)(int arg);' */
+   CT_OC_BLOCK_EXPR,    /* ObjC: block expression with arg: '^(int arg) { arg++; };' and without (called a block literal): '^{ ... };' */
+   CT_OC_BLOCK_CARET,   /* ObjC: block pointer caret: '^' */
 
    /* start PP types */
    CT_PP_DEFINE,        /* #define */

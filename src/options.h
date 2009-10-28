@@ -295,6 +295,8 @@ enum uncrustify_options
    UO_sp_after_oc_type,
    UO_sp_after_oc_return_type,
    UO_sp_after_oc_at_sel,
+   UO_sp_before_oc_block_caret,
+   UO_sp_after_oc_block_caret,
    UO_sp_cond_colon,
    UO_sp_cond_question,
    UO_sp_case_label,
@@ -368,9 +370,10 @@ enum uncrustify_options
                                    // 1: '*' part of the type - no space
                                    // 2: '*' part of type, dangling
    UO_align_typedef_amp_style,     // align_typedef_star_style for ref '&' stuff
-   //UO_align_struct_array_brace,   // TODO: align array of structure initializers
+   //UO_align_struct_array_brace,  // TODO: align array of structure initializers
    UO_align_left_shift,
-   UO_align_oc_msg_colon,
+//    UO_align_oc_msg_colon,
+   UO_align_oc_msg_colon_span,
 
 
    /*

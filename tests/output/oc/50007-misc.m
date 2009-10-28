@@ -5,11 +5,11 @@
    GLfloat sc[3] = { 0.75, 0.75, 0.75 };
 
    return([self initWithWarmColors: (float *)&wc coolColors: (float *)&cc
-           surfaceColor: sc enableTexturing: NO enableSpecular: YES
-           enableQuakeDisruptor: NO]);
+                      surfaceColor: sc enableTexturing: NO enableSpecular: YES
+              enableQuakeDisruptor: NO]);
 
    [NSException raise: NSInternalInconsistency
-    format: @"An internal inconsistency was raised"];
+               format: @"An internal inconsistency was raised"];
 
    for (i = 0; i < [a count]; i++)
    {

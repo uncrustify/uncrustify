@@ -363,41 +363,39 @@ void tokenize_cleanup(void)
          }
       }
 
-      /* Detect Objective-C categories */
+      /* Detect Objective-C categories and class extensions */
       /* @interface ClassName (CategoryName) */
       /* @implementation ClassName (CategoryName) */
-      if (((pc->type == CT_OC_IMPL) || (pc->type == CT_OC_INTF)) &&
+      /* @interface ClassName () */
+      /* @implementation ClassName () */
+      if (((pc->parent_type == CT_OC_IMPL) ||
+           (pc->parent_type == CT_OC_INTF) ||
+           (pc->type == CT_OC_CLASS)) &&
           (next->type == CT_PAREN_OPEN))
       {
-         next->parent_type = pc->type;
+         next->parent_type = pc->parent_type;
 
-         tmp = chunk_get_next_ncnl(next);
-         if (tmp != NULL)
+         tmp = chunk_get_next(next);
+         if ((tmp != NULL) && (tmp->next != NULL))
          {
-            if (tmp->next->type == CT_PAREN_CLOSE)
+            if (tmp->type == CT_PAREN_CLOSE)
             {
                tmp->type        = CT_OC_CLASS_EXT;
-               tmp->parent_type = pc->type;
+               tmp->parent_type = pc->parent_type;
             }
             else
             {
-               tmp->type   = CT_OC_CATEGORY;
-               tmp->flags |= PCF_STMT_START | PCF_EXPR_START;
+               tmp->type        = CT_OC_CATEGORY;
+               tmp->parent_type = pc->parent_type;
             }
          }
 
          tmp = chunk_get_next_type(pc, CT_PAREN_CLOSE, pc->level);
          if (tmp != NULL)
          {
-            tmp->parent_type = pc->type;
+            tmp->parent_type = pc->parent_type;
          }
       }
-
-
-      /* Detect Objective-C class extensions */
-      /* @interface ClassName () */
-      /* @implementation ClassName () */
-
 
       /**
        * Objective C @dynamic and @synthesize
@@ -471,6 +469,67 @@ void tokenize_cleanup(void)
                }
                tmp->type        = CT_OC_SEL_NAME;
                tmp->parent_type = pc->type;
+            }
+         }
+      }
+
+      /* Mark Objective-C blocks (aka lambdas or closures)
+       *  The syntax and usage is exactly like C function pointers with two exceptions:
+       *  Instead of an asterisk they have a caret as pointer symbol.
+       *  In method declarations which take a block as parameter, there can be anonymous blocks, e.g.: (^)
+       *  1. block literal: ^{ ... };
+       *  2. block declaration: return_t (^name) (int arg1, int arg2, ...) NB: return_t is optional and name can be optional if found as param in a method declaration.
+       *  3. block expression: ^ return_t (int arg) { ... }; NB: return_t is optional
+       *
+       *  See http://developer.apple.com/mac/library/documentation/Cocoa/Conceptual/Blocks for more info...
+       */
+      if ((cpd.lang_flags & LANG_OC) &&
+          (pc->type == CT_ARITH) &&
+          (chunk_is_str(pc, "^", 1)) &&
+          (prev->type != CT_NUMBER) &&
+          (prev->type != CT_NUMBER_FP))
+      {
+         /* mark objc blocks caret so that we can process it later*/
+         pc->type = CT_OC_BLOCK_CARET;
+
+         if (prev->type == CT_PAREN_OPEN)
+         {
+            /* block declaration */
+            pc->parent_type = CT_OC_BLOCK_TYPE;
+         }
+         else if ((next->type == CT_PAREN_OPEN) ||
+                  (next->type == CT_BRACE_OPEN))
+         {
+            /* block expression without return type */
+            /* block literal */
+            pc->parent_type = CT_OC_BLOCK_EXPR;
+         }
+         else
+         {
+            /* block expression with return type (seldomly used) */
+            if (prev->type == CT_ASSIGN)
+            {
+               /* shortcut to spare the peeking below
+                * the XOR operator wouldn't be used directly
+                * after an assign all by itself */
+               pc->parent_type = CT_OC_BLOCK_EXPR;
+            }
+            else
+            {
+               /* this ones tricky because we don't know how many
+                * stars the return type has - if there even is one */
+               tmp = pc;
+               while ((tmp = chunk_get_next(tmp)) != NULL)
+               {
+                  /* we just peek ahead and see if the line contains
+                   * an open brace somewhere.
+                   * FIXME: this check needs to be more thorough. */
+                  if (tmp->type == CT_BRACE_OPEN)
+                  {
+                     pc->parent_type = CT_OC_BLOCK_EXPR;
+                     break;
+                  }
+               }
             }
          }
       }
