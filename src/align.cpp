@@ -1704,6 +1704,7 @@ static void align_typedefs(int span)
 static void align_left_shift(void)
 {
    chunk_t    *pc;
+   chunk_t    *start = NULL;
    AlignStack as;
    bool       skip_stmt = false;
 
@@ -1717,20 +1718,33 @@ static void align_left_shift(void)
          as.NewLines(pc->nl_count);
          skip_stmt = as.m_aligned.Empty();
       }
+      else if ((start != NULL) && (pc->level < start->level))
+      {
+         /* A drop in level restarts the aligning */
+         as.Flush();
+         start = NULL;
+      }
+      else if ((start != NULL) && (pc->level > start->level))
+      {
+         /* Ignore any deeper levels when aligning */
+      }
       else if (pc->flags & PCF_STMT_START)
       {
          as.Reset();
          skip_stmt = false;
+         start     = NULL;
       }
       else if (pc->type == CT_SEMICOLON)
       {
          as.Flush();
+         start = NULL;
       }
       else if (!skip_stmt && chunk_is_str(pc, "<<", 2))
       {
          if (as.m_aligned.Empty())
          {
             as.Add(pc);
+            start = pc;
          }
          else if (chunk_is_newline(chunk_get_prev(pc)))
          {
