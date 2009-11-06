@@ -56,3 +56,14 @@ int foo2(void)
 {
    return(-1);
 }
+
+void foo(void)
+{
+   if (!value
+#ifdef OPTION
+       || (value == SOMECONST)
+#endif /* comment */
+       )
+   {
+   }
+}
