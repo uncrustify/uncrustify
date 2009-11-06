@@ -36,6 +36,7 @@ typedef enum
    CT_COMMENT_START, /* comment parent_type: newline before */
    CT_COMMENT_END,   /* comment parent_type: newline after */
    CT_COMMENT_WHOLE, /* comment parent_type: newline before and after */
+   CT_COMMENT_ENDIF, /* C-comment, single line, after ENDIF */
 
    CT_IGNORED,       /* a chunk of ignored text */
 

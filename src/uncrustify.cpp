@@ -1246,6 +1246,8 @@ static void uncrustify_start(const char *data, int data_len)
     */
    fix_symbols();
 
+   mark_comments();
+
    /**
     * Look at all colons ':' and mark labels, :? sequences, etc.
     */

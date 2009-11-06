@@ -302,6 +302,7 @@ enum uncrustify_options
    UO_sp_case_label,
    UO_sp_range,
    UO_sp_cmt_cpp_start,
+   UO_sp_endif_cmt,
 
    /*
     * Line splitting options (for long lines)

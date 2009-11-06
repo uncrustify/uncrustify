@@ -22,6 +22,7 @@ const char *token_names[] =
    "COMMENT_START",
    "COMMENT_END",
    "COMMENT_WHOLE",
+   "COMMENT_ENDIF",
    "IGNORED",
    "WORD",
    "NUMBER",

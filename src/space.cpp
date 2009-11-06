@@ -1221,6 +1221,17 @@ argval_t do_space(chunk_t *first, chunk_t *second, bool complete = true)
       return(AV_FORCE);
    }
 
+   if ((second->type == CT_COMMENT) &&
+       ((first->type == CT_PP_ELSE) || (first->type == CT_PP_ENDIF)))
+   {
+      if (cpd.settings[UO_sp_endif_cmt].a != AV_IGNORE)
+      {
+         second->type = CT_COMMENT_ENDIF;
+         log_rule("sp_endif_cmt");
+         return(cpd.settings[UO_sp_endif_cmt].a);
+      }
+   }
+
    if (chunk_is_comment(second))
    {
       log_rule("IGNORE");
@@ -1386,13 +1397,17 @@ void space_text(void)
              chunk_is_newline(chunk_get_next(next)) &&
              (column < (int)next->orig_col))
          {
-            if (cpd.settings[UO_indent_relative_single_line_comments].b)
+            if ((cpd.settings[UO_sp_endif_cmt].a == AV_IGNORE) ||
+                ((pc->type != CT_PP_ELSE) && (pc->type != CT_PP_ENDIF)))
             {
-               column = pc->column + (next->orig_col - pc->orig_col_end);
-            }
-            else
-            {
-               column = next->orig_col;
+               if (cpd.settings[UO_indent_relative_single_line_comments].b)
+               {
+                  column = pc->column + (next->orig_col - pc->orig_col_end);
+               }
+               else
+               {
+                  column = next->orig_col;
+               }
             }
          }
          next->column = column;
