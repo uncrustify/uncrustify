@@ -123,8 +123,6 @@
 		<F N="configure"/>
 		<F N="configure.in"/>
 		<F N="COPYING"/>
-		<F N="do-c.sh"/>
-		<F N="do-d.sh"/>
 		<F N="HELP"/>
 		<F N="INSTALL"/>
 		<F N="make_token_names.sh"/>
@@ -132,6 +130,5 @@
 		<F N="NEWS"/>
 		<F N="README"/>
 		<F N="release-steps.txt"/>
-		<F N="todo.txt"/>
 	</Files>
 </Project>
