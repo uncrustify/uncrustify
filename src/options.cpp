@@ -240,7 +240,7 @@ void register_options(void)
    unc_add_option("sp_before_comma", UO_sp_before_comma, AT_IARF,
                   "Add or remove space before ','");
    unc_add_option("sp_before_ellipsis", UO_sp_before_ellipsis, AT_IARF,
-                  "Add or remove space before the variadic '...'");
+                  "Add or remove space before the variadic '...' when preceded by a non-punctuator");
    unc_add_option("sp_after_class_colon", UO_sp_after_class_colon, AT_IARF,
                   "Add or remove space after class ':'");
    unc_add_option("sp_before_class_colon", UO_sp_before_class_colon, AT_IARF,

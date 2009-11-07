@@ -328,32 +328,31 @@ argval_t do_space(chunk_t *first, chunk_t *second, bool complete = true)
       return(cpd.settings[UO_sp_before_comma].a);
    }
 
-   if ((second->type == CT_ELLIPSIS) &&
-       (cpd.settings[UO_sp_before_ellipsis].a != AV_IGNORE))
+   if (second->type == CT_ELLIPSIS)
    {
-      log_rule("sp_before_ellipsis");
-      return(cpd.settings[UO_sp_before_ellipsis].a);
-   }
+      /* non-punc followed by a ellipsis */
+      if (((first->flags & PCF_PUNCTUATOR) == 0) &&
+          (cpd.settings[UO_sp_before_ellipsis].a != AV_IGNORE))
+      {
+         log_rule("sp_before_ellipsis");
+         return(cpd.settings[UO_sp_before_ellipsis].a);
+      }
 
-   if (first->type == CT_TAG_COLON)
-   {
-      if (second->type == CT_ELLIPSIS)
+      if (first->type == CT_TAG_COLON)
       {
          log_rule("FORCE");
          return(AV_FORCE);
       }
-      log_rule("sp_after_tag");
-      return(cpd.settings[UO_sp_after_tag].a);
    }
    if ((first->type == CT_ELLIPSIS) && CharTable::IsKw1(second->str[0]))
    {
       log_rule("FORCE");
       return(AV_FORCE);
    }
-   if (second->type == CT_ELLIPSIS)
+   if (first->type == CT_TAG_COLON)
    {
-      log_rule("REMOVE");
-      return(AV_REMOVE);
+      log_rule("sp_after_tag");
+      return(cpd.settings[UO_sp_after_tag].a);
    }
    if (second->type == CT_TAG_COLON)
    {
