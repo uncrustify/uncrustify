@@ -640,7 +640,7 @@ chunk_t *insert_comment_after(chunk_t *ref, c_token_t cmt_type,
    new_cmt.type  = cmt_type;
 
    /* allocate memory for the string */
-   txt = new char[txt_len];
+   txt = new char[txt_len + 1]; /* + 1 for '\0' */
    if (txt == NULL)
    {
       return(NULL);

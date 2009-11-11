@@ -1073,7 +1073,7 @@ static void output_comment_multi(chunk_t *pc)
    line_len      = 0;
    cmt.column    = ccol;
    cmt.br_column = ccol;
-   line          = new char[remaining + 1024];
+   line          = new char[remaining + 1024 + 1]; /* + 1 for '\0' */
    while (remaining > 0)
    {
       ch = *cmt_str;
