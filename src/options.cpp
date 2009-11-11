@@ -1221,6 +1221,14 @@ int load_option_file(const char *filename)
 
    cpd.line_number = 0;
 
+#ifdef WIN32
+   /* "/dev/null" not understood by "fopen" in windoze */
+   if (strcasecmp(filename, "/dev/null") == 0)
+   {
+	   return(0);
+   }
+#endif
+
    pfile = fopen(filename, "r");
    if (pfile == NULL)
    {

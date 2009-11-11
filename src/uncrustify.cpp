@@ -88,7 +88,7 @@ const char *path_basename(const char *path)
    while ((ch = *path) != 0)
    {
       path++;
-      if (ch == PATH_SEP)
+      if ((ch == '/') || (ch == '\\')) /* Update to be able to run python test script under windoze */
       {
          last_path = path;
       }
@@ -931,7 +931,7 @@ const char *fix_filename(const char *filename)
    char *tmp_file;
 
    /* Create 'outfile.uncrustify' */
-   tmp_file = new char[strlen(filename) + 16];
+   tmp_file = new char[strlen(filename) + 16 + 1]; /* + 1 for '\0' */
    if (tmp_file != NULL)
    {
       sprintf(tmp_file, "%s.uncrustify", filename);

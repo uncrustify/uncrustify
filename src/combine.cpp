@@ -2920,6 +2920,13 @@ static void mark_class_ctor(chunk_t *start)
    chunk_t *pc   = chunk_get_next_ncnl(pclass, CNAV_PREPROC);
    int     level = pclass->brace_level + 1;
 
+   if (pc == NULL)
+   {
+      LOG_FMT(LFTOR, "%s: Called on %.*s on line %d. Bailed on NULL\n",
+		  __func__, pclass->len, pclass->str, pclass->orig_line);
+      return;
+   }
+
    LOG_FMT(LFTOR, "%s: Called on %.*s on line %d (next='%.*s')\n",
            __func__, pclass->len, pclass->str, pclass->orig_line,
            pc->len, pc->str);
@@ -3960,7 +3967,7 @@ static void handle_wrap(chunk_t *pc)
        ((name->type == CT_WORD) || (name->type == CT_TYPE)) &&
        (clp->type == CT_PAREN_CLOSE))
    {
-      new_name = new char[pc->len + 2 + name->len + 2];
+      new_name = new char[pc->len + 2 + name->len + 2 + 1]; /* + 1 for '\0' */
       if (new_name != NULL)
       {
          const char *fsp = (av & AV_ADD) ? " " : "";
