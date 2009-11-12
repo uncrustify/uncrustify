@@ -88,7 +88,8 @@ const char *path_basename(const char *path)
    while ((ch = *path) != 0)
    {
       path++;
-      if ((ch == '/') || (ch == '\\')) /* Update to be able to run python test script under windoze */
+      /* Check both slash types to support windows */
+      if ((ch == '/') || (ch == '\\'))
       {
          last_path = path;
       }

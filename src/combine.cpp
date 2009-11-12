@@ -2923,7 +2923,7 @@ static void mark_class_ctor(chunk_t *start)
    if (pc == NULL)
    {
       LOG_FMT(LFTOR, "%s: Called on %.*s on line %d. Bailed on NULL\n",
-		  __func__, pclass->len, pclass->str, pclass->orig_line);
+              __func__, pclass->len, pclass->str, pclass->orig_line);
       return;
    }
 
