@@ -53,3 +53,16 @@ typename Foo<T>::Type
 Foo<T>::Func()
 {
 }
+
+void
+Foo::bar() {
+}
+
+namespace foo {
+Foo::Foo() {
+}
+}
+
+Foo::~Foo() {
+}
+
