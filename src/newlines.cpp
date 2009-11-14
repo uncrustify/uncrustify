@@ -1190,6 +1190,10 @@ static void newline_func_def(chunk_t *start)
 
       if (a != AV_IGNORE)
       {
+         if ((prev != NULL) && (prev->type == CT_DESTRUCTOR))
+         {
+            prev = chunk_get_prev_ncnl(prev);
+         }
          /* If we are on a '::', step back two tokens
           * TODO: do we also need to check for '.' ?
           */

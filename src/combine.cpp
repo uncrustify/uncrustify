@@ -2468,6 +2468,8 @@ static void mark_function(chunk_t *pc)
          prev->type = CT_DESTRUCTOR;
          pc->type   = CT_FUNC_CLASS;
 
+         pc->parent_type = CT_DESTRUCTOR;
+
          destr = prev;
          prev  = chunk_get_prev_ncnlnp(prev);
       }
@@ -2487,10 +2489,6 @@ static void mark_function(chunk_t *pc)
             if ((pc->len == prev->len) && (memcmp(pc->str, prev->str, pc->len) == 0))
             {
                pc->type = CT_FUNC_CLASS;
-               if (destr != NULL)
-               {
-                  destr->type = CT_DESTRUCTOR;
-               }
                LOG_FMT(LFCN, "FOUND %sSTRUCTOR for %.*s[%s]\n",
                        (destr != NULL) ? "DE" : "CON",
                        prev->len, prev->str, get_token_name(prev->type));
