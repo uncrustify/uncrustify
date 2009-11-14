@@ -464,7 +464,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
    if ((next->type == CT_PAREN_OPEN) &&
        (next->next != NULL) && (next->next->type != CT_OC_BLOCK_CARET))
    {
-      if (pc->type == CT_WORD)
+      if ((pc->type == CT_WORD) || (pc->type == CT_OPERATOR_VAL))
       {
          pc->type = CT_FUNCTION;
       }
@@ -789,9 +789,10 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
 
    if (pc->type == CT_AMP)
    {
-      if (prev->type == CT_DELETE)
+      if ((prev->type == CT_DELETE) ||
+          (prev->type == CT_TYPE))
       {
-         pc->type = CT_DEREF;
+         pc->type = CT_ADDR;
       }
       else
       {
@@ -2031,7 +2032,8 @@ static chunk_t *fix_var_def(chunk_t *start)
    if ((cs.Len() <= 1) ||
        (end->type == CT_FUNC_DEF) ||
        (end->type == CT_FUNC_PROTO) ||
-       (end->type == CT_FUNC_CLASS))
+       (end->type == CT_FUNC_CLASS) ||
+       (end->type == CT_OPERATOR))
    {
       return(skip_to_next_statement(end));
    }
@@ -2661,7 +2663,7 @@ static void mark_function(chunk_t *pc)
     * out whether this is a prototype or definition
     */
 
-   flag_parens(paren_open, PCF_IN_FCN_DEF, CT_FPAREN_OPEN, pc->parent_type, false);
+   flag_parens(paren_open, PCF_IN_FCN_DEF, CT_FPAREN_OPEN, pc->type, false);
 
    /* See if this is a prototype or implementation */
 
@@ -2807,6 +2809,7 @@ static void mark_function(chunk_t *pc)
    fix_fcn_def_params(next);
 
    /* Step backwards from pc and mark the parent of the return type */
+   LOG_FMT(LFCNR, "%s: (backwards) return type for '%.*s':", __func__, pc->len, pc->str);
    tmp = pc;
    while ((tmp = chunk_get_prev_ncnl(tmp)) != NULL)
    {
@@ -2817,9 +2820,12 @@ static void mark_function(chunk_t *pc)
       {
          break;
       }
+      LOG_FMT(LFCNR, " [%.*s]", tmp->len, tmp->str);
+
       tmp->parent_type = pc->type;
       make_type(tmp);
    }
+   LOG_FMT(LFCNR, "\n");
 
    /* Find the brace pair and set the parent */
    if (pc->type == CT_FUNC_DEF)

@@ -1485,6 +1485,27 @@ void space_text_balance_nested_parens(void)
 
 
 /**
+ * Determines if a space is required between two chunks
+ */
+bool space_needed(chunk_t *first, chunk_t *second)
+{
+   switch (do_space(first, second))
+   {
+   case AV_ADD:
+   case AV_FORCE:
+      return(true);
+
+   case AV_REMOVE:
+      return(false);
+
+   case AV_IGNORE:
+   default:
+      return(second->orig_col > (first->orig_col + first->len));
+   }
+}
+
+
+/**
  * Calculates the column difference between two chunks.
  * The rules are bent a bit here, as AV_IGNORE and AV_ADD become AV_FORCE.
  * So the column difference is either first->len or first->len + 1.

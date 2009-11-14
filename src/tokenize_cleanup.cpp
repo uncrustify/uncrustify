@@ -210,76 +210,84 @@ void tokenize_cleanup(void)
          }
       }
 
-      /* Change item after operator (>=, ==, etc) to a CT_FUNCTION */
+      /* Change item after operator (>=, ==, etc) to a CT_OPERATOR_VAL
+       * Usually the next item is part of the operator.
+       * In a few cases the next few tokens are part of it:
+       *  operator +       - common case
+       *  operator ()
+       *  operator []      - already converted to TSQUARE
+       *  operator new []
+       *  operator delete []
+       *  operator const char *
+       * This will put the entire operator value in one chunk.
+       */
       if (pc->type == CT_OPERATOR)
       {
-         LOG_FMT(LOPERATOR, "%s: %d:%d operator", __func__, pc->orig_line, pc->orig_col);
-
          /* Handle special case of () operator -- [] already handled */
          if (next->type == CT_PAREN_OPEN)
          {
             tmp = chunk_get_next(next);
             if ((tmp != NULL) && (tmp->type == CT_PAREN_CLOSE))
             {
-               next->str         = "()";
-               next->len         = 2;
-               next->type        = CT_FUNCTION;
-               next->parent_type = CT_OPERATOR;
+               next->str  = "()";
+               next->len  = 2;
+               next->type = CT_OPERATOR_VAL;
                chunk_del(tmp);
                next->orig_col_end += 1;
-               LOG_FMT(LOPERATOR, " ()");
             }
+         }
+         else if (next->flags & PCF_PUNCTUATOR)
+         {
+            next->type = CT_OPERATOR_VAL;
          }
          else
          {
-            /* Scan until we hit a '(' or ';' */
-            tmp = next;
-            while ((tmp != NULL) &&
-                   (tmp->type != CT_PAREN_OPEN) &&
-                   (tmp->type != CT_SEMICOLON))
-            {
-               LOG_FMT(LOPERATOR, " %.*s", tmp->len, tmp->str);
-               tmp = chunk_get_next_ncnl(tmp);
-            }
+            next->type = CT_TYPE;
 
-            if ((tmp != NULL) && (tmp->type == CT_PAREN_OPEN))
+            /* Replace next with a collection of all tokens that are part of
+             * the type.
+             */
+            char opbuf[256];
+            int  len;
+
+            len = snprintf(opbuf, sizeof(opbuf), "%.*s",
+                           next->len, next->str);
+
+            tmp2 = next;
+            while ((tmp = chunk_get_next(tmp2)) != NULL)
             {
-               /* Mark chunks between 'operator' and '('.
-                * If 'next' is a WORD, then the last 'type' present
-                * is the function name. Otherwise, the item after the
-                * 'operator' is the function name.
-                */
-               tmp2 = next;
-               if ((next->flags & PCF_PUNCTUATOR) == 0)
+               if ((tmp->type != CT_WORD) &&
+                   (tmp->type != CT_TYPE) &&
+                   (tmp->type != CT_QUALIFIER) &&
+                   (tmp->type != CT_STAR) &&
+                   (tmp->type != CT_AMP) &&
+                   (tmp->type != CT_TSQUARE))
                {
-                  tmp = chunk_get_next_ncnl(next);
-                  while ((tmp != NULL) && (tmp->type != CT_PAREN_OPEN))
-                  {
-                     tmp->parent_type = CT_OPERATOR;
-                     make_type(tmp);
-                     if (tmp->type == CT_TYPE)
-                     {
-                        tmp2 = tmp;
-                     }
-                     tmp = chunk_get_next_ncnl(tmp);
-                  }
-                  if (tmp2->type != CT_TYPE)
-                  {
-                     tmp2 = next;
-                  }
+                  break;
                }
-
-               LOG_FMT(LOPERATOR, " [%.*s]", tmp2->len, tmp2->str);
-
-               tmp2->type        = CT_FUNCTION;
-               tmp2->parent_type = CT_OPERATOR;
+               len += snprintf(opbuf + len, sizeof(opbuf) - len, "%s%.*s",
+                               space_needed(tmp2, tmp) ? " " : "",
+                               tmp->len, tmp->str);
+               tmp2 = tmp;
             }
-            LOG_FMT(LOPERATOR, "\n");
+
+            while ((tmp2 = chunk_get_next(next)) != tmp)
+            {
+               chunk_del(tmp2);
+            }
+
+            next->str    = strdup(opbuf);
+            next->len    = len;
+            next->flags |= PCF_OWN_STR;
+            next->type   = CT_OPERATOR_VAL;
+
+            next->orig_col_end = next->orig_col + next->len;
          }
-         if (chunk_is_addr(prev))
-         {
-            prev->type = CT_BYREF;
-         }
+         next->parent_type = CT_OPERATOR;
+
+         LOG_FMT(LOPERATOR, "%s: %d:%d operator '%.*s'\n",
+                 __func__, pc->orig_line, pc->orig_col,
+                 next->len, next->str);
       }
 
       /* Change private, public, protected into either a qualifier or label */
@@ -676,7 +684,10 @@ static void check_template(chunk_t *start)
        */
 
       /* A template requires a word/type right before the open angle */
-      if ((prev->type != CT_WORD) && (prev->type != CT_TYPE) && (prev->parent_type != CT_OPERATOR))
+      if ((prev->type != CT_WORD) &&
+          (prev->type != CT_TYPE) &&
+          (prev->type != CT_OPERATOR_VAL) &&
+          (prev->parent_type != CT_OPERATOR))
       {
          LOG_FMT(LTEMPL, " - after %s + ( - Not a template\n", get_token_name(prev->type));
          start->type = CT_COMPARE;

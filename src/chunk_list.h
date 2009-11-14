@@ -185,14 +185,14 @@ bool chunk_is_word(chunk_t *pc)
 static_inline
 bool chunk_is_star(chunk_t *pc)
 {
-   return((pc != NULL) && (pc->len == 1) && (pc->str[0] == '*'));
+   return((pc != NULL) && (pc->len == 1) && (pc->str[0] == '*') && (pc->type != CT_OPERATOR_VAL));
 }
 
 
 static_inline
 bool chunk_is_addr(chunk_t *pc)
 {
-   return((pc != NULL) && (pc->len == 1) && (pc->str[0] == '&'));
+   return((pc != NULL) && (pc->len == 1) && (pc->str[0] == '&') && (pc->type != CT_OPERATOR_VAL));
 }
 
 
