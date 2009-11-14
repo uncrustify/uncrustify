@@ -2,6 +2,8 @@
 #include <map>
 #include <vector>
 
+#define MACRO(T) f < T > ()
+
 class MyClass
 {
 public:
