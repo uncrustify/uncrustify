@@ -2,7 +2,7 @@
 struct bar;
 struct foo
 {
-   operator bar* ();
+   operator bar * ();
 };
 
 class Foo {
@@ -44,7 +44,7 @@ class Example
    void operator ++ ();
    int& operator * ();
    Example& operator ++ ();    // prefix ++
-   Example operator ++ (int); // postfix ++
+   Example operator ++ (int);  // postfix ++
 
    bool operator < (const Example& lhs, const Example& rhs) const;
 
@@ -69,3 +69,14 @@ bool Example::operator != (const Example& other) const
    return !operator == (other);
 }
 
+
+void a() {
+   Op op = &X::operator ==;
+   if (!A)
+      if (op != &X::operator ==)
+	 A(1) = a;
+   if (!A) {
+      if (op != &X::operator ==)
+	 A(1) = a;
+   }
+}

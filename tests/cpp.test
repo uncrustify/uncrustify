@@ -36,6 +36,8 @@
 30031 avalon.cfg                       cpp/operator.cpp
 30032 op-space-force.cfg               cpp/operator.cpp
 30033 op-space-remove.cfg              cpp/operator.cpp
+30034 op-space-force.cfg               cpp/operator_proto.cpp
+30035 op-space-remove.cfg              cpp/operator_proto.cpp
 
 30040 nl_class-r.cfg                   cpp/nl-class.h
 30041 nl_class-a.cfg                   cpp/nl-class.h

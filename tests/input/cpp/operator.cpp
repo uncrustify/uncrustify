@@ -69,3 +69,14 @@ class Example
       return ! operator ==(other);
    }
 
+
+void a() {
+Op op = &X::operator==;
+if (!A)
+if (op != &X::operator==)
+A(1) = a;
+if (!A) {
+if (op != &X::operator==)
+A(1) = a;
+}
+}
