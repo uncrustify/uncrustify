@@ -142,14 +142,7 @@ void tokenize_cleanup(void)
        */
       if ((pc->type == CT_ANGLE_OPEN) && (pc->parent_type != CT_TYPE_CAST))
       {
-         if (pc->flags & PCF_IN_PREPROC)
-         {
-            pc->type = CT_COMPARE;
-         }
-         else
-         {
-            check_template(pc);
-         }
+         check_template(pc);
       }
       if ((pc->type == CT_ANGLE_CLOSE) && (pc->parent_type != CT_TEMPLATE))
       {
@@ -643,7 +636,7 @@ static void check_template(chunk_t *start)
 
    LOG_FMT(LTEMPL, "%s: Line %d, col %d:", __func__, start->orig_line, start->orig_col);
 
-   prev = chunk_get_prev_ncnl(start);
+   prev = chunk_get_prev_ncnl(start, CNAV_PREPROC);
    if (prev == NULL)
    {
       return;
@@ -655,7 +648,9 @@ static void check_template(chunk_t *start)
 
       /* We have: "template< ... >", which is a template declaration */
       int level = 1;
-      for (pc = chunk_get_next_ncnl(start); pc != NULL; pc = chunk_get_next_ncnl(pc))
+      for (pc = chunk_get_next_ncnl(start, CNAV_PREPROC);
+           pc != NULL;
+           pc = chunk_get_next_ncnl(pc, CNAV_PREPROC))
       {
          LOG_FMT(LTEMPL, " [%s,%d]", get_token_name(pc->type), level);
 
@@ -698,7 +693,7 @@ static void check_template(chunk_t *start)
 
       /* Scan back and make sure we aren't inside square parens */
       pc = start;
-      while ((pc = chunk_get_prev_ncnl(pc)) != NULL)
+      while ((pc = chunk_get_prev_ncnl(pc, CNAV_PREPROC)) != NULL)
       {
          if ((pc->type == CT_SEMICOLON) ||
              (pc->type == CT_BRACE_OPEN) ||
@@ -728,7 +723,9 @@ static void check_template(chunk_t *start)
       int       num_tokens = 1;
 
       tokens[0] = CT_ANGLE_OPEN;
-      for (pc = chunk_get_next_ncnl(start); pc != NULL; pc = chunk_get_next_ncnl(pc))
+      for (pc = chunk_get_next_ncnl(start, CNAV_PREPROC);
+           pc != NULL;
+           pc = chunk_get_next_ncnl(pc, CNAV_PREPROC))
       {
          LOG_FMT(LTEMPL, " [%s,%d]", get_token_name(pc->type), num_tokens);
 
@@ -783,9 +780,8 @@ static void check_template(chunk_t *start)
 
    if ((end != NULL) && (end->type == CT_ANGLE_CLOSE))
    {
-      pc = chunk_get_next_ncnl(end);
-      if ((pc != NULL) &&
-          (pc->type != CT_NUMBER))
+      pc = chunk_get_next_ncnl(end, CNAV_PREPROC);
+      if ((pc != NULL) && (pc->type != CT_NUMBER))
       {
          LOG_FMT(LTEMPL, " - Template Detected\n");
 
@@ -794,7 +790,7 @@ static void check_template(chunk_t *start)
          pc = start;
          while (pc != end)
          {
-            next       = chunk_get_next_ncnl(pc);
+            next       = chunk_get_next_ncnl(pc, CNAV_PREPROC);
             pc->flags |= PCF_IN_TEMPLATE;
             if (next->type != CT_PAREN_OPEN)
             {
