@@ -234,8 +234,10 @@ void quick_align_again(void)
 
          LOG_FMT(LALAGAIN, "   [%.*s:%d]", pc->len, pc->str, pc->orig_line);
          as.Add(pc->align.start);
+         pc->flags |= PCF_WAS_ALIGNED;
          for (tmp = pc->align.next; tmp != NULL; tmp = tmp->align.next)
          {
+            tmp->flags |= PCF_WAS_ALIGNED;
             as.Add(tmp->align.start);
             LOG_FMT(LALAGAIN, " => [%.*s:%d]", tmp->len, tmp->str, tmp->orig_line);
          }
