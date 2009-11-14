@@ -65,3 +65,13 @@ foo()
    return nuts;
 }
 
+void
+Foo::bar() {
+}
+
+Foo::Foo() {
+}
+
+Foo::~Foo() {
+}
+
