@@ -415,10 +415,9 @@ void output_text(FILE *pfile)
                prev       = chunk_get_prev(pc);
                allow_tabs = (cpd.settings[UO_align_with_tabs].b &&
                              ((pc->flags & PCF_WAS_ALIGNED) != 0) &&
-                             (((pc->column - 1) % cpd.settings[UO_output_tab_size].n) == 0) &&
                              ((prev->column + prev->len + 1) != pc->column));
             }
-            LOG_FMT(LOUTIND, " %d -", pc->column);
+            LOG_FMT(LOUTIND, " %d(%d) -", pc->column, allow_tabs);
          }
 
          output_to_column(pc->column, allow_tabs);
