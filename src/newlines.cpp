@@ -1568,7 +1568,9 @@ void newlines_cleanup_braces(void)
             }
          }
 
-         if (((pc->parent_type == CT_IF) &&
+         if ((((pc->parent_type == CT_IF) ||
+               (pc->parent_type == CT_ELSEIF) ||
+               (pc->parent_type == CT_ELSE)) &&
               cpd.settings[UO_nl_create_if_one_liner].b) ||
              ((pc->parent_type == CT_FOR) &&
               cpd.settings[UO_nl_create_for_one_liner].b) ||
