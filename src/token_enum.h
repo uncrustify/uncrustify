@@ -124,7 +124,6 @@ typedef enum
    CT_DELETE,
    CT_EXPORT,
    CT_FRIEND,
-   CT_MUTABLE,
    CT_NAMESPACE,
    CT_NEW,              /* may turn into CT_PBRACED if followed by a '(' */
    CT_OPERATOR,

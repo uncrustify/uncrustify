@@ -163,7 +163,7 @@ static const chunk_tag_t keywords[] =
    { "macro",            CT_D_MACRO,      LANG_D                                                                      },
    { "mixin",            CT_CLASS,        LANG_D                                                                      }, // may need special handling
    { "module",           CT_D_MODULE,     LANG_D                                                                      },
-   { "mutable",          CT_MUTABLE,      LANG_C | LANG_CPP                                                           },
+   { "mutable",          CT_QUALIFIER,    LANG_C | LANG_CPP                                                           },
    { "namespace",        CT_NAMESPACE,    LANG_C | LANG_CPP | LANG_CS | LANG_VALA                                     },
    { "native",           CT_NATIVE,       LANG_PAWN                                                                   }, // PAWN
    { "native",           CT_QUALIFIER,    LANG_JAVA | LANG_ECMA                                                       },
