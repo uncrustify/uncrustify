@@ -674,6 +674,7 @@ static void newlines_if_for_while_switch_post_blank_lines(chunk_t *start, argval
  * Adds or removes a newline between the keyword and the open brace.
  * If there is something after the '{' on the same line, then
  * the newline is removed unconditionally.
+ * If there is a '=' between the keyword and '{', do nothing.
  *
  * "struct [name] {" or "struct [name] \n {"
  */
@@ -690,14 +691,16 @@ static void newlines_struct_enum_union(chunk_t *start, argval_t nl_opt, bool lea
    }
 
    /* step past any junk between the keyword and the open brace
-    * Quit if we hit a semicolon, which is not expected.
+    * Quit if we hit a semicolon or '=', which are not expected.
     */
    int level = start->level;
    pc = start;
    while (((pc = chunk_get_next_ncnl(pc)) != NULL) && (pc->level >= level))
    {
       if ((pc->level == level) &&
-          ((pc->type == CT_BRACE_OPEN) || chunk_is_semicolon(pc)))
+          ((pc->type == CT_BRACE_OPEN) ||
+           chunk_is_semicolon(pc) ||
+           (pc->type == CT_ASSIGN)))
       {
          break;
       }
