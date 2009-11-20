@@ -779,7 +779,7 @@ static void newlines_do_else(chunk_t *start, argval_t nl_opt)
       newline_iarf_pair(start, next, nl_opt);
       if ((nl_opt & AV_ADD) != 0)
       {
-         chunk_t *tmp = chunk_get_next(next);
+         chunk_t *tmp = chunk_get_next_nc(next);
          if ((tmp != NULL) && !chunk_is_newline(tmp))
          {
             newline_add_between(next, tmp);
