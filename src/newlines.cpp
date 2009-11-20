@@ -2024,7 +2024,10 @@ void newlines_chunk_pos(c_token_t chunk_type, tokenpos_e mode)
          if (chunk_is_newline(next))
          {
             chunk_t *next2 = chunk_get_next(next);
-            if ((next2 != NULL) && (next2->type == CT_PREPROC))
+            if ((next2 != NULL) &&
+                ((next2->type == CT_PREPROC) ||
+                 ((chunk_type == CT_ASSIGN) &&
+                  (next2->type == CT_BRACE_OPEN))))
             {
                continue;
             }

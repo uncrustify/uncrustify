@@ -735,7 +735,8 @@ void register_options(void)
    unc_add_option("pos_arith", UO_pos_arith, AT_POS,
                   "The position of arithmetic operators in wrapped expressions");
    unc_add_option("pos_assign", UO_pos_assign, AT_POS,
-                  "The position of assignment in wrapped expressions");
+                  "The position of assignment in wrapped expressions.\n"
+                  "Do not affect '=' followed by '{'");
    unc_add_option("pos_bool", UO_pos_bool, AT_POS,
                   "The position of boolean operators in wrapped expressions");
    unc_add_option("pos_compare", UO_pos_compare, AT_POS,
