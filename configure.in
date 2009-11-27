@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.59)
-AC_INIT(uncrustify, 0.55)
+AC_INIT(uncrustify, 0.55,,,http://uncrustify.sourceforge.net/)
 AM_INIT_AUTOMAKE([-Wall])
 AM_MAINTAINER_MODE
 AC_CONFIG_SRCDIR([src/uncrustify.cpp])
