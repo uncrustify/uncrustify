@@ -635,7 +635,10 @@ void register_options(void)
                   "If nl_after_brace_open and nl_after_brace_open_cmt are true, a newline is\n"
                   "placed between the open brace and a trailing single-line comment.");
    unc_add_option("nl_after_vbrace_open", UO_nl_after_vbrace_open, AT_BOOL,
-                  "Whether to put a newline after a virtual brace open.\n"
+                  "Whether to put a newline after a virtual brace open with a non-empty body.\n"
+                  "These occur in un-braced if/while/do/for statement bodies.");
+   unc_add_option("nl_after_vbrace_open_empty", UO_nl_after_vbrace_open_empty, AT_BOOL,
+                  "Whether to put a newline after a virtual brace open with an empty body.\n"
                   "These occur in un-braced if/while/do/for statement bodies.");
    unc_add_option("nl_after_brace_close", UO_nl_after_brace_close, AT_BOOL,
                   "Whether to put a newline after a brace close.\n"

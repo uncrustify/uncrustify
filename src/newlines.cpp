@@ -1560,12 +1560,23 @@ void newlines_cleanup_braces(void)
       }
       else if (pc->type == CT_VBRACE_OPEN)
       {
-         if (cpd.settings[UO_nl_after_vbrace_open].b)
+         if (cpd.settings[UO_nl_after_vbrace_open].b ||
+             cpd.settings[UO_nl_after_vbrace_open_empty].b)
          {
-            next = chunk_get_next(pc);
-            if ((next->type != CT_VBRACE_CLOSE) &&
-                !chunk_is_comment(next) &&
-                !chunk_is_newline(next))
+            next = chunk_get_next(pc, CNAV_PREPROC);
+            bool add_it;
+            if (chunk_is_semicolon(next))
+            {
+               add_it = cpd.settings[UO_nl_after_vbrace_open_empty].b;
+            }
+            else
+            {
+               add_it = (cpd.settings[UO_nl_after_vbrace_open].b &&
+                         (next->type != CT_VBRACE_CLOSE) &&
+                         !chunk_is_comment(next) &&
+                         !chunk_is_newline(next));
+            }
+            if (add_it)
             {
                newline_iarf(pc, AV_ADD);
             }

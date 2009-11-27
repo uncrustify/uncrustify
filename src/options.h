@@ -401,6 +401,7 @@ enum uncrustify_options
    UO_nl_after_brace_open,           // force a newline after a brace open
    UO_nl_after_brace_open_cmt,       // put the newline before the comment
    UO_nl_after_vbrace_open,          // force a newline after a virtual brace open
+   UO_nl_after_vbrace_open_empty,    // force a newline after a virtual brace open
    UO_nl_after_brace_close,          // force a newline after a brace close
    UO_nl_fcall_brace,                /* newline between function call and open brace */
    UO_nl_squeeze_ifdef,              /* no blanks after #ifxx, #elxx, or before #endif */
