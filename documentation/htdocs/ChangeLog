@@ -1,5 +1,28 @@
 
 
+Change highlights in uncrustify-0.55 (27 Nov 2009)
+-------------------------------------------------------------------------------
+ - See the GIT history for a full list of changes
+ - Fix align_left_shift with array indexes
+ - Objective C changes (Andre Berg)
+ - Fix a close paren added inside a preprocessor line
+ - Fix handling of 'mutable'
+ - New options
+   - sp_endif_cmt
+   - nl_func_decl_start_single
+   - nl_func_decl_end_single
+   - nl_after_vbrace_open_empty
+ - Improved options
+   - sp_before_ellipsis
+   - nl_struct_brace
+   - align_on_tabstop
+   - align_with_tabs
+   - align_left_shift
+   - nl_func_type_name
+   - nl_create_if_one_liner
+   - pos_assign
+
+
 Changes in uncrustify-0.54 (16 Oct 2009)
 -------------------------------------------------------------------------------
  - Add mod_case_brace
