@@ -1227,9 +1227,8 @@ static void newline_func_def(chunk_t *start)
       return;
    }
 
-   newline_iarf(start, cpd.settings[UO_nl_func_decl_start].a);
-
    /* Now scan for commas */
+   int comma_count = 0;
    for (pc = chunk_get_next_ncnl(start);
         (pc != NULL) && (pc->level > start->level);
         pc = chunk_get_next_ncnl(pc))
@@ -1237,6 +1236,7 @@ static void newline_func_def(chunk_t *start)
       prev = pc;
       if ((pc->type == CT_COMMA) && (pc->level == (start->level + 1)))
       {
+         comma_count++;
          tmp = chunk_get_next(pc);
          if (chunk_is_comment(tmp))
          {
@@ -1246,13 +1246,28 @@ static void newline_func_def(chunk_t *start)
       }
    }
 
+   argval_t as = cpd.settings[UO_nl_func_decl_start].a;
+   argval_t ae = cpd.settings[UO_nl_func_decl_end].a;
+   if (comma_count == 0)
+   {
+      if (cpd.settings[UO_nl_func_decl_start_single].a != AV_IGNORE)
+      {
+         as = cpd.settings[UO_nl_func_decl_start_single].a;
+      }
+      if (cpd.settings[UO_nl_func_decl_end_single].a != AV_IGNORE)
+      {
+         ae = cpd.settings[UO_nl_func_decl_end_single].a;
+      }
+   }
+   newline_iarf(start, as);
+
    /* and fix up the close paren */
    if ((prev != NULL) && (pc != NULL) && (pc->type == CT_FPAREN_CLOSE))
    {
       prev = chunk_get_prev_nnl(pc);
       if (prev->type != CT_FPAREN_OPEN)
       {
-         newline_iarf(prev, cpd.settings[UO_nl_func_decl_end].a);
+         newline_iarf(prev, ae);
       }
    }
 }
