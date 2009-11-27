@@ -1444,7 +1444,7 @@ static void output_comment_multi_simple(chunk_t *pc)
                line_len--;
             }
             /* REVISIT: the check for '*' seem unnecessary */
-            if ((line[line_len - 1] == '\\') && (line[line_len - 2] != '*'))
+            if ((line_len > 1) && (line[line_len - 1] == '\\') && (line[line_len - 2] != '*'))
             {
                /* Kill off the backslash-newline */
                line_len--;
