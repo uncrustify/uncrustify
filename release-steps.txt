@@ -51,18 +51,12 @@ folder named "uncrustify-$UNC_REL-win32".
 Zip up that folder using the folder name + ".zip"
 Copy to the release folder on Linux
 
-12. Copy the files to sourceforge
-$ sftp USER,uncrustify@frs.sourceforge.net
-sftp> cd /home/pfs/project/u/un/uncrustify/uncrustify/uncrustify-0.XX
-sftp> put uncrustify-0.XX.tgz
-sftp> put uncrustify-0.XX-win32.tgz
-sftp> exit
-
 12. Update the web page files
-$ cd uncrustify-$UNC_REL/documentation/htdocs
+$ cd uncrustify-$UNC_REL/
 $ scp -r documentation/htdocs/* ChangeLog USER,uncrustify@web.sourceforge.net:htdocs/
 
-13. Use the web interface to create the release and attach the files
+13. Use the web interface (file manager) to create the release folder and
+upload the files to sourceforge.
 
 14. (optional) Create a news item
 
