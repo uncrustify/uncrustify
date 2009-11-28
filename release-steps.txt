@@ -2,62 +2,56 @@
 Release steps.
 Just in case I don't do a release for a while and forget what to do... =)
 
-NOTE: this is mostly obsolete, as Uncrustify now uses git
-
-0. Update the following two lines and paste into a terminal:
-
-UNC_URL=https://uncrustify.svn.sourceforge.net/svnroot/uncrustify
-UNC_REL=0.55
-
 1. Make sure all tests pass
 
    Run all tests (requires python):
 
-     cd tests
-     ./run_tests.py
+     make check
+     or
+     cd tests && ./run_tests.py
 
 2. Make sure it builds on Windows
 
-3. Update the version number.
+3. Update the version number and rebuild.
 Replace the old version with the new version everywhere except in ChangeLog.
 Specific files to update:
     configure.in
     documentation/htdocs/index.html
     man/uncrustify.1 (man file)
     src/uncrustify_version.h
-Run "sh autogen.sh" and then "./configure".
 
-3a. Rebuild from scratch (make clean && make)
+Run "sh autogen.sh" and then "./configure".
+Rebuild from scratch (make clean && make)
 
 4. Update the config files
 $ scripts/update-defaults.sh
 
-4a. Update the man file, if any command-line options have changed.
+5. Update the man file, if any command-line options have changed.
 
-5. Update the ChangeLog to indicate the release date
+6. Update the ChangeLog to indicate the release date
 
-6. Make sure there are no modified files in the workspace.
+7. Make sure there are no modified files in the workspace.
    Check in all the changes you just made.
 
-7. Copy the trunk to a tag
-$ svn cp $UNC_URL/trunk/uncrustify $UNC_URL/tags/uncrustify-$UNC_REL -m "uncrustify-$UNC_REL"
+8. Create a dist tarball and make sure it works
+$ make dist
+Untar the file in a temporary folder and run './configure && make && make check'
 
-8. Export to the release folder
-$ cd ../releases
-$ svn export $UNC_URL/tags/uncrustify-$UNC_REL
+NOTE: "make distcheck" doesn't work.  It can't find the config.h file.
+No idea why.
 
-9. Tar up the files
-$ tar czf uncrustify-$UNC_REL.tgz uncrustify-$UNC_REL
+9. Create a GIT tag
+$ git tag -a v0.55
 
-REVISIT: consider splitting the tests out from the source
+10. Re-run 'make dist' and copy out the release tarball.
 
-10. Update and build on windows
+11. Update and build on windows
 Copy the exe, ChangeLog, index.html, and all the .cfg files in etc into a
 folder named "uncrustify-$UNC_REL-win32".
 Zip up that folder using the folder name + ".zip"
 Copy to the release folder on Linux
 
-11. Copy the files to sourceforge
+12. Copy the files to sourceforge
 $ sftp USER,uncrustify@frs.sourceforge.net
 sftp> cd /home/pfs/project/u/un/uncrustify/uncrustify/uncrustify-0.XX
 sftp> put uncrustify-0.XX.tgz
@@ -66,7 +60,7 @@ sftp> exit
 
 12. Update the web page files
 $ cd uncrustify-$UNC_REL/documentation/htdocs
-$ scp -r * USER,uncrustify@web.sourceforge.net:htdocs/
+$ scp -r documentation/htdocs/* ChangeLog USER,uncrustify@web.sourceforge.net:htdocs/
 
 13. Use the web interface to create the release and attach the files
 
