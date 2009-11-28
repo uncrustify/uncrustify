@@ -208,7 +208,8 @@ static chunk_t *pawn_process_line(chunk_t *start)
    {
       if ((pc->level == 0) &&
           ((pc->type == CT_FUNCTION) ||
-           (pc->type == CT_WORD)))
+           (pc->type == CT_WORD) ||
+           (pc->type == CT_OPERATOR_VAL)))
       {
          fcn = pc;
       }
