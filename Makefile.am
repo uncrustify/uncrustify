@@ -11,7 +11,9 @@ pkgdata_DATA = etc/ben.cfg etc/d.cfg etc/defaults.cfg etc/gnu-indent.cfg etc/kr-
 testdir = tests
 TESTS = run_tests.sh
 
-EXTRA_DIST = run_tests.sh make_token_names.sh $(pkgdata_DATA) tests/*.test tests/*.sh tests/*.py tests/config tests/input tests/output
+EXTRA_DIST = scripts run_tests.sh make_token_names.sh $(pkgdata_DATA) \
+	tests/*.test tests/*.sh tests/*.py tests/config tests/input \
+	tests/output win32 uncrustify.xcodeproj osx
 
 check-local:
 
