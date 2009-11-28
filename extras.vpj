@@ -108,6 +108,7 @@
 			<F N="etc/xsupplicant.cfg"/>
 		</Folder>
 		<Folder Name="man">
+			<F N="man/Makefile.am"/>
 			<F N="man/uncrustify.1"/>
 		</Folder>
 		<Folder Name="scripts">
