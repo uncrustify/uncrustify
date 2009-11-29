@@ -2667,6 +2667,8 @@ static void mark_function(chunk_t *pc)
 
    /* See if this is a prototype or implementation */
 
+   /* FIXME: this doesn't take the old K&R parameter definitions into account */
+
    /* Scan tokens until we hit a brace open (def) or semicolon (proto) */
    tmp = paren_close;
    while ((tmp = chunk_get_next_ncnl(tmp)) != NULL)
