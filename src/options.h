@@ -92,6 +92,7 @@ enum uncrustify_options
    UO_output_tab_size,          // tab size for output: usually 8
 
    UO_indent_columns,           // ie 3 or 8
+   UO_indent_continue,
    UO_indent_with_tabs,         // 1=only to the 'level' indent, 2=use tabs for indenting
    //UO_indent_brace_struct,      //TODO: spaces to indent brace after struct/enum/union def
    //UO_indent_paren,             //TODO: indent for open paren on next line (1)

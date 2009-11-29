@@ -395,6 +395,9 @@ void register_options(void)
    unc_add_option("indent_columns", UO_indent_columns, AT_NUM,
                   "The number of columns to indent per level.\n"
                   "Usually 2, 3, 4, or 8.");
+   unc_add_option("indent_continue", UO_indent_continue, AT_NUM,
+                  "The continuation indent. If non-zero, this overrides the indent of '(' and '=' continuation indents.\n"
+                  "For FreeBSD, this is set to 4.");
    unc_add_option("indent_with_tabs", UO_indent_with_tabs, AT_NUM,
                   "How to use tabs when indenting code\n"
                   "0=spaces only\n"

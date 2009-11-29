@@ -373,6 +373,18 @@ static int token_indent(c_token_t type)
               __LINE__, indent_column);                   \
    } while (0)
 
+
+/**
+ * Determines the continuation indent if indent_continue is non-zero.
+ */
+static int continue_indent(chunk_t *pc)
+{
+   return(1 + (pc->level * cpd.settings[UO_indent_columns].n) +
+          cpd.settings[UO_indent_continue].n);
+
+}
+
+
 /**
  * Change the top-level indentation only by changing the column member in
  * the chunk structures.
@@ -1081,6 +1093,11 @@ void indent_text(void)
             frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent + indent_size;
             indent_column_set(frm.pse[frm.pse_tos].indent);
          }
+         if (cpd.settings[UO_indent_continue].n != 0)
+         {
+            frm.pse[frm.pse_tos].indent = continue_indent(pc);
+            indent_column_set(frm.pse[frm.pse_tos].indent);
+         }
          frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
          frm.paren_count++;
       }
@@ -1106,7 +1123,11 @@ void indent_text(void)
          if (next != NULL)
          {
             indent_pse_push(frm, pc);
-            if (chunk_is_newline(next) || !cpd.settings[UO_indent_align_assign].b)
+            if (cpd.settings[UO_indent_continue].n)
+            {
+               frm.pse[frm.pse_tos].indent = continue_indent(pc);
+            }
+            else if (chunk_is_newline(next) || !cpd.settings[UO_indent_align_assign].b)
             {
                frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent_tmp + indent_size;
                if (pc->type == CT_ASSIGN)
