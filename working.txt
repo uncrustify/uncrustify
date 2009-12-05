@@ -1,0 +1,11 @@
+
+
+What am I working on:
+
+ - get tabs to appear between code and comments when aligning with tabs
+   (indent_with_tabs = 2)
+
+ - add option to put trailing comments on a tabstop
+   don't use "align_on_tabstop"
+   call it "cmt_trail_on_tabstop" ?
+

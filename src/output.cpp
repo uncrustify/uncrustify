@@ -169,10 +169,13 @@ static void output_to_column(int column, bool allow_tabs)
  * @param column    the column that we should end up in
  * @param brace_col the level that indent_with_tabs=1 should tab to
  */
-static void output_indent(int column, int brace_col)
+static void output_indent(int column, int brace_col, bool force_tabs=false)
 {
+   LOG_FMT(LSYS, "%s(%d, %d, %d) cur %d\n", __func__, column, brace_col, force_tabs, cpd.column);
+
    cpd.did_newline = 0;
-   if ((cpd.column == 1) && (cpd.settings[UO_indent_with_tabs].n != 0))
+   if (force_tabs ||
+       ((cpd.column == 1) && (cpd.settings[UO_indent_with_tabs].n != 0)))
    {
       if (cpd.settings[UO_indent_with_tabs].n == 2)
       {
@@ -189,7 +192,7 @@ static void output_indent(int column, int brace_col)
    /* space out the rest */
    while (cpd.column < column)
    {
-      add_text(" ");
+      add_text(".");
    }
 }
 
@@ -761,6 +764,7 @@ static void add_comment_text(const char *text, int len,
       if (text[idx] == '\n')
       {
          in_word = false;
+         add_char('X');
          add_char('\n');
          output_indent(cmt.column, cmt.br_column);
          add_text(cmt.cont_text);
@@ -830,8 +834,19 @@ static void output_cmt_start(cmt_reflow& cmt, chunk_t *pc)
       }
    }
 
+   /* tab aligning code */
+   if ((pc->parent_type == CT_COMMENT_END) ||
+       (pc->parent_type == CT_COMMENT_WHOLE))
+   {
+      cmt.column = next_tab_column(1 + cmt.column - cpd.settings[UO_output_tab_size].n);
+      LOG_FMT(LSYS, "%s: line %d, orig:%d new:%d\n",
+              __func__, pc->orig_line, pc->column, cmt.column);
+      pc->column = cmt.column;
+      cmt.br_column = cmt.column;
+   }
+
    /* Bump out to the column */
-   output_indent(cmt.column, cmt.br_column);
+   output_indent(cmt.column, cmt.br_column, true);
 
    cmt.kw_subst = (pc->flags & PCF_INSERTED) != 0;
 }
@@ -1047,7 +1062,6 @@ static void output_comment_multi(chunk_t *pc)
 
    cmt.reflow = (cpd.settings[UO_cmt_reflow_mode].n != 1);
 
-   output_cmt_start(cmt, pc);
    cmt.cont_text = !cpd.settings[UO_cmt_indent_multi].b ? "" :
                    cpd.settings[UO_cmt_star_cont].b ? " * " : "   ";
 
@@ -1056,10 +1070,9 @@ static void output_comment_multi(chunk_t *pc)
    {
       cmt_col = pc->orig_col;
    }
-   else
-   {
-      col_diff = pc->orig_col - pc->column;
-   }
+   output_cmt_start(cmt, pc);
+   cmt_col = pc->column;
+   col_diff = pc->orig_col - pc->column;
 
    xtra = calculate_comment_body_indent(pc->str, pc->len, pc->column);
 
@@ -1257,7 +1270,7 @@ static void output_comment_multi(chunk_t *pc)
          if (line_count == 1)
          {
             /* this is the first line - add unchanged */
-            output_indent(cmt_col, cmt_col);
+            //output_indent(cmt_col, cmt_col);
             add_comment_text(line, line_len, cmt, false);
             if (nl_end)
             {
