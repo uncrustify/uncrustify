@@ -234,7 +234,7 @@ int main(int argc, char *argv[])
    int        idx;
    const char *p_arg;
 
-   /* If ran without options... check keywork sort and show the usage info */
+   /* If ran without options... check keyword sort and show the usage info */
    if (argc == 1)
    {
       keywords_are_sorted();
@@ -526,13 +526,13 @@ int main(int argc, char *argv[])
    {
       if (source_file != NULL)
       {
-         usage_exit("Cannot specify both the single file option and a mulit-file option.",
+         usage_exit("Cannot specify both the single file option and a multi-file option.",
                     argv[0], 67);
       }
 
       if (output_file != NULL)
       {
-         usage_exit("Cannot specify -o with a mulit-file option.",
+         usage_exit("Cannot specify -o with a multi-file option.",
                     argv[0], 68);
       }
    }
@@ -1502,7 +1502,7 @@ const char *get_token_name(c_token_t token)
 
 /**
  * Grab the token id for the text.
- * returns CT_NONE on failure t match
+ * returns CT_NONE on failure to match
  */
 c_token_t find_token_name(const char *text)
 {

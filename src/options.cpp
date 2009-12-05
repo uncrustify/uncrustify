@@ -712,7 +712,7 @@ void register_options(void)
                   "The minimum number of newlines before a CPP comment.\n"
                   "Doesn't apply if after a brace open or other CPP comments.");
    unc_add_option("nl_after_multiline_comment", UO_nl_after_multiline_comment, AT_BOOL,
-                  "Whether to force a newline after a mulit-line comment.");
+                  "Whether to force a newline after a multi-line comment.");
 
    unc_add_option("nl_before_access_spec", UO_nl_before_access_spec, AT_NUM,
                   "The number of newlines before a 'private:', 'public:', 'protected:', 'signals:', or 'slots:' label.\n"

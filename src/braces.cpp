@@ -29,7 +29,7 @@ static bool should_add_braces(chunk_t *vbopen);
 
 void do_braces(void)
 {
-   /* covert vbraces if needed */
+   /* convert vbraces if needed */
    if (((cpd.settings[UO_mod_full_brace_if].a |
          cpd.settings[UO_mod_full_brace_do].a |
          cpd.settings[UO_mod_full_brace_for].a |
