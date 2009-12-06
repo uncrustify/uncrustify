@@ -11,7 +11,7 @@ int foo1(int bar)
             {
                return(r);       /* cool */
             }
-            else                /* if (r) */
+            else /* if (r) */
             {
                return(bar);     /* uncool */
             } /* if (r) */

@@ -43,8 +43,8 @@ class Example
    double operator () (int row, int col) const;
    void operator ++ ();
    int& operator * ();
-   Example& operator ++ ();    // prefix ++
-   Example operator ++ (int);  // postfix ++
+   Example& operator ++ ();   // prefix ++
+   Example operator ++ (int); // postfix ++
 
    bool operator < (const Example& lhs, const Example& rhs) const;
 

@@ -11,15 +11,15 @@ namespace {
     ~Test() {}
 
     /** Call this method to
-	    run the test
+            run the test
 
-	\param n test number
-	\returns the test result
+        \param n test number
+        \returns the test result
     */
     bool Run(int n);
 
     /** Call this method to
-	stop the test
+        stop the test
 
     \param n test number
     \returns the test result

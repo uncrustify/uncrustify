@@ -33,8 +33,8 @@ int bug(int); /* BUG: left-aligned */
 typedef int    fooman;
 enum FLAGS
 {
-    FLAGS_decimal  = 1,      /* decimal */
-    FLAGS_unsigned = 2,      /* u or U suffix */
-    FLAGS_long     = 4,      /* l or L suffix */
+    FLAGS_decimal  = 1,    /* decimal */
+    FLAGS_unsigned = 2,    /* u or U suffix */
+    FLAGS_long     = 4,    /* l or L suffix */
 
 };
