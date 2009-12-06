@@ -1,6 +1,6 @@
 AUTOMAKE_OPTIONS = foreign no-dependencies nostdinc
 
-DISTCLEANFILES = 
+DISTCLEANFILES =
 CLEANFILES = *.o *~ *.bak
 MAINTAINERCLEANFILES = Makefile.in
 
@@ -22,8 +22,7 @@ noinst_HEADERS = chunk_list.h options.h char_table.h chunk_list.h \
 		align_stack.h backup.h base_types.h log_levels.h \
 		punctuators.h \
 		uncrustify_version.h \
-		unc_ctype.h \
-		d.tokenize.cpp
+		unc_ctype.h
 
 token_names.h: token_enum.h ../make_token_names.sh
 	@echo "Rebuilding token_names.h"
