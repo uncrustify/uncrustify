@@ -196,7 +196,7 @@ class Lexer
             {
                         error(msg);
             }
-         +/
+           +/
             return u;
          */
     }
@@ -304,9 +304,9 @@ class Lexer
             case '\r':
 //					debug writefln( "    cr" );
                 p++;
-                if (*p != '\n')                                                         // if CR stands by itself
+                if (*p != '\n')                                                 // if CR stands by itself
                     loc.linnum++;
-                continue;                                                               // skip white space
+                continue;                                                       // skip white space
 
             case '\n':
 //					debug writefln( "    nl" );
@@ -327,32 +327,32 @@ class Lexer
                 t.value = number(t);
                 return;
 
-            /*
-             #if CSTRINGS
-                                        case '\'':
-                                            t.value = charConstant(t, 0);
-                                            return;
+/*
+   #if CSTRINGS
+                            case '\'':
+                                t.value = charConstant(t, 0);
+                                return;
 
-                                        case '"':
-                                            t.value = stringConstant(t,0);
-                                            return;
+                            case '"':
+                                t.value = stringConstant(t,0);
+                                return;
 
-                                        case 'l':
-                                        case 'L':
-                                            if( p[1] == '\'')
-                                            {
-                                                p++;
-                                                t.value = charConstant(t, 1);
-                                                return;
-                                            }
-                                            else if( p[1] == '"')
-                                            {
-                                                p++;
-                                                t.value = stringConstant(t, 1);
-                                                return;
-                                            }
-             #else
-             */
+                            case 'l':
+                            case 'L':
+                                if( p[1] == '\'')
+                                {
+                                    p++;
+                                    t.value = charConstant(t, 1);
+                                    return;
+                                }
+                                else if( p[1] == '"')
+                                {
+                                    p++;
+                                    t.value = stringConstant(t, 1);
+                                    return;
+                                }
+   #else
+ */
             case '\'':
 //					debug writefln( "    char" );
                 t.value = charConstant(t, 0);
@@ -1531,7 +1531,7 @@ class Lexer
         value = 0;
         for (n = 0; 1; n++)
         {
-     ++p;
+       ++p;
                     if( n == nchars)
                         break;
                     c = *p;
@@ -1758,8 +1758,8 @@ class Lexer
 //						break;
             //		#endif
 
-            case STATE.STATE_octal:                                             // reading octal number
-            case STATE.STATE_octale:                                            // reading octal number with non-octal digits
+            case STATE.STATE_octal:                                     // reading octal number
+            case STATE.STATE_octale:                                    // reading octal number with non-octal digits
                 if (!isoctal(c))
                 {
 //				#if ZEROH
@@ -2425,7 +2425,7 @@ static void cmtable_init()
 
     char[] lstring;
    }
- #define CASE_BASIC_TYPES
+   #define CASE_BASIC_TYPES
         case TOKwchar: case TOKdchar:
         case TOKbit: case TOKbool: case TOKchar:
         case TOKint8: case TOKuns8:
@@ -2437,7 +2437,7 @@ static void cmtable_init()
         case TOKcomplex32: case TOKcomplex64: case TOKcomplex80:
         case TOKvoid:
 
- #define CASE_BASIC_TYPES_X(t)					\
+   #define CASE_BASIC_TYPES_X(t)					\
         case TOKvoid:	 t = Type::tvoid;  goto LabelX;		\
         case TOKint8:	 t = Type::tint8;  goto LabelX;		\
         case TOKuns8:	 t = Type::tuns8;  goto LabelX;		\
