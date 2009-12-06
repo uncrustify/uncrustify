@@ -18,7 +18,7 @@
 
 
 static chunk_t *align_var_def_brace(chunk_t *pc, int span, int *nl_count);
-chunk_t *align_trailing_comments(chunk_t *start);
+static chunk_t *align_trailing_comments(chunk_t *start);
 static void align_init_brace(chunk_t *start);
 static void align_func_params();
 static void align_same_func_call_params();

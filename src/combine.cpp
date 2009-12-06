@@ -2640,7 +2640,7 @@ static void mark_function(chunk_t *pc)
          }
          for (tmp = prev; tmp != pc; tmp = chunk_get_next_ncnl(tmp))
          {
-            LOG_FMT(LFCN, ", %.*s[%s]",
+            LOG_FMT(LFCN, " %.*s[%s]",
                     tmp->len, tmp->str, get_token_name(tmp->type));
             make_type(tmp);
          }
