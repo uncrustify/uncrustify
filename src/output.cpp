@@ -45,6 +45,7 @@ static void add_char(char ch)
       fputs(cpd.newline, cpd.fout);
       cpd.column      = 1;
       cpd.did_newline = 1;
+      cpd.spaces      = 0;
    }
 
    /* convert a newline into the LF/CRLF/CR sequence */
@@ -53,12 +54,14 @@ static void add_char(char ch)
       fputs(cpd.newline, cpd.fout);
       cpd.column      = 1;
       cpd.did_newline = 1;
+      cpd.spaces      = 0;
    }
    else if (ch == '\r')
    {
       /* do not output '\r' */
       cpd.column      = 1;
       cpd.did_newline = 1;
+      cpd.spaces      = 0;
    }
    else
    {
@@ -72,8 +75,18 @@ static void add_char(char ch)
          }
          return;
       }
+      else if (ch == ' ')
+      {
+         cpd.spaces++;
+         cpd.column++;
+      }
       else
       {
+         while (cpd.spaces > 0)
+         {
+            fputc(' ', cpd.fout);
+            cpd.spaces--;
+         }
          fputc(ch, cpd.fout);
          if (ch == '\t')
          {

@@ -309,6 +309,7 @@ struct cp_data
    bool               unc_off;
    UINT32             line_number;
    UINT16             column;  /* column for parsing */
+   UINT16             spaces;  /* space count on output */
 
    /* stuff to auto-detect line endings */
    UINT32             le_counts[LE_AUTO];
