@@ -314,7 +314,7 @@ int align_tab_column(int col)
 {
    if ((col % cpd.settings[UO_output_tab_size].n) != 1)
    {
-      calc_next_tab_column(col, cpd.settings[UO_output_tab_size].n);
+      col = next_tab_column(col);
    }
    return(col);
 }
