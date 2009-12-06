@@ -19,10 +19,12 @@ struct cmt_reflow
 {
    chunk_t    *pc;
    int        column;      /* Column of the comment start */
-   int        br_column;   /* Brace column (for indenting with tabs) */
+   int        brace_col;   /* Brace column (for indenting with tabs) */
+   int        base_col;    /* Base column (for indenting with tabs) */
    int        word_count;  /* number of words on this line */
    bool       kw_subst;    /* do keyword substitution */
-   const char *cont_text;  /* fixed text to output at the start of the line (3-chars) */
+   int        xtra_indent; /* extra indent of non-first lines (0 or 1) */
+   const char *cont_text;  /* fixed text to output at the start of a line (0 to 3 chars) */
    bool       reflow;      /* reflow the current line */
 };
 
@@ -177,23 +179,34 @@ static void output_to_column(int column, bool allow_tabs)
 
 
 /**
- * Output to the column using indent_with_tabs as the rule.
+ * Output a comment to the column using indent_with_tabs and
+ * indent_cmt_with_tabs as the rules.
+ * base_col is the indent of the first line of the comment.
+ * On the first line, column == base_col.
+ * On subsequnet lines, column >= base_col.
  *
+ * @param brace_col the brace-level indent of the comment
+ * @param base_col  the indent of the start of the comment (multiline)
  * @param column    the column that we should end up in
- * @param brace_col the level that indent_with_tabs=1 should tab to
  */
-static void output_indent(int column, int brace_col)
+static void cmt_output_indent(int brace_col, int base_col, int column)
 {
-   cpd.did_newline = 0;
-   if ((cpd.column == 1) && (cpd.settings[UO_indent_with_tabs].n != 0))
-   {
-      if (cpd.settings[UO_indent_with_tabs].n == 2)
-      {
-         brace_col = column;
-      }
+   int iwt;
+   int tab_col;
 
+   iwt = cpd.settings[UO_indent_cmt_with_tabs].b ? 2 :
+         (cpd.settings[UO_indent_with_tabs].n ? 1 : 0);
+
+   tab_col = (iwt == 0) ? 0 : ((iwt == 1) ? brace_col : base_col);
+
+   //LOG_FMT(LSYS, "%s(brace=%d base=%d col=%d iwt=%d) tab=%d cur=%d\n",
+   //        __func__, brace_col, base_col, column, iwt, tab_col, cpd.column);
+
+   cpd.did_newline = 0;
+   if ((iwt == 2) || ((cpd.column == 1) && (iwt == 1)))
+   {
       /* tab out as far as possible and then use spaces */
-      while (next_tab_column(cpd.column) <= brace_col)
+      while (next_tab_column(cpd.column) <= tab_col)
       {
          add_text("\t");
       }
@@ -440,14 +453,63 @@ void output_text(FILE *pfile)
    }
 }
 
+/**
+ * Checks for and updates the lead chars.
+ *
+ * @param line the comment line
+ * @return 0=not present, >0=number of chars that are part of the lead
+ */
+static int cmt_parse_lead(const char *line, int is_last)
+{
+   int len = 0;
+
+   while ((len < 32) && (line[len] != 0))
+   {
+      if ((len > 0) && (line[len] == '/'))
+      {
+         /* ignore combined comments */
+         int tmp = len + 1;
+         while (unc_isspace(line[tmp]))
+         {
+            tmp++;
+         }
+         if (line[tmp] == '/')
+         {
+            return 1;
+         }
+         break;
+      }
+      else if (strchr("*|\\#+", line[len]) == NULL)
+      {
+         break;
+      }
+      len++;
+   }
+
+   if (len > 30)
+   {
+      return 1;
+   }
+
+   if ((len > 0) && ((line[len] == 0) || unc_isspace(line[len])))
+   {
+      return len;
+   }
+   if (is_last && (len > 0))
+   {
+      return len;
+   }
+   return 0;
+}
 
 /**
- * Given a multi-line comment block that starts in column X, figure out how
- * much subsequent lines should be indented.
- *
- * The answer is either 0 or 1.
+ * Scans a multiline comment to determine the following:
+ *  - the extra indent of the non-first line (0 or 1)
+ *  - the continuation text ('' or '* ')
  *
  * The decision is based on:
+ *  - cmt_indent_multi
+ *  - cmt_star_cont
  *  - the first line length
  *  - the second line leader length
  *  - the last line length
@@ -465,16 +527,18 @@ void output_text(FILE *pfile)
  * @param start_col Starting column
  * @return 0 or 1
  */
-static int calculate_comment_body_indent(const char *str, int len, int start_col)
+static void calculate_comment_body_indent(cmt_reflow &cmt, const char *str, int len)
 {
    int idx       = 0;
    int first_len = 0;
    int last_len  = 0;
    int width     = 0;
 
+   cmt.xtra_indent = 0;
+
    if (!cpd.settings[UO_cmt_indent_multi].b)
    {
-      return(0);
+      return;
    }
 
    if (cpd.settings[UO_cmt_multi_check_last].b)
@@ -518,7 +582,7 @@ static int calculate_comment_body_indent(const char *str, int len, int start_col
 
    /* Scan the second line */
    width = 0;
-   for (/* nada */; idx < len; idx++)
+   for (/* nada */; idx < len - 1; idx++)
    {
       if ((str[idx] == ' ') || (str[idx] == '\t'))
       {
@@ -545,6 +609,7 @@ static int calculate_comment_body_indent(const char *str, int len, int start_col
       }
       else
       {
+         width = 0;
          break;
       }
    }
@@ -554,10 +619,10 @@ static int calculate_comment_body_indent(const char *str, int len, int start_col
    /*TODO: make the first_len minimum (4) configurable? */
    if ((first_len == last_len) && ((first_len > 4) || (first_len == width)))
    {
-      return(0);
+      return;
    }
 
-   return((width == 2) ? 0 : 1);
+   cmt.xtra_indent = ((width == 2) ? 0 : 1);
 }
 
 
@@ -775,7 +840,11 @@ static void add_comment_text(const char *text, int len,
       {
          in_word = false;
          add_char('\n');
-         output_indent(cmt.column, cmt.br_column);
+         cmt_output_indent(cmt.brace_col, cmt.base_col, cmt.column);
+         if (cmt.xtra_indent)
+         {
+            add_char(' ');
+         }
          add_text(cmt.cont_text);
       }
       else if (cmt.reflow &&
@@ -786,7 +855,11 @@ static void add_comment_text(const char *text, int len,
       {
          in_word = false;
          add_char('\n');
-         output_indent(cmt.column, cmt.br_column);
+         cmt_output_indent(cmt.brace_col, cmt.base_col, cmt.column);
+         if (cmt.xtra_indent)
+         {
+            add_char(' ');
+         }
          add_text(cmt.cont_text);
       }
       else
@@ -814,19 +887,35 @@ static void add_comment_text(const char *text, int len,
 
 static void output_cmt_start(cmt_reflow& cmt, chunk_t *pc)
 {
-   cmt.word_count = 0;
-   cmt.pc         = pc;
-   cmt.column     = pc->column;
-   cmt.br_column  = pc->column_indent;
+   cmt.pc          = pc;
+   cmt.column      = pc->column;
+   cmt.brace_col   = pc->column_indent;
+   cmt.base_col    = pc->column_indent;
+   cmt.word_count  = 0;
+   cmt.kw_subst    = false;
+   cmt.xtra_indent = 0;
+   cmt.cont_text   = "";
+   cmt.reflow      = false;
+
+   if (cmt.brace_col == 0)
+   {
+      cmt.brace_col = 1 + (pc->brace_level * cpd.settings[UO_output_tab_size].n);
+   }
+
+   //LOG_FMT(LSYS, "%s: line %d, brace=%d base=%d col=%d orig=%d aligned=%x\n",
+   //        __func__, pc->orig_line, cmt.brace_col, cmt.base_col, cmt.column, pc->orig_col,
+   //        pc->flags & (PCF_WAS_ALIGNED | PCF_RIGHT_COMMENT));
 
    if ((pc->parent_type == CT_COMMENT_START) ||
        (pc->parent_type == CT_COMMENT_WHOLE))
    {
       if (!cpd.settings[UO_indent_col1_comment].b &&
-          (pc->orig_col == 1))
+          (pc->orig_col == 1) &&
+          !(pc->flags & PCF_INSERTED))
       {
          cmt.column    = 1;
-         cmt.br_column = 1;
+         cmt.base_col  = 1;
+         cmt.brace_col = 1;
       }
    }
    else if (pc->parent_type == CT_COMMENT_END)
@@ -843,8 +932,23 @@ static void output_cmt_start(cmt_reflow& cmt, chunk_t *pc)
       }
    }
 
+   /* tab aligning code */
+   if (cpd.settings[UO_indent_cmt_with_tabs].b &&
+       ((pc->parent_type == CT_COMMENT_END) ||
+        (pc->parent_type == CT_COMMENT_WHOLE)))
+   {
+      cmt.column = next_tab_column(cmt.column - 1);
+      //LOG_FMT(LSYS, "%s: line %d, orig:%d new:%d\n",
+      //        __func__, pc->orig_line, pc->column, cmt.column);
+      pc->column = cmt.column;
+   }
+   cmt.base_col = cmt.column;
+
+   //LOG_FMT(LSYS, "%s: -- brace=%d base=%d col=%d\n",
+   //        __func__, cmt.brace_col, cmt.base_col, cmt.column);
+
    /* Bump out to the column */
-   output_indent(cmt.column, cmt.br_column);
+   cmt_output_indent(cmt.brace_col, cmt.base_col, cmt.column);
 
    cmt.kw_subst = (pc->flags & PCF_INSERTED) != 0;
 }
@@ -874,8 +978,8 @@ static bool can_combine_comment(chunk_t *pc, cmt_reflow& cmt)
       if ((next != NULL) &&
           (next->type == pc->type) &&
           (((next->column == 1) && (pc->column == 1)) ||
-           ((next->column == cmt.br_column) && (pc->column == cmt.br_column)) ||
-           ((next->column > cmt.br_column) && (pc->parent_type == CT_COMMENT_END))))
+           ((next->column == cmt.base_col) && (pc->column == cmt.base_col)) ||
+           ((next->column > cmt.base_col) && (pc->parent_type == CT_COMMENT_END))))
       {
          return(true);
       }
@@ -894,9 +998,8 @@ static chunk_t *output_comment_c(chunk_t *first)
 {
    cmt_reflow cmt;
 
-   cmt.reflow = (cpd.settings[UO_cmt_reflow_mode].n != 1);
-
    output_cmt_start(cmt, first);
+   cmt.reflow = (cpd.settings[UO_cmt_reflow_mode].n != 1);
 
    cmt.cont_text = cpd.settings[UO_cmt_star_cont].b ? " *" : "  ";
 
@@ -942,9 +1045,8 @@ static chunk_t *output_comment_cpp(chunk_t *first)
 {
    cmt_reflow cmt;
 
-   cmt.reflow = (cpd.settings[UO_cmt_reflow_mode].n != 1);
-
    output_cmt_start(cmt, first);
+   cmt.reflow = (cpd.settings[UO_cmt_reflow_mode].n != 1);
 
    /* CPP comments can't be grouped unless they are converted to C comments */
    if (!cpd.settings[UO_cmt_cpp_to_c].b)
@@ -1042,7 +1144,7 @@ static chunk_t *output_comment_cpp(chunk_t *first)
  */
 static void output_comment_multi(chunk_t *pc)
 {
-   int        cmt_col = pc->column;
+   int        cmt_col;
    const char *cmt_str;
    int        remaining;
    char       ch;
@@ -1050,42 +1152,34 @@ static void output_comment_multi(chunk_t *pc)
    char       *line;
    int        line_len;
    int        line_count = 0;
-   int        ccol;
+   int        ccol; /* the col of subsequent comment lines */
    int        col_diff = 0;
-   int        xtra     = 1;
    char       lead[80];
    bool       nl_end = false;
-
    cmt_reflow cmt;
 
-   cmt.reflow = (cpd.settings[UO_cmt_reflow_mode].n != 1);
-
-   output_cmt_start(cmt, pc);
-   cmt.cont_text = !cpd.settings[UO_cmt_indent_multi].b ? "" :
-                   cpd.settings[UO_cmt_star_cont].b ? " * " : "   ";
+   //LOG_FMT(LSYS, "%s: line %d\n", __func__, pc->orig_line);
 
    prev = chunk_get_prev(pc);
-   if ((prev != NULL) && (prev->type != CT_NEWLINE))
-   {
-      cmt_col = pc->orig_col;
-   }
-   else
-   {
-      col_diff = pc->orig_col - pc->column;
-   }
+   output_cmt_start(cmt, pc);
+   cmt.reflow = (cpd.settings[UO_cmt_reflow_mode].n != 1);
 
-   xtra = calculate_comment_body_indent(pc->str, pc->len, pc->column);
+   cmt_col = cmt.base_col;
+   col_diff = pc->orig_col - cmt.base_col;
 
-   //LOG_FMT(LSYS, "Indenting1 line %d to col %d (orig=%d) col_diff=%d xtra=%d\n",
-   //        pc->orig_line, cmt_col, pc->orig_col, col_diff, xtra);
+   calculate_comment_body_indent(cmt, pc->str, pc->len);
 
-   ccol          = pc->column;
-   remaining     = pc->len;
-   cmt_str       = pc->str;
-   line_len      = 0;
-   cmt.column    = ccol;
-   cmt.br_column = ccol;
-   line          = new char[remaining + 1024 + 1]; /* + 1 for '\0' */
+   cmt.cont_text = !cpd.settings[UO_cmt_indent_multi].b ? "" :
+                   (cpd.settings[UO_cmt_star_cont].b ? "* " : "  ");
+
+   //LOG_FMT(LSYS, "Indenting1 line %d to col %d (orig=%d) col_diff=%d xtra=%d cont='%s'\n",
+   //        pc->orig_line, cmt_col, pc->orig_col, col_diff, cmt.xtra_indent, cmt.cont_text);
+
+   ccol      = pc->column;
+   remaining = pc->len;
+   cmt_str   = pc->str;
+   line_len  = 0;
+   line      = new char[remaining + 1024 + 1]; /* + 1 for '\0' */
    while (remaining > 0)
    {
       ch = *cmt_str;
@@ -1124,7 +1218,8 @@ static void output_comment_multi(chunk_t *pc)
       }
 
       /*
-       * Now see if we need/must fold the next line with the current to enable full reflow
+       * Now see if we need/must fold the next line with the current to enable
+       * full reflow
        */
       if ((cpd.settings[UO_cmt_reflow_mode].n == 2) &&
           (ch == '\n') &&
@@ -1267,10 +1362,11 @@ static void output_comment_multi(chunk_t *pc)
          }
          line[line_len] = 0;
 
+         //LOG_FMT(LSYS, "[%3d]%s\n", ccol, line);
+
          if (line_count == 1)
          {
             /* this is the first line - add unchanged */
-            output_indent(cmt_col, cmt_col);
             add_comment_text(line, line_len, cmt, false);
             if (nl_end)
             {
@@ -1280,9 +1376,7 @@ static void output_comment_multi(chunk_t *pc)
          else
          {
             /* This is not the first line, so we need to indent to the
-             * correct column. Each line is indented a minimum of three spaces.
-             * Those three spaces are filled with whatever lead char should be
-             * there.
+             * correct column. Each line is indented 0 or more spaces.
              */
             ccol -= col_diff;
             if (ccol < (cmt_col + 3))
@@ -1295,9 +1389,13 @@ static void output_comment_multi(chunk_t *pc)
                /* Empty line - just a '\n' */
                if (cpd.settings[UO_cmt_star_cont].b)
                {
-                  output_indent(cmt_col + xtra + cpd.settings[UO_cmt_sp_before_star_cont].n,
-                                cmt_col);
-                  add_char('*');
+                  cmt.column = cmt_col + cpd.settings[UO_cmt_sp_before_star_cont].n;
+                  cmt_output_indent(cmt.brace_col, cmt.base_col, cmt.column);
+                  if (cmt.xtra_indent)
+                  {
+                     add_char(' ');
+                  }
+                  add_text(cmt.cont_text);
                }
                add_char('\n');
             }
@@ -1310,42 +1408,48 @@ static void output_comment_multi(chunk_t *pc)
                    (line[0] != '*') && (line[0] != '|') && (line[0] != '#') &&
                    ((line[0] != '\\') || unc_isalpha(line[1])) && (line[0] != '+'))
                {
-                  int start_col = cmt_col + xtra + cpd.settings[UO_cmt_sp_before_star_cont].n;
+                  int start_col = cmt_col + cpd.settings[UO_cmt_sp_before_star_cont].n;
 
                   if (cpd.settings[UO_cmt_star_cont].b)
                   {
-                     output_indent(start_col, cmt_col);
-                     add_text("* ");
+                     cmt.column = start_col;
+                     cmt_output_indent(cmt.brace_col, cmt.base_col, cmt.column);
+                     if (cmt.xtra_indent)
+                     {
+                        add_char(' ');
+                     }
+                     add_text(cmt.cont_text);
                      output_to_column(ccol + cpd.settings[UO_cmt_sp_after_star_cont].n,
                                       false);
                   }
                   else
                   {
-                     output_indent(ccol, cmt_col);
+                     cmt.column = ccol;
+                     cmt_output_indent(cmt.brace_col, cmt.base_col, cmt.column);
                   }
                }
                else
                {
-                  output_indent(cmt_col + xtra + cpd.settings[UO_cmt_sp_before_star_cont].n,
-                                cmt_col);
+                  cmt.column = cmt_col + cpd.settings[UO_cmt_sp_before_star_cont].n;
+                  cmt_output_indent(cmt.brace_col, cmt.base_col, cmt.column);
+                  if (cmt.xtra_indent)
+                  {
+                     add_char(' ');
+                  }
 
-                  int idx  = 0;
-                  int sidx = 0;
-                  if (xtra > 0)
+                  int idx;
+
+                  idx = cmt_parse_lead(line, (remaining == 0));
+                  if (idx > 0)
                   {
-                     lead[idx++] = ' ';
+                     memcpy(lead, line, idx);
+                     lead[idx] = 0;
+                     cmt.cont_text = lead;
                   }
-                  /* keep the indentation of the start of the line intact when folding/reflowing. */
-                  while ((idx < int(sizeof(lead) - 1)) && !unc_isspace(line[sidx]))
+                  else
                   {
-                     lead[idx++] = line[sidx++];
+                     add_text(cmt.cont_text);
                   }
-                  for (sidx = 0; sidx < cpd.settings[UO_cmt_sp_after_star_cont].n; sidx++)
-                  {
-                     lead[idx++] = ' ';
-                  }
-                  lead[idx]     = 0;
-                  cmt.cont_text = lead;
                }
 
                add_comment_text(line, line_len, cmt, false);
@@ -1380,6 +1484,9 @@ static void output_comment_multi_simple(chunk_t *pc)
    int        ccol;
    int        col_diff = 0;
    bool       nl_end   = false;
+   cmt_reflow cmt;
+
+   output_cmt_start(cmt, pc);
 
    if (chunk_is_newline(chunk_get_prev(pc)))
    {
@@ -1393,9 +1500,6 @@ static void output_comment_multi_simple(chunk_t *pc)
       cmt_col  = pc->orig_col;
       col_diff = 0;
    }
-
-   //LOG_FMT(LSYS, "Indenting1 line %d to col %d (orig=%d) col_diff=%d xtra=%d\n",
-   //        pc->orig_line, cmt_col, pc->orig_col, col_diff, xtra);
 
    ccol      = pc->column;
    remaining = pc->len;
@@ -1481,7 +1585,8 @@ static void output_comment_multi_simple(chunk_t *pc)
 
          if (line_len > 0)
          {
-            output_indent(ccol, cmt_col);
+            cmt.column = ccol;
+            cmt_output_indent(cmt.brace_col, cmt.base_col, cmt.column);
             add_text_len(line, line_len);
          }
          if (nl_end)
