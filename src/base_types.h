@@ -11,7 +11,7 @@
 
 #ifdef WIN32
 
-#include "windows_compat.h"
+#include "../win32/windows_compat.h"
 
 #else /* not WIN32 */
 
