@@ -2,11 +2,8 @@
 *.o
 src/uncrustify
 Makefile
-Makefile.in
 man/Makefile
-man/Makefile.in
 src/Makefile
-src/Makefile.in
 src/stamp-h1
 *~
 config.log
