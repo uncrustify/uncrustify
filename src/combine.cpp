@@ -3452,15 +3452,35 @@ chunk_t *skip_attribute_prev(chunk_t *fp_close)
 
 /**
  * Process an ObjC 'class'
- * pc is the chunk after '@implementation' or '@interface'.
- * Change colons, etc.
+ * pc is the chunk after '@implementation' or '@interface' or '@protocol'.
+ * Change colons, etc. Processes stuff until '@end'.
+ * Skips anything in braces.
  */
 static void handle_oc_class(chunk_t *pc)
 {
-   chunk_t *tmp = pc;
+   chunk_t *tmp;
+   bool    hit_scope = false;
 
-   while ((tmp = chunk_get_next(tmp)) != NULL)
+   LOG_FMT(LOCCLASS, "%s: start [%.*s] [%s] line %d\n", __func__,
+           pc->len, pc->str, get_token_name(pc->parent_type), pc->orig_line);
+
+   if (pc->parent_type == CT_OC_PROTOCOL)
    {
+      tmp = chunk_get_next_ncnl(pc);
+      if (chunk_is_semicolon(tmp))
+      {
+         tmp->parent_type = pc->parent_type;
+         LOG_FMT(LOCCLASS, "%s:   bail on semicolon\n", __func__);
+         return;
+      }
+   }
+
+   tmp = pc;
+   while ((tmp = chunk_get_next_nnl(tmp)) != NULL)
+   {
+      LOG_FMT(LOCCLASS, "%s:       %d [%.*s]\n", __func__,
+              tmp->orig_line, tmp->len, tmp->str);
+
       if (tmp->type == CT_OC_END)
       {
          break;
@@ -3468,17 +3488,25 @@ static void handle_oc_class(chunk_t *pc)
       if (tmp->type == CT_BRACE_OPEN)
       {
          tmp->parent_type = CT_OC_CLASS;
-         break;
+         tmp = chunk_get_next_type(tmp, CT_BRACE_CLOSE, tmp->level);
+         if (tmp != NULL)
+         {
+            tmp->parent_type = CT_OC_CLASS;
+         }
       }
       else if (tmp->type == CT_COLON)
       {
-         tmp->type        = CT_CLASS_COLON;
+         tmp->type        = hit_scope ? CT_OC_COLON : CT_CLASS_COLON;
          tmp->parent_type = CT_OC_CLASS;
       }
       else if (chunk_is_str(tmp, "-", 1) || chunk_is_str(tmp, "+", 1))
       {
-         tmp->flags |= PCF_STMT_START;
-         break;
+         if (chunk_is_newline(chunk_get_prev(tmp)))
+         {
+            tmp->type   = CT_OC_SCOPE;
+            tmp->flags |= PCF_STMT_START;
+            hit_scope   = true;
+         }
       }
    }
 

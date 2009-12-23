@@ -12,6 +12,7 @@
 50005  obj-c.cfg           oc/Declarations.h  OC
 50006  obj-c.cfg           oc/exceptions.m
 50007  obj-c.cfg           oc/misc.m
+50008  obj-c.cfg           oc/protocol.m
 
 50060  oc-split.cfg        oc/oc-split.m
 
