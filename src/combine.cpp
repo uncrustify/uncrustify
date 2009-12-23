@@ -2868,8 +2868,18 @@ static void mark_cpp_constructor(chunk_t *pc)
    chunk_t *paren_open;
    chunk_t *tmp;
    chunk_t *after;
+   bool    is_destr = false;
 
-   LOG_FMT(LFTOR, "FOUND CONSTRUCTOR for %.*s[%s] ",
+   tmp = chunk_get_prev_ncnl(pc);
+   if (tmp->type == CT_INV)
+   {
+      tmp->type       = CT_DESTRUCTOR;
+      pc->parent_type = CT_DESTRUCTOR;
+      is_destr = true;
+   }
+
+   LOG_FMT(LFTOR, "FOUND %sSTRUCTOR for %.*s[%s] ",
+           is_destr ? "DE" : "CON",
            pc->len, pc->str, get_token_name(pc->type));
 
    paren_open = chunk_get_next_ncnl(pc);

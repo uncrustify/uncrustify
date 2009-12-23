@@ -62,3 +62,7 @@ Foo::Foo() {
 Foo::~Foo() {
 }
 
+class Object
+{
+~Object(void);
+};
