@@ -381,7 +381,7 @@ void tokenize_cleanup(void)
          {
             if (tmp->type == CT_PAREN_CLOSE)
             {
-               tmp->type        = CT_OC_CLASS_EXT;
+               //tmp->type        = CT_OC_CLASS_EXT;
                tmp->parent_type = pc->parent_type;
             }
             else
