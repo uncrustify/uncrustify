@@ -1724,7 +1724,6 @@ static void align_left_shift(void)
    chunk_t    *pc;
    chunk_t    *start = NULL;
    AlignStack as;
-   bool       skip_stmt = false;
 
    as.Start(2);
 
@@ -1734,7 +1733,6 @@ static void align_left_shift(void)
       if (chunk_is_newline(pc))
       {
          as.NewLines(pc->nl_count);
-         skip_stmt = as.m_aligned.Empty();
       }
       else if ((start != NULL) && (pc->level < start->level))
       {
@@ -1746,41 +1744,30 @@ static void align_left_shift(void)
       {
          /* Ignore any deeper levels when aligning */
       }
-      else if (pc->flags & PCF_STMT_START)
-      {
-         as.Reset();
-         skip_stmt = false;
-         start     = NULL;
-      }
       else if (pc->type == CT_SEMICOLON)
       {
+         /* A semicolon at the same level flushes */
          as.Flush();
          start = NULL;
       }
-      else if (!skip_stmt && chunk_is_str(pc, "<<", 2))
+      else if (chunk_is_str(pc, "<<", 2))
       {
          if (as.m_aligned.Empty())
          {
+            /* first one can be anywhere */
             as.Add(pc);
             start = pc;
          }
          else if (chunk_is_newline(chunk_get_prev(pc)))
          {
+            /* subsequent ones must be after a newline */
             as.Add(pc);
          }
       }
 
       pc = chunk_get_next(pc);
    }
-
-   if (skip_stmt)
-   {
-      as.Reset();
-   }
-   else
-   {
-      as.End();
-   }
+   as.End();
 }
 
 

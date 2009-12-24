@@ -12,3 +12,19 @@ int main()
 	std::cout << X
 	          << X[0];
 }
+
+#define A_LONG_MACRO_NAME(x) x
+
+void f() {
+	std::cout << "Hello, "
+	          << "World!"
+	          << std::endl;
+	A_LONG_MACRO_NAME(std::cout << "Hello, "
+	                            << "World!"
+	                            << std::endl);
+	A_LONG_MACRO_NAME(
+	        std::cout << "Hello, "
+	                  << "World!"
+	                  << std::endl);
+}
+
