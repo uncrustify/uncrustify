@@ -212,7 +212,10 @@ void tokenize_cleanup(void)
        *  operator new []
        *  operator delete []
        *  operator const char *
-       * This will put the entire operator value in one chunk.
+       *  operator std::allocator<U>
+       *
+       * In all cases except the last, this will put the entire operator value
+       * in one chunk.
        */
       if (pc->type == CT_OPERATOR)
       {
