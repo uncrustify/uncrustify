@@ -359,7 +359,7 @@ void align_right_comments(void)
          if (pc->parent_type == CT_COMMENT_END)
          {
             prev = chunk_get_prev(pc);
-            if (pc->orig_col <= (prev->orig_col_end + cpd.settings[UO_align_right_cmt_gap].n))
+            if (pc->orig_col < (prev->orig_col_end + cpd.settings[UO_align_right_cmt_gap].n))
             {
                LOG_FMT(LALTC, "NOT changing END comment on line %d (%d <= %d + %d)\n",
                        pc->orig_line,
@@ -380,7 +380,7 @@ void align_right_comments(void)
             int tmp_col = 1 + (pc->brace_level * cpd.settings[UO_indent_columns].n);
 
             /* If the comment is further right than the brace level... */
-            if (pc->column > (tmp_col + cpd.settings[UO_align_right_cmt_gap].n))
+            if (pc->column >= (tmp_col + cpd.settings[UO_input_tab_size].n))
             {
                LOG_FMT(LALTC, "Changing WHOLE comment on line %d into a RIGHT-comment\n",
                        pc->orig_line);
