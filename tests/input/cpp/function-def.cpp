@@ -68,3 +68,7 @@ Foo::Foo() {}
 
 Foo::~Foo() {}
 
+void func(void)
+{
+Directory dir("arg");
+}
