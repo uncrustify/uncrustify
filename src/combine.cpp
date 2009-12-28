@@ -2663,8 +2663,6 @@ static void mark_function(chunk_t *pc)
     * out whether this is a prototype or definition
     */
 
-   flag_parens(paren_open, PCF_IN_FCN_DEF, CT_FPAREN_OPEN, pc->type, false);
-
    /* See if this is a prototype or implementation */
 
    /* FIXME: this doesn't take the old K&R parameter definitions into account */
@@ -2795,6 +2793,8 @@ static void mark_function(chunk_t *pc)
    {
       tmp->parent_type = pc->type;
    }
+
+   flag_parens(paren_open, PCF_IN_FCN_DEF, CT_FPAREN_OPEN, pc->type, false);
 
    if (pc->type == CT_FUNC_CTOR_VAR)
    {
