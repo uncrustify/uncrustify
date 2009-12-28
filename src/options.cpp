@@ -437,6 +437,8 @@ void register_options(void)
                   "True=indent the 'if' one level\n");
    unc_add_option("indent_var_def_blk", UO_indent_var_def_blk, AT_NUM,
                   "Amount to indent variable declarations after a open brace. neg=relative, pos=absolute");
+   unc_add_option("indent_var_def_cont", UO_indent_var_def_cont, AT_BOOL,
+                  "Indent continued variable declarations instead of aligning.");
 
    unc_add_option("indent_func_call_param", UO_indent_func_call_param, AT_BOOL,
                   "True:  indent continued function call parameters one indent level\n"

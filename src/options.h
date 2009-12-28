@@ -157,6 +157,7 @@ enum uncrustify_options
 
    UO_indent_else_if,
    UO_indent_var_def_blk,        // indent a variable def block that appears at the top
+   UO_indent_var_def_cont,
 
    /*
     * Misc inter-element spacing
