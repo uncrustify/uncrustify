@@ -96,7 +96,7 @@
 00162  indent_func_def_param.cfg   c/fcn_indent.c
 00163  indent_func_proto_param.cfg c/fcn_indent.c
 
-00170  /dev/null               c/beautifier-off.c
+00170  empty.cfg               c/beautifier-off.c
 
 # switch & case stuff
 00201   case-1.cfg             c/case.c
@@ -109,7 +109,7 @@
 00303   1liner-split.cfg       c/one-liner-init.c
 00304   1liner-no-split.cfg    c/one-liner-init.c
 
-00310   /dev/null              c/sp_embed_comment.c
+00310   empty.cfg              c/sp_embed_comment.c
 
 # aligning tresholds
 00401   align-1.cfg            c/align-equ.c
@@ -186,7 +186,7 @@
 01011  del_semicolon.cfg       c/semicolons.c
 01012  ben.cfg                 c/semicolons.c
 
-01015  /dev/null               c/paren_indent.c
+01015  empty.cfg               c/paren_indent.c
 01016  align_attr.cfg          c/align_attr.c
 
 01020  kw_subst.cfg            c/kw_subst.c

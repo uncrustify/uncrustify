@@ -62,7 +62,7 @@
 
 30070 nl_func_scope_name.cfg           cpp/nl_func_scope_name.cpp
 
-30075 /dev/null                        cpp/goto.cpp
+30075 empty.cfg                        cpp/goto.cpp
 
 30080 nl_brace_brace-a.cfg             cpp/nl_brace_brace.cpp
 
