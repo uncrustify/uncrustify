@@ -1199,6 +1199,30 @@ void indent_text(void)
       }
 
       /**
+       * Handle variable definition continuation indenting
+       */
+      if ((vardefcol == 0) &&
+          (pc->type == CT_WORD) &&
+          ((pc->flags & PCF_IN_FCN_DEF) == 0) &&
+          ((pc->flags & PCF_VAR_1ST_DEF) == PCF_VAR_1ST_DEF))
+      {
+         if (cpd.settings[UO_indent_var_def_cont].b ||
+             chunk_is_newline(chunk_get_prev(pc)))
+         {
+            vardefcol = frm.pse[frm.pse_tos].indent + indent_size;
+         }
+         else
+         {
+            vardefcol = pc->column;
+         }
+      }
+      if (chunk_is_semicolon(pc) ||
+          ((pc->type == CT_BRACE_OPEN) && (pc->parent_type == CT_FUNCTION)))
+      {
+         vardefcol = 0;
+      }
+
+      /**
        * Indent the line if needed
        */
       if (did_newline && !chunk_is_newline(pc) && (pc->len != 0))
@@ -1242,8 +1266,7 @@ void indent_text(void)
          else if ((vardefcol > 0) &&
                   (pc->level == pc->brace_level) &&
                   (pc->type == CT_WORD) &&
-                  ((pc->flags & PCF_VAR_DEF) != 0) &&
-                  (prev != NULL) && (prev->type == CT_COMMA))
+                  ((pc->flags & PCF_VAR_DEF) != 0))
          {
             LOG_FMT(LINDENT, "%s: %d] Vardefcol => %d\n",
                     __func__, pc->orig_line, vardefcol);
@@ -1387,21 +1410,6 @@ void indent_text(void)
                frm.pse[frm.pse_tos].non_vardef = true;
             }
          }
-      }
-
-      /**
-       * Handle variable definition continuation indenting
-       */
-      if ((pc->type == CT_WORD) &&
-          ((pc->flags & PCF_IN_FCN_DEF) == 0) &&
-          ((pc->flags & PCF_VAR_1ST_DEF) == PCF_VAR_1ST_DEF))
-      {
-         vardefcol = pc->column;
-      }
-      if (chunk_is_semicolon(pc) ||
-          ((pc->type == CT_BRACE_OPEN) && (pc->parent_type == CT_FUNCTION)))
-      {
-         vardefcol = 0;
       }
 
       /* if we hit a newline, reset indent_tmp */
