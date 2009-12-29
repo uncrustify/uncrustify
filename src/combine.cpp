@@ -1531,9 +1531,21 @@ static void fix_enum_struct_union(chunk_t *pc)
       return;
    }
 
-   if ((cpd.lang_flags & LANG_D) && !chunk_is_semicolon(next))
+   if (!chunk_is_semicolon(next))
    {
-      next = pawn_add_vsemi_after(chunk_get_prev_ncnl(next));
+      /* Pawn does not require a semicolon after an enum */
+      if (cpd.lang_flags & LANG_PAWN)
+      {
+         return;
+      }
+
+      /* D does not require a semicolon after an enum, but we add one to make
+       * other code happy.
+       */
+      if (cpd.lang_flags & LANG_D)
+      {
+         next = pawn_add_vsemi_after(chunk_get_prev_ncnl(next));
+      }
    }
 
    /* We are either pointing to a ';' or a variable */
