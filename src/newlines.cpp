@@ -346,7 +346,9 @@ static void newlines_if_for_while_switch(chunk_t *start, argval_t nl_opt)
       close_paren = chunk_get_next_type(pc, CT_SPAREN_CLOSE, pc->level);
       brace_open  = chunk_get_next_ncnl(close_paren);
 
-      if ((brace_open != NULL) && (brace_open->type == CT_BRACE_OPEN) &&
+      if ((brace_open != NULL) &&
+          ((brace_open->type == CT_BRACE_OPEN) ||
+           (brace_open->type == CT_VBRACE_OPEN)) &&
           one_liner_nl_ok(brace_open))
       {
          if (cpd.settings[UO_nl_multi_line_cond].b)
@@ -361,13 +363,24 @@ static void newlines_if_for_while_switch(chunk_t *start, argval_t nl_opt)
             }
          }
 
-         newline_iarf_pair(close_paren, brace_open, nl_opt);
+         if (brace_open->type == CT_VBRACE_OPEN)
+         {
+            /* Can only add - we don't want to create a one-line here */
+            if (nl_opt & AV_ADD)
+            {
+               newline_iarf_pair(close_paren, chunk_get_next_ncnl(brace_open), nl_opt);
+            }
+         }
+         else
+         {
+            newline_iarf_pair(close_paren, brace_open, nl_opt);
 
-         newline_add_between(brace_open, chunk_get_next_ncnl(brace_open));
+            newline_add_between(brace_open, chunk_get_next_ncnl(brace_open));
 
-         /* Make sure nothing is cuddled with the closing brace */
-         pc = chunk_get_next_type(brace_open, CT_BRACE_CLOSE, brace_open->level);
-         newline_add_between(pc, chunk_get_next_nblank(pc));
+            /* Make sure nothing is cuddled with the closing brace */
+            pc = chunk_get_next_type(brace_open, CT_BRACE_CLOSE, brace_open->level);
+            newline_add_between(pc, chunk_get_next_nblank(pc));
+         }
       }
    }
 }
@@ -770,19 +783,32 @@ static void newlines_do_else(chunk_t *start, argval_t nl_opt)
    }
 
    next = chunk_get_next_ncnl(start);
-   if ((next != NULL) && (next->type == CT_BRACE_OPEN))
+   if ((next != NULL) &&
+       ((next->type == CT_BRACE_OPEN) ||
+        (next->type == CT_VBRACE_OPEN)))
    {
       if (!one_liner_nl_ok(next))
       {
          return;
       }
-      newline_iarf_pair(start, next, nl_opt);
-      if ((nl_opt & AV_ADD) != 0)
+      if (next->type == CT_VBRACE_OPEN)
       {
-         chunk_t *tmp = chunk_get_next_nc(next);
-         if ((tmp != NULL) && !chunk_is_newline(tmp))
+         /* Can only add - we don't want to create a one-line here */
+         if (nl_opt & AV_ADD)
          {
-            newline_add_between(next, tmp);
+            newline_iarf_pair(start, chunk_get_next_ncnl(next), nl_opt);
+         }
+      }
+      else
+      {
+         newline_iarf_pair(start, next, nl_opt);
+         if ((nl_opt & AV_ADD) != 0)
+         {
+            chunk_t *tmp = chunk_get_next_nc(next);
+            if ((tmp != NULL) && !chunk_is_newline(tmp))
+            {
+               newline_add_between(next, tmp);
+            }
          }
       }
    }
@@ -1285,7 +1311,9 @@ static bool one_liner_nl_ok(chunk_t *pc)
 
    if ((pc->flags & PCF_ONE_LINER) &&
        ((pc->type == CT_BRACE_OPEN) ||
-        (pc->type == CT_BRACE_CLOSE)))
+        (pc->type == CT_BRACE_CLOSE) ||
+        (pc->type == CT_VBRACE_OPEN) ||
+        (pc->type == CT_VBRACE_CLOSE)))
    {
       if (cpd.settings[UO_nl_class_leave_one_liners].b &&
           (pc->flags & PCF_IN_CLASS))
