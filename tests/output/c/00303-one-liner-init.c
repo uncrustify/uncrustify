@@ -28,3 +28,19 @@ int foo()
 {
    return 0;
 }
+
+void foo(int a, int b)
+{
+   if (a == b)
+   {
+      a++;
+   }
+   else
+   {
+      b++;
+   }
+   if (a == b)
+      a++;
+   else
+      b++;
+}
