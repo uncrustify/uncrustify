@@ -19,9 +19,9 @@
 
 #define PATH_SEP    '/'
 
-#if defined HAVE_STDINT_H
-#include <stdint.h>
-#elif defined HAVE_INTTYPES_H
+#define __STDC_FORMAT_MACROS
+
+#if defined HAVE_INTTYPES_H
 #include <inttypes.h>
 #else
 #error "Don't know where int8_t is defined"
@@ -39,6 +39,7 @@ typedef int32_t    INT32;
 typedef uint8_t    UINT8;
 typedef uint16_t   UINT16;
 typedef uint32_t   UINT32;
+typedef uint64_t   UINT64;
 
 #endif   /* ifdef WIN32 */
 

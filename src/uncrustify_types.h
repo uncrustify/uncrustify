@@ -86,84 +86,90 @@ struct parse_frame
    bool                     maybe_cast;
 };
 
-#define PCF_FORCE_SPACE        (1 << 0)  /* must have a space after this token */
-#define PCF_STMT_START         (1 << 1)  /* marks the start of a statment */
-#define PCF_EXPR_START         (1 << 2)
-#define PCF_IN_PREPROC         (1 << 3)  /* in a preprocessor */
-#define PCF_DONT_INDENT        (1 << 4)  /* already aligned! */
-#define PCF_VAR_DEF            (1 << 5)  /* variable name in a variable def */
-#define PCF_VAR_1ST            (1 << 6)  /* 1st variable def in a statement */
+#define PCF_BIT(b)   (1ULL << b)
+
+/* Copy flags are in the lower 16 bits */
+#define PCF_COPY_FLAGS         0x0000ffff
+#define PCF_IN_PREPROC         PCF_BIT(0)  /* in a preprocessor */
+#define PCF_IN_STRUCT          PCF_BIT(1)  /* in a struct */
+#define PCF_IN_ENUM            PCF_BIT(2)  /* in enum */
+#define PCF_IN_FCN_DEF         PCF_BIT(3)  /* inside function def parens */
+#define PCF_IN_FCN_CALL        PCF_BIT(4)  /* inside function call parens */
+#define PCF_IN_SPAREN          PCF_BIT(5)  /* inside for/if/while/switch parens */
+#define PCF_IN_TEMPLATE        PCF_BIT(6)
+#define PCF_IN_TYPEDEF         PCF_BIT(7)
+#define PCF_IN_CONST_ARGS      PCF_BIT(8)
+#define PCF_IN_ARRAY_ASSIGN    PCF_BIT(9)
+#define PCF_IN_CLASS           PCF_BIT(10)
+#define PCF_IN_NAMESPACE       PCF_BIT(11)
+#define PCF_IN_FOR             PCF_BIT(12)
+
+/* Non-Copy flags are in the upper 48 bits */
+#define PCF_FORCE_SPACE        PCF_BIT(16)  /* must have a space after this token */
+#define PCF_STMT_START         PCF_BIT(17)  /* marks the start of a statment */
+#define PCF_EXPR_START         PCF_BIT(18)
+#define PCF_DONT_INDENT        PCF_BIT(19)  /* already aligned! */
+#define PCF_ALIGN_START        PCF_BIT(20)
+#define PCF_WAS_ALIGNED        PCF_BIT(21)
+#define PCF_VAR_TYPE           PCF_BIT(22)  /* part of a variable def type */
+#define PCF_VAR_DEF            PCF_BIT(23)  /* variable name in a variable def */
+#define PCF_VAR_1ST            PCF_BIT(24)  /* 1st variable def in a statement */
 #define PCF_VAR_1ST_DEF        (PCF_VAR_DEF | PCF_VAR_1ST)
-#define PCF_VAR_INLINE         (1 << 7)  /* type was an inline struct/enum/union */
-#define PCF_IN_ENUM            (1 << 8)  /* in enum */
-#define PCF_IN_FCN_DEF         (1 << 9)  /* inside function def parens */
-#define PCF_IN_FCN_CALL        (1 << 10) /* inside function call parens */
-#define PCF_IN_SPAREN          (1 << 11) /* inside for/if/while/switch parens */
-#define PCF_RIGHT_COMMENT      (1 << 12)
-#define PCF_OLD_FCN_PARAMS     (1 << 13)
-#define PCF_WAS_ALIGNED        (1 << 14)
-#define PCF_IN_TEMPLATE        (1 << 15)
-#define PCF_IN_TYPEDEF         (1 << 16)
-#define PCF_IN_CONST_ARGS      (1 << 17)
-#define PCF_LVALUE             (1 << 18) /* left of assignment */
-#define PCF_IN_ARRAY_ASSIGN    (1 << 19)
-#define PCF_IN_CLASS           (1 << 20)
-#define PCF_IN_NAMESPACE       (1 << 21)
-#define PCF_IN_FOR             (1 << 22)
-#define PCF_ONE_LINER          (1 << 23)
+#define PCF_VAR_INLINE         PCF_BIT(25)  /* type was an inline struct/enum/union */
+#define PCF_RIGHT_COMMENT      PCF_BIT(26)
+#define PCF_OLD_FCN_PARAMS     PCF_BIT(27)
+#define PCF_LVALUE             PCF_BIT(28) /* left of assignment */
+#define PCF_ONE_LINER          PCF_BIT(29)
 #define PCF_ONE_CLASS          (PCF_ONE_LINER | PCF_IN_CLASS)
-#define PCF_EMPTY_BODY         (1 << 24)
-#define PCF_ANCHOR             (1 << 25)  /* aligning anchor */
-#define PCF_PUNCTUATOR         (1 << 26)
-#define PCF_INSERTED           (1 << 27)  /* chunk was inserted from another file */
-#define PCF_ALIGN_START        (1 << 28)
-#define PCF_VAR_TYPE           (1 << 29)  /* part of a variable def type */
-#define PCF_LONG_BLOCK         (1 << 30)  /* the block is 'long' by some measure */
-#define PCF_OWN_STR            (1 << 31)  /* chunk owns the memory at str */
-
-
-/* flags that get copied when a new chunk is inserted */
-#define PCF_COPY_FLAGS                                      \
-   (PCF_IN_PREPROC | PCF_IN_SPAREN | PCF_IN_ENUM |          \
-    PCF_IN_FCN_DEF | PCF_IN_FCN_CALL | PCF_IN_TYPEDEF |     \
-    PCF_IN_ARRAY_ASSIGN | PCF_IN_CLASS | PCF_IN_NAMESPACE | \
-    PCF_IN_CLASS | PCF_IN_FOR | PCF_IN_TEMPLATE)
+#define PCF_EMPTY_BODY         PCF_BIT(30)
+#define PCF_ANCHOR             PCF_BIT(31)  /* aligning anchor */
+#define PCF_PUNCTUATOR         PCF_BIT(32)
+#define PCF_INSERTED           PCF_BIT(33)  /* chunk was inserted from another file */
+#define PCF_LONG_BLOCK         PCF_BIT(34)  /* the block is 'long' by some measure */
+#define PCF_OWN_STR            PCF_BIT(35)  /* chunk owns the memory at str */
 
 #ifdef DEFINE_PCF_NAMES
 static const char *pcf_names[] =
 {
-   "FORCE_SPACE",
-   "STMT_START",
-   "EXPR_START",
-   "IN_PREPROC",
-   "DONT_INDENT",
-   "VAR_DEF",
-   "VAR_1ST",
-   "VAR_INLINE",
-   "IN_ENUM",
-   "IN_FCN_DEF",
-   "IN_FCN_CALL",
-   "IN_SPAREN",
-   "RIGHT_COMMENT",
-   "OLD_FCN_PARAMS",
-   "WAS_ALIGNED",
-   "IN_TEMPLATE",
-   "IN_TYPEDEF",
-   "IN_CONST_ARGS",
-   "LVALUE",
-   "IN_ARRAY_ASSIGN",
-   "IN_CLASS",
-   "IN_NAMESPACE",
-   "IN_FOR",
-   "ONE_LINER",
-   "EMPTY_BODY",
-   "ANCHOR",
-   "PUNCTUATOR",
-   "INSERTED",
-   "ALIGN_START",
-   "VAR_TYPE",
-   "LONG_BLOCK",
-   "OWN_STR",
+   "IN_PREPROC",        // 0
+   "IN_STRUCT",         // 1
+   "IN_ENUM",           // 2
+   "IN_FCN_DEF",        // 3
+   "IN_FCN_CALL",       // 4
+   "IN_SPAREN",         // 5
+   "IN_TEMPLATE",       // 6
+   "IN_TYPEDEF",        // 7
+   "IN_CONST_ARGS",     // 8
+   "IN_ARRAY_ASSIGN",   // 9
+   "IN_CLASS",          // 10
+   "IN_NAMESPACE",      // 11
+   "IN_FOR",            // 12
+   "#13",               // 13
+   "#14",               // 14
+   "#15",               // 15
+   "FORCE_SPACE",       // 16
+   "STMT_START",        // 17
+   "EXPR_START",        // 18
+   "DONT_INDENT",       // 19
+   "ALIGN_START",       // 20
+   "WAS_ALIGNED",       // 21
+   "VAR_TYPE",          // 22
+   "VAR_DEF",           // 23
+   "VAR_1ST",           // 24
+   "VAR_INLINE",        // 25
+   "RIGHT_COMMENT",     // 26
+   "OLD_FCN_PARAMS",    // 27
+   "LVALUE",            // 28
+   "ONE_LINER",         // 29
+   "EMPTY_BODY",        // 30
+   "ANCHOR",            // 31
+   "PUNCTUATOR",        // 32
+   "INSERTED",          // 33
+   "LONG_BLOCK",        // 34
+   "OWN_STR",           // 35
+   "#36",               // 36
+   "#37",               // 37
+   "#38",               // 38
 };
 #endif
 
@@ -195,7 +201,7 @@ struct chunk_t
    UINT32      orig_line;
    UINT32      orig_col;
    UINT32      orig_col_end;
-   UINT32      flags;            /* see PCF_xxx */
+   UINT64      flags;            /* see PCF_xxx */
    int         column;           /* column of chunk */
    int         column_indent;    /* if 1st on a line, set to the 'indent'
                                   * column, which may be less that the real column */

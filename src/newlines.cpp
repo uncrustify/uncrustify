@@ -1279,7 +1279,7 @@ static void newline_func_def(chunk_t *start)
  */
 static bool one_liner_nl_ok(chunk_t *pc)
 {
-   LOG_FMT(LNL1LINE, "%s: check [%s] parent=[%s] flg=%x, on line %d, col %d - ",
+   LOG_FMT(LNL1LINE, "%s: check [%s] parent=[%s] flg=%" PRIx64 ", on line %d, col %d - ",
            __func__, get_token_name(pc->type), get_token_name(pc->parent_type),
            pc->flags, pc->orig_line, pc->orig_col);
 

@@ -73,7 +73,7 @@ void make_type(chunk_t *pc)
  * @param po   Pointer to the open parenthesis
  * @return     The token after the close paren
  */
-static chunk_t *flag_parens(chunk_t *po, UINT32 flags,
+static chunk_t *flag_parens(chunk_t *po, UINT64 flags,
                             c_token_t opentype, c_token_t parenttype,
                             bool parent_all)
 {
@@ -156,7 +156,7 @@ static bool chunk_ends_type(chunk_t *pc)
 
    for (/* nada */; pc != NULL; pc = chunk_get_prev_ncnl(pc))
    {
-      LOG_FMT(LFTYPE, "%s: [%s] %.*s flags %x on line %d, col %d\n",
+      LOG_FMT(LFTYPE, "%s: [%s] %.*s flags %" PRId64 " on line %d, col %d\n",
               __func__, get_token_name(pc->type), pc->len, pc->str,
               pc->flags, pc->orig_line, pc->orig_col);
 

@@ -1657,19 +1657,19 @@ static const char *language_to_string(int lang)
 }
 
 
-void log_pcf_flags(log_sev_t sev, UINT32 flags)
+void log_pcf_flags(log_sev_t sev, UINT64 flags)
 {
    if (!log_sev_on(sev))
    {
       return;
    }
 
-   log_fmt(sev, "[0x%X:", flags);
+   log_fmt(sev, "[0x%" PRIx64 ":", flags);
 
    const char *tolog = NULL;
    for (int i = 0; i < (int)ARRAY_SIZE(pcf_names); i++)
    {
-      if ((flags & (1 << i)) != 0)
+      if ((flags & (1ULL << i)) != 0)
       {
          if (tolog != NULL)
          {

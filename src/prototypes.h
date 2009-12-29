@@ -18,7 +18,7 @@
 
 const char *get_token_name(c_token_t token);
 c_token_t find_token_name(const char *text);
-void log_pcf_flags(log_sev_t sev, UINT32 flags);
+void log_pcf_flags(log_sev_t sev, UINT64 flags);
 const char *path_basename(const char *path);
 int path_dirname_len(const char *filename);
 const char *get_file_extension(int& idx);

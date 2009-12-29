@@ -949,7 +949,7 @@ static chunk_t *align_var_def_brace(chunk_t *start, int span, int *p_nl_count)
    chunk_t    *pc;
    chunk_t    *next;
    chunk_t    *prev;
-   int        align_mask = PCF_IN_FCN_DEF | PCF_VAR_1ST;
+   UINT64     align_mask = PCF_IN_FCN_DEF | PCF_VAR_1ST;
    int        myspan     = span;
    int        mythresh   = 0;
    int        mygap      = 0;

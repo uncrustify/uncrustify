@@ -22,6 +22,11 @@ typedef int                INT32;
 typedef unsigned char      UINT8;
 typedef unsigned short     UINT16;
 typedef unsigned int       UINT32;
+typedef unsigned long long UINT64;
+
+#ifndef PRIx64
+#define PRIx64             "llx"
+#endif
 
 /* eliminate GNU's attribute */
 #define __attribute__(x)
