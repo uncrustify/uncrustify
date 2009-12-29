@@ -1513,7 +1513,8 @@ static void fix_enum_struct_union(chunk_t *pc)
          mark_struct_union_body(next);
       }
 
-      flag_parens(next, PCF_IN_ENUM, CT_NONE, CT_NONE, false);
+      flag_parens(next, (pc->type == CT_ENUM) ? PCF_IN_ENUM : PCF_IN_STRUCT,
+                  CT_NONE, CT_NONE, false);
 
       /* Skip to the closing brace */
       next->parent_type = pc->type;

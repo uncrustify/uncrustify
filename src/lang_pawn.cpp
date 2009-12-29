@@ -118,7 +118,7 @@ static bool pawn_continued(chunk_t *pc, int br_level)
        (pc->parent_type == CT_WHILE) ||
        (pc->parent_type == CT_FUNC_DEF) ||
        (pc->parent_type == CT_ENUM) ||
-       ((pc->flags & PCF_IN_ENUM) != 0) ||
+       ((pc->flags & (PCF_IN_ENUM | PCF_IN_STRUCT)) != 0) ||
        chunk_is_str(pc, ":", 1) ||
        chunk_is_str(pc, "+", 1) ||
        chunk_is_str(pc, "-", 1))
@@ -297,7 +297,7 @@ void pawn_add_virtual_semicolons(void)
 
          /* we just hit a newline and we have a previous token */
          if (((prev->flags & PCF_IN_PREPROC) == 0) &&
-             ((prev->flags & PCF_IN_ENUM) == 0) &&
+             ((prev->flags & (PCF_IN_ENUM | PCF_IN_STRUCT)) == 0) &&
              (prev->type != CT_VSEMICOLON) &&
              (prev->type != CT_SEMICOLON) &&
              !pawn_continued(prev, prev->brace_level))
