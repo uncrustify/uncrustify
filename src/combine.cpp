@@ -915,7 +915,8 @@ void fix_symbols(void)
           ((pc->type == CT_QUALIFIER) ||
            (pc->type == CT_TYPE) ||
            (pc->type == CT_WORD)) &&
-          (pc->parent_type != CT_ENUM)) // TODO: why this check?
+          (pc->parent_type != CT_ENUM) &&
+          ((pc->flags & PCF_IN_ENUM) == 0))
       {
          pc = fix_var_def(pc);
       }
