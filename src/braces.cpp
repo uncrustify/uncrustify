@@ -56,19 +56,22 @@ void do_braces(void)
    chunk_t *pc;
    chunk_t *br_open;
    chunk_t *tmp;
+   c_token_t brc_type;
 
    pc = chunk_get_head();
    while ((pc = chunk_get_next_ncnl(pc)) != NULL)
    {
-      if (pc->type != CT_BRACE_OPEN)
+      if ((pc->type != CT_BRACE_OPEN) &&
+          (pc->type != CT_VBRACE_OPEN))
       {
          continue;
       }
-      br_open = pc;
+      br_open  = pc;
+      brc_type = c_token_t(pc->type + 1);
 
       /* Detect empty bodies */
       tmp = chunk_get_next_ncnl(pc);
-      if ((tmp != NULL) && (tmp->type == CT_BRACE_CLOSE))
+      if ((tmp != NULL) && (tmp->type == brc_type))
       {
          br_open->flags |= PCF_EMPTY_BODY;
          tmp->flags     |= PCF_EMPTY_BODY;
@@ -82,7 +85,7 @@ void do_braces(void)
          {
             break;
          }
-         if ((tmp->type == CT_BRACE_CLOSE) && (br_open->level == tmp->level))
+         if ((tmp->type == brc_type) && (br_open->level == tmp->level))
          {
             br_open->flags |= PCF_ONE_LINER;
             tmp->flags     |= PCF_ONE_LINER;
