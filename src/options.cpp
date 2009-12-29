@@ -894,7 +894,7 @@ void register_options(void)
                   "1: no touching at all\n"
                   "2: full reflow\n", "", 0, 2);
    unc_add_option("cmt_indent_multi", UO_cmt_indent_multi, AT_BOOL,
-                  "If false, disable all multi-line comment changes, including cmt_width and leading chars.\n"
+                  "If false, disable all multi-line comment changes, including cmt_width. keyword substitution, and leading chars.\n"
                   "Default is true.");
    unc_add_option("cmt_c_group", UO_cmt_c_group, AT_BOOL,
                   "Whether to group c-comments that look like they are in a block");
