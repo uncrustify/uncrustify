@@ -1637,6 +1637,16 @@ void newlines_cleanup_braces(void)
             nl_create_one_liner(pc);
          }
       }
+      else if (pc->type == CT_VBRACE_CLOSE)
+      {
+         if (cpd.settings[UO_nl_after_vbrace_close].b)
+         {
+            if (!chunk_is_newline(chunk_get_next_nc(pc)))
+            {
+               newline_add_after(pc);
+            }
+         }
+      }
       else if (pc->type == CT_STRUCT)
       {
          newlines_struct_enum_union(pc, cpd.settings[UO_nl_struct_brace].a, true);
