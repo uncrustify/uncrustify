@@ -253,6 +253,8 @@
 21053 return-3.cfg              c/nl_return_expr.c
 21054 return-4.cfg              c/nl_return_expr.c
 
+21060 freebsd.cfg               c/freebsd.c
+
 66601 ger.cfg			c/custom_types_ssl.c
 66602 custom_types_ssl.cfg	c/custom_types_ssl.c
 66603 ger.cfg			c/pp_concat_asn1.h

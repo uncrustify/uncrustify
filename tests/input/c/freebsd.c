@@ -84,8 +84,8 @@ main(int argc, char *argv[])
 
 	while (cnt < 20 && this_variable_name_is_too_long &&
 	    ep != NULL)
-		zappy = a + really + long + statement + that + needs +
-		    two + lines + gets + indented + four + spaces +
+		zappy = a + really + long + statement + that + needs
+		    + two + lines + gets + indented + four + spaces +
 		    on + the + second + and + subsequent + lines;
 
    // Do not add whitespace at the end of a line, and only use tabs followed by
