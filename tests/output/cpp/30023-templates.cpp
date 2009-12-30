@@ -153,3 +153,8 @@ template<class T> class Y {
 void                        (*foobar)(void) = NULL;
 std::vector<void (*)(void)> functions;
 
+#define MACRO(a)    a
+template<typename = int> class X;
+MACRO(void f(X<>& x));
+void g(X<>& x);
+
