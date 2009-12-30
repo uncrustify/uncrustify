@@ -1206,8 +1206,13 @@ void indent_text(void)
           ((pc->flags & PCF_IN_FCN_DEF) == 0) &&
           ((pc->flags & PCF_VAR_1ST_DEF) == PCF_VAR_1ST_DEF))
       {
-         if (cpd.settings[UO_indent_var_def_cont].b ||
-             chunk_is_newline(chunk_get_prev(pc)))
+         if (cpd.settings[UO_indent_continue].n != 0)
+         {
+            vardefcol = frm.pse[frm.pse_tos].indent +
+                        cpd.settings[UO_indent_continue].n;
+         }
+         else if (cpd.settings[UO_indent_var_def_cont].b ||
+                  chunk_is_newline(chunk_get_prev(pc)))
          {
             vardefcol = frm.pse[frm.pse_tos].indent + indent_size;
          }
