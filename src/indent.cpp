@@ -665,6 +665,14 @@ void indent_text(void)
                indent_pse_pop(frm, pc);
             }
 
+            /* an OC SCOPE ('-' or '+') ends with a semicolon or brace open */
+            if ((frm.pse[frm.pse_tos].type == CT_OC_SCOPE) &&
+                (chunk_is_semicolon(pc) ||
+                 (pc->type == CT_BRACE_OPEN)))
+            {
+               indent_pse_pop(frm, pc);
+            }
+
             /* an SQL EXEC is ended with a semicolon */
             if ((frm.pse[frm.pse_tos].type == CT_SQL_EXEC) &&
                 chunk_is_semicolon(pc))
@@ -1191,6 +1199,18 @@ void indent_text(void)
                        __func__, pc->orig_line, indent_column, pc->len, pc->str);
                reindent_line(pc, indent_column);
             }
+         }
+      }
+      else if (pc->type == CT_OC_SCOPE)
+      {
+         indent_pse_push(frm, pc);
+         if (cpd.settings[UO_indent_continue].n != 0)
+         {
+            frm.pse[frm.pse_tos].indent += cpd.settings[UO_indent_continue].n;
+         }
+         else
+         {
+            frm.pse[frm.pse_tos].indent += indent_size;
          }
       }
       else
