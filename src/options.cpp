@@ -925,6 +925,8 @@ void register_options(void)
 
    unc_add_option("align_oc_msg_colon_span", UO_align_oc_msg_colon_span, AT_NUM,
                   "Span for aligning parameters in an Obj-C message call on the ':' (0=don't align)", 0, 5000);
+   unc_add_option("align_oc_decl_colon", UO_align_oc_decl_colon, AT_BOOL,
+                  "Aligning parameters in an Obj-C '+' or '-' declaration on the ':'");
 
    unc_begin_group(UG_comment, "Comment modifications");
    unc_add_option("cmt_width", UO_cmt_width, AT_NUM,

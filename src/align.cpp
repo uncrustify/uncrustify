@@ -27,6 +27,7 @@ static void align_oc_msg_spec(int span);
 static void align_typedefs(int span);
 static void align_left_shift(void);
 static void align_oc_msg_colon(int span);
+static void align_oc_decl_colon(void);
 
 
 /*
@@ -248,6 +249,11 @@ void align_all(void)
    if (cpd.settings[UO_align_oc_msg_colon_span].n > 0)
    {
       align_oc_msg_colon(cpd.settings[UO_align_oc_msg_colon_span].n);
+   }
+
+   if (cpd.settings[UO_align_oc_decl_colon].b)
+   {
+      align_oc_decl_colon();
    }
 
    /* Align variable definitions */
@@ -1828,6 +1834,86 @@ static void align_oc_msg_colon(int span)
             cas.Add(pc);
             tmp = chunk_get_prev(pc);
             if ((tmp != NULL) && ((tmp->type == CT_WORD) || (tmp->type == CT_TYPE)))
+            {
+               nas.Add(tmp);
+            }
+            did_line = true;
+         }
+         pc = chunk_get_next(pc, CNAV_PREPROC);
+      }
+      nas.End();
+      cas.End();
+   }
+}
+
+
+/**
+ * Aligns OC declarations on the colon
+ * -(void) doSomething: (NSString*) param1
+ *                with: (NSString*) param2
+ */
+static void align_oc_decl_colon(void)
+{
+   chunk_t    *pc = chunk_get_head();
+   chunk_t    *tmp;
+   chunk_t    *tmp2;
+   AlignStack cas;   /* for the colons */
+   AlignStack nas;   /* for the parameter label */
+   int        level;
+   bool       did_line;
+
+   cas.Start(4);
+   nas.Start(4);
+   nas.m_right_align = true;
+
+   while (pc != NULL)
+   {
+      if (pc->type != CT_OC_SCOPE)
+      {
+         pc = chunk_get_next(pc);
+         continue;
+      }
+
+      nas.Reset();
+      cas.Reset();
+
+      level = pc->level;
+      pc    = chunk_get_next_ncnl(pc, CNAV_PREPROC);
+
+      did_line = false;
+
+      while ((pc != NULL) && (pc->level >= level))
+      {
+         /* The decl ends with an open brace or semicolon */
+         if ((pc->type == CT_BRACE_OPEN) || chunk_is_semicolon(pc))
+         {
+            break;
+         }
+
+         if (chunk_is_newline(pc))
+         {
+            nas.NewLines(pc->nl_count);
+            cas.NewLines(pc->nl_count);
+            did_line  = false;
+         }
+         else if (!did_line && (pc->type == CT_OC_COLON))
+         {
+            cas.Add(pc);
+
+            tmp = chunk_get_prev(pc, CNAV_PREPROC);
+            tmp2 = chunk_get_prev_ncnl(tmp, CNAV_PREPROC);
+
+            /* Check for an un-labeled parameter */
+            if ((tmp != NULL) &&
+                (tmp2 != NULL)
+                &&
+                ((tmp->type == CT_WORD) ||
+                 (tmp->type == CT_TYPE) ||
+                 (tmp->type == CT_OC_MSG_DECL))
+                &&
+                ((tmp2->type == CT_WORD) ||
+                 (tmp2->type == CT_TYPE) ||
+                 (tmp2->type == CT_PAREN_CLOSE)))
             {
                nas.Add(tmp);
             }

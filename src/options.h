@@ -378,6 +378,7 @@ enum uncrustify_options
    UO_align_left_shift,
 //    UO_align_oc_msg_colon,
    UO_align_oc_msg_colon_span,
+   UO_align_oc_decl_colon,
 
 
    /*
