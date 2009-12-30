@@ -327,6 +327,9 @@ void newline_del_between2(chunk_t *start, chunk_t *end,
  * Also uncuddles anything on the closing brace. (may get fixed later)
  *
  * "if (...) { \n" or "if (...) \n { \n"
+ *
+ * For virtual braces, we can only add a newline after the vbrace open.
+ * If we do so, also add a newline after the vbrace close.
  */
 static void newlines_if_for_while_switch(chunk_t *start, argval_t nl_opt)
 {
@@ -370,7 +373,13 @@ static void newlines_if_for_while_switch(chunk_t *start, argval_t nl_opt)
             if (nl_opt & AV_ADD)
             {
                newline_iarf_pair(close_paren, chunk_get_next_ncnl(brace_open), nl_opt);
-            }
+               pc = chunk_get_next_type(brace_open, CT_VBRACE_CLOSE, brace_open->level);
+               if (!chunk_is_newline(chunk_get_prev_nc(pc)) &&
+                   !chunk_is_newline(chunk_get_next_nc(pc)))
+               {
+                  newline_add_after(pc);
+               }
+           }
          }
          else
          {
@@ -775,6 +784,7 @@ static void newlines_cuddle_uncuddle(chunk_t *start, argval_t nl_opt)
 static void newlines_do_else(chunk_t *start, argval_t nl_opt)
 {
    chunk_t *next;
+   chunk_t *tmp;
 
    if ((nl_opt == AV_IGNORE) ||
        (((start->flags & PCF_IN_PREPROC) != 0) &&
@@ -798,6 +808,12 @@ static void newlines_do_else(chunk_t *start, argval_t nl_opt)
          if (nl_opt & AV_ADD)
          {
             newline_iarf_pair(start, chunk_get_next_ncnl(next), nl_opt);
+            tmp = chunk_get_next_type(next, CT_VBRACE_CLOSE, next->level);
+            if (!chunk_is_newline(chunk_get_next_nc(tmp)) &&
+                !chunk_is_newline(chunk_get_prev_nc(tmp)))
+            {
+               newline_add_after(tmp);
+            }
          }
       }
       else
@@ -805,7 +821,7 @@ static void newlines_do_else(chunk_t *start, argval_t nl_opt)
          newline_iarf_pair(start, next, nl_opt);
          if ((nl_opt & AV_ADD) != 0)
          {
-            chunk_t *tmp = chunk_get_next_nc(next);
+            tmp = chunk_get_next_nc(next);
             if ((tmp != NULL) && !chunk_is_newline(tmp))
             {
                newline_add_between(next, tmp);
