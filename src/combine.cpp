@@ -2521,9 +2521,12 @@ static void mark_function(chunk_t *pc)
       }
    }
 
-   /* Determine if this is a function call or a function def/proto */
+   /* Determine if this is a function call or a function def/proto
+    * We check for level==1 to allow the case that a function prototype is
+    * wrapped in a macro: "MACRO(void foo(void));"
+    */
    if ((pc->type == CT_FUNC_CALL) &&
-       (pc->level == pc->brace_level) &&
+       ((pc->level == pc->brace_level) || (pc->level == 1)) &&
        ((pc->flags & PCF_IN_ARRAY_ASSIGN) == 0))
    {
       bool isa_def  = false;
@@ -2688,8 +2691,8 @@ static void mark_function(chunk_t *pc)
       /* Only care about brace or semi on the same level */
       if (tmp->level < pc->level)
       {
-         /* No semicolon - probably a function call? */
-         pc->type = CT_FUNC_CALL;
+         /* No semicolon - guess that it is a prototype */
+         pc->type = CT_FUNC_PROTO;
          break;
       }
       else if (tmp->level == pc->level)
