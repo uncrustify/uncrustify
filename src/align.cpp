@@ -813,6 +813,12 @@ static void align_same_func_call_params()
          continue;
       }
 
+      /* Only align function calls that are right after a newline */
+      if (!chunk_is_newline(chunk_get_prev(pc)))
+      {
+         continue;
+      }
+
       fcn_as.Add(pc);
       add_str = NULL;
 
