@@ -106,11 +106,49 @@ void unc_add_option(const char *name, uncrustify_options id, argtype_e type,
    }
 }
 
+/* only compare alpha-numeric characters */
+static bool match_text(const char *str1, const char *str2)
+{
+   int matches = 0;
+
+   while ((*str1 != 0) && (*str2 != 0))
+   {
+      if (!unc_isalnum(*str1))
+      {
+         str1++;
+         continue;
+      }
+      if (!unc_isalnum(*str2))
+      {
+         str2++;
+         continue;
+      }
+      if (unc_tolower(*str1) != unc_tolower(*str2))
+      {
+         return(false);
+      }
+      matches++;
+      str1++;
+      str2++;
+   }
+   return(matches && (*str1 == 0) && (*str2 == 0));
+}
+
 
 const option_map_value *unc_find_option(const char *name)
 {
    if (option_name_map.find(name) == option_name_map.end())
    {
+      /* Try a more aggressive search */
+      for (option_name_map_it it = option_name_map.begin();
+           it != option_name_map.end();
+           it++)
+      {
+         if (match_text(it->second.name, name))
+         {
+            return(&it->second);
+         }
+      }
       return(NULL);
    }
    return(&option_name_map[name]);
