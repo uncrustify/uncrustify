@@ -98,18 +98,15 @@ static void setup_newline_add(const chunk_t *prev, chunk_t *nl, const chunk_t *n
 
 
 /**
- * 2 parts:
- *  - if/switch/while/for after braces
- *  - else before/after braces
- *  - do after braces
- *  - do/while before braces
+ * Add a newline before the chunk if there isn't already a newline present.
+ * Virtual braces are skipped, as they do not contribute to the output.
  */
 chunk_t *newline_add_before2(chunk_t *pc, const char *fcn, int line)
 {
    chunk_t nl;
    chunk_t *prev;
 
-   prev = chunk_get_prev(pc);
+   prev = chunk_get_prev_nvb(pc);
    if (chunk_is_newline(prev))
    {
       /* Already has a newline before this chunk */
@@ -125,12 +122,16 @@ chunk_t *newline_add_before2(chunk_t *pc, const char *fcn, int line)
 }
 
 
+/**
+ * Add a newline after the chunk if there isn't already a newline present.
+ * Virtual braces are skipped, as they do not contribute to the output.
+ */
 chunk_t *newline_add_after2(chunk_t *pc, const char *fcn, int line)
 {
    chunk_t nl;
    chunk_t *next;
 
-   next = chunk_get_next(pc);
+   next = chunk_get_next_nvb(pc);
    if (chunk_is_newline(next))
    {
       /* Already has a newline after this chunk */
