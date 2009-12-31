@@ -16,6 +16,15 @@ void foo(void)
       printf("yar");
    }
 
+   if (flag1 &&
+#ifdef FLAG2
+       flag2 &&
+#endif
+       flag3)
+   {
+      printf("bo");
+   }
+
    if ((a != 0)
        && (b == 0)
        && (c < 0))

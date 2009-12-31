@@ -41,12 +41,18 @@ enum lineends_e
    LE_AUTO,    /* keep last */
 };
 
-/** Token position */
+/** Token position - these are bit fields */
 enum tokenpos_e
 {
-   TP_IGNORE,     /* don't change it */
-   TP_LEAD,       /* at the start of a line or leading */
-   TP_TRAIL,      /* at the end of a line or trailing */
+   TP_IGNORE      = 0,     /* don't change it */
+   TP_BREAK       = 1,     /* add a newline before or after the if not present */
+   TP_FORCE       = 2,     /* force a newline on one side and not the other */
+   TP_LEAD        = 4,     /* at the start of a line or leading if wrapped line */
+   TP_LEAD_BREAK  = (TP_LEAD | TP_BREAK),
+   TP_LEAD_FORCE  = (TP_LEAD | TP_FORCE),
+   TP_TRAIL       = 8,     /* at the end of a line or trailing if wrapped line */
+   TP_TRAIL_BREAK = (TP_TRAIL | TP_BREAK),
+   TP_TRAIL_FORCE = (TP_TRAIL | TP_FORCE),
 };
 
 union op_val_t

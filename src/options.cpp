@@ -1125,21 +1125,40 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
 
    if (entry->type == AT_POS)
    {
-      if ((strcasecmp(val, "LEAD") == 0) ||
-          (strcasecmp(val, "START") == 0))
+      if (strcasecmp(val, "LEAD") == 0)
       {
          dest->tp = TP_LEAD;
          return;
       }
-      if ((strcasecmp(val, "TRAIL") == 0) ||
-          (strcasecmp(val, "END") == 0))
+      if (strcasecmp(val, "LEAD_BREAK") == 0)
+      {
+         dest->tp = TP_LEAD_BREAK;
+         return;
+      }
+      if (strcasecmp(val, "LEAD_FORCE") == 0)
+      {
+         dest->tp = TP_LEAD_FORCE;
+         return;
+      }
+      if (strcasecmp(val, "TRAIL") == 0)
       {
          dest->tp = TP_TRAIL;
          return;
       }
+      if (strcasecmp(val, "TRAIL_BREAK") == 0)
+      {
+         dest->tp = TP_TRAIL_BREAK;
+         return;
+      }
+      if (strcasecmp(val, "TRAIL_FORCE") == 0)
+      {
+         dest->tp = TP_TRAIL_FORCE;
+         return;
+      }
       if (strcasecmp(val, "IGNORE") != 0)
       {
-         LOG_FMT(LWARN, "%s:%d Expected IGNORE, LEAD/START, or TRAIL/END for %s, got %s\n",
+         LOG_FMT(LWARN, "%s:%d Expected IGNORE, LEAD, LEAD_BREAK, LEAD_FORCE, "
+                 "TRAIL, TRAIL_BREAK, TRAIL_FORCE for %s, got %s\n",
                  cpd.filename, cpd.line_number, entry->name, val);
          cpd.error_count++;
       }
@@ -1684,7 +1703,7 @@ std::string argtype_to_string(argtype_e argtype)
       return("auto/lf/crlf/cr");
 
    case AT_POS:
-      return("ignore/lead/trail");
+      return("ignore/lead/lead_break/lead_force/trail/trail_break/trail_force");
 
    case AT_STRING:
       return("string");
@@ -1778,8 +1797,20 @@ std::string tokenpos_to_string(tokenpos_e tokenpos)
    case TP_LEAD:
       return("lead");
 
+   case TP_LEAD_BREAK:
+      return("lead_break");
+
+   case TP_LEAD_FORCE:
+      return("lead_force");
+
    case TP_TRAIL:
       return("trail");
+
+   case TP_TRAIL_BREAK:
+      return("trail_break");
+
+   case TP_TRAIL_FORCE:
+      return("trail_force");
 
    default:
       LOG_FMT(LWARN, "Unknown tokenpos '%d'\n", tokenpos);

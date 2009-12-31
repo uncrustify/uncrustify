@@ -257,16 +257,16 @@ static void split_line(chunk_t *start)
 
    /* Break before the token instead of after it according to the pos_xxx rules */
    if ((chunk_is_token(ent.pc, CT_ARITH) &&
-        (cpd.settings[UO_pos_arith].tp == TP_LEAD)) ||
+        (cpd.settings[UO_pos_arith].tp & TP_LEAD)) ||
        (chunk_is_token(ent.pc, CT_ASSIGN) &&
-        (cpd.settings[UO_pos_assign].tp == TP_LEAD)) ||
+        (cpd.settings[UO_pos_assign].tp & TP_LEAD)) ||
        (chunk_is_token(ent.pc, CT_COMPARE) &&
-        (cpd.settings[UO_pos_compare].tp == TP_LEAD)) ||
+        (cpd.settings[UO_pos_compare].tp & TP_LEAD)) ||
        ((chunk_is_token(ent.pc, CT_COND_COLON) ||
          chunk_is_token(ent.pc, CT_QUESTION)) &&
-        (cpd.settings[UO_pos_compare].tp == TP_LEAD)) ||
+        (cpd.settings[UO_pos_conditional].tp & TP_LEAD)) ||
        (chunk_is_token(ent.pc, CT_BOOL) &&
-        (cpd.settings[UO_pos_bool].tp == TP_LEAD)))
+        (cpd.settings[UO_pos_bool].tp & TP_LEAD)))
    {
       pc = ent.pc;
    }

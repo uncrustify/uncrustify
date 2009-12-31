@@ -2,7 +2,8 @@ void foo(void)
 {
    if ((a != 0)
        && (b == 0)
-       && (c < 0) && (d > 0))
+       && (c < 0)
+       && (d > 0))
    {
       printf("hi");
    }
@@ -33,29 +34,33 @@ void foo(void)
    }
 
    if ((a != 0)
-       &&
-       (b == 0)
-       &&
-       (c < 0))
+       && (b == 0)
+       && (c < 0))
    {
       printf("hi");
    }
 
    if (!this->writeOwiFile ()                   // comment1
-       || broken () || !saveArchiveData ()      /* comment2 */
-       || broken () || !deleteCentralArchive () // comment3
-       || broken () || !copyArchivFiles ()      // comment4
-       || broken () || !appendToPlanetDb ())    // comment5
+       || broken ()
+       || !saveArchiveData ()                   /* comment2 */
+       || broken ()
+       || !deleteCentralArchive ()              // comment3
+       || broken ()
+       || !copyArchivFiles ()                   // comment4
+       || broken ()
+       || !appendToPlanetDb ())                 // comment5
    {
       ;
    }
 
    foobar(param1
-          , param2, param3
+          , param2
+          , param3
           , param4);
 
    foobar2(param1
-           , param2, param3
+           , param2
+           , param3
            , param4);
 }
 

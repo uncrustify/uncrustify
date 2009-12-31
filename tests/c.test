@@ -131,12 +131,16 @@
 00432   indent_paren_close-2.cfg c/paren-indent.c
 
 # boolean and comma positioning
-00501   bool-pos-eol.cfg       c/bool-pos.c
-00502   bool-pos-sol.cfg       c/bool-pos.c
-00503   pos_compare-sol.cfg    c/pos_compare.c
-00504   pos_compare-eol.cfg    c/pos_compare.c
+00501   bool-pos-eol.cfg        c/bool-pos.c
+00502   bool-pos-sol.cfg        c/bool-pos.c
+00503   pos_compare-sol.cfg     c/pos_compare.c
+00504   pos_compare-eol.cfg     c/pos_compare.c
 00505   pos_conditional-sol.cfg c/pos_conditional.c
 00506   pos_conditional-eol.cfg c/pos_conditional.c
+00510   bool-pos-eol-break.cfg  c/bool-pos.c
+00511   bool-pos-sol-break.cfg  c/bool-pos.c
+00512   bool-pos-eol-force.cfg  c/bool-pos.c
+00513   bool-pos-sol-force.cfg  c/bool-pos.c
 
 00600  indent.cfg              c/dos.c
 00601  indent.cfg              c/mac.c

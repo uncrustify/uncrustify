@@ -2083,8 +2083,9 @@ void newlines_chunk_pos(c_token_t chunk_type, tokenpos_e mode)
    chunk_t *pc;
    chunk_t *next;
    chunk_t *prev;
+   int     nl_flag;
 
-   if (mode == TP_IGNORE)
+   if ((mode & (TP_LEAD | TP_TRAIL)) == 0)
    {
       return;
    }
@@ -2096,13 +2097,53 @@ void newlines_chunk_pos(c_token_t chunk_type, tokenpos_e mode)
          prev = chunk_get_prev_nc(pc);
          next = chunk_get_next_nc(pc);
 
-         /* if both are newlines or neither are newlines, skip this chunk */
-         if (chunk_is_newline(prev) == chunk_is_newline(next))
+         nl_flag = ((chunk_is_newline(prev) ? 1 : 0) |
+                    (chunk_is_newline(next) ? 2 : 0));
+
+         if (((nl_flag == 0) && ((mode & (TP_FORCE | TP_BREAK)) == 0)) ||
+             ((nl_flag == 3) && ((mode & TP_FORCE) == 0)))
          {
+            /* No newlines and not adding any or both and not forcing */
             continue;
          }
 
-         if (chunk_is_newline(next))
+         if (((mode & TP_LEAD) && (nl_flag == 1)) ||
+             ((mode & TP_TRAIL) && (nl_flag == 2)))
+         {
+            /* Already a newline before (lead) or after (trail) */
+            continue;
+         }
+
+         /* If there were no newlines, we need to add one */
+         if (nl_flag == 0)
+         {
+            if (mode & TP_LEAD)
+            {
+               newline_add_before(pc);
+            }
+            else
+            {
+               newline_add_after(pc);
+            }
+            continue;
+         }
+
+         /* If there were both newlines, we need to remove one */
+         if (nl_flag == 3)
+         {
+            if (mode & TP_LEAD)
+            {
+               remove_next_newlines(pc);
+            }
+            else
+            {
+               remove_next_newlines(chunk_get_prev_ncnl(pc));
+            }
+            continue;
+         }
+
+         /* we need to move the newline */
+         if (mode & TP_LEAD)
          {
             chunk_t *next2 = chunk_get_next(next);
             if ((next2 != NULL) &&
@@ -2112,12 +2153,15 @@ void newlines_chunk_pos(c_token_t chunk_type, tokenpos_e mode)
             {
                continue;
             }
+            if (next->nl_count == 1)
+            {
+               /* move the CT_BOOL to after the newline */
+               chunk_move_after(pc, next);
+            }
          }
-
-         /*NOTE: may end up processing a chunk twice if changed */
-         if (mode == TP_TRAIL)
+         else
          {
-            if (chunk_is_newline(prev) && (prev->nl_count == 1))
+            if (prev->nl_count == 1)
             {
                /* Back up to the next non-comment item */
                prev = chunk_get_prev_nc(prev);
@@ -2126,14 +2170,6 @@ void newlines_chunk_pos(c_token_t chunk_type, tokenpos_e mode)
                {
                   chunk_move_after(pc, prev);
                }
-            }
-         }
-         else  /* (mode == TP_LEAD) */
-         {
-            if (chunk_is_newline(next) && (next->nl_count == 1))
-            {
-               /* move the CT_BOOL to after the newline */
-               chunk_move_after(pc, next);
             }
          }
       }
@@ -2190,7 +2226,7 @@ void newlines_class_colon_pos(void)
             }
          }
 
-         if (mode == TP_TRAIL)
+         if (mode & TP_TRAIL)
          {
             if (chunk_is_newline(prev) && (prev->nl_count == 1) &&
                 chunk_safe_to_del_nl(prev))
@@ -2198,7 +2234,7 @@ void newlines_class_colon_pos(void)
                chunk_swap(pc, prev);
             }
          }
-         else if (mode == TP_LEAD)
+         else if (mode & TP_LEAD)
          {
             if (chunk_is_newline(next) && (next->nl_count == 1) &&
                 chunk_safe_to_del_nl(next))
@@ -2219,11 +2255,11 @@ void newlines_class_colon_pos(void)
          {
             if ((cpd.settings[UO_nl_class_init_args].a & AV_ADD) != 0)
             {
-               if (cpd.settings[UO_pos_class_comma].tp == TP_TRAIL)
+               if (cpd.settings[UO_pos_class_comma].tp & TP_TRAIL)
                {
                   newline_add_after(pc);
                }
-               else if (cpd.settings[UO_pos_class_comma].tp == TP_LEAD)
+               else if (cpd.settings[UO_pos_class_comma].tp & TP_LEAD)
                {
                   newline_add_before(pc);
                   next = chunk_get_next_nc(pc);

@@ -227,7 +227,8 @@ void print_universal_indent_cfg(FILE *pfile)
                // EditorType=multiple
                // Choices="pos_bool=ignore|pos_bool=lead|pos_bool=trail"
                fprintf(pfile, "EditorType=multiple\n");
-               fprintf(pfile, "Choices=\"%s=ignore|%s=lead|%s=trail\"\n",
+               fprintf(pfile, "Choices=\"%s=ignore|%s=lead|%s=lead_break|%s=lead_force|%s=trail|%s=trail_break|%s=trail_force\"\n",
+                       option->name, option->name, option->name, option->name,
                        option->name, option->name, option->name);
                fprintf(pfile, "ChoicesReadable=\"Ignore %s|Lead %s|Trail %s\"\n",
                        optionNameReadable, optionNameReadable, optionNameReadable);
