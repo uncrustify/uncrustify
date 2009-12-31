@@ -111,6 +111,8 @@
 
 00310   empty.cfg              c/sp_embed_comment.c
 
+00320   rdan.cfg               c/indent_first_bool_expr.c
+
 # aligning tresholds
 00401   align-1.cfg            c/align-equ.c
 00402   align-1.cfg            c/align-var.c

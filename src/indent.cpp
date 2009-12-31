@@ -1384,6 +1384,11 @@ void indent_text(void)
                 chunk_is_paren_open(frm.pse[frm.pse_tos].pc))
             {
                indent_column_set(frm.pse[frm.pse_tos].pc->column);
+               if (cpd.settings[UO_indent_first_bool_expr].b)
+               {
+                  reindent_line(chunk_get_next(frm.pse[frm.pse_tos].pc),
+                                indent_column + pc->len + 1);
+               }
             }
             LOG_FMT(LINDENT, "%s: %d] bool => %d [%.*s]\n",
                     __func__, pc->orig_line, indent_column, pc->len, pc->str);
