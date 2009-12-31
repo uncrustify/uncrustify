@@ -584,7 +584,7 @@ void register_options(void)
    unc_add_option("nl_after_square_assign", UO_nl_after_square_assign, AT_IARF,
                   "Add or remove newline after '= [' (D only). Will also affect the newline before the ']'");
    unc_add_option("nl_func_var_def_blk", UO_nl_func_var_def_blk, AT_NUM,
-                  "The number of newlines after a block of variable definitions");
+                  "The number of blank lines after a block of variable definitions");
    unc_add_option("nl_fcall_brace", UO_nl_fcall_brace, AT_IARF,
                   "Add or remove newline between a function call's ')' and '{', as in:\n"
                   "list_for_each(item, &list) { }");
@@ -704,29 +704,30 @@ void register_options(void)
    unc_add_option("nl_squeeze_ifdef", UO_nl_squeeze_ifdef, AT_BOOL,
                   "Whether to not put blanks after '#ifxx', '#elxx', or before '#endif'");
    unc_add_option("nl_before_if", UO_nl_before_if, AT_IARF,
-                  "Add or remove newline before 'if'");
+                  "Add or remove blank line before 'if'");
    unc_add_option("nl_after_if", UO_nl_after_if, AT_IARF,
-                  "Add or remove newline after 'if'");
+                  "Add or remove blank line after 'if' statement");
    unc_add_option("nl_before_for", UO_nl_before_for, AT_IARF,
-                  "Add or remove newline before 'for'");
+                  "Add or remove blank line before 'for'");
    unc_add_option("nl_after_for", UO_nl_after_for, AT_IARF,
-                  "Add or remove newline after 'for'");
+                  "Add or remove blank line after 'for' statement");
    unc_add_option("nl_before_while", UO_nl_before_while, AT_IARF,
-                  "Add or remove newline before 'while'");
+                  "Add or remove blank line before 'while'");
    unc_add_option("nl_after_while", UO_nl_after_while, AT_IARF,
-                  "Add or remove newline after 'while'");
+                  "Add or remove blank line after 'while' statement");
    unc_add_option("nl_before_switch", UO_nl_before_switch, AT_IARF,
-                  "Add or remove newline before 'switch'");
+                  "Add or remove blank line before 'switch'");
    unc_add_option("nl_after_switch", UO_nl_after_switch, AT_IARF,
-                  "Add or remove newline after 'switch'");
+                  "Add or remove blank line after 'switch' statement");
    unc_add_option("nl_before_do", UO_nl_before_do, AT_IARF,
-                  "Add or remove newline before 'do'");
+                  "Add or remove blank line before 'do'");
    unc_add_option("nl_after_do", UO_nl_after_do, AT_IARF,
-                  "Add or remove newline after 'do'");
+                  "Add or remove blank line after 'do/while' statement");
    unc_add_option("nl_ds_struct_enum_cmt", UO_nl_ds_struct_enum_cmt, AT_BOOL,
                   "Whether to double-space commented-entries in struct/enum");
    unc_add_option("nl_ds_struct_enum_close_brace", UO_nl_ds_struct_enum_close_brace, AT_BOOL,
-                  "Whether to double-space before the close brace of a struct/union/enum");
+                  "Whether to double-space before the close brace of a struct/union/enum\n"
+                  "(lower priority than 'eat_blanks_before_close_brace')");
    unc_add_option("nl_class_colon", UO_nl_class_colon, AT_IARF,
                   "Add or remove a newline around a class colon.\n"
                   "Related to pos_class_colon, nl_class_init_args, and pos_comma.");
