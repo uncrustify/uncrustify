@@ -1137,6 +1137,39 @@ static chunk_t *output_comment_cpp(chunk_t *first)
 }
 
 
+static void cmt_trim_whitespace(int& line_len, char *line, bool in_preproc)
+{
+   /* Remove trailing whitespace on the line */
+   while ((line_len > 0) &&
+          ((line[line_len - 1] == ' ') ||
+           (line[line_len - 1] == '\t')))
+   {
+      line_len--;
+   }
+
+   /* If in a preproc, shift any bs-nl back to the comment text */
+   if (in_preproc && (line_len > 1) && (line[line_len - 1] == '\\'))
+   {
+      bool do_space = false;
+
+      /* If there was any space before the backslash, change it to 1 space */
+      line_len--;
+      while ((line_len > 0) &&
+             ((line[line_len - 1] == ' ') ||
+              (line[line_len - 1] == '\t')))
+      {
+         do_space = true;
+         line_len--;
+      }
+      if (do_space)
+      {
+         line[line_len++] = ' ';
+      }
+      line[line_len++] = '\\';
+   }
+}
+
+
 /**
  * A multiline comment -- woopeee!
  * The only trick here is that we have to trim out whitespace characters
@@ -1328,37 +1361,9 @@ static void output_comment_multi(chunk_t *pc)
          /* strip trailing tabs and spaces before the newline */
          if (ch == '\n')
          {
-            line_len--;
-            while ((line_len > 0) &&
-                   ((line[line_len - 1] == ' ') ||
-                    (line[line_len - 1] == '\t')))
-            {
-               line_len--;
-            }
-
-            if ((line_len > 1) && (line[line_len - 1] == '\\') && (line[line_len - 2] != '*'))
-            {
-               if (pc->flags & PCF_IN_PREPROC)
-               {
-                  bool do_space = false;
-
-                  /* Kill off the backslash-newline */
-                  line_len--;
-                  while ((line_len > 0) &&
-                         ((line[line_len - 1] == ' ') ||
-                          (line[line_len - 1] == '\t')))
-                  {
-                     do_space = true;
-                     line_len--;
-                  }
-                  if (do_space)
-                  {
-                     line[line_len++] = ' ';
-                  }
-                  line[line_len++] = '\\';
-               }
-            }
             nl_end = true;
+            line_len--;
+            cmt_trim_whitespace(line_len, line, pc->flags & PCF_IN_PREPROC);
          }
          line[line_len] = 0;
 
@@ -1554,27 +1559,10 @@ static void output_comment_multi_simple(chunk_t *pc)
          if (ch == '\n')
          {
             line_len--;
-            while ((line_len > 0) &&
-                   ((line[line_len - 1] == ' ') ||
-                    (line[line_len - 1] == '\t')))
-            {
-               line_len--;
-            }
-            /* REVISIT: the check for '*' seem unnecessary */
-            if ((line_len > 1) && (line[line_len - 1] == '\\') && (line[line_len - 2] != '*'))
-            {
-               /* Kill off the backslash-newline */
-               line_len--;
-               while ((line_len > 0) &&
-                      ((line[line_len - 1] == ' ') ||
-                       (line[line_len - 1] == '\t')))
-               {
-                  line_len--;
-               }
-               line[line_len++] = ' ';
-               line[line_len++] = '\\';
-            }
             nl_end = true;
+
+            /* Say we aren't in a preproc to prevent changing any bs-nl */
+            cmt_trim_whitespace(line_len, line, false);
          }
          line[line_len] = 0;
 
