@@ -1361,7 +1361,8 @@ static bool one_liner_nl_ok(chunk_t *pc)
       }
 
       if (cpd.settings[UO_nl_func_leave_one_liners].b &&
-          (pc->parent_type == CT_FUNC_DEF))
+          ((pc->parent_type == CT_FUNC_DEF) ||
+           (pc->parent_type == CT_FUNC_CLASS)))
       {
          LOG_FMT(LNL1LINE, "false (func def)\n");
          return(false);
