@@ -1509,13 +1509,13 @@ static void fix_enum_struct_union(chunk_t *pc)
    }
    if (next->type == CT_BRACE_OPEN)
    {
+      flag_parens(next, (pc->type == CT_ENUM) ? PCF_IN_ENUM : PCF_IN_STRUCT,
+                  CT_NONE, CT_NONE, false);
+
       if ((pc->type == CT_UNION) || (pc->type == CT_STRUCT))
       {
          mark_struct_union_body(next);
       }
-
-      flag_parens(next, (pc->type == CT_ENUM) ? PCF_IN_ENUM : PCF_IN_STRUCT,
-                  CT_NONE, CT_NONE, false);
 
       /* Skip to the closing brace */
       next->parent_type = pc->type;
@@ -2166,12 +2166,16 @@ static chunk_t *mark_variable_definition(chunk_t *start)
    {
       if ((pc->type == CT_WORD) || (pc->type == CT_FUNC_CTOR_VAR))
       {
-         pc->flags |= flags;
-         flags     &= ~PCF_VAR_1ST;
+         UINT64 flg = pc->flags;
+         if ((pc->flags & PCF_IN_ENUM) == 0)
+         {
+            pc->flags |= flags;
+         }
+         flags &= ~PCF_VAR_1ST;
 
-         LOG_FMT(LVARDEF, "%s:%d marked '%.*s'[%s] in col %d\n",
+         LOG_FMT(LVARDEF, "%s:%d marked '%.*s'[%s] in col %d flags: %#"PRIx64" -> %#"PRIx64"\n",
                  __func__, pc->orig_line, pc->len, pc->str,
-                 get_token_name(pc->type), pc->orig_col);
+                 get_token_name(pc->type), pc->orig_col, flg, pc->flags);
       }
       else if (chunk_is_star(pc))
       {
@@ -3083,8 +3087,10 @@ static void mark_struct_union_body(chunk_t *start)
          continue;
       }
 
-      if ((pc->type == CT_STRUCT) || (pc->type == CT_UNION))
+      if ((pc->type == CT_STRUCT) || (pc->type == CT_UNION) || (pc->type == CT_ENUM))
       {
+         bool was_enum = (pc->type == CT_ENUM);
+
          pc = chunk_get_next_ncnlnp(pc);
          if ((pc != NULL) && (pc->type != CT_BRACE_OPEN))
          {
@@ -3092,11 +3098,14 @@ static void mark_struct_union_body(chunk_t *start)
          }
          if ((pc != NULL) && (pc->type == CT_BRACE_OPEN))
          {
-            mark_struct_union_body(pc);
+            if (!was_enum)
+            {
+               mark_struct_union_body(pc);
+            }
             pc = chunk_skip_to_match(pc);
             pc = chunk_get_next_ncnlnp(pc);
          }
-         if (pc != NULL)
+         if ((pc != NULL) && !was_enum)
          {
             pc = mark_variable_definition(pc);
          }
