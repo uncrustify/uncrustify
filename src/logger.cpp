@@ -136,7 +136,7 @@ static void log_flush(bool force_nl)
 
 
 /**
- * Starts the log statment by flushing if needed and printing the header
+ * Starts the log statement by flushing if needed and printing the header
  *
  * @param sev  The log severity
  * @return     The number of bytes available

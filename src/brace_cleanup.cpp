@@ -229,7 +229,7 @@ static void push_fmr_pse(struct parse_frame *frm, chunk_t *pc,
  * The PS (pse in the code) keeps track of braces, parens,
  * if/else/switch/do/while/etc items -- anything that is nestable.
  * Complex statements go through stages.
- * Take this simple if statment as an example:
+ * Take this simple if statement as an example:
  *   if ( x ) { x--; }
  *
  * The stack would change like so: 'token' stack afterwards
@@ -258,7 +258,7 @@ static void push_fmr_pse(struct parse_frame *frm, chunk_t *pc,
  * 'x'    [ELSE - 0] [VBRACE OPEN] <- lack of '{' -> VBrace
  * '++'   [ELSE - 0] [VBRACE OPEN]
  * ';'    [ELSE - 0]               <- VBrace close inserted after semicolon
- *                                 <- ELSE removed after statment close
+ *                                 <- ELSE removed after statement close
  *
  * The pse stack is kept on a frame stack.
  * The frame stack is need for languages that support preprocessors (C, C++, C#)
@@ -540,7 +540,7 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
 
    pattern_class patcls = get_token_pattern_class(pc->type);
 
-   /** Create a stack entry for complex statments IF/DO/FOR/WHILE/SWITCH */
+   /** Create a stack entry for complex statements IF/DO/FOR/WHILE/SWITCH */
    if (patcls == PATCLS_BRACED)
    {
       push_fmr_pse(frm, pc,

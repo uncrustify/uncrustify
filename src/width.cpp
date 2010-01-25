@@ -190,7 +190,7 @@ static void split_line(chunk_t *start)
       return;
    }
 
-   /* Check to see if we are in a for statment */
+   /* Check to see if we are in a for statement */
    if ((start->flags & PCF_IN_FOR) != 0)
    {
       LOG_FMT(LSPLIT, " ** FOR SPLIT **\n");
@@ -295,7 +295,7 @@ static void split_line(chunk_t *start)
 
 
 /**
- * A for statment is too long.
+ * A for statement is too long.
  * Step backwards and forwards to find the semicolons
  * Try splitting at the semicolons first.
  * If that doesn't work, then look for a comma at paren level.

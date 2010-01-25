@@ -106,7 +106,7 @@ struct parse_frame
 
 /* Non-Copy flags are in the upper 48 bits */
 #define PCF_FORCE_SPACE        PCF_BIT(16)  /* must have a space after this token */
-#define PCF_STMT_START         PCF_BIT(17)  /* marks the start of a statment */
+#define PCF_STMT_START         PCF_BIT(17)  /* marks the start of a statement */
 #define PCF_EXPR_START         PCF_BIT(18)
 #define PCF_DONT_INDENT        PCF_BIT(19)  /* already aligned! */
 #define PCF_ALIGN_START        PCF_BIT(20)

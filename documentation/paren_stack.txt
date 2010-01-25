@@ -24,7 +24,7 @@ Complex statements go through some of these BS_ stages:
 The file is processed one token at a time to support #if/#else/#endif
 preprocessors at any point.
 
-Take this simple if statment as an example:
+Take this simple if statement as an example:
 
    if ( x )
    {

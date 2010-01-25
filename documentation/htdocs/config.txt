@@ -208,10 +208,10 @@ sp_before_semi_for                       { Ignore, Add, Remove, Force }
   Add or remove space before ';' in non-empty 'for' statements
 
 sp_before_semi_for_empty                 { Ignore, Add, Remove, Force }
-  Add or remove space before a semicolon of an empty part of a for statment.
+  Add or remove space before a semicolon of an empty part of a for statement.
 
 sp_after_semi_for_empty                  { Ignore, Add, Remove, Force }
-  Add or remove space after the final semicolon of an empty part of a for statment: for ( ; ; <here> ).
+  Add or remove space after the final semicolon of an empty part of a for statement: for ( ; ; <here> ).
 
 sp_before_square                         { Ignore, Add, Remove, Force }
   Add or remove space before '[' (except '[]')
@@ -340,7 +340,7 @@ sp_addr                                  { Ignore, Add, Remove, Force }
 
 sp_member                                { Ignore, Add, Remove, Force }
   Add or remove space around the '.' or '->' operators
-  
+
 
 sp_deref                                 { Ignore, Add, Remove, Force }
   Add or remove space after the '*' (dereference) operator.
@@ -869,16 +869,16 @@ cmt_sp_before_star_cont                  Number
 cmt_sp_after_star_cont                   Number
   The number of spaces to insert after the star on subsequent comment lines
 
-cmt_insert_file_header                   
+cmt_insert_file_header
   The filename that contains text to insert at the head of a file if the file doesn't start with a C/C++ comment.
   Will substitue $(filename) with the current file's name.
 
-cmt_insert_func_header                   
+cmt_insert_func_header
   The filename that contains text to insert before a function implementation if the function isn't preceeded with a C/C++ comment.
   Will substitue $(function) with the function name and $(javaparam) with the javadoc @param and @return stuff.
   Will also substitute $(fclass) with the class name: void CFoo::Bar() { ... }
 
-cmt_insert_class_header                  
+cmt_insert_class_header
   The filename that contains text to insert before a class if the class isn't preceeded with a C/C++ comment.
   Will substitue $(class) with the class name.
 

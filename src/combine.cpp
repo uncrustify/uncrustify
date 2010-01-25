@@ -1086,7 +1086,7 @@ static void process_returns(void)
 
 
 /**
- * Processes a return statment, labeling the parens and marking the parent.
+ * Processes a return statement, labeling the parens and marking the parent.
  * May remove or add parens around the return statement
  *
  * @param pc   Pointer to the return chunk
