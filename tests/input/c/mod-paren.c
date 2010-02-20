@@ -67,3 +67,13 @@ if (!value
 {
 }
 }
+
+void foo3(void)
+{
+   if (*p == '-' && p[1] != ']' ?
+       *text <= *++p && *text >= last : *text == *p)
+   {
+      matched = TRUE;
+   }
+}
+
