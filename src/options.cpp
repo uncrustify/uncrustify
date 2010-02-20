@@ -407,7 +407,15 @@ void register_options(void)
                   "'-(int) f:(int)x;' vs '-(int)f:(int)x;'");
    unc_add_option("sp_after_oc_at_sel", UO_sp_after_oc_at_sel, AT_IARF,
                   "Add or remove space between '@selector' and '('\n"
-                  "'@selector(msgName).' vs '@selector (msgName)'");
+                  "'@selector(msgName)' vs '@selector (msgName)'\n"
+                  "Also applies to @protocol() constructs");
+   unc_add_option("sp_after_oc_at_sel_parens", UO_sp_after_oc_at_sel_parens, AT_IARF,
+                  "Add or remove space between '@selector(x)' and the following word\n"
+                  "'@selector(foo) a:' vs '@selector(foo)a:'");
+   unc_add_option("sp_inside_oc_at_sel_parens", UO_sp_inside_oc_at_sel_parens, AT_IARF,
+                  "Add or remove space inside '@selector' parens\n"
+                  "'@selector(foo)' vs '@selector( foo )'\n"
+                  "Also applies to @protocol() constructs");
    unc_add_option("sp_before_oc_block_caret", UO_sp_before_oc_block_caret, AT_IARF,
                   "Add or remove space before a block pointer caret\n"
                   "'^int (int arg){...}' vs. ' ^int (int arg){...}'");

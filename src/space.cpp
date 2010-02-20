@@ -840,9 +840,30 @@ argval_t do_space(chunk_t *first, chunk_t *second, bool complete = true)
          log_rule("sp_after_oc_type");
          return(cpd.settings[UO_sp_after_oc_type].a);
       }
+      else if (first->parent_type == CT_OC_SEL)
+      {
+         log_rule("sp_after_oc_at_sel_parens");
+         return(cpd.settings[UO_sp_after_oc_at_sel_parens].a);
+      }
    }
 
-   if ((first->type == CT_OC_SEL) && (second->type == CT_PAREN_OPEN))
+   if (cpd.settings[UO_sp_inside_oc_at_sel_parens].a != AV_IGNORE)
+   {
+      if (((first->type == CT_PAREN_OPEN) &&
+           ((first->parent_type == CT_OC_SEL) ||
+            (first->parent_type == CT_OC_PROTOCOL)))
+          ||
+          ((second->type == CT_PAREN_CLOSE) &&
+           ((second->parent_type == CT_OC_SEL) ||
+            (second->parent_type == CT_OC_PROTOCOL))))
+      {
+         log_rule("sp_inside_oc_at_sel_parens");
+         return(cpd.settings[UO_sp_inside_oc_at_sel_parens].a);
+      }
+   }
+
+   if ((second->type == CT_PAREN_OPEN) &&
+       ((first->type == CT_OC_SEL) || (first->type == CT_OC_PROTOCOL)))
    {
       log_rule("sp_after_oc_at_sel");
       return(cpd.settings[UO_sp_after_oc_at_sel].a);

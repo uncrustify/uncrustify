@@ -183,7 +183,7 @@
                                                  name:NSWindowWillCloseNotification
                                                object:_window];
 
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_windowShouldClose:)name:NSApplicationDidResignActiveNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_windowShouldClose:) name:NSApplicationDidResignActiveNotification object:nil];
 
     // Start watching events to figure out when to close the window
     NSAssert(_eventMonitor == nil, @"_eventMonitor should not be created yet");

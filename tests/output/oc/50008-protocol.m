@@ -1,7 +1,7 @@
 
-NSAssert([self.delegate conformsToProtocol: @protocol (UISearchBarDelegate)], @"Some Error.");
+NSAssert([self.delegate conformsToProtocol: @protocol(UISearchBarDelegate)], @"Some Error.");
 
-Protocol *counter = @protocol (ReferenceCounting);
+Protocol *counter = @protocol(ReferenceCounting);
 
 @protocol ReferenceCounting
 
@@ -19,7 +19,7 @@ Protocol *counter = @protocol (ReferenceCounting);
 
 @end
 
-if ([receiver conformsTo: @protocol (ReferenceCounting)])
+if ([receiver conformsTo: @protocol(ReferenceCounting)])
 {
    [receiver incrementCount];
 }

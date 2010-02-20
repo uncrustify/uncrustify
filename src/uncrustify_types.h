@@ -103,6 +103,7 @@ struct parse_frame
 #define PCF_IN_CLASS           PCF_BIT(10)
 #define PCF_IN_NAMESPACE       PCF_BIT(11)
 #define PCF_IN_FOR             PCF_BIT(12)
+#define PCF_IN_OC_MSG          PCF_BIT(13)
 
 /* Non-Copy flags are in the upper 48 bits */
 #define PCF_FORCE_SPACE        PCF_BIT(16)  /* must have a space after this token */
@@ -144,7 +145,7 @@ static const char *pcf_names[] =
    "IN_CLASS",          // 10
    "IN_NAMESPACE",      // 11
    "IN_FOR",            // 12
-   "#13",               // 13
+   "IN_OC_MSG",         // 13
    "#14",               // 14
    "#15",               // 15
    "FORCE_SPACE",       // 16
