@@ -335,6 +335,11 @@ void output_text(FILE *pfile)
             {
                /* Try to keep the same relative spacing */
                prev = chunk_get_prev(pc);
+               while ((prev != NULL) && (prev->orig_col == 0) && (prev->nl_count == 0))
+               {
+                  prev = chunk_get_prev(prev);
+               }
+
                if ((prev != NULL) && (prev->nl_count == 0))
                {
                   int orig_sp = (pc->orig_col - prev->orig_col_end);
