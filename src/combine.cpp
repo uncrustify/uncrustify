@@ -156,7 +156,7 @@ static bool chunk_ends_type(chunk_t *pc)
 
    for (/* nada */; pc != NULL; pc = chunk_get_prev_ncnl(pc))
    {
-      LOG_FMT(LFTYPE, "%s: [%s] %.*s flags %" PRId64 " on line %d, col %d\n",
+      LOG_FMT(LFTYPE, "%s: [%s] %.*s flags %" PRIx64 " on line %d, col %d\n",
               __func__, get_token_name(pc->type), pc->len, pc->str,
               pc->flags, pc->orig_line, pc->orig_col);
 
