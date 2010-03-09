@@ -27,3 +27,4 @@ build
 *.tmproj
 Debug
 .*
+uncrustify-*-win32
