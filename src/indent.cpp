@@ -728,7 +728,11 @@ void indent_text(void)
       {
          brace_indent = (cpd.settings[UO_indent_braces].b &&
                          (!cpd.settings[UO_indent_braces_no_func].b ||
-                          (pc->parent_type != CT_FUNC_DEF)));
+                          (pc->parent_type != CT_FUNC_DEF)) &&
+                         (!cpd.settings[UO_indent_braces_no_func].b ||
+                          (pc->parent_type != CT_FUNC_CLASS)) &&
+                         (!cpd.settings[UO_indent_braces_no_class].b ||
+                          (pc->parent_type != CT_CLASS)));
       }
 
       if (pc->type == CT_BRACE_CLOSE)
