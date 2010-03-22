@@ -732,7 +732,10 @@ void indent_text(void)
                          (!cpd.settings[UO_indent_braces_no_func].b ||
                           (pc->parent_type != CT_FUNC_CLASS)) &&
                          (!cpd.settings[UO_indent_braces_no_class].b ||
-                          (pc->parent_type != CT_CLASS)));
+                          (pc->parent_type != CT_CLASS)) &&
+                         (!cpd.settings[UO_indent_braces_no_struct].b ||
+                          (pc->parent_type != CT_STRUCT)));
+
       }
 
       if (pc->type == CT_BRACE_CLOSE)

@@ -465,6 +465,8 @@ void register_options(void)
                   "Disabled indenting function braces if indent_braces is true");
    unc_add_option("indent_braces_no_class", UO_indent_braces_no_class, AT_BOOL,
                   "Disabled indenting class braces if indent_braces is true");
+   unc_add_option("indent_braces_no_struct", UO_indent_braces_no_struct, AT_BOOL,
+                  "Disabled indenting struct braces if indent_braces is true");
    unc_add_option("indent_brace_parent", UO_indent_brace_parent, AT_BOOL,
                   "Indent based on the size of the brace parent, i.e. 'if' => 3 spaces, 'for' => 4 spaces, etc.");
    unc_add_option("indent_namespace", UO_indent_namespace, AT_BOOL,
