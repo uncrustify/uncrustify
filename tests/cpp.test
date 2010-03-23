@@ -159,4 +159,5 @@
 30932 empty.cfg                        cpp/indent_var_def_cont.cpp
 
 30935 ben.cfg                          cpp/indent-misc.cpp
+30936 indent_braces_no.cfg             cpp/indent_braces_no.h
 
