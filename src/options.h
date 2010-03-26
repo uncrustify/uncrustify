@@ -445,6 +445,7 @@ enum uncrustify_options
    UO_nl_catch_brace,                /* nl between catch and { */
    UO_nl_brace_catch,                /* nl between } and catch */
    UO_nl_while_brace,                /* nl between while and { */
+   UO_nl_using_brace,
    UO_nl_switch_brace,               /* nl between switch and { */
    UO_nl_brace_else,                 // nl between } and else
    UO_nl_brace_while,                // nl between } and while of do stmt
@@ -536,6 +537,7 @@ enum uncrustify_options
    UO_mod_full_brace_for,         // add or remove braces on for
    UO_mod_full_brace_do,          // add or remove braces on do
    UO_mod_full_brace_while,       // add or remove braces on while
+   UO_mod_full_brace_using,       // add or remove braces on using
    UO_mod_pawn_semicolon,         // add optional semicolons
    UO_mod_full_brace_function,    // add optional braces on Pawn functions
    UO_mod_full_paren_if_bool,

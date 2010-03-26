@@ -352,6 +352,7 @@ static int token_indent(c_token_t type)
       return(4);
 
    case CT_WHILE:
+   case CT_USING_STMT:
       return(6);
 
    case CT_SWITCH:
@@ -784,6 +785,7 @@ void indent_text(void)
                 (pc->parent_type == CT_CATCH) ||
                 (pc->parent_type == CT_DO) ||
                 (pc->parent_type == CT_WHILE) ||
+                (pc->parent_type == CT_USING_STMT) ||
                 (pc->parent_type == CT_SWITCH) ||
                 (pc->parent_type == CT_FOR))
             {

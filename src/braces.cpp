@@ -34,6 +34,7 @@ void do_braces(void)
          cpd.settings[UO_mod_full_brace_do].a |
          cpd.settings[UO_mod_full_brace_for].a |
          cpd.settings[UO_mod_full_brace_function].a |
+         cpd.settings[UO_mod_full_brace_using].a |
          cpd.settings[UO_mod_full_brace_while].a) & AV_ADD) != 0)
    {
       convert_vbrace_to_brace();
@@ -42,6 +43,7 @@ void do_braces(void)
    if (((cpd.settings[UO_mod_full_brace_if].a |
          cpd.settings[UO_mod_full_brace_do].a |
          cpd.settings[UO_mod_full_brace_for].a |
+         cpd.settings[UO_mod_full_brace_using].a |
          cpd.settings[UO_mod_full_brace_while].a) & AV_REMOVE) != 0)
    {
       examine_braces();
@@ -128,6 +130,8 @@ static void examine_braces(void)
               ((cpd.settings[UO_mod_full_brace_do].a & AV_REMOVE) != 0)) ||
              ((pc->parent_type == CT_FOR) &&
               ((cpd.settings[UO_mod_full_brace_for].a & AV_REMOVE) != 0)) ||
+             ((pc->parent_type == CT_USING_STMT) &&
+              ((cpd.settings[UO_mod_full_brace_using].a & AV_REMOVE) != 0)) ||
              ((pc->parent_type == CT_WHILE) &&
               ((cpd.settings[UO_mod_full_brace_while].a & AV_REMOVE) != 0)))
          {
@@ -264,6 +268,7 @@ static bool can_remove_braces(chunk_t *bopen)
                 (pc->type == CT_FOR) ||
                 (pc->type == CT_DO) ||
                 (pc->type == CT_WHILE) ||
+                (pc->type == CT_USING_STMT) ||
                 ((pc->type == CT_BRACE_OPEN) && was_fcn))
             {
                hit_semi |= chunk_is_semicolon(pc);
@@ -375,6 +380,7 @@ static void examine_brace(chunk_t *bopen)
                 (pc->type == CT_FOR) ||
                 (pc->type == CT_DO) ||
                 (pc->type == CT_WHILE) ||
+                (pc->type == CT_USING_STMT) ||
                 ((pc->type == CT_BRACE_OPEN) && was_fcn))
             {
                hit_semi |= chunk_is_semicolon(pc);
@@ -583,6 +589,9 @@ static void convert_vbrace_to_brace(void)
           ||
           ((pc->parent_type == CT_WHILE) &&
            ((cpd.settings[UO_mod_full_brace_while].a & AV_ADD) != 0))
+          ||
+          ((pc->parent_type == CT_USING_STMT) &&
+           ((cpd.settings[UO_mod_full_brace_using].a & AV_ADD) != 0))
           ||
           ((pc->parent_type == CT_FUNC_DEF) &&
            ((cpd.settings[UO_mod_full_brace_function].a & AV_ADD) != 0)))

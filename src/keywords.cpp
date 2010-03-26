@@ -521,6 +521,7 @@ pattern_class get_token_pattern_class(c_token_t tok)
    case CT_SWITCH:
    case CT_FOR:
    case CT_WHILE:
+   case CT_USING_STMT:
    case CT_LOCK:
    case CT_D_WITH:
       return(PATCLS_PBRACED);

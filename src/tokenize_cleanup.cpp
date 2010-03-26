@@ -621,6 +621,11 @@ void tokenize_cleanup(void)
          pc->type = CT_QUALIFIER;
       }
 
+      if ((pc->type == CT_USING) && (next->type == CT_PAREN_OPEN))
+      {
+         pc->type = CT_USING_STMT;
+      }
+
       /* TODO: determine other stuff here */
 
       prev = pc;

@@ -60,6 +60,7 @@ void remove_extra_semicolons(void)
               (prev->parent_type == CT_ELSE) ||
               (prev->parent_type == CT_SWITCH) ||
               (prev->parent_type == CT_WHILE) ||
+              (prev->parent_type == CT_USING_STMT) ||
               (prev->parent_type == CT_FOR) ||
               (prev->parent_type == CT_FUNC_DEF) ||
               (prev->parent_type == CT_OC_MSG_DECL) ||

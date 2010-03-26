@@ -1449,6 +1449,10 @@ void newlines_cleanup_braces(void)
       {
          newlines_if_for_while_switch(pc, cpd.settings[UO_nl_while_brace].a);
       }
+      else if (pc->type == CT_USING_STMT)
+      {
+         newlines_if_for_while_switch(pc, cpd.settings[UO_nl_using_brace].a);
+      }
       else if (pc->type == CT_SWITCH)
       {
          newlines_if_for_while_switch(pc, cpd.settings[UO_nl_switch_brace].a);

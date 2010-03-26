@@ -633,6 +633,8 @@ void register_options(void)
                   "Add or remove newline between '}' and 'catch'");
    unc_add_option("nl_while_brace", UO_nl_while_brace, AT_IARF,
                   "Add or remove newline between 'while' and '{'");
+   unc_add_option("nl_using_brace", UO_nl_using_brace, AT_IARF,
+                  "Add or remove newline between 'using' and '{'");
    unc_add_option("nl_brace_brace", UO_nl_brace_brace, AT_IARF,
                   "Add or remove newline between two open or close braces.\n"
                   "Due to general newline/brace handling, REMOVE may not work.");
@@ -1014,6 +1016,8 @@ void register_options(void)
                   "Don't remove braces around statements that span N newlines", "", 0, 5000);
    unc_add_option("mod_full_brace_while", UO_mod_full_brace_while, AT_IARF,
                   "Add or remove braces on single-line 'while' statement");
+   unc_add_option("mod_full_brace_using", UO_mod_full_brace_using, AT_IARF,
+                  "Add or remove braces on single-line 'using ()' statement");
    unc_add_option("mod_paren_on_return", UO_mod_paren_on_return, AT_IARF,
                   "Add or remove unnecessary paren on 'return' statement");
    unc_add_option("mod_pawn_semicolon", UO_mod_pawn_semicolon, AT_BOOL,

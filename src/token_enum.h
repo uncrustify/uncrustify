@@ -133,6 +133,7 @@ typedef enum
    CT_THROW,
    CT_TRY,
    CT_USING,
+   CT_USING_STMT,       /* using (xxx) ... */
    CT_D_WITH,           /* D: paren+braced */
    CT_D_MODULE,
    CT_SUPER,
