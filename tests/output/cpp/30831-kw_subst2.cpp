@@ -16,7 +16,15 @@ namespace bar
 	class CFoo
 	{
 	int foo1(int arg);
-	int foo2();
+private:
+	/**
+	 * foo2
+	 * TODO: DESCRIPTION
+	 * @return TODO
+	 */
+	int foo2()
+	{
+	}
 	};
 
 	/**
