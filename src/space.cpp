@@ -840,7 +840,8 @@ argval_t do_space(chunk_t *first, chunk_t *second, bool complete = true)
          log_rule("sp_after_oc_type");
          return(cpd.settings[UO_sp_after_oc_type].a);
       }
-      else if (first->parent_type == CT_OC_SEL)
+      else if ((first->parent_type == CT_OC_SEL) &&
+               (second->type != CT_SQUARE_CLOSE))
       {
          log_rule("sp_after_oc_at_sel_parens");
          return(cpd.settings[UO_sp_after_oc_at_sel_parens].a);
