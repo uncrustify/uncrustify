@@ -59,3 +59,8 @@ class Object
 {
 ~Object(void);
 };
+
+template <class T>
+void SampleClassTemplate<T>::connect()
+{
+}
