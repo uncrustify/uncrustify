@@ -210,7 +210,10 @@ typedef enum
    CT_OC_CLASS_EXT,     /* ObjC: a pair of empty parens after the class name in a @interface or @implementation */
    CT_OC_CATEGORY,      /* ObjC: the category name in parens after the class name in a @interface or @implementation */
    CT_OC_SCOPE,         /* ObjC: the '-' or '+' in '-(void) func: (int) i;' */
-   CT_OC_MSG,           /* ObjC: parent type to '[class func : param];' stuff */
+   CT_OC_MSG,           /* ObjC: parent type to '[class func : param name: param];' stuff */
+   CT_OC_MSG_CLASS,     /* ObjC: 'class' in  '[class func : param name: param];' */
+   CT_OC_MSG_FUNC,      /* ObjC: 'func' in  '[class func : param name: param];' */
+   CT_OC_MSG_NAME,      /* ObjC: 'name' in  '[class func : param name: param];' */
    CT_OC_MSG_SPEC,      /* ObjC: msg spec '-(void) func: (int) i;' */
    CT_OC_MSG_DECL,      /* ObjC: msg decl '-(void) func: (int) i { }' */
    CT_OC_RTYPE,         /* ObjC: marks closing parens of the return type after scope */

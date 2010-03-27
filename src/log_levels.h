@@ -90,6 +90,7 @@ enum
    LBRCH     = 76,    /* if brace chain */
    LFCNR     = 77,    /* function return type */
    LOCCLASS  = 78,    /* OC Class stuff */
+   LOCMSG    = 79,    /* OC Message stuff */
 };
 
 #endif   /* LOG_LEVELS_H_INCLUDED */

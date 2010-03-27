@@ -1833,7 +1833,9 @@ static void align_oc_msg_colon(int span)
             has_colon = true;
             cas.Add(pc);
             tmp = chunk_get_prev(pc);
-            if ((tmp != NULL) && ((tmp->type == CT_WORD) || (tmp->type == CT_TYPE)))
+            if ((tmp != NULL) &&
+                ((tmp->type == CT_OC_MSG_FUNC) ||
+                 (tmp->type == CT_OC_MSG_NAME)))
             {
                nas.Add(tmp);
             }

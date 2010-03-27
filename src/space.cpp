@@ -1224,7 +1224,9 @@ argval_t do_space(chunk_t *first, chunk_t *second, bool complete = true)
    }
    if (second->type == CT_OC_COLON)
    {
-      if (first->parent_type == CT_OC_MSG)
+      if ((first->parent_type == CT_OC_MSG) &&
+          ((first->type == CT_OC_MSG_FUNC) ||
+           (first->type == CT_OC_MSG_NAME)))
       {
          log_rule("sp_before_send_oc_colon");
          return(cpd.settings[UO_sp_before_send_oc_colon].a);

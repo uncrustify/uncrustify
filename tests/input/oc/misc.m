@@ -14,6 +14,8 @@ enableQuakeDisruptor:NO];
        format:@"An internal inconsistency was raised"];
 
 for (i = 0; i <[a count]; i++) {
+[thePerson setAmount:(1.5 * 17)forKey:@"overtime"];
+[screen showtext : x : y : @"Message"];
 	}
 }
 
