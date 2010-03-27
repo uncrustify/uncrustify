@@ -1975,6 +1975,11 @@ static void fix_fcn_def_params(chunk_t *start)
       else if ((pc->type == CT_COMMA) || (pc->type == CT_ASSIGN))
       {
          mark_variable_stack(cs, LFCNP);
+         if (pc->type == CT_ASSIGN)
+         {
+            /* Mark assignment for default param spacing */
+            pc->parent_type = CT_FUNC_PROTO;
+         }
       }
    }
    mark_variable_stack(cs, LFCNP);

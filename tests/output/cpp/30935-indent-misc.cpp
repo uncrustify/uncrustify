@@ -1,7 +1,7 @@
 struct S
 {
    int one, two;
-   S(int i = 1)
+   S(int i=1)
    {
       one = i;
       two = i + i;
@@ -20,7 +20,7 @@ struct S
       fortytwoseven = 427
    };
    int one, two;
-   S(int i = 1)
+   S(int i=1)
    {
       one = i;
       two = i + i;

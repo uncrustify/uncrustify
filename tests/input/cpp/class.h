@@ -9,11 +9,11 @@ public:
               CWnd* pParent = NULL );
    virtual ~CFooBarDlg();
 
-   void Initialize( BYTE nDelay );
+   void Initialize( BYTE nDelay=100 );
 
    UINT GetCount() { return (m_nCount); }
 
-   void SetCount(int count)
+   void SetCount(int count=1)
    {
       if ((count > 0) && (count < MAX_COUNT))
       {

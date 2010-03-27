@@ -413,6 +413,12 @@ argval_t do_space(chunk_t *first, chunk_t *second, bool complete = true)
          log_rule("sp_enum_assign");
          return(cpd.settings[UO_sp_enum_assign].a);
       }
+      if ((cpd.settings[UO_sp_assign_default].a != AV_IGNORE) &&
+          (second->parent_type == CT_FUNC_PROTO))
+      {
+         log_rule("sp_assign_default");
+         return(cpd.settings[UO_sp_assign_default].a);
+      }
       if (cpd.settings[UO_sp_before_assign].a != AV_IGNORE)
       {
          log_rule("sp_before_assign");
@@ -433,6 +439,12 @@ argval_t do_space(chunk_t *first, chunk_t *second, bool complete = true)
          }
          log_rule("sp_enum_assign");
          return(cpd.settings[UO_sp_enum_assign].a);
+      }
+      if ((cpd.settings[UO_sp_assign_default].a != AV_IGNORE) &&
+          (first->parent_type == CT_FUNC_PROTO))
+      {
+         log_rule("sp_assign_default");
+         return(cpd.settings[UO_sp_assign_default].a);
       }
       if (cpd.settings[UO_sp_after_assign].a != AV_IGNORE)
       {
