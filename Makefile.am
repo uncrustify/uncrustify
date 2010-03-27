@@ -13,7 +13,7 @@ TESTS = run_tests.sh
 
 EXTRA_DIST = scripts run_tests.sh make_token_names.sh $(pkgdata_DATA) \
 	tests/*.test tests/*.sh tests/*.py tests/config tests/input \
-	tests/output win32 uncrustify.xcodeproj osx
+	tests/output win32 uncrustify.xcodeproj osx make_win32.sh documentation
 
 check-local:
 

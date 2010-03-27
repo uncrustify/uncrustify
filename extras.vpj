@@ -76,7 +76,6 @@
 					<F N="documentation/htdocs/examples/example.c"/>
 				</Folder>
 				<F N="documentation/htdocs/ben.cfg.txt"/>
-				<F N="documentation/htdocs/ChangeLog"/>
 				<F N="documentation/htdocs/config.txt"/>
 				<F N="documentation/htdocs/configuration.txt"/>
 				<F N="documentation/htdocs/default.cfg"/>
@@ -121,6 +120,7 @@
 		<F N="AUTHORS"/>
 		<F N="autogen.sh"/>
 		<F N="BUGS"/>
+		<F N="ChangeLog"/>
 		<F N="configure"/>
 		<F N="configure.in"/>
 		<F N="COPYING"/>

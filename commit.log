@@ -1,0 +1,509 @@
+commit bf91a0e8452d67043c1f173d4c3891ee5e28ac44
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Mar 27 16:10:56 2010 -0500
+
+    Add sp_assign_default to control spacing around '=' in a prototype.
+
+commit 6a2668606926b8c5e11317438e5b5264578bed91
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Mar 27 15:52:28 2010 -0500
+
+    Improve test for nl_func_type_name
+
+commit f85b85ca8d5eb24316dbab512bbbf6467b5ed280
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Mar 27 15:46:53 2010 -0500
+
+    Improve align_oc_msg_colon_span with nested messages.
+
+commit 1eebba4b93bdb9e76ee0beff1c5c710b52025215
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Mar 27 15:24:56 2010 -0500
+
+    sp_after_oc_at_sel_parens should not change space if followed by a
+    square close.
+
+commit 18d8d2bba441dc81cf8f494bf3e6b689edebbe52
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Mar 27 15:10:49 2010 -0500
+
+    Do a better job of labeling ObjC message statements.
+    Examples:
+    [class func: val name1: val1 name2: val2];
+    [class func: val : val1 : val2];
+
+commit f099fadff2e38c28d2e0ad3d9b897dee19dc76f4
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Mar 27 14:07:39 2010 -0500
+
+    Insert function comment after the access specifier.
+
+commit e2fd5395a37392dd0ec26a0acc402aee2fe28794
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Fri Mar 26 17:43:10 2010 -0500
+
+    Detect the C# using statement - using (xx) { }
+    Add mod_full_brace_using and nl_using_brace
+
+commit 62a453f2c01f3a4938025c5750c485e4271c3310
+Author: Emmanuel Christophe <emmanuel.christophe@gmail.com>
+Date:   Tue Mar 23 22:52:37 2010 +0800
+
+    Add test for indent_braces_no... options
+
+commit bd5f91f005dca20403680000b89b3fcbf5cb14d0
+Author: Emmanuel Christophe <emmanuel.christophe@gmail.com>
+Date:   Mon Mar 22 22:18:09 2010 +0800
+
+    Add indent_braces_no_struct option
+
+commit feec2a8fd4572f81b5a2f38ce91a1237255885d4
+Author: Emmanuel Christophe <emmanuel.christophe@gmail.com>
+Date:   Sat Mar 20 23:44:28 2010 +0800
+
+    Add indent_braces_no_class option
+
+commit b2354a0a0980bb827745372310b476b6c46afa45
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Mon Mar 8 19:29:00 2010 -0600
+
+    Add a script to build a win32 release zip on linux
+
+commit faec052dcf9bfbed8788a63e283917ef7901eadf
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Mon Mar 8 17:52:20 2010 -0600
+
+    Use PRIx64 to show the flags, like is done everywhere else.
+
+commit 42b1ed31999d4926188acf881912b49958282dac
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Fri Feb 19 21:55:58 2010 -0600
+
+    Add sp_inside_oc_at_sel_parens and sp_after_oc_at_sel_parens.
+    Make some @selector options also apply to @protocol().
+    Set the PCF_IN_OC_MSG flag instead of changing the parent of everything
+    inside a OC msg.
+
+commit b2bc11feb5717f553e16a074dee90195b3752bfb
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Fri Feb 19 21:21:01 2010 -0600
+
+    Step back to a non-inserted token to get the backslash position.
+    Fixes issue 2935688.
+
+commit 58d7dbd5d9a88ecaf47e9f6d17e7988f26a6491d
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Fri Feb 19 20:59:29 2010 -0600
+
+    Fix mod_full_paren_if_bool interactions with ternary conditional (a?b:c)
+    Fixes issue #2943323.
+
+commit 8909c9fc0c8f9f308c1ccef1bfc4cef5ce889d5d
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sun Jan 24 21:02:19 2010 -0600
+
+    Spelling: statment -> statement
+
+commit 5b4be42d368a2d8c049cd3361b1901649ec57c63
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Jan 16 12:30:24 2010 -0600
+
+    Fix incorrect indenting inside enums.
+    Bug 2930752.
+
+commit 10b633d6d50af6faf979953fd07f2aec5e0b7f6f
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Jan 9 11:09:56 2010 -0600
+
+    From: Mathieu Lacage
+    
+    Force uncrustify to respect the nl_func_leave_one_liners configuration
+    option for constructors and destructors.
+    
+    i.e., if nl_func_leave_one_liners=True:
+    
+    Foo::Foo() {}
+    
+    is left as-is.
+    
+    Without this patch, it is transformed into:
+    
+    Foo::Foo() {
+    }
+
+commit ba2bdf90a110bda22d5e865fadfd9db9afd2f74c
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Tue Jan 5 21:16:19 2010 -0600
+
+    Don't mess with the position of a backslash-newline in a comment, unless in a preprocessor.
+
+commit 0578f7c5b5202481756c16bbd480ab4787f80961
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Thu Dec 31 13:33:18 2009 -0600
+
+    Change 'newline' to 'blank line' in some descriptions.
+    Clarify an option description. -- Thanks Ronan (rdan)
+
+commit 921c1ca41e18772b1e70d90dc822508e2993221c
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Thu Dec 31 13:31:35 2009 -0600
+
+    Add indent_first_bool_expr - Thanks to Ronan (rdan)
+
+commit e042712e0a623dd7db2df136fca4c391aa0fd9a2
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Thu Dec 31 13:15:55 2009 -0600
+
+    Update the vpj file
+
+commit 0796009c9f506159d19d12440595e6c9786b5d65
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Thu Dec 31 13:15:42 2009 -0600
+
+    Extend the pos_xxx options to have xx_break and xx_force options.
+    xx_break adds a line break is one wasn't present and xx_force removes extra
+    newlines so that there is either one before or one after.
+
+commit 49f7ce6dbdcf48aea20c114aaadc24afa4aca45a
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Wed Dec 30 16:51:01 2009 -0600
+
+    Update template test for the latest fix.
+
+commit a9df57a0d1d2849d01121e04ecd7ffa104ebaac7
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Wed Dec 30 16:43:29 2009 -0600
+
+    Allow a function prototype to be wrapped in a function call at the top level.
+    
+    #define MACRO(a) a
+    MACRO(void foo(void));
+
+commit 38870ae909a97a4e6cc065437c23da70f977a678
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Wed Dec 30 14:15:48 2009 -0600
+
+    Indent ObjC msg declarations that span more than one line.
+
+commit 6a360a75b81c6e5e821d4711b0e2e8d375e7afa7
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Wed Dec 30 13:30:47 2009 -0600
+
+    Add option: align_oc_decl_colon
+
+commit d29556fc7ae373ed860842edee8d99163dbcf084
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Wed Dec 30 09:15:01 2009 -0600
+
+    Add a freebsd style test
+
+commit 096e5c1ce1cbf7df35146012ccce41e1f176e89d
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Wed Dec 30 09:07:11 2009 -0600
+
+    Add indent_continue support to variable definition indenting.
+
+commit 09b97918833807fc7be2bc737d21ff4e98466ff6
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Wed Dec 30 08:50:33 2009 -0600
+
+    Update test results for recent change in nl_else_brace with regards to
+    virtual braces.
+
+commit 74a1427b4c48c8cebeb192b635a184a5b7be941b
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Wed Dec 30 08:47:59 2009 -0600
+
+    In if/for/while/switch/do/else statements, if a newline was added around the
+    vbrace open, also add one around the vbrace close.
+
+commit 098fc1598fac6ea19b2328502dcdc919223352a6
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Wed Dec 30 08:46:52 2009 -0600
+
+    newline_add_before() and newline_add_after() should ignore virtual braces
+    when checking to see if there is already a newline present.
+
+commit 541ca14b9226aad5184ebffba9ee463857ce0afc
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Wed Dec 30 08:45:58 2009 -0600
+
+    New option: nl_after_vbrace_close
+
+commit cf53884b8a5b066aba1f5d82995eb7b2162337d6
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Wed Dec 30 08:03:10 2009 -0600
+
+    align_same_func_call_params: only align function calls that are right after
+    a newline.
+
+commit 7e0dd190729658e3db8a64c408d83c7cac3fbe1d
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Wed Dec 30 07:52:12 2009 -0600
+
+    If an exact option name match doesn't work, try comparing only alphanumeric characters.
+    This will accept options that were copied from SF's broken web interface that have
+    the underscore characters stripped.
+
+commit d66f78b95905e2680e378fe4dab5e68e1771fc30
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Tue Dec 29 15:00:01 2009 -0600
+
+    Enhance one-liner tests
+
+commit 3b8acea8a478238db3b27290efbace5fd9b19a86
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Tue Dec 29 14:46:38 2009 -0600
+
+    Make nl_if_brace, nl_else_brace, etc, able to insert a newline between the
+    close paren and the "a++" in "if (foo) a++;".
+    Will not do that if leave_xx_one_liners is true.
+
+commit bec510f9ce24a89c25df786266fdfce75f8abec9
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Tue Dec 29 14:29:16 2009 -0600
+
+    Mark virtual brace one-liners
+
+commit 1e86a51400bd99f94b120726f403f10e0f9996e8
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Tue Dec 29 13:58:51 2009 -0600
+
+    Mention that cmt_indent_multi disables keyword substitution in multi-line comments.
+
+commit e63d84a58f7f4f7e13553e5c49d011a5e2866d6f
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Tue Dec 29 13:42:17 2009 -0600
+
+    Add tests for indent_var_def_cont
+
+commit 399530476d7280b7d5888dbae5a8a6a8979fa784
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Tue Dec 29 13:35:10 2009 -0600
+
+    Use an empty config instead of /dev/null
+
+commit aa5a2135aded6a19e7995b5072db6a18097dde73
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Tue Dec 29 13:27:24 2009 -0600
+
+    Add indent_var_def_cont and indent 'a' by one tabstop in 'int \n a, b, c;'
+
+commit e0cae88fb3559e4a60a7e22fee9d9ff67e03ac99
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Mon Dec 28 13:31:00 2009 -0600
+
+    Add option indent_var_def_cont
+
+commit f7891ea8ec39151cc23f52a22de6322c0e370daa
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Tue Dec 29 13:24:02 2009 -0600
+
+    Variable definitions cannot appear in an enum
+
+commit 8d72d2210ef3c9fd080cffcb26f080e55b32d6a5
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Tue Dec 29 13:23:13 2009 -0600
+
+    Split the flag PCF_IN_ENUM, creating PCF_IN_STRUCT
+
+commit d55e99d732915ef38b2709b95dd7d00235bd3611
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Tue Dec 29 13:22:03 2009 -0600
+
+    Extend the flags variable to 64 bits
+
+commit 5c81851d01649f53ded1353d4471a5df27e4090d
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Tue Dec 29 12:46:03 2009 -0600
+
+    Fix language check for PAWN and D enums.
+
+commit 992447afb354e34cd5b3cd3224c927fde113d6d9
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Mon Dec 28 11:31:03 2009 -0600
+
+    Expand test to cover nl_func_type_name with constructor variables.
+
+commit 7a3fe5a03884e7928d1cd5d3452d81f18b61490a
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Mon Dec 28 11:29:54 2009 -0600
+
+    The fparen parent was being set too early, breaking proper handling of 'constructor' variables.
+
+commit 4d1c3f01cc6f056c8e4860145c8380ebf83ecc73
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Thu Dec 24 11:27:48 2009 -0600
+
+    Add LANG_CPP to 'foreach'
+
+commit 82b1ec3b5a705552b175fc80ee8d6c56e0edbd8c
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Wed Dec 23 21:10:27 2009 -0600
+
+    Fix aligning '<<'. The code was too clever.
+
+commit 70363eb72ce236de774a89af0ca54195167078c4
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Wed Dec 23 20:42:10 2009 -0600
+
+    Make sp_before_dc handle any keyword before '::'.
+
+commit b18e56af0cdb1c312c30b7c84b449a3f9ea94d04
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Wed Dec 23 20:29:05 2009 -0600
+
+    Fix off-by-one problem with align_right_cmt_gap.
+    Clarify what the option does.
+
+commit 3103fc2ff6163ba3c1b6bea0fe3c1f996d5946cc
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Tue Dec 22 22:04:06 2009 -0600
+
+    Fix marking of a destructor
+
+commit bae94e27a383b7dfcc35147cdb7815608dad4121
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Tue Dec 22 20:17:45 2009 -0600
+
+    Split out and handle the Objective C '@protocol'
+
+commit a856c5fd63c1fb946cfbea2ac07199efdd7aa812
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Tue Dec 22 19:01:19 2009 -0600
+
+    Don't change PAREN_CLOSE to OC_CLASS_EXT
+
+commit df905852d2661f230151da2e55c15282115537a6
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Tue Dec 8 20:57:38 2009 -0600
+
+    Makefile.in is required to build with MinGW.
+
+commit c65e73ddc886f296e106e976df4dd800d9aefef2
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Tue Dec 8 19:10:07 2009 -0600
+
+    Change include of windows_compat.h so that it builds under MinGW/MinSys on Windows
+
+commit 714500275add5b811d4bc0604f1748b394f59cef
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Dec 5 22:20:42 2009 -0600
+
+    Finish removal of d.tokenize.cpp
+
+commit d99335251ac8974585c4e4763c1b724bc1b408d6
+Merge: 3d40b0f 78d5e7c
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Dec 5 22:18:20 2009 -0600
+
+    Merge branch 'freebsd'
+
+commit 3d40b0f3ebe93eb333ca4ac6bb2f3dde03d37d93
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Dec 5 22:10:34 2009 -0600
+
+    Update tests to reflect comment output improvements.
+
+commit b427544b4662856ffc0625a34e9e4690e4fe0077
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Dec 5 22:15:54 2009 -0600
+
+    Add indent_cmt_with_tabs and rework the comment output code.
+
+commit 514d70eb81e80bc92f227a589a1e180437b73fdb
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Dec 5 21:59:54 2009 -0600
+
+    Clean up some aligning
+
+commit 6cb7a7ed7b759ff69846a34958213a212404c93d
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Dec 5 20:26:21 2009 -0600
+
+    Fix bug in align_tab_column()
+
+commit 8c63eb3ccb7b811bbfa3854d369407c2f15de511
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Dec 5 18:25:43 2009 -0600
+
+    Filter out trailing spaces
+
+commit 78d5e7cbbdaef7aa3945885ccc69bc5bf8378323
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Dec 5 22:10:34 2009 -0600
+
+    Update tests to reflect comment output improvements.
+
+commit 51c1f51f86cc4f79f8b0f050122035ec5599ddfd
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Dec 5 22:09:35 2009 -0600
+
+    Add indent_cmt_with_tabs and rework the comment output code.
+
+commit fe7e8204856a591cb89939619badf93489d4be2a
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Dec 5 21:59:54 2009 -0600
+
+    Clean up some aligning
+
+commit a5b683c4f644a9ba2ba5e9cf367903fd87eafb54
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Dec 5 20:26:21 2009 -0600
+
+    Fix bug in align_tab_column()
+
+commit 622bb1cf4531bff6028e78de83ff367176cb9688
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Dec 5 18:25:43 2009 -0600
+
+    Filter out trailing spaces
+
+commit 5e60ea5aa84dc60a3221026538d14995d8fb3b58
+Merge: 837f579 72754d8
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Dec 5 12:29:03 2009 -0600
+
+    Merge branch 'master' into freebsd
+
+commit 72754d8ce612b1f2e79a301bacd84456a410112a
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Dec 5 09:43:57 2009 -0600
+
+    Spelling corrections, thanks to Bill Cox
+
+commit 41086eb04d33d9c0589bdb9bf4d0c4b3e62692f7
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Dec 5 09:40:12 2009 -0600
+
+    Add more patterns to .gitignore
+
+commit 837f579390c814f5969cc7fb539d14ead000a72b
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Dec 5 09:38:44 2009 -0600
+
+    save off work in the freebsd branch
+
+commit 2d39c44b4f8600600586213ae65584808c16ad14
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Nov 28 20:31:37 2009 -0600
+
+    Add a start to the FreeBSD style (not yet perfect)
+
+commit c28ffcaeec772f85770e61c4ad09e4c994393272
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Nov 28 20:18:03 2009 -0600
+
+    Add a note that the old K&R function declarations are not handled.
+
+commit 0bbae411beec75b78d368727aea2bdc61002d9be
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Nov 28 20:17:25 2009 -0600
+
+    Add option indent_continue
+
+commit ae7a414ff4f153d3aea6149b01dcfc412c3f4a4a
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Fri Nov 27 21:54:47 2009 -0600
+
+    Update release step.

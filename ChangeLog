@@ -1,4 +1,23 @@
 
+Change highlights in uncrustify-0.56 (27 Mar 2010)
+-------------------------------------------------------------------------------
+New options:
+ - indent_continue
+ - indent_cmt_with_tabs
+ - indent_first_bool_expr
+ - indent_braces_no_class
+ - indent_braces_no_struct
+ - indent_var_def_cont
+ - sp_assign_default
+ - sp_after_oc_at_sel_parens
+ - sp_inside_oc_at_sel_parens
+ - align_oc_decl_colon
+ - nl_after_vbrace_close
+ - nl_using_brace
+ - mod_full_brace_using
+
+See commit.log for details.
+
 
 Change highlights in uncrustify-0.55 (27 Nov 2009)
 -------------------------------------------------------------------------------
