@@ -19,3 +19,9 @@ for (i = 0; i <[a count]; i++) {
 	}
 }
 
+*outError = [NSError errorWithDomain:NSCocoaErrorDomain
+code:0
+userInfo:[NSDictionary
+dictionaryWithObject:@"Some Description"
+forKey:NSLocalizedDescriptionKey]];
+

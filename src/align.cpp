@@ -26,7 +26,8 @@ static void align_func_proto(int span);
 static void align_oc_msg_spec(int span);
 static void align_typedefs(int span);
 static void align_left_shift(void);
-static void align_oc_msg_colon(int span);
+static void align_oc_msg_colons();
+static void align_oc_msg_colon(chunk_t *so);
 static void align_oc_decl_colon(void);
 
 
@@ -248,7 +249,7 @@ void align_all(void)
 
    if (cpd.settings[UO_align_oc_msg_colon_span].n > 0)
    {
-      align_oc_msg_colon(cpd.settings[UO_align_oc_msg_colon_span].n);
+      align_oc_msg_colons();
    }
 
    if (cpd.settings[UO_align_oc_decl_colon].b)
@@ -1784,11 +1785,15 @@ static void align_left_shift(void)
 
 
 /**
- * Aligns OC message
+ * Aligns an OC message
+ *
+ * @param so   the square open of the message
+ * @param span the span value
  */
-static void align_oc_msg_colon(int span)
+static void align_oc_msg_colon(chunk_t *so)
 {
-   chunk_t    *pc = chunk_get_head();
+   int        span = cpd.settings[UO_align_oc_msg_colon_span].n;
+   chunk_t    *pc;
    chunk_t    *tmp;
    AlignStack cas;   /* for the colons */
    AlignStack nas;   /* for the parameter tag */
@@ -1797,54 +1802,67 @@ static void align_oc_msg_colon(int span)
    int        lcnt;  /* line count with no colon for span */
    bool       has_colon;
 
-   while (pc != NULL)
+
+   nas.Reset();
+   nas.m_right_align = true;
+
+   cas.Start(span);
+
+   level = so->level;
+   pc    = chunk_get_next_ncnl(so, CNAV_PREPROC);
+
+   did_line  = false;
+   has_colon = false;
+   lcnt      = 0;
+
+   while ((pc != NULL) && (pc->level > level))
    {
-      if ((pc->type != CT_SQUARE_OPEN) || (pc->parent_type != CT_OC_MSG))
+      if (pc->level > (level + 1))
       {
-         pc = chunk_get_next(pc);
-         continue;
+         /* do nothing */
       }
-
-      nas.Reset();
-      nas.m_right_align = true;
-
-      cas.Start(span);
-
-      level = pc->level;
-      pc    = chunk_get_next_ncnl(pc, CNAV_PREPROC);
-
-      did_line  = false;
-      has_colon = false;
-      lcnt      = 0;
-
-      while ((pc != NULL) && (pc->level > level))
+      else if (chunk_is_newline(pc))
       {
-         if (chunk_is_newline(pc))
+         if (!has_colon)
          {
-            if (!has_colon)
-            {
-               ++lcnt;
-            }
-            did_line  = false;
-            has_colon = !has_colon;
+            ++lcnt;
          }
-         else if (!did_line && (lcnt - 1 < span) && (pc->type == CT_OC_COLON))
-         {
-            has_colon = true;
-            cas.Add(pc);
-            tmp = chunk_get_prev(pc);
-            if ((tmp != NULL) &&
-                ((tmp->type == CT_OC_MSG_FUNC) ||
-                 (tmp->type == CT_OC_MSG_NAME)))
-            {
-               nas.Add(tmp);
-            }
-            did_line = true;
-         }
-         pc = chunk_get_next(pc, CNAV_PREPROC);
+         did_line  = false;
+         has_colon = !has_colon;
       }
-      nas.End();
-      cas.End();
+      else if (!did_line && (lcnt - 1 < span) && (pc->type == CT_OC_COLON))
+      {
+         has_colon = true;
+         cas.Add(pc);
+         tmp = chunk_get_prev(pc);
+         if ((tmp != NULL) &&
+             ((tmp->type == CT_OC_MSG_FUNC) ||
+              (tmp->type == CT_OC_MSG_NAME)))
+         {
+            nas.Add(tmp);
+         }
+         did_line = true;
+      }
+      pc = chunk_get_next(pc, CNAV_PREPROC);
+   }
+   nas.End();
+   cas.End();
+}
+
+
+/**
+ * Aligns OC messages
+ */
+static void align_oc_msg_colons()
+{
+   chunk_t *pc;
+
+   for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next(pc))
+   {
+      if ((pc->type == CT_SQUARE_OPEN) && (pc->parent_type == CT_OC_MSG))
+      {
+         align_oc_msg_colon(pc);
+      }
    }
 }
 

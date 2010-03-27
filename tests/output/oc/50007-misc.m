@@ -18,3 +18,9 @@
    }
 }
 
+*outError = [NSError errorWithDomain: NSCocoaErrorDomain
+                                code: 0
+                            userInfo: [NSDictionary
+                        dictionaryWithObject: @"Some Description"
+                                      forKey: NSLocalizedDescriptionKey]];
+
