@@ -1826,6 +1826,11 @@ void combine_labels(void)
                   cur->type  = CT_LABEL;
                   next->type = CT_LABEL_COLON;
                }
+               else if (next->flags & PCF_IN_FCN_CALL)
+               {
+                  /* Must be a macro thingy, assume some sort of label */
+                  next->type = CT_LABEL_COLON;
+               }
                else
                {
                   next->type = CT_BIT_COLON;
