@@ -217,6 +217,7 @@ enum uncrustify_options
 
    UO_sp_after_comma,           // space after ','
    UO_sp_before_comma,          // space before ','
+   UO_sp_paren_comma,
 
    UO_sp_before_ellipsis,       // space before '...'
 

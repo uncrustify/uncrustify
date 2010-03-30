@@ -279,6 +279,8 @@ void register_options(void)
                   "Add or remove space after ','");
    unc_add_option("sp_before_comma", UO_sp_before_comma, AT_IARF,
                   "Add or remove space before ','");
+   unc_add_option("sp_paren_comma", UO_sp_paren_comma, AT_IARF,
+                  "Add or remove space between an open paren and comma: '(,' vs '( ,'\n");
    unc_add_option("sp_before_ellipsis", UO_sp_before_ellipsis, AT_IARF,
                   "Add or remove space before the variadic '...' when preceded by a non-punctuator");
    unc_add_option("sp_after_class_colon", UO_sp_after_class_colon, AT_IARF,
@@ -1684,6 +1686,7 @@ void set_option_defaults(void)
    cpd.settings[UO_indent_label].n         = 1;
    cpd.settings[UO_indent_access_spec].n   = 1;
    cpd.settings[UO_sp_before_comma].a      = AV_REMOVE;
+   cpd.settings[UO_sp_paren_comma].a       = AV_FORCE;
    cpd.settings[UO_string_escape_char].n   = '\\';
    cpd.settings[UO_sp_not].a               = AV_REMOVE;
    cpd.settings[UO_sp_inv].a               = AV_REMOVE;
