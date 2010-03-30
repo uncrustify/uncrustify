@@ -29,6 +29,15 @@ static bool should_add_braces(chunk_t *vbopen);
 
 void do_braces(void)
 {
+   if (((cpd.settings[UO_mod_full_brace_if].a |
+         cpd.settings[UO_mod_full_brace_do].a |
+         cpd.settings[UO_mod_full_brace_for].a |
+         cpd.settings[UO_mod_full_brace_using].a |
+         cpd.settings[UO_mod_full_brace_while].a) & AV_REMOVE) != 0)
+   {
+      examine_braces();
+   }
+
    /* convert vbraces if needed */
    if (((cpd.settings[UO_mod_full_brace_if].a |
          cpd.settings[UO_mod_full_brace_do].a |
@@ -38,15 +47,6 @@ void do_braces(void)
          cpd.settings[UO_mod_full_brace_while].a) & AV_ADD) != 0)
    {
       convert_vbrace_to_brace();
-   }
-
-   if (((cpd.settings[UO_mod_full_brace_if].a |
-         cpd.settings[UO_mod_full_brace_do].a |
-         cpd.settings[UO_mod_full_brace_for].a |
-         cpd.settings[UO_mod_full_brace_using].a |
-         cpd.settings[UO_mod_full_brace_while].a) & AV_REMOVE) != 0)
-   {
-      examine_braces();
    }
 
    if (cpd.settings[UO_mod_full_brace_if_chain].b)
