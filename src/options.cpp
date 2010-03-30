@@ -241,6 +241,8 @@ void register_options(void)
                   "Add or remove space between '<>' and '(' as found in 'new List<byte>();'");
    unc_add_option("sp_angle_word", UO_sp_angle_word, AT_IARF,
                   "Add or remove space between '<>' and a word as in 'List<byte> m;'");
+   unc_add_option("sp_angle_shift", UO_sp_angle_shift, AT_IARF,
+                  "Add or remove space between '>' and '>' in '>>' (template stuff C++/C# only). Default=Add");
    unc_add_option("sp_before_sparen", UO_sp_before_sparen, AT_IARF,
                   "Add or remove space before '(' of 'if', 'for', 'switch', and 'while'");
    unc_add_option("sp_inside_sparen", UO_sp_inside_sparen, AT_IARF,
@@ -1708,6 +1710,7 @@ void set_option_defaults(void)
    cpd.settings[UO_indent_align_assign].b  = true;
    cpd.settings[UO_sp_pp_concat].a         = AV_ADD;
    cpd.settings[UO_sp_pp_stringify].a      = AV_ADD;
+   cpd.settings[UO_sp_angle_shift].a       = AV_ADD;
 }
 
 

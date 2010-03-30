@@ -474,6 +474,13 @@ argval_t do_space(chunk_t *first, chunk_t *second, bool complete = true)
       return(cpd.settings[UO_sp_before_squares].a);
    }
 
+   if ((cpd.settings[UO_sp_angle_shift].a != AV_IGNORE) &&
+       (first->type == CT_ANGLE_CLOSE) && (second->type == CT_ANGLE_CLOSE))
+   {
+      log_rule("sp_angle_shift");
+      return(cpd.settings[UO_sp_angle_shift].a);
+   }
+
    /* spacing around template < > stuff */
    if ((first->type == CT_ANGLE_OPEN) ||
        (second->type == CT_ANGLE_CLOSE))
@@ -1398,6 +1405,8 @@ void space_text(void)
          int av = do_space(pc, next, false);
          if (pc->flags & PCF_FORCE_SPACE)
          {
+            LOG_FMT(LSPACE, "Forcing space between '%.*s' and '%.*s'\n",
+                    pc->len, pc->str, next->len, next->str);
             av |= AV_ADD;
          }
          switch (av)

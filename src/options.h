@@ -205,6 +205,7 @@ enum uncrustify_options
    UO_sp_after_angle,           // space after  '<>', as in '<class T>'
    UO_sp_angle_paren,           // space between '<>' and '(' in "a = new List<byte>();"
    UO_sp_angle_word,            // space between '<>' and a word in "List<byte> a;"
+   UO_sp_angle_shift,           // '> >' vs '>>'
 
    UO_sp_before_square,         // space before single '['
    UO_sp_before_squares,        // space before '[]', as in 'byte []'
