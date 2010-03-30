@@ -4064,6 +4064,10 @@ static void handle_wrap(chunk_t *pc)
    chunk_t *clp  = chunk_get_next(name);
    char    *new_name;
 
+   argval_t pav = (pc->type == CT_FUNC_WRAP) ?
+                  cpd.settings[UO_sp_func_call_paren].a :
+                  cpd.settings[UO_sp_cpp_cast_paren].a;
+
    argval_t av = (pc->type == CT_FUNC_WRAP) ?
                  cpd.settings[UO_sp_inside_fparen].a :
                  cpd.settings[UO_sp_inside_paren_cast].a;
@@ -4076,10 +4080,11 @@ static void handle_wrap(chunk_t *pc)
       new_name = new char[pc->len + 2 + name->len + 2 + 1]; /* + 1 for '\0' */
       if (new_name != NULL)
       {
+         const char *psp = (pav & AV_ADD) ? " " : "";
          const char *fsp = (av & AV_ADD) ? " " : "";
 
-         sprintf(new_name, "%.*s(%s%.*s%s)",
-                 pc->len, pc->str, fsp, name->len, name->str, fsp);
+         sprintf(new_name, "%.*s%s(%s%.*s%s)",
+                 pc->len, pc->str, psp, fsp, name->len, name->str, fsp);
          pc->type   = (pc->type == CT_FUNC_WRAP) ? CT_FUNCTION : CT_TYPE;
          pc->str    = new_name;
          pc->len    = strlen(new_name);

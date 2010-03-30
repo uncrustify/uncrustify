@@ -608,7 +608,7 @@ argval_t do_space(chunk_t *first, chunk_t *second, bool complete = true)
       log_rule("sp_func_def_paren");
       return(cpd.settings[UO_sp_func_def_paren].a);
    }
-   if (first->type == CT_CPP_CAST)
+   if ((first->type == CT_CPP_CAST) || (first->type == CT_TYPE_WRAP))
    {
       log_rule("sp_cpp_cast_paren");
       return(cpd.settings[UO_sp_cpp_cast_paren].a);
