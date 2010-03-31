@@ -18,6 +18,66 @@
 static void check_template(chunk_t *start);
 
 
+/**
+ * Convert '>' + '>' into '>>'
+ * If we only have a single '>', then change it to CT_COMPARE.
+ */
+static chunk_t *handle_double_angle_close(chunk_t *pc)
+{
+   chunk_t *next = chunk_get_next(pc);
+
+   if (next != NULL)
+   {
+      if ((pc->type == CT_ANGLE_CLOSE) &&
+          (next->type == CT_ANGLE_CLOSE) &&
+          (pc->parent_type == CT_NONE) &&
+          (memcmp(pc->str, ">>", 2) == 0) &&
+          (next->parent_type == CT_NONE))
+      {
+         pc->len++;
+         pc->type = CT_ARITH;
+         pc->orig_col_end = next->orig_col_end;
+
+         chunk_t *tmp = chunk_get_next_ncnl(next);
+         chunk_del(next);
+         next = tmp;
+      }
+      else
+      {
+         pc->type = CT_COMPARE;
+      }
+   }
+   return(next);
+}
+
+
+static void split_off_angle_close(chunk_t *pc)
+{
+   chunk_t nc;
+
+   nc = *pc;
+
+   const chunk_tag_t *ct;
+
+   ct = find_punctuator(pc->str + 1, cpd.lang_flags);
+   if (ct == NULL)
+   {
+      return;
+   }
+
+   pc->len = 1;
+   pc->orig_col_end = pc->orig_col + 1;
+   pc->type = CT_ANGLE_CLOSE;
+
+   nc.type = ct->type;
+   nc.str++;
+   nc.len--;
+   nc.orig_col++;
+   nc.column++;
+   chunk_add_after(&nc, pc);
+}
+
+
 void tokenize_cleanup(void)
 {
    chunk_t *pc   = chunk_get_head();
@@ -153,7 +213,7 @@ void tokenize_cleanup(void)
          }
          else
          {
-            pc->type = CT_COMPARE;
+            next = handle_double_angle_close(pc);
          }
       }
 
@@ -207,6 +267,7 @@ void tokenize_cleanup(void)
        * Usually the next item is part of the operator.
        * In a few cases the next few tokens are part of it:
        *  operator +       - common case
+       *  operator >>      - need to combine '>' and '>'
        *  operator ()
        *  operator []      - already converted to TSQUARE
        *  operator new []
@@ -231,6 +292,14 @@ void tokenize_cleanup(void)
                chunk_del(tmp);
                next->orig_col_end += 1;
             }
+         }
+         else if ((next->type == CT_ANGLE_CLOSE) &&
+                  (memcmp(next->str, ">>", 2) == 0))
+         {
+            next->len++;
+            next->orig_col_end++;
+            next->type = CT_OPERATOR_VAL;
+            chunk_del(chunk_get_next(next));
          }
          else if (next->flags & PCF_PUNCTUATOR)
          {
@@ -593,21 +662,6 @@ void tokenize_cleanup(void)
          }
       }
 
-      /* Convert '>' + '>' into '>>' */
-      if ((cpd.lang_flags & LANG_CS) &&
-          (pc->type == CT_ANGLE_CLOSE) &&
-          (next->type == CT_ANGLE_CLOSE) &&
-          (pc->parent_type == CT_NONE) &&
-          ((pc->orig_col + pc->len) == next->orig_col) &&
-          (next->parent_type == CT_NONE))
-      {
-         pc->len++;
-         pc->type = CT_ARITH;
-         tmp      = chunk_get_next_ncnl(next);
-         chunk_del(next);
-         next = tmp;
-      }
-
       /* Change 'default(' into a sizeof-like statement */
       if ((cpd.lang_flags & LANG_CS) &&
           (pc->type == CT_DEFAULT) &&
@@ -666,6 +720,13 @@ static void check_template(chunk_t *start)
            pc = chunk_get_next_ncnl(pc, CNAV_PREPROC))
       {
          LOG_FMT(LTEMPL, " [%s,%d]", get_token_name(pc->type), level);
+
+         if ((pc->str[0] == '>') && (pc->len > 1))
+         {
+            LOG_FMT(LTEMPL, " {split '%.*s' at %d:%d}",
+                    pc->len, pc->str, pc->orig_line, pc->orig_col);
+            split_off_angle_close(pc);
+         }
 
          if (chunk_is_str(pc, "<", 1))
          {
@@ -742,17 +803,28 @@ static void check_template(chunk_t *start)
       {
          LOG_FMT(LTEMPL, " [%s,%d]", get_token_name(pc->type), num_tokens);
 
+         if ((pc->str[0] == '>') && (pc->len > 1))
+         {
+            LOG_FMT(LTEMPL, " {split '%.*s' at %d:%d}",
+                    pc->len, pc->str, pc->orig_line, pc->orig_col);
+            split_off_angle_close(pc);
+         }
+
          if (chunk_is_str(pc, "<", 1))
          {
             tokens[num_tokens++] = CT_ANGLE_OPEN;
          }
          else if (chunk_is_str(pc, ">", 1))
          {
-            if (--num_tokens <= 0)
+            if ((num_tokens > 0) && (tokens[num_tokens - 1] == CT_PAREN_OPEN))
+            {
+               handle_double_angle_close(pc);
+            }
+            else if (--num_tokens <= 0)
             {
                break;
             }
-            if (tokens[num_tokens] != CT_ANGLE_OPEN)
+            else if (tokens[num_tokens] != CT_ANGLE_OPEN)
             {
                /* unbalanced parens */
                break;
