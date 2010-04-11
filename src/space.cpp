@@ -325,10 +325,11 @@ argval_t do_space(chunk_t *first, chunk_t *second, bool complete = true)
    }
    if (second->type == CT_COMMA)
    {
-      if (first->type == CT_PAREN_OPEN)
+      if ((first->type == CT_PAREN_OPEN) &&
+          (cpd.settings[UO_sp_paren_comma].a != AV_IGNORE))
       {
          log_rule("sp_paren_comma");
-         return(AV_FORCE);
+         return(cpd.settings[UO_sp_paren_comma].a);
       }
       log_rule("sp_before_comma");
       return(cpd.settings[UO_sp_before_comma].a);
