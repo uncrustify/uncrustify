@@ -299,6 +299,9 @@ sp_angle_paren                           { Ignore, Add, Remove, Force }
 sp_angle_word                            { Ignore, Add, Remove, Force }
   Add or remove space between '<>' and a word as in 'List<byte> m;'
 
+sp_angle_shift                           { Ignore, Add, Remove, Force }
+  Add or remove space between '>' and '>' in '>>' (template stuff C++/C# only). Default=Add
+
 sp_before_sparen                         { Ignore, Add, Remove, Force }
   Add or remove space before '(' of 'if', 'for', 'switch', and 'while'
 
@@ -355,6 +358,10 @@ sp_after_comma                           { Ignore, Add, Remove, Force }
 
 sp_before_comma                          { Ignore, Add, Remove, Force }
   Add or remove space before ','
+
+sp_paren_comma                           { Ignore, Add, Remove, Force }
+  Add or remove space between an open paren and comma: '(,' vs '( ,'
+  
 
 sp_before_ellipsis                       { Ignore, Add, Remove, Force }
   Add or remove space before the variadic '...' when preceded by a non-punctuator
@@ -907,7 +914,7 @@ nl_func_decl_start                       { Ignore, Add, Remove, Force }
   Add or remove newline after '(' in a function declaration
 
 nl_func_decl_start_single                { Ignore, Add, Remove, Force }
-  Overrides nl_func_decl_start when there is only one paramter.
+  Overrides nl_func_decl_start when there is only one parameter.
 
 nl_func_decl_args                        { Ignore, Add, Remove, Force }
   Add or remove newline after each ',' in a function declaration
@@ -916,7 +923,7 @@ nl_func_decl_end                         { Ignore, Add, Remove, Force }
   Add or remove newline before the ')' in a function declaration
 
 nl_func_decl_end_single                  { Ignore, Add, Remove, Force }
-  Overrides nl_func_decl_end when there is only one paramter.
+  Overrides nl_func_decl_end when there is only one parameter.
 
 nl_func_decl_empty                       { Ignore, Add, Remove, Force }
   Add or remove newline between '()' in a function declaration.

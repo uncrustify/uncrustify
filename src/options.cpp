@@ -684,13 +684,13 @@ void register_options(void)
    unc_add_option("nl_func_decl_start", UO_nl_func_decl_start, AT_IARF,
                   "Add or remove newline after '(' in a function declaration");
    unc_add_option("nl_func_decl_start_single", UO_nl_func_decl_start_single, AT_IARF,
-                  "Overrides nl_func_decl_start when there is only one paramter.");
+                  "Overrides nl_func_decl_start when there is only one parameter.");
    unc_add_option("nl_func_decl_args", UO_nl_func_decl_args, AT_IARF,
                   "Add or remove newline after each ',' in a function declaration");
    unc_add_option("nl_func_decl_end", UO_nl_func_decl_end, AT_IARF,
                   "Add or remove newline before the ')' in a function declaration");
    unc_add_option("nl_func_decl_end_single", UO_nl_func_decl_end_single, AT_IARF,
-                  "Overrides nl_func_decl_end when there is only one paramter.");
+                  "Overrides nl_func_decl_end when there is only one parameter.");
    unc_add_option("nl_func_decl_empty", UO_nl_func_decl_empty, AT_IARF,
                   "Add or remove newline between '()' in a function declaration.");
    unc_add_option("nl_fdef_brace", UO_nl_fdef_brace, AT_IARF,
