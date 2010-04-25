@@ -20,6 +20,7 @@ class Timestamp
   : public IStreamable
 {
 public:
+
 /**
  * Default constructor.
  */
