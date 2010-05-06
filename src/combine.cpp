@@ -1676,10 +1676,13 @@ static void fix_typedef(chunk_t *start)
        (next->type != CT_STRUCT) &&
        (next->type != CT_UNION))
    {
-      /* We have just a regular typedef */
-      LOG_FMT(LTYPEDEF, "%s: regular typedef [%.*s] on line %d\n", __func__,
-              the_type->len, the_type->str, the_type->orig_line);
-      the_type->flags |= PCF_ANCHOR;
+      if (the_type != NULL)
+      {
+         /* We have just a regular typedef */
+         LOG_FMT(LTYPEDEF, "%s: regular typedef [%.*s] on line %d\n", __func__,
+                 the_type->len, the_type->str, the_type->orig_line);
+         the_type->flags |= PCF_ANCHOR;
+      }
       return;
    }
 
