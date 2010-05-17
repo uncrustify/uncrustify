@@ -5023,7 +5023,7 @@ rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 
-ac_config_files="$ac_config_files Makefile src/Makefile man/Makefile"
+ac_config_files="$ac_config_files Makefile src/Makefile man/Makefile man/uncrustify.1 src/uncrustify_version.h"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -5749,6 +5749,8 @@ do
     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
     "src/Makefile") CONFIG_FILES="$CONFIG_FILES src/Makefile" ;;
     "man/Makefile") CONFIG_FILES="$CONFIG_FILES man/Makefile" ;;
+    "man/uncrustify.1") CONFIG_FILES="$CONFIG_FILES man/uncrustify.1" ;;
+    "src/uncrustify_version.h") CONFIG_FILES="$CONFIG_FILES src/uncrustify_version.h" ;;
 
   *) as_fn_error "invalid argument: \`$ac_config_target'" "$LINENO" 5;;
   esac

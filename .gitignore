@@ -3,8 +3,11 @@
 src/uncrustify
 Makefile
 man/Makefile
+man/uncrustify.1
 src/Makefile
 src/stamp-h1
+src/uncrustify_version.h
+*.exe
 *~
 config.log
 config.status

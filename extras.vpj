@@ -108,7 +108,7 @@
 		</Folder>
 		<Folder Name="man">
 			<F N="man/Makefile.am"/>
-			<F N="man/uncrustify.1"/>
+			<F N="man/uncrustify.1.in"/>
 		</Folder>
 		<Folder Name="scripts">
 			<F N="scripts/check_options.py"/>
