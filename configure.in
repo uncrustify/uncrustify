@@ -46,5 +46,5 @@ AC_TRY_COMPILE([],
    AC_DEFINE(__func__, __FILE__,
          [Define to appropriate substitue if compiler doesnt have __func__])))
 
-AC_CONFIG_FILES([Makefile src/Makefile man/Makefile])
+AC_CONFIG_FILES([Makefile src/Makefile man/Makefile man/uncrustify.1 src/uncrustify_version.h])
 AC_OUTPUT
