@@ -1432,7 +1432,7 @@ void indent_text(void)
             if (!frm.pse[frm.pse_tos].non_vardef &&
                 (frm.pse[frm.pse_tos].type == CT_BRACE_OPEN))
             {
-               int tmp = indent_column;
+               tmp = indent_column;
                if (cpd.settings[UO_indent_var_def_blk].n > 0)
                {
                   tmp = cpd.settings[UO_indent_var_def_blk].n;

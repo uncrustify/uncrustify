@@ -317,8 +317,8 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
          }
       }
       if ((pc->type == CT_OC_BLOCK_CARET) &&
-          ((pc->parent_type != CT_OC_MSG_SPEC) ||
-           (pc->parent_type != CT_OC_MSG_DECL)))
+          (pc->parent_type != CT_OC_MSG_SPEC) &&
+          (pc->parent_type != CT_OC_MSG_DECL))
       {
          handle_oc_block(pc);
       }
@@ -612,8 +612,8 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
        (pc->parent_type != CT_C_CAST) &&
        ((pc->flags & PCF_IN_PREPROC) == 0) &&
        (!is_oc_block(pc)) &&
-       (((pc->parent_type != CT_OC_MSG_DECL) ||
-         (pc->parent_type != CT_OC_MSG_SPEC))) &&
+       (pc->parent_type != CT_OC_MSG_DECL) &&
+       (pc->parent_type != CT_OC_MSG_SPEC) &&
        chunk_is_str(pc, ")", 1) &&
        chunk_is_str(next, "(", 1))
    {
@@ -2774,9 +2774,9 @@ static void mark_function(chunk_t *pc)
        *  - function calls
        */
       chunk_t *ref = chunk_get_next_ncnl(paren_open);
-      chunk_t *tmp = ref;
       chunk_t *tmp2;
       bool    is_param = true;
+      tmp = ref;
       while (tmp != paren_close)
       {
          tmp2 = chunk_get_next_ncnl(tmp);
@@ -2833,7 +2833,7 @@ static void mark_function(chunk_t *pc)
 
    if (semi != NULL)
    {
-      tmp->parent_type = pc->type;
+      semi->parent_type = pc->type;
    }
 
    flag_parens(paren_open, PCF_IN_FCN_DEF, CT_FPAREN_OPEN, pc->type, false);
@@ -4106,7 +4106,7 @@ static void handle_wrap(chunk_t *pc)
                  pc->len, pc->str, psp, fsp, name->len, name->str, fsp);
          pc->type   = (pc->type == CT_FUNC_WRAP) ? CT_FUNCTION : CT_TYPE;
          pc->str    = new_name;
-         pc->len    = strlen(new_name);
+         pc->len    = (int)strlen(new_name);
          pc->flags |= PCF_OWN_STR;
 
          pc->orig_col_end = pc->orig_col + pc->len;
