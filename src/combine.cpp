@@ -2378,6 +2378,14 @@ static void mark_function(chunk_t *pc)
                break;
             }
          }
+         if ((tmp != NULL) && (pc->type != CT_FUNC_CALL))
+         {
+            /* Mark the return type */
+            while ((tmp = chunk_get_next_ncnl(tmp)) != pc)
+            {
+               make_type(tmp);
+            }
+         }
       }
    }
 
