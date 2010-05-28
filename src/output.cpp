@@ -308,6 +308,8 @@ void output_text(FILE *pfile)
    if (cpd.bom != NULL)
    {
       add_text_len(cpd.bom->str, cpd.bom->len);
+      cpd.did_newline = 1;
+      cpd.column      = 1;
    }
 
    for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next(pc))
