@@ -2967,6 +2967,14 @@ static void mark_class_ctor(chunk_t *start)
       return;
    }
 
+   next = chunk_get_next_ncnl(pclass, CNAV_PREPROC);
+   while ((next != NULL) &&
+          ((next->type == CT_TYPE) || (next->type == CT_WORD)))
+   {
+      pclass = next;
+      next   = chunk_get_next_ncnl(next, CNAV_PREPROC);
+   }
+
    chunk_t *pc   = chunk_get_next_ncnl(pclass, CNAV_PREPROC);
    int     level = pclass->brace_level + 1;
 
