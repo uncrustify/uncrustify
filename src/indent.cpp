@@ -580,12 +580,9 @@ void indent_text(void)
       {
          old_pse_tos = frm.pse_tos;
 
-         /* End anything that drops a level
-          * REVISIT: not sure about the preproc check
-          */
+         /* End anything that drops a level */
          if (!chunk_is_newline(pc) &&
              !chunk_is_comment(pc) &&
-             ((pc->flags & PCF_IN_PREPROC) == 0) &&
              (frm.pse[frm.pse_tos].level > pc->level))
          {
             indent_pse_pop(frm, pc);
