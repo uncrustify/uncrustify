@@ -3,7 +3,8 @@
 
 AC_PREREQ(2.59)
 AC_INIT(uncrustify, 0.56,,,http://uncrustify.sourceforge.net/)
-AM_INIT_AUTOMAKE([-Wall])
+enable_silent_rules=${enable_silent_rules-yes}
+AM_INIT_AUTOMAKE([-Wall silent-rules])
 AM_MAINTAINER_MODE
 AC_CONFIG_SRCDIR([src/uncrustify.cpp])
 AC_CONFIG_HEADER([src/config.h])

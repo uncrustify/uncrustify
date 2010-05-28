@@ -1,4 +1,4 @@
-AUTOMAKE_OPTIONS = foreign no-dependencies nostdinc
+AUTOMAKE_OPTIONS = foreign no-dependencies
 
 DISTCLEANFILES =
 CLEANFILES = *.o *~ *.bak

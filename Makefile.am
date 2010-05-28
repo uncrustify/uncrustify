@@ -1,6 +1,6 @@
 ## Process this file with automake to produce Makefile.in
 
-AUTOMAKE_OPTIONS=foreign no-dependencies
+AUTOMAKE_OPTIONS=foreign no-dependencies 1.11
 
 SUBDIRS = src man
 
