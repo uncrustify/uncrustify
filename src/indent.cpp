@@ -1095,6 +1095,10 @@ void indent_text(void)
             {
                if (!chunk_is_comment(next))
                {
+                  if (next->type == CT_SPACE)
+                  {
+                     next = chunk_get_next_nc(next);
+                  }
                   frm.pse[frm.pse_tos].indent = next->column;
                }
             }
