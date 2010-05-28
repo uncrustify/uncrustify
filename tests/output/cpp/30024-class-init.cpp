@@ -22,6 +22,11 @@ class GLOX_API ClientBase :
    public ThridClass,
    public ForthClass
 {
+public:
+ClientBase(const ClientBase & f)
+{
+   // do something
+}
 };
 
 ClientBase::ClientBase (const std::string& ns,
