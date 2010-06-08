@@ -793,7 +793,7 @@ static void check_template(chunk_t *start)
       /* Scan forward to the angle close
        * If we have a comparison in there, then it can't be a template.
        */
-      c_token_t tokens[16];
+      c_token_t tokens[1024];
       int       num_tokens = 1;
 
       tokens[0] = CT_ANGLE_OPEN;
