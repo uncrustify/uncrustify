@@ -345,6 +345,15 @@ static void examine_brace(chunk_t *bopen)
          else if (pc->type == CT_BRACE_CLOSE)
          {
             br_count--;
+            if (br_count == 0)
+            {
+               next = chunk_get_next_ncnl(pc, CNAV_PREPROC);
+               if ((next == NULL) || (next->type != CT_BRACE_CLOSE))
+               {
+                  LOG_FMT(LBRDEL, " junk after close brace\n");
+                  return;
+               }
+            }
          }
          else if ((pc->type == CT_IF) || (pc->type == CT_ELSEIF))
          {
