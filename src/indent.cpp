@@ -614,7 +614,6 @@ void indent_text(void)
             /* End any assign operations with a semicolon on the same level */
             if (chunk_is_semicolon(pc) &&
                 ((frm.pse[frm.pse_tos].type == CT_IMPORT) ||
-                 (frm.pse[frm.pse_tos].type == CT_THROW) ||
                  (frm.pse[frm.pse_tos].type == CT_USING)))
             {
                indent_pse_pop(frm, pc);
@@ -656,9 +655,10 @@ void indent_text(void)
                indent_pse_pop(frm, pc);
             }
 
-            /* a return is ended with a semicolon */
-            if ((frm.pse[frm.pse_tos].type == CT_RETURN) &&
-                chunk_is_semicolon(pc))
+            /* return & throw are ended with a semicolon */
+            if (chunk_is_semicolon(pc) &&
+                ((frm.pse[frm.pse_tos].type == CT_RETURN) ||
+                 (frm.pse[frm.pse_tos].type == CT_THROW)))
             {
                indent_pse_pop(frm, pc);
             }
@@ -1160,7 +1160,8 @@ void indent_text(void)
             frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
          }
       }
-      else if (pc->type == CT_RETURN)
+      else if ((pc->type == CT_RETURN) ||
+               ((pc->type == CT_THROW) && (pc->parent_type == CT_NONE)))
       {
          /* don't count returns inside a () or [] */
          if (pc->level == pc->brace_level)
@@ -1175,40 +1176,6 @@ void indent_text(void)
                frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent + pc->len + 1;
             }
             frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos - 1].indent;
-         }
-      }
-      else if (pc->type == CT_THROW)
-      {
-         // Pick up what was just before this.
-         prev = chunk_get_prev(pc);
-         if (pc->parent_type == CT_FUNC_PROTO)
-         {
-            indent_pse_push(frm, pc);
-
-            if ((cpd.settings[UO_indent_func_throw].n != 0) &&
-                ((prev == NULL) || (prev->type == CT_NEWLINE)))
-            {
-               frm.pse[frm.pse_tos].indent = cpd.settings[UO_indent_func_throw].n;
-            }
-            else
-            {
-               frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent_tmp + indent_size;
-            }
-            frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
-            frm.pse[frm.pse_tos].indent_tab = frm.pse[frm.pse_tos].indent;
-
-            indent_column_set(frm.pse[frm.pse_tos].indent_tmp);
-         }
-         else if (pc->parent_type == CT_FUNC_DEF)
-         {
-            if ((cpd.settings[UO_indent_func_throw].n != 0) &&
-                ((prev == NULL) || (prev->type == CT_NEWLINE)))
-            {
-               indent_column_set(cpd.settings[UO_indent_func_throw].n);
-               LOG_FMT(LINDENT, "%s: %d] throw => %d [%.*s]\n",
-                       __func__, pc->orig_line, indent_column, pc->len, pc->str);
-               reindent_line(pc, indent_column);
-            }
          }
       }
       else if (pc->type == CT_OC_SCOPE)
@@ -1389,6 +1356,16 @@ void indent_text(void)
             // indent const - void GetFoo(void)\n const\n { return (m_Foo); }
             indent_column_set(cpd.settings[UO_indent_func_const].n);
             LOG_FMT(LINDENT, "%s: %d] const => %d [%.*s]\n",
+                    __func__, pc->orig_line, indent_column, pc->len, pc->str);
+            reindent_line(pc, indent_column);
+         }
+         else if (cpd.settings[UO_indent_func_throw].n &&
+                  (pc->type == CT_THROW) &&
+                  (pc->parent_type != CT_NONE))
+         {
+            // indent throw - void GetFoo(void)\n throw()\n { return (m_Foo); }
+            indent_column_set(cpd.settings[UO_indent_func_throw].n);
+            LOG_FMT(LINDENT, "%s: %d] throw => %d [%.*s]\n",
                     __func__, pc->orig_line, indent_column, pc->len, pc->str);
             reindent_line(pc, indent_column);
          }
