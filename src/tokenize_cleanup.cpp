@@ -803,7 +803,8 @@ static void check_template(chunk_t *start)
       {
          LOG_FMT(LTEMPL, " [%s,%d]", get_token_name(pc->type), num_tokens);
 
-         if ((pc->str[0] == '>') && (pc->len > 1))
+         if ((tokens[num_tokens - 1] == CT_ANGLE_OPEN) &&
+             (pc->str[0] == '>') && (pc->len > 1))
          {
             LOG_FMT(LTEMPL, " {split '%.*s' at %d:%d}",
                     pc->len, pc->str, pc->orig_line, pc->orig_col);
