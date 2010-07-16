@@ -312,6 +312,18 @@ void output_text(FILE *pfile)
       cpd.column      = 1;
    }
 
+   if (cpd.frag_cols > 0)
+   {
+      int indent = cpd.frag_cols - 1;
+
+      for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next(pc))
+      {
+         pc->column        += indent;
+         pc->column_indent += indent;
+      }
+      cpd.frag_cols = 0;
+   }
+
    for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next(pc))
    {
       if (pc->type == CT_NEWLINE)

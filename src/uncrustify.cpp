@@ -156,6 +156,7 @@ static void usage_exit(const char *msg, const char *argv0, int code)
            " -l           : language override: C, CPP, D, CS, JAVA, PAWN, OC, OC+\n"
            " -t           : load a file with types (usually not needed)\n"
            " -q           : quiet mode - no output on stderr (-L will override)\n"
+           " --frag       : code fragment, assume the first line is indented correctly\n"
            "\n"
            "Config/Help Options:\n"
            " -h -? --help --usage     : print this message and exit\n"
@@ -280,6 +281,7 @@ int main(int argc, char *argv[])
       logmask_from_string(p_arg, &mask);
       log_set_mask(&mask);
    }
+   cpd.frag = arg.Present("--frag");
 
    if ((p_arg = arg.Param("--decode")) != NULL)
    {
@@ -1206,6 +1208,14 @@ static void uncrustify_start(const char *data, int data_len)
     * Parse the text into chunks
     */
    tokenize(data, data_len, NULL);
+
+   /* Get the column for the fragment indent */
+   if (cpd.frag)
+   {
+      chunk_t *pc = chunk_get_head();
+
+      cpd.frag_cols = (pc != NULL) ? pc->orig_col : 0;
+   }
 
    /* Add the file header */
    if (cpd.file_hdr.data != NULL)

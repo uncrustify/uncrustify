@@ -318,6 +318,9 @@ struct cp_data
    UINT16             column;  /* column for parsing */
    UINT16             spaces;  /* space count on output */
 
+   bool               frag;
+   UINT16             frag_cols;
+
    /* stuff to auto-detect line endings */
    UINT32             le_counts[LE_AUTO];
    char               newline[5];
