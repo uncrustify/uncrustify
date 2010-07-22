@@ -42,6 +42,12 @@ bool foo(char c)
    dookie::wookie << "asd"
                   << "bag"
                   << "sag";
+
+   sp_sign = 4 - -5;
+   sp_sign = -sp_sign;
+   sp_sign = 4 + +7;
+   sp_sign = +sp_sign;
+   sp_sign = 4 + +sp_sign;
 }
 
 #ifndef abc
