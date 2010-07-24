@@ -230,8 +230,10 @@ void print_universal_indent_cfg(FILE *pfile)
                fprintf(pfile, "Choices=\"%s=ignore|%s=lead|%s=lead_break|%s=lead_force|%s=trail|%s=trail_break|%s=trail_force\"\n",
                        option->name, option->name, option->name, option->name,
                        option->name, option->name, option->name);
-               fprintf(pfile, "ChoicesReadable=\"Ignore %s|Lead %s|Trail %s\"\n",
-                       optionNameReadable, optionNameReadable, optionNameReadable);
+               fprintf(pfile, "ChoicesReadable=\"Ignore %s|Lead %s|Lead Break %s|Lead Force %s|Trail %s|Trail Break %s|Trail Force %s\"\n",
+                       optionNameReadable, optionNameReadable, optionNameReadable,
+                       optionNameReadable, optionNameReadable, optionNameReadable,
+                       optionNameReadable);
                fprintf(pfile, "ValueDefault=%d\n", cpd.settings[option->id].n);
                break;
 
