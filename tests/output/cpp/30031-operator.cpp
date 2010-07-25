@@ -1,6 +1,6 @@
 struct bar;
 struct foo {
-  operator bar *();
+  operator bar*();
 };
 
 class Foo {

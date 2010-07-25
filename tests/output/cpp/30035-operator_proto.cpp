@@ -60,5 +60,5 @@ void *Type1::operator delete[](size_t x);                  // delete [] a
 // Misc examples
 int& operator*();
 Foo::operator const char *();
-Foo::operator const Bar &();
+Foo::operator const Bar&();
 
