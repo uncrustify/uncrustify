@@ -188,6 +188,7 @@
 
 01005  mod_case_brace_add.cfg  c/mod_case_brace.c
 01006  mod_case_brace_rm.cfg   c/mod_case_brace.c
+01007  mod_move_case_brace.cfg c/mod_case_brace.c
 
 01011  del_semicolon.cfg       c/semicolons.c
 01012  ben.cfg                 c/semicolons.c

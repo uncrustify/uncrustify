@@ -915,6 +915,7 @@ static chunk_t *mod_case_brace_add(chunk_t *cl_colon)
    chunk.str       = "}";
 
    br_close = chunk_add_before(&chunk, last);
+   newline_add_before(last);
 
    for (pc = chunk_get_next(br_open, CNAV_PREPROC);
         pc != br_close;
