@@ -91,6 +91,7 @@ enum
    LFCNR     = 77,    /* function return type */
    LOCCLASS  = 78,    /* OC Class stuff */
    LOCMSG    = 79,    /* OC Message stuff */
+   LBLANK    = 80,    /* Blank Lines */
 };
 
 #endif   /* LOG_LEVELS_H_INCLUDED */

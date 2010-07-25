@@ -2301,6 +2301,7 @@ void do_blank_lines(void)
    chunk_t *next;
    chunk_t *prev;
    chunk_t *pcmt;
+   int     old_nl;
 
    /* Don't process the first token, as we don't care if it is a newline */
    pc = chunk_get_head();
@@ -2315,6 +2316,14 @@ void do_blank_lines(void)
       next = chunk_get_next(pc);
       prev = chunk_get_prev_nc(pc);
       pcmt = chunk_get_prev(pc);
+
+      old_nl = pc->nl_count;
+      if ((next != NULL) && (prev != NULL))
+      {
+         LOG_FMT(LBLANK, "%s: line %d [%.*s] vs [%.*s] nl=%d\n", __func__,
+                 pc->orig_line,
+                 prev->len, prev->str, next->len, next->str, pc->nl_count);
+      }
 
       /* Limit consecutive newlines */
       if ((cpd.settings[UO_nl_max].n > 0) &&
@@ -2499,6 +2508,11 @@ void do_blank_lines(void)
          {
             pc->nl_count = cpd.settings[UO_nl_around_cs_property].n;
          }
+      }
+
+      if (old_nl != pc->nl_count)
+      {
+         LOG_FMT(LBLANK, "   -=> changed to %d\n", pc->nl_count);
       }
    }
 }
