@@ -384,13 +384,13 @@ void align_right_comments(void)
          /* Change certain WHOLE comments into RIGHT-alignable comments */
          if (pc->parent_type == CT_COMMENT_WHOLE)
          {
-            int tmp_col = 1 + (pc->brace_level * cpd.settings[UO_indent_columns].n);
+            int max_col = pc->column_indent + cpd.settings[UO_input_tab_size].n;
 
             /* If the comment is further right than the brace level... */
-            if (pc->column >= (tmp_col + cpd.settings[UO_input_tab_size].n))
+            if (pc->column >= max_col)
             {
-               LOG_FMT(LALTC, "Changing WHOLE comment on line %d into a RIGHT-comment\n",
-                       pc->orig_line);
+               LOG_FMT(LALTC, "Changing WHOLE comment on line %d into a RIGHT-comment (col=%d col_ind=%d max_col=%d)\n",
+                       pc->orig_line, pc->column, pc->column_indent, max_col);
 
                pc->flags |= PCF_RIGHT_COMMENT;
             }
