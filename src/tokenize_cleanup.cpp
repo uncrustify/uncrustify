@@ -273,6 +273,7 @@ void tokenize_cleanup(void)
        *  operator new []
        *  operator delete []
        *  operator const char *
+       *  operator const B&
        *  operator std::allocator<U>
        *
        * In all cases except the last, this will put the entire operator value
@@ -330,6 +331,8 @@ void tokenize_cleanup(void)
                {
                   break;
                }
+               /* Change tmp into a type so that space_needed() works right */
+               make_type(tmp);
                len += snprintf(opbuf + len, sizeof(opbuf) - len, "%s%.*s",
                                space_needed(tmp2, tmp) ? " " : "",
                                tmp->len, tmp->str);
