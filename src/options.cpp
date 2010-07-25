@@ -330,6 +330,9 @@ void register_options(void)
                   "Add or remove space between ')' and '{' of function");
    unc_add_option("sp_func_call_paren", UO_sp_func_call_paren, AT_IARF,
                   "Add or remove space between function name and '(' on function calls");
+   unc_add_option("sp_func_call_paren_empty", UO_sp_func_call_paren_empty, AT_IARF,
+                  "Add or remove space between function name and '()' on function calls without parameters.\n"
+                  "If set to 'ignore' (the default), sp_func_call_paren is used.");
    unc_add_option("sp_func_call_user_paren", UO_sp_func_call_user_paren, AT_IARF,
                   "Add or remove space between the user function name and '(' on function calls\n"
                   "You need to set a keyword to be a user function, like this: 'set func_call_user _' in the config file.");

@@ -598,6 +598,16 @@ argval_t do_space(chunk_t *first, chunk_t *second, bool complete = true)
    if ((first->type == CT_FUNC_CALL) ||
        (first->type == CT_FUNC_CTOR_VAR))
    {
+      if ((cpd.settings[UO_sp_func_call_paren_empty].a != AV_IGNORE) &&
+          (second->type == CT_FPAREN_OPEN))
+      {
+         next = chunk_get_next_ncnl(second);
+         if (next && (next->type == CT_FPAREN_CLOSE))
+         {
+            log_rule("sp_func_call_paren_empty");
+            return(cpd.settings[UO_sp_func_call_paren_empty].a);
+         }
+      }
       log_rule("sp_func_call_paren");
       return(cpd.settings[UO_sp_func_call_paren].a);
    }

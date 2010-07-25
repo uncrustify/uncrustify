@@ -153,6 +153,7 @@
 30922 sp_before_ellipsis-f.cfg         cpp/variadic-template.h
 30923 sp_before_ellipsis-f.cfg         cpp/sp_before_ellipsis.cpp
 30924 sp_before_ellipsis-r.cfg         cpp/sp_before_ellipsis.cpp
+30925 sp_func_call_empty.cfg           cpp/function-def.cpp
 
 30930 indent_var_def.cfg               cpp/indent_var_def.cpp
 30931 indent_var_def_cont.cfg          cpp/indent_var_def_cont.cpp
