@@ -690,6 +690,8 @@ void register_options(void)
                   "Overrides nl_func_decl_start when there is only one parameter.");
    unc_add_option("nl_func_decl_args", UO_nl_func_decl_args, AT_IARF,
                   "Add or remove newline after each ',' in a function declaration");
+   unc_add_option("nl_func_def_args", UO_nl_func_def_args, AT_IARF,
+                  "Add or remove newline after each ',' in a function definition");
    unc_add_option("nl_func_decl_end", UO_nl_func_decl_end, AT_IARF,
                   "Add or remove newline before the ')' in a function declaration");
    unc_add_option("nl_func_decl_end_single", UO_nl_func_decl_end_single, AT_IARF,

@@ -405,6 +405,7 @@ enum uncrustify_options
    UO_nl_func_decl_start,            // newline after the '(' in a function decl
    UO_nl_func_decl_start_single,
    UO_nl_func_decl_args,             // newline after each ',' in a function decl
+   UO_nl_func_def_args,
    UO_nl_func_decl_end,              // newline before the ')' in a function decl
    UO_nl_func_decl_end_single,
    UO_nl_func_decl_empty,            // as above, but for empty parens '()'

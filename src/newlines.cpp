@@ -1285,7 +1285,9 @@ static void newline_func_def(chunk_t *start)
          {
             pc = tmp;
          }
-         newline_iarf(pc, cpd.settings[UO_nl_func_decl_args].a);
+         newline_iarf(pc, cpd.settings[(start->parent_type == CT_FUNC_DEF) ?
+                                       UO_nl_func_def_args :
+                                       UO_nl_func_decl_args].a);
       }
    }
 
@@ -1749,6 +1751,7 @@ void newlines_cleanup_braces(void)
              &&
              ((cpd.settings[UO_nl_func_decl_start].a != AV_IGNORE) ||
               (cpd.settings[UO_nl_func_decl_args].a != AV_IGNORE) ||
+              (cpd.settings[UO_nl_func_def_args].a != AV_IGNORE) ||
               (cpd.settings[UO_nl_func_decl_end].a != AV_IGNORE) ||
               (cpd.settings[UO_nl_func_decl_empty].a != AV_IGNORE) ||
               (cpd.settings[UO_nl_func_type_name].a != AV_IGNORE) ||
