@@ -3092,92 +3092,61 @@ static void mark_namespace(chunk_t *pns)
    }
 }
 
+/**
+ * Skips the D 'align()' statement and the colon, if present.
+ *    align(2) int foo;  -- returns 'int'
+ *    align(4):          -- returns 'int'
+ *    int bar;
+ */
+static chunk_t *skip_align(chunk_t *start)
+{
+   chunk_t *pc = start;
+
+   if (pc->type == CT_ALIGN)
+   {
+      pc = chunk_get_next_ncnl(pc);
+      if (pc->type == CT_PAREN_OPEN)
+      {
+         pc = chunk_get_next_type(pc, CT_PAREN_CLOSE, pc->level);
+         pc = chunk_get_next_ncnl(pc);
+         if (pc->type == CT_COLON)
+         {
+            pc = chunk_get_next_ncnl(pc);
+         }
+      }
+   }
+   return(pc);
+}
+
 
 /**
  * Examines the stuff between braces { }.
- * There should only be variable definitions.
+ * There should only be variable definitions and methods.
+ * Skip the methods, as they will get handled elsewhere.
  */
 static void mark_struct_union_body(chunk_t *start)
 {
    chunk_t *pc = start;
-   chunk_t *first;
-   chunk_t *last;
-
-   // fprintf(stderr, "%s: line %d %s\n",
-   //         __func__, start->orig_line, get_token_name(start->type));
 
    while ((pc != NULL) &&
           (pc->level >= start->level) &&
-          (pc->type != CT_BRACE_CLOSE))
+          !((pc->level == start->level) && (pc->type == CT_BRACE_CLOSE)))
    {
-      if (chunk_is_semicolon(pc))
+      LOG_FMT(LSYS, "%s: %d:%d %.*s:%s\n", __func__, pc->orig_line, pc->orig_col,
+              pc->len, pc->str, get_token_name(pc->parent_type));
+      if ((pc->type == CT_BRACE_OPEN) ||
+          (pc->type == CT_BRACE_CLOSE) ||
+          (pc->type == CT_SEMICOLON))
       {
-         pc = chunk_get_next_ncnlnp(pc);
-         continue;
+         pc = chunk_get_next_ncnl(pc);
       }
-
-      if ((pc->type == CT_STRUCT) || (pc->type == CT_UNION) || (pc->type == CT_ENUM))
+      if (pc->type == CT_ALIGN)
       {
-         bool was_enum = (pc->type == CT_ENUM);
-
-         pc = chunk_get_next_ncnlnp(pc);
-         if ((pc != NULL) && (pc->type != CT_BRACE_OPEN))
-         {
-            pc = chunk_get_next_ncnlnp(pc);
-         }
-         if ((pc != NULL) && (pc->type == CT_BRACE_OPEN))
-         {
-            if (!was_enum)
-            {
-               mark_struct_union_body(pc);
-            }
-            pc = chunk_skip_to_match(pc);
-            pc = chunk_get_next_ncnlnp(pc);
-         }
-         if ((pc != NULL) && !was_enum)
-         {
-            pc = mark_variable_definition(pc);
-         }
+         pc = skip_align(pc); // "align(x)" or "align(x):"
       }
       else
       {
-         last  = NULL;
-         first = pc;
-         while ((pc != NULL) && ((pc->type == CT_TYPE) ||
-                                 (pc->type == CT_WORD) ||
-                                 (pc->type == CT_QUALIFIER) ||
-                                 (pc->type == CT_DC_MEMBER) ||
-                                 (pc->type == CT_MEMBER) ||
-                                 (pc->type == CT_ANGLE_OPEN) ||
-                                 chunk_is_star(pc) ||
-                                 chunk_is_addr(pc)))
-         {
-            last = pc;
-            if (pc->type == CT_ANGLE_OPEN)
-            {
-               pc = skip_template_next(pc);
-            }
-            else if (pc->type == CT_ATTRIBUTE)
-            {
-               pc = skip_attribute_next(pc);
-            }
-            else
-            {
-               pc = chunk_get_next_ncnlnp(pc);
-            }
-         }
-         if (last != NULL)
-         {
-            for (pc = first; pc != last; pc = chunk_get_next_ncnlnp(pc))
-            {
-               make_type(pc);
-            }
-            pc = mark_variable_definition(last);
-         }
-         else
-         {
-            pc = chunk_get_next_ncnlnp(pc);
-         }
+         pc = fix_var_def(pc);
       }
    }
 }
