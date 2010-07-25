@@ -32,3 +32,16 @@ int foo2(sometype *a);
 int bar1(int *a);
 int bar2(sometype *a);
 
+struct X
+{
+int   *  a; // 3:5
+
+int f()
+{
+return  *  b ; // 7:8
+}
+int g()
+{
+return  *  c ;  // 11:8
+}
+};
