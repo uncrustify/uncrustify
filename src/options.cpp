@@ -684,20 +684,32 @@ void register_options(void)
                   "Add or remove newline between return type and function name in a prototype");
    unc_add_option("nl_func_paren", UO_nl_func_paren, AT_IARF,
                   "Add or remove newline between a function name and the opening '('");
+   unc_add_option("nl_func_def_paren", UO_nl_func_def_paren, AT_IARF,
+                  "Add or remove newline between a function name and the opening '(' in the definition");
    unc_add_option("nl_func_decl_start", UO_nl_func_decl_start, AT_IARF,
                   "Add or remove newline after '(' in a function declaration");
+   unc_add_option("nl_func_def_start", UO_nl_func_def_start, AT_IARF,
+                  "Add or remove newline after '(' in a function definition");
    unc_add_option("nl_func_decl_start_single", UO_nl_func_decl_start_single, AT_IARF,
                   "Overrides nl_func_decl_start when there is only one parameter.");
+   unc_add_option("nl_func_def_start_single", UO_nl_func_def_start_single, AT_IARF,
+                  "Overrides nl_func_def_start when there is only one parameter.");
    unc_add_option("nl_func_decl_args", UO_nl_func_decl_args, AT_IARF,
                   "Add or remove newline after each ',' in a function declaration");
    unc_add_option("nl_func_def_args", UO_nl_func_def_args, AT_IARF,
                   "Add or remove newline after each ',' in a function definition");
    unc_add_option("nl_func_decl_end", UO_nl_func_decl_end, AT_IARF,
                   "Add or remove newline before the ')' in a function declaration");
+   unc_add_option("nl_func_def_end", UO_nl_func_def_end, AT_IARF,
+                  "Add or remove newline before the ')' in a function definition");
    unc_add_option("nl_func_decl_end_single", UO_nl_func_decl_end_single, AT_IARF,
                   "Overrides nl_func_decl_end when there is only one parameter.");
+   unc_add_option("nl_func_def_end_single", UO_nl_func_def_end_single, AT_IARF,
+                  "Overrides nl_func_def_end when there is only one parameter.");
    unc_add_option("nl_func_decl_empty", UO_nl_func_decl_empty, AT_IARF,
                   "Add or remove newline between '()' in a function declaration.");
+   unc_add_option("nl_func_def_empty", UO_nl_func_def_empty, AT_IARF,
+                  "Add or remove newline between '()' in a function definition.");
    unc_add_option("nl_fdef_brace", UO_nl_fdef_brace, AT_IARF,
                   "Add or remove newline between function signature and '{'");
    unc_add_option("nl_after_return", UO_nl_after_return, AT_BOOL,

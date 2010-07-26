@@ -1188,16 +1188,19 @@ void newline_iarf(chunk_t *pc, argval_t av)
  */
 static void newline_func_def(chunk_t *start)
 {
-   chunk_t *pc;
-   chunk_t *prev = NULL;
-   chunk_t *tmp;
+   chunk_t  *pc;
+   chunk_t  *prev = NULL;
+   chunk_t  *tmp;
+   argval_t atmp;
+   bool     is_def = (start->parent_type == CT_FUNC_DEF);
 
-   if (cpd.settings[UO_nl_func_paren].a != AV_IGNORE)
+   atmp = cpd.settings[is_def ? UO_nl_func_def_paren : UO_nl_func_paren].a;
+   if (atmp != AV_IGNORE)
    {
       prev = chunk_get_prev_ncnl(start);
       if (prev != NULL)
       {
-         newline_iarf(prev, cpd.settings[UO_nl_func_paren].a);
+         newline_iarf(prev, atmp);
       }
    }
 
@@ -1263,9 +1266,10 @@ static void newline_func_def(chunk_t *start)
    pc = chunk_get_next_ncnl(start);
    if (chunk_is_str(pc, ")", 1))
    {
-      if (cpd.settings[UO_nl_func_decl_empty].a != AV_IGNORE)
+      atmp = cpd.settings[is_def ? UO_nl_func_def_empty : UO_nl_func_decl_empty].a;
+      if (atmp != AV_IGNORE)
       {
-         newline_iarf(start, cpd.settings[UO_nl_func_decl_empty].a);
+         newline_iarf(start, atmp);
       }
       return;
    }
@@ -1291,17 +1295,21 @@ static void newline_func_def(chunk_t *start)
       }
    }
 
-   argval_t as = cpd.settings[UO_nl_func_decl_start].a;
-   argval_t ae = cpd.settings[UO_nl_func_decl_end].a;
+   argval_t as = cpd.settings[is_def ? UO_nl_func_def_start : UO_nl_func_decl_start].a;
+   argval_t ae = cpd.settings[is_def ? UO_nl_func_def_end : UO_nl_func_decl_end].a;
    if (comma_count == 0)
    {
-      if (cpd.settings[UO_nl_func_decl_start_single].a != AV_IGNORE)
+      atmp = cpd.settings[is_def ? UO_nl_func_def_start_single :
+                                   UO_nl_func_decl_start_single].a;
+      if (atmp != AV_IGNORE)
       {
-         as = cpd.settings[UO_nl_func_decl_start_single].a;
+         as = atmp;
       }
-      if (cpd.settings[UO_nl_func_decl_end_single].a != AV_IGNORE)
+      atmp = cpd.settings[is_def ? UO_nl_func_def_end_single :
+                                   UO_nl_func_decl_end_single].a;
+      if (atmp != AV_IGNORE)
       {
-         ae = cpd.settings[UO_nl_func_decl_end_single].a;
+         ae = atmp;
       }
    }
    newline_iarf(start, as);
@@ -1750,15 +1758,19 @@ void newlines_cleanup_braces(void)
               (pc->parent_type == CT_OPERATOR))
              &&
              ((cpd.settings[UO_nl_func_decl_start].a != AV_IGNORE) ||
+              (cpd.settings[UO_nl_func_def_start].a != AV_IGNORE) ||
               (cpd.settings[UO_nl_func_decl_args].a != AV_IGNORE) ||
               (cpd.settings[UO_nl_func_def_args].a != AV_IGNORE) ||
               (cpd.settings[UO_nl_func_decl_end].a != AV_IGNORE) ||
+              (cpd.settings[UO_nl_func_def_end].a != AV_IGNORE) ||
               (cpd.settings[UO_nl_func_decl_empty].a != AV_IGNORE) ||
+              (cpd.settings[UO_nl_func_def_empty].a != AV_IGNORE) ||
               (cpd.settings[UO_nl_func_type_name].a != AV_IGNORE) ||
               (cpd.settings[UO_nl_func_type_name_class].a != AV_IGNORE) ||
               (cpd.settings[UO_nl_func_scope_name].a != AV_IGNORE) ||
               (cpd.settings[UO_nl_func_proto_type_name].a != AV_IGNORE) ||
-              (cpd.settings[UO_nl_func_paren].a != AV_IGNORE)))
+              (cpd.settings[UO_nl_func_paren].a != AV_IGNORE) ||
+              (cpd.settings[UO_nl_func_def_paren].a != AV_IGNORE)))
          {
             newline_func_def(pc);
          }
