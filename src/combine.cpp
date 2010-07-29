@@ -206,6 +206,15 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
    //         next->len, next->str, get_token_name(next->type));
 
    /* D stuff */
+   if ((cpd.lang_flags & LANG_D) &&
+       (pc->type == CT_QUALIFIER) &&
+       chunk_is_str(pc, "const", 5) &&
+       (next->type == CT_PAREN_OPEN))
+   {
+      pc->type = CT_D_CAST;
+      set_paren_parent(next, pc->type);
+   }
+
    if ((next->type == CT_PAREN_OPEN) &&
        ((pc->type == CT_D_CAST) ||
         (pc->type == CT_DELEGATE) ||
@@ -2592,6 +2601,15 @@ static void mark_function(chunk_t *pc)
             continue;
          }
 
+         /* skip const(TYPE) */
+         if ((prev->type == CT_PAREN_CLOSE) &&
+             (prev->parent_type == CT_D_CAST))
+         {
+            LOG_FMT(LFCN, " --> For sure a prototype or definition\n");
+            isa_def = true;
+            break;
+         }
+
          /** Skip the word/type before the '.' or '::' */
          if ((prev->type == CT_DC_MEMBER) ||
              (prev->type == CT_MEMBER))
@@ -2649,11 +2667,6 @@ static void mark_function(chunk_t *pc)
          {
             prev = skip_template_prev(prev);
          }
-         else if ((prev->type == CT_FPAREN_CLOSE) &&
-                  (prev->parent_type == CT_ATTRIBUTE))
-         {
-            prev = skip_attribute_prev(prev);
-         }
          else
          {
             prev = chunk_get_prev_ncnlnp(prev);
@@ -2664,7 +2677,7 @@ static void mark_function(chunk_t *pc)
       //        prev->len, prev->str, get_token_name(prev->type));
 
       if (isa_def && (prev != NULL) &&
-          (chunk_is_paren_close(prev) ||
+          ((chunk_is_paren_close(prev) && (prev->parent_type != CT_D_CAST)) ||
            (prev->type == CT_ASSIGN) ||
            (prev->type == CT_RETURN)))
       {

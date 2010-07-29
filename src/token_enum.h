@@ -66,7 +66,7 @@ typedef enum
    CT_CONTINUE,
    CT_C_CAST,              /* C-style cast:   "(int)5.6" */
    CT_CPP_CAST,            /* C++-style cast: "int(5.6)" */
-   CT_D_CAST,              /* D-style cast:   "cast(type)" */
+   CT_D_CAST,              /* D-style cast:   "cast(type)" and "const(type)" */
    CT_TYPE_CAST,           /* static_cast<type>(exp) */
    CT_TYPENAME,            /* typename type */
    CT_TEMPLATE,            /* template<...> */

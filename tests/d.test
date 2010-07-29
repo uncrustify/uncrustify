@@ -30,4 +30,6 @@
 40051  d.cfg                   d/numbers.d
 40052  d2.cfg                  d/numbers.d
 
+40060  d.cfg                   d/casts.d
+40061  d.cfg                   d/const.d
 

@@ -820,14 +820,6 @@ argval_t do_space(chunk_t *first, chunk_t *second, bool complete = true)
          return(cpd.settings[UO_sp_arith].a);
       }
 
-      /* "(int)a" vs "(int) a" or "cast(int)a" vs "cast(int) a" */
-      if ((first->parent_type == CT_C_CAST) ||
-          (first->parent_type == CT_D_CAST))
-      {
-         log_rule("sp_after_cast");
-         return(cpd.settings[UO_sp_after_cast].a);
-      }
-
       /* "(struct foo) {...}" vs "(struct foo){...}" */
       if (second->type == CT_BRACE_OPEN)
       {
@@ -1098,6 +1090,14 @@ argval_t do_space(chunk_t *first, chunk_t *second, bool complete = true)
       }
       log_rule("sp_type_func");
       return(cpd.settings[UO_sp_type_func].a);
+   }
+
+   /* "(int)a" vs "(int) a" or "cast(int)a" vs "cast(int) a" */
+   if ((first->parent_type == CT_C_CAST) ||
+       (first->parent_type == CT_D_CAST))
+   {
+      log_rule("sp_after_cast");
+      return(cpd.settings[UO_sp_after_cast].a);
    }
 
    if (first->type == CT_BRACE_CLOSE)
