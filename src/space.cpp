@@ -1476,7 +1476,7 @@ void space_text(void)
          LOG_FMT(LSPACE, " = %s @ %d\n",
                  (av == AV_IGNORE) ? "IGNORE" :
                  (av == AV_ADD) ? "ADD" :
-                 (av == AV_ADD) ? "REMOVE" : "FORCE",
+                 (av == AV_REMOVE) ? "REMOVE" : "FORCE",
                  column - prev_column);
       }
 
