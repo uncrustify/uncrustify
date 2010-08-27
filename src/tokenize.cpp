@@ -346,6 +346,16 @@ static bool parse_comment(chunk_t *pc)
 }
 
 
+static void parse_suffix(chunk_t *pc)
+{
+   while (CharTable::IsKw1(pc->str[pc->len]))
+   {
+      pc->len++;
+      cpd.column++;
+   }
+}
+
+
 /**
  * Count the number of characters in the number.
  * The next bit of text starts with a number (0-9 or '.'), so it is a number.
@@ -506,17 +516,15 @@ static bool parse_number(chunk_t *pc)
       len += 2;
    }
 
-   /* It there is anything left, then we are probably dealing with garbage or
-    * some sick macro junk. Eat it.
-    */
-   while (unc_isalnum(pc->str[len]))
-   {
-      len++;
-   }
-
    pc->len     = len;
    pc->type    = is_float ? CT_NUMBER_FP : CT_NUMBER;
    cpd.column += len;
+
+   /* If there is anything left, then we are probably dealing with garbage or
+    * some sick macro junk. Eat it.
+    */
+   parse_suffix(pc);
+
    return(true);
 }
 
@@ -578,16 +586,8 @@ static bool parse_string(chunk_t *pc, int quote_idx, bool allow_escape)
       }
    }
 
-   /* D can have suffixes */
-   if (((cpd.lang_flags & LANG_D) != 0) &&
-       ((pc->str[len] == 'c') ||
-        (pc->str[len] == 'w') ||
-        (pc->str[len] == 'd')))
-   {
-      len++;
-      cpd.column++;
-   }
    pc->len = len;
+   parse_suffix(pc);
    return(true);
 }
 
@@ -624,6 +624,45 @@ static bool parse_cs_string(chunk_t *pc)
    pc->type    = CT_STRING;
    cpd.column += len;
    return(true);
+}
+
+
+/**
+ * Parses a C++0x 'R' string. R"( xxx )" or R"tag(  )tag"
+ */
+static bool parse_cr_string(chunk_t *pc, int q_idx)
+{
+   int        idx     = q_idx + 1;
+   const char *tag    = &pc->str[idx];
+   int        tag_len = 0;
+
+   while ((pc->str[idx] != 0) &&
+          (pc->str[idx] != '('))
+   {
+      tag_len++;
+      idx++;
+   }
+   if (pc->str[idx] != '(')
+   {
+      return(false);
+   }
+
+   while (pc->str[idx] != 0)
+   {
+      if ((pc->str[idx] == ')') &&
+          (memcmp(&pc->str[idx + 1], tag, tag_len) == 0) &&
+          (pc->str[idx + tag_len + 1] == '"'))
+      {
+         idx += tag_len + 2;
+         pc->len     = idx;
+         pc->type    = CT_STRING;
+         cpd.column += idx;
+         parse_suffix(pc);
+         return(true);
+      }
+      idx++;
+   }
+   return(false);
 }
 
 
@@ -1015,6 +1054,47 @@ static bool parse_next(chunk_t *pc)
       {
          parse_string(pc, 1, true);
          return(true);
+      }
+   }
+
+   /* handle C++0x strings u8"x" u"x" U"x" R"x" */
+   if (((cpd.lang_flags & LANG_CPP) != 0) &&
+       ((pc->str[0] == 'u') || (pc->str[0] == 'U') || (pc->str[0] == 'R')))
+   {
+      int idx = 0;
+      bool is_real = false;
+
+      if ((pc->str[0] == 'u') && (pc->str[1] == '8'))
+      {
+         idx = 2;
+      }
+      else if (unc_tolower(pc->str[0]) == 'u')
+      {
+         idx++;
+      }
+
+      if (pc->str[idx] == 'R')
+      {
+         idx++;
+         is_real = true;
+      }
+      if (pc->str[idx] == '"')
+      {
+         if (is_real)
+         {
+            if (parse_cr_string(pc, idx))
+            {
+               return(true);
+            }
+         }
+         else
+         {
+            if (parse_string(pc, idx, true))
+            {
+               parse_suffix(pc);
+               return(true);
+            }
+         }
       }
    }
 
