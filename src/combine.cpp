@@ -3145,8 +3145,8 @@ static void mark_struct_union_body(chunk_t *start)
           (pc->level >= start->level) &&
           !((pc->level == start->level) && (pc->type == CT_BRACE_CLOSE)))
    {
-      LOG_FMT(LSYS, "%s: %d:%d %.*s:%s\n", __func__, pc->orig_line, pc->orig_col,
-              pc->len, pc->str, get_token_name(pc->parent_type));
+      // LOG_FMT(LSYS, "%s: %d:%d %.*s:%s\n", __func__, pc->orig_line, pc->orig_col,
+      //         pc->len, pc->str, get_token_name(pc->parent_type));
       if ((pc->type == CT_BRACE_OPEN) ||
           (pc->type == CT_BRACE_CLOSE) ||
           (pc->type == CT_SEMICOLON))
