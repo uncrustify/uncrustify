@@ -49,6 +49,7 @@ static const chunk_tag_t symbols2[] =
    { "!>", CT_COMPARE,      LANG_D                                         },
    { "!~", CT_COMPARE,      LANG_D                                         },
    { "##", CT_PP,           LANG_C | LANG_CPP | LANG_OC                    },
+   { "#@", CT_POUND,        LANG_C | LANG_CPP | LANG_OC                    }, /* MS extension */
    { "%=", CT_ASSIGN,       LANG_ALL                                       },
    { "&&", CT_BOOL,         LANG_ALL                                       },
    { "&=", CT_ASSIGN,       LANG_ALL                                       },

@@ -189,7 +189,7 @@ void register_options(void)
    unc_add_option("sp_pp_concat", UO_sp_pp_concat, AT_IARF,
                   "Add or remove space around preprocessor '##' concatenation operator. Default=Add");
    unc_add_option("sp_pp_stringify", UO_sp_pp_stringify, AT_IARF,
-                  "Add or remove space after preprocessor '#' stringify operator. Default=Add");
+                  "Add or remove space after preprocessor '#' stringify operator. Also affects the '#@' charizing operator. Default=Add");
    unc_add_option("sp_bool", UO_sp_bool, AT_IARF,
                   "Add or remove space around boolean operators '&&' and '||'");
    unc_add_option("sp_compare", UO_sp_compare, AT_IARF,
