@@ -2231,6 +2231,7 @@ static chunk_t *mark_variable_definition(chunk_t *start)
  * "WORD.WORD"          ==> true
  * "WORD::WORD"         ==> true
  * "WORD * WORD"        ==> true
+ * "WORD & WORD"        ==> true
  * "NUMBER"             ==> false
  * "STRING"             ==> false
  * "OPEN PAREN"         ==> false

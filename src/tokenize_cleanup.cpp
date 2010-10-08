@@ -683,6 +683,15 @@ void tokenize_cleanup(void)
          pc->type = CT_USING_STMT;
       }
 
+      /* Add minimal support for C++0x rvalue references */
+      if ((pc->type == CT_BOOL) && chunk_is_str(pc, "&&", 2))
+      {
+         if (prev->type == CT_TYPE)
+         {
+            pc->type = CT_BYREF;
+         }
+      }
+
       /* TODO: determine other stuff here */
 
       prev = pc;
