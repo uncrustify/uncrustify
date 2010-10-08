@@ -112,8 +112,9 @@ void brace_cleanup(void)
    memset(&frm, 0, sizeof(frm));
    memset(&vs_chunk, 0, sizeof(vs_chunk));
 
-   cpd.in_preproc = CT_NONE;
-   cpd.pp_level   = 0;
+   cpd.frame_count = 0;
+   cpd.in_preproc  = CT_NONE;
+   cpd.pp_level    = 0;
 
    pc = chunk_get_head();
    while (pc != NULL)

@@ -411,6 +411,7 @@ void indent_text(void)
    int                sql_orig_col = 0;
 
    memset(&frm, 0, sizeof(frm));
+   cpd.frame_count = 0;
 
    /* dummy top-level entry */
    frm.pse[0].indent     = 1;
