@@ -692,6 +692,15 @@ void tokenize_cleanup(void)
          }
       }
 
+      /* HACK: treat try followed by a colon as a qualifier to handle this:
+       *   A::A(int) try : B() { } catch (...) { }
+       */
+      if ((pc->type == CT_TRY) && chunk_is_str(pc, "try", 3) &&
+          (next != NULL) && (next->type == CT_COLON))
+      {
+         pc->type = CT_QUALIFIER;
+      }
+
       /* TODO: determine other stuff here */
 
       prev = pc;
