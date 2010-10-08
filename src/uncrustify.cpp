@@ -372,6 +372,10 @@ int main(int argc, char *argv[])
       {
          LOG_FMT(LWARN, "Ignoring unknown language: %s\n", p_arg);
       }
+      else
+      {
+         cpd.lang_forced = true;
+      }
    }
 
    /* Get the source file name */
@@ -472,7 +476,7 @@ int main(int argc, char *argv[])
       }
 
       /* Do some simple language detection based on the filename extension */
-      if (cpd.lang_flags == 0)
+      if (!cpd.lang_forced || (cpd.lang_flags == 0))
       {
          cpd.lang_flags = language_from_filename(source_file);
       }
@@ -965,7 +969,7 @@ static void do_source_file(const char *filename_in,
    const char *filename_tmp = NULL;
 
    /* Do some simple language detection based on the filename extension */
-   if (cpd.lang_flags == 0)
+   if (!cpd.lang_forced || (cpd.lang_flags == 0))
    {
       cpd.lang_flags = language_from_filename(filename_in);
    }

@@ -312,6 +312,7 @@ struct cp_data
    file_mem           class_hdr;  /* for cmt_insert_class_header */
 
    int                lang_flags; // LANG_xxx
+   bool               lang_forced;
 
    bool               unc_off;
    UINT32             line_number;
