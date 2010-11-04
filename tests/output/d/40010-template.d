@@ -20,6 +20,9 @@ f.Bar b;
 f.foo(1, 2);
 f.abc = 3;
 
+to!string(10.0);
+TFoo!int.t x;
+
 class Abc(T)
 {
     T t;

@@ -228,10 +228,12 @@ void tokenize_cleanup(void)
             pc->type = CT_CONCAT;
          }
 
-         /* Check for the D template symbol '!' */
+         /* Check for the D template symbol '!' (word + '!' + word or '(') */
          if ((pc->type == CT_NOT) &&
              (prev->type == CT_WORD) &&
-             (next->type == CT_PAREN_OPEN))
+             ((next->type == CT_PAREN_OPEN) ||
+              (next->type == CT_WORD) ||
+              (next->type == CT_TYPE)))
          {
             pc->type = CT_D_TEMPLATE;
          }
