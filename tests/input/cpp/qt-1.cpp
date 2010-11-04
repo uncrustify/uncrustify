@@ -16,3 +16,20 @@ void somesignal();
 class foo{bool b;public:int i;};class bar:public
 foo{void*p;protected:double d;};
 
+class Foo1: public QObject
+{
+Q_OBJECT
+
+private Q_SLOTS:
+void mySlot();
+
+public Q_SLOTS:
+void publicSlot();
+
+Q_SIGNALS:
+void somesignal();
+};
+
+class foo1{bool b;public:int i;};class bar:public
+foo1{void*p;protected:double d;};
+
