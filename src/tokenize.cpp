@@ -916,6 +916,25 @@ static bool parse_ignored(chunk_t *pc)
       return(true);
    }
 
+   /* See if the INDENT-ON text is on this line */
+   int len = 0;
+   while ((pc->str[len] != 0) &&
+          (pc->str[len] != '\r') &&
+          (pc->str[len] != '\n'))
+   {
+      len++;
+   }
+   if (len == 0)
+   {
+      return(false);
+   }
+   if (str_search(UNCRUSTIFY_ON_TEXT, pc->str, len) == NULL)
+   {
+      pc->type = CT_IGNORED;
+      pc->len  = len;
+      return(true);
+   }
+
    /* parse off whitespace leading to the comment */
    if (parse_whitespace(pc))
    {
@@ -928,9 +947,9 @@ static bool parse_ignored(chunk_t *pc)
    {
       return(true);
    }
-   pc->len = 0;
 
    /* Reset the chunk & scan to until a newline */
+   pc->len = 0;
    while ((pc->str[pc->len] != 0) &&
           (pc->str[pc->len] != '\r') &&
           (pc->str[pc->len] != '\n'))
