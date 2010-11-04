@@ -216,6 +216,9 @@ static bool parse_comment(chunk_t *pc)
          {
             len++;
          }
+         pc->nl_count++;
+         cpd.did_newline = true;
+         cpd.line_number++;
       }
    }
    else if (pc->str[len] == 0)

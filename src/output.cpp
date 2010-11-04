@@ -822,6 +822,26 @@ static int add_comment_kw(const char *text, int len, cmt_reflow& cmt)
 }
 
 
+static int next_up(const char *text, int text_len, const char *tag)
+{
+   int offs    = 0;
+   int tag_len = strlen(tag);
+
+   while (unc_isspace(*text) && (text_len > 0))
+   {
+      text++;
+      text_len--;
+      offs++;
+   }
+
+   if ((tag_len <= text_len) && (memcmp(text, tag, tag_len) == 0))
+   {
+      return(offs);
+   }
+   return(-1);
+}
+
+
 /**
  * Outputs a comment. The initial opening '//' may be included in the text.
  * Subsequent openings (if combining comments), should not be included.
@@ -841,6 +861,7 @@ static void add_comment_text(const char *text, int len,
    bool was_slash  = false;
    bool was_dollar = false;
    bool in_word    = false;
+   int  tmp;
 
    for (int idx = 0; idx < len; idx++)
    {
@@ -864,7 +885,17 @@ static void add_comment_text(const char *text, int len,
          {
             add_char(' ');
          }
-         add_text(cmt.cont_text);
+
+         /* hack to get escaped newlines to align and not dup the leading '//' */
+         tmp = next_up(text + idx + 1, len - (idx + 1), cmt.cont_text);
+         if (tmp < 0)
+         {
+            add_text(cmt.cont_text);
+         }
+         else
+         {
+            idx += tmp;
+         }
       }
       else if (cmt.reflow &&
                (text[idx] == ' ') &&
