@@ -2991,7 +2991,9 @@ static void mark_class_ctor(chunk_t *start)
 
    next = chunk_get_next_ncnl(pclass, CNAV_PREPROC);
    while ((next != NULL) &&
-          ((next->type == CT_TYPE) || (next->type == CT_WORD)))
+          ((next->type == CT_TYPE) ||
+           (next->type == CT_WORD) ||
+           (next->type == CT_DC_MEMBER)))
    {
       pclass = next;
       next   = chunk_get_next_ncnl(next, CNAV_PREPROC);
