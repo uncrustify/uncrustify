@@ -14,6 +14,11 @@ class Foo {
    Foo(const Foo& f);
 };
 
+class NS::Foo {
+ public:
+   Foo(Bar& b);
+};
+
 template<class T> class ListManager
 {
  protected:
