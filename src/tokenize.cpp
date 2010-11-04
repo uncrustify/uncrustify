@@ -916,6 +916,13 @@ static bool parse_ignored(chunk_t *pc)
       return(true);
    }
 
+   /* parse off whitespace leading to the comment */
+   if (parse_whitespace(pc))
+   {
+      pc->type = CT_IGNORED;
+      return(true);
+   }
+
    /* Look for the ending comment and let it pass */
    if (parse_comment(pc) && !cpd.unc_off)
    {
