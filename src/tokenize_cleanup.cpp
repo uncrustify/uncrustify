@@ -237,6 +237,12 @@ void tokenize_cleanup(void)
          {
             pc->type = CT_D_TEMPLATE;
          }
+
+         /* handle "version(unittest) { }" vs "unittest { }" */
+         if ((pc->type == CT_UNITTEST) && (prev->type == CT_PAREN_OPEN))
+         {
+            pc->type = CT_WORD;
+         }
       }
 
       if ((cpd.lang_flags & LANG_CPP) != 0)
