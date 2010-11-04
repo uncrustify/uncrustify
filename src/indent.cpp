@@ -634,6 +634,7 @@ void indent_text(void)
                 ((pc->type == CT_BRACE_OPEN) ||
                  (pc->type == CT_OC_END) ||
                  (pc->type == CT_OC_SCOPE) ||
+                 (pc->type == CT_OC_PROPERTY) ||
                  chunk_is_semicolon(pc)))
             {
                indent_pse_pop(frm, pc);
