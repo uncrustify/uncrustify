@@ -392,7 +392,7 @@ void output_text(FILE *pfile)
       {
          pc = output_comment_c(pc);
       }
-      else if (pc->type == CT_JUNK)
+      else if ((pc->type == CT_JUNK) || (pc->type == CT_IGNORED))
       {
          /* do not adjust the column for junk */
          add_text_len(pc->str, pc->len);
