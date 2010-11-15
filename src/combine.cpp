@@ -3510,6 +3510,7 @@ static void handle_oc_class(chunk_t *pc)
 {
    chunk_t *tmp;
    bool    hit_scope = false;
+   int     do_pl     = 1;
 
    LOG_FMT(LOCCLASS, "%s: start [%.*s] [%s] line %d\n", __func__,
            pc->len, pc->str, get_token_name(pc->parent_type), pc->orig_line);
@@ -3535,8 +3536,21 @@ static void handle_oc_class(chunk_t *pc)
       {
          break;
       }
+      if ((do_pl == 1) && chunk_is_str(tmp, "<", 1))
+      {
+         tmp->type = CT_ANGLE_OPEN;
+         tmp->parent_type = CT_OC_PROTO_LIST;
+         do_pl = 2;
+      }
+      if ((do_pl == 2) && chunk_is_str(tmp, ">", 1))
+      {
+         tmp->type = CT_ANGLE_CLOSE;
+         tmp->parent_type = CT_OC_PROTO_LIST;
+         do_pl = 0;
+      }
       if (tmp->type == CT_BRACE_OPEN)
       {
+         do_pl = 0;
          tmp->parent_type = CT_OC_CLASS;
          tmp = chunk_get_next_type(tmp, CT_BRACE_CLOSE, tmp->level);
          if (tmp != NULL)
@@ -3551,12 +3565,17 @@ static void handle_oc_class(chunk_t *pc)
       }
       else if (chunk_is_str(tmp, "-", 1) || chunk_is_str(tmp, "+", 1))
       {
+         do_pl = 0;
          if (chunk_is_newline(chunk_get_prev(tmp)))
          {
             tmp->type   = CT_OC_SCOPE;
             tmp->flags |= PCF_STMT_START;
             hit_scope   = true;
          }
+      }
+      if (do_pl == 2)
+      {
+         tmp->parent_type = CT_OC_PROTO_LIST;
       }
    }
 
