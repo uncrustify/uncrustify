@@ -1564,23 +1564,26 @@ static void fix_enum_struct_union(chunk_t *pc)
           (next->type != CT_ASSIGN) &&
           ((in_fcn_paren ^ (next->flags & PCF_IN_FCN_DEF)) == 0))
    {
-      if (next->type == CT_WORD)
+      if (next->level == pc->level)
       {
-         next->flags |= flags;
-         flags       &= ~PCF_VAR_1ST; /* clear the first flag for the next items */
-      }
+         if (next->type == CT_WORD)
+         {
+            next->flags |= flags;
+            flags       &= ~PCF_VAR_1ST; /* clear the first flag for the next items */
+         }
 
-      if (next->type == CT_STAR)
-      {
-         next->type = CT_PTR_TYPE;
-      }
+         if (next->type == CT_STAR)
+         {
+            next->type = CT_PTR_TYPE;
+         }
 
-      /* If we hit a comma in a function param, we are done */
-      if (((next->type == CT_COMMA) ||
-           (next->type == CT_FPAREN_CLOSE)) &&
-          ((next->flags & (PCF_IN_FCN_DEF | PCF_IN_FCN_CALL)) != 0))
-      {
-         return;
+         /* If we hit a comma in a function param, we are done */
+         if (((next->type == CT_COMMA) ||
+              (next->type == CT_FPAREN_CLOSE)) &&
+             ((next->flags & (PCF_IN_FCN_DEF | PCF_IN_FCN_CALL)) != 0))
+         {
+            return;
+         }
       }
 
       next = chunk_get_next_ncnl(next);
