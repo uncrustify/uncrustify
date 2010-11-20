@@ -291,6 +291,23 @@ static bool can_remove_braces(chunk_t *bopen)
       return(false);
    }
 
+   if ((pc->type == CT_BRACE_CLOSE) && (pc->parent_type == CT_IF))
+   {
+      chunk_t *next = chunk_get_next_ncnl(pc, CNAV_PREPROC);
+
+      prev = chunk_get_prev_ncnl(pc, CNAV_PREPROC);
+
+      if ((next != NULL) && (next->type == CT_ELSE) &&
+          ((prev->type == CT_BRACE_CLOSE) || (prev->type == CT_VBRACE_CLOSE)) &&
+          (prev->parent_type == CT_IF))
+      {
+         LOG_FMT(LBRDEL, " - bailed on '%s'[%s] on line %d due to 'if' and 'else' sequence\n",
+                 get_token_name(pc->type), get_token_name(pc->parent_type),
+                 pc->orig_line);
+         return(false);
+      }
+   }
+
    LOG_FMT(LBRDEL, " - end on '%s' on line %d. if_count=%d semi_count=%d\n",
            get_token_name(pc->type), pc->orig_line, if_count, semi_count);
 

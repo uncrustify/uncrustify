@@ -68,3 +68,15 @@ void bar(void)
 #endif /* ifdef SOME_DEFINE */
 			}
 }
+
+void funct(int v1, int v2, int v3)
+{
+    if ( v1 )
+    {
+	if ( v2 ) f1();
+    }
+    else
+    {
+	if ( v3 ) f2();
+    }
+}
