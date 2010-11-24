@@ -774,7 +774,7 @@ static void check_template(chunk_t *start)
    }
    else
    {
-      /* We may have something like "a< ... >", which is a template use
+      /* We may have something like "a< ... >", which is a template where
        * '...' may consist of anything except braces {}, a semicolon, and
        * unbalanced parens.
        * if we are inside an 'if' statement and hit a CT_BOOL, then it isn't a
@@ -801,12 +801,11 @@ static void check_template(chunk_t *start)
          if ((pc->type == CT_SEMICOLON) ||
              (pc->type == CT_BRACE_OPEN) ||
              (pc->type == CT_BRACE_CLOSE) ||
-             (pc->type == CT_SQUARE_CLOSE) ||
-             (pc->type == CT_SEMICOLON))
+             (pc->type == CT_SQUARE_CLOSE))
          {
             break;
          }
-         if (pc->type == CT_IF)
+         if ((pc->type == CT_IF) || (pc->type == CT_RETURN))
          {
             in_if = true;
             break;
