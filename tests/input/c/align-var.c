@@ -10,12 +10,18 @@ struct foo2
  unsigned int a : 1;
  unsigned int bcd : 3;
  unsigned int ef : 2;
- unsigned int gh : 2;
+ unsigned int  : 2;
 
  unsigned short more;
 
  int fields;
 };
+
+typedef struct {
+bitfld a : 8;
+bitfld b : 16;
+bitfld : 8;
+} type_t;
 
 struct foo { int a; char *b };
 

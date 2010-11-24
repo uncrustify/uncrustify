@@ -1157,7 +1157,7 @@ static chunk_t *align_var_def_brace(chunk_t *start, int span, int *p_nl_count)
          }
          did_this_line = true;
       }
-      if (pc->type == CT_BIT_COLON)
+      else if (pc->type == CT_BIT_COLON)
       {
          if (!did_this_line)
          {

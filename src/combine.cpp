@@ -1836,7 +1836,8 @@ void combine_labels(void)
             }
             else if (cur->type == CT_WORD)
             {
-               if (chunk_is_newline(prev))
+               tmp = chunk_get_next_nc(next, CNAV_PREPROC);
+               if (chunk_is_newline(prev) && ((tmp == NULL) || (tmp->type != CT_NUMBER)))
                {
                   cur->type  = CT_LABEL;
                   next->type = CT_LABEL_COLON;
@@ -1873,8 +1874,11 @@ void combine_labels(void)
             {
                /* ignore it, as it is inside a paren */
             }
-            else if ((cur->type == CT_TYPE) ||
-                     (cur->type == CT_ENUM) ||
+            else if (cur->type == CT_TYPE)
+            {
+               next->type = CT_BIT_COLON;
+            }
+            else if ((cur->type == CT_ENUM) ||
                      (cur->type == CT_PRIVATE) ||
                      (cur->type == CT_QUALIFIER) ||
                      (cur->parent_type == CT_ALIGN))
