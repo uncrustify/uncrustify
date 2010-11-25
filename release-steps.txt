@@ -49,8 +49,9 @@ Then, in that new folder, run 'sh make_win32.sh'.
 NOTE: "make distcheck" doesn't work.  It can't find the config.h file.
 No idea why.
 
-6. Create a GIT tag
+6. Create a GIT tag and push it
 $ git tag -a uncrustify-0.56 -m uncrustify-0.56
+$ git push --tags
 
 7. Re-run 'make dist' and copy out the release tarball.
 
