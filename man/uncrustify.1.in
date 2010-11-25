@@ -57,6 +57,9 @@ The default is '.uncrustify' if neither \fISFX\fR or \fIPFX\fR are specified.
 .br
 This cannot be combined with \fB\-f\fR, \fB\-\-replace\fR, or \fB\-\-no\-backup\fR.
 .TP
+\fB\-\-frag\fI
+Assume the input is a code fragment and the first line is properly indented.
+.TP
 \fB\-\-replace\fR
 Replace source files (creates a backup).
 .br

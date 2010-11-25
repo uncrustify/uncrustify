@@ -121,6 +121,7 @@
 		<F N="autogen.sh"/>
 		<F N="BUGS"/>
 		<F N="ChangeLog"/>
+		<F N="commit.log"/>
 		<F N="configure"/>
 		<F N="configure.in"/>
 		<F N="COPYING"/>
