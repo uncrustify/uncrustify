@@ -666,7 +666,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
        */
       if ((pc->type == CT_PAREN_OPEN) &&
           ((pc->parent_type == CT_NONE) ||
-           (pc->parent_type == CT_OC_MSG) ||
+           (pc->parent_type == CT_OC_MSG) || // TODO: use pc->flags & PCF_IN_OC_MSG instead?
            (pc->parent_type == CT_OC_BLOCK_EXPR)) &&
           ((next->type == CT_WORD) ||
            (next->type == CT_TYPE) ||
@@ -1749,7 +1749,7 @@ void combine_labels(void)
    /* unlikely that the file will start with a label... */
    while (next != NULL)
    {
-      if ((next->parent_type != CT_OC_MSG) && /* filter OC case of [self class] msg send */
+      if ((0 == next->flags & PCF_IN_OC_MSG) && /* filter OC case of [self class] msg send */
           ((next->type == CT_CLASS) ||
            (next->type == CT_OC_CLASS) ||
            (next->type == CT_TEMPLATE)))
