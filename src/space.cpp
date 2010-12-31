@@ -382,6 +382,13 @@ argval_t do_space(chunk_t *first, chunk_t *second, bool complete = true)
       return(cpd.settings[UO_sp_paren_paren].a);
    }
 
+   if ((first->type == CT_CATCH) && (second->type == CT_SPAREN_OPEN) &&
+       (cpd.settings[UO_sp_catch_paren].a != AV_IGNORE))
+   {
+      log_rule("sp_catch_paren");
+      return(cpd.settings[UO_sp_catch_paren].a);
+   }
+
    /* "if (" vs "if(" */
    if (second->type == CT_SPAREN_OPEN)
    {
