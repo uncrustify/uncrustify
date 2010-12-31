@@ -108,11 +108,11 @@ void tokenize_cleanup(void)
       }
 
       /* Determine the version stuff (D only) */
-      if (pc->type == CT_VERSION)
+      if (pc->type == CT_D_VERSION)
       {
          if (next->type == CT_PAREN_OPEN)
          {
-            pc->type = CT_IF;
+            pc->type = CT_D_VERSION_IF;
          }
          else
          {
@@ -123,6 +123,19 @@ void tokenize_cleanup(void)
                cpd.error_count++;
             }
             pc->type = CT_WORD;
+         }
+      }
+
+      /* Determine the scope stuff (D only) */
+      if (pc->type == CT_D_SCOPE)
+      {
+         if (next->type == CT_PAREN_OPEN)
+         {
+            pc->type = CT_D_SCOPE_IF;
+         }
+         else
+         {
+            pc->type = CT_TYPE;
          }
       }
 

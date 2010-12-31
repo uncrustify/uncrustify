@@ -250,6 +250,8 @@ enum uncrustify_options
    UO_sp_defined_paren,
    UO_sp_throw_paren,
    UO_sp_catch_paren,
+   UO_sp_version_paren,
+   UO_sp_scope_paren,
 
    UO_sp_type_func,             // space between return type and 'func'
    // a minimum of 1 is forced except for '*'

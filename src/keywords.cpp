@@ -193,7 +193,7 @@ static const chunk_tag_t keywords[] =
    { "restrict",         CT_QUALIFIER,    LANG_C | LANG_CPP                                                           },
    { "return",           CT_RETURN,       LANG_ALL                                                                    }, // PAWN
    { "sbyte",            CT_TYPE,         LANG_CS                                                                     },
-   { "scope",            CT_SCOPE,        LANG_D                                                                      },
+   { "scope",            CT_D_SCOPE,      LANG_D                                                                      },
    { "sealed",           CT_QUALIFIER,    LANG_CS                                                                     },
    { "section",          CT_PP_SECTION,   LANG_PAWN | FLAG_PP                                                         }, // PAWN
    { "set",              CT_GETSET,       LANG_CS | LANG_VALA                                                         },
@@ -240,7 +240,7 @@ static const chunk_tag_t keywords[] =
    { "ushort",           CT_TYPE,         LANG_CS | LANG_D                                                            },
    { "using",            CT_USING,        LANG_CPP | LANG_CS | LANG_VALA                                              },
    { "var",              CT_TYPE,         LANG_VALA | LANG_ECMA                                                       },
-   { "version",          CT_VERSION,      LANG_D                                                                      },
+   { "version",          CT_D_VERSION,    LANG_D                                                                      },
    { "virtual",          CT_QUALIFIER,    LANG_CPP | LANG_CS | LANG_VALA                                              },
    { "void",             CT_TYPE,         LANG_ALLC                                                                   },
    { "volatile",         CT_QUALIFIER,    LANG_C | LANG_CPP | LANG_CS | LANG_JAVA | LANG_ECMA                         },
@@ -524,6 +524,8 @@ pattern_class get_token_pattern_class(c_token_t tok)
    case CT_USING_STMT:
    case CT_LOCK:
    case CT_D_WITH:
+   case CT_D_VERSION_IF:
+   case CT_D_SCOPE_IF:
       return(PATCLS_PBRACED);
 
    case CT_ELSE:
@@ -540,7 +542,7 @@ pattern_class get_token_pattern_class(c_token_t tok)
       return(PATCLS_BRACED);
 
    case CT_CATCH:
-   case CT_VERSION:
+   case CT_D_VERSION:
    case CT_DEBUG:
       return(PATCLS_OPBRACED);
 

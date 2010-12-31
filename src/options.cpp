@@ -353,6 +353,12 @@ void register_options(void)
    unc_add_option("sp_catch_paren", UO_sp_catch_paren, AT_IARF,
                   "Add or remove space between 'catch' and '(' in 'catch (something) { }'\n"
                   "If set to ignore, sp_before_sparen is used.");
+   unc_add_option("sp_version_paren", UO_sp_version_paren, AT_IARF,
+                  "Add or remove space between 'version' and '(' in 'version (something) { }' (D language)\n"
+                  "If set to ignore, sp_before_sparen is used.");
+   unc_add_option("sp_scope_paren", UO_sp_scope_paren, AT_IARF,
+                  "Add or remove space between 'scope' and '(' in 'scope (something) { }' (D language)\n"
+                  "If set to ignore, sp_before_sparen is used.");
    unc_add_option("sp_macro", UO_sp_macro, AT_IARF,
                   "Add or remove space between macro and value");
    unc_add_option("sp_macro_func", UO_sp_macro_func, AT_IARF,

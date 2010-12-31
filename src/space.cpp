@@ -389,6 +389,20 @@ argval_t do_space(chunk_t *first, chunk_t *second, bool complete = true)
       return(cpd.settings[UO_sp_catch_paren].a);
    }
 
+   if ((first->type == CT_D_VERSION_IF) && (second->type == CT_SPAREN_OPEN) &&
+       (cpd.settings[UO_sp_version_paren].a != AV_IGNORE))
+   {
+      log_rule("sp_version_paren");
+      return(cpd.settings[UO_sp_version_paren].a);
+   }
+
+   if ((first->type == CT_D_SCOPE_IF) && (second->type == CT_SPAREN_OPEN) &&
+       (cpd.settings[UO_sp_scope_paren].a != AV_IGNORE))
+   {
+      log_rule("sp_scope_paren");
+      return(cpd.settings[UO_sp_scope_paren].a);
+   }
+
    /* "if (" vs "if(" */
    if (second->type == CT_SPAREN_OPEN)
    {

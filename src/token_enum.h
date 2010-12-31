@@ -146,9 +146,12 @@ typedef enum
    CT_UNSAFE,
    CT_FINALLY,
    CT_IMPORT,
-   CT_SCOPE,
+   CT_D_SCOPE,
+   CT_D_SCOPE_IF,
    CT_LAZY,
    CT_D_MACRO,
+   CT_D_VERSION,        /* turns into CT_D_VERSION_IF if not followed by '=' */
+   CT_D_VERSION_IF,     /* version(x) { } */
 
    /* note for paren/brace/square pairs: close MUST be open + 1 */
    CT_PAREN_OPEN,
@@ -269,7 +272,6 @@ typedef enum
    CT_AS,
    CT_IN,               /* "foreach (T c in x)" or "foo(in char c)" or "in { ..." */
    CT_BRACED,           /* simple braced items: try {} */
-   CT_VERSION,          /* turns into CT_IF if not followed by '=' */
    CT_THIS,             /* may turn into CT_PBRACED if followed by a '(' */
    CT_BASE,             /* C# thingy */
    CT_DEFAULT,          /* may be changed into CT_CASE */
