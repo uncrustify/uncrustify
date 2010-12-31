@@ -93,6 +93,7 @@ enum uncrustify_options
     * Basic Indenting stuff
     */
    //UO_indent,                   //TODO: 0=don't change indentation, 1=change indentation
+   UO_tok_split_gte,             // allow split of '>>=' in template detection
 
    UO_input_tab_size,           // tab size on input file: usually 8
    UO_output_tab_size,          // tab size for output: usually 8
