@@ -543,10 +543,11 @@ chunk_t *align_assign(chunk_t *first, int span, int thresh)
    AlignStack as;    // regular assigns
    AlignStack vdas;  // variable def assigns
 
+   /* If we are aligning on a tabstop, we shouldn't right-align */
    as.Start(span, thresh);
-   as.m_right_align = true;
+   as.m_right_align = !cpd.settings[UO_align_on_tabstop].b;
    vdas.Start(span, thresh);
-   vdas.m_right_align = true;
+   vdas.m_right_align = as.m_right_align;
 
    pc = first;
    while ((pc != NULL) && ((pc->level >= my_level) || (pc->level == 0)))
@@ -875,7 +876,7 @@ static void align_same_func_call_params()
                       (chunks[idx]->type == CT_POS) ||
                       (chunks[idx]->type == CT_NEG))
                   {
-                     as[idx].m_right_align = true;
+                     as[idx].m_right_align = !cpd.settings[UO_align_on_tabstop].b;
                   }
                }
                max_idx = idx;
@@ -1794,7 +1795,7 @@ static void align_oc_msg_colon(chunk_t *so)
 
 
    nas.Reset();
-   nas.m_right_align = true;
+   nas.m_right_align = !cpd.settings[UO_align_on_tabstop].b;
 
    cas.Start(span);
 
@@ -1874,7 +1875,7 @@ static void align_oc_decl_colon(void)
 
    cas.Start(4);
    nas.Start(4);
-   nas.m_right_align = true;
+   nas.m_right_align = !cpd.settings[UO_align_on_tabstop].b;
 
    while (pc != NULL)
    {
