@@ -33,3 +33,5 @@
 40060  d.cfg                   d/casts.d
 40061  d.cfg                   d/const.d
 
+40070  d_sp_paren.cfg          d/d_sp_paren.d
+
