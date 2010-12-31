@@ -2967,7 +2967,7 @@ static void mark_cpp_constructor(chunk_t *pc)
    {
       tmp->flags |= PCF_IN_CONST_ARGS;
       tmp         = chunk_get_next_ncnl(tmp);
-      if (chunk_is_str(tmp, ":", 1))
+      if (chunk_is_str(tmp, ":", 1) && (tmp->level == paren_open->level))
       {
          tmp->type = CT_CLASS_COLON;
       }
