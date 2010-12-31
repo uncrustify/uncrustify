@@ -123,12 +123,7 @@ static void align_stack(ChunkStack& cs, int col, bool align_single, log_sev_t se
 
    if (cpd.settings[UO_align_on_tabstop].b)
    {
-      int rem = (col - 1) % cpd.settings[UO_output_tab_size].n;
-      if (rem != 0)
-      {
-         LOG_FMT(sev, "%s: col=%d rem=%d", __func__, col, rem);
-         col += cpd.settings[UO_output_tab_size].n - rem;
-      }
+      col = align_tab_column(col);
    }
 
    if ((cs.Len() > 1) || (align_single && (cs.Len() == 1)))
@@ -1554,12 +1549,7 @@ static void align_init_brace(chunk_t *start)
    if (cpd.settings[UO_align_on_tabstop].b && (cpd.al_cnt >= 1) &&
        (cpd.al[0].type == CT_ASSIGN))
    {
-      int rem = (cpd.al[0].col - 1) % cpd.settings[UO_output_tab_size].n;
-      if (rem != 0)
-      {
-         LOG_FMT(LALBR, "%s: col=%d rem=%d", __func__, cpd.al[0].col, rem);
-         cpd.al[0].col += cpd.settings[UO_output_tab_size].n - rem;
-      }
+      cpd.al[0].col = align_tab_column(cpd.al[0].col);
    }
 
    pc  = chunk_get_next(start);

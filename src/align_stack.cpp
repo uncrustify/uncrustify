@@ -397,12 +397,7 @@ void AlignStack::Flush()
 
    if (cpd.settings[UO_align_on_tabstop].b && (m_aligned.Len() > 1))
    {
-      int rem = (m_max_col - 1) % cpd.settings[UO_output_tab_size].n;
-      if (rem != 0)
-      {
-         LOG_FMT(LAS, "%s: align_on_tabstop col=%d rem=%d", __func__, m_max_col, rem);
-         m_max_col += cpd.settings[UO_output_tab_size].n - rem;
-      }
+      m_max_col = align_tab_column(m_max_col);
    }
 
    for (idx = 0; idx < m_aligned.Len(); idx++)
