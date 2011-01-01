@@ -465,6 +465,22 @@ void tokenize_cleanup(void)
          }
       }
 
+      if (pc->type == CT_OC_INTF)
+      {
+         tmp = chunk_get_next_ncnl(pc, CNAV_PREPROC);
+         while ((tmp != NULL) && (tmp->type != CT_OC_END))
+         {
+            if (get_token_pattern_class(tmp->type) != PATCLS_NONE)
+            {
+               LOG_FMT(LOBJCWORD, "@interface %d:%d change '%.*s' (%s) to CT_WORD\n",
+                       pc->orig_line, pc->orig_col, tmp->len, tmp->str,
+                       get_token_name(tmp->type));
+               tmp->type = CT_WORD;
+            }
+            tmp = chunk_get_next_ncnl(tmp, CNAV_PREPROC);
+         }
+      }
+
       /* Detect Objective-C categories and class extensions */
       /* @interface ClassName (CategoryName) */
       /* @implementation ClassName (CategoryName) */

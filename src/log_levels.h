@@ -92,6 +92,7 @@ enum
    LOCCLASS  = 78,    /* OC Class stuff */
    LOCMSG    = 79,    /* OC Message stuff */
    LBLANK    = 80,    /* Blank Lines */
+   LOBJCWORD = 81,    /* Convert keyword to CT_WORD in certain circumstances */
 };
 
 #endif   /* LOG_LEVELS_H_INCLUDED */
