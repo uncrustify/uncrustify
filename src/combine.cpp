@@ -2256,7 +2256,7 @@ static bool can_be_full_param(chunk_t *start, chunk_t *end)
 
    LOG_FMT(LFPARAM, "%s:", __func__);
 
-   for (pc = start; pc != end; pc = chunk_get_next_ncnl(pc))
+   for (pc = start; pc != end; pc = chunk_get_next_ncnl(pc, CNAV_PREPROC))
    {
       LOG_FMT(LFPARAM, " [%.*s]", pc->len, pc->str);
 
@@ -2302,6 +2302,29 @@ static bool can_be_full_param(chunk_t *start, chunk_t *end)
       {
          LOG_FMT(LFPARAM, " <== elipses\n");
          return(true);
+      }
+      else if ((word_cnt == 1) && (pc->type == CT_PAREN_OPEN))
+      {
+         /* Check for func proto param 'void (*name)' or 'void (*name)(params)' */
+         chunk_t *tmp1 = chunk_get_next_ncnl(pc, CNAV_PREPROC);
+         chunk_t *tmp2 = chunk_get_next_ncnl(tmp1, CNAV_PREPROC);
+         chunk_t *tmp3 = chunk_get_next_ncnl(tmp2, CNAV_PREPROC);
+
+         if (!chunk_is_str(tmp3, ")", 1) ||
+             !chunk_is_str(tmp1, "*", 1) ||
+             (tmp2->type != CT_WORD))
+         {
+            LOG_FMT(LFPARAM, " <== [%s] not fcn type!\n", get_token_name(pc->type));
+            return(false);
+         }
+         LOG_FMT(LFPARAM, " <skip fcn type>");
+         tmp1 = chunk_get_next_ncnl(tmp3, CNAV_PREPROC);
+         tmp2 = chunk_get_next_ncnl(tmp1, CNAV_PREPROC);
+         if (chunk_is_str(tmp1, "(", 1))
+         {
+            tmp3 = chunk_get_next_type(tmp1, c_token_t(tmp1->type + 1), tmp1->level, CNAV_PREPROC);
+         }
+         pc = tmp3;
       }
       else
       {
