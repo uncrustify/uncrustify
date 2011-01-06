@@ -2326,6 +2326,15 @@ static bool can_be_full_param(chunk_t *start, chunk_t *end)
          }
          pc = tmp3;
       }
+      else if ((word_cnt == 1) && (pc->type == CT_TSQUARE))
+      {
+         /* ignore it */
+      }
+      else if ((word_cnt == 1) && (pc->type == CT_SQUARE_OPEN))
+      {
+         /* skip over any array stuff */
+         pc = chunk_skip_to_match(pc, CNAV_PREPROC);
+      }
       else
       {
          LOG_FMT(LFPARAM, " <== [%s] no way!\n", get_token_name(pc->type));
