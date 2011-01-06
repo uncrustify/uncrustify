@@ -139,7 +139,7 @@ chunk_t *set_paren_parent(chunk_t *start, c_token_t parent)
 {
    chunk_t *end;
 
-   end = chunk_get_next_type(start, (c_token_t)(start->type + 1), start->level, CNAV_PREPROC);
+   end = chunk_skip_to_match(start, CNAV_PREPROC);
    if (end != NULL)
    {
       start->parent_type = parent;
@@ -2322,7 +2322,7 @@ static bool can_be_full_param(chunk_t *start, chunk_t *end)
          tmp2 = chunk_get_next_ncnl(tmp1, CNAV_PREPROC);
          if (chunk_is_str(tmp1, "(", 1))
          {
-            tmp3 = chunk_get_next_type(tmp1, c_token_t(tmp1->type + 1), tmp1->level, CNAV_PREPROC);
+            tmp3 = chunk_skip_to_match(tmp1, CNAV_PREPROC);
          }
          pc = tmp3;
       }

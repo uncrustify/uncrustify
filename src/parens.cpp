@@ -159,7 +159,7 @@ static void check_bool_parens(chunk_t *popen, chunk_t *pclose, int nest)
       }
       else if (chunk_is_paren_open(pc))
       {
-         next = chunk_get_next_type(pc, (c_token_t)(pc->type + 1), pc->level);
+         next = chunk_skip_to_match(pc);
          if (next != NULL)
          {
             check_bool_parens(pc, next, nest + 1);
@@ -171,7 +171,7 @@ static void check_bool_parens(chunk_t *popen, chunk_t *pclose, int nest)
                (pc->type == CT_ANGLE_OPEN))
       {
          /* Skip [], {}, and <> */
-         pc = chunk_get_next_type(pc, (c_token_t)(pc->type + 1), pc->level);
+         pc = chunk_skip_to_match(pc);
       }
    }
 

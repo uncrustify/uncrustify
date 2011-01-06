@@ -1023,7 +1023,7 @@ static void process_if_chain(chunk_t *br_start)
       }
 
       braces[br_cnt++] = pc;
-      br_close         = chunk_get_next_type(pc, (c_token_t)(pc->type + 1), pc->level, CNAV_PREPROC);
+      br_close         = chunk_skip_to_match(pc, CNAV_PREPROC);
       if (br_close == NULL)
       {
          break;
