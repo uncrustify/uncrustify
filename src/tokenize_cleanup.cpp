@@ -441,6 +441,26 @@ void tokenize_cleanup(void)
          }
       }
 
+      /* ObjectiveC allows keywords to be used as identifiers in some situations
+       * This is a dirty hack to allow some of the more common situations.
+       */
+      if (cpd.lang_flags & LANG_OC)
+      {
+         if (((pc->type == CT_IF) ||
+             (pc->type == CT_FOR) ||
+             (pc->type == CT_WHILE)) &&
+             (next->type != CT_PAREN_OPEN))
+         {
+            pc->type = CT_WORD;
+         }
+         if ((pc->type == CT_DO) &&
+             ((prev->type == CT_MINUS) ||
+              (next->type == CT_SQUARE_CLOSE)))
+         {
+            pc->type = CT_WORD;
+         }
+      }
+
       /* Detect Objective C class name */
       if ((pc->type == CT_OC_IMPL) ||
           (pc->type == CT_OC_INTF) ||
