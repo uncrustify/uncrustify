@@ -449,16 +449,24 @@ void tokenize_cleanup(void)
          if (((pc->type == CT_IF) ||
              (pc->type == CT_FOR) ||
              (pc->type == CT_WHILE)) &&
-             (next->type != CT_PAREN_OPEN))
+             !chunk_is_token(next, CT_PAREN_OPEN))
          {
             pc->type = CT_WORD;
          }
          if ((pc->type == CT_DO) &&
-             ((prev->type == CT_MINUS) ||
-              (next->type == CT_SQUARE_CLOSE)))
+             (chunk_is_token(prev, CT_MINUS) ||
+              chunk_is_token(next, CT_SQUARE_CLOSE)))
          {
             pc->type = CT_WORD;
          }
+      }
+
+      /* Another hack to clean up more keyword abuse */
+      if ((pc->type == CT_CLASS) &&
+          (chunk_is_token(prev, CT_DOT) ||
+           chunk_is_token(next, CT_DOT)))
+      {
+         pc->type = CT_WORD;
       }
 
       /* Detect Objective C class name */
