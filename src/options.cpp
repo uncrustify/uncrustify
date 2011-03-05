@@ -1741,7 +1741,6 @@ void set_option_defaults(void)
    cpd.settings[UO_sp_pp_concat].a         = AV_ADD;
    cpd.settings[UO_sp_pp_stringify].a      = AV_ADD;
    cpd.settings[UO_sp_angle_shift].a       = AV_ADD;
-   cpd.settings[UO_tok_split_gte].b        = true;
 }
 
 
