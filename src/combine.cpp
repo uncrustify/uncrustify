@@ -2661,6 +2661,8 @@ static void mark_function(chunk_t *pc)
             {
                LOG_FMT(LFCN, " --? Skipped MEMBER and landed on %s\n",
                        (prev == NULL) ? "<null>" : get_token_name(prev->type));
+               pc->type = CT_FUNC_CALL;
+               isa_def = false;
                break;
             }
             LOG_FMT(LFCN, " <skip %.*s>", prev->len, prev->str);
