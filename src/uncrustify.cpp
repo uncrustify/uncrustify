@@ -851,6 +851,12 @@ static int load_header_files()
       retval |= load_mem_file_config(cpd.settings[UO_cmt_insert_class_header].str,
                                      cpd.class_hdr);
    }
+   if ((cpd.settings[UO_cmt_insert_oc_msg_header].str != NULL) &&
+       (cpd.settings[UO_cmt_insert_oc_msg_header].str[0] != 0))
+   {
+      retval |= load_mem_file_config(cpd.settings[UO_cmt_insert_oc_msg_header].str,
+                                     cpd.oc_msg_hdr);
+   }
    return(retval);
 }
 
@@ -1206,6 +1212,106 @@ static void add_func_header(c_token_t type, file_mem& fm)
 }
 
 
+static void add_msg_header(c_token_t type, file_mem& fm)
+{
+   chunk_t *pc;
+   chunk_t *ref;
+   chunk_t *tmp;
+   bool    do_insert;
+
+   for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next_ncnlnp(pc))
+   {
+      if (pc->type != type)
+      {
+         continue;
+      }
+
+      do_insert = false;
+
+      /* On a function proto or def. Back up to a close brace or semicolon on
+       * the same level
+       */
+      ref = pc;
+      while ((ref = chunk_get_prev(ref)) != NULL)
+      {
+         /* ignore the CT_TYPE token that is the result type */
+         if ((ref->level != pc->level) &&
+             ((ref->type == CT_TYPE) ||
+              (ref->type == CT_PTR_TYPE)))
+         {
+            continue;
+         }
+
+         if ((ref->level != pc->level) && (ref->type == CT_OC_CATEGORY))
+         {
+            ref = chunk_get_next_ncnl(ref);
+            if (ref)
+            {
+               do_insert = true;
+            }
+            break;
+         }
+
+         /* Bail if we change level or find an access specifier colon */
+         if ((ref->level != pc->level) || (ref->type == CT_PRIVATE_COLON))
+         {
+            do_insert = true;
+            break;
+         }
+
+         /* If we hit an angle close, back up to the angle open */
+         if (ref->type == CT_ANGLE_CLOSE)
+         {
+            ref = chunk_get_prev_type(ref, CT_ANGLE_OPEN, ref->level, CNAV_PREPROC);
+            continue;
+         }
+
+         /* Bail if we hit a preprocessor and cmt_insert_before_preproc is false */
+         if (ref->flags & PCF_IN_PREPROC)
+         {
+            tmp = chunk_get_prev_type(ref, CT_PREPROC, ref->level);
+            if ((tmp != NULL) && (tmp->parent_type == CT_PP_IF))
+            {
+               tmp = chunk_get_prev_nnl(tmp);
+               if (chunk_is_comment(tmp) &&
+                   !cpd.settings[UO_cmt_insert_before_preproc].b)
+               {
+                  break;
+               }
+            }
+         }
+
+         /* Ignore 'right' comments */
+         if (chunk_is_comment(ref) && chunk_is_newline(chunk_get_prev(ref)))
+         {
+            break;
+         }
+
+         if ((ref->level == pc->level) &&
+             ((ref->flags & PCF_IN_PREPROC) ||
+              (ref->type == CT_SEMICOLON) ||
+              (ref->type == CT_BRACE_CLOSE) ||
+              (ref->type == CT_OC_CLASS)))
+         {
+            do_insert = true;
+            break;
+         }
+      }
+
+      if (do_insert)
+      {
+         /* Insert between after and ref */
+         chunk_t *after = chunk_get_next_ncnl(ref);
+         tokenize(fm.data, fm.length, after);
+         for (tmp = chunk_get_next(ref); tmp != after; tmp = chunk_get_next(tmp))
+         {
+            tmp->level = after->level;
+         }
+      }
+   }
+}
+
+
 static void uncrustify_start(const char *data, int data_len)
 {
    /**
@@ -1291,6 +1397,10 @@ static void uncrustify_file(const char *data, int data_len, FILE *pfout,
       if (cpd.class_hdr.data != NULL)
       {
          add_func_header(CT_CLASS, cpd.class_hdr);
+      }
+      if (cpd.oc_msg_hdr.data != NULL)
+      {
+         add_msg_header(CT_OC_MSG_DECL, cpd.oc_msg_hdr);
       }
 
       /**

@@ -309,6 +309,7 @@ struct cp_data
    file_mem           file_hdr;   /* for cmt_insert_file_header */
    file_mem           file_ftr;   /* for cmt_insert_file_footer */
    file_mem           func_hdr;   /* for cmt_insert_func_header */
+   file_mem           oc_msg_hdr; /* for cmt_insert_oc_msg_header */
    file_mem           class_hdr;  /* for cmt_insert_class_header */
 
    int                lang_flags; // LANG_xxx

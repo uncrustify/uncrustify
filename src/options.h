@@ -592,6 +592,7 @@ enum uncrustify_options
    UO_cmt_insert_file_footer,
    UO_cmt_insert_func_header,
    UO_cmt_insert_class_header,
+   UO_cmt_insert_oc_msg_header,
    UO_cmt_insert_before_preproc,
 
    UO_string_escape_char,       // the string escape char to use
