@@ -1037,7 +1037,7 @@ void register_options(void)
    unc_add_option("cmt_insert_before_preproc", UO_cmt_insert_before_preproc, AT_BOOL,
                   "If a preprocessor is encountered when stepping backwards from a function name, then\n"
                   "this option decides whether the comment should be inserted.\n"
-                  "Affects UO_cmt_insert_oc_msg_header, cmt_insert_func_header and cmt_insert_class_header.");
+                  "Affects cmt_insert_oc_msg_header, cmt_insert_func_header and cmt_insert_class_header.");
 
    unc_begin_group(UG_codemodify, "Code modifying options (non-whitespace)");
    unc_add_option("mod_full_brace_do", UO_mod_full_brace_do, AT_IARF,
