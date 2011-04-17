@@ -590,11 +590,12 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
    }
 
    /* Mark expression starts */
+   chunk_t *tmp = chunk_get_next_ncnl(pc);
    if ((pc->type == CT_ARITH) ||
        (pc->type == CT_ASSIGN) ||
        (pc->type == CT_CASE) ||
        (pc->type == CT_COMPARE) ||
-       (pc->type == CT_STAR) ||
+       ((pc->type == CT_STAR) && tmp && (tmp->type != CT_STAR)) ||
        (pc->type == CT_BOOL) ||
        (pc->type == CT_MINUS) ||
        (pc->type == CT_PLUS) ||

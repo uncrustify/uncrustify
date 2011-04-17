@@ -779,7 +779,11 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
          pc->type = CT_DEREF;
       }
       else if (((prev->type == CT_WORD) && chunk_ends_type(prev)) ||
-               (prev->type == CT_DC_MEMBER))
+               (prev->type == CT_DC_MEMBER) || (prev->type == CT_PTR_TYPE))
+      {
+         pc->type = CT_PTR_TYPE;
+      }
+      else if (next->type == CT_SQUARE_OPEN)
       {
          pc->type = CT_PTR_TYPE;
       }
