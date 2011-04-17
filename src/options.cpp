@@ -1073,10 +1073,10 @@ void register_options(void)
                   "the close brace, a comment will be added.");
    unc_add_option("mod_add_long_ifdef_endif_comment", UO_mod_add_long_ifdef_endif_comment, AT_NUM,
                   "If an #ifdef body exceeds the specified number of newlines and doesn't have a comment after\n"
-                  "the #else, a comment will be added.");
+                  "the #endif, a comment will be added.");
    unc_add_option("mod_add_long_ifdef_else_comment", UO_mod_add_long_ifdef_else_comment, AT_NUM,
                   "If an #ifdef or #else body exceeds the specified number of newlines and doesn't have a comment after\n"
-                  "the #endif, a comment will be added.");
+                  "the #else, a comment will be added.");
    unc_add_option("mod_sort_import", UO_mod_sort_import, AT_BOOL,
                   "If TRUE, will sort consecutive single-line 'import' statements [Java, D]");
    unc_add_option("mod_sort_using", UO_mod_sort_using, AT_BOOL,
