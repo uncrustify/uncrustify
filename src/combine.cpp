@@ -1485,6 +1485,7 @@ static void fix_type_cast(chunk_t *start)
  *
  * tag { ... } [*] word [, [*]word] ;
  * tag [word/type] { ... } [*] word [, [*]word] ;
+ * enum [word/type [: int_type]] { ... } [*] word [, [*]word] ;
  * tag [word/type] [word]; -- this gets caught later.
  * fcn(tag [word/type] [word])
  * a = (tag [word/type] [*])&b;
@@ -1505,18 +1506,39 @@ static void fix_enum_struct_union(chunk_t *pc)
 
    /* the next item is either a type or open brace */
    next = chunk_get_next_ncnl(pc);
-   if (next->type == CT_TYPE)
+   if (next && (next->type == CT_TYPE))
    {
       next->parent_type = pc->type;
       next = chunk_get_next_ncnl(next);
 
-      if (((cpd.lang_flags & LANG_PAWN) != 0) &&
-          (next->type == CT_PAREN_OPEN))
+      /* next up is either a colon, open brace, or open paren (pawn) */
+      if (!next)
+      {
+         return;
+      }
+      else if (((cpd.lang_flags & LANG_PAWN) != 0) &&
+               (next->type == CT_PAREN_OPEN))
       {
          next = set_paren_parent(next, CT_ENUM);
       }
+      else if ((pc->type == CT_ENUM) && (next->type == CT_COLON))
+      {
+         /* enum TYPE : INT_TYPE { */
+         next = chunk_get_next_ncnl(next);
+         if (next)
+         {
+            make_type(next);
+            next = chunk_get_next_ncnl(next);
+         }
+      }
+      else
+      {
+         LOG_FMT(LSYS, "%s: %d:%d unexpected chunk %s '%.*s' - please report\n",
+                 __func__, next->orig_line, next->orig_col,
+                 get_token_name(next->type), next->len, next->str);
+      }
    }
-   if (next->type == CT_BRACE_OPEN)
+   if (next && (next->type == CT_BRACE_OPEN))
    {
       flag_parens(next, (pc->type == CT_ENUM) ? PCF_IN_ENUM : PCF_IN_STRUCT,
                   CT_NONE, CT_NONE, false);
