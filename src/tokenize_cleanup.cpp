@@ -441,6 +441,31 @@ void tokenize_cleanup(void)
          }
       }
 
+      /* handle MS abomination 'for each' */
+      if ((pc->type == CT_FOR) && chunk_is_str(next, "each", 4) &&
+          (next == chunk_get_next(pc)))
+      {
+         /* merge the two */
+         pc->len = next->orig_col_end - pc->orig_col;
+         pc->orig_col_end = next->orig_col_end;
+         chunk_del(next);
+         next = chunk_get_next_ncnl(pc);
+         /* label the 'in' */
+         if (next && (next->type == CT_PAREN_OPEN))
+         {
+            tmp = chunk_get_next_ncnl(next);
+            while (tmp && (tmp->type != CT_PAREN_CLOSE))
+            {
+               if (chunk_is_str(tmp, "in", 2))
+               {
+                  tmp->type = CT_IN;
+                  break;
+               }
+               tmp = chunk_get_next_ncnl(tmp);
+            }
+         }
+      }
+
       /* ObjectiveC allows keywords to be used as identifiers in some situations
        * This is a dirty hack to allow some of the more common situations.
        */
