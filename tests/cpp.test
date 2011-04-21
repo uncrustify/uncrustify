@@ -66,6 +66,8 @@
 
 30080 nl_brace_brace-a.cfg             cpp/nl_brace_brace.cpp
 
+30085 nSolve.cfg                       cpp/align_class.cpp
+
 30100 nl_template_class-force.cfg      cpp/templates.cpp
 30101 nl_template_class-remove.cfg     cpp/templates.cpp
 30102 template_sp-force.cfg            cpp/templates.cpp
