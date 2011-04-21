@@ -900,6 +900,8 @@ static void align_same_func_call_params()
 static void align_func_proto(int span)
 {
    chunk_t    *pc;
+   chunk_t    *toadd;
+   chunk_t    *tmp;
    bool       look_bro = false;
    AlignStack as;
    AlignStack as_br;
@@ -926,12 +928,19 @@ static void align_func_proto(int span)
          if ((pc->parent_type == CT_OPERATOR) &&
              cpd.settings[UO_align_on_operator].b)
          {
-            as.Add(chunk_get_prev_ncnl(pc));
+            toadd = chunk_get_prev_ncnl(pc);
          }
          else
          {
-            as.Add(pc);
+            toadd = pc;
          }
+         /* Skip over any class stuff: bool CFoo::bar() */
+         while (((tmp = chunk_get_prev_ncnl(toadd)) != NULL) &&
+                (tmp->type == CT_DC_MEMBER))
+         {
+            toadd = chunk_get_prev_ncnl(tmp);
+         }
+         as.Add(toadd);
          look_bro = (pc->type == CT_FUNC_DEF) &&
                     cpd.settings[UO_align_single_line_brace].b;
       }
