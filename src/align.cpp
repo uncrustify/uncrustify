@@ -894,6 +894,21 @@ static void align_same_func_call_params()
 }
 
 
+chunk_t *step_back_over_member(chunk_t *pc)
+{
+   chunk_t *tmp;
+
+   /* Skip over any class stuff: bool CFoo::bar() */
+   while (((tmp = chunk_get_prev_ncnl(pc)) != NULL) &&
+          (tmp->type == CT_DC_MEMBER))
+   {
+      /* TODO: verify that we are pointing at something sane? */
+      pc = chunk_get_prev_ncnl(tmp);
+   }
+   return(pc);
+}
+
+
 /**
  * Aligns all function prototypes in the file.
  */
@@ -901,7 +916,6 @@ static void align_func_proto(int span)
 {
    chunk_t    *pc;
    chunk_t    *toadd;
-   chunk_t    *tmp;
    bool       look_bro = false;
    AlignStack as;
    AlignStack as_br;
@@ -934,13 +948,7 @@ static void align_func_proto(int span)
          {
             toadd = pc;
          }
-         /* Skip over any class stuff: bool CFoo::bar() */
-         while (((tmp = chunk_get_prev_ncnl(toadd)) != NULL) &&
-                (tmp->type == CT_DC_MEMBER))
-         {
-            toadd = chunk_get_prev_ncnl(tmp);
-         }
-         as.Add(toadd);
+         as.Add(step_back_over_member(toadd));
          look_bro = (pc->type == CT_FUNC_DEF) &&
                     cpd.settings[UO_align_single_line_brace].b;
       }
@@ -1133,7 +1141,7 @@ static chunk_t *align_var_def_brace(chunk_t *start, int span, int *p_nl_count)
             LOG_FMT(LAVDB, "    add=[%.*s] line=%d col=%d level=%d\n",
                     pc->len, pc->str, pc->orig_line, pc->orig_col, pc->level);
 
-            as.Add(pc);
+            as.Add(step_back_over_member(pc));
 
             if (cpd.settings[UO_align_var_def_colon].b)
             {
