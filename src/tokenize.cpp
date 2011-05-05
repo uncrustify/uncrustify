@@ -696,8 +696,13 @@ bool parse_word(chunk_t *pc, bool skipcheck)
    int               len = 1;
    const chunk_tag_t *tag;
 
-   while ((pc->str[len] < 127) && CharTable::IsKw2(pc->str[len]))
+   while (CharTable::IsKw2(pc->str[len]))
    {
+      /* HACK: Non-ASCII character are only allowed in identifiers */
+      if (pc->str[len] & 0x80)
+      {
+         skipcheck = true;
+      }
       len++;
    }
    cpd.column += len;

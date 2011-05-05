@@ -27,7 +27,18 @@ struct CharTable
 
    static inline int Get(char ch)
    {
-      return(chars[(int)ch & 0x7f]);
+      if ((ch & 0x80) == 0)
+      {
+         return(chars[(int)ch]);
+      }
+
+      /* HACK: If the top bit is set, then we are likely dealing with UTF-8,
+       * and since that is only allowed in identifiers, then assume that is
+       * what this is. This only prevents corruption, it does not properly
+       * handle UTF-8 because the byte length and screen size are assumed to be
+       * the same.
+       */
+      return(KW1 | KW2);
    }
 
 
