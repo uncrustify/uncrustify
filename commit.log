@@ -1,3 +1,229 @@
+commit 6ed81d30cf926218d873ea644fdfe016343cb1bf
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Wed May 4 21:09:14 2011 -0500
+
+    Do not corrupt files that contain non-ASCII UTF-8 characters
+
+commit f4c1969ad44a8ae7c79dcb616aed2e70d81989a8
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Wed Apr 20 22:07:39 2011 -0500
+
+    Add missing test file
+
+commit 5b8cf13145ed0e104d6add03a338b8c80b1f6c1c
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Wed Apr 20 21:50:19 2011 -0500
+
+    Add a test for aligning static class variables
+
+commit c581c009194be58024a1eaf53d9c753ffdde06f0
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Wed Apr 20 21:49:28 2011 -0500
+
+    Skip over member stuff 'foo::bar' when aligning variables.
+
+commit c6266ba06538ebda17cc3bcd8b9ba5a218dda324
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Wed Apr 20 21:37:47 2011 -0500
+
+    Back up past and class specifiers when aligning function prototypes and
+    single-line functions.
+
+commit edaa77817e796fbd54c55106da068aa8789f4b36
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Apr 16 23:40:34 2011 -0500
+
+    Fix '*' detection in "BYTE** c = new BYTE*[12];"
+
+commit 7925530f1e5405d738729607d9761c7e8f1ead98
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Apr 16 23:20:24 2011 -0500
+
+    Label the '&' in 'TYPE &' as BYREF.
+
+commit 4b8f3fb5ace5d2286315dcc815a4e6c0d6bf700f
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Apr 16 22:57:07 2011 -0500
+
+    Handle MS extension: 'for each ( xx in yy )'
+
+commit 5885e05beac1496cb9ad5688f28edd9d63c198b0
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Apr 16 22:42:58 2011 -0500
+
+    Fix the description for mod_add_long_ifdef_else_comment and
+    mod_add_long_ifdef_endif_comment
+
+commit 837ccbf4713428383857453fcd1ef1831dfb2036
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Apr 16 22:38:18 2011 -0500
+
+    Add test for D sized enums
+
+commit f9263ccd64d06fb2a9425ff55e8caaf522936645
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Apr 16 22:35:43 2011 -0500
+
+    Correctly handle D sized enums in "enum x : int { ... }"
+
+commit 8438283ffd1ce36116c2b252362c835a7f4f7326
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Fri Apr 8 18:24:55 2011 -0500
+
+    Fix cut and paste error in description for cmt_insert_before_preproc
+
+commit bc33025cb4fa8772fe036cdc6f6cf1a665525f64
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Mar 19 09:11:55 2011 -0500
+
+    Add inserted comment substitution for "$(message)".
+    From: Kevin Hardman
+
+commit d633b408c604babcaf349b7418d519e3f8f0bd20
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Mar 19 09:10:42 2011 -0500
+
+    Add new option cmt_insert_oc_msg_header.
+    From: Kevin Hardman
+
+commit ce5edfe22ae1d6b0c3d27e516a8f2dff6b777fdc
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Mar 5 15:33:11 2011 -0600
+
+    The default for tok_split_gte is now false, so it needs to be set.
+
+commit 4a011f3b8d44762adadcef4f071bc04ab6c982ef
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Mar 5 15:29:17 2011 -0600
+
+    Fix detection of this: d[i].e * f();
+    Was detecting 'f()' as a function prototype, should be a function call.
+
+commit e02cea59246cd98e2e4682a126a15a83d8f9a2fa
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Mar 5 15:28:10 2011 -0600
+
+    Fix segfault introduced in the last commit.
+
+commit ee31f327f5b1faf197bb86c7942fb2e35a685c89
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Mar 5 15:14:26 2011 -0600
+
+    Mark the parent of braces if an open brace follows a function call.
+    Fixed SF issue 3171797.
+
+commit 01c2d27e0f8f4a4fccd037c4aabe00b7dd25eec2
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Mar 5 14:48:01 2011 -0600
+
+    Change the default to NOT split '>=' if it could be the closing part of
+    a template.
+
+commit 8a6089244856829128c3f0d2a7fe0b65010c765e
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Fri Jan 21 22:25:13 2011 -0600
+
+    Add a hack to allow a something named 'class' that isn't part of a class
+    definition. As in: "MyClass.class.getCanonicalName()"
+
+commit d57a1a30683db491fa00879509dfe506e3dad6c6
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Fri Jan 21 21:58:56 2011 -0600
+
+    Add some special handling to allow ObjC to use some keywords as identifiers
+
+commit 03b4a31c63a15b75d3c8759a6d92610e450c5ad6
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Thu Jan 6 10:23:33 2011 -0600
+
+    Add a test for detecting function parameters
+
+commit 3e4c826e4cacd760c3b7860a4366549be917b445
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Thu Jan 6 10:05:50 2011 -0600
+
+    Function parameters may be arrays.
+
+commit b1b19b9ddd9411f99ccd642308856d071f157440
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Thu Jan 6 10:04:38 2011 -0600
+
+    Use chunk_skip_to_match() instead of chunk_get_next_type() where appropriate
+
+commit af7ee0f748283ff39e20eae928fd6eab630c54dc
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Jan 1 13:42:12 2011 -0600
+
+    Change logic so that align_keep_tabs doesn't break align_with_tabs.
+
+commit 2ad8fc4030d34aebd55ff1a138a3208f558680d7
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Jan 1 13:18:55 2011 -0600
+
+    Change some keywords to CT_WORD between '@interface' and '@end' (ObjC)
+
+commit a726617e74b739a54f6fda3487d17180de3e9ba1
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Jan 1 12:46:44 2011 -0600
+
+    Allow function types inside function parameters in a prototype.
+
+commit a6f728ec83a5798f65566cf70f67b0eea44e2050
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Fri Dec 31 14:52:23 2010 -0600
+
+    Add tests for sp_catch_paren, sp_throw_paren, sp_version_paren and
+    sp_scope_paren.
+
+commit 135d677b97e3dea11600ea0adce9228563a0e583
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Fri Dec 31 14:49:28 2010 -0600
+
+    Add new options for D: sp_scope_paren and sp_version_paren
+
+commit c6a66430edfc6d2e0705b396a0877511aa7d6042
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Fri Dec 31 14:28:23 2010 -0600
+
+    Add option sp_catch_paren
+
+commit 27df8f102b8848b347a5788206795b175bdd4c9d
+Author: ben <ben@ben-desktop.(none)>
+Date:   Fri Dec 31 13:51:16 2010 -0600
+
+    Only mark a colon as a CT_CLASS_COLON if at the same level as the parens.
+
+commit 6840f94af18dcc30f252bf0c45642673f7ba901b
+Author: ben <ben@ben-desktop.(none)>
+Date:   Fri Dec 31 12:15:00 2010 -0600
+
+    Add option tok_split_gte to disable splitting '>>=' and '>=' in template
+    detection.
+
+commit e6528e71b685a73ee30da0eabe3521ce03c3d8a9
+Author: ben <ben@ben-desktop.(none)>
+Date:   Fri Dec 31 11:33:11 2010 -0600
+
+    Don't right-align if align_on_tabstop is set.
+
+commit 5c2a8b36760bf64059a5b60bf6f827b190cdb2cd
+Author: ben <ben@ben-desktop.(none)>
+Date:   Fri Dec 31 11:31:00 2010 -0600
+
+    Remove some duplicate tab-calculating code.
+
+commit a22f48121a9eeb207230c0063d0c51f38ce8fa82
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Thu Nov 25 10:46:38 2010 -0600
+
+    Add note about how to push a tag
+
+commit 0247755e1496b876c4fa5759eafb6ebc1b47a459
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Thu Nov 25 10:20:27 2010 -0600
+
+    Prep uncrustify 0.57 release
+
 commit cbb8025fd6ba45664ed49e7f4d4c4e215fc77b01
 Author: Ben Gardner <gardner.ben@gmail.com>
 Date:   Wed Nov 24 10:51:39 2010 -0600

@@ -1,4 +1,16 @@
 
+Change highlights in uncrustify-0.58 (19 May 2011)
+-------------------------------------------------------------------------------
+New options:
+ - tok_split_gte
+ - sp_catch_paren
+ - sp_scope_paren
+ - sp_version_paren
+ - cmt_insert_oc_msg_header
+
+See commit.log for details.
+
+
 Change highlights in uncrustify-0.57 (25 Nov 2010)
 -------------------------------------------------------------------------------
 New options:
