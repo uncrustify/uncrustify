@@ -2433,8 +2433,14 @@ static void mark_function(chunk_t *pc)
          tmp = pc;
          while ((tmp = chunk_get_prev_ncnl(tmp)) != NULL)
          {
-            if (tmp->type == CT_BRACE_CLOSE)
+            if ((tmp->type == CT_BRACE_CLOSE) ||
+                (tmp->type == CT_SEMICOLON))
             {
+               break;
+            }
+            if (tmp->type == CT_ASSIGN)
+            {
+               pc->type = CT_FUNC_CALL;
                break;
             }
             if (tmp->type == CT_TEMPLATE)
@@ -2686,7 +2692,8 @@ static void mark_function(chunk_t *pc)
             prev = chunk_get_prev_ncnlnp(prev);
             if ((prev == NULL) ||
                 ((prev->type != CT_WORD) &&
-                 (prev->type != CT_TYPE)))
+                 (prev->type != CT_TYPE) &&
+                 (prev->type != CT_THIS)))
             {
                LOG_FMT(LFCN, " --? Skipped MEMBER and landed on %s\n",
                        (prev == NULL) ? "<null>" : get_token_name(prev->type));
