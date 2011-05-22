@@ -7,7 +7,7 @@ void foo()
 
 
 /* The 'u8', 'u', and 'U' prefixes */
-const char *s1     = u8"I'm a UTF-8 string.";
+const char     *s1 = u8"I'm a UTF-8 string.";
 const char16_t *s2 = u"This is a UTF-16 string.";
 const char32_t *s3 = U"This is a UTF-32 string.";
 
@@ -25,7 +25,7 @@ auto foo = R"FOO"(
 )FOO"";
 
 /* Combo */
-const char *c1     = u8R"XXX(I'm a "raw UTF-8" string.)XXX";
+const char     *c1 = u8R"XXX(I'm a "raw UTF-8" string.)XXX";
 const char16_t *c2 = uR"*(This is a "raw UTF-16" string.)*";
 const char32_t *c3 = UR"(This is a "raw UTF-32" string.)";
 
