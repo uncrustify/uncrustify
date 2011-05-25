@@ -11,7 +11,6 @@
  */
 #include "logger.h"
 
-#include <cstdio>
 #include <stdarg.h>
 #include "unc_ctype.h"
 
@@ -93,7 +92,7 @@ void log_set_mask(const log_mask_t *mask)
 {
    if (mask != NULL)
    {
-      memcpy(g_log.mask.bits, mask->bits, sizeof(g_log.mask.bits));
+	   g_log.mask.bits = mask->bits;
    }
 }
 
@@ -107,7 +106,7 @@ void log_get_mask(log_mask_t *mask)
 {
    if (mask != NULL)
    {
-      memcpy(mask->bits, g_log.mask.bits, sizeof(g_log.mask.bits));
+	   mask->bits = g_log.mask.bits;
    }
 }
 
