@@ -92,7 +92,7 @@ void log_set_mask(const log_mask_t *mask)
 {
    if (mask != NULL)
    {
-	   g_log.mask.bits = mask->bits;
+      g_log.mask.bits = mask->bits;
    }
 }
 
@@ -106,7 +106,7 @@ void log_get_mask(log_mask_t *mask)
 {
    if (mask != NULL)
    {
-	   mask->bits = g_log.mask.bits;
+      mask->bits = g_log.mask.bits;
    }
 }
 

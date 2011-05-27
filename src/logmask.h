@@ -21,7 +21,7 @@ typedef UINT8   log_sev_t;
 /** A simple array of 256 bits */
 typedef struct
 {
-   bitset<256> bits;   /* 256 levels */
+   bitset<256> bits;    /* 256 levels */
 } log_mask_t;
 
 
@@ -33,7 +33,7 @@ typedef struct
  */
 static_inline bool logmask_test(const log_mask_t *mask, log_sev_t sev)
 {
-	return mask->bits.test(sev);
+   return mask->bits.test(sev);
 }
 
 
@@ -47,11 +47,11 @@ static_inline void logmask_set_sev(log_mask_t *mask, log_sev_t sev, bool value)
 {
    if (value)
    {
-	   mask->bits.set(sev);
+      mask->bits.set(sev);
    }
    else
    {
-	   mask->bits.reset(sev);
+      mask->bits.reset(sev);
    }
 }
 
@@ -65,11 +65,11 @@ static_inline void logmask_set_all(log_mask_t *mask, bool value)
 {
    if (value)
    {
-	   mask->bits.set();
+      mask->bits.set();
    }
    else
    {
-	   mask->bits.reset();
+      mask->bits.reset();
    }
 }
 
