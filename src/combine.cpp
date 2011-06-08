@@ -1538,16 +1538,6 @@ static void fix_enum_struct_union(chunk_t *pc)
             next = chunk_get_next_ncnl(next);
          }
       }
-      else if (next->type == CT_BRACE_OPEN)
-      {
-         /* this is expected */
-      }
-      else
-      {
-         LOG_FMT(LSYS, "%s: %d:%d unexpected chunk %s '%.*s' - please report\n",
-                 __func__, next->orig_line, next->orig_col,
-                 get_token_name(next->type), next->len, next->str);
-      }
    }
    if (next && (next->type == CT_BRACE_OPEN))
    {
