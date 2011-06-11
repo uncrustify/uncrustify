@@ -418,7 +418,7 @@ static bool parse_number(chunk_t *pc)
                   (pc->str[len] == '_'));
          break;
 
-      case '0':                /* octal */
+      case '0':                /* octal or decimal */
       case '1':
       case '2':
       case '3':
@@ -426,10 +426,12 @@ static bool parse_number(chunk_t *pc)
       case '5':
       case '6':
       case '7':
+      case '8':
+      case '9':
          do
          {
             len++;
-         } while (((pc->str[len] >= '0') && (pc->str[len] <= '7')) ||
+         } while (((pc->str[len] >= '0') && (pc->str[len] <= '9')) ||
                   (pc->str[len] == '_'));
          break;
 
