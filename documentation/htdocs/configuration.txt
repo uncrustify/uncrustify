@@ -1,7 +1,5 @@
 Quick documentation (probably out of date - see options.h)
 
-$Id: configuration.txt 858 2007-08-10 23:45:33Z bengardner $
-
 There are five type of arguments:
 	- boolean (true/false)
 	- numeric

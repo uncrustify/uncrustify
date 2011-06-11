@@ -1,4 +1,4 @@
-$Id: theory.txt 858 2007-08-10 23:45:33Z bengardner $
+
 -------------------------------------------------------------------------------
 This document is too incomplete to be of much use.
 Patches are welcome!

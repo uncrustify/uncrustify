@@ -1,8 +1,6 @@
 #
 # My favorite format
 #
-# $Id: ben.cfg 408 2006-08-11 02:08:30Z bengardner $
-#
 
 newlines                        = LF		# AUTO (default), CRLF, CR, or LF
 

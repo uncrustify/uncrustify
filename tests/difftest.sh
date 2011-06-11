@@ -1,12 +1,10 @@
 #! /bin/sh
-# $Id: difftest.sh 798 2007-07-24 16:01:09Z bengardner $
-#
 # Shows the difference for a failed test
-#  
+#
 
 if [ -n "$1" ] ; then
     case  "$1" in
-        -h|--help|--usage) 
+        -h|--help|--usage)
             fn=$(basename $0)
             echo "Usage: $fn [TEST [LANG]]"
             echo
