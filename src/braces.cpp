@@ -125,15 +125,15 @@ static void examine_braces(void)
          if ((((pc->parent_type == CT_IF) ||
                (pc->parent_type == CT_ELSE) ||
                (pc->parent_type == CT_ELSEIF)) &&
-              ((cpd.settings[UO_mod_full_brace_if].a & AV_REMOVE) != 0)) ||
+              ((cpd.settings[UO_mod_full_brace_if].a) == AV_REMOVE)) ||
              ((pc->parent_type == CT_DO) &&
-              ((cpd.settings[UO_mod_full_brace_do].a & AV_REMOVE) != 0)) ||
+              ((cpd.settings[UO_mod_full_brace_do].a) == AV_REMOVE)) ||
              ((pc->parent_type == CT_FOR) &&
-              ((cpd.settings[UO_mod_full_brace_for].a & AV_REMOVE) != 0)) ||
+              ((cpd.settings[UO_mod_full_brace_for].a) == AV_REMOVE)) ||
              ((pc->parent_type == CT_USING_STMT) &&
-              ((cpd.settings[UO_mod_full_brace_using].a & AV_REMOVE) != 0)) ||
+              ((cpd.settings[UO_mod_full_brace_using].a) == AV_REMOVE)) ||
              ((pc->parent_type == CT_WHILE) &&
-              ((cpd.settings[UO_mod_full_brace_while].a & AV_REMOVE) != 0)))
+              ((cpd.settings[UO_mod_full_brace_while].a) == AV_REMOVE)))
          {
             examine_brace(pc);
          }
