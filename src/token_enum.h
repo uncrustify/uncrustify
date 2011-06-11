@@ -291,6 +291,9 @@ typedef enum
    /* Vala stuff */
    CT_CONSTRUCT,        /* braced "construct { }" or qualifier "(construct int x)" */
    CT_LAMBDA,
+
+   /* Java */
+   CT_ASSERT,           /* assert EXP1 [ : EXP2 ] ; */
 } c_token_t;
 
 #endif   /* TOKEN_ENUM_H_INCLUDED */

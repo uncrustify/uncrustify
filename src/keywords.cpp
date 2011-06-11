@@ -64,6 +64,7 @@ static const chunk_tag_t keywords[] =
    { "asm",              CT_ASM,          LANG_C | LANG_CPP | LANG_D                                                  },
    { "assert",           CT_FUNCTION,     LANG_D | LANG_PAWN                                                          }, // PAWN
    { "assert",           CT_PP_ASSERT,    LANG_PAWN | FLAG_PP                                                         }, // PAWN
+   { "assert",           CT_ASSERT,       LANG_JAVA                                                                   },
    { "auto",             CT_QUALIFIER,    LANG_C | LANG_CPP | LANG_D                                                  },
    { "base",             CT_BASE,         LANG_CS | LANG_VALA                                                         },
    { "bit",              CT_TYPE,         LANG_D                                                                      },
