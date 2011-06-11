@@ -4,5 +4,5 @@
 # Range: 80000 - 89999
 # test.name  config.file  input.file
 
-# 50000 java.cfg                 java/test.java
+80000 ben.cfg                 java/assert.java
 
