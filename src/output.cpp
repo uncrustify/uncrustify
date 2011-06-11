@@ -1012,7 +1012,7 @@ static void output_cmt_start(cmt_reflow& cmt, chunk_t *pc)
        ((pc->parent_type == CT_COMMENT_END) ||
         (pc->parent_type == CT_COMMENT_WHOLE)))
    {
-      cmt.column = next_tab_column(cmt.column - 1);
+      cmt.column = align_tab_column(cmt.column - 1);
       //LOG_FMT(LSYS, "%s: line %d, orig:%d new:%d\n",
       //        __func__, pc->orig_line, pc->column, cmt.column);
       pc->column = cmt.column;

@@ -312,6 +312,10 @@ int next_tab_column(int col)
 static_inline
 int align_tab_column(int col)
 {
+   if (col <= 0)
+   {
+      col = 1;
+   }
    if ((col % cpd.settings[UO_output_tab_size].n) != 1)
    {
       col = next_tab_column(col);
