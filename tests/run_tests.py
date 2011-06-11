@@ -75,6 +75,10 @@ else:
 	MISMATCH_COLOR = FG_RED #REVERSE
 	UNSTABLE_COLOR = FGB_CYAN
 
+# log_levels:
+# bit 0: show a diff on unstable or failures
+# bit 1: show passes
+# bit 2: show commands
 log_level = 0
 
 def usage_exit():
@@ -99,7 +103,7 @@ def run_tests(test_name, config_name, input_name, lang):
 		pass
 
 	cmd = "%s/uncrustify -q -c %s -f input/%s %s > %s" % (os.path.abspath('../src'), config_name, input_name, lang, resultname)
-	if log_level >= 2:
+	if log_level & 2:
 		print "RUN: " + cmd
 	a = os.system(cmd)
 	if a != 0:
@@ -109,7 +113,7 @@ def run_tests(test_name, config_name, input_name, lang):
 	try:
 		if not filecmp.cmp(resultname, outputname):
 			print MISMATCH_COLOR + "MISMATCH: " + NORMAL + test_name
-			if log_level >= 3:
+			if log_level & 1:
 				cmd = "diff -u %s %s" % (outputname, resultname)
 				os.system(cmd)
 			return -1
@@ -120,7 +124,7 @@ def run_tests(test_name, config_name, input_name, lang):
 	# The file in results matches the file in output.
 	# Re-run with the output file as the input to check stability.
 	cmd = "%s/uncrustify -q -c %s -f %s %s > %s" % (os.path.abspath('../src'), config_name, outputname, lang, resultname)
-	if log_level >= 2:
+	if log_level & 2:
 		print "RUN: " + cmd
 	a = os.system(cmd)
 	if a != 0:
@@ -130,7 +134,7 @@ def run_tests(test_name, config_name, input_name, lang):
 	try:
 		if not filecmp.cmp(resultname, outputname):
 			print UNSTABLE_COLOR + "UNSTABLE: " + NORMAL + test_name
-			if log_level >= 3:
+			if log_level & 1:
 				cmd = "diff -u %s %s" % (outputname, resultname)
 				os.system(cmd)
 			return -2
@@ -139,7 +143,7 @@ def run_tests(test_name, config_name, input_name, lang):
 		print UNSTABLE_COLOR + "MISSING: " + NORMAL + test_name
 		return -1
 
-	if log_level >= 1:
+	if log_level & 4:
 		print PASS_COLOR + "PASSED: " + NORMAL + test_name
 	return 0
 
@@ -178,10 +182,16 @@ if __name__ == '__main__':
 	args = []
 	the_tests = []
 	for arg in sys.argv[1:]:
-		if arg.startswith('-v'):
-			for ch in arg[1:]:
-				if ch == 'v':
-					log_level += 1
+		if arg.startswith('-'):
+			for cc in arg[1:]:
+				if cc == 'd':       # show diff on failure
+					log_level |= 1
+				elif cc == 'c':     # show commands
+					log_level |= 2
+				elif cc == 'p':     # show passes
+					log_level |= 4
+				else:
+					sys.exit('Unknown option "%s"' % (cc))
 		else:
 			args.append(arg)
 
