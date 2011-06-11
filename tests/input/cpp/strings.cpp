@@ -47,3 +47,6 @@ OutputType some_variable = L"1234"_Suffix;     //Calls the const wchar_t * versi
 OutputType some_variable = u"1234"_Suffix;     //Calls the const char16_t * version
 OutputType some_variable = U"1234"_Suffix;     //Calls the const char32_t * version
 
+/* Some stuff that should NOT be detected as a C++0x  user-defined literal */
+sscanf(text, "%"SCNx64, &val);
+printf("Val=%"PRIx64"\n", val);

@@ -349,12 +349,32 @@ static bool parse_comment(chunk_t *pc)
 }
 
 
-static void parse_suffix(chunk_t *pc)
+/**
+ * Parse any attached suffix, which may be a user-defined literal suffix.
+ * If for a string, explicitly exclude common format and scan specifiers, ie,
+ * PRIx32 and SCNx64.
+ */
+static void parse_suffix(chunk_t *pc, bool forstring = false)
 {
-   while (CharTable::IsKw1(pc->str[pc->len]))
+   if (CharTable::IsKw1(pc->str[pc->len]))
    {
-      pc->len++;
-      cpd.column++;
+      int        slen = 0;
+      const char *ptr = &pc->str[pc->len];
+
+      while (CharTable::IsKw2(pc->str[pc->len]))
+      {
+         slen++;
+         pc->len++;
+         cpd.column++;
+      }
+
+      if (forstring && (slen >= 4) &&
+          ((memcmp(ptr, "PRI", 3) == 0) ||
+           (memcmp(ptr, "SCN", 3) == 0)))
+      {
+         pc->len    -= slen;
+         cpd.column -= slen;
+      }
    }
 }
 
@@ -592,7 +612,7 @@ static bool parse_string(chunk_t *pc, int quote_idx, bool allow_escape)
    }
 
    pc->len = len;
-   parse_suffix(pc);
+   parse_suffix(pc, true);
    return(true);
 }
 
@@ -1142,7 +1162,7 @@ static bool parse_next(chunk_t *pc)
          {
             if (parse_string(pc, idx, true))
             {
-               parse_suffix(pc);
+               parse_suffix(pc, true);
                return(true);
             }
          }
