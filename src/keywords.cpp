@@ -88,6 +88,7 @@ static const chunk_tag_t keywords[] =
    { "compl",            CT_ARITH,        LANG_C | LANG_CPP                                                           },
    { "const",            CT_QUALIFIER,    LANG_ALL                                                                    }, // PAWN
    { "const_cast",       CT_TYPE_CAST,    LANG_CPP                                                                    },
+   { "constexpr",        CT_QUALIFIER,    LANG_CPP                                                                    },
    { "construct",        CT_CONSTRUCT,    LANG_VALA                                                                   },
    { "continue",         CT_CONTINUE,     LANG_ALL                                                                    }, // PAWN
    { "creal",            CT_TYPE,         LANG_D                                                                      },
