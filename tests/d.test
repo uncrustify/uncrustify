@@ -1,7 +1,7 @@
 #
 # Test cases specifically for the D language.
-# $Id: d.test 1435 2008-11-26 19:51:06Z bengardner $
 #
+# Range: 40000 - 49999
 # test.name  config.file  input.file  output.file
 
 40000  d.cfg                   d/HashMap.d

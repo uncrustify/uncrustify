@@ -1,7 +1,7 @@
 #
 # Test cases specifically for the Objective C language.
-# $Id: c.test 631 2007-02-03 02:45:22Z bengardner $
 #
+# Range: 50000 - 59999
 # test.name  config.file  input.file
 
 # The .h file needs a language override

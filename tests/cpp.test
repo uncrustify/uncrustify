@@ -1,7 +1,7 @@
 #
 # Test cases specifically for the C++ language.
-# $Id: cpp.test 1641 2009-10-16 01:29:30Z bengardner $
 #
+# Range: 30000 - 39999
 # test.name  config.file  input.file
 
 30000 ben.cfg                          cpp/cout.cpp

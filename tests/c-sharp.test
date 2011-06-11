@@ -1,7 +1,7 @@
 #
 # Test cases specifically for the C# language.
-# $Id: c-sharp.test 1526 2009-03-30 02:11:29Z bengardner $
 #
+# Range: 10000 - 19999
 # test.name  config.file  input.file
 
 10000 mono.cfg                 cs/simple.cs

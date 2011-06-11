@@ -1,7 +1,7 @@
 #
 # Test cases specifically for the Pawn language.
-# $Id: pawn.test 741 2007-04-21 19:01:55Z bengardner $
 #
+# Range: 60000 - 69999
 # test.name  config.file  input.file
 
 60000 pawn.cfg                 pawn/functions.pawn
