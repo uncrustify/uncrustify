@@ -381,9 +381,9 @@ void add_long_preprocessor_conditional_block_comment(void)
                   nl_min = cpd.settings[UO_mod_add_long_ifdef_else_comment].n;
                }
 
+               const char *txt = !tmp ? "EOF" : ((tmp->type == CT_PP_ENDIF) ? "#endif" : "#else");
                LOG_FMT(LPPIF, "#if / %s section candidate for augmenting when over NL threshold %d != 0 (nl_count=%d)\n",
-                       (tmp->type == CT_PP_ENDIF ? "#endif" : "#else"),
-                       nl_min, nl_count);
+                       txt, nl_min, nl_count);
 
                if ((nl_min > 0) && (nl_count > nl_min)) /* nl_count is 1 too large at all times as #if line was counted too */
                {
@@ -395,10 +395,7 @@ void add_long_preprocessor_conditional_block_comment(void)
                   generate_if_conditional_as_text(str, br_open);
 
                   LOG_FMT(LPPIF, "#if / %s section over threshold %d (nl_count=%d) --> insert comment after the %s: %s\n",
-                          (tmp->type == CT_PP_ENDIF ? "#endif" : "#else"),
-                          nl_min, nl_count,
-                          (tmp->type == CT_PP_ENDIF ? "#endif" : "#else"),
-                          str.c_str());
+                          txt, nl_min, nl_count, txt, str.c_str());
 
                   /* Add a comment after the close brace */
                   insert_comment_after(br_close, style, str.length(), str.c_str());
