@@ -46,6 +46,7 @@ static void handle_cs_property(chunk_t *pc);
 static void handle_template(chunk_t *pc);
 static void handle_wrap(chunk_t *pc);
 static bool is_oc_block(chunk_t *pc);
+static void handle_java_assert(chunk_t *pc);
 
 void make_type(chunk_t *pc)
 {
@@ -371,6 +372,11 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
             break;
          }
       }
+   }
+
+   if (pc->type == CT_ASSERT)
+   {
+      handle_java_assert(pc);
    }
 
    /* A [] in C# and D only follows a type */
@@ -1915,6 +1921,10 @@ void combine_labels(void)
             else if (cur->parent_type == CT_SQL_EXEC)
             {
                /* ignore it - SQL variable name */
+            }
+            else if (next->parent_type == CT_ASSERT)
+            {
+               /* ignore it - Java assert thing */
             }
             else
             {
@@ -4193,6 +4203,33 @@ static void handle_wrap(chunk_t *pc)
          chunk_del(opp);
          chunk_del(name);
          chunk_del(clp);
+      }
+   }
+}
+
+/**
+ * Java assert statments are: "assert EXP1 [: EXP2] ;"
+ * Mark the parent of the colon and semicolon
+ */
+static void handle_java_assert(chunk_t *pc)
+{
+   bool did_colon = false;
+
+   chunk_t *tmp = pc;
+   while ((tmp = chunk_get_next(tmp)) != NULL)
+   {
+      if (tmp->level == pc->level)
+      {
+         if (!did_colon && (tmp->type == CT_COLON))
+         {
+            did_colon = true;
+            tmp->parent_type = pc->type;
+         }
+         if (tmp->type == CT_SEMICOLON)
+         {
+            tmp->parent_type = pc->type;
+            break;
+         }
       }
    }
 }
