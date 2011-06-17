@@ -87,21 +87,31 @@ void tokenize_cleanup(void)
    chunk_t *tmp2;
    bool    in_type_cast = false;
 
+   /* Since [] is expected to be TSQUARE for the 'operator', we need to make
+    * this change in the first pass.
+    */
+   for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next_ncnl(pc))
+   {
+      if (pc->type == CT_SQUARE_OPEN)
+      {
+         next = chunk_get_next_ncnl(pc);
+         if (chunk_is_token(next, CT_SQUARE_CLOSE))
+         {
+            /* Change '[' + ']' into '[]' */
+            pc->type = CT_TSQUARE;
+            pc->str  = "[]";
+            pc->len  = 2;
+            chunk_del(next);
+            pc->orig_col_end += 1;
+         }
+      }
+   }
+
+   /* We can handle everything else in the second pass */
    pc   = chunk_get_head();
    next = chunk_get_next_ncnl(pc);
    while ((pc != NULL) && (next != NULL))
    {
-      /* Change '[' + ']' into '[]' */
-      if ((pc->type == CT_SQUARE_OPEN) && (next->type == CT_SQUARE_CLOSE))
-      {
-         pc->type = CT_TSQUARE;
-         pc->str  = "[]";
-         pc->len  = 2;
-         chunk_del(next);
-         pc->orig_col_end += 1;
-         next              = chunk_get_next_ncnl(pc);
-      }
-
       if ((pc->type == CT_DOT) && ((cpd.lang_flags & LANG_ALLC) != 0))
       {
          pc->type = CT_MEMBER;
