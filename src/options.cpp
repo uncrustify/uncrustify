@@ -280,7 +280,7 @@ void register_options(void)
    unc_add_option("sp_before_squares", UO_sp_before_squares, AT_IARF,
                   "Add or remove space before '[]'");
    unc_add_option("sp_inside_square", UO_sp_inside_square, AT_IARF,
-                  "Add or remove space inside '[' and ']'");
+                  "Add or remove space inside a non-empty '[' and ']'");
    unc_add_option("sp_after_comma", UO_sp_after_comma, AT_IARF,
                   "Add or remove space after ','");
    unc_add_option("sp_before_comma", UO_sp_before_comma, AT_IARF,
