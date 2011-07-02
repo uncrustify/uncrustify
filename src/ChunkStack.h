@@ -9,32 +9,37 @@
 #define CHUNKSTACK_H_INCLUDED
 
 #include "uncrustify_types.h"
+#include <deque>
 
 class ChunkStack
 {
 public:
    struct Entry
    {
+      Entry() : m_seqnum(0), m_pc(0) { }
+      Entry(const Entry& ref) : m_seqnum(ref.m_seqnum), m_pc(ref.m_pc) { }
+      Entry(int sn, chunk_t *pc) : m_seqnum(sn), m_pc(pc) { }
       int     m_seqnum;
       chunk_t *m_pc;
    };
 
 protected:
-   Entry *m_cse;     // the array of entries
-   int   m_size;     // entries allocated
-   int   m_len;      // entries used
-   int   m_seqnum;   // current seq num
+   std::deque<Entry> m_cse;
+   int m_seqnum;   // current seq num
 
 public:
-   ChunkStack()
+   ChunkStack() : m_seqnum(0)
    {
-      Init();
    }
 
+   ChunkStack(const ChunkStack& cs)
+   {
+      Set(cs);
+   }
 
-   ChunkStack(const ChunkStack& cs);
-
-   ~ChunkStack();
+   virtual ~ChunkStack()
+   {
+   }
 
    void Set(const ChunkStack& cs);
 
@@ -43,18 +48,15 @@ public:
       Push(pc, ++m_seqnum);
    }
 
-
    bool Empty() const
    {
-      return(m_len == 0);
+      return(m_cse.empty());
    }
-
 
    int Len() const
    {
-      return(m_len);
+      return(m_cse.size());
    }
-
 
    const Entry *Top() const;
    const Entry *Get(int idx) const;
@@ -65,16 +67,11 @@ public:
 
    void Reset()
    {
-      m_len = 0;
+      m_cse.clear();
    }
-
 
    void Zap(int idx);
    void Collapse();
-
-protected:
-   void Init();
-   void Resize(int newsize);
 };
 
 #endif   /* CHUNKSTACK_H_INCLUDED */
