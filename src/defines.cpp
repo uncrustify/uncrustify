@@ -15,12 +15,12 @@
 #include "chunk_list.h"
 #include "prototypes.h"
 
-typedef struct
+struct define_list_t
 {
    define_tag_t *p_tags;
    int          total;            /* number of items at p_tags */
    int          active;           /* number of valid entries */
-} define_list_t;
+};
 static define_list_t dl;
 
 

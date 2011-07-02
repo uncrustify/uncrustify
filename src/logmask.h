@@ -17,10 +17,10 @@ typedef UINT8   log_sev_t;
 
 
 /** A simple array of 256 bits */
-typedef struct
+struct log_mask_t
 {
    UINT8 bits[32];   /* 256 levels */
-} log_mask_t;
+};
 
 
 /**

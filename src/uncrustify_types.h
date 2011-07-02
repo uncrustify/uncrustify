@@ -248,27 +248,26 @@ enum pattern_class
    PATCLS_ELSE,     // Special case of PATCLS_BRACED for handling CT_IF
 };
 
-typedef struct
+struct chunk_tag_t
 {
    const char *tag;
    c_token_t  type;
    int        lang_flags;
-} chunk_tag_t;
+};
 
-typedef struct
+struct lookup_entry_t
 {
    char              ch;
    char              left_in_group;
    UINT16            next_idx;
    const chunk_tag_t *tag;
-} lookup_entry_t;
+};
 
-typedef struct
+struct define_tag_t
 {
    const char *tag;
    const char *value;
-} define_tag_t;
-
+};
 
 struct align_t
 {
@@ -276,19 +275,6 @@ struct align_t
    c_token_t type;
    int       len;    // of the token + space
 };
-
-typedef struct
-{
-   chunk_t *pc;
-   int     seqnum;
-} chunk_stack_entry_t;
-
-typedef struct chunk_stack
-{
-   chunk_stack_entry_t *cse;
-   int                 len;
-   int                 size;
-} chunk_stack_t;
 
 struct file_mem
 {

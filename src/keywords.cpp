@@ -13,12 +13,12 @@
 #include <cstdlib>
 #include "unc_ctype.h"
 
-typedef struct
+struct dynamic_word_list_t
 {
    chunk_tag_t *p_tags;
    int         total;            /* number of items at p_tags */
    int         active;           /* number of valid entries */
-} dynamic_word_list_t;
+};
 
 /* A dynamic list of keywords - add via add_keyword() */
 static dynamic_word_list_t wl;
