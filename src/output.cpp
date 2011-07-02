@@ -1558,7 +1558,7 @@ static void output_comment_multi_simple(chunk_t *pc)
    const char *cmt_str;
    int        remaining;
    char       ch;
-   char       line[1024 + pc->len];
+   char       *line = new char[1024 + pc->len];
    int        line_len;
    int        line_count = 0;
    int        ccol;
@@ -1660,4 +1660,5 @@ static void output_comment_multi_simple(chunk_t *pc)
          ccol     = 1;
       }
    }
+   delete line;
 }
