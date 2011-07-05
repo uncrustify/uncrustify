@@ -1,4 +1,4 @@
-# Uncrustify 0.56
+# Uncrustify 0.58
 #
 # General options
 #
@@ -17,6 +17,11 @@ string_escape_char                       Number
 
 string_escape_char2                      Number
   Alternate string escape char for Pawn. Only works right before the quote char.
+
+tok_split_gte                            { False, True }
+  Allow interpreting '>=' and '>>=' as part of a template in 'void f(list<list<B>>=val);'.
+  If true (default), 'assert(x<0 && y>=3)' will be broken.
+  Improvements to template detection may make this option obsolete.
 
 #
 # Indenting
@@ -222,7 +227,7 @@ sp_pp_concat                             { Ignore, Add, Remove, Force }
   Add or remove space around preprocessor '##' concatenation operator. Default=Add
 
 sp_pp_stringify                          { Ignore, Add, Remove, Force }
-  Add or remove space after preprocessor '#' stringify operator. Default=Add
+  Add or remove space after preprocessor '#' stringify operator. Also affects the '#@' charizing operator. Default=Add
 
 sp_bool                                  { Ignore, Add, Remove, Force }
   Add or remove space around boolean operators '&&' and '||'
@@ -351,7 +356,7 @@ sp_before_squares                        { Ignore, Add, Remove, Force }
   Add or remove space before '[]'
 
 sp_inside_square                         { Ignore, Add, Remove, Force }
-  Add or remove space inside '[' and ']'
+  Add or remove space inside a non-empty '[' and ']'
 
 sp_after_comma                           { Ignore, Add, Remove, Force }
   Add or remove space after ','
@@ -433,6 +438,10 @@ sp_fparen_brace                          { Ignore, Add, Remove, Force }
 sp_func_call_paren                       { Ignore, Add, Remove, Force }
   Add or remove space between function name and '(' on function calls
 
+sp_func_call_paren_empty                 { Ignore, Add, Remove, Force }
+  Add or remove space between function name and '()' on function calls without parameters.
+  If set to 'ignore' (the default), sp_func_call_paren is used.
+
 sp_func_call_user_paren                  { Ignore, Add, Remove, Force }
   Add or remove space between the user function name and '(' on function calls
   You need to set a keyword to be a user function, like this: 'set func_call_user _' in the config file.
@@ -451,6 +460,18 @@ sp_defined_paren                         { Ignore, Add, Remove, Force }
 
 sp_throw_paren                           { Ignore, Add, Remove, Force }
   Add or remove space between 'throw' and '(' in 'throw (something)'
+
+sp_catch_paren                           { Ignore, Add, Remove, Force }
+  Add or remove space between 'catch' and '(' in 'catch (something) { }'
+  If set to ignore, sp_before_sparen is used.
+
+sp_version_paren                         { Ignore, Add, Remove, Force }
+  Add or remove space between 'version' and '(' in 'version (something) { }' (D language)
+  If set to ignore, sp_before_sparen is used.
+
+sp_scope_paren                           { Ignore, Add, Remove, Force }
+  Add or remove space between 'scope' and '(' in 'scope (something) { }' (D language)
+  If set to ignore, sp_before_sparen is used.
 
 sp_macro                                 { Ignore, Add, Remove, Force }
   Add or remove space between macro and value
@@ -910,23 +931,44 @@ nl_func_proto_type_name                  { Ignore, Add, Remove, Force }
 nl_func_paren                            { Ignore, Add, Remove, Force }
   Add or remove newline between a function name and the opening '('
 
+nl_func_def_paren                        { Ignore, Add, Remove, Force }
+  Add or remove newline between a function name and the opening '(' in the definition
+
 nl_func_decl_start                       { Ignore, Add, Remove, Force }
   Add or remove newline after '(' in a function declaration
+
+nl_func_def_start                        { Ignore, Add, Remove, Force }
+  Add or remove newline after '(' in a function definition
 
 nl_func_decl_start_single                { Ignore, Add, Remove, Force }
   Overrides nl_func_decl_start when there is only one parameter.
 
+nl_func_def_start_single                 { Ignore, Add, Remove, Force }
+  Overrides nl_func_def_start when there is only one parameter.
+
 nl_func_decl_args                        { Ignore, Add, Remove, Force }
   Add or remove newline after each ',' in a function declaration
+
+nl_func_def_args                         { Ignore, Add, Remove, Force }
+  Add or remove newline after each ',' in a function definition
 
 nl_func_decl_end                         { Ignore, Add, Remove, Force }
   Add or remove newline before the ')' in a function declaration
 
+nl_func_def_end                          { Ignore, Add, Remove, Force }
+  Add or remove newline before the ')' in a function definition
+
 nl_func_decl_end_single                  { Ignore, Add, Remove, Force }
   Overrides nl_func_decl_end when there is only one parameter.
 
+nl_func_def_end_single                   { Ignore, Add, Remove, Force }
+  Overrides nl_func_def_end when there is only one parameter.
+
 nl_func_decl_empty                       { Ignore, Add, Remove, Force }
   Add or remove newline between '()' in a function declaration.
+
+nl_func_def_empty                        { Ignore, Add, Remove, Force }
+  Add or remove newline between '()' in a function definition.
 
 nl_fdef_brace                            { Ignore, Add, Remove, Force }
   Add or remove newline between function signature and '{'
@@ -1181,11 +1223,11 @@ mod_add_long_switch_closebrace_comment   Number
 
 mod_add_long_ifdef_endif_comment         Number
   If an #ifdef body exceeds the specified number of newlines and doesn't have a comment after
-  the #else, a comment will be added.
+  the #endif, a comment will be added.
 
 mod_add_long_ifdef_else_comment          Number
   If an #ifdef or #else body exceeds the specified number of newlines and doesn't have a comment after
-  the #endif, a comment will be added.
+  the #else, a comment will be added.
 
 mod_sort_import                          { False, True }
   If TRUE, will sort consecutive single-line 'import' statements [Java, D]
@@ -1276,10 +1318,14 @@ cmt_insert_class_header                  String
   The filename that contains text to insert before a class if the class isn't preceded with a C/C++ comment.
   Will substitute $(class) with the class name.
 
+cmt_insert_oc_msg_header                 String
+  The filename that contains text to insert before a Obj-C message specification if the method isn't preceeded with a C/C++ comment.
+  Will substitute $(message) with the function name and $(javaparam) with the javadoc @param and @return stuff.
+
 cmt_insert_before_preproc                { False, True }
   If a preprocessor is encountered when stepping backwards from a function name, then
   this option decides whether the comment should be inserted.
-  Affects cmt_insert_func_header and cmt_insert_class_header.
+  Affects cmt_insert_oc_msg_header, cmt_insert_func_header and cmt_insert_class_header.
 
 #
 # Preprocessor options
