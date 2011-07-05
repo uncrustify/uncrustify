@@ -347,7 +347,7 @@ int main(int argc, char *argv[])
    idx = 0;
    while ((p_arg = arg.Params("--type", idx)) != NULL)
    {
-      add_keyword(p_arg, CT_TYPE, LANG_ALL);
+      add_keyword(p_arg, CT_TYPE);
    }
 
    /* Load define files */

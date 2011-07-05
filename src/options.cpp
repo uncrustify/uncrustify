@@ -1417,7 +1417,7 @@ int load_option_file(const char *filename)
       {
          for (idx = 1; idx < argc; idx++)
          {
-            add_keyword(args[idx], CT_TYPE, LANG_ALL);
+            add_keyword(args[idx], CT_TYPE);
          }
       }
       else if (strcasecmp(args[0], "define") == 0)
@@ -1426,15 +1426,15 @@ int load_option_file(const char *filename)
       }
       else if (strcasecmp(args[0], "macro-open") == 0)
       {
-         add_keyword(args[1], CT_MACRO_OPEN, LANG_ALL);
+         add_keyword(args[1], CT_MACRO_OPEN);
       }
       else if (strcasecmp(args[0], "macro-close") == 0)
       {
-         add_keyword(args[1], CT_MACRO_CLOSE, LANG_ALL);
+         add_keyword(args[1], CT_MACRO_CLOSE);
       }
       else if (strcasecmp(args[0], "macro-else") == 0)
       {
-         add_keyword(args[1], CT_MACRO_ELSE, LANG_ALL);
+         add_keyword(args[1], CT_MACRO_ELSE);
       }
       else if (strcasecmp(args[0], "set") == 0)
       {
@@ -1452,7 +1452,7 @@ int load_option_file(const char *filename)
                for (idx = 2; idx < argc; idx++)
                {
                   LOG_FMT(LNOTE, " '%s'", args[idx]);
-                  add_keyword(args[idx], id, LANG_ALL);
+                  add_keyword(args[idx], id);
                }
                LOG_FMT(LNOTE, "\n");
             }
@@ -1593,38 +1593,7 @@ int save_option_file(FILE *pfile, bool withDoc)
    }
 
    /* Print custom keywords */
-   const chunk_tag_t *ct;
-   idx = 0;
-   while ((ct = get_custom_keyword_idx(idx)) != NULL)
-   {
-      if (ct->type == CT_TYPE)
-      {
-         fprintf(pfile, "type %*.s%s\n",
-                 cpd.max_option_name_len - 4, " ", ct->tag);
-      }
-      else if (ct->type == CT_MACRO_OPEN)
-      {
-         fprintf(pfile, "macro-open %*.s%s\n",
-                 cpd.max_option_name_len - 11, " ", ct->tag);
-      }
-      else if (ct->type == CT_MACRO_CLOSE)
-      {
-         fprintf(pfile, "macro-close %*.s%s\n",
-                 cpd.max_option_name_len - 12, " ", ct->tag);
-      }
-      else if (ct->type == CT_MACRO_ELSE)
-      {
-         fprintf(pfile, "macro-else %*.s%s\n",
-                 cpd.max_option_name_len - 11, " ", ct->tag);
-      }
-      else
-      {
-         const char *tn = get_token_name(ct->type);
-
-         fprintf(pfile, "set %s %*.s%s\n", tn,
-                 int(cpd.max_option_name_len - (4 + strlen(tn))), " ", ct->tag);
-      }
-   }
+   print_keywords(pfile);
 
    /* Print custom defines */
    print_defines(pfile);

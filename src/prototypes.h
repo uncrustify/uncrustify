@@ -202,10 +202,10 @@ void brace_cleanup(void);
  */
 
 int load_keyword_file(const char *filename);
-const chunk_tag_t *find_keyword(const char *word, int len);
-void add_keyword(const char *tag, c_token_t type, int lang_flags);
+c_token_t find_keyword_type(const char *word, int len);
+void add_keyword(const char *tag, c_token_t type);
 void output_types(FILE *pfile);
-const chunk_tag_t *get_custom_keyword_idx(int& idx);
+void print_keywords(FILE *pfile);
 void clear_keyword_file(void);
 pattern_class get_token_pattern_class(c_token_t tok);
 bool keywords_are_sorted(void);

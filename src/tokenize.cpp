@@ -715,8 +715,7 @@ static bool parse_cr_string(chunk_t *pc, int q_idx)
  */
 bool parse_word(chunk_t *pc, bool skipcheck)
 {
-   int               len = 1;
-   const chunk_tag_t *tag;
+   int len = 1;
 
    while (CharTable::IsKw2(pc->str[len]))
    {
@@ -751,10 +750,10 @@ bool parse_word(chunk_t *pc, bool skipcheck)
    }
 
    /* Turn it into a keyword now */
-   tag = find_keyword(pc->str, len);
-   if (tag != NULL)
+   c_token_t tt = find_keyword_type(pc->str, len);
+   if (tt != CT_NONE)
    {
-      pc->type = tag->type;
+      pc->type = tt;
    }
    return(true);
 }
