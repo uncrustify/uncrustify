@@ -1627,13 +1627,7 @@ int save_option_file(FILE *pfile, bool withDoc)
    }
 
    /* Print custom defines */
-   const define_tag_t *dt;
-   idx = 0;
-   while ((dt = get_define_idx(idx)) != NULL)
-   {
-      fprintf(pfile, "define %*.s%s \"%s\"\n",
-              cpd.max_option_name_len - 6, " ", dt->tag, dt->value);
-   }
+   print_defines(pfile);
 
    fclose(pfile);
    return(0);

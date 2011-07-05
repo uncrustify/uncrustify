@@ -263,12 +263,6 @@ struct lookup_entry_t
    const chunk_tag_t *tag;
 };
 
-struct define_tag_t
-{
-   const char *tag;
-   const char *value;
-};
-
 struct align_t
 {
    int       col;

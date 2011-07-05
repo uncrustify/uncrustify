@@ -1,6 +1,9 @@
 /**
  * @file defines.cpp
- * Manages the table of keywords.
+ * Manages the table of defines for some future time when these will be used to
+ * help decide whether a block of #if'd code should be formatted.
+ *
+ * !! This isn't used right now. !!
  *
  * @author  Ben Gardner
  * @license GPL v2+
@@ -11,32 +14,15 @@
 #include <cstring>
 #include <cerrno>
 #include <cstdlib>
+#include <map>
 #include "unc_ctype.h"
 #include "chunk_list.h"
 #include "prototypes.h"
 
-struct define_list_t
-{
-   define_tag_t *p_tags;
-   int          total;            /* number of items at p_tags */
-   int          active;           /* number of valid entries */
-};
-static define_list_t dl;
+using namespace std;
 
-
-/**
- * Compares two define_tag_t entries using strcmp on the name
- *
- * @param p1   The 'left' entry
- * @param p2   The 'right' entry
- */
-static int def_compare(const void *p1, const void *p2)
-{
-   const define_tag_t *t1 = (const define_tag_t *)p1;
-   const define_tag_t *t2 = (const define_tag_t *)p2;
-
-   return(strcmp(t1->tag, t2->tag));
-}
+typedef map<string, string> defmap;
+defmap defines;
 
 
 /**
@@ -47,88 +33,24 @@ static int def_compare(const void *p1, const void *p2)
  */
 void add_define(const char *tag, const char *value)
 {
-   /* Update existing entry */
-   if (dl.active > 0)
+   if ((tag == NULL) || (*tag == 0))
    {
-      define_tag_t *p_ret;
+      return;
+   }
+   value = value ? value : "";
 
-      p_ret = (define_tag_t *)bsearch(&tag, dl.p_tags, dl.active,
-                                      sizeof(define_tag_t), def_compare);
-      if (p_ret != NULL)
-      {
-         if (*p_ret->value != 0)
-         {
-            free((void *)p_ret->value);
-         }
-         if ((value == NULL) || (*value == 0))
-         {
-            dl.p_tags[dl.active].value = "";
-         }
-         else
-         {
-            dl.p_tags[dl.active].value = strdup(value);
-         }
-         return;
-      }
+   /* Try to update an existing entry first */
+   defmap::iterator it = defines.find(tag);
+   if (it != defines.end())
+   {
+      (*it).second = value;
+      LOG_FMT(LDEFVAL, "%s: updated '%s' = '%s'\n", __func__, tag, value);
+      return;
    }
 
-   /* need to add it to the list: do we need to allocate more memory? */
-   if ((dl.total == dl.active) || (dl.p_tags == NULL))
-   {
-      dl.total += 16;
-      dl.p_tags = (define_tag_t *)realloc(dl.p_tags, sizeof(define_tag_t) * dl.total);
-   }
-   if (dl.p_tags != NULL)
-   {
-      /* add to the end of the list */
-      dl.p_tags[dl.active].tag = strdup(tag);
-      if ((value == NULL) || (*value == 0))
-      {
-         dl.p_tags[dl.active].value = "";
-      }
-      else
-      {
-         dl.p_tags[dl.active].value = strdup(value);
-      }
-      dl.active++;
-
-      /* Todo: add in sorted order instead of resorting the whole list? */
-      qsort(dl.p_tags, dl.active, sizeof(define_tag_t), def_compare);
-
-      LOG_FMT(LDEFVAL, "%s: added '%s' = '%s'\n",
-              __func__, tag, value ? value : "NULL");
-   }
-}
-
-
-/**
- * Search the define table for a match
- *
- * @param word    Pointer to the text -- NOT zero terminated
- * @param len     The length of the text
- * @return        NULL (no match) or the define entry
- */
-const define_tag_t *find_define(const char *word, int len)
-{
-   define_tag_t       tag;
-   char               buf[32];
-   const define_tag_t *p_ret;
-
-   if (len > (int)(sizeof(buf) - 1))
-   {
-      LOG_FMT(LNOTE, "%s: define too long at %d char (%d max) : %.*s\n",
-              __func__, len, (int)sizeof(buf), len, word);
-      return(NULL);
-   }
-   memcpy(buf, word, len);
-   buf[len] = 0;
-
-   tag.tag = buf;
-
-   /* check the dynamic word list first */
-   p_ret = (const define_tag_t *)bsearch(&tag, dl.p_tags, dl.active,
-                                         sizeof(define_tag_t), def_compare);
-   return(p_ret);
+   /* Insert a new entry */
+   defines.insert(defmap::value_type(tag, value));
+   LOG_FMT(LDEFVAL, "%s: added '%s' = '%s'\n", __func__, tag, value);
 }
 
 
@@ -192,56 +114,37 @@ int load_define_file(const char *filename)
 
 void output_defines(FILE *pfile)
 {
-   int idx;
-
-   if (dl.active > 0)
+   if (defines.size() > 0)
    {
       fprintf(pfile, "-== User Defines ==-\n");
-   }
-   for (idx = 0; idx < dl.active; idx++)
-   {
-      if (*dl.p_tags[idx].value != 0)
+      defmap::iterator it;
+      for (it = defines.begin(); it != defines.end(); ++it)
       {
-         fprintf(pfile, "%s = %s\n", dl.p_tags[idx].tag, dl.p_tags[idx].value);
-      }
-      else
-      {
-         fprintf(pfile, "%s\n", dl.p_tags[idx].tag);
+         if ((*it).second.size() > 0)
+         {
+            fprintf(pfile, "%s = %s\n", (*it).first.c_str(), (*it).second.c_str());
+         }
+         else
+         {
+            fprintf(pfile, "%s\n", (*it).first.c_str());
+         }
       }
    }
 }
 
 
-const define_tag_t *get_define_idx(int& idx)
+void print_defines(FILE *pfile)
 {
-   const define_tag_t *dt = NULL;
-
-   if ((idx >= 0) && (idx < dl.active))
+   defmap::iterator it;
+   for (it = defines.begin(); it != defines.end(); ++it)
    {
-      dt = &dl.p_tags[idx];
+      fprintf(pfile, "define %*.s%s \"%s\"\n",
+              cpd.max_option_name_len - 6, " ", (*it).first.c_str(), (*it).second.c_str());
    }
-   idx++;
-   return(dt);
 }
 
 
 void clear_defines(void)
 {
-   if (dl.p_tags != NULL)
-   {
-      for (int idx = 0; idx < dl.active; idx++)
-      {
-         free((void *)dl.p_tags[idx].tag);
-         dl.p_tags[idx].tag = NULL;
-         if (dl.p_tags[idx].value != NULL)
-         {
-            free((void *)dl.p_tags[idx].value);
-            dl.p_tags[idx].value = NULL;
-         }
-      }
-      free(dl.p_tags);
-      dl.p_tags = NULL;
-   }
-   dl.total  = 0;
-   dl.active = 0;
+   defines.clear();
 }

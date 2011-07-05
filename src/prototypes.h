@@ -38,6 +38,7 @@ void detect_options(const char *data, int data_len);
 void output_text(FILE *pfile);
 void output_parsed(FILE *pfile);
 void output_options(FILE *pfile);
+void add_long_preprocessor_conditional_block_comment(void);
 
 
 /*
@@ -215,12 +216,10 @@ bool keywords_are_sorted(void);
  */
 
 int load_define_file(const char *filename);
-const define_tag_t *find_define(const char *word, int len);
 void add_define(const char *tag, const char *value);
-const define_tag_t *get_define_idx(int& idx);
 void output_defines(FILE *pfile);
+void print_defines(FILE *pfile);
 void clear_defines(void);
-void add_long_preprocessor_conditional_block_comment(void);
 
 
 /*
