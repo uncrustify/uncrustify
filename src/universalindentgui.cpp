@@ -241,7 +241,7 @@ void print_universal_indent_cfg(FILE *pfile)
                {
                   fprintf(pfile, "CallName=%s=\n", option->name);
                   fprintf(pfile, "EditorType=string\n");
-                  std::string val_string;
+                  string val_string;
                   const char  *val_str;
                   val_string = op_val_to_string(option->type, cpd.settings[option->id]);
                   val_str    = val_string.c_str();

@@ -480,7 +480,7 @@ static void detect_space_options()
 /**
  * Call all the detect_xxxx() functions
  */
-void detect_options(const char *data, int data_len)
+void detect_options()
 {
    detect_space_options();
 }

@@ -24,7 +24,7 @@ public:
    };
 
 protected:
-   std::deque<Entry> m_cse;
+   deque<Entry> m_cse;
    int m_seqnum;   // current seq num
 
 public:

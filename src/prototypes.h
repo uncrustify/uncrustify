@@ -28,7 +28,7 @@ const char *get_file_extension(int& idx);
  * detect.cpp
  */
 
-void detect_options(const char *data, int data_len);
+void detect_options();
 
 
 /*
@@ -55,13 +55,13 @@ const group_map_value *get_group_name(int ug);
 const option_map_value *get_option_name(int uo);
 void print_options(FILE *pfile, bool verbose);
 
-std::string argtype_to_string(argtype_e argtype);
-std::string bool_to_string(bool val);
-std::string argval_to_string(argval_t argval);
-std::string number_to_string(int number);
-std::string lineends_to_string(lineends_e linends);
-std::string tokenpos_to_string(tokenpos_e tokenpos);
-std::string op_val_to_string(argtype_e argtype, op_val_t op_val);
+string argtype_to_string(argtype_e argtype);
+string bool_to_string(bool val);
+string argval_to_string(argval_t argval);
+string number_to_string(int number);
+string lineends_to_string(lineends_e linends);
+string tokenpos_to_string(tokenpos_e tokenpos);
+string op_val_to_string(argtype_e argtype, op_val_t op_val);
 
 /*
  *  indent.cpp
@@ -180,7 +180,7 @@ chunk_t *newline_add_between2(chunk_t *start, chunk_t *end,
  *  tokenize.cpp
  */
 
-void tokenize(const char *data, int data_len, chunk_t *ref);
+void tokenize(const vector<char>& data, chunk_t *ref);
 
 
 /*

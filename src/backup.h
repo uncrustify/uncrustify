@@ -38,7 +38,7 @@
  * @param file_len   The file length
  * @return           SUCCESS or FAILURE
  */
-int backup_copy_file(const char *filename, const char *file_data, int file_len);
+int backup_copy_file(const char *filename, const vector<char>& data);
 
 
 /**

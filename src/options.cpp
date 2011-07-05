@@ -19,8 +19,8 @@
 #include "unc_ctype.h"
 
 
-static std::map<std::string, option_map_value>      option_name_map;
-static std::map<uncrustify_groups, group_map_value> group_map;
+static map<string, option_map_value>      option_name_map;
+static map<uncrustify_groups, group_map_value> group_map;
 static uncrustify_groups current_group;
 
 
@@ -1481,11 +1481,11 @@ int load_option_file(const char *filename)
 
 int save_option_file(FILE *pfile, bool withDoc)
 {
-   std::string val_string;
-   const char  *val_str;
-   int         val_len;
-   int         name_len;
-   int         idx;
+   string     val_string;
+   const char *val_str;
+   int        val_len;
+   int        name_len;
+   int        idx;
 
    fprintf(pfile, "# Uncrustify %s\n", UNCRUSTIFY_VERSION);
 
@@ -1710,7 +1710,7 @@ void set_option_defaults(void)
 }
 
 
-std::string argtype_to_string(argtype_e argtype)
+string argtype_to_string(argtype_e argtype)
 {
    switch (argtype)
    {
@@ -1739,7 +1739,7 @@ std::string argtype_to_string(argtype_e argtype)
 }
 
 
-std::string bool_to_string(bool val)
+string bool_to_string(bool val)
 {
    if (val)
    {
@@ -1752,7 +1752,7 @@ std::string bool_to_string(bool val)
 }
 
 
-std::string argval_to_string(argval_t argval)
+string argval_to_string(argval_t argval)
 {
    switch (argval)
    {
@@ -1775,7 +1775,7 @@ std::string argval_to_string(argval_t argval)
 }
 
 
-std::string number_to_string(int number)
+string number_to_string(int number)
 {
    char buffer[12]; // 11 + 1
 

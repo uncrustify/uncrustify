@@ -32,6 +32,8 @@
 #ifdef HAVE_STRINGS_H
 #include <strings.h>  /* strcasecmp() */
 #endif
+#include <vector>
+#include <deque>
 
 /* Global data */
 struct cp_data cpd;
@@ -40,10 +42,10 @@ struct cp_data cpd;
 static int language_from_tag(const char *tag);
 static int language_from_filename(const char *filename);
 static const char *language_to_string(int lang);
-static char *read_stdin(int& out_len);
-static void uncrustify_start(const char *data, int data_len);
+static bool read_stdin(vector<char>& data);
+static void uncrustify_start(const vector<char>& data);
 static void uncrustify_end();
-static void uncrustify_file(const char *data, int data_len, FILE *pfout,
+static void uncrustify_file(const vector<char>& data, FILE *pfout,
                             const char *parsed_file);
 static void do_source_file(const char *filename_in,
                            const char *filename_out,
@@ -224,8 +226,6 @@ static void redir_stdout(const char *output_file)
 
 int main(int argc, char *argv[])
 {
-   char       *data        = NULL;
-   int        data_len     = 0;
    const char *cfg_file    = "uncrustify.cfg";
    const char *parsed_file = NULL;
    const char *source_file = NULL;
@@ -489,10 +489,9 @@ int main(int argc, char *argv[])
          return(EXIT_FAILURE);
       }
 
-      uncrustify_start(fm.data, fm.length);
-      detect_options(fm.data, fm.length);
+      uncrustify_start(fm.data);
+      detect_options();
       uncrustify_end();
-      free(fm.data);
 
       redir_stdout(output_file);
       save_option_file(stdout, update_config_wd);
@@ -556,10 +555,10 @@ int main(int argc, char *argv[])
 
       redir_stdout(output_file);
 
-      data = read_stdin(data_len);
-      if (data == NULL)
+      vector<char> data;
+      if (!read_stdin(data))
       {
-         LOG_FMT(LERR, "Out of memory\n");
+         LOG_FMT(LERR, "Failed to read stdin\n");
          return(100);
       }
 
@@ -567,12 +566,9 @@ int main(int argc, char *argv[])
 
       /* Done reading from stdin */
       LOG_FMT(LSYS, "Parsing: %d bytes from stdin as language %s\n",
-              data_len, language_to_string(cpd.lang_flags));
+              (int)data.size(), language_to_string(cpd.lang_flags));
 
-      uncrustify_file(data, data_len, stdout, parsed_file);
-      free(data);
-      data_len = 0;
-      data     = NULL;
+      uncrustify_file(data, stdout, parsed_file);
    }
    else if (source_file != NULL)
    {
@@ -658,57 +654,39 @@ static void process_source_list(const char *source_list,
 }
 
 
-static char *read_stdin(int& out_len)
+static bool read_stdin(vector<char>& data)
 {
-   char *data;
-   char *new_data;
-   int  data_size;
-   int  data_len;
-   int  len;
+   deque<char> dq;
+   char        buf[4096];
+   int         len;
+   int         idx;
 
-   /* Start with 64k */
-   data_size = 64 * 1024;
-   data      = (char *)malloc(data_size);
-   data_len  = 0;
-
-   if (data == NULL)
+   while ((len = fread(buf, 1, sizeof(buf), stdin)) > 0)
    {
-      return(NULL);
-   }
-
-   while ((len = fread(&data[data_len], 1, data_size - data_len, stdin)) > 0)
-   {
-      data_len += len;
-      if (data_len == data_size)
+      for (idx = 0; idx < len; idx++)
       {
-         /* Double the buffer size */
-         data_size *= 2;
-         if ((new_data = (char *)realloc(data, data_size)) == NULL)
-         {
-            free(data);
-            return(NULL);
-         }
-         data = new_data;
+         /* TODO: parse as UTF-8 and add int-chars */
+         dq.push_back(buf[idx]);
       }
    }
 
-   assert(data_len < data_size);
-   /* Make sure the buffer is terminated */
-   data[data_len] = 0;
-
-   out_len = data_len;
-
-   return(data);
+   /* Copy the data from the deque to the vector */
+   data.resize(dq.size() + 1);
+   for (idx = 0; idx < (int)dq.size(); idx++)
+   {
+      data[idx] = dq[idx];
+   }
+   return(true);
 }
 
 
-static void make_folders(const char *filename)
+static void make_folders(const string& filename)
 {
    int  idx;
    int  last_idx = 0;
-   char outname[1024];
+   char outname[4096];
 
-   snprintf(outname, sizeof(outname), "%s", filename);
+   snprintf(outname, sizeof(outname), "%s", filename.c_str());
 
    for (idx = 0; outname[idx] != 0; idx++)
    {
@@ -747,8 +725,7 @@ static int load_mem_file(const char *filename, file_mem& fm)
    struct stat my_stat;
    FILE        *p_file;
 
-   fm.data   = NULL;
-   fm.length = 0;
+   fm.data.clear();
 
    /* Grab the stat info for the file */
    if (stat(filename, &my_stat) < 0)
@@ -768,14 +745,8 @@ static int load_mem_file(const char *filename, file_mem& fm)
       return(-1);
    }
 
-   fm.length = my_stat.st_size;
-   fm.data   = (char *)malloc(fm.length + 1);
-   if (fm.data == NULL)
-   {
-      LOG_FMT(LERR, "%s: fopen(%s) failed: out of memory\n", __func__, filename);
-      cpd.error_count++;
-   }
-   else if (fread(fm.data, fm.length, 1, p_file) != 1)
+   fm.data.resize(my_stat.st_size + 1);
+   if (fread(&fm.data[0], fm.data.size() - 1, 1, p_file) != 1)
    {
       LOG_FMT(LERR, "%s: fread(%s) failed: %s (%d)\n",
               __func__, filename, strerror(errno), errno);
@@ -783,16 +754,14 @@ static int load_mem_file(const char *filename, file_mem& fm)
    }
    else
    {
-      fm.data[fm.length] = 0;
-      retval             = 0;
+      fm.data[fm.data.size() - 1] = 0;
+      retval = 0;
    }
    fclose(p_file);
 
-   if ((retval != 0) && (fm.data != NULL))
+   if (retval != 0)
    {
-      free(fm.data);
-      fm.data   = NULL;
-      fm.length = 0;
+      fm.data.clear();
    }
    return(retval);
 }
@@ -883,7 +852,7 @@ static const char *make_output_filename(char *buf, int buf_size,
 /**
  * Reinvent the wheel with a file comparision function...
  */
-static bool file_content_matches(const char *filename1, const char *filename2)
+static bool file_content_matches(const string& filename1, const string& filename2)
 {
    struct stat st1, st2;
    int         fd1, fd2;
@@ -892,18 +861,18 @@ static bool file_content_matches(const char *filename1, const char *filename2)
    int         minlen;
 
    /* Check the sizes first */
-   if ((stat(filename1, &st1) != 0) ||
-       (stat(filename2, &st2) != 0) ||
+   if ((stat(filename1.c_str(), &st1) != 0) ||
+       (stat(filename2.c_str(), &st2) != 0) ||
        (st1.st_size != st2.st_size))
    {
       return(false);
    }
 
-   if ((fd1 = open(filename1, O_RDONLY)) < 0)
+   if ((fd1 = open(filename1.c_str(), O_RDONLY)) < 0)
    {
       return(false);
    }
-   if ((fd2 = open(filename2, O_RDONLY)) < 0)
+   if ((fd2 = open(filename2.c_str(), O_RDONLY)) < 0)
    {
       close(fd1);
       return(false);
@@ -972,7 +941,7 @@ static void do_source_file(const char *filename_in,
    bool       did_open    = false;
    bool       need_backup = false;
    file_mem   fm;
-   const char *filename_tmp = NULL;
+   string     filename_tmp;
 
    /* Do some simple language detection based on the filename extension */
    if (!cpd.lang_forced || (cpd.lang_flags == 0))
@@ -1003,21 +972,13 @@ static void do_source_file(const char *filename_in,
       {
          /* Create 'outfile.uncrustify' */
          filename_tmp = fix_filename(filename_out);
-         if (filename_tmp == NULL)
-         {
-            LOG_FMT(LERR, "%s: Out of memory\n", __func__);
-            cpd.error_count++;
-            free(fm.data);
-            return;
-         }
 
          if (!no_backup)
          {
-            if (backup_copy_file(filename_in, fm.data, fm.length) != SUCCESS)
+            if (backup_copy_file(filename_in, fm.data) != SUCCESS)
             {
                LOG_FMT(LERR, "%s: Failed to create backup file for %s\n",
                        __func__, filename_in);
-               free(fm.data);
                cpd.error_count++;
                return;
             }
@@ -1026,18 +987,12 @@ static void do_source_file(const char *filename_in,
       }
       make_folders(filename_tmp);
 
-      pfout = fopen(filename_tmp, "wb");
+      pfout = fopen(filename_tmp.c_str(), "wb");
       if (pfout == NULL)
       {
          LOG_FMT(LERR, "%s: Unable to create %s: %s (%d)\n",
-                 __func__, filename_tmp, strerror(errno), errno);
+                 __func__, filename_tmp.c_str(), strerror(errno), errno);
          cpd.error_count++;
-         free(fm.data);
-         if ((filename_tmp != NULL) && (filename_tmp != filename_out))
-         {
-            delete [] (char *)filename_tmp;
-            filename_tmp = NULL;
-         }
          return;
       }
       did_open = true;
@@ -1045,9 +1000,7 @@ static void do_source_file(const char *filename_in,
    }
 
    cpd.filename = filename_in;
-   uncrustify_file(fm.data, fm.length, pfout, parsed_file);
-
-   free(fm.data);
+   uncrustify_file(fm.data, pfout, parsed_file);
 
    if (did_open)
    {
@@ -1058,13 +1011,13 @@ static void do_source_file(const char *filename_in,
          backup_create_md5_file(filename_in);
       }
 
-      if ((filename_tmp != NULL) && (filename_tmp != filename_out))
+      if (filename_tmp != filename_out)
       {
          /* We need to compare and then do a rename */
          if (file_content_matches(filename_tmp, filename_out))
          {
             /* No change - remove tmp file */
-            (void)unlink(filename_tmp);
+            (void)unlink(filename_tmp.c_str());
          }
          else
          {
@@ -1076,15 +1029,13 @@ static void do_source_file(const char *filename_in,
             (void)unlink(filename_out);
 #endif
             /* Change - rename filename_tmp to filename_out */
-            if (rename(filename_tmp, filename_out) != 0)
+            if (rename(filename_tmp.c_str(), filename_out) != 0)
             {
                LOG_FMT(LERR, "%s: Unable to rename '%s' to '%s'\n",
-                       __func__, filename_tmp, filename_out);
+                       __func__, filename_tmp.c_str(), filename_out);
                cpd.error_count++;
             }
          }
-         delete [] (char *)filename_tmp;
-         filename_tmp = NULL;
       }
 
 #ifdef HAVE_UTIME_H
@@ -1104,7 +1055,7 @@ static void add_file_header()
    if (!chunk_is_comment(chunk_get_head()))
    {
       /*TODO: detect the typical #ifndef FOO / #define FOO sequence */
-      tokenize(cpd.file_hdr.data, cpd.file_hdr.length, chunk_get_head());
+      tokenize(cpd.file_hdr.data, chunk_get_head());
    }
 }
 
@@ -1127,7 +1078,7 @@ static void add_file_footer()
          LOG_FMT(LSYS, "Adding a newline at the end of the file\n");
          newline_add_after(pc);
       }
-      tokenize(cpd.file_ftr.data, cpd.file_ftr.length, NULL);
+      tokenize(cpd.file_ftr.data, NULL);
    }
 }
 
@@ -1202,7 +1153,7 @@ static void add_func_header(c_token_t type, file_mem& fm)
       {
          /* Insert between after and ref */
          chunk_t *after = chunk_get_next_ncnl(ref);
-         tokenize(fm.data, fm.length, after);
+         tokenize(fm.data, after);
          for (tmp = chunk_get_next(ref); tmp != after; tmp = chunk_get_next(tmp))
          {
             tmp->level = after->level;
@@ -1302,7 +1253,7 @@ static void add_msg_header(c_token_t type, file_mem& fm)
       {
          /* Insert between after and ref */
          chunk_t *after = chunk_get_next_ncnl(ref);
-         tokenize(fm.data, fm.length, after);
+         tokenize(fm.data, after);
          for (tmp = chunk_get_next(ref); tmp != after; tmp = chunk_get_next(tmp))
          {
             tmp->level = after->level;
@@ -1312,12 +1263,12 @@ static void add_msg_header(c_token_t type, file_mem& fm)
 }
 
 
-static void uncrustify_start(const char *data, int data_len)
+static void uncrustify_start(const vector<char>& data)
 {
    /**
     * Parse the text into chunks
     */
-   tokenize(data, data_len, NULL);
+   tokenize(data, NULL);
 
    /* Get the column for the fragment indent */
    if (cpd.frag)
@@ -1328,13 +1279,13 @@ static void uncrustify_start(const char *data, int data_len)
    }
 
    /* Add the file header */
-   if (cpd.file_hdr.data != NULL)
+   if (cpd.file_hdr.data.size() > 0)
    {
       add_file_header();
    }
 
    /* Add the file footer */
-   if (cpd.file_ftr.data != NULL)
+   if (cpd.file_ftr.data.size() > 0)
    {
       add_file_footer();
    }
@@ -1376,10 +1327,10 @@ static void uncrustify_start(const char *data, int data_len)
 }
 
 
-static void uncrustify_file(const char *data, int data_len, FILE *pfout,
+static void uncrustify_file(const vector<char>& data, FILE *pfout,
                             const char *parsed_file)
 {
-   uncrustify_start(data, data_len);
+   uncrustify_start(data);
 
    /**
     * Done with detection. Do the rest only if the file will go somewhere.
@@ -1390,15 +1341,15 @@ static void uncrustify_file(const char *data, int data_len, FILE *pfout,
       /**
        * Add comments before function defs and classes
        */
-      if (cpd.func_hdr.data != NULL)
+      if (cpd.func_hdr.data.size() > 0)
       {
          add_func_header(CT_FUNC_DEF, cpd.func_hdr);
       }
-      if (cpd.class_hdr.data != NULL)
+      if (cpd.class_hdr.data.size() > 0)
       {
          add_func_header(CT_CLASS, cpd.class_hdr);
       }
-      if (cpd.oc_msg_hdr.data != NULL)
+      if (cpd.oc_msg_hdr.data.size() > 0)
       {
          add_msg_header(CT_OC_MSG_DECL, cpd.oc_msg_hdr);
       }

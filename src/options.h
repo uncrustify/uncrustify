@@ -604,10 +604,10 @@ enum uncrustify_options
 
 struct group_map_value
 {
-   uncrustify_groups             id;
-   const char                    *short_desc;
-   const char                    *long_desc;
-   std::list<uncrustify_options> options;
+   uncrustify_groups        id;
+   const char               *short_desc;
+   const char               *long_desc;
+   list<uncrustify_options> options;
 };
 
 struct option_map_value
@@ -623,10 +623,10 @@ struct option_map_value
 };
 
 
-typedef std::map<std::string, option_map_value>::iterator        option_name_map_it;
-typedef std::map<uncrustify_groups, group_map_value>::iterator   group_map_it;
-typedef std::list<uncrustify_options>::iterator                  option_list_it;
-typedef std::list<uncrustify_options>::const_iterator            option_list_cit;
+typedef map<string, option_map_value>::iterator        option_name_map_it;
+typedef map<uncrustify_groups, group_map_value>::iterator   group_map_it;
+typedef list<uncrustify_options>::iterator                  option_list_it;
+typedef list<uncrustify_options>::const_iterator            option_list_cit;
 
 
 #endif   /* OPTIONS_H_INCLUDED */
