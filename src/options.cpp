@@ -1788,7 +1788,7 @@ string number_to_string(int number)
 }
 
 
-std::string lineends_to_string(lineends_e linends)
+string lineends_to_string(lineends_e linends)
 {
    switch (linends)
    {
@@ -1811,7 +1811,7 @@ std::string lineends_to_string(lineends_e linends)
 }
 
 
-std::string tokenpos_to_string(tokenpos_e tokenpos)
+string tokenpos_to_string(tokenpos_e tokenpos)
 {
    switch (tokenpos)
    {
@@ -1843,7 +1843,7 @@ std::string tokenpos_to_string(tokenpos_e tokenpos)
 }
 
 
-std::string op_val_to_string(argtype_e argtype, op_val_t op_val)
+string op_val_to_string(argtype_e argtype, op_val_t op_val)
 {
    switch (argtype)
    {
