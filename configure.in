@@ -27,9 +27,7 @@ AC_C_CONST
 AC_C_INLINE
 
 # Checks for library functions.
-AC_FUNC_MALLOC
 AC_FUNC_MEMCMP
-AC_FUNC_REALLOC
 AC_CHECK_FUNCS([memset strcasecmp strchr strdup strerror strtol strtoul])
 
 AC_MSG_CHECKING([whether our compiler supports __func__])
