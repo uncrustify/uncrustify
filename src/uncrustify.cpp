@@ -661,21 +661,21 @@ static bool read_stdin(vector<char>& data)
    int         len;
    int         idx;
 
-   while ((len = fread(buf, 1, sizeof(buf), stdin)) > 0)
+   while (!feof(stdin))
    {
+      len = fread(buf, 1, sizeof(buf), stdin);
       for (idx = 0; idx < len; idx++)
       {
          /* TODO: parse as UTF-8 and add int-chars */
          dq.push_back(buf[idx]);
       }
    }
+   /* terminate the string */
+   dq.push_back(0);
 
    /* Copy the data from the deque to the vector */
-   data.resize(dq.size() + 1);
-   for (idx = 0; idx < (int)dq.size(); idx++)
-   {
-      data[idx] = dq[idx];
-   }
+   data.clear();
+   data.insert(data.end(), dq.begin(), dq.end());
    return(true);
 }
 
