@@ -822,14 +822,13 @@ static void align_same_func_call_params()
          continue;
       }
 
-      fcn_as.Add(pc);
       add_str = NULL;
-
       if (align_root != NULL)
       {
          if ((pc->len == align_root->len) &&
              (memcmp(pc->str, align_root->str, pc->len) == 0))
          {
+            fcn_as.Add(pc);
             align_cur->align.next = pc;
             align_cur             = pc;
             align_len++;
@@ -848,8 +847,10 @@ static void align_same_func_call_params()
             align_root = NULL;
          }
       }
+
       if (align_root == NULL)
       {
+         fcn_as.Add(pc);
          align_root = pc;
          align_cur  = pc;
          align_len  = 1;
@@ -886,10 +887,15 @@ static void align_same_func_call_params()
          LOG_FMT(LASFCP, "\n");
       }
    }
-   fcn_as.End();
-   for (idx = 0; idx <= max_idx; idx++)
+
+   if (align_len > 1)
    {
-      as[idx].End();
+      LOG_FMT(LASFCP, "  ++ Ended with %d fcns\n", align_len);
+      fcn_as.End();
+      for (idx = 0; idx <= max_idx; idx++)
+      {
+         as[idx].End();
+      }
    }
 }
 
