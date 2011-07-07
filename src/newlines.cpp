@@ -147,16 +147,17 @@ chunk_t *newline_add_after2(chunk_t *pc, const char *fcn, int line)
 }
 
 
-#define newline_min_after(ref, cnt)    newline_min_after2(ref, cnt, __func__, __LINE__)
+#define newline_min_after(ref, cnt, flag) \
+   newline_min_after2(ref, cnt, flag, __func__, __LINE__)
 
-static void newline_min_after2(chunk_t *ref, INT32 count,
+static void newline_min_after2(chunk_t *ref, INT32 count, UINT64 flag,
                                const char *func, int line)
 {
    chunk_t *pc = ref;
    chunk_t *next;
 
-   LOG_FMT(LNEWLINE, "%s: '%.*s' line %d - count %d : caller=%s:%d\n",
-           __func__, ref->len, ref->str, ref->orig_line, count, func, line);
+   LOG_FMT(LNEWLINE, "%s: '%.*s' line %d - count=%d flg=0x%"PRIx64": caller=%s:%d\n",
+           __func__, ref->len, ref->str, ref->orig_line, count, flag, func, line);
 
    do
    {
@@ -170,11 +171,12 @@ static void newline_min_after2(chunk_t *ref, INT32 count,
    if (chunk_is_comment(next) && (next->nl_count == 1) &&
        chunk_is_comment(chunk_get_prev(pc)))
    {
-      newline_min_after(next, count);
+      newline_min_after(next, count, flag);
       return;
    }
    else
    {
+      pc->flags |= flag;
       if (chunk_is_newline(pc) && can_increase_nl(pc))
       {
          if (pc->nl_count < count)
@@ -433,7 +435,7 @@ static void newlines_if_for_while_switch_pre_blank_lines(chunk_t *start, argval_
          if ((pc->nl_count > 1) || chunk_is_newline(chunk_get_prev_nvb(pc)))
          {
             /* need to remove */
-            if (nl_opt & AV_REMOVE)
+            if ((nl_opt & AV_REMOVE) && ((pc->flags & PCF_VAR_DEF) == 0))
             {
                /* if we're also adding, take care of that here */
                pc->nl_count = do_add ? 2 : 1;
@@ -869,7 +871,7 @@ static void newline_fnc_var_def(chunk_t *br_open, int nl_count)
       next = chunk_get_next_ncnl(prev);
       if ((next != NULL) && (next->type != CT_BRACE_CLOSE))
       {
-         newline_min_after(prev, 1 + cpd.settings[UO_nl_func_var_def_blk].n);
+         newline_min_after(prev, 1 + nl_count, PCF_VAR_DEF);
       }
    }
 }
