@@ -618,7 +618,8 @@ void register_options(void)
    unc_add_option("nl_after_square_assign", UO_nl_after_square_assign, AT_IARF,
                   "Add or remove newline after '= [' (D only). Will also affect the newline before the ']'");
    unc_add_option("nl_func_var_def_blk", UO_nl_func_var_def_blk, AT_NUM,
-                  "The number of blank lines after a block of variable definitions");
+                  "The number of blank lines after a block of variable definitions at the top of a function body.\n"
+                  "0=no change (default)");
    unc_add_option("nl_fcall_brace", UO_nl_fcall_brace, AT_IARF,
                   "Add or remove newline between a function call's ')' and '{', as in:\n"
                   "list_for_each(item, &list) { }");
