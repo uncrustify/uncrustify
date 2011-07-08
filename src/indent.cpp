@@ -1116,7 +1116,8 @@ void indent_text(void)
          if (cpd.settings[UO_indent_continue].n != 0)
          {
             frm.pse[frm.pse_tos].indent = continue_indent(pc);
-            indent_column_set(frm.pse[frm.pse_tos].indent);
+            /* the continuation indent applies to the next line, not the current */
+            //indent_column_set(frm.pse[frm.pse_tos].indent);
          }
          frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
          frm.paren_count++;
