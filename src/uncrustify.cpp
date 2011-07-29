@@ -272,14 +272,14 @@ int main(int argc, char *argv[])
    log_init(stderr);
    if (arg.Present("-q"))
    {
-      logmask_from_string("", &mask);
-      log_set_mask(&mask);
+      logmask_from_string("", mask);
+      log_set_mask(mask);
    }
    if (((p_arg = arg.Param("-L")) != NULL) ||
        ((p_arg = arg.Param("--log")) != NULL))
    {
-      logmask_from_string(p_arg, &mask);
-      log_set_mask(&mask);
+      logmask_from_string(p_arg, mask);
+      log_set_mask(mask);
    }
    cpd.frag = arg.Present("--frag");
 

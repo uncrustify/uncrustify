@@ -59,7 +59,7 @@ void log_set_sev(log_sev_t sev, bool value);
  *
  * @param mask The mask to copy
  */
-void log_set_mask(const log_mask_t *mask);
+void log_set_mask(const log_mask_t& mask);
 
 
 /**
@@ -67,7 +67,7 @@ void log_set_mask(const log_mask_t *mask);
  *
  * @param mask Where to copy the mask
  */
-void log_get_mask(log_mask_t *mask);
+void log_get_mask(log_mask_t& mask);
 
 
 /**

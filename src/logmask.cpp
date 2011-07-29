@@ -20,19 +20,15 @@
  * @param size the size of the buffer
  * @return     buf (pass through)
  */
-char *logmask_to_str(const log_mask_t *mask, char *buf, int size)
+char *logmask_to_str(const log_mask_t& mask, char *buf, int size)
 {
    int  last_sev = -1;
    bool is_range = false;
    int  sev;
    int  len = 0;
 
-   if ((mask == NULL) || (buf == NULL) || (size <= 0))
+   if ((buf == NULL) || (size <= 0))
    {
-      if ((buf != NULL) && (size > 0))
-      {
-         *buf = 0;
-      }
       return(buf);
    }
 
@@ -89,7 +85,7 @@ char *logmask_to_str(const log_mask_t *mask, char *buf, int size)
  * @param str     The string to parse
  * @param mask    The mask to populate
  */
-void logmask_from_string(const char *str, log_mask_t *mask)
+void logmask_from_string(const char *str, log_mask_t& mask)
 {
    char *ptmp;
    bool was_dash   = false;
@@ -97,7 +93,7 @@ void logmask_from_string(const char *str, log_mask_t *mask)
    int  level;
    int  idx;
 
-   if ((str == NULL) || (mask == NULL))
+   if (str == NULL)
    {
       return;
    }

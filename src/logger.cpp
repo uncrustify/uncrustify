@@ -68,7 +68,7 @@ void log_show_sev(bool show)
  */
 bool log_sev_on(log_sev_t sev)
 {
-   return(logmask_test(&g_log.mask, sev));
+   return(logmask_test(g_log.mask, sev));
 }
 
 
@@ -80,7 +80,7 @@ bool log_sev_on(log_sev_t sev)
  */
 void log_set_sev(log_sev_t sev, bool value)
 {
-   logmask_set_sev(&g_log.mask, sev, value);
+   logmask_set_sev(g_log.mask, sev, value);
 }
 
 
@@ -89,12 +89,9 @@ void log_set_sev(log_sev_t sev, bool value)
  *
  * @param mask The mask to copy
  */
-void log_set_mask(const log_mask_t *mask)
+void log_set_mask(const log_mask_t& mask)
 {
-   if (mask != NULL)
-   {
-      memcpy(g_log.mask.bits, mask->bits, sizeof(g_log.mask.bits));
-   }
+   g_log.mask = mask;
 }
 
 
@@ -103,12 +100,9 @@ void log_set_mask(const log_mask_t *mask)
  *
  * @param mask Where to copy the mask
  */
-void log_get_mask(log_mask_t *mask)
+void log_get_mask(log_mask_t& mask)
 {
-   if (mask != NULL)
-   {
-      memcpy(mask->bits, g_log.mask.bits, sizeof(g_log.mask.bits));
-   }
+   mask = g_log.mask;
 }
 
 
