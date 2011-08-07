@@ -2314,7 +2314,10 @@ static bool can_be_full_param(chunk_t *start, chunk_t *end)
       else if ((pc->type == CT_MEMBER) ||
                (pc->type == CT_DC_MEMBER))
       {
-         word_cnt--;
+         if (word_cnt > 0)
+         {
+            word_cnt--;
+         }
       }
       else if ((pc != start) && (chunk_is_star(pc) ||
                                  chunk_is_addr(pc)))
