@@ -1703,7 +1703,11 @@ void newlines_cleanup_braces(void)
       }
       else if (pc->type == CT_THROW)
       {
-         newline_iarf(chunk_get_prev_ncnl(pc), cpd.settings[UO_nl_before_throw].a);
+         prev = chunk_get_prev(pc);
+         if (prev && (prev->type == CT_PAREN_CLOSE))
+         {
+            newline_iarf(chunk_get_prev_ncnl(pc), cpd.settings[UO_nl_before_throw].a);
+         }
       }
       else if (pc->type == CT_CASE_COLON)
       {
