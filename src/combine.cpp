@@ -3169,27 +3169,28 @@ static void mark_namespace(chunk_t *pns)
    chunk_t *br_close;
 
    pc = chunk_get_next_ncnl(pns);
-   if (pc != NULL)
+   while (pc != NULL)
    {
+      pc->parent_type = CT_NAMESPACE;
       if (pc->type != CT_BRACE_OPEN)
       {
          pc = chunk_get_next_ncnl(pc);
+         continue;
       }
-      if ((pc != NULL) && (pc->type == CT_BRACE_OPEN))
-      {
-         if ((cpd.settings[UO_indent_namespace_limit].n > 0) &&
-             ((br_close = chunk_skip_to_match(pc)) != NULL))
-         {
-            int diff = br_close->orig_line - pc->orig_line;
 
-            if (diff > cpd.settings[UO_indent_namespace_limit].n)
-            {
-               pc->flags       |= PCF_LONG_BLOCK;
-               br_close->flags |= PCF_LONG_BLOCK;
-            }
+      if ((cpd.settings[UO_indent_namespace_limit].n > 0) &&
+          ((br_close = chunk_skip_to_match(pc)) != NULL))
+      {
+         int diff = br_close->orig_line - pc->orig_line;
+
+         if (diff > cpd.settings[UO_indent_namespace_limit].n)
+         {
+            pc->flags       |= PCF_LONG_BLOCK;
+            br_close->flags |= PCF_LONG_BLOCK;
          }
-         flag_parens(pc, PCF_IN_NAMESPACE, CT_NONE, CT_NAMESPACE, false);
       }
+      flag_parens(pc, PCF_IN_NAMESPACE, CT_NONE, CT_NAMESPACE, false);
+      return;
    }
 }
 
