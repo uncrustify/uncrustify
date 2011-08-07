@@ -1330,6 +1330,19 @@ static void uncrustify_start(const vector<char>& data)
 static void uncrustify_file(const vector<char>& data, FILE *pfout,
                             const char *parsed_file)
 {
+   /* Check for embedded 0's */
+   for (int idx = 0; idx < (int)data.size() - 1; idx++)
+   {
+      if (data[idx] == 0)
+      {
+         LOG_FMT(LERR, "An embedded 0 was found in '%s'.\n", cpd.filename);
+         LOG_FMT(LERR, "The file may be encoded in an unsupported Unicode format.\n");
+         LOG_FMT(LERR, "Aborting.\n");
+         cpd.error_count++;
+         return;
+      }
+   }
+
    uncrustify_start(data);
 
    /**
