@@ -56,7 +56,7 @@ static const chunk_tag_t keywords[] =
    { "alias",            CT_QUALIFIER,    LANG_D                                                                      },
    { "align",            CT_ALIGN,        LANG_D                                                                      },
    { "alignof",          CT_SIZEOF,       LANG_C | LANG_CPP                                                           },
-   { "and",              CT_SBOOL,        LANG_C | LANG_CPP                                                           },
+   { "and",              CT_SBOOL,        LANG_C | LANG_CPP | FLAG_PP                                                 },
    { "and_eq",           CT_SASSIGN,      LANG_C | LANG_CPP                                                           },
    { "as",               CT_AS,           LANG_CS                                                                     },
    { "asm",              CT_ASM,          LANG_C | LANG_CPP | LANG_D                                                  },
@@ -173,7 +173,7 @@ static const chunk_tag_t keywords[] =
    { "null",             CT_TYPE,         LANG_CS | LANG_D | LANG_JAVA | LANG_VALA                                    },
    { "object",           CT_TYPE,         LANG_CS                                                                     },
    { "operator",         CT_OPERATOR,     LANG_CPP | LANG_CS | LANG_PAWN                                              }, // PAWN
-   { "or",               CT_SBOOL,        LANG_C | LANG_CPP                                                           },
+   { "or",               CT_SBOOL,        LANG_C | LANG_CPP | FLAG_PP                                                 },
    { "or_eq",            CT_SASSIGN,      LANG_C | LANG_CPP                                                           },
    { "out",              CT_QUALIFIER,    LANG_CS | LANG_D | LANG_VALA                                                },
    { "override",         CT_QUALIFIER,    LANG_CS | LANG_D | LANG_VALA                                                },
