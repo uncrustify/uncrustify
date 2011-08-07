@@ -75,6 +75,11 @@ static void double_newline(chunk_t *nl)
 //#define DEBUG_NEWLINES
 static void setup_newline_add(const chunk_t *prev, chunk_t *nl, const chunk_t *next)
 {
+   if (!prev || !nl || !next)
+   {
+      return;
+   }
+
    memset(nl, 0, sizeof(*nl));
    nl->nl_count = 1;
    nl->flags    = (prev->flags & PCF_COPY_FLAGS) & ~PCF_IN_PREPROC;
@@ -130,6 +135,11 @@ chunk_t *newline_add_after2(chunk_t *pc, const char *fcn, int line)
 {
    chunk_t nl;
    chunk_t *next;
+
+   if (!pc)
+   {
+      return(NULL);
+   }
 
    next = chunk_get_next_nvb(pc);
    if (chunk_is_newline(next))
