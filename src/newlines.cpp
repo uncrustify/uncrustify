@@ -2452,8 +2452,14 @@ void do_blank_lines(void)
          }
          else
          {
-            if ((cpd.settings[UO_nl_after_func_body].n > 0) &&
-                (cpd.settings[UO_nl_after_func_body].n != pc->nl_count))
+            if ((prev->flags & PCF_IN_CLASS) &&
+                (cpd.settings[UO_nl_after_func_body_class].n > 0) &&
+                (cpd.settings[UO_nl_after_func_body_class].n != pc->nl_count))
+            {
+               pc->nl_count = cpd.settings[UO_nl_after_func_body_class].n;
+            }
+            else if ((cpd.settings[UO_nl_after_func_body].n > 0) &&
+                     (cpd.settings[UO_nl_after_func_body].n != pc->nl_count))
             {
                pc->nl_count = cpd.settings[UO_nl_after_func_body].n;
             }

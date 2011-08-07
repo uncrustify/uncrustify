@@ -801,6 +801,8 @@ void register_options(void)
                   "The number of newlines after a function prototype, if not followed by another function prototype");
    unc_add_option("nl_after_func_body", UO_nl_after_func_body, AT_NUM,
                   "The number of newlines after '}' of a multi-line function body");
+   unc_add_option("nl_after_func_body_class", UO_nl_after_func_body_class, AT_NUM,
+                  "The number of newlines after '}' of a multi-line function body in a class declaration");
    unc_add_option("nl_after_func_body_one_liner", UO_nl_after_func_body_one_liner, AT_NUM,
                   "The number of newlines after '}' of a single line function body");
    unc_add_option("nl_before_block_comment", UO_nl_before_block_comment, AT_NUM,

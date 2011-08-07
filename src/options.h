@@ -524,6 +524,7 @@ enum uncrustify_options
    UO_nl_before_c_comment,
    UO_nl_after_multiline_comment,    // NL after multiline comment
    UO_nl_after_func_body,            // after the closing brace of a function body
+   UO_nl_after_func_body_class,
    UO_nl_after_func_body_one_liner,  // after the closing brace of a single line function body
    UO_nl_after_func_proto,           // after each prototype
    UO_nl_after_func_proto_group,     // after a block of prototypes
