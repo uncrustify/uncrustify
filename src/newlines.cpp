@@ -2319,6 +2319,14 @@ void newlines_class_colon_pos(void)
 }
 
 
+static void change_blank_lines(chunk_t *pc, const char *text, uncrustify_options uo)
+{
+   LOG_FMT(LCMTNL, "do_blank_lines: %s affected line %d\n", text + 3, pc->orig_line);
+   pc->nl_count = cpd.settings[uo].n;
+}
+#define set_blank_line(pc, op) change_blank_lines(pc, # op, op)
+
+
 /**
  * Scans for newline tokens and limits the nl_count.
  * A newline token has a minimum nl_count of 1.
@@ -2360,7 +2368,7 @@ void do_blank_lines(void)
       if ((cpd.settings[UO_nl_max].n > 0) &&
           (pc->nl_count > (cpd.settings[UO_nl_max].n)))
       {
-         pc->nl_count = cpd.settings[UO_nl_max].n;
+         set_blank_line(pc, UO_nl_max);
       }
 
       /** Control blanks before multi-line comments */
@@ -2373,8 +2381,7 @@ void do_blank_lines(void)
              ((prev->type != CT_BRACE_OPEN) &&
               (prev->type != CT_VBRACE_OPEN)))
          {
-            LOG_FMT(LCMTNL, "%s: NL-MLCommentC: line %d\n", __func__, next->orig_line);
-            pc->nl_count = cpd.settings[UO_nl_before_block_comment].n;
+            set_blank_line(pc, UO_nl_before_block_comment);
          }
       }
 
@@ -2389,8 +2396,7 @@ void do_blank_lines(void)
               (prev->type != CT_VBRACE_OPEN) &&
               (pcmt->type != CT_COMMENT)))
          {
-            LOG_FMT(LCMTNL, "%s: NL-CommentC: line %d\n", __func__, next->orig_line);
-            pc->nl_count = cpd.settings[UO_nl_before_c_comment].n;
+            set_blank_line(pc, UO_nl_before_c_comment);
          }
       }
 
@@ -2405,8 +2411,7 @@ void do_blank_lines(void)
               (prev->type != CT_VBRACE_OPEN) &&
               (pcmt->type != CT_COMMENT_CPP)))
          {
-            LOG_FMT(LCMTNL, "%s: NL-CommentCPP: line %d\n", __func__, next->orig_line);
-            pc->nl_count = cpd.settings[UO_nl_before_cpp_comment].n;
+            set_blank_line(pc, UO_nl_before_cpp_comment);
          }
       }
 
@@ -2421,8 +2426,7 @@ void do_blank_lines(void)
              ((prev->type != CT_BRACE_OPEN) &&
               (prev->type != CT_VBRACE_OPEN)))
          {
-            LOG_FMT(LCMTNL, "%s: NL-BeforePrivate: line %d\n", __func__, next->orig_line);
-            pc->nl_count = cpd.settings[UO_nl_before_access_spec].n;
+            set_blank_line(pc, UO_nl_before_access_spec);
          }
       }
 
@@ -2432,8 +2436,7 @@ void do_blank_lines(void)
           (prev != NULL) &&
           (prev->type == CT_PRIVATE_COLON))
       {
-         LOG_FMT(LCMTNL, "%s: NL-AfterPrivate: line %d\n", __func__, prev->orig_line);
-         pc->nl_count = cpd.settings[UO_nl_after_access_spec].n;
+         set_blank_line(pc, UO_nl_after_access_spec);
       }
 
       /* Add blanks after function bodies */
@@ -2447,21 +2450,25 @@ void do_blank_lines(void)
          {
             if (cpd.settings[UO_nl_after_func_body_one_liner].n > pc->nl_count)
             {
-               pc->nl_count = cpd.settings[UO_nl_after_func_body_one_liner].n;
+               set_blank_line(pc, UO_nl_after_func_body_one_liner);
             }
          }
          else
          {
             if ((prev->flags & PCF_IN_CLASS) &&
-                (cpd.settings[UO_nl_after_func_body_class].n > 0) &&
-                (cpd.settings[UO_nl_after_func_body_class].n != pc->nl_count))
+                (cpd.settings[UO_nl_after_func_body_class].n > 0))
             {
-               pc->nl_count = cpd.settings[UO_nl_after_func_body_class].n;
+               if (cpd.settings[UO_nl_after_func_body_class].n != pc->nl_count)
+               {
+                  set_blank_line(pc, UO_nl_after_func_body_class);
+               }
             }
-            else if ((cpd.settings[UO_nl_after_func_body].n > 0) &&
-                     (cpd.settings[UO_nl_after_func_body].n != pc->nl_count))
+            else if (cpd.settings[UO_nl_after_func_body].n > 0)
             {
-               pc->nl_count = cpd.settings[UO_nl_after_func_body].n;
+               if (cpd.settings[UO_nl_after_func_body].n != pc->nl_count)
+               {
+                  set_blank_line(pc, UO_nl_after_func_body);
+               }
             }
          }
       }
@@ -2480,7 +2487,7 @@ void do_blank_lines(void)
              (next->parent_type != CT_FUNC_PROTO) &&
              can_increase_nl(pc))
          {
-            pc->nl_count = cpd.settings[UO_nl_after_func_proto_group].n;
+            set_blank_line(pc, UO_nl_after_func_proto_group);
          }
       }
 
@@ -2492,8 +2499,7 @@ void do_blank_lines(void)
       {
          if (cpd.settings[UO_nl_comment_func_def].n != pc->nl_count)
          {
-            LOG_FMT(LCMTNL, "%s: nl_comment_func_def affected line %d\n", __func__, pc->orig_line);
-            pc->nl_count = cpd.settings[UO_nl_comment_func_def].n;
+            set_blank_line(pc, UO_nl_comment_func_def);
          }
       }
 
@@ -2510,7 +2516,7 @@ void do_blank_lines(void)
                 (next->type != CT_CATCH) &&
                 (next->type != CT_FINALLY))
             {
-               pc->nl_count = cpd.settings[UO_nl_after_try_catch_finally].n;
+               set_blank_line(pc, UO_nl_after_try_catch_finally);
             }
          }
       }
@@ -2525,7 +2531,7 @@ void do_blank_lines(void)
              ((prev->type == CT_BRACE_CLOSE) ||
               (prev->type == CT_SEMICOLON)))
          {
-            pc->nl_count = cpd.settings[UO_nl_between_get_set].n;
+            set_blank_line(pc, UO_nl_between_get_set);
          }
       }
 
@@ -2538,12 +2544,12 @@ void do_blank_lines(void)
              (prev->parent_type == CT_CS_PROPERTY) &&
              (next->type != CT_BRACE_CLOSE))
          {
-            pc->nl_count = cpd.settings[UO_nl_around_cs_property].n;
+            set_blank_line(pc, UO_nl_around_cs_property);
          }
          else if ((next->parent_type == CT_CS_PROPERTY) &&
                   (next->flags & PCF_STMT_START))
          {
-            pc->nl_count = cpd.settings[UO_nl_around_cs_property].n;
+            set_blank_line(pc, UO_nl_around_cs_property);
          }
       }
 
