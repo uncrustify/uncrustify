@@ -537,6 +537,7 @@ enum uncrustify_options
    UO_nl_after_try_catch_finally,
    UO_nl_between_get_set,
    UO_nl_around_cs_property,
+   UO_nl_property_brace,
 
    UO_eat_blanks_after_open_brace,   // remove blank lines after {
    UO_eat_blanks_before_close_brace, // remove blank lines before }

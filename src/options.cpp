@@ -838,6 +838,8 @@ void register_options(void)
    unc_add_option("nl_between_get_set", UO_nl_between_get_set, AT_NUM,
                   "The number of newlines between the get/set/add/remove handlers in C#.\n"
                   "0 = No change.");
+   unc_add_option("nl_property_brace", UO_nl_property_brace, AT_IARF,
+                  "Add or remove newline between C# property and the '{'");
 
    unc_add_option("eat_blanks_after_open_brace", UO_eat_blanks_after_open_brace, AT_BOOL,
                   "Whether to remove blank lines after '{'");
