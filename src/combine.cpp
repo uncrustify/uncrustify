@@ -1617,6 +1617,11 @@ static void fix_enum_struct_union(chunk_t *pc)
 
       next = chunk_get_next_ncnl(next);
    }
+
+   if (next && (next->type == CT_SEMICOLON))
+   {
+      next->parent_type = pc->type;
+   }
 }
 
 
@@ -3146,6 +3151,11 @@ static void mark_class_ctor(chunk_t *start)
       if ((pc->type == CT_BRACE_CLOSE) && (pc->brace_level < level))
       {
          LOG_FMT(LFTOR, "%s: %d] Hit brace close\n", __func__, pc->orig_line);
+         pc = chunk_get_next_ncnl(pc, CNAV_PREPROC);
+         if (pc && (pc->type == CT_SEMICOLON))
+         {
+            pc->parent_type = start->type;
+         }
          return;
       }
 
