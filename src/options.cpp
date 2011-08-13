@@ -817,6 +817,11 @@ void register_options(void)
    unc_add_option("nl_after_multiline_comment", UO_nl_after_multiline_comment, AT_BOOL,
                   "Whether to force a newline after a multi-line comment.");
 
+   unc_add_option("nl_after_struct", UO_nl_after_struct, AT_NUM,
+                  "The number of newlines after '}' or ';' of a struct/enum/union definition");
+   unc_add_option("nl_after_class", UO_nl_after_class, AT_NUM,
+                  "The number of newlines after '}' or ';' of a class definition");
+
    unc_add_option("nl_before_access_spec", UO_nl_before_access_spec, AT_NUM,
                   "The number of newlines before a 'private:', 'public:', 'protected:', 'signals:', or 'slots:' label.\n"
                   "Will not change the newline count if after a brace open.\n"

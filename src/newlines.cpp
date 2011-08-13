@@ -2494,6 +2494,31 @@ void do_blank_lines(void)
          }
       }
 
+      /* Add blanks after struct/enum/union/class */
+      if ((prev != NULL) &&
+          ((prev->type == CT_SEMICOLON) ||
+           (prev->type == CT_BRACE_CLOSE)) &&
+          ((prev->parent_type == CT_STRUCT) ||
+           (prev->parent_type == CT_ENUM) ||
+           (prev->parent_type == CT_UNION) ||
+           (prev->parent_type == CT_CLASS)))
+      {
+         if (prev->parent_type == CT_CLASS)
+         {
+            if (cpd.settings[UO_nl_after_class].n > pc->nl_count)
+            {
+               set_blank_line(pc, UO_nl_after_class);
+            }
+         }
+         else
+         {
+            if (cpd.settings[UO_nl_after_struct].n > pc->nl_count)
+            {
+               set_blank_line(pc, UO_nl_after_struct);
+            }
+         }
+      }
+
       /* Change blanks between a function comment and body */
       if ((cpd.settings[UO_nl_comment_func_def].n != 0) &&
           (pcmt->type == CT_COMMENT_MULTI) &&
