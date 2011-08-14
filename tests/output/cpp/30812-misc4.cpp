@@ -4,7 +4,7 @@ struct X
    void deallocate(int *p)
    {
       operator delete((void *)p);
-      delete ((void *)q);
+      delete((void *)q);
    }
 };
 
