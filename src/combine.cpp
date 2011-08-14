@@ -763,6 +763,11 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       }
    }
 
+   if ((pc->type == CT_DELETE) && (next->type == CT_TSQUARE))
+   {
+      next->parent_type = CT_DELETE;
+   }
+
    /* Change CT_STAR to CT_PTR_TYPE or CT_ARITH or SYM_DEREF */
    if (pc->type == CT_STAR)
    {
