@@ -16,7 +16,7 @@
 #include "unc_ctype.h"
 
 
-argval_t do_space(chunk_t *first, chunk_t *second, bool complete);
+static argval_t do_space(chunk_t *first, chunk_t *second, bool complete);
 
 struct no_space_table_s
 {
@@ -73,14 +73,17 @@ struct no_space_table_s no_space_table[] =
 
 static void log_rule2(int line, const char *rule, chunk_t *first, chunk_t *second, bool complete)
 {
-   LOG_FMT(LSPACE, "Spacing: line %d [%s/%s] '%.*s' <===> [%s/%s] '%.*s' : %s[%d]%s",
-           first->orig_line,
-           get_token_name(first->type), get_token_name(first->parent_type),
-           first->len, first->str,
-           get_token_name(second->type), get_token_name(second->parent_type),
-           second->len, second->str,
-           rule, line,
-           complete ? "\n" : "");
+   if (second->type != CT_NEWLINE)
+   {
+      LOG_FMT(LSPACE, "Spacing: line %d [%s/%s] '%.*s' <===> [%s/%s] '%.*s' : %s[%d]%s",
+              first->orig_line,
+              get_token_name(first->type), get_token_name(first->parent_type),
+              first->len, first->str,
+              get_token_name(second->type), get_token_name(second->parent_type),
+              second->len, second->str,
+              rule, line,
+              complete ? "\n" : "");
+   }
 }
 
 
@@ -92,7 +95,7 @@ static void log_rule2(int line, const char *rule, chunk_t *first, chunk_t *secon
  * @param second  The second chunk
  * @return        AV_IGNORE, AV_ADD, AV_REMOVE or AV_FORCE
  */
-argval_t do_space(chunk_t *first, chunk_t *second, bool complete = true)
+static argval_t do_space(chunk_t *first, chunk_t *second, bool complete = true)
 {
    int      idx;
    argval_t arg;
