@@ -768,7 +768,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       next->parent_type = CT_DELETE;
    }
 
-   /* Change CT_STAR to CT_PTR_TYPE or CT_ARITH or SYM_DEREF */
+   /* Change CT_STAR to CT_PTR_TYPE or CT_ARITH or CT_DEREF */
    if (pc->type == CT_STAR)
    {
       if (chunk_is_paren_close(next))
