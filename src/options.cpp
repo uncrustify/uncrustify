@@ -458,6 +458,8 @@ void register_options(void)
                   "Control the space after the opening of a C++ comment '// A' vs '//A'");
    unc_add_option("sp_endif_cmt", UO_sp_endif_cmt, AT_IARF,
                   "Controls the spaces between #else or #endif and a trailing comment");
+   unc_add_option("sp_after_new", UO_sp_after_new, AT_IARF,
+                  "Controls the spaces after 'new', 'delete', and 'delete[]'");
 
    unc_begin_group(UG_indent, "Indenting");
    unc_add_option("indent_columns", UO_indent_columns, AT_NUM,

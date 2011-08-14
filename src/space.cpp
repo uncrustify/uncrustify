@@ -1324,6 +1324,14 @@ argval_t do_space(chunk_t *first, chunk_t *second, bool complete = true)
       return(AV_FORCE);
    }
 
+   if ((first->type == CT_NEW) ||
+       (first->type == CT_DELETE) ||
+       ((first->type == CT_TSQUARE) && (first->parent_type == CT_DELETE)))
+   {
+      log_rule("sp_after_new");
+      return(cpd.settings[UO_sp_after_new].a);
+   }
+
    for (idx = 0; idx < (int)ARRAY_SIZE(no_space_table); idx++)
    {
       if (((no_space_table[idx].first == CT_UNKNOWN) ||
