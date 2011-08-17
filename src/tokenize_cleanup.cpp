@@ -371,8 +371,14 @@ void tokenize_cleanup(void)
                }
                /* Change tmp into a type so that space_needed() works right */
                make_type(tmp);
+               int numsp = space_needed(tmp2, tmp);
+               std::string spaces;
+               for (int i=0; i < numsp; ++i)
+               {
+                 spaces += " ";
+               }
                len += snprintf(opbuf + len, sizeof(opbuf) - len, "%s%.*s",
-                               space_needed(tmp2, tmp) ? " " : "",
+                               spaces.c_str(),
                                tmp->len, tmp->str);
                tmp2 = tmp;
             }

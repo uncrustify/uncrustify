@@ -120,7 +120,7 @@ void do_parens(void);
 void space_text(void);
 void space_text_balance_nested_parens(void);
 int space_col_align(chunk_t *first, chunk_t *second);
-bool space_needed(chunk_t *first, chunk_t *second);
+int space_needed(chunk_t *first, chunk_t *second);
 void space_add_after(chunk_t *pc, int count);
 
 
