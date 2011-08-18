@@ -37,14 +37,14 @@ static void add_comment_text(const char *text, int len,
 /**
  * All output text is sent here, one char at a time.
  */
-static void add_char(char ch)
+static void add_char(UINT32 ch)
 {
-   static char last_char = 0;
+   static int last_char = 0;
 
    /* If we did a '\r' and it isn't followed by a '\n', then output a newline */
    if ((last_char == '\r') && (ch != '\n'))
    {
-      fputs(cpd.newline, cpd.fout);
+      write_string(cpd.fout, cpd.newline, cpd.enc);
       cpd.column      = 1;
       cpd.did_newline = 1;
       cpd.spaces      = 0;
@@ -53,7 +53,7 @@ static void add_char(char ch)
    /* convert a newline into the LF/CRLF/CR sequence */
    if (ch == '\n')
    {
-      fputs(cpd.newline, cpd.fout);
+      write_string(cpd.fout, cpd.newline, cpd.enc);
       cpd.column      = 1;
       cpd.did_newline = 1;
       cpd.spaces      = 0;
@@ -86,10 +86,10 @@ static void add_char(char ch)
       {
          while (cpd.spaces > 0)
          {
-            fputc(' ', cpd.fout);
+            write_char(cpd.fout, ' ', cpd.enc);
             cpd.spaces--;
          }
-         fputc(ch, cpd.fout);
+         write_char(cpd.fout, ch, cpd.enc);
          if (ch == '\t')
          {
             cpd.column = next_tab_column(cpd.column);

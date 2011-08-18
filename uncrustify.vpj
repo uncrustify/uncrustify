@@ -80,6 +80,7 @@
 			<F N="src/tokenize.cpp"/>
 			<F N="src/tokenize_cleanup.cpp"/>
 			<F N="src/uncrustify.cpp"/>
+			<F N="src/unicode.cpp"/>
 			<F N="src/universalindentgui.cpp"/>
 			<F N="src/width.cpp"/>
 		</Folder>

@@ -44,6 +44,15 @@ enum brstage_e
    BS_CATCH,     /* expecting 'catch' or 'finally' after 'try' */
 };
 
+enum CharEncoding
+{
+   ENC_ASCII,     /* 0-127 */
+   ENC_BYTE,      /* 0-255, not UTF-8 */
+   ENC_UTF8,
+   ENC_UTF16_LE,
+   ENC_UTF16_BE,
+};
+
 struct chunk_t;
 
 /**
@@ -315,6 +324,7 @@ struct cp_data
    int                preproc_ncnl_count;
 
    chunk_t            *bom;
+   CharEncoding       enc;
 
    /* bumped up when a line is split or indented */
    int                changes;
