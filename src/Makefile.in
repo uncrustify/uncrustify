@@ -66,7 +66,8 @@ am_uncrustify_OBJECTS = uncrustify-uncrustify.$(OBJEXT) \
 	uncrustify-parens.$(OBJEXT) \
 	uncrustify-universalindentgui.$(OBJEXT) \
 	uncrustify-semicolons.$(OBJEXT) uncrustify-sorting.$(OBJEXT) \
-	uncrustify-detect.$(OBJEXT)
+	uncrustify-detect.$(OBJEXT) uncrustify-unicode.$(OBJEXT) \
+	uncrustify-unc_text.$(OBJEXT)
 uncrustify_OBJECTS = $(am_uncrustify_OBJECTS)
 uncrustify_LDADD = $(LDADD)
 DEFAULT_INCLUDES = -I.@am__isrc@
@@ -201,7 +202,7 @@ uncrustify_SOURCES = uncrustify.cpp chunk_list.cpp indent.cpp align.cpp combine.
 		logmask.cpp logger.cpp ChunkStack.cpp braces.cpp brace_cleanup.cpp \
 		align_stack.cpp defines.cpp width.cpp lang_pawn.cpp md5.cpp \
 		backup.cpp parens.cpp universalindentgui.cpp semicolons.cpp \
-		sorting.cpp detect.cpp
+		sorting.cpp detect.cpp unicode.cpp unc_text.cpp
 
 noinst_HEADERS = chunk_list.h options.h char_table.h chunk_list.h \
 		uncrustify_types.h prototypes.h logmask.h logger.h \
@@ -568,6 +569,22 @@ uncrustify-detect.o: detect.cpp
 uncrustify-detect.obj: detect.cpp
 	$(AM_V_CXX) @AM_BACKSLASH@
 	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(uncrustify_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o uncrustify-detect.obj `if test -f 'detect.cpp'; then $(CYGPATH_W) 'detect.cpp'; else $(CYGPATH_W) '$(srcdir)/detect.cpp'; fi`
+
+uncrustify-unicode.o: unicode.cpp
+	$(AM_V_CXX) @AM_BACKSLASH@
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(uncrustify_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o uncrustify-unicode.o `test -f 'unicode.cpp' || echo '$(srcdir)/'`unicode.cpp
+
+uncrustify-unicode.obj: unicode.cpp
+	$(AM_V_CXX) @AM_BACKSLASH@
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(uncrustify_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o uncrustify-unicode.obj `if test -f 'unicode.cpp'; then $(CYGPATH_W) 'unicode.cpp'; else $(CYGPATH_W) '$(srcdir)/unicode.cpp'; fi`
+
+uncrustify-unc_text.o: unc_text.cpp
+	$(AM_V_CXX) @AM_BACKSLASH@
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(uncrustify_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o uncrustify-unc_text.o `test -f 'unc_text.cpp' || echo '$(srcdir)/'`unc_text.cpp
+
+uncrustify-unc_text.obj: unc_text.cpp
+	$(AM_V_CXX) @AM_BACKSLASH@
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(uncrustify_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o uncrustify-unc_text.obj `if test -f 'unc_text.cpp'; then $(CYGPATH_W) 'unc_text.cpp'; else $(CYGPATH_W) '$(srcdir)/unc_text.cpp'; fi`
 
 ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
 	list='$(SOURCES) $(HEADERS) $(LISP) $(TAGS_FILES)'; \

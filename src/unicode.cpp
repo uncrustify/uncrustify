@@ -17,7 +17,7 @@
  */
 bool is_ascii(const vector<char>& data)
 {
-   for (int idx = 0; idx < data.size(); idx++)
+   for (int idx = 0; idx < (int)data.size(); idx++)
    {
       if (data[idx] & 0x80)
       {
@@ -34,11 +34,65 @@ bool is_ascii(const vector<char>& data)
 bool decode_bytes(const vector<char>& in_data, deque<int>& out_data)
 {
    out_data.resize(in_data.size());
-   for (int idx = 0; idx < in_data.size(); idx++)
+   for (int idx = 0; idx < (int)in_data.size(); idx++)
    {
       out_data[idx] = in_data[idx];
    }
    return true;
+}
+
+
+void encode_utf8(int ch, vector<UINT8>& res)
+{
+   if (ch < 0)
+   {
+      /* illegal code - do not store */
+   }
+   else if (ch < 0x80)
+   {
+      /* 0xxxxxxx */
+      res.push_back(ch);
+   }
+   else if (ch < 0x0800)
+   {
+      /* 110xxxxx 10xxxxxx */
+      res.push_back(0xC0 | (ch >> 6));
+      res.push_back(0x80 | (ch & 0x3f));
+   }
+   else if (ch < 0x10000)
+   {
+      /* 1110xxxx 10xxxxxx 10xxxxxx */
+      res.push_back(0xE0 | (ch >> 12));
+      res.push_back(0x80 | ((ch >> 6) & 0x3f));
+      res.push_back(0x80 | (ch & 0x3f));
+   }
+   else if (ch < 0x200000)
+   {
+      /* 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx */
+      res.push_back(0xF0 | (ch >> 18));
+      res.push_back(0x80 | ((ch >> 12) & 0x3f));
+      res.push_back(0x80 | ((ch >> 6) & 0x3f));
+      res.push_back(0x80 | (ch & 0x3f));
+   }
+   else if (ch < 0x4000000)
+   {
+      /* 111110xx 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx */
+      res.push_back(0xF8 | (ch >> 24));
+      res.push_back(0x80 | ((ch >> 18) & 0x3f));
+      res.push_back(0x80 | ((ch >> 12) & 0x3f));
+      res.push_back(0x80 | ((ch >> 6) & 0x3f));
+      res.push_back(0x80 | (ch & 0x3f));
+   }
+   else /* (ch <= 0x7fffffff) */
+   {
+      /* 1111110x 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx */
+      res.push_back(0xFC | (ch >> 30));
+      res.push_back(0x80 | ((ch >> 24) & 0x3f));
+      res.push_back(0x80 | ((ch >> 18) & 0x3f));
+      res.push_back(0x80 | ((ch >> 12) & 0x3f));
+      res.push_back(0x80 | ((ch >> 6) & 0x3f));
+      res.push_back(0x80 | (ch & 0x3f));
+   }
 }
 
 
@@ -65,7 +119,7 @@ bool decode_utf8(const vector<char>& in_data, deque<int>& out_data)
       }
    }
 
-   while (idx < in_data.size())
+   while (idx < (int)in_data.size())
    {
       ch = in_data[idx++];
       if (ch < 0x80)                   /* 1-byte sequence */
@@ -99,7 +153,7 @@ bool decode_utf8(const vector<char>& in_data, deque<int>& out_data)
          return false;
       }
 
-      while ((cnt-- > 0) && (idx < in_data.size()))
+      while ((cnt-- > 0) && (idx < (int)in_data.size()))
       {
          tmp = in_data[idx++];
          if ((tmp & 0xC0) != 0x80)
@@ -116,7 +170,6 @@ bool decode_utf8(const vector<char>& in_data, deque<int>& out_data)
       }
       out_data.push_back(ch);
    }
-   enc = ENC_UTF8;
    return true;
 }
 
@@ -166,11 +219,11 @@ bool decode_utf16(const vector<char>& in_data, deque<int>& out_data, CharEncodin
       return false;
    }
 
-   if ((data[0] == 0xfe) && (data[1] == 0xff))
+   if ((in_data[0] == 0xfe) && (in_data[1] == 0xff))
    {
       enc = ENC_UTF16_BE;
    }
-   else if ((data[0] == 0xff) && (data[1] == 0xfe))
+   else if ((in_data[0] == 0xff) && (in_data[1] == 0xfe))
    {
       enc = ENC_UTF16_LE;
    }
@@ -182,14 +235,14 @@ bool decode_utf16(const vector<char>& in_data, deque<int>& out_data, CharEncodin
    bool be = (enc == ENC_UTF16_BE);
 
    int idx = 2;
-   while (idx < in_data.size())
+   while (idx < (int)in_data.size())
    {
-      ch = get_word(in_data, idx, be);
+      int ch = get_word(in_data, idx, be);
       if ((ch & 0xfc00) == 0xd800)
       {
          ch  &= 0x3ff;
          ch <<= 10;
-         tmp = get_word(in_data, idx, be);
+         int tmp = get_word(in_data, idx, be);
          if ((tmp & 0xfc00) != 0xdc00)
          {
             return false;
@@ -222,18 +275,18 @@ bool decode_bom(const vector<char>& in_data, CharEncoding& enc)
    enc = ENC_ASCII;
    if (in_data.size() >= 2)
    {
-      if ((data[0] == 0xfe) && (data[1] == 0xff))
+      if ((in_data[0] == 0xfe) && (in_data[1] == 0xff))
       {
          enc = ENC_UTF16_BE;
       }
-      else if ((data[0] == 0xff) && (data[1] == 0xfe))
+      else if ((in_data[0] == 0xff) && (in_data[1] == 0xfe))
       {
          enc = ENC_UTF16_LE;
       }
       else if ((in_data.size() >= 3) &&
-          (in_data[0] == 0xef) &&
-          (in_data[1] == 0xbb) &&
-          (in_data[2] == 0xbf))
+               (in_data[0] == 0xef) &&
+               (in_data[1] == 0xbb) &&
+               (in_data[2] == 0xbf))
       {
          enc = ENC_UTF8;
          return true;
@@ -300,55 +353,11 @@ void write_byte(int ch, FILE *pf)
  */
 void write_utf8(int ch, FILE *pf)
 {
-   if (ch < 0x80)
-   {
-      /* 0xxxxxxx */
-      fputc(ch, pf);
-   }
-   else if (ch < 0x0800)
-   {
-      /* 110xxxxx 10xxxxxx */
-      fputc(0xC0 | (ch >> 6), pf);
-      fputc(0x80 | (ch & 0x3f), pf);
-   }
-   else if (ch < 0x10000)
-   {
-      /* 1110xxxx 10xxxxxx 10xxxxxx */
-      fputc(0xE0 | (ch >> 12), pf);
-      fputc(0x80 | ((ch >> 6) & 0x3f), pf);
-      fputc(0x80 | (ch & 0x3f), pf);
-   }
-   else if (ch < 0x200000)
-   {
-      /* 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx */
-      fputc(0xF0 | (ch >> 18), pf);
-      fputc(0x80 | ((ch >> 12) & 0x3f), pf);
-      fputc(0x80 | ((ch >> 6) & 0x3f), pf);
-      fputc(0x80 | (ch & 0x3f), pf);
-   }
-   else if (ch < 0x4000000)
-   {
-      /* 111110xx 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx */
-      fputc(0xF8 | (ch >> 24), pf);
-      fputc(0x80 | ((ch >> 18) & 0x3f), pf);
-      fputc(0x80 | ((ch >> 12) & 0x3f), pf);
-      fputc(0x80 | ((ch >> 6) & 0x3f), pf);
-      fputc(0x80 | (ch & 0x3f), pf);
-   }
-   else if (ch < 0x80000000)
-   {
-      /* 1111110x 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx */
-      fputc(0xFC | (ch >> 30), pf);
-      fputc(0x80 | ((ch >> 24) & 0x3f), pf);
-      fputc(0x80 | ((ch >> 18) & 0x3f), pf);
-      fputc(0x80 | ((ch >> 12) & 0x3f), pf);
-      fputc(0x80 | ((ch >> 6) & 0x3f), pf);
-      fputc(0x80 | (ch & 0x3f), pf);
-   }
-   else
-   {
-      /* illegal code - do not store */
-   }
+   vector<UINT8> dq;
+   dq.reserve(6);
+
+   encode_utf8(ch, dq);
+   fwrite(&dq[0], dq.size(), 1, pf);
 }
 
 
@@ -455,19 +464,19 @@ void write_char(FILE *pf, int ch, CharEncoding enc)
 }
 
 
-void write_string(FILE *pf, const UINT8 *text, CharEncoding enc)
+void write_string(FILE *pf, const char *ascii_text, CharEncoding enc)
 {
-   while (*text)
+   while (*ascii_text)
    {
-      write_char(pf, *text, enc);
-      text++;
+      write_char(pf, *ascii_text, enc);
+      ascii_text++;
    }
 }
 
 
 void write_string(FILE *pf, const deque<int>& text, CharEncoding enc)
 {
-   for (int idx = 0; idx < text.size(); idx++)
+   for (int idx = 0; idx < (int)text.size(); idx++)
    {
       write_char(pf, text[idx], enc);
    }

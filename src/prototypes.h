@@ -11,6 +11,7 @@
 #include "uncrustify_types.h"
 
 #include <string>
+#include <deque>
 
 /*
  *  uncrustify.cpp
@@ -269,8 +270,9 @@ void print_universal_indent_cfg(FILE *pfile);
 void write_bom(FILE *pf, CharEncoding enc, bool force);
 void write_char(FILE *pf, int ch, CharEncoding enc);
 void write_string(FILE *pf, const deque<int>& text, CharEncoding enc);
-void write_string(FILE *pf, const UINT8 *text, CharEncoding enc);
+void write_string(FILE *pf, const char *ascii_text, CharEncoding enc);
 bool decode_unicode(const vector<UINT8>& in_data, deque<int>& out_data, CharEncoding& enc);
+void encode_utf8(int ch, vector<UINT8>& res);
 
 
 /*
