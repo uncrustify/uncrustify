@@ -13,7 +13,7 @@
 #include <cstring>
 #include <cerrno>
 #include "unc_ctype.h"
-
+#include <iostream>
 
 /**
  * General indenting approach:
@@ -1011,7 +1011,14 @@ void indent_text(void)
             if (chunk_is_newline(prev))
             {
                frm.pse[frm.pse_tos].indent += 2;
-               /* don't change indent of current line */
+
+               if(cpd.settings[UO_indent_ctor_init].n > 0)
+               {
+                 frm.pse[frm.pse_tos].indent += cpd.settings[UO_indent_ctor_init].n;
+                 frm.pse[frm.pse_tos].indent_tmp += cpd.settings[UO_indent_ctor_init].n;
+                 frm.pse[frm.pse_tos].indent_tab += cpd.settings[UO_indent_ctor_init].n;
+                 indent_column_set(frm.pse[frm.pse_tos].indent_tmp);
+               }
             }
             else
             {
@@ -1074,9 +1081,10 @@ void indent_text(void)
             frm.pse[frm.pse_tos].indent = frm.pse[idx].indent + indent_size;
             if (cpd.settings[UO_indent_func_param_double].b)
             {
-               frm.pse[frm.pse_tos].indent += indent_size;
+              frm.pse[frm.pse_tos].indent += indent_size;
             }
             frm.pse[frm.pse_tos].indent_tab = frm.pse[frm.pse_tos].indent;
+
          }
 
          else if ((chunk_is_str(pc, "(", 1) && !cpd.settings[UO_indent_paren_nl].b) ||
