@@ -9,6 +9,8 @@
 #ifndef UNCRUSTIFY_TYPES_H_INCLUDED
 #define UNCRUSTIFY_TYPES_H_INCLUDED
 
+#include <vector>
+#include <deque>
 using namespace std;
 
 #include "base_types.h"
@@ -21,7 +23,6 @@ using namespace std;
 #ifdef HAVE_UTIME_H
 #include <utime.h>
 #endif
-#include <vector>
 
 #define UNCRUSTIFY_OFF_TEXT    " *INDENT-OFF*"
 #define UNCRUSTIFY_ON_TEXT     " *INDENT-ON*"
@@ -283,7 +284,9 @@ struct align_t
 
 struct file_mem
 {
-   vector<char>   data;
+   vector<UINT8>  raw;
+   deque<int>     data;
+   CharEncoding   enc;
 #ifdef HAVE_UTIME_H
    struct utimbuf utb;
 #endif

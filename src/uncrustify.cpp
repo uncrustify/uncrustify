@@ -42,10 +42,10 @@ struct cp_data cpd;
 static int language_from_tag(const char *tag);
 static int language_from_filename(const char *filename);
 static const char *language_to_string(int lang);
-static bool read_stdin(vector<char>& data);
-static void uncrustify_start(const vector<char>& data);
+static bool read_stdin(file_mem& fm);
+static void uncrustify_start(const deque<int>& data);
 static void uncrustify_end();
-static void uncrustify_file(const vector<char>& data, FILE *pfout,
+static void uncrustify_file(const deque<int>& data, FILE *pfout,
                             const char *parsed_file);
 static void do_source_file(const char *filename_in,
                            const char *filename_out,
@@ -555,8 +555,8 @@ int main(int argc, char *argv[])
 
       redir_stdout(output_file);
 
-      vector<char> data;
-      if (!read_stdin(data))
+      file_mem fm;
+      if (!read_stdin(fm))
       {
          LOG_FMT(LERR, "Failed to read stdin\n");
          return(100);
@@ -565,10 +565,11 @@ int main(int argc, char *argv[])
       cpd.filename = "stdin";
 
       /* Done reading from stdin */
-      LOG_FMT(LSYS, "Parsing: %d bytes from stdin as language %s\n",
-              (int)data.size(), language_to_string(cpd.lang_flags));
+      LOG_FMT(LSYS, "Parsing: %d bytes (%d chars) from stdin as language %s\n",
+              (int)fm.raw.size(), (int)fm.data.size(),
+              language_to_string(cpd.lang_flags));
 
-      uncrustify_file(data, stdout, parsed_file);
+      uncrustify_file(fm.data, stdout, parsed_file);
    }
    else if (source_file != NULL)
    {
@@ -654,29 +655,29 @@ static void process_source_list(const char *source_list,
 }
 
 
-static bool read_stdin(vector<char>& data)
+static bool read_stdin(file_mem& fm)
 {
-   deque<char> dq;
-   char        buf[4096];
-   int         len;
-   int         idx;
+   deque<UINT8> dq;
+   char         buf[4096];
+   int          len;
+   int          idx;
+
+   fm.raw.clear();
+   fm.data.clear();
+   fm.enc = ENC_ASCII;
 
    while (!feof(stdin))
    {
       len = fread(buf, 1, sizeof(buf), stdin);
       for (idx = 0; idx < len; idx++)
       {
-         /* TODO: parse as UTF-8 and add int-chars */
          dq.push_back(buf[idx]);
       }
    }
-   /* terminate the string */
-   dq.push_back(0);
 
-   /* Copy the data from the deque to the vector */
-   data.clear();
-   data.insert(data.end(), dq.begin(), dq.end());
-   return(true);
+   /* Copy the raw data from the deque to the vector */
+   fm.raw.insert(fm.raw.end(), dq.begin(), dq.end());
+   return decode_unicode(fm.raw, fm.data, fm.enc);
 }
 
 
@@ -725,7 +726,9 @@ static int load_mem_file(const char *filename, file_mem& fm)
    struct stat my_stat;
    FILE        *p_file;
 
+   fm.raw.clear();
    fm.data.clear();
+   fm.enc = ENC_ASCII;
 
    /* Grab the stat info for the file */
    if (stat(filename, &my_stat) < 0)
@@ -745,24 +748,25 @@ static int load_mem_file(const char *filename, file_mem& fm)
       return(-1);
    }
 
-   fm.data.resize(my_stat.st_size + 1);
-   if (fread(&fm.data[0], fm.data.size() - 1, 1, p_file) != 1)
+   /* read the raw data */
+   fm.raw.resize(my_stat.st_size);
+   if (fread(&fm.raw[0], fm.raw.size(), 1, p_file) != 1)
    {
       LOG_FMT(LERR, "%s: fread(%s) failed: %s (%d)\n",
               __func__, filename, strerror(errno), errno);
       cpd.error_count++;
    }
+   else if (decode_unicode(fm.raw, fm.data, fm.enc) != 0)
+   {
+      LOG_FMT(LERR, "%s: failed to decode the file '%s'\n", __func__, filename);
+   }
    else
    {
-      fm.data[fm.data.size() - 1] = 0;
+      LOG_FMT(LSYS, "%s: '%s' looks like %d\n", __func__, filename, fm.enc);
       retval = 0;
    }
    fclose(p_file);
 
-   if (retval != 0)
-   {
-      fm.data.clear();
-   }
    return(retval);
 }
 
@@ -975,7 +979,7 @@ static void do_source_file(const char *filename_in,
 
          if (!no_backup)
          {
-            if (backup_copy_file(filename_in, fm.data) != SUCCESS)
+            if (backup_copy_file(filename_in, fm.raw) != SUCCESS)
             {
                LOG_FMT(LERR, "%s: Failed to create backup file for %s\n",
                        __func__, filename_in);
@@ -1263,7 +1267,7 @@ static void add_msg_header(c_token_t type, file_mem& fm)
 }
 
 
-static void uncrustify_start(const vector<char>& data)
+static void uncrustify_start(const deque<int>& data)
 {
    /**
     * Parse the text into chunks
@@ -1327,7 +1331,7 @@ static void uncrustify_start(const vector<char>& data)
 }
 
 
-static void uncrustify_file(const vector<char>& data, FILE *pfout,
+static void uncrustify_file(const deque<int>& data, FILE *pfout,
                             const char *parsed_file)
 {
    /* Check for embedded 0's */

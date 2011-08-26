@@ -181,7 +181,7 @@ chunk_t *newline_add_between2(chunk_t *start, chunk_t *end,
  *  tokenize.cpp
  */
 
-void tokenize(const vector<char>& data, chunk_t *ref);
+void tokenize(const deque<int>& data, chunk_t *ref);
 
 
 /*

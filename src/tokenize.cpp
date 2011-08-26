@@ -1276,7 +1276,7 @@ static bool parse_next(chunk_t *pc)
  * All the tokens are inserted before ref. If ref is NULL, they are inserted
  * at the end of the list.  Line numbers are relative to the start of the data.
  */
-void tokenize(const vector<char>& data, chunk_t *ref)
+void tokenize(const deque<int>& data, chunk_t *ref)
 {
    int                idx = 0;
    chunk_t            chunk;
@@ -1292,7 +1292,7 @@ void tokenize(const vector<char>& data, chunk_t *ref)
    cpd.line_number = 1;
    cpd.column      = 1;
 
-   while (idx < (int)data.size() - 1)
+   while (idx < (int)data.size())
    {
       chunk.str = &data[idx];
       if (!parse_next(&chunk))
