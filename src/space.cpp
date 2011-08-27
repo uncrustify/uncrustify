@@ -14,7 +14,7 @@
 #include <cstring>
 #include <cerrno>
 #include "unc_ctype.h"
-
+#include <iostream>
 
 static argval_t do_space(chunk_t *first, chunk_t *second, bool complete);
 
@@ -270,7 +270,12 @@ static argval_t do_space(chunk_t *first, chunk_t *second, bool complete = true)
          log_rule("sp_after_semi");
          return(cpd.settings[UO_sp_after_semi].a);
       }
-      /* Let the comment spacing rules handle this */
+      else if ((cpd.settings[UO_sp_before_tr_emb_cmt].a != AV_IGNORE ) &&
+          (second->parent_type == CT_COMMENT_END || second->parent_type == CT_COMMENT_EMBED) )
+      {
+        log_rule("sp_before_tr_emb_cmt");
+        return(cpd.settings[UO_sp_before_tr_emb_cmt].a);
+      }
    }
 
    if (((first->type == CT_NEG) || (first->type == CT_POS) || (first->type == CT_ARITH)) &&
@@ -1124,6 +1129,13 @@ static argval_t do_space(chunk_t *first, chunk_t *second, bool complete = true)
       return(cpd.settings[UO_sp_after_cast].a);
    }
 
+   if ( (cpd.settings[UO_sp_before_tr_emb_cmt].a != AV_IGNORE ) &&
+       (second->parent_type == CT_COMMENT_END || second->parent_type == CT_COMMENT_EMBED) )
+   {
+      log_rule("sp_before_tr_emb_cmt");
+      return(cpd.settings[UO_sp_before_tr_emb_cmt].a);
+   }
+
    if (first->type == CT_BRACE_CLOSE)
    {
       if (second->type == CT_ELSE)
@@ -1315,12 +1327,6 @@ static argval_t do_space(chunk_t *first, chunk_t *second, bool complete = true)
       }
    }
 
-   if (chunk_is_comment(second))
-   {
-      log_rule("IGNORE");
-      return(AV_IGNORE);
-   }
-
    if (first->type == CT_COMMENT)
    {
       log_rule("FORCE");
@@ -1446,6 +1452,12 @@ void space_text(void)
          }
 
          int av = do_space(pc, next, false);
+         int numsp = 1;
+         if ((cpd.settings[UO_sp_before_tr_emb_cmt].a != AV_IGNORE ) &&
+             (next->parent_type == CT_COMMENT_END || next->parent_type == CT_COMMENT_EMBED))
+         {
+           numsp = cpd.settings[UO_sp_num_before_tr_emb_cmt].n;
+         }
          if (pc->flags & PCF_FORCE_SPACE)
          {
             LOG_FMT(LSPACE, "Forcing space between '%.*s' and '%.*s'\n",
@@ -1455,19 +1467,19 @@ void space_text(void)
          switch (av)
          {
          case AV_FORCE:
-            /* add exactly one space */
-            column++;
+            /* add exactly n spaces */
+            column += numsp;
             break;
 
          case AV_ADD:
-            delta = 1;
+            delta = numsp;
             if ((next->orig_col >= pc->orig_col_end) && (pc->orig_col_end != 0))
             {
                /* Keep the same relative spacing, minimum 1 */
                delta = next->orig_col - pc->orig_col_end;
-               if (delta < 1)
+               if (delta < numsp)
                {
-                  delta = 1;
+                  delta = numsp;
                }
             }
             column += delta;
@@ -1488,20 +1500,19 @@ void space_text(void)
 
          if (chunk_is_comment(next) &&
              chunk_is_newline(chunk_get_next(next)) &&
-             (column < (int)next->orig_col))
+             (column < (int)next->orig_col) &&
+             cpd.settings[UO_sp_before_tr_emb_cmt].a == AV_IGNORE &&
+             ((cpd.settings[UO_sp_endif_cmt].a == AV_IGNORE) ||
+                 ((pc->type != CT_PP_ELSE) && (pc->type != CT_PP_ENDIF))))
          {
-            if ((cpd.settings[UO_sp_endif_cmt].a == AV_IGNORE) ||
-                ((pc->type != CT_PP_ELSE) && (pc->type != CT_PP_ENDIF)))
-            {
-               if (cpd.settings[UO_indent_relative_single_line_comments].b)
-               {
-                  column = pc->column + (next->orig_col - pc->orig_col_end);
-               }
-               else
-               {
-                  column = next->orig_col;
-               }
-            }
+           if (cpd.settings[UO_indent_relative_single_line_comments].b)
+           {
+             column = pc->column + (next->orig_col - pc->orig_col_end);
+           }
+           else
+           {
+             column = next->orig_col;
+           }
          }
          next->column = column;
 
@@ -1581,16 +1592,24 @@ void space_text_balance_nested_parens(void)
 /**
  * Determines if a space is required between two chunks
  */
-bool space_needed(chunk_t *first, chunk_t *second)
+int space_needed(chunk_t *first, chunk_t *second)
 {
    switch (do_space(first, second))
    {
    case AV_ADD:
    case AV_FORCE:
-      return(true);
+     if ((cpd.settings[UO_sp_before_tr_emb_cmt].a != AV_IGNORE ) &&
+         (second->parent_type == CT_COMMENT_END || second->parent_type == CT_COMMENT_EMBED))
+     {
+       return(cpd.settings[UO_sp_num_before_tr_emb_cmt].n);
+     }
+     else
+     {
+       return(1);
+     }
 
    case AV_REMOVE:
-      return(false);
+      return(0);
 
    case AV_IGNORE:
    default:
@@ -1620,7 +1639,15 @@ int space_col_align(chunk_t *first, chunk_t *second)
    {
    case AV_ADD:
    case AV_FORCE:
-      coldiff++;
+     if ((cpd.settings[UO_sp_before_tr_emb_cmt].a != AV_IGNORE ) &&
+         (second->parent_type == CT_COMMENT_END || second->parent_type == CT_COMMENT_EMBED))
+      {
+        coldiff += cpd.settings[UO_sp_num_before_tr_emb_cmt].n;
+      }
+      else
+      {
+        coldiff++;
+      }
       break;
 
    case AV_REMOVE:
