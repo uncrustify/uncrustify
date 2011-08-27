@@ -110,7 +110,6 @@ void brace_cleanup(void)
    int                pp_level;
 
    memset(&frm, 0, sizeof(frm));
-   memset(&vs_chunk, 0, sizeof(vs_chunk));
 
    cpd.frame_count = 0;
    cpd.in_preproc  = CT_NONE;
@@ -295,8 +294,8 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
    {
       pc->flags |= PCF_EXPR_START;
       pc->flags |= (frm->stmt_count == 0) ? PCF_STMT_START : 0;
-      LOG_FMT(LSTMT, "%d] 1.marked %.*s as stmt start st:%d ex:%d\n",
-              pc->orig_line, pc->len, pc->str, frm->stmt_count, frm->expr_count);
+      LOG_FMT(LSTMT, "%d] 1.marked %s as stmt start st:%d ex:%d\n",
+              pc->orig_line, pc->str.c_str(), frm->stmt_count, frm->expr_count);
    }
    frm->stmt_count++;
    frm->expr_count++;
@@ -384,8 +383,8 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
          if ((frm->pse[frm->pse_tos].type != CT_NONE) &&
              (frm->pse[frm->pse_tos].type != CT_PP_DEFINE))
          {
-            LOG_FMT(LWARN, "%s:%d Error: Unexpected '%.*s' for '%s', which was on line %d\n",
-                    cpd.filename, pc->orig_line, pc->len, pc->str,
+            LOG_FMT(LWARN, "%s:%d Error: Unexpected '%s' for '%s', which was on line %d\n",
+                    cpd.filename, pc->orig_line, pc->str.c_str(),
                     get_token_name(frm->pse[frm->pse_tos].pc->type),
                     frm->pse[frm->pse_tos].pc->orig_line);
             print_stack(LBCSPOP, "=Error  ", frm, pc);
@@ -583,8 +582,8 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
         (frm->pse[frm->pse_tos].type != CT_FPAREN_OPEN) &&
         (frm->pse[frm->pse_tos].type != CT_SPAREN_OPEN)))
    {
-      LOG_FMT(LSTMT, "%s: %d> reset stmt on %.*s\n",
-              __func__, pc->orig_line, pc->len, pc->str);
+      LOG_FMT(LSTMT, "%s: %d> reset stmt on %s\n",
+              __func__, pc->orig_line, pc->str.c_str());
       frm->stmt_count = 0;
       frm->expr_count = 0;
    }
@@ -616,8 +615,8 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
        (pc->type == CT_QUESTION))
    {
       frm->expr_count = 0;
-      LOG_FMT(LSTMT, "%s: %d> reset expr on %.*s\n",
-              __func__, pc->orig_line, pc->len, pc->str);
+      LOG_FMT(LSTMT, "%s: %d> reset expr on %s\n",
+              __func__, pc->orig_line, pc->str.c_str());
    }
 }
 
@@ -718,8 +717,8 @@ static bool check_complex_statements(struct parse_frame *frm, chunk_t *pc)
          return(true);
       }
 
-      LOG_FMT(LWARN, "%s:%d Error: Expected 'while', got '%.*s'\n",
-              cpd.filename, pc->orig_line, pc->len, pc->str);
+      LOG_FMT(LWARN, "%s:%d Error: Expected 'while', got '%s'\n",
+              cpd.filename, pc->orig_line, pc->str.c_str());
       frm->pse_tos--;
       print_stack(LBCSPOP, "-Error  ", frm, pc);
       cpd.error_count++;
@@ -751,7 +750,7 @@ static bool check_complex_statements(struct parse_frame *frm, chunk_t *pc)
       pc->flags      |= PCF_STMT_START | PCF_EXPR_START;
       frm->stmt_count = 1;
       frm->expr_count = 1;
-      LOG_FMT(LSTMT, "%d] 2.marked %.*s as stmt start\n", pc->orig_line, pc->len, pc->str);
+      LOG_FMT(LSTMT, "%d] 2.marked %s as stmt start\n", pc->orig_line, pc->str.c_str());
    }
 
    /* Verify open paren in complex statement */
@@ -759,8 +758,8 @@ static bool check_complex_statements(struct parse_frame *frm, chunk_t *pc)
        ((frm->pse[frm->pse_tos].stage == BS_PAREN1) ||
         (frm->pse[frm->pse_tos].stage == BS_WOD_PAREN)))
    {
-      LOG_FMT(LWARN, "%s:%d Error: Expected '(', got '%.*s' for '%s'\n",
-              cpd.filename, pc->orig_line, pc->len, pc->str,
+      LOG_FMT(LWARN, "%s:%d Error: Expected '(', got '%s' for '%s'\n",
+              cpd.filename, pc->orig_line, pc->str.c_str(),
               get_token_name(frm->pse[frm->pse_tos].type));
 
       /* Throw out the complex statement */
@@ -884,8 +883,6 @@ static chunk_t *insert_vbrace(chunk_t *pc, bool after,
    chunk_t *rv;
    chunk_t *ref;
 
-   memset(&chunk, 0, sizeof(chunk));
-
    chunk.orig_line   = pc->orig_line;
    chunk.parent_type = frm->pse[frm->pse_tos].type;
    chunk.level       = frm->level;
@@ -930,7 +927,7 @@ static chunk_t *insert_vbrace(chunk_t *pc, bool after,
       }
 
       chunk.orig_line = ref->orig_line;
-      chunk.column    = ref->column + ref->len + 1;
+      chunk.column    = ref->column + ref->len() + 1;
       chunk.type      = CT_VBRACE_OPEN;
       rv = chunk_add_after(&chunk, ref);
    }
@@ -951,9 +948,9 @@ bool close_statement(struct parse_frame *frm, chunk_t *pc)
 {
    chunk_t *vbc = pc;
 
-   LOG_FMT(LTOK, "%s:%d] %s '%.*s' type %s stage %d\n", __func__,
+   LOG_FMT(LTOK, "%s:%d] %s '%s' type %s stage %d\n", __func__,
            pc->orig_line,
-           get_token_name(pc->type), pc->len, pc->str,
+           get_token_name(pc->type), pc->str.c_str(),
            get_token_name(frm->pse[frm->pse_tos].type),
            frm->pse[frm->pse_tos].stage);
 
@@ -961,8 +958,8 @@ bool close_statement(struct parse_frame *frm, chunk_t *pc)
    {
       frm->stmt_count = 0;
       frm->expr_count = 0;
-      LOG_FMT(LSTMT, "%s: %d> reset stmt on %.*s\n",
-              __func__, pc->orig_line, pc->len, pc->str);
+      LOG_FMT(LSTMT, "%s: %d> reset stmt on %s\n",
+              __func__, pc->orig_line, pc->str.c_str());
    }
 
    /**

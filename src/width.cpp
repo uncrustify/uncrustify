@@ -17,7 +17,7 @@ static void split_for_stmt(chunk_t *start);
 
 static_inline bool is_past_width(chunk_t *pc)
 {
-   return((pc->column + pc->len) > cpd.settings[UO_code_width].n);
+   return((pc->column + pc->len()) > cpd.settings[UO_code_width].n);
 }
 
 
@@ -26,7 +26,7 @@ static_inline bool is_past_width(chunk_t *pc)
  */
 static void split_before_chunk(chunk_t *pc)
 {
-   LOG_FMT(LSPLIT, "%s: %.*s\n", __func__, pc->len, pc->str);
+   LOG_FMT(LSPLIT, "%s: %s\n", __func__, pc->str.c_str());
 
    if (!chunk_is_newline(pc) &&
        !chunk_is_newline(chunk_get_prev(pc)))
@@ -165,8 +165,8 @@ static void try_split_here(cw_entry& ent, chunk_t *pc)
  */
 static void split_line(chunk_t *start)
 {
-   LOG_FMT(LSPLIT, "%s: line %d, col %d token:%.*s[%s] (IN_FUNC=%d) ",
-           __func__, start->orig_line, start->column, start->len, start->str,
+   LOG_FMT(LSPLIT, "%s: line %d, col %d token:%s[%s] (IN_FUNC=%d) ",
+           __func__, start->orig_line, start->column, start->str.c_str(),
            get_token_name(start->type),
            (start->flags & (PCF_IN_FCN_DEF | PCF_IN_FCN_CALL)) != 0);
 
@@ -182,7 +182,7 @@ static void split_line(chunk_t *start)
        (start->type == CT_COMMA) ||
        (start->type == CT_SEMICOLON) ||
        (start->type == CT_VSEMICOLON) ||
-       (start->len == 0))
+       (start->len() == 0))
    {
       LOG_FMT(LSPLIT, " ** NO GO **\n");
 
@@ -246,13 +246,13 @@ static void split_line(chunk_t *start)
 
    if (ent.pc == NULL)
    {
-      LOG_FMT(LSPLIT, "%s: TRY_SPLIT yielded NO SOLUTION for line %d at %.*s [%s]\n",
-              __func__, start->orig_line, start->len, start->str, get_token_name(start->type));
+      LOG_FMT(LSPLIT, "%s: TRY_SPLIT yielded NO SOLUTION for line %d at %s [%s]\n",
+              __func__, start->orig_line, start->str.c_str(), get_token_name(start->type));
    }
    else
    {
-      LOG_FMT(LSPLIT, "%s: TRY_SPLIT yielded '%.*s' [%s] on line %d\n", __func__,
-              ent.pc->len, ent.pc->str, get_token_name(ent.pc->type), ent.pc->orig_line);
+      LOG_FMT(LSPLIT, "%s: TRY_SPLIT yielded '%s' [%s] on line %d\n", __func__,
+              ent.pc->str.c_str(), get_token_name(ent.pc->type), ent.pc->orig_line);
    }
 
    /* Break before the token instead of after it according to the pos_xxx rules */
@@ -283,11 +283,11 @@ static void split_line(chunk_t *start)
    prev = chunk_get_prev(pc);
    if ((prev != NULL) && !chunk_is_newline(pc) && !chunk_is_newline(prev))
    {
-      int plen = (pc->len < 5) ? pc->len : 5;
-      int slen = (start->len < 5) ? start->len : 5;
+      int plen = (pc->len() < 5) ? pc->len() : 5;
+      int slen = (start->len() < 5) ? start->len() : 5;
       LOG_FMT(LSPLIT, " '%.*s' [%s], started on token '%.*s' [%s]\n",
-              plen, pc->str, get_token_name(pc->type),
-              slen, start->str, get_token_name(start->type));
+              plen, pc->str.c_str(), get_token_name(pc->type),
+              slen, start->str.c_str(), get_token_name(start->type));
 
       split_before_chunk(pc);
    }
@@ -311,8 +311,8 @@ static void split_for_stmt(chunk_t *start)
    chunk_t *open_paren = NULL;
    int     nl_cnt      = 0;
 
-   LOG_FMT(LSPLIT, "%s: starting on %.*s, line %d\n",
-           __func__, start->len, start->str, start->orig_line);
+   LOG_FMT(LSPLIT, "%s: starting on %s, line %d\n",
+           __func__, start->str.c_str(), start->orig_line);
 
    /* Find the open paren so we know the level and count newlines */
    pc = start;
@@ -364,7 +364,7 @@ static void split_for_stmt(chunk_t *start)
 
    while (--count >= 0)
    {
-      LOG_FMT(LSPLIT, "%s: split before %.*s\n", __func__, st[count]->len, st[count]->str);
+      LOG_FMT(LSPLIT, "%s: split before %s\n", __func__, st[count]->str.c_str());
       split_before_chunk(chunk_get_next(st[count]));
    }
 
@@ -496,8 +496,8 @@ static void split_fcn_params(chunk_t *start)
             {
                last_col = pc->column;
             }
-            cur_width += (pc->column - last_col) + pc->len;
-            last_col   = pc->column + pc->len;
+            cur_width += (pc->column - last_col) + pc->len();
+            last_col   = pc->column + pc->len();
 
             if ((pc->type == CT_COMMA) ||
                 (pc->type == CT_FPAREN_CLOSE))

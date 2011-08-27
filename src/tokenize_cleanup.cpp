@@ -34,7 +34,7 @@ static chunk_t *handle_double_angle_close(chunk_t *pc)
           (memcmp(pc->str, ">>", 2) == 0) &&
           (next->parent_type == CT_NONE))
       {
-         pc->len++;
+         pc->str.append('>');
          pc->type = CT_ARITH;
          pc->orig_col_end = next->orig_col_end;
 
@@ -59,19 +59,18 @@ static void split_off_angle_close(chunk_t *pc)
 
    const chunk_tag_t *ct;
 
-   ct = find_punctuator(pc->str + 1, cpd.lang_flags);
+   ct = find_punctuator(pc->text() + 1, cpd.lang_flags);
    if (ct == NULL)
    {
       return;
    }
 
-   pc->len = 1;
+   pc->str.resize(1);
    pc->orig_col_end = pc->orig_col + 1;
    pc->type = CT_ANGLE_CLOSE;
 
    nc.type = ct->type;
-   nc.str++;
-   nc.len--;
+   nc.str.pop_front();
    nc.orig_col++;
    nc.column++;
    chunk_add_after(&nc, pc);
@@ -100,7 +99,6 @@ void tokenize_cleanup(void)
             /* Change '[' + ']' into '[]' */
             pc->type = CT_TSQUARE;
             pc->str  = "[]";
-            pc->len  = 2;
             chunk_del(next);
             pc->orig_col_end += 1;
          }
@@ -319,6 +317,7 @@ void tokenize_cleanup(void)
        */
       if (pc->type == CT_OPERATOR)
       {
+         tmp2 = chunk_get_next(next);
          /* Handle special case of () operator -- [] already handled */
          if (next->type == CT_PAREN_OPEN)
          {
@@ -326,19 +325,19 @@ void tokenize_cleanup(void)
             if ((tmp != NULL) && (tmp->type == CT_PAREN_CLOSE))
             {
                next->str  = "()";
-               next->len  = 2;
                next->type = CT_OPERATOR_VAL;
                chunk_del(tmp);
                next->orig_col_end += 1;
             }
          }
          else if ((next->type == CT_ANGLE_CLOSE) &&
-                  (memcmp(next->str, ">>", 2) == 0))
+                  tmp2 && (tmp2->type == CT_ANGLE_CLOSE) &&
+                  (tmp2->orig_col == next->orig_col_end))
          {
-            next->len++;
+            next->str.append('>');
             next->orig_col_end++;
             next->type = CT_OPERATOR_VAL;
-            chunk_del(chunk_get_next(next));
+            chunk_del(tmp2);
          }
          else if (next->flags & PCF_PUNCTUATOR)
          {
@@ -354,8 +353,7 @@ void tokenize_cleanup(void)
             char opbuf[256];
             int  len;
 
-            len = snprintf(opbuf, sizeof(opbuf), "%.*s",
-                           next->len, next->str);
+            len = snprintf(opbuf, sizeof(opbuf), "%s", next->str.c_str());
 
             tmp2 = next;
             while ((tmp = chunk_get_next(tmp2)) != NULL)
@@ -371,9 +369,9 @@ void tokenize_cleanup(void)
                }
                /* Change tmp into a type so that space_needed() works right */
                make_type(tmp);
-               len += snprintf(opbuf + len, sizeof(opbuf) - len, "%s%.*s",
+               len += snprintf(opbuf + len, sizeof(opbuf) - len, "%s%s",
                                space_needed(tmp2, tmp) ? " " : "",
-                               tmp->len, tmp->str);
+                               tmp->str.c_str());
                tmp2 = tmp;
             }
 
@@ -382,18 +380,17 @@ void tokenize_cleanup(void)
                chunk_del(tmp2);
             }
 
-            next->str    = strdup(opbuf);
-            next->len    = len;
+            opbuf[len]   = 0;
+            next->str    = opbuf;
             next->flags |= PCF_OWN_STR;
             next->type   = CT_OPERATOR_VAL;
 
-            next->orig_col_end = next->orig_col + next->len;
+            next->orig_col_end = next->orig_col + next->len();
          }
          next->parent_type = CT_OPERATOR;
 
-         LOG_FMT(LOPERATOR, "%s: %d:%d operator '%.*s'\n",
-                 __func__, pc->orig_line, pc->orig_col,
-                 next->len, next->str);
+         LOG_FMT(LOPERATOR, "%s: %d:%d operator '%s'\n",
+                 __func__, pc->orig_line, pc->orig_col, next->str.c_str());
       }
 
       /* Change private, public, protected into either a qualifier or label */
@@ -449,7 +446,7 @@ void tokenize_cleanup(void)
                {
                   break;
                }
-               if ((tmp->len > 0) && isalpha(*tmp->str))
+               if ((tmp->len() > 0) && isalpha(*tmp->str))
                {
                   tmp->type = CT_SQL_WORD;
                }
@@ -462,8 +459,9 @@ void tokenize_cleanup(void)
       if ((pc->type == CT_FOR) && chunk_is_str(next, "each", 4) &&
           (next == chunk_get_next(pc)))
       {
-         /* merge the two */
-         pc->len = next->orig_col_end - pc->orig_col;
+         /* merge the two with a space between */
+         pc->str.append(' ');
+         pc->str += next->str;
          pc->orig_col_end = next->orig_col_end;
          chunk_del(next);
          next = chunk_get_next_ncnl(pc);
@@ -542,8 +540,8 @@ void tokenize_cleanup(void)
          {
             if (get_token_pattern_class(tmp->type) != PATCLS_NONE)
             {
-               LOG_FMT(LOBJCWORD, "@interface %d:%d change '%.*s' (%s) to CT_WORD\n",
-                       pc->orig_line, pc->orig_col, tmp->len, tmp->str,
+               LOG_FMT(LOBJCWORD, "@interface %d:%d change '%s' (%s) to CT_WORD\n",
+                       pc->orig_line, pc->orig_col, tmp->str.c_str(),
                        get_token_name(tmp->type));
                tmp->type = CT_WORD;
             }
@@ -743,7 +741,7 @@ void tokenize_cleanup(void)
       /* Check for C# nullable types '?' is in next */
       if ((cpd.lang_flags & LANG_CS) &&
           (next->type == CT_QUESTION) &&
-          (next->orig_col == (pc->orig_col + pc->len)))
+          (next->orig_col == (pc->orig_col + pc->len())))
       {
          tmp = chunk_get_next_ncnl(next);
          if (tmp != NULL)
@@ -765,7 +763,7 @@ void tokenize_cleanup(void)
 
             if (doit)
             {
-               pc->len++;
+               pc->str += next->str;
                chunk_del(next);
                next = tmp;
             }
@@ -849,10 +847,10 @@ static void check_template(chunk_t *start)
       {
          LOG_FMT(LTEMPL, " [%s,%d]", get_token_name(pc->type), level);
 
-         if ((pc->str[0] == '>') && (pc->len > 1))
+         if ((pc->str[0] == '>') && (pc->len() > 1))
          {
-            LOG_FMT(LTEMPL, " {split '%.*s' at %d:%d}",
-                    pc->len, pc->str, pc->orig_line, pc->orig_col);
+            LOG_FMT(LTEMPL, " {split '%s' at %d:%d}",
+                    pc->str.c_str(), pc->orig_line, pc->orig_col);
             split_off_angle_close(pc);
          }
 
@@ -931,11 +929,11 @@ static void check_template(chunk_t *start)
          LOG_FMT(LTEMPL, " [%s,%d]", get_token_name(pc->type), num_tokens);
 
          if ((tokens[num_tokens - 1] == CT_ANGLE_OPEN) &&
-             (pc->str[0] == '>') && (pc->len > 1) &&
+             (pc->str[0] == '>') && (pc->len() > 1) &&
              (cpd.settings[UO_tok_split_gte].b || chunk_is_str(pc, ">>", 2)))
          {
-            LOG_FMT(LTEMPL, " {split '%.*s' at %d:%d}",
-                    pc->len, pc->str, pc->orig_line, pc->orig_col);
+            LOG_FMT(LTEMPL, " {split '%s' at %d:%d}",
+                    pc->str.c_str(), pc->orig_line, pc->orig_col);
             split_off_angle_close(pc);
          }
 

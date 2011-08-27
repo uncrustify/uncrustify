@@ -22,16 +22,16 @@ static int compare_chunks(chunk_t *pc1, chunk_t *pc2)
 
    while ((pc1 != NULL) && (pc2 != NULL))
    {
-      int min_len = (pc1->len < pc2->len) ? pc1->len : pc2->len;
-      int ret_val = memcmp(pc1->str, pc2->str, min_len);
+      int min_len = (pc1->len() < pc2->len()) ? pc1->len() : pc2->len();
+      int ret_val = unc_text::compare(pc1->str, pc2->str, min_len);
 
       if (ret_val != 0)
       {
          return(ret_val);
       }
-      if (pc1->len != pc2->len)
+      if (pc1->len() != pc2->len())
       {
-         return(pc1->len - pc2->len);
+         return(pc1->len() - pc2->len());
       }
 
       /* Same word, same length. Step to the next chunk. */
@@ -70,7 +70,7 @@ static void do_the_sort(chunk_t **chunks, int num_chunks)
    LOG_FMT(LSORT, "%s: %d chunks:", __func__, num_chunks);
    for (idx = 0; idx < num_chunks; idx++)
    {
-      LOG_FMT(LSORT, " [%.*s]", chunks[idx]->len, chunks[idx]->str);
+      LOG_FMT(LSORT, " [%s]", chunks[idx]->str.c_str());
    }
    LOG_FMT(LSORT, "\n");
 

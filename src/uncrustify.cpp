@@ -756,7 +756,7 @@ static int load_mem_file(const char *filename, file_mem& fm)
               __func__, filename, strerror(errno), errno);
       cpd.error_count++;
    }
-   else if (decode_unicode(fm.raw, fm.data, fm.enc) != 0)
+   else if (!decode_unicode(fm.raw, fm.data, fm.enc))
    {
       LOG_FMT(LERR, "%s: failed to decode the file '%s'\n", __func__, filename);
    }

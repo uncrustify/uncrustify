@@ -18,6 +18,7 @@ using namespace std;
 #include "token_enum.h"    /* c_token_t */
 #include "log_levels.h"
 #include "logger.h"
+#include "unc_text.h"
 #include <cstdio>
 #include <assert.h>
 #ifdef HAVE_UTIME_H
@@ -206,6 +207,39 @@ struct align_ptr_t
 /** This is the main type of this program */
 struct chunk_t
 {
+   chunk_t()
+   {
+      reset();
+   }
+   void reset()
+   {
+      memset(&align, 0, sizeof(align));
+      next = 0;
+      prev = 0;
+      type = CT_NONE;
+      parent_type = CT_NONE;
+      orig_line = 0;
+      orig_col = 0;
+      orig_col_end = 0;
+      flags = 0;
+      column = 0;
+      column_indent = 0;
+      nl_count = 0;
+      level = 0;
+      brace_level = 0;
+      pp_level = 0;
+      after_tab = false;
+      str.clear();
+   }
+   int len()
+   {
+      return str.size();
+   }
+   const char *text()
+   {
+      return str.c_str();
+   }
+
    chunk_t     *next;
    chunk_t     *prev;
    align_ptr_t align;
@@ -223,8 +257,7 @@ struct chunk_t
    int         brace_level;      /* nest level in braces only */
    int         pp_level;         /* nest level in #if stuff */
    bool        after_tab;        /* whether this token was after a tab */
-   int         len;              /* # of bytes at str that make up the token */
-   const char  *str;             /* pointer to the token text */
+   unc_text    str;             /* pointer to the token text */
 };
 
 enum
@@ -318,7 +351,7 @@ struct cp_data
 
    /* stuff to auto-detect line endings */
    UINT32             le_counts[LE_AUTO];
-   char               newline[5];
+   unc_text           newline;
 
    bool               consumed;
 

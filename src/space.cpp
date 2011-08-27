@@ -75,12 +75,12 @@ static void log_rule2(int line, const char *rule, chunk_t *first, chunk_t *secon
 {
    if (second->type != CT_NEWLINE)
    {
-      LOG_FMT(LSPACE, "Spacing: line %d [%s/%s] '%.*s' <===> [%s/%s] '%.*s' : %s[%d]%s",
+      LOG_FMT(LSPACE, "Spacing: line %d [%s/%s] '%s' <===> [%s/%s] '%s' : %s[%d]%s",
               first->orig_line,
               get_token_name(first->type), get_token_name(first->parent_type),
-              first->len, first->str,
+              first->str.c_str(),
               get_token_name(second->type), get_token_name(second->parent_type),
-              second->len, second->str,
+              second->str.c_str(),
               rule, line,
               complete ? "\n" : "");
    }
@@ -1391,7 +1391,7 @@ void space_text(void)
          /* Set to the minimum allowed column */
          if (pc->nl_count == 0)
          {
-            column += pc->len;
+            column += pc->len();
          }
          else
          {
@@ -1407,36 +1407,36 @@ void space_text(void)
           * They are always safe to not have a space after them.
           */
          pc->flags &= ~PCF_FORCE_SPACE;
-         if ((pc->len > 0) &&
+         if ((pc->len() > 0) &&
              !chunk_is_str(pc, "[]", 2) &&
              !chunk_is_str(pc, "()", 2))
          {
             /* Find the next non-empty chunk on this line */
             tmp = next;
-            while ((tmp != NULL) && (tmp->len == 0) && !chunk_is_newline(tmp))
+            while ((tmp != NULL) && (tmp->len() == 0) && !chunk_is_newline(tmp))
             {
                tmp = chunk_get_next(tmp);
             }
-            if ((tmp != NULL) && (tmp->len > 0))
+            if ((tmp != NULL) && (tmp->len() > 0))
             {
-               bool kw1 = CharTable::IsKw2(pc->str[pc->len - 1]);
+               bool kw1 = CharTable::IsKw2(pc->str[pc->len() - 1]);
                bool kw2 = CharTable::IsKw1(next->str[0]);
                if (kw1 && kw2)
                {
                   /* back-to-back words need a space */
                   pc->flags |= PCF_FORCE_SPACE;
                }
-               else if (!kw1 && !kw2 && (pc->len < 4) && (next->len < 4))
+               else if (!kw1 && !kw2 && (pc->len() < 4) && (next->len() < 4))
                {
                   /* We aren't dealing with keywords. concat and try punctuators */
                   char buf[9];
-                  memcpy(buf, pc->str, pc->len);
-                  memcpy(buf + pc->len, next->str, next->len);
-                  buf[pc->len + next->len] = 0;
+                  memcpy(buf, pc->text(), pc->len());
+                  memcpy(buf + pc->len(), next->text(), next->len());
+                  buf[pc->len() + next->len()] = 0;
 
                   const chunk_tag_t *ct;
                   ct = find_punctuator(buf, cpd.lang_flags);
-                  if ((ct != NULL) && ((int)strlen(ct->tag) != pc->len))
+                  if ((ct != NULL) && ((int)strlen(ct->tag) != pc->len()))
                   {
                      /* punctuator parsed to a different size.. */
                      pc->flags |= PCF_FORCE_SPACE;
@@ -1448,8 +1448,8 @@ void space_text(void)
          int av = do_space(pc, next, false);
          if (pc->flags & PCF_FORCE_SPACE)
          {
-            LOG_FMT(LSPACE, "Forcing space between '%.*s' and '%.*s'\n",
-                    pc->len, pc->str, next->len, next->str);
+            LOG_FMT(LSPACE, "Forcing space between '%s' and '%s'\n",
+                    pc->str.c_str(), next->str.c_str());
             av |= AV_ADD;
          }
          switch (av)
@@ -1594,7 +1594,7 @@ bool space_needed(chunk_t *first, chunk_t *second)
 
    case AV_IGNORE:
    default:
-      return(second->orig_col > (first->orig_col + first->len));
+      return(second->orig_col > (first->orig_col + first->len()));
    }
 }
 
@@ -1615,7 +1615,7 @@ int space_col_align(chunk_t *first, chunk_t *second)
 
    av = do_space(first, second);
 
-   coldiff = first->len;
+   coldiff = first->len();
    switch (av)
    {
    case AV_ADD:
@@ -1627,7 +1627,7 @@ int space_col_align(chunk_t *first, chunk_t *second)
       break;
 
    case AV_IGNORE:
-      if (second->orig_col > (first->orig_col + first->len))
+      if (second->orig_col > (first->orig_col + first->len()))
       {
          coldiff++;
       }
@@ -1661,25 +1661,28 @@ void space_add_after(chunk_t *pc, int count)
    /* Two CT_SPACE in a row -- use the max of the two */
    if (next->type == CT_SPACE)
    {
-      if (next->len < count)
+      if (next->len() < count)
       {
-         next->len = count;
+         while (next->len() < count)
+         {
+            next->str.append(' ');
+         }
       }
       return;
    }
 
    chunk_t sp;
 
-   memset(&sp, 0, sizeof(sp));
+   //memset(&sp, 0, sizeof(sp));
 
    sp.flags       = pc->flags & PCF_COPY_FLAGS;
    sp.type        = CT_SPACE;
    sp.str         = "                "; // 16 spaces
-   sp.len         = count;
+   sp.str.resize(count);
    sp.level       = pc->level;
    sp.brace_level = pc->brace_level;
    sp.pp_level    = pc->pp_level;
-   sp.column      = pc->column + pc->len;
+   sp.column      = pc->column + pc->len();
    sp.orig_line   = pc->orig_line;
 
    chunk_add_after(&sp, pc);

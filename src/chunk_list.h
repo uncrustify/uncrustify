@@ -129,7 +129,7 @@ bool chunk_is_semicolon(chunk_t *pc)
 static_inline
 bool chunk_is_blank(chunk_t *pc)
 {
-   return((pc != NULL) && (pc->len == 0));
+   return((pc != NULL) && (pc->len() == 0));
 }
 
 
@@ -164,28 +164,28 @@ bool chunk_is_token(chunk_t *pc, c_token_t c_token)
 static_inline
 bool chunk_is_str(chunk_t *pc, const char *str, int len)
 {
-   return((pc != NULL) && (pc->len == len) && (memcmp(pc->str, str, len) == 0));
+   return((pc != NULL) && (pc->len() == len) && (memcmp(pc->text(), str, len) == 0));
 }
 
 
 static_inline
 bool chunk_is_str_case(chunk_t *pc, const char *str, int len)
 {
-   return((pc != NULL) && (pc->len == len) && (strncasecmp(pc->str, str, len) == 0));
+   return((pc != NULL) && (pc->len() == len) && (strncasecmp(pc->text(), str, len) == 0));
 }
 
 
 static_inline
 bool chunk_is_word(chunk_t *pc)
 {
-   return((pc != NULL) && (pc->len >= 1) && CharTable::IsKw1(pc->str[0]));
+   return((pc != NULL) && (pc->len() >= 1) && CharTable::IsKw1(pc->str[0]));
 }
 
 
 static_inline
 bool chunk_is_star(chunk_t *pc)
 {
-   return((pc != NULL) && (pc->len == 1) && (pc->str[0] == '*') && (pc->type != CT_OPERATOR_VAL));
+   return((pc != NULL) && (pc->len() == 1) && (pc->str[0] == '*') && (pc->type != CT_OPERATOR_VAL));
 }
 
 
@@ -194,7 +194,7 @@ bool chunk_is_addr(chunk_t *pc)
 {
    return((pc != NULL) &&
           ((pc->type == CT_BYREF) ||
-           ((pc->len == 1) && (pc->str[0] == '&') && (pc->type != CT_OPERATOR_VAL))));
+           ((pc->len() == 1) && (pc->str[0] == '&') && (pc->type != CT_OPERATOR_VAL))));
 }
 
 

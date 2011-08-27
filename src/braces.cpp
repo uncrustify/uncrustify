@@ -251,12 +251,12 @@ static bool can_remove_braces(chunk_t *bopen)
                return(false);
             }
 
-            LOG_FMT(LBRDEL, " [%.*s %d-%d]", pc->len, pc->str, pc->orig_line, semi_count);
+            LOG_FMT(LBRDEL, " [%s %d-%d]", pc->str.c_str(), pc->orig_line, semi_count);
 
             if (pc->type == CT_ELSE)
             {
-               LOG_FMT(LBRDEL, " bailed on %.*s on line %d\n",
-                       pc->len, pc->str, pc->orig_line);
+               LOG_FMT(LBRDEL, " bailed on %s on line %d\n",
+                       pc->str.c_str(), pc->orig_line);
                return(false);
             }
 
@@ -274,8 +274,8 @@ static bool can_remove_braces(chunk_t *bopen)
                hit_semi |= chunk_is_semicolon(pc);
                if (++semi_count > 1)
                {
-                  LOG_FMT(LBRDEL, " bailed on %d because of %.*s on line %d\n",
-                          bopen->orig_line, pc->len, pc->str, pc->orig_line);
+                  LOG_FMT(LBRDEL, " bailed on %d because of %s on line %d\n",
+                          bopen->orig_line, pc->str.c_str(), pc->orig_line);
                   return(false);
                }
             }
@@ -389,12 +389,12 @@ static void examine_brace(chunk_t *bopen)
                return;
             }
 
-            LOG_FMT(LBRDEL, " [%.*s %d-%d]", pc->len, pc->str, pc->orig_line, semi_count);
+            LOG_FMT(LBRDEL, " [%s %d-%d]", pc->str.c_str(), pc->orig_line, semi_count);
 
             if (pc->type == CT_ELSE)
             {
-               LOG_FMT(LBRDEL, " bailed on %.*s on line %d\n",
-                       pc->len, pc->str, pc->orig_line);
+               LOG_FMT(LBRDEL, " bailed on %s on line %d\n",
+                       pc->str.c_str(), pc->orig_line);
                return;
             }
 
@@ -412,8 +412,8 @@ static void examine_brace(chunk_t *bopen)
                hit_semi |= chunk_is_semicolon(pc);
                if (++semi_count > 1)
                {
-                  LOG_FMT(LBRDEL, " bailed on %d because of %.*s on line %d\n",
-                          bopen->orig_line, pc->len, pc->str, pc->orig_line);
+                  LOG_FMT(LBRDEL, " bailed on %d because of %s on line %d\n",
+                          bopen->orig_line, pc->str.c_str(), pc->orig_line);
                   return;
                }
             }
@@ -483,7 +483,7 @@ static void examine_brace(chunk_t *bopen)
    }
    else
    {
-      LOG_FMT(LBRDEL, " not a close brace? - '%.*s'\n", pc->len, pc->str);
+      LOG_FMT(LBRDEL, " not a close brace? - '%s'\n", pc->str.c_str());
    }
 }
 
@@ -502,16 +502,14 @@ static void convert_brace(chunk_t *br)
    else if (br->type == CT_BRACE_OPEN)
    {
       br->type = CT_VBRACE_OPEN;
-      br->len  = 0;
-      br->str  = "";
-      tmp      = chunk_get_prev(br);
+      br->str.clear();
+      tmp = chunk_get_prev(br);
    }
    else if (br->type == CT_BRACE_CLOSE)
    {
       br->type = CT_VBRACE_CLOSE;
-      br->len  = 0;
-      br->str  = "";
-      tmp      = chunk_get_next(br);
+      br->str.clear();
+      tmp = chunk_get_next(br);
    }
    else
    {
@@ -547,7 +545,6 @@ static void convert_vbrace(chunk_t *vbr)
    else if (vbr->type == CT_VBRACE_OPEN)
    {
       vbr->type = CT_BRACE_OPEN;
-      vbr->len  = 1;
       vbr->str  = "{";
 
       /* If the next chunk is a preprocessor, then move the open brace after the
@@ -564,7 +561,6 @@ static void convert_vbrace(chunk_t *vbr)
    else if (vbr->type == CT_VBRACE_CLOSE)
    {
       vbr->type = CT_BRACE_CLOSE;
-      vbr->len  = 1;
       vbr->str  = "}";
 
       /* If the next chunk is a comment, followed by a newline, then
@@ -687,15 +683,16 @@ chunk_t *insert_comment_after(chunk_t *ref, c_token_t cmt_type,
    new_cmt.str = txt;
    if (cmt_type == CT_COMMENT_CPP)
    {
-      new_cmt.len = snprintf(txt, txt_len, "// %.*s", cmt_len, cmt_text);
+      snprintf(txt, txt_len, "// %.*s", cmt_len, cmt_text);
    }
    else
    {
-      new_cmt.len = snprintf(txt, txt_len, "/* %.*s */", cmt_len, cmt_text);
+      snprintf(txt, txt_len, "/* %.*s */", cmt_len, cmt_text);
    }
+   new_cmt.str = txt;
    /* TODO: expand comment type to cover other comment styles? */
 
-   new_cmt.column   = ref->column + ref->len + 1;
+   new_cmt.column   = ref->column + ref->len() + 1;
    new_cmt.orig_col = new_cmt.column;
 
    return(chunk_add_after(&new_cmt, ref));
@@ -780,7 +777,7 @@ void add_long_closebrace_comment(void)
 
                   /* Add a comment after the close brace */
                   insert_comment_after(br_close, style,
-                                       tag_pc->len, tag_pc->str);
+                                       tag_pc->len(), tag_pc->text());
                }
             }
             break;
@@ -851,7 +848,7 @@ static chunk_t *mod_case_brace_remove(chunk_t *br_open)
    {
       if ((pc->level == (br_open->level + 1)) && (pc->flags & PCF_VAR_DEF))
       {
-         LOG_FMT(LMCB, " - vardef on line %d: '%.*s'\n", pc->orig_line, pc->len, pc->str);
+         LOG_FMT(LMCB, " - vardef on line %d: '%s'\n", pc->orig_line, pc->str.c_str());
          return(next);
       }
    }
@@ -912,9 +909,7 @@ static chunk_t *mod_case_brace_add(chunk_t *cl_colon)
       return(next);
    }
 
-   LOG_FMT(LMCB, " - adding before '%.*s' on line %d\n", last->len, last->str, last->orig_line);
-
-   memset(&chunk, 0, sizeof(chunk));
+   LOG_FMT(LMCB, " - adding before '%s' on line %d\n", last->str.c_str(), last->orig_line);
 
    chunk.type        = CT_BRACE_OPEN;
    chunk.orig_line   = cl_colon->orig_line;
@@ -923,7 +918,6 @@ static chunk_t *mod_case_brace_add(chunk_t *cl_colon)
    chunk.brace_level = cl_colon->brace_level;
    chunk.flags       = pc->flags & PCF_COPY_FLAGS;
    chunk.str         = "{";
-   chunk.len         = 1;
 
    br_open = chunk_add_after(&chunk, cl_colon);
 

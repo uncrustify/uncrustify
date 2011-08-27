@@ -50,8 +50,8 @@ void remove_extra_semicolons(void)
       if ((pc->type == CT_SEMICOLON) &&
           ((prev = chunk_get_prev_ncnl(pc)) != NULL))
       {
-         LOG_FMT(LSCANSEMI, "Semi on %d:%d, prev = '%.*s' [%s/%s]\n",
-                 pc->orig_line, pc->orig_col, prev->len, prev->str,
+         LOG_FMT(LSCANSEMI, "Semi on %d:%d, prev = '%s' [%s/%s]\n",
+                 pc->orig_line, pc->orig_col, prev->str.c_str(),
                  get_token_name(prev->type), get_token_name(prev->parent_type));
 
          if ((prev->type == CT_BRACE_CLOSE) &&

@@ -44,7 +44,7 @@ static void add_char(UINT32 ch)
    /* If we did a '\r' and it isn't followed by a '\n', then output a newline */
    if ((last_char == '\r') && (ch != '\n'))
    {
-      write_string(cpd.fout, cpd.newline, cpd.enc);
+      write_string(cpd.fout, cpd.newline.get(), cpd.enc);
       cpd.column      = 1;
       cpd.did_newline = 1;
       cpd.spaces      = 0;
@@ -53,7 +53,7 @@ static void add_char(UINT32 ch)
    /* convert a newline into the LF/CRLF/CR sequence */
    if (ch == '\n')
    {
-      write_string(cpd.fout, cpd.newline, cpd.enc);
+      write_string(cpd.fout, cpd.newline.get(), cpd.enc);
       cpd.column      = 1;
       cpd.did_newline = 1;
       cpd.spaces      = 0;
@@ -122,6 +122,15 @@ static void add_text_len(const char *text, int len)
    {
       add_char(*text);
       text++;
+   }
+}
+
+
+static void add_text(const unc_text& text)
+{
+   for (int idx = 0; idx < text.size(); idx++)
+   {
+      add_char(text[idx]);
    }
 }
 
@@ -240,7 +249,7 @@ void output_parsed(FILE *pfile)
               pc->brace_level, pc->level, pc->pp_level,
               pc->flags, pc->nl_count, pc->after_tab);
 
-      if ((pc->type != CT_NEWLINE) && (pc->len != 0))
+      if ((pc->type != CT_NEWLINE) && (pc->len() != 0))
       {
          for (cnt = 0; cnt < pc->column; cnt++)
          {
@@ -248,7 +257,7 @@ void output_parsed(FILE *pfile)
          }
          if (pc->type != CT_NL_CONT)
          {
-            fprintf(pfile, "%.*s", pc->len, pc->str);
+            fprintf(pfile, "%s", pc->str.c_str());
          }
          else
          {
@@ -307,7 +316,7 @@ void output_text(FILE *pfile)
 
    if (cpd.bom != NULL)
    {
-      add_text_len(cpd.bom->str, cpd.bom->len);
+      add_text(cpd.bom->str);
       cpd.did_newline = 1;
       cpd.column      = 1;
    }
@@ -395,9 +404,9 @@ void output_text(FILE *pfile)
       else if ((pc->type == CT_JUNK) || (pc->type == CT_IGNORED))
       {
          /* do not adjust the column for junk */
-         add_text_len(pc->str, pc->len);
+         add_text(pc->str);
       }
-      else if (pc->len == 0)
+      else if (pc->len() == 0)
       {
          /* don't do anything for non-visible stuff */
          LOG_FMT(LOUTIND, " <%d> -", pc->column);
@@ -454,7 +463,7 @@ void output_text(FILE *pfile)
             prev       = chunk_get_prev(pc);
             allow_tabs = (cpd.settings[UO_align_with_tabs].b &&
                           ((pc->flags & PCF_WAS_ALIGNED) != 0) &&
-                          ((prev->column + prev->len + 1) != pc->column));
+                          ((prev->column + prev->len() + 1) != pc->column));
             if (cpd.settings[UO_align_keep_tabs].b)
             {
                allow_tabs |= pc->after_tab;
@@ -463,7 +472,7 @@ void output_text(FILE *pfile)
          }
 
          output_to_column(pc->column, allow_tabs);
-         add_text_len(pc->str, pc->len);
+         add_text(pc->str);
          cpd.did_newline = chunk_is_newline(pc);
       }
    }
@@ -728,7 +737,7 @@ static void add_comment_javaparam(chunk_t *pc, cmt_reflow& cmt)
             if (prev != NULL)
             {
                add_text(" ");
-               add_text_len(prev->str, prev->len);
+               add_text(prev->str);
                add_text(" TODO");
             }
             prev = NULL;
@@ -774,7 +783,7 @@ static int add_comment_kw(const char *text, int len, cmt_reflow& cmt)
       chunk_t *tmp = get_next_class(cmt.pc);
       if (tmp != NULL)
       {
-         add_text_len(tmp->str, tmp->len);
+         add_text(tmp->str);
          return(8);
       }
    }
@@ -788,7 +797,7 @@ static int add_comment_kw(const char *text, int len, cmt_reflow& cmt)
 
    if ((len >= 10) && (memcmp(text, "$(message)", 10) == 0))
    {
-      add_text_len(fcn->str, fcn->len);
+      add_text(fcn->str);
       chunk_t *tmp = chunk_get_next_ncnl(fcn);
       chunk_t *word = NULL;
       while (tmp)
@@ -801,10 +810,10 @@ static int add_comment_kw(const char *text, int len, cmt_reflow& cmt)
          {
             if (word != NULL)
             {
-               add_text_len(word->str, word->len);
+               add_text(word->str);
                word = NULL;
             }
-            add_text_len(":", 1);
+            add_text(":");
          }
          if (tmp->type == CT_WORD)
          {
@@ -818,9 +827,9 @@ static int add_comment_kw(const char *text, int len, cmt_reflow& cmt)
    {
       if (fcn->parent_type == CT_OPERATOR)
       {
-         add_text_len("operator ", 9);
+         add_text("operator ");
       }
-      add_text_len(fcn->str, fcn->len);
+      add_text(fcn->str);
       return(11);
    }
    if ((len >= 12) && (memcmp(text, "$(javaparam)", 12) == 0))
@@ -839,7 +848,7 @@ static int add_comment_kw(const char *text, int len, cmt_reflow& cmt)
                             (tmp->type == CT_MEMBER)))
       {
          tmp = chunk_get_prev_ncnl(tmp);
-         add_text_len(tmp->str, tmp->len);
+         add_text(tmp->str);
          return(9);
       }
    }
@@ -999,7 +1008,7 @@ static void output_cmt_start(cmt_reflow& cmt, chunk_t *pc)
       chunk_t *prev = chunk_get_prev(pc);
       if (prev != NULL)
       {
-         int col_min = prev->column + prev->len + 1;
+         int col_min = prev->column + prev->len() + 1;
          if (cmt.column < col_min)
          {
             cmt.column = col_min;
@@ -1083,11 +1092,11 @@ static chunk_t *output_comment_c(chunk_t *first)
        !can_combine_comment(first, cmt))
    {
       /* Just add the single comment */
-      add_comment_text(first->str, first->len, cmt, false);
+      add_comment_text(first->str, first->len(), cmt, false);
       return(first);
    }
 
-   add_text_len("/*", 2);
+   add_text("/*");
    if (cpd.settings[UO_cmt_c_nl_start].b)
    {
       add_comment_text("\n", 1, cmt, false);
@@ -1095,11 +1104,11 @@ static chunk_t *output_comment_c(chunk_t *first)
    chunk_t *pc = first;
    while (can_combine_comment(pc, cmt))
    {
-      add_comment_text(pc->str + 2, pc->len - 4, cmt, false);
+      add_comment_text(pc->text() + 2, pc->len() - 4, cmt, false);
       add_comment_text("\n", 1, cmt, false);
       pc = chunk_get_next(chunk_get_next(pc));
    }
-   add_comment_text(pc->str + 2, pc->len - 4, cmt, false);
+   add_comment_text(pc->text() + 2, pc->len() - 4, cmt, false);
    if (cpd.settings[UO_cmt_c_nl_end].b)
    {
       cmt.cont_text = " ";
@@ -1130,14 +1139,14 @@ static chunk_t *output_comment_cpp(chunk_t *first)
 
       if (cpd.settings[UO_sp_cmt_cpp_start].a == AV_IGNORE)
       {
-         add_comment_text(first->str, first->len, cmt, false);
+         add_comment_text(first->text(), first->len(), cmt, false);
       }
       else
       {
          add_comment_text(first->str, 2, cmt, false);
 
-         const char *tmp = first->str + 2;
-         int        len  = first->len - 2;
+         const char *tmp = first->text() + 2;
+         int        len  = first->len() - 2;
 
          if (cpd.settings[UO_sp_cmt_cpp_start].a & AV_REMOVE)
          {
@@ -1171,24 +1180,24 @@ static chunk_t *output_comment_cpp(chunk_t *first)
        !can_combine_comment(first, cmt))
    {
       /* nothing to group: just output a single line */
-      add_text_len("/*", 2);
+      add_text("/*");
       if (!unc_isspace(first->str[2]))
       {
          add_char(' ');
       }
-      add_comment_text(first->str + 2, first->len - 2, cmt, true);
-      add_text_len(" */", 3);
+      add_comment_text(first->text() + 2, first->len() - 2, cmt, true);
+      add_text(" */");
       return(first);
    }
 
-   add_text_len("/*", 2);
+   add_text("/*");
    if (cpd.settings[UO_cmt_cpp_nl_start].b)
    {
       add_comment_text("\n", 1, cmt, false);
    }
    else
    {
-      add_text_len(" ", 1);
+      add_text(" ");
    }
    chunk_t *pc = first;
 
@@ -1196,12 +1205,12 @@ static chunk_t *output_comment_cpp(chunk_t *first)
    while (can_combine_comment(pc, cmt))
    {
       offs = unc_isspace(pc->str[2]) ? 1 : 0;
-      add_comment_text(pc->str + 2 + offs, pc->len - (2 + offs), cmt, true);
+      add_comment_text(pc->text() + 2 + offs, pc->len() - (2 + offs), cmt, true);
       add_comment_text("\n", 1, cmt, false);
       pc = chunk_get_next(chunk_get_next(pc));
    }
    offs = unc_isspace(pc->str[2]) ? 1 : 0;
-   add_comment_text(pc->str + 2 + offs, pc->len - (2 + offs), cmt, true);
+   add_comment_text(pc->text() + 2 + offs, pc->len() - (2 + offs), cmt, true);
    if (cpd.settings[UO_cmt_cpp_nl_end].b)
    {
       cmt.cont_text = "";
@@ -1275,7 +1284,7 @@ static void output_comment_multi(chunk_t *pc)
    cmt_col = cmt.base_col;
    col_diff = pc->orig_col - cmt.base_col;
 
-   calculate_comment_body_indent(cmt, pc->str, pc->len);
+   calculate_comment_body_indent(cmt, pc->text(), pc->len());
 
    cmt.cont_text = !cpd.settings[UO_cmt_indent_multi].b ? "" :
                    (cpd.settings[UO_cmt_star_cont].b ? "* " : "  ");
@@ -1284,8 +1293,8 @@ static void output_comment_multi(chunk_t *pc)
    //        pc->orig_line, cmt_col, pc->orig_col, col_diff, cmt.xtra_indent, cmt.cont_text);
 
    ccol      = pc->column;
-   remaining = pc->len;
-   cmt_str   = pc->str;
+   remaining = pc->len();
+   cmt_str   = pc->text();
    line_len  = 0;
    line      = new char[remaining + 1024 + 1]; /* + 1 for '\0' */
    while (remaining > 0)
@@ -1535,7 +1544,7 @@ static void output_comment_multi(chunk_t *pc)
                add_comment_text(line, line_len, cmt, false);
                if (nl_end)
                {
-                  add_text_len("\n", 1);
+                  add_text("\n");
                }
             }
          }
@@ -1558,7 +1567,7 @@ static void output_comment_multi_simple(chunk_t *pc)
    const char *cmt_str;
    int        remaining;
    char       ch;
-   char       *line = new char[1024 + pc->len];
+   char       *line = new char[1024 + pc->len()];
    int        line_len;
    int        line_count = 0;
    int        ccol;
@@ -1582,8 +1591,8 @@ static void output_comment_multi_simple(chunk_t *pc)
    }
 
    ccol      = pc->column;
-   remaining = pc->len;
-   cmt_str   = pc->str;
+   remaining = pc->len();
+   cmt_str   = pc->text();
    line_len  = 0;
    while (remaining > 0)
    {
@@ -1703,8 +1712,8 @@ static void generate_if_conditional_as_text(string& dst, chunk_t *ifdef)
             dst += ' ';
             column++;
          }
-         dst.append(pc->str, pc->len);
-         column += pc->len;
+         dst.append(pc->text(), pc->len());
+         column += pc->len();
       }
    }
 }

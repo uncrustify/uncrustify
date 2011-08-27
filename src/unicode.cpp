@@ -443,6 +443,9 @@ void write_char(FILE *pf, int ch, CharEncoding enc)
       switch (enc)
       {
       case ENC_BYTE:
+         write_byte(ch & 0xff, pf);
+         break;
+
       case ENC_ASCII:
       default:
          write_byte(ch, pf);

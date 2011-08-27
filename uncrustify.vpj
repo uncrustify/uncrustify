@@ -109,6 +109,7 @@
 			<F N="src/unc_ctype.h"/>
 			<F N="src/unc_text.h"/>
 			<F N="src/uncrustify_types.h"/>
+			<F N="src/uncrustify_version.h"/>
 			<F N="win32/windows_compat.h"/>
 		</Folder>
 		<Folder
