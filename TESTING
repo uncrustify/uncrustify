@@ -1,18 +1,23 @@
 Running the tests
 -----------------
 
-Running the tests is as simple as:
- $ make check
+- All tests reside in the tests/ directory tree.
 
-Alternatively, the test scripts can be run directly:
- $ ./tests/run-tests.py
+- Running the tests is as simple as:
+    $ make check
+
+- Alternatively, the test scripts can be run directly:
+    $ cd tests
+    $ ./run_tests.py
+
+- To run the only the tests associated with language X ("cpp", "java", etc.):
+    $ cd tests
+    $ ./run_tests.py X  
 
 Adding new tests
 ----------------
 
-- All tests reside in the ./tests/ directory tree.
-
-- A test is defined by adding a line in one of the ./tests/*.test
+- A test is defined by adding a line in one of the tests/*.test
   files: you must pick the .test file for the proper programming
   language, i.e. pick the X.test file which defines tests which use
   inputs in language X.
@@ -30,7 +35,7 @@ Adding new tests
 
 - As each test references a config file and an input file (the latter
   written in programming language X), these are assumed to exist in
-  the paths ./tests/config/<config.file> and ./tests/<input.file>
+  the paths tests/config/<config.file> and tests/<input.file>
   respectively. It is _strongly_ advised to put input files in their
   own subdirectory, so a 'C' source formatting test entry might look
   like this (in 'c.test'):
@@ -38,9 +43,9 @@ Adding new tests
     99902 ger-full-cmt-reflow.cfg c/cmt-not-a-boxed-cmt.c
 
   where 'ger-full-cmt-reflow.cfg' is stored at
-  ./tests/config/ger-full-cmt-reflow.cfg and 'c/cmt-not-a-boxed-cmt.c'
-  will be fetched from ./tests/c/cmt-not-a-boxed-cmt.c when you run
-  the tests by invoking ./tests/run-tests.py (or: 'make check')
+  tests/config/ger-full-cmt-reflow.cfg and 'c/cmt-not-a-boxed-cmt.c'
+  will be fetched from tests/c/cmt-not-a-boxed-cmt.c when you run
+  the tests.
   
 
 Features
@@ -66,7 +71,7 @@ Features
 
 - Reference output files (the reference against which the uncrustify
   test run output is compared) are to be stored in the path
-  ./tests/output/<X>/<NNN-TTTTT.TTT> where <X> is the 'language
+  tests/output/<X>/<NNN-TTTTT.TTT> where <X> is the 'language
   directory' part of the input file, e.g. 'c' for input file
   'c/nl_return_expr.c', <NNN> is the test name (number), e.g. '21051',
   and <TTTTT.TTT> is the file name part of the input test filespec,
@@ -78,15 +83,15 @@ Features
 
   the accompanying reference output is:
 
-    ./tests/output/c/21051-nl_return_expr.c
+    tests/output/c/21051-nl_return_expr.c
 
 - When starting out with a new test, you don't need to have a
   'reference output' yet: the test will simply be reported as a
   'fail'ed test until you do.
 
 - Tip: the easiest way to produce 'reference output' is to copy the
-  test output (from ./tests/results/...etc... ) to
-  ./tests/output/...etc... once you've ascertained that those tests
+  test output (from tests/results/...etc... ) to
+  tests/output/...etc... once you've ascertained that those tests
   produce the desired (correct) output. The helper script
   tests/fixtest.sh will copy the results file to the output folder:
 
