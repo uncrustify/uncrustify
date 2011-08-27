@@ -506,6 +506,8 @@ void register_options(void)
                   "Whether the 'class' body is indented");
    unc_add_option("indent_class_colon", UO_indent_class_colon, AT_BOOL,
                   "Whether to indent the stuff after a leading class colon");
+   unc_add_option("indent_ctor_init", UO_indent_ctor_init, AT_NUM,
+                  "Additional indenting for constructor initializer list");
    unc_add_option("indent_else_if", UO_indent_else_if, AT_BOOL,
                   "False=treat 'else\\nif' as 'else if' for indenting purposes\n"
                   "True=indent the 'if' one level\n");
@@ -1695,6 +1697,7 @@ void set_option_defaults(void)
    cpd.settings[UO_indent_with_tabs].n     = 1;
    cpd.settings[UO_indent_label].n         = 1;
    cpd.settings[UO_indent_access_spec].n   = 1;
+   cpd.settings[UO_indent_ctor_init].n     = 0;
    cpd.settings[UO_sp_before_comma].a      = AV_REMOVE;
    cpd.settings[UO_sp_paren_comma].a       = AV_FORCE;
    cpd.settings[UO_string_escape_char].n   = '\\';

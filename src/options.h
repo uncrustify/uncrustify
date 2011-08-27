@@ -158,6 +158,8 @@ enum uncrustify_options
    UO_indent_class,                         // indent stuff inside class braces
    UO_indent_class_colon,                   // indent stuff after a class colon
 
+   UO_indent_ctor_init,                // additional indenting for ctor initializer lists
+
    UO_indent_member,                        // indent lines broken at a member '.' or '->'
 
    UO_indent_sing_line_comments,            // indent single line ('//') comments on lines before code

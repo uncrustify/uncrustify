@@ -168,3 +168,5 @@
 30936 indent_braces_no.cfg             cpp/indent_braces_no.h
 
 30940 mod_case_brace_rm.cfg            cpp/case-brace-remove.cpp
+
+30955 indent_ctor_init.cfg             cpp/indent_ctor_init.cpp
