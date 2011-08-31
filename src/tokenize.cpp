@@ -413,7 +413,7 @@ static bool parse_comment(tok_ctx& ctx, chunk_t& pc)
             /* If there is another C comment right after this one, combine them */
             while ((ctx.peek() == ' ') || (ctx.peek() == '\t'))
             {
-               ctx.get();
+               pc.str.append(ctx.get());
             }
             if ((ctx.peek() != '/') || (ctx.peek(1) != '*'))
             {
