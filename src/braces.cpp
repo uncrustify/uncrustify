@@ -666,7 +666,7 @@ chunk_t *insert_comment_after(chunk_t *ref, c_token_t cmt_type,
    }
    txt_len = cmt_len + 8;                  /* 8 is big enough for all types */
 
-   memcpy(&new_cmt, ref, sizeof(new_cmt)); /* [i_a] clone levels, etc. */
+   new_cmt      = *ref;
    new_cmt.prev = NULL;
    new_cmt.next = NULL;
 

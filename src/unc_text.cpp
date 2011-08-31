@@ -154,10 +154,10 @@ void unc_text::set(const value_type& data, int idx, int len)
 {
    fix_len_idx(data.size(), idx, len);
    m_chars.resize(len);
+   int di = 0;
    while (len-- > 0)
    {
-      m_chars[idx] = data[idx];
-      idx++;
+      m_chars[di++] = data[idx++];
    }
    m_logok = false;
 }

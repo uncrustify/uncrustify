@@ -146,6 +146,7 @@ static bool parse_string(tok_ctx& ctx, chunk_t& pc, int quote_idx, bool allow_es
 static bool d_parse_string(tok_ctx& ctx, chunk_t& pc)
 {
    int ch = ctx.peek();
+
    if ((ch == '"') || (ch == '\'') || (ch == '`'))
    {
       return(parse_string(ctx, pc, 0, true));
@@ -237,13 +238,9 @@ static bool d_parse_string(tok_ctx& ctx, chunk_t& pc)
       }
       ctx.restore();
    }
-   else if ((ch == 'r') || (ch == 'x'))
+   else if (((ch == 'r') || (ch == 'x')) && (ctx.peek(1) == '"'))
    {
-      pc.str = ctx.get();
-      if (ctx.peek() == '"')
-      {
-         return(parse_string(ctx, pc, 1, false));
-      }
+      return(parse_string(ctx, pc, 1, false));
    }
    return(false);
 }
@@ -488,7 +485,7 @@ static void parse_suffix(tok_ctx& ctx, chunk_t& pc, bool forstring = false)
       tok_info ss;
       ctx.save(ss);
 
-      while (CharTable::IsKw2(ctx.peek()))
+      while (ctx.more() && CharTable::IsKw2(ctx.peek()))
       {
          slen++;
          pc.str.append(ctx.get());
@@ -846,14 +843,14 @@ static bool tag_compare(const deque<int>& d, int a_idx, int b_idx, int len)
 static bool parse_cr_string(tok_ctx& ctx, chunk_t& pc, int q_idx)
 {
    int cnt;
-   int tag_idx = q_idx + 1;
+   int tag_idx = ctx.c.idx + q_idx + 1;
    int tag_len = 0;
 
    ctx.save();
 
-   /* Consume the prefix + " to the string */
+   /* Copy the prefix + " to the string */
    pc.str.clear();
-   cnt = tag_idx;
+   cnt = q_idx + 1;
    while (cnt--)
    {
       pc.str.append(ctx.get());
@@ -1046,6 +1043,7 @@ static bool parse_bom(tok_ctx& ctx, chunk_t& pc)
 static bool parse_bs_newline(tok_ctx& ctx, chunk_t& pc)
 {
    ctx.save();
+   ctx.get(); /* skip the '\' */
 
    int ch;
    while (ctx.more() && unc_isspace(ch = ctx.peek()))
