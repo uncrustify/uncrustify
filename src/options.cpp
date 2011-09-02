@@ -172,6 +172,8 @@ void register_options(void)
                   "Allow interpreting '>=' and '>>=' as part of a template in 'void f(list<list<B>>=val);'.\n"
                   "If true (default), 'assert(x<0 && y>=3)' will be broken.\n"
                   "Improvements to template detection may make this option obsolete.");
+   unc_add_option("force_utf8", UO_force_utf8, AT_BOOL,
+                  "If the file contains chars between 128 and 255 and is not UTF-8, then output as UTF-8");
 
    unc_begin_group(UG_space, "Spacing options");
    unc_add_option("sp_arith", UO_sp_arith, AT_IARF,

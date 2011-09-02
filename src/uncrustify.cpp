@@ -45,7 +45,7 @@ static const char *language_to_string(int lang);
 static bool read_stdin(file_mem& fm);
 static void uncrustify_start(const deque<int>& data);
 static void uncrustify_end();
-static void uncrustify_file(const deque<int>& data, FILE *pfout,
+static void uncrustify_file(const file_mem& fm, FILE *pfout,
                             const char *parsed_file);
 static void do_source_file(const char *filename_in,
                            const char *filename_out,
@@ -569,7 +569,7 @@ int main(int argc, char *argv[])
               (int)fm.raw.size(), (int)fm.data.size(),
               language_to_string(cpd.lang_flags));
 
-      uncrustify_file(fm.data, stdout, parsed_file);
+      uncrustify_file(fm, stdout, parsed_file);
    }
    else if (source_file != NULL)
    {
@@ -762,7 +762,7 @@ static int load_mem_file(const char *filename, file_mem& fm)
    }
    else
    {
-      LOG_FMT(LSYS, "%s: '%s' looks like %d\n", __func__, filename, fm.enc);
+      LOG_FMT(LNOTE, "%s: '%s' encoding looks like %d\n", __func__, filename, fm.enc);
       retval = 0;
    }
    fclose(p_file);
@@ -1004,7 +1004,7 @@ static void do_source_file(const char *filename_in,
    }
 
    cpd.filename = filename_in;
-   uncrustify_file(fm.data, pfout, parsed_file);
+   uncrustify_file(fm, pfout, parsed_file);
 
    if (did_open)
    {
@@ -1331,9 +1331,17 @@ static void uncrustify_start(const deque<int>& data)
 }
 
 
-static void uncrustify_file(const deque<int>& data, FILE *pfout,
+static void uncrustify_file(const file_mem& fm, FILE *pfout,
                             const char *parsed_file)
 {
+   const deque<int>& data = fm.data;
+
+   cpd.enc = fm.enc;
+   if ((cpd.enc == ENC_BYTE) && cpd.settings[UO_force_utf8].b)
+   {
+      cpd.enc = ENC_UTF8;
+   }
+
    /* Check for embedded 0's */
    for (int idx = 0; idx < (int)data.size() - 1; idx++)
    {
