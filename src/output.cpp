@@ -473,16 +473,16 @@ void output_text(FILE *pfile)
  * @param line the comment line
  * @return 0=not present, >0=number of chars that are part of the lead
  */
-static int cmt_parse_lead(const unc_text& line, int idx, int is_last)
+static int cmt_parse_lead(const unc_text& line, int is_last)
 {
    int len = 0;
 
-   while ((len < 32) && (idx < line.size()))
+   while ((len < 32) && (len < line.size()))
    {
-      if ((len > 0) && (line[idx] == '/'))
+      if ((len > 0) && (line[len] == '/'))
       {
          /* ignore combined comments */
-         int tmp = idx + 1;
+         int tmp = len + 1;
          while ((tmp < line.size()) && unc_isspace(line[tmp]))
          {
             tmp++;
@@ -493,12 +493,11 @@ static int cmt_parse_lead(const unc_text& line, int idx, int is_last)
          }
          break;
       }
-      else if (strchr("*|\\#+", line[idx]) == NULL)
+      else if (strchr("*|\\#+", line[len]) == NULL)
       {
          break;
       }
       len++;
-      idx++;
    }
 
    if (len > 30)
@@ -506,7 +505,7 @@ static int cmt_parse_lead(const unc_text& line, int idx, int is_last)
       return 1;
    }
 
-   if ((len > 0) && ((idx >= line.size()) || unc_isspace(line[idx])))
+   if ((len > 0) && ((len >= line.size()) || unc_isspace(line[len])))
    {
       return len;
    }
@@ -1258,16 +1257,13 @@ static void cmt_trim_whitespace(unc_text& line, bool in_preproc)
 static void output_comment_multi(chunk_t *pc)
 {
    int        cmt_col;
-   const char *cmt_str;
-   int        remaining;
+   int        cmt_idx;
    char       ch;
    chunk_t    *prev;
-   char       *line;
-   int        line_len;
+   unc_text   line;
    int        line_count = 0;
    int        ccol; /* the col of subsequent comment lines */
    int        col_diff = 0;
-   char       lead[80];
    bool       nl_end = false;
    cmt_reflow cmt;
 
@@ -1280,38 +1276,33 @@ static void output_comment_multi(chunk_t *pc)
    cmt_col = cmt.base_col;
    col_diff = pc->orig_col - cmt.base_col;
 
-   calculate_comment_body_indent(cmt, pc->text(), pc->len());
+   calculate_comment_body_indent(cmt, pc->str);
 
    cmt.cont_text = !cpd.settings[UO_cmt_indent_multi].b ? "" :
                    (cpd.settings[UO_cmt_star_cont].b ? "* " : "  ");
 
    //LOG_FMT(LSYS, "Indenting1 line %d to col %d (orig=%d) col_diff=%d xtra=%d cont='%s'\n",
-   //        pc->orig_line, cmt_col, pc->orig_col, col_diff, cmt.xtra_indent, cmt.cont_text);
+   //        pc->orig_line, cmt_col, pc->orig_col, col_diff, cmt.xtra_indent, cmt.cont_text.c_str());
 
-   ccol      = pc->column;
-   remaining = pc->len();
-   cmt_str   = pc->text();
-   line_len  = 0;
-   line      = new char[remaining + 1024 + 1]; /* + 1 for '\0' */
-   while (remaining > 0)
+   ccol    = pc->column;
+   cmt_idx = 0;
+   line.clear();
+   while (cmt_idx < pc->len())
    {
-      ch = *cmt_str;
-      cmt_str++;
-      remaining--;
+      ch = pc->str[cmt_idx++];
 
       /* handle the CRLF and CR endings. convert both to LF */
       if (ch == '\r')
       {
          ch = '\n';
-         if (*cmt_str == '\n')
+         if ((cmt_idx < pc->len()) && (pc->str[cmt_idx] == '\n'))
          {
-            cmt_str++;
-            remaining--;
+            cmt_idx++;
          }
       }
 
       /* Find the start column */
-      if (line_len == 0)
+      if (line.size() == 0)
       {
          nl_end = false;
          if (ch == ' ')
@@ -1336,16 +1327,15 @@ static void output_comment_multi(chunk_t *pc)
        */
       if ((cpd.settings[UO_cmt_reflow_mode].n == 2) &&
           (ch == '\n') &&
-          (remaining > 0))
+          (cmt_idx < pc->len()))
       {
          int  nxt_len            = 0;
          int  next_nonempty_line = -1;
          int  prev_nonempty_line = -1;
-         int  nwidx          = line_len;
+         int  nwidx          = line.size();
          bool star_is_bullet = false;
 
          /* strip trailing whitespace from the line collected so far */
-         line[nwidx] = 0; // sentinel
          while (nwidx > 0)
          {
             nwidx--;
@@ -1362,20 +1352,21 @@ static void output_comment_multi(chunk_t *pc)
             }
          }
 
+         int remaining = pc->len() - cmt_idx;
          for (nxt_len = 0;
               (nxt_len <= remaining) &&
-              (cmt_str[nxt_len] != 'r') &&
-              (cmt_str[nxt_len] != '\n');
+              (pc->str[nxt_len] != 'r') &&
+              (pc->str[nxt_len] != '\n');
               nxt_len++)
          {
             if ((next_nonempty_line < 0) &&
-                !unc_isspace(cmt_str[nxt_len]) &&
-                (cmt_str[nxt_len] != '*') &&
+                !unc_isspace(pc->str[nxt_len]) &&
+                (pc->str[nxt_len] != '*') &&
                 ((nxt_len == remaining) ||
                  ((pc->flags & PCF_IN_PREPROC)
-                  ? (cmt_str[nxt_len] != '\\') ||
-                  ((cmt_str[nxt_len + 1] != 'r') &&
-                   (cmt_str[nxt_len + 1] != '\n'))
+                  ? (pc->str[nxt_len] != '\\') ||
+                  ((pc->str[nxt_len + 1] != 'r') &&
+                   (pc->str[nxt_len + 1] != '\n'))
                   : true)))
             {
                next_nonempty_line = nxt_len; // first nonwhitespace char in the next line
@@ -1415,26 +1406,25 @@ static void output_comment_multi(chunk_t *pc)
          if ((prev_nonempty_line >= 0) && (next_nonempty_line >= 0) &&
              (((unc_isalnum(line[prev_nonempty_line]) ||
                 strchr(",)]", line[prev_nonempty_line])) &&
-               (unc_isalnum(cmt_str[next_nonempty_line]) ||
-                strchr("([", cmt_str[next_nonempty_line]))) ||
+               (unc_isalnum(pc->str[next_nonempty_line]) ||
+                strchr("([", pc->str[next_nonempty_line]))) ||
               (('.' == line[prev_nonempty_line]) &&    // dot followed by non-capital is NOT a new sentence start
-               unc_isupper(cmt_str[next_nonempty_line]))) &&
+               unc_isupper(pc->str[next_nonempty_line]))) &&
              !star_is_bullet)
          {
             // rewind the line to the last non-alpha:
-            line_len = prev_nonempty_line + 1;
+            line.resize(prev_nonempty_line + 1);
             // roll the current line forward to the first non-alpha:
-            cmt_str   += next_nonempty_line;
-            remaining -= next_nonempty_line;
+            cmt_idx += next_nonempty_line;
             // override the NL and make it a single whitespace:
             ch = ' ';
          }
       }
 
-      line[line_len++] = ch;
+      line.append(ch);
 
       /* If we just hit an end of line OR we just hit end-of-comment... */
-      if ((ch == '\n') || (remaining == 0))
+      if ((ch == '\n') || (cmt_idx == pc->len()))
       {
          line_count++;
 
@@ -1442,17 +1432,16 @@ static void output_comment_multi(chunk_t *pc)
          if (ch == '\n')
          {
             nl_end = true;
-            line_len--;
-            cmt_trim_whitespace(line_len, line, pc->flags & PCF_IN_PREPROC);
+            line.pop_back();
+            cmt_trim_whitespace(line, pc->flags & PCF_IN_PREPROC);
          }
-         line[line_len] = 0;
 
          //LOG_FMT(LSYS, "[%3d]%s\n", ccol, line);
 
          if (line_count == 1)
          {
             /* this is the first line - add unchanged */
-            add_comment_text(line, line_len, cmt, false);
+            add_comment_text(line, cmt, false);
             if (nl_end)
             {
                add_char('\n');
@@ -1469,7 +1458,7 @@ static void output_comment_multi(chunk_t *pc)
                ccol = cmt_col + 3;
             }
 
-            if (line_len == 0)
+            if (line.size() == 0)
             {
                /* Empty line - just a '\n' */
                if (cpd.settings[UO_cmt_star_cont].b)
@@ -1524,12 +1513,10 @@ static void output_comment_multi(chunk_t *pc)
 
                   int idx;
 
-                  idx = cmt_parse_lead(line, (remaining == 0));
+                  idx = cmt_parse_lead(line, (cmt_idx == pc->len()));
                   if (idx > 0)
                   {
-                     memcpy(lead, line, idx);
-                     lead[idx] = 0;
-                     cmt.cont_text = lead;
+                     cmt.cont_text.set(line, 0, idx);
                   }
                   else
                   {
@@ -1537,18 +1524,17 @@ static void output_comment_multi(chunk_t *pc)
                   }
                }
 
-               add_comment_text(line, line_len, cmt, false);
+               add_comment_text(line, cmt, false);
                if (nl_end)
                {
                   add_text("\n");
                }
             }
          }
-         line_len = 0;
-         ccol     = 1;
+         line.clear();
+         ccol = 1;
       }
    }
-   delete[] line;
 }
 
 
