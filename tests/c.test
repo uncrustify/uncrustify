@@ -213,6 +213,7 @@
 # big general tests
 02000 ben.cfg                  c/i2c-core.c
 02001 preproc-cleanup.cfg      c/directfb.h
+02002 ben2.cfg                 c/i2c-core.c
 
 # clark's style - blank lines before and after flow control, indented comments
 02100 clark.cfg                c/i2c-core.c
