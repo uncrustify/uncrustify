@@ -949,6 +949,7 @@ static void add_comment_text(const unc_text& text,
             cmt.word_count++;
          }
          in_word = !unc_isspace(text[idx]);
+
          add_char(text[idx]);
          was_star   = (text[idx] == '*');
          was_slash  = (text[idx] == '/');
@@ -1258,7 +1259,7 @@ static void output_comment_multi(chunk_t *pc)
 {
    int        cmt_col;
    int        cmt_idx;
-   char       ch;
+   int        ch;
    chunk_t    *prev;
    unc_text   line;
    int        line_count = 0;

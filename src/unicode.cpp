@@ -127,24 +127,29 @@ bool decode_utf8(const vector<UINT8>& in_data, deque<int>& out_data)
          out_data.push_back(ch);
          continue;
       }
-      else if ((ch & 0x70) == 0xC0)    /* 2-byte sequence */
+      else if ((ch & 0xE0) == 0xC0)    /* 2-byte sequence */
       {
+         ch &= 0x1F;
          cnt = 1;
       }
       else if ((ch & 0xF0) == 0xE0)    /* 3-byte sequence */
       {
+         ch &= 0x0F;
          cnt = 2;
       }
       else if ((ch & 0xF8) == 0xF0)    /* 4-byte sequence */
       {
+         ch &= 0x07;
          cnt = 3;
       }
       else if ((ch & 0xFC) == 0xF8)    /* 5-byte sequence */
       {
+         ch &= 0x03;
          cnt = 4;
       }
-      else if ((ch & 0xF7) == 0xFC)    /* 6-byte sequence */
+      else if ((ch & 0xFE) == 0xFC)    /* 6-byte sequence */
       {
+         ch &= 0x01;
          cnt = 5;
       }
       else
@@ -163,7 +168,7 @@ bool decode_utf8(const vector<UINT8>& in_data, deque<int>& out_data)
          }
          ch = (ch << 6) | (tmp & 0x3f);
       }
-      if (cnt != 0)
+      if (cnt >= 0)
       {
          /* short UTF-8 sequence */
          return false;
