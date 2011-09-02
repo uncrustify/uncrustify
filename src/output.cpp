@@ -9,7 +9,6 @@
 #include "prototypes.h"
 #include "chunk_list.h"
 #include "unc_ctype.h"
-#include <cstring>
 #include <cstdlib>
 
 static void output_comment_multi(chunk_t *pc);
@@ -1676,12 +1675,12 @@ static void output_comment_multi_simple(chunk_t *pc)
 /**
  * This renders the #if condition to a string buffer.
  */
-static void generate_if_conditional_as_text(string& dst, chunk_t *ifdef)
+static void generate_if_conditional_as_text(unc_text& dst, chunk_t *ifdef)
 {
    chunk_t *pc;
    int     column = -1;
 
-   dst.erase();
+   dst.clear();
    for (pc = ifdef; pc != NULL; pc = chunk_get_next(pc))
    {
       if (column == -1)
@@ -1712,7 +1711,7 @@ static void generate_if_conditional_as_text(string& dst, chunk_t *ifdef)
             dst += ' ';
             column++;
          }
-         dst.append(pc->text(), pc->len());
+         dst.append(pc->str);
          column += pc->len();
       }
    }
@@ -1817,14 +1816,14 @@ void add_long_preprocessor_conditional_block_comment(void)
                   c_token_t style = (cpd.lang_flags & (LANG_CPP | LANG_CS)) ?
                                     CT_COMMENT_CPP : CT_COMMENT;
 
-                  string str;
+                  unc_text str;
                   generate_if_conditional_as_text(str, br_open);
 
                   LOG_FMT(LPPIF, "#if / %s section over threshold %d (nl_count=%d) --> insert comment after the %s: %s\n",
                           txt, nl_min, nl_count, txt, str.c_str());
 
                   /* Add a comment after the close brace */
-                  insert_comment_after(br_close, style, str.size(), str.c_str());
+                  insert_comment_after(br_close, style, str);
                }
             }
 

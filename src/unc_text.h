@@ -32,6 +32,10 @@ public:
    {
       set(ref);
    }
+   unc_text(const unc_text& ref, int idx, int len = -1)
+   {
+      set(ref, idx, len);
+   }
    unc_text(const char *ascii_text)
    {
       set(ascii_text);
@@ -55,6 +59,7 @@ public:
 
    void set(int ch);
    void set(const unc_text& ref);
+   void set(const unc_text& ref, int idx, int len = -1);
    void set(const string& ascii_text);
    void set(const char *ascii_text);
    void set(const value_type& data, int idx = 0, int len = -1);
@@ -141,6 +146,21 @@ public:
       return m_chars.at(idx);
    }
 
+   const int& at(int idx) const
+   {
+      return m_chars.at(idx);
+   }
+
+   const int& back() const
+   {
+      return m_chars.back();
+   }
+
+   int& back()
+   {
+      return m_chars.back();
+   }
+
    void push_back(int ch)
    {
       append(ch);
@@ -164,6 +184,7 @@ public:
       }
    }
 
+   bool startswith(const unc_text& text, int idx = 0) const;
    bool startswith(const char *text, int idx = 0) const;
    int find(const char *text, int idx = 0) const;
 

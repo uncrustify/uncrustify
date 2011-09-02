@@ -140,7 +140,6 @@ struct parse_frame
 #define PCF_PUNCTUATOR         PCF_BIT(32)
 #define PCF_INSERTED           PCF_BIT(33)  /* chunk was inserted from another file */
 #define PCF_LONG_BLOCK         PCF_BIT(34)  /* the block is 'long' by some measure */
-#define PCF_OWN_STR            PCF_BIT(35)  /* chunk owns the memory at str */
 
 #ifdef DEFINE_PCF_NAMES
 static const char *pcf_names[] =
@@ -180,7 +179,7 @@ static const char *pcf_names[] =
    "PUNCTUATOR",        // 32
    "INSERTED",          // 33
    "LONG_BLOCK",        // 34
-   "OWN_STR",           // 35
+   "#35",               // 35
    "#36",               // 36
    "#37",               // 37
    "#38",               // 38

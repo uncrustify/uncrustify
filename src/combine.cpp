@@ -4187,7 +4187,6 @@ static void handle_wrap(chunk_t *pc)
    chunk_t *opp  = chunk_get_next(pc);
    chunk_t *name = chunk_get_next(opp);
    chunk_t *clp  = chunk_get_next(name);
-   char    *new_name;
 
    argval_t pav = (pc->type == CT_FUNC_WRAP) ?
                   cpd.settings[UO_sp_func_call_paren].a :
@@ -4202,24 +4201,23 @@ static void handle_wrap(chunk_t *pc)
        ((name->type == CT_WORD) || (name->type == CT_TYPE)) &&
        (clp->type == CT_PAREN_CLOSE))
    {
-      new_name = new char[pc->len() + 2 + name->len() + 2 + 1]; /* + 1 for '\0' */
-      if (new_name != NULL)
-      {
-         const char *psp = (pav & AV_ADD) ? " " : "";
-         const char *fsp = (av & AV_ADD) ? " " : "";
+      const char *psp = (pav & AV_ADD) ? " " : "";
+      const char *fsp = (av & AV_ADD) ? " " : "";
 
-         sprintf(new_name, "%s%s(%s%s%s)",
-                 pc->str.c_str(), psp, fsp, name->str.c_str(), fsp);
-         pc->type   = (pc->type == CT_FUNC_WRAP) ? CT_FUNCTION : CT_TYPE;
-         pc->str    = new_name;
-         pc->flags |= PCF_OWN_STR;
+      pc->str.append(psp);
+      pc->str.append("(");
+      pc->str.append(fsp);
+      pc->str.append(name->str);
+      pc->str.append(fsp);
+      pc->str.append(")");
 
-         pc->orig_col_end = pc->orig_col + pc->len();
+      pc->type = (pc->type == CT_FUNC_WRAP) ? CT_FUNCTION : CT_TYPE;
 
-         chunk_del(opp);
-         chunk_del(name);
-         chunk_del(clp);
-      }
+      pc->orig_col_end = pc->orig_col + pc->len();
+
+      chunk_del(opp);
+      chunk_del(name);
+      chunk_del(clp);
    }
 }
 

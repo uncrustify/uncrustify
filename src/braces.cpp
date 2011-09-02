@@ -654,42 +654,29 @@ static void convert_vbrace_to_brace(void)
  * Returns the added chunk or NULL
  */
 chunk_t *insert_comment_after(chunk_t *ref, c_token_t cmt_type,
-                              int cmt_len, const char *cmt_text)
+                              const unc_text& cmt_text)
 {
    chunk_t new_cmt;
-   char    *txt;
-   int     txt_len;
-
-   if (cmt_len <= 0)
-   {
-      cmt_len = strlen(cmt_text);
-   }
-   txt_len = cmt_len + 8;                  /* 8 is big enough for all types */
 
    new_cmt      = *ref;
    new_cmt.prev = NULL;
    new_cmt.next = NULL;
 
-   new_cmt.flags = (ref->flags & PCF_COPY_FLAGS) | PCF_OWN_STR;
+   new_cmt.flags = (ref->flags & PCF_COPY_FLAGS);
    new_cmt.type  = cmt_type;
 
-   /* allocate memory for the string */
-   txt = new char[txt_len + 1]; /* + 1 for '\0' */
-   if (txt == NULL)
-   {
-      return(NULL);
-   }
-
-   new_cmt.str = txt;
+   new_cmt.str.clear();
    if (cmt_type == CT_COMMENT_CPP)
    {
-      snprintf(txt, txt_len, "// %.*s", cmt_len, cmt_text);
+      new_cmt.str.append("// ");
+      new_cmt.str.append(cmt_text);
    }
    else
    {
-      snprintf(txt, txt_len, "/* %.*s */", cmt_len, cmt_text);
+      new_cmt.str.append("/* ");
+      new_cmt.str.append(cmt_text);
+      new_cmt.str.append(" */");
    }
-   new_cmt.str = txt;
    /* TODO: expand comment type to cover other comment styles? */
 
    new_cmt.column   = ref->column + ref->len() + 1;
@@ -776,8 +763,7 @@ void add_long_closebrace_comment(void)
                                     CT_COMMENT_CPP : CT_COMMENT;
 
                   /* Add a comment after the close brace */
-                  insert_comment_after(br_close, style,
-                                       tag_pc->len(), tag_pc->text());
+                  insert_comment_after(br_close, style, tag_pc->str);
                }
             }
             break;

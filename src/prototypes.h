@@ -97,7 +97,7 @@ void quick_align_again(void);
 
 void do_braces(void);
 void add_long_closebrace_comment(void);
-chunk_t *insert_comment_after(chunk_t *ref, c_token_t cmt_type, int cmt_len, const char *cmt_text);
+chunk_t *insert_comment_after(chunk_t *ref, c_token_t cmt_type, const unc_text& cmt_text);
 
 
 /*

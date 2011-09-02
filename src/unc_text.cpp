@@ -8,6 +8,38 @@
 #include "unc_text.h"
 #include "prototypes.h" /* encode_utf8() */
 
+static void fix_len_idx(int size, int& idx, int& len)
+{
+   if (len < 0)
+   {
+      len = size;
+   }
+   if (len > 0)
+   {
+      if (idx < 0)
+      {
+         idx += size;
+         if (idx < 0)
+         {
+            idx = 0;
+            len = 0;
+            return;
+         }
+      }
+      if (idx >= size)
+      {
+         len = 0;
+      }
+      else
+      {
+         int left = size - idx;
+         if (len > left)
+         {
+            len = left;
+         }
+      }
+   }
+}
 
 void unc_text::update_logtext()
 {
@@ -93,6 +125,26 @@ void unc_text::set(const unc_text& ref)
    m_logok = false;
 }
 
+void unc_text::set(const unc_text& ref, int idx, int len)
+{
+   int size = ref.size();
+   fix_len_idx(size, idx, len);
+   m_logok = false;
+   if ((idx == 0) && (len == size))
+   {
+      m_chars = ref.m_chars;
+   }
+   else
+   {
+      m_chars.resize(len);
+      int di = 0;
+      while (len-- > 0)
+      {
+         m_chars[di++] = ref.m_chars[idx++];
+      }
+   }
+}
+
 void unc_text::set(const string& ascii_text)
 {
    int len = ascii_text.size();
@@ -115,39 +167,6 @@ void unc_text::set(const char *ascii_text)
       m_chars[idx] = *ascii_text++;
    }
    m_logok = false;
-}
-
-void fix_len_idx(int size, int& idx, int& len)
-{
-   if (len < 0)
-   {
-      len = size;
-   }
-   if (len > 0)
-   {
-      if (idx < 0)
-      {
-         idx += size;
-         if (idx < 0)
-         {
-            idx = 0;
-            len = 0;
-            return;
-         }
-      }
-      if (idx >= size)
-      {
-         len = 0;
-      }
-      else
-      {
-         int left = size - idx;
-         if (len > left)
-         {
-            len = left;
-         }
-      }
-   }
 }
 
 void unc_text::set(const value_type& data, int idx, int len)
@@ -221,6 +240,23 @@ bool unc_text::startswith(const char *text, int idx) const
       match = true;
    }
    return(match && (*text == 0));
+}
+
+bool unc_text::startswith(const unc_text& text, int idx) const
+{
+   bool match = false;
+   int  si = 0;
+   while ((idx < size()) && (si < text.size()))
+   {
+      if (text.m_chars[si] != m_chars[idx])
+      {
+         return false;
+      }
+      idx++;
+      si++;
+      match = true;
+   }
+   return(match && (si == text.size()));
 }
 
 int unc_text::find(const char *text, int sidx) const

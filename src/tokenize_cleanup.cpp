@@ -350,11 +350,6 @@ void tokenize_cleanup(void)
             /* Replace next with a collection of all tokens that are part of
              * the type.
              */
-            char opbuf[256];
-            int  len;
-
-            len = snprintf(opbuf, sizeof(opbuf), "%s", next->str.c_str());
-
             tmp2 = next;
             while ((tmp = chunk_get_next(tmp2)) != NULL)
             {
@@ -369,9 +364,8 @@ void tokenize_cleanup(void)
                }
                /* Change tmp into a type so that space_needed() works right */
                make_type(tmp);
-               len += snprintf(opbuf + len, sizeof(opbuf) - len, "%s%s",
-                               space_needed(tmp2, tmp) ? " " : "",
-                               tmp->str.c_str());
+               next->str.append(space_needed(tmp2, tmp) ? " " : "");
+               next->str.append(tmp->str);
                tmp2 = tmp;
             }
 
@@ -380,10 +374,7 @@ void tokenize_cleanup(void)
                chunk_del(tmp2);
             }
 
-            opbuf[len]   = 0;
-            next->str    = opbuf;
-            next->flags |= PCF_OWN_STR;
-            next->type   = CT_OPERATOR_VAL;
+            next->type = CT_OPERATOR_VAL;
 
             next->orig_col_end = next->orig_col + next->len();
          }
