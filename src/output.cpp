@@ -1563,16 +1563,14 @@ static void output_comment_multi(chunk_t *pc)
 static void output_comment_multi_simple(chunk_t *pc)
 {
    int        cmt_col = pc->column;
-   const char *cmt_str;
-   int        remaining;
+   int        cmt_idx;
    char       ch;
-   char       *line = new char[1024 + pc->len()];
-   int        line_len;
    int        line_count = 0;
    int        ccol;
    int        col_diff = 0;
    bool       nl_end   = false;
    cmt_reflow cmt;
+   unc_text   line;
 
    output_cmt_start(cmt, pc);
 
@@ -1589,29 +1587,25 @@ static void output_comment_multi_simple(chunk_t *pc)
       col_diff = 0;
    }
 
-   ccol      = pc->column;
-   remaining = pc->len();
-   cmt_str   = pc->text();
-   line_len  = 0;
-   while (remaining > 0)
+   ccol    = pc->column;
+   cmt_idx = 0;
+   line.clear();
+   while (cmt_idx < pc->len())
    {
-      ch = *cmt_str;
-      cmt_str++;
-      remaining--;
+      ch = pc->str[cmt_idx++];
 
       /* handle the CRLF and CR endings. convert both to LF */
       if (ch == '\r')
       {
          ch = '\n';
-         if (*cmt_str == '\n')
+         if ((cmt_idx < pc->len()) && (pc->str[cmt_idx] == '\n'))
          {
-            cmt_str++;
-            remaining--;
+            cmt_idx++;
          }
       }
 
       /* Find the start column */
-      if (line_len == 0)
+      if (line.size() == 0)
       {
          nl_end = false;
          if (ch == ' ')
@@ -1631,44 +1625,42 @@ static void output_comment_multi_simple(chunk_t *pc)
          }
       }
 
-      line[line_len++] = ch;
+      line.append(ch);
 
       /* If we just hit an end of line OR we just hit end-of-comment... */
-      if ((ch == '\n') || (remaining == 0))
+      if ((ch == '\n') || (cmt_idx == pc->len()))
       {
          line_count++;
 
          /* strip trailing tabs and spaces before the newline */
          if (ch == '\n')
          {
-            line_len--;
+            line.pop_back();
             nl_end = true;
 
             /* Say we aren't in a preproc to prevent changing any bs-nl */
-            cmt_trim_whitespace(line_len, line, false);
+            cmt_trim_whitespace(line, false);
          }
-         line[line_len] = 0;
 
          if (line_count > 1)
          {
             ccol -= col_diff;
          }
 
-         if (line_len > 0)
+         if (line.size() > 0)
          {
             cmt.column = ccol;
             cmt_output_indent(cmt.brace_col, cmt.base_col, cmt.column);
-            add_text_len(line, line_len);
+            add_text(line);
          }
          if (nl_end)
          {
             add_char('\n');
          }
-         line_len = 0;
-         ccol     = 1;
+         line.clear();
+         ccol = 1;
       }
    }
-   delete line;
 }
 
 
