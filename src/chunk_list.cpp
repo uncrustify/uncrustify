@@ -169,11 +169,11 @@ chunk_t *chunk_add_before(const chunk_t *pc_in, chunk_t *ref)
 void chunk_del(chunk_t *pc)
 {
    g_cl.Pop(pc);
-   if ((pc->flags & PCF_OWN_STR) && (pc->str != NULL))
-   {
-      delete[] (char *)pc->str;
-      pc->str = NULL;
-   }
+   //if ((pc->flags & PCF_OWN_STR) && (pc->str != NULL))
+   //{
+   //   delete[] (char *)pc->str;
+   //   pc->str = NULL;
+   //}
    delete pc;
 }
 
@@ -186,7 +186,7 @@ void chunk_move_after(chunk_t *pc_in, chunk_t *ref)
    /* HACK: Adjust the original column */
    pc_in->column       = ref->column + space_col_align(ref, pc_in);
    pc_in->orig_col     = pc_in->column;
-   pc_in->orig_col_end = pc_in->orig_col + pc_in->len;
+   pc_in->orig_col_end = pc_in->orig_col + pc_in->len();
 }
 
 
@@ -434,7 +434,7 @@ chunk_t *chunk_get_next_str(chunk_t *cur, const char *str, int len, int level,
    {
       pc = chunk_get_next(pc, nav);
       if ((pc == NULL) ||
-          ((pc->len == len) && (memcmp(str, pc->str, len) == 0) &&
+          ((pc->len() == len) && (memcmp(str, pc->text(), len) == 0) &&
            ((pc->level == level) || (level < 0))))
       {
          break;
@@ -479,7 +479,7 @@ chunk_t *chunk_get_prev_str(chunk_t *cur, const char *str, int len, int level,
    {
       pc = chunk_get_prev(pc, nav);
       if ((pc == NULL) ||
-          ((pc->len == len) && (memcmp(str, pc->str, len) == 0) &&
+          ((pc->len() == len) && (memcmp(str, pc->text(), len) == 0) &&
            ((pc->level == level) || (level < 0))))
       {
          break;

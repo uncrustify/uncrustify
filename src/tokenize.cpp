@@ -2,7 +2,7 @@
  * @file tokenize.cpp
  * This file breaks up the text stream into tokens or chunks.
  *
- * Each routine needs to set pc->len and pc->type.
+ * Each routine needs to set pc.len and pc.type.
  *
  * @author  Ben Gardner
  * @license GPL v2+
@@ -17,8 +17,110 @@
 #include <cerrno>
 #include "unc_ctype.h"
 
+struct tok_info
+{
+   tok_info() : last_ch(0), idx(0), row(1), col(1)
+   {
+   }
+   int last_ch;
+   int idx;
+   int row;
+   int col;
+};
 
-static bool parse_string(chunk_t *pc, int quote_idx, bool allow_escape);
+struct tok_ctx
+{
+   tok_ctx(const deque<int>& d) : data(d)
+   {
+   }
+
+   /* save before trying to parse something that may fail */
+   void save()
+   {
+      save(s);
+   }
+   void save(tok_info& info)
+   {
+      info = c;
+   }
+
+   /* restore previous saved state */
+   void restore()
+   {
+      restore(s);
+   }
+   void restore(const tok_info& info)
+   {
+      c = info;
+   }
+
+   bool more()
+   {
+      return(c.idx < (int)data.size());
+   }
+
+   int peek()
+   {
+      return(more() ? data[c.idx] : -1);
+   }
+
+   int peek(int idx)
+   {
+      idx += c.idx;
+      return((idx < (int)data.size()) ? data[idx] : -1);
+   }
+
+   int get()
+   {
+      if (more())
+      {
+         int ch = data[c.idx++];
+         switch (ch)
+         {
+         case '\t':
+            c.col = calc_next_tab_column(c.col, cpd.settings[UO_input_tab_size].n);
+            break;
+
+         case '\n':
+            if (c.last_ch != '\r')
+            {
+               c.row++;
+               c.col = 1;
+            }
+            break;
+
+         case '\r':
+            c.row++;
+            c.col = 1;
+            break;
+
+         default:
+            c.col++;
+            break;
+         }
+         c.last_ch = ch;
+         return ch;
+      }
+      return -1;
+   }
+
+   bool expect(int ch)
+   {
+      if (peek() == ch)
+      {
+         get();
+         return true;
+      }
+      return false;
+   }
+
+   const deque<int>& data;
+   tok_info          c; /* current */
+   tok_info          s; /* saved */
+};
+
+static bool parse_string(tok_ctx& ctx, chunk_t& pc, int quote_idx, bool allow_escape);
+
 
 /**
  * Parses all legal D string constants.
@@ -41,39 +143,50 @@ static bool parse_string(chunk_t *pc, int quote_idx, bool allow_escape);
  * @param pc   The structure to update, str is an input.
  * @return     Whether a string was parsed
  */
-static bool d_parse_string(chunk_t *pc)
+static bool d_parse_string(tok_ctx& ctx, chunk_t& pc)
 {
-   if (pc->str[0] == '"')
+   int ch = ctx.peek();
+
+   if ((ch == '"') || (ch == '\'') || (ch == '`'))
    {
-      return(parse_string(pc, 0, true));
+      return(parse_string(ctx, pc, 0, true));
    }
-   else if ((pc->str[0] == '\'') ||
-            (pc->str[0] == '`'))
+   else if (ch == '\\')
    {
-      return(parse_string(pc, 0, true));
-   }
-   else if (pc->str[0] == '\\')
-   {
-      pc->len = 0;
-      while (pc->str[pc->len] == '\\')
+      ctx.save();
+      int cnt;
+      pc.str.clear();
+      while (ctx.peek() == '\\')
       {
-         pc->len++;
+         pc.str.append(ctx.get());
          /* Check for end of file */
-         switch (pc->str[pc->len])
+         switch (ctx.peek())
          {
          case 'x':
             /* \x HexDigit HexDigit */
-            pc->len += 3;
+            cnt = 3;
+            while (cnt--)
+            {
+               pc.str.append(ctx.get());
+            }
             break;
 
          case 'u':
             /* \u HexDigit HexDigit HexDigit HexDigit */
-            pc->len += 5;
+            cnt = 5;
+            while (cnt--)
+            {
+               pc.str.append(ctx.get());
+            }
             break;
 
          case 'U':
             /* \U HexDigit (x8) */
-            pc->len += 9;
+            cnt = 9;
+            while (cnt--)
+            {
+               pc.str.append(ctx.get());
+            }
             break;
 
          case '0':
@@ -85,71 +198,71 @@ static bool d_parse_string(chunk_t *pc)
          case '6':
          case '7':
             /* handle up to 3 octal digits */
-            pc->len++;
-            if ((pc->str[pc->len] >= '0') && (pc->str[pc->len] <= '7'))
+            pc.str.append(ctx.get());
+            ch = ctx.peek();
+            if ((ch >= '0') && (ch <= '7'))
             {
-               pc->len++;
-               if ((pc->str[pc->len] >= '0') && (pc->str[pc->len] <= '7'))
+               pc.str.append(ctx.get());
+               ch = ctx.peek();
+               if ((ch >= '0') && (ch <= '7'))
                {
-                  pc->len++;
+                  pc.str.append(ctx.get());
                }
             }
             break;
 
          case '&':
             /* \& NamedCharacterEntity ; */
-            pc->len++;
-            while (isalpha(pc->str[pc->len]))
+            pc.str.append(ctx.get());
+            while (unc_isalpha(ctx.peek()))
             {
-               pc->len++;
+               pc.str.append(ctx.get());
             }
-            if (pc->str[pc->len] == ';')
+            if (ctx.peek() == ';')
             {
-               pc->len++;
+               pc.str.append(ctx.get());
             }
             break;
 
          default:
             /* Everything else is a single character */
-            pc->len++;
+            pc.str.append(ctx.get());
             break;
          }
       }
 
-      if (pc->len > 1)
+      if (pc.str.size() > 1)
       {
-         pc->type    = CT_STRING;
-         cpd.column += pc->len;
+         pc.type = CT_STRING;
          return(true);
       }
+      ctx.restore();
    }
-   else if (pc->str[1] == '"')
+   else if (((ch == 'r') || (ch == 'x')) && (ctx.peek(1) == '"'))
    {
-      if ((pc->str[0] == 'r') || (pc->str[0] == 'x'))
-      {
-         return(parse_string(pc, 1, false));
-      }
+      return(parse_string(ctx, pc, 1, false));
    }
    return(false);
 }
 
-/**
- * A string-in-string search.  Like strstr() with a haystack length.
- */
-static const char *str_search(const char *needle, const char *haystack, int haystack_len)
-{
-   int needle_len = strlen(needle);
 
-   while (haystack_len-- >= needle_len)
-   {
-      if (memcmp(needle, haystack, needle_len) == 0)
-      {
-         return(haystack);
-      }
-      haystack++;
-   }
-   return(NULL);
-}
+// /**
+//  * A string-in-string search.  Like strstr() with a haystack length.
+//  */
+// static const char *str_search(const char *needle, const char *haystack, int haystack_len)
+// {
+//    int needle_len = strlen(needle);
+//
+//    while (haystack_len-- >= needle_len)
+//    {
+//       if (memcmp(needle, haystack, needle_len) == 0)
+//       {
+//          return(haystack);
+//       }
+//       haystack++;
+//    }
+//    return(NULL);
+// }
 
 
 /**
@@ -163,34 +276,42 @@ static const char *str_search(const char *needle, const char *haystack, int hays
  * @param pc   The structure to update, str is an input.
  * @return     Whether a comment was parsed
  */
-static bool parse_comment(chunk_t *pc)
+static bool parse_comment(tok_ctx& ctx, chunk_t& pc)
 {
-   int  len     = 2;
+   int  ch;
    bool is_d    = (cpd.lang_flags & LANG_D) != 0;
    int  d_level = 0;
    int  bs_cnt;
 
-   if ((pc->str[0] != '/') ||
-       ((pc->str[1] != '*') && (pc->str[1] != '/') &&
-        ((pc->str[1] != '+') || !is_d)))
+   /* does this start with '/ /' or '/ *' or '/ +' (d) */
+   if ((ctx.peek() != '/') ||
+       ((ctx.peek(1) != '*') && (ctx.peek(1) != '/') &&
+        ((ctx.peek(1) != '+') || !is_d)))
    {
       return(false);
    }
 
-   /* account for opening two chars */
-   cpd.column += 2;
+   ctx.save();
 
-   if (pc->str[1] == '/')
+   /* account for opening two chars */
+   pc.str = ctx.get();   /* opening '/' */
+
+   ch = ctx.peek();
+   if (ch == '/')
    {
-      pc->type = CT_COMMENT_CPP;
+      pc.str.append(ctx.get());  /* store the '/' */
+      pc.type = CT_COMMENT_CPP;
       while (true)
       {
          bs_cnt = 0;
-         while ((pc->str[len] != '\n') &&
-                (pc->str[len] != '\r') &&
-                (pc->str[len] != 0))
+         while (ctx.more())
          {
-            if (pc->str[len] == '\\')
+            ch = ctx.peek();
+            if ((ch == '\r') || (ch == '\n'))
+            {
+               break;
+            }
+            if (ch == '\\')
             {
                bs_cnt++;
             }
@@ -198,69 +319,70 @@ static bool parse_comment(chunk_t *pc)
             {
                bs_cnt = 0;
             }
-            len++;
+            pc.str.append(ctx.get());
          }
 
          /* If we hit an odd number of backslashes right before the newline,
           * then we keep going.
           */
-         if (((bs_cnt & 1) == 0) || (pc->str[len] == 0))
+         if (((bs_cnt & 1) == 0) || !ctx.more())
          {
             break;
          }
-         if (pc->str[len] == '\r')
+         if (ctx.peek() == '\r')
          {
-            len++;
+            pc.str.append(ctx.get());
          }
-         if (pc->str[len] == '\n')
+         if (ctx.peek() == '\n')
          {
-            len++;
+            pc.str.append(ctx.get());
          }
-         pc->nl_count++;
+         pc.nl_count++;
          cpd.did_newline = true;
-         cpd.line_number++;
       }
    }
-   else if (pc->str[len] == 0)
+   else if (!ctx.more())
    {
       /* unexpected end of file */
+      ctx.restore();
       return(false);
    }
-   else if (pc->str[1] == '+')
+   else if (ch == '+')
    {
-      pc->type = CT_COMMENT;
+      pc.str.append(ctx.get());  /* store the '+' */
+      pc.type = CT_COMMENT;
       d_level++;
-      while ((d_level > 0) && (pc->str[len + 1] != 0))
+      while ((d_level > 0) && ctx.more())
       {
-         if ((pc->str[len] == '+') && (pc->str[len + 1] == '/'))
+         if ((ctx.peek() == '+') && (ctx.peek(1) == '/'))
          {
-            len        += 2;
-            cpd.column += 2;
+            pc.str.append(ctx.get());  /* store the '+' */
+            pc.str.append(ctx.get());  /* store the '/' */
             d_level--;
             continue;
          }
 
-         if ((pc->str[len] == '/') && (pc->str[len + 1] == '+'))
+         if ((ctx.peek() == '/') && (ctx.peek(1) == '+'))
          {
-            len        += 2;
-            cpd.column += 2;
+            pc.str.append(ctx.get());  /* store the '/' */
+            pc.str.append(ctx.get());  /* store the '+' */
             d_level++;
             continue;
          }
 
-         if ((pc->str[len] == '\n') || (pc->str[len] == '\r'))
+         ch = ctx.get();
+         pc.str.append(ch);
+         if ((ch == '\n') || (ch == '\r'))
          {
-            pc->type = CT_COMMENT_MULTI;
-            pc->nl_count++;
-            cpd.column = 0;
-            cpd.line_number++;
+            pc.type = CT_COMMENT_MULTI;
+            pc.nl_count++;
 
-            if (pc->str[len] == '\r')
+            if (ch == '\r')
             {
-               if (pc->str[len + 1] == '\n')
+               if (ctx.peek(1) == '\n')
                {
                   cpd.le_counts[LE_CRLF]++;
-                  len++;
+                  pc.str.append(ctx.get());  /* store the '\n' */
                }
                else
                {
@@ -272,47 +394,49 @@ static bool parse_comment(chunk_t *pc)
                cpd.le_counts[LE_LF]++;
             }
          }
-         len++;
-         cpd.column++;
       }
    }
-   else
+   else  /* must be '/ *' */
    {
-      pc->type = CT_COMMENT;
-      while (pc->str[len + 1] != 0)
+      pc.type = CT_COMMENT;
+      while (ctx.more())
       {
-         if ((pc->str[len] == '*') && (pc->str[len + 1] == '/'))
+         if ((ctx.peek() == '*') && (ctx.peek(1) == '/'))
          {
-            len        += 2;
-            cpd.column += 2;
+            pc.str.append(ctx.get());  /* store the '*' */
+            pc.str.append(ctx.get());  /* store the '/' */
+
+            tok_info ss;
+            ctx.save(ss);
+            int oldsize = pc.str.size();
 
             /* If there is another C comment right after this one, combine them */
-            int tmp_len = len;
-            while ((pc->str[tmp_len] == ' ') ||
-                   (pc->str[tmp_len] == '\t'))
+            while ((ctx.peek() == ' ') || (ctx.peek() == '\t'))
             {
-               tmp_len++;
+               pc.str.append(ctx.get());
             }
-            if ((pc->str[tmp_len] != '/') || (pc->str[tmp_len + 1] != '*'))
+            if ((ctx.peek() != '/') || (ctx.peek(1) != '*'))
             {
+               /* undo the attempt to join */
+               ctx.restore(ss);
+               pc.str.resize(oldsize);
                break;
             }
-            pc->len = tmp_len;
          }
 
-         if ((pc->str[len] == '\n') || (pc->str[len] == '\r'))
+         ch = ctx.get();
+         pc.str.append(ch);
+         if ((ch == '\n') || (ch == '\r'))
          {
-            pc->type = CT_COMMENT_MULTI;
-            pc->nl_count++;
-            cpd.column = 0;
-            cpd.line_number++;
+            pc.type = CT_COMMENT_MULTI;
+            pc.nl_count++;
 
-            if (pc->str[len] == '\r')
+            if (ch == '\r')
             {
-               if (pc->str[len + 1] == '\n')
+               if (ctx.peek() == '\n')
                {
                   cpd.le_counts[LE_CRLF]++;
-                  len++;
+                  pc.str.append(ctx.get());  /* store the '\n' */
                }
                else
                {
@@ -324,24 +448,22 @@ static bool parse_comment(chunk_t *pc)
                cpd.le_counts[LE_LF]++;
             }
          }
-         len++;
-         cpd.column++;
       }
    }
-   pc->len = len;
+
    if (cpd.unc_off)
    {
-      if (str_search(UNCRUSTIFY_ON_TEXT, pc->str, pc->len) != NULL)
+      if (pc.str.find(UNCRUSTIFY_ON_TEXT) >= 0)
       {
-         LOG_FMT(LBCTRL, "Found '%s' on line %d\n", UNCRUSTIFY_ON_TEXT, pc->orig_line);
+         LOG_FMT(LBCTRL, "Found '%s' on line %d\n", UNCRUSTIFY_ON_TEXT, pc.orig_line);
          cpd.unc_off = false;
       }
    }
    else
    {
-      if (str_search(UNCRUSTIFY_OFF_TEXT, pc->str, pc->len) != NULL)
+      if (pc.str.find(UNCRUSTIFY_OFF_TEXT) >= 0)
       {
-         LOG_FMT(LBCTRL, "Found '%s' on line %d\n", UNCRUSTIFY_OFF_TEXT, pc->orig_line);
+         LOG_FMT(LBCTRL, "Found '%s' on line %d\n", UNCRUSTIFY_OFF_TEXT, pc.orig_line);
          cpd.unc_off = true;
       }
    }
@@ -354,28 +476,72 @@ static bool parse_comment(chunk_t *pc)
  * If for a string, explicitly exclude common format and scan specifiers, ie,
  * PRIx32 and SCNx64.
  */
-static void parse_suffix(chunk_t *pc, bool forstring = false)
+static void parse_suffix(tok_ctx& ctx, chunk_t& pc, bool forstring = false)
 {
-   if (CharTable::IsKw1(pc->str[pc->len]))
+   if (CharTable::IsKw1(ctx.peek()))
    {
-      int        slen = 0;
-      const char *ptr = &pc->str[pc->len];
+      int slen = 0;
+      int oldsize = pc.str.size();
+      tok_info ss;
+      ctx.save(ss);
 
-      while (CharTable::IsKw2(pc->str[pc->len]))
+      while (ctx.more() && CharTable::IsKw2(ctx.peek()))
       {
          slen++;
-         pc->len++;
-         cpd.column++;
+         pc.str.append(ctx.get());
       }
 
       if (forstring && (slen >= 4) &&
-          ((memcmp(ptr, "PRI", 3) == 0) ||
-           (memcmp(ptr, "SCN", 3) == 0)))
+          (pc.str.startswith("PRI", oldsize) ||
+           pc.str.startswith("SCN", oldsize)))
       {
-         pc->len    -= slen;
-         cpd.column -= slen;
+         ctx.restore(ss);
+         pc.str.resize(oldsize);
       }
    }
+}
+
+
+static bool is_bin(int ch)
+{
+   return((ch == '0') || (ch == '1'));
+}
+
+static bool is_bin_(int ch)
+{
+   return(is_bin(ch) || (ch == '_'));
+}
+
+static bool is_oct(int ch)
+{
+   return((ch >= '0') && (ch <= '7'));
+}
+
+static bool is_oct_(int ch)
+{
+   return(is_oct(ch) || (ch == '_'));
+}
+
+static bool is_dec(int ch)
+{
+   return((ch >= '0') && (ch <= '9'));
+}
+
+static bool is_dec_(int ch)
+{
+   return(is_dec(ch) || (ch == '_'));
+}
+
+static bool is_hex(int ch)
+{
+   return(((ch >= '0') && (ch <= '9')) ||
+          ((ch >= 'a') && (ch <= 'f')) ||
+          ((ch >= 'A') && (ch <= 'F')));
+}
+
+static bool is_hex_(int ch)
+{
+   return(is_hex(ch) || (ch == '_'));
 }
 
 
@@ -394,23 +560,21 @@ static void parse_suffix(chunk_t *pc, bool forstring = false)
  * @param pc   The structure to update, str is an input.
  * @return     Whether a number was parsed
  */
-static bool parse_number(chunk_t *pc)
+static bool parse_number(tok_ctx& ctx, chunk_t& pc)
 {
-   int  len;
    int  tmp;
    bool is_float;
    bool did_hex = false;
 
    /* A number must start with a digit or a dot, followed by a digit */
-   if (!unc_isdigit(pc->str[0]) &&
-       ((pc->str[0] != '.') || !unc_isdigit(pc->str[1])))
+   if (!is_dec(ctx.peek()) &&
+       ((ctx.peek() != '.') || !is_dec(ctx.peek(1))))
    {
       return(false);
    }
-   len = 1;
 
-   is_float = (pc->str[0] == '.');
-   if (is_float && (pc->str[1] == '.'))
+   is_float = (ctx.peek() == '.');
+   if (is_float && (ctx.peek(1) == '.'))
    {
       return(false);
    }
@@ -418,24 +582,25 @@ static bool parse_number(chunk_t *pc)
    /* Check for Hex, Octal, or Binary
     * Note that only D and Pawn support binary, but who cares?
     */
-   if (pc->str[0] == '0')
+   if (ctx.peek() == '0')
    {
-      switch (unc_toupper(pc->str[1]))
+      pc.str.append(ctx.get());  /* store the '0' */
+
+      switch (unc_toupper(ctx.peek()))
       {
       case 'X':               /* hex */
          did_hex = true;
          do
          {
-            len++;
-         } while (unc_isxdigit(pc->str[len]) || (pc->str[len] == '_'));
+            pc.str.append(ctx.get());  /* store the 'x' and then the rest */
+         } while (is_hex_(ctx.peek()));
          break;
 
       case 'B':               /* binary */
          do
          {
-            len++;
-         } while ((pc->str[len] == '0') || (pc->str[len] == '1') ||
-                  (pc->str[len] == '_'));
+            pc.str.append(ctx.get());  /* store the 'b' and then the rest */
+         } while (is_bin_(ctx.peek()));
          break;
 
       case '0':                /* octal or decimal */
@@ -450,9 +615,8 @@ static bool parse_number(chunk_t *pc)
       case '9':
          do
          {
-            len++;
-         } while (((pc->str[len] >= '0') && (pc->str[len] <= '9')) ||
-                  (pc->str[len] == '_'));
+            pc.str.append(ctx.get());
+         } while (is_oct_(ctx.peek()));
          break;
 
       default:
@@ -463,29 +627,29 @@ static bool parse_number(chunk_t *pc)
    else
    {
       /* Regular int or float */
-      while (unc_isdigit(pc->str[len]) || (pc->str[len] == '_'))
+      while (is_dec_(ctx.peek()))
       {
-         len++;
+         pc.str.append(ctx.get());
       }
    }
 
    /* Check if we stopped on a decimal point & make sure it isn't '..' */
-   if ((pc->str[len] == '.') && (pc->str[len + 1] != '.'))
+   if ((ctx.peek() == '.') && (ctx.peek(1) != '.'))
    {
-      len++;
+      pc.str.append(ctx.get());
       is_float = true;
       if (did_hex)
       {
-         while (unc_isxdigit(pc->str[len]) || (pc->str[len] == '_'))
+         while (is_hex_(ctx.peek()))
          {
-            len++;
+            pc.str.append(ctx.get());
          }
       }
       else
       {
-         while (unc_isdigit(pc->str[len]) || (pc->str[len] == '_'))
+         while (is_dec_(ctx.peek()))
          {
-            len++;
+            pc.str.append(ctx.get());
          }
       }
    }
@@ -495,18 +659,18 @@ static bool parse_number(chunk_t *pc)
     * C/C++/D/Java: eEpP
     * C#/Pawn:      eE
     */
-   tmp = unc_toupper(pc->str[len]);
+   tmp = unc_toupper(ctx.peek());
    if ((tmp == 'E') || (tmp == 'P'))
    {
       is_float = true;
-      len++;
-      if ((pc->str[len] == '+') || (pc->str[len] == '-'))
+      pc.str.append(ctx.get());
+      if ((ctx.peek() == '+') || (ctx.peek() == '-'))
       {
-         len++;
+         pc.str.append(ctx.get());
       }
-      while (unc_isdigit(pc->str[len]) || (pc->str[len] == '_'))
+      while (is_dec_(ctx.peek()))
       {
-         len++;
+         pc.str.append(ctx.get());
       }
    }
 
@@ -523,7 +687,7 @@ static bool parse_number(chunk_t *pc)
     */
    while (1)
    {
-      tmp = unc_toupper(pc->str[len]);
+      tmp = unc_toupper(ctx.peek());
       if ((tmp == 'I') || (tmp == 'F') || (tmp == 'D') || (tmp == 'M'))
       {
          is_float = true;
@@ -532,23 +696,22 @@ static bool parse_number(chunk_t *pc)
       {
          break;
       }
-      len++;
+      pc.str.append(ctx.get());
    }
 
    /* skip the Microsoft-specific '64' suffix */
-   if ((pc->str[len] == '6') && (pc->str[len + 1] == '4'))
+   if ((ctx.peek() == '6') && (ctx.peek(1) == '4'))
    {
-      len += 2;
+      pc.str.append(ctx.get());
+      pc.str.append(ctx.get());
    }
 
-   pc->len     = len;
-   pc->type    = is_float ? CT_NUMBER_FP : CT_NUMBER;
-   cpd.column += len;
+   pc.type = is_float ? CT_NUMBER_FP : CT_NUMBER;
 
    /* If there is anything left, then we are probably dealing with garbage or
     * some sick macro junk. Eat it.
     */
-   parse_suffix(pc);
+   parse_suffix(ctx, pc);
 
    return(true);
 }
@@ -562,46 +725,52 @@ static bool parse_number(chunk_t *pc)
  * @param pc   The structure to update, str is an input.
  * @return     Whether a string was parsed
  */
-static bool parse_string(chunk_t *pc, int quote_idx, bool allow_escape)
+static bool parse_string(tok_ctx& ctx, chunk_t& pc, int quote_idx, bool allow_escape)
 {
    bool escaped = 0;
    int  end_ch;
-   int  len          = quote_idx;
    char escape_char  = cpd.settings[UO_string_escape_char].n;
    char escape_char2 = cpd.settings[UO_string_escape_char2].n;
 
-   pc->type = CT_STRING;
-
-   end_ch = CharTable::Get(pc->str[len]) & 0xff;
-   len++;
-
-   cpd.column += len;
-   for (/* nada */; pc->str[len] != 0; len++)
+   pc.str.clear();
+   while (quote_idx-- > 0)
    {
-      cpd.column++;
+      pc.str.append(ctx.get());
+   }
 
-      if ((pc->str[len] == '\n') ||
-          ((pc->str[len] == '\r') && (pc->str[len + 1] != '\n')))
+   pc.type = CT_STRING;
+   end_ch  = CharTable::Get(ctx.peek()) & 0xff;
+   pc.str.append(ctx.get());  /* store the " */
+
+   while (ctx.more())
+   {
+      int ch = ctx.get();
+      pc.str.append(ch);
+      if (ch == '\n')
       {
-         cpd.line_number++;
-         cpd.column = 1;
-         pc->nl_count++;
-         pc->type = CT_STRING_MULTI;
+         pc.nl_count++;
+         pc.type = CT_STRING_MULTI;
+         continue;
+      }
+      if ((ch == '\r') && (ctx.peek() != '\n'))
+      {
+         pc.str.append(ctx.get());
+         pc.nl_count++;
+         pc.type = CT_STRING_MULTI;
+         continue;
       }
       if (!escaped)
       {
-         if (pc->str[len] == escape_char)
+         if (ch == escape_char)
          {
             escaped = (escape_char != 0);
          }
-         else if ((pc->str[len] == escape_char2) &&
-                  (pc->str[len + 1] == end_ch))
+         else if ((ch == escape_char2) && (ctx.peek() == end_ch))
          {
             escaped = allow_escape;
          }
-         else if (pc->str[len] == end_ch)
+         else if (ch == end_ch)
          {
-            len++;
             break;
          }
       }
@@ -611,8 +780,7 @@ static bool parse_string(chunk_t *pc, int quote_idx, bool allow_escape)
       }
    }
 
-   pc->len = len;
-   parse_suffix(pc, true);
+   parse_suffix(ctx, pc, true);
    return(true);
 }
 
@@ -624,84 +792,109 @@ static bool parse_string(chunk_t *pc, int quote_idx, bool allow_escape)
  * @param pc   The structure to update, str is an input.
  * @return     Whether a string was parsed
  */
-static bool parse_cs_string(chunk_t *pc)
+static bool parse_cs_string(tok_ctx& ctx, chunk_t& pc)
 {
-   int len = 2;
+   pc.str = ctx.get();
+   pc.str.append(ctx.get());
 
    /* go until we hit a zero (end of file) or a single " */
-   while (pc->str[len] != 0)
+   while (ctx.more())
    {
-      if ((pc->str[len] == '"') && (pc->str[len + 1] == '"'))
+      int ch = ctx.get();
+      pc.str.append(ch);
+      if (ch == '"')
       {
-         len += 2;
-      }
-      else
-      {
-         len++;
-         if (pc->str[len - 1] == '"')
+         if (ctx.peek() == '"')
+         {
+            pc.str.append(ctx.get());
+         }
+         else
          {
             break;
          }
       }
    }
 
-   pc->len     = len;
-   pc->type    = CT_STRING;
-   cpd.column += len;
+   pc.type = CT_STRING;
    return(true);
 }
 
 
+static bool tag_compare(const deque<int>& d, int a_idx, int b_idx, int len)
+{
+   if (a_idx != b_idx)
+   {
+      while (len-- > 0)
+      {
+         if (d[a_idx] != d[b_idx])
+         {
+            return false;
+         }
+      }
+   }
+   return true;
+}
+
+
 /**
- * Parses a C++0x 'R' string. R"( xxx )" or R"tag(  )tag"
+ * Parses a C++0x 'R' string. R"( xxx )" R"tag(  )tag" u8R"(x)" uR"(x)"
  * Newlines may be in the string.
  */
-static bool parse_cr_string(chunk_t *pc, int q_idx)
+static bool parse_cr_string(tok_ctx& ctx, chunk_t& pc, int q_idx)
 {
-   int        idx     = q_idx + 1;
-   const char *tag    = &pc->str[idx];
-   int        tag_len = 0;
+   int cnt;
+   int tag_idx = ctx.c.idx + q_idx + 1;
+   int tag_len = 0;
 
-   while ((pc->str[idx] != 0) &&
-          (pc->str[idx] != '('))
+   ctx.save();
+
+   /* Copy the prefix + " to the string */
+   pc.str.clear();
+   cnt = q_idx + 1;
+   while (cnt--)
+   {
+      pc.str.append(ctx.get());
+   }
+
+   /* Add the tag and get the length of the tag */
+   while (ctx.more() && (ctx.peek() != '('))
    {
       tag_len++;
-      idx++;
+      pc.str.append(ctx.get());
    }
-   if (pc->str[idx] != '(')
+   if (ctx.peek() != '(')
    {
+      ctx.restore();
       return(false);
    }
 
-   pc->type = CT_STRING;
-   cpd.column += idx;
-   while (pc->str[idx] != 0)
+   pc.type = CT_STRING;
+   while (ctx.more())
    {
-      if ((pc->str[idx] == ')') &&
-          (memcmp(&pc->str[idx + 1], tag, tag_len) == 0) &&
-          (pc->str[idx + tag_len + 1] == '"'))
+      if ((ctx.peek() == ')') &&
+          (ctx.peek(tag_len + 1) == '"') &&
+          tag_compare(ctx.data, tag_idx, ctx.c.idx + 1, tag_len))
       {
-         idx        += tag_len + 2;
-         cpd.column += tag_len + 2;
-
-         pc->len     = idx;
-         parse_suffix(pc);
+         cnt = tag_len + 2;   /* for the )" */
+         while (cnt--)
+         {
+            pc.str.append(ctx.get());
+         }
+         parse_suffix(ctx, pc);
          return(true);
       }
-      if (pc->str[idx] == '\n')
+      if (ctx.peek() == '\n')
       {
-         cpd.column = 1;
-         cpd.line_number++;
-         pc->nl_count++;
-         pc->type = CT_STRING_MULTI;
+         pc.str.append(ctx.get());
+         pc.nl_count++;
+         pc.type = CT_STRING_MULTI;
       }
       else
       {
-         cpd.column++;
+         pc.str.append(ctx.get());
       }
-      /* TODO: handle embedded tab chars? */
-      idx++;
    }
+   ctx.restore();
    return(false);
 }
 
@@ -713,22 +906,26 @@ static bool parse_cr_string(chunk_t *pc, int q_idx)
  * @param pc   The structure to update, str is an input.
  * @return     Whether a word was parsed (always true)
  */
-bool parse_word(chunk_t *pc, bool skipcheck)
+bool parse_word(tok_ctx& ctx, chunk_t& pc, bool skipcheck)
 {
-   int len = 1;
+   int ch;
 
-   while (CharTable::IsKw2(pc->str[len]))
+   /* The first character is already valid */
+   pc.str.clear();
+   pc.str.append(ctx.get());
+
+   while (CharTable::IsKw2(ctx.peek()))
    {
+      ch = ctx.get();
+      pc.str.append(ch);
+
       /* HACK: Non-ASCII character are only allowed in identifiers */
-      if (pc->str[len] & 0x80)
+      if (ch > 0x7f)
       {
          skipcheck = true;
       }
-      len++;
    }
-   cpd.column += len;
-   pc->len     = len;
-   pc->type    = CT_WORD;
+   pc.type = CT_WORD;
 
    if (skipcheck)
    {
@@ -739,22 +936,21 @@ bool parse_word(chunk_t *pc, bool skipcheck)
    if ((cpd.in_preproc == CT_PP_DEFINE) &&
        (cpd.preproc_ncnl_count == 1))
    {
-      if (pc->str[len] == '(')
+      if (ctx.peek() == '(')
       {
-         pc->type = CT_MACRO_FUNC;
+         pc.type = CT_MACRO_FUNC;
       }
       else
       {
-         pc->type = CT_MACRO;
+         pc.type = CT_MACRO;
       }
    }
-
-   /* Turn it into a keyword now */
-   c_token_t tt = find_keyword_type(pc->str, len);
-   if (tt != CT_NONE)
+   else
    {
-      pc->type = tt;
+      /* Turn it into a keyword now */
+      pc.type = find_keyword_type(pc.str.c_str(), pc.str.size());
    }
+
    return(true);
 }
 
@@ -765,23 +961,22 @@ bool parse_word(chunk_t *pc, bool skipcheck)
  * @param pc   The structure to update, str is an input.
  * @return     Whether whitespace was parsed
  */
-static bool parse_whitespace(chunk_t *pc)
+static bool parse_whitespace(tok_ctx& ctx, chunk_t& pc)
 {
-   int  len          = 0;
-   int  nl_count     = 0;
-   bool last_was_tab = false;
+   int nl_count = 0;
+   int ch       = -2;
 
-   while ((pc->str[len] != 0) &&
-          ((pc->str[len] <= ' ') || (pc->str[len] >= 127)))
+   /* REVISIT: use a better whitespace detector? */
+   while (ctx.more() && unc_isspace(ctx.peek()))
    {
-      last_was_tab = false;
-      switch (pc->str[len])
+      ch = ctx.get();   /* throw away the whitespace char */
+      switch (ch)
       {
       case '\r':
-         if (pc->str[len + 1] == '\n')
+         if (ctx.peek() == '\n')
          {
             /* CRLF ending */
-            len++;
+            ctx.get();     /* throw away \n */
             cpd.le_counts[LE_CRLF]++;
          }
          else
@@ -790,67 +985,30 @@ static bool parse_whitespace(chunk_t *pc)
             cpd.le_counts[LE_CR]++;
          }
          nl_count++;
-         cpd.column = 1;
-         cpd.line_number++;
          break;
 
       case '\n':
          /* LF ending */
          cpd.le_counts[LE_LF]++;
          nl_count++;
-         cpd.column = 1;
-         cpd.line_number++;
          break;
 
       case '\t':
-         cpd.column = calc_next_tab_column(cpd.column,
-                                           cpd.settings[UO_input_tab_size].n);
-         last_was_tab = true;
-         break;
-
       case ' ':
-         cpd.column++;
-         break;
-
       default:
          break;
       }
-      len++;
    }
 
-   if (len > 0)
+   if (ch != -2)
    {
-      pc->nl_count  = nl_count;
-      pc->type      = nl_count ? CT_NEWLINE : CT_WHITESPACE;
-      pc->len       = len;
-      pc->after_tab = last_was_tab;
+      pc.str.clear();
+      pc.nl_count  = nl_count;
+      pc.type      = nl_count ? CT_NEWLINE : CT_WHITESPACE;
+      pc.after_tab = (ctx.c.last_ch == '\t');
+      return(true);
    }
-   return(len != 0);
-}
-
-
-/**
- * Count the number of non-ascii characters at the start of a file.
- *
- * @param pc   The structure to update, str is an input.
- * @return     Whether a BOM was parsed
- */
-static bool parse_bom(chunk_t *pc)
-{
-   int len = 0;
-
-   while ((pc->str[len] != 0) &&
-          ((pc->str[len] <= 0) || (pc->str[len] >= 127)))
-   {
-      len++;
-   }
-
-   if (len > 0)
-   {
-      pc->type = CT_SOF;
-      pc->len  = len;
-   }
-   return(len != 0);
+   return(false);
 }
 
 
@@ -859,132 +1017,131 @@ static bool parse_bom(chunk_t *pc)
  * If there is nothing but whitespace until the newline, then this is a
  * backslash newline
  */
-static bool parse_bs_newline(chunk_t *pc)
+static bool parse_bs_newline(tok_ctx& ctx, chunk_t& pc)
 {
-   pc->len = 1;
+   ctx.save();
+   ctx.get(); /* skip the '\' */
 
-   while (unc_isspace(pc->str[pc->len]))
+   int ch;
+   while (ctx.more() && unc_isspace(ch = ctx.peek()))
    {
-      if ((pc->str[pc->len] == '\r') || (pc->str[pc->len] == '\n'))
+      ctx.get();
+      if ((ch == '\r') || (ch == '\n'))
       {
-         if (pc->str[pc->len] == '\n')
+         if (ch == '\r')
          {
-            pc->len++;
+            ctx.expect('\n');
          }
-         else /* it is '\r' */
-         {
-            pc->len++;
-            if (pc->str[pc->len] == '\n')
-            {
-               pc->len++;
-            }
-         }
-         pc->type     = CT_NL_CONT;
-         pc->nl_count = 1;
+         pc.str      = "\\";
+         pc.type     = CT_NL_CONT;
+         pc.nl_count = 1;
          return(true);
       }
-      pc->len++;
    }
+
+   ctx.restore();
    return(false);
 }
 
 
 /**
  * Parses any number of tab or space chars followed by a newline.
- * Does not change pc->len if a newline isn't found.
+ * Does not change pc.len if a newline isn't found.
  * This is not the same as parse_whitespace() because it only consumes until
  * a single newline is encountered.
  */
-static bool parse_newline(chunk_t *pc)
+static bool parse_newline(tok_ctx& ctx)
 {
-   int len = pc->len;
+   ctx.save();
 
-   while ((pc->str[len] == ' ') || (pc->str[len] == '\t'))
+   /* Eat whitespace */
+   while ((ctx.peek() == ' ') || (ctx.peek() == '\t'))
    {
-      len++;
+      ctx.get();
    }
-   if ((pc->str[len] == '\r') || (pc->str[len] == '\n'))
+   if ((ctx.peek() == '\r') || (ctx.peek() == '\n'))
    {
-      if (pc->str[len] == '\n')
+      if (ctx.peek() == '\n')
       {
-         len++;
+         ctx.get();
       }
       else /* it is '\r' */
       {
-         len++;
-         if (pc->str[len] == '\n')
+         ctx.get();
+         if (ctx.peek() == '\n')
          {
-            len++;
+            ctx.get();
          }
       }
-      pc->len = len;
       return(true);
    }
+   ctx.restore();
    return(false);
 }
 
 
-static bool parse_ignored(chunk_t *pc)
+static bool parse_ignored(tok_ctx& ctx, chunk_t& pc)
 {
    int nl_count = 0;
 
-   /* Parse off newlines */
-   while (parse_newline(pc))
+   /* Parse off newlines/blank lines */
+   while (parse_newline(ctx))
    {
       nl_count++;
    }
    if (nl_count > 0)
    {
-      cpd.column       = 1;
-      cpd.line_number += nl_count;
-      pc->nl_count     = nl_count;
-      pc->type         = CT_NEWLINE;
+      pc.nl_count = nl_count;
+      pc.type     = CT_NEWLINE;
       return(true);
    }
 
    /* See if the INDENT-ON text is on this line */
-   int len = 0;
-   while ((pc->str[len] != 0) &&
-          (pc->str[len] != '\r') &&
-          (pc->str[len] != '\n'))
+   ctx.save();
+   pc.str.clear();
+   while (ctx.more() &&
+          (ctx.peek() != '\r') &&
+          (ctx.peek() != '\n'))
    {
-      len++;
+      pc.str.append(ctx.get());
    }
-   if (len == 0)
+   if (pc.str.size() == 0)
    {
+      /* end of file? */
       return(false);
    }
-   if (str_search(UNCRUSTIFY_ON_TEXT, pc->str, len) == NULL)
+   /* Note that we aren't actually making sure this is in a comment, yet */
+   if (pc.str.find(UNCRUSTIFY_ON_TEXT) < 0)
    {
-      pc->type = CT_IGNORED;
-      pc->len  = len;
+      pc.type = CT_IGNORED;
       return(true);
    }
+   ctx.restore();
 
    /* parse off whitespace leading to the comment */
-   if (parse_whitespace(pc))
+   if (parse_whitespace(ctx, pc))
    {
-      pc->type = CT_IGNORED;
+      pc.type = CT_IGNORED;
       return(true);
    }
 
    /* Look for the ending comment and let it pass */
-   if (parse_comment(pc) && !cpd.unc_off)
+   if (parse_comment(ctx, pc) && !cpd.unc_off)
    {
       return(true);
    }
 
    /* Reset the chunk & scan to until a newline */
-   pc->len = 0;
-   while ((pc->str[pc->len] != 0) &&
-          (pc->str[pc->len] != '\r') &&
-          (pc->str[pc->len] != '\n'))
+   pc.str.clear();
+   while (ctx.more() &&
+          (ctx.peek() != '\r') &&
+          (ctx.peek() != '\n'))
    {
-      pc->len++;
+      pc.str.append(ctx.get());
    }
-   if (pc->len > 0)
+   if (pc.str.size() > 0)
    {
-      pc->type = CT_IGNORED;
+      pc.type = CT_IGNORED;
       return(true);
    }
    return(false);
@@ -994,174 +1151,171 @@ static bool parse_ignored(chunk_t *pc)
 /**
  * Skips the next bit of whatever and returns the type of block.
  *
- * pc->str is the input text.
- * pc->len in the output length.
- * pc->type is the output type
- * pc->column is output column
+ * pc.str is the input text.
+ * pc.len in the output length.
+ * pc.type is the output type
+ * pc.column is output column
  *
  * @param pc      The structure to update, str is an input.
  * @return        true/false - whether anything was parsed
  */
-static bool parse_next(chunk_t *pc)
+static bool parse_next(tok_ctx& ctx, chunk_t& pc)
 {
    const chunk_tag_t *punc;
+   int ch, ch1;
 
-   if ((pc == NULL) || (pc->str == NULL) || (*pc->str == 0))
+   if (!ctx.more())
    {
       //fprintf(stderr, "All done!\n");
       return(false);
    }
 
    /* Save off the current column */
-   pc->orig_line = cpd.line_number;
-   pc->column    = cpd.column;
-   pc->orig_col  = cpd.column;
-   pc->len       = 0;
-   pc->type      = CT_NONE;
-   pc->nl_count  = 0;
-   pc->flags     = 0;
+   pc.orig_line = ctx.c.row;
+   pc.column    = ctx.c.col;
+   pc.orig_col  = ctx.c.col;
+   pc.type      = CT_NONE;
+   pc.nl_count  = 0;
+   pc.flags     = 0;
 
    /* If it is turned off, we put everything except newlines into CT_UNKNOWN */
    if (cpd.unc_off)
    {
-      if (parse_ignored(pc))
-      {
-         return(true);
-      }
-   }
-
-   if (chunk_get_head() == NULL)
-   {
-      if (parse_bom(pc))
+      if (parse_ignored(ctx, pc))
       {
          return(true);
       }
    }
 
    /**
-    *  Parse whitespace
+    * Parse whitespace
     */
-   if (parse_whitespace(pc))
+   if (parse_whitespace(ctx, pc))
    {
       return(true);
    }
 
    /**
-    *  Handle unknown/unhandled preprocessors
+    * Handle unknown/unhandled preprocessors
     */
    if ((cpd.in_preproc > CT_PP_BODYCHUNK) &&
        (cpd.in_preproc <= CT_PP_OTHER))
    {
+      pc.str.clear();
+      tok_info ss;
+      ctx.save(ss);
       /* Chunk to a newline or comment */
-      pc->type = CT_PREPROC_BODY;
-      char last = 0;
-      while (pc->str[pc->len] != 0)
+      pc.type = CT_PREPROC_BODY;
+      int last = 0;
+      while (ctx.more())
       {
-         char ch = pc->str[pc->len];
+         int ch = ctx.peek();
 
          if ((ch == '\n') || (ch == '\r'))
          {
             /* Back off if this is an escaped newline */
             if (last == '\\')
             {
-               pc->len--;
+               ctx.restore(ss);
+               pc.str.pop_back();
             }
             break;
          }
 
          /* Quit on a C++ comment start */
-         if ((ch == '/') && (pc->str[pc->len + 1] == '/'))
+         if ((ch == '/') && (ctx.peek(1) == '/'))
          {
             break;
          }
          last = ch;
-         pc->len++;
+         ctx.save(ss);
+
+         pc.str.append(ctx.get());
       }
-      if (pc->len > 0)
+      if (pc.str.size() > 0)
       {
          return(true);
       }
    }
 
    /**
-    *   Detect backslash-newline
-    *
-    * REVISIT: does this need to handle other line endings?
+    * Detect backslash-newline
     */
-   if ((pc->str[0] == '\\') && parse_bs_newline(pc))
+   if ((ctx.peek() == '\\') && parse_bs_newline(ctx, pc))
    {
-      cpd.column = 1;
-      cpd.line_number++;
       return(true);
    }
 
    /**
-    *  Parse comments
+    * Parse comments
     */
-   if (parse_comment(pc))
+   if (parse_comment(ctx, pc))
    {
       return(true);
    }
 
-   /* Check for C# literal strings, ie @"hello" */
-   if (((cpd.lang_flags & LANG_CS) != 0) && (*pc->str == '@'))
+   /* Check for C# literal strings, ie @"hello" and identifiers @for*/
+   if (((cpd.lang_flags & LANG_CS) != 0) && (ctx.peek() == '@'))
    {
-      if (pc->str[1] == '"')
+      if (ctx.peek(1) == '"')
       {
-         parse_cs_string(pc);
+         parse_cs_string(ctx, pc);
          return(true);
       }
-      if (CharTable::IsKw1(pc->str[1]) && parse_word(pc, true))
+      /* check for non-keyword identifiers such as @if @switch, etc */
+      if (CharTable::IsKw1(ctx.peek(1)))
       {
+         parse_word(ctx, pc, true);
          return(true);
       }
    }
 
    /* Check for Obj-C NSString constants, ie @"hello" */
-   if (((cpd.lang_flags & LANG_OC) != 0) && (*pc->str == '@'))
+   if (((cpd.lang_flags & LANG_OC) != 0) && (ctx.peek() == '@'))
    {
-      if (pc->str[1] == '"')
+      if (ctx.peek(1) == '"')
       {
-         parse_string(pc, 1, true);
+         parse_string(ctx, pc, 1, true);
          return(true);
       }
    }
 
-   /* handle C++0x strings u8"x" u"x" U"x" R"x" */
+   /* handle C++0x strings u8"x" u"x" U"x" R"x" u8R"XXX(I'm a "raw UTF-8" string.)XXX" */
+   ch = ctx.peek();
    if (((cpd.lang_flags & LANG_CPP) != 0) &&
-       ((pc->str[0] == 'u') || (pc->str[0] == 'U') || (pc->str[0] == 'R')))
+       ((ch == 'u') || (ch == 'U') || (ch == 'R')))
    {
       int idx = 0;
       bool is_real = false;
 
-      if ((pc->str[0] == 'u') && (pc->str[1] == '8'))
+      if ((ch == 'u') && (ctx.peek(1) == '8'))
       {
          idx = 2;
       }
-      else if (unc_tolower(pc->str[0]) == 'u')
+      else if (unc_tolower(ch) == 'u')
       {
          idx++;
       }
 
-      if (pc->str[idx] == 'R')
+      if (ctx.peek(idx) == 'R')
       {
          idx++;
          is_real = true;
       }
-      if (pc->str[idx] == '"')
+      if (ctx.peek(idx) == '"')
       {
          if (is_real)
          {
-            if (parse_cr_string(pc, idx))
+            if (parse_cr_string(ctx, pc, idx))
             {
                return(true);
             }
          }
          else
          {
-            if (parse_string(pc, idx, true))
+            if (parse_string(ctx, pc, idx, true))
             {
-               parse_suffix(pc, true);
+               parse_suffix(ctx, pc, true);
                return(true);
             }
          }
@@ -1172,27 +1326,27 @@ static bool parse_next(chunk_t *pc)
    if ((cpd.lang_flags & LANG_PAWN) != 0)
    {
       /* Check for PAWN strings: \"hi" or !"hi" or !\"hi" or \!"hi" */
-      if ((pc->str[0] == '\\') || (pc->str[0] == '!'))
+      if ((ctx.peek() == '\\') || (ctx.peek() == '!'))
       {
-         if (pc->str[1] == '"')
+         if (ctx.peek(1) == '"')
          {
-            parse_string(pc, 1, (*pc->str == '!'));
+            parse_string(ctx, pc, 1, (ctx.peek() == '!'));
             return(true);
          }
-         else if (((pc->str[1] == '\\') || (pc->str[1] == '!')) &&
-                  (pc->str[2] == '"'))
+         else if (((ctx.peek(1) == '\\') || (ctx.peek(1) == '!')) &&
+                  (ctx.peek(2) == '"'))
          {
-            parse_string(pc, 2, false);
+            parse_string(ctx, pc, 2, false);
             return(true);
          }
       }
    }
 
    /**
-    *  Parse strings and character constants
+    * Parse strings and character constants
     */
 
-   if (parse_number(pc))
+   if (parse_number(ctx, pc))
    {
       return(true);
    }
@@ -1200,7 +1354,7 @@ static bool parse_next(chunk_t *pc)
    if ((cpd.lang_flags & LANG_D) != 0)
    {
       /* D specific stuff */
-      if (d_parse_string(pc))
+      if (d_parse_string(ctx, pc))
       {
          return(true);
       }
@@ -1210,56 +1364,61 @@ static bool parse_next(chunk_t *pc)
       /* Not D stuff */
 
       /* Check for L'a', L"abc", 'a', "abc", <abc> strings */
-      if ((((*pc->str == 'L') || (*pc->str == 'S')) &&
-           ((pc->str[1] == '"') || (pc->str[1] == '\''))) ||
-          (*pc->str == '"') ||
-          (*pc->str == '\'') ||
-          ((*pc->str == '<') && (cpd.in_preproc == CT_PP_INCLUDE)))
+      ch  = ctx.peek();
+      ch1 = ctx.peek(1);
+      if ((((ch == 'L') || (ch == 'S')) &&
+           ((ch1 == '"') || (ch1 == '\''))) ||
+          (ch == '"') ||
+          (ch == '\'') ||
+          ((ch == '<') && (cpd.in_preproc == CT_PP_INCLUDE)))
       {
-         parse_string(pc, unc_isalpha(*pc->str) ? 1 : 0, true);
+         parse_string(ctx, pc, unc_isalpha(ch) ? 1 : 0, true);
          return(true);
       }
 
-      if ((*pc->str == '<') && (cpd.in_preproc == CT_PP_DEFINE))
+      if ((ch == '<') && (cpd.in_preproc == CT_PP_DEFINE))
       {
          if (chunk_get_tail()->type == CT_MACRO)
          {
             /* We have "#define XXX <", assume '<' starts an include string */
-            parse_string(pc, 0, false);
+            parse_string(ctx, pc, 0, false);
             return(true);
          }
       }
    }
 
-   /* Check for pawn/ObjectiveC identifiers */
-   if ((*pc->str == '@') &&
-       CharTable::IsKw2(pc->str[1]) &&
-       parse_word(pc, false))
+   /* Check for pawn/ObjectiveC and normal identifiers */
+   if (CharTable::IsKw1(ctx.peek()) ||
+       ((ctx.peek() == '@') && CharTable::IsKw2(ctx.peek(1))))
    {
+      parse_word(ctx, pc, false);
       return(true);
    }
 
-   if (CharTable::IsKw1(*pc->str) && parse_word(pc, false))
+   /* see if we have a punctuator */
+   char punc_txt[4];
+   punc_txt[0] = ctx.peek();
+   punc_txt[1] = ctx.peek(1);
+   punc_txt[2] = ctx.peek(2);
+   punc_txt[3] = ctx.peek(3);
+   if ((punc = find_punctuator(punc_txt, cpd.lang_flags)) != NULL)
    {
+      int cnt = strlen(punc->tag);
+      while (cnt--)
+      {
+         pc.str.append(ctx.get());
+      }
+      pc.type   = punc->type;
+      pc.flags |= PCF_PUNCTUATOR;
       return(true);
    }
-
-   if ((punc = find_punctuator(pc->str, cpd.lang_flags)) != NULL)
-   {
-      pc->type    = punc->type;
-      pc->len     = strlen(punc->tag);
-      cpd.column += pc->len;
-      pc->flags  |= PCF_PUNCTUATOR;
-      return(true);
-   }
-
 
    /* throw away this character */
-   pc->type = CT_UNKNOWN;
-   pc->len  = 1;
+   pc.type = CT_UNKNOWN;
+   pc.str.append(ctx.get());
 
    LOG_FMT(LWARN, "%s:%d Garbage in col %d: %x\n",
-           cpd.filename, pc->orig_line, cpd.column, *pc->str);
+           cpd.filename, pc.orig_line, (int)ctx.c.col, pc.str[0]);
    cpd.error_count++;
    return(true);
 }
@@ -1276,9 +1435,9 @@ static bool parse_next(chunk_t *pc)
  * All the tokens are inserted before ref. If ref is NULL, they are inserted
  * at the end of the list.  Line numbers are relative to the start of the data.
  */
-void tokenize(const vector<char>& data, chunk_t *ref)
+void tokenize(const deque<int>& data, chunk_t *ref)
 {
-   int                idx = 0;
+   tok_ctx            ctx(data);
    chunk_t            chunk;
    chunk_t            *pc    = NULL;
    chunk_t            *rprev = NULL;
@@ -1287,24 +1446,17 @@ void tokenize(const vector<char>& data, chunk_t *ref)
    bool               last_was_tab = false;
 
    memset(&frm, 0, sizeof(frm));
-   memset(&chunk, 0, sizeof(chunk));
 
-   cpd.line_number = 1;
-   cpd.column      = 1;
-
-   while (idx < (int)data.size() - 1)
+   while (ctx.more())
    {
-      chunk.str = &data[idx];
-      if (!parse_next(&chunk))
+      chunk.reset();
+      if (!parse_next(ctx, chunk))
       {
          LOG_FMT(LERR, "%s:%d Bailed before the end?\n",
-                 cpd.filename, cpd.line_number);
+                 cpd.filename, ctx.c.row);
          cpd.error_count++;
          break;
       }
-
-      /* Bump up the index */
-      idx += chunk.len;
 
       /* Don't create an entry for whitespace */
       if (chunk.type == CT_WHITESPACE)
@@ -1313,23 +1465,16 @@ void tokenize(const vector<char>& data, chunk_t *ref)
          continue;
       }
 
-      if (chunk.type == CT_SOF)
-      {
-         cpd.bom = chunk_dup(&chunk);
-         continue;
-      }
-
       if (chunk.type == CT_NEWLINE)
       {
          last_was_tab    = chunk.after_tab;
          chunk.after_tab = false;
-         chunk.len       = 0;
+         chunk.str.clear();
       }
       else if (chunk.type == CT_NL_CONT)
       {
          last_was_tab    = chunk.after_tab;
          chunk.after_tab = false;
-         chunk.len       = 2;
          chunk.str       = "\\\n";
       }
       else
@@ -1339,15 +1484,15 @@ void tokenize(const vector<char>& data, chunk_t *ref)
       }
 
       /* Strip trailing whitespace (for CPP comments and PP blocks) */
-      while ((chunk.len > 0) &&
-             ((chunk.str[chunk.len - 1] == ' ') ||
-              (chunk.str[chunk.len - 1] == '\t')))
+      while ((chunk.str.size() > 0) &&
+             ((chunk.str[chunk.str.size() - 1] == ' ') ||
+              (chunk.str[chunk.str.size() - 1] == '\t')))
       {
-         chunk.len--;
+         chunk.str.pop_back();
       }
 
       /* Store off the end column */
-      chunk.orig_col_end = cpd.column;
+      chunk.orig_col_end = ctx.c.col;
 
       /* Add the chunk to the list */
       rprev = pc;
@@ -1423,7 +1568,7 @@ void tokenize(const vector<char>& data, chunk_t *ref)
         (cpd.le_counts[LE_LF] >= cpd.le_counts[LE_CR])))
    {
       /* LF line ends */
-      strcpy(cpd.newline, "\n");
+      cpd.newline = "\n";
       LOG_FMT(LLINEENDS, "Using LF line endings\n");
    }
    else if ((cpd.settings[UO_newlines].le == LE_CRLF) ||
@@ -1432,32 +1577,32 @@ void tokenize(const vector<char>& data, chunk_t *ref)
              (cpd.le_counts[LE_CRLF] >= cpd.le_counts[LE_CR])))
    {
       /* CRLF line ends */
-      strcpy(cpd.newline, "\r\n");
+      cpd.newline = "\r\n";
       LOG_FMT(LLINEENDS, "Using CRLF line endings\n");
    }
    else
    {
       /* CR line ends */
-      strcpy(cpd.newline, "\r");
+      cpd.newline = "\r";
       LOG_FMT(LLINEENDS, "Using CR line endings\n");
    }
 }
 
 
-/**
- * A simplistic fixed-sized needle in the fixed-size haystack string search.
- */
-int str_find(const char *needle, int needle_len,
-             const char *haystack, int haystack_len)
-{
-   int idx;
-
-   for (idx = 0; idx < (haystack_len - needle_len); idx++)
-   {
-      if (memcmp(needle, haystack + idx, needle_len) == 0)
-      {
-         return(idx);
-      }
-   }
-   return(-1);
-}
+// /**
+//  * A simplistic fixed-sized needle in the fixed-size haystack string search.
+//  */
+// int str_find(const char *needle, int needle_len,
+//              const char *haystack, int haystack_len)
+// {
+//    int idx;
+//
+//    for (idx = 0; idx < (haystack_len - needle_len); idx++)
+//    {
+//       if (memcmp(needle, haystack + idx, needle_len) == 0)
+//       {
+//          return(idx);
+//       }
+//    }
+//    return(-1);
+// }

@@ -1,8 +1,7 @@
 /* Advanced Vala Sample Code */
 using GLib;
 public class Sample : Object {
-   public string name { get;
-                        set; }
+   public string name { get; set; }
    public signal void foo();
    public Sample (construct string !name)
    {

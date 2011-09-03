@@ -34,13 +34,12 @@ chunk_t *pawn_add_vsemi_after(chunk_t *pc)
 
    chunk             = *pc;
    chunk.type        = CT_VSEMICOLON;
-   chunk.len         = cpd.settings[UO_mod_pawn_semicolon].b ? 1 : 0;
-   chunk.str         = ";";
-   chunk.column     += pc->len;
+   chunk.str         = cpd.settings[UO_mod_pawn_semicolon].b ? ";" : "";
+   chunk.column     += pc->len();
    chunk.parent_type = CT_NONE;
 
-   LOG_FMT(LPVSEMI, "%s: Added VSEMI on line %d, prev='%.*s' [%s]\n",
-           __func__, pc->orig_line, pc->len, pc->str,
+   LOG_FMT(LPVSEMI, "%s: Added VSEMI on line %d, prev='%s' [%s]\n",
+           __func__, pc->orig_line, pc->str.c_str(),
            get_token_name(pc->type));
 
    return(chunk_add_after(&chunk, pc));
@@ -76,7 +75,7 @@ void pawn_scrub_vsemi(void)
              (prev->parent_type == CT_CASE) ||
              (prev->parent_type == CT_WHILE_OF_DO))
          {
-            pc->len = 0;
+            pc->str.clear();
          }
       }
    }
@@ -186,8 +185,8 @@ static chunk_t *pawn_process_line(chunk_t *start)
    chunk_t *pc;
    chunk_t *fcn = NULL;
 
-   //LOG_FMT(LSYS, "%s: %d - %.*s\n", __func__,
-   //        start->orig_line, start->len, start->str);
+   //LOG_FMT(LSYS, "%s: %d - %s\n", __func__,
+   //        start->orig_line, start->str.c_str());
 
    if ((start->type == CT_NEW) ||
        chunk_is_str(start, "const", 5))
@@ -225,7 +224,7 @@ static chunk_t *pawn_process_line(chunk_t *start)
 
    if (fcn != NULL)
    {
-      //LOG_FMT(LSYS, "FUNCTION: %.*s\n", fcn->len, fcn->str);
+      //LOG_FMT(LSYS, "FUNCTION: %s\n", fcn->str.c_str());
       return(pawn_mark_function0(start, fcn));
    }
 
@@ -235,8 +234,8 @@ static chunk_t *pawn_process_line(chunk_t *start)
       return(pc);
    }
 
-   //LOG_FMT(LSYS, "%s: Don't understand line %d, starting with '%.*s' [%s]\n",
-   //        __func__, start->orig_line, start->len, start->str, get_token_name(start->type));
+   //LOG_FMT(LSYS, "%s: Don't understand line %d, starting with '%s' [%s]\n",
+   //        __func__, start->orig_line, start->str.c_str(), get_token_name(start->type));
    return(start);
 }
 
@@ -324,8 +323,8 @@ static chunk_t *pawn_mark_function0(chunk_t *start, chunk_t *fcn)
       last = chunk_get_next(last);
       if ((last != NULL) && (last->type == CT_SEMICOLON))
       {
-         LOG_FMT(LPFUNC, "%s: %d] '%.*s' proto due to semicolon\n", __func__,
-                 fcn->orig_line, fcn->len, fcn->str);
+         LOG_FMT(LPFUNC, "%s: %d] '%s' proto due to semicolon\n", __func__,
+                 fcn->orig_line, fcn->str.c_str());
          fcn->type = CT_FUNC_PROTO;
          return(last);
       }
@@ -335,8 +334,8 @@ static chunk_t *pawn_mark_function0(chunk_t *start, chunk_t *fcn)
       if ((start->type == CT_FORWARD) ||
           (start->type == CT_NATIVE))
       {
-         LOG_FMT(LPFUNC, "%s: %d] '%.*s' [%s] proto due to %s\n", __func__,
-                 fcn->orig_line, fcn->len, fcn->str,
+         LOG_FMT(LPFUNC, "%s: %d] '%s' [%s] proto due to %s\n", __func__,
+                 fcn->orig_line, fcn->str.c_str(),
                  get_token_name(fcn->type),
                  get_token_name(start->type));
          fcn->type = CT_FUNC_PROTO;
@@ -366,15 +365,15 @@ static chunk_t *pawn_process_func_def(chunk_t *pc)
 
    if (last != NULL)
    {
-      LOG_FMT(LPFUNC, "%s: %d] last is '%.*s' [%s]\n", __func__,
-              last->orig_line, last->len, last->str, get_token_name(last->type));
+      LOG_FMT(LPFUNC, "%s: %d] last is '%s' [%s]\n", __func__,
+              last->orig_line, last->str.c_str(), get_token_name(last->type));
    }
 
    /* See if there is a state clause after the function */
    if ((last != NULL) && chunk_is_str(last, "<", 1))
    {
-      LOG_FMT(LPFUNC, "%s: %d] '%.*s' has state angle open %s\n", __func__,
-              pc->orig_line, pc->len, pc->str, get_token_name(last->type));
+      LOG_FMT(LPFUNC, "%s: %d] '%s' has state angle open %s\n", __func__,
+              pc->orig_line, pc->str.c_str(), get_token_name(last->type));
 
       last->type        = CT_ANGLE_OPEN;
       last->parent_type = CT_FUNC_DEF;
@@ -385,8 +384,8 @@ static chunk_t *pawn_process_func_def(chunk_t *pc)
 
       if (last != NULL)
       {
-         LOG_FMT(LPFUNC, "%s: %d] '%.*s' has state angle close %s\n", __func__,
-                 pc->orig_line, pc->len, pc->str, get_token_name(last->type));
+         LOG_FMT(LPFUNC, "%s: %d] '%s' has state angle close %s\n", __func__,
+                 pc->orig_line, pc->str.c_str(), get_token_name(last->type));
          last->type        = CT_ANGLE_CLOSE;
          last->parent_type = CT_FUNC_DEF;
       }
@@ -408,13 +407,12 @@ static chunk_t *pawn_process_func_def(chunk_t *pc)
    }
    else
    {
-      LOG_FMT(LPFUNC, "%s: %d] '%.*s' fdef: expected brace open: %s\n", __func__,
-              pc->orig_line, pc->len, pc->str, get_token_name(last->type));
+      LOG_FMT(LPFUNC, "%s: %d] '%s' fdef: expected brace open: %s\n", __func__,
+              pc->orig_line, pc->str.c_str(), get_token_name(last->type));
 
       chunk_t chunk;
       chunk             = *last;
-      chunk.str         = "{";
-      chunk.len         = 0;
+      chunk.str.clear();
       chunk.type        = CT_VBRACE_OPEN;
       chunk.parent_type = CT_FUNC_DEF;
 
@@ -450,9 +448,8 @@ static chunk_t *pawn_process_func_def(chunk_t *pc)
       }
 
       chunk             = *last;
-      chunk.str         = "}";
-      chunk.len         = 0;
-      chunk.column     += last->len;
+      chunk.str.clear();
+      chunk.column     += last->len();
       chunk.type        = CT_VBRACE_CLOSE;
       chunk.level       = 0;
       chunk.brace_level = 0;
@@ -495,8 +492,8 @@ chunk_t *pawn_check_vsemicolon(chunk_t *pc)
    {
       if (prev != NULL)
       {
-         LOG_FMT(LPVSEMI, "%s:  no  VSEMI on line %d, prev='%.*s' [%s]\n",
-                 __func__, prev->orig_line, prev->len, prev->str, get_token_name(prev->type));
+         LOG_FMT(LPVSEMI, "%s:  no  VSEMI on line %d, prev='%s' [%s]\n",
+                 __func__, prev->orig_line, prev->str.c_str(), get_token_name(prev->type));
       }
       return(pc);
    }

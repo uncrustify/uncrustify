@@ -19,6 +19,10 @@
 /** Private log structure */
 struct log_buf
 {
+   log_buf() : log_file(0), sev(0), in_log(0), buf_len(0), show_hdr(false)
+   {
+   }
+
    FILE       *log_file;
    log_sev_t  sev;
    int        in_log;
@@ -38,9 +42,8 @@ static struct log_buf g_log;
  */
 void log_init(FILE *log_file)
 {
-   memset(&g_log, 0, sizeof(g_log));
-
    /* set the top 3 severities */
+   logmask_set_all(g_log.mask, false);
    log_set_sev(0, true);
    log_set_sev(1, true);
    log_set_sev(2, true);

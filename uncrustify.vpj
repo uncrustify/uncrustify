@@ -79,7 +79,9 @@
 			<F N="src/space.cpp"/>
 			<F N="src/tokenize.cpp"/>
 			<F N="src/tokenize_cleanup.cpp"/>
+			<F N="src/unc_text.cpp"/>
 			<F N="src/uncrustify.cpp"/>
+			<F N="src/unicode.cpp"/>
 			<F N="src/universalindentgui.cpp"/>
 			<F N="src/width.cpp"/>
 		</Folder>
@@ -105,7 +107,9 @@
 			<F N="src/token_enum.h"/>
 			<F N="src/token_names.h"/>
 			<F N="src/unc_ctype.h"/>
+			<F N="src/unc_text.h"/>
 			<F N="src/uncrustify_types.h"/>
+			<F N="src/uncrustify_version.h"/>
 			<F N="win32/windows_compat.h"/>
 		</Folder>
 		<Folder

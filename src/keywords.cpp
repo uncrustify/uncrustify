@@ -363,7 +363,7 @@ static const chunk_tag_t *kw_static_match(const chunk_tag_t *tag)
  *
  * @param word    Pointer to the text -- NOT zero terminated
  * @param len     The length of the text
- * @return        NULL (no match) or the keyword entry
+ * @return        CT_WORD (no match) or the keyword token
  */
 c_token_t find_keyword_type(const char *word, int len)
 {
@@ -392,7 +392,7 @@ c_token_t find_keyword_type(const char *word, int len)
    {
       p_ret = kw_static_match(p_ret);
    }
-   return((p_ret != NULL) ? p_ret->type : CT_NONE);
+   return((p_ret != NULL) ? p_ret->type : CT_WORD);
 }
 
 
