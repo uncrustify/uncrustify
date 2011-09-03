@@ -22,14 +22,20 @@ class Foo : public QObject
 class foo
 {
 	bool b;
+
+
  public:
+
 	int i;
 };
 class bar : public
 	foo
 {
 	void*p;
+
+
  protected:
+
 	double d;
 };
 
@@ -54,14 +60,20 @@ Q_SIGNALS:
 class foo1
 {
 	bool b;
+
+
  public:
+
 	int i;
 };
 class bar : public
 	foo1
 {
 	void*p;
+
+
  protected:
+
 	double d;
 };
 
