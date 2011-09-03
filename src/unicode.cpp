@@ -15,16 +15,21 @@
 /**
  * See if all characters are ASCII (0-127)
  */
-bool is_ascii(const vector<UINT8>& data)
+bool is_ascii(const vector<UINT8>& data, int& non_ascii_cnt, int& zero_cnt)
 {
+   non_ascii_cnt = zero_cnt = 0;
    for (int idx = 0; idx < (int)data.size(); idx++)
    {
       if (data[idx] & 0x80)
       {
-         return false;
+         non_ascii_cnt++;
+      }
+      if (!data[idx])
+      {
+         zero_cnt++;
       }
    }
-   return true;
+   return((non_ascii_cnt + zero_cnt) == 0);
 }
 
 
@@ -220,10 +225,11 @@ bool decode_utf16(const vector<UINT8>& in_data, deque<int>& out_data, CharEncodi
 
    if (in_data.size() < 2)
    {
-      /* we require the BOM */
+      /* we require the BOM or at least 1 char */
       return false;
    }
 
+   int idx = 2;
    if ((in_data[0] == 0xfe) && (in_data[1] == 0xff))
    {
       enc = ENC_UTF16_BE;
@@ -234,12 +240,29 @@ bool decode_utf16(const vector<UINT8>& in_data, deque<int>& out_data, CharEncodi
    }
    else
    {
-      return false;
+      /* If we have a few words, we can take a guess, assuming the first few
+       * chars are ASCII */
+      enc = ENC_ASCII;
+      idx = 0;
+      if (in_data.size() >= 6)
+      {
+         if ((in_data[0] == 0) && (in_data[2] == 0) && (in_data[4] == 0))
+         {
+            enc = ENC_UTF16_BE;
+         }
+         else if ((in_data[1] == 0) && (in_data[3] == 0) && (in_data[5] == 0))
+         {
+            enc = ENC_UTF16_LE;
+         }
+      }
+      if (enc == ENC_ASCII)
+      {
+         return false;
+      }
    }
 
    bool be = (enc == ENC_UTF16_BE);
 
-   int idx = 2;
    while (idx < (int)in_data.size())
    {
       int ch = get_word(in_data, idx, be);
@@ -323,10 +346,24 @@ bool decode_unicode(const vector<UINT8>& in_data, deque<int>& out_data, CharEnco
    }
    has_bom = false;
 
-   if (is_ascii(in_data))
+   /* Check for simple ASCII */
+   int non_ascii_cnt;
+   int zero_cnt;
+   if (is_ascii(in_data, non_ascii_cnt, zero_cnt))
    {
       enc = ENC_ASCII;
       return decode_bytes(in_data, out_data);
+   }
+
+   /* There are alot of 0's in UTF-16 (~50%) */
+   if ((zero_cnt > (in_data.size() / 4)) &&
+       (zero_cnt <= (in_data.size() / 2)))
+   {
+      /* likely is UTF-16 */
+      if (decode_utf16(in_data, out_data, enc))
+      {
+         return true;
+      }
    }
 
    if (decode_utf8(in_data, out_data))
@@ -382,8 +419,8 @@ void write_utf16(int ch, bool be, FILE *pf)
       }
       else
       {
-         fputc((ch >> 8), pf);
          fputc((ch & 0xff), pf);
+         fputc((ch >> 8), pf);
       }
    }
    else if ((ch >= 0x10000) && (ch < 0x110000))

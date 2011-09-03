@@ -1353,7 +1353,7 @@ static void uncrustify_file(const file_mem& fm, FILE *pfout,
 
    case ENC_UTF16_LE:
    case ENC_UTF16_BE:
-      av = cpd.settings[UO_utf16_bom].a;
+      av = AV_FORCE;
       break;
 
    default:

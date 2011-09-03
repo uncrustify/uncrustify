@@ -98,7 +98,6 @@ enum uncrustify_options
    UO_utf8_byte,
    UO_utf8_force,
    UO_utf8_bom,
-   UO_utf16_bom,
 
    UO_input_tab_size,           // tab size on input file: usually 8
    UO_output_tab_size,          // tab size for output: usually 8
