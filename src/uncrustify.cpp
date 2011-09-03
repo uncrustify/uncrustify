@@ -1468,6 +1468,7 @@ static void uncrustify_file(const file_mem& fm, FILE *pfout,
       {
          newlines_squeeze_ifdef();
       }
+      do_blank_lines();
       newlines_eat_start_end();
       newlines_cleanup_dup();
 
