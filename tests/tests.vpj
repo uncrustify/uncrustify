@@ -302,7 +302,6 @@
 				<F N="output/c/00601-mac.c"/>
 				<F N="output/c/00901-code_width.c"/>
 				<F N="output/c/00910-pascal_ptr.c"/>
-				<F N="output/c/20000-i2c-core.c"/>
 			</Folder>
 			<Folder Name="cpp">
 				<F N="output/cpp/30000-cout.cpp"/>
