@@ -68,6 +68,20 @@ void make_type(chunk_t *pc)
 }
 
 
+void flag_series(chunk_t *start, chunk_t *end, UINT64 flags, chunk_nav_t nav)
+{
+   while ((start != NULL) && (start != end))
+   {
+      start->flags |= flags;
+      start = chunk_get_next(start, nav);
+   }
+   if (end)
+   {
+      end->flags |= flags;
+   }
+}
+
+
 /**
  * Flags everything from the open paren to the close paren.
  *

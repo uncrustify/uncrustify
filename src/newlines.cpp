@@ -17,6 +17,7 @@
 
 static void newlines_double_space_struct_enum_union(chunk_t *open_brace);
 static bool one_liner_nl_ok(chunk_t *pc);
+static void undo_one_liner(chunk_t *pc);
 static void nl_handle_define(chunk_t *pc);
 static void newline_iarf_pair(chunk_t *before, chunk_t *after, argval_t av);
 
@@ -1349,7 +1350,23 @@ static bool one_liner_nl_ok(chunk_t *pc)
            __func__, get_token_name(pc->type), get_token_name(pc->parent_type),
            pc->flags, pc->orig_line, pc->orig_col);
 
-   if ((pc->flags & PCF_ONE_LINER) &&
+   if (!(pc->flags & PCF_ONE_LINER))
+   {
+      LOG_FMT(LNL1LINE, "true (not 1-liner)\n");
+      return(true);
+   }
+
+   /* Step back to find the opening brace */
+   chunk_t *br_open = pc;
+   while (br_open &&
+          (br_open->flags & PCF_ONE_LINER) &&
+          !chunk_is_opening_brace(br_open) &&
+          !chunk_is_closing_brace(br_open))
+   {
+      br_open = chunk_get_prev(br_open);
+   }
+   pc = br_open;
+   if (pc && (pc->flags & PCF_ONE_LINER) &&
        ((pc->type == CT_BRACE_OPEN) ||
         (pc->type == CT_BRACE_CLOSE) ||
         (pc->type == CT_VBRACE_OPEN) ||
@@ -1401,6 +1418,43 @@ static bool one_liner_nl_ok(chunk_t *pc)
    }
    LOG_FMT(LNL1LINE, "true\n");
    return(true);
+}
+
+
+static void undo_one_liner(chunk_t *pc)
+{
+   chunk_t *tmp;
+   if (pc && (pc->flags & PCF_ONE_LINER))
+   {
+      LOG_FMT(LNL1LINE, "%s: [%s]", __func__, pc->text());
+      pc->flags &= ~PCF_ONE_LINER;
+
+      /* scan backward */
+      tmp = pc;
+      while ((tmp = chunk_get_prev(tmp)) != NULL)
+      {
+         if (!tmp->flags & PCF_ONE_LINER)
+         {
+            break;
+         }
+         LOG_FMT(LNL1LINE, " %s", tmp->text());
+         tmp->flags &= ~PCF_ONE_LINER;
+      }
+
+      /* scan forward */
+      tmp = pc;
+      LOG_FMT(LNL1LINE, " -");
+      while ((tmp = chunk_get_next(tmp)) != NULL)
+      {
+         if (!tmp->flags & PCF_ONE_LINER)
+         {
+            break;
+         }
+         LOG_FMT(LNL1LINE, " %s", tmp->text());
+         tmp->flags &= ~PCF_ONE_LINER;
+      }
+      LOG_FMT(LNL1LINE, "\n");
+   }
 }
 
 

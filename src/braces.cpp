@@ -89,8 +89,7 @@ void do_braces(void)
          }
          if ((tmp->type == brc_type) && (br_open->level == tmp->level))
          {
-            br_open->flags |= PCF_ONE_LINER;
-            tmp->flags     |= PCF_ONE_LINER;
+            flag_series(br_open, tmp, PCF_ONE_LINER);
             break;
          }
       }
