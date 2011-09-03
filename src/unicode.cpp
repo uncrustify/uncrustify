@@ -283,10 +283,12 @@ bool decode_bom(const vector<UINT8>& in_data, CharEncoding& enc)
       if ((in_data[0] == 0xfe) && (in_data[1] == 0xff))
       {
          enc = ENC_UTF16_BE;
+         return true;
       }
       else if ((in_data[0] == 0xff) && (in_data[1] == 0xfe))
       {
          enc = ENC_UTF16_LE;
+         return true;
       }
       else if ((in_data.size() >= 3) &&
                (in_data[0] == 0xef) &&

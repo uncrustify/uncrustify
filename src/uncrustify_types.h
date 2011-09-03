@@ -358,7 +358,6 @@ struct cp_data
    c_token_t          in_preproc;
    int                preproc_ncnl_count;
 
-   chunk_t            *bom;
    CharEncoding       enc;
 
    /* bumped up when a line is split or indented */

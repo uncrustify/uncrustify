@@ -19,7 +19,6 @@
 typedef enum
 {
    CT_NONE,
-   CT_SOF,           /* Start of the file */
    CT_EOF,
    CT_UNKNOWN,
 

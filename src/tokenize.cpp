@@ -1013,29 +1013,6 @@ static bool parse_whitespace(tok_ctx& ctx, chunk_t& pc)
 
 
 /**
- * Count the number of non-ascii characters at the start of a file.
- *
- * @param pc   The structure to update, str is an input.
- * @return     Whether a BOM was parsed
- */
-static bool parse_bom(tok_ctx& ctx, chunk_t& pc)
-{
-   /* FIXME: this is broken -- and done elsewhere */
-   pc.str.clear();
-   while (ctx.more() && ((ctx.peek() <= 0) || (ctx.peek() >= 127)))
-   {
-      pc.str.append(ctx.get());
-   }
-
-   if (pc.len() > 0)
-   {
-      pc.type = CT_SOF;
-   }
-   return(pc.len() != 0);
-}
-
-
-/**
  * Called when we hit a backslash.
  * If there is nothing but whitespace until the newline, then this is a
  * backslash newline
@@ -1205,14 +1182,6 @@ static bool parse_next(tok_ctx& ctx, chunk_t& pc)
    if (cpd.unc_off)
    {
       if (parse_ignored(ctx, pc))
-      {
-         return(true);
-      }
-   }
-
-   if (chunk_get_head() == NULL)
-   {
-      if (parse_bom(ctx, pc))
       {
          return(true);
       }
@@ -1493,12 +1462,6 @@ void tokenize(const deque<int>& data, chunk_t *ref)
       if (chunk.type == CT_WHITESPACE)
       {
          last_was_tab = chunk.after_tab;
-         continue;
-      }
-
-      if (chunk.type == CT_SOF)
-      {
-         cpd.bom = chunk_dup(&chunk);
          continue;
       }
 

@@ -1569,12 +1569,6 @@ static void uncrustify_end()
       chunk_del(pc);
    }
 
-   if (cpd.bom != NULL)
-   {
-      chunk_del(cpd.bom);
-      cpd.bom = NULL;
-   }
-
    /* Clean up some state variables */
    cpd.unc_off     = false;
    cpd.al_cnt      = 0;
