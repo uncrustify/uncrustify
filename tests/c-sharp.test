@@ -24,3 +24,6 @@
 10050 cs_generics.cfg          cs/generics.cs
 
 10060 ben.cfg                  cs/unsafe.cs
+
+10070 ben.cfg                  cs/utf16le.cs
+10071 ben.cfg                  cs/utf16be.cs
