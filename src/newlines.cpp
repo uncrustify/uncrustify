@@ -1492,6 +1492,11 @@ static void nl_create_one_liner(chunk_t *vbrace_open)
    /* See if we get a newline between the next text and the vbrace_close */
    tmp   = chunk_get_next_ncnl(vbrace_open);
    first = tmp;
+   if (!first || (get_token_pattern_class(first->type) != PATCLS_NONE))
+   {
+      return;
+   }
+
    while ((tmp != NULL) && (tmp->type != CT_VBRACE_CLOSE))
    {
       if (chunk_is_newline(tmp))
@@ -1501,7 +1506,7 @@ static void nl_create_one_liner(chunk_t *vbrace_open)
       tmp = chunk_get_next(tmp);
    }
 
-   if (tmp != NULL)
+   if ((tmp != NULL) && (first != NULL))
    {
       newline_del_between(vbrace_open, first);
    }
