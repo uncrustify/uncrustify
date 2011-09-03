@@ -677,7 +677,7 @@ static bool read_stdin(file_mem& fm)
 
    /* Copy the raw data from the deque to the vector */
    fm.raw.insert(fm.raw.end(), dq.begin(), dq.end());
-   return decode_unicode(fm.raw, fm.data, fm.enc);
+   return decode_unicode(fm.raw, fm.data, fm.enc, fm.bom);
 }
 
 
@@ -756,7 +756,7 @@ static int load_mem_file(const char *filename, file_mem& fm)
               __func__, filename, strerror(errno), errno);
       cpd.error_count++;
    }
-   else if (!decode_unicode(fm.raw, fm.data, fm.enc))
+   else if (!decode_unicode(fm.raw, fm.data, fm.enc, fm.bom))
    {
       LOG_FMT(LERR, "%s: failed to decode the file '%s'\n", __func__, filename);
    }
@@ -1336,13 +1336,40 @@ static void uncrustify_file(const file_mem& fm, FILE *pfout,
 {
    const deque<int>& data = fm.data;
 
+   /* Save off the encoding and whether a BOM is required */
+   cpd.bom = fm.bom;
    cpd.enc = fm.enc;
-   if ((cpd.enc == ENC_BYTE) && cpd.settings[UO_force_utf8].b)
+   if (cpd.settings[UO_utf8_force].b ||
+       ((cpd.enc == ENC_BYTE) && cpd.settings[UO_utf8_byte].b))
    {
       cpd.enc = ENC_UTF8;
    }
+   argval_t av;
+   switch (cpd.enc)
+   {
+   case ENC_UTF8:
+      av = cpd.settings[UO_utf8_bom].a;
+      break;
 
-   /* Check for embedded 0's */
+   case ENC_UTF16_LE:
+   case ENC_UTF16_BE:
+      av = cpd.settings[UO_utf16_bom].a;
+      break;
+
+   default:
+      av = AV_IGNORE;
+      break;
+   }
+   if (av == AV_REMOVE)
+   {
+      cpd.bom = false;
+   }
+   else if (av != AV_IGNORE)
+   {
+      cpd.bom = true;
+   }
+
+   /* Check for embedded 0's (represents a decoding failure or corrupt file) */
    for (int idx = 0; idx < (int)data.size() - 1; idx++)
    {
       if (data[idx] == 0)

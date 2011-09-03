@@ -303,7 +303,10 @@ void output_text(FILE *pfile)
    cpd.did_newline = 1;
    cpd.column      = 1;
 
-   write_bom(pfile, cpd.enc, false);
+   if (cpd.bom)
+   {
+      write_bom(pfile, cpd.enc);
+   }
 
    if (cpd.frag_cols > 0)
    {

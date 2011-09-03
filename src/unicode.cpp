@@ -306,11 +306,12 @@ bool decode_bom(const vector<UINT8>& in_data, CharEncoding& enc)
 /**
  * Figure out the encoding and convert to an int sequence
  */
-bool decode_unicode(const vector<UINT8>& in_data, deque<int>& out_data, CharEncoding& enc)
+bool decode_unicode(const vector<UINT8>& in_data, deque<int>& out_data, CharEncoding& enc, bool& has_bom)
 {
    /* check for a BOM */
    if (decode_bom(in_data, enc))
    {
+      has_bom = true;
       if (enc == ENC_UTF8)
       {
          return decode_utf8(in_data, out_data);
@@ -320,6 +321,7 @@ bool decode_unicode(const vector<UINT8>& in_data, deque<int>& out_data, CharEnco
          return decode_utf16(in_data, out_data, enc);
       }
    }
+   has_bom = false;
 
    if (is_ascii(in_data))
    {
@@ -411,22 +413,14 @@ void write_utf16(int ch, bool be, FILE *pf)
 }
 
 
-void write_bom(FILE *pf, CharEncoding enc, bool force)
+void write_bom(FILE *pf, CharEncoding enc)
 {
    switch (enc)
    {
-   case ENC_ASCII:
-   case ENC_BYTE:
-   default:
-      break;
-
    case ENC_UTF8:
-      if (force)
-      {
-         write_byte(0xef, pf);
-         write_byte(0xbb, pf);
-         write_byte(0xbf, pf);
-      }
+      write_byte(0xef, pf);
+      write_byte(0xbb, pf);
+      write_byte(0xbf, pf);
       break;
 
    case ENC_UTF16_LE:
@@ -435,6 +429,9 @@ void write_bom(FILE *pf, CharEncoding enc, bool force)
 
    case ENC_UTF16_BE:
       write_utf16(0xfeff, true, pf);
+      break;
+
+   default:
       break;
    }
 }
