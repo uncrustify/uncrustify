@@ -364,6 +364,7 @@ struct cp_data
 
    /* bumped up when a line is split or indented */
    int                changes;
+   int                pass_count;
 
    struct align_t     al[80];
    int                al_cnt;

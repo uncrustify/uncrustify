@@ -1431,46 +1431,56 @@ static void uncrustify_file(const file_mem& fm, FILE *pfout,
       /**
        * Insert line breaks as needed
        */
-      do_blank_lines();
-      newlines_cleanup_braces();
-      if (cpd.settings[UO_nl_after_multiline_comment].b)
+      //do_newlines();
+      int old_changes;
+      cpd.pass_count = 3;
+      do
       {
-         newline_after_multiline_comment();
-      }
-      newlines_insert_blank_lines();
-      if (cpd.settings[UO_pos_bool].tp != TP_IGNORE)
-      {
-         newlines_chunk_pos(CT_BOOL, cpd.settings[UO_pos_bool].tp);
-      }
-      if (cpd.settings[UO_pos_compare].tp != TP_IGNORE)
-      {
-         newlines_chunk_pos(CT_COMPARE, cpd.settings[UO_pos_compare].tp);
-      }
-      if (cpd.settings[UO_pos_conditional].tp != TP_IGNORE)
-      {
-         newlines_chunk_pos(CT_COND_COLON, cpd.settings[UO_pos_conditional].tp);
-         newlines_chunk_pos(CT_QUESTION, cpd.settings[UO_pos_conditional].tp);
-      }
-      if (cpd.settings[UO_pos_comma].tp != TP_IGNORE)
-      {
-         newlines_chunk_pos(CT_COMMA, cpd.settings[UO_pos_comma].tp);
-      }
-      if (cpd.settings[UO_pos_assign].tp != TP_IGNORE)
-      {
-         newlines_chunk_pos(CT_ASSIGN, cpd.settings[UO_pos_assign].tp);
-      }
-      if (cpd.settings[UO_pos_arith].tp != TP_IGNORE)
-      {
-         newlines_chunk_pos(CT_ARITH, cpd.settings[UO_pos_arith].tp);
-      }
-      newlines_class_colon_pos();
-      if (cpd.settings[UO_nl_squeeze_ifdef].b)
-      {
-         newlines_squeeze_ifdef();
-      }
-      do_blank_lines();
-      newlines_eat_start_end();
-      newlines_cleanup_dup();
+         old_changes = cpd.changes;
+
+         LOG_FMT(LNEWLINE, "Newline loop start: %d\n", cpd.changes);
+
+         newlines_cleanup_dup();
+         newlines_cleanup_braces();
+         if (cpd.settings[UO_nl_after_multiline_comment].b)
+         {
+            newline_after_multiline_comment();
+         }
+         newlines_insert_blank_lines();
+         if (cpd.settings[UO_pos_bool].tp != TP_IGNORE)
+         {
+            newlines_chunk_pos(CT_BOOL, cpd.settings[UO_pos_bool].tp);
+         }
+         if (cpd.settings[UO_pos_compare].tp != TP_IGNORE)
+         {
+            newlines_chunk_pos(CT_COMPARE, cpd.settings[UO_pos_compare].tp);
+         }
+         if (cpd.settings[UO_pos_conditional].tp != TP_IGNORE)
+         {
+            newlines_chunk_pos(CT_COND_COLON, cpd.settings[UO_pos_conditional].tp);
+            newlines_chunk_pos(CT_QUESTION, cpd.settings[UO_pos_conditional].tp);
+         }
+         if (cpd.settings[UO_pos_comma].tp != TP_IGNORE)
+         {
+            newlines_chunk_pos(CT_COMMA, cpd.settings[UO_pos_comma].tp);
+         }
+         if (cpd.settings[UO_pos_assign].tp != TP_IGNORE)
+         {
+            newlines_chunk_pos(CT_ASSIGN, cpd.settings[UO_pos_assign].tp);
+         }
+         if (cpd.settings[UO_pos_arith].tp != TP_IGNORE)
+         {
+            newlines_chunk_pos(CT_ARITH, cpd.settings[UO_pos_arith].tp);
+         }
+         newlines_class_colon_pos();
+         if (cpd.settings[UO_nl_squeeze_ifdef].b)
+         {
+            newlines_squeeze_ifdef();
+         }
+         do_blank_lines();
+         newlines_eat_start_end();
+         newlines_cleanup_dup();
+      } while ((old_changes != cpd.changes) && (cpd.pass_count-- > 0));
 
       mark_comments();
 
@@ -1538,18 +1548,17 @@ static void uncrustify_file(const file_mem& fm, FILE *pfout,
 
       if (cpd.settings[UO_code_width].n > 0)
       {
-         int max_passes = 3;
-         int prev_changes;
+         cpd.pass_count = 3;
          do
          {
-            prev_changes = cpd.changes;
+            old_changes = cpd.changes;
             do_code_width();
-            if (prev_changes != cpd.changes)
+            if (old_changes != cpd.changes)
             {
                align_all();
                indent_text();
             }
-         } while ((prev_changes != cpd.changes) && (--max_passes > 0));
+         } while ((old_changes != cpd.changes) && (cpd.pass_count-- > 0));
       }
 
       /**
