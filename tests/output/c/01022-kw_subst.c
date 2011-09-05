@@ -73,4 +73,3 @@ void * foo4(int a, int b, int c)
   * $Log $
   *
   */
-

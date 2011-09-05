@@ -70,7 +70,8 @@ __extension__ typedef unsigned int        __nlink_t;
 __extension__ typedef long int            __off_t;
 __extension__ typedef __quad_t            __off64_t;
 __extension__ typedef int                 __pid_t;
-__extension__ typedef struct {
+__extension__ typedef struct
+{
    int __val[2];
 } __fsid_t;
 __extension__ typedef long int            __clock_t;
@@ -2028,7 +2029,8 @@ typedef struct
    __u16                   saturation;
 } DFBColorAdjustment;
 #1319 "/usr/include/directfb/directfb.h"
-struct _IDirectFB {
+struct _IDirectFB
+{
    void      *priv;
    int       magic;
    DFBResult (*AddRef)(IDirectFB *thiz);
@@ -2388,7 +2390,8 @@ typedef struct
    DFBColorAdjustment          adjustment;
 } DFBScreenEncoderConfig;
 #2030 "/usr/include/directfb/directfb.h"
-struct _IDirectFBScreen {
+struct _IDirectFBScreen
+{
    void      *priv;
    int       magic;
    DFBResult (*AddRef)(IDirectFBScreen *thiz);
@@ -2412,7 +2415,8 @@ struct _IDirectFBScreen {
    DFBResult (*SetOutputConfiguration)(IDirectFBScreen *thiz, int output, const DFBScreenOutputConfig *config);
 };
 #2236 "/usr/include/directfb/directfb.h"
-struct _IDirectFBDisplayLayer {
+struct _IDirectFBDisplayLayer
+{
    void      *priv;
    int       magic;
    DFBResult (*AddRef)(IDirectFBDisplayLayer *thiz);
@@ -2557,7 +2561,8 @@ typedef enum
    DTTF_FAN
 } DFBTriangleFormation;
 #2763 "/usr/include/directfb/directfb.h"
-struct _IDirectFBSurface {
+struct _IDirectFBSurface
+{
    void      *priv;
    int       magic;
    DFBResult (*AddRef)(IDirectFBSurface *thiz);
@@ -2608,7 +2613,8 @@ struct _IDirectFBSurface {
    DFBResult (*Dump)(IDirectFBSurface *thiz, const char *directory, const char *prefix);
 };
 #3354 "/usr/include/directfb/directfb.h"
-struct _IDirectFBPalette {
+struct _IDirectFBPalette
+{
    void      *priv;
    int       magic;
    DFBResult (*AddRef)(IDirectFBPalette *thiz);
@@ -2657,7 +2663,8 @@ typedef enum
    DIMM_HYPER   = (1 << DIMKI_HYPER)
 } DFBInputDeviceModifierMask;
 #3476 "/usr/include/directfb/directfb.h"
-struct _IDirectFBInputDevice {
+struct _IDirectFBInputDevice
+{
    void      *priv;
    int       magic;
    DFBResult (*AddRef)(IDirectFBInputDevice *thiz);
@@ -2881,7 +2888,8 @@ typedef union
    DFBUserEvent   user;
 } DFBEvent;
 #3827 "/usr/include/directfb/directfb.h"
-struct _IDirectFBEventBuffer {
+struct _IDirectFBEventBuffer
+{
    void      *priv;
    int       magic;
    DFBResult (*AddRef)(IDirectFBEventBuffer *thiz);
@@ -2935,7 +2943,8 @@ typedef enum
    DWSC_LOWER  = 0x00000002
 } DFBWindowStackingClass;
 #3988 "/usr/include/directfb/directfb.h"
-struct _IDirectFBWindow {
+struct _IDirectFBWindow
+{
    void      *priv;
    int       magic;
    DFBResult (*AddRef)(IDirectFBWindow *thiz);
@@ -2977,7 +2986,8 @@ struct _IDirectFBWindow {
    DFBResult (*Destroy)(IDirectFBWindow *thiz);
 };
 #4356 "/usr/include/directfb/directfb.h"
-struct _IDirectFBFont {
+struct _IDirectFBFont
+{
    void      *priv;
    int       magic;
    DFBResult (*AddRef)(IDirectFBFont *thiz);
@@ -3015,7 +3025,8 @@ typedef struct
 
 typedef void (*DIRenderCallback)(DFBRectangle *rect, void *ctx);
 #4526 "/usr/include/directfb/directfb.h"
-struct _IDirectFBImageProvider {
+struct _IDirectFBImageProvider
+{
    void      *priv;
    int       magic;
    DFBResult (*AddRef)(IDirectFBImageProvider *thiz);
@@ -3028,7 +3039,8 @@ struct _IDirectFBImageProvider {
 #4592 "/usr/include/directfb/directfb.h"
 typedef int (*DVFrameCallback)(void *ctx);
 #4602 "/usr/include/directfb/directfb.h"
-struct _IDirectFBVideoProvider {
+struct _IDirectFBVideoProvider
+{
    void      *priv;
    int       magic;
    DFBResult (*AddRef)(IDirectFBVideoProvider *thiz);
@@ -3044,7 +3056,8 @@ struct _IDirectFBVideoProvider {
    DFBResult (*SetColorAdjustment)(IDirectFBVideoProvider *thiz, const DFBColorAdjustment *adj);
 };
 #4708 "/usr/include/directfb/directfb.h"
-struct _IDirectFBDataBuffer {
+struct _IDirectFBDataBuffer
+{
    void      *priv;
    int       magic;
    DFBResult (*AddRef)(IDirectFBDataBuffer *thiz);

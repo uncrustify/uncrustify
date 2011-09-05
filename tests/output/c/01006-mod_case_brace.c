@@ -41,6 +41,7 @@ int foo(int bar)
       case 'c':
          gl_foo = false;
          break;
+
       default:
          // nothing
          break;

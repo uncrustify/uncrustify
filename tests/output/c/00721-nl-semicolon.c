@@ -10,14 +10,16 @@ void foo(void)
    }
 }
 
-struct somestruct {
+struct somestruct
+{
    int  a;
    char b;
    foo  c;
    bar  *d;
 };
 
-struct foo {
+struct foo
+{
    int  a;
    char *b
 };

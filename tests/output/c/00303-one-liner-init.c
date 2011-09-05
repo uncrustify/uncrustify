@@ -1,4 +1,5 @@
-enum boo {
+enum boo
+{
    FOO = 1
 };
 
@@ -9,7 +10,8 @@ void foo(void)
       0
    };
 
-   enum hoo {
+   enum hoo
+   {
       NOO = 1
    };
 
