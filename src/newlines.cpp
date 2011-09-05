@@ -42,7 +42,7 @@ static void mark_change(const char *func, int line)
 static bool can_increase_nl(chunk_t *nl)
 {
    chunk_t *prev = chunk_get_prev_nc(nl);
-   //chunk_t *pcmt = chunk_get_prev(nl);
+   chunk_t *pcmt = chunk_get_prev(nl);
    chunk_t *next = chunk_get_next(nl);
 
    if (cpd.settings[UO_nl_squeeze_ifdef].b)
@@ -73,7 +73,7 @@ static bool can_increase_nl(chunk_t *nl)
       }
    }
 
-   if (!prev && (cpd.settings[UO_nl_start_of_file].a != AV_IGNORE))
+   if (!pcmt && (cpd.settings[UO_nl_start_of_file].a != AV_IGNORE))
    {
       LOG_FMT(LBLANKD, "%s: no prev %d\n", __func__, nl->orig_line);
       return false;
