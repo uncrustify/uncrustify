@@ -1566,26 +1566,6 @@ static void nl_create_one_liner(chunk_t *vbrace_open)
 }
 
 
-static chunk_t *start_of_line(chunk_t *ref)
-{
-   chunk_t *pc;
-
-   while ((pc = chunk_get_prev(pc)) != NULL)
-   {
-      if (chunk_is_newline(pc))
-      {
-         return chunk_get_next(pc);
-      }
-   }
-   pc = chunk_get_head();
-   if (chunk_is_newline(pc))
-   {
-      return chunk_get_next(pc);
-   }
-   return ref;
-}
-
-
 /**
  * Step through all chunks.
  */
@@ -2495,17 +2475,6 @@ void newlines_class_colon_pos(void)
 }
 
 
-static void _blank_line_min(chunk_t *pc, const char *text, uncrustify_options uo)
-{
-   if ((cpd.settings[uo].n > 0) && (pc->nl_count < cpd.settings[uo].n))
-   {
-      LOG_FMT(LBLANKD, "do_blank_lines: %s min line %d\n", text + 3, pc->orig_line);
-      pc->nl_count = cpd.settings[uo].n;
-      MARK_CHANGE();
-   }
-}
-#define blank_line_min(pc, op) _blank_line_min(pc, # op, op)
-
 static void _blank_line_set(chunk_t *pc, const char *text, uncrustify_options uo)
 {
    if ((cpd.settings[uo].n > 0) && (pc->nl_count != cpd.settings[uo].n))
@@ -2516,6 +2485,7 @@ static void _blank_line_set(chunk_t *pc, const char *text, uncrustify_options uo
    }
 }
 #define blank_line_set(pc, op) _blank_line_set(pc, # op, op)
+
 
 static void _blank_line_max(chunk_t *pc, const char *text, uncrustify_options uo)
 {
