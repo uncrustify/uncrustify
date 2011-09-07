@@ -707,7 +707,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
       log_rule("sp_func_class_paren");
       return(cpd.settings[UO_sp_func_class_paren].a);
    }
-   if ((first->type == CT_CLASS) && (first->parent_type != CT_OC_MSG))
+   if ((first->type == CT_CLASS) && !(first->flags & PCF_IN_OC_MSG))
    {
       log_rule("FORCE");
       return(AV_FORCE);
@@ -1293,7 +1293,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
    }
    if (first->type == CT_OC_COLON)
    {
-      if (first->parent_type == CT_OC_MSG)
+      if (first->flags & PCF_IN_OC_MSG)
       {
          log_rule("sp_after_send_oc_colon");
          return(cpd.settings[UO_sp_after_send_oc_colon].a);
@@ -1306,7 +1306,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
    }
    if (second->type == CT_OC_COLON)
    {
-      if ((first->parent_type == CT_OC_MSG) &&
+      if ((first->flags & PCF_IN_OC_MSG) &&
           ((first->type == CT_OC_MSG_FUNC) ||
            (first->type == CT_OC_MSG_NAME)))
       {
