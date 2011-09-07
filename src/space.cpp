@@ -1673,8 +1673,6 @@ void space_add_after(chunk_t *pc, int count)
 
    chunk_t sp;
 
-   //memset(&sp, 0, sizeof(sp));
-
    sp.flags       = pc->flags & PCF_COPY_FLAGS;
    sp.type        = CT_SPACE;
    sp.str         = "                "; // 16 spaces

@@ -71,8 +71,6 @@ static void add_parens_between(chunk_t *first, chunk_t *last)
       return;
    }
 
-   //memset(&pc, 0, sizeof(pc));
-
    pc.type        = CT_PAREN_OPEN;
    pc.str         = "(";
    pc.flags       = first_n->flags & PCF_COPY_FLAGS;

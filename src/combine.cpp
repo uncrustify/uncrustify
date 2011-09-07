@@ -897,8 +897,6 @@ void fix_symbols(void)
 
    mark_define_expressions();
 
-   //memset(&dummy, 0, sizeof(dummy));
-
    pc = chunk_get_head();
    if (chunk_is_newline(pc) || chunk_is_comment(pc))
    {
@@ -1211,7 +1209,6 @@ static chunk_t *process_return(chunk_t *pc)
    if (chunk_is_semicolon(semi) && (pc->level == semi->level))
    {
       /* add the parens */
-      //memset(&chunk, 0, sizeof(chunk));
       chunk.type        = CT_PAREN_OPEN;
       chunk.str         = "(";
       chunk.level       = pc->level;
