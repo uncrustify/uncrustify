@@ -517,6 +517,8 @@ void register_options(void)
                   "Whether the 'class' body is indented");
    unc_add_option("indent_class_colon", UO_indent_class_colon, AT_BOOL,
                   "Whether to indent the stuff after a leading class colon");
+   unc_add_option("indent_ctor_init", UO_indent_ctor_init, AT_NUM,
+                  "Additional indenting for constructor initializer list");
    unc_add_option("indent_else_if", UO_indent_else_if, AT_BOOL,
                   "False=treat 'else\\nif' as 'else if' for indenting purposes\n"
                   "True=indent the 'if' one level\n");
