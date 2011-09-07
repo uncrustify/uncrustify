@@ -16,7 +16,7 @@
 #include "unc_ctype.h"
 
 
-static argval_t do_space(chunk_t *first, chunk_t *second, bool complete);
+static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool complete);
 
 struct no_space_table_s
 {
@@ -95,11 +95,13 @@ static void log_rule2(int line, const char *rule, chunk_t *first, chunk_t *secon
  * @param second  The second chunk
  * @return        AV_IGNORE, AV_ADD, AV_REMOVE or AV_FORCE
  */
-static argval_t do_space(chunk_t *first, chunk_t *second, bool complete = true)
+static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool complete = true)
 {
    int      idx;
    argval_t arg;
    chunk_t  *next;
+
+   min_sp = 1;
 
    if ((first->type == CT_IGNORED) || (second->type == CT_IGNORED))
    {
@@ -246,6 +248,26 @@ static argval_t do_space(chunk_t *first, chunk_t *second, bool complete = true)
          arg = (argval_t)(arg | cpd.settings[UO_sp_special_semi].a);
       }
       return(arg);
+   }
+
+   if ((second->type == CT_COMMENT) &&
+       ((first->type == CT_PP_ELSE) || (first->type == CT_PP_ENDIF)))
+   {
+      if (cpd.settings[UO_sp_endif_cmt].a != AV_IGNORE)
+      {
+         second->type = CT_COMMENT_ENDIF;
+         log_rule("sp_endif_cmt");
+         return(cpd.settings[UO_sp_endif_cmt].a);
+      }
+   }
+
+   if ((cpd.settings[UO_sp_before_tr_emb_cmt].a != AV_IGNORE) &&
+       ((second->parent_type == CT_COMMENT_END) ||
+        (second->parent_type == CT_COMMENT_EMBED)))
+   {
+      log_rule("sp_before_tr_emb_cmt");
+      min_sp = cpd.settings[UO_sp_num_before_tr_emb_cmt].n;
+      return(cpd.settings[UO_sp_before_tr_emb_cmt].a);
    }
 
    /* "for (;;)" vs "for (;; )" and "for (a;b;c)" vs "for (a; b; c)" */
@@ -1304,17 +1326,6 @@ static argval_t do_space(chunk_t *first, chunk_t *second, bool complete = true)
       return(AV_FORCE);
    }
 
-   if ((second->type == CT_COMMENT) &&
-       ((first->type == CT_PP_ELSE) || (first->type == CT_PP_ENDIF)))
-   {
-      if (cpd.settings[UO_sp_endif_cmt].a != AV_IGNORE)
-      {
-         second->type = CT_COMMENT_ENDIF;
-         log_rule("sp_endif_cmt");
-         return(cpd.settings[UO_sp_endif_cmt].a);
-      }
-   }
-
    if (chunk_is_comment(second))
    {
       log_rule("IGNORE");
@@ -1445,29 +1456,31 @@ void space_text(void)
             }
          }
 
-         int av = do_space(pc, next, false);
+         int min_sp;
+         int av = do_space(pc, next, min_sp, false);
          if (pc->flags & PCF_FORCE_SPACE)
          {
-            LOG_FMT(LSPACE, "Forcing space between '%s' and '%s'\n",
+            LOG_FMT(LSPACE, " <force between '%s' and '%s'>",
                     pc->str.c_str(), next->str.c_str());
             av |= AV_ADD;
          }
+         min_sp = max(1, min_sp);
          switch (av)
          {
          case AV_FORCE:
-            /* add exactly one space */
-            column++;
+            /* add exactly the specified # of spaces */
+            column += min_sp;
             break;
 
          case AV_ADD:
-            delta = 1;
+            delta = min_sp;
             if ((next->orig_col >= pc->orig_col_end) && (pc->orig_col_end != 0))
             {
                /* Keep the same relative spacing, minimum 1 */
                delta = next->orig_col - pc->orig_col_end;
-               if (delta < 1)
+               if (delta < min_sp)
                {
-                  delta = 1;
+                  delta = min_sp;
                }
             }
             column += delta;
@@ -1490,15 +1503,21 @@ void space_text(void)
              chunk_is_newline(chunk_get_next(next)) &&
              (column < (int)next->orig_col))
          {
-            if ((cpd.settings[UO_sp_endif_cmt].a == AV_IGNORE) ||
-                ((pc->type != CT_PP_ELSE) && (pc->type != CT_PP_ENDIF)))
+            if (((cpd.settings[UO_sp_before_tr_emb_cmt].a == AV_IGNORE) ||
+                 ((next->parent_type != CT_COMMENT_END) &&
+                  (next->parent_type != CT_COMMENT_EMBED)))
+                &&
+                ((cpd.settings[UO_sp_endif_cmt].a == AV_IGNORE) ||
+                 ((pc->type != CT_PP_ELSE) && (pc->type != CT_PP_ENDIF))))
             {
                if (cpd.settings[UO_indent_relative_single_line_comments].b)
                {
+                  LOG_FMT(LSPACE, " <relative adj>");
                   column = pc->column + (next->orig_col - pc->orig_col_end);
                }
                else
                {
+                  LOG_FMT(LSPACE, " <relative set>");
                   column = next->orig_col;
                }
             }
@@ -1581,16 +1600,17 @@ void space_text_balance_nested_parens(void)
 /**
  * Determines if a space is required between two chunks
  */
-bool space_needed(chunk_t *first, chunk_t *second)
+int space_needed(chunk_t *first, chunk_t *second)
 {
-   switch (do_space(first, second))
+   int min_sp;
+   switch (do_space(first, second, min_sp))
    {
    case AV_ADD:
    case AV_FORCE:
-      return(true);
+      return(max(1, min_sp));
 
    case AV_REMOVE:
-      return(false);
+      return(0);
 
    case AV_IGNORE:
    default:
@@ -1610,10 +1630,10 @@ bool space_needed(chunk_t *first, chunk_t *second)
  */
 int space_col_align(chunk_t *first, chunk_t *second)
 {
-   int      coldiff;
+   int      coldiff, min_sp;
    argval_t av;
 
-   av = do_space(first, second);
+   av = do_space(first, second, min_sp);
 
    coldiff = first->len();
    switch (av)

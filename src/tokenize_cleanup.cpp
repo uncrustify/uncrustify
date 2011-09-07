@@ -364,7 +364,11 @@ void tokenize_cleanup(void)
                }
                /* Change tmp into a type so that space_needed() works right */
                make_type(tmp);
-               next->str.append(space_needed(tmp2, tmp) ? " " : "");
+               int num_sp = space_needed(tmp2, tmp);
+               while (num_sp-- > 0)
+               {
+                  next->str.append(" ");
+               }
                next->str.append(tmp->str);
                tmp2 = tmp;
             }
