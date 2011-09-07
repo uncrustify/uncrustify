@@ -467,6 +467,10 @@ void register_options(void)
                   "Controls the spaces between #else or #endif and a trailing comment");
    unc_add_option("sp_after_new", UO_sp_after_new, AT_IARF,
                   "Controls the spaces after 'new', 'delete', and 'delete[]'");
+   unc_add_option("sp_before_tr_emb_cmt", UO_sp_before_tr_emb_cmt, AT_IARF,
+                  "Controls the spaces before a trailing or embedded comment");
+   unc_add_option("sp_num_before_tr_emb_cmt", UO_sp_num_before_tr_emb_cmt, AT_NUM,
+                  "Number of spaces before a trailing or embedded comment");
 
    unc_begin_group(UG_indent, "Indenting");
    unc_add_option("indent_columns", UO_indent_columns, AT_NUM,

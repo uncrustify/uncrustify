@@ -330,6 +330,8 @@ enum uncrustify_options
    UO_sp_cmt_cpp_start,
    UO_sp_endif_cmt,
    UO_sp_after_new,
+   UO_sp_before_tr_emb_cmt,  // treatment of spaces before comments following code
+   UO_sp_num_before_tr_emb_cmt,  // number of spaces before comments following code
 
    /*
     * Line splitting options (for long lines)
