@@ -507,6 +507,7 @@ enum uncrustify_options
    UO_nl_getset_leave_one_liners,    // leave one-line get/set bodies
    UO_nl_func_leave_one_liners,      // leave one-line function def bodies
    UO_nl_if_leave_one_liners,
+   UO_nl_case_colon_brace,
 
    UO_nl_template_class,          // newline between '>' and class in "template <x> class"
 

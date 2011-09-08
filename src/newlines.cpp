@@ -1864,7 +1864,13 @@ void newlines_cleanup_braces(void)
       }
       else if (pc->type == CT_CASE_COLON)
       {
-         if (cpd.settings[UO_nl_after_case].b)
+         next = chunk_get_next_nnl(pc);
+         if (next && (next->type == CT_BRACE_OPEN) &&
+             (cpd.settings[UO_nl_case_colon_brace].a != AV_IGNORE))
+         {
+            newline_iarf(pc, cpd.settings[UO_nl_case_colon_brace].a);
+         }
+         else if (cpd.settings[UO_nl_after_case].b)
          {
             newline_case_colon(pc);
          }

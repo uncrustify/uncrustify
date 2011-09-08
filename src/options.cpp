@@ -693,6 +693,8 @@ void register_options(void)
                   "Add or remove newline between ')' and 'throw'");
    unc_add_option("nl_after_case", UO_nl_after_case, AT_BOOL,
                   "Whether to put a newline after 'case' statement");
+   unc_add_option("nl_case_colon_brace", UO_nl_case_colon_brace, AT_IARF,
+                  "Add or remove a newline between a case ':' and '{'. Overrides nl_after_case.");
    unc_add_option("nl_namespace_brace", UO_nl_namespace_brace, AT_IARF,
                   "Newline between namespace and {");
    unc_add_option("nl_template_class", UO_nl_template_class, AT_IARF,
