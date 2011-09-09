@@ -89,6 +89,7 @@
 00152  cast-sp-a.cfg           c/casts.c
 00153  cast-type.cfg           c/casts.c
 00154  sp_after_cast.cfg       c/casts.c
+00155  ben.cfg                 c/cast_brace.c
 
 # fcn indents
 00160  indent_func_param.cfg       c/fcn_indent.c

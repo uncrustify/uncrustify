@@ -1437,7 +1437,8 @@ static void fix_casts(chunk_t *start)
                (pc->type != CT_SIZEOF) &&
                (pc->type != CT_FUNC_CALL) &&
                (pc->type != CT_FUNC_CALL_USER) &&
-               (pc->type != CT_FUNCTION))
+               (pc->type != CT_FUNCTION) &&
+               (pc->type != CT_BRACE_OPEN))
       {
          LOG_FMT(LCASTS, " -- not a cast - followed by '%s' %s\n",
                  pc->str.c_str(), get_token_name(pc->type));
@@ -1470,6 +1471,10 @@ static void fix_casts(chunk_t *start)
    if (pc != NULL)
    {
       pc->flags |= PCF_EXPR_START;
+      if (chunk_is_opening_brace(pc))
+      {
+         set_paren_parent(pc, start->parent_type);
+      }
    }
 }
 
