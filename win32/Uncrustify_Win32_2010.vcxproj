@@ -67,6 +67,7 @@
       <StringPooling>true</StringPooling>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <ProgramDataBaseFileName>.\Debug/</ProgramDataBaseFileName>
+      <DisableSpecificWarnings>4996</DisableSpecificWarnings>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -79,6 +80,7 @@
       <DataExecutionPrevention>
       </DataExecutionPrevention>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>setargv.obj;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Bscmake />
   </ItemDefinitionGroup>
@@ -106,6 +108,7 @@
       <PrecompiledHeaderFile>uncrustify_types.h</PrecompiledHeaderFile>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <WarningLevel>Level3</WarningLevel>
+      <DisableSpecificWarnings>4996</DisableSpecificWarnings>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -118,6 +121,7 @@
       <DataExecutionPrevention>
       </DataExecutionPrevention>
       <GenerateDebugInformation>false</GenerateDebugInformation>
+      <AdditionalDependencies>setargv.obj;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Bscmake />
   </ItemDefinitionGroup>
@@ -151,6 +155,8 @@
     <ClCompile Include="..\src\tokenize.cpp" />
     <ClCompile Include="..\src\tokenize_cleanup.cpp" />
     <ClCompile Include="..\src\uncrustify.cpp" />
+    <ClCompile Include="..\src\unc_text.cpp" />
+    <ClCompile Include="..\src\unicode.cpp" />
     <ClCompile Include="..\src\universalindentgui.cpp" />
     <ClCompile Include="..\src\width.cpp" />
   </ItemGroup>
@@ -175,6 +181,8 @@
     <ClInclude Include="..\src\token_names.h" />
     <ClInclude Include="..\src\uncrustify_types.h" />
     <ClInclude Include="..\src\uncrustify_version.h" />
+    <ClInclude Include="..\src\unc_ctype.h" />
+    <ClInclude Include="..\src\unc_text.h" />
     <ClInclude Include="windows_compat.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
