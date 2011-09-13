@@ -191,7 +191,7 @@ static int get_word(const vector<UINT8>& in_data, int& idx, bool be)
 {
    int ch;
 
-   if ((idx + 2) > in_data.size())
+   if ((idx + 2) > (int)in_data.size())
    {
       ch = -1;
    }
@@ -356,8 +356,8 @@ bool decode_unicode(const vector<UINT8>& in_data, deque<int>& out_data, CharEnco
    }
 
    /* There are alot of 0's in UTF-16 (~50%) */
-   if ((zero_cnt > (in_data.size() / 4)) &&
-       (zero_cnt <= (in_data.size() / 2)))
+   if ((zero_cnt > ((int)in_data.size() / 4)) &&
+       (zero_cnt <= ((int)in_data.size() / 2)))
    {
       /* likely is UTF-16 */
       if (decode_utf16(in_data, out_data, enc))

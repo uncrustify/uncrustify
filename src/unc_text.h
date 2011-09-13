@@ -135,9 +135,9 @@ public:
       return m_chars;
    }
 
-   int operator[](size_t idx) const
+   int operator[](int idx) const
    {
-      return(((idx >= 0) && (idx < m_chars.size())) ? m_chars[idx] : 0);
+      return(((idx >= 0) && (idx < (int)m_chars.size())) ? m_chars[idx] : 0);
    }
 
    /* throws an exception if out of bounds */
