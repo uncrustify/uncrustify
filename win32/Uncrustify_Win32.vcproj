@@ -812,6 +812,14 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath="..\src\unc_ctype.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\unc_text.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\src\uncrustify.cpp"
 				>
 				<FileConfiguration
@@ -832,6 +840,10 @@
 						PreprocessorDefinitions=""
 					/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\src\unicode.cpp"
+				>
 			</File>
 			<File
 				RelativePath="..\src\universalindentgui.cpp"
@@ -952,6 +964,10 @@
 			</File>
 			<File
 				RelativePath="..\src\token_names.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\unc_text.h"
 				>
 			</File>
 			<File
