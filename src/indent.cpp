@@ -1102,7 +1102,7 @@ void indent_text(void)
             }
             else
             {
-               if (!chunk_is_comment(next))
+               if (next && !chunk_is_comment(next))
                {
                   if (next->type == CT_SPACE)
                   {
