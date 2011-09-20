@@ -914,7 +914,7 @@ bool parse_word(tok_ctx& ctx, chunk_t& pc, bool skipcheck)
    pc.str.clear();
    pc.str.append(ctx.get());
 
-   while (CharTable::IsKw2(ctx.peek()))
+   while (ctx.more() && CharTable::IsKw2(ctx.peek()))
    {
       ch = ctx.get();
       pc.str.append(ch);
