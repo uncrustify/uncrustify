@@ -27,7 +27,7 @@ static void mark_change(const char *func, int line)
    cpd.changes++;
    if (cpd.pass_count == 0)
    {
-      LOG_FMT(LWARN, "%s: change %d on %s:%d\n", __func__, cpd.changes, func, line);
+      LOG_FMT(LCHANGE, "%s: change %d on %s:%d\n", __func__, cpd.changes, func, line);
    }
 }
 

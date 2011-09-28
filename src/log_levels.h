@@ -93,6 +93,7 @@ enum
    LOCMSG    = 79,    /* OC Message stuff */
    LBLANK    = 80,    /* Blank Lines */
    LOBJCWORD = 81,    /* Convert keyword to CT_WORD in certain circumstances */
+   LCHANGE   = 82,    /* something changed */
 };
 
 #endif   /* LOG_LEVELS_H_INCLUDED */
