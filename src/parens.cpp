@@ -144,7 +144,8 @@ static void check_bool_parens(chunk_t *popen, chunk_t *pclose, int nest)
 
       if ((pc->type == CT_BOOL) ||
           (pc->type == CT_QUESTION) ||
-          (pc->type == CT_COND_COLON))
+          (pc->type == CT_COND_COLON) ||
+          (pc->type == CT_COMMA))
       {
          LOG_FMT(LPARADD2, " -- %s [%s] at line %d col %d, level %d\n",
                  get_token_name(pc->type),
