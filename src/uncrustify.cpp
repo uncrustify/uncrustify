@@ -748,25 +748,35 @@ static int load_mem_file(const char *filename, file_mem& fm)
       return(-1);
    }
 
-   /* read the raw data */
    fm.raw.resize(my_stat.st_size);
-   if (fread(&fm.raw[0], fm.raw.size(), 1, p_file) != 1)
+   if (my_stat.st_size == 0)
    {
-      LOG_FMT(LERR, "%s: fread(%s) failed: %s (%d)\n",
-              __func__, filename, strerror(errno), errno);
-      cpd.error_count++;
-   }
-   else if (!decode_unicode(fm.raw, fm.data, fm.enc, fm.bom))
-   {
-      LOG_FMT(LERR, "%s: failed to decode the file '%s'\n", __func__, filename);
+      /* Empty file */
+      retval = 0;
+      fm.bom = false;
+      fm.enc = ENC_ASCII;
+      fm.data.clear();
    }
    else
    {
-      LOG_FMT(LNOTE, "%s: '%s' encoding looks like %d\n", __func__, filename, fm.enc);
-      retval = 0;
+      /* read the raw data */
+      if (fread(&fm.raw[0], fm.raw.size(), 1, p_file) != 1)
+      {
+         LOG_FMT(LERR, "%s: fread(%s) failed: %s (%d)\n",
+                 __func__, filename, strerror(errno), errno);
+         cpd.error_count++;
+      }
+      else if (!decode_unicode(fm.raw, fm.data, fm.enc, fm.bom))
+      {
+         LOG_FMT(LERR, "%s: failed to decode the file '%s'\n", __func__, filename);
+      }
+      else
+      {
+         LOG_FMT(LNOTE, "%s: '%s' encoding looks like %d\n", __func__, filename, fm.enc);
+         retval = 0;
+      }
    }
    fclose(p_file);
-
    return(retval);
 }
 
