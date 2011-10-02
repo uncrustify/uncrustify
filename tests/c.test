@@ -211,6 +211,8 @@
 
 01050  func_call_user.cfg      c/func_call_user.c
 
+01060 empty.cfg                c/backslash-newline-lex.c
+
 # big general tests
 02000 ben.cfg                  c/i2c-core.c
 02001 preproc-cleanup.cfg      c/directfb.h
@@ -267,4 +269,3 @@
 02501 ger.cfg			c/custom_types_ssl.c
 02502 custom_types_ssl.cfg	c/custom_types_ssl.c
 02503 ger.cfg			c/pp_concat_asn1.h
-

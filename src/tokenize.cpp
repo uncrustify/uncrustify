@@ -750,6 +750,7 @@ static bool parse_string(tok_ctx& ctx, chunk_t& pc, int quote_idx, bool allow_es
       {
          pc.nl_count++;
          pc.type = CT_STRING_MULTI;
+         escaped = 0;
          continue;
       }
       if ((ch == '\r') && (ctx.peek() != '\n'))
@@ -757,6 +758,7 @@ static bool parse_string(tok_ctx& ctx, chunk_t& pc, int quote_idx, bool allow_es
          pc.str.append(ctx.get());
          pc.nl_count++;
          pc.type = CT_STRING_MULTI;
+         escaped = 0;
          continue;
       }
       if (!escaped)
