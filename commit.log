@@ -1,3 +1,835 @@
+commit ee20cffd27cafd99aac17c06e80ba954554fb76f
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Tue Oct 4 21:06:02 2011 -0500
+
+    Update two tests to reflect recent change to mod_full_paren_if_bool
+
+commit 3dfc51bf551358630722b7e931588f7c5b01b20e
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Tue Sep 27 21:01:18 2011 -0500
+
+    Fix comma and boolean op precedence with mod_full_paren_if_bool
+
+commit dfbd1a86c0490e0a016ab1a40b125e42ec291c29
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Tue Sep 27 20:55:32 2011 -0500
+
+    Change cast to fix warning:
+    assuming signed overflow does not occur when assuming that (X - c) <= X is always true
+
+commit f30b92aac7008d942b36547e421c72d69ddbcc62
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Tue Sep 27 20:49:15 2011 -0500
+
+    Fix the log level in mark_change()
+
+commit e8f850c79ed93e16fca9e1902175419f05e95774
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Tue Sep 27 20:42:46 2011 -0500
+
+    Properly handle an empty source file
+
+commit 235ae27fa2dccfee5e44c7fb03bbf178b32d3260
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Tue Sep 27 20:40:44 2011 -0500
+
+    Don't add parens around BOOL comparisons if there is a preproc present
+
+commit cda1e865876bf577f74efac9fd4a720ff78b2a00
+Merge: 3de9050 26804b5
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Mon Sep 19 21:21:24 2011 -0500
+
+    Merge branch 'master' of https://github.com/jott/uncrustify into jott-master
+
+commit 3de90503fc5b360c11ceb861bde3acc138d87ef4
+Merge: 51ee3f4 74f6836
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Mon Sep 19 21:17:56 2011 -0500
+
+    Merge branch 'jott-aa107f1'
+
+commit 74f6836d4aef70a9b4c9ef46810fcefdc6caa798
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Mon Sep 19 21:17:43 2011 -0500
+
+    From: Jott
+    Fixed a crash in indent_text.
+    
+    When a closing paren is missing at the end of a file, the next token is NULL.
+    To reproduce, create a file with just x( in it and without a newline.
+
+commit 51ee3f4c7c39c4a337476c51ac576474cb3fac5d
+Merge: 0fa8fd4 6827f9f
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Mon Sep 19 19:13:57 2011 -0700
+
+    Merge pull request #38 from jott/6827f9ff03920b7b2f178474292176c6078edc11
+    
+    Fixed an infinite loop in parse_word.
+
+commit 26804b5098a0b1d7e288186caeadbd412e2297f6
+Author: Jonas Hurrelmann <j@outpo.st>
+Date:   Mon Sep 19 21:39:10 2011 +0200
+
+    Added new files to the VS2008 project file.
+
+commit aa107f1bc6926def0152b182541650cdb43d3744
+Author: Jonas Hurrelmann <j@outpo.st>
+Date:   Mon Sep 19 21:26:04 2011 +0200
+
+    Fixed a crash in indent_text.
+    When a closing paren is missing at the end of a file, the next token is NULL.
+    To reproduce, create a file with just x( in it and without a newline.
+
+commit 6827f9ff03920b7b2f178474292176c6078edc11
+Author: Jonas Hurrelmann <j@outpo.st>
+Date:   Mon Sep 19 21:18:58 2011 +0200
+
+    Fixed an infinite loop in parse_word.
+    When there are no more characters in the context, the parsing fails.
+    Create a file with just #x in it and without a new line to reproduce.
+
+commit 0fa8fd44c6a4ebffbe9378c932c604dd814ad2af
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Mon Sep 12 20:58:12 2011 -0500
+
+    Update the Win32 VS2010 project file (Todd Richmond)
+
+commit 2be051a1e0e155a96710bec43ab16c4eaffa79e2
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Mon Sep 12 20:56:53 2011 -0500
+
+    Fix some build issues under Win32
+
+commit 60f3681da60462eda539b78e0c6c3eea823481e5
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Thu Sep 8 21:38:27 2011 -0500
+
+    Set the parent of '{' in cast '(foo){1,2,3}'
+    Fixes SF #3406144
+
+commit 2b6a3105f5bfeaef74821ffb714799871376ad62
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Wed Sep 7 21:34:18 2011 -0500
+
+    Add option nl_case_colon_brace
+
+commit ed129ba0f37055b4be02200e2bb644a51c29aa02
+Merge: eb394d1 b144060
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Tue Sep 6 22:25:52 2011 -0500
+
+    Merge branch 'master' of https://github.com/hschmidt/uncrustify into hschmidt-master
+    
+    Conflicts:
+    	src/token_names.h
+    
+    Assuming that the change in test 50007 was intentional
+
+commit eb394d1ad6001cebf6ef2ef3572e1ae13a200e86
+Merge: 9789753 caecd7c
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Tue Sep 6 22:17:45 2011 -0500
+
+    Merge branch 'indent_ctor_init' of https://github.com/patnotz/uncrustify into patnotz-indent_ctor_init
+    
+    Conflicts:
+    	tests/cpp.test
+
+commit 978975355fa1e8280400df3d742b48498d6af1b3
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Tue Sep 6 22:10:31 2011 -0500
+
+    Rework the sp_before_tr_emb_cmt and sp_num_before_tr_emb_cmt options
+
+commit eaa5aef38a15b3c5aabb06943f8a2d0cea53dd04
+Merge: 235adfd 6dcaa68
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Tue Sep 6 21:47:20 2011 -0500
+
+    Merge branch 'sp_before_tr_emb_cmt' of https://github.com/patnotz/uncrustify into patnotz-sp_before_tr_emb_cmt
+    
+    Conflicts:
+    	src/tokenize_cleanup.cpp
+
+commit 235adfd18147f35a196686efa2ddd084010ba505
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Tue Sep 6 21:22:00 2011 -0500
+
+    Remove commented out memset's
+
+commit 727d23421b17a960e5fb8fe80e331739be278724
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Mon Sep 5 20:26:07 2011 -0500
+
+    Remove some unused functions
+
+commit b18c4ee9b7a3240cfee3330559c8c4b64f1fc823
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sun Sep 4 22:36:24 2011 -0500
+
+    Need to check the real previous when looking for the start of the file
+
+commit 00f7f5d2a50e3ee504772387e7071fcf0111d684
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sun Sep 4 22:22:58 2011 -0500
+
+    Update some tests that had incorrect output due to newline issues
+
+commit c08cf0da0f2a8970848a6d601494beea49aff866
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sun Sep 4 22:22:24 2011 -0500
+
+    Fix some output stability issues by running the newline code twice
+
+commit 9160e075dcb81d895cac3fd8aee9164ea8cd637b
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Sep 3 16:21:13 2011 -0500
+
+    Don't nest complex statements when creating an 'if' one-liner
+
+commit 6b4cdc6ddd259ea6b7c210a7fdf8064a4080c6bd
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Sep 3 16:12:48 2011 -0500
+
+    Fix some test output
+
+commit 5230fbb00bd0cc3e28dba2645139378b21212a3b
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Sep 3 16:12:10 2011 -0500
+
+    Improve blank line handling
+
+commit 2f05596f4f7423c8b06eb28dac3d9d629dd7d1a3
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Sep 3 15:43:00 2011 -0500
+
+    Update test config to reflect new option name
+
+commit 8c57f4556d2ce43f3a6f41368f09b24db40aa6ab
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Sep 3 15:40:11 2011 -0500
+
+    Add test of UTF-16 input files w/o a BOM (output contains the BOM)
+
+commit 9e45777e294ce778a46e43ae0e0c75d9027e7948
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Sep 3 15:37:45 2011 -0500
+
+    Force the BOM on UTF-16, detect UTF-16 encoding without a BOM
+
+commit a44d84381db4f0882a5fa2a47f49f4ecc73a12fa
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Sep 3 15:07:34 2011 -0500
+
+    Rework the Byte Order Mark stuff (more options)
+
+commit c16a2f1ea6f001a6b12a51ade1befb7a38662f16
+Merge: ab8a73f 7ba9a91
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Sep 3 12:06:05 2011 -0500
+
+    Merge branch 'unicode'
+
+commit ab8a73f782e1859bdb304189a2e2b098ad680d5a
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Sep 3 12:05:56 2011 -0500
+
+    Update vpj file
+
+commit bf40639ae0ab7b49e4dca7c5af0dddf5c173e63c
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Sep 3 12:05:37 2011 -0500
+
+    Fix error in comment
+
+commit 7ba9a91cd3a7f2ea5815ee61d7b838b7cb2bb36d
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Sep 3 12:02:16 2011 -0500
+
+    Save fixed test
+
+commit 1067a8b382521b62eadb099e23c80c3e649c81c6
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Sep 3 12:01:21 2011 -0500
+
+    Fix 1-liner splitting in "{ get; set; }"
+
+commit b16542872982674f8896fa68a22c28a0a383c945
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Sep 3 11:11:40 2011 -0500
+
+    Add tests for UTF-16 handling
+
+commit 1dac0422c9d52d0cb84d25d3eb8ed20569cdc9a6
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Sep 3 11:08:08 2011 -0500
+
+    Fix UTF-16 handling and the BOM
+
+commit d6c084a4f7f25ae05a43364ef52a7fc5c89df6fa
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Fri Sep 2 02:29:02 2011 -0500
+
+    Add test for force_utf8
+
+commit d95d1fe639882fbe85e78403fbd871407ea14145
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Fri Sep 2 02:26:11 2011 -0500
+
+    Add force_utf8
+
+commit 10d5b16f6f207bd51d05ef232a328fa67165e262
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Fri Sep 2 02:13:57 2011 -0500
+
+    fix test - no idea why it was broken previously
+
+commit 8742ac03b5a7670938440eb9ab8eff1f7517a40c
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Fri Sep 2 02:13:35 2011 -0500
+
+    Fix a few UTF-8 bugs
+
+commit 85a24120bd4b693024b9d6428ca260a2426ec176
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Fri Sep 2 01:47:16 2011 -0500
+
+    get output_comment_multi() working
+
+commit 9d3e02ed8091f86f00d095613b40d826f68ac7d8
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Fri Sep 2 01:35:29 2011 -0500
+
+    save everything except output_comment_multi
+
+commit 090841b780f60c3ee9ff3c530f5693ea194196e1
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Fri Sep 2 01:13:02 2011 -0500
+
+    rework output_comment_multi_simple to use unc_text
+
+commit b895188f6b093010125c2b26c6802233f56f1f10
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Fri Sep 2 01:12:10 2011 -0500
+
+    More unc_text usage and cleanup
+
+commit f9736a041e65b92c6040776c73027c289b463e76
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Tue Aug 30 22:32:23 2011 -0500
+
+    Fix combining of C comments
+
+commit 911d7c9d316235275094a539341fe7e192b41fb2
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Tue Aug 30 22:28:17 2011 -0500
+
+    Fix more string-related issues
+
+commit 95ee11320e9bf26c6715d73b1fdcb4301207497a
+Merge: 5f4855d a0f6fbc
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Fri Aug 26 19:21:23 2011 -0700
+
+    Merge pull request #32 from patnotz/testing-howto
+    
+    Tweaks to the TESTING how-to
+
+commit 878becb3b0f205974efe86fef36616326c706487
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Fri Aug 26 21:19:46 2011 -0500
+
+    Save off work
+
+commit 6dcaa6850aa475e76a83d77e7322c67cc1aee3ed
+Author: Pat Notz <patnotz@gmail.com>
+Date:   Tue Aug 2 22:29:59 2011 -0600
+
+    Add option for controlling space before trailing/embedded comments
+    
+    Two new options:
+    
+       # Controls the spaces before a trailing or embedded comment
+       sp_before_tr_emb_cmt = ignore
+    
+       # Number of spaces before a trailing or embedded comment
+       sp_num_before_tr_emb_cmt = 0
+
+commit a0f6fbcc77cd45c867514b24d0d3e499f2e00fe3
+Author: Pat Notz <patnotz@gmail.com>
+Date:   Fri Aug 26 11:36:38 2011 -0600
+
+    Tweaks to the TESTING how-to
+    
+     - correct "run-tests.py" to "run_tests.py"
+     - add tip about 'run_tests.py LANG'
+     - can do "cd tests; ./run_tests.py", not "./tests/run_tests.py"
+
+commit caecd7c26b58926fe00e9d3c110906d9f7e7050e
+Author: Pat Notz <patnotz@gmail.com>
+Date:   Fri Aug 26 15:54:21 2011 -0600
+
+    Add indent_ctor_init option for extra indenting of ctor initializers
+    
+    if indent_ctor_init > 0 then that many extra spaces are added to the
+    indetation of the constructor initializer list.
+
+commit 63b1c684256183f773eca6740564395631857674
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Thu Aug 25 20:42:09 2011 -0500
+
+    Save off Unicode work
+
+commit 5f4855d5a9165fc083c2ed2d65a988e2786054c1
+Merge: 69486ca 9f6bdb7
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Thu Aug 25 18:41:04 2011 -0700
+
+    Merge pull request #29 from JanX2/master
+    
+    Fixed Xcode build settings
+
+commit 69486ca2d0187c8a3e0fe08da1ea1196f2d53237
+Merge: 3437cff c44ee6d
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Thu Aug 25 18:32:21 2011 -0700
+
+    Merge pull request #31 from patnotz/testing-howto
+    
+    Add TESTING file to document running and adding tests
+
+commit c44ee6dfb5b60e32725f8df25c9dc93f58177452
+Author: Pat Notz <patnotz@gmail.com>
+Date:   Tue Aug 23 10:16:34 2011 -0600
+
+    Add TESTING file to document running and adding tests
+    
+    The content of this file is from messages from Ger Hobbelt and Ben
+    Gardner.
+
+commit fe42c67ae018c7ee44f276d0d4ab543710062678
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Thu Aug 18 22:31:37 2011 -0500
+
+    Add a completely untested unc_text class
+
+commit 97996a0b51d916d4f25f5b61aecbb4c367f5f19f
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Wed Aug 17 22:28:55 2011 -0500
+
+    Add a start to UTF-8 and UTF-16 support
+
+commit 9f6bdb7f3880cf90eea86381a1ac7c96ea54f96a
+Author: Jan Weiß <jan@geheimwerk.de>
+Date:   Tue Aug 16 17:54:57 2011 +0200
+
+    Cleaning Xcode build settings.
+
+commit b4687cd969dba1ca92b51b6268aae109622ba5aa
+Author: Jan Weiß <jan@geheimwerk.de>
+Date:   Tue Aug 16 17:54:22 2011 +0200
+
+    Xcode project file touched by more recent Xcode version (3.2.5).
+
+commit a0639c2b9047e91e585bfbc009fc3eda961d137c
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Aug 13 22:56:16 2011 -0500
+
+    Fix comment
+
+commit 3437cffac02717c37c4f7b3d23adc7c73d2a2543
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Aug 13 21:37:25 2011 -0500
+
+    Update test results for new sp_after_new option
+
+commit e7e09ab2b2b67341451bacc11472a6f5330c642d
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Aug 13 21:09:21 2011 -0500
+
+    Make do_space() static and don't log spacing if the 2nd chunk is a newline
+
+commit e0e50e81b0ba2c04242b7799d71dd2b6d77dcc01
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Aug 13 21:08:49 2011 -0500
+
+    Add option sp_after_new
+
+commit 3bbe8521f46956d7d879505452b4c7b5273dfd88
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Aug 13 21:07:52 2011 -0500
+
+    Mark the parent of '[]' in 'delete[] x'
+
+commit 7501cad6f93119ae3862a3b84d3934d6c9bd9df0
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Aug 13 14:14:10 2011 -0500
+
+    Add new options: nl_after_class and nl_after_struct
+
+commit 46718ae6f0873340e19dde925837ac657274ef7b
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Aug 13 14:13:05 2011 -0500
+
+    Set the parent type of the semicolon after a class/struct/enum/union
+
+commit 97bba2218fc491ed48bac794a6c2f093a9628dbc
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Wed Aug 10 22:02:20 2011 -0500
+
+    Add nl_property_brace to handle "public foo bar { get; set; }"
+
+commit 1b30ae951777f26fbbb463bb2cc8e19b222be459
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Wed Aug 10 21:44:11 2011 -0500
+
+    Fix the new option nl_after_func_body_class (too much cut-and-paste)
+    Improve logging so see what changes blank lines.
+
+commit 20b21c2f7cd9c3b635b0fc124541e17074fdf941
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Aug 6 22:56:10 2011 -0500
+
+    Yell if a macro function ending with a semicolon is detected.
+    Using those in code confuses Uncrustify.
+
+commit 26a283192627880f598f857cf8892338098d038c
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Aug 6 22:55:15 2011 -0500
+
+    Update test for recent namespace/property fix
+
+commit 5f547a4988eab08f04d1d22c2c67a6a175fbd4bb
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Aug 6 22:50:42 2011 -0500
+
+    Fix detection of "void f(::a::b v);"
+
+commit 238d22c69c8a9bfc67bf029c1b6642f00fafc642
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Aug 6 22:26:13 2011 -0500
+
+    Set the parent of everything between 'namespace' and '{' to fix false
+    property detection in C#.
+
+commit ef8350ecdbcf65988f708f8d072513deb85bfd5a
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Aug 6 22:11:49 2011 -0500
+
+    Add option nl_after_func_body_class
+
+commit a746876a46f9c0437be10248760cef9ea11a3d8e
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Aug 6 21:51:19 2011 -0500
+
+    Check for embedded 0's in the input file.
+    This causes undesired operation.
+
+commit bcee5c52f5922102e57c805141480bc5a41e14d1
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Aug 6 21:38:30 2011 -0500
+
+    Keywords 'and' and 'or' may be in C/C++ '#if' statements
+
+commit 057d9e4188d182147d5bd459530b4785811fe117
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Aug 6 21:28:34 2011 -0500
+
+    Add some additional null checks in newline_add_after()
+
+commit 25b916cee118fa9ec92d96a45bd1bfed5bfb95b5
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Aug 6 21:00:50 2011 -0500
+
+    nl_before_throw only applies to after a ')'.
+
+commit e9d48e186b3969511d24a85c0c5def9ce278d757
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Thu Jul 28 21:50:10 2011 -0500
+
+    Use std::bitset for the log mask
+
+commit cb1dbd354b339ae81c03865ccf0e6fb60a4e03ca
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Jul 16 15:38:11 2011 -0500
+
+    Add missing test results
+
+commit 0ab0127350eccdaf085c2b5a4e082679746acad5
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Jul 16 15:02:48 2011 -0500
+
+    Add config file for the 'sun' C++ format (Todd Richmond)
+
+commit 9519de3a7e44f903ce5fbc56b6182579fad8a1c4
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Jul 16 14:57:41 2011 -0500
+
+    Add Visual Studio 2010 project file.
+
+commit f4c5357612d26e94a5951336d58c5b351dab3c65
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Thu Jul 7 22:19:54 2011 -0500
+
+    Clarify the description for nl_func_var_def_blk
+
+commit 6cbeb6fba003f19fc4a56261072accd34900cbd2
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Thu Jul 7 22:15:59 2011 -0500
+
+    The continuation indent applies to the next line, not the current
+    Fixes SF#3348571
+
+commit abb5ed155825b5756328d226881e041882a4e96b
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Wed Jul 6 21:31:19 2011 -0500
+
+    Make the nl_func_var_def_blk option take priority over nl_before_if, etc
+    Fixes SF#3348594
+
+commit e7990ff73274f4d4ed6fe89853148c9a58d23efa
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Wed Jul 6 20:37:57 2011 -0500
+
+    Remove arbitrary limits in align_same_func_call_params()
+
+commit 0fd87aad1bc102221d45d75caee772ea370e36fe
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Wed Jul 6 20:30:12 2011 -0500
+
+    Fix align_same_func_call_params()
+    Fixes SF#3354409
+
+commit f6ab1b08e9327f22c4077a212c793b14c55b08cb
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Tue Jul 5 22:07:29 2011 -0500
+
+    Use feof() to detect the end of the stdin stream.
+
+commit 5ddffe8ca744cbe8cfbff11632460b59769f4939
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Mon Jul 4 22:49:35 2011 -0500
+
+    Remove std:: prefix, now that we are "using namespace std".
+
+commit c3224461bfdda91c8414095b31aa87ece0817434
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Mon Jul 4 22:49:09 2011 -0500
+
+    Re-run update-default-cfg.sh
+
+commit 313c87ae4403b76c31a7302c6d6374f0fbae6f39
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Mon Jul 4 22:48:46 2011 -0500
+
+    Remove newline at the end of the option text.
+
+commit 7d627682a0b5aeed41abf467d5f3253641ea75fb
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Mon Jul 4 22:46:29 2011 -0500
+
+    No longer need malloc() or realloc()
+
+commit f7d16638d056a2e1a2df0e6f298b786153f02e6b
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Mon Jul 4 22:40:45 2011 -0500
+
+    Use std namespace and use std::vector for file data.
+
+commit 067d13ae43eaca6c67036d459f51617b53bc17c8
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Mon Jul 4 21:49:42 2011 -0500
+
+    Use std::map for custom keywords.
+
+commit 29371a4b44cb5af4375dcf2364af607c4c6952b7
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Mon Jul 4 21:48:17 2011 -0500
+
+    Use a std::map for the custom defines.
+
+commit 4c7c49574de4360bd233b67622f62dba1bb4d413
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Mon Jul 4 15:25:28 2011 -0500
+
+    Move add_long_preprocessor_conditional_block_comment() out of defines.cpp
+
+commit 183a3ab83f52c14d91fa71f6b9a845a4ff3ec55b
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Jul 2 17:32:11 2011 -0500
+
+    Remove unused typedefs and types.
+
+commit acc0a1488f581f1a5d3a0f389a29d645db24a13a
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Jul 2 17:24:14 2011 -0500
+
+    Rework ChunkStack to use std::deque and not manually manage memory
+
+commit c45d8a349f8964c6f36bece12c5fcfcbffd0a6bf
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Jul 2 16:15:23 2011 -0500
+
+    Replace C99 construct with new/delete.
+
+commit 7d2f25f76cd051e58d4599c07820778bbf6d543d
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Fri Jun 17 14:47:50 2011 -0500
+
+    Add more to the C++ operator test
+
+commit adb08f32bc3b8f77dc5efb86bd3f33be3da82b2b
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Fri Jun 17 14:45:58 2011 -0500
+
+    Clarify the description of sp_inside_square
+
+commit dd537926695d380f6aec1e4bd8ce551dd2f37219
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Fri Jun 17 14:44:35 2011 -0500
+
+    Properly handle 'operator []', 'operator new[]' and 'operator delete[]'.
+    Fixes SF #3317841
+
+commit 314cf189824f261afd6673f5b90cdb9f3ac92778
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Fri Jun 17 10:55:07 2011 -0500
+
+    Use the comment size as a guide for how large a line can be.
+    Fixes SF #3317781
+
+commit 2b9adf5b10bc501d4256bc77130c243d8bcd78e0
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Jun 11 17:25:54 2011 -0500
+
+    Remove obsolete subversion $Id$ tags
+
+commit 59e7dd641a525f3eb6086fc2a3774ccaaed4c30f
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Jun 11 17:18:13 2011 -0500
+
+    Redo the options to tests/run_tests.py
+
+commit 4cfad57e4785c0989a9192a2a0f8baf9d7ac8ee1
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Jun 11 17:06:27 2011 -0500
+
+    Extend the test script to check for stability.
+    If a test passes, it runs uncrustify on the output and checks to see if it
+    changes.
+
+commit 9073b78f0fb4219e229c4a161669eadc17a4e26b
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Jun 11 16:50:52 2011 -0500
+
+    Do not remove braces if set to AV_FORCE
+    Fixes SF #3289119
+
+commit 9db88d5c5831b599323fbd00290beaa64485e900
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Jun 11 16:39:39 2011 -0500
+
+    Fix indent_cmt_with_tabs for comments in the first column.
+    Fixes SF #3310758
+
+commit 4cf28b5c5eafec045424084f69b21c1189e01ad7
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Jun 11 16:34:30 2011 -0500
+
+    Sort the keyword table. @synthesize and @selector were out of order.
+
+commit 317b7f0e04f575dd3de1dd50bf863cbf7c9562a6
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Jun 11 16:21:11 2011 -0500
+
+    Add handling for the Java assert statement
+    Fixes SF #3304061
+
+commit 4efe8c86ce16fc9fbfb00ab18725c3063e75dcfc
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Jun 11 16:18:37 2011 -0500
+
+    Add a test for the Java assert statement.
+
+commit b69eadfbc8f1b51b09fbb948373c486b2b7ef106
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Jun 11 16:16:52 2011 -0500
+
+    Add a specific keyword for the Java 'assert'
+
+commit 28f342227228f6bed4fa65e92bf161ef6a898dca
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Jun 11 16:15:58 2011 -0500
+
+    Add test number ranges to each language test file
+
+commit 9e911263e5d1055ad28fcec4745d592421025efd
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Jun 11 16:12:27 2011 -0500
+
+    Renumber the C tests
+
+commit 6175a01d970d9bad6138fea083ecce3b283d6747
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Jun 11 15:37:50 2011 -0500
+
+    Fix some NULL-derefs in add_long_preprocessor_conditional_block_comment()
+    Closes SF #3306280
+
+commit 116e2e6d87bc741a47b3dcbdefadc0323c3000ee
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Jun 11 15:29:07 2011 -0500
+
+    Try to do a better job at handling user-defined literal suffixes.
+    Fixes the second issue in SF #3306237.
+
+commit d42b30e474ffd4aabe262b748520ff05ca1f9159
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Jun 11 14:54:53 2011 -0500
+
+    Recognize the C++0x 'constexpr' keyword
+
+commit 983dd90b2a03525955c0faa854ddc953c8a18cb8
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Jun 11 14:39:44 2011 -0500
+
+    Change parse_number() to allow decimal numbers starting with a 0, as in 08.
+    Fixed the first issue in SF# 3306237.
+
+commit 92a6a6b2ccb7916d56aa6d3956b2e773bd9f82c8
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Tue Jun 7 20:50:38 2011 -0500
+
+    Remove diagnostic code about unexpect chunk in struct/enum/union
+
+commit 2cc9f6d51ba0d091c6e4e1b3f876528a6d2648b2
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Thu May 26 21:21:27 2011 -0500
+
+    Suppress log on expected chunk
+    Fix SF #3307476
+
+commit 586f958edf0d2303fe6411370958fe15a6465ae2
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sun May 22 10:20:21 2011 -0500
+
+    Update tests for SF bug #3305534
+
+commit df55dc01c7f5358f8572ea23df46374d0752458f
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sun May 22 10:10:26 2011 -0500
+
+    Fix detection of operator() function calls.
+    Fixes SF #3305534
+
+commit 7bf25d620c3fd11f2edaad43ba71139deae6ca9f
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Thu May 19 22:13:45 2011 -0500
+
+    Uncrustify 0.58
+
 commit 6ed81d30cf926218d873ea644fdfe016343cb1bf
 Author: Ben Gardner <gardner.ben@gmail.com>
 Date:   Wed May 4 21:09:14 2011 -0500
@@ -211,6 +1043,16 @@ Author: ben <ben@ben-desktop.(none)>
 Date:   Fri Dec 31 11:31:00 2010 -0600
 
     Remove some duplicate tab-calculating code.
+
+commit b144060febe17aea8a38ee758f125452281d454c
+Author: Hannes Schmidt <git3@hannesschmidt.net>
+Date:   Sat Dec 4 16:06:49 2010 -0800
+
+    Fix detection of whether inside Obj-C msg send
+    
+    Fixes sp_before_send_oc_colon and sp_after_send_oc_colon that were probabably broken by 42b1ed31999d4926188acf881912b49958282dac. Also revives the intent of cb9c866934ff2937e59eebab7dfeb937de73f792 broken by the same commit.
+    
+    Signed-off-by: Hannes Schmidt <git3@hannesschmidt.net>
 
 commit a22f48121a9eeb207230c0063d0c51f38ce8fa82
 Author: Ben Gardner <gardner.ben@gmail.com>

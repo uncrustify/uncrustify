@@ -46,7 +46,7 @@ $ make dist
 Untar the file in a temporary folder and run './configure && make && make check'
 Then, in that new folder, run 'sh make_win32.sh'.
 
-NOTE: "make distcheck" doesn't work.  It can't find the config.h file.
+NOTE: "make distcheck" doesn't work, as it doesn't copy over the test script.
 No idea why.
 
 6. Create a GIT tag and push it

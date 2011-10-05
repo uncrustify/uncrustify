@@ -1,4 +1,26 @@
 
+Change highlights in uncrustify-0.59 (4 Oct 2011)
+-------------------------------------------------------------------------------
+The biggest change in this release was to rework the string handling to add
+proper support for UTF-8 and UTF-16.
+
+New options:
+ - nl_case_colon_brace
+ - indent_ctor_init
+ - sp_before_tr_emb_cmt
+ - sp_num_before_tr_emb_cmt
+ - utf8_bom
+ - utf8_byte
+ - utf8_force
+ - sp_after_new
+ - nl_after_struct
+ - nl_after_class
+ - nl_property_brace
+ - nl_after_func_body_class
+
+See commit.log for details.
+
+
 Change highlights in uncrustify-0.58 (19 May 2011)
 -------------------------------------------------------------------------------
 New options:
