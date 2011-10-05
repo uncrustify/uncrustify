@@ -61,7 +61,7 @@ void foo(void)
 {
    if (!value
 #ifdef OPTION
-       || (value == SOMECONST)
+       || value == SOMECONST
 #endif /* comment */
        )
    {
