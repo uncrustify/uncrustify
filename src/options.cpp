@@ -478,7 +478,7 @@ void register_options(void)
                   "Usually 2, 3, 4, or 8.");
    unc_add_option("indent_continue", UO_indent_continue, AT_NUM,
                   "The continuation indent. If non-zero, this overrides the indent of '(' and '=' continuation indents.\n"
-                  "For FreeBSD, this is set to 4.");
+                  "For FreeBSD, this is set to 4. Negative value is absolute and not increased for each ( level");
    unc_add_option("indent_with_tabs", UO_indent_with_tabs, AT_NUM,
                   "How to use tabs when indenting code\n"
                   "0=spaces only\n"
@@ -1211,6 +1211,11 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
 
    if (entry->type == AT_POS)
    {
+      if (strcasecmp(val, "JOIN") == 0)
+      {
+         dest->tp = TP_JOIN;
+         return;
+      }
       if (strcasecmp(val, "LEAD") == 0)
       {
          dest->tp = TP_LEAD;
@@ -1243,7 +1248,7 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
       }
       if (strcasecmp(val, "IGNORE") != 0)
       {
-         LOG_FMT(LWARN, "%s:%d Expected IGNORE, LEAD, LEAD_BREAK, LEAD_FORCE, "
+         LOG_FMT(LWARN, "%s:%d Expected IGNORE, JOIN, LEAD, LEAD_BREAK, LEAD_FORCE, "
                  "TRAIL, TRAIL_BREAK, TRAIL_FORCE for %s, got %s\n",
                  cpd.filename, cpd.line_number, entry->name, val);
          cpd.error_count++;
@@ -1754,7 +1759,7 @@ string argtype_to_string(argtype_e argtype)
       return("auto/lf/crlf/cr");
 
    case AT_POS:
-      return("ignore/lead/lead_break/lead_force/trail/trail_break/trail_force");
+      return("ignore/join/lead/lead_break/lead_force/trail/trail_break/trail_force");
 
    case AT_STRING:
       return("string");
@@ -1844,6 +1849,9 @@ string tokenpos_to_string(tokenpos_e tokenpos)
    {
    case TP_IGNORE:
       return("ignore");
+
+   case TP_JOIN:
+      return("join");
 
    case TP_LEAD:
       return("lead");

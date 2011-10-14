@@ -2279,7 +2279,7 @@ void newlines_chunk_pos(c_token_t chunk_type, tokenpos_e mode)
    chunk_t *prev;
    int     nl_flag;
 
-   if ((mode & (TP_LEAD | TP_TRAIL)) == 0)
+   if ((mode & (TP_JOIN | TP_LEAD | TP_TRAIL)) == 0)
    {
       return;
    }
@@ -2293,6 +2293,31 @@ void newlines_chunk_pos(c_token_t chunk_type, tokenpos_e mode)
 
          nl_flag = ((chunk_is_newline(prev) ? 1 : 0) |
                     (chunk_is_newline(next) ? 2 : 0));
+
+         if (mode & TP_JOIN)
+         {
+            if (nl_flag & 1)
+            {
+               /* remove nl if not precededed by a comment */
+               chunk_t *prev2 = chunk_get_prev(prev);
+
+               if ((prev2 != NULL) && !(chunk_is_comment(prev2)))
+               {
+                  remove_next_newlines(prev2);
+               }
+            }
+            if (nl_flag & 2)
+            {
+               /* remove nl if not followed by a comment */
+               chunk_t *next2 = chunk_get_next(next);
+
+               if ((next2 != NULL) && !(chunk_is_comment(next2)))
+               {
+                  remove_next_newlines(pc);
+               }
+            }
+            continue;
+         }
 
          if (((nl_flag == 0) && ((mode & (TP_FORCE | TP_BREAK)) == 0)) ||
              ((nl_flag == 3) && ((mode & TP_FORCE) == 0)))

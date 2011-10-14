@@ -53,6 +53,7 @@ enum tokenpos_e
    TP_TRAIL       = 8,     /* at the end of a line or trailing if wrapped line */
    TP_TRAIL_BREAK = (TP_TRAIL | TP_BREAK),
    TP_TRAIL_FORCE = (TP_TRAIL | TP_FORCE),
+   TP_JOIN        = 16,    /* remove newlines on both sides */
 };
 
 union op_val_t
