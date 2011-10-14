@@ -32,7 +32,9 @@ static void split_before_chunk(chunk_t *pc)
        !chunk_is_newline(chunk_get_prev(pc)))
    {
       newline_add_before(pc);
-      reindent_line(pc, pc->brace_level * cpd.settings[UO_indent_columns].n);
+      // reindent needs to include the indent_continue value and was off by one
+      reindent_line(pc, pc->brace_level * cpd.settings[UO_indent_columns].n +
+                    abs(cpd.settings[UO_indent_continue].n) + 1);
       cpd.changes++;
    }
 }

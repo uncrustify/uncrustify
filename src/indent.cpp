@@ -380,9 +380,17 @@ static int token_indent(c_token_t type)
  */
 static int continue_indent(chunk_t *pc)
 {
-   return(1 + (pc->level * cpd.settings[UO_indent_columns].n) +
-          cpd.settings[UO_indent_continue].n);
-
+   // do not increase for every level if indent_continue is absolute
+   if (cpd.settings[UO_indent_continue].n < 0)
+   {
+      return(1 + (pc->brace_level * cpd.settings[UO_indent_columns].n) -
+             cpd.settings[UO_indent_continue].n);
+   }
+   else
+   {
+      return(1 + (pc->level * cpd.settings[UO_indent_columns].n) +
+             cpd.settings[UO_indent_continue].n);
+   }
 }
 
 
@@ -1193,7 +1201,7 @@ void indent_text(void)
          indent_pse_push(frm, pc);
          if (cpd.settings[UO_indent_continue].n != 0)
          {
-            frm.pse[frm.pse_tos].indent += cpd.settings[UO_indent_continue].n;
+            frm.pse[frm.pse_tos].indent += abs(cpd.settings[UO_indent_continue].n);
          }
          else
          {
@@ -1216,7 +1224,7 @@ void indent_text(void)
          if (cpd.settings[UO_indent_continue].n != 0)
          {
             vardefcol = frm.pse[frm.pse_tos].indent +
-                        cpd.settings[UO_indent_continue].n;
+                        abs(cpd.settings[UO_indent_continue].n);
          }
          else if (cpd.settings[UO_indent_var_def_cont].b ||
                   chunk_is_newline(chunk_get_prev(pc)))
