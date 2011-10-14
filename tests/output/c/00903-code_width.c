@@ -24,8 +24,8 @@ static int short_function_name(struct device *dev, struct device_driver *drv)
         some_long_parameter1,
         some_long_parameter2);
 
-    abcdefghijklmnopqrstuvwxyz = abc + def + ghi + jkl + mno + prq + stu +
-                                 vwx + yz;
+    abcdefghijklmnopqrstuvwxyz = abc + def + ghi + jkl + mno + prq + stu + vwx +
+                                 yz;
 
     return 1;
 }

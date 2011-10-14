@@ -38,8 +38,8 @@ static void some_really_long_function_name(
     struct device *dev,
     struct device_driver *drv)
 {
-    if ((some_variable_name &&
-         somefunction(param1, param2, param3))) {
+    if ((some_variable_name && somefunction(
+             param1, param2, param3))) {
         asdfghjk = asdfasdfasd.aasdfasd +
                    (asdfasd.asdas * 1234.65);
     }

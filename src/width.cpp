@@ -9,6 +9,7 @@
 #include "uncrustify_types.h"
 #include "chunk_list.h"
 #include "prototypes.h"
+#include <cstdlib>
 
 static void split_line(chunk_t *pc);
 static void split_fcn_params(chunk_t *start);
@@ -17,7 +18,8 @@ static void split_for_stmt(chunk_t *start);
 
 static_inline bool is_past_width(chunk_t *pc)
 {
-   return((pc->column + pc->len()) > cpd.settings[UO_code_width].n);
+   // allow char to sit at last column by subtracting 1
+   return((pc->column + pc->len() - 1) > cpd.settings[UO_code_width].n);
 }
 
 
@@ -83,6 +85,9 @@ static const token_pri pri_table[] =
    { CT_COMPARE,   4 },
    { CT_ARITH,     5 },
    { CT_ASSIGN,    6 },
+   { CT_QUESTION,    7 }, // allow break in ? : for indent_continue < 0
+   { CT_COND_COLON,  7 },
+   { CT_FPAREN_OPEN, 8 }, // break after function open paren not followed by close paren
    //{ CT_DC_MEMBER, 10 },
    //{ CT_MEMBER,    10 },
 };
@@ -115,6 +120,8 @@ static int get_split_pri(c_token_t tok)
  *  - comparison
  *  - arithmetic op
  *  - assignment
+ *  - ? :
+ *  - function open paren not followed by close paren
  */
 static void try_split_here(cw_entry& ent, chunk_t *pc)
 {
@@ -129,6 +136,23 @@ static void try_split_here(cw_entry& ent, chunk_t *pc)
    /* Can't split after a newline */
    prev = chunk_get_prev(pc);
    if ((prev == NULL) || chunk_is_newline(prev))
+   {
+      return;
+   }
+
+   /* Can't split a function without arguments */
+   if (pc->type == CT_FPAREN_OPEN)
+   {
+      chunk_t *next = chunk_get_next(pc);
+
+      if (next->type == CT_FPAREN_CLOSE)
+      {
+         return;
+      }
+   }
+   /* keep ? : statements together */
+   if (((pc->type == CT_QUESTION) || (pc->type == CT_COND_COLON)) &&
+       (cpd.settings[UO_indent_continue].n >= 0))
    {
       return;
    }
@@ -172,28 +196,14 @@ static void split_line(chunk_t *start)
            get_token_name(start->type),
            (start->flags & (PCF_IN_FCN_DEF | PCF_IN_FCN_CALL)) != 0);
 
-   /* Don't break before a close, comma, or colon */
-   if ((start->type == CT_PAREN_CLOSE) ||
-       (start->type == CT_PAREN_OPEN) ||
-       (start->type == CT_FPAREN_CLOSE) ||
-       (start->type == CT_FPAREN_OPEN) ||
-       (start->type == CT_SPAREN_CLOSE) ||
-       (start->type == CT_SPAREN_OPEN) ||
-       (start->type == CT_ANGLE_CLOSE) ||
-       (start->type == CT_BRACE_CLOSE) ||
-       (start->type == CT_COMMA) ||
-       (start->type == CT_SEMICOLON) ||
-       (start->type == CT_VSEMICOLON) ||
-       (start->len() == 0))
+   /**
+    * break at maximum line length if indent_continue is absolute
+    */
+   if (cpd.settings[UO_indent_continue].n < 0)
    {
-      LOG_FMT(LSPLIT, " ** NO GO **\n");
-
-      /*TODO: Add in logic to handle 'hard' limits by backing up a token */
-      return;
    }
-
    /* Check to see if we are in a for statement */
-   if ((start->flags & PCF_IN_FOR) != 0)
+   else if ((start->flags & PCF_IN_FOR) != 0)
    {
       LOG_FMT(LSPLIT, " ** FOR SPLIT **\n");
       split_for_stmt(start);
@@ -243,6 +253,9 @@ static void split_line(chunk_t *start)
       if (pc->type != CT_SPACE)
       {
          try_split_here(ent, pc);
+         // break at maximum line length if indent_continue is absolute
+         if ((ent.pc != NULL) && (cpd.settings[UO_indent_continue].n < 0))
+             break;
       }
    }
 
@@ -279,6 +292,25 @@ static void split_line(chunk_t *start)
    if (pc == NULL)
    {
       pc = start;
+      /* Don't break before a close, comma, or colon */
+      if ((start->type == CT_PAREN_CLOSE) ||
+          (start->type == CT_PAREN_OPEN) ||
+          (start->type == CT_FPAREN_CLOSE) ||
+          (start->type == CT_FPAREN_OPEN) ||
+          (start->type == CT_SPAREN_CLOSE) ||
+          (start->type == CT_SPAREN_OPEN) ||
+          (start->type == CT_ANGLE_CLOSE) ||
+          (start->type == CT_BRACE_CLOSE) ||
+          (start->type == CT_COMMA) ||
+          (start->type == CT_SEMICOLON) ||
+          (start->type == CT_VSEMICOLON) ||
+          (start->len() == 0))
+      {
+         LOG_FMT(LSPLIT, " ** NO GO **\n");
+
+         /*TODO: Add in logic to handle 'hard' limits by backing up a token */
+         return;
+      }
    }
 
    /* add a newline before pc */
@@ -462,6 +494,7 @@ static void split_fcn_params(chunk_t *start)
 {
    LOG_FMT(LSPLIT, "  %s: ", __func__);
 
+   chunk_t *next;
    chunk_t *prev;
    chunk_t *fpo;
    chunk_t *pc;
@@ -525,7 +558,10 @@ static void split_fcn_params(chunk_t *start)
          pc = chunk_get_next(pc);
       }
 
-      if ((max_width + min_col) > cpd.settings[UO_code_width].n)
+      // don't split function w/o parameters
+      next = chunk_get_next(fpo);
+      if (((max_width + min_col) > cpd.settings[UO_code_width].n) &&
+          next->type != CT_FPAREN_CLOSE)
       {
          LOG_FMT(LSPLIT, " - A param won't fit, nl after open paren.");
          split_before_chunk(chunk_get_next(fpo));
