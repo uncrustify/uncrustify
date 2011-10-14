@@ -107,7 +107,7 @@ void tokenize_cleanup(void)
           (pc->flags & PCF_IN_PREPROC) &&
           !chunk_get_next_ncnl(pc, CNAV_PREPROC))
       {
-         LOG_FMT(LWARN, "%s:%d Detected a macro that ends with a semicolon. Expect failures if used.\n",
+         LOG_FMT(LNOTE, "%s:%d Detected a macro that ends with a semicolon. Possible failures if used.\n",
                  cpd.filename, pc->orig_line);
       }
    }
