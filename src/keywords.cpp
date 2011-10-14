@@ -151,7 +151,7 @@ static const chunk_tag_t keywords[] =
    { "inout",            CT_QUALIFIER,    LANG_D                                                                      },
    { "instanceof",       CT_SIZEOF,       LANG_JAVA | LANG_ECMA                                                       },
    { "int",              CT_TYPE,         LANG_ALLC                                                                   },
-   { "interface",        CT_CLASS,        LANG_CS | LANG_D | LANG_JAVA | LANG_VALA | LANG_ECMA                        },
+   { "interface",        CT_CLASS,        LANG_C | LANG_CPP | LANG_CS | LANG_D | LANG_JAVA | LANG_VALA | LANG_ECMA    },
    { "internal",         CT_QUALIFIER,    LANG_CS                                                                     },
    { "invariant",        CT_INVARIANT,    LANG_D                                                                      },
    { "ireal",            CT_TYPE,         LANG_D                                                                      },
