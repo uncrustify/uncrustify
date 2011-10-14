@@ -299,6 +299,15 @@ void tokenize_cleanup(void)
          }
       }
 
+      /* Interface is only a keyword in MS land if followed by 'class' or 'struct' */
+      if ((pc->type == CT_CLASS) &&
+          (cpd.lang_flags & (LANG_C | LANG_CPP)) &&
+          chunk_is_str(pc, "interface", 9) &&
+          !chunk_is_str(next, "class", 5) && !chunk_is_str(next, "struct", 6))
+      {
+         pc->type = CT_WORD;
+      }
+
       /* Change item after operator (>=, ==, etc) to a CT_OPERATOR_VAL
        * Usually the next item is part of the operator.
        * In a few cases the next few tokens are part of it:
