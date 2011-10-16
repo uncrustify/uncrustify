@@ -196,14 +196,8 @@ static void split_line(chunk_t *start)
            get_token_name(start->type),
            (start->flags & (PCF_IN_FCN_DEF | PCF_IN_FCN_CALL)) != 0);
 
-   /**
-    * break at maximum line length if indent_continue is absolute
-    */
-   if (cpd.settings[UO_indent_continue].n < 0)
-   {
-   }
    /* Check to see if we are in a for statement */
-   else if ((start->flags & PCF_IN_FOR) != 0)
+   if ((start->flags & PCF_IN_FOR) != 0)
    {
       LOG_FMT(LSPLIT, " ** FOR SPLIT **\n");
       split_for_stmt(start);
