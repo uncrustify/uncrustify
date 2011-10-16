@@ -302,8 +302,7 @@ void tokenize_cleanup(void)
       /* Interface is only a keyword in MS land if followed by 'class' or 'struct' */
       if ((pc->type == CT_CLASS) &&
           (cpd.lang_flags & (LANG_C | LANG_CPP)) &&
-          chunk_is_str(pc, "interface", 9) &&
-          !chunk_is_str(next, "class", 5) && !chunk_is_str(next, "struct", 6))
+          !CharTable::IsKw1(next->str[0]))
       {
          pc->type = CT_WORD;
       }
