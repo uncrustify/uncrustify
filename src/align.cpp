@@ -477,7 +477,10 @@ void align_preprocessor(void)
       cur_as = &as;
       if (pc->type == CT_MACRO_FUNC)
       {
-         cur_as = &asf;
+         if (!cpd.settings[UO_align_pp_define_together].b)
+         {
+            cur_as = &asf;
+         }
 
          /* Skip to the close paren */
          pc = chunk_get_next_nc(pc); // point to open (
