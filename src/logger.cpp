@@ -116,8 +116,6 @@ void log_get_mask(log_mask_t& mask)
  */
 static void log_flush(bool force_nl)
 {
-   int dummy;  /* get the compiler to shut up */
-
    if (g_log.buf_len > 0)
    {
       if (force_nl && (g_log.buf[g_log.buf_len - 1] != '\n'))
@@ -125,7 +123,10 @@ static void log_flush(bool force_nl)
          g_log.buf[g_log.buf_len++] = '\n';
          g_log.buf[g_log.buf_len]   = 0;
       }
-      dummy = fwrite(g_log.buf, 1, g_log.buf_len, g_log.log_file);
+      if (fwrite(g_log.buf, g_log.buf_len, 1,g_log .log_file) != 1)
+      {
+         /* maybe we should log something to complain... =) */
+      }
 
       g_log.buf_len = 0;
    }

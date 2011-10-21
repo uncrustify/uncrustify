@@ -1443,7 +1443,6 @@ void tokenize(const deque<int>& data, chunk_t *ref)
    chunk_t            chunk;
    chunk_t            *pc    = NULL;
    chunk_t            *rprev = NULL;
-   chunk_t            *prev  = NULL;
    struct parse_frame frm;
    bool               last_was_tab = false;
 
@@ -1498,10 +1497,6 @@ void tokenize(const deque<int>& data, chunk_t *ref)
 
       /* Add the chunk to the list */
       rprev = pc;
-      if (!chunk_is_newline(pc) && !chunk_is_comment(pc))
-      {
-         prev = pc;
-      }
       if (rprev != NULL)
       {
          pc->flags |= rprev->flags & PCF_COPY_FLAGS;

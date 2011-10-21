@@ -1258,7 +1258,6 @@ static void output_comment_multi(chunk_t *pc)
    int        cmt_col;
    int        cmt_idx;
    int        ch;
-   chunk_t    *prev;
    unc_text   line;
    int        line_count = 0;
    int        ccol; /* the col of subsequent comment lines */
@@ -1268,7 +1267,6 @@ static void output_comment_multi(chunk_t *pc)
 
    //LOG_FMT(LSYS, "%s: line %d\n", __func__, pc->orig_line);
 
-   prev = chunk_get_prev(pc);
    output_cmt_start(cmt, pc);
    cmt.reflow = (cpd.settings[UO_cmt_reflow_mode].n != 1);
 
@@ -1544,7 +1542,6 @@ static void output_comment_multi(chunk_t *pc)
  */
 static void output_comment_multi_simple(chunk_t *pc)
 {
-   int        cmt_col = pc->column;
    int        cmt_idx;
    char       ch;
    int        line_count = 0;
@@ -1559,13 +1556,11 @@ static void output_comment_multi_simple(chunk_t *pc)
    if (chunk_is_newline(chunk_get_prev(pc)))
    {
       /* The comment should be indented correctly */
-      cmt_col  = pc->column;
       col_diff = pc->orig_col - pc->column;
    }
    else
    {
       /* The comment starts after something else */
-      cmt_col  = pc->orig_col;
       col_diff = 0;
    }
 

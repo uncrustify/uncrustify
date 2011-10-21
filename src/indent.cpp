@@ -410,7 +410,7 @@ void indent_text(void)
    int                indent_size = cpd.settings[UO_indent_columns].n;
    int                tmp;
    struct parse_frame frm;
-   bool               in_preproc = false, was_preproc = false;
+   bool               in_preproc = false;
    int                indent_column;
    int                parent_token_indent = 0;
    int                xml_indent          = 0;
@@ -431,7 +431,6 @@ void indent_text(void)
    while (pc != NULL)
    {
       /* Handle proprocessor transitions */
-      was_preproc = in_preproc;
       in_preproc  = (pc->flags & PCF_IN_PREPROC) != 0;
 
       if (cpd.settings[UO_indent_brace_parent].b)

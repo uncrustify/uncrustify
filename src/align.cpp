@@ -1382,7 +1382,6 @@ static chunk_t *scan_ib_line(chunk_t *start, bool first_pass)
    chunk_t *prev_match = NULL;
    int     token_width;
    int     idx = 0;
-   bool    last_was_comment = false;
 
    /* Skip past C99 "[xx] =" stuff */
    if (start->type == CT_SQUARE_OPEN)
@@ -1431,7 +1430,6 @@ static chunk_t *scan_ib_line(chunk_t *start, bool first_pass)
             cpd.al[cpd.al_cnt].len  = token_width;
             cpd.al_cnt++;
             idx++;
-            last_was_comment = false;
          }
          else
          {
@@ -1470,14 +1468,8 @@ static chunk_t *scan_ib_line(chunk_t *start, bool first_pass)
          }
          prev_match = pc;
       }
-      last_was_comment = chunk_is_comment(pc);
       pc = chunk_get_next_nc(pc);
    }
-
-   //if (last_was_comment && (cpd.al[cpd.al_cnt - 1].type == CT_COMMA))
-   //{
-   //   cpd.al_cnt--;
-   //}
    return(pc);
 }
 
@@ -1699,7 +1691,6 @@ static void align_init_brace(chunk_t *start)
 static void align_typedefs(int span)
 {
    chunk_t    *pc;
-   chunk_t    *c_type    = NULL;
    chunk_t    *c_typedef = NULL;
    AlignStack as;
 
@@ -1731,7 +1722,6 @@ static void align_typedefs(int span)
             LOG_FMT(LALTD, "%s: line %d, col %d\n",
                     __func__, pc->orig_line, pc->orig_col);
             c_typedef = pc;
-            c_type    = NULL;
          }
       }
 
