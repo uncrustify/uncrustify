@@ -170,6 +170,7 @@
 30940 mod_case_brace_rm.cfg            cpp/case-brace-remove.cpp
 
 30945 sf.3266678.cfg                   cpp/sf.3266678.cpp
+30946 sf.3315874.cfg                   cpp/sf.3315874.h
 
 30950 sp_before_tr_emb_cmt-f.cfg       cpp/sp_before_tr_emb_cmt_input.cpp
 30951 sp_before_tr_emb_cmt-a.cfg       cpp/sp_before_tr_emb_cmt_input.cpp
