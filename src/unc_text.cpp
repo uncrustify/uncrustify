@@ -196,6 +196,15 @@ void unc_text::clear()
    m_logok = false;
 }
 
+void unc_text::insert(int idx, int ch)
+{
+   if (idx >= 0)
+   {
+      m_chars.insert(m_chars.begin() + idx, ch);
+      m_logok = false;
+   }
+}
+
 void unc_text::append(int ch)
 {
    m_chars.push_back(ch);

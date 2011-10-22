@@ -85,6 +85,8 @@ public:
       return(*this);
    }
 
+   void insert(int idx, int ch);
+
    void append(int ch);
    void append(const unc_text& ref);
    void append(const string& ascii_text);
