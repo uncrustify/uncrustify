@@ -672,12 +672,19 @@ void indent_text(void)
                indent_pse_pop(frm, pc);
             }
 
+            /* an OC SCOPE ('-' or '+') ends with a semicolon or brace open */
+            if ((frm.pse[frm.pse_tos].type == CT_OC_SCOPE) &&
+                (chunk_is_semicolon(pc) ||
+                 (pc->type == CT_BRACE_OPEN)))
+            {
+               indent_pse_pop(frm, pc);
+            }
+
             /* a typedef and an OC SCOPE ('-' or '+') ends with a semicolon or
              * brace open */
-            if (((frm.pse[frm.pse_tos].type == CT_OC_SCOPE) ||
-                 (frm.pse[frm.pse_tos].type == CT_TYPEDEF))
-                 &&
+            if ((frm.pse[frm.pse_tos].type == CT_TYPEDEF) &&
                 (chunk_is_semicolon(pc) ||
+                 chunk_is_paren_open(pc) ||
                  (pc->type == CT_BRACE_OPEN)))
             {
                indent_pse_pop(frm, pc);
