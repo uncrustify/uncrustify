@@ -928,6 +928,8 @@ static void align_func_proto(int span)
    LOG_FMT(LALIGN, "%s\n", __func__);
    as.Start(span, 0);
    as.m_gap = cpd.settings[UO_align_func_proto_gap].n;
+   as.m_star_style = (AlignStack::StarStyle)cpd.settings[UO_align_var_def_star_style].n;
+   as.m_amp_style  = (AlignStack::StarStyle)cpd.settings[UO_align_var_def_amp_style].n;
 
    as_br.Start(span, 0);
    as_br.m_gap = cpd.settings[UO_align_single_line_brace_gap].n;
