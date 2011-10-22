@@ -672,8 +672,11 @@ void indent_text(void)
                indent_pse_pop(frm, pc);
             }
 
-            /* an OC SCOPE ('-' or '+') ends with a semicolon or brace open */
-            if ((frm.pse[frm.pse_tos].type == CT_OC_SCOPE) &&
+            /* a typedef and an OC SCOPE ('-' or '+') ends with a semicolon or
+             * brace open */
+            if (((frm.pse[frm.pse_tos].type == CT_OC_SCOPE) ||
+                 (frm.pse[frm.pse_tos].type == CT_TYPEDEF))
+                 &&
                 (chunk_is_semicolon(pc) ||
                  (pc->type == CT_BRACE_OPEN)))
             {
@@ -1195,7 +1198,7 @@ void indent_text(void)
             frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos - 1].indent;
          }
       }
-      else if (pc->type == CT_OC_SCOPE)
+      else if ((pc->type == CT_OC_SCOPE) || (pc->type == CT_TYPEDEF))
       {
          indent_pse_push(frm, pc);
          if (cpd.settings[UO_indent_continue].n != 0)
