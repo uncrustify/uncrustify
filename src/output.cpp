@@ -33,6 +33,9 @@ static chunk_t *output_comment_cpp(chunk_t *pc);
 static void add_comment_text(const unc_text& text,
                              cmt_reflow& cmt, bool esc_close);
 
+#define LOG_CONTTEXT() \
+   LOG_FMT(LCONTTEXT, "%s:%d set cont_text to '%s'\n", __func__, __LINE__, cmt.cont_text.c_str())
+
 /**
  * All output text is sent here, one char at a time.
  */
@@ -1081,6 +1084,7 @@ static chunk_t *output_comment_c(chunk_t *first)
    cmt.reflow = (cpd.settings[UO_cmt_reflow_mode].n != 1);
 
    cmt.cont_text = cpd.settings[UO_cmt_star_cont].b ? " *" : "  ";
+   LOG_CONTTEXT();
 
    /* See if we can combine this comment with the next comment */
    if (!cpd.settings[UO_cmt_c_group].b ||
@@ -1110,6 +1114,7 @@ static chunk_t *output_comment_c(chunk_t *first)
    if (cpd.settings[UO_cmt_c_nl_end].b)
    {
       cmt.cont_text = " ";
+      LOG_CONTTEXT();
       add_comment_text("\n", cmt, false);
    }
    add_comment_text("*/", cmt, false);
@@ -1135,6 +1140,7 @@ static chunk_t *output_comment_cpp(chunk_t *first)
    if (!cpd.settings[UO_cmt_cpp_to_c].b)
    {
       cmt.cont_text = (cpd.settings[UO_sp_cmt_cpp_start].a & AV_REMOVE) ? "//" : "// ";
+      LOG_CONTTEXT();
 
       if (cpd.settings[UO_sp_cmt_cpp_start].a == AV_IGNORE)
       {
@@ -1172,6 +1178,7 @@ static chunk_t *output_comment_cpp(chunk_t *first)
 
    /* We are going to convert the CPP comments to C comments */
    cmt.cont_text = cpd.settings[UO_cmt_star_cont].b ? " * " : "   ";
+   LOG_CONTTEXT();
 
    /* See if we can combine this comment with the next comment */
    if (!cpd.settings[UO_cmt_cpp_group].b ||
@@ -1215,6 +1222,7 @@ static chunk_t *output_comment_cpp(chunk_t *first)
    if (cpd.settings[UO_cmt_cpp_nl_end].b)
    {
       cmt.cont_text = "";
+      LOG_CONTTEXT();
       add_comment_text("\n", cmt, false);
    }
    add_comment_text(" */", cmt, false);
@@ -1284,6 +1292,7 @@ static void output_comment_multi(chunk_t *pc)
 
    cmt.cont_text = !cpd.settings[UO_cmt_indent_multi].b ? "" :
                    (cpd.settings[UO_cmt_star_cont].b ? "* " : "  ");
+   LOG_CONTTEXT();
 
    //LOG_FMT(LSYS, "Indenting1 line %d to col %d (orig=%d) col_diff=%d xtra=%d cont='%s'\n",
    //        pc->orig_line, cmt_col, pc->orig_col, col_diff, cmt.xtra_indent, cmt.cont_text.c_str());
@@ -1521,6 +1530,7 @@ static void output_comment_multi(chunk_t *pc)
                   if (idx > 0)
                   {
                      cmt.cont_text.set(line, 0, idx);
+                     LOG_CONTTEXT();
                      if ((line.size() >= 2) && (line[0] == '*') && unc_isalnum(line[1]))
                      {
                         line.insert(1, ' ');
