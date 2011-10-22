@@ -1514,6 +1514,10 @@ static void output_comment_multi(chunk_t *pc)
                   if (idx > 0)
                   {
                      cmt.cont_text.set(line, 0, idx);
+                     if ((line.size() >= 2) && (line[0] == '*') && unc_isalnum(line[1]))
+                     {
+                        line.insert(1, ' ');
+                     }
                   }
                   else
                   {
