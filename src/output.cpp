@@ -507,6 +507,10 @@ static int cmt_parse_lead(const unc_text& line, int is_last)
    {
       return len;
    }
+   if ((len == 1) && (line[0] == '*'))
+   {
+      return len;
+   }
    if (is_last && (len > 0))
    {
       return len;
@@ -622,7 +626,10 @@ static void calculate_comment_body_indent(cmt_reflow &cmt, const unc_text& str)
       }
       else
       {
-         width = 0;
+         if ((width != 1) || (str[idx - 1] != '*'))
+         {
+            width = 0;
+         }
          break;
       }
    }
