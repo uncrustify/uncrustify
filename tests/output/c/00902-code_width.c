@@ -26,6 +26,19 @@ static int short_function_name(struct device *dev,
     return 1;
 }
 
+typedef
+   xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+   yyyyyyyyyyyyyyyyyyyyyy;
+
+typedef some_return_value (*some_function_type)(
+    another_type parameter1, another_type parameter2);
+
+typedef struct
+   xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+{
+    int yyyyyyyyyyyyyyyyyyyyyy;
+} x_t;
+
 static void some_really_long_function_name(
     struct device *dev, struct device_driver *drv)
 {
