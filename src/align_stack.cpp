@@ -411,8 +411,8 @@ void AlignStack::Flush()
          pc->align.right_align = m_right_align;
          pc->align.amp_style   = (int)m_amp_style;
          pc->align.star_style  = (int)m_star_style;
-         pc->align.gap         = m_gap;
       }
+      pc->align.gap  = m_gap;
       pc->align.next = m_aligned.GetChunk(idx + 1);
 
       /* Indent the token, taking col_adj into account */
