@@ -600,7 +600,8 @@ static void convert_vbrace_to_brace(void)
       if ((((pc->parent_type == CT_IF) ||
             (pc->parent_type == CT_ELSE) ||
             (pc->parent_type == CT_ELSEIF)) &&
-           ((cpd.settings[UO_mod_full_brace_if].a & AV_ADD) != 0))
+           ((cpd.settings[UO_mod_full_brace_if].a & AV_ADD) != 0) &&
+            !cpd.settings[UO_mod_full_brace_if_chain].b)
           ||
           ((pc->parent_type == CT_FOR) &&
            ((cpd.settings[UO_mod_full_brace_for].a & AV_ADD) != 0))
