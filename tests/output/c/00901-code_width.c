@@ -35,14 +35,16 @@ static int short_function_name(struct device *dev,
 }
 
 typedef
-   xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-   yyyyyyyyyyyyyyyyyyyyyy;
+    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    yyyyyyyyyyyyyyyyyyyyyy;
 
-typedef some_return_value (*some_function_type)(
-    another_type parameter1, another_type parameter2);
+typedef some_return_value (*some_function_type)(another_type
+                                                parameter1,
+                                                another_type
+                                                parameter2);
 
 typedef struct
-   xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 {
     int yyyyyyyyyyyyyyyyyyyyyy;
 } x_t;
@@ -51,8 +53,8 @@ static void some_really_long_function_name(
     struct device *dev,
     struct device_driver *drv)
 {
-    if ((some_variable_name && somefunction(
-             param1, param2, param3))) {
+    if ((some_variable_name &&
+         somefunction(param1, param2, param3))) {
         asdfghjk = asdfasdfasd.aasdfasd +
                    (asdfasd.asdas * 1234.65);
     }

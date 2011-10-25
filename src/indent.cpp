@@ -376,25 +376,6 @@ static int token_indent(c_token_t type)
 
 
 /**
- * Determines the continuation indent if indent_continue is non-zero.
- */
-static int continue_indent(chunk_t *pc)
-{
-   // do not increase for every level if indent_continue is absolute
-   if (cpd.settings[UO_indent_continue].n < 0)
-   {
-      return(1 + (pc->brace_level * cpd.settings[UO_indent_columns].n) -
-             cpd.settings[UO_indent_continue].n);
-   }
-   else
-   {
-      return(1 + (pc->level * cpd.settings[UO_indent_columns].n) +
-             cpd.settings[UO_indent_continue].n);
-   }
-}
-
-
-/**
  * Change the top-level indentation only by changing the column member in
  * the chunk structures.
  * The level indicator must already be set.
@@ -1056,6 +1037,8 @@ void indent_text(void)
          /* Open parens and squares - never update indent_column, unless right
           * after a newline.
           */
+         bool skipped = false;
+
          indent_pse_push(frm, pc);
          frm.pse[frm.pse_tos].indent = pc->column + pc->len();
 
@@ -1094,6 +1077,7 @@ void indent_text(void)
                    (frm.pse[idx].type != CT_ASSIGN_NL))
             {
                idx--;
+               skipped = true;
             }
             frm.pse[frm.pse_tos].indent = frm.pse[idx].indent + indent_size;
             if (cpd.settings[UO_indent_func_param_double].b)
@@ -1116,6 +1100,7 @@ void indent_text(void)
                   sub = 2;
                }
                frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - sub].indent + indent_size;
+               skipped = true;
             }
             else
             {
@@ -1137,11 +1122,14 @@ void indent_text(void)
             frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent + indent_size;
             indent_column_set(frm.pse[frm.pse_tos].indent);
          }
-         if (cpd.settings[UO_indent_continue].n != 0)
+         if ((cpd.settings[UO_indent_continue].n != 0) && (!skipped))
          {
-            frm.pse[frm.pse_tos].indent = continue_indent(pc);
-            /* the continuation indent applies to the next line, not the current */
-            //indent_column_set(frm.pse[frm.pse_tos].indent);
+            frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent;
+            if ((pc->level == pc->brace_level) &&
+                ((pc->type == CT_FPAREN_OPEN) || (pc->type == CT_SPAREN_OPEN)))
+            {
+               frm.pse[frm.pse_tos].indent += abs(cpd.settings[UO_indent_continue].n);
+            }
          }
          frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
          frm.paren_count++;
@@ -1168,9 +1156,15 @@ void indent_text(void)
          if (next != NULL)
          {
             indent_pse_push(frm, pc);
-            if (cpd.settings[UO_indent_continue].n)
+            if (cpd.settings[UO_indent_continue].n != 0)
             {
-               frm.pse[frm.pse_tos].indent = continue_indent(pc);
+               frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent;
+               if ((pc->level == pc->brace_level) &&
+                   ((pc->type != CT_ASSIGN) ||
+                    ((pc->parent_type != CT_FUNC_PROTO) && (pc->parent_type != CT_FUNC_DEF))))
+               {
+                  frm.pse[frm.pse_tos].indent += abs(cpd.settings[UO_indent_continue].n);
+               }
             }
             else if (chunk_is_newline(next) || !cpd.settings[UO_indent_align_assign].b)
             {
@@ -1210,11 +1204,12 @@ void indent_text(void)
          indent_pse_push(frm, pc);
          if (cpd.settings[UO_indent_continue].n != 0)
          {
-            frm.pse[frm.pse_tos].indent += abs(cpd.settings[UO_indent_continue].n);
+            frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent +
+               abs(cpd.settings[UO_indent_continue].n);
          }
          else
          {
-            frm.pse[frm.pse_tos].indent += indent_size;
+            frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent + indent_size;
          }
       }
       else
