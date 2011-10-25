@@ -299,10 +299,10 @@ void tokenize_cleanup(void)
          }
       }
 
-      /* Interface is only a keyword in MS land if followed by 'class' or 'struct' */
-      if ((pc->type == CT_CLASS) &&
-          (cpd.lang_flags & (LANG_C | LANG_CPP)) &&
-          !CharTable::IsKw1(next->str[0]))
+      /* Interface is only a keyword in MS land if followed by 'class' or 'struct'
+       * likewise, 'class' may be a member name in Java.
+       */
+      if ((pc->type == CT_CLASS) && !CharTable::IsKw1(next->str[0]))
       {
          pc->type = CT_WORD;
       }
