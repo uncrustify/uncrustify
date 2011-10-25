@@ -40,6 +40,8 @@
 		65536866107EB7FA00E08A01 /* width.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65536846107EB7FA00E08A01 /* width.cpp */; };
 		65536892107EB9B600E08A01 /* uncrustify.1 in Install Man Page */ = {isa = PBXBuildFile; fileRef = 655367CB107EB73F00E08A01 /* uncrustify.1 */; };
 		65DB4DD71084D577005E7765 /* uncrustify in Copy to 'src' where tests expect it */ = {isa = PBXBuildFile; fileRef = 8DD76F6C0486A84900D96B5E /* uncrustify */; };
+		89794F7214544FD900E38ACC /* unc_text.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 89794F7114544FD900E38ACC /* unc_text.cpp */; };
+		89794F741454502900E38ACC /* unicode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 89794F731454502900E38ACC /* unicode.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -987,6 +989,8 @@
 		65DB4E2A1084D99C005E7765 /* project-support.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "project-support.jpg"; sourceTree = "<group>"; };
 		65DB4E2B1084D99C005E7765 /* uncrustify.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = uncrustify.css; sourceTree = "<group>"; };
 		65DB4E2C1084D99C005E7765 /* uncrustify.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html.documentation; path = uncrustify.html; sourceTree = "<group>"; };
+		89794F7114544FD900E38ACC /* unc_text.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = unc_text.cpp; sourceTree = "<group>"; };
+		89794F731454502900E38ACC /* unicode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = unicode.cpp; sourceTree = "<group>"; };
 		8DD76F6C0486A84900D96B5E /* uncrustify */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = uncrustify; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -2113,7 +2117,9 @@
 				6553683C107EB7FA00E08A01 /* space.cpp */,
 				6553683F107EB7FA00E08A01 /* tokenize.cpp */,
 				65536840107EB7FA00E08A01 /* tokenize_cleanup.cpp */,
+				89794F7114544FD900E38ACC /* unc_text.cpp */,
 				65536842107EB7FA00E08A01 /* uncrustify.cpp */,
+				89794F731454502900E38ACC /* unicode.cpp */,
 				65536845107EB7FA00E08A01 /* universalindentgui.cpp */,
 				65536846107EB7FA00E08A01 /* width.cpp */,
 				65536811107EB7FA00E08A01 /* align_stack.h */,
@@ -2345,7 +2351,9 @@
 				65536861107EB7FA00E08A01 /* space.cpp in Sources */,
 				65536862107EB7FA00E08A01 /* tokenize.cpp in Sources */,
 				65536863107EB7FA00E08A01 /* tokenize_cleanup.cpp in Sources */,
+				89794F7214544FD900E38ACC /* unc_text.cpp in Sources */,
 				65536864107EB7FA00E08A01 /* uncrustify.cpp in Sources */,
+				89794F741454502900E38ACC /* unicode.cpp in Sources */,
 				65536865107EB7FA00E08A01 /* universalindentgui.cpp in Sources */,
 				65536866107EB7FA00E08A01 /* width.cpp in Sources */,
 			);
