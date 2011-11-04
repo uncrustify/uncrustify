@@ -1529,6 +1529,7 @@ static void fix_type_cast(chunk_t *start)
 static void fix_enum_struct_union(chunk_t *pc)
 {
    chunk_t *next;
+   chunk_t *prev = NULL;
    int     flags        = PCF_VAR_1ST_DEF;
    int     in_fcn_paren = pc->flags & PCF_IN_FCN_DEF;
 
@@ -1543,6 +1544,7 @@ static void fix_enum_struct_union(chunk_t *pc)
    if (next && (next->type == CT_TYPE))
    {
       next->parent_type = pc->type;
+      prev = next;
       next = chunk_get_next_ncnl(next);
 
       /* next up is either a colon, open brace, or open paren (pawn) */
@@ -1585,6 +1587,12 @@ static void fix_enum_struct_union(chunk_t *pc)
          next->parent_type = pc->type;
          next = chunk_get_next_ncnl(next);
       }
+      prev = NULL;
+   }
+   /* reset var name parent type */
+   else if (next && prev)
+   {
+       prev->parent_type = CT_NONE;
    }
 
    if ((next == NULL) || (next->type == CT_PAREN_CLOSE))
@@ -1639,7 +1647,7 @@ static void fix_enum_struct_union(chunk_t *pc)
       next = chunk_get_next_ncnl(next);
    }
 
-   if (next && (next->type == CT_SEMICOLON))
+   if (next && !prev && (next->type == CT_SEMICOLON))
    {
       next->parent_type = pc->type;
    }
