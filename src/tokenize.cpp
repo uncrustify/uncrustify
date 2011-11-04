@@ -483,8 +483,17 @@ static void parse_suffix(tok_ctx& ctx, chunk_t& pc, bool forstring = false)
       int slen = 0;
       int oldsize = pc.str.size();
       tok_info ss;
-      ctx.save(ss);
 
+      /* don't add the suffix if we see L" or L' or S" */
+      int p1 = ctx.peek();
+      int p2 = ctx.peek(1);
+      if (forstring &&
+          (((p1 == 'L') && ((p2 == '"') || (p2 == '\''))) ||
+           ((p1 == 'S') && (p2 == '"'))))
+      {
+          return;
+      }
+      ctx.save(ss);
       while (ctx.more() && CharTable::IsKw2(ctx.peek()))
       {
          slen++;
