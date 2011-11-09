@@ -626,28 +626,40 @@ static void process_source_list(const char *source_list,
    }
 
    char linebuf[256];
-   int  argc;
-   char *args[3];
+   char *fname;
    int  line = 0;
-   int  idx;
+   int  len;
 
    while (fgets(linebuf, sizeof(linebuf), p_file) != NULL)
    {
       line++;
-      argc = Args::SplitLine(linebuf, args, ARRAY_SIZE(args));
-
-      LOG_FMT(LFILELIST, "%3d]", line);
-      for (idx = 0; idx < argc; idx++)
+      fname = linebuf;
+      len = strlen(fname);
+      while ((len > 0) && unc_isspace(*fname))
       {
-         LOG_FMT(LFILELIST, " [%s]", args[idx]);
+         fname++;
+         len--;
       }
-      LOG_FMT(LFILELIST, "\n");
+      while ((len > 0) && unc_isspace(fname[len - 1]))
+      {
+         len--;
+      }
+      fname[len] = 0;
+      while (len-- > 0)
+      {
+         if (fname[len] == '\\')
+         {
+            fname[len] = '/';
+         }
+      }
 
-      if ((argc == 1) && (*args[0] != '#'))
+      LOG_FMT(LFILELIST, "%3d] %s\n", line, fname);
+
+      if (fname[0] != '#')
       {
          char outbuf[1024];
-         do_source_file(args[0],
-                        make_output_filename(outbuf, sizeof(outbuf), args[0], prefix, suffix),
+         do_source_file(fname,
+                        make_output_filename(outbuf, sizeof(outbuf), fname, prefix, suffix),
                         NULL, no_backup, keep_mtime);
       }
    }
