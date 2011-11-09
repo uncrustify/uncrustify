@@ -894,6 +894,8 @@ void register_options(void)
                   "Whether to fully split long 'for' statements at semi-colons");
    unc_add_option("ls_func_split_full", UO_ls_func_split_full, AT_BOOL,
                   "Whether to fully split long function protos/calls at commas");
+   unc_add_option("ls_code_width", UO_ls_code_width, AT_BOOL,
+                  "Whether to split lines as close to code_width as possible and ignore some groupings");
 
    unc_begin_group(UG_align, "Code alignment (not left column spaces/tabs)");
    unc_add_option("align_keep_tabs", UO_align_keep_tabs, AT_BOOL,

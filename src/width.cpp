@@ -87,7 +87,7 @@ static const token_pri pri_table[] =
    { CT_ASSIGN,    6 },
    //{ CT_DC_MEMBER, 10 },
    //{ CT_MEMBER,    10 },
-   { CT_QUESTION,    20 }, // allow break in ? : for indent_continue < 0
+   { CT_QUESTION,    20 }, // allow break in ? : for ls_code_width
    { CT_COND_COLON,  20 },
    { CT_FPAREN_OPEN, 21 }, // break after function open paren not followed by close paren
    { CT_QUALIFIER,   25 },
@@ -157,8 +157,8 @@ static void try_split_here(cw_entry& ent, chunk_t *pc)
       }
    }
 
-   /* keep common groupings unless indent_continue < 0 */
-   if ((cpd.settings[UO_indent_continue].n >= 0) && (pc_pri >= 20))
+   /* keep common groupings unless ls_code_width */
+   if (!cpd.settings[UO_ls_code_width].b && (pc_pri >= 20))
    {
       return;
    }
@@ -213,9 +213,9 @@ static void split_line(chunk_t *start)
            (start->flags & (PCF_IN_FCN_DEF | PCF_IN_FCN_CALL)) != 0);
 
    /**
-    * break at maximum line length if indent_continue is absolute
+    * break at maximum line length if ls_code_width is true
     */
-   if (cpd.settings[UO_indent_continue].n < 0)
+   if (cpd.settings[UO_ls_code_width].b)
    {
    }
    /* Check to see if we are in a for statement */
@@ -269,8 +269,8 @@ static void split_line(chunk_t *start)
       if (pc->type != CT_SPACE)
       {
          try_split_here(ent, pc);
-         // break at maximum line length if indent_continue is absolute
-         if ((ent.pc != NULL) && (cpd.settings[UO_indent_continue].n < 0))
+         /*  break at maximum line length */
+         if ((ent.pc != NULL) && (cpd.settings[UO_ls_code_width].b))
              break;
       }
    }
