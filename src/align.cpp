@@ -1770,7 +1770,11 @@ static void align_left_shift(void)
       }
       else if (chunk_is_str(pc, "<<", 2))
       {
-         if (as.m_aligned.Empty())
+         if (pc->parent_type == CT_OPERATOR)
+         {
+            /* Ignore operator<< */
+         }
+         else if (as.m_aligned.Empty())
          {
             /* first one can be anywhere */
             as.Add(pc);
