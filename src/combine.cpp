@@ -3054,7 +3054,7 @@ static void mark_cpp_constructor(chunk_t *pc)
            is_destr ? "DE" : "CON",
            pc->str.c_str(), get_token_name(pc->type));
 
-   paren_open = chunk_get_next_ncnl(pc);
+   paren_open = skip_template_next(chunk_get_next_ncnl(pc));
    if (!chunk_is_str(paren_open, "(", 1))
    {
       LOG_FMT(LWARN, "%s:%d Expected '(', got: [%s]\n",
