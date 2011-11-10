@@ -1006,6 +1006,10 @@ static void output_cmt_start(cmt_reflow& cmt, chunk_t *pc)
       chunk_t *prev = chunk_get_prev(pc);
       if (prev != NULL)
       {
+         while (prev->prev && prev->type == CT_VBRACE_CLOSE)
+         {
+            prev = prev->prev;
+         }
          int col_min = prev->column + prev->len() + 1;
          if (cmt.column < col_min)
          {
