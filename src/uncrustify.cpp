@@ -1563,25 +1563,29 @@ static void uncrustify_file(const file_mem& fm, FILE *pfout,
       }
 
       /**
-       * Aligning everything else and reindent
+       * Aligning everything else, reindent and break at code_width
        */
-      align_all();
-      indent_text();
-
-      if (cpd.settings[UO_code_width].n > 0)
+      bool first = true;
+      cpd.pass_count = 3;
+      do
       {
-         cpd.pass_count = 3;
-         do
+         align_all();
+         indent_text();
+         old_changes = cpd.changes;
+         if (cpd.settings[UO_code_width].n > 0)
          {
-            old_changes = cpd.changes;
+            LOG_FMT(LNEWLINE, "Code_width loop start: %d\n", cpd.changes);
+
             do_code_width();
-            if (old_changes != cpd.changes)
+            if (old_changes != cpd.changes && first)
             {
-               align_all();
-               indent_text();
+               /* retry line breaks caused by splitting 1-liners */
+               newlines_cleanup_braces();
+               newlines_insert_blank_lines();
+               first = false;
             }
-         } while ((old_changes != cpd.changes) && (cpd.pass_count-- > 0));
-      }
+         }
+      } while ((old_changes != cpd.changes) && (cpd.pass_count-- > 0));
 
       /**
        * And finally, align the backslash newline stuff
