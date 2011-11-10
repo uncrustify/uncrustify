@@ -34,10 +34,10 @@ int main() {
 	if(true)   // indent=1
 		for(int i = 0; i < 3; i++) {
 			if(false)
-				continue;  // indent=4
+				continue; // indent=4
 		}
 	else
-		return;  // indent=2
+		return; // indent=2
 }
 
 // mod_full_brace_if = remove should not remove the braces in this example:
@@ -45,8 +45,8 @@ int main() {
 	if(true) {
 		for(int i = 0; i < 3; i++)
 			if(false)
-				continue;  // indent=4
+				continue; // indent=4
 	}
 	else
-		return;  // indent=2
+		return; // indent=2
 }

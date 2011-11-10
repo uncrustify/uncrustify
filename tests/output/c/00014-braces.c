@@ -49,7 +49,7 @@ void foo(void)
 
 
 	while (1)
-		;  /* hang forever */
+		; /* hang forever */
 }
 
 void f()
