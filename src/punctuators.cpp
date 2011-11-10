@@ -28,17 +28,17 @@ static const chunk_tag_t symbols4[] =
 /* 3-char symbols */
 static const chunk_tag_t symbols3[] =
 {
-   { "!<=", CT_COMPARE,  LANG_D                                 },
-   { "!<>", CT_COMPARE,  LANG_D                                 },
-   { "!==", CT_COMPARE,  LANG_D                                 },
-   { "!>=", CT_COMPARE,  LANG_D                                 },
-   { "->*", CT_MEMBER,   LANG_C | LANG_CPP | LANG_D             },
-   { "...", CT_ELLIPSIS, LANG_C | LANG_CPP | LANG_D | LANG_PAWN },
-   { "<<=", CT_ASSIGN,   LANG_ALL                               },
-   { "<>=", CT_COMPARE,  LANG_D                                 },
-   { "===", CT_COMPARE,  LANG_D                                 },
-   { ">>=", CT_ASSIGN,   LANG_ALL                               },
-   { ">>>", CT_ARITH,    LANG_D | LANG_JAVA | LANG_PAWN         },
+   { "!<=", CT_COMPARE,  LANG_D                                             },
+   { "!<>", CT_COMPARE,  LANG_D                                             },
+   { "!==", CT_COMPARE,  LANG_D                                             },
+   { "!>=", CT_COMPARE,  LANG_D                                             },
+   { "->*", CT_MEMBER,   LANG_C | LANG_CPP | LANG_D                         },
+   { "...", CT_ELLIPSIS, LANG_C | LANG_CPP | LANG_D | LANG_PAWN | LANG_JAVA },
+   { "<<=", CT_ASSIGN,   LANG_ALL                                           },
+   { "<>=", CT_COMPARE,  LANG_D                                             },
+   { "===", CT_COMPARE,  LANG_D                                             },
+   { ">>=", CT_ASSIGN,   LANG_ALL                                           },
+   { ">>>", CT_ARITH,    LANG_D | LANG_JAVA | LANG_PAWN                     },
 };
 
 /* 2-char symbols */
