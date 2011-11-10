@@ -85,6 +85,7 @@ static const token_pri pri_table[] =
    { CT_COMPARE,   4 },
    { CT_ARITH,     5 },
    { CT_ASSIGN,    6 },
+   { CT_STRING,    7 },
    //{ CT_DC_MEMBER, 10 },
    //{ CT_MEMBER,    10 },
    { CT_QUESTION,    20 }, // allow break in ? : for ls_code_width
@@ -126,6 +127,7 @@ static int get_split_pri(c_token_t tok)
  *  - comparison
  *  - arithmetic op
  *  - assignment
+ *  - concatenated strings
  *  - ? :
  *  - function open paren not followed by close paren
  */
@@ -142,7 +144,7 @@ static void try_split_here(cw_entry& ent, chunk_t *pc)
 
    /* Can't split after a newline */
    prev = chunk_get_prev(pc);
-   if ((prev == NULL) || chunk_is_newline(prev))
+   if ((prev == NULL) || (chunk_is_newline(prev) && (pc->type != CT_STRING)))
    {
       return;
    }
@@ -152,6 +154,16 @@ static void try_split_here(cw_entry& ent, chunk_t *pc)
    {
       next = chunk_get_next(pc);
       if (next->type == CT_FPAREN_CLOSE)
+      {
+         return;
+      }
+   }
+
+   /* Only split concatenated strings */
+   if (pc->type == CT_STRING)
+   {
+      next = chunk_get_next(pc);
+      if (next->type != CT_STRING)
       {
          return;
       }
