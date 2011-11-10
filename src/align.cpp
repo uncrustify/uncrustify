@@ -1743,7 +1743,7 @@ static void align_left_shift(void)
    chunk_t    *start = NULL;
    AlignStack as;
 
-   as.Start(2);
+   as.Start(255);
 
    pc = chunk_get_head();
    while (pc != NULL)
