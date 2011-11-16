@@ -41,6 +41,17 @@ public:
    }
 
 
+   AlignStack(const AlignStack &ref) :
+      m_aligned(ref.m_aligned), m_skipped(ref.m_skipped),
+      m_max_col(ref.m_max_col), m_min_col(ref.m_min_col),
+      m_span(ref.m_span), m_thresh(ref.m_thresh), m_seqnum(ref.m_seqnum),
+      m_nl_seqnum(ref.m_nl_seqnum), m_gap(ref.m_gap),
+      m_right_align(ref.m_right_align), m_star_style(ref.m_star_style),
+      m_amp_style(ref.m_amp_style), m_last_added(ref.m_last_added)
+   {
+   }
+
+
    ~AlignStack()
    {
    }
