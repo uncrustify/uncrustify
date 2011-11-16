@@ -1600,6 +1600,7 @@ class Lexer
         int   i;
         TOK   result;
         int   base;
+
         stringbuffer.offset = 0;
 //		stringbuffer.data = null;
         STATE state  = STATE.STATE_initial;
