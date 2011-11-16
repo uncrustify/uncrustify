@@ -174,7 +174,7 @@ void register_options(void)
                   "Improvements to template detection may make this option obsolete.");
 
    unc_add_option("utf8_bom", UO_utf8_bom, AT_IARF,
-                  "Control what to do with the UTF-8 BOM (recommed 'remove')");
+                  "Control what to do with the UTF-8 BOM (recommend 'remove')");
    unc_add_option("utf8_byte", UO_utf8_byte, AT_BOOL,
                   "If the file contains bytes with values between 128 and 255, but is not UTF-8, then output as UTF-8");
    unc_add_option("utf8_force", UO_utf8_force, AT_BOOL,
