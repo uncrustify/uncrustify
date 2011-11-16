@@ -260,11 +260,7 @@ static void split_line(chunk_t *start)
          }
       }
       split_fcn_params(start);
-      if (!is_past_width(start))
-      {
-         return;
-      }
-      LOG_FMT(LSPLIT, "%s: func split didn't work\n", __func__);
+      return;
    }
 
    /**
@@ -522,10 +518,12 @@ static void split_fcn_params(chunk_t *start)
 {
    LOG_FMT(LSPLIT, "  %s: ", __func__);
 
-   chunk_t *next;
    chunk_t *prev;
    chunk_t *fpo;
    chunk_t *pc;
+   int     cur_width = 0;
+   int     last_col  = -1;
+   int     min_col;
 
    /* Find the opening fparen */
    fpo = start;
@@ -535,93 +533,80 @@ static void split_fcn_params(chunk_t *start)
       /* do nothing */
    }
 
-   pc = chunk_get_next(fpo);
-   if (!chunk_is_newline(pc))
+   pc = chunk_get_next_ncnl(fpo);
+   min_col = pc->column;
+
+   LOG_FMT(LSPLIT, " mincol=%d, max_width=%d ",
+           min_col, cpd.settings[UO_code_width].n - min_col);
+
+   while (pc != NULL)
    {
-      int min_col   = pc->column;
-      int max_width = 0;
-      int cur_width = 0;
-      int last_col  = -1;
-
-      LOG_FMT(LSPLIT, " mincol=%d, max_width=%d ",
-              min_col,
-              cpd.settings[UO_code_width].n - min_col);
-
-      while (pc != NULL)
+      if (chunk_is_newline(pc))
       {
-         if (chunk_is_newline(pc))
+         cur_width = 0;
+         last_col = -1;
+      }
+      else
+      {
+         if (last_col < 0)
          {
-            last_col = -1;
+            last_col = pc->column;
          }
-         else
-         {
-            if (last_col < 0)
-            {
-               last_col = pc->column;
-            }
-            cur_width += (pc->column - last_col) + pc->len();
-            last_col   = pc->column + pc->len();
+         cur_width += (pc->column - last_col) + pc->len();
+         last_col   = pc->column + pc->len();
 
-            if ((pc->type == CT_COMMA) ||
+         if ((pc->type == CT_COMMA) ||
+             (pc->type == CT_FPAREN_CLOSE))
+         {
+            cur_width--;
+            LOG_FMT(LSPLIT, " width=%d ", cur_width);
+            if (((last_col - 1) > cpd.settings[UO_code_width].n) ||
                 (pc->type == CT_FPAREN_CLOSE))
             {
-               cur_width--;
-               LOG_FMT(LSPLIT, " width=%d ", cur_width);
-               if (cur_width > max_width)
-               {
-                  max_width = cur_width;
-                  if ((max_width + min_col) > cpd.settings[UO_code_width].n)
-                  {
-                     break;
-                  }
-               }
-               cur_width = 0;
-               last_col  = -1;
-               if (pc->type == CT_FPAREN_CLOSE)
-               {
-                  break;
-               }
+               break;
             }
          }
-         pc = chunk_get_next(pc);
       }
-
-      // don't split function w/o parameters
-      next = chunk_get_next(fpo);
-      if (((max_width + min_col) > cpd.settings[UO_code_width].n) &&
-          next->type != CT_FPAREN_CLOSE)
-      {
-         LOG_FMT(LSPLIT, " - A param won't fit, nl after open paren.");
-         split_before_chunk(chunk_get_next(fpo));
-         return;
-      }
+      pc = chunk_get_next(pc);
    }
 
    /* back up until the prev is a comma */
    prev = pc;
    while ((prev = chunk_get_prev(prev)) != NULL)
    {
-      if (chunk_is_newline(prev) ||
-          (prev->type == CT_COMMA))
+      if (chunk_is_newline(prev) || (prev->type == CT_COMMA))
       {
          break;
       }
+      last_col -= pc->len();
       if (prev->type == CT_FPAREN_OPEN)
       {
-         /* Don't split "()" */
          pc = chunk_get_next(prev);
+         if (!cpd.settings[UO_indent_paren_nl].b)
+         {
+            min_col = pc->brace_level * cpd.settings[UO_indent_columns].n + 1;
+            if (cpd.settings[UO_indent_continue].n == 0)
+            {
+                min_col += cpd.settings[UO_indent_columns].n;
+            }
+            else
+            {
+                min_col += abs(cpd.settings[UO_indent_continue].n);
+            }
+         }
+         /* Don't split "()" */
          if (pc->type != c_token_t(prev->type + 1))
          {
             break;
          }
       }
    }
-   if (prev != NULL)
+   if ((prev != NULL) && !chunk_is_newline(prev))
    {
       LOG_FMT(LSPLIT, " -- ended on [%s] -- ", get_token_name(prev->type));
-   }
-   if (prev != NULL)
-   {
-      split_before_chunk(chunk_get_next(prev));
+      pc = chunk_get_next(prev);
+      newline_add_before(pc);
+      reindent_line(pc, min_col);
+      cpd.changes++;
    }
 }
