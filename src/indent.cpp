@@ -1300,7 +1300,7 @@ void indent_text(void)
                     __func__, pc->orig_line, vardefcol);
             reindent_line(pc, vardefcol);
          }
-         else if ((pc->type == CT_STRING) && (prev->type == CT_STRING) &&
+         else if ((pc->type == CT_STRING) && (prev != NULL) && (prev->type == CT_STRING) &&
                   cpd.settings[UO_indent_align_string].b)
          {
             tmp = (xml_indent != 0) ? xml_indent : prev->column;

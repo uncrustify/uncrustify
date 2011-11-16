@@ -363,7 +363,10 @@ void newline_del_between2(chunk_t *start, chunk_t *end,
             {
                chunk_del(pc);
                MARK_CHANGE();
-               align_to_column(next, prev->column + space_col_align(prev, next));
+               if (prev != NULL)
+               {
+                  align_to_column(next, prev->column + space_col_align(prev, next));
+               }
             }
          }
          else
