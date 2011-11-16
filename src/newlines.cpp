@@ -21,7 +21,7 @@ static void undo_one_liner(chunk_t *pc);
 static void nl_handle_define(chunk_t *pc);
 static void newline_iarf_pair(chunk_t *before, chunk_t *after, argval_t av);
 
-#define MARK_CHANGE()  mark_change(__func__, __LINE__)
+#define MARK_CHANGE()    mark_change(__func__, __LINE__)
 static void mark_change(const char *func, int line)
 {
    cpd.changes++;
@@ -76,13 +76,13 @@ static bool can_increase_nl(chunk_t *nl)
    if (!pcmt && (cpd.settings[UO_nl_start_of_file].a != AV_IGNORE))
    {
       LOG_FMT(LBLANKD, "%s: no prev %d\n", __func__, nl->orig_line);
-      return false;
+      return(false);
    }
 
    if (!next && (cpd.settings[UO_nl_end_of_file].a != AV_IGNORE))
    {
       LOG_FMT(LBLANKD, "%s: no next %d\n", __func__, nl->orig_line);
-      return false;
+      return(false);
    }
 
    return(true);
@@ -254,7 +254,7 @@ static void newline_min_after2(chunk_t *ref, INT32 count, UINT64 flag,
    chunk_t *pc = ref;
    chunk_t *next;
 
-   LOG_FMT(LNEWLINE, "%s: '%s' line %d - count=%d flg=0x%"PRIx64": caller=%s:%d\n",
+   LOG_FMT(LNEWLINE, "%s: '%s' line %d - count=%d flg=0x%" PRIx64 ": caller=%s:%d\n",
            __func__, ref->str.c_str(), ref->orig_line, count, flag, func, line);
 
    do
@@ -448,7 +448,7 @@ static bool newlines_if_for_while_switch(chunk_t *start, argval_t nl_opt)
        (((start->flags & PCF_IN_PREPROC) != 0) &&
         !cpd.settings[UO_nl_define_macro].b))
    {
-      return false;
+      return(false);
    }
 
    pc = chunk_get_next_ncnl(start);
@@ -487,7 +487,7 @@ static bool newlines_if_for_while_switch(chunk_t *start, argval_t nl_opt)
                   newline_add_after(pc);
                   retval = true;
                }
-           }
+            }
          }
          else
          {
@@ -502,7 +502,7 @@ static bool newlines_if_for_while_switch(chunk_t *start, argval_t nl_opt)
          }
       }
    }
-   return retval;
+   return(retval);
 }
 
 
@@ -2748,7 +2748,9 @@ static void _blank_line_set(chunk_t *pc, const char *text, uncrustify_options uo
       MARK_CHANGE();
    }
 }
-#define blank_line_set(pc, op) _blank_line_set(pc, # op, op)
+
+
+#define blank_line_set(pc, op)    _blank_line_set(pc, # op, op)
 
 
 static void _blank_line_max(chunk_t *pc, const char *text, uncrustify_options uo)
@@ -2760,7 +2762,9 @@ static void _blank_line_max(chunk_t *pc, const char *text, uncrustify_options uo
       MARK_CHANGE();
    }
 }
-#define blank_line_max(pc, op) _blank_line_max(pc, # op, op)
+
+
+#define blank_line_max(pc, op)    _blank_line_max(pc, # op, op)
 
 
 /**

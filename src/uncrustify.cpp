@@ -634,7 +634,7 @@ static void process_source_list(const char *source_list,
    {
       line++;
       fname = linebuf;
-      len = strlen(fname);
+      len   = strlen(fname);
       while ((len > 0) && unc_isspace(*fname))
       {
          fname++;
@@ -689,7 +689,7 @@ static bool read_stdin(file_mem& fm)
 
    /* Copy the raw data from the deque to the vector */
    fm.raw.insert(fm.raw.end(), dq.begin(), dq.end());
-   return decode_unicode(fm.raw, fm.data, fm.enc, fm.bom);
+   return(decode_unicode(fm.raw, fm.data, fm.enc, fm.bom));
 }
 
 
@@ -963,11 +963,11 @@ static void do_source_file(const char *filename_in,
                            bool       no_backup,
                            bool       keep_mtime)
 {
-   FILE       *pfout;
-   bool       did_open    = false;
-   bool       need_backup = false;
-   file_mem   fm;
-   string     filename_tmp;
+   FILE     *pfout;
+   bool     did_open    = false;
+   bool     need_backup = false;
+   file_mem fm;
+   string   filename_tmp;
 
    /* Do some simple language detection based on the filename extension */
    if (!cpd.lang_forced || (cpd.lang_flags == 0))
@@ -1048,6 +1048,7 @@ static void do_source_file(const char *filename_in,
          else
          {
 #ifdef WIN32
+
             /* windows can't rename a file if the target exists, so delete it
              * first. This may cause data loss if the tmp file gets deleted
              * or can't be renamed.

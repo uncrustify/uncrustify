@@ -271,8 +271,8 @@ enum uncrustify_options
    UO_sp_before_byref_func,
    UO_sp_between_ptr_star,      // space between two '*' that are part of a type
 
-   UO_sp_special_semi,      /* space empty stmt ';' on while, if, for
-                             * example "while (*p++ = ' ') ;" */
+   UO_sp_special_semi,          /* space empty stmt ';' on while, if, for
+                                 * example "while (*p++ = ' ') ;" */
    UO_sp_before_semi,           // space before all ';'
    UO_sp_before_semi_for,       // space before the two ';' in a for() - non-empty
    UO_sp_before_semi_for_empty, // space before ';' in empty for statement
@@ -333,8 +333,8 @@ enum uncrustify_options
    UO_sp_cmt_cpp_start,
    UO_sp_endif_cmt,
    UO_sp_after_new,
-   UO_sp_before_tr_emb_cmt,  // treatment of spaces before comments following code
-   UO_sp_num_before_tr_emb_cmt,  // number of spaces before comments following code
+   UO_sp_before_tr_emb_cmt,     // treatment of spaces before comments following code
+   UO_sp_num_before_tr_emb_cmt, // number of spaces before comments following code
 
    /*
     * Line splitting options (for long lines)
@@ -646,7 +646,7 @@ struct option_map_value
 };
 
 
-typedef map<string, option_map_value>::iterator        option_name_map_it;
+typedef map<string, option_map_value>::iterator             option_name_map_it;
 typedef map<uncrustify_groups, group_map_value>::iterator   group_map_it;
 typedef list<uncrustify_options>::iterator                  option_list_it;
 typedef list<uncrustify_options>::const_iterator            option_list_cit;

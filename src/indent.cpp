@@ -412,7 +412,7 @@ void indent_text(void)
    while (pc != NULL)
    {
       /* Handle proprocessor transitions */
-      in_preproc  = (pc->flags & PCF_IN_PREPROC) != 0;
+      in_preproc = (pc->flags & PCF_IN_PREPROC) != 0;
 
       if (cpd.settings[UO_indent_brace_parent].b)
       {
@@ -733,7 +733,6 @@ void indent_text(void)
                           (pc->parent_type != CT_CLASS)) &&
                          (!cpd.settings[UO_indent_braces_no_struct].b ||
                           (pc->parent_type != CT_STRUCT)));
-
       }
 
       if (pc->type == CT_BRACE_CLOSE)
@@ -1206,7 +1205,7 @@ void indent_text(void)
          if (cpd.settings[UO_indent_continue].n != 0)
          {
             frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent +
-               abs(cpd.settings[UO_indent_continue].n);
+                                          abs(cpd.settings[UO_indent_continue].n);
          }
          else
          {
@@ -1784,7 +1783,7 @@ void indent_preproc(void)
 
       /* Mark as already handled if not region stuff or in column 1 */
       if ((!cpd.settings[UO_pp_indent_at_level].b ||
-           (pc->brace_level <= (pc->parent_type == CT_PP_DEFINE ? 1 : 0))) &&
+           (pc->brace_level <= ((pc->parent_type == CT_PP_DEFINE) ? 1 : 0))) &&
           (pc->parent_type != CT_PP_REGION) &&
           (pc->parent_type != CT_PP_ENDREGION))
       {

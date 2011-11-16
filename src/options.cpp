@@ -19,7 +19,7 @@
 #include "unc_ctype.h"
 
 
-static map<string, option_map_value>      option_name_map;
+static map<string, option_map_value>           option_name_map;
 static map<uncrustify_groups, group_map_value> group_map;
 static uncrustify_groups current_group;
 
@@ -105,6 +105,7 @@ void unc_add_option(const char *name, uncrustify_options id, argtype_e type,
       cpd.max_option_name_len = name_len;
    }
 }
+
 
 /* only compare alpha-numeric characters */
 static bool match_text(const char *str1, const char *str2)
@@ -1276,7 +1277,7 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
       if (strcasecmp(val, "IGNORE") != 0)
       {
          LOG_FMT(LWARN, "%s:%d Expected IGNORE, JOIN, LEAD, LEAD_BREAK, LEAD_FORCE, "
-                 "TRAIL, TRAIL_BREAK, TRAIL_FORCE for %s, got %s\n",
+                        "TRAIL, TRAIL_BREAK, TRAIL_FORCE for %s, got %s\n",
                  cpd.filename, cpd.line_number, entry->name, val);
          cpd.error_count++;
       }
@@ -1421,7 +1422,7 @@ int load_option_file(const char *filename)
    /* "/dev/null" not understood by "fopen" in windoze */
    if (strcasecmp(filename, "/dev/null") == 0)
    {
-	   return(0);
+      return(0);
    }
 #endif
 
