@@ -490,8 +490,8 @@ void tokenize_cleanup(void)
       if (cpd.lang_flags & LANG_OC)
       {
          if (((pc->type == CT_IF) ||
-             (pc->type == CT_FOR) ||
-             (pc->type == CT_WHILE)) &&
+              (pc->type == CT_FOR) ||
+              (pc->type == CT_WHILE)) &&
              !chunk_is_token(next, CT_PAREN_OPEN))
          {
             pc->type = CT_WORD;
