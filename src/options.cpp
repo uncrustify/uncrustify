@@ -633,8 +633,26 @@ void register_options(void)
    unc_add_option("nl_after_square_assign", UO_nl_after_square_assign, AT_IARF,
                   "Add or remove newline after '= [' (D only). Will also affect the newline before the ']'");
    unc_add_option("nl_func_var_def_blk", UO_nl_func_var_def_blk, AT_NUM,
-                  "The number of blank lines after a block of variable definitions at the top of a function body.\n"
-                  "0=no change (default)");
+                  "The number of blank lines after a block of variable definitions at the top of a function body\n"
+                  "0 = No change (default)");
+   unc_add_option("nl_typedef_blk_start", UO_nl_typedef_blk_start, AT_NUM,
+                  "The number of newlines before a block of typedefs\n"
+                  "0 = No change (default)");
+   unc_add_option("nl_typedef_blk_end", UO_nl_typedef_blk_end, AT_NUM,
+                  "The number of newlines after a block of typedefs\n"
+                  "0 = No change (default)");
+   unc_add_option("nl_typedef_blk_in", UO_nl_typedef_blk_in, AT_NUM,
+                  "The maximum consecutive newlines within a block of typedefs\n"
+                  "0 = No change (default)");
+   unc_add_option("nl_var_def_blk_start", UO_nl_var_def_blk_start, AT_NUM,
+                  "The number of newlines before a block of variable definitions not at the top of a function body\n"
+                  "0 = No change (default)");
+   unc_add_option("nl_var_def_blk_end", UO_nl_var_def_blk_end, AT_NUM,
+                  "The number of newlines after a block of variable definitions not at the top of a function body\n"
+                  "0 = No change (default)");
+   unc_add_option("nl_var_def_blk_in", UO_nl_var_def_blk_in, AT_NUM,
+                  "The maximum consecutive newlines within a block of variable definitions\n"
+                  "0 = No change (default)");
    unc_add_option("nl_fcall_brace", UO_nl_fcall_brace, AT_IARF,
                   "Add or remove newline between a function call's ')' and '{', as in:\n"
                   "list_for_each(item, &list) { }");
@@ -867,6 +885,11 @@ void register_options(void)
                   "Whether to remove blank lines after '{'");
    unc_add_option("eat_blanks_before_close_brace", UO_eat_blanks_before_close_brace, AT_BOOL,
                   "Whether to remove blank lines before '}'");
+   unc_add_option("nl_remove_extra_newlines", UO_nl_remove_extra_newlines, AT_NUM,
+                  "How aggressively to remove extra newlines not in preproc.\n"
+                  "0: No change\n"
+                  "1: Remove most newlines not handled by other config\n"
+                  "2: Remove all newlines and reformat completely by config");
 
    unc_begin_group(UG_position, "Positioning options");
    unc_add_option("pos_arith", UO_pos_arith, AT_POS,

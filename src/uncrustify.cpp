@@ -1451,10 +1451,15 @@ static void uncrustify_file(const file_mem& fm, FILE *pfout,
       do_parens();
 
       /**
-       * Insert line breaks as needed
+       * Modify line breaks as needed
        */
-      //do_newlines();
-      int old_changes;
+      bool first = true;
+      int  old_changes;
+
+      if (cpd.settings[UO_nl_remove_extra_newlines].n == 2)
+      {
+         newlines_remove_newlines();
+      }
       cpd.pass_count = 3;
       do
       {
@@ -1463,7 +1468,7 @@ static void uncrustify_file(const file_mem& fm, FILE *pfout,
          LOG_FMT(LNEWLINE, "Newline loop start: %d\n", cpd.changes);
 
          newlines_cleanup_dup();
-         newlines_cleanup_braces();
+         newlines_cleanup_braces(first);
          if (cpd.settings[UO_nl_after_multiline_comment].b)
          {
             newline_after_multiline_comment();
@@ -1502,6 +1507,7 @@ static void uncrustify_file(const file_mem& fm, FILE *pfout,
          do_blank_lines();
          newlines_eat_start_end();
          newlines_cleanup_dup();
+         first = false;
       } while ((old_changes != cpd.changes) && (cpd.pass_count-- > 0));
 
       mark_comments();
@@ -1563,9 +1569,9 @@ static void uncrustify_file(const file_mem& fm, FILE *pfout,
       }
 
       /**
-       * Aligning everything else, reindent and break at code_width
+       * Align everything else, reindent and break at code_width
        */
-      bool first = true;
+      first          = true;
       cpd.pass_count = 3;
       do
       {
@@ -1577,10 +1583,10 @@ static void uncrustify_file(const file_mem& fm, FILE *pfout,
             LOG_FMT(LNEWLINE, "Code_width loop start: %d\n", cpd.changes);
 
             do_code_width();
-            if (old_changes != cpd.changes && first)
+            if ((old_changes != cpd.changes) && first)
             {
                /* retry line breaks caused by splitting 1-liners */
-               newlines_cleanup_braces();
+               newlines_cleanup_braces(false);
                newlines_insert_blank_lines();
                first = false;
             }

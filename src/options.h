@@ -435,7 +435,13 @@ enum uncrustify_options
    UO_nl_func_type_name_class,       // newline between return type and func name in class
    UO_nl_func_scope_name,
    UO_nl_func_proto_type_name,       // nl_func_type_name, but for prottypes
-   UO_nl_func_var_def_blk,           // newline after a block of variable defs
+   UO_nl_func_var_def_blk,           // newline after first block of func variable defs
+   UO_nl_typedef_blk_start,          // newline before typedef block
+   UO_nl_typedef_blk_end,            // newline after typedef block
+   UO_nl_typedef_blk_in,             // newline max within typedef block
+   UO_nl_var_def_blk_start,          // newline before variable defs block
+   UO_nl_var_def_blk_end,            // newline after variable defs block
+   UO_nl_var_def_blk_in,             // newline max within variable defs block
    UO_nl_before_case,                // newline before 'case' statement
    UO_nl_before_throw,
    UO_nl_after_return,               /* newline after return statement */
@@ -541,7 +547,6 @@ enum uncrustify_options
    UO_nl_after_func_body_one_liner,  // after the closing brace of a single line function body
    UO_nl_after_func_proto,           // after each prototype
    UO_nl_after_func_proto_group,     // after a block of prototypes
-   //UO_nl_after_var_def_group,        // after a group of variable defs at top of proc
    //UO_nl_after_ifdef,                // after #if or #ifdef - but not if covers whole file
    UO_nl_after_struct,
    UO_nl_after_class,
@@ -556,6 +561,7 @@ enum uncrustify_options
 
    UO_eat_blanks_after_open_brace,   // remove blank lines after {
    UO_eat_blanks_before_close_brace, // remove blank lines before }
+   UO_nl_remove_extra_newlines,      // remove extra nl aggressiveness
 
 
    /*

@@ -150,7 +150,8 @@ void remove_extra_returns();
  *  newlines.cpp
  */
 
-void newlines_cleanup_braces(void);
+void newlines_remove_newlines(void);
+void newlines_cleanup_braces(bool first);
 void newlines_insert_blank_lines(void);
 void newlines_squeeze_ifdef(void);
 void newlines_eat_start_end(void);

@@ -1126,7 +1126,8 @@ void indent_text(void)
          {
             frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent;
             if ((pc->level == pc->brace_level) &&
-                ((pc->type == CT_FPAREN_OPEN) || (pc->type == CT_SPAREN_OPEN)))
+                (((pc->type == CT_FPAREN_OPEN) && (pc->parent_type != CT_FUNC_CTOR_VAR)) ||
+                 (pc->type == CT_SPAREN_OPEN)))
             {
                frm.pse[frm.pse_tos].indent += abs(cpd.settings[UO_indent_continue].n);
             }
