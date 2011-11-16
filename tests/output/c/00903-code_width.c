@@ -63,15 +63,13 @@ static void some_really_long_function_name(struct device *dev,
     {
     }
 
-    register_clcmd(
-        "examine",
-        "do_examine",
-        -1,
-        "-Allows a player to examine the health and armor of a teammate" );
-    register_clcmd(
-        "/examine",
-        "do_examine",
-        -1,
-        "-Allows a player to examine the health and armor of a teammate" );
+    register_clcmd( "examine",
+                    "do_examine",
+                    -1,
+                    "-Allows a player to examine the health and armor of a teammate" );
+    register_clcmd( "/examine",
+                    "do_examine",
+                    -1,
+                    "-Allows a player to examine the health and armor of a teammate" );
 }
 
