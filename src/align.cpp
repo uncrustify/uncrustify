@@ -807,7 +807,7 @@ static void align_same_func_call_params()
       {
          if (chunk_is_newline(pc))
          {
-            for (idx = 0; idx <= (int)as.size(); idx++)
+            for (idx = 0; idx < (int)as.size(); idx++)
             {
                as[idx].NewLines(pc->nl_count);
             }
