@@ -1568,7 +1568,7 @@ static void output_comment_multi(chunk_t *pc)
 static void output_comment_multi_simple(chunk_t *pc)
 {
    int        cmt_idx;
-   char       ch;
+   int        ch;
    int        line_count = 0;
    int        ccol;
    int        col_diff = 0;
