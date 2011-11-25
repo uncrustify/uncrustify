@@ -255,6 +255,7 @@
 
 02421 cmt_multi-1.cfg          c/cmt_multi.c
 02422 cmt_multi-2.cfg          c/cmt_multi.c
+02423 cmt_multi-2.cfg          c/cmt_multi_utf8.c
 
 02431 align_right_cmt_gap-1.cfg c/cmt_right_align.c
 02432 align_right_cmt_gap-2.cfg c/cmt_right_align.c
