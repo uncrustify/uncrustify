@@ -180,6 +180,18 @@ chunk_t *newline_add_before2(chunk_t *pc, const char *fcn, int line)
 }
 
 
+chunk_t *newline_force_before2(chunk_t *pc, const char *fcn, int line)
+{
+   chunk_t *nl = newline_add_before2(pc, fcn, line);
+   if (nl && (nl->nl_count > 1))
+   {
+      nl->nl_count = 1;
+      MARK_CHANGE();
+   }
+   return nl;
+}
+
+
 /**
  * Add a newline after the chunk if there isn't already a newline present.
  * Virtual braces are skipped, as they do not contribute to the output.
@@ -208,6 +220,18 @@ chunk_t *newline_add_after2(chunk_t *pc, const char *fcn, int line)
 
    MARK_CHANGE();
    return(chunk_add_after(&nl, pc));
+}
+
+
+chunk_t *newline_force_after2(chunk_t *pc, const char *fcn, int line)
+{
+   chunk_t *nl = newline_add_after2(pc, fcn, line);
+   if (nl && (nl->nl_count > 1))
+   {
+      nl->nl_count = 1;
+      MARK_CHANGE();
+   }
+   return nl;
 }
 
 
@@ -2711,11 +2735,25 @@ void newlines_class_colon_pos(void)
             {
                if (cpd.settings[UO_pos_class_comma].tp & TP_TRAIL)
                {
-                  newline_add_after(pc);
+                  if (cpd.settings[UO_nl_class_init_args].a == AV_FORCE)
+                  {
+                     newline_force_after(pc);
+                  }
+                  else
+                  {
+                     newline_add_after(pc);
+                  }
                }
                else if (cpd.settings[UO_pos_class_comma].tp & TP_LEAD)
                {
-                  newline_add_before(pc);
+                  if (cpd.settings[UO_nl_class_init_args].a == AV_FORCE)
+                  {
+                     newline_force_before(pc);
+                  }
+                  else
+                  {
+                     newline_add_before(pc);
+                  }
                   next = chunk_get_next_nc(pc);
                   if (chunk_is_newline(next) && chunk_safe_to_del_nl(next))
                   {

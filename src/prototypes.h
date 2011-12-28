@@ -165,8 +165,14 @@ void newline_iarf(chunk_t *pc, argval_t av);
 #define newline_add_before(pc)    newline_add_before2(pc, __func__, __LINE__)
 chunk_t *newline_add_before2(chunk_t *pc, const char *fcn, int line);
 
+#define newline_force_before(pc)    newline_force_before2(pc, __func__, __LINE__)
+chunk_t *newline_force_before2(chunk_t *pc, const char *fcn, int line);
+
 #define newline_add_after(pc)     newline_add_after2(pc, __func__, __LINE__)
 chunk_t *newline_add_after2(chunk_t *pc, const char *fcn, int line);
+
+#define newline_force_after(pc)     newline_force_after2(pc, __func__, __LINE__)
+chunk_t *newline_force_after2(chunk_t *pc, const char *fcn, int line);
 
 
 #define newline_del_between(start, end) \
