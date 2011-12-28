@@ -1449,14 +1449,17 @@ static void newline_iarf_pair(chunk_t *before, chunk_t *after, argval_t av)
 {
    if ((before != NULL) && (after != NULL))
    {
-      if ((av & AV_REMOVE) != 0)
-      {
-         newline_del_between(before, after);
-      }
-
       if ((av & AV_ADD) != 0)
       {
-         newline_add_between(before, after);
+         chunk_t *nl = newline_add_between(before, after);
+         if (nl && (av == AV_FORCE) && (nl->nl_count > 1))
+         {
+            nl->nl_count = 1;
+         }
+      }
+      else if ((av & AV_REMOVE) != 0)
+      {
+         newline_del_between(before, after);
       }
    }
 }
