@@ -2373,7 +2373,8 @@ static bool can_be_full_param(chunk_t *start, chunk_t *end)
          LOG_FMT(LFPARAM, " <== elipses\n");
          return(true);
       }
-      else if ((word_cnt == 1) && (pc->type == CT_PAREN_OPEN))
+      else if (((word_cnt == 1) || (word_cnt == type_count)) &&
+               (pc->type == CT_PAREN_OPEN))
       {
          /* Check for func proto param 'void (*name)' or 'void (*name)(params)' */
          chunk_t *tmp1 = chunk_get_next_ncnl(pc, CNAV_PREPROC);
@@ -2395,6 +2396,10 @@ static bool can_be_full_param(chunk_t *start, chunk_t *end)
             tmp3 = chunk_skip_to_match(tmp1, CNAV_PREPROC);
          }
          pc = tmp3;
+
+         /* reset some vars to allow [] after parens */
+         word_cnt   = 1;
+         type_count = 1;
       }
       else if ((word_cnt == 1) && (pc->type == CT_TSQUARE))
       {
@@ -2407,7 +2412,8 @@ static bool can_be_full_param(chunk_t *start, chunk_t *end)
       }
       else
       {
-         LOG_FMT(LFPARAM, " <== [%s] no way!\n", get_token_name(pc->type));
+         LOG_FMT(LFPARAM, " <== [%s] no way! tc=%d wc=%d\n",
+                 get_token_name(pc->type), type_count, word_cnt);
          return(false);
       }
    }
