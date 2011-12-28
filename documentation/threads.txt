@@ -1,0 +1,111 @@
+
+Notes on how to deal with the wicked corner case that is C/C++
+preprocessor #if magic.  None of this is actually implemented.
+
+Languages not affected:
+ - D
+ - Java
+ - ECMA (Java Script)
+
+Langauges affected:
+ - C
+ - C++
+ - C#
+ - Vala
+ - Pawn
+ - Objective C/C++
+
+
+Threads of code are created for functions that navigate the tokens.
+There is the master list of the raw tokens parsed out.
+
+There is at least one thread, which, in the absense of any #if statements, is
+the same as the raw token list.
+
+In the threads, a BARRIER is placed where ever code cannot move past.
+This represents and #if or #else statement.
+Normally, the barriers are skipped when navigating code. Only when removing a
+newline does the code need to check for a barrier.
+
+For #if statements without an #else, there is an implicit #else added that contains
+nothing.
+
+// example 1
+a
+#if X
+b
+#endif
+c
+
+Thread
+       #if   #endif
+       V     V
+0 - a -+- b -+- c
+       |     |
+1      +-----+  <- empty else path (ie, for '#if 0')
+
+Max depth = 2
+
+
+// example 2
+a
+#if X
+b
+#else
+c
+#endif
+d
+       #if   #endif
+       V     V
+0 - a -+- b -+- d
+       |     |
+1      +- c -+   <- else path
+
+Max depth = 2
+
+
+// example 3
+a
+#if X
+b
+#elif Y
+c
+#elif Z
+d
+#else
+e
+#endif
+f
+#if A
+g
+#endif
+h
+       #if X #endif          #if A
+       V     V               V
+0 - a -+- b -+- f -----------+- g -+- h
+       |     |               |     |
+1      +- c -+   <- elif Y   +-----+   <- empty else
+       |     |
+2      +- d -+   <- elif Z
+       |     |
+3      +- e -+   <- else
+
+Max depth = 4
+
+The detection routines need to be executed once for each thread, up to the maximum
+thread depth.  Note that the typical maximum thread depth is going to be 2-3.
+
+0 - a - b - f - g - h
+1 - a - c - f ----- h
+2 - a - d - f - g - h
+3 - a - e - f - g - h
+
+The general rule is that if the current thread exceed the max, thread 0 is used.
+
+Identification is the primary use for the threads.
+The secondary use is indentation.  The indentation of each token at each thread
+level is recorded.
+The maximum indentation for the token is used, assuming the thread is without
+error. ('#if 0' commented out code that is bad may not be handled.)
+
+I won't know if this will work for sure until I try it.
