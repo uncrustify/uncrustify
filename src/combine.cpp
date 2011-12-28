@@ -785,7 +785,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
    /* Change CT_STAR to CT_PTR_TYPE or CT_ARITH or CT_DEREF */
    if (pc->type == CT_STAR)
    {
-      if (chunk_is_paren_close(next))
+      if (chunk_is_paren_close(next) || (next->type == CT_COMMA))
       {
          pc->type = CT_PTR_TYPE;
       }
