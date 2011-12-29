@@ -762,8 +762,6 @@ void register_options(void)
                   "Add or remove newline between '()' in a function definition.");
    unc_add_option("nl_fdef_brace", UO_nl_fdef_brace, AT_IARF,
                   "Add or remove newline between function signature and '{'");
-   unc_add_option("nl_after_return", UO_nl_after_return, AT_BOOL,
-                  "Whether to put a newline after 'return' statement");
    unc_add_option("nl_return_expr", UO_nl_return_expr, AT_IARF,
                   "Add or remove a newline between the return keyword and return expression.");
    unc_add_option("nl_after_semicolon", UO_nl_after_semicolon, AT_BOOL,
@@ -891,6 +889,10 @@ void register_options(void)
                   "0: No change\n"
                   "1: Remove most newlines not handled by other config\n"
                   "2: Remove all newlines and reformat completely by config");
+   unc_add_option("nl_before_return", UO_nl_before_return, AT_BOOL,
+                  "Whether to put a blank line before 'return' statements, unless after an open brace.");
+   unc_add_option("nl_after_return", UO_nl_after_return, AT_BOOL,
+                  "Whether to put a blank line after 'return' statements, unless followed by a close brace.");
 
    unc_begin_group(UG_position, "Positioning options");
    unc_add_option("pos_arith", UO_pos_arith, AT_POS,

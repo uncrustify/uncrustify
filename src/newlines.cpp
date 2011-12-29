@@ -1402,12 +1402,55 @@ static void newline_case_colon(chunk_t *start)
 
 
 /**
+ * Put a blank line before a return statement, unless it is after an open brace
+ */
+static void newline_before_return(chunk_t *start)
+{
+   chunk_t *nl;
+   chunk_t *pc;
+
+   nl = chunk_get_prev(start);
+   if (!chunk_is_newline(nl))
+   {
+      /* Don't mess with lines that don't start with 'return' */
+      return;
+   }
+
+   /* Do we already have a blank line? */
+   if (nl->nl_count > 1)
+   {
+      return;
+   }
+
+   pc = chunk_get_prev(nl);
+   if (!pc || (pc->type == CT_BRACE_OPEN))
+   {
+      return;
+   }
+   if (chunk_is_comment(pc))
+   {
+      pc = chunk_get_prev(pc);
+      if (!chunk_is_newline(pc))
+      {
+         return;
+      }
+      nl = pc;
+   }
+   if (nl->nl_count < 2)
+   {
+      nl->nl_count++;
+      MARK_CHANGE();
+   }
+}
+
+
+/**
  * Put a empty line after a return statement, unless it is followed by a
  * close brace.
  *
  * May not work with PAWN
  */
-static void newline_return(chunk_t *start)
+static void newline_after_return(chunk_t *start)
 {
    chunk_t *pc;
    chunk_t *semi;
@@ -2139,9 +2182,13 @@ void newlines_cleanup_braces(bool first)
       }
       else if (pc->type == CT_RETURN)
       {
+         if (cpd.settings[UO_nl_before_return].b)
+         {
+            newline_before_return(pc);
+         }
          if (cpd.settings[UO_nl_after_return].b)
          {
-            newline_return(pc);
+            newline_after_return(pc);
          }
       }
       else if (pc->type == CT_SEMICOLON)

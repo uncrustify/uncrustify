@@ -444,6 +444,7 @@ enum uncrustify_options
    UO_nl_var_def_blk_in,             // newline max within variable defs block
    UO_nl_before_case,                // newline before 'case' statement
    UO_nl_before_throw,
+   UO_nl_before_return,
    UO_nl_after_return,               /* newline after return statement */
    UO_nl_return_expr,
    UO_nl_after_case,                 /* disallow nested "case 1: a=3;" */
