@@ -1,6 +1,7 @@
 
 int foo1(void)
 {
+   bar();
    return NewClass(1);
 }
 
@@ -12,6 +13,8 @@ int foo2(void)
 
 int foo3(void)
 {
+   bar(none);
+   // comment
    return(3);
 }
 
