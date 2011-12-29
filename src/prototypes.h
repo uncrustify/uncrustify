@@ -290,6 +290,12 @@ void encode_utf8(int ch, vector<UINT8>& res);
  */
 void remove_extra_semicolons(void);
 
+/*
+ * compat_posix.cpp / compat_win32.cpp
+ */
+bool unc_getenv(const char *name, std::string& str);
+bool unc_homedir(std::string& home);
+
 
 /**
  * Advances to the next tab stop.

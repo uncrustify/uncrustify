@@ -61,6 +61,8 @@
          <F N="src/chunk_list.cpp"/>
          <F N="src/ChunkStack.cpp"/>
          <F N="src/combine.cpp"/>
+         <F N="src/compat_posix.cpp"/>
+         <F N="src/compat_win32.cpp"/>
          <F N="src/defines.cpp"/>
          <F N="src/detect.cpp"/>
          <F N="src/indent.cpp"/>

@@ -227,7 +227,7 @@ static void redir_stdout(const char *output_file)
 
 int main(int argc, char *argv[])
 {
-   const char *cfg_file    = "uncrustify.cfg";
+   string     cfg_file;
    const char *parsed_file = NULL;
    const char *source_file = NULL;
    const char *output_file = NULL;
@@ -291,35 +291,40 @@ int main(int argc, char *argv[])
    }
 
    /* Get the config file name */
-   if (((cfg_file = arg.Param("--config")) == NULL) &&
-       ((cfg_file = arg.Param("-c")) == NULL))
+   if (((p_arg = arg.Param("--config")) != NULL) ||
+       ((p_arg = arg.Param("-c")) != NULL))
    {
-      /* Handled later */
+      cfg_file = p_arg;
    }
 
-#ifndef WIN32
    /* Try to file a config at an alternate location */
-   char buf[512];
-   if (cfg_file == NULL)
+   if (cfg_file.empty())
    {
-      cfg_file = getenv("UNCRUSTIFY_CONFIG");
-      if (cfg_file == NULL)
+      if (!unc_getenv("UNCRUSTIFY_CONFIG", cfg_file))
       {
-         const char *home = getenv("HOME");
+         string home;
 
-         if (home != NULL)
+         if (unc_homedir(home))
          {
             struct stat tmp_stat;
+            char        buf[home.size() + 32];
 
-            snprintf(buf, sizeof(buf), "%s/.uncrustify.cfg", home);
+            snprintf(buf, sizeof(buf), "%s/uncrustify.cfg", home.c_str());
             if (stat(buf, &tmp_stat) == 0)
             {
                cfg_file = buf;
             }
+            else
+            {
+               snprintf(buf, sizeof(buf), "%s/.uncrustify.cfg", home.c_str());
+               if (stat(buf, &tmp_stat) == 0)
+               {
+                  cfg_file = buf;
+               }
+            }
          }
       }
    }
-#endif
 
    /* Get the parsed file name */
    if (((parsed_file = arg.Param("--parsed")) != NULL) ||
@@ -405,6 +410,7 @@ int main(int argc, char *argv[])
    /* Grab the output override */
    output_file = arg.Param("-o");
 
+   LOG_FMT(LDATA, "config_file = %s\n", cfg_file.c_str());
    LOG_FMT(LDATA, "output_file = %s\n", (output_file != NULL) ? output_file : "null");
    LOG_FMT(LDATA, "source_file = %s\n", (source_file != NULL) ? source_file : "null");
    LOG_FMT(LDATA, "source_list = %s\n", (source_list != NULL) ? source_list : "null");
@@ -437,10 +443,10 @@ int main(int argc, char *argv[])
     * It is optional for "--universalindent" and "--detect", but required for
     * everything else.
     */
-   if (cfg_file != NULL)
+   if (!cfg_file.empty())
    {
-      cpd.filename = cfg_file;
-      if (load_option_file(cfg_file) < 0)
+      cpd.filename = cfg_file.c_str();
+      if (load_option_file(cpd.filename) < 0)
       {
          usage_exit("Unable to load the config file", argv[0], 56);
       }
@@ -502,14 +508,10 @@ int main(int argc, char *argv[])
    /* Everything beyond this point requires a config file, so complain and
     * bail if we don't have one.
     */
-   if (cfg_file == NULL)
+   if (cfg_file.empty())
    {
-#ifdef WIN32
-      usage_exit("Specify the config file: -c file", argv[0], 58);
-#else
       usage_exit("Specify the config file with '-c file' or set UNCRUSTIFY_CONFIG",
                  argv[0], 58);
-#endif
    }
 
    /*

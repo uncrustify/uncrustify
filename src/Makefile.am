@@ -14,7 +14,8 @@ uncrustify_SOURCES = uncrustify.cpp chunk_list.cpp indent.cpp align.cpp combine.
 		logmask.cpp logger.cpp ChunkStack.cpp braces.cpp brace_cleanup.cpp \
 		align_stack.cpp defines.cpp width.cpp lang_pawn.cpp md5.cpp \
 		backup.cpp parens.cpp universalindentgui.cpp semicolons.cpp \
-		sorting.cpp detect.cpp unicode.cpp unc_text.cpp
+		sorting.cpp detect.cpp unicode.cpp unc_text.cpp \
+		compat_posix.cpp compat_win32.cpp
 
 noinst_HEADERS = chunk_list.h options.h char_table.h chunk_list.h \
 		uncrustify_types.h prototypes.h logmask.h logger.h \

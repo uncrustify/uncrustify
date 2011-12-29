@@ -67,7 +67,9 @@ am_uncrustify_OBJECTS = uncrustify-uncrustify.$(OBJEXT) \
 	uncrustify-universalindentgui.$(OBJEXT) \
 	uncrustify-semicolons.$(OBJEXT) uncrustify-sorting.$(OBJEXT) \
 	uncrustify-detect.$(OBJEXT) uncrustify-unicode.$(OBJEXT) \
-	uncrustify-unc_text.$(OBJEXT)
+	uncrustify-unc_text.$(OBJEXT) \
+	uncrustify-compat_posix.$(OBJEXT) \
+	uncrustify-compat_win32.$(OBJEXT)
 uncrustify_OBJECTS = $(am_uncrustify_OBJECTS)
 uncrustify_LDADD = $(LDADD)
 DEFAULT_INCLUDES = -I.@am__isrc@
@@ -202,7 +204,8 @@ uncrustify_SOURCES = uncrustify.cpp chunk_list.cpp indent.cpp align.cpp combine.
 		logmask.cpp logger.cpp ChunkStack.cpp braces.cpp brace_cleanup.cpp \
 		align_stack.cpp defines.cpp width.cpp lang_pawn.cpp md5.cpp \
 		backup.cpp parens.cpp universalindentgui.cpp semicolons.cpp \
-		sorting.cpp detect.cpp unicode.cpp unc_text.cpp
+		sorting.cpp detect.cpp unicode.cpp unc_text.cpp \
+		compat_posix.cpp compat_win32.cpp
 
 noinst_HEADERS = chunk_list.h options.h char_table.h chunk_list.h \
 		uncrustify_types.h prototypes.h logmask.h logger.h \
@@ -585,6 +588,22 @@ uncrustify-unc_text.o: unc_text.cpp
 uncrustify-unc_text.obj: unc_text.cpp
 	$(AM_V_CXX) @AM_BACKSLASH@
 	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(uncrustify_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o uncrustify-unc_text.obj `if test -f 'unc_text.cpp'; then $(CYGPATH_W) 'unc_text.cpp'; else $(CYGPATH_W) '$(srcdir)/unc_text.cpp'; fi`
+
+uncrustify-compat_posix.o: compat_posix.cpp
+	$(AM_V_CXX) @AM_BACKSLASH@
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(uncrustify_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o uncrustify-compat_posix.o `test -f 'compat_posix.cpp' || echo '$(srcdir)/'`compat_posix.cpp
+
+uncrustify-compat_posix.obj: compat_posix.cpp
+	$(AM_V_CXX) @AM_BACKSLASH@
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(uncrustify_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o uncrustify-compat_posix.obj `if test -f 'compat_posix.cpp'; then $(CYGPATH_W) 'compat_posix.cpp'; else $(CYGPATH_W) '$(srcdir)/compat_posix.cpp'; fi`
+
+uncrustify-compat_win32.o: compat_win32.cpp
+	$(AM_V_CXX) @AM_BACKSLASH@
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(uncrustify_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o uncrustify-compat_win32.o `test -f 'compat_win32.cpp' || echo '$(srcdir)/'`compat_win32.cpp
+
+uncrustify-compat_win32.obj: compat_win32.cpp
+	$(AM_V_CXX) @AM_BACKSLASH@
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(uncrustify_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o uncrustify-compat_win32.obj `if test -f 'compat_win32.cpp'; then $(CYGPATH_W) 'compat_win32.cpp'; else $(CYGPATH_W) '$(srcdir)/compat_win32.cpp'; fi`
 
 ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
 	list='$(SOURCES) $(HEADERS) $(LISP) $(TAGS_FILES)'; \
