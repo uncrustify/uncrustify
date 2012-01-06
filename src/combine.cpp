@@ -3158,8 +3158,6 @@ static void mark_class_ctor(chunk_t *start)
    LOG_FMT(LFTOR, "%s: Called on %s on line %d (next='%s')\n",
            __func__, pclass->str.c_str(), pclass->orig_line, pc->str.c_str());
 
-   pclass->parent_type = start->type;
-
    /* Find the open brace, abort on semicolon */
    while ((pc != NULL) && (pc->type != CT_BRACE_OPEN))
    {
@@ -3212,12 +3210,18 @@ static void mark_class_ctor(chunk_t *start)
       }
 
       next = chunk_get_next_ncnl(pc, CNAV_PREPROC);
-      if ((next != NULL) && (next->len() == 1) && (next->str[0] == '(') &&
-          pc->str.equals(pclass->str))
+      if (pc->str.equals(pclass->str))
       {
-         pc->type = CT_FUNC_CLASS;
-         LOG_FMT(LFTOR, "%d] Marked CTor/DTor %s\n", pc->orig_line, pc->str.c_str());
-         mark_cpp_constructor(pc);
+         if ((next != NULL) && (next->len() == 1) && (next->str[0] == '('))
+         {
+            pc->type = CT_FUNC_CLASS;
+            LOG_FMT(LFTOR, "%d] Marked CTor/DTor %s\n", pc->orig_line, pc->str.c_str());
+            mark_cpp_constructor(pc);
+         }
+         else
+         {
+            make_type(pc);
+         }
       }
       pc = next;
    }
