@@ -205,6 +205,27 @@ static bool chunk_ends_type(chunk_t *pc)
 }
 
 
+/* skip to the final word/type in a :: chain
+ * pc is either a word or a ::
+ */
+static chunk_t *skip_dc_member(chunk_t *start)
+{
+   if (!start)
+   {
+      return NULL;
+   }
+
+   chunk_t *pc = start;
+   chunk_t *next = (pc->type == CT_DC_MEMBER) ? pc : chunk_get_next_ncnl(pc);
+   while (next && (next->type == CT_DC_MEMBER))
+   {
+      pc   = chunk_get_next_ncnl(next);
+      next = chunk_get_next_ncnl(pc);
+   }
+   return pc;
+}
+
+
 /**
  * This is called on every chunk.
  * First on all non-preprocessor chunks and then on each preprocessor chunk.
@@ -705,7 +726,6 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
    }
 
 
-
    /* Check for stuff that can only occur at the start of an expression */
    if ((pc->flags & PCF_EXPR_START) != 0)
    {
@@ -734,17 +754,21 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       }
    }
 
-   /* Detect a variable definition that starts with struct/enum/union */
+   /* Detect a variable definition that starts with struct/enum/union/class */
    if (((pc->flags & PCF_IN_TYPEDEF) == 0) &&
        (prev->parent_type != CT_CPP_CAST) &&
        ((prev->flags & PCF_IN_FCN_DEF) == 0) &&
        ((pc->type == CT_STRUCT) ||
         (pc->type == CT_UNION) ||
+        (pc->type == CT_CLASS) ||
         (pc->type == CT_ENUM)))
    {
-      tmp = next;
-      if (tmp->type == CT_TYPE)
+      tmp = skip_dc_member(next);
+      if (tmp && ((tmp->type == CT_TYPE) || (tmp->type == CT_WORD)))
       {
+         tmp->parent_type = pc->type;
+         tmp->type        = CT_TYPE;
+
          tmp = chunk_get_next_ncnl(tmp);
       }
       if ((tmp != NULL) && (tmp->type == CT_BRACE_OPEN))
@@ -752,7 +776,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
          tmp = chunk_skip_to_match(tmp);
          tmp = chunk_get_next_ncnl(tmp);
       }
-      if ((tmp != NULL) && (chunk_is_star(tmp) || (tmp->type == CT_WORD)))
+      if ((tmp != NULL) && (chunk_is_star(tmp) || chunk_is_addr(tmp) || (tmp->type == CT_WORD)))
       {
          mark_variable_definition(tmp);
       }
