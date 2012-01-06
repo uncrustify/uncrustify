@@ -6,6 +6,6 @@ C& D;
 const C& D;
 static C& D;
 public C& D;
-E=C& D;
+E=c& D;
 };
 
