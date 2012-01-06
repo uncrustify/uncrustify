@@ -3189,8 +3189,7 @@ static void mark_class_ctor(chunk_t *start)
 
       next = chunk_get_next_ncnl(pc, CNAV_PREPROC);
       if ((next != NULL) && (next->len() == 1) && (next->str[0] == '(') &&
-          (pc->len() == pclass->len()) &&
-          (memcmp(pc->text(), pclass->text(), pc->len()) == 0))
+          pc->str.equals(pclass->str))
       {
          pc->type = CT_FUNC_CLASS;
          LOG_FMT(LFTOR, "%d] Marked CTor/DTor %s\n", pc->orig_line, pc->str.c_str());
