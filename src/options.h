@@ -193,6 +193,7 @@ enum uncrustify_options
    UO_sp_after_byref,           // space after a '&'  as in 'int& var'
 
    UO_sp_after_type,            // space between type and word
+   UO_sp_before_template_paren, // D: "template Foo("
 
    UO_sp_inside_fparen,         // space inside 'foo( xxx )' vs 'foo(xxx)'
    UO_sp_inside_fparens,        // space inside 'foo( )' vs 'foo()'

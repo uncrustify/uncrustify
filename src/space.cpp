@@ -1222,6 +1222,12 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
       return(cpd.settings[UO_sp_before_sparen].a);
    }
 
+   if ((second->type == CT_PAREN_OPEN) && (second->parent_type == CT_TEMPLATE))
+   {
+      log_rule("UO_sp_before_template_paren");
+      return(cpd.settings[UO_sp_before_template_paren].a);
+   }
+
    if ((second->type != CT_PTR_TYPE) &&
        ((first->type == CT_QUALIFIER) || (first->type == CT_TYPE)))
    {
