@@ -43,10 +43,13 @@ static void handle_oc_message_decl(chunk_t *pc);
 static void handle_oc_message_send(chunk_t *pc);
 static void handle_cs_square_stmt(chunk_t *pc);
 static void handle_cs_property(chunk_t *pc);
-static void handle_template(chunk_t *pc);
+static void handle_cpp_template(chunk_t *pc);
+static void handle_d_template(chunk_t *pc);
 static void handle_wrap(chunk_t *pc);
 static bool is_oc_block(chunk_t *pc);
 static void handle_java_assert(chunk_t *pc);
+static chunk_t *get_d_template_types(ChunkStack& cs, chunk_t *open_paren);
+static bool chunkstack_match(ChunkStack& cs, chunk_t *pc);
 
 void make_type(chunk_t *pc)
 {
@@ -468,7 +471,14 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
 
    if (pc->type == CT_TEMPLATE)
    {
-      handle_template(pc);
+      if (cpd.lang_flags & LANG_D)
+      {
+         handle_d_template(pc);
+      }
+      else
+      {
+         handle_cpp_template(pc);
+      }
    }
 
    if ((pc->type == CT_WORD) &&
@@ -3126,6 +3136,7 @@ static void mark_class_ctor(chunk_t *start)
 {
    chunk_t *next;
    chunk_t *pclass;
+   ChunkStack cs;
 
    pclass = chunk_get_next_ncnl(start, CNAV_PREPROC);
    if ((pclass == NULL) ||
@@ -3155,8 +3166,23 @@ static void mark_class_ctor(chunk_t *start)
       return;
    }
 
+   /* Add the class name */
+   cs.Push(pclass);
+
    LOG_FMT(LFTOR, "%s: Called on %s on line %d (next='%s')\n",
            __func__, pclass->str.c_str(), pclass->orig_line, pc->str.c_str());
+
+   /* detect D template class: "class foo(x) { ... }" */
+   if ((cpd.lang_flags & LANG_D) && (next->type == CT_PAREN_OPEN))
+   {
+      next->parent_type = CT_TEMPLATE;
+
+      next = get_d_template_types(cs, next);
+      if (next && (next->type == CT_PAREN_CLOSE))
+      {
+         next->parent_type = CT_TEMPLATE;
+      }
+   }
 
    /* Find the open brace, abort on semicolon */
    while ((pc != NULL) && (pc->type != CT_BRACE_OPEN))
@@ -3210,7 +3236,7 @@ static void mark_class_ctor(chunk_t *start)
       }
 
       next = chunk_get_next_ncnl(pc, CNAV_PREPROC);
-      if (pc->str.equals(pclass->str))
+      if (chunkstack_match(cs, pc))
       {
          if ((next != NULL) && (next->len() == 1) && (next->str[0] == '('))
          {
@@ -3430,7 +3456,7 @@ static void mark_define_expressions(void)
 
 
 /**
- * We are on the 'template' C++ keyword.
+ * We are on the C++ 'template' keyword.
  * What follows should be the following:
  *
  * template <class identifier> function_declaration;
@@ -3442,7 +3468,7 @@ static void mark_define_expressions(void)
  * Set the parent to the class after the <> to CT_TEMPLATE.
  * Set the parent of the semicolon to CT_TEMPLATE.
  */
-static void handle_template(chunk_t *pc)
+static void handle_cpp_template(chunk_t *pc)
 {
    chunk_t *tmp;
    int     level;
@@ -3485,6 +3511,123 @@ static void handle_template(chunk_t *pc)
          }
       }
    }
+}
+
+
+/**
+ * Parse off the types in the D template args, adds to cs
+ * returns the close_paren
+ */
+static chunk_t *get_d_template_types(ChunkStack& cs, chunk_t *open_paren)
+{
+   chunk_t *tmp       = open_paren;
+   bool    maybe_type = true;
+
+   while (((tmp = chunk_get_next_ncnl(tmp)) != NULL) &&
+          (tmp->level > open_paren->level))
+   {
+      if ((tmp->type == CT_TYPE) || (tmp->type == CT_WORD))
+      {
+         if (maybe_type)
+         {
+            make_type(tmp);
+            cs.Push(tmp);
+         }
+         maybe_type = false;
+      }
+      else if (tmp->type == CT_COMMA)
+      {
+         maybe_type = true;
+      }
+   }
+   return tmp;
+}
+
+
+static bool chunkstack_match(ChunkStack& cs, chunk_t *pc)
+{
+   chunk_t *tmp;
+   int idx;
+
+   for (idx = 0; idx < cs.Len(); idx++)
+   {
+      tmp = cs.GetChunk(idx);
+      if (pc->str.equals(tmp->str))
+      {
+         return true;
+      }
+   }
+   return false;
+}
+
+
+/**
+ * We are on the D 'template' keyword.
+ * What follows should be the following:
+ *
+ * template NAME ( TYPELIST ) { BODY }
+ *
+ * Set the parent of NAME to template, change NAME to CT_TYPE.
+ * Set the parent of the parens and braces to CT_TEMPLATE.
+ * Scan the body for each type in TYPELIST and change the type to CT_TYPE.
+ */
+static void handle_d_template(chunk_t *pc)
+{
+   chunk_t *name;
+   chunk_t *po;
+   chunk_t *tmp;
+
+   name = chunk_get_next_ncnl(pc);
+   po   = chunk_get_next_ncnl(name);
+   if (!name || ((name->type != CT_WORD) && (name->type != CT_WORD)))
+   {
+      /* TODO: log an error, expected NAME */
+      return;
+   }
+   if (!po || (po->type != CT_PAREN_OPEN))
+   {
+      /* TODO: log an error, expected '(' */
+      return;
+   }
+
+   name->type        = CT_TYPE;
+   name->parent_type = CT_TEMPLATE;
+   po->parent_type   = CT_TEMPLATE;
+
+   ChunkStack cs;
+
+   tmp = get_d_template_types(cs, po);
+
+   if (!tmp || (tmp->type != CT_PAREN_CLOSE))
+   {
+      /* TODO: log an error, expected ')' */
+      return;
+   }
+   tmp->parent_type = CT_TEMPLATE;
+
+   tmp = chunk_get_next_ncnl(tmp);
+   if (tmp->type != CT_BRACE_OPEN)
+   {
+      /* TODO: log an error, expected '{' */
+      return;
+   }
+   tmp->parent_type = CT_TEMPLATE;
+   po = tmp;
+
+   tmp = po;
+   while (((tmp = chunk_get_next_ncnl(tmp)) != NULL) &&
+          (tmp->level > po->level))
+   {
+      if ((tmp->type == CT_WORD) && chunkstack_match(cs, tmp))
+      {
+         tmp->type = CT_TYPE;
+      }
+   }
+   if (tmp->type != CT_BRACE_CLOSE)
+   {
+      /* TODO: log an error, expected '}' */
+   }
+   tmp->parent_type = CT_TEMPLATE;
 }
 
 
