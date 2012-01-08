@@ -1906,6 +1906,10 @@ void newlines_cleanup_braces(bool first)
       {
          newlines_if_for_while_switch(pc, cpd.settings[UO_nl_using_brace].a);
       }
+      else if (pc->type == CT_UNITTEST)
+      {
+         newlines_do_else(pc, cpd.settings[UO_nl_unittest_brace].a);
+      }
       else if (pc->type == CT_SWITCH)
       {
          newlines_if_for_while_switch(pc, cpd.settings[UO_nl_switch_brace].a);

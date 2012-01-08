@@ -480,6 +480,7 @@ enum uncrustify_options
    UO_nl_catch_brace,                /* nl between catch and { */
    UO_nl_brace_catch,                /* nl between } and catch */
    UO_nl_while_brace,                /* nl between while and { */
+   UO_nl_unittest_brace,             /* nl between unittest and { */
    UO_nl_using_brace,
    UO_nl_switch_brace,               /* nl between switch and { */
    UO_nl_brace_else,                 // nl between } and else
