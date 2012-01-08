@@ -267,7 +267,7 @@ void tokenize_cleanup(void)
          }
 
          /* handle "version(unittest) { }" vs "unittest { }" */
-         if ((pc->type == CT_UNITTEST) && (prev->type == CT_PAREN_OPEN))
+         if (prev && (pc->type == CT_UNITTEST) && (prev->type == CT_PAREN_OPEN))
          {
             pc->type = CT_WORD;
          }
