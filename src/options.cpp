@@ -696,6 +696,8 @@ void register_options(void)
                   "Add or remove newline between 'scope (x)' and '{' (D)");
    unc_add_option("nl_unittest_brace", UO_nl_unittest_brace, AT_IARF,
                   "Add or remove newline between 'unittest' and '{' (D)");
+   unc_add_option("nl_version_brace", UO_nl_version_brace, AT_IARF,
+                  "Add or remove newline between 'version (x)' and '{' (D)");
    unc_add_option("nl_using_brace", UO_nl_using_brace, AT_IARF,
                   "Add or remove newline between 'using' and '{'");
    unc_add_option("nl_brace_brace", UO_nl_brace_brace, AT_IARF,

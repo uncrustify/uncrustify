@@ -1914,6 +1914,10 @@ void newlines_cleanup_braces(bool first)
       {
          newlines_do_else(pc, cpd.settings[UO_nl_unittest_brace].a);
       }
+      else if (pc->type == CT_D_VERSION_IF)
+      {
+         newlines_if_for_while_switch(pc, cpd.settings[UO_nl_version_brace].a);
+      }
       else if (pc->type == CT_SWITCH)
       {
          newlines_if_for_while_switch(pc, cpd.settings[UO_nl_switch_brace].a);
