@@ -434,7 +434,7 @@ void output_text(FILE *pfile)
                          (chunk_is_comment(pc) &&
                           (cpd.settings[UO_indent_with_tabs].n != 0));
 
-            LOG_FMT(LOUTIND, "  %d> col %d/%d - ", pc->orig_line, pc->column, cpd.column);
+            LOG_FMT(LOUTIND, "  %d> col %d/%d/%d - ", pc->orig_line, pc->column, pc->column_indent, cpd.column);
          }
          else
          {
