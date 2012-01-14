@@ -309,19 +309,19 @@ int main(int argc, char *argv[])
          if (unc_homedir(home))
          {
             struct stat tmp_stat;
-            char        buf[home.size() + 32];
+            string      path;
 
-            snprintf(buf, sizeof(buf), "%s/uncrustify.cfg", home.c_str());
-            if (stat(buf, &tmp_stat) == 0)
+            path = home + "/uncrustify.cfg";
+            if (stat(path.c_str(), &tmp_stat) == 0)
             {
-               cfg_file = buf;
+               cfg_file = path;
             }
             else
             {
-               snprintf(buf, sizeof(buf), "%s/.uncrustify.cfg", home.c_str());
-               if (stat(buf, &tmp_stat) == 0)
+               path = home + "/.uncrustify.cfg";
+               if (stat(path.c_str(), &tmp_stat) == 0)
                {
-                  cfg_file = buf;
+                  cfg_file = path;
                }
             }
          }
