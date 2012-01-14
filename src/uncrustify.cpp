@@ -25,7 +25,9 @@
 #include <cstring>
 #include <cerrno>
 #include <fcntl.h>
+#ifdef HAVE_UNISTD_H
 #include <unistd.h>
+#endif
 #include "unc_ctype.h"
 #ifdef HAVE_SYS_STAT_H
 #include <sys/stat.h>
