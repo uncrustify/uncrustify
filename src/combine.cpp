@@ -46,6 +46,7 @@ static void handle_cs_property(chunk_t *pc);
 static void handle_cpp_template(chunk_t *pc);
 static void handle_d_template(chunk_t *pc);
 static void handle_wrap(chunk_t *pc);
+static void handle_proto_wrap(chunk_t *pc);
 static bool is_oc_block(chunk_t *pc);
 static void handle_java_assert(chunk_t *pc);
 static chunk_t *get_d_template_types(ChunkStack& cs, chunk_t *open_paren);
@@ -443,6 +444,10 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
    {
       handle_wrap(pc);
       next = chunk_get_next_ncnl(pc);
+   }
+   if (pc->type == CT_PROTO_WRAP)
+   {
+      handle_proto_wrap(pc);
    }
 
    /* Handle the typedef */
@@ -4415,6 +4420,71 @@ static void handle_wrap(chunk_t *pc)
       chunk_del(clp);
    }
 }
+
+
+/**
+ * A proto wrap chunk and what follows should be treated as a function proto.
+ *
+ * RETTYPE PROTO_WRAP( NAME, PARAMS );
+ * RETTYPE gets changed with make_type().
+ * PROTO_WRAP is marked as CT_FUNC_PROTO or CT_FUNC_DEF.
+ * NAME is marked as CT_WORD.
+ * PARAMS is all marked as prototype parameters.
+ */
+static void handle_proto_wrap(chunk_t *pc)
+{
+   chunk_t *opp  = chunk_get_next_ncnl(pc);
+   chunk_t *name = chunk_get_next_ncnl(opp);
+   chunk_t *tmp  = chunk_get_next_ncnl(chunk_get_next_ncnl(name));
+   chunk_t *clp  = chunk_skip_to_match(opp);
+   chunk_t *cma  = chunk_get_next_ncnl(clp);
+
+   if (!opp || !name || !clp || !cma || !tmp ||
+       ((name->type != CT_WORD) && (name->type != CT_TYPE)) ||
+       (tmp->type != CT_PAREN_OPEN) ||
+       (opp->type != CT_PAREN_OPEN))
+   {
+      return;
+   }
+   if (cma->type == CT_SEMICOLON)
+   {
+      pc->type = CT_FUNC_PROTO;
+   }
+   else if (cma->type == CT_BRACE_OPEN)
+   {
+      pc->type = CT_FUNC_DEF;
+   }
+   else
+   {
+      return;
+   }
+   opp->parent_type = pc->type;
+   clp->parent_type = pc->type;
+
+   tmp->parent_type = CT_PROTO_WRAP;
+   fix_fcn_def_params(tmp);
+   tmp = chunk_skip_to_match(tmp);
+   if (tmp)
+   {
+      tmp->parent_type = CT_PROTO_WRAP;
+   }
+
+   /* Mark return type (TODO: move to own function) */
+   tmp = pc;
+   while ((tmp = chunk_get_prev_ncnl(tmp)) != NULL)
+   {
+      if (!chunk_is_type(tmp) &&
+          (tmp->type != CT_OPERATOR) &&
+          (tmp->type != CT_WORD) &&
+          (tmp->type != CT_ADDR))
+      {
+         break;
+      }
+      tmp->parent_type = pc->type;
+      make_type(tmp);
+   }
+}
+
 
 /**
  * Java assert statments are: "assert EXP1 [: EXP2] ;"
