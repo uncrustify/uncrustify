@@ -492,7 +492,8 @@ void indent_text(void)
          {
             frm.pse[frm.pse_tos].indent_tmp = cpd.settings[UO_pp_define_at_level].b ?
                                               frm.pse[frm.pse_tos - 1].indent_tmp : 1;
-            frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos].indent_tmp + indent_size;
+            frm.pse[frm.pse_tos].indent     = frm.pse[frm.pse_tos].indent_tmp + indent_size;
+            frm.pse[frm.pse_tos].indent_tab = frm.pse[frm.pse_tos].indent;
          }
          else
          {
