@@ -182,7 +182,7 @@ typedef struct ASN1_ENCODING_st
 #define STABLE_FLAGS_MALLOC     0x01
 #define STABLE_NO_MASK          0x02
 #define DIRSTRING_TYPE  \
-    (B_ASN1_PRINTABLESTRING | B_ASN1_T61STRING | B_ASN1_BMPSTRING | B_ASN1_UTF8STRING)
+	(B_ASN1_PRINTABLESTRING | B_ASN1_T61STRING | B_ASN1_BMPSTRING | B_ASN1_UTF8STRING)
 #define PKCS9STRING_TYPE (DIRSTRING_TYPE | B_ASN1_IA5STRING)
 
 /* Declarations for template structures: for full definitions
@@ -199,42 +199,42 @@ typedef struct ASN1_VALUE_st ASN1_VALUE;
 #define DECLARE_ASN1_FUNCTIONS(type) DECLARE_ASN1_FUNCTIONS_name(type, type)
 
 #define DECLARE_ASN1_ALLOC_FUNCTIONS(type) \
-    DECLARE_ASN1_ALLOC_FUNCTIONS_name(type, type)
+	DECLARE_ASN1_ALLOC_FUNCTIONS_name(type, type)
 
 #define DECLARE_ASN1_FUNCTIONS_name(type, name) \
-    DECLARE_ASN1_ALLOC_FUNCTIONS_name(type, name); \
-    DECLARE_ASN1_ENCODE_FUNCTIONS(type, name, name)
+	DECLARE_ASN1_ALLOC_FUNCTIONS_name(type, name); \
+	DECLARE_ASN1_ENCODE_FUNCTIONS(type, name, name)
 
 #define DECLARE_ASN1_FUNCTIONS_fname(type, itname, name) \
-    DECLARE_ASN1_ALLOC_FUNCTIONS_name(type, name); \
-    DECLARE_ASN1_ENCODE_FUNCTIONS(type, itname, name)
+	DECLARE_ASN1_ALLOC_FUNCTIONS_name(type, name); \
+	DECLARE_ASN1_ENCODE_FUNCTIONS(type, itname, name)
 
 #define DECLARE_ASN1_ENCODE_FUNCTIONS(type, itname, name) \
-    type *d2i_##name(type **a, const unsigned char **in, size_t len); \
-    int i2d_##name(const type *a, unsigned char **out); \
-    DECLARE_ASN1_ITEM(itname)
+	type *d2i_##name(type **a, const unsigned char **in, size_t len); \
+	int i2d_##name(const type *a, unsigned char **out); \
+	DECLARE_ASN1_ITEM(itname)
 
 #define DECLARE_ASN1_ENCODE_FUNCTIONS_const(type, name) \
-    type *d2i_##name(type **a, const unsigned char **in, size_t len); \
-    int i2d_##name(const type *a, unsigned char **out); \
-    DECLARE_ASN1_ITEM(name)
+	type *d2i_##name(type **a, const unsigned char **in, size_t len); \
+	int i2d_##name(const type *a, unsigned char **out); \
+	DECLARE_ASN1_ITEM(name)
 
 #define DECLARE_ASN1_NDEF_FUNCTION(name) \
-    int i2d_##name##_NDEF(const name * a, unsigned char **out)
+	int i2d_##name##_NDEF(const name * a, unsigned char **out)
 
 #define DECLARE_ASN1_FUNCTIONS_const(name) \
-    DECLARE_ASN1_ALLOC_FUNCTIONS(name); \
-    DECLARE_ASN1_ENCODE_FUNCTIONS_const(name, name)
+	DECLARE_ASN1_ALLOC_FUNCTIONS(name); \
+	DECLARE_ASN1_ENCODE_FUNCTIONS_const(name, name)
 
 #define DECLARE_ASN1_ALLOC_FUNCTIONS_name(type, name) \
-    type *name##_new(void); \
-    void name##_free(type *a)
+	type *name##_new(void); \
+	void name##_free(type *a)
 
 #define DECLARE_ASN1_PRINT_FUNCTION(stname) \
-    DECLARE_ASN1_PRINT_FUNCTION_fname(stname, stname)
+	DECLARE_ASN1_PRINT_FUNCTION_fname(stname, stname)
 
 #define DECLARE_ASN1_PRINT_FUNCTION_fname(stname, fname) \
-    int fname##_print_ctx(BIO *out, const stname *x, int indent, \
+	int fname##_print_ctx(BIO *out, const stname *x, int indent, \
 		const ASN1_PCTX * pctx)
 
 
@@ -259,16 +259,16 @@ typedef struct ASN1_VALUE_st ASN1_VALUE;
 #define ASN1_ITEM_rptr(ref) (&(ref##_it))
 
 #define DECLARE_ASN1_ITEM(name) \
-    extern const ASN1_ITEM name##_it;
+	extern const ASN1_ITEM name##_it;
 
 
 #define ASN1_STRFLGS_RFC2253 \
-    (ASN1_STRFLGS_ESC_2253 | \
-     ASN1_STRFLGS_ESC_CTRL | \
-     ASN1_STRFLGS_ESC_MSB | \
-     ASN1_STRFLGS_UTF8_CONVERT | \
-     ASN1_STRFLGS_DUMP_UNKNOWN | \
-     ASN1_STRFLGS_DUMP_DER)
+	(ASN1_STRFLGS_ESC_2253 | \
+	 ASN1_STRFLGS_ESC_CTRL | \
+	 ASN1_STRFLGS_ESC_MSB | \
+	 ASN1_STRFLGS_UTF8_CONVERT | \
+	 ASN1_STRFLGS_DUMP_UNKNOWN | \
+	 ASN1_STRFLGS_DUMP_DER)
 
 DECLARE_STACK_OF(ASN1_INTEGER);
 DECLARE_ASN1_SET_OF(ASN1_INTEGER);
@@ -282,17 +282,17 @@ DECLARE_ASN1_ENCODE_FUNCTIONS_const(ASN1_SEQUENCE_ANY, ASN1_SET_ANY);
 
 
 #define B_ASN1_DIRECTORYSTRING \
-    B_ASN1_PRINTABLESTRING | \
-    B_ASN1_TELETEXSTRING | \
-    B_ASN1_BMPSTRING | \
-    B_ASN1_UNIVERSALSTRING | \
-    B_ASN1_UTF8STRING
+	B_ASN1_PRINTABLESTRING | \
+	B_ASN1_TELETEXSTRING | \
+	B_ASN1_BMPSTRING | \
+	B_ASN1_UNIVERSALSTRING | \
+	B_ASN1_UTF8STRING
 
 #define B_ASN1_DISPLAYTEXT \
-    B_ASN1_IA5STRING | \
-    B_ASN1_VISIBLESTRING | \
-    B_ASN1_BMPSTRING | \
-    B_ASN1_UTF8STRING
+	B_ASN1_IA5STRING | \
+	B_ASN1_VISIBLESTRING | \
+	B_ASN1_BMPSTRING | \
+	B_ASN1_UTF8STRING
 
 #endif // ifndef HEADER_ASN1_H
 

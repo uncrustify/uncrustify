@@ -11,8 +11,8 @@
 /* *INDENT-ON* */
 
 #define multilinemacro do { (x+5); } while (0); \
-        printf("a multilinemacro"); \
-        printf("a multilinemacro2");
+	printf("a multilinemacro"); \
+	printf("a multilinemacro2");
 
 /* *INDENT-OFF* */
 
