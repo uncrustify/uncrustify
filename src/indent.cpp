@@ -398,6 +398,7 @@ void indent_text(void)
    bool               token_used;
    int                sql_col      = 0;
    int                sql_orig_col = 0;
+   bool               in_func_def = false;
 
    memset(&frm, 0, sizeof(frm));
    cpd.frame_count = 0;
@@ -417,6 +418,35 @@ void indent_text(void)
       if (cpd.settings[UO_indent_brace_parent].b)
       {
          parent_token_indent = token_indent(pc->parent_type);
+      }
+
+      /* Handle "force indentation of function definition to start in column 1" */
+      if (cpd.settings[UO_indent_func_def_force_col1].b)
+      {
+         if (!in_func_def)
+         {
+            next = chunk_get_next_ncnl(pc);
+            if ((pc->parent_type == CT_FUNC_DEF) ||
+                ((pc->type == CT_COMMENT) && 
+                 (next->parent_type == CT_FUNC_DEF)))
+            {
+               in_func_def = true;
+               indent_pse_push(frm, pc);
+               frm.pse[frm.pse_tos].indent_tmp = 1;
+               frm.pse[frm.pse_tos].indent     = 1;
+               frm.pse[frm.pse_tos].indent_tab = 1;
+            }
+         }
+         else
+         {
+            prev = chunk_get_prev(pc);
+            if ((prev->type == CT_BRACE_CLOSE) && 
+                (prev->parent_type == CT_FUNC_DEF))
+            {
+               in_func_def = false;
+               indent_pse_pop(frm, pc);
+            }
+         }
       }
 
       /* Clean up after a #define, etc */
