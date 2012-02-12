@@ -399,6 +399,7 @@ void indent_text(void)
    int                sql_col      = 0;
    int                sql_orig_col = 0;
    bool               in_func_def = false;
+   c_token_t          memtype;
 
    memset(&frm, 0, sizeof(frm));
    cpd.frame_count = 0;
@@ -412,7 +413,7 @@ void indent_text(void)
    pc = chunk_get_head();
    while (pc != NULL)
    {
-      /* Handle proprocessor transitions */
+      /* Handle preprocessor transitions */
       in_preproc = (pc->flags & PCF_IN_PREPROC) != 0;
 
       if (cpd.settings[UO_indent_brace_parent].b)
@@ -427,7 +428,8 @@ void indent_text(void)
          {
             next = chunk_get_next_ncnl(pc);
             if ((pc->parent_type == CT_FUNC_DEF) ||
-                ((pc->type == CT_COMMENT) && 
+                ((pc->type == CT_COMMENT) &&
+                 (next != NULL) &&
                  (next->parent_type == CT_FUNC_DEF)))
             {
                in_func_def = true;
@@ -503,9 +505,10 @@ void indent_text(void)
          {
             next = chunk_get_next(pc);
             /* Hack to get the logs to look right */
+            memtype = next->type;
             next->type = CT_PP_IF_INDENT;
             indent_pse_push(frm, next);
-            next->type = CT_PP_IF;
+            next->type = memtype;
 
             /* Indent one level */
             frm.pse[frm.pse_tos].indent     = frm.pse[frm.pse_tos - 1].indent + indent_size;

@@ -154,6 +154,8 @@
 00614  pp-space.cfg            c/pp-space.c
 
 00615  pp-indent-2.cfg         c/pp-nest.c
+00616  pp_if_indent-1.cfg      c/pp-if-indent.c
+00617  rdan.cfg                c/pp-if-indent.c
 
 00620  ben.cfg         c/indent-assign.c
 00621  nl_endif.cfg         c/nl_endif.c
