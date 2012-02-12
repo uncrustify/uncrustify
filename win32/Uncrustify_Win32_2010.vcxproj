@@ -136,6 +136,7 @@
     <ClCompile Include="..\src\chunk_list.cpp" />
     <ClCompile Include="..\src\ChunkStack.cpp" />
     <ClCompile Include="..\src\combine.cpp" />
+    <ClCompile Include="..\src\compat_win32.cpp" />
     <ClCompile Include="..\src\defines.cpp" />
     <ClCompile Include="..\src\detect.cpp" />
     <ClCompile Include="..\src\indent.cpp" />
