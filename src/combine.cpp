@@ -3038,10 +3038,11 @@ static void mark_function(chunk_t *pc)
    tmp = pc;
    while ((tmp = chunk_get_prev_ncnl(tmp)) != NULL)
    {
-      if (!chunk_is_type(tmp) &&
-          (tmp->type != CT_OPERATOR) &&
-          (tmp->type != CT_WORD) &&
-          (tmp->type != CT_ADDR))
+      if ((!chunk_is_type(tmp) &&
+           (tmp->type != CT_OPERATOR) &&
+           (tmp->type != CT_WORD) &&
+           (tmp->type != CT_ADDR)) ||
+          ((tmp->flags & PCF_IN_PREPROC) != 0))
       {
          break;
       }

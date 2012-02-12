@@ -530,6 +530,9 @@ void register_options(void)
    unc_add_option("indent_var_def_cont", UO_indent_var_def_cont, AT_BOOL,
                   "Indent continued variable declarations instead of aligning.");
 
+   unc_add_option("indent_func_def_force_col1", UO_indent_func_def_force_col1, AT_BOOL,
+                  "True:  force indentation of function definition to start in column 1\n"
+                  "False: use the default behavior");
    unc_add_option("indent_func_call_param", UO_indent_func_call_param, AT_BOOL,
                   "True:  indent continued function call parameters one indent level\n"
                   "False: align parameters under the open paren");

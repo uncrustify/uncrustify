@@ -145,6 +145,7 @@ enum uncrustify_options
 
    UO_indent_col1_comment,       // indent comments in column 1
 
+   UO_indent_func_def_force_col1,// force indentation of function definition to start in column 1
    UO_indent_func_call_param,    // indent continued function calls to indent_columns
    UO_indent_func_proto_param,   // same, but for function protos
    UO_indent_func_def_param,     // same, but for function defs

@@ -96,6 +96,7 @@
 00161  indent_func_call_param.cfg  c/fcn_indent.c
 00162  indent_func_def_param.cfg   c/fcn_indent.c
 00163  indent_func_proto_param.cfg c/fcn_indent.c
+00164  rdan.cfg                    c/fcn_indent_func_def_col1.c
 
 00170  empty.cfg               c/beautifier-off.c
 
