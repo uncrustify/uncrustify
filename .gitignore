@@ -31,3 +31,4 @@ build
 Debug
 .*
 uncrustify-*-win32
+src/config.h
