@@ -21,10 +21,14 @@
     {
 	uint8 u8LocalMsgIdx;
 
-
-	u8LocalMsgIdx = ( (COMINL_kastrVarReceiveMsg[u8LocalMsgIdx].udtDeadlineMonTimer < COMINL_udtNB_MESSAGES_RX)
-	                  ? (E_OK)
-			  : (E_NOT_OK));
+	if (COMINL_kastrVarReceiveMsg[u8LocalMsgIdx].udtDeadlineMonTimer < COMINL_udtNB_MESSAGES_RX)
+	{
+	    u8LocalMsgIdx = E_OK;
+	}
+	else
+	{
+	    u8LocalMsgIdx = E_NOT_OK;
+	}
 
 /* nested #if...already well indented */
 	#if COMINL_coRX_MESSAGE_VAR == COMINL_coENABLE
