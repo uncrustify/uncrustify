@@ -247,11 +247,6 @@ void align_all(void)
       align_oc_msg_colons();
    }
 
-   if (cpd.settings[UO_align_oc_decl_colon].b)
-   {
-      align_oc_decl_colon();
-   }
-
    /* Align variable definitions */
    if ((cpd.settings[UO_align_var_def_span].n > 0) ||
        (cpd.settings[UO_align_var_struct_span].n > 0))
@@ -281,6 +276,12 @@ void align_all(void)
    if (cpd.settings[UO_align_oc_msg_spec_span].n > 0)
    {
       align_oc_msg_spec(cpd.settings[UO_align_oc_msg_spec_span].n);
+   }
+
+   /* Align OC colons */
+   if (cpd.settings[UO_align_oc_decl_colon].b)
+   {
+      align_oc_decl_colon();
    }
 
    /* Align variable defs in function prototypes */
@@ -1938,7 +1939,8 @@ static void align_oc_decl_colon(void)
                 &&
                 ((tmp->type == CT_WORD) ||
                  (tmp->type == CT_TYPE) ||
-                 (tmp->type == CT_OC_MSG_DECL))
+                 (tmp->type == CT_OC_MSG_DECL) ||
+                 (tmp->type == CT_OC_MSG_SPEC))
                 &&
                 ((tmp2->type == CT_WORD) ||
                  (tmp2->type == CT_TYPE) ||
