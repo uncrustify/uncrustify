@@ -11,6 +11,17 @@ int main()
 	           << X;
 	std::cout << X
 	          << X[0];
+	std::cout <<
+	        X <<
+	        Y;
+	std::cout
+	        << X
+	        << Y;
+	std::cout
+	        <<
+	        X
+	        <<
+	        Y;
 }
 
 #define A_LONG_MACRO_NAME(x) x
