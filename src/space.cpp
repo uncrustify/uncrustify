@@ -1460,7 +1460,21 @@ void space_text(void)
                   if ((ct != NULL) && ((int)strlen(ct->tag) != pc->len()))
                   {
                      /* punctuator parsed to a different size.. */
-                     pc->flags |= PCF_FORCE_SPACE;
+
+                     /* C++11 allows '>>' to mean '> >' in templates:
+                      *   some_func<vector<string>>();
+                      */
+                     if ((cpd.lang_flags & LANG_CPP) &&
+                         cpd.settings[UO_sp_permit_cpp11_shift].b &&
+                         (pc->type == CT_ANGLE_CLOSE) &&
+                         (next->type == CT_ANGLE_CLOSE))
+                     {
+                        /* allow '>' and '>' to become '>>' */
+                     }
+                     else
+                     {
+                        pc->flags |= PCF_FORCE_SPACE;
+                     }
                   }
                }
             }

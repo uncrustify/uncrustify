@@ -257,6 +257,9 @@ void register_options(void)
                   "Add or remove space between '<>' and a word as in 'List<byte> m;'");
    unc_add_option("sp_angle_shift", UO_sp_angle_shift, AT_IARF,
                   "Add or remove space between '>' and '>' in '>>' (template stuff C++/C# only). Default=Add");
+   unc_add_option("sp_permit_cpp11_shift", UO_sp_permit_cpp11_shift, AT_BOOL,
+                  "Permit removal of the space between '>>' in 'foo<bar<int> >' (C++11 only). Default=False\n"
+                  "sp_angle_shift cannot remove the space without this option.");
    unc_add_option("sp_before_sparen", UO_sp_before_sparen, AT_IARF,
                   "Add or remove space before '(' of 'if', 'for', 'switch', and 'while'");
    unc_add_option("sp_inside_sparen", UO_sp_inside_sparen, AT_IARF,
