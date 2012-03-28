@@ -1777,6 +1777,20 @@ static void align_left_shift(void)
          }
          else if (as.m_aligned.Empty())
          {
+            /* check if the first one is actually on a blank line and then
+             * indent it. Eg:
+             *
+             *      cout
+             *          << "something";
+             */
+            chunk_t *prev = chunk_get_prev(pc);
+            if (prev && chunk_is_newline(prev))
+            {
+                indent_to_column(pc, pc->column_indent + cpd.settings[UO_indent_columns].n);
+                pc->column_indent = pc->column;
+                pc->flags |= PCF_DONT_INDENT;
+            }
+
             /* first one can be anywhere */
             as.Add(pc);
             start = pc;
@@ -1786,6 +1800,22 @@ static void align_left_shift(void)
             /* subsequent ones must be after a newline */
             as.Add(pc);
          }
+      }
+      else if (!as.m_aligned.Empty())
+      {
+          /* check if the given statement is on a line of its own, immediately following <<
+           * and then it. Eg:
+           *
+           *      cout <<
+           *          "something";
+           */
+          chunk_t *prev = chunk_get_prev(pc);
+          if (prev && chunk_is_newline(prev))
+          {
+              indent_to_column(pc, pc->column_indent + cpd.settings[UO_indent_columns].n);
+              pc->column_indent = pc->column;
+              pc->flags |= PCF_DONT_INDENT;
+          }
       }
 
       pc = chunk_get_next(pc);
