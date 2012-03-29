@@ -457,6 +457,32 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
       return(cpd.settings[UO_sp_after_oc_block_caret].a);
    }
 
+   // Handle the special lambda case for C++11:
+   //    [=](Something arg){.....}
+   if ((cpd.settings[UO_sp_cpp_lambda_assign].a != AV_IGNORE) &&
+       (((first->type == CT_SQUARE_OPEN) &&
+         (first->parent_type == CT_CPP_LAMBDA) &&
+         (second->type == CT_ASSIGN))
+        ||
+        ((first->type == CT_ASSIGN) &&
+         (second->type == CT_SQUARE_OPEN) &&
+         (second->parent_type == CT_CPP_LAMBDA))))
+   {
+      log_rule("UO_sp_cpp_lambda_assign");
+      return(cpd.settings[UO_sp_cpp_lambda_assign].a);
+   }
+
+   // Handle the special lambda case for C++11:
+   //    [](Something arg){.....}
+   if ((cpd.settings[UO_sp_cpp_lambda_paren].a != AV_IGNORE) &&
+       (first->type == CT_SQUARE_CLOSE) &&
+       (first->parent_type == CT_CPP_LAMBDA) &&
+       (second->type == CT_FPAREN_OPEN))
+   {
+      log_rule("UO_sp_cpp_lambda_paren");
+      return(cpd.settings[UO_sp_cpp_lambda_paren].a);
+   }
+
    if (second->type == CT_ASSIGN)
    {
       if (second->flags & PCF_IN_ENUM)

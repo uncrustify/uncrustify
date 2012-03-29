@@ -186,6 +186,10 @@ void register_options(void)
                   "Add or remove space around arithmetic operator '+', '-', '/', '*', etc");
    unc_add_option("sp_assign", UO_sp_assign, AT_IARF,
                   "Add or remove space around assignment operator '=', '+=', etc");
+   unc_add_option("sp_cpp_lambda_assign", UO_sp_cpp_lambda_assign, AT_IARF,
+                  "Add or remove space around '=' in C++11 lambda capture specifications. Overrides sp_assign");
+   unc_add_option("sp_cpp_lambda_paren", UO_sp_cpp_lambda_paren, AT_IARF,
+                  "Add or remove space after the capture specification in C++11 lambda.");
    unc_add_option("sp_assign_default", UO_sp_assign_default, AT_IARF,
                   "Add or remove space around assignment operator '=' in a prototype");
    unc_add_option("sp_before_assign", UO_sp_before_assign, AT_IARF,
