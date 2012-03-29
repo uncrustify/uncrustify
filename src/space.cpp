@@ -465,7 +465,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
          (second->type == CT_ASSIGN))
         ||
         ((first->type == CT_ASSIGN) &&
-         (second->type == CT_SQUARE_OPEN) &&
+         (second->type == CT_SQUARE_CLOSE) &&
          (second->parent_type == CT_CPP_LAMBDA))))
    {
       log_rule("UO_sp_cpp_lambda_assign");
@@ -1496,6 +1496,10 @@ void space_text(void)
                          (next->type == CT_ANGLE_CLOSE))
                      {
                         /* allow '>' and '>' to become '>>' */
+                     }
+                     else if (strcmp(ct->tag, "[]") == 0)
+                     {
+                        /* this is OK */
                      }
                      else
                      {
