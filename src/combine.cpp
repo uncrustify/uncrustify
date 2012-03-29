@@ -44,6 +44,7 @@ static void handle_oc_message_send(chunk_t *pc);
 static void handle_cs_square_stmt(chunk_t *pc);
 static void handle_cs_property(chunk_t *pc);
 static void handle_cpp_template(chunk_t *pc);
+static void handle_cpp_lambda(chunk_t *pc);
 static void handle_d_template(chunk_t *pc);
 static void handle_wrap(chunk_t *pc);
 static void handle_proto_wrap(chunk_t *pc);
@@ -392,6 +393,15 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       }
    }
 
+   /* C++11 Lambda stuff */
+   if (prev && (cpd.lang_flags & LANG_CPP) &&
+       ((pc->type == CT_SQUARE_OPEN) || (pc->type == CT_TSQUARE)) &&
+       !CharTable::IsKw1(prev->str[0]))
+   {
+      handle_cpp_lambda(pc);
+   }
+
+   /* FIXME: which language does this apply to? */
    if ((pc->type == CT_ASSIGN) && (next->type == CT_SQUARE_OPEN))
    {
       set_paren_parent(next, CT_ASSIGN);
@@ -3517,6 +3527,87 @@ static void handle_cpp_template(chunk_t *pc)
          }
       }
    }
+}
+
+
+/**
+ * Verify and then mark C++ lambda expressions.
+ * The expected format is '[...](...){...}'
+ * sq_o is '[' CT_SQUARE_OPEN or '[]' CT_TSQUARE
+ * Split the '[]' so we can control the space
+ */
+static void handle_cpp_lambda(chunk_t *sq_o)
+{
+   chunk_t *sq_c;
+   chunk_t *pa_o;
+   chunk_t *pa_c;
+   chunk_t *br_o;
+   chunk_t *br_c;
+
+   sq_c = sq_o; /* assuming '[]' */
+   if (sq_o->type == CT_SQUARE_OPEN)
+   {
+      /* make sure there is a ']' */
+      sq_c = chunk_skip_to_match(sq_o);
+      if (!sq_c)
+      {
+         return;
+      }
+   }
+
+   /* Make sure a '(' is next */
+   pa_o = chunk_get_next_ncnl(sq_c);
+   if (!pa_o || (pa_o->type != CT_PAREN_OPEN))
+   {
+      return;
+   }
+   /* and now find the ')' */
+   pa_c = chunk_skip_to_match(pa_o);
+   if (!pa_c)
+   {
+      return;
+   }
+
+   /* Make sure a '{' is next */
+   br_o = chunk_get_next_ncnl(pa_c);
+   if (!br_o || (br_o->type != CT_BRACE_OPEN))
+   {
+      return;
+   }
+   /* and now find the '}' */
+   br_c = chunk_skip_to_match(br_o);
+   if (!br_c)
+   {
+      return;
+   }
+
+   /* This looks like a lambda expression */
+   if (sq_o->type == CT_TSQUARE)
+   {
+      /* split into two chunks */
+      chunk_t nc;
+
+      nc = *sq_o;
+      sq_o->type = CT_SQUARE_OPEN;
+      sq_o->str.resize(1);
+      sq_o->orig_col_end = sq_o->orig_col + 1;
+
+      nc.type = CT_SQUARE_CLOSE;
+      nc.str.pop_front();
+      nc.orig_col++;
+      nc.column++;
+      sq_c = chunk_add_after(&nc, sq_o);
+   }
+   sq_o->parent_type = CT_CPP_LAMBDA;
+   sq_c->parent_type = CT_CPP_LAMBDA;
+   pa_o->type        = CT_FPAREN_OPEN;
+   pa_o->parent_type = CT_CPP_LAMBDA;
+   pa_c->type        = CT_FPAREN_CLOSE;
+   pa_c->parent_type = CT_CPP_LAMBDA;
+   br_o->parent_type = CT_CPP_LAMBDA;
+   br_c->parent_type = CT_CPP_LAMBDA;
+
+   fix_fcn_def_params(pa_o);
 }
 
 
