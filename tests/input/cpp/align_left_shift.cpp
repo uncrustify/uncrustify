@@ -14,7 +14,7 @@ int main()
  std::cout <<
 X <<
 Y;
- std::count
+ std::cout
 << X
 << Y;
  std::cout
