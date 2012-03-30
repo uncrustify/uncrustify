@@ -17,6 +17,17 @@ void f1a()
                  );
 }
 
+void f1b()
+{
+   std::for_each(a, b,
+                 [](int& b) -> foo
+                 {
+                    b += 3;
+                    return(b);
+                 }
+                 );
+}
+
 void f2()
 {
    Invoke(a, b,
