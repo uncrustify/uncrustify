@@ -3532,7 +3532,7 @@ static void handle_cpp_template(chunk_t *pc)
 
 /**
  * Verify and then mark C++ lambda expressions.
- * The expected format is '[...](...){...}'
+ * The expected format is '[...](...){...}' or '[...](...) -> type {...}'
  * sq_o is '[' CT_SQUARE_OPEN or '[]' CT_TSQUARE
  * Split the '[]' so we can control the space
  */
@@ -3543,6 +3543,7 @@ static void handle_cpp_lambda(chunk_t *sq_o)
    chunk_t *pa_c;
    chunk_t *br_o;
    chunk_t *br_c;
+   chunk_t *ret = NULL;
 
    sq_c = sq_o; /* assuming '[]' */
    if (sq_o->type == CT_SQUARE_OPEN)
@@ -3568,8 +3569,14 @@ static void handle_cpp_lambda(chunk_t *sq_o)
       return;
    }
 
-   /* Make sure a '{' is next */
+   /* Make sure a '{' or '->' is next */
    br_o = chunk_get_next_ncnl(pa_c);
+   if (chunk_is_str(br_o, "->", 2))
+   {
+      ret  = br_o;
+      /* REVISIT: really should check the stuff we are skipping */
+      br_o = chunk_get_next_type(br_o, CT_BRACE_OPEN, br_o->level);
+   }
    if (!br_o || (br_o->type != CT_BRACE_OPEN))
    {
       return;
@@ -3606,6 +3613,17 @@ static void handle_cpp_lambda(chunk_t *sq_o)
    pa_c->parent_type = CT_CPP_LAMBDA;
    br_o->parent_type = CT_CPP_LAMBDA;
    br_c->parent_type = CT_CPP_LAMBDA;
+
+   if (ret)
+   {
+      ret->type = CT_CPP_LAMBDA_RET;
+      ret = chunk_get_next_ncnl(ret);
+      while (ret != br_o)
+      {
+         make_type(ret);
+         ret = chunk_get_next_ncnl(ret);
+      }
+   }
 
    fix_fcn_def_params(pa_o);
 }

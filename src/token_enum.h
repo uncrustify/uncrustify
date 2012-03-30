@@ -201,6 +201,7 @@ typedef enum
    CT_PTR_TYPE,         /* a '*' as part of a type */
    CT_TYPE_WRAP,        /* macro that wraps a type name */
    CT_CPP_LAMBDA,       /* parent for '[=](...){...}' */
+   CT_CPP_LAMBDA_RET,   /* '->' in '[=](...) -> type {...}' */
    CT_BIT_COLON,        /* a ':' in a variable declaration */
 
    CT_OC_DYNAMIC,
