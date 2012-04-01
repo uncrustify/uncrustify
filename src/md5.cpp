@@ -203,8 +203,8 @@ void MD5::Final(UINT8 digest[16])
    }
 
    /* Append length in bits and transform */
-   ((UINT32 *)m_in)[14] = m_bits[0];
-   ((UINT32 *)m_in)[15] = m_bits[1];
+   memcpy (&m_in[52], &m_bits[0], sizeof m_bits[0]);
+   memcpy (&m_in[56], &m_bits[1], sizeof m_bits[0]);
 
    Transform(m_buf, (UINT32 *)m_in);
    if (m_need_byteswap)
