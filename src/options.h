@@ -164,6 +164,7 @@ enum uncrustify_options
    UO_indent_class,                         // indent stuff inside class braces
    UO_indent_class_colon,                   // indent stuff after a class colon
 
+   UO_indent_ctor_init_leading,             // virtual indent from the ':' for member initializers. Default is 2. (applies to the leading colon case)
    UO_indent_ctor_init,                     // additional indenting for ctor initializer lists
 
    UO_indent_member,                        // indent lines broken at a member '.' or '->'

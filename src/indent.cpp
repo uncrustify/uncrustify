@@ -1041,7 +1041,7 @@ void indent_text(void)
             prev = chunk_get_prev(pc);
             if (chunk_is_newline(prev))
             {
-               frm.pse[frm.pse_tos].indent += 2;
+               frm.pse[frm.pse_tos].indent += cpd.settings[UO_indent_ctor_init_leading].n;
 
                if (cpd.settings[UO_indent_ctor_init].n > 0)
                {

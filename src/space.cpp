@@ -1031,6 +1031,8 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
    if ((cpd.settings[UO_sp_after_class_colon].a != AV_IGNORE) &&
        (first->type == CT_CLASS_COLON))
    {
+      min_sp = cpd.settings[UO_indent_ctor_init_leading].n - 1; // default indent is 1 space
+
       log_rule("sp_after_class_colon");
       return(cpd.settings[UO_sp_after_class_colon].a);
    }

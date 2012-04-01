@@ -527,6 +527,8 @@ void register_options(void)
                   "Whether the 'class' body is indented");
    unc_add_option("indent_class_colon", UO_indent_class_colon, AT_BOOL,
                   "Whether to indent the stuff after a leading class colon");
+   unc_add_option("indent_ctor_init_leading", UO_indent_ctor_init_leading, AT_NUM,
+                  "Virtual indent from the ':' for member initializers. Default is 2");
    unc_add_option("indent_ctor_init", UO_indent_ctor_init, AT_NUM,
                   "Additional indenting for constructor initializer list");
    unc_add_option("indent_else_if", UO_indent_else_if, AT_BOOL,
@@ -1759,6 +1761,7 @@ void set_option_defaults(void)
    cpd.settings[UO_newlines].le            = LE_AUTO;
    cpd.settings[UO_input_tab_size].n       = 8;
    cpd.settings[UO_output_tab_size].n      = 8;
+   cpd.settings[UO_indent_ctor_init_leading].n = 2;
    cpd.settings[UO_indent_columns].n       = 8;
    cpd.settings[UO_indent_with_tabs].n     = 1;
    cpd.settings[UO_indent_label].n         = 1;
