@@ -2,9 +2,9 @@ void f1()
 {
    auto a =
       [=] (int *a, Something& b)
-   {
-      std::cout << "blah: " << *a;
-   };
+      {
+         std::cout << "blah: " << *a;
+      };
 }
 
 void f1a()
