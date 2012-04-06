@@ -1129,7 +1129,8 @@ void indent_text(void)
             if (chunk_is_newline(next))
             {
                int sub = 1;
-               if (frm.pse[frm.pse_tos - 1].type == CT_ASSIGN)
+               if (frm.pse[frm.pse_tos - 1].type == CT_ASSIGN ||
+                   frm.pse[frm.pse_tos - 1].type == CT_RETURN)
                {
                   sub = 2;
                }
