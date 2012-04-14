@@ -1142,7 +1142,8 @@ static chunk_t *align_var_def_brace(chunk_t *start, int span, int *p_nl_count)
       if ((pc->type != CT_FUNC_CLASS) &&
           ((pc->flags & align_mask) == PCF_VAR_1ST) &&
           ((pc->level == (start->level + 1)) ||
-           (pc->level == 0)))
+           (pc->level == 0)) &&
+          pc->prev && (pc->prev->type != CT_MEMBER))
       {
          if (!did_this_line)
          {

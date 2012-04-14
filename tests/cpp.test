@@ -91,6 +91,7 @@
 30254 align_left_shift.cfg             cpp/align_left_shift2.cpp
 30255 ben.cfg                          cpp/align_constr.cpp
 30256 align_left_shift.cfg             cpp/func_call.cpp
+30257 pbtech.cfg                       cpp/func_call_chain.cpp
 30258 ben.cfg                          cpp/casts.cpp
 
 30260 var_def_gap.cfg                  cpp/var_def_gap.cpp
