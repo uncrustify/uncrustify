@@ -1595,7 +1595,8 @@ static void newline_func_def(chunk_t *start)
          if ((prev != NULL) &&
              (prev->type != CT_BRACE_CLOSE) &&
              (prev->type != CT_BRACE_OPEN) &&
-             (prev->type != CT_SEMICOLON))
+             (prev->type != CT_SEMICOLON) &&
+             (prev->parent_type != CT_TEMPLATE))
          {
             newline_iarf(prev, a);
          }
