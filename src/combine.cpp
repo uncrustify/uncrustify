@@ -2834,6 +2834,10 @@ static void mark_function(chunk_t *pc)
          {
             LOG_FMT(LFCN, " --> Stopping on %s [%s]\n",
                     prev->str.c_str(), get_token_name(prev->type));
+            if (prev->type == CT_ARITH)
+            {
+               isa_def = false;
+            }
             break;
          }
 
