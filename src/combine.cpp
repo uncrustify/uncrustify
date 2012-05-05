@@ -2937,11 +2937,6 @@ static void mark_function(chunk_t *pc)
                     pc->str.c_str(), pc->orig_line, pc->orig_col);
             break;
          }
-         else if (chunk_is_str(tmp, ":", 1))
-         {
-            /* mark constuctor colon (?) */
-            tmp->type = CT_CLASS_COLON;
-         }
       }
    }
 
