@@ -290,7 +290,9 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
    if (((frm->stmt_count == 0) || (frm->expr_count == 0)) &&
        !chunk_is_semicolon(pc) &&
        (pc->type != CT_BRACE_CLOSE) &&
-       (pc->type != CT_VBRACE_CLOSE))
+       (pc->type != CT_VBRACE_CLOSE) &&
+       !chunk_is_str(pc, ")", 1) &&
+       !chunk_is_str(pc, "]", 1))
    {
       pc->flags |= PCF_EXPR_START;
       pc->flags |= (frm->stmt_count == 0) ? PCF_STMT_START : 0;
