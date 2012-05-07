@@ -1050,7 +1050,7 @@ void register_options(void)
    unc_add_option("align_pp_define_gap", UO_align_pp_define_gap, AT_NUM,
                   "The minimum space between label and value of a preprocessor define");
    unc_add_option("align_pp_define_span", UO_align_pp_define_span, AT_NUM,
-                  "The span for aligning on '#define' bodies (0=don't align)", "", 0, 5000);
+                  "The span for aligning on '#define' bodies (0=don't align, other=number of lines including comments between blocks)", "", 0, 5000);
    unc_add_option("align_left_shift", UO_align_left_shift, AT_BOOL,
                   "Align lines that start with '<<' with previous '<<'. Default=true");
 
@@ -1171,11 +1171,13 @@ void register_options(void)
 
    unc_begin_group(UG_preprocessor, "Preprocessor options");
    unc_add_option("pp_indent", UO_pp_indent, AT_IARF,
-                  "Control indent of preprocessors inside #if blocks at brace level 0");
+                  "Control indent of preprocessors inside #if blocks at brace level 0 (file-level)");
    unc_add_option("pp_indent_at_level", UO_pp_indent_at_level, AT_BOOL,
                   "Whether to indent #if/#else/#endif at the brace level (true) or from column 1 (false)");
    unc_add_option("pp_indent_count", UO_pp_indent_count, AT_NUM,
-                  "If pp_indent_at_level=false, specifies the number of columns to indent per level. Default=1.");
+	              "Specifies the number of columns to indent preprocessors per level at brace level 0 (file-level).\n"
+                  "If pp_indent_at_level=false, specifies the number of columns to indent preprocessors per level at brace level > 0 (function-level).\n"
+				  "Default=1.");
    unc_add_option("pp_space", UO_pp_space, AT_IARF,
                   "Add or remove space after # based on pp_level of #if blocks");
    unc_add_option("pp_space_count", UO_pp_space_count, AT_NUM,
@@ -1185,9 +1187,11 @@ void register_options(void)
    unc_add_option("pp_region_indent_code", UO_pp_region_indent_code, AT_BOOL,
                   "Whether to indent the code between #region and #endregion");
    unc_add_option("pp_indent_if", UO_pp_indent_if, AT_NUM,
-                  "If pp_indent_at_level=true, sets the indent for #if, #else, and #endif when not at file-level");
+                  "If pp_indent_at_level=true, sets the indent for #if, #else, and #endif when not at file-level.\n"
+				  "0:  indent preprocessors using output_tab_size.\n"
+				  ">0: column at which all preprocessors will be indented.");
    unc_add_option("pp_if_indent_code", UO_pp_if_indent_code, AT_BOOL,
-                  "Control whether to indent the code between #if, #else and #endif when not at file-level");
+                  "Control whether to indent the code between #if, #else and #endif.");
    unc_add_option("pp_define_at_level", UO_pp_define_at_level, AT_BOOL,
                   "Whether to indent '#define' at the brace level (true) or from column 1 (false)");
 }
