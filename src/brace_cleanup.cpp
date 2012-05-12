@@ -290,12 +290,15 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
    if (((frm->stmt_count == 0) || (frm->expr_count == 0)) &&
        !chunk_is_semicolon(pc) &&
        (pc->type != CT_BRACE_CLOSE) &&
-       (pc->type != CT_VBRACE_CLOSE))
+       (pc->type != CT_VBRACE_CLOSE) &&
+       !chunk_is_str(pc, ")", 1) &&
+       !chunk_is_str(pc, "]", 1))
    {
       pc->flags |= PCF_EXPR_START;
       pc->flags |= (frm->stmt_count == 0) ? PCF_STMT_START : 0;
-      LOG_FMT(LSTMT, "%d] 1.marked %s as stmt start st:%d ex:%d\n",
-              pc->orig_line, pc->str.c_str(), frm->stmt_count, frm->expr_count);
+      LOG_FMT(LSTMT, "%d] 1.marked %s as %s start st:%d ex:%d\n",
+              pc->orig_line, pc->str.c_str(), (pc->flags &PCF_STMT_START) ? "stmt" : "expr",
+              frm->stmt_count, frm->expr_count);
    }
    frm->stmt_count++;
    frm->expr_count++;
@@ -582,7 +585,7 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
         (frm->pse[frm->pse_tos].type != CT_FPAREN_OPEN) &&
         (frm->pse[frm->pse_tos].type != CT_SPAREN_OPEN)))
    {
-      LOG_FMT(LSTMT, "%s: %d> reset stmt on %s\n",
+      LOG_FMT(LSTMT, "%s: %d> reset1 stmt on %s\n",
               __func__, pc->orig_line, pc->str.c_str());
       frm->stmt_count = 0;
       frm->expr_count = 0;
@@ -958,7 +961,7 @@ bool close_statement(struct parse_frame *frm, chunk_t *pc)
    {
       frm->stmt_count = 0;
       frm->expr_count = 0;
-      LOG_FMT(LSTMT, "%s: %d> reset stmt on %s\n",
+      LOG_FMT(LSTMT, "%s: %d> reset2 stmt on %s\n",
               __func__, pc->orig_line, pc->str.c_str());
    }
 

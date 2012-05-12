@@ -2834,6 +2834,10 @@ static void mark_function(chunk_t *pc)
          {
             LOG_FMT(LFCN, " --> Stopping on %s [%s]\n",
                     prev->str.c_str(), get_token_name(prev->type));
+            if (prev->type == CT_ARITH)
+            {
+               isa_def = false;
+            }
             break;
          }
 
@@ -2932,11 +2936,6 @@ static void mark_function(chunk_t *pc)
             LOG_FMT(LFCN, "  2) Marked [%s] as FUNC_CTOR_VAR on line %d col %d\n",
                     pc->str.c_str(), pc->orig_line, pc->orig_col);
             break;
-         }
-         else if (chunk_is_str(tmp, ":", 1))
-         {
-            /* mark constuctor colon (?) */
-            tmp->type = CT_CLASS_COLON;
          }
       }
    }
