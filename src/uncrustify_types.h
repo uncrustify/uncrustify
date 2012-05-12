@@ -140,6 +140,8 @@ struct parse_frame
 #define PCF_PUNCTUATOR         PCF_BIT(32)
 #define PCF_INSERTED           PCF_BIT(33)  /* chunk was inserted from another file */
 #define PCF_LONG_BLOCK         PCF_BIT(34)  /* the block is 'long' by some measure */
+#define PCF_TYPE_WRAP          PCF_BIT(35)  /* part of a macro defining a type */
+#define PCF_FUNC_PTR_WRAP      PCF_BIT(36)  /* part of a macro defining a function pointer */
 
 #ifdef DEFINE_PCF_NAMES
 static const char *pcf_names[] =

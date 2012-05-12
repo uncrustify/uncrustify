@@ -243,7 +243,7 @@ void register_options(void)
    unc_add_option("sp_before_byref_func", UO_sp_before_byref_func, AT_IARF,
                   "Add or remove space before a reference sign '&', if followed by a func proto/def.");
    unc_add_option("sp_after_type", UO_sp_after_type, AT_IARF,
-                  "Add or remove space between type and word. Default=Force");
+                  "Add or remove space after 'typedef', a qualifier, a type if not followed by '*'. Default=Force");
    unc_add_option("sp_before_template_paren", UO_sp_before_template_paren, AT_IARF,
                   "Add or remove space before the paren in the D constructs 'template Foo(' and 'class Foo('.");
    unc_add_option("sp_template_angle", UO_sp_template_angle, AT_IARF,
@@ -350,7 +350,8 @@ void register_options(void)
    unc_add_option("sp_fparen_brace", UO_sp_fparen_brace, AT_IARF,
                   "Add or remove space between ')' and '{' of function");
    unc_add_option("sp_func_call_paren", UO_sp_func_call_paren, AT_IARF,
-                  "Add or remove space between function name and '(' on function calls");
+                  "Add or remove space between function name and '(' on function calls.\n"
+				  "Applied also for 'TYPE_WRAP', 'FUNC_WRAP', 'FUNC_PTR_WRAP', 'PROTO_WRAP'.");
    unc_add_option("sp_func_call_paren_empty", UO_sp_func_call_paren_empty, AT_IARF,
                   "Add or remove space between function name and '()' on function calls without parameters.\n"
                   "If set to 'ignore' (the default), sp_func_call_paren is used.");

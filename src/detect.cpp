@@ -250,7 +250,7 @@ static void detect_space_options()
          vote_sp_after_byref.vote(pc, next);
       }
       if ((pc->type != CT_PTR_TYPE) &&
-          ((prev->type == CT_QUALIFIER) || (prev->type == CT_TYPE)))
+          ((prev->type == CT_QUALIFIER) || (prev->type == CT_TYPE) || (prev->flags & PCF_TYPE_WRAP)))
       {
          vote_sp_after_type.vote(prev, pc);
       }
