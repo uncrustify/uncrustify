@@ -14,7 +14,7 @@
 #if (COMINL_coMINIMUM_DELAY_TIME_1 == COMINL_coENABLE)
  #if (COMINL_coMINIMUM_DELAY_TIME_2 == COMINL_coENABLE)
   #include "def1.h"
-  #define COMINL_coMINIMUM_DELAY_TIME_1
+	#define COMINL_coMINIMUM_DELAY_TIME_1
   #include "def2.h"
  #endif
 #endif
