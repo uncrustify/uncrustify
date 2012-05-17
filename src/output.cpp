@@ -340,7 +340,11 @@ void output_text(FILE *pfile)
          /* FIXME: this really shouldn't be done here! */
          if ((pc->flags & PCF_WAS_ALIGNED) == 0)
          {
-            if (cpd.settings[UO_sp_before_nl_cont].a & AV_REMOVE)
+            if (chunk_is_newline(chunk_get_prev(pc)))
+            {
+               /* '\' single on its line => use calculated indentation => nothing to do */
+            }
+            else if (cpd.settings[UO_sp_before_nl_cont].a & AV_REMOVE)
             {
                pc->column = cpd.column + (cpd.settings[UO_sp_before_nl_cont].a == AV_FORCE);
             }
