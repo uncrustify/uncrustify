@@ -134,6 +134,8 @@
 00431   indent_paren_close-1.cfg c/paren-indent.c
 00432   indent_paren_close-2.cfg c/paren-indent.c
 
+00440   align-type-wrap-func-data-1.cfg c/align-type-wrap-func-data.c
+
 # boolean and comma positioning
 00501   bool-pos-eol.cfg        c/bool-pos.c
 00502   bool-pos-sol.cfg        c/bool-pos.c

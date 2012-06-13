@@ -144,6 +144,7 @@ static_inline
 bool chunk_is_type(chunk_t *pc)
 {
    return((pc != NULL) && ((pc->type == CT_TYPE) ||
+                           (pc->flags & PCF_TYPE_WRAP) ||
                            (pc->type == CT_PTR_TYPE) ||
                            (pc->type == CT_BYREF) ||
                            (pc->type == CT_DC_MEMBER) ||

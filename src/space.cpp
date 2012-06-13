@@ -672,7 +672,9 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
 
    /* spaces between function and open paren */
    if ((first->type == CT_FUNC_CALL) ||
-       (first->type == CT_FUNC_CTOR_VAR))
+       (first->type == CT_FUNC_CTOR_VAR) ||
+       (first->type == CT_TYPE_WRAP) ||
+       (first->type == CT_FUNC_PTR_WRAP))
    {
       if ((cpd.settings[UO_sp_func_call_paren_empty].a != AV_IGNORE) &&
           (second->type == CT_FPAREN_OPEN))
@@ -702,7 +704,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
       log_rule("sp_func_def_paren");
       return(cpd.settings[UO_sp_func_def_paren].a);
    }
-   if ((first->type == CT_CPP_CAST) || (first->type == CT_TYPE_WRAP))
+   if (first->type == CT_CPP_CAST)
    {
       log_rule("sp_cpp_cast_paren");
       return(cpd.settings[UO_sp_cpp_cast_paren].a);
@@ -1257,7 +1259,10 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
    }
 
    if ((second->type != CT_PTR_TYPE) &&
-       ((first->type == CT_QUALIFIER) || (first->type == CT_TYPE)))
+       ((first->type == CT_TYPEDEF) ||
+        (first->type == CT_QUALIFIER) ||
+		(first->type == CT_TYPE) ||
+		(first->flags & PCF_TYPE_WRAP)))
    {
       arg = cpd.settings[UO_sp_after_type].a;
       log_rule("sp_after_type");

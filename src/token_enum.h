@@ -191,6 +191,7 @@ typedef enum
    CT_FUNC_CLASS,       /* ctor or dtor for a class */
    CT_FUNC_CTOR_VAR,    /* variable or class initialization */
    CT_FUNC_WRAP,        /* macro that wraps the function name */
+   CT_FUNC_PTR_WRAP,    /* macro that wraps a function pointer (last parameter is the name of the pointer) */
    CT_PROTO_WRAP,       /* macro: "RETVAL PROTO_WRAP( fcn_name, (PARAMS))" */
    CT_MACRO_FUNC,       /* function-like macro */
    CT_MACRO,            /* a macro def */

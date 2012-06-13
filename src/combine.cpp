@@ -47,6 +47,8 @@ static void handle_cpp_template(chunk_t *pc);
 static void handle_cpp_lambda(chunk_t *pc);
 static void handle_d_template(chunk_t *pc);
 static void handle_wrap(chunk_t *pc);
+static void handle_type_wrap(chunk_t *pc);
+static void handle_func_ptr_wrap(chunk_t *pc);
 static void handle_proto_wrap(chunk_t *pc);
 static bool is_oc_block(chunk_t *pc);
 static void handle_java_assert(chunk_t *pc);
@@ -182,6 +184,7 @@ static bool chunk_ends_type(chunk_t *pc)
 
       if ((pc->type == CT_WORD) ||
           (pc->type == CT_TYPE) ||
+          (pc->flags & PCF_TYPE_WRAP) ||
           (pc->type == CT_STRUCT) ||
           (pc->type == CT_DC_MEMBER) ||
           (pc->type == CT_QUALIFIER))
@@ -449,13 +452,20 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       mark_exec_sql(pc);
    }
 
-   if ((pc->type == CT_FUNC_WRAP) ||
-       (pc->type == CT_TYPE_WRAP))
+   if (pc->type == CT_FUNC_WRAP)
    {
       handle_wrap(pc);
       next = chunk_get_next_ncnl(pc);
    }
-   if (pc->type == CT_PROTO_WRAP)
+   else if (pc->type == CT_TYPE_WRAP)
+   {
+      handle_type_wrap(pc);
+   }
+   else if (pc->type == CT_FUNC_PTR_WRAP)
+   {
+      handle_func_ptr_wrap(pc);
+   }
+   else if (pc->type == CT_PROTO_WRAP)
    {
       handle_proto_wrap(pc);
    }
@@ -690,11 +700,17 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
        (pc->parent_type != CT_OC_MSG_DECL) &&
        (pc->parent_type != CT_OC_MSG_SPEC) &&
        chunk_is_str(pc, ")", 1) &&
+       ((pc->flags & PCF_TYPE_WRAP) == 0) &&
        chunk_is_str(next, "(", 1))
    {
       if ((cpd.lang_flags & LANG_D) != 0)
       {
          flag_parens(next, 0, CT_FPAREN_OPEN, CT_FUNC_CALL, false);
+      }
+      else if ((pc->flags & PCF_FUNC_PTR_WRAP) != 0)
+      {
+         flag_parens(next, 0, CT_FPAREN_OPEN, CT_FUNC_PROTO, false);
+         fix_fcn_def_params(next);
       }
       else
       {
@@ -736,6 +752,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
            (pc->parent_type == CT_OC_BLOCK_EXPR)) &&
           ((next->type == CT_WORD) ||
            (next->type == CT_TYPE) ||
+           (next->flags & PCF_TYPE_WRAP) ||
            (next->type == CT_STRUCT) ||
            (next->type == CT_QUALIFIER) ||
            (next->type == CT_MEMBER) ||
@@ -880,7 +897,8 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       {
          pc->type = CT_ADDR;
       }
-      else if (prev->type == CT_TYPE)
+      else if ((prev->type == CT_TYPE) ||
+               (prev->flags & PCF_TYPE_WRAP))
       {
          pc->type = CT_BYREF;
       }
@@ -928,7 +946,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
  * Change number/word + CT_STAR to CT_ARITH
  * Change number/word + CT_NEG to CT_ARITH
  * Change word + ( to a CT_FUNCTION
- * Cahnge struct/union/enum + CT_WORD => CT_TYPE
+ * Change struct/union/enum + CT_WORD => CT_TYPE
  * Force parens on return.
  *
  * TODO: This could be done earlier.
@@ -1002,6 +1020,7 @@ void fix_symbols(void)
           ((pc->flags & PCF_STMT_START) != 0) &&
           ((pc->type == CT_QUALIFIER) ||
            (pc->type == CT_TYPE) ||
+           (pc->flags & PCF_TYPE_WRAP) ||
            (pc->type == CT_WORD)) &&
           (pc->parent_type != CT_ENUM) &&
           ((pc->flags & PCF_IN_ENUM) == 0))
@@ -1124,6 +1143,10 @@ static void mark_function_type(chunk_t *pc)
 
    pc->type        = CT_PAREN_CLOSE;
    pc->parent_type = CT_NONE;
+
+   tmp = chunk_get_next_ncnl(pc);
+   flag_parens(tmp, 0, CT_FPAREN_OPEN, CT_FUNC_PROTO, false);
+   fix_fcn_def_params(tmp);
 
    /* Step backwards to the previous open paren and mark everything a
     */
@@ -1391,7 +1414,8 @@ static void fix_casts(chunk_t *start)
    /* If last is a type or star, we have a cast for sure */
    if ((last->type == CT_STAR) ||
        (last->type == CT_PTR_TYPE) ||
-       (last->type == CT_TYPE))
+       (last->type == CT_TYPE) ||
+       (last->flags & PCF_TYPE_WRAP))
    {
       verb = "for sure";
    }
@@ -1483,6 +1507,7 @@ static void fix_casts(chunk_t *start)
                (pc->type != CT_NUMBER) &&
                (pc->type != CT_WORD) &&
                (pc->type != CT_TYPE) &&
+               ((pc->flags & PCF_TYPE_WRAP) == 0) &&
                (pc->type != CT_PAREN_OPEN) &&
                (pc->type != CT_STRING) &&
                (pc->type != CT_SIZEOF) &&
@@ -1732,6 +1757,14 @@ static void fix_typedef(chunk_t *start)
           (next->level >= start->level))
    {
       next->flags |= PCF_IN_TYPEDEF;
+
+	  /* TYPE_WRAP has to be handled here for parameters because "do_symbol_check" */
+	  /* has not done the job yet                                                  */
+      if (next->type == CT_TYPE_WRAP)
+      {
+         handle_type_wrap(next);
+      }
+
       if (start->level == next->level)
       {
          if (chunk_is_semicolon(next))
@@ -1749,7 +1782,7 @@ static void fix_typedef(chunk_t *start)
             break;
          }
          make_type(next);
-         if (next->type == CT_TYPE)
+         if ((next->type == CT_TYPE) || (next->type == CT_TYPE_WRAP))
          {
             the_type = next;
          }
@@ -1757,14 +1790,17 @@ static void fix_typedef(chunk_t *start)
          if (*next->str == '(')
          {
             prev = chunk_get_prev_ncnl(next);
-            if (*prev->str != ')')
+            if ((*prev->str != ')') || (prev->flags & PCF_TYPE_WRAP))
             {
                continue;
             }
 
-            prev->parent_type       = CT_TYPEDEF;
-            open_paren              = chunk_get_prev_type(prev, c_token_t(prev->type - 1), prev->level);
-            open_paren->parent_type = CT_TYPEDEF;
+            prev->parent_type = CT_TYPEDEF;
+            if ((prev->flags & PCF_FUNC_PTR_WRAP) == 0)
+            {
+               open_paren              = chunk_get_prev_type(prev, c_token_t(prev->type - 1), prev->level);
+               open_paren->parent_type = CT_TYPEDEF;
+            }
 
             flag_parens(next, 0, CT_FPAREN_OPEN, CT_TYPEDEF, false);
 
@@ -2049,15 +2085,39 @@ static void mark_variable_stack(ChunkStack& cs, log_sev_t sev)
       LOG_FMT(LFCNP, "%s: parameter on line %d :",
               __func__, var_name->orig_line);
 
-      while ((word_type = cs.Pop()) != NULL)
+      if ((cs.Len() == 0) ||
+          (var_name->type != CT_WORD) ||
+          (var_name->flags & PCF_TYPE_WRAP))
+	  {
+         /* Parameter name is missing */
+         word_type = var_name;
+         var_name  = NULL;
+	  }
+	  else
+	  {
+         word_type = cs.Pop();
+	  }
+      
+      do
       {
          LOG_FMT(LFCNP, " <%s>", word_type->str.c_str());
-         word_type->type   = CT_TYPE;
+		 if ((word_type->flags & PCF_TYPE_WRAP) == 0)
+		 {
+            word_type->type = CT_TYPE;
+		 }
          word_type->flags |= PCF_VAR_TYPE;
       }
+      while ((word_type = cs.Pop()) != NULL);
 
-      LOG_FMT(LFCNP, " [%s]\n", var_name->str.c_str());
-      var_name->flags |= PCF_VAR_DEF;
+	  if (var_name == NULL)
+	  {
+         LOG_FMT(LFCNP, " [no var name]\n");
+	  }
+	  else
+	  {
+         LOG_FMT(LFCNP, " [%s]\n", var_name->str.c_str());
+         var_name->flags |= PCF_VAR_DEF;
+	  }
    }
 }
 
@@ -2101,6 +2161,14 @@ static void fix_fcn_def_params(chunk_t *start)
       {
          continue;
       }
+
+	  /* TYPE_WRAP has to be handled here for parameters because "do_symbol_check" */
+	  /* has not done the job yet                                                  */
+      if (pc->type == CT_TYPE_WRAP)
+      {
+         handle_type_wrap(pc);
+      }
+      
       if (chunk_is_star(pc))
       {
          pc->type = CT_PTR_TYPE;
@@ -2109,7 +2177,7 @@ static void fix_fcn_def_params(chunk_t *start)
       {
          pc->type = CT_BYREF;
       }
-      else if ((pc->type == CT_WORD) || (pc->type == CT_TYPE))
+      else if ((pc->type == CT_WORD) || (pc->type == CT_TYPE) || (pc->flags & PCF_TYPE_WRAP))
       {
          cs.Push(pc);
       }
@@ -2164,6 +2232,7 @@ static chunk_t *fix_var_def(chunk_t *start)
    /* Scan for words and types and stars oh my! */
    while ((pc != NULL) &&
           ((pc->type == CT_TYPE) ||
+           (pc->flags & PCF_TYPE_WRAP) ||
            (pc->type == CT_WORD) ||
            (pc->type == CT_QUALIFIER) ||
            (pc->type == CT_DC_MEMBER) ||
@@ -2805,6 +2874,7 @@ static void mark_function(chunk_t *pc)
 
          /* If we are on a TYPE or WORD, then we must be on a proto or def */
          if ((prev->type == CT_TYPE) ||
+             (prev->flags & PCF_TYPE_WRAP) ||
              (prev->type == CT_WORD))
          {
             if (!hit_star)
@@ -2828,6 +2898,7 @@ static void mark_function(chunk_t *pc)
              (prev->type != CT_ANGLE_CLOSE) &&
              (prev->type != CT_QUALIFIER) &&
              (prev->type != CT_TYPE) &&
+             ((prev->flags & PCF_TYPE_WRAP) == 0) &&
              (prev->type != CT_WORD) &&
              !chunk_is_addr(prev) &&
              !chunk_is_star(prev))
@@ -2856,7 +2927,7 @@ static void mark_function(chunk_t *pc)
       //        prev->str.c_str(), get_token_name(prev->type));
 
       if (isa_def && (prev != NULL) &&
-          ((chunk_is_paren_close(prev) && (prev->parent_type != CT_D_CAST)) ||
+          ((chunk_is_paren_close(prev) && (prev->parent_type != CT_D_CAST) && ((prev->flags & PCF_TYPE_WRAP) == 0)) ||
            (prev->type == CT_ASSIGN) ||
            (prev->type == CT_RETURN)))
       {
@@ -4488,9 +4559,6 @@ void remove_extra_returns()
 /**
  * A func wrap chunk and what follows should be treated as a function name.
  * Create new text for the chunk and call it a CT_FUNCTION.
- *
- * A type wrap chunk and what follows should be treated as a simple type.
- * Create new text for the chunk and call it a CT_TYPE.
  */
 static void handle_wrap(chunk_t *pc)
 {
@@ -4498,13 +4566,8 @@ static void handle_wrap(chunk_t *pc)
    chunk_t *name = chunk_get_next(opp);
    chunk_t *clp  = chunk_get_next(name);
 
-   argval_t pav = (pc->type == CT_FUNC_WRAP) ?
-                  cpd.settings[UO_sp_func_call_paren].a :
-                  cpd.settings[UO_sp_cpp_cast_paren].a;
-
-   argval_t av = (pc->type == CT_FUNC_WRAP) ?
-                 cpd.settings[UO_sp_inside_fparen].a :
-                 cpd.settings[UO_sp_inside_paren_cast].a;
+   argval_t pav = cpd.settings[UO_sp_func_call_paren].a;
+   argval_t av  = cpd.settings[UO_sp_inside_fparen].a;
 
    if ((clp != NULL) &&
        (opp->type == CT_PAREN_OPEN) &&
@@ -4521,7 +4584,7 @@ static void handle_wrap(chunk_t *pc)
       pc->str.append(fsp);
       pc->str.append(")");
 
-      pc->type = (pc->type == CT_FUNC_WRAP) ? CT_FUNCTION : CT_TYPE;
+      pc->type = CT_FUNCTION;
 
       pc->orig_col_end = pc->orig_col + pc->len();
 
@@ -4529,6 +4592,70 @@ static void handle_wrap(chunk_t *pc)
       chunk_del(name);
       chunk_del(clp);
    }
+}
+
+
+/**
+ * A type wrap chunk and what follows should be treated as a simple type.
+ * What follows can contain 0 to n parameters.
+ * Set the flag "PCF_TYPE_WRAP" for all elements composing the "type wrap"
+ * to be able to treat it as a type.
+ */
+static void handle_type_wrap(chunk_t *pc)
+{
+   chunk_t *opp  = chunk_get_next_ncnl(pc);
+   chunk_t *clp  = chunk_skip_to_match(opp);
+   chunk_t *tmp;
+
+   if (!opp || !clp ||
+       (opp->type != CT_PAREN_OPEN))
+   {
+      return;
+   }
+
+   tmp  = chunk_get_next_ncnl(opp);
+   while (tmp != clp)
+   {
+	  tmp->flags |= PCF_TYPE_WRAP;
+
+      tmp = chunk_get_next_ncnl(tmp);
+   }
+
+   pc->flags  |= PCF_TYPE_WRAP;
+   opp->flags |= PCF_TYPE_WRAP;
+   clp->flags |= PCF_TYPE_WRAP;
+}
+
+
+/**
+ * A function pointer wrap chunk and what follows should be treated as a simple function pointer.
+ * What follows can contain 0 to n parameters.
+ * Set the flag "PCF_FUNC_PTR_WRAP" for all elements composing the "function pointer wrap"
+ * to be able to treat it as a function pointer.
+ */
+static void handle_func_ptr_wrap(chunk_t *pc)
+{
+   chunk_t *opp  = chunk_get_next_ncnl(pc);
+   chunk_t *clp  = chunk_skip_to_match(opp);
+   chunk_t *tmp;
+
+   if (!opp || !clp ||
+       (opp->type != CT_PAREN_OPEN))
+   {
+      return;
+   }
+
+   tmp  = chunk_get_next_ncnl(opp);
+   while (tmp != clp)
+   {
+	  tmp->flags |= PCF_FUNC_PTR_WRAP;
+
+      tmp = chunk_get_next_ncnl(tmp);
+   }
+
+   pc->flags  |= PCF_FUNC_PTR_WRAP;
+   opp->flags |= PCF_FUNC_PTR_WRAP;
+   clp->flags |= PCF_FUNC_PTR_WRAP;
 }
 
 

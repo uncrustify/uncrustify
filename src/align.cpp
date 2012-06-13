@@ -717,7 +717,8 @@ static chunk_t *align_func_param(chunk_t *start)
             break;
          }
       }
-      else if (pc->type == CT_COMMA)
+      else if ((pc->type == CT_COMMA) &&
+               (pc->level == (start->level + 1)))
       {
          comma_count++;
       }

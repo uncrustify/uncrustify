@@ -212,6 +212,7 @@ void tokenize_cleanup(void)
        */
       if ((next->type == CT_STAR) &&
           ((pc->type == CT_TYPE) ||
+           (pc->flags & PCF_TYPE_WRAP) ||
            (pc->type == CT_QUALIFIER) ||
            (pc->type == CT_PTR_TYPE)))
       {

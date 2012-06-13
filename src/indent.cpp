@@ -1329,6 +1329,7 @@ void indent_text(void)
                   (prev != NULL) &&
                   ((prev->type == CT_COMMA) ||
                    (prev->type == CT_TYPE) ||
+                   (prev->flags & PCF_TYPE_WRAP) ||
                    (prev->type == CT_WORD)) &&
                   ((pc->flags & PCF_VAR_DEF) != 0))
          {

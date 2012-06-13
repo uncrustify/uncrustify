@@ -112,6 +112,7 @@ static void check_unknown_brace_close(chunk_t *semi, chunk_t *brace_close)
    if ((pc != NULL) &&
        (pc->type != CT_WORD) &&
        (pc->type != CT_TYPE) &&
+       ((pc->flags & PCF_TYPE_WRAP) == 0) &&
        (pc->type != CT_SQUARE_CLOSE) &&
        (pc->type != CT_TSQUARE))
    {
