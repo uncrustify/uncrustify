@@ -1878,7 +1878,7 @@ void newlines_cleanup_braces(bool first)
       }
       else if (pc->type == CT_ELSEIF)
       {
-		 argval_t arg = cpd.settings[UO_nl_elseif_brace].a; // [i_a]
+         argval_t arg = cpd.settings[UO_nl_elseif_brace].a; // [i_a]
          newlines_if_for_while_switch(
             pc, (arg != AV_IGNORE) ? arg : cpd.settings[UO_nl_if_brace].a);
       }
