@@ -105,7 +105,6 @@ static void print_stack(int logsev, const char *str,
 void brace_cleanup(void)
 {
    chunk_t            *pc;
-   chunk_t            vs_chunk;
    struct parse_frame frm;
    int                pp_level;
 

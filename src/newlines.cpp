@@ -1868,7 +1868,7 @@ void newlines_cleanup_braces(bool first)
    chunk_t  *next;
    chunk_t  *prev;
    chunk_t  *tmp;
-   argval_t arg;
+   //argval_t arg;  // 1>d:\h\prj\3actual\uncrustify\src\newlines.cpp(1815) : warning C6246: Local declaration of 'arg' hides declaration of the same name in outer scope. For additional information, see previous declaration at line '1436' of 'd:\h\prj\3actual\uncrustify\src\newlines.cpp': Lines: 1436
 
    for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next_ncnl(pc))
    {
@@ -1878,7 +1878,7 @@ void newlines_cleanup_braces(bool first)
       }
       else if (pc->type == CT_ELSEIF)
       {
-         arg = cpd.settings[UO_nl_elseif_brace].a;
+		 argval_t arg = cpd.settings[UO_nl_elseif_brace].a; // [i_a]
          newlines_if_for_while_switch(
             pc, (arg != AV_IGNORE) ? arg : cpd.settings[UO_nl_if_brace].a);
       }
@@ -2907,7 +2907,7 @@ void do_blank_lines(void)
 
       /* Limit consecutive newlines */
       if ((cpd.settings[UO_nl_max].n > 0) &&
-          (pc->nl_count > (cpd.settings[UO_nl_max].n)))
+          (pc->nl_count > cpd.settings[UO_nl_max].n))
       {
          blank_line_max(pc, UO_nl_max);
       }

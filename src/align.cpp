@@ -26,7 +26,7 @@ static void align_func_proto(int span);
 static void align_oc_msg_spec(int span);
 static void align_typedefs(int span);
 static void align_left_shift(void);
-static void align_oc_msg_colons();
+static void align_oc_msg_colons(void);
 static void align_oc_msg_colon(chunk_t *so);
 static void align_oc_decl_colon(void);
 
@@ -1275,7 +1275,7 @@ static CmtAlignType get_comment_align_type(chunk_t *cmt)
  * The series ends when more than align_right_cmt_span newlines are found.
  *
  * Interesting info:
- *  - least pysically allowed column
+ *  - least physically allowed column
  *  - intended column
  *  - least original cmt column
  *
@@ -1894,7 +1894,7 @@ static void align_oc_msg_colon(chunk_t *so)
 /**
  * Aligns OC messages
  */
-static void align_oc_msg_colons()
+static void align_oc_msg_colons(void)
 {
    chunk_t *pc;
 

@@ -39,7 +39,7 @@
 #include <deque>
 
 /* Global data */
-struct cp_data cpd;
+struct cp_data cpd = {0};
 
 
 static int language_from_tag(const char *tag);
@@ -134,50 +134,61 @@ static void usage_exit(const char *msg, const char *argv0, int code)
            "If no input files are specified, the input is read from stdin\n"
            "If reading from stdin, you should specify the language using -l\n"
            "\n"
-           "If -F is used or files are specified on the command line, the output filename is\n"
-           "'prefix/filename' + suffix\n"
+           "If -F is used or files are specified on the command line, the output filename\n"
+           "is 'prefix/filename' + suffix\n"
            "\n"
            "When reading from stdin or doing a single file via the '-f' option,\n"
            "the output is dumped to stdout, unless redirected with -o FILE.\n"
            "\n"
            "Errors are always dumped to stderr\n"
            "\n"
-           "The '-f' and '-o' options may not be used with '-F', '--replace' or '--no-backup'.\n"
-           "The '--prefix' and '--suffix' options may not be used with '--replace' or '--no-backup'.\n"
+           "The '-f' and '-o' options may not be used with '-F', '--replace' or\n"
+		   "'--no-backup'.\n"
+           "The '--prefix' and '--suffix' options may not be used with '--replace' or\n"
+		   "'--no-backup'.\n"
            "\n"
            "Basic Options:\n"
-           " -c CFG       : use the config file CFG\n"
+           " -c CFG\n"
+           " --config CFG : use the config file CFG\n"
+		   " --file FILE,\n"
            " -f FILE      : process the single file FILE (output to stdout, use with -o)\n"
            " -o FILE      : Redirect stdout to FILE\n"
+		   " --files FILE,\n"
            " -F FILE      : read files to process from FILE, one filename per line\n"
            " files        : files to process (can be combined with -F)\n"
            " --suffix SFX : Append SFX to the output filename. The default is '.uncrustify'\n"
            " --prefix PFX : Prepend PFX to the output filename path.\n"
            " --replace    : replace source files (creates a backup)\n"
-           " --no-backup  : replace files, no backup. Useful if files are under source control\n"
+           " --no-backup  : replace files, no backup. Useful if files are under source\n"
+		   "                control\n"
 #ifdef HAVE_UTIME_H
            " --mtime      : preserve mtime on replaced files\n"
 #endif
            " -l           : language override: C, CPP, D, CS, JAVA, PAWN, OC, OC+\n"
-           " -t           : load a file with types (usually not needed)\n"
+           " -t FILE      : load a FILE with types (usually not needed)\n"
+		   " --type T     : define one user defined type T\n"
+		   " -d FILE      : load a FILE with defines (usually not needed)\n"
+		   " --define DEF : define one user defined define DEF\n"
            " -q           : quiet mode - no output on stderr (-L will override)\n"
            " --frag       : code fragment, assume the first line is indented correctly\n"
            "\n"
            "Config/Help Options:\n"
-           " -h -? --help --usage     : print this message and exit\n"
+           " -h, -?, --help, --usage  : print this message and exit\n"
            " --version                : print the version and exit\n"
            " --show-config            : print out option documentation and exit\n"
            " --update-config          : Output a new config file. Use with -o FILE\n"
            " --update-config-with-doc : Output a new config file. Use with -o FILE\n"
            " --universalindent        : Output a config file for Universal Indent GUI\n"
-           " --detect                 : detects the config from a source file. Use with '-f FILE'\n"
+           " --detect                 : detects the config from a source file. Use with\n"
+		   "                            '-f FILE'\n"
            "                            Detection is fairly limited.\n"
            "\n"
            "Debug Options:\n"
-           " -p FILE      : dump debug info to a file\n"
-           " -L SEV       : Set the log severity (see log_levels.h)\n"
-           " -s           : Show the log severity in the logs\n"
-           " --decode FLAG: Print FLAG (chunk flags) as text and exit\n"
+           " --parsed FILE, -p FILE : dump debug info to a file\n"
+           " --log SEV, -L SEV      : Set the log severity (see log_levels.h, 'A' for all,\n"
+		   "                          N-M is range N..M, commas separate levels)\n"
+           " --show, -s             : Show the log severity in the logs\n"
+           " --decode FLAG          : Print FLAG (chunk flags) as text and exit\n"
            "\n"
            "Usage Examples\n"
            "cat foo.d | uncrustify -q -c my.cfg -l d\n"
@@ -262,8 +273,8 @@ int main(int argc, char *argv[])
 
    if (arg.Present("--show-config"))
    {
-      print_options(stdout, true);
-      return(0);
+      print_options(stdout, !arg.Present("-q"));
+      return EXIT_SUCCESS;
    }
 
 #ifdef WIN32
@@ -289,7 +300,7 @@ int main(int argc, char *argv[])
    if ((p_arg = arg.Param("--decode")) != NULL)
    {
       log_pcf_flags(LSYS, strtoul(p_arg, NULL, 16));
-      exit(EXIT_SUCCESS);
+      return EXIT_SUCCESS;
    }
 
    /* Get the config file name */
@@ -299,7 +310,7 @@ int main(int argc, char *argv[])
       cfg_file = p_arg;
    }
 
-   /* Try to file a config at an alternate location */
+   /* Try to find a config file at an alternate location */
    if (cfg_file.empty())
    {
       if (!unc_getenv("UNCRUSTIFY_CONFIG", cfg_file))
@@ -524,7 +535,7 @@ int main(int argc, char *argv[])
    {
       redir_stdout(output_file);
       save_option_file(stdout, update_config_wd);
-      return(0);
+      return(EXIT_SUCCESS);
    }
 
    /* Check for unused args (ignore them) */
@@ -612,7 +623,7 @@ int main(int argc, char *argv[])
    clear_keyword_file();
    clear_defines();
 
-   return((cpd.error_count != 0) ? 1 : 0);
+   return((cpd.error_count != 0) ? EXIT_FAILURE : EXIT_SUCCESS);
 }
 
 
@@ -1693,8 +1704,8 @@ c_token_t find_token_name(const char *text)
 
 static bool ends_with(const char *filename, const char *tag)
 {
-   int len1 = strlen(filename);
-   int len2 = strlen(tag);
+   int len1 = (int)strlen(filename);
+   int len2 = (int)strlen(tag);
 
    if ((len2 <= len1) && (strcmp(&filename[len1 - len2], tag) == 0))
    {
@@ -1846,7 +1857,7 @@ void log_pcf_flags(log_sev_t sev, UINT64 flags)
       {
          if (tolog != NULL)
          {
-            log_str(sev, tolog, strlen(tolog));
+            log_str(sev, tolog, (int)strlen(tolog));
             log_str(sev, ",", 1);
          }
          tolog = pcf_names[i];
@@ -1855,7 +1866,7 @@ void log_pcf_flags(log_sev_t sev, UINT64 flags)
 
    if (tolog != NULL)
    {
-      log_str(sev, tolog, strlen(tolog));
+      log_str(sev, tolog, (int)strlen(tolog));
    }
 
    log_str(sev, "]\n", 2);

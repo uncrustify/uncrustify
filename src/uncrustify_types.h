@@ -244,20 +244,20 @@ struct chunk_t
    chunk_t     *prev;
    align_ptr_t align;
    c_token_t   type;
-   c_token_t   parent_type;     /* usually CT_NONE */
+   c_token_t   parent_type;      /* usually CT_NONE */
    UINT32      orig_line;
    UINT32      orig_col;
    UINT32      orig_col_end;
    UINT64      flags;            /* see PCF_xxx */
    int         column;           /* column of chunk */
    int         column_indent;    /* if 1st on a line, set to the 'indent'
-                                  * column, which may be less that the real column */
+                                  * column, which may be less than the real column */
    int         nl_count;         /* number of newlines in CT_NEWLINE */
    int         level;            /* nest level in {, (, or [ */
    int         brace_level;      /* nest level in braces only */
    int         pp_level;         /* nest level in #if stuff */
    bool        after_tab;        /* whether this token was after a tab */
-   unc_text    str;             /* pointer to the token text */
+   unc_text    str;              /* pointer to the token text */
 };
 
 enum

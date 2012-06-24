@@ -5,30 +5,30 @@
 # test.name  config.file  input.file
 
 # The .h file needs a language override
-50001  obj-c.cfg           oc/Fraction.h      OC
-50002  obj-c.cfg           oc/Fraction.m      OC
-50003  obj-c.cfg           oc/main.m
-50004  obj-c.cfg           oc/string.m
-50005  obj-c.cfg           oc/Declarations.h  OC
-50006  obj-c.cfg           oc/exceptions.m
-50007  obj-c.cfg           oc/misc.m
-50008  obj-c.cfg           oc/protocol.m
+50001  obj-c.cfg                                    oc/Fraction.h      OC
+50002  obj-c.cfg                                    oc/Fraction.m      OC
+50003  obj-c.cfg                                    oc/main.m
+50004  obj-c.cfg                                    oc/string.m
+50005  obj-c.cfg                                    oc/Declarations.h  OC
+50006  obj-c.cfg                                    oc/exceptions.m
+50007  obj-c.cfg                                    oc/misc.m
+50008  obj-c.cfg                                    oc/protocol.m
 
-50010  sp_after_oc_return_type_add.cfg      oc/return_type.m
-50011  sp_after_oc_return_type_force.cfg    oc/return_type.m
-50012  sp_after_oc_return_type_remove.cfg   oc/return_type.m
-
-50020  sp_after_oc_at_sel_add.cfg           oc/selector.m
-50021  sp_after_oc_at_sel_force.cfg         oc/selector.m
-50022  sp_after_oc_at_sel_remove.cfg        oc/selector.m
-
-50030  sort_imports.cfg    oc/sort_import.m
-
-50040  objc_complex_method.cfg              oc/complex_method.m
-
-50050  objc_complex_method.cfg              oc/real_world_file.m
-
-50060  oc-split.cfg        oc/oc-split.m
+50010  sp_after_oc_return_type_add.cfg              oc/return_type.m
+50011  sp_after_oc_return_type_force.cfg            oc/return_type.m
+50012  sp_after_oc_return_type_remove.cfg           oc/return_type.m
+                                                
+50020  sp_after_oc_at_sel_add.cfg                   oc/selector.m
+50021  sp_after_oc_at_sel_force.cfg                 oc/selector.m
+50022  sp_after_oc_at_sel_remove.cfg                oc/selector.m
+                                                
+50030  sort_imports.cfg                             oc/sort_import.m
+                                                
+50040  objc_complex_method.cfg                      oc/complex_method.m
+                                                
+50050  objc_complex_method.cfg                      oc/real_world_file.m
+                                                
+50060  oc-split.cfg                                 oc/oc-split.m
 
 50070  sp_before_oc_block_caret_add.cfg             oc/blocks.m
 50071  sp_before_oc_block_caret_force.cfg           oc/blocks.m
@@ -46,4 +46,4 @@
 50082  sp_after_oc_block_caret_remove.cfg           oc/more_blocks.m
 50083  sp_before_after_oc_block_caret_remove.cfg    oc/more_blocks.m
 
-50090  obj-c.cfg           oc/kw.m
+50090  obj-c.cfg                                    oc/kw.m

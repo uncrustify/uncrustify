@@ -942,7 +942,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
  * Change number/word + CT_STAR to CT_ARITH
  * Change number/word + CT_NEG to CT_ARITH
  * Change word + ( to a CT_FUNCTION
- * Cahnge struct/union/enum + CT_WORD => CT_TYPE
+ * Change struct/union/enum + CT_WORD => CT_TYPE
  * Force parens on return.
  *
  * TODO: This could be done earlier.
