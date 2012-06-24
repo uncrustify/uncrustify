@@ -140,6 +140,7 @@ struct parse_frame
 #define PCF_PUNCTUATOR         PCF_BIT(32)
 #define PCF_INSERTED           PCF_BIT(33)  /* chunk was inserted from another file */
 #define PCF_LONG_BLOCK         PCF_BIT(34)  /* the block is 'long' by some measure */
+#define PCF_OC_BOXED           PCF_BIT(35)  /* inside OC boxed expression */
 
 #ifdef DEFINE_PCF_NAMES
 static const char *pcf_names[] =
@@ -179,7 +180,7 @@ static const char *pcf_names[] =
    "PUNCTUATOR",        // 32
    "INSERTED",          // 33
    "LONG_BLOCK",        // 34
-   "#35",               // 35
+   "OC_BOXED",          // 35
    "#36",               // 36
    "#37",               // 37
    "#38",               // 38

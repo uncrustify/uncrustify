@@ -100,6 +100,7 @@ static const chunk_tag_t symbols1[] =
    { "<", CT_ANGLE_OPEN,   LANG_ALL                                                   },
    { "=", CT_ASSIGN,       LANG_ALL                                                   },
    { ">", CT_ANGLE_CLOSE,  LANG_ALL                                                   },
+   { "@", CT_OC_AT,        LANG_OC                                                    },
    { "?", CT_QUESTION,     LANG_ALL                                                   },
    { "[", CT_SQUARE_OPEN,  LANG_ALL                                                   },
    { "]", CT_SQUARE_CLOSE, LANG_ALL                                                   },

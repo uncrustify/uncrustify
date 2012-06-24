@@ -31,6 +31,7 @@ struct no_space_table_s
  */
 struct no_space_table_s no_space_table[] =
 {
+   { CT_OC_AT,          CT_UNKNOWN       },
    { CT_INCDEC_BEFORE,  CT_WORD          },
    { CT_UNKNOWN,        CT_INCDEC_AFTER  },
    { CT_UNKNOWN,        CT_LABEL_COLON   },

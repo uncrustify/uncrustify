@@ -1400,7 +1400,7 @@ static bool parse_next(tok_ctx& ctx, chunk_t& pc)
 
    /* Check for pawn/ObjectiveC and normal identifiers */
    if (CharTable::IsKw1(ctx.peek()) ||
-       ((ctx.peek() == '@') && CharTable::IsKw2(ctx.peek(1))))
+       ((ctx.peek() == '@') && CharTable::IsKw1(ctx.peek(1))))
    {
       parse_word(ctx, pc, false);
       return(true);

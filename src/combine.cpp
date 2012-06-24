@@ -246,6 +246,20 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
    //         pc->str.c_str(), get_token_name(pc->type),
    //         next->str.c_str(), get_token_name(next->type));
 
+   if ((pc->type == CT_OC_AT) && next)
+   {
+      if ((next->type == CT_PAREN_OPEN) ||
+          (next->type == CT_BRACE_OPEN) ||
+          (next->type == CT_SQUARE_OPEN))
+      {
+         flag_parens(next, PCF_OC_BOXED, next->type, CT_OC_AT, false);
+      }
+      else
+      {
+         next->parent_type = CT_OC_AT;
+      }
+   }
+
    /* D stuff */
    if ((cpd.lang_flags & LANG_D) &&
        (pc->type == CT_QUALIFIER) &&
@@ -1946,6 +1960,10 @@ void combine_labels(void)
             else if (next->flags & PCF_IN_ARRAY_ASSIGN)
             {
                next->type = CT_D_ARRAY_COLON;
+            }
+            else if (next->flags & PCF_OC_BOXED)
+            {
+               next->type = CT_OC_DICT_COLON;
             }
             else if (cur->type == CT_WORD)
             {
