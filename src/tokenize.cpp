@@ -379,7 +379,7 @@ static bool parse_comment(tok_ctx& ctx, chunk_t& pc)
 
             if (ch == '\r')
             {
-               if (ctx.peek(1) == '\n')
+               if (ctx.peek() == '\n')
                {
                   cpd.le_counts[LE_CRLF]++;
                   pc.str.append(ctx.get());  /* store the '\n' */
