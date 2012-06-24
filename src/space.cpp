@@ -1330,6 +1330,16 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
       log_rule("sp_after_oc_scope");
       return(cpd.settings[UO_sp_after_oc_scope].a);
    }
+   if (first->type == CT_OC_DICT_COLON)
+   {
+      log_rule("sp_after_oc_dict_colon");
+      return(cpd.settings[UO_sp_after_oc_dict_colon].a);
+   }
+   if (second->type == CT_OC_DICT_COLON)
+   {
+      log_rule("sp_before_oc_dict_colon");
+      return(cpd.settings[UO_sp_before_oc_dict_colon].a);
+   }
    if (first->type == CT_OC_COLON)
    {
       if (first->flags & PCF_IN_OC_MSG)

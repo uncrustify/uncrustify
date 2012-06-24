@@ -323,6 +323,8 @@ enum uncrustify_options
    UO_sp_after_oc_scope,
    UO_sp_before_oc_colon,
    UO_sp_after_oc_colon,
+   UO_sp_before_oc_dict_colon,
+   UO_sp_after_oc_dict_colon,
    UO_sp_before_send_oc_colon,
    UO_sp_after_send_oc_colon,
    UO_sp_after_oc_type,
