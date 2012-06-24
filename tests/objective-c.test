@@ -47,3 +47,5 @@
 50083  sp_before_after_oc_block_caret_remove.cfg    oc/more_blocks.m
 
 50090  obj-c.cfg           oc/kw.m
+
+50095  obj-c.cfg           oc/box.m
