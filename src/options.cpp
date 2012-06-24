@@ -810,6 +810,9 @@ void register_options(void)
    unc_add_option("nl_after_vbrace_close", UO_nl_after_vbrace_close, AT_BOOL,
                   "Whether to put a newline after a virtual brace close.\n"
                   "Would add a newline before return in: 'if (foo) a++; return;'");
+   unc_add_option("nl_brace_struct_var", UO_nl_brace_struct_var, AT_IARF,
+                  "Control the newline between the close brace and 'b' in: 'struct { int a; } b;'\n"
+                  "Affects enums, unions, and structures. If set to ignore, uses nl_after_brace_close");
    unc_add_option("nl_define_macro", UO_nl_define_macro, AT_BOOL,
                   "Whether to alter newlines in '#define' macros");
    unc_add_option("nl_squeeze_ifdef", UO_nl_squeeze_ifdef, AT_BOOL,

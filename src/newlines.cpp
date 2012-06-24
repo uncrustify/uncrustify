@@ -2076,11 +2076,24 @@ void newlines_cleanup_braces(bool first)
             }
          }
 
-         /* Force a newline after a function def */
-         if (cpd.settings[UO_nl_after_brace_close].b ||
-             (pc->parent_type == CT_FUNC_CLASS) ||
-             (pc->parent_type == CT_FUNC_DEF) ||
-             (pc->parent_type == CT_OC_MSG_DECL))
+         /* Force a newline after a close brace */
+         if ((cpd.settings[UO_nl_brace_struct_var].a != AV_IGNORE) &&
+             ((pc->parent_type == CT_STRUCT) ||
+              (pc->parent_type == CT_ENUM) ||
+              (pc->parent_type == CT_UNION)))
+         {
+            next = chunk_get_next_ncnl(pc, CNAV_PREPROC);
+            if (next &&
+                (next->type != CT_SEMICOLON) &&
+                (next->type != CT_COMMA))
+            {
+               newline_iarf(pc, cpd.settings[UO_nl_brace_struct_var].a);
+            }
+         }
+         else if (cpd.settings[UO_nl_after_brace_close].b ||
+                  (pc->parent_type == CT_FUNC_CLASS) ||
+                  (pc->parent_type == CT_FUNC_DEF) ||
+                  (pc->parent_type == CT_OC_MSG_DECL))
          {
             next = chunk_get_next(pc);
             if ((next != NULL) &&
