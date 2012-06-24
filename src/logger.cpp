@@ -14,6 +14,7 @@
 #include <cstdio>
 #include <stdarg.h>
 #include "unc_ctype.h"
+#include "log_levels.h"
 
 
 /** Private log structure */
@@ -44,9 +45,9 @@ void log_init(FILE *log_file)
 {
    /* set the top 3 severities */
    logmask_set_all(g_log.mask, false);
-   log_set_sev(0, true);
-   log_set_sev(1, true);
-   log_set_sev(2, true);
+   log_set_sev(LSYS, true);
+   log_set_sev(LERR, true);
+   log_set_sev(LWARN, true);
 
    g_log.log_file = (log_file != NULL) ? log_file : stderr;
 }
@@ -196,7 +197,7 @@ void log_str(log_sev_t sev, const char *str, int len)
    {
       if (len > (int)cap)
       {
-         len = cap;
+         len = (int)cap;
       }
       memcpy(&g_log.buf[g_log.buf_len], str, len);
       g_log.buf_len           += len;
@@ -239,7 +240,7 @@ void log_fmt(log_sev_t sev, const char *fmt, ...)
    {
       if (len > (int)cap)
       {
-         len = cap;
+         len = (int)cap;
       }
       g_log.buf_len           += len;
       g_log.buf[g_log.buf_len] = 0;
@@ -340,7 +341,7 @@ void log_hex_blk(log_sev_t sev, const void *data, int len)
       buf[str_idx + 1] = to_hex_char(tmp);
       str_idx         += 3;
 
-      buf[chr_idx++] = unc_isprint(tmp) ? tmp : '.';
+      buf[chr_idx++] = unc_isprint(tmp) ? (char)tmp : '.';
 
       total++;
       count++;

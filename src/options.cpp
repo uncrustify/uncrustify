@@ -99,7 +99,7 @@ void unc_add_option(const char *name, uncrustify_options id, argtype_e type,
 
    option_name_map[name] = value;
 
-   int name_len = strlen(name);
+   int name_len = (int)strlen(name);
    if (name_len > cpd.max_option_name_len)
    {
       cpd.max_option_name_len = name_len;
@@ -1439,7 +1439,7 @@ int load_option_file(const char *filename)
    FILE *pfile;
    char buffer[256];
    char *ptr;
-   int  id;
+   //int  id;
    char *args[32];
    int  argc;
    int  idx;
@@ -1552,6 +1552,8 @@ int load_option_file(const char *filename)
       }
       else
       {
+		 int id; /* [i_a] otherwise warning about other id var in nested block up there */
+
          /* must be a regular option = value */
          if ((id = set_option_value(args[0], args[1])) < 0)
          {
@@ -1613,8 +1615,8 @@ int save_option_file(FILE *pfile, bool withDoc)
          first      = false;
          val_string = op_val_to_string(option->type, cpd.settings[option->id]);
          val_str    = val_string.c_str();
-         val_len    = strlen(val_str);
-         name_len   = strlen(option->name);
+         val_len    = (int)strlen(val_str);
+         name_len   = (int)strlen(option->name);
 
          fprintf(pfile, "%s %*.s= ",
                  option->name, cpd.max_option_name_len - name_len, " ");

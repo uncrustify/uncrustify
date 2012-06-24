@@ -738,8 +738,8 @@ static bool parse_string(tok_ctx& ctx, chunk_t& pc, int quote_idx, bool allow_es
 {
    bool escaped = 0;
    int  end_ch;
-   char escape_char  = cpd.settings[UO_string_escape_char].n;
-   char escape_char2 = cpd.settings[UO_string_escape_char2].n;
+   char escape_char  = (char)cpd.settings[UO_string_escape_char].n;
+   char escape_char2 = (char)cpd.settings[UO_string_escape_char2].n;
 
    pc.str.clear();
    while (quote_idx-- > 0)

@@ -70,7 +70,7 @@ static int preproc_start(struct parse_frame *frm, chunk_t *pc)
 }
 
 
-static void print_stack(int logsev, const char *str,
+static void print_stack(log_sev_t logsev, const char *str,
                         struct parse_frame *frm, chunk_t *pc)
 {
    if (log_sev_on(logsev))
@@ -105,7 +105,6 @@ static void print_stack(int logsev, const char *str,
 void brace_cleanup(void)
 {
    chunk_t            *pc;
-   chunk_t            vs_chunk;
    struct parse_frame frm;
    int                pp_level;
 

@@ -352,7 +352,7 @@ enum uncrustify_options
    UO_ls_for_split_full,    // try to split long 'for' statements at semi-colons
    UO_ls_func_split_full,   // try to split long func proto/def at comma
    UO_ls_code_width,        // try to split at code_width
-   //UO_ls_before_bool_op,    //TODO: break line before of after boolean op
+   //UO_ls_before_bool_op,    //TODO: break line before or after boolean op
    //UO_ls_before_paren,      //TODO: break before open paren
    //UO_ls_after_arith,       //TODO: break after arith op '+', etc
    //UO_ls_honor_newlines,    //TODO: don't remove newlines on split lines
@@ -621,7 +621,7 @@ enum uncrustify_options
    UO_cmt_c_nl_end,             // put a nl before the */ in a combined group
    UO_cmt_cpp_nl_start,         // put a blank /* at the start of a converted group
    UO_cmt_cpp_nl_end,           // put a nl before the */ in a converted group
-   UO_cmt_multi_check_last,
+   UO_cmt_multi_check_last,		// no space after '*' prefix when comment start and end are of equal length
 
    UO_cmt_insert_file_header,
    UO_cmt_insert_file_footer,

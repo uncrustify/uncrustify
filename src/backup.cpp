@@ -54,6 +54,7 @@ int backup_copy_file(const char *filename, const vector<UINT8>& data)
 
    /* Create the backup-md5 filename, open it and read the md5 */
    snprintf(newpath, sizeof(newpath), "%s%s", filename, UNC_BACKUP_MD5_SUFFIX);
+   newpath[sizeof(newpath) - 1] = 0; /* [i_a] */
 
    FILE *thefile = fopen(newpath, "rb");
    if (thefile != NULL)
@@ -64,7 +65,7 @@ int backup_copy_file(const char *filename, const vector<UINT8>& data)
          {
             if (unc_isxdigit(buffer[i]))
             {
-               md5_str_in[i] = unc_tolower(buffer[i]);
+               md5_str_in[i] = (char)unc_tolower(buffer[i]);
             }
             else
             {
@@ -87,11 +88,12 @@ int backup_copy_file(const char *filename, const vector<UINT8>& data)
 
    /* Create the backup file */
    snprintf(newpath, sizeof(newpath), "%s%s", filename, UNC_BACKUP_SUFFIX);
+   newpath[sizeof(newpath) - 1] = 0; /* [i_a] */
 
    thefile = fopen(newpath, "wb");
    if (thefile != NULL)
    {
-      int retval   = fwrite(&data[0], data.size(), 1, thefile);
+      int retval   = (int)fwrite(&data[0], data.size(), 1, thefile);
       int my_errno = errno;
 
       fclose(thefile);
@@ -135,7 +137,7 @@ void backup_create_md5_file(const char *filename)
       return;
    }
 
-   while ((len = fread(buf, 1, sizeof(buf), thefile)) > 0)
+   while ((len = (INT32)fread(buf, 1, sizeof(buf), thefile)) > 0)
    {
       md5.Update(buf, len);
    }
@@ -144,6 +146,7 @@ void backup_create_md5_file(const char *filename)
    md5.Final(dig);
 
    snprintf(newpath, sizeof(newpath), "%s%s", filename, UNC_BACKUP_MD5_SUFFIX);
+   newpath[sizeof(newpath) - 1] = 0; /* [i_a] */
 
    thefile = fopen(newpath, "wb");
    if (thefile != NULL)

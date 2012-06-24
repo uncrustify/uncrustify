@@ -15,7 +15,7 @@
 /**
  * Logs one parse frame
  */
-void pf_log(int logsev, struct parse_frame *pf)
+void pf_log(log_sev_t logsev, struct parse_frame *pf)
 {
    int idx;
 
@@ -34,7 +34,7 @@ void pf_log(int logsev, struct parse_frame *pf)
 }
 
 
-static void pf_log_frms(int logsev, const char *txt, struct parse_frame *pf)
+static void pf_log_frms(log_sev_t logsev, const char *txt, struct parse_frame *pf)
 {
    int idx;
 
@@ -52,7 +52,7 @@ static void pf_log_frms(int logsev, const char *txt, struct parse_frame *pf)
 /**
  * Logs the entire parse frame stack
  */
-void pf_log_all(int logsev)
+void pf_log_all(log_sev_t logsev)
 {
    int idx;
 

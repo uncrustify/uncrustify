@@ -73,7 +73,7 @@ static void add_char(UINT32 ch)
       if ((ch == '\t') && (last_char == ' '))
       {
          int endcol = next_tab_column(cpd.column);
-         while (cpd.column < endcol)
+         while ((int)cpd.column < endcol)
          {
             add_char(' ');
          }
@@ -148,7 +148,7 @@ static bool next_word_exceeds_limit(const unc_text& text, int idx)
       idx++;
       length++;
    }
-   return((cpd.column + length - 1) > cpd.settings[UO_cmt_width].n);
+   return(cpd.column + length - 1 > cpd.settings[UO_cmt_width].n);
 }
 
 
@@ -172,7 +172,7 @@ static void output_to_column(int column, bool allow_tabs)
       }
    }
    /* space out the final bit */
-   while (cpd.column < column)
+   while ((int)cpd.column < column)
    {
       add_text(" ");
    }
@@ -358,7 +358,7 @@ void output_text(FILE *pfile)
                   int orig_sp = (pc->orig_col - prev->orig_col_end);
                   pc->column = cpd.column + orig_sp;
                   if ((cpd.settings[UO_sp_before_nl_cont].a != AV_IGNORE) &&
-                      (pc->column < (cpd.column + 1)))
+                      (pc->column < (int)(cpd.column + 1)))
                   {
                      pc->column = cpd.column + 1;
                   }
@@ -444,7 +444,7 @@ void output_text(FILE *pfile)
              * This has to be done here because comments are not formatted
              * until the output phase.
              */
-            if (pc->column < cpd.column)
+            if (pc->column < (int)cpd.column)
             {
                reindent_line(pc, cpd.column);
             }
@@ -1400,7 +1400,7 @@ static void output_comment_multi(chunk_t *pc)
           *   something clearly non-alphanumeric (you see where we're going with this?)
           *
           * - bullet lists that are closely spaced: bullets are always non-alphanumeric
-          *   characters, such as '-' or '+' (or, oh horor, '*' - that's bloody ambiguous
+          *   characters, such as '-' or '+' (or, oh horror, '*' - that's bloody ambiguous
           *   to parse :-( ... with or without '*' comment start prefix, that's the
           *   question, then.)
           *
