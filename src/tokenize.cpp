@@ -1281,16 +1281,6 @@ static bool parse_next(tok_ctx& ctx, chunk_t& pc)
       }
    }
 
-   /* Check for Obj-C NSString constants, ie @"hello" */
-   if (((cpd.lang_flags & LANG_OC) != 0) && (ctx.peek() == '@'))
-   {
-      if (ctx.peek(1) == '"')
-      {
-         parse_string(ctx, pc, 1, true);
-         return(true);
-      }
-   }
-
    /* handle C++0x strings u8"x" u"x" U"x" R"x" u8R"XXX(I'm a "raw UTF-8" string.)XXX" */
    ch = ctx.peek();
    if (((cpd.lang_flags & LANG_CPP) != 0) &&
