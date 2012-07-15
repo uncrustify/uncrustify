@@ -75,7 +75,7 @@ static const chunk_tag_t symbols2[] =
    { "||", CT_BOOL,         LANG_ALL                                       },
    { "~=", CT_COMPARE,      LANG_D                                         },
    { "~~", CT_COMPARE,      LANG_D                                         },
-   { "=>", CT_LAMBDA,       LANG_VALA | LANG_CS                            },
+   { "=>", CT_LAMBDA,       LANG_VALA | LANG_CS | LANG_D                   },
    { "??", CT_COMPARE,      LANG_CS                                        },
 };
 
