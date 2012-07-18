@@ -617,7 +617,8 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
    }
    else
    {
-      if ((pc->type == CT_FUNCTION) && !is_oc_block(pc))
+      if ((pc->type == CT_FUNCTION) &&
+          (pc->parent_type == CT_OC_BLOCK_EXPR || !is_oc_block(pc)))
       {
          mark_function(pc);
       }
