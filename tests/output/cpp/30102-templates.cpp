@@ -176,6 +176,5 @@ X < (1>2) > x2;    // Okay.
 
 template< class T > class Y { /* ... */ };
 Y < X < 1 > > x3;     // Okay, same as "Y<X<1> > x3;".
-Y<X < 6 > >1 >> x4;  // Syntax error. Instead, write "Y<X<(6>>1)>> x4;".
 Y < X < (6 >> 1) > > x4;
 
