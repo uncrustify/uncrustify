@@ -401,29 +401,6 @@ static bool parse_comment(tok_ctx& ctx, chunk_t& pc)
       pc.type = CT_COMMENT;
       while (ctx.more())
       {
-         if ((ctx.peek() == '*') && (ctx.peek(1) == '/'))
-         {
-            pc.str.append(ctx.get());  /* store the '*' */
-            pc.str.append(ctx.get());  /* store the '/' */
-
-            tok_info ss;
-            ctx.save(ss);
-            int oldsize = pc.str.size();
-
-            /* If there is another C comment right after this one, combine them */
-            while ((ctx.peek() == ' ') || (ctx.peek() == '\t'))
-            {
-               pc.str.append(ctx.get());
-            }
-            if ((ctx.peek() != '/') || (ctx.peek(1) != '*'))
-            {
-               /* undo the attempt to join */
-               ctx.restore(ss);
-               pc.str.resize(oldsize);
-               break;
-            }
-         }
-
          ch = ctx.get();
          pc.str.append(ch);
          if ((ch == '\n') || (ch == '\r'))
@@ -446,6 +423,29 @@ static bool parse_comment(tok_ctx& ctx, chunk_t& pc)
             else
             {
                cpd.le_counts[LE_LF]++;
+            }
+         }
+
+         if ((ctx.peek() == '*') && (ctx.peek(1) == '/'))
+         {
+            pc.str.append(ctx.get());  /* store the '*' */
+            pc.str.append(ctx.get());  /* store the '/' */
+
+            tok_info ss;
+            ctx.save(ss);
+            int oldsize = pc.str.size();
+
+            /* If there is another C comment right after this one, combine them */
+            while ((ctx.peek() == ' ') || (ctx.peek() == '\t'))
+            {
+               pc.str.append(ctx.get());
+            }
+            if ((ctx.peek() != '/') || (ctx.peek(1) != '*'))
+            {
+               /* undo the attempt to join */
+               ctx.restore(ss);
+               pc.str.resize(oldsize);
+               break;
             }
          }
       }
