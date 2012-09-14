@@ -399,7 +399,6 @@ static bool parse_comment(tok_ctx& ctx, chunk_t& pc)
    else  /* must be '/ *' */
    {
       pc.type = CT_COMMENT;
-      /* needed that '/_*_/' cases are not misinterpreted */
       while (ctx.more())
       {
          ch = ctx.get();
