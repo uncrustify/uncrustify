@@ -295,11 +295,11 @@ static bool parse_comment(tok_ctx& ctx, chunk_t& pc)
 
    /* account for opening two chars */
    pc.str = ctx.get();   /* opening '/' */
+   ch = ctx.get();
+   pc.str.append(ch);    /* second char */
 
-   ch = ctx.peek();
    if (ch == '/')
    {
-      pc.str.append(ctx.get());  /* store the '/' */
       pc.type = CT_COMMENT_CPP;
       while (true)
       {
@@ -349,7 +349,6 @@ static bool parse_comment(tok_ctx& ctx, chunk_t& pc)
    }
    else if (ch == '+')
    {
-      pc.str.append(ctx.get());  /* store the '+' */
       pc.type = CT_COMMENT;
       d_level++;
       while ((d_level > 0) && ctx.more())
