@@ -4080,6 +4080,8 @@ static void handle_oc_block(chunk_t *pc)
             if (tmp != NULL)
             {
                tmp->parent_type = CT_OC_BLOCK_ARG;
+               /* block arguments are just like function definitions */
+               fix_fcn_def_params(tmp);
 
                while ((tmp = chunk_get_next(tmp)) != NULL)
                {
@@ -4167,7 +4169,9 @@ static void handle_oc_block(chunk_t *pc)
                }
             }
 
-
+            /* block arguments are just like function definitions */
+            fix_fcn_def_params(tmp);
+             
             /* handle args */
             tmp = chunk_get_next(tmp);
             if (tmp != NULL)
