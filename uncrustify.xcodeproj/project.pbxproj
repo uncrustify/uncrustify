@@ -2304,6 +2304,7 @@
 				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				INSTALL_PATH = /usr/local/bin;
 				PRODUCT_NAME = uncrustify;
+				SDKROOT = "";
 			};
 			name = Debug;
 		};
@@ -2317,6 +2318,7 @@
 				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				INSTALL_PATH = /usr/local/bin;
 				PRODUCT_NAME = uncrustify;
+				SDKROOT = "";
 			};
 			name = Release;
 		};
@@ -2371,6 +2373,7 @@
 				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				INSTALL_PATH = /usr/local/bin;
 				PRODUCT_NAME = uncrustify;
+				SDKROOT = "";
 				SEPARATE_STRIP = YES;
 				STRIP_INSTALLED_PRODUCT = YES;
 			};
@@ -2402,6 +2405,7 @@
 				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				INSTALL_PATH = /usr/local/bin;
 				PRODUCT_NAME = uncrustify;
+				SDKROOT = "";
 			};
 			name = "Debug Clang";
 		};
@@ -2427,6 +2431,7 @@
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INSTALL_PATH = /usr/local/bin;
 				PRODUCT_NAME = uncrustify;
+				SDKROOT = "";
 			};
 			name = "Release Clang";
 		};
