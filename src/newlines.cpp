@@ -1743,6 +1743,13 @@ static bool one_liner_nl_ok(chunk_t *pc)
          return(false);
       }
 
+      if (cpd.settings[UO_nl_func_leave_one_liners].b &&
+          (pc->parent_type == CT_OC_MSG_DECL))
+      {
+         LOG_FMT(LNL1LINE, "false (method def)\n");
+         return(false);
+      }
+
       if (cpd.settings[UO_nl_if_leave_one_liners].b &&
           ((pc->parent_type == CT_IF) ||
            (pc->parent_type == CT_ELSE)))
