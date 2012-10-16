@@ -4055,57 +4055,60 @@ static void handle_oc_block(chunk_t *pc)
             tmp->type        = CT_TYPE;
             tmp->flags      |= PCF_STMT_START;
             tmp->parent_type = pc->parent_type;
-
-            while ((tmp = chunk_get_next(tmp)) != NULL)
-            {
-               tmp->parent_type = pc->parent_type;
-
-               if (!tmp->next)
-               {
-                  break;
-               }
-               if (((tmp->type == CT_PAREN_CLOSE) ||
-                    (tmp->type == CT_FPAREN_CLOSE)) &&
-                   ((tmp->next->type == CT_PAREN_OPEN) ||
-                    (tmp->next->type == CT_FPAREN_OPEN)))
-               {
-                  tmp->type = CT_PAREN_CLOSE;
-                  tmp->next->parent_type = pc->parent_type;
-                  break;
-               }
-            }
-
-            /* mark args in function def parens */
-            tmp = chunk_get_next(tmp);
-            if (tmp != NULL)
-            {
-               tmp->parent_type = CT_OC_BLOCK_ARG;
-               /* block arguments are just like function definitions */
-               fix_fcn_def_params(tmp);
-
-               while ((tmp = chunk_get_next(tmp)) != NULL)
-               {
-                  tmp->parent_type = CT_OC_BLOCK_ARG;
-                  if (!tmp->next)
-                  {
-                     break;
-                  }
-                  if (((tmp->next->type == CT_PAREN_CLOSE) ||
-                       (tmp->next->type == CT_FPAREN_CLOSE)) &&
-                      ((tmp->next->level + 1) == pc->level))
-                  {
-                     tmp->parent_type       = CT_OC_BLOCK_ARG;
-                     tmp->next->parent_type = CT_OC_BLOCK_ARG;
-                     break;
-                  }
-               }
-            }
          }
          else
          {
             tmp->type        = CT_PAREN_CLOSE;
             tmp->parent_type = CT_OC_BLOCK_TYPE;
+            /* need to rewind tmp, to allow for argument processing in the 
+             * anonymous case... usually message declaration or implementation
+             */
+            tmp = tmp->prev;
          }
+          while ((tmp = chunk_get_next(tmp)) != NULL)
+          {
+              tmp->parent_type = pc->parent_type;
+              
+              if (!tmp->next)
+              {
+                  break;
+              }
+              if (((tmp->type == CT_PAREN_CLOSE) ||
+                   (tmp->type == CT_FPAREN_CLOSE)) &&
+                  ((tmp->next->type == CT_PAREN_OPEN) ||
+                   (tmp->next->type == CT_FPAREN_OPEN)))
+              {
+                  tmp->type = CT_PAREN_CLOSE;
+                  tmp->next->parent_type = pc->parent_type;
+                  break;
+              }
+          }
+          
+          /* mark args in function def parens */
+          tmp = chunk_get_next(tmp);
+          if (tmp != NULL)
+          {
+              tmp->parent_type = CT_OC_BLOCK_ARG;
+              /* block arguments are just like function definitions */
+              fix_fcn_def_params(tmp);
+              
+              while ((tmp = chunk_get_next(tmp)) != NULL)
+              {
+                  tmp->parent_type = CT_OC_BLOCK_ARG;
+                  if (!tmp->next)
+                  {
+                      break;
+                  }
+                  if (((tmp->next->type == CT_PAREN_CLOSE) ||
+                       (tmp->next->type == CT_FPAREN_CLOSE)) &&
+                      ((tmp->next->level + 1) == pc->level))
+                  {
+                      tmp->parent_type       = CT_OC_BLOCK_ARG;
+                      tmp->next->parent_type = CT_OC_BLOCK_ARG;
+                      break;
+                  }
+              }
+          }
       }
    }
    else
