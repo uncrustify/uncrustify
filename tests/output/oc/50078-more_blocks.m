@@ -1,7 +1,7 @@
 int ( ^myBlock)(int) = ^(int num) { return num * multiplier; };
 
 int d = i % 10;
-repeat(10, ^{ putc ('0'+d); });
+repeat(10, ^{ putc('0'+d); });
 
 
 void ( ^block)(void);
