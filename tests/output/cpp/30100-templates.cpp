@@ -172,7 +172,7 @@ void func(List<B> = default_val1);
 void func(List<List<B> > = default_val2);
 
 BLAH<(3.14 >= 42)> blah;
-bool x = j < 3 >> 1;
+bool X = j<3> > 1;
 
 void foo()
 {
