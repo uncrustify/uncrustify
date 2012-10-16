@@ -25,14 +25,13 @@ static void check_template(chunk_t *start);
 static chunk_t *handle_double_angle_close(chunk_t *pc)
 {
    chunk_t *next = chunk_get_next(pc);
-   chunk_t *prev = chunk_get_prev(pc);
 
-   if (next != NULL)
+   if (next)
    {
       if ((pc->type == CT_ANGLE_CLOSE) &&
           (next->type == CT_ANGLE_CLOSE) &&
           (pc->parent_type == CT_NONE) &&
-          (memcmp(pc->str, ">>", 2) == 0) &&
+          ((pc->orig_col_end + 1) == next->orig_col) &&
           (next->parent_type == CT_NONE))
       {
          pc->str.append('>');
@@ -42,30 +41,6 @@ static chunk_t *handle_double_angle_close(chunk_t *pc)
          chunk_t *tmp = chunk_get_next_ncnl(next);
          chunk_del(next);
          next = tmp;
-      }
-      else if ((pc->type == CT_ANGLE_CLOSE) &&
-         (prev->type == CT_ANGLE_CLOSE) &&
-         (pc->parent_type == CT_NONE) &&
-         (memcmp(prev->str, ">>", 2) == 0) &&
-         (next->parent_type == CT_NONE))
-      {
-	      chunk_t *temp = pc;
-	      while ( temp->prev != NULL )
-         {
-		      if ( temp->type == CT_ANGLE_OPEN )
-		      {
-			   temp->type = CT_COMPARE;
-			   break;
-		      }
-		   temp = temp->prev;
-	      }
-         prev->len++;
-         prev->type = CT_ARITH;
-         prev->orig_col_end = pc->orig_col_end;
-         chunk_del(pc);
-         pc = next;
-         prev->next = pc;
-	      next = chunk_get_next_ncnl(next);
       }
       else
       {
