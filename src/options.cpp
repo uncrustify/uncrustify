@@ -1694,7 +1694,7 @@ int save_option_file(FILE *pfile, bool withDoc)
 }
 
 
-void print_options(FILE *pfile, bool verbose)
+void print_options(FILE *pfile)
 {
    int        max_width = 0;
    int        cur_width;
