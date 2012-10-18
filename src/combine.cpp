@@ -78,7 +78,7 @@ void flag_series(chunk_t *start, chunk_t *end, UINT64 flags, chunk_nav_t nav)
    while ((start != NULL) && (start != end))
    {
       start->flags |= flags;
-      start = chunk_get_next(start, nav);
+      start         = chunk_get_next(start, nav);
    }
    if (end)
    {
@@ -220,7 +220,7 @@ static chunk_t *skip_dc_member(chunk_t *start)
       return NULL;
    }
 
-   chunk_t *pc = start;
+   chunk_t *pc   = start;
    chunk_t *next = (pc->type == CT_DC_MEMBER) ? pc : chunk_get_next_ncnl(pc);
    while (next && (next->type == CT_DC_MEMBER))
    {
@@ -618,7 +618,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
    else
    {
       if ((pc->type == CT_FUNCTION) &&
-          (pc->parent_type == CT_OC_BLOCK_EXPR || !is_oc_block(pc)))
+          ((pc->parent_type == CT_OC_BLOCK_EXPR) || !is_oc_block(pc)))
       {
          mark_function(pc);
       }
@@ -1594,7 +1594,7 @@ static void fix_type_cast(chunk_t *start)
 static void fix_enum_struct_union(chunk_t *pc)
 {
    chunk_t *next;
-   chunk_t *prev = NULL;
+   chunk_t *prev        = NULL;
    int     flags        = PCF_VAR_1ST_DEF;
    int     in_fcn_paren = pc->flags & PCF_IN_FCN_DEF;
 
@@ -1657,7 +1657,7 @@ static void fix_enum_struct_union(chunk_t *pc)
    /* reset var name parent type */
    else if (next && prev)
    {
-       prev->parent_type = CT_NONE;
+      prev->parent_type = CT_NONE;
    }
 
    if ((next == NULL) || (next->type == CT_PAREN_CLOSE))
@@ -2338,7 +2338,7 @@ static chunk_t *mark_variable_definition(chunk_t *start)
          }
          flags &= ~PCF_VAR_1ST;
 
-         LOG_FMT(LVARDEF, "%s:%d marked '%s'[%s] in col %d flags: %#"PRIx64" -> %#"PRIx64"\n",
+         LOG_FMT(LVARDEF, "%s:%d marked '%s'[%s] in col %d flags: %#" PRIx64 " -> %#" PRIx64 "\n",
                  __func__, pc->orig_line, pc->str.c_str(),
                  get_token_name(pc->type), pc->orig_col, flg, pc->flags);
       }
@@ -2814,7 +2814,7 @@ static void mark_function(chunk_t *pc)
                LOG_FMT(LFCN, " --? Skipped MEMBER and landed on %s\n",
                        (prev == NULL) ? "<null>" : get_token_name(prev->type));
                pc->type = CT_FUNC_CALL;
-               isa_def = false;
+               isa_def  = false;
                break;
             }
             LOG_FMT(LFCN, " <skip %s>", prev->str.c_str());
@@ -3122,7 +3122,7 @@ static void mark_cpp_constructor(chunk_t *pc)
    {
       tmp->type       = CT_DESTRUCTOR;
       pc->parent_type = CT_DESTRUCTOR;
-      is_destr = true;
+      is_destr        = true;
    }
 
    LOG_FMT(LFTOR, "FOUND %sSTRUCTOR for %s[%s] ",
@@ -3169,8 +3169,8 @@ static void mark_cpp_constructor(chunk_t *pc)
  */
 static void mark_class_ctor(chunk_t *start)
 {
-   chunk_t *next;
-   chunk_t *pclass;
+   chunk_t    *next;
+   chunk_t    *pclass;
    ChunkStack cs;
 
    pclass = chunk_get_next_ncnl(start, CNAV_PREPROC);
@@ -3322,6 +3322,7 @@ static void mark_namespace(chunk_t *pns)
       return;
    }
 }
+
 
 /**
  * Skips the D 'align()' statement and the colon, if present.
@@ -3592,7 +3593,7 @@ static void handle_cpp_lambda(chunk_t *sq_o)
    br_o = chunk_get_next_ncnl(pa_c);
    if (chunk_is_str(br_o, "->", 2))
    {
-      ret  = br_o;
+      ret = br_o;
       /* REVISIT: really should check the stuff we are skipping */
       br_o = chunk_get_next_type(br_o, CT_BRACE_OPEN, br_o->level);
    }
@@ -3613,7 +3614,7 @@ static void handle_cpp_lambda(chunk_t *sq_o)
       /* split into two chunks */
       chunk_t nc;
 
-      nc = *sq_o;
+      nc         = *sq_o;
       sq_o->type = CT_SQUARE_OPEN;
       sq_o->str.resize(1);
       sq_o->orig_col_end = sq_o->orig_col + 1;
@@ -3636,7 +3637,7 @@ static void handle_cpp_lambda(chunk_t *sq_o)
    if (ret)
    {
       ret->type = CT_CPP_LAMBDA_RET;
-      ret = chunk_get_next_ncnl(ret);
+      ret       = chunk_get_next_ncnl(ret);
       while (ret != br_o)
       {
          make_type(ret);
@@ -3681,7 +3682,7 @@ static chunk_t *get_d_template_types(ChunkStack& cs, chunk_t *open_paren)
 static bool chunkstack_match(ChunkStack& cs, chunk_t *pc)
 {
    chunk_t *tmp;
-   int idx;
+   int     idx;
 
    for (idx = 0; idx < cs.Len(); idx++)
    {
@@ -3969,19 +3970,19 @@ static void handle_oc_class(chunk_t *pc)
       }
       if ((do_pl == 1) && chunk_is_str(tmp, "<", 1))
       {
-         tmp->type = CT_ANGLE_OPEN;
+         tmp->type        = CT_ANGLE_OPEN;
          tmp->parent_type = CT_OC_PROTO_LIST;
-         do_pl = 2;
+         do_pl            = 2;
       }
       if ((do_pl == 2) && chunk_is_str(tmp, ">", 1))
       {
-         tmp->type = CT_ANGLE_CLOSE;
+         tmp->type        = CT_ANGLE_CLOSE;
          tmp->parent_type = CT_OC_PROTO_LIST;
-         do_pl = 0;
+         do_pl            = 0;
       }
       if (tmp->type == CT_BRACE_OPEN)
       {
-         do_pl = 0;
+         do_pl            = 0;
          tmp->parent_type = CT_OC_CLASS;
          tmp = chunk_get_next_type(tmp, CT_BRACE_CLOSE, tmp->level);
          if (tmp != NULL)
@@ -4060,55 +4061,56 @@ static void handle_oc_block(chunk_t *pc)
          {
             tmp->type        = CT_PAREN_CLOSE;
             tmp->parent_type = CT_OC_BLOCK_TYPE;
-            /* need to rewind tmp, to allow for argument processing in the 
+
+            /* need to rewind tmp, to allow for argument processing in the
              * anonymous case... usually message declaration or implementation
              */
             tmp = tmp->prev;
          }
-          while ((tmp = chunk_get_next(tmp)) != NULL)
-          {
-              tmp->parent_type = pc->parent_type;
-              
-              if (!tmp->next)
-              {
+         while ((tmp = chunk_get_next(tmp)) != NULL)
+         {
+            tmp->parent_type = pc->parent_type;
+
+            if (!tmp->next)
+            {
+               break;
+            }
+            if (((tmp->type == CT_PAREN_CLOSE) ||
+                 (tmp->type == CT_FPAREN_CLOSE)) &&
+                ((tmp->next->type == CT_PAREN_OPEN) ||
+                 (tmp->next->type == CT_FPAREN_OPEN)))
+            {
+               tmp->type = CT_PAREN_CLOSE;
+               tmp->next->parent_type = pc->parent_type;
+               break;
+            }
+         }
+
+         /* mark args in function def parens */
+         tmp = chunk_get_next(tmp);
+         if (tmp != NULL)
+         {
+            tmp->parent_type = CT_OC_BLOCK_ARG;
+            /* block arguments are just like function definitions */
+            fix_fcn_def_params(tmp);
+
+            while ((tmp = chunk_get_next(tmp)) != NULL)
+            {
+               tmp->parent_type = CT_OC_BLOCK_ARG;
+               if (!tmp->next)
+               {
                   break;
-              }
-              if (((tmp->type == CT_PAREN_CLOSE) ||
-                   (tmp->type == CT_FPAREN_CLOSE)) &&
-                  ((tmp->next->type == CT_PAREN_OPEN) ||
-                   (tmp->next->type == CT_FPAREN_OPEN)))
-              {
-                  tmp->type = CT_PAREN_CLOSE;
-                  tmp->next->parent_type = pc->parent_type;
+               }
+               if (((tmp->next->type == CT_PAREN_CLOSE) ||
+                    (tmp->next->type == CT_FPAREN_CLOSE)) &&
+                   ((tmp->next->level + 1) == pc->level))
+               {
+                  tmp->parent_type       = CT_OC_BLOCK_ARG;
+                  tmp->next->parent_type = CT_OC_BLOCK_ARG;
                   break;
-              }
-          }
-          
-          /* mark args in function def parens */
-          tmp = chunk_get_next(tmp);
-          if (tmp != NULL)
-          {
-              tmp->parent_type = CT_OC_BLOCK_ARG;
-              /* block arguments are just like function definitions */
-              fix_fcn_def_params(tmp);
-              
-              while ((tmp = chunk_get_next(tmp)) != NULL)
-              {
-                  tmp->parent_type = CT_OC_BLOCK_ARG;
-                  if (!tmp->next)
-                  {
-                      break;
-                  }
-                  if (((tmp->next->type == CT_PAREN_CLOSE) ||
-                       (tmp->next->type == CT_FPAREN_CLOSE)) &&
-                      ((tmp->next->level + 1) == pc->level))
-                  {
-                      tmp->parent_type       = CT_OC_BLOCK_ARG;
-                      tmp->next->parent_type = CT_OC_BLOCK_ARG;
-                      break;
-                  }
-              }
-          }
+               }
+            }
+         }
       }
    }
    else
@@ -4174,7 +4176,7 @@ static void handle_oc_block(chunk_t *pc)
 
             /* block arguments are just like function definitions */
             fix_fcn_def_params(tmp);
-             
+
             /* handle args */
             tmp = chunk_get_next(tmp);
             if (tmp != NULL)
@@ -4628,16 +4630,16 @@ static void handle_proto_wrap(chunk_t *pc)
  */
 static void handle_java_assert(chunk_t *pc)
 {
-   bool did_colon = false;
+   bool    did_colon = false;
+   chunk_t *tmp      = pc;
 
-   chunk_t *tmp = pc;
    while ((tmp = chunk_get_next(tmp)) != NULL)
    {
       if (tmp->level == pc->level)
       {
          if (!did_colon && (tmp->type == CT_COLON))
          {
-            did_colon = true;
+            did_colon        = true;
             tmp->parent_type = pc->type;
          }
          if (tmp->type == CT_SEMICOLON)
