@@ -622,7 +622,7 @@ enum uncrustify_options
    UO_cmt_c_nl_end,             // put a nl before the */ in a combined group
    UO_cmt_cpp_nl_start,         // put a blank /* at the start of a converted group
    UO_cmt_cpp_nl_end,           // put a nl before the */ in a converted group
-   UO_cmt_multi_check_last,
+   UO_cmt_multi_check_last,     // no space after '*' prefix when comment start and end are of equal length
 
    UO_cmt_insert_file_header,
    UO_cmt_insert_file_footer,

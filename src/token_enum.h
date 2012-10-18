@@ -165,13 +165,13 @@ typedef enum
    CT_FPAREN_OPEN,      /* 'function' paren after fcn/macro fcn */
    CT_FPAREN_CLOSE,
 
-   CT_BRACE_OPEN,
+   CT_BRACE_OPEN,       /* {...} */
    CT_BRACE_CLOSE,
 
-   CT_VBRACE_OPEN,
+   CT_VBRACE_OPEN,      /* virtual brace, i.e. brace inserted by uncrustify */
    CT_VBRACE_CLOSE,
 
-   CT_SQUARE_OPEN,
+   CT_SQUARE_OPEN,      /* [...] */
    CT_SQUARE_CLOSE,
 
    CT_TSQUARE,          /* special case of [] */
