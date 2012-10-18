@@ -1275,7 +1275,7 @@ static CmtAlignType get_comment_align_type(chunk_t *cmt)
  * The series ends when more than align_right_cmt_span newlines are found.
  *
  * Interesting info:
- *  - least pysically allowed column
+ *  - least physically allowed column
  *  - intended column
  *  - least original cmt column
  *

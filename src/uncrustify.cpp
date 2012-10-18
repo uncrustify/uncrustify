@@ -299,7 +299,7 @@ int main(int argc, char *argv[])
       cfg_file = p_arg;
    }
 
-   /* Try to file a config at an alternate location */
+   /* Try to find a config file at an alternate location */
    if (cfg_file.empty())
    {
       if (!unc_getenv("UNCRUSTIFY_CONFIG", cfg_file))

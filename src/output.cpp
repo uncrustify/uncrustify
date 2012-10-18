@@ -1400,7 +1400,7 @@ static void output_comment_multi(chunk_t *pc)
           *   something clearly non-alphanumeric (you see where we're going with this?)
           *
           * - bullet lists that are closely spaced: bullets are always non-alphanumeric
-          *   characters, such as '-' or '+' (or, oh horor, '*' - that's bloody ambiguous
+          *   characters, such as '-' or '+' (or, oh horror, '*' - that's bloody ambiguous
           *   to parse :-( ... with or without '*' comment start prefix, that's the
           *   question, then.)
           *

@@ -352,7 +352,7 @@ enum uncrustify_options
    UO_ls_for_split_full,    // try to split long 'for' statements at semi-colons
    UO_ls_func_split_full,   // try to split long func proto/def at comma
    UO_ls_code_width,        // try to split at code_width
-   //UO_ls_before_bool_op,    //TODO: break line before of after boolean op
+   //UO_ls_before_bool_op,    //TODO: break line before or after boolean op
    //UO_ls_before_paren,      //TODO: break before open paren
    //UO_ls_after_arith,       //TODO: break after arith op '+', etc
    //UO_ls_honor_newlines,    //TODO: don't remove newlines on split lines

@@ -251,7 +251,7 @@ struct chunk_t
    UINT64      flags;            /* see PCF_xxx */
    int         column;           /* column of chunk */
    int         column_indent;    /* if 1st on a line, set to the 'indent'
-                                  * column, which may be less that the real column */
+                                  * column, which may be less than the real column */
    int         nl_count;         /* number of newlines in CT_NEWLINE */
    int         level;            /* nest level in {, (, or [ */
    int         brace_level;      /* nest level in braces only */
