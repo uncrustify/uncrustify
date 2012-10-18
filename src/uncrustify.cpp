@@ -263,7 +263,7 @@ int main(int argc, char *argv[])
    if (arg.Present("--show-config"))
    {
       print_options(stdout, true);
-      return(0);
+      return EXIT_SUCCESS;
    }
 
 #ifdef WIN32
@@ -289,7 +289,7 @@ int main(int argc, char *argv[])
    if ((p_arg = arg.Param("--decode")) != NULL)
    {
       log_pcf_flags(LSYS, strtoul(p_arg, NULL, 16));
-      exit(EXIT_SUCCESS);
+      return EXIT_SUCCESS;
    }
 
    /* Get the config file name */
@@ -465,13 +465,13 @@ int main(int argc, char *argv[])
          {
             fprintf(stderr, "Unable to open %s for write: %s (%d)\n",
                     output_file, strerror(errno), errno);
-            return(EXIT_FAILURE);
+            return EXIT_FAILURE;
          }
       }
 
       print_universal_indent_cfg(pfile);
 
-      return(EXIT_SUCCESS);
+      return EXIT_SUCCESS;
    }
 
    if (detect)
@@ -481,7 +481,7 @@ int main(int argc, char *argv[])
       if ((source_file == NULL) || (source_list != NULL))
       {
          fprintf(stderr, "The --detect option requires a single input file\n");
-         return(EXIT_FAILURE);
+         return EXIT_FAILURE;
       }
 
       /* Do some simple language detection based on the filename extension */
@@ -495,7 +495,7 @@ int main(int argc, char *argv[])
       {
          LOG_FMT(LERR, "Failed to load (%s)\n", source_file);
          cpd.error_count++;
-         return(EXIT_FAILURE);
+         return EXIT_FAILURE;
       }
 
       uncrustify_start(fm.data);
@@ -504,7 +504,7 @@ int main(int argc, char *argv[])
 
       redir_stdout(output_file);
       save_option_file(stdout, update_config_wd);
-      return(EXIT_SUCCESS);
+      return EXIT_SUCCESS;
    }
 
    /* Everything beyond this point requires a config file, so complain and
@@ -524,7 +524,7 @@ int main(int argc, char *argv[])
    {
       redir_stdout(output_file);
       save_option_file(stdout, update_config_wd);
-      return(0);
+      return EXIT_SUCCESS;
    }
 
    /* Check for unused args (ignore them) */
@@ -612,7 +612,7 @@ int main(int argc, char *argv[])
    clear_keyword_file();
    clear_defines();
 
-   return((cpd.error_count != 0) ? 1 : 0);
+   return((cpd.error_count != 0) ? EXIT_FAILURE : EXIT_SUCCESS);
 }
 
 
