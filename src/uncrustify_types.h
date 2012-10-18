@@ -244,7 +244,7 @@ struct chunk_t
    chunk_t     *prev;
    align_ptr_t align;
    c_token_t   type;
-   c_token_t   parent_type;     /* usually CT_NONE */
+   c_token_t   parent_type;      /* usually CT_NONE */
    UINT32      orig_line;
    UINT32      orig_col;
    UINT32      orig_col_end;
@@ -257,7 +257,7 @@ struct chunk_t
    int         brace_level;      /* nest level in braces only */
    int         pp_level;         /* nest level in #if stuff */
    bool        after_tab;        /* whether this token was after a tab */
-   unc_text    str;             /* pointer to the token text */
+   unc_text    str;              /* pointer to the token text */
 };
 
 enum
