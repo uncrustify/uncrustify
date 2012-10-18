@@ -12,8 +12,7 @@
 #include "base_types.h"
 #include <cstring>     /* memset() */
 #include <bitset>
-
-typedef UINT8   log_sev_t;
+#include "log_levels.h"
 
 
 /** A simple array of 256 bits */

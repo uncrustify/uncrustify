@@ -14,12 +14,13 @@
 #include <cstdio>
 #include <stdarg.h>
 #include "unc_ctype.h"
+#include "log_levels.h"
 
 
 /** Private log structure */
 struct log_buf
 {
-   log_buf() : log_file(0), sev(0), in_log(0), buf_len(0), show_hdr(false)
+   log_buf() : log_file(0), sev(LSYS), in_log(0), buf_len(0), show_hdr(false)
    {
    }
 
@@ -44,9 +45,9 @@ void log_init(FILE *log_file)
 {
    /* set the top 3 severities */
    logmask_set_all(g_log.mask, false);
-   log_set_sev(0, true);
-   log_set_sev(1, true);
-   log_set_sev(2, true);
+   log_set_sev(LSYS, true);
+   log_set_sev(LERR, true);
+   log_set_sev(LWARN, true);
 
    g_log.log_file = (log_file != NULL) ? log_file : stderr;
 }

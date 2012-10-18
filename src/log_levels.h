@@ -10,7 +10,7 @@
 #ifndef LOG_LEVELS_H_INCLUDED
 #define LOG_LEVELS_H_INCLUDED
 
-enum
+enum log_sev_t
 {
    LSYS      = 0,
    LERR      = 1,
