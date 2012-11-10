@@ -1023,6 +1023,12 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
       log_rule("sp_inside_sparen_close");
       return(cpd.settings[UO_sp_inside_sparen_close].a);
    }
+   if ((first->type == CT_SPAREN_OPEN) &&
+       (cpd.settings[UO_sp_inside_sparen_open].a != AV_IGNORE))
+   {
+      log_rule("sp_inside_sparen_open");
+      return(cpd.settings[UO_sp_inside_sparen_open].a);
+   }
    if ((first->type == CT_SPAREN_OPEN) || (second->type == CT_SPAREN_CLOSE))
    {
       log_rule("sp_inside_sparen");
