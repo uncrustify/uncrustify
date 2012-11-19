@@ -4033,7 +4033,7 @@ static void handle_oc_class(chunk_t *pc)
 /* Mark Objective-C blocks (aka lambdas or closures)
  *  The syntax and usage is exactly like C function pointers
  *  but instead of an asterisk they have a caret as pointer symbol.
- *  Although it may look expensive this functions if only triggered
+ *  Although it may look expensive this functions is only triggered
  *  on appearance of an OC_BLOCK_CARET for LANG_OC.
  *  repeat(10, ^{ putc('0'+d); });
  *  typedef void (^workBlk_t)(void);
@@ -4341,8 +4341,10 @@ static void handle_oc_message_decl(chunk_t *pc)
  * Process an ObjC message send statement:
  * [ class func: val1 name2: val2 name3: val3] ; // named params
  * [ class func: val1      : val2      : val3] ; // unnamed params
+ * [ class <proto> self method ] ; // with protocol
+ * [[NSMutableString alloc] initWithString: @"" ] // class from msg
  *
- * Just find the matching ']' and ';' and mark the colon.
+ * Mainly find the matching ']' and ';' and mark the colons.
  *
  * @param os points to the open square '['
  */
@@ -4374,34 +4376,76 @@ static void handle_oc_message_send(chunk_t *os)
    cs->parent_type = CT_OC_MSG;
    cs->flags      |= PCF_IN_OC_MSG;
 
-   int     cnt   = 0;
+   /* expect a word first thing or [...] */
+   tmp = chunk_get_next_ncnl(os);
+   if (tmp->type == CT_SQUARE_OPEN)
+   {
+      tmp = chunk_skip_to_match(tmp);
+   }
+   else if ((tmp->type != CT_WORD) && (tmp->type != CT_TYPE))
+   {
+      LOG_FMT(LOCMSG, "%s: %d:%d expected identifier, not '%s' [%s]\n", __func__,
+              tmp->orig_line, tmp->orig_col,
+              tmp->text(), get_token_name(tmp->type));
+      return;
+   }
+   else
+   {
+      tmp->type = CT_OC_MSG_CLASS;
+   }
+
+   /* handle '< protocol >' */
+   tmp = chunk_get_next_ncnl(tmp);
+   if (chunk_is_str(tmp, "<", 1))
+   {
+      chunk_t *ao = tmp;
+      chunk_t *ac = chunk_get_next_str(ao, ">", 1, ao->level);
+
+      if (ac)
+      {
+         ao->type = CT_ANGLE_OPEN;
+         ao->parent_type = CT_OC_PROTO_LIST;
+         ac->type = CT_ANGLE_CLOSE;
+         ac->parent_type = CT_OC_PROTO_LIST;
+         for (tmp = chunk_get_next(ao); tmp != ac; tmp = chunk_get_next(tmp))
+         {
+            tmp->level += 1;
+            tmp->parent_type = CT_OC_PROTO_LIST;
+         }
+      }
+      tmp = chunk_get_next_ncnl(ac);
+   }
+
+   if (tmp && ((tmp->type == CT_WORD) || (tmp->type == CT_TYPE)))
+   {
+      tmp->type = CT_OC_MSG_FUNC;
+   }
+
    chunk_t *prev = NULL;
 
    for (tmp = chunk_get_next(os); tmp != cs; tmp = chunk_get_next(tmp))
    {
       tmp->flags |= PCF_IN_OC_MSG;
-      if (tmp->type == CT_COLON)
+      if (tmp->level == cs->level + 1)
       {
-         tmp->type = CT_OC_COLON;
-         if ((prev != NULL) && ((prev->type == CT_WORD) || (prev->type == CT_TYPE)))
+         if (tmp->type == CT_COLON)
          {
-            /* Might be a named param, check previous block */
-            chunk_t *pp = chunk_get_prev(prev);
-            if ((pp != NULL) &&
-                (pp->type != CT_OC_COLON) &&
-                (pp->type != CT_ARITH))
+            tmp->type = CT_OC_COLON;
+            if ((prev != NULL) && ((prev->type == CT_WORD) || (prev->type == CT_TYPE)))
             {
-               prev->type       = CT_OC_MSG_NAME;
-               tmp->parent_type = CT_OC_MSG_NAME;
+               /* Might be a named param, check previous block */
+               chunk_t *pp = chunk_get_prev(prev);
+               if ((pp != NULL) &&
+                   (pp->type != CT_OC_COLON) &&
+                   (pp->type != CT_ARITH))
+               {
+                  prev->type       = CT_OC_MSG_NAME;
+                  tmp->parent_type = CT_OC_MSG_NAME;
+               }
             }
          }
       }
-      if ((cnt <= 1) && ((tmp->type == CT_WORD) || (tmp->type == CT_TYPE)))
-      {
-         tmp->type = (cnt == 0) ? CT_OC_MSG_CLASS : CT_OC_MSG_FUNC;
-      }
       prev = tmp;
-      cnt++;
    }
 }
 
