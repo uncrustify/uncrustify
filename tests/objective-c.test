@@ -13,6 +13,7 @@
 50006  obj-c.cfg                                    oc/exceptions.m
 50007  obj-c.cfg                                    oc/misc.m
 50008  obj-c.cfg                                    oc/protocol.m
+50009  obj-c.cfg                                    oc/literals.m
 
 50010  sp_after_oc_return_type_add.cfg              oc/return_type.m
 50011  sp_after_oc_return_type_force.cfg            oc/return_type.m
