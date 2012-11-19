@@ -1,6 +1,6 @@
 
 NSDictionary *dictionary = @{
-   @0 : @"red", @1 : @"green", @2 : @"blue"
+   @0: @"red", @1: @"green", @2: @"blue"
 };
 
 NSArray *array = @{
