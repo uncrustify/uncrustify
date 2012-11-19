@@ -1322,6 +1322,8 @@ static void uncrustify_start(const deque<int>& data)
       add_file_footer();
    }
 
+   annotations_newlines();
+
    /**
     * Change certain token types based on simple sequence.
     * Example: change '[' + ']' to '[]'

@@ -1401,6 +1401,12 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
       return(cpd.settings[UO_sp_after_new].a);
    }
 
+   if ((first->type == CT_ANNOTATION) && chunk_is_paren_open(second))
+   {
+      log_rule("sp_annotation_paren");
+      return(cpd.settings[UO_sp_annotation_paren].a);
+   }
+
    for (idx = 0; idx < (int)ARRAY_SIZE(no_space_table); idx++)
    {
       if (((no_space_table[idx].first == CT_UNKNOWN) ||

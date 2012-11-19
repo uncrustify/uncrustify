@@ -490,6 +490,9 @@ void register_options(void)
    unc_add_option("sp_num_before_tr_emb_cmt", UO_sp_num_before_tr_emb_cmt, AT_NUM,
                   "Number of spaces before a trailing or embedded comment");
 
+   unc_add_option("sp_annotation_paren", UO_sp_annotation_paren, AT_IARF,
+                  "Control space between a Java annotation and the open paren.");
+
    unc_begin_group(UG_indent, "Indenting");
    unc_add_option("indent_columns", UO_indent_columns, AT_NUM,
                   "The number of columns to indent per level.\n"
@@ -924,6 +927,11 @@ void register_options(void)
                   "Whether to put a blank line before 'return' statements, unless after an open brace.");
    unc_add_option("nl_after_return", UO_nl_after_return, AT_BOOL,
                   "Whether to put a blank line after 'return' statements, unless followed by a close brace.");
+   unc_add_option("nl_after_annotation", UO_nl_after_annotation, AT_IARF,
+                  "Whether to put a newline after a Java annotation statement.\n"
+                  "Only affects annotations that are after a newline.");
+   unc_add_option("nl_between_annotation", UO_nl_between_annotation, AT_IARF,
+                  "Controls the newline between two annotations.");
 
    unc_begin_group(UG_position, "Positioning options");
    unc_add_option("pos_arith", UO_pos_arith, AT_POS,

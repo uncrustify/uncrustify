@@ -344,6 +344,7 @@ enum uncrustify_options
    UO_sp_after_new,
    UO_sp_before_tr_emb_cmt,     // treatment of spaces before comments following code
    UO_sp_num_before_tr_emb_cmt, // number of spaces before comments following code
+   UO_sp_annotation_paren,
 
    /*
     * Line splitting options (for long lines)
@@ -456,6 +457,8 @@ enum uncrustify_options
    UO_nl_before_return,
    UO_nl_after_return,               /* newline after return statement */
    UO_nl_return_expr,
+   UO_nl_after_annotation,
+   UO_nl_between_annotation,
    UO_nl_after_case,                 /* disallow nested "case 1: a=3;" */
    UO_nl_after_semicolon,            // disallow multiple statements on a line "a=1;b=4;"
    UO_nl_after_brace_open,           // force a newline after a brace open

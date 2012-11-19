@@ -957,8 +957,15 @@ bool parse_word(tok_ctx& ctx, chunk_t& pc, bool skipcheck)
    }
    else
    {
-      /* Turn it into a keyword now */
-      pc.type = find_keyword_type(pc.str.c_str(), pc.str.size());
+      if ((cpd.lang_flags & LANG_JAVA) && pc.str.startswith("@"))
+      {
+         pc.type = CT_ANNOTATION;
+      }
+      else
+      {
+         /* Turn it into a keyword now */
+         pc.type = find_keyword_type(pc.str.c_str(), pc.str.size());
+      }
    }
 
    return(true);
@@ -1387,7 +1394,7 @@ static bool parse_next(tok_ctx& ctx, chunk_t& pc)
       }
    }
 
-   /* Check for pawn/ObjectiveC and normal identifiers */
+   /* Check for pawn/ObjectiveC/Java and normal identifiers */
    if (CharTable::IsKw1(ctx.peek()) ||
        ((ctx.peek() == '@') && CharTable::IsKw1(ctx.peek(1))))
    {

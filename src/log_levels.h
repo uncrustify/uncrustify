@@ -95,6 +95,7 @@ enum log_sev_t
    LOBJCWORD = 81,    /* Convert keyword to CT_WORD in certain circumstances */
    LCHANGE   = 82,    /* something changed */
    LCONTTEXT = 83,    /* comment cont_text set */
+   LANNOT    = 84,    /* Java annotation */
 };
 
 #endif   /* LOG_LEVELS_H_INCLUDED */
