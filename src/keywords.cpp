@@ -180,7 +180,8 @@ static const chunk_tag_t keywords[] =
    { "or_eq",            CT_SASSIGN,      LANG_C | LANG_CPP                                                           },
    { "out",              CT_QUALIFIER,    LANG_CS | LANG_D | LANG_VALA                                                },
    { "override",         CT_QUALIFIER,    LANG_CS | LANG_D | LANG_VALA                                                },
-   { "package",          CT_NAMESPACE,    LANG_D | LANG_JAVA | LANG_ECMA                                              },
+   { "package",          CT_PRIVATE,      LANG_D                                                                      },
+   { "package",          CT_PACKAGE,      LANG_ECMA | LANG_JAVA                                                       },
    { "params",           CT_TYPE,         LANG_CS                                                                     },
    { "pragma",           CT_PP_PRAGMA,    LANG_ALL | FLAG_PP                                                          }, // PAWN
    { "private",          CT_PRIVATE,      LANG_ALLC                                                                   }, // not C

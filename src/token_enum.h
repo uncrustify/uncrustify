@@ -124,6 +124,7 @@ typedef enum
    CT_EXPORT,
    CT_FRIEND,
    CT_NAMESPACE,
+   CT_PACKAGE,
    CT_NEW,              /* may turn into CT_PBRACED if followed by a '(' */
    CT_OPERATOR,
    CT_OPERATOR_VAL,

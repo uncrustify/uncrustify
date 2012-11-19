@@ -104,6 +104,7 @@ const char *token_names[] =
    "EXPORT",
    "FRIEND",
    "NAMESPACE",
+   "PACKAGE",
    "NEW",
    "OPERATOR",
    "OPERATOR_VAL",
