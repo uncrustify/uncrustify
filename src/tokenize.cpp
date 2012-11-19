@@ -1394,6 +1394,25 @@ static bool parse_next(tok_ctx& ctx, chunk_t& pc)
       }
    }
 
+   /* Check for Objective C literals */
+   if ((cpd.lang_flags & LANG_OC) && (ctx.peek() == '@'))
+   {
+      int nc = ctx.peek(1);
+      if ((nc == '"') || (nc == '\''))
+      {
+         /* literal string */
+         parse_string(ctx, pc, 1, true);
+         return true;
+      }
+      else if ((nc >= '0') && (nc <= '9'))
+      {
+         /* literal number */
+         pc.str.append(ctx.get());  /* store the '@' */
+         parse_number(ctx, pc);
+         return true;
+      }
+   }
+
    /* Check for pawn/ObjectiveC/Java and normal identifiers */
    if (CharTable::IsKw1(ctx.peek()) ||
        ((ctx.peek() == '@') && CharTable::IsKw1(ctx.peek(1))))
