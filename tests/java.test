@@ -5,4 +5,4 @@
 # test.name  config.file  input.file
 
 80000 ben.cfg                 java/assert.java
-
+80010 annotation.cfg          java/annotation1.java
