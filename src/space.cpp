@@ -1481,7 +1481,8 @@ void space_text(void)
          pc->flags &= ~PCF_FORCE_SPACE;
          if ((pc->len() > 0) &&
              !chunk_is_str(pc, "[]", 2) &&
-             !chunk_is_str(pc, "()", 2))
+             !chunk_is_str(pc, "()", 2) &&
+             !pc->str.startswith("@\""))
          {
             /* Find the next non-empty chunk on this line */
             tmp = next;
