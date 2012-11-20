@@ -3427,7 +3427,7 @@ void mark_comments(void)
 
    while (cur != NULL)
    {
-      next    = chunk_get_next(cur);
+      next    = chunk_get_next_nvb(cur);
       next_nl = (next == NULL) || chunk_is_newline(next);
 
       if (chunk_is_comment(cur))
