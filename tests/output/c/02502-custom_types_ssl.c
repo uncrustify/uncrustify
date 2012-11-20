@@ -29,7 +29,7 @@ LHASH_OF(CONF_VALUE) *CONF_load_fp ( LHASH_OF(CONF_VALUE) *conf, FILE *fp,
 #endif
 LHASH_OF(CONF_VALUE) *CONF_load_bio ( LHASH_OF(CONF_VALUE) *conf, BIO *bp,long *eline );
 STACK_OF(CONF_VALUE) *CONF_get_section ( LHASH_OF(CONF_VALUE) *conf,
-	const char *section );
+	const char *                                               section );
 char *CONF_get_string ( LHASH_OF(CONF_VALUE) *conf,const char *group,
 	const char *name );
 long CONF_get_number ( LHASH_OF(CONF_VALUE) *conf,const char *group,
@@ -105,7 +105,7 @@ LHASH_OF(CONF_VALUE) *CONF_load_bio ( LHASH_OF(CONF_VALUE) *conf, BIO *bp,
 }
 
 STACK_OF(CONF_VALUE) *CONF_get_section ( LHASH_OF(CONF_VALUE) *conf,
-	const char *section )
+	const char *                                               section )
 {
 	if (conf == NULL)
 	{
