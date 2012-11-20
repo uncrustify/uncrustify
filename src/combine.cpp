@@ -2079,9 +2079,13 @@ static void mark_variable_stack(ChunkStack& cs, log_sev_t sev)
 
       while ((word_type = cs.Pop()) != NULL)
       {
-         LOG_FMT(LFCNP, " <%s>", word_type->str.c_str());
-         word_type->type   = CT_TYPE;
-         word_type->flags |= PCF_VAR_TYPE;
+         if ((word_type->type == CT_WORD) || (word_type->type == CT_TYPE))
+         {
+            LOG_FMT(LFCNP, " <%s>", word_type->str.c_str());
+
+            word_type->type   = CT_TYPE;
+            word_type->flags |= PCF_VAR_TYPE;
+         }
          word_cnt++;
       }
 
@@ -2142,10 +2146,16 @@ static void fix_fcn_def_params(chunk_t *start)
       if (chunk_is_star(pc))
       {
          pc->type = CT_PTR_TYPE;
+         cs.Push(pc);
       }
       else if (pc->type == CT_AMP)
       {
          pc->type = CT_BYREF;
+         cs.Push(pc);
+      }
+      else if (pc->type == CT_TYPE_WRAP)
+      {
+         cs.Push(pc);
       }
       else if ((pc->type == CT_WORD) || (pc->type == CT_TYPE))
       {
