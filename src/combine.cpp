@@ -4343,6 +4343,7 @@ static void handle_oc_message_decl(chunk_t *pc)
  * [ class func: val1      : val2      : val3] ; // unnamed params
  * [ class <proto> self method ] ; // with protocol
  * [[NSMutableString alloc] initWithString: @"" ] // class from msg
+ * [func(a,b,c) lastObject ] // class from func
  *
  * Mainly find the matching ']' and ';' and mark the colons.
  *
@@ -4391,7 +4392,16 @@ static void handle_oc_message_send(chunk_t *os)
    }
    else
    {
-      tmp->type = CT_OC_MSG_CLASS;
+      chunk_t *tt = chunk_get_next_ncnl(tmp);
+      if (chunk_is_paren_open(tt))
+      {
+         tmp->type = CT_FUNC_CALL;
+         tmp = chunk_get_prev_ncnl(set_paren_parent(tt, CT_FUNC_CALL));
+      }
+      else
+      {
+         tmp->type = CT_OC_MSG_CLASS;
+      }
    }
 
    /* handle '< protocol >' */
