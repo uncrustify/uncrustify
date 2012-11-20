@@ -6,6 +6,7 @@
  * @license GPL v2+
  */
 #include "uncrustify_types.h"
+#include "uncrustify_version.h"
 #include "prototypes.h"
 #include "chunk_list.h"
 #include "unc_ctype.h"
@@ -226,15 +227,16 @@ void output_parsed(FILE *pfile)
    chunk_t *pc;
    int     cnt;
 
+   fprintf(pfile, "# uncrustify %s\n", UNCRUSTIFY_VERSION);
    output_options(pfile);
    output_defines(pfile);
    output_types(pfile);
 
-   fprintf(pfile, "-=====-\n");
-   fprintf(pfile, "Line      Tag          Parent     Columns  Br/Lvl/pp Flag Nl  Text");
+   fprintf(pfile, "# -=====-\n");
+   fprintf(pfile, "# Line      Tag          Parent     Columns  Br/Lvl/pp Flag Nl  Text");
    for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next(pc))
    {
-      fprintf(pfile, "\n%3d> %13.13s[%13.13s][%2d/%2d/%2d][%d/%d/%d][%10" PRIx64 "][%d-%d]",
+      fprintf(pfile, "\n# %3d> %13.13s[%13.13s][%2d/%2d/%2d][%d/%d/%d][%10" PRIx64 "][%d-%d]",
               pc->orig_line, get_token_name(pc->type),
               get_token_name(pc->parent_type),
               pc->column, pc->orig_col, pc->orig_col_end,
@@ -257,7 +259,7 @@ void output_parsed(FILE *pfile)
          }
       }
    }
-   fprintf(pfile, "\n-=====-\n");
+   fprintf(pfile, "\n# -=====-\n");
    fflush(pfile);
 }
 
@@ -267,7 +269,7 @@ void output_options(FILE *pfile)
    int idx;
    const option_map_value *ptr;
 
-   fprintf(pfile, "-== Options ==-\n");
+   fprintf(pfile, "# -== Options ==-\n");
    for (idx = 0; idx < UO_option_count; idx++)
    {
       ptr = get_option_name(idx);
@@ -275,14 +277,14 @@ void output_options(FILE *pfile)
       {
          if (ptr->type == AT_STRING)
          {
-            fprintf(pfile, "%3d) %32s = \"%s\"\n",
-                    ptr->id, ptr->name,
+            fprintf(pfile, "%-40s = \"%s\"\n",
+                    ptr->name,
                     op_val_to_string(ptr->type, cpd.settings[ptr->id]).c_str());
          }
          else
          {
-            fprintf(pfile, "%3d) %32s = %s\n",
-                    ptr->id, ptr->name,
+            fprintf(pfile, "%-40s = %s\n",
+                    ptr->name,
                     op_val_to_string(ptr->type, cpd.settings[ptr->id]).c_str());
          }
       }
