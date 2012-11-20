@@ -211,9 +211,15 @@ static bool can_remove_braces(chunk_t *bopen)
 
    LOG_FMT(LBRDEL, "%s: start on %d : ", __func__, bopen->orig_line);
 
-   pc = chunk_get_next_nc(bopen, CNAV_PREPROC);
+   pc = chunk_get_next_nc(bopen, CNAV_ALL);
    while ((pc != NULL) && (pc->level >= level))
    {
+      if (pc->flags & PCF_IN_PREPROC)
+      {
+         /* Cannot remove braces that contain a preprocessor */
+         return(false);
+      }
+
       if (chunk_is_newline(pc))
       {
          nl_count += pc->nl_count;
@@ -281,7 +287,7 @@ static bool can_remove_braces(chunk_t *bopen)
          }
       }
       prev = pc;
-      pc   = chunk_get_next_nc(pc, CNAV_PREPROC);
+      pc   = chunk_get_next_nc(pc);
    }
 
    if (pc == NULL)
