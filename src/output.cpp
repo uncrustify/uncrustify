@@ -227,10 +227,7 @@ void output_parsed(FILE *pfile)
    chunk_t *pc;
    int     cnt;
 
-   fprintf(pfile, "# uncrustify %s\n", UNCRUSTIFY_VERSION);
-   output_options(pfile);
-   output_defines(pfile);
-   output_types(pfile);
+   save_option_file(pfile, false);
 
    fprintf(pfile, "# -=====-\n");
    fprintf(pfile, "# Line      Tag          Parent     Columns  Br/Lvl/pp Flag Nl  Text");
@@ -261,34 +258,6 @@ void output_parsed(FILE *pfile)
    }
    fprintf(pfile, "\n# -=====-\n");
    fflush(pfile);
-}
-
-
-void output_options(FILE *pfile)
-{
-   int idx;
-   const option_map_value *ptr;
-
-   fprintf(pfile, "# -== Options ==-\n");
-   for (idx = 0; idx < UO_option_count; idx++)
-   {
-      ptr = get_option_name(idx);
-      if (ptr != NULL)
-      {
-         if (ptr->type == AT_STRING)
-         {
-            fprintf(pfile, "%-40s = \"%s\"\n",
-                    ptr->name,
-                    op_val_to_string(ptr->type, cpd.settings[ptr->id]).c_str());
-         }
-         else
-         {
-            fprintf(pfile, "%-40s = %s\n",
-                    ptr->name,
-                    op_val_to_string(ptr->type, cpd.settings[ptr->id]).c_str());
-         }
-      }
-   }
 }
 
 

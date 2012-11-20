@@ -457,19 +457,6 @@ int load_keyword_file(const char *filename)
 }
 
 
-void output_types(FILE *pfile)
-{
-   if (dkwm.size() > 0)
-   {
-      fprintf(pfile, "-== User Types ==-\n");
-      for (dkwmap::iterator it = dkwm.begin(); it != dkwm.end(); ++it)
-      {
-         fprintf(pfile, "%s\n", (*it).first.c_str());
-      }
-   }
-}
-
-
 void print_keywords(FILE *pfile)
 {
    for (dkwmap::iterator it = dkwm.begin(); it != dkwm.end(); ++it)

@@ -1702,7 +1702,6 @@ int save_option_file(FILE *pfile, bool withDoc)
    /* Print custom defines */
    print_defines(pfile);
 
-   fclose(pfile);
    return(0);
 }
 

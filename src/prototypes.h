@@ -39,7 +39,6 @@ void detect_options();
 
 void output_text(FILE *pfile);
 void output_parsed(FILE *pfile);
-void output_options(FILE *pfile);
 void add_long_preprocessor_conditional_block_comment(void);
 
 
@@ -216,7 +215,6 @@ void brace_cleanup(void);
 int load_keyword_file(const char *filename);
 c_token_t find_keyword_type(const char *word, int len);
 void add_keyword(const char *tag, c_token_t type);
-void output_types(FILE *pfile);
 void print_keywords(FILE *pfile);
 void clear_keyword_file(void);
 pattern_class get_token_pattern_class(c_token_t tok);
@@ -229,7 +227,6 @@ bool keywords_are_sorted(void);
 
 int load_define_file(const char *filename);
 void add_define(const char *tag, const char *value);
-void output_defines(FILE *pfile);
 void print_defines(FILE *pfile);
 void clear_defines(void);
 

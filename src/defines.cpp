@@ -112,27 +112,6 @@ int load_define_file(const char *filename)
 }
 
 
-void output_defines(FILE *pfile)
-{
-   if (defines.size() > 0)
-   {
-      fprintf(pfile, "-== User Defines ==-\n");
-      defmap::iterator it;
-      for (it = defines.begin(); it != defines.end(); ++it)
-      {
-         if ((*it).second.size() > 0)
-         {
-            fprintf(pfile, "%s = %s\n", (*it).first.c_str(), (*it).second.c_str());
-         }
-         else
-         {
-            fprintf(pfile, "%s\n", (*it).first.c_str());
-         }
-      }
-   }
-}
-
-
 void print_defines(FILE *pfile)
 {
    defmap::iterator it;
