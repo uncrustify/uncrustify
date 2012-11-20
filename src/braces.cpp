@@ -29,6 +29,11 @@ static bool should_add_braces(chunk_t *vbopen);
 
 void do_braces(void)
 {
+   if (cpd.settings[UO_mod_full_brace_if_chain].b)
+   {
+      mod_full_brace_if_chain();
+   }
+
    if (((cpd.settings[UO_mod_full_brace_if].a |
          cpd.settings[UO_mod_full_brace_do].a |
          cpd.settings[UO_mod_full_brace_for].a |
@@ -47,11 +52,6 @@ void do_braces(void)
          cpd.settings[UO_mod_full_brace_while].a) & AV_ADD) != 0)
    {
       convert_vbrace_to_brace();
-   }
-
-   if (cpd.settings[UO_mod_full_brace_if_chain].b)
-   {
-      mod_full_brace_if_chain();
    }
 
    /* Mark one-liners */
@@ -494,7 +494,7 @@ static void convert_brace(chunk_t *br)
 {
    chunk_t *tmp;
 
-   if (br == NULL)
+   if (!br || (br->flags & PCF_KEEP_BRACE))
    {
       return;
    }
@@ -1038,6 +1038,7 @@ static void process_if_chain(chunk_t *br_start)
       LOG_FMT(LBRCH, "%s: add braces on lines[%d]:", __func__, br_cnt);
       while (--br_cnt >= 0)
       {
+         braces[br_cnt]->flags |= PCF_KEEP_BRACE;
          if ((braces[br_cnt]->type == CT_VBRACE_OPEN) ||
              (braces[br_cnt]->type == CT_VBRACE_CLOSE))
          {
