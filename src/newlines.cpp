@@ -3016,6 +3016,7 @@ void do_blank_lines(void)
           ((prev->parent_type == CT_FUNC_DEF) ||
            (prev->parent_type == CT_FUNC_CLASS) ||
            (prev->parent_type == CT_OC_MSG_DECL) ||
+           (prev->parent_type == CT_OC_BLOCK_EXPR) ||
            (prev->parent_type == CT_ASSIGN)))
       {
          if (prev->flags & PCF_ONE_LINER)
