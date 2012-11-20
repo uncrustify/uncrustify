@@ -2068,6 +2068,7 @@ static void mark_variable_stack(ChunkStack& cs, log_sev_t sev)
 {
    chunk_t *var_name;
    chunk_t *word_type;
+   int     word_cnt = 0;
 
    /* throw out the last word and mark the rest */
    var_name = cs.Pop();
@@ -2081,10 +2082,20 @@ static void mark_variable_stack(ChunkStack& cs, log_sev_t sev)
          LOG_FMT(LFCNP, " <%s>", word_type->str.c_str());
          word_type->type   = CT_TYPE;
          word_type->flags |= PCF_VAR_TYPE;
+         word_cnt++;
       }
 
-      LOG_FMT(LFCNP, " [%s]\n", var_name->str.c_str());
-      var_name->flags |= PCF_VAR_DEF;
+      if (word_cnt)
+      {
+         LOG_FMT(LFCNP, " [%s]\n", var_name->str.c_str());
+         var_name->flags |= PCF_VAR_DEF;
+      }
+      else
+      {
+         LOG_FMT(LFCNP, " <%s>\n", var_name->str.c_str());
+         var_name->type   = CT_TYPE;
+         var_name->flags |= PCF_VAR_TYPE;
+      }
    }
 }
 
