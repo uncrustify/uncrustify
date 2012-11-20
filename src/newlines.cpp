@@ -2244,6 +2244,13 @@ void newlines_cleanup_braces(bool first)
                }
             }
          }
+         else if (pc->parent_type == CT_CLASS)
+         {
+            if (cpd.settings[UO_nl_after_class].n > 0)
+            {
+               newline_iarf(pc, AV_ADD);
+            }
+         }
       }
       else if (pc->type == CT_FPAREN_OPEN)
       {
