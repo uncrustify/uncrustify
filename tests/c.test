@@ -37,6 +37,8 @@
 00053  nl_brace_test.cfg       c/brace.c
 00054  if_chain.cfg            c/if_chain.c
 00055  cgal.cfg                c/braces-2.c
+00056  brace-remove-all.cfg    c/brace-remove3.c
+00057  if_chain.cfg            c/brace-remove3.c
 
 00060  ben.cfg                 c/braces-2.c
 00061  ben.cfg                 c/braces-3.c
