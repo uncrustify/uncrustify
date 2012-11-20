@@ -457,6 +457,11 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
       log_rule("sp_after_oc_block_caret");
       return(cpd.settings[UO_sp_after_oc_block_caret].a);
    }
+   if (second->type == CT_OC_MSG_FUNC)
+   {
+      log_rule("sp_after_oc_msg_receiver");
+      return(cpd.settings[UO_sp_after_oc_msg_receiver].a);
+   }
 
    // Handle the special lambda case for C++11:
    //    [=](Something arg){.....}

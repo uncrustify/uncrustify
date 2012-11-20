@@ -335,6 +335,7 @@ enum uncrustify_options
    UO_sp_inside_oc_at_sel_parens,
    UO_sp_before_oc_block_caret,
    UO_sp_after_oc_block_caret,
+   UO_sp_after_oc_msg_receiver,
    UO_sp_cond_colon,
    UO_sp_cond_question,
    UO_sp_case_label,

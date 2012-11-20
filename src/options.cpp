@@ -469,6 +469,9 @@ void register_options(void)
    unc_add_option("sp_after_oc_block_caret", UO_sp_after_oc_block_caret, AT_IARF,
                   "Add or remove space after a block pointer caret\n"
                   "'^int (int arg){...}' vs. '^ int (int arg){...}'");
+   unc_add_option("sp_after_oc_msg_receiver", UO_sp_after_oc_msg_receiver, AT_IARF,
+                  "Add or remove space between the receiver and selector in a message.\n"
+                  "'[receiver selector ...]'");
 
    unc_add_option("sp_cond_colon", UO_sp_cond_colon, AT_IARF,
                   "Add or remove space around the ':' in 'b ? t : f'");
