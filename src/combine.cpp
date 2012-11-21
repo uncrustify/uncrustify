@@ -2500,6 +2500,30 @@ static bool can_be_full_param(chunk_t *start, chunk_t *end)
          LOG_FMT(LFPARAM, " <== elipses\n");
          return(true);
       }
+      else if ((word_cnt == 0) && (pc->type == CT_PAREN_OPEN))
+      {
+         /* Check for old-school func proto param '(type)' */
+         chunk_t *tmp1 = chunk_skip_to_match(pc, CNAV_PREPROC);
+         chunk_t *tmp2 = chunk_get_next_ncnl(tmp1, CNAV_PREPROC);
+
+         if (chunk_is_token(tmp2, CT_COMMA) || chunk_is_paren_close(tmp2))
+         {
+
+            do {
+               pc = chunk_get_next_ncnl(pc, CNAV_PREPROC);
+               LOG_FMT(LFPARAM, " [%s]", pc->text());
+            } while (pc != tmp1);
+
+            /* reset some vars to allow [] after parens */
+            word_cnt   = 1;
+            type_count = 1;
+         }
+         else
+         {
+            LOG_FMT(LFPARAM, " <== [%s] not fcn type!\n", get_token_name(pc->type));
+            return false;
+         }
+      }
       else if (((word_cnt == 1) || (word_cnt == type_count)) &&
                (pc->type == CT_PAREN_OPEN))
       {
