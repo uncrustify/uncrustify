@@ -72,6 +72,7 @@
 30091 bug_472.cfg                      cpp/bug_472.cpp
 30092 ben.cfg                          cpp/bug_481.cpp
 30093 sp_after_cast.cfg                cpp/bug_484.cpp
+30094 align-1.cfg                      cpp/bug_495.cpp
 
 30100 nl_template_class-force.cfg      cpp/templates.cpp
 30101 nl_template_class-remove.cfg     cpp/templates.cpp
