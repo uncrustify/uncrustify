@@ -68,6 +68,8 @@
 
 30085 nSolve.cfg                       cpp/align_class.cpp
 
+30090 bug_488.cfg                      cpp/bug_488.cpp
+
 30100 nl_template_class-force.cfg      cpp/templates.cpp
 30101 nl_template_class-remove.cfg     cpp/templates.cpp
 30102 template_sp-force.cfg            cpp/templates.cpp
