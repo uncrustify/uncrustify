@@ -1277,7 +1277,7 @@ void indent_text(void)
        * Handle variable definition continuation indenting
        */
       if ((vardefcol == 0) &&
-          (pc->type == CT_WORD) &&
+          ((pc->type == CT_WORD) || (pc->type == CT_FUNC_CTOR_VAR)) &&
           ((pc->flags & PCF_IN_FCN_DEF) == 0) &&
           ((pc->flags & PCF_VAR_1ST_DEF) == PCF_VAR_1ST_DEF))
       {
@@ -1347,7 +1347,7 @@ void indent_text(void)
          }
          else if ((vardefcol > 0) &&
                   (pc->level == pc->brace_level) &&
-                  (pc->type == CT_WORD) &&
+                  ((pc->type == CT_WORD) || (pc->type == CT_FUNC_CTOR_VAR)) &&
                   (prev != NULL) &&
                   ((prev->type == CT_COMMA) ||
                    (prev->type == CT_TYPE) ||
