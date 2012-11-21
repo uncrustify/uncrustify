@@ -335,8 +335,12 @@ void output_text(FILE *pfile)
                   }
                }
             }
+            output_to_column(pc->column, false);
          }
-         output_to_column(pc->column, (cpd.settings[UO_indent_with_tabs].n == 2));
+         else
+         {
+            output_to_column(pc->column, (cpd.settings[UO_indent_with_tabs].n == 2));
+         }
          add_char('\\');
          add_char('\n');
          cpd.did_newline = 1;
