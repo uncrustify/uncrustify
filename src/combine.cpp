@@ -1527,6 +1527,14 @@ static void fix_casts(chunk_t *start)
       }
    }
 
+   /* if the 'cast' is followed by a semicolon, comma or close paren, it isn't */
+   pc = chunk_get_next_ncnl(paren_close);
+   if (chunk_is_semicolon(pc) || chunk_is_token(pc, CT_COMMA) || chunk_is_paren_close(pc))
+   {
+      LOG_FMT(LCASTS, " -- not a cast - followed by %s\n", get_token_name(pc->type));
+      return;
+   }
+
    start->parent_type       = CT_C_CAST;
    paren_close->parent_type = CT_C_CAST;
 
