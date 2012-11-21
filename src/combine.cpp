@@ -2552,7 +2552,7 @@ static bool can_be_full_param(chunk_t *start, chunk_t *end)
          word_cnt   = 1;
          type_count = 1;
       }
-      else if ((word_cnt == 1) && (pc->type == CT_TSQUARE))
+      else if (pc->type == CT_TSQUARE)
       {
          /* ignore it */
       }
