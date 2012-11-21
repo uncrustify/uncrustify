@@ -1423,7 +1423,7 @@ static void newline_before_return(chunk_t *start)
    }
 
    pc = chunk_get_prev(nl);
-   if (!pc || (pc->type == CT_BRACE_OPEN))
+   if (!pc || ((pc->type == CT_BRACE_OPEN) || (pc->type == CT_VBRACE_OPEN)))
    {
       return;
    }
@@ -1462,6 +1462,7 @@ static void newline_after_return(chunk_t *start)
    /* If we hit a brace or an 'else', then a newline isn't needed */
    if ((after == NULL) ||
        (after->type == CT_BRACE_CLOSE) ||
+       (after->type == CT_VBRACE_CLOSE) ||
        (after->type == CT_ELSE))
    {
       return;
