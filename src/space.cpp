@@ -731,6 +731,13 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
       return(AV_REMOVE);  /* TODO: make this configurable? */
    }
 
+   if ((first->type == CT_FUNC_TYPE) ||
+       ((second->type == CT_FPAREN_OPEN) &&
+        (second->parent_type == CT_TYPEDEF)))
+   {
+      log_rule("sp_func_proto_paren");
+      return(cpd.settings[UO_sp_func_proto_paren].a);
+   }
    if ((first->type == CT_FUNC_PROTO) ||
        ((second->type == CT_FPAREN_OPEN) &&
         (second->parent_type == CT_FUNC_PROTO)))

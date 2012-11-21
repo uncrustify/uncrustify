@@ -1734,15 +1734,17 @@ static void fix_enum_struct_union(chunk_t *pc)
  *
  * typedef [type...] [*] type [, [*]type] ;
  * typedef <return type>([*]func)(params);
+ * typedef <return type>func(params);
  * typedef <enum/struct/union> [type] [*] type [, [*]type] ;
  * typedef <enum/struct/union> [type] { ... } [*] type [, [*]type] ;
  */
 static void fix_typedef(chunk_t *start)
 {
    chunk_t   *next;
-   chunk_t   *prev;
+   chunk_t   *tmp;
    chunk_t   *the_type = NULL;
    chunk_t   *open_paren;
+   chunk_t   *last_op = NULL;
    c_token_t tag;
 
    LOG_FMT(LTYPEDEF, "%s: looking at line %d\n", __func__, start->orig_line);
@@ -1779,40 +1781,59 @@ static void fix_typedef(chunk_t *start)
          next->flags &= ~PCF_VAR_1ST_DEF;
          if (*next->str == '(')
          {
-            prev = chunk_get_prev_ncnl(next);
-            if (*prev->str != ')')
-            {
-               continue;
-            }
-
-            prev->parent_type       = CT_TYPEDEF;
-            open_paren              = chunk_get_prev_type(prev, c_token_t(prev->type - 1), prev->level);
-            open_paren->parent_type = CT_TYPEDEF;
-
-            flag_parens(next, 0, CT_FPAREN_OPEN, CT_TYPEDEF, false);
-
-            fix_fcn_def_params(next);
-
-            /* Grab the type name (right before the close paren */
-            the_type = chunk_get_prev_ncnl(prev);
-
-            LOG_FMT(LTYPEDEF, "%s: fcn typedef [%s] on line %d\n", __func__,
-                    the_type->str.c_str(), the_type->orig_line);
-
-            /* If we are aligning on the open paren, grab that instead */
-            if (cpd.settings[UO_align_typedef_func].n == 1)
-            {
-               the_type = open_paren;
-            }
-            if (cpd.settings[UO_align_typedef_func].n != 0)
-            {
-               the_type->flags |= PCF_ANCHOR;
-            }
-
-            /* already did everything we need to do */
-            return;
+            last_op = next;
          }
       }
+   }
+
+   if (last_op)
+   {
+      flag_parens(last_op, 0, CT_FPAREN_OPEN, CT_TYPEDEF, false);
+      fix_fcn_def_params(last_op);
+
+      open_paren = NULL;
+      the_type = chunk_get_prev_ncnl(last_op);
+      if (chunk_is_paren_close(the_type))
+      {
+         /* must be: "typedef <return type>([*]func)(params);" */
+         the_type = chunk_get_prev_ncnl(the_type);
+         open_paren = chunk_get_prev_str(the_type, "(", 1, -1);
+         if (open_paren)
+         {
+            make_type(the_type);
+            /* flag the parens in (*name) */
+            set_paren_parent(open_paren, CT_TYPEDEF);
+            /* change the '*' (if any) to CT_PTR_CTYPE */
+            tmp = chunk_get_next_ncnl(open_paren);
+            if (chunk_is_star(tmp))
+            {
+               tmp->parent_type = CT_TYPEDEF;
+               make_type(tmp);
+            }
+         }
+      }
+      else
+      {
+         /* must be: "typedef <return type>func(params);" */
+         the_type->type = CT_FUNC_TYPE;
+      }
+      the_type->parent_type = CT_TYPEDEF;
+
+      LOG_FMT(LTYPEDEF, "%s: fcn typedef [%s] on line %d\n", __func__,
+              the_type->text(), the_type->orig_line);
+
+      /* If we are aligning on the open paren, grab that instead */
+      if (open_paren && (cpd.settings[UO_align_typedef_func].n == 1))
+      {
+         the_type = open_paren;
+      }
+      if (cpd.settings[UO_align_typedef_func].n != 0)
+      {
+         the_type->flags |= PCF_ANCHOR;
+      }
+
+      /* already did everything we need to do */
+      return;
    }
 
    /**

@@ -188,6 +188,7 @@ typedef enum
    CT_FUNC_CALL,        /* function call */
    CT_FUNC_CALL_USER,   /* function call (special user) */
    CT_FUNC_DEF,         /* function definition/implementation */
+   CT_FUNC_TYPE,        /* function type - foo in "typedef void (*foo)(void)" */
    CT_FUNC_PROTO,       /* function prototype */
    CT_FUNC_CLASS,       /* ctor or dtor for a class */
    CT_FUNC_CTOR_VAR,    /* variable or class initialization */
