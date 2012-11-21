@@ -1143,7 +1143,7 @@ static chunk_t *output_comment_cpp(chunk_t *first)
          {
             if (cpd.settings[UO_sp_cmt_cpp_start].a & AV_ADD)
             {
-               if (!unc_isspace(tmp[0]))
+               if (!unc_isspace(tmp[0]) && (tmp[0] != '/'))
                {
                   add_comment_text(" ", cmt, false);
                }
