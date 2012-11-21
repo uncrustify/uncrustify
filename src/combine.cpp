@@ -3197,6 +3197,7 @@ static void mark_cpp_constructor(chunk_t *pc)
    chunk_t *paren_open;
    chunk_t *tmp;
    chunk_t *after;
+   chunk_t *var;
    bool    is_destr = false;
 
    tmp = chunk_get_prev_ncnl(pc);
@@ -3228,6 +3229,7 @@ static void mark_cpp_constructor(chunk_t *pc)
 
    /* Scan until the brace open, mark everything */
    tmp = paren_open;
+   bool hit_colon = false;
    while ((tmp != NULL) && (tmp->type != CT_BRACE_OPEN) &&
           !chunk_is_semicolon(tmp))
    {
@@ -3236,6 +3238,16 @@ static void mark_cpp_constructor(chunk_t *pc)
       if (chunk_is_str(tmp, ":", 1) && (tmp->level == paren_open->level))
       {
          tmp->type = CT_CLASS_COLON;
+         hit_colon = true;
+      }
+      if (hit_colon && chunk_is_paren_open(tmp) && (tmp->level == paren_open->level))
+      {
+         var = skip_template_prev(chunk_get_prev_ncnl(tmp));
+         if ((var->type == CT_TYPE) || (var->type == CT_WORD))
+         {
+            var->type = CT_FUNC_CTOR_VAR;
+            flag_parens(tmp, PCF_IN_FCN_CALL, CT_FPAREN_OPEN, CT_FUNC_CTOR_VAR, false);
+         }
       }
    }
    if ((tmp != NULL) && (tmp->type == CT_BRACE_OPEN))
