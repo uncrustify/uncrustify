@@ -70,6 +70,7 @@ struct paren_stack_entry
    int       indent;       /**< indent level (depends on use) */
    int       indent_tmp;   /**< temporary indent level (depends on use) */
    int       indent_tab;   /**< the 'tab' indent (always <= real column) */
+   bool      indent_cont;  /**< indent_continue was applied */
    int       ref;
    c_token_t parent;       /**< if, for, function, etc */
    brstage_e stage;

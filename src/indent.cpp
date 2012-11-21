@@ -291,14 +291,15 @@ static void indent_pse_push(struct parse_frame& frm, chunk_t *pc)
       LOG_FMT(LINDPSE, "%4d] (pp=%d) OPEN  [%d,%s] level=%d\n",
               pc->orig_line, cpd.pp_level, frm.pse_tos, get_token_name(pc->type), pc->level);
 
-      frm.pse[frm.pse_tos].pc         = pc;
-      frm.pse[frm.pse_tos].type       = pc->type;
-      frm.pse[frm.pse_tos].level      = pc->level;
-      frm.pse[frm.pse_tos].open_line  = pc->orig_line;
-      frm.pse[frm.pse_tos].ref        = ++ref;
-      frm.pse[frm.pse_tos].in_preproc = (pc->flags & PCF_IN_PREPROC) != 0;
-      frm.pse[frm.pse_tos].indent_tab = frm.pse[frm.pse_tos - 1].indent_tab;
-      frm.pse[frm.pse_tos].non_vardef = false;
+      frm.pse[frm.pse_tos].pc          = pc;
+      frm.pse[frm.pse_tos].type        = pc->type;
+      frm.pse[frm.pse_tos].level       = pc->level;
+      frm.pse[frm.pse_tos].open_line   = pc->orig_line;
+      frm.pse[frm.pse_tos].ref         = ++ref;
+      frm.pse[frm.pse_tos].in_preproc  = (pc->flags & PCF_IN_PREPROC) != 0;
+      frm.pse[frm.pse_tos].indent_tab  = frm.pse[frm.pse_tos - 1].indent_tab;
+      frm.pse[frm.pse_tos].indent_cont = frm.pse[frm.pse_tos - 1].indent_cont;
+      frm.pse[frm.pse_tos].non_vardef  = false;
    }
 }
 
@@ -373,6 +374,18 @@ static int token_indent(c_token_t type)
       LOG_FMT(LINDENT2, "[line %d] indent_column = %d\n", \
               __LINE__, indent_column);                   \
    } while (0)
+
+
+static int calc_indent_continue(struct parse_frame& frm, int pse_tos)
+{
+   int ic = cpd.settings[UO_indent_continue].n;
+
+   if ((ic < 0) && frm.pse[pse_tos].indent_cont)
+   {
+      return frm.pse[pse_tos].indent;
+   }
+   return frm.pse[pse_tos].indent + abs(ic);
+}
 
 
 /**
@@ -1164,7 +1177,9 @@ void indent_text(void)
                 (((pc->type == CT_FPAREN_OPEN) && (pc->parent_type != CT_FUNC_CTOR_VAR)) ||
                  (pc->type == CT_SPAREN_OPEN)))
             {
-               frm.pse[frm.pse_tos].indent += abs(cpd.settings[UO_indent_continue].n);
+               //frm.pse[frm.pse_tos].indent += abs(cpd.settings[UO_indent_continue].n);
+               frm.pse[frm.pse_tos].indent = calc_indent_continue(frm, frm.pse_tos);
+               frm.pse[frm.pse_tos].indent_cont = true;
             }
          }
          frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
@@ -1199,7 +1214,10 @@ void indent_text(void)
                    ((pc->type != CT_ASSIGN) ||
                     ((pc->parent_type != CT_FUNC_PROTO) && (pc->parent_type != CT_FUNC_DEF))))
                {
-                  frm.pse[frm.pse_tos].indent += abs(cpd.settings[UO_indent_continue].n);
+                  //frm.pse[frm.pse_tos].indent += abs(cpd.settings[UO_indent_continue].n);
+                  frm.pse[frm.pse_tos].indent = calc_indent_continue(frm, frm.pse_tos);
+                  frm.pse[frm.pse_tos].indent_cont = true;
+
                }
             }
             else if (chunk_is_newline(next) || !cpd.settings[UO_indent_align_assign].b)
@@ -1240,8 +1258,10 @@ void indent_text(void)
          indent_pse_push(frm, pc);
          if (cpd.settings[UO_indent_continue].n != 0)
          {
-            frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent +
-                                          abs(cpd.settings[UO_indent_continue].n);
+            //frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent +
+            //                              abs(cpd.settings[UO_indent_continue].n);
+            frm.pse[frm.pse_tos].indent = calc_indent_continue(frm, frm.pse_tos - 1);
+            frm.pse[frm.pse_tos].indent_cont = true;
          }
          else
          {
@@ -1263,8 +1283,10 @@ void indent_text(void)
       {
          if (cpd.settings[UO_indent_continue].n != 0)
          {
-            vardefcol = frm.pse[frm.pse_tos].indent +
-                        abs(cpd.settings[UO_indent_continue].n);
+            //vardefcol = frm.pse[frm.pse_tos].indent +
+            //            abs(cpd.settings[UO_indent_continue].n);
+            vardefcol = calc_indent_continue(frm, frm.pse_tos);
+            frm.pse[frm.pse_tos].indent_cont = true;
          }
          else if (cpd.settings[UO_indent_var_def_cont].b ||
                   chunk_is_newline(chunk_get_prev(pc)))
