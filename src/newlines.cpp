@@ -50,7 +50,13 @@ static bool can_increase_nl(chunk_t *nl)
       if (prev && (prev->type == CT_PREPROC) &&
           (prev->parent_type == CT_PP_ENDIF))
       {
-         LOG_FMT(LBLANKD, "%s: nl_squeeze_ifdef %d\n", __func__, nl->orig_line);
+         LOG_FMT(LBLANKD, "%s: nl_squeeze_ifdef %d (prev)\n", __func__, nl->orig_line);
+         return(false);
+      }
+      if (next && (next->type == CT_PREPROC) &&
+          (next->parent_type == CT_PP_ENDIF))
+      {
+         LOG_FMT(LBLANKD, "%s: nl_squeeze_ifdef %d (next)\n", __func__, nl->orig_line);
          return(false);
       }
    }
@@ -2928,14 +2934,16 @@ void do_blank_lines(void)
       old_nl = pc->nl_count;
       if ((next != NULL) && (prev != NULL))
       {
-         LOG_FMT(LBLANK, "%s: line %d [%s] vs [%s] nl=%d\n", __func__,
+         LOG_FMT(LBLANK, "%s: line %d [%s][%s] vs [%s][%s] nl=%d\n", __func__,
                  pc->orig_line,
-                 prev->str.c_str(), next->str.c_str(), pc->nl_count);
+                 prev->str.c_str(), get_token_name(prev->type),
+                 next->str.c_str(), get_token_name(next->type),
+                 pc->nl_count);
       }
 
       /* Limit consecutive newlines */
       if ((cpd.settings[UO_nl_max].n > 0) &&
-          (pc->nl_count > (cpd.settings[UO_nl_max].n)))
+          (pc->nl_count > cpd.settings[UO_nl_max].n))
       {
          blank_line_max(pc, UO_nl_max);
       }
