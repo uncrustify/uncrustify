@@ -917,6 +917,8 @@ static void add_comment_text(const unc_text& text,
             add_char(' ');
          }
          add_text(cmt.cont_text);
+         output_to_column(cmt.column + cpd.settings[UO_cmt_sp_after_star_cont].n,
+                          false);
       }
       else
       {
