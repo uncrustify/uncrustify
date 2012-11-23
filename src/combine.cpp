@@ -4268,8 +4268,12 @@ static void handle_oc_block(chunk_t *pc)
                }
             }
 
-            /* block arguments are just like function definitions */
-            fix_fcn_def_params(tmp);
+            /* REVISIT: the above code doesn't seem to handle all variants */
+            if (tmp)
+            {
+               /* block arguments are just like function definitions */
+               fix_fcn_def_params(tmp);
+            }
 
             /* handle args */
             tmp = chunk_get_next(tmp);
