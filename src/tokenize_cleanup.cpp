@@ -673,8 +673,7 @@ void tokenize_cleanup(void)
        *  See http://developer.apple.com/mac/library/documentation/Cocoa/Conceptual/Blocks for more info...
        */
       if ((cpd.lang_flags & LANG_OC) &&
-          (pc->type == CT_ARITH) &&
-          (chunk_is_str(pc, "^", 1)) &&
+          (pc->type == CT_CARET) &&
           (prev->type != CT_NUMBER) &&
           (prev->type != CT_NUMBER_FP))
       {

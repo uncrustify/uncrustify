@@ -104,7 +104,7 @@ static const chunk_tag_t symbols1[] =
    { "?", CT_QUESTION,     LANG_ALL                                                   },
    { "[", CT_SQUARE_OPEN,  LANG_ALL                                                   },
    { "]", CT_SQUARE_CLOSE, LANG_ALL                                                   },
-   { "^", CT_ARITH,        LANG_ALL                                                   },
+   { "^", CT_CARET,        LANG_ALL                                                   },
    { "{", CT_BRACE_OPEN,   LANG_ALL                                                   },
    { "|", CT_ARITH,        LANG_ALL                                                   },
    { "}", CT_BRACE_CLOSE,  LANG_ALL                                                   },

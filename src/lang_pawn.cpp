@@ -95,6 +95,7 @@ static bool pawn_continued(chunk_t *pc, int br_level)
    }
    if ((pc->level > br_level) ||
        (pc->type == CT_ARITH) ||
+       (pc->type == CT_CARET) ||
        (pc->type == CT_QUESTION) ||
        (pc->type == CT_BOOL) ||
        (pc->type == CT_ASSIGN) ||

@@ -84,8 +84,9 @@ static const token_pri pri_table[] =
    { CT_BOOL,      3 },
    { CT_COMPARE,   4 },
    { CT_ARITH,     5 },
-   { CT_ASSIGN,    6 },
-   { CT_STRING,    7 },
+   { CT_CARET,     6 },
+   { CT_ASSIGN,    7 },
+   { CT_STRING,    8 },
    //{ CT_DC_MEMBER, 10 },
    //{ CT_MEMBER,    10 },
    { CT_QUESTION,    20 }, // allow break in ? : for ls_code_width
@@ -295,7 +296,7 @@ static void split_line(chunk_t *start)
    }
 
    /* Break before the token instead of after it according to the pos_xxx rules */
-   if ((chunk_is_token(ent.pc, CT_ARITH) &&
+   if (((chunk_is_token(ent.pc, CT_ARITH) || chunk_is_token(ent.pc, CT_CARET)) &&
         (cpd.settings[UO_pos_arith].tp & TP_LEAD)) ||
        (chunk_is_token(ent.pc, CT_ASSIGN) &&
         (cpd.settings[UO_pos_assign].tp & TP_LEAD)) ||

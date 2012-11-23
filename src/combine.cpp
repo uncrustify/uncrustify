@@ -3559,6 +3559,7 @@ static void mark_define_expressions(void)
                 (first ||
                  (prev->type == CT_PAREN_OPEN) ||
                  (prev->type == CT_ARITH) ||
+                 (prev->type == CT_CARET) ||
                  (prev->type == CT_ASSIGN) ||
                  (prev->type == CT_COMPARE) ||
                  (prev->type == CT_RETURN) ||
@@ -4537,7 +4538,8 @@ static void handle_oc_message_send(chunk_t *os)
                chunk_t *pp = chunk_get_prev(prev);
                if ((pp != NULL) &&
                    (pp->type != CT_OC_COLON) &&
-                   (pp->type != CT_ARITH))
+                   (pp->type != CT_ARITH) &&
+                   (pp->type != CT_CARET))
                {
                   prev->type       = CT_OC_MSG_NAME;
                   tmp->parent_type = CT_OC_MSG_NAME;

@@ -300,6 +300,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
       /* Let the comment spacing rules handle this */
    }
 
+   /* puts a space in the rare '+-' or '-+' */
    if (((first->type == CT_NEG) || (first->type == CT_POS) || (first->type == CT_ARITH)) &&
        ((second->type == CT_NEG) || (second->type == CT_POS) || (second->type == CT_ARITH)))
    {
@@ -903,7 +904,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
       }
 
       /* Arith after a cast comes first */
-      if (second->type == CT_ARITH)
+      if ((second->type == CT_ARITH) || (second->type == CT_CARET))
       {
          log_rule("sp_arith");
          return(cpd.settings[UO_sp_arith].a);
@@ -1079,7 +1080,8 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
       return(AV_ADD);
    }
 
-   if ((first->type == CT_ARITH) || (second->type == CT_ARITH))
+   if ((first->type == CT_ARITH) || (first->type == CT_CARET) ||
+       (second->type == CT_ARITH) || (second->type == CT_CARET))
    {
       log_rule("sp_arith");
       return(cpd.settings[UO_sp_arith].a);

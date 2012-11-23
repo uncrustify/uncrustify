@@ -79,6 +79,7 @@ typedef enum
    CT_SBOOL,               /* or, and */
    CT_ARITH,               /* +, -, /, <<, etc */
    CT_SARITH,              /* 'not', 'xor' */
+   CT_CARET,               /* ^ */
    CT_DEREF,               /* * dereference */
    CT_INCDEC_BEFORE,       /* ++a or --a */
    CT_INCDEC_AFTER,        /* a++ or a-- */

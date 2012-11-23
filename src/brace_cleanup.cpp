@@ -601,6 +601,7 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
        (pc->type == CT_BOOL) ||
        (pc->type == CT_MINUS) ||
        (pc->type == CT_PLUS) ||
+       (pc->type == CT_CARET) ||
        (pc->type == CT_ANGLE_OPEN) ||
        (pc->type == CT_ANGLE_CLOSE) ||
        (pc->type == CT_RETURN) ||

@@ -1506,6 +1506,7 @@ static void uncrustify_file(const file_mem& fm, FILE *pfout,
          if (cpd.settings[UO_pos_arith].tp != TP_IGNORE)
          {
             newlines_chunk_pos(CT_ARITH, cpd.settings[UO_pos_arith].tp);
+            newlines_chunk_pos(CT_CARET, cpd.settings[UO_pos_arith].tp);
          }
          newlines_class_colon_pos();
          if (cpd.settings[UO_nl_squeeze_ifdef].b)
