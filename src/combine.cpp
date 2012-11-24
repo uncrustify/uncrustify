@@ -24,6 +24,7 @@ static void fix_casts(chunk_t *pc);
 static void fix_type_cast(chunk_t *pc);
 static chunk_t *fix_var_def(chunk_t *pc);
 static void mark_function(chunk_t *pc);
+static void mark_function_return_type(chunk_t *fname, chunk_t *pc, c_token_t parent_type);
 static void mark_struct_union_body(chunk_t *start);
 static chunk_t *mark_variable_definition(chunk_t *start);
 
@@ -1072,6 +1073,44 @@ static void mark_lvalue(chunk_t *pc)
       {
          make_type(prev);
       }
+   }
+}
+
+
+/**
+ * Changes the return type to type and set the parent.
+ *
+ * @param pc the last chunk of the return type
+ * @param parent_type CT_NONE (no change) or the new parent type
+ */
+static void mark_function_return_type(chunk_t *fname, chunk_t *pc, c_token_t parent_type)
+{
+   if (pc)
+   {
+      /* Step backwards from pc and mark the parent of the return type */
+      LOG_FMT(LFCNR, "%s: (backwards) return type for '%s' @ %d:%d", __func__,
+              fname->text(), fname->orig_line, fname->orig_col);
+
+      while (pc)
+      {
+         if ((!chunk_is_type(pc) &&
+              (pc->type != CT_OPERATOR) &&
+              (pc->type != CT_WORD) &&
+              (pc->type != CT_ADDR)) ||
+             ((pc->flags & PCF_IN_PREPROC) != 0))
+         {
+            break;
+         }
+         LOG_FMT(LFCNR, " [%s|%s]", pc->text(), get_token_name(pc->type));
+
+         if (parent_type != CT_NONE)
+         {
+            pc->parent_type = parent_type;
+         }
+         make_type(pc);
+         pc = chunk_get_prev_ncnl(pc);
+      }
+      LOG_FMT(LFCNR, "\n");
    }
 }
 
@@ -3141,28 +3180,9 @@ static void mark_function(chunk_t *pc)
       next = chunk_get_next_ncnl(next);
    }
 
-   /* Mark parameters */
+   /* Mark parameters and return type */
    fix_fcn_def_params(next);
-
-   /* Step backwards from pc and mark the parent of the return type */
-   LOG_FMT(LFCNR, "%s: (backwards) return type for '%s':", __func__, pc->str.c_str());
-   tmp = pc;
-   while ((tmp = chunk_get_prev_ncnl(tmp)) != NULL)
-   {
-      if ((!chunk_is_type(tmp) &&
-           (tmp->type != CT_OPERATOR) &&
-           (tmp->type != CT_WORD) &&
-           (tmp->type != CT_ADDR)) ||
-          ((tmp->flags & PCF_IN_PREPROC) != 0))
-      {
-         break;
-      }
-      LOG_FMT(LFCNR, " [%s]", tmp->str.c_str());
-
-      tmp->parent_type = pc->type;
-      make_type(tmp);
-   }
-   LOG_FMT(LFCNR, "\n");
+   mark_function_return_type(pc, chunk_get_prev_ncnl(pc), pc->type);
 
    /* Find the brace pair and set the parent */
    if (pc->type == CT_FUNC_DEF)
