@@ -580,6 +580,7 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
        (pc->type == CT_VBRACE_CLOSE) ||
        ((pc->type == CT_SPAREN_OPEN) && (pc->parent_type == CT_FOR)) ||
        (pc->type == CT_COLON) ||
+       (pc->type == CT_OC_END) ||
        (chunk_is_semicolon(pc) &&
         (frm->pse[frm->pse_tos].type != CT_PAREN_OPEN) &&
         (frm->pse[frm->pse_tos].type != CT_FPAREN_OPEN) &&
