@@ -96,6 +96,7 @@ enum log_sev_t
    LCHANGE   = 82,    /* something changed */
    LCONTTEXT = 83,    /* comment cont_text set */
    LANNOT    = 84,    /* Java annotation */
+   LOCBLK    = 85,    /* OC Block stuff */
 };
 
 #endif   /* LOG_LEVELS_H_INCLUDED */
