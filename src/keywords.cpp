@@ -227,7 +227,7 @@ static const chunk_tag_t keywords[] =
    { "true",             CT_WORD,         LANG_CPP | LANG_CS | LANG_D | LANG_JAVA | LANG_VALA                         },
    { "try",              CT_TRY,          LANG_CPP | LANG_CS | LANG_D | LANG_JAVA | LANG_ECMA                         },
    { "tryinclude",       CT_PP_INCLUDE,   LANG_PAWN | FLAG_PP                                                         }, // PAWN
-   { "typedef",          CT_TYPEDEF,      LANG_C | LANG_CPP | LANG_D                                                  },
+   { "typedef",          CT_TYPEDEF,      LANG_C | LANG_CPP | LANG_D | LANG_OC                                        },
    { "typeid",           CT_SIZEOF,       LANG_C | LANG_CPP | LANG_D                                                  },
    { "typename",         CT_TYPENAME,     LANG_CPP                                                                    },
    { "typeof",           CT_SIZEOF,       LANG_C | LANG_CPP | LANG_CS | LANG_D | LANG_VALA | LANG_ECMA                },
