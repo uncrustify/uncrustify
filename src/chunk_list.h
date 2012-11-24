@@ -73,21 +73,36 @@ chunk_t *chunk_get_prev_nvb(chunk_t *cur, chunk_nav_t nav = CNAV_ALL);
 /**
  * Skips to the closing match for the current paren/brace/square.
  *
- * @param cur  The opening paren/brace/square
+ * @param cur  The opening or closing paren/brace/square
  * @return     NULL or the matching paren/brace/square
  */
 static_inline
 chunk_t *chunk_skip_to_match(chunk_t *cur, chunk_nav_t nav = CNAV_ALL)
 {
-   if ((cur != NULL) &&
-       ((cur->type == CT_PAREN_OPEN) ||
-        (cur->type == CT_SPAREN_OPEN) ||
-        (cur->type == CT_FPAREN_OPEN) ||
-        (cur->type == CT_BRACE_OPEN) ||
-        (cur->type == CT_VBRACE_OPEN) ||
-        (cur->type == CT_SQUARE_OPEN)))
+   if (cur != NULL)
    {
-      return(chunk_get_next_type(cur, (c_token_t)(cur->type + 1), cur->level, nav));
+      if ((cur->type == CT_PAREN_OPEN) ||
+          (cur->type == CT_SPAREN_OPEN) ||
+          (cur->type == CT_FPAREN_OPEN) ||
+          (cur->type == CT_BRACE_OPEN) ||
+          (cur->type == CT_VBRACE_OPEN) ||
+          (cur->type == CT_SQUARE_OPEN))
+      {
+         return(chunk_get_next_type(cur, (c_token_t)(cur->type + 1), cur->level, nav));
+      }
+      else if ((cur->type == CT_PAREN_CLOSE) ||
+               (cur->type == CT_SPAREN_CLOSE) ||
+               (cur->type == CT_FPAREN_CLOSE) ||
+               (cur->type == CT_BRACE_CLOSE) ||
+               (cur->type == CT_VBRACE_CLOSE) ||
+               (cur->type == CT_SQUARE_CLOSE))
+      {
+         return(chunk_get_prev_type(cur, (c_token_t)(cur->type - 1), cur->level, nav));
+      }
+      else
+      {
+         cur = NULL;
+      }
    }
    return(cur);
 }
