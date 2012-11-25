@@ -114,7 +114,11 @@ static chunk_t *flag_parens(chunk_t *po, UINT64 flags,
       return(NULL);
    }
 
-   if ((paren_close != NULL) && (po != paren_close))
+   LOG_FMT(LFLPAREN, "%s @ %d:%d and %d:%d type=%s ptype=%s\n",
+           __func__, po->orig_line, po->orig_col, paren_close->orig_line, paren_close->orig_col,
+           get_token_name(opentype), get_token_name(parenttype));
+
+   if (po != paren_close)
    {
       if ((flags != 0) ||
           (parent_all && (parenttype != CT_NONE)))
