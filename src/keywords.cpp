@@ -51,6 +51,7 @@ static const chunk_tag_t keywords[] =
    { "__inline__",       CT_QUALIFIER,    LANG_C | LANG_CPP                                                           },
    { "__restrict",       CT_QUALIFIER,    LANG_C | LANG_CPP                                                           },
    { "__signed__",       CT_TYPE,         LANG_C | LANG_CPP                                                           },
+   { "__thread",         CT_QUALIFIER,    LANG_C | LANG_CPP                                                           },
    { "__traits",         CT_QUALIFIER,    LANG_D                                                                      },
    { "__try",            CT_TRY,          LANG_C | LANG_CPP                                                           },
    { "__typeof__",       CT_SIZEOF,       LANG_C | LANG_CPP                                                           },
