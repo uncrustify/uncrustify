@@ -44,6 +44,7 @@ static const chunk_tag_t keywords[] =
    { "_Complex",         CT_TYPE,         LANG_CPP                                                                    },
    { "_Imaginary",       CT_TYPE,         LANG_CPP                                                                    },
    { "__attribute__",    CT_ATTRIBUTE,    LANG_C | LANG_CPP                                                           },
+   { "__block",          CT_QUALIFIER,    LANG_OC                                                                     },
    { "__const__",        CT_QUALIFIER,    LANG_C | LANG_CPP                                                           },
    { "__except",         CT_CATCH,        LANG_C | LANG_CPP                                                           },
    { "__finally",        CT_FINALLY,      LANG_C | LANG_CPP                                                           },
