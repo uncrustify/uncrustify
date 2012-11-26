@@ -141,6 +141,8 @@ const char *token_names[] =
    "SPAREN_CLOSE",
    "FPAREN_OPEN",
    "FPAREN_CLOSE",
+   "TPAREN_OPEN",
+   "TPAREN_CLOSE",
    "BRACE_OPEN",
    "BRACE_CLOSE",
    "VBRACE_OPEN",

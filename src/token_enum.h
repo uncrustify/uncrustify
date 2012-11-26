@@ -167,6 +167,9 @@ typedef enum
    CT_FPAREN_OPEN,      /* 'function' paren after fcn/macro fcn */
    CT_FPAREN_CLOSE,
 
+   CT_TPAREN_OPEN,      /* 'type' paren used in function types */
+   CT_TPAREN_CLOSE,
+
    CT_BRACE_OPEN,       /* {...} */
    CT_BRACE_CLOSE,
 

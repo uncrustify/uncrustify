@@ -944,6 +944,13 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
       return(cpd.settings[UO_sp_inside_fparen].a);
    }
 
+   /* "foo(...)" vs "foo( ... )" */
+   if ((first->type == CT_TPAREN_OPEN) || (second->type == CT_TPAREN_CLOSE))
+   {
+      log_rule("sp_inside_tparen");
+      return(cpd.settings[UO_sp_inside_tparen].a);
+   }
+
    if (first->type == CT_PAREN_CLOSE)
    {
       if (first->parent_type == CT_OC_RTYPE)

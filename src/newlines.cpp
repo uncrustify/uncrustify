@@ -1552,7 +1552,7 @@ static void newline_func_def(chunk_t *start)
    /* Handle break newlines type and function */
    prev = chunk_get_prev_ncnl(start);
    /* Don't split up a function variable */
-   prev = ((prev != NULL) && (prev->type == CT_PAREN_CLOSE)) ? NULL : chunk_get_prev_ncnl(prev);
+   prev = chunk_is_paren_close(prev) ? NULL : chunk_get_prev_ncnl(prev);
 
    if ((prev != NULL) && (prev->type != CT_PRIVATE_COLON))
    {

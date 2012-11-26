@@ -84,6 +84,7 @@ chunk_t *chunk_skip_to_match(chunk_t *cur, chunk_nav_t nav = CNAV_ALL)
       if ((cur->type == CT_PAREN_OPEN) ||
           (cur->type == CT_SPAREN_OPEN) ||
           (cur->type == CT_FPAREN_OPEN) ||
+          (cur->type == CT_TPAREN_OPEN) ||
           (cur->type == CT_BRACE_OPEN) ||
           (cur->type == CT_VBRACE_OPEN) ||
           (cur->type == CT_SQUARE_OPEN))
@@ -93,6 +94,7 @@ chunk_t *chunk_skip_to_match(chunk_t *cur, chunk_nav_t nav = CNAV_ALL)
       else if ((cur->type == CT_PAREN_CLOSE) ||
                (cur->type == CT_SPAREN_CLOSE) ||
                (cur->type == CT_FPAREN_CLOSE) ||
+               (cur->type == CT_TPAREN_CLOSE) ||
                (cur->type == CT_BRACE_CLOSE) ||
                (cur->type == CT_VBRACE_CLOSE) ||
                (cur->type == CT_SQUARE_CLOSE))
@@ -245,6 +247,7 @@ bool chunk_is_paren_open(chunk_t *pc)
    return((pc != NULL) &&
           ((pc->type == CT_PAREN_OPEN) ||
            (pc->type == CT_SPAREN_OPEN) ||
+           (pc->type == CT_TPAREN_OPEN) ||
            (pc->type == CT_FPAREN_OPEN)));
 }
 
@@ -255,6 +258,7 @@ bool chunk_is_paren_close(chunk_t *pc)
    return((pc != NULL) &&
           ((pc->type == CT_PAREN_CLOSE) ||
            (pc->type == CT_SPAREN_CLOSE) ||
+           (pc->type == CT_TPAREN_CLOSE) ||
            (pc->type == CT_FPAREN_CLOSE)));
 }
 

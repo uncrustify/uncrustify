@@ -347,6 +347,8 @@ void register_options(void)
                   "Add or remove space inside empty function '()'");
    unc_add_option("sp_inside_fparen", UO_sp_inside_fparen, AT_IARF,
                   "Add or remove space inside function '(' and ')'");
+   unc_add_option("sp_inside_tparen", UO_sp_inside_tparen, AT_IARF,
+                  "Add or remove space inside the first parens in the function type: 'void (*x)(...)'");
    unc_add_option("sp_square_fparen", UO_sp_square_fparen, AT_IARF,
                   "Add or remove space between ']' and '(' when part of a function call.");
    unc_add_option("sp_fparen_brace", UO_sp_fparen_brace, AT_IARF,
