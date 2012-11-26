@@ -177,7 +177,7 @@ static void usage_exit(const char *msg, const char *argv0, int code)
            " -p FILE      : dump debug info to a file\n"
            " -L SEV       : Set the log severity (see log_levels.h)\n"
            " -s           : Show the log severity in the logs\n"
-           " --decode FLAG: Print FLAG (chunk flags) as text and exit\n"
+           " --decode     : decode remaining args (chunk flags) and exit\n"
            "\n"
            "Usage Examples\n"
            "cat foo.d | uncrustify -q -c my.cfg -l d\n"
@@ -286,9 +286,13 @@ int main(int argc, char *argv[])
    }
    cpd.frag = arg.Present("--frag");
 
-   if ((p_arg = arg.Param("--decode")) != NULL)
+   if (arg.Present("--decode"))
    {
-      log_pcf_flags(LSYS, strtoul(p_arg, NULL, 16));
+      idx = 1;
+      while ((p_arg = arg.Unused(idx)) != NULL)
+      {
+         log_pcf_flags(LSYS, strtoul(p_arg, NULL, 16));
+      }
       return EXIT_SUCCESS;
    }
 
