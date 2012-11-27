@@ -1568,6 +1568,27 @@ int load_option_file(const char *filename)
             }
          }
       }
+      else if (strcasecmp(args[0], "include") == 0)
+      {
+         int save_line_no = cpd.line_number;
+
+         /* FIXME: detect an absolute path under windows? */
+         if (*args[1] != '/')
+         {
+            /* include is a relative path to the current config file */
+            unc_text ut = filename;
+            ut.resize(path_dirname_len(filename));
+            ut.append(args[1]);
+            (void)load_option_file(ut.c_str());
+         }
+         else
+         {
+            /* include is an absolute Unix path */
+            (void)load_option_file(args[1]);
+         }
+
+         cpd.line_number = save_line_no;
+      }
       else
       {
          /* must be a regular option = value */
