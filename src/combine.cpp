@@ -476,12 +476,6 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       mark_exec_sql(pc);
    }
 
-   if ((pc->type == CT_FUNC_WRAP) ||
-       (pc->type == CT_TYPE_WRAP))
-   {
-      handle_wrap(pc);
-      next = chunk_get_next_ncnl(pc);
-   }
    if (pc->type == CT_PROTO_WRAP)
    {
       handle_proto_wrap(pc);
@@ -973,6 +967,15 @@ void fix_symbols(void)
    chunk_t dummy;
 
    mark_define_expressions();
+
+   for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next_ncnl(pc))
+   {
+      if ((pc->type == CT_FUNC_WRAP) ||
+          (pc->type == CT_TYPE_WRAP))
+      {
+         handle_wrap(pc);
+      }
+   }
 
    pc = chunk_get_head();
    if (chunk_is_newline(pc) || chunk_is_comment(pc))
