@@ -168,7 +168,7 @@ void AlignStack::Add(chunk_t *start, int seqnum)
       while (((prev = chunk_get_prev(prev)) != NULL) &&
              (chunk_is_star(prev) ||
               chunk_is_addr(prev) ||
-              (chunk_is_str(prev, "(", 1) && (prev->parent_type == CT_TYPEDEF))))
+              (prev->type == CT_TPAREN_OPEN)))
       {
          /* do nothing - we want prev when this exits */
       }
@@ -189,7 +189,7 @@ void AlignStack::Add(chunk_t *start, int seqnum)
             ali  = prev;
             prev = chunk_get_prev(ali);
          }
-         if (chunk_is_str(prev, "(", 1) && (prev->parent_type == CT_TYPEDEF))
+         if (chunk_is_token(prev, CT_TPAREN_OPEN))
          {
             ali  = prev;
             prev = chunk_get_prev(ali);
@@ -228,7 +228,7 @@ void AlignStack::Add(chunk_t *start, int seqnum)
          gap = ali->column - (ref->column + ref->len());
       }
       tmp = ali;
-      if (chunk_is_str(tmp, "(", 1) && (tmp->parent_type == CT_TYPEDEF))
+      if (chunk_is_token(tmp, CT_TPAREN_OPEN))
       {
          tmp = chunk_get_next(tmp);
       }
@@ -356,7 +356,7 @@ void AlignStack::Flush()
          gap = pc->column - (pc->align.ref->column + pc->align.ref->len());
       }
       chunk_t *tmp = pc;
-      if (chunk_is_str(tmp, "(", 1) && (tmp->parent_type == CT_TYPEDEF))
+      if (tmp->type == CT_TPAREN_OPEN)
       {
          tmp = chunk_get_next(tmp);
       }
