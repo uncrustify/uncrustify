@@ -2869,18 +2869,30 @@ static void mark_function(chunk_t *pc)
       }
 
       if (chunk_is_str(tmp3, ")", 1) &&
-          chunk_is_star(tmp1) &&
+          (chunk_is_star(tmp1) ||
+           ((cpd.lang_flags & LANG_OC) && chunk_is_token(tmp1, CT_CARET)))
+           &&
           ((tmp2 == NULL) || (tmp2->type == CT_WORD)))
       {
-         if (tmp2 != NULL)
+         if (tmp2)
          {
             LOG_FMT(LFCN, "%s: [%d/%d] function variable [%s], changing [%s] into a type\n",
-                    __func__, pc->orig_line, pc->orig_col, tmp2->str.c_str(), pc->str.c_str());
+                    __func__, pc->orig_line, pc->orig_col, tmp2->text(), pc->text());
+            tmp2->type = CT_FUNC_VAR;
+            flag_parens(paren_open, 0, CT_PAREN_OPEN, CT_FUNC_VAR, false);
+
+            LOG_FMT(LFCN, "%s: paren open @ %d:%d\n",
+                    __func__, paren_open->orig_line, paren_open->orig_col);
          }
          else
          {
             LOG_FMT(LFCN, "%s: [%d/%d] function type, changing [%s] into a type\n",
                     __func__, pc->orig_line, pc->orig_col, pc->str.c_str());
+            if (tmp2)
+            {
+               tmp2->type = CT_FUNC_TYPE;
+            }
+            flag_parens(paren_open, 0, CT_PAREN_OPEN, CT_FUNC_TYPE, false);
          }
 
          pc->type   = CT_TYPE;
