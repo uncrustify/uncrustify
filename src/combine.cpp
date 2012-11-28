@@ -1883,19 +1883,18 @@ static void fix_enum_struct_union(chunk_t *pc)
 static void fix_typedef(chunk_t *start)
 {
    chunk_t   *next;
-   chunk_t   *tmp;
    chunk_t   *the_type = NULL;
    chunk_t   *open_paren;
    chunk_t   *last_op = NULL;
    c_token_t tag;
 
-   LOG_FMT(LTYPEDEF, "%s: looking at line %d\n", __func__, start->orig_line);
+   LOG_FMT(LTYPEDEF, "%s: typedef @ %d:%d\n", __func__, start->orig_line, start->orig_col);
 
    /* Mark everything in the typedef and scan for ")(", which makes it a
     * function type
     */
    next = start;
-   while (((next = chunk_get_next_ncnl(next)) != NULL) &&
+   while (((next = chunk_get_next_ncnl(next, CNAV_PREPROC)) != NULL) &&
           (next->level >= start->level))
    {
       next->flags |= PCF_IN_TYPEDEF;
@@ -1934,25 +1933,12 @@ static void fix_typedef(chunk_t *start)
       fix_fcn_def_params(last_op);
 
       open_paren = NULL;
-      the_type = chunk_get_prev_ncnl(last_op);
+      the_type = chunk_get_prev_ncnl(last_op, CNAV_PREPROC);
       if (chunk_is_paren_close(the_type))
       {
-         /* must be: "typedef <return type>([*]func)(params);" */
-         the_type = chunk_get_prev_ncnl(the_type);
-         open_paren = chunk_get_prev_str(the_type, "(", 1, -1);
-         if (open_paren)
-         {
-            make_type(the_type);
-            /* flag the parens in (*name) */
-            set_paren_parent(open_paren, CT_TYPEDEF);
-            /* change the '*' (if any) to CT_PTR_CTYPE */
-            tmp = chunk_get_next_ncnl(open_paren);
-            if (chunk_is_star(tmp))
-            {
-               tmp->parent_type = CT_TYPEDEF;
-               make_type(tmp);
-            }
-         }
+         open_paren = chunk_skip_to_match(the_type);
+         mark_function_type(the_type);
+         the_type = chunk_get_prev_ncnl(the_type, CNAV_PREPROC);
       }
       else
       {
@@ -1971,6 +1957,8 @@ static void fix_typedef(chunk_t *start)
       }
       if (cpd.settings[UO_align_typedef_func].n != 0)
       {
+         LOG_FMT(LTYPEDEF, "%s:  -- align anchor on [%s] @ %d:%d\n", __func__,
+                 the_type->text(), the_type->orig_line, the_type->orig_col);
          the_type->flags |= PCF_ANCHOR;
       }
 
@@ -1982,7 +1970,7 @@ static void fix_typedef(chunk_t *start)
     * Skip over enum/struct/union stuff, as we know it isn't a return type
     * for a function type
     */
-   next = chunk_get_next_ncnl(start);
+   next = chunk_get_next_ncnl(start, CNAV_PREPROC);
    if ((next->type != CT_ENUM) &&
        (next->type != CT_STRUCT) &&
        (next->type != CT_UNION))
@@ -2001,16 +1989,16 @@ static void fix_typedef(chunk_t *start)
    tag = next->type;
 
    /* the next item should be either a type or { */
-   next = chunk_get_next_ncnl(next);
+   next = chunk_get_next_ncnl(next, CNAV_PREPROC);
    if (next->type == CT_TYPE)
    {
-      next = chunk_get_next_ncnl(next);
+      next = chunk_get_next_ncnl(next, CNAV_PREPROC);
    }
    if (next->type == CT_BRACE_OPEN)
    {
       next->parent_type = tag;
       /* Skip to the closing brace */
-      next = chunk_get_next_type(next, CT_BRACE_CLOSE, next->level);
+      next = chunk_get_next_type(next, CT_BRACE_CLOSE, next->level, CNAV_PREPROC);
       if (next != NULL)
       {
          next->parent_type = tag;
