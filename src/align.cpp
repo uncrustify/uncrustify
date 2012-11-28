@@ -1686,8 +1686,6 @@ static void align_init_brace(chunk_t *start)
  * Aligns simple typedefs that are contained on a single line each.
  * This should be called after the typedef target is marked as a type.
  *
- * Won't align function typedefs.
- *
  * typedef int        foo_t;
  * typedef char       bar_t;
  * typedef const char cc_t;
@@ -1716,6 +1714,9 @@ static void align_typedefs(int span)
          if (pc->flags & PCF_ANCHOR)
          {
             as.Add(pc);
+            LOG_FMT(LALTD, "%s: typedef @ %d:%d, tag '%s' @ %d:%d\n",
+                    __func__, c_typedef->orig_line, c_typedef->orig_col,
+                    pc->text(), pc->orig_line, pc->orig_col);
             c_typedef = NULL;
          }
       }
@@ -1723,8 +1724,6 @@ static void align_typedefs(int span)
       {
          if (pc->type == CT_TYPEDEF)
          {
-            LOG_FMT(LALTD, "%s: line %d, col %d\n",
-                    __func__, pc->orig_line, pc->orig_col);
             c_typedef = pc;
          }
       }
