@@ -1,4 +1,4 @@
-int* (  ^blkReturningPointer)(int) = ^int* (int a) {
+int *(^blkReturningPointer)(int) = ^int *(int a) {
     return a + 1;
 };
 

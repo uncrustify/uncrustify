@@ -12,14 +12,23 @@ b);
 
 }
 
+typedef const char * pu8_t;
+
 typedef short (*hello1)(char         coolParam,
           ushort *,
        unsigned int anotherone);
+
+typedef const unsigned char * (getfcn_t)(
+int idx, ulong op);
 
 short (*hello2)(char         coolParam,
           ulong *,
 	uchar,
                unsigned int anotherone);
+
+const unsigned char * (*getstr) (
+int idx,
+ulong op);
 
 short hello3 (char         coolParam,
         ushort *,

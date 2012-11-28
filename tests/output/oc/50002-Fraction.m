@@ -19,11 +19,11 @@
 
 -(int) denominator
 {
-   return(denominator);
+   return denominator;
 }
 
 -(int) numerator
 {
-   return(numerator);
+   return numerator;
 }
 @end

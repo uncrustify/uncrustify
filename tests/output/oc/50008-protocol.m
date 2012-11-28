@@ -29,4 +29,3 @@ if ([receiver conformsTo: @protocol(ReferenceCounting)])
 @protocol A
 -Foo: (id<B> )anObject;
 @end
-

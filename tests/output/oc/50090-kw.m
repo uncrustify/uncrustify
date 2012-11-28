@@ -12,7 +12,7 @@
 -do
 {
    printf("Doing Job\n");
-   return(self);
+   return self;
 }
 @end
 
@@ -27,6 +27,6 @@
    {
       [job do];
    }
-   return(self);
+   return self;
 }
 @end

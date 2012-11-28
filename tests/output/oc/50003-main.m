@@ -18,5 +18,5 @@ int main(int argc, const char *argv[])
    // free memory
    [frac release];
 
-   return(0);
+   return 0;
 }

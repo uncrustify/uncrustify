@@ -15,5 +15,5 @@ int main(int argc, const char *argv[])
       NSLog(@"Finally");
    }
 
-   return(0);
+   return 0;
 }

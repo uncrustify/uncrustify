@@ -8,4 +8,3 @@ public bool Enabled
 
    a = (enderedImage->h - toplines - bottomlines);
 }
-

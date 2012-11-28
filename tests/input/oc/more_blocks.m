@@ -1,4 +1,6 @@
 int (^myBlock)(int) = ^(int num) { return num * multiplier; };
+// for comparison
+int (*fcnptr)(int);
 
 int d = i % 10; 
 repeat(10, ^{ putc('0'+d); });
