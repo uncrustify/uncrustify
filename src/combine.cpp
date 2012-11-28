@@ -94,9 +94,13 @@ void flag_series(chunk_t *start, chunk_t *end, UINT64 flags, chunk_nav_t nav)
  * @param po   Pointer to the open parenthesis
  * @return     The token after the close paren
  */
-static chunk_t *flag_parens(chunk_t *po, UINT64 flags,
-                            c_token_t opentype, c_token_t parenttype,
-                            bool parent_all)
+#define flag_parens(_po, _flg, _ot, _pt, _pa) \
+   flag_parens2(__func__, __LINE__, _po, _flg, _ot, _pt, _pa)
+
+static chunk_t *flag_parens2(const char *func, int line,
+                             chunk_t *po, UINT64 flags,
+                             c_token_t opentype, c_token_t parenttype,
+                             bool parent_all)
 {
    chunk_t *paren_close;
    chunk_t *pc;
@@ -109,13 +113,13 @@ static chunk_t *flag_parens(chunk_t *po, UINT64 flags,
    paren_close = chunk_skip_to_match(po, CNAV_PREPROC);
    if (paren_close == NULL)
    {
-      LOG_FMT(LERR, "%s: no match for [%s] at  [%d:%d]\n",
-              __func__, po->str.c_str(), po->orig_line, po->orig_col);
+      LOG_FMT(LERR, "flag_parens[%s:%d]: no match for [%s] at  [%d:%d]\n",
+              func, line, po->str.c_str(), po->orig_line, po->orig_col);
       return(NULL);
    }
 
-   LOG_FMT(LFLPAREN, "%s @ %d:%d and %d:%d type=%s ptype=%s\n",
-           __func__, po->orig_line, po->orig_col, paren_close->orig_line, paren_close->orig_col,
+   LOG_FMT(LFLPAREN, "flag_parens[%s:%d] @ %d:%d and %d:%d type=%s ptype=%s\n",
+           func, line, po->orig_line, po->orig_col, paren_close->orig_line, paren_close->orig_col,
            get_token_name(opentype), get_token_name(parenttype));
 
    if (po != paren_close)
