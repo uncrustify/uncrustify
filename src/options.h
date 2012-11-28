@@ -200,6 +200,7 @@ enum uncrustify_options
    UO_sp_inside_fparen,         // space inside 'foo( xxx )' vs 'foo(xxx)'
    UO_sp_inside_fparens,        // space inside 'foo( )' vs 'foo()'
    UO_sp_inside_tparen,
+   UO_sp_after_tparen_close,
    UO_sp_inside_paren,          // space inside '+ ( xxx )' vs '+ (xxx)'
    UO_sp_inside_square,         // space inside 'byte[ 5 ]' vs 'byte[5]'
    UO_sp_inside_sparen,         // space inside 'if( xxx )' vs 'if(xxx)'
@@ -274,6 +275,7 @@ enum uncrustify_options
    UO_sp_before_unnamed_ptr_star,
    UO_sp_after_ptr_star,        // space after a '*' that is part of a type
    UO_sp_after_ptr_star_func,   // space between a '*' and a function proto/def
+   UO_sp_ptr_star_paren,
    UO_sp_before_ptr_star_func,
    UO_sp_after_byref_func,
    UO_sp_before_byref_func,

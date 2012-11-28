@@ -229,6 +229,8 @@ void register_options(void)
                   "Add or remove space after pointer star '*', if followed by a word.");
    unc_add_option("sp_after_ptr_star_func", UO_sp_after_ptr_star_func, AT_IARF,
                   "Add or remove space after a pointer star '*', if followed by a func proto/def.");
+   unc_add_option("sp_ptr_star_paren", UO_sp_ptr_star_paren, AT_IARF,
+                  "Add or remove space after a pointer star '*', if followed by an open paren (function types).");
    unc_add_option("sp_before_ptr_star_func", UO_sp_before_ptr_star_func, AT_IARF,
                   "Add or remove space before a pointer star '*', if followed by a func proto/def.");
    unc_add_option("sp_before_byref", UO_sp_before_byref, AT_IARF,
@@ -349,6 +351,8 @@ void register_options(void)
                   "Add or remove space inside function '(' and ')'");
    unc_add_option("sp_inside_tparen", UO_sp_inside_tparen, AT_IARF,
                   "Add or remove space inside the first parens in the function type: 'void (*x)(...)'");
+   unc_add_option("sp_after_tparen_close", UO_sp_after_tparen_close, AT_IARF,
+                  "Add or remove between the parens in the function type: 'void (*x)(...)'");
    unc_add_option("sp_square_fparen", UO_sp_square_fparen, AT_IARF,
                   "Add or remove space between ']' and '(' when part of a function call.");
    unc_add_option("sp_fparen_brace", UO_sp_fparen_brace, AT_IARF,

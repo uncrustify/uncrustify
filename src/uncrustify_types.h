@@ -143,6 +143,8 @@ struct parse_frame
 #define PCF_LONG_BLOCK         PCF_BIT(34)  /* the block is 'long' by some measure */
 #define PCF_OC_BOXED           PCF_BIT(35)  /* inside OC boxed expression */
 #define PCF_KEEP_BRACE         PCF_BIT(36)  /* do not remove brace */
+#define PCF_OC_RTYPE           PCF_BIT(37)  /* inside OC return type */
+#define PCF_OC_ATYPE           PCF_BIT(38)  /* inside OC arg type */
 
 #ifdef DEFINE_PCF_NAMES
 static const char *pcf_names[] =
@@ -184,8 +186,8 @@ static const char *pcf_names[] =
    "LONG_BLOCK",        // 34
    "OC_BOXED",          // 35
    "KEEP_BRACE",        // 36
-   "#37",               // 37
-   "#38",               // 38
+   "OC_RTYPE",          // 37
+   "OC_ATYPE",          // 38
 };
 #endif
 

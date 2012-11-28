@@ -448,22 +448,6 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
       return(cpd.settings[UO_sp_assign].a);
    }
 
-   if (second->type == CT_OC_BLOCK_CARET)
-   {
-      log_rule("sp_before_oc_block_caret");
-      return(cpd.settings[UO_sp_before_oc_block_caret].a);
-   }
-   if (first->type == CT_OC_BLOCK_CARET)
-   {
-      log_rule("sp_after_oc_block_caret");
-      return(cpd.settings[UO_sp_after_oc_block_caret].a);
-   }
-   if (second->type == CT_OC_MSG_FUNC)
-   {
-      log_rule("sp_after_oc_msg_receiver");
-      return(cpd.settings[UO_sp_after_oc_msg_receiver].a);
-   }
-
    // Handle the special lambda case for C++11:
    //    [=](Something arg){.....}
    if ((cpd.settings[UO_sp_cpp_lambda_assign].a != AV_IGNORE) &&
@@ -542,6 +526,22 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
       }
       log_rule("sp_assign");
       return(cpd.settings[UO_sp_assign].a);
+   }
+
+   if (second->type == CT_OC_BLOCK_CARET)
+   {
+      log_rule("sp_before_oc_block_caret");
+      return(cpd.settings[UO_sp_before_oc_block_caret].a);
+   }
+   if (first->type == CT_OC_BLOCK_CARET)
+   {
+      log_rule("sp_after_oc_block_caret");
+      return(cpd.settings[UO_sp_after_oc_block_caret].a);
+   }
+   if (second->type == CT_OC_MSG_FUNC)
+   {
+      log_rule("sp_after_oc_msg_receiver");
+      return(cpd.settings[UO_sp_after_oc_msg_receiver].a);
    }
 
    /* "a [x]" vs "a[x]" */
@@ -732,13 +732,13 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
       return(AV_REMOVE);  /* TODO: make this configurable? */
    }
 
-   if ((first->type == CT_FUNC_TYPE) ||
-       ((second->type == CT_FPAREN_OPEN) &&
-        (second->parent_type == CT_TYPEDEF)))
+   /* handle the space between parens in fcn type 'void (*f)(void)' */
+   if (first->type == CT_TPAREN_CLOSE)
    {
-      log_rule("sp_func_proto_paren");
-      return(cpd.settings[UO_sp_func_proto_paren].a);
+      log_rule("sp_after_tparen_close");
+      return(cpd.settings[UO_sp_after_tparen_close].a);
    }
+
    if ((first->type == CT_FUNC_PROTO) ||
        ((second->type == CT_FPAREN_OPEN) &&
         (second->parent_type == CT_FUNC_PROTO)))
@@ -953,7 +953,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
 
    if (first->type == CT_PAREN_CLOSE)
    {
-      if (first->parent_type == CT_OC_RTYPE)
+      if (first->flags & PCF_OC_RTYPE) //== CT_OC_RTYPE)
       {
          log_rule("sp_after_oc_return_type");
          return(cpd.settings[UO_sp_after_oc_return_type].a);
@@ -1118,6 +1118,15 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
    }
 
    if ((first->type == CT_PTR_TYPE) &&
+       (cpd.settings[UO_sp_ptr_star_paren].a != AV_IGNORE) &&
+       ((second->type == CT_FPAREN_OPEN) ||
+        (second->type == CT_TPAREN_OPEN)))
+   {
+      log_rule("sp_ptr_star_paren");
+      return cpd.settings[UO_sp_ptr_star_paren].a;
+   }
+
+   if ((first->type == CT_PTR_TYPE) &&
        (second->type == CT_PTR_TYPE) &&
        (cpd.settings[UO_sp_between_ptr_star].a != AV_IGNORE))
    {
@@ -1128,7 +1137,8 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
    if ((first->type == CT_PTR_TYPE) &&
        (cpd.settings[UO_sp_after_ptr_star_func].a != AV_IGNORE) &&
        ((first->parent_type == CT_FUNC_DEF) ||
-        (first->parent_type == CT_FUNC_PROTO)))
+        (first->parent_type == CT_FUNC_PROTO) ||
+        (first->parent_type == CT_FUNC_VAR)))
    {
       log_rule("sp_after_ptr_star_func");
       return(cpd.settings[UO_sp_after_ptr_star_func].a);
