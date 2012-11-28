@@ -39,7 +39,8 @@ static void mark_lvalue(chunk_t *pc);
 static void mark_template_func(chunk_t *pc, chunk_t *pc_next);
 static void mark_exec_sql(chunk_t *pc);
 static void handle_oc_class(chunk_t *pc);
-static void handle_oc_block(chunk_t *pc);
+static void handle_oc_block_literal(chunk_t *pc);
+static void handle_oc_block_type(chunk_t *pc);
 static void handle_oc_message_decl(chunk_t *pc);
 static void handle_oc_message_send(chunk_t *pc);
 static void handle_cs_square_stmt(chunk_t *pc);
@@ -104,11 +105,6 @@ static chunk_t *flag_parens2(const char *func, int line,
 {
    chunk_t *paren_close;
    chunk_t *pc;
-
-   if (is_oc_block(po))
-   {
-      return(NULL);
-   }
 
    paren_close = chunk_skip_to_match(po, CNAV_PREPROC);
    if (paren_close == NULL)
@@ -388,12 +384,10 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
          {
             handle_oc_message_send(pc);
          }
-      }
-      if ((pc->type == CT_OC_BLOCK_CARET) &&
-          (pc->parent_type != CT_OC_MSG_SPEC) &&
-          (pc->parent_type != CT_OC_MSG_DECL))
-      {
-         handle_oc_block(pc);
+         if (pc->type == CT_CARET)
+         {
+            handle_oc_block_literal(pc);
+         }
       }
    }
 
@@ -561,10 +555,14 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
     * A word before an open paren is a function call or definition.
     * CT_WORD => CT_FUNC_CALL or CT_FUNC_DEF
     */
-   if ((next->type == CT_PAREN_OPEN) &&
-       (next->next != NULL) && (next->next->type != CT_OC_BLOCK_CARET))
+   if (next->type == CT_PAREN_OPEN)
    {
-      if ((pc->type == CT_WORD) || (pc->type == CT_OPERATOR_VAL))
+      tmp = chunk_get_next_ncnl(next);
+      if ((cpd.lang_flags & LANG_OC) && chunk_is_token(tmp, CT_CARET))
+      {
+         handle_oc_block_type(tmp);
+      }
+      else if ((pc->type == CT_WORD) || (pc->type == CT_OPERATOR_VAL))
       {
          pc->type = CT_FUNCTION;
       }
@@ -802,6 +800,14 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       {
          //fprintf(stderr, "Changed AMP to ADDR on line %d\n", pc->orig_line);
          pc->type = CT_ADDR;
+      }
+      if (pc->type == CT_CARET)
+      {
+         if (cpd.lang_flags & LANG_OC)
+         {
+            /* This is likely the start of a block literal */
+            handle_oc_block_literal(pc);
+         }
       }
    }
 
@@ -1465,6 +1471,7 @@ static bool is_oc_block(chunk_t *pc)
           ((pc->parent_type == CT_OC_BLOCK_TYPE) ||
            (pc->parent_type == CT_OC_BLOCK_EXPR) ||
            (pc->parent_type == CT_OC_BLOCK_ARG) ||
+           (pc->parent_type == CT_OC_BLOCK) ||
            (pc->type == CT_OC_BLOCK_CARET) ||
            (pc->next && pc->next->type == CT_OC_BLOCK_CARET) ||
            (pc->prev && pc->prev->type == CT_OC_BLOCK_CARET)));
@@ -2330,8 +2337,6 @@ static void fix_fcn_def_params(chunk_t *start)
 }
 
 
-//#define DEBUG_FIX_VAR_DEF
-
 /**
  * Skips to the start of the next statement.
  */
@@ -2362,7 +2367,7 @@ static chunk_t *fix_var_def(chunk_t *start)
    ChunkStack cs;
    int        idx, ref_idx;
 
-   LOG_FMT(LFVD, "%s: top[%d]", __func__, pc->orig_line);
+   LOG_FMT(LFVD, "%s: start[%d:%d]", __func__, pc->orig_line, pc->orig_col);
 
    /* Scan for words and types and stars oh my! */
    while ((pc != NULL) &&
@@ -4206,8 +4211,11 @@ static void handle_oc_class(chunk_t *pc)
       }
       else if (tmp->type == CT_COLON)
       {
-         tmp->type        = hit_scope ? CT_OC_COLON : CT_CLASS_COLON;
-         tmp->parent_type = CT_OC_CLASS;
+         tmp->type = hit_scope ? CT_OC_COLON : CT_CLASS_COLON;
+         if (tmp->type == CT_CLASS_COLON)
+         {
+            tmp->parent_type = CT_OC_CLASS;
+         }
       }
       else if (chunk_is_str(tmp, "-", 1) || chunk_is_str(tmp, "+", 1))
       {
@@ -4246,7 +4254,7 @@ static void handle_oc_class(chunk_t *pc)
  *
  * @param pc points to the '^'
  */
-static void handle_oc_block(chunk_t *pc)
+static void handle_oc_block_literal(chunk_t *pc)
 {
    chunk_t *tmp  = pc;
    chunk_t *prev = chunk_get_prev_ncnl(pc);
@@ -4257,110 +4265,210 @@ static void handle_oc_block(chunk_t *pc)
       return; /* let's be paranoid */
    }
 
-   chunk_t *tpo;  /* type paren open */
-   chunk_t *tpc;  /* type paren close */
-   chunk_t *nam;  /* name (if any) of '^' */
    chunk_t *apo;  /* arg paren open */
    chunk_t *apc;  /* arg paren close */
    chunk_t *bbo;  /* block brace open */
    chunk_t *bbc;  /* block brace close */
 
-   if (chunk_is_paren_open(prev))
+   /* block literal: '^ RTYPE ( ARGS ) { }'
+    * RTYPE and ARGS are optional
+    */
+   LOG_FMT(LOCBLK, "%s: block literal @ %d:%d\n", __func__, pc->orig_line, pc->orig_col);
+
+   apo = NULL;
+   bbo = NULL;
+
+   LOG_FMT(LOCBLK, "%s:  + scan", __func__);
+   for (tmp = next; tmp; tmp = chunk_get_next_ncnl(tmp))
+   {
+      LOG_FMT(LOCBLK, " %s", tmp->text());
+      if ((tmp->level < pc->level) || (tmp->type == CT_SEMICOLON))
+      {
+         LOG_FMT(LOCBLK, "[DONE]");
+         break;
+      }
+      if (tmp->level == pc->level)
+      {
+         if (chunk_is_paren_open(tmp))
+         {
+            apo = tmp;
+            LOG_FMT(LOCBLK, "[PAREN]");
+         }
+         if (tmp->type == CT_BRACE_OPEN)
+         {
+            LOG_FMT(LOCBLK, "[BRACE]");
+            bbo = tmp;
+            break;
+         }
+      }
+   }
+
+   /* make sure we have braces */
+   bbc = chunk_skip_to_match(bbo);
+   if (!bbo || !bbc)
+   {
+      LOG_FMT(LOCBLK, " -- no braces found\n");
+      return;
+   }
+   LOG_FMT(LOCBLK, "\n");
+
+   /* we are on a block literal for sure */
+   pc->type        = CT_OC_BLOCK_CARET;
+   pc->parent_type = CT_OC_BLOCK_EXPR;
+
+   /* handle the optional args */
+   chunk_t *lbp; /* last before paren - end of return type, if any */
+   if (apo)
+   {
+      apc = chunk_skip_to_match(apo);
+      if (chunk_is_paren_close(apc))
+      {
+         LOG_FMT(LOCBLK, " -- marking parens @ %d:%d and %d:%d\n",
+                 apo->orig_line, apo->orig_col, apc->orig_line, apc->orig_col);
+         flag_parens(apo, PCF_OC_ATYPE, CT_FPAREN_OPEN, CT_OC_BLOCK_EXPR, true);
+         fix_fcn_def_params(apo);
+      }
+      lbp = chunk_get_prev_ncnl(apo);
+   }
+   else
+   {
+      lbp = chunk_get_prev_ncnl(bbo);
+   }
+
+   /* mark the return type, if any */
+   while (lbp != pc)
+   {
+      LOG_FMT(LOCBLK, " -- lbp %s[%s]\n", lbp->text(), get_token_name(lbp->type));
+      make_type(lbp);
+      lbp->flags      |= PCF_OC_RTYPE;
+      lbp->parent_type = CT_OC_BLOCK_EXPR;
+      lbp = chunk_get_prev_ncnl(lbp);
+   }
+   /* mark the braces */
+   bbo->parent_type = CT_OC_BLOCK_EXPR;
+   bbc->parent_type = CT_OC_BLOCK_EXPR;
+}
+
+
+/**
+ * Mark Objective-C block types.
+ * The syntax and usage is exactly like C function pointers
+ * but instead of an asterisk they have a caret as pointer symbol.
+ *  typedef void (^workBlk_t)(void);
+ *  const char * (^workVar)(void);
+ *  -(void)Foo:(void(^)())blk { }
+ *
+ * This is triggered when the sequence '(' '^' is found.
+ *
+ * @param pc points to the '^'
+ */
+static void handle_oc_block_type(chunk_t *pc)
+{
+   if (!pc)
+   {
+      return;
+   }
+
+   if (pc->flags & PCF_IN_TYPEDEF)
+   {
+      LOG_FMT(LOCBLK, "%s: skip block type @ %d:%d -- in typedef\n",
+              __func__, pc->orig_line, pc->orig_col);
+      return;
+   }
+
+   chunk_t *tpo;  /* type paren open */
+   chunk_t *tpc;  /* type paren close */
+   chunk_t *nam;  /* name (if any) of '^' */
+   chunk_t *apo;  /* arg paren open */
+   chunk_t *apc;  /* arg paren close */
+
+   /* make sure we have '( ^' */
+   tpo = chunk_get_prev_ncnl(pc);
+   if (chunk_is_paren_open(tpo))
    {
       /* block type: 'RTYPE (^LABEL)(ARGS)'
        * LABEL is optional.
        */
-      tpo = prev;
-      tpc = chunk_skip_to_match(prev); /* type close paren (after '^') */
+      tpc = chunk_skip_to_match(tpo);  /* type close paren (after '^') */
       nam = chunk_get_prev_ncnl(tpc);  /* name (if any) or '^' */
       apo = chunk_get_next_ncnl(tpc);  /* arg open paren */
       apc = chunk_skip_to_match(apo);  /* arg close paren */
 
       if (chunk_is_paren_close(apc))
       {
-         tpo->parent_type = CT_OC_BLOCK_TYPE;
-         tpc->parent_type = CT_OC_BLOCK_TYPE;
-         apo->parent_type = CT_OC_BLOCK_ARG;
-         apc->parent_type = CT_OC_BLOCK_ARG;
-         LOG_FMT(LOCBLK, "%s: block type @ %d:%d (%s)\n", __func__, pc->orig_line, pc->orig_col, nam->text());
+         chunk_t   *aft = chunk_get_next_ncnl(apc);
+         c_token_t pt;
+
+         if (chunk_is_str(nam, "^", 1))
+         {
+            nam->type = CT_PTR_TYPE;
+            pt        = CT_FUNC_TYPE;
+         }
+         else if (chunk_is_token(aft, CT_ASSIGN) || chunk_is_token(aft, CT_SEMICOLON))
+         {
+            nam->type = CT_FUNC_VAR;
+            pt        = CT_FUNC_VAR;
+         }
+         else
+         {
+            nam->type = CT_FUNC_TYPE;
+            pt        = CT_FUNC_TYPE;
+         }
+         LOG_FMT(LOCBLK, "%s: block type @ %d:%d (%s)[%s]\n", __func__,
+                 pc->orig_line, pc->orig_col, nam->text(), get_token_name(nam->type));
+         pc->type         = CT_PTR_TYPE;
+         pc->parent_type  = pt; //CT_OC_BLOCK_TYPE;
+         tpo->type        = CT_TPAREN_OPEN;
+         tpo->parent_type = pt; //CT_OC_BLOCK_TYPE;
+         tpc->type        = CT_TPAREN_CLOSE;
+         tpc->parent_type = pt; //CT_OC_BLOCK_TYPE;
+         apo->type        = CT_FPAREN_OPEN;
+         apo->parent_type = CT_FUNC_PROTO;
+         apc->type        = CT_FPAREN_CLOSE;
+         apc->parent_type = CT_FUNC_PROTO;
          fix_fcn_def_params(apo);
-         mark_function_return_type(nam, chunk_get_prev_ncnl(prev), CT_OC_BLOCK_TYPE);
+         mark_function_return_type(nam, chunk_get_prev_ncnl(tpo), pt);
       }
    }
-   else
+}
+
+
+/**
+ * Process a type that is enclosed in parens in message decls.
+ * TODO: handle block types, which get special formatting
+ *
+ * @param pc points to the open paren
+ * @return the chunk after the type
+ */
+static chunk_t *handle_oc_md_type(chunk_t *paren_open, c_token_t ptype, UINT64 flags, bool& did_it)
+{
+   chunk_t *paren_close;
+
+   if (!chunk_is_paren_open(paren_open) ||
+       ((paren_close = chunk_skip_to_match(paren_open)) == NULL))
    {
-      /* block literal: '^ RTYPE ( ARGS ) { }'
-       * RTYPE and ARGS are optional
-       */
-      LOG_FMT(LOCBLK, "%s: block literal @ %d:%d\n", __func__, pc->orig_line, pc->orig_col);
-
-      apo = NULL;
-      bbo = NULL;
-
-      LOG_FMT(LOCBLK, "%s:  + scan", __func__);
-      for (tmp = next; tmp; tmp = chunk_get_next_ncnl(tmp))
-      {
-         LOG_FMT(LOCBLK, " %s", tmp->text());
-         if ((tmp->level < pc->level) || (tmp->type == CT_SEMICOLON))
-         {
-            LOG_FMT(LOCBLK, "[DONE]");
-            break;
-         }
-         if (tmp->level == pc->level)
-         {
-            if (chunk_is_paren_open(tmp))
-            {
-               apo = tmp;
-               LOG_FMT(LOCBLK, "[PAREN]");
-            }
-            if (tmp->type == CT_BRACE_OPEN)
-            {
-               LOG_FMT(LOCBLK, "[BRACE]");
-               bbo = tmp;
-               break;
-            }
-         }
-      }
-
-      /* make sure we have braces */
-      bbc = chunk_skip_to_match(bbo);
-      if (!bbo || !bbc)
-      {
-         LOG_FMT(LOCBLK, " -- no braces found\n");
-         return;
-      }
-      LOG_FMT(LOCBLK, "\n");
-
-      /* handle the optional args */
-      chunk_t *lbp; /* last before paren - end of return type, if any */
-      if (apo)
-      {
-         apc = chunk_skip_to_match(apo);
-         if (chunk_is_paren_close(apc))
-         {
-            LOG_FMT(LOCBLK, " -- marking parens @ %d:%d and %d:%d\n",
-                    apo->orig_line, apo->orig_col, apc->orig_line, apc->orig_col);
-            flag_parens(apo, 0, CT_PAREN_OPEN, CT_OC_BLOCK_ARG, true);
-            fix_fcn_def_params(apo);
-         }
-         lbp = chunk_get_prev_ncnl(apo);
-      }
-      else
-      {
-         lbp = chunk_get_prev_ncnl(bbo);
-      }
-
-      /* mark the return type, if any */
-      while (lbp != pc)
-      {
-         LOG_FMT(LOCBLK, " -- lbp %s[%s]\n", lbp->text(), get_token_name(lbp->type));
-         lbp->parent_type = CT_OC_RTYPE;
-         lbp = chunk_get_prev_ncnl(lbp);
-      }
-      /* mark the braces */
-      bbo->parent_type = CT_OC_BLOCK_EXPR;
-      bbc->parent_type = CT_OC_BLOCK_EXPR;
+      did_it = false;
+      return paren_open;
    }
+
+   did_it = true;
+
+   paren_open->parent_type  = ptype;
+   paren_open->flags       |= flags;
+   paren_close->parent_type = ptype;
+   paren_close->flags      |= flags;
+
+   for (chunk_t *cur = chunk_get_next_ncnl(paren_open);
+        cur != paren_close;
+        cur = chunk_get_next_ncnl(cur))
+   {
+      LOG_FMT(LOCMSGD, " <%s|%s>", cur->text(), get_token_name(cur->type));
+      cur->flags |= flags;
+      make_type(cur);
+   }
+
+   /* returning the chunk after the paren close */
+   return chunk_get_next_ncnl(paren_close);
 }
 
 
@@ -4373,8 +4481,13 @@ static void handle_oc_block(chunk_t *pc)
  * Decl:
  * -(void) foo ARGS {  }
  *
- * ARGS is ': (type) name [name]'
+ * LABEL : (ARGTYPE) ARGNAME
+ *
+ * ARGS is ': (ARGTYPE) ARGNAME [MOREARGS...]'
+ * MOREARGS is ' [ LABEL] : (ARGTYPE) ARGNAME '
  * -(void) foo: (int) arg: {  }
+ * -(void) foo: (int) arg: {  }
+ * -(void) insertObject:(id)anObject atIndex:(int)index
  */
 static void handle_oc_message_decl(chunk_t *pc)
 {
@@ -4382,16 +4495,21 @@ static void handle_oc_message_decl(chunk_t *pc)
    bool      in_paren  = false;
    int       paren_cnt = 0;
    int       arg_cnt   = 0;
-   c_token_t pt        = CT_OC_MSG_SPEC;
+   c_token_t pt;
+   bool      did_it;
 
    /* Figure out if this is a spec or decl */
    tmp = pc;
    while ((tmp = chunk_get_next(tmp)) != NULL)
    {
+      if (tmp->level < pc->level)
+      {
+         /* should not happen */
+         return;
+      }
       if ((tmp->type == CT_SEMICOLON) ||
           (tmp->type == CT_BRACE_OPEN))
       {
-         pt = (tmp->type == CT_SEMICOLON) ? CT_OC_MSG_SPEC : CT_OC_MSG_DECL;
          break;
       }
    }
@@ -4399,13 +4517,100 @@ static void handle_oc_message_decl(chunk_t *pc)
    {
       return;
    }
+   pt = (tmp->type == CT_SEMICOLON) ? CT_OC_MSG_SPEC : CT_OC_MSG_DECL;
+
    pc->type        = CT_OC_SCOPE;
    pc->parent_type = pt;
+
+   LOG_FMT(LOCMSGD, "%s: %s @ %d:%d -", __func__, get_token_name(pt), pc->orig_line, pc->orig_col);
+
+   /* format: -(TYPE) NAME [: (TYPE)NAME */
+
+   /* handle the return type */
+   tmp = handle_oc_md_type(chunk_get_next_ncnl(pc), pt, PCF_OC_RTYPE, did_it);
+   if (!did_it)
+   {
+      LOG_FMT(LOCMSGD, " -- missing type parens\n");
+      return;
+   }
+
+   /* expect the method name/label */
+   if (!chunk_is_token(tmp, CT_WORD))
+   {
+      LOG_FMT(LOCMSGD, " -- missing method name\n");
+      return;
+   }
+
+   chunk_t *label = tmp;
+   tmp->type = pt;
+   tmp->parent_type = pt;
+   pc = chunk_get_next_ncnl(tmp);
+
+   LOG_FMT(LOCMSGD, " [%s]%s", pc->text(), get_token_name(pc->type));
+
+   /* if we have a colon next, we have args */
+   if ((pc->type == CT_COLON) || (pc->type == CT_OC_COLON))
+   {
+      pc = label;
+
+      while (true)
+      {
+         /* skip optional label */
+         if (chunk_is_token(pc, CT_WORD) || chunk_is_token(pc, pt))
+         {
+            pc->parent_type = pt;
+            pc = chunk_get_next_ncnl(pc);
+         }
+         /* a colon must be next */
+         if (!chunk_is_str(pc, ":", 1))
+         {
+            break;
+         }
+         pc->type        = CT_OC_COLON;
+         pc->parent_type = pt;
+         pc = chunk_get_next_ncnl(pc);
+
+         /* next is the type in parens */
+         LOG_FMT(LOCMSGD, "  (%s)", pc->text());
+         tmp = handle_oc_md_type(pc, pt, PCF_OC_ATYPE, did_it);
+         if (!did_it)
+         {
+            LOG_FMT(LWARN, "%s: %d:%d expected type\n", __func__, pc->orig_line, pc->orig_col);
+            break;
+         }
+         pc = tmp;
+         /* we should now be on the arg name */
+         pc->flags |= PCF_VAR_DEF;
+         LOG_FMT(LOCMSGD, " arg[%s]", pc->text());
+         pc = chunk_get_next_ncnl(pc);
+      }
+   }
+
+   LOG_FMT(LOCMSGD, " end[%s]", pc->text());
+
+   if (chunk_is_token(pc, CT_BRACE_OPEN))
+   {
+      pc->parent_type = pt;
+      pc = chunk_skip_to_match(pc);
+      if (pc)
+      {
+         pc->parent_type = pt;
+      }
+   }
+   else if (chunk_is_token(pc, CT_SEMICOLON))
+   {
+      pc->parent_type = pt;
+   }
+
+   LOG_FMT(LOCMSGD, "\n");
+   return;
 
    /* Mark everything */
    tmp = pc;
    while ((tmp = chunk_get_next(tmp)) != NULL)
    {
+      LOG_FMT(LOCMSGD, " [%s]", tmp->text());
+
       if ((tmp->type == CT_SEMICOLON) ||
           (tmp->type == CT_BRACE_OPEN))
       {
@@ -4461,12 +4666,13 @@ static void handle_oc_message_decl(chunk_t *pc)
 
    if ((tmp != NULL) && (tmp->type == CT_BRACE_OPEN))
    {
-      tmp = chunk_get_next_type(tmp, CT_BRACE_CLOSE, tmp->level);
-      if (tmp != NULL)
+      tmp = chunk_skip_to_match(tmp);
+      if (tmp)
       {
          tmp->parent_type = pt;
       }
    }
+   LOG_FMT(LOCMSGD, "\n");
 }
 
 

@@ -98,6 +98,7 @@ enum log_sev_t
    LANNOT    = 84,    /* Java annotation */
    LOCBLK    = 85,    /* OC Block stuff */
    LFLPAREN  = 86,    /* Flag paren */
+   LOCMSGD   = 87,    /* OC Message declaration */
 };
 
 #endif   /* LOG_LEVELS_H_INCLUDED */

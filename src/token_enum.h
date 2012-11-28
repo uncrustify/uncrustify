@@ -228,11 +228,13 @@ typedef enum
    CT_OC_MSG_NAME,      /* ObjC: 'name' in  '[class func : param name: param];' (see also PCF_IN_OC_MSG) */
    CT_OC_MSG_SPEC,      /* ObjC: msg spec '-(void) func: (int) i;' */
    CT_OC_MSG_DECL,      /* ObjC: msg decl '-(void) func: (int) i { }' */
-   CT_OC_RTYPE,         /* ObjC: marks closing parens of the return type after scope */
+   CT_OC_RTYPE,         /* ObjC: marks parens of the return type after scope */
+   CT_OC_ATYPE,         /* ObjC: marks parens of the arg type after scope */
    CT_OC_COLON,         /* ObjC: the colon in a msg spec */
    CT_OC_DICT_COLON,    /* ObjC: colon in dictionary constant: "KEY: VALUE" */
    CT_OC_SEL,           /* ObjC: @selector */
    CT_OC_SEL_NAME,      /* ObjC: selector name */
+   CT_OC_BLOCK,         /* ObjC: block parent type. */
    CT_OC_BLOCK_ARG,     /* ObjC: block arguments parent type. */
    CT_OC_BLOCK_TYPE,    /* ObjC: block declaration parent type, e.g. mainly the '(^block_t)' in 'void (^block_t)(int arg);' */
    CT_OC_BLOCK_EXPR,    /* ObjC: block expression with arg: '^(int arg) { arg++; };' and without (called a block literal): '^{ ... };' */
