@@ -1880,6 +1880,7 @@ static void align_oc_msg_colon(chunk_t *so)
               (tmp->type == CT_OC_MSG_NAME)))
          {
             nas.Add(tmp);
+            tmp->flags |= PCF_DONT_INDENT;
          }
          did_line = true;
       }
