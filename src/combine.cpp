@@ -114,8 +114,9 @@ static chunk_t *flag_parens2(const char *func, int line,
       return(NULL);
    }
 
-   LOG_FMT(LFLPAREN, "flag_parens[%s:%d] @ %d:%d and %d:%d type=%s ptype=%s\n",
-           func, line, po->orig_line, po->orig_col, paren_close->orig_line, paren_close->orig_col,
+   LOG_FMT(LFLPAREN, "flag_parens[%s:%d] @ %d:%d [%s] and %d:%d [%s] type=%s ptype=%s\n",
+           func, line, po->orig_line, po->orig_col, po->text(),
+           paren_close->orig_line, paren_close->orig_col, paren_close->text(),
            get_token_name(opentype), get_token_name(parenttype));
 
    if (po != paren_close)
