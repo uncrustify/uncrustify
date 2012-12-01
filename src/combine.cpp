@@ -660,19 +660,22 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
          tmp = chunk_get_next_ncnl(tmp);
       }
 
-      tmp = flag_parens(tmp, 0, CT_FPAREN_OPEN, pc->type, false);
-      if (tmp != NULL)
+      if (chunk_is_paren_open(tmp))
       {
-         if (tmp->type == CT_BRACE_OPEN)
+         tmp = flag_parens(tmp, 0, CT_FPAREN_OPEN, pc->type, false);
+         if (tmp != NULL)
          {
-            if ((pc->flags & PCF_IN_CONST_ARGS) == 0)
+            if (tmp->type == CT_BRACE_OPEN)
             {
-               set_paren_parent(tmp, pc->type);
+               if ((pc->flags & PCF_IN_CONST_ARGS) == 0)
+               {
+                  set_paren_parent(tmp, pc->type);
+               }
             }
-         }
-         else if (chunk_is_semicolon(tmp) && (pc->type == CT_FUNC_PROTO))
-         {
-            tmp->parent_type = pc->type;
+            else if (chunk_is_semicolon(tmp) && (pc->type == CT_FUNC_PROTO))
+            {
+               tmp->parent_type = pc->type;
+            }
          }
       }
    }
