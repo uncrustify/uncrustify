@@ -3133,7 +3133,7 @@ static void mark_function(chunk_t *pc)
               get_token_name(pc->type),
               pc->str.c_str(), pc->orig_line, pc->orig_col);
 
-      tmp = flag_parens(next, PCF_IN_FCN_CALL, CT_FPAREN_OPEN, CT_NONE, false);
+      tmp = flag_parens(next, PCF_IN_FCN_CALL, CT_FPAREN_OPEN, CT_FUNC_CALL, false);
       if ((tmp != NULL) && (tmp->type == CT_BRACE_OPEN))
       {
          set_paren_parent(tmp, pc->type);
