@@ -4026,7 +4026,7 @@ static void mark_template_func(chunk_t *pc, chunk_t *pc_next)
              *   std::pair<int, double>(*it, double(*it) + 1.0));
              */
 
-            LOG_FMT(LTEMPFUNC, "%s: marking '%s' in line %d as a FUNC_CALL\n",
+            LOG_FMT(LTEMPFUNC, "%s: marking '%s' in line %d as a FUNC_CALL 2\n",
                     __func__, pc->str.c_str(), pc->orig_line);
             // its a function!!!
             pc->type = CT_FUNC_CALL;
