@@ -808,6 +808,7 @@ static void check_template(chunk_t *start)
       /* A template requires a word/type right before the open angle */
       if ((prev->type != CT_WORD) &&
           (prev->type != CT_TYPE) &&
+          (prev->type != CT_COMMA) &&
           (prev->type != CT_OPERATOR_VAL) &&
           (prev->parent_type != CT_OPERATOR))
       {
