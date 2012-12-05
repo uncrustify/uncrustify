@@ -606,6 +606,7 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
        (pc->type == CT_ANGLE_OPEN) ||
        (pc->type == CT_ANGLE_CLOSE) ||
        (pc->type == CT_RETURN) ||
+       (pc->type == CT_THROW) ||
        (pc->type == CT_GOTO) ||
        (pc->type == CT_CONTINUE) ||
        (pc->type == CT_PAREN_OPEN) ||

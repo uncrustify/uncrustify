@@ -375,6 +375,8 @@ void register_options(void)
                   "Add or remove space between 'defined' and '(' in '#if defined (FOO)'");
    unc_add_option("sp_throw_paren", UO_sp_throw_paren, AT_IARF,
                   "Add or remove space between 'throw' and '(' in 'throw (something)'");
+   unc_add_option("sp_after_throw", UO_sp_after_throw, AT_IARF,
+                  "Add or remove space between 'throw' and anything other than '(' as in '@throw [...];'");
    unc_add_option("sp_catch_paren", UO_sp_catch_paren, AT_IARF,
                   "Add or remove space between 'catch' and '(' in 'catch (something) { }'\n"
                   "If set to ignore, sp_before_sparen is used.");

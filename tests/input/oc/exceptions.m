@@ -10,6 +10,14 @@ int main( int argc, const char *argv[] ) {
 	@finally {
 		NSLog(@"Finally");
 	}
+    
+ @throw [NSException exceptionWithName:@"foo" reason:@"bar" userInfo:nil];
+
+NSException *exception = [NSException exceptionWithName: @"HotTeaException"
+                          reason: @"The tea is too hot"
+                          userInfo: nil];
+
+@throw exception;
 
     return 0;
 }

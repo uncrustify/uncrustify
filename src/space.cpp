@@ -792,10 +792,15 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
       return(cpd.settings[UO_sp_defined_paren].a);
    }
 
-   if ((first->type == CT_THROW) && (second->type == CT_PAREN_OPEN))
+   if (first->type == CT_THROW)
    {
-      log_rule("sp_throw_paren");
-      return(cpd.settings[UO_sp_throw_paren].a);
+      if (second->type == CT_PAREN_OPEN)
+      {
+         log_rule("sp_throw_paren");
+         return(cpd.settings[UO_sp_throw_paren].a);
+      }
+      log_rule("sp_after_throw");
+      return(cpd.settings[UO_sp_after_throw].a);
    }
 
    if ((first->type == CT_THIS) && (second->type == CT_PAREN_OPEN))

@@ -15,7 +15,7 @@ int main(int argc, const char *argv[])
       NSLog(@"Finally");
    }
 
-   @throw [NSException exceptionWithName: @"foo" reason: @"bar" userInfo: nil];
+   @throw[NSException exceptionWithName: @"foo" reason: @"bar" userInfo: nil];
 
    NSException *exception = [NSException exceptionWithName: @"HotTeaException"
                                                     reason: @"The tea is too hot"

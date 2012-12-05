@@ -25,6 +25,9 @@
 50021  sp_after_oc_at_sel_force.cfg                 oc/selector.m
 50022  sp_after_oc_at_sel_remove.cfg                oc/selector.m
 
+50025  sp_after_throw_force.cfg                     oc/exceptions.m
+50026  sp_after_throw_remove.cfg                    oc/exceptions.m
+
 50030  sort_imports.cfg                             oc/sort_import.m
 
 50040  objc_complex_method.cfg                      oc/complex_method.m

@@ -265,6 +265,7 @@ enum uncrustify_options
    UO_sp_attribute_paren,       // space between '__attribute__' and '('
    UO_sp_defined_paren,
    UO_sp_throw_paren,
+   UO_sp_after_throw,
    UO_sp_catch_paren,
    UO_sp_version_paren,
    UO_sp_scope_paren,
