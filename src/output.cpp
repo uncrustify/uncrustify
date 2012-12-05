@@ -1120,7 +1120,7 @@ static chunk_t *output_comment_cpp(chunk_t *first)
    /* CPP comments can't be grouped unless they are converted to C comments */
    if (!cpd.settings[UO_cmt_cpp_to_c].b)
    {
-      cmt.cont_text = (cpd.settings[UO_sp_cmt_cpp_start].a & AV_REMOVE) ? "//" : "// ";
+      cmt.cont_text = (cpd.settings[UO_sp_cmt_cpp_start].a == AV_REMOVE) ? "//" : "// ";
       LOG_CONTTEXT();
 
       if (cpd.settings[UO_sp_cmt_cpp_start].a == AV_IGNORE)
