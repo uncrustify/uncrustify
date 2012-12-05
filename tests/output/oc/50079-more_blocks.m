@@ -6,7 +6,7 @@ int (*fcnptr)(int);
 
 int d = i % 10;
 repeat(10, ^{ putc('0' + d);
-       });
+});
 
 
 void (^block)(void);
@@ -58,13 +58,13 @@ void AllLinesInFile(char *f, vstr_t block)
 
 // corner case: block literal in use with return type
 id longLines = [allLines collect:^BOOL (id item) {
-                    return [item length] > 20;
-                }];
+    return [item length] > 20;
+}];
 
 // corner case: block literal in use with return type
 id longLines = [allLines collect:^BOOL *(id item) {
-                    return [item length] > 20;
-                }];
+    return [item length] > 20;
+}];
 
 @end
 
