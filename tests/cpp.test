@@ -157,6 +157,8 @@
 
 30845 ben.cfg                          cpp/deref.cpp
 
+30850 sp_cmt_cpp_start_force.cfg       cpp/sp_cmt_cpp_start.cc
+
 30900 region-0.cfg                     cpp/region.cpp
 30901 region-1.cfg                     cpp/region.cpp
 30902 region-2.cfg                     cpp/region.cpp
