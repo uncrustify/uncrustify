@@ -119,9 +119,11 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
       log_rule("sp_pp_stringify");
       return(cpd.settings[UO_sp_pp_stringify].a);
    }
-   if ((second->type == CT_POUND) && chunk_is_str(first, "L", 1))
+   if ((second->type == CT_POUND) && (second->flags & PCF_IN_PREPROC) &&
+       (first->parent_type != CT_MACRO_FUNC))
    {
-      return(AV_IGNORE);
+      log_rule("sp_before_pp_stringify");
+      return(cpd.settings[UO_sp_before_pp_stringify].a);
    }
 
    if ((first->type == CT_SPACE) || (second->type == CT_SPACE))

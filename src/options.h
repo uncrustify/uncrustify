@@ -240,7 +240,8 @@ enum uncrustify_options
    UO_sp_arith,                 // space around + - / * etc
    UO_sp_bool,                  // space around || &&
    UO_sp_pp_concat,             // space around ##
-   UO_sp_pp_stringify,          // space around #
+   UO_sp_pp_stringify,          // space after #
+   UO_sp_before_pp_stringify,   // space before # in a #define x(y) L#y
    UO_sp_compare,               // space around < > ==, etc
    UO_sp_assign,                // space around =, +=, etc
    UO_sp_cpp_lambda_assign,     // space around the capture spec [=](...){...}

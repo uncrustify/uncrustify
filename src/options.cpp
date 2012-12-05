@@ -205,7 +205,9 @@ void register_options(void)
    unc_add_option("sp_pp_concat", UO_sp_pp_concat, AT_IARF,
                   "Add or remove space around preprocessor '##' concatenation operator. Default=Add");
    unc_add_option("sp_pp_stringify", UO_sp_pp_stringify, AT_IARF,
-                  "Add or remove space after preprocessor '#' stringify operator. Also affects the '#@' charizing operator. Default=Add");
+                  "Add or remove space after preprocessor '#' stringify operator. Also affects the '#@' charizing operator.");
+   unc_add_option("sp_before_pp_stringify", UO_sp_before_pp_stringify, AT_IARF,
+                  "Add or remove space before preprocessor '#' stringify operator as in '#define x(y) L#y'.");
    unc_add_option("sp_bool", UO_sp_bool, AT_IARF,
                   "Add or remove space around boolean operators '&&' and '||'");
    unc_add_option("sp_compare", UO_sp_compare, AT_IARF,
@@ -1838,7 +1840,6 @@ void set_option_defaults(void)
    cpd.settings[UO_align_left_shift].b     = true;
    cpd.settings[UO_indent_align_assign].b  = true;
    cpd.settings[UO_sp_pp_concat].a         = AV_ADD;
-   cpd.settings[UO_sp_pp_stringify].a      = AV_ADD;
    cpd.settings[UO_sp_angle_shift].a       = AV_ADD;
 }
 
