@@ -813,8 +813,17 @@ void indent_text(void)
 
          if (frm.paren_count != 0)
          {
-            /* We are inside ({ ... }) -- indent one tab from the paren */
-            frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent_tmp + indent_size;
+            if (cpd.settings[UO_indent_oc_block].b &&
+                (frm.pse[frm.pse_tos].pc->parent_type == CT_OC_BLOCK_EXPR))
+            {
+               frm.pse[frm.pse_tos].indent = 1 + (pc->level * indent_size);
+               indent_column_set(frm.pse[frm.pse_tos].indent - indent_size);
+            }
+            else
+            {
+               /* We are inside ({ ... }) -- indent one tab from the paren */
+               frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent_tmp + indent_size;
+            }
          }
          else
          {
@@ -1311,8 +1320,8 @@ void indent_text(void)
       {
          pc->column_indent = frm.pse[frm.pse_tos].indent_tab;
 
-         LOG_FMT(LINDENT2, "%s: %d] %d for %s\n",
-                 __func__, pc->orig_line, pc->column_indent, pc->str.c_str());
+         LOG_FMT(LINDENT2, "%s: %d] %d/%d for %s\n",
+                 __func__, pc->orig_line, pc->column_indent, indent_column, pc->str.c_str());
 
          /**
           * Check for special continuations.

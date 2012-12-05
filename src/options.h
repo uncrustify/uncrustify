@@ -173,6 +173,7 @@ enum uncrustify_options
    UO_indent_relative_single_line_comments, // indent single line ('//') comments after code
    UO_indent_preserve_sql,                  // preserve indent of EXEC SQL statement body
    UO_indent_align_assign,
+   UO_indent_oc_block,
 
    UO_indent_else_if,
    UO_indent_var_def_blk,        // indent a variable def block that appears at the top
