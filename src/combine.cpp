@@ -2136,6 +2136,10 @@ void combine_labels(void)
             {
                next->type = CT_D_ARRAY_COLON;
             }
+            else if ((cpd.lang_flags & LANG_JAVA) && (next->flags & PCF_IN_FOR))
+            {
+               next->type = CT_FOR_COLON;
+            }
             else if (next->flags & PCF_OC_BOXED)
             {
                next->type = CT_OC_DICT_COLON;

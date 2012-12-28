@@ -258,6 +258,7 @@ const char *token_names[] =
    "LAMBDA",
    "ASSERT",
    "ANNOTATION",
+   "FOR_COLON",
 };
 
 #endif /* TOKEN_NAMES_H_INCLUDED */
