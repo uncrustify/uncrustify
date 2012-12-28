@@ -6,3 +6,4 @@
 
 80000 ben.cfg                 java/assert.java
 80010 annotation.cfg          java/annotation1.java
+80020 java_foreach.cfg        java/foreach.java
