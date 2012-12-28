@@ -177,6 +177,17 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
       return(argval_t(cpd.settings[UO_sp_case_label].a | AV_ADD));
    }
 
+   if (first->type == CT_FOR_COLON)
+   {
+      log_rule("sp_after_for_colon");
+      return cpd.settings[UO_sp_after_for_colon].a;
+   }
+   if (second->type == CT_FOR_COLON)
+   {
+      log_rule("sp_before_for_colon");
+      return cpd.settings[UO_sp_before_for_colon].a;
+   }
+
    if ((first->type == CT_QUESTION) || (second->type == CT_QUESTION))
    {
       if (cpd.settings[UO_sp_cond_question].a != AV_IGNORE)

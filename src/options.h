@@ -353,6 +353,8 @@ enum uncrustify_options
    UO_sp_before_tr_emb_cmt,     // treatment of spaces before comments following code
    UO_sp_num_before_tr_emb_cmt, // number of spaces before comments following code
    UO_sp_annotation_paren,
+   UO_sp_after_for_colon,
+   UO_sp_before_for_colon,
 
    /*
     * Line splitting options (for long lines)
