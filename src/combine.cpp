@@ -497,10 +497,23 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
 
    if (pc->type == CT_EXTERN)
    {
-      tmp = chunk_get_next_type(next, CT_BRACE_OPEN, next->level);
-      if (tmp != NULL)
+      if (chunk_is_paren_open(next))
       {
-         set_paren_parent(tmp, CT_EXTERN);
+         tmp = flag_parens(next, 0, CT_NONE, CT_EXTERN, true);
+         if (tmp && (tmp->type == CT_BRACE_OPEN))
+         {
+            set_paren_parent(tmp, CT_EXTERN);
+         }
+      }
+      else
+      {
+         /* next likely is a string (see tokenize_cleanup.cpp) */
+         next->parent_type = CT_EXTERN;
+         tmp = chunk_get_next_ncnl(next);
+         if (tmp && (tmp->type == CT_BRACE_OPEN))
+         {
+            set_paren_parent(tmp, CT_EXTERN);
+         }
       }
    }
 
