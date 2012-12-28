@@ -355,6 +355,7 @@ enum uncrustify_options
    UO_sp_annotation_paren,
    UO_sp_after_for_colon,
    UO_sp_before_for_colon,
+   UO_sp_extern_paren,
 
    /*
     * Line splitting options (for long lines)

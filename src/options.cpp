@@ -499,6 +499,9 @@ void register_options(void)
    unc_add_option("sp_before_for_colon", UO_sp_before_for_colon, AT_IARF,
                   "Control the spacing before ':' in 'for (TYPE VAR : EXPR)' (Java)");
 
+   unc_add_option("sp_extern_paren", UO_sp_extern_paren, AT_IARF,
+                  "Control the spacing in 'extern (C)' (D)");
+
    unc_add_option("sp_cmt_cpp_start", UO_sp_cmt_cpp_start, AT_IARF,
                   "Control the space after the opening of a C++ comment '// A' vs '//A'");
    unc_add_option("sp_endif_cmt", UO_sp_endif_cmt, AT_IARF,

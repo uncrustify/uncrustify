@@ -1462,6 +1462,12 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
       return(cpd.settings[UO_sp_after_oc_property].a);
    }
 
+   if ((first->type == CT_EXTERN) && (second->type == CT_PAREN_OPEN))
+   {
+      log_rule("sp_extern_paren");
+      return cpd.settings[UO_sp_extern_paren].a;
+   }
+
    for (idx = 0; idx < (int)ARRAY_SIZE(no_space_table); idx++)
    {
       if (((no_space_table[idx].first == CT_UNKNOWN) ||
