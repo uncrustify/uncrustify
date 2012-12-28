@@ -3818,8 +3818,14 @@ static void handle_cpp_lambda(chunk_t *sq_o)
       return;
    }
 
-   /* Make sure a '{' or '->' is next */
+   /* Check if keyword 'mutable' is before '->' */
    br_o = chunk_get_next_ncnl(pa_c);
+   if (chunk_is_str(br_o, "mutable", 7))
+   {
+      br_o = chunk_get_next_ncnl(br_o);
+   }
+
+   /* Make sure a '{' or '->' is next */
    if (chunk_is_str(br_o, "->", 2))
    {
       ret = br_o;
