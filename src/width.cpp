@@ -79,14 +79,15 @@ struct token_pri
 
 static const token_pri pri_table[] =
 {
-   { CT_SEMICOLON, 1 },
-   { CT_COMMA,     2 },
-   { CT_BOOL,      3 },
-   { CT_COMPARE,   4 },
-   { CT_ARITH,     5 },
-   { CT_CARET,     6 },
-   { CT_ASSIGN,    7 },
-   { CT_STRING,    8 },
+   { CT_SEMICOLON,   1  },
+   { CT_COMMA,       2  },
+   { CT_BOOL,        3  },
+   { CT_COMPARE,     4  },
+   { CT_ARITH,       5  },
+   { CT_CARET,       6  },
+   { CT_ASSIGN,      7  },
+   { CT_STRING,      8  },
+   { CT_FOR_COLON,   9  },
    //{ CT_DC_MEMBER, 10 },
    //{ CT_MEMBER,    10 },
    { CT_QUESTION,    20 }, // allow break in ? : for ls_code_width
