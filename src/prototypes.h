@@ -134,7 +134,7 @@ void combine_labels(void);
 void mark_comments(void);
 void make_type(chunk_t *pc);
 
-void flag_series(chunk_t *start, chunk_t *end, UINT64 flags, chunk_nav_t nav = CNAV_ALL);
+void flag_series(chunk_t *start, chunk_t *end, UINT64 set_flags, UINT64 clr_flags=0, chunk_nav_t nav = CNAV_ALL);
 
 chunk_t *skip_template_next(chunk_t *ang_open);
 chunk_t *skip_template_prev(chunk_t *ang_close);

@@ -75,16 +75,17 @@ void make_type(chunk_t *pc)
 }
 
 
-void flag_series(chunk_t *start, chunk_t *end, UINT64 flags, chunk_nav_t nav)
+void flag_series(chunk_t *start, chunk_t *end, UINT64 set_flags, UINT64 clr_flags, chunk_nav_t nav)
 {
-   while ((start != NULL) && (start != end))
+   while (start && (start != end))
    {
-      start->flags |= flags;
-      start         = chunk_get_next(start, nav);
+      start->flags = (start->flags & ~clr_flags) | set_flags;
+
+      start = chunk_get_next(start, nav);
    }
    if (end)
    {
-      end->flags |= flags;
+      end->flags = (end->flags & ~clr_flags) | set_flags;
    }
 }
 
