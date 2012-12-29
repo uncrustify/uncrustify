@@ -1886,6 +1886,38 @@ static void align_oc_msg_colon(chunk_t *so)
       }
       pc = chunk_get_next(pc, CNAV_PREPROC);
    }
+
+   if (!cpd.settings[UO_align_oc_msg_colon_first].b)
+   {
+      /* find the size of all the args and drop the first if it is short */
+      int idx, len;
+      int tlen, mlen = 0, flen = 0;
+
+      /* find the length of all the args */
+      for (idx = 0, len = nas.m_aligned.Len(); idx < len; idx++)
+      {
+         tmp = nas.m_aligned.GetChunk(idx);
+
+         tlen = tmp->str.size();
+         if (idx == 0)
+         {
+            flen = tlen;
+         }
+         if (tlen > mlen)
+         {
+            mlen = tlen;
+         }
+      }
+
+      if (flen < mlen)
+      {
+         nas.m_aligned.Pop_Front();
+         cas.m_aligned.Pop_Front();
+      }
+
+      /* FIXME: take into account the indent_oc_msg_colon value */
+   }
+
    nas.End();
    cas.End();
 }

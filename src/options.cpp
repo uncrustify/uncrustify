@@ -1105,6 +1105,8 @@ void register_options(void)
 
    unc_add_option("align_oc_msg_colon_span", UO_align_oc_msg_colon_span, AT_NUM,
                   "Span for aligning parameters in an Obj-C message call on the ':' (0=don't align)", 0, 5000);
+   unc_add_option("align_oc_msg_colon_first", UO_align_oc_msg_colon_first, AT_BOOL,
+                  "If true, always align with the first parameter, even if it is too short.");
    unc_add_option("align_oc_decl_colon", UO_align_oc_decl_colon, AT_BOOL,
                   "Aligning parameters in an Obj-C '+' or '-' declaration on the ':'");
 
