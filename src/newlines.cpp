@@ -1805,6 +1805,10 @@ static bool one_liner_nl_ok(chunk_t *pc)
 }
 
 
+/**
+ * Clears the PCF_ONE_LINER flag on the current line.
+ * Done right before inserting a newline.
+ */
 static void undo_one_liner(chunk_t *pc)
 {
    chunk_t *tmp;
