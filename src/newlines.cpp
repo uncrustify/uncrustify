@@ -140,9 +140,12 @@ static void setup_newline_add(chunk_t *prev, chunk_t *nl, chunk_t *next)
 
    undo_one_liner(prev);
 
-   nl->orig_line = prev->orig_line;
-   nl->nl_count  = 1;
-   nl->flags     = (prev->flags & PCF_COPY_FLAGS) & ~PCF_IN_PREPROC;
+   nl->orig_line   = prev->orig_line;
+   nl->level       = prev->level;
+   nl->brace_level = prev->brace_level;
+   nl->pp_level    = prev->pp_level;
+   nl->nl_count    = 1;
+   nl->flags       = (prev->flags & PCF_COPY_FLAGS) & ~PCF_IN_PREPROC;
    if ((prev->flags & PCF_IN_PREPROC) && (next->flags & PCF_IN_PREPROC))
    {
       nl->flags |= PCF_IN_PREPROC;
