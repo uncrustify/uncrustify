@@ -56,3 +56,5 @@
 
 50095  obj-c.cfg                                    oc/box.m
 50100  bug_340.cfg                                  oc/bug_340.m
+
+50110  obj-c.cfg                                    oc/msg_align.m
