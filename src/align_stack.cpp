@@ -404,8 +404,20 @@ void AlignStack::Flush()
    {
       ce = m_aligned.Get(idx);
       pc = ce->m_pc;
+
+      tmp_col = m_max_col - pc->align.col_adj;
       if (idx == 0)
       {
+         if (m_skip_first && (pc->column != tmp_col))
+         {
+            LOG_FMT(LAS, "%s: %d:%d dropping first item due to skip_first\n", __func__,
+                    pc->orig_line, pc->orig_col);
+            m_skip_first = false;
+            m_aligned.Pop_Front();
+            Flush();
+            m_skip_first = true;
+            return;
+         }
          pc->flags |= PCF_ALIGN_START;
 
          pc->align.right_align = m_right_align;
@@ -416,7 +428,6 @@ void AlignStack::Flush()
       pc->align.next = m_aligned.GetChunk(idx + 1);
 
       /* Indent the token, taking col_adj into account */
-      tmp_col = m_max_col - pc->align.col_adj;
       LOG_FMT(LAS, "%s: line %d: '%s' to col %d (adj=%d)\n", __func__,
               pc->orig_line, pc->str.c_str(), tmp_col, pc->align.col_adj);
       align_to_column(pc, tmp_col);
