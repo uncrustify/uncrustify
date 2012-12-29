@@ -651,6 +651,8 @@ void register_options(void)
                   "If FALSE or the '=' is followed by a newline, the next line is indent one tab.");
    unc_add_option("indent_oc_block", UO_indent_oc_block, AT_BOOL,
                   "Indent OC blocks at brace level instead of usual rules.");
+   unc_add_option("indent_oc_msg_colon", UO_indent_oc_msg_colon, AT_NUM,
+                  "Minimum indent for subsequent parameters", 0, 5000);
 
    unc_begin_group(UG_newline, "Newline adding and removing options");
    unc_add_option("nl_collapse_empty_body", UO_nl_collapse_empty_body, AT_BOOL,

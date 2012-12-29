@@ -1887,37 +1887,50 @@ static void align_oc_msg_colon(chunk_t *so)
       pc = chunk_get_next(pc, CNAV_PREPROC);
    }
 
-   if (!cpd.settings[UO_align_oc_msg_colon_first].b)
+   nas.m_skip_first = !cpd.settings[UO_align_oc_msg_colon_first].b;
+   cas.m_skip_first = !cpd.settings[UO_align_oc_msg_colon_first].b;
+
+   /* find the longest args that isn't the first one */
+   int     idx, len;
+   int     tlen, mlen = 0;
+   chunk_t *longest = NULL;
+
+   for (idx = 0, len = nas.m_aligned.Len(); idx < len; idx++)
    {
-      /* find the size of all the args and drop the first if it is short */
-      int idx, len;
-      int tlen, mlen = 0, flen = 0;
+      tmp = nas.m_aligned.GetChunk(idx);
 
-      /* find the length of all the args */
-      for (idx = 0, len = nas.m_aligned.Len(); idx < len; idx++)
+      tlen = tmp->str.size();
+      if (tlen > mlen)
       {
-         tmp = nas.m_aligned.GetChunk(idx);
-
-         tlen = tmp->str.size();
-         if (idx == 0)
+         mlen = tlen;
+         if (idx != 0)
          {
-            flen = tlen;
-         }
-         if (tlen > mlen)
-         {
-            mlen = tlen;
+            longest = tmp;
          }
       }
-
-      if (flen < mlen)
-      {
-         nas.m_aligned.Pop_Front();
-         cas.m_aligned.Pop_Front();
-      }
-
-      /* FIXME: take into account the indent_oc_msg_colon value */
    }
 
+   /* add spaces before the longest arg */
+   len = cpd.settings[UO_indent_oc_msg_colon].n;
+   if (longest && (len > 0))
+   {
+      chunk_t chunk;
+
+      chunk.type        = CT_SPACE;
+      chunk.orig_line   = longest->orig_line;
+      chunk.parent_type = CT_NONE;
+      chunk.level       = longest->level;
+      chunk.brace_level = longest->brace_level;
+      chunk.flags       = longest->flags & PCF_COPY_FLAGS;
+
+      /* start at one since we already indent for the '[' */
+      for (idx = 1; idx < len; idx++)
+      {
+         chunk.str.append(' ');
+      }
+
+      chunk_add_before(&chunk, longest);
+   }
    nas.End();
    cas.End();
 }
