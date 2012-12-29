@@ -552,6 +552,9 @@ enum uncrustify_options
    UO_nl_create_for_one_liner,
    UO_nl_create_while_one_liner,
 
+   UO_nl_oc_msg_args,
+   UO_nl_oc_msg_leave_one_liner,
+
    UO_pos_arith,                  // position of trailing/leading arithmetic ops
    UO_pos_assign,                 // position of trailing/leading =
    UO_pos_bool,                   // position of trailing/leading &&/||

@@ -668,6 +668,8 @@ void register_options(void)
                   "Don't split one-line function definitions - 'int foo() { return 0; }'");
    unc_add_option("nl_if_leave_one_liners", UO_nl_if_leave_one_liners, AT_BOOL,
                   "Don't split one-line if/else statements - 'if(a) b++;'");
+   unc_add_option("nl_oc_msg_leave_one_liner", UO_nl_oc_msg_leave_one_liner, AT_BOOL,
+                  "Don't split one-line OC messages");
 
    unc_add_option("nl_start_of_file", UO_nl_start_of_file, AT_IARF,
                   "Add or remove newlines at the start of the file");
@@ -816,6 +818,9 @@ void register_options(void)
                   "Add or remove newline between '()' in a function declaration.");
    unc_add_option("nl_func_def_empty", UO_nl_func_def_empty, AT_IARF,
                   "Add or remove newline between '()' in a function definition.");
+   unc_add_option("nl_oc_msg_args", UO_nl_oc_msg_args, AT_BOOL,
+                  "Whether to put each OC message parameter on a separate line\n"
+                  "See nl_oc_msg_leave_one_liner");
    unc_add_option("nl_fdef_brace", UO_nl_fdef_brace, AT_IARF,
                   "Add or remove newline between function signature and '{'");
    unc_add_option("nl_return_expr", UO_nl_return_expr, AT_IARF,

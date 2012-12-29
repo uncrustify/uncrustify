@@ -1677,6 +1677,31 @@ static void newline_func_def(chunk_t *start)
 
 
 /**
+ * Formats a message, adding newlines before the item before the colons.
+ *
+ * Start points to the open '[' in:
+ * [myObject doFooWith:arg1 name:arg2  // some lines with >1 arg
+ *            error:arg3];
+ */
+static void newline_oc_msg(chunk_t *start)
+{
+   chunk_t *pc;
+
+   for (pc = chunk_get_next_ncnl(start); pc; pc = chunk_get_next_ncnl(pc))
+   {
+      if (pc->level <= start->level)
+      {
+         break;
+      }
+      if (pc->type == CT_OC_MSG_NAME)
+      {
+         newline_add_before(pc);
+      }
+   }
+}
+
+
+/**
  * Checks to see if it is OK to add a newline around the chunk.
  * Don't want to break one-liners...
  */
@@ -1757,6 +1782,13 @@ static bool one_liner_nl_ok(chunk_t *pc)
           (pc->parent_type == CT_OC_MSG_DECL))
       {
          LOG_FMT(LNL1LINE, "false (method def)\n");
+         return(false);
+      }
+
+      if (cpd.settings[UO_nl_oc_msg_leave_one_liner].b &&
+          (pc->flags & PCF_IN_OC_MSG))
+      {
+         LOG_FMT(LNL1LINE, "false (message)\n");
          return(false);
       }
 
@@ -2168,6 +2200,13 @@ void newlines_cleanup_braces(bool first)
             {
                newline_iarf(pc, AV_ADD);
             }
+         }
+      }
+      else if ((pc->type == CT_SQUARE_OPEN) && (pc->parent_type == CT_OC_MSG))
+      {
+         if (cpd.settings[UO_nl_oc_msg_args].b)
+         {
+            newline_oc_msg(pc);
          }
       }
       else if (pc->type == CT_STRUCT)
