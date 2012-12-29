@@ -2254,13 +2254,13 @@ static void mark_variable_stack(ChunkStack& cs, log_sev_t sev)
    int     word_cnt = 0;
 
    /* throw out the last word and mark the rest */
-   var_name = cs.Pop();
+   var_name = cs.Pop_Back();
    if (var_name != NULL)
    {
       LOG_FMT(LFCNP, "%s: parameter on line %d :",
               __func__, var_name->orig_line);
 
-      while ((word_type = cs.Pop()) != NULL)
+      while ((word_type = cs.Pop_Back()) != NULL)
       {
          if ((word_type->type == CT_WORD) || (word_type->type == CT_TYPE))
          {
@@ -2329,21 +2329,21 @@ static void fix_fcn_def_params(chunk_t *start)
       if (chunk_is_star(pc))
       {
          pc->type = CT_PTR_TYPE;
-         cs.Push(pc);
+         cs.Push_Back(pc);
       }
       else if ((pc->type == CT_AMP) ||
                ((cpd.lang_flags & LANG_CPP) && chunk_is_str(pc, "&&", 2)))
       {
          pc->type = CT_BYREF;
-         cs.Push(pc);
+         cs.Push_Back(pc);
       }
       else if (pc->type == CT_TYPE_WRAP)
       {
-         cs.Push(pc);
+         cs.Push_Back(pc);
       }
       else if ((pc->type == CT_WORD) || (pc->type == CT_TYPE))
       {
-         cs.Push(pc);
+         cs.Push_Back(pc);
       }
       else if ((pc->type == CT_COMMA) || (pc->type == CT_ASSIGN))
       {
@@ -2402,7 +2402,7 @@ static chunk_t *fix_var_def(chunk_t *start)
            chunk_is_star(pc)))
    {
       LOG_FMT(LFVD, " %s[%s]", pc->str.c_str(), get_token_name(pc->type));
-      cs.Push(pc);
+      cs.Push_Back(pc);
       pc = chunk_get_next_ncnl(pc);
 
       /* Skip templates and attributes */
@@ -3447,7 +3447,7 @@ static void mark_class_ctor(chunk_t *start)
    }
 
    /* Add the class name */
-   cs.Push(pclass);
+   cs.Push_Back(pclass);
 
    LOG_FMT(LFTOR, "%s: Called on %s on line %d (next='%s')\n",
            __func__, pclass->str.c_str(), pclass->orig_line, pc->str.c_str());
@@ -3918,7 +3918,7 @@ static chunk_t *get_d_template_types(ChunkStack& cs, chunk_t *open_paren)
          if (maybe_type)
          {
             make_type(tmp);
-            cs.Push(tmp);
+            cs.Push_Back(tmp);
          }
          maybe_type = false;
       }

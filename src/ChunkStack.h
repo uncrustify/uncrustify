@@ -43,9 +43,9 @@ public:
 
    void Set(const ChunkStack& cs);
 
-   void Push(chunk_t *pc)
+   void Push_Back(chunk_t *pc)
    {
-      Push(pc, ++m_seqnum);
+      Push_Back(pc, ++m_seqnum);
    }
 
    bool Empty() const
@@ -62,8 +62,8 @@ public:
    const Entry *Get(int idx) const;
    chunk_t *GetChunk(int idx) const;
 
-   chunk_t *Pop();
-   void Push(chunk_t *pc, int seqnum);
+   chunk_t *Pop_Back();
+   void Push_Back(chunk_t *pc, int seqnum);
 
    void Reset()
    {

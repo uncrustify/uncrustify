@@ -129,7 +129,7 @@ static void align_stack(ChunkStack& cs, int col, bool align_single, log_sev_t se
    if ((cs.Len() > 1) || (align_single && (cs.Len() == 1)))
    {
       LOG_FMT(sev, "%s: max_col=%d\n", __func__, col);
-      while ((pc = cs.Pop()) != NULL)
+      while ((pc = cs.Pop_Back()) != NULL)
       {
          align_to_column(pc, col);
          pc->flags |= PCF_WAS_ALIGNED;
@@ -189,7 +189,7 @@ static void align_add(ChunkStack& cs, chunk_t *pc, int& max_col, int min_pad, bo
       max_col = 0;
    }
 
-   cs.Push(pc);
+   cs.Push_Back(pc);
    if (min_col > max_col)
    {
       max_col = min_col;
@@ -1229,7 +1229,7 @@ chunk_t *align_nl_cont(chunk_t *start)
    }
 
    /* NL_CONT is always the last thing on a line */
-   while ((tmp = cs.Pop()) != NULL)
+   while ((tmp = cs.Pop_Back()) != NULL)
    {
       tmp->flags |= PCF_WAS_ALIGNED;
       tmp->column = max_col;

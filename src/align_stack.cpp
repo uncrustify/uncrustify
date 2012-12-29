@@ -257,7 +257,7 @@ void AlignStack::Add(chunk_t *start, int seqnum)
       ali->align.col_adj = col_adj;
       ali->align.ref     = ref;
       ali->align.start   = start;
-      m_aligned.Push(ali, seqnum);
+      m_aligned.Push_Back(ali, seqnum);
       m_last_added = 1;
 
       LOG_FMT(LAS, "Add-[%s]: line %d, col %d, adj %d : ref=[%s] endcol=%d\n",
@@ -295,7 +295,7 @@ void AlignStack::Add(chunk_t *start, int seqnum)
    else
    {
       /* The threshold check failed, so add it to the skipped list */
-      m_skipped.Push(start, seqnum);
+      m_skipped.Push_Back(start, seqnum);
       m_last_added = 2;
 
       LOG_FMT(LAS, "Add-skipped [%d/%d/%d]: line %d, col %d <= %d + %d\n",

@@ -52,7 +52,7 @@ chunk_t *ChunkStack::GetChunk(int idx) const
 }
 
 
-chunk_t *ChunkStack::Pop()
+chunk_t *ChunkStack::Pop_Back()
 {
    chunk_t *pc = NULL;
 
@@ -65,7 +65,7 @@ chunk_t *ChunkStack::Pop()
 }
 
 
-void ChunkStack::Push(chunk_t *pc, int seqnum)
+void ChunkStack::Push_Back(chunk_t *pc, int seqnum)
 {
    m_cse.push_back(Entry(seqnum, pc));
    if (m_seqnum < seqnum)
