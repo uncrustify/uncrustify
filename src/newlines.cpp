@@ -1686,6 +1686,36 @@ static void newline_func_def(chunk_t *start)
 static void newline_oc_msg(chunk_t *start)
 {
    chunk_t *pc;
+   chunk_t *sq_c;
+   bool    one_liner = true;
+
+   sq_c = chunk_skip_to_match(start);
+   if (!sq_c)
+   {
+      return;
+   }
+
+   /* mark one-liner */
+   for (pc = chunk_get_next(start); pc && (pc != sq_c); pc = chunk_get_next(pc))
+   {
+      if (pc->level <= start->level)
+      {
+         break;
+      }
+      if (chunk_is_newline(pc))
+      {
+         one_liner = false;
+      }
+   }
+
+   /* we don't use the 1-liner flag, but set it anyway */
+   UINT64 flags = one_liner ? PCF_ONE_LINER : 0;
+   flag_series(start, sq_c, flags, flags ^ PCF_ONE_LINER);
+
+   if (cpd.settings[UO_nl_oc_msg_leave_one_liner].b && one_liner)
+   {
+      return;
+   }
 
    for (pc = chunk_get_next_ncnl(start); pc; pc = chunk_get_next_ncnl(pc))
    {
