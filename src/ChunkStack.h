@@ -65,6 +65,8 @@ public:
    chunk_t *Pop_Back();
    void Push_Back(chunk_t *pc, int seqnum);
 
+   chunk_t *Pop_Front();
+
    void Reset()
    {
       m_cse.clear();

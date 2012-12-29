@@ -52,6 +52,19 @@ chunk_t *ChunkStack::GetChunk(int idx) const
 }
 
 
+chunk_t *ChunkStack::Pop_Front()
+{
+   chunk_t *pc = NULL;
+
+   if (m_cse.size() > 0)
+   {
+      pc = m_cse[0].m_pc;
+      m_cse.pop_front();
+   }
+   return(pc);
+}
+
+
 chunk_t *ChunkStack::Pop_Back()
 {
    chunk_t *pc = NULL;
