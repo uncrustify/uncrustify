@@ -857,6 +857,16 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       }
    }
 
+   if (pc->type == CT_OC_PROPERTY)
+   {
+      tmp = chunk_get_next_ncnl(pc);
+      if (chunk_is_paren_open(tmp))
+      {
+         tmp = chunk_get_next_ncnl(chunk_skip_to_match(tmp));
+      }
+      fix_var_def(tmp);
+   }
+
    /**
     * Change the paren pair after a function/macrofunc.
     * CT_PAREN_OPEN => CT_FPAREN_OPEN
