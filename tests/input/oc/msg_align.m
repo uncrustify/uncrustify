@@ -18,3 +18,19 @@ BOOL immediatlyReady = [self ensureResource:mutableResources[0]
 [myObject doithereguysA:argA
  reallylongargname:argB another:argC];
 
+ int foo()
+{
+[UIView transitionWithView:self.window
+                      duration:0.3
+                       options:UIViewAnimationOptionTransitionCrossDissolve
+                    animations:^{
+                        BOOL oldState = [UIView areAnimationsEnabled];
+                        [UIView setAnimationsEnabled:NO];
+                        self.window.rootViewController = self.viewController;
+                        [UIView setAnimationsEnabled:oldState];
+                    }
+                    completion:^(BOOL finished) {
+
+BOOL foo;
+                    }];
+}
