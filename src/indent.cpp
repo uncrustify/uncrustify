@@ -399,7 +399,7 @@ static chunk_t *oc_msg_block_indent(chunk_t *pc)
 
    if (chunk_is_paren_close(tmp))
    {
-      tmp = chunk_get_prev_nc(chunk_skip_to_match(tmp));
+      tmp = chunk_get_prev_nc(chunk_skip_to_match_rev(tmp));
    }
    if (!tmp || (tmp->type != CT_OC_BLOCK_CARET))
    {

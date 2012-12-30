@@ -79,36 +79,38 @@ chunk_t *chunk_get_prev_nvb(chunk_t *cur, chunk_nav_t nav = CNAV_ALL);
 static_inline
 chunk_t *chunk_skip_to_match(chunk_t *cur, chunk_nav_t nav = CNAV_ALL)
 {
-   if (cur != NULL)
+   if (cur &&
+       ((cur->type == CT_PAREN_OPEN) ||
+        (cur->type == CT_SPAREN_OPEN) ||
+        (cur->type == CT_FPAREN_OPEN) ||
+        (cur->type == CT_TPAREN_OPEN) ||
+        (cur->type == CT_BRACE_OPEN) ||
+        (cur->type == CT_VBRACE_OPEN) ||
+        (cur->type == CT_ANGLE_OPEN) ||
+        (cur->type == CT_SQUARE_OPEN)))
    {
-      if ((cur->type == CT_PAREN_OPEN) ||
-          (cur->type == CT_SPAREN_OPEN) ||
-          (cur->type == CT_FPAREN_OPEN) ||
-          (cur->type == CT_TPAREN_OPEN) ||
-          (cur->type == CT_BRACE_OPEN) ||
-          (cur->type == CT_VBRACE_OPEN) ||
-          (cur->type == CT_ANGLE_OPEN) ||
-          (cur->type == CT_SQUARE_OPEN))
-      {
-         return(chunk_get_next_type(cur, (c_token_t)(cur->type + 1), cur->level, nav));
-      }
-      else if ((cur->type == CT_PAREN_CLOSE) ||
-               (cur->type == CT_SPAREN_CLOSE) ||
-               (cur->type == CT_FPAREN_CLOSE) ||
-               (cur->type == CT_TPAREN_CLOSE) ||
-               (cur->type == CT_BRACE_CLOSE) ||
-               (cur->type == CT_VBRACE_CLOSE) ||
-               (cur->type == CT_ANGLE_CLOSE) ||
-               (cur->type == CT_SQUARE_CLOSE))
-      {
-         return(chunk_get_prev_type(cur, (c_token_t)(cur->type - 1), cur->level, nav));
-      }
-      else
-      {
-         cur = NULL;
-      }
+      return chunk_get_next_type(cur, (c_token_t)(cur->type + 1), cur->level, nav);
    }
-   return(cur);
+   return cur;
+}
+
+
+static_inline
+chunk_t *chunk_skip_to_match_rev(chunk_t *cur, chunk_nav_t nav = CNAV_ALL)
+{
+   if (cur &&
+       ((cur->type == CT_PAREN_CLOSE) ||
+        (cur->type == CT_SPAREN_CLOSE) ||
+        (cur->type == CT_FPAREN_CLOSE) ||
+        (cur->type == CT_TPAREN_CLOSE) ||
+        (cur->type == CT_BRACE_CLOSE) ||
+        (cur->type == CT_VBRACE_CLOSE) ||
+        (cur->type == CT_ANGLE_CLOSE) ||
+        (cur->type == CT_SQUARE_CLOSE)))
+   {
+      return chunk_get_prev_type(cur, (c_token_t)(cur->type - 1), cur->level, nav);
+   }
+   return cur;
 }
 
 

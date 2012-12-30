@@ -1965,7 +1965,7 @@ static void fix_typedef(chunk_t *start)
       the_type = chunk_get_prev_ncnl(last_op, CNAV_PREPROC);
       if (chunk_is_paren_close(the_type))
       {
-         open_paren = chunk_skip_to_match(the_type);
+         open_paren = chunk_skip_to_match_rev(the_type);
          mark_function_type(the_type);
          the_type = chunk_get_prev_ncnl(the_type, CNAV_PREPROC);
       }
