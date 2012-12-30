@@ -230,6 +230,31 @@ void quick_align_again(void)
 }
 
 
+void quick_indent_again(void)
+{
+   chunk_t *pc;
+   chunk_t *tmp;
+
+   for (pc = chunk_get_head(); pc; pc = chunk_get_next(pc))
+   {
+      if (pc->indent.ref)
+      {
+         tmp = chunk_get_prev(pc);
+         if (chunk_is_newline(tmp))
+         {
+            int col = pc->indent.ref->column + pc->indent.delta;
+
+            indent_to_column(pc, col);
+            LOG_FMT(LINDENTAG, "%s: [%d] indent [%s] to %d based on [%s] @ %d:%d\n",
+                    __func__, pc->orig_line, pc->text(), col,
+                    pc->indent.ref->text(),
+                    pc->indent.ref->orig_line, pc->indent.ref->column);
+         }
+      }
+   }
+}
+
+
 void align_all(void)
 {
    if (cpd.settings[UO_align_typedef_span].n > 0)

@@ -57,25 +57,39 @@ enum CharEncoding
 
 struct chunk_t;
 
+
+/**
+ * Sort of like the aligning stuff, but the token indent is relative to the
+ * indent of another chunk. This is needed, as that chunk may be aligned and
+ * so the indent cannot be determined in the indent code.
+ */
+struct indent_ptr_t
+{
+   chunk_t *ref;
+   int     delta;
+};
+
+
 /**
  * Structure for counting nested level
  */
 struct paren_stack_entry
 {
-   c_token_t type;         /**< the type that opened the entry */
-   int       level;        /**< Level of opening type */
-   int       open_line;    /**< line that open symbol is on */
-   chunk_t   *pc;          /**< Chunk that opened the level */
-   int       brace_indent; /**< indent for braces - may not relate to indent */
-   int       indent;       /**< indent level (depends on use) */
-   int       indent_tmp;   /**< temporary indent level (depends on use) */
-   int       indent_tab;   /**< the 'tab' indent (always <= real column) */
-   bool      indent_cont;  /**< indent_continue was applied */
-   int       ref;
-   c_token_t parent;       /**< if, for, function, etc */
-   brstage_e stage;
-   bool      in_preproc;   /**< whether this was created in a preprocessor */
-   bool      non_vardef;   /**< Hit a non-vardef line */
+   c_token_t    type;         /**< the type that opened the entry */
+   int          level;        /**< Level of opening type */
+   int          open_line;    /**< line that open symbol is on */
+   chunk_t      *pc;          /**< Chunk that opened the level */
+   int          brace_indent; /**< indent for braces - may not relate to indent */
+   int          indent;       /**< indent level (depends on use) */
+   int          indent_tmp;   /**< temporary indent level (depends on use) */
+   int          indent_tab;   /**< the 'tab' indent (always <= real column) */
+   bool         indent_cont;  /**< indent_continue was applied */
+   int          ref;
+   c_token_t    parent;       /**< if, for, function, etc */
+   brstage_e    stage;
+   bool         in_preproc;   /**< whether this was created in a preprocessor */
+   bool         non_vardef;   /**< Hit a non-vardef line */
+   indent_ptr_t ip;
 };
 
 /* TODO: put this on a linked list */
@@ -208,6 +222,7 @@ struct align_ptr_t
    chunk_t *start;
 };
 
+
 /** This is the main type of this program */
 struct chunk_t
 {
@@ -218,6 +233,7 @@ struct chunk_t
    void reset()
    {
       memset(&align, 0, sizeof(align));
+      memset(&indent, 0, sizeof(indent));
       next = 0;
       prev = 0;
       type = CT_NONE;
@@ -244,24 +260,26 @@ struct chunk_t
       return str.c_str();
    }
 
-   chunk_t     *next;
-   chunk_t     *prev;
-   align_ptr_t align;
-   c_token_t   type;
-   c_token_t   parent_type;      /* usually CT_NONE */
-   UINT32      orig_line;
-   UINT32      orig_col;
-   UINT32      orig_col_end;
-   UINT64      flags;            /* see PCF_xxx */
-   int         column;           /* column of chunk */
-   int         column_indent;    /* if 1st on a line, set to the 'indent'
-                                  * column, which may be less than the real column */
-   int         nl_count;         /* number of newlines in CT_NEWLINE */
-   int         level;            /* nest level in {, (, or [ */
-   int         brace_level;      /* nest level in braces only */
-   int         pp_level;         /* nest level in #if stuff */
-   bool        after_tab;        /* whether this token was after a tab */
-   unc_text    str;              /* pointer to the token text */
+   chunk_t      *next;
+   chunk_t      *prev;
+   align_ptr_t  align;
+   indent_ptr_t indent;
+   c_token_t    type;
+   c_token_t    parent_type;      /* usually CT_NONE */
+   UINT32       orig_line;
+   UINT32       orig_col;
+   UINT32       orig_col_end;
+   UINT64       flags;            /* see PCF_xxx */
+   int          column;           /* column of chunk */
+   int          column_indent;    /* if 1st on a line, set to the 'indent'
+                                   * column, which may be less than the real column
+                                   * used to indent with tabs */
+   int          nl_count;         /* number of newlines in CT_NEWLINE */
+   int          level;            /* nest level in {, (, or [ */
+   int          brace_level;      /* nest level in braces only */
+   int          pp_level;         /* nest level in #if stuff */
+   bool         after_tab;        /* whether this token was after a tab */
+   unc_text     str;              /* the token text */
 };
 
 enum

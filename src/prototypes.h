@@ -75,6 +75,7 @@ void align_to_column(chunk_t *pc, int column);
 
 #define reindent_line(pc, col)    reindent_line2(pc, col, __func__, __LINE__)
 void reindent_line2(chunk_t *pc, int column, const char *fcn_name, int lineno);
+void quick_indent_again(void);
 
 
 /*

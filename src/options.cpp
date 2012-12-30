@@ -651,6 +651,9 @@ void register_options(void)
                   "If FALSE or the '=' is followed by a newline, the next line is indent one tab.");
    unc_add_option("indent_oc_block", UO_indent_oc_block, AT_BOOL,
                   "Indent OC blocks at brace level instead of usual rules.");
+   unc_add_option("indent_oc_block_msg", UO_indent_oc_block_msg, AT_NUM,
+                  "Indent OC blocks in a message relative to the parameter name.\n"
+                  "0=use indent_oc_block rules, 1+=spaces to indent", 0, 16);
    unc_add_option("indent_oc_msg_colon", UO_indent_oc_msg_colon, AT_NUM,
                   "Minimum indent for subsequent parameters", 0, 5000);
 
