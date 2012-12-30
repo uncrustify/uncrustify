@@ -3542,6 +3542,14 @@ static void mark_namespace(chunk_t *pns)
 {
    chunk_t *pc;
    chunk_t *br_close;
+   bool    is_using = false;
+
+   pc = chunk_get_prev_ncnl(pns);
+   if (chunk_is_token(pc, CT_USING))
+   {
+      is_using = true;
+      pns->parent_type = CT_USING;
+   }
 
    pc = chunk_get_next_ncnl(pns);
    while (pc != NULL)
@@ -3549,6 +3557,14 @@ static void mark_namespace(chunk_t *pns)
       pc->parent_type = CT_NAMESPACE;
       if (pc->type != CT_BRACE_OPEN)
       {
+         if (pc->type == CT_SEMICOLON)
+         {
+            if (is_using)
+            {
+               pc->parent_type = CT_USING;
+            }
+            return;
+         }
          pc = chunk_get_next_ncnl(pc);
          continue;
       }
