@@ -209,7 +209,7 @@ static const chunk_tag_t keywords[] =
    { "signals",          CT_PRIVATE,      LANG_CPP                                                                    },
    { "signed",           CT_TYPE,         LANG_C | LANG_CPP                                                           },
    { "sizeof",           CT_SIZEOF,       LANG_C | LANG_CPP | LANG_CS | LANG_PAWN                                     }, // PAWN
-   { "sleep",            CT_FUNCTION,     LANG_C | LANG_CPP | LANG_CS | LANG_PAWN                                     }, // PAWN
+   { "sleep",            CT_SIZEOF,       LANG_PAWN                                                                   }, // PAWN
    { "stackalloc",       CT_NEW,          LANG_CS                                                                     },
    { "state",            CT_STATE,        LANG_PAWN                                                                   }, // PAWN
    { "static",           CT_QUALIFIER,    LANG_ALL                                                                    }, // PAWN
