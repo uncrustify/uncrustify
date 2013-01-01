@@ -1,3 +1,2164 @@
+commit 20f85c688334859635b21b95951b1e115540c69d
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Tue Jan 1 15:59:23 2013 -0600
+
+    Run scripts/update-defaults.sh
+
+commit d85e6222393b36fde7aa8275abdea0c86ffe7f8d
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Tue Jan 1 15:57:34 2013 -0600
+
+    Run autogen.sh on Ubuntu 12.10.
+
+commit f9282e34b98da6733c502448bbb88dd4ae28048a
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Tue Jan 1 15:56:51 2013 -0600
+
+    Update the ChangeLog
+
+commit 5d1398028feaf5181a5e41e8893392bdac602afb
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Tue Jan 1 15:25:38 2013 -0600
+
+    Add a few files to the workspace
+
+commit cae8a0b9c1b913e428e219865bb46fa58d4539fc
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Tue Jan 1 15:25:13 2013 -0600
+
+    Update version number to 0.60
+
+commit edfb4f0bd76c11af4d5bb7cd709c0857ab084042
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Sun Dec 30 14:56:49 2012 -0600
+
+    Fix labeling of OC @property statements
+
+commit 4154cb656fd3344b72c10b757087344adb1fa190
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Sun Dec 30 10:57:48 2012 -0600
+
+    Properly label 'using namespace XXX;'
+
+commit b3744a85a9273d05b80d05086cfc42024e1813c9
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Sat Dec 29 23:39:23 2012 -0600
+
+    Split 'prev' code in chunk_skip_to_match() to chunk_skip_to_match_rev()
+
+commit 182a0cae4cf0d2db4e41249043fd9ef9191ba54e
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Sat Dec 29 23:25:32 2012 -0600
+
+    Fix the pawn-only keyword 'sleep', which is like return or sizeof.
+
+commit d625ef6006159aa9272cf9be7c497b802b4c7e65
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Sat Dec 29 23:24:46 2012 -0600
+
+    Update test results (missed a file in the last commit)
+
+commit 51fe304d6dbb1d4ddf2e30a9e4e6c04f62aa903c
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Sat Dec 29 22:42:13 2012 -0600
+
+    Update config and test for indent_oc_block_msg
+
+commit 67d055ccfbcf7c3e9b2078b791e991c813eb847e
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Sat Dec 29 22:38:53 2012 -0600
+
+    Add option: indent_oc_block_msg
+    
+    Indents blocks relative to the tag name inside messages.
+    Really hacky, but it seems to work.
+
+commit 0edf827adcb8b509b58607faacecec906ed0980b
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Sat Dec 29 15:51:59 2012 -0600
+
+    And and update tests for new ObjC options
+
+commit fa87f91938e520251d1380e0ebd2d69f7d11e1d7
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Sat Dec 29 15:47:04 2012 -0600
+
+    New option: indent_oc_msg_colon
+    
+    Insert a CT_SPACE in front of the longest arg to make it work.
+
+commit f3aa1441a79f5968436e4b607ed8d3c8b8209c0f
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Sat Dec 29 15:43:09 2012 -0600
+
+    Finish option nl_oc_msg_leave_one_liner
+
+commit e2f941ab0c8f1f1d48cf88d4718efcb8e8b525bd
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Sat Dec 29 15:42:18 2012 -0600
+
+    Extend flag_series to both set and clear flags.
+
+commit bc7a55d957419cb4c01fa7a3a0cbad6cbf2573c1
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Sat Dec 29 15:41:05 2012 -0600
+
+    Add m_skip_first to AlignStack to anchor the first line.
+
+commit 626c3e5de763176d3b6d148a958786b712fd2b55
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Sat Dec 29 10:52:39 2012 -0600
+
+    Add a comment for undo_one_liner()
+
+commit e6248d0b55c066e76bc18c64245ebb0d6975f9da
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Sat Dec 29 10:52:16 2012 -0600
+
+    Add option: align_oc_msg_colon_first
+    
+    Controls whether the first OC message arg is aligned with the rest if it is
+    short.
+
+commit d1fc8a0bdb2c04d057716be024063e4778b03799
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Sat Dec 29 10:50:40 2012 -0600
+
+    Add ChunkStack::Pop_Front()
+
+commit 493f3ed0bb1e3c21485ceaac1c6d7351ee5abe25
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Sat Dec 29 10:50:16 2012 -0600
+
+    Add options: nl_oc_msg_leave_one_liner and nl_oc_msg_args
+    
+    Splits OC message arguments to one-per-line.
+
+commit a317d7df902664efdcff5797685e9587a92b7bd7
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Sat Dec 29 10:43:02 2012 -0600
+
+    Rename ChunkStack::Push() to ChunkStack::Push_Back()
+
+commit 79a889b0e4847a39c2543a940214ab3e4be515a0
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Sat Dec 29 10:03:08 2012 -0600
+
+    Copy the level, pp_level and brace_level when inserting a newline.
+
+commit e1befa297644f4e53e79bd341cb68d3399203c31
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Fri Dec 28 14:58:06 2012 -0600
+
+    Do a better job of labeling 'extern (C)' stuff in D
+
+commit 3e92b23534e7e96e57f360fc24082eff6b06025d
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Fri Dec 28 14:57:16 2012 -0600
+
+    Add option sp_extern_paren to control space in 'extern (C)' (D)
+
+commit c5916e04bc9f75d873660fa8e46baeb12ed1abd8
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Fri Dec 28 14:28:42 2012 -0600
+
+    Add test for the Java for-each construct.
+
+commit 9d193c556f240a168ec679aa1d4c7e478f82a87b
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Fri Dec 28 14:26:40 2012 -0600
+
+    Allow splitting after a Java for-each colon.
+
+commit 3c3db622f1eb8bd5496d542ea2d80c88c0cd59a9
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Fri Dec 28 14:22:12 2012 -0600
+
+    Add options: sp_before_for_colon and sp_after_for_colon
+
+commit 7cbfd663b38859451612d7ad1b649359f6b808db
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Fri Dec 28 14:03:57 2012 -0600
+
+    Label the ':' in the Java foreach: "for (TYPE VAR: EXPR) { }"
+
+commit ec14dea186351cf021e41bb7a7e7952a46734575
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Fri Dec 28 14:02:50 2012 -0600
+
+    Remove the date from token_names.h/make_token_names.sh
+
+commit 4f37cdf81942be97894ec467bada3f7c5f917590
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Thu Dec 27 19:50:20 2012 -0600
+
+    Skip the 'mutable' keyword in C++ lambda expressions
+    
+    Thanks to Jorge Amado
+
+commit 126a8b4474e9c260775a571804725316073a5db0
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Tue Dec 4 23:01:44 2012 -0600
+
+    Add option sp_after_oc_property
+
+commit dfff12d84896faa23e5832e0d28f8ffe78686935
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Tue Dec 4 22:53:05 2012 -0600
+
+    Update test for indent_oc_block option
+
+commit 697236aaf0b4b5979287e176f3a1773f25fe16db
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Tue Dec 4 22:50:02 2012 -0600
+
+    Add option indent_oc_block to drop back the brace indent of OC blocks
+
+commit ba2faf474b574d85a570f145c8c65693490f9ec0
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Tue Dec 4 22:08:37 2012 -0600
+
+    Add a basic test for the '&&' C++ move operator
+
+commit 1ced8f481245a154a575d47acae6e286bffd8f95
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Tue Dec 4 22:08:16 2012 -0600
+
+    Allow the '&&' operator to be interpreted as CT_BYREF
+
+commit 3bb91cc5cdf5c914e59b630b0d1153c2aef8cc34
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Tue Dec 4 21:51:20 2012 -0600
+
+    Add option sp_before_pp_stringify and default sp_pp_stringify to ignore.
+
+commit 0b34f6412ad9c3fa45cc00edcae2f86710bc3db0
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Tue Dec 4 21:30:25 2012 -0600
+
+    Add test for sp_cmt_cpp_start fix
+
+commit 44e0253a1648e9ba8c905e9aa7877d07268645e1
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Tue Dec 4 21:26:43 2012 -0600
+
+    Fix C++ comment continuation on wrapped lines.
+
+commit a5b7aad662e80a56db10e990ec35b48d032e6223
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Tue Dec 4 21:20:15 2012 -0600
+
+    Add support for Objective C @throw and option sp_after_throw
+
+commit f91f1aa05b1f0f935fccebe50def5136a052f805
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Fri Nov 30 22:11:28 2012 -0600
+
+    Make a log less ambiguous, as there was the same text a few lines up.
+
+commit 9c3cf58acb6a45479147f4ccd849a83f3a0b9384
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Fri Nov 30 22:10:51 2012 -0600
+
+    Only flag parens after a function.
+    This code may be redundant.
+
+commit a18e0a8c33e426cb04ca28e93165a46e9103e35c
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Fri Nov 30 22:09:08 2012 -0600
+
+    Set the paren parent when marking a function call
+
+commit ce990e6d35316958c4f8a596c5c1efc1ef5e60e2
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Fri Nov 30 22:08:40 2012 -0600
+
+    Improve the flag_parens() log
+
+commit 53a19b1dbb088a468c50e6760785078503044126
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Fri Nov 30 20:32:23 2012 -0600
+
+    Add test case for SF#340
+
+commit e9cf4852e0783dadfb8a1d98edaa78512371ef1b
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Fri Nov 30 20:31:50 2012 -0600
+
+    Mark the parameter label with DONT_INDENT when aligning on the colon.
+    Fixes SF#340
+
+commit d5fabd4e79aabbc8cb0bb8f103c6a0a8c3776143
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Fri Nov 30 20:17:01 2012 -0600
+
+    Change template detection a little and enable for for Java
+
+commit 7556452ec8277f9b487b51b3682acec2d58536eb
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Fri Nov 30 20:02:51 2012 -0600
+
+    Add missing ANGLE_OPEN/ANGLE_CLOSE to chunk_skip_to_match()
+
+commit 55d4795178842bdafcff18b3e510528ecd5a79bb
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Tue Nov 27 22:40:17 2012 -0600
+
+    Rework test results based on recent changes.
+
+commit 93d0cc53ddaf5cc7e83b8515019c7700ec4183c4
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Tue Nov 27 22:38:07 2012 -0600
+
+    Add sp_after_tparen_close=remove to a few test config files
+
+commit 81d782116d6bce157c79609054d7419f0982cc06
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Tue Nov 27 22:31:14 2012 -0600
+
+    Rework ObjC block type, literal, and message marking
+
+commit f1152bde2a61f863730b5ef9d7377b7505abbcbd
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Tue Nov 27 22:28:57 2012 -0600
+
+    Allow ObjC '^' to be used as a function pointer
+
+commit 31d47719c594f3f8c5a59c498f66702e94ef46ac
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Tue Nov 27 22:27:15 2012 -0600
+
+    Use TPAREN_OPEN for aligning function defs
+
+commit 7a029ce0ea6e3489531ab28a84e4e4b335eeb2bf
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Tue Nov 27 22:25:59 2012 -0600
+
+    Add sp_after_tparen_close and sp_ptr_star_paren
+
+commit 1e6cf7a2a3b568b33e8fc39c65a356b1069039dd
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Tue Nov 27 22:05:57 2012 -0600
+
+    Make flag_parens() log who called it.
+
+commit 474fe3a8bec8f5f860598ca061859022b24b8a15
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Tue Nov 27 22:04:22 2012 -0600
+
+    Fix up fix_typedef()
+
+commit 2c5353d982c35ffa624fa369bdbbbd4741acb8dc
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Tue Nov 27 22:01:54 2012 -0600
+
+    Clean up mark_function_type() and make it handle more cases.
+
+commit bfd9a034944c29c8566ceadcea39812fd6f8b2ee
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Tue Nov 27 21:53:41 2012 -0600
+
+    Move log in align_typedefs and remove obsolete comment
+
+commit 4abb818058010d13478e924e443699e0c68b9565
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Mon Nov 26 23:04:43 2012 -0600
+
+    FUNC_WRAP and TYPE_WRAP need to be handled before the main loop.
+
+commit 6470b895835a897cfc0d195343c927525a277ea6
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Mon Nov 26 21:53:20 2012 -0600
+
+    Add an include statement to the config files to base of another config.
+
+commit e055dbc87cfae1b552dfa1512d87d04afd74dcc8
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Sun Nov 25 18:52:29 2012 -0600
+
+    Add TPAREN_OPEN and TPAREN_CLOSE for future function type stuff.
+
+commit 9c86d2f9f2ef023c48f709bbc7d1ae8a30241a77
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Sun Nov 25 18:49:24 2012 -0600
+
+    Change --decode to process all remaining args instead of just one.
+
+commit afc1f2aa1b1d3b765b3143613b718555fb0ddbd5
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Sun Nov 25 12:15:44 2012 -0600
+
+    Add a log sev for flag_parens()
+
+commit 3f528f93a2fd8a16aba5daed7a02a857e5afebda
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Sun Nov 25 10:02:13 2012 -0600
+
+    Add '__thread' (C/C++) keyword
+
+commit 146b50958d9f9a58d9690fe778c14d4f758abb04
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Sun Nov 25 10:01:48 2012 -0600
+
+    Add '__block' (ObjC) keyword
+
+commit cf8c379422c360d6f87da219b817b0e8ba53fad8
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Sat Nov 24 15:04:44 2012 -0600
+
+    Try to clean up the objective C block code a little
+
+commit 2cb28330f9b0e4fd78d5d07364338ea1eda5667d
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Sat Nov 24 15:04:11 2012 -0600
+
+    Make chunk_skip_to_match() go both ways.
+
+commit d5b3d1c4ebf793947a0f47a9a81d53f1dd2f3620
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Sat Nov 24 13:56:37 2012 -0600
+
+    Split out return type marking logic into mark_function_return_type()
+
+commit 877fc7f2bb65c3735a7c767d50d9f54e12ec3b36
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Sat Nov 24 13:25:47 2012 -0600
+
+    Objective C: @end marks the end of a statement
+
+commit 23cd8b3faf4f009ef68ec26df1095cdf4b5f5d4d
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Sat Nov 24 13:25:20 2012 -0600
+
+    Objective C has the typedef keyword.
+
+commit dae38559646a0b4186e6464d9e40b1ed4c5d1213
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Fri Nov 23 15:21:30 2012 -0600
+
+    Split CT_CARET (^) from CT_ARITH
+
+commit 9fe010cbbca11f04ac31ca8a2f31f978ae805e38
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Fri Nov 23 13:38:02 2012 -0600
+
+    Patch over segfault in GH#107.
+
+commit 36c4414aa46b4d8378179bfc2630c363a10872ec
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Thu Nov 22 11:03:10 2012 -0600
+
+    Update test results for nl_squeeze_ifdef change
+
+commit 114c2ac0f5e6be54fbefeeae050e12b46df09569
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Thu Nov 22 11:02:49 2012 -0600
+
+    Make nl_squeeze_ifdef work before #else and #endif
+
+commit a18cd338149d97938e28e07f64809949ea16e5a9
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Thu Nov 22 10:38:06 2012 -0600
+
+    Fix cmt_sp_after_star_cont when wrapping long comment lines.
+
+commit 83f2e0a7e832341485f6d37b980eefb9c77f489c
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Wed Nov 21 20:20:48 2012 -0600
+
+    Add a test for bug SF#485
+
+commit 07f1938707162f95209772de8821fdfe707ee282
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Wed Nov 21 20:18:28 2012 -0600
+
+    A colon starts a statement on the next token.
+    Fixed SF#485
+
+commit b2bd23da3c103b5d3a0877bce31991b6e62b45fd
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Wed Nov 21 16:52:16 2012 -0600
+
+    Add test for variable aligning change for bug 495
+
+commit cc503cb277767988e7f9c4aefbf3f8e51a396db5
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Wed Nov 21 16:47:48 2012 -0600
+
+    Align FUNC_CTOR_VAR with regular variables
+    
+    Patch from SF#495, thanks to Jean-Marc Bourguet
+
+commit 571d39af2e2ca5cec7d1665d25e2e2b640275b3a
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Wed Nov 21 16:42:09 2012 -0600
+
+    Add a test for bug 484
+
+commit 577f10774afd2a086c112fbc855db5f37876a635
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Wed Nov 21 16:41:35 2012 -0600
+
+    Do a better job of marking the C++ constructor initialization functions.
+    
+    Fixes SF#484.
+
+commit a8b1eb768712d0e0dd5efd00e0ff88027160b787
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Wed Nov 21 15:52:37 2012 -0600
+
+    Expand tests to cover new functionality
+
+commit 2305faab70e6df3096305a419bddeb3c49312959
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Wed Nov 21 15:52:14 2012 -0600
+
+    sp_cmt_cpp_start: Do not insert a space in '////'
+    
+    Thanks to sf.net user stsi
+
+commit 374c12df306f5d3f36c2026d734f758d87dc2e18
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Wed Nov 21 15:45:46 2012 -0600
+
+    Add a test for bug 481
+
+commit 570a17c1f6b20ab0d2db31d4f62816bef257f865
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Wed Nov 21 15:45:28 2012 -0600
+
+    Always allow '[]' in prototypes.
+    Fixes SF#481.
+
+commit 2654520e936bc91fbc18d4501b89965ee053c4b1
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Wed Nov 21 15:35:56 2012 -0600
+
+    Add a test for bug 472
+
+commit 316bbcf34494b2dd2a1565d664ffaee6019bd79c
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Wed Nov 21 15:35:11 2012 -0600
+
+    Handle old-school C function pointers as a prototype parameters.
+    void foo(int, (void));
+
+commit c2261b80c37d89ee56f7dcdd4cea00669e19e384
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Wed Nov 21 15:33:33 2012 -0600
+
+    C/C++ casts cannot be followed by a comma, close paren or semicolon.
+
+commit ebff0b4e9299711d3237e92e21099af3d7eb4da3
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Tue Nov 20 22:44:32 2012 -0600
+
+    nl_before_return and nl_after_return should also check for vbrace.
+
+commit dd9adc5775e7a56cd2c0c39220f246fbe449fa14
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Tue Nov 20 22:36:44 2012 -0600
+
+    Add a test for negative values of indent_continue
+
+commit bfb6771bea22b12447f0f670332f344cfe9dcde2
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Tue Nov 20 22:36:13 2012 -0600
+
+    Fix negative values for indent_continue.
+
+commit 86f2e99a784ea5c6c04b91c463db4f4ed7b355ff
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Tue Nov 20 22:03:05 2012 -0600
+
+    Add a test to catch the tab-backslash-newline problem.
+
+commit 2faf4e699a49a0ca1c087bb135159afaa107bd93
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Tue Nov 20 22:02:25 2012 -0600
+
+    Do not allow a tab before a backslash-newline except if it was aligned.
+
+commit 102996568c1d3d53853b8142f27fe204cb30b772
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Tue Nov 20 21:43:44 2012 -0600
+
+    Expand the typedef aligning tests a bit.
+
+commit bf2a69a6e1ec7911e4b03da5fe944aa9570e796c
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Tue Nov 20 21:37:09 2012 -0600
+
+    Rework typedef processing to handle 'typedef void foo(int);'
+
+commit 286d3d38c852d76808ac079cdb8852084a90e2e1
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Tue Nov 20 15:27:51 2012 -0600
+
+    Update tests for latest fixes.
+
+commit 71409716a860cef542e08d680574dea8f46670dc
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Tue Nov 20 15:27:28 2012 -0600
+
+    Ignore vbraces when determining the comment position.
+
+commit b56f56b581a95c0cf86096c6162c7cb44749ddbb
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Tue Nov 20 15:13:31 2012 -0600
+
+    Do not allow the removal of braces if it contains any preprocessors.
+
+commit 78438169b21759238252faf917231d4b9422e529
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Tue Nov 20 14:57:56 2012 -0600
+
+    Handle mod_full_brace_if_chain first so that braces are not toggled.
+    Keep a flag to prevent a brace being virtualized.
+
+commit 70dfbd2d44ca1f7ff1c823bfbf9cdd2224b3c213
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Tue Nov 20 14:23:22 2012 -0600
+
+    Make nl_after_class force a newline after a semicolon for a class.
+
+commit 396480606490e9a22dc4e14d23e4ee3fd31d9e22
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Tue Nov 20 11:01:16 2012 -0600
+
+    Reuse the config file output code in the parsed output code.
+
+commit 55b5a029109a684851f77f05e8727bf6c53168b1
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Tue Nov 20 10:58:26 2012 -0600
+
+    Revert the test result 'fix'. The results are ugly, but correct.
+
+commit d93b3e57927ae6287d3d5aa336eb45e925213a1d
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Tue Nov 20 10:57:50 2012 -0600
+
+    Fix prototype parameter marking when TYPE_WRAP is used.
+
+commit c7ba8cc65f8aa2995a241ff9145d967df2039aee
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Tue Nov 20 10:23:52 2012 -0600
+
+    Add version to the 'parsed' output and make it usable as a config file.
+
+commit 00fa127f3e0192db96e089d754b95bc3ebb71f9f
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Tue Nov 20 10:23:16 2012 -0600
+
+    Update test that had broken results, which were fixed by the last commit.
+
+commit 391b2919584ce149750d5ffe175fab0377f31a5a
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Tue Nov 20 10:13:27 2012 -0600
+
+    Fix marking of unnamed parameters in prototypes.
+
+commit 235be8d12a7d16e1fcd7d7b6effd68e99727dc53
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Mon Nov 19 21:32:55 2012 -0600
+
+    Also handle: '[ func(a,b,c) selector ]'
+
+commit 0375f45fca8fef84ea1b4f764a2fff246aef707f
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Mon Nov 19 21:32:19 2012 -0600
+
+    Update obj-c.cfg with new option: sp_after_oc_msg_receiver
+    Add a test that uses it.
+
+commit 69523163bf7cd2aefebfd911551bf00e0a2ad1eb
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Mon Nov 19 21:29:36 2012 -0600
+
+    Add Obj-C option: sp_after_oc_msg_receiver
+
+commit 24fe8b792003e513213f6c1d293063d61337afdc
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Mon Nov 19 20:26:03 2012 -0600
+
+    nl_after_func_body should control the newline after a ObjC block expression.
+
+commit 9c131cea93862c88b8bb403ffe0e61620301026a
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Mon Nov 19 14:29:04 2012 -0600
+
+    Update test results.
+    I had changed the input but didn't update the results.
+
+commit 45519f9fe1b2e287760ebfce874277b40286db76
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Mon Nov 19 14:28:26 2012 -0600
+
+    Objective C messages: allow nested [] and protocols <>
+     [ class <proto> self method ] ;
+     [ [NSMutableString alloc] initWithString: @"" ];
+
+commit 43e36321bc80deceb31c2b46a27bf865ea6feec4
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Sun Nov 18 22:37:43 2012 -0600
+
+    Add some more Objective C literal tests
+
+commit 90828710bab8306971767f0372abc8676e53c2ee
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Sun Nov 18 22:35:33 2012 -0600
+
+    Do not do a space safety check on literal strings.
+
+commit cf4562d3ece8716d5bfa7257331369691b7a3401
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Sun Nov 18 22:11:25 2012 -0600
+
+    Parse Objective C literals: @2 or @"hello"
+
+commit 254c53bb55f51392ea6bbea73f9dad52ce6e3b02
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Sun Nov 18 21:48:49 2012 -0600
+
+    Clean up GCC compile warning about strict aliasing rules.
+
+commit 4e95ba9bb36c92f6807e322df2c15de3c79321a6
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Sun Nov 18 21:47:39 2012 -0600
+
+    Add a simple test for Java annotations
+
+commit b332a27a8f5fcd253bc736df4ed1d06b5882049a
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Sun Nov 18 21:45:45 2012 -0600
+
+    Add basic support for Java annotations.
+    New options:
+     sp_annotation_paren
+     nl_after_annotation
+     nl_between_annotation
+    
+    Thanks to skarekar.
+
+commit 5421d10fca9a51e1311e3c791cbb8e2ab649eecd
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Sun Nov 18 21:36:10 2012 -0600
+
+    Fix the 'package' keyword for Java, D, and ECMA.
+    The Java 'package' keyword is nothing like 'namespace'.
+    The D keyword is like 'private'.
+    ECMA just has it as a reserved word.
+
+commit 5f403057e4bc4cfe0adf5e10a9702d1c68af257d
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Sat Nov 10 11:53:50 2012 -0600
+
+    Add option sp_inside_sparen_open to mirror sp_inside_sparen_close
+
+commit 6407100375f6369bd2170d8d586af7742d4325c3
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Wed Oct 17 22:47:52 2012 -0500
+
+    Fix spelling errors in comments
+    
+    Thanks to Ger Hobbelt
+
+commit 97bae9f6766596f45ae1a6f3b960aeff468b7bf6
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Wed Oct 17 22:28:51 2012 -0500
+
+    Remove unused parameter to print_options()
+    
+    Thanks to Ger Hobbelt
+
+commit 46b78ef42a3ad960cee0eeb2c9b69f4cd6208e15
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Wed Oct 17 22:27:39 2012 -0500
+
+    Use the cross-platform 'safe' isalpha() wrapper.
+    
+    Thanks to Ger Hobbelt
+
+commit eb7ce00527e1f9fb7e1b9748a9458fdea4a0cf87
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Wed Oct 17 22:23:53 2012 -0500
+
+    Use the log_sev_t enum instead of int where it makes sense
+    
+    Thanks to Ger Hobbelt
+
+commit 4976ecf46bf5c99070442ed61d2c4d61d2313078
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Wed Oct 17 22:12:52 2012 -0500
+
+    Remove unused variable.
+    
+    Thanks to Ger Hobbelt
+
+commit 8177f573f0c6e5915b82fc785ac4314408933290
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Wed Oct 17 21:41:49 2012 -0500
+
+    Use EXIT_SUCCESS and EXIT_FAILURE instead of 0 and 1 for portability
+    
+    Thanks to Ger Hobbelt
+
+commit 9a96fd27e29d64ad813e9d99a135ef0e3079567b
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Wed Oct 17 21:38:25 2012 -0500
+
+    Add some enum value comments
+    
+    Thanks to Ger Hobbelt
+
+commit 3653536c281c6bcc982da4bfe71a56536d734298
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Wed Oct 17 21:36:30 2012 -0500
+
+    Use GetEnvironmentVariableA() instead of GetEnvironmentVariable()
+    
+    Thanks to Ger Hobbelt
+
+commit db25fd2c9345eb506d57db33a501a81e68121976
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Wed Oct 17 21:35:15 2012 -0500
+
+    Whitespace cleanup a bit
+    
+    Thanks to Ger Hobbelt
+
+commit 6c430a023695451d5eb17027a098cc0d4e816aa6
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Wed Oct 17 21:13:02 2012 -0500
+
+    Uncrustify combined.cpp
+
+commit d35dc97ff2868e439cba3b5c331f442cc9391d13
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Wed Oct 17 21:09:16 2012 -0500
+
+    Update my preferred style and change mod_paren_on_return to ignore.
+
+commit 6bfecba0b345006c560793012d073db3b02bf585
+Author: David Schaefgen <david.schaefgen@gmail.com>
+Date:   Tue Oct 16 09:38:47 2012 -0500
+
+    Finish FIX | Issue #99
+    
+    Found an additional case, anonymous block arguments to Objective-C
+    messages, i.e.:
+    
+    - (void)resetCells:(void (^)(UIView *view, NSUInteger idx))handler {...}
+    
+    or this in an @interface
+    
+    - (void)resetCells:(void (^)(UIView *view, NSUInteger idx))handler;
+
+commit 4eaee0e7f8b7621eb24a0fe24b7959047e74b011
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Mon Oct 15 20:46:09 2012 -0500
+
+    Fix the '>' + '>' => '>>' detection logic
+    
+    The memcmp() was incorrect since the token string storage was changed.
+    The extra else if () logic added recently was not needed. At least, it
+    didn't make any difference in the tests once tif was fixed.
+
+commit 3f06a2cd5f98fc9b2e32b4da99681df664677402
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Mon Oct 15 20:40:03 2012 -0500
+
+    Save off current template test results.
+    
+    Apparently, this "bool X = j<3>>1;" is now the template 'j' passed a value
+    of 3 compared against 1.
+
+commit ab0cb3517a07482cd38e6857cdd5aa9cfdd2ac0f
+Author: Ben Gardner <ben@ben-MS-7637.(none)>
+Date:   Mon Oct 15 20:32:19 2012 -0500
+
+    Update test results for recent Objective C improvements.
+
+commit aea8b1b2a2eaac3f46bcb7afdeb92144187ce677
+Merge: be15b03 e91557f
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Fri Oct 12 10:39:47 2012 -0700
+
+    Merge pull request #89 from jasonfharris/master
+    
+    Request for fix to make ObjC handle method one liners (nl_func_leave_one_liners)
+
+commit be15b031d9aa3ca652184bc4fc9d602e4e54688e
+Merge: ccd991f 4be6c27
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Fri Oct 12 10:38:17 2012 -0700
+
+    Merge pull request #90 from aniec07/master
+    
+    Bug 3555610, bugs of >> worked on version 0.57
+
+commit ccd991fc2e0a2865a79f11c82a92a863303b6788
+Merge: bc39f8b 0befe17
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Fri Oct 12 10:36:18 2012 -0700
+
+    Merge pull request #100 from daschae/master
+    
+    FIX | issue 99 -> Type pointers in Objective-C block argument definitions and literal blocks star is arith rather than ptr_type
+
+commit 0befe17a9705c9a1849dc8fd44f60a131f0a45b0
+Author: David Schaefgen <david.schaefgen@gmail.com>
+Date:   Thu Oct 11 18:24:01 2012 -0500
+
+    FIX | issue #99
+    
+    Type pointers in Objective-C block argument definitions and literal
+    blocks star is arith rather than ptr_type.
+    
+    Pass everything starting with the open paren through
+    fix_fcn_def_params(chunk_t *) to process the arguments like function
+    parameters.
+
+commit bc39f8b5dfc50037593247e6b290be802b479d72
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Wed Sep 26 21:45:23 2012 -0500
+
+    Fix tokenizing of comments such as '/*// ... */'
+
+commit 4be6c270cc1bd01164ab75a6a8e066b8de95e64a
+Author: Anirban Pramanick <pramanick89@gmail.com>
+Date:   Wed Aug 22 12:22:44 2012 +0530
+
+    Update src/tokenize_cleanup.cpp
+    
+    Changes pertaining to bugs of >> - ID: 3555610
+    Resolve conflict between template and comparator followed by shift operator
+    The function handle_double_angle_close is called when then second '>' of  '>>' is reached.
+    pc is then '>' which is of comparator type. pc->prev is also of comparator type. We delete pc and make prev as CT_ARITH. We also make the next field of prev point to pc->next.  prev now behaves has the current pc.
+    This invokes a case of angle mismatch because earlier a '<' was opened and detected as ANGLE_OPEN, which should now be CT_COMPARE. Thus the while loop helps us detect this '<' and make it CT_COMPARE.
+
+commit 96a59eb2493c5fd7754baad18433817d3655d791
+Author: Anirban Pramanick <pramanick89@gmail.com>
+Date:   Wed Aug 22 12:09:27 2012 +0530
+
+    Update tests/output/cpp/30103-templates.cpp
+    
+    bugs of >> - ID: 3555610
+    Resolve conflict between template and comparator followed by shift operator
+
+commit 648b2c2863a76eb5a830439467e73a510e15698b
+Author: Anirban Pramanick <pramanick89@gmail.com>
+Date:   Wed Aug 22 12:07:54 2012 +0530
+
+    Update tests/output/cpp/30102-templates.cpp
+    
+    Did not remove the syntax error line that was similar to bugs ID: 3555610
+
+commit 7d47d1624ae6affa797d75cfcb4462d4bbaa7542
+Author: Anirban Pramanick <pramanick89@gmail.com>
+Date:   Wed Aug 22 12:07:05 2012 +0530
+
+    Update tests/output/cpp/30102-templates.cpp
+    
+    bugs of >> - ID: 3555610
+    Resolve conflict between template and comparator followed by shift operator
+
+commit f6cfd7b9c394df1d18a984331e75f1fe94b2845d
+Author: Anirban Pramanick <pramanick89@gmail.com>
+Date:   Wed Aug 22 12:05:56 2012 +0530
+
+    Update tests/output/cpp/30101-templates.cpp
+    
+    bugs of >> - ID: 3555610
+    Resolve conflict between template and comparator followed by shift operator
+
+commit 92a4088e4d3725e82d637b50d1b9edbdddd653b4
+Author: Anirban Pramanick <pramanick89@gmail.com>
+Date:   Wed Aug 22 12:04:10 2012 +0530
+
+    Update tests/output/cpp/30100-templates.cpp
+    
+    bugs of >> - ID: 3555610
+    Resolve conflict between template and comparator followed by shift operator
+
+commit 110fabb014714dbacb838efedd24e38e65eb92ea
+Author: Anirban Pramanick <pramanick89@gmail.com>
+Date:   Wed Aug 22 12:00:51 2012 +0530
+
+    Update tests/output/cpp/30023-templates.cpp
+    
+    bugs of >> - ID: 3555610
+    Test case to resolve conflict between template and comparator followed by shift operator.
+
+commit b99e585ddc4e22f0b26e991048c2b47a1da96737
+Author: Anirban Pramanick <pramanick89@gmail.com>
+Date:   Wed Aug 22 11:53:16 2012 +0530
+
+    Update tests/input/cpp/templates.cpp
+    
+    Y<X<6>>1>> x4 is detected as a syntax error in C++. However a condition like:
+    if ( j<3>>1 )
+    is not a syntax error. But Uncrustify detects the latter as a template and forces a space making it as:
+    if ( j<3> >1 )
+    which is a syntax error in C++.
+    Therefore the required test condition should be:
+    bool X = j<3>>1;
+    where 3>>1 does not need to be specified explicitly inside brackets
+
+commit e91557f0682b2d046b764613c30831d5a1724a96
+Author: Jason <jason@jasonfharris.com>
+Date:   Mon Aug 20 03:28:51 2012 +0200
+
+    fix leave function one liners alone for objective C methods
+
+commit acf6059a97e72b1b8fa596309accfc4c34d374c5
+Merge: 65dd559 234a1e9
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Wed Jul 18 09:49:41 2012 -0700
+
+    Merge pull request #85 from kastiglione/fix-blocks-spacing
+    
+    Mark functions inside block expressions
+
+commit 65dd5597686d1772d951fc6698578afbf8ebf3ac
+Merge: 1712cbe 4c8a034
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Wed Jul 18 09:47:32 2012 -0700
+
+    Merge pull request #86 from Hackerpilot/master
+    
+    Add support for D's new lambda operator
+
+commit 4c8a0340cbb9c551e58618e5b485e304167a57fd
+Author: Hackerpilot <briancschott@gmail.com>
+Date:   Sat Jul 14 22:42:20 2012 +0000
+
+    Added lambda operator to D
+
+commit 234a1e932de5b8bfd18ffa688ceb30d10cf30acb
+Author: Dave Lee <davelee.com@gmail.com>
+Date:   Mon Jul 2 22:39:23 2012 -0600
+
+    Mark functions inside block expressions
+
+commit 1712cbe29a4afd2b00ec4f4a5b1698a080be8215
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Tue Jun 26 22:02:03 2012 -0500
+
+    Expand the ObjC boxed test
+
+commit b48b7c8ca701a2f281d527f8bf63b8e48873255b
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Tue Jun 26 22:01:43 2012 -0500
+
+    Treat ObjC boxed strings the same as other boxed types.
+
+commit d466c318dec17f37a3a6e85d3f273a409422dcea
+Merge: f450527 16fdfdf
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sun Jun 24 15:27:57 2012 -0700
+
+    Merge pull request #84 from GerHobbelt/issue-084
+    
+    bugfix: wrong offset passed to peek() --> CRLF not recognized correctly
+
+commit f4505271868e251e694f2aff5da8804342b55505
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sun Jun 24 16:44:29 2012 -0500
+
+    Add a test for Objective C boxed literals
+
+commit b875c33fe318810b0a69317c0800e46b25f32685
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sun Jun 24 16:41:50 2012 -0500
+
+    Add new option: nl_brace_struct_var
+
+commit 16fdfdfcc8df54c5b4082f786b81995f8b80cc03
+Author: Ger Hobbelt <ger@hobbelt.com>
+Date:   Sun Jun 24 19:11:15 2012 +0200
+
+    wrong offset passed to peek() --> CRLF not recognized correctly (as peek(1) points 1 PAST the LF!) in D /+...+/ comments.
+
+commit f91bb5a01c76caef5ba035f73c20b5ff3424161a
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sun Jun 24 02:00:34 2012 -0500
+
+    Add options: sp_before_oc_dict_colon and sp_after_oc_dict_colon
+
+commit c0db5d7584ef6103abe7a820c5f28cd4bb2ef2eb
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sun Jun 24 01:59:14 2012 -0500
+
+    Add basic support for Objective-C boxed expressions.
+
+commit 2e5f32e87834ca1239dc1481091c85db134c5f92
+Merge: cc65530 1b6c857
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Tue Jun 5 15:25:02 2012 -0700
+
+    Merge pull request #79 from pwaller/remove_ns_close_semicolon
+    
+    Remove semicolons after namespace close brace
+
+commit 1b6c857876e78b46d1a2c6d0c7ae8dbba1504fb7
+Author: Peter Waller <peter.waller@gmail.com>
+Date:   Thu May 31 13:20:34 2012 +0100
+
+    Remove semicolons after namespace close brace
+
+commit cc65530fb55a9b24fda73f46474bf26589b43020
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Fri May 4 22:44:42 2012 -0500
+
+    Remove incorrect labeling of CT_CLASS_COLON in mark_function().
+    The proper place is in combine_labels().
+
+commit eb9bf3beda26457e3ff74d2359a16c14e8439a72
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Fri May 4 22:25:27 2012 -0500
+
+    nl_func_type_name[_class] should not affect template<type T> stuff
+    Fixes SF#3523347
+
+commit 3539361342da04a3286f0cf808d827ede1aba217
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Fri May 4 22:07:32 2012 -0500
+
+    Don't allow a definition or prototype after CT_ARITH.
+    This is a hack that fixed SF#3522432.
+
+commit dfa082ded986d024b4c429b27d86851467e94473
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Fri May 4 22:06:32 2012 -0500
+
+    Don't start a statement on a ')' or ']'.
+
+commit 11fa9162d6ffec46eb3dd9ceb92ed5acfde360e0
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Fri May 4 22:03:18 2012 -0500
+
+    Improve logs for statement start detection
+
+commit 159921c86fb85bb44b9b8d18b5e44dfa56a459cc
+Merge: 088e4e1 a3a56c1
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Apr 28 14:26:40 2012 -0700
+
+    Merge pull request #65 from JanX2/master
+    
+    Updated Xcode project with recent changes
+
+commit a3a56c1fad9d23afecc691723a622a3d9c678890
+Author: Jan Weiß <jan@geheimwerk.de>
+Date:   Thu Apr 26 15:24:37 2012 +0200
+
+    Updating Xcode project with recent file changes.
+
+commit 2bff457c9f0255a9a753ab5fd314eabcf5e6d920
+Author: Jan Weiß <jan@geheimwerk.de>
+Date:   Thu Apr 26 15:23:48 2012 +0200
+
+    Updating “.gitignore” for Xcode 4.
+
+commit 088e4e10adeee341e60d444b0a2bd07bdc960111
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Apr 14 15:39:57 2012 -0500
+
+    Add test
+
+commit 62746441ccc52dee9b87e9ef133e8f7c6fab0831
+Author: Oleg Smolsky <oleg@smolsky.net>
+Date:   Sat Apr 14 15:36:30 2012 -0500
+
+    Fixed a small alignment bug in complex calls
+
+commit 7e40fd41ba6f99d43b2931deaec66534f52e637d
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Apr 7 15:43:29 2012 -0500
+
+    Fix detection of a cast in "(uint32)std::distance(a,b)"
+
+commit df0a2c1b661766f7581b9d47a1250abef7230633
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Fri Apr 6 11:54:08 2012 -0500
+
+    Add another C++ test case
+
+commit f420f11b6966f33382390366e7ecd216b2fd99b8
+Author: Oleg Smolsky <oleg@smolsky.net>
+Date:   Thu Apr 5 21:05:06 2012 -0700
+
+    Fixed multi-line indentation in the 'return' case
+
+commit 06d1642da17fb9407577943d51d93a2442f45747
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Fri Apr 6 11:35:40 2012 -0500
+
+    Update test results for latest fix to C++ lambda stuff
+
+commit 65867c045c4833d6d8034bbc6394d872c33c2b45
+Author: Oleg Smolsky <oleg@smolsky.net>
+Date:   Thu Apr 5 18:56:43 2012 -0700
+
+    Additional lambda/indent fix
+
+commit a54dfa1aa36561c025ed2ba56861f19436fb50af
+Author: Oleg Smolsky <oleg@smolsky.net>
+Date:   Sun Apr 1 11:33:14 2012 -0700
+
+    Moved a hard-coded constant out into an option
+    
+        indent_ctor_init_leading  = 4        # virtual indent from the ':' for member
+                                             # initializers. Default is 2.
+                                             # (applies to the leading colon case)
+    this is needed for handling member initializer lists:
+    
+    Thread::Thread()
+        :   m_bStarted(false),
+            m_log(/Thread)
+    {
+        ....
+    }
+
+commit 9d3ab48b138ecdfbee4ddbd0e35fce31ae785b92
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Fri Apr 6 11:23:19 2012 -0500
+
+    Add an expanded test for '<<' alignment.
+    The results may not be correct based on pending patches.
+
+commit 7a9f6a9b9fa75dd143a9b4fd91c1a2dee1eb46c6
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Thu Mar 29 19:36:18 2012 -0500
+
+    Update test for lambda return type
+
+commit 19dff2aea0dec7910fdae1065370e23ba2e7be1b
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Thu Mar 29 19:35:58 2012 -0500
+
+    Handle C++ lambda return type
+
+commit bc1ea727dff5b73b86fc1a5f6f94690c5173e370
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Thu Mar 29 18:55:49 2012 -0500
+
+    Fix a few problems with the new options
+
+commit bd32896fd7f0fd73aa338b1a1340086097cbe649
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Thu Mar 29 18:55:19 2012 -0500
+
+    Add some tests for the new sp_cpp_lambda_xx options
+
+commit 7e2db96aa6cdba4e012e8adfa266a67e7cf2adda
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Thu Mar 29 18:34:44 2012 -0500
+
+    Add sp_cpp_lambda_assign and sp_cpp_lambda_paren
+
+commit c12a4c5ce4929eaff377486b36da690037d58345
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Thu Mar 29 17:53:12 2012 -0500
+
+    Label C++11 lambda expressions
+
+commit 9e92b900e5766dc2e95f611c5627625f17a9262b
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Thu Mar 29 17:18:42 2012 -0500
+
+    Correct input file.
+
+commit d28e0fd97037eb548e62f177435bb675de5521a8
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Thu Mar 29 11:16:53 2012 -0500
+
+    Add VS2011 project files (Oleg Smolsky)
+
+commit b5d0a2c5edba524f49f984078f8740b7743af30c
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Tue Mar 27 21:24:23 2012 -0500
+
+    Add test cases for new '<<' aligning functionality
+
+commit 5ff36433c85ca55a3b4f6d972dbbb5d7e9082b62
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Tue Mar 27 21:23:52 2012 -0500
+
+    Fix aligning of '<<' in C++
+    From: Oleg Smolsky
+
+commit 9fa0183f6a2f08e4b5c0a5f433481277fce0cb52
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Tue Mar 27 21:10:25 2012 -0500
+
+    Add sp_permit_cpp11_shift
+    From: Oleg Smolsky
+
+commit 5a930a5dc1e285513b52088f98a5dacd5fea4ea3
+Merge: c6e500a 868501f
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Tue Mar 20 21:23:55 2012 -0500
+
+    Merge branch 'master' of github.com:bengardner/uncrustify
+
+commit c6e500aaaba0abba230311471a52f8b34776cdde
+Merge: d519bfa bbbee52
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Tue Mar 20 21:21:32 2012 -0500
+
+    Merge branch 'rdan-20120129' of https://github.com/rdan/uncrustify into rdan-rdan-20120129
+    
+    Conflicts:
+    	src/indent.cpp
+
+commit 868501f35dead19b3731eefb5a1435105665dbdf
+Merge: d519bfa 5542d0b
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Tue Mar 20 19:16:30 2012 -0700
+
+    Merge pull request #57 from mkonig/mos_extensions
+    
+    Added a script that generates uncrustify_version.h on windows.
+
+commit d519bfa85552cebc5388b979668ea7c5d1c53853
+Merge: 82f70d3 e2e0756
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Tue Mar 20 19:13:46 2012 -0700
+
+    Merge pull request #63 from bitserf/objc-method-spec-colons
+    
+    Tweak align_oc_decl_colon to also align colons of Objective-C method prototypes
+
+commit e2e075683a576be33afdab4eac922c3afd52bb2b
+Author: Leon Breedt <ljb@bitserf.org>
+Date:   Wed Mar 21 03:10:34 2012 +1300
+
+    Tweak align_oc_decl_colon to also align colons of Obj-C method prototypes.
+
+commit 5542d0b29f741f0fb97b9c9a617a99a04f03d3a7
+Author: Mirko König <koenig@v-i-t.de>
+Date:   Sat Feb 25 19:56:23 2012 +0100
+
+    Added a script that generates uncrustify_version.h on windows.
+    Added this script to vs2008 solution to run as pre-build event.
+    Added compat_win32.cpp to vs2008 solution file.
+
+commit bbbee52fd41dc240f3312d06cf4744e3337bf70e
+Author: rdan <rdanioux@free.fr>
+Date:   Mon Feb 13 01:41:36 2012 +0100
+
+    Update of test file to try to avoid an "UNSTABLE" result (for 00617).
+    It's still unstable because of "nl_max" which is applied everywhere even if another option specifies a different value (ex: nl_max is set to 2 to have a maximum of 1 consecutive blank line everywhere in the code. But we also want to have 2 blank lines after the declaration of local variables in a function).
+
+commit af232a0b7adc6ab1340f84c7fbc827a67f38887f
+Author: rdan <rdanioux@free.fr>
+Date:   Mon Feb 13 00:50:12 2012 +0100
+
+    - Correction of my previous commit (bug detected with file "pp-if-indent.c", file added to tests). The bug is present only when the option added is active.
+    - Correction of a bug that was already in uncrustify detected with file "pp-if-indent.c". It generated the following output:
+    
+    pp-if-indent.c:19 Unmatched PP_IF_INDENT
+    pp-if-indent.c:21 Unmatched BRACE_OPEN
+    pp-if-indent.c:30 Unmatched PP_IF_INDENT
+    pp-if-indent.c:33 Unmatched BRACE_OPEN
+
+commit 82f70d3261904ac11caf7ca125a852ce10d0f6e2
+Merge: e5d2eff bc43061
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sun Feb 12 17:34:21 2012 -0600
+
+    Merge branch 'rdan-20120129' of https://github.com/rdan/uncrustify
+
+commit e5d2eff99f6f1042057d64dbbdaab817a7914606
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sun Feb 12 17:27:10 2012 -0600
+
+    Don't include src/config.h, as that is generated by configure.
+
+commit b7cf7809161b5d47d0786e051a779cb1c9002eb7
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sun Feb 12 17:23:09 2012 -0600
+
+    Add missing file to MS VC++ 2010 project file
+
+commit bc43061e83f77d726c5891a4ded770a787207dc9
+Author: rdan <rdanioux@free.fr>
+Date:   Sun Feb 12 13:31:44 2012 +0100
+
+    New option to force the indentation of function definition to start on the first column even if this function is defined inside a #if/#endif directive.
+
+commit d8c5e80b1463282cee7a9fea7d8852804a4dd2b0
+Author: rdan <rdanioux@free.fr>
+Date:   Sun Feb 12 13:07:29 2012 +0100
+
+    Correction of an issue:
+    In the following code
+    
+    #if A
+     void function(void)
+     {
+     }
+    #endif
+    
+    A is qualified as Tag=CT_TYPE/Parent=FUNC_DEF instead of Tag=WORD/Parent=NONE.
+
+commit 95eb26256066b608063f42d8ca7ade73e8fb2922
+Author: rdan <rdanioux@free.fr>
+Date:   Sun Feb 12 13:02:48 2012 +0100
+
+    Updates to be able to generate the software with Visual C++ 2010
+
+commit dc89e72f61320fc95a15638ddd03663e937620e4
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Tue Feb 7 08:06:41 2012 -0600
+
+    Add include of windows_compat.h to compat_win32.cpp
+
+commit 6358b4865f18a0a8f75f6a534447524682cdb4bc
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Jan 14 16:06:13 2012 -0600
+
+    Debugging: also log the column_indent
+
+commit 948ec99cfdc6acbb1d13b489d7d2bbe39059fba9
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Jan 14 16:04:13 2012 -0600
+
+    Update tests to reflect the change in the last commit.
+
+commit c0b125fdfe6e6f5d02b466220961ac6731b4c728
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Jan 14 16:02:26 2012 -0600
+
+    A #define body indent should have 1 level of tabs in mixed mode.
+
+commit 490986c7607c772cb76eb7bbf4eb62d3ccfc2bfa
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Jan 14 11:02:27 2012 -0600
+
+    Add custom type PROTO_WRAP for old-style prototype wrapper macros.
+
+commit 3359082eff68278e7d3b2cf0ebbdf0f914857852
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Jan 14 10:22:38 2012 -0600
+
+    Rework the default config file check to avoid C99 constructs.
+    Fixes a compile error on MS VC++ 2010.
+
+commit 7aba80646c66fc45dcb9e8fdc9542b7d1794cc5a
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Jan 14 10:13:42 2012 -0600
+
+    Fix compile issue on MS VC++ 2010
+
+commit 2a220107fd1e0e9139c5bbe312b14b3b12e2cee7
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Jan 7 21:48:41 2012 -0600
+
+    Add option: nl_version_brace
+    Affects D
+
+commit 72c9645f0b57017063ed83f5db7e3d845eab56a7
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Jan 7 21:48:15 2012 -0600
+
+    Add option: nl_scope_brace
+    Affects D
+
+commit c4bdf597a32525548c43f80c4b36a9dabdb7475f
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Jan 7 21:10:15 2012 -0600
+
+    Fix crash if unittest is the first token in the file.
+
+commit 91701a4e5ec5de9cb4f71847da44e7f1ed3d8c26
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Jan 7 21:09:48 2012 -0600
+
+    Add option: nl_unittest_brace
+
+commit 1691e461067922002c1dd5d3f42519715cce9001
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Jan 7 16:59:35 2012 -0600
+
+    Add a few other C++ extensions.
+    Fixes SF#3470255
+
+commit 4dccc7487e0baaffb8f6a25a10adc8841514dcce
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Jan 7 16:40:14 2012 -0600
+
+    Add test for sp_before_template_paren
+
+commit bdf2c6671c5b97c3120749499685f9458f0bdd5c
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Jan 7 16:39:25 2012 -0600
+
+    Add option: sp_before_template_paren
+    Controls the space for D in "class Foo(" and "template Foo(".
+
+commit 2501784474c6493bbfff3b7ede29ec8222a42b5c
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Jan 7 16:25:40 2012 -0600
+
+    Improve labeling of D templates.
+
+commit 3ffbfd5c7c0b6f618394ae6dfb4c1e88cc8a0b2c
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Thu Jan 5 22:37:30 2012 -0600
+
+    Do a better job of marking types in a class
+
+commit e047b3d380003e3f6355dc8c88ef62b7ac063051
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Thu Jan 5 22:36:49 2012 -0600
+
+    Do a better job handling class forward declarations
+
+commit c321930e9ef4d989d596bdc068b17aaec0d8dad8
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Thu Jan 5 22:34:23 2012 -0600
+
+    Fix incorrect test
+
+commit c0c4354016756ddb02984341a3b79295c1f1ba57
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Thu Jan 5 21:34:02 2012 -0600
+
+    Use unc_text::equals() instead of memcmp()
+
+commit 044ebe1c4ad8e11f99d2d49a1134fae86b490e79
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Thu Dec 29 16:47:09 2011 -0600
+
+    Add ability to get config from UNCRUSTIFY_CONFIG env var to win32
+
+commit d7b57f9fd59ff39e24503ffa8a822a1a46b48e29
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Thu Dec 29 15:27:10 2011 -0600
+
+    Update tests for nl_before_newline
+
+commit 3040f3887634b0f4331bee7b25f9f34f5f97adc7
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Thu Dec 29 15:26:02 2011 -0600
+
+    Add option: nl_before_return
+    Move nl_after_return to the blankline group.
+
+commit 4e39f15b183b6e92531aa0bd88168515c4d8cbc3
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Wed Dec 28 00:54:34 2011 -0600
+
+    Save off working notes about #if/#else/#endif code threads
+
+commit 47fa9b294210f07ecabedbf75ee30ffa5603be12
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Wed Dec 28 00:50:15 2011 -0600
+
+    Handle function pointers with complex return types (ie, unsigned char).
+    Fixes SF #3152653
+
+commit 6226fdb03c02b8e3ecbea1bbda2ea5d945322457
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Wed Dec 28 00:25:49 2011 -0600
+
+    Change newline_iarf_pair() to handle 'force' as 'add' + newline limit.
+    Fixed SF #3169766
+
+commit 3ee41a21c7a8c76e1db7d208d4f8eab6dfaf7065
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Wed Dec 28 00:05:46 2011 -0600
+
+    Get nl_class_init_args=force to work
+    Fixed SF #3444921
+
+commit 4775d8990fc8552b4384a833386b2aea0fb665aa
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Tue Dec 27 23:25:26 2011 -0600
+
+    The '*' in "*," is always likely to be a pointer in the following:
+      FUNCDEF_MACRO( func, (arg1 *,arg2 *, arg3*));
+    Fixes SF #3464371
+
+commit 37ebfd815d1ed8b5ba33b69d76da980c7ec6644c
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Nov 26 12:03:15 2011 -0600
+
+    From: Jim Meyering
+    include <unitsd.h> for open, close, unlink
+    
+    Otherwise, I get errors like these on Fedora 16:
+    
+      uncrustify.cpp: In function 'bool file_content_matches(const string&,\
+        const string&)':
+      uncrustify.cpp:903:16: error: 'close' was not declared in this scope
+      uncrustify.cpp:915:45: error: 'read' was not declared in this scope
+      ...
+      uncrustify.cpp: In function 'void do_source_file(const char*,\
+        const char*, const char*, bool, bool)':
+      uncrustify.cpp:1046:46: error: 'unlink' was not declared in this scope
+
+commit 1c8aedbd1e845196f2a46491b8479596e7404856
+Merge: 34d4143 fbf046e
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Nov 26 09:56:03 2011 -0800
+
+    Merge pull request #47 from meyering/multi-line-comment--do-not-elide-utf8-characters
+    
+    do not elide UTF-8 characters from multi-line comments
+
+commit fbf046e03e41fb8c137c2ed49c120bf389cbbc75
+Author: Jim Meyering <meyering@redhat.com>
+Date:   Fri Nov 25 19:47:25 2011 +0100
+
+    do not elide UTF-8 characters from multi-line comments
+    
+    Before this change, uncrustify would remove UTF-8 characters from
+    multi-line comments.  E.g., here, uncrustify would remove an a-acute
+    from a 2-line comment:
+    
+        $ printf '/*\303\241\n*/\n' > utf8.c
+        $ src/uncrustify -q utf8.c; wc -c utf8.c utf8.c.unc*
+         8 utf8.c
+         6 utf8.c.uncrustify
+    
+    This fixes it and adds a test to exercise the fix.
+    
+    * src/output.cpp (output_comment_multi_simple): Correct the type of
+    "ch": use "int", not char, to avoid sign-extension with signed char.
+    * tests/c.test: New file.
+    * tests/input/c/cmt_multi_utf8.c: New file.
+    * tests/output/c/02423-cmt_multi_utf8.c: New file.
+
+commit 34d41436cfc900c23edb55c161ae2086766ce56e
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Tue Nov 15 21:23:18 2011 -0600
+
+    Update tests based on latest patch
+
+commit 2d0e192c23b3a24aa16566ca1aafaf0f470f5580
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Tue Nov 15 21:22:54 2011 -0600
+
+    From: Todd Richmond
+    Rework function parameter line splitting.
+
+commit 6df0bc53655d8bb590f028166fb17c6796d408b9
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Tue Nov 15 21:15:43 2011 -0600
+
+    Whitespace cleanup
+
+commit e4f447789a2f6f4a1c1f0cb8e9e6c8871e67ee79
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Tue Nov 15 21:15:29 2011 -0600
+
+    From: Todd Richmond
+    Don't split '>>' into '> >' for C++ templates.
+    Fixes SF#3203335
+
+commit 4d2960bf02e840fd2c9bf80b7a2cb9122770b3ea
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Tue Nov 15 20:49:48 2011 -0600
+
+    From: Todd Richmond
+    Add support for __try, __except, and __finally.
+
+commit ceb60d60580cbdfc8cf72daf7244df5847759ce1
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Tue Nov 15 20:44:36 2011 -0600
+
+    From: Todd Richmond
+    Add copy constructor to AlignStack.
+
+commit a920c2b08afeac1e4312daeb768871e4600972f4
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Tue Nov 15 20:43:57 2011 -0600
+
+    From Todd Richmond
+    Fix off-by-one error in align_same_func_call_params()
+
+commit 2d9f50feaef2b80854bed2ce64e4d6eec9c5bbcc
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Tue Nov 15 20:38:59 2011 -0600
+
+    Run uncrustify against some of its source.
+
+commit 867f0f7dad29a9ab08e2394140e43749f3e4c3fb
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Tue Nov 15 20:38:29 2011 -0600
+
+    From: Todd Richmond
+    Update sun.cfg and update test results from the latest patch.
+
+commit 2e95b3c8bf4bf9d7ec688c769803ffaf3ca4be29
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Tue Nov 15 20:37:22 2011 -0600
+
+    From: Todd Richmond
+    Add a slew of new options:
+    nl_typedef_blk_start, nl_typedef_blk_end, nl_typedef_blk_in
+    nl_var_def_blk_start, nl_var_def_blk_end, nl_var_def_blk_in
+    nl_remove_extra_newlines
+    From SF #3426576
+
+commit b24579c1e5b68f8ce9757964c81686ce8a7a5b84
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Tue Nov 15 20:23:37 2011 -0600
+
+    Fix null dereferences
+
+commit 31265d3337be44b4499d3a673ff4a3622e27af53
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Tue Nov 15 20:18:57 2011 -0600
+
+    Fix spelling recommed => recommend
+
+commit 122b7e7b3f44d3c0ae72f703874d123ef6d5d053
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Thu Nov 10 05:58:31 2011 -0600
+
+    Fix aligning on '<<' in the presence of 'operator <<'.
+
+commit d723b22b89b3a460fa8a7e6975b89d3059b45ad3
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Thu Nov 10 05:52:17 2011 -0600
+
+    Increase the span of '<<' slignment so that 'q' and 'xyz' align in the
+    following code snippet:
+    
+    void bar()
+    {
+      out << "q"
+      // << "abc"
+      // << "def"
+          << "xyz";
+    }
+
+commit 158cc8abe5e3ce1c3b53b161dd1c5d5fcd2e847c
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Thu Nov 10 05:38:37 2011 -0600
+
+    Update test results to reflect virtual brace comment spacing fix.
+
+commit 491b8927f2305b4ed7d727e7de2e77970ffc526c
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Thu Nov 10 05:37:07 2011 -0600
+
+    From: Jim Meyering
+    Fix handling of virtual braces when calculating the comment column.
+    
+    foo ()
+    {
+      if (1)
+        a = b; /* c */
+    }
+
+commit 7021e495105caffa5d2f47be65984c75254ac692
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Thu Nov 10 05:29:04 2011 -0600
+
+    Fix handling of templates in constructors:
+    
+    TOTO<char*const>::~TOTO<char*const> ()
+    {
+    }
+
+commit 88bb98e5e8b0a03fdcf8522cb62bf7c5ba175f56
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Thu Nov 10 05:18:30 2011 -0600
+
+    From: Todd Richmond
+    do_code_width() must be followed by newlines_cleanup_braces because
+    breaking lines might also break one-liners such as
+    
+    enum x = { 1, var_too_long_for_code_width };
+    
+    which reformats to
+    
+    enum x = { 1,
+    var_too_long_for_code_width
+    };
+    
+    instead of putting the newline after the {
+
+commit 004a21be1b633306c6e655719a06d09bf7e3ee95
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Thu Nov 10 05:13:25 2011 -0600
+
+    From: Todd Richmond
+    Allow a line split between two strings.
+
+commit 10c35ad427c9ab08f255f98ed60c1ffb57a668ec
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Thu Nov 10 05:08:34 2011 -0600
+
+    Java also uses the ellipsis
+
+commit e6ccc2551d533b75c435dd34ea030ed9ed02b783
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Wed Nov 9 07:18:30 2011 -0600
+
+    Change '-F' handling to match what the usage info says, one file per line.
+    More work is needed to support a prefix on windows, as drive letters aren't
+    handled.
+
+commit 8c2cc60bbe4fedf012331d8641fec5dce27d97df
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Wed Nov 9 07:01:53 2011 -0600
+
+    From: Todd Richmond
+    Create new option ls_code_width to better control line width splitting.
+
+commit e1ebb8b1592832dbcd6b5664fa05f2c4e2208243
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Thu Nov 3 21:11:26 2011 -0500
+
+    From: Todd Richmond
+    struct/enum/class variable definitions are using nl_after_struct/
+    nl_after_class newlines which were designed for the actual struct
+    definition, not instances of the struct. This adds an extra newline
+    within a var def block
+    
+    int x() {
+    struct b c;
+    struct d e;
+    }
+    
+    formats to
+    
+    int x() {
+    struct b c;
+    
+    struct d e;
+    }
+
+commit 4bdae67aa0cbb5858aae1065eea23c4a5dde89f3
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Thu Nov 3 21:04:26 2011 -0500
+
+    From: Todd Richmond
+    Two wide strings concatenated together without a space causes the
+    second L to trail the first string instead of lead the 2nd string.
+    
+    #define x L"a"L"b"
+    formats to L"a"L "b"
+    instead of
+    L"a" L"b"
+
+commit 1db8aaf384e2c74f98974df0d6a6ffa27903615b
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Tue Oct 25 18:47:42 2011 -0500
+
+    From: Todd Richmond
+    Rework long line splitting code.
+    
+    This patch does the following
+    
+    1) makes indenting for indent_continue != 0 consistent except that >0 is
+    old behavior of grouping constructs like ?: or functions
+    
+    2) fixes a bug found with the fix for 3426636 (long typedefs). The old
+    code never indented properly because it added indent_size to 0 instead of
+    the previous indent. In test cases that showed up as a 3 char indent
+    instead of 4
+    
+    3) fix test cases for the long typedef lines. Note that your final typedef
+    change caused typedefed functions to tread the arguments as a function
+    which causes the lines to indent to the fparen. I think your change is
+    correct behavior and only the test case needed an update
+
+commit 4a0e1d63861d883ddacfcd6b9bf4ddab6c5adb7b
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Tue Oct 25 18:40:05 2011 -0500
+
+    Rework 'class' detection to allow 'class' as a member name.
+
+commit 53d716f543709bb0b6f1e524bc910c64ecebaf21
+Merge: 716df3c d57307d
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Tue Oct 25 18:29:42 2011 -0500
+
+    Merge branch 'master' of github.com:bengardner/uncrustify
+
+commit 716df3cfdad8f49daf4841c5b58593345ebbac6a
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Tue Oct 25 18:27:31 2011 -0500
+
+    From: Todd Richmond
+    If mod_full_brace_if = add and mod_full_brace_if_chain = true, it will eat
+    a required line break after the closing if statement, regardless of having
+    { } or not.
+    
+    if (a)
+    b();
+    c();
+    
+    reformats to
+    
+    if (a)
+    b(); c();
+
+commit d57307ddfec43dd3a9967b56b6b3e8cf935a2825
+Merge: 0650864 c9768db
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Mon Oct 24 10:29:55 2011 -0700
+
+    Merge pull request #45 from Uncommon/master
+    
+    Add missing files to Xcode project
+
+commit c9768db3e058dd2b63303f3f09d0a6a2ab479be6
+Author: David Catmull <uncommon@uncommonplace.com>
+Date:   Mon Oct 24 11:19:46 2011 -0600
+
+    Add unc_text.cpp and unicode.cpp to the Xcode project
+
+commit 06508646f3cc0fbccb7ad6eeb0c50d42b847ff29
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Oct 22 15:50:15 2011 -0500
+
+    Add a log when the comment cont_text is set.
+
+commit c9fce40717e12c2feaec7f7a469baa351c213426
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Oct 22 15:49:33 2011 -0500
+
+    Detect a comment lead without requiring a space after a single '*'.
+
+commit e02dd8a41e466876bc39aa8eaf55c1d6aee6b596
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Oct 22 15:48:05 2011 -0500
+
+    Insert a space between '*' and text in a comment line start.
+
+commit 0461e187859eb2b227073edd6b74ccc39359b1ca
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Oct 22 15:46:39 2011 -0500
+
+    Add unc_text::insert()
+
+commit cfa96cbe6c840ac11845cda0e55424cda764cd79
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Oct 22 14:51:24 2011 -0500
+
+    Add a test for align_func_proto_span with align_on_operator
+
+commit abd74db2c35b9bfcf95d706d58ce3ab1e5d96562
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Oct 22 14:37:03 2011 -0500
+
+    Set the gap on all aligned chunks
+
+commit 187f33f098806d9bd1cc4df618cd5e337381e0d4
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Oct 22 14:34:49 2011 -0500
+
+    Set the start and amp style for align_func_proto
+
+commit 95cac2cff979de9391f983f1de4fcb5d90aec525
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Fri Oct 21 21:53:21 2011 -0500
+
+    Also need to end a typedef indent on an open paren
+
+commit ab66cf91f5b788ecd1a9f704f3f18ee5e1ac595f
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Fri Oct 21 21:52:55 2011 -0500
+
+    Update code-width.c test with long typedefs
+
+commit fbd5ad351a12808679ed029eaa4e14b115ab3a12
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Fri Oct 21 21:44:27 2011 -0500
+
+    Use a continuation indent for typedefs that span two lines.
+    Fixes SF 3426636
+
+commit 0c8f3cc968820db79b04883a862f42355f3effdd
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Thu Oct 20 22:21:20 2011 -0500
+
+    Allow '&' in a C-style cast. Ie, (Foo &).
+    Fixes SF#3266678
+
+commit ad9f2b11ec58e7d2458d07276263bb683bc87f19
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Thu Oct 20 21:54:03 2011 -0500
+
+    Remove unused variables that g++ 4.6 found.
+    
+    Signed-off-by: Ben Gardner <gardner.ben@gmail.com>
+
+commit db9c795e9d756ed3eff50510311b62436f51ac20
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Thu Oct 20 21:44:17 2011 -0500
+
+    From: Todd Richmond
+    New option: align_pp_define_together
+    Align #define functions and variables together
+
+commit f3f6ac39f834e31fa703109e1ccdccd76c64066c
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Oct 15 21:48:03 2011 -0500
+
+    Change the 'class' check to require a 'word' after to be value.
+    Should now handle variables named 'interface' or members named 'class'.
+
+commit e5246380c0a64c878d070ff322b101509dc3813e
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Oct 15 21:37:27 2011 -0500
+
+    Back out absolute indent_continue check in split_line(), as it caused
+    ls_func_split_full to fail.
+
+commit 0f22bda9daa368017a46bd66994fa206194c99be
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Thu Oct 13 22:28:42 2011 -0500
+
+    Fix wording of the utf8_byte option
+
+commit 02342d6f0a241dfd52666334d0c363f7b5121bd4
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Thu Oct 13 22:28:20 2011 -0500
+
+    From: Todd Richmond
+    
+    Update sub.cfg
+
+commit 2720231d94a927f6ee9e83e9fecedef7e7b75e52
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Thu Oct 13 22:24:24 2011 -0500
+
+    Fix regression caused by labeling 'interface' as a keyword.
+
+commit 005fefb6fe223b45684d3f2f166cc6d1ad26450d
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Thu Oct 13 22:06:04 2011 -0500
+
+    From: Todd Richmond
+    
+    Rework long line splitting
+
+commit e00f3545a4430f89d627d92f0bdaf63b6f18cbfc
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Thu Oct 13 21:58:05 2011 -0500
+
+    From: Todd Richmond
+    
+    Add support for negative indent_continue values.
+
+commit 6aeed7a617bb0058092c36dc1cf5cbc6232b1831
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Thu Oct 13 21:55:05 2011 -0500
+
+    From: Todd Richmond
+    
+    Add project name to VS2010 project file
+
+commit d3a972aaf7ea9ef20c0f7c5436ae4d598aa381c4
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Thu Oct 13 21:49:16 2011 -0500
+
+    From: Todd Richmond
+    
+    uncrustify needs a "join" option to go with the other lead/trail options.
+    The requirement is to remove extraneous newlines and merge them into the
+    same format they would have if newlines were not found in the original.
+    This is critical for function calls/deffs where arguments are not brought
+    back together to maximize line length
+    
+    The attached diff is quite simple and resolves the test cases I tried so
+    far. It also undoes the splits that were added by the over-aggressive
+    splitting that I resolved in my previous large diff
+
+commit 345560f7d0c27e65725a91664e89ca544155df84
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Thu Oct 13 21:41:30 2011 -0500
+
+    From: Todd Richmond
+    
+    If mod_remove_extra_semicolon=true, extra semicolons will be removed from
+    within a macro such as
+    
+    #define ENDSTRUCT };
+    
+    There might be other modifying options as well that should not take effect
+    within macros
+
+commit a36b09750273c9d3306e85684028d2cac0f32770
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Thu Oct 13 21:38:51 2011 -0500
+
+    From: Todd Richmond
+    
+    To denote that a string is unicode, L"string" is used, but uncustify will
+    insert a space in the # cpp operator for common macros such as
+    
+    #define KEYWORD(_keyword_) L#_keyword_
+    
+    which reformats to
+    
+    #define KEYWORD(_keyword_) L # _keyword_
+    
+    sp_pp_stringify will remove the trailing space but not the leading space
+    which is an invalid construct
+
+commit befe3c513e69a08a3e90dc759da01b338687f5a5
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Thu Oct 13 21:35:38 2011 -0500
+
+    From: Todd Richmond
+    
+    In Visual Studio in C/C++, the "interface" keyword should be treated like
+    "class" as it allows derivations like ": public foo"
+
+commit 965c01bad535aa807e25f4b79a9a6495a3b18280
+Author: Jim Meyering <meyering@redhat.com>
+Date:   Sun Oct 2 12:59:57 2011 +0200
+
+    handle a backslash followed by a literal newline
+    
+    Without this change, uncrustify's lexer would get confused for any C
+    code containing a string like this:
+    
+      f ("\
+      Some text\n");
+    
+    That led to a diagnostic like "Garbage in col 8: 5c" typically
+    followed by a cascade of unwarranted diagnostics.
+    
+    The fix is to reset "escaped" also when handling a literal
+    newline or a carriage return.
+    
+    Also included: a test case to exercise the bug/fix:
+      tests/c.test
+      tests/input/c/backslash-newline-lex.c
+      tests/output/c/01060-backslash-newline-lex.c
+    
+    Signed-off-by: Ben Gardner <gardner.ben@gmail.com>
+
+commit c404574dd88dba6520ca545ed1b388d678049c21
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Oct 8 21:34:42 2011 -0500
+
+    Update SlickEdit project files
+
+commit 68c59727a92ee887c110175258dacd27b589fcf8
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Oct 8 20:57:13 2011 -0500
+
+    Add OpenPorts.se link
+
+commit 8efb7ea7ff46a7b6196f9233541bb63a1a9d3142
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Tue Oct 4 21:37:04 2011 -0500
+
+    Save off changes for version 0.59
+
 commit ee20cffd27cafd99aac17c06e80ba954554fb76f
 Author: Ben Gardner <gardner.ben@gmail.com>
 Date:   Tue Oct 4 21:06:02 2011 -0500
