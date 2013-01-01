@@ -1,4 +1,59 @@
 
+Change highlights in uncrustify-0.59 (1 Jan 2013)
+-------------------------------------------------------------------------------
+Objective C support was greatly enhanced in this release.
+Many bugs were squashed and many options were added.
+
+New options:
+ - align_oc_msg_colon_first
+ - align_pp_define_together
+ - indent_ctor_init_leading
+ - indent_func_def_force_col1
+ - indent_oc_block
+ - indent_oc_block_msg
+ - indent_oc_msg_colon
+ - ls_code_width
+ - nl_after_annotation
+ - nl_before_return
+ - nl_between_annotation
+ - nl_brace_struct_var
+ - nl_oc_msg_args
+ - nl_oc_msg_leave_one_liner
+ - nl_remove_extra_newlines
+ - nl_scope_brace
+ - nl_typedef_blk_end
+ - nl_typedef_blk_in
+ - nl_typedef_blk_start
+ - nl_unittest_brace
+ - nl_var_def_blk_end
+ - nl_var_def_blk_in
+ - nl_var_def_blk_start
+ - nl_version_brace
+ - sp_after_for_colon
+ - sp_after_oc_dict_colon
+ - sp_after_oc_msg_receiver
+ - sp_after_oc_property
+ - sp_after_throw
+ - sp_after_tparen_close
+ - sp_annotation_paren
+ - sp_before_for_colon
+ - sp_before_oc_dict_colon
+ - sp_before_pp_stringify
+ - sp_before_template_paren
+ - sp_cpp_lambda_assign
+ - sp_cpp_lambda_paren
+ - sp_extern_paren
+ - sp_inside_sparen_open
+ - sp_inside_tparen
+ - sp_permit_cpp11_shift
+ - sp_ptr_star_paren
+
+Changed default:
+ - sp_pp_stringify = ignore (was add)
+
+See commit.log for details.
+
+
 Change highlights in uncrustify-0.59 (4 Oct 2011)
 -------------------------------------------------------------------------------
 The biggest change in this release was to rework the string handling to add
