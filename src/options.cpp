@@ -1006,6 +1006,8 @@ void register_options(void)
                   "Whether to bump out to the next tab when aligning");
    unc_add_option("align_number_left", UO_align_number_left, AT_BOOL,
                   "Whether to left-align numbers");
+   unc_add_option("align_keep_extra_space", UO_align_keep_extra_space, AT_BOOL,
+                  "Whether to keep whitespace not required for alignment.");
    unc_add_option("align_func_params", UO_align_func_params, AT_BOOL,
                   "Align variable definitions in prototypes and functions");
    unc_add_option("align_same_func_call_params", UO_align_same_func_call_params, AT_BOOL,

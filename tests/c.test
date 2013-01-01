@@ -277,3 +277,5 @@
 02501 ger.cfg			c/custom_types_ssl.c
 02502 custom_types_ssl.cfg	c/custom_types_ssl.c
 02503 ger.cfg			c/pp_concat_asn1.h
+
+02504 align_keep_extra.cfg      c/align_keep_extra.c
