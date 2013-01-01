@@ -68,6 +68,10 @@
          Filters="">
       </Folder>
    </CustomFolders>
+   <CompatibleVersions>
+      <PrevVersion VersionNumber="9.0"/>
+      <PrevVersion VersionNumber="9.1"/>
+   </CompatibleVersions>
    <Files AutoFolders="DirectoryView">
       <Folder Name="documentation">
          <Folder Name="htdocs">
@@ -129,13 +133,11 @@
       <F N="HELP"/>
       <F N="INSTALL"/>
       <F N="make_token_names.sh"/>
+      <F N="make_win32.sh"/>
       <F N="Makefile.am"/>
       <F N="NEWS"/>
       <F N="README"/>
       <F N="release-steps.txt"/>
+      <F N="run_tests.sh"/>
    </Files>
-   <CompatibleVersions>
-      <PrevVersion VersionNumber="9.0"/>
-      <PrevVersion VersionNumber="9.1"/>
-   </CompatibleVersions>
 </Project>
