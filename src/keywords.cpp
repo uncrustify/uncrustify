@@ -31,7 +31,7 @@ static const chunk_tag_t keywords[] =
    { "@catch",           CT_CATCH,        LANG_OC | LANG_CPP | LANG_C                                                 },
    { "@dynamic",         CT_OC_DYNAMIC,   LANG_OC | LANG_CPP | LANG_C                                                 },
    { "@end",             CT_OC_END,       LANG_OC | LANG_CPP | LANG_C                                                 },
-   { "@finally",         CT_TRY,          LANG_OC | LANG_CPP | LANG_C                                                 },
+   { "@finally",         CT_FINALLY,      LANG_OC | LANG_CPP | LANG_C                                                 },
    { "@implementation",  CT_OC_IMPL,      LANG_OC | LANG_CPP | LANG_C                                                 },
    { "@interface",       CT_OC_INTF,      LANG_OC | LANG_CPP | LANG_C                                                 },
    { "@private",         CT_PRIVATE,      LANG_OC | LANG_CPP | LANG_C                                                 },
