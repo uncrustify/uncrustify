@@ -51,22 +51,27 @@ void remove_extra_semicolons(void)
       if ((pc->type == CT_SEMICOLON) && !(pc->flags & PCF_IN_PREPROC) &&
           ((prev = chunk_get_prev_ncnl(pc)) != NULL))
       {
-         LOG_FMT(LSCANSEMI, "Semi on %d:%d, prev = '%s' [%s/%s]\n",
-                 pc->orig_line, pc->orig_col, prev->str.c_str(),
+         LOG_FMT(LSCANSEMI, "Semi on %d:%d parent=%s, prev = '%s' [%s/%s]\n",
+                 pc->orig_line, pc->orig_col, get_token_name(pc->parent_type),
+                 prev->str.c_str(),
                  get_token_name(prev->type), get_token_name(prev->parent_type));
 
-         if ((prev->type == CT_BRACE_CLOSE) &&
-             ((prev->parent_type == CT_IF) ||
-              (prev->parent_type == CT_ELSEIF) ||
-              (prev->parent_type == CT_ELSE) ||
-              (prev->parent_type == CT_SWITCH) ||
-              (prev->parent_type == CT_WHILE) ||
-              (prev->parent_type == CT_USING_STMT) ||
-              (prev->parent_type == CT_FOR) ||
-              (prev->parent_type == CT_FUNC_DEF) ||
-              (prev->parent_type == CT_OC_MSG_DECL) ||
-              (prev->parent_type == CT_FUNC_CLASS) ||
-              (prev->parent_type == CT_NAMESPACE)))
+         if (pc->parent_type == CT_TYPEDEF)
+         {
+            /* keep it */
+         }
+         else if ((prev->type == CT_BRACE_CLOSE) &&
+                  ((prev->parent_type == CT_IF) ||
+                   (prev->parent_type == CT_ELSEIF) ||
+                   (prev->parent_type == CT_ELSE) ||
+                   (prev->parent_type == CT_SWITCH) ||
+                   (prev->parent_type == CT_WHILE) ||
+                   (prev->parent_type == CT_USING_STMT) ||
+                   (prev->parent_type == CT_FOR) ||
+                   (prev->parent_type == CT_FUNC_DEF) ||
+                   (prev->parent_type == CT_OC_MSG_DECL) ||
+                   (prev->parent_type == CT_FUNC_CLASS) ||
+                   (prev->parent_type == CT_NAMESPACE)))
          {
             remove_semicolon(pc);
          }
