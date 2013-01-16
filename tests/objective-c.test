@@ -58,3 +58,4 @@
 50100  bug_340.cfg                                  oc/bug_340.m
 
 50110  obj-c.cfg                                    oc/msg_align.m
+50111  del_semicolon.cfg                            oc/ns_enum.m
