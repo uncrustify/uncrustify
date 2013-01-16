@@ -434,7 +434,7 @@ enum uncrustify_options
    UO_align_oc_msg_colon_span,
    UO_align_oc_msg_colon_first,
    UO_align_oc_decl_colon,
-
+   UO_align_keep_extra_space,      // don't squash extra whitespace
 
    /*
     * Newline adding and removing options
