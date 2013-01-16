@@ -71,6 +71,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		2E6EEE7D16A62A27001EFF54 /* ns_enum.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ns_enum.m; sourceTree = "<group>"; };
+		2E6EEE7F16A62A4E001EFF54 /* 50111-ns_enum.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "50111-ns_enum.m"; sourceTree = "<group>"; };
 		3DFFDA26154983A800A1185B /* compat_posix.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = compat_posix.cpp; sourceTree = "<group>"; };
 		654C6B42108ED8FC00556CD9 /* real_world_file.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = real_world_file.m; sourceTree = "<group>"; };
 		654C6C70108F238800556CD9 /* 50050-real_world_file.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "50050-real_world_file.m"; sourceTree = "<group>"; };
@@ -1563,6 +1565,7 @@
 				654C6B42108ED8FC00556CD9 /* real_world_file.m */,
 				654C6FB2108FB40D00556CD9 /* more_blocks.m */,
 				654C70BA1090E89400556CD9 /* blocks.m */,
+				2E6EEE7D16A62A27001EFF54 /* ns_enum.m */,
 			);
 			path = oc;
 			sourceTree = "<group>";
@@ -1957,6 +1960,7 @@
 				65A4632D1092D346007F6EBA /* 50081-more_blocks.m */,
 				65A4632E1092D346007F6EBA /* 50082-more_blocks.m */,
 				65A4632F1092D346007F6EBA /* 50083-more_blocks.m */,
+				2E6EEE7F16A62A4E001EFF54 /* 50111-ns_enum.m */,
 			);
 			path = oc;
 			sourceTree = "<group>";
