@@ -107,6 +107,7 @@ void remove_extra_semicolons(void)
  * We are on a semicolon that is after an unidentified brace close.
  * Check for what is before the brace open.
  * Do not remove if it is a square close, word or type.
+ * (OC) Do not remove if following NS_ENUM or NS_OPTIONS declaration.
  */
 static void check_unknown_brace_close(chunk_t *semi, chunk_t *brace_close)
 {
@@ -114,6 +115,23 @@ static void check_unknown_brace_close(chunk_t *semi, chunk_t *brace_close)
 
    pc = chunk_get_prev_type(brace_close, CT_BRACE_OPEN, brace_close->level);
    pc = chunk_get_prev_ncnl(pc);
+
+   if ((pc != NULL) &&
+       (cpd.lang_flags & LANG_OC) &&
+       (pc->parent_type == CT_TYPEDEF))
+   {
+      chunk_t *ppc;
+
+      ppc = chunk_get_prev_type(brace_close, CT_FPAREN_OPEN, brace_close->level);
+      ppc = chunk_get_prev_ncnl(ppc);
+
+      if ((strcmp(ppc->str.c_str(), "NS_ENUM") == 0) ||
+          (strcmp(ppc->str.c_str(), "NS_OPTIONS") == 0))
+      {
+         return;
+      }
+   }
+
    if ((pc != NULL) &&
        (pc->type != CT_WORD) &&
        (pc->type != CT_TYPE) &&
