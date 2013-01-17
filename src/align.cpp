@@ -1399,6 +1399,25 @@ void ib_shift_out(int idx, int num)
 
 
 /**
+ * If sq_open is CT_SQUARE_OPEN and the matching close is followed by '=',
+ * then return the chunk after the '='.  Otherwise, return NULL.
+ */
+static chunk_t *skip_c99_array(chunk_t *sq_open)
+{
+   if (chunk_is_token(sq_open, CT_SQUARE_OPEN))
+   {
+      chunk_t *tmp = chunk_get_next_nc(chunk_skip_to_match(sq_open));
+
+      if (chunk_is_token(tmp, CT_ASSIGN))
+      {
+         return chunk_get_next_nc(tmp);
+      }
+   }
+   return NULL;
+}
+
+
+/**
  * Scans a line for stuff to align on.
  *
  * We trigger on BRACE_OPEN, FPAREN_OPEN, ASSIGN, and COMMA.
@@ -1409,15 +1428,16 @@ static chunk_t *scan_ib_line(chunk_t *start, bool first_pass)
    chunk_t *pc;
    chunk_t *next;
    chunk_t *prev_match = NULL;
+   chunk_t *tmp;
    int     token_width;
    int     idx = 0;
 
    /* Skip past C99 "[xx] =" stuff */
-   if (start->type == CT_SQUARE_OPEN)
+   tmp = skip_c99_array(start);
+   if (tmp)
    {
       start->parent_type = CT_TSQUARE;
-      start            = chunk_get_next_type(start, CT_ASSIGN, start->level);
-      start            = chunk_get_next_ncnl(start);
+      start = tmp;
       cpd.al_c99_array = true;
    }
    pc = start;
@@ -1558,12 +1578,13 @@ static void align_init_brace(chunk_t *start)
    chunk_t *pc;
    chunk_t *next;
    chunk_t *prev;
+   chunk_t *tmp;
    chunk_t *num_token = NULL;
 
    cpd.al_cnt       = 0;
    cpd.al_c99_array = false;
 
-   LOG_FMT(LALBR, "%s: line %d, col %d\n", __func__, start->orig_line, start->orig_col);
+   LOG_FMT(LALBR, "%s: start @ %d:%d\n", __func__, start->orig_line, start->orig_col);
 
    pc = chunk_get_next_ncnl(start);
    pc = scan_ib_line(pc, true);
@@ -1600,11 +1621,10 @@ static void align_init_brace(chunk_t *start)
    idx = 0;
    do
    {
-      if ((idx == 0) && (pc->type == CT_SQUARE_OPEN))
+      if ((idx == 0) && ((tmp = skip_c99_array(pc)) != NULL))
       {
-         pc = chunk_get_next_type(pc, CT_ASSIGN, pc->level);
-         pc = chunk_get_next(pc);
-         if (pc != NULL)
+         pc = tmp;
+         if (pc)
          {
             LOG_FMT(LALBR, " -%d- skipped '[] =' to %s\n",
                     pc->orig_line, get_token_name(pc->type));
