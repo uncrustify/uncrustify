@@ -39,7 +39,8 @@ Use with \fB\-f\fR, \fB\-\-update\-config\fR, \fB\-\-update\-config\-with\-doc\f
 \fB\-\-universalindent\fR.
 .TP
 \fB\-F\fI FILE
-Read files to process from \fIFILE\fR, one filename per line.
+Read files to process from \fIFILE\fR, one filename per line.  If \fIFILE\fR
+is \'\-\' then read filenames from standard input instead of a file.
 .br
 You can create this file using something like \'\fBfind . \-name "*.c" > list.txt\fR\'.
 .br
