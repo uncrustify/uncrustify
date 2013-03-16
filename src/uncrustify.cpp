@@ -149,7 +149,7 @@ static void usage_exit(const char *msg, const char *argv0, int code)
            " -c CFG       : use the config file CFG\n"
            " -f FILE      : process the single file FILE (output to stdout, use with -o)\n"
            " -o FILE      : Redirect stdout to FILE\n"
-           " -F FILE      : read files to process from FILE, one filename per line\n"
+           " -F FILE      : read files to process from FILE, one filename per line (- is stdin)\n"
            " files        : files to process (can be combined with -F)\n"
            " --suffix SFX : Append SFX to the output filename. The default is '.uncrustify'\n"
            " --prefix PFX : Prepend PFX to the output filename path.\n"
@@ -624,7 +624,8 @@ static void process_source_list(const char *source_list,
                                 const char *prefix, const char *suffix,
                                 bool no_backup, bool keep_mtime)
 {
-   FILE *p_file = fopen(source_list, "r");
+   int from_stdin = strcmp(source_list, "-") == 0;
+   FILE *p_file = from_stdin ? stdin : fopen(source_list, "r");
 
    if (p_file == NULL)
    {
@@ -672,7 +673,11 @@ static void process_source_list(const char *source_list,
                         NULL, no_backup, keep_mtime);
       }
    }
-   fclose(p_file);
+
+   if (!from_stdin)
+   {
+      fclose(p_file);
+   }
 }
 
 
