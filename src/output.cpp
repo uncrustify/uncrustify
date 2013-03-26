@@ -869,7 +869,19 @@ static void add_comment_text(const unc_text& text,
    int  tmp;
    int  len = text.size();
 
-   for (int idx = 0; idx < len; idx++)
+   /* If the '//' is included write it first else we may wrap an empty line */
+   int idx = 0;
+   if (text.startswith("//"))
+   {
+      add_text("//");
+      idx += 2;
+      while (unc_isspace(text[idx]))
+      {
+         add_char(text[idx++]);
+      }
+   }
+
+   for ( ; idx < len; idx++)
    {
       if (!was_dollar && cmt.kw_subst &&
           (text[idx] == '$') && (len > (idx + 3)) && (text[idx + 1] == '('))
