@@ -215,7 +215,9 @@ void register_options(void)
    unc_add_option("sp_inside_paren", UO_sp_inside_paren, AT_IARF,
                   "Add or remove space inside '(' and ')'");
    unc_add_option("sp_paren_paren", UO_sp_paren_paren, AT_IARF,
-                  "Add or remove space between nested parens");
+                  "Add or remove space between nested parens: '((' vs ') )'");
+   unc_add_option("sp_cparen_oparen", UO_sp_cparen_oparen, AT_IARF,
+                  "Add or remove space between back-to-back parens: ')(' vs ') ('");
    unc_add_option("sp_balance_nested_parens", UO_sp_balance_nested_parens, AT_BOOL,
                   "Whether to balance spaces inside nested parens");
    unc_add_option("sp_paren_brace", UO_sp_paren_brace, AT_IARF,

@@ -229,6 +229,7 @@ enum uncrustify_options
    UO_sp_before_squares,        // space before '[]', as in 'byte []'
 
    UO_sp_paren_paren,           // space between nested parens - '( (' vs '(('
+   UO_sp_cparen_oparen,         // space between nested parens - ') (' vs ')('
    UO_sp_balance_nested_parens, // balance spaces inside nested parens
 
    UO_sp_return_paren,          // space between 'return' and '('
