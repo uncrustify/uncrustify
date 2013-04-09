@@ -274,7 +274,7 @@ int unc_text::find(const char *text, int sidx) const
    int midx = size() - len;
    int idx, ii;
 
-   for (idx = sidx; idx < midx; idx++)
+   for (idx = sidx; idx <= midx; idx++)
    {
       bool match = true;
       for (ii = 0; ii < len; ii++)
