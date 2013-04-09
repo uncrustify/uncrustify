@@ -426,14 +426,6 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
       return(cpd.settings[UO_sp_paren_paren].a);
    }
 
-   /* ")(" vs ") (" */
-   if ((chunk_is_str(first, ")", 1) && chunk_is_str(second, "(", 1)) ||
-       (chunk_is_paren_close(first) && chunk_is_paren_open(second)))
-   {
-      log_rule("sp_cparen_oparen");
-      return(cpd.settings[UO_sp_cparen_oparen].a);
-   }
-
    if ((first->type == CT_CATCH) && (second->type == CT_SPAREN_OPEN) &&
        (cpd.settings[UO_sp_catch_paren].a != AV_IGNORE))
    {
@@ -758,6 +750,14 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
    {
       log_rule("sp_after_tparen_close");
       return(cpd.settings[UO_sp_after_tparen_close].a);
+   }
+
+   /* ")(" vs ") (" */
+   if ((chunk_is_str(first, ")", 1) && chunk_is_str(second, "(", 1)) ||
+       (chunk_is_paren_close(first) && chunk_is_paren_open(second)))
+   {
+      log_rule("sp_cparen_oparen");
+      return(cpd.settings[UO_sp_cparen_oparen].a);
    }
 
    if ((first->type == CT_FUNC_PROTO) ||
