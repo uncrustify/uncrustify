@@ -140,8 +140,8 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
    }
    if ((first->type == CT_VBRACE_OPEN) && (second->type != CT_NL_CONT))
    {
-      log_rule("ADD");
-      return(AV_ADD);
+      log_rule("FORCE");
+      return(AV_FORCE);
    }
    if ((first->type == CT_VBRACE_CLOSE) && (second->type != CT_NL_CONT))
    {
