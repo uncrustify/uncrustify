@@ -1890,11 +1890,16 @@ static void nl_create_one_liner(chunk_t *vbrace_open)
       return;
    }
 
+   int nl_total = 0;
    while ((tmp != NULL) && (tmp->type != CT_VBRACE_CLOSE))
    {
       if (chunk_is_newline(tmp))
       {
-         return;
+         nl_total += tmp->nl_count;
+         if (nl_total > 1)
+         {
+            return;
+         }
       }
       tmp = chunk_get_next(tmp);
    }
