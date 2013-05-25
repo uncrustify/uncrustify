@@ -108,6 +108,7 @@
 30272 sp_throw_paren-f.cfg             cpp/sp_throw_paren.cpp
 
 30300 ben.cfg                          cpp/enum_shr.cpp
+30301 al.cfg                           cpp/enum_class.h
 
 # function def newlines
 30701 func-def-1.cfg                   cpp/function-def.cpp
