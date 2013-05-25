@@ -41,6 +41,7 @@ const char *token_names[] =
    "TYPEDEF",
    "STRUCT",
    "ENUM",
+   "ENUM_CLASS",
    "SIZEOF",
    "RETURN",
    "BREAK",

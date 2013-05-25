@@ -57,6 +57,7 @@ typedef enum
    CT_TYPEDEF,
    CT_STRUCT,
    CT_ENUM,
+   CT_ENUM_CLASS,
    CT_SIZEOF,
    CT_RETURN,
    CT_BREAK,

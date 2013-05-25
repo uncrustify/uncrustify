@@ -1795,6 +1795,10 @@ static void fix_enum_struct_union(chunk_t *pc)
 
    /* the next item is either a type or open brace */
    next = chunk_get_next_ncnl(pc);
+   if (next && (next->type == CT_ENUM_CLASS))
+   {
+      next = chunk_get_next_ncnl(next);
+   }
    if (next && (next->type == CT_TYPE))
    {
       next->parent_type = pc->type;

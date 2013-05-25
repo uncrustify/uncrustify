@@ -164,6 +164,11 @@ void tokenize_cleanup(void)
          pc->type = CT_WORD;
       }
 
+      if ((pc->type == CT_ENUM) && (next->type == CT_CLASS))
+      {
+         next->type = CT_ENUM_CLASS;
+      }
+
       /**
        * Change CT_WORD after CT_ENUM, CT_UNION, or CT_STRUCT to CT_TYPE
        * Change CT_WORD before CT_WORD to CT_TYPE
@@ -171,6 +176,7 @@ void tokenize_cleanup(void)
       if (next->type == CT_WORD)
       {
          if ((pc->type == CT_ENUM) ||
+             (pc->type == CT_ENUM_CLASS) ||
              (pc->type == CT_UNION) ||
              (pc->type == CT_STRUCT))
          {
