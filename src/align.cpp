@@ -1814,7 +1814,7 @@ static void align_left_shift(void)
          as.Flush();
          start = NULL;
       }
-      else if (chunk_is_str(pc, "<<", 2))
+      else if (!(pc->flags & PCF_IN_ENUM) && chunk_is_str(pc, "<<", 2))
       {
          if (pc->parent_type == CT_OPERATOR)
          {
