@@ -411,6 +411,7 @@ static void examine_brace(chunk_t *bopen)
                 (pc->type == CT_FOR) ||
                 (pc->type == CT_DO) ||
                 (pc->type == CT_WHILE) ||
+                (pc->type == CT_SWITCH) ||
                 (pc->type == CT_USING_STMT) ||
                 ((pc->type == CT_BRACE_OPEN) && was_fcn))
             {
