@@ -1554,6 +1554,7 @@ static void newline_func_def(chunk_t *start)
 
    /* Handle break newlines type and function */
    prev = chunk_get_prev_ncnl(start);
+   prev = skip_template_prev(prev);
    /* Don't split up a function variable */
    prev = chunk_is_paren_close(prev) ? NULL : chunk_get_prev_ncnl(prev);
 
