@@ -100,6 +100,7 @@ enum log_sev_t
    LFLPAREN  = 86,    /* Flag paren */
    LOCMSGD   = 87,    /* OC Message declaration */
    LINDENTAG = 88,    /* indent again */
+   LNFD      = 89,    /* newline-function-def */
 };
 
 #endif   /* LOG_LEVELS_H_INCLUDED */

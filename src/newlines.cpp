@@ -1542,6 +1542,10 @@ static void newline_func_def(chunk_t *start)
    argval_t atmp;
    bool     is_def = (start->parent_type == CT_FUNC_DEF) || (start->parent_type == CT_FUNC_CLASS);
 
+   LOG_FMT(LNFD, "%s: called on %d:%d '%s' [%s/%s]\n",
+           __func__, start->orig_line, start->orig_col,
+           start->text(), get_token_name(start->type), get_token_name(start->parent_type));
+
    atmp = cpd.settings[is_def ? UO_nl_func_def_paren : UO_nl_func_paren].a;
    if (atmp != AV_IGNORE)
    {
@@ -1588,6 +1592,10 @@ static void newline_func_def(chunk_t *start)
 
       if (a != AV_IGNORE)
       {
+         LOG_FMT(LNFD, "%s: prev %d:%d '%s' [%s/%s]\n",
+                 __func__, prev->orig_line, prev->orig_col,
+                 prev->text(), get_token_name(prev->type), get_token_name(prev->parent_type));
+
          if ((prev != NULL) && (prev->type == CT_DESTRUCTOR))
          {
             prev = chunk_get_prev_ncnl(prev);
