@@ -2625,9 +2625,10 @@ static bool can_be_full_param(chunk_t *start, chunk_t *end)
       if ((pc->type == CT_QUALIFIER) ||
           (pc->type == CT_STRUCT) ||
           (pc->type == CT_ENUM) ||
-          (pc->type == CT_UNION))
+          (pc->type == CT_UNION) ||
+          (pc->type == CT_TYPENAME))
       {
-         LOG_FMT(LFPARAM, " <== %s!\n", get_token_name(pc->type));
+         LOG_FMT(LFPARAM, " <== %s! (yes)\n", get_token_name(pc->type));
          return(true);
       }
 
