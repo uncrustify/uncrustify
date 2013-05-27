@@ -176,3 +176,10 @@ template<class T> class Y { /* ... */ };
 Y<X<1>> x3;     // Okay, same as "Y<X<1> > x3;".
 Y<X<(6>>1)>> x4;
 
+
+template <typename T>
+int
+myFunc1(typename T::Subtype val);
+
+int
+myFunc2(T::Subtype val);
