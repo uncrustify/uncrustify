@@ -908,6 +908,22 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
       return(cpd.settings[UO_sp_getset_brace].a);
    }
 
+   if (((first->type == CT_WORD) || (first->type == CT_WORD)) &&
+       (second->type == CT_BRACE_OPEN))
+   {
+      if (first->parent_type == CT_NAMESPACE)
+      {
+         log_rule("sp_word_brace_ns");
+         return(cpd.settings[UO_sp_word_brace_ns].a);
+      }
+      if ((first->parent_type == CT_NONE) &&
+          (second->parent_type == CT_NONE))
+      {
+         log_rule("sp_word_brace");
+         return(cpd.settings[UO_sp_word_brace].a);
+      }
+   }
+
    if ((second->type == CT_PAREN_OPEN) &&
        (second->parent_type == CT_INVARIANT))
    {

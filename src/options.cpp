@@ -412,6 +412,10 @@ void register_options(void)
                   "Add or remove space between 'try' and '{' if on the same line");
    unc_add_option("sp_getset_brace", UO_sp_getset_brace, AT_IARF,
                   "Add or remove space between get/set and '{' if on the same line");
+   unc_add_option("sp_word_brace", UO_sp_word_brace, AT_IARF,
+                  "Add or remove space between a variable and '{' for C++ uniform initialization");
+   unc_add_option("sp_word_brace_ns", UO_sp_word_brace_ns, AT_IARF,
+                  "Add or remove space between a variable and '{' for a namespace");
    unc_add_option("sp_before_dc", UO_sp_before_dc, AT_IARF,
                   "Add or remove space before the '::' operator");
    unc_add_option("sp_after_dc", UO_sp_after_dc, AT_IARF,

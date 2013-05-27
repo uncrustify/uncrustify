@@ -319,6 +319,9 @@ enum uncrustify_options
    UO_sp_try_brace,
    UO_sp_getset_brace,
 
+   UO_sp_word_brace,
+   UO_sp_word_brace_ns,
+
    UO_sp_before_dc,
    UO_sp_after_dc,
    UO_sp_d_array_colon,
