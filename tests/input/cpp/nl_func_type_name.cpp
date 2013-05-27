@@ -58,3 +58,15 @@ template <class T>
 void SampleClassTemplate<T>::connect()
 {
 }
+
+template <>
+inline void bar<MyType>(MyType r)
+{
+    foo(r);
+}
+
+template <T>
+inline void baz<>(T r)
+{
+    foo(r);
+}
