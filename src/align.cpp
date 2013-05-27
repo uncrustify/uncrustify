@@ -839,6 +839,22 @@ static void align_same_func_call_params()
             }
             fcn_as.NewLines(pc->nl_count);
          }
+         else
+         {
+            /* if we drop below the brace level that started it, we are done */
+            if (align_root && (align_root->brace_level > pc->brace_level))
+            {
+               LOG_FMT(LASFCP, "  ++ (drop) Ended with %d fcns\n", align_len);
+
+               /* Flush it all! */
+               fcn_as.Flush();
+               for (idx = 0; idx < (int)as.size(); idx++)
+               {
+                  as[idx].Flush();
+               }
+               align_root = NULL;
+            }
+         }
          continue;
       }
 
@@ -851,7 +867,9 @@ static void align_same_func_call_params()
       add_str = NULL;
       if (align_root != NULL)
       {
-         if (pc->str.equals(align_root->str))
+         /* can only align functions on the same brace level */
+         if ((align_root->brace_level == pc->brace_level) &&
+             pc->str.equals(align_root->str))
          {
             fcn_as.Add(pc);
             align_cur->align.next = pc;
