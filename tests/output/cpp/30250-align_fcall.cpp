@@ -7,4 +7,12 @@ void foo()
 	brat(     "foo", 2000, 3000);
 	brat("question",    2,  -42);
 	brat(       "a",  -22,    1);
+	while (1)
+	{
+		brat(     "foo", 2000, 3000);
+		brat("question",    2,  -42);
+		brat(       "a",  -22,    1);
+	}
+	brat("foo", 2000, 3000);
+	brat(  "a",  -22,    1);
 }
