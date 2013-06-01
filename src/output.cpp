@@ -765,7 +765,7 @@ static void add_comment_javaparam(chunk_t *pc, cmt_reflow& cmt)
    /* Do the return stuff */
    tmp = chunk_get_prev_ncnl(pc);
    /* For Objective-C we need to go to the previous chunk */
-   if (tmp->parent_type == CT_OC_MSG_DECL && tmp->type == CT_PAREN_CLOSE)
+   if ((tmp->parent_type == CT_OC_MSG_DECL) && (tmp->type == CT_PAREN_CLOSE))
    {
       tmp = chunk_get_prev_ncnl(tmp);
    }
