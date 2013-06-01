@@ -667,52 +667,52 @@ static void add_comment_javaparam(chunk_t *pc, cmt_reflow& cmt)
    bool    has_param = true;
    bool    need_nl   = false;
 
-    if (pc->type == CT_OC_MSG_DECL)
-    {
-        chunk_t *tmp = chunk_get_next_ncnl(pc);
-        has_param = false;
-        while (tmp)
-        {
-            if ((tmp->type == CT_BRACE_OPEN) || (tmp->type == CT_SEMICOLON))
+   if (pc->type == CT_OC_MSG_DECL)
+   {
+      chunk_t *tmp = chunk_get_next_ncnl(pc);
+      has_param = false;
+      while (tmp)
+      {
+         if ((tmp->type == CT_BRACE_OPEN) || (tmp->type == CT_SEMICOLON))
+         {
+            break;
+         }
+
+         if (has_param)
+         {
+            if (need_nl)
             {
-                break;
+               add_comment_text("\n", cmt, false);
             }
-            
-            if (has_param)
-            {
-                if (need_nl)
-                {
-                    add_comment_text("\n", cmt, false);
-                }
-                need_nl = true;
-                add_text("@param");
-                add_text(" ");
-                add_text(tmp->str);
-                add_text(" TODO");
-            }
-            
-            has_param = false;
-            if (tmp->type == CT_PAREN_CLOSE)
-            {
-                has_param = true;
-            }
-            tmp = chunk_get_next_ncnl(tmp);
-        }
-        fpo = fpc = NULL;
-    }
-    else
-    {
-        fpo = chunk_get_next_type(pc, CT_FPAREN_OPEN, pc->level);
-        if (fpo == NULL)
-        {
-            return;
-        }
-        fpc = chunk_get_next_type(fpo, CT_FPAREN_CLOSE, pc->level);
-        if (fpc == NULL)
-        {
-            return;
-        }
-    }
+            need_nl = true;
+            add_text("@param");
+            add_text(" ");
+            add_text(tmp->str);
+            add_text(" TODO");
+         }
+
+         has_param = false;
+         if (tmp->type == CT_PAREN_CLOSE)
+         {
+            has_param = true;
+         }
+         tmp = chunk_get_next_ncnl(tmp);
+      }
+      fpo = fpc = NULL;
+   }
+   else
+   {
+      fpo = chunk_get_next_type(pc, CT_FPAREN_OPEN, pc->level);
+      if (fpo == NULL)
+      {
+         return;
+      }
+      fpc = chunk_get_next_type(fpo, CT_FPAREN_CLOSE, pc->level);
+      if (fpc == NULL)
+      {
+         return;
+      }
+   }
 
    /* Check for 'foo()' and 'foo(void)' */
    if (chunk_get_next_ncnl(fpo) == fpc)
