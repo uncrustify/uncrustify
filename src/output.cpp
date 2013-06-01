@@ -773,7 +773,7 @@ static void add_comment_javaparam(chunk_t *pc, cmt_reflow& cmt)
    {
       if (need_nl)
       {
-         add_comment_text("\n", cmt, false);
+         add_comment_text("\n ", cmt, false);
       }
       add_text("@return TODO");
    }
