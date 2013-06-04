@@ -550,6 +550,7 @@ enum uncrustify_options
    UO_nl_enum_leave_one_liners,      // leave one-line enum bodies in "enum FOO { BAR = 5 };"
    UO_nl_getset_leave_one_liners,    // leave one-line get/set bodies
    UO_nl_func_leave_one_liners,      // leave one-line function def bodies
+   UO_nl_cpp_lambda_leave_one_liners,// leave one-line C++11 lambda bodies
    UO_nl_if_leave_one_liners,
    UO_nl_case_colon_brace,
 

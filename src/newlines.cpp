@@ -1824,6 +1824,13 @@ static bool one_liner_nl_ok(chunk_t *pc)
          return(false);
       }
 
+      if (cpd.settings[UO_nl_cpp_lambda_leave_one_liners].b &&
+          ((pc->parent_type == CT_CPP_LAMBDA)))
+      {
+         LOG_FMT(LNL1LINE, "false (lambda)\n");
+         return(false);
+      }
+
       if (cpd.settings[UO_nl_oc_msg_leave_one_liner].b &&
           (pc->flags & PCF_IN_OC_MSG))
       {
@@ -2094,7 +2101,8 @@ void newlines_cleanup_braces(bool first)
             next = chunk_get_next_ncnl(pc);
 
             // Handle nl_after_brace_open
-            if ((pc->level == pc->brace_level) &&
+            if (((pc->parent_type == CT_CPP_LAMBDA) ||
+                 (pc->level == pc->brace_level)) &&
                 cpd.settings[UO_nl_after_brace_open].b)
             {
                if (!one_liner_nl_ok(pc))

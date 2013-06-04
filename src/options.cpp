@@ -677,6 +677,8 @@ void register_options(void)
                   "Don't split one-line get or set functions");
    unc_add_option("nl_func_leave_one_liners", UO_nl_func_leave_one_liners, AT_BOOL,
                   "Don't split one-line function definitions - 'int foo() { return 0; }'");
+   unc_add_option("nl_cpp_lambda_leave_one_liners", UO_nl_cpp_lambda_leave_one_liners, AT_BOOL,
+                  "Don't split one-line C++11 lambdas - '[]() { return 0; }'");
    unc_add_option("nl_if_leave_one_liners", UO_nl_if_leave_one_liners, AT_BOOL,
                   "Don't split one-line if/else statements - 'if(a) b++;'");
    unc_add_option("nl_oc_msg_leave_one_liner", UO_nl_oc_msg_leave_one_liner, AT_BOOL,

@@ -132,6 +132,7 @@
 
 30750 ben.cfg                          cpp/lambda.cpp
 30751 lambda1.cfg                      cpp/lambda.cpp
+30752 lambda2.cfg                      cpp/lambda.cpp
 
 30800 star_pos-0.cfg                   cpp/align-star-amp-pos.cpp
 30801 star_pos-1.cfg                   cpp/align-star-amp-pos.cpp
