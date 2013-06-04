@@ -1,8 +1,7 @@
 void f1()
 {
    auto a =
-      [=] (int *a, Something& b)
-      {
+      [=] (int *a, Something& b) {
          std::cout << "blah: " << *a;
       };
 }
@@ -10,8 +9,7 @@ void f1()
 void f1a()
 {
    std::for_each(a, b,
-                 [] (Something& b)
-                 {
+                 [] (Something& b) {
                     std::cout << "blah: " << *a;
                  });
 }
@@ -19,8 +17,7 @@ void f1a()
 void f1b()
 {
    std::for_each(a, b,
-                 [] (int& b) -> foo
-                 {
+                 [] (int& b) -> foo {
                     b += 3;
                     return(b);
                  });
@@ -29,8 +26,7 @@ void f1b()
 void f2()
 {
    Invoke(a, b,
-          [&one, two] (int *a, Something& b)
-          {
+          [&one, two] (int *a, Something& b) {
              std::cout << "blah: " << *a;
           });
 }

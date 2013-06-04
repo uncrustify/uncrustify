@@ -445,6 +445,7 @@ enum uncrustify_options
     */
 
    UO_nl_fdef_brace,                 // "int foo() {" vs "int foo()\n{"
+   UO_nl_cpp_ldef_brace,             // "[&x](int a) {" vs "[&x](int a)\n{"
    UO_nl_func_paren,                 // newline between function and open paren
    UO_nl_func_def_paren,
    UO_nl_func_decl_start,            // newline after the '(' in a function decl

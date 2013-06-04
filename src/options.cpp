@@ -836,6 +836,8 @@ void register_options(void)
                   "See nl_oc_msg_leave_one_liner");
    unc_add_option("nl_fdef_brace", UO_nl_fdef_brace, AT_IARF,
                   "Add or remove newline between function signature and '{'");
+   unc_add_option("nl_cpp_ldef_brace", UO_nl_cpp_ldef_brace, AT_IARF,
+                  "Add or remove newline between C++11 lambda signature and '{'");
    unc_add_option("nl_return_expr", UO_nl_return_expr, AT_IARF,
                   "Add or remove a newline between the return keyword and return expression.");
    unc_add_option("nl_after_semicolon", UO_nl_after_semicolon, AT_BOOL,

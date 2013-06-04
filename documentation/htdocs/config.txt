@@ -976,6 +976,9 @@ nl_func_def_empty                        { Ignore, Add, Remove, Force }
 nl_fdef_brace                            { Ignore, Add, Remove, Force }
   Add or remove newline between function signature and '{'
 
+nl_cpp_ldef_brace                        { Ignore, Add, Remove, Force }
+  Add or remove newline between C++11 lambda signature and '{'
+
 nl_after_return                          { False, True }
   Whether to put a newline after 'return' statement
 
