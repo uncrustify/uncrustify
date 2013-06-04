@@ -3413,7 +3413,10 @@ static void mark_cpp_constructor(chunk_t *pc)
          tmp->type = CT_CLASS_COLON;
          hit_colon = true;
       }
-      if (hit_colon && chunk_is_paren_open(tmp) && (tmp->level == paren_open->level))
+      if (hit_colon &&
+          (chunk_is_paren_open(tmp) ||
+           chunk_is_opening_brace(tmp)) &&
+          (tmp->level == paren_open->level))
       {
          var = skip_template_prev(chunk_get_prev_ncnl(tmp));
          if ((var->type == CT_TYPE) || (var->type == CT_WORD))
