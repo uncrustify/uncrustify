@@ -445,6 +445,7 @@ enum uncrustify_options
     */
 
    UO_nl_fdef_brace,                 // "int foo() {" vs "int foo()\n{"
+   UO_nl_cpp_ldef_brace,             // "[&x](int a) {" vs "[&x](int a)\n{"
    UO_nl_func_paren,                 // newline between function and open paren
    UO_nl_func_def_paren,
    UO_nl_func_decl_start,            // newline after the '(' in a function decl
@@ -550,6 +551,7 @@ enum uncrustify_options
    UO_nl_enum_leave_one_liners,      // leave one-line enum bodies in "enum FOO { BAR = 5 };"
    UO_nl_getset_leave_one_liners,    // leave one-line get/set bodies
    UO_nl_func_leave_one_liners,      // leave one-line function def bodies
+   UO_nl_cpp_lambda_leave_one_liners,// leave one-line C++11 lambda bodies
    UO_nl_if_leave_one_liners,
    UO_nl_case_colon_brace,
 

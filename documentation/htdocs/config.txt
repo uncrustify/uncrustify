@@ -790,6 +790,9 @@ nl_getset_leave_one_liners               { False, True }
 nl_func_leave_one_liners                 { False, True }
   Don't split one-line function definitions - 'int foo() { return 0; }'
 
+nl_cpp_lambda_leave_one_liners           { False, True }
+  Don't split one-line C++11 lambdas - '[]() { return 0; }'
+
 nl_if_leave_one_liners                   { False, True }
   Don't split one-line if/else statements - 'if(a) b++;'
 
@@ -972,6 +975,9 @@ nl_func_def_empty                        { Ignore, Add, Remove, Force }
 
 nl_fdef_brace                            { Ignore, Add, Remove, Force }
   Add or remove newline between function signature and '{'
+
+nl_cpp_ldef_brace                        { Ignore, Add, Remove, Force }
+  Add or remove newline between C++11 lambda signature and '{'
 
 nl_after_return                          { False, True }
   Whether to put a newline after 'return' statement
