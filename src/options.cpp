@@ -677,6 +677,8 @@ void register_options(void)
                   "Don't split one-line get or set functions");
    unc_add_option("nl_func_leave_one_liners", UO_nl_func_leave_one_liners, AT_BOOL,
                   "Don't split one-line function definitions - 'int foo() { return 0; }'");
+   unc_add_option("nl_cpp_lambda_leave_one_liners", UO_nl_cpp_lambda_leave_one_liners, AT_BOOL,
+                  "Don't split one-line C++11 lambdas - '[]() { return 0; }'");
    unc_add_option("nl_if_leave_one_liners", UO_nl_if_leave_one_liners, AT_BOOL,
                   "Don't split one-line if/else statements - 'if(a) b++;'");
    unc_add_option("nl_oc_msg_leave_one_liner", UO_nl_oc_msg_leave_one_liner, AT_BOOL,
@@ -834,6 +836,8 @@ void register_options(void)
                   "See nl_oc_msg_leave_one_liner");
    unc_add_option("nl_fdef_brace", UO_nl_fdef_brace, AT_IARF,
                   "Add or remove newline between function signature and '{'");
+   unc_add_option("nl_cpp_ldef_brace", UO_nl_cpp_ldef_brace, AT_IARF,
+                  "Add or remove newline between C++11 lambda signature and '{'");
    unc_add_option("nl_return_expr", UO_nl_return_expr, AT_IARF,
                   "Add or remove a newline between the return keyword and return expression.");
    unc_add_option("nl_after_semicolon", UO_nl_after_semicolon, AT_BOOL,
