@@ -351,6 +351,7 @@ struct file_mem
 struct cp_data
 {
    FILE               *fout;
+   int                last_char;
 
    UINT32             error_count;
    const char         *filename;

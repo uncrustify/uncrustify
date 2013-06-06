@@ -42,10 +42,8 @@ static void add_comment_text(const unc_text& text,
  */
 static void add_char(UINT32 ch)
 {
-   static int last_char = 0;
-
    /* If we did a '\r' and it isn't followed by a '\n', then output a newline */
-   if ((last_char == '\r') && (ch != '\n'))
+   if ((cpd.last_char == '\r') && (ch != '\n'))
    {
       write_string(cpd.fout, cpd.newline.get(), cpd.enc);
       cpd.column      = 1;
@@ -71,7 +69,7 @@ static void add_char(UINT32 ch)
    else
    {
       /* Explicitly disallow a tab after a space */
-      if ((ch == '\t') && (last_char == ' '))
+      if ((ch == '\t') && (cpd.last_char == ' '))
       {
          int endcol = next_tab_column(cpd.column);
          while (cpd.column < endcol)
@@ -103,7 +101,7 @@ static void add_char(UINT32 ch)
          }
       }
    }
-   last_char = ch;
+   cpd.last_char = ch;
 }
 
 
@@ -1139,11 +1137,19 @@ static chunk_t *output_comment_c(chunk_t *first)
    while (can_combine_comment(pc, cmt))
    {
       tmp.set(pc->str, 2, pc->len() - 4);
+      if ((cpd.last_char == '*') && (tmp[0] == '/'))
+      {
+         add_text(" ");
+      }
       add_comment_text(tmp, cmt, false);
       add_comment_text("\n", cmt, false);
       pc = chunk_get_next(chunk_get_next(pc));
    }
    tmp.set(pc->str, 2, pc->len() - 4);
+   if ((cpd.last_char == '*') && (tmp[0] == '/'))
+   {
+      add_text(" ");
+   }
    add_comment_text(tmp, cmt, false);
    if (cpd.settings[UO_cmt_c_nl_end].b)
    {
@@ -1246,6 +1252,10 @@ static chunk_t *output_comment_cpp(chunk_t *first)
    {
       offs = unc_isspace(pc->str[2]) ? 1 : 0;
       tmp.set(pc->str, 2 + offs, pc->len() - (2 + offs));
+      if ((cpd.last_char == '*') && (tmp[0] == '/'))
+      {
+         add_text(" ");
+      }
       add_comment_text(tmp, cmt, true);
       add_comment_text("\n", cmt, false);
       pc = chunk_get_next(chunk_get_next(pc));
