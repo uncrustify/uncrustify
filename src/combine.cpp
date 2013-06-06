@@ -1221,7 +1221,20 @@ static bool mark_function_type(chunk_t *pc)
       goto nogo_exit;
    }
    aft = chunk_get_next_ncnl(apc);
-   pt  = chunk_is_token(aft, CT_BRACE_OPEN) ? CT_FUNC_DEF : CT_FUNC_PROTO;
+   if (chunk_is_token(aft, CT_BRACE_OPEN))
+   {
+      pt  = CT_FUNC_DEF;
+   }
+   else if (chunk_is_token(aft, CT_SEMICOLON) ||
+            chunk_is_token(aft, CT_ASSIGN))
+   {
+      pt  = CT_FUNC_PROTO;
+   }
+   else
+   {
+      LOG_FMT(LFTYPE, "%s: not followed by '{' or ';'\n", __func__);
+      goto nogo_exit;
+   }
    ptp = (pc->flags & PCF_IN_TYPEDEF) ? CT_FUNC_TYPE : CT_FUNC_VAR;
 
    tmp = pc;
