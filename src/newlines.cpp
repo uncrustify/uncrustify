@@ -1584,43 +1584,46 @@ static void newline_func_def(chunk_t *start)
          }
       }
 
-      argval_t a = (tmp->parent_type == CT_FUNC_PROTO) ?
-                   cpd.settings[UO_nl_func_proto_type_name].a :
-                   cpd.settings[UO_nl_func_type_name].a;
-      if ((tmp->flags & PCF_IN_CLASS) &&
-          (cpd.settings[UO_nl_func_type_name_class].a != AV_IGNORE))
+      if (chunk_get_next_ncnl(prev)->type != CT_FUNC_CLASS)
       {
-         a = cpd.settings[UO_nl_func_type_name_class].a;
-      }
-
-      if (a != AV_IGNORE)
-      {
-         LOG_FMT(LNFD, "%s: prev %d:%d '%s' [%s/%s]\n",
-                 __func__, prev->orig_line, prev->orig_col,
-                 prev->text(), get_token_name(prev->type), get_token_name(prev->parent_type));
-
-         if ((prev != NULL) && (prev->type == CT_DESTRUCTOR))
+         argval_t a = (tmp->parent_type == CT_FUNC_PROTO) ?
+                      cpd.settings[UO_nl_func_proto_type_name].a :
+                      cpd.settings[UO_nl_func_type_name].a;
+         if ((tmp->flags & PCF_IN_CLASS) &&
+             (cpd.settings[UO_nl_func_type_name_class].a != AV_IGNORE))
          {
-            prev = chunk_get_prev_ncnl(prev);
+            a = cpd.settings[UO_nl_func_type_name_class].a;
          }
 
-         /* If we are on a '::', step back two tokens
-          * TODO: do we also need to check for '.' ?
-          */
-         while ((prev != NULL) && (prev->type == CT_DC_MEMBER))
+         if (a != AV_IGNORE)
          {
-            prev = chunk_get_prev_ncnl(prev);
-            prev = skip_template_prev(prev);
-            prev = chunk_get_prev_ncnl(prev);
-         }
+            LOG_FMT(LNFD, "%s: prev %d:%d '%s' [%s/%s]\n",
+                    __func__, prev->orig_line, prev->orig_col,
+                    prev->text(), get_token_name(prev->type), get_token_name(prev->parent_type));
 
-         if ((prev != NULL) &&
-             (prev->type != CT_BRACE_CLOSE) &&
-             (prev->type != CT_BRACE_OPEN) &&
-             (prev->type != CT_SEMICOLON) &&
-             (prev->parent_type != CT_TEMPLATE))
-         {
-            newline_iarf(prev, a);
+            if ((prev != NULL) && (prev->type == CT_DESTRUCTOR))
+            {
+               prev = chunk_get_prev_ncnl(prev);
+            }
+
+            /* If we are on a '::', step back two tokens
+             * TODO: do we also need to check for '.' ?
+             */
+            while ((prev != NULL) && (prev->type == CT_DC_MEMBER))
+            {
+               prev = chunk_get_prev_ncnl(prev);
+               prev = skip_template_prev(prev);
+               prev = chunk_get_prev_ncnl(prev);
+            }
+
+            if ((prev != NULL) &&
+                (prev->type != CT_BRACE_CLOSE) &&
+                (prev->type != CT_BRACE_OPEN) &&
+                (prev->type != CT_SEMICOLON) &&
+                (prev->parent_type != CT_TEMPLATE))
+            {
+               newline_iarf(prev, a);
+            }
          }
       }
    }
