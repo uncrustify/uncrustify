@@ -189,6 +189,7 @@ static bool chunk_ends_type(chunk_t *pc)
 
       if ((pc->type == CT_WORD) ||
           (pc->type == CT_TYPE) ||
+          (pc->type == CT_PTR_TYPE) ||
           (pc->type == CT_STRUCT) ||
           (pc->type == CT_DC_MEMBER) ||
           (pc->type == CT_QUALIFIER))
@@ -197,6 +198,7 @@ static bool chunk_ends_type(chunk_t *pc)
       }
 
       if (chunk_is_semicolon(pc) ||
+          (pc->type == CT_TYPEDEF) ||
           (pc->type == CT_BRACE_OPEN) ||
           (pc->type == CT_BRACE_CLOSE))
       {
@@ -1283,6 +1285,12 @@ static bool mark_function_type(chunk_t *pc)
    {
       LOG_FMT(LFTYPE, "%s: bad counts word:%d, star:%d\n", __func__,
               word_count, star_count);
+      goto nogo_exit;
+   }
+
+   /* make sure what appears before the first open paren can be a return type */
+   if (!chunk_ends_type(chunk_get_prev_ncnl(tmp)))
+   {
       goto nogo_exit;
    }
 
