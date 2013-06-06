@@ -32,3 +32,7 @@ void foo(void)
     */
 }
 
+/* Start Change #95 */
+/*INITIALIZE Variable(contExtnElgInd); /# Change #61 #/ */
+/*/# Start Change #35 #/ */
+
