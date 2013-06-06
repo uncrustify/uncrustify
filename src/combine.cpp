@@ -2924,13 +2924,17 @@ static void mark_function(chunk_t *pc)
    {
       chunk_t *tmp1, *tmp2, *tmp3;
 
-      tmp1 = next;
-      do
+      /* skip over any leading class/namespace in: "T(F::*A)();" */
+      tmp1 = chunk_get_next_ncnl(next);
+      while (tmp1)
       {
-         tmp1 = chunk_get_next_ncnl(tmp1);
-      } while ((tmp1 != NULL) &&
-               ((tmp1->type == CT_WORD) ||
-                (tmp1->type == CT_DC_MEMBER)));
+         tmp2 = chunk_get_next_ncnl(tmp1);
+         if (!chunk_is_word(tmp1) || !chunk_is_token(tmp2, CT_DC_MEMBER))
+         {
+            break;
+         }
+         tmp1 = chunk_get_next_ncnl(tmp2);
+      }
 
       tmp2 = chunk_get_next_ncnl(tmp1);
       if (chunk_is_str(tmp2, ")", 1))
