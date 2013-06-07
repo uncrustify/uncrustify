@@ -3059,6 +3059,11 @@ static void mark_function(chunk_t *pc)
       bool hit_star = false;
       LOG_FMT(LFCN, "  Checking func call: prev=%s", (prev == NULL) ? "<null>" : get_token_name(prev->type));
 
+      // if (!chunk_ends_type(prev))
+      // {
+      //    goto bad_ret_type;
+      // }
+
       /**
        * REVISIT:
        * a function def can only occur at brace level, but not inside an
@@ -3154,7 +3159,14 @@ static void mark_function(chunk_t *pc)
          {
             LOG_FMT(LFCN, " --> Stopping on %s [%s]\n",
                     prev->str.c_str(), get_token_name(prev->type));
-            if (prev->type == CT_ARITH)
+            /* certain tokens are unlikely to preceed a proto or def */
+            if ((prev->type == CT_ARITH) ||
+                (prev->type == CT_ASSIGN) ||
+                (prev->type == CT_COMMA) ||
+                (prev->type == CT_STRING) ||
+                (prev->type == CT_STRING_MULTI) ||
+                (prev->type == CT_NUMBER) ||
+                (prev->type == CT_NUMBER_FP))
             {
                isa_def = false;
             }
@@ -3171,6 +3183,7 @@ static void mark_function(chunk_t *pc)
             prev = chunk_get_prev_ncnlnp(prev);
          }
       }
+bad_ret_type:
 
       //LOG_FMT(LFCN, " -- stopped on %s [%s]\n",
       //        prev->str.c_str(), get_token_name(prev->type));
