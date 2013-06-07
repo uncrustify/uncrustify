@@ -180,6 +180,7 @@
 # function types
 00801  ben.cfg                 c/fcn_type.c
 00802  ben.cfg                 c/funcfunc.c
+00803  sf537.cfg               c/fcn_type.c
 
 # code width
 00901  width.cfg               c/code_width.c

@@ -29,6 +29,8 @@ struct myfoo
 
 SMU foo(void)
 {
+   double AAA = 1.e-3, BBB = 0.016, CCC = 2 * DDD * sqrt(EEE);
+
    a = 4;
    (*ABC)();
    return(SMUIFY(a));
