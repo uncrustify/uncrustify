@@ -757,6 +757,15 @@ void indent_text(void)
                indent_pse_pop(frm, pc);
             }
 
+            /* an CLASS is ended with a semicolon or brace open */
+            if ((frm.pse[frm.pse_tos].type == CT_CLASS) &&
+                ((pc->type == CT_CLASS_COLON) ||
+                 (pc->type == CT_BRACE_OPEN) ||
+                 chunk_is_semicolon(pc)))
+            {
+               indent_pse_pop(frm, pc);
+            }
+
             /* Close out parens and squares */
             if ((frm.pse[frm.pse_tos].type == (pc->type - 1)) &&
                 ((pc->type == CT_PAREN_CLOSE) ||
@@ -1098,6 +1107,14 @@ void indent_text(void)
                                  cpd.settings[UO_indent_access_spec].n);
             }
          }
+      }
+      else if (pc->type == CT_CLASS)
+      {
+         frm.level++;
+         indent_pse_push(frm, pc);
+         frm.pse[frm.pse_tos].indent     = frm.pse[frm.pse_tos - 1].indent + indent_size;
+         frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
+         frm.pse[frm.pse_tos].indent_tab = frm.pse[frm.pse_tos].indent;
       }
       else if (pc->type == CT_CLASS_COLON)
       {
