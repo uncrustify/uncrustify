@@ -180,6 +180,7 @@ chunk_t *set_paren_parent(chunk_t *start, c_token_t parent)
 static bool chunk_ends_type(chunk_t *pc)
 {
    bool ret = false;
+   int  cnt = 0;
 
    for (/* nada */; pc != NULL; pc = chunk_get_prev_ncnl(pc))
    {
@@ -194,6 +195,7 @@ static bool chunk_ends_type(chunk_t *pc)
           (pc->type == CT_DC_MEMBER) ||
           (pc->type == CT_QUALIFIER))
       {
+         cnt++;
          continue;
       }
 
@@ -202,7 +204,7 @@ static bool chunk_ends_type(chunk_t *pc)
           (pc->type == CT_BRACE_OPEN) ||
           (pc->type == CT_BRACE_CLOSE))
       {
-         ret = true;
+         ret = cnt > 0;
       }
       break;
    }
