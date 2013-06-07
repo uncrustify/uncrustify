@@ -27,6 +27,7 @@ struct myfoo {
 SMU foo(void)
 {
    a = 4;
+   ( * ABC )();
    return SMUIFY(a);
 }
 
