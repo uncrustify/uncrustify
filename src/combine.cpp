@@ -3183,7 +3183,6 @@ static void mark_function(chunk_t *pc)
             prev = chunk_get_prev_ncnlnp(prev);
          }
       }
-bad_ret_type:
 
       //LOG_FMT(LFCN, " -- stopped on %s [%s]\n",
       //        prev->str.c_str(), get_token_name(prev->type));
