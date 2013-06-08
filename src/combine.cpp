@@ -558,11 +558,6 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       fix_type_cast(pc);
    }
 
-   if (pc->type == CT_ASSIGN)
-   {
-      mark_lvalue(pc);
-   }
-
    if ((pc->parent_type == CT_ASSIGN) &&
        ((pc->type == CT_BRACE_OPEN) ||
         (pc->type == CT_SQUARE_OPEN)))
@@ -1022,6 +1017,11 @@ void fix_symbols(void)
           (pc->type == CT_TYPE_WRAP))
       {
          handle_wrap(pc);
+      }
+
+      if (pc->type == CT_ASSIGN)
+      {
+         mark_lvalue(pc);
       }
    }
 
