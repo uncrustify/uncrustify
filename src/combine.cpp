@@ -181,6 +181,7 @@ static bool chunk_ends_type(chunk_t *pc)
 {
    bool ret = false;
    int  cnt = 0;
+   bool last_lval = false;
 
    for (/* nada */; pc != NULL; pc = chunk_get_prev_ncnl(pc))
    {
@@ -196,13 +197,15 @@ static bool chunk_ends_type(chunk_t *pc)
           (pc->type == CT_QUALIFIER))
       {
          cnt++;
+         last_lval = (pc->flags & PCF_LVALUE) != 0;
          continue;
       }
 
       if (chunk_is_semicolon(pc) ||
           (pc->type == CT_TYPEDEF) ||
           (pc->type == CT_BRACE_OPEN) ||
-          (pc->type == CT_BRACE_CLOSE))
+          (pc->type == CT_BRACE_CLOSE) ||
+          ((pc->type == CT_SPAREN_OPEN) && last_lval))
       {
          ret = cnt > 0;
       }
