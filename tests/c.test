@@ -101,6 +101,7 @@
 00164  rdan.cfg                    c/fcn_indent_func_def_col1.c
 
 00170  empty.cfg               c/beautifier-off.c
+00180  sf538.cfg               c/lvalue.c
 
 # switch & case stuff
 00201   case-1.cfg             c/case.c
