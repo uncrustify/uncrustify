@@ -1574,7 +1574,8 @@ static void uncrustify_file(const file_mem& fm, FILE *pfout,
 
       /* Insert trailing comments after certain close braces */
       if ((cpd.settings[UO_mod_add_long_switch_closebrace_comment].n > 0) ||
-          (cpd.settings[UO_mod_add_long_function_closebrace_comment].n > 0))
+          (cpd.settings[UO_mod_add_long_function_closebrace_comment].n > 0) ||
+          (cpd.settings[UO_mod_add_long_namespace_closebrace_comment].n > 0))
       {
          add_long_closebrace_comment();
       }
