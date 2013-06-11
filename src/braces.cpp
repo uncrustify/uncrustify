@@ -706,6 +706,8 @@ void add_long_closebrace_comment(void)
    chunk_t *br_close;
    chunk_t *fcn_pc = NULL;
    chunk_t *sw_pc  = NULL;
+   chunk_t *ns_pc  = NULL;
+   unc_text string;
    int     nl_count;
 
    pc = chunk_get_head();
@@ -720,6 +722,10 @@ void add_long_closebrace_comment(void)
       {
          /* kinda pointless, since it always has the text "switch" */
          sw_pc = pc;
+      }
+      else if (pc->type == CT_NAMESPACE)
+      {
+         ns_pc = pc;
       }
       if ((pc->type != CT_BRACE_OPEN) || ((pc->flags & PCF_IN_PREPROC) != 0))
       {
@@ -755,12 +761,24 @@ void add_long_closebrace_comment(void)
                {
                   nl_min = cpd.settings[UO_mod_add_long_switch_closebrace_comment].n;
                   tag_pc = sw_pc;
+                  string = sw_pc->str;
                }
                else if ((br_open->parent_type == CT_FUNC_DEF) ||
                         (br_open->parent_type == CT_OC_MSG_DECL))
                {
                   nl_min = cpd.settings[UO_mod_add_long_function_closebrace_comment].n;
                   tag_pc = fcn_pc;
+                  string = fcn_pc->str;
+               }
+               else if (br_open->parent_type == CT_NAMESPACE)
+               {
+                  nl_min = cpd.settings[UO_mod_add_long_namespace_closebrace_comment].n;
+                  tag_pc = ns_pc;
+                  /* obtain the next chunck, normally this is the name of the namespace
+                     and append it to generate "namespace xyz" */
+                  string = ns_pc->str;
+                  string.append(" ");
+                  string.append( chunk_get_next(ns_pc)->str );
                }
 
                if ((nl_min > 0) && (nl_count >= nl_min) && (tag_pc != NULL))
@@ -770,7 +788,7 @@ void add_long_closebrace_comment(void)
                                     CT_COMMENT_CPP : CT_COMMENT;
 
                   /* Add a comment after the close brace */
-                  insert_comment_after(br_close, style, tag_pc->str);
+                  insert_comment_after(br_close, style, string);
                }
             }
             break;
