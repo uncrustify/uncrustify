@@ -710,8 +710,7 @@ void add_long_closebrace_comment(void)
    unc_text string;
    int     nl_count;
 
-   pc = chunk_get_head();
-   while ((pc = chunk_get_next_ncnl(pc)) != NULL)
+   for (pc = chunk_get_head(); pc; pc = chunk_get_next_ncnl(pc))
    {
       if ((pc->type == CT_FUNC_DEF) ||
           (pc->type == CT_OC_MSG_DECL))
