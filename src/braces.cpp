@@ -707,7 +707,7 @@ void add_long_closebrace_comment(void)
    chunk_t *fcn_pc = NULL;
    chunk_t *sw_pc  = NULL;
    chunk_t *ns_pc  = NULL;
-   unc_text string;
+   unc_text xstr;
    int     nl_count;
 
    for (pc = chunk_get_head(); pc; pc = chunk_get_next_ncnl(pc))
@@ -760,14 +760,14 @@ void add_long_closebrace_comment(void)
                {
                   nl_min = cpd.settings[UO_mod_add_long_switch_closebrace_comment].n;
                   tag_pc = sw_pc;
-                  string = sw_pc->str;
+                  xstr   = sw_pc->str;
                }
                else if ((br_open->parent_type == CT_FUNC_DEF) ||
                         (br_open->parent_type == CT_OC_MSG_DECL))
                {
                   nl_min = cpd.settings[UO_mod_add_long_function_closebrace_comment].n;
                   tag_pc = fcn_pc;
-                  string = fcn_pc->str;
+                  xstr   = fcn_pc->str;
                }
                else if (br_open->parent_type == CT_NAMESPACE)
                {
@@ -775,9 +775,9 @@ void add_long_closebrace_comment(void)
                   tag_pc = ns_pc;
                   /* obtain the next chunck, normally this is the name of the namespace
                      and append it to generate "namespace xyz" */
-                  string = ns_pc->str;
-                  string.append(" ");
-                  string.append( chunk_get_next(ns_pc)->str );
+                  xstr = ns_pc->str;
+                  xstr.append(" ");
+                  xstr.append( chunk_get_next(ns_pc)->str );
                }
 
                if ((nl_min > 0) && (nl_count >= nl_min) && (tag_pc != NULL))
@@ -787,7 +787,7 @@ void add_long_closebrace_comment(void)
                                     CT_COMMENT_CPP : CT_COMMENT;
 
                   /* Add a comment after the close brace */
-                  insert_comment_after(br_close, style, string);
+                  insert_comment_after(br_close, style, xstr);
                }
             }
             break;
