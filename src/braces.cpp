@@ -693,6 +693,46 @@ chunk_t *insert_comment_after(chunk_t *ref, c_token_t cmt_type,
 }
 
 
+/**
+ * Collect the text into txt that contains the full tag name.
+ * Mainly for collecting namespace 'a.b.c' or function 'foo::bar()' names.
+ */
+static void append_tag_name(unc_text& txt, chunk_t *pc)
+{
+   chunk_t *tmp = pc;
+
+   /* step backwards over all a::b stuff */
+   while ((tmp = chunk_get_prev_ncnl(tmp)) != NULL)
+   {
+      if ((tmp->type != CT_DC_MEMBER) && (tmp->type != CT_MEMBER))
+      {
+         break;
+      }
+      tmp = chunk_get_prev_ncnl(tmp);
+      pc = tmp;
+      if (!chunk_is_word(tmp))
+      {
+         break;
+      }
+   }
+
+   txt += pc->str;
+   while ((pc = chunk_get_next_ncnl(pc)) != NULL)
+   {
+      if ((pc->type != CT_DC_MEMBER) && (pc->type != CT_MEMBER))
+      {
+         break;
+      }
+      txt += pc->str;
+      pc = chunk_get_next_ncnl(pc);
+      if (pc)
+      {
+         txt += pc->str;
+      }
+   }
+}
+
+
 /*
  * See also it's preprocessor counterpart
  *   add_long_preprocessor_conditional_block_comment
@@ -767,7 +807,8 @@ void add_long_closebrace_comment(void)
                {
                   nl_min = cpd.settings[UO_mod_add_long_function_closebrace_comment].n;
                   tag_pc = fcn_pc;
-                  xstr   = fcn_pc->str;
+                  xstr.clear();
+                  append_tag_name(xstr, tag_pc);
                }
                else if (br_open->parent_type == CT_NAMESPACE)
                {
@@ -777,7 +818,7 @@ void add_long_closebrace_comment(void)
                      and append it to generate "namespace xyz" */
                   xstr = ns_pc->str;
                   xstr.append(" ");
-                  xstr.append( chunk_get_next(ns_pc)->str );
+                  append_tag_name(xstr, chunk_get_next(ns_pc));
                }
 
                if ((nl_min > 0) && (nl_count >= nl_min) && (tag_pc != NULL))
