@@ -190,18 +190,46 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
 
    if ((first->type == CT_QUESTION) || (second->type == CT_QUESTION))
    {
+      if ((second->type == CT_QUESTION) &&
+          (cpd.settings[UO_sp_cond_question_before].a != AV_IGNORE))
+      {
+         log_rule("sp_cond_question_before");
+         return(cpd.settings[UO_sp_cond_question_before].a);
+      }
+      if ((first->type == CT_QUESTION) &&
+          (cpd.settings[UO_sp_cond_question_after].a != AV_IGNORE))
+      {
+         log_rule("sp_cond_question_after");
+         return(cpd.settings[UO_sp_cond_question_after].a);
+      }
       if (cpd.settings[UO_sp_cond_question].a != AV_IGNORE)
       {
+         log_rule("sp_cond_question");
          return(cpd.settings[UO_sp_cond_question].a);
       }
    }
+
    if ((first->type == CT_COND_COLON) || (second->type == CT_COND_COLON))
    {
+      if ((second->type == CT_COND_COLON) &&
+          (cpd.settings[UO_sp_cond_colon_before].a != AV_IGNORE))
+      {
+         log_rule("sp_cond_colon_before");
+         return(cpd.settings[UO_sp_cond_colon_before].a);
+      }
+      if ((first->type == CT_COND_COLON) &&
+          (cpd.settings[UO_sp_cond_colon_after].a != AV_IGNORE))
+      {
+         log_rule("sp_cond_colon_after");
+         return(cpd.settings[UO_sp_cond_colon_after].a);
+      }
       if (cpd.settings[UO_sp_cond_colon].a != AV_IGNORE)
       {
+         log_rule("sp_cond_colon");
          return(cpd.settings[UO_sp_cond_colon].a);
       }
    }
+
    if ((first->type == CT_RANGE) || (second->type == CT_RANGE))
    {
       return(cpd.settings[UO_sp_range].a);

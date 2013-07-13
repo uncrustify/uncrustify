@@ -493,8 +493,16 @@ void register_options(void)
 
    unc_add_option("sp_cond_colon", UO_sp_cond_colon, AT_IARF,
                   "Add or remove space around the ':' in 'b ? t : f'");
+   unc_add_option("sp_cond_colon_before", UO_sp_cond_colon_before, AT_IARF,
+                  "Add or remove space before the ':' in 'b ? t : f'. Overrides sp_cond_colon.");
+   unc_add_option("sp_cond_colon_after", UO_sp_cond_colon_after, AT_IARF,
+                  "Add or remove space after the ':' in 'b ? t : f'. Overrides sp_cond_colon.");
    unc_add_option("sp_cond_question", UO_sp_cond_question, AT_IARF,
                   "Add or remove space around the '?' in 'b ? t : f'");
+   unc_add_option("sp_cond_question_before", UO_sp_cond_question_before, AT_IARF,
+                  "Add or remove space before the '?' in 'b ? t : f'. Overrides sp_cond_question.");
+   unc_add_option("sp_cond_question_after", UO_sp_cond_question_after, AT_IARF,
+                  "Add or remove space after the '?' in 'b ? t : f'. Overrides sp_cond_question.");
    unc_add_option("sp_case_label", UO_sp_case_label, AT_IARF,
                   "Fix the spacing between 'case' and the label. Only 'ignore' and 'force' make sense here.");
    unc_add_option("sp_range", UO_sp_range, AT_IARF,
