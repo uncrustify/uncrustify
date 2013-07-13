@@ -870,7 +870,7 @@ void indent_text(void)
 
                if (cpd.settings[UO_indent_oc_block].b)
                {
-                  frm.pse[frm.pse_tos].indent = 1 + ((pc->brace_level+1) * indent_size);
+                  frm.pse[frm.pse_tos].indent = 1 + ((pc->brace_level + 1) * indent_size);
                   indent_column_set(frm.pse[frm.pse_tos].indent - indent_size);
                }
                else
