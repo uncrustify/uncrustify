@@ -59,6 +59,7 @@
 
 00091  cond-1.cfg              c/cond.c
 00092  cond-2.cfg              c/cond.c
+00093  sp_cond_colon.cfg       c/cond.c
 
 00101  ben.cfg                 c/bugs-1.c
 00102  ben.cfg                 c/bugs-2.c
