@@ -59,3 +59,5 @@
 
 50110  obj-c.cfg                                    oc/msg_align.m
 50111  del_semicolon.cfg                            oc/ns_enum.m
+
+50120  gh137.cfg                                    oc/gh137.m
