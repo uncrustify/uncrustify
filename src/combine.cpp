@@ -2302,6 +2302,11 @@ static void mark_variable_stack(ChunkStack& cs, log_sev_t sev)
 
    /* throw out the last word and mark the rest */
    var_name = cs.Pop_Back();
+   if (var_name && var_name->prev->type == CT_DC_MEMBER)
+   {
+     cs.Push_Back(var_name);
+   }
+
    if (var_name != NULL)
    {
       LOG_FMT(LFCNP, "%s: parameter on line %d :",
@@ -2319,16 +2324,19 @@ static void mark_variable_stack(ChunkStack& cs, log_sev_t sev)
          word_cnt++;
       }
 
-      if (word_cnt)
+      if (var_name->type == CT_WORD)
       {
-         LOG_FMT(LFCNP, " [%s]\n", var_name->str.c_str());
-         var_name->flags |= PCF_VAR_DEF;
-      }
-      else
-      {
-         LOG_FMT(LFCNP, " <%s>\n", var_name->str.c_str());
-         var_name->type   = CT_TYPE;
-         var_name->flags |= PCF_VAR_TYPE;
+         if (word_cnt)
+         {
+            LOG_FMT(LFCNP, " [%s]\n", var_name->str.c_str());
+            var_name->flags |= PCF_VAR_DEF;
+         }
+         else
+         {
+            LOG_FMT(LFCNP, " <%s>\n", var_name->str.c_str());
+            var_name->type   = CT_TYPE;
+            var_name->flags |= PCF_VAR_TYPE;
+         }
       }
    }
 }
