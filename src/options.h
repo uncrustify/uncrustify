@@ -667,7 +667,7 @@ enum uncrustify_options
 
    /* Hack, add comments to the ends of namespaces */
    UO_mod_add_long_namespace_closebrace_comment,
-   
+
    /* This is used to get the enumeration count */
    UO_option_count
 };
