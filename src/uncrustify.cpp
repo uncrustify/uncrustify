@@ -1331,8 +1331,6 @@ static void uncrustify_start(const deque<int>& data)
       add_file_footer();
    }
 
-   annotations_newlines();
-
    /**
     * Change certain token types based on simple sequence.
     * Example: change '[' + ']' to '[]'
@@ -1484,6 +1482,7 @@ static void uncrustify_file(const file_mem& fm, FILE *pfout,
 
          LOG_FMT(LNEWLINE, "Newline loop start: %d\n", cpd.changes);
 
+         annotations_newlines();
          newlines_cleanup_dup();
          newlines_cleanup_braces(first);
          if (cpd.settings[UO_nl_after_multiline_comment].b)

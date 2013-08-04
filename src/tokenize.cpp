@@ -918,7 +918,8 @@ static bool parse_cr_string(tok_ctx& ctx, chunk_t& pc, int q_idx)
  */
 bool parse_word(tok_ctx& ctx, chunk_t& pc, bool skipcheck)
 {
-   int ch;
+   int             ch;
+   static unc_text interface("@interface");
 
    /* The first character is already valid */
    pc.str.clear();
@@ -957,7 +958,9 @@ bool parse_word(tok_ctx& ctx, chunk_t& pc, bool skipcheck)
    }
    else
    {
-      if ((cpd.lang_flags & LANG_JAVA) && pc.str.startswith("@"))
+      /* '@interface' is reserved, not an interface itself */
+      if ((cpd.lang_flags & LANG_JAVA) && pc.str.startswith("@") &&
+          !pc.str.equals(interface))
       {
          pc.type = CT_ANNOTATION;
       }

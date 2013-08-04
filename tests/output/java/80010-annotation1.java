@@ -14,12 +14,12 @@ import java.lang.annotation.Target;
          ElementType.PACKAGE,ElementType.FIELD,ElementType.LOCAL_VARIABLE})
 @Inherited
 public @interface Unfinished {
-	public enum Priority { LOW, MEDIUM, HIGH }
-	String value();
-	String[] changedBy() default "";
-	String[] lastChangedBy() default "";
-	Priority priority() default Priority.MEDIUM;
-	String createdBy() default "James Gosling";
-	String lastChanged() default "08/07/2011";
+public enum Priority { LOW, MEDIUM, HIGH }
+String value();
+String[] changedBy() default "";
+String[] lastChangedBy() default "";
+Priority priority() default Priority.MEDIUM;
+String createdBy() default "James Gosling";
+String lastChanged() default "08/07/2011";
 }
 
