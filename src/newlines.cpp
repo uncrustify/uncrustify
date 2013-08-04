@@ -3370,25 +3370,16 @@ void annotations_newlines(void)
               __func__, pc->orig_line, pc->orig_col, pc->text(),
               ae->orig_line, ae->orig_col, ae->text());
 
-      if (chunk_is_token(prev, CT_ANNOTATION) ||
-          !chunk_is_newline(prev))
+      next = chunk_get_next_nnl(ae);
+      if (chunk_is_token(next, CT_ANNOTATION))
       {
-         /* skip it */
-         LOG_FMT(LANNOT, " -- ignored\n");
+         LOG_FMT(LANNOT, " -- nl_between_annotation\n");
+         newline_iarf(ae, cpd.settings[UO_nl_between_annotation].a);
       }
       else
       {
-         next = chunk_get_next_nnl(ae);
-         if (chunk_is_token(next, CT_ANNOTATION))
-         {
-            LOG_FMT(LANNOT, " -- nl_between_annotation\n");
-            newline_iarf(ae, cpd.settings[UO_nl_between_annotation].a);
-         }
-         else
-         {
-            LOG_FMT(LANNOT, " -- nl_after_annotation\n");
-            newline_iarf(ae, cpd.settings[UO_nl_after_annotation].a);
-         }
+         LOG_FMT(LANNOT, " -- nl_after_annotation\n");
+         newline_iarf(ae, cpd.settings[UO_nl_after_annotation].a);
       }
    }
 }
