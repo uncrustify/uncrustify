@@ -382,7 +382,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
       return(cpd.settings[UO_sp_after_dc].a);
    }
    if ((second->type == CT_DC_MEMBER) &&
-       ((first->type == CT_WORD) || (first->type == CT_TYPE) ||
+       ((first->type == CT_WORD) || (first->type == CT_TYPE) || (first->type == CT_PAREN_CLOSE) ||
         CharTable::IsKw1(first->str[0])))
    {
       log_rule("sp_before_dc");
