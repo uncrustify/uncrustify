@@ -100,6 +100,7 @@ static const chunk_tag_t keywords[] =
    { "dchar",            CT_TYPE,         LANG_D                                                                      },
    { "debug",            CT_DEBUG,        LANG_D                                                                      },
    { "debugger",         CT_DEBUGGER,     LANG_ECMA                                                                   },
+   { "decltype",         CT_SIZEOF,       LANG_CPP                                                                    },
    { "default",          CT_DEFAULT,      LANG_ALL                                                                    }, // PAWN
    { "define",           CT_PP_DEFINE,    LANG_ALL | FLAG_PP                                                          }, // PAWN
    { "defined",          CT_DEFINED,      LANG_PAWN                                                                   }, // PAWN
