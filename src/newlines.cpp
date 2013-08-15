@@ -3342,7 +3342,6 @@ void annotations_newlines(void)
 {
    chunk_t *pc;
    chunk_t *next;
-   chunk_t *prev;
    chunk_t *ae;   /* last token of the annotation */
 
    pc = chunk_get_head();
@@ -3363,8 +3362,6 @@ void annotations_newlines(void)
       {
          break;
       }
-
-      prev = chunk_get_prev(pc);
 
       LOG_FMT(LANNOT, "%s: %d:%d annotation '%s' end@%d:%d '%s'",
               __func__, pc->orig_line, pc->orig_col, pc->text(),
