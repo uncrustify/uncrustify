@@ -993,10 +993,9 @@ static bool parse_whitespace(tok_ctx& ctx, chunk_t& pc)
       switch (ch)
       {
       case '\r':
-         if (ctx.peek() == '\n')
+         if (ctx.expect('\n'))
          {
             /* CRLF ending */
-            ctx.get();     /* throw away \n */
             cpd.le_counts[LE_CRLF]++;
          }
          else
@@ -1081,17 +1080,10 @@ static bool parse_newline(tok_ctx& ctx)
    }
    if ((ctx.peek() == '\r') || (ctx.peek() == '\n'))
    {
-      if (ctx.peek() == '\n')
+      if (!ctx.expect('\n'))
       {
          ctx.get();
-      }
-      else /* it is '\r' */
-      {
-         ctx.get();
-         if (ctx.peek() == '\n')
-         {
-            ctx.get();
-         }
+         ctx.expect('\n');
       }
       return(true);
    }
