@@ -6,4 +6,8 @@
 
 80000 ben.cfg                 java/assert.java
 80010 annotation.cfg          java/annotation1.java
+80011 annot-none.cfg          java/annotation2.java
+80012 annot-after.cfg         java/annotation2.java
+80013 annot-between.cfg       java/annotation2.java
+80014 annot-both.cfg          java/annotation2.java
 80020 java_foreach.cfg        java/foreach.java

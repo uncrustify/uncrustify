@@ -34,6 +34,7 @@ static const chunk_tag_t keywords[] =
    { "@finally",         CT_FINALLY,      LANG_OC | LANG_CPP | LANG_C                                                 },
    { "@implementation",  CT_OC_IMPL,      LANG_OC | LANG_CPP | LANG_C                                                 },
    { "@interface",       CT_OC_INTF,      LANG_OC | LANG_CPP | LANG_C                                                 },
+   { "@interface",       CT_CLASS,        LANG_JAVA                                                                   },
    { "@private",         CT_PRIVATE,      LANG_OC | LANG_CPP | LANG_C                                                 },
    { "@property",        CT_OC_PROPERTY,  LANG_OC | LANG_CPP | LANG_C                                                 },
    { "@protocol",        CT_OC_PROTOCOL,  LANG_OC | LANG_CPP | LANG_C                                                 },
