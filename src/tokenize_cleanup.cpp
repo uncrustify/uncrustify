@@ -188,6 +188,19 @@ void tokenize_cleanup(void)
          }
       }
 
+      /* Since Java allows array-style brackets to be part of type names,
+       * scan past possible CT_TSQUARE or balanced CT_SQUARE tokens and
+       * perform the same check for CT_WORD as above
+       */
+      if (cpd.lang_flags & LANG_JAVA)
+      {
+         chunk_t *tmp = chunk_get_next_nisq(pc);
+         if (pc->type == CT_WORD && tmp->type == CT_WORD)
+         {
+            pc->type = CT_TYPE;
+         }
+      }
+
       /* change extern to qualifier if extern isn't followed by a string or
        * an open paren
        */
