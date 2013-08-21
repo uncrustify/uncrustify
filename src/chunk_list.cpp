@@ -384,10 +384,6 @@ chunk_t *chunk_get_next_nisq(chunk_t *cur, chunk_nav_t nav)
 
    do
    {
-      if (pc && pc->type == CT_SQUARE_OPEN)
-      {
-         pc = chunk_get_next_type(cur, CT_SQUARE_CLOSE, cur->level, nav);
-      }
       pc = chunk_get_next(pc, nav);
    } while (pc != NULL && (pc->type == CT_SQUARE_OPEN ||
                           pc->type == CT_TSQUARE ||
