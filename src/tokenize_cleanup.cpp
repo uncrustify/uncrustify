@@ -205,7 +205,7 @@ void tokenize_cleanup(void)
          {
             /* Something else followed by a open brace */
             tmp = chunk_get_next_ncnl(next);
-            if ((tmp != NULL) || (tmp->type != CT_BRACE_OPEN))
+            if ((tmp == NULL) || (tmp->type != CT_BRACE_OPEN))
             {
                pc->type = CT_QUALIFIER;
             }
