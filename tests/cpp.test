@@ -86,6 +86,8 @@
 30108 nl_template_class-remove.cfg     cpp/templates3.cpp
 30109 template4.cfg                    cpp/templates4.cpp
 
+30110 class-nl_func-add2.cfg           cpp/class-init.cpp
+
 30201 cmt_indent-1.cfg                 cpp/cmt_indent.cpp
 30202 cmt_indent-2.cfg                 cpp/cmt_indent.cpp
 30203 cmt_indent-3.cfg                 cpp/cmt_indent.cpp
