@@ -1126,21 +1126,33 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
    }
 
    if ((cpd.settings[UO_sp_after_class_colon].a != AV_IGNORE) &&
-       ((first->type == CT_CLASS_COLON) ||
-        (first->type == CT_CONSTR_COLON)))
+       (first->type == CT_CLASS_COLON))
    {
-      min_sp = cpd.settings[UO_indent_ctor_init_leading].n - 1; // default indent is 1 space
-
       log_rule("sp_after_class_colon");
       return(cpd.settings[UO_sp_after_class_colon].a);
    }
    if ((cpd.settings[UO_sp_before_class_colon].a != AV_IGNORE) &&
-       ((second->type == CT_CLASS_COLON) ||
-        (second->type == CT_CONSTR_COLON)))
+       (second->type == CT_CLASS_COLON))
    {
       log_rule("sp_before_class_colon");
       return(cpd.settings[UO_sp_before_class_colon].a);
    }
+
+   if ((cpd.settings[UO_sp_after_constr_colon].a != AV_IGNORE) &&
+       (first->type == CT_CONSTR_COLON))
+   {
+      min_sp = cpd.settings[UO_indent_ctor_init_leading].n - 1; // default indent is 1 space
+
+      log_rule("sp_after_constr_colon");
+      return(cpd.settings[UO_sp_after_constr_colon].a);
+   }
+   if ((cpd.settings[UO_sp_before_constr_colon].a != AV_IGNORE) &&
+       (second->type == CT_CONSTR_COLON))
+   {
+      log_rule("sp_before_constr_colon");
+      return(cpd.settings[UO_sp_before_constr_colon].a);
+   }
+
    if ((cpd.settings[UO_sp_before_case_colon].a != AV_IGNORE) &&
        (second->type == CT_CASE_COLON))
    {

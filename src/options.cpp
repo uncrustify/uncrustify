@@ -318,6 +318,10 @@ void register_options(void)
                   "Add or remove space after class ':'");
    unc_add_option("sp_before_class_colon", UO_sp_before_class_colon, AT_IARF,
                   "Add or remove space before class ':'");
+   unc_add_option("sp_after_constr_colon", UO_sp_after_constr_colon, AT_IARF,
+                  "Add or remove space after class constructor ':'");
+   unc_add_option("sp_before_constr_colon", UO_sp_before_constr_colon, AT_IARF,
+                  "Add or remove space before class constructor ':'");
    unc_add_option("sp_before_case_colon", UO_sp_before_case_colon, AT_IARF,
                   "Add or remove space before case ':'. Default=Remove");
    unc_add_option("sp_after_operator", UO_sp_after_operator, AT_IARF,
