@@ -1109,7 +1109,7 @@ static chunk_t *align_var_def_brace(chunk_t *start, int span, int *p_nl_count)
          continue;
       }
 
-      if (fp_active)
+      if (fp_active && !(pc->flags & PCF_IN_CLASS_BASE))
       {
          if ((pc->type == CT_FUNC_PROTO) ||
              ((pc->type == CT_FUNC_DEF) &&
@@ -1182,7 +1182,8 @@ static chunk_t *align_var_def_brace(chunk_t *start, int span, int *p_nl_count)
       }
 
       /* If this is a variable def, update the max_col */
-      if ((pc->type != CT_FUNC_CLASS) &&
+      if (!(pc->flags & PCF_IN_CLASS_BASE) &&
+          (pc->type != CT_FUNC_CLASS) &&
           ((pc->flags & align_mask) == PCF_VAR_1ST) &&
           ((pc->level == (start->level + 1)) ||
            (pc->level == 0)) &&
