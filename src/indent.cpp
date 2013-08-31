@@ -697,7 +697,8 @@ void indent_text(void)
             }
 
             /* End any CPP/ObjC class colon stuff */
-            if ((frm.pse[frm.pse_tos].type == CT_CLASS_COLON) &&
+            if (((frm.pse[frm.pse_tos].type == CT_CLASS_COLON) ||
+                 (frm.pse[frm.pse_tos].type == CT_CONSTR_COLON)) &&
                 ((pc->type == CT_BRACE_OPEN) ||
                  (pc->type == CT_OC_END) ||
                  (pc->type == CT_OC_SCOPE) ||
@@ -1116,7 +1117,8 @@ void indent_text(void)
          frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
          frm.pse[frm.pse_tos].indent_tab = frm.pse[frm.pse_tos].indent;
       }
-      else if (pc->type == CT_CLASS_COLON)
+      else if ((pc->type == CT_CLASS_COLON) ||
+               (pc->type == CT_CONSTR_COLON))
       {
          /* just indent one level */
          indent_pse_push(frm, pc);
@@ -1197,6 +1199,7 @@ void indent_text(void)
                    (frm.pse[idx].type != CT_SQUARE_OPEN) &&
                    (frm.pse[idx].type != CT_ANGLE_OPEN) &&
                    (frm.pse[idx].type != CT_CLASS_COLON) &&
+                   (frm.pse[idx].type != CT_CONSTR_COLON) &&
                    (frm.pse[idx].type != CT_ASSIGN_NL))
             {
                idx--;

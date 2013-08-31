@@ -94,6 +94,7 @@ const char *token_names[] =
    "COLON",
    "CASE_COLON",
    "CLASS_COLON",
+   "CONSTR_COLON",
    "D_ARRAY_COLON",
    "COND_COLON",
    "QUESTION",

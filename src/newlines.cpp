@@ -2858,7 +2858,7 @@ void newlines_chunk_pos(c_token_t chunk_type, tokenpos_e mode)
  * Searches for CT_CLASS_COLON and moves them, if needed.
  * Also breaks up the args
  */
-void newlines_class_colon_pos(void)
+void newlines_class_colon_pos(c_token_t tok)
 {
    chunk_t    *pc;
    chunk_t    *next;
@@ -2868,12 +2868,12 @@ void newlines_class_colon_pos(void)
 
    for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next_ncnl(pc))
    {
-      if ((ccolon == NULL) && (pc->type != CT_CLASS_COLON))
+      if (!ccolon && (pc->type != tok))
       {
          continue;
       }
 
-      if (pc->type == CT_CLASS_COLON)
+      if (pc->type == tok)
       {
          ccolon = pc;
          prev   = chunk_get_prev_nc(pc);

@@ -3460,7 +3460,7 @@ static void mark_cpp_constructor(chunk_t *pc)
       tmp         = chunk_get_next_ncnl(tmp);
       if (chunk_is_str(tmp, ":", 1) && (tmp->level == paren_open->level))
       {
-         tmp->type = CT_CLASS_COLON;
+         tmp->type = CT_CONSTR_COLON;
          hit_colon = true;
       }
       if (hit_colon &&
