@@ -2863,8 +2863,24 @@ void newlines_class_colon_pos(c_token_t tok)
    chunk_t    *pc;
    chunk_t    *next;
    chunk_t    *prev;
-   tokenpos_e mode    = cpd.settings[UO_pos_class_colon].tp;
    chunk_t    *ccolon = NULL;
+   tokenpos_e tpc, pcc;
+   argval_t   anc, ncia;
+
+   if (tok == CT_CLASS_COLON)
+   {
+      tpc = cpd.settings[UO_pos_class_colon].tp;
+      anc = cpd.settings[UO_nl_class_colon].a;
+      ncia = cpd.settings[UO_nl_class_init_args].a;
+      pcc = cpd.settings[UO_pos_class_comma].tp;
+   }
+   else /* tok == CT_CONSTR_COLON */
+   {
+      tpc = cpd.settings[UO_pos_constr_colon].tp;
+      anc = cpd.settings[UO_nl_constr_colon].a;
+      ncia = cpd.settings[UO_nl_constr_init_args].a;
+      pcc = cpd.settings[UO_pos_constr_comma].tp;
+   }
 
    for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next_ncnl(pc))
    {
@@ -2880,14 +2896,14 @@ void newlines_class_colon_pos(c_token_t tok)
          next   = chunk_get_next_nc(pc);
 
          if (!chunk_is_newline(prev) && !chunk_is_newline(next) &&
-             ((cpd.settings[UO_nl_class_colon].a & AV_ADD) != 0))
+             ((anc & AV_ADD) != 0))
          {
             newline_add_after(pc);
             prev = chunk_get_prev_nc(pc);
             next = chunk_get_next_nc(pc);
          }
 
-         if (cpd.settings[UO_nl_class_colon].a == AV_REMOVE)
+         if (anc == AV_REMOVE)
          {
             if (chunk_is_newline(prev) &&
                 chunk_safe_to_del_nl(prev))
@@ -2905,7 +2921,7 @@ void newlines_class_colon_pos(c_token_t tok)
             }
          }
 
-         if (mode & TP_TRAIL)
+         if (tpc & TP_TRAIL)
          {
             if (chunk_is_newline(prev) && (prev->nl_count == 1) &&
                 chunk_safe_to_del_nl(prev))
@@ -2913,7 +2929,7 @@ void newlines_class_colon_pos(c_token_t tok)
                chunk_swap(pc, prev);
             }
          }
-         else if (mode & TP_LEAD)
+         else if (tpc & TP_LEAD)
          {
             if (chunk_is_newline(next) && (next->nl_count == 1) &&
                 chunk_safe_to_del_nl(next))
@@ -2932,11 +2948,11 @@ void newlines_class_colon_pos(c_token_t tok)
 
          if ((pc->type == CT_COMMA) && (pc->level == ccolon->level))
          {
-            if ((cpd.settings[UO_nl_class_init_args].a & AV_ADD) != 0)
+            if ((ncia & AV_ADD) != 0)
             {
-               if (cpd.settings[UO_pos_class_comma].tp & TP_TRAIL)
+               if (pcc & TP_TRAIL)
                {
-                  if (cpd.settings[UO_nl_class_init_args].a == AV_FORCE)
+                  if (ncia == AV_FORCE)
                   {
                      newline_force_after(pc);
                   }
@@ -2945,9 +2961,9 @@ void newlines_class_colon_pos(c_token_t tok)
                      newline_add_after(pc);
                   }
                }
-               else if (cpd.settings[UO_pos_class_comma].tp & TP_LEAD)
+               else if (pcc & TP_LEAD)
                {
-                  if (cpd.settings[UO_nl_class_init_args].a == AV_FORCE)
+                  if (ncia == AV_FORCE)
                   {
                      newline_force_before(pc);
                   }
@@ -2963,7 +2979,7 @@ void newlines_class_colon_pos(c_token_t tok)
                   }
                }
             }
-            else if (cpd.settings[UO_nl_class_init_args].a == AV_REMOVE)
+            else if (ncia == AV_REMOVE)
             {
                next = chunk_get_next(pc);
                if (chunk_is_newline(next) && chunk_safe_to_del_nl(next))

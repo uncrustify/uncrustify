@@ -1128,7 +1128,8 @@ void indent_text(void)
 
          indent_column_set(frm.pse[frm.pse_tos].indent_tmp);
 
-         if (cpd.settings[UO_indent_class_colon].b)
+         if ((cpd.settings[UO_indent_class_colon].b && (pc->type == CT_CLASS_COLON)) ||
+             (cpd.settings[UO_indent_constr_colon].b && (pc->type == CT_CONSTR_COLON)))
          {
             prev = chunk_get_prev(pc);
             if (chunk_is_newline(prev))

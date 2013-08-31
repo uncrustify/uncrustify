@@ -163,6 +163,7 @@ enum uncrustify_options
    UO_indent_extern,
    UO_indent_class,                         // indent stuff inside class braces
    UO_indent_class_colon,                   // indent stuff after a class colon
+   UO_indent_constr_colon,                  // indent stuff after a constr colon
 
    UO_indent_ctor_init_leading,             // virtual indent from the ':' for member initializers. Default is 2. (applies to the leading colon case)
    UO_indent_ctor_init,                     // additional indenting for ctor initializer lists
@@ -550,7 +551,9 @@ enum uncrustify_options
    UO_nl_end_of_file_min,            // min number of newlines at the end of the file
 
    UO_nl_class_colon,                // nl before/after class colon (tied to UO_pos_class_colon)
-   UO_nl_class_init_args,            // newline after comma in class init args
+   UO_nl_constr_colon,               // nl before/after class constr colon (tied to UO_pos_constr_colon)
+   UO_nl_class_init_args,            // newline after comma in base class list
+   UO_nl_constr_init_args,           // newline after comma in class init args
    UO_nl_collapse_empty_body,        // change { \n } into {}
    UO_nl_class_leave_one_liners,     // leave one-line function bodies in "class xx { here }"
    UO_nl_assign_leave_one_liners,    // leave one-line assign bodies in "foo_t f = { a, b, c };"
@@ -576,8 +579,10 @@ enum uncrustify_options
    UO_pos_compare,                // position of trailing/leading <=/>, etc
    UO_pos_conditional,            // position of trailing/leading (b ? t : f)
    UO_pos_comma,                  // position of comma in functions
-   UO_pos_class_comma,            // position of comma in constructor init list
+   UO_pos_class_comma,            // position of comma in class parent list list
+   UO_pos_constr_comma,           // position of comma in constructor init list
    UO_pos_class_colon,            // position of trailing/leading class colon
+   UO_pos_constr_colon,           // position of trailing/leading class constr colon
 
 
    /*

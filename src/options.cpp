@@ -578,7 +578,9 @@ void register_options(void)
    unc_add_option("indent_class", UO_indent_class, AT_BOOL,
                   "Whether the 'class' body is indented");
    unc_add_option("indent_class_colon", UO_indent_class_colon, AT_BOOL,
-                  "Whether to indent the stuff after a leading class colon");
+                  "Whether to indent the stuff after a leading base class colon");
+   unc_add_option("indent_constr_colon", UO_indent_constr_colon, AT_BOOL,
+                  "Whether to indent the stuff after a leading class initializer colon");
    unc_add_option("indent_ctor_init_leading", UO_indent_ctor_init_leading, AT_NUM,
                   "Virtual indent from the ':' for member initializers. Default is 2");
    unc_add_option("indent_ctor_init", UO_indent_ctor_init, AT_NUM,
@@ -804,6 +806,8 @@ void register_options(void)
    unc_add_option("nl_class_brace", UO_nl_class_brace, AT_IARF,
                   "Add or remove newline between 'class' and '{'");
    unc_add_option("nl_class_init_args", UO_nl_class_init_args, AT_IARF,
+                  "Add or remove newline after each ',' in the class base list");
+   unc_add_option("nl_constr_init_args", UO_nl_constr_init_args, AT_IARF,
                   "Add or remove newline after each ',' in the constructor member initialization");
    unc_add_option("nl_func_type_name", UO_nl_func_type_name, AT_IARF,
                   "Add or remove newline between return type and function name in a function definition");
@@ -906,7 +910,10 @@ void register_options(void)
                   "(lower priority than 'eat_blanks_before_close_brace')");
    unc_add_option("nl_class_colon", UO_nl_class_colon, AT_IARF,
                   "Add or remove a newline around a class colon.\n"
-                  "Related to pos_class_colon, nl_class_init_args, and pos_comma.");
+                  "Related to pos_class_colon, nl_class_init_args, and pos_class_comma.");
+   unc_add_option("nl_constr_colon", UO_nl_constr_colon, AT_IARF,
+                  "Add or remove a newline around a class constructor colon.\n"
+                  "Related to pos_constr_colon, nl_constr_init_args, and pos_constr_comma.");
    unc_add_option("nl_create_if_one_liner", UO_nl_create_if_one_liner, AT_BOOL,
                   "Change simple unbraced if statements into a one-liner\n"
                   "'if(b)\\n i++;' => 'if(b) i++;'");
@@ -1005,8 +1012,12 @@ void register_options(void)
    unc_add_option("pos_comma", UO_pos_comma, AT_POS,
                   "The position of the comma in wrapped expressions");
    unc_add_option("pos_class_comma", UO_pos_class_comma, AT_POS,
+                  "The position of the comma in the class base list");
+   unc_add_option("pos_constr_comma", UO_pos_constr_comma, AT_POS,
                   "The position of the comma in the constructor initialization list");
    unc_add_option("pos_class_colon", UO_pos_class_colon, AT_POS,
+                  "The position of colons between class and base class list");
+   unc_add_option("pos_constr_colon", UO_pos_constr_colon, AT_POS,
                   "The position of colons between constructor and member initialization");
 
    unc_begin_group(UG_linesplit, "Line Splitting options");
