@@ -1,6 +1,17 @@
 README for Uncrustify
 =====================
 
+Post any bugs to the issue tracker found on the project's Sourceforge page:
+  http://sourceforge.net/projects/uncrustify
+
+Please include the following with your issue:
+ - a description of what is not working right
+ - input code sufficient to demonstrate the issue
+ - expected output code
+ - configuration options used to generate the output
+
+If the issue cannot be easily reproduced, then it isn't likely to be fixed.
+
 
 Building the program
 --------------------
@@ -16,20 +27,20 @@ Copy that to your ~/bin/ folder or wherever you want.
 Building the program using Xcode on Mac OS X
 ---------------------------------------------
 
-You can of course just open the Xcode project and build uncrustify using the 
-default 'Debug' configuration but if you want to install it the 'Install' 
-configuration will not work from within Xcode. 
+You can of course just open the Xcode project and build uncrustify using the
+default 'Debug' configuration but if you want to install it the 'Install'
+configuration will not work from within Xcode.
 
 For that you will have to use the Xcode command line tool 'xcodebuild'.
- 
-To do that, cd into the uncrustify project folder where uncrustify.xcodeproj 
+
+To do that, cd into the uncrustify project folder where uncrustify.xcodeproj
 resides and enter the following command:
 
-sudo xcodebuild -configuration 'Install' 
+sudo xcodebuild -configuration 'Install'
 
-You will be prompted for the root level password. By doing this you will install 
-uncrustify into /usr/local/bin. The install location can be changed by editing 
-the Build Settings for the uncrustify target. The setting you need to change is 
+You will be prompted for the root level password. By doing this you will install
+uncrustify into /usr/local/bin. The install location can be changed by editing
+the Build Settings for the uncrustify target. The setting you need to change is
 called, surprisingly enough, 'Installation Directory'.
 
 
@@ -72,5 +83,3 @@ That script is used as follows:
 3. sh etc/dofiles.sh files.txt
 4. Use your favorite diff/merge program to merge in the changes
   $ xxdiff out/myproj myproj
-
-
