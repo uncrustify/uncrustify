@@ -3,9 +3,12 @@ NSDictionary *dictionary = @{
    @0: @"red", @1: @"green", @2: @"blue"
 };
 
-NSArray *array = @{
-   @0, @1, @2, @YES, @'Z', @42U
-};
+NSArray *array = @[@0, @1, @2, @YES, @'Z', @42U];
+
+NSArray *multilineArray = @[
+   @0, @1, @2, @YES,
+   @'Z', @42U
+];
 
 void main(int argc, const char *argv[])
 {
