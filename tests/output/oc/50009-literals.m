@@ -5,6 +5,11 @@ NSDictionary *dictionary = @{
 
 NSArray *array = @[@0, @1, @2, @YES, @'Z', @42U];
 
+NSArray *multilineArray = @[
+   @0, @1, @2, @YES,
+   @'Z', @42U
+];
+
 void main(int argc, const char *argv[])
 {
    // character literals.
