@@ -140,6 +140,8 @@ void flag_series(chunk_t *start, chunk_t *end, UINT64 set_flags, UINT64 clr_flag
 chunk_t *skip_template_next(chunk_t *ang_open);
 chunk_t *skip_template_prev(chunk_t *ang_close);
 
+chunk_t *skip_tsquare_next(chunk_t *ary_def);
+
 chunk_t *skip_attribute_next(chunk_t *attr);
 chunk_t *skip_attribute_prev(chunk_t *fp_close);
 

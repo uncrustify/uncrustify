@@ -370,6 +370,29 @@ chunk_t *chunk_get_next_nc(chunk_t *cur, chunk_nav_t nav)
 
 
 /**
+ * Gets the next chunk not in or part of balanced square
+ * brackets. This handles stacked [] instances to acommodate
+ * multi-dimensional array declarations
+ *
+ * @param cur     Starting chunk
+ * @return        NULL or the next chunk not in or part of
+ *                square brackets
+ */
+chunk_t *chunk_get_next_nisq(chunk_t *cur, chunk_nav_t nav)
+{
+   chunk_t *pc = cur;
+
+   do
+   {
+      pc = chunk_get_next(pc, nav);
+   } while (pc != NULL && (pc->type == CT_SQUARE_OPEN ||
+                          pc->type == CT_TSQUARE ||
+                          pc->type == CT_SQUARE_CLOSE));
+  return(pc);
+}
+
+
+/**
  * Gets the prev non-NEWLINE and non-comment chunk
  */
 chunk_t *chunk_get_prev_ncnl(chunk_t *cur, chunk_nav_t nav)
