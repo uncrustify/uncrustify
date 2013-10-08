@@ -385,9 +385,9 @@ chunk_t *chunk_get_next_nisq(chunk_t *cur, chunk_nav_t nav)
    do
    {
       pc = chunk_get_next(pc, nav);
-   } while (pc != NULL && (pc->type == CT_SQUARE_OPEN ||
-                          pc->type == CT_TSQUARE ||
-                          pc->type == CT_SQUARE_CLOSE));
+   } while (pc && ((pc->type == CT_SQUARE_OPEN) ||
+                   (pc->type == CT_TSQUARE) ||
+                   (pc->type == CT_SQUARE_CLOSE)));
   return(pc);
 }
 

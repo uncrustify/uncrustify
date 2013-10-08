@@ -2464,8 +2464,9 @@ static chunk_t *fix_var_def(chunk_t *start)
       pc = skip_template_next(pc);
       pc = skip_attribute_next(pc);
       if (cpd.lang_flags & LANG_JAVA)
+      {
          pc = skip_tsquare_next(pc);
-
+      }
    }
    end = pc;
 
@@ -4246,12 +4247,10 @@ chunk_t *skip_template_prev(chunk_t *ang_close)
  */
 chunk_t *skip_tsquare_next(chunk_t *ary_def)
 {
-   if ((ary_def != NULL) && (ary_def->type == CT_SQUARE_OPEN ||
-                             ary_def->type == CT_TSQUARE))
+   if (ary_def && ((ary_def->type == CT_SQUARE_OPEN) ||
+                   (ary_def->type == CT_TSQUARE)))
    {
-      chunk_t *pc;
-      pc = chunk_get_next_nisq(ary_def);
-      return(pc);
+      return chunk_get_next_nisq(ary_def);
    }
    return(ary_def);
 }
