@@ -98,7 +98,7 @@ static void do_the_sort(chunk_t **chunks, int num_chunks)
 }
 
 
-void sort_imports(void)
+void sort_chunks(void)
 {
    chunk_t *chunks[256];  /* 256 should be enough, right? */
    int     num_chunks = 0;
@@ -114,19 +114,18 @@ void sort_imports(void)
 
       if (chunk_is_newline(pc))
       {
-         bool did_import = false;
+         bool did_chunks_finished = false;
 
          if ((p_imp != NULL) && (p_last != NULL) &&
-             ((p_last->type == CT_SEMICOLON) ||
-              (p_imp->flags & PCF_IN_PREPROC)))
+             (p_last->type == CT_SEMICOLON))
          {
             if (num_chunks < (int)ARRAY_SIZE(chunks))
             {
                chunks[num_chunks++] = p_imp;
             }
-            did_import = true;
+            did_chunks_finished = true;
          }
-         if (!did_import || (pc->nl_count > 1))
+         if (!did_chunks_finished || (pc->nl_count > 1))
          {
             if (num_chunks > 1)
             {
@@ -159,6 +158,37 @@ void sort_imports(void)
             p_imp  = chunk_get_next(pc);
             p_last = pc;
          }
+      }
+      else if (pc->type == CT_OC_PROPERTY)
+      {
+          if (cpd.settings[UO_mod_sort_proporties].b)
+          {
+              p_imp = pc;
+              do {
+                  p_imp  = chunk_get_next(p_imp);
+              } while (p_imp->type!=CT_TYPE);
+              p_imp  = chunk_get_next(p_imp);
+              if (p_imp->type==CT_PTR_TYPE) {
+                  p_imp  = chunk_get_next(p_imp);
+              }
+              p_last = pc;
+          }
+      }
+      else if (pc->type == CT_FUNC_PROTO)
+      {
+          if (cpd.settings[UO_mod_sort_func_prototypes].b)
+          {
+              p_imp  = pc;
+              p_last = pc;
+          }
+      }
+      else if (pc->type == CT_OC_MSG_SPEC)
+      {
+          if (cpd.settings[UO_mod_sort_msg_spec].b)
+          {
+              p_imp  = pc;
+              p_last = pc;
+          }
       }
       else if (!chunk_is_comment(pc))
       {

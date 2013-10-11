@@ -1548,9 +1548,12 @@ static void uncrustify_file(const file_mem& fm, FILE *pfout,
       /* Sort imports/using/include */
       if (cpd.settings[UO_mod_sort_import].b ||
           cpd.settings[UO_mod_sort_include].b ||
-          cpd.settings[UO_mod_sort_using].b)
+          cpd.settings[UO_mod_sort_using].b ||
+          cpd.settings[UO_mod_sort_func_prototypes].b ||
+          cpd.settings[UO_mod_sort_msg_spec].b ||
+          cpd.settings[UO_mod_sort_proporties].b)
       {
-         sort_imports();
+         sort_chunks();
       }
 
       /**
