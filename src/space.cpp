@@ -814,7 +814,8 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
 
    if (second->type == CT_BRACE_CLOSE)
    {
-      if (second->parent_type == CT_ENUM)
+      if ((second->parent_type == CT_ENUM) || 
+          (second->parent_type == CT_OC_NS_ENUM))
       {
          log_rule("sp_inside_braces_enum");
          return(cpd.settings[UO_sp_inside_braces_enum].a);
@@ -1321,7 +1322,8 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
 
    if (first->type == CT_BRACE_OPEN)
    {
-      if (first->parent_type == CT_ENUM)
+      if ((first->parent_type == CT_ENUM) || 
+          (first->parent_type == CT_OC_NS_ENUM))
       {
          log_rule("sp_inside_braces_enum");
          return(cpd.settings[UO_sp_inside_braces_enum].a);
@@ -1341,7 +1343,8 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
 
    if (second->type == CT_BRACE_CLOSE)
    {
-      if (second->parent_type == CT_ENUM)
+      if ((second->parent_type == CT_ENUM) || 
+          (second->parent_type == CT_OC_NS_ENUM))
       {
          log_rule("sp_inside_braces_enum");
          return(cpd.settings[UO_sp_inside_braces_enum].a);
@@ -1359,6 +1362,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
    if ((first->type == CT_BRACE_CLOSE) &&
        (first->flags & PCF_IN_TYPEDEF) &&
        ((first->parent_type == CT_ENUM) ||
+        (first->parent_type == CT_OC_NS_ENUM) ||
         (first->parent_type == CT_STRUCT) ||
         (first->parent_type == CT_UNION)))
    {
