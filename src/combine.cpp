@@ -2002,7 +2002,9 @@ static void fix_typedef(chunk_t *start)
       }
    }
 
-   if (last_op)
+   /* avoid interpreting typedef NS_ENUM (NSInteger, MyEnum) as a function def */
+   if (last_op && !((cpd.lang_flags & LANG_OC) &&
+       (last_op->parent_type == CT_ENUM)))
    {
       flag_parens(last_op, 0, CT_FPAREN_OPEN, CT_TYPEDEF, false);
       fix_fcn_def_params(last_op);
