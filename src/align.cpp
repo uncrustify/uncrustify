@@ -606,7 +606,8 @@ chunk_t *align_assign(chunk_t *first, int span, int thresh)
 
          tmp = pc->orig_line;
 
-         if (pc->parent_type == CT_ENUM)
+         if ((pc->parent_type == CT_ENUM) || 
+             (pc->parent_type == CT_OC_NS_ENUM))
          {
             myspan   = cpd.settings[UO_align_enum_equ_span].n;
             mythresh = cpd.settings[UO_align_enum_equ_thresh].n;

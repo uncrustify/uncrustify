@@ -1802,7 +1802,8 @@ static bool one_liner_nl_ok(chunk_t *pc)
       }
 
       if (cpd.settings[UO_nl_enum_leave_one_liners].b &&
-          (pc->parent_type == CT_ENUM))
+          ((pc->parent_type == CT_ENUM) || 
+           (pc->parent_type == CT_OC_NS_ENUM)))
       {
          LOG_FMT(LNL1LINE, "false (enum)\n");
          return(false);
@@ -2077,6 +2078,7 @@ void newlines_cleanup_braces(bool first)
 
          if (cpd.settings[UO_nl_ds_struct_enum_cmt].b &&
              ((pc->parent_type == CT_ENUM) ||
+              (pc->parent_type == CT_OC_NS_ENUM) ||
               (pc->parent_type == CT_STRUCT) ||
               (pc->parent_type == CT_UNION)))
          {
@@ -2169,6 +2171,7 @@ void newlines_cleanup_braces(bool first)
          }
          else if (cpd.settings[UO_nl_ds_struct_enum_close_brace].b &&
                   ((pc->parent_type == CT_ENUM) ||
+                   (pc->parent_type == CT_OC_NS_ENUM) ||
                    (pc->parent_type == CT_STRUCT) ||
                    (pc->parent_type == CT_UNION)))
          {
@@ -2191,6 +2194,7 @@ void newlines_cleanup_braces(bool first)
          if ((cpd.settings[UO_nl_brace_struct_var].a != AV_IGNORE) &&
              ((pc->parent_type == CT_STRUCT) ||
               (pc->parent_type == CT_ENUM) ||
+              (pc->parent_type == CT_OC_NS_ENUM) ||
               (pc->parent_type == CT_UNION)))
          {
             next = chunk_get_next_ncnl(pc, CNAV_PREPROC);
@@ -2279,7 +2283,9 @@ void newlines_cleanup_braces(bool first)
       {
          newlines_struct_enum_union(pc, cpd.settings[UO_nl_union_brace].a, true);
       }
-      else if (pc->type == CT_ENUM)
+      else if ((pc->type == CT_ENUM) || 
+               (pc->type == CT_OC_NS_ENUM) || 
+               (pc->type == CT_OC_NS_OPTIONS))
       {
          newlines_struct_enum_union(pc, cpd.settings[UO_nl_enum_brace].a, true);
       }
@@ -3206,6 +3212,7 @@ void do_blank_lines(void)
            (prev->type == CT_BRACE_CLOSE)) &&
           ((prev->parent_type == CT_STRUCT) ||
            (prev->parent_type == CT_ENUM) ||
+           (prev->parent_type == CT_OC_NS_ENUM) ||
            (prev->parent_type == CT_UNION) ||
            (prev->parent_type == CT_CLASS)))
       {

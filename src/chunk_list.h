@@ -172,6 +172,7 @@ bool chunk_is_type(chunk_t *pc)
                            (pc->type == CT_QUALIFIER) ||
                            (pc->type == CT_STRUCT) ||
                            (pc->type == CT_ENUM) ||
+                           (pc->type == CT_OC_NS_ENUM) ||
                            (pc->type == CT_UNION)));
 }
 

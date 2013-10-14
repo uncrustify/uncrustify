@@ -500,6 +500,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       fix_typedef(pc);
    }
    if ((pc->type == CT_ENUM) ||
+       (pc->type == CT_OC_NS_ENUM) ||
        (pc->type == CT_STRUCT) ||
        (pc->type == CT_UNION))
    {
@@ -791,6 +792,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
            (next->type == CT_MEMBER) ||
            (next->type == CT_DC_MEMBER) ||
            (next->type == CT_ENUM) ||
+           (next->type == CT_OC_NS_ENUM) ||
            (next->type == CT_UNION)) &&
           (prev->type != CT_SIZEOF) &&
           (prev->parent_type != CT_OPERATOR) &&
@@ -1860,7 +1862,7 @@ static void fix_enum_struct_union(chunk_t *pc)
    }
    if (next && (next->type == CT_BRACE_OPEN))
    {
-      flag_parens(next, (pc->type == CT_ENUM) ? PCF_IN_ENUM : PCF_IN_STRUCT,
+      flag_parens(next, ((pc->type == CT_ENUM) || (pc->type == CT_OC_NS_ENUM)) ? PCF_IN_ENUM : PCF_IN_STRUCT,
                   CT_NONE, CT_NONE, false);
 
       if ((pc->type == CT_UNION) || (pc->type == CT_STRUCT))
@@ -2002,7 +2004,8 @@ static void fix_typedef(chunk_t *start)
       }
    }
 
-   if (last_op)
+   /* avoid interpreting typedef NS_ENUM (NSInteger, MyEnum) as a function def */
+   if (last_op && last_op->parent_type != CT_OC_NS_ENUM)
    {
       flag_parens(last_op, 0, CT_FPAREN_OPEN, CT_TYPEDEF, false);
       fix_fcn_def_params(last_op);
@@ -2047,6 +2050,7 @@ static void fix_typedef(chunk_t *start)
     */
    next = chunk_get_next_ncnl(start, CNAV_PREPROC);
    if ((next->type != CT_ENUM) &&
+       (next->type != CT_OC_NS_ENUM) &&
        (next->type != CT_STRUCT) &&
        (next->type != CT_UNION))
    {
@@ -2249,6 +2253,7 @@ void combine_labels(void)
                next->type = CT_BIT_COLON;
             }
             else if ((cur->type == CT_ENUM) ||
+                     (cur->type == CT_OC_NS_ENUM) ||
                      (cur->type == CT_PRIVATE) ||
                      (cur->type == CT_QUALIFIER) ||
                      (cur->parent_type == CT_ALIGN))
@@ -2669,6 +2674,7 @@ static bool can_be_full_param(chunk_t *start, chunk_t *end)
       if ((pc->type == CT_QUALIFIER) ||
           (pc->type == CT_STRUCT) ||
           (pc->type == CT_ENUM) ||
+          (pc->type == CT_OC_NS_ENUM) ||
           (pc->type == CT_UNION) ||
           (pc->type == CT_TYPENAME))
       {
