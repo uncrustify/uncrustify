@@ -489,6 +489,14 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
                pc->type = CT_FPAREN_OPEN;
                parent   = CT_FUNCTION;
             }
+            /* NS_ENUM and NS_OPTIONS are followed by a (type, name) pair */
+            else if ((prev->type == CT_ENUM) &&
+                     (cpd.lang_flags & LANG_OC))
+            {
+               /* Treat both as CT_ENUM since the syntax is identical */
+               pc->type = CT_FPAREN_OPEN;
+               parent   = CT_ENUM;
+            }
             else
             {
                /* no need to set parent */
@@ -504,6 +512,13 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
             else if ((prev->type == CT_ASSIGN) && (prev->str[0] == '='))
             {
                parent = CT_ASSIGN;
+            }
+            /*  Carry through CT_ENUM parent in NS_ENUM (type, name) { */
+            else if ((prev->type == CT_FPAREN_CLOSE) && 
+                     (cpd.lang_flags & LANG_OC) &&
+                     (prev->parent_type == CT_ENUM))
+            {
+               parent = CT_ENUM;
             }
             else if (prev->type == CT_FPAREN_CLOSE)
             {
