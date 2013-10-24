@@ -1892,7 +1892,6 @@ static void align_left_shift(void)
  * Aligns an OC message
  *
  * @param so   the square open of the message
- * @param span the span value
  */
 static void align_oc_msg_colon(chunk_t *so)
 {
@@ -1956,7 +1955,9 @@ static void align_oc_msg_colon(chunk_t *so)
 
    /* find the longest args that isn't the first one */
    int     idx, len;
+   int     first_len, len_diff;
    int     tlen, mlen = 0;
+   int     indent_size = cpd.settings[UO_indent_columns].n;
    chunk_t *longest = NULL;
 
    for (idx = 0, len = nas.m_aligned.Len(); idx < len; idx++)
@@ -1972,11 +1973,21 @@ static void align_oc_msg_colon(chunk_t *so)
             longest = tmp;
          }
       }
+      if (idx == 0)
+      {
+         first_len = tlen+1;
+      }
    }
 
    /* add spaces before the longest arg */
    len = cpd.settings[UO_indent_oc_msg_colon].n;
-   if (longest && (len > 0))
+   len_diff = mlen - first_len;
+   /* Align with first colon if possible by removing spaces */
+   if (longest && cpd.settings[UO_indent_oc_msg_prioritize_first_colon].b && len_diff > 0 && (longest->column - len_diff) > longest->brace_level*indent_size)
+   {
+      longest->column -= len_diff;
+   }
+   else if (longest && (len > 0))
    {
       chunk_t chunk;
 
