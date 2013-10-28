@@ -20,10 +20,7 @@ BOOL immediatlyReady = [self ensureResource:mutableResources[0]
 
  int foo()
 {
-[UIView transitionWithView:self.window
-                      duration:0.3
-                       options:UIViewAnimationOptionTransitionCrossDissolve
-                    animations:^{
+[UIView transitionWithView:self.window duration:0.3 options:UIViewAnimationOptionTransitionCrossDissolve animations:^{
                         BOOL oldState = [UIView areAnimationsEnabled];
                         [UIView setAnimationsEnabled:NO];
                         self.window.rootViewController = self.viewController;
