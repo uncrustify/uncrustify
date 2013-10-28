@@ -209,6 +209,14 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
       }
    }
 
+   if (first->type == CT_QUESTION && second->type == CT_COND_COLON)
+   {
+       if (cpd.settings[UO_sp_cond_ternary_short].a != AV_IGNORE)
+       {
+           return cpd.settings[UO_sp_cond_ternary_short].a;
+       }
+   }
+
    if ((first->type == CT_COND_COLON) || (second->type == CT_COND_COLON))
    {
       if ((second->type == CT_COND_COLON) &&

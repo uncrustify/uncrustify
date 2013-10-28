@@ -21,6 +21,8 @@
 
 50015  obj-c.cfg                                    oc/receiver.m
 
+50016  obj-c.cfg                                    oc/ternary.m
+
 50020  sp_after_oc_at_sel_add.cfg                   oc/selector.m
 50021  sp_after_oc_at_sel_force.cfg                 oc/selector.m
 50022  sp_after_oc_at_sel_remove.cfg                oc/selector.m
