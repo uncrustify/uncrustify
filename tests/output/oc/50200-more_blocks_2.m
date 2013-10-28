@@ -13,6 +13,6 @@ dispatch_async(thread, (^{
 
 // Example of a unit test using Kiwi
 beforeAll(^{
-    NSString *serviceURL = [NSURL URLWithString:@"http://TEST_URL"];
+    NSString *serviceURL = [NSURL URLWithString: @"http://TEST_URL"];
     NSLog(serviceURL);
-})
+});
