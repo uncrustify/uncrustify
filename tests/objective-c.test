@@ -52,7 +52,7 @@
 50082  sp_after_oc_block_caret_remove.cfg           oc/more_blocks.m
 50083  sp_before_after_oc_block_caret_remove.cfg    oc/more_blocks.m
 
-50200  sp_before_oc_block_caret_add.cfg             oc/more_blocks_2.m
+50200  sp_block_as_argument.cfg                     oc/more_blocks_2.m
 
 50090  obj-c.cfg                                    oc/kw.m
 

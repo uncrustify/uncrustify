@@ -4,5 +4,9 @@ int (^myBlock)(int) = ( ^(int num) {
 });
 
 dispatch_async(thread, (^{
-    NSLog(@"Hooray for dispatch_async!");
+    dispatch_async(thread, ^{
+        dispatch_async(thread, ^{
+            NSLog(@"Hooray for dispatch_async!");
+        });
+    });
 }));

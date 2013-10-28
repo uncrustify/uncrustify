@@ -4541,6 +4541,13 @@ static void handle_oc_block_type(chunk_t *pc)
       apo = chunk_get_next_ncnl(tpc);  /* arg open paren */
       apc = chunk_skip_to_match(apo);  /* arg close paren */
 
+      // If this is a block literal instead of a block type, 'nam' will actually be the closing bracket of the block.
+      // We run into this situation if a block literal is enclosed in parentheses.
+      if (chunk_is_closing_brace(nam))
+      {
+          return handle_oc_block_literal(pc);
+      }
+
       if (chunk_is_paren_close(apc))
       {
          chunk_t   *aft = chunk_get_next_ncnl(apc);
