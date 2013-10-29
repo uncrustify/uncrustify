@@ -4882,7 +4882,7 @@ static void handle_oc_message_send(chunk_t *os)
    {
       tmp = chunk_skip_to_match(tmp);
    }
-   else if ((tmp->type != CT_WORD) && (tmp->type != CT_TYPE))
+   else if ((tmp->type != CT_WORD) && (tmp->type != CT_TYPE) && (tmp->type != CT_STRING))
    {
       LOG_FMT(LOCMSG, "%s: %d:%d expected identifier, not '%s' [%s]\n", __func__,
               tmp->orig_line, tmp->orig_col,

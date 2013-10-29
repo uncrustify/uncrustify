@@ -1,2 +1,2 @@
-[obj doSomething:0 withArgs:@""];
-[@"" doSomething:0 withArgs:@""];
+[obj doSomething: 0 withArgs: @""];
+[@"" doSomething: 0 withArgs: @""];
