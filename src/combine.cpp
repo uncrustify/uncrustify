@@ -1637,6 +1637,7 @@ static void fix_casts(chunk_t *start)
        * simple rules:
        *  - if all caps, likely a type
        *  - if it ends in _t, likely a type
+       *  - if it's objective-c and the type is id, likely valid
        */
       verb = "guessed";
       if ((last->len() > 3) &&
@@ -1648,6 +1649,10 @@ static void fix_casts(chunk_t *start)
       else if (is_ucase_str(last->text(), last->len()))
       {
          detail = " -- upper case";
+      }
+      else if (cpd.lang_flags & LANG_OC && chunk_is_str(last, "id", 2))
+      {
+         detail = " -- Objective-C id";
       }
       else
       {
@@ -1723,7 +1728,8 @@ static void fix_casts(chunk_t *start)
                (pc->type != CT_FUNC_CALL) &&
                (pc->type != CT_FUNC_CALL_USER) &&
                (pc->type != CT_FUNCTION) &&
-               (pc->type != CT_BRACE_OPEN))
+               (pc->type != CT_BRACE_OPEN) &&
+               (!(pc->type == CT_SQUARE_OPEN && cpd.lang_flags & LANG_OC)))
       {
          LOG_FMT(LCASTS, " -- not a cast - followed by '%s' %s\n",
                  pc->str.c_str(), get_token_name(pc->type));
