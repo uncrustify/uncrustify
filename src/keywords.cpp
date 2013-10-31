@@ -155,7 +155,7 @@ static const chunk_tag_t keywords[] =
    { "implicit",         CT_QUALIFIER,    LANG_CS                                                                     },
    { "import",           CT_IMPORT,       LANG_D | LANG_JAVA | LANG_ECMA                                              }, // fudged to get indenting
    { "import",           CT_PP_INCLUDE,   LANG_OC | FLAG_PP                                                           }, // ObjectiveC version of include
-   { "in",               CT_IN,           LANG_D | LANG_CS | LANG_VALA | LANG_ECMA                                    },
+   { "in",               CT_IN,           LANG_D | LANG_CS | LANG_VALA | LANG_ECMA | LANG_OC                          },
    { "include",          CT_PP_INCLUDE,   LANG_C | LANG_CPP | LANG_PAWN | FLAG_PP                                     }, // PAWN
    { "inline",           CT_QUALIFIER,    LANG_C | LANG_CPP                                                           },
    { "inout",            CT_QUALIFIER,    LANG_D                                                                      },

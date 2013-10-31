@@ -177,8 +177,9 @@ chunk_t *set_paren_parent(chunk_t *start, c_token_t parent)
 
 
 /* Scan backwards to see if we might be on a type declaration */
-static bool chunk_ends_type(chunk_t *pc)
+static bool chunk_ends_type(chunk_t *start)
 {
+   chunk_t *pc = start;
    bool ret = false;
    int  cnt = 0;
    bool last_lval = false;
@@ -209,6 +210,25 @@ static bool chunk_ends_type(chunk_t *pc)
       {
          ret = cnt > 0;
       }
+
+      // Handle for (... in ...) in Objective-C
+      if ((cpd.lang_flags & LANG_OC) && !ret)
+      {
+        chunk_t *prev = chunk_get_prev_ncnl(pc);
+        if (prev->type == CT_FOR)
+        {
+            chunk_t *next = start;
+            while (next != NULL && next->type != CT_PAREN_CLOSE && next->type != CT_IN)
+            {
+                next = chunk_get_next_ncnl(next);
+            }
+            if (next->type == CT_IN)
+            {
+                ret = cnt > 0;
+            }
+        }
+      }
+
       break;
    }
 
