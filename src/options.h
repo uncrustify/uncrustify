@@ -177,6 +177,7 @@ enum uncrustify_options
    UO_indent_oc_block,
    UO_indent_oc_block_msg,
    UO_indent_oc_msg_colon,
+   UO_indent_oc_block_msg_from_keyword,
 
    UO_indent_else_if,
    UO_indent_var_def_blk,        // indent a variable def block that appears at the top

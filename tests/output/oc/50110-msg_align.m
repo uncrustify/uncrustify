@@ -27,12 +27,12 @@ int foo()
                      duration: 0.3
                       options: UIViewAnimationOptionTransitionCrossDissolve
                    animations:^{
-                       BOOL oldState = [UIView areAnimationsEnabled];
-                       [UIView setAnimationsEnabled: NO];
-                       self.window.rootViewController = self.viewController;
-                       [UIView setAnimationsEnabled: oldState];
-                   }
+                          BOOL oldState = [UIView areAnimationsEnabled];
+                          [UIView setAnimationsEnabled: NO];
+                          self.window.rootViewController = self.viewController;
+                          [UIView setAnimationsEnabled: oldState];
+                       }
                    completion:^(BOOL finished) {
-                       BOOL foo;
-                   }];
+                          BOOL foo;
+                       }];
 }

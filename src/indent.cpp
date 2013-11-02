@@ -872,8 +872,17 @@ void indent_text(void)
 
                if (cpd.settings[UO_indent_oc_block].b)
                {
-                  frm.pse[frm.pse_tos].indent = 1 + ((pc->brace_level + 1) * indent_size);
-                  indent_column_set(frm.pse[frm.pse_tos].indent - indent_size);
+                   chunk_t *ref = oc_msg_block_indent(pc);
+                   if (cpd.settings[UO_indent_oc_block_msg_from_keyword].b && (pc->flags & PCF_IN_OC_MSG) && ref != NULL)
+                   {
+                      frm.pse[frm.pse_tos].indent = 1 + ((pc->brace_level + 1) * indent_size) + ref->column;
+                      indent_column_set(frm.pse[frm.pse_tos].indent - indent_size);
+                   }
+                   else
+                   {
+                      frm.pse[frm.pse_tos].indent = 1 + ((pc->brace_level + 1) * indent_size);
+                      indent_column_set(frm.pse[frm.pse_tos].indent - indent_size);
+                   }
                }
                else
                {
