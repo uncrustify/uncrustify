@@ -61,3 +61,12 @@
 50111  del_semicolon.cfg                            oc/ns_enum.m
 
 50120  gh137.cfg                                    oc/gh137.m
+
+50130  objc_nl_after_implementation_add.cfg         oc/nl_implementation.m
+50131  objc_nl_after_implementation_remove.cfg      oc/nl_implementation.m
+50132  objc_nl_after_interface_add.cfg              oc/nl_interface.h OC
+50133  objc_nl_after_interface_remove.cfg           oc/nl_interface.h OC
+50134  objc_nl_before_implementation_add.cfg        oc/nl_implementation.m
+50135  objc_nl_before_implementation_remove.cfg     oc/nl_implementation.m
+50136  objc_nl_before_interface_add.cfg             oc/nl_interface.h OC
+50137  objc_nl_before_interface_remove.cfg          oc/nl_interface.h OC

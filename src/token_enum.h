@@ -221,6 +221,7 @@ typedef enum
    CT_OC_PROTO_LIST,    /* ObjC: protocol list < > (parent token only) */
    CT_OC_PROPERTY,      /* ObjC: @property */
    CT_OC_CLASS,         /* ObjC: the name after @interface or @implementation */
+   CT_OC_SUPERCLASS,    /* ObjC: the name after the class colon in an @interface or @implementation */
    CT_OC_CLASS_EXT,     /* ObjC: a pair of empty parens after the class name in a @interface or @implementation */
    CT_OC_CATEGORY,      /* ObjC: the category name in parens after the class name in a @interface or @implementation */
    CT_OC_SCOPE,         /* ObjC: the '-' or '+' in '-(void) func: (int) i;' */
