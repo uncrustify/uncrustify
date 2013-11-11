@@ -401,6 +401,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       flag_parens(prev, 0, CT_NONE, CT_GETSET, false);
    }
 
+
    /* Objective C stuff */
    if (cpd.lang_flags & LANG_OC)
    {

@@ -399,7 +399,7 @@ static chunk_t *oc_msg_block_indent(chunk_t *pc, bool from_brace, bool from_care
 
    if (from_brace)
    {
-       return tmp;
+       return pc;
    }
 
    if (chunk_is_paren_close(tmp))
@@ -897,7 +897,7 @@ void indent_text(void)
                    chunk_t *ref = oc_msg_block_indent(pc, indent_from_brace, indent_from_caret, indent_from_colon, indent_from_keyword);
                    if (ref != NULL)
                    {
-                      frm.pse[frm.pse_tos].indent = 1 + ((pc->brace_level + 1) * indent_size) + ref->column;
+                      frm.pse[frm.pse_tos].indent = indent_size + ref->column;
                       indent_column_set(frm.pse[frm.pse_tos].indent - indent_size);
                    }
                    else
