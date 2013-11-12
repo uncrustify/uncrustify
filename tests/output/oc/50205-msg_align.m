@@ -51,4 +51,11 @@ int foo2()
                     completion:^(BOOL finished) {
                         BOOL foo;
                     }];
+
+    [[HRNewsService sharedInstance] registerPushToken: deviceToken
+                                              success:^{
+                                                  DLog(@"Finished Registering Push Token!");
+                                                  self.notificationsEnabled = YES;
+                                              }
+                                                 fail: nil];
 }

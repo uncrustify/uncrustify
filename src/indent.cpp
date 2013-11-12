@@ -437,20 +437,11 @@ static chunk_t *oc_msg_block_indent(chunk_t *pc, bool from_brace, bool from_care
 
 /**
  * We are on a '{' that has parent = OC_BLOCK_EXPR
- * Find the colon for the previous argument or the beginning (opening bracket) of the message invocation.
  */
-static chunk_t *oc_msg_prev_param(chunk_t *pc)
+static chunk_t *oc_msg_prev_colon(chunk_t *pc)
 {
-    chunk_t *colon = chunk_get_prev_type(pc, CT_OC_COLON, pc->level, CNAV_ALL);
-    chunk_t *tmp = chunk_get_prev_type(colon, CT_OC_COLON, colon->level, CNAV_ALL);
-    if (tmp == NULL)
-    {
-        tmp = chunk_get_prev_type(colon, CT_OC_MSG_FUNC, colon->level, CNAV_ALL);
-    }
-
-    return tmp;
+    return chunk_get_prev_type(pc, CT_OC_COLON, pc->level, CNAV_ALL);
 }
-
 
 /**
  * Change the top-level indentation only by changing the column member in
@@ -912,13 +903,14 @@ void indent_text(void)
                    bool indent_from_brace = cpd.settings[UO_indent_oc_block_msg_from_brace].b && in_oc_msg;
 
                    // In "Xcode indent mode", we want to indent:
-                   //  - if the colon is aligned, indent_from_brace
+                   //  - if the colon is aligned (namely, if a newline has been added before it), indent_from_brace
                    //  - otherwise, indent from previous block (the "else" statement here)
                    if (cpd.settings[UO_indent_oc_block_msg_xcode_style].b)
                    {
-                       chunk_t *prev_param_colon = oc_msg_prev_param(pc);
-                       chunk_t *prev_param= chunk_get_prev(prev_param_colon);
-                       if (prev_param->flags & PCF_DONT_INDENT)
+                       chunk_t *colon = oc_msg_prev_colon(pc);
+                       chunk_t *param_name = chunk_get_prev(colon);
+                       chunk_t *before_param = chunk_get_prev(param_name);
+                       if (before_param->type == CT_NEWLINE)
                        {
                            indent_from_keyword = true;
                            indent_from_colon = indent_from_caret = indent_from_brace = false;
