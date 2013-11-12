@@ -1892,7 +1892,6 @@ static void align_left_shift(void)
  * Aligns an OC message
  *
  * @param so   the square open of the message
- * @param span the span value
  */
 static void align_oc_msg_colon(chunk_t *so)
 {

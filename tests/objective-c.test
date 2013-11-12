@@ -70,6 +70,7 @@
 50202  sp_block_as_argument2.cfg                    oc/blocks_align.m
 50203  sp_block_as_argument3.cfg                    oc/blocks_align.m
 50204  sp_block_as_argument4.cfg                    oc/blocks_align.m
+50205  sp_block_as_argument5.cfg                    oc/msg_align.m
 
 50300  obj-c.cfg                                    oc/msg.m
 

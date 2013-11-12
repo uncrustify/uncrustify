@@ -177,6 +177,7 @@ enum uncrustify_options
    UO_indent_oc_block,
    UO_indent_oc_block_msg,
    UO_indent_oc_msg_colon,
+   UO_indent_oc_block_msg_xcode_style,
    UO_indent_oc_block_msg_from_brace,
    UO_indent_oc_block_msg_from_caret,
    UO_indent_oc_block_msg_from_colon,
