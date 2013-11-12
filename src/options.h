@@ -747,11 +747,20 @@ enum uncrustify_options
    UO_mod_sort_import,            //
    UO_mod_sort_using,             //
    UO_mod_sort_include,           //
+   UO_mod_sort_oc_properties,     // organizes objective c properties
    UO_mod_move_case_break,        //
    UO_mod_case_brace,             //
    UO_mod_remove_empty_return,    //
 
-
+   /*
+    * Sorting options for objc properties
+    */
+   UO_mod_sort_oc_property_thread_safe_weight,  // Determines weight of atomic/nonatomic
+   UO_mod_sort_oc_property_readwrite_weight,    // Determines weight of readwrite
+   UO_mod_sort_oc_property_reference_weight,    // Determines weight of reference type (retain, copy, assign, weak, strong)
+   UO_mod_sort_oc_property_getter_weight,       // Determines weight of getter type (getter=)
+   UO_mod_sort_oc_property_setter_weight,       // Determines weight of setter type (setter=)
+    
    /*
     * Comment modifications
     */
