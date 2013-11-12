@@ -1,9 +1,9 @@
 
 BOOL immediatlyReady = [self ensureResource: mutableResources[0]
-                           existsInDirectoryAtPath: mutablePaths[0]
-                                         queueMode: mode
-                                 completionHandler: completionHandler
-                                      errorHandler: errorHandler];
+                    existsInDirectoryAtPath: mutablePaths[0]
+                                  queueMode: mode
+                          completionHandler: completionHandler
+                               errorHandler: errorHandler];
 
 [myObject doFooWith1: arg1
                name1: arg2            // some lines with >1 arg

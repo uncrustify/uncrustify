@@ -678,6 +678,9 @@ void register_options(void)
                   "0=use indent_oc_block rules, 1+=spaces to indent", 0, 16);
    unc_add_option("indent_oc_msg_colon", UO_indent_oc_msg_colon, AT_NUM,
                   "Minimum indent for subsequent parameters", 0, 5000);
+   unc_add_option("indent_oc_msg_prioritize_first_colon", UO_indent_oc_msg_prioritize_first_colon, AT_BOOL,
+                  "If true, prioritize aligning with initial colon (and stripping spaces from lines, if necessary).\n"
+                  "Default is true.");
    unc_add_option("indent_oc_block_msg_xcode_style", UO_indent_oc_block_msg_xcode_style, AT_BOOL,
                   "If indent_oc_block_msg and this option are on, blocks will be indented the way that Xcode does by default (from keyword if the parameter is on its own line; otherwise, from the previous indentation level).");
    unc_add_option("indent_oc_block_msg_from_keyword", UO_indent_oc_block_msg_from_keyword, AT_BOOL,
@@ -1917,6 +1920,7 @@ void set_option_defaults(void)
    cpd.settings[UO_sp_angle_shift].a       = AV_ADD;
    cpd.settings[UO_sp_word_brace].a        = AV_ADD;
    cpd.settings[UO_sp_word_brace_ns].a     = AV_ADD;
+   cpd.settings[UO_indent_oc_msg_prioritize_first_colon].b     = true;
 }
 
 
