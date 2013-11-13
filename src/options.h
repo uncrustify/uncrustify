@@ -644,6 +644,7 @@ enum uncrustify_options
    UO_mod_sort_import,
    UO_mod_sort_using,
    UO_mod_sort_include,
+   UO_mod_sort_oc_properties,      // organizes objective c properties
    UO_mod_move_case_break,
    UO_mod_case_brace,
    UO_mod_remove_empty_return,
