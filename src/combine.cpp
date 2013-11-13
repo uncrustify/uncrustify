@@ -4948,7 +4948,10 @@ static void handle_oc_message_send(chunk_t *os)
  */
 static void handle_oc_property_decl(chunk_t *os)
 {
-    if (cpd.settings[UO_mod_sort_oc_properties].b)
+    chunk_t *os_next = chunk_get_next_ncnl(os);
+    flag_parens(os_next, PCF_IN_OC_PROPERTY, CT_NONE, CT_NONE, false);
+    
+    if (cpd.settings[UO_mod_sort_oc_property_attributes].b)
     {
         typedef std::vector<chunk_t*> ChunkGroup;
 
@@ -5057,12 +5060,12 @@ static void handle_oc_property_decl(chunk_t *os)
             }
             close_paren = next;
 
-            int thread_w = cpd.settings[UO_mod_sort_oc_property_thread_safe_weight].n;
-            int readwrite_w = cpd.settings[UO_mod_sort_oc_property_readwrite_weight].n;
-            int ref_w = cpd.settings[UO_mod_sort_oc_property_reference_weight].n;
-            int getter_w = cpd.settings[UO_mod_sort_oc_property_getter_weight].n;
-            int setter_w = cpd.settings[UO_mod_sort_oc_property_setter_weight].n;
-            
+            int thread_w = cpd.settings[UO_mod_sort_oc_property_attribute_atomicity_weight].n;
+            int readwrite_w = cpd.settings[UO_mod_sort_oc_property_attribute_readwrite_weight].n;
+            int ref_w = cpd.settings[UO_mod_sort_oc_property_attribute_reference_weight].n;
+            int getter_w = cpd.settings[UO_mod_sort_oc_property_attribute_getter_weight].n;
+            int setter_w = cpd.settings[UO_mod_sort_oc_property_attribute_setter_weight].n;
+
             std::multimap< int, std::vector<ChunkGroup> > sorted_chunk_map;
             sorted_chunk_map.insert(pair< int, std::vector<ChunkGroup> >(thread_w, thread_chunks));
             sorted_chunk_map.insert(pair< int, std::vector<ChunkGroup> >(readwrite_w, readwrite_chunks));

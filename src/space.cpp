@@ -527,6 +527,17 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
          log_rule("sp_enum_assign");
          return(cpd.settings[UO_sp_enum_assign].a);
       }
+      if (first->flags & PCF_IN_OC_PROPERTY)
+      {
+          if (cpd.settings[UO_sp_oc_property_before_assign].a != AV_IGNORE)
+          {
+              log_rule("UO_sp_oc_property_before_assign");
+              return(cpd.settings[UO_sp_oc_property_before_assign].a);
+          }
+          log_rule("sp_enum_assign");
+          return(cpd.settings[UO_sp_oc_property_assign].a);
+      }
+       
       if ((cpd.settings[UO_sp_assign_default].a != AV_IGNORE) &&
           (second->parent_type == CT_FUNC_PROTO))
       {
@@ -553,6 +564,16 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
          }
          log_rule("sp_enum_assign");
          return(cpd.settings[UO_sp_enum_assign].a);
+      }
+      if (first->flags & PCF_IN_OC_PROPERTY)
+      {
+          if (cpd.settings[UO_sp_oc_property_after_assign].a != AV_IGNORE)
+          {
+              log_rule("UO_sp_oc_property_after_assign");
+              return(cpd.settings[UO_sp_oc_property_after_assign].a);
+          }
+          log_rule("sp_enum_assign");
+          return(cpd.settings[UO_sp_oc_property_assign].a);
       }
       if ((cpd.settings[UO_sp_assign_default].a != AV_IGNORE) &&
           (first->parent_type == CT_FUNC_PROTO))
