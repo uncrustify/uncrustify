@@ -1267,7 +1267,8 @@ static void newlines_brace_pair(chunk_t *br_open)
        (br_open->parent_type == CT_FUNC_CLASS) ||
        (br_open->parent_type == CT_OC_MSG_DECL) ||
        (br_open->parent_type == CT_CS_PROPERTY) ||
-       (br_open->parent_type == CT_CPP_LAMBDA))
+       (br_open->parent_type == CT_CPP_LAMBDA) ||
+       (br_open->parent_type == CT_OC_BLOCK_EXPR))
    {
       /* Need to force a newline before the close brace, if not in a class body */
       if ((br_open->flags & PCF_IN_CLASS) == 0)
@@ -1287,7 +1288,9 @@ static void newlines_brace_pair(chunk_t *br_open)
               cpd.settings[UO_nl_property_brace].a :
               ((br_open->parent_type == CT_CPP_LAMBDA) ?
                cpd.settings[UO_nl_cpp_ldef_brace].a :
-               cpd.settings[UO_nl_fcall_brace].a)));
+               ((br_open->parent_type == CT_OC_BLOCK_EXPR) ?
+                cpd.settings[UO_nl_block_fcall_brace].a :
+               cpd.settings[UO_nl_fcall_brace].a))));
 
       if (val != AV_IGNORE)
       {
@@ -2210,6 +2213,9 @@ void newlines_cleanup_braces(bool first)
             if ((next != NULL) &&
                 (next->type != CT_SEMICOLON) &&
                 (next->type != CT_COMMA) &&
+                (cpd.settings[UO_nl_after_brace_close_oc_skip_block_end].b ?
+                 (next->type != CT_SQUARE_CLOSE) && (next->type != CT_FPAREN_CLOSE) :
+                 true) &&
                 ((pc->flags & (PCF_IN_ARRAY_ASSIGN | PCF_IN_TYPEDEF)) == 0) &&
                 !chunk_is_newline(next) &&
                 !chunk_is_comment(next))
