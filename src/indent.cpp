@@ -910,7 +910,7 @@ void indent_text(void)
                        chunk_t *colon = oc_msg_prev_colon(pc);
                        chunk_t *param_name = chunk_get_prev(colon);
                        chunk_t *before_param = chunk_get_prev(param_name);
-                       if (before_param->type == CT_NEWLINE)
+                       if (before_param != NULL && before_param->type == CT_NEWLINE)
                        {
                            indent_from_keyword = true;
                            indent_from_colon = indent_from_caret = indent_from_brace = false;
