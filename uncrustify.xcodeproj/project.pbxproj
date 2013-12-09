@@ -959,6 +959,8 @@
 		89794F7114544FD900E38ACC /* unc_text.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = unc_text.cpp; sourceTree = "<group>"; };
 		89794F731454502900E38ACC /* unicode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = unicode.cpp; sourceTree = "<group>"; };
 		8DD76F6C0486A84900D96B5E /* uncrustify */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = uncrustify; sourceTree = BUILT_PRODUCTS_DIR; };
+		A00EAF72185655CF007D4EDC /* nl_brace_square.cfg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = nl_brace_square.cfg; sourceTree = "<group>"; };
+		A00EAF73185656A2007D4EDC /* 50084-more_blocks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "50084-more_blocks.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1204,6 +1206,7 @@
 				65536346107EB6D900E08A01 /* nl_after_func_body.cfg */,
 				65536347107EB6D900E08A01 /* nl_assign1.cfg */,
 				65536348107EB6D900E08A01 /* nl_assign2.cfg */,
+				A00EAF72185655CF007D4EDC /* nl_brace_square.cfg */,
 				65536349107EB6D900E08A01 /* nl_brace_test.cfg */,
 				6553634A107EB6D900E08A01 /* nl_class-a.cfg */,
 				6553634B107EB6D900E08A01 /* nl_class-r.cfg */,
@@ -1960,6 +1963,7 @@
 				65A4632D1092D346007F6EBA /* 50081-more_blocks.m */,
 				65A4632E1092D346007F6EBA /* 50082-more_blocks.m */,
 				65A4632F1092D346007F6EBA /* 50083-more_blocks.m */,
+				A00EAF73185656A2007D4EDC /* 50084-more_blocks.m */,
 				2E6EEE7F16A62A4E001EFF54 /* 50111-ns_enum.m */,
 			);
 			path = oc;
