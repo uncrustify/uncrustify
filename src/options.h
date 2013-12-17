@@ -257,6 +257,10 @@ enum uncrustify_options
    UO_sp_enum_assign,           // space around = in enum
    UO_sp_enum_before_assign,    // space before = in enum
    UO_sp_enum_after_assign,     // space after = in enum
+   UO_sp_oc_property_assign,
+   UO_sp_oc_property_before_assign, // space before = in a objective c property
+   UO_sp_oc_property_after_assign,  // space after = in a objective c property
+
    UO_sp_after_class_colon,     // space after class ':'
    UO_sp_before_class_colon,    // space before class ':'
    UO_sp_after_constr_colon,
@@ -493,8 +497,10 @@ enum uncrustify_options
    UO_nl_after_vbrace_open_empty,    // force a newline after a virtual brace open
    UO_nl_after_brace_close,          // force a newline after a brace close
    UO_nl_after_vbrace_close,         // force a newline after a virtual brace close
+   UO_nl_after_brace_close_oc_skip_block_end,       // force a newline after a block brace close
    UO_nl_brace_struct_var,           // force a newline after a brace close
    UO_nl_fcall_brace,                /* newline between function call and open brace */
+   UO_nl_block_fcall_brace,          /* newline between block definition and open brace */
    UO_nl_squeeze_ifdef,              /* no blanks after #ifxx, #elxx, or before #endif */
    UO_nl_enum_brace,                 /* nl between enum and brace */
    UO_nl_struct_brace,               /* nl between struct and brace */
@@ -638,11 +644,21 @@ enum uncrustify_options
    UO_mod_sort_import,
    UO_mod_sort_using,
    UO_mod_sort_include,
+   UO_mod_sort_oc_properties,      // organizes objective c properties
    UO_mod_move_case_break,
    UO_mod_case_brace,
    UO_mod_remove_empty_return,
 
-
+   /*
+    * Sorting options for objc properties
+    */
+   UO_mod_sort_oc_property_attributes,                  // organizes objective c properties
+   UO_mod_sort_oc_property_attribute_atomicity_weight,  // Determines weight of atomic/nonatomic
+   UO_mod_sort_oc_property_attribute_readwrite_weight,  // Determines weight of readwrite
+   UO_mod_sort_oc_property_attribute_reference_weight,  // Determines weight of reference type (retain, copy, assign, weak, strong)
+   UO_mod_sort_oc_property_attribute_getter_weight,     // Determines weight of getter type (getter=)
+   UO_mod_sort_oc_property_attribute_setter_weight,     // Determines weight of setter type (setter=)
+    
    /*
     * Comment modifications
     */

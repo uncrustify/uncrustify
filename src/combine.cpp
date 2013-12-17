@@ -43,6 +43,7 @@ static void handle_oc_block_literal(chunk_t *pc);
 static void handle_oc_block_type(chunk_t *pc);
 static void handle_oc_message_decl(chunk_t *pc);
 static void handle_oc_message_send(chunk_t *pc);
+static void handle_oc_property_decl(chunk_t *pc);
 static void handle_cs_square_stmt(chunk_t *pc);
 static void handle_cs_property(chunk_t *pc);
 static void handle_cpp_template(chunk_t *pc);
@@ -404,7 +405,13 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
             handle_oc_block_literal(pc);
          }
       }
+       
+      if (pc->type == CT_OC_PROPERTY)
+      {
+          handle_oc_property_decl(pc);
+      }
    }
+    
 
    /* C# stuff */
    if (cpd.lang_flags & LANG_CS)
@@ -863,16 +870,6 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       {
          mark_variable_definition(tmp);
       }
-   }
-
-   if (pc->type == CT_OC_PROPERTY)
-   {
-      tmp = chunk_get_next_ncnl(pc);
-      if (chunk_is_paren_open(tmp))
-      {
-         tmp = chunk_get_next_ncnl(chunk_skip_to_match(tmp));
-      }
-      fix_var_def(tmp);
    }
 
    /**
@@ -4944,6 +4941,193 @@ static void handle_oc_message_send(chunk_t *os)
       }
       prev = tmp;
    }
+}
+
+/*
+ * Process @Property values and re-arrange them if necessary
+ */
+static void handle_oc_property_decl(chunk_t *os)
+{
+    chunk_t *os_next = chunk_get_next_ncnl(os);
+    flag_parens(os_next, PCF_IN_OC_PROPERTY, CT_NONE, CT_NONE, false);
+    
+    if (cpd.settings[UO_mod_sort_oc_property_attributes].b)
+    {
+        typedef std::vector<chunk_t*> ChunkGroup;
+
+        chunk_t *next = chunk_get_next(os);
+        chunk_t *open_paren = NULL;
+        chunk_t *close_paren = NULL;
+        
+        std::vector<ChunkGroup> thread_chunks;      // atomic/nonatomic
+        std::vector<ChunkGroup> readwrite_chunks;   // readwrite, readonly
+        std::vector<ChunkGroup> ref_chunks;         // retain, copy, assign, weak, strong
+        std::vector<ChunkGroup> getter_chunks;      // getter
+        std::vector<ChunkGroup> setter_chunks;      // setter
+        
+        if(next->type == CT_PAREN_OPEN)
+        {
+            open_paren = next;
+            next = chunk_get_next(next);
+            
+            // Determine location of the property attributes
+            // NOTE: Did not do this in the combine.cpp do_symbol_check as I was not sure
+            // what the ramifications of adding a new type for each of the below types would
+            // be. It did break some items when I attempted to add them so this is my hack for
+            // now.
+            while (next != NULL && next->type != CT_PAREN_CLOSE)
+            {
+                if (next->type == CT_WORD)
+                {
+                    if(chunk_is_str(next, "atomic", 6))
+                    {
+                        ChunkGroup chunkGroup;
+                        chunkGroup.push_back(next);
+                        thread_chunks.push_back(chunkGroup);
+                    }
+                    else if(chunk_is_str(next, "nonatomic", 9))
+                    {
+                        ChunkGroup chunkGroup;
+                        chunkGroup.push_back(next);
+                        thread_chunks.push_back(chunkGroup);
+                    }
+                    else if(chunk_is_str(next, "readonly", 8))
+                    {
+                        ChunkGroup chunkGroup;
+                        chunkGroup.push_back(next);
+                        readwrite_chunks.push_back(chunkGroup);
+                    }
+                    else if(chunk_is_str(next, "readwrite", 9))
+                    {
+                        ChunkGroup chunkGroup;
+                        chunkGroup.push_back(next);
+                        readwrite_chunks.push_back(chunkGroup);
+                    }
+                    else if(chunk_is_str(next, "assign", 6))
+                    {
+                        ChunkGroup chunkGroup;
+                        chunkGroup.push_back(next);
+                        ref_chunks.push_back(chunkGroup);
+                    }
+                    else if(chunk_is_str(next, "retain", 6))
+                    {
+                        ChunkGroup chunkGroup;
+                        chunkGroup.push_back(next);
+                        ref_chunks.push_back(chunkGroup);
+                    }
+                    else if(chunk_is_str(next, "copy", 4))
+                    {
+                        ChunkGroup chunkGroup;
+                        chunkGroup.push_back(next);
+                        ref_chunks.push_back(chunkGroup);
+                    }
+                    else if(chunk_is_str(next, "strong", 6))
+                    {
+                        ChunkGroup chunkGroup;
+                        chunkGroup.push_back(next);
+                        ref_chunks.push_back(chunkGroup);
+                    }
+                    else if(chunk_is_str(next, "weak", 4))
+                    {
+                        ChunkGroup chunkGroup;
+                        chunkGroup.push_back(next);
+                        ref_chunks.push_back(chunkGroup);
+                    }
+                    else if(chunk_is_str(next, "getter", 6))
+                    {
+                        ChunkGroup chunkGroup;
+                        do
+                        {
+                            chunkGroup.push_back(next);
+                            next = chunk_get_next(next);
+                        } while(next && next->type != CT_COMMA && next->type != CT_PAREN_CLOSE);
+                        next = next->prev;
+                        getter_chunks.push_back(chunkGroup);
+                    }
+                    else if(chunk_is_str(next, "setter", 6))
+                    {
+                        ChunkGroup chunkGroup;
+                        do
+                        {
+                            chunkGroup.push_back(next);
+                            next = chunk_get_next(next);
+                        } while(next && next->type != CT_COMMA && next->type != CT_PAREN_CLOSE);
+                        next = next->prev;
+                        setter_chunks.push_back(chunkGroup);
+                    }
+                }
+                next = chunk_get_next(next);
+            }
+            close_paren = next;
+
+            int thread_w = cpd.settings[UO_mod_sort_oc_property_attribute_atomicity_weight].n;
+            int readwrite_w = cpd.settings[UO_mod_sort_oc_property_attribute_readwrite_weight].n;
+            int ref_w = cpd.settings[UO_mod_sort_oc_property_attribute_reference_weight].n;
+            int getter_w = cpd.settings[UO_mod_sort_oc_property_attribute_getter_weight].n;
+            int setter_w = cpd.settings[UO_mod_sort_oc_property_attribute_setter_weight].n;
+
+            std::multimap< int, std::vector<ChunkGroup> > sorted_chunk_map;
+            sorted_chunk_map.insert(pair< int, std::vector<ChunkGroup> >(thread_w, thread_chunks));
+            sorted_chunk_map.insert(pair< int, std::vector<ChunkGroup> >(readwrite_w, readwrite_chunks));
+            sorted_chunk_map.insert(pair< int, std::vector<ChunkGroup> >(ref_w, ref_chunks));
+            sorted_chunk_map.insert(pair< int, std::vector<ChunkGroup> >(getter_w, getter_chunks));
+            sorted_chunk_map.insert(pair< int, std::vector<ChunkGroup> >(setter_w, setter_chunks));
+            
+            
+            chunk_t *curr_chunk = open_paren;
+            for (multimap<int, std::vector<ChunkGroup> >::reverse_iterator it = sorted_chunk_map.rbegin(); it != sorted_chunk_map.rend(); ++it)
+            {
+                std::vector<ChunkGroup> chunk_groups = (*it).second;
+                for(int i = 0; i < chunk_groups.size(); i++)
+                {
+                    ChunkGroup chunk_group = chunk_groups[i];
+                    for(int j = 0; j < chunk_group.size(); j++)
+                    {
+                        chunk_t *chunk = chunk_group[j];
+                        if(chunk != curr_chunk)
+                        {
+                            chunk_move_after(chunk, curr_chunk);
+                            curr_chunk = chunk;
+                        }
+                        else
+                        {
+                            curr_chunk = chunk_get_next(curr_chunk);
+                        }
+                    }
+                
+                    /* add the parens */
+                    chunk_t endchunk;
+                    endchunk.type        = CT_COMMA;
+                    endchunk.str         = ",";
+                    endchunk.level       = curr_chunk->level;
+                    endchunk.brace_level = curr_chunk->brace_level;
+                    endchunk.orig_line   = curr_chunk->orig_line;
+                    endchunk.parent_type = curr_chunk->parent_type;
+                    endchunk.flags       = curr_chunk->flags & PCF_COPY_FLAGS;
+                    chunk_add_after(&endchunk, curr_chunk);
+                    curr_chunk = curr_chunk->next;
+                }
+            }
+            
+            // Remove the extra comma's that we did not move
+            while(curr_chunk && curr_chunk->type != CT_PAREN_CLOSE)
+            {
+                chunk_t *rm_chunk = curr_chunk;
+                curr_chunk = chunk_get_next(curr_chunk);
+                chunk_del(rm_chunk);
+            }
+            
+        }
+
+    }
+    
+    
+    chunk_t *tmp = chunk_get_next_ncnl(os);
+    if (chunk_is_paren_open(tmp))
+    {
+        tmp = chunk_get_next_ncnl(chunk_skip_to_match(tmp));
+    }
+    fix_var_def(tmp);
 }
 
 

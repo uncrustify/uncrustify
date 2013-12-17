@@ -202,6 +202,12 @@ void register_options(void)
                   "Add or remove space before assignment '=' in enum. Overrides sp_enum_assign.");
    unc_add_option("sp_enum_after_assign", UO_sp_enum_after_assign, AT_IARF,
                   "Add or remove space after assignment '=' in enum. Overrides sp_enum_assign.");
+   unc_add_option("sp_oc_property_assign", UO_sp_oc_property_assign, AT_IARF,
+                   "Add or remove space around assignment '=' in objective-c property");
+   unc_add_option("sp_oc_property_before_assign", UO_sp_oc_property_before_assign, AT_IARF,
+                  "Add or remove space before assignment '=' in objectice-c property. Overrides sp_oc_property_assign.");
+   unc_add_option("sp_oc_property_after_assign", UO_sp_oc_property_after_assign, AT_IARF,
+                  "Add or remove space after assignment '=' in objectice-c property. Overrides sp_oc_property_assign.");
    unc_add_option("sp_pp_concat", UO_sp_pp_concat, AT_IARF,
                   "Add or remove space around preprocessor '##' concatenation operator. Default=Add");
    unc_add_option("sp_pp_stringify", UO_sp_pp_stringify, AT_IARF,
@@ -736,6 +742,9 @@ void register_options(void)
    unc_add_option("nl_fcall_brace", UO_nl_fcall_brace, AT_IARF,
                   "Add or remove newline between a function call's ')' and '{', as in:\n"
                   "list_for_each(item, &list) { }");
+   unc_add_option("nl_block_fcall_brace", UO_nl_block_fcall_brace, AT_IARF,
+                  "Add or remove newline between a block definitions )' and '{', as in:\n"
+                  "^(bool temp) { }");
    unc_add_option("nl_enum_brace", UO_nl_enum_brace, AT_IARF,
                   "Add or remove newline between 'enum' and '{'");
    unc_add_option("nl_struct_brace", UO_nl_struct_brace, AT_IARF,
@@ -876,6 +885,8 @@ void register_options(void)
    unc_add_option("nl_after_vbrace_close", UO_nl_after_vbrace_close, AT_BOOL,
                   "Whether to put a newline after a virtual brace close.\n"
                   "Would add a newline before return in: 'if (foo) a++; return;'");
+   unc_add_option("nl_after_brace_close_oc_skip_block_end", UO_nl_after_brace_close_oc_skip_block_end, AT_BOOL,
+                  "Whether to put a newline after a block brace close. Only works if nl_after_brace_close is used.\n");
    unc_add_option("nl_brace_struct_var", UO_nl_brace_struct_var, AT_IARF,
                   "Control the newline between the close brace and 'b' in: 'struct { int a; } b;'\n"
                   "Affects enums, unions, and structures. If set to ignore, uses nl_after_brace_close");
@@ -1262,6 +1273,18 @@ void register_options(void)
                   "Will only remove the braces if there are no variable declarations in the block.");
    unc_add_option("mod_remove_empty_return", UO_mod_remove_empty_return, AT_BOOL,
                   "If TRUE, it will remove a void 'return;' that appears as the last statement in a function.");
+   unc_add_option("mod_sort_oc_property_attributes", UO_mod_sort_oc_property_attributes, AT_BOOL,
+                  "If TRUE, it will organize the property attributes based on weights (higher the weight, the closer the property will be to the start of the decleration)  (Obj-C)");
+   unc_add_option("mod_sort_oc_property_attribute_atomicity_weight", UO_mod_sort_oc_property_attribute_atomicity_weight, AT_NUM,
+                  "Determines weight of atomic/nonatomic. See mod_sort_oc_property_attributes for more details. (Obj-C)");
+   unc_add_option("mod_sort_oc_property_attribute_readwrite_weight", UO_mod_sort_oc_property_attribute_readwrite_weight, AT_NUM,
+                  "Determines weight of readwrite. See mod_sort_oc_property_attributes for more details. (Obj-C)");
+   unc_add_option("mod_sort_oc_property_attribute_reference_weight", UO_mod_sort_oc_property_attribute_reference_weight, AT_NUM,
+                  "Determines weight of reference type (retain, copy, assign, weak, strong). See mod_sort_oc_property_attributes for more details. (Obj-C)");
+   unc_add_option("mod_sort_oc_property_attribute_getter_weight", UO_mod_sort_oc_property_attribute_getter_weight, AT_NUM,
+                  "Determines weight of getter type (getter=). See mod_sort_oc_property_attributes for more details. (Obj-C)");
+   unc_add_option("mod_sort_oc_property_attribute_setter_weight", UO_mod_sort_oc_property_attribute_setter_weight, AT_NUM,
+                  "Determines weight of setter type (setter=). See mod_sort_oc_property_attributes for more details. (Obj-C)");
 
    unc_begin_group(UG_preprocessor, "Preprocessor options");
    unc_add_option("pp_indent", UO_pp_indent, AT_IARF,
