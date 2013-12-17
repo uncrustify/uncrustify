@@ -769,7 +769,7 @@ void register_options(void)
                   "Add or remove newline between '}' and 'catch'");
    unc_add_option("nl_brace_square", UO_nl_brace_square, AT_IARF,
                   "Add or remove newline between '}' and ']'");
-   unc_add_option("nl_brace_square", UO_nl_brace_fparen, AT_IARF,
+   unc_add_option("nl_brace_fparen", UO_nl_brace_fparen, AT_IARF,
                   "Add or remove newline between '}' and ')' in a function invocation");
    unc_add_option("nl_while_brace", UO_nl_while_brace, AT_IARF,
                   "Add or remove newline between 'while' and '{'");
