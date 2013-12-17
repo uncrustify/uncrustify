@@ -2152,25 +2152,25 @@ void newlines_cleanup_braces(bool first)
             {
                newline_iarf_pair(pc, next, cpd.settings[UO_nl_brace_brace].a);
             }
-        }
+         }
 
-        if (cpd.settings[UO_nl_brace_square].a != AV_IGNORE)
-        {
+         if (cpd.settings[UO_nl_brace_square].a != AV_IGNORE)
+         {
             next = chunk_get_next_nc(pc, CNAV_PREPROC);
             if ((next != NULL) && (next->type == CT_SQUARE_CLOSE))
             {
-                newline_iarf_pair(pc, next, cpd.settings[UO_nl_brace_square].a);
+               newline_iarf_pair(pc, next, cpd.settings[UO_nl_brace_square].a);
             }
-        }
-         
-        if (cpd.settings[UO_nl_brace_fparen].a != AV_IGNORE)
-        {
+         }
+
+         if (cpd.settings[UO_nl_brace_fparen].a != AV_IGNORE)
+         {
             next = chunk_get_next_nc(pc, CNAV_PREPROC);
             if ((next != NULL) && (next->type == CT_FPAREN_CLOSE))
             {
-                newline_iarf_pair(pc, next, cpd.settings[UO_nl_brace_fparen].a);
+               newline_iarf_pair(pc, next, cpd.settings[UO_nl_brace_fparen].a);
             }
-        }
+         }
 
          if (cpd.settings[UO_eat_blanks_before_close_brace].b)
          {

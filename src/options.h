@@ -518,7 +518,7 @@ enum uncrustify_options
    UO_nl_catch_brace,                /* nl between catch and { */
    UO_nl_brace_catch,                /* nl between } and catch */
    UO_nl_brace_square,               /* nl between } and ] */
-   UO_nl_brace_fparen,                /* nl between } and ) of a function invocation */
+   UO_nl_brace_fparen,               /* nl between } and ) of a function invocation */
    UO_nl_while_brace,                /* nl between while and { */
    UO_nl_unittest_brace,             /* nl between unittest and { */
    UO_nl_scope_brace,
