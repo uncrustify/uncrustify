@@ -177,8 +177,9 @@ chunk_t *set_paren_parent(chunk_t *start, c_token_t parent)
 
 
 /* Scan backwards to see if we might be on a type declaration */
-static bool chunk_ends_type(chunk_t *pc)
+static bool chunk_ends_type(chunk_t *start)
 {
+   chunk_t *pc = start;
    bool ret = false;
    int  cnt = 0;
    bool last_lval = false;
@@ -209,6 +210,25 @@ static bool chunk_ends_type(chunk_t *pc)
       {
          ret = cnt > 0;
       }
+
+      // Handle for (... in ...) in Objective-C
+      if ((cpd.lang_flags & LANG_OC) && !ret)
+      {
+        chunk_t *prev = chunk_get_prev_ncnl(pc);
+        if (prev->type == CT_FOR)
+        {
+            chunk_t *next = start;
+            while (next != NULL && next->type != CT_PAREN_CLOSE && next->type != CT_IN)
+            {
+                next = chunk_get_next_ncnl(next);
+            }
+            if (next->type == CT_IN)
+            {
+                ret = cnt > 0;
+            }
+        }
+      }
+
       break;
    }
 
@@ -380,6 +400,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
    {
       flag_parens(prev, 0, CT_NONE, CT_GETSET, false);
    }
+
 
    /* Objective C stuff */
    if (cpd.lang_flags & LANG_OC)
@@ -584,6 +605,12 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       if ((cpd.lang_flags & LANG_OC) && chunk_is_token(tmp, CT_CARET))
       {
          handle_oc_block_type(tmp);
+
+         // This is the case where a block literal is passed as the first argument of a C-style method invocation.
+         if (tmp->type == CT_OC_BLOCK_CARET && pc->type == CT_WORD)
+         {
+             pc->type = CT_FUNC_CALL;
+         }
       }
       else if ((pc->type == CT_WORD) || (pc->type == CT_OPERATOR_VAL))
       {
@@ -1631,6 +1658,7 @@ static void fix_casts(chunk_t *start)
        * simple rules:
        *  - if all caps, likely a type
        *  - if it ends in _t, likely a type
+       *  - if it's objective-c and the type is id, likely valid
        */
       verb = "guessed";
       if ((last->len() > 3) &&
@@ -1642,6 +1670,10 @@ static void fix_casts(chunk_t *start)
       else if (is_ucase_str(last->text(), last->len()))
       {
          detail = " -- upper case";
+      }
+      else if (cpd.lang_flags & LANG_OC && chunk_is_str(last, "id", 2))
+      {
+         detail = " -- Objective-C id";
       }
       else
       {
@@ -1717,7 +1749,8 @@ static void fix_casts(chunk_t *start)
                (pc->type != CT_FUNC_CALL) &&
                (pc->type != CT_FUNC_CALL_USER) &&
                (pc->type != CT_FUNCTION) &&
-               (pc->type != CT_BRACE_OPEN))
+               (pc->type != CT_BRACE_OPEN) &&
+               (!(pc->type == CT_SQUARE_OPEN && cpd.lang_flags & LANG_OC)))
       {
          LOG_FMT(LCASTS, " -- not a cast - followed by '%s' %s\n",
                  pc->str.c_str(), get_token_name(pc->type));
@@ -4541,6 +4574,13 @@ static void handle_oc_block_type(chunk_t *pc)
       apo = chunk_get_next_ncnl(tpc);  /* arg open paren */
       apc = chunk_skip_to_match(apo);  /* arg close paren */
 
+      // If this is a block literal instead of a block type, 'nam' will actually be the closing bracket of the block.
+      // We run into this situation if a block literal is enclosed in parentheses.
+      if (chunk_is_closing_brace(nam))
+      {
+          return handle_oc_block_literal(pc);
+      }
+
       if (chunk_is_paren_close(apc))
       {
          chunk_t   *aft = chunk_get_next_ncnl(apc);
@@ -4869,7 +4909,7 @@ static void handle_oc_message_send(chunk_t *os)
    {
       tmp = chunk_skip_to_match(tmp);
    }
-   else if ((tmp->type != CT_WORD) && (tmp->type != CT_TYPE))
+   else if ((tmp->type != CT_WORD) && (tmp->type != CT_TYPE) && (tmp->type != CT_STRING))
    {
       LOG_FMT(LOCMSG, "%s: %d:%d expected identifier, not '%s' [%s]\n", __func__,
               tmp->orig_line, tmp->orig_col,

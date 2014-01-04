@@ -507,6 +507,8 @@ void register_options(void)
                   "Add or remove space before the '?' in 'b ? t : f'. Overrides sp_cond_question.");
    unc_add_option("sp_cond_question_after", UO_sp_cond_question_after, AT_IARF,
                   "Add or remove space after the '?' in 'b ? t : f'. Overrides sp_cond_question.");
+   unc_add_option("sp_cond_ternary_short", UO_sp_cond_ternary_short, AT_IARF,
+                  "In the abbreviated ternary form (a ?: b), add/remove space between ? and :.'. Overrides all other sp_cond_* options.");
    unc_add_option("sp_case_label", UO_sp_case_label, AT_IARF,
                   "Fix the spacing between 'case' and the label. Only 'ignore' and 'force' make sense here.");
    unc_add_option("sp_range", UO_sp_range, AT_IARF,
@@ -676,6 +678,19 @@ void register_options(void)
                   "0=use indent_oc_block rules, 1+=spaces to indent", 0, 16);
    unc_add_option("indent_oc_msg_colon", UO_indent_oc_msg_colon, AT_NUM,
                   "Minimum indent for subsequent parameters", 0, 5000);
+   unc_add_option("indent_oc_msg_prioritize_first_colon", UO_indent_oc_msg_prioritize_first_colon, AT_BOOL,
+                  "If true, prioritize aligning with initial colon (and stripping spaces from lines, if necessary).\n"
+                  "Default is true.");
+   unc_add_option("indent_oc_block_msg_xcode_style", UO_indent_oc_block_msg_xcode_style, AT_BOOL,
+                  "If indent_oc_block_msg and this option are on, blocks will be indented the way that Xcode does by default (from keyword if the parameter is on its own line; otherwise, from the previous indentation level).");
+   unc_add_option("indent_oc_block_msg_from_keyword", UO_indent_oc_block_msg_from_keyword, AT_BOOL,
+                  "If indent_oc_block_msg and this option are on, blocks will be indented from where the brace is relative to a msg keyword.");
+   unc_add_option("indent_oc_block_msg_from_colon", UO_indent_oc_block_msg_from_colon, AT_BOOL,
+                  "If indent_oc_block_msg and this option are on, blocks will be indented from where the brace is relative to a msg colon.");
+   unc_add_option("indent_oc_block_msg_from_caret", UO_indent_oc_block_msg_from_caret, AT_BOOL,
+                  "If indent_oc_block_msg and this option are on, blocks will be indented from where the block caret is.");
+   unc_add_option("indent_oc_block_msg_from_brace", UO_indent_oc_block_msg_from_brace, AT_BOOL,
+                  "If indent_oc_block_msg and this option are on, blocks will be indented from where the brace is.");
 
    unc_begin_group(UG_newline, "Newline adding and removing options");
    unc_add_option("nl_collapse_empty_body", UO_nl_collapse_empty_body, AT_BOOL,
@@ -1909,6 +1924,7 @@ void set_option_defaults(void)
    cpd.settings[UO_sp_angle_shift].a       = AV_ADD;
    cpd.settings[UO_sp_word_brace].a        = AV_ADD;
    cpd.settings[UO_sp_word_brace_ns].a     = AV_ADD;
+   cpd.settings[UO_indent_oc_msg_prioritize_first_colon].b     = true;
 }
 
 

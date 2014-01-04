@@ -21,6 +21,9 @@
 
 50015  obj-c.cfg                                    oc/receiver.m
 
+50016  obj-c.cfg                                    oc/ternary.m
+50017  ternary_short.cfg                            oc/ternary.m
+
 50020  sp_after_oc_at_sel_add.cfg                   oc/selector.m
 50021  sp_after_oc_at_sel_force.cfg                 oc/selector.m
 50022  sp_after_oc_at_sel_remove.cfg                oc/selector.m
@@ -62,3 +65,14 @@
 50111  del_semicolon.cfg                            oc/ns_enum.m
 
 50120  gh137.cfg                                    oc/gh137.m
+
+50200  sp_block_as_argument.cfg                     oc/more_blocks_2.m
+50201  sp_block_as_argument.cfg                     oc/blocks_align.m
+50202  sp_block_as_argument2.cfg                    oc/blocks_align.m
+50203  sp_block_as_argument3.cfg                    oc/blocks_align.m
+50204  sp_block_as_argument4.cfg                    oc/blocks_align.m
+50205  sp_block_as_argument5.cfg                    oc/msg_align.m
+
+50300  obj-c.cfg                                    oc/msg.m
+
+50400  obj-c.cfg                                    oc/for.m

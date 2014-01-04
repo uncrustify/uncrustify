@@ -176,7 +176,13 @@ enum uncrustify_options
    UO_indent_align_assign,
    UO_indent_oc_block,
    UO_indent_oc_block_msg,
+   UO_indent_oc_msg_prioritize_first_colon,
    UO_indent_oc_msg_colon,
+   UO_indent_oc_block_msg_xcode_style,
+   UO_indent_oc_block_msg_from_brace,
+   UO_indent_oc_block_msg_from_caret,
+   UO_indent_oc_block_msg_from_colon,
+   UO_indent_oc_block_msg_from_keyword,
 
    UO_indent_else_if,
    UO_indent_var_def_blk,        // indent a variable def block that appears at the top
@@ -358,6 +364,7 @@ enum uncrustify_options
    UO_sp_cond_question,
    UO_sp_cond_question_before,
    UO_sp_cond_question_after,
+   UO_sp_cond_ternary_short,
    UO_sp_case_label,
    UO_sp_range,
    UO_sp_cmt_cpp_start,
