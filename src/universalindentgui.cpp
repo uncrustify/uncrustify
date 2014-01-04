@@ -213,7 +213,7 @@ void print_universal_indent_cfg(FILE *pfile)
                fprintf(pfile, "EditorType=multiple\n");
                fprintf(pfile, "Choices=\"%s=lf|%s=crlf|%s=cr|%s=auto\"\n",
                        option->name, option->name, option->name, option->name);
-               fprintf(pfile, "ChoicesReadable=\"Newlines Mac|Newlines Win|Newlines Unix|Newlines Auto\"\n");
+               fprintf(pfile, "ChoicesReadable=\"Newlines Unix|Newlines Win|Newlines Mac|Newlines Auto\"\n");
                fprintf(pfile, "ValueDefault=%d\n", cpd.settings[option->id].n);
                break;
 
