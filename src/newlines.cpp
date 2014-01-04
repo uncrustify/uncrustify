@@ -2493,6 +2493,28 @@ void newlines_cleanup_braces(bool first)
             nl_handle_define(pc);
          }
       }
+      else if (pc->type == CT_OC_INTF || pc->type == CT_OC_IMPL)
+      {
+         const int before_setting = pc->type == CT_OC_INTF ? UO_nl_oc_before_intf : UO_nl_oc_before_impl;
+         const int after_setting = pc->type == CT_OC_INTF ? UO_nl_oc_after_intf : UO_nl_oc_after_impl;
+         argval_t arg = cpd.settings[before_setting].a;
+         prev = chunk_get_prev(pc);
+         newline_iarf(prev, arg);
+          
+         arg = cpd.settings[after_setting].a;
+         tmp = pc;
+         do
+         {
+            prev = tmp;
+            tmp = chunk_get_next_ncnlnp(tmp);
+         }
+         while (tmp != NULL && tmp->type != CT_OC_END && tmp->type != CT_OC_PROPERTY && tmp->type != CT_OC_SCOPE && tmp->type != CT_BRACE_OPEN);
+          
+         if (prev)
+         {
+            newline_iarf(prev, arg);
+         }
+      }
       else if (first && (cpd.settings[UO_nl_remove_extra_newlines].n == 1) &&
                !(pc->flags & PCF_IN_PREPROC))
       {

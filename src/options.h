@@ -572,6 +572,11 @@ enum uncrustify_options
    UO_nl_create_for_one_liner,
    UO_nl_create_while_one_liner,
 
+   UO_nl_oc_before_intf, // newline before @interface
+   UO_nl_oc_after_intf,  // newline after @interface and before ivars, properties, or methods
+   UO_nl_oc_before_impl, // newline before @implementation
+   UO_nl_oc_after_impl,  // newline after @implementation and before ivars or method definitions
+
    UO_nl_oc_msg_args,
    UO_nl_oc_msg_leave_one_liner,
 

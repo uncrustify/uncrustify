@@ -854,6 +854,15 @@ void register_options(void)
    unc_add_option("nl_oc_msg_args", UO_nl_oc_msg_args, AT_BOOL,
                   "Whether to put each OC message parameter on a separate line\n"
                   "See nl_oc_msg_leave_one_liner");
+   unc_add_option("nl_oc_before_intf", UO_nl_oc_before_intf, AT_IARF,
+                  "Add or remove newline before each OC @interface declaration");
+   unc_add_option("nl_oc_after_intf", UO_nl_oc_after_intf, AT_IARF,
+                  "Add or remove newline after each OC @interface declaration");
+   unc_add_option("nl_oc_before_impl", UO_nl_oc_before_impl, AT_IARF,
+                   "Add or remove newline before each OC @implementation declaration");
+   unc_add_option("nl_oc_after_impl", UO_nl_oc_after_impl, AT_IARF,
+                   "Add or remove newline after each OC @implementation declaration");
+
    unc_add_option("nl_fdef_brace", UO_nl_fdef_brace, AT_IARF,
                   "Add or remove newline between function signature and '{'");
    unc_add_option("nl_cpp_ldef_brace", UO_nl_cpp_ldef_brace, AT_IARF,

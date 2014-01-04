@@ -187,6 +187,7 @@ const char *token_names[] =
    "OC_PROTO_LIST",
    "OC_PROPERTY",
    "OC_CLASS",
+   "OC_SUPERCLASS",
    "OC_CLASS_EXT",
    "OC_CATEGORY",
    "OC_SCOPE",

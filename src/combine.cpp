@@ -4356,12 +4356,39 @@ static void handle_oc_class(chunk_t *pc)
             tmp->parent_type = CT_OC_CLASS;
          }
       }
+       if (tmp->type == CT_PAREN_OPEN)
+       {
+           chunk_t* next = chunk_get_next(tmp);
+           if (next)
+           {
+               if (next && next->type == CT_PAREN_CLOSE)
+               {
+                   tmp->parent_type = CT_OC_CLASS_EXT;
+                   next->parent_type = CT_OC_CLASS_EXT;
+               }
+               else
+               {
+                   tmp->parent_type = CT_OC_CATEGORY;
+                   tmp = chunk_get_next_type(tmp, CT_PAREN_CLOSE, tmp->level);
+                   if(tmp)
+                   {
+                       tmp->parent_type = CT_OC_CATEGORY;
+                   }
+               }
+           }
+       }
+       
       else if (tmp->type == CT_COLON)
       {
          tmp->type = hit_scope ? CT_OC_COLON : CT_CLASS_COLON;
          if (tmp->type == CT_CLASS_COLON)
          {
             tmp->parent_type = CT_OC_CLASS;
+             if ((tmp = chunk_get_next_nnl(tmp)) != NULL)
+             {
+                 tmp->type = CT_OC_SUPERCLASS;
+                 tmp->parent_type = CT_OC_CLASS;
+             }             
          }
       }
       else if (chunk_is_str(tmp, "-", 1) || chunk_is_str(tmp, "+", 1))
