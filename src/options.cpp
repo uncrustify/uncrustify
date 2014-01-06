@@ -507,6 +507,8 @@ void register_options(void)
                   "Add or remove space before the '?' in 'b ? t : f'. Overrides sp_cond_question.");
    unc_add_option("sp_cond_question_after", UO_sp_cond_question_after, AT_IARF,
                   "Add or remove space after the '?' in 'b ? t : f'. Overrides sp_cond_question.");
+   unc_add_option("sp_cond_ternary_short", UO_sp_cond_ternary_short, AT_IARF,
+                  "In the abbreviated ternary form (a ?: b), add/remove space between ? and :.'. Overrides all other sp_cond_* options.");
    unc_add_option("sp_case_label", UO_sp_case_label, AT_IARF,
                   "Fix the spacing between 'case' and the label. Only 'ignore' and 'force' make sense here.");
    unc_add_option("sp_range", UO_sp_range, AT_IARF,

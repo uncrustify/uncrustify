@@ -358,6 +358,7 @@ enum uncrustify_options
    UO_sp_cond_question,
    UO_sp_cond_question_before,
    UO_sp_cond_question_after,
+   UO_sp_cond_ternary_short,
    UO_sp_case_label,
    UO_sp_range,
    UO_sp_cmt_cpp_start,
