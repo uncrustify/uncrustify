@@ -460,6 +460,8 @@ void register_options(void)
    unc_add_option("sp_before_oc_dict_colon", UO_sp_before_oc_dict_colon, AT_IARF,
                   "Add or remove space before the colon in immutable dictionary expression\n"
                   "'NSDictionary *test = @{@\"foo\" :@\"bar\"};'");
+   unc_add_option("sp_after_oc_ns_enum", UO_sp_after_oc_ns_enum, AT_IARF,
+                                 "Add or remove space between NS_ENUM and '('");
    unc_add_option("sp_after_send_oc_colon", UO_sp_after_send_oc_colon, AT_IARF,
                   "Add or remove space after the colon in message specs\n"
                   "'[object setValue:1];' vs '[object setValue: 1];'");

@@ -349,6 +349,7 @@ enum uncrustify_options
    UO_sp_after_oc_dict_colon,
    UO_sp_before_send_oc_colon,
    UO_sp_after_send_oc_colon,
+   UO_sp_after_oc_ns_enum,
    UO_sp_after_oc_type,
    UO_sp_after_oc_return_type,
    UO_sp_after_oc_at_sel,

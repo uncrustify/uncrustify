@@ -75,3 +75,5 @@
 50300  obj-c.cfg                                    oc/msg.m
 
 50400  obj-c.cfg                                    oc/for.m
+
+50500  obj-c.cfg                                    oc/ns_enum_space.m

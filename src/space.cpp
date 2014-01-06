@@ -238,6 +238,11 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
       }
    }
 
+   if ((cpd.lang_flags & LANG_OC) && first->type == CT_ENUM && (chunk_is_str(first, "NS_ENUM", 7) || chunk_is_str(first, "NS_OPTIONS", 10)) && second->type == CT_FPAREN_OPEN){
+       log_rule("sp_after_oc_ns_enum");
+       return(cpd.settings[UO_sp_after_oc_ns_enum].a);
+   }
+
    if ((first->type == CT_RANGE) || (second->type == CT_RANGE))
    {
       return(cpd.settings[UO_sp_range].a);
