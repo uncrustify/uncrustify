@@ -3176,7 +3176,7 @@ static void mark_function(chunk_t *pc)
          {
             LOG_FMT(LFCN, " --> Stopping on %s [%s]\n",
                     prev->str.c_str(), get_token_name(prev->type));
-            /* certain tokens are unlikely to preceed a proto or def */
+            /* certain tokens are unlikely to precede a proto or def */
             if ((prev->type == CT_ARITH) ||
                 (prev->type == CT_ASSIGN) ||
                 (prev->type == CT_COMMA) ||
