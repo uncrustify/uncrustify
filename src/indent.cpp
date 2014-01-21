@@ -393,9 +393,14 @@ static int calc_indent_continue(struct parse_frame& frm, int pse_tos)
  * We are on a '{' that has parent = OC_BLOCK_EXPR
  * find the column of the param tag
  */
-static chunk_t *oc_msg_block_indent(chunk_t *pc)
+static chunk_t *oc_msg_block_indent(chunk_t *pc, bool from_brace, bool from_caret, bool from_colon, bool from_keyword)
 {
    chunk_t *tmp = chunk_get_prev_nc(pc);
+
+   if (from_brace)
+   {
+       return pc;
+   }
 
    if (chunk_is_paren_close(tmp))
    {
@@ -405,19 +410,38 @@ static chunk_t *oc_msg_block_indent(chunk_t *pc)
    {
       return NULL;
    }
+   if (from_caret)
+   {
+       return tmp;
+   }
    tmp = chunk_get_prev_nc(tmp);
    if (!tmp || (tmp->type != CT_OC_COLON))
    {
       return NULL;
+   }
+   if (from_colon)
+   {
+       return tmp;
    }
    tmp = chunk_get_prev_nc(tmp);
    if (!tmp || ((tmp->type != CT_OC_MSG_NAME) && (tmp->type != CT_OC_MSG_FUNC)))
    {
       return NULL;
    }
-   return tmp;
+   if (from_keyword)
+   {
+       return tmp;
+   }
+   return NULL;
 }
 
+/**
+ * We are on a '{' that has parent = OC_BLOCK_EXPR
+ */
+static chunk_t *oc_msg_prev_colon(chunk_t *pc)
+{
+    return chunk_get_prev_type(pc, CT_OC_COLON, pc->level, CNAV_ALL);
+}
 
 /**
  * Change the top-level indentation only by changing the column member in
@@ -866,14 +890,48 @@ void indent_text(void)
                if ((pc->flags & PCF_IN_OC_MSG) &&
                    cpd.settings[UO_indent_oc_block_msg].n)
                {
-                  frm.pse[frm.pse_tos].ip.ref   = oc_msg_block_indent(pc);
+                  frm.pse[frm.pse_tos].ip.ref   = oc_msg_block_indent(pc, false, false, false, true);
                   frm.pse[frm.pse_tos].ip.delta = cpd.settings[UO_indent_oc_block_msg].n;
                }
 
-               if (cpd.settings[UO_indent_oc_block].b)
+               if (cpd.settings[UO_indent_oc_block].b || cpd.settings[UO_indent_oc_block_msg_xcode_style].b)
                {
-                  frm.pse[frm.pse_tos].indent = 1 + ((pc->brace_level + 1) * indent_size);
-                  indent_column_set(frm.pse[frm.pse_tos].indent - indent_size);
+                   bool in_oc_msg = (pc->flags & PCF_IN_OC_MSG);
+                   bool indent_from_keyword = cpd.settings[UO_indent_oc_block_msg_from_keyword].b && in_oc_msg;
+                   bool indent_from_colon = cpd.settings[UO_indent_oc_block_msg_from_colon].b && in_oc_msg;
+                   bool indent_from_caret = cpd.settings[UO_indent_oc_block_msg_from_caret].b && in_oc_msg;
+                   bool indent_from_brace = cpd.settings[UO_indent_oc_block_msg_from_brace].b && in_oc_msg;
+
+                   // In "Xcode indent mode", we want to indent:
+                   //  - if the colon is aligned (namely, if a newline has been added before it), indent_from_brace
+                   //  - otherwise, indent from previous block (the "else" statement here)
+                   if (cpd.settings[UO_indent_oc_block_msg_xcode_style].b)
+                   {
+                       chunk_t *colon = oc_msg_prev_colon(pc);
+                       chunk_t *param_name = chunk_get_prev(colon);
+                       chunk_t *before_param = chunk_get_prev(param_name);
+                       if (before_param != NULL && before_param->type == CT_NEWLINE)
+                       {
+                           indent_from_keyword = true;
+                           indent_from_colon = indent_from_caret = indent_from_brace = false;
+                       }
+                       else
+                       {
+                           indent_from_brace = indent_from_colon = indent_from_caret = indent_from_keyword = false;
+                       }
+                   }
+
+                   chunk_t *ref = oc_msg_block_indent(pc, indent_from_brace, indent_from_caret, indent_from_colon, indent_from_keyword);
+                   if (ref != NULL)
+                   {
+                      frm.pse[frm.pse_tos].indent = indent_size + ref->column;
+                      indent_column_set(frm.pse[frm.pse_tos].indent - indent_size);
+                   }
+                   else
+                   {
+                      frm.pse[frm.pse_tos].indent = 1 + ((pc->brace_level + 1) * indent_size);
+                      indent_column_set(frm.pse[frm.pse_tos].indent - indent_size);
+                   }
                }
                else
                {
