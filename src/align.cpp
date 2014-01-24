@@ -1955,7 +1955,7 @@ static void align_oc_msg_colon(chunk_t *so)
 
    /* find the longest args that isn't the first one */
    int     idx, len;
-   int     first_len, len_diff;
+   int     first_len = 0, len_diff;
    int     tlen, mlen = 0;
    int     indent_size = cpd.settings[UO_indent_columns].n;
    chunk_t *longest = NULL;
