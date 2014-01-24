@@ -211,7 +211,6 @@ static bool chunk_ends_type(chunk_t *start)
       {
          ret = cnt > 0;
       }
-
       break;
    }
 
@@ -590,9 +589,9 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
          handle_oc_block_type(tmp);
 
          // This is the case where a block literal is passed as the first argument of a C-style method invocation.
-         if (tmp->type == CT_OC_BLOCK_CARET && pc->type == CT_WORD)
+         if ((tmp->type == CT_OC_BLOCK_CARET) && (pc->type == CT_WORD))
          {
-             pc->type = CT_FUNC_CALL;
+            pc->type = CT_FUNC_CALL;
          }
       }
       else if ((pc->type == CT_WORD) || (pc->type == CT_OPERATOR_VAL))
@@ -1733,7 +1732,7 @@ static void fix_casts(chunk_t *start)
                (pc->type != CT_FUNC_CALL_USER) &&
                (pc->type != CT_FUNCTION) &&
                (pc->type != CT_BRACE_OPEN) &&
-               (!(pc->type == CT_SQUARE_OPEN && cpd.lang_flags & LANG_OC)))
+               (!((pc->type == CT_SQUARE_OPEN) && (cpd.lang_flags & LANG_OC))))
       {
          LOG_FMT(LCASTS, " -- not a cast - followed by '%s' %s\n",
                  pc->str.c_str(), get_token_name(pc->type));
@@ -4557,11 +4556,12 @@ static void handle_oc_block_type(chunk_t *pc)
       apo = chunk_get_next_ncnl(tpc);  /* arg open paren */
       apc = chunk_skip_to_match(apo);  /* arg close paren */
 
-      // If this is a block literal instead of a block type, 'nam' will actually be the closing bracket of the block.
+      // If this is a block literal instead of a block type, 'nam' will actually
+      // be the closing bracket of the block.
       // We run into this situation if a block literal is enclosed in parentheses.
       if (chunk_is_closing_brace(nam))
       {
-          return handle_oc_block_literal(pc);
+         return handle_oc_block_literal(pc);
       }
 
       if (chunk_is_paren_close(apc))

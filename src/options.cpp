@@ -1924,7 +1924,7 @@ void set_option_defaults(void)
    cpd.settings[UO_sp_angle_shift].a       = AV_ADD;
    cpd.settings[UO_sp_word_brace].a        = AV_ADD;
    cpd.settings[UO_sp_word_brace_ns].a     = AV_ADD;
-   cpd.settings[UO_indent_oc_msg_prioritize_first_colon].b     = true;
+   cpd.settings[UO_indent_oc_msg_prioritize_first_colon].b = true;
 }
 
 

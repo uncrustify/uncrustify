@@ -304,13 +304,13 @@ bool chunk_safe_to_del_nl(chunk_t *nl)
 static_inline
 bool chunk_is_forin(chunk_t *pc)
 {
-   if ((cpd.lang_flags & LANG_OC) && pc != NULL && pc->type == CT_SPAREN_OPEN)
+   if ((cpd.lang_flags & LANG_OC) && pc && (pc->type == CT_SPAREN_OPEN))
    {
       chunk_t *prev = chunk_get_prev_ncnl(pc);
       if (prev->type == CT_FOR)
       {
          chunk_t *next = pc;
-         while (next != NULL && next->type != CT_SPAREN_CLOSE && next->type != CT_IN)
+         while (next && (next->type != CT_SPAREN_CLOSE) && (next->type != CT_IN))
          {
             next = chunk_get_next_ncnl(next);
          }
@@ -320,7 +320,6 @@ bool chunk_is_forin(chunk_t *pc)
          }
       }
    }
-
    return false;
 }
 
