@@ -100,6 +100,8 @@ enum uncrustify_options
    UO_utf8_force,
    UO_utf8_bom,
 
+   UO_dont_protect_xcode_code_placeholders,
+
    UO_input_tab_size,           // tab size on input file: usually 8
    UO_output_tab_size,          // tab size for output: usually 8
 
