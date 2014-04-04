@@ -1246,6 +1246,13 @@ void indent_text(void)
          bool skipped = false;
 
          indent_pse_push(frm, pc);
+         if (chunk_is_newline(chunk_get_prev(pc)) &&
+             (pc->column != indent_column))
+         {
+            LOG_FMT(LINDENT, "%s: %d] indent => %d [%s]\n",
+                    __func__, pc->orig_line, indent_column, pc->str.c_str());
+            reindent_line(pc, indent_column);
+         }
          frm.pse[frm.pse_tos].indent = pc->column + pc->len();
 
          if (((pc->type == CT_FPAREN_OPEN) || (pc->type == CT_ANGLE_OPEN)) &&
