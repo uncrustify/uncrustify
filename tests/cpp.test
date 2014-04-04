@@ -173,6 +173,8 @@
 
 30855 cpp_move.cfg                     cpp/cpp_move.cpp
 
+30860 sf574.cfg                        cpp/sf574.cpp
+
 30900 region-0.cfg                     cpp/region.cpp
 30901 region-1.cfg                     cpp/region.cpp
 30902 region-2.cfg                     cpp/region.cpp
