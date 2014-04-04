@@ -20,7 +20,10 @@ static void newlines_double_space_struct_enum_union(chunk_t *open_brace);
 static bool one_liner_nl_ok(chunk_t *pc);
 static void undo_one_liner(chunk_t *pc);
 static void nl_handle_define(chunk_t *pc);
-static void newline_iarf_pair(chunk_t *before, chunk_t *after, argval_t av);
+
+#define newline_iarf_pair(_b,_a,_v  ) newline_iarf_pair2(_b, _a, _v, __func__, __LINE__)
+static void newline_iarf_pair2(chunk_t *before, chunk_t *after, argval_t av,
+                               const char *func, int line);
 
 #define MARK_CHANGE()    mark_change(__func__, __LINE__)
 static void mark_change(const char *func, int line)
@@ -1502,8 +1505,11 @@ static void newline_after_return(chunk_t *start)
  * @param after  The second chunk
  * @param av     The IARF value
  */
-static void newline_iarf_pair(chunk_t *before, chunk_t *after, argval_t av)
+static void newline_iarf_pair2(chunk_t *before, chunk_t *after, argval_t av,
+                               const char *fcn, int line)
 {
+   LOG_FMT(LNEWLINE, "%s: called by %s:%d\n", __func__, fcn, line);
+
    if ((before != NULL) && (after != NULL))
    {
       if ((av & AV_ADD) != 0)
@@ -1528,8 +1534,10 @@ static void newline_iarf_pair(chunk_t *before, chunk_t *after, argval_t av)
  * @param pc   The chunk
  * @param av   The IARF value
  */
-void newline_iarf(chunk_t *pc, argval_t av)
+void newline_iarf2(chunk_t *pc, argval_t av, const char *fcn, int line)
 {
+   LOG_FMT(LNEWLINE, "%s: called by %s:%d\n", __func__, fcn, line);
+
    newline_iarf_pair(pc, chunk_get_next_nnl(pc), av);
 }
 
