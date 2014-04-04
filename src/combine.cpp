@@ -2155,7 +2155,8 @@ void combine_labels(void)
             hit_case = true;
          }
       }
-      else if (next->type == CT_COLON)
+      else if ((next->type == CT_COLON) ||
+               ((question_count > 0) && (next->type == CT_OC_COLON)))
       {
          if (cur->type == CT_DEFAULT)
          {
