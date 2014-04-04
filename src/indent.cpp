@@ -813,14 +813,20 @@ void indent_text(void)
       /* Grab a copy of the current indent */
       indent_column_set(frm.pse[frm.pse_tos].indent_tmp);
 
-      if (!chunk_is_newline(pc) && !chunk_is_comment(pc))
+      if (!chunk_is_newline(pc) && !chunk_is_comment(pc) && log_sev_on(LINDPC))
       {
-         LOG_FMT(LINDPC, " -=[ %s ]=- top=%d %s %d/%d\n",
-                 pc->str.c_str(),
-                 frm.pse_tos,
-                 get_token_name(frm.pse[frm.pse_tos].type),
-                 frm.pse[frm.pse_tos].indent_tmp,
-                 frm.pse[frm.pse_tos].indent);
+         LOG_FMT(LINDPC, " -=[ %s ]=-", pc->str.c_str());
+         for (int ttidx = frm.pse_tos; ttidx > 0; ttidx--)
+         {
+            LOG_FMT(LINDPC, " [%d %d:%d %s %d/%d]",
+                    ttidx,
+                    frm.pse[ttidx].pc->orig_line,
+                    frm.pse[ttidx].pc->orig_col,
+                    get_token_name(frm.pse[ttidx].type),
+                    frm.pse[ttidx].indent_tmp,
+                    frm.pse[ttidx].indent);
+         }
+         LOG_FMT(LINDPC, "\n");
       }
 
       /**
