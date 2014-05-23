@@ -716,7 +716,9 @@ void tokenize_cleanup(void)
          pc->type = CT_QUALIFIER;
       }
 
-      if ((pc->type == CT_USING) && (next->type == CT_PAREN_OPEN))
+      if (((pc->type == CT_USING) ||
+	      ((pc->type == CT_TRY) && (cpd.lang_flags & LANG_JAVA))) &&
+		  (next->type == CT_PAREN_OPEN))
       {
          pc->type = CT_USING_STMT;
       }
