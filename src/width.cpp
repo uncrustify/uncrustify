@@ -195,8 +195,8 @@ static void try_split_here(cw_entry& ent, chunk_t *pc)
    }
    else
    {
-      if ((pc->level > ent.pc->level) &&
-          (pc_pri <= ent.pri))
+      if ((pc->level >= ent.pc->level) &&
+          (pc_pri < ent.pri))
       {
          change = true;
       }
