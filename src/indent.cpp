@@ -1234,6 +1234,15 @@ void indent_text(void)
             }
          }
       }
+      else if (pc->type == CT_SQUARE_OPEN && (pc->flags & PCF_IN_OC_MSG))
+      {
+         int arg_indent_size = cpd.settings[UO_indent_oc_msg_args].n;
+         frm.level++;
+         indent_pse_push(frm, pc);
+         frm.pse[frm.pse_tos].indent     = frm.pse[frm.pse_tos - 1].indent + arg_indent_size;
+         frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
+         frm.pse[frm.pse_tos].indent_tab = frm.pse[frm.pse_tos].indent;
+      }
       else if ((pc->type == CT_PAREN_OPEN) ||
                (pc->type == CT_SPAREN_OPEN) ||
                (pc->type == CT_FPAREN_OPEN) ||

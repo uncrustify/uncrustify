@@ -1,4 +1,9 @@
 
+Change highlights in uncrustify-0.61 (PENDING)
+-------------------------------------------------------------------------------
+New options:
+ - indent_oc_msg_args
+
 Change highlights in uncrustify-0.60 (1 Jan 2013)
 -------------------------------------------------------------------------------
 Objective C support was greatly enhanced in this release.

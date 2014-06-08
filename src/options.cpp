@@ -677,7 +677,10 @@ void register_options(void)
                   "Indent OC blocks in a message relative to the parameter name.\n"
                   "0=use indent_oc_block rules, 1+=spaces to indent", 0, 16);
    unc_add_option("indent_oc_msg_colon", UO_indent_oc_msg_colon, AT_NUM,
-                  "Minimum indent for subsequent parameters", 0, 5000);
+                  "If align_oc_msg_colon_span is on, this value is the minimum indent for subsequent parameters", 0, 5000);
+   unc_add_option("indent_oc_msg_args", UO_indent_oc_msg_args, AT_NUM,
+                  "Minimum indent for wrapped OC message parameters\n"
+                  "See nl_oc_msg_args", 0, 5000);
    unc_add_option("indent_oc_msg_prioritize_first_colon", UO_indent_oc_msg_prioritize_first_colon, AT_BOOL,
                   "If true, prioritize aligning with initial colon (and stripping spaces from lines, if necessary).\n"
                   "Default is true.");
