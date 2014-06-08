@@ -78,3 +78,6 @@
 50400  obj-c.cfg                                    oc/for.m
 
 50410  oc_cond_colon.cfg                            oc/oc_cond_colon.m
+
+50425  meiss_indent_oc_msg_args.cfg                 oc/meiss_indent_oc_msg_args.m
+
