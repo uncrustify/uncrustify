@@ -1652,8 +1652,8 @@ void space_text(void)
                      /* C++11 allows '>>' to mean '> >' in templates:
                       *   some_func<vector<string>>();
                       */
-                     if ((cpd.lang_flags & (LANG_CPP | LANG_JAVA)) &&
-                         cpd.settings[UO_sp_permit_cpp11_shift].b &&
+                     if ((((cpd.lang_flags & LANG_CPP) && cpd.settings[UO_sp_permit_cpp11_shift].b) ||
+                         ((cpd.lang_flags & LANG_JAVA) || (cpd.lang_flags & LANG_CS))) &&
                          (pc->type == CT_ANGLE_CLOSE) &&
                          (next->type == CT_ANGLE_CLOSE))
                      {
