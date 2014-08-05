@@ -830,6 +830,41 @@ static bool parse_cs_string(tok_ctx& ctx, chunk_t& pc)
 }
 
 
+/**
+ * VALA verbatim string, ends with three quotes (""")
+ *
+ * @param pc   The structure to update, str is an input.
+ */
+static void parse_verbatim_string(tok_ctx& ctx, chunk_t& pc)
+{
+   pc.type = CT_STRING;
+
+   // consumre the initial """
+   pc.str = ctx.get();
+   pc.str.append(ctx.get());
+   pc.str.append(ctx.get());
+
+   /* go until we hit a zero (end of file) or a """ */
+   while (ctx.more())
+   {
+      int ch = ctx.get();
+      pc.str.append(ch);
+      if ((ch == '"') &&
+          (ctx.peek() == '"') &&
+          (ctx.peek(1) == '"'))
+      {
+         pc.str.append(ctx.get());
+         pc.str.append(ctx.get());
+         break;
+      }
+      if ((ch == '\n') || (ch == '\r'))
+      {
+         pc.type = CT_STRING_MULTI;
+      }
+   }
+}
+
+
 static bool tag_compare(const deque<int>& d, int a_idx, int b_idx, int len)
 {
    if (a_idx != b_idx)
@@ -1280,6 +1315,16 @@ static bool parse_next(tok_ctx& ctx, chunk_t& pc)
          parse_word(ctx, pc, true);
          return(true);
       }
+   }
+
+   /* handle VALA """ strings """ */
+   if (((cpd.lang_flags & LANG_VALA) != 0) &&
+       (ctx.peek() == '"') &&
+       (ctx.peek(1) == '"') &&
+       (ctx.peek(2) == '"'))
+   {
+       parse_verbatim_string(ctx, pc);
+       return true;
    }
 
    /* handle C++0x strings u8"x" u"x" U"x" R"x" u8R"XXX(I'm a "raw UTF-8" string.)XXX" */
