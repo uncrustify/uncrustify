@@ -469,6 +469,50 @@ static bool parse_comment(tok_ctx& ctx, chunk_t& pc)
    return(true);
 }
 
+/**
+ * Figure of the length of the code placeholder at text, if present.
+ * This is only for Xcode which sometimes inserts temporary code placeholder chunks, which in plaintext <#look like this#>.
+ *
+ * @param pc   The structure to update, str is an input.
+ * @return     Whether a placeholder was parsed.
+ */
+static bool parse_code_placeholder(tok_ctx& ctx, chunk_t& pc)
+{
+   int  ch;
+
+   if (!(ctx.peek() == '<' && ctx.peek(1) == '#'))
+   {
+      return(false);
+   }
+
+   ctx.save();
+
+   /* account for opening two chars */
+   pc.str = ctx.get();   /* opening '/' */
+   ch = ctx.get();
+   pc.str.append(ch);    /* second char */
+
+   pc.type = CT_WORD;
+   while (ctx.more())
+   {
+      if ((ctx.peek() == '#') && (ctx.peek(1) == '>'))
+      {
+         pc.str.append(ctx.get());  /* store the '#' */
+         pc.str.append(ctx.get());  /* store the '>' */
+
+         tok_info ss;
+         ctx.save(ss);
+
+         return(true);
+      }
+
+      ch = ctx.get();
+      pc.str.append(ch);
+   }
+
+   return(false);
+}
+
 
 /**
  * Parse any attached suffix, which may be a user-defined literal suffix.
@@ -1298,6 +1342,11 @@ static bool parse_next(tok_ctx& ctx, chunk_t& pc)
     */
    if (parse_comment(ctx, pc))
    {
+      return(true);
+   }
+
+   /* Parse code placeholders */
+   if (parse_code_placeholder(ctx, pc) && !cpd.settings[UO_dont_protect_xcode_code_placeholders].b) {
       return(true);
    }
 
