@@ -68,7 +68,7 @@ static const chunk_tag_t symbols2[] =
    { "<>", CT_COMPARE,      LANG_D                                                     },
    { "==", CT_COMPARE,      LANG_ALL                                                   },
    { ">=", CT_COMPARE,      LANG_ALL                                                   },
-   { ">>", CT_ARITH,        LANG_ALL & ~LANG_CS                                        },
+   { ">>", CT_ARITH,        LANG_ALL                                                   },
    { "[]", CT_TSQUARE,      LANG_ALL                                                   },
    { "^=", CT_ASSIGN,       LANG_ALL                                                   },
    { "|=", CT_ASSIGN,       LANG_ALL                                                   },
