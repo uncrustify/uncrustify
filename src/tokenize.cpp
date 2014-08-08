@@ -1346,7 +1346,8 @@ static bool parse_next(tok_ctx& ctx, chunk_t& pc)
    }
 
    /* Parse code placeholders */
-   if (parse_code_placeholder(ctx, pc) && !cpd.settings[UO_dont_protect_xcode_code_placeholders].b) {
+   if (parse_code_placeholder(ctx, pc))
+   {
       return(true);
    }
 

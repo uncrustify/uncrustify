@@ -173,8 +173,6 @@ void register_options(void)
                   "Allow interpreting '>=' and '>>=' as part of a template in 'void f(list<list<B>>=val);'.\n"
                   "If true (default), 'assert(x<0 && y>=3)' will be broken.\n"
                   "Improvements to template detection may make this option obsolete.");
-   unc_add_option("dont_protect_xcode_code_placeholders", UO_dont_protect_xcode_code_placeholders, AT_BOOL,
-                  "Xcode inserts <#code placeholders#> into files that will otherwise be mangled. Turn option on to ignore these.");
 
    unc_add_option("utf8_bom", UO_utf8_bom, AT_IARF,
                   "Control what to do with the UTF-8 BOM (recommend 'remove')");
