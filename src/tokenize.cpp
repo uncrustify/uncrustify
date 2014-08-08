@@ -478,36 +478,31 @@ static bool parse_comment(tok_ctx& ctx, chunk_t& pc)
  */
 static bool parse_code_placeholder(tok_ctx& ctx, chunk_t& pc)
 {
-   int  ch;
+   int last2 = 0, last1 = 0;
 
-   if (!(ctx.peek() == '<' && ctx.peek(1) == '#'))
+   if ((ctx.peek() != '<') || (ctx.peek(1) != '#'))
    {
       return(false);
    }
 
    ctx.save();
 
-   /* account for opening two chars */
-   pc.str = ctx.get();   /* opening '/' */
-   ch = ctx.get();
-   pc.str.append(ch);    /* second char */
+   /* account for opening two chars '<#' */
+   pc.str = ctx.get();
+   pc.str.append(ctx.get());
 
-   pc.type = CT_WORD;
+   /* grab everything until '#>', fail if not found. */
    while (ctx.more())
    {
-      if ((ctx.peek() == '#') && (ctx.peek(1) == '>'))
+      last2 = last1;
+      last1 = ctx.get();
+      pc.str.append(last1);
+
+      if ((last2 == '#') && (last1 == '>'))
       {
-         pc.str.append(ctx.get());  /* store the '#' */
-         pc.str.append(ctx.get());  /* store the '>' */
-
-         tok_info ss;
-         ctx.save(ss);
-
+         pc.type = CT_WORD;
          return(true);
       }
-
-      ch = ctx.get();
-      pc.str.append(ch);
    }
 
    return(false);
