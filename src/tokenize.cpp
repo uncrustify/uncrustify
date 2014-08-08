@@ -878,7 +878,7 @@ static void parse_verbatim_string(tok_ctx& ctx, chunk_t& pc)
 {
    pc.type = CT_STRING;
 
-   // consumre the initial """
+   // consume the initial """
    pc.str = ctx.get();
    pc.str.append(ctx.get());
    pc.str.append(ctx.get());
@@ -899,6 +899,7 @@ static void parse_verbatim_string(tok_ctx& ctx, chunk_t& pc)
       if ((ch == '\n') || (ch == '\r'))
       {
          pc.type = CT_STRING_MULTI;
+         pc.nl_count++;
       }
    }
 }

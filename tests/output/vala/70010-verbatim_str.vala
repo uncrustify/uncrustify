@@ -20,9 +20,9 @@ public class Sample : Object {
       string sql   = """ SELECT name "my_name"
                         FROM table
                         WHERE id='4'
-                  """                                                                                                                        ;
+                  """;
       var    where = """ WHERE name LIKE '%blah%
-         """                                                  ;
+         """;
 
       foreach (string arg in args)
       {
