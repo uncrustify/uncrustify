@@ -383,6 +383,7 @@ struct cp_data
    int                did_newline;
    c_token_t          in_preproc;
    int                preproc_ncnl_count;
+   bool               output_trailspace;
 
    bool               bom;
    CharEncoding       enc;

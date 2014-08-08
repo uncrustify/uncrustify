@@ -17,11 +17,11 @@ public class Sample : Object {
    }
    static int main(string[] args)
    {
-      string sql   = """ SELECT name "my_name"
+      string sql   = """ SELECT name "my_name" 
                         FROM table
                         WHERE id='4'
                   """;
-      var    where = """ WHERE name LIKE '%blah%
+      var    where = """ WHERE name LIKE '%blah% 
          """;
 
       foreach (string arg in args)

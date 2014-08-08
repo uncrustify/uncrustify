@@ -78,7 +78,7 @@ static void add_char(UINT32 ch)
          }
          return;
       }
-      else if (ch == ' ')
+      else if ((ch == ' ') && !cpd.output_trailspace)
       {
          cpd.spaces++;
          cpd.column++;
@@ -376,6 +376,7 @@ void output_text(FILE *pfile)
       }
       else
       {
+         cpd.output_trailspace = (pc->type == CT_STRING_MULTI);
          /* indent to the 'level' first */
          if (cpd.did_newline)
          {
@@ -437,6 +438,7 @@ void output_text(FILE *pfile)
          output_to_column(pc->column, allow_tabs);
          add_text(pc->str);
          cpd.did_newline = chunk_is_newline(pc);
+         cpd.output_trailspace = false;
       }
    }
 }
