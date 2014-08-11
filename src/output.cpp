@@ -1113,11 +1113,15 @@ static bool can_combine_comment(chunk_t *pc, cmt_reflow& cmt)
 static chunk_t *output_comment_c(chunk_t *first)
 {
    cmt_reflow cmt;
+   int cnt;
 
    output_cmt_start(cmt, first);
    cmt.reflow = (cpd.settings[UO_cmt_reflow_mode].n != 1);
 
    cmt.cont_text = cpd.settings[UO_cmt_star_cont].b ? " *" : "  ";
+   for (cnt = 0; cnt < cpd.settings[UO_cmt_sp_after_star_cont].n; cnt++) {
+       cmt.cont_text += " ";
+   }
    LOG_CONTTEXT();
 
    /* See if we can combine this comment with the next comment */
