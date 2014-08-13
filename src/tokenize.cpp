@@ -504,7 +504,7 @@ static bool parse_code_placeholder(tok_ctx& ctx, chunk_t& pc)
          return(true);
       }
    }
-
+   ctx.restore();
    return(false);
 }
 
