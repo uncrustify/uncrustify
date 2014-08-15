@@ -1969,7 +1969,7 @@ void newlines_remove_newlines(void)
             pc = next;
             continue;
          }
-         else if (!chunk_is_newline(prev->next))
+         else if (prev && !chunk_is_newline(prev->next))
          {
             pc = prev;
          }
