@@ -852,7 +852,7 @@ void indent_text(void)
                          (!cpd.settings[UO_indent_braces_no_func].b ||
                           (pc->parent_type != CT_FUNC_DEF)) &&
                          (!cpd.settings[UO_indent_braces_no_func].b ||
-                          (pc->parent_type != CT_FUNC_CLASS)) &&
+                          (pc->parent_type != CT_FUNC_CLASS_DEF)) &&
                          (!cpd.settings[UO_indent_braces_no_class].b ||
                           (pc->parent_type != CT_CLASS)) &&
                          (!cpd.settings[UO_indent_braces_no_struct].b ||
@@ -1262,10 +1262,11 @@ void indent_text(void)
               ||
               (cpd.settings[UO_indent_func_proto_param].b &&
                ((pc->parent_type == CT_FUNC_PROTO) ||
-                (pc->parent_type == CT_FUNC_CLASS)))
+                (pc->parent_type == CT_FUNC_CLASS_PROTO)))
               ||
               (cpd.settings[UO_indent_func_class_param].b &&
-               (pc->parent_type == CT_FUNC_CLASS))
+               ((pc->parent_type == CT_FUNC_CLASS_DEF) ||
+                (pc->parent_type == CT_FUNC_CLASS_PROTO)))
               ||
               (cpd.settings[UO_indent_template_param].b &&
                (pc->parent_type == CT_TEMPLATE))

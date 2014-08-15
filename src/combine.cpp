@@ -2499,7 +2499,8 @@ static chunk_t *fix_var_def(chunk_t *start)
    if ((cs.Len() <= 1) ||
        (end->type == CT_FUNC_DEF) ||
        (end->type == CT_FUNC_PROTO) ||
-       (end->type == CT_FUNC_CLASS) ||
+       (end->type == CT_FUNC_CLASS_DEF) ||
+       (end->type == CT_FUNC_CLASS_PROTO) ||
        (end->type == CT_OPERATOR))
    {
       return(skip_to_next_statement(end));
@@ -3032,7 +3033,7 @@ static void mark_function(chunk_t *pc)
    }
 
    /* Check for C++ function def */
-   if ((pc->type == CT_FUNC_CLASS) ||
+   if ((pc->type == CT_FUNC_CLASS_DEF) ||
        ((prev != NULL) && ((prev->type == CT_DC_MEMBER) ||
                            (prev->type == CT_INV))))
    {
@@ -3041,7 +3042,7 @@ static void mark_function(chunk_t *pc)
       {
          /* TODO: do we care that this is the destructor? */
          prev->type = CT_DESTRUCTOR;
-         pc->type   = CT_FUNC_CLASS;
+         pc->type   = CT_FUNC_CLASS_DEF;
 
          pc->parent_type = CT_DESTRUCTOR;
 
@@ -3063,8 +3064,9 @@ static void mark_function(chunk_t *pc)
          {
             if (pc->str.equals(prev->str))
             {
-               pc->type = CT_FUNC_CLASS;
-               LOG_FMT(LFCN, "FOUND %sSTRUCTOR for %s[%s]\n",
+               pc->type = CT_FUNC_CLASS_DEF;
+               LOG_FMT(LFCN, "%d:%d - FOUND %sSTRUCTOR for %s[%s]\n",
+                       prev->orig_line, prev->orig_col,
                        (destr != NULL) ? "DE" : "CON",
                        prev->str.c_str(), get_token_name(prev->type));
 
@@ -3446,16 +3448,18 @@ static void mark_cpp_constructor(chunk_t *pc)
    bool    is_destr = false;
 
    tmp = chunk_get_prev_ncnl(pc);
-   if (tmp->type == CT_INV)
+   if ((tmp->type == CT_INV) || (tmp->type == CT_DESTRUCTOR))
    {
       tmp->type       = CT_DESTRUCTOR;
       pc->parent_type = CT_DESTRUCTOR;
       is_destr        = true;
    }
 
-   LOG_FMT(LFTOR, "FOUND %sSTRUCTOR for %s[%s] ",
+   LOG_FMT(LFTOR, "%d:%d FOUND %sSTRUCTOR for %s[%s] prev=%s[%s]",
+           pc->orig_line, pc->orig_col,
            is_destr ? "DE" : "CON",
-           pc->str.c_str(), get_token_name(pc->type));
+           pc->str.c_str(), get_token_name(pc->type),
+           tmp->str.c_str(), get_token_name(tmp->type));
 
    paren_open = skip_template_next(chunk_get_next_ncnl(pc));
    if (!chunk_is_str(paren_open, "(", 1))
@@ -3468,7 +3472,7 @@ static void mark_cpp_constructor(chunk_t *pc)
 
    /* Mark parameters */
    fix_fcn_def_params(paren_open);
-   after = flag_parens(paren_open, PCF_IN_FCN_CALL, CT_FPAREN_OPEN, CT_FUNC_CLASS, false);
+   after = flag_parens(paren_open, PCF_IN_FCN_CALL, CT_FPAREN_OPEN, CT_FUNC_CLASS_PROTO, false);
 
    LOG_FMT(LFTOR, "[%s]\n", after->str.c_str());
 
@@ -3498,9 +3502,18 @@ static void mark_cpp_constructor(chunk_t *pc)
          }
       }
    }
-   if ((tmp != NULL) && (tmp->type == CT_BRACE_OPEN))
+   if (tmp != NULL)
    {
-      set_paren_parent(tmp, CT_FUNC_CLASS);
+      if (tmp->type == CT_BRACE_OPEN)
+      {
+         set_paren_parent(paren_open, CT_FUNC_CLASS_DEF);
+         set_paren_parent(tmp, CT_FUNC_CLASS_DEF);
+      }
+      else
+      {
+         tmp->parent_type = CT_FUNC_CLASS_PROTO;
+         pc->type = CT_FUNC_CLASS_PROTO;
+      }
    }
 }
 
@@ -3620,7 +3633,7 @@ static void mark_class_ctor(chunk_t *start)
       {
          if ((next != NULL) && (next->len() == 1) && (next->str[0] == '('))
          {
-            pc->type = CT_FUNC_CLASS;
+            pc->type = CT_FUNC_CLASS_DEF;
             LOG_FMT(LFTOR, "%d] Marked CTor/DTor %s\n", pc->orig_line, pc->str.c_str());
             mark_cpp_constructor(pc);
          }
@@ -5072,7 +5085,7 @@ void remove_extra_returns()
          if ((semi != NULL) && (semi->type == CT_SEMICOLON) &&
              (cl_br != NULL) && (cl_br->type == CT_BRACE_CLOSE) &&
              ((cl_br->parent_type == CT_FUNC_DEF) ||
-              (cl_br->parent_type == CT_FUNC_CLASS)))
+              (cl_br->parent_type == CT_FUNC_CLASS_DEF)))
          {
             LOG_FMT(LRMRETURN, "Removed 'return;' on line %d\n", pc->orig_line);
             chunk_del(pc);

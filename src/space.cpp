@@ -804,7 +804,8 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
       log_rule("sp_func_proto_paren");
       return(cpd.settings[UO_sp_func_proto_paren].a);
    }
-   if (first->type == CT_FUNC_CLASS)
+   if ((first->type == CT_FUNC_CLASS_DEF) ||
+       (first->type == CT_FUNC_CLASS_PROTO))
    {
       log_rule("sp_func_class_paren");
       return(cpd.settings[UO_sp_func_class_paren].a);

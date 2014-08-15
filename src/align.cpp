@@ -767,7 +767,8 @@ static void align_func_params()
       if ((pc->type != CT_FPAREN_OPEN) ||
           ((pc->parent_type != CT_FUNC_PROTO) &&
            (pc->parent_type != CT_FUNC_DEF) &&
-           (pc->parent_type != CT_FUNC_CLASS) &&
+           (pc->parent_type != CT_FUNC_CLASS_PROTO) &&
+           (pc->parent_type != CT_FUNC_CLASS_DEF) &&
            (pc->parent_type != CT_TYPEDEF)))
       {
          continue;
@@ -1183,7 +1184,8 @@ static chunk_t *align_var_def_brace(chunk_t *start, int span, int *p_nl_count)
 
       /* If this is a variable def, update the max_col */
       if (!(pc->flags & PCF_IN_CLASS_BASE) &&
-          (pc->type != CT_FUNC_CLASS) &&
+          (pc->type != CT_FUNC_CLASS_DEF) &&
+          (pc->type != CT_FUNC_CLASS_PROTO) &&
           ((pc->flags & align_mask) == PCF_VAR_1ST) &&
           ((pc->level == (start->level + 1)) ||
            (pc->level == 0)) &&

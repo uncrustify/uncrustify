@@ -1065,7 +1065,9 @@ static chunk_t *newline_def_blk(chunk_t *start, bool fn_top)
       }
 
       /* Determine if this is a variable def or code */
-      if (!did_this_line && (pc->type != CT_FUNC_CLASS) &&
+      if (!did_this_line &&
+          (pc->type != CT_FUNC_CLASS_DEF) &&
+          (pc->type != CT_FUNC_CLASS_PROTO) &&
           ((pc->level == (start->level + 1)) ||
            (pc->level == 0)))
       {
@@ -1268,7 +1270,7 @@ static void newlines_brace_pair(chunk_t *br_open)
    if ((br_open->parent_type == CT_FUNC_DEF) ||
        (br_open->parent_type == CT_FUNC_CALL) ||
        (br_open->parent_type == CT_FUNC_CALL_USER) ||
-       (br_open->parent_type == CT_FUNC_CLASS) ||
+       (br_open->parent_type == CT_FUNC_CLASS_DEF) ||
        (br_open->parent_type == CT_OC_MSG_DECL) ||
        (br_open->parent_type == CT_CS_PROPERTY) ||
        (br_open->parent_type == CT_CPP_LAMBDA))
@@ -1284,7 +1286,7 @@ static void newlines_brace_pair(chunk_t *br_open)
       newline_add_between(br_open, pc);
 
       val = (((br_open->parent_type == CT_FUNC_DEF) ||
-              (br_open->parent_type == CT_FUNC_CLASS) ||
+              (br_open->parent_type == CT_FUNC_CLASS_DEF) ||
               (br_open->parent_type == CT_OC_MSG_DECL)) ?
              cpd.settings[UO_nl_fdef_brace].a :
              ((br_open->parent_type == CT_CS_PROPERTY) ?
@@ -1552,7 +1554,7 @@ static void newline_func_def(chunk_t *start)
    chunk_t  *prev = NULL;
    chunk_t  *tmp;
    argval_t atmp;
-   bool     is_def = (start->parent_type == CT_FUNC_DEF) || (start->parent_type == CT_FUNC_CLASS);
+   bool     is_def = (start->parent_type == CT_FUNC_DEF) || (start->parent_type == CT_FUNC_CLASS_DEF);
 
    LOG_FMT(LNFD, "%s: called on %d:%d '%s' [%s/%s]\n",
            __func__, start->orig_line, start->orig_col,
@@ -1593,7 +1595,7 @@ static void newline_func_def(chunk_t *start)
          }
       }
 
-      if (chunk_get_next_ncnl(prev)->type != CT_FUNC_CLASS)
+      if (chunk_get_next_ncnl(prev)->type != CT_FUNC_CLASS_DEF)
       {
          argval_t a = (tmp->parent_type == CT_FUNC_PROTO) ?
                       cpd.settings[UO_nl_func_proto_type_name].a :
@@ -1664,7 +1666,8 @@ static void newline_func_def(chunk_t *start)
          {
             pc = tmp;
          }
-         newline_iarf(pc, cpd.settings[(start->parent_type == CT_FUNC_DEF) || (start->parent_type == CT_FUNC_CLASS) ?
+         newline_iarf(pc, cpd.settings[((start->parent_type == CT_FUNC_DEF) ||
+                                        (start->parent_type == CT_FUNC_CLASS_DEF)) ?
                                        UO_nl_func_def_args :
                                        UO_nl_func_decl_args].a);
       }
@@ -1827,7 +1830,7 @@ static bool one_liner_nl_ok(chunk_t *pc)
 
       if (cpd.settings[UO_nl_func_leave_one_liners].b &&
           ((pc->parent_type == CT_FUNC_DEF) ||
-           (pc->parent_type == CT_FUNC_CLASS)))
+           (pc->parent_type == CT_FUNC_CLASS_DEF)))
       {
          LOG_FMT(LNL1LINE, "false (func def)\n");
          return(false);
@@ -2230,7 +2233,7 @@ void newlines_cleanup_braces(bool first)
             }
          }
          else if (cpd.settings[UO_nl_after_brace_close].b ||
-                  (pc->parent_type == CT_FUNC_CLASS) ||
+                  (pc->parent_type == CT_FUNC_CLASS_DEF) ||
                   (pc->parent_type == CT_FUNC_DEF) ||
                   (pc->parent_type == CT_OC_MSG_DECL))
          {
@@ -2397,7 +2400,8 @@ void newlines_cleanup_braces(bool first)
       {
          if (((pc->parent_type == CT_FUNC_DEF) ||
               (pc->parent_type == CT_FUNC_PROTO) ||
-              (pc->parent_type == CT_FUNC_CLASS) ||
+              (pc->parent_type == CT_FUNC_CLASS_DEF) ||
+              (pc->parent_type == CT_FUNC_CLASS_PROTO) ||
               (pc->parent_type == CT_OPERATOR))
              &&
              ((cpd.settings[UO_nl_func_decl_start].a != AV_IGNORE) ||
@@ -3180,7 +3184,7 @@ void do_blank_lines(void)
       /* Add blanks after function bodies */
       if ((prev != NULL) && (prev->type == CT_BRACE_CLOSE) &&
           ((prev->parent_type == CT_FUNC_DEF) ||
-           (prev->parent_type == CT_FUNC_CLASS) ||
+           (prev->parent_type == CT_FUNC_CLASS_DEF) ||
            (prev->parent_type == CT_OC_MSG_DECL) ||
            (prev->parent_type == CT_OC_BLOCK_EXPR) ||
            (prev->parent_type == CT_ASSIGN)))
@@ -3259,7 +3263,8 @@ void do_blank_lines(void)
       if ((cpd.settings[UO_nl_comment_func_def].n != 0) &&
           (pcmt->type == CT_COMMENT_MULTI) &&
           (pcmt->parent_type == CT_COMMENT_WHOLE) &&
-          (next != NULL) && ((next->parent_type == CT_FUNC_DEF) || (next->parent_type == CT_FUNC_CLASS)))
+          (next != NULL) && ((next->parent_type == CT_FUNC_DEF) ||
+                             (next->parent_type == CT_FUNC_CLASS_DEF)))
       {
          if (cpd.settings[UO_nl_comment_func_def].n != pc->nl_count)
          {
