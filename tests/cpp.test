@@ -206,3 +206,5 @@
 30950 sp_before_tr_emb_cmt-f.cfg       cpp/sp_before_tr_emb_cmt_input.cpp
 30951 sp_before_tr_emb_cmt-a.cfg       cpp/sp_before_tr_emb_cmt_input.cpp
 30955 indent_ctor_init.cfg             cpp/indent_ctor_init.cpp
+
+31593 sf593.cfg                        cpp/sf593.cpp
