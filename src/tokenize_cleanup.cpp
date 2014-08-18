@@ -236,7 +236,18 @@ void tokenize_cleanup(void)
        */
       if ((pc->type == CT_ANGLE_OPEN) && (pc->parent_type != CT_TYPE_CAST))
       {
-         check_template(pc);
+         /* pretty much all languages except C use <> for something other than
+          * comparisons.  "#include<xxx>" is handled elsewhere.
+          */
+         if (cpd.lang_flags & (LANG_CPP | LANG_CS | LANG_JAVA | LANG_VALA | LANG_OC))
+         {
+            check_template(pc);
+         }
+         else
+         {
+            /* convert CT_ANGLE_OPEN to CT_COMPARE */
+            pc->type = CT_COMPARE;
+         }
       }
       if ((pc->type == CT_ANGLE_CLOSE) && (pc->parent_type != CT_TEMPLATE))
       {
@@ -866,8 +877,7 @@ static void check_template(chunk_t *start)
 
          if ((tokens[num_tokens - 1] == CT_ANGLE_OPEN) &&
              (pc->str[0] == '>') && (pc->len() > 1) &&
-             (cpd.settings[UO_tok_split_gte].b ||
-              (chunk_is_str(pc, ">>", 2) && ((cpd.lang_flags & LANG_CPP) == 0))))
+             (cpd.settings[UO_tok_split_gte].b || chunk_is_str(pc, ">>", 2)))
          {
             LOG_FMT(LTEMPL, " {split '%s' at %d:%d}",
                     pc->str.c_str(), pc->orig_line, pc->orig_col);
