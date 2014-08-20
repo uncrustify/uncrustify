@@ -158,7 +158,7 @@ static void usage_exit(const char *msg, const char *argv0, int code)
 #ifdef HAVE_UTIME_H
            " --mtime      : preserve mtime on replaced files\n"
 #endif
-           " -l           : language override: C, CPP, D, CS, JAVA, PAWN, OC, OC+\n"
+           " -l           : language override: C, CPP, D, CS, JAVA, PAWN, OC, OC+, VALA\n"
            " -t           : load a file with types (usually not needed)\n"
            " -q           : quiet mode - no output on stderr (-L will override)\n"
            " --frag       : code fragment, assume the first line is indented correctly\n"
