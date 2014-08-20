@@ -1480,8 +1480,8 @@ static bool parse_next(tok_ctx& ctx, chunk_t& pc)
       }
    }
 
-   /* Check for Objective C literals */
-   if ((cpd.lang_flags & LANG_OC) && (ctx.peek() == '@'))
+   /* Check for Objective C literals and VALA identifiers ('@1', '@if')*/
+   if ((cpd.lang_flags & (LANG_OC | LANG_VALA)) && (ctx.peek() == '@'))
    {
       int nc = ctx.peek(1);
       if ((nc == '"') || (nc == '\''))
