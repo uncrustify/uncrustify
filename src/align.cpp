@@ -1815,7 +1815,14 @@ static void align_left_shift(void)
    pc = chunk_get_head();
    while (pc != NULL)
    {
-      if (chunk_is_newline(pc))
+      if ((start != NULL) &&
+          (pc->flags & PCF_IN_PREPROC) != (start->flags & PCF_IN_PREPROC))
+      {
+         /* a change in preproc status restarts the aligning */
+         as.Flush();
+         start = NULL;
+      }
+      else if (chunk_is_newline(pc))
       {
          as.NewLines(pc->nl_count);
       }
