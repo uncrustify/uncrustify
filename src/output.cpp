@@ -28,7 +28,6 @@ struct cmt_reflow
    bool       reflow;      /* reflow the current line */
 };
 
-
 static chunk_t *output_comment_c(chunk_t *pc);
 static chunk_t *output_comment_cpp(chunk_t *pc);
 static void add_comment_text(const unc_text& text,
@@ -65,6 +64,14 @@ static void add_char(UINT32 ch)
       cpd.column      = 1;
       cpd.did_newline = 1;
       cpd.spaces      = 0;
+   }
+   else if ((ch == '\t') && (cpd.settings[UO_mod_convert_all_tabs_to_spaces].b))
+   {
+      int endcol = next_tab_column(cpd.column);
+      while (cpd.column < endcol)
+      {
+          add_char(' ');
+      }
    }
    else
    {
@@ -104,7 +111,6 @@ static void add_char(UINT32 ch)
    cpd.last_char = ch;
 }
 
-
 static void add_text(const char *ascii_text)
 {
    char ch;
@@ -116,7 +122,6 @@ static void add_text(const char *ascii_text)
    }
 }
 
-
 static void add_text(const unc_text& text)
 {
    for (int idx = 0; idx < text.size(); idx++)
@@ -124,7 +129,6 @@ static void add_text(const unc_text& text)
       add_char(text[idx]);
    }
 }
-
 
 /**
  * Count the number of characters to the end of the next chunk of text.
@@ -149,7 +153,6 @@ static bool next_word_exceeds_limit(const unc_text& text, int idx)
    }
    return((cpd.column + length - 1) > cpd.settings[UO_cmt_width].n);
 }
-
 
 /**
  * Advance to a specific column
@@ -176,7 +179,6 @@ static void output_to_column(int column, bool allow_tabs)
       add_text(" ");
    }
 }
-
 
 /**
  * Output a comment to the column using indent_with_tabs and
@@ -219,7 +221,6 @@ static void cmt_output_indent(int brace_col, int base_col, int column)
    }
 }
 
-
 void output_parsed(FILE *pfile)
 {
    chunk_t *pc;
@@ -257,7 +258,6 @@ void output_parsed(FILE *pfile)
    fprintf(pfile, "\n# -=====-\n");
    fflush(pfile);
 }
-
 
 /**
  * This renders the chunk list to a file.
@@ -623,7 +623,6 @@ static void calculate_comment_body_indent(cmt_reflow &cmt, const unc_text& str)
    cmt.xtra_indent = ((width == 2) ? 0 : 1);
 }
 
-
 static chunk_t *get_next_function(chunk_t *pc)
 {
    while ((pc = chunk_get_next(pc)) != NULL)
@@ -638,7 +637,6 @@ static chunk_t *get_next_function(chunk_t *pc)
    return(NULL);
 }
 
-
 static chunk_t *get_next_class(chunk_t *pc)
 {
    while ((pc = chunk_get_next(pc)) != NULL)
@@ -650,7 +648,6 @@ static chunk_t *get_next_class(chunk_t *pc)
    }
    return(NULL);
 }
-
 
 /**
  * Adds the javadoc-style @param and @return stuff, based on the params and
@@ -779,7 +776,6 @@ static void add_comment_javaparam(chunk_t *pc, cmt_reflow& cmt)
    }
 }
 
-
 /**
  * text starts with '$('. see if this matches a keyword and add text based
  * on that keyword.
@@ -869,7 +865,6 @@ static int add_comment_kw(const unc_text& text, int idx, cmt_reflow& cmt)
    return(0);
 }
 
-
 static int next_up(const unc_text& text, int idx, unc_text& tag)
 {
    int offs = 0;
@@ -886,7 +881,6 @@ static int next_up(const unc_text& text, int idx, unc_text& tag)
    }
    return(-1);
 }
-
 
 /**
  * Outputs a comment. The initial opening '//' may be included in the text.
@@ -996,7 +990,6 @@ static void add_comment_text(const unc_text& text,
    }
 }
 
-
 static void output_cmt_start(cmt_reflow& cmt, chunk_t *pc)
 {
    cmt.pc          = pc;
@@ -1069,7 +1062,6 @@ static void output_cmt_start(cmt_reflow& cmt, chunk_t *pc)
    cmt.kw_subst = (pc->flags & PCF_INSERTED) != 0;
 }
 
-
 /**
  * Checks to see if the current comment can be combined with the next comment.
  * The two can be combined if:
@@ -1102,7 +1094,6 @@ static bool can_combine_comment(chunk_t *pc, cmt_reflow& cmt)
    }
    return(false);
 }
-
 
 /**
  * Outputs the C comment at pc.
@@ -1162,7 +1153,6 @@ static chunk_t *output_comment_c(chunk_t *first)
    add_comment_text("*/", cmt, false);
    return(pc);
 }
-
 
 /**
  * Outputs the CPP comment at pc.
@@ -1275,7 +1265,6 @@ static chunk_t *output_comment_cpp(chunk_t *first)
    return(pc);
 }
 
-
 static void cmt_trim_whitespace(unc_text& line, bool in_preproc)
 {
    /* Remove trailing whitespace on the line */
@@ -1307,7 +1296,6 @@ static void cmt_trim_whitespace(unc_text& line, bool in_preproc)
       line.append('\\');
    }
 }
-
 
 /**
  * A multiline comment -- woopeee!
@@ -1601,7 +1589,6 @@ static void output_comment_multi(chunk_t *pc)
    }
 }
 
-
 /**
  * Output a multiline comment without any reformatting other than shifting
  * it left or right to get the column right.
@@ -1707,7 +1694,6 @@ static void output_comment_multi_simple(chunk_t *pc)
    }
 }
 
-
 /**
  * This renders the #if condition to a string buffer.
  */
@@ -1752,7 +1738,6 @@ static void generate_if_conditional_as_text(unc_text& dst, chunk_t *ifdef)
       }
    }
 }
-
 
 /*
  * See also it's preprocessor counterpart

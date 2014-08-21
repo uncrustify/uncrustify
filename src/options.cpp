@@ -1252,6 +1252,8 @@ void register_options(void)
                   "Add parens on 'while' and 'if' statement around bools");
    unc_add_option("mod_remove_extra_semicolon", UO_mod_remove_extra_semicolon, AT_BOOL,
                   "Whether to remove superfluous semicolons");
+   unc_add_option("mod_convert_all_tabs_to_spaces", UO_mod_convert_all_tabs_to_spaces, AT_BOOL,
+                  "Whether to convert all tabs to spaces");
    unc_add_option("mod_add_long_function_closebrace_comment", UO_mod_add_long_function_closebrace_comment, AT_NUM,
                   "If a function body exceeds the specified number of newlines and doesn't have a comment after\n"
                   "the close brace, a comment will be added.");
