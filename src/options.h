@@ -642,6 +642,7 @@ enum uncrustify_options
    UO_mod_full_brace_function,    // add optional braces on Pawn functions
    UO_mod_full_paren_if_bool,
    UO_mod_remove_extra_semicolon, // remove extra semicolons
+   UO_mod_convert_all_tabs_to_spaces,   // convert all tabs to spaces
    UO_mod_add_long_function_closebrace_comment,
    UO_mod_add_long_switch_closebrace_comment,
    UO_mod_add_long_ifdef_else_comment,
