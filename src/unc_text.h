@@ -86,6 +86,9 @@ public:
    }
 
    void insert(int idx, int ch);
+   void insert(int idx, const unc_text& ref);
+
+   void erase(int idx, int len = 1);
 
    void append(int ch);
    void append(const unc_text& ref);
@@ -189,6 +192,8 @@ public:
    bool startswith(const unc_text& text, int idx = 0) const;
    bool startswith(const char *text, int idx = 0) const;
    int find(const char *text, int idx = 0) const;
+   int rfind(const char *text, int idx = -1) const;
+   int replace(const char *oldtext, const unc_text& newtext);
 
 protected:
    void update_logtext();

@@ -205,6 +205,15 @@ void unc_text::insert(int idx, int ch)
    }
 }
 
+void unc_text::insert(int idx, const unc_text& ref)
+{
+   if (idx >= 0)
+   {
+      m_chars.insert(m_chars.begin() + idx, ref.m_chars.begin(), ref.m_chars.end());
+      m_logok = false;
+   }
+}
+
 void unc_text::append(int ch)
 {
    m_chars.push_back(ch);
@@ -291,4 +300,57 @@ int unc_text::find(const char *text, int sidx) const
       }
    }
    return -1;
+}
+
+int unc_text::rfind(const char *text, int sidx) const
+{
+   int len  = strlen(text);
+   int midx = size() - len;
+
+   if ((sidx < 0) || (sidx > midx))
+   {
+      sidx = midx;
+   }
+
+   for (int idx = sidx; idx >= 0; idx--)
+   {
+      bool match = true;
+      for (int ii = 0; ii < len; ii++)
+      {
+         if (m_chars[idx + ii] != text[ii])
+         {
+            match = false;
+            break;
+         }
+      }
+      if (match)
+      {
+         return idx;
+      }
+   }
+   return -1;
+}
+
+void unc_text::erase(int idx, int len)
+{
+   if (len >= 1)
+   {
+      m_chars.erase(m_chars.begin() + idx, m_chars.begin() + idx + len);
+   }
+}
+
+int unc_text::replace(const char *oldtext, const unc_text& newtext)
+{
+   int fidx = find(oldtext);
+   int olen = strlen(oldtext);
+   int rcnt = 0;
+
+   while (fidx >= 0)
+   {
+      rcnt++;
+      erase(fidx, olen);
+      insert(fidx, newtext);
+      fidx = find(oldtext, fidx + newtext.size() - olen + 1);
+   }
+   return rcnt;
 }
