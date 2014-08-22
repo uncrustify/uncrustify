@@ -34,7 +34,7 @@ def main (argv):
                 fh_out.write(line.replace('@PACKAGE_VERSION@', full_vers))
 
     # rebuild configure.in
-    fn = os.path.join(root, 'configure.in')
+    fn = os.path.join(root, 'configure.ac')
     with open(fn, 'rb') as fh:
         data = fh.read()
     with open(fn, 'wb') as fh:
