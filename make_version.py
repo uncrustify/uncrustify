@@ -26,12 +26,11 @@ def main (argv):
     print ' tag version:', tag_vers
 
     # rebuild uncrustify_version.h
-    in_fn = os.path.join(root, 'src', 'uncrustify_version.h.in')
-    out_fn = in_fn[:-3]
-    with open(in_fn, 'rb') as fh_in:
-        with open(out_fn, 'wb') as fh_out:
-            for line in fh_in.readlines():
-                fh_out.write(line.replace('@PACKAGE_VERSION@', full_vers))
+    fn = os.path.join(root, 'src', 'uncrustify_version.h.in')
+    with open(fn, 'rb') as fh:
+        data = fh.read()
+    with open(fn[:-3], 'wb') as fh:
+        fh.write(data.replace('@PACKAGE_VERSION@', full_vers))
 
     # rebuild configure.in
     fn = os.path.join(root, 'configure.ac')
