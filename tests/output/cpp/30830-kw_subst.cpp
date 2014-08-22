@@ -14,6 +14,15 @@ class CFoo
 {
 int foo1(int arg);
 int foo2();
+/**
+ * CLASS:  CFoo
+ * METHOD: foo3
+ * TODO: DESCRIPTION
+ * @return TODO
+ */
+int foo3()
+{
+}
 };
 
 /**

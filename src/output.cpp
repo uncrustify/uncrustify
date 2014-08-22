@@ -853,17 +853,39 @@ static int add_comment_kw(const unc_text& text, int idx, cmt_reflow& cmt)
    }
    if (text.startswith("$(fclass)", idx))
    {
-      chunk_t *tmp = chunk_get_prev_ncnl(fcn);
-      if ((tmp != NULL) && (tmp->type == CT_OPERATOR))
+      if (fcn->flags & PCF_IN_CLASS)
       {
-         tmp = chunk_get_prev_ncnl(tmp);
+         /* if inside a class, we need to find to the class name */
+         chunk_t *tmp = chunk_get_prev_type(fcn, CT_BRACE_OPEN, fcn->level - 1);
+         tmp = chunk_get_prev_type(tmp, CT_CLASS, tmp->level);
+         tmp = chunk_get_next_ncnl(tmp);
+         while (chunk_is_token(chunk_get_next_ncnl(tmp), CT_DC_MEMBER))
+         {
+            tmp = chunk_get_next_ncnl(tmp);
+            tmp = chunk_get_next_ncnl(tmp);
+         }
+
+         if (tmp)
+         {
+            add_text(tmp->str);
+            return(9);
+         }
       }
-      if ((tmp != NULL) && ((tmp->type == CT_DC_MEMBER) ||
-                            (tmp->type == CT_MEMBER)))
+      else
       {
-         tmp = chunk_get_prev_ncnl(tmp);
-         add_text(tmp->str);
-         return(9);
+         /* if outside a class, we expect "CLASS::METHOD(...)" */
+         chunk_t *tmp = chunk_get_prev_ncnl(fcn);
+         if ((tmp != NULL) && (tmp->type == CT_OPERATOR))
+         {
+            tmp = chunk_get_prev_ncnl(tmp);
+         }
+         if ((tmp != NULL) && ((tmp->type == CT_DC_MEMBER) ||
+                               (tmp->type == CT_MEMBER)))
+         {
+            tmp = chunk_get_prev_ncnl(tmp);
+            add_text(tmp->str);
+            return(9);
+         }
       }
    }
    return(0);

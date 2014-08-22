@@ -4,6 +4,9 @@ class CFoo
 {
 int foo1(int arg);
 int foo2();
+int foo3()
+{
+}
 };
 
 int CFoo::foo1(int arg)
