@@ -18,9 +18,11 @@ int foo2();
  * CLASS:  CFoo
  * METHOD: foo3
  * TODO: DESCRIPTION
+ * @param ch TODO
+ * @param xx TODO
  * @return TODO
  */
-int foo3()
+int foo3(char ch, int xx)
 {
 }
 };
@@ -30,9 +32,10 @@ int foo3()
  * METHOD: foo1
  * TODO: DESCRIPTION
  * @param arg TODO
+ * @param arg2 TODO
  * @return TODO
  */
-int CFoo::foo1(int arg)
+int CFoo::foo1(int arg, int arg2)
 {
 }
 

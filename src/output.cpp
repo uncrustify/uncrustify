@@ -13,7 +13,7 @@
 #include <cstdlib>
 
 static void output_comment_multi(chunk_t *pc);
-static void output_comment_multi_simple(chunk_t *pc);
+static void output_comment_multi_simple(chunk_t *pc, bool kw_subst);
 
 struct cmt_reflow
 {
@@ -353,7 +353,7 @@ void output_text(FILE *pfile)
          }
          else
          {
-            output_comment_multi_simple(pc);
+            output_comment_multi_simple(pc, (pc->flags & PCF_INSERTED) != 0);
          }
       }
       else if (pc->type == CT_COMMENT_CPP)
@@ -1624,12 +1624,322 @@ static void output_comment_multi(chunk_t *pc)
 }
 
 
+static bool kw_fcn_filename(chunk_t *cmt, unc_text& out_txt)
+{
+   out_txt.append(path_basename(cpd.filename));
+   return true;
+}
+
+
+static bool kw_fcn_class(chunk_t *cmt, unc_text& out_txt)
+{
+   chunk_t *tmp = get_next_class(cmt);
+   if (tmp)
+   {
+      out_txt.append(tmp->str);
+      return true;
+   }
+   return false;
+}
+
+
+static bool kw_fcn_message(chunk_t *cmt, unc_text& out_txt)
+{
+   chunk_t *fcn = get_next_function(cmt);
+
+   if (!fcn)
+   {
+      return false;
+   }
+
+   out_txt.append(fcn->str);
+
+   chunk_t *tmp = chunk_get_next_ncnl(fcn);
+   chunk_t *word = NULL;
+   while (tmp)
+   {
+      if ((tmp->type == CT_BRACE_OPEN) || (tmp->type == CT_SEMICOLON))
+      {
+         break;
+      }
+      if (tmp->type == CT_OC_COLON)
+      {
+         if (word != NULL)
+         {
+            out_txt.append(word->str);
+            word = NULL;
+         }
+         out_txt.append(":");
+      }
+      if (tmp->type == CT_WORD)
+      {
+         word = tmp;
+      }
+      tmp = chunk_get_next_ncnl(tmp);
+   }
+   return true;
+}
+
+
+static bool kw_fcn_function(chunk_t *cmt, unc_text& out_txt)
+{
+   chunk_t *fcn = get_next_function(cmt);
+
+   if (fcn)
+   {
+      if (fcn->parent_type == CT_OPERATOR)
+      {
+         out_txt.append("operator ");
+      }
+      out_txt.append(fcn->str);
+      return true;
+   }
+   return false;
+}
+
+
+static bool kw_fcn_javaparam(chunk_t *cmt, unc_text& out_txt)
+{
+   chunk_t *fcn = get_next_function(cmt);
+
+   if (!fcn)
+   {
+      return false;
+   }
+
+   chunk_t *fpo;
+   chunk_t *fpc;
+   chunk_t *tmp;
+   chunk_t *prev;
+   bool    has_param = true;
+   bool    need_nl   = false;
+
+   if (fcn->type == CT_OC_MSG_DECL)
+   {
+      chunk_t *tmp = chunk_get_next_ncnl(fcn);
+      has_param = false;
+      while (tmp)
+      {
+         if ((tmp->type == CT_BRACE_OPEN) || (tmp->type == CT_SEMICOLON))
+         {
+            break;
+         }
+
+         if (has_param)
+         {
+            if (need_nl)
+            {
+               out_txt.append("\n");
+            }
+            need_nl = true;
+            out_txt.append("@param");
+            out_txt.append(" ");
+            out_txt.append(tmp->str);
+            out_txt.append(" TODO");
+         }
+
+         has_param = false;
+         if (tmp->type == CT_PAREN_CLOSE)
+         {
+            has_param = true;
+         }
+         tmp = chunk_get_next_ncnl(tmp);
+      }
+      fpo = fpc = NULL;
+   }
+   else
+   {
+      fpo = chunk_get_next_type(fcn, CT_FPAREN_OPEN, fcn->level);
+      if (fpo == NULL)
+      {
+         return true;
+      }
+      fpc = chunk_get_next_type(fpo, CT_FPAREN_CLOSE, fcn->level);
+      if (fpc == NULL)
+      {
+         return true;
+      }
+   }
+
+   /* Check for 'foo()' and 'foo(void)' */
+   if (chunk_get_next_ncnl(fpo) == fpc)
+   {
+      has_param = false;
+   }
+   else
+   {
+      tmp = chunk_get_next_ncnl(fpo);
+      if ((tmp == chunk_get_prev_ncnl(fpc)) &&
+          chunk_is_str(tmp, "void", 4))
+      {
+         has_param = false;
+      }
+   }
+
+   if (has_param)
+   {
+      tmp  = fpo;
+      prev = NULL;
+      while ((tmp = chunk_get_next(tmp)) != NULL)
+      {
+         if ((tmp->type == CT_COMMA) || (tmp == fpc))
+         {
+            if (need_nl)
+            {
+               out_txt.append("\n");
+            }
+            need_nl = true;
+            out_txt.append("@param");
+            if (prev != NULL)
+            {
+               out_txt.append(" ");
+               out_txt.append(prev->str);
+               out_txt.append(" TODO");
+            }
+            prev = NULL;
+            if (tmp == fpc)
+            {
+               break;
+            }
+         }
+         if (tmp->type == CT_WORD)
+         {
+            prev = tmp;
+         }
+      }
+   }
+
+   /* Do the return stuff */
+   tmp = chunk_get_prev_ncnl(fcn);
+   /* For Objective-C we need to go to the previous chunk */
+   if ((tmp->parent_type == CT_OC_MSG_DECL) && (tmp->type == CT_PAREN_CLOSE))
+   {
+      tmp = chunk_get_prev_ncnl(tmp);
+   }
+   if ((tmp != NULL) && !chunk_is_str(tmp, "void", 4))
+   {
+      if (need_nl)
+      {
+         out_txt.append("\n");
+      }
+      out_txt.append("@return TODO");
+   }
+
+   return true;
+}
+
+
+static bool kw_fcn_fclass(chunk_t *cmt, unc_text& out_txt)
+{
+   chunk_t *fcn = get_next_function(cmt);
+
+   if (!fcn)
+   {
+      return false;
+   }
+   if (fcn->flags & PCF_IN_CLASS)
+   {
+      /* if inside a class, we need to find to the class name */
+      chunk_t *tmp = chunk_get_prev_type(fcn, CT_BRACE_OPEN, fcn->level - 1);
+      tmp = chunk_get_prev_type(tmp, CT_CLASS, tmp->level);
+      tmp = chunk_get_next_ncnl(tmp);
+      while (chunk_is_token(chunk_get_next_ncnl(tmp), CT_DC_MEMBER))
+      {
+         tmp = chunk_get_next_ncnl(tmp);
+         tmp = chunk_get_next_ncnl(tmp);
+      }
+
+      if (tmp)
+      {
+         out_txt.append(tmp->str);
+         return true;
+      }
+   }
+   else
+   {
+      /* if outside a class, we expect "CLASS::METHOD(...)" */
+      chunk_t *tmp = chunk_get_prev_ncnl(fcn);
+      if ((tmp != NULL) && (tmp->type == CT_OPERATOR))
+      {
+         tmp = chunk_get_prev_ncnl(tmp);
+      }
+      if ((tmp != NULL) && ((tmp->type == CT_DC_MEMBER) ||
+                            (tmp->type == CT_MEMBER)))
+      {
+         tmp = chunk_get_prev_ncnl(tmp);
+         out_txt.append(tmp->str);
+         return true;
+      }
+   }
+   return false;
+}
+
+
+struct kw_subst_t {
+   const char *tag;
+   bool      (*func)(chunk_t *cmt, unc_text& out_txt);
+};
+
+
+static const kw_subst_t kw_subst_table[] =
+{
+   { "$(filename)",  kw_fcn_filename  },
+   { "$(class)",     kw_fcn_class     },
+   { "$(message)",   kw_fcn_message   },
+   { "$(function)",  kw_fcn_function  },
+   { "$(javaparam)", kw_fcn_javaparam },
+   { "$(fclass)",    kw_fcn_fclass    },
+};
+
+
+/**
+ * Do keyword substitution on a comment.
+ * NOTE: it is assumed that a comment will contain at most one of each type
+ * of keyword.
+ */
+static void do_kw_subst(chunk_t *pc)
+{
+   unc_text tmp_txt;
+
+   for (int kw_idx = 0; kw_idx < (int)ARRAY_SIZE(kw_subst_table); kw_idx++)
+   {
+      const kw_subst_t *kw = &kw_subst_table[kw_idx];
+
+      int idx = pc->str.find(kw->tag);
+      if (idx >= 0)
+      {
+         tmp_txt.clear();
+         if (kw->func(pc, tmp_txt))
+         {
+            /* if the replacement contains '\n' we need to fix the lead */
+            if (tmp_txt.find("\n") >= 0)
+            {
+               int nl_idx = pc->str.rfind("\n", idx);
+               if (nl_idx > 0)
+               {
+                  unc_text nl_txt;
+                  nl_txt.append("\n");
+                  nl_idx++;
+                  while ((nl_idx < idx) && !unc_isalnum(pc->str[nl_idx]))
+                  {
+                     nl_txt.append(pc->str[nl_idx++]);
+                  }
+                  tmp_txt.replace("\n", nl_txt);
+               }
+            }
+            pc->str.replace(kw->tag, tmp_txt);
+         }
+      }
+   }
+}
+
+
 /**
  * Output a multiline comment without any reformatting other than shifting
  * it left or right to get the column right.
- * Oh, and trim trailing whitespace.
+ * Trim trailing whitespace and do keyword substitution.
  */
-static void output_comment_multi_simple(chunk_t *pc)
+static void output_comment_multi_simple(chunk_t *pc, bool kw_subst)
 {
    int        cmt_idx;
    int        ch;
@@ -1639,6 +1949,11 @@ static void output_comment_multi_simple(chunk_t *pc)
    bool       nl_end   = false;
    cmt_reflow cmt;
    unc_text   line;
+
+   if (kw_subst)
+   {
+      do_kw_subst(pc);
+   }
 
    output_cmt_start(cmt, pc);
 

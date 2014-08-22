@@ -162,6 +162,7 @@
 
 30830 kw_subst2.cfg                    cpp/kw_subst.cpp
 30831 kw_subst.cfg                     cpp/kw_subst2.cpp
+30832 kw_subst4.cfg                    cpp/kw_subst.cpp
 
 30840 nl_func_type_name_remove.cfg     cpp/nl_func_type_name.cpp
 30841 nl_func_type_name_force.cfg      cpp/nl_func_type_name.cpp
