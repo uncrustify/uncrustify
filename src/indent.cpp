@@ -1739,6 +1739,12 @@ void indent_text(void)
       indent_pse_pop(frm, pc);
    }
 
+   /* Throw out any VBRACE_OPEN at the end - implied with the end of file  */
+   while ((frm.pse_tos > 0) && (frm.pse[frm.pse_tos].type == CT_VBRACE_OPEN))
+   {
+      indent_pse_pop(frm, pc);
+   }
+
    for (idx = 1; idx <= frm.pse_tos; idx++)
    {
       LOG_FMT(LWARN, "%s:%d Unmatched %s\n",
