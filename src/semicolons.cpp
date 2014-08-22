@@ -115,6 +115,7 @@ static void check_unknown_brace_close(chunk_t *semi, chunk_t *brace_close)
    pc = chunk_get_prev_type(brace_close, CT_BRACE_OPEN, brace_close->level);
    pc = chunk_get_prev_ncnl(pc);
    if ((pc != NULL) &&
+       (pc->type != CT_RETURN) &&
        (pc->type != CT_WORD) &&
        (pc->type != CT_TYPE) &&
        (pc->type != CT_SQUARE_CLOSE) &&
