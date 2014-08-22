@@ -1150,14 +1150,17 @@ static void mark_lvalue(chunk_t *pc)
  * @param pc the last chunk of the return type
  * @param parent_type CT_NONE (no change) or the new parent type
  */
-static void mark_function_return_type(chunk_t *fname, chunk_t *pc, c_token_t parent_type)
+static void mark_function_return_type(chunk_t *fname, chunk_t *start, c_token_t parent_type)
 {
+   chunk_t *pc = start;
+
    if (pc)
    {
       /* Step backwards from pc and mark the parent of the return type */
       LOG_FMT(LFCNR, "%s: (backwards) return type for '%s' @ %d:%d", __func__,
               fname->text(), fname->orig_line, fname->orig_col);
 
+      chunk_t *first = pc;
       while (pc)
       {
          if ((!chunk_is_type(pc) &&
@@ -1168,6 +1171,16 @@ static void mark_function_return_type(chunk_t *fname, chunk_t *pc, c_token_t par
          {
             break;
          }
+         if (!chunk_is_addr(pc) && !chunk_is_star(pc))
+         {
+            first = pc;
+         }
+         pc = chunk_get_prev_ncnl(pc);
+      }
+
+      pc = first;
+      while (pc)
+      {
          LOG_FMT(LFCNR, " [%s|%s]", pc->text(), get_token_name(pc->type));
 
          if (parent_type != CT_NONE)
@@ -1175,7 +1188,11 @@ static void mark_function_return_type(chunk_t *fname, chunk_t *pc, c_token_t par
             pc->parent_type = parent_type;
          }
          make_type(pc);
-         pc = chunk_get_prev_ncnl(pc);
+         if (pc == start)
+         {
+            break;
+         }
+         pc = chunk_get_next_ncnl(pc);
       }
       LOG_FMT(LFCNR, "\n");
    }
@@ -2871,6 +2888,11 @@ static void mark_function(chunk_t *pc)
             if ((tmp->type == CT_BRACE_CLOSE) ||
                 (tmp->type == CT_SEMICOLON))
             {
+               break;
+            }
+            if (chunk_is_paren_open(tmp))
+            {
+               pc->type = CT_FUNC_CALL;
                break;
             }
             if (tmp->type == CT_ASSIGN)
