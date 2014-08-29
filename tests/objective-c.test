@@ -80,3 +80,6 @@
 50410  oc_cond_colon.cfg                            oc/oc_cond_colon.m
 
 50500  obj-c.cfg                                    oc/code_placeholder.m
+
+50510  gh293.a.cfg                                  oc/gh293.m
+50511  gh293.b.cfg                                  oc/gh293.m
