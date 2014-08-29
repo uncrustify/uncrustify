@@ -898,7 +898,20 @@ void indent_text(void)
          frm.level++;
          indent_pse_push(frm, pc);
 
-         if (frm.paren_count != 0)
+         if (!cpd.settings[UO_indent_paren_open_brace].b &&
+             chunk_is_paren_open(chunk_get_prev(pc)) &&
+             chunk_is_newline(chunk_get_next_nc(pc)))
+         {
+            /* FIXME: I don't know how much of this is necessary, but it seems to work */
+            frm.pse[frm.pse_tos].brace_indent = 1 + (pc->brace_level * indent_size);
+            indent_column = frm.pse[frm.pse_tos].brace_indent;
+            frm.pse[frm.pse_tos].indent       = indent_column + indent_size;
+            frm.pse[frm.pse_tos].indent_tab   = frm.pse[frm.pse_tos].indent;
+            frm.pse[frm.pse_tos].indent_tmp   = frm.pse[frm.pse_tos].indent;
+
+            frm.pse[frm.pse_tos - 1].indent_tmp = frm.pse[frm.pse_tos].indent_tmp;
+         }
+         else if (frm.paren_count != 0)
          {
             if (frm.pse[frm.pse_tos].pc->parent_type == CT_OC_BLOCK_EXPR)
             {
