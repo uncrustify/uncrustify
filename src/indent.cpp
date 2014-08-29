@@ -815,18 +815,23 @@ void indent_text(void)
 
       if (!chunk_is_newline(pc) && !chunk_is_comment(pc) && log_sev_on(LINDPC))
       {
-         LOG_FMT(LINDPC, " -=[ %s ]=-", pc->str.c_str());
+         LOG_FMT(LINDPC, " -=[ %d:%d %s ]=-\n",
+                 pc->orig_line, pc->orig_col, pc->str.c_str());
          for (int ttidx = frm.pse_tos; ttidx > 0; ttidx--)
          {
-            LOG_FMT(LINDPC, " [%d %d:%d %s %d/%d]",
+            LOG_FMT(LINDPC, "     [%d %d:%d %s tmp=%d ind=%d bri=%d tab=%d cont=%d lvl=%d blvl=%d]\n",
                     ttidx,
                     frm.pse[ttidx].pc->orig_line,
                     frm.pse[ttidx].pc->orig_col,
                     get_token_name(frm.pse[ttidx].type),
                     frm.pse[ttidx].indent_tmp,
-                    frm.pse[ttidx].indent);
+                    frm.pse[ttidx].indent,
+                    frm.pse[ttidx].brace_indent,
+                    frm.pse[ttidx].indent_tab,
+                    frm.pse[ttidx].indent_cont,
+                    frm.pse[ttidx].level,
+                    frm.pse[ttidx].pc->brace_level);
          }
-         LOG_FMT(LINDPC, "\n");
       }
 
       /**
