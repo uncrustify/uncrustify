@@ -4924,7 +4924,7 @@ static void handle_oc_message_send(chunk_t *os)
 
    /* expect a word first thing or [...] */
    tmp = chunk_get_next_ncnl(os);
-   if (tmp->type == CT_SQUARE_OPEN)
+   if (tmp->type == CT_SQUARE_OPEN  || tmp->type == CT_PAREN_OPEN)
    {
       tmp = chunk_skip_to_match(tmp);
    }
