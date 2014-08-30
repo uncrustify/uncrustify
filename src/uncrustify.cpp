@@ -1668,6 +1668,7 @@ static void uncrustify_end()
    cpd.consumed    = false;
    memset(cpd.le_counts, 0, sizeof(cpd.le_counts));
    cpd.preproc_ncnl_count = 0;
+   cpd.ifdef_over_whole_file = 0;
 }
 
 

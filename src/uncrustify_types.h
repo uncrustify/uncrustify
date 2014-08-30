@@ -371,6 +371,8 @@ struct cp_data
    UINT16             column;  /* column for parsing */
    UINT16             spaces;  /* space count on output */
 
+   int                ifdef_over_whole_file;
+
    bool               frag;
    UINT16             frag_cols;
 

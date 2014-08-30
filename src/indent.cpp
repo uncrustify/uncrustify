@@ -1938,12 +1938,14 @@ static bool ifdef_over_whole_file()
    chunk_t *pc;
    chunk_t *next;
 
-   static int stage = -1;
+   int stage = 0;
 
-   if (stage > 0)
-      return(stage == 2);
+   /* the results for this file are cached */
+   if (cpd.ifdef_over_whole_file)
+   {
+      return (cpd.ifdef_over_whole_file > 0);
+   }
 
-   stage = 0;
    for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next(pc))
    {
       if (chunk_is_comment(pc) || chunk_is_newline(pc))
@@ -1987,12 +1989,10 @@ static bool ifdef_over_whole_file()
       }
    }
 
-   if (stage == 2)
-   {
-      LOG_FMT(LINFO, "The whole file is covered by a #IF\n");
-      return(true);
-   }
-   return(stage == 2);
+   cpd.ifdef_over_whole_file = (stage == 2) ? 1 : -1;
+   LOG_FMT(LSYS, "The whole file is%s covered by a #IF\n",
+           (cpd.ifdef_over_whole_file > 0) ? "" : " NOT");
+   return (cpd.ifdef_over_whole_file > 0);
 }
 
 
