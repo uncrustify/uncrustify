@@ -117,7 +117,6 @@ void myfunction(void)
    #endif
    int k;
 }
-
 #endif /* COMSTACK_TYPES_H */
 
 /*------------------------------- end of file --------------------------------*/
