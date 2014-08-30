@@ -473,16 +473,9 @@ void indent_text(void)
    int                sql_orig_col = 0;
    bool               in_func_def = false;
    c_token_t          memtype;
-   bool               has_include_guard = false;
 
    memset(&frm, 0, sizeof(frm));
    cpd.frame_count = 0;
-
-   /* Check if file contains a #include guard */
-   if (ifdef_over_whole_file())
-   {
-      has_include_guard = true;
-   }
 
    /* dummy top-level entry */
    frm.pse[0].indent     = 1;
@@ -591,17 +584,9 @@ void indent_text(void)
             next->type = memtype;
 
             /* Indent one level except if the #if is a #include guard */
-            if (has_include_guard &&
-				(pc->pp_level == 0))
-            {
-                frm.pse[frm.pse_tos].indent     = frm.pse[frm.pse_tos - 1].indent;
-                frm.pse[frm.pse_tos].indent_tab = frm.pse[frm.pse_tos - 1].indent_tab;
-            }
-            else
-            {
-                frm.pse[frm.pse_tos].indent     = frm.pse[frm.pse_tos - 1].indent + indent_size;
-                frm.pse[frm.pse_tos].indent_tab = frm.pse[frm.pse_tos - 1].indent_tab + indent_size;
-            }
+            int extra = ((pc->pp_level == 0) && ifdef_over_whole_file()) ? 0 : indent_size;
+            frm.pse[frm.pse_tos].indent     = frm.pse[frm.pse_tos - 1].indent + extra;
+            frm.pse[frm.pse_tos].indent_tab = frm.pse[frm.pse_tos - 1].indent_tab + extra;
             frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
             frm.pse[frm.pse_tos].in_preproc = false;
          }
