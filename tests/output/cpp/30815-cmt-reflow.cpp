@@ -25,6 +25,10 @@ typedef enum stuff
  * line 4
  */
 
+int cnt;    /* This is a counter variable with a long
+             * comment. this should cause the comment to be
+             * wrapped. */
+
 /**
  * Multi-line comment
  */
