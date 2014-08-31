@@ -1975,7 +1975,7 @@ static bool ifdef_over_whole_file()
    }
 
    cpd.ifdef_over_whole_file = (stage == 2) ? 1 : -1;
-   LOG_FMT(LSYS, "The whole file is%s covered by a #IF\n",
+   LOG_FMT(LNOTE, "The whole file is%s covered by a #IF\n",
            (cpd.ifdef_over_whole_file > 0) ? "" : " NOT");
    return (cpd.ifdef_over_whole_file > 0);
 }
