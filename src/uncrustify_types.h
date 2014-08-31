@@ -386,6 +386,7 @@ struct cp_data
    c_token_t          in_preproc;
    int                preproc_ncnl_count;
    bool               output_trailspace;
+   bool               output_tab_as_space;
 
    bool               bom;
    CharEncoding       enc;

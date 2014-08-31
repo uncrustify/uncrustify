@@ -66,6 +66,15 @@ static void add_char(UINT32 ch)
       cpd.did_newline = 1;
       cpd.spaces      = 0;
    }
+   else if ((ch == '\t') && cpd.output_tab_as_space)
+   {
+      int endcol = next_tab_column(cpd.column);
+      while (cpd.column < endcol)
+      {
+         add_char(' ');
+      }
+      return;
+   }
    else
    {
       /* Explicitly disallow a tab after a space */
@@ -294,6 +303,8 @@ void output_text(FILE *pfile)
 
    for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next(pc))
    {
+      cpd.output_tab_as_space = (cpd.settings[UO_cmt_convert_tab_to_spaces].b &&
+                                 chunk_is_comment(pc));
       if (pc->type == CT_NEWLINE)
       {
          for (cnt = 0; cnt < pc->nl_count; cnt++)
