@@ -1,4 +1,4 @@
-/* i2c-core.c - a device driver for the iic-bus interface		     */
+/* i2c-core.c - a device driver for the iic-bus interface                    */
 /* ------------------------------------------------------------------------- */
 /*   Copyright (C) 1995-99 Simon G. Vogl
  *
@@ -14,7 +14,7 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.		     */
+ *  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                */
 /* ------------------------------------------------------------------------- */
 
 /* With some changes from Kyösti Mälkki <kmalkki@cc.hut.fi>.
