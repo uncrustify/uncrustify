@@ -889,17 +889,19 @@ static chunk_t *output_comment_c(chunk_t *first)
    output_cmt_start(cmt, first);
    cmt.reflow = (cpd.settings[UO_cmt_reflow_mode].n != 1);
 
-   cmt.cont_text = cpd.settings[UO_cmt_star_cont].b ? " *" : "  ";
-   LOG_CONTTEXT();
-
    /* See if we can combine this comment with the next comment */
    if (!cpd.settings[UO_cmt_c_group].b ||
        !can_combine_comment(first, cmt))
    {
       /* Just add the single comment */
+      cmt.cont_text = cpd.settings[UO_cmt_star_cont].b ? " * " : "   ";
+      LOG_CONTTEXT();
       add_comment_text(first->str, cmt, false);
       return(first);
    }
+
+   cmt.cont_text = cpd.settings[UO_cmt_star_cont].b ? " *" : "  ";
+   LOG_CONTTEXT();
 
    add_text("/*");
    if (cpd.settings[UO_cmt_c_nl_start].b)
