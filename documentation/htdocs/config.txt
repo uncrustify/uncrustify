@@ -80,8 +80,7 @@ indent_brace_parent                       { False, True }
   Indent based on the size of the brace parent, i.e. 'if' => 3 spaces, 'for' => 4 spaces, etc.
 
 indent_paren_open_brace                   { False, True }
-  Indent based on the paren open instead of the brace open in '({
-  ', default is to indent by brace.
+  Indent based on the paren open instead of the brace open in '({\n', default is to indent by brace.
 
 indent_namespace                          { False, True }
   Whether the 'namespace' body is indented
