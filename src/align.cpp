@@ -820,6 +820,9 @@ static void align_same_func_call_params()
    chunk_t           *align_root = NULL;
    chunk_t           *align_cur  = NULL;
    int               align_len   = 0;
+   chunk_t           *align_fcn;
+   unc_text          align_fcn_name;
+   unc_text          align_root_name;
    deque<chunk_t *>  chunks;
    deque<AlignStack> as;
    AlignStack        fcn_as;
@@ -860,17 +863,41 @@ static void align_same_func_call_params()
       }
 
       /* Only align function calls that are right after a newline */
-      if (!chunk_is_newline(chunk_get_prev(pc)))
+      chunk_t *prev = chunk_get_prev(pc);
+      while (chunk_is_token(prev, CT_MEMBER) || chunk_is_token(prev, CT_DC_MEMBER))
+      {
+         chunk_t *tprev = chunk_get_prev(prev);
+         if (!chunk_is_token(tprev, CT_TYPE))
+         {
+            prev = tprev;
+            break;
+         }
+         prev = chunk_get_prev(tprev);
+      }
+      if (!chunk_is_newline(prev))
       {
          continue;
       }
+      prev = chunk_get_next(prev);
+      align_fcn = prev;
+      align_fcn_name.clear();
+      while (prev != pc)
+      {
+         align_fcn_name += prev->str;
+         prev = chunk_get_next(prev);
+      }
+      align_fcn_name += pc->str;
+      LOG_FMT(LASFCP, "Func Call @ %d:%d [%s]\n",
+              align_fcn->orig_line,
+              align_fcn->orig_col,
+              align_fcn_name.c_str());
 
       add_str = NULL;
       if (align_root != NULL)
       {
          /* can only align functions on the same brace level */
          if ((align_root->brace_level == pc->brace_level) &&
-             pc->str.equals(align_root->str))
+             align_fcn_name.equals(align_root_name))
          {
             fcn_as.Add(pc);
             align_cur->align.next = pc;
@@ -895,7 +922,8 @@ static void align_same_func_call_params()
       if (align_root == NULL)
       {
          fcn_as.Add(pc);
-         align_root = pc;
+         align_root      = align_fcn;
+         align_root_name = align_fcn_name;
          align_cur  = pc;
          align_len  = 1;
          add_str    = "Start";
@@ -904,7 +932,7 @@ static void align_same_func_call_params()
       if (add_str != NULL)
       {
          LOG_FMT(LASFCP, "%s '%s' on line %d -",
-                 add_str, pc->str.c_str(), pc->orig_line);
+                 add_str, align_fcn_name.c_str(), pc->orig_line);
          align_params(pc, chunks);
          LOG_FMT(LASFCP, " %d items:", (int)chunks.size());
 
