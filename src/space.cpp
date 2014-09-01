@@ -1744,11 +1744,11 @@ void space_text(void)
          }
          next->column = column;
 
-         LOG_FMT(LSPACE, " = %s @ %d\n",
+         LOG_FMT(LSPACE, " = %s @ %d => %d\n",
                  (av == AV_IGNORE) ? "IGNORE" :
                  (av == AV_ADD) ? "ADD" :
                  (av == AV_REMOVE) ? "REMOVE" : "FORCE",
-                 column - prev_column);
+                 column - prev_column, next->column);
       }
 
       pc = next;
