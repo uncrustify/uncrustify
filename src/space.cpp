@@ -1723,6 +1723,9 @@ void space_text(void)
              chunk_is_newline(chunk_get_next(next)) &&
              (column < (int)next->orig_col))
          {
+            /* do some comment adjustments if sp_before_tr_emb_cmt and
+             * sp_endif_cmt did not apply.
+             */
             if (((cpd.settings[UO_sp_before_tr_emb_cmt].a == AV_IGNORE) ||
                  ((next->parent_type != CT_COMMENT_END) &&
                   (next->parent_type != CT_COMMENT_EMBED)))
@@ -1732,13 +1735,21 @@ void space_text(void)
             {
                if (cpd.settings[UO_indent_relative_single_line_comments].b)
                {
+                  /* Try to keep relative spacing between tokens */
                   LOG_FMT(LSPACE, " <relative adj>");
                   column = pc->column + 1 + (next->orig_col - pc->orig_col_end);
                }
                else
                {
-                  LOG_FMT(LSPACE, " <relative set>");
+                  /* If there was a space, we need to force one, otherwise
+                   * try to keep the comment in the same column. */
+                  int col_min = pc->column + pc->len() + ((next->orig_prev_sp > 0) ? 1 : 0);
                   column = next->orig_col;
+                  if (column < col_min)
+                  {
+                     column = col_min;
+                  }
+                  LOG_FMT(LSPACE, " <relative set>");
                }
             }
          }
