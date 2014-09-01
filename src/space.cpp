@@ -1585,7 +1585,15 @@ void space_text(void)
    while (pc != NULL)
    {
       next = chunk_get_next(pc);
-      if (next == NULL)
+      while (chunk_is_blank(next) && !chunk_is_newline(next))
+      {
+         LOG_FMT(LSPACE, "%s: %d:%d Skip %s (%d+%d)\n", __func__,
+                 next->orig_line, next->orig_col, get_token_name(next->type),
+                 pc->column, pc->str.size());
+         next->column = pc->column + pc->str.size();
+         next = chunk_get_next(next);
+      }
+      if (!next)
       {
          break;
       }
