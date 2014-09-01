@@ -1703,7 +1703,7 @@ static void align_init_brace(chunk_t *start)
                      /* Need to wait until the next match to indent numbers */
                      num_token = next;
                   }
-                  else
+                  else if (idx < (cpd.al_cnt - 1))
                   {
                      reindent_line(next, cpd.al[idx].col + cpd.al[idx].len);
                      next->flags |= PCF_WAS_ALIGNED;
