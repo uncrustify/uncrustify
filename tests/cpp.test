@@ -184,6 +184,7 @@
 30910 indent_namespace-t.cfg           cpp/indent_namespace.h
 30911 indent_namespace-f.cfg           cpp/indent_namespace.h
 30912 long_namespace.cfg               cpp/long_namespace.cpp
+30913 indent_namespace-t.cfg           cpp/indent_namespace2.h
 
 30920 ben.cfg                          cpp/indent-off.cpp
 30921 ben.cfg                          cpp/variadic-template.h
