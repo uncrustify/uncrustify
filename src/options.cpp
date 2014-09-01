@@ -196,6 +196,8 @@ void register_options(void)
                   "Add or remove space before assignment operator '=', '+=', etc. Overrides sp_assign.");
    unc_add_option("sp_after_assign", UO_sp_after_assign, AT_IARF,
                   "Add or remove space after assignment operator '=', '+=', etc. Overrides sp_assign.");
+   unc_add_option("sp_enum_paren", UO_sp_enum_paren, AT_IARF,
+                  "Add or remove space in 'NS_ENUM ('");
    unc_add_option("sp_enum_assign", UO_sp_enum_assign, AT_IARF,
                   "Add or remove space around assignment '=' in enum");
    unc_add_option("sp_enum_before_assign", UO_sp_enum_before_assign, AT_IARF,

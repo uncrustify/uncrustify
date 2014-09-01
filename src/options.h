@@ -264,6 +264,7 @@ enum uncrustify_options
    UO_sp_assign_default,        // space around '=' in prototype
    UO_sp_before_assign,         // space before =, +=, etc
    UO_sp_after_assign,          // space after =, +=, etc
+   UO_sp_enum_paren,
    UO_sp_enum_assign,           // space around = in enum
    UO_sp_enum_before_assign,    // space before = in enum
    UO_sp_enum_after_assign,     // space after = in enum
