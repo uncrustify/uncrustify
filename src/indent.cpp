@@ -1034,7 +1034,8 @@ void indent_text(void)
             else if (pc->parent_type == CT_NAMESPACE)
             {
                if ((pc->flags & PCF_LONG_BLOCK) ||
-                   !cpd.settings[UO_indent_namespace].b)
+                   !cpd.settings[UO_indent_namespace].b ||
+                   (cpd.settings[UO_indent_namespace_single_indent].b && frm.pse[frm.pse_tos].level >= 1))
                {
                   /* don't indent long blocks */
                   frm.pse[frm.pse_tos].indent -= indent_size;

@@ -369,6 +369,20 @@ void output_text(FILE *pfile)
       }
       else if (pc->type == CT_COMMENT_CPP)
       {
+         if (pc->prev != NULL &&
+             pc->prev->parent_type == CT_NAMESPACE &&
+             cpd.settings[UO_indent_namespace].b &&
+             cpd.settings[UO_indent_namespace_single_indent].b &&
+             (pc->level > 1 || (pc->prev->type == CT_BRACE_CLOSE && pc->level == 1))) 
+         {
+             int column = pc->column - cpd.settings[UO_indent_namespace_level].n;
+             if (!cpd.settings[UO_indent_relative_single_line_comments].b) 
+             {
+               if (column < pc->orig_col)
+                 column = pc->orig_col;
+             }
+             pc->column = column;
+         }
          pc = output_comment_cpp(pc);
       }
       else if (pc->type == CT_COMMENT)
@@ -444,6 +458,17 @@ void output_text(FILE *pfile)
                allow_tabs |= pc->after_tab;
             }
             LOG_FMT(LOUTIND, " %d(%d) -", pc->column, allow_tabs);
+         }
+
+         if (cpd.settings[UO_indent_namespace].b &&
+             cpd.settings[UO_indent_namespace_single_indent].b &&
+             pc->level >= 1 &&
+             ((pc->type == CT_NAMESPACE && pc->parent_type != CT_USING) ||
+              (pc->prev != NULL &&
+               pc->parent_type == CT_NAMESPACE &&
+               pc->prev->parent_type != CT_USING))) 
+         {
+             pc->column -= cpd.settings[UO_indent_namespace_level].n;
          }
 
          output_to_column(pc->column, allow_tabs);
