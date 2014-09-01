@@ -220,9 +220,10 @@ void align_to_column(chunk_t *pc, int column)
  */
 void reindent_line2(chunk_t *pc, int column, const char *fcn_name, int lineno)
 {
-   LOG_FMT(LINDLINE, "%s: %d] col %d on %s [%s] => %d <called from '%s' line %d\n",
+   LOG_FMT(LINDLINE, "%s: %d] col %d on '%s' [%s/%s] => %d <called from '%s' line %d>\n",
            __func__, pc->orig_line, pc->column, pc->str.c_str(),
-           get_token_name(pc->type), column, fcn_name, lineno);
+           get_token_name(pc->type), get_token_name(pc->parent_type),
+           column, fcn_name, lineno);
 
    if (column == pc->column)
    {
