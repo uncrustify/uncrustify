@@ -1079,16 +1079,24 @@ static bool parse_whitespace(tok_ctx& ctx, chunk_t& pc)
             cpd.le_counts[LE_CR]++;
          }
          nl_count++;
+         pc.orig_prev_sp = 0;
          break;
 
       case '\n':
          /* LF ending */
          cpd.le_counts[LE_LF]++;
          nl_count++;
+         pc.orig_prev_sp = 0;
          break;
 
       case '\t':
+         pc.orig_prev_sp += calc_next_tab_column(cpd.column, cpd.settings[UO_input_tab_size].n) - cpd.column;
+         break;
+
       case ' ':
+         pc.orig_prev_sp++;
+         break;
+
       default:
          break;
       }
@@ -1555,6 +1563,7 @@ void tokenize(const deque<int>& data, chunk_t *ref)
    chunk_t            *rprev = NULL;
    struct parse_frame frm;
    bool               last_was_tab = false;
+   int                prev_sp = 0;
 
    memset(&frm, 0, sizeof(frm));
 
@@ -1573,8 +1582,11 @@ void tokenize(const deque<int>& data, chunk_t *ref)
       if (chunk.type == CT_WHITESPACE)
       {
          last_was_tab = chunk.after_tab;
+         prev_sp = chunk.orig_prev_sp;
          continue;
       }
+      chunk.orig_prev_sp = prev_sp;
+      prev_sp = 0;
 
       if (chunk.type == CT_NEWLINE)
       {
