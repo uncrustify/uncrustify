@@ -209,5 +209,6 @@
 30955 indent_ctor_init.cfg             cpp/indent_ctor_init.cpp
 
 31562 sf562.cfg                        cpp/sf562.cpp
+31567 sf567.cfg                        cpp/sf567.cpp
 31583 sf583.cfg                        cpp/sf583.cpp
 31593 sf593.cfg                        cpp/sf593.cpp
