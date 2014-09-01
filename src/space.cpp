@@ -1858,6 +1858,7 @@ void space_text_balance_nested_parens(void)
 int space_needed(chunk_t *first, chunk_t *second)
 {
    int min_sp;
+   LOG_FMT(LSPACE, "%s\n", __func__);
    switch (do_space(first, second, min_sp))
    {
    case AV_ADD:
@@ -1888,6 +1889,14 @@ int space_col_align(chunk_t *first, chunk_t *second)
    int      coldiff, min_sp;
    argval_t av;
 
+   LOG_FMT(LSPACE, "%s: %d:%d [%s/%s] '%s' <==> %d:%d [%s/%s] '%s'\n", __func__,
+           first->orig_line, first->orig_col,
+           get_token_name(first->type), get_token_name(first->parent_type),
+           first->text(),
+           second->orig_line, second->orig_col,
+           get_token_name(second->type), get_token_name(second->parent_type),
+           second->text());
+
    av = do_space(first, second, min_sp);
 
    coldiff = first->len();
@@ -1908,6 +1917,7 @@ int space_col_align(chunk_t *first, chunk_t *second)
       }
       break;
    }
+   LOG_FMT(LSPACE, "%s: => %d\n", __func__, coldiff);
    return(coldiff);
 }
 
