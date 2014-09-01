@@ -815,23 +815,6 @@ static void output_cmt_start(cmt_reflow& cmt, chunk_t *pc)
          cmt.brace_col = 1;
       }
    }
-   else if (pc->parent_type == CT_COMMENT_END)
-   {
-      /* Make sure we have at least one space past the last token */
-      chunk_t *prev = chunk_get_prev(pc);
-      if (prev != NULL)
-      {
-         while (prev->prev && prev->type == CT_VBRACE_CLOSE)
-         {
-            prev = prev->prev;
-         }
-         int col_min = prev->column + prev->len() + 1;
-         if (cmt.column < col_min)
-         {
-            cmt.column = col_min;
-         }
-      }
-   }
 
    /* tab aligning code */
    if (cpd.settings[UO_indent_cmt_with_tabs].b &&

@@ -328,6 +328,22 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
       return(cpd.settings[UO_sp_before_tr_emb_cmt].a);
    }
 
+   if (second->parent_type == CT_COMMENT_END)
+   {
+      switch (second->orig_prev_sp)
+      {
+      case 0:
+         log_rule("orig_prev_sp-REMOVE");
+         return AV_REMOVE;
+      case 1:
+         log_rule("orig_prev_sp-FORCE");
+         return AV_FORCE;
+      default:
+         log_rule("orig_prev_sp-ADD");
+         return AV_ADD;
+      }
+   }
+
    /* "for (;;)" vs "for (;; )" and "for (a;b;c)" vs "for (a; b; c)" */
    if (first->type == CT_SEMICOLON)
    {
