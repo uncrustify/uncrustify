@@ -572,6 +572,9 @@ void register_options(void)
                   "Indent based on the paren open instead of the brace open in '({\\n', default is to indent by brace.");
    unc_add_option("indent_namespace", UO_indent_namespace, AT_BOOL,
                   "Whether the 'namespace' body is indented");
+   unc_add_option("indent_namespace_single_indent", UO_indent_namespace_single_indent, AT_BOOL,
+                  "Only indent one namespace and no sub-namepaces.\n"
+                  "Requires indent_namespace=true.");
    unc_add_option("indent_namespace_level", UO_indent_namespace_level, AT_NUM,
                   "The number of spaces to indent a namespace block");
    unc_add_option("indent_namespace_limit", UO_indent_namespace_limit, AT_NUM,

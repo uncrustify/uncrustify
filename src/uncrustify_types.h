@@ -88,6 +88,7 @@ struct paren_stack_entry
    c_token_t    parent;       /**< if, for, function, etc */
    brstage_e    stage;
    bool         in_preproc;   /**< whether this was created in a preprocessor */
+   int          ns_cnt;
    bool         non_vardef;   /**< Hit a non-vardef line */
    indent_ptr_t ip;
 };

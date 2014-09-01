@@ -302,6 +302,7 @@ static void indent_pse_push(struct parse_frame& frm, chunk_t *pc)
       frm.pse[frm.pse_tos].indent_tab  = frm.pse[frm.pse_tos - 1].indent_tab;
       frm.pse[frm.pse_tos].indent_cont = frm.pse[frm.pse_tos - 1].indent_cont;
       frm.pse[frm.pse_tos].non_vardef  = false;
+      frm.pse[frm.pse_tos].ns_cnt      = frm.pse[frm.pse_tos - 1].ns_cnt;
       memcpy(&frm.pse[frm.pse_tos].ip, &frm.pse[frm.pse_tos - 1].ip, sizeof(frm.pse[frm.pse_tos].ip));
    }
 }
@@ -1034,7 +1035,8 @@ void indent_text(void)
             else if (pc->parent_type == CT_NAMESPACE)
             {
                if ((pc->flags & PCF_LONG_BLOCK) ||
-                   !cpd.settings[UO_indent_namespace].b)
+                   !cpd.settings[UO_indent_namespace].b ||
+                   (cpd.settings[UO_indent_namespace_single_indent].b && frm.pse[frm.pse_tos].ns_cnt))
                {
                   /* don't indent long blocks */
                   frm.pse[frm.pse_tos].indent -= indent_size;
@@ -1048,6 +1050,7 @@ void indent_text(void)
                         cpd.settings[UO_indent_namespace_level].n;
                   }
                }
+               frm.pse[frm.pse_tos].ns_cnt++;
             }
             else if ((pc->parent_type == CT_EXTERN) && !cpd.settings[UO_indent_extern].b)
             {
