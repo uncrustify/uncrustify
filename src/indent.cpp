@@ -1487,6 +1487,13 @@ void indent_text(void)
          else
          {
             vardefcol = pc->column;
+            /* need to skip backward over any '*' */
+            chunk_t *tmp = chunk_get_prev_nc(pc);
+            while (chunk_is_token(tmp, CT_PTR_TYPE))
+            {
+               vardefcol = tmp->column;
+               tmp = chunk_get_prev_nc(tmp);
+            }
          }
       }
       if (chunk_is_semicolon(pc) ||
@@ -1519,6 +1526,28 @@ void indent_text(void)
 
          prev = chunk_get_prev_ncnl(pc);
          next = chunk_get_next_ncnl(pc);
+
+         bool do_vardefcol = false;
+         if ((vardefcol > 0) &&
+             (pc->level == pc->brace_level) &&
+             prev &&
+             ((prev->type == CT_COMMA) ||
+              (prev->type == CT_TYPE) ||
+              (prev->type == CT_PTR_TYPE) ||
+              (prev->type == CT_WORD)))
+         {
+            chunk_t *tmp = pc;
+            while (chunk_is_token(tmp, CT_PTR_TYPE))
+            {
+               tmp = chunk_get_next_ncnl(tmp);
+            }
+            if (tmp && ((tmp->flags & PCF_VAR_DEF) != 0) &&
+                ((tmp->type == CT_WORD) || (tmp->type == CT_FUNC_CTOR_VAR)))
+            {
+               do_vardefcol = true;
+            }
+         }
+
          if ((pc->flags & PCF_DONT_INDENT) != 0)
          {
             /* no change */
@@ -1542,14 +1571,7 @@ void indent_text(void)
                     __func__, pc->orig_line, tmp);
             reindent_line(pc, tmp);
          }
-         else if ((vardefcol > 0) &&
-                  (pc->level == pc->brace_level) &&
-                  ((pc->type == CT_WORD) || (pc->type == CT_FUNC_CTOR_VAR)) &&
-                  (prev != NULL) &&
-                  ((prev->type == CT_COMMA) ||
-                   (prev->type == CT_TYPE) ||
-                   (prev->type == CT_WORD)) &&
-                  ((pc->flags & PCF_VAR_DEF) != 0))
+         else if (do_vardefcol)
          {
             LOG_FMT(LINDENT, "%s: %d] Vardefcol => %d\n",
                     __func__, pc->orig_line, vardefcol);

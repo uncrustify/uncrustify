@@ -85,6 +85,7 @@
 00142  ben.cfg                 c/type-cast.c
 00143  ben.cfg                 c/t3.in.c
 00144  ben.cfg                 c/align-proto-vars.c
+00145  ben.cfg                 c/vardefcol.c
 
 # casts
 00150  ben.cfg                 c/casts.c
