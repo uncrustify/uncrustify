@@ -5,8 +5,8 @@ int main()
                              });
 #else
    gtkwidget.enabled.connect((widdget) => {
-                                message("Clicked");
-                             });
+      message("Clicked");
+   });
 #endif
    return(0);
 }
