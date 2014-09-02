@@ -83,7 +83,7 @@ static const chunk_tag_t symbols2[] =
 static const chunk_tag_t symbols1[] =
 {
    { "!", CT_NOT,          LANG_ALL                                                   },
-   { "#", CT_POUND,        LANG_C | LANG_CPP | LANG_CS | LANG_D | LANG_OC | LANG_PAWN },
+   { "#", CT_POUND,        LANG_ALL & ~(LANG_JAVA | LANG_ECMA)                        },
    { "$", CT_COMPARE,      LANG_D                                                     },
    { "%", CT_ARITH,        LANG_ALL                                                   },
    { "&", CT_AMP,          LANG_ALL                                                   },
