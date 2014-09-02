@@ -48,3 +48,6 @@ void foo(void)
  * /# Start Change #35 #/
  */
 
+/**
+ * OneBigWordThatCannotBeSplitYetExceedsTheCommentWidthSettingSoThatWrappingShouldBeAttempted.
+ */
