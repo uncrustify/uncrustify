@@ -823,11 +823,12 @@ void indent_text(void)
                  pc->orig_line, pc->orig_col, pc->str.c_str());
          for (int ttidx = frm.pse_tos; ttidx > 0; ttidx--)
          {
-            LOG_FMT(LINDPC, "     [%d %d:%d %s tmp=%d ind=%d bri=%d tab=%d cont=%d lvl=%d blvl=%d]\n",
+            LOG_FMT(LINDPC, "     [%d %d:%d %s/%s tmp=%d ind=%d bri=%d tab=%d cont=%d lvl=%d blvl=%d]\n",
                     ttidx,
                     frm.pse[ttidx].pc->orig_line,
                     frm.pse[ttidx].pc->orig_col,
                     get_token_name(frm.pse[ttidx].type),
+                    get_token_name(frm.pse[ttidx].pc->parent_type),
                     frm.pse[ttidx].indent_tmp,
                     frm.pse[ttidx].indent,
                     frm.pse[ttidx].brace_indent,
