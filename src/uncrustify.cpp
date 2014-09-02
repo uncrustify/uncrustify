@@ -514,7 +514,7 @@ int main(int argc, char *argv[])
    /* Everything beyond this point requires a config file, so complain and
     * bail if we don't have one.
     */
-   if (cfg_file.empty())
+   if (cfg_file.empty() && !(update_config || update_config_wd))
    {
       usage_exit("Specify the config file with '-c file' or set UNCRUSTIFY_CONFIG",
                  argv[0], 58);
