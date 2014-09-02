@@ -29,3 +29,5 @@
 10071 ben.cfg                  cs/utf16be.cs
 10072 ben.cfg                  cs/utf16le_no_bom.cs
 10073 ben.cfg                  cs/utf16be_no_bom.cs
+
+10080 ben.cfg                  cs/property.cs

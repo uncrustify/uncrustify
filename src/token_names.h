@@ -223,6 +223,7 @@ const char *token_names[] =
    "PP_LINE",
    "PP_SECTION",
    "PP_UNDEF",
+   "PP_PROPERTY",
    "PP_BODYCHUNK",
    "PP_PRAGMA",
    "PP_REGION",

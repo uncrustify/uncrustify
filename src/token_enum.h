@@ -259,6 +259,7 @@ typedef enum
    CT_PP_LINE,
    CT_PP_SECTION,
    CT_PP_UNDEF,
+   CT_PP_PROPERTY,
 
    CT_PP_BODYCHUNK,     /* everything after this gets put in CT_PREPROC_BODY */
 

@@ -192,6 +192,7 @@ static const chunk_tag_t keywords[] =
    { "params",           CT_TYPE,         LANG_CS                                                                     },
    { "pragma",           CT_PP_PRAGMA,    LANG_ALL | FLAG_PP                                                          }, // PAWN
    { "private",          CT_PRIVATE,      LANG_ALLC                                                                   }, // not C
+   { "property",         CT_PP_PROPERTY,  LANG_CS | FLAG_PP                                                           },
    { "protected",        CT_PRIVATE,      LANG_ALLC                                                                   }, // not C
    { "public",           CT_PRIVATE,      LANG_ALL                                                                    }, // PAWN // not C
    { "readonly",         CT_QUALIFIER,    LANG_CS                                                                     },
