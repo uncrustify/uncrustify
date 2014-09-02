@@ -288,6 +288,19 @@ void tokenize_cleanup(void)
          {
             pc->type = CT_WORD;
          }
+
+         /* handle 'static if' and merge the tokens */
+         if (prev && (pc->type == CT_IF) && chunk_is_str(prev, "static", 6))
+         {
+            /* delete PREV and merge with IF */
+            pc->str.insert(0, ' ');
+            pc->str.insert(0, prev->str);
+            pc->orig_col = prev->orig_col;
+            pc->orig_line = prev->orig_line;
+            chunk_t *tmp = prev;
+            prev = chunk_get_prev_ncnl(prev);
+            chunk_del(tmp);
+         }
       }
 
       if ((cpd.lang_flags & LANG_CPP) != 0)
