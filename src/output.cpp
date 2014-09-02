@@ -701,6 +701,7 @@ static void add_comment_text(const unc_text& text,
    bool in_word   = false;
    int  tmp;
    int  len = text.size();
+   int  ch_cnt = 0; /* chars since newline */
 
    /* If the '//' is included write it first else we may wrap an empty line */
    int idx = 0;
@@ -737,12 +738,13 @@ static void add_comment_text(const unc_text& text,
          {
             idx += tmp;
          }
+         ch_cnt = 0;
       }
       else if (cmt.reflow &&
                (text[idx] == ' ') &&
                (cpd.settings[UO_cmt_width].n > 0) &&
                ((cpd.column > cpd.settings[UO_cmt_width].n) ||
-                next_word_exceeds_limit(text, idx)))
+                ((ch_cnt > 1) && next_word_exceeds_limit(text, idx))))
       {
          in_word = false;
          add_char('\n');
@@ -754,6 +756,7 @@ static void add_comment_text(const unc_text& text,
          add_text(cmt.cont_text);
          output_to_column(cmt.column + cpd.settings[UO_cmt_sp_after_star_cont].n,
                           false);
+         ch_cnt = 0;
       }
       else
       {
@@ -773,6 +776,7 @@ static void add_comment_text(const unc_text& text,
          add_char(text[idx]);
          was_star  = (text[idx] == '*');
          was_slash = (text[idx] == '/');
+         ch_cnt++;
       }
    }
 }
