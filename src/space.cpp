@@ -1654,6 +1654,8 @@ void space_text(void)
          pc->flags &= ~PCF_FORCE_SPACE;
          if ((pc->len() > 0) &&
              !chunk_is_str(pc, "[]", 2) &&
+             !chunk_is_str(pc, "{{", 2) &&
+             !chunk_is_str(pc, "}}", 2) &&
              !chunk_is_str(pc, "()", 2) &&
              !pc->str.startswith("@\""))
          {

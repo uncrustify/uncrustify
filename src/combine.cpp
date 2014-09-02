@@ -1000,6 +1000,33 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
 
 
 /**
+ * Combines two tokens into {{ and }} if inside parens and nothing is between
+ * either pair.
+ */
+static void check_double_brace_init(chunk_t *bo1)
+{
+   chunk_t *bo2 = chunk_get_next(bo1);
+   if (chunk_is_token(bo2, CT_BRACE_OPEN))
+   {
+      /* found a potential double brace */
+      chunk_t *bc2 = chunk_skip_to_match(bo2);
+      chunk_t *bc1 = chunk_get_next(bc2);
+      if (chunk_is_token(bc1, CT_BRACE_CLOSE))
+      {
+         /* delete bo2 and bc1 */
+         bo1->str += bo2->str;
+         bo1->orig_col_end = bo2->orig_col_end;
+         chunk_del(bo2);
+
+         bc2->str += bc1->str;
+         bc2->orig_col_end = bc1->orig_col_end;
+         chunk_del(bc1);
+      }
+   }
+}
+
+
+/**
  * Change CT_INCDEC_AFTER + WORD to CT_INCDEC_BEFORE
  * Change number/word + CT_ADDR to CT_ARITH
  * Change number/word + CT_STAR to CT_ARITH
@@ -1023,6 +1050,7 @@ void fix_symbols(void)
 
    mark_define_expressions();
 
+   bool is_java = cpd.lang_flags & LANG_JAVA;
    for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next_ncnl(pc))
    {
       if ((pc->type == CT_FUNC_WRAP) ||
@@ -1034,6 +1062,11 @@ void fix_symbols(void)
       if (pc->type == CT_ASSIGN)
       {
          mark_lvalue(pc);
+      }
+
+      if (is_java && (pc->level > pc->brace_level) && (pc->type == CT_BRACE_OPEN))
+      {
+         check_double_brace_init(pc);
       }
    }
 
