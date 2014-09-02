@@ -1036,9 +1036,18 @@ void indent_text(void)
             }
             else if (pc->parent_type == CT_NAMESPACE)
             {
-               if ((pc->flags & PCF_LONG_BLOCK) ||
-                   !cpd.settings[UO_indent_namespace].b ||
-                   (cpd.settings[UO_indent_namespace_single_indent].b && frm.pse[frm.pse_tos].ns_cnt))
+               if (cpd.settings[UO_indent_namespace].b &&
+                   cpd.settings[UO_indent_namespace_single_indent].b)
+               {
+                  if (frm.pse[frm.pse_tos].ns_cnt)
+                  {
+                     /* undo indent on all except the first namespace */
+                     frm.pse[frm.pse_tos].indent -= indent_size;
+                  }
+                  indent_column_set((frm.pse_tos <= 1) ? 1 : frm.pse[frm.pse_tos - 1].brace_indent);
+               }
+               else if ((pc->flags & PCF_LONG_BLOCK) ||
+                        !cpd.settings[UO_indent_namespace].b)
                {
                   /* don't indent long blocks */
                   frm.pse[frm.pse_tos].indent -= indent_size;
@@ -1578,6 +1587,15 @@ void indent_text(void)
             LOG_FMT(LINDENT, "%s: %d] Vardefcol => %d\n",
                     __func__, pc->orig_line, vardefcol);
             reindent_line(pc, vardefcol);
+         }
+         else if ((pc->type == CT_NAMESPACE) &&
+                  cpd.settings[UO_indent_namespace].b &&
+                  cpd.settings[UO_indent_namespace_single_indent].b &&
+                  frm.pse[frm.pse_tos].ns_cnt)
+         {
+            LOG_FMT(LINDENT, "%s: %d] Namespace => %d\n",
+                    __func__, pc->orig_line, frm.pse[frm.pse_tos].brace_indent);
+            reindent_line(pc, frm.pse[frm.pse_tos].brace_indent);
          }
          else if ((pc->type == CT_STRING) && (prev != NULL) && (prev->type == CT_STRING) &&
                   cpd.settings[UO_indent_align_string].b)
