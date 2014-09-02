@@ -526,6 +526,7 @@ int main(int argc, char *argv[])
 
    if (update_config || update_config_wd)
    {
+      /* TODO: complain if file-processing related options are present */
       redir_stdout(output_file);
       save_option_file(stdout, update_config_wd);
       return EXIT_SUCCESS;
