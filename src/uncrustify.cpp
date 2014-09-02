@@ -511,10 +511,18 @@ int main(int argc, char *argv[])
       return EXIT_SUCCESS;
    }
 
+   if (update_config || update_config_wd)
+   {
+      /* TODO: complain if file-processing related options are present */
+      redir_stdout(output_file);
+      save_option_file(stdout, update_config_wd);
+      return EXIT_SUCCESS;
+   }
+
    /* Everything beyond this point requires a config file, so complain and
     * bail if we don't have one.
     */
-   if (cfg_file.empty() && !(update_config || update_config_wd))
+   if (cfg_file.empty())
    {
       usage_exit("Specify the config file with '-c file' or set UNCRUSTIFY_CONFIG",
                  argv[0], 58);
@@ -523,14 +531,6 @@ int main(int argc, char *argv[])
    /*
     *  Done parsing args
     */
-
-   if (update_config || update_config_wd)
-   {
-      /* TODO: complain if file-processing related options are present */
-      redir_stdout(output_file);
-      save_option_file(stdout, update_config_wd);
-      return EXIT_SUCCESS;
-   }
 
    /* Check for unused args (ignore them) */
    idx   = 1;
