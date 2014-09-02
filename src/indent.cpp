@@ -902,8 +902,9 @@ void indent_text(void)
          frm.level++;
          indent_pse_push(frm, pc);
 
+         /* any '{' that is inside of a '(' overrides the '(' indent */
          if (!cpd.settings[UO_indent_paren_open_brace].b &&
-             chunk_is_paren_open(chunk_get_prev(pc)) &&
+             chunk_is_paren_open(frm.pse[frm.pse_tos - 1].pc) &&
              chunk_is_newline(chunk_get_next_nc(pc)))
          {
             /* FIXME: I don't know how much of this is necessary, but it seems to work */
