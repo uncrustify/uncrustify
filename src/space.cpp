@@ -928,6 +928,11 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
 
    if ((first->type == CT_FPAREN_CLOSE) && (second->type == CT_BRACE_OPEN))
    {
+      if (second->parent_type == CT_DOUBLE_BRACE)
+      {
+         log_rule("sp_fparen_dbrace");
+         return(cpd.settings[UO_sp_fparen_dbrace].a);
+      }
       log_rule("sp_fparen_brace");
       return(cpd.settings[UO_sp_fparen_brace].a);
    }

@@ -367,6 +367,8 @@ void register_options(void)
                   "Add or remove space between ']' and '(' when part of a function call.");
    unc_add_option("sp_fparen_brace", UO_sp_fparen_brace, AT_IARF,
                   "Add or remove space between ')' and '{' of function");
+   unc_add_option("sp_fparen_dbrace", UO_sp_fparen_dbrace, AT_IARF,
+                  "Java: Add or remove space between ')' and '{{' of double brace initializer.");
    unc_add_option("sp_func_call_paren", UO_sp_func_call_paren, AT_IARF,
                   "Add or remove space between function name and '(' on function calls");
    unc_add_option("sp_func_call_paren_empty", UO_sp_func_call_paren_empty, AT_IARF,
