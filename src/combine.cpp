@@ -1014,7 +1014,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
 static void check_double_brace_init(chunk_t *bo1)
 {
    LOG_FMT(LJDBI, "%s: %d:%d", __func__, bo1->orig_line, bo1->orig_col);
-   chunk_t *pc = chunk_get_prev(bo1);
+   chunk_t *pc = chunk_get_prev_ncnl(bo1);
    if (chunk_is_paren_close(pc))
    {
       chunk_t *bo2 = chunk_get_next(bo1);

@@ -884,6 +884,8 @@ void register_options(void)
                   "Add or remove a newline between the return keyword and return expression.");
    unc_add_option("nl_after_semicolon", UO_nl_after_semicolon, AT_BOOL,
                   "Whether to put a newline after semicolons, except in 'for' statements");
+   unc_add_option("nl_paren_dbrace_open", UO_nl_paren_dbrace_open, AT_IARF,
+                  "Java: Control the newline between the ')' and '{{' of the double brace initializer.");
    unc_add_option("nl_after_brace_open", UO_nl_after_brace_open, AT_BOOL,
                   "Whether to put a newline after brace open.\n"
                   "This also adds a newline before the matching brace close.");

@@ -2079,6 +2079,16 @@ void newlines_cleanup_braces(bool first)
       }
       else if (pc->type == CT_BRACE_OPEN)
       {
+         if ((pc->parent_type == CT_DOUBLE_BRACE) &&
+             (cpd.settings[UO_nl_paren_dbrace_open].a != AV_IGNORE))
+         {
+            prev = chunk_get_prev(pc, CNAV_PREPROC);
+            if (chunk_is_paren_close(prev))
+            {
+               newline_iarf_pair(prev, pc, cpd.settings[UO_nl_paren_dbrace_open].a);
+            }
+         }
+
          if (cpd.settings[UO_nl_brace_brace].a != AV_IGNORE)
          {
             next = chunk_get_next_nc(pc, CNAV_PREPROC);
