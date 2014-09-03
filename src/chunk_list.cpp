@@ -676,25 +676,25 @@ void set_chunk_type2(chunk_t *pc, c_token_t tt, const char *func, int line)
 {
    if (pc && (pc->type != tt))
    {
-      LOG_FMT(LSETTYP, "set_chunk_type[%s:%d]: %d:%d '%s' %s => %s\n",
+      LOG_FMT(LSETTYP, "set_chunk_type[%s:%d]: %d:%d '%s' %s:%s => %s:%s\n",
               func, line,
-              pc->orig_line, pc->orig_col,
-              get_token_name(pc->type), pc->text(),
-              get_token_name(tt));
+              pc->orig_line, pc->orig_col, pc->text(),
+              get_token_name(pc->type), get_token_name(pc->parent_type),
+              get_token_name(tt), get_token_name(pc->parent_type));
       pc->type = tt;
    }
 }
 
 
-void set_chunk_parent2(chunk_t *pc, c_token_t tt, const char *func, int line)
+void set_chunk_parent2(chunk_t *pc, c_token_t pt, const char *func, int line)
 {
-   if (pc && (pc->parent_type != tt))
+   if (pc && (pc->parent_type != pt))
    {
-      LOG_FMT(LSETPAR, "set_chunk_parent[%s:%d]: %d:%d %s '%s' %s => %s\n",
+      LOG_FMT(LSETPAR, "set_chunk_parent[%s:%d]: %d:%d '%s' %s:%s => %s:%s\n",
               func, line,
-              pc->orig_line, pc->orig_col,
-              get_token_name(pc->type), pc->text(),
-              get_token_name(pc->parent_type), get_token_name(tt));
-      pc->parent_type = tt;
+              pc->orig_line, pc->orig_col, pc->text(),
+              get_token_name(pc->type), get_token_name(pc->parent_type),
+              get_token_name(pc->type), get_token_name(pt));
+      pc->parent_type = pt;
    }
 }
