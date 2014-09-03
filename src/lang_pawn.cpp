@@ -376,8 +376,8 @@ static chunk_t *pawn_process_func_def(chunk_t *pc)
       LOG_FMT(LPFUNC, "%s: %d] '%s' has state angle open %s\n", __func__,
               pc->orig_line, pc->str.c_str(), get_token_name(last->type));
 
-      last->type        = CT_ANGLE_OPEN;
-      last->parent_type = CT_FUNC_DEF;
+      last->type = CT_ANGLE_OPEN;
+      set_chunk_parent(last, CT_FUNC_DEF);
       while (((last = chunk_get_next(last)) != NULL) &&
              !chunk_is_str(last, ">", 1))
       {
@@ -387,8 +387,8 @@ static chunk_t *pawn_process_func_def(chunk_t *pc)
       {
          LOG_FMT(LPFUNC, "%s: %d] '%s' has state angle close %s\n", __func__,
                  pc->orig_line, pc->str.c_str(), get_token_name(last->type));
-         last->type        = CT_ANGLE_CLOSE;
-         last->parent_type = CT_FUNC_DEF;
+         last->type = CT_ANGLE_CLOSE;
+         set_chunk_parent(last, CT_FUNC_DEF);
       }
       last = chunk_get_next_ncnl(last);
    }
@@ -399,11 +399,11 @@ static chunk_t *pawn_process_func_def(chunk_t *pc)
    }
    if (last->type == CT_BRACE_OPEN)
    {
-      last->parent_type = CT_FUNC_DEF;
+      set_chunk_parent(last, CT_FUNC_DEF);
       last = chunk_get_next_type(last, CT_BRACE_CLOSE, last->level);
       if (last != NULL)
       {
-         last->parent_type = CT_FUNC_DEF;
+         set_chunk_parent(last, CT_FUNC_DEF);
       }
    }
    else

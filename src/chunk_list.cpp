@@ -670,3 +670,17 @@ chunk_t *chunk_get_prev_nvb(chunk_t *cur, chunk_nav_t nav)
    } while (chunk_is_vbrace(pc));
    return(pc);
 }
+
+
+void set_chunk_parent2(chunk_t *pc, c_token_t tt, const char *func, int line)
+{
+   if (pc && (pc->parent_type != tt))
+   {
+      LOG_FMT(LSETPAR, "set_chunk_parent[%s:%d]: %d:%d %s '%s' %s => %s\n",
+              func, line,
+              pc->orig_line, pc->orig_col,
+              get_token_name(pc->type), pc->text(),
+              get_token_name(pc->parent_type), get_token_name(tt));
+      pc->parent_type = tt;
+   }
+}

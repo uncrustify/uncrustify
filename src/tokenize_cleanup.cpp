@@ -227,8 +227,8 @@ void tokenize_cleanup(void)
       if ((pc->type == CT_TYPE_CAST) &&
           (next->type == CT_ANGLE_OPEN))
       {
-         next->parent_type = CT_TYPE_CAST;
-         in_type_cast      = true;
+         set_chunk_parent(next, CT_TYPE_CAST);
+         in_type_cast = true;
       }
 
       /**
@@ -253,8 +253,8 @@ void tokenize_cleanup(void)
       {
          if (in_type_cast)
          {
-            in_type_cast    = false;
-            pc->parent_type = CT_TYPE_CAST;
+            in_type_cast = false;
+            set_chunk_parent(pc, CT_TYPE_CAST);
          }
          else
          {
@@ -320,8 +320,8 @@ void tokenize_cleanup(void)
               (prev->type == CT_BRACE_OPEN) ||
               (prev->type == CT_SEMICOLON)))
          {
-            pc->type          = CT_GETSET_EMPTY;
-            next->parent_type = CT_GETSET;
+            pc->type = CT_GETSET_EMPTY;
+            set_chunk_parent(next, CT_GETSET);
          }
          else
          {
@@ -420,7 +420,7 @@ void tokenize_cleanup(void)
 
             next->orig_col_end = next->orig_col + next->len();
          }
-         next->parent_type = CT_OPERATOR;
+         set_chunk_parent(next, CT_OPERATOR);
 
          LOG_FMT(LOPERATOR, "%s: %d:%d operator '%s'\n",
                  __func__, pc->orig_line, pc->orig_col, next->str.c_str());
@@ -551,7 +551,7 @@ void tokenize_cleanup(void)
          {
             next->type = CT_OC_CLASS;
          }
-         next->parent_type = pc->type;
+         set_chunk_parent(next, pc->type);
 
          tmp = chunk_get_next_ncnl(next);
          if (tmp != NULL)
@@ -562,7 +562,7 @@ void tokenize_cleanup(void)
          tmp = chunk_get_next_type(pc, CT_OC_END, pc->level);
          if (tmp != NULL)
          {
-            tmp->parent_type = pc->type;
+            set_chunk_parent(tmp, pc->type);
          }
       }
 
@@ -592,27 +592,27 @@ void tokenize_cleanup(void)
            (pc->type == CT_OC_CLASS)) &&
           (next->type == CT_PAREN_OPEN))
       {
-         next->parent_type = pc->parent_type;
+         set_chunk_parent(next, pc->parent_type);
 
          tmp = chunk_get_next(next);
          if ((tmp != NULL) && (tmp->next != NULL))
          {
             if (tmp->type == CT_PAREN_CLOSE)
             {
-               //tmp->type        = CT_OC_CLASS_EXT;
-               tmp->parent_type = pc->parent_type;
+               //tmp->type = CT_OC_CLASS_EXT;
+               set_chunk_parent(tmp, pc->parent_type);
             }
             else
             {
-               tmp->type        = CT_OC_CATEGORY;
-               tmp->parent_type = pc->parent_type;
+               tmp->type = CT_OC_CATEGORY;
+               set_chunk_parent(tmp, pc->parent_type);
             }
          }
 
          tmp = chunk_get_next_type(pc, CT_PAREN_CLOSE, pc->level);
          if (tmp != NULL)
          {
-            tmp->parent_type = pc->parent_type;
+            set_chunk_parent(tmp, pc->parent_type);
          }
       }
 
@@ -628,12 +628,12 @@ void tokenize_cleanup(void)
          }
          else
          {
-            next->parent_type = pc->type;
+            set_chunk_parent(next, pc->type);
 
             tmp = chunk_get_next_type(pc, CT_PAREN_CLOSE, pc->level);
             if (tmp != NULL)
             {
-               tmp->parent_type = pc->type;
+               set_chunk_parent(tmp, pc->type);
                tmp = chunk_get_next_ncnl(tmp);
                if (tmp != NULL)
                {
@@ -642,7 +642,7 @@ void tokenize_cleanup(void)
                   tmp = chunk_get_next_type(tmp, CT_SEMICOLON, pc->level);
                   if (tmp != NULL)
                   {
-                     tmp->parent_type = pc->type;
+                     set_chunk_parent(tmp, pc->type);
                   }
                }
             }
@@ -656,23 +656,23 @@ void tokenize_cleanup(void)
        */
       if ((pc->type == CT_OC_SEL) && (next->type == CT_PAREN_OPEN))
       {
-         next->parent_type = pc->type;
+         set_chunk_parent(next, pc->type);
 
          tmp = chunk_get_next(next);
          if (tmp != NULL)
          {
-            tmp->type        = CT_OC_SEL_NAME;
-            tmp->parent_type = pc->type;
+            tmp->type = CT_OC_SEL_NAME;
+            set_chunk_parent(tmp, pc->type);
 
             while ((tmp = chunk_get_next_ncnl(tmp)) != NULL)
             {
                if (tmp->type == CT_PAREN_CLOSE)
                {
-                  tmp->parent_type = CT_OC_SEL;
+                  set_chunk_parent(tmp, CT_OC_SEL);
                   break;
                }
-               tmp->type        = CT_OC_SEL_NAME;
-               tmp->parent_type = pc->type;
+               tmp->type = CT_OC_SEL_NAME;
+               set_chunk_parent(tmp, pc->type);
             }
          }
       }
@@ -680,7 +680,7 @@ void tokenize_cleanup(void)
       /* Handle special preprocessor junk */
       if (pc->type == CT_PREPROC)
       {
-         pc->parent_type = next->type;
+         set_chunk_parent(pc, next->type);
       }
 
       /* Detect "pragma region" and "pragma endregion" */
@@ -691,7 +691,7 @@ void tokenize_cleanup(void)
          {
             pc->type = (*next->str == 'r') ? CT_PP_REGION : CT_PP_ENDREGION;
 
-            prev->parent_type = pc->type;
+            set_chunk_parent(prev, pc->type);
          }
       }
 
@@ -957,7 +957,7 @@ static void check_template(chunk_t *start)
       {
          LOG_FMT(LTEMPL, " - Template Detected\n");
 
-         start->parent_type = CT_TEMPLATE;
+         set_chunk_parent(start, CT_TEMPLATE);
 
          pc = start;
          while (pc != end)
@@ -970,8 +970,8 @@ static void check_template(chunk_t *start)
             }
             pc = next;
          }
-         end->parent_type = CT_TEMPLATE;
-         end->flags      |= PCF_IN_TEMPLATE;
+         set_chunk_parent(end, CT_TEMPLATE);
+         end->flags |= PCF_IN_TEMPLATE;
          return;
       }
    }

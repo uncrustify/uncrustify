@@ -1485,7 +1485,7 @@ static chunk_t *scan_ib_line(chunk_t *start, bool first_pass)
    tmp = skip_c99_array(start);
    if (tmp)
    {
-      start->parent_type = CT_TSQUARE;
+      set_chunk_parent(start, CT_TSQUARE);
       start = tmp;
       cpd.al_c99_array = true;
    }

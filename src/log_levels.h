@@ -101,6 +101,7 @@ enum log_sev_t
    LOCMSGD   = 87,    /* OC Message declaration */
    LINDENTAG = 88,    /* indent again */
    LNFD      = 89,    /* newline-function-def */
+   LSETPAR   = 91,    /* set_chunk_parent() */
 };
 
 #endif   /* LOG_LEVELS_H_INCLUDED */
