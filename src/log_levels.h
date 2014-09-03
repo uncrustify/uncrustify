@@ -102,6 +102,7 @@ enum log_sev_t
    LINDENTAG = 88,    /* indent again */
    LNFD      = 89,    /* newline-function-def */
    LSETPAR   = 91,    /* set_chunk_parent() */
+   LSETTYP   = 92,    /* set_chunk_type() */
 };
 
 #endif   /* LOG_LEVELS_H_INCLUDED */

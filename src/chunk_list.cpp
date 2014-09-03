@@ -672,6 +672,20 @@ chunk_t *chunk_get_prev_nvb(chunk_t *cur, chunk_nav_t nav)
 }
 
 
+void set_chunk_type2(chunk_t *pc, c_token_t tt, const char *func, int line)
+{
+   if (pc && (pc->type != tt))
+   {
+      LOG_FMT(LSETTYP, "set_chunk_type[%s:%d]: %d:%d '%s' %s => %s\n",
+              func, line,
+              pc->orig_line, pc->orig_col,
+              get_token_name(pc->type), pc->text(),
+              get_token_name(tt));
+      pc->type = tt;
+   }
+}
+
+
 void set_chunk_parent2(chunk_t *pc, c_token_t tt, const char *func, int line)
 {
    if (pc && (pc->parent_type != tt))

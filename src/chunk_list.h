@@ -323,6 +323,9 @@ bool chunk_is_forin(chunk_t *pc)
    return false;
 }
 
+#define set_chunk_type(_pc, _ty) set_chunk_type2((_pc), (_ty), __func__, __LINE__)
+void set_chunk_type2(chunk_t *pc, c_token_t tt, const char *func, int line);
+
 #define set_chunk_parent(_pc, _ty) set_chunk_parent2((_pc), (_ty), __func__, __LINE__)
 void set_chunk_parent2(chunk_t *pc, c_token_t tt, const char *func, int line);
 
