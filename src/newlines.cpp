@@ -2082,7 +2082,7 @@ void newlines_cleanup_braces(bool first)
          if ((pc->parent_type == CT_DOUBLE_BRACE) &&
              (cpd.settings[UO_nl_paren_dbrace_open].a != AV_IGNORE))
          {
-            prev = chunk_get_prev(pc, CNAV_PREPROC);
+            prev = chunk_get_prev_ncnl(pc, CNAV_PREPROC);
             if (chunk_is_paren_close(prev))
             {
                newline_iarf_pair(prev, pc, cpd.settings[UO_nl_paren_dbrace_open].a);
