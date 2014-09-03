@@ -507,13 +507,13 @@ static void convert_brace(chunk_t *br)
    }
    else if (br->type == CT_BRACE_OPEN)
    {
-      br->type = CT_VBRACE_OPEN;
+      set_chunk_type(br, CT_VBRACE_OPEN);
       br->str.clear();
       tmp = chunk_get_prev(br);
    }
    else if (br->type == CT_BRACE_CLOSE)
    {
-      br->type = CT_VBRACE_CLOSE;
+      set_chunk_type(br, CT_VBRACE_CLOSE);
       br->str.clear();
       tmp = chunk_get_next(br);
    }
@@ -550,7 +550,7 @@ static void convert_vbrace(chunk_t *vbr)
    }
    else if (vbr->type == CT_VBRACE_OPEN)
    {
-      vbr->type = CT_BRACE_OPEN;
+      set_chunk_type(vbr, CT_BRACE_OPEN);
       vbr->str  = "{";
 
       /* If the next chunk is a preprocessor, then move the open brace after the
@@ -566,7 +566,7 @@ static void convert_vbrace(chunk_t *vbr)
    }
    else if (vbr->type == CT_VBRACE_CLOSE)
    {
-      vbr->type = CT_BRACE_CLOSE;
+      set_chunk_type(vbr, CT_BRACE_CLOSE);
       vbr->str  = "}";
 
       /* If the next chunk is a comment, followed by a newline, then

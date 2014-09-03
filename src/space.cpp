@@ -313,7 +313,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
    {
       if (cpd.settings[UO_sp_endif_cmt].a != AV_IGNORE)
       {
-         second->type = CT_COMMENT_ENDIF;
+         set_chunk_type(second, CT_COMMENT_ENDIF);
          log_rule("sp_endif_cmt");
          return(cpd.settings[UO_sp_endif_cmt].a);
       }

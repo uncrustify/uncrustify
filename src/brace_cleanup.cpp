@@ -371,7 +371,7 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
           ((frm->pse[frm->pse_tos].type == CT_FPAREN_OPEN) ||
            (frm->pse[frm->pse_tos].type == CT_SPAREN_OPEN)))
       {
-         pc->type = (c_token_t)(frm->pse[frm->pse_tos].type + 1);
+         set_chunk_type(pc, (c_token_t)(frm->pse[frm->pse_tos].type + 1));
          if (pc->type == CT_SPAREN_CLOSE)
          {
             frm->sparen_count--;
@@ -480,13 +480,13 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
             /* Set the parent for parens and change paren type */
             if (frm->pse[frm->pse_tos].stage != BS_NONE)
             {
-               pc->type = CT_SPAREN_OPEN;
+               set_chunk_type(pc, CT_SPAREN_OPEN);
                parent   = frm->pse[frm->pse_tos].type;
                frm->sparen_count++;
             }
             else if (prev->type == CT_FUNCTION)
             {
-               pc->type = CT_FPAREN_OPEN;
+               set_chunk_type(pc, CT_FPAREN_OPEN);
                parent   = CT_FUNCTION;
             }
             /* NS_ENUM and NS_OPTIONS are followed by a (type, name) pair */
@@ -494,7 +494,7 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
                      (cpd.lang_flags & LANG_OC))
             {
                /* Treat both as CT_ENUM since the syntax is identical */
-               pc->type = CT_FPAREN_OPEN;
+               set_chunk_type(pc, CT_FPAREN_OPEN);
                parent   = CT_ENUM;
             }
             else
@@ -570,7 +570,7 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
 
       if ((pc->type == CT_WHILE) && maybe_while_of_do(pc))
       {
-         pc->type = CT_WHILE_OF_DO;
+         set_chunk_type(pc, CT_WHILE_OF_DO);
          bs       = BS_WOD_PAREN;
       }
       push_fmr_pse(frm, pc, bs, "+ComplexParenBraced");
@@ -695,7 +695,7 @@ static bool check_complex_statements(struct parse_frame *frm, chunk_t *pc)
              !chunk_is_newline(chunk_get_prev_nc(pc)))
          {
             /* Replace CT_ELSE with CT_IF */
-            pc->type = CT_ELSEIF;
+            set_chunk_type(pc, CT_ELSEIF);
             frm->pse[frm->pse_tos].type  = CT_ELSEIF;
             frm->pse[frm->pse_tos].stage = BS_PAREN1;
             return(true);
@@ -732,7 +732,7 @@ static bool check_complex_statements(struct parse_frame *frm, chunk_t *pc)
    {
       if (pc->type == CT_WHILE)
       {
-         pc->type = CT_WHILE_OF_DO;
+         set_chunk_type(pc, CT_WHILE_OF_DO);
          frm->pse[frm->pse_tos].type  = CT_WHILE_OF_DO; //CT_WHILE;
          frm->pse[frm->pse_tos].stage = BS_WOD_PAREN;
          return(true);

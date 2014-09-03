@@ -1662,7 +1662,7 @@ void tokenize(const deque<int>& data, chunk_t *ref)
          {
             if ((pc->type < CT_PP_DEFINE) || (pc->type > CT_PP_OTHER))
             {
-               pc->type = CT_PP_OTHER;
+               set_chunk_type(pc, CT_PP_OTHER);
             }
             cpd.in_preproc = pc->type;
          }
@@ -1673,7 +1673,7 @@ void tokenize(const deque<int>& data, chunk_t *ref)
          if ((pc->type == CT_POUND) &&
              ((rprev == NULL) || (rprev->type == CT_NEWLINE)))
          {
-            pc->type       = CT_PREPROC;
+            set_chunk_type(pc, CT_PREPROC);
             pc->flags     |= PCF_IN_PREPROC;
             cpd.in_preproc = CT_PREPROC;
          }

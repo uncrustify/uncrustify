@@ -562,9 +562,9 @@ void indent_text(void)
          {
             next = chunk_get_next(pc);
             /* Hack to get the logs to look right */
-            next->type = CT_PP_REGION_INDENT;
+            set_chunk_type(next, CT_PP_REGION_INDENT);
             indent_pse_push(frm, next);
-            next->type = CT_PP_REGION;
+            set_chunk_type(next, CT_PP_REGION);
 
             /* Indent one level */
             frm.pse[frm.pse_tos].indent     = frm.pse[frm.pse_tos - 1].indent + indent_size;
@@ -581,9 +581,9 @@ void indent_text(void)
             next = chunk_get_next(pc);
             /* Hack to get the logs to look right */
             memtype = next->type;
-            next->type = CT_PP_IF_INDENT;
+            set_chunk_type(next, CT_PP_IF_INDENT);
             indent_pse_push(frm, next);
-            next->type = memtype;
+            set_chunk_type(next, memtype);
 
             /* Indent one level except if the #if is a #include guard */
             int extra = ((pc->pp_level == 0) && ifdef_over_whole_file()) ? 0 : indent_size;

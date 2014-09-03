@@ -156,12 +156,12 @@ static void setup_newline_add(chunk_t *prev, chunk_t *nl, chunk_t *next)
    }
    if ((nl->flags & PCF_IN_PREPROC) != 0)
    {
-      nl->type = CT_NL_CONT;
+      set_chunk_type(nl, CT_NL_CONT);
       nl->str  = "\\\n";
    }
    else
    {
-      nl->type = CT_NEWLINE;
+      set_chunk_type(nl, CT_NEWLINE);
       nl->str  = "\n";
    }
 }
