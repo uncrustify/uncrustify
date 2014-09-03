@@ -162,18 +162,23 @@ static chunk_t *flag_parens2(const char *func, int line,
  * @param parent  The type to assign as the parent
  * @reutrn        The chunk after the close paren
  */
-chunk_t *set_paren_parent(chunk_t *start, c_token_t parent)
+chunk_t *set_paren_parent2(chunk_t *start, c_token_t parent, const char *func, int line)
 {
    chunk_t *end;
 
    end = chunk_skip_to_match(start, CNAV_PREPROC);
    if (end != NULL)
    {
-      start->parent_type = parent;
-      end->parent_type   = parent;
+      LOG_FMT(LFLPAREN, "set_paren_parent[%s:%d] @ %d:%d [%s] and %d:%d [%s] type=%s ptype=%s\n",
+              func, line, start->orig_line, start->orig_col, start->text(),
+              end->orig_line, end->orig_col, end->text(),
+              get_token_name(start->type), get_token_name(parent));
+      set_chunk_parent(start, parent);
+      set_chunk_parent(end, parent);
    }
    return(chunk_get_next_ncnl(end, CNAV_PREPROC));
 }
+#define set_paren_parent(_s, _p) set_paren_parent2((_s), (_p), __func__, __LINE__)
 
 
 /* Scan backwards to see if we might be on a type declaration */
