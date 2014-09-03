@@ -703,7 +703,8 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
          {
             if (tmp->type == CT_BRACE_OPEN)
             {
-               if ((pc->flags & PCF_IN_CONST_ARGS) == 0)
+               if ((tmp->parent_type != CT_DOUBLE_BRACE) &&
+                   ((pc->flags & PCF_IN_CONST_ARGS) == 0))
                {
                   set_paren_parent(tmp, pc->type);
                }
@@ -733,6 +734,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
 
    /* Mark the braces in: "for_each_entry(xxx) { }" */
    if ((pc->type == CT_BRACE_OPEN) &&
+       (pc->parent_type != CT_DOUBLE_BRACE) &&
        (prev->type == CT_FPAREN_CLOSE) &&
        ((prev->parent_type == CT_FUNC_CALL) ||
         (prev->parent_type == CT_FUNC_CALL_USER)) &&
@@ -1011,24 +1013,34 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
  */
 static void check_double_brace_init(chunk_t *bo1)
 {
-   chunk_t *bo2 = chunk_get_next(bo1);
-   if (chunk_is_token(bo2, CT_BRACE_OPEN))
+   LOG_FMT(LJDBI, "%s: %d:%d", __func__, bo1->orig_line, bo1->orig_col);
+   chunk_t *pc = chunk_get_prev(bo1);
+   if (chunk_is_paren_close(pc))
    {
-      /* found a potential double brace */
-      chunk_t *bc2 = chunk_skip_to_match(bo2);
-      chunk_t *bc1 = chunk_get_next(bc2);
-      if (chunk_is_token(bc1, CT_BRACE_CLOSE))
+      chunk_t *bo2 = chunk_get_next(bo1);
+      if (chunk_is_token(bo2, CT_BRACE_OPEN))
       {
-         /* delete bo2 and bc1 */
-         bo1->str += bo2->str;
-         bo1->orig_col_end = bo2->orig_col_end;
-         chunk_del(bo2);
+         /* found a potential double brace */
+         chunk_t *bc2 = chunk_skip_to_match(bo2);
+         chunk_t *bc1 = chunk_get_next(bc2);
+         if (chunk_is_token(bc1, CT_BRACE_CLOSE))
+         {
+            LOG_FMT(LJDBI, " - end %d:%d\n", bc2->orig_line, bc2->orig_col);
+            /* delete bo2 and bc1 */
+            bo1->str += bo2->str;
+            bo1->orig_col_end = bo2->orig_col_end;
+            chunk_del(bo2);
+            set_chunk_parent(bo1, CT_DOUBLE_BRACE);
 
-         bc2->str += bc1->str;
-         bc2->orig_col_end = bc1->orig_col_end;
-         chunk_del(bc1);
+            bc2->str += bc1->str;
+            bc2->orig_col_end = bc1->orig_col_end;
+            chunk_del(bc1);
+            set_chunk_parent(bc2, CT_DOUBLE_BRACE);
+            return;
+         }
       }
    }
+   LOG_FMT(LJDBI, " - no\n");
 }
 
 
@@ -1070,7 +1082,7 @@ void fix_symbols(void)
          mark_lvalue(pc);
       }
 
-      if (is_java && (pc->level > pc->brace_level) && (pc->type == CT_BRACE_OPEN))
+      if (is_java && (pc->type == CT_BRACE_OPEN))
       {
          check_double_brace_init(pc);
       }
@@ -3317,7 +3329,7 @@ static void mark_function(chunk_t *pc)
               pc->str.c_str(), pc->orig_line, pc->orig_col);
 
       tmp = flag_parens(next, PCF_IN_FCN_CALL, CT_FPAREN_OPEN, CT_FUNC_CALL, false);
-      if ((tmp != NULL) && (tmp->type == CT_BRACE_OPEN))
+      if (tmp && (tmp->type == CT_BRACE_OPEN) && (tmp->parent_type != CT_DOUBLE_BRACE))
       {
          set_paren_parent(tmp, pc->type);
       }

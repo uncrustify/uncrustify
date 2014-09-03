@@ -263,6 +263,7 @@ const char *token_names[] =
    "ASSERT",
    "ANNOTATION",
    "FOR_COLON",
+   "DOUBLE_BRACE",
 };
 
 #endif /* TOKEN_NAMES_H_INCLUDED */

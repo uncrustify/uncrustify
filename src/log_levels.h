@@ -101,6 +101,7 @@ enum log_sev_t
    LOCMSGD   = 87,    /* OC Message declaration */
    LINDENTAG = 88,    /* indent again */
    LNFD      = 89,    /* newline-function-def */
+   LJDBI     = 90,    /* Java Double Brace Init */
    LSETPAR   = 91,    /* set_chunk_parent() */
    LSETTYP   = 92,    /* set_chunk_type() */
 };
