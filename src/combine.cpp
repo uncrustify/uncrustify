@@ -132,21 +132,21 @@ static chunk_t *flag_parens2(const char *func, int line,
             pc->flags |= flags;
             if (parent_all)
             {
-               set_chunk_parent(pc, parenttype);
+               set_chunk_parent2(pc, parenttype, func, line);
             }
          }
       }
 
       if (opentype != CT_NONE)
       {
-         set_chunk_type(po, opentype);
-         set_chunk_type(paren_close, (c_token_t)(opentype + 1));
+         set_chunk_type2(po, opentype, func, line);
+         set_chunk_type2(paren_close, (c_token_t)(opentype + 1), func, line);
       }
 
       if (parenttype != CT_NONE)
       {
-         set_chunk_parent(po, parenttype);
-         set_chunk_parent(paren_close, parenttype);
+         set_chunk_parent2(po, parenttype, func, line);
+         set_chunk_parent2(paren_close, parenttype, func, line);
       }
    }
    return(chunk_get_next_ncnl(paren_close, CNAV_PREPROC));
@@ -173,8 +173,8 @@ chunk_t *set_paren_parent2(chunk_t *start, c_token_t parent, const char *func, i
               func, line, start->orig_line, start->orig_col, start->text(),
               end->orig_line, end->orig_col, end->text(),
               get_token_name(start->type), get_token_name(parent));
-      set_chunk_parent(start, parent);
-      set_chunk_parent(end, parent);
+      set_chunk_parent2(start, parent, func, line);
+      set_chunk_parent2(end, parent, func, line);
    }
    return(chunk_get_next_ncnl(end, CNAV_PREPROC));
 }
