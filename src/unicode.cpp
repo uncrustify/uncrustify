@@ -406,13 +406,13 @@ static void write_byte(int ch)
  */
 static void write_utf8(int ch)
 {
-   vector<UINT8> dq;
-   dq.reserve(6);
+   vector<UINT8> vv;
+   vv.reserve(6);
 
-   encode_utf8(ch, dq);
-   for (int idx = 0; idx < (int)dq.size(); idx++)
+   encode_utf8(ch, vv);
+   for (int idx = 0; idx < (int)vv.size(); idx++)
    {
-      write_byte(dq[idx]);
+      write_byte(vv[idx]);
    }
 }
 
