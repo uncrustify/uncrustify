@@ -474,6 +474,7 @@ int main(int argc, char *argv[])
       }
 
       print_universal_indent_cfg(pfile);
+      fclose(pfile);
 
       return EXIT_SUCCESS;
    }
