@@ -406,30 +406,27 @@ static void write_utf8(int ch)
    dq.reserve(6);
 
    encode_utf8(ch, dq);
-   if (cpd.fout)
+   for (int idx = 0; idx < (int)dq.size(); idx++)
    {
-      fwrite(&dq[0], dq.size(), 1, cpd.fout);
+      write_byte(dq[idx]);
    }
 }
 
 
 static void write_utf16(int ch, bool be)
 {
-   UINT8 buf[4];
-   int   len = 0;
-
    /* U+0000 to U+D7FF and U+E000 to U+FFFF */
    if (((ch >= 0) && (ch < 0xD800)) || ((ch >= 0xE000) && (ch < 0x10000)))
    {
       if (be)
       {
-         buf[len++] = (ch >> 8);
-         buf[len++] = (ch & 0xff);
+         write_byte(ch >> 8);
+         write_byte(ch & 0xff);
       }
       else
       {
-         buf[len++] = (ch & 0xff);
-         buf[len++] = (ch >> 8);
+         write_byte(ch & 0xff);
+         write_byte(ch >> 8);
       }
    }
    else if ((ch >= 0x10000) && (ch < 0x110000))
@@ -439,29 +436,22 @@ static void write_utf16(int ch, bool be)
       int w2 = 0xDC00 + (v1 & 0x3ff);
       if (be)
       {
-         buf[len++] = (w1 >> 8);
-         buf[len++] = (w1 & 0xff);
-         buf[len++] = (w2 >> 8);
-         buf[len++] = (w2 & 0xff);
+         write_byte(w1 >> 8);
+         write_byte(w1 & 0xff);
+         write_byte(w2 >> 8);
+         write_byte(w2 & 0xff);
       }
       else
       {
-         buf[len++] = (w1 & 0xff);
-         buf[len++] = (w1 >> 8);
-         buf[len++] = (w2 & 0xff);
-         buf[len++] = (w2 >> 8);
+         write_byte(w1 & 0xff);
+         write_byte(w1 >> 8);
+         write_byte(w2 & 0xff);
+         write_byte(w2 >> 8);
       }
    }
    else
    {
       /* illegal code - do not store */
-   }
-   if (len)
-   {
-      if (cpd.fout)
-      {
-         fwrite(buf, len, 1, cpd.fout);
-      }
    }
 }
 
