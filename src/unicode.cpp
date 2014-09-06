@@ -389,6 +389,10 @@ static void write_byte(int ch)
       {
          fputc(ch, cpd.fout);
       }
+      if (cpd.bout)
+      {
+         cpd.bout->push_back((UINT8)ch);
+      }
    }
    else
    {

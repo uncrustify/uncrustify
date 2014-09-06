@@ -354,6 +354,7 @@ struct file_mem
 
 struct cp_data
 {
+   deque<UINT8>       *bout;
    FILE               *fout;
    int                last_char;
 
