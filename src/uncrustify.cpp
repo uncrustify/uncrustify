@@ -829,7 +829,12 @@ static int load_mem_file(const char *filename, file_mem& fm)
       }
       else
       {
-         LOG_FMT(LNOTE, "%s: '%s' encoding looks like %d\n", __func__, filename, fm.enc);
+         LOG_FMT(LNOTE, "%s: '%s' encoding looks like %s (%d)\n", __func__, filename,
+                 fm.enc == ENC_ASCII ? "ASCII" :
+                 fm.enc == ENC_BYTE ? "BYTES" :
+                 fm.enc == ENC_UTF16_LE ? "UTF-16-LE" :
+                 fm.enc == ENC_UTF16_BE ? "UTF-16-BE" : "Error",
+                 fm.enc);
          retval = 0;
       }
    }
