@@ -150,6 +150,9 @@ static void usage_exit(const char *msg, const char *argv0, int code)
            " -f FILE      : process the single file FILE (output to stdout, use with -o)\n"
            " -o FILE      : Redirect stdout to FILE\n"
            " -F FILE      : read files to process from FILE, one filename per line (- is stdin)\n"
+           " --check      : Do not output the new text, instead verify that nothing changes when\n"
+           "                the file(s) are processed.  The status of every file is printed to\n"
+           "                stderr. Exit code EXIT_SUCCESS if no changes, EXIT_FAILURE otherwise.\n"
            " files        : files to process (can be combined with -F)\n"
            " --suffix SFX : Append SFX to the output filename. The default is '.uncrustify'\n"
            " --prefix PFX : Prepend PFX to the output filename path.\n"
@@ -266,13 +269,15 @@ int main(int argc, char *argv[])
       return EXIT_SUCCESS;
    }
 
+   cpd.do_check = arg.Present("--check");
+
 #ifdef WIN32
    /* tell windoze not to change what I write to stdout */
    (void)_setmode(_fileno(stdout), _O_BINARY);
 #endif
 
    /* Init logging */
-   log_init(stderr);
+   log_init(cpd.do_check ? stdout : stderr);
    if (arg.Present("-q"))
    {
       logmask_from_string("", mask);
@@ -425,23 +430,34 @@ int main(int argc, char *argv[])
    LOG_FMT(LDATA, "replace     = %d\n", replace);
    LOG_FMT(LDATA, "no_backup   = %d\n", no_backup);
    LOG_FMT(LDATA, "detect      = %d\n", detect);
+   LOG_FMT(LDATA, "check       = %d\n", cpd.do_check);
 
-   if (replace || no_backup)
+   if (cpd.do_check &&
+       (output_file || replace || no_backup || keep_mtime || update_config ||
+        update_config_wd || detect || prefix || suffix))
    {
-      if ((prefix != NULL) || (suffix != NULL))
-      {
-         usage_exit("Cannot use --replace with --prefix or --suffix", argv[0], 66);
-      }
-      if ((source_file != NULL) || (output_file != NULL))
-      {
-         usage_exit("Cannot use --replace or --no-backup with -f or -o", argv[0], 66);
-      }
+      usage_exit("Cannot use --check with output options.", argv[0], 67);
    }
-   else
+
+   if (!cpd.do_check)
    {
-      if ((prefix == NULL) && (suffix == NULL))
+      if (replace || no_backup)
       {
-         suffix = ".uncrustify";
+         if ((prefix != NULL) || (suffix != NULL))
+         {
+            usage_exit("Cannot use --replace with --prefix or --suffix", argv[0], 66);
+         }
+         if ((source_file != NULL) || (output_file != NULL))
+         {
+            usage_exit("Cannot use --replace or --no-backup with -f or -o", argv[0], 66);
+         }
+      }
+      else
+      {
+         if ((prefix == NULL) && (suffix == NULL))
+         {
+            suffix = ".uncrustify";
+         }
       }
    }
 
@@ -556,6 +572,11 @@ int main(int argc, char *argv[])
    /* This relies on cpd.filename being the config file name */
    load_header_files();
 
+   if (cpd.do_check)
+   {
+      cpd.bout = new deque<UINT8>();
+   }
+
    if ((source_file == NULL) && (source_list == NULL) && (p_arg == NULL))
    {
       /* no input specified, so use stdin */
@@ -564,7 +585,10 @@ int main(int argc, char *argv[])
          cpd.lang_flags = LANG_C;
       }
 
-      redir_stdout(output_file);
+      if (!cpd.do_check)
+      {
+         redir_stdout(output_file);
+      }
 
       file_mem fm;
       if (!read_stdin(fm))
@@ -617,6 +641,11 @@ int main(int argc, char *argv[])
 
    clear_keyword_file();
    clear_defines();
+
+   if (cpd.do_check)
+   {
+      return cpd.check_fail_cnt ? EXIT_FAILURE : EXIT_SUCCESS;
+   }
 
    return((cpd.error_count != 0) ? EXIT_FAILURE : EXIT_SUCCESS);
 }
@@ -979,7 +1008,7 @@ static void do_source_file(const char *filename_in,
                            bool       no_backup,
                            bool       keep_mtime)
 {
-   FILE     *pfout;
+   FILE     *pfout      = NULL;
    bool     did_open    = false;
    bool     need_backup = false;
    file_mem fm;
@@ -1002,43 +1031,46 @@ static void do_source_file(const char *filename_in,
    LOG_FMT(LSYS, "Parsing: %s as language %s\n",
            filename_in, language_to_string(cpd.lang_flags));
 
-   if (filename_out == NULL)
+   if (!cpd.do_check)
    {
-      pfout = stdout;
-   }
-   else
-   {
-      /* If the out file is the same as the in file, then use a temp file */
-      filename_tmp = filename_out;
-      if (strcmp(filename_in, filename_out) == 0)
+      if (filename_out == NULL)
       {
-         /* Create 'outfile.uncrustify' */
-         filename_tmp = fix_filename(filename_out);
-
-         if (!no_backup)
+         pfout = stdout;
+      }
+      else
+      {
+         /* If the out file is the same as the in file, then use a temp file */
+         filename_tmp = filename_out;
+         if (strcmp(filename_in, filename_out) == 0)
          {
-            if (backup_copy_file(filename_in, fm.raw) != SUCCESS)
-            {
-               LOG_FMT(LERR, "%s: Failed to create backup file for %s\n",
-                       __func__, filename_in);
-               cpd.error_count++;
-               return;
-            }
-            need_backup = true;
-         }
-      }
-      make_folders(filename_tmp);
+            /* Create 'outfile.uncrustify' */
+            filename_tmp = fix_filename(filename_out);
 
-      pfout = fopen(filename_tmp.c_str(), "wb");
-      if (pfout == NULL)
-      {
-         LOG_FMT(LERR, "%s: Unable to create %s: %s (%d)\n",
-                 __func__, filename_tmp.c_str(), strerror(errno), errno);
-         cpd.error_count++;
-         return;
+            if (!no_backup)
+            {
+               if (backup_copy_file(filename_in, fm.raw) != SUCCESS)
+               {
+                  LOG_FMT(LERR, "%s: Failed to create backup file for %s\n",
+                          __func__, filename_in);
+                  cpd.error_count++;
+                  return;
+               }
+               need_backup = true;
+            }
+         }
+         make_folders(filename_tmp);
+
+         pfout = fopen(filename_tmp.c_str(), "wb");
+         if (pfout == NULL)
+         {
+            LOG_FMT(LERR, "%s: Unable to create %s: %s (%d)\n",
+                    __func__, filename_tmp.c_str(), strerror(errno), errno);
+            cpd.error_count++;
+            return;
+         }
+         did_open = true;
+         //LOG_FMT(LSYS, "Output file %s\n", filename_out);
       }
-      did_open = true;
-      //LOG_FMT(LSYS, "Output file %s\n", filename_out);
    }
 
    cpd.filename = filename_in;
@@ -1427,7 +1459,6 @@ static void uncrustify_file(const file_mem& fm, FILE *pfout,
     * Done with detection. Do the rest only if the file will go somewhere.
     * The detection code needs as few changes as possible.
     */
-   if (pfout != NULL)
    {
       /**
        * Add comments before function defs and classes
@@ -1645,6 +1676,38 @@ static void uncrustify_file(const file_mem& fm, FILE *pfout,
       }
    }
 
+   if (cpd.do_check)
+   {
+      bool is_same = true;
+      /* compare the old data vs the new data */
+      if (cpd.bout->size() != fm.raw.size())
+      {
+         fprintf(stderr, "FAIL: %s (File size changed from %u to %u)\n",
+                 cpd.filename,
+                 (int)fm.raw.size(), (int)cpd.bout->size());
+         cpd.check_fail_cnt++;
+         is_same = false;
+      }
+      else
+      {
+         for (int idx = 0; idx < (int)fm.raw.size(); idx++)
+         {
+            if (fm.raw[idx] != (*cpd.bout)[idx])
+            {
+               fprintf(stderr, "FAIL: %s (Difference at byte %u)\n",
+                       cpd.filename, idx);
+               cpd.check_fail_cnt++;
+               is_same = false;
+               break;
+            }
+         }
+      }
+      if (is_same)
+      {
+         fprintf(stdout, "PASS: %s (%u bytes)\n", cpd.filename, (int)fm.raw.size());
+      }
+   }
+
    uncrustify_end();
 }
 
@@ -1657,6 +1720,11 @@ static void uncrustify_end()
    while ((pc = chunk_get_head()) != NULL)
    {
       chunk_del(pc);
+   }
+
+   if (cpd.bout)
+   {
+      cpd.bout->clear();
    }
 
    /* Clean up some state variables */
