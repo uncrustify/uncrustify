@@ -124,7 +124,7 @@ static void log_flush(bool force_nl)
          g_log.buf[g_log.buf_len++] = '\n';
          g_log.buf[g_log.buf_len]   = 0;
       }
-      if (fwrite(g_log.buf, g_log.buf_len, 1,g_log .log_file) != 1)
+      if (fwrite(g_log.buf, g_log.buf_len, 1, g_log.log_file) != 1)
       {
          /* maybe we should log something to complain... =) */
       }
