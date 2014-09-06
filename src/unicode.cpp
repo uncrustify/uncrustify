@@ -15,7 +15,7 @@
 /**
  * See if all characters are ASCII (0-127)
  */
-bool is_ascii(const vector<UINT8>& data, int& non_ascii_cnt, int& zero_cnt)
+static bool is_ascii(const vector<UINT8>& data, int& non_ascii_cnt, int& zero_cnt)
 {
    non_ascii_cnt = zero_cnt = 0;
    for (int idx = 0; idx < (int)data.size(); idx++)
@@ -36,7 +36,7 @@ bool is_ascii(const vector<UINT8>& data, int& non_ascii_cnt, int& zero_cnt)
 /**
  * Convert the array of bytes into an array of ints
  */
-bool decode_bytes(const vector<UINT8>& in_data, deque<int>& out_data)
+static bool decode_bytes(const vector<UINT8>& in_data, deque<int>& out_data)
 {
    out_data.resize(in_data.size());
    for (int idx = 0; idx < (int)in_data.size(); idx++)
@@ -105,7 +105,7 @@ void encode_utf8(int ch, vector<UINT8>& res)
  * Decode UTF-8 sequences from in_data and put the chars in out_data.
  * If there are any decoding errors, then return false.
  */
-bool decode_utf8(const vector<UINT8>& in_data, deque<int>& out_data)
+static bool decode_utf8(const vector<UINT8>& in_data, deque<int>& out_data)
 {
    int idx = 0;
    int ch, tmp, cnt;
@@ -213,7 +213,7 @@ static int get_word(const vector<UINT8>& in_data, int& idx, bool be)
  * Sets enc based on the BOM.
  * Must have the BOM as the first two bytes.
  */
-bool decode_utf16(const vector<UINT8>& in_data, deque<int>& out_data, CharEncoding& enc)
+static bool decode_utf16(const vector<UINT8>& in_data, deque<int>& out_data, CharEncoding& enc)
 {
    out_data.clear();
 
@@ -298,7 +298,7 @@ bool decode_utf16(const vector<UINT8>& in_data, deque<int>& out_data, CharEncodi
  * If found, set enc and return true.
  * Sets enc to ENC_ASCII and returns false if not found.
  */
-bool decode_bom(const vector<UINT8>& in_data, CharEncoding& enc)
+static bool decode_bom(const vector<UINT8>& in_data, CharEncoding& enc)
 {
    enc = ENC_ASCII;
    if (in_data.size() >= 2)
@@ -381,7 +381,7 @@ bool decode_unicode(const vector<UINT8>& in_data, deque<int>& out_data, CharEnco
 /**
  * Write for ASCII and BYTE encoding
  */
-void write_byte(int ch, FILE *pf)
+static void write_byte(int ch, FILE *pf)
 {
    if (ch < 0x100)
    {
@@ -397,7 +397,7 @@ void write_byte(int ch, FILE *pf)
 /**
  * Writes a single character to a file using UTF-8 encoding
  */
-void write_utf8(int ch, FILE *pf)
+static void write_utf8(int ch, FILE *pf)
 {
    vector<UINT8> dq;
    dq.reserve(6);
@@ -407,7 +407,7 @@ void write_utf8(int ch, FILE *pf)
 }
 
 
-void write_utf16(int ch, bool be, FILE *pf)
+static void write_utf16(int ch, bool be, FILE *pf)
 {
    /* U+0000 to U+D7FF and U+E000 to U+FFFF */
    if (((ch >= 0) && (ch < 0xD800)) || ((ch >= 0xE000) && (ch < 0x10000)))
