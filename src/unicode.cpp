@@ -381,11 +381,14 @@ bool decode_unicode(const vector<UINT8>& in_data, deque<int>& out_data, CharEnco
 /**
  * Write for ASCII and BYTE encoding
  */
-static void write_byte(int ch, FILE *pf)
+static void write_byte(int ch)
 {
    if (ch < 0x100)
    {
-      fputc(ch, pf);
+      if (cpd.fout)
+      {
+         fputc(ch, cpd.fout);
+      }
    }
    else
    {
@@ -397,30 +400,36 @@ static void write_byte(int ch, FILE *pf)
 /**
  * Writes a single character to a file using UTF-8 encoding
  */
-static void write_utf8(int ch, FILE *pf)
+static void write_utf8(int ch)
 {
    vector<UINT8> dq;
    dq.reserve(6);
 
    encode_utf8(ch, dq);
-   fwrite(&dq[0], dq.size(), 1, pf);
+   if (cpd.fout)
+   {
+      fwrite(&dq[0], dq.size(), 1, cpd.fout);
+   }
 }
 
 
-static void write_utf16(int ch, bool be, FILE *pf)
+static void write_utf16(int ch, bool be)
 {
+   UINT8 buf[4];
+   int   len = 0;
+
    /* U+0000 to U+D7FF and U+E000 to U+FFFF */
    if (((ch >= 0) && (ch < 0xD800)) || ((ch >= 0xE000) && (ch < 0x10000)))
    {
       if (be)
       {
-         fputc((ch >> 8), pf);
-         fputc((ch & 0xff), pf);
+         buf[len++] = (ch >> 8);
+         buf[len++] = (ch & 0xff);
       }
       else
       {
-         fputc((ch & 0xff), pf);
-         fputc((ch >> 8), pf);
+         buf[len++] = (ch & 0xff);
+         buf[len++] = (ch >> 8);
       }
    }
    else if ((ch >= 0x10000) && (ch < 0x110000))
@@ -430,42 +439,49 @@ static void write_utf16(int ch, bool be, FILE *pf)
       int w2 = 0xDC00 + (v1 & 0x3ff);
       if (be)
       {
-         fputc((w1 >> 8), pf);
-         fputc((w1 & 0xff), pf);
-         fputc((w2 >> 8), pf);
-         fputc((w2 & 0xff), pf);
+         buf[len++] = (w1 >> 8);
+         buf[len++] = (w1 & 0xff);
+         buf[len++] = (w2 >> 8);
+         buf[len++] = (w2 & 0xff);
       }
       else
       {
-         fputc((w1 & 0xff), pf);
-         fputc((w1 >> 8), pf);
-         fputc((w2 & 0xff), pf);
-         fputc((w2 >> 8), pf);
+         buf[len++] = (w1 & 0xff);
+         buf[len++] = (w1 >> 8);
+         buf[len++] = (w2 & 0xff);
+         buf[len++] = (w2 >> 8);
       }
    }
    else
    {
       /* illegal code - do not store */
    }
+   if (len)
+   {
+      if (cpd.fout)
+      {
+         fwrite(buf, len, 1, cpd.fout);
+      }
+   }
 }
 
 
-void write_bom(FILE *pf, CharEncoding enc)
+void write_bom()
 {
-   switch (enc)
+   switch (cpd.enc)
    {
    case ENC_UTF8:
-      write_byte(0xef, pf);
-      write_byte(0xbb, pf);
-      write_byte(0xbf, pf);
+      write_byte(0xef);
+      write_byte(0xbb);
+      write_byte(0xbf);
       break;
 
    case ENC_UTF16_LE:
-      write_utf16(0xfeff, false, pf);
+      write_utf16(0xfeff, false);
       break;
 
    case ENC_UTF16_BE:
-      write_utf16(0xfeff, true, pf);
+      write_utf16(0xfeff, true);
       break;
 
    default:
@@ -477,41 +493,41 @@ void write_bom(FILE *pf, CharEncoding enc)
 /**
  * @param ch the 31-bit char value
  */
-void write_char(FILE *pf, int ch, CharEncoding enc)
+void write_char(int ch)
 {
    if (ch >= 0)
    {
-      switch (enc)
+      switch (cpd.enc)
       {
       case ENC_BYTE:
-         write_byte(ch & 0xff, pf);
+         write_byte(ch & 0xff);
          break;
 
       case ENC_ASCII:
       default:
-         write_byte(ch, pf);
+         write_byte(ch);
          break;
 
       case ENC_UTF8:
-         write_utf8(ch, pf);
+         write_utf8(ch);
          break;
 
       case ENC_UTF16_LE:
-         write_utf16(ch, false, pf);
+         write_utf16(ch, false);
          break;
 
       case ENC_UTF16_BE:
-         write_utf16(ch, true, pf);
+         write_utf16(ch, true);
          break;
       }
    }
 }
 
 
-void write_string(FILE *pf, const deque<int>& text, CharEncoding enc)
+void write_string(const unc_text& text)
 {
    for (int idx = 0; idx < (int)text.size(); idx++)
    {
-      write_char(pf, text[idx], enc);
+      write_char(text[idx]);
    }
 }

@@ -45,7 +45,7 @@ static void add_char(UINT32 ch)
    /* If we did a '\r' and it isn't followed by a '\n', then output a newline */
    if ((cpd.last_char == '\r') && (ch != '\n'))
    {
-      write_string(cpd.fout, cpd.newline.get(), cpd.enc);
+      write_string(cpd.newline);
       cpd.column      = 1;
       cpd.did_newline = 1;
       cpd.spaces      = 0;
@@ -54,7 +54,7 @@ static void add_char(UINT32 ch)
    /* convert a newline into the LF/CRLF/CR sequence */
    if (ch == '\n')
    {
-      write_string(cpd.fout, cpd.newline.get(), cpd.enc);
+      write_string(cpd.newline);
       cpd.column      = 1;
       cpd.did_newline = 1;
       cpd.spaces      = 0;
@@ -96,10 +96,10 @@ static void add_char(UINT32 ch)
       {
          while (cpd.spaces > 0)
          {
-            write_char(cpd.fout, ' ', cpd.enc);
+            write_char(' ');
             cpd.spaces--;
          }
-         write_char(cpd.fout, ch, cpd.enc);
+         write_char(ch);
          if (ch == '\t')
          {
             cpd.column = next_tab_column(cpd.column);
@@ -286,7 +286,7 @@ void output_text(FILE *pfile)
 
    if (cpd.bom)
    {
-      write_bom(pfile, cpd.enc);
+      write_bom();
    }
 
    if (cpd.frag_cols > 0)
