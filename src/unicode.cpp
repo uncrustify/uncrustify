@@ -508,16 +508,6 @@ void write_char(FILE *pf, int ch, CharEncoding enc)
 }
 
 
-void write_string(FILE *pf, const char *ascii_text, CharEncoding enc)
-{
-   while (*ascii_text)
-   {
-      write_char(pf, *ascii_text, enc);
-      ascii_text++;
-   }
-}
-
-
 void write_string(FILE *pf, const deque<int>& text, CharEncoding enc)
 {
    for (int idx = 0; idx < (int)text.size(); idx++)
