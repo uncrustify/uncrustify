@@ -383,7 +383,7 @@ bool decode_unicode(const vector<UINT8>& in_data, deque<int>& out_data, CharEnco
  */
 static void write_byte(int ch)
 {
-   if (ch < 0x100)
+   if ((ch & 0xff) == ch)
    {
       if (cpd.fout)
       {
