@@ -42,9 +42,9 @@
 struct cp_data cpd;
 
 
-static int language_from_tag(const char *tag);
-static int language_from_filename(const char *filename);
-static const char *language_to_string(int lang);
+static int language_flags_from_name(const char *tag);
+static int language_flags_from_filename(const char *filename);
+static const char *language_name_from_flags(int lang);
 static bool read_stdin(file_mem& fm);
 static void uncrustify_start(const deque<int>& data);
 static void uncrustify_end();
@@ -385,7 +385,7 @@ int main(int argc, char *argv[])
    /* Check for a language override */
    if ((p_arg = arg.Param("-l")) != NULL)
    {
-      cpd.lang_flags = language_from_tag(p_arg);
+      cpd.lang_flags = language_flags_from_name(p_arg);
       if (cpd.lang_flags == 0)
       {
          LOG_FMT(LWARN, "Ignoring unknown language: %s\n", p_arg);
@@ -509,7 +509,7 @@ int main(int argc, char *argv[])
       /* Do some simple language detection based on the filename extension */
       if (!cpd.lang_forced || (cpd.lang_flags == 0))
       {
-         cpd.lang_flags = language_from_filename(source_file);
+         cpd.lang_flags = language_flags_from_filename(source_file);
       }
 
       /* Try to read in the source file */
@@ -603,7 +603,7 @@ int main(int argc, char *argv[])
       /* Done reading from stdin */
       LOG_FMT(LSYS, "Parsing: %d bytes (%d chars) from stdin as language %s\n",
               (int)fm.raw.size(), (int)fm.data.size(),
-              language_to_string(cpd.lang_flags));
+              language_name_from_flags(cpd.lang_flags));
 
       uncrustify_file(fm, stdout, parsed_file);
    }
@@ -1023,7 +1023,7 @@ static void do_source_file(const char *filename_in,
    /* Do some simple language detection based on the filename extension */
    if (!cpd.lang_forced || (cpd.lang_flags == 0))
    {
-      cpd.lang_flags = language_from_filename(filename_in);
+      cpd.lang_flags = language_flags_from_filename(filename_in);
    }
 
    /* Try to read in the source file */
@@ -1035,7 +1035,7 @@ static void do_source_file(const char *filename_in,
    }
 
    LOG_FMT(LSYS, "Parsing: %s as language %s\n",
-           filename_in, language_to_string(cpd.lang_flags));
+           filename_in, language_name_from_flags(cpd.lang_flags));
 
    if (!cpd.do_check)
    {
@@ -1781,52 +1781,117 @@ c_token_t find_token_name(const char *text)
 }
 
 
-static bool ends_with(const char *filename, const char *tag)
+static bool ends_with(const char *filename, const char *tag, bool case_sensitive=true)
 {
    int len1 = strlen(filename);
    int len2 = strlen(tag);
 
-   if ((len2 <= len1) && (strcmp(&filename[len1 - len2], tag) == 0))
-   {
-      return(true);
-   }
-   return(false);
+   return ((len2 <= len1) &&
+           ((case_sensitive && (strcmp(&filename[len1 - len2], tag) == 0)) ||
+            (!case_sensitive && (strcasecmp(&filename[len1 - len2], tag) == 0))));
 }
 
 
-struct file_lang
+struct lang_name_t
 {
-   const char *ext;
-   const char *tag;
+   const char *name;
    int        lang;
 };
 
-struct file_lang languages[] =
+static lang_name_t language_names[] =
 {
-   { ".c",    "C",    LANG_C             },
-   { ".cpp",  "CPP",  LANG_CPP           },
-   { ".d",    "D",    LANG_D             },
-   { ".cs",   "CS",   LANG_CS            },
-   { ".vala", "VALA", LANG_VALA          },
-   { ".java", "JAVA", LANG_JAVA          },
-   { ".pawn", "PAWN", LANG_PAWN          },
-   { ".p",    "",     LANG_PAWN          },
-   { ".sma",  "",     LANG_PAWN          },
-   { ".inl",  "",     LANG_PAWN          },
-   { ".h",    "",     LANG_CPP           },
-   { ".cxx",  "",     LANG_CPP           },
-   { ".hpp",  "",     LANG_CPP           },
-   { ".hxx",  "",     LANG_CPP           },
-   { ".cc",   "",     LANG_CPP           },
-   { ".cp",   "",     LANG_CPP           },
-   { ".C",    "",     LANG_CPP           },
-   { ".CPP",  "",     LANG_CPP           },
-   { ".c++",  "",     LANG_CPP           },
-   { ".di",   "",     LANG_D             },
-   { ".m",    "OC",   LANG_OC            },
-   { ".mm",   "OC+",  LANG_OC | LANG_CPP },
-   { ".sqc",  "",     LANG_C             }, // embedded SQL
-   { ".es",   "ECMA", LANG_ECMA          },
+   { "C",    LANG_C             },
+   { "CPP",  LANG_CPP           },
+   { "D",    LANG_D             },
+   { "CS",   LANG_CS            },
+   { "VALA", LANG_VALA          },
+   { "JAVA", LANG_JAVA          },
+   { "PAWN", LANG_PAWN          },
+   { "OC",   LANG_OC            },
+   { "OC+",  LANG_OC | LANG_CPP },
+   { "ECMA", LANG_ECMA          },
+};
+
+
+int language_flags_from_name(const char *name)
+{
+   int i;
+
+   for (i = 0; i < (int)ARRAY_SIZE(language_names); i++)
+   {
+      if (strcasecmp(name, language_names[i].name) == 0)
+      {
+         return language_names[i].lang;
+      }
+   }
+   return 0;
+}
+
+
+/**
+ * Gets the tag text for a language
+ *
+ * @param lang    The LANG_xxx enum
+ * @return        A string
+ */
+static const char *language_name_from_flags(int lang)
+{
+   int i;
+
+   /* Check for an exact match first */
+   for (i = 0; i < (int)ARRAY_SIZE(language_names); i++)
+   {
+      if (language_names[i].lang == lang)
+      {
+         return language_names[i].name;
+      }
+   }
+
+   /* Check for the first set language bit */
+   for (i = 0; i < (int)ARRAY_SIZE(language_names); i++)
+   {
+      if ((language_names[i].lang & lang) != 0)
+      {
+         return language_names[i].name;
+      }
+   }
+   return "???";
+}
+
+
+struct lang_ext_t
+{
+   const char *ext;
+   const char *name;
+};
+
+/* maps file extensions to language names */
+struct lang_ext_t language_exts[] =
+{
+   { ".c",    "C"    },
+   { ".cpp",  "CPP"  },
+   { ".d",    "D"    },
+   { ".cs",   "CS"   },
+   { ".vala", "VALA" },
+   { ".java", "JAVA" },
+   { ".pawn", "PAWN" },
+   { ".p",    "PAWN" },
+   { ".sma",  "PAWN" },
+   { ".inl",  "PAWN" },
+   { ".h",    "CPP"  },
+   { ".cxx",  "CPP"  },
+   { ".hpp",  "CPP"  },
+   { ".hxx",  "CPP"  },
+   { ".cc",   "CPP"  },
+   { ".cp",   "CPP"  },
+   { ".C",    "CPP"  },
+   { ".CPP",  "CPP"  },
+   { ".c++",  "CPP"  },
+   { ".di",   "D"    },
+   { ".m",    "OC"   },
+   { ".mm",   "OC+"  },
+   { ".sqc",  "C"    }, // embedded SQL
+   { ".es",   "ECMA" },
 };
 
 /**
@@ -1837,12 +1902,58 @@ const char *get_file_extension(int& idx)
 {
    const char *val = NULL;
 
-   if (idx < (int)ARRAY_SIZE(languages))
+   if (idx < (int)ARRAY_SIZE(language_exts))
    {
-      val = languages[idx].ext;
+      val = language_exts[idx].ext;
    }
    idx++;
-   return(val);
+   return val;
+}
+
+// maps a file extension to a language flag. include the ".", as in ".c".
+// These ARE case sensitive user file extensions.
+typedef std::map<string, string> extension_map_t;
+static extension_map_t g_ext_map;
+
+const char *extension_add(const char *ext_text, const char *lang_text)
+{
+   int lang_flags = language_flags_from_name(lang_text);
+   if (lang_flags)
+   {
+      const char *lang_name = language_name_from_flags(lang_flags);
+      g_ext_map[string(ext_text)] = lang_name;
+      return lang_name;
+   }
+   return NULL;
+}
+
+
+/**
+ * Prints custom file extensions to the file
+ */
+void print_extensions(FILE *pfile)
+{
+   for (int idx = 0; idx < (int)ARRAY_SIZE(language_names); idx++)
+   {
+      const char *lang_name = language_names[idx].name;
+      bool did_one = false;
+      for (extension_map_t::iterator it = g_ext_map.begin(); it != g_ext_map.end(); ++it)
+      {
+         if (strcmp(it->second.c_str(), lang_name) == 0)
+         {
+            if (!did_one)
+            {
+               fprintf(pfile, "file_ext %s", it->second.c_str());
+               did_one = true;
+            }
+            fprintf(pfile, " %s", it->first.c_str());
+         }
+      }
+      if (did_one)
+      {
+         fprintf(pfile, "\n");
+      }
+   }
 }
 
 
@@ -1853,70 +1964,43 @@ const char *get_file_extension(int& idx)
  * @param filename   The name of the file
  * @return           LANG_xxx
  */
-static int language_from_filename(const char *filename)
+static int language_flags_from_filename(const char *filename)
 {
    int i;
 
-   for (i = 0; i < (int)ARRAY_SIZE(languages); i++)
+   /* check custom extensions first */
+   for (extension_map_t::iterator it = g_ext_map.begin(); it != g_ext_map.end(); ++it)
    {
-      if (ends_with(filename, languages[i].ext))
+      if (ends_with(filename, it->first.c_str()))
       {
-         return(languages[i].lang);
-      }
-   }
-   return(LANG_C);
-}
-
-
-/**
- * Find the language for the file extension
- *
- * @param filename   The name of the file
- * @return           LANG_xxx or 0 (no match)
- */
-static int language_from_tag(const char *tag)
-{
-   int i;
-
-   for (i = 0; i < (int)ARRAY_SIZE(languages); i++)
-   {
-      if (strcasecmp(tag, languages[i].tag) == 0)
-      {
-         return(languages[i].lang);
-      }
-   }
-   return(0);
-}
-
-
-/**
- * Gets the tag text for a language
- *
- * @param lang    The LANG_xxx enum
- * @return        A string
- */
-static const char *language_to_string(int lang)
-{
-   int i;
-
-   /* Check for an exact match first */
-   for (i = 0; i < (int)ARRAY_SIZE(languages); i++)
-   {
-      if (languages[i].lang == lang)
-      {
-         return(languages[i].tag);
+         return language_flags_from_name(it->second.c_str());
       }
    }
 
-   /* Check for the first set language bit */
-   for (i = 0; i < (int)ARRAY_SIZE(languages); i++)
+   for (i = 0; i < (int)ARRAY_SIZE(language_exts); i++)
    {
-      if ((languages[i].lang & lang) != 0)
+      if (ends_with(filename, language_exts[i].ext))
       {
-         return(languages[i].tag);
+         return language_flags_from_name(language_exts[i].name);
       }
    }
-   return("???");
+
+   /* check again without case sensitivity */
+   for (extension_map_t::iterator it = g_ext_map.begin(); it != g_ext_map.end(); ++it)
+   {
+      if (ends_with(filename, it->first.c_str(), false))
+      {
+         return language_flags_from_name(it->second.c_str());
+      }
+   }
+   for (i = 0; i < (int)ARRAY_SIZE(language_exts); i++)
+   {
+      if (ends_with(filename, language_exts[i].ext, false))
+      {
+         return language_flags_from_name(language_exts[i].name);
+      }
+   }
+   return LANG_C;
 }
 
 

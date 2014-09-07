@@ -1695,6 +1695,31 @@ int load_option_file(const char *filename)
 
          cpd.line_number = save_line_no;
       }
+      else if (strcasecmp(args[0], "file_ext") == 0)
+      {
+         if (argc < 3)
+         {
+            LOG_FMT(LWARN, "%s:%d 'file_ext' requires at least three arguments\n",
+                    filename, cpd.line_number);
+         }
+         else
+         {
+            for (idx = 2; idx < argc; idx++)
+            {
+               const char *lang_name = extension_add(args[idx], args[1]);
+               if (lang_name)
+               {
+                  LOG_FMT(LNOTE, "%s:%d file_ext '%s' => '%s'\n",
+                          filename, cpd.line_number, args[idx], lang_name);
+               }
+               else
+               {
+                  LOG_FMT(LWARN, "%s:%d file_ext has unknown language '%s'\n",
+                          filename, cpd.line_number, args[1]);
+               }
+            }
+         }
+      }
       else
       {
          /* must be a regular option = value */
@@ -1822,6 +1847,11 @@ int save_option_file(FILE *pfile, bool withDoc)
               "# all tokens are separated by any mix of ',' commas, '=' equal signs\n"
               "# and whitespace (space, tab)\n"
               "#\n"
+              "# You can add support for other file extensions using the 'file_ext' command.\n"
+              "# The first arg is the language name used with the '-l' option.\n"
+              "# The remaining args are file extensions, matched with 'endswith'.\n"
+              "#   file_ext CPP .ch .cxx .cpp.in\n"
+              "#\n"
               );
    }
 
@@ -1830,6 +1860,9 @@ int save_option_file(FILE *pfile, bool withDoc)
 
    /* Print custom defines */
    print_defines(pfile);
+
+   /* Print custom file extensions */
+   print_extensions(pfile);
 
    return(0);
 }

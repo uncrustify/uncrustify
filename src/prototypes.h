@@ -24,6 +24,8 @@ void log_pcf_flags(log_sev_t sev, UINT64 flags);
 const char *path_basename(const char *path);
 int path_dirname_len(const char *filename);
 const char *get_file_extension(int& idx);
+void print_extensions(FILE *pfile);
+const char *extension_add(const char *ext_text, const char *lang_text);
 
 
 /*
