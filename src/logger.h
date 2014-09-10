@@ -150,4 +150,29 @@ static_inline char to_hex_char(int nibble)
 }
 
 
+/**
+ * Create a class at the top of a function to track that function.
+ * Call log_func_stack() to output the trace.
+ * RAII for the win.
+ *
+ * Example:
+ * void foo() {
+ *    LOG_FUNC_ENTRY();
+ * }
+ */
+#ifdef DEBUG
+#define LOG_FUNC_ENTRY()   log_func log_fe = log_func(__func__, __LINE__)
+#else
+#define LOG_FUNC_ENTRY()
+#endif
+
+class log_func
+{
+public:
+   log_func(const char *name, int line);
+   ~log_func();
+};
+void log_func_stack(log_sev_t sev, const char *prefix, bool newline=true);
+
+
 #endif   /* LOGGER_H_INCLUDED */

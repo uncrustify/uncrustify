@@ -12,10 +12,20 @@
 #include "logger.h"
 
 #include <cstdio>
+#include <deque>
 #include <stdarg.h>
 #include "unc_ctype.h"
 #include "log_levels.h"
 
+struct log_fcn_info
+{
+   log_fcn_info(const char *name, int line) : name(name), line(line)
+   {
+   }
+   const char *name;
+   int        line;
+};
+static std::deque<log_fcn_info> g_fq;
 
 /** Private log structure */
 struct log_buf
@@ -369,5 +379,40 @@ void log_hex_blk(log_sev_t sev, const void *data, int len)
          count++;
       }
       log_str(sev, buf, 73);
+   }
+}
+
+
+log_func::log_func(const char *name, int line)
+{
+   g_fq.push_back(log_fcn_info(name, line));
+}
+
+
+log_func::~log_func()
+{
+   g_fq.pop_back();
+}
+
+
+void log_func_stack(log_sev_t sev, const char *prefix, bool newline)
+{
+   if (prefix)
+   {
+      LOG_FMT(sev, "%s", prefix);
+   }
+#ifdef DEBUG
+   const char *sep = "";
+   for (int idx = (int)g_fq.size() - 1; idx >= 0; idx--)
+   {
+      LOG_FMT(sev, "%s %s:%d", sep, g_fq[idx].name, g_fq[idx].line);
+      sep = ",";
+   }
+#else
+   LOG_FMT(sev, "-DEBUG NOT SET-");
+#endif
+   if (newline)
+   {
+      LOG_FMT(sev, "\n");
    }
 }
