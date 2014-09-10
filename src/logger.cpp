@@ -395,15 +395,19 @@ log_func::~log_func()
 }
 
 
-void log_func_stack(log_sev_t sev, const char *prefix, const char *suffix)
+void log_func_stack(log_sev_t sev, const char *prefix, const char *suffix, int skip_cnt)
 {
    if (prefix)
    {
       LOG_FMT(sev, "%s", prefix);
    }
+   if (skip_cnt < 0)
+   {
+      skip_cnt = 0;
+   }
 #ifdef DEBUG
    const char *sep = "";
-   for (int idx = (int)g_fq.size() - 1; idx >= 0; idx--)
+   for (int idx = (int)g_fq.size() - (skip_cnt + 1); idx >= 0; idx--)
    {
       LOG_FMT(sev, "%s %s:%d", sep, g_fq[idx].name, g_fq[idx].line);
       sep = ",";
