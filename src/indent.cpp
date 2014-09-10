@@ -220,13 +220,14 @@ void align_to_column(chunk_t *pc, int column)
  * @param pc      The chunk at the start of the line
  * @param column  The desired column
  */
-void reindent_line2(chunk_t *pc, int column, const char *fcn_name, int lineno)
+void reindent_line(chunk_t *pc, int column)
 {
    LOG_FUNC_ENTRY();
-   LOG_FMT(LINDLINE, "%s: %d] col %d on '%s' [%s/%s] => %d <called from '%s' line %d>\n",
+   LOG_FMT(LINDLINE, "%s: %d] col %d on '%s' [%s/%s] => %d",
            __func__, pc->orig_line, pc->column, pc->str.c_str(),
            get_token_name(pc->type), get_token_name(pc->parent_type),
-           column, fcn_name, lineno);
+           column);
+   log_func_stack_inline(LINDLINE);
 
    if (column == pc->column)
    {

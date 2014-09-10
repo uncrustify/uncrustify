@@ -98,29 +98,28 @@ void flag_series(chunk_t *start, chunk_t *end, UINT64 set_flags, UINT64 clr_flag
  * @param po   Pointer to the open parenthesis
  * @return     The token after the close paren
  */
-#define flag_parens(_po, _flg, _ot, _pt, _pa) \
-   flag_parens2(__func__, __LINE__, _po, _flg, _ot, _pt, _pa)
-
-static chunk_t *flag_parens2(const char *func, int line,
-                             chunk_t *po, UINT64 flags,
-                             c_token_t opentype, c_token_t parenttype,
-                             bool parent_all)
+static chunk_t *flag_parens(chunk_t *po, UINT64 flags,
+                            c_token_t opentype, c_token_t parenttype,
+                            bool parent_all)
 {
+   LOG_FUNC_ENTRY();
    chunk_t *paren_close;
    chunk_t *pc;
 
    paren_close = chunk_skip_to_match(po, CNAV_PREPROC);
    if (paren_close == NULL)
    {
-      LOG_FMT(LERR, "flag_parens[%s:%d]: no match for [%s] at  [%d:%d]\n",
-              func, line, po->str.c_str(), po->orig_line, po->orig_col);
+      LOG_FMT(LERR, "flag_parens: no match for [%s] at [%d:%d]",
+              po->str.c_str(), po->orig_line, po->orig_col);
+      log_func_stack_inline(LERR);
       return(NULL);
    }
 
-   LOG_FMT(LFLPAREN, "flag_parens[%s:%d] @ %d:%d [%s] and %d:%d [%s] type=%s ptype=%s\n",
-           func, line, po->orig_line, po->orig_col, po->text(),
+   LOG_FMT(LFLPAREN, "flag_parens: %d:%d [%s] and %d:%d [%s] type=%s ptype=%s",
+           po->orig_line, po->orig_col, po->text(),
            paren_close->orig_line, paren_close->orig_col, paren_close->text(),
            get_token_name(opentype), get_token_name(parenttype));
+   log_func_stack_inline(LSETTYP);
 
    if (po != paren_close)
    {
@@ -134,21 +133,21 @@ static chunk_t *flag_parens2(const char *func, int line,
             pc->flags |= flags;
             if (parent_all)
             {
-               set_chunk_parent2(pc, parenttype, func, line);
+               set_chunk_parent(pc, parenttype);
             }
          }
       }
 
       if (opentype != CT_NONE)
       {
-         set_chunk_type2(po, opentype, func, line);
-         set_chunk_type2(paren_close, (c_token_t)(opentype + 1), func, line);
+         set_chunk_type(po, opentype);
+         set_chunk_type(paren_close, (c_token_t)(opentype + 1));
       }
 
       if (parenttype != CT_NONE)
       {
-         set_chunk_parent2(po, parenttype, func, line);
-         set_chunk_parent2(paren_close, parenttype, func, line);
+         set_chunk_parent(po, parenttype);
+         set_chunk_parent(paren_close, parenttype);
       }
    }
    return(chunk_get_next_ncnl(paren_close, CNAV_PREPROC));
@@ -164,23 +163,24 @@ static chunk_t *flag_parens2(const char *func, int line,
  * @param parent  The type to assign as the parent
  * @reutrn        The chunk after the close paren
  */
-chunk_t *set_paren_parent2(chunk_t *start, c_token_t parent, const char *func, int line)
+chunk_t *set_paren_parent(chunk_t *start, c_token_t parent)
 {
+   LOG_FUNC_ENTRY();
    chunk_t *end;
 
    end = chunk_skip_to_match(start, CNAV_PREPROC);
    if (end != NULL)
    {
-      LOG_FMT(LFLPAREN, "set_paren_parent[%s:%d] @ %d:%d [%s] and %d:%d [%s] type=%s ptype=%s\n",
-              func, line, start->orig_line, start->orig_col, start->text(),
+      LOG_FMT(LFLPAREN, "set_paren_parent: %d:%d [%s] and %d:%d [%s] type=%s ptype=%s",
+              start->orig_line, start->orig_col, start->text(),
               end->orig_line, end->orig_col, end->text(),
               get_token_name(start->type), get_token_name(parent));
-      set_chunk_parent2(start, parent, func, line);
-      set_chunk_parent2(end, parent, func, line);
+      log_func_stack_inline(LFLPAREN);
+      set_chunk_parent(start, parent);
+      set_chunk_parent(end, parent);
    }
    return(chunk_get_next_ncnl(end, CNAV_PREPROC));
 }
-#define set_paren_parent(_s, _p) set_paren_parent2((_s), (_p), __func__, __LINE__)
 
 
 /* Scan backwards to see if we might be on a type declaration */

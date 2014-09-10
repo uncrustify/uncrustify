@@ -1911,13 +1911,14 @@ int space_col_align(chunk_t *first, chunk_t *second)
    int      coldiff, min_sp;
    argval_t av;
 
-   LOG_FMT(LSPACE, "%s: %d:%d [%s/%s] '%s' <==> %d:%d [%s/%s] '%s'\n", __func__,
+   LOG_FMT(LSPACE, "%s: %d:%d [%s/%s] '%s' <==> %d:%d [%s/%s] '%s'", __func__,
            first->orig_line, first->orig_col,
            get_token_name(first->type), get_token_name(first->parent_type),
            first->text(),
            second->orig_line, second->orig_col,
            get_token_name(second->type), get_token_name(second->parent_type),
            second->text());
+   log_func_stack_inline(LSPACE);
 
    av = do_space(first, second, min_sp);
 

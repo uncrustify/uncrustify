@@ -21,9 +21,7 @@ static bool one_liner_nl_ok(chunk_t *pc);
 static void undo_one_liner(chunk_t *pc);
 static void nl_handle_define(chunk_t *pc);
 
-#define newline_iarf_pair(_b,_a,_v  ) newline_iarf_pair2(_b, _a, _v, __func__, __LINE__)
-static void newline_iarf_pair2(chunk_t *before, chunk_t *after, argval_t av,
-                               const char *func, int line);
+static void newline_iarf_pair(chunk_t *before, chunk_t *after, argval_t av);
 
 #define MARK_CHANGE()    mark_change(__func__, __LINE__)
 static void mark_change(const char *func, int line)
@@ -175,7 +173,7 @@ static void setup_newline_add(chunk_t *prev, chunk_t *nl, chunk_t *next)
  * Add a newline before the chunk if there isn't already a newline present.
  * Virtual braces are skipped, as they do not contribute to the output.
  */
-chunk_t *newline_add_before2(chunk_t *pc, const char *fcn, int line)
+chunk_t *newline_add_before(chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
    chunk_t nl;
@@ -188,8 +186,9 @@ chunk_t *newline_add_before2(chunk_t *pc, const char *fcn, int line)
       return(prev);
    }
 
-   LOG_FMT(LNEWLINE, "%s: '%s' on line %d (called from %s line %d)\n",
-           __func__, pc->str.c_str(), pc->orig_line, fcn, line);
+   LOG_FMT(LNEWLINE, "%s: '%s' on line %d",
+           __func__, pc->str.c_str(), pc->orig_line);
+   log_func_stack_inline(LSETTYP);
 
    setup_newline_add(prev, &nl, pc);
 
@@ -198,10 +197,10 @@ chunk_t *newline_add_before2(chunk_t *pc, const char *fcn, int line)
 }
 
 
-chunk_t *newline_force_before2(chunk_t *pc, const char *fcn, int line)
+chunk_t *newline_force_before(chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
-   chunk_t *nl = newline_add_before2(pc, fcn, line);
+   chunk_t *nl = newline_add_before(pc);
    if (nl && (nl->nl_count > 1))
    {
       nl->nl_count = 1;
@@ -215,7 +214,7 @@ chunk_t *newline_force_before2(chunk_t *pc, const char *fcn, int line)
  * Add a newline after the chunk if there isn't already a newline present.
  * Virtual braces are skipped, as they do not contribute to the output.
  */
-chunk_t *newline_add_after2(chunk_t *pc, const char *fcn, int line)
+chunk_t *newline_add_after(chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
    chunk_t nl;
@@ -233,8 +232,9 @@ chunk_t *newline_add_after2(chunk_t *pc, const char *fcn, int line)
       return(next);
    }
 
-   LOG_FMT(LNEWLINE, "%s: '%s' on line %d (called from %s line %d)\n",
-           __func__, pc->str.c_str(), pc->orig_line, fcn, line);
+   LOG_FMT(LNEWLINE, "%s: '%s' on line %d",
+           __func__, pc->str.c_str(), pc->orig_line);
+   log_func_stack_inline(LNEWLINE);
 
    setup_newline_add(pc, &nl, next);
 
@@ -243,10 +243,10 @@ chunk_t *newline_add_after2(chunk_t *pc, const char *fcn, int line)
 }
 
 
-chunk_t *newline_force_after2(chunk_t *pc, const char *fcn, int line)
+chunk_t *newline_force_after(chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
-   chunk_t *nl = newline_add_after2(pc, fcn, line);
+   chunk_t *nl = newline_add_after(pc);
    if (nl && (nl->nl_count > 1))
    {
       nl->nl_count = 1;
@@ -291,18 +291,15 @@ static void newline_end_newline(chunk_t *br_close)
 }
 
 
-#define newline_min_after(ref, cnt, flag) \
-   newline_min_after2(ref, cnt, flag, __func__, __LINE__)
-
-static void newline_min_after2(chunk_t *ref, INT32 count, UINT64 flag,
-                               const char *func, int line)
+static void newline_min_after(chunk_t *ref, INT32 count, UINT64 flag)
 {
    LOG_FUNC_ENTRY();
    chunk_t *pc = ref;
    chunk_t *next;
 
-   LOG_FMT(LNEWLINE, "%s: '%s' line %d - count=%d flg=0x%" PRIx64 ": caller=%s:%d\n",
-           __func__, ref->str.c_str(), ref->orig_line, count, flag, func, line);
+   LOG_FMT(LNEWLINE, "%s: '%s' line %d - count=%d flg=0x%" PRIx64 ":",
+           __func__, ref->str.c_str(), ref->orig_line, count, flag);
+   log_func_stack_inline(LNEWLINE);
 
    do
    {
@@ -349,8 +346,7 @@ static void newline_min_after2(chunk_t *ref, INT32 count, UINT64 flag,
  *    if (...)   //comment
  *    {
  */
-chunk_t *newline_add_between2(chunk_t *start, chunk_t *end,
-                              const char *func, int line)
+chunk_t *newline_add_between(chunk_t *start, chunk_t *end)
 {
    LOG_FUNC_ENTRY();
    chunk_t *pc;
@@ -360,10 +356,11 @@ chunk_t *newline_add_between2(chunk_t *start, chunk_t *end,
       return(NULL);
    }
 
-   LOG_FMT(LNEWLINE, "%s: '%s'[%s] line %d:%d and '%s' line %d:%d : caller=%s:%d\n",
+   LOG_FMT(LNEWLINE, "%s: '%s'[%s] line %d:%d and '%s' line %d:%d :",
            __func__, start->str.c_str(), get_token_name(start->type),
            start->orig_line, start->orig_col,
-           end->str.c_str(), end->orig_line, end->orig_col, func, line);
+           end->str.c_str(), end->orig_line, end->orig_col);
+   log_func_stack_inline(LNEWLINE);
 
    /* Back-up check for one-liners (should never be true!) */
    if (!one_liner_nl_ok(start))
@@ -412,19 +409,19 @@ chunk_t *newline_add_between2(chunk_t *start, chunk_t *end,
  * @param end     The ending chunk (cannot be a newline)
  * @return        true/false - removed something
  */
-void newline_del_between2(chunk_t *start, chunk_t *end,
-                          const char *func, int line)
+void newline_del_between(chunk_t *start, chunk_t *end)
 {
    LOG_FUNC_ENTRY();
    chunk_t *next;
    chunk_t *prev;
    chunk_t *pc = start;
 
-   LOG_FMT(LNEWLINE, "%s: '%s' line %d:%d and '%s' line %d:%d : caller=%s:%d preproc=%d/%d\n",
+   LOG_FMT(LNEWLINE, "%s: '%s' line %d:%d and '%s' line %d:%d : preproc=%d/%d ",
            __func__, start->str.c_str(), start->orig_line, start->orig_col,
-           end->str.c_str(), end->orig_line, end->orig_col, func, line,
+           end->str.c_str(), end->orig_line, end->orig_col,
            ((start->flags & PCF_IN_PREPROC) != 0),
            ((end->flags & PCF_IN_PREPROC) != 0));
+   log_func_stack_inline(LNEWLINE);
 
    /* Can't remove anything if the preproc status differs */
    if (!chunk_same_preproc(start, end))
@@ -1533,11 +1530,10 @@ static void newline_after_return(chunk_t *start)
  * @param after  The second chunk
  * @param av     The IARF value
  */
-static void newline_iarf_pair2(chunk_t *before, chunk_t *after, argval_t av,
-                               const char *fcn, int line)
+static void newline_iarf_pair(chunk_t *before, chunk_t *after, argval_t av)
 {
    LOG_FUNC_ENTRY();
-   LOG_FMT(LNEWLINE, "%s: called by %s:%d\n", __func__, fcn, line);
+   log_func_stack(LNEWLINE, "Call Stack:");
 
    if ((before != NULL) && (after != NULL))
    {
@@ -1563,10 +1559,10 @@ static void newline_iarf_pair2(chunk_t *before, chunk_t *after, argval_t av,
  * @param pc   The chunk
  * @param av   The IARF value
  */
-void newline_iarf2(chunk_t *pc, argval_t av, const char *fcn, int line)
+void newline_iarf(chunk_t *pc, argval_t av)
 {
    LOG_FUNC_ENTRY();
-   LOG_FMT(LNEWLINE, "%s: called by %s:%d\n", __func__, fcn, line);
+   log_func_stack(LNEWLINE, "CallStack:");
 
    newline_iarf_pair(pc, chunk_get_next_nnl(pc), av);
 }
