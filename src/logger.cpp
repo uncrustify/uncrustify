@@ -395,7 +395,7 @@ log_func::~log_func()
 }
 
 
-void log_func_stack(log_sev_t sev, const char *prefix, bool newline)
+void log_func_stack(log_sev_t sev, const char *prefix, const char *suffix)
 {
    if (prefix)
    {
@@ -411,8 +411,8 @@ void log_func_stack(log_sev_t sev, const char *prefix, bool newline)
 #else
    LOG_FMT(sev, "-DEBUG NOT SET-");
 #endif
-   if (newline)
+   if (suffix)
    {
-      LOG_FMT(sev, "\n");
+      LOG_FMT(sev, "%s", suffix);
    }
 }
