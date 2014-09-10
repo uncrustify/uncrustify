@@ -180,6 +180,7 @@ void chunk_del(chunk_t *pc)
 
 void chunk_move_after(chunk_t *pc_in, chunk_t *ref)
 {
+   LOG_FUNC_ENTRY();
    g_cl.Pop(pc_in);
    g_cl.AddAfter(pc_in, ref);
 

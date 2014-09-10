@@ -28,6 +28,7 @@ static_inline bool is_past_width(chunk_t *pc)
  */
 static void split_before_chunk(chunk_t *pc)
 {
+   LOG_FUNC_ENTRY();
    LOG_FMT(LSPLIT, "%s: %s\n", __func__, pc->str.c_str());
 
    if (!chunk_is_newline(pc) &&
@@ -48,6 +49,7 @@ static void split_before_chunk(chunk_t *pc)
  */
 void do_code_width(void)
 {
+   LOG_FUNC_ENTRY();
    chunk_t *pc;
 
    LOG_FMT(LSPLIT, "%s\n", __func__);
@@ -135,6 +137,7 @@ static int get_split_pri(c_token_t tok)
  */
 static void try_split_here(cw_entry& ent, chunk_t *pc)
 {
+   LOG_FUNC_ENTRY();
    chunk_t *next;
    chunk_t *prev;
    int     pc_pri = get_split_pri(pc->type);
@@ -221,6 +224,7 @@ static void try_split_here(cw_entry& ent, chunk_t *pc)
  */
 static void split_line(chunk_t *start)
 {
+   LOG_FUNC_ENTRY();
    LOG_FMT(LSPLIT, "%s: line %d, col %d token:%s[%s] (IN_FUNC=%d) ",
            __func__, start->orig_line, start->column, start->str.c_str(),
            get_token_name(start->type),
@@ -364,6 +368,7 @@ static void split_line(chunk_t *start)
  */
 static void split_for_stmt(chunk_t *start)
 {
+   LOG_FUNC_ENTRY();
    int     count   = 0;
    int     max_cnt = cpd.settings[UO_ls_for_split_full].b ? 2 : 1;
    chunk_t *st[2];
@@ -471,6 +476,7 @@ static void split_for_stmt(chunk_t *start)
  */
 static void split_fcn_params_full(chunk_t *start)
 {
+   LOG_FUNC_ENTRY();
    LOG_FMT(LSPLIT, "%s", __func__);
 
    chunk_t *fpo;
@@ -518,6 +524,7 @@ static void split_fcn_params_full(chunk_t *start)
  */
 static void split_fcn_params(chunk_t *start)
 {
+   LOG_FUNC_ENTRY();
    LOG_FMT(LSPLIT, "  %s: ", __func__);
 
    chunk_t *prev;

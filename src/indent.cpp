@@ -122,6 +122,7 @@ static bool ifdef_over_whole_file();
 
 void indent_to_column(chunk_t *pc, int column)
 {
+   LOG_FUNC_ENTRY();
    if (column < pc->column)
    {
       column = pc->column;
@@ -140,6 +141,7 @@ enum align_mode
 /* Same as indent_to_column, except we can move both ways */
 void align_to_column(chunk_t *pc, int column)
 {
+   LOG_FUNC_ENTRY();
    if (column == pc->column)
    {
       return;
@@ -220,6 +222,7 @@ void align_to_column(chunk_t *pc, int column)
  */
 void reindent_line2(chunk_t *pc, int column, const char *fcn_name, int lineno)
 {
+   LOG_FUNC_ENTRY();
    LOG_FMT(LINDLINE, "%s: %d] col %d on '%s' [%s/%s] => %d <called from '%s' line %d>\n",
            __func__, pc->orig_line, pc->column, pc->str.c_str(),
            get_token_name(pc->type), get_token_name(pc->parent_type),
@@ -281,6 +284,7 @@ void reindent_line2(chunk_t *pc, int column, const char *fcn_name, int lineno)
  */
 static void indent_pse_push(struct parse_frame& frm, chunk_t *pc)
 {
+   LOG_FUNC_ENTRY();
    static int ref = 0;
 
    /* check the stack depth */
@@ -316,6 +320,7 @@ static void indent_pse_push(struct parse_frame& frm, chunk_t *pc)
  */
 static void indent_pse_pop(struct parse_frame& frm, chunk_t *pc)
 {
+   LOG_FUNC_ENTRY();
    /* Bump up the index and initialize it */
    if (frm.pse_tos > 0)
    {
@@ -400,6 +405,7 @@ static chunk_t *oc_msg_block_indent(chunk_t *pc, bool from_brace,
                                     bool from_caret, bool from_colon,
                                     bool from_keyword)
 {
+   LOG_FUNC_ENTRY();
    chunk_t *tmp = chunk_get_prev_nc(pc);
 
    if (from_brace)
@@ -457,6 +463,7 @@ static chunk_t *oc_msg_prev_colon(chunk_t *pc)
  */
 void indent_text(void)
 {
+   LOG_FUNC_ENTRY();
    chunk_t            *pc;
    chunk_t            *next;
    chunk_t            *prev       = NULL;
@@ -1831,6 +1838,7 @@ void indent_text(void)
  */
 static bool single_line_comment_indent_rule_applies(chunk_t *start)
 {
+   LOG_FUNC_ENTRY();
    chunk_t *pc      = start;
    int     nl_count = 0;
 
@@ -1905,6 +1913,7 @@ static bool single_line_comment_indent_rule_applies(chunk_t *start)
  */
 static void indent_comment(chunk_t *pc, int col)
 {
+   LOG_FUNC_ENTRY();
    chunk_t *nl;
    chunk_t *prev;
 
@@ -1966,6 +1975,7 @@ static void indent_comment(chunk_t *pc, int col)
  */
 static bool ifdef_over_whole_file()
 {
+   LOG_FUNC_ENTRY();
    chunk_t *pc;
    chunk_t *next;
 
@@ -2034,6 +2044,7 @@ static bool ifdef_over_whole_file()
  */
 void indent_preproc(void)
 {
+   LOG_FUNC_ENTRY();
    chunk_t *pc;
    chunk_t *next;
    int     pp_level;

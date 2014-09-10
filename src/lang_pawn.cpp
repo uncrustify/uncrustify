@@ -17,6 +17,7 @@ static chunk_t *pawn_process_func_def(chunk_t *pc);
 
 chunk_t *pawn_add_vsemi_after(chunk_t *pc)
 {
+   LOG_FUNC_ENTRY();
    if ((pc->type == CT_VSEMICOLON) ||
        (pc->type == CT_SEMICOLON))
    {
@@ -52,6 +53,7 @@ chunk_t *pawn_add_vsemi_after(chunk_t *pc)
  */
 void pawn_scrub_vsemi(void)
 {
+   LOG_FUNC_ENTRY();
    if (!cpd.settings[UO_mod_pawn_semicolon].b)
    {
       return;
@@ -89,6 +91,7 @@ void pawn_scrub_vsemi(void)
  */
 static bool pawn_continued(chunk_t *pc, int br_level)
 {
+   LOG_FUNC_ENTRY();
    if (pc == NULL)
    {
       return(false);
@@ -138,6 +141,7 @@ static bool pawn_continued(chunk_t *pc, int br_level)
  */
 void pawn_prescan(void)
 {
+   LOG_FUNC_ENTRY();
    /* Start at the beginning and step through the entire file, and clean up
     * any questionable stuff
     */
@@ -183,6 +187,7 @@ void pawn_prescan(void)
  */
 static chunk_t *pawn_process_line(chunk_t *start)
 {
+   LOG_FUNC_ENTRY();
    chunk_t *pc;
    chunk_t *fcn = NULL;
 
@@ -247,6 +252,7 @@ static chunk_t *pawn_process_line(chunk_t *start)
  */
 static chunk_t *pawn_process_variable(chunk_t *start)
 {
+   LOG_FUNC_ENTRY();
    chunk_t *prev = NULL;
    chunk_t *pc   = start;
 
@@ -270,6 +276,7 @@ static chunk_t *pawn_process_variable(chunk_t *start)
 
 void pawn_add_virtual_semicolons(void)
 {
+   LOG_FUNC_ENTRY();
    chunk_t *prev;
    chunk_t *pc;
 
@@ -315,6 +322,7 @@ void pawn_add_virtual_semicolons(void)
  */
 static chunk_t *pawn_mark_function0(chunk_t *start, chunk_t *fcn)
 {
+   LOG_FUNC_ENTRY();
    chunk_t *last;
 
    /* handle prototypes */
@@ -351,6 +359,7 @@ static chunk_t *pawn_mark_function0(chunk_t *start, chunk_t *fcn)
 
 static chunk_t *pawn_process_func_def(chunk_t *pc)
 {
+   LOG_FUNC_ENTRY();
    /* We are on a function definition */
    chunk_t *clp;
    chunk_t *last;
@@ -470,6 +479,7 @@ static chunk_t *pawn_process_func_def(chunk_t *pc)
  */
 chunk_t *pawn_check_vsemicolon(chunk_t *pc)
 {
+   LOG_FUNC_ENTRY();
    chunk_t *vb_open;
    chunk_t *prev;
 

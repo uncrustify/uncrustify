@@ -75,6 +75,7 @@ struct no_space_table_s no_space_table[] =
 
 static void log_rule2(int line, const char *rule, chunk_t *first, chunk_t *second, bool complete)
 {
+   LOG_FUNC_ENTRY();
    if (second->type != CT_NEWLINE)
    {
       LOG_FMT(LSPACE, "Spacing: line %d [%s/%s] '%s' <===> [%s/%s] '%s' : %s[%d]%s",
@@ -99,6 +100,7 @@ static void log_rule2(int line, const char *rule, chunk_t *first, chunk_t *secon
  */
 static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool complete = true)
 {
+   LOG_FUNC_ENTRY();
    int      idx;
    argval_t arg;
    chunk_t  *next;
@@ -1600,6 +1602,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
  */
 void space_text(void)
 {
+   LOG_FUNC_ENTRY();
    chunk_t *pc;
    chunk_t *next;
    chunk_t *tmp;
@@ -1812,6 +1815,7 @@ void space_text(void)
  */
 void space_text_balance_nested_parens(void)
 {
+   LOG_FUNC_ENTRY();
    chunk_t *first;
    chunk_t *next;
    chunk_t *cur;
@@ -1873,6 +1877,7 @@ void space_text_balance_nested_parens(void)
  */
 int space_needed(chunk_t *first, chunk_t *second)
 {
+   LOG_FUNC_ENTRY();
    int min_sp;
    LOG_FMT(LSPACE, "%s\n", __func__);
    switch (do_space(first, second, min_sp))
@@ -1902,6 +1907,7 @@ int space_needed(chunk_t *first, chunk_t *second)
  */
 int space_col_align(chunk_t *first, chunk_t *second)
 {
+   LOG_FUNC_ENTRY();
    int      coldiff, min_sp;
    argval_t av;
 
@@ -1940,6 +1946,7 @@ int space_col_align(chunk_t *first, chunk_t *second)
 
 void space_add_after(chunk_t *pc, int count)
 {
+   LOG_FUNC_ENTRY();
    if (count <= 0)
    {
       return;

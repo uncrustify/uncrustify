@@ -22,6 +22,7 @@ static void check_unknown_brace_close(chunk_t *semi, chunk_t *brace_close);
 
 static void remove_semicolon(chunk_t *pc)
 {
+   LOG_FUNC_ENTRY();
    LOG_FMT(LDELSEMI, "%s: Removed semicolon at line %d, col %d\n",
            __func__, pc->orig_line, pc->orig_col);
    /* TODO: do we want to shift stuff back a column? */
@@ -39,6 +40,7 @@ static void remove_semicolon(chunk_t *pc)
  */
 void remove_extra_semicolons(void)
 {
+   LOG_FUNC_ENTRY();
    chunk_t *pc;
    chunk_t *next;
    chunk_t *prev;
@@ -110,6 +112,7 @@ void remove_extra_semicolons(void)
  */
 static void check_unknown_brace_close(chunk_t *semi, chunk_t *brace_close)
 {
+   LOG_FUNC_ENTRY();
    chunk_t *pc;
 
    pc = chunk_get_prev_type(brace_close, CT_BRACE_OPEN, brace_close->level);

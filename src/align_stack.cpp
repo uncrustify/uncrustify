@@ -71,6 +71,7 @@ void AlignStack::ReAddSkipped()
  */
 void AlignStack::Add(chunk_t *start, int seqnum)
 {
+   LOG_FUNC_ENTRY();
    /* Assign a seqnum if needed */
    if (seqnum == 0)
    {

@@ -34,6 +34,7 @@ static bool handle_complex_close(struct parse_frame *frm, chunk_t *pc);
 
 static int preproc_start(struct parse_frame *frm, chunk_t *pc)
 {
+   LOG_FUNC_ENTRY();
    chunk_t *next;
    int     pp_level = cpd.pp_level;
 
@@ -73,6 +74,7 @@ static int preproc_start(struct parse_frame *frm, chunk_t *pc)
 static void print_stack(log_sev_t logsev, const char *str,
                         struct parse_frame *frm, chunk_t *pc)
 {
+   LOG_FUNC_ENTRY();
    if (log_sev_on(logsev))
    {
       int idx;
@@ -104,6 +106,7 @@ static void print_stack(log_sev_t logsev, const char *str,
  */
 void brace_cleanup(void)
 {
+   LOG_FUNC_ENTRY();
    chunk_t            *pc;
    struct parse_frame frm;
    int                pp_level;
@@ -175,6 +178,7 @@ void brace_cleanup(void)
  */
 static bool maybe_while_of_do(chunk_t *pc)
 {
+   LOG_FUNC_ENTRY();
    chunk_t *prev;
 
    prev = chunk_get_prev_ncnl(pc);
@@ -203,6 +207,7 @@ static bool maybe_while_of_do(chunk_t *pc)
 static void push_fmr_pse(struct parse_frame *frm, chunk_t *pc,
                          brstage_e stage, const char *logtext)
 {
+   LOG_FUNC_ENTRY();
    if (frm->pse_tos < ((int)ARRAY_SIZE(frm->pse) - 1))
    {
       frm->pse_tos++;
@@ -277,6 +282,7 @@ static void push_fmr_pse(struct parse_frame *frm, chunk_t *pc,
  */
 static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
 {
+   LOG_FUNC_ENTRY();
    c_token_t parent = CT_NONE;
    chunk_t   *prev;
 
@@ -656,6 +662,7 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
  */
 static bool check_complex_statements(struct parse_frame *frm, chunk_t *pc)
 {
+   LOG_FUNC_ENTRY();
    c_token_t parent;
    chunk_t   *vbrace;
 
@@ -803,6 +810,7 @@ static bool check_complex_statements(struct parse_frame *frm, chunk_t *pc)
  */
 static bool handle_complex_close(struct parse_frame *frm, chunk_t *pc)
 {
+   LOG_FUNC_ENTRY();
    chunk_t *next;
 
    if (frm->pse[frm->pse_tos].stage == BS_PAREN1)
@@ -900,6 +908,7 @@ static bool handle_complex_close(struct parse_frame *frm, chunk_t *pc)
 static chunk_t *insert_vbrace(chunk_t *pc, bool after,
                               struct parse_frame *frm)
 {
+   LOG_FUNC_ENTRY();
    chunk_t chunk;
    chunk_t *rv;
    chunk_t *ref;
@@ -967,6 +976,7 @@ static chunk_t *insert_vbrace(chunk_t *pc, bool after,
  */
 bool close_statement(struct parse_frame *frm, chunk_t *pc)
 {
+   LOG_FUNC_ENTRY();
    chunk_t *vbc = pc;
 
    LOG_FMT(LTOK, "%s:%d] %s '%s' type %s stage %d\n", __func__,
