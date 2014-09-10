@@ -845,12 +845,18 @@ static bool parse_cs_string(tok_ctx& ctx, chunk_t& pc)
 {
    pc.str = ctx.get();
    pc.str.append(ctx.get());
+   pc.type = CT_STRING;
 
    /* go until we hit a zero (end of file) or a single " */
    while (ctx.more())
    {
       int ch = ctx.get();
       pc.str.append(ch);
+      if ((ch == '\n') || (ch == '\r'))
+      {
+         pc.type = CT_STRING_MULTI;
+         pc.nl_count++;
+      }
       if (ch == '"')
       {
          if (ctx.peek() == '"')
@@ -864,7 +870,6 @@ static bool parse_cs_string(tok_ctx& ctx, chunk_t& pc)
       }
    }
 
-   pc.type = CT_STRING;
    return(true);
 }
 
