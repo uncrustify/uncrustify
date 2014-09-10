@@ -31,3 +31,5 @@
 10073 ben.cfg                  cs/utf16be_no_bom.cs
 
 10080 ben.cfg                  cs/property.cs
+
+10090 ben.cfg                  cs/string_multi.cs
