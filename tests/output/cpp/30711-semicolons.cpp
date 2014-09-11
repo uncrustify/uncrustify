@@ -96,3 +96,14 @@ class C
 {
 };
 }
+
+void deallocate2(S **s_ptr)
+{
+	{
+		void *stopper_for_apply = (int[]){0};
+		void **list_for_apply = (void *[]){(*s_ptr)->arr, *s_ptr, stopper_for_apply};
+		for (int i = 0;list_for_apply[i] != stopper_for_apply;i++) {
+			saferFree((void *) &(list_for_apply[i]));
+		}
+	}
+}
