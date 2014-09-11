@@ -113,7 +113,7 @@ void remove_extra_semicolons(void)
 /**
  * We are on a semicolon that is after an unidentified brace close.
  * Check for what is before the brace open.
- * Do not remove if it is a square close, word or type.
+ * Do not remove if it is a square close, word, type, or paren close.
  */
 static void check_unknown_brace_close(chunk_t *semi, chunk_t *brace_close)
 {
@@ -127,7 +127,8 @@ static void check_unknown_brace_close(chunk_t *semi, chunk_t *brace_close)
        (pc->type != CT_WORD) &&
        (pc->type != CT_TYPE) &&
        (pc->type != CT_SQUARE_CLOSE) &&
-       (pc->type != CT_TSQUARE))
+       (pc->type != CT_TSQUARE) &&
+       !chunk_is_paren_close(pc))
    {
       remove_semicolon(semi);
    }
