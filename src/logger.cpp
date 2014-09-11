@@ -395,6 +395,16 @@ log_func::~log_func()
 }
 
 
+void log_func_call(int line)
+{
+   /* REVISIT: pass the __func__ and verify it matches the top entry? */
+   if (!g_fq.empty())
+   {
+      g_fq.back().line = line;
+   }
+}
+
+
 void log_func_stack(log_sev_t sev, const char *prefix, const char *suffix, int skip_cnt)
 {
    if (prefix)

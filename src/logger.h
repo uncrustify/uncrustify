@@ -150,28 +150,39 @@ static_inline char to_hex_char(int nibble)
 }
 
 
-/**
- * Create a class at the top of a function to track that function.
- * Call log_func_stack() to output the trace.
- * RAII for the win.
- *
- * Example:
- * void foo() {
- *    LOG_FUNC_ENTRY();
- * }
- */
 #ifdef DEBUG
+
+/**
+ * This should be called as the first thing in a function.
+ * It uses the log_func class to add an entry to the function log stack.
+ * It is automatically removed when the function returns.
+ */
 #define LOG_FUNC_ENTRY()   log_func log_fe = log_func(__func__, __LINE__)
+
+/**
+ * This should be called right before a repeated function call to trace where
+ * the function was called. It does not add an entry, but rather updates the
+ * line number of the top entry.
+ */
+#define LOG_FUNC_CALL()    log_func_call(__LINE__)
+
 #else
 #define LOG_FUNC_ENTRY()
+#define LOG_FUNC_CALL()
 #endif
 
+/**
+ * This class just adds a entry to the top of the stack on construction and
+ * removes it on destruction.
+ * RAII for the win.
+ */
 class log_func
 {
 public:
    log_func(const char *name, int line);
    ~log_func();
 };
+void log_func_call(int line);
 void log_func_stack(log_sev_t sev, const char *prefix=0, const char *suffix="\n", int skip_cnt=0);
 #define log_func_stack_inline(_sev) log_func_stack((_sev), " [CallStack:", "]\n", 1)
 
