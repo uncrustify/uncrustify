@@ -23,8 +23,9 @@ static void check_unknown_brace_close(chunk_t *semi, chunk_t *brace_close);
 static void remove_semicolon(chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
-   LOG_FMT(LDELSEMI, "%s: Removed semicolon at line %d, col %d\n",
+   LOG_FMT(LDELSEMI, "%s: Removed semicolon at line %d, col %d",
            __func__, pc->orig_line, pc->orig_col);
+   log_func_stack_inline(LDELSEMI);
    /* TODO: do we want to shift stuff back a column? */
    chunk_del(pc);
 }
@@ -75,6 +76,7 @@ void remove_extra_semicolons(void)
                    (prev->parent_type == CT_FUNC_CLASS_DEF) ||
                    (prev->parent_type == CT_NAMESPACE)))
          {
+            LOG_FUNC_CALL();
             remove_semicolon(pc);
          }
          else if ((prev->type == CT_BRACE_CLOSE) &&
@@ -85,6 +87,7 @@ void remove_extra_semicolons(void)
          else if ((prev->type == CT_SEMICOLON) &&
                   (prev->parent_type != CT_FOR))
          {
+            LOG_FUNC_CALL();
             remove_semicolon(pc);
          }
          else if ((cpd.lang_flags & LANG_D) &&
@@ -92,10 +95,12 @@ void remove_extra_semicolons(void)
                    (prev->parent_type == CT_UNION) ||
                    (prev->parent_type == CT_STRUCT)))
          {
+            LOG_FUNC_CALL();
             remove_semicolon(pc);
          }
          else if (prev->type == CT_BRACE_OPEN)
          {
+            LOG_FUNC_CALL();
             remove_semicolon(pc);
          }
       }
