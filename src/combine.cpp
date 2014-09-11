@@ -1669,6 +1669,7 @@ static void fix_casts(chunk_t *start)
                            (pc->type == CT_QUALIFIER) ||
                            (pc->type == CT_DC_MEMBER) ||
                            (pc->type == CT_STAR) ||
+                           (pc->type == CT_TSQUARE) ||
                            (pc->type == CT_AMP)))
    {
       LOG_FMT(LCASTS, " [%s]", get_token_name(pc->type));
