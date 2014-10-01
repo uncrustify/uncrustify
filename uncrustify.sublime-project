@@ -1,0 +1,46 @@
+{
+	"folders":
+	[
+		{
+			"path": "src",
+		},
+		{
+			"path": "tests",
+		},
+		{
+			"name": "extras",
+			"path": ".",
+
+			"folder_include_patterns":
+			[
+				"documentation",
+				"documentation/*",
+				"etc",
+				"man",
+				"scripts",
+			],
+			"folder_exclude_patterns":
+			[
+				"images",
+			],
+			"file_exclude_patterns":
+			[
+				".gitignore",
+				"*.odt",
+				"*.jpg",
+				"*.vpj",
+				"*.vpw",
+				"*.sublime-*",
+			],
+		},
+	],
+
+	"build_systems":
+	[
+		{
+			"name": "Uncrustify Test",
+			"cmd": ["python", "run_tests.py", "$file_base_name"],
+			"selector": "text.plain",
+		}
+	]
+}
