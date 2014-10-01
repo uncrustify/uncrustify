@@ -23,6 +23,7 @@ win32/Release
 win32/Debug
 win32/*.*sdf
 win32/*.suo
+win32/*.user
 *.obj
 autom4te.cache
 build
@@ -32,6 +33,7 @@ build
 *.xcodeproj/*.tm_build_errors
 *.tmproj
 *.xcworkspace
+*.sublime-workspace
 xcuserdata
 Debug
 .*
