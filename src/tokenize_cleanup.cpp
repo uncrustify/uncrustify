@@ -721,6 +721,7 @@ void tokenize_cleanup(void)
             if (doit)
             {
                pc->str += next->str;
+               pc->orig_col_end = next->orig_col_end;
                chunk_del(next);
                next = tmp;
             }
