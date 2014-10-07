@@ -1922,7 +1922,17 @@ int space_col_align(chunk_t *first, chunk_t *second)
 
    av = do_space(first, second, min_sp);
 
-   coldiff = first->len();
+   LOG_FMT(LSPACE, "%s: av=%d, ", __func__, av);
+   if (first->nl_count)
+   {
+      LOG_FMT(LSPACE, "nl_count=%d, orig_col_end=%d", first->nl_count, first->orig_col_end);
+      coldiff = first->orig_col_end - 1;
+   }
+   else
+   {
+      LOG_FMT(LSPACE, "len=%d", first->len());
+      coldiff = first->len();
+   }
    switch (av)
    {
    case AV_ADD:
@@ -1940,7 +1950,7 @@ int space_col_align(chunk_t *first, chunk_t *second)
       }
       break;
    }
-   LOG_FMT(LSPACE, "%s: => %d\n", __func__, coldiff);
+   LOG_FMT(LSPACE, " => %d\n", coldiff);
    return(coldiff);
 }
 
