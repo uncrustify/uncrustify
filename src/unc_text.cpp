@@ -50,7 +50,16 @@ void unc_text::update_logtext()
       m_logtext.reserve(m_chars.size() * 3);
       for (value_type::iterator it = m_chars.begin(); it != m_chars.end(); ++it)
       {
-         encode_utf8(*it, m_logtext);
+         int val = *it;
+         if (*it == '\n')
+         {
+            val = 0x2424;
+         }
+         else if (*it == '\r')
+         {
+            val = 0x240d;
+         }
+         encode_utf8(val, m_logtext);
       }
       m_logtext.push_back(0);
       m_logok = true;

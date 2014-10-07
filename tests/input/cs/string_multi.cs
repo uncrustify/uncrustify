@@ -6,5 +6,8 @@ public class C
 abc";
         var y = @"
 abc" + "def";
+        var z = "" +
+@"
+";
     }
 }

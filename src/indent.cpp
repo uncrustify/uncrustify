@@ -246,6 +246,11 @@ void reindent_line(chunk_t *pc, int column)
       {
          break;
       }
+      if (pc->nl_count)
+      {
+         min_col   = 0;
+         col_delta = 0;
+      }
       min_col += space_col_align(pc, next);
       pc       = next;
 
