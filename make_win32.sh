@@ -13,7 +13,7 @@ THEZIP=$RELDIR/$VERDIR.zip
 
 echo "Building version $VERSION for Win32"
 
-./configure --host=i586-mingw32msvc
+./configure --host=i586-mingw32msvc CXXFLAGS="-I../win32"
 
 make clean
 make
