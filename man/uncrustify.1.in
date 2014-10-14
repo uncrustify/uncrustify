@@ -1,4 +1,4 @@
-.TH UNCRUSTIFY "1" "Oct 2009" "uncrustify @PACKAGE_VERSION@" "User Commands"
+.TH UNCRUSTIFY "1" "Oct 2014" "uncrustify @PACKAGE_VERSION@" "User Commands"
 .SH NAME
 uncrustify \- C, C++, C#, D, Java and Pawn source code beautifier
 
@@ -152,7 +152,7 @@ Written by Ben Gardner
 Use the issue tracker at <http://sourceforge.net/projects/uncrustify>
 
 .SH COPYRIGHT
-Copyright (C) 2006\(hy2009 Ben Gardner
+Copyright (C) 2006\(hy2014 Ben Gardner
 
 .SH LICENSE
 GNU GPL version 2 or later <http://gnu.org/licenses/gpl.html>
