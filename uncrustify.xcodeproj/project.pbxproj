@@ -961,6 +961,7 @@
 		8DD76F6C0486A84900D96B5E /* uncrustify */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = uncrustify; sourceTree = BUILT_PRODUCTS_DIR; };
 		A00EAF72185655CF007D4EDC /* nl_brace_square.cfg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = nl_brace_square.cfg; sourceTree = "<group>"; };
 		A00EAF73185656A2007D4EDC /* 50084-more_blocks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "50084-more_blocks.m"; sourceTree = "<group>"; };
+		C3933A131A1F90D5007DFB45 /* ptr_star-4.cfg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "ptr_star-4.cfg"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1245,6 +1246,7 @@
 				6553636A107EB6D900E08A01 /* ptr_star-1.cfg */,
 				6553636B107EB6D900E08A01 /* ptr_star-2.cfg */,
 				6553636C107EB6D900E08A01 /* ptr_star-3.cfg */,
+				C3933A131A1F90D5007DFB45 /* ptr_star-4.cfg */,
 				6553636D107EB6D900E08A01 /* region-0.cfg */,
 				6553636E107EB6D900E08A01 /* region-1.cfg */,
 				6553636F107EB6D900E08A01 /* region-2.cfg */,
