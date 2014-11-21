@@ -1273,14 +1273,18 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
       return(cpd.settings[UO_sp_after_ptr_star_func].a);
    }
 
-   if ((first->type == CT_PTR_TYPE) &&
-       (cpd.settings[UO_sp_after_ptr_star].a != AV_IGNORE) &&
-       CharTable::IsKw1(second->str[0]))
+   if ((first->type == CT_PTR_TYPE) && CharTable::IsKw1(second->str[0]))
    {
-      log_rule("sp_after_ptr_star");
-      return(cpd.settings[UO_sp_after_ptr_star].a);
+       if (second->type == CT_QUALIFIER && (cpd.settings[UO_sp_after_ptr_star_qualifier].a != AV_IGNORE)) {
+           log_rule("sp_after_ptr_star_qualifier");
+           return(cpd.settings[UO_sp_after_ptr_star_qualifier].a);
+       }
+       else if (cpd.settings[UO_sp_after_ptr_star].a != AV_IGNORE) {
+           log_rule("sp_after_ptr_star");
+           return(cpd.settings[UO_sp_after_ptr_star].a);
+       }
    }
-
+    
    if (second->type == CT_PTR_TYPE)
    {
       if (cpd.settings[UO_sp_before_ptr_star_func].a != AV_IGNORE)
