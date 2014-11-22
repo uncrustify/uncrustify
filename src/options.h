@@ -295,6 +295,7 @@ enum uncrustify_options
    UO_sp_before_ptr_star,       // space before a '*' that is part of a type
    UO_sp_before_unnamed_ptr_star,
    UO_sp_after_ptr_star,        // space after a '*' that is part of a type
+   UO_sp_after_ptr_star_qualifier,  // space after a '*' next to a qualifier
    UO_sp_after_ptr_star_func,   // space between a '*' and a function proto/def
    UO_sp_ptr_star_paren,
    UO_sp_before_ptr_star_func,

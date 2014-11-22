@@ -233,6 +233,8 @@ void register_options(void)
                   "Add or remove space between pointer stars '*'");
    unc_add_option("sp_after_ptr_star", UO_sp_after_ptr_star, AT_IARF,
                   "Add or remove space after pointer star '*', if followed by a word.");
+   unc_add_option("sp_after_ptr_star_qualifier", UO_sp_after_ptr_star_qualifier, AT_IARF,
+                   "Add or remove space after pointer star '*', if followed by a qualifier.");
    unc_add_option("sp_after_ptr_star_func", UO_sp_after_ptr_star_func, AT_IARF,
                   "Add or remove space after a pointer star '*', if followed by a func proto/def.");
    unc_add_option("sp_ptr_star_paren", UO_sp_ptr_star_paren, AT_IARF,
