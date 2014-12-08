@@ -1,19 +1,37 @@
 #! /bin/sh
 #
-# Builds the release zip for Windows using mingw
-# On ubuntu, you'll need to install the mingw32 package.
+# Builds the 32-bit Windows release zip using mingw.
+# Tested only on Ubuntu 14.04 x86_64 host.
+# You'll need to install the "mingw-w64" package.
 #
 
-# grab the version - there is probably an easier way...
+# This is the prefix for the mingw32 build
+HOST_PREFIX=i686-w64-mingw32
+
+echo "Configuring for Win32 build..."
+./configure --host=$HOST_PREFIX CXXFLAGS="-I../win32 -static"
+
+# build the version string from git
+python make_version.py > /dev/null
+
+# extract the version from src/uncrustify_version.h...
 VERSION=`grep '#define UNCRUSTIFY_VERSION ' src/uncrustify_version.h | \
          sed -e "s/#define UNCRUSTIFY_VERSION//" -e 's/\"//g' -e 's/ //g'`
-VERDIR=uncrustify-$VERSION-win32
+THISDIR=$PWD
 RELDIR=../release
-THEZIP=$RELDIR/$VERDIR.zip
+if ! [ -e $RELDIR ] ; then
+  mkdir -p $RELDIR
+fi
+# convert RELDIR to an absolute path
+cd $RELDIR
+RELDIR=$PWD
+cd $THISDIR
 
+VERDIR=$RELDIR/uncrustify-$VERSION-win32
+THEZIP=$RELDIR/$(basename $VERDIR).zip
+
+echo
 echo "Building version $VERSION for Win32"
-
-./configure --host=i586-mingw32msvc
 
 make clean
 make
@@ -21,20 +39,19 @@ make
 if [ -e $VERDIR ] ; then
   rm -rf $VERDIR
 fi
-mkdir $VERDIR
+mkdir $VERDIR $VERDIR/cfg $VERDIR/doc
 
 cp src/uncrustify.exe              $VERDIR/
-cp etc/*.cfg                       $VERDIR/
-cp ChangeLog                       $VERDIR/
-cp documentation/htdocs/index.html $VERDIR/
+cp README BUGS ChangeLog           $VERDIR/
+cp etc/*.cfg                       $VERDIR/cfg/
+cp documentation/htdocs/index.html $VERDIR/doc/
 
-strip $VERDIR/uncrustify.exe
+$HOST_PREFIX-strip $VERDIR/uncrustify.exe
 
-if ! [ -e $RELDIR ] ; then
-  mkdir $RELDIR
-fi
 [ -e $THEZIP ] && rm -f $THEZIP
 
-zip -r9 $THEZIP $VERDIR
+cd $RELDIR
+zip -r9 $THEZIP $(basename $VERDIR)/*
+cd $THISDIR
 
 echo "Stored in $THEZIP"

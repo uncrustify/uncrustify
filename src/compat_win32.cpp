@@ -8,7 +8,6 @@
 #ifdef WIN32
 
 #include "windows_compat.h"
-#include "windows.h"
 #include <string>
 #include <cstdio>
 
