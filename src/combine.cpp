@@ -432,6 +432,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       if ((next != NULL) && (next->type == CT_BRACE_OPEN) &&
           (next->parent_type == CT_NONE) &&
           ((pc->type == CT_SQUARE_CLOSE) ||
+           (pc->type == CT_ANGLE_CLOSE) ||
            (pc->type == CT_WORD)))
       {
          handle_cs_property(next);
