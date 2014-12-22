@@ -133,7 +133,7 @@ static const chunk_tag_t keywords[] =
    { "extern",           CT_EXTERN,       LANG_C | LANG_CPP | LANG_CS | LANG_D | LANG_VALA                            },
    { "false",            CT_WORD,         LANG_CPP | LANG_CS | LANG_D | LANG_JAVA | LANG_VALA                         },
    { "file",             CT_PP_FILE,      LANG_PAWN | FLAG_PP                                                         }, // PAWN
-   { "final",            CT_QUALIFIER,    LANG_D | LANG_ECMA                                                          },
+   { "final",            CT_QUALIFIER,    LANG_CPP | LANG_D | LANG_ECMA                                               },
    { "finally",          CT_FINALLY,      LANG_D | LANG_CS | LANG_ECMA | LANG_JAVA                                    },
    { "flags",            CT_TYPE,         LANG_VALA                                                                   },
    { "float",            CT_TYPE,         LANG_ALLC                                                                   },
