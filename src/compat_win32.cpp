@@ -5,7 +5,7 @@
  * @author  Ben Gardner
  * @license GPL v2+
  */
-#ifdef WIN32
+#if defined(_WIN32) && !defined(__CYGWIN__)
 
 #include "windows_compat.h"
 #include <string>
@@ -57,4 +57,4 @@ bool unc_homedir(std::string& home)
    return false;
 }
 
-#endif /* ifdef WIN32 */
+#endif /* if defined(_WIN32) && !defined(__CYGWIN__) */
