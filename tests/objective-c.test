@@ -54,6 +54,7 @@
 50082  sp_after_oc_block_caret_remove.cfg           oc/more_blocks.m
 50083  sp_before_after_oc_block_caret_remove.cfg    oc/more_blocks.m
 50084  nl_brace_square.cfg                          oc/more_blocks.m
+50085  nl_after_func_body-3.cfg                     oc/block_in_method.m
 
 50090  obj-c.cfg                                    oc/kw.m
 

@@ -9,6 +9,8 @@
 #ifndef WINDOWS_COMPAT_H_INCLUDED
 #define WINDOWS_COMPAT_H_INCLUDED
 
+#include "windows.h"
+
 #define HAVE_SYS_STAT_H
 
 #define NO_MACRO_VARARG

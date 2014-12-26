@@ -4,7 +4,7 @@ BUGS:
 Post any bugs to the issue tracker found on the project's Sourceforge page:
   http://sourceforge.net/projects/uncrustify
 
-Before you do so, try running with the latest code from subversion.
+Before you do so, try running with the latest code from git.
 The bug might have already been fixed.
 
 If it hasn't already been reported, then you'll need to file a bug report.
@@ -22,10 +22,10 @@ Finally, create a bug report.
 
 Here's what I like to see in a bug report.
 
-1. The type of problem (crash or bad formatting)
-2. The version of uncrustify you tested with (ie, rev 850)
+1. The type of problem (crash, bad formatting, etc)
+2. The version of uncrustify you tested with (ie, the git hash)
 3. The operating system
-4. The input file or code snippet
+4. The input file or code snippet, including the language (C, C++, Java, etc)
 5. The configuration file you used.
    If it isn't one of the 'standard' ones, then attach it.
 6. The expected output (not needed for crash bugs)

@@ -1303,6 +1303,11 @@ void indent_text(void)
          }
          frm.pse[frm.pse_tos].indent = pc->column + pc->len();
 
+         if ((pc->type == CT_SQUARE_OPEN) && (cpd.lang_flags & LANG_D))
+         {
+            frm.pse[frm.pse_tos].indent_tab = frm.pse[frm.pse_tos].indent;
+         }
+
          if (((pc->type == CT_FPAREN_OPEN) || (pc->type == CT_ANGLE_OPEN)) &&
              ((cpd.settings[UO_indent_func_call_param].b &&
                ((pc->parent_type == CT_FUNC_CALL) ||
