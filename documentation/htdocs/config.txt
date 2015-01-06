@@ -1378,6 +1378,9 @@ nl_before_cpp_comment                     Number
 nl_after_multiline_comment                { False, True }
   Whether to force a newline after a multi-line comment.
 
+nl_after_label_colon                      { False, True}
+  Whether to force a newline after a label (outside of a switch, as for goto)
+
 nl_after_struct                           Number
   The number of newlines after '}' or ';' of a struct/enum/union definition
 
