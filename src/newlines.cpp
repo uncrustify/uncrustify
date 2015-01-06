@@ -2614,6 +2614,26 @@ void newline_after_multiline_comment(void)
 
 
 /**
+ * Handle insertion of blank lines after label colons
+ */
+void newline_after_label_colon(void)
+{
+   LOG_FUNC_ENTRY();
+   chunk_t *pc;
+
+   for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next(pc))
+   {
+      if (pc->type != CT_LABEL_COLON)
+      {
+         continue;
+      }
+
+      newline_add_after(pc);
+   }
+}
+
+
+/**
  * Handle insertion/removal of blank lines before if/for/while/do
  */
 void newlines_insert_blank_lines(void)
