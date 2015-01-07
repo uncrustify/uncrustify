@@ -226,6 +226,9 @@
 
 01060 empty.cfg                c/backslash-newline-lex.c
 
+01070  label_colon_nl_1.cfg    c/various_colons.c
+01071  label_colon_nl_2.cfg    c/various_colons.c
+
 # big general tests
 02000 ben.cfg                  c/i2c-core.c
 02001 preproc-cleanup.cfg      c/directfb.h
