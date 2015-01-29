@@ -2313,17 +2313,12 @@ void combine_labels(void)
             else if (cur->type == CT_WORD)
             {
                tmp = chunk_get_next_nc(next, CNAV_PREPROC);
-               if (chunk_is_newline(prev) && ((tmp == NULL) || (tmp->type != CT_NUMBER)))
-               {
-                  set_chunk_type(cur, CT_LABEL);
-                  set_chunk_type(next, CT_LABEL_COLON);
-               }
-               else if (next->flags & PCF_IN_FCN_CALL)
+               if (next->flags & PCF_IN_FCN_CALL)
                {
                   /* Must be a macro thingy, assume some sort of label */
                   set_chunk_type(next, CT_LABEL_COLON);
                }
-               else
+               else if (next->flags & (PCF_IN_STRUCT | PCF_IN_TYPEDEF))
                {
                   set_chunk_type(next, CT_BIT_COLON);
 
@@ -2339,6 +2334,11 @@ void combine_labels(void)
                         set_chunk_type(tmp, CT_BIT_COLON);
                      }
                   }
+               }
+               else if ((tmp == NULL) || (tmp->type != CT_NUMBER))
+               {
+                  set_chunk_type(cur, CT_LABEL);
+                  set_chunk_type(next, CT_LABEL_COLON);
                }
             }
             else if (nextprev->type == CT_FPAREN_CLOSE)

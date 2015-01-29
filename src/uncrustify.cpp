@@ -1528,6 +1528,10 @@ static void uncrustify_file(const file_mem& fm, FILE *pfout,
          {
             newline_after_multiline_comment();
          }
+         if (cpd.settings[UO_nl_after_label_colon].b)
+         {
+            newline_after_label_colon();
+         }
          newlines_insert_blank_lines();
          if (cpd.settings[UO_pos_bool].tp != TP_IGNORE)
          {

@@ -39,6 +39,7 @@
 00055  cgal.cfg                c/braces-2.c
 00056  brace-remove-all.cfg    c/brace-remove3.c
 00057  if_chain.cfg            c/brace-remove3.c
+00058  brace-kr-nobr.cfg       c/if_chain.c
 
 00060  ben.cfg                 c/braces-2.c
 00061  ben.cfg                 c/braces-3.c
@@ -224,6 +225,9 @@
 01050  func_call_user.cfg      c/func_call_user.c
 
 01060 empty.cfg                c/backslash-newline-lex.c
+
+01070  label_colon_nl_1.cfg    c/various_colons.c
+01071  label_colon_nl_2.cfg    c/various_colons.c
 
 # big general tests
 02000 ben.cfg                  c/i2c-core.c

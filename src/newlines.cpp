@@ -1000,14 +1000,8 @@ static void newlines_do_else(chunk_t *start, argval_t nl_opt)
       else
       {
          newline_iarf_pair(start, next, nl_opt);
-         if ((nl_opt & AV_ADD) != 0)
-         {
-            tmp = chunk_get_next_nc(next);
-            if ((tmp != NULL) && !chunk_is_newline(tmp))
-            {
-               newline_add_between(next, tmp);
-            }
-         }
+
+         newline_add_between(next, chunk_get_next_ncnl(next));
       }
    }
 }
@@ -2615,6 +2609,26 @@ void newline_after_multiline_comment(void)
             break;
          }
       }
+   }
+}
+
+
+/**
+ * Handle insertion of blank lines after label colons
+ */
+void newline_after_label_colon(void)
+{
+   LOG_FUNC_ENTRY();
+   chunk_t *pc;
+
+   for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next(pc))
+   {
+      if (pc->type != CT_LABEL_COLON)
+      {
+         continue;
+      }
+
+      newline_add_after(pc);
    }
 }
 
