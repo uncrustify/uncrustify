@@ -393,7 +393,7 @@ sp_inside_sparen_close                    { Ignore, Add, Remove, Force }
   Add or remove space before if-condition ')'. Overrides sp_inside_sparen.
 
 sp_inside_sparen_open                     { Ignore, Add, Remove, Force }
-  Add or remove space before if-condition '('. Overrides sp_inside_sparen.
+  Add or remove space after if-condition '('. Overrides sp_inside_sparen.
 
 sp_after_sparen                           { Ignore, Add, Remove, Force }
   Add or remove space after ')' of 'if', 'for', 'switch', and 'while'
