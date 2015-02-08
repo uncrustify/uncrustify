@@ -709,6 +709,11 @@ void indent_text(void)
                indent_pse_pop(frm, pc);
                frm.level--;
                pc = chunk_get_next(pc);
+               if (!pc)
+               {
+                  /* need to break out of both the do and while loops */
+                  goto null_pc;
+               }
             }
 
             /* End any assign operations with a semicolon on the same level */
@@ -1816,6 +1821,7 @@ void indent_text(void)
       }
       pc = chunk_get_next(pc);
    }
+null_pc:
 
    /* Throw out any stuff inside a preprocessor - no need to warn */
    while ((frm.pse_tos > 0) && frm.pse[frm.pse_tos].in_preproc)
