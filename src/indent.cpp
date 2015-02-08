@@ -1274,10 +1274,17 @@ void indent_text(void)
             }
             else
             {
-               next = chunk_get_next(pc);
-               if ((next != NULL) && !chunk_is_newline(next))
+               if (cpd.settings[UO_indent_class_on_colon].b && (pc->type == CT_CLASS_COLON))
                {
-                  frm.pse[frm.pse_tos].indent = next->column;
+                  frm.pse[frm.pse_tos].indent = pc->column;
+               }
+               else
+               {
+                  next = chunk_get_next(pc);
+                  if ((next != NULL) && !chunk_is_newline(next))
+                  {
+                     frm.pse[frm.pse_tos].indent = next->column;
+                  }
                }
             }
          }
