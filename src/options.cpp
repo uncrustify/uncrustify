@@ -314,6 +314,12 @@ void register_options(void)
                   "Add or remove space after ','");
    unc_add_option("sp_before_comma", UO_sp_before_comma, AT_IARF,
                   "Add or remove space before ','");
+   unc_add_option("sp_after_mdatype_commas", UO_sp_after_mdatype_commas, AT_IARF,
+                  "Add or remove space between ',' and ']' in multidimensional array type 'int[,,]'");
+   unc_add_option("sp_before_mdatype_commas", UO_sp_before_mdatype_commas, AT_IARF,
+                  "Add or remove space between '[' and ',' in multidimensional array type 'int[,,]'");
+   unc_add_option("sp_between_mdatype_commas", UO_sp_between_mdatype_commas, AT_IARF,
+                  "Add or remove space between ',' in multidimensional array type 'int[,,]'");
    unc_add_option("sp_paren_comma", UO_sp_paren_comma, AT_IARF,
                   "Add or remove space between an open paren and comma: '(,' vs '( ,'\n");
    unc_add_option("sp_before_ellipsis", UO_sp_before_ellipsis, AT_IARF,

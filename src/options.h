@@ -251,6 +251,10 @@ enum uncrustify_options
    UO_sp_before_comma,          // space before ','
    UO_sp_paren_comma,
 
+   UO_sp_before_mdatype_commas,
+   UO_sp_between_mdatype_commas,
+   UO_sp_after_mdatype_commas,
+
    UO_sp_before_ellipsis,       // space before '...'
 
    UO_sp_arith,                 // space around + - / * etc
