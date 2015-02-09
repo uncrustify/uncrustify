@@ -1,0 +1,4 @@
+foo();
+// test \
+// blah();
+bar();
