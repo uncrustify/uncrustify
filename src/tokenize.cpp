@@ -280,6 +280,7 @@ static bool parse_comment(tok_ctx& ctx, chunk_t& pc)
 {
    int  ch;
    bool is_d    = (cpd.lang_flags & LANG_D) != 0;
+   bool is_cs   = (cpd.lang_flags & LANG_CS) != 0;
    int  d_level = 0;
    int  bs_cnt;
 
@@ -311,7 +312,7 @@ static bool parse_comment(tok_ctx& ctx, chunk_t& pc)
             {
                break;
             }
-            if (ch == '\\')
+            if (ch == '\\' && !is_cs) /* backslashes aren't special in comments in C# */
             {
                bs_cnt++;
             }

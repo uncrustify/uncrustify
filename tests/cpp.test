@@ -93,6 +93,7 @@
 30203 cmt_indent-3.cfg                 cpp/cmt_indent.cpp
 30204 comment-align.cfg                cpp/comment-align.cpp
 30205 cmt_right.cfg                    cpp/cmt_right.cpp
+30206 empty.cfg                        cpp/cmt_backslash_eol.cpp
 
 30250 align_fcall.cfg                  cpp/align_fcall.cpp
 30251 align_fcall-2.cfg                cpp/align_fcall.cpp
