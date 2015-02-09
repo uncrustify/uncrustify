@@ -45,6 +45,7 @@ static void handle_oc_message_decl(chunk_t *pc);
 static void handle_oc_message_send(chunk_t *pc);
 static void handle_cs_square_stmt(chunk_t *pc);
 static void handle_cs_property(chunk_t *pc);
+static void handle_cs_array_type(chunk_t *pc);
 static void handle_cpp_template(chunk_t *pc);
 static void handle_cpp_lambda(chunk_t *pc);
 static void handle_d_template(chunk_t *pc);
@@ -437,6 +438,12 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
            (pc->type == CT_WORD)))
       {
          handle_cs_property(next);
+      }
+
+      if ((pc->type == CT_SQUARE_CLOSE) &&
+          (next != NULL) && (next->type == CT_WORD))
+      {
+         handle_cs_array_type(pc);
       }
    }
 
@@ -5179,6 +5186,34 @@ static void handle_cs_property(chunk_t *bro)
             break;
          }
       }
+   }
+}
+
+
+/**
+ * We hit a ']' followed by a WORD. This may be a multidimensional array type.
+ * Example: int[,,] x;
+ * If there is nothing but commas between the open and close, then mark it.
+ */
+static void handle_cs_array_type(chunk_t *pc)
+{
+   chunk_t *prev = chunk_get_prev(pc);
+
+   for (prev = chunk_get_prev(pc);
+        prev && (prev->type == CT_COMMA);
+        prev = chunk_get_prev(prev))
+   {
+      /* empty */
+   }
+
+   if (prev && (prev->type == CT_SQUARE_OPEN))
+   {
+      while (pc != prev)
+      {
+         pc->parent_type = CT_TYPE;
+         pc = chunk_get_prev(pc);
+      }
+      prev->parent_type = CT_TYPE;
    }
 }
 

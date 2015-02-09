@@ -36,3 +36,7 @@
 
 10100 bug_600.cfg              cs/bug_600.cs
 10101 sf607.cfg                cs/sf607.cs
+
+10110 mda_space_a.cfg          cs/mdarray_space.cs
+10111 mda_space_b.cfg          cs/mdarray_space.cs
+10112 mda_space_c.cfg          cs/mdarray_space.cs

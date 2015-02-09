@@ -422,11 +422,34 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
    /* "a,b" vs "a, b" */
    if (first->type == CT_COMMA)
    {
-      log_rule("sp_after_comma");
-      return(cpd.settings[UO_sp_after_comma].a);
+      if (first->parent_type == CT_TYPE)
+      {
+         /* C# multidimensional array type: ',,' vs ', ,' or ',]' vs ', ]' */
+         if (second->type == CT_COMMA)
+         {
+            log_rule("sp_between_mdatype_commas");
+            return cpd.settings[UO_sp_between_mdatype_commas].a;
+         }
+         else
+         {
+            log_rule("sp_after_mdatype_commas");
+            return cpd.settings[UO_sp_after_mdatype_commas].a;
+         }
+      }
+      else
+      {
+         log_rule("sp_after_comma");
+         return(cpd.settings[UO_sp_after_comma].a);
+      }
    }
    if (second->type == CT_COMMA)
    {
+      if ((first->type == CT_SQUARE_OPEN) &&
+          (first->parent_type == CT_TYPE))
+      {
+         log_rule("sp_before_mdatype_commas");
+         return cpd.settings[UO_sp_before_mdatype_commas].a;
+      }
       if ((first->type == CT_PAREN_OPEN) &&
           (cpd.settings[UO_sp_paren_comma].a != AV_IGNORE))
       {
