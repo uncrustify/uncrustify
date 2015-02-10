@@ -39,3 +39,6 @@ Debug
 .*
 uncrustify-*-win32
 src/config.h
+*.sh.trs
+*.sh.log
+test-suite.log
