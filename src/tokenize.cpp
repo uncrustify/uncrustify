@@ -453,17 +453,29 @@ static bool parse_comment(tok_ctx& ctx, chunk_t& pc)
 
    if (cpd.unc_off)
    {
-      if (pc.str.find(UNCRUSTIFY_ON_TEXT) >= 0)
+      const char* ontext = cpd.settings[UO_enable_processing_cmt].str;
+      if (ontext == NULL)
       {
-         LOG_FMT(LBCTRL, "Found '%s' on line %d\n", UNCRUSTIFY_ON_TEXT, pc.orig_line);
+         ontext = UNCRUSTIFY_ON_TEXT;
+      }
+
+      if (pc.str.find(ontext) >= 0)
+      {
+         LOG_FMT(LBCTRL, "Found '%s' on line %d\n", ontext, pc.orig_line);
          cpd.unc_off = false;
       }
    }
    else
    {
-      if (pc.str.find(UNCRUSTIFY_OFF_TEXT) >= 0)
+      const char* offtext = cpd.settings[UO_disable_processing_cmt].str;
+      if (offtext == NULL)
       {
-         LOG_FMT(LBCTRL, "Found '%s' on line %d\n", UNCRUSTIFY_OFF_TEXT, pc.orig_line);
+         offtext = UNCRUSTIFY_OFF_TEXT;
+      }
+
+      if (pc.str.find(offtext) >= 0)
+      {
+         LOG_FMT(LBCTRL, "Found '%s' on line %d\n", offtext, pc.orig_line);
          cpd.unc_off = true;
       }
    }
@@ -1197,7 +1209,7 @@ static bool parse_ignored(tok_ctx& ctx, chunk_t& pc)
       return(true);
    }
 
-   /* See if the INDENT-ON text is on this line */
+   /* See if the UO_enable_processing_cmt text is on this line */
    ctx.save();
    pc.str.clear();
    while (ctx.more() &&
@@ -1212,7 +1224,12 @@ static bool parse_ignored(tok_ctx& ctx, chunk_t& pc)
       return(false);
    }
    /* Note that we aren't actually making sure this is in a comment, yet */
-   if (pc.str.find(UNCRUSTIFY_ON_TEXT) < 0)
+   const char* ontext = cpd.settings[UO_enable_processing_cmt].str;
+   if (ontext == NULL)
+   {
+      ontext = UNCRUSTIFY_ON_TEXT;
+   }
+   if (pc.str.find(ontext) < 0)
    {
       pc.type = CT_IGNORED;
       return(true);

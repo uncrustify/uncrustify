@@ -173,6 +173,10 @@ void register_options(void)
                   "Allow interpreting '>=' and '>>=' as part of a template in 'void f(list<list<B>>=val);'.\n"
                   "If true (default), 'assert(x<0 && y>=3)' will be broken.\n"
                   "Improvements to template detection may make this option obsolete.");
+   unc_add_option("disable_processing_cmt", UO_disable_processing_cmt, AT_STRING,
+                  "Override the default ' *INDENT-OFF*' in comments for disabling processing of part of the file.");
+   unc_add_option("enable_processing_cmt", UO_enable_processing_cmt, AT_STRING,
+                  "Override the default ' *INDENT-ON*' in comments for enabling processing of part of the file.");
 
    unc_add_option("utf8_bom", UO_utf8_bom, AT_IARF,
                   "Control what to do with the UTF-8 BOM (recommend 'remove')");

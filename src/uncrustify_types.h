@@ -25,8 +25,6 @@ using namespace std;
 #include <utime.h>
 #endif
 
-// TODO: make these configurable via options
-// TODO: make a way to set any option via inline comment so don't have to do workarounds globally (or require custom .cfg for a given file)
 #define UNCRUSTIFY_OFF_TEXT    " *INDENT-OFF*"
 #define UNCRUSTIFY_ON_TEXT     " *INDENT-ON*"
 
