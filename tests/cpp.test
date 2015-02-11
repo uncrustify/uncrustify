@@ -210,6 +210,8 @@
 30951 sp_before_tr_emb_cmt-a.cfg       cpp/sp_before_tr_emb_cmt_input.cpp
 30955 indent_ctor_init.cfg             cpp/indent_ctor_init.cpp
 
+31000 digraph.cfg                      cpp/digraph.cpp
+
 31562 sf562.cfg                        cpp/sf562.cpp
 31567 sf567.cfg                        cpp/sf567.cpp
 31583 sf583.cfg                        cpp/sf583.cpp
