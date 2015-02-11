@@ -15,6 +15,7 @@
  *   If you change one of the below symbol tables, re-run punc.py.
  *   $ python scripts/punc.py > src/punctuators.h
  *
+ *   NOTE: the tables below do not need to be sorted.
  */
 
 
@@ -23,6 +24,7 @@ static const chunk_tag_t symbols4[] =
 {
    { "!<>=", CT_COMPARE, LANG_D                         },
    { ">>>=", CT_ASSIGN,  LANG_D | LANG_JAVA | LANG_PAWN },
+   { "%:%:", CT_PP,      LANG_CPP                       }, // digraph ##
 };
 
 /* 3-char symbols */
@@ -77,6 +79,11 @@ static const chunk_tag_t symbols2[] =
    { "~~", CT_COMPARE,      LANG_D                                                     },
    { "=>", CT_LAMBDA,       LANG_VALA | LANG_CS | LANG_D                               },
    { "??", CT_COMPARE,      LANG_CS | LANG_VALA                                        },
+   { "<%", CT_BRACE_OPEN,   LANG_C | LANG_CPP                                          }, // digraph {
+   { "%>", CT_BRACE_CLOSE,  LANG_C | LANG_CPP                                          }, // digraph }
+   { "<:", CT_SQUARE_OPEN,  LANG_C | LANG_CPP                                          }, // digraph [
+   { ":>", CT_SQUARE_CLOSE, LANG_C | LANG_CPP                                          }, // digraph ]
+   { "%:", CT_POUND,        LANG_C | LANG_CPP                                          }, // digraph #
 };
 
 /* 1-char symbols */
