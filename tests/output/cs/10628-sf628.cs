@@ -6,4 +6,6 @@ void foo()
 	func();
 	obj.cb += (p0, p1) => { };
 	func();
+	Action a = delegate { };
+	func();
 }
