@@ -445,6 +445,11 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       {
          handle_cs_array_type(pc);
       }
+
+      if ((pc->type == CT_LAMBDA) && (next->type == CT_BRACE_OPEN))
+      {
+         set_paren_parent(next, pc->type);
+      }
    }
 
    /* C++11 Lambda stuff */
