@@ -1616,6 +1616,10 @@ void tokenize(const deque<int>& data, chunk_t *ref)
              ((chunk.str[chunk.str.size() - 1] == ' ') ||
               (chunk.str[chunk.str.size() - 1] == '\t')))
       {
+         // If comment contains backslash '\' followed by whitespace chars, keep last one;
+         // this will prevent it from turning '\' into line continuation.
+         if (chunk.str.size() > 1 && chunk.str[chunk.str.size() - 2] == '\\')
+            break;
          chunk.str.pop_back();
       }
 
