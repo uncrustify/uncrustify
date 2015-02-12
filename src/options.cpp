@@ -169,6 +169,8 @@ void register_options(void)
                   "The ASCII value of the string escape char, usually 92 (\\) or 94 (^). (Pawn)", "", 0, 255);
    unc_add_option("string_escape_char2", UO_string_escape_char2, AT_NUM,
                   "Alternate string escape char for Pawn. Only works right before the quote char.", "", 0, 255);
+   unc_add_option("string_replace_tab_chars", UO_string_replace_tab_chars, AT_BOOL,
+                  "Replace tab characters found in string literals with the escape sequence \\t instead.");
    unc_add_option("tok_split_gte", UO_tok_split_gte, AT_BOOL,
                   "Allow interpreting '>=' and '>>=' as part of a template in 'void f(list<list<B>>=val);'.\n"
                   "If true (default), 'assert(x<0 && y>=3)' will be broken.\n"

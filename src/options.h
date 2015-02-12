@@ -695,6 +695,7 @@ enum uncrustify_options
 
    UO_string_escape_char,       // the string escape char to use
    UO_string_escape_char2,      // the string escape char to use
+   UO_string_replace_tab_chars, // replace tab chars found in strings to the escape sequence \t
    UO_disable_processing_cmt,   // override UNCRUSTIFY_DEFAULT_OFF_TEXT
    UO_enable_processing_cmt,	// override UNCRUSTIFY_DEFAULT_ON_TEXT
 

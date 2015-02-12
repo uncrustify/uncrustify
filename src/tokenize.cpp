@@ -791,6 +791,7 @@ static bool parse_string(tok_ctx& ctx, chunk_t& pc, int quote_idx, bool allow_es
    int  end_ch;
    char escape_char  = cpd.settings[UO_string_escape_char].n;
    char escape_char2 = cpd.settings[UO_string_escape_char2].n;
+   bool should_escape_tabs = cpd.settings[UO_string_replace_tab_chars].b && (cpd.lang_flags & LANG_ALLC);
 
    pc.str.clear();
    while (quote_idx-- > 0)
@@ -804,7 +805,17 @@ static bool parse_string(tok_ctx& ctx, chunk_t& pc, int quote_idx, bool allow_es
 
    while (ctx.more())
    {
+      int lastcol = ctx.c.col;
       int ch = ctx.get();
+
+      if ((ch == '\t') && should_escape_tabs)
+      {
+         ctx.c.col = lastcol + 2;
+         pc.str.append(escape_char);
+         pc.str.append('t');
+         continue;
+      }
+
       pc.str.append(ch);
       if (ch == '\n')
       {
