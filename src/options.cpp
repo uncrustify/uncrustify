@@ -1572,6 +1572,34 @@ int set_option_value(const char *name, const char *value)
 }
 
 
+bool is_path_relative(const char* path)
+{
+#ifdef WIN32
+
+   // X:\path\to\file style absolute disk path
+   if (isalpha(path[0]) && path[1] == ':')
+   {
+      return false;
+   }
+
+   // \\server\path\to\file style absolute UNC path
+   if (path[0] == '\\' && path[1] == '\\')
+   {
+      return false;
+   }
+
+#endif
+
+   // /path/to/file style absolute path
+   if (path[0] == '/')
+   {
+      return false;
+   }
+
+   return true;
+}
+
+
 int load_option_file(const char *filename)
 {
    FILE *pfile;
@@ -1692,8 +1720,7 @@ int load_option_file(const char *filename)
       {
          int save_line_no = cpd.line_number;
 
-         /* FIXME: detect an absolute path under windows? */
-         if (*args[1] != '/')
+         if (is_path_relative(args[1]))
          {
             /* include is a relative path to the current config file */
             unc_text ut = filename;
