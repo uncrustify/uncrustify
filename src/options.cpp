@@ -285,7 +285,7 @@ void register_options(void)
    unc_add_option("sp_inside_sparen_close", UO_sp_inside_sparen_close, AT_IARF,
                   "Add or remove space before if-condition ')'. Overrides sp_inside_sparen.");
    unc_add_option("sp_inside_sparen_open", UO_sp_inside_sparen_open, AT_IARF,
-                  "Add or remove space before if-condition '('. Overrides sp_inside_sparen.");
+                  "Add or remove space after if-condition '('. Overrides sp_inside_sparen.");
    unc_add_option("sp_after_sparen", UO_sp_after_sparen, AT_IARF,
                   "Add or remove space after ')' of 'if', 'for', 'switch', and 'while'");
    unc_add_option("sp_sparen_brace", UO_sp_sparen_brace, AT_IARF,
