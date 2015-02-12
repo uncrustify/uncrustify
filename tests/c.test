@@ -276,6 +276,8 @@
 02431 align_right_cmt_gap-1.cfg c/cmt_right_align.c
 02432 align_right_cmt_gap-2.cfg c/cmt_right_align.c
 
+02440 empty.cfg                 c/string_utf8.c
+
 02451 return-1.cfg              c/nl_return_expr.c
 02452 return-2.cfg              c/nl_return_expr.c
 02453 return-3.cfg              c/nl_return_expr.c
