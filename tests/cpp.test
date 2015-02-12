@@ -220,4 +220,7 @@
 31593 sf593.cfg                        cpp/sf593.cpp
 
 31700 toggle_processing_cmt.cfg        cpp/toggle_processing_cmt.cpp
-31701 toggle_processing_cmt2.cfg        cpp/toggle_processing_cmt2.cpp
+31701 toggle_processing_cmt2.cfg       cpp/toggle_processing_cmt2.cpp
+
+31710 empty.cfg                        cpp/string_replace_tab_chars.cpp
+31711 string_replace_tab_chars.cfg     cpp/string_replace_tab_chars.cpp
