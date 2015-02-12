@@ -59,6 +59,7 @@
 30063 class-colon-pos-eol-add.cfg      cpp/class-init.cpp
 30064 class-colon-pos-sol-add.cfg      cpp/class-init.cpp
 30065 class-colon-pos-sol.cfg          cpp/Example.h
+30066 class-on-colon-indent.cfg        cpp/class-init.cpp
 
 30070 nl_func_scope_name.cfg           cpp/nl_func_scope_name.cpp
 

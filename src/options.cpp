@@ -602,6 +602,9 @@ void register_options(void)
                   "Whether the 'class' body is indented");
    unc_add_option("indent_class_colon", UO_indent_class_colon, AT_BOOL,
                   "Whether to indent the stuff after a leading base class colon");
+   unc_add_option("indent_class_on_colon", UO_indent_class_on_colon, AT_BOOL,
+                  "Indent based on a class colon instead of the stuff after the colon.\n"
+                  "Requires indent_class_colon=true. Default=false");
    unc_add_option("indent_constr_colon", UO_indent_constr_colon, AT_BOOL,
                   "Whether to indent the stuff after a leading class initializer colon");
    unc_add_option("indent_ctor_init_leading", UO_indent_ctor_init_leading, AT_NUM,
