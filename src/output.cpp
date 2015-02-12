@@ -130,7 +130,7 @@ static void add_text(const unc_text& text, bool is_ignored = false)
 {
    for (int idx = 0; idx < text.size(); idx++)
    {
-      char ch = text[idx];
+      int ch = text[idx];
       if (is_ignored)
       {
          write_char(ch);
