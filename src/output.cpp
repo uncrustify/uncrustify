@@ -369,7 +369,12 @@ void output_text(FILE *pfile)
       }
       else if (pc->type == CT_COMMENT_CPP)
       {
+         bool tmp = cpd.output_trailspace;
+         // keep trailing spaces if they are still present in a chunk;
+         // note that tokenize() already strips spaces in comments, so if they made it up to here, they are to stay
+         cpd.output_trailspace = true;
          pc = output_comment_cpp(pc);
+         cpd.output_trailspace = tmp;
       }
       else if (pc->type == CT_COMMENT)
       {
