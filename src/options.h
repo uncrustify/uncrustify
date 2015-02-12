@@ -695,8 +695,8 @@ enum uncrustify_options
 
    UO_string_escape_char,       // the string escape char to use
    UO_string_escape_char2,      // the string escape char to use
-   UO_disable_processing_cmt,   // override UNCRUSTIFY_DEFAULT_OFF_TEXT
-   UO_enable_processing_cmt,	// override UNCRUSTIFY_DEFAULT_ON_TEXT
+   UO_disable_processing_cmt,   // override UNCRUSTIFY_OFF_TEXT
+   UO_enable_processing_cmt,    // override UNCRUSTIFY_ON_TEXT
 
    /* Hack, add comments to the ends of namespaces */
    UO_mod_add_long_namespace_closebrace_comment,

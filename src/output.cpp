@@ -126,11 +126,19 @@ static void add_text(const char *ascii_text)
 }
 
 
-static void add_text(const unc_text& text)
+static void add_text(const unc_text& text, bool is_ignored = false)
 {
    for (int idx = 0; idx < text.size(); idx++)
    {
-      add_char(text[idx]);
+      char ch = text[idx];
+      if (is_ignored)
+      {
+         write_char(ch);
+      }
+      else
+      {
+         add_char(ch);
+      }
    }
 }
 
@@ -383,7 +391,7 @@ void output_text(FILE *pfile)
       else if ((pc->type == CT_JUNK) || (pc->type == CT_IGNORED))
       {
          /* do not adjust the column for junk */
-         add_text(pc->str);
+         add_text(pc->str, true);
       }
       else if (pc->len() == 0)
       {
