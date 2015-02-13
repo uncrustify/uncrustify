@@ -909,7 +909,12 @@ void indent_text(void)
          frm.level++;
          indent_pse_push(frm, pc);
 
-         frm.pse[frm.pse_tos].indent     = frm.pse[frm.pse_tos - 1].indent + indent_size;
+         int iNewIndent                  = frm.pse[frm.pse_tos - 1].indent + indent_size
+                                           + cpd.settings[ UO_indent_min_vbrace_open ].n;
+         int iTabSize                    = cpd.settings[ UO_output_tab_size ].n;
+         if ( cpd.settings[ UO_indent_vbrace_open_on_tabstop ].b && iTabSize )
+                iNewIndent = ((iNewIndent-1)/iTabSize +1)*iTabSize +1;
+         frm.pse[frm.pse_tos].indent     = iNewIndent;
          frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
          frm.pse[frm.pse_tos].indent_tab = frm.pse[frm.pse_tos].indent;
 
