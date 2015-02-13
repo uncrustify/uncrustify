@@ -192,6 +192,7 @@ enum uncrustify_options
    UO_indent_else_if,
    UO_indent_var_def_blk,        // indent a variable def block that appears at the top
    UO_indent_var_def_cont,
+   UO_indent_shift,              // if a shift expression spans multiple lines, indent
 
    /*
     * Misc inter-element spacing
