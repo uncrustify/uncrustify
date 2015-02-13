@@ -475,6 +475,7 @@ void indent_text(void)
    bool               did_newline = true;
    int                idx;
    int                vardefcol   = 0;
+   int                shiftcontcol = 0;
    int                indent_size = cpd.settings[UO_indent_columns].n;
    int                tmp;
    struct parse_frame frm;
@@ -1514,6 +1515,91 @@ void indent_text(void)
       }
 
       /**
+       * Handle shift expression continuation indenting
+       */
+      shiftcontcol = 0;
+      if (cpd.settings[UO_indent_shift].b && !(pc->flags & PCF_IN_ENUM) &&
+          pc->parent_type != CT_OPERATOR && pc->type != CT_COMMENT &&
+          pc->type != CT_COMMENT_CPP && pc->type != CT_COMMENT_MULTI &&
+          pc->type != CT_BRACE_OPEN &&
+          pc->level > 0 && !chunk_is_blank(pc))
+      {
+         bool in_shift = false;
+         bool is_operator = false;
+
+         /* Are we in such an expression? Go both forwards and backwards. */
+         chunk_t *tmp = pc;
+         do {
+            if (tmp &&
+                (chunk_is_str(tmp, "<<", 2) || chunk_is_str(tmp, ">>", 2))) {
+               in_shift = true;
+
+               tmp = chunk_get_prev_ncnl(tmp);
+               if (tmp && tmp->type == CT_OPERATOR)
+                  is_operator = true;
+
+               break;
+            }
+            tmp = chunk_get_prev_ncnl(tmp);
+         } while (!in_shift && tmp && tmp->type != CT_SEMICOLON &&
+                  tmp->type != CT_BRACE_OPEN && tmp->type != CT_BRACE_CLOSE &&
+                  tmp->type != CT_COMMA && tmp->type != CT_SPAREN_OPEN &&
+                  tmp->type != CT_SPAREN_CLOSE);
+
+         tmp = pc;
+         do {
+            tmp = chunk_get_next_ncnl(tmp);
+            if (tmp &&
+                (chunk_is_str(tmp, "<<", 2) || chunk_is_str(tmp, ">>", 2))) {
+               in_shift = true;
+
+               tmp = chunk_get_prev_ncnl(tmp);
+               if (tmp && tmp->type == CT_OPERATOR)
+                  is_operator = true;
+
+               break;
+            }
+         } while (!in_shift && tmp && tmp->type != CT_SEMICOLON &&
+                   tmp->type != CT_BRACE_OPEN && tmp->type != CT_BRACE_CLOSE &&
+                   tmp->type != CT_COMMA && tmp->type != CT_SPAREN_OPEN &&
+                   tmp->type != CT_SPAREN_CLOSE);
+
+         chunk_t *prev_nonl = chunk_get_prev_ncnl(pc);
+         chunk_t *prev = chunk_get_prev_nc(pc);
+
+         if (prev_nonl &&
+             (chunk_is_semicolon(prev_nonl) || prev_nonl->type == CT_BRACE_OPEN ||
+              prev_nonl->type == CT_BRACE_CLOSE || prev_nonl->type == CT_VBRACE_CLOSE ||
+              prev_nonl->type == CT_VBRACE_OPEN || prev_nonl->type == CT_CASE_COLON ||
+              (prev_nonl->flags & PCF_IN_PREPROC) != (pc->flags & PCF_IN_PREPROC) ||
+              prev_nonl->type == CT_COMMA ||
+              is_operator))
+             in_shift = false;
+
+         if (prev && prev->type == CT_NEWLINE && in_shift) {
+            shiftcontcol = calc_indent_continue(frm, frm.pse_tos);
+            frm.pse[frm.pse_tos].indent_cont = true;
+
+            /* Work around the doubly increased indent in RETURNs and assignments */
+            bool need_workaround = false;
+            int sub = 0;
+            for (int i = frm.pse_tos; i >= 0; i--) {
+               if (frm.pse[i].type == CT_RETURN ||
+                   frm.pse[i].type == CT_ASSIGN) {
+
+                  need_workaround = true;
+                  sub = frm.pse_tos - i + 1;
+                  break;
+               }
+            }
+
+            if (need_workaround) {
+                shiftcontcol = calc_indent_continue(frm, frm.pse_tos - sub);
+            }
+         }
+      }
+
+      /**
        * Handle variable definition continuation indenting
        */
       if ((vardefcol == 0) &&
@@ -1625,6 +1711,12 @@ void indent_text(void)
             LOG_FMT(LINDENT, "%s: %d] Vardefcol => %d\n",
                     __func__, pc->orig_line, vardefcol);
             reindent_line(pc, vardefcol);
+         }
+         else if (shiftcontcol > 0)
+         {
+            LOG_FMT(LINDENT, "%s: %d] indent_shift => %d\n",
+                    __func__, pc->orig_line, shiftcontcol);
+            reindent_line(pc, shiftcontcol);
          }
          else if ((pc->type == CT_NAMESPACE) &&
                   cpd.settings[UO_indent_namespace].b &&
