@@ -297,7 +297,9 @@ int calc_next_tab_column(int col, int tabsize)
    {
       col = 1;
    }
+   if ( cpd.frag_cols > 0 ) col+= cpd.frag_cols-1;
    col = 1 + ((((col - 1) / tabsize) + 1) * tabsize);
+   if ( cpd.frag_cols > 0 ) col-= cpd.frag_cols-1;
    return(col);
 }
 
