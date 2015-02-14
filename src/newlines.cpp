@@ -2744,9 +2744,10 @@ void newlines_eat_start_end(void)
    chunk_t *pc;
 
    /* Process newlines at the start of the file */
-   if (((cpd.settings[UO_nl_start_of_file].a & AV_REMOVE) != 0) ||
+   if ((cpd.frag_cols == 0) &&
+       (((cpd.settings[UO_nl_start_of_file].a & AV_REMOVE) != 0) ||
        (((cpd.settings[UO_nl_start_of_file].a & AV_ADD) != 0) &&
-        (cpd.settings[UO_nl_start_of_file_min].n > 0)))
+        (cpd.settings[UO_nl_start_of_file_min].n > 0))))
    {
       pc = chunk_get_head();
       if (pc != NULL)
@@ -2779,9 +2780,10 @@ void newlines_eat_start_end(void)
    }
 
    /* Process newlines at the end of the file */
-   if (((cpd.settings[UO_nl_end_of_file].a & AV_REMOVE) != 0) ||
+   if ((cpd.frag_cols == 0) &&
+       (((cpd.settings[UO_nl_end_of_file].a & AV_REMOVE) != 0) ||
        (((cpd.settings[UO_nl_end_of_file].a & AV_ADD) != 0) &&
-        (cpd.settings[UO_nl_end_of_file_min].n > 0)))
+        (cpd.settings[UO_nl_end_of_file_min].n > 0))))
    {
       pc = chunk_get_tail();
       if (pc != NULL)
