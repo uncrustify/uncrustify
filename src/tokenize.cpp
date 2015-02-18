@@ -454,7 +454,7 @@ static bool parse_comment(tok_ctx& ctx, chunk_t& pc)
    if (cpd.unc_off)
    {
       const char* ontext = cpd.settings[UO_enable_processing_cmt].str;
-      if (ontext == NULL)
+      if ( (ontext == NULL) || !ontext[0] )
       {
          ontext = UNCRUSTIFY_ON_TEXT;
       }
