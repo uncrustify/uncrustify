@@ -285,6 +285,9 @@
 
 02460 freebsd.cfg               c/freebsd.c
 
+02486 doxy-comment-no.cfg       c/doxy-comment.c
+02487 doxy-comment-yes.cfg      c/doxy-comment.c
+
 02501 ger.cfg			c/custom_types_ssl.c
 02502 custom_types_ssl.cfg	c/custom_types_ssl.c
 02503 ger.cfg			c/pp_concat_asn1.h
