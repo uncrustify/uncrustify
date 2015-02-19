@@ -1444,6 +1444,8 @@ chunk_t *align_trailing_comments(chunk_t *start)
    }
    LOG_FMT(LALADD, "%s:  -- min_orig=%d intend=%d min_allowed=%d ==> col=%d\n", __func__,
            min_orig, intended_col, min_col, col);
+   if ( (cpd.frag_cols > 0) && (cpd.frag_cols <= col) )
+        col-=   cpd.frag_cols;
    align_stack(cs, col, (intended_col != 0), LALTC);
 
    return(chunk_get_next(pc));
