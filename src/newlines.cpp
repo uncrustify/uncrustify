@@ -159,12 +159,12 @@ static void setup_newline_add(chunk_t *prev, chunk_t *nl, chunk_t *next)
    if ((nl->flags & PCF_IN_PREPROC) != 0)
    {
       set_chunk_type(nl, CT_NL_CONT);
-      nl->str  = "\\\n";
+      nl->str = "\\\n";
    }
    else
    {
       set_chunk_type(nl, CT_NEWLINE);
-      nl->str  = "\n";
+      nl->str = "\n";
    }
 }
 
@@ -2746,8 +2746,8 @@ void newlines_eat_start_end(void)
    /* Process newlines at the start of the file */
    if ((cpd.frag_cols == 0) &&
        (((cpd.settings[UO_nl_start_of_file].a & AV_REMOVE) != 0) ||
-       (((cpd.settings[UO_nl_start_of_file].a & AV_ADD) != 0) &&
-        (cpd.settings[UO_nl_start_of_file_min].n > 0))))
+        (((cpd.settings[UO_nl_start_of_file].a & AV_ADD) != 0) &&
+         (cpd.settings[UO_nl_start_of_file_min].n > 0))))
    {
       pc = chunk_get_head();
       if (pc != NULL)
@@ -2782,8 +2782,8 @@ void newlines_eat_start_end(void)
    /* Process newlines at the end of the file */
    if ((cpd.frag_cols == 0) &&
        (((cpd.settings[UO_nl_end_of_file].a & AV_REMOVE) != 0) ||
-       (((cpd.settings[UO_nl_end_of_file].a & AV_ADD) != 0) &&
-        (cpd.settings[UO_nl_end_of_file_min].n > 0))))
+        (((cpd.settings[UO_nl_end_of_file].a & AV_ADD) != 0) &&
+         (cpd.settings[UO_nl_end_of_file_min].n > 0))))
    {
       pc = chunk_get_tail();
       if (pc != NULL)
@@ -2967,17 +2967,17 @@ void newlines_class_colon_pos(c_token_t tok)
 
    if (tok == CT_CLASS_COLON)
    {
-      tpc = cpd.settings[UO_pos_class_colon].tp;
-      anc = cpd.settings[UO_nl_class_colon].a;
+      tpc  = cpd.settings[UO_pos_class_colon].tp;
+      anc  = cpd.settings[UO_nl_class_colon].a;
       ncia = cpd.settings[UO_nl_class_init_args].a;
-      pcc = cpd.settings[UO_pos_class_comma].tp;
+      pcc  = cpd.settings[UO_pos_class_comma].tp;
    }
    else /* tok == CT_CONSTR_COLON */
    {
-      tpc = cpd.settings[UO_pos_constr_colon].tp;
-      anc = cpd.settings[UO_nl_constr_colon].a;
+      tpc  = cpd.settings[UO_pos_constr_colon].tp;
+      anc  = cpd.settings[UO_nl_constr_colon].a;
       ncia = cpd.settings[UO_nl_constr_init_args].a;
-      pcc = cpd.settings[UO_pos_constr_comma].tp;
+      pcc  = cpd.settings[UO_pos_constr_comma].tp;
    }
 
    for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next_ncnl(pc))

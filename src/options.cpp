@@ -240,7 +240,7 @@ void register_options(void)
    unc_add_option("sp_after_ptr_star", UO_sp_after_ptr_star, AT_IARF,
                   "Add or remove space after pointer star '*', if followed by a word.");
    unc_add_option("sp_after_ptr_star_qualifier", UO_sp_after_ptr_star_qualifier, AT_IARF,
-                   "Add or remove space after pointer star '*', if followed by a qualifier.");
+                  "Add or remove space after pointer star '*', if followed by a qualifier.");
    unc_add_option("sp_after_ptr_star_func", UO_sp_after_ptr_star_func, AT_IARF,
                   "Add or remove space after a pointer star '*', if followed by a func proto/def.");
    unc_add_option("sp_ptr_star_paren", UO_sp_ptr_star_paren, AT_IARF,
@@ -543,7 +543,7 @@ void register_options(void)
    unc_add_option("sp_cmt_cpp_start", UO_sp_cmt_cpp_start, AT_IARF,
                   "Control the space after the opening of a C++ comment '// A' vs '//A'");
    unc_add_option("sp_cmt_cpp_doxygen", UO_sp_cmt_cpp_doxygen, AT_BOOL,
-                  "TRUE: If space is added with sp_cmt_cpp_start, do it after doxygen sequences like '///', '///<', '//!' and '//!<'." );
+                  "TRUE: If space is added with sp_cmt_cpp_start, do it after doxygen sequences like '///', '///<', '//!' and '//!<'.");
 
    unc_add_option("sp_endif_cmt", UO_sp_endif_cmt, AT_IARF,
                   "Controls the spaces between #else or #endif and a trailing comment");
@@ -724,7 +724,7 @@ void register_options(void)
                   "When identing after virtual brace open and newline add further spaces to reach this min. indent.");
    unc_add_option("indent_vbrace_open_on_tabstop", UO_indent_vbrace_open_on_tabstop, AT_BOOL,
                   "TRUE: When identing after virtual brace open and newline add further spaces "
-                  "after regular indent to reach next tabstop." );
+                  "after regular indent to reach next tabstop.");
 
    unc_begin_group(UG_newline, "Newline adding and removing options");
    unc_add_option("nl_collapse_empty_body", UO_nl_collapse_empty_body, AT_BOOL,
@@ -1328,9 +1328,9 @@ void register_options(void)
    unc_add_option("pp_indent_at_level", UO_pp_indent_at_level, AT_BOOL,
                   "Whether to indent #if/#else/#endif at the brace level (true) or from column 1 (false)");
    unc_add_option("pp_indent_count", UO_pp_indent_count, AT_NUM,
-	              "Specifies the number of columns to indent preprocessors per level at brace level 0 (file-level).\n"
+                  "Specifies the number of columns to indent preprocessors per level at brace level 0 (file-level).\n"
                   "If pp_indent_at_level=false, specifies the number of columns to indent preprocessors per level at brace level > 0 (function-level).\n"
-				  "Default=1.");
+                  "Default=1.");
    unc_add_option("pp_space", UO_pp_space, AT_IARF,
                   "Add or remove space after # based on pp_level of #if blocks");
    unc_add_option("pp_space_count", UO_pp_space_count, AT_NUM,
@@ -1341,8 +1341,8 @@ void register_options(void)
                   "Whether to indent the code between #region and #endregion");
    unc_add_option("pp_indent_if", UO_pp_indent_if, AT_NUM,
                   "If pp_indent_at_level=true, sets the indent for #if, #else, and #endif when not at file-level.\n"
-				  "0:  indent preprocessors using output_tab_size.\n"
-				  ">0: column at which all preprocessors will be indented.");
+                  "0:  indent preprocessors using output_tab_size.\n"
+                  ">0: column at which all preprocessors will be indented.");
    unc_add_option("pp_if_indent_code", UO_pp_if_indent_code, AT_BOOL,
                   "Control whether to indent the code between #if, #else and #endif.");
    unc_add_option("pp_define_at_level", UO_pp_define_at_level, AT_BOOL,
@@ -1585,22 +1585,20 @@ int set_option_value(const char *name, const char *value)
 }
 
 
-bool is_path_relative(const char* path)
+bool is_path_relative(const char *path)
 {
 #ifdef WIN32
-
    // X:\path\to\file style absolute disk path
-   if (isalpha(path[0]) && path[1] == ':')
+   if (isalpha(path[0]) && (path[1] == ':'))
    {
       return false;
    }
 
    // \\server\path\to\file style absolute UNC path
-   if (path[0] == '\\' && path[1] == '\\')
+   if ((path[0] == '\\') && (path[1] == '\\'))
    {
       return false;
    }
-
 #endif
 
    // /path/to/file style absolute path
@@ -1995,17 +1993,17 @@ void print_options(FILE *pfile)
  */
 void set_option_defaults(void)
 {
-   cpd.settings[UO_newlines].le            = LE_AUTO;
-   cpd.settings[UO_input_tab_size].n       = 8;
-   cpd.settings[UO_output_tab_size].n      = 8;
+   cpd.settings[UO_newlines].le                = LE_AUTO;
+   cpd.settings[UO_input_tab_size].n           = 8;
+   cpd.settings[UO_output_tab_size].n          = 8;
    cpd.settings[UO_indent_ctor_init_leading].n = 2;
-   cpd.settings[UO_indent_columns].n       = 8;
-   cpd.settings[UO_indent_with_tabs].n     = 1;
-   cpd.settings[UO_indent_label].n         = 1;
-   cpd.settings[UO_indent_access_spec].n   = 1;
-   cpd.settings[UO_sp_before_comma].a      = AV_REMOVE;
-   cpd.settings[UO_sp_paren_comma].a       = AV_FORCE;
-   cpd.settings[UO_string_escape_char].n   = '\\';
+   cpd.settings[UO_indent_columns].n           = 8;
+   cpd.settings[UO_indent_with_tabs].n         = 1;
+   cpd.settings[UO_indent_label].n             = 1;
+   cpd.settings[UO_indent_access_spec].n       = 1;
+   cpd.settings[UO_sp_before_comma].a          = AV_REMOVE;
+   cpd.settings[UO_sp_paren_comma].a           = AV_FORCE;
+   cpd.settings[UO_string_escape_char].n       = '\\';
    cpd.settings[UO_sp_not].a               = AV_REMOVE;
    cpd.settings[UO_sp_inv].a               = AV_REMOVE;
    cpd.settings[UO_sp_addr].a              = AV_REMOVE;

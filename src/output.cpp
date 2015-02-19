@@ -18,14 +18,14 @@ static void do_kw_subst(chunk_t *pc);
 
 struct cmt_reflow
 {
-   chunk_t    *pc;
-   int        column;      /* Column of the comment start */
-   int        brace_col;   /* Brace column (for indenting with tabs) */
-   int        base_col;    /* Base column (for indenting with tabs) */
-   int        word_count;  /* number of words on this line */
-   int        xtra_indent; /* extra indent of non-first lines (0 or 1) */
-   unc_text   cont_text;   /* fixed text to output at the start of a line (0 to 3 chars) */
-   bool       reflow;      /* reflow the current line */
+   chunk_t  *pc;
+   int      column;        /* Column of the comment start */
+   int      brace_col;     /* Brace column (for indenting with tabs) */
+   int      base_col;      /* Base column (for indenting with tabs) */
+   int      word_count;    /* number of words on this line */
+   int      xtra_indent;   /* extra indent of non-first lines (0 or 1) */
+   unc_text cont_text;     /* fixed text to output at the start of a line (0 to 3 chars) */
+   bool     reflow;        /* reflow the current line */
 };
 
 
@@ -461,11 +461,12 @@ void output_text(FILE *pfile)
 
          output_to_column(pc->column, allow_tabs);
          add_text(pc->str);
-         cpd.did_newline = chunk_is_newline(pc);
+         cpd.did_newline       = chunk_is_newline(pc);
          cpd.output_trailspace = false;
       }
    }
 }
+
 
 /**
  * Checks for and updates the lead chars.
@@ -520,6 +521,7 @@ static int cmt_parse_lead(const unc_text& line, int is_last)
    return 0;
 }
 
+
 /**
  * Scans a multiline comment to determine the following:
  *  - the extra indent of the non-first line (0 or 1)
@@ -545,7 +547,7 @@ static int cmt_parse_lead(const unc_text& line, int is_last)
  * @param start_col Starting column
  * @return 0 or 1
  */
-static void calculate_comment_body_indent(cmt_reflow &cmt, const unc_text& str)
+static void calculate_comment_body_indent(cmt_reflow& cmt, const unc_text& str)
 {
    int idx       = 0;
    int first_len = 0;
@@ -713,11 +715,12 @@ static void add_comment_text(const unc_text& text,
    bool was_slash = false;
    bool in_word   = false;
    int  tmp;
-   int  len = text.size();
+   int  len    = text.size();
    int  ch_cnt = 0; /* chars since newline */
 
    /* If the '//' is included write it first else we may wrap an empty line */
    int idx = 0;
+
    if (text.startswith("//"))
    {
       add_text("//");
@@ -804,7 +807,7 @@ static void output_cmt_start(cmt_reflow& cmt, chunk_t *pc)
    cmt.word_count  = 0;
    cmt.xtra_indent = 0;
    cmt.cont_text.clear();
-   cmt.reflow      = false;
+   cmt.reflow = false;
 
    if ((pc->flags & PCF_INSERTED))
    {
@@ -963,14 +966,18 @@ static chunk_t *output_comment_cpp(chunk_t *first)
    output_cmt_start(cmt, first);
    cmt.reflow = (cpd.settings[UO_cmt_reflow_mode].n != 1);
 
-   leadin =     "//";                                   // default setting to keep previous behaviour
-   if ( cpd.settings[ UO_sp_cmt_cpp_doxygen ].b ) {     // special treatment for doxygen style comments (treat as unity)
-    const char  *sComment =     first->str.c_str();
-    if ( (sComment[2] == '/') || (sComment[2] == '!') ){// doxygen style found!
-     leadin+=           sComment[2];                    // at least one additional char (either "///" or "//!")
-     if ( sComment[3] == '<' )                          // and a further one (either "///<" or "//!<")
-        leadin+=        '<';
-    }
+   leadin = "//";                                       // default setting to keep previous behaviour
+   if (cpd.settings[UO_sp_cmt_cpp_doxygen].b)           // special treatment for doxygen style comments (treat as unity)
+   {
+      const char *sComment = first->str.c_str();
+      if ((sComment[2] == '/') || (sComment[2] == '!')) // doxygen style found!
+      {
+         leadin += sComment[2];                         // at least one additional char (either "///" or "//!")
+         if (sComment[3] == '<')                        // and a further one (either "///<" or "//!<")
+         {
+            leadin += '<';
+         }
+      }
    }
 
 
@@ -978,8 +985,10 @@ static chunk_t *output_comment_cpp(chunk_t *first)
    if (!cpd.settings[UO_cmt_cpp_to_c].b)
    {
       cmt.cont_text = leadin;
-      if ( cpd.settings[UO_sp_cmt_cpp_start].a != AV_REMOVE )
-        cmt.cont_text+= ' ';
+      if (cpd.settings[UO_sp_cmt_cpp_start].a != AV_REMOVE)
+      {
+         cmt.cont_text += ' ';
+      }
       LOG_CONTTEXT();
 
       if (cpd.settings[UO_sp_cmt_cpp_start].a == AV_IGNORE)
@@ -988,7 +997,7 @@ static chunk_t *output_comment_cpp(chunk_t *first)
       }
       else
       {
-         int  iLISz = leadin.size();
+         int      iLISz = leadin.size();
          unc_text tmp(first->str, 0, iLISz);
          add_comment_text(tmp, cmt, false);
 
@@ -1122,7 +1131,7 @@ static void output_comment_multi(chunk_t *pc)
    int        line_count = 0;
    int        ccol; /* the col of subsequent comment lines */
    int        col_diff = 0;
-   bool       nl_end = false;
+   bool       nl_end   = false;
    cmt_reflow cmt;
 
    //LOG_FMT(LSYS, "%s: line %d\n", __func__, pc->orig_line);
@@ -1130,7 +1139,7 @@ static void output_comment_multi(chunk_t *pc)
    output_cmt_start(cmt, pc);
    cmt.reflow = (cpd.settings[UO_cmt_reflow_mode].n != 1);
 
-   cmt_col = cmt.base_col;
+   cmt_col  = cmt.base_col;
    col_diff = pc->orig_col - cmt.base_col;
 
    calculate_comment_body_indent(cmt, pc->str);
@@ -1411,6 +1420,7 @@ static bool kw_fcn_filename(chunk_t *cmt, unc_text& out_txt)
 static bool kw_fcn_class(chunk_t *cmt, unc_text& out_txt)
 {
    chunk_t *tmp = get_next_class(cmt);
+
    if (tmp)
    {
       out_txt.append(tmp->str);
@@ -1431,7 +1441,7 @@ static bool kw_fcn_message(chunk_t *cmt, unc_text& out_txt)
 
    out_txt.append(fcn->str);
 
-   chunk_t *tmp = chunk_get_next_ncnl(fcn);
+   chunk_t *tmp  = chunk_get_next_ncnl(fcn);
    chunk_t *word = NULL;
    while (tmp)
    {
@@ -1658,9 +1668,10 @@ static bool kw_fcn_fclass(chunk_t *cmt, unc_text& out_txt)
 }
 
 
-struct kw_subst_t {
+struct kw_subst_t
+{
    const char *tag;
-   bool      (*func)(chunk_t *cmt, unc_text& out_txt);
+   bool       (*func)(chunk_t *cmt, unc_text& out_txt);
 };
 
 
@@ -1930,7 +1941,7 @@ void add_long_preprocessor_conditional_block_comment(void)
          }
          else if ((pp_end->pp_level == pp_start->pp_level) &&
                   ((tmp->type == CT_PP_ENDIF) ||
-                   (br_open->type == CT_PP_IF ? tmp->type == CT_PP_ELSE : 0)))
+                   ((br_open->type == CT_PP_IF) ? (tmp->type == CT_PP_ELSE) : 0)))
          {
             br_close = tmp;
 

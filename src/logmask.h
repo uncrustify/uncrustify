@@ -16,7 +16,7 @@
 
 
 /** A simple array of 256 bits */
-typedef std::bitset<256> log_mask_t;
+typedef std::bitset<256>   log_mask_t;
 
 
 /**
@@ -81,6 +81,5 @@ char *logmask_to_str(const log_mask_t& mask, char *buf, int size);
  * @param mask    The mask to populate
  */
 void logmask_from_string(const char *str, log_mask_t& mask);
-
 
 #endif /* LOGMASK_H_INCLUDED */

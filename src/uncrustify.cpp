@@ -657,8 +657,8 @@ static void process_source_list(const char *source_list,
                                 const char *prefix, const char *suffix,
                                 bool no_backup, bool keep_mtime)
 {
-   int from_stdin = strcmp(source_list, "-") == 0;
-   FILE *p_file = from_stdin ? stdin : fopen(source_list, "r");
+   int  from_stdin = strcmp(source_list, "-") == 0;
+   FILE *p_file    = from_stdin ? stdin : fopen(source_list, "r");
 
    if (p_file == NULL)
    {
@@ -1748,7 +1748,7 @@ static void uncrustify_end()
    cpd.in_preproc  = CT_NONE;
    cpd.consumed    = false;
    memset(cpd.le_counts, 0, sizeof(cpd.le_counts));
-   cpd.preproc_ncnl_count = 0;
+   cpd.preproc_ncnl_count    = 0;
    cpd.ifdef_over_whole_file = 0;
 }
 
@@ -1786,14 +1786,14 @@ c_token_t find_token_name(const char *text)
 }
 
 
-static bool ends_with(const char *filename, const char *tag, bool case_sensitive=true)
+static bool ends_with(const char *filename, const char *tag, bool case_sensitive = true)
 {
    int len1 = strlen(filename);
    int len2 = strlen(tag);
 
-   return ((len2 <= len1) &&
-           ((case_sensitive && (strcmp(&filename[len1 - len2], tag) == 0)) ||
-            (!case_sensitive && (strcasecmp(&filename[len1 - len2], tag) == 0))));
+   return((len2 <= len1) &&
+          ((case_sensitive && (strcmp(&filename[len1 - len2], tag) == 0)) ||
+           (!case_sensitive && (strcasecmp(&filename[len1 - len2], tag) == 0))));
 }
 
 
@@ -1915,14 +1915,16 @@ const char *get_file_extension(int& idx)
    return val;
 }
 
+
 // maps a file extension to a language flag. include the ".", as in ".c".
 // These ARE case sensitive user file extensions.
-typedef std::map<string, string> extension_map_t;
+typedef std::map<string, string>   extension_map_t;
 static extension_map_t g_ext_map;
 
 const char *extension_add(const char *ext_text, const char *lang_text)
 {
    int lang_flags = language_flags_from_name(lang_text);
+
    if (lang_flags)
    {
       const char *lang_name = language_name_from_flags(lang_flags);
@@ -1941,7 +1943,7 @@ void print_extensions(FILE *pfile)
    for (int idx = 0; idx < (int)ARRAY_SIZE(language_names); idx++)
    {
       const char *lang_name = language_names[idx].name;
-      bool did_one = false;
+      bool       did_one    = false;
       for (extension_map_t::iterator it = g_ext_map.begin(); it != g_ext_map.end(); ++it)
       {
          if (strcmp(it->second.c_str(), lang_name) == 0)

@@ -98,7 +98,7 @@ void tokenize_cleanup(void)
          {
             /* Change '[' + ']' into '[]' */
             set_chunk_type(pc, CT_TSQUARE);
-            pc->str  = "[]";
+            pc->str = "[]";
             chunk_del(next);
             pc->orig_col_end += 1;
          }
@@ -295,7 +295,7 @@ void tokenize_cleanup(void)
             /* delete PREV and merge with IF */
             pc->str.insert(0, ' ');
             pc->str.insert(0, prev->str);
-            pc->orig_col = prev->orig_col;
+            pc->orig_col  = prev->orig_col;
             pc->orig_line = prev->orig_line;
             chunk_t *tmp = prev;
             prev = chunk_get_prev_ncnl(prev);
@@ -362,7 +362,7 @@ void tokenize_cleanup(void)
             tmp = chunk_get_next(next);
             if ((tmp != NULL) && (tmp->type == CT_PAREN_CLOSE))
             {
-               next->str  = "()";
+               next->str = "()";
                set_chunk_type(next, CT_OPERATOR_VAL);
                chunk_del(tmp);
                next->orig_col_end += 1;
@@ -494,7 +494,7 @@ void tokenize_cleanup(void)
       {
          /* merge the two with a space between */
          pc->str.append(' ');
-         pc->str += next->str;
+         pc->str         += next->str;
          pc->orig_col_end = next->orig_col_end;
          chunk_del(next);
          next = chunk_get_next_ncnl(pc);
@@ -720,7 +720,7 @@ void tokenize_cleanup(void)
 
             if (doit)
             {
-               pc->str += next->str;
+               pc->str         += next->str;
                pc->orig_col_end = next->orig_col_end;
                chunk_del(next);
                next = tmp;

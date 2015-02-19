@@ -128,31 +128,31 @@ enum uncrustify_options
    UO_pp_indent_if,
    UO_pp_if_indent_code,
 
-   UO_indent_switch_case,        // spaces to indent case from switch
-   UO_indent_case_shift,         // spaces to shift the line with the 'case'
-   UO_indent_case_brace,         // spaces to indent '{' from case (usually 0 or indent_columns)
+   UO_indent_switch_case,         // spaces to indent case from switch
+   UO_indent_case_shift,          // spaces to shift the line with the 'case'
+   UO_indent_case_brace,          // spaces to indent '{' from case (usually 0 or indent_columns)
 
-   UO_indent_brace,              // spaces to indent '{' from level (usually 0)
-   UO_indent_braces,             // whether to indent the braces or not
-   UO_indent_braces_no_func,     // whether to not indent the function braces (depends on UO_indent_braces)
-   UO_indent_braces_no_class,    // whether to not indent the class braces (depends on UO_indent_braces)
-   UO_indent_braces_no_struct,   // whether to not indent the struct braces (depends on UO_indent_braces)
-   UO_indent_brace_parent,       // indent the braces based on the parent size (if=3, for=4, etc)
-   UO_indent_paren_open_brace,   // indent on paren level in '({', default by {
-   UO_indent_label,              // 0=left >0=col from left, <0=sub from brace indent
-   UO_indent_access_spec,        // same as indent_label, but for "private:", "public:"
-   UO_indent_access_spec_body,   // indent private/public/protected inside a class (overrides indent_access_spec)
+   UO_indent_brace,               // spaces to indent '{' from level (usually 0)
+   UO_indent_braces,              // whether to indent the braces or not
+   UO_indent_braces_no_func,      // whether to not indent the function braces (depends on UO_indent_braces)
+   UO_indent_braces_no_class,     // whether to not indent the class braces (depends on UO_indent_braces)
+   UO_indent_braces_no_struct,    // whether to not indent the struct braces (depends on UO_indent_braces)
+   UO_indent_brace_parent,        // indent the braces based on the parent size (if=3, for=4, etc)
+   UO_indent_paren_open_brace,    // indent on paren level in '({', default by {
+   UO_indent_label,               // 0=left >0=col from left, <0=sub from brace indent
+   UO_indent_access_spec,         // same as indent_label, but for "private:", "public:"
+   UO_indent_access_spec_body,    // indent private/public/protected inside a class (overrides indent_access_spec)
 
-   UO_indent_align_string,       // True/False - indent align broken strings
-   UO_indent_xml_string,         // Number amount to indent XML strings
+   UO_indent_align_string,        // True/False - indent align broken strings
+   UO_indent_xml_string,          // Number amount to indent XML strings
 
-   UO_indent_col1_comment,       // indent comments in column 1
+   UO_indent_col1_comment,        // indent comments in column 1
 
-   UO_indent_func_def_force_col1,// force indentation of function definition to start in column 1
-   UO_indent_func_call_param,    // indent continued function calls to indent_columns
-   UO_indent_func_proto_param,   // same, but for function protos
-   UO_indent_func_def_param,     // same, but for function defs
-   UO_indent_func_class_param,   // same, but for classes
+   UO_indent_func_def_force_col1, // force indentation of function definition to start in column 1
+   UO_indent_func_call_param,     // indent continued function calls to indent_columns
+   UO_indent_func_proto_param,    // same, but for function protos
+   UO_indent_func_def_param,      // same, but for function defs
+   UO_indent_func_class_param,    // same, but for classes
    UO_indent_func_ctor_var_param,
    UO_indent_template_param,
    UO_indent_func_param_double,             // double the tab indent for
@@ -298,13 +298,13 @@ enum uncrustify_options
    UO_sp_version_paren,
    UO_sp_scope_paren,
 
-   UO_sp_type_func,             // space between return type and 'func'
+   UO_sp_type_func,                // space between return type and 'func'
    // a minimum of 1 is forced except for '*'
-   UO_sp_before_ptr_star,       // space before a '*' that is part of a type
+   UO_sp_before_ptr_star,          // space before a '*' that is part of a type
    UO_sp_before_unnamed_ptr_star,
-   UO_sp_after_ptr_star,        // space after a '*' that is part of a type
-   UO_sp_after_ptr_star_qualifier,  // space after a '*' next to a qualifier
-   UO_sp_after_ptr_star_func,   // space between a '*' and a function proto/def
+   UO_sp_after_ptr_star,           // space after a '*' that is part of a type
+   UO_sp_after_ptr_star_qualifier, // space after a '*' next to a qualifier
+   UO_sp_after_ptr_star_func,      // space between a '*' and a function proto/def
    UO_sp_ptr_star_paren,
    UO_sp_before_ptr_star_func,
    UO_sp_after_byref_func,
@@ -548,45 +548,45 @@ enum uncrustify_options
    UO_nl_scope_brace,
    UO_nl_version_brace,
    UO_nl_using_brace,
-   UO_nl_switch_brace,               /* nl between switch and { */
-   UO_nl_brace_else,                 // nl between } and else
-   UO_nl_brace_while,                // nl between } and while of do stmt
+   UO_nl_switch_brace,                /* nl between switch and { */
+   UO_nl_brace_else,                  // nl between } and else
+   UO_nl_brace_while,                 // nl between } and while of do stmt
 
-   UO_nl_multi_line_cond,            /* nl between ) and { when cond spans >=2 lines */
-   UO_nl_elseif_brace,               // nl between close paren and open brace in 'else if () {'
+   UO_nl_multi_line_cond,             /* nl between ) and { when cond spans >=2 lines */
+   UO_nl_elseif_brace,                // nl between close paren and open brace in 'else if () {'
 
-   UO_nl_multi_line_define,          // nl after define XXX for multi-line define
+   UO_nl_multi_line_define,           // nl after define XXX for multi-line define
 
-   UO_nl_before_if,                  // nl before if
-   UO_nl_after_if,                   // nl after if/else
-   UO_nl_before_for,                 // nl before for
-   UO_nl_after_for,                  // nl after for close
-   UO_nl_before_while,               // nl before while
-   UO_nl_after_while,                // nl after while close
-   UO_nl_before_switch,              // nl before switch
-   UO_nl_after_switch,               // nl after switch close
-   UO_nl_before_do,                  // nl before do
-   UO_nl_after_do,                   // nl after while of do
-   UO_nl_ds_struct_enum_cmt,         // nl between commented-elements of struct/enum
-   UO_nl_ds_struct_enum_close_brace, // force nl before } of struct/union/enum
+   UO_nl_before_if,                   // nl before if
+   UO_nl_after_if,                    // nl after if/else
+   UO_nl_before_for,                  // nl before for
+   UO_nl_after_for,                   // nl after for close
+   UO_nl_before_while,                // nl before while
+   UO_nl_after_while,                 // nl after while close
+   UO_nl_before_switch,               // nl before switch
+   UO_nl_after_switch,                // nl after switch close
+   UO_nl_before_do,                   // nl before do
+   UO_nl_after_do,                    // nl after while of do
+   UO_nl_ds_struct_enum_cmt,          // nl between commented-elements of struct/enum
+   UO_nl_ds_struct_enum_close_brace,  // force nl before } of struct/union/enum
 
-   UO_nl_define_macro,               // alter newlines in #define macros
-   UO_nl_start_of_file,              // alter newlines at the start of file
-   UO_nl_start_of_file_min,          // min number of newlines at the start of the file
-   UO_nl_end_of_file,                // alter newlines at the end of file
-   UO_nl_end_of_file_min,            // min number of newlines at the end of the file
+   UO_nl_define_macro,                // alter newlines in #define macros
+   UO_nl_start_of_file,               // alter newlines at the start of file
+   UO_nl_start_of_file_min,           // min number of newlines at the start of the file
+   UO_nl_end_of_file,                 // alter newlines at the end of file
+   UO_nl_end_of_file_min,             // min number of newlines at the end of the file
 
-   UO_nl_class_colon,                // nl before/after class colon (tied to UO_pos_class_colon)
-   UO_nl_constr_colon,               // nl before/after class constr colon (tied to UO_pos_constr_colon)
-   UO_nl_class_init_args,            // newline after comma in base class list
-   UO_nl_constr_init_args,           // newline after comma in class init args
-   UO_nl_collapse_empty_body,        // change { \n } into {}
-   UO_nl_class_leave_one_liners,     // leave one-line function bodies in "class xx { here }"
-   UO_nl_assign_leave_one_liners,    // leave one-line assign bodies in "foo_t f = { a, b, c };"
-   UO_nl_enum_leave_one_liners,      // leave one-line enum bodies in "enum FOO { BAR = 5 };"
-   UO_nl_getset_leave_one_liners,    // leave one-line get/set bodies
-   UO_nl_func_leave_one_liners,      // leave one-line function def bodies
-   UO_nl_cpp_lambda_leave_one_liners,// leave one-line C++11 lambda bodies
+   UO_nl_class_colon,                 // nl before/after class colon (tied to UO_pos_class_colon)
+   UO_nl_constr_colon,                // nl before/after class constr colon (tied to UO_pos_constr_colon)
+   UO_nl_class_init_args,             // newline after comma in base class list
+   UO_nl_constr_init_args,            // newline after comma in class init args
+   UO_nl_collapse_empty_body,         // change { \n } into {}
+   UO_nl_class_leave_one_liners,      // leave one-line function bodies in "class xx { here }"
+   UO_nl_assign_leave_one_liners,     // leave one-line assign bodies in "foo_t f = { a, b, c };"
+   UO_nl_enum_leave_one_liners,       // leave one-line enum bodies in "enum FOO { BAR = 5 };"
+   UO_nl_getset_leave_one_liners,     // leave one-line get/set bodies
+   UO_nl_func_leave_one_liners,       // leave one-line function def bodies
+   UO_nl_cpp_lambda_leave_one_liners, // leave one-line C++11 lambda bodies
    UO_nl_if_leave_one_liners,
    UO_nl_case_colon_brace,
 
@@ -701,7 +701,7 @@ enum uncrustify_options
    UO_string_escape_char2,      // the string escape char to use
    UO_string_replace_tab_chars, // replace tab chars found in strings to the escape sequence \t
    UO_disable_processing_cmt,   // override UNCRUSTIFY_DEFAULT_OFF_TEXT
-   UO_enable_processing_cmt,	// override UNCRUSTIFY_DEFAULT_ON_TEXT
+   UO_enable_processing_cmt,    // override UNCRUSTIFY_DEFAULT_ON_TEXT
 
    /* Hack, add comments to the ends of namespaces */
    UO_mod_add_long_namespace_closebrace_comment,
@@ -736,5 +736,4 @@ typedef map<uncrustify_groups, group_map_value>::iterator   group_map_it;
 typedef list<uncrustify_options>::iterator                  option_list_it;
 typedef list<uncrustify_options>::const_iterator            option_list_cit;
 
-
-#endif   /* OPTIONS_H_INCLUDED */
+#endif /* OPTIONS_H_INCLUDED */

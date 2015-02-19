@@ -38,6 +38,7 @@ bool unc_getenv(const char *name, std::string& str)
    return true;
 }
 
+
 bool unc_homedir(std::string& home)
 {
    if (unc_getenv("HOME", home))

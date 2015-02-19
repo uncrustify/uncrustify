@@ -22,6 +22,7 @@ struct tok_info
    tok_info() : last_ch(0), idx(0), row(1), col(1)
    {
    }
+
    int last_ch;
    int idx;
    int row;
@@ -35,42 +36,44 @@ struct tok_ctx
    }
 
    /* save before trying to parse something that may fail */
-   void save()
+   void              save()
    {
       save(s);
    }
-   void save(tok_info& info)
+
+   void              save(tok_info& info)
    {
       info = c;
    }
 
    /* restore previous saved state */
-   void restore()
+   void              restore()
    {
       restore(s);
    }
-   void restore(const tok_info& info)
+
+   void              restore(const tok_info& info)
    {
       c = info;
    }
 
-   bool more()
+   bool              more()
    {
       return(c.idx < (int)data.size());
    }
 
-   int peek()
+   int               peek()
    {
       return(more() ? data[c.idx] : -1);
    }
 
-   int peek(int idx)
+   int               peek(int idx)
    {
       idx += c.idx;
       return((idx < (int)data.size()) ? data[idx] : -1);
    }
 
-   int get()
+   int               get()
    {
       if (more())
       {
@@ -104,7 +107,7 @@ struct tok_ctx
       return -1;
    }
 
-   bool expect(int ch)
+   bool              expect(int ch)
    {
       if (peek() == ch)
       {
@@ -296,7 +299,7 @@ static bool parse_comment(tok_ctx& ctx, chunk_t& pc)
 
    /* account for opening two chars */
    pc.str = ctx.get();   /* opening '/' */
-   ch = ctx.get();
+   ch     = ctx.get();
    pc.str.append(ch);    /* second char */
 
    if (ch == '/')
@@ -312,7 +315,7 @@ static bool parse_comment(tok_ctx& ctx, chunk_t& pc)
             {
                break;
             }
-            if (ch == '\\' && !is_cs) /* backslashes aren't special in comments in C# */
+            if ((ch == '\\') && !is_cs) /* backslashes aren't special in comments in C# */
             {
                bs_cnt++;
             }
@@ -453,8 +456,8 @@ static bool parse_comment(tok_ctx& ctx, chunk_t& pc)
 
    if (cpd.unc_off)
    {
-      const char* ontext = cpd.settings[UO_enable_processing_cmt].str;
-      if ( (ontext == NULL) || !ontext[0] )
+      const char *ontext = cpd.settings[UO_enable_processing_cmt].str;
+      if ((ontext == NULL) || !ontext[0])
       {
          ontext = UNCRUSTIFY_ON_TEXT;
       }
@@ -467,8 +470,8 @@ static bool parse_comment(tok_ctx& ctx, chunk_t& pc)
    }
    else
    {
-      const char* offtext = cpd.settings[UO_disable_processing_cmt].str;
-      if ( (offtext == NULL) || !offtext[0] )
+      const char *offtext = cpd.settings[UO_disable_processing_cmt].str;
+      if ((offtext == NULL) || !offtext[0])
       {
          offtext = UNCRUSTIFY_OFF_TEXT;
       }
@@ -481,6 +484,7 @@ static bool parse_comment(tok_ctx& ctx, chunk_t& pc)
    }
    return(true);
 }
+
 
 /**
  * Figure of the length of the code placeholder at text, if present.
@@ -531,8 +535,8 @@ static void parse_suffix(tok_ctx& ctx, chunk_t& pc, bool forstring = false)
 {
    if (CharTable::IsKw1(ctx.peek()))
    {
-      int slen = 0;
-      int oldsize = pc.str.size();
+      int      slen    = 0;
+      int      oldsize = pc.str.size();
       tok_info ss;
 
       /* don't add the suffix if we see L" or L' or S" */
@@ -542,7 +546,7 @@ static void parse_suffix(tok_ctx& ctx, chunk_t& pc, bool forstring = false)
           (((p1 == 'L') && ((p2 == '"') || (p2 == '\''))) ||
            ((p1 == 'S') && (p2 == '"'))))
       {
-          return;
+         return;
       }
       ctx.save(ss);
       while (ctx.more() && CharTable::IsKw2(ctx.peek()))
@@ -567,30 +571,36 @@ static bool is_bin(int ch)
    return((ch == '0') || (ch == '1'));
 }
 
+
 static bool is_bin_(int ch)
 {
    return(is_bin(ch) || (ch == '_'));
 }
+
 
 static bool is_oct(int ch)
 {
    return((ch >= '0') && (ch <= '7'));
 }
 
+
 static bool is_oct_(int ch)
 {
    return(is_oct(ch) || (ch == '_'));
 }
+
 
 static bool is_dec(int ch)
 {
    return((ch >= '0') && (ch <= '9'));
 }
 
+
 static bool is_dec_(int ch)
 {
    return(is_dec(ch) || (ch == '_'));
 }
+
 
 static bool is_hex(int ch)
 {
@@ -598,6 +608,7 @@ static bool is_hex(int ch)
           ((ch >= 'a') && (ch <= 'f')) ||
           ((ch >= 'A') && (ch <= 'F')));
 }
+
 
 static bool is_hex_(int ch)
 {
@@ -789,8 +800,8 @@ static bool parse_string(tok_ctx& ctx, chunk_t& pc, int quote_idx, bool allow_es
 {
    bool escaped = 0;
    int  end_ch;
-   char escape_char  = cpd.settings[UO_string_escape_char].n;
-   char escape_char2 = cpd.settings[UO_string_escape_char2].n;
+   char escape_char        = cpd.settings[UO_string_escape_char].n;
+   char escape_char2       = cpd.settings[UO_string_escape_char2].n;
    bool should_escape_tabs = cpd.settings[UO_string_replace_tab_chars].b && (cpd.lang_flags & LANG_ALLC);
 
    pc.str.clear();
@@ -806,7 +817,7 @@ static bool parse_string(tok_ctx& ctx, chunk_t& pc, int quote_idx, bool allow_es
    while (ctx.more())
    {
       int lastcol = ctx.c.col;
-      int ch = ctx.get();
+      int ch      = ctx.get();
 
       if ((ch == '\t') && should_escape_tabs)
       {
@@ -1235,7 +1246,7 @@ static bool parse_ignored(tok_ctx& ctx, chunk_t& pc)
       return(false);
    }
    /* Note that we aren't actually making sure this is in a comment, yet */
-   const char* ontext = cpd.settings[UO_enable_processing_cmt].str;
+   const char *ontext = cpd.settings[UO_enable_processing_cmt].str;
    if (ontext == NULL)
    {
       ontext = UNCRUSTIFY_ON_TEXT;
@@ -1291,7 +1302,7 @@ static bool parse_ignored(tok_ctx& ctx, chunk_t& pc)
 static bool parse_next(tok_ctx& ctx, chunk_t& pc)
 {
    const chunk_tag_t *punc;
-   int ch, ch1;
+   int               ch, ch1;
 
    if (!ctx.more())
    {
@@ -1411,8 +1422,8 @@ static bool parse_next(tok_ctx& ctx, chunk_t& pc)
        (ctx.peek(1) == '"') &&
        (ctx.peek(2) == '"'))
    {
-       parse_verbatim_string(ctx, pc);
-       return true;
+      parse_verbatim_string(ctx, pc);
+      return true;
    }
 
    /* handle C++0x strings u8"x" u"x" U"x" R"x" u8R"XXX(I'm a "raw UTF-8" string.)XXX" */
@@ -1420,7 +1431,7 @@ static bool parse_next(tok_ctx& ctx, chunk_t& pc)
    if (((cpd.lang_flags & LANG_CPP) != 0) &&
        ((ch == 'u') || (ch == 'U') || (ch == 'R')))
    {
-      int idx = 0;
+      int  idx     = 0;
       bool is_real = false;
 
       if ((ch == 'u') && (ctx.peek(1) == '8'))
@@ -1597,7 +1608,7 @@ void tokenize(const deque<int>& data, chunk_t *ref)
    chunk_t            *rprev = NULL;
    struct parse_frame frm;
    bool               last_was_tab = false;
-   int                prev_sp = 0;
+   int                prev_sp      = 0;
 
    memset(&frm, 0, sizeof(frm));
 
@@ -1616,11 +1627,11 @@ void tokenize(const deque<int>& data, chunk_t *ref)
       if (chunk.type == CT_WHITESPACE)
       {
          last_was_tab = chunk.after_tab;
-         prev_sp = chunk.orig_prev_sp;
+         prev_sp      = chunk.orig_prev_sp;
          continue;
       }
       chunk.orig_prev_sp = prev_sp;
-      prev_sp = 0;
+      prev_sp            = 0;
 
       if (chunk.type == CT_NEWLINE)
       {
@@ -1647,8 +1658,10 @@ void tokenize(const deque<int>& data, chunk_t *ref)
       {
          // If comment contains backslash '\' followed by whitespace chars, keep last one;
          // this will prevent it from turning '\' into line continuation.
-         if (chunk.str.size() > 1 && chunk.str[chunk.str.size() - 2] == '\\')
+         if ((chunk.str.size() > 1) && (chunk.str[chunk.str.size() - 2] == '\\'))
+         {
             break;
+         }
          chunk.str.pop_back();
       }
 
