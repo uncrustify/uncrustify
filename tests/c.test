@@ -294,5 +294,7 @@
 
 02504 align_keep_extra.cfg      c/align_keep_extra.c
 
+07630 indent-vbrace.cfg         c/indent-vbrace.c
+
 09594 ben.cfg                   c/sf594.c
 09588 ben.cfg                   c/sf588.c
