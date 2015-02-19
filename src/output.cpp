@@ -958,15 +958,28 @@ static chunk_t *output_comment_c(chunk_t *first)
 static chunk_t *output_comment_cpp(chunk_t *first)
 {
    cmt_reflow cmt;
-   unc_text   tmp;
+   unc_text   tmp, leadin;
 
    output_cmt_start(cmt, first);
    cmt.reflow = (cpd.settings[UO_cmt_reflow_mode].n != 1);
 
+   leadin =     "//";                                   // default setting to keep previous behaviour
+   if ( cpd.settings[ UO_sp_cmt_cpp_doxygen ].b ) {     // special treatment for doxygen style comments (treat as unity)
+    const char  *sComment =     first->str.c_str();
+    if ( (sComment[2] == '/') || (sComment[2] == '!') ){// doxygen style found!
+     leadin+=           sComment[2];                    // at least one additional char (either "///" or "//!")
+     if ( sComment[3] == '<' )                          // and a further one (either "///<" or "//!<")
+        leadin+=        '<';
+    }
+   }
+
+
    /* CPP comments can't be grouped unless they are converted to C comments */
    if (!cpd.settings[UO_cmt_cpp_to_c].b)
    {
-      cmt.cont_text = (cpd.settings[UO_sp_cmt_cpp_start].a == AV_REMOVE) ? "//" : "// ";
+      cmt.cont_text = leadin;
+      if ( cpd.settings[UO_sp_cmt_cpp_start].a != AV_REMOVE )
+        cmt.cont_text+= ' ';
       LOG_CONTTEXT();
 
       if (cpd.settings[UO_sp_cmt_cpp_start].a == AV_IGNORE)
@@ -975,10 +988,11 @@ static chunk_t *output_comment_cpp(chunk_t *first)
       }
       else
       {
-         unc_text tmp(first->str, 0, 2);
+         int  iLISz = leadin.size();
+         unc_text tmp(first->str, 0, iLISz);
          add_comment_text(tmp, cmt, false);
 
-         tmp.set(first->str, 2, first->len() - 2);
+         tmp.set(first->str, iLISz, first->len() - iLISz);
 
          if (cpd.settings[UO_sp_cmt_cpp_start].a & AV_REMOVE)
          {
