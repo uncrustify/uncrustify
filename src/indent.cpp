@@ -486,7 +486,7 @@ void indent_text(void)
    bool               token_used;
    int                sql_col      = 0;
    int                sql_orig_col = 0;
-   bool               in_func_def = false;
+   bool               in_func_def  = false;
    c_token_t          memtype;
 
    memset(&frm, 0, sizeof(frm));
@@ -725,7 +725,7 @@ void indent_text(void)
                  (pc->type == CT_SPAREN_CLOSE) ||
                  ((pc->type == CT_SQUARE_OPEN) && (pc->parent_type == CT_OC_AT)) ||
                  ((pc->type == CT_SQUARE_OPEN) && (pc->parent_type == CT_ASSIGN))) &&
-                 (pc->parent_type != CT_CPP_LAMBDA))
+                (pc->parent_type != CT_CPP_LAMBDA))
             {
                indent_pse_pop(frm, pc);
             }
@@ -909,7 +909,17 @@ void indent_text(void)
          frm.level++;
          indent_pse_push(frm, pc);
 
-         frm.pse[frm.pse_tos].indent     = frm.pse[frm.pse_tos - 1].indent + indent_size;
+         int iMinIndent = cpd.settings[UO_indent_min_vbrace_open].n;
+         if (indent_size > iMinIndent)
+         {
+            iMinIndent = indent_size;
+         }
+         int iNewIndent = frm.pse[frm.pse_tos - 1].indent + iMinIndent;
+         if (cpd.settings[UO_indent_vbrace_open_on_tabstop].b)
+         {
+            iNewIndent = next_tab_column(iNewIndent);
+         }
+         frm.pse[frm.pse_tos].indent     = iNewIndent;
          frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
          frm.pse[frm.pse_tos].indent_tab = frm.pse[frm.pse_tos].indent;
 
@@ -929,9 +939,9 @@ void indent_text(void)
             /* FIXME: I don't know how much of this is necessary, but it seems to work */
             frm.pse[frm.pse_tos].brace_indent = 1 + (pc->brace_level * indent_size);
             indent_column = frm.pse[frm.pse_tos].brace_indent;
-            frm.pse[frm.pse_tos].indent       = indent_column + indent_size;
-            frm.pse[frm.pse_tos].indent_tab   = frm.pse[frm.pse_tos].indent;
-            frm.pse[frm.pse_tos].indent_tmp   = frm.pse[frm.pse_tos].indent;
+            frm.pse[frm.pse_tos].indent     = indent_column + indent_size;
+            frm.pse[frm.pse_tos].indent_tab = frm.pse[frm.pse_tos].indent;
+            frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
 
             frm.pse[frm.pse_tos - 1].indent_tmp = frm.pse[frm.pse_tos].indent_tmp;
          }
@@ -949,11 +959,11 @@ void indent_text(void)
                if (cpd.settings[UO_indent_oc_block].b ||
                    cpd.settings[UO_indent_oc_block_msg_xcode_style].b)
                {
-                  bool in_oc_msg = (pc->flags & PCF_IN_OC_MSG) != 0;
+                  bool in_oc_msg           = (pc->flags & PCF_IN_OC_MSG);
                   bool indent_from_keyword = cpd.settings[UO_indent_oc_block_msg_from_keyword].b && in_oc_msg;
-                  bool indent_from_colon = cpd.settings[UO_indent_oc_block_msg_from_colon].b && in_oc_msg;
-                  bool indent_from_caret = cpd.settings[UO_indent_oc_block_msg_from_caret].b && in_oc_msg;
-                  bool indent_from_brace = cpd.settings[UO_indent_oc_block_msg_from_brace].b && in_oc_msg;
+                  bool indent_from_colon   = cpd.settings[UO_indent_oc_block_msg_from_colon].b && in_oc_msg;
+                  bool indent_from_caret   = cpd.settings[UO_indent_oc_block_msg_from_caret].b && in_oc_msg;
+                  bool indent_from_brace   = cpd.settings[UO_indent_oc_block_msg_from_brace].b && in_oc_msg;
 
                   // In "Xcode indent mode", we want to indent:
                   //  - if the colon is aligned (namely, if a newline has been
@@ -961,8 +971,8 @@ void indent_text(void)
                   //  - otherwise, indent from previous block (the "else" statement here)
                   if (cpd.settings[UO_indent_oc_block_msg_xcode_style].b)
                   {
-                     chunk_t *colon = oc_msg_prev_colon(pc);
-                     chunk_t *param_name = chunk_get_prev(colon);
+                     chunk_t *colon        = oc_msg_prev_colon(pc);
+                     chunk_t *param_name   = chunk_get_prev(colon);
                      chunk_t *before_param = chunk_get_prev(param_name);
 
                      if (before_param && (before_param->type == CT_NEWLINE))
@@ -1375,8 +1385,8 @@ void indent_text(void)
             if (chunk_is_newline(next))
             {
                int sub = 1;
-               if (frm.pse[frm.pse_tos - 1].type == CT_ASSIGN ||
-                   frm.pse[frm.pse_tos - 1].type == CT_RETURN)
+               if ((frm.pse[frm.pse_tos - 1].type == CT_ASSIGN) ||
+                   (frm.pse[frm.pse_tos - 1].type == CT_RETURN))
                {
                   sub = 2;
                }
@@ -1410,7 +1420,7 @@ void indent_text(void)
                 ((pc->type == CT_FPAREN_OPEN) || (pc->type == CT_SPAREN_OPEN)))
             {
                //frm.pse[frm.pse_tos].indent += abs(cpd.settings[UO_indent_continue].n);
-               frm.pse[frm.pse_tos].indent = calc_indent_continue(frm, frm.pse_tos);
+               frm.pse[frm.pse_tos].indent      = calc_indent_continue(frm, frm.pse_tos);
                frm.pse[frm.pse_tos].indent_cont = true;
             }
          }
@@ -1447,9 +1457,8 @@ void indent_text(void)
                     ((pc->parent_type != CT_FUNC_PROTO) && (pc->parent_type != CT_FUNC_DEF))))
                {
                   //frm.pse[frm.pse_tos].indent += abs(cpd.settings[UO_indent_continue].n);
-                  frm.pse[frm.pse_tos].indent = calc_indent_continue(frm, frm.pse_tos);
+                  frm.pse[frm.pse_tos].indent      = calc_indent_continue(frm, frm.pse_tos);
                   frm.pse[frm.pse_tos].indent_cont = true;
-
                }
             }
             else if (chunk_is_newline(next) || !cpd.settings[UO_indent_align_assign].b)
@@ -1492,7 +1501,7 @@ void indent_text(void)
          {
             //frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent +
             //                              abs(cpd.settings[UO_indent_continue].n);
-            frm.pse[frm.pse_tos].indent = calc_indent_continue(frm, frm.pse_tos - 1);
+            frm.pse[frm.pse_tos].indent      = calc_indent_continue(frm, frm.pse_tos - 1);
             frm.pse[frm.pse_tos].indent_cont = true;
          }
          else
@@ -1533,7 +1542,7 @@ void indent_text(void)
             while (chunk_is_token(tmp, CT_PTR_TYPE))
             {
                vardefcol = tmp->column;
-               tmp = chunk_get_prev_nc(tmp);
+               tmp       = chunk_get_prev_nc(tmp);
             }
          }
       }
@@ -2008,7 +2017,7 @@ static bool ifdef_over_whole_file()
    /* the results for this file are cached */
    if (cpd.ifdef_over_whole_file)
    {
-      return (cpd.ifdef_over_whole_file > 0);
+      return(cpd.ifdef_over_whole_file > 0);
    }
 
    for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next(pc))
@@ -2057,7 +2066,7 @@ static bool ifdef_over_whole_file()
    cpd.ifdef_over_whole_file = (stage == 2) ? 1 : -1;
    LOG_FMT(LNOTE, "The whole file is%s covered by a #IF\n",
            (cpd.ifdef_over_whole_file > 0) ? "" : " NOT");
-   return (cpd.ifdef_over_whole_file > 0);
+   return(cpd.ifdef_over_whole_file > 0);
 }
 
 

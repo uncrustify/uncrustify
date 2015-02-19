@@ -297,6 +297,7 @@ bool chunk_safe_to_del_nl(chunk_t *nl)
    return(chunk_same_preproc(chunk_get_prev(nl), chunk_get_next(nl)));
 }
 
+
 /**
  * Handle for (... in ...) in Objective-C.
  * Returns true if pc->prev points to a CT_FOR and we find a CT_IN before the closing parenthesis.
@@ -322,6 +323,7 @@ bool chunk_is_forin(chunk_t *pc)
    }
    return false;
 }
+
 
 void set_chunk_type(chunk_t *pc, c_token_t tt);
 void set_chunk_parent(chunk_t *pc, c_token_t tt);

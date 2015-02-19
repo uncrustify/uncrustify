@@ -18,7 +18,7 @@
 using namespace std;
 
 /* Dynamic keyword map */
-typedef map<string, c_token_t> dkwmap;
+typedef map<string, c_token_t>   dkwmap;
 static dkwmap dkwm;
 
 
@@ -271,6 +271,7 @@ void init_keywords()
 {
 }
 
+
 /**
  * Compares two chunk_tag_t entries using strcmp on the strings
  *
@@ -316,6 +317,7 @@ void add_keyword(const char *tag, c_token_t type)
 
    /* See if the keyword has already been added */
    dkwmap::iterator it = dkwm.find(ss);
+
    if (it != dkwm.end())
    {
       LOG_FMT(LDYNKW, "%s: changed '%s' to %d\n", __func__, tag, type);

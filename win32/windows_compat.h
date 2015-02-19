@@ -75,5 +75,4 @@ typedef unsigned long long UINT64;
 #define mkdir(x, y) _mkdir(x)
 #define PATH_SEP  '\\'
 
-#endif   /* WINDOWS_COMPAT_H_INCLUDED */
-
+#endif /* WINDOWS_COMPAT_H_INCLUDED */

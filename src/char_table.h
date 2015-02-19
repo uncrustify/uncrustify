@@ -17,7 +17,7 @@
  */
 struct CharTable
 {
-   static int chars[128];
+   static int         chars[128];
 
    enum
    {
@@ -25,7 +25,7 @@ struct CharTable
       KW2 = 0x0200,
    };
 
-   static inline int Get(char ch)
+   static inline int  Get(char ch)
    {
       if ((ch & 0x80) == 0)
       {
@@ -41,12 +41,10 @@ struct CharTable
       return(KW1 | KW2);
    }
 
-
    static inline bool IsKw1(char ch)
    {
       return((Get(ch) & KW1) != 0);
    }
-
 
    static inline bool IsKw2(char ch)
    {
@@ -76,4 +74,4 @@ int CharTable::chars[128] =
 };
 #endif /* DEFINE_CHAR_TABLE */
 
-#endif   /* CHAR_TABLE_H_INCLUDED */
+#endif /* CHAR_TABLE_H_INCLUDED */

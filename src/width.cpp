@@ -81,15 +81,15 @@ struct token_pri
 
 static const token_pri pri_table[] =
 {
-   { CT_SEMICOLON,   1  },
-   { CT_COMMA,       2  },
-   { CT_BOOL,        3  },
-   { CT_COMPARE,     4  },
-   { CT_ARITH,       5  },
-   { CT_CARET,       6  },
-   { CT_ASSIGN,      7  },
-   { CT_STRING,      8  },
-   { CT_FOR_COLON,   9  },
+   { CT_SEMICOLON,    1 },
+   { CT_COMMA,        2 },
+   { CT_BOOL,         3 },
+   { CT_COMPARE,      4 },
+   { CT_ARITH,        5 },
+   { CT_CARET,        6 },
+   { CT_ASSIGN,       7 },
+   { CT_STRING,       8 },
+   { CT_FOR_COLON,    9 },
    //{ CT_DC_MEMBER, 10 },
    //{ CT_MEMBER,    10 },
    { CT_QUESTION,    20 }, // allow break in ? : for ls_code_width
@@ -285,7 +285,9 @@ static void split_line(chunk_t *start)
          try_split_here(ent, pc);
          /*  break at maximum line length */
          if ((ent.pc != NULL) && (cpd.settings[UO_ls_code_width].b))
-             break;
+         {
+            break;
+         }
       }
    }
 
@@ -542,7 +544,7 @@ static void split_fcn_params(chunk_t *start)
       /* do nothing */
    }
 
-   pc = chunk_get_next_ncnl(fpo);
+   pc      = chunk_get_next_ncnl(fpo);
    min_col = pc->column;
 
    LOG_FMT(LSPLIT, " mincol=%d, max_width=%d ",
@@ -553,7 +555,7 @@ static void split_fcn_params(chunk_t *start)
       if (chunk_is_newline(pc))
       {
          cur_width = 0;
-         last_col = -1;
+         last_col  = -1;
       }
       else
       {
@@ -596,11 +598,11 @@ static void split_fcn_params(chunk_t *start)
             min_col = pc->brace_level * cpd.settings[UO_indent_columns].n + 1;
             if (cpd.settings[UO_indent_continue].n == 0)
             {
-                min_col += cpd.settings[UO_indent_columns].n;
+               min_col += cpd.settings[UO_indent_columns].n;
             }
             else
             {
-                min_col += abs(cpd.settings[UO_indent_continue].n);
+               min_col += abs(cpd.settings[UO_indent_continue].n);
             }
          }
          /* Don't split "()" */

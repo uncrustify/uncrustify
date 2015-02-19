@@ -893,13 +893,13 @@ static void align_same_func_call_params()
       {
          continue;
       }
-      prev = chunk_get_next(prev);
+      prev      = chunk_get_next(prev);
       align_fcn = prev;
       align_fcn_name.clear();
       while (prev != pc)
       {
          align_fcn_name += prev->str;
-         prev = chunk_get_next(prev);
+         prev            = chunk_get_next(prev);
       }
       align_fcn_name += pc->str;
       LOG_FMT(LASFCP, "Func Call @ %d:%d [%s]\n",
@@ -939,9 +939,9 @@ static void align_same_func_call_params()
          fcn_as.Add(pc);
          align_root      = align_fcn;
          align_root_name = align_fcn_name;
-         align_cur  = pc;
-         align_len  = 1;
-         add_str    = "Start";
+         align_cur       = pc;
+         align_len       = 1;
+         add_str         = "Start";
       }
 
       if (add_str != NULL)
@@ -1016,7 +1016,7 @@ static void align_func_proto(int span)
 
    LOG_FMT(LALIGN, "%s\n", __func__);
    as.Start(span, 0);
-   as.m_gap = cpd.settings[UO_align_func_proto_gap].n;
+   as.m_gap        = cpd.settings[UO_align_func_proto_gap].n;
    as.m_star_style = (AlignStack::StarStyle)cpd.settings[UO_align_var_def_star_style].n;
    as.m_amp_style  = (AlignStack::StarStyle)cpd.settings[UO_align_var_def_amp_style].n;
 
@@ -1444,6 +1444,10 @@ chunk_t *align_trailing_comments(chunk_t *start)
    }
    LOG_FMT(LALADD, "%s:  -- min_orig=%d intend=%d min_allowed=%d ==> col=%d\n", __func__,
            min_orig, intended_col, min_col, col);
+   if ((cpd.frag_cols > 0) && (cpd.frag_cols <= col))
+   {
+      col -= cpd.frag_cols;
+   }
    align_stack(cs, col, (intended_col != 0), LALTC);
 
    return(chunk_get_next(pc));
@@ -1506,7 +1510,7 @@ static chunk_t *scan_ib_line(chunk_t *start, bool first_pass)
    if (tmp)
    {
       set_chunk_parent(start, CT_TSQUARE);
-      start = tmp;
+      start            = tmp;
       cpd.al_c99_array = true;
    }
    pc = start;
@@ -1867,7 +1871,7 @@ static void align_left_shift(void)
    while (pc != NULL)
    {
       if ((start != NULL) &&
-          (pc->flags & PCF_IN_PREPROC) != (start->flags & PCF_IN_PREPROC))
+          ((pc->flags & PCF_IN_PREPROC) != (start->flags & PCF_IN_PREPROC)))
       {
          /* a change in preproc status restarts the aligning */
          as.Flush();
@@ -1910,9 +1914,9 @@ static void align_left_shift(void)
             chunk_t *prev = chunk_get_prev(pc);
             if (prev && chunk_is_newline(prev))
             {
-                indent_to_column(pc, pc->column_indent + cpd.settings[UO_indent_columns].n);
-                pc->column_indent = pc->column;
-                pc->flags |= PCF_DONT_INDENT;
+               indent_to_column(pc, pc->column_indent + cpd.settings[UO_indent_columns].n);
+               pc->column_indent = pc->column;
+               pc->flags        |= PCF_DONT_INDENT;
             }
 
             /* first one can be anywhere */
@@ -1927,19 +1931,19 @@ static void align_left_shift(void)
       }
       else if (!as.m_aligned.Empty())
       {
-          /* check if the given statement is on a line of its own, immediately following <<
-           * and then it. Eg:
-           *
-           *      cout <<
-           *          "something";
-           */
-          chunk_t *prev = chunk_get_prev(pc);
-          if (prev && chunk_is_newline(prev))
-          {
-              indent_to_column(pc, pc->column_indent + cpd.settings[UO_indent_columns].n);
-              pc->column_indent = pc->column;
-              pc->flags |= PCF_DONT_INDENT;
-          }
+         /* check if the given statement is on a line of its own, immediately following <<
+          * and then it. Eg:
+          *
+          *      cout <<
+          *          "something";
+          */
+         chunk_t *prev = chunk_get_prev(pc);
+         if (prev && chunk_is_newline(prev))
+         {
+            indent_to_column(pc, pc->column_indent + cpd.settings[UO_indent_columns].n);
+            pc->column_indent = pc->column;
+            pc->flags        |= PCF_DONT_INDENT;
+         }
       }
 
       pc = chunk_get_next(pc);
@@ -2019,7 +2023,7 @@ static void align_oc_msg_colon(chunk_t *so)
    int     first_len = 0, len_diff;
    int     tlen, mlen = 0;
    int     indent_size = cpd.settings[UO_indent_columns].n;
-   chunk_t *longest = NULL;
+   chunk_t *longest    = NULL;
 
    for (idx = 0, len = nas.m_aligned.Len(); idx < len; idx++)
    {
@@ -2041,7 +2045,7 @@ static void align_oc_msg_colon(chunk_t *so)
    }
 
    /* add spaces before the longest arg */
-   len = cpd.settings[UO_indent_oc_msg_colon].n;
+   len      = cpd.settings[UO_indent_oc_msg_colon].n;
    len_diff = mlen - first_len;
    /* Align with first colon if possible by removing spaces */
    if (longest &&
@@ -2141,13 +2145,13 @@ static void align_oc_decl_colon(void)
          {
             nas.NewLines(pc->nl_count);
             cas.NewLines(pc->nl_count);
-            did_line  = false;
+            did_line = false;
          }
          else if (!did_line && (pc->type == CT_OC_COLON))
          {
             cas.Add(pc);
 
-            tmp = chunk_get_prev(pc, CNAV_PREPROC);
+            tmp  = chunk_get_prev(pc, CNAV_PREPROC);
             tmp2 = chunk_get_prev_ncnl(tmp, CNAV_PREPROC);
 
             /* Check for an un-labeled parameter */

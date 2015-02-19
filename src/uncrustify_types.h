@@ -115,7 +115,7 @@ struct parse_frame
    bool                     maybe_cast;
 };
 
-#define PCF_BIT(b)   (1ULL << b)
+#define PCF_BIT(b)    (1ULL << b)
 
 /* Copy flags are in the lower 16 bits */
 #define PCF_COPY_FLAGS         0x0000ffff
@@ -232,33 +232,36 @@ struct chunk_t
    {
       reset();
    }
-   void reset()
+
+   void         reset()
    {
       memset(&align, 0, sizeof(align));
       memset(&indent, 0, sizeof(indent));
-      next = 0;
-      prev = 0;
-      type = CT_NONE;
-      parent_type = CT_NONE;
-      orig_line = 0;
-      orig_col = 0;
-      orig_col_end = 0;
-      orig_prev_sp = 0;
-      flags = 0;
-      column = 0;
+      next          = 0;
+      prev          = 0;
+      type          = CT_NONE;
+      parent_type   = CT_NONE;
+      orig_line     = 0;
+      orig_col      = 0;
+      orig_col_end  = 0;
+      orig_prev_sp  = 0;
+      flags         = 0;
+      column        = 0;
       column_indent = 0;
-      nl_count = 0;
-      level = 0;
-      brace_level = 0;
-      pp_level = 0;
-      after_tab = false;
+      nl_count      = 0;
+      level         = 0;
+      brace_level   = 0;
+      pp_level      = 0;
+      after_tab     = false;
       str.clear();
    }
-   int len()
+
+   int          len()
    {
       return str.size();
    }
-   const char *text()
+
+   const char   *text()
    {
       return str.c_str();
    }
@@ -416,4 +419,4 @@ struct cp_data
 
 extern struct cp_data cpd;
 
-#endif   /* UNCRUSTIFY_TYPES_H_INCLUDED */
+#endif /* UNCRUSTIFY_TYPES_H_INCLUDED */

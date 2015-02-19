@@ -136,7 +136,7 @@ void combine_labels(void);
 void mark_comments(void);
 void make_type(chunk_t *pc);
 
-void flag_series(chunk_t *start, chunk_t *end, UINT64 set_flags, UINT64 clr_flags=0, chunk_nav_t nav = CNAV_ALL);
+void flag_series(chunk_t *start, chunk_t *end, UINT64 set_flags, UINT64 clr_flags = 0, chunk_nav_t nav = CNAV_ALL);
 
 chunk_t *skip_template_next(chunk_t *ang_open);
 chunk_t *skip_template_prev(chunk_t *ang_close);
@@ -297,7 +297,15 @@ int calc_next_tab_column(int col, int tabsize)
    {
       col = 1;
    }
+   if (cpd.frag_cols > 0)
+   {
+      col += cpd.frag_cols - 1;
+   }
    col = 1 + ((((col - 1) / tabsize) + 1) * tabsize);
+   if (cpd.frag_cols > 0)
+   {
+      col -= cpd.frag_cols - 1;
+   }
    return(col);
 }
 
@@ -335,5 +343,4 @@ int align_tab_column(int col)
    return(col);
 }
 
-
-#endif   /* C_PARSE_PROTOTYPES_H_INCLUDED */
+#endif /* C_PARSE_PROTOTYPES_H_INCLUDED */

@@ -142,6 +142,7 @@ static bool pawn_continued(chunk_t *pc, int br_level)
 void pawn_prescan(void)
 {
    LOG_FUNC_ENTRY();
+
    /* Start at the beginning and step through the entire file, and clean up
     * any questionable stuff
     */
@@ -421,7 +422,7 @@ static chunk_t *pawn_process_func_def(chunk_t *pc)
               pc->orig_line, pc->str.c_str(), get_token_name(last->type));
 
       chunk_t chunk;
-      chunk             = *last;
+      chunk = *last;
       chunk.str.clear();
       chunk.type        = CT_VBRACE_OPEN;
       chunk.parent_type = CT_FUNC_DEF;
@@ -457,7 +458,7 @@ static chunk_t *pawn_process_func_def(chunk_t *pc)
                  last->orig_line, get_token_name(last->type), last->level);
       }
 
-      chunk             = *last;
+      chunk = *last;
       chunk.str.clear();
       chunk.column     += last->len();
       chunk.type        = CT_VBRACE_CLOSE;

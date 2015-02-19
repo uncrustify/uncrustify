@@ -309,10 +309,10 @@ typedef enum
    CT_LAMBDA,
 
    /* Java */
-   CT_ASSERT,           /* assert EXP1 [ : EXP2 ] ; */
-   CT_ANNOTATION,       /* @interface or @something(...) */
-   CT_FOR_COLON,        /* colon in "for ( TYPE var: EXPR ) { ... }" */
-   CT_DOUBLE_BRACE,     /* parent for double brace */
+   CT_ASSERT,       /* assert EXP1 [ : EXP2 ] ; */
+   CT_ANNOTATION,   /* @interface or @something(...) */
+   CT_FOR_COLON,    /* colon in "for ( TYPE var: EXPR ) { ... }" */
+   CT_DOUBLE_BRACE, /* parent for double brace */
 } c_token_t;
 
-#endif   /* TOKEN_ENUM_H_INCLUDED */
+#endif /* TOKEN_ENUM_H_INCLUDED */

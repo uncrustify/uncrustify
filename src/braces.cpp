@@ -56,9 +56,9 @@ void do_braces(void)
    }
 
    /* Mark one-liners */
-   chunk_t *pc;
-   chunk_t *br_open;
-   chunk_t *tmp;
+   chunk_t   *pc;
+   chunk_t   *br_open;
+   chunk_t   *tmp;
    c_token_t brc_type;
 
    pc = chunk_get_head();
@@ -558,7 +558,7 @@ static void convert_vbrace(chunk_t *vbr)
    else if (vbr->type == CT_VBRACE_OPEN)
    {
       set_chunk_type(vbr, CT_BRACE_OPEN);
-      vbr->str  = "{";
+      vbr->str = "{";
 
       /* If the next chunk is a preprocessor, then move the open brace after the
        * preprocessor.
@@ -574,7 +574,7 @@ static void convert_vbrace(chunk_t *vbr)
    else if (vbr->type == CT_VBRACE_CLOSE)
    {
       set_chunk_type(vbr, CT_BRACE_CLOSE);
-      vbr->str  = "}";
+      vbr->str = "}";
 
       /* If the next chunk is a comment, followed by a newline, then
        * move the brace after the newline and add another newline after
@@ -616,7 +616,7 @@ static void convert_vbrace_to_brace(void)
             (pc->parent_type == CT_ELSE) ||
             (pc->parent_type == CT_ELSEIF)) &&
            ((cpd.settings[UO_mod_full_brace_if].a & AV_ADD) != 0) &&
-            !cpd.settings[UO_mod_full_brace_if_chain].b)
+           !cpd.settings[UO_mod_full_brace_if_chain].b)
           ||
           ((pc->parent_type == CT_FOR) &&
            ((cpd.settings[UO_mod_full_brace_for].a & AV_ADD) != 0))
@@ -719,7 +719,7 @@ static void append_tag_name(unc_text& txt, chunk_t *pc)
          break;
       }
       tmp = chunk_get_prev_ncnl(tmp);
-      pc = tmp;
+      pc  = tmp;
       if (!chunk_is_word(tmp))
       {
          break;
@@ -734,7 +734,7 @@ static void append_tag_name(unc_text& txt, chunk_t *pc)
          break;
       }
       txt += pc->str;
-      pc = chunk_get_next_ncnl(pc);
+      pc   = chunk_get_next_ncnl(pc);
       if (pc)
       {
          txt += pc->str;
@@ -751,15 +751,15 @@ static void append_tag_name(unc_text& txt, chunk_t *pc)
 void add_long_closebrace_comment(void)
 {
    LOG_FUNC_ENTRY();
-   chunk_t *pc;
-   chunk_t *tmp;
-   chunk_t *br_open;
-   chunk_t *br_close;
-   chunk_t *fcn_pc = NULL;
-   chunk_t *sw_pc  = NULL;
-   chunk_t *ns_pc  = NULL;
+   chunk_t  *pc;
+   chunk_t  *tmp;
+   chunk_t  *br_open;
+   chunk_t  *br_close;
+   chunk_t  *fcn_pc = NULL;
+   chunk_t  *sw_pc  = NULL;
+   chunk_t  *ns_pc  = NULL;
    unc_text xstr;
-   int     nl_count;
+   int      nl_count;
 
    for (pc = chunk_get_head(); pc; pc = chunk_get_next_ncnl(pc))
    {
@@ -825,8 +825,9 @@ void add_long_closebrace_comment(void)
                {
                   nl_min = cpd.settings[UO_mod_add_long_namespace_closebrace_comment].n;
                   tag_pc = ns_pc;
+
                   /* obtain the next chunck, normally this is the name of the namespace
-                     and append it to generate "namespace xyz" */
+                   * and append it to generate "namespace xyz" */
                   xstr = ns_pc->str;
                   xstr.append(" ");
                   append_tag_name(xstr, chunk_get_next(ns_pc));

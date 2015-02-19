@@ -210,18 +210,18 @@ void AlignStack::Add(chunk_t *start, int seqnum)
       /* Tighten down the spacing between ref and start */
       if (!cpd.settings[UO_align_keep_extra_space].b)
       {
-          tmp_col = ref->column;
-          tmp     = ref;
-          while (tmp != start)
-          {
-              next     = chunk_get_next(tmp);
-              tmp_col += space_col_align(tmp, next);
-              if (next->column != tmp_col)
-              {
-                  align_to_column(next, tmp_col);
-              }
-              tmp = next;
-          }
+         tmp_col = ref->column;
+         tmp     = ref;
+         while (tmp != start)
+         {
+            next     = chunk_get_next(tmp);
+            tmp_col += space_col_align(tmp, next);
+            if (next->column != tmp_col)
+            {
+               align_to_column(next, tmp_col);
+            }
+            tmp = next;
+         }
       }
 
       /* Set the column adjust and gap */

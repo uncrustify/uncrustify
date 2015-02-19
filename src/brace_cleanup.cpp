@@ -302,7 +302,7 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
       pc->flags |= PCF_EXPR_START;
       pc->flags |= (frm->stmt_count == 0) ? PCF_STMT_START : 0;
       LOG_FMT(LSTMT, "%d] 1.marked %s as %s start st:%d ex:%d\n",
-              pc->orig_line, pc->str.c_str(), (pc->flags &PCF_STMT_START) ? "stmt" : "expr",
+              pc->orig_line, pc->str.c_str(), (pc->flags & PCF_STMT_START) ? "stmt" : "expr",
               frm->stmt_count, frm->expr_count);
    }
    frm->stmt_count++;
@@ -487,13 +487,13 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
             if (frm->pse[frm->pse_tos].stage != BS_NONE)
             {
                set_chunk_type(pc, CT_SPAREN_OPEN);
-               parent   = frm->pse[frm->pse_tos].type;
+               parent = frm->pse[frm->pse_tos].type;
                frm->sparen_count++;
             }
             else if (prev->type == CT_FUNCTION)
             {
                set_chunk_type(pc, CT_FPAREN_OPEN);
-               parent   = CT_FUNCTION;
+               parent = CT_FUNCTION;
             }
             /* NS_ENUM and NS_OPTIONS are followed by a (type, name) pair */
             else if ((prev->type == CT_ENUM) &&
@@ -501,7 +501,7 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
             {
                /* Treat both as CT_ENUM since the syntax is identical */
                set_chunk_type(pc, CT_FPAREN_OPEN);
-               parent   = CT_ENUM;
+               parent = CT_ENUM;
             }
             else
             {
@@ -577,7 +577,7 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
       if ((pc->type == CT_WHILE) && maybe_while_of_do(pc))
       {
          set_chunk_type(pc, CT_WHILE_OF_DO);
-         bs       = BS_WOD_PAREN;
+         bs = BS_WOD_PAREN;
       }
       push_fmr_pse(frm, pc, bs, "+ComplexParenBraced");
    }

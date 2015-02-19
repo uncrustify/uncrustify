@@ -157,14 +157,14 @@ static_inline char to_hex_char(int nibble)
  * It uses the log_func class to add an entry to the function log stack.
  * It is automatically removed when the function returns.
  */
-#define LOG_FUNC_ENTRY()   log_func log_fe = log_func(__func__, __LINE__)
+#define LOG_FUNC_ENTRY()    log_func log_fe = log_func(__func__, __LINE__)
 
 /**
  * This should be called right before a repeated function call to trace where
  * the function was called. It does not add an entry, but rather updates the
  * line number of the top entry.
  */
-#define LOG_FUNC_CALL()    log_func_call(__LINE__)
+#define LOG_FUNC_CALL()     log_func_call(__LINE__)
 
 #else
 #define LOG_FUNC_ENTRY()
@@ -183,7 +183,8 @@ public:
    ~log_func();
 };
 void log_func_call(int line);
-void log_func_stack(log_sev_t sev, const char *prefix=0, const char *suffix="\n", int skip_cnt=0);
-#define log_func_stack_inline(_sev) log_func_stack((_sev), " [CallStack:", "]\n", 1)
+void log_func_stack(log_sev_t sev, const char *prefix = 0, const char *suffix = "\n", int skip_cnt = 0);
 
-#endif   /* LOGGER_H_INCLUDED */
+#define log_func_stack_inline(_sev)    log_func_stack((_sev), " [CallStack:", "]\n", 1)
+
+#endif /* LOGGER_H_INCLUDED */

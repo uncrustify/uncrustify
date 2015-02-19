@@ -22,6 +22,7 @@ struct log_fcn_info
    log_fcn_info(const char *name, int line) : name(name), line(line)
    {
    }
+
    const char *name;
    int        line;
 };

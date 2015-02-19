@@ -337,9 +337,11 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
       case 0:
          log_rule("orig_prev_sp-REMOVE");
          return AV_REMOVE;
+
       case 1:
          log_rule("orig_prev_sp-FORCE");
          return AV_FORCE;
+
       default:
          log_rule("orig_prev_sp-ADD");
          return AV_ADD;
@@ -1654,7 +1656,7 @@ void space_text(void)
                  next->orig_line, next->orig_col, get_token_name(next->type),
                  pc->column, pc->str.size());
          next->column = pc->column + pc->str.size();
-         next = chunk_get_next(next);
+         next         = chunk_get_next(next);
       }
       if (!next)
       {
@@ -1730,7 +1732,7 @@ void space_text(void)
                       *   some_func<vector<string>>();
                       */
                      if ((((cpd.lang_flags & LANG_CPP) && cpd.settings[UO_sp_permit_cpp11_shift].b) ||
-                         ((cpd.lang_flags & LANG_JAVA) || (cpd.lang_flags & LANG_CS))) &&
+                          ((cpd.lang_flags & LANG_JAVA) || (cpd.lang_flags & LANG_CS))) &&
                          (pc->type == CT_ANGLE_CLOSE) &&
                          (next->type == CT_ANGLE_CLOSE))
                      {
@@ -2022,9 +2024,9 @@ void space_add_after(chunk_t *pc, int count)
 
    chunk_t sp;
 
-   sp.flags       = pc->flags & PCF_COPY_FLAGS;
-   sp.type        = CT_SPACE;
-   sp.str         = "                "; // 16 spaces
+   sp.flags = pc->flags & PCF_COPY_FLAGS;
+   sp.type  = CT_SPACE;
+   sp.str   = "                ";       // 16 spaces
    sp.str.resize(count);
    sp.level       = pc->level;
    sp.brace_level = pc->brace_level;

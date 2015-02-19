@@ -21,7 +21,7 @@
 
 using namespace std;
 
-typedef map<string, string> defmap;
+typedef map<string, string>   defmap;
 defmap defines;
 
 
@@ -115,6 +115,7 @@ int load_define_file(const char *filename)
 void print_defines(FILE *pfile)
 {
    defmap::iterator it;
+
    for (it = defines.begin(); it != defines.end(); ++it)
    {
       fprintf(pfile, "define %*.s%s \"%s\"\n",
