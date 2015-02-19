@@ -1,0 +1,20 @@
+{
+  "name": "uncrustify",
+  "version": "0.6.1",
+  "description": "A highly configurable, easily modifiable source code beautifier for C, C++, C#, ObjectiveC, D, Java, Pawn and VALA",
+  "main": "uncrustify",
+  "scripts": {
+      "preinstall": "./configure && make"
+  },
+  "bin" : "src/uncrustify" ,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bengardner/uncrustify"
+  },
+  "keywords": [
+    "uncrustify",
+    "source code beautifier"
+  ],
+  "author": "Ben Gardner",
+  "license": "GPLv3"
+}
