@@ -45,4 +45,6 @@
 
 10130 sp_between_new_paren.cfg cs/sp_between_new_paren.cs
 
+10140 ben.cfg                  cs/remove_semi.cs
+
 10628 sf628.cfg                cs/sf628.cs
