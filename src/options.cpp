@@ -549,6 +549,8 @@ void register_options(void)
                   "Controls the spaces between #else or #endif and a trailing comment");
    unc_add_option("sp_after_new", UO_sp_after_new, AT_IARF,
                   "Controls the spaces after 'new', 'delete', and 'delete[]'");
+   unc_add_option("sp_between_new_paren", UO_sp_between_new_paren, AT_IARF,
+                  "Controls the spaces between new and '(' in 'new()'");
    unc_add_option("sp_before_tr_emb_cmt", UO_sp_before_tr_emb_cmt, AT_IARF,
                   "Controls the spaces before a trailing or embedded comment");
    unc_add_option("sp_num_before_tr_emb_cmt", UO_sp_num_before_tr_emb_cmt, AT_NUM,
@@ -937,7 +939,7 @@ void register_options(void)
    unc_add_option("nl_define_macro", UO_nl_define_macro, AT_BOOL,
                   "Whether to alter newlines in '#define' macros");
    unc_add_option("nl_squeeze_ifdef", UO_nl_squeeze_ifdef, AT_BOOL,
-                  "Whether to not put blanks after '#ifxx', '#elxx', or before '#endif'");
+                  "Whether to not put blanks after '#ifxx', '#elxx', or before '#endif'. Does not affect the whole-file #ifdef.");
    unc_add_option("nl_before_if", UO_nl_before_if, AT_IARF,
                   "Add or remove blank line before 'if'");
    unc_add_option("nl_after_if", UO_nl_after_if, AT_IARF,

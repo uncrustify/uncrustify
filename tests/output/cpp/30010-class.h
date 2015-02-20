@@ -47,5 +47,6 @@ class CFooBarDlg : public CDialog
    //}}AFX_MSG
    DECLARE_MESSAGE_MAP()
 };
+
 #endif   /* _FOO_BAR_H_INCLUDED_ */
 

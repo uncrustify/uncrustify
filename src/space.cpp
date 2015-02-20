@@ -1585,6 +1585,11 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
       return(AV_FORCE);
    }
 
+   if ((first->type == CT_NEW) && (second->type == CT_PAREN_OPEN))
+   {
+      log_rule("sp_between_new_paren");
+      return(cpd.settings[UO_sp_between_new_paren].a);
+   }
    if ((first->type == CT_NEW) ||
        (first->type == CT_DELETE) ||
        ((first->type == CT_TSQUARE) && (first->parent_type == CT_DELETE)))

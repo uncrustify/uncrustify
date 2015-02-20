@@ -117,7 +117,6 @@
  */
 
 static void indent_comment(chunk_t *pc, int col);
-static bool ifdef_over_whole_file();
 
 
 void indent_to_column(chunk_t *pc, int column)
@@ -2006,11 +2005,12 @@ static void indent_comment(chunk_t *pc, int col)
 /**
  * Scan to see if the whole file is covered by one #ifdef
  */
-static bool ifdef_over_whole_file()
+bool ifdef_over_whole_file()
 {
    LOG_FUNC_ENTRY();
    chunk_t *pc;
    chunk_t *next;
+   chunk_t *end_pp = NULL;
 
    int stage = 0;
 
@@ -2048,6 +2048,7 @@ static bool ifdef_over_whole_file()
              (pc->pp_level == 0))
          {
             stage = 2;
+            end_pp = pc;
          }
          continue;
       }
@@ -2064,6 +2065,10 @@ static bool ifdef_over_whole_file()
    }
 
    cpd.ifdef_over_whole_file = (stage == 2) ? 1 : -1;
+   if (cpd.ifdef_over_whole_file > 0)
+   {
+      end_pp->flags |= PCF_WF_ENDIF;
+   }
    LOG_FMT(LNOTE, "The whole file is%s covered by a #IF\n",
            (cpd.ifdef_over_whole_file > 0) ? "" : " NOT");
    return(cpd.ifdef_over_whole_file > 0);

@@ -19,7 +19,7 @@ if os.name == "nt":	# windoze doesn't support ansi sequences
 	BOLD        = ""
 	UNDERSCORE  = ""
 	REVERSE     = ""
-else:	
+else:
 	NORMAL      = "\033[0m"
 	BOLD        = "\033[1m"
 	UNDERSCORE  = "\033[1m"
@@ -207,7 +207,9 @@ if __name__ == '__main__':
 	unst_count = 0
 
 	for item in the_tests:
-		passfail = process_test_file(item + '.test')
+		if not item.endswith('.test'):
+			item += '.test'
+		passfail = process_test_file(item)
 		if passfail != None:
 			pass_count += passfail[0]
 			fail_count += passfail[1]

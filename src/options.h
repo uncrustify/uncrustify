@@ -386,6 +386,7 @@ enum uncrustify_options
    UO_sp_cmt_cpp_doxygen,       // in case of UO_sp_cmt_cpp_start: treat '///', '///<', '//!' and '//!<' as a unity (add space behind)
    UO_sp_endif_cmt,
    UO_sp_after_new,
+   UO_sp_between_new_paren,
    UO_sp_before_tr_emb_cmt,     // treatment of spaces before comments following code
    UO_sp_num_before_tr_emb_cmt, // number of spaces before comments following code
    UO_sp_annotation_paren,

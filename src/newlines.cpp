@@ -54,14 +54,15 @@ static bool can_increase_nl(chunk_t *nl)
       if (prev && (prev->type == CT_PREPROC) &&
           (prev->parent_type == CT_PP_ENDIF))
       {
-         LOG_FMT(LBLANKD, "%s: nl_squeeze_ifdef %d (prev)\n", __func__, nl->orig_line);
-         return(false);
+         LOG_FMT(LBLANKD, "%s: nl_squeeze_ifdef %d (prev) pp_lvl=%d rv=0\n", __func__, nl->orig_line, nl->pp_level);
+         return false;
       }
       if (next && (next->type == CT_PREPROC) &&
           (next->parent_type == CT_PP_ENDIF))
       {
-         LOG_FMT(LBLANKD, "%s: nl_squeeze_ifdef %d (next)\n", __func__, nl->orig_line);
-         return(false);
+         bool rv = ifdef_over_whole_file() && (next->flags & PCF_WF_ENDIF);
+         LOG_FMT(LBLANKD, "%s: nl_squeeze_ifdef %d (next) pp_lvl=%d rv=%d\n", __func__, nl->orig_line, nl->pp_level, rv);
+         return rv;
       }
    }
 
@@ -85,13 +86,13 @@ static bool can_increase_nl(chunk_t *nl)
 
    if (!pcmt && (cpd.settings[UO_nl_start_of_file].a != AV_IGNORE))
    {
-      LOG_FMT(LBLANKD, "%s: no prev %d\n", __func__, nl->orig_line);
+      LOG_FMT(LBLANKD, "%s: SOF no prev %d\n", __func__, nl->orig_line);
       return(false);
    }
 
    if (!next && (cpd.settings[UO_nl_end_of_file].a != AV_IGNORE))
    {
-      LOG_FMT(LBLANKD, "%s: no next %d\n", __func__, nl->orig_line);
+      LOG_FMT(LBLANKD, "%s: EOF no next %d\n", __func__, nl->orig_line);
       return(false);
    }
 
@@ -188,7 +189,7 @@ chunk_t *newline_add_before(chunk_t *pc)
 
    LOG_FMT(LNEWLINE, "%s: '%s' on line %d",
            __func__, pc->str.c_str(), pc->orig_line);
-   log_func_stack_inline(LSETTYP);
+   log_func_stack_inline(LNEWLINE);
 
    setup_newline_add(prev, &nl, pc);
 
@@ -286,6 +287,8 @@ static void newline_end_newline(chunk_t *br_close)
          nl.str  = "\n";
       }
       MARK_CHANGE();
+      LOG_FMT(LNEWLINE, "%s: %d:%d add newline after '%s'\n",
+              __func__, br_close->orig_line, br_close->orig_col, br_close->str.c_str());
       chunk_add_after(&nl, br_close);
    }
 }
@@ -2278,6 +2281,7 @@ void newlines_cleanup_braces(bool first)
                 (next->type != CT_COMMA) &&
                 (next->type != CT_SQUARE_CLOSE) &&
                 (next->type != CT_FPAREN_CLOSE) &&
+                (next->type != CT_WHILE_OF_DO) &&
                 ((pc->flags & (PCF_IN_ARRAY_ASSIGN | PCF_IN_TYPEDEF)) == 0) &&
                 !chunk_is_newline(next) &&
                 !chunk_is_comment(next))
@@ -2774,6 +2778,8 @@ void newlines_eat_start_end(void)
             chunk.type      = CT_NEWLINE;
             chunk.nl_count  = cpd.settings[UO_nl_start_of_file_min].n;
             chunk_add_before(&chunk, pc);
+            LOG_FMT(LNEWLINE, "%s: %d:%d add newline before '%s'\n",
+                    __func__, pc->orig_line, pc->orig_col, pc->str.c_str());
             MARK_CHANGE();
          }
       }
