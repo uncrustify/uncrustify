@@ -1839,6 +1839,7 @@ static void fix_casts(chunk_t *start)
       else if ((pc->type != CT_NUMBER_FP) &&
                (pc->type != CT_NUMBER) &&
                (pc->type != CT_WORD) &&
+               (pc->type != CT_THIS) &&
                (pc->type != CT_TYPE) &&
                (pc->type != CT_PAREN_OPEN) &&
                (pc->type != CT_STRING) &&
