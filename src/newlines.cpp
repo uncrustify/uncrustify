@@ -189,7 +189,7 @@ chunk_t *newline_add_before(chunk_t *pc)
 
    LOG_FMT(LNEWLINE, "%s: '%s' on line %d",
            __func__, pc->str.c_str(), pc->orig_line);
-   log_func_stack_inline(LSETTYP);
+   log_func_stack_inline(LNEWLINE);
 
    setup_newline_add(prev, &nl, pc);
 
@@ -287,6 +287,8 @@ static void newline_end_newline(chunk_t *br_close)
          nl.str  = "\n";
       }
       MARK_CHANGE();
+      LOG_FMT(LNEWLINE, "%s: %d:%d add newline after '%s'\n",
+              __func__, br_close->orig_line, br_close->orig_col, br_close->str.c_str());
       chunk_add_after(&nl, br_close);
    }
 }
@@ -2775,6 +2777,8 @@ void newlines_eat_start_end(void)
             chunk.type      = CT_NEWLINE;
             chunk.nl_count  = cpd.settings[UO_nl_start_of_file_min].n;
             chunk_add_before(&chunk, pc);
+            LOG_FMT(LNEWLINE, "%s: %d:%d add newline before '%s'\n",
+                    __func__, pc->orig_line, pc->orig_col, pc->str.c_str());
             MARK_CHANGE();
          }
       }
