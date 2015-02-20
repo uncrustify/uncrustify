@@ -74,7 +74,7 @@ void indent_text(void);
 void indent_preproc(void);
 void indent_to_column(chunk_t *pc, int column);
 void align_to_column(chunk_t *pc, int column);
-
+bool ifdef_over_whole_file();
 void reindent_line(chunk_t *pc, int column);
 void quick_indent_again(void);
 

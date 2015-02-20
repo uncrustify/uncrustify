@@ -54,14 +54,15 @@ static bool can_increase_nl(chunk_t *nl)
       if (prev && (prev->type == CT_PREPROC) &&
           (prev->parent_type == CT_PP_ENDIF))
       {
-         LOG_FMT(LBLANKD, "%s: nl_squeeze_ifdef %d (prev)\n", __func__, nl->orig_line);
-         return(false);
+         LOG_FMT(LBLANKD, "%s: nl_squeeze_ifdef %d (prev) pp_lvl=%d rv=0\n", __func__, nl->orig_line, nl->pp_level);
+         return false;
       }
       if (next && (next->type == CT_PREPROC) &&
           (next->parent_type == CT_PP_ENDIF))
       {
-         LOG_FMT(LBLANKD, "%s: nl_squeeze_ifdef %d (next)\n", __func__, nl->orig_line);
-         return(false);
+         bool rv = ifdef_over_whole_file() && (next->flags & PCF_WF_ENDIF);
+         LOG_FMT(LBLANKD, "%s: nl_squeeze_ifdef %d (next) pp_lvl=%d rv=%d\n", __func__, nl->orig_line, nl->pp_level, rv);
+         return rv;
       }
    }
 
@@ -85,13 +86,13 @@ static bool can_increase_nl(chunk_t *nl)
 
    if (!pcmt && (cpd.settings[UO_nl_start_of_file].a != AV_IGNORE))
    {
-      LOG_FMT(LBLANKD, "%s: no prev %d\n", __func__, nl->orig_line);
+      LOG_FMT(LBLANKD, "%s: SOF no prev %d\n", __func__, nl->orig_line);
       return(false);
    }
 
    if (!next && (cpd.settings[UO_nl_end_of_file].a != AV_IGNORE))
    {
-      LOG_FMT(LBLANKD, "%s: no next %d\n", __func__, nl->orig_line);
+      LOG_FMT(LBLANKD, "%s: EOF no next %d\n", __func__, nl->orig_line);
       return(false);
    }
 
