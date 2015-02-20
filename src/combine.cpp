@@ -452,6 +452,25 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       }
    }
 
+   if (pc->type == CT_NEW)
+   {
+      chunk_t *ts = NULL;
+      tmp = next;
+      if (tmp->type == CT_TSQUARE)
+      {
+         ts = tmp;
+         tmp = chunk_get_next_ncnl(tmp);
+      }
+      if (tmp && (tmp->type == CT_BRACE_OPEN))
+      {
+         set_paren_parent(tmp, pc->type);
+         if (ts)
+         {
+            ts->parent_type = pc->type;
+         }
+      }
+   }
+
    /* C++11 Lambda stuff */
    if (prev && (cpd.lang_flags & LANG_CPP) &&
        ((pc->type == CT_SQUARE_OPEN) || (pc->type == CT_TSQUARE)) &&
