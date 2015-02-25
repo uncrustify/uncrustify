@@ -220,6 +220,21 @@ bool chunk_is_addr(chunk_t *pc)
 }
 
 
+static_inline
+bool chunk_is_msref(chunk_t *pc) // ms compilers for C++/CLI and WinRT use '^' instead of '*' for marking up reference types vs pointer types
+{
+   return((cpd.lang_flags & LANG_CPP) &&
+          ((pc != NULL) && (pc->len() == 1) && (pc->str[0] == '^') && (pc->type != CT_OPERATOR_VAL)));
+}
+
+
+static_inline
+bool chunk_is_ptr_operator(chunk_t *pc)
+{
+   return chunk_is_star(pc) || chunk_is_addr(pc) || chunk_is_msref(pc);
+}
+
+
 bool chunk_is_newline_between(chunk_t *start, chunk_t *end);
 
 static_inline
