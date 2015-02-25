@@ -2350,7 +2350,13 @@ void combine_labels(void)
                   /* Must be a macro thingy, assume some sort of label */
                   set_chunk_type(next, CT_LABEL_COLON);
                }
-               else if (next->flags & (PCF_IN_STRUCT | PCF_IN_TYPEDEF))
+               else if ((tmp == NULL) || (tmp->type != CT_NUMBER && tmp->type != CT_SIZEOF))
+               {
+                  /* the CT_SIZEOF isn't great - test 31720 happens to use a sizeof expr, but this really should be able to handle any constant expr */
+                  set_chunk_type(cur, CT_LABEL);
+                  set_chunk_type(next, CT_LABEL_COLON);
+               }
+               else if (next->flags & (PCF_IN_STRUCT | PCF_IN_CLASS | PCF_IN_TYPEDEF))
                {
                   set_chunk_type(next, CT_BIT_COLON);
 
@@ -2366,11 +2372,6 @@ void combine_labels(void)
                         set_chunk_type(tmp, CT_BIT_COLON);
                      }
                   }
-               }
-               else if ((tmp == NULL) || (tmp->type != CT_NUMBER))
-               {
-                  set_chunk_type(cur, CT_LABEL);
-                  set_chunk_type(next, CT_LABEL_COLON);
                }
             }
             else if (nextprev->type == CT_FPAREN_CLOSE)
