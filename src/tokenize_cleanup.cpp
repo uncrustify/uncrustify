@@ -395,6 +395,7 @@ void tokenize_cleanup(void)
                    (tmp->type != CT_TYPE) &&
                    (tmp->type != CT_QUALIFIER) &&
                    (tmp->type != CT_STAR) &&
+                   (tmp->type != CT_CARET) &&
                    (tmp->type != CT_AMP) &&
                    (tmp->type != CT_TSQUARE))
                {

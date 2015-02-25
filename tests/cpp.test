@@ -224,3 +224,5 @@
 
 31710 empty.cfg                        cpp/string_replace_tab_chars.cpp
 31711 string_replace_tab_chars.cfg     cpp/string_replace_tab_chars.cpp
+
+31721 ms-style-ref.cfg                 cpp/ms-style-ref.cpp

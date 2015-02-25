@@ -167,8 +167,7 @@ void AlignStack::Add(chunk_t *start, int seqnum)
       /* Find ref. Back up to the real item that is aligned. */
       prev = start;
       while (((prev = chunk_get_prev(prev)) != NULL) &&
-             (chunk_is_star(prev) ||
-              chunk_is_addr(prev) ||
+             (chunk_is_ptr_operator(prev) ||
               (prev->type == CT_TPAREN_OPEN)))
       {
          /* do nothing - we want prev when this exits */
@@ -183,9 +182,9 @@ void AlignStack::Add(chunk_t *start, int seqnum)
       ali = start;
       if (m_star_style != SS_IGNORE)
       {
-         /* back up to the first '*' preceding the token */
+         /* back up to the first '*' or '^' preceding the token */
          prev = chunk_get_prev(ali);
-         while (chunk_is_star(prev))
+         while (chunk_is_star(prev) || chunk_is_msref(prev))
          {
             ali  = prev;
             prev = chunk_get_prev(ali);
@@ -236,8 +235,7 @@ void AlignStack::Add(chunk_t *start, int seqnum)
       {
          tmp = chunk_get_next(tmp);
       }
-      if ((chunk_is_star(tmp) && (m_star_style == SS_DANGLE)) ||
-          (chunk_is_addr(tmp) && (m_amp_style == SS_DANGLE)))
+      if (chunk_is_ptr_operator(tmp) && (m_star_style == SS_DANGLE))
       {
          col_adj = start->column - ali->column;
          gap     = start->column - (ref->column + ref->len());
@@ -364,8 +362,7 @@ void AlignStack::Flush()
       {
          tmp = chunk_get_next(tmp);
       }
-      if ((chunk_is_star(tmp) && (m_star_style == SS_DANGLE)) ||
-          (chunk_is_addr(tmp) && (m_amp_style == SS_DANGLE)))
+      if (chunk_is_ptr_operator(tmp) && (m_star_style == SS_DANGLE))
       {
          col_adj = pc->align.start->column - pc->column;
          gap     = pc->align.start->column - (pc->align.ref->column + pc->align.ref->len());
