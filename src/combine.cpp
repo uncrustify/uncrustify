@@ -2350,7 +2350,7 @@ void combine_labels(void)
                   /* Must be a macro thingy, assume some sort of label */
                   set_chunk_type(next, CT_LABEL_COLON);
                }
-               else if (next->flags & (PCF_IN_STRUCT | PCF_IN_TYPEDEF))
+               else if (next->flags & (PCF_IN_STRUCT | PCF_IN_CLASS | PCF_IN_TYPEDEF))
                {
                   set_chunk_type(next, CT_BIT_COLON);
 
