@@ -184,7 +184,7 @@ void AlignStack::Add(chunk_t *start, int seqnum)
       {
          /* back up to the first '*' or '^' preceding the token */
          prev = chunk_get_prev(ali);
-         while (chunk_is_ptr_operator(prev))
+         while (chunk_is_star(prev) || chunk_is_msref(prev))
          {
             ali  = prev;
             prev = chunk_get_prev(ali);
