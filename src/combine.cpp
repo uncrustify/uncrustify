@@ -958,7 +958,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
    }
 
    /* Change CT_STAR to CT_PTR_TYPE or CT_ARITH or CT_DEREF */
-   if (pc->type == CT_STAR || (cpd.lang_flags & LANG_CPP) && (pc->type == CT_CARET))
+   if (pc->type == CT_STAR || ((cpd.lang_flags & LANG_CPP) && (pc->type == CT_CARET)))
    {
       if (chunk_is_paren_close(next) || (next->type == CT_COMMA))
       {
@@ -2059,7 +2059,7 @@ static void fix_enum_struct_union(chunk_t *pc)
             flags       &= ~PCF_VAR_1ST; /* clear the first flag for the next items */
          }
 
-         if (next->type == CT_STAR || (cpd.lang_flags & LANG_CPP) && (next->type == CT_CARET))
+         if (next->type == CT_STAR || ((cpd.lang_flags & LANG_CPP) && (next->type == CT_CARET)))
          {
             set_chunk_type(next, CT_PTR_TYPE);
          }
