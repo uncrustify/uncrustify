@@ -16,6 +16,7 @@
 #include <cerrno>
 #include "unc_ctype.h"
 #include <cassert>
+#include <stack>
 
 static void fix_fcn_def_params(chunk_t *pc);
 static void fix_typedef(chunk_t *pc);
@@ -2243,9 +2244,12 @@ void combine_labels(void)
    chunk_t *prev;
    chunk_t *next;
    chunk_t *tmp;
-   int     question_count = 0;
    bool    hit_case       = false;
    bool    hit_class      = false;
+
+   // need a stack to handle nesting inside of OC messages, which reset the scope
+   std::stack<int> question_counts;
+   question_counts.push(0);
 
    prev = chunk_get_head();
    cur  = chunk_get_next_nc(prev);
@@ -2265,9 +2269,19 @@ void combine_labels(void)
       {
          hit_class = false;
       }
+
+      if (prev->type == CT_SQUARE_OPEN && prev->parent_type == CT_OC_MSG)
+      {
+         question_counts.push(0);
+      }
+      else if (next->type == CT_SQUARE_CLOSE && next->parent_type == CT_OC_MSG)
+      {
+         question_counts.pop();
+      }
+
       if (next->type == CT_QUESTION)
       {
-         question_count++;
+         ++question_counts.top();
       }
       else if (next->type == CT_CASE)
       {
@@ -2282,17 +2296,17 @@ void combine_labels(void)
          }
       }
       else if ((next->type == CT_COLON) ||
-               ((question_count > 0) && (next->type == CT_OC_COLON) && (cur->type != CT_OC_MSG_FUNC)))
+               ((question_counts.top() > 0) && (next->type == CT_OC_COLON)))
       {
          if (cur->type == CT_DEFAULT)
          {
             set_chunk_type(cur, CT_CASE);
             hit_case = true;
          }
-         if (question_count > 0)
+         if (question_counts.top() > 0)
          {
             set_chunk_type(next, CT_COND_COLON);
-            question_count--;
+            --question_counts.top();
          }
          else if (hit_case)
          {
