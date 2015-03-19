@@ -2276,7 +2276,7 @@ void combine_labels(void)
          }
       }
       else if ((next->type == CT_COLON) ||
-               ((question_count > 0) && (next->type == CT_OC_COLON)))
+               ((question_count > 0) && (next->type == CT_OC_COLON) && (cur->type != CT_OC_MSG_FUNC)))
       {
          if (cur->type == CT_DEFAULT)
          {
