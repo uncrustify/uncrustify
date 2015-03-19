@@ -14,7 +14,10 @@ import filecmp
 
 # OK, so I just had way too much fun with the colors..
 
-if os.name == "nt":	# windoze doesn't support ansi sequences
+# windoze doesn't support ansi sequences (unless using ConEmu and enabled)
+disablecolors = os.name == "nt" and os.environ.get('CONEMUANSI', '') != 'ON'
+
+if disablecolors:
 	NORMAL      = ""
 	BOLD        = ""
 	UNDERSCORE  = ""
@@ -64,7 +67,7 @@ BGB_WHITE   = "\033[107m"
 
 # after all that, I chose c
 
-if os.name == "nt":	# windoze doesn't support ansi sequences
+if disablecolors:
 	FAIL_COLOR     = ""
 	PASS_COLOR     = ""
 	MISMATCH_COLOR = ""
