@@ -1102,16 +1102,16 @@ static void do_source_file(const char *filename_in,
          }
          else
          {
-#ifdef WIN32
-
-            /* windows can't rename a file if the target exists, so delete it
-             * first. This may cause data loss if the tmp file gets deleted
-             * or can't be renamed.
-             */
-            (void)unlink(filename_out);
-#endif
             /* Change - rename filename_tmp to filename_out */
+
+#ifdef WIN32
+            /* Atomic rename in windows can't go through stdio rename() func because underneath
+             * it calls MoveFileExW without MOVEFILE_REPLACE_EXISTING.
+             */
+            if (!MoveFileEx(filename_tmp.c_str(), filename_out, MOVEFILE_REPLACE_EXISTING | MOVEFILE_COPY_ALLOWED))
+#else
             if (rename(filename_tmp.c_str(), filename_out) != 0)
+#endif
             {
                LOG_FMT(LERR, "%s: Unable to rename '%s' to '%s'\n",
                        __func__, filename_tmp.c_str(), filename_out);
