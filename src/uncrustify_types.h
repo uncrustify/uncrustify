@@ -364,6 +364,7 @@ struct cp_data
    int                last_char;
    bool               do_check;
    int                check_fail_cnt; // total failures
+   bool               if_changed;
 
    UINT32             error_count;
    const char         *filename;
