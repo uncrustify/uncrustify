@@ -2283,7 +2283,7 @@ void combine_labels(void)
             set_chunk_type(cur, CT_CASE);
             hit_case = true;
          }
-         if (question_count > 0)
+         if (question_count > 0 && cur->type != CT_OC_MSG_FUNC)
          {
             set_chunk_type(next, CT_COND_COLON);
             question_count--;
