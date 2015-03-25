@@ -235,7 +235,9 @@ void AlignStack::Add(chunk_t *start, int seqnum)
       {
          tmp = chunk_get_next(tmp);
       }
-      if (chunk_is_ptr_operator(tmp) && (m_star_style == SS_DANGLE))
+      if ((chunk_is_star(tmp) && (m_star_style == SS_DANGLE)) ||
+          (chunk_is_addr(tmp) && (m_amp_style == SS_DANGLE)) ||
+          (chunk_is_msref(tmp) && (m_star_style == SS_DANGLE))) // TODO: add m_msref_style
       {
          col_adj = start->column - ali->column;
          gap     = start->column - (ref->column + ref->len());
