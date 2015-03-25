@@ -1279,7 +1279,7 @@ void indent_text(void)
             {
                frm.pse[frm.pse_tos].indent += cpd.settings[UO_indent_ctor_init_leading].n;
 
-               if (cpd.settings[UO_indent_ctor_init].n > 0)
+               if (cpd.settings[UO_indent_ctor_init].n != 0)
                {
                   frm.pse[frm.pse_tos].indent     += cpd.settings[UO_indent_ctor_init].n;
                   frm.pse[frm.pse_tos].indent_tmp += cpd.settings[UO_indent_ctor_init].n;
