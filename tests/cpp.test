@@ -115,6 +115,9 @@
 
 30280 sf557.cfg                        cpp/sf557.cpp
 
+30290 indent_shift.cfg                 cpp/align_left_shift.cpp
+30291 indent_shift.cfg                 cpp/indent_shift.cpp
+
 30300 ben.cfg                          cpp/enum_shr.cpp
 30301 al.cfg                           cpp/enum_class.h
 30310 sp_word_brace_force.cfg          cpp/uniform_initialization.cpp

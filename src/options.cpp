@@ -625,6 +625,9 @@ void register_options(void)
                   "Amount to indent variable declarations after a open brace. neg=relative, pos=absolute");
    unc_add_option("indent_var_def_cont", UO_indent_var_def_cont, AT_BOOL,
                   "Indent continued variable declarations instead of aligning.");
+   unc_add_option("indent_shift", UO_indent_shift, AT_BOOL,
+                  "Indent continued shift expressions ('<<' and '>>') instead of aligning.\n"
+                  "Turn align_left_shift off when enabling this.");
 
    unc_add_option("indent_func_def_force_col1", UO_indent_func_def_force_col1, AT_BOOL,
                   "True:  force indentation of function definition to start in column 1\n"

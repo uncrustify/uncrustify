@@ -192,6 +192,7 @@ enum uncrustify_options
    UO_indent_else_if,
    UO_indent_var_def_blk,        // indent a variable def block that appears at the top
    UO_indent_var_def_cont,
+   UO_indent_shift,              // if a shift expression spans multiple lines, indent
 
    UO_indent_min_vbrace_open,               // min. indent after virtual brace open and newline
    UO_indent_vbrace_open_on_tabstop,        // when identing after virtual brace open and newline add further spaces to reach next tabstop
