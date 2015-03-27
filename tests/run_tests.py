@@ -87,16 +87,31 @@ def usage_exit():
 
 def run_tests(test_name, config_name, input_name, lang):
 	expected_name = os.path.join(os.path.dirname(input_name), test_name + '-' + os.path.basename(input_name))
-	# print "Test:  ", test_name
-	# print "Config:", config_name
-	# print "Input: ", input_name
-	# print 'Output:', expected_name
+	if log_level & 2:
+		print "Test:  ", test_name
+		print "Config:", config_name
+		print "Input: ", input_name
+		print 'Output:', expected_name
 
 	if not config_name.startswith(os.sep):
 		config_name = os.path.join('config', config_name)
+	fd = open(config_name, "r")
+	if fd == None:
+		print "Unable to open the config file " + config_name
+	        sys.exit()
+        fd.close()
+	i_name = os.path.join('input', input_name)
+	fd = open(i_name, "r")
+	if fd == None:
+		print "Unable to open the input file " + i_name
+	        sys.exit()
+        fd.close()
 
 	resultname = os.path.join('results', expected_name)
 	outputname = os.path.join('output', expected_name)
+	if log_level & 2:
+		print 'Resultname:', resultname
+		print 'Outputname:', outputname
 	try:
 		os.makedirs(os.path.dirname(resultname))
 	except:
@@ -113,16 +128,22 @@ def run_tests(test_name, config_name, input_name, lang):
 	try:
 		if not filecmp.cmp(resultname, outputname):
 			print MISMATCH_COLOR + "MISMATCH: " + NORMAL + test_name
-			if log_level & 1:
+			if log_level == 0:
 				cmd = "diff -u %s %s" % (outputname, resultname)
 				os.system(cmd)
 			return -1
+		else:
+			if log_level & 2:
+				print "The file in results matches the file in output."
+
 	except:
 		print MISMATCH_COLOR + "MISSING: " + NORMAL + test_name
 		return -1
 
 	# The file in results matches the file in output.
 	# Re-run with the output file as the input to check stability.
+	if log_level & 2:
+		print "Re-run with the output file as the input to check stability."
 	cmd = "%s/uncrustify -q -c %s -f %s %s > %s" % (os.path.abspath('../src'), config_name, outputname, lang, resultname)
 	if log_level & 2:
 		print "RUN: " + cmd
@@ -138,6 +159,9 @@ def run_tests(test_name, config_name, input_name, lang):
 				cmd = "diff -u %s %s" % (outputname, resultname)
 				os.system(cmd)
 			return -2
+		else:
+			if log_level & 2:
+				print "The file in results matches."
 	except:
 		# impossible
 		print UNSTABLE_COLOR + "MISSING: " + NORMAL + test_name
