@@ -287,21 +287,18 @@ static int kw_compare(const void *p1, const void *p2)
 }
 
 
-bool keywords_are_sorted(void)
+void keywords_are_sorted(void)
 {
-   int  idx;
-   bool retval = true;
-
-   for (idx = 1; idx < (int)ARRAY_SIZE(keywords); idx++)
+   for (int idx = 1; idx < (int)ARRAY_SIZE(keywords); idx++)
    {
       if (kw_compare(&keywords[idx - 1], &keywords[idx]) > 0)
       {
          LOG_FMT(LERR, "%s: bad sort order at idx %d, words '%s' and '%s'\n",
                  __func__, idx - 1, keywords[idx - 1].tag, keywords[idx].tag);
-         retval = false;
+         exit(EXIT_FAILURE);
       }
    }
-   return(retval);
+   return;
 }
 
 

@@ -206,7 +206,7 @@ void add_keyword(const char *tag, c_token_t type);
 void print_keywords(FILE *pfile);
 void clear_keyword_file(void);
 pattern_class get_token_pattern_class(c_token_t tok);
-bool keywords_are_sorted(void);
+void keywords_are_sorted(void);
 
 
 /*
