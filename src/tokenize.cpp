@@ -1531,6 +1531,13 @@ static bool parse_next(tok_ctx& ctx, chunk_t& pc)
             return(true);
          }
       }
+
+      /* Inside clang's __has_include() could be "path/to/file.h" or system-style <path/to/file.h> */
+      if ((ch == '(') && ((chunk_get_tail()->type == CT_CNG_HASINC) || (chunk_get_tail()->type == CT_CNG_HASINCN)))
+      {
+         parse_string(ctx, pc, 0, false);
+         return(true);
+      }
    }
 
    /* Check for Objective C literals and VALA identifiers ('@1', '@if')*/

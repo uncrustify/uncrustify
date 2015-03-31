@@ -313,6 +313,10 @@ typedef enum
    CT_ANNOTATION,   /* @interface or @something(...) */
    CT_FOR_COLON,    /* colon in "for ( TYPE var: EXPR ) { ... }" */
    CT_DOUBLE_BRACE, /* parent for double brace */
+
+   /* Clang */
+   CT_CNG_HASINC,       /* Clang: __has_include() */
+   CT_CNG_HASINCN,      /* Clang: __has_include_next() */
 } c_token_t;
 
 #endif /* TOKEN_ENUM_H_INCLUDED */

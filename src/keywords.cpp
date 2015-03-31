@@ -52,6 +52,8 @@ static const chunk_tag_t keywords[] =
    { "__const__",        CT_QUALIFIER,    LANG_C | LANG_CPP                                                           },
    { "__except",         CT_CATCH,        LANG_C | LANG_CPP                                                           },
    { "__finally",        CT_FINALLY,      LANG_C | LANG_CPP                                                           },
+   { "__has_include",    CT_CNG_HASINC,   LANG_C | LANG_CPP | FLAG_PP                                                 }, // clang
+   { "__has_include_next",CT_CNG_HASINCN, LANG_C | LANG_CPP | FLAG_PP                                                 }, // clang
    { "__inline__",       CT_QUALIFIER,    LANG_C | LANG_CPP                                                           },
    { "__restrict",       CT_QUALIFIER,    LANG_C | LANG_CPP                                                           },
    { "__signed__",       CT_TYPE,         LANG_C | LANG_CPP                                                           },

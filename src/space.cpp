@@ -784,7 +784,9 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
 
    /* spaces between function and open paren */
    if ((first->type == CT_FUNC_CALL) ||
-       (first->type == CT_FUNC_CTOR_VAR))
+       (first->type == CT_FUNC_CTOR_VAR) ||
+       (first->type == CT_CNG_HASINC) ||
+       (first->type == CT_CNG_HASINCN))
    {
       if ((cpd.settings[UO_sp_func_call_paren_empty].a != AV_IGNORE) &&
           (second->type == CT_FPAREN_OPEN))

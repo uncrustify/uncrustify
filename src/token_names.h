@@ -264,6 +264,8 @@ const char *token_names[] =
    "ANNOTATION",
    "FOR_COLON",
    "DOUBLE_BRACE",
+   "CNG_HASINC",
+   "CNG_HASINCN",
 };
 
 #endif /* TOKEN_NAMES_H_INCLUDED */
