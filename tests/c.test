@@ -54,6 +54,7 @@
 00071  ben.cfg                 c/include_define.h
 00072  star_pos-0.cfg          c/align-proto.c
 00073  ben.cfg                 c/nl_proto_endif.c
+00074  ben.cfg                 c/clang-has_include.h
 
 00081  else-if-1.cfg           c/else-if.c
 00082  else-if-2.cfg           c/else-if.c
