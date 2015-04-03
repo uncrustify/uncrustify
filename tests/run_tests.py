@@ -1,4 +1,4 @@
-#! /usr/bin/env python
+#!/usr/bin/env python2
 #
 # Scans the .test files on the command line and parses each, running
 # the tests listed.  Results are printed out.
