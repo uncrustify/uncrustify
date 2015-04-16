@@ -66,7 +66,7 @@ void make_type(chunk_t *pc)
       {
          set_chunk_type(pc, CT_TYPE);
       }
-      else if (chunk_is_star(pc))
+      else if (chunk_is_star(pc) || chunk_is_msref(pc))
       {
          set_chunk_type(pc, CT_PTR_TYPE);
       }
@@ -864,6 +864,10 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       {
          set_chunk_type(pc, (prev->type == CT_ANGLE_CLOSE) ? CT_PTR_TYPE : CT_DEREF);
       }
+      if ((cpd.lang_flags & LANG_CPP) && (pc->type == CT_CARET) && (prev->type == CT_ANGLE_CLOSE))
+      {
+         set_chunk_type(pc, CT_PTR_TYPE);
+      }
       if (pc->type == CT_MINUS)
       {
          set_chunk_type(pc, CT_NEG);
@@ -914,7 +918,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
          tmp = chunk_skip_to_match(tmp);
          tmp = chunk_get_next_ncnl(tmp);
       }
-      if ((tmp != NULL) && (chunk_is_star(tmp) || chunk_is_addr(tmp) || (tmp->type == CT_WORD)))
+      if ((tmp != NULL) && (chunk_is_ptr_operator(tmp) || (tmp->type == CT_WORD)))
       {
          mark_variable_definition(tmp);
       }
@@ -955,7 +959,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
    }
 
    /* Change CT_STAR to CT_PTR_TYPE or CT_ARITH or CT_DEREF */
-   if (pc->type == CT_STAR)
+   if (pc->type == CT_STAR || ((cpd.lang_flags & LANG_CPP) && (pc->type == CT_CARET)))
    {
       if (chunk_is_paren_close(next) || (next->type == CT_COMMA))
       {
@@ -971,7 +975,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
          set_chunk_type(next, CT_PTR_TYPE);
          set_chunk_parent(next, pc->parent_type);
       }
-      else if ((prev->type == CT_SIZEOF) || (prev->type == CT_DELETE))
+      else if ((pc->type == CT_STAR) && ((prev->type == CT_SIZEOF) || (prev->type == CT_DELETE)))
       {
          set_chunk_type(pc, CT_DEREF);
       }
@@ -984,7 +988,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       {
          set_chunk_type(pc, CT_PTR_TYPE);
       }
-      else
+      else if (pc->type == CT_STAR)
       {
          /* most PCF_PUNCTUATOR chunks except a paren close would make this
           * a deref. A paren close may end a cast or may be part of a macro fcn.
@@ -1265,7 +1269,7 @@ static void mark_function_return_type(chunk_t *fname, chunk_t *start, c_token_t 
          {
             break;
          }
-         if (!chunk_is_addr(pc) && !chunk_is_star(pc))
+         if (!chunk_is_ptr_operator(pc))
          {
             first = pc;
          }
@@ -1695,7 +1699,7 @@ static void fix_casts(chunk_t *start)
       return;
    }
 
-   /* Make sure there is only WORD, TYPE, and '*' before the close paren */
+   /* Make sure there is only WORD, TYPE, and '*' or '^' before the close paren */
    pc    = chunk_get_next_ncnl(start);
    first = pc;
    while ((pc != NULL) && (chunk_is_type(pc) ||
@@ -1703,6 +1707,7 @@ static void fix_casts(chunk_t *start)
                            (pc->type == CT_QUALIFIER) ||
                            (pc->type == CT_DC_MEMBER) ||
                            (pc->type == CT_STAR) ||
+                           (pc->type == CT_CARET) ||
                            (pc->type == CT_TSQUARE) ||
                            (pc->type == CT_AMP)))
    {
@@ -1741,8 +1746,9 @@ static void fix_casts(chunk_t *start)
    }
    paren_close = pc;
 
-   /* If last is a type or star, we have a cast for sure */
+   /* If last is a type or star/caret, we have a cast for sure */
    if ((last->type == CT_STAR) ||
+       (last->type == CT_CARET) ||
        (last->type == CT_PTR_TYPE) ||
        (last->type == CT_TYPE))
    {
@@ -1809,7 +1815,7 @@ static void fix_casts(chunk_t *start)
       }
 
       nope = false;
-      if (chunk_is_star(pc) || chunk_is_addr(pc))
+      if (chunk_is_ptr_operator(pc))
       {
          /* star (*) and addr (&) are ambiguous */
          if ((after->type == CT_NUMBER_FP) ||
@@ -2054,7 +2060,7 @@ static void fix_enum_struct_union(chunk_t *pc)
             flags       &= ~PCF_VAR_1ST; /* clear the first flag for the next items */
          }
 
-         if (next->type == CT_STAR)
+         if (next->type == CT_STAR || ((cpd.lang_flags & LANG_CPP) && (next->type == CT_CARET)))
          {
             set_chunk_type(next, CT_PTR_TYPE);
          }
@@ -2536,7 +2542,7 @@ static void fix_fcn_def_params(chunk_t *start)
       {
          continue;
       }
-      if (chunk_is_star(pc))
+      if (chunk_is_star(pc) || chunk_is_msref(pc))
       {
          set_chunk_type(pc, CT_PTR_TYPE);
          cs.Push_Back(pc);
@@ -2609,8 +2615,7 @@ static chunk_t *fix_var_def(chunk_t *start)
            (pc->type == CT_QUALIFIER) ||
            (pc->type == CT_DC_MEMBER) ||
            (pc->type == CT_MEMBER) ||
-           chunk_is_addr(pc) ||
-           chunk_is_star(pc)))
+           chunk_is_ptr_operator(pc)))
    {
       LOG_FMT(LFVD, " %s[%s]", pc->str.c_str(), get_token_name(pc->type));
       cs.Push_Back(pc);
@@ -2770,7 +2775,7 @@ static chunk_t *mark_variable_definition(chunk_t *start)
                  __func__, pc->orig_line, pc->str.c_str(),
                  get_token_name(pc->type), pc->orig_col, flg, pc->flags);
       }
-      else if (chunk_is_star(pc))
+      else if (chunk_is_star(pc) || chunk_is_msref(pc))
       {
          set_chunk_type(pc, CT_PTR_TYPE);
       }
@@ -2852,8 +2857,7 @@ static bool can_be_full_param(chunk_t *start, chunk_t *end)
             word_cnt--;
          }
       }
-      else if ((pc != start) && (chunk_is_star(pc) ||
-                                 chunk_is_addr(pc)))
+      else if ((pc != start) && chunk_is_ptr_operator(pc))
       {
          /* chunk is OK */
       }
@@ -2947,7 +2951,7 @@ static bool can_be_full_param(chunk_t *start, chunk_t *end)
    }
 
    last = chunk_get_prev_ncnl(pc);
-   if (chunk_is_star(last) || chunk_is_addr(last))
+   if (chunk_is_ptr_operator(last))
    {
       LOG_FMT(LFPARAM, " <== [%s] sure!\n", get_token_name(pc->type));
       return(true);
@@ -3054,7 +3058,7 @@ static void mark_function(chunk_t *pc)
       }
    }
 
-   if (chunk_is_star(next) || chunk_is_addr(next))
+   if (chunk_is_ptr_operator(next))
    {
       next = chunk_get_next_ncnlnp(next);
    }
@@ -3130,7 +3134,7 @@ static void mark_function(chunk_t *pc)
       }
 
       if (chunk_is_str(tmp3, ")", 1) &&
-          (chunk_is_star(tmp1) ||
+          (chunk_is_star(tmp1) || chunk_is_msref(tmp1) ||
            ((cpd.lang_flags & LANG_OC) && chunk_is_token(tmp1, CT_CARET)))
           &&
           ((tmp2 == NULL) || (tmp2->type == CT_WORD)))
@@ -3323,8 +3327,7 @@ static void mark_function(chunk_t *pc)
             isa_def = true;
          }
 
-         if (chunk_is_addr(prev) ||
-             chunk_is_star(prev))
+         if (chunk_is_ptr_operator(prev))
          {
             hit_star = true;
          }
@@ -3335,8 +3338,7 @@ static void mark_function(chunk_t *pc)
              (prev->type != CT_QUALIFIER) &&
              (prev->type != CT_TYPE) &&
              (prev->type != CT_WORD) &&
-             !chunk_is_addr(prev) &&
-             !chunk_is_star(prev))
+             !chunk_is_ptr_operator(prev))
          {
             LOG_FMT(LFCN, " --> Stopping on %s [%s]\n",
                     prev->str.c_str(), get_token_name(prev->type));
