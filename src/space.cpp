@@ -78,12 +78,12 @@ static void log_rule2(int line, const char *rule, chunk_t *first, chunk_t *secon
    LOG_FUNC_ENTRY();
    if (second->type != CT_NEWLINE)
    {
-      LOG_FMT(LSPACE, "Spacing: line %d [%s/%s] '%s' <===> [%s/%s] '%s' : %s[%d]%s",
+      LOG_FMT(LSPACE, "Spacing: line %d [%s/%s] '%.*s' <===> [%s/%s] '%.*s' : %s[%d]%s",
               first->orig_line,
               get_token_name(first->type), get_token_name(first->parent_type),
-              first->str.c_str(),
+              first->str.size(), first->str.c_str(),
               get_token_name(second->type), get_token_name(second->parent_type),
-              second->str.c_str(),
+              second->str.size(), second->str.c_str(),
               rule, line,
               complete ? "\n" : "");
    }
