@@ -230,6 +230,7 @@ const char *token_names[] =
    "PP_ENDREGION",
    "PP_REGION_INDENT",
    "PP_IF_INDENT",
+   "PP_IGNORE",
    "PP_OTHER",
    "CHAR",
    "DEFINED",

@@ -1834,14 +1834,22 @@ void indent_text(void)
                     __func__, pc->orig_line, indent_column, pc->str.c_str());
             reindent_line(pc, indent_column);
          }
-         else if (pc->type == CT_PREPROC_BODY)
-         {
-            /* [Unity-only hack] Do nothing. We're using 'define' as CT_PP_OTHER to avoid reformatting of complex and weird macros. Likewise leave indentation alone because probably also weird. */
-         }
          else
          {
-            if (pc->column != indent_column)
+            /* [Unity-only hack] Do nothing. We're using 'define' as CT_PP_IGNORE to avoid reformatting of complex and weird macros. Likewise leave indentation alone because probably also weird. */
+            bool doit = true;
+            for (chunk_t* i = prev; i && (i->type == CT_PREPROC_BODY || i->type >= CT_PP_DEFINE && i->type <= CT_PP_OTHER); i = i->prev)
             {
+               if (i->type == CT_PP_IGNORE)
+               {
+                  doit = false;
+                  break;
+               }
+            }
+
+            if (doit && pc->column != indent_column)
+            {
+
                LOG_FMT(LINDENT, "%s: %d] indent => %d [%s]\n",
                        __func__, pc->orig_line, indent_column, pc->str.c_str());
                reindent_line(pc, indent_column);
