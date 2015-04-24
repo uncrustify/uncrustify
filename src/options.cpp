@@ -544,6 +544,8 @@ void register_options(void)
                   "Control the space after the opening of a C++ comment '// A' vs '//A'");
    unc_add_option("sp_cmt_cpp_doxygen", UO_sp_cmt_cpp_doxygen, AT_BOOL,
                   "TRUE: If space is added with sp_cmt_cpp_start, do it after doxygen sequences like '///', '///<', '//!' and '//!<'.");
+   unc_add_option("sp_cmt_cpp_qttr", UO_sp_cmt_cpp_qttr, AT_BOOL,
+                  "TRUE: If space is added with sp_cmt_cpp_start, do it after Qt translator or meta-data comments like '//:', '//=', and '//~'.");
 
    unc_add_option("sp_endif_cmt", UO_sp_endif_cmt, AT_IARF,
                   "Controls the spaces between #else or #endif and a trailing comment");

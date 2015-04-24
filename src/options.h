@@ -385,6 +385,7 @@ enum uncrustify_options
    UO_sp_range,
    UO_sp_cmt_cpp_start,
    UO_sp_cmt_cpp_doxygen,       // in case of UO_sp_cmt_cpp_start: treat '///', '///<', '//!' and '//!<' as a unity (add space behind)
+   UO_sp_cmt_cpp_qttr,          // in case of UO_sp_cmt_cpp_start: treat '//:', '//=', '//~' as a unity (add space behind)
    UO_sp_endif_cmt,
    UO_sp_after_new,
    UO_sp_between_new_paren,
