@@ -12,10 +12,21 @@
 #include "logger.h"
 
 #include <cstdio>
+#include <deque>
 #include <stdarg.h>
 #include "unc_ctype.h"
 #include "log_levels.h"
 
+struct log_fcn_info
+{
+   log_fcn_info(const char *name, int line) : name(name), line(line)
+   {
+   }
+
+   const char *name;
+   int        line;
+};
+static std::deque<log_fcn_info> g_fq;
 
 /** Private log structure */
 struct log_buf
@@ -124,7 +135,7 @@ static void log_flush(bool force_nl)
          g_log.buf[g_log.buf_len++] = '\n';
          g_log.buf[g_log.buf_len]   = 0;
       }
-      if (fwrite(g_log.buf, g_log.buf_len, 1,g_log .log_file) != 1)
+      if (fwrite(g_log.buf, g_log.buf_len, 1, g_log.log_file) != 1)
       {
          /* maybe we should log something to complain... =) */
       }
@@ -369,5 +380,54 @@ void log_hex_blk(log_sev_t sev, const void *data, int len)
          count++;
       }
       log_str(sev, buf, 73);
+   }
+}
+
+
+log_func::log_func(const char *name, int line)
+{
+   g_fq.push_back(log_fcn_info(name, line));
+}
+
+
+log_func::~log_func()
+{
+   g_fq.pop_back();
+}
+
+
+void log_func_call(int line)
+{
+   /* REVISIT: pass the __func__ and verify it matches the top entry? */
+   if (!g_fq.empty())
+   {
+      g_fq.back().line = line;
+   }
+}
+
+
+void log_func_stack(log_sev_t sev, const char *prefix, const char *suffix, int skip_cnt)
+{
+   if (prefix)
+   {
+      LOG_FMT(sev, "%s", prefix);
+   }
+   if (skip_cnt < 0)
+   {
+      skip_cnt = 0;
+   }
+#ifdef DEBUG
+   const char *sep = "";
+   for (int idx = (int)g_fq.size() - (skip_cnt + 1); idx >= 0; idx--)
+   {
+      LOG_FMT(sev, "%s %s:%d", sep, g_fq[idx].name, g_fq[idx].line);
+      sep = ",";
+   }
+#else
+   LOG_FMT(sev, "-DEBUG NOT SET-");
+#endif
+   if (suffix)
+   {
+      LOG_FMT(sev, "%s", suffix);
    }
 }

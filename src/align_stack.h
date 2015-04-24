@@ -31,7 +31,7 @@ public:
    StarStyle  m_star_style;
    StarStyle  m_amp_style;
    /* do not include the first item if it causes it to be indented */
-   bool       m_skip_first;
+   bool m_skip_first;
 
 
    AlignStack() :
@@ -42,8 +42,7 @@ public:
    {
    }
 
-
-   AlignStack(const AlignStack &ref) :
+   AlignStack(const AlignStack& ref) :
       m_aligned(ref.m_aligned), m_skipped(ref.m_skipped),
       m_max_col(ref.m_max_col), m_min_col(ref.m_min_col),
       m_span(ref.m_span), m_thresh(ref.m_thresh), m_seqnum(ref.m_seqnum),
@@ -54,11 +53,9 @@ public:
    {
    }
 
-
    ~AlignStack()
    {
    }
-
 
    void Start(int span, int threshold = 0);
    void Add(chunk_t *pc, int seqnum = 0);

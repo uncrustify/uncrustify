@@ -52,5 +52,4 @@ int backup_copy_file(const char *filename, const vector<UINT8>& data);
  */
 void backup_create_md5_file(const char *filename);
 
-
 #endif /* BACKUP_H_INCLUDED */

@@ -22,8 +22,10 @@ static void check_unknown_brace_close(chunk_t *semi, chunk_t *brace_close);
 
 static void remove_semicolon(chunk_t *pc)
 {
-   LOG_FMT(LDELSEMI, "%s: Removed semicolon at line %d, col %d\n",
+   LOG_FUNC_ENTRY();
+   LOG_FMT(LDELSEMI, "%s: Removed semicolon at line %d, col %d",
            __func__, pc->orig_line, pc->orig_col);
+   log_func_stack_inline(LDELSEMI);
    /* TODO: do we want to shift stuff back a column? */
    chunk_del(pc);
 }
@@ -39,6 +41,7 @@ static void remove_semicolon(chunk_t *pc)
  */
 void remove_extra_semicolons(void)
 {
+   LOG_FUNC_ENTRY();
    chunk_t *pc;
    chunk_t *next;
    chunk_t *prev;
@@ -70,9 +73,10 @@ void remove_extra_semicolons(void)
                    (prev->parent_type == CT_FOR) ||
                    (prev->parent_type == CT_FUNC_DEF) ||
                    (prev->parent_type == CT_OC_MSG_DECL) ||
-                   (prev->parent_type == CT_FUNC_CLASS) ||
+                   (prev->parent_type == CT_FUNC_CLASS_DEF) ||
                    (prev->parent_type == CT_NAMESPACE)))
          {
+            LOG_FUNC_CALL();
             remove_semicolon(pc);
          }
          else if ((prev->type == CT_BRACE_CLOSE) &&
@@ -83,6 +87,7 @@ void remove_extra_semicolons(void)
          else if ((prev->type == CT_SEMICOLON) &&
                   (prev->parent_type != CT_FOR))
          {
+            LOG_FUNC_CALL();
             remove_semicolon(pc);
          }
          else if ((cpd.lang_flags & LANG_D) &&
@@ -90,10 +95,12 @@ void remove_extra_semicolons(void)
                    (prev->parent_type == CT_UNION) ||
                    (prev->parent_type == CT_STRUCT)))
          {
+            LOG_FUNC_CALL();
             remove_semicolon(pc);
          }
          else if (prev->type == CT_BRACE_OPEN)
          {
+            LOG_FUNC_CALL();
             remove_semicolon(pc);
          }
       }
@@ -106,19 +113,22 @@ void remove_extra_semicolons(void)
 /**
  * We are on a semicolon that is after an unidentified brace close.
  * Check for what is before the brace open.
- * Do not remove if it is a square close, word or type.
+ * Do not remove if it is a square close, word, type, or paren close.
  */
 static void check_unknown_brace_close(chunk_t *semi, chunk_t *brace_close)
 {
+   LOG_FUNC_ENTRY();
    chunk_t *pc;
 
    pc = chunk_get_prev_type(brace_close, CT_BRACE_OPEN, brace_close->level);
    pc = chunk_get_prev_ncnl(pc);
    if ((pc != NULL) &&
+       (pc->type != CT_RETURN) &&
        (pc->type != CT_WORD) &&
        (pc->type != CT_TYPE) &&
        (pc->type != CT_SQUARE_CLOSE) &&
-       (pc->type != CT_TSQUARE))
+       (pc->type != CT_TSQUARE) &&
+       !chunk_is_paren_close(pc))
    {
       remove_semicolon(semi);
    }

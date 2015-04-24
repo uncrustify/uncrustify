@@ -47,3 +47,6 @@ struct X
       return(*c); // 11:8
    }
 };
+
+int *const  i;
+int *static i;

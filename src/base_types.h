@@ -11,7 +11,7 @@
 
 #ifdef WIN32
 
-#include "../win32/windows_compat.h"
+#include "windows_compat.h"
 
 #else /* not WIN32 */
 
@@ -40,7 +40,6 @@ typedef uint8_t    UINT8;
 typedef uint16_t   UINT16;
 typedef uint32_t   UINT32;
 typedef uint64_t   UINT64;
-
 #endif   /* ifdef WIN32 */
 
 /* and the good old SUCCESS/FAILURE */
@@ -58,4 +57,4 @@ typedef uint64_t   UINT64;
 #define ARRAY_SIZE(x)    (sizeof(x) / sizeof((x)[0]))
 #endif
 
-#endif   /* BASE_TYPES_H_INCLUDED */
+#endif /* BASE_TYPES_H_INCLUDED */

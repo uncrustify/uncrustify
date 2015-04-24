@@ -24,7 +24,7 @@ void test(void)
    {
    }
 
-   if (  a /*test*/
+   if (  a/*test*/
       || b)
    {
    }

@@ -21,6 +21,7 @@ static void check_bool_parens(chunk_t *popen, chunk_t *pclose, int nest);
 
 void do_parens(void)
 {
+   LOG_FUNC_ENTRY();
    chunk_t *pc;
    chunk_t *pclose;
 
@@ -54,6 +55,7 @@ void do_parens(void)
  */
 static void add_parens_between(chunk_t *first, chunk_t *last)
 {
+   LOG_FUNC_ENTRY();
    chunk_t pc;
    chunk_t *first_n;
    chunk_t *last_p;
@@ -120,6 +122,7 @@ static void add_parens_between(chunk_t *first, chunk_t *last)
  */
 static void check_bool_parens(chunk_t *popen, chunk_t *pclose, int nest)
 {
+   LOG_FUNC_ENTRY();
    chunk_t *pc;
    chunk_t *ref = popen;
    chunk_t *next;

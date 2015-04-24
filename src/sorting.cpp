@@ -15,6 +15,7 @@
  */
 static int compare_chunks(chunk_t *pc1, chunk_t *pc2)
 {
+   LOG_FUNC_ENTRY();
    if (pc1 == pc2)
    {
       return(0);
@@ -65,6 +66,7 @@ static int compare_chunks(chunk_t *pc1, chunk_t *pc2)
  */
 static void do_the_sort(chunk_t **chunks, int num_chunks)
 {
+   LOG_FUNC_ENTRY();
    int start_idx, min_idx, idx;
 
    LOG_FMT(LSORT, "%s: %d chunks:", __func__, num_chunks);
@@ -100,6 +102,7 @@ static void do_the_sort(chunk_t **chunks, int num_chunks)
 
 void sort_imports(void)
 {
+   LOG_FUNC_ENTRY();
    chunk_t *chunks[256];  /* 256 should be enough, right? */
    int     num_chunks = 0;
    chunk_t *pc;

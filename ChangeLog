@@ -1,4 +1,46 @@
 
+Change highlights in uncrustify-0.61 (22 Dec 2014)
+-------------------------------------------------------------------------------
+This release is just a roll-up of the past two years.
+Many bugs were squashed and many options were added.
+
+New options:
+ - indent_paren_open_brace
+ - indent_namespace_single_indent
+ - indent_constr_colon
+ - indent_oc_msg_prioritize_first_colon
+ - indent_oc_block_msg_xcode_style
+ - indent_oc_block_msg_from_keyword
+ - indent_oc_block_msg_from_colon
+ - indent_oc_block_msg_from_caret
+ - indent_oc_block_msg_from_brace
+ - sp_enum_paren
+ - sp_cparen_oparen
+ - sp_after_ptr_star_qualifier
+ - sp_after_constr_colon
+ - sp_before_constr_colon
+ - sp_fparen_dbrace
+ - sp_word_brace
+ - sp_word_brace_ns
+ - sp_cond_colon_before
+ - sp_cond_colon_after
+ - sp_cond_question_before
+ - sp_cond_question_after
+ - sp_cond_ternary_short
+ - align_keep_extra_space
+ - nl_cpp_lambda_leave_one_liners
+ - nl_brace_square
+ - nl_brace_fparen
+ - nl_constr_init_args
+ - nl_cpp_ldef_brace
+ - nl_paren_dbrace_open
+ - nl_constr_colon
+ - pos_constr_comma
+ - pos_constr_colon
+ - mod_add_long_namespace_closebrace_comment
+ - cmt_convert_tab_to_spaces
+
+
 Change highlights in uncrustify-0.60 (1 Jan 2013)
 -------------------------------------------------------------------------------
 Objective C support was greatly enhanced in this release.

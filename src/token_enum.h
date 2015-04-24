@@ -197,7 +197,8 @@ typedef enum
    CT_FUNC_TYPE,        /* function type - foo in "typedef void (*foo)(void)" */
    CT_FUNC_VAR,         /* foo and parent type of first parens in "void (*foo)(void)" */
    CT_FUNC_PROTO,       /* function prototype */
-   CT_FUNC_CLASS,       /* ctor or dtor for a class */
+   CT_FUNC_CLASS_DEF,   /* ctor or dtor for a class */
+   CT_FUNC_CLASS_PROTO, /* ctor or dtor for a class */
    CT_FUNC_CTOR_VAR,    /* variable or class initialization */
    CT_FUNC_WRAP,        /* macro that wraps the function name */
    CT_PROTO_WRAP,       /* macro: "RETVAL PROTO_WRAP( fcn_name, (PARAMS))" */
@@ -258,6 +259,7 @@ typedef enum
    CT_PP_LINE,
    CT_PP_SECTION,
    CT_PP_UNDEF,
+   CT_PP_PROPERTY,
 
    CT_PP_BODYCHUNK,     /* everything after this gets put in CT_PREPROC_BODY */
 
@@ -307,9 +309,10 @@ typedef enum
    CT_LAMBDA,
 
    /* Java */
-   CT_ASSERT,           /* assert EXP1 [ : EXP2 ] ; */
-   CT_ANNOTATION,       /* @interface or @something(...) */
-   CT_FOR_COLON,        /* colon in "for ( TYPE var: EXPR ) { ... }" */
+   CT_ASSERT,       /* assert EXP1 [ : EXP2 ] ; */
+   CT_ANNOTATION,   /* @interface or @something(...) */
+   CT_FOR_COLON,    /* colon in "for ( TYPE var: EXPR ) { ... }" */
+   CT_DOUBLE_BRACE, /* parent for double brace */
 } c_token_t;
 
-#endif   /* TOKEN_ENUM_H_INCLUDED */
+#endif /* TOKEN_ENUM_H_INCLUDED */

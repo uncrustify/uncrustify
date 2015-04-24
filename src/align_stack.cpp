@@ -71,6 +71,7 @@ void AlignStack::ReAddSkipped()
  */
 void AlignStack::Add(chunk_t *start, int seqnum)
 {
+   LOG_FUNC_ENTRY();
    /* Assign a seqnum if needed */
    if (seqnum == 0)
    {
@@ -166,8 +167,7 @@ void AlignStack::Add(chunk_t *start, int seqnum)
       /* Find ref. Back up to the real item that is aligned. */
       prev = start;
       while (((prev = chunk_get_prev(prev)) != NULL) &&
-             (chunk_is_star(prev) ||
-              chunk_is_addr(prev) ||
+             (chunk_is_ptr_operator(prev) ||
               (prev->type == CT_TPAREN_OPEN)))
       {
          /* do nothing - we want prev when this exits */
@@ -182,9 +182,9 @@ void AlignStack::Add(chunk_t *start, int seqnum)
       ali = start;
       if (m_star_style != SS_IGNORE)
       {
-         /* back up to the first '*' preceding the token */
+         /* back up to the first '*' or '^' preceding the token */
          prev = chunk_get_prev(ali);
-         while (chunk_is_star(prev))
+         while (chunk_is_star(prev) || chunk_is_msref(prev))
          {
             ali  = prev;
             prev = chunk_get_prev(ali);
@@ -209,18 +209,18 @@ void AlignStack::Add(chunk_t *start, int seqnum)
       /* Tighten down the spacing between ref and start */
       if (!cpd.settings[UO_align_keep_extra_space].b)
       {
-          tmp_col = ref->column;
-          tmp     = ref;
-          while (tmp != start)
-          {
-              next     = chunk_get_next(tmp);
-              tmp_col += space_col_align(tmp, next);
-              if (next->column != tmp_col)
-              {
-                  align_to_column(next, tmp_col);
-              }
-              tmp = next;
-          }
+         tmp_col = ref->column;
+         tmp     = ref;
+         while (tmp != start)
+         {
+            next     = chunk_get_next(tmp);
+            tmp_col += space_col_align(tmp, next);
+            if (next->column != tmp_col)
+            {
+               align_to_column(next, tmp_col);
+            }
+            tmp = next;
+         }
       }
 
       /* Set the column adjust and gap */
@@ -236,7 +236,8 @@ void AlignStack::Add(chunk_t *start, int seqnum)
          tmp = chunk_get_next(tmp);
       }
       if ((chunk_is_star(tmp) && (m_star_style == SS_DANGLE)) ||
-          (chunk_is_addr(tmp) && (m_amp_style == SS_DANGLE)))
+          (chunk_is_addr(tmp) && (m_amp_style == SS_DANGLE)) ||
+          (chunk_is_msref(tmp) && (m_star_style == SS_DANGLE))) // TODO: add m_msref_style
       {
          col_adj = start->column - ali->column;
          gap     = start->column - (ref->column + ref->len());
@@ -363,8 +364,7 @@ void AlignStack::Flush()
       {
          tmp = chunk_get_next(tmp);
       }
-      if ((chunk_is_star(tmp) && (m_star_style == SS_DANGLE)) ||
-          (chunk_is_addr(tmp) && (m_amp_style == SS_DANGLE)))
+      if (chunk_is_ptr_operator(tmp) && (m_star_style == SS_DANGLE))
       {
          col_adj = pc->align.start->column - pc->column;
          gap     = pc->align.start->column - (pc->align.ref->column + pc->align.ref->len());

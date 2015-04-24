@@ -18,6 +18,8 @@ Value2 = 0x00000800 , // A much longer comment that needs to be truncated to fit
 /* line 3 */
 /* line 4 */
 
+int cnt;    /* This is a counter variable with a long comment. this should cause the comment to be wrapped. */
+
 /**
  * Multi-line comment
  */
@@ -36,3 +38,6 @@ void foo(void)
 /*INITIALIZE Variable(contExtnElgInd); /# Change #61 #/ */
 /*/# Start Change #35 #/ */
 
+/**
+ * OneBigWordThatCannotBeSplitYetExceedsTheCommentWidthSettingSoThatWrappingShouldBeAttempted.
+ */

@@ -667,7 +667,7 @@ void indent_text(void)
           (pc->type == CT_DC_MEMBER) ||
           ((prev != NULL) &&
            ((prev->type == CT_MEMBER) ||
-               (prev->type == CT_DC_MEMBER))))
+            (prev->type == CT_DC_MEMBER))))
         {
         tmp = cpd.settings[UO_indent_member].n + indent_column;
         LOG_FMT(LINDENT, "%s: %d] member => %d\n",

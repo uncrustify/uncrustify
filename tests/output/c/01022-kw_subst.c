@@ -57,9 +57,9 @@ int foo1()
   *  <Description>
   *
   *  @param a TODO
-  * @param b TODO
-  * @param c TODO
-  * @return TODO
+  *  @param b TODO
+  *  @param c TODO
+  *  @return TODO
   *
   **********************************************************************************/
 void * foo4(int a, int b, int c)

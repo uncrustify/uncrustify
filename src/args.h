@@ -112,4 +112,4 @@ public:
    static int SplitLine(char *text, char *args[], int num_args);
 };
 
-#endif   /* ARGS_H_INCLUDED */
+#endif /* ARGS_H_INCLUDED */

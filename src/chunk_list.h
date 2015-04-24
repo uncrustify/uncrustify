@@ -220,6 +220,21 @@ bool chunk_is_addr(chunk_t *pc)
 }
 
 
+static_inline
+bool chunk_is_msref(chunk_t *pc) // ms compilers for C++/CLI and WinRT use '^' instead of '*' for marking up reference types vs pointer types
+{
+   return((cpd.lang_flags & LANG_CPP) &&
+          ((pc != NULL) && (pc->len() == 1) && (pc->str[0] == '^') && (pc->type != CT_OPERATOR_VAL)));
+}
+
+
+static_inline
+bool chunk_is_ptr_operator(chunk_t *pc)
+{
+   return chunk_is_star(pc) || chunk_is_addr(pc) || chunk_is_msref(pc);
+}
+
+
 bool chunk_is_newline_between(chunk_t *start, chunk_t *end);
 
 static_inline
@@ -298,4 +313,34 @@ bool chunk_safe_to_del_nl(chunk_t *nl)
 }
 
 
-#endif   /* CHUNK_LIST_H_INCLUDED */
+/**
+ * Handle for (... in ...) in Objective-C.
+ * Returns true if pc->prev points to a CT_FOR and we find a CT_IN before the closing parenthesis.
+ */
+static_inline
+bool chunk_is_forin(chunk_t *pc)
+{
+   if ((cpd.lang_flags & LANG_OC) && pc && (pc->type == CT_SPAREN_OPEN))
+   {
+      chunk_t *prev = chunk_get_prev_ncnl(pc);
+      if (prev->type == CT_FOR)
+      {
+         chunk_t *next = pc;
+         while (next && (next->type != CT_SPAREN_CLOSE) && (next->type != CT_IN))
+         {
+            next = chunk_get_next_ncnl(next);
+         }
+         if (next->type == CT_IN)
+         {
+            return true;
+         }
+      }
+   }
+   return false;
+}
+
+
+void set_chunk_type(chunk_t *pc, c_token_t tt);
+void set_chunk_parent(chunk_t *pc, c_token_t tt);
+
+#endif /* CHUNK_LIST_H_INCLUDED */

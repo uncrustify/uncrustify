@@ -37,3 +37,6 @@
 
 40070  d_sp_paren.cfg          d/d_sp_paren.d
 
+40080  d.cfg                   d/static_if.d
+
+40090 libd.cfg                 d/square_indent_tab.d

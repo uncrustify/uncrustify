@@ -1,4 +1,3 @@
-#
 # Test cases specifically for the Objective C language.
 #
 # Range: 50000 - 59999
@@ -22,6 +21,7 @@
 50015  obj-c.cfg                                    oc/receiver.m
 
 50016  obj-c.cfg                                    oc/ternary.m
+50017  ternary_short.cfg                            oc/ternary.m
 
 50020  sp_after_oc_at_sel_add.cfg                   oc/selector.m
 50021  sp_after_oc_at_sel_force.cfg                 oc/selector.m
@@ -54,6 +54,7 @@
 50082  sp_after_oc_block_caret_remove.cfg           oc/more_blocks.m
 50083  sp_before_after_oc_block_caret_remove.cfg    oc/more_blocks.m
 50084  nl_brace_square.cfg                          oc/more_blocks.m
+50085  nl_after_func_body-3.cfg                     oc/block_in_method.m
 
 50090  obj-c.cfg                                    oc/kw.m
 
@@ -62,5 +63,25 @@
 
 50110  obj-c.cfg                                    oc/msg_align.m
 50111  del_semicolon.cfg                            oc/ns_enum.m
+50112  sp_enum_paren-f.cfg                          oc/ns_enum.m
+50113  sp_enum_paren-r.cfg                          oc/ns_enum.m
 
 50120  gh137.cfg                                    oc/gh137.m
+
+50200  sp_block_as_argument.cfg                     oc/more_blocks_2.m
+50201  sp_block_as_argument.cfg                     oc/blocks_align.m
+50202  sp_block_as_argument2.cfg                    oc/blocks_align.m
+50203  sp_block_as_argument3.cfg                    oc/blocks_align.m
+50204  sp_block_as_argument4.cfg                    oc/blocks_align.m
+50205  sp_block_as_argument5.cfg                    oc/msg_align.m
+
+50300  obj-c.cfg                                    oc/msg.m
+
+50400  obj-c.cfg                                    oc/for.m
+
+50410  oc_cond_colon.cfg                            oc/oc_cond_colon.m OC+
+
+50500  obj-c.cfg                                    oc/code_placeholder.m
+
+50510  gh293.a.cfg                                  oc/gh293.m
+50511  gh293.b.cfg                                  oc/gh293.m

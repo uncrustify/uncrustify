@@ -34,6 +34,7 @@ static bool handle_complex_close(struct parse_frame *frm, chunk_t *pc);
 
 static int preproc_start(struct parse_frame *frm, chunk_t *pc)
 {
+   LOG_FUNC_ENTRY();
    chunk_t *next;
    int     pp_level = cpd.pp_level;
 
@@ -73,6 +74,7 @@ static int preproc_start(struct parse_frame *frm, chunk_t *pc)
 static void print_stack(log_sev_t logsev, const char *str,
                         struct parse_frame *frm, chunk_t *pc)
 {
+   LOG_FUNC_ENTRY();
    if (log_sev_on(logsev))
    {
       int idx;
@@ -104,6 +106,7 @@ static void print_stack(log_sev_t logsev, const char *str,
  */
 void brace_cleanup(void)
 {
+   LOG_FUNC_ENTRY();
    chunk_t            *pc;
    struct parse_frame frm;
    int                pp_level;
@@ -175,6 +178,7 @@ void brace_cleanup(void)
  */
 static bool maybe_while_of_do(chunk_t *pc)
 {
+   LOG_FUNC_ENTRY();
    chunk_t *prev;
 
    prev = chunk_get_prev_ncnl(pc);
@@ -203,6 +207,7 @@ static bool maybe_while_of_do(chunk_t *pc)
 static void push_fmr_pse(struct parse_frame *frm, chunk_t *pc,
                          brstage_e stage, const char *logtext)
 {
+   LOG_FUNC_ENTRY();
    if (frm->pse_tos < ((int)ARRAY_SIZE(frm->pse) - 1))
    {
       frm->pse_tos++;
@@ -277,6 +282,7 @@ static void push_fmr_pse(struct parse_frame *frm, chunk_t *pc,
  */
 static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
 {
+   LOG_FUNC_ENTRY();
    c_token_t parent = CT_NONE;
    chunk_t   *prev;
 
@@ -296,7 +302,7 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
       pc->flags |= PCF_EXPR_START;
       pc->flags |= (frm->stmt_count == 0) ? PCF_STMT_START : 0;
       LOG_FMT(LSTMT, "%d] 1.marked %s as %s start st:%d ex:%d\n",
-              pc->orig_line, pc->str.c_str(), (pc->flags &PCF_STMT_START) ? "stmt" : "expr",
+              pc->orig_line, pc->str.c_str(), (pc->flags & PCF_STMT_START) ? "stmt" : "expr",
               frm->stmt_count, frm->expr_count);
    }
    frm->stmt_count++;
@@ -323,7 +329,7 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
           (frm->pse_tos > 1) &&
           (frm->pse[frm->pse_tos - 1].type == CT_FOR))
       {
-         pc->parent_type = CT_FOR;
+         set_chunk_parent(pc, CT_FOR);
       }
    }
 
@@ -371,7 +377,7 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
           ((frm->pse[frm->pse_tos].type == CT_FPAREN_OPEN) ||
            (frm->pse[frm->pse_tos].type == CT_SPAREN_OPEN)))
       {
-         pc->type = (c_token_t)(frm->pse[frm->pse_tos].type + 1);
+         set_chunk_type(pc, (c_token_t)(frm->pse[frm->pse_tos].type + 1));
          if (pc->type == CT_SPAREN_CLOSE)
          {
             frm->sparen_count--;
@@ -398,7 +404,7 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
          cpd.consumed = true;
 
          /* Copy the parent, update the paren/brace levels */
-         pc->parent_type = frm->pse[frm->pse_tos].parent;
+         set_chunk_parent(pc, frm->pse[frm->pse_tos].parent);
          frm->level--;
          if ((pc->type == CT_BRACE_CLOSE) ||
              (pc->type == CT_VBRACE_CLOSE) ||
@@ -450,8 +456,8 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
          /* Complain if this ISN'T a semicolon, but close out WHILE_OF_DO anyway */
          if ((pc->type == CT_SEMICOLON) || (pc->type == CT_VSEMICOLON))
          {
-            cpd.consumed    = true;
-            pc->parent_type = CT_WHILE_OF_DO;
+            cpd.consumed = true;
+            set_chunk_parent(pc, CT_WHILE_OF_DO);
          }
          else
          {
@@ -480,22 +486,22 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
             /* Set the parent for parens and change paren type */
             if (frm->pse[frm->pse_tos].stage != BS_NONE)
             {
-               pc->type = CT_SPAREN_OPEN;
-               parent   = frm->pse[frm->pse_tos].type;
+               set_chunk_type(pc, CT_SPAREN_OPEN);
+               parent = frm->pse[frm->pse_tos].type;
                frm->sparen_count++;
             }
             else if (prev->type == CT_FUNCTION)
             {
-               pc->type = CT_FPAREN_OPEN;
-               parent   = CT_FUNCTION;
+               set_chunk_type(pc, CT_FPAREN_OPEN);
+               parent = CT_FUNCTION;
             }
             /* NS_ENUM and NS_OPTIONS are followed by a (type, name) pair */
             else if ((prev->type == CT_ENUM) &&
                      (cpd.lang_flags & LANG_OC))
             {
                /* Treat both as CT_ENUM since the syntax is identical */
-               pc->type = CT_FPAREN_OPEN;
-               parent   = CT_ENUM;
+               set_chunk_type(pc, CT_FPAREN_OPEN);
+               parent = CT_ENUM;
             }
             else
             {
@@ -514,7 +520,7 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
                parent = CT_ASSIGN;
             }
             /*  Carry through CT_ENUM parent in NS_ENUM (type, name) { */
-            else if ((prev->type == CT_FPAREN_CLOSE) && 
+            else if ((prev->type == CT_FPAREN_CLOSE) &&
                      (cpd.lang_flags & LANG_OC) &&
                      (prev->parent_type == CT_ENUM))
             {
@@ -552,7 +558,7 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
       }
       push_fmr_pse(frm, pc, BS_NONE, "+Open   ");
       frm->pse[frm->pse_tos].parent = parent;
-      pc->parent_type = parent;
+      set_chunk_parent(pc, parent);
    }
 
    pattern_class patcls = get_token_pattern_class(pc->type);
@@ -570,8 +576,8 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
 
       if ((pc->type == CT_WHILE) && maybe_while_of_do(pc))
       {
-         pc->type = CT_WHILE_OF_DO;
-         bs       = BS_WOD_PAREN;
+         set_chunk_type(pc, CT_WHILE_OF_DO);
+         bs = BS_WOD_PAREN;
       }
       push_fmr_pse(frm, pc, bs, "+ComplexParenBraced");
    }
@@ -656,6 +662,7 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
  */
 static bool check_complex_statements(struct parse_frame *frm, chunk_t *pc)
 {
+   LOG_FUNC_ENTRY();
    c_token_t parent;
    chunk_t   *vbrace;
 
@@ -695,7 +702,7 @@ static bool check_complex_statements(struct parse_frame *frm, chunk_t *pc)
              !chunk_is_newline(chunk_get_prev_nc(pc)))
          {
             /* Replace CT_ELSE with CT_IF */
-            pc->type = CT_ELSEIF;
+            set_chunk_type(pc, CT_ELSEIF);
             frm->pse[frm->pse_tos].type  = CT_ELSEIF;
             frm->pse[frm->pse_tos].stage = BS_PAREN1;
             return(true);
@@ -732,7 +739,7 @@ static bool check_complex_statements(struct parse_frame *frm, chunk_t *pc)
    {
       if (pc->type == CT_WHILE)
       {
-         pc->type = CT_WHILE_OF_DO;
+         set_chunk_type(pc, CT_WHILE_OF_DO);
          frm->pse[frm->pse_tos].type  = CT_WHILE_OF_DO; //CT_WHILE;
          frm->pse[frm->pse_tos].stage = BS_WOD_PAREN;
          return(true);
@@ -753,7 +760,7 @@ static bool check_complex_statements(struct parse_frame *frm, chunk_t *pc)
       parent = frm->pse[frm->pse_tos].type;
 
       vbrace = insert_vbrace_open_before(pc, frm);
-      vbrace->parent_type = parent;
+      set_chunk_parent(vbrace, parent);
 
       frm->level++;
       frm->brace_level++;
@@ -803,6 +810,7 @@ static bool check_complex_statements(struct parse_frame *frm, chunk_t *pc)
  */
 static bool handle_complex_close(struct parse_frame *frm, chunk_t *pc)
 {
+   LOG_FUNC_ENTRY();
    chunk_t *next;
 
    if (frm->pse[frm->pse_tos].stage == BS_PAREN1)
@@ -900,6 +908,7 @@ static bool handle_complex_close(struct parse_frame *frm, chunk_t *pc)
 static chunk_t *insert_vbrace(chunk_t *pc, bool after,
                               struct parse_frame *frm)
 {
+   LOG_FUNC_ENTRY();
    chunk_t chunk;
    chunk_t *rv;
    chunk_t *ref;
@@ -967,6 +976,7 @@ static chunk_t *insert_vbrace(chunk_t *pc, bool after,
  */
 bool close_statement(struct parse_frame *frm, chunk_t *pc)
 {
+   LOG_FUNC_ENTRY();
    chunk_t *vbc = pc;
 
    LOG_FMT(LTOK, "%s:%d] %s '%s' type %s stage %d\n", __func__,
@@ -998,7 +1008,7 @@ bool close_statement(struct parse_frame *frm, chunk_t *pc)
          /* otherwise, add before it and consume the vbrace */
          vbc = chunk_get_prev_ncnl(pc);
          vbc = insert_vbrace_close_after(vbc, frm);
-         vbc->parent_type = frm->pse[frm->pse_tos].parent;
+         set_chunk_parent(vbc, frm->pse[frm->pse_tos].parent);
 
          frm->level--;
          frm->brace_level--;

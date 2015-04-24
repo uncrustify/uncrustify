@@ -164,7 +164,8 @@ const char *token_names[] =
    "FUNC_TYPE",
    "FUNC_VAR",
    "FUNC_PROTO",
-   "FUNC_CLASS",
+   "FUNC_CLASS_DEF",
+   "FUNC_CLASS_PROTO",
    "FUNC_CTOR_VAR",
    "FUNC_WRAP",
    "PROTO_WRAP",
@@ -222,6 +223,7 @@ const char *token_names[] =
    "PP_LINE",
    "PP_SECTION",
    "PP_UNDEF",
+   "PP_PROPERTY",
    "PP_BODYCHUNK",
    "PP_PRAGMA",
    "PP_REGION",
@@ -261,6 +263,7 @@ const char *token_names[] =
    "ASSERT",
    "ANNOTATION",
    "FOR_COLON",
+   "DOUBLE_BRACE",
 };
 
 #endif /* TOKEN_NAMES_H_INCLUDED */

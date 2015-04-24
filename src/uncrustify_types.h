@@ -88,6 +88,7 @@ struct paren_stack_entry
    c_token_t    parent;       /**< if, for, function, etc */
    brstage_e    stage;
    bool         in_preproc;   /**< whether this was created in a preprocessor */
+   int          ns_cnt;
    bool         non_vardef;   /**< Hit a non-vardef line */
    indent_ptr_t ip;
 };
@@ -114,7 +115,7 @@ struct parse_frame
    bool                     maybe_cast;
 };
 
-#define PCF_BIT(b)   (1ULL << b)
+#define PCF_BIT(b)    (1ULL << b)
 
 /* Copy flags are in the lower 16 bits */
 #define PCF_COPY_FLAGS         0x0000ffff
@@ -160,6 +161,7 @@ struct parse_frame
 #define PCF_KEEP_BRACE         PCF_BIT(36)  /* do not remove brace */
 #define PCF_OC_RTYPE           PCF_BIT(37)  /* inside OC return type */
 #define PCF_OC_ATYPE           PCF_BIT(38)  /* inside OC arg type */
+#define PCF_WF_ENDIF           PCF_BIT(39)  /* #endif for whole file ifdef */
 
 #ifdef DEFINE_PCF_NAMES
 static const char *pcf_names[] =
@@ -203,6 +205,7 @@ static const char *pcf_names[] =
    "KEEP_BRACE",        // 36
    "OC_RTYPE",          // 37
    "OC_ATYPE",          // 38
+   "WF_ENDIF",          // 39
 };
 #endif
 
@@ -231,32 +234,36 @@ struct chunk_t
    {
       reset();
    }
-   void reset()
+
+   void         reset()
    {
       memset(&align, 0, sizeof(align));
       memset(&indent, 0, sizeof(indent));
-      next = 0;
-      prev = 0;
-      type = CT_NONE;
-      parent_type = CT_NONE;
-      orig_line = 0;
-      orig_col = 0;
-      orig_col_end = 0;
-      flags = 0;
-      column = 0;
+      next          = 0;
+      prev          = 0;
+      type          = CT_NONE;
+      parent_type   = CT_NONE;
+      orig_line     = 0;
+      orig_col      = 0;
+      orig_col_end  = 0;
+      orig_prev_sp  = 0;
+      flags         = 0;
+      column        = 0;
       column_indent = 0;
-      nl_count = 0;
-      level = 0;
-      brace_level = 0;
-      pp_level = 0;
-      after_tab = false;
+      nl_count      = 0;
+      level         = 0;
+      brace_level   = 0;
+      pp_level      = 0;
+      after_tab     = false;
       str.clear();
    }
-   int len()
+
+   int          len()
    {
       return str.size();
    }
-   const char *text()
+
+   const char   *text()
    {
       return str.c_str();
    }
@@ -270,6 +277,7 @@ struct chunk_t
    UINT32       orig_line;
    UINT32       orig_col;
    UINT32       orig_col_end;
+   UINT32       orig_prev_sp;     /* whitespace before this token */
    UINT64       flags;            /* see PCF_xxx */
    int          column;           /* column of chunk */
    int          column_indent;    /* if 1st on a line, set to the 'indent'
@@ -351,8 +359,11 @@ struct file_mem
 
 struct cp_data
 {
+   deque<UINT8>       *bout;
    FILE               *fout;
    int                last_char;
+   bool               do_check;
+   int                check_fail_cnt; // total failures
 
    UINT32             error_count;
    const char         *filename;
@@ -371,6 +382,8 @@ struct cp_data
    UINT16             column;  /* column for parsing */
    UINT16             spaces;  /* space count on output */
 
+   int                ifdef_over_whole_file;
+
    bool               frag;
    UINT16             frag_cols;
 
@@ -383,6 +396,8 @@ struct cp_data
    int                did_newline;
    c_token_t          in_preproc;
    int                preproc_ncnl_count;
+   bool               output_trailspace;
+   bool               output_tab_as_space;
 
    bool               bom;
    CharEncoding       enc;
@@ -406,4 +421,4 @@ struct cp_data
 
 extern struct cp_data cpd;
 
-#endif   /* UNCRUSTIFY_TYPES_H_INCLUDED */
+#endif /* UNCRUSTIFY_TYPES_H_INCLUDED */

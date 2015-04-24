@@ -18,7 +18,7 @@
 using namespace std;
 
 /* Dynamic keyword map */
-typedef map<string, c_token_t> dkwmap;
+typedef map<string, c_token_t>   dkwmap;
 static dkwmap dkwm;
 
 
@@ -133,7 +133,7 @@ static const chunk_tag_t keywords[] =
    { "extern",           CT_EXTERN,       LANG_C | LANG_CPP | LANG_CS | LANG_D | LANG_VALA                            },
    { "false",            CT_WORD,         LANG_CPP | LANG_CS | LANG_D | LANG_JAVA | LANG_VALA                         },
    { "file",             CT_PP_FILE,      LANG_PAWN | FLAG_PP                                                         }, // PAWN
-   { "final",            CT_QUALIFIER,    LANG_D | LANG_ECMA                                                          },
+   { "final",            CT_QUALIFIER,    LANG_CPP | LANG_D | LANG_ECMA                                               },
    { "finally",          CT_FINALLY,      LANG_D | LANG_CS | LANG_ECMA | LANG_JAVA                                    },
    { "flags",            CT_TYPE,         LANG_VALA                                                                   },
    { "float",            CT_TYPE,         LANG_ALLC                                                                   },
@@ -155,7 +155,7 @@ static const chunk_tag_t keywords[] =
    { "implicit",         CT_QUALIFIER,    LANG_CS                                                                     },
    { "import",           CT_IMPORT,       LANG_D | LANG_JAVA | LANG_ECMA                                              }, // fudged to get indenting
    { "import",           CT_PP_INCLUDE,   LANG_OC | FLAG_PP                                                           }, // ObjectiveC version of include
-   { "in",               CT_IN,           LANG_D | LANG_CS | LANG_VALA | LANG_ECMA                                    },
+   { "in",               CT_IN,           LANG_D | LANG_CS | LANG_VALA | LANG_ECMA | LANG_OC                          },
    { "include",          CT_PP_INCLUDE,   LANG_C | LANG_CPP | LANG_PAWN | FLAG_PP                                     }, // PAWN
    { "inline",           CT_QUALIFIER,    LANG_C | LANG_CPP                                                           },
    { "inout",            CT_QUALIFIER,    LANG_D                                                                      },
@@ -174,7 +174,7 @@ static const chunk_tag_t keywords[] =
    { "mixin",            CT_CLASS,        LANG_D                                                                      }, // may need special handling
    { "module",           CT_D_MODULE,     LANG_D                                                                      },
    { "mutable",          CT_QUALIFIER,    LANG_C | LANG_CPP                                                           },
-   { "namespace",        CT_NAMESPACE,    LANG_C | LANG_CPP | LANG_CS | LANG_VALA                                     },
+   { "namespace",        CT_NAMESPACE,    LANG_CPP | LANG_CS | LANG_VALA                                              },
    { "native",           CT_NATIVE,       LANG_PAWN                                                                   }, // PAWN
    { "native",           CT_QUALIFIER,    LANG_JAVA | LANG_ECMA                                                       },
    { "new",              CT_NEW,          LANG_CPP | LANG_CS | LANG_D | LANG_JAVA | LANG_PAWN | LANG_VALA | LANG_ECMA }, // PAWN
@@ -192,6 +192,7 @@ static const chunk_tag_t keywords[] =
    { "params",           CT_TYPE,         LANG_CS                                                                     },
    { "pragma",           CT_PP_PRAGMA,    LANG_ALL | FLAG_PP                                                          }, // PAWN
    { "private",          CT_PRIVATE,      LANG_ALLC                                                                   }, // not C
+   { "property",         CT_PP_PROPERTY,  LANG_CS | FLAG_PP                                                           },
    { "protected",        CT_PRIVATE,      LANG_ALLC                                                                   }, // not C
    { "public",           CT_PRIVATE,      LANG_ALL                                                                    }, // PAWN // not C
    { "readonly",         CT_QUALIFIER,    LANG_CS                                                                     },
@@ -270,6 +271,7 @@ void init_keywords()
 {
 }
 
+
 /**
  * Compares two chunk_tag_t entries using strcmp on the strings
  *
@@ -285,21 +287,18 @@ static int kw_compare(const void *p1, const void *p2)
 }
 
 
-bool keywords_are_sorted(void)
+void keywords_are_sorted(void)
 {
-   int  idx;
-   bool retval = true;
-
-   for (idx = 1; idx < (int)ARRAY_SIZE(keywords); idx++)
+   for (int idx = 1; idx < (int)ARRAY_SIZE(keywords); idx++)
    {
       if (kw_compare(&keywords[idx - 1], &keywords[idx]) > 0)
       {
          LOG_FMT(LERR, "%s: bad sort order at idx %d, words '%s' and '%s'\n",
                  __func__, idx - 1, keywords[idx - 1].tag, keywords[idx].tag);
-         retval = false;
+         exit(EXIT_FAILURE);
       }
    }
-   return(retval);
+   return;
 }
 
 
@@ -315,6 +314,7 @@ void add_keyword(const char *tag, c_token_t type)
 
    /* See if the keyword has already been added */
    dkwmap::iterator it = dkwm.find(ss);
+
    if (it != dkwm.end())
    {
       LOG_FMT(LDYNKW, "%s: changed '%s' to %d\n", __func__, tag, type);

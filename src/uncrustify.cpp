@@ -42,9 +42,9 @@
 struct cp_data cpd;
 
 
-static int language_from_tag(const char *tag);
-static int language_from_filename(const char *filename);
-static const char *language_to_string(int lang);
+static int language_flags_from_name(const char *tag);
+static int language_flags_from_filename(const char *filename);
+static const char *language_name_from_flags(int lang);
 static bool read_stdin(file_mem& fm);
 static void uncrustify_start(const deque<int>& data);
 static void uncrustify_end();
@@ -150,6 +150,10 @@ static void usage_exit(const char *msg, const char *argv0, int code)
            " -f FILE      : process the single file FILE (output to stdout, use with -o)\n"
            " -o FILE      : Redirect stdout to FILE\n"
            " -F FILE      : read files to process from FILE, one filename per line (- is stdin)\n"
+           " --check      : Do not output the new text, instead verify that nothing changes when\n"
+           "                the file(s) are processed.\n"
+           "                The status of every file is printed to stderr.\n"
+           "                The exit code is EXIT_SUCCESS if there were no changes, EXIT_FAILURE otherwise.\n"
            " files        : files to process (can be combined with -F)\n"
            " --suffix SFX : Append SFX to the output filename. The default is '.uncrustify'\n"
            " --prefix PFX : Prepend PFX to the output filename path.\n"
@@ -158,7 +162,7 @@ static void usage_exit(const char *msg, const char *argv0, int code)
 #ifdef HAVE_UTIME_H
            " --mtime      : preserve mtime on replaced files\n"
 #endif
-           " -l           : language override: C, CPP, D, CS, JAVA, PAWN, OC, OC+\n"
+           " -l           : language override: C, CPP, D, CS, JAVA, PAWN, OC, OC+, VALA\n"
            " -t           : load a file with types (usually not needed)\n"
            " -q           : quiet mode - no output on stderr (-L will override)\n"
            " --frag       : code fragment, assume the first line is indented correctly\n"
@@ -190,7 +194,8 @@ static void usage_exit(const char *msg, const char *argv0, int code)
            "uncrustify -c my.cfg --prefix=out -F files.txt\n"
            "\n"
            "Note: Use comments containing ' *INDENT-OFF*' and ' *INDENT-ON*' to disable\n"
-           "      processing of parts of the source file.\n"
+           "      processing of parts of the source file (these can be overridden with \n"
+           "      enable_processing_cmt and disable_processing_cmt.\n"
            "\n"
            "There are currently %d options and minimal documentation.\n"
            "Try UniversalIndentGUI and good luck.\n"
@@ -266,13 +271,15 @@ int main(int argc, char *argv[])
       return EXIT_SUCCESS;
    }
 
+   cpd.do_check = arg.Present("--check");
+
 #ifdef WIN32
    /* tell windoze not to change what I write to stdout */
    (void)_setmode(_fileno(stdout), _O_BINARY);
 #endif
 
    /* Init logging */
-   log_init(stderr);
+   log_init(cpd.do_check ? stdout : stderr);
    if (arg.Present("-q"))
    {
       logmask_from_string("", mask);
@@ -379,7 +386,7 @@ int main(int argc, char *argv[])
    /* Check for a language override */
    if ((p_arg = arg.Param("-l")) != NULL)
    {
-      cpd.lang_flags = language_from_tag(p_arg);
+      cpd.lang_flags = language_flags_from_name(p_arg);
       if (cpd.lang_flags == 0)
       {
          LOG_FMT(LWARN, "Ignoring unknown language: %s\n", p_arg);
@@ -425,23 +432,34 @@ int main(int argc, char *argv[])
    LOG_FMT(LDATA, "replace     = %d\n", replace);
    LOG_FMT(LDATA, "no_backup   = %d\n", no_backup);
    LOG_FMT(LDATA, "detect      = %d\n", detect);
+   LOG_FMT(LDATA, "check       = %d\n", cpd.do_check);
 
-   if (replace || no_backup)
+   if (cpd.do_check &&
+       (output_file || replace || no_backup || keep_mtime || update_config ||
+        update_config_wd || detect || prefix || suffix))
    {
-      if ((prefix != NULL) || (suffix != NULL))
-      {
-         usage_exit("Cannot use --replace with --prefix or --suffix", argv[0], 66);
-      }
-      if ((source_file != NULL) || (output_file != NULL))
-      {
-         usage_exit("Cannot use --replace or --no-backup with -f or -o", argv[0], 66);
-      }
+      usage_exit("Cannot use --check with output options.", argv[0], 67);
    }
-   else
+
+   if (!cpd.do_check)
    {
-      if ((prefix == NULL) && (suffix == NULL))
+      if (replace || no_backup)
       {
-         suffix = ".uncrustify";
+         if ((prefix != NULL) || (suffix != NULL))
+         {
+            usage_exit("Cannot use --replace with --prefix or --suffix", argv[0], 66);
+         }
+         if ((source_file != NULL) || (output_file != NULL))
+         {
+            usage_exit("Cannot use --replace or --no-backup with -f or -o", argv[0], 66);
+         }
+      }
+      else
+      {
+         if ((prefix == NULL) && (suffix == NULL))
+         {
+            suffix = ".uncrustify";
+         }
       }
    }
 
@@ -474,6 +492,7 @@ int main(int argc, char *argv[])
       }
 
       print_universal_indent_cfg(pfile);
+      fclose(pfile);
 
       return EXIT_SUCCESS;
    }
@@ -491,7 +510,7 @@ int main(int argc, char *argv[])
       /* Do some simple language detection based on the filename extension */
       if (!cpd.lang_forced || (cpd.lang_flags == 0))
       {
-         cpd.lang_flags = language_from_filename(source_file);
+         cpd.lang_flags = language_flags_from_filename(source_file);
       }
 
       /* Try to read in the source file */
@@ -511,6 +530,14 @@ int main(int argc, char *argv[])
       return EXIT_SUCCESS;
    }
 
+   if (update_config || update_config_wd)
+   {
+      /* TODO: complain if file-processing related options are present */
+      redir_stdout(output_file);
+      save_option_file(stdout, update_config_wd);
+      return EXIT_SUCCESS;
+   }
+
    /* Everything beyond this point requires a config file, so complain and
     * bail if we don't have one.
     */
@@ -523,13 +550,6 @@ int main(int argc, char *argv[])
    /*
     *  Done parsing args
     */
-
-   if (update_config || update_config_wd)
-   {
-      redir_stdout(output_file);
-      save_option_file(stdout, update_config_wd);
-      return EXIT_SUCCESS;
-   }
 
    /* Check for unused args (ignore them) */
    idx   = 1;
@@ -554,6 +574,11 @@ int main(int argc, char *argv[])
    /* This relies on cpd.filename being the config file name */
    load_header_files();
 
+   if (cpd.do_check)
+   {
+      cpd.bout = new deque<UINT8>();
+   }
+
    if ((source_file == NULL) && (source_list == NULL) && (p_arg == NULL))
    {
       /* no input specified, so use stdin */
@@ -562,7 +587,10 @@ int main(int argc, char *argv[])
          cpd.lang_flags = LANG_C;
       }
 
-      redir_stdout(output_file);
+      if (!cpd.do_check)
+      {
+         redir_stdout(output_file);
+      }
 
       file_mem fm;
       if (!read_stdin(fm))
@@ -576,7 +604,7 @@ int main(int argc, char *argv[])
       /* Done reading from stdin */
       LOG_FMT(LSYS, "Parsing: %d bytes (%d chars) from stdin as language %s\n",
               (int)fm.raw.size(), (int)fm.data.size(),
-              language_to_string(cpd.lang_flags));
+              language_name_from_flags(cpd.lang_flags));
 
       uncrustify_file(fm, stdout, parsed_file);
    }
@@ -616,6 +644,11 @@ int main(int argc, char *argv[])
    clear_keyword_file();
    clear_defines();
 
+   if (cpd.do_check)
+   {
+      return cpd.check_fail_cnt ? EXIT_FAILURE : EXIT_SUCCESS;
+   }
+
    return((cpd.error_count != 0) ? EXIT_FAILURE : EXIT_SUCCESS);
 }
 
@@ -624,8 +657,8 @@ static void process_source_list(const char *source_list,
                                 const char *prefix, const char *suffix,
                                 bool no_backup, bool keep_mtime)
 {
-   int from_stdin = strcmp(source_list, "-") == 0;
-   FILE *p_file = from_stdin ? stdin : fopen(source_list, "r");
+   int  from_stdin = strcmp(source_list, "-") == 0;
+   FILE *p_file    = from_stdin ? stdin : fopen(source_list, "r");
 
    if (p_file == NULL)
    {
@@ -798,7 +831,12 @@ static int load_mem_file(const char *filename, file_mem& fm)
       }
       else
       {
-         LOG_FMT(LNOTE, "%s: '%s' encoding looks like %d\n", __func__, filename, fm.enc);
+         LOG_FMT(LNOTE, "%s: '%s' encoding looks like %s (%d)\n", __func__, filename,
+                 fm.enc == ENC_ASCII ? "ASCII" :
+                 fm.enc == ENC_BYTE ? "BYTES" :
+                 fm.enc == ENC_UTF16_LE ? "UTF-16-LE" :
+                 fm.enc == ENC_UTF16_BE ? "UTF-16-BE" : "Error",
+                 fm.enc);
          retval = 0;
       }
    }
@@ -977,7 +1015,7 @@ static void do_source_file(const char *filename_in,
                            bool       no_backup,
                            bool       keep_mtime)
 {
-   FILE     *pfout;
+   FILE     *pfout      = NULL;
    bool     did_open    = false;
    bool     need_backup = false;
    file_mem fm;
@@ -986,7 +1024,7 @@ static void do_source_file(const char *filename_in,
    /* Do some simple language detection based on the filename extension */
    if (!cpd.lang_forced || (cpd.lang_flags == 0))
    {
-      cpd.lang_flags = language_from_filename(filename_in);
+      cpd.lang_flags = language_flags_from_filename(filename_in);
    }
 
    /* Try to read in the source file */
@@ -998,45 +1036,48 @@ static void do_source_file(const char *filename_in,
    }
 
    LOG_FMT(LSYS, "Parsing: %s as language %s\n",
-           filename_in, language_to_string(cpd.lang_flags));
+           filename_in, language_name_from_flags(cpd.lang_flags));
 
-   if (filename_out == NULL)
+   if (!cpd.do_check)
    {
-      pfout = stdout;
-   }
-   else
-   {
-      /* If the out file is the same as the in file, then use a temp file */
-      filename_tmp = filename_out;
-      if (strcmp(filename_in, filename_out) == 0)
+      if (filename_out == NULL)
       {
-         /* Create 'outfile.uncrustify' */
-         filename_tmp = fix_filename(filename_out);
-
-         if (!no_backup)
+         pfout = stdout;
+      }
+      else
+      {
+         /* If the out file is the same as the in file, then use a temp file */
+         filename_tmp = filename_out;
+         if (strcmp(filename_in, filename_out) == 0)
          {
-            if (backup_copy_file(filename_in, fm.raw) != SUCCESS)
-            {
-               LOG_FMT(LERR, "%s: Failed to create backup file for %s\n",
-                       __func__, filename_in);
-               cpd.error_count++;
-               return;
-            }
-            need_backup = true;
-         }
-      }
-      make_folders(filename_tmp);
+            /* Create 'outfile.uncrustify' */
+            filename_tmp = fix_filename(filename_out);
 
-      pfout = fopen(filename_tmp.c_str(), "wb");
-      if (pfout == NULL)
-      {
-         LOG_FMT(LERR, "%s: Unable to create %s: %s (%d)\n",
-                 __func__, filename_tmp.c_str(), strerror(errno), errno);
-         cpd.error_count++;
-         return;
+            if (!no_backup)
+            {
+               if (backup_copy_file(filename_in, fm.raw) != SUCCESS)
+               {
+                  LOG_FMT(LERR, "%s: Failed to create backup file for %s\n",
+                          __func__, filename_in);
+                  cpd.error_count++;
+                  return;
+               }
+               need_backup = true;
+            }
+         }
+         make_folders(filename_tmp);
+
+         pfout = fopen(filename_tmp.c_str(), "wb");
+         if (pfout == NULL)
+         {
+            LOG_FMT(LERR, "%s: Unable to create %s: %s (%d)\n",
+                    __func__, filename_tmp.c_str(), strerror(errno), errno);
+            cpd.error_count++;
+            return;
+         }
+         did_open = true;
+         //LOG_FMT(LSYS, "Output file %s\n", filename_out);
       }
-      did_open = true;
-      //LOG_FMT(LSYS, "Output file %s\n", filename_out);
    }
 
    cpd.filename = filename_in;
@@ -1425,7 +1466,6 @@ static void uncrustify_file(const file_mem& fm, FILE *pfout,
     * Done with detection. Do the rest only if the file will go somewhere.
     * The detection code needs as few changes as possible.
     */
-   if (pfout != NULL)
    {
       /**
        * Add comments before function defs and classes
@@ -1488,6 +1528,10 @@ static void uncrustify_file(const file_mem& fm, FILE *pfout,
          if (cpd.settings[UO_nl_after_multiline_comment].b)
          {
             newline_after_multiline_comment();
+         }
+         if (cpd.settings[UO_nl_after_label_colon].b)
+         {
+            newline_after_label_colon();
          }
          newlines_insert_blank_lines();
          if (cpd.settings[UO_pos_bool].tp != TP_IGNORE)
@@ -1643,6 +1687,38 @@ static void uncrustify_file(const file_mem& fm, FILE *pfout,
       }
    }
 
+   if (cpd.do_check)
+   {
+      bool is_same = true;
+      /* compare the old data vs the new data */
+      if (cpd.bout->size() != fm.raw.size())
+      {
+         fprintf(stderr, "FAIL: %s (File size changed from %u to %u)\n",
+                 cpd.filename,
+                 (int)fm.raw.size(), (int)cpd.bout->size());
+         cpd.check_fail_cnt++;
+         is_same = false;
+      }
+      else
+      {
+         for (int idx = 0; idx < (int)fm.raw.size(); idx++)
+         {
+            if (fm.raw[idx] != (*cpd.bout)[idx])
+            {
+               fprintf(stderr, "FAIL: %s (Difference at byte %u)\n",
+                       cpd.filename, idx);
+               cpd.check_fail_cnt++;
+               is_same = false;
+               break;
+            }
+         }
+      }
+      if (is_same)
+      {
+         fprintf(stdout, "PASS: %s (%u bytes)\n", cpd.filename, (int)fm.raw.size());
+      }
+   }
+
    uncrustify_end();
 }
 
@@ -1657,6 +1733,11 @@ static void uncrustify_end()
       chunk_del(pc);
    }
 
+   if (cpd.bout)
+   {
+      cpd.bout->clear();
+   }
+
    /* Clean up some state variables */
    cpd.unc_off     = false;
    cpd.al_cnt      = 0;
@@ -1667,7 +1748,8 @@ static void uncrustify_end()
    cpd.in_preproc  = CT_NONE;
    cpd.consumed    = false;
    memset(cpd.le_counts, 0, sizeof(cpd.le_counts));
-   cpd.preproc_ncnl_count = 0;
+   cpd.preproc_ncnl_count    = 0;
+   cpd.ifdef_over_whole_file = 0;
 }
 
 
@@ -1704,52 +1786,117 @@ c_token_t find_token_name(const char *text)
 }
 
 
-static bool ends_with(const char *filename, const char *tag)
+static bool ends_with(const char *filename, const char *tag, bool case_sensitive = true)
 {
    int len1 = strlen(filename);
    int len2 = strlen(tag);
 
-   if ((len2 <= len1) && (strcmp(&filename[len1 - len2], tag) == 0))
-   {
-      return(true);
-   }
-   return(false);
+   return((len2 <= len1) &&
+          ((case_sensitive && (strcmp(&filename[len1 - len2], tag) == 0)) ||
+           (!case_sensitive && (strcasecmp(&filename[len1 - len2], tag) == 0))));
 }
 
 
-struct file_lang
+struct lang_name_t
 {
-   const char *ext;
-   const char *tag;
+   const char *name;
    int        lang;
 };
 
-struct file_lang languages[] =
+static lang_name_t language_names[] =
 {
-   { ".c",    "C",    LANG_C             },
-   { ".cpp",  "CPP",  LANG_CPP           },
-   { ".d",    "D",    LANG_D             },
-   { ".cs",   "CS",   LANG_CS            },
-   { ".vala", "VALA", LANG_VALA          },
-   { ".java", "JAVA", LANG_JAVA          },
-   { ".pawn", "PAWN", LANG_PAWN          },
-   { ".p",    "",     LANG_PAWN          },
-   { ".sma",  "",     LANG_PAWN          },
-   { ".inl",  "",     LANG_PAWN          },
-   { ".h",    "",     LANG_CPP           },
-   { ".cxx",  "",     LANG_CPP           },
-   { ".hpp",  "",     LANG_CPP           },
-   { ".hxx",  "",     LANG_CPP           },
-   { ".cc",   "",     LANG_CPP           },
-   { ".cp",   "",     LANG_CPP           },
-   { ".C",    "",     LANG_CPP           },
-   { ".CPP",  "",     LANG_CPP           },
-   { ".c++",  "",     LANG_CPP           },
-   { ".di",   "",     LANG_D             },
-   { ".m",    "OC",   LANG_OC            },
-   { ".mm",   "OC+",  LANG_OC | LANG_CPP },
-   { ".sqc",  "",     LANG_C             }, // embedded SQL
-   { ".es",   "ECMA", LANG_ECMA          },
+   { "C",    LANG_C             },
+   { "CPP",  LANG_CPP           },
+   { "D",    LANG_D             },
+   { "CS",   LANG_CS            },
+   { "VALA", LANG_VALA          },
+   { "JAVA", LANG_JAVA          },
+   { "PAWN", LANG_PAWN          },
+   { "OC",   LANG_OC            },
+   { "OC+",  LANG_OC | LANG_CPP },
+   { "ECMA", LANG_ECMA          },
+};
+
+
+int language_flags_from_name(const char *name)
+{
+   int i;
+
+   for (i = 0; i < (int)ARRAY_SIZE(language_names); i++)
+   {
+      if (strcasecmp(name, language_names[i].name) == 0)
+      {
+         return language_names[i].lang;
+      }
+   }
+   return 0;
+}
+
+
+/**
+ * Gets the tag text for a language
+ *
+ * @param lang    The LANG_xxx enum
+ * @return        A string
+ */
+static const char *language_name_from_flags(int lang)
+{
+   int i;
+
+   /* Check for an exact match first */
+   for (i = 0; i < (int)ARRAY_SIZE(language_names); i++)
+   {
+      if (language_names[i].lang == lang)
+      {
+         return language_names[i].name;
+      }
+   }
+
+   /* Check for the first set language bit */
+   for (i = 0; i < (int)ARRAY_SIZE(language_names); i++)
+   {
+      if ((language_names[i].lang & lang) != 0)
+      {
+         return language_names[i].name;
+      }
+   }
+   return "???";
+}
+
+
+struct lang_ext_t
+{
+   const char *ext;
+   const char *name;
+};
+
+/* maps file extensions to language names */
+struct lang_ext_t language_exts[] =
+{
+   { ".c",    "C"    },
+   { ".cpp",  "CPP"  },
+   { ".d",    "D"    },
+   { ".cs",   "CS"   },
+   { ".vala", "VALA" },
+   { ".java", "JAVA" },
+   { ".pawn", "PAWN" },
+   { ".p",    "PAWN" },
+   { ".sma",  "PAWN" },
+   { ".inl",  "PAWN" },
+   { ".h",    "CPP"  },
+   { ".cxx",  "CPP"  },
+   { ".hpp",  "CPP"  },
+   { ".hxx",  "CPP"  },
+   { ".cc",   "CPP"  },
+   { ".cp",   "CPP"  },
+   { ".C",    "CPP"  },
+   { ".CPP",  "CPP"  },
+   { ".c++",  "CPP"  },
+   { ".di",   "D"    },
+   { ".m",    "OC"   },
+   { ".mm",   "OC+"  },
+   { ".sqc",  "C"    }, // embedded SQL
+   { ".es",   "ECMA" },
 };
 
 /**
@@ -1760,12 +1907,60 @@ const char *get_file_extension(int& idx)
 {
    const char *val = NULL;
 
-   if (idx < (int)ARRAY_SIZE(languages))
+   if (idx < (int)ARRAY_SIZE(language_exts))
    {
-      val = languages[idx].ext;
+      val = language_exts[idx].ext;
    }
    idx++;
-   return(val);
+   return val;
+}
+
+
+// maps a file extension to a language flag. include the ".", as in ".c".
+// These ARE case sensitive user file extensions.
+typedef std::map<string, string>   extension_map_t;
+static extension_map_t g_ext_map;
+
+const char *extension_add(const char *ext_text, const char *lang_text)
+{
+   int lang_flags = language_flags_from_name(lang_text);
+
+   if (lang_flags)
+   {
+      const char *lang_name = language_name_from_flags(lang_flags);
+      g_ext_map[string(ext_text)] = lang_name;
+      return lang_name;
+   }
+   return NULL;
+}
+
+
+/**
+ * Prints custom file extensions to the file
+ */
+void print_extensions(FILE *pfile)
+{
+   for (int idx = 0; idx < (int)ARRAY_SIZE(language_names); idx++)
+   {
+      const char *lang_name = language_names[idx].name;
+      bool       did_one    = false;
+      for (extension_map_t::iterator it = g_ext_map.begin(); it != g_ext_map.end(); ++it)
+      {
+         if (strcmp(it->second.c_str(), lang_name) == 0)
+         {
+            if (!did_one)
+            {
+               fprintf(pfile, "file_ext %s", it->second.c_str());
+               did_one = true;
+            }
+            fprintf(pfile, " %s", it->first.c_str());
+         }
+      }
+      if (did_one)
+      {
+         fprintf(pfile, "\n");
+      }
+   }
 }
 
 
@@ -1776,70 +1971,43 @@ const char *get_file_extension(int& idx)
  * @param filename   The name of the file
  * @return           LANG_xxx
  */
-static int language_from_filename(const char *filename)
+static int language_flags_from_filename(const char *filename)
 {
    int i;
 
-   for (i = 0; i < (int)ARRAY_SIZE(languages); i++)
+   /* check custom extensions first */
+   for (extension_map_t::iterator it = g_ext_map.begin(); it != g_ext_map.end(); ++it)
    {
-      if (ends_with(filename, languages[i].ext))
+      if (ends_with(filename, it->first.c_str()))
       {
-         return(languages[i].lang);
-      }
-   }
-   return(LANG_C);
-}
-
-
-/**
- * Find the language for the file extension
- *
- * @param filename   The name of the file
- * @return           LANG_xxx or 0 (no match)
- */
-static int language_from_tag(const char *tag)
-{
-   int i;
-
-   for (i = 0; i < (int)ARRAY_SIZE(languages); i++)
-   {
-      if (strcasecmp(tag, languages[i].tag) == 0)
-      {
-         return(languages[i].lang);
-      }
-   }
-   return(0);
-}
-
-
-/**
- * Gets the tag text for a language
- *
- * @param lang    The LANG_xxx enum
- * @return        A string
- */
-static const char *language_to_string(int lang)
-{
-   int i;
-
-   /* Check for an exact match first */
-   for (i = 0; i < (int)ARRAY_SIZE(languages); i++)
-   {
-      if (languages[i].lang == lang)
-      {
-         return(languages[i].tag);
+         return language_flags_from_name(it->second.c_str());
       }
    }
 
-   /* Check for the first set language bit */
-   for (i = 0; i < (int)ARRAY_SIZE(languages); i++)
+   for (i = 0; i < (int)ARRAY_SIZE(language_exts); i++)
    {
-      if ((languages[i].lang & lang) != 0)
+      if (ends_with(filename, language_exts[i].ext))
       {
-         return(languages[i].tag);
+         return language_flags_from_name(language_exts[i].name);
       }
    }
-   return("???");
+
+   /* check again without case sensitivity */
+   for (extension_map_t::iterator it = g_ext_map.begin(); it != g_ext_map.end(); ++it)
+   {
+      if (ends_with(filename, it->first.c_str(), false))
+      {
+         return language_flags_from_name(it->second.c_str());
+      }
+   }
+   for (i = 0; i < (int)ARRAY_SIZE(language_exts); i++)
+   {
+      if (ends_with(filename, language_exts[i].ext, false))
+      {
+         return language_flags_from_name(language_exts[i].name);
+      }
+   }
+   return LANG_C;
 }
 
 

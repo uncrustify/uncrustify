@@ -19,31 +19,37 @@ using namespace std;
 class unc_text
 {
 public:
-   typedef deque<int> value_type;
+   typedef deque<int>   value_type;
 
 public:
    unc_text() : m_logok(false)
    {
    }
+
    ~unc_text()
    {
    }
+
    unc_text(const unc_text& ref)
    {
       set(ref);
    }
+
    unc_text(const unc_text& ref, int idx, int len = -1)
    {
       set(ref, idx, len);
    }
+
    unc_text(const char *ascii_text)
    {
       set(ascii_text);
    }
+
    unc_text(const string& ascii_text)
    {
       set(ascii_text);
    }
+
    unc_text(const value_type& data, int idx = 0, int len = -1)
    {
       set(data, idx, len);
@@ -51,6 +57,7 @@ public:
 
    void resize(size_t new_size);
    void clear();
+
    /* grab the number of characters */
    int size() const
    {
@@ -69,16 +76,19 @@ public:
       set(ch);
       return(*this);
    }
+
    unc_text& operator =(const unc_text& ref)
    {
       set(ref);
       return(*this);
    }
+
    unc_text& operator =(const string& ascii_text)
    {
       set(ascii_text);
       return(*this);
    }
+
    unc_text& operator =(const char *ascii_text)
    {
       set(ascii_text);
@@ -86,6 +96,9 @@ public:
    }
 
    void insert(int idx, int ch);
+   void insert(int idx, const unc_text& ref);
+
+   void erase(int idx, int len = 1);
 
    void append(int ch);
    void append(const unc_text& ref);
@@ -98,16 +111,19 @@ public:
       append(ch);
       return(*this);
    }
+
    unc_text& operator +=(const unc_text& ref)
    {
       append(ref);
       return(*this);
    }
+
    unc_text& operator +=(const string& ascii_text)
    {
       append(ascii_text);
       return(*this);
    }
+
    unc_text& operator +=(const char *ascii_text)
    {
       append(ascii_text);
@@ -189,17 +205,18 @@ public:
    bool startswith(const unc_text& text, int idx = 0) const;
    bool startswith(const char *text, int idx = 0) const;
    int find(const char *text, int idx = 0) const;
+   int rfind(const char *text, int idx = -1) const;
+   int replace(const char *oldtext, const unc_text& newtext);
 
 protected:
    void update_logtext();
 
    /* this contains the non-encoded 31-bit chars */
-   value_type    m_chars;
+   value_type m_chars;
 
    /* logging text, utf8 encoded - updated in c_str() */
    vector<UINT8> m_logtext;
    bool          m_logok;
 };
-
 
 #endif /* UNC_TEXT_H_INCLUDED */

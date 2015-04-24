@@ -15,6 +15,7 @@
  *   If you change one of the below symbol tables, re-run punc.py.
  *   $ python scripts/punc.py > src/punctuators.h
  *
+ *   NOTE: the tables below do not need to be sorted.
  */
 
 
@@ -23,6 +24,7 @@ static const chunk_tag_t symbols4[] =
 {
    { "!<>=", CT_COMPARE, LANG_D                         },
    { ">>>=", CT_ASSIGN,  LANG_D | LANG_JAVA | LANG_PAWN },
+   { "%:%:", CT_PP,      LANG_CPP                       }, // digraph ##
 };
 
 /* 3-char symbols */
@@ -44,71 +46,76 @@ static const chunk_tag_t symbols3[] =
 /* 2-char symbols */
 static const chunk_tag_t symbols2[] =
 {
-   { "!<", CT_COMPARE,      LANG_D                                         },
-   { "!=", CT_COMPARE,      LANG_ALL                                       },
-   { "!>", CT_COMPARE,      LANG_D                                         },
-   { "!~", CT_COMPARE,      LANG_D                                         },
-   { "##", CT_PP,           LANG_C | LANG_CPP | LANG_OC                    },
-   { "#@", CT_POUND,        LANG_C | LANG_CPP | LANG_OC                    }, /* MS extension */
-   { "%=", CT_ASSIGN,       LANG_ALL                                       },
-   { "&&", CT_BOOL,         LANG_ALL                                       },
-   { "&=", CT_ASSIGN,       LANG_ALL                                       },
-   { "*=", CT_ASSIGN,       LANG_ALL                                       },
-   { "++", CT_INCDEC_AFTER, LANG_ALL                                       },
-   { "+=", CT_ASSIGN,       LANG_ALL                                       },
-   { "--", CT_INCDEC_AFTER, LANG_ALL                                       },
-   { "-=", CT_ASSIGN,       LANG_ALL                                       },
-   { "->", CT_MEMBER,       LANG_C | LANG_CPP | LANG_CS | LANG_OC | LANG_D },
-   { ".*", CT_MEMBER,       LANG_C | LANG_CPP | LANG_D                     },
-   { "..", CT_RANGE,        LANG_D                                         },
-   { "/=", CT_ASSIGN,       LANG_ALL                                       },
-   { "::", CT_DC_MEMBER,    LANG_C | LANG_CPP | LANG_CS | LANG_D           },
-   { "<<", CT_ARITH,        LANG_ALL                                       },
-   { "<=", CT_COMPARE,      LANG_ALL                                       },
-   { "<>", CT_COMPARE,      LANG_D                                         },
-   { "==", CT_COMPARE,      LANG_ALL                                       },
-   { ">=", CT_COMPARE,      LANG_ALL                                       },
-   { ">>", CT_ARITH,        LANG_ALL & ~LANG_CS                            },
-   { "[]", CT_TSQUARE,      LANG_ALL                                       },
-   { "^=", CT_ASSIGN,       LANG_ALL                                       },
-   { "|=", CT_ASSIGN,       LANG_ALL                                       },
-   { "||", CT_BOOL,         LANG_ALL                                       },
-   { "~=", CT_COMPARE,      LANG_D                                         },
-   { "~~", CT_COMPARE,      LANG_D                                         },
-   { "=>", CT_LAMBDA,       LANG_VALA | LANG_CS | LANG_D                   },
-   { "??", CT_COMPARE,      LANG_CS                                        },
+   { "!<", CT_COMPARE,      LANG_D                                                     },
+   { "!=", CT_COMPARE,      LANG_ALL                                                   },
+   { "!>", CT_COMPARE,      LANG_D                                                     },
+   { "!~", CT_COMPARE,      LANG_D                                                     },
+   { "##", CT_PP,           LANG_C | LANG_CPP | LANG_OC                                },
+   { "#@", CT_POUND,        LANG_C | LANG_CPP | LANG_OC                                }, /* MS extension */
+   { "%=", CT_ASSIGN,       LANG_ALL                                                   },
+   { "&&", CT_BOOL,         LANG_ALL                                                   },
+   { "&=", CT_ASSIGN,       LANG_ALL                                                   },
+   { "*=", CT_ASSIGN,       LANG_ALL                                                   },
+   { "++", CT_INCDEC_AFTER, LANG_ALL                                                   },
+   { "+=", CT_ASSIGN,       LANG_ALL                                                   },
+   { "--", CT_INCDEC_AFTER, LANG_ALL                                                   },
+   { "-=", CT_ASSIGN,       LANG_ALL                                                   },
+   { "->", CT_MEMBER,       LANG_C | LANG_CPP | LANG_CS | LANG_OC | LANG_D | LANG_VALA },
+   { ".*", CT_MEMBER,       LANG_C | LANG_CPP | LANG_D                                 },
+   { "..", CT_RANGE,        LANG_D                                                     },
+   { "/=", CT_ASSIGN,       LANG_ALL                                                   },
+   { "::", CT_DC_MEMBER,    LANG_C | LANG_CPP | LANG_CS | LANG_D | LANG_VALA           },
+   { "<<", CT_ARITH,        LANG_ALL                                                   },
+   { "<=", CT_COMPARE,      LANG_ALL                                                   },
+   { "<>", CT_COMPARE,      LANG_D                                                     },
+   { "==", CT_COMPARE,      LANG_ALL                                                   },
+   { ">=", CT_COMPARE,      LANG_ALL                                                   },
+   { ">>", CT_ARITH,        LANG_ALL                                                   },
+   { "[]", CT_TSQUARE,      LANG_ALL                                                   },
+   { "^=", CT_ASSIGN,       LANG_ALL                                                   },
+   { "|=", CT_ASSIGN,       LANG_ALL                                                   },
+   { "||", CT_BOOL,         LANG_ALL                                                   },
+   { "~=", CT_COMPARE,      LANG_D                                                     },
+   { "~~", CT_COMPARE,      LANG_D                                                     },
+   { "=>", CT_LAMBDA,       LANG_VALA | LANG_CS | LANG_D                               },
+   { "??", CT_COMPARE,      LANG_CS | LANG_VALA                                        },
+   { "<%", CT_BRACE_OPEN,   LANG_C | LANG_CPP                                          }, // digraph {
+   { "%>", CT_BRACE_CLOSE,  LANG_C | LANG_CPP                                          }, // digraph }
+   { "<:", CT_SQUARE_OPEN,  LANG_C | LANG_CPP                                          }, // digraph [
+   { ":>", CT_SQUARE_CLOSE, LANG_C | LANG_CPP                                          }, // digraph ]
+   { "%:", CT_POUND,        LANG_C | LANG_CPP                                          }, // digraph #
 };
 
 /* 1-char symbols */
 static const chunk_tag_t symbols1[] =
 {
-   { "!", CT_NOT,          LANG_ALL                                                   },
-   { "#", CT_POUND,        LANG_C | LANG_CPP | LANG_CS | LANG_D | LANG_OC | LANG_PAWN },
-   { "$", CT_COMPARE,      LANG_D                                                     },
-   { "%", CT_ARITH,        LANG_ALL                                                   },
-   { "&", CT_AMP,          LANG_ALL                                                   },
-   { "(", CT_PAREN_OPEN,   LANG_ALL                                                   },
-   { ")", CT_PAREN_CLOSE,  LANG_ALL                                                   },
-   { "*", CT_STAR,         LANG_ALL                                                   },
-   { "+", CT_PLUS,         LANG_ALL                                                   },
-   { ",", CT_COMMA,        LANG_ALL                                                   },
-   { "-", CT_MINUS,        LANG_ALL                                                   },
-   { ".", CT_DOT,          LANG_ALL                                                   },
-   { "/", CT_ARITH,        LANG_ALL                                                   },
-   { ":", CT_COLON,        LANG_ALL                                                   },
-   { ";", CT_SEMICOLON,    LANG_ALL                                                   },
-   { "<", CT_ANGLE_OPEN,   LANG_ALL                                                   },
-   { "=", CT_ASSIGN,       LANG_ALL                                                   },
-   { ">", CT_ANGLE_CLOSE,  LANG_ALL                                                   },
-   { "@", CT_OC_AT,        LANG_OC                                                    },
-   { "?", CT_QUESTION,     LANG_ALL                                                   },
-   { "[", CT_SQUARE_OPEN,  LANG_ALL                                                   },
-   { "]", CT_SQUARE_CLOSE, LANG_ALL                                                   },
-   { "^", CT_CARET,        LANG_ALL                                                   },
-   { "{", CT_BRACE_OPEN,   LANG_ALL                                                   },
-   { "|", CT_ARITH,        LANG_ALL                                                   },
-   { "}", CT_BRACE_CLOSE,  LANG_ALL                                                   },
-   { "~", CT_INV,          LANG_ALL                                                   },
+   { "!", CT_NOT,          LANG_ALL                            },
+   { "#", CT_POUND,        LANG_ALL & ~(LANG_JAVA | LANG_ECMA) },
+   { "$", CT_COMPARE,      LANG_D                              },
+   { "%", CT_ARITH,        LANG_ALL                            },
+   { "&", CT_AMP,          LANG_ALL                            },
+   { "(", CT_PAREN_OPEN,   LANG_ALL                            },
+   { ")", CT_PAREN_CLOSE,  LANG_ALL                            },
+   { "*", CT_STAR,         LANG_ALL                            },
+   { "+", CT_PLUS,         LANG_ALL                            },
+   { ",", CT_COMMA,        LANG_ALL                            },
+   { "-", CT_MINUS,        LANG_ALL                            },
+   { ".", CT_DOT,          LANG_ALL                            },
+   { "/", CT_ARITH,        LANG_ALL                            },
+   { ":", CT_COLON,        LANG_ALL                            },
+   { ";", CT_SEMICOLON,    LANG_ALL                            },
+   { "<", CT_ANGLE_OPEN,   LANG_ALL                            },
+   { "=", CT_ASSIGN,       LANG_ALL                            },
+   { ">", CT_ANGLE_CLOSE,  LANG_ALL                            },
+   { "@", CT_OC_AT,        LANG_OC                             },
+   { "?", CT_QUESTION,     LANG_ALL                            },
+   { "[", CT_SQUARE_OPEN,  LANG_ALL                            },
+   { "]", CT_SQUARE_CLOSE, LANG_ALL                            },
+   { "^", CT_CARET,        LANG_ALL                            },
+   { "{", CT_BRACE_OPEN,   LANG_ALL                            },
+   { "|", CT_ARITH,        LANG_ALL                            },
+   { "}", CT_BRACE_CLOSE,  LANG_ALL                            },
+   { "~", CT_INV,          LANG_ALL                            },
 };
 
 #include "punctuators.h"

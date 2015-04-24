@@ -4,9 +4,12 @@ class CFoo
 {
 int foo1(int arg);
 int foo2();
+int foo3(char ch, int xx)
+{
+}
 };
 
-int CFoo::foo1(int arg)
+int CFoo::foo1(int arg, int arg2)
 {
 }
 

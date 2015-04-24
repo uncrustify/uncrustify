@@ -25,7 +25,7 @@ public:
 
 protected:
    deque<Entry> m_cse;
-   int m_seqnum;   // current seq num
+   int          m_seqnum; // current seq num
 
 public:
    ChunkStack() : m_seqnum(0)

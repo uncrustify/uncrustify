@@ -9,6 +9,8 @@
 #ifndef WINDOWS_COMPAT_H_INCLUDED
 #define WINDOWS_COMPAT_H_INCLUDED
 
+#include "windows.h"
+
 #define HAVE_SYS_STAT_H
 
 #define NO_MACRO_VARARG
@@ -73,5 +75,4 @@ typedef unsigned long long UINT64;
 #define mkdir(x, y) _mkdir(x)
 #define PATH_SEP  '\\'
 
-#endif   /* WINDOWS_COMPAT_H_INCLUDED */
-
+#endif /* WINDOWS_COMPAT_H_INCLUDED */

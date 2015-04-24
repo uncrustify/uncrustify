@@ -1,4 +1,23 @@
-/* Test rules chapter 6.8 */
+/* this is a comment */
+
+/* should be in a H file but put in this file to avoid multiplying the number of test files */
+#ifndef COMSTACK_TYPES_H
+#define COMSTACK_TYPES_H
+
+#include "STD_TYPES.h"
+#ifdef COMINL_coENABLE_1
+ #ifdef COMINL_coENABLE_2
+  #include "def.h"
+ #endif
+#endif
+
+#if (COMINL_coMINIMUM_DELAY_TIME_1 == COMINL_coENABLE)
+ #if (COMINL_coMINIMUM_DELAY_TIME_2 == COMINL_coENABLE)
+  #include "def1.h"
+  #define COMINL_coMINIMUM_DELAY_TIME_1
+  #include "def2.h"
+ #endif
+#endif
 
 /* no indentation */
 #if COMINL_coMINIMUM_DELAY_TIME == COMINL_coENABLE
@@ -14,6 +33,19 @@
 #ifndef COMINL_coENABLE
  #error "Define COMINL_coENABLE is undefined"
 #endif
+
+
+#ifdef COMINL_coENABLE_3
+    typedef enum
+    {
+	BUFREQ_OK            =0,
+	BUFREQ_E_NOT_OK      =     1,
+	BUFREQ_E_BUSY=2,
+	BUFREQ_E_OVFL    =3
+    }
+    BufReq_ReturnType;
+#endif
+
 
 
 #if COMINL_coSTART_STOP_PERIODIC == COMINL_coENABLE
@@ -67,5 +99,21 @@
 	#endif /* COMINL_coTX_MESSAGE_VAR == COMINL_coENABLE */
     }
 #endif
+
+
+void myfunction(void)
+{
+    int i;
+    #ifdef COMINL_coTX_MESSAGE_VAR
+	#ifndef COMINL_coMIXED_MODE
+	#pragma MyPragma
+	    int j;
+	#endif
+    #endif
+    int k;
+}
+
+
+#endif /* COMSTACK_TYPES_H */
 
 /*------------------------------- end of file --------------------------------*/

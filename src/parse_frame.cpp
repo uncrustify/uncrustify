@@ -201,7 +201,7 @@ int pf_check(struct parse_frame *frm, chunk_t *pc)
       LOG_FMT(LNOTE, "%s: Preproc parent not set correctly on line %d: got %s expected %s\n",
               __func__, pc->orig_line, get_token_name(pc->parent_type),
               get_token_name(next->type));
-      pc->parent_type = next->type;
+      set_chunk_parent(pc, next->type);
    }
 
    LOG_FMT(LPFCHK, "%s: %5d] %s\n",

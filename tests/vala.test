@@ -6,4 +6,8 @@
 
 70000 ben.cfg                 vala/list.vala
 70001 ben.cfg                 vala/advanced.vala
-
+70010 ben.cfg                 vala/verbatim_str.vala
+70011 ben.cfg                 vala/verbatim_str2.vala
+70012 ben2.cfg                vala/verbatim_str2.vala
+70020 ben.cfg                 vala/preproc.vala
+70287 ben.cfg                 vala/gh287.vala

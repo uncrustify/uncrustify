@@ -1,4 +1,3 @@
-namespace foo {
 /**
  * This is your typical header comment
  */
@@ -39,5 +38,3 @@ int foo(int bar)
 
 // col1 comment in level 0
 // and another
-}
-

@@ -180,6 +180,7 @@ void chunk_del(chunk_t *pc)
 
 void chunk_move_after(chunk_t *pc_in, chunk_t *ref)
 {
+   LOG_FUNC_ENTRY();
    g_cl.Pop(pc_in);
    g_cl.AddAfter(pc_in, ref);
 
@@ -388,7 +389,7 @@ chunk_t *chunk_get_next_nisq(chunk_t *cur, chunk_nav_t nav)
    } while (pc && ((pc->type == CT_SQUARE_OPEN) ||
                    (pc->type == CT_TSQUARE) ||
                    (pc->type == CT_SQUARE_CLOSE)));
-  return(pc);
+   return(pc);
 }
 
 
@@ -669,4 +670,34 @@ chunk_t *chunk_get_prev_nvb(chunk_t *cur, chunk_nav_t nav)
       pc = chunk_get_prev(pc, nav);
    } while (chunk_is_vbrace(pc));
    return(pc);
+}
+
+
+void set_chunk_type(chunk_t *pc, c_token_t tt)
+{
+   LOG_FUNC_ENTRY();
+   if (pc && (pc->type != tt))
+   {
+      LOG_FMT(LSETTYP, "set_chunk_type: %d:%d '%s' %s:%s => %s:%s",
+              pc->orig_line, pc->orig_col, pc->text(),
+              get_token_name(pc->type), get_token_name(pc->parent_type),
+              get_token_name(tt), get_token_name(pc->parent_type));
+      log_func_stack_inline(LSETTYP);
+      pc->type = tt;
+   }
+}
+
+
+void set_chunk_parent(chunk_t *pc, c_token_t pt)
+{
+   LOG_FUNC_ENTRY();
+   if (pc && (pc->parent_type != pt))
+   {
+      LOG_FMT(LSETPAR, "set_chunk_parent: %d:%d '%s' %s:%s => %s:%s",
+              pc->orig_line, pc->orig_col, pc->text(),
+              get_token_name(pc->type), get_token_name(pc->parent_type),
+              get_token_name(pc->type), get_token_name(pt));
+      log_func_stack_inline(LSETPAR);
+      pc->parent_type = pt;
+   }
 }

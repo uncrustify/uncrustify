@@ -34,7 +34,6 @@ public:
       m_av     = &av;
    }
 
-
    ~sp_votes();
 
    void vote(chunk_t *first, chunk_t *second);

@@ -1,4 +1,4 @@
-.TH UNCRUSTIFY "1" "Oct 2009" "uncrustify @PACKAGE_VERSION@" "User Commands"
+.TH UNCRUSTIFY "1" "Oct 2014" "uncrustify @PACKAGE_VERSION@" "User Commands"
 .SH NAME
 uncrustify \- C, C++, C#, D, Java and Pawn source code beautifier
 
@@ -37,6 +37,11 @@ Redirect output to \fIFILE\fR.
 .br
 Use with \fB\-f\fR, \fB\-\-update\-config\fR, \fB\-\-update\-config\-with\-doc\fR,
 \fB\-\-universalindent\fR.
+.TP
+\fB\-\-check\fR
+Do not output the new text, instead verify that nothing changes when
+the file(s) are processed. The status of every file is printed to
+stderr. The exit code is EXIT_SUCCESS if there were no changes, EXIT_FAILURE otherwise.
 .TP
 \fB\-F\fI FILE
 Read files to process from \fIFILE\fR, one filename per line.  If \fIFILE\fR
@@ -147,7 +152,7 @@ Written by Ben Gardner
 Use the issue tracker at <http://sourceforge.net/projects/uncrustify>
 
 .SH COPYRIGHT
-Copyright (C) 2006\(hy2009 Ben Gardner
+Copyright (C) 2006\(hy2014 Ben Gardner
 
 .SH LICENSE
 GNU GPL version 2 or later <http://gnu.org/licenses/gpl.html>
