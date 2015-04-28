@@ -70,6 +70,7 @@ typedef enum
    CT_TYPE_CAST,           /* static_cast<type>(exp) */
    CT_TYPENAME,            /* typename type */
    CT_TEMPLATE,            /* template<...> */
+   CT_WHERE,               /* where : used in C# constraint clause */
 
    CT_ASSIGN,              /* =, +=, /=, etc */
    CT_ASSIGN_NL,           /* Assign followed by a newline - fake item for indenting */
@@ -116,6 +117,7 @@ typedef enum
    CT_CONSTR_COLON,        /* colon after a constructor */
    CT_D_ARRAY_COLON,       /* D named array initializer colon */
    CT_COND_COLON,          /* conditional colon in  'b ? t : f' */
+   CT_WHERE_COLON,         /* C# where-constraint colon (after the type) */
    CT_QUESTION,
    CT_COMMA,
 

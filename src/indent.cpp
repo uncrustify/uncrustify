@@ -1509,6 +1509,15 @@ void indent_text(void)
             frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent + indent_size;
          }
       }
+      else if (pc->type == CT_WHERE)
+      {
+         /* class indentation is ok already, just need to adjust func */
+         /* TODO: make this configurable, obviously.. */
+         if (pc->parent_type == CT_FUNC_DEF)
+         {
+            indent_column_set(frm.pse[frm.pse_tos].indent + 4);
+         }
+      }
       else
       {
          /* anything else? */

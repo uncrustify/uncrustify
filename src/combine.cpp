@@ -451,6 +451,32 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       {
          set_paren_parent(next, pc->type);
       }
+
+      if (pc->type == CT_WHERE)
+      {
+         /* TODO: should have options to control spacing around the ':' as well as newline ability for the
+            constraint clauses (should it break up a 'where A : B where C : D' on the same line? wrap? etc.) */
+
+         for (chunk_t* i = pc->next; i && i->type != CT_BRACE_OPEN; i = i->next)
+         {
+            if (i->type != CT_WHERE)
+            {
+               set_chunk_parent(i, CT_WHERE);
+            }
+
+            switch (i->type)
+            {
+               case CT_COLON:
+                  set_chunk_type(i, CT_WHERE_COLON);
+                  break;
+               case CT_WORD:
+               case CT_CLASS: /* class/struct confuses parser; keep it as type */
+               case CT_STRUCT:
+                  set_chunk_type(i, CT_TYPE);
+                  break;
+            }
+         }
+      }
    }
 
    if (pc->type == CT_NEW)
@@ -3726,7 +3752,7 @@ static void mark_class_ctor(chunk_t *start)
 
    /* Find the open brace, abort on semicolon */
    int flags = 0;
-   while ((pc != NULL) && (pc->type != CT_BRACE_OPEN))
+   while ((pc != NULL) && (pc->type != CT_BRACE_OPEN) && (pc->type != CT_WHERE))
    {
       LOG_FMT(LFTOR, " [%s]", pc->str.c_str());
 
