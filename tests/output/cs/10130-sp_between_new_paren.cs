@@ -1,4 +1,4 @@
-T F<T>() where T: new()
+T F<T>() where T : new()
 {
 	return new T();
 }
