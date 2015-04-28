@@ -469,11 +469,15 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
                case CT_COLON:
                   set_chunk_type(i, CT_WHERE_COLON);
                   break;
+
                case CT_WORD:
                case CT_CLASS: /* class/struct confuses parser; keep it as type */
                case CT_STRUCT:
                   set_chunk_type(i, CT_TYPE);
                   break;
+
+               /* make compiler happy */
+               default: break; 
             }
          }
       }
