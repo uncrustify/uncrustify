@@ -229,5 +229,4 @@
 31711 string_replace_tab_chars.cfg     cpp/string_replace_tab_chars.cpp
 
 31720 ben.cfg                          cpp/bit-colon.cpp
-
 31730 ms-style-ref.cfg                 cpp/ms-style-ref.cpp
