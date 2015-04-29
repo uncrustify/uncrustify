@@ -698,8 +698,7 @@ void tokenize_cleanup(void)
 
       /* Check for C# nullable types '?' is in next */
       if ((cpd.lang_flags & LANG_CS) &&
-          (next->type == CT_QUESTION) &&
-          (next->orig_col == (pc->orig_col + pc->len())))
+          (next->type == CT_QUESTION))
       {
          tmp = chunk_get_next_ncnl(next);
          if (tmp != NULL)
