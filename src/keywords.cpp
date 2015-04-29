@@ -164,7 +164,7 @@ static const chunk_tag_t keywords[] =
    { "instanceof",       CT_SIZEOF,       LANG_JAVA | LANG_ECMA                                                       },
    { "int",              CT_TYPE,         LANG_ALLC                                                                   },
    { "interface",        CT_CLASS,        LANG_C | LANG_CPP | LANG_CS | LANG_D | LANG_JAVA | LANG_VALA | LANG_ECMA    },
-   { "internal",         CT_QUALIFIER,    LANG_CS                                                                     },
+   { "internal",         CT_PRIVATE,      LANG_CS | LANG_CPP                                                          }, // MS C++/CLI and similar flavors
    { "invariant",        CT_INVARIANT,    LANG_D                                                                      },
    { "ireal",            CT_TYPE,         LANG_D                                                                      },
    { "is",               CT_SCOMPARE,     LANG_D | LANG_CS | LANG_VALA                                                },
