@@ -70,7 +70,7 @@ typedef enum
    CT_TYPE_CAST,           /* static_cast<type>(exp) */
    CT_TYPENAME,            /* typename type */
    CT_TEMPLATE,            /* template<...> */
-   CT_WHERE,               /* where : used in C# constraint clause */
+   CT_WHERE_SPEC,          /* 'where' : used in C# generic constraint */
 
    CT_ASSIGN,              /* =, +=, /=, etc */
    CT_ASSIGN_NL,           /* Assign followed by a newline - fake item for indenting */

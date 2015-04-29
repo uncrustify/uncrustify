@@ -262,7 +262,6 @@ static const chunk_tag_t keywords[] =
    { "wchar",            CT_TYPE,         LANG_D                                                                      },
    { "wchar_t",          CT_TYPE,         LANG_C | LANG_CPP                                                           },
    { "weak",             CT_QUALIFIER,    LANG_VALA                                                                   },
-   { "where",            CT_WHERE,        LANG_CS                                                                     },
    { "while",            CT_WHILE,        LANG_ALL                                                                    }, // PAWN
    { "with",             CT_D_WITH,       LANG_D | LANG_ECMA                                                          },
    { "xor",              CT_SARITH,       LANG_C | LANG_CPP                                                           },

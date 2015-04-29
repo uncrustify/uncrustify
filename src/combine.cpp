@@ -33,6 +33,7 @@ static chunk_t *mark_variable_definition(chunk_t *start);
 static void mark_define_expressions(void);
 static void process_returns(void);
 static chunk_t *process_return(chunk_t *pc);
+static int mark_where_chunk(chunk_t *pc, c_token_t parent_type, int flags);
 static void mark_class_ctor(chunk_t *pclass);
 static void mark_namespace(chunk_t *pns);
 static void mark_cpp_constructor(chunk_t *pc);
@@ -450,36 +451,6 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       if ((((pc->type == CT_LAMBDA) || (pc->type == CT_DELEGATE))) && (next->type == CT_BRACE_OPEN))
       {
          set_paren_parent(next, pc->type);
-      }
-
-      if (pc->type == CT_WHERE)
-      {
-         /* TODO: should have options to control spacing around the ':' as well as newline ability for the
-            constraint clauses (should it break up a 'where A : B where C : D' on the same line? wrap? etc.) */
-
-         for (chunk_t* i = pc->next; i && i->type != CT_BRACE_OPEN; i = i->next)
-         {
-            if (i->type != CT_WHERE)
-            {
-               set_chunk_parent(i, CT_WHERE);
-            }
-
-            switch (i->type)
-            {
-               case CT_COLON:
-                  set_chunk_type(i, CT_WHERE_COLON);
-                  break;
-
-               case CT_WORD:
-               case CT_CLASS: /* class/struct confuses parser; keep it as type */
-               case CT_STRUCT:
-                  set_chunk_type(i, CT_TYPE);
-                  break;
-
-               /* make compiler happy */
-               default: break; 
-            }
-         }
       }
    }
 
@@ -2353,6 +2324,10 @@ void combine_labels(void)
                }
             }
          }
+         else if (cur->flags & PCF_IN_WHERE_SPEC)
+         {
+            /* leave colons in where-constraint clauses alone */
+         }
          else
          {
             chunk_t *nextprev = chunk_get_prev_ncnl(next);
@@ -3593,6 +3568,7 @@ static void mark_function(chunk_t *pc)
    if (pc->type == CT_FUNC_DEF)
    {
       tmp = chunk_get_next_ncnl(paren_close);
+      int in_where_spec_flags = 0;
       while ((tmp != NULL) &&
              (tmp->type != CT_BRACE_OPEN))
       {
@@ -3602,6 +3578,10 @@ static void mark_function(chunk_t *pc)
          {
             tmp->flags |= PCF_OLD_FCN_PARAMS;
          }
+
+         mark_where_chunk(tmp, CT_FUNC_DEF, tmp->flags | in_where_spec_flags);
+         in_where_spec_flags = tmp->flags & PCF_IN_WHERE_SPEC;
+
          tmp = chunk_get_next_ncnl(tmp);
       }
       if ((tmp != NULL) && (tmp->type == CT_BRACE_OPEN))
@@ -3697,6 +3677,43 @@ static void mark_cpp_constructor(chunk_t *pc)
 }
 
 
+static int mark_where_chunk(chunk_t *pc, c_token_t parent_type, int flags)
+{
+   /* TODO: should have options to control spacing around the ':' as well as newline ability for the
+      constraint clauses (should it break up a 'where A : B where C : D' on the same line? wrap? etc.) */
+
+   if (chunk_is_str(pc, "where", 5))
+   {
+      set_chunk_type(pc, CT_WHERE_SPEC);
+      set_chunk_parent(pc, parent_type);
+      flags |= PCF_IN_WHERE_SPEC;
+      LOG_FMT(LFTOR, "%s: where-spec on line %d\n",
+               __func__, pc->orig_line);
+   }
+   else if (flags & PCF_IN_WHERE_SPEC)
+   {
+      if (chunk_is_str(pc, ":", 1))
+      {
+         set_chunk_type(pc, CT_WHERE_COLON);
+         LOG_FMT(LFTOR, "%s: where-spec colon on line %d\n",
+                  __func__, pc->orig_line);
+      }
+      else if ((pc->type == CT_STRUCT) || (pc->type == CT_CLASS))
+      {
+         /* class/struct inside of a where-clause confuses parser for indentation; set it as a word so it looks like the rest */
+         set_chunk_type(pc, CT_WORD);
+      }
+   }
+
+   if (flags & PCF_IN_WHERE_SPEC)
+   {
+      pc->flags |= PCF_IN_WHERE_SPEC;
+   }
+
+   return flags;
+}
+
+
 /**
  * We're on a 'class' or 'struct'.
  * Scan for CT_FUNCTION with a string that matches pclass->str
@@ -3756,16 +3773,18 @@ static void mark_class_ctor(chunk_t *start)
 
    /* Find the open brace, abort on semicolon */
    int flags = 0;
-   while ((pc != NULL) && (pc->type != CT_BRACE_OPEN) && (pc->type != CT_WHERE))
+   while ((pc != NULL) && (pc->type != CT_BRACE_OPEN))
    {
       LOG_FMT(LFTOR, " [%s]", pc->str.c_str());
 
-      if (chunk_is_str(pc, ":", 1))
+      flags = mark_where_chunk(pc, start->type, flags);
+
+      if (!(flags & PCF_IN_WHERE_SPEC) && chunk_is_str(pc, ":", 1))
       {
          set_chunk_type(pc, CT_CLASS_COLON);
          flags |= PCF_IN_CLASS_BASE;
          LOG_FMT(LFTOR, "%s: class colon on line %d\n",
-                 __func__, pc->orig_line);
+                  __func__, pc->orig_line);
       }
 
       if (chunk_is_semicolon(pc))

@@ -14,6 +14,9 @@ where T3: class
 	where TX : new()
 	where T6: D
     {
+        m_EventNamesOnFlow = (from node in g.nodes
+                              where node.GetType() == typeof(ExternalCallReceiver)
+                              select((ExternalCallReceiver)node).eventName).ToArray();
     }
 
 	class C2<T1, T2, TX, T3, T4, T5>

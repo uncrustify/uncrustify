@@ -54,7 +54,7 @@ const char *token_names[] =
    "TYPE_CAST",
    "TYPENAME",
    "TEMPLATE",
-   "WHERE",
+   "WHERE_SPEC",
    "ASSIGN",
    "ASSIGN_NL",
    "SASSIGN",

@@ -1509,7 +1509,7 @@ void indent_text(void)
             frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent + indent_size;
          }
       }
-      else if (pc->type == CT_WHERE)
+      else if (pc->type == CT_WHERE_SPEC)
       {
          /* class indentation is ok already, just need to adjust func */
          /* TODO: make this configurable, obviously.. */

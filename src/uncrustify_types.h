@@ -134,6 +134,7 @@ struct parse_frame
 #define PCF_IN_NAMESPACE       PCF_BIT(12)
 #define PCF_IN_FOR             PCF_BIT(13)
 #define PCF_IN_OC_MSG          PCF_BIT(14)
+#define PCF_IN_WHERE_SPEC      PCF_BIT(15)  /* inside C# 'where' constraint clause on class or function def */
 
 /* Non-Copy flags are in the upper 48 bits */
 #define PCF_FORCE_SPACE        PCF_BIT(16)  /* must have a space after this token */
