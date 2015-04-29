@@ -33,6 +33,11 @@
 				"*.sublime-*",
 			],
 		},
+		{
+			"path": "win32",
+			"folder_include_patterns": ["."],
+			"file_exclude_patterns": ["*.user"],
+		},
 	],
 
 	"build_systems":
