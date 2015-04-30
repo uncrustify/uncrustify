@@ -24,8 +24,7 @@ if(NOT WIN32)
   # This prevents problems that occur when the source space is a symlinked directory.
   # See: https://github.com/ament/uncrustify/issues/1
   ExternalProject_Add_Step(external_uncrustify copy_source
-    DEPENDEES download
-    DEPENDERS build
+    DEPENDERS configure
     COMMENT "Copy source to ${uncrustify_source_dir} to prevent problems with symlink."
     ALWAYS 1  # Always do this otherwise changing the source would not change the built binary.
     COMMAND
