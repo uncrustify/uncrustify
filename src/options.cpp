@@ -749,6 +749,8 @@ void register_options(void)
                   "Don't split one-line C++11 lambdas - '[]() { return 0; }'");
    unc_add_option("nl_if_leave_one_liners", UO_nl_if_leave_one_liners, AT_BOOL,
                   "Don't split one-line if/else statements - 'if(a) b++;'");
+   unc_add_option("nl_while_leave_one_liners", UO_nl_while_leave_one_liners, AT_BOOL,
+                  "Don't split one-line while statements - 'while(a) b++;'");
    unc_add_option("nl_oc_msg_leave_one_liner", UO_nl_oc_msg_leave_one_liner, AT_BOOL,
                   "Don't split one-line OC messages");
 
