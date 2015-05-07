@@ -5,34 +5,57 @@ project(uncrustify)
 include(ExternalProject)
 
 if(NOT WIN32)
-  # Make the destination for the source code.
-  set(uncrustify_source_dir "${CMAKE_CURRENT_BINARY_DIR}/uncrustify_src")
+  set(uncrustify_source_dir "${CMAKE_CURRENT_BINARY_DIR}/external_project/src/uncrustify")
+
+  # create non-empty source folder in binary directory
+  # otherwise the external projects fails since it does not have a download command
   file(MAKE_DIRECTORY "${uncrustify_source_dir}")
-  # Touch a file there during configure time to prevent ExternalProject_Add from complaining about
-  # SOURCE_DIR being an empty folder.
-  execute_process(COMMAND
-    ${CMAKE_COMMAND} -E touch "${uncrustify_source_dir}/fool_external_project")
-  # Add a standard autotools external project, using the build space version of the source.
+  file(WRITE "${uncrustify_source_dir}/non-empty-folder")
+
+  # add a standard autotools external project
   ExternalProject_Add(
-    external_uncrustify
-    SOURCE_DIR "${uncrustify_source_dir}"
+    uncrustify
+    PREFIX "${CMAKE_CURRENT_BINARY_DIR}/external_project"
     CONFIGURE_COMMAND "${uncrustify_source_dir}/configure"
-      "--prefix" "${CMAKE_CURRENT_BINARY_DIR}"
-    BUILD_COMMAND "${MAKE}"
+      "--prefix" "${CMAKE_CURRENT_BINARY_DIR}/external_project"
+    BUILD_COMMAND "make"
+    BUILD_IN_SOURCE 1
+    INSTALL_COMMAND "echo" "Skipping install step of external project"
   )
-  # Always copy the source of uncrustify to the build space between the download and build steps.
-  # This prevents problems that occur when the source space is a symlinked directory.
-  # See: https://github.com/ament/uncrustify/issues/1
-  ExternalProject_Add_Step(external_uncrustify copy_source
+
+  # always copy the necessary source files of uncrustify to the build directory
+  # since the upstream build scripts can't handle symlinked folders correctly
+  set(copy_commands "")
+  file(GLOB_RECURSE source_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
+    "${CMAKE_CURRENT_SOURCE_DIR}/configure"
+    "${CMAKE_CURRENT_SOURCE_DIR}/etc/*.cfg"
+    "${CMAKE_CURRENT_SOURCE_DIR}/install-sh"
+    "${CMAKE_CURRENT_SOURCE_DIR}/make_token_names.sh"
+    "${CMAKE_CURRENT_SOURCE_DIR}/Makefile.in"
+    "${CMAKE_CURRENT_SOURCE_DIR}/man/uncrustify.1.in"
+    "${CMAKE_CURRENT_SOURCE_DIR}/missing"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/*"
+  )
+  foreach(source_file ${source_files})
+    # copy every file only when changed which will avoid recompilation if nothing changed
+    list (APPEND copy_commands
+      COMMAND
+        ${CMAKE_COMMAND} -E copy_if_different
+          "${CMAKE_CURRENT_SOURCE_DIR}/${source_file}"
+          "${uncrustify_source_dir}/${source_file}")
+  endforeach()
+  ExternalProject_Add_Step(uncrustify copy_source
+    # it must happen before the configure step
     DEPENDERS configure
-    COMMENT "Copy source to ${uncrustify_source_dir} to prevent problems with symlink."
-    ALWAYS 1  # Always do this otherwise changing the source would not change the built binary.
-    COMMAND
-      ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/ ${uncrustify_source_dir}
+    COMMENT "Copy source files to '${uncrustify_source_dir}'"
+    # it must happen every time to ensure that changes propagate
+    # even if that retriggers configure everytime
+    ALWAYS 1
+    ${copy_commands}
   )
 
   install(
-    PROGRAMS "${CMAKE_CURRENT_BINARY_DIR}/bin/uncrustify"
+    PROGRAMS "${uncrustify_source_dir}/src/uncrustify"
     DESTINATION bin
   )
 
