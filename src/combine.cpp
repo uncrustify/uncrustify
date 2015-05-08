@@ -3946,6 +3946,10 @@ static void mark_struct_union_body(chunk_t *start)
           (pc->type == CT_SEMICOLON))
       {
          pc = chunk_get_next_ncnl(pc);
+         if (pc == NULL)
+         {
+            break;
+         }
       }
       if (pc->type == CT_ALIGN)
       {
