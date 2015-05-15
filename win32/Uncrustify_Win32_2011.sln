@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 11
+# Visual Studio 14
+VisualStudioVersion = 14.0.22823.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Uncrustify", "Uncrustify_Win32_2011.vcxproj", "{743E549D-6BCA-4E81-8DCF-C34B85AF8373}"
 EndProject
 Global
