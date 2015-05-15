@@ -26,7 +26,7 @@ if(NOT WIN32)
   # always copy the necessary source files of uncrustify to the build directory
   # since the upstream build scripts can't handle symlinked folders correctly
   set(copy_commands "")
-  file(GLOB_RECURSE source_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
+  file(GLOB_RECURSE src_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
     "${CMAKE_CURRENT_SOURCE_DIR}/configure"
     "${CMAKE_CURRENT_SOURCE_DIR}/etc/*.cfg"
     "${CMAKE_CURRENT_SOURCE_DIR}/install-sh"
@@ -36,7 +36,7 @@ if(NOT WIN32)
     "${CMAKE_CURRENT_SOURCE_DIR}/missing"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/*"
   )
-  foreach(source_file ${source_files})
+  foreach(source_file ${src_files})
     # copy every file only when changed which will avoid recompilation if nothing changed
     list (APPEND copy_commands
       COMMAND
@@ -73,7 +73,7 @@ else()
 
   add_custom_command(
     OUTPUT "${CMAKE_CURRENT_SOURCE_DIR}/win32/${build_type}/Uncrustify.exe"
-    COMMAND "devenv" "/upgrade" "${CMAKE_CURRENT_SOURCE_DIR}/win32/Uncrustify_Win32_2011.sln"
+    # COMMAND "devenv" "/upgrade" "${CMAKE_CURRENT_SOURCE_DIR}/win32/Uncrustify_Win32_2011.sln"
     COMMAND
       "msbuild" "${CMAKE_CURRENT_SOURCE_DIR}/win32/Uncrustify_Win32_2011.sln"
       "/p:Configuration=${build_type}" "/p:Platform=Win32"
