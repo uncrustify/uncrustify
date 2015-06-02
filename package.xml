@@ -9,4 +9,8 @@
   <license>GNU GENERAL PUBLIC LICENSE Version 3</license>
 
   <url>https://github.com/bengardner/uncrustify</url>
+
+  <export>
+    <build_type>cmake</build_type>
+  </export>
 </package>
