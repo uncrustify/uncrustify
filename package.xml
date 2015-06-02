@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>uncrustify</name>
+  <version>0.61.20150413</version>
+  <description>
+    Package a newer version of uncrustify (0.61+, b6593c1, April 14th 2015).
+  </description>
+  <maintainer email="dthomas@osrfoundation.org">Dirk Thomas</maintainer>
+  <license>GNU GENERAL PUBLIC LICENSE Version 3</license>
+
+  <url>https://github.com/bengardner/uncrustify</url>
+
+  <export>
+    <build_type>cmake</build_type>
+  </export>
+</package>
