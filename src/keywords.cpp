@@ -182,7 +182,7 @@ static const chunk_tag_t keywords[] =
    { "new",              CT_NEW,          LANG_CPP | LANG_CS | LANG_D | LANG_JAVA | LANG_PAWN | LANG_VALA | LANG_ECMA }, // PAWN
    { "not",              CT_SARITH,       LANG_C | LANG_CPP                                                           },
    { "not_eq",           CT_SCOMPARE,     LANG_C | LANG_CPP                                                           },
-   { "null",             CT_TYPE,         LANG_CS | LANG_D | LANG_JAVA | LANG_VALA                                    },
+   { "null",             CT_TYPE,         LANG_D | LANG_JAVA | LANG_VALA                                              },
    { "object",           CT_TYPE,         LANG_CS                                                                     },
    { "operator",         CT_OPERATOR,     LANG_CPP | LANG_CS | LANG_PAWN                                              }, // PAWN
    { "or",               CT_SBOOL,        LANG_C | LANG_CPP | FLAG_PP                                                 },

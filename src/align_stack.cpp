@@ -184,7 +184,7 @@ void AlignStack::Add(chunk_t *start, int seqnum)
       {
          /* back up to the first '*' or '^' preceding the token */
          prev = chunk_get_prev(ali);
-         while (chunk_is_star(prev) || chunk_is_msref(prev))
+         while (chunk_is_star(prev) || chunk_is_msref(prev) || chunk_is_nullable(prev))
          {
             ali  = prev;
             prev = chunk_get_prev(ali);
@@ -237,6 +237,7 @@ void AlignStack::Add(chunk_t *start, int seqnum)
       }
       if ((chunk_is_star(tmp) && (m_star_style == SS_DANGLE)) ||
           (chunk_is_addr(tmp) && (m_amp_style == SS_DANGLE)) ||
+          (chunk_is_nullable(tmp) && (m_star_style == SS_DANGLE)) || // TODO: add m_nullable_style
           (chunk_is_msref(tmp) && (m_star_style == SS_DANGLE))) // TODO: add m_msref_style
       {
          col_adj = start->column - ali->column;

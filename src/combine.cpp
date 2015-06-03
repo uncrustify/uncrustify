@@ -67,7 +67,7 @@ void make_type(chunk_t *pc)
       {
          set_chunk_type(pc, CT_TYPE);
       }
-      else if (chunk_is_star(pc) || chunk_is_msref(pc))
+      else if (chunk_is_star(pc) || chunk_is_msref(pc) || chunk_is_nullable(pc))
       {
          set_chunk_type(pc, CT_PTR_TYPE);
       }
@@ -206,7 +206,8 @@ static bool chunk_ends_type(chunk_t *start)
           (pc->type == CT_PTR_TYPE) ||
           (pc->type == CT_STRUCT) ||
           (pc->type == CT_DC_MEMBER) ||
-          (pc->type == CT_QUALIFIER))
+          (pc->type == CT_QUALIFIER) ||
+          ((cpd.lang_flags & LANG_CS) && (pc->type == CT_MEMBER)))
       {
          cnt++;
          last_lval = (pc->flags & PCF_LVALUE) != 0;
@@ -866,6 +867,10 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
          set_chunk_type(pc, (prev->type == CT_ANGLE_CLOSE) ? CT_PTR_TYPE : CT_DEREF);
       }
       if ((cpd.lang_flags & LANG_CPP) && (pc->type == CT_CARET) && (prev->type == CT_ANGLE_CLOSE))
+      {
+         set_chunk_type(pc, CT_PTR_TYPE);
+      }
+      if ((cpd.lang_flags & LANG_CS) && (pc->type == CT_QUESTION) && (prev->type == CT_ANGLE_CLOSE))
       {
          set_chunk_type(pc, CT_PTR_TYPE);
       }
@@ -1709,6 +1714,7 @@ static void fix_casts(chunk_t *start)
                            (pc->type == CT_DC_MEMBER) ||
                            (pc->type == CT_STAR) ||
                            (pc->type == CT_CARET) ||
+                           (pc->type == CT_QUESTION) ||
                            (pc->type == CT_TSQUARE) ||
                            (pc->type == CT_AMP)))
    {
@@ -2547,7 +2553,7 @@ static void fix_fcn_def_params(chunk_t *start)
       {
          continue;
       }
-      if (chunk_is_star(pc) || chunk_is_msref(pc))
+      if (chunk_is_star(pc) || chunk_is_msref(pc) || chunk_is_nullable(pc))
       {
          set_chunk_type(pc, CT_PTR_TYPE);
          cs.Push_Back(pc);

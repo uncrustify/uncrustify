@@ -1317,6 +1317,11 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
 
    if (second->type == CT_PTR_TYPE)
    {
+      if ((cpd.lang_flags & LANG_CS) && chunk_is_nullable(second))
+      {
+          min_sp = 0;
+          return AV_REMOVE;
+      }
       if (cpd.settings[UO_sp_before_ptr_star_func].a != AV_IGNORE)
       {
          /* Find the next non-'*' chunk */

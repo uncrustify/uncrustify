@@ -216,7 +216,9 @@ void tokenize_cleanup(void)
        * Change CT_STAR to CT_PTR_TYPE if preceded by CT_TYPE,
        * CT_QUALIFIER, or CT_PTR_TYPE.
        */
-      if ((next->type == CT_STAR) &&
+      if (((next->type == CT_STAR) ||
+           ((cpd.lang_flags & LANG_CPP) && (next->type == CT_CARET)) ||
+           ((cpd.lang_flags & LANG_CS) && (next->type == CT_QUESTION))) &&
           ((pc->type == CT_TYPE) ||
            (pc->type == CT_QUALIFIER) ||
            (pc->type == CT_PTR_TYPE)))
@@ -693,39 +695,6 @@ void tokenize_cleanup(void)
             set_chunk_type(pc, (*next->str == 'r') ? CT_PP_REGION : CT_PP_ENDREGION);
 
             set_chunk_parent(prev, pc->type);
-         }
-      }
-
-      /* Check for C# nullable types '?' is in next */
-      if ((cpd.lang_flags & LANG_CS) &&
-          (next->type == CT_QUESTION))
-      {
-         tmp = chunk_get_next_ncnl(next);
-         if (tmp != NULL)
-         {
-            bool doit = ((tmp->type == CT_PAREN_CLOSE) ||
-                         (tmp->type == CT_ANGLE_CLOSE));
-
-            if (tmp->type == CT_WORD)
-            {
-               tmp2 = chunk_get_next_ncnl(tmp);
-               if ((tmp2 != NULL) &&
-                   ((tmp2->type == CT_SEMICOLON) ||
-                    (tmp2->type == CT_ASSIGN) ||
-                    (tmp2->type == CT_COMMA) ||
-                    (tmp2->type == CT_PAREN_CLOSE)))
-               {
-                  doit = true;
-               }
-            }
-
-            if (doit)
-            {
-               pc->str         += next->str;
-               pc->orig_col_end = next->orig_col_end;
-               chunk_del(next);
-               next = tmp;
-            }
          }
       }
 
