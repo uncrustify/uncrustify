@@ -412,6 +412,8 @@ struct cp_data
    int                al_cnt;
    bool               al_c99_array;
 
+   bool               warned_unable_string_replace_tab_chars;
+
    /* Here are all the settings */
    op_val_t           settings[UO_option_count];
    int                max_option_name_len;
