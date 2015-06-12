@@ -343,15 +343,18 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
             }
          }
 
-         for (tmp = chunk_get_prev_ncnl(pc); tmp != NULL; tmp = chunk_get_prev_ncnl(tmp))
+         if (cpd.lang_flags & LANG_D)
          {
-            if (chunk_is_semicolon(tmp) ||
-                (tmp->type == CT_BRACE_OPEN) ||
-                (tmp->type == CT_VBRACE_OPEN))
-            {
-               break;
-            }
-            make_type(tmp);
+             for (tmp = chunk_get_prev_ncnl(pc); tmp != NULL; tmp = chunk_get_prev_ncnl(tmp))
+             {
+                 if (chunk_is_semicolon(tmp) ||
+                     (tmp->type == CT_BRACE_OPEN) ||
+                     (tmp->type == CT_VBRACE_OPEN))
+                 {
+                     break;
+                 }
+                 make_type(tmp);
+             }
          }
       }
 
@@ -3360,7 +3363,12 @@ static void mark_function(chunk_t *pc)
                 (prev->type == CT_STRING) ||
                 (prev->type == CT_STRING_MULTI) ||
                 (prev->type == CT_NUMBER) ||
-                (prev->type == CT_NUMBER_FP))
+                (prev->type == CT_NUMBER_FP) ||
+                (prev->type == CT_COMPARE) ||
+                ((prev->type == CT_AS) && (cpd.lang_flags & LANG_CS)) ||
+                ((prev->type == CT_SCOMPARE) && (cpd.lang_flags & LANG_CS)) ||
+                ((prev->type == CT_BOOL) && (cpd.lang_flags & LANG_CS)) ||
+                ((prev->type == CT_COLON) && (cpd.lang_flags & LANG_CS)))
             {
                isa_def = false;
             }
@@ -5273,6 +5281,11 @@ static void handle_cs_property(chunk_t *bro)
    {
       if (pc->level == bro->level)
       {
+         //prevent scanning back past 'new' in expressions like new List<int> {1,2,3}
+         if (pc->type == CT_NEW)
+         {
+             break;
+         }
          if (!did_prop && ((pc->type == CT_WORD) || (pc->type == CT_THIS)))
          {
             set_chunk_type(pc, CT_CS_PROPERTY);
