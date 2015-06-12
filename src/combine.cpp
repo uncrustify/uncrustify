@@ -345,16 +345,16 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
 
          if (cpd.lang_flags & LANG_D)
          {
-             for (tmp = chunk_get_prev_ncnl(pc); tmp != NULL; tmp = chunk_get_prev_ncnl(tmp))
-             {
-                 if (chunk_is_semicolon(tmp) ||
-                     (tmp->type == CT_BRACE_OPEN) ||
-                     (tmp->type == CT_VBRACE_OPEN))
-                 {
-                     break;
-                 }
-                 make_type(tmp);
-             }
+            for (tmp = chunk_get_prev_ncnl(pc); tmp != NULL; tmp = chunk_get_prev_ncnl(tmp))
+            {
+               if (chunk_is_semicolon(tmp) ||
+                  (tmp->type == CT_BRACE_OPEN) ||
+                  (tmp->type == CT_VBRACE_OPEN))
+               {
+                  break;
+               }
+               make_type(tmp);
+            }
          }
       }
 
@@ -5284,7 +5284,7 @@ static void handle_cs_property(chunk_t *bro)
          //prevent scanning back past 'new' in expressions like new List<int> {1,2,3}
          if (pc->type == CT_NEW)
          {
-             break;
+            break;
          }
          if (!did_prop && ((pc->type == CT_WORD) || (pc->type == CT_THIS)))
          {
