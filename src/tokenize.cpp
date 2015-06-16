@@ -898,10 +898,16 @@ static bool parse_cs_string(tok_ctx& ctx, chunk_t& pc)
       {
          if (should_escape_tabs && !cpd.warned_unable_string_replace_tab_chars)
          {
-            /* a tab char can't be replaced with \\t because escapes don't work in here-strings. best we can do is warn. */
-            LOG_FMT(LWARN, "%s:%d Detected non-replaceable tab char in literal string\n", cpd.filename, pc.orig_line);
-            cpd.error_count++;
             cpd.warned_unable_string_replace_tab_chars = true;
+
+            log_sev_t warnlevel = (log_sev_t)cpd.settings[UO_warnlevel_tabs_found_in_verbatim_string_literals].n;
+
+            /* a tab char can't be replaced with \\t because escapes don't work in here-strings. best we can do is warn. */
+            LOG_FMT(warnlevel, "%s:%d Detected non-replaceable tab char in literal string\n", cpd.filename, pc.orig_line);
+            if (warnlevel < LWARN)
+            {
+               cpd.error_count++;
+            }
          }
       }
       else if (ch == '"')

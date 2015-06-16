@@ -80,6 +80,7 @@ enum uncrustify_groups
    UG_codemodify,
    UG_comment,
    UG_preprocessor,
+   UG_warnlevels,
    UG_group_count
 };
 
@@ -707,6 +708,9 @@ enum uncrustify_options
 
    /* Hack, add comments to the ends of namespaces */
    UO_mod_add_long_namespace_closebrace_comment,
+
+   /* Levels to attach to warnings (log_sev_t; default = LWARN) */
+   UO_warnlevel_tabs_found_in_verbatim_string_literals, // if UO_string_replace_tab_chars is set, then we should warn about cases we can't do the replacement
 
    /* This is used to get the enumeration count */
    UO_option_count

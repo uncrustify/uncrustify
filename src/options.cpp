@@ -1352,6 +1352,10 @@ void register_options(void)
                   "Control whether to indent the code between #if, #else and #endif.");
    unc_add_option("pp_define_at_level", UO_pp_define_at_level, AT_BOOL,
                   "Whether to indent '#define' at the brace level (true) or from column 1 (false)");
+
+   unc_begin_group(UG_warnlevels, "Warn levels - 1: error, 2: warning (default), 3: note");
+   unc_add_option("UO_warn_level_tabs_found_in_verbatim_string_literals", UO_warnlevel_tabs_found_in_verbatim_string_literals, AT_NUM,
+                  "Warning is given if doing tab-to-\t replacement and we have found one in a C# verbatim string literal.", "", 1, 3);
 }
 
 
@@ -2032,6 +2036,7 @@ void set_option_defaults(void)
    cpd.settings[UO_sp_word_brace].a        = AV_ADD;
    cpd.settings[UO_sp_word_brace_ns].a     = AV_ADD;
    cpd.settings[UO_indent_oc_msg_prioritize_first_colon].b = true;
+   cpd.settings[UO_warnlevel_tabs_found_in_verbatim_string_literals].n = LWARN;
 }
 
 
