@@ -1369,7 +1369,14 @@ void indent_text(void)
                idx--;
                skipped = true;
             }
-            frm.pse[frm.pse_tos].indent = frm.pse[idx].indent + indent_size;
+            if (cpd.settings[UO_indent_param].n != 0)
+            {
+               frm.pse[frm.pse_tos].indent = frm.pse[idx].indent + cpd.settings[UO_indent_param].n;
+            }
+            else
+            {
+               frm.pse[frm.pse_tos].indent = frm.pse[idx].indent + indent_size;
+            }
             if (cpd.settings[UO_indent_func_param_double].b)
             {
                frm.pse[frm.pse_tos].indent += indent_size;
