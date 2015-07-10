@@ -34,7 +34,7 @@ using namespace std;
 enum brstage_e
 {
    BS_NONE,
-   BS_PAREN1,    /* if/for/switch/while */
+   BS_PAREN1,    /* if/for/switch/while/synchronized */
    BS_OP_PAREN1, /* optional paren: catch () { */
    BS_WOD_PAREN, /* while of do parens */
    BS_WOD_SEMI,  /* semicolon after while of do */

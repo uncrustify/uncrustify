@@ -376,6 +376,9 @@ static int token_indent(c_token_t type)
    case CT_ELSEIF:
       return(8);
 
+   case CT_SYNCHRONIZED:
+      return(13);
+
    default:
       return(0);
    }
@@ -1032,6 +1035,7 @@ void indent_text(void)
                 (pc->parent_type == CT_WHILE) ||
                 (pc->parent_type == CT_USING_STMT) ||
                 (pc->parent_type == CT_SWITCH) ||
+                (pc->parent_type == CT_SYNCHRONIZED) ||
                 (pc->parent_type == CT_FOR))
             {
                if (parent_token_indent != 0)

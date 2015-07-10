@@ -15,5 +15,7 @@
 80040 empty.cfg               java/try.java
 80050 jdbi-r.cfg              java/double_brace.java
 80051 jdbi-f.cfg              java/double_brace.java
+80060 java_synchronized_1.cfg java/synchronized.java
+80061 java_synchronized_2.cfg java/synchronized.java
 
 80100 sf567.cfg               java/sf567.java
