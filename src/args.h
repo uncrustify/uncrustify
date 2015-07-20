@@ -19,9 +19,9 @@
 class Args
 {
 protected:
-   int   m_count;
-   char  **m_values;
-   UINT8 *m_used;      /* array of bits */
+   size_t m_count;
+   char   **m_values;
+   UINT8  *m_used;      /* array of bits */
 
 public:
    /**
@@ -63,28 +63,28 @@ public:
    const char *Param(const char *token);
 
    /**
-    * Similiar to arg_param, but can iterate over all matches.
+    * Similar to arg_param, but can iterate over all matches.
     * Set index to 0 before the first call.
     *
     * @param token   The token string to match
     * @param idx     Pointer to the index that you initialized to 0
     * @return        NULL or the pointer to the string.
     */
-   const char *Params(const char *token, int &index);
+   const char *Params(const char *token, size_t &index);
 
    /**
     * Marks an argument as being used.
     *
     * @param idx  The index of the argument
     */
-   void SetUsed(int idx);
+   void SetUsed(size_t idx);
 
    /**
     * Gets whether an argument has been used, by index.
     *
     * @param idx  The index of the argument
     */
-   bool GetUsed(int idx);
+   bool GetUsed(size_t idx);
 
    /**
     * This function retrieves all unused parameters.
@@ -94,7 +94,7 @@ public:
     * @param idx  Pointer to the index
     * @return     NULL (done) or the pointer to the string
     */
-   const char *Unused(int &idx);
+   const char *Unused(size_t &idx);
 
    /**
     * Takes text and splits it into arguments.
@@ -108,7 +108,7 @@ public:
     * @param num_args   The number of items in args
     * @return           The number of arguments parsed (always <= num_args)
     */
-   static int SplitLine(char *text, char *args[], int num_args);
+   static size_t SplitLine(char *text, char *args[], size_t num_args);
 };
 
 #endif /* ARGS_H_INCLUDED */

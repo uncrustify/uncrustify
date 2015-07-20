@@ -1,5 +1,5 @@
 #!/bin/sh 
-
+sh_dir="$(dirname "$(readlink -f "$0")")"
 outTmp="temp.bak"
 out="libUncrustify.js"
 
@@ -24,4 +24,4 @@ em++ -O3 \
     ../src/*.cpp \
 && cat "./prefix_file" "$out" "./postfix_file" > "$outTmp" \
 && mv "$outTmp" "$out" \
-&& ./test/run.sh
+&& ./test/run.sh "$sh_dir/libUncrustify.js" "$sh_dir/test"

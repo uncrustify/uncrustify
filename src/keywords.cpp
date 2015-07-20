@@ -7,6 +7,7 @@
  *          October 2015, 2016
  * @license GPL v2+
  */
+#include "keywords.h"
 #include "uncrustify_types.h"
 #include "prototypes.h"
 #include "char_table.h"
@@ -16,6 +17,7 @@
 #include <cstdlib>
 #include <map>
 #include "unc_ctype.h"
+#include "uncrustify.h"
 
 using namespace std;
 
@@ -23,6 +25,23 @@ using namespace std;
 typedef map<string, c_token_t> dkwmap;
 static dkwmap dkwm;
 
+
+/**
+ * Compares two chunk_tag_t entries using strcmp on the strings
+ *
+ * @param p1   The 'left' entry
+ * @param p2   The 'right' entry
+ */
+static int kw_compare(const void *p1, const void *p2);
+
+
+/**
+ * Backs up to the first string match in keywords.
+ */
+static const chunk_tag_t *kw_static_first(const chunk_tag_t *tag);
+
+
+static const chunk_tag_t *kw_static_match(const chunk_tag_t *tag);
 
 /**
  * interesting static keywords - keep sorted.
@@ -290,16 +309,10 @@ void init_keywords()
 }
 
 
-/**
- * Compares two chunk_tag_t entries using strcmp on the strings
- *
- * @param p1   The 'left' entry
- * @param p2   The 'right' entry
- */
 static int kw_compare(const void *p1, const void *p2)
 {
-   const chunk_tag_t *t1 = (const chunk_tag_t *)p1;
-   const chunk_tag_t *t2 = (const chunk_tag_t *)p2;
+   const chunk_tag_t *t1 = static_cast<const chunk_tag_t *>(p1);
+   const chunk_tag_t *t2 = static_cast<const chunk_tag_t *>(p2);
 
    return(strcmp(t1->tag, t2->tag));
 }
@@ -307,7 +320,7 @@ static int kw_compare(const void *p1, const void *p2)
 
 bool keywords_are_sorted(void)
 {
-   for (int idx = 1; idx < (int)ARRAY_SIZE(keywords); idx++)
+   for (int idx = 1; idx < static_cast<int> ARRAY_SIZE(keywords); idx++)
    {
       if (kw_compare(&keywords[idx - 1], &keywords[idx]) > 0)
       {
@@ -322,12 +335,6 @@ bool keywords_are_sorted(void)
 }
 
 
-/**
- * Adds a keyword to the list of dynamic keywords
- *
- * @param tag        The tag (string) must be zero terminated
- * @param type       The type, usually CT_TYPE
- */
 void add_keyword(const char *tag, c_token_t type)
 {
    string ss = tag;
@@ -348,9 +355,6 @@ void add_keyword(const char *tag, c_token_t type)
 }
 
 
-/**
- * Backs up to the first string match in keywords.
- */
 static const chunk_tag_t *kw_static_first(const chunk_tag_t *tag)
 {
    const chunk_tag_t *prev = tag - 1;
@@ -367,16 +371,14 @@ static const chunk_tag_t *kw_static_first(const chunk_tag_t *tag)
 
 static const chunk_tag_t *kw_static_match(const chunk_tag_t *tag)
 {
-   bool              in_pp = ((cpd.in_preproc != CT_NONE) && (cpd.in_preproc != CT_PP_DEFINE));
-   bool              pp_iter;
-   const chunk_tag_t *iter;
+   bool in_pp = ((cpd.in_preproc != CT_NONE) && (cpd.in_preproc != CT_PP_DEFINE));
 
-   for (iter = kw_static_first(tag);
+   for (const chunk_tag_t *iter = kw_static_first(tag);
         iter < &keywords[ARRAY_SIZE(keywords)];
         iter++)
    {
       //fprintf(stderr, " check:%s", iter->tag);
-      pp_iter = (iter->lang_flags & FLAG_PP) != 0;    // forcing value to bool
+      bool pp_iter = (iter->lang_flags & FLAG_PP) != 0; // forcing value to bool
       if ((strcmp(iter->tag, tag->tag) == 0) &&
           (cpd.lang_flags & iter->lang_flags) &&
           (in_pp == pp_iter))
@@ -385,84 +387,72 @@ static const chunk_tag_t *kw_static_match(const chunk_tag_t *tag)
          return(iter);
       }
    }
-   return(NULL);
+   return(nullptr);
 }
 
 
-/**
- * Search first the dynamic and then the static table for a matching keyword
- *
- * @param word    Pointer to the text -- NOT zero terminated
- * @param len     The length of the text
- * @return        CT_WORD (no match) or the keyword token
- */
-c_token_t find_keyword_type(const char *word, int len)
+c_token_t find_keyword_type(const char *word, size_t len)
 {
-   string            ss(word, len);
-   chunk_tag_t       key;
-   const chunk_tag_t *p_ret;
-
    if (len <= 0)
    {
       return(CT_NONE);
    }
 
    /* check the dynamic word list first */
+   string           ss(word, len);
    dkwmap::iterator it = dkwm.find(ss);
    if (it != dkwm.end())
    {
       return((*it).second);
    }
 
+   chunk_tag_t key;
    key.tag = ss.c_str();
 
    /* check the static word list */
-   p_ret = (const chunk_tag_t *)bsearch(&key, keywords, ARRAY_SIZE(keywords),
-                                        sizeof(keywords[0]), kw_compare);
-   if (p_ret != NULL)
+   const chunk_tag_t *p_ret = static_cast<const chunk_tag_t *>(
+      bsearch(&key, keywords, ARRAY_SIZE(keywords), sizeof(keywords[0]), kw_compare));
+
+   if (p_ret != nullptr)
    {
       p_ret = kw_static_match(p_ret);
    }
-   return((p_ret != NULL) ? p_ret->type : CT_WORD);
+   return((p_ret != nullptr) ? p_ret->type : CT_WORD);
 }
 
 
-/**
- * Loads the dynamic keywords from a file
- *
- * @param filename   The path to the file to load
- * @return           SUCCESS or FAILURE
- */
 int load_keyword_file(const char *filename)
 {
-   FILE *pf;
-   char buf[256];
-   char *ptr;
-   char *args[3];
-   int  argc;
-   int  line_no = 0;
+   FILE *pf = fopen(filename, "r");
 
-   pf = fopen(filename, "r");
-   if (pf == NULL)
+   if (pf == nullptr)
    {
       LOG_FMT(LERR, "%s: fopen(%s) failed: %s (%d)\n",
               __func__, filename, strerror(errno), errno);
       cpd.error_count++;
-      return(FAILURE);
+      return(EX_IOERR);
    }
 
-   while (fgets(buf, sizeof(buf), pf) != NULL)
+#define MAXLENGTHOFLINE    256
+#define NUMBEROFARGS       2
+   // maximal length of a line in the file
+   char   buf[MAXLENGTHOFLINE];
+   char   *args[NUMBEROFARGS];
+   size_t line_no = 0;
+   while (fgets(buf, MAXLENGTHOFLINE, pf) != nullptr)
    {
       line_no++;
 
       /* remove comments */
-      if ((ptr = strchr(buf, '#')) != NULL)
+      char *ptr;
+      if ((ptr = strchr(buf, '#')) != nullptr)
       {
+         // a comment line
          *ptr = 0;
+         // don't use the rest of the line
       }
 
-      argc       = Args::SplitLine(buf, args, ARRAY_SIZE(args) - 1);
-      args[argc] = 0;
+      size_t argc = Args::SplitLine(buf, args, NUMBEROFARGS);
 
       if (argc > 0)
       {
@@ -472,49 +462,54 @@ int load_keyword_file(const char *filename)
          }
          else
          {
-            LOG_FMT(LWARN, "%s:%d Invalid line (starts with '%s')\n",
+            LOG_FMT(LWARN, "%s:%zu Invalid line (starts with '%s')\n",
                     filename, line_no, args[0]);
             cpd.error_count++;
          }
       }
+      else
+      {
+         // the line is empty
+         continue;
+      }
    }
 
    fclose(pf);
-   return(SUCCESS);
+   return(EX_OK);
 } // load_keyword_file
 
 
 void print_keywords(FILE *pfile)
 {
-   for (dkwmap::iterator it = dkwm.begin(); it != dkwm.end(); ++it)
+   for (const auto &keyword_pair : dkwm)
    {
-      c_token_t tt = (*it).second;
+      c_token_t tt = keyword_pair.second;
       if (tt == CT_TYPE)
       {
          fprintf(pfile, "type %*.s%s\n",
-                 MAX_OPTION_NAME_LEN - 4, " ", (*it).first.c_str());
+                 MAX_OPTION_NAME_LEN - 4, " ", keyword_pair.first.c_str());
       }
       else if (tt == CT_MACRO_OPEN)
       {
          fprintf(pfile, "macro-open %*.s%s\n",
-                 MAX_OPTION_NAME_LEN - 11, " ", (*it).first.c_str());
+                 MAX_OPTION_NAME_LEN - 11, " ", keyword_pair.first.c_str());
       }
       else if (tt == CT_MACRO_CLOSE)
       {
          fprintf(pfile, "macro-close %*.s%s\n",
-                 MAX_OPTION_NAME_LEN - 12, " ", (*it).first.c_str());
+                 MAX_OPTION_NAME_LEN - 12, " ", keyword_pair.first.c_str());
       }
       else if (tt == CT_MACRO_ELSE)
       {
          fprintf(pfile, "macro-else %*.s%s\n",
-                 MAX_OPTION_NAME_LEN - 11, " ", (*it).first.c_str());
+                 MAX_OPTION_NAME_LEN - 11, " ", keyword_pair.first.c_str());
       }
       else
       {
          const char *tn = get_token_name(tt);
 
          fprintf(pfile, "set %s %*.s%s\n", tn,
-                 int(MAX_OPTION_NAME_LEN - (4 + strlen(tn))), " ", (*it).first.c_str());
+                 int(MAX_OPTION_NAME_LEN - (4 + strlen(tn))), " ", keyword_pair.first.c_str());
       }
    }
 }
@@ -526,10 +521,7 @@ void clear_keyword_file(void)
 }
 
 
-/**
- * Returns the pattern that the keyword needs based on the token
- */
-pattern_class get_token_pattern_class(c_token_t tok)
+pattern_class_e get_token_pattern_class(c_token_t tok)
 {
    switch (tok)
    {
@@ -544,10 +536,10 @@ pattern_class get_token_pattern_class(c_token_t tok)
    case CT_D_WITH:
    case CT_D_VERSION_IF:
    case CT_D_SCOPE_IF:
-      return(PATCLS_PBRACED);
+      return(pattern_class_e::PBRACED);
 
    case CT_ELSE:
-      return(PATCLS_ELSE);
+      return(pattern_class_e::ELSE);
 
    case CT_DO:
    case CT_TRY:
@@ -557,23 +549,23 @@ pattern_class get_token_pattern_class(c_token_t tok)
    case CT_UNSAFE:
    case CT_VOLATILE:
    case CT_GETSET:
-      return(PATCLS_BRACED);
+      return(pattern_class_e::BRACED);
 
    case CT_CATCH:
    case CT_D_VERSION:
    case CT_DEBUG:
-      return(PATCLS_OPBRACED);
+      return(pattern_class_e::OPBRACED);
 
    case CT_NAMESPACE:
-      return(PATCLS_VBRACED);
+      return(pattern_class_e::VBRACED);
 
    case CT_WHILE_OF_DO:
-      return(PATCLS_PAREN);
+      return(pattern_class_e::PAREN);
 
    case CT_INVARIANT:
-      return(PATCLS_OPPAREN);
+      return(pattern_class_e::OPPAREN);
 
    default:
-      return(PATCLS_NONE);
+      return(pattern_class_e::NONE);
    } // switch
 }    // get_token_pattern_class

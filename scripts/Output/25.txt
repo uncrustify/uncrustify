@@ -1,6 +1,6 @@
-Newline loop start: x
-newline_add_between: ';'[SEMICOLON] line xx:xx and '}' line xx:x : [CallStack:-DEBUG NOT SET-]
-newline_add_between: '{'[BRACE_OPEN] line x:x and '}' line x:x : [CallStack:-DEBUG NOT SET-]
-newline_add_between: '{'[BRACE_OPEN] line x:x and '}' line x:x : [CallStack:-DEBUG NOT SET-]
-newline_add_between: '{'[BRACE_OPEN] line xx:x and '}' line xx:x : [CallStack:-DEBUG NOT SET-]
-newline_add_between: '{'[BRACE_OPEN] line xx:x and '}' line xx:x : [CallStack:-DEBUG NOT SET-]
+Newline loop start: 
+newline_add_between: ';'[SEMICOLON] line : and '}' line : : [CallStack:-DEBUG NOT SET-]
+newline_add_between: '{'[BRACE_OPEN] line : and '}' line : : [CallStack:-DEBUG NOT SET-]
+newline_add_between: '{'[BRACE_OPEN] line : and '}' line : : [CallStack:-DEBUG NOT SET-]
+newline_add_between: '{'[BRACE_OPEN] line : and '}' line : : [CallStack:-DEBUG NOT SET-]
+newline_add_between: '{'[BRACE_OPEN] line : and '}' line : : [CallStack:-DEBUG NOT SET-]

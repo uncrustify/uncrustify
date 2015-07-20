@@ -282,6 +282,7 @@ typedef enum
    CT_PP_ENDREGION,     /* C# #endregion */
    CT_PP_REGION_INDENT, /* Dummy token for indenting a C# #region */
    CT_PP_IF_INDENT,     /* Dummy token for indenting a #if stuff */
+   CT_PP_IGNORE,        /* Dummy token for ignoring a certain preprocessor directive (do not do any processing) */
    CT_PP_OTHER,         /* #line, #error, #pragma, etc */
    /* end PP types */
 
@@ -314,8 +315,8 @@ typedef enum
 
    /* Embedded SQL - always terminated with a semicolon */
    CT_SQL_EXEC,         /* the 'EXEC' in 'EXEC SQL ...' */
-   CT_SQL_BEGIN,        /* the 'EXEC' in 'EXEC SQL BEGIN ...' */
-   CT_SQL_END,          /* the 'EXEC' in 'EXEC SQL END ...' */
+   CT_SQL_BEGIN,        /* the 'BEGINN' in 'EXEC SQL BEGIN ...' */
+   CT_SQL_END,          /* the 'END' in 'EXEC SQL END ...' */
    CT_SQL_WORD,         /* CT_WORDs in the 'EXEC SQL' statement */
 
    /* Vala stuff */
@@ -328,7 +329,7 @@ typedef enum
    CT_FOR_COLON,    /* colon in "for ( TYPE var: EXPR ) { ... }" */
    CT_DOUBLE_BRACE, /* parent for double brace */
 
-   /* extentions for Qt macros */
+   /* extensions for Qt macros */
    CT_Q_EMIT,       // guy 2015-10-16
    CT_Q_FOREACH,    // guy 2015-09-23
    CT_Q_FOREVER,    // guy 2015-10-18

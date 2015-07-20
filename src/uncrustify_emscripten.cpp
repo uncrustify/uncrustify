@@ -42,36 +42,37 @@ extern map<uncrustify_groups, group_map_value>   group_map;
 /**
  * Loads options from a file represented as a single char array.
  * Modifies: input char array, cpd.line_number
+ * Expects: \0 terminated char array
  *
  * @param configString char array that holds the whole config
  * @return EXIT_SUCCESS on success
  */
 int load_option_fileChar(char *configString)
 {
-   const int textLen         = strlen(configString);
-   char      *delimPos       = &configString[0];
-   char      *stringEnd      = &configString[textLen - 1];
-   char      *subStringStart = &configString[0];
+   char *delimPos       = &configString[0];
+   char *subStringStart = &configString[0];
 
    cpd.line_number = 0;
 
    while (true)
    {
-      delimPos = std::find(delimPos, stringEnd, '\n');
+      delimPos = strchr(delimPos, '\n');
+      if (delimPos == nullptr)
+      {
+         break;
+      }
 
-      // replaces \n with \0 to get a string with multiple terminated
-      // substrings inside
+      // replaces \n with \0 -> string including multiple terminated substrings
       *delimPos = '\0';
 
       process_option_line(subStringStart, "");
 
-      if (delimPos == stringEnd)
-      {
-         break;
-      }
       delimPos++;
       subStringStart = delimPos;
    }
+   //get last line, expectation: ends with \0
+   process_option_line(subStringStart, "");
+
    return(EXIT_SUCCESS);
 }
 
@@ -172,7 +173,7 @@ void set_language(lang_flags langIDX)
 
 
 /**
- * adds a new keyword to Uncrustifys dynamic keyword map (dkwm, keywords.cpp)
+ * adds a new keyword to Uncrustify's dynamic keyword map (dkwm, keywords.cpp)
  *
  * @param type: keyword that is going to be added
  */
@@ -187,7 +188,7 @@ void add_type(string type)
 }
 
 
-//! clears Uncrustifys dynamic keyword map (dkwm, keywords.cpp)
+//! clears Uncrustify's dynamic keyword map (dkwm, keywords.cpp)
 void clear_keywords()
 {
    clear_keyword_file();
@@ -313,12 +314,12 @@ string get_option(string name)
 //! returns a string with option documentation
 string show_options()
 {
-   FILE   *stream;
    char   *buf;
    size_t len;
 
    // TODO (upstream): see uncrustify()
-   stream = open_memstream(&buf, &len);
+   FILE *stream = open_memstream(&buf, &len);
+
    if (stream == NULL)
    {
       LOG_FMT(LERR, "Failed to open_memstream\n");
@@ -351,12 +352,12 @@ string show_options()
  */
 string show_config(bool withDoc, bool only_not_default)
 {
-   FILE   *stream;
    char   *buf;
    size_t len;
 
    // TODO (upstream): see uncrustify()
-   stream = open_memstream(&buf, &len);
+   FILE *stream = open_memstream(&buf, &len);
+
    if (stream == NULL)
    {
       LOG_FMT(LERR, "Failed to open_memstream\n");
@@ -434,7 +435,10 @@ int loadConfig(string _cfg)
    }
 
    unique_ptr<char[]> cfg(new char[_cfg.length() + 1]);
-   std::strcpy(cfg.get(), _cfg.c_str());
+   strcpy(cfg.get(), _cfg.c_str());
+
+   // reset everything in case a config was loaded previously
+   set_option_defaults();
 
    if (load_option_fileChar(cfg.get()) != EXIT_SUCCESS)
    {
@@ -494,7 +498,7 @@ string uncrustify(string file, bool frag)
    file_mem fm;
    fm.raw.clear();
    fm.data.clear();
-   fm.enc = ENC_ASCII;
+   fm.enc = char_encoding_e::ASCII;
    fm.raw = vector<UINT8>(file.begin(), file.end());
 
    if (!decode_unicode(fm.raw, fm.data, fm.enc, fm.bom))
@@ -512,7 +516,6 @@ string uncrustify(string file, bool frag)
 
    cpd.frag = frag;
 
-   FILE   *stream;
    char   *buf;
    size_t len;
 
@@ -521,7 +524,7 @@ string uncrustify(string file, bool frag)
    // windows lacks open_memstream, only UNIX/BSD is supported
    // apparently emscripten has its own implementation, if that is not working
    // see: stackoverflow.com/questions/10305095#answer-10341073
-   stream = open_memstream(&buf, &len);
+   FILE *stream = open_memstream(&buf, &len);
    if (stream == NULL)
    {
       LOG_FMT(LERR, "Failed to open_memstream\n");
@@ -711,6 +714,7 @@ EMSCRIPTEN_BINDINGS(MainModule)
       .value(STRINGIFY(UO_indent_token_after_brace), UO_indent_token_after_brace)
       .value(STRINGIFY(UO_indent_cpp_lambda_body), UO_indent_cpp_lambda_body)
       .value(STRINGIFY(UO_indent_using_block), UO_indent_using_block)
+      .value(STRINGIFY(UO_indent_ternary_operator), UO_indent_ternary_operator)
       .value(STRINGIFY(UO_sp_paren_brace), UO_sp_paren_brace)
       .value(STRINGIFY(UO_sp_fparen_brace), UO_sp_fparen_brace)
       .value(STRINGIFY(UO_sp_fparen_dbrace), UO_sp_fparen_dbrace)
@@ -1111,6 +1115,7 @@ EMSCRIPTEN_BINDINGS(MainModule)
       .value(STRINGIFY(UO_nl_after_class), UO_nl_after_class)
       .value(STRINGIFY(UO_nl_max), UO_nl_max)
       .value(STRINGIFY(UO_nl_before_access_spec), UO_nl_before_access_spec)
+      .value(STRINGIFY(UO_nl_max_blank_in_func), UO_nl_max_blank_in_func)
       .value(STRINGIFY(UO_nl_after_access_spec), UO_nl_after_access_spec)
       .value(STRINGIFY(UO_nl_comment_func_def), UO_nl_comment_func_def)
       .value(STRINGIFY(UO_nl_after_try_catch_finally), UO_nl_after_try_catch_finally)
@@ -1208,7 +1213,8 @@ EMSCRIPTEN_BINDINGS(MainModule)
       .value(STRINGIFY(AT_NUM), AT_NUM)
       .value(STRINGIFY(AT_LINE), AT_LINE)
       .value(STRINGIFY(AT_POS), AT_POS)
-      .value(STRINGIFY(AT_STRING), AT_STRING);
+      .value(STRINGIFY(AT_STRING), AT_STRING)
+      .value(STRINGIFY(AT_UNUM), AT_UNUM);
 
    enum_<log_sev_t>(STRINGIFY(log_sev_t))
       .value(STRINGIFY(LSYS), LSYS)

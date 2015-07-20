@@ -2,6 +2,10 @@
  * @file punctuators.h
  * Automatically generated
  */
+
+#ifndef PUNCTUATORS_H_INCLUDED
+#define PUNCTUATORS_H_INCLUDED
+
 static const lookup_entry_t punc_table[] =
 {
    { '!', 26, 27, &symbols1[0]  },   //   0: '!'
@@ -86,3 +90,5 @@ static const lookup_entry_t punc_table[] =
    { '=',  1,  0, &symbols2[30] },   //  79: '~='
    { '~',  0,  0, &symbols2[31] },   //  80: '~~'
 };
+
+#endif /* PUNCTUATORS_H_INCLUDED */

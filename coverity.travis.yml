@@ -1,0 +1,29 @@
+language: cpp
+sudo: required
+
+branches:
+  only:
+    - coverity_scan
+
+# Coverity stuff
+env:
+  global:
+    # The next declaration is the encrypted COVERITY_SCAN_TOKEN, created
+    #   via the "travis encrypt" command using the project repo's public key
+    - secure: "rHg6I3iGS/u7+sWDD0misaVVrmVy6sjTuTGp1NK5nxuoDBjZgJkXC61yIzhbbDywwt5lCTYhC1J08ljrfVl4OSblrQIy9ihSrOs2mA/SrPiKh5sB1B661Pd20GDK+hkLByrSyWR2UusgHxYly9KPykbo0wX7R0qdLJouv86Irx09SS+YggkQTiAxVD7dvxHagiZa609zau5sZvDDtmFs73nS+JAjRwj5iweSPO00ApHZSgIrhWMDCSoWXPEnOn8+Ruw02Eza0ArvceipuMtY5ju6kejQvgZ7l7y7nu4LwXUFxWE2z4C7lSTIjIk9cKGcEoSHAvTCAJor75AQY7NcMWq0MYNXj55e+CPzELBT5XCcR14CKirgOHaG7L9H7McvFdMTsmujkd61Qbxs9p2lro8nliFAvpG7yduuaF/XTCugzS8JwrPfq98mWgqhVO0ysowEsesOn0Bjo9XmjBUtjVJxg8hdq50XoVyWHnXLoEXgXLcRv4JFFfquvM5+nvd2pNxopTboO//KPsGIz1A1qCQ0g9ktaVM+be7wZzB6Lb3L2hnOdmTiNNirJXnNupwQF64ZUxmajyh3QF+SIcYEnoug+2X1bftC+qLKf2DkR4DwjCvWWVXAk0/Nn3ndfuKyGy8ZzUkHGw+BGjq5Z/SVC0l+AJ+y5UWtu8PNj+Bdtsw="
+
+before_install:
+  - mkdir $TRAVIS_BUILD_DIR/build
+  - echo -n | openssl s_client -connect scan.coverity.com:443 | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' | sudo tee -a /etc/ssl/certs/ca-
+
+script: true
+
+addons:
+  coverity_scan:
+    project:
+      name: "uncrustify/uncrustify"
+      description: "Build submitted via Travis CI"
+    notification_email: {NOTIFICATION_EMAIL}
+    build_command_prepend: "(rm -rf $TRAVIS_BUILD_DIR/build ; mkdir $TRAVIS_BUILD_DIR/build ; cd $TRAVIS_BUILD_DIR/build ; cmake -DCMAKE_BUILD_TYPE=Release $TRAVIS_BUILD_DIR)"
+    build_command:   "make -C $TRAVIS_BUILD_DIR/build"
+    branch_pattern: coverity_scan

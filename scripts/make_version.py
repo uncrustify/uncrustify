@@ -2,41 +2,41 @@
 #
 # Rebuilds the version using git describe
 #
-import sys
-import os
-import subprocess
+from sys import exit
+from subprocess import check_output, check_call
+from os.path import join, dirname, abspath, exists
+from os import EX_OK, EX_USAGE, EX_IOERR
 
-def main (argv):
-    root = os.path.abspath(os.path.dirname(__file__))
-    git_path = os.path.join(root, '.git')
-    hg_path = os.path.join(root, '.hg')
 
-    if os.path.exists(git_path):
+def main():
+    root = dirname(dirname(abspath(__file__)))
+    git_path = join(root, '.git')
+    hg_path = join(root, '.hg')
+
+    if exists(git_path):
         try:
-            txt = subprocess.check_output(['git', 'describe', '--long', '--always', '--dirty']).strip()
+            txt = check_output(['git', 'describe', '--long', '--always', '--dirty']).strip()
         except:
-            print "Failed to retrieve version from git"
-            return 1
-    elif os.path.exists(hg_path):
+            print("Failed to retrieve version from git")
+            return EX_IOERR
+    elif exists(hg_path):
         try:
-            subprocess.check_call(['hg', 'gexport'])
-            node = subprocess.check_output(['hg', '--config', 'defaults.log=', 'log', '-r', '.', '--template', '{gitnode}']).strip()
-            txt = subprocess.check_output(['git', '--git-dir=.hg/git', 'describe', '--long', '--tags', '--always', node]).strip()
+            check_call(['hg', 'gexport'])
+            node = check_output(['hg', '--config', 'defaults.log=', 'log', '-r', '.', '--template', '{gitnode}']).strip()
+            txt = check_output(['git', '--git-dir=.hg/git', 'describe', '--long', '--tags', '--always', node]).strip()
         except:
-            print "Failed to retrieve version from hg"
-            return 1
+            print("Failed to retrieve version from hg")
+            return EX_IOERR
     else:
-        print "Unknown version control system."
-        return 1
+        print("Unknown version control system.")
+        return EX_USAGE
 
     # convert the git describe text to a version
-    pts = txt.split('-', 2)
-    full_vers = '%s.%s' % (pts[1], pts[2])
-    tag_vers = pts[1]
-    print 'full version:', full_vers
-    print ' tag version:', tag_vers
+    pts = txt.decode("ascii").split('-', 2)
+    print("full version: %s.%s" % (pts[1], pts[2]))
+    print(" tag version: %s" % pts[1])
 
-    return 0
+    return EX_OK
 
 if __name__ == '__main__':
-    sys.exit(main(sys.argv[1:]))
+    exit(main())

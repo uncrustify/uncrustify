@@ -72,7 +72,9 @@ typedef unsigned long long   UINT64;
 #include <fcntl.h>
 #include <direct.h>
 
+/* on windows the file permissions have no meaning thus neglect them */
 #define mkdir(x, y)    _mkdir(x)
+
 #define PATH_SEP    '\\'
 
 #endif /* WINDOWS_COMPAT_H_INCLUDED */

@@ -30,15 +30,12 @@
 #include <cerrno>
 #include "unc_ctype.h"
 #include <cstring>
+#include "uncrustify.h"
 
 
-/**
- * Check the backup-md5 file and copy the input file to a backup if needed.
- */
 int backup_copy_file(const char *filename, const vector<UINT8> &data)
 {
    char  newpath[1024];
-   char  buffer[128];
    char  md5_str_in[33];
    char  md5_str[33];
    UINT8 dig[16];
@@ -57,9 +54,10 @@ int backup_copy_file(const char *filename, const vector<UINT8> &data)
    snprintf(newpath, sizeof(newpath), "%s%s", filename, UNC_BACKUP_MD5_SUFFIX);
 
    FILE *thefile = fopen(newpath, "rb");
-   if (thefile != NULL)
+   if (thefile != nullptr)
    {
-      if (fgets(buffer, sizeof(buffer), thefile) != NULL)
+      char buffer[128];
+      if (fgets(buffer, sizeof(buffer), thefile) != nullptr)
       {
          for (int i = 0; buffer[i] != 0; i++)
          {
@@ -81,7 +79,7 @@ int backup_copy_file(const char *filename, const vector<UINT8> &data)
    if (memcmp(md5_str, md5_str_in, 32) == 0)
    {
       LOG_FMT(LNOTE, "%s: MD5 match for %s\n", __func__, filename);
-      return(SUCCESS);
+      return(EX_OK);
    }
 
    LOG_FMT(LNOTE, "%s: MD5 mismatch - backing up %s\n", __func__, filename);
@@ -90,16 +88,16 @@ int backup_copy_file(const char *filename, const vector<UINT8> &data)
    snprintf(newpath, sizeof(newpath), "%s%s", filename, UNC_BACKUP_SUFFIX);
 
    thefile = fopen(newpath, "wb");
-   if (thefile != NULL)
+   if (thefile != nullptr)
    {
-      int retval   = fwrite(&data[0], data.size(), 1, thefile);
-      int my_errno = errno;
+      size_t retval   = fwrite(&data[0], data.size(), 1, thefile);
+      int    my_errno = errno;
 
       fclose(thefile);
 
       if (retval == 1)
       {
-         return(SUCCESS);
+         return(EX_OK);
       }
       LOG_FMT(LERR, "fwrite(%s) failed: %s (%d)\n",
               newpath, strerror(my_errno), my_errno);
@@ -111,27 +109,23 @@ int backup_copy_file(const char *filename, const vector<UINT8> &data)
               newpath, strerror(errno), errno);
       cpd.error_count++;
    }
-   return(FAILURE);
+   return(EX_IOERR);
 } // backup_copy_file
 
 
-/**
- * This should be called after the file was written to disk.
- * It will be read back and an md5 will be calculated over it.
- */
 void backup_create_md5_file(const char *filename)
 {
-   UINT8 dig[16];
-   MD5   md5;
-   FILE  *thefile;
-   UINT8 buf[4096];
-   INT32 len;
-   char  newpath[1024];
+   UINT8  dig[16];
+   MD5    md5;
+   FILE   *thefile;
+   UINT8  buf[4096];
+   size_t len;
+   char   newpath[1024];
 
    md5.Init();
 
    thefile = fopen(filename, "rb");
-   if (thefile == NULL)
+   if (thefile == nullptr)
    {
       LOG_FMT(LERR, "%s: fopen(%s) failed: %s (%d)\n",
               __func__, filename, strerror(errno), errno);
@@ -150,7 +144,7 @@ void backup_create_md5_file(const char *filename)
    snprintf(newpath, sizeof(newpath), "%s%s", filename, UNC_BACKUP_MD5_SUFFIX);
 
    thefile = fopen(newpath, "wb");
-   if (thefile != NULL)
+   if (thefile != nullptr)
    {
       fprintf(thefile,
               "%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x  %s\n",

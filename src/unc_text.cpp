@@ -6,7 +6,11 @@
  * @license GPL v2+
  */
 #include "unc_text.h"
-#include "prototypes.h" /* encode_utf8() */
+#include "unc_ctype.h"
+#include "unicode.h" /* encode_utf8() */
+
+
+static void fix_len_idx(size_t size, size_t &idx, size_t &len);
 
 
 static void fix_len_idx(size_t size, size_t &idx, size_t &len)
@@ -33,18 +37,17 @@ void unc_text::update_logtext()
       /* make a pessimistic guess at the size */
       m_logtext.clear();
       m_logtext.reserve(m_chars.size() * 3);
-      for (value_type::iterator it = m_chars.begin(); it != m_chars.end(); ++it)
+      for (int m_char : m_chars)
       {
-         int val = *it;
-         if (*it == '\n')
+         if (m_char == '\n')
          {
-            val = 0x2424;
+            m_char = 0x2424;
          }
-         else if (*it == '\r')
+         else if (m_char == '\r')
          {
-            val = 0x240d;
+            m_char = 0x240d;
          }
-         encode_utf8(val, m_logtext);
+         encode_utf8(m_char, m_logtext);
       }
       m_logtext.push_back(0);
       m_logok = true;
@@ -60,15 +63,30 @@ int unc_text::compare(const unc_text &ref1, const unc_text &ref2, size_t len)
 
    for (idx = 0; (idx < len1) && (idx < len2) && (idx < len); idx++)
    {
-      if (ref1.m_chars[idx] != ref2.m_chars[idx])
+      // exactly the same character ?
+      if (ref1.m_chars[idx] == ref2.m_chars[idx])
       {
-         return(ref1.m_chars[idx] - ref2.m_chars[idx]);
+         continue;
       }
+
+      int diff = unc_tolower(ref1.m_chars[idx]) - unc_tolower(ref2.m_chars[idx]);
+      if (diff == 0)
+      {
+         // if we're comparing the same character but in different case
+         // we want to favor lowercase before uppercase (e.g. a before A)
+         // so the order is the reverse of ASCII order (we negate).
+         return(-(ref1.m_chars[idx] - ref2.m_chars[idx]));
+      }
+
+      // return the case-insensitive diff to sort alphabetically
+      return(diff);
    }
+
    if (idx == len)
    {
       return(0);
    }
+
    return(len1 - len2);
 }
 
@@ -95,7 +113,7 @@ bool unc_text::equals(const unc_text &ref) const
 const char *unc_text::c_str()
 {
    update_logtext();
-   return((const char *)&m_logtext[0]);
+   return(reinterpret_cast<const char *>(&m_logtext[0]));
 }
 
 
@@ -200,14 +218,14 @@ void unc_text::clear()
 
 void unc_text::insert(size_t idx, int ch)
 {
-   m_chars.insert(m_chars.begin() + (int)idx, ch);
+   m_chars.insert(m_chars.begin() + static_cast<int>(idx), ch);
    m_logok = false;
 }
 
 
 void unc_text::insert(size_t idx, const unc_text &ref)
 {
-   m_chars.insert(m_chars.begin() + (int)idx, ref.m_chars.begin(), ref.m_chars.end());
+   m_chars.insert(m_chars.begin() + static_cast<int>(idx), ref.m_chars.begin(), ref.m_chars.end());
    m_logok = false;
 }
 
@@ -295,14 +313,11 @@ bool unc_text::startswith(const unc_text &text, size_t idx) const
  */
 int unc_text::find(const char *text, size_t sidx) const
 {
-   // the length of 'text' we are looking for
-   size_t len = strlen(text);
-   // the length of the string we are looking in
-   size_t si = size();
+   size_t len = strlen(text); // the length of 'text' we are looking for
+   size_t si  = size();       // the length of the string we are looking in
 
-   if (si < len)
+   if (si < len)              // not enough place for 'text'
    {
-      // not enought place for 'text'
       return(-1);
    }
    size_t midx = size() - len;
@@ -318,9 +333,8 @@ int unc_text::find(const char *text, size_t sidx) const
             break;
          }
       }
-      if (match)
+      if (match) // found at position 'idx'
       {
-         // found at position 'idx'
          return(idx);
       }
    }
@@ -363,7 +377,7 @@ void unc_text::erase(size_t idx, size_t len)
 {
    if (len >= 1)
    {
-      m_chars.erase(m_chars.begin() + (int)idx, m_chars.begin() + (int)idx + (int)len);
+      m_chars.erase(m_chars.begin() + static_cast<int>(idx), m_chars.begin() + static_cast<int>(idx) + static_cast<int>(len));
    }
 }
 
@@ -378,9 +392,9 @@ int unc_text::replace(const char *oldtext, const unc_text &newtext)
    while (fidx >= 0)
    {
       rcnt++;
-      erase((size_t)fidx, olen);
-      insert((size_t)fidx, newtext);
-      fidx = find(oldtext, (size_t)fidx + newtext_size - olen + 1);
+      erase(static_cast<size_t>(fidx), olen);
+      insert(static_cast<size_t>(fidx), newtext);
+      fidx = find(oldtext, static_cast<size_t>(fidx) + newtext_size - olen + 1);
    }
    return(rcnt);
 }

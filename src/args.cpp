@@ -20,9 +20,9 @@ Args::Args(int argc, char **argv)
 {
    m_count  = argc;
    m_values = argv;
-   int len = (argc >> 3) + 1;
+   size_t len = (argc >> 3) + 1;
    m_used = new UINT8[len];
-   if (m_used != NULL)
+   if (m_used != nullptr)
    {
       memset(m_used, 0, len);
    }
@@ -31,10 +31,10 @@ Args::Args(int argc, char **argv)
 
 Args::~Args()
 {
-   if (m_used != NULL)
+   if (m_used != nullptr)
    {
       delete[] m_used;
-      m_used = NULL;
+      m_used = nullptr;
    }
    m_count = 0;
 }
@@ -48,11 +48,9 @@ Args::~Args()
  */
 bool Args::Present(const char *token)
 {
-   int idx;
-
-   if (token != NULL)
+   if (token != nullptr)
    {
-      for (idx = 0; idx < m_count; idx++)
+      for (size_t idx = 0; idx < m_count; idx++)
       {
          if (strcmp(token, m_values[idx]) == 0)
          {
@@ -61,7 +59,6 @@ bool Args::Present(const char *token)
          }
       }
    }
-
    return(false);
 }
 
@@ -74,7 +71,7 @@ bool Args::Present(const char *token)
  */
 const char *Args::Param(const char *token)
 {
-   int idx = 0;
+   size_t idx = 0;
 
    return(Params(token, idx));
 }
@@ -86,22 +83,18 @@ const char *Args::Param(const char *token)
  * @param token   The token string to match
  * @return        NULL or the pointer to the string
  */
-const char *Args::Params(const char *token, int &index)
+const char *Args::Params(const char *token, size_t &index)
 {
-   int idx;
-   int token_len;
-   int arg_len;
-
-   if (token == NULL)
+   if (token == nullptr)
    {
-      return(NULL);
+      return(nullptr);
    }
 
-   token_len = (int)strlen(token);
+   size_t token_len = strlen(token);
 
-   for (idx = index; idx < m_count; idx++)
+   for (size_t idx = index; idx < m_count; idx++)
    {
-      arg_len = (int)strlen(m_values[idx]);
+      size_t arg_len = strlen(m_values[idx]);
 
       if ((arg_len >= token_len) &&
           (memcmp(token, m_values[idx], token_len) == 0))
@@ -127,7 +120,7 @@ const char *Args::Params(const char *token, int &index)
       }
    }
 
-   return(NULL);
+   return(nullptr);
 } // Args::Params
 
 
@@ -136,9 +129,9 @@ const char *Args::Params(const char *token, int &index)
  *
  * @param idx  The index of the argument
  */
-bool Args::GetUsed(int idx)
+bool Args::GetUsed(size_t idx)
 {
-   if ((m_used != NULL) && (idx >= 0) && (idx < m_count))
+   if ((m_used != nullptr) && (idx > 0) && (idx < m_count))
    {
       return((m_used[idx >> 3] & (1 << (idx & 0x07))) != 0);
    }
@@ -151,9 +144,9 @@ bool Args::GetUsed(int idx)
  *
  * @param idx  The index of the argument
  */
-void Args::SetUsed(int idx)
+void Args::SetUsed(size_t idx)
 {
-   if ((m_used != NULL) && (idx >= 0) && (idx < m_count))
+   if ((m_used != nullptr) && (idx > 0) && (idx < m_count))
    {
       m_used[idx >> 3] |= (1 << (idx & 0x07));
    }
@@ -168,16 +161,14 @@ void Args::SetUsed(int idx)
  * @param idx  Pointer to the index
  * @return     NULL (done) or the pointer to the string
  */
-const char *Args::Unused(int &index)
+const char *Args::Unused(size_t &index)
 {
-   int idx;
-
-   if (m_used == NULL)
+   if (m_used == nullptr)
    {
-      return(NULL);
+      return(nullptr);
    }
 
-   for (idx = index; idx < m_count; idx++)
+   for (size_t idx = index; idx < m_count; idx++)
    {
       if (!GetUsed(idx))
       {
@@ -186,7 +177,7 @@ const char *Args::Unused(int &index)
       }
    }
    index = m_count;
-   return(NULL);
+   return(nullptr);
 }
 
 
@@ -202,13 +193,13 @@ const char *Args::Unused(int &index)
  * @param num_args   The number of items in args
  * @return           The number of arguments parsed (always <= num_args)
  */
-int Args::SplitLine(char *text, char *args[], int num_args)
+size_t Args::SplitLine(char *text, char *args[], size_t num_args)
 {
-   char cur_quote    = 0;
-   bool in_backslash = false;
-   bool in_arg       = false;
-   int  argc         = 0;
-   char *dest        = text;
+   char   cur_quote    = 0;
+   bool   in_backslash = false;
+   bool   in_arg       = false;
+   size_t argc         = 0;
+   char   *dest        = text;
 
 
    while ((*text != 0) && (argc <= num_args))

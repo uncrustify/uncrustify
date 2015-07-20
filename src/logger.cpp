@@ -10,12 +10,13 @@
  * @license GPL v2+
  */
 #include "logger.h"
-
+#include "uncrustify_types.h"
 #include <cstdio>
 #include <deque>
 #include <stdarg.h>
 #include "unc_ctype.h"
 #include "log_levels.h"
+
 
 struct log_fcn_info
 {
@@ -34,7 +35,7 @@ static std::deque<log_fcn_info> g_fq;
 struct log_buf
 {
    log_buf()
-      : log_file(0)
+      : log_file(nullptr)
       , sev(LSYS)
       , in_log(0)
       , buf_len(0)
@@ -54,6 +55,30 @@ static struct log_buf g_log;
 
 
 /**
+ * Flushes the cached log text to the stream
+ *
+ * @param force_nl   Append NL if not present
+ */
+static void log_flush(bool force_nl);
+
+
+/**
+ * Starts the log statement by flushing if needed and printing the header
+ *
+ * @param sev  The log severity
+ * @return     The number of bytes available
+ */
+static size_t log_start(log_sev_t sev);
+
+
+/**
+ * Cleans up after a log statement by detecting whether the log is done,
+ * (it ends in a newline) and possibly flushing the log.
+ */
+static void log_end(void);
+
+
+/**
  * Initializes the log subsystem - call this first.
  * This function sets the log stream and enables the top 3 sevs (0-2).
  *
@@ -67,7 +92,7 @@ void log_init(FILE *log_file)
    log_set_sev(LERR, true);
    log_set_sev(LWARN, true);
 
-   g_log.log_file = (log_file != NULL) ? log_file : stderr;
+   g_log.log_file = (log_file != nullptr) ? log_file : stderr;
 }
 
 
@@ -128,11 +153,6 @@ void log_get_mask(log_mask_t &mask)
 }
 
 
-/**
- * Flushes the cached log text to the stream
- *
- * @param force_nl   Append NL if not present
- */
 static void log_flush(bool force_nl)
 {
    if (g_log.buf_len > 0)
@@ -152,12 +172,6 @@ static void log_flush(bool force_nl)
 }
 
 
-/**
- * Starts the log statement by flushing if needed and printing the header
- *
- * @param sev  The log severity
- * @return     The number of bytes available
- */
 static size_t log_start(log_sev_t sev)
 {
    if (sev != g_log.sev)
@@ -173,7 +187,7 @@ static size_t log_start(log_sev_t sev)
    /* If not in a log, the buffer is empty. Add the header, if enabled. */
    if (!g_log.in_log && g_log.show_hdr)
    {
-      g_log.buf_len = (size_t)snprintf(g_log.buf, sizeof(g_log.buf), "<%d>", sev);
+      g_log.buf_len = static_cast<size_t>(snprintf(g_log.buf, sizeof(g_log.buf), "<%d>", sev));
    }
 
    size_t cap = (sizeof(g_log.buf) - 2) - g_log.buf_len;
@@ -182,14 +196,10 @@ static size_t log_start(log_sev_t sev)
 }
 
 
-/**
- * Cleans up after a log statement by detecting whether the log is done,
- * (it ends in a newline) and possibly flushing the log.
- */
 static void log_end(void)
 {
    g_log.in_log = (g_log.buf[g_log.buf_len - 1] != '\n');
-   if (!g_log.in_log || (g_log.buf_len > (int)(sizeof(g_log.buf) / 2)))
+   if (!g_log.in_log || (g_log.buf_len > static_cast<int>(sizeof(g_log.buf) / 2)))
    {
       log_flush(false);
    }
@@ -205,7 +215,7 @@ static void log_end(void)
  */
 void log_str(log_sev_t sev, const char *str, size_t len)
 {
-   if ((str == NULL) || (len <= 0) || !log_sev_on(sev))
+   if ((str == nullptr) || (len == 0) || !log_sev_on(sev))
    {
       return;
    }
@@ -226,7 +236,7 @@ void log_str(log_sev_t sev, const char *str, size_t len)
 
 
 /**
- * Logs a formatted string -- similiar to printf()
+ * Logs a formatted string -- similar to printf()
  *
  * @param sev     The severity
  * @param fmt     The format string
@@ -234,11 +244,7 @@ void log_str(log_sev_t sev, const char *str, size_t len)
  */
 void log_fmt(log_sev_t sev, const char *fmt, ...)
 {
-   va_list args;
-   size_t  len;
-   size_t  cap;
-
-   if ((fmt == NULL) || !log_sev_on(sev))
+   if ((fmt == nullptr) || !log_sev_on(sev))
    {
       return;
    }
@@ -247,11 +253,12 @@ void log_fmt(log_sev_t sev, const char *fmt, ...)
     * that would have been stored if the buffer was large enough instead of
     * the number of characters actually stored.
     */
-   cap = log_start(sev);
+   size_t cap = log_start(sev);
 
    /* Add on the variable log parameters to the log string */
+   va_list args;
    va_start(args, fmt);
-   len = (size_t)vsnprintf(&g_log.buf[g_log.buf_len], cap, fmt, args);
+   size_t  len = static_cast<size_t>(vsnprintf(&g_log.buf[g_log.buf_len], cap, fmt, args));
    va_end(args);
 
    if (len > 0)
@@ -277,16 +284,14 @@ void log_fmt(log_sev_t sev, const char *fmt, ...)
  */
 void log_hex(log_sev_t sev, const void *vdata, size_t len)
 {
-   const UINT8 *dat = (const UINT8 *)vdata;
-   size_t      idx;
-   char        buf[80];
-
-   if ((vdata == NULL) || !log_sev_on(sev))
+   if ((vdata == nullptr) || !log_sev_on(sev))
    {
       return;
    }
 
-   idx = 0;
+   char        buf[80];
+   const UINT8 *dat = static_cast<const UINT8 *>(vdata);
+   size_t      idx  = 0;
    while (len-- > 0)
    {
       buf[idx++] = to_hex_char(*dat >> 4);
@@ -319,19 +324,15 @@ void log_hex(log_sev_t sev, const void *vdata, size_t len)
  */
 void log_hex_blk(log_sev_t sev, const void *data, size_t len)
 {
-   static char buf[80] = "nnn | XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX | cccccccccccccccc\n";
-   const UINT8 *dat    = (const UINT8 *)data;
-   size_t      idx;
-   int         count;
-   int         str_idx = 0;
-   int         chr_idx = 0;
-   int         tmp;
-   int         total;
-
-   if ((data == NULL) || !log_sev_on(sev))
+   if ((data == nullptr) || !log_sev_on(sev))
    {
       return;
    }
+
+   static char buf[80] = "nnn | XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX | cccccccccccccccc\n";
+   const UINT8 *dat    = static_cast<const UINT8 *>(data);
+   int         str_idx = 0;
+   int         chr_idx = 0;
 
    /*
     * Dump the specified number of bytes in hex, 16 byte per line by
@@ -339,9 +340,9 @@ void log_hex_blk(log_sev_t sev, const void *data, size_t len)
     */
 
    /* Loop through the data of the current iov */
-   count = 0;
-   total = 0;
-   for (idx = 0; idx < len; idx++)
+   int count = 0;
+   int total = 0;
+   for (size_t idx = 0; idx < len; idx++)
    {
       if (count == 0)
       {
@@ -353,7 +354,7 @@ void log_hex_blk(log_sev_t sev, const void *data, size_t len)
          buf[2] = to_hex_char(total >> 4);
       }
 
-      tmp = dat[idx];
+      int tmp = dat[idx];
 
       buf[str_idx]     = to_hex_char(tmp >> 4);
       buf[str_idx + 1] = to_hex_char(tmp);
@@ -415,6 +416,8 @@ void log_func_call(int line)
 
 void log_func_stack(log_sev_t sev, const char *prefix, const char *suffix, size_t skip_cnt)
 {
+   UNUSED(skip_cnt);
+
    if (prefix)
    {
       LOG_FMT(sev, "%s", prefix);

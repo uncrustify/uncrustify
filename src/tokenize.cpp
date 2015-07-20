@@ -7,6 +7,7 @@
  * @author  Ben Gardner
  * @license GPL v2+
  */
+#include "tokenize.h"
 #include "uncrustify_types.h"
 #include "char_table.h"
 #include "prototypes.h"
@@ -14,8 +15,10 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
-#include <cerrno>
 #include "unc_ctype.h"
+#include "uncrustify.h"
+#include "keywords.h"
+
 
 struct tok_info
 {
@@ -27,10 +30,10 @@ struct tok_info
    {
    }
 
-   int last_ch;
-   int idx;
-   int row;
-   int col;
+   size_t last_ch;
+   size_t idx;
+   size_t row;
+   size_t col;
 };
 
 struct tok_ctx
@@ -69,32 +72,32 @@ struct tok_ctx
 
    bool more()
    {
-      return(c.idx < (int)data.size());
+      return(c.idx < data.size());
    }
 
 
-   int peek()
+   size_t peek()
    {
-      return(more() ? data[c.idx] : -1);
+      return(more() ? data[c.idx] : 0);
    }
 
 
-   int peek(int idx)
+   size_t peek(size_t idx)
    {
       idx += c.idx;
-      return((idx < (int)data.size()) ? data[idx] : -1);
+      return((idx < data.size()) ? data[idx] : 0);
    }
 
 
-   int get()
+   size_t get()
    {
       if (more())
       {
-         int ch = data[c.idx++];
+         size_t ch = data[c.idx++];
          switch (ch)
          {
          case '\t':
-            c.col = calc_next_tab_column(c.col, cpd.settings[UO_input_tab_size].n);
+            c.col = calc_next_tab_column(c.col, cpd.settings[UO_input_tab_size].u);
             break;
 
          case '\n':
@@ -117,11 +120,11 @@ struct tok_ctx
          c.last_ch = ch;
          return(ch);
       }
-      return(-1);
+      return(0);
    }
 
 
-   bool expect(int ch)
+   bool expect(size_t ch)
    {
       if (peek() == ch)
       {
@@ -136,7 +139,108 @@ struct tok_ctx
    tok_info          s; /* saved */
 };
 
-static bool parse_string(tok_ctx &ctx, chunk_t &pc, int quote_idx, bool allow_escape);
+
+/**
+ * Count the number of characters in a quoted string.
+ * The next bit of text starts with a quote char " or ' or <.
+ * Count the number of characters until the matching character.
+ *
+ * @param pc   The structure to update, str is an input.
+ * @return     Whether a string was parsed
+ */
+static bool parse_string(tok_ctx &ctx, chunk_t &pc, size_t quote_idx, bool allow_escape);
+
+
+/**
+ * Literal string, ends with single "
+ * Two "" don't end the string.
+ *
+ * @param pc   The structure to update, str is an input.
+ * @return     Whether a string was parsed
+ */
+static bool parse_cs_string(tok_ctx &ctx, chunk_t &pc);
+
+
+/**
+ * Interpolated strings start with $" end with a single "
+ * Double quotes are escaped by doubling.
+ * Need to track embedded { } pairs and ignore anything between.
+ *
+ * @param pc   The structure to update, str is an input.
+ * @return     Whether a string was parsed
+ */
+static bool parse_cs_interpolated_string(tok_ctx &ctx, chunk_t &pc);
+
+
+/**
+ * VALA verbatim string, ends with three quotes (""")
+ *
+ * @param pc   The structure to update, str is an input.
+ */
+static void parse_verbatim_string(tok_ctx &ctx, chunk_t &pc);
+
+
+static bool tag_compare(const deque<int> &d, size_t a_idx, size_t b_idx, size_t len);
+
+
+/**
+ * Parses a C++0x 'R' string. R"( xxx )" R"tag(  )tag" u8R"(x)" uR"(x)"
+ * Newlines may be in the string.
+ */
+static bool parse_cr_string(tok_ctx &ctx, chunk_t &pc, size_t q_idx);
+
+
+/**
+ * Count the number of whitespace characters.
+ *
+ * @param pc   The structure to update, str is an input.
+ * @return     Whether whitespace was parsed
+ */
+static bool parse_whitespace(tok_ctx &ctx, chunk_t &pc);
+
+
+/**
+ * Called when we hit a backslash.
+ * If there is nothing but whitespace until the newline, then this is a
+ * backslash newline
+ */
+static bool parse_bs_newline(tok_ctx &ctx, chunk_t &pc);
+
+
+/**
+ * Parses any number of tab or space chars followed by a newline.
+ * Does not change pc.len if a newline isn't found.
+ * This is not the same as parse_whitespace() because it only consumes until
+ * a single newline is encountered.
+ */
+static bool parse_newline(tok_ctx &ctx);
+
+
+/**
+ * PAWN #define is different than C/C++.
+ *   #define PATTERN REPLACEMENT_TEXT
+ * The PATTERN may not contain a space or '[' or ']'.
+ * A generic whitespace check should be good enough.
+ * Do not change the pattern.
+ */
+static void parse_pawn_pattern(tok_ctx &ctx, chunk_t &pc, c_token_t tt);
+
+
+static bool parse_ignored(tok_ctx &ctx, chunk_t &pc);
+
+
+/**
+ * Skips the next bit of whatever and returns the type of block.
+ *
+ * pc.str is the input text.
+ * pc.len in the output length.
+ * pc.type is the output type
+ * pc.column is output column
+ *
+ * @param pc      The structure to update, str is an input.
+ * @return        true/false - whether anything was parsed
+ */
+static bool parse_next(tok_ctx &ctx, chunk_t &pc);
 
 
 /**
@@ -160,15 +264,79 @@ static bool parse_string(tok_ctx &ctx, chunk_t &pc, int quote_idx, bool allow_es
  * @param pc   The structure to update, str is an input.
  * @return     Whether a string was parsed
  */
+static bool d_parse_string(tok_ctx &ctx, chunk_t &pc);
+
+
+/**
+ * Figure of the length of the comment at text.
+ * The next bit of text starts with a '/', so it might be a comment.
+ * There are three types of comments:
+ *  - C comments that start with  '/ *' and end with '* /'
+ *  - C++ comments that start with //
+ *  - D nestable comments '/+' '+/'
+ *
+ * @param pc   The structure to update, str is an input.
+ * @return     Whether a comment was parsed
+ */
+static bool parse_comment(tok_ctx &ctx, chunk_t &pc);
+
+
+/**
+ * Figure of the length of the code placeholder at text, if present.
+ * This is only for Xcode which sometimes inserts temporary code placeholder chunks, which in plaintext <#look like this#>.
+ *
+ * @param pc   The structure to update, str is an input.
+ * @return     Whether a placeholder was parsed.
+ */
+static bool parse_code_placeholder(tok_ctx &ctx, chunk_t &pc);
+
+
+/**
+ * Parse any attached suffix, which may be a user-defined literal suffix.
+ * If for a string, explicitly exclude common format and scan specifiers, ie,
+ * PRIx32 and SCNx64.
+ */
+static void parse_suffix(tok_ctx &ctx, chunk_t &pc, bool forstring);
+
+
+static bool is_bin(int ch);
+static bool is_bin_(int ch);
+static bool is_oct(int ch);
+static bool is_oct_(int ch);
+static bool is_dec(int ch);
+static bool is_dec_(int ch);
+static bool is_hex(int ch);
+static bool is_hex_(int ch);
+
+
+/**
+ * Count the number of characters in the number.
+ * The next bit of text starts with a number (0-9 or '.'), so it is a number.
+ * Count the number of characters in the number.
+ *
+ * This should cover all number formats for all languages.
+ * Note that this is not a strict parser. It will happily parse numbers in
+ * an invalid format.
+ *
+ * For example, only D allows underscores in the numbers, but they are
+ * allowed in all formats.
+ *
+ * @param pc   The structure to update, str is an input.
+ * @return     Whether a number was parsed
+ */
+static bool parse_number(tok_ctx &ctx, chunk_t &pc);
+
+
 static bool d_parse_string(tok_ctx &ctx, chunk_t &pc)
 {
-   int ch = ctx.peek();
+   size_t ch = ctx.peek();
 
    if ((ch == '"') || (ch == '\'') || (ch == '`'))
    {
       return(parse_string(ctx, pc, 0, true));
    }
-   else if (ch == '\\')
+
+   if (ch == '\\')
    {
       ctx.save();
       int cnt;
@@ -263,43 +431,34 @@ static bool d_parse_string(tok_ctx &ctx, chunk_t &pc)
 } // d_parse_string
 
 
-// /**
-//  * A string-in-string search.  Like strstr() with a haystack length.
-//  */
-// static const char *str_search(const char *needle, const char *haystack, int haystack_len)
-// {
-//    int needle_len = strlen(needle);
-//
-//    while (haystack_len-- >= needle_len)
-//    {
-//       if (memcmp(needle, haystack, needle_len) == 0)
-//       {
-//          return(haystack);
-//       }
-//       haystack++;
-//    }
-//    return(NULL);
-// }
+#if 0
 
 
 /**
- * Figure of the length of the comment at text.
- * The next bit of text starts with a '/', so it might be a comment.
- * There are three types of comments:
- *  - C comments that start with  '/ *' and end with '* /'
- *  - C++ comments that start with //
- *  - D nestable comments '/+' '+/'
- *
- * @param pc   The structure to update, str is an input.
- * @return     Whether a comment was parsed
+ * A string-in-string search.  Like strstr() with a haystack length.
  */
+static const char *str_search(const char *needle, const char *haystack, int haystack_len)
+{
+   int needle_len = strlen(needle);
+
+   while (haystack_len-- >= needle_len)
+   {
+      if (memcmp(needle, haystack, needle_len) == 0)
+      {
+         return(haystack);
+      }
+      haystack++;
+   }
+   return(NULL);
+}
+#endif
+
+
 static bool parse_comment(tok_ctx &ctx, chunk_t &pc)
 {
-   int  ch;
-   bool is_d    = (cpd.lang_flags & LANG_D) != 0;          // forcing value to bool
-   bool is_cs   = (cpd.lang_flags & LANG_CS) != 0;         // forcing value to bool
-   int  d_level = 0;
-   int  bs_cnt;
+   bool   is_d    = (cpd.lang_flags & LANG_D) != 0;          // forcing value to bool
+   bool   is_cs   = (cpd.lang_flags & LANG_CS) != 0;         // forcing value to bool
+   size_t d_level = 0;
 
    /* does this start with '/ /' or '/ *' or '/ +' (d) */
    if ((ctx.peek() != '/') ||
@@ -313,7 +472,7 @@ static bool parse_comment(tok_ctx &ctx, chunk_t &pc)
 
    /* account for opening two chars */
    pc.str = ctx.get();   /* opening '/' */
-   ch     = ctx.get();
+   size_t ch = ctx.get();
    pc.str.append(ch);    /* second char */
 
    if (ch == '/')
@@ -321,7 +480,7 @@ static bool parse_comment(tok_ctx &ctx, chunk_t &pc)
       pc.type = CT_COMMENT_CPP;
       while (true)
       {
-         bs_cnt = 0;
+         int bs_cnt = 0;
          while (ctx.more())
          {
             ch = ctx.peek();
@@ -425,7 +584,7 @@ static bool parse_comment(tok_ctx &ctx, chunk_t &pc)
 
             tok_info ss;
             ctx.save(ss);
-            int      oldsize = pc.str.size();
+            size_t   oldsize = pc.str.size();
 
             /* If there is another C comment right after this one, combine them */
             while ((ctx.peek() == ' ') || (ctx.peek() == '\t'))
@@ -471,46 +630,39 @@ static bool parse_comment(tok_ctx &ctx, chunk_t &pc)
    if (cpd.unc_off)
    {
       const char *ontext = cpd.settings[UO_enable_processing_cmt].str;
-      if ((ontext == NULL) || !ontext[0])
+      if ((ontext == nullptr) || !ontext[0])
       {
          ontext = UNCRUSTIFY_ON_TEXT;
       }
 
       if (pc.str.find(ontext) >= 0)
       {
-         LOG_FMT(LBCTRL, "Found '%s' on line %d\n", ontext, pc.orig_line);
+         LOG_FMT(LBCTRL, "Found '%s' on line %zu\n", ontext, pc.orig_line);
          cpd.unc_off = false;
       }
    }
    else
    {
       const char *offtext = cpd.settings[UO_disable_processing_cmt].str;
-      if ((offtext == NULL) || !offtext[0])
+      if ((offtext == nullptr) || !offtext[0])
       {
          offtext = UNCRUSTIFY_OFF_TEXT;
       }
 
       if (pc.str.find(offtext) >= 0)
       {
-         LOG_FMT(LBCTRL, "Found '%s' on line %d\n", offtext, pc.orig_line);
+         LOG_FMT(LBCTRL, "Found '%s' on line %zu\n", offtext, pc.orig_line);
          cpd.unc_off = true;
+         // Issue #842
+         cpd.unc_off_used = true;
       }
    }
    return(true);
 } // parse_comment
 
 
-/**
- * Figure of the length of the code placeholder at text, if present.
- * This is only for Xcode which sometimes inserts temporary code placeholder chunks, which in plaintext <#look like this#>.
- *
- * @param pc   The structure to update, str is an input.
- * @return     Whether a placeholder was parsed.
- */
 static bool parse_code_placeholder(tok_ctx &ctx, chunk_t &pc)
 {
-   int last2 = 0, last1 = 0;
-
    if ((ctx.peek() != '<') || (ctx.peek(1) != '#'))
    {
       return(false);
@@ -523,9 +675,10 @@ static bool parse_code_placeholder(tok_ctx &ctx, chunk_t &pc)
    pc.str.append(ctx.get());
 
    /* grab everything until '#>', fail if not found. */
+   size_t last1 = 0;
    while (ctx.more())
    {
-      last2 = last1;
+      size_t last2 = last1;
       last1 = ctx.get();
       pc.str.append(last1);
 
@@ -540,28 +693,24 @@ static bool parse_code_placeholder(tok_ctx &ctx, chunk_t &pc)
 }
 
 
-/**
- * Parse any attached suffix, which may be a user-defined literal suffix.
- * If for a string, explicitly exclude common format and scan specifiers, ie,
- * PRIx32 and SCNx64.
- */
 static void parse_suffix(tok_ctx &ctx, chunk_t &pc, bool forstring = false)
 {
    if (CharTable::IsKw1(ctx.peek()))
    {
-      int      slen    = 0;
-      int      oldsize = pc.str.size();
-      tok_info ss;
+      size_t slen    = 0;
+      size_t oldsize = pc.str.size();
 
       /* don't add the suffix if we see L" or L' or S" */
-      int p1 = ctx.peek();
-      int p2 = ctx.peek(1);
+      size_t p1 = ctx.peek();
+      size_t p2 = ctx.peek(1);
       if (forstring &&
           (((p1 == 'L') && ((p2 == '"') || (p2 == '\''))) ||
            ((p1 == 'S') && (p2 == '"'))))
       {
          return;
       }
+
+      tok_info ss;
       ctx.save(ss);
       while (ctx.more() && CharTable::IsKw2(ctx.peek()))
       {
@@ -630,27 +779,8 @@ static bool is_hex_(int ch)
 }
 
 
-/**
- * Count the number of characters in the number.
- * The next bit of text starts with a number (0-9 or '.'), so it is a number.
- * Count the number of characters in the number.
- *
- * This should cover all number formats for all languages.
- * Note that this is not a strict parser. It will happily parse numbers in
- * an invalid format.
- *
- * For example, only D allows underscores in the numbers, but they are
- * allowed in all formats.
- *
- * @param pc   The structure to update, str is an input.
- * @return     Whether a number was parsed
- */
 static bool parse_number(tok_ctx &ctx, chunk_t &pc)
 {
-   int  tmp;
-   bool is_float;
-   bool did_hex = false;
-
    /* A number must start with a digit or a dot, followed by a digit */
    if (!is_dec(ctx.peek()) &&
        ((ctx.peek() != '.') || !is_dec(ctx.peek(1))))
@@ -658,7 +788,7 @@ static bool parse_number(tok_ctx &ctx, chunk_t &pc)
       return(false);
    }
 
-   is_float = (ctx.peek() == '.');
+   bool is_float = (ctx.peek() == '.');
    if (is_float && (ctx.peek(1) == '.'))
    {
       return(false);
@@ -667,10 +797,11 @@ static bool parse_number(tok_ctx &ctx, chunk_t &pc)
    /* Check for Hex, Octal, or Binary
     * Note that only D and Pawn support binary, but who cares?
     */
+   bool did_hex = false;
    if (ctx.peek() == '0')
    {
       pc.str.append(ctx.get());  /* store the '0' */
-      int     ch;
+      size_t  ch;
       chunk_t pc_temp;
       size_t  pc_length;
 
@@ -717,7 +848,7 @@ static bool parse_number(tok_ctx &ctx, chunk_t &pc)
             } while (is_bin_(ctx.peek()));
             break;
 
-         case '0':                /* octal or decimal */
+         case '0':               /* octal or decimal */
          case '1':
          case '2':
          case '3':
@@ -774,7 +905,7 @@ static bool parse_number(tok_ctx &ctx, chunk_t &pc)
     * C/C++/D/Java: eEpP
     * C#/Pawn:      eE
     */
-   tmp = unc_toupper(ctx.peek());
+   size_t tmp = unc_toupper(ctx.peek());
    if ((tmp == 'E') || (tmp == 'P'))
    {
       is_float = true;
@@ -802,12 +933,12 @@ static bool parse_number(tok_ctx &ctx, chunk_t &pc)
     */
    while (1)
    {
-      tmp = unc_toupper(ctx.peek());
-      if ((tmp == 'I') || (tmp == 'F') || (tmp == 'D') || (tmp == 'M'))
+      size_t tmp2 = unc_toupper(ctx.peek());
+      if ((tmp2 == 'I') || (tmp2 == 'F') || (tmp2 == 'D') || (tmp2 == 'M'))
       {
          is_float = true;
       }
-      else if ((tmp != 'L') && (tmp != 'U'))
+      else if ((tmp2 != 'L') && (tmp2 != 'U'))
       {
          break;
       }
@@ -832,21 +963,11 @@ static bool parse_number(tok_ctx &ctx, chunk_t &pc)
 } // parse_number
 
 
-/**
- * Count the number of characters in a quoted string.
- * The next bit of text starts with a quote char " or ' or <.
- * Count the number of characters until the matching character.
- *
- * @param pc   The structure to update, str is an input.
- * @return     Whether a string was parsed
- */
-static bool parse_string(tok_ctx &ctx, chunk_t &pc, int quote_idx, bool allow_escape)
+static bool parse_string(tok_ctx &ctx, chunk_t &pc, size_t quote_idx, bool allow_escape)
 {
-   bool escaped = 0;
-   int  end_ch;
-   char escape_char        = cpd.settings[UO_string_escape_char].n;
-   char escape_char2       = cpd.settings[UO_string_escape_char2].n;
-   bool should_escape_tabs = cpd.settings[UO_string_replace_tab_chars].b && (cpd.lang_flags & LANG_ALLC);
+   size_t escape_char        = cpd.settings[UO_string_escape_char].u;
+   size_t escape_char2       = cpd.settings[UO_string_escape_char2].u;
+   bool   should_escape_tabs = cpd.settings[UO_string_replace_tab_chars].b && (cpd.lang_flags & LANG_ALLC);
 
    pc.str.clear();
    while (quote_idx-- > 0)
@@ -855,13 +976,14 @@ static bool parse_string(tok_ctx &ctx, chunk_t &pc, int quote_idx, bool allow_es
    }
 
    pc.type = CT_STRING;
-   end_ch  = CharTable::Get(ctx.peek()) & 0xff;
+   size_t end_ch = CharTable::Get(ctx.peek()) & 0xff;
    pc.str.append(ctx.get());  /* store the " */
 
+   bool escaped = false;
    while (ctx.more())
    {
-      int lastcol = ctx.c.col;
-      int ch      = ctx.get();
+      size_t lastcol = ctx.c.col;
+      size_t ch      = ctx.get();
 
       if ((ch == '\t') && should_escape_tabs)
       {
@@ -876,7 +998,7 @@ static bool parse_string(tok_ctx &ctx, chunk_t &pc, int quote_idx, bool allow_es
       {
          pc.nl_count++;
          pc.type = CT_STRING_MULTI;
-         escaped = 0;
+         escaped = false;
          continue;
       }
       if ((ch == '\r') && (ctx.peek() != '\n'))
@@ -884,7 +1006,7 @@ static bool parse_string(tok_ctx &ctx, chunk_t &pc, int quote_idx, bool allow_es
          pc.str.append(ctx.get());
          pc.nl_count++;
          pc.type = CT_STRING_MULTI;
-         escaped = 0;
+         escaped = false;
          continue;
       }
       if (!escaped)
@@ -913,13 +1035,6 @@ static bool parse_string(tok_ctx &ctx, chunk_t &pc, int quote_idx, bool allow_es
 } // parse_string
 
 
-/**
- * Literal string, ends with single "
- * Two "" don't end the string.
- *
- * @param pc   The structure to update, str is an input.
- * @return     Whether a string was parsed
- */
 static bool parse_cs_string(tok_ctx &ctx, chunk_t &pc)
 {
    pc.str = ctx.get();
@@ -931,7 +1046,7 @@ static bool parse_cs_string(tok_ctx &ctx, chunk_t &pc)
    /* go until we hit a zero (end of file) or a single " */
    while (ctx.more())
    {
-      int ch = ctx.get();
+      size_t ch = ctx.get();
       pc.str.append(ch);
       if ((ch == '\n') || (ch == '\r'))
       {
@@ -944,10 +1059,10 @@ static bool parse_cs_string(tok_ctx &ctx, chunk_t &pc)
          {
             cpd.warned_unable_string_replace_tab_chars = true;
 
-            log_sev_t warnlevel = (log_sev_t)cpd.settings[UO_warn_level_tabs_found_in_verbatim_string_literals].n;
+            log_sev_t warnlevel = static_cast<log_sev_t>(cpd.settings[UO_warn_level_tabs_found_in_verbatim_string_literals].u);
 
             /* a tab char can't be replaced with \\t because escapes don't work in here-strings. best we can do is warn. */
-            LOG_FMT(warnlevel, "%s:%d Detected non-replaceable tab char in literal string\n", cpd.filename, pc.orig_line);
+            LOG_FMT(warnlevel, "%s:%zu Detected non-replaceable tab char in literal string\n", cpd.filename, pc.orig_line);
             if (warnlevel < LWARN)
             {
                cpd.error_count++;
@@ -971,14 +1086,6 @@ static bool parse_cs_string(tok_ctx &ctx, chunk_t &pc)
 } // parse_cs_string
 
 
-/**
- * Interpolated strings start with $" end with a single "
- * Double quotes are escaped by doubling.
- * Need to track embedded { } pairs and ignore anything between.
- *
- * @param pc   The structure to update, str is an input.
- * @return     Whether a string was parsed
- */
 static bool parse_cs_interpolated_string(tok_ctx &ctx, chunk_t &pc)
 {
    pc.str = ctx.get();        // '$'
@@ -990,7 +1097,7 @@ static bool parse_cs_interpolated_string(tok_ctx &ctx, chunk_t &pc)
    /* go until we hit a zero (end of file) or a single " */
    while (ctx.more())
    {
-      int ch = ctx.get();
+      size_t ch = ctx.get();
       pc.str.append(ch);
 
       /* if we are inside a { }, then we only look for a } */
@@ -1041,11 +1148,6 @@ static bool parse_cs_interpolated_string(tok_ctx &ctx, chunk_t &pc)
 } // parse_cs_interpolated_string
 
 
-/**
- * VALA verbatim string, ends with three quotes (""")
- *
- * @param pc   The structure to update, str is an input.
- */
 static void parse_verbatim_string(tok_ctx &ctx, chunk_t &pc)
 {
    pc.type = CT_STRING;
@@ -1058,7 +1160,7 @@ static void parse_verbatim_string(tok_ctx &ctx, chunk_t &pc)
    /* go until we hit a zero (end of file) or a """ */
    while (ctx.more())
    {
-      int ch = ctx.get();
+      size_t ch = ctx.get();
       pc.str.append(ch);
       if ((ch == '"') &&
           (ctx.peek() == '"') &&
@@ -1077,7 +1179,7 @@ static void parse_verbatim_string(tok_ctx &ctx, chunk_t &pc)
 }
 
 
-static bool tag_compare(const deque<int> &d, int a_idx, int b_idx, int len)
+static bool tag_compare(const deque<int> &d, size_t a_idx, size_t b_idx, size_t len)
 {
    if (a_idx != b_idx)
    {
@@ -1093,21 +1195,16 @@ static bool tag_compare(const deque<int> &d, int a_idx, int b_idx, int len)
 }
 
 
-/**
- * Parses a C++0x 'R' string. R"( xxx )" R"tag(  )tag" u8R"(x)" uR"(x)"
- * Newlines may be in the string.
- */
-static bool parse_cr_string(tok_ctx &ctx, chunk_t &pc, int q_idx)
+static bool parse_cr_string(tok_ctx &ctx, chunk_t &pc, size_t q_idx)
 {
-   int cnt;
-   int tag_idx = ctx.c.idx + q_idx + 1;
-   int tag_len = 0;
+   size_t tag_idx = ctx.c.idx + q_idx + 1;
+   size_t tag_len = 0;
 
    ctx.save();
 
    /* Copy the prefix + " to the string */
    pc.str.clear();
-   cnt = q_idx + 1;
+   int cnt = q_idx + 1;
    while (cnt--)
    {
       pc.str.append(ctx.get());
@@ -1165,7 +1262,6 @@ static bool parse_cr_string(tok_ctx &ctx, chunk_t &pc, int q_idx)
  */
 bool parse_word(tok_ctx &ctx, chunk_t &pc, bool skipcheck)
 {
-   int             ch;
    static unc_text intr_txt("@interface");
 
    /* The first character is already valid */
@@ -1174,7 +1270,7 @@ bool parse_word(tok_ctx &ctx, chunk_t &pc, bool skipcheck)
 
    while (ctx.more())
    {
-      ch = ctx.peek();
+      size_t ch = ctx.peek();
       if (CharTable::IsKw2(ch))
       {
          pc.str.append(ctx.get());
@@ -1214,6 +1310,12 @@ bool parse_word(tok_ctx &ctx, chunk_t &pc, bool skipcheck)
       else
       {
          pc.type = CT_MACRO;
+         if (cpd.settings[UO_pp_ignore_define_body].b)
+         {
+            // We are setting the PP_IGNORE preproc state because the following
+            // chunks are part of the macro body and will have to be ignored.
+            cpd.in_preproc = CT_PP_IGNORE;
+         }
       }
    }
    else
@@ -1228,6 +1330,16 @@ bool parse_word(tok_ctx &ctx, chunk_t &pc, bool skipcheck)
       {
          /* Turn it into a keyword now */
          pc.type = find_keyword_type(pc.text(), pc.str.size());
+
+         /* Special pattern: if we're trying to redirect a preprocessor directive to PP_IGNORE,
+          * then ensure we're actually part of a preprocessor before doing the swap, or we'll
+          * end up with a function named 'define' as PP_IGNORE. This is necessary because with
+          * the config 'set' feature, there's no way to do a pair of tokens as a word
+          * substitution. */
+         if (pc.type == CT_PP_IGNORE && !cpd.in_preproc)
+         {
+            pc.type = find_keyword_type(pc.text(), pc.str.size());
+         }
       }
    }
 
@@ -1235,16 +1347,10 @@ bool parse_word(tok_ctx &ctx, chunk_t &pc, bool skipcheck)
 } // parse_word
 
 
-/**
- * Count the number of whitespace characters.
- *
- * @param pc   The structure to update, str is an input.
- * @return     Whether whitespace was parsed
- */
 static bool parse_whitespace(tok_ctx &ctx, chunk_t &pc)
 {
-   int nl_count = 0;
-   int ch       = -2;
+   size_t nl_count = 0;
+   size_t ch       = 0;
 
    /* REVISIT: use a better whitespace detector? */
    while (ctx.more() && unc_isspace(ctx.peek()))
@@ -1275,7 +1381,7 @@ static bool parse_whitespace(tok_ctx &ctx, chunk_t &pc)
          break;
 
       case '\t':
-         pc.orig_prev_sp += calc_next_tab_column(cpd.column, cpd.settings[UO_input_tab_size].n) - cpd.column;
+         pc.orig_prev_sp += calc_next_tab_column(cpd.column, cpd.settings[UO_input_tab_size].u) - cpd.column;
          break;
 
       case ' ':
@@ -1287,7 +1393,7 @@ static bool parse_whitespace(tok_ctx &ctx, chunk_t &pc)
       }
    }
 
-   if (ch != -2)
+   if (ch != 0)
    {
       pc.str.clear();
       pc.nl_count  = nl_count;
@@ -1299,17 +1405,12 @@ static bool parse_whitespace(tok_ctx &ctx, chunk_t &pc)
 } // parse_whitespace
 
 
-/**
- * Called when we hit a backslash.
- * If there is nothing but whitespace until the newline, then this is a
- * backslash newline
- */
 static bool parse_bs_newline(tok_ctx &ctx, chunk_t &pc)
 {
    ctx.save();
    ctx.get(); /* skip the '\' */
 
-   int ch;
+   size_t ch;
    while (ctx.more() && unc_isspace(ch = ctx.peek()))
    {
       ctx.get();
@@ -1331,12 +1432,6 @@ static bool parse_bs_newline(tok_ctx &ctx, chunk_t &pc)
 }
 
 
-/**
- * Parses any number of tab or space chars followed by a newline.
- * Does not change pc.len if a newline isn't found.
- * This is not the same as parse_whitespace() because it only consumes until
- * a single newline is encountered.
- */
 static bool parse_newline(tok_ctx &ctx)
 {
    ctx.save();
@@ -1360,13 +1455,6 @@ static bool parse_newline(tok_ctx &ctx)
 }
 
 
-/**
- * PAWN #define is different than C/C++.
- *   #define PATTERN REPLACEMENT_TEXT
- * The PATTERN may not contain a space or '[' or ']'.
- * A generic whitespace check should be good enough.
- * Do not change the pattern.
- */
 static void parse_pawn_pattern(tok_ctx &ctx, chunk_t &pc, c_token_t tt)
 {
    pc.str.clear();
@@ -1376,7 +1464,7 @@ static void parse_pawn_pattern(tok_ctx &ctx, chunk_t &pc, c_token_t tt)
       /* end the pattern on an escaped newline */
       if (ctx.peek() == '\\')
       {
-         int ch = ctx.peek(1);
+         size_t ch = ctx.peek(1);
          if ((ch == '\n') || (ch == '\r'))
          {
             break;
@@ -1389,7 +1477,7 @@ static void parse_pawn_pattern(tok_ctx &ctx, chunk_t &pc, c_token_t tt)
 
 static bool parse_ignored(tok_ctx &ctx, chunk_t &pc)
 {
-   int nl_count = 0;
+   size_t nl_count = 0;
 
    /* Parse off newlines/blank lines */
    while (parse_newline(ctx))
@@ -1418,9 +1506,9 @@ static bool parse_ignored(tok_ctx &ctx, chunk_t &pc)
       return(false);
    }
    /* HACK: turn on if we find '#endasm' or '#pragma' and 'endasm' separated by blanks */
-   if ( ( ( (pc.str.find("#pragma ") >= 0) || (pc.str.find("#pragma	") >= 0) ) &&
-          ( (pc.str.find(" endasm") >= 0) || (pc.str.find("	endasm") >= 0) ) ) ||
-        (pc.str.find("#endasm") >= 0) )
+   if ((((pc.str.find("#pragma ") >= 0) || (pc.str.find("#pragma	") >= 0)) &&
+        ((pc.str.find(" endasm") >= 0) || (pc.str.find("	endasm") >= 0))) ||
+       (pc.str.find("#endasm") >= 0))
    {
       cpd.unc_off = false;
       ctx.restore();
@@ -1429,7 +1517,7 @@ static bool parse_ignored(tok_ctx &ctx, chunk_t &pc)
    }
    /* Note that we aren't actually making sure this is in a comment, yet */
    const char *ontext = cpd.settings[UO_enable_processing_cmt].str;
-   if (ontext == NULL)
+   if (ontext == nullptr)
    {
       ontext = UNCRUSTIFY_ON_TEXT;
    }
@@ -1470,24 +1558,8 @@ static bool parse_ignored(tok_ctx &ctx, chunk_t &pc)
 } // parse_ignored
 
 
-/**
- * Skips the next bit of whatever and returns the type of block.
- *
- * pc.str is the input text.
- * pc.len in the output length.
- * pc.type is the output type
- * pc.column is output column
- *
- * @param pc      The structure to update, str is an input.
- * @return        true/false - whether anything was parsed
- */
 static bool parse_next(tok_ctx &ctx, chunk_t &pc)
 {
-   const chunk_tag_t *punc;
-   int               ch1;
-
-   //chunk_t           pc_temp;
-
    if (!ctx.more())
    {
       //fprintf(stderr, "All done!\n");
@@ -1530,10 +1602,10 @@ static bool parse_next(tok_ctx &ctx, chunk_t &pc)
       ctx.save(ss);
       /* Chunk to a newline or comment */
       pc.type = CT_PREPROC_BODY;
-      int last = 0;
+      size_t last = 0;
       while (ctx.more())
       {
-         int ch = ctx.peek();
+         size_t ch = ctx.peek();
 
          if ((ch == '\n') || (ch == '\r'))
          {
@@ -1618,12 +1690,12 @@ static bool parse_next(tok_ctx &ctx, chunk_t &pc)
    }
 
    /* handle C++0x strings u8"x" u"x" U"x" R"x" u8R"XXX(I'm a "raw UTF-8" string.)XXX" */
-   int ch = ctx.peek();
+   size_t ch = ctx.peek();
    if ((cpd.lang_flags & LANG_CPP) &&
        ((ch == 'u') || (ch == 'U') || (ch == 'R')))
    {
-      int  idx     = 0;
-      bool is_real = false;
+      size_t idx     = 0;
+      bool   is_real = false;
 
       if ((ch == 'u') && (ctx.peek(1) == '8'))
       {
@@ -1677,8 +1749,9 @@ static bool parse_next(tok_ctx &ctx, chunk_t &pc)
             parse_string(ctx, pc, 1, (ctx.peek() == '!'));
             return(true);
          }
-         else if (((ctx.peek(1) == '\\') || (ctx.peek(1) == '!')) &&
-                  (ctx.peek(2) == '"'))
+
+         if (((ctx.peek(1) == '\\') || (ctx.peek(1) == '!'))
+             && (ctx.peek(2) == '"'))
          {
             parse_string(ctx, pc, 2, false);
             return(true);
@@ -1722,8 +1795,8 @@ static bool parse_next(tok_ctx &ctx, chunk_t &pc)
       /* Not D stuff */
 
       /* Check for L'a', L"abc", 'a', "abc", <abc> strings */
-      ch  = ctx.peek();
-      ch1 = ctx.peek(1);
+      ch = ctx.peek();
+      size_t ch1 = ctx.peek(1);
       if ((((ch == 'L') || (ch == 'S')) &&
            ((ch1 == '"') || (ch1 == '\''))) ||
           (ch == '"') ||
@@ -1748,14 +1821,15 @@ static bool parse_next(tok_ctx &ctx, chunk_t &pc)
    /* Check for Objective C literals and VALA identifiers ('@1', '@if')*/
    if ((cpd.lang_flags & (LANG_OC | LANG_VALA)) && (ctx.peek() == '@'))
    {
-      int nc = ctx.peek(1);
+      size_t nc = ctx.peek(1);
       if ((nc == '"') || (nc == '\''))
       {
          /* literal string */
          parse_string(ctx, pc, 1, true);
          return(true);
       }
-      else if ((nc >= '0') && (nc <= '9'))
+
+      if ((nc >= '0') && (nc <= '9'))
       {
          /* literal number */
          pc.str.append(ctx.get());  /* store the '@' */
@@ -1779,7 +1853,8 @@ static bool parse_next(tok_ctx &ctx, chunk_t &pc)
    punc_txt[1] = ctx.peek(1);
    punc_txt[2] = ctx.peek(2);
    punc_txt[3] = ctx.peek(3);
-   if ((punc = find_punctuator(punc_txt, cpd.lang_flags)) != NULL)
+   const chunk_tag_t *punc;
+   if ((punc = find_punctuator(punc_txt, cpd.lang_flags)) != nullptr)
    {
       int cnt = strlen(punc->tag);
       while (cnt--)
@@ -1795,7 +1870,7 @@ static bool parse_next(tok_ctx &ctx, chunk_t &pc)
    pc.type = CT_UNKNOWN;
    pc.str.append(ctx.get());
 
-   LOG_FMT(LWARN, "%s:%d Garbage in col %d: %x\n",
+   LOG_FMT(LWARN, "%s:%zu Garbage in col %d: %x\n",
            cpd.filename, pc.orig_line, (int)ctx.c.col, pc.str[0]);
    cpd.error_count++;
    return(true);
@@ -1815,15 +1890,15 @@ static bool parse_next(tok_ctx &ctx, chunk_t &pc)
  */
 void tokenize(const deque<int> &data, chunk_t *ref)
 {
-   tok_ctx            ctx(data);
-   chunk_t            chunk;
-   chunk_t            *pc    = NULL;
-   chunk_t            *rprev = NULL;
-   struct parse_frame frm;
-   bool               last_was_tab = false;
-   int                prev_sp      = 0;
+   tok_ctx       ctx(data);
+   chunk_t       chunk;
+   chunk_t       *pc    = nullptr;
+   chunk_t       *rprev = nullptr;
+   parse_frame_t frm;
+   bool          last_was_tab = false;
+   size_t        prev_sp      = 0;
 
-   cpd.unc_stage = US_TOKENIZE;
+   cpd.unc_stage = unc_stage_e::TOKENIZE;
 
    memset(&frm, 0, sizeof(frm));
 
@@ -1832,7 +1907,7 @@ void tokenize(const deque<int> &data, chunk_t *ref)
       chunk.reset();
       if (!parse_next(ctx, chunk))
       {
-         LOG_FMT(LERR, "%s:%d Bailed before the end?\n",
+         LOG_FMT(LERR, "%s:%zu Bailed before the end?\n",
                  cpd.filename, ctx.c.row);
          cpd.error_count++;
          break;
@@ -1885,7 +1960,7 @@ void tokenize(const deque<int> &data, chunk_t *ref)
 
       /* Add the chunk to the list */
       rprev = pc;
-      if (rprev != NULL)
+      if (rprev != nullptr)
       {
          chunk_flags_set(pc, rprev->flags & PCF_COPY_FLAGS);
 
@@ -1895,7 +1970,7 @@ void tokenize(const deque<int> &data, chunk_t *ref)
             chunk_flags_clr(pc, PCF_IN_PREPROC);
          }
       }
-      if (ref != NULL)
+      if (ref != nullptr)
       {
          chunk.flags |= PCF_INSERTED;
       }
@@ -1912,16 +1987,11 @@ void tokenize(const deque<int> &data, chunk_t *ref)
          cpd.preproc_ncnl_count = 0;
       }
 
-      /* Enable/disable indentation between #asm / #endasm diretives */
-      if (pc->type == CT_PP_ASM )
+      /* Disable indentation when #asm directive found */
+      if (pc->type == CT_PP_ASM)
       {
-         LOG_FMT(LBCTRL, "Found a directive %s on line %d\n","#asm",pc->orig_line);
+         LOG_FMT(LBCTRL, "Found a directive %s on line %d\n", "#asm", pc->orig_line);
          cpd.unc_off = true;
-      }
-      else if (pc->type == CT_PP_ENDASM )
-      {
-         LOG_FMT(LBCTRL, "Found a directive %s on line %d\n","#endasm",pc->orig_line);
-         cpd.unc_off = false;
       }
 
       /* Special handling for preprocessor stuff */
@@ -1935,18 +2005,13 @@ void tokenize(const deque<int> &data, chunk_t *ref)
             cpd.preproc_ncnl_count++;
          }
 
-         /* Figure out the type of pragma for enable/disable indentation */
+         /* Disable indentation if a #pragma asm directive is found */
          if (cpd.in_preproc == CT_PP_PRAGMA)
          {
-            if (memcmp(pc->text(),"asm",3) == 0)
+            if (memcmp(pc->text(), "asm", 3) == 0)
             {
-              LOG_FMT(LBCTRL, "Found a pragma %s on line %d\n","asm",pc->orig_line);
-              cpd.unc_off = true;
-            }
-            else if (memcmp(pc->text(),"endasm",6) == 0)
-            {
-              LOG_FMT(LBCTRL, "Found a pragma %s on line %d\n","endasm",pc->orig_line);
-              cpd.unc_off = false;
+               LOG_FMT(LBCTRL, "Found a pragma %s on line %d\n", "asm", pc->orig_line);
+               cpd.unc_off = true;
             }
          }
 
@@ -1959,12 +2024,27 @@ void tokenize(const deque<int> &data, chunk_t *ref)
             }
             cpd.in_preproc = pc->type;
          }
+         else if (cpd.in_preproc == CT_PP_IGNORE)
+         {
+            // ASSERT(cpd.settings[UO_pp_ignore_define_body].b);
+            if (pc->type != CT_NL_CONT && pc->type != CT_COMMENT_CPP)
+            {
+               set_chunk_type(pc, CT_PP_IGNORE);
+            }
+         }
+         else if (cpd.in_preproc == CT_PP_DEFINE && pc->type == CT_PAREN_CLOSE
+                  && cpd.settings[UO_pp_ignore_define_body].b)
+         {
+            // When we have a PAREN_CLOSE in a PP_DEFINE we should be terminating a MACRO_FUNC
+            // arguments list. Therefore we can enter the PP_IGNORE state and ignore next chunks.
+            cpd.in_preproc = CT_PP_IGNORE;
+         }
       }
       else
       {
          /* Check for a preprocessor start */
          if ((pc->type == CT_POUND) &&
-             ((rprev == NULL) || (rprev->type == CT_NEWLINE)))
+             ((rprev == nullptr) || (rprev->type == CT_NEWLINE)))
          {
             set_chunk_type(pc, CT_PREPROC);
             pc->flags     |= PCF_IN_PREPROC;
@@ -1973,12 +2053,12 @@ void tokenize(const deque<int> &data, chunk_t *ref)
       }
       if (pc->type == CT_NEWLINE)
       {
-         LOG_FMT(LGUY, "%s(%d): (%d)<NL> col=%d\n",
+         LOG_FMT(LGUY, "%s(%d): (%zu)<NL> col=%zu\n",
                  __func__, __LINE__, pc->orig_line, pc->orig_col);
       }
       else
       {
-         LOG_FMT(LGUY, "%s(%d): text():%s, type:%s, orig_col=%d, orig_col_end=%d\n",
+         LOG_FMT(LGUY, "%s(%d): text():%s, type:%s, orig_col=%zu, orig_col_end=%zu\n",
                  __func__, __LINE__, pc->text(), get_token_name(pc->type), pc->orig_col, pc->orig_col_end);
       }
    }
@@ -2017,9 +2097,7 @@ void tokenize(const deque<int> &data, chunk_t *ref)
 // int str_find(const char *needle, int needle_len,
 //              const char *haystack, int haystack_len)
 // {
-//    int idx;
-//
-//    for (idx = 0; idx < (haystack_len - needle_len); idx++)
+//    for (int idx = 0; idx < (haystack_len - needle_len); idx++)
 //    {
 //       if (memcmp(needle, haystack + idx, needle_len) == 0)
 //       {

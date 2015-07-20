@@ -5,14 +5,54 @@
  * @author  Ben Gardner
  * @license GPL v2+
  */
+#include "lang_pawn.h"
 #include "uncrustify_types.h"
 #include "chunk_list.h"
 #include "ChunkStack.h"
 #include "prototypes.h"
+#include "uncrustify.h"
 
+
+/**
+ * Checks to see if a token continues a statement to the next line.
+ * We need to check for 'open' braces/paren/etc because the level doesn't
+ * change until the token after the open.
+ */
+static bool pawn_continued(chunk_t *pc, size_t br_level);
+
+
+/**
+ * Functions prototypes and definitions can only appear in level 0.
+ *
+ * Function prototypes start with "native", "forward", or are just a function
+ * with a trailing semicolon instead of a open brace (or something else)
+ *
+ * somefunc(params)              <-- def
+ * stock somefunc(params)        <-- def
+ * somefunc(params);             <-- proto
+ * forward somefunc(params)      <-- proto
+ * native somefunc[rect](params) <-- proto
+ *
+ * Functions start with 'stock', 'static', 'public', or '@' (on level 0)
+ *
+ * Variable definitions start with 'stock', 'static', 'new', or 'public'.
+ */
 static chunk_t *pawn_process_line(chunk_t *start);
+
+
+/**
+ * We are on a level 0 function proto of def
+ */
 static chunk_t *pawn_mark_function0(chunk_t *start, chunk_t *fcn);
+
+
+/**
+ * follows a variable definition at level 0 until the end.
+ * Adds a semicolon at the end, if needed.
+ */
 static chunk_t *pawn_process_variable(chunk_t *start);
+
+
 static chunk_t *pawn_process_func_def(chunk_t *pc);
 
 
@@ -26,21 +66,19 @@ chunk_t *pawn_add_vsemi_after(chunk_t *pc)
    }
 
    chunk_t *next = chunk_get_next_nc(pc);
-   if ((next != NULL) &&
+   if ((next != nullptr) &&
        ((next->type == CT_VSEMICOLON) ||
         (next->type == CT_SEMICOLON)))
    {
       return(pc);
    }
-   chunk_t chunk;
-
-   chunk             = *pc;
+   chunk_t chunk = *pc;
    chunk.type        = CT_VSEMICOLON;
    chunk.str         = cpd.settings[UO_mod_pawn_semicolon].b ? ";" : "";
    chunk.column     += pc->len();
    chunk.parent_type = CT_NONE;
 
-   LOG_FMT(LPVSEMI, "%s: Added VSEMI on line %d, prev='%s' [%s]\n",
+   LOG_FMT(LPVSEMI, "%s: Added VSEMI on line %zu, prev='%s' [%s]\n",
            __func__, pc->orig_line, pc->text(),
            get_token_name(pc->type));
 
@@ -48,10 +86,6 @@ chunk_t *pawn_add_vsemi_after(chunk_t *pc)
 }
 
 
-/**
- * Turns certain virtual semicolons invisible.
- *  - after a close brace with a parent of switch, case, else, if
- */
 void pawn_scrub_vsemi(void)
 {
    LOG_FUNC_ENTRY();
@@ -60,17 +94,14 @@ void pawn_scrub_vsemi(void)
       return;
    }
 
-   chunk_t *pc;
-   chunk_t *prev;
-
-   for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next(pc))
+   for (chunk_t *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next(pc))
    {
       if (pc->type != CT_VSEMICOLON)
       {
          continue;
       }
-      prev = chunk_get_prev_ncnl(pc);
-      if ((prev != NULL) && (prev->type == CT_BRACE_CLOSE))
+      chunk_t *prev = chunk_get_prev_ncnl(pc);
+      if ((prev != nullptr) && (prev->type == CT_BRACE_CLOSE))
       {
          if ((prev->parent_type == CT_IF) ||
              (prev->parent_type == CT_ELSE) ||
@@ -85,15 +116,10 @@ void pawn_scrub_vsemi(void)
 }
 
 
-/**
- * Checks to see if a token continues a statement to the next line.
- * We need to check for 'open' braces/paren/etc because the level doesn't
- * change until the token after the open.
- */
-static bool pawn_continued(chunk_t *pc, int br_level)
+static bool pawn_continued(chunk_t *pc, size_t br_level)
 {
    LOG_FUNC_ENTRY();
-   if (pc == NULL)
+   if (pc == nullptr)
    {
       return(false);
    }
@@ -133,26 +159,15 @@ static bool pawn_continued(chunk_t *pc, int br_level)
 }
 
 
-/**
- * Does a scan of level 0 BEFORE stuff in combine.cpp is called.
- * At this point, VSemis have been added only in VBraces.
- * Otherwise, all level info is correct, except for unbraced functions.
- *
- * We are looking for unbraced functions.
- */
 void pawn_prescan(void)
 {
    LOG_FUNC_ENTRY();
 
    /* Start at the beginning and step through the entire file, and clean up
-    * any questionable stuff
-    */
-
-   chunk_t *pc;
+    * any questionable stuff */
    bool    did_nl = true;
-
-   pc = chunk_get_head();
-   while (pc != NULL)
+   chunk_t *pc    = chunk_get_head();
+   while (pc != nullptr)
    {
       if (did_nl && (pc->type != CT_PREPROC) &&
           !chunk_is_newline(pc) && (pc->level == 0))
@@ -161,7 +176,7 @@ void pawn_prescan(void)
          pc = pawn_process_line(pc);
       }
       /* note that continued lines are ignored */
-      if (pc != NULL)
+      if (pc != nullptr)
       {
          did_nl = (pc->type == CT_NEWLINE);
       }
@@ -171,27 +186,9 @@ void pawn_prescan(void)
 }
 
 
-/**
- * Functions prototypes and definitions can only appear in level 0.
- *
- * Function prototypes start with "native", "forward", or are just a function
- * with a trailing semicolon instead of a open brace (or something else)
- *
- * somefunc(params)              <-- def
- * stock somefunc(params)        <-- def
- * somefunc(params);             <-- proto
- * forward somefunc(params)      <-- proto
- * native somefunc[rect](params) <-- proto
- *
- * Functions start with 'stock', 'static', 'public', or '@' (on level 0)
- *
- * Variable definitions start with 'stock', 'static', 'new', or 'public'.
- */
 static chunk_t *pawn_process_line(chunk_t *start)
 {
    LOG_FUNC_ENTRY();
-   chunk_t *pc;
-   chunk_t *fcn = NULL;
 
    //LOG_FMT(LSYS, "%s: %d - %s\n", __func__,
    //        start->orig_line, start->text());
@@ -203,12 +200,13 @@ static chunk_t *pawn_process_line(chunk_t *start)
    }
 
    /* if a open paren is found before an assign, then this is a function */
+   chunk_t *fcn = nullptr;
    if (start->type == CT_WORD)
    {
       fcn = start;
    }
-   pc = start;
-   while (((pc = chunk_get_next_nc(pc)) != NULL) &&
+   chunk_t *pc = start;
+   while (((pc = chunk_get_next_nc(pc)) != nullptr) &&
           !chunk_is_str(pc, "(", 1) &&
           (pc->type != CT_ASSIGN) &&
           (pc->type != CT_NEWLINE))
@@ -222,7 +220,7 @@ static chunk_t *pawn_process_line(chunk_t *start)
       }
    }
 
-   if (pc != NULL)
+   if (pc != nullptr)
    {
       if (pc->type == CT_ASSIGN)
       {
@@ -230,7 +228,7 @@ static chunk_t *pawn_process_line(chunk_t *start)
       }
    }
 
-   if (fcn != NULL)
+   if (fcn != nullptr)
    {
       //LOG_FMT(LSYS, "FUNCTION: %s\n", fcn->text());
       return(pawn_mark_function0(start, fcn));
@@ -248,17 +246,13 @@ static chunk_t *pawn_process_line(chunk_t *start)
 } // pawn_process_line
 
 
-/**
- * follows a variable definition at level 0 until the end.
- * Adds a semicolon at the end, if needed.
- */
 static chunk_t *pawn_process_variable(chunk_t *start)
 {
    LOG_FUNC_ENTRY();
-   chunk_t *prev = NULL;
+   chunk_t *prev = nullptr;
    chunk_t *pc   = start;
 
-   while ((pc = chunk_get_next_nc(pc)) != NULL)
+   while ((pc = chunk_get_next_nc(pc)) != nullptr)
    {
       if ((pc->type == CT_NEWLINE) &&
           !pawn_continued(prev, start->level))
@@ -279,15 +273,13 @@ static chunk_t *pawn_process_variable(chunk_t *start)
 void pawn_add_virtual_semicolons(void)
 {
    LOG_FUNC_ENTRY();
-   chunk_t *prev;
-   chunk_t *pc;
 
    /** Add Pawn virtual semicolons */
-   prev = NULL;
    if (cpd.lang_flags & LANG_PAWN)
    {
-      pc = chunk_get_head();
-      while ((pc = chunk_get_next(pc)) != NULL)
+      chunk_t *prev = nullptr;
+      chunk_t *pc   = chunk_get_head();
+      while ((pc = chunk_get_next(pc)) != nullptr)
       {
          if (!chunk_is_comment(pc) &&
              !chunk_is_newline(pc) &&
@@ -296,7 +288,7 @@ void pawn_add_virtual_semicolons(void)
          {
             prev = pc;
          }
-         if ((prev == NULL) ||
+         if ((prev == nullptr) ||
              ((pc->type != CT_NEWLINE) &&
               (pc->type != CT_BRACE_CLOSE) &&
               (pc->type != CT_VBRACE_CLOSE)))
@@ -312,30 +304,26 @@ void pawn_add_virtual_semicolons(void)
              !pawn_continued(prev, prev->brace_level))
          {
             pawn_add_vsemi_after(prev);
-            prev = NULL;
+            prev = nullptr;
          }
       }
    }
 }
 
 
-/**
- * We are on a level 0 function proto of def
- */
 static chunk_t *pawn_mark_function0(chunk_t *start, chunk_t *fcn)
 {
    LOG_FUNC_ENTRY();
-   chunk_t *last;
 
    /* handle prototypes */
    if (start == fcn)
    {
-      last = chunk_get_next_type(fcn, CT_PAREN_CLOSE, fcn->level);
+      chunk_t *last = chunk_get_next_type(fcn, CT_PAREN_CLOSE, fcn->level);
       last = chunk_get_next(last);
-      if ((last != NULL) && (last->type == CT_SEMICOLON))
+      if ((last != nullptr) && (last->type == CT_SEMICOLON))
       {
-         LOG_FMT(LPFUNC, "%s: %d] '%s' proto due to semicolon\n", __func__,
-                 fcn->orig_line, fcn->text());
+         LOG_FMT(LPFUNC, "%s: %zu] '%s' proto due to semicolon\n",
+                 __func__, fcn->orig_line, fcn->text());
          set_chunk_type(fcn, CT_FUNC_PROTO);
          return(last);
       }
@@ -345,8 +333,8 @@ static chunk_t *pawn_mark_function0(chunk_t *start, chunk_t *fcn)
       if ((start->type == CT_FORWARD) ||
           (start->type == CT_NATIVE))
       {
-         LOG_FMT(LPFUNC, "%s: %d] '%s' [%s] proto due to %s\n", __func__,
-                 fcn->orig_line, fcn->text(),
+         LOG_FMT(LPFUNC, "%s: %zu] '%s' [%s] proto due to %s\n",
+                 __func__, fcn->orig_line, fcn->text(),
                  get_token_name(fcn->type),
                  get_token_name(start->type));
          set_chunk_type(fcn, CT_FUNC_PROTO);
@@ -362,52 +350,49 @@ static chunk_t *pawn_mark_function0(chunk_t *start, chunk_t *fcn)
 static chunk_t *pawn_process_func_def(chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
-   /* We are on a function definition */
-   chunk_t *clp;
-   chunk_t *last;
-   chunk_t *next;
 
+   /* We are on a function definition */
    set_chunk_type(pc, CT_FUNC_DEF);
 
-   LOG_FMT(LPFUNC, "%s: %d:%d %s\n", __func__,
-           pc->orig_line, pc->orig_col, pc->text());
+   LOG_FMT(LPFUNC, "%s: %zu:%zu %s\n",
+           __func__, pc->orig_line, pc->orig_col, pc->text());
 
    /* If we don't have a brace open right after the close fparen, then
     * we need to add virtual braces around the function body.
     */
-   clp  = chunk_get_next_str(pc, ")", 1, 0);
-   last = chunk_get_next_ncnl(clp);
+   chunk_t *clp  = chunk_get_next_str(pc, ")", 1, 0);
+   chunk_t *last = chunk_get_next_ncnl(clp);
 
-   if (last != NULL)
+   if (last != nullptr)
    {
-      LOG_FMT(LPFUNC, "%s: %d] last is '%s' [%s]\n", __func__,
-              last->orig_line, last->text(), get_token_name(last->type));
+      LOG_FMT(LPFUNC, "%s: %zu] last is '%s' [%s]\n",
+              __func__, last->orig_line, last->text(), get_token_name(last->type));
    }
 
    /* See if there is a state clause after the function */
-   if ((last != NULL) && chunk_is_str(last, "<", 1))
+   if ((last != nullptr) && chunk_is_str(last, "<", 1))
    {
-      LOG_FMT(LPFUNC, "%s: %d] '%s' has state angle open %s\n", __func__,
-              pc->orig_line, pc->text(), get_token_name(last->type));
+      LOG_FMT(LPFUNC, "%s: %zu] '%s' has state angle open %s\n",
+              __func__, pc->orig_line, pc->text(), get_token_name(last->type));
 
       set_chunk_type(last, CT_ANGLE_OPEN);
       set_chunk_parent(last, CT_FUNC_DEF);
-      while (((last = chunk_get_next(last)) != NULL) &&
+      while (((last = chunk_get_next(last)) != nullptr) &&
              !chunk_is_str(last, ">", 1))
       {
       }
 
-      if (last != NULL)
+      if (last != nullptr)
       {
-         LOG_FMT(LPFUNC, "%s: %d] '%s' has state angle close %s\n", __func__,
-                 pc->orig_line, pc->text(), get_token_name(last->type));
+         LOG_FMT(LPFUNC, "%s: %zu] '%s' has state angle close %s\n",
+                 __func__, pc->orig_line, pc->text(), get_token_name(last->type));
          set_chunk_type(last, CT_ANGLE_CLOSE);
          set_chunk_parent(last, CT_FUNC_DEF);
       }
       last = chunk_get_next_ncnl(last);
    }
 
-   if (last == NULL)
+   if (last == nullptr)
    {
       return(last);
    }
@@ -415,15 +400,15 @@ static chunk_t *pawn_process_func_def(chunk_t *pc)
    {
       set_chunk_parent(last, CT_FUNC_DEF);
       last = chunk_get_next_type(last, CT_BRACE_CLOSE, last->level);
-      if (last != NULL)
+      if (last != nullptr)
       {
          set_chunk_parent(last, CT_FUNC_DEF);
       }
    }
    else
    {
-      LOG_FMT(LPFUNC, "%s: %d] '%s' fdef: expected brace open: %s\n", __func__,
-              pc->orig_line, pc->text(), get_token_name(last->type));
+      LOG_FMT(LPFUNC, "%s: %zu] '%s' fdef: expected brace open: %s\n",
+              __func__, pc->orig_line, pc->text(), get_token_name(last->type));
 
       /* do not insert a vbrace before a preproc */
       if (last->flags & PCF_IN_PREPROC)
@@ -431,8 +416,7 @@ static chunk_t *pawn_process_func_def(chunk_t *pc)
          return(last);
       }
 
-      chunk_t chunk;
-      chunk = *last;
+      chunk_t chunk = *last;
       chunk.str.clear();
       chunk.type        = CT_VBRACE_OPEN;
       chunk.parent_type = CT_FUNC_DEF;
@@ -444,13 +428,13 @@ static chunk_t *pawn_process_func_def(chunk_t *pc)
       prev = chunk_get_next_ncnl(prev);
       do
       {
-         LOG_FMT(LPFUNC, "%s:%d] check %s, level %d\n", __func__,
-                 prev->orig_line, get_token_name(prev->type), prev->level);
+         LOG_FMT(LPFUNC, "%s:%zu] check %s, level %zu\n",
+                 __func__, prev->orig_line, get_token_name(prev->type), prev->level);
          if ((prev->type == CT_NEWLINE) &&
              (prev->level == 0))
          {
-            next = chunk_get_next_ncnl(prev);
-            if ((next != NULL) &&
+            chunk_t *next = chunk_get_next_ncnl(prev);
+            if ((next != nullptr) &&
                 (next->type != CT_ELSE) &&
                 (next->type != CT_WHILE_OF_DO))
             {
@@ -460,12 +444,12 @@ static chunk_t *pawn_process_func_def(chunk_t *pc)
          prev->level++;
          prev->brace_level++;
          last = prev;
-      } while ((prev = chunk_get_next(prev)) != NULL);
+      } while ((prev = chunk_get_next(prev)) != nullptr);
 
-      if (last != NULL)
+      if (last != nullptr)
       {
-         LOG_FMT(LPFUNC, "%s:%d] ended on %s, level %d\n", __func__,
-                 last->orig_line, get_token_name(last->type), last->level);
+         LOG_FMT(LPFUNC, "%s:%zu] ended on %s, level %zu\n",
+                 __func__, last->orig_line, get_token_name(last->type), last->level);
       }
 
       chunk = *last;
@@ -481,21 +465,12 @@ static chunk_t *pawn_process_func_def(chunk_t *pc)
 } // pawn_process_func_def
 
 
-/**
- * We are in a virtual brace and hit a newline.
- * If this should end the vbrace, then insert a VSEMICOLON and return that.
- *
- * @param pc   The newline (CT_NEWLINE)
- * @return     Either the newline or the newly inserted virtual semicolon
- */
 chunk_t *pawn_check_vsemicolon(chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
-   chunk_t *vb_open;
-   chunk_t *prev;
 
    /* Grab the open VBrace */
-   vb_open = chunk_get_prev_type(pc, CT_VBRACE_OPEN, -1);
+   chunk_t *vb_open = chunk_get_prev_type(pc, CT_VBRACE_OPEN, -1);
 
    /**
     * Grab the item before the newline
@@ -506,15 +481,15 @@ chunk_t *pawn_check_vsemicolon(chunk_t *pc)
     *  - it is something that needs a continuation
     *    + arith, assign, bool, comma, compare
     */
-   prev = chunk_get_prev_ncnl(pc);
-   if ((prev == NULL) ||
+   chunk_t *prev = chunk_get_prev_ncnl(pc);
+   if ((prev == nullptr) ||
        (prev == vb_open) ||
        (prev->flags & PCF_IN_PREPROC) ||
        pawn_continued(prev, vb_open->level + 1))
    {
-      if (prev != NULL)
+      if (prev != nullptr)
       {
-         LOG_FMT(LPVSEMI, "%s:  no  VSEMI on line %d, prev='%s' [%s]\n",
+         LOG_FMT(LPVSEMI, "%s:  no  VSEMI on line %zu, prev='%s' [%s]\n",
                  __func__, prev->orig_line, prev->text(), get_token_name(prev->type));
       }
       return(pc);

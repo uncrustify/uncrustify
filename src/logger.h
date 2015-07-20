@@ -89,7 +89,7 @@ void log_str(log_sev_t sev, const char *str, size_t len);
 
 
 /**
- * Logs a formatted string -- similiar to printf()
+ * Logs a formatted string -- similar to printf()
  *
  * @param sev     The severity
  * @param fmt     The format string

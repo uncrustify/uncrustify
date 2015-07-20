@@ -5,6 +5,8 @@
  * @author  Ben Gardner
  * @license GPL v2+
  */
+#include "unicode.h"
+#include "uncrustify.h"
 #include "uncrustify_types.h"
 #include "prototypes.h"
 #include "unc_ctype.h"
@@ -15,16 +17,70 @@
 /**
  * See if all characters are ASCII (0-127)
  */
-static bool is_ascii(const vector<UINT8> &data, int &non_ascii_cnt, int &zero_cnt)
+static bool is_ascii(const vector<UINT8> &data, size_t &non_ascii_cnt, size_t &zero_cnt);
+
+
+/**
+ * Convert the array of bytes into an array of ints
+ */
+static bool decode_bytes(const vector<UINT8> &in_data, deque<int> &out_data);
+
+
+/**
+ * Decode UTF-8 sequences from in_data and put the chars in out_data.
+ * If there are any decoding errors, then return false.
+ */
+static bool decode_utf8(const vector<UINT8> &in_data, deque<int> &out_data);
+
+
+/**
+ * Extract 2 bytes from the stream and increment idx by 2
+ */
+static int get_word(const vector<UINT8> &in_data, size_t &idx, bool be);
+
+
+/**
+ * Decode a UTF-16 sequence.
+ * Sets enc based on the BOM.
+ * Must have the BOM as the first two bytes.
+ */
+static bool decode_utf16(const vector<UINT8> &in_data, deque<int> &out_data, char_encoding_e &enc);
+
+
+/**
+ * Looks for the BOM of UTF-16 BE/LE and UTF-8.
+ * If found, set enc and return true.
+ * Sets enc to char_encoding_e::ASCII and returns false if not found.
+ */
+static bool decode_bom(const vector<UINT8> &in_data, char_encoding_e &enc);
+
+
+/**
+ * Write for ASCII and BYTE encoding
+ */
+static void write_byte(int ch);
+
+
+/**
+ * Writes a single character to a file using UTF-8 encoding
+ */
+static void write_utf8(int ch);
+
+
+static void write_utf16(int ch, bool be);
+
+
+static bool is_ascii(const vector<UINT8> &data, size_t &non_ascii_cnt, size_t &zero_cnt)
 {
-   non_ascii_cnt = zero_cnt = 0;
-   for (int idx = 0; idx < (int)data.size(); idx++)
+   non_ascii_cnt = 0;
+   zero_cnt      = 0;
+   for (unsigned char value : data)
    {
-      if (data[idx] & 0x80)
+      if (value & 0x80)
       {
          non_ascii_cnt++;
       }
-      if (!data[idx])
+      if (!value)
       {
          zero_cnt++;
       }
@@ -33,13 +89,10 @@ static bool is_ascii(const vector<UINT8> &data, int &non_ascii_cnt, int &zero_cn
 }
 
 
-/**
- * Convert the array of bytes into an array of ints
- */
 static bool decode_bytes(const vector<UINT8> &in_data, deque<int> &out_data)
 {
    out_data.resize(in_data.size());
-   for (int idx = 0; idx < (int)in_data.size(); idx++)
+   for (size_t idx = 0; idx < in_data.size(); idx++)
    {
       out_data[idx] = in_data[idx];
    }
@@ -101,14 +154,10 @@ void encode_utf8(int ch, vector<UINT8> &res)
 } // encode_utf8
 
 
-/**
- * Decode UTF-8 sequences from in_data and put the chars in out_data.
- * If there are any decoding errors, then return false.
- */
 static bool decode_utf8(const vector<UINT8> &in_data, deque<int> &out_data)
 {
-   int idx = 0;
-   int ch, tmp, cnt;
+   size_t idx = 0;
+   int    cnt;
 
    out_data.clear();
 
@@ -124,9 +173,9 @@ static bool decode_utf8(const vector<UINT8> &in_data, deque<int> &out_data)
       }
    }
 
-   while (idx < (int)in_data.size())
+   while (idx < in_data.size())
    {
-      ch = in_data[idx++];
+      int ch = in_data[idx++];
       if (ch < 0x80)                   /* 1-byte sequence */
       {
          out_data.push_back(ch);
@@ -163,9 +212,9 @@ static bool decode_utf8(const vector<UINT8> &in_data, deque<int> &out_data)
          return(false);
       }
 
-      while ((cnt-- > 0) && (idx < (int)in_data.size()))
+      while ((cnt-- > 0) && (idx < in_data.size()))
       {
-         tmp = in_data[idx++];
+         int tmp = in_data[idx++];
          if ((tmp & 0xC0) != 0x80)
          {
             /* invalid UTF-8 sequence */
@@ -184,14 +233,11 @@ static bool decode_utf8(const vector<UINT8> &in_data, deque<int> &out_data)
 } // decode_utf8
 
 
-/**
- * Extract 2 bytes from the stream and increment idx by 2
- */
-static int get_word(const vector<UINT8> &in_data, int &idx, bool be)
+static int get_word(const vector<UINT8> &in_data, size_t &idx, bool be)
 {
    int ch;
 
-   if ((idx + 2) > (int)in_data.size())
+   if ((idx + 2) > in_data.size())
    {
       ch = -1;
    }
@@ -208,12 +254,7 @@ static int get_word(const vector<UINT8> &in_data, int &idx, bool be)
 }
 
 
-/**
- * Deocde a UTF-16 sequence.
- * Sets enc based on the BOM.
- * Must have the BOM as the first two bytes.
- */
-static bool decode_utf16(const vector<UINT8> &in_data, deque<int> &out_data, CharEncoding &enc)
+static bool decode_utf16(const vector<UINT8> &in_data, deque<int> &out_data, char_encoding_e &enc)
 {
    out_data.clear();
 
@@ -229,41 +270,41 @@ static bool decode_utf16(const vector<UINT8> &in_data, deque<int> &out_data, Cha
       return(false);
    }
 
-   int idx = 2;
+   size_t idx = 2;
    if ((in_data[0] == 0xfe) && (in_data[1] == 0xff))
    {
-      enc = ENC_UTF16_BE;
+      enc = char_encoding_e::UTF16_BE;
    }
    else if ((in_data[0] == 0xff) && (in_data[1] == 0xfe))
    {
-      enc = ENC_UTF16_LE;
+      enc = char_encoding_e::UTF16_LE;
    }
    else
    {
       /* If we have a few words, we can take a guess, assuming the first few
        * chars are ASCII */
-      enc = ENC_ASCII;
+      enc = char_encoding_e::ASCII;
       idx = 0;
       if (in_data.size() >= 6)
       {
          if ((in_data[0] == 0) && (in_data[2] == 0) && (in_data[4] == 0))
          {
-            enc = ENC_UTF16_BE;
+            enc = char_encoding_e::UTF16_BE;
          }
          else if ((in_data[1] == 0) && (in_data[3] == 0) && (in_data[5] == 0))
          {
-            enc = ENC_UTF16_LE;
+            enc = char_encoding_e::UTF16_LE;
          }
       }
-      if (enc == ENC_ASCII)
+      if (enc == char_encoding_e::ASCII)
       {
          return(false);
       }
    }
 
-   bool be = (enc == ENC_UTF16_BE);
+   bool be = (enc == char_encoding_e::UTF16_BE);
 
-   while (idx < (int)in_data.size())
+   while (idx < in_data.size())
    {
       int ch = get_word(in_data, idx, be);
       if ((ch & 0xfc00) == 0xd800)
@@ -293,32 +334,27 @@ static bool decode_utf16(const vector<UINT8> &in_data, deque<int> &out_data, Cha
 } // decode_utf16
 
 
-/**
- * Looks for the BOM of UTF-16 BE/LE and UTF-8.
- * If found, set enc and return true.
- * Sets enc to ENC_ASCII and returns false if not found.
- */
-static bool decode_bom(const vector<UINT8> &in_data, CharEncoding &enc)
+static bool decode_bom(const vector<UINT8> &in_data, char_encoding_e &enc)
 {
-   enc = ENC_ASCII;
+   enc = char_encoding_e::ASCII;
    if (in_data.size() >= 2)
    {
       if ((in_data[0] == 0xfe) && (in_data[1] == 0xff))
       {
-         enc = ENC_UTF16_BE;
+         enc = char_encoding_e::UTF16_BE;
          return(true);
       }
-      else if ((in_data[0] == 0xff) && (in_data[1] == 0xfe))
+
+      if ((in_data[0] == 0xff) && (in_data[1] == 0xfe))
       {
-         enc = ENC_UTF16_LE;
+         enc = char_encoding_e::UTF16_LE;
          return(true);
       }
-      else if ((in_data.size() >= 3) &&
-               (in_data[0] == 0xef) &&
-               (in_data[1] == 0xbb) &&
-               (in_data[2] == 0xbf))
+
+      if ((in_data.size() >= 3) && (in_data[0] == 0xef) && (in_data[1] == 0xbb)
+          && (in_data[2] == 0xbf))
       {
-         enc = ENC_UTF8;
+         enc = char_encoding_e::UTF8;
          return(true);
       }
    }
@@ -326,38 +362,33 @@ static bool decode_bom(const vector<UINT8> &in_data, CharEncoding &enc)
 }
 
 
-/**
- * Figure out the encoding and convert to an int sequence
- */
-bool decode_unicode(const vector<UINT8> &in_data, deque<int> &out_data, CharEncoding &enc, bool &has_bom)
+bool decode_unicode(const vector<UINT8> &in_data, deque<int> &out_data, char_encoding_e &enc, bool &has_bom)
 {
    /* check for a BOM */
    if (decode_bom(in_data, enc))
    {
       has_bom = true;
-      if (enc == ENC_UTF8)
+      if (enc == char_encoding_e::UTF8)
       {
          return(decode_utf8(in_data, out_data));
       }
-      else
-      {
-         return(decode_utf16(in_data, out_data, enc));
-      }
+
+      return(decode_utf16(in_data, out_data, enc));
    }
    has_bom = false;
 
    /* Check for simple ASCII */
-   int non_ascii_cnt;
-   int zero_cnt;
+   size_t non_ascii_cnt;
+   size_t zero_cnt;
    if (is_ascii(in_data, non_ascii_cnt, zero_cnt))
    {
-      enc = ENC_ASCII;
+      enc = char_encoding_e::ASCII;
       return(decode_bytes(in_data, out_data));
    }
 
    /* There are alot of 0's in UTF-16 (~50%) */
-   if ((zero_cnt > ((int)in_data.size() / 4)) &&
-       (zero_cnt <= ((int)in_data.size() / 2)))
+   if ((zero_cnt > (in_data.size() / 4)) &&
+       (zero_cnt <= (in_data.size() / 2)))
    {
       /* likely is UTF-16 */
       if (decode_utf16(in_data, out_data, enc))
@@ -368,19 +399,16 @@ bool decode_unicode(const vector<UINT8> &in_data, deque<int> &out_data, CharEnco
 
    if (decode_utf8(in_data, out_data))
    {
-      enc = ENC_UTF8;
+      enc = char_encoding_e::UTF8;
       return(true);
    }
 
    /* it is an unrecognized byte sequence */
-   enc = ENC_BYTE;
+   enc = char_encoding_e::BYTE;
    return(decode_bytes(in_data, out_data));
 } // decode_unicode
 
 
-/**
- * Write for ASCII and BYTE encoding
- */
 static void write_byte(int ch)
 {
    if ((ch & 0xff) == ch)
@@ -391,7 +419,7 @@ static void write_byte(int ch)
       }
       if (cpd.bout)
       {
-         cpd.bout->push_back((UINT8)ch);
+         cpd.bout->push_back(static_cast<UINT8>(ch));
       }
    }
    else
@@ -401,18 +429,15 @@ static void write_byte(int ch)
 }
 
 
-/**
- * Writes a single character to a file using UTF-8 encoding
- */
 static void write_utf8(int ch)
 {
    vector<UINT8> vv;
    vv.reserve(6);
 
    encode_utf8(ch, vv);
-   for (int idx = 0; idx < (int)vv.size(); idx++)
+   for (unsigned char char_val : vv)
    {
-      write_byte(vv[idx]);
+      write_byte(char_val);
    }
 }
 
@@ -460,21 +485,21 @@ static void write_utf16(int ch, bool be)
 }
 
 
-void write_bom()
+void write_bom(void)
 {
    switch (cpd.enc)
    {
-   case ENC_UTF8:
+   case char_encoding_e::UTF8:
       write_byte(0xef);
       write_byte(0xbb);
       write_byte(0xbf);
       break;
 
-   case ENC_UTF16_LE:
+   case char_encoding_e::UTF16_LE:
       write_utf16(0xfeff, false);
       break;
 
-   case ENC_UTF16_BE:
+   case char_encoding_e::UTF16_BE:
       write_utf16(0xfeff, true);
       break;
 
@@ -484,33 +509,30 @@ void write_bom()
 }
 
 
-/**
- * @param ch the 31-bit char value
- */
 void write_char(int ch)
 {
    if (ch >= 0)
    {
       switch (cpd.enc)
       {
-      case ENC_BYTE:
+      case char_encoding_e::BYTE:
          write_byte(ch & 0xff);
          break;
 
-      case ENC_ASCII:
+      case char_encoding_e::ASCII:
       default:
          write_byte(ch);
          break;
 
-      case ENC_UTF8:
+      case char_encoding_e::UTF8:
          write_utf8(ch);
          break;
 
-      case ENC_UTF16_LE:
+      case char_encoding_e::UTF16_LE:
          write_utf16(ch, false);
          break;
 
-      case ENC_UTF16_BE:
+      case char_encoding_e::UTF16_BE:
          write_utf16(ch, true);
          break;
       }
@@ -520,7 +542,7 @@ void write_char(int ch)
 
 void write_string(const unc_text &text)
 {
-   for (int idx = 0; idx < (int)text.size(); idx++)
+   for (size_t idx = 0; idx < text.size(); idx++)
    {
       write_char(text[idx]);
    }

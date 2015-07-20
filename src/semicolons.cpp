@@ -5,25 +5,34 @@
  * @author  Ben Gardner
  * @license GPL v2+
  */
+#include "semicolons.h"
 #include "uncrustify_types.h"
 #include "chunk_list.h"
 #include "ChunkStack.h"
 #include "prototypes.h"
+#include "uncrustify.h"
 
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
-#include <cerrno>
 #include "unc_ctype.h"
-#include <cassert>
 
+
+static void remove_semicolon(chunk_t *pc);
+
+
+/**
+ * We are on a semicolon that is after an unidentified brace close.
+ * Check for what is before the brace open.
+ * Do not remove if it is a square close, word, type, or paren close.
+ */
 static void check_unknown_brace_close(chunk_t *semi, chunk_t *brace_close);
 
 
 static void remove_semicolon(chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
-   LOG_FMT(LDELSEMI, "%s: Removed semicolon at line %d, col %d",
+   LOG_FMT(LDELSEMI, "%s: Removed semicolon at line %zu, col %zu",
            __func__, pc->orig_line, pc->orig_col);
    log_func_stack_inline(LDELSEMI);
    /* TODO: do we want to shift stuff back a column? */
@@ -31,31 +40,19 @@ static void remove_semicolon(chunk_t *pc)
 }
 
 
-/**
- * Removes superfluous semicolons:
- *  - after brace close whose parent is IF, ELSE, SWITCH, WHILE, FOR, NAMESPACE
- *  - after another semicolon where parent is not FOR
- *  - (D) after brace close whose parent is ENUM/STRUCT/UNION
- *  - (Java) after brace close whose parent is SYNCHRONIZED
- *  - after an open brace
- *  - when not in a #DEFINE
- */
 void remove_extra_semicolons(void)
 {
    LOG_FUNC_ENTRY();
-   chunk_t *pc;
-   chunk_t *next;
-   chunk_t *prev;
 
-   pc = chunk_get_head();
-   while (pc != NULL)
+   chunk_t *pc = chunk_get_head();
+   while (pc != nullptr)
    {
-      next = chunk_get_next_ncnl(pc);
-
+      chunk_t *next = chunk_get_next_ncnl(pc);
+      chunk_t *prev;
       if ((pc->type == CT_SEMICOLON) && !(pc->flags & PCF_IN_PREPROC) &&
-          ((prev = chunk_get_prev_ncnl(pc)) != NULL))
+          ((prev = chunk_get_prev_ncnl(pc)) != nullptr))
       {
-         LOG_FMT(LSCANSEMI, "Semi on %d:%d parent=%s, prev = '%s' [%s/%s]\n",
+         LOG_FMT(LSCANSEMI, "Semi on %zu:%zu parent=%s, prev = '%s' [%s/%s]\n",
                  pc->orig_line, pc->orig_col, get_token_name(pc->parent_type),
                  prev->text(),
                  get_token_name(prev->type), get_token_name(prev->parent_type));
@@ -117,19 +114,12 @@ void remove_extra_semicolons(void)
 } // remove_extra_semicolons
 
 
-/**
- * We are on a semicolon that is after an unidentified brace close.
- * Check for what is before the brace open.
- * Do not remove if it is a square close, word, type, or paren close.
- */
 static void check_unknown_brace_close(chunk_t *semi, chunk_t *brace_close)
 {
    LOG_FUNC_ENTRY();
-   chunk_t *pc;
-
-   pc = chunk_get_prev_type(brace_close, CT_BRACE_OPEN, brace_close->level);
+   chunk_t *pc = chunk_get_prev_type(brace_close, CT_BRACE_OPEN, brace_close->level);
    pc = chunk_get_prev_ncnl(pc);
-   if ((pc != NULL) &&
+   if ((pc != nullptr) &&
        (pc->type != CT_RETURN) &&
        (pc->type != CT_WORD) &&
        (pc->type != CT_TYPE) &&

@@ -4,6 +4,8 @@
 # Range: 30000 - 39999
 # test.name  config.file  input.file
 
+# there are additional tests inside imported.test.
+
 30000 ben.cfg                          cpp/cout.cpp
 #30001 ben.cfg                          cpp/alt_tokens.cpp
 30002 ben.cfg                          cpp/constructor.cpp
@@ -151,6 +153,7 @@
 30752 lambda2.cfg                      cpp/lambda.cpp
 30753 lambda3.cfg                      cpp/lambda2.cpp
 30754 bug_i_682.cfg                    cpp/bug_i_682.h
+30755 bug_i_938.cfg                    cpp/bug_i_938.h
 
 30800 star_pos-0.cfg                   cpp/align-star-amp-pos.cpp
 30801 star_pos-1.cfg                   cpp/align-star-amp-pos.cpp
@@ -218,6 +221,7 @@
 
 30935 ben.cfg                          cpp/indent-misc.cpp
 30936 indent_braces_no.cfg             cpp/indent_braces_no.h
+30937 indent_param.cfg                 cpp/indent_param.cpp
 
 30940 mod_case_brace_rm.cfg            cpp/case-brace-remove.cpp
 
@@ -347,7 +351,10 @@
 33101 enum_comma-5.cfg                 cpp/enum_comma.h
 33102 enum_comma-6.cfg                 cpp/enum_comma.h
 
+33110 enum.cfg                         cpp/enum.cpp
+
 33150 bug_i_753.cfg                    cpp/bug_i_753.cpp
+33151 bug_i_752.cfg                    cpp/bug_i_752.cpp
 
 33200 first_len_minimum.cfg            cpp/first_len_minimum.cpp
 
@@ -360,3 +367,13 @@
 34003 nl_max_blank_in_func-0.cfg       cpp/nl_max_blank_in_func.cpp
 34004 nl_max_blank_in_func-1.cfg       cpp/nl_max_blank_in_func.cpp
 34005 nl_max_blank_in_func-2.cfg       cpp/nl_max_blank_in_func.cpp
+34006 empty.cfg                        cpp/bug_i_575.cpp
+34007 bug_i_928.cfg                    cpp/bug_i_928.cpp
+
+34100 empty.cfg                        cpp/bug_i_525.cpp
+34101 empty.cfg                        cpp/bug_i_646.cpp
+34105 bug_i_663.cfg                    cpp/bug_i_663.cpp
+34108 bug_i_666.cfg                    cpp/bug_i_666.cpp
+34112 empty.cfg                        cpp/bug_i_889.cpp
+34113 bug_902-1.cfg                    cpp/bug_902.cpp
+34114 bug_902-2.cfg                    cpp/bug_902.cpp

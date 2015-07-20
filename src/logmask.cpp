@@ -22,19 +22,18 @@
  */
 char *logmask_to_str(const log_mask_t &mask, char *buf, int size)
 {
-   int  last_sev = -1;
-   bool is_range = false;
-   int  sev;
-   int  len = 0;
-
-   if ((buf == NULL) || (size <= 0))
+   if ((buf == nullptr) || (size <= 0))
    {
       return(buf);
    }
 
-   for (sev = 0; sev < 256; sev++)
+   int  last_sev = -1;
+   bool is_range = false;
+   int  len      = 0;
+
+   for (int sev = 0; sev < 256; sev++)
    {
-      if (logmask_test(mask, (log_sev_t)sev))
+      if (logmask_test(mask, static_cast<log_sev_t>(sev)))
       {
          if (last_sev == -1)
          {
@@ -87,13 +86,7 @@ char *logmask_to_str(const log_mask_t &mask, char *buf, int size)
  */
 void logmask_from_string(const char *str, log_mask_t &mask)
 {
-   char *ptmp;
-   bool was_dash   = false;
-   int  last_level = -1;
-   int  level;
-   int  idx;
-
-   if (str == NULL)
+   if (str == nullptr)
    {
       return;
    }
@@ -108,6 +101,9 @@ void logmask_from_string(const char *str, log_mask_t &mask)
       str++;
    }
 
+   char *ptmp;
+   bool was_dash   = false;
+   int  last_level = -1;
    while (*str != 0)
    {
       if (unc_isspace(*str))
@@ -118,15 +114,15 @@ void logmask_from_string(const char *str, log_mask_t &mask)
 
       if (unc_isdigit(*str))
       {
-         level = strtoul(str, &ptmp, 10);
-         str   = ptmp;
+         int level = strtoul(str, &ptmp, 10);
+         str = ptmp;
 
-         logmask_set_sev(mask, (log_sev_t)level, true);
+         logmask_set_sev(mask, static_cast<log_sev_t>(level), true);
          if (was_dash)
          {
-            for (idx = last_level + 1; idx < level; idx++)
+            for (int idx = last_level + 1; idx < level; idx++)
             {
-               logmask_set_sev(mask, (log_sev_t)idx, true);
+               logmask_set_sev(mask, static_cast<log_sev_t>(idx), true);
             }
             was_dash = false;
          }
