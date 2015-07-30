@@ -1113,7 +1113,7 @@ void fix_symbols(void)
 
    mark_define_expressions();
 
-   bool is_java = cpd.lang_flags & LANG_JAVA;
+   bool is_java = (cpd.lang_flags & LANG_JAVA) != 0;
    for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next_ncnl(pc))
    {
       if ((pc->type == CT_FUNC_WRAP) ||
