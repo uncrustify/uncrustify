@@ -631,6 +631,7 @@ enum uncrustify_options
    UO_nl_after_struct,
    UO_nl_after_class,
    UO_nl_max,                        // maximum consecutive newlines (3 = 2 blank lines)
+   UO_nl_max_blank_in_func_minus_one, // maximum consecutive newlines in function(1 = 0 blank lines)
    UO_nl_before_access_spec,         // number of newlines before "private:", "public:" (0=no change)
    UO_nl_after_access_spec,          // number of newlines after "private:", "public:" (0=no change)
    UO_nl_comment_func_def,

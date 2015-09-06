@@ -1568,6 +1568,7 @@ static void uncrustify_file(const file_mem& fm, FILE *pfout,
          }
          do_blank_lines();
          newlines_eat_start_end();
+         newlines_eat_extra_blank_lines();
          newlines_cleanup_dup();
          first = false;
       } while ((old_changes != cpd.changes) && (cpd.pass_count-- > 0));
