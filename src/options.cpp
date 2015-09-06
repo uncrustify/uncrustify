@@ -1074,6 +1074,8 @@ void register_options(void)
    unc_begin_group(UG_blankline, "Blank line options", "Note that it takes 2 newlines to get a blank line");
    unc_add_option("nl_max", UO_nl_max, AT_NUM,
                   "The maximum consecutive newlines (3 = 2 blank lines)");
+   unc_add_option("nl_max_blank_in_func", UO_nl_max_blank_in_func, AT_NUM,
+                  "The maximum consecutive newlines in function");
    unc_add_option("nl_after_func_proto", UO_nl_after_func_proto, AT_NUM,
                   "The number of newlines after a function prototype, if followed by another function prototype");
    unc_add_option("nl_after_func_proto_group", UO_nl_after_func_proto_group, AT_NUM,
