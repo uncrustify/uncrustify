@@ -5295,6 +5295,72 @@ void remove_extra_returns()
    }
 }
 
+/**
+ * Remove 'return;' that appears as the last statement in a function
+ */
+void remove_brace_only_has_return()
+{
+    
+    LOG_FUNC_ENTRY();
+    
+    chunk_t *pc;
+    chunk_t *prev_pc;         /*'{'*/
+    chunk_t *next_pr;         /*'}'*/
+    chunk_t *prev_prev_pc;   /*before '{' */
+    chunk_t *next_prev_pc;   /*back '{' */
+    chunk_t *prev_next_pc;  /*before '}'*/
+    chunk_t *next_next_pc;  /*back '}'*/
+    
+    pc = chunk_get_head();
+    while (pc != NULL)
+    {
+        if ((pc->type == CT_RETURN) && ((pc->flags & PCF_IN_PREPROC) == 0))
+        {
+            prev_pc = chunk_get_prev_nnl(pc);
+            chunk_t * semi =  chunk_get_next(pc); /*normal has a semi or other*/
+            next_pr = chunk_get_next_nnl(semi);
+            
+            prev_prev_pc = chunk_get_prev_nc(prev_pc);
+            next_prev_pc = chunk_get_next_nc(prev_pc);
+            
+            prev_next_pc = chunk_get_prev_nc(next_pr);
+            next_next_pc = chunk_get_next_nc(next_pr);
+            
+            if (true) {
+                
+            }
+            
+            if ((prev_prev_pc != NULL) && next_prev_pc != NULL && prev_next_pc != NULL &&
+                next_next_pc !=NULL && (prev_pc != NULL) && (prev_pc->type == CT_BRACE_OPEN) &&
+                (next_pr != NULL) && (next_pr->type == CT_BRACE_CLOSE) &&
+                ((next_pr->parent_type != CT_FUNC_DEF) &&
+                 (next_pr->parent_type != CT_FUNC_CLASS_DEF)) &&
+                (pc->brace_level > 1))
+            {
+                LOG_FMT(LRMRETURN, "Removed  brace at single return on line %d\n", pc->orig_line);
+               
+                prev_prev_pc->next = next_prev_pc;
+                prev_next_pc->next = next_next_pc;
+
+                chunk_t *newline = newline_add_between(next_prev_pc, pc);
+                if (newline &&  (newline->nl_count > 1))
+                {
+                    newline->nl_count = 1;
+                }
+                
+                pc->indent.ref = pc;
+                pc->indent.delta = 4;
+
+                chunk_del(prev_pc);
+                chunk_del(next_pr);
+                pc = next_next_pc;
+            }
+        }
+        
+        pc = chunk_get_next(pc);
+    }
+}
+
 
 /**
  * A func wrap chunk and what follows should be treated as a function name.

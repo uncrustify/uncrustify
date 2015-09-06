@@ -1328,6 +1328,8 @@ void register_options(void)
                   "Will only remove the braces if there are no variable declarations in the block.");
    unc_add_option("mod_remove_empty_return", UO_mod_remove_empty_return, AT_BOOL,
                   "If TRUE, it will remove a void 'return;' that appears as the last statement in a function.");
+   unc_add_option("mod_remove_brace_only_has_return", UO_mod_remove_brace_only_has_return, AT_BOOL,
+                   "If TRUE, it will remove brace that appears as the block only has single return statement.");
 
    unc_begin_group(UG_preprocessor, "Preprocessor options");
    unc_add_option("pp_indent", UO_pp_indent, AT_IARF,

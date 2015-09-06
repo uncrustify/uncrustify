@@ -147,6 +147,7 @@ chunk_t *skip_attribute_next(chunk_t *attr);
 chunk_t *skip_attribute_prev(chunk_t *fp_close);
 
 void remove_extra_returns();
+void remove_brace_only_has_return();
 
 
 /*

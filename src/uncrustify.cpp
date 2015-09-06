@@ -1498,7 +1498,14 @@ static void uncrustify_file(const file_mem& fm, FILE *pfout,
       if (cpd.settings[UO_mod_remove_empty_return].b)
       {
          remove_extra_returns();
+          
       }
+      
+       /* Remove brace  only has single return statement */
+       if (cpd.settings[UO_mod_remove_brace_only_has_return].b)
+       {
+           remove_brace_only_has_return();
+       }
 
       /**
        * Add parens
