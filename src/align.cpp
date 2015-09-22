@@ -1182,6 +1182,9 @@ static chunk_t *align_var_def_brace(chunk_t *start, int span, int *p_nl_count)
       {
          int sub_nl_count = 0;
 
+#if 1 // Denphon
+        chunk_t* pcPrev = pc; 
+#endif
          pc = align_var_def_brace(pc, span, &sub_nl_count);
          if (sub_nl_count > 0)
          {
@@ -1196,6 +1199,10 @@ static chunk_t *align_var_def_brace(chunk_t *start, int span, int *p_nl_count)
                *p_nl_count += sub_nl_count;
             }
          }
+#if 1 // Denphon
+         if(!pc || pcPrev->orig_line != pc->orig_line)
+            as.Reset();
+#endif
          continue;
       }
 
@@ -1278,6 +1285,15 @@ static chunk_t *align_var_def_brace(chunk_t *start, int span, int *p_nl_count)
             did_this_line = true;
          }
       }
+
+#if 1 // Denphon
+      if(chunk_is_blank(pc) && chunk_is_newline(pc) && pc->nl_count > 1)
+      {
+          as.Flush();
+          as.Reset();
+      }
+#endif
+
       pc = chunk_get_next(pc);
    }
 

@@ -1652,6 +1652,10 @@ static void newline_func_def(chunk_t *start)
             if ((prev != NULL) &&
                 (prev->type != CT_BRACE_CLOSE) &&
                 (prev->type != CT_VBRACE_CLOSE) &&
+#if 1 // denphon
+             (prev->type != CT_PRIVATE_COLON) &&
+             !(prev->type == CT_ANGLE_CLOSE && prev->parent_type == CT_TEMPLATE) &&
+#endif
                 (prev->type != CT_BRACE_OPEN) &&
                 (prev->type != CT_SEMICOLON) &&
                 (prev->parent_type != CT_TEMPLATE))

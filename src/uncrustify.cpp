@@ -1882,7 +1882,7 @@ struct lang_ext_t language_exts[] =
    { ".pawn", "PAWN" },
    { ".p",    "PAWN" },
    { ".sma",  "PAWN" },
-   { ".inl",  "PAWN" },
+   { ".inl",  "CPP"  },
    { ".h",    "CPP"  },
    { ".cxx",  "CPP"  },
    { ".hpp",  "CPP"  },
