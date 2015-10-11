@@ -117,7 +117,8 @@ def run_tests(test_name, config_name, input_name, lang):
 	except:
 		pass
 
-	cmd = "%s/uncrustify -q -c %s -f input/%s %s > %s" % (os.path.abspath('../src'), config_name, input_name, lang, resultname)
+	#cmd = "%s/uncrustify -q -c %s -f input/%s %s > %s" % (os.path.abspath('../src'), config_name, input_name, lang, resultname)
+	cmd = "/home/guy-kde/Software/uncrustify4Qt/build/src/uncrustify -q -c %s -f input/%s %s > %s" % (config_name, input_name, lang, resultname)
 	if log_level & 2:
 		print "RUN: " + cmd
 	a = os.system(cmd)
@@ -144,7 +145,8 @@ def run_tests(test_name, config_name, input_name, lang):
 	# Re-run with the output file as the input to check stability.
 	if log_level & 2:
 		print "Re-run with the output file as the input to check stability."
-	cmd = "%s/uncrustify -q -c %s -f %s %s > %s" % (os.path.abspath('../src'), config_name, outputname, lang, resultname)
+	#cmd = "%s/uncrustify -q -c %s -f %s %s > %s" % (os.path.abspath('../src'), config_name, outputname, lang, resultname)
+	cmd = "/home/guy-kde/Software/uncrustify4Qt/build/src/uncrustify -q -c %s -f %s %s > %s" % (config_name, outputname, lang, resultname)
 	if log_level & 2:
 		print "RUN: " + cmd
 	a = os.system(cmd)

@@ -184,7 +184,12 @@ void tokenize_cleanup(void)
          }
          if (pc->type == CT_WORD)
          {
-            set_chunk_type(pc, CT_TYPE);
+            if ((strncasecmp(pc->text(), "Q_EMIT", pc->len()) == 0))
+            {
+                set_chunk_type(pc, CT_COMMENT_EMBED);
+            } else {
+                set_chunk_type(pc, CT_TYPE);
+            }
          }
       }
 

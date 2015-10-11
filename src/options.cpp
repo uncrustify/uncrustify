@@ -850,7 +850,7 @@ void register_options(void)
    unc_add_option("nl_multi_line_define", UO_nl_multi_line_define, AT_BOOL,
                   "Force a newline in a define after the macro name for multi-line defines.");
    unc_add_option("nl_before_case", UO_nl_before_case, AT_BOOL,
-                  "Whether to put a newline before 'case' statement");
+                  "Whether to put a newline before 'case' statement, not after the first 'case'");
    unc_add_option("nl_before_throw", UO_nl_before_throw, AT_IARF,
                   "Add or remove newline between ')' and 'throw'");
    unc_add_option("nl_after_case", UO_nl_after_case, AT_BOOL,
@@ -873,12 +873,12 @@ void register_options(void)
                   "Add or remove newline between return type and function name inside a class {}\n"
                   "Uses nl_func_type_name or nl_func_proto_type_name if set to ignore.");
    unc_add_option("nl_func_scope_name", UO_nl_func_scope_name, AT_IARF,
-                  "Add or remove newline between function scope and name in a definition\n"
+                  "Add or remove newline between function scope and name\n"
                   "Controls the newline after '::' in 'void A::f() { }'");
    unc_add_option("nl_func_proto_type_name", UO_nl_func_proto_type_name, AT_IARF,
                   "Add or remove newline between return type and function name in a prototype");
    unc_add_option("nl_func_paren", UO_nl_func_paren, AT_IARF,
-                  "Add or remove newline between a function name and the opening '('");
+                  "Add or remove newline between a function name and the opening '(' in the declaration");
    unc_add_option("nl_func_def_paren", UO_nl_func_def_paren, AT_IARF,
                   "Add or remove newline between a function name and the opening '(' in the definition");
    unc_add_option("nl_func_decl_start", UO_nl_func_decl_start, AT_IARF,
@@ -964,9 +964,9 @@ void register_options(void)
    unc_add_option("nl_after_do", UO_nl_after_do, AT_IARF,
                   "Add or remove blank line after 'do/while' statement");
    unc_add_option("nl_ds_struct_enum_cmt", UO_nl_ds_struct_enum_cmt, AT_BOOL,
-                  "Whether to double-space commented-entries in struct/enum");
+                  "Whether to double-space commented-entries in struct/union/enum");
    unc_add_option("nl_ds_struct_enum_close_brace", UO_nl_ds_struct_enum_close_brace, AT_BOOL,
-                  "Whether to double-space before the close brace of a struct/union/enum\n"
+                  "force nl before } of a struct/union/enum\n"
                   "(lower priority than 'eat_blanks_before_close_brace')");
    unc_add_option("nl_class_colon", UO_nl_class_colon, AT_IARF,
                   "Add or remove a newline around a class colon.\n"
@@ -986,7 +986,7 @@ void register_options(void)
 
    unc_begin_group(UG_blankline, "Blank line options", "Note that it takes 2 newlines to get a blank line");
    unc_add_option("nl_max", UO_nl_max, AT_NUM,
-                  "The maximum consecutive newlines");
+                  "The maximum consecutive newlines (3 = 2 blank lines)");
    unc_add_option("nl_after_func_proto", UO_nl_after_func_proto, AT_NUM,
                   "The number of newlines after a function prototype, if followed by another function prototype");
    unc_add_option("nl_after_func_proto_group", UO_nl_after_func_proto_group, AT_NUM,
@@ -1021,7 +1021,7 @@ void register_options(void)
                   "Will not change the newline count if after a brace open.\n"
                   "0 = No change.");
    unc_add_option("nl_after_access_spec", UO_nl_after_access_spec, AT_NUM,
-                  "The number of newlines after a 'private:', 'public:', 'protected:', 'signals:', or 'slots:' label.\n"
+                  "The number of newlines after a 'private:', 'public:', 'protected:', 'signals:' or 'slots:' label.\n"
                   "0 = No change.");
 
    unc_add_option("nl_comment_func_def", UO_nl_comment_func_def, AT_NUM,
@@ -1352,6 +1352,10 @@ void register_options(void)
                   "Control whether to indent the code between #if, #else and #endif.");
    unc_add_option("pp_define_at_level", UO_pp_define_at_level, AT_BOOL,
                   "Whether to indent '#define' at the brace level (true) or from column 1 (false)");
+   unc_begin_group(UG_Use_Ext, "Use/Don't Use options", "G");
+   unc_add_option("use_indent_func_call_param", UO_use_indent_func_call_param, AT_BOOL,
+                  "True:  indent_func_call_param will be used\n"
+                  "False: indent_func_call_param will NOT be used");
 }
 
 
@@ -2032,6 +2036,7 @@ void set_option_defaults(void)
    cpd.settings[UO_sp_word_brace].a        = AV_ADD;
    cpd.settings[UO_sp_word_brace_ns].a     = AV_ADD;
    cpd.settings[UO_indent_oc_msg_prioritize_first_colon].b = true;
+   cpd.settings[UO_use_indent_func_call_param].b = true;
 }
 
 

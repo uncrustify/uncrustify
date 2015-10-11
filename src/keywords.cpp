@@ -42,8 +42,10 @@ static const chunk_tag_t keywords[] =
    { "@synthesize",      CT_OC_DYNAMIC,   LANG_OC | LANG_CPP | LANG_C                                                 },
    { "@throw",           CT_THROW,        LANG_OC                                                                     },
    { "@try",             CT_TRY,          LANG_OC | LANG_CPP | LANG_C                                                 },
+   { "NS_OPTIONS",       CT_ENUM,         LANG_OC                                                                     },
    { "NS_ENUM",          CT_ENUM,         LANG_OC                                                                     },
    { "NS_OPTIONS",       CT_ENUM,         LANG_OC                                                                     },
+   { "Q_FOREACH",        CT_FOR,          LANG_CPP                                                                    }, // guy 2015-09-23
    { "_Bool",            CT_TYPE,         LANG_CPP                                                                    },
    { "_Complex",         CT_TYPE,         LANG_CPP                                                                    },
    { "_Imaginary",       CT_TYPE,         LANG_CPP                                                                    },

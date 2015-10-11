@@ -73,6 +73,15 @@ struct no_space_table_s no_space_table[] =
       log_rule2(__LINE__, (rule), first, second, complete); } \
    } while (0)
 
+// for the modification of options within the SIGNAL/SLOT call. guy 2015-09-22
+static bool QT_SIGNAL_SLOT_found = false;
+static int QT_SIGNAL_SLOT_level = 0;
+static argval_t SaveUO_sp_inside_fparen_A = AV_NOT_DEFINED;
+static argval_t SaveUO_sp_paren_paren_A = AV_NOT_DEFINED;
+static argval_t SaveUO_sp_before_comma_A = AV_NOT_DEFINED;
+static argval_t SaveUO_sp_after_comma_A = AV_NOT_DEFINED;
+static bool restoreValues = false;
+
 static void log_rule2(int line, const char *rule, chunk_t *first, chunk_t *second, bool complete)
 {
    LOG_FUNC_ENTRY();
@@ -501,10 +510,20 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
       return(AV_REMOVE);
    }
 
-   /* "((" vs "( (" */
+   /* "((" vs "( (" or "))" vs ") )" */
    if ((chunk_is_str(first, "(", 1) && chunk_is_str(second, "(", 1)) ||
        (chunk_is_str(first, ")", 1) && chunk_is_str(second, ")", 1)))
    {
+      // test if we are within a SIGNAL/SLOT call
+      LOG_FMT(LSPACE, "%d:%d %d %s %s %s      level %d\n",
+              first->orig_line, first->orig_col, __LINE__, first->text(), first->next->text(), first->next->next->text(), first->level); // guy  2015-09-22
+      if (QT_SIGNAL_SLOT_found) {
+        if ((first->type == CT_FPAREN_CLOSE) && (second->type == CT_FPAREN_CLOSE)) {
+          if (second->level == (QT_SIGNAL_SLOT_level)) {
+             restoreValues = true;
+          }
+        }
+      }
       log_rule("sp_paren_paren");
       return(cpd.settings[UO_sp_paren_paren].a);
    }
@@ -1079,6 +1098,16 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
       {
          log_rule("sp_inside_fparens");
          return(cpd.settings[UO_sp_inside_fparens].a);
+      }
+      // test if we are within a SIGNAL/SLOT call
+      LOG_FMT(LSPACE, "%d:%d %d %s %s %s      level %d\n",
+              first->orig_line, first->orig_col, __LINE__, first->text(), first->next->text(), first->next->next->text(), first->level); // guy  2015-09-22
+      if (QT_SIGNAL_SLOT_found) {
+        if (first->type == CT_FPAREN_CLOSE) {
+          if (second->level == (QT_SIGNAL_SLOT_level + 1)) {
+             restoreValues = true;
+          }
+        }
       }
       log_rule("sp_inside_fparen");
       return(cpd.settings[UO_sp_inside_fparen].a);
@@ -1655,6 +1684,26 @@ void space_text(void)
    while (pc != NULL)
    {
       next = chunk_get_next(pc);
+      LOG_FMT(LSPACE, "%d:%d %s %s %s %s      level %d\n",
+              pc->orig_line, pc->orig_col, pc->text(), next->text(), next->next->text(), next->next->next->text(), pc->level); // guy  2015-09-22
+      if ((strcmp(pc->text(), "SIGNAL") == 0) ||
+          (strcmp(pc->text(), "SLOT") == 0)) { // guy 2015-09-22
+         LOG_FMT(LSPACE, "%d: [%d] type %s SIGNAL/SLOT found\n",
+                 pc->orig_line, __LINE__, get_token_name(pc->type));
+         QT_SIGNAL_SLOT_found = true;
+         // save the values
+         QT_SIGNAL_SLOT_level = pc->level;
+         SaveUO_sp_inside_fparen_A = cpd.settings[UO_sp_inside_fparen].a;
+         SaveUO_sp_paren_paren_A = cpd.settings[UO_sp_paren_paren].a;
+         SaveUO_sp_before_comma_A = cpd.settings[UO_sp_before_comma].a;
+         SaveUO_sp_after_comma_A = cpd.settings[UO_sp_after_comma].a;
+         // set values for SIGNAL/SLOT
+         cpd.settings[UO_sp_inside_fparen].a = AV_REMOVE;
+         cpd.settings[UO_sp_paren_paren].a = AV_REMOVE;
+         cpd.settings[UO_sp_before_comma].a = AV_REMOVE;
+         cpd.settings[UO_sp_after_comma].a = AV_REMOVE;
+      } // guy
+
       while (chunk_is_blank(next) && !chunk_is_newline(next))
       {
          LOG_FMT(LSPACE, "%s: %d:%d Skip %s (%d+%d)\n", __func__,
@@ -1840,6 +1889,21 @@ void space_text(void)
                  (av == AV_ADD) ? "ADD" :
                  (av == AV_REMOVE) ? "REMOVE" : "FORCE",
                  column - prev_column, next->column);
+         if (restoreValues) {  // guy 2015-09-22
+            LOG_FMT(LSPACE, "restore values\n");
+            // restore the values we had before SIGNAL/SLOT
+            QT_SIGNAL_SLOT_level = 0;
+            cpd.settings[UO_sp_inside_fparen].a = SaveUO_sp_inside_fparen_A;
+            cpd.settings[UO_sp_paren_paren].a = SaveUO_sp_paren_paren_A;
+            cpd.settings[UO_sp_before_comma].a = SaveUO_sp_before_comma_A;
+            cpd.settings[UO_sp_after_comma].a = SaveUO_sp_after_comma_A;
+            SaveUO_sp_inside_fparen_A = AV_NOT_DEFINED;
+            SaveUO_sp_paren_paren_A = AV_NOT_DEFINED;
+            SaveUO_sp_before_comma_A = AV_NOT_DEFINED;
+            SaveUO_sp_after_comma_A = AV_NOT_DEFINED;
+            QT_SIGNAL_SLOT_found = false;
+            restoreValues = false;
+         }
       }
 
       pc = next;
