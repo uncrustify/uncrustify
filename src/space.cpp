@@ -3,6 +3,8 @@
  * Adds or removes inter-chunk spaces.
  *
  * @author  Ben Gardner
+ * @author  Guy Maurel since version 0.62 for uncrustify4Qt
+ *          October 2015
  * @license GPL v2+
  */
 #include "uncrustify_types.h"
