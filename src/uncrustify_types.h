@@ -307,6 +307,7 @@ enum
    LANG_ALLC = 0x017f,
    LANG_ALL  = 0x0fff,
 
+   FLAG_DIG  = 0x4000,     /*<< digraph/trigraph */
    FLAG_PP   = 0x8000,     /*<< only appears in a preprocessor */
 };
 

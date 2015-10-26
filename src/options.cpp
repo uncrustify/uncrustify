@@ -179,6 +179,8 @@ void register_options(void)
                   "Override the default ' *INDENT-OFF*' in comments for disabling processing of part of the file.");
    unc_add_option("enable_processing_cmt", UO_enable_processing_cmt, AT_STRING,
                   "Override the default ' *INDENT-ON*' in comments for enabling processing of part of the file.");
+   unc_add_option("enable_digraphs", UO_enable_digraphs, AT_BOOL,
+                  "Enable parsing of digraphs. Default=false");
 
    unc_add_option("utf8_bom", UO_utf8_bom, AT_IARF,
                   "Control what to do with the UTF-8 BOM (recommend 'remove')");
