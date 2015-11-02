@@ -486,19 +486,17 @@ int main(int argc, char *argv[])
    {
       char buffer[256];
       strcpy(buffer, p_arg);
+      
+      // Tokenize and extract key and value
+      const char *token = strtok(buffer, "=");
+      const char *option = token;
 
-      char *ptr;
-      if ((ptr = strchr(buffer, '=')) != NULL)
+      token = strtok(NULL, "=");
+      const char *value = token;
+
+      if (option != NULL && value != NULL && strtok(NULL, "=") == NULL)
       {
-         // Tokenize the string using the null character and move to second token.
-         *ptr++ = '\0';
-
-         if (*ptr == '\0')
-         {
-            usage_exit("Error while parsing --set", argv[0], 64);
-         }
-
-         if (set_option_value(buffer, ptr) == -1)
+         if (set_option_value(option, value) == -1)
          {
             fprintf(stderr, "Unknown option '%s' to override.\n", buffer);
             return EXIT_FAILURE;
@@ -506,6 +504,7 @@ int main(int argc, char *argv[])
       }
       else
       {
+         /* TODO: consider using defines like EX_USAGE from sysexits.h */
          usage_exit("Error while parsing --set", argv[0], 64);
       }
    }
