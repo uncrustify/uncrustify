@@ -186,12 +186,7 @@ void tokenize_cleanup(void)
          }
          if (pc->type == CT_WORD)
          {
-            if ((strncasecmp(pc->text(), "Q_EMIT", pc->len()) == 0))
-            {
-                set_chunk_type(pc, CT_COMMENT_EMBED);
-            } else {
-                set_chunk_type(pc, CT_TYPE);
-            }
+            set_chunk_type(pc, CT_TYPE);
          }
       }
 
@@ -775,6 +770,13 @@ void tokenize_cleanup(void)
       }
 
       /* TODO: determine other stuff here */
+      // guy 2015-11-05
+      // change CT_DC_MEMBER + CT_FOR into CT_DC_MEMBER + CT_FUNC_CALL
+      if ((pc->type == CT_FOR) &&
+          (pc->prev->type == CT_DC_MEMBER))
+      {
+         set_chunk_type(pc, CT_FUNC_CALL);
+      }
 
       prev = pc;
       pc   = next;

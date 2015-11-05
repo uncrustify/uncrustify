@@ -508,6 +508,14 @@ void indent_text(void)
    pc = chunk_get_head();
    while (pc != NULL)
    {
+      //if (strcasecmp(get_token_name(pc->type), "NEWLINE") == 0) {
+      //   LOG_FMT(LINDPC, "begin of the loop: %d:%d NEWLINE (%d) %d\n",
+      //           pc->orig_line, pc->orig_col, __LINE__, frm.pse[frm.pse_tos].indent_tmp);
+      //   tmp = 123;
+      //} else {
+      //   LOG_FMT(LINDPC, "begin of the loop: %d:%d %s (%d), column=%d\n",
+      //           pc->orig_line, pc->orig_col, pc->str.c_str(), __LINE__, pc->column);
+      //}
       /* Handle preprocessor transitions */
       in_preproc = (pc->flags & PCF_IN_PREPROC) != 0;
 
@@ -1427,8 +1435,15 @@ void indent_text(void)
                 ((pc->type == CT_FPAREN_OPEN) || (pc->type == CT_SPAREN_OPEN)))
             {
                //frm.pse[frm.pse_tos].indent += abs(cpd.settings[UO_indent_continue].n);
-               frm.pse[frm.pse_tos].indent      = calc_indent_continue(frm, frm.pse_tos);
-               frm.pse[frm.pse_tos].indent_cont = true;
+               if ((cpd.settings[UO_use_indent_continue_only_once].b) &&
+                   (frm.pse[frm.pse_tos].indent_cont) &&
+                   (vardefcol != 0)) {
+                  // if vardefcol isn't zero, use it
+                  frm.pse[frm.pse_tos].indent = vardefcol;
+               } else {
+                  frm.pse[frm.pse_tos].indent      = calc_indent_continue(frm, frm.pse_tos);
+                  frm.pse[frm.pse_tos].indent_cont = true;
+               }
             }
          }
          frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
@@ -1464,8 +1479,15 @@ void indent_text(void)
                     ((pc->parent_type != CT_FUNC_PROTO) && (pc->parent_type != CT_FUNC_DEF))))
                {
                   //frm.pse[frm.pse_tos].indent += abs(cpd.settings[UO_indent_continue].n);
-                  frm.pse[frm.pse_tos].indent      = calc_indent_continue(frm, frm.pse_tos);
-                  frm.pse[frm.pse_tos].indent_cont = true;
+                  if ((cpd.settings[UO_use_indent_continue_only_once].b) &&
+                      (frm.pse[frm.pse_tos].indent_cont) &&
+                      (vardefcol != 0)) {
+                     // if vardefcol isn't zero, use it
+                     frm.pse[frm.pse_tos].indent = vardefcol;
+                  } else {
+                     frm.pse[frm.pse_tos].indent      = calc_indent_continue(frm, frm.pse_tos);
+                     frm.pse[frm.pse_tos].indent_cont = true;
+                  }
                }
             }
             else if (chunk_is_newline(next) || !cpd.settings[UO_indent_align_assign].b)
@@ -1847,11 +1869,11 @@ void indent_text(void)
             int ttidx = frm.pse_tos;
             if (ttidx > 0) {
                if (strcasecmp(get_token_name(frm.pse[ttidx].pc->parent_type), "FUNC_CALL") == 0) {
-                  LOG_FMT(LINDPC, "guy-Info FUNC_CALL OK [%d]\n", __LINE__);
+                  LOG_FMT(LINDPC, "FUNC_CALL OK [%d]\n", __LINE__);
                   if (cpd.settings[UO_use_indent_func_call_param].b) {
-                     LOG_FMT(LINDPC, "guy-Info use is true [%d]\n", __LINE__);
+                     LOG_FMT(LINDPC, "use is true [%d]\n", __LINE__);
                   } else {
-                     LOG_FMT(LINDPC, "guy-Info use is false [%d]\n", __LINE__);
+                     LOG_FMT(LINDPC, "use is false [%d]\n", __LINE__);
                      use_ident = false;
                   }
                }

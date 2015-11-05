@@ -47,7 +47,10 @@ static const chunk_tag_t keywords[] =
    { "NS_OPTIONS",       CT_ENUM,         LANG_OC                                                                     },
    { "NS_ENUM",          CT_ENUM,         LANG_OC                                                                     },
    { "NS_OPTIONS",       CT_ENUM,         LANG_OC                                                                     },
+   { "Q_EMIT",           CT_COMMENT_EMBED, LANG_CPP                                                                   }, // guy 2015-10-16
    { "Q_FOREACH",        CT_FOR,          LANG_CPP                                                                    }, // guy 2015-09-23
+   { "Q_FOREVER",        CT_COMMENT_EMBED, LANG_CPP                                                                   }, // guy 2015-10-18
+   { "Q_OBJECT",         CT_COMMENT_EMBED, LANG_CPP                                                                   }, // guy 2015-10-16
    { "_Bool",            CT_TYPE,         LANG_CPP                                                                    },
    { "_Complex",         CT_TYPE,         LANG_CPP                                                                    },
    { "_Imaginary",       CT_TYPE,         LANG_CPP                                                                    },
@@ -143,6 +146,7 @@ static const chunk_tag_t keywords[] =
    { "float",            CT_TYPE,         LANG_ALLC                                                                   },
    { "for",              CT_FOR,          LANG_ALL                                                                    }, // PAWN
    { "foreach",          CT_FOR,          LANG_CS | LANG_D | LANG_VALA                                                },
+   { "for_each",         CT_FOR,          LANG_CPP                                                                    },
    { "foreach_reverse",  CT_FOR,          LANG_D                                                                      },
    { "forward",          CT_FORWARD,      LANG_PAWN                                                                   }, // PAWN
    { "friend",           CT_FRIEND,       LANG_CPP                                                                    },

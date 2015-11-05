@@ -120,11 +120,13 @@ def run_tests(test_name, config_name, input_name, lang):
 		pass
 
 	#cmd = "%s/uncrustify -q -c %s -f input/%s %s > %s" % (os.path.abspath('../src'), config_name, input_name, lang, resultname)
-	cmd = "/home/guy-kde/Software/uncrustify4Qt/build/src/uncrustify -q -c %s -f input/%s %s > %s" % (config_name, input_name, lang, resultname)
+	cmd = "/home/guy-kde/Software/uncrustify4Qt/src/uncrustify -q -c %s -f input/%s %s > %s" % (config_name, input_name, lang, resultname)
+        #print 'cmd-1 ist:', cmd
 	if log_level & 2:
 		print "RUN: " + cmd
 	a = os.system(cmd)
 	if a != 0:
+		print 'cmd-1 ist:', cmd
 		print FAIL_COLOR + "FAILED: " + NORMAL + test_name
 		return -1
 
@@ -148,11 +150,13 @@ def run_tests(test_name, config_name, input_name, lang):
 	if log_level & 2:
 		print "Re-run with the output file as the input to check stability."
 	#cmd = "%s/uncrustify -q -c %s -f %s %s > %s" % (os.path.abspath('../src'), config_name, outputname, lang, resultname)
-	cmd = "/home/guy-kde/Software/uncrustify4Qt/build/src/uncrustify -q -c %s -f %s %s > %s" % (config_name, outputname, lang, resultname)
+	cmd = "/home/guy-kde/Software/uncrustify4Qt/src/uncrustify -q -c %s -f %s %s > %s" % (config_name, outputname, lang, resultname)
+        #print 'cmd-2 ist:', cmd
 	if log_level & 2:
 		print "RUN: " + cmd
 	a = os.system(cmd)
 	if a != 0:
+		print 'cmd-2 ist:', cmd
 		print FAIL_COLOR + "FAILED2: " + NORMAL + test_name
 		return -1
 
