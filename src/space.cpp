@@ -1706,15 +1706,20 @@ void space_text(void)
          cpd.settings[UO_sp_after_comma].a = AV_REMOVE;
       } // guy
 
-      while (chunk_is_blank(next) && !chunk_is_newline(next))
-      {
-         LOG_FMT(LSPACE, "%s: %d:%d Skip %s (%d+%d)\n", __func__,
-                 next->orig_line, next->orig_col, get_token_name(next->type),
-                 pc->column, pc->str.size());
-         next->column = pc->column + pc->str.size();
-         next         = chunk_get_next(next);
-      }
-      if (!next)
+      // why this??
+      // "space: drop vbrace tokens back to the previous and skip them"
+      // 2014-09-01 06:33:17
+      // take it as TODO 2015-11-16
+      //while (chunk_is_blank(next) && !chunk_is_newline(next))
+      //{
+      //   LOG_FMT(LSPACE, "%s(GUY:%d): %d:%d Skip %s (%d+%d)\n", __func__, __LINE__,
+      //           next->orig_line, next->orig_col, get_token_name(next->type),
+      //           pc->column, pc->str.size());
+      //   next->column = pc->column + pc->str.size();
+      //   next         = chunk_get_next(next);
+      //}
+      //if (!next)
+      if (next == NULL)
       {
          break;
       }
@@ -2051,6 +2056,9 @@ int space_col_align(chunk_t *first, chunk_t *second)
       {
          coldiff++;
       }
+      break;
+
+   case AV_NOT_DEFINED:
       break;
    }
    LOG_FMT(LSPACE, " => %d\n", coldiff);

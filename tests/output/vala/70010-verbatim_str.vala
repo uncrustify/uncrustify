@@ -24,9 +24,10 @@ public class Sample : Object {
       var    where = """ WHERE name LIKE '%blah% 
          """;
 
-      foreach (string arg in args)
+      foreach(string arg in args)
       {
          var sample = new Sample(arg);
+
          sample.run();
          /* Object will automatically be freed
           * at the end of the block */

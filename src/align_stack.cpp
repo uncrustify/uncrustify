@@ -19,7 +19,7 @@
  */
 void AlignStack::Start(int span, int thresh)
 {
-   LOG_FMT(LAS, "Start(%d, %d)\n", span, thresh);
+   LOG_FMT(LAS, "Start(%d, %d), (%s>%d)\n", span, thresh, __func__, __LINE__);
 
    m_aligned.Reset();
    m_skipped.Reset();
@@ -250,13 +250,14 @@ void AlignStack::Add(chunk_t *start, int seqnum)
          endcol += m_gap - gap;
       }
 
-      // LOG_FMT(LSYS, "[%p] line %d pc='%s' [%s] col:%d ali='%s' [%s] col:%d ref='%s' [%s] col:%d  col_adj=%d  endcol=%d, ss=%d as=%d, gap=%d\n",
-      //         this,
-      //         start->orig_line,
-      //         start->str.c_str(), get_token_name(start->type), start->column,
-      //         ali->str.c_str(), get_token_name(ali->type), ali->column,
-      //         ref->str.c_str(), get_token_name(ref->type), ref->column,
-      //         col_adj, endcol, m_star_style, m_amp_style, gap);
+       //LOG_FMT(LSYS, "[%p] line %d pc='%s' [%s] col:%d ali='%s' [%s] col:%d ref='%s' [%s] col:%d  col_adj=%d  endcol=%d, ss=%d as=%d, gap=%d, (%s>%d)\n",
+       LOG_FMT(LAS, "[%p] line %d pc='%s' [%s] col:%d ali='%s' [%s] col:%d ref='%s' [%s] col:%d  col_adj=%d  endcol=%d, ss=%d as=%d, gap=%d, (%s>%d)\n",
+               this,
+               start->orig_line,
+               start->str.c_str(), get_token_name(start->type), start->column,
+               ali->str.c_str(), get_token_name(ali->type), ali->column,
+               ref->str.c_str(), get_token_name(ref->type), ref->column,
+               col_adj, endcol, m_star_style, m_amp_style, gap, __func__, __LINE__);
 
       ali->align.col_adj = col_adj;
       ali->align.ref     = ref;
@@ -264,9 +265,9 @@ void AlignStack::Add(chunk_t *start, int seqnum)
       m_aligned.Push_Back(ali, seqnum);
       m_last_added = 1;
 
-      LOG_FMT(LAS, "Add-[%s]: line %d, col %d, adj %d : ref=[%s] endcol=%d\n",
+      LOG_FMT(LAS, "Add-[%s]: line %d, col %d, adj %d : ref=[%s] endcol=%d, (%s>%d)\n",
               ali->str.c_str(), ali->orig_line, ali->column, ali->align.col_adj,
-              ref->str.c_str(), endcol);
+              ref->str.c_str(), endcol, __func__, __LINE__);
 
       if (m_min_col > endcol)
       {
@@ -275,9 +276,9 @@ void AlignStack::Add(chunk_t *start, int seqnum)
 
       if (endcol > m_max_col)
       {
-         LOG_FMT(LAS, "Add-aligned [%d/%d/%d]: line %d, col %d : max_col old %d, new %d - min_col %d\n",
+         LOG_FMT(LAS, "Add-aligned [%d/%d/%d]: line %d, col %d : max_col old %d, new %d - min_col %d, (%s>%d)\n",
                  seqnum, m_nl_seqnum, m_seqnum,
-                 ali->orig_line, ali->column, m_max_col, endcol, m_min_col);
+                 ali->orig_line, ali->column, m_max_col, endcol, m_min_col, __func__, __LINE__);
          m_max_col = endcol;
 
          /**
@@ -291,9 +292,9 @@ void AlignStack::Add(chunk_t *start, int seqnum)
       }
       else
       {
-         LOG_FMT(LAS, "Add-aligned [%d/%d/%d]: line %d, col %d : col %d <= %d - min_col %d\n",
+         LOG_FMT(LAS, "Add-aligned [%d/%d/%d]: line %d, col %d : col %d <= %d - min_col %d, (%s>%d)\n",
                  seqnum, m_nl_seqnum, m_seqnum,
-                 ali->orig_line, ali->column, endcol, m_max_col, m_min_col);
+                 ali->orig_line, ali->column, endcol, m_max_col, m_min_col, __func__, __LINE__);
       }
    }
    else
@@ -324,7 +325,7 @@ void AlignStack::NewLines(int cnt)
       }
       else
       {
-         LOG_FMT(LAS, "Newlines<%d>\n", cnt);
+         LOG_FMT(LAS, "Newlines<%d>, (%s>%d)\n", cnt, __func__, __LINE__);
       }
    }
 }
@@ -342,7 +343,7 @@ void AlignStack::Flush()
    const ChunkStack::Entry *ce = NULL;
    chunk_t                 *pc;
 
-   LOG_FMT(LAS, "Flush (min=%d, max=%d)\n", m_min_col, m_max_col);
+   LOG_FMT(LAS, "Flush (min=%d, max=%d), (%s>%d)\n", m_min_col, m_max_col, __func__, __LINE__);
 
    m_last_added = 0;
    m_max_col    = 0;
@@ -413,8 +414,8 @@ void AlignStack::Flush()
       {
          if (m_skip_first && (pc->column != tmp_col))
          {
-            LOG_FMT(LAS, "%s: %d:%d dropping first item due to skip_first\n", __func__,
-                    pc->orig_line, pc->orig_col);
+            LOG_FMT(LAS, "%s: %d:%d dropping first item due to skip_first, (%d)\n", __func__,
+                    pc->orig_line, pc->orig_col, __LINE__);
             m_skip_first = false;
             m_aligned.Pop_Front();
             Flush();
@@ -431,8 +432,8 @@ void AlignStack::Flush()
       pc->align.next = m_aligned.GetChunk(idx + 1);
 
       /* Indent the token, taking col_adj into account */
-      LOG_FMT(LAS, "%s: line %d: '%s' to col %d (adj=%d)\n", __func__,
-              pc->orig_line, pc->str.c_str(), tmp_col, pc->align.col_adj);
+      LOG_FMT(LAS, "%s: line %d: '%s' to col %d (adj=%d), (%s>%d)\n", __func__,
+              pc->orig_line, pc->str.c_str(), tmp_col, pc->align.col_adj, __func__, __LINE__);
       align_to_column(pc, tmp_col);
    }
 

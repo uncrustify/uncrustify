@@ -1,4 +1,37 @@
 
+Change highlights in uncrustify4Qt-0.6xx ()
+-------------------------------------------------------------------------------
+Reverse
+ - space: drop vbrace tokens... 2014-09-01 06:33:17
+   I cannot anderstand this change.
+   It makes some troubles: Bug # 637
+   No test file for it found
+   Reverse the change until more informations could be found
+
+Change
+ - CT_DC_MEMBER + CT_FOR into CT_DC_MEMBER + CT_FUNC_CALL
+
+Some more Qt-macros
+ - for_each
+ - Q_FOREVER
+
+New options:
+ - use_indent_continue_only_once
+
+
+Change highlights in uncrustify4Qt-0.62 (Oct 2015)
+-------------------------------------------------------------------------------
+This is an extention of uncrustify to support Qt-macros
+ - Q_OBJECT
+ - Q_EMIT
+ - SLOT
+ - SIGNAL
+ - Q_FOREACH
+
+New options:
+ - use_indent_func_call_param
+
+
 Change highlights in uncrustify-0.61 (22 Dec 2014)
 -------------------------------------------------------------------------------
 This release is just a roll-up of the past two years.

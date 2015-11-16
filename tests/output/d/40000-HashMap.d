@@ -203,7 +203,7 @@ class HashMap
     {
         uint hash = 2_166_136_261;
 
-        foreach (ubyte c; cast(ubyte[])x)
+        foreach(ubyte c; cast(ubyte[])x)
         {
             hash ^= c;
             hash *= 16_777_619;

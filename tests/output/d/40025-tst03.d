@@ -14,8 +14,8 @@ void foo()
     for (i = 0; i < array.length; i++)
         func(array[ i ]);
     int array[ 17 ];
-    foreach (int value; array)
-        func(value);
+    foreach(int value; array)
+    func(value);
     int[] array;
 
     array.length              = array.length + 1;

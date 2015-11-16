@@ -7,7 +7,7 @@ class C
     }
     void func2()
     {
-        foreach (v; container)
+        foreach(v; container)
         {
             v.f();
         }

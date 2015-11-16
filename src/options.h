@@ -83,8 +83,8 @@ enum uncrustify_groups
    UG_codemodify,
    UG_comment,
    UG_preprocessor,
-   UG_group_count,
-   UG_Use_Ext
+   UG_Use_Ext,
+   UG_group_count
 };
 
 /**
