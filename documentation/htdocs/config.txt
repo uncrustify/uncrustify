@@ -282,6 +282,7 @@ indent_vbrace_open_on_tabstop             { False, True }
 
 sp_arith                                  { Ignore, Add, Remove, Force }
   Add or remove space around arithmetic operator '+', '-', '/', '*', etc
+  also '>>>' '<<' '>>' '%' '|'
 
 sp_assign                                 { Ignore, Add, Remove, Force }
   Add or remove space around assignment operator '=', '+=', etc
@@ -407,7 +408,7 @@ sp_angle_paren                            { Ignore, Add, Remove, Force }
   Add or remove space between '<>' and '(' as found in 'new List<byte>();'
 
 sp_angle_word                             { Ignore, Add, Remove, Force }
-  Add or remove space between '<>' and a word as in 'List<byte> m;'
+  Add or remove space between '<>' and a word as in 'List<byte> m;' or 'template <typename T> static ...'
 
 sp_angle_shift                            { Ignore, Add, Remove, Force }
   Add or remove space between '>' and '>' in '>>' (template stuff C++/C# only). Default=Add
@@ -778,10 +779,10 @@ sp_range                                  { Ignore, Add, Remove, Force }
   Control the space around the D '..' operator.
 
 sp_after_for_colon                        { Ignore, Add, Remove, Force }
-  Control the spacing after ':' in 'for (TYPE VAR : EXPR)' (Java)
+  Control the spacing after ':' in 'for (TYPE VAR : EXPR)'
 
 sp_before_for_colon                       { Ignore, Add, Remove, Force }
-  Control the spacing before ':' in 'for (TYPE VAR : EXPR)' (Java)
+  Control the spacing before ':' in 'for (TYPE VAR : EXPR)'
 
 sp_extern_paren                           { Ignore, Add, Remove, Force }
   Control the spacing in 'extern (C)' (D)
@@ -1695,10 +1696,14 @@ pp_define_at_level                        { False, True }
   Whether to indent '#define' at the brace level (true) or from column 1 (false)
 
 #
-# Use/Don't Use options
+# Use or Do not Use options
 #
 
 use_indent_func_call_param                { False, True }
   True:  indent_func_call_param will be used
   False: indent_func_call_param will NOT be used
+
+use_indent_continue_only_once             { False, True }
+  True:  indent_continue will be used only once
+  False: indent_continue will be used every time (default)
 

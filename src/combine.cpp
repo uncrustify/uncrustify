@@ -1383,6 +1383,12 @@ static bool mark_function_type(chunk_t *pc)
          ptrcnk = tmp;
          LOG_FMT(LFTYPE, " -- PTR_TYPE\n");
       }
+      else if (tmp->type == CT_STDCALL)
+      {
+         // Bug # 633
+         // MS-specific extension to specify calling convention.
+         LOG_FMT(LFTYPE, " -- CT_STDCALL(%s)\n", tmp->text());
+      }
       else if (chunk_is_word(tmp) ||
                (tmp->type == CT_WORD) ||
                (tmp->type == CT_TYPE))
@@ -2090,7 +2096,9 @@ static void fix_enum_struct_union(chunk_t *pc)
  * next ',' or ';' or '__attribute__' is a type.
  *
  * typedef [type...] [*] type [, [*]type] ;
+ * typedef <return type>([*]func)();
  * typedef <return type>([*]func)(params);
+ * typedef <return type>(__stdcall *func)();         Bug # 633    MS-specific extension, guy 2015-11-19
  * typedef <return type>func(params);
  * typedef <enum/struct/union> [type] [*] type [, [*]type] ;
  * typedef <enum/struct/union> [type] { ... } [*] type [, [*]type] ;

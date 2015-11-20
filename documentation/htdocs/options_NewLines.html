@@ -1,0 +1,754 @@
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+   <title>Uncrustify: where do the New Lines options work</title>
+</head>
+<body lang="en-US">
+<h1><a href="https://github.com/gmaurel/uncrustify4Qt">Uncrustify4Qt</a>:
+Where do the options work?</h1>
+<h2>New lines</h2>
+<p>
+</p>
+<hr>
+
+<pre>
+</Pre>
+<a name="nl_remove_extra_newlines"></a>
+<pre>
+<a title="nl_remove_extra_newlines = 0"><strong><font color="red">?</font></strong></a>
+
+</Pre>
+<a name="nl_start_of_file"></a>
+<pre>
+<a title="nl_start_of_file"><strong><font color="red"><strong><font color="red">?</font></strong></font></strong></a>
+
+void bar_0();  // function definition
+</Pre>
+<a name="nl_func_paren"></a><a name="nl_func_def_empty"></a>
+<pre>
+<a title="nl_func_paren = remove"><strong><font color="red">          ^</font></strong></a><a title="nl_func_def_empty = remove"><strong><font color="red">^</font></strong></a>
+
+void bar_0()   // function declaration
+</Pre>
+<a name="nl_func_def_paren"></a><a name="nl_func_decl_empty"></a>
+<pre>
+<a title="nl_func_def_paren = remove"><strong><font color="red">          ^</font></strong></a><a title="nl_func_decl_empty = remove"><strong><font color="red">^</font></strong></a>
+{
+}
+
+void A::bar_1(int a);
+</Pre>
+<a name="nl_func_scope_name"></a><a name="nl_func_def_start"></a><a name="nl_func_def_end_single"></a>
+<pre>
+<a title="nl_func_scope_name = remove"><strong><font color="red">        ^</font></strong></a><a title="nl_func_def_start = remove"><strong><font color="red">    ^</font></strong></a><a title="nl_func_def_end_single = remove"><strong><font color="red">     ^</font></strong></a>
+
+</Pre>
+<a name="nl_fdef_brace"></a>
+<pre>
+void bar_1(int a) <a title="nl_fdef_brace = force"><strong><font color="red">?</font></strong></a>
+</Pre>
+<a name="nl_func_type_name"></a><a name="nl_func_decl_start"></a><a name="nl_func_decl_end"></a>
+<pre>
+<a title="nl_func_type_name = remove"><strong><font color="red">    ^</font></strong></a><a title="nl_func_decl_start = remove"><strong><font color="red">     ^</font></strong></a><a title="nl_func_decl_end = ignore"><strong><font color="red">     ^</font></strong></a>
+</Pre>
+<a name="nl_func_decl_start_single"></a><a name="nl_func_decl_end_single"></a>
+<pre>
+<a title="nl_func_decl_start_single = remove"><strong><font color="red">          ^</font></strong></a><a title="nl_func_decl_end_single = remove"><strong><font color="red">     ^</font></strong></a>
+</Pre>
+<a name="nl_collapse_empty_body"></a>
+<pre>
+{<a title="nl_collapse_empty_body"><strong><font color="red">?</font></strong></a>
+}
+</Pre>
+<a name="nl_after_func_body"></a>
+<pre>
+<a title="nl_after_func_body = 2"><strong><font color="red">?</font></strong></a>
+void bar_2(int x,
+           int y)
+</Pre>
+<a name="nl_func_def_args"></a><a name="nl_func_decl_end"></a>
+<pre>
+<a title="nl_func_def_args = force"><strong><font color="red">          ^</font></strong></a><a title="nl_func_decl_end = remove"><strong><font color="red">    ^</font></strong></a>
+{
+</Pre>
+<a name="nl_after_semicolon"></a>
+<pre>
+    int a = 5;<a title="nl_after_semicolon = true"><strong><font color="red"> ?</font></strong></a>
+    int b = 7;
+</Pre>
+<a name="nl_func_var_def_blk"></a>
+<pre>
+<a title="nl_func_var_def_blk = 1"><strong><font color="red">    ?</font></strong></a>
+    a = 135;
+    list_for_each(item, list) {
+</Pre>
+<a name="nl_fcall_brace"></a>
+<pre>
+<a title="nl_fcall_brace = remove"><strong><font color="red">                             ^</font></strong></a>
+    }
+</Pre>
+<a name="nl_before_block_comment"></a>
+<pre>
+<a title="nl_before_block_comment = 2"><strong><font color="red">    ?</font></strong></a>
+    /* c1
+     * c2
+     */
+</Pre>
+<a name="nl_max"></a>
+<pre>
+<a title="nl_max = 2"><strong><font color="red">    ?</font></strong></a>
+    int x2;
+</Pre>
+<a name="nl_before_c_comment"></a>
+<pre>
+<a title="nl_before_c_comment = 2"><strong><font color="red">    ?</font></strong></a>
+    /* single comment */
+</Pre>
+<a name="nl_before_cpp_comment"></a>
+<pre>
+<a title="nl_before_cpp_comment = 2"><strong><font color="red">    ?</font></strong></a>
+    // cpp comment
+}
+
+void g1b()
+{
+        std::for_each(a, b, [] (int& b) -> foo {
+</Pre>
+<a name="nl_cpp_ldef_brace"></a>
+<pre>
+<a title="nl_cpp_ldef_brace = remove"><strong><font color="red">                                              ^</font></strong></a>
+                b+=3; return(b);
+        });
+}
+
+</Pre>
+<a name="nl_end_of_file"></a>
+<pre>
+<a title="nl_end_of_file"><strong><font color="red">?</font></strong></a>
+
+</pre>
+<hr>
+<pre>
+</Pre>
+<a name="nl_class_brace"></a>
+<pre>
+class foo : public<a title="nl_class_brace = force"><strong><font color="red"> ?</font></strong> </a>
+</Pre>
+<a name="nl_class_colon"></a>
+<pre>
+<a title="nl_class_colon = remove"><strong><font color="red">         ^</font></strong></a>
+{
+</Pre>
+<a name="nl_constr_colon"></a>
+<pre>
+    void bar_c(int t, int u)<a title="nl_constr_colon = force"><strong><font color="red"> ?</font></strong></a>
+</Pre>
+<a name="nl_func_type_name_class"></a><a name="nl_func_decl_args"></a>
+<pre>
+<a title="nl_func_type_name_class = remove, nl_func_proto_type_name = remove"><strong><font color="red">        ^</font></strong></a><a title="nl_func_decl_args = remove"><strong><font color="red">            ^</font></strong></a>
+        : t(222)
+</Pre>
+<a name="pos_class_colon"></a>
+<pre>
+<a title="pos_class_colon = lead_force"><strong><font color="red"><strong><font color="red">        ^</font></strong></font></strong></a>
+        , u(88)
+</Pre>
+<a name="nl_constr_init_args"></a>
+<pre>
+<a title="nl_constr_init_args = force, pos_constr_comma = lead_force"><strong><font color="red">        ^</font></strong></a>
+    {
+</Pre>
+<a name="nl_typedef_blk_start"></a>
+<pre>
+<a title="nl_typedef_blk_start = 2"><strong><font color="red">        ?</font></strong></a>
+        typedef char CHAR;
+</Pre>
+<a name="nl_typedef_blk_end"></a><a name="nl_var_def_blk_start"></a>
+<pre>
+<a title="nl_typedef_blk_end = 2"><strong><font color="red">        ?</font></strong></a><a title="nl_var_def_blk_start = 2"><strong><font color="red"> ?</font></strong></a>
+        CHAR c;
+        int a;
+        int b;
+</Pre>
+<a name="nl_var_def_blk_end"></a>
+<pre>
+<a title="nl_var_def_blk_end = 2"><strong><font color="red">        ?</font></strong></a>
+        c = 'a';
+</Pre>
+<a name="nl_before_switch"></a>
+<pre>
+<a title="nl_before_switch = force"><strong><font color="red">        ?</font></strong></a>
+        switch (a) {
+</Pre>
+<a name="nl_switch_brace"></a>
+<pre>
+<a title="nl_switch_brace = remove"><strong><font color="red">                  ^</font></strong></a>
+        case 0:
+            b = 1;
+            break;
+</Pre>
+<a name="nl_before_case"></a>
+<pre>
+<a title="nl_before_case = true"><strong><font color="red">        ?</font></strong></a>
+        case 1: b = 5; break;
+</Pre>
+<a name="nl_after_case"></a>
+<pre>
+<a title="nl_after_case = false"><strong><font color="red">               ^</font></strong></a>
+        case 13: {
+</Pre>
+<a name="nl_case_colon_brace"></a>
+<pre>
+<a title="nl_case_colon_brace = remove"><strong><font color="red">                ^</font></strong></a>
+            b = 15;
+            break;
+        }
+        }
+</Pre>
+<a name="nl_after_switch"></a><a name="nl_before_do"></a>
+<pre>
+<a title="nl_after_switch = force"><strong><font color="red">        ?</font></strong></a><a title="nl_before_do = force"><strong><font color="red"> ?</font></strong></a>
+</Pre>
+<a name="nl_do_brace"></a>
+<pre>
+        do { <a title="nl_do_brace = remove"><strong><font color="red">?</font></strong></a>
+           do_something();
+        } while (!d.isEmpty());
+</Pre>
+<a name="nl_brace_while"></a><a name="nl_after_do"></a><a name="nl_before_if"></a>
+<pre>
+<a title="nl_brace_while = remove"><strong><font color="red">        ^</font></strong></a><a title="nl_after_do = force"><strong><font color="red">?</font></strong></a><a title="nl_before_if = force"><strong><font color="red"> ?</font></strong></a>
+</Pre>
+<a name="nl_if_brace"></a>
+<pre>
+        if (a) { <a title="nl_if_brace = remove"><strong><font color="red">?</font></strong></a>
+            b = 1;
+        } else if (c) {
+</Pre>
+<a name="nl_brace_else"></a><a name="nl_else_if"></a><a name="nl_elseif_brace"></a>
+<pre>
+<a title="nl_brace_else = remove"><strong><font color="red">         ^</font></strong></a><a title="nl_else_if = remove"><strong><font color="red">    ^</font></strong></a><a title="nl_elseif_brace = remove"><strong><font color="red">      ^</font></strong></a>
+            b = 2;
+        } else {
+</Pre>
+<a name="nl_else_brace"></a>
+<pre>
+<a title="nl_else_brace = remove"><strong><font color="red">              ^</font></strong></a>
+            b = 3;
+        }
+</Pre>
+<a name="nl_after_if"></a><a name="nl_before_for"></a>
+<pre>
+<a title="nl_after_if = force"><strong><font color="red">        ?</font></strong></a><a title="nl_before_for = force"><strong><font color="red"> ?</font></strong></a>
+        for (a = 1; a < 5; a++) {
+</Pre>
+<a name="nl_for_brace"></a>
+<pre>
+<a title="nl_for_brace = remove"><strong><font color="red">                              ^</font></strong></a>
+            b = b + a;
+        }
+</Pre>
+<a name="nl_after_for"></a>
+<pre>
+<a title="nl_after_for = force"><strong><font color="red">        ?</font></strong></a>
+        for (int a = 1; a < 5;
+             a++) {
+</Pre>
+<a name="nl_multi_line_cond"></a>
+<pre>
+<a title="nl_multi_line_cond = false"><strong><font color="red">                 ^</font></strong></a>
+            b = a + 4;
+        }
+
+        try {
+</Pre>
+<a name="nl_try_brace"></a>
+<pre>
+<a title="nl_try_brace = remove"><strong><font color="red">        ^</font></strong></a>
+            b = 1;
+            if (err) {
+</Pre>
+<a name="nl_before_throw"></a>
+<pre>
+<a title="nl_before_throw = force"><strong><font color="red">                ?</font></strong></a>
+                throw std::runtime_error(std::string("nextKey: ") + err.asString());
+            }
+        } catch (const std::exception &exc) {
+</Pre>
+<a name="nl_brace_catch"></a><a name="nl_catch_brace"></a>
+<pre>
+<a title="nl_brace_catch = remove"><strong><font color="red">         ^</font></strong></a><a title="nl_catch_brace = remove"><strong><font color="red">                                 ^</font></strong></a>
+            b = 3;
+        }
+</Pre>
+<a name="nl_before_while"></a>
+<pre>
+<a title="nl_before_while = ignore"><strong><font color="red">        ?</font></strong></a>
+        while (c) {
+</Pre>
+<a name="nl_while_brace"></a>
+<pre>
+<a title="nl_while_brace = remove"><strong><font color="red">             ^</font></strong></a>
+            b = 2;
+        }
+</Pre>
+<a name="nl_after_while"></a>
+<pre>
+<a title="nl_after_while = force"><strong><font color="red">        ?</font></strong></a>
+    }
+    enum CaseOfOne {
+</Pre>
+<a name="nl_enum_brace"></a>
+<pre>
+<a title="nl_enum_brace = remove"><strong><font color="red">                  ^</font></strong></a>
+        a1,
+        b1,
+</Pre>
+<a name="nl_ds_struct_enum_cmt"></a>
+<pre>
+<a title="nl_ds_struct_enum_cmt = true"><strong><font color="red">        ?</font></strong></a>
+        // comment
+        c1,
+</Pre>
+<a name="nl_ds_struct_enum_close_brace"></a>
+<pre>
+<a title="nl_ds_struct_enum_close_brace = false"><strong><font color="red">        ?</font></strong></a>
+    };
+</Pre>
+<a name="nl_struct_brace"></a>
+<pre>
+    struct indent_ptr_t <a title="nl_struct_brace = force"><strong><font color="red">?</font></strong></a>
+    {
+        chunk_t *ref;
+</Pre>
+<a name="nl_ds_struct_enum_cmt"></a>
+<pre>
+<a title="nl_ds_struct_enum_cmt = true"><strong><font color="red">        ?</font></strong></a>
+        // comment
+        int delta;
+</Pre>
+<a name="nl_ds_struct_enum_close_brace"></a>
+<pre>
+<a title="nl_ds_struct_enum_close_brace = false"><strong><font color="red">        ?</font></strong></a>
+    } ipt;
+</Pre>
+<a name="nl_brace_struct_var"></a>
+<pre>
+<a title="nl_brace_struct_var = ignore"><strong><font color="red">     ^</font></strong></a>
+</Pre>
+<a name="nl_after_struct"></a>
+<pre>
+<a title="nl_after_struct = 2"><strong><font color="red">    ?</font></strong></a>
+    union UnionOfOne {
+</Pre>
+<a name="nl_union_brace"></a>
+<pre>
+<a title="nl_union_brace = remove"><strong><font color="red">                    ^</font></strong></a>
+        a1,
+        b1,
+</Pre>
+<a name="nl_ds_struct_enum_cmt"></a>
+<pre>
+<a title="nl_ds_struct_enum_cmt = true"><strong><font color="red">        ?</font></strong></a>
+        // comment
+        c1,
+</Pre>
+<a name="nl_ds_struct_enum_close_brace"></a>
+<pre>
+<a title="nl_ds_struct_enum_close_brace = false"><strong><font color="red">        ?</font></strong></a>
+    };
+</Pre>
+<a name="nl_before_access_spec"></a><a name="nl_after_func_body_class"></a>
+<pre>
+<a title="nl_before_access_spec = 2"><strong><font color="red">    ?</font></strong></a><a title="nl_after_func_body_class"><strong><font color="red"> ?</font></strong></a>
+    private: // same for protected:, signal: or slots: label
+</Pre>
+<a name="nl_after_access_spec"></a>
+<pre>
+<a title="nl_after_access_spec = 2"><strong><font color="red">    ?</font></strong></a>
+        int ap;
+};
+</Pre>
+<a name="nl_after_class"></a>
+<pre>
+<a title="nl_after_class = 2"><strong><font color="red">?</font></strong></a>
+</pre>
+<hr>
+<pre>
+namespace foo {
+</Pre>
+<a name="nl_namespace_brace"></a>
+<pre>
+<a title="nl_namespace_brace = remove"><strong><font color="red">             ^</font></strong></a>
+int foo()
+{
+    int a;
+    int b;
+    int c;
+
+    a = 5;
+    b = 1;
+    if (foo) a++; return;
+</Pre>
+<a name="nl_after_vbrace_open"></a><a name="nl_after_vbrace_close"></a>
+<pre>
+<a title="nl_after_vbrace_open = false"><strong><font color="red">        ^</font></strong></a><a title="nl_after_vbrace_close = false"><strong><font color="red">          ^</font></strong></a>
+    if (a)
+        return;
+</Pre>
+<a name="nl_after_return"></a>
+<pre>
+<a title="nl_after_return = true"><strong><font color="red">    ?</font></strong></a>
+</Pre>
+<a name="nl_after_label_colon"></a>
+<pre>
+l123: <a title="nl_after_label_colon = true"><strong><font color="red">?</font></strong></a>
+    int a = 5;
+<a title="nl_before_if = force"><strong><font color="red">    ?</font></strong></a>
+    if (a > b) {
+        c = 7;
+</Pre>
+<a name="nl_before_return"></a>
+<pre>
+<a title="nl_before_return = true"><strong><font color="red">    ?</font></strong></a>
+        return a + b;
+    }
+    std::for_each(a, b, [] (int& b)->foo{ b+=3; return(b); });
+</Pre>
+<a name="nl_brace_fparen"></a>
+<pre>
+<a title="nl_brace_fparen = ignore"><strong><font color="red">                                                            ^</font></strong></a>
+    QUrl dxOffEagle("http://something/newpage.html?[{\"foo: bar\"}]", QUrl::TolerantMode);
+</Pre>
+<a name="nl_brace_square"></a>
+<pre>
+<a title="nl_brace_square = ignore"><strong><font color="red">                                                                  ^</font></strong></a>
+</Pre>
+<a name="nl_before_return"></a>
+<pre>
+<a title="nl_before_return = true"><strong><font color="red">    ?</font></strong></a>
+    return 0;
+</Pre>
+<a name="nl_return_expr"></a>
+<pre>
+<a title="nl_return_expr = remove"><strong><font color="red">    ^</font></strong></a>
+}
+}
+</pre>
+<hr>
+<pre>
+/* c1
+ *
+ */
+</Pre>
+<a name="nl_comment_func_def"></a>
+<pre>
+<a title="nl_comment_func_def = 2"><strong><font color="red">?</font></strong></a>
+void a()
+{
+}
+void b();
+</Pre>
+<a name="nl_after_func_proto"></a>
+<pre>
+<a title="nl_after_func_proto = 2"><strong><font color="red">?</font></strong></a>
+void d();
+
+#define LOG_CONTTEXT() \
+</Pre>
+<a name="nl_multi_line_define"></a>
+<pre>
+<a title="nl_multi_line_define = true"><strong><font color="red">                      ^</font></strong></a>
+    LOG_FMT(LCONTTEXT  \
+            ,"%s:%d set cont_text to '%s'\n"  \
+            ,__func__, __LINE__, cmt.cont_text.c_str())
+
+template &lt;class T&gt;
+</Pre>
+<a name="nl_template_class"></a>
+<pre>
+<a title="nl_template_class = force"><strong><font color="red">?</font></strong></a>
+ItemJob<T>::ItemJob(PlatformDependent *internals, const QNetworkRequest &request)
+    : GetJob(internals, request)
+{
+}
+typedef int ia;
+typedef int ib;
+</Pre>
+<a name="nl_typedef_blk_in"></a>
+<pre>
+<a title="nl_typedef_blk_in = 2"><strong><font color="red">?</font></strong></a>
+typedef int ic;
+typedef int id;
+void x()
+{
+    int a;
+}
+void y()
+{
+    int a;
+    int b;
+</Pre>
+<a name="nl_var_def_blk_in"></a>
+<pre>
+<a title="nl_var_def_blk_in = 2"><strong><font color="red">?</font></strong></a>
+    int c;
+    int d;
+    int e;
+}
+</pre>
+<hr>
+<h1>Register</h1>
+<table>
+  <tr>
+    <td><a href="#nl_after_access_spec">nl_after_access_spec</a></td>
+    <td><a href="#nl_after_case">nl_after_case</a></td>
+  </tr>
+  <tr>
+    <td><a href="#nl_after_class">nl_after_class</a></td>
+    <td><a href="#nl_after_do">nl_after_do</a></td>
+  </tr>
+  <tr>
+    <td><a href="#nl_after_for">nl_after_for</a></td>
+    <td><a href="#nl_after_func_body">nl_after_func_body</a></td>
+  </tr>
+  <tr>
+    <td><a href="#nl_after_func_body_class">nl_after_func_body_class</a></td>
+    <td><a href="#nl_after_func_proto">nl_after_func_proto</a></td>
+  </tr>
+  <tr>
+    <td><a href="#nl_after_if">nl_after_if</a></td>
+    <td><a href="#nl_after_label_colon">nl_after_label_colon</a></td>
+  </tr>
+  <tr>
+    <td><a href="#nl_after_return">nl_after_return</a></td>
+    <td><a href="#nl_after_semicolon">nl_after_semicolon</a></td>
+  </tr>
+  <tr>
+    <td><a href="#nl_after_struct">nl_after_struct</a></td>
+    <td><a href="#nl_after_switch">nl_after_switch</a></td>
+  </tr>
+  <tr>
+    <td><a href="#nl_after_vbrace_close">nl_after_vbrace_close</a></td>
+    <td><a href="#nl_after_vbrace_open">nl_after_vbrace_open</a></td>
+  </tr>
+  <tr>
+    <td><a href="#nl_after_while">nl_after_while</a></td>
+    <td><a href="#nl_before_access_spec">nl_before_access_spec</a></td>
+  </tr>
+  <tr>
+    <td><a href="#nl_before_block_comment">nl_before_block_comment</a></td>
+    <td><a href="#nl_before_c_comment">nl_before_c_comment</a></td>
+  </tr>
+  <tr>
+    <td><a href="#nl_before_case">nl_before_case</a></td>
+    <td><a href="#nl_before_cpp_comment">nl_before_cpp_comment</a></td>
+  </tr>
+  <tr>
+    <td><a href="#nl_before_do">nl_before_do</a></td>
+    <td><a href="#nl_before_for">nl_before_for</a></td>
+  </tr>
+  <tr>
+    <td><a href="#nl_before_if">nl_before_if</a></td>
+    <td><a href="#nl_before_return">nl_before_return</a></td>
+  </tr>
+  <tr>
+    <td><a href="#nl_before_return">nl_before_return</a></td>
+    <td><a href="#nl_before_switch">nl_before_switch</a></td>
+  </tr>
+  <tr>
+    <td><a href="#nl_before_throw">nl_before_throw</a></td>
+    <td><a href="#nl_before_while">nl_before_while</a></td>
+  </tr>
+  <tr>
+    <td><a href="#nl_brace_catch">nl_brace_catch</a></td>
+    <td><a href="#nl_brace_else">nl_brace_else</a></td>
+  </tr>
+  <tr>
+    <td><a href="#nl_brace_fparen">nl_brace_fparen</a></td>
+    <td><a href="#nl_brace_square">nl_brace_square</a></td>
+  </tr>
+  <tr>
+    <td><a href="#nl_brace_struct_var">nl_brace_struct_var</a></td>
+    <td><a href="#nl_brace_while">nl_brace_while</a></td>
+  </tr>
+  <tr>
+    <td><a href="#nl_case_colon_brace">nl_case_colon_brace</a></td>
+    <td><a href="#nl_catch_brace">nl_catch_brace</a></td>
+  </tr>
+  <tr>
+    <td><a href="#nl_class_brace">nl_class_brace</a></td>
+    <td><a href="#nl_class_colon">nl_class_colon</a></td>
+  </tr>
+  <tr>
+    <td><a href="#nl_collapse_empty_body">nl_collapse_empty_body</a></td>
+    <td><a href="#nl_comment_func_def">nl_comment_func_def</a></td>
+  </tr>
+  <tr>
+    <td><a href="#nl_constr_colon">nl_constr_colon</a></td>
+    <td><a href="#nl_constr_init_args">nl_constr_init_args</a></td>
+  </tr>
+  <tr>
+    <td><a href="#nl_cpp_ldef_brace">nl_cpp_ldef_brace</a></td>
+    <td><a href="#nl_do_brace">nl_do_brace</a></td>
+  </tr>
+  <tr>
+    <td><a href="#nl_ds_struct_enum_close_brace">nl_ds_struct_enum_close_brace</a></td>
+    <td><a href="#nl_ds_struct_enum_close_brace">nl_ds_struct_enum_close_brace</a></td>
+  </tr>
+  <tr>
+    <td><a href="#nl_ds_struct_enum_close_brace">nl_ds_struct_enum_close_brace</a></td>
+    <td><a href="#nl_ds_struct_enum_cmt">nl_ds_struct_enum_cmt</a></td>
+  </tr>
+  <tr>
+    <td><a href="#nl_ds_struct_enum_cmt">nl_ds_struct_enum_cmt</a></td>
+    <td><a href="#nl_ds_struct_enum_cmt">nl_ds_struct_enum_cmt</a></td>
+  </tr>
+  <tr>
+    <td><a href="#nl_else_brace">nl_else_brace</a></td>
+    <td><a href="#nl_else_if">nl_else_if</a></td>
+  </tr>
+  <tr>
+    <td><a href="#nl_elseif_brace">nl_elseif_brace</a></td>
+    <td><a href="#nl_end_of_file">nl_end_of_file</a></td>
+  </tr>
+  <tr>
+    <td><a href="#nl_enum_brace">nl_enum_brace</a></td>
+    <td><a href="#nl_fcall_brace">nl_fcall_brace</a></td>
+  </tr>
+  <tr>
+    <td><a href="#nl_fdef_brace">nl_fdef_brace</a></td>
+    <td><a href="#nl_for_brace">nl_for_brace</a></td>
+  </tr>
+  <tr>
+    <td><a href="#nl_func_decl_args">nl_func_decl_args</a></td>
+    <td><a href="#nl_func_decl_empty">nl_func_decl_empty</a></td>
+  </tr>
+  <tr>
+    <td><a href="#nl_func_decl_end">nl_func_decl_end</a></td>
+    <td><a href="#nl_func_decl_end">nl_func_decl_end</a></td>
+  </tr>
+  <tr>
+    <td><a href="#nl_func_decl_end_single">nl_func_decl_end_single</a></td>
+    <td><a href="#nl_func_decl_start">nl_func_decl_start</a></td>
+  </tr>
+  <tr>
+    <td><a href="#nl_func_decl_start_single">nl_func_decl_start_single</a></td>
+    <td><a href="#nl_func_def_args">nl_func_def_args</a></td>
+  </tr>
+  <tr>
+    <td><a href="#nl_func_def_empty">nl_func_def_empty</a></td>
+    <td><a href="#nl_func_def_end_single">nl_func_def_end_single</a></td>
+  </tr>
+  <tr>
+    <td><a href="#nl_func_def_paren">nl_func_def_paren</a></td>
+    <td><a href="#nl_func_def_start">nl_func_def_start</a></td>
+  </tr>
+  <tr>
+    <td><a href="#nl_func_paren">nl_func_paren</a></td>
+    <td><a href="#nl_func_scope_name">nl_func_scope_name</a></td>
+  </tr>
+  <tr>
+    <td><a href="#nl_func_type_name">nl_func_type_name</a></td>
+    <td><a href="#nl_func_type_name_class">nl_func_type_name_class</a></td>
+  </tr>
+  <tr>
+    <td><a href="#nl_func_var_def_blk">nl_func_var_def_blk</a></td>
+    <td><a href="#nl_if_brace">nl_if_brace</a></td>
+  </tr>
+  <tr>
+    <td><a href="#nl_max">nl_max</a></td>
+    <td><a href="#nl_multi_line_cond">nl_multi_line_cond</a></td>
+  </tr>
+  <tr>
+    <td><a href="#nl_multi_line_define">nl_multi_line_define</a></td>
+    <td><a href="#nl_namespace_brace">nl_namespace_brace</a></td>
+  </tr>
+  <tr>
+    <td><a href="#nl_remove_extra_newlines">nl_remove_extra_newlines</a></td>
+    <td><a href="#nl_return_expr">nl_return_expr</a></td>
+  </tr>
+  <tr>
+    <td><a href="#nl_start_of_file">nl_start_of_file</a></td>
+    <td><a href="#nl_struct_brace">nl_struct_brace</a></td>
+  </tr>
+  <tr>
+    <td><a href="#nl_switch_brace">nl_switch_brace</a></td>
+    <td><a href="#nl_template_class">nl_template_class</a></td>
+  </tr>
+  <tr>
+    <td><a href="#nl_try_brace">nl_try_brace</a></td>
+    <td><a href="#nl_typedef_blk_end">nl_typedef_blk_end</a></td>
+  </tr>
+  <tr>
+    <td><a href="#nl_typedef_blk_in">nl_typedef_blk_in</a></td>
+    <td><a href="#nl_typedef_blk_start">nl_typedef_blk_start</a></td>
+  </tr>
+  <tr>
+    <td><a href="#nl_union_brace">nl_union_brace</a></td>
+    <td><a href="#nl_var_def_blk_end">nl_var_def_blk_end</a></td>
+  </tr>
+  <tr>
+    <td><a href="#nl_var_def_blk_in">nl_var_def_blk_in</a></td>
+    <td><a href="#nl_var_def_blk_start">nl_var_def_blk_start</a></td>
+  </tr>
+  <tr>
+    <td><a href="#nl_while_brace">nl_while_brace</a></td>
+    <td><a href="#pos_class_colon">pos_class_colon</a></td>
+  </tr>
+</table>
+
+<h2>only for Java</h2>
+nl_after_annotation<br>
+nl_between_annotation<br>
+nl_paren_dbrace_open<br>
+
+<h2>only for D</h2>
+nl_after_square_assign<br>
+nl_assign_square<br>
+nl_scope_brace<br>
+nl_unittest_brace<br>
+nl_version_brace<br>
+
+<h2>only for oc</h2>
+nl_oc_msg_args<br>
+nl_oc_msg_leave_one_liner<br>
+
+<h2>only for C#</h2>
+nl_around_cs_property<br>
+nl_between_get_set<br>
+nl_after_try_catch_finally<br>
+nl_brace_finally<br>
+nl_finally_brace<br>
+nl_getset_brace<br>
+nl_property_brace<br>
+
+<h2>not yet shown</h2>
+nl_after_brace_close<br>
+nl_after_brace_open<br>
+template<int i> class X { /* a */ };
+
+template<class T> class Y { /* ... */ };
+
+nl_after_brace_open_cmt<br>
+nl_after_func_body_one_liner<br>
+nl_after_func_proto_group<br>
+nl_after_multiline_comment<br>
+nl_after_vbrace_open_empty<br>
+nl_brace_brace<br>
+nl_class_init_args<br>
+nl_class_leave_one_liners<br>
+nl_cpp_lambda_leave_one_liners<br>
+nl_create_for_one_liner<br>
+nl_create_if_one_liner<br>
+nl_create_while_one_liner<br>
+nl_define_macro<br>
+nl_enum_leave_one_liners<br>
+nl_func_leave_one_liners<br>
+nl_getset_leave_one_liners<br>
+nl_if_leave_one_liners<br>
+nl_squeeze_ifdef<br>
+nl_using_brace<br>
+
+</body>
+</html>

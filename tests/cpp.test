@@ -248,3 +248,4 @@
 33014 kdepim.cfg                       cpp/DB.cpp
 33015 kdepim.cfg                       cpp/Q_FOREACH.cpp
 33016 indent_once.cfg                  cpp/indent.cpp
+33017 stdcall.cfg                      cpp/stdcall.cpp

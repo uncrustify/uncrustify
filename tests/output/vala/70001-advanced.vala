@@ -17,10 +17,9 @@ public class Sample : Object {
    }
    static int main(string[] args)
    {
-      foreach(string arg in args)
+      foreach (string arg in args)
       {
          var sample = new Sample(arg);
-
          sample.run();
          /* Object will automatically be freed
           * at the end of the block */

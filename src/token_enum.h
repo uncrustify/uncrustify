@@ -3,6 +3,8 @@
  * List of the different tokens used in the program.
  *
  * @author  Ben Gardner
+ * @author  Guy Maurel since version 0.62 for uncrustify4Qt
+ *          October 2015
  * @license GPL v2+
  */
 #ifndef TOKEN_ENUM_H_INCLUDED
@@ -318,6 +320,9 @@ typedef enum
    CT_ANNOTATION,   /* @interface or @something(...) */
    CT_FOR_COLON,    /* colon in "for ( TYPE var: EXPR ) { ... }" */
    CT_DOUBLE_BRACE, /* parent for double brace */
+
+   /* MS-specific extension */
+   CT_STDCALL,      /* __stdcall Bug # 633 guy 2015-11-19 */
 } c_token_t;
 
 #endif /* TOKEN_ENUM_H_INCLUDED */
