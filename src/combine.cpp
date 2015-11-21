@@ -5114,6 +5114,45 @@ static void handle_oc_message_send(chunk_t *os)
       }
       tmp = chunk_get_next_ncnl(ac);
    }
+   /* handle 'object.property' and 'collection[index]' */
+   else
+   {
+      while (tmp)
+      {
+         if (tmp->type == CT_MEMBER)  /* move past [object.prop1.prop2  */
+         {
+            chunk_t *typ = chunk_get_next_ncnl(tmp);
+            if (typ && ((typ->type == CT_WORD) || (typ->type == CT_TYPE)))
+            {
+               tmp = chunk_get_next_ncnl(typ);
+            }
+            else
+            {
+               break;
+            }
+         }
+         else if (tmp->type == CT_SQUARE_OPEN)  /* move past [collection[index]  */
+         {
+            chunk_t *tcs = chunk_get_next_ncnl(tmp);
+            while (tcs && (tcs->level > tmp->level))
+            {
+               tcs = chunk_get_next_ncnl(tcs);
+            }
+            if (tcs && (tcs->type == CT_SQUARE_CLOSE))
+            {
+               tmp = chunk_get_next_ncnl(tcs);
+            }
+            else
+            {
+               break;
+            }
+         }
+         else
+         {
+            break;
+         }
+      }
+   }
 
    if (tmp && ((tmp->type == CT_WORD) || (tmp->type == CT_TYPE)))
    {
