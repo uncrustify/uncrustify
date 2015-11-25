@@ -1888,6 +1888,13 @@ static bool one_liner_nl_ok(chunk_t *pc)
          LOG_FMT(LNL1LINE, "false (if/else)\n");
          return(false);
       }
+
+      if (cpd.settings[UO_nl_while_leave_one_liners].b &&
+          (pc->parent_type == CT_WHILE))
+      {
+         LOG_FMT(LNL1LINE, "false (while)\n");
+         return(false);
+      }
    }
    LOG_FMT(LNL1LINE, "true\n");
    return(true);
