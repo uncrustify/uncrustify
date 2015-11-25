@@ -1411,8 +1411,7 @@ void indent_text(void)
          }
 
          if ((pc->type == CT_FPAREN_OPEN) &&
-             chunk_is_newline(chunk_get_prev(pc)) &&
-             !chunk_is_newline(chunk_get_next(pc)))
+             chunk_is_newline(chunk_get_prev(pc)))
          {
             frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent + indent_size;
             indent_column_set(frm.pse[frm.pse_tos].indent);
