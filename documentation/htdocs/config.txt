@@ -1,4 +1,4 @@
-# Uncrustify 0.60.194-g5b1183a
+# Uncrustify 0.61
 #
 # General options
 #
@@ -18,10 +18,19 @@ string_escape_char                        Number
 string_escape_char2                       Number
   Alternate string escape char for Pawn. Only works right before the quote char.
 
+string_replace_tab_chars                  { False, True }
+  Replace tab characters found in string literals with the escape sequence \t instead.
+
 tok_split_gte                             { False, True }
   Allow interpreting '>=' and '>>=' as part of a template in 'void f(list<list<B>>=val);'.
   If true (default), 'assert(x<0 && y>=3)' will be broken.
   Improvements to template detection may make this option obsolete.
+
+disable_processing_cmt                    String
+  Override the default ' *INDENT-OFF*' in comments for disabling processing of part of the file.
+
+enable_processing_cmt                     String
+  Override the default ' *INDENT-ON*' in comments for enabling processing of part of the file.
 
 utf8_bom                                  { Ignore, Add, Remove, Force }
   Control what to do with the UTF-8 BOM (recommend 'remove')
@@ -85,6 +94,10 @@ indent_paren_open_brace                   { False, True }
 indent_namespace                          { False, True }
   Whether the 'namespace' body is indented
 
+indent_namespace_single_indent            { False, True }
+  Only indent one namespace and no sub-namespaces.
+  Requires indent_namespace=true.
+
 indent_namespace_level                    Number
   The number of spaces to indent a namespace block
 
@@ -100,6 +113,10 @@ indent_class                              { False, True }
 
 indent_class_colon                        { False, True }
   Whether to indent the stuff after a leading base class colon
+
+indent_class_on_colon                     { False, True }
+  Indent based on a class colon instead of the stuff after the colon.
+  Requires indent_class_colon=true. Default=false
 
 indent_constr_colon                       { False, True }
   Whether to indent the stuff after a leading class initializer colon
@@ -120,6 +137,10 @@ indent_var_def_blk                        Number
 
 indent_var_def_cont                       { False, True }
   Indent continued variable declarations instead of aligning.
+
+indent_shift                              { False, True }
+  Indent continued shift expressions ('<<' and '>>') instead of aligning.
+  Turn align_left_shift off when enabling this.
 
 indent_func_def_force_col1                { False, True }
   True:  force indentation of function definition to start in column 1
@@ -249,6 +270,12 @@ indent_oc_block_msg_from_caret            { False, True }
 indent_oc_block_msg_from_brace            { False, True }
   If indent_oc_block_msg and this option are on, blocks will be indented from where the brace is.
 
+indent_min_vbrace_open                    Number
+  When identing after virtual brace open and newline add further spaces to reach this min. indent.
+
+indent_vbrace_open_on_tabstop             { False, True }
+  TRUE: When identing after virtual brace open and newline add further spaces after regular indent to reach next tabstop.
+
 #
 # Spacing options
 #
@@ -273,6 +300,9 @@ sp_before_assign                          { Ignore, Add, Remove, Force }
 
 sp_after_assign                           { Ignore, Add, Remove, Force }
   Add or remove space after assignment operator '=', '+=', etc. Overrides sp_assign.
+
+sp_enum_paren                             { Ignore, Add, Remove, Force }
+  Add or remove space in 'NS_ENUM ('
 
 sp_enum_assign                            { Ignore, Add, Remove, Force }
   Add or remove space around assignment '=' in enum
@@ -325,6 +355,9 @@ sp_between_ptr_star                       { Ignore, Add, Remove, Force }
 
 sp_after_ptr_star                         { Ignore, Add, Remove, Force }
   Add or remove space after pointer star '*', if followed by a word.
+
+sp_after_ptr_star_qualifier               { Ignore, Add, Remove, Force }
+  Add or remove space after pointer star '*', if followed by a qualifier.
 
 sp_after_ptr_star_func                    { Ignore, Add, Remove, Force }
   Add or remove space after a pointer star '*', if followed by a func proto/def.
@@ -384,7 +417,7 @@ sp_permit_cpp11_shift                     { False, True }
   sp_angle_shift cannot remove the space without this option.
 
 sp_before_sparen                          { Ignore, Add, Remove, Force }
-  Add or remove space before '(' of 'if', 'for', 'switch', and 'while'
+  Add or remove space before '(' of 'if', 'for', 'switch', 'while', etc.
 
 sp_inside_sparen                          { Ignore, Add, Remove, Force }
   Add or remove space inside if-condition '(' and ')'
@@ -442,6 +475,15 @@ sp_after_comma                            { Ignore, Add, Remove, Force }
 
 sp_before_comma                           { Ignore, Add, Remove, Force }
   Add or remove space before ','
+
+sp_after_mdatype_commas                   { Ignore, Add, Remove, Force }
+  Add or remove space between ',' and ']' in multidimensional array type 'int[,,]'
+
+sp_before_mdatype_commas                  { Ignore, Add, Remove, Force }
+  Add or remove space between '[' and ',' in multidimensional array type 'int[,,]'
+
+sp_between_mdatype_commas                 { Ignore, Add, Remove, Force }
+  Add or remove space between ',' in multidimensional array type 'int[,,]'
 
 sp_paren_comma                            { Ignore, Add, Remove, Force }
   Add or remove space between an open paren and comma: '(,' vs '( ,'
@@ -525,6 +567,9 @@ sp_square_fparen                          { Ignore, Add, Remove, Force }
 
 sp_fparen_brace                           { Ignore, Add, Remove, Force }
   Add or remove space between ')' and '{' of function
+
+sp_fparen_dbrace                          { Ignore, Add, Remove, Force }
+  Java: Add or remove space between ')' and '{{' of double brace initializer.
 
 sp_func_call_paren                        { Ignore, Add, Remove, Force }
   Add or remove space between function name and '(' on function calls
@@ -744,11 +789,17 @@ sp_extern_paren                           { Ignore, Add, Remove, Force }
 sp_cmt_cpp_start                          { Ignore, Add, Remove, Force }
   Control the space after the opening of a C++ comment '// A' vs '//A'
 
+sp_cmt_cpp_doxygen                        { False, True }
+  TRUE: If space is added with sp_cmt_cpp_start, do it after doxygen sequences like '///', '///<', '//!' and '//!<'.
+
 sp_endif_cmt                              { Ignore, Add, Remove, Force }
   Controls the spaces between #else or #endif and a trailing comment
 
 sp_after_new                              { Ignore, Add, Remove, Force }
   Controls the spaces after 'new', 'delete', and 'delete[]'
+
+sp_between_new_paren                      { Ignore, Add, Remove, Force }
+  Controls the spaces between new and '(' in 'new()'
 
 sp_before_tr_emb_cmt                      { Ignore, Add, Remove, Force }
   Controls the spaces before a trailing or embedded comment
@@ -1093,6 +1144,9 @@ nl_brace_while                            { Ignore, Add, Remove, Force }
 nl_switch_brace                           { Ignore, Add, Remove, Force }
   Add or remove newline between 'switch' and '{'
 
+nl_synchronized_brace                     { Ignore, Add, Remove, Force }
+  Add or remove newline between 'synchronized' and '{'
+
 nl_multi_line_cond                        { False, True }
   Add a newline between ')' and '{' if the ')' is on a different line than the if/for/etc.
   Overrides nl_for_brace, nl_if_brace, nl_switch_brace, nl_while_switch, and nl_catch_brace.
@@ -1199,6 +1253,9 @@ nl_return_expr                            { Ignore, Add, Remove, Force }
 nl_after_semicolon                        { False, True }
   Whether to put a newline after semicolons, except in 'for' statements
 
+nl_paren_dbrace_open                      { Ignore, Add, Remove, Force }
+  Java: Control the newline between the ')' and '{{' of the double brace initializer.
+
 nl_after_brace_open                       { False, True }
   Whether to put a newline after brace open.
   This also adds a newline before the matching brace close.
@@ -1231,7 +1288,7 @@ nl_define_macro                           { False, True }
   Whether to alter newlines in '#define' macros
 
 nl_squeeze_ifdef                          { False, True }
-  Whether to not put blanks after '#ifxx', '#elxx', or before '#endif'
+  Whether to not put blanks after '#ifxx', '#elxx', or before '#endif'. Does not affect the whole-file #ifdef.
 
 nl_before_if                              { Ignore, Add, Remove, Force }
   Add or remove blank line before 'if'
@@ -1256,6 +1313,12 @@ nl_before_switch                          { Ignore, Add, Remove, Force }
 
 nl_after_switch                           { Ignore, Add, Remove, Force }
   Add or remove blank line after 'switch' statement
+
+nl_before_synchronized                    { Ignore, Add, Remove, Force }
+  Add or remove blank line before 'synchronized'
+
+nl_after_synchronized                     { Ignore, Add, Remove, Force }
+  Add or remove blank line after 'synchronized' statement
 
 nl_before_do                              { Ignore, Add, Remove, Force }
   Add or remove blank line before 'do'
@@ -1378,8 +1441,8 @@ nl_before_cpp_comment                     Number
 nl_after_multiline_comment                { False, True }
   Whether to force a newline after a multi-line comment.
 
-nl_after_label_colon                      { False, True}
-  Whether to force a newline after a label (outside of a switch, as for goto)
+nl_after_label_colon                      { False, True }
+  Whether to force a newline after a label's colon.
 
 nl_after_struct                           Number
   The number of newlines after '}' or ';' of a struct/enum/union definition

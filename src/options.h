@@ -230,8 +230,8 @@ enum uncrustify_options
    UO_sp_inside_sparen_open,
    UO_sp_inside_angle,          // space inside '<>', as in '<class T>'
 
-   UO_sp_before_sparen,         // space before '(' of 'if/for/while/switch'
-   UO_sp_after_sparen,          /* space after  ')' of 'if/for/while/switch'
+   UO_sp_before_sparen,         // space before '(' of 'if/for/while/switch/etc'
+   UO_sp_after_sparen,          /* space after  ')' of 'if/for/while/switch/etc'
                                  * the do-while does not get set here */
    UO_sp_after_invariant_paren,
    UO_sp_invariant_paren,
@@ -553,6 +553,7 @@ enum uncrustify_options
    UO_nl_version_brace,
    UO_nl_using_brace,
    UO_nl_switch_brace,                /* nl between switch and { */
+   UO_nl_synchronized_brace,          /* nl between synchronized and { */
    UO_nl_brace_else,                  // nl between } and else
    UO_nl_brace_while,                 // nl between } and while of do stmt
 
@@ -569,6 +570,8 @@ enum uncrustify_options
    UO_nl_after_while,                 // nl after while close
    UO_nl_before_switch,               // nl before switch
    UO_nl_after_switch,                // nl after switch close
+   UO_nl_before_synchronized,         // nl before synchronized
+   UO_nl_after_synchronized,          // nl after synchronized close
    UO_nl_before_do,                   // nl before do
    UO_nl_after_do,                    // nl after while of do
    UO_nl_ds_struct_enum_cmt,          // nl between commented-elements of struct/enum
