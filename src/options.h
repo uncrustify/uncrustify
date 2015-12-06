@@ -206,6 +206,7 @@ enum uncrustify_options
     */
 
    UO_sp_paren_brace,           // space between ')' and '{'
+                                /* "(struct foo) {...}" vs "(struct foo){...}" */
    UO_sp_fparen_brace,          // space between ')' and '{' of function
    UO_sp_fparen_dbrace,         // space between ')' and '{{' of double-brace init
    UO_sp_sparen_brace,          // space between ')' and '{' of if, while, etc
