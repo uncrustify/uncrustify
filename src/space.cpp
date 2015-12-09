@@ -413,12 +413,47 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
       log_rule("sp_after_dc");
       return(cpd.settings[UO_sp_after_dc].a);
    }
-   if ((second->type == CT_DC_MEMBER) &&
-       ((first->type == CT_WORD) || (first->type == CT_TYPE) || (first->type == CT_PAREN_CLOSE) ||
-        CharTable::IsKw1(first->str[0])))
+   if (second->type == CT_DC_MEMBER)
    {
-      log_rule("sp_before_dc");
-      return(cpd.settings[UO_sp_before_dc].a);
+      /* '::' at the start of an identifier is not member access, but global scope operator.
+       * Detect if previous chunk is keyword
+       */
+      switch(first->type)
+      {
+      case CT_SBOOL:
+      case CT_SASSIGN:
+      case CT_ARITH:
+      case CT_CASE:
+      case CT_CLASS:
+      case CT_DELETE:
+      case CT_FRIEND:
+      case CT_NAMESPACE:
+      case CT_NEW:
+      case CT_SARITH:
+      case CT_SCOMPARE:
+      case CT_OPERATOR:
+      case CT_PRIVATE:
+      case CT_QUALIFIER:
+      case CT_RETURN:
+      case CT_SIZEOF:
+      case CT_STRUCT:
+      case CT_THROW:
+      case CT_TYPEDEF:
+      case CT_TYPENAME:
+      case CT_UNION:
+      case CT_USING:
+         log_rule("FORCE");
+         return(AV_FORCE);
+      default:
+         break;
+      }
+
+      if((first->type == CT_WORD) || (first->type == CT_TYPE) || (first->type == CT_PAREN_CLOSE) ||
+        CharTable::IsKw1(first->str[0]))
+      {
+         log_rule("sp_before_dc");
+         return(cpd.settings[UO_sp_before_dc].a);
+      }
    }
 
    /* "a,b" vs "a, b" */
