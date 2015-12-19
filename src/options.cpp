@@ -284,7 +284,7 @@ void register_options(void)
                   "Permit removal of the space between '>>' in 'foo<bar<int> >' (C++11 only). Default=False\n"
                   "sp_angle_shift cannot remove the space without this option.");
    unc_add_option("sp_before_sparen", UO_sp_before_sparen, AT_IARF,
-                  "Add or remove space before '(' of 'if', 'for', 'switch', and 'while'");
+                  "Add or remove space before '(' of 'if', 'for', 'switch' and 'while'");
    unc_add_option("sp_inside_sparen", UO_sp_inside_sparen, AT_IARF,
                   "Add or remove space inside if-condition '(' and ')'");
    unc_add_option("sp_inside_sparen_close", UO_sp_inside_sparen_close, AT_IARF,
@@ -292,9 +292,9 @@ void register_options(void)
    unc_add_option("sp_inside_sparen_open", UO_sp_inside_sparen_open, AT_IARF,
                   "Add or remove space after if-condition '('. Overrides sp_inside_sparen.");
    unc_add_option("sp_after_sparen", UO_sp_after_sparen, AT_IARF,
-                  "Add or remove space after ')' of 'if', 'for', 'switch', and 'while'");
+                  "Add or remove space after ')' of 'if', 'for', 'switch' and 'while'");
    unc_add_option("sp_sparen_brace", UO_sp_sparen_brace, AT_IARF,
-                  "Add or remove space between ')' and '{' of 'if', 'for', 'switch', and 'while'");
+                  "Add or remove space between ')' and '{' of 'if', 'for', 'switch' and 'while'");
    unc_add_option("sp_invariant_paren", UO_sp_invariant_paren, AT_IARF,
                   "Add or remove space between 'invariant' and '(' in the D language.");
    unc_add_option("sp_after_invariant_paren", UO_sp_after_invariant_paren, AT_IARF,
@@ -551,7 +551,7 @@ void register_options(void)
    unc_add_option("sp_endif_cmt", UO_sp_endif_cmt, AT_IARF,
                   "Controls the spaces between #else or #endif and a trailing comment");
    unc_add_option("sp_after_new", UO_sp_after_new, AT_IARF,
-                  "Controls the spaces after 'new', 'delete', and 'delete[]'");
+                  "Controls the spaces after 'new', 'delete' and 'delete[]'");
    unc_add_option("sp_between_new_paren", UO_sp_between_new_paren, AT_IARF,
                   "Controls the spaces between new and '(' in 'new()'");
    unc_add_option("sp_before_tr_emb_cmt", UO_sp_before_tr_emb_cmt, AT_IARF,
@@ -849,7 +849,7 @@ void register_options(void)
                   "Add or remove newline between 'switch' and '{'");
    unc_add_option("nl_multi_line_cond", UO_nl_multi_line_cond, AT_BOOL,
                   "Add a newline between ')' and '{' if the ')' is on a different line than the if/for/etc.\n"
-                  "Overrides nl_for_brace, nl_if_brace, nl_switch_brace, nl_while_switch, and nl_catch_brace.");
+                  "Overrides nl_for_brace, nl_if_brace, nl_switch_brace, nl_while_switch and nl_catch_brace.");
    unc_add_option("nl_multi_line_define", UO_nl_multi_line_define, AT_BOOL,
                   "Force a newline in a define after the macro name for multi-line defines.");
    unc_add_option("nl_before_case", UO_nl_before_case, AT_BOOL,
@@ -867,9 +867,11 @@ void register_options(void)
    unc_add_option("nl_class_brace", UO_nl_class_brace, AT_IARF,
                   "Add or remove newline between 'class' and '{'");
    unc_add_option("nl_class_init_args", UO_nl_class_init_args, AT_IARF,
-                  "Add or remove newline after each ',' in the class base list");
+                  "Add or remove newline before/after each ',' in the base class list,\n"
+                  "  (tied to pos_class_comma).");
    unc_add_option("nl_constr_init_args", UO_nl_constr_init_args, AT_IARF,
-                  "Add or remove newline after each ',' in the constructor member initialization");
+                  "Add or remove newline after each ',' in the constructor member initialization.\n"
+                  "Related to nl_constr_colon, pos_constr_colon and pos_constr_comma.");
    unc_add_option("nl_func_type_name", UO_nl_func_type_name, AT_IARF,
                   "Add or remove newline between return type and function name in a function definition");
    unc_add_option("nl_func_type_name_class", UO_nl_func_type_name_class, AT_IARF,
@@ -941,7 +943,7 @@ void register_options(void)
                   "Would add a newline before return in: 'if (foo) a++; return;'");
    unc_add_option("nl_brace_struct_var", UO_nl_brace_struct_var, AT_IARF,
                   "Control the newline between the close brace and 'b' in: 'struct { int a; } b;'\n"
-                  "Affects enums, unions, and structures. If set to ignore, uses nl_after_brace_close");
+                  "Affects enums, unions and structures. If set to ignore, uses nl_after_brace_close");
    unc_add_option("nl_define_macro", UO_nl_define_macro, AT_BOOL,
                   "Whether to alter newlines in '#define' macros");
    unc_add_option("nl_squeeze_ifdef", UO_nl_squeeze_ifdef, AT_BOOL,
@@ -972,11 +974,11 @@ void register_options(void)
                   "force nl before } of a struct/union/enum\n"
                   "(lower priority than 'eat_blanks_before_close_brace')");
    unc_add_option("nl_class_colon", UO_nl_class_colon, AT_IARF,
-                  "Add or remove a newline around a class colon.\n"
-                  "Related to pos_class_colon, nl_class_init_args, and pos_class_comma.");
+                  "Add or remove a newline before/after a class colon,\n"
+                  "  (tied to pos_class_colon).");
    unc_add_option("nl_constr_colon", UO_nl_constr_colon, AT_IARF,
                   "Add or remove a newline around a class constructor colon.\n"
-                  "Related to pos_constr_colon, nl_constr_init_args, and pos_constr_comma.");
+                  "Related to nl_constr_init_args, pos_constr_colon and pos_constr_comma.");
    unc_add_option("nl_create_if_one_liner", UO_nl_create_if_one_liner, AT_BOOL,
                   "Change simple unbraced if statements into a one-liner\n"
                   "'if(b)\\n i++;' => 'if(b) i++;'");
@@ -1077,13 +1079,18 @@ void register_options(void)
    unc_add_option("pos_comma", UO_pos_comma, AT_POS,
                   "The position of the comma in wrapped expressions");
    unc_add_option("pos_class_comma", UO_pos_class_comma, AT_POS,
-                  "The position of the comma in the class base list");
+                  "The position of the comma in the base class list if there are more than one line,\n"
+                  "  (tied to nl_class_init_args).");
    unc_add_option("pos_constr_comma", UO_pos_constr_comma, AT_POS,
-                  "The position of the comma in the constructor initialization list");
+                  "The position of the comma in the constructor initialization list.\n"
+                  "Related to nl_constr_colon, nl_constr_init_args and pos_constr_colon.");
    unc_add_option("pos_class_colon", UO_pos_class_colon, AT_POS,
-                  "The position of colons between class and base class list");
+                  "The position of trailing/leading class colon, between class and base class list\n"
+                  "  (tied to nl_class_colon).\n");
    unc_add_option("pos_constr_colon", UO_pos_constr_colon, AT_POS,
-                  "The position of colons between constructor and member initialization");
+                  "The position of colons between constructor and member initialization,\n"
+                  "(tied to UO_nl_constr_colon).\n"
+                  "Related to nl_constr_colon, nl_constr_init_args and pos_constr_comma.");
 
    unc_begin_group(UG_linesplit, "Line Splitting options");
    unc_add_option("code_width", UO_code_width, AT_NUM,
@@ -1226,7 +1233,7 @@ void register_options(void)
    unc_add_option("cmt_convert_tab_to_spaces", UO_cmt_convert_tab_to_spaces, AT_BOOL,
                   "Whether to convert all tabs to spaces in comments. Default is to leave tabs inside comments alone, unless used for indenting.");
    unc_add_option("cmt_indent_multi", UO_cmt_indent_multi, AT_BOOL,
-                  "If false, disable all multi-line comment changes, including cmt_width. keyword substitution, and leading chars.\n"
+                  "If false, disable all multi-line comment changes, including cmt_width. keyword substitution and leading chars.\n"
                   "Default is true.");
    unc_add_option("cmt_c_group", UO_cmt_c_group, AT_BOOL,
                   "Whether to group c-comments that look like they are in a block");
@@ -1348,7 +1355,7 @@ void register_options(void)
    unc_add_option("pp_region_indent_code", UO_pp_region_indent_code, AT_BOOL,
                   "Whether to indent the code between #region and #endregion");
    unc_add_option("pp_indent_if", UO_pp_indent_if, AT_NUM,
-                  "If pp_indent_at_level=true, sets the indent for #if, #else, and #endif when not at file-level.\n"
+                  "If pp_indent_at_level=true, sets the indent for #if, #else and #endif when not at file-level.\n"
                   "0:  indent preprocessors using output_tab_size.\n"
                   ">0: column at which all preprocessors will be indented.");
    unc_add_option("pp_if_indent_code", UO_pp_if_indent_code, AT_BOOL,

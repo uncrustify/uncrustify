@@ -52,16 +52,15 @@ void bar_3(int x,
         b+=3; return(b);
     }<a name="nl_end_of_file"></a>
 <a title="nl_end_of_file"><strong><font color="red">^</font></strong></a>
-<hr><a name="nl_class_brace"></a>
-class foo : public<a title="nl_class_brace"><strong><font color="red"> ^</font></strong></a><a name="nl_class_colon"></a>
+<hr><a name="nl_class_colon"></a><a name="nl_class_brace"></a>
+class foo : public my_Class<a title="nl_class_brace"><strong><font color="red"> ^</font></strong></a>
 <a title="nl_class_colon"><strong><font color="red">         ^</font></strong></a>
 {<a name="nl_constr_colon"></a>
     void bar_c(int t, int u)<a title="nl_constr_colon"><strong><font color="red"> ^</font></strong></a><a name="nl_func_type_name_class"></a><a name="nl_func_decl_args"></a>
 <a title="nl_func_type_name_class, nl_func_proto_type_name"><strong><font color="red">        ^</a><a title="nl_func_decl_args">            ^</font></strong></a>
-        : t(222)<a name="pos_class_colon"></a>
-<a title="pos_class_colon = lead_force"><strong><font color="red">        ^</font></strong></font></strong></a>
+        : t(222)
         , u(88)<a name="nl_constr_init_args"></a>
-<a title="nl_constr_init_args, pos_constr_comma = lead_force"><strong><font color="red">        ^</font></strong></a>
+<a title="nl_constr_init_args, pos_constr_comma"><strong><font color="red">        ^</font></strong></a>
     {<a name="nl_typedef_blk_start"></a>
 <a title="nl_typedef_blk_start "><strong><font color="red">        ^</font></strong></a>
         typedef char CHAR;<a name="nl_typedef_blk_end"></a><a name="nl_var_def_blk_start"></a>
@@ -408,7 +407,7 @@ typedef int id;
   </tr>
   <tr>
     <td><a href="#nl_while_brace">nl_while_brace</a></td>
-    <td><a href="#pos_class_colon">pos_class_colon</a></td>
+    <td></td>
   </tr>
 </table>
 

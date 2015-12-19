@@ -1686,8 +1686,8 @@ void space_text(void)
    while (pc != NULL)
    {
       next = chunk_get_next(pc);
-      LOG_FMT(LSPACE, "%d:%d %s %s %s %s      level %d\n",
-              pc->orig_line, pc->orig_col, pc->text(), next->text(), next->next->text(), next->next->next->text(), pc->level); // guy  2015-09-22
+      //LOG_FMT(LSPACE, "%d:%d %s %s %s %s      level %d\n",
+      //        pc->orig_line, pc->orig_col, pc->text(), next->text(), next->next->text(), next->next->next->text(), pc->level); // guy  2015-09-22
       if ((strcmp(pc->text(), "SIGNAL") == 0) ||
           (strcmp(pc->text(), "SLOT") == 0)) { // guy 2015-09-22
          LOG_FMT(LSPACE, "%d: [%d] type %s SIGNAL/SLOT found\n",

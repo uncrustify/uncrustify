@@ -280,15 +280,15 @@ enum uncrustify_options
    UO_sp_assign_default,        // space around '=' in prototype
    UO_sp_before_assign,         // space before =, +=, etc
    UO_sp_after_assign,          // space after =, +=, etc
-   UO_sp_enum_paren,
+   UO_sp_enum_paren,            // space in 'NS_ENUM ('"
    UO_sp_enum_assign,           // space around = in enum
    UO_sp_enum_before_assign,    // space before = in enum
    UO_sp_enum_after_assign,     // space after = in enum
    UO_sp_after_class_colon,     // space after class ':'
    UO_sp_before_class_colon,    // space before class ':'
-   UO_sp_after_constr_colon,
-   UO_sp_before_constr_colon,
-   UO_sp_before_case_colon,
+   UO_sp_after_constr_colon,    // space after class constructor ':'
+   UO_sp_before_constr_colon,   // space before class constructor ':'
+   UO_sp_before_case_colon,     // space before case ':'
 
    UO_sp_func_def_paren,        // space between 'func' and '(' - 'foo (' vs 'foo('
    UO_sp_func_call_paren,       // space between 'func' and '(' - 'foo (' vs 'foo('
@@ -588,7 +588,7 @@ enum uncrustify_options
 
    UO_nl_class_colon,                 // newline before/after class colon (tied to UO_pos_class_colon)
    UO_nl_constr_colon,                // newline before/after class constr colon (tied to UO_pos_constr_colon)
-   UO_nl_class_init_args,             // newline after comma in base class list
+   UO_nl_class_init_args,             // newline before/after each comma in the base class list (tied to UO_pos_class_comma)
    UO_nl_constr_init_args,            // newline after comma in class init args
    UO_nl_collapse_empty_body,         // change '{ \n }' into '{}'
    UO_nl_class_leave_one_liners,      // leave one-line function bodies in 'class xx { here }'
@@ -619,10 +619,13 @@ enum uncrustify_options
    UO_pos_compare,                // position of trailing/leading <=/>, etc
    UO_pos_conditional,            // position of trailing/leading (b ? t : f)
    UO_pos_comma,                  // position of comma in functions
-   UO_pos_class_comma,            // position of comma in class parent list list
+   UO_pos_class_comma,            // position of comma in the base class list if there are more than one line,
+                                  //   (tied to UO_nl_class_init_args).
    UO_pos_constr_comma,           // position of comma in constructor init list
-   UO_pos_class_colon,            // position of trailing/leading class colon
+   UO_pos_class_colon,            // position of trailing/leading class colon, between class and base class list
+                                  //   (tied to UO_nl_class_colon)
    UO_pos_constr_colon,           // position of trailing/leading class constr colon
+                                  //   (tied to UO_nl_constr_colon, UO_nl_constr_init_args, UO_pos_constr_colon, 
 
 
    /*
@@ -673,11 +676,11 @@ enum uncrustify_options
 
    UO_mod_paren_on_return,        // add or remove paren on return
    UO_mod_full_brace_nl,          // max number of newlines to span w/o braces
-   UO_mod_full_brace_if,          // add or remove braces on if
+   UO_mod_full_brace_if,          // add or remove braces on single-line if
    UO_mod_full_brace_if_chain,
-   UO_mod_full_brace_for,         // add or remove braces on for
-   UO_mod_full_brace_do,          // add or remove braces on do
-   UO_mod_full_brace_while,       // add or remove braces on while
+   UO_mod_full_brace_for,         // add or remove braces on single-line for
+   UO_mod_full_brace_do,          // add or remove braces on single-line do
+   UO_mod_full_brace_while,       // add or remove braces on single-line while
    UO_mod_full_brace_using,       // add or remove braces on using
    UO_mod_pawn_semicolon,         // add optional semicolons
    UO_mod_full_brace_function,    // add optional braces on Pawn functions
