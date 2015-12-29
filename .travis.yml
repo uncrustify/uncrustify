@@ -2,4 +2,6 @@ language: cpp
 
 before_script: ./configure
 
-script: make
+script: 
+  - make
+  - ./run_tests.sh
