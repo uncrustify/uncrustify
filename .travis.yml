@@ -1,10 +1,6 @@
 language: cpp
 
-branches:
-  only:
-   - master
-
-before_script: pwd
+before_script: ls
 
 script:
   - make
