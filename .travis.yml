@@ -4,7 +4,7 @@ branches:
   only:
    - master
 
-before_script: ls
+before_script: pwd
 
 script:
   - make
