@@ -3,4 +3,4 @@ language: cpp
 before_script: ls
 
 script:
-  - make
+  - make -C Build
