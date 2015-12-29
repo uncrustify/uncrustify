@@ -1,6 +1,5 @@
 language: cpp
 
-before_script: ls
+before_script: ./configure
 
-script:
-  - make -C Build
+script: make
