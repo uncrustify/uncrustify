@@ -17,6 +17,9 @@
 #include "unc_ctype.h"
 
 
+int g_stills_at_preprocessor = 0;
+int g_stills_preprocessor_emit = 0;
+
 static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool complete);
 
 struct no_space_table_s
@@ -455,6 +458,45 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
          return(cpd.settings[UO_sp_before_dc].a);
       }
    }
+   
+   /* "#define SXO(%1,%2) 1 < %1 - %2" vs "#define SXO( % 1 , % 2 ) 1 < %1 - %2" (wrong pawn syntax) */
+   if( ( ( ( first->flags & PCF_IN_PREPROC )
+          && ( first->parent_type == CT_MACRO_FUNC ) )
+        || ( ( second->flags & PCF_IN_PREPROC )
+           && ( second->parent_type == CT_MACRO_FUNC ) ) )
+        && ( cpd.settings[UO_string_escape_char].n == 94 ) )
+    {
+        g_stills_at_preprocessor = ( g_stills_at_preprocessor + 1 ) % 2; 
+        
+        log_rule("string_escape_char");
+        return AV_REMOVE;
+    }
+   if( g_stills_at_preprocessor )
+   {
+       log_rule("string_escape_char");
+       return AV_REMOVE;
+   }
+   
+   /* "#emit CONST.pri 1911" vs "#emit CONST. pri 1911" (wrong pawn syntax) */
+   if( ( first->type == CT_WORD )
+      && ( second->type == CT_DOT )
+      && ( g_stills_preprocessor_emit ) )
+    {
+        g_stills_preprocessor_emit = 0; 
+        
+        log_rule("string_escape_char");
+        return AV_REMOVE;
+    }
+    else // ensures exits the chain PP_EMIT, WORD, DOT - if a DOT is not next
+    {
+        g_stills_preprocessor_emit = 0; 
+    }
+   if( ( first->type == CT_PP_EMIT )
+      && ( second->type == CT_WORD )
+      && ( cpd.settings[UO_string_escape_char].n == 94 ) )
+    {
+        g_stills_preprocessor_emit = 1; 
+    }
 
    /* "a,b" vs "a, b" */
    if (first->type == CT_COMMA)
@@ -1275,7 +1317,16 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
       log_rule("ADD");
       return(AV_ADD);
    }
-
+   
+   /* "#define SXO(%1,%2) 1 < %1 - %2" vs "#define SEXO(%1,%2) 1 < % 1 - % 2" (wrong pawn syntax)*/
+   if ( ( first->type == CT_ARITH) 
+        && (second->type == CT_NUMBER )
+        && ( first->flags & PCF_IN_PREPROC )
+        && ( cpd.settings[UO_string_escape_char].n == 94 ) )
+   {
+      log_rule("string_escape_char");
+      return AV_IGNORE;
+   }
    if ((first->type == CT_ARITH) || (first->type == CT_CARET) ||
        (second->type == CT_ARITH) || (second->type == CT_CARET))
    {

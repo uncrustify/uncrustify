@@ -166,7 +166,14 @@ void register_options(void)
    unc_add_option("output_tab_size", UO_output_tab_size, AT_NUM,
                   "The size of tabs in the output (only used if align_with_tabs=true)", "", 1, 32);
    unc_add_option("string_escape_char", UO_string_escape_char, AT_NUM,
-                  "The ASCII value of the string escape char, usually 92 (\\) or 94 (^). (Pawn)", "", 0, 255);
+                  "The ASCII value of the string escape char, usually 92 (\\) or 94 (^). (Pawn)"
+                  "If 94 is selected, remove spaces only at the preprocessor macro functions\n"
+                  "declarations and ignore adding arithmetic expressions spaces at the macro\n"
+                  "function body. Ex: '#define COOL_MACRO(%1,%2)   ( %1 = %2 + 1 )' # instead of:\n"
+                  "'define COOL_MACRO( % 1 , % 2 )   ( % 1 = % 2 + 1 )', which is wrong.\n"
+                  "To accomplish it, this overrides sp_inside_paren, sp_after_comma and sp_arith\n"
+                  "only at the macro function declaration and body."
+                   "at the macro function declaration and body.", "", 0, 255);
    unc_add_option("string_escape_char2", UO_string_escape_char2, AT_NUM,
                   "Alternate string escape char for Pawn. Only works right before the quote char.", "", 0, 255);
    unc_add_option("string_replace_tab_chars", UO_string_replace_tab_chars, AT_BOOL,
