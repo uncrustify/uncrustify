@@ -1317,8 +1317,8 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
       log_rule("ADD");
       return(AV_ADD);
    }
-   
-   /* "#define SXO(%1,%2) 1 < %1 - %2" vs "#define SEXO(%1,%2) 1 < % 1 - % 2" (wrong pawn syntax)*/
+
+   /* "#define SXO(%1,%2) 1 < %1 - %2" vs "#define SXO(%1,%2) 1 < % 1 - % 2" (wrong pawn syntax)*/
    if ( ( first->type == CT_ARITH) 
         && (second->type == CT_NUMBER )
         && ( first->flags & PCF_IN_PREPROC )
@@ -1327,6 +1327,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
       log_rule("string_escape_char");
       return AV_IGNORE;
    }
+
    if ((first->type == CT_ARITH) || (first->type == CT_CARET) ||
        (second->type == CT_ARITH) || (second->type == CT_CARET))
    {

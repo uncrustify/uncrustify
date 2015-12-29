@@ -169,8 +169,8 @@ void register_options(void)
                   "The ASCII value of the string escape char, usually 92 (\\) or 94 (^). (Pawn)"
                   "If 94 is selected, remove spaces only at the preprocessor macro functions\n"
                   "declarations and ignore adding arithmetic expressions spaces at the macro\n"
-                  "function body. Ex: '#define COOL_MACRO(%1,%2)   ( %1 = %2 + 1 )' # instead of:\n"
-                  "'define COOL_MACRO( % 1 , % 2 )   ( % 1 = % 2 + 1 )', which is wrong.\n"
+                  "function body. Ex: \'#define COOL_MACRO(%1,%2)   ( %1 = %2 + 1 )\' # instead of:\n"
+                  "\'define COOL_MACRO( % 1 , % 2 )   ( % 1 = % 2 + 1 )\', which is wrong.\n"
                   "To accomplish it, this overrides sp_inside_paren, sp_after_comma and sp_arith\n"
                   "only at the macro function declaration and body."
                    "at the macro function declaration and body.", "", 0, 255);
