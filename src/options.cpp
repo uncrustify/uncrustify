@@ -605,7 +605,7 @@ void register_options(void)
                   "The number of spaces to indent a namespace block");
    unc_add_option("indent_namespace_limit", UO_indent_namespace_limit, AT_NUM,
                   "If the body of the namespace is longer than this number, it won't be indented.\n"
-                  "Requires indent_namespace=true. Default=0 (no limit)", NULL, 0, 255);
+                  "Requires indent_namespace=true. Default=0 (no limit)", "", 0, 255);
    unc_add_option("indent_extern", UO_indent_extern, AT_BOOL,
                   "Whether the 'extern \"C\"' body is indented");
    unc_add_option("indent_class", UO_indent_class, AT_BOOL,
@@ -678,8 +678,8 @@ void register_options(void)
                   "Whether to indent comments found in first column");
    unc_add_option("indent_label", UO_indent_label, AT_NUM,
                   "How to indent goto labels\n"
-                  " >0 : absolute column where 1 is the leftmost column\n"
-                  " <=0 : subtract from brace indent", "", -16, 16);
+                  "  >0: absolute column where 1 is the leftmost column\n"
+                  " <=0: subtract from brace indent", "", -16, 16);
    unc_add_option("indent_access_spec", UO_indent_access_spec, AT_NUM,
                   "Same as indent_label, but for access specifiers that are followed by a colon", "", -16, 16);
    unc_add_option("indent_access_spec_body", UO_indent_access_spec_body, AT_BOOL,
@@ -691,7 +691,7 @@ void register_options(void)
                   "Controls the indent of a close paren after a newline.\n"
                   "0: Indent to body level\n"
                   "1: Align under the open paren\n"
-                  "2: Indent to the brace level");
+                  "2: Indent to the brace level", "", 0, 2);
    unc_add_option("indent_comma_paren", UO_indent_comma_paren, AT_BOOL,
                   "Controls the indent of a comma when inside a paren."
                   "If TRUE, aligns under the open paren");
@@ -712,9 +712,9 @@ void register_options(void)
                   "Indent OC blocks at brace level instead of usual rules.");
    unc_add_option("indent_oc_block_msg", UO_indent_oc_block_msg, AT_NUM,
                   "Indent OC blocks in a message relative to the parameter name.\n"
-                  "0=use indent_oc_block rules, 1+=spaces to indent", 0, 16);
+                  "0=use indent_oc_block rules, 1+=spaces to indent", "", 0, 16);
    unc_add_option("indent_oc_msg_colon", UO_indent_oc_msg_colon, AT_NUM,
-                  "Minimum indent for subsequent parameters", 0, 5000);
+                  "Minimum indent for subsequent parameters", "", 0, 5000);
    unc_add_option("indent_oc_msg_prioritize_first_colon", UO_indent_oc_msg_prioritize_first_colon, AT_BOOL,
                   "If true, prioritize aligning with initial colon (and stripping spaces from lines, if necessary).\n"
                   "Default is true.");
@@ -1053,7 +1053,7 @@ void register_options(void)
                   "How aggressively to remove extra newlines not in preproc.\n"
                   "0: No change\n"
                   "1: Remove most newlines not handled by other config\n"
-                  "2: Remove all newlines and reformat completely by config");
+                  "2: Remove all newlines and reformat completely by config", "", 0, 2);
    unc_add_option("nl_before_return", UO_nl_before_return, AT_BOOL,
                   "Whether to put a blank line before 'return' statements, unless after an open brace.");
    unc_add_option("nl_after_return", UO_nl_after_return, AT_BOOL,
@@ -1164,7 +1164,7 @@ void register_options(void)
                   "How to align typedef'd functions with other typedefs\n"
                   "0: Don't mix them at all\n"
                   "1: align the open paren with the types\n"
-                  "2: align the function type name with the other type names");
+                  "2: align the function type name with the other type names", "", 0, 2);
    unc_add_option("align_typedef_star_style", UO_align_typedef_star_style, AT_NUM,
                   "Controls the positioning of the '*' in typedefs. Just try it.\n"
                   "0: Align on typedef type, ignore '*'\n"
@@ -1216,7 +1216,7 @@ void register_options(void)
                   "Align lines that start with '<<' with previous '<<'. Default=true");
 
    unc_add_option("align_oc_msg_colon_span", UO_align_oc_msg_colon_span, AT_NUM,
-                  "Span for aligning parameters in an Obj-C message call on the ':' (0=don't align)", 0, 5000);
+                  "Span for aligning parameters in an Obj-C message call on the ':' (0=don't align)", "", 0, 5000);
    unc_add_option("align_oc_msg_colon_first", UO_align_oc_msg_colon_first, AT_BOOL,
                   "If true, always align with the first parameter, even if it is too short.");
    unc_add_option("align_oc_decl_colon", UO_align_oc_decl_colon, AT_BOOL,
