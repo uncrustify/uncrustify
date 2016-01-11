@@ -474,7 +474,7 @@ void output_text(FILE *pfile)
  * @param line the comment line
  * @return 0=not present, >0=number of chars that are part of the lead
  */
-static int cmt_parse_lead(const unc_text& line, int is_last)
+static int cmt_parse_lead(const unc_text& line, bool is_last)
 {
    int len = 0;
 
@@ -532,7 +532,7 @@ static int cmt_parse_lead(const unc_text& line, int is_last)
  *  - cmt_star_cont
  *  - the first line length
  *  - the second line leader length
- *  - the last line length
+ *  - the last line length (without leading space/tab)
  *
  * If the first and last line are the same length and don't contain any alnum
  * chars and (the first line len > 2 or the second leader is the same as the
@@ -545,7 +545,7 @@ static int cmt_parse_lead(const unc_text& line, int is_last)
  * @param str       The comment string
  * @param len       Length of the comment
  * @param start_col Starting column
- * @return 0 or 1
+ * @return          cmt.xtra_indent is set to 0 or 1
  */
 static void calculate_comment_body_indent(cmt_reflow& cmt, const unc_text& str)
 {
@@ -643,10 +643,12 @@ static void calculate_comment_body_indent(cmt_reflow& cmt, const unc_text& str)
    /*TODO: make the first_len minimum (4) configurable? */
    if ((first_len == last_len) && ((first_len > 4) || (first_len == width)))
    {
+      //LOG_FMT(LSYS, "%s: cmt.xtra_indent=0\n", __func__);
       return;
    }
 
    cmt.xtra_indent = ((width == 2) ? 0 : 1);
+   //LOG_FMT(LSYS, "%s: cmt.xtra_indent=%d\n", __func__, cmt.xtra_indent);
 }
 
 
@@ -1380,19 +1382,23 @@ static void output_comment_multi(chunk_t *pc)
 
                   int idx;
 
+                  // Checks for and updates the lead chars.
+                  // @return 0=not present, >0=number of chars that are part of the lead
                   idx = cmt_parse_lead(line, (cmt_idx == pc->len()));
                   if (idx > 0)
                   {
+                     // >0=number of chars that are part of the lead
                      cmt.cont_text.set(line, 0, idx);
                      LOG_CONTTEXT();
                      if ((line.size() >= 2) && (line[0] == '*') && unc_isalnum(line[1]))
                      {
                         line.insert(1, ' ');
                      }
-                  }
-                  else
-                  {
-                     add_text(cmt.cont_text);
+                  //} bug #653, let it away a time
+                  //else
+                  //{
+                  //   // 0=no lead char present
+                  //   add_text(cmt.cont_text);
                   }
                }
 

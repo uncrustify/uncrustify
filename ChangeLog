@@ -21,6 +21,10 @@ Some more Qt-macros
 New options:
  - use_indent_continue_only_once
 
+Bugfix:
+ - fix 3 calls of unc_add_option for "align_oc_msg_colon_span",
+     "indent_oc_block_msg", "indent_oc_msg_colon"
+ - bug #653 fixed
 
 Change highlights in uncrustify4Qt-0.62 (Oct 2015)
 -------------------------------------------------------------------------------
