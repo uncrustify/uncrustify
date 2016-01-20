@@ -227,7 +227,8 @@ static const chunk_tag_t keywords[] =
    { "struct",           CT_STRUCT,       LANG_C | LANG_CPP | LANG_CS | LANG_D | LANG_VALA                            },
    { "super",            CT_SUPER,        LANG_D | LANG_JAVA | LANG_ECMA                                              },
    { "switch",           CT_SWITCH,       LANG_ALL                                                                    }, // PAWN
-   { "synchronized",     CT_QUALIFIER,    LANG_D | LANG_JAVA | LANG_ECMA                                              },
+   { "synchronized",     CT_QUALIFIER,    LANG_D | LANG_ECMA                                                          },
+   { "synchronized",     CT_SYNCHRONIZED, LANG_JAVA                                                                   },
    { "tagof",            CT_TAGOF,        LANG_PAWN                                                                   }, // PAWN
    { "template",         CT_TEMPLATE,     LANG_CPP | LANG_D                                                           },
    { "this",             CT_THIS,         LANG_CPP | LANG_CS | LANG_D | LANG_JAVA | LANG_VALA | LANG_ECMA             },
@@ -520,6 +521,7 @@ pattern_class get_token_pattern_class(c_token_t tok)
    case CT_SWITCH:
    case CT_FOR:
    case CT_WHILE:
+   case CT_SYNCHRONIZED:
    case CT_USING_STMT:
    case CT_LOCK:
    case CT_D_WITH:

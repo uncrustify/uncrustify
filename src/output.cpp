@@ -980,6 +980,16 @@ static chunk_t *output_comment_cpp(chunk_t *first)
       }
    }
 
+   /* Special treatment for Qt translator or meta-data comments (treat as unity) */
+   if (cpd.settings[UO_sp_cmt_cpp_qttr].b)
+   {
+      const int c = first->str[2];
+      if ((c == ':') || (c == '=') || (c == '~'))
+      {
+         leadin += c;
+      }
+   }
+
 
    /* CPP comments can't be grouped unless they are converted to C comments */
    if (!cpd.settings[UO_cmt_cpp_to_c].b)

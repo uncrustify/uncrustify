@@ -36,6 +36,7 @@ static void remove_semicolon(chunk_t *pc)
  *  - after brace close whose parent is IF, ELSE, SWITCH, WHILE, FOR, NAMESPACE
  *  - after another semicolon where parent is not FOR
  *  - (D) after brace close whose parent is ENUM/STRUCT/UNION
+ *  - (Java) after brace close whose parent is SYNCHRONIZED
  *  - after an open brace
  *  - when not in a #DEFINE
  */
@@ -94,6 +95,12 @@ void remove_extra_semicolons(void)
                   ((prev->parent_type == CT_ENUM) ||
                    (prev->parent_type == CT_UNION) ||
                    (prev->parent_type == CT_STRUCT)))
+         {
+            LOG_FUNC_CALL();
+            remove_semicolon(pc);
+         }
+         else if ((cpd.lang_flags & LANG_JAVA) &&
+                  ((prev->parent_type == CT_SYNCHRONIZED)))
          {
             LOG_FUNC_CALL();
             remove_semicolon(pc);

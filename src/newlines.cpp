@@ -1888,6 +1888,13 @@ static bool one_liner_nl_ok(chunk_t *pc)
          LOG_FMT(LNL1LINE, "false (if/else)\n");
          return(false);
       }
+
+      if (cpd.settings[UO_nl_while_leave_one_liners].b &&
+          (pc->parent_type == CT_WHILE))
+      {
+         LOG_FMT(LNL1LINE, "false (while)\n");
+         return(false);
+      }
    }
    LOG_FMT(LNL1LINE, "true\n");
    return(true);
@@ -2073,6 +2080,11 @@ void newlines_cleanup_braces(bool first)
       else if (pc->type == CT_SWITCH)
       {
          newlines_if_for_while_switch(pc, cpd.settings[UO_nl_switch_brace].a);
+      }
+      else if (pc->type == CT_SYNCHRONIZED)
+      {
+         newlines_if_for_while_switch(pc,
+                                      cpd.settings[UO_nl_synchronized_brace].a);
       }
       else if (pc->type == CT_DO)
       {
@@ -2666,6 +2678,11 @@ void newlines_insert_blank_lines(void)
       {
          newlines_if_for_while_switch_pre_blank_lines(pc, cpd.settings[UO_nl_before_switch].a);
          newlines_if_for_while_switch_post_blank_lines(pc, cpd.settings[UO_nl_after_switch].a);
+      }
+      else if (pc->type == CT_SYNCHRONIZED)
+      {
+         newlines_if_for_while_switch_pre_blank_lines(pc, cpd.settings[UO_nl_before_synchronized].a);
+         newlines_if_for_while_switch_post_blank_lines(pc, cpd.settings[UO_nl_after_synchronized].a);
       }
       else if (pc->type == CT_DO)
       {

@@ -37,6 +37,7 @@ const char *token_names[] =
    "SWITCH",
    "CASE",
    "DO",
+   "SYNCHRONIZED",
    "VOLATILE",
    "TYPEDEF",
    "STRUCT",

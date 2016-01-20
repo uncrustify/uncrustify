@@ -283,7 +283,7 @@ void register_options(void)
                   "Permit removal of the space between '>>' in 'foo<bar<int> >' (C++11 only). Default=False\n"
                   "sp_angle_shift cannot remove the space without this option.");
    unc_add_option("sp_before_sparen", UO_sp_before_sparen, AT_IARF,
-                  "Add or remove space before '(' of 'if', 'for', 'switch', and 'while'");
+                  "Add or remove space before '(' of 'if', 'for', 'switch', 'while', etc.");
    unc_add_option("sp_inside_sparen", UO_sp_inside_sparen, AT_IARF,
                   "Add or remove space inside if-condition '(' and ')'");
    unc_add_option("sp_inside_sparen_close", UO_sp_inside_sparen_close, AT_IARF,
@@ -291,9 +291,9 @@ void register_options(void)
    unc_add_option("sp_inside_sparen_open", UO_sp_inside_sparen_open, AT_IARF,
                   "Add or remove space after if-condition '('. Overrides sp_inside_sparen.");
    unc_add_option("sp_after_sparen", UO_sp_after_sparen, AT_IARF,
-                  "Add or remove space after ')' of 'if', 'for', 'switch', and 'while'");
+                  "Add or remove space after ')' of 'if', 'for', 'switch', and 'while', etc.");
    unc_add_option("sp_sparen_brace", UO_sp_sparen_brace, AT_IARF,
-                  "Add or remove space between ')' and '{' of 'if', 'for', 'switch', and 'while'");
+                  "Add or remove space between ')' and '{' of 'if', 'for', 'switch', and 'while', etc.");
    unc_add_option("sp_invariant_paren", UO_sp_invariant_paren, AT_IARF,
                   "Add or remove space between 'invariant' and '(' in the D language.");
    unc_add_option("sp_after_invariant_paren", UO_sp_after_invariant_paren, AT_IARF,
@@ -546,6 +546,8 @@ void register_options(void)
                   "Control the space after the opening of a C++ comment '// A' vs '//A'");
    unc_add_option("sp_cmt_cpp_doxygen", UO_sp_cmt_cpp_doxygen, AT_BOOL,
                   "TRUE: If space is added with sp_cmt_cpp_start, do it after doxygen sequences like '///', '///<', '//!' and '//!<'.");
+   unc_add_option("sp_cmt_cpp_qttr", UO_sp_cmt_cpp_qttr, AT_BOOL,
+                  "TRUE: If space is added with sp_cmt_cpp_start, do it after Qt translator or meta-data comments like '//:', '//=', and '//~'.");
 
    unc_add_option("sp_endif_cmt", UO_sp_endif_cmt, AT_IARF,
                   "Controls the spaces between #else or #endif and a trailing comment");
@@ -751,6 +753,8 @@ void register_options(void)
                   "Don't split one-line C++11 lambdas - '[]() { return 0; }'");
    unc_add_option("nl_if_leave_one_liners", UO_nl_if_leave_one_liners, AT_BOOL,
                   "Don't split one-line if/else statements - 'if(a) b++;'");
+   unc_add_option("nl_while_leave_one_liners", UO_nl_while_leave_one_liners, AT_BOOL,
+                  "Don't split one-line while statements - 'while(a) b++;'");
    unc_add_option("nl_oc_msg_leave_one_liner", UO_nl_oc_msg_leave_one_liner, AT_BOOL,
                   "Don't split one-line OC messages");
 
@@ -846,6 +850,8 @@ void register_options(void)
                   "Add or remove newline between '}' and 'while' of 'do' statement");
    unc_add_option("nl_switch_brace", UO_nl_switch_brace, AT_IARF,
                   "Add or remove newline between 'switch' and '{'");
+   unc_add_option("nl_synchronized_brace", UO_nl_synchronized_brace, AT_IARF,
+                  "Add or remove newline between 'synchronized' and '{'");
    unc_add_option("nl_multi_line_cond", UO_nl_multi_line_cond, AT_BOOL,
                   "Add a newline between ')' and '{' if the ')' is on a different line than the if/for/etc.\n"
                   "Overrides nl_for_brace, nl_if_brace, nl_switch_brace, nl_while_switch, and nl_catch_brace.");
@@ -961,6 +967,10 @@ void register_options(void)
                   "Add or remove blank line before 'switch'");
    unc_add_option("nl_after_switch", UO_nl_after_switch, AT_IARF,
                   "Add or remove blank line after 'switch' statement");
+   unc_add_option("nl_before_synchronized", UO_nl_before_synchronized, AT_IARF,
+                  "Add or remove blank line before 'synchronized'");
+   unc_add_option("nl_after_synchronized", UO_nl_after_synchronized, AT_IARF,
+                  "Add or remove blank line after 'synchronized' statement");
    unc_add_option("nl_before_do", UO_nl_before_do, AT_IARF,
                   "Add or remove blank line before 'do'");
    unc_add_option("nl_after_do", UO_nl_after_do, AT_IARF,

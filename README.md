@@ -51,10 +51,12 @@ called, surprisingly enough, 'Installation Directory'.
 Configuring the program
 -----------------------
 
-Examine the example config files in etc and/or read
-documentation/htdocs/configuration.txt.
+Examine the example config files in `etc` (such as [ben.cfg](./etc/ben.cfg)) 
+and/or read [configuration.txt](./documentation/htdocs/configuration.txt).
 Copy the existing config file that closely matches your style and put in
-~/.uncrustify/.  Modify to your liking.
+`~/.uncrustify/`. Find complete configuration file options 
+[in this file](./documentation/htdocs/config.txt). Modify to your 
+liking.
 
 
 Running the program (and refining your style)
