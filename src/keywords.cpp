@@ -319,6 +319,7 @@ bool keywords_are_sorted(void)
       {
          fprintf(stderr, "%s: bad sort order at idx %d, words '%s' and '%s'\n",
                  __func__, idx - 1, keywords[idx - 1].tag, keywords[idx].tag);
+         cpd.error_count++;
          return(false);
       }
    }

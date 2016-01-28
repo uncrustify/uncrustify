@@ -119,6 +119,7 @@ static chunk_t *flag_parens(chunk_t *po, UINT64 flags,
       LOG_FMT(LERR, "flag_parens: no match for [%s] at [%d:%d]",
               po->text(), po->orig_line, po->orig_col);
       log_func_stack_inline(LERR);
+      cpd.error_count++;
       return(NULL);
    }
 
