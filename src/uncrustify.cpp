@@ -133,6 +133,7 @@ static void usage_exit(const char *msg, const char *argv0, int code)
            "\n"
            "If no input files are specified, the input is read from stdin\n"
            "If reading from stdin, you should specify the language using -l\n"
+           "or specify a filename using --assume for automatic language detection.\n"
            "\n"
            "If -F is used or files are specified on the command line, the output filename is\n"
            "'prefix/filename' + suffix\n"
@@ -166,6 +167,8 @@ static void usage_exit(const char *msg, const char *argv0, int code)
            " -t           : load a file with types (usually not needed)\n"
            " -q           : quiet mode - no output on stderr (-L will override)\n"
            " --frag       : code fragment, assume the first line is indented correctly\n"
+           " --assume FN  : Uses the filename FN for automatic language detection if reading\n"
+           "                from stdin unless -l is specified.\n"
            "\n"
            "Config/Help Options:\n"
            " -h -? --help --usage     : print this message and exit\n"
@@ -412,6 +415,7 @@ int main(int argc, char *argv[])
 
    const char *prefix = arg.Param("--prefix");
    const char *suffix = arg.Param("--suffix");
+   const char *assume = arg.Param("--assume");
 
    bool no_backup        = arg.Present("--no-backup");
    bool replace          = arg.Present("--replace");
@@ -429,6 +433,7 @@ int main(int argc, char *argv[])
    LOG_FMT(LDATA, "source_list = %s\n", (source_list != NULL) ? source_list : "null");
    LOG_FMT(LDATA, "prefix      = %s\n", (prefix != NULL) ? prefix : "null");
    LOG_FMT(LDATA, "suffix      = %s\n", (suffix != NULL) ? suffix : "null");
+   LOG_FMT(LDATA, "assume      = %s\n", (assume != NULL) ? assume : "null");
    LOG_FMT(LDATA, "replace     = %d\n", replace);
    LOG_FMT(LDATA, "no_backup   = %d\n", no_backup);
    LOG_FMT(LDATA, "detect      = %d\n", detect);
@@ -584,7 +589,14 @@ int main(int argc, char *argv[])
       /* no input specified, so use stdin */
       if (cpd.lang_flags == 0)
       {
-         cpd.lang_flags = LANG_C;
+         if (assume != NULL)
+         {
+            cpd.lang_flags = language_flags_from_filename(assume);
+         }
+         else
+         {
+            cpd.lang_flags = LANG_C;
+         }
       }
 
       if (!cpd.do_check)
