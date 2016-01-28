@@ -171,8 +171,10 @@ void tokenize_cleanup(void)
        * Change CT_BASE before CT_PAREN_OPEN to CT_WORD.
        * public myclass() : base() {
        * }
+       * -or-
+       * var x = (T)base.y;
        */
-      if ((pc->type == CT_BASE) && (next->type == CT_PAREN_OPEN))
+      if ((pc->type == CT_BASE) && ((next->type == CT_PAREN_OPEN) || (next->type == CT_DOT)))
       {
          set_chunk_type(pc, CT_WORD);
       }
