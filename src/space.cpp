@@ -11,6 +11,7 @@
 #include "chunk_list.h"
 #include "prototypes.h"
 #include "char_table.h"
+#include "options_for_QT.h"
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -75,15 +76,6 @@ struct no_space_table_s no_space_table[] =
       log_rule2(__LINE__, (rule), first, second, complete); } \
    } while (0)
 
-// for the modification of options within the SIGNAL/SLOT call. guy 2015-09-22
-static bool QT_SIGNAL_SLOT_found = false;
-static int QT_SIGNAL_SLOT_level = 0;
-static argval_t SaveUO_sp_inside_fparen_A = AV_NOT_DEFINED;
-static argval_t SaveUO_sp_paren_paren_A = AV_NOT_DEFINED;
-static argval_t SaveUO_sp_before_comma_A = AV_NOT_DEFINED;
-static argval_t SaveUO_sp_after_comma_A = AV_NOT_DEFINED;
-static bool restoreValues = false;
-
 static void log_rule2(int line, const char *rule, chunk_t *first, chunk_t *second, bool complete)
 {
    LOG_FUNC_ENTRY();
@@ -99,7 +91,6 @@ static void log_rule2(int line, const char *rule, chunk_t *first, chunk_t *secon
               complete ? "\n" : "");
    }
 }
-
 
 /**
  * Decides how to change inter-chunk spacing.
@@ -518,7 +509,9 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
    {
       // test if we are within a SIGNAL/SLOT call
       LOG_FMT(LSPACE, "%d:%d %d %s %s %s      level %d\n",
-              first->orig_line, first->orig_col, __LINE__, first->text(), first->next->text(), first->next->next->text(), first->level); // guy  2015-09-22
+              first->orig_line, first->orig_col, __LINE__,
+              first->text(), first->next->text(),
+              first->next->next->text(), first->level); // guy  2015-09-22
       if (QT_SIGNAL_SLOT_found) {
         if ((first->type == CT_FPAREN_CLOSE) && (second->type == CT_FPAREN_CLOSE)) {
           if (second->level == (QT_SIGNAL_SLOT_level)) {
@@ -1103,7 +1096,9 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
       }
       // test if we are within a SIGNAL/SLOT call
       LOG_FMT(LSPACE, "%d:%d %d %s %s %s      level %d\n",
-              first->orig_line, first->orig_col, __LINE__, first->text(), first->next->text(), first->next->next->text(), first->level); // guy  2015-09-22
+              first->orig_line, first->orig_col, __LINE__,
+              first->text(), first->next->text(),
+              first->next->next->text(), first->level); // guy  2015-09-22
       if (QT_SIGNAL_SLOT_found) {
         if (first->type == CT_FPAREN_CLOSE) {
           if (second->level == (QT_SIGNAL_SLOT_level + 1)) {
@@ -1490,6 +1485,20 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
        ((first->type == CT_QUALIFIER) || (first->type == CT_TYPE)))
    {
       arg = cpd.settings[UO_sp_after_type].a;
+//      // test if we are within a SIGNAL/SLOT call
+//      LOG_FMT(LSPACE, "\n++++++++++++++ %d:%d %d %s %s %s %s      level %d\n",
+//              first->orig_line, first->orig_col, __LINE__,
+//              first->text(), first->next->text(),
+//              first->next->next->text(), first->next->next->next->text(),
+//              first->level); // guy  2015-09-22
+//      if (QT_SIGNAL_SLOT_found) {
+//        LOG_FMT(LSPACE, "++++++++++++++++ QT_SIGNAL_SLOT_found\n");
+//      }
+//         if (first->flags & PCF_FORCE_SPACE)
+//         {
+//            LOG_FMT(LSPACE, "+++++++++++++++++++ force between '%s' and '%s'>\n",
+//                    first->str.c_str(), first->next->str.c_str());
+//         }
       log_rule("sp_after_type");
       return((arg != AV_REMOVE) ? arg : AV_FORCE);
    }
@@ -1685,25 +1694,41 @@ void space_text(void)
    column = pc->column;
    while (pc != NULL)
    {
-      next = chunk_get_next(pc);
-      //LOG_FMT(LSPACE, "%d:%d %s %s %s %s      level %d\n",
-      //        pc->orig_line, pc->orig_col, pc->text(), next->text(), next->next->text(), next->next->next->text(), pc->level); // guy  2015-09-22
+//      chunk_t *local_next;
+//      local_next = chunk_get_next(pc);
+//      int count = 0;
+//      //LOG_FMT(LSPACE, "\nGG3 %d\n", __LINE__);
+//      LOG_FMT(LSPACE, "\n%s:%d (%d) %s", __func__, pc->orig_line, __LINE__, pc->text());
+//      local_next = pc->next;
+//      while (local_next != NULL) {
+//         LOG_FMT(LSPACE, " %s", local_next->text());
+//         count++;
+//         if (count == 10) {
+//           LOG_FMT(LSPACE, "\n");
+//           break;
+//         }
+//         if (local_next->type == CT_NEWLINE) {
+//           LOG_FMT(LSPACE, "\n");
+//           break;
+//         }
+//         local_next = local_next->next;
+//      }
+//      if (local_next == NULL) {
+//        LOG_FMT(LSPACE, "<EOL>\n");
+//      }
+//      decode_flag(pc->flags);
+//      LOG_FMT(LSPACE, "%d:%d %s %s %s %s      level %d\n",
+//              pc->orig_line, pc->orig_col, pc->text(), next->text(), next->next->text(), next->next->next->text(), pc->level); // guy  2015-09-22
       if ((strcmp(pc->text(), "SIGNAL") == 0) ||
           (strcmp(pc->text(), "SLOT") == 0)) { // guy 2015-09-22
-         LOG_FMT(LSPACE, "%d: [%d] type %s SIGNAL/SLOT found\n",
+         LOG_FMT(LGUY, "%d: [%d] type %s SIGNAL/SLOT found\n",
                  pc->orig_line, __LINE__, get_token_name(pc->type));
-         QT_SIGNAL_SLOT_found = true;
+//         QT_SIGNAL_SLOT_found = true;
+         // flag the chunk for a second processing
+         pc->flags |= PCF_IN_QT_MACRO;
+
          // save the values
-         QT_SIGNAL_SLOT_level = pc->level;
-         SaveUO_sp_inside_fparen_A = cpd.settings[UO_sp_inside_fparen].a;
-         SaveUO_sp_paren_paren_A = cpd.settings[UO_sp_paren_paren].a;
-         SaveUO_sp_before_comma_A = cpd.settings[UO_sp_before_comma].a;
-         SaveUO_sp_after_comma_A = cpd.settings[UO_sp_after_comma].a;
-         // set values for SIGNAL/SLOT
-         cpd.settings[UO_sp_inside_fparen].a = AV_REMOVE;
-         cpd.settings[UO_sp_paren_paren].a = AV_REMOVE;
-         cpd.settings[UO_sp_before_comma].a = AV_REMOVE;
-         cpd.settings[UO_sp_after_comma].a = AV_REMOVE;
+         save_set_options_for_QT(pc->level);
       } // guy
 
       // why this??
@@ -1712,13 +1737,11 @@ void space_text(void)
       // take it as TODO 2015-11-16
       //while (chunk_is_blank(next) && !chunk_is_newline(next))
       //{
-      //   LOG_FMT(LSPACE, "%s(GUY:%d): %d:%d Skip %s (%d+%d)\n", __func__, __LINE__,
-      //           next->orig_line, next->orig_col, get_token_name(next->type),
-      //           pc->column, pc->str.size());
       //   next->column = pc->column + pc->str.size();
       //   next         = chunk_get_next(next);
       //}
       //if (!next)
+      next = pc->next;
       if (next == NULL)
       {
          break;
@@ -1897,26 +1920,17 @@ void space_text(void)
                  (av == AV_REMOVE) ? "REMOVE" : "FORCE",
                  column - prev_column, next->column);
          if (restoreValues) {  // guy 2015-09-22
-            LOG_FMT(LSPACE, "restore values\n");
-            // restore the values we had before SIGNAL/SLOT
-            QT_SIGNAL_SLOT_level = 0;
-            cpd.settings[UO_sp_inside_fparen].a = SaveUO_sp_inside_fparen_A;
-            cpd.settings[UO_sp_paren_paren].a = SaveUO_sp_paren_paren_A;
-            cpd.settings[UO_sp_before_comma].a = SaveUO_sp_before_comma_A;
-            cpd.settings[UO_sp_after_comma].a = SaveUO_sp_after_comma_A;
-            SaveUO_sp_inside_fparen_A = AV_NOT_DEFINED;
-            SaveUO_sp_paren_paren_A = AV_NOT_DEFINED;
-            SaveUO_sp_before_comma_A = AV_NOT_DEFINED;
-            SaveUO_sp_after_comma_A = AV_NOT_DEFINED;
-            QT_SIGNAL_SLOT_found = false;
-            restoreValues = false;
+            restore_options_for_QT();
          }
       }
 
       pc = next;
+      if (QT_SIGNAL_SLOT_found) {
+         // flag the chunk for a second processing
+         pc->flags |= PCF_IN_QT_MACRO;
+      }
    }
 }
-
 
 /**
  * Marches through the whole file and adds spaces around nested parens
@@ -2003,7 +2017,6 @@ int space_needed(chunk_t *first, chunk_t *second)
    }
 }
 
-
 /**
  * Calculates the column difference between two chunks.
  * The rules are bent a bit here, as AV_IGNORE and AV_ADD become AV_FORCE.
@@ -2019,6 +2032,7 @@ int space_col_align(chunk_t *first, chunk_t *second)
    int      coldiff, min_sp;
    argval_t av;
 
+   LOG_FMT(LGUY, "\n%s: %d (%d) %s\n", __func__, first->orig_line, __LINE__, first->text());
    LOG_FMT(LSPACE, "%s: %d:%d [%s/%s] '%s' <==> %d:%d [%s/%s] '%s'", __func__,
            first->orig_line, first->orig_col,
            get_token_name(first->type), get_token_name(first->parent_type),

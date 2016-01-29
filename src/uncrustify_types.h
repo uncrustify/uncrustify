@@ -162,6 +162,7 @@ struct parse_frame
 #define PCF_OC_RTYPE           PCF_BIT(37)  /* inside OC return type */
 #define PCF_OC_ATYPE           PCF_BIT(38)  /* inside OC arg type */
 #define PCF_WF_ENDIF           PCF_BIT(39)  /* #endif for whole file ifdef */
+#define PCF_IN_QT_MACRO        PCF_BIT(40)  /* in a QT-macro, i.e. SIGNAL, SLOT */
 
 #ifdef DEFINE_PCF_NAMES
 static const char *pcf_names[] =
@@ -206,6 +207,7 @@ static const char *pcf_names[] =
    "OC_RTYPE",          // 37
    "OC_ATYPE",          // 38
    "WF_ENDIF",          // 39
+   "IN_QT_MACRO",       // 40
 };
 #endif
 

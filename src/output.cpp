@@ -311,6 +311,7 @@ void output_text(FILE *pfile)
 
    for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next(pc))
    {
+      LOG_FMT(LGUY, "%s, column=%d\n", pc->text(), pc->column);
       cpd.output_tab_as_space = (cpd.settings[UO_cmt_convert_tab_to_spaces].b &&
                                  chunk_is_comment(pc));
       if (pc->type == CT_NEWLINE)
