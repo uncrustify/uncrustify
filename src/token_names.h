@@ -268,7 +268,12 @@ const char *token_names[] =
    "ANNOTATION",
    "FOR_COLON",
    "DOUBLE_BRACE",
+   "CDECL",
+   "CLRCALL",
+   "FASTCALL",
    "STDCALL",
+   "THISCALL",
+   "VECTORCALL",
 };
 
 #endif /* TOKEN_NAMES_H_INCLUDED */

@@ -56,17 +56,22 @@ static const chunk_tag_t keywords[] =
    { "_Imaginary",       CT_TYPE,         LANG_CPP                                                                    },
    { "__attribute__",    CT_ATTRIBUTE,    LANG_C | LANG_CPP                                                           },
    { "__block",          CT_QUALIFIER,    LANG_OC                                                                     },
+   { "__cdecl",          CT_CDECL,        LANG_C | LANG_CPP                                                           }, // guy 2016-01-31
+   { "__clrcall",        CT_CLRCALL,      LANG_C | LANG_CPP                                                           }, // guy 2016-01-31
    { "__const__",        CT_QUALIFIER,    LANG_C | LANG_CPP                                                           },
    { "__except",         CT_CATCH,        LANG_C | LANG_CPP                                                           },
+   { "__fastcall",       CT_FASTCALL,     LANG_C | LANG_CPP                                                           }, // guy 2016-01-31
    { "__finally",        CT_FINALLY,      LANG_C | LANG_CPP                                                           },
    { "__inline__",       CT_QUALIFIER,    LANG_C | LANG_CPP                                                           },
    { "__restrict",       CT_QUALIFIER,    LANG_C | LANG_CPP                                                           },
    { "__signed__",       CT_TYPE,         LANG_C | LANG_CPP                                                           },
    { "__stdcall",        CT_STDCALL,      LANG_C | LANG_CPP                                                           }, // guy 2015-11-19
+   { "__thiscall",       CT_THISCALL,     LANG_C | LANG_CPP                                                           }, // guy 2016-01-31
    { "__thread",         CT_QUALIFIER,    LANG_C | LANG_CPP                                                           },
    { "__traits",         CT_QUALIFIER,    LANG_D                                                                      },
    { "__try",            CT_TRY,          LANG_C | LANG_CPP                                                           },
    { "__typeof__",       CT_SIZEOF,       LANG_C | LANG_CPP                                                           },
+   { "__vectorcall",     CT_VECTORCALL,   LANG_C | LANG_CPP                                                           }, // guy 2016-01-31
    { "__volatile__",     CT_QUALIFIER,    LANG_C | LANG_CPP                                                           },
    { "abstract",         CT_QUALIFIER,    LANG_CS | LANG_D | LANG_JAVA | LANG_VALA | LANG_ECMA                        },
    { "add",              CT_GETSET,       LANG_CS                                                                     },

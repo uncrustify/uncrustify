@@ -3,6 +3,8 @@
  * Labels the chunks as needed.
  *
  * @author  Ben Gardner
+ * @author  Guy Maurel since version 0.62 for uncrustify4Qt
+ *          October 2015
  * @license GPL v2+
  */
 #include "uncrustify_types.h"
@@ -1390,11 +1392,41 @@ static bool mark_function_type(chunk_t *pc)
          ptrcnk = tmp;
          LOG_FMT(LFTYPE, " -- PTR_TYPE\n");
       }
+      else if (tmp->type == CT_CDECL)
+      {
+         // Bug # 633
+         // MS-specific extension to specify calling convention.
+         LOG_FMT(LFTYPE, " -- MS calling convention CT_CDECL(%s)\n", tmp->text());
+      }
+      else if (tmp->type == CT_CLRCALL)
+      {
+         // Bug # 633
+         // MS-specific extension to specify calling convention.
+         LOG_FMT(LFTYPE, " -- MS calling convention CT_CLRCALL(%s)\n", tmp->text());
+      }
+      else if (tmp->type == CT_FASTCALL)
+      {
+         // Bug # 633
+         // MS-specific extension to specify calling convention.
+         LOG_FMT(LFTYPE, " -- MS calling convention CT_FASTCALL(%s)\n", tmp->text());
+      }
       else if (tmp->type == CT_STDCALL)
       {
          // Bug # 633
          // MS-specific extension to specify calling convention.
-         LOG_FMT(LFTYPE, " -- CT_STDCALL(%s)\n", tmp->text());
+         LOG_FMT(LFTYPE, " -- MS calling convention CT_STDCALL(%s)\n", tmp->text());
+      }
+      else if (tmp->type == CT_THISCALL)
+      {
+         // Bug # 633
+         // MS-specific extension to specify calling convention.
+         LOG_FMT(LFTYPE, " -- MS calling convention CT_THISCALL(%s)\n", tmp->text());
+      }
+      else if (tmp->type == CT_VECTORCALL)
+      {
+         // Bug # 633
+         // MS-specific extension to specify calling convention.
+         LOG_FMT(LFTYPE, " -- MS calling convention CT_VECTORCALL(%s)\n", tmp->text());
       }
       else if (chunk_is_word(tmp) ||
                (tmp->type == CT_WORD) ||
@@ -2105,7 +2137,10 @@ static void fix_enum_struct_union(chunk_t *pc)
  * typedef [type...] [*] type [, [*]type] ;
  * typedef <return type>([*]func)();
  * typedef <return type>([*]func)(params);
- * typedef <return type>(__stdcall *func)();         Bug # 633    MS-specific extension, guy 2015-11-19
+ * typedef <return type>(__stdcall *func)(); Bug # 633    MS-specific extension, guy 2015-11-19
+ *                                           other calling conventions as detailled at:
+ *                                           https://msdn.microsoft.com/en-us/library/984x0h58.aspx
+ *                                           __cdecl, __clrcall, __fastcall, __thiscall, __vectorcall
  * typedef <return type>func(params);
  * typedef <enum/struct/union> [type] [*] type [, [*]type] ;
  * typedef <enum/struct/union> [type] { ... } [*] type [, [*]type] ;
