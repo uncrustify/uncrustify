@@ -1426,19 +1426,6 @@ static bool parse_next(tok_ctx& ctx, chunk_t& pc)
       return true;
    }
 
-   /* handle VALA preprocessor args %0 - %9 */
-   if (((cpd.lang_flags & LANG_VALA) != 0) &&
-       (cpd.in_preproc == CT_PP_DEFINE) &&
-       (ctx.peek() == '%') &&
-       unc_isdigit(ctx.peek(1)))
-   {
-      pc.str.clear();
-      pc.str.append(ctx.get());
-      pc.str.append(ctx.get());
-      pc.type = CT_WORD;
-      return true;
-   }
-
    /* handle C++0x strings u8"x" u"x" U"x" R"x" u8R"XXX(I'm a "raw UTF-8" string.)XXX" */
    ch = ctx.peek();
    if (((cpd.lang_flags & LANG_CPP) != 0) &&
