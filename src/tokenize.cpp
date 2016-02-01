@@ -1486,6 +1486,18 @@ static bool parse_next(tok_ctx& ctx, chunk_t& pc)
             return(true);
          }
       }
+
+      /* handle PAWN preprocessor args %0 .. %9 */
+      if ((cpd.in_preproc == CT_PP_DEFINE) &&
+          (ctx.peek() == '%') &&
+          unc_isdigit(ctx.peek(1)))
+      {
+         pc.str.clear();
+         pc.str.append(ctx.get());
+         pc.str.append(ctx.get());
+         pc.type = CT_WORD;
+         return true;
+      }
    }
 
    /**
