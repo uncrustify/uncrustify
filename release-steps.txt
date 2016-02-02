@@ -19,7 +19,7 @@ Just in case I don't do a release for a while and forget what to do... =)
 3a. Update the version number and rebuild.
 Replace the old version with the new version everywhere except in ChangeLog.
 Specific files to update:
-    configure.in
+    configure.ac
     documentation/htdocs/index.html
 
 Run "sh autogen.sh" and then "./configure".
