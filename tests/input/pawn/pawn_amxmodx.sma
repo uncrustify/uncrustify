@@ -1,6 +1,6 @@
 #include <amxmodx>
 
-#define COOL_MACRO( %1 , %2 ) ( %1 + %2 + 1 )
+#define COOL_MACRO(%1,%2) ( % 1 + % 2 + 1 )
 
 #define SXO( % 1 ,%2) 1 < %1 || %2 > 2
 
@@ -23,6 +23,7 @@ Test1()
 {
     static var;
     var++
+    #emit CONST.pri 1337
     #emit CONST. pri 1337
     return var;
 }
@@ -30,6 +31,7 @@ Test1()
 Test2()
 {
     #emit CONST .pri 1911
+    #emit CONST.pri 1911
     static var;
     return --var
 }

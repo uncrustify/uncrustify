@@ -38,6 +38,10 @@
 #include <vector>
 #include <deque>
 
+#if IS_DEBUG_ENABLED > 0
+int g_debug_level = 0;
+#endif
+
 static const char *pcf_names[] =
 {
    "IN_PREPROC",        // 0
@@ -386,6 +390,9 @@ int main(int argc, char *argv[])
    if (((parsed_file = arg.Param("--parsed")) != NULL) ||
        ((parsed_file = arg.Param("-p")) != NULL))
    {
+#if IS_DEBUG_ENABLED > 0
+      g_debug_level = 3;
+#endif
       LOG_FMT(LNOTE, "Will export parsed data to: %s\n", parsed_file);
    }
 

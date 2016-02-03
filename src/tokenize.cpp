@@ -11,6 +11,7 @@
 #include "char_table.h"
 #include "prototypes.h"
 #include "chunk_list.h"
+#include "logger.h"
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -78,6 +79,7 @@ struct tok_ctx
       if (more())
       {
          int ch = data[c.idx++];
+         DEBUG_LOGGER( 2, "%c", ch )
          switch (ch)
          {
          case '\t':
@@ -1303,10 +1305,10 @@ static bool parse_next(tok_ctx& ctx, chunk_t& pc)
 {
    const chunk_tag_t *punc;
    int               ch, ch1;
-
+   
    if (!ctx.more())
    {
-      //fprintf(stderr, "All done!\n");
+      DEBUG_LOGGER( 1, "All done!\n" );
       return(false);
    }
 
@@ -1467,7 +1469,12 @@ static bool parse_next(tok_ctx& ctx, chunk_t& pc)
          }
       }
    }
-
+   
+#if IS_DEBUG_ENABLED > 0
+   static int current_pass_counter = 0;
+   DEBUG_LOGGER( 0, " ( parse_next ) current_pass_counter: %d\n", current_pass_counter++  )
+#endif
+   
    /* PAWN specific stuff */
    if ((cpd.lang_flags & LANG_PAWN) != 0)
    {
@@ -1487,7 +1494,14 @@ static bool parse_next(tok_ctx& ctx, chunk_t& pc)
          }
       }
    }
-
+   
+   /* "#define SXO(%1,%2) 1 < %1 - %2" vs "#define SXO( % 1 , % 2 ) 1 < %1 - %2" (wrong pawn syntax) */
+   if( ( cpd.in_preproc )
+      && ( ( cpd.lang_flags & LANG_PAWN) != 0 ) )
+   {
+       return(true);
+   }
+   
    /**
     * Parse strings and character constants
     */

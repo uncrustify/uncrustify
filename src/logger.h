@@ -171,6 +171,35 @@ static_inline char to_hex_char(int nibble)
 #define LOG_FUNC_CALL()
 #endif
 
+
+#define IS_DEBUG_ENABLED 1
+
+#if IS_DEBUG_ENABLED > 0
+
+/**
+ * ( 0 ) 0 disabled all debug.
+ * ( 1 ) 1 displays basic debug messages.
+ * ( 10 ) 2 displays PAWN specific stuff.
+ * ( 11 ) 3 displays all debug levels.
+ */
+extern int g_debug_level;
+
+/**
+ * This print to the standard output, the debug information passed accordingly to the global 
+ * constant g_debug_level.
+ *
+ * @param mode the debug mode level, see the directive 'g_debug_level' for the levels.
+ * @param message[] the text formatting rules to display. Example: "Hi today is %s-%s"
+ * @param any the variable number of formatting parameters. Example: day_name, the_time
+ */
+#define DEBUG_LOGGER(mode,...) if( mode & g_debug_level ) \
+{ \
+    fprintf( stderr, __VA_ARGS__ ); \
+}
+#else
+#define DEBUG_LOGGER(...) //
+#endif
+
 /**
  * This class just adds a entry to the top of the stack on construction and
  * removes it on destruction.
