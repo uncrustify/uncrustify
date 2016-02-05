@@ -396,7 +396,7 @@ int main(int argc, char *argv[])
       LOG_FMT(LNOTE, "Will export parsed data to: %s\n", parsed_file);
    }
 
-   /* Enable log sevs? */
+   /* Enable log sevs? Show the log severity in the logs */
    if (arg.Present("-s") || arg.Present("--show"))
    {
       log_show_sev(true);
@@ -1051,7 +1051,8 @@ const char *fix_filename(const char *filename)
 
 
 /**
- * Does a source file.
+ * Call uncrustify_file() to realises the file parsing applying the source code format options 
+ * a source file.
  *
  * @param filename_in  the file to read
  * @param filename_out NULL (stdout) or the file to write
@@ -1395,6 +1396,11 @@ static void add_msg_header(c_token_t type, file_mem& fm)
 }
 
 
+/**
+ * Prepare all data to be processed later on.
+ * 
+ * @param data     the data to be parsed by this program.
+ */
 static void uncrustify_start(const deque<int>& data)
 {
    /**
@@ -1458,7 +1464,9 @@ static void uncrustify_start(const deque<int>& data)
    combine_labels();
 }
 
-
+/**
+ * Realises the file parsing applying the source code format options.
+ */
 static void uncrustify_file(const file_mem& fm, FILE *pfout,
                             const char *parsed_file)
 {
