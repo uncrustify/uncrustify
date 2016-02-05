@@ -880,7 +880,7 @@ void indent_text(void)
        */
 
       bool brace_indent = false;
-      if (((pc->type == CT_BRACE_CLOSE) || (pc->type == CT_BRACE_OPEN)))
+      if ((pc->type == CT_BRACE_CLOSE) || (pc->type == CT_BRACE_OPEN))
       {
          brace_indent = (cpd.settings[UO_indent_braces].b &&
                          (!cpd.settings[UO_indent_braces_no_func].b ||

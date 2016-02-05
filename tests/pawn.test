@@ -16,6 +16,7 @@
 60020 pawn-escape.cfg          pawn/switch-vsemi.sma
 
 60030 amxmodx.cfg              pawn/crusty_ex-1.sma
+60040 amxmodx.cfg              pawn/preproc.pawn
 
 60040 amxmodx_prepro.cfg              pawn/amxmodx.sma
 60041 amxmodx_prepro.cfg              pawn/amxmodx_braces.sma

@@ -1,4 +1,31 @@
 
+Change highlights in uncrustify-0.62 (2 Feb 2016)
+-------------------------------------------------------------------------------
+This release is just a roll-up of the past year.
+Many bugs were squashed and many options were added.
+
+New options:
+ - string_replace_tab_chars
+ - disable_processing_cmt
+ - enable_processing_cmt
+ - enable_digraphs
+ - indent_class_on_colon
+ - indent_shift
+ - indent_min_vbrace_open
+ - indent_vbrace_open_on_tabstop
+ - sp_after_mdatype_commas
+ - sp_before_mdatype_commas
+ - sp_between_mdatype_commas
+ - sp_cmt_cpp_doxygen
+ - sp_cmt_cpp_qttr
+ - sp_between_new_paren
+ - nl_while_leave_one_liners
+ - nl_synchronized_brace
+ - nl_before_synchronized
+ - nl_after_synchronized
+ - nl_after_label_colon
+
+
 Change highlights in uncrustify-0.61 (22 Dec 2014)
 -------------------------------------------------------------------------------
 This release is just a roll-up of the past two years.
