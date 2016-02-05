@@ -504,7 +504,8 @@ void indent_text(void)
    while ( (pc = chunk_get_next(pc) ) != NULL)
    {
       /* Handle preprocessor transitions */
-      if( ( in_preproc = (pc->flags & PCF_IN_PREPROC) ) != 0 )
+      if( ( in_preproc = (pc->flags & PCF_IN_PREPROC) ) != 0 
+          && cpd.settings[UO_pp_parsing_disable].b )
       {
           continue;
       }

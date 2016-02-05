@@ -1364,6 +1364,8 @@ void register_options(void)
                   "If TRUE, it will remove a void 'return;' that appears as the last statement in a function.");
 
    unc_begin_group(UG_preprocessor, "Preprocessor options");
+   unc_add_option("pp_parsing_disable", UO_pp_parsing_disable, AT_BOOL,
+                  "Disables the preprocessor source code formatting/parsing.");
    unc_add_option("pp_indent", UO_pp_indent, AT_IARF,
                   "Control indent of preprocessors inside #if blocks at brace level 0 (file-level)");
    unc_add_option("pp_indent_at_level", UO_pp_indent_at_level, AT_BOOL,
