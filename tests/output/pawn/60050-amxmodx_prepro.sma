@@ -2,7 +2,8 @@
 
 #define COOL_MACRO(%1,%2) ( % 1 + % 2 + 1 )
 
-#define SXO( % 1 ,%2) 1 < %1 || %2 > 2
+#define SXO( % 1, %2 ) 1 < %1 \
+    || %2 > 2
 
 public plugin_init()
 {

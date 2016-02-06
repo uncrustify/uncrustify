@@ -18,7 +18,10 @@
 60030 amxmodx.cfg              pawn/crusty_ex-1.sma
 60040 amxmodx.cfg              pawn/preproc.pawn
 
-60040 amxmodx_prepro.cfg              pawn/amxmodx.sma
-60041 amxmodx_prepro.cfg              pawn/amxmodx_braces.sma
+60050 amxmodx_prepro.cfg              pawn/amxmodx_prepro.sma
+60051 amxmodx_prepro.cfg              pawn/amxmodx_braces.sma
 
-60050 amxmodx_no_prepro.cfg              pawn/amxmodx_no_prepro.sma
+60060 amxmodx_no_prepro.cfg           pawn/amxmodx_no_prepro.sma
+
+# TODO implementation, tests are done.
+# 60070 amxmodx_no_prepro_full.cfg           pawn/amxmodx_no_prepro_full.sma

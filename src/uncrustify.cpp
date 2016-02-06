@@ -1063,8 +1063,8 @@ const char *fix_filename(const char *filename)
 
 
 /**
- * Call uncrustify_file() to realises the file parsing applying the source code format options 
- * a source file.
+ * Call uncrustify_file() to realises the file parsing applying the source code format options to
+ * the source code file.
  *
  * @param filename_in  the file to read
  * @param filename_out NULL (stdout) or the file to write
