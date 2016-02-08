@@ -60,9 +60,8 @@ void do_braces(void)
    chunk_t   *br_open;
    chunk_t   *tmp;
    c_token_t brc_type;
-
-   pc = chunk_get_head();
-   while ((pc = chunk_get_next_ncnl(pc)) != NULL)
+   
+   for( pc = chunk_get_head(); pc != NULL; pc = chunk_get_next_ncnl(pc) )
    {
       if ((pc->type != CT_BRACE_OPEN) &&
           (pc->type != CT_VBRACE_OPEN))
@@ -114,12 +113,9 @@ static void examine_braces(void)
 {
    LOG_FUNC_ENTRY();
    chunk_t *pc;
-   chunk_t *prev;
-
-   pc = chunk_get_tail();
-   while (pc != NULL)
+   
+   for( pc = chunk_get_tail(); pc != NULL ; pc = chunk_get_prev_type(pc, CT_BRACE_OPEN, -1) )
    {
-      prev = chunk_get_prev_type(pc, CT_BRACE_OPEN, -1);
       if ((pc->type == CT_BRACE_OPEN) &&
           ((pc->flags & PCF_IN_PREPROC) == 0))
       {
@@ -139,7 +135,6 @@ static void examine_braces(void)
             examine_brace(pc);
          }
       }
-      pc = prev;
    }
 }
 
@@ -1056,7 +1051,7 @@ static void process_if_chain(chunk_t *br_start)
    int     br_cnt = 0;
    chunk_t *pc;
    bool    must_have_braces = false;
-   bool    tmp;
+   bool    is_toRemoveBraces_temporary;
 
    pc = br_start;
 
@@ -1066,24 +1061,24 @@ static void process_if_chain(chunk_t *br_start)
    {
       if (pc->type == CT_BRACE_OPEN)
       {
-         tmp = can_remove_braces(pc);
+         is_toRemoveBraces_temporary = can_remove_braces(pc);
          LOG_FMT(LBRCH, "  [%d] line %d - can%s remove %s\n",
-                 br_cnt, pc->orig_line, tmp ? "" : "not",
+                 br_cnt, pc->orig_line, is_toRemoveBraces_temporary ? "" : "not",
                  get_token_name(pc->type));
-         if (!tmp)
+         if (!is_toRemoveBraces_temporary)
          {
             must_have_braces = true;
          }
       }
       else
       {
-         tmp = should_add_braces(pc);
-         if (tmp)
+         is_toRemoveBraces_temporary = should_add_braces(pc);
+         if (is_toRemoveBraces_temporary)
          {
             must_have_braces = true;
          }
          LOG_FMT(LBRCH, "  [%d] line %d - %s %s\n",
-                 br_cnt, pc->orig_line, tmp ? "should add" : "ignore",
+                 br_cnt, pc->orig_line, is_toRemoveBraces_temporary ? "should add" : "ignore",
                  get_token_name(pc->type));
       }
 
