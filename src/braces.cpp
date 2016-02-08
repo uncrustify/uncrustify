@@ -632,7 +632,9 @@ static void convert_vbrace_to_brace(void)
           ||
           ((pc->parent_type == CT_FUNC_DEF) &&
            ((cpd.settings[UO_mod_full_brace_function].a & AV_ADD) != 0) &&
-           !in_preproc ))
+           ((!in_preproc && 
+             cpd.settings[UO_pp_parsing_brace_disable].b) || 
+            !cpd.settings[UO_pp_parsing_brace_disable].b )))
       {
          /* Find the matching vbrace close */
          vbc = NULL;

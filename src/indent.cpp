@@ -505,7 +505,7 @@ void indent_text(void)
    {
       /* Handle preprocessor transitions */
       if( ( in_preproc = (pc->flags & PCF_IN_PREPROC) ) != 0 
-          && cpd.settings[UO_pp_parsing_disable].b )
+          && cpd.settings[UO_pp_parsing_align_disable].b )
       {
           continue;
       }
