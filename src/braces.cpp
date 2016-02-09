@@ -600,6 +600,11 @@ static void convert_vbrace_to_brace(void)
    /* Find every vbrace open */
    for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next_ncnl(pc))
    {
+      LOG_FMT(LMCB, "\npc->text(): %s", pc->text() );
+      
+      LOG_FMT(LMCB, "\nis_in_preproc: %d",
+              ( pc->flags & PCF_IN_PREPROC ) != 0 );
+      
       if (pc->type != CT_VBRACE_OPEN)
       {
          continue;
@@ -626,10 +631,7 @@ static void convert_vbrace_to_brace(void)
            ((cpd.settings[UO_mod_full_brace_using].a & AV_ADD) != 0))
           ||
           ((pc->parent_type == CT_FUNC_DEF) &&
-           ((cpd.settings[UO_mod_full_brace_function].a & AV_ADD) != 0) &&
-           ((!in_preproc && 
-             cpd.settings[UO_pp_parsing_brace_disable].b) || 
-            !cpd.settings[UO_pp_parsing_brace_disable].b )))
+           ((cpd.settings[UO_mod_full_brace_function].a & AV_ADD) != 0)))
       {
          /* Find the matching vbrace close */
          vbc = NULL;
@@ -654,7 +656,24 @@ static void convert_vbrace_to_brace(void)
          {
             continue;
          }
-
+         
+         LOG_FMT(LMCB, "\n      cpd.settings[UO_pp_parsing_brace_disable].b: %d",
+                 cpd.settings[UO_pp_parsing_brace_disable].b );
+         
+         LOG_FMT(LMCB, "\n      ( pc->flags & PCF_IN_PREPROC ) != 0: %d",
+                 ( pc->flags & PCF_IN_PREPROC ) != 0 );
+         
+         LOG_FMT(LMCB, "\n      vbc->flags & PCF_IN_PREPROC ) != 0: %d",
+                 ( vbc->flags & PCF_IN_PREPROC ) != 0 );
+         
+         LOG_FMT(LMCB, "\n      pc->text(): %s", pc->text() );
+         LOG_FMT(LMCB, "\n      vbc->text(): %s",  vbc->text() );
+         
+         if( cpd.settings[UO_pp_parsing_brace_disable].b )
+         {
+             continue;
+         }
+         
          convert_vbrace(pc);
          convert_vbrace(vbc);
       }
@@ -1051,7 +1070,7 @@ static void process_if_chain(chunk_t *br_start)
    int     br_cnt = 0;
    chunk_t *pc;
    bool    must_have_braces = false;
-   bool    is_toRemoveBraces_temporary;
+   bool    is_toRemoveBraces;
 
    pc = br_start;
 
@@ -1061,24 +1080,24 @@ static void process_if_chain(chunk_t *br_start)
    {
       if (pc->type == CT_BRACE_OPEN)
       {
-         is_toRemoveBraces_temporary = can_remove_braces(pc);
+         is_toRemoveBraces = can_remove_braces(pc);
          LOG_FMT(LBRCH, "  [%d] line %d - can%s remove %s\n",
-                 br_cnt, pc->orig_line, is_toRemoveBraces_temporary ? "" : "not",
+                 br_cnt, pc->orig_line, is_toRemoveBraces ? "" : "not",
                  get_token_name(pc->type));
-         if (!is_toRemoveBraces_temporary)
+         if (!is_toRemoveBraces)
          {
             must_have_braces = true;
          }
       }
       else
       {
-         is_toRemoveBraces_temporary = should_add_braces(pc);
-         if (is_toRemoveBraces_temporary)
+         is_toRemoveBraces = should_add_braces(pc);
+         if (is_toRemoveBraces)
          {
             must_have_braces = true;
          }
          LOG_FMT(LBRCH, "  [%d] line %d - %s %s\n",
-                 br_cnt, pc->orig_line, is_toRemoveBraces_temporary ? "should add" : "ignore",
+                 br_cnt, pc->orig_line, is_toRemoveBraces ? "should add" : "ignore",
                  get_token_name(pc->type));
       }
 

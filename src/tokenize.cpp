@@ -11,7 +11,6 @@
 #include "char_table.h"
 #include "prototypes.h"
 #include "chunk_list.h"
-#include "logger.h"
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -79,11 +78,11 @@ struct tok_ctx
       if (more())
       {
          int ch = data[c.idx++];
-         DEBUG_LOGGER( 2, "%c", ch )
          switch (ch)
          {
          case '\t':
             c.col = calc_next_tab_column(c.col, cpd.settings[UO_input_tab_size].n);
+            LOG_FMT(LTOK, "\\t");
             break;
 
          case '\n':
@@ -92,15 +91,18 @@ struct tok_ctx
                c.row++;
                c.col = 1;
             }
+            LOG_FMT(LTOK, "\\n");
             break;
 
          case '\r':
             c.row++;
             c.col = 1;
+            LOG_FMT(LTOK, "\\r");
             break;
 
          default:
             c.col++;
+            LOG_FMT(LTOK, "%c", ch );
             break;
          }
          c.last_ch = ch;
@@ -1324,9 +1326,14 @@ static bool parse_next(tok_ctx& ctx, chunk_t& pc)
    const chunk_tag_t *punc;
    int               ch, ch1;
    
+#ifdef DEBUG
+   static int current_pass_counter = 0;
+   LOG_FMT(LTOK, "\n[%d]", current_pass_counter++  );
+#endif
+   
    if (!ctx.more())
    {
-      DEBUG_LOGGER( 1, "All done!\n" );
+      LOG_FMT(LTOK, "All done!\n" );
       return(false);
    }
 
@@ -1487,11 +1494,6 @@ static bool parse_next(tok_ctx& ctx, chunk_t& pc)
          }
       }
    }
-   
-#if IS_DEBUG_ENABLED > 0
-   static int current_pass_counter = 0;
-   DEBUG_LOGGER( 0, " ( parse_next ) current_pass_counter: %d\n", current_pass_counter++  )
-#endif
    
    /* PAWN specific stuff */
    if ((cpd.lang_flags & LANG_PAWN) != 0)
@@ -1655,6 +1657,8 @@ void tokenize(const deque<int>& data, chunk_t *ref)
    int                prev_sp      = 0;
 
    memset(&frm, 0, sizeof(frm));
+   
+   LOG_FMT(LTOK, "\n[token number] token"  );
 
    while (ctx.more())
    {

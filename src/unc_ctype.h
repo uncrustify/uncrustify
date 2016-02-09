@@ -46,6 +46,11 @@ static inline int unc_isalnum(int ch)
 }
 
 
+/**
+ * Convert int char to upper case letter.
+ * 
+ * @param ch   the lower case char to convert
+ */
 static inline int unc_toupper(int ch)
 {
    return(toupper(unc_fix_ctype(ch)));

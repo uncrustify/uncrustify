@@ -38,9 +38,6 @@
 #include <vector>
 #include <deque>
 
-#if IS_DEBUG_ENABLED > 0
-int g_debug_level = 0;
-#endif
 
 static const char *pcf_names[] =
 {
@@ -228,10 +225,11 @@ static void usage_exit(const char *msg, const char *argv0, int code)
            "                            Detection is fairly limited.\n"
            "\n"
            "Debug Options:\n"
-           " -p FILE      : dump debug info to a file\n"
-           " -L SEV       : Set the log severity (see log_levels.h)\n"
-           " -s           : Show the log severity in the logs\n"
-           " --decode     : decode remaining args (chunk flags) and exit\n"
+           " -p FILE                  : dump debug info to a file\n"
+           " -L SEV1 SEV2 ...         : Use 'a' for all levels. See the log severity availibles on "
+           "                            'log_levels.h' (use an integer value).\n"
+           " -s                       : Show the log severity in the logs\n"
+           " --decode                 : decode remaining args (chunk flags) and exit\n"
            "\n"
            "Usage Examples\n"
            "cat foo.d | uncrustify -q -c my.cfg -l d\n"
@@ -393,9 +391,6 @@ int main(int argc, char *argv[])
    if (((parsed_file = arg.Param("--parsed")) != NULL) ||
        ((parsed_file = arg.Param("-p")) != NULL))
    {
-#if IS_DEBUG_ENABLED > 0
-      g_debug_level = 3;
-#endif
       LOG_FMT(LNOTE, "Will export parsed data to: %s\n", parsed_file);
    }
 
