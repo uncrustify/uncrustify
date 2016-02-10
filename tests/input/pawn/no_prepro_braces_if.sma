@@ -20,3 +20,14 @@ public on_damage(id)
         ShowSyncHudMsg(attacker, g_MsgSync, "%i^n", damage)
     }
 }
+
+public on_damage( id )
+	get_user_attacker( id )
+
+public on_damage( id )
+{
+get_user_attacker( id )
+if( read_data( 2 ) )
+    get_user_attacker( id )
+}
+

@@ -598,7 +598,7 @@ static void convert_vbrace_to_brace(void)
    chunk_t *tmp;
    chunk_t *vbc;
    bool    in_preproc;
-   bool    on_proproc;
+   bool    on_preproc;
 
    /* Find every vbrace open */
    for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next_ncnl(pc))
@@ -610,11 +610,11 @@ static void convert_vbrace_to_brace(void)
       
       if (pc->parent_type == CT_PP_IF)
       {
-          on_proproc = true;
+          on_preproc = true;
       }
       else if (pc->parent_type == CT_PP_ENDIF)
       {
-          on_proproc = false;
+          on_preproc = false;
       }
       
       if (pc->type != CT_VBRACE_OPEN)
@@ -681,7 +681,7 @@ static void convert_vbrace_to_brace(void)
          LOG_FMT(LTOKSEE, "\n      pc->text(): %s", pc->text() );
          LOG_FMT(LTOKSEE, "\n      vbc->text(): %s",  vbc->text() );
          
-         if (cpd.settings[UO_pp_parsing_brace_disable].b && on_proproc)
+         if (cpd.settings[UO_pp_parsing_brace_disable].b && on_preproc)
          {
              continue;
          }
