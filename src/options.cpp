@@ -1360,7 +1360,7 @@ void register_options(void)
    unc_add_option("pp_mod_full_brace_disable", UO_pp_mod_full_brace_disable, AT_BOOL,
                   "Disables the preprocessor source code 'mod_full_brace_...' options parsing.");
    unc_add_option("pp_indent_parsing_disable", UO_pp_indent_parsing_disable, AT_BOOL,
-                  "Disables the preprocessor source code formatting/parsing.");
+                  "Disables the preprocessor source code indent parsing.");
    unc_add_option("pp_indent", UO_pp_indent, AT_IARF,
                   "Control indent of preprocessors inside #if blocks at brace level 0 (file-level)");
    unc_add_option("pp_indent_at_level", UO_pp_indent_at_level, AT_BOOL,
