@@ -47,7 +47,22 @@ void unc_begin_group(uncrustify_groups id, const char *short_desc,
    group_map[id] = value;
 }
 
-
+/**
+ * Add a code format option to the current group. There is only needed to call this function using 
+ * at least its 3 first parameters, unless it is 'AT_NUM' or any other that needs abroad limits.
+ * 
+ * @param *name         the char array pointer to the option name
+ * @param id            the enumeration option id from the 'uncrustify_options' enumeration
+ * @param type          the option input type from the 'argtype_e' enumeration. Example 
+ *                           'AT_NUM' for an option which receives a number as parameter, as the 
+ *                           'input_tab_size' using the value 4
+ * @param *short_desc   the char array pointer to the option short description to be used when 
+ *                            building a default configuration file
+ * @param *long_desc    this value was never used, but is supposed to be more detailed description 
+ *                            than *short_desc above
+ * @param min_val       the min value accepted, when using a numerical option type as 'AT_NUM'
+ * @param max_val       the max value accepted, when using a numerical option type as 'AT_NUM'
+ */
 void unc_add_option(const char *name, uncrustify_options id, argtype_e type,
                     const char *short_desc, const char *long_desc,
                     int min_val, int max_val)
@@ -155,7 +170,9 @@ const option_map_value *unc_find_option(const char *name)
    return(&option_name_map[name]);
 }
 
-
+/**
+ * Create the available options to the program use.
+ */
 void register_options(void)
 {
    unc_begin_group(UG_general, "General options");
@@ -1340,6 +1357,10 @@ void register_options(void)
                   "If TRUE, it will remove a void 'return;' that appears as the last statement in a function.");
 
    unc_begin_group(UG_preprocessor, "Preprocessor options");
+   unc_add_option("pp_parsing_brace_disable", UO_pp_parsing_brace_disable, AT_BOOL,
+                  "Disables the preprocessor source code 'mod_full_brace_...' option parsing.");
+   unc_add_option("pp_parsing_align_disable", UO_pp_parsing_align_disable, AT_BOOL,
+                  "Disables the preprocessor source code formatting/parsing.");
    unc_add_option("pp_indent", UO_pp_indent, AT_IARF,
                   "Control indent of preprocessors inside #if blocks at brace level 0 (file-level)");
    unc_add_option("pp_indent_at_level", UO_pp_indent_at_level, AT_BOOL,

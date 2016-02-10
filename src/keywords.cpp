@@ -1,6 +1,7 @@
 /**
  * @file keywords.cpp
- * Manages the table of keywords.
+ * Manages the table of keywords. This C file contains all language keywords accepted by this 
+ * program supported languages.
  *
  * @author  Ben Gardner
  * @license GPL v2+
@@ -23,7 +24,7 @@ static dkwmap dkwm;
 
 
 /**
- * interesting static keywords - keep sorted.
+ * Interesting static keywords - Keep sorted.
  * Table should include the Name, Type, and Language flags.
  */
 static const chunk_tag_t keywords[] =
@@ -287,7 +288,10 @@ static int kw_compare(const void *p1, const void *p2)
    return(strcmp(t1->tag, t2->tag));
 }
 
-
+/**
+ * This function verifies if all language keywords as 'if', 'for', 'break', etc, are 
+ * alphabetycally sorted on the main table.
+ */
 void keywords_are_sorted(void)
 {
    for (int idx = 1; idx < (int)ARRAY_SIZE(keywords); idx++)

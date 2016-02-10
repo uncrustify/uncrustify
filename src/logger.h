@@ -19,6 +19,13 @@
 #include <cstdio>      /* FILE */
 
 
+#define IS_DEBUG_ENABLED 1
+
+#if IS_DEBUG_ENABLED > 0
+#define DEBUG
+#endif
+
+
 /**
  * Initializes the log subsystem - call this first.
  * This function sets the log stream and enables the top 3 sevs (0-2).
@@ -170,6 +177,7 @@ static_inline char to_hex_char(int nibble)
 #define LOG_FUNC_ENTRY()
 #define LOG_FUNC_CALL()
 #endif
+
 
 /**
  * This class just adds a entry to the top of the stack on construction and

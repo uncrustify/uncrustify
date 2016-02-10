@@ -16,5 +16,13 @@
 60020 pawn-escape.cfg          pawn/switch-vsemi.sma
 
 60030 amxmodx.cfg              pawn/crusty_ex-1.sma
-
 60040 amxmodx.cfg              pawn/preproc.pawn
+
+60050 amxmodx_prepro.cfg              pawn/prepro_basic.sma
+
+60060 amxmodx_no_prepro.cfg           pawn/no_prepro_indent.sma
+60061 amxmodx_no_prepro.cfg           pawn/no_prepro_braces_function.sma
+60062 amxmodx_no_prepro.cfg           pawn/no_prepro_braces_if.sma
+
+# TODO implementation, tests are done.
+# 60070 amxmodx_no_prepro.cfg           pawn/no_prepro_full.sma

@@ -82,6 +82,7 @@ struct tok_ctx
          {
          case '\t':
             c.col = calc_next_tab_column(c.col, cpd.settings[UO_input_tab_size].n);
+            LOG_FMT(LTOKSEE, "\\t");
             break;
 
          case '\n':
@@ -90,15 +91,18 @@ struct tok_ctx
                c.row++;
                c.col = 1;
             }
+            LOG_FMT(LTOKSEE, "\\n");
             break;
 
          case '\r':
             c.row++;
             c.col = 1;
+            LOG_FMT(LTOKSEE, "\\r");
             break;
 
          default:
             c.col++;
+            LOG_FMT(LTOKSEE, "%c", ch );
             break;
          }
          c.last_ch = ch;
@@ -1321,10 +1325,15 @@ static bool parse_next(tok_ctx& ctx, chunk_t& pc)
 {
    const chunk_tag_t *punc;
    int               ch, ch1;
-
+   
+#ifdef DEBUG
+   static int current_pass_counter = 0;
+   LOG_FMT(LTOKSEE, "\n[%d]", current_pass_counter++  );
+#endif
+   
    if (!ctx.more())
    {
-      //fprintf(stderr, "All done!\n");
+      LOG_FMT(LTOK, "All done!\n" );
       return(false);
    }
 
@@ -1485,7 +1494,7 @@ static bool parse_next(tok_ctx& ctx, chunk_t& pc)
          }
       }
    }
-
+   
    /* PAWN specific stuff */
    if ((cpd.lang_flags & LANG_PAWN) != 0)
    {
@@ -1524,7 +1533,7 @@ static bool parse_next(tok_ctx& ctx, chunk_t& pc)
          return true;
       }
    }
-
+   
    /**
     * Parse strings and character constants
     */
@@ -1648,6 +1657,8 @@ void tokenize(const deque<int>& data, chunk_t *ref)
    int                prev_sp      = 0;
 
    memset(&frm, 0, sizeof(frm));
+   
+   LOG_FMT(LTOKSEE, "\n[token number] token"  );
 
    while (ctx.more())
    {

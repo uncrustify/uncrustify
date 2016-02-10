@@ -500,13 +500,16 @@ void indent_text(void)
    frm.pse[0].indent_tmp = 1;
    frm.pse[0].indent_tab = 1;
    frm.pse[0].type       = CT_EOF;
-
-   pc = chunk_get_head();
-   while (pc != NULL)
+   
+   for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next(pc))
    {
       /* Handle preprocessor transitions */
-      in_preproc = (pc->flags & PCF_IN_PREPROC) != 0;
-
+      if ((in_preproc = (pc->flags & PCF_IN_PREPROC)) != 0 &&
+          cpd.settings[UO_pp_parsing_align_disable].b )
+      {
+          continue;
+      }
+      
       if (cpd.settings[UO_indent_brace_parent].b)
       {
          parent_token_indent = token_indent(pc->parent_type);
@@ -1930,10 +1933,9 @@ void indent_text(void)
       {
          prev = pc;
       }
-      pc = chunk_get_next(pc);
    }
+   
 null_pc:
-
    /* Throw out any stuff inside a preprocessor - no need to warn */
    while ((frm.pse_tos > 0) && frm.pse[frm.pse_tos].in_preproc)
    {

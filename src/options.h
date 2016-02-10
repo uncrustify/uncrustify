@@ -119,6 +119,8 @@ enum uncrustify_options
    UO_indent_comma_paren,        // indent of comma if inside a paren
    UO_indent_bool_paren,         // indent of bool if inside a paren
    UO_indent_first_bool_expr,    // if UO_indent_bool_paren == true, aligns the first expression to the following ones
+   UO_pp_parsing_brace_disable,
+   UO_pp_parsing_align_disable,
    UO_pp_indent,                 // indent preproc 1 space per level (add/ignore/remove)
    UO_pp_indent_at_level,        // indent #if, #else, #endif at brace level
    UO_pp_indent_count,
