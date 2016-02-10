@@ -21,6 +21,7 @@ public on_damage( id )
             set_hudmessage( 0, 100, 200, -1.0, 0.55, 2, 0.1, 4.0, 0.02, 0.02, -1 )
             ShowSyncHudMsg( attacker, g_MsgSync, "%i^n", damage )
         }
+    hi_girl()
 }
 
 public on_damage( id )

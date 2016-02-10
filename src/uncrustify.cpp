@@ -83,6 +83,7 @@ static const char *pcf_names[] =
    "WF_ENDIF",          // 39
 };
 
+
 /* Global data */
 struct cp_data cpd;
 
@@ -1058,7 +1059,7 @@ const char *fix_filename(const char *filename)
 
 
 /**
- * Call uncrustify_file() to realises the file parsing applying the source code format options to
+ * Call uncrustify_file() to do the file parsing applying the source code format options to
  * the source code file.
  *
  * @param filename_in  the file to read

@@ -6,7 +6,6 @@
 #define DEBUG_LOGGER(%1) debugMesssageLogger( %1 );
 #endif
 
-
 /**
  * Contains all unit tests to execute.
  */
@@ -19,7 +18,6 @@
     test_gal_in_empty_cycle4(); \
     test_is_map_extension_allowed1( true ); \
 }
-
 
 /**
  * Write debug messages to server's console accordantly with cvar gal_debug.

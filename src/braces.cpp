@@ -669,8 +669,8 @@ static void convert_vbrace_to_brace(void)
             continue;
          }
          
-         LOG_FMT(LTOKSEE, "\n      cpd.settings[UO_pp_parsing_brace_disable].b: %d",
-                 cpd.settings[UO_pp_parsing_brace_disable].b );
+         LOG_FMT(LTOKSEE, "\n      cpd.settings[UO_pp_mod_full_brace_disable].b: %d",
+                 cpd.settings[UO_pp_mod_full_brace_disable].b );
          
          LOG_FMT(LTOKSEE, "\n      ( pc->flags & PCF_IN_PREPROC ) != 0: %d",
                  ( pc->flags & PCF_IN_PREPROC ) != 0 );
@@ -681,7 +681,7 @@ static void convert_vbrace_to_brace(void)
          LOG_FMT(LTOKSEE, "\n      pc->text(): %s", pc->text() );
          LOG_FMT(LTOKSEE, "\n      vbc->text(): %s",  vbc->text() );
          
-         if (cpd.settings[UO_pp_parsing_brace_disable].b && on_preproc)
+         if (cpd.settings[UO_pp_mod_full_brace_disable].b && on_preproc)
          {
              continue;
          }

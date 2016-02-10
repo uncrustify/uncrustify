@@ -1333,7 +1333,7 @@ static bool parse_next(tok_ctx& ctx, chunk_t& pc)
    
    if (!ctx.more())
    {
-      LOG_FMT(LTOK, "All done!\n" );
+      LOG_FMT(LTOKSEE, "All done!\n");
       return(false);
    }
 
@@ -1494,7 +1494,7 @@ static bool parse_next(tok_ctx& ctx, chunk_t& pc)
          }
       }
    }
-   
+
    /* PAWN specific stuff */
    if ((cpd.lang_flags & LANG_PAWN) != 0)
    {
@@ -1533,7 +1533,7 @@ static bool parse_next(tok_ctx& ctx, chunk_t& pc)
          return true;
       }
    }
-   
+
    /**
     * Parse strings and character constants
     */
