@@ -501,10 +501,10 @@ void indent_text(void)
    frm.pse[0].indent_tab = 1;
    frm.pse[0].type       = CT_EOF;
    
-   for( pc = chunk_get_head(); pc != NULL; pc = chunk_get_next(pc) )
+   for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next(pc))
    {
       /* Handle preprocessor transitions */
-      if( ( in_preproc = (pc->flags & PCF_IN_PREPROC) ) != 0 
+      if ((in_preproc = (pc->flags & PCF_IN_PREPROC)) != 0 
           && cpd.settings[UO_pp_parsing_align_disable].b )
       {
           continue;

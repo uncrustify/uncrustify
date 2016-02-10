@@ -2,7 +2,7 @@
 Release steps.
 Just in case I don't do a release for a while and forget what to do... =)
 
-1. Make sure all tests pass
+1. Make sure all tests pass and set 'IS_DEBUG_ENABLED' to 0 at 'logger.h'.
 
    Run all tests (requires python):
 

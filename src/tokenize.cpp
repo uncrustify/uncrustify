@@ -82,7 +82,7 @@ struct tok_ctx
          {
          case '\t':
             c.col = calc_next_tab_column(c.col, cpd.settings[UO_input_tab_size].n);
-            LOG_FMT(LTOK, "\\t");
+            LOG_FMT(LTOKSEE, "\\t");
             break;
 
          case '\n':
@@ -91,18 +91,18 @@ struct tok_ctx
                c.row++;
                c.col = 1;
             }
-            LOG_FMT(LTOK, "\\n");
+            LOG_FMT(LTOKSEE, "\\n");
             break;
 
          case '\r':
             c.row++;
             c.col = 1;
-            LOG_FMT(LTOK, "\\r");
+            LOG_FMT(LTOKSEE, "\\r");
             break;
 
          default:
             c.col++;
-            LOG_FMT(LTOK, "%c", ch );
+            LOG_FMT(LTOKSEE, "%c", ch );
             break;
          }
          c.last_ch = ch;
@@ -1328,7 +1328,7 @@ static bool parse_next(tok_ctx& ctx, chunk_t& pc)
    
 #ifdef DEBUG
    static int current_pass_counter = 0;
-   LOG_FMT(LTOK, "\n[%d]", current_pass_counter++  );
+   LOG_FMT(LTOKSEE, "\n[%d]", current_pass_counter++  );
 #endif
    
    if (!ctx.more())
@@ -1658,7 +1658,7 @@ void tokenize(const deque<int>& data, chunk_t *ref)
 
    memset(&frm, 0, sizeof(frm));
    
-   LOG_FMT(LTOK, "\n[token number] token"  );
+   LOG_FMT(LTOKSEE, "\n[token number] token"  );
 
    while (ctx.more())
    {

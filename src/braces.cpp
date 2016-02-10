@@ -61,7 +61,7 @@ void do_braces(void)
    chunk_t   *tmp;
    c_token_t brc_type;
    
-   for( pc = chunk_get_head(); pc != NULL; pc = chunk_get_next_ncnl(pc) )
+   for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next_ncnl(pc))
    {
       if ((pc->type != CT_BRACE_OPEN) &&
           (pc->type != CT_VBRACE_OPEN))
@@ -114,7 +114,7 @@ static void examine_braces(void)
    LOG_FUNC_ENTRY();
    chunk_t *pc;
    
-   for( pc = chunk_get_tail(); pc != NULL ; pc = chunk_get_prev_type(pc, CT_BRACE_OPEN, -1) )
+   for (pc = chunk_get_tail(); pc != NULL ; pc = chunk_get_prev_type(pc, CT_BRACE_OPEN, -1))
    {
       if ((pc->type == CT_BRACE_OPEN) &&
           ((pc->flags & PCF_IN_PREPROC) == 0))
@@ -596,14 +596,24 @@ static void convert_vbrace_to_brace(void)
    chunk_t *tmp;
    chunk_t *vbc;
    bool    in_preproc;
+   bool    on_proproc;
 
    /* Find every vbrace open */
    for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next_ncnl(pc))
    {
-      LOG_FMT(LMCB, "\npc->text(): %s", pc->text() );
-      
-      LOG_FMT(LMCB, "\nis_in_preproc: %d",
+      LOG_FMT(LTOKSEE, "\npc->text(): %s", pc->text() );
+
+      LOG_FMT(LTOKSEE, "\nis_in_preproc: %d",
               ( pc->flags & PCF_IN_PREPROC ) != 0 );
+      
+      if (pc->parent_type == CT_PP_IF)
+      {
+          on_proproc = true;
+      }
+      else if (pc->parent_type == CT_PP_ENDIF)
+      {
+          on_proproc = false;
+      }
       
       if (pc->type != CT_VBRACE_OPEN)
       {
@@ -657,19 +667,19 @@ static void convert_vbrace_to_brace(void)
             continue;
          }
          
-         LOG_FMT(LMCB, "\n      cpd.settings[UO_pp_parsing_brace_disable].b: %d",
+         LOG_FMT(LTOKSEE, "\n      cpd.settings[UO_pp_parsing_brace_disable].b: %d",
                  cpd.settings[UO_pp_parsing_brace_disable].b );
          
-         LOG_FMT(LMCB, "\n      ( pc->flags & PCF_IN_PREPROC ) != 0: %d",
+         LOG_FMT(LTOKSEE, "\n      ( pc->flags & PCF_IN_PREPROC ) != 0: %d",
                  ( pc->flags & PCF_IN_PREPROC ) != 0 );
          
-         LOG_FMT(LMCB, "\n      vbc->flags & PCF_IN_PREPROC ) != 0: %d",
+         LOG_FMT(LTOKSEE, "\n      vbc->flags & PCF_IN_PREPROC ) != 0: %d",
                  ( vbc->flags & PCF_IN_PREPROC ) != 0 );
          
-         LOG_FMT(LMCB, "\n      pc->text(): %s", pc->text() );
-         LOG_FMT(LMCB, "\n      vbc->text(): %s",  vbc->text() );
+         LOG_FMT(LTOKSEE, "\n      pc->text(): %s", pc->text() );
+         LOG_FMT(LTOKSEE, "\n      vbc->text(): %s",  vbc->text() );
          
-         if( cpd.settings[UO_pp_parsing_brace_disable].b )
+         if (cpd.settings[UO_pp_parsing_brace_disable].b && on_proproc)
          {
              continue;
          }
