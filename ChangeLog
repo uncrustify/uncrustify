@@ -24,6 +24,7 @@ New options:
  - use_indent_continue_only_once
 
 Bugfix:
+ - bug # 657 is fixed: change 'mode' if necessary for 'pos_class_comma'
  - fix 3 calls of unc_add_option for "align_oc_msg_colon_span",
      "indent_oc_block_msg", "indent_oc_msg_colon"
  - bug #653 fixed
