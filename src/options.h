@@ -104,6 +104,8 @@ enum uncrustify_options
    UO_utf8_force,
    UO_utf8_bom,
 
+   UO_enable_digraphs,
+
    UO_dont_protect_xcode_code_placeholders,
 
    UO_input_tab_size,           // tab size on input file: usually 8
@@ -233,8 +235,8 @@ enum uncrustify_options
    UO_sp_inside_sparen_open,
    UO_sp_inside_angle,          // space inside '<>', as in '<class T>'
 
-   UO_sp_before_sparen,         // space before '(' of 'if/for/while/switch'
-   UO_sp_after_sparen,          /* space after  ')' of 'if/for/while/switch'
+   UO_sp_before_sparen,         // space before '(' of 'if/for/while/switch/etc'
+   UO_sp_after_sparen,          /* space after  ')' of 'if/for/while/switch/etc'
                                  * the do-while does not get set here */
    UO_sp_after_invariant_paren,
    UO_sp_invariant_paren,
@@ -391,6 +393,7 @@ enum uncrustify_options
    UO_sp_range,
    UO_sp_cmt_cpp_start,
    UO_sp_cmt_cpp_doxygen,       // in case of UO_sp_cmt_cpp_start: treat '///', '///<', '//!' and '//!<' as a unity (add space behind)
+   UO_sp_cmt_cpp_qttr,          // in case of UO_sp_cmt_cpp_start: treat '//:', '//=', '//~' as a unity (add space behind)
    UO_sp_endif_cmt,
    UO_sp_after_new,
    UO_sp_between_new_paren,
@@ -559,6 +562,7 @@ enum uncrustify_options
    UO_nl_version_brace,               // Add or remove newline between 'version (x)' and '{' (D)
    UO_nl_using_brace,                 // Add or remove newline between 'using' and '{'
    UO_nl_switch_brace,                // newline between 'switch' and '{'
+   UO_nl_synchronized_brace,          // newline between 'synchronized' and '{' 
    UO_nl_brace_else,                  // newline between '}' and 'else'
    UO_nl_brace_while,                 // newline between '}' and 'while' of do stmt
 
@@ -567,16 +571,18 @@ enum uncrustify_options
 
    UO_nl_multi_line_define,           // newline after define XXX for multi-line define
 
-   UO_nl_before_if,                   // newline before if
-   UO_nl_after_if,                    // newline after if/else
-   UO_nl_before_for,                  // newline before for
-   UO_nl_after_for,                   // newline after for close
-   UO_nl_before_while,                // newline before while
-   UO_nl_after_while,                 // newline after while close
-   UO_nl_before_switch,               // newline before switch
-   UO_nl_after_switch,                // newline after switch close
-   UO_nl_before_do,                   // newline before do
-   UO_nl_after_do,                    // newline after while of do
+   UO_nl_before_if,                   // newline before 'if'
+   UO_nl_after_if,                    // newline after 'if'/'else'
+   UO_nl_before_for,                  // newline before 'for'
+   UO_nl_after_for,                   // newline after for 'close'
+   UO_nl_before_while,                // newline before 'while'
+   UO_nl_after_while,                 // newline after while 'close'
+   UO_nl_before_switch,               // newline before 'switch'
+   UO_nl_after_switch,                // newline after switch 'close'
+   UO_nl_before_synchronized,         // newline before 'synchronized'
+   UO_nl_after_synchronized,          // newline after synchronized 'close'
+   UO_nl_before_do,                   // newline before 'do'
+   UO_nl_after_do,                    // newline after 'while' of do
    UO_nl_ds_struct_enum_cmt,          // newline between commented-elements of struct/enum
    UO_nl_ds_struct_enum_close_brace,  // force newline before '}' of struct/union/enum
 
@@ -598,6 +604,7 @@ enum uncrustify_options
    UO_nl_func_leave_one_liners,       // leave one-line function def bodies
    UO_nl_cpp_lambda_leave_one_liners, // leave one-line C++11 lambda bodies
    UO_nl_if_leave_one_liners,
+   UO_nl_while_leave_one_liners,
    UO_nl_case_colon_brace,            // Add or remove a newline between a case ':' and '{'. Overrides nl_after_case
 
    UO_nl_template_class,              // newline between '>' and class in 'template <x> class'

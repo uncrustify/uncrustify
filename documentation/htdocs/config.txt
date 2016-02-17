@@ -418,7 +418,7 @@ sp_permit_cpp11_shift                     { False, True }
   sp_angle_shift cannot remove the space without this option.
 
 sp_before_sparen                          { Ignore, Add, Remove, Force }
-  Add or remove space before '(' of 'if', 'for', 'switch', and 'while'
+  Add or remove space before '(' of 'if', 'for', 'switch', 'while', etc.
 
 sp_inside_sparen                          { Ignore, Add, Remove, Force }
   Add or remove space inside if-condition '(' and ')'
@@ -1145,6 +1145,9 @@ nl_brace_while                            { Ignore, Add, Remove, Force }
 nl_switch_brace                           { Ignore, Add, Remove, Force }
   Add or remove newline between 'switch' and '{'
 
+nl_synchronized_brace                     { Ignore, Add, Remove, Force }
+  Add or remove newline between 'synchronized' and '{'
+
 nl_multi_line_cond                        { False, True }
   Add a newline between ')' and '{' if the ')' is on a different line than the if/for/etc.
   Overrides nl_for_brace, nl_if_brace, nl_switch_brace, nl_while_switch, and nl_catch_brace.
@@ -1311,6 +1314,12 @@ nl_before_switch                          { Ignore, Add, Remove, Force }
 
 nl_after_switch                           { Ignore, Add, Remove, Force }
   Add or remove blank line after 'switch' statement
+
+nl_before_synchronized                    { Ignore, Add, Remove, Force }
+  Add or remove blank line before 'synchronized'
+
+nl_after_synchronized                     { Ignore, Add, Remove, Force }
+  Add or remove blank line after 'synchronized' statement
 
 nl_before_do                              { Ignore, Add, Remove, Force }
   Add or remove blank line before 'do'

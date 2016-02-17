@@ -5,7 +5,7 @@
  * http://doc.qt.io/qt-4.8/qtglobal.html
  *
  * @author  Guy Maurel since version 0.62 for uncrustify4Qt
- *          October 2015
+ *          October 2015, 2016
  * @license GPL v2+
  */
 

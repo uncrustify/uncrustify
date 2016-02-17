@@ -24,7 +24,7 @@ static const chunk_tag_t symbols4[] =
 {
    { "!<>=", CT_COMPARE, LANG_D                         },
    { ">>>=", CT_ASSIGN,  LANG_D | LANG_JAVA | LANG_PAWN },
-   { "%:%:", CT_PP,      LANG_CPP                       }, // digraph ##
+   { "%:%:", CT_PP,      LANG_CPP | FLAG_DIG            }, // digraph ##
 };
 
 /* 3-char symbols */
@@ -79,11 +79,11 @@ static const chunk_tag_t symbols2[] =
    { "~~", CT_COMPARE,      LANG_D                                                     },
    { "=>", CT_LAMBDA,       LANG_VALA | LANG_CS | LANG_D                               },
    { "??", CT_COMPARE,      LANG_CS | LANG_VALA                                        },
-   { "<%", CT_BRACE_OPEN,   LANG_C | LANG_CPP                                          }, // digraph {
-   { "%>", CT_BRACE_CLOSE,  LANG_C | LANG_CPP                                          }, // digraph }
-   { "<:", CT_SQUARE_OPEN,  LANG_C | LANG_CPP                                          }, // digraph [
-   { ":>", CT_SQUARE_CLOSE, LANG_C | LANG_CPP                                          }, // digraph ]
-   { "%:", CT_POUND,        LANG_C | LANG_CPP                                          }, // digraph #
+   { "<%", CT_BRACE_OPEN,   LANG_C | LANG_CPP | FLAG_DIG                               }, // digraph {
+   { "%>", CT_BRACE_CLOSE,  LANG_C | LANG_CPP | FLAG_DIG                               }, // digraph }
+   { "<:", CT_SQUARE_OPEN,  LANG_C | LANG_CPP | FLAG_DIG                               }, // digraph [
+   { ":>", CT_SQUARE_CLOSE, LANG_C | LANG_CPP | FLAG_DIG                               }, // digraph ]
+   { "%:", CT_POUND,        LANG_C | LANG_CPP | FLAG_DIG                               }, // digraph #
 };
 
 /* 1-char symbols */
@@ -137,7 +137,9 @@ const chunk_tag_t *find_punctuator(const char *str, int lang_flags)
       {
          /* Match */
          if ((p_tab->tag != NULL) &&
-             ((p_tab->tag->lang_flags & lang_flags) != 0))
+             ((p_tab->tag->lang_flags & lang_flags) != 0) &&
+             (((p_tab->tag->lang_flags & FLAG_DIG) == 0) ||
+              cpd.settings[UO_enable_digraphs].b))
          {
             p_match = p_tab->tag;
          }

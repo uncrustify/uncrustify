@@ -769,6 +769,15 @@ void tokenize_cleanup(void)
          set_chunk_type(pc, CT_QUALIFIER);
       }
 
+      /* If Java's 'synchronized' is in a method declaration, it should be
+       * a qualifier. */
+      if ((cpd.lang_flags & LANG_JAVA) &&
+          (pc->type == CT_SYNCHRONIZED) &&
+          (next->type != CT_PAREN_OPEN))
+      {
+         set_chunk_type(pc, CT_QUALIFIER);
+      }
+
       /* TODO: determine other stuff here */
       // guy 2015-11-05
       // change CT_DC_MEMBER + CT_FOR into CT_DC_MEMBER + CT_FUNC_CALL

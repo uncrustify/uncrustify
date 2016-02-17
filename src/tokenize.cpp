@@ -1215,6 +1215,24 @@ static bool parse_newline(tok_ctx& ctx)
 }
 
 
+/**
+ * PAWN #define is different than C/C++.
+ *   #define PATTERN REPLACEMENT_TEXT
+ * The PATTERN may not contain a space or '[' or ']'.
+ * A generic whitespace check should be good enough.
+ * Do not change the pattern.
+ */
+static void parse_pawn_pattern(tok_ctx& ctx, chunk_t& pc, c_token_t tt)
+{
+   pc.str.clear();
+   pc.type = tt;
+   while (!unc_isspace(ctx.peek()))
+   {
+      pc.str.append(ctx.get());
+   }
+}
+
+
 static bool parse_ignored(tok_ctx& ctx, chunk_t& pc)
 {
    int nl_count = 0;
@@ -1471,6 +1489,13 @@ static bool parse_next(tok_ctx& ctx, chunk_t& pc)
    /* PAWN specific stuff */
    if ((cpd.lang_flags & LANG_PAWN) != 0)
    {
+      if ((cpd.preproc_ncnl_count == 1) &&
+          ((cpd.in_preproc == CT_PP_DEFINE) ||
+           (cpd.in_preproc == CT_PP_EMIT)))
+      {
+         parse_pawn_pattern(ctx, pc, CT_MACRO);
+         return true;
+      }
       /* Check for PAWN strings: \"hi" or !"hi" or !\"hi" or \!"hi" */
       if ((ctx.peek() == '\\') || (ctx.peek() == '!'))
       {
@@ -1485,6 +1510,18 @@ static bool parse_next(tok_ctx& ctx, chunk_t& pc)
             parse_string(ctx, pc, 2, false);
             return(true);
          }
+      }
+
+      /* handle PAWN preprocessor args %0 .. %9 */
+      if ((cpd.in_preproc == CT_PP_DEFINE) &&
+          (ctx.peek() == '%') &&
+          unc_isdigit(ctx.peek(1)))
+      {
+         pc.str.clear();
+         pc.str.append(ctx.get());
+         pc.str.append(ctx.get());
+         pc.type = CT_WORD;
+         return true;
       }
    }
 

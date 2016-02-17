@@ -2,8 +2,6 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.59)
-#AC_INIT(uncrustify,0.61,,,http://uncrustify.sourceforge.net/)
-# change version from 0.61 to A.bb to begin with uncrustify4Qt
 AC_INIT(uncrustify,0.62,,,http://uncrustify.sourceforge.net/)
 enable_silent_rules=${enable_silent_rules-yes}
 AM_INIT_AUTOMAKE([-Wall silent-rules])

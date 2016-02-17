@@ -216,6 +216,7 @@
 30955 indent_ctor_init.cfg             cpp/indent_ctor_init.cpp
 
 31000 digraph.cfg                      cpp/digraph.cpp
+31001 ben.cfg                          cpp/digraph.cpp
 
 31562 sf562.cfg                        cpp/sf562.cpp
 31567 sf567.cfg                        cpp/sf567.cpp

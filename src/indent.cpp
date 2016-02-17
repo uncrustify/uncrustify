@@ -398,6 +398,9 @@ static int token_indent(c_token_t type)
    case CT_ELSEIF:
       return(8);
 
+   case CT_SYNCHRONIZED:
+      return(13);
+
    default:
       return(0);
    }
@@ -993,7 +996,7 @@ void indent_text(void)
                if (cpd.settings[UO_indent_oc_block].b ||
                    cpd.settings[UO_indent_oc_block_msg_xcode_style].b)
                {
-                  bool in_oc_msg           = (pc->flags & PCF_IN_OC_MSG);
+                  bool in_oc_msg           = (pc->flags & PCF_IN_OC_MSG) != 0;
                   bool indent_from_keyword = cpd.settings[UO_indent_oc_block_msg_from_keyword].b && in_oc_msg;
                   bool indent_from_colon   = cpd.settings[UO_indent_oc_block_msg_from_colon].b && in_oc_msg;
                   bool indent_from_caret   = cpd.settings[UO_indent_oc_block_msg_from_caret].b && in_oc_msg;
@@ -1066,6 +1069,7 @@ void indent_text(void)
                 (pc->parent_type == CT_WHILE) ||
                 (pc->parent_type == CT_USING_STMT) ||
                 (pc->parent_type == CT_SWITCH) ||
+                (pc->parent_type == CT_SYNCHRONIZED) ||
                 (pc->parent_type == CT_FOR))
             {
                if (parent_token_indent != 0)
