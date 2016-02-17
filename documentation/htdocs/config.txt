@@ -1,4 +1,4 @@
-# Uncrustify 0.61
+# Uncrustify 0.62
 #
 # General options
 #
@@ -282,6 +282,7 @@ indent_vbrace_open_on_tabstop             { False, True }
 
 sp_arith                                  { Ignore, Add, Remove, Force }
   Add or remove space around arithmetic operator '+', '-', '/', '*', etc
+  also '>>>' '<<' '>>' '%' '|'
 
 sp_assign                                 { Ignore, Add, Remove, Force }
   Add or remove space around assignment operator '=', '+=', etc
@@ -407,7 +408,7 @@ sp_angle_paren                            { Ignore, Add, Remove, Force }
   Add or remove space between '<>' and '(' as found in 'new List<byte>();'
 
 sp_angle_word                             { Ignore, Add, Remove, Force }
-  Add or remove space between '<>' and a word as in 'List<byte> m;'
+  Add or remove space between '<>' and a word as in 'List<byte> m;' or 'template <typename T> static ...'
 
 sp_angle_shift                            { Ignore, Add, Remove, Force }
   Add or remove space between '>' and '>' in '>>' (template stuff C++/C# only). Default=Add
@@ -778,10 +779,10 @@ sp_range                                  { Ignore, Add, Remove, Force }
   Control the space around the D '..' operator.
 
 sp_after_for_colon                        { Ignore, Add, Remove, Force }
-  Control the spacing after ':' in 'for (TYPE VAR : EXPR)' (Java)
+  Control the spacing after ':' in 'for (TYPE VAR : EXPR)'
 
 sp_before_for_colon                       { Ignore, Add, Remove, Force }
-  Control the spacing before ':' in 'for (TYPE VAR : EXPR)' (Java)
+  Control the spacing before ':' in 'for (TYPE VAR : EXPR)'
 
 sp_extern_paren                           { Ignore, Add, Remove, Force }
   Control the spacing in 'extern (C)' (D)
@@ -1155,7 +1156,7 @@ nl_multi_line_define                      { False, True }
   Force a newline in a define after the macro name for multi-line defines.
 
 nl_before_case                            { False, True }
-  Whether to put a newline before 'case' statement
+  Whether to put a newline before 'case' statement, not after the first 'case'
 
 nl_before_throw                           { Ignore, Add, Remove, Force }
   Add or remove newline between ')' and 'throw'
@@ -1189,14 +1190,14 @@ nl_func_type_name_class                   { Ignore, Add, Remove, Force }
   Uses nl_func_type_name or nl_func_proto_type_name if set to ignore.
 
 nl_func_scope_name                        { Ignore, Add, Remove, Force }
-  Add or remove newline between function scope and name in a definition
+  Add or remove newline between function scope and name
   Controls the newline after '::' in 'void A::f() { }'
 
 nl_func_proto_type_name                   { Ignore, Add, Remove, Force }
   Add or remove newline between return type and function name in a prototype
 
 nl_func_paren                             { Ignore, Add, Remove, Force }
-  Add or remove newline between a function name and the opening '('
+  Add or remove newline between a function name and the opening '(' in the declaration
 
 nl_func_def_paren                         { Ignore, Add, Remove, Force }
   Add or remove newline between a function name and the opening '(' in the definition
@@ -1327,10 +1328,10 @@ nl_after_do                               { Ignore, Add, Remove, Force }
   Add or remove blank line after 'do/while' statement
 
 nl_ds_struct_enum_cmt                     { False, True }
-  Whether to double-space commented-entries in struct/enum
+  Whether to double-space commented-entries in struct/union/enum
 
 nl_ds_struct_enum_close_brace             { False, True }
-  Whether to double-space before the close brace of a struct/union/enum
+  force nl before } of a struct/union/enum
   (lower priority than 'eat_blanks_before_close_brace')
 
 nl_class_colon                            { Ignore, Add, Remove, Force }
@@ -1409,7 +1410,7 @@ ls_code_width                             { False, True }
 #
 
 nl_max                                    Number
-  The maximum consecutive newlines
+  The maximum consecutive newlines (3 = 2 blank lines)
 
 nl_after_func_proto                       Number
   The number of newlines after a function prototype, if followed by another function prototype
@@ -1456,7 +1457,7 @@ nl_before_access_spec                     Number
   0 = No change.
 
 nl_after_access_spec                      Number
-  The number of newlines after a 'private:', 'public:', 'protected:', 'signals:', or 'slots:' label.
+  The number of newlines after a 'private:', 'public:', 'protected:', 'signals:' or 'slots:' label.
   0 = No change.
 
 nl_comment_func_def                       Number
@@ -1702,4 +1703,16 @@ pp_if_indent_code                         { False, True }
 
 pp_define_at_level                        { False, True }
   Whether to indent '#define' at the brace level (true) or from column 1 (false)
+
+#
+# Use or Do not Use options
+#
+
+use_indent_func_call_param                { False, True }
+  True:  indent_func_call_param will be used
+  False: indent_func_call_param will NOT be used
+
+use_indent_continue_only_once             { False, True }
+  True:  indent_continue will be used only once
+  False: indent_continue will be used every time (default)
 

@@ -6,6 +6,8 @@
  *  - detect "version = 10;" vs "version (xxx) {"
  *
  * @author  Ben Gardner
+ * @author  Guy Maurel since version 0.62 for uncrustify4Qt
+ *          October 2015
  * @license GPL v2+
  */
 #include "uncrustify_types.h"
@@ -777,6 +779,13 @@ void tokenize_cleanup(void)
       }
 
       /* TODO: determine other stuff here */
+      // guy 2015-11-05
+      // change CT_DC_MEMBER + CT_FOR into CT_DC_MEMBER + CT_FUNC_CALL
+      if ((pc->type == CT_FOR) &&
+          (pc->prev->type == CT_DC_MEMBER))
+      {
+         set_chunk_type(pc, CT_FUNC_CALL);
+      }
 
       prev = pc;
       pc   = next;

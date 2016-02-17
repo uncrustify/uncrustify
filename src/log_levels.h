@@ -104,6 +104,7 @@ enum log_sev_t
    LJDBI     = 90, /* Java Double Brace Init */
    LSETPAR   = 91, /* set_chunk_parent() */
    LSETTYP   = 92, /* set_chunk_type() */
+   LGUY      = 99, /* for guy-test */
 };
 
 #endif /* LOG_LEVELS_H_INCLUDED */

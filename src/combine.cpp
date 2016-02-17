@@ -3,6 +3,8 @@
  * Labels the chunks as needed.
  *
  * @author  Ben Gardner
+ * @author  Guy Maurel since version 0.62 for uncrustify4Qt
+ *          October 2015, 2016
  * @license GPL v2+
  */
 #include "uncrustify_types.h"
@@ -268,6 +270,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
    LOG_FUNC_ENTRY();
    chunk_t *tmp;
 
+   LOG_FMT(LGUY, "token %s:%s\n", get_token_name(pc->type), pc->str.c_str());
    // LOG_FMT(LSYS, " %3d > ['%s' %s] ['%s' %s] ['%s' %s]\n",
    //         pc->orig_line,
    //         prev->str.c_str(), get_token_name(prev->type),
@@ -1012,6 +1015,13 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       {
          set_chunk_type(pc, CT_BYREF);
       }
+      else if ((next->type == CT_FPAREN_CLOSE) ||
+               (next->type == CT_COMMA))
+      {
+         // fix the bug #654
+         // connect(&mapper, SIGNAL(mapped(QString &)), this, SLOT(onSomeEvent(QString &)));
+         set_chunk_type(pc, CT_BYREF);
+      }
       else
       {
          set_chunk_type(pc, CT_ARITH);
@@ -1045,6 +1055,76 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       else
       {
          set_chunk_type(pc, CT_ARITH);
+      }
+   }
+
+   /**
+    * Bug # 634
+    * Check for extern "C" NSString* i;
+    * NSString is a type
+    * change CT_WORD => CT_TYPE     for pc
+    * change CT_STAR => CT_PTR_TYPE for pc-next
+    */
+   if (pc->type == CT_WORD)
+   {
+      LOG_FMT(LGUY, "check token %s:%s\n", get_token_name(pc->type), pc->text());
+      if (pc->prev != NULL)
+      {
+         if (pc->prev->type == CT_STRING)
+         {
+            LOG_FMT(LGUY, "string found before %s:%s\n",
+                    get_token_name(pc->prev->type), pc->prev->text());
+            if (unc_text::compare(pc->prev->text(), "\"C\"") == 0)
+            {
+               LOG_FMT(LGUY, "C string found before %s:%s\n",
+                       get_token_name(pc->prev->type), pc->prev->text());
+               if (pc->prev->prev->type == CT_EXTERN)
+               {
+                  LOG_FMT(LGUY, "extern found before %s:%s\n",
+                          get_token_name(pc->prev->prev->type), pc->prev->prev->text());
+                  // change CT_WORD => CT_TYPE
+                  set_chunk_type(pc, CT_TYPE);
+                  if (pc->next->type == CT_STAR)
+                  {
+                     LOG_FMT(LGUY, "STAR found %s:%s\n",
+                             get_token_name(pc->next->type), pc->next->text());
+                     // change CT_STAR => CT_PTR_TYPE
+                     set_chunk_type(pc->next, CT_PTR_TYPE);
+                  }
+               }
+            }
+         }
+      }
+   }
+
+   /**
+    * Bug # 634
+    * Check for __attribute__((visibility ("default"))) NSString* i;
+    * NSString is a type
+    * change CT_WORD => CT_TYPE     for pc
+    * change CT_STAR => CT_PTR_TYPE for pc-next
+    */
+   if (pc->type == CT_WORD)
+   {
+      tmp = pc;
+      while ((tmp != NULL) )
+      {
+         LOG_FMT(LGUY, "token %s:%s\n", get_token_name(tmp->type), tmp->text());
+         if (tmp->type == CT_ATTRIBUTE)
+         {
+            LOG_FMT(LGUY, "ATTRIBUTE found %s:%s\n",
+                    get_token_name(tmp->type), tmp->text());
+            LOG_FMT(LGUY, "for token %s:%s\n", get_token_name(pc->type), pc->text());
+            // change CT_WORD => CT_TYPE
+            set_chunk_type(pc, CT_TYPE);
+            // change CT_STAR => CT_PTR_TYPE
+            set_chunk_type(pc->next, CT_PTR_TYPE);
+         }
+         if (tmp->flags & PCF_STMT_START) {
+            // we are at beginnig of the line
+            break;
+         }
+         tmp = chunk_get_prev(tmp);
       }
    }
 }
@@ -1382,6 +1462,42 @@ static bool mark_function_type(chunk_t *pc)
          star_count++;
          ptrcnk = tmp;
          LOG_FMT(LFTYPE, " -- PTR_TYPE\n");
+      }
+      else if (tmp->type == CT_CDECL)
+      {
+         // Bug # 633
+         // MS-specific extension to specify calling convention.
+         LOG_FMT(LFTYPE, " -- MS calling convention CT_CDECL(%s)\n", tmp->text());
+      }
+      else if (tmp->type == CT_CLRCALL)
+      {
+         // Bug # 633
+         // MS-specific extension to specify calling convention.
+         LOG_FMT(LFTYPE, " -- MS calling convention CT_CLRCALL(%s)\n", tmp->text());
+      }
+      else if (tmp->type == CT_FASTCALL)
+      {
+         // Bug # 633
+         // MS-specific extension to specify calling convention.
+         LOG_FMT(LFTYPE, " -- MS calling convention CT_FASTCALL(%s)\n", tmp->text());
+      }
+      else if (tmp->type == CT_STDCALL)
+      {
+         // Bug # 633
+         // MS-specific extension to specify calling convention.
+         LOG_FMT(LFTYPE, " -- MS calling convention CT_STDCALL(%s)\n", tmp->text());
+      }
+      else if (tmp->type == CT_THISCALL)
+      {
+         // Bug # 633
+         // MS-specific extension to specify calling convention.
+         LOG_FMT(LFTYPE, " -- MS calling convention CT_THISCALL(%s)\n", tmp->text());
+      }
+      else if (tmp->type == CT_VECTORCALL)
+      {
+         // Bug # 633
+         // MS-specific extension to specify calling convention.
+         LOG_FMT(LFTYPE, " -- MS calling convention CT_VECTORCALL(%s)\n", tmp->text());
       }
       else if (chunk_is_word(tmp) ||
                (tmp->type == CT_WORD) ||
@@ -2090,7 +2206,12 @@ static void fix_enum_struct_union(chunk_t *pc)
  * next ',' or ';' or '__attribute__' is a type.
  *
  * typedef [type...] [*] type [, [*]type] ;
+ * typedef <return type>([*]func)();
  * typedef <return type>([*]func)(params);
+ * typedef <return type>(__stdcall *func)(); Bug # 633    MS-specific extension, guy 2015-11-19
+ *                                           other calling conventions as detailled at:
+ *                                           https://msdn.microsoft.com/en-us/library/984x0h58.aspx
+ *                                           __cdecl, __clrcall, __fastcall, __thiscall, __vectorcall
  * typedef <return type>func(params);
  * typedef <enum/struct/union> [type] [*] type [, [*]type] ;
  * typedef <enum/struct/union> [type] { ... } [*] type [, [*]type] ;

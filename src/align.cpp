@@ -896,12 +896,17 @@ static void align_same_func_call_params()
       prev      = chunk_get_next(prev);
       align_fcn = prev;
       align_fcn_name.clear();
+      LOG_FMT(LASFCP, "(%d) align_fnc_name [%s]\n", __LINE__, align_fcn_name.c_str());
       while (prev != pc)
       {
+         LOG_FMT(LASFCP, "(%d) align_fnc_name [%s]\n", __LINE__, align_fcn_name.c_str());
          align_fcn_name += prev->str;
+         LOG_FMT(LASFCP, "(%d) align_fnc_name [%s]\n", __LINE__, align_fcn_name.c_str());
          prev            = chunk_get_next(prev);
       }
+      LOG_FMT(LASFCP, "(%d) align_fnc_name [%s]\n", __LINE__, align_fcn_name.c_str());
       align_fcn_name += pc->str;
+      LOG_FMT(LASFCP, "(%d) align_fnc_name [%s]\n", __LINE__, align_fcn_name.c_str());
       LOG_FMT(LASFCP, "Func Call @ %d:%d [%s]\n",
               align_fcn->orig_line,
               align_fcn->orig_col,
@@ -1107,15 +1112,15 @@ static chunk_t *align_var_def_brace(chunk_t *start, int span, int *p_nl_count)
    prev = chunk_get_prev_ncnl(start);
    if ((prev != NULL) && (prev->type == CT_ASSIGN))
    {
-      LOG_FMT(LAVDB, "%s: start=%s [%s] on line %d (abort due to assign)\n", __func__,
-              start->str.c_str(), get_token_name(start->type), start->orig_line);
+      LOG_FMT(LAVDB, "%s: start=%s [%s] on line %d (abort due to assign) (%d)\n", __func__,
+              start->str.c_str(), get_token_name(start->type), start->orig_line, __LINE__);
 
       pc = chunk_get_next_type(start, CT_BRACE_CLOSE, start->level);
       return(chunk_get_next_ncnl(pc));
    }
 
-   LOG_FMT(LAVDB, "%s: start=%s [%s] on line %d\n", __func__,
-           start->str.c_str(), get_token_name(start->type), start->orig_line);
+   LOG_FMT(LAVDB, "%s: start=%s [%s] on line %d (%d)\n", __func__,
+           start->str.c_str(), get_token_name(start->type), start->orig_line, __LINE__);
 
    if (!cpd.settings[UO_align_var_def_inline].b)
    {
@@ -1161,8 +1166,8 @@ static chunk_t *align_var_def_brace(chunk_t *start, int span, int *p_nl_count)
              ((pc->type == CT_FUNC_DEF) &&
               cpd.settings[UO_align_single_line_func].b))
          {
-            LOG_FMT(LAVDB, "    add=[%s] line=%d col=%d level=%d\n",
-                    pc->str.c_str(), pc->orig_line, pc->orig_col, pc->level);
+            LOG_FMT(LAVDB, "    add=[%s] line=%d col=%d level=%d (%d)\n",
+                    pc->str.c_str(), pc->orig_line, pc->orig_col, pc->level, __LINE__);
 
             as.Add(pc);
             fp_look_bro = (pc->type == CT_FUNC_DEF) &&
@@ -1238,8 +1243,8 @@ static chunk_t *align_var_def_brace(chunk_t *start, int span, int *p_nl_count)
       {
          if (!did_this_line)
          {
-            LOG_FMT(LAVDB, "    add=[%s] line=%d col=%d level=%d\n",
-                    pc->str.c_str(), pc->orig_line, pc->orig_col, pc->level);
+            LOG_FMT(LAVDB, "    add=[%s] line=%d col=%d level=%d (%s>%d)\n",
+                    pc->str.c_str(), pc->orig_line, pc->orig_col, pc->level, __func__, __LINE__);
 
             as.Add(step_back_over_member(pc));
 

@@ -83,6 +83,10 @@ const char *token_names[] =
    "MINUS",
    "AMP",
    "BYREF",
+   // "BITWISE_AND",
+   // "BITWISE_OR",
+   // "BITWISE_EXCLUSIVE_OR",
+   // "BITWISE_NOT",
    "POUND",
    "PREPROC",
    "PREPROC_INDENT",
@@ -265,6 +269,12 @@ const char *token_names[] =
    "ANNOTATION",
    "FOR_COLON",
    "DOUBLE_BRACE",
+   "CDECL",
+   "CLRCALL",
+   "FASTCALL",
+   "STDCALL",
+   "THISCALL",
+   "VECTORCALL",
 };
 
 #endif /* TOKEN_NAMES_H_INCLUDED */

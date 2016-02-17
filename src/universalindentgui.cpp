@@ -101,7 +101,7 @@ void print_universal_indent_cfg(FILE *pfile)
 
          fprintf(pfile, "\n[%s]\n", optionNameReadable);
          fprintf(pfile, "Category=%d\n", idx);
-         fprintf(pfile, "Description=\"<html>");
+         fprintf(pfile, "Description=\"<html>(123)");
 
          const char *tmp = option->short_desc;
          ch = 0;
