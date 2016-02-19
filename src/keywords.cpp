@@ -290,7 +290,7 @@ static int kw_compare(const void *p1, const void *p2)
 
 /**
  * This function verifies if all language keywords as 'if', 'for', 'break', etc, are 
- * alphabetycally sorted on the main table.
+ * alphabetically sorted on the main table.
  */
 void keywords_are_sorted(void)
 {
