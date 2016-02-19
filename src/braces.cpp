@@ -113,11 +113,11 @@ static void examine_braces(void)
 {
    LOG_FUNC_ENTRY();
    chunk_t *pc;
-   chunk_t *backup;
+   chunk_t *prev;
    
-   for (pc = chunk_get_tail(); pc != NULL ; pc = backup)
+   for (pc = chunk_get_tail(); pc != NULL ; pc = prev)
    {
-      backup = chunk_get_prev_type(pc, CT_BRACE_OPEN, -1);
+      prev = chunk_get_prev_type(pc, CT_BRACE_OPEN, -1);
       if ((pc->type == CT_BRACE_OPEN) &&
           ((pc->flags & PCF_IN_PREPROC) == 0))
       {
