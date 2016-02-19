@@ -910,6 +910,76 @@ static bool parse_cs_string(tok_ctx& ctx, chunk_t& pc)
 
 
 /**
+ * Interpolated strings start with $" end with a single "
+ * Double quotes are escaped by doubling.
+ * Need to track embedded { } pairs and ignore anything between.
+ *
+ * @param pc   The structure to update, str is an input.
+ * @return     Whether a string was parsed
+ */
+static bool parse_cs_interpolated_string(tok_ctx& ctx, chunk_t& pc)
+{
+   pc.str = ctx.get();        // '$'
+   pc.str.append(ctx.get());  // '"'
+   pc.type = CT_STRING;
+
+   int depth = 0;
+
+   /* go until we hit a zero (end of file) or a single " */
+   while (ctx.more())
+   {
+      int ch = ctx.get();
+      pc.str.append(ch);
+
+      /* if we are inside a { }, then we only look for a } */
+      if (depth > 0)
+      {
+         if (ch == '}')
+         {
+            if (ctx.peek() == '}')
+            {
+               // }} doesn't decrease the depth
+               pc.str.append(ctx.get());  // '{'
+            }
+            else
+            {
+               depth--;
+            }
+         }
+      }
+      else
+      {
+         if (ch == '{')
+         {
+            if (ctx.peek() == '{')
+            {
+               // {{ doesn't increase the depth
+               pc.str.append(ctx.get());
+            }
+            else
+            {
+               depth++;
+            }
+         }
+         else if (ch == '"')
+         {
+            if (ctx.peek() == '"')
+            {
+               pc.str.append(ctx.get());
+            }
+            else
+            {
+               break;
+            }
+         }
+      }
+   }
+
+   return(true);
+}
+
+
+/**
  * VALA verbatim string, ends with three quotes (""")
  *
  * @param pc   The structure to update, str is an input.
@@ -1432,6 +1502,13 @@ static bool parse_next(tok_ctx& ctx, chunk_t& pc)
          parse_word(ctx, pc, true);
          return(true);
       }
+   }
+
+   /* Check for C# Interpolated strings */
+   if (((cpd.lang_flags & LANG_CS) != 0) && (ctx.peek() == '$') && (ctx.peek(1) == '"'))
+   {
+      parse_cs_interpolated_string(ctx, pc);
+      return true;
    }
 
    /* handle VALA """ strings """ */
