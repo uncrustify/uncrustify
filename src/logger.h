@@ -19,13 +19,6 @@
 #include <cstdio>      /* FILE */
 
 
-#define IS_DEBUG_ENABLED 1
-
-#if IS_DEBUG_ENABLED > 0
-#define DEBUG
-#endif
-
-
 /**
  * Initializes the log subsystem - call this first.
  * This function sets the log stream and enables the top 3 sevs (0-2).
