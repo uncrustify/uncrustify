@@ -163,6 +163,52 @@ struct parse_frame
 #define PCF_OC_ATYPE           PCF_BIT(38)  /* inside OC arg type */
 #define PCF_WF_ENDIF           PCF_BIT(39)  /* #endif for whole file ifdef */
 
+#ifdef DEFINE_PCF_NAMES
+static const char *pcf_names[] =
+{
+   "IN_PREPROC",        // 0
+   "IN_STRUCT",         // 1
+   "IN_ENUM",           // 2
+   "IN_FCN_DEF",        // 3
+   "IN_FCN_CALL",       // 4
+   "IN_SPAREN",         // 5
+   "IN_TEMPLATE",       // 6
+   "IN_TYPEDEF",        // 7
+   "IN_CONST_ARGS",     // 8
+   "IN_ARRAY_ASSIGN",   // 9
+   "IN_CLASS",          // 10
+   "IN_CLASS_BASE",     // 11
+   "IN_NAMESPACE",      // 12
+   "IN_FOR",            // 13
+   "IN_OC_MSG",         // 14
+   "#15",               // 15
+   "FORCE_SPACE",       // 16
+   "STMT_START",        // 17
+   "EXPR_START",        // 18
+   "DONT_INDENT",       // 19
+   "ALIGN_START",       // 20
+   "WAS_ALIGNED",       // 21
+   "VAR_TYPE",          // 22
+   "VAR_DEF",           // 23
+   "VAR_1ST",           // 24
+   "VAR_INLINE",        // 25
+   "RIGHT_COMMENT",     // 26
+   "OLD_FCN_PARAMS",    // 27
+   "LVALUE",            // 28
+   "ONE_LINER",         // 29
+   "EMPTY_BODY",        // 30
+   "ANCHOR",            // 31
+   "PUNCTUATOR",        // 32
+   "INSERTED",          // 33
+   "LONG_BLOCK",        // 34
+   "OC_BOXED",          // 35
+   "KEEP_BRACE",        // 36
+   "OC_RTYPE",          // 37
+   "OC_ATYPE",          // 38
+   "WF_ENDIF",          // 39
+};
+#endif
+
 struct align_ptr_t
 {
    chunk_t *next;       /* NULL or the chunk that should be under this one */
