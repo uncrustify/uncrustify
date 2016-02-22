@@ -212,7 +212,7 @@ static bool chunk_ends_type(chunk_t *start)
          continue;
       }
 
-      if (chunk_is_semicolon(pc) ||
+      if ((chunk_is_semicolon(pc) && ((pc->flags & PCF_IN_FOR) == 0)) ||
           (pc->type == CT_TYPEDEF) ||
           (pc->type == CT_BRACE_OPEN) ||
           (pc->type == CT_BRACE_CLOSE) ||

@@ -297,5 +297,7 @@
 
 07630 indent-vbrace.cfg         c/indent-vbrace.c
 
+08399 ben.cfg                   c/gh399.c
+
 09594 ben.cfg                   c/sf594.c
 09588 ben.cfg                   c/sf588.c
