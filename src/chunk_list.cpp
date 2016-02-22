@@ -673,7 +673,7 @@ chunk_t *chunk_get_prev_nvb(chunk_t *cur, chunk_nav_t nav)
 }
 
 
-void set_chunk_type(chunk_t *pc, c_token_t tt)
+void set_chunk_type_real(chunk_t *pc, c_token_t tt)
 {
    LOG_FUNC_ENTRY();
    if (pc && (pc->type != tt))
@@ -688,7 +688,7 @@ void set_chunk_type(chunk_t *pc, c_token_t tt)
 }
 
 
-void set_chunk_parent(chunk_t *pc, c_token_t pt)
+void set_chunk_parent_real(chunk_t *pc, c_token_t pt)
 {
    LOG_FUNC_ENTRY();
    if (pc && (pc->parent_type != pt))
