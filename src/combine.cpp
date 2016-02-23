@@ -4158,6 +4158,11 @@ static void handle_cpp_lambda(chunk_t *sq_o)
 
       nc.type = CT_SQUARE_CLOSE;
       nc.str.pop_front();
+      // bug # 664
+      // The original orig_col for CT_SQUARE_CLOSE is lost as
+      // CT_SQUARE_OPEN and CT_SQUARE_CLOSE have been transform to CT_TSQUARE.
+      // The value calculate as nc.orig_col++ might be NOT correct, ie. if there
+      // where one or more spaces beetwen CT_SQUARE_OPEN and CT_SQUARE_CLOSE.
       nc.orig_col++;
       nc.column++;
       sq_c = chunk_add_after(&nc, sq_o);

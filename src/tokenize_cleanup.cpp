@@ -101,6 +101,11 @@ void tokenize_cleanup(void)
             pc->str = "[]";
             chunk_del(next);
             pc->orig_col_end += 1;
+            // bug # 664
+            // The original orig_col for CT_SQUARE_CLOSE is lost as
+            // CT_SQUARE_OPEN and CT_SQUARE_CLOSE have been transform to CT_TSQUARE.
+            // The value calculate as nc.orig_col++ might be NOT correct, ie. if there
+            // where one or more spaces beetwen CT_SQUARE_OPEN and CT_SQUARE_CLOSE.
          }
       }
       if ((pc->type == CT_SEMICOLON) &&
