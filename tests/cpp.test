@@ -231,3 +231,5 @@
 
 31720 ben.cfg                          cpp/bit-colon.cpp
 31730 ms-style-ref.cfg                 cpp/ms-style-ref.cpp
+
+33020 bug_662.cfg                      cpp/bug_662.cpp
