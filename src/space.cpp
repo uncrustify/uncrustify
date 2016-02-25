@@ -3,6 +3,8 @@
  * Adds or removes inter-chunk spaces.
  *
  * @author  Ben Gardner
+ * @author  Guy Maurel since version 0.62 for uncrustify4Qt
+ *          October 2015, 2016
  * @license GPL v2+
  */
 #include "uncrustify_types.h"
@@ -1826,22 +1828,12 @@ void space_text(void)
             break;
 
          default:
-            if ((pc->type == CT_SQUARE_CLOSE) &&
-                (pc->prev->type == CT_SQUARE_OPEN)) {
-               // bug # 664
-               // The original orig_col for CT_SQUARE_CLOSE is lost as
-               // CT_SQUARE_OPEN and CT_SQUARE_CLOSE have been transform to CT_TSQUARE.
-               // The value calculate as nc.orig_col++ might be NOT correct, ie. if there
-               // where one or more spaces beetwen CT_SQUARE_OPEN and CT_SQUARE_CLOSE.
-               break;
-            } else {
-               /* Keep the same relative spacing, if possible */
-               if ((next->orig_col >= pc->orig_col_end) && (pc->orig_col_end != 0))
-               {
-                  column += next->orig_col - pc->orig_col_end;
-               }
-               break;
+            /* Keep the same relative spacing, if possible */
+            if ((next->orig_col >= pc->orig_col_end) && (pc->orig_col_end != 0))
+            {
+               column += next->orig_col - pc->orig_col_end;
             }
+            break;
          }
 
          if (chunk_is_comment(next) &&
