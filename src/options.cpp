@@ -1331,7 +1331,14 @@ void register_options(void)
    unc_add_option("mod_sort_include", UO_mod_sort_include, AT_BOOL,
                   "If TRUE, will sort consecutive single-line '#include' statements [C/C++] and '#import' statements [Obj-C]\n"
                   "This is generally a bad idea, as it may break your code.");
-   unc_add_option("mod_move_case_break", UO_mod_move_case_break, AT_BOOL,
+
+   unc_add_option("mod_sort_proporties", UO_mod_sort_proporties, AT_BOOL,
+                   "If TRUE, will sort properties in Objective-C");
+   unc_add_option("mod_sort_func_prototypes", UO_mod_sort_func_prototypes, AT_BOOL, "If TRUE, will sort function prototypes");
+   unc_add_option("mod_sort_msg_spec", UO_mod_sort_msg_spec, AT_BOOL,
+                   "If TRUE, will sort method declarations in Objective-C");
+
+    unc_add_option("mod_move_case_break", UO_mod_move_case_break, AT_BOOL,
                   "If TRUE, it will move a 'break' that appears after a fully braced 'case' before the close brace.");
    unc_add_option("mod_case_brace", UO_mod_case_brace, AT_IARF,
                   "Will add or remove the braces around a fully braced case statement.\n"

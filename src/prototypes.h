@@ -106,7 +106,7 @@ chunk_t *insert_comment_after(chunk_t *ref, c_token_t cmt_type, const unc_text& 
  *  sorting.cpp
  */
 
-void sort_imports(void);
+void sort_chunks(void);
 
 
 /*
