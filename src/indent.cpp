@@ -483,6 +483,7 @@ void indent_text(void)
    int                tmp;
    struct parse_frame frm;
    bool               in_preproc = false;
+   bool               in_define  = false;
    int                indent_column;
    int                parent_token_indent = 0;
    int                xml_indent          = 0;
@@ -491,6 +492,7 @@ void indent_text(void)
    int                sql_orig_col = 0;
    bool               in_func_def  = false;
    c_token_t          memtype;
+   int                frmPseTosOpenParen = -1;
 
    memset(&frm, 0, sizeof(frm));
    cpd.frame_count = 0;
@@ -545,6 +547,7 @@ void indent_text(void)
       /* Clean up after a #define, etc */
       if (!in_preproc)
       {
+         in_define = false;
          while ((frm.pse_tos > 0) && frm.pse[frm.pse_tos].in_preproc)
          {
             c_token_t type = frm.pse[frm.pse_tos].type;
@@ -616,9 +619,11 @@ void indent_text(void)
          if (pc->parent_type == CT_PP_DEFINE)
          {
             frm.pse[frm.pse_tos].indent_tmp = cpd.settings[UO_pp_define_at_level].b ?
-                                              frm.pse[frm.pse_tos - 1].indent_tmp : 1;
+                                              frm.pse[frm.pse_tos - 1].indent_tmp : pc->column;
             frm.pse[frm.pse_tos].indent     = frm.pse[frm.pse_tos].indent_tmp + indent_size;
             frm.pse[frm.pse_tos].indent_tab = frm.pse[frm.pse_tos].indent;
+
+            in_define = true;
          }
          else
          {
@@ -662,7 +667,16 @@ void indent_text(void)
             frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
          }
       }
-
+      else if (pc->type == CT_MACRO_FUNC)
+      {
+         frm.level++;
+         indent_pse_push(frm, pc);
+         
+         frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos - 1].indent_tmp;
+         frm.pse[frm.pse_tos].indent     = frm.pse[frm.pse_tos - 1].indent_tmp;
+         frm.pse[frm.pse_tos].indent_tab = frm.pse[frm.pse_tos - 1].indent_tmp;
+      }
+      
       /* Check for close XML tags "</..." */
       if (cpd.settings[UO_indent_xml_string].n > 0)
       {
@@ -829,8 +843,71 @@ void indent_text(void)
                  (pc->type == CT_SQUARE_CLOSE) ||
                  (pc->type == CT_ANGLE_CLOSE)))
             {
+               /* save open paren/square/angle location in pse stack */
+               frmPseTosOpenParen = frm.pse_tos;
+
                indent_pse_pop(frm, pc);
                frm.paren_count--;
+
+               /* remove MACRO_FUNC level if not in a "do/while(0)" construction */
+               if ((pc->type == CT_FPAREN_CLOSE) &&
+                   (pc->parent_type == CT_MACRO_FUNC))
+               {
+                  bool isDoWhile0 = false;
+
+                  /* Search for do/while(0) construction if requested by configuration */
+                  if (cpd.settings[UO_pp_indent_macro_func_dowhile0_skip].b)
+                  {
+                     next = chunk_get_next_ncnl(pc);
+                     if ((next != NULL) && (next->type == CT_DO))
+                     {
+                        int level = next->level;
+
+                        /* Search for "while" at same level as "do" and inside the same macro */
+                        for (;;)
+                        {
+                           next = chunk_get_next(next);
+                           if (next == NULL)
+                           {
+                              break;
+                           }
+                           else if ((next->flags & PCF_IN_PREPROC) == 0)
+                           {
+                              next = NULL;
+                              break;
+                           }
+                           else if ((next->type == CT_WHILE_OF_DO) && (next->level == level))
+                           {
+                              break;
+                           }
+                        }
+                        if (next != NULL)
+                        {
+                           chunk_t *chunk_op = chunk_get_next_ncnl(next);
+                           chunk_t *chunk_nr = chunk_get_next_ncnl(chunk_op);
+                           chunk_t *chunk_cp = chunk_get_next_ncnl(chunk_nr);
+                           chunk_t *chunk_nl = chunk_get_next_nc(chunk_cp);
+
+                           if ((chunk_nl != NULL) &&
+                               (chunk_op->type == CT_SPAREN_OPEN) &&
+                               (chunk_op->flags & PCF_IN_PREPROC) &&
+                               (chunk_nr->type == CT_NUMBER) &&
+                               (strcmp(chunk_nr->str.c_str(), "0") == 0) &&
+                               (chunk_nr->flags & PCF_IN_PREPROC) &&
+                               (chunk_cp->type == CT_SPAREN_CLOSE) &&
+                               (chunk_cp->flags & PCF_IN_PREPROC) &&
+                               (chunk_nl->type == CT_NEWLINE))
+                           {
+                              isDoWhile0 = true;
+                           }
+                        }
+                     }
+                  }
+                  if (!isDoWhile0)
+                  {
+                     indent_pse_pop(frm, pc);
+                  }
+               }
             }
          }
       } while (old_pse_tos > frm.pse_tos);
@@ -1756,29 +1833,35 @@ void indent_text(void)
          {
             /* This is a big hack. We assume that since we hit a paren close,
              * that we just removed a paren open */
-            if (frm.pse[frm.pse_tos + 1].type == c_token_t(pc->type - 1))
+            if ((frmPseTosOpenParen >= 0) &&
+                (frm.pse[frmPseTosOpenParen].type == c_token_t(pc->type - 1)))
             {
-               chunk_t *ck1 = frm.pse[frm.pse_tos + 1].pc;
+               chunk_t *ck1 = frm.pse[frmPseTosOpenParen].pc;
                chunk_t *ck2 = chunk_get_prev(ck1);
+               int     nlIndentMode;
+
+               nlIndentMode = ( (pc->parent_type == CT_MACRO_FUNC)
+                              ? cpd.settings[UO_indent_paren_close_macro_func].n
+                              : ( ((pc->parent_type == CT_FUNC_DEF) ||
+                                   (pc->parent_type == CT_FUNC_PROTO))
+                                ? cpd.settings[UO_indent_paren_close_func].n
+                                : cpd.settings[UO_indent_paren_close].n));
 
                /* If the open paren was the first thing on the line or we are
                * doing mode 1, then put the close paren in the same column */
                if (chunk_is_newline(ck2) ||
-                   (cpd.settings[UO_indent_paren_close].n == 1))
+                   (nlIndentMode == 1))
                {
                   indent_column_set(ck1->column);
                }
                else
                {
-                  if (cpd.settings[UO_indent_paren_close].n != 2)
+                  if (nlIndentMode != 2)
                   {
-                     indent_column_set(frm.pse[frm.pse_tos + 1].indent_tmp);
-                     if (cpd.settings[UO_indent_paren_close].n == 1)
-                     {
-                        indent_column--;
-                     }
+                     indent_column_set(frm.pse[frmPseTosOpenParen].indent_tmp);
                   }
                }
+               frmPseTosOpenParen = -1;
             }
             LOG_FMT(LINDENT, "%s: %d] cl paren => %d [%s]\n",
                     __func__, pc->orig_line, indent_column, pc->str.c_str());
@@ -1886,6 +1969,25 @@ void indent_text(void)
          }
       }
 
+      /* if "\" is alone on a line, align it on the previous line */
+      if (chunk_is_newline(pc) &&
+          chunk_is_newline(chunk_get_prev(pc)))
+      {
+         chunk_t *search;
+         chunk_t *searchPrev;
+
+         /* search for the indentation column of the previous line */
+         searchPrev = chunk_get_prev(pc);
+         search     = chunk_get_prev(searchPrev);
+         while ((search != NULL) && !chunk_is_newline(search))
+         {
+            searchPrev = search;
+            search     = chunk_get_prev(search);
+         }
+
+         pc->column = searchPrev->column;
+      }
+
       /* if we hit a newline, reset indent_tmp */
       if (chunk_is_newline(pc) ||
           (pc->type == CT_COMMENT_MULTI) ||
@@ -1894,10 +1996,11 @@ void indent_text(void)
          frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
 
          /**
-          * Handle the case of a multi-line #define w/o anything on the
-          * first line (indent_tmp will be 1 or 0)
+          * Handle the case of a multi-line #XXXX (error, pragma, ... but not
+          * define because it is managed specifically)
           */
          if ((pc->type == CT_NL_CONT) &&
+             (!in_define) &&
              (frm.pse[frm.pse_tos].indent_tmp <= indent_size))
          {
             frm.pse[frm.pse_tos].indent_tmp = indent_size + 1;

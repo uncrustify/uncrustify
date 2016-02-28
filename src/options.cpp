@@ -689,7 +689,17 @@ void register_options(void)
    unc_add_option("indent_paren_nl", UO_indent_paren_nl, AT_BOOL,
                   "If an open paren is followed by a newline, indent the next line so that it lines up after the open paren (not recommended)");
    unc_add_option("indent_paren_close", UO_indent_paren_close, AT_NUM,
-                  "Controls the indent of a close paren after a newline.\n"
+                  "Controls the indent of a close paren after a newline (except for function and macro function prototype).\n"
+                  "0: Indent to body level\n"
+                  "1: Align under the open paren\n"
+                  "2: Indent to the brace level");
+   unc_add_option("indent_paren_close_func", UO_indent_paren_close_func, AT_NUM,
+                  "Controls the indent of the close paren after a newline in a function prototype (declaration and definition).\n"
+                  "0: Indent to body level\n"
+                  "1: Align under the open paren\n"
+                  "2: Indent to the brace level");
+   unc_add_option("indent_paren_close_macro_func", UO_indent_paren_close_macro_func, AT_NUM,
+                  "Controls the indent of the close paren after a newline in a macro function prototype.\n"
                   "0: Indent to body level\n"
                   "1: Align under the open paren\n"
                   "2: Indent to the brace level");
@@ -1364,6 +1374,8 @@ void register_options(void)
                   "Control whether to indent the code between #if, #else and #endif.");
    unc_add_option("pp_define_at_level", UO_pp_define_at_level, AT_BOOL,
                   "Whether to indent '#define' at the brace level (true) or from column 1 (false)");
+   unc_add_option("pp_indent_macro_func_dowhile0_skip", UO_pp_indent_macro_func_dowhile0_skip, AT_BOOL,
+                  "If true, don't indent the 'do' in 'do/while(0)' construction (default = false)");
 }
 
 

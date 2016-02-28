@@ -261,6 +261,9 @@
 02400 ben.cfg                  sql/mysql.sqc
 02401 ben.cfg                  sql/sta-select.sqc
 
+02405 pp_define_indent-0.cfg   c/pp-indent-define.c
+02406 pp_define_indent-1.cfg   c/pp-indent-define.c
+02407 pp_define_indent-2.cfg   c/pp-indent-define.c
 
 02410 pp_if_indent-0.cfg       c/ifdef-indent.c
 02411 pp_if_indent-1.cfg       c/ifdef-indent.c
