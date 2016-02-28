@@ -2697,6 +2697,51 @@ void newlines_insert_blank_lines(void)
 }
 
 
+/**
+ * Handle removal of extra blank lines in function
+ */
+void newlines_eat_extra_blank_lines(void)
+{
+
+    LOG_FUNC_ENTRY();
+    chunk_t *pc;
+
+    int nl_max_blank_in_func_minus_one = cpd.settings[UO_nl_max_blank_in_func_minus_one].n;
+    if (nl_max_blank_in_func_minus_one == 0)
+    {
+        return;
+    }
+
+    for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next(pc))
+    {
+        if(pc->type == CT_BRACE_OPEN)
+        {
+            chunk_t* startMove = pc;
+            
+            while(pc != NULL)
+            {
+                if(pc->type == CT_BRACE_CLOSE && pc->level == startMove->level)
+                {
+                    break;
+                }
+
+                /*delete if needs*/
+                if(pc->nl_count > nl_max_blank_in_func_minus_one)
+                {
+                    pc->nl_count = nl_max_blank_in_func_minus_one;
+                    MARK_CHANGE();
+                    remove_next_newlines(pc);
+                }
+                else
+                {
+                    pc = chunk_get_next(pc);
+               }
+            }
+        }
+    }
+}
+
+
 void newlines_squeeze_ifdef(void)
 {
    LOG_FUNC_ENTRY();

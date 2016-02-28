@@ -1510,7 +1510,14 @@ static void uncrustify_file(const file_mem& fm, FILE *pfout,
       if (cpd.settings[UO_mod_remove_empty_return].b)
       {
          remove_extra_returns();
+          
       }
+      
+       /* Remove brace  only has single return statement */
+       if (cpd.settings[UO_mod_remove_brace_only_has_return].b)
+       {
+           remove_brace_only_has_return();
+       }
 
       /**
        * Add parens
@@ -1580,6 +1587,7 @@ static void uncrustify_file(const file_mem& fm, FILE *pfout,
          }
          do_blank_lines();
          newlines_eat_start_end();
+         newlines_eat_extra_blank_lines();
          newlines_cleanup_dup();
          first = false;
       } while ((old_changes != cpd.changes) && (cpd.pass_count-- > 0));
