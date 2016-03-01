@@ -3,6 +3,8 @@
  * Adds or removes inter-chunk spaces.
  *
  * @author  Ben Gardner
+ * @author  Guy Maurel since version 0.62 for uncrustify4Qt
+ *          October 2015, 2016
  * @license GPL v2+
  */
 #include "uncrustify_types.h"
@@ -1285,7 +1287,8 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
    if ((first->type == CT_BOOL) || (second->type == CT_BOOL))
    {
       arg = cpd.settings[UO_sp_bool].a;
-      if ((cpd.settings[UO_pos_bool].tp != TP_IGNORE) &&
+      if (((cpd.settings[UO_pos_bool].tp != TP_IGNORE) &&
+           !cpd.settings[UO_pp_pos_bool_disable].b) &&
           (first->orig_line != second->orig_line) &&
           (arg != AV_REMOVE))
       {

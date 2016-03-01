@@ -1560,7 +1560,8 @@ static void uncrustify_file(const file_mem& fm, FILE *pfout,
             newline_after_label_colon();
          }
          newlines_insert_blank_lines();
-         if (cpd.settings[UO_pos_bool].tp != TP_IGNORE)
+         if ((cpd.settings[UO_pos_bool].tp != TP_IGNORE) &&
+             !cpd.settings[UO_pp_pos_bool_disable].b)
          {
             newlines_chunk_pos(CT_BOOL, cpd.settings[UO_pos_bool].tp);
          }

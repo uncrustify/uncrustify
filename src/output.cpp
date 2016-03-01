@@ -970,6 +970,8 @@ static chunk_t *output_comment_cpp(chunk_t *first)
    if (cpd.settings[UO_sp_cmt_cpp_doxygen].b)           // special treatment for doxygen style comments (treat as unity)
    {
       const char *sComment = first->str.c_str();
+      bool grouping = (sComment[2] == '@');
+      int brace = 3;
       if ((sComment[2] == '/') || (sComment[2] == '!')) // doxygen style found!
       {
          leadin += sComment[2];                         // at least one additional char (either "///" or "//!")
@@ -977,6 +979,16 @@ static chunk_t *output_comment_cpp(chunk_t *first)
          {
             leadin += '<';
          }
+         else
+         {
+           grouping = (sComment[3] == '@');             // or a further one (grouping)
+           brace = 4;
+         }
+      }
+      if (grouping && ((sComment[brace] == '{') || (sComment[brace] == '}')))
+      {
+         leadin += '@';
+         leadin += sComment[brace];
       }
    }
 

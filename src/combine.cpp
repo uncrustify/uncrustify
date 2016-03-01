@@ -3,6 +3,8 @@
  * Labels the chunks as needed.
  *
  * @author  Ben Gardner
+ * @author  Guy Maurel since version 0.62 for uncrustify4Qt
+ *          October 2015, 2016
  * @license GPL v2+
  */
 #include "uncrustify_types.h"
@@ -212,7 +214,7 @@ static bool chunk_ends_type(chunk_t *start)
          continue;
       }
 
-      if (chunk_is_semicolon(pc) ||
+      if ((chunk_is_semicolon(pc) && ((pc->flags & PCF_IN_FOR) == 0)) ||
           (pc->type == CT_TYPEDEF) ||
           (pc->type == CT_BRACE_OPEN) ||
           (pc->type == CT_BRACE_CLOSE) ||
@@ -4154,12 +4156,16 @@ static void handle_cpp_lambda(chunk_t *sq_o)
       nc = *sq_o;
       set_chunk_type(sq_o, CT_SQUARE_OPEN);
       sq_o->str.resize(1);
+      // bug # 664
+      // The original orig_col of CT_SQUARE_CLOSE is stored at orig_col_end of CT_TSQUARE.
+      // CT_SQUARE_CLOSE orig_col and orig_col_end values are calculate from orig_col_end of CT_TSQUARE.
+      nc.orig_col = sq_o->orig_col_end - 1;
+      nc.column = nc.orig_col;
+      nc.orig_col_end = sq_o->orig_col_end;
       sq_o->orig_col_end = sq_o->orig_col + 1;
 
       nc.type = CT_SQUARE_CLOSE;
       nc.str.pop_front();
-      nc.orig_col++;
-      nc.column++;
       sq_c = chunk_add_after(&nc, sq_o);
    }
    set_chunk_parent(sq_o, CT_CPP_LAMBDA);

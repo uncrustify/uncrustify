@@ -5,6 +5,8 @@
  * Use these for the log severities in LOG_FMT(), etc.
  *
  * @author  Ben Gardner
+ * @author  Guy Maurel since version 0.62 for uncrustify4Qt
+ *          October 2015, 2016
  * @license GPL v2+
  */
 #ifndef LOG_LEVELS_H_INCLUDED
@@ -105,6 +107,7 @@ enum log_sev_t
    LSETPAR   = 91, /* set_chunk_parent() */
    LSETTYP   = 92, /* set_chunk_type() */
    LTOKSEE   = 93, /* Shows all tokens processed on 'convert_vbrace_to_brace' and 'tokenize.cpp' */
+   LGUY      = 99, /* for guy-test */
 };
 
 #endif /* LOG_LEVELS_H_INCLUDED */

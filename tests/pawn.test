@@ -19,7 +19,7 @@
 
 60040 amxmodx.cfg              pawn/preproc.pawn
 
-60050 amxmodx_prepro.cfg              pawn/prepro_basic.sma
+60050 pp_pos_bool_disable.cfg  pawn/pp_pos_bool_disable.sma
 
 60060 amxmodx_no_prepro.cfg           pawn/no_prepro_indent.sma
 60061 amxmodx_no_prepro.cfg           pawn/no_prepro_braces_function.sma
@@ -27,3 +27,5 @@
 
 # TODO implementation, tests are done.
 # 60070 amxmodx_no_prepro.cfg           pawn/no_prepro_full.sma
+
+60080 amxmodx_prepro.cfg              pawn/prepro_basic.sma

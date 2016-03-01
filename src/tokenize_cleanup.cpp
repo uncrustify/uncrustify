@@ -6,6 +6,8 @@
  *  - detect "version = 10;" vs "version (xxx) {"
  *
  * @author  Ben Gardner
+ * @author  Guy Maurel since version 0.62 for uncrustify4Qt
+ *          October 2015, 2016
  * @license GPL v2+
  */
 #include "uncrustify_types.h"
@@ -99,8 +101,11 @@ void tokenize_cleanup(void)
             /* Change '[' + ']' into '[]' */
             set_chunk_type(pc, CT_TSQUARE);
             pc->str = "[]";
+            // bug # 664
+            // The original orig_col_end of CT_SQUARE_CLOSE is stored at orig_col_end of CT_TSQUARE.
+            // pc->orig_col_end += 1;
+            pc->orig_col_end = next->orig_col_end;
             chunk_del(next);
-            pc->orig_col_end += 1;
          }
       }
       if ((pc->type == CT_SEMICOLON) &&
