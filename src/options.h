@@ -3,6 +3,8 @@
  * Enum and settings for all the options.
  *
  * @author  Ben Gardner
+ * @author  Guy Maurel since version 0.62 for uncrustify4Qt
+ *          October 2015
  * @license GPL v2+
  */
 #ifndef OPTIONS_H_INCLUDED
