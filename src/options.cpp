@@ -1219,6 +1219,8 @@ void register_options(void)
                   "The span for aligning on '#define' bodies (0=don't align, other=number of lines including comments between blocks)", "", 0, 5000);
    unc_add_option("align_left_shift", UO_align_left_shift, AT_BOOL,
                   "Align lines that start with '<<' with previous '<<'. Default=true");
+   unc_add_option("align_asm_colon", UO_align_asm_colon, AT_BOOL,
+                  "Align text after asm volatile () colons.");
 
    unc_add_option("align_oc_msg_colon_span", UO_align_oc_msg_colon_span, AT_NUM,
                   "Span for aligning parameters in an Obj-C message call on the ':' (0=don't align)", 0, 5000);

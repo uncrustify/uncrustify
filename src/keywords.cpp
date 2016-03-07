@@ -53,6 +53,7 @@ static const chunk_tag_t keywords[] =
    { "_Bool",            CT_TYPE,         LANG_CPP                                                                    },
    { "_Complex",         CT_TYPE,         LANG_CPP                                                                    },
    { "_Imaginary",       CT_TYPE,         LANG_CPP                                                                    },
+   { "__asm__",          CT_ASM,          LANG_C | LANG_CPP                                                           },
    { "__attribute__",    CT_ATTRIBUTE,    LANG_C | LANG_CPP                                                           },
    { "__block",          CT_QUALIFIER,    LANG_OC                                                                     },
    { "__const__",        CT_QUALIFIER,    LANG_C | LANG_CPP                                                           },

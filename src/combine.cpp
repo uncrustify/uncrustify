@@ -187,6 +187,53 @@ chunk_t *set_paren_parent(chunk_t *start, c_token_t parent)
 }
 
 
+/**
+ * Mark the parens and colons in:
+ *   asm volatile ( "xx" : "xx" (l), "yy"(h) : ...  );
+ *
+ * @param pc the CT_ASM item
+ */
+static void flag_asm(chunk_t *pc)
+{
+   LOG_FUNC_ENTRY();
+   chunk_t *po;
+   chunk_t *tmp;
+   chunk_t *end;
+
+   tmp = chunk_get_next_ncnl(pc, CNAV_PREPROC);
+   if (!chunk_is_token(tmp, CT_QUALIFIER))
+   {
+      return;
+   }
+   po = chunk_get_next_ncnl(tmp, CNAV_PREPROC);
+   if (!chunk_is_paren_open(po))
+   {
+      return;
+   }
+   end = chunk_skip_to_match(po, CNAV_PREPROC);
+   if (!end)
+   {
+      return;
+   }
+   set_chunk_parent(po, CT_ASM);
+   set_chunk_parent(end, CT_ASM);
+   for (tmp = chunk_get_next_ncnl(po, CNAV_PREPROC);
+        tmp != end;
+        tmp = chunk_get_next_ncnl(tmp, CNAV_PREPROC))
+   {
+      if (tmp->type == CT_COLON)
+      {
+         set_chunk_type(tmp, CT_ASM_COLON);
+      }
+   }
+   tmp = chunk_get_next_ncnl(end, CNAV_PREPROC);
+   if (chunk_is_token(tmp, CT_SEMICOLON))
+   {
+      set_chunk_parent(tmp, CT_ASM);
+   }
+}
+
+
 /* Scan backwards to see if we might be on a type declaration */
 static bool chunk_ends_type(chunk_t *start)
 {
@@ -398,6 +445,10 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       flag_parens(prev, 0, CT_NONE, CT_GETSET, false);
    }
 
+   if (pc->type == CT_ASM)
+   {
+      flag_asm(pc);
+   }
 
    /* Objective C stuff */
    if (cpd.lang_flags & LANG_OC)
