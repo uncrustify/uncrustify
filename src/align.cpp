@@ -3,6 +3,8 @@
  * Does all the aligning stuff.
  *
  * @author  Ben Gardner
+ * @author  Guy Maurel since version 0.62 for uncrustify4Qt
+ *          October 2015, 2016
  * @license GPL v2+
  */
 #include "uncrustify_types.h"
@@ -896,12 +898,17 @@ static void align_same_func_call_params()
       prev      = chunk_get_next(prev);
       align_fcn = prev;
       align_fcn_name.clear();
+      LOG_FMT(LASFCP, "(%d) align_fnc_name [%s]\n", __LINE__, align_fcn_name.c_str());
       while (prev != pc)
       {
+         LOG_FMT(LASFCP, "(%d) align_fnc_name [%s]\n", __LINE__, align_fcn_name.c_str());
          align_fcn_name += prev->str;
+         LOG_FMT(LASFCP, "(%d) align_fnc_name [%s]\n", __LINE__, align_fcn_name.c_str());
          prev            = chunk_get_next(prev);
       }
+      LOG_FMT(LASFCP, "(%d) align_fnc_name [%s]\n", __LINE__, align_fcn_name.c_str());
       align_fcn_name += pc->str;
+      LOG_FMT(LASFCP, "(%d) align_fnc_name [%s]\n", __LINE__, align_fcn_name.c_str());
       LOG_FMT(LASFCP, "Func Call @ %d:%d [%s]\n",
               align_fcn->orig_line,
               align_fcn->orig_col,
