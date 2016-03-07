@@ -179,11 +179,11 @@ def process_test_file(filename):
 #
 # entry point
 #
-
-if __name__ == '__main__':
+def main(argv):
+	global log_level
 	args = []
 	the_tests = []
-	for arg in sys.argv[1:]:
+	for arg in argv:
 		if arg.startswith('-'):
 			for cc in arg[1:]:
 				if cc == 'd':       # show diff on failure
@@ -228,3 +228,5 @@ if __name__ == '__main__':
 		print txt
 		sys.exit(0)
 
+if __name__ == '__main__':
+	sys.exit(main(sys.argv[1:]))
