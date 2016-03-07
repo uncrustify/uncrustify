@@ -1397,6 +1397,7 @@ void indent_text(void)
                   sub = 2;
                }
                frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - sub].indent + indent_size;
+               frm.pse[frm.pse_tos].indent_tab = frm.pse[frm.pse_tos].indent;
                skipped = true;
             }
             else
@@ -1794,6 +1795,7 @@ void indent_text(void)
                   if (cpd.settings[UO_indent_paren_close].n != 2)
                   {
                      indent_column_set(frm.pse[frm.pse_tos + 1].indent_tmp);
+                     pc->column_indent = frm.pse[frm.pse_tos + 1].indent_tab;
                      if (cpd.settings[UO_indent_paren_close].n == 1)
                      {
                         indent_column--;

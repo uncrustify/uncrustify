@@ -12,7 +12,7 @@ void g()
 void f()
 {
 	cout << something(
-	        arg);
+		arg);
 	cout
 	        << "something";
 	cout <<
@@ -23,10 +23,10 @@ void f()
 
 	RLOGD(m_log) <<
 	        base::sprintfT(
-	        "something %u ",
-	        m_pendingAccepts);
+		"something %u ",
+		m_pendingAccepts);
 
 	RLOGDD(m_log) << sprintfT(
-	        "something id=%u",
-	        newSocket->GetId());
+		"something id=%u",
+		newSocket->GetId());
 }
