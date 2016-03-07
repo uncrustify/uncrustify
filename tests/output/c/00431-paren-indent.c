@@ -5,18 +5,18 @@ static void *foo( int param1
 
 static void *foo
 (
-        int param1
+	int param1
 , char *param2
 )
 {
 	for (
-	        int i = 0;
-	        i< 10;
-	        i++
+		int i = 0;
+		i< 10;
+		i++
 	    )
 	{
 		bar(
-		        arg1
+			arg1
 		   , arg2
 		   );
 		if ( ( abc < bcd )
