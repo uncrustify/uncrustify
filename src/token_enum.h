@@ -119,6 +119,7 @@ typedef enum
    CT_SEMICOLON,
    CT_VSEMICOLON,          /* virtual semicolon for PAWN */
    CT_COLON,
+   CT_ASM_COLON,
    CT_CASE_COLON,
    CT_CLASS_COLON,         /* colon after a class def */
    CT_CONSTR_COLON,        /* colon after a constructor */

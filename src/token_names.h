@@ -97,6 +97,7 @@ const char *token_names[] =
    "SEMICOLON",
    "VSEMICOLON",
    "COLON",
+   "ASM_COLON",
    "CASE_COLON",
    "CLASS_COLON",
    "CONSTR_COLON",

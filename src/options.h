@@ -473,7 +473,7 @@ enum uncrustify_options
    UO_align_typedef_amp_style,     // align_typedef_star_style for ref '&' stuff
    //UO_align_struct_array_brace,  // TODO: align array of structure initializers
    UO_align_left_shift,
-//    UO_align_oc_msg_colon,
+   UO_align_asm_colon,
    UO_align_oc_msg_colon_span,
    UO_align_oc_msg_colon_first,
    UO_align_oc_decl_colon,
