@@ -1491,6 +1491,7 @@ void indent_text(void)
                if (pc->type == CT_ASSIGN)
                {
                   frm.pse[frm.pse_tos].type = CT_ASSIGN_NL;
+                  frm.pse[frm.pse_tos].indent_tab = frm.pse[frm.pse_tos].indent;
                }
             }
             else
