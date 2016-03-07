@@ -202,6 +202,15 @@ def main(argv):
 	else:
 		the_tests += args
 
+	# do a sanity check on the executable
+	cmd = "%s/uncrustify > %s" % (os.path.abspath('../src'), "usage.txt")
+	if log_level & 2:
+		print "RUN: " + cmd
+	a = os.system(cmd)
+	if a != 0:
+		print FAIL_COLOR + "FAILED: " + NORMAL + "Sanity check"
+		return -1
+
 	#print args
 	print "Tests: " + str(the_tests)
 	pass_count = 0
