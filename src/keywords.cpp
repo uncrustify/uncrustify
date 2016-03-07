@@ -301,12 +301,11 @@ void keywords_are_sorted(void)
    {
       if (kw_compare(&keywords[idx - 1], &keywords[idx]) > 0)
       {
-         LOG_FMT(LERR, "%s: bad sort order at idx %d, words '%s' and '%s'\n",
+         fprintf(stderr, "%s: bad sort order at idx %d, words '%s' and '%s'\n",
                  __func__, idx - 1, keywords[idx - 1].tag, keywords[idx].tag);
          exit(EXIT_FAILURE);
       }
    }
-   return;
 }
 
 
