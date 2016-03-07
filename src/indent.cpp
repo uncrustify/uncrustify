@@ -1426,8 +1426,17 @@ void indent_text(void)
                 ((pc->type == CT_FPAREN_OPEN) || (pc->type == CT_SPAREN_OPEN)))
             {
                //frm.pse[frm.pse_tos].indent += abs(cpd.settings[UO_indent_continue].n);
-               frm.pse[frm.pse_tos].indent      = calc_indent_continue(frm, frm.pse_tos);
-               frm.pse[frm.pse_tos].indent_cont = true;
+            //   frm.pse[frm.pse_tos].indent      = calc_indent_continue(frm, frm.pse_tos);
+            //   frm.pse[frm.pse_tos].indent_cont = true;
+               if ((cpd.settings[UO_use_indent_continue_only_once].b) &&
+                   (frm.pse[frm.pse_tos].indent_cont) &&
+                   (vardefcol != 0)) {
+                  // if vardefcol isn't zero, use it
+                  frm.pse[frm.pse_tos].indent = vardefcol;
+               } else {
+                  frm.pse[frm.pse_tos].indent      = calc_indent_continue(frm, frm.pse_tos);
+                  frm.pse[frm.pse_tos].indent_cont = true;
+               }
             }
          }
          frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
@@ -1463,8 +1472,17 @@ void indent_text(void)
                     ((pc->parent_type != CT_FUNC_PROTO) && (pc->parent_type != CT_FUNC_DEF))))
                {
                   //frm.pse[frm.pse_tos].indent += abs(cpd.settings[UO_indent_continue].n);
-                  frm.pse[frm.pse_tos].indent      = calc_indent_continue(frm, frm.pse_tos);
-                  frm.pse[frm.pse_tos].indent_cont = true;
+               //   frm.pse[frm.pse_tos].indent      = calc_indent_continue(frm, frm.pse_tos);
+               //   frm.pse[frm.pse_tos].indent_cont = true;
+                  if ((cpd.settings[UO_use_indent_continue_only_once].b) &&
+                      (frm.pse[frm.pse_tos].indent_cont) &&
+                      (vardefcol != 0)) {
+                     // if vardefcol isn't zero, use it
+                     frm.pse[frm.pse_tos].indent = vardefcol;
+                  } else {
+                     frm.pse[frm.pse_tos].indent      = calc_indent_continue(frm, frm.pse_tos);
+                     frm.pse[frm.pse_tos].indent_cont = true;
+                  }
                }
             }
             else if (chunk_is_newline(next) || !cpd.settings[UO_indent_align_assign].b)
@@ -1842,11 +1860,30 @@ void indent_text(void)
          }
          else
          {
+            bool use_ident = true;
+            int ttidx = frm.pse_tos;
+            if (ttidx > 0) {
+               if (strcasecmp(get_token_name(frm.pse[ttidx].pc->parent_type), "FUNC_CALL") == 0) {
+                  LOG_FMT(LINDPC, "FUNC_CALL OK [%d]\n", __LINE__);
+                  if (cpd.settings[UO_use_indent_func_call_param].b) {
+                     LOG_FMT(LINDPC, "use is true [%d]\n", __LINE__);
+                  } else {
+                     LOG_FMT(LINDPC, "use is false [%d]\n", __LINE__);
+                     use_ident = false;
+                  }
+               }
+            }
             if (pc->column != indent_column)
             {
-               LOG_FMT(LINDENT, "%s: %d] indent => %d [%s]\n",
-                       __func__, pc->orig_line, indent_column, pc->str.c_str());
-               reindent_line(pc, indent_column);
+               if (use_ident) {
+                  LOG_FMT(LINDENT, "%s: %d] indent => %d [%s] [%d]\n",
+                          __func__, pc->orig_line, indent_column, pc->str.c_str(), __LINE__);
+                  reindent_line(pc, indent_column);
+               } else {
+                  // do not indent this line
+                  LOG_FMT(LINDENT, "%s: %d] don't indent this line [%d]\n",
+                          __func__, pc->orig_line, __LINE__);
+               }
             }
          }
          did_newline = false;

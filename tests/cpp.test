@@ -232,5 +232,20 @@
 31720 ben.cfg                          cpp/bit-colon.cpp
 31730 ms-style-ref.cfg                 cpp/ms-style-ref.cpp
 
-33020 bug_662.cfg                      cpp/bug_662.cpp
-33027 bug_664.cfg                      cpp/bug_664.cpp
+33000 tab-0-11.cfg                     cpp/tab-0.cpp
+33001 tab-1-11.cfg                     cpp/tab-1.cpp
+33002 comment_tab_f.cfg                cpp/cmt_convert_tab_to_spaces.cpp
+33003 comment_tab_t.cfg                cpp/cmt_convert_tab_to_spaces.cpp
+33004 DoxygenComments_f.cfg            cpp/DoxygenComments.cpp
+33005 DoxygenComments_t.cfg            cpp/DoxygenComments.cpp
+33006 string_replace_tab_chars_f.cfg   cpp/string_replace_tab_chars.cpp
+33007 NewLine-i.cfg                    cpp/NewLine.cpp
+33008 NewLine-r.cfg                    cpp/NewLine.cpp
+33009 NewLine-f.cfg                    cpp/NewLine0.cpp
+#33010 kdepim.cfg                       cpp/Q_EMIT.cpp
+#33011 kdepim.cfg                       cpp/static.h
+#33012 kdepim.cfg                       cpp/Q_SIGNAL_SLOT.cpp
+#33013 kdepim.cfg                       cpp/Q_2.cpp
+#33014 kdepim.cfg                       cpp/DB.cpp
+#33015 kdepim.cfg                       cpp/Q_FOREACH.cpp
+33016 indent_once.cfg                  cpp/indent.cpp

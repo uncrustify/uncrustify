@@ -3,6 +3,8 @@
  * List of the different tokens used in the program.
  *
  * @author  Ben Gardner
+ * @author  Guy Maurel since version 0.62 for uncrustify4Qt
+ *          October 2015
  * @license GPL v2+
  */
 #ifndef TOKEN_ENUM_H_INCLUDED
@@ -100,6 +102,11 @@ typedef enum
    CT_MINUS,               /* - : raw char to be changed */
    CT_AMP,                 /* & : raw char to be changed */
    CT_BYREF,               /* & in function def/proto params */
+
+   // CT_BITWISE_AND,         /* & */   // is a CT_ARITH
+   // CT_BITWISE_OR,          /* | */   // is a CT_ARITH
+   // CT_BITWISE_EXCLUSIVE_OR,/* ^ */   // is a CT_ARITH
+   // CT_BITWISE_NOT,         /* ~ */   // is a CT_ARITH
 
    CT_POUND,               /* # */
    CT_PREPROC,             /* # at the start of a line */

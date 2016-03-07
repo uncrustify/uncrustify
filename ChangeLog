@@ -1,3 +1,10 @@
+Change highlights in uncrustify4Qt-0.6xx ()
+-------------------------------------------------------------------------------
+
+Change highlights in uncrustify4Qt-0.62 (Oct 2015)
+-------------------------------------------------------------------------------
+New options:
+ - use_indent_func_call_param
 
 Change highlights in uncrustify-0.62 (2 Feb 2016)
 -------------------------------------------------------------------------------
