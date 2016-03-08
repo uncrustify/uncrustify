@@ -225,6 +225,27 @@ static void flag_asm(chunk_t *pc)
       {
          set_chunk_type(tmp, CT_ASM_COLON);
       }
+      else if (tmp->type == CT_DC_MEMBER)
+      {
+         /* if there is a string on both sides, then this is two ASM_COLONs */
+         if (chunk_is_token(chunk_get_next_ncnl(tmp, CNAV_PREPROC), CT_STRING) &&
+             chunk_is_token(chunk_get_prev_ncnl(tmp, CNAV_PREPROC), CT_STRING))
+         {
+            chunk_t nc;
+
+            nc = *tmp;
+
+            tmp->str.resize(1);
+            tmp->orig_col_end = tmp->orig_col + 1;
+            set_chunk_type(tmp, CT_ASM_COLON);
+
+            nc.type = tmp->type;
+            nc.str.pop_front();
+            nc.orig_col++;
+            nc.column++;
+            chunk_add_after(&nc, tmp);
+         }
+      }
    }
    tmp = chunk_get_next_ncnl(end, CNAV_PREPROC);
    if (chunk_is_token(tmp, CT_SEMICOLON))
