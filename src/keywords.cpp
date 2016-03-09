@@ -3,6 +3,8 @@
  * Manages the table of keywords.
  *
  * @author  Ben Gardner
+ * @author  Guy Maurel since version 0.62 for uncrustify4Qt
+ *          October 2015
  * @license GPL v2+
  */
 #include "uncrustify_types.h"
@@ -44,9 +46,14 @@ static const chunk_tag_t keywords[] =
    { "@try",             CT_TRY,          LANG_OC | LANG_CPP | LANG_C                                                 },
    { "NS_ENUM",          CT_ENUM,         LANG_OC                                                                     },
    { "NS_OPTIONS",       CT_ENUM,         LANG_OC                                                                     },
+   { "Q_EMIT",           CT_COMMENT_EMBED, LANG_CPP                                                                   }, // guy 2015-10-16
+   { "Q_FOREACH",        CT_FOR,          LANG_CPP                                                                    }, // guy 2015-09-23
+   { "Q_FOREVER",        CT_COMMENT_EMBED, LANG_CPP                                                                   }, // guy 2015-10-18
+   { "Q_OBJECT",         CT_COMMENT_EMBED, LANG_CPP                                                                   }, // guy 2015-10-16
    { "_Bool",            CT_TYPE,         LANG_CPP                                                                    },
    { "_Complex",         CT_TYPE,         LANG_CPP                                                                    },
    { "_Imaginary",       CT_TYPE,         LANG_CPP                                                                    },
+   { "__asm__",          CT_ASM,          LANG_C | LANG_CPP                                                           },
    { "__attribute__",    CT_ATTRIBUTE,    LANG_C | LANG_CPP                                                           },
    { "__block",          CT_QUALIFIER,    LANG_OC                                                                     },
    { "__const__",        CT_QUALIFIER,    LANG_C | LANG_CPP                                                           },
@@ -138,6 +145,7 @@ static const chunk_tag_t keywords[] =
    { "flags",            CT_TYPE,         LANG_VALA                                                                   },
    { "float",            CT_TYPE,         LANG_ALLC                                                                   },
    { "for",              CT_FOR,          LANG_ALL                                                                    }, // PAWN
+   { "for_each",         CT_FOR,          LANG_CPP                                                                    },
    { "foreach",          CT_FOR,          LANG_CS | LANG_D | LANG_VALA                                                },
    { "foreach_reverse",  CT_FOR,          LANG_D                                                                      },
    { "forward",          CT_FORWARD,      LANG_PAWN                                                                   }, // PAWN
@@ -294,12 +302,11 @@ void keywords_are_sorted(void)
    {
       if (kw_compare(&keywords[idx - 1], &keywords[idx]) > 0)
       {
-         LOG_FMT(LERR, "%s: bad sort order at idx %d, words '%s' and '%s'\n",
+         fprintf(stderr, "%s: bad sort order at idx %d, words '%s' and '%s'\n",
                  __func__, idx - 1, keywords[idx - 1].tag, keywords[idx].tag);
          exit(EXIT_FAILURE);
       }
    }
-   return;
 }
 
 

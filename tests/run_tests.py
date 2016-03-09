@@ -5,6 +5,8 @@
 #
 # This could all be done with bash, but I wanted to use python. =)
 # Anyway, this was all done while waiting in the Denver airport.
+# * @author  Guy Maurel since version 0.62 for uncrustify4Qt
+# *          October 2015
 #
 
 import sys
@@ -177,11 +179,11 @@ def process_test_file(filename):
 #
 # entry point
 #
-
-if __name__ == '__main__':
+def main(argv):
+	global log_level
 	args = []
 	the_tests = []
-	for arg in sys.argv[1:]:
+	for arg in argv:
 		if arg.startswith('-'):
 			for cc in arg[1:]:
 				if cc == 'd':       # show diff on failure
@@ -199,6 +201,15 @@ if __name__ == '__main__':
 		the_tests += "c-sharp c cpp d java pawn objective-c vala ecma".split()
 	else:
 		the_tests += args
+
+	# do a sanity check on the executable
+	cmd = "%s/uncrustify > %s" % (os.path.abspath('../src'), "usage.txt")
+	if log_level & 2:
+		print "RUN: " + cmd
+	a = os.system(cmd)
+	if a != 0:
+		print FAIL_COLOR + "FAILED: " + NORMAL + "Sanity check"
+		return -1
 
 	#print args
 	print "Tests: " + str(the_tests)
@@ -226,3 +237,5 @@ if __name__ == '__main__':
 		print txt
 		sys.exit(0)
 
+if __name__ == '__main__':
+	sys.exit(main(sys.argv[1:]))

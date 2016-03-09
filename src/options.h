@@ -3,6 +3,8 @@
  * Enum and settings for all the options.
  *
  * @author  Ben Gardner
+ * @author  Guy Maurel since version 0.62 for uncrustify4Qt
+ *          October 2015, 2016
  * @license GPL v2+
  */
 #ifndef OPTIONS_H_INCLUDED
@@ -80,6 +82,7 @@ enum uncrustify_groups
    UG_codemodify,
    UG_comment,
    UG_preprocessor,
+   UG_Use_Ext,
    UG_group_count
 };
 
@@ -241,7 +244,7 @@ enum uncrustify_options
    UO_sp_before_angle,          // space before '<>', as in '<class T>'
    UO_sp_after_angle,           // space after  '<>', as in '<class T>'
    UO_sp_angle_paren,           // space between '<>' and '(' in "a = new List<byte>();"
-   UO_sp_angle_word,            // space between '<>' and a word in "List<byte> a;"
+   UO_sp_angle_word,            // space between '<>' and a word in 'List<byte> a; or template <typename T> static ...'
    UO_sp_angle_shift,           // '> >' vs '>>'
    UO_sp_permit_cpp11_shift,    // '>>' vs '> >' for C++11 code
 
@@ -266,6 +269,7 @@ enum uncrustify_options
    UO_sp_before_ellipsis,       // space before '...'
 
    UO_sp_arith,                 // space around + - / * etc
+                                // also ">>>" "<<" ">>" "%" "|"
    UO_sp_bool,                  // space around || &&
    UO_sp_pp_concat,             // space around ##
    UO_sp_pp_stringify,          // space after #
@@ -470,7 +474,7 @@ enum uncrustify_options
    UO_align_typedef_amp_style,     // align_typedef_star_style for ref '&' stuff
    //UO_align_struct_array_brace,  // TODO: align array of structure initializers
    UO_align_left_shift,
-//    UO_align_oc_msg_colon,
+   UO_align_asm_colon,
    UO_align_oc_msg_colon_span,
    UO_align_oc_msg_colon_first,
    UO_align_oc_decl_colon,
@@ -715,6 +719,9 @@ enum uncrustify_options
 
    /* Hack, add comments to the ends of namespaces */
    UO_mod_add_long_namespace_closebrace_comment,
+
+   UO_use_indent_func_call_param,     // use/don't use indent_func_call_param Guy 2015-09-24
+   UO_use_indent_continue_only_once,  // use/don't use indent_continue once Guy 2015-11-04
 
    /* This is used to get the enumeration count */
    UO_option_count
