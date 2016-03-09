@@ -3,6 +3,8 @@
  * Parses the options from the config file.
  *
  * @author  Ben Gardner
+ * @author  Guy Maurel since version 0.62 for uncrustify4Qt
+ *          October 2015
  * @license GPL v2+
  */
 #include "uncrustify_types.h"
@@ -208,7 +210,8 @@ void register_options(void)
 
    unc_begin_group(UG_space, "Spacing options");
    unc_add_option("sp_arith", UO_sp_arith, AT_IARF,
-                  "Add or remove space around arithmetic operator '+', '-', '/', '*', etc");
+                  "Add or remove space around arithmetic operator '+', '-', '/', '*', etc\n"
+                  "also '>>>' '<<' '>>' '%' '|'");
    unc_add_option("sp_assign", UO_sp_assign, AT_IARF,
                   "Add or remove space around assignment operator '=', '+=', etc");
    unc_add_option("sp_cpp_lambda_assign", UO_sp_cpp_lambda_assign, AT_IARF,
@@ -293,7 +296,7 @@ void register_options(void)
    unc_add_option("sp_angle_paren", UO_sp_angle_paren, AT_IARF,
                   "Add or remove space between '<>' and '(' as found in 'new List<byte>();'");
    unc_add_option("sp_angle_word", UO_sp_angle_word, AT_IARF,
-                  "Add or remove space between '<>' and a word as in 'List<byte> m;'");
+                  "Add or remove space between '<>' and a word as in 'List<byte> m;' or 'template <typename T> static ...'");
    unc_add_option("sp_angle_shift", UO_sp_angle_shift, AT_IARF,
                   "Add or remove space between '>' and '>' in '>>' (template stuff C++/C# only). Default=Add");
    unc_add_option("sp_permit_cpp11_shift", UO_sp_permit_cpp11_shift, AT_BOOL,
@@ -552,9 +555,9 @@ void register_options(void)
                   "Control the space around the D '..' operator.");
 
    unc_add_option("sp_after_for_colon", UO_sp_after_for_colon, AT_IARF,
-                  "Control the spacing after ':' in 'for (TYPE VAR : EXPR)' (Java)");
+                  "Control the spacing after ':' in 'for (TYPE VAR : EXPR)'");
    unc_add_option("sp_before_for_colon", UO_sp_before_for_colon, AT_IARF,
-                  "Control the spacing before ':' in 'for (TYPE VAR : EXPR)' (Java)");
+                  "Control the spacing before ':' in 'for (TYPE VAR : EXPR)'");
 
    unc_add_option("sp_extern_paren", UO_sp_extern_paren, AT_IARF,
                   "Control the spacing in 'extern (C)' (D)");
@@ -1233,6 +1236,8 @@ void register_options(void)
                   "The span for aligning on '#define' bodies (0=don't align, other=number of lines including comments between blocks)", "", 0, 5000);
    unc_add_option("align_left_shift", UO_align_left_shift, AT_BOOL,
                   "Align lines that start with '<<' with previous '<<'. Default=true");
+   unc_add_option("align_asm_colon", UO_align_asm_colon, AT_BOOL,
+                  "Align text after asm volatile () colons.");
 
    unc_add_option("align_oc_msg_colon_span", UO_align_oc_msg_colon_span, AT_NUM,
                   "Span for aligning parameters in an Obj-C message call on the ':' (0=don't align)", 0, 5000);
@@ -1387,6 +1392,14 @@ void register_options(void)
                   "Whether to indent '#define' at the brace level (true) or from column 1 (false)");
    unc_add_option("pp_pos_bool_disable", UO_pp_pos_bool_disable, AT_BOOL,
                   "Disables the preprocessor source code 'pos_bool' option parsing.");
+
+   unc_begin_group(UG_Use_Ext, "Use or Do not Use options", "G");
+   unc_add_option("use_indent_func_call_param", UO_use_indent_func_call_param, AT_BOOL,
+                  "True:  indent_func_call_param will be used\n"
+                  "False: indent_func_call_param will NOT be used");
+   unc_add_option("use_indent_continue_only_once", UO_use_indent_continue_only_once, AT_BOOL,
+                  "True:  indent_continue will be used only once\n"
+                  "False: indent_continue will be used every time (default)");
 }
 
 
@@ -2067,6 +2080,8 @@ void set_option_defaults(void)
    cpd.settings[UO_sp_word_brace].a        = AV_ADD;
    cpd.settings[UO_sp_word_brace_ns].a     = AV_ADD;
    cpd.settings[UO_indent_oc_msg_prioritize_first_colon].b = true;
+   cpd.settings[UO_use_indent_func_call_param].b = true;
+   cpd.settings[UO_use_indent_continue_only_once].b = false;
 }
 
 

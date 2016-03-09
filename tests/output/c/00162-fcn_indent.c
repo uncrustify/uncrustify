@@ -20,7 +20,7 @@ typedef short (*hello1)(char coolParam,
                         unsigned int anotherone);
 
 typedef const unsigned char * (getfcn_t)(
-   int idx, ulong op);
+	int idx, ulong op);
 
 short (*hello2)(char coolParam,
                 ulong *,
@@ -28,8 +28,8 @@ short (*hello2)(char coolParam,
                 unsigned int anotherone);
 
 const unsigned char * (*getstr) (
-   int idx,
-   ulong op);
+	int idx,
+	ulong op);
 
 short
 hello3 (char coolParam,

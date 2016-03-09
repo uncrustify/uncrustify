@@ -47,11 +47,11 @@ void bar(void)
 			hw_priv->Counter[ port ].time =
 
 #ifdef SOME_DEFINE
-			        hw_priv->Counter[ port - 1 ].time + HZ * 2;
+				hw_priv->Counter[ port - 1 ].time + HZ * 2;
 		}
 
 #else /* ifdef SOME_DEFINE */
-			        hw_priv->Counter[ MAIN_PORT ].time + HZ * 2;
+				hw_priv->Counter[ MAIN_PORT ].time + HZ * 2;
 #endif /* ifdef SOME_DEFINE */
 	}
 }

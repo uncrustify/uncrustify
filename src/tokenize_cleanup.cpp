@@ -781,6 +781,13 @@ void tokenize_cleanup(void)
          set_chunk_type(pc, CT_QUALIFIER);
       }
 
+      // guy 2015-11-05
+      // change CT_DC_MEMBER + CT_FOR into CT_DC_MEMBER + CT_FUNC_CALL
+      if ((pc->type == CT_FOR) &&
+          (pc->prev->type == CT_DC_MEMBER))
+      {
+         set_chunk_type(pc, CT_FUNC_CALL);
+      }
       /* TODO: determine other stuff here */
 
       prev = pc;

@@ -3,6 +3,8 @@
  * Does all the aligning stuff.
  *
  * @author  Ben Gardner
+ * @author  Guy Maurel since version 0.62 for uncrustify4Qt
+ *          October 2015, 2016
  * @license GPL v2+
  */
 #include "uncrustify_types.h"
@@ -29,6 +31,7 @@ static void align_left_shift(void);
 static void align_oc_msg_colons();
 static void align_oc_msg_colon(chunk_t *so);
 static void align_oc_decl_colon(void);
+static void align_asm_colon(void);
 
 
 /*
@@ -312,6 +315,11 @@ void align_all(void)
    if (cpd.settings[UO_align_oc_decl_colon].b)
    {
       align_oc_decl_colon();
+   }
+
+   if (cpd.settings[UO_align_asm_colon].b)
+   {
+      align_asm_colon();
    }
 
    /* Align variable defs in function prototypes */
@@ -896,12 +904,17 @@ static void align_same_func_call_params()
       prev      = chunk_get_next(prev);
       align_fcn = prev;
       align_fcn_name.clear();
+      LOG_FMT(LASFCP, "(%d) align_fnc_name [%s]\n", __LINE__, align_fcn_name.c_str());
       while (prev != pc)
       {
+         LOG_FMT(LASFCP, "(%d) align_fnc_name [%s]\n", __LINE__, align_fcn_name.c_str());
          align_fcn_name += prev->str;
+         LOG_FMT(LASFCP, "(%d) align_fnc_name [%s]\n", __LINE__, align_fcn_name.c_str());
          prev            = chunk_get_next(prev);
       }
+      LOG_FMT(LASFCP, "(%d) align_fnc_name [%s]\n", __LINE__, align_fcn_name.c_str());
       align_fcn_name += pc->str;
+      LOG_FMT(LASFCP, "(%d) align_fnc_name [%s]\n", __LINE__, align_fcn_name.c_str());
       LOG_FMT(LASFCP, "Func Call @ %d:%d [%s]\n",
               align_fcn->orig_line,
               align_fcn->orig_col,
@@ -2174,6 +2187,62 @@ static void align_oc_decl_colon(void)
          pc = chunk_get_next(pc, CNAV_PREPROC);
       }
       nas.End();
+      cas.End();
+   }
+}
+
+
+/**
+ * Aligns asm declarations on the colon
+ * asm volatile (
+ *    "xxx"
+ *    : "x"(h),
+ *      "y"(l),
+ *    : "z"(h)
+ *    );
+ */
+static void align_asm_colon(void)
+{
+   LOG_FUNC_ENTRY();
+   chunk_t    *pc = chunk_get_head();
+   AlignStack cas;   /* for the colons */
+   int        level;
+   bool       did_nl;
+
+   cas.Start(4);
+
+   while (pc != NULL)
+   {
+      if (pc->type != CT_ASM_COLON)
+      {
+         pc = chunk_get_next(pc);
+         continue;
+      }
+
+      cas.Reset();
+
+      pc = chunk_get_next_ncnl(pc, CNAV_PREPROC);
+      level = pc->level;
+      did_nl = true;
+      while (pc->level >= level)
+      {
+         if (chunk_is_newline(pc))
+         {
+            cas.NewLines(pc->nl_count);
+            did_nl = true;
+         }
+         else if (pc->type == CT_ASM_COLON)
+         {
+            cas.Flush();
+            did_nl = true;
+         }
+         else if (did_nl)
+         {
+            did_nl = false;
+            cas.Add(pc);
+         }
+         pc = chunk_get_next_nc(pc, CNAV_PREPROC);
+      }
       cas.End();
    }
 }
