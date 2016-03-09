@@ -38,9 +38,9 @@
 #include <vector>
 #include <deque>
 
+
 /* Global data */
 struct cp_data cpd;
-
 
 static int language_flags_from_name(const char *tag);
 static int language_flags_from_filename(const char *filename);
@@ -181,12 +181,18 @@ static void usage_exit(const char *msg, const char *argv0, int code)
            "                            Detection is fairly limited.\n"
            "\n"
            "Debug Options:\n"
-           " -p FILE      : dump debug info to a file\n"
-           " -L SEV       : Set the log severity (see log_levels.h)\n"
-           " -s           : Show the log severity in the logs\n"
-           " --decode     : decode remaining args (chunk flags) and exit\n"
+           " -p FILE           : dump debug info to a file\n"
+           " -s                : Show the log severity in the logs\n"
+           " --decode          : decode remaining args (chunk flags) and exit\n"
            "\n"
-           "Usage Examples\n"
+           "As this project use auto-tools, to enable DEBUG mode you can use something like this:\n"
+		   "                    ./configure CXXFLAGS=\"-ggdb3 -O0 -DDEBUG\" CXX=\"ccache g++\"\n"
+           "\n"
+           "Debug Log Levels available when DEBUG mode is enabled. Use 'a' for all levels. \n"
+           "See the log severities availiable on './src/log_levels.h'. Example: -L0-3,45,56-58\n"
+           "                    -L SEV1, SEV2, ..., SEV_START_RANGE-SEV_END_RANGE, ...\n"
+           "\n"
+           "Pragram Usage Examples\n"
            "cat foo.d | uncrustify -q -c my.cfg -l d\n"
            "uncrustify -c my.cfg -f foo.d\n"
            "uncrustify -c my.cfg -f foo.d -L0-2,20-23,51\n"
@@ -349,7 +355,7 @@ int main(int argc, char *argv[])
       LOG_FMT(LNOTE, "Will export parsed data to: %s\n", parsed_file);
    }
 
-   /* Enable log sevs? */
+   /* Enable log sevs? Show the log severity in the logs */
    if (arg.Present("-s") || arg.Present("--show"))
    {
       log_show_sev(true);
@@ -1013,7 +1019,8 @@ const char *fix_filename(const char *filename)
 
 
 /**
- * Does a source file.
+ * Call uncrustify_file() to do the file parsing applying the source code format options to
+ * the source code file.
  *
  * @param filename_in  the file to read
  * @param filename_out NULL (stdout) or the file to write
@@ -1357,6 +1364,11 @@ static void add_msg_header(c_token_t type, file_mem& fm)
 }
 
 
+/**
+ * Prepare all data to be processed later on.
+ * 
+ * @param data     the data to be parsed by this program.
+ */
 static void uncrustify_start(const deque<int>& data)
 {
    /**
@@ -1420,7 +1432,9 @@ static void uncrustify_start(const deque<int>& data)
    combine_labels();
 }
 
-
+/**
+ * Realises the file parsing applying the source code format options.
+ */
 static void uncrustify_file(const file_mem& fm, FILE *pfout,
                             const char *parsed_file)
 {
@@ -1546,7 +1560,8 @@ static void uncrustify_file(const file_mem& fm, FILE *pfout,
             newline_after_label_colon();
          }
          newlines_insert_blank_lines();
-         if (cpd.settings[UO_pos_bool].tp != TP_IGNORE)
+         if ((cpd.settings[UO_pos_bool].tp != TP_IGNORE) &&
+             !cpd.settings[UO_pp_pos_bool_disable].b)
          {
             newlines_chunk_pos(CT_BOOL, cpd.settings[UO_pos_bool].tp);
          }

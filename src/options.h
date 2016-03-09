@@ -122,6 +122,8 @@ enum uncrustify_options
    UO_indent_comma_paren,        // indent of comma if inside a paren
    UO_indent_bool_paren,         // indent of bool if inside a paren
    UO_indent_first_bool_expr,    // if UO_indent_bool_paren == true, aligns the first expression to the following ones
+   UO_pp_mod_full_brace_disable,
+   UO_pp_indent_parsing_disable,
    UO_pp_indent,                 // indent preproc 1 space per level (add/ignore/remove)
    UO_pp_indent_at_level,        // indent #if, #else, #endif at brace level
    UO_pp_indent_count,
@@ -132,6 +134,7 @@ enum uncrustify_options
    UO_pp_region_indent_code,     // whether to indent the code inside region stuff
    UO_pp_indent_if,
    UO_pp_if_indent_code,
+   UO_pp_pos_bool_disable,
 
    UO_indent_switch_case,         // spaces to indent case from switch
    UO_indent_case_shift,          // spaces to shift the line with the 'case'

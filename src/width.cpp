@@ -313,7 +313,8 @@ static void split_line(chunk_t *start)
          chunk_is_token(ent.pc, CT_QUESTION)) &&
         (cpd.settings[UO_pos_conditional].tp & TP_LEAD)) ||
        (chunk_is_token(ent.pc, CT_BOOL) &&
-        (cpd.settings[UO_pos_bool].tp & TP_LEAD)))
+        ((cpd.settings[UO_pos_bool].tp & TP_LEAD) &&
+          !cpd.settings[UO_pp_pos_bool_disable].b)))
    {
       pc = ent.pc;
    }

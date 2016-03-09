@@ -106,6 +106,7 @@ enum log_sev_t
    LJDBI     = 90, /* Java Double Brace Init */
    LSETPAR   = 91, /* set_chunk_parent() */
    LSETTYP   = 92, /* set_chunk_type() */
+   LTOKSEE   = 93, /* Shows all tokens processed on 'convert_vbrace_to_brace' and 'tokenize.cpp' */
    LGUY      = 99, /* for guy-test */
 };
 

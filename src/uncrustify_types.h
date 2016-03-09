@@ -363,6 +363,10 @@ struct cp_data
    deque<UINT8>       *bout;
    FILE               *fout;
    int                last_char;
+   
+   /**
+    * Do not output the new text, instead verify that nothing changes when the file(s) are processed.
+    */
    bool               do_check;
    int                check_fail_cnt; // total failures
 

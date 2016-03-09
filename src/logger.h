@@ -171,6 +171,7 @@ static_inline char to_hex_char(int nibble)
 #define LOG_FUNC_CALL()
 #endif
 
+
 /**
  * This class just adds a entry to the top of the stack on construction and
  * removes it on destruction.
