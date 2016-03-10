@@ -250,4 +250,5 @@
 33015 kdepim.cfg                       cpp/Q_FOREACH.cpp
 33016 indent_once.cfg                  cpp/indent.cpp
 33017 stdcall.cfg                      cpp/stdcall.cpp
+33018 byref-2.cfg                      cpp/byref-2.cpp
 33030 kdepim.cfg                       cpp/Q_FOREVER.cpp

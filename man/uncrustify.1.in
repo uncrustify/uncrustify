@@ -153,6 +153,8 @@ Use the issue tracker at <http://sourceforge.net/projects/uncrustify>
 
 .SH COPYRIGHT
 Copyright (C) 2006\(hy2014 Ben Gardner
+.br
+Copyright (C) 2015, 2016 Guy Maurel
 
 .SH LICENSE
 GNU GPL version 2 or later <http://gnu.org/licenses/gpl.html>

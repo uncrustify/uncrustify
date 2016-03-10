@@ -2,6 +2,8 @@ Change highlights in uncrustify4Qt-0.6xx ()
 -------------------------------------------------------------------------------
 New
  - introduce CT_STDCALL to work with typedef void (__stdcall *func)(); Bug # 633
+ - introduce some more MS calling conventions: __cdecl, __clrcall, __fastcall, __thiscall, __vectorcall
+     https://msdn.microsoft.com/en-us/library/984x0h58.aspx
 
 Reverse
  - space: drop vbrace tokens... 2014-09-01 06:33:17
@@ -19,6 +21,10 @@ Some more Qt-macros
 New options:
  - use_indent_continue_only_once
 
+Bugfix:
+ - fix 3 calls of unc_add_option for "align_oc_msg_colon_span",
+     "indent_oc_block_msg", "indent_oc_msg_colon"
+
 Change highlights in uncrustify4Qt-0.62 (Oct 2015)
 -------------------------------------------------------------------------------
 This is an extention of uncrustify to support Qt-macros
@@ -33,6 +39,7 @@ Change highlights in uncrustify4Qt-0.62 (Oct 2015)
 -------------------------------------------------------------------------------
 New options:
  - use_indent_func_call_param
+
 
 Change highlights in uncrustify-0.62 (2 Feb 2016)
 -------------------------------------------------------------------------------
