@@ -1,0 +1,90 @@
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+   <title>Uncrustify: where do the Positioning options work</title>
+</head>
+<body lang="en-US">
+<h1><a href="https://github.com/gmaurel/uncrustify4Qt">Uncrustify4Qt</a>:
+Where do the options work?</h1>
+<h2>Positioning</h2>
+<p> 
+</p>
+<table border="1">
+<tr>
+<td>
+<pre>
+void Mode( TDistMode dm )
+{<a name="pos_arith"></a>
+    a = b
+	+ c;
+	<a title="pos_arith"><strong><font color="red">^</font></strong></a><a name="pos_assign"></a>
+    ms_DistMode
+        = dm;
+	<a title="pos_assign"><strong><font color="red">^</font></strong></a>
+    if ((count > 0)<a name="pos_bool"></a>
+        && (count < MAX_COUNT)) { ... }
+        <a title="pos_bool"><strong><font color="red">^</font></strong></a>
+    b = ( GetDistanceMode()<a name="pos_compare"></a>
+	== dmKM ) ? "km" : "Miles";
+	<a title="pos_compare"><strong><font color="red">^</font></strong></a>
+    b = ( GetDistanceMode() == dmKM ) <a name="pos_conditional"></a>
+        ? "km"
+        : "Miles";
+        <a title="pos_conditional"><strong><font color="red">^</font></strong></a>
+}
+{<a name="pos_comma"></a>
+	a = B(1
+	      , 2
+	      , 3);
+	      <a title="pos_comma"><strong><font color="red">^</font></strong></a>
+}
+<a name="pos_class_colon"></a><a name="nl_class_colon"></a><a name="pos_class_comma"></a>
+class GLOX_API ClientBase
+        : public Class
+        <a title="nl_class_colon"><strong><font color="red">^</a><a title="pos_class_colon">^</font></strong></a><a name="nl_class_init_args<strong>"</a>
+        , public OtherClass   // if many lines are wanted
+        <a title="nl_class_init_args"><strong><font color="red">^</font></strong></a>
+        , public ThridClass
+        , public ForthClass
+        <a title="pos_class_comma"><strong><font color="red">^</font></strong></a>
+{ }
+<a name="pos_constr_colon"></a><a name="pos_constr_comma"></a>
+class foo : public
+{
+    void bar_c(int t, int u)
+        : t(222)
+<a title="pos_constr_colon"><strong><font color="red">        ^</font></strong></font></strong></a>
+        , u(88)
+<a title="pos_constr_comma"><strong><font color="red">        ^</font></strong></a>
+    {}
+}
+</pre>
+</td>
+</tr>
+</table>
+<p></p>
+<h1>Register</h1>
+<table>
+  <tr>
+    <td><a href="#pos_arith">pos_arith</a></td>
+    <td><a href="#pos_assign">pos_assign</a></td>
+  </tr>
+  <tr>
+    <td><a href="#pos_bool">pos_bool</a></td>
+    <td><a href="#pos_class_colon">pos_class_colon</a></td>
+  </tr>
+  <tr>
+    <td><a href="#pos_class_comma">pos_class_comma</a></td>
+    <td><a href="#pos_comma">pos_comma</a></td>
+  </tr>
+  <tr>
+    <td><a href="#pos_compare">pos_compare</a></td>
+    <td><a href="#pos_conditional">pos_conditional</a></td>
+  </tr>
+  <tr>
+    <td><a href="#pos_constr_colon">pos_constr_colon</a></td>
+    <td><a href="#pos_constr_comma">pos_constr_comma</a></td>
+  </tr>
+</table>
+</body>
+</html>

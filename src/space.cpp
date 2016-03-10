@@ -538,7 +538,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
       return(AV_REMOVE);
    }
 
-   /* "((" vs "( (" */
+   /* "((" vs "( (" or "))" vs ") )" */
    if ((chunk_is_str(first, "(", 1) && chunk_is_str(second, "(", 1)) ||
        (chunk_is_str(first, ")", 1) && chunk_is_str(second, ")", 1)))
    {
@@ -1691,15 +1691,17 @@ void space_text(void)
    column = pc->column;
    while (pc != NULL)
    {
-      next = chunk_get_next(pc);
-      while (chunk_is_blank(next) && !chunk_is_newline(next))
-      {
-         LOG_FMT(LSPACE, "%s: %d:%d Skip %s (%d+%d)\n", __func__,
-                 next->orig_line, next->orig_col, get_token_name(next->type),
-                 pc->column, pc->str.size());
-         next->column = pc->column + pc->str.size();
-         next         = chunk_get_next(next);
-      }
+      // Bug # 637
+      //next = chunk_get_next(pc);
+      //while (chunk_is_blank(next) && !chunk_is_newline(next))
+      //{
+      //   LOG_FMT(LSPACE, "%s: %d:%d Skip %s (%d+%d)\n", __func__,
+      //           next->orig_line, next->orig_col, get_token_name(next->type),
+      //           pc->column, pc->str.size());
+      //   next->column = pc->column + pc->str.size();
+      //   next         = chunk_get_next(next);
+      //}
+      next = pc->next;
       if (!next)
       {
          break;

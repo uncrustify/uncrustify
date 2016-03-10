@@ -322,6 +322,21 @@ typedef enum
    CT_ANNOTATION,   /* @interface or @something(...) */
    CT_FOR_COLON,    /* colon in "for ( TYPE var: EXPR ) { ... }" */
    CT_DOUBLE_BRACE, /* parent for double brace */
+
+   /* MS calling convention */
+   CT_CDECL,        /* guy 2016-01-31 */
+   CT_CLRCALL,      /* guy 2016-01-31 */
+   CT_FASTCALL,     /* guy 2016-01-31 */
+   CT_STDCALL,      /* __stdcall Bug # 633 guy 2015-11-19 */
+   CT_THISCALL,     /* guy 2016-01-31 */
+   CT_VECTORCALL,   /* guy 2016-01-31 */
+
+   /* extentions for Qt macros */
+   CT_Q_EMIT,       // guy 2015-10-16
+   CT_Q_FOREACH,    // guy 2015-09-23
+   CT_Q_FOREVER,    // guy 2015-10-18
+   CT_Q_OBJECT,     // guy 2015-10-16
+
 } c_token_t;
 
 #endif /* TOKEN_ENUM_H_INCLUDED */

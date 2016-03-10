@@ -1,5 +1,8 @@
 Change highlights in uncrustify4Qt-0.6xx ()
 -------------------------------------------------------------------------------
+New
+ - introduce CT_STDCALL to work with typedef void (__stdcall *func)(); Bug # 633
+
 Reverse
  - space: drop vbrace tokens... 2014-09-01 06:33:17
    I cannot anderstand this change.
