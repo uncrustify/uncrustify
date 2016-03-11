@@ -10,6 +10,7 @@
 #include "uncrustify_types.h"
 #include "chunk_list.h"
 #include "prototypes.h"
+#include "options_for_QT.h"
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -241,6 +242,21 @@ void reindent_line(chunk_t *pc, int column)
    pc->column = column;
    do
    {
+      if (QT_SIGNAL_SLOT_found) {
+         // fix the bug #654
+         // connect(&mapper, SIGNAL(mapped(QString &)), this, SLOT(onSomeEvent(QString &)));
+         // look for end of SIGNAL/SLOT block
+         if (!(pc->flags & PCF_IN_QT_MACRO)) {
+            LOG_FMT(LGUY, "FLAGS is NOT set: PCF_IN_QT_MACRO\n");
+            restore_options_for_QT();
+         }
+      } else {
+         // look for begin of SIGNAL/SLOT block
+         if (pc->flags & PCF_IN_QT_MACRO) {
+            LOG_FMT(LGUY, "FLAGS is set: PCF_IN_QT_MACRO\n");
+            save_set_options_for_QT(pc->level);
+         }
+      }
       chunk_t *next = chunk_get_next(pc);
 
       if (next == NULL)
@@ -506,6 +522,11 @@ void indent_text(void)
    pc = chunk_get_head();
    while (pc != NULL)
    {
+      if ((strcmp(pc->text(), "SIGNAL") == 0) ||
+          (strcmp(pc->text(), "SLOT") == 0)) { // guy 2015-09-22
+         LOG_FMT(LGUY, "%d: [%d] type %s SIGNAL/SLOT found\n",
+                 pc->orig_line, __LINE__, get_token_name(pc->type));
+      }
       /* Handle preprocessor transitions */
       in_preproc = (pc->flags & PCF_IN_PREPROC) != 0;
 
@@ -2036,7 +2057,7 @@ static bool single_line_comment_indent_rule_applies(chunk_t *start)
          if (!chunk_is_single_line_comment(pc))
          {
             /* here we check for things to run into that we wouldn't want to
-             * indent the comment for.  for example, non-single line comment,
+             * indent the comment for. for example, non-single line comment,
              * closing brace */
             if (chunk_is_comment(pc) || chunk_is_closing_brace(pc))
             {

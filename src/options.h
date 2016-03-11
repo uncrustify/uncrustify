@@ -31,6 +31,7 @@ enum argval_t
    AV_ADD    = 1,
    AV_REMOVE = 2,
    AV_FORCE  = 3, /**< remove + add */
+   AV_NOT_DEFINED = 4 /* to be used with QT, SIGNAL SLOT macros */
 };
 
 /** Line endings */

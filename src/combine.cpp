@@ -1086,6 +1086,13 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       {
          set_chunk_type(pc, CT_BYREF);
       }
+      else if ((next->type == CT_FPAREN_CLOSE) ||
+               (next->type == CT_COMMA))
+      {
+         // fix the bug #654
+         // connect(&mapper, SIGNAL(mapped(QString &)), this, SLOT(onSomeEvent(QString &)));
+         set_chunk_type(pc, CT_BYREF);
+      }
       else
       {
          set_chunk_type(pc, CT_ARITH);

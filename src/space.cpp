@@ -11,6 +11,7 @@
 #include "chunk_list.h"
 #include "prototypes.h"
 #include "char_table.h"
+#include "options_for_QT.h"
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -542,6 +543,14 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
    if ((chunk_is_str(first, "(", 1) && chunk_is_str(second, "(", 1)) ||
        (chunk_is_str(first, ")", 1) && chunk_is_str(second, ")", 1)))
    {
+      // test if we are within a SIGNAL/SLOT call
+      if (QT_SIGNAL_SLOT_found) {
+        if ((first->type == CT_FPAREN_CLOSE) && (second->type == CT_FPAREN_CLOSE)) {
+          if (second->level == (QT_SIGNAL_SLOT_level)) {
+             restoreValues = true;
+          }
+        }
+      }
       log_rule("sp_paren_paren");
       return(cpd.settings[UO_sp_paren_paren].a);
    }
@@ -1117,6 +1126,14 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
          log_rule("sp_inside_fparens");
          return(cpd.settings[UO_sp_inside_fparens].a);
       }
+      // test if we are within a SIGNAL/SLOT call
+      if (QT_SIGNAL_SLOT_found) {
+        if (first->type == CT_FPAREN_CLOSE) {
+          if (second->level == (QT_SIGNAL_SLOT_level + 1)) {
+             restoreValues = true;
+          }
+        }
+      }
       log_rule("sp_inside_fparen");
       return(cpd.settings[UO_sp_inside_fparen].a);
    }
@@ -1691,6 +1708,18 @@ void space_text(void)
    column = pc->column;
    while (pc != NULL)
    {
+      LOG_FMT(LGUY, "%d:%d [%d] %s\n", pc->orig_line, pc->orig_col, __LINE__, pc->text());
+      if ((strcmp(pc->text(), "SIGNAL") == 0) ||
+          (strcmp(pc->text(), "SLOT") == 0))
+      { // guy 2015-09-22
+         LOG_FMT(LGUY, "%d: [%d] type %s SIGNAL/SLOT found\n",
+                 pc->orig_line, __LINE__, get_token_name(pc->type));
+         // flag the chunk for a second processing
+         pc->flags |= PCF_IN_QT_MACRO;
+
+         // save the values
+         save_set_options_for_QT(pc->level);
+      } // guy
       // Bug # 637
       //next = chunk_get_next(pc);
       //while (chunk_is_blank(next) && !chunk_is_newline(next))
@@ -1702,7 +1731,7 @@ void space_text(void)
       //   next         = chunk_get_next(next);
       //}
       next = pc->next;
-      if (!next)
+      if (next == NULL)
       {
          break;
       }
@@ -1879,9 +1908,16 @@ void space_text(void)
                  (av == AV_ADD) ? "ADD" :
                  (av == AV_REMOVE) ? "REMOVE" : "FORCE",
                  column - prev_column, next->column);
+         if (restoreValues) {  // guy 2015-09-22
+            restore_options_for_QT();
+         }
       }
 
       pc = next;
+      if (QT_SIGNAL_SLOT_found) {
+         // flag the chunk for a second processing
+         pc->flags |= PCF_IN_QT_MACRO;
+      }
    }
 }
 
@@ -2024,6 +2060,9 @@ int space_col_align(chunk_t *first, chunk_t *second)
       {
          coldiff++;
       }
+      break;
+
+   case AV_NOT_DEFINED:
       break;
    }
    LOG_FMT(LSPACE, " => %d\n", coldiff);

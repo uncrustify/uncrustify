@@ -46,10 +46,10 @@ static const chunk_tag_t keywords[] =
    { "@try",             CT_TRY,          LANG_OC | LANG_CPP | LANG_C                                                 },
    { "NS_ENUM",          CT_ENUM,         LANG_OC                                                                     },
    { "NS_OPTIONS",       CT_ENUM,         LANG_OC                                                                     },
-   { "Q_EMIT",           CT_COMMENT_EMBED, LANG_CPP                                                                   }, // guy 2015-10-16
+   { "Q_EMIT",           CT_Q_EMIT,       LANG_CPP                                                                    }, // guy 2015-10-16
    { "Q_FOREACH",        CT_FOR,          LANG_CPP                                                                    }, // guy 2015-09-23
-   { "Q_FOREVER",        CT_COMMENT_EMBED, LANG_CPP                                                                   }, // guy 2015-10-18
-   { "Q_OBJECT",         CT_COMMENT_EMBED, LANG_CPP                                                                   }, // guy 2015-10-16
+   { "Q_FOREVER",        CT_Q_FOREVER,    LANG_CPP                                                                    }, // guy 2015-10-18
+   { "Q_OBJECT",         CT_Q_OBJECT,     LANG_CPP                                                                    }, // guy 2015-10-16
    { "_Bool",            CT_TYPE,         LANG_CPP                                                                    },
    { "_Complex",         CT_TYPE,         LANG_CPP                                                                    },
    { "_Imaginary",       CT_TYPE,         LANG_CPP                                                                    },

@@ -244,8 +244,8 @@
 33009 NewLine-f.cfg                    cpp/NewLine0.cpp
 33010 kdepim.cfg                       cpp/Q_EMIT.cpp
 #33011 kdepim.cfg                       cpp/static.h
-#33012 kdepim.cfg                       cpp/Q_SIGNAL_SLOT.cpp
-#33013 kdepim.cfg                       cpp/Q_2.cpp
+33012 kdepim.cfg                       cpp/Q_SIGNAL_SLOT.cpp
+33013 kdepim.cfg                       cpp/Q_2.cpp
 #33014 kdepim.cfg                       cpp/DB.cpp
 33015 kdepim.cfg                       cpp/Q_FOREACH.cpp
 33016 indent_once.cfg                  cpp/indent.cpp
