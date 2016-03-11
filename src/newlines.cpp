@@ -2868,13 +2868,29 @@ void newlines_chunk_pos(c_token_t chunk_type, tokenpos_e mode)
    {
       if (pc->type == chunk_type)
       {
+         tokenpos_e mode_local;
+         if (chunk_type == CT_COMMA) {
+            // 12 february 2016, guy
+            // for chunk_type == CT_COMMA
+            // we get 'mode' from cpd.settings[UO_pos_comma].tp
+            // BUT we must take care of cpd.settings[UO_pos_class_comma].tp
+            // TODO and cpd.settings[UO_pos_constr_comma].tp
+            if (pc->flags & PCF_IN_CLASS_BASE) {
+               // change mode
+               mode_local = cpd.settings[UO_pos_class_comma].tp;
+            } else {
+               mode_local = mode;
+            }
+         } else {
+            mode_local = mode;
+         }
          prev = chunk_get_prev_nc(pc);
          next = chunk_get_next_nc(pc);
 
          nl_flag = ((chunk_is_newline(prev) ? 1 : 0) |
                     (chunk_is_newline(next) ? 2 : 0));
 
-         if (mode & TP_JOIN)
+         if (mode_local & TP_JOIN)
          {
             if (nl_flag & 1)
             {
@@ -2899,15 +2915,15 @@ void newlines_chunk_pos(c_token_t chunk_type, tokenpos_e mode)
             continue;
          }
 
-         if (((nl_flag == 0) && ((mode & (TP_FORCE | TP_BREAK)) == 0)) ||
-             ((nl_flag == 3) && ((mode & TP_FORCE) == 0)))
+         if (((nl_flag == 0) && ((mode_local & (TP_FORCE | TP_BREAK)) == 0)) ||
+             ((nl_flag == 3) && ((mode_local & TP_FORCE) == 0)))
          {
             /* No newlines and not adding any or both and not forcing */
             continue;
          }
 
-         if (((mode & TP_LEAD) && (nl_flag == 1)) ||
-             ((mode & TP_TRAIL) && (nl_flag == 2)))
+         if (((mode_local & TP_LEAD) && (nl_flag == 1)) ||
+             ((mode_local & TP_TRAIL) && (nl_flag == 2)))
          {
             /* Already a newline before (lead) or after (trail) */
             continue;
@@ -2916,7 +2932,7 @@ void newlines_chunk_pos(c_token_t chunk_type, tokenpos_e mode)
          /* If there were no newlines, we need to add one */
          if (nl_flag == 0)
          {
-            if (mode & TP_LEAD)
+            if (mode_local & TP_LEAD)
             {
                newline_add_before(pc);
             }
@@ -2930,7 +2946,7 @@ void newlines_chunk_pos(c_token_t chunk_type, tokenpos_e mode)
          /* If there were both newlines, we need to remove one */
          if (nl_flag == 3)
          {
-            if (mode & TP_LEAD)
+            if (mode_local & TP_LEAD)
             {
                remove_next_newlines(pc);
             }
@@ -2942,7 +2958,7 @@ void newlines_chunk_pos(c_token_t chunk_type, tokenpos_e mode)
          }
 
          /* we need to move the newline */
-         if (mode & TP_LEAD)
+         if (mode_local & TP_LEAD)
          {
             chunk_t *next2 = chunk_get_next(next);
             if ((next2 != NULL) &&
