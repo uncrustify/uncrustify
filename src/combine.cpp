@@ -338,6 +338,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
    LOG_FUNC_ENTRY();
    chunk_t *tmp;
 
+   LOG_FMT(LGUY, " %3d > %s\n", pc->orig_line, pc->text());
    // LOG_FMT(LSYS, " %3d > ['%s' %s] ['%s' %s] ['%s' %s]\n",
    //         pc->orig_line,
    //         prev->str.c_str(), get_token_name(prev->type),
@@ -1126,6 +1127,70 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       else
       {
          set_chunk_type(pc, CT_ARITH);
+      }
+   }
+
+   /**
+    * Bug # 634
+    * Check for extern "C" NSString* i;
+    * NSString is a type
+    * change CT_WORD => CT_TYPE     for pc
+    * change CT_STAR => CT_PTR_TYPE for pc-next
+    */
+   if (pc->type == CT_WORD)             // here NSString
+   {
+      if (pc->next != NULL)             // here *
+      {
+        if (pc->next->type == CT_STAR)  // here *
+        {
+          if (pc->prev != NULL) {
+             if (pc->prev->type == CT_STRING) {
+                if (unc_text::compare(pc->prev->text(), "\"C\"") == 0) {
+                   if (pc->prev->prev->type == CT_EXTERN) {
+                      // change CT_WORD => CT_TYPE
+                      set_chunk_type(pc, CT_TYPE);
+                      // change CT_STAR => CT_PTR_TYPE
+                      set_chunk_type(pc->next, CT_PTR_TYPE);
+                   }
+                }
+             }
+          }
+        }
+      }
+   }
+
+   /**
+    * Bug # 634
+    * Check for __attribute__((visibility ("default"))) NSString* i;
+    * NSString is a type
+    * change CT_WORD => CT_TYPE     for pc
+    * change CT_STAR => CT_PTR_TYPE for pc-next
+    */
+   if (pc->type == CT_WORD)             // here NSString
+   {
+      if (pc->next != NULL)             // here *
+      {
+        if (pc->next->type == CT_STAR)  // here *
+        {
+          tmp = pc;
+          while ((tmp != NULL) ) {
+             if (tmp->type == CT_ATTRIBUTE)
+             {
+                LOG_FMT(LGUY, "ATTRIBUTE found %s:%s\n",
+                        get_token_name(tmp->type), tmp->text());
+                LOG_FMT(LGUY, "for token %s:%s\n", get_token_name(pc->type), pc->text());
+                // change CT_WORD => CT_TYPE
+                set_chunk_type(pc, CT_TYPE);
+                // change CT_STAR => CT_PTR_TYPE
+                set_chunk_type(pc->next, CT_PTR_TYPE);
+             }
+             if (tmp->flags & PCF_STMT_START) {
+                // we are at beginnig of the line
+                break;
+             }
+             tmp = chunk_get_prev(tmp);
+          }
+        }
       }
    }
 }

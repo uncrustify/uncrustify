@@ -337,6 +337,15 @@ typedef enum
    CT_Q_FOREVER,    // guy 2015-10-18
    CT_Q_OBJECT,     // guy 2015-10-16
 
+   /* Machine Modes */
+   CT_MODE,         // guy 2016-03-11
+   CT_DI,           // guy 2016-03-11
+   CT_HI,           // guy 2016-03-11
+   CT_QI,           // guy 2016-03-11
+   CT_SI,           // guy 2016-03-11
+   CT_NOTHROW,      // guy 2016-03-11
+   CT_WORD_,        // guy 2016-03-11
+
 } c_token_t;
 
 #endif /* TOKEN_ENUM_H_INCLUDED */
