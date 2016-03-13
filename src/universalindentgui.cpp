@@ -1,6 +1,11 @@
 /**
  * @file universalindentgui.cpp
  * Exports the config file for UniversalIndentGUI
+ *
+ * @author  Ben Gardner
+ * @author  Guy Maurel since version 0.62 for uncrustify4Qt
+ *          October 2015, 2016
+ * @license GPL v2+
  */
 #include "prototypes.h"
 #include "uncrustify_version.h"

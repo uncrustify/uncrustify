@@ -1731,7 +1731,7 @@ void space_text(void)
       //   next         = chunk_get_next(next);
       //}
       next = pc->next;
-      if (next == NULL)
+      if (!next)
       {
          break;
       }

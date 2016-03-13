@@ -4,7 +4,7 @@
  *
  * @author  Ben Gardner
  * @author  Guy Maurel since version 0.62 for uncrustify4Qt
- *          October 2015
+ *          October 2015, 2016
  * @license GPL v2+
  */
 #include "uncrustify_types.h"
@@ -311,8 +311,8 @@ static void newline_min_after(chunk_t *ref, INT32 count, UINT64 flag)
       pc = chunk_get_next(pc);
    } while ((pc != NULL) && !chunk_is_newline(pc));
 
-   //LOG_FMT(LNEWLINE, "%s: on %s, line %d, col %d\n",
-   //        __func__, get_token_name(pc->type), pc->orig_line, pc->orig_col);
+   LOG_FMT(LNEWLINE, "%s: on %s, line %d, col %d\n",
+           __func__, get_token_name(pc->type), pc->orig_line, pc->orig_col);
 
    next = chunk_get_next(pc);
    if (chunk_is_comment(next) && (next->nl_count == 1) &&
@@ -1128,8 +1128,12 @@ static chunk_t *newline_def_blk(chunk_t *start, bool fn_top)
             var_blk       = false;
          }
          else if (chunk_is_type(pc) &&
-                  ((chunk_is_type(next) || (next->type == CT_WORD) ||
-                    (next->type == CT_FUNC_CTOR_VAR))))
+                  ((chunk_is_type(next) ||
+                   (next->type == CT_WORD) ||
+                   (next->type == CT_FUNC_CTOR_VAR))) &&
+                   !(next->type == CT_DC_MEMBER))  // DbConfig::configuredDatabase()->apply(db);
+                                                   // is NOT a declaration of a variable
+                                                   // guy 2015-09-22
          {
             /* set newlines before var def block */
             if (!var_blk && !first_var_blk &&
@@ -1656,6 +1660,7 @@ static void newline_func_def(chunk_t *start)
                 (prev->type != CT_VBRACE_CLOSE) &&
                 (prev->type != CT_BRACE_OPEN) &&
                 (prev->type != CT_SEMICOLON) &&
+                (prev->type != CT_PRIVATE_COLON) &&                // guy 2015-06-06
                 (prev->parent_type != CT_TEMPLATE))
             {
                newline_iarf(prev, a);

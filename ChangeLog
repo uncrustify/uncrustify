@@ -1,5 +1,8 @@
-Change highlights in uncrustify4Qt-0.6xx ()
+Change highlights in uncrustify-0.63 (Mar 2016)
 -------------------------------------------------------------------------------
+
+The branch uncrustify4Qt is now merged.
+
 New
  - introduce CT_STDCALL to work with typedef void (__stdcall *func)(); Bug # 633
  - introduce some more MS calling conventions: __cdecl, __clrcall, __fastcall, __thiscall, __vectorcall
@@ -22,8 +25,12 @@ New options:
  - use_indent_continue_only_once
 
 Bugfix:
+ - DbConfig::configuredDatabase()->apply(db); is NOT a declaration of a variable
+ - bug # 657 is fixed: change 'mode' if necessary for 'pos_class_comma'
  - fix 3 calls of unc_add_option for "align_oc_msg_colon_span",
      "indent_oc_block_msg", "indent_oc_msg_colon"
+ - bugs #664, #662, #654, #653, #651 and #633 are fixed
+
 
 Change highlights in uncrustify4Qt-0.62 (Oct 2015)
 -------------------------------------------------------------------------------

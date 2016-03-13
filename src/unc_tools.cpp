@@ -47,10 +47,12 @@ void examine_Data(const char *func_name, int theLine, int what)
       LOG_FMT(LGUY, "2:(%d)\n", theLine);
       for (pc = chunk_get_head(); pc != NULL; pc = pc->next)
       {
-        if (pc->type == CT_NEWLINE) {
-          LOG_FMT(LGUY, "(%d)<NL> col=%d\n\n", pc->orig_line, pc->orig_col);
-        } else {
-          LOG_FMT(LGUY, "(%d)%s %s, col=%d, col_end=%d\n", pc->orig_line, pc->text(), get_token_name(pc->type), pc->orig_col, pc->orig_col_end);
+        if (pc->orig_line == 7) {
+          if (pc->type == CT_NEWLINE) {
+            LOG_FMT(LGUY, "(%d)<NL> col=%d\n\n", pc->orig_line, pc->orig_col);
+          } else {
+            LOG_FMT(LGUY, "(%d)%s %s, col=%d, column=%d\n", pc->orig_line, pc->text(), get_token_name(pc->type), pc->orig_col, pc->column);
+          }
         }
       }
       break;
