@@ -258,6 +258,7 @@
 33023 bug_651.cfg                      cpp/bug_651.cpp
 33024 bug_653.cfg                      cpp/bug_653.cpp
 33025 bug_654.cfg                      cpp/bug_654.cpp
+33026 bug_631.cfg                      cpp/bug_631.cpp
 33027 bug_664.cfg                      cpp/bug_664.cpp
 33028 braces_empty.cfg                 cpp/braces_empty.cpp
 33029 cast.cfg                         cpp/cast.cpp
