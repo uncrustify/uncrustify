@@ -1944,7 +1944,7 @@ void add_long_preprocessor_conditional_block_comment(void)
          pp_end = pp_start = pc;
       }
 
-      if (pc->type != CT_PP_IF)
+      if ((pc->type != CT_PP_IF) || !pp_start)
       {
          continue;
       }
