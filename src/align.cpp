@@ -2222,9 +2222,9 @@ static void align_asm_colon(void)
       cas.Reset();
 
       pc = chunk_get_next_ncnl(pc, CNAV_PREPROC);
-      level = pc->level;
+      level = pc ? pc->level : 0;
       did_nl = true;
-      while (pc->level >= level)
+      while (pc && (pc->level >= level))
       {
          if (chunk_is_newline(pc))
          {
