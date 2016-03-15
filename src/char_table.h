@@ -25,11 +25,15 @@ struct CharTable
       KW2 = 0x0200,
    };
 
-   static inline int  Get(char ch)
+   static inline int Get(int ch)
    {
-      if ((ch & 0x80) == 0)
+      if (ch < 0)
       {
-         return(chars[(int)ch]);
+         return 0;
+      }
+      if (ch < (int)sizeof(chars))
+      {
+         return chars[ch];
       }
 
       /* HACK: If the top bit is set, then we are likely dealing with UTF-8,
