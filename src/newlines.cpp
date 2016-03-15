@@ -315,6 +315,10 @@ static void newline_min_after(chunk_t *ref, INT32 count, UINT64 flag)
            __func__, get_token_name(pc->type), pc->orig_line, pc->orig_col);
 
    next = chunk_get_next(pc);
+   if (!next)
+   {
+      return;
+   }
    if (chunk_is_comment(next) && (next->nl_count == 1) &&
        chunk_is_comment(chunk_get_prev(pc)))
    {
