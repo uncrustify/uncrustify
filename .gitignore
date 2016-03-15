@@ -34,3 +34,8 @@ Debug
 .*
 uncrustify-*-win32
 src/config.h
+/configure
+Makefile.in
+/cov-int
+/src/token_names.h
+/aclocal.m4
