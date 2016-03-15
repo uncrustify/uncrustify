@@ -6,4 +6,4 @@ branches:
   only:
   - master
 
-script ./configure && make && ./run_tests.sh
+script: ./configure && make && ./run_tests.sh
