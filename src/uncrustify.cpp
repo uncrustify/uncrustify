@@ -998,9 +998,10 @@ static bool file_content_matches(const string& filename1, const string& filename
 }
 
 
-const char *fix_filename(const char *filename)
+static string fix_filename(const char *filename)
 {
    char *tmp_file;
+   string rv;
 
    /* Create 'outfile.uncrustify' */
    tmp_file = new char[strlen(filename) + 16 + 1]; /* + 1 for '\0' */
@@ -1008,7 +1009,9 @@ const char *fix_filename(const char *filename)
    {
       sprintf(tmp_file, "%s.uncrustify", filename);
    }
-   return(tmp_file);
+   rv = tmp_file;
+   delete[] tmp_file;
+   return rv;
 }
 
 
