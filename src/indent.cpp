@@ -2311,6 +2311,7 @@ void indent_preproc(void)
       }
 
       LOG_FMT(LPPIS, "%s: Indent line %d to %d (len %d, next->col %d)\n",
-              __func__, pc->orig_line, 1 + pp_level, pc->len(), next->column);
+              __func__, pc->orig_line, 1 + pp_level, pc->len(),
+              next ? next->column : -1);
    }
 }
