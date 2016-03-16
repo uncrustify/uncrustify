@@ -31,7 +31,7 @@ struct CharTable
       {
          return 0;
       }
-      if (ch < (int)sizeof(chars))
+      if (ch < (int)ARRAY_SIZE(chars))
       {
          return chars[ch];
       }
