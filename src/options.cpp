@@ -780,7 +780,8 @@ void register_options(void)
                   "0 = No change (default)");
    unc_add_option("nl_typedef_blk_start", UO_nl_typedef_blk_start, AT_NUM,
                   "The number of newlines before a block of typedefs\n"
-                  "0 = No change (default)");
+                  "0 = No change (default)\n"
+                  "the option 'nl_after_access_spec' takes preference over 'nl_typedef_blk_start'");
    unc_add_option("nl_typedef_blk_end", UO_nl_typedef_blk_end, AT_NUM,
                   "The number of newlines after a block of typedefs\n"
                   "0 = No change (default)");
@@ -789,7 +790,8 @@ void register_options(void)
                   "0 = No change (default)");
    unc_add_option("nl_var_def_blk_start", UO_nl_var_def_blk_start, AT_NUM,
                   "The number of newlines before a block of variable definitions not at the top of a function body\n"
-                  "0 = No change (default)");
+                  "0 = No change (default)\n"
+                  "the option 'nl_after_access_spec' takes preference over 'nl_var_def_blk_start'");
    unc_add_option("nl_var_def_blk_end", UO_nl_var_def_blk_end, AT_NUM,
                   "The number of newlines after a block of variable definitions not at the top of a function body\n"
                   "0 = No change (default)");
@@ -1039,7 +1041,8 @@ void register_options(void)
                   "0 = No change.");
    unc_add_option("nl_after_access_spec", UO_nl_after_access_spec, AT_NUM,
                   "The number of newlines after a 'private:', 'public:', 'protected:', 'signals:' or 'slots:' label.\n"
-                  "0 = No change.");
+                  "0 = No change.\n"
+                  "the option 'nl_after_access_spec' takes preference over 'nl_typedef_blk_start' and 'nl_var_def_blk_start'");
 
    unc_add_option("nl_comment_func_def", UO_nl_comment_func_def, AT_NUM,
                   "The number of newlines between a function def and the function comment.\n"

@@ -614,7 +614,7 @@ static void split_fcn_params(chunk_t *start)
    }
    if ((prev != NULL) && !chunk_is_newline(prev))
    {
-      LOG_FMT(LSPLIT, " -- ended on [%s] -- ", get_token_name(prev->type));
+      LOG_FMT(LSPLIT, " -- ended on [%s] --\n", get_token_name(prev->type));
       pc = chunk_get_next(prev);
       newline_add_before(pc);
       reindent_line(pc, min_col);

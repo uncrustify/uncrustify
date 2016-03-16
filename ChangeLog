@@ -1,3 +1,7 @@
+Bugfix:
+ - better descriptions for options
+ - bug #631 is fixed
+
 Change highlights in uncrustify-0.63 (Mar 2016)
 -------------------------------------------------------------------------------
 
