@@ -263,3 +263,4 @@
 33028 braces_empty.cfg                 cpp/braces_empty.cpp
 33029 cast.cfg                         cpp/cast.cpp
 33030 kdepim.cfg                       cpp/Q_FOREVER.cpp
+33031 bug_612.cfg                      cpp/bug_612.cpp

@@ -660,7 +660,8 @@ chunk_t *align_assign(chunk_t *first, int span, int thresh)
       }
       else if (var_def_cnt > 1)
       {
-         /* we hit the second variable def - don't look for assigns */
+         /* we hit the second variable def - don't look for assigns, don't align */
+         vdas.Reset();
       }
       else if ((equ_count == 0) && (pc->type == CT_ASSIGN))
       {
