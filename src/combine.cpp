@@ -4445,7 +4445,8 @@ static void handle_d_template(chunk_t *pc)
 
    name = chunk_get_next_ncnl(pc);
    po   = chunk_get_next_ncnl(name);
-   if (!name || ((name->type != CT_WORD) && (name->type != CT_WORD)))
+   //if (!name || ((name->type != CT_WORD) && (name->type != CT_WORD)))  76000 Same on both sides, 2016-03-16
+   if (!name || (name->type != CT_WORD))
    {
       /* TODO: log an error, expected NAME */
       return;
@@ -5033,9 +5034,9 @@ static void handle_oc_message_decl(chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
    chunk_t   *tmp;
-   bool      in_paren  = false;
-   int       paren_cnt = 0;
-   int       arg_cnt   = 0;
+   //bool      in_paren  = false;
+   //int       paren_cnt = 0;
+   //int       arg_cnt   = 0;
    c_token_t pt;
    bool      did_it;
 
@@ -5147,73 +5148,74 @@ static void handle_oc_message_decl(chunk_t *pc)
    return;
 
    /* Mark everything */
-   tmp = pc;
-   while ((tmp = chunk_get_next(tmp)) != NULL)
-   {
-      LOG_FMT(LOCMSGD, " [%s]", tmp->text());
+   // 76020 Structurally dead code, 2016-03-16
+   //tmp = pc;
+   //while ((tmp = chunk_get_next(tmp)) != NULL)
+   //{
+   //   LOG_FMT(LOCMSGD, " [%s]", tmp->text());
 
-      if ((tmp->type == CT_SEMICOLON) ||
-          (tmp->type == CT_BRACE_OPEN))
-      {
-         set_chunk_parent(tmp, pt);
-         break;
-      }
+   //   if ((tmp->type == CT_SEMICOLON) ||
+   //       (tmp->type == CT_BRACE_OPEN))
+   //   {
+   //      set_chunk_parent(tmp, pt);
+   //      break;
+   //   }
 
-      /* Mark first parens as return type */
-      if ((arg_cnt == 0) &&
-          ((tmp->type == CT_PAREN_OPEN) ||
-           (tmp->type == CT_PAREN_CLOSE)))
-      {
-         set_chunk_parent(tmp, CT_OC_RTYPE);
-         in_paren = (tmp->type == CT_PAREN_OPEN);
-         if (!in_paren)
-         {
-            paren_cnt++;
-            arg_cnt++;
-         }
-      }
-      else if ((tmp->type == CT_PAREN_OPEN) ||
-               (tmp->type == CT_PAREN_CLOSE))
-      {
-         set_chunk_parent(tmp, pt);
-         in_paren = (tmp->type == CT_PAREN_OPEN);
-         if (!in_paren)
-         {
-            paren_cnt++;
-         }
-      }
-      else if (tmp->type == CT_WORD)
-      {
-         if (in_paren)
-         {
-            set_chunk_type(tmp, CT_TYPE);
-            set_chunk_parent(tmp, pt);
-         }
-         else if (paren_cnt == 1)
-         {
-            set_chunk_type(tmp, pt);
-         }
-         else
-         {
-            tmp->flags |= PCF_VAR_DEF;
-         }
-      }
-      else if (tmp->type == CT_COLON)
-      {
-         set_chunk_type(tmp, CT_OC_COLON);
-         set_chunk_parent(tmp, pt);
-      }
-   }
+   //   /* Mark first parens as return type */
+   //   if ((arg_cnt == 0) &&
+   //       ((tmp->type == CT_PAREN_OPEN) ||
+   //        (tmp->type == CT_PAREN_CLOSE)))
+   //   {
+   //      set_chunk_parent(tmp, CT_OC_RTYPE);
+   //      in_paren = (tmp->type == CT_PAREN_OPEN);
+   //      if (!in_paren)
+   //      {
+   //         paren_cnt++;
+   //         arg_cnt++;
+   //      }
+   //   }
+   //   else if ((tmp->type == CT_PAREN_OPEN) ||
+   //            (tmp->type == CT_PAREN_CLOSE))
+   //   {
+   //      set_chunk_parent(tmp, pt);
+   //      in_paren = (tmp->type == CT_PAREN_OPEN);
+   //      if (!in_paren)
+   //      {
+   //         paren_cnt++;
+   //      }
+   //   }
+   //   else if (tmp->type == CT_WORD)
+   //   {
+   //      if (in_paren)
+   //      {
+   //         set_chunk_type(tmp, CT_TYPE);
+   //         set_chunk_parent(tmp, pt);
+   //      }
+   //      else if (paren_cnt == 1)
+   //      {
+   //         set_chunk_type(tmp, pt);
+   //      }
+   //      else
+   //      {
+   //         tmp->flags |= PCF_VAR_DEF;
+   //      }
+   //   }
+   //   else if (tmp->type == CT_COLON)
+   //   {
+   //      set_chunk_type(tmp, CT_OC_COLON);
+   //      set_chunk_parent(tmp, pt);
+   //   }
+   //}
 
-   if ((tmp != NULL) && (tmp->type == CT_BRACE_OPEN))
-   {
-      tmp = chunk_skip_to_match(tmp);
-      if (tmp)
-      {
-         set_chunk_parent(tmp, pt);
-      }
-   }
-   LOG_FMT(LOCMSGD, "\n");
+   //if ((tmp != NULL) && (tmp->type == CT_BRACE_OPEN))
+   //{
+   //   tmp = chunk_skip_to_match(tmp);
+   //   if (tmp)
+   //   {
+   //      set_chunk_parent(tmp, pt);
+   //   }
+   //}
+   //LOG_FMT(LOCMSGD, "\n");
 }
 
 

@@ -1052,7 +1052,9 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
       return(cpd.settings[UO_sp_getset_brace].a);
    }
 
-   if (((first->type == CT_WORD) || (first->type == CT_WORD)) &&
+   //if (((first->type == CT_WORD) || (first->type == CT_WORD)) &&   76001 Same on both sides, 2016-03-16
+   //    (second->type == CT_BRACE_OPEN))
+   if ((first->type == CT_WORD) &&
        (second->type == CT_BRACE_OPEN))
    {
       if (first->parent_type == CT_NAMESPACE)
