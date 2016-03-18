@@ -136,7 +136,7 @@ static void align_stack(ChunkStack& cs, int col, bool align_single, log_sev_t se
       while ((pc = cs.Pop_Back()) != NULL)
       {
          align_to_column(pc, col);
-         pc->flags |= PCF_WAS_ALIGNED;
+         chunk_flags_set(pc, PCF_WAS_ALIGNED);
 
          LOG_FMT(sev, "%s: indented [%s] on line %d to %d\n",
                  __func__, pc->str.c_str(), pc->orig_line, pc->column);
@@ -222,10 +222,10 @@ void quick_align_again(void)
 
          LOG_FMT(LALAGAIN, "   [%s:%d]", pc->str.c_str(), pc->orig_line);
          as.Add(pc->align.start);
-         pc->flags |= PCF_WAS_ALIGNED;
+         chunk_flags_set(pc, PCF_WAS_ALIGNED);
          for (tmp = pc->align.next; tmp != NULL; tmp = tmp->align.next)
          {
-            tmp->flags |= PCF_WAS_ALIGNED;
+            chunk_flags_set(tmp, PCF_WAS_ALIGNED);
             as.Add(tmp->align.start);
             LOG_FMT(LALAGAIN, " => [%s:%d]", tmp->str.c_str(), tmp->orig_line);
          }
@@ -414,7 +414,7 @@ void align_right_comments(void)
             {
                LOG_FMT(LALTC, "Changing END comment on line %d into a RIGHT-comment\n",
                        pc->orig_line);
-               pc->flags |= PCF_RIGHT_COMMENT;
+               chunk_flags_set(pc, PCF_RIGHT_COMMENT);
             }
          }
 
@@ -429,7 +429,7 @@ void align_right_comments(void)
                LOG_FMT(LALTC, "Changing WHOLE comment on line %d into a RIGHT-comment (col=%d col_ind=%d max_col=%d)\n",
                        pc->orig_line, pc->column, pc->column_indent, max_col);
 
-               pc->flags |= PCF_RIGHT_COMMENT;
+               chunk_flags_set(pc, PCF_RIGHT_COMMENT);
             }
          }
       }
@@ -1336,7 +1336,7 @@ chunk_t *align_nl_cont(chunk_t *start)
    /* NL_CONT is always the last thing on a line */
    while ((tmp = cs.Pop_Back()) != NULL)
    {
-      tmp->flags |= PCF_WAS_ALIGNED;
+      chunk_flags_set(tmp, PCF_WAS_ALIGNED);
       tmp->column = max_col;
    }
 
@@ -1731,7 +1731,7 @@ static void align_init_brace(chunk_t *start)
                prev = chunk_get_prev(pc);
                if (chunk_is_newline(prev))
                {
-                  pc->flags |= PCF_DONT_INDENT;
+                  chunk_flags_set(pc, PCF_DONT_INDENT);
                }
             }
             LOG_FMT(LALBR, " [%s] to col %d\n", pc->str.c_str(), cpd.al[idx].col);
@@ -1745,8 +1745,8 @@ static void align_init_brace(chunk_t *start)
                //        num_token->orig_line,
                //        num_token->str.c_str(), cpd.al[idx - 1].col, col_diff);
 
-               num_token->flags |= PCF_WAS_ALIGNED;
-               num_token         = NULL;
+               chunk_flags_set(num_token, PCF_WAS_ALIGNED);
+               num_token = NULL;
             }
 
             /* Comma's need to 'fall back' to the previous token */
@@ -1772,7 +1772,7 @@ static void align_init_brace(chunk_t *start)
                   else if (idx < (cpd.al_cnt - 1))
                   {
                      reindent_line(next, cpd.al[idx].col + cpd.al[idx].len);
-                     next->flags |= PCF_WAS_ALIGNED;
+                     chunk_flags_set(next, PCF_WAS_ALIGNED);
                   }
                }
             }
@@ -1780,7 +1780,7 @@ static void align_init_brace(chunk_t *start)
             {
                /* first item on the line */
                reindent_line(pc, cpd.al[idx].col);
-               pc->flags |= PCF_WAS_ALIGNED;
+               chunk_flags_set(pc, PCF_WAS_ALIGNED);
 
                /* see if we need to right-align a number */
                if ((idx < (cpd.al_cnt - 1)) &&
@@ -2021,7 +2021,7 @@ static void align_oc_msg_colon(chunk_t *so)
               (tmp->type == CT_OC_MSG_NAME)))
          {
             nas.Add(tmp);
-            tmp->flags |= PCF_DONT_INDENT;
+            chunk_flags_set(tmp, PCF_DONT_INDENT);
          }
          did_line = true;
       }

@@ -701,3 +701,22 @@ void set_chunk_parent_real(chunk_t *pc, c_token_t pt)
       pc->parent_type = pt;
    }
 }
+
+
+void chunk_flags_set_real(chunk_t *pc, UINT64 clr_bits, UINT64 set_bits)
+{
+   if (pc)
+   {
+      LOG_FUNC_ENTRY();
+      UINT64 nflags = (pc->flags & ~clr_bits) | set_bits;
+      if (pc->flags != nflags)
+      {
+         LOG_FMT(LSETFLG, "set_chunk_flags: %016" PRIx64 "^%016" PRIx64 "=%016" PRIx64 " %d:%d '%s' %s:%s",
+                 pc->flags, pc->flags ^ nflags, nflags,
+                 pc->orig_line, pc->orig_col, pc->text(),
+                 get_token_name(pc->type), get_token_name(pc->parent_type));
+         log_func_stack_inline(LSETFLG);
+         pc->flags = nflags;
+      }
+   }
+}

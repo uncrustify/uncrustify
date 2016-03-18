@@ -2226,7 +2226,7 @@ bool ifdef_over_whole_file()
    cpd.ifdef_over_whole_file = (stage == 2) ? 1 : -1;
    if (cpd.ifdef_over_whole_file > 0)
    {
-      end_pp->flags |= PCF_WF_ENDIF;
+      chunk_flags_set(end_pp, PCF_WF_ENDIF);
    }
    LOG_FMT(LNOTE, "The whole file is%s covered by a #IF\n",
            (cpd.ifdef_over_whole_file > 0) ? "" : " NOT");
@@ -2306,7 +2306,7 @@ void indent_preproc(void)
          if (!cpd.settings[UO_pp_define_at_level].b ||
              (pc->parent_type != CT_PP_DEFINE))
          {
-            pc->flags |= PCF_DONT_INDENT;
+            chunk_flags_set(pc, PCF_DONT_INDENT);
          }
       }
 

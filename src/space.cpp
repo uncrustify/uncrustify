@@ -1717,7 +1717,7 @@ void space_text(void)
          LOG_FMT(LGUY, "%d: [%d] type %s SIGNAL/SLOT found\n",
                  pc->orig_line, __LINE__, get_token_name(pc->type));
          // flag the chunk for a second processing
-         pc->flags |= PCF_IN_QT_MACRO;
+         chunk_flags_set(pc, PCF_IN_QT_MACRO);
 
          // save the values
          save_set_options_for_QT(pc->level);
@@ -1766,7 +1766,7 @@ void space_text(void)
           * Two chunks -- "()" and "[]" will always tokenize differently.
           * They are always safe to not have a space after them.
           */
-         pc->flags &= ~PCF_FORCE_SPACE;
+         chunk_flags_clr(pc, PCF_FORCE_SPACE);
          if ((pc->len() > 0) &&
              !chunk_is_str(pc, "[]", 2) &&
              !chunk_is_str(pc, "{{", 2) &&
@@ -1787,7 +1787,7 @@ void space_text(void)
                if (kw1 && kw2)
                {
                   /* back-to-back words need a space */
-                  pc->flags |= PCF_FORCE_SPACE;
+                  chunk_flags_set(pc, PCF_FORCE_SPACE);
                }
                else if (!kw1 && !kw2 && (pc->len() < 4) && (next->len() < 4))
                {
@@ -1819,7 +1819,7 @@ void space_text(void)
                      }
                      else
                      {
-                        pc->flags |= PCF_FORCE_SPACE;
+                        chunk_flags_set(pc, PCF_FORCE_SPACE);
                      }
                   }
                }
@@ -1918,7 +1918,7 @@ void space_text(void)
       pc = next;
       if (QT_SIGNAL_SLOT_found) {
          // flag the chunk for a second processing
-         pc->flags |= PCF_IN_QT_MACRO;
+         chunk_flags_set(pc, PCF_IN_QT_MACRO);
       }
    }
 }

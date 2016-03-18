@@ -421,7 +421,7 @@ void AlignStack::Flush()
             m_skip_first = true;
             return;
          }
-         pc->flags |= PCF_ALIGN_START;
+         chunk_flags_set(pc, PCF_ALIGN_START);
 
          pc->align.right_align = m_right_align;
          pc->align.amp_style   = (int)m_amp_style;

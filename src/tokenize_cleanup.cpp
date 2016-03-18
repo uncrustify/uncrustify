@@ -449,7 +449,7 @@ void tokenize_cleanup(void)
             set_chunk_type(next, CT_PRIVATE_COLON);
             if ((tmp = chunk_get_next_ncnl(next)) != NULL)
             {
-               tmp->flags |= PCF_STMT_START | PCF_EXPR_START;
+               chunk_flags_set(tmp, PCF_STMT_START | PCF_EXPR_START);
             }
          }
          else
@@ -562,7 +562,7 @@ void tokenize_cleanup(void)
          tmp = chunk_get_next_ncnl(next);
          if (tmp != NULL)
          {
-            tmp->flags |= PCF_STMT_START | PCF_EXPR_START;
+            chunk_flags_set(tmp, PCF_STMT_START | PCF_EXPR_START);
          }
 
          tmp = chunk_get_next_type(pc, CT_OC_END, pc->level);
@@ -630,7 +630,7 @@ void tokenize_cleanup(void)
       {
          if (next->type != CT_PAREN_OPEN)
          {
-            next->flags |= PCF_STMT_START | PCF_EXPR_START;
+            chunk_flags_set(next, PCF_STMT_START | PCF_EXPR_START);
          }
          else
          {
@@ -643,7 +643,7 @@ void tokenize_cleanup(void)
                tmp = chunk_get_next_ncnl(tmp);
                if (tmp != NULL)
                {
-                  tmp->flags |= PCF_STMT_START | PCF_EXPR_START;
+                  chunk_flags_set(tmp, PCF_STMT_START | PCF_EXPR_START);
 
                   tmp = chunk_get_next_type(tmp, CT_SEMICOLON, pc->level);
                   if (tmp != NULL)
@@ -985,8 +985,8 @@ static void check_template(chunk_t *start)
          pc = start;
          while (pc != end)
          {
-            next       = chunk_get_next_ncnl(pc, CNAV_PREPROC);
-            pc->flags |= PCF_IN_TEMPLATE;
+            next = chunk_get_next_ncnl(pc, CNAV_PREPROC);
+            chunk_flags_set(pc, PCF_IN_TEMPLATE);
             if (next->type != CT_PAREN_OPEN)
             {
                make_type(pc);
@@ -994,7 +994,7 @@ static void check_template(chunk_t *start)
             pc = next;
          }
          set_chunk_parent(end, CT_TEMPLATE);
-         end->flags |= PCF_IN_TEMPLATE;
+         chunk_flags_set(end, PCF_IN_TEMPLATE);
          return;
       }
    }

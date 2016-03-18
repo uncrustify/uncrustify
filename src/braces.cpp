@@ -76,8 +76,8 @@ void do_braces(void)
       tmp = chunk_get_next_ncnl(pc);
       if ((tmp != NULL) && (tmp->type == brc_type))
       {
-         br_open->flags |= PCF_EMPTY_BODY;
-         tmp->flags     |= PCF_EMPTY_BODY;
+         chunk_flags_set(br_open, PCF_EMPTY_BODY);
+         chunk_flags_set(tmp, PCF_EMPTY_BODY);
       }
 
       /* Scan for the brace close or a newline */
@@ -1120,7 +1120,7 @@ static void process_if_chain(chunk_t *br_start)
       LOG_FMT(LBRCH, "%s: add braces on lines[%d]:", __func__, br_cnt);
       while (--br_cnt >= 0)
       {
-         braces[br_cnt]->flags |= PCF_KEEP_BRACE;
+         chunk_flags_set(braces[br_cnt], PCF_KEEP_BRACE);
          if ((braces[br_cnt]->type == CT_VBRACE_OPEN) ||
              (braces[br_cnt]->type == CT_VBRACE_CLOSE))
          {

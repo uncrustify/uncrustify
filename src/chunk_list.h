@@ -353,5 +353,21 @@ void set_chunk_parent_real(chunk_t *pc, c_token_t tt);
       set_chunk_parent_real((pc), (tt)); \
    } while (false)
 
+void chunk_flags_set_real(chunk_t *pc, UINT64 clr_bits, UINT64 set_bits);
+
+#define chunk_flags_upd(pc, cc, ss)   do { \
+      LOG_FUNC_CALL(); \
+      chunk_flags_set_real((pc), (cc), (ss)); \
+   } while (false)
+
+#define chunk_flags_set(pc, ss)   do { \
+      LOG_FUNC_CALL(); \
+      chunk_flags_set_real((pc), 0, (ss)); \
+   } while (false)
+
+#define chunk_flags_clr(pc, cc)   do { \
+      LOG_FUNC_CALL(); \
+      chunk_flags_set_real((pc), (cc), 0); \
+   } while (false)
 
 #endif /* CHUNK_LIST_H_INCLUDED */
