@@ -157,7 +157,7 @@ static void setup_newline_add(chunk_t *prev, chunk_t *nl, chunk_t *next)
    nl->flags       = (prev->flags & PCF_COPY_FLAGS) & ~PCF_IN_PREPROC;
    if ((prev->flags & PCF_IN_PREPROC) && (next->flags & PCF_IN_PREPROC))
    {
-      nl->flags |= PCF_IN_PREPROC;
+      chunk_flags_set(nl, PCF_IN_PREPROC);
    }
    if ((nl->flags & PCF_IN_PREPROC) != 0)
    {
@@ -327,7 +327,7 @@ static void newline_min_after(chunk_t *ref, INT32 count, UINT64 flag)
    }
    else
    {
-      pc->flags |= flag;
+      chunk_flags_set(pc, flag);
       if (chunk_is_newline(pc) && can_increase_nl(pc))
       {
          if (pc->nl_count < count)
@@ -1924,7 +1924,7 @@ static void undo_one_liner(chunk_t *pc)
    if (pc && (pc->flags & PCF_ONE_LINER))
    {
       LOG_FMT(LNL1LINE, "%s: [%s]", __func__, pc->text());
-      pc->flags &= ~PCF_ONE_LINER;
+      chunk_flags_clr(pc, PCF_ONE_LINER);
 
       /* scan backward */
       tmp = pc;
@@ -1935,7 +1935,7 @@ static void undo_one_liner(chunk_t *pc)
             break;
          }
          LOG_FMT(LNL1LINE, " %s", tmp->text());
-         tmp->flags &= ~PCF_ONE_LINER;
+         chunk_flags_clr(tmp, PCF_ONE_LINER);
       }
 
       /* scan forward */
@@ -1948,7 +1948,7 @@ static void undo_one_liner(chunk_t *pc)
             break;
          }
          LOG_FMT(LNL1LINE, " %s", tmp->text());
-         tmp->flags &= ~PCF_ONE_LINER;
+         chunk_flags_clr(tmp, PCF_ONE_LINER);
       }
       LOG_FMT(LNL1LINE, "\n");
    }

@@ -1786,12 +1786,12 @@ void tokenize(const deque<int>& data, chunk_t *ref)
       rprev = pc;
       if (rprev != NULL)
       {
-         pc->flags |= rprev->flags & PCF_COPY_FLAGS;
+         chunk_flags_set(pc, rprev->flags & PCF_COPY_FLAGS);
 
          /* a newline can't be in a preprocessor */
          if (pc->type == CT_NEWLINE)
          {
-            pc->flags &= ~PCF_IN_PREPROC;
+            chunk_flags_clr(pc, PCF_IN_PREPROC);
          }
       }
       if (ref != NULL)
@@ -1814,7 +1814,7 @@ void tokenize(const deque<int>& data, chunk_t *ref)
       /* Special handling for preprocessor stuff */
       if (cpd.in_preproc != CT_NONE)
       {
-         pc->flags |= PCF_IN_PREPROC;
+         chunk_flags_set(pc, PCF_IN_PREPROC);
 
          /* Count words after the preprocessor */
          if (!chunk_is_comment(pc) && !chunk_is_newline(pc))

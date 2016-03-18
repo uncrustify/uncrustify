@@ -299,8 +299,7 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
        !chunk_is_str(pc, ")", 1) &&
        !chunk_is_str(pc, "]", 1))
    {
-      pc->flags |= PCF_EXPR_START;
-      pc->flags |= (frm->stmt_count == 0) ? PCF_STMT_START : 0;
+      chunk_flags_set(pc, PCF_EXPR_START | ((frm->stmt_count == 0) ? PCF_STMT_START : 0));
       LOG_FMT(LSTMT, "%d] 1.marked %s as %s start st:%d ex:%d\n",
               pc->orig_line, pc->str.c_str(), (pc->flags & PCF_STMT_START) ? "stmt" : "expr",
               frm->stmt_count, frm->expr_count);
@@ -312,14 +311,14 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
    {
       int tmp;
 
-      pc->flags |= PCF_IN_SPAREN;
+      chunk_flags_set(pc, PCF_IN_SPAREN);
 
       /* Mark everything in the a for statement */
       for (tmp = frm->pse_tos - 1; tmp >= 0; tmp--)
       {
          if (frm->pse[tmp].type == CT_FOR)
          {
-            pc->flags |= PCF_IN_FOR;
+            chunk_flags_set(pc, PCF_IN_FOR);
             break;
          }
       }
@@ -381,7 +380,7 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
          if (pc->type == CT_SPAREN_CLOSE)
          {
             frm->sparen_count--;
-            pc->flags &= ~PCF_IN_SPAREN;
+            chunk_flags_clr(pc, PCF_IN_SPAREN);
          }
       }
 
