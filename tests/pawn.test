@@ -18,3 +18,5 @@
 60030 amxmodx.cfg              pawn/crusty_ex-1.sma
 
 60040 amxmodx.cfg              pawn/preproc.pawn
+
+60050 pp_pos_bool_disable.cfg  pawn/pp_pos_bool_disable.sma

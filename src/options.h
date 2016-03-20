@@ -133,6 +133,7 @@ enum uncrustify_options
    UO_pp_region_indent_code,     // whether to indent the code inside region stuff
    UO_pp_indent_if,
    UO_pp_if_indent_code,
+   UO_pp_pos_bool_disable,
 
    UO_indent_switch_case,         // spaces to indent case from switch
    UO_indent_case_shift,          // spaces to shift the line with the 'case'

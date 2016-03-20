@@ -1379,6 +1379,8 @@ void register_options(void)
                   "Control whether to indent the code between #if, #else and #endif.");
    unc_add_option("pp_define_at_level", UO_pp_define_at_level, AT_BOOL,
                   "Whether to indent '#define' at the brace level (true) or from column 1 (false)");
+   unc_add_option("pp_pos_bool_disable", UO_pp_pos_bool_disable, AT_BOOL,
+                  "Disables the preprocessor source code 'pos_bool' option parsing.");
 
    unc_begin_group(UG_Use_Ext, "Use or Do not Use options", "G");
    unc_add_option("use_indent_func_call_param", UO_use_indent_func_call_param, AT_BOOL,
