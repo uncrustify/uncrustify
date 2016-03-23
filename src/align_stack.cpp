@@ -253,9 +253,9 @@ void AlignStack::Add(chunk_t *start, int seqnum)
       // LOG_FMT(LSYS, "[%p] line %d pc='%s' [%s] col:%d ali='%s' [%s] col:%d ref='%s' [%s] col:%d  col_adj=%d  endcol=%d, ss=%d as=%d, gap=%d\n",
       //         this,
       //         start->orig_line,
-      //         start->str.c_str(), get_token_name(start->type), start->column,
-      //         ali->str.c_str(), get_token_name(ali->type), ali->column,
-      //         ref->str.c_str(), get_token_name(ref->type), ref->column,
+      //         start->text(), get_token_name(start->type), start->column,
+      //         ali->text(), get_token_name(ali->type), ali->column,
+      //         ref->text(), get_token_name(ref->type), ref->column,
       //         col_adj, endcol, m_star_style, m_amp_style, gap);
 
       ali->align.col_adj = col_adj;
@@ -265,8 +265,8 @@ void AlignStack::Add(chunk_t *start, int seqnum)
       m_last_added = 1;
 
       LOG_FMT(LAS, "Add-[%s]: line %d, col %d, adj %d : ref=[%s] endcol=%d\n",
-              ali->str.c_str(), ali->orig_line, ali->column, ali->align.col_adj,
-              ref->str.c_str(), endcol);
+              ali->text(), ali->orig_line, ali->column, ali->align.col_adj,
+              ref->text(), endcol);
 
       if (m_min_col > endcol)
       {
@@ -432,7 +432,7 @@ void AlignStack::Flush()
 
       /* Indent the token, taking col_adj into account */
       LOG_FMT(LAS, "%s: line %d: '%s' to col %d (adj=%d)\n", __func__,
-              pc->orig_line, pc->str.c_str(), tmp_col, pc->align.col_adj);
+              pc->orig_line, pc->text(), tmp_col, pc->align.col_adj);
       align_to_column(pc, tmp_col);
    }
 

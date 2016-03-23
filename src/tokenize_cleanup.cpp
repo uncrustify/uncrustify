@@ -429,7 +429,7 @@ void tokenize_cleanup(void)
          set_chunk_parent(next, CT_OPERATOR);
 
          LOG_FMT(LOPERATOR, "%s: %d:%d operator '%s'\n",
-                 __func__, pc->orig_line, pc->orig_col, next->str.c_str());
+                 __func__, pc->orig_line, pc->orig_col, next->text());
       }
 
       /* Change private, public, protected into either a qualifier or label */
@@ -580,7 +580,7 @@ void tokenize_cleanup(void)
             if (get_token_pattern_class(tmp->type) != PATCLS_NONE)
             {
                LOG_FMT(LOBJCWORD, "@interface %d:%d change '%s' (%s) to CT_WORD\n",
-                       pc->orig_line, pc->orig_col, tmp->str.c_str(),
+                       pc->orig_line, pc->orig_col, tmp->text(),
                        get_token_name(tmp->type));
                set_chunk_type(tmp, CT_WORD);
             }
@@ -832,7 +832,7 @@ static void check_template(chunk_t *start)
          if ((pc->str[0] == '>') && (pc->len() > 1))
          {
             LOG_FMT(LTEMPL, " {split '%s' at %d:%d}",
-                    pc->str.c_str(), pc->orig_line, pc->orig_col);
+                    pc->text(), pc->orig_line, pc->orig_col);
             split_off_angle_close(pc);
          }
 
@@ -916,7 +916,7 @@ static void check_template(chunk_t *start)
              (cpd.settings[UO_tok_split_gte].b || chunk_is_str(pc, ">>", 2)))
          {
             LOG_FMT(LTEMPL, " {split '%s' at %d:%d}",
-                    pc->str.c_str(), pc->orig_line, pc->orig_col);
+                    pc->text(), pc->orig_line, pc->orig_col);
             split_off_angle_close(pc);
          }
 

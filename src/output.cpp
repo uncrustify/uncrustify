@@ -265,7 +265,7 @@ void output_parsed(FILE *pfile)
          }
          if (pc->type != CT_NL_CONT)
          {
-            fprintf(pfile, "%s", pc->str.c_str());
+            fprintf(pfile, "%s", pc->text());
          }
          else
          {
@@ -971,7 +971,7 @@ static chunk_t *output_comment_cpp(chunk_t *first)
    leadin = "//";                                       // default setting to keep previous behaviour
    if (cpd.settings[UO_sp_cmt_cpp_doxygen].b)           // special treatment for doxygen style comments (treat as unity)
    {
-      const char *sComment = first->str.c_str();
+      const char *sComment = first->text();
       bool grouping = (sComment[2] == '@');
       int brace = 3;
       if ((sComment[2] == '/') || (sComment[2] == '!')) // doxygen style found!

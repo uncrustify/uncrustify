@@ -150,7 +150,7 @@ void align_to_column(chunk_t *pc, int column)
    }
 
    LOG_FMT(LINDLINE, "%s: %d] col %d on %s [%s] => %d\n",
-           __func__, pc->orig_line, pc->column, pc->str.c_str(),
+           __func__, pc->orig_line, pc->column, pc->text(),
            get_token_name(pc->type), column);
 
    int col_delta = column - pc->column;
@@ -226,7 +226,7 @@ void reindent_line(chunk_t *pc, int column)
 {
    LOG_FUNC_ENTRY();
    LOG_FMT(LINDLINE, "%s: %d] col %d on '%s' [%s/%s] => %d",
-           __func__, pc->orig_line, pc->column, pc->str.c_str(),
+           __func__, pc->orig_line, pc->column, pc->text(),
            get_token_name(pc->type), get_token_name(pc->parent_type),
            column);
    log_func_stack_inline(LINDLINE);
@@ -292,8 +292,13 @@ void reindent_line(chunk_t *pc, int column)
          {
             pc->column = min_col;
          }
-         LOG_FMT(LINDLINED, "   set column of '%s' to %d (orig %d)\n",
-                 pc->str.c_str(), pc->column, pc->orig_col);
+         LOG_FMT(LINDLINED, "   set column of ");
+         if (pc->type == CT_NEWLINE) {
+            LOG_FMT(LINDLINED, "newline");
+         } else {
+            LOG_FMT(LINDLINED, "'%s'", pc->text());
+         }
+         LOG_FMT(LINDLINED, " to %d (orig %d)\n", pc->column, pc->orig_col);
       }
    } while ((pc != NULL) && (pc->nl_count == 0));
 }
@@ -864,7 +869,7 @@ void indent_text(void)
       if (!chunk_is_newline(pc) && !chunk_is_comment(pc) && log_sev_on(LINDPC))
       {
          LOG_FMT(LINDPC, " -=[ %d:%d %s ]=-\n",
-                 pc->orig_line, pc->orig_col, pc->str.c_str());
+                 pc->orig_line, pc->orig_col, pc->text());
          for (int ttidx = frm.pse_tos; ttidx > 0; ttidx--)
          {
             LOG_FMT(LINDPC, "     [%d %d:%d %s/%s tmp=%d ind=%d bri=%d tab=%d cont=%d lvl=%d blvl=%d]\n",
@@ -1347,7 +1352,7 @@ void indent_text(void)
              (pc->column != indent_column))
          {
             LOG_FMT(LINDENT, "%s: %d] indent => %d [%s]\n",
-                    __func__, pc->orig_line, indent_column, pc->str.c_str());
+                    __func__, pc->orig_line, indent_column, pc->text());
             reindent_line(pc, indent_column);
          }
          frm.pse[frm.pse_tos].indent = pc->column + pc->len();
@@ -1478,7 +1483,7 @@ void indent_text(void)
             frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent + indent_size;
             indent_column_set(frm.pse[frm.pse_tos].indent_tmp);
             LOG_FMT(LINDENT, "%s: %d] assign => %d [%s]\n",
-                    __func__, pc->orig_line, indent_column, pc->str.c_str());
+                    __func__, pc->orig_line, indent_column, pc->text());
             reindent_line(pc, frm.pse[frm.pse_tos].indent_tmp);
          }
 
@@ -1698,7 +1703,7 @@ void indent_text(void)
          }
 
          LOG_FMT(LINDENT2, "%s: %d] %d/%d for %s\n",
-                 __func__, pc->orig_line, pc->column_indent, indent_column, pc->str.c_str());
+                 __func__, pc->orig_line, pc->column_indent, indent_column, pc->text());
 
          /**
           * Check for special continuations.
@@ -1739,7 +1744,7 @@ void indent_text(void)
          {
             reindent_line(pc, sql_col + (pc->orig_col - sql_orig_col));
             LOG_FMT(LINDENT, "Indent SQL: [%s] to %d (%d/%d)\n",
-                    pc->str.c_str(), pc->column, sql_col, sql_orig_col);
+                    pc->text(), pc->column, sql_col, sql_orig_col);
          }
          else if (((pc->flags & PCF_STMT_START) == 0) &&
                   ((pc->type == CT_MEMBER) ||
@@ -1792,7 +1797,7 @@ void indent_text(void)
          else if (pc->type == CT_PREPROC)
          {
             LOG_FMT(LINDENT, "%s: %d] pp-indent => %d [%s]\n",
-                    __func__, pc->orig_line, indent_column, pc->str.c_str());
+                    __func__, pc->orig_line, indent_column, pc->text());
             reindent_line(pc, indent_column);
          }
          else if (chunk_is_paren_close(pc) || (pc->type == CT_ANGLE_CLOSE))
@@ -1825,7 +1830,7 @@ void indent_text(void)
                }
             }
             LOG_FMT(LINDENT, "%s: %d] cl paren => %d [%s]\n",
-                    __func__, pc->orig_line, indent_column, pc->str.c_str());
+                    __func__, pc->orig_line, indent_column, pc->text());
             reindent_line(pc, indent_column);
          }
          else if (pc->type == CT_COMMA)
@@ -1836,7 +1841,7 @@ void indent_text(void)
                indent_column_set(frm.pse[frm.pse_tos].pc->column);
             }
             LOG_FMT(LINDENT, "%s: %d] comma => %d [%s]\n",
-                    __func__, pc->orig_line, indent_column, pc->str.c_str());
+                    __func__, pc->orig_line, indent_column, pc->text());
             reindent_line(pc, indent_column);
          }
          else if (cpd.settings[UO_indent_func_const].n &&
@@ -1853,7 +1858,7 @@ void indent_text(void)
             // indent const - void GetFoo(void)\n const\n { return (m_Foo); }
             indent_column_set(cpd.settings[UO_indent_func_const].n);
             LOG_FMT(LINDENT, "%s: %d] const => %d [%s]\n",
-                    __func__, pc->orig_line, indent_column, pc->str.c_str());
+                    __func__, pc->orig_line, indent_column, pc->text());
             reindent_line(pc, indent_column);
          }
          else if (cpd.settings[UO_indent_func_throw].n &&
@@ -1863,7 +1868,7 @@ void indent_text(void)
             // indent throw - void GetFoo(void)\n throw()\n { return (m_Foo); }
             indent_column_set(cpd.settings[UO_indent_func_throw].n);
             LOG_FMT(LINDENT, "%s: %d] throw => %d [%s]\n",
-                    __func__, pc->orig_line, indent_column, pc->str.c_str());
+                    __func__, pc->orig_line, indent_column, pc->text());
             reindent_line(pc, indent_column);
          }
          else if (pc->type == CT_BOOL)
@@ -1879,7 +1884,7 @@ void indent_text(void)
                }
             }
             LOG_FMT(LINDENT, "%s: %d] bool => %d [%s]\n",
-                    __func__, pc->orig_line, indent_column, pc->str.c_str());
+                    __func__, pc->orig_line, indent_column, pc->text());
             reindent_line(pc, indent_column);
          }
          else
@@ -1901,7 +1906,7 @@ void indent_text(void)
             {
                if (use_ident) {
                   LOG_FMT(LINDENT, "%s: %d] indent => %d [%s] [%d]\n",
-                          __func__, pc->orig_line, indent_column, pc->str.c_str(), __LINE__);
+                          __func__, pc->orig_line, indent_column, pc->text(), __LINE__);
                   reindent_line(pc, indent_column);
                } else {
                   // do not indent this line
@@ -1937,7 +1942,7 @@ void indent_text(void)
                }
                reindent_line(pc, tmp);
                LOG_FMT(LINDENT, "%s: %d] var_type indent => %d [%s]\n",
-                       __func__, pc->orig_line, tmp, pc->str.c_str());
+                       __func__, pc->orig_line, tmp, pc->text());
             }
          }
          else

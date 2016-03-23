@@ -29,7 +29,7 @@ static_inline bool is_past_width(chunk_t *pc)
 static void split_before_chunk(chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
-   LOG_FMT(LSPLIT, "%s: %s\n", __func__, pc->str.c_str());
+   LOG_FMT(LSPLIT, "%s: %s\n", __func__, pc->text());
 
    if (!chunk_is_newline(pc) &&
        !chunk_is_newline(chunk_get_prev(pc)))
@@ -226,7 +226,7 @@ static void split_line(chunk_t *start)
 {
    LOG_FUNC_ENTRY();
    LOG_FMT(LSPLIT, "%s: line %d, col %d token:%s[%s] (IN_FUNC=%d) ",
-           __func__, start->orig_line, start->column, start->str.c_str(),
+           __func__, start->orig_line, start->column, start->text(),
            get_token_name(start->type),
            (start->flags & (PCF_IN_FCN_DEF | PCF_IN_FCN_CALL)) != 0);
 
@@ -294,12 +294,12 @@ static void split_line(chunk_t *start)
    if (ent.pc == NULL)
    {
       LOG_FMT(LSPLIT, "%s: TRY_SPLIT yielded NO SOLUTION for line %d at %s [%s]\n",
-              __func__, start->orig_line, start->str.c_str(), get_token_name(start->type));
+              __func__, start->orig_line, start->text(), get_token_name(start->type));
    }
    else
    {
       LOG_FMT(LSPLIT, "%s: TRY_SPLIT yielded '%s' [%s] on line %d\n", __func__,
-              ent.pc->str.c_str(), get_token_name(ent.pc->type), ent.pc->orig_line);
+              ent.pc->text(), get_token_name(ent.pc->type), ent.pc->orig_line);
    }
 
    /* Break before the token instead of after it according to the pos_xxx rules */
@@ -352,8 +352,8 @@ static void split_line(chunk_t *start)
       int plen = (pc->len() < 5) ? pc->len() : 5;
       int slen = (start->len() < 5) ? start->len() : 5;
       LOG_FMT(LSPLIT, " '%.*s' [%s], started on token '%.*s' [%s]\n",
-              plen, pc->str.c_str(), get_token_name(pc->type),
-              slen, start->str.c_str(), get_token_name(start->type));
+              plen, pc->text(), get_token_name(pc->type),
+              slen, start->text(), get_token_name(start->type));
 
       split_before_chunk(pc);
    }
@@ -379,7 +379,7 @@ static void split_for_stmt(chunk_t *start)
    int     nl_cnt      = 0;
 
    LOG_FMT(LSPLIT, "%s: starting on %s, line %d\n",
-           __func__, start->str.c_str(), start->orig_line);
+           __func__, start->text(), start->orig_line);
 
    /* Find the open paren so we know the level and count newlines */
    pc = start;
@@ -431,7 +431,7 @@ static void split_for_stmt(chunk_t *start)
 
    while (--count >= 0)
    {
-      LOG_FMT(LSPLIT, "%s: split before %s\n", __func__, st[count]->str.c_str());
+      LOG_FMT(LSPLIT, "%s: split before %s\n", __func__, st[count]->text());
       split_before_chunk(chunk_get_next(st[count]));
    }
 

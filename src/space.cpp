@@ -84,9 +84,9 @@ static void log_rule2(int line, const char *rule, chunk_t *first, chunk_t *secon
       LOG_FMT(LSPACE, "Spacing: line %d [%s/%s] '%s' <===> [%s/%s] '%s' : %s[%d]%s",
               first->orig_line,
               get_token_name(first->type), get_token_name(first->parent_type),
-              first->str.c_str(),
+              first->text(),
               get_token_name(second->type), get_token_name(second->parent_type),
-              second->str.c_str(),
+              second->text(),
               rule, line,
               complete ? "\n" : "");
    }
@@ -1831,7 +1831,7 @@ void space_text(void)
          if (pc->flags & PCF_FORCE_SPACE)
          {
             LOG_FMT(LSPACE, " <force between '%s' and '%s'>",
-                    pc->str.c_str(), next->str.c_str());
+                    pc->text(), next->text());
             av |= AV_ADD;
          }
          min_sp = max(1, min_sp);

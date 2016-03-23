@@ -111,7 +111,7 @@ static void double_newline(chunk_t *nl)
    chunk_t *prev = chunk_get_prev(nl);
 
    LOG_FMT(LNEWLINE, "%s: add newline after %s on line %d",
-           __func__, prev->str.c_str(), prev->orig_line);
+           __func__, prev->text(), prev->orig_line);
 
    if (!can_increase_nl(nl))
    {
@@ -190,7 +190,7 @@ chunk_t *newline_add_before(chunk_t *pc)
    }
 
    LOG_FMT(LNEWLINE, "%s: '%s' on line %d",
-           __func__, pc->str.c_str(), pc->orig_line);
+           __func__, pc->text(), pc->orig_line);
    log_func_stack_inline(LNEWLINE);
 
    setup_newline_add(prev, &nl, pc);
@@ -236,7 +236,7 @@ chunk_t *newline_add_after(chunk_t *pc)
    }
 
    LOG_FMT(LNEWLINE, "%s: '%s' on line %d",
-           __func__, pc->str.c_str(), pc->orig_line);
+           __func__, pc->text(), pc->orig_line);
    log_func_stack_inline(LNEWLINE);
 
    setup_newline_add(pc, &nl, next);
@@ -290,7 +290,7 @@ static void newline_end_newline(chunk_t *br_close)
       }
       MARK_CHANGE();
       LOG_FMT(LNEWLINE, "%s: %d:%d add newline after '%s'\n",
-              __func__, br_close->orig_line, br_close->orig_col, br_close->str.c_str());
+              __func__, br_close->orig_line, br_close->orig_col, br_close->text());
       chunk_add_after(&nl, br_close);
    }
 }
@@ -303,7 +303,7 @@ static void newline_min_after(chunk_t *ref, INT32 count, UINT64 flag)
    chunk_t *next;
 
    LOG_FMT(LNEWLINE, "%s: '%s' line %d - count=%d flg=0x%" PRIx64 ":",
-           __func__, ref->str.c_str(), ref->orig_line, count, flag);
+           __func__, ref->text(), ref->orig_line, count, flag);
    log_func_stack_inline(LNEWLINE);
 
    do
@@ -366,9 +366,9 @@ chunk_t *newline_add_between(chunk_t *start, chunk_t *end)
    }
 
    LOG_FMT(LNEWLINE, "%s: '%s'[%s] line %d:%d and '%s' line %d:%d :",
-           __func__, start->str.c_str(), get_token_name(start->type),
+           __func__, start->text(), get_token_name(start->type),
            start->orig_line, start->orig_col,
-           end->str.c_str(), end->orig_line, end->orig_col);
+           end->text(), end->orig_line, end->orig_col);
    log_func_stack_inline(LNEWLINE);
 
    /* Back-up check for one-liners (should never be true!) */
@@ -426,8 +426,8 @@ void newline_del_between(chunk_t *start, chunk_t *end)
    chunk_t *pc = start;
 
    LOG_FMT(LNEWLINE, "%s: '%s' line %d:%d and '%s' line %d:%d : preproc=%d/%d ",
-           __func__, start->str.c_str(), start->orig_line, start->orig_col,
-           end->str.c_str(), end->orig_line, end->orig_col,
+           __func__, start->text(), start->orig_line, start->orig_col,
+           end->text(), end->orig_line, end->orig_col,
            ((start->flags & PCF_IN_PREPROC) != 0),
            ((end->flags & PCF_IN_PREPROC) != 0));
    log_func_stack_inline(LNEWLINE);
@@ -857,10 +857,10 @@ static void newlines_if_for_while_switch_post_blank_lines(chunk_t *start, argval
             {
                prev = chunk_get_prev_nnl(next);
                pc   = chunk_get_next_nl(next);
-               //LOG_FMT(LSYS, "  -- pc1=%s [%s]\n", pc->str.c_str(), get_token_name(pc->type));
+               //LOG_FMT(LSYS, "  -- pc1=%s [%s]\n", pc->text(), get_token_name(pc->type));
 
                pc = chunk_get_next(pc);
-               //LOG_FMT(LSYS, "  -- pc2=%s [%s]\n", pc->str.c_str(), get_token_name(pc->type));
+               //LOG_FMT(LSYS, "  -- pc2=%s [%s]\n", pc->text(), get_token_name(pc->type));
                if ((pc != NULL) && (pc->type == CT_PREPROC) &&
                    (pc->parent_type == CT_PP_ENDIF) &&
                    cpd.settings[UO_nl_squeeze_ifdef].b)
@@ -2807,7 +2807,7 @@ void newlines_eat_start_end(void)
             chunk.nl_count  = cpd.settings[UO_nl_start_of_file_min].n;
             chunk_add_before(&chunk, pc);
             LOG_FMT(LNEWLINE, "%s: %d:%d add newline before '%s'\n",
-                    __func__, pc->orig_line, pc->orig_col, pc->str.c_str());
+                    __func__, pc->orig_line, pc->orig_col, pc->text());
             MARK_CHANGE();
          }
       }
@@ -3207,8 +3207,8 @@ void do_blank_lines(void)
       {
          LOG_FMT(LBLANK, "%s: line %d [%s][%s] vs [%s][%s] nl=%d\n", __func__,
                  pc->orig_line,
-                 prev->str.c_str(), get_token_name(prev->type),
-                 next->str.c_str(), get_token_name(next->type),
+                 prev->text(), get_token_name(prev->type),
+                 next->text(), get_token_name(next->type),
                  pc->nl_count);
       }
 

@@ -72,7 +72,7 @@ static void do_the_sort(chunk_t **chunks, int num_chunks)
    LOG_FMT(LSORT, "%s: %d chunks:", __func__, num_chunks);
    for (idx = 0; idx < num_chunks; idx++)
    {
-      LOG_FMT(LSORT, " [%s]", chunks[idx]->str.c_str());
+      LOG_FMT(LSORT, " [%s]", chunks[idx]->text());
    }
    LOG_FMT(LSORT, "\n");
 

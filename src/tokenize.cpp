@@ -1152,7 +1152,7 @@ bool parse_word(tok_ctx& ctx, chunk_t& pc, bool skipcheck)
       else
       {
          /* Turn it into a keyword now */
-         pc.type = find_keyword_type(pc.str.c_str(), pc.str.size());
+         pc.type = find_keyword_type(pc.text(), pc.str.size());
       }
    }
 
