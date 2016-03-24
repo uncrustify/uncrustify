@@ -1246,6 +1246,16 @@ void indent_text(void)
          if (cpd.settings[UO_indent_label].n > 0)
          {
             indent_column_set(cpd.settings[UO_indent_label].n);
+
+            next = chunk_get_next(pc);   /* colon */
+            next = chunk_get_next(next); /* possible statement */
+
+            if ((next != NULL) && !chunk_is_newline(next) &&
+                /* label (+ 2, because there is colon and space after it) must fit into indent */
+                (cpd.settings[UO_indent_label].n + pc->len() + 2 <= frm.pse[frm.pse_tos].indent))
+            {
+               reindent_line(next, frm.pse[frm.pse_tos].indent);
+            }
          }
          else
          {
