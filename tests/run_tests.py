@@ -88,7 +88,6 @@ def usage_exit():
 	sys.exit()
 
 def run_tests(test_name, config_name, input_name, lang):
-	expected_name = os.path.join(os.path.dirname(input_name), test_name + '-' + os.path.basename(input_name))
 	# print "Test:  ", test_name
 	# print "Config:", config_name
 	# print "Input: ", input_name
@@ -97,6 +96,13 @@ def run_tests(test_name, config_name, input_name, lang):
 	if not config_name.startswith(os.sep):
 		config_name = os.path.join('config', config_name)
 
+	if test_name[-1] == '!':
+		test_name = test_name[:-1]
+		rerun_config = "%s.rerun%s" % os.path.splitext(config_name)
+	else:
+		rerun_config = config_name
+
+	expected_name = os.path.join(os.path.dirname(input_name), test_name + '-' + os.path.basename(input_name))
 	resultname = os.path.join('results', expected_name)
 	outputname = os.path.join('output', expected_name)
 	try:
@@ -126,7 +132,7 @@ def run_tests(test_name, config_name, input_name, lang):
 
 	# The file in results matches the file in output.
 	# Re-run with the output file as the input to check stability.
-	cmd = "%s/uncrustify -q -c %s -f %s %s > %s" % (os.path.abspath('../src'), config_name, outputname, lang, resultname)
+	cmd = "%s/uncrustify -q -c %s -f %s %s > %s" % (os.path.abspath('../src'), rerun_config, outputname, lang, resultname)
 	if log_level & 2:
 		print "RUN: " + cmd
 	a = os.system(cmd)
