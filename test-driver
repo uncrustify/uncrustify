@@ -120,6 +120,7 @@ case $estatus:$expect_failure in
 esac
 
 # Report outcome to console.
+cat $log_file
 echo "${col}${res}${std}: $test_name"
 
 # Register the test result, and other relevant metadata.
