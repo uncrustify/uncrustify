@@ -24,7 +24,7 @@
 # brace styles
 00010  ben.cfg                 c/braces.c
 00011  brace-allman.cfg        c/braces.c
-00012  brace-banner.cfg        c/braces.c
+00012! brace-banner.cfg        c/braces.c
 00013  brace-gnu.cfg           c/braces.c
 00014  brace-kr.cfg            c/braces.c
 00015  brace-ws.cfg            c/braces.c
