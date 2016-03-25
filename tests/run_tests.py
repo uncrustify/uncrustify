@@ -117,6 +117,7 @@ def run_tests(test_name, config_name, input_name, lang):
 			print MISMATCH_COLOR + "MISMATCH: " + NORMAL + test_name
 			if log_level & 1:
 				cmd = "diff -u %s %s" % (outputname, resultname)
+				sys.stdout.flush()
 				os.system(cmd)
 			return -1
 	except:
@@ -138,6 +139,7 @@ def run_tests(test_name, config_name, input_name, lang):
 			print UNSTABLE_COLOR + "UNSTABLE: " + NORMAL + test_name
 			if log_level & 1:
 				cmd = "diff -u %s %s" % (outputname, resultname)
+				sys.stdout.flush()
 				os.system(cmd)
 			return -2
 	except:
