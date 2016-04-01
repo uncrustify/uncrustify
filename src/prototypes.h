@@ -53,6 +53,7 @@ void register_options(void);
 void set_option_defaults(void);
 int load_option_file(const char *filename);
 int save_option_file(FILE *pfile, bool withDoc);
+int save_option_file_kernel(FILE *pfile, bool withDoc, bool only_not_default);
 int set_option_value(const char *name, const char *value);
 const group_map_value *get_group_name(int ug);
 const option_map_value *get_option_name(int uo);
