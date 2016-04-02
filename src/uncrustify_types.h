@@ -420,6 +420,9 @@ struct cp_data
    struct parse_frame frames[16];
    int                frame_count;
    int                pp_level;
+
+   /* the default values for settings */
+   op_val_t           defaults[UO_option_count];
 };
 
 extern struct cp_data cpd;
