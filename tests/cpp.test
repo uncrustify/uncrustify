@@ -264,3 +264,5 @@
 33029 cast.cfg                         cpp/cast.cpp
 33030 kdepim.cfg                       cpp/Q_FOREVER.cpp
 33031 bug_612.cfg                      cpp/bug_612.cpp
+33032 bug_670.cfg                      cpp/bug_670.cpp
+33033 bug_670.cfg                      cpp/bug_670.h

@@ -1664,9 +1664,11 @@ static void newline_func_def(chunk_t *start)
                 (prev->type != CT_VBRACE_CLOSE) &&
                 (prev->type != CT_BRACE_OPEN) &&
                 (prev->type != CT_SEMICOLON) &&
-                (prev->type != CT_PRIVATE_COLON) &&                // guy 2015-06-06
-                (prev->parent_type != CT_TEMPLATE))
+                (prev->type != CT_PRIVATE_COLON)  //&&                // guy 2015-06-06
+                //(prev->parent_type != CT_TEMPLATE)                  TODO: create some examples to test the option
+               )
             {
+               log_pcf_flags((log_sev_t) 99, prev->flags);
                newline_iarf(prev, a);
             }
          }
