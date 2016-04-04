@@ -641,7 +641,9 @@ void indent_text(void)
          frm.level++;
          indent_pse_push(frm, chunk_get_next(pc));
 
-         if (pc->parent_type == CT_PP_DEFINE)
+         if ((pc->parent_type == CT_PP_DEFINE) ||
+             (pc->parent_type == CT_PP_UNDEF) ||
+             (pc->parent_type == CT_PP_PRAGMA))
          {
             frm.pse[frm.pse_tos].indent_tmp = cpd.settings[UO_pp_define_at_level].b ?
                                               frm.pse[frm.pse_tos - 1].indent_tmp : 1;
