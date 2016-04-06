@@ -3128,6 +3128,11 @@ static bool can_be_full_param(chunk_t *start, chunk_t *end)
          /* skip over any array stuff */
          pc = chunk_skip_to_match(pc, CNAV_PREPROC);
       }
+      else if ((word_cnt == 2) && (pc->type == CT_SQUARE_OPEN))
+      {
+         /* Bug #671: is it such as: bool foo[FOO_MAX] */
+         pc = chunk_skip_to_match(pc, CNAV_PREPROC);
+      }
       else if ((word_cnt == 1) && (cpd.lang_flags & LANG_CPP) &&
                chunk_is_str(pc, "&&", 2))
       {
