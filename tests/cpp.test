@@ -267,3 +267,4 @@
 33032 bug_670.cfg                      cpp/bug_670.cpp
 33033 bug_670.cfg                      cpp/bug_670.h
 33034 bug_671.cfg                      cpp/bug_671.h
+33035 patch_32.cfg                     cpp/patch_32.cpp
