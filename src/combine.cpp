@@ -360,82 +360,84 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
    }
 
    /* D stuff */
-   if ((cpd.lang_flags & LANG_D) &&
-       (pc->type == CT_QUALIFIER) &&
-       chunk_is_str(pc, "const", 5) &&
-       (next->type == CT_PAREN_OPEN))
-   {
-      set_chunk_type(pc, CT_D_CAST);
-      set_paren_parent(next, pc->type);
+   if (next != NULL) {            // Coverity CID 76005
+      if ((cpd.lang_flags & LANG_D) &&
+          (pc->type == CT_QUALIFIER) &&
+          chunk_is_str(pc, "const", 5) &&
+          (next->type == CT_PAREN_OPEN))
+      {
+         set_chunk_type(pc, CT_D_CAST);
+         set_paren_parent(next, pc->type);
+      }
+
+      if ((next->type == CT_PAREN_OPEN) &&
+          ((pc->type == CT_D_CAST) ||
+           (pc->type == CT_DELEGATE) ||
+           (pc->type == CT_ALIGN)))
+      {
+         /* mark the parenthesis parent */
+         tmp = set_paren_parent(next, pc->type);
+
+         /* For a D cast - convert the next item */
+         if ((pc->type == CT_D_CAST) && (tmp != NULL))
+         {
+            if (tmp->type == CT_STAR)
+            {
+               set_chunk_type(tmp, CT_DEREF);
+            }
+            else if (tmp->type == CT_AMP)
+            {
+               set_chunk_type(tmp, CT_ADDR);
+            }
+            else if (tmp->type == CT_MINUS)
+            {
+               set_chunk_type(tmp, CT_NEG);
+            }
+            else if (tmp->type == CT_PLUS)
+            {
+               set_chunk_type(tmp, CT_POS);
+            }
+         }
+
+         /* For a delegate, mark previous words as types and the item after the
+          * close paren as a variable def
+          */
+         if (pc->type == CT_DELEGATE)
+         {
+            if (tmp != NULL)
+            {
+               set_chunk_parent(tmp, CT_DELEGATE);
+               if (tmp->level == tmp->brace_level)
+               {
+                  chunk_flags_set(tmp, PCF_VAR_1ST_DEF);
+               }
+            }
+
+            for (tmp = chunk_get_prev_ncnl(pc); tmp != NULL; tmp = chunk_get_prev_ncnl(tmp))
+            {
+               if (chunk_is_semicolon(tmp) ||
+                   (tmp->type == CT_BRACE_OPEN) ||
+                   (tmp->type == CT_VBRACE_OPEN))
+               {
+                  break;
+               }
+               make_type(tmp);
+            }
+         }
+
+         if ((pc->type == CT_ALIGN) && (tmp != NULL))
+         {
+            if (tmp->type == CT_BRACE_OPEN)
+            {
+               set_paren_parent(tmp, pc->type);
+            }
+            else if (tmp->type == CT_COLON)
+            {
+               set_chunk_parent(tmp, pc->type);
+            }
+         }
+      } /* paren open + cast/align/delegate */
    }
-
-   if ((next->type == CT_PAREN_OPEN) &&
-       ((pc->type == CT_D_CAST) ||
-        (pc->type == CT_DELEGATE) ||
-        (pc->type == CT_ALIGN)))
-   {
-      /* mark the parenthesis parent */
-      tmp = set_paren_parent(next, pc->type);
-
-      /* For a D cast - convert the next item */
-      if ((pc->type == CT_D_CAST) && (tmp != NULL))
-      {
-         if (tmp->type == CT_STAR)
-         {
-            set_chunk_type(tmp, CT_DEREF);
-         }
-         else if (tmp->type == CT_AMP)
-         {
-            set_chunk_type(tmp, CT_ADDR);
-         }
-         else if (tmp->type == CT_MINUS)
-         {
-            set_chunk_type(tmp, CT_NEG);
-         }
-         else if (tmp->type == CT_PLUS)
-         {
-            set_chunk_type(tmp, CT_POS);
-         }
-      }
-
-      /* For a delegate, mark previous words as types and the item after the
-       * close paren as a variable def
-       */
-      if (pc->type == CT_DELEGATE)
-      {
-         if (tmp != NULL)
-         {
-            set_chunk_parent(tmp, CT_DELEGATE);
-            if (tmp->level == tmp->brace_level)
-            {
-               chunk_flags_set(tmp, PCF_VAR_1ST_DEF);
-            }
-         }
-
-         for (tmp = chunk_get_prev_ncnl(pc); tmp != NULL; tmp = chunk_get_prev_ncnl(tmp))
-         {
-            if (chunk_is_semicolon(tmp) ||
-                (tmp->type == CT_BRACE_OPEN) ||
-                (tmp->type == CT_VBRACE_OPEN))
-            {
-               break;
-            }
-            make_type(tmp);
-         }
-      }
-
-      if ((pc->type == CT_ALIGN) && (tmp != NULL))
-      {
-         if (tmp->type == CT_BRACE_OPEN)
-         {
-            set_paren_parent(tmp, pc->type);
-         }
-         else if (tmp->type == CT_COLON)
-         {
-            set_chunk_parent(tmp, pc->type);
-         }
-      }
-   } /* paren open + cast/align/delegate */
 
    if (pc->type == CT_INVARIANT)
    {
@@ -2709,7 +2711,9 @@ static void fix_fcn_def_params(chunk_t *start)
       start = chunk_get_next_ncnl(start);
    }
 
-   assert((start->len() == 1) && (start->str[0] == '('));
+   if (start != NULL) {               // Coverity CID 76003
+      assert((start->len() == 1) && (start->str[0] == '('));
+   }
 
    ChunkStack cs;
 
@@ -3910,14 +3914,16 @@ static void mark_class_ctor(chunk_t *start)
            __func__, pclass->text(), pclass->orig_line, pc->text());
 
    /* detect D template class: "class foo(x) { ... }" */
-   if ((cpd.lang_flags & LANG_D) && (next->type == CT_PAREN_OPEN))
-   {
-      set_chunk_parent(next, CT_TEMPLATE);
-
-      next = get_d_template_types(cs, next);
-      if (next && (next->type == CT_PAREN_CLOSE))
+   if (next != NULL) {            // Coverity CID 76004
+      if ((cpd.lang_flags & LANG_D) && (next->type == CT_PAREN_OPEN))
       {
          set_chunk_parent(next, CT_TEMPLATE);
+
+         next = get_d_template_types(cs, next);
+         if (next && (next->type == CT_PAREN_CLOSE))
+         {
+            set_chunk_parent(next, CT_TEMPLATE);
+         }
       }
    }
 
@@ -4454,7 +4460,7 @@ static void handle_d_template(chunk_t *pc)
 
    name = chunk_get_next_ncnl(pc);
    po   = chunk_get_next_ncnl(name);
-   //if (!name || ((name->type != CT_WORD) && (name->type != CT_WORD)))  76000 Same on both sides, 2016-03-16
+   //if (!name || ((name->type != CT_WORD) && (name->type != CT_WORD)))  Coverity CID 76000 Same on both sides, 2016-03-16
    if (!name || (name->type != CT_WORD))
    {
       /* TODO: log an error, expected NAME */

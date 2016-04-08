@@ -311,8 +311,10 @@ static void newline_min_after(chunk_t *ref, INT32 count, UINT64 flag)
       pc = chunk_get_next(pc);
    } while ((pc != NULL) && !chunk_is_newline(pc));
 
-   LOG_FMT(LNEWLINE, "%s: on %s, line %d, col %d\n",
-           __func__, get_token_name(pc->type), pc->orig_line, pc->orig_col);
+   if (pc != NULL) {               // Coverity CID 76002
+      LOG_FMT(LNEWLINE, "%s: on %s, line %d, col %d\n",
+              __func__, get_token_name(pc->type), pc->orig_line, pc->orig_col);
+   }
 
    next = chunk_get_next(pc);
    if (!next)
