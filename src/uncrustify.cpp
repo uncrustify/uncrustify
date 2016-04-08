@@ -775,7 +775,14 @@ static void make_folders(const string& filename)
              (strcmp(&outname[last_idx], "..") != 0))
          {
             //fprintf(stderr, "%s: %s\n", __func__, outname);
-            mkdir(outname, 0750);
+            int status;    // coverity CID 75999
+            status = mkdir(outname, 0750);
+            if (status != 0) {
+               LOG_FMT(LERR, "%s: Unable to create %s: %s (%d)\n",
+                       __func__, outname, strerror(errno), errno);
+               cpd.error_count++;
+               return;
+            }
          }
          outname[idx] = PATH_SEP;
       }
