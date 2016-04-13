@@ -32,7 +32,7 @@ bool unc_getenv(const char *name, std::string& str)
    buf[len] = 0;
 
    str = buf;
-   printf("%s: name=%s len=%d value=%s\n", __func__, name, (int)len, text());
+   printf("%s: name=%s len=%d value=%s\n", __func__, name, (int)len, str.c_str());
    free(buf);
 
    return true;
