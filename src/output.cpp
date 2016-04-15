@@ -251,7 +251,7 @@ void output_parsed(FILE *pfile)
    fprintf(pfile, "# Line      Tag          Parent     Columns     Br/Lvl/pp Flag Nl  Text");
    for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next(pc))
    {
-      fprintf(pfile, "\n# %3d> %13.13s[%13.13s][%2d/%2d/%2d/%2d][%d/%d/%d][%10" PRIx64 "][%d-%d]",
+      fprintf(pfile, "\n# %3d> %16.16s[%16.16s][%2d/%2d/%2d/%2d][%d/%d/%d][%10" PRIx64 "][%d-%d]",
               pc->orig_line, get_token_name(pc->type),
               get_token_name(pc->parent_type),
               pc->column, pc->orig_col, pc->orig_col_end, pc->orig_prev_sp,
@@ -1082,8 +1082,8 @@ static chunk_t *output_comment_cpp(chunk_t *first)
       add_text(" ");
    }
    chunk_t *pc = first;
-
    int offs;
+
    while (can_combine_comment(pc, cmt))
    {
       offs = unc_isspace(pc->str[2]) ? 1 : 0;
@@ -1732,8 +1732,8 @@ static void do_kw_subst(chunk_t *pc)
    for (int kw_idx = 0; kw_idx < (int)ARRAY_SIZE(kw_subst_table); kw_idx++)
    {
       const kw_subst_t *kw = &kw_subst_table[kw_idx];
-
       int idx = pc->str.find(kw->tag);
+
       if (idx >= 0)
       {
          tmp_txt.clear();
