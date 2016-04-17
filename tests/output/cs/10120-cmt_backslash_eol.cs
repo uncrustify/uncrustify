@@ -1,4 +1,0 @@
-foo();
-// test \
-blah();
-bar();

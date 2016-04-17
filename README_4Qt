@@ -1,6 +1,12 @@
 README for Uncrustify4Qt
 ========================
 
+April 2016:
+IMPORTANT
+=========
+The project is NO MORE supported, as the extentions for Qt are all 
+merged whithin uncrustify.
+
 October 2015:
 This is a copy from uncrustify, version 0.61
 We begin with version 0.62

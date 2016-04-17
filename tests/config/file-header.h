@@ -1,6 +1,0 @@
-/**
- * @file $(filename)
- * Description
- *
- * $Id$
- */

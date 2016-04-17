@@ -1,8 +1,0 @@
-#
-# Test cases specifically for the ECMA language.
-#
-# Range: 90000 - 99999
-# test.name  config.file  input.file
-
-90000 ben.cfg ecma/example-1.es
-

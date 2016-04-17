@@ -1,4 +1,0 @@
-/**
- * CLASS:  $(class)
- * TODO: DESCRIPTION
- */
