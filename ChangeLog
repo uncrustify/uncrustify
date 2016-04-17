@@ -1,3 +1,7 @@
+New options:
+ - nl_before_func_class_def
+ - nl_before_func_class_proto
+
 Bugfix:
  - better descriptions for options
  - bug #631 is fixed

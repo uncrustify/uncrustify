@@ -61,7 +61,7 @@ public:
    /* grab the number of characters */
    int size() const
    {
-      return m_chars.size();
+      return(m_chars.size());
    }
 
    void set(int ch);
@@ -135,7 +135,7 @@ public:
 
    operator const char *()
    {
-      return c_str();
+      return(c_str());
    }
 
    static int compare(const unc_text& ref1, const unc_text& ref2, int len = 0);
@@ -145,12 +145,12 @@ public:
    value_type& get()
    {
       m_logok = false;
-      return m_chars;
+      return(m_chars);
    }
 
    const value_type& get() const
    {
-      return m_chars;
+      return(m_chars);
    }
 
    int operator[](int idx) const
@@ -161,22 +161,22 @@ public:
    /* throws an exception if out of bounds */
    int& at(int idx)
    {
-      return m_chars.at(idx);
+      return(m_chars.at(idx));
    }
 
    const int& at(int idx) const
    {
-      return m_chars.at(idx);
+      return(m_chars.at(idx));
    }
 
    const int& back() const
    {
-      return m_chars.back();
+      return(m_chars.back());
    }
 
    int& back()
    {
-      return m_chars.back();
+      return(m_chars.back());
    }
 
    void push_back(int ch)

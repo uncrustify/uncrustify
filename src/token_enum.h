@@ -346,7 +346,6 @@ typedef enum
    CT_SI,           // guy 2016-03-11
    CT_NOTHROW,      // guy 2016-03-11
    CT_WORD_,        // guy 2016-03-11
-
 } c_token_t;
 
 #endif /* TOKEN_ENUM_H_INCLUDED */

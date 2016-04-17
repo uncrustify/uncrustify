@@ -9,7 +9,7 @@
 
 #include "unc_tools.h"
 
-// examine_Data(__func__, __LINE__, 2);
+// examine_Data(__func__, __LINE__, n);
 
 void prot_the_line(int theLine)
 {
@@ -33,8 +33,7 @@ void examine_Data(const char *func_name, int theLine, int what)
    LOG_FMT(LGUY, "\n%s:", func_name);
    switch (what) {
    case 1:
-      for (pc = chunk_get_head(); pc != NULL; pc = pc->next)
-      {
+      for (pc = chunk_get_head(); pc != NULL; pc = pc->next) {
          if ((pc->type == CT_SQUARE_CLOSE) ||
              (pc->type == CT_TSQUARE)) {
            LOG_FMT(LGUY, "\n");
@@ -45,8 +44,7 @@ void examine_Data(const char *func_name, int theLine, int what)
       break;
    case 2:
       LOG_FMT(LGUY, "2:(%d)\n", theLine);
-      for (pc = chunk_get_head(); pc != NULL; pc = pc->next)
-      {
+      for (pc = chunk_get_head(); pc != NULL; pc = pc->next) {
         if (pc->orig_line == 7) {
           if (pc->type == CT_NEWLINE) {
             LOG_FMT(LGUY, "(%d)<NL> col=%d\n\n", pc->orig_line, pc->orig_col);
@@ -58,15 +56,23 @@ void examine_Data(const char *func_name, int theLine, int what)
       break;
    case 3:
       LOG_FMT(LGUY, "3:(%d)\n", theLine);
-      for (pc = chunk_get_head(); pc != NULL; pc = pc->next)
-      {
-         if (pc->type == CT_SEMICOLON) {
+      for (pc = chunk_get_head(); pc != NULL; pc = pc->next) {
            if (pc->type == CT_NEWLINE) {
              LOG_FMT(LGUY, "(%d)<NL> col=%d\n\n", pc->orig_line, pc->orig_col);
            } else {
              LOG_FMT(LGUY, "(%d)%s %s, col=%d, column=%d\n", pc->orig_line, pc->text(), get_token_name(pc->type), pc->orig_col, pc->column);
            }
-         }
+      }
+   case 4:
+      LOG_FMT(LGUY, "4:(%d)\n", theLine);
+      for (pc = chunk_get_head(); pc != NULL; pc = pc->next) {
+         if (pc->orig_line == 6) {
+           if (pc->type == CT_NEWLINE) {
+             LOG_FMT(LGUY, "(%d)<NL> col=%d\n\n", pc->orig_line, pc->orig_col);
+           } else {
+             LOG_FMT(LGUY, "(%d)%s %s, col=%d, column=%d\n", pc->orig_line, pc->text(), get_token_name(pc->type), pc->orig_col, pc->column);
+           }
+        }
       }
       break;
    }

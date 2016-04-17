@@ -225,7 +225,9 @@ static void try_split_here(cw_entry& ent, chunk_t *pc)
 static void split_line(chunk_t *start)
 {
    LOG_FUNC_ENTRY();
-   LOG_FMT(LSPLIT, "%s: line %d, col %d token:%s[%s] (IN_FUNC=%d) ",
+   LOG_FMT(LGUY, "%s: line %d, col %d token: %s\n",
+           __func__, start->orig_line, start->column, start->text());
+   LOG_FMT(LSPLIT, "%s: line %d, col %d token: '%s' [%s] (IN_FUNC=%d) ",
            __func__, start->orig_line, start->column, start->text(),
            get_token_name(start->type),
            (start->flags & (PCF_IN_FCN_DEF | PCF_IN_FCN_CALL)) != 0);
@@ -280,6 +282,7 @@ static void split_line(chunk_t *start)
 
    while (((pc = chunk_get_prev(pc)) != NULL) && !chunk_is_newline(pc))
    {
+      LOG_FMT(LGUY, "%s: at %s, col=%d\n", __func__, pc->text(), pc->orig_col);
       if (pc->type != CT_SPACE)
       {
          try_split_here(ent, pc);
@@ -303,6 +306,7 @@ static void split_line(chunk_t *start)
    }
 
    /* Break before the token instead of after it according to the pos_xxx rules */
+   LOG_FMT(LGUY, "%s: ent at %s, col=%d\n", __func__, ent.pc->text(), ent.pc->orig_col);
    if (((chunk_is_token(ent.pc, CT_ARITH) || chunk_is_token(ent.pc, CT_CARET)) &&
         (cpd.settings[UO_pos_arith].tp & TP_LEAD)) ||
        (chunk_is_token(ent.pc, CT_ASSIGN) &&
@@ -321,6 +325,7 @@ static void split_line(chunk_t *start)
    {
       pc = chunk_get_next(ent.pc);
    }
+   LOG_FMT(LGUY, "%s: at %s, col=%d\n", __func__, pc->text(), pc->orig_col);
    if (pc == NULL)
    {
       pc = start;
@@ -349,11 +354,14 @@ static void split_line(chunk_t *start)
    prev = chunk_get_prev(pc);
    if ((prev != NULL) && !chunk_is_newline(pc) && !chunk_is_newline(prev))
    {
-      int plen = (pc->len() < 5) ? pc->len() : 5;
-      int slen = (start->len() < 5) ? start->len() : 5;
-      LOG_FMT(LSPLIT, " '%.*s' [%s], started on token '%.*s' [%s]\n",
-              plen, pc->text(), get_token_name(pc->type),
-              slen, start->text(), get_token_name(start->type));
+      //int plen = (pc->len() < 5) ? pc->len() : 5;
+      //int slen = (start->len() < 5) ? start->len() : 5;
+      //LOG_FMT(LSPLIT, " '%.*s' [%s], started on token '%.*s' [%s]\n",
+      //        plen, pc->text(), get_token_name(pc->type),
+      //        slen, start->text(), get_token_name(start->type));
+      LOG_FMT(LSPLIT, "  %s [%s], started on token '%s' [%s]\n",
+              pc->text(), get_token_name(pc->type),
+              start->text(), get_token_name(start->type));
 
       split_before_chunk(pc);
    }

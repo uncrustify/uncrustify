@@ -1710,7 +1710,7 @@ void space_text(void)
    column = pc->column;
    while (pc != NULL)
    {
-      LOG_FMT(LGUY, "%d:%d [%d] %s\n", pc->orig_line, pc->orig_col, __LINE__, pc->text());
+      //LOG_FMT(LGUY, "%d:%d [%d] %s\n", pc->orig_line, pc->orig_col, __LINE__, pc->text());
       if ((strcmp(pc->text(), "SIGNAL") == 0) ||
           (strcmp(pc->text(), "SLOT") == 0))
       { // guy 2015-09-22

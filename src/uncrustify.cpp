@@ -777,7 +777,8 @@ static void make_folders(const string& filename)
             //fprintf(stderr, "%s: %s\n", __func__, outname);
             int status;    // Coverity CID 75999
             status = mkdir(outname, 0750);
-            if (status != 0) {
+            if ((status != 0) &&
+                (errno != 17)) {
                LOG_FMT(LERR, "%s: Unable to create %s: %s (%d)\n",
                        __func__, outname, strerror(errno), errno);
                cpd.error_count++;
@@ -1543,6 +1544,7 @@ static void uncrustify_file(const file_mem& fm, FILE *pfout,
          old_changes = cpd.changes;
 
          LOG_FMT(LNEWLINE, "Newline loop start: %d\n", cpd.changes);
+         LOG_FMT(LGUY, "Newline loop start: %d\n", cpd.changes);
 
          annotations_newlines();
          newlines_cleanup_dup();
@@ -1666,7 +1668,6 @@ static void uncrustify_file(const file_mem& fm, FILE *pfout,
          if (cpd.settings[UO_code_width].n > 0)
          {
             LOG_FMT(LNEWLINE, "Code_width loop start: %d\n", cpd.changes);
-
             do_code_width();
             if ((old_changes != cpd.changes) && first)
             {

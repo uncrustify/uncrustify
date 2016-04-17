@@ -269,3 +269,5 @@
 33034 bug_671.cfg                      cpp/bug_671.h
 33035 patch_32.cfg                     cpp/patch_32.cpp
 33036 bug_663.cfg                      cpp/bug_663.cpp
+33037 func_class.cfg                   cpp/func_class.cpp
+33038 func_class.cfg                   cpp/func_class.h

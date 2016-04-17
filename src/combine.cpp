@@ -2718,8 +2718,8 @@ static void fix_fcn_def_params(chunk_t *start)
    ChunkStack cs;
 
    int level = start->level + 1;
-
    chunk_t *pc = start;
+
    while ((pc = chunk_get_next_ncnl(pc)) != NULL)
    {
       if (((start->len() == 1) && (start->str[0] == ')')) ||

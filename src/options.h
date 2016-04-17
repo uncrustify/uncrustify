@@ -584,6 +584,10 @@ enum uncrustify_options
    UO_nl_after_do,                    // newline after 'while' of do
    UO_nl_ds_struct_enum_cmt,          // newline between commented-elements of struct/enum
    UO_nl_ds_struct_enum_close_brace,  // force newline before '}' of struct/union/enum
+   UO_nl_before_func_class_def,       // newline before 'func_class_def'                    guy 2016-04-16
+   //UO_nl_after_func_class_def,        // newline after 'func_class_def'                     guy 2016-04-16
+   UO_nl_before_func_class_proto,     // newline before 'func_class_proto'                  guy 2016-04-16
+   //UO_nl_after_func_class_proto,      // newline after 'func_class_proto'                   guy 2016-04-16
 
    UO_nl_define_macro,                // alter newlines in #define macros
    UO_nl_start_of_file,               // alter newlines at the start of file

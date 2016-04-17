@@ -164,8 +164,8 @@ static void align_add(ChunkStack& cs, chunk_t *pc, int& max_col, int min_pad, bo
    if ((prev == NULL) || chunk_is_newline(prev))
    {
       min_col = squeeze ? 1 : pc->column;
-      LOG_FMT(LALADD, "%s: pc->col=%d max_col=%d min_pad=%d min_col=%d\n",
-              __func__, pc->column, max_col, min_pad, min_col);
+      LOG_FMT(LALADD, "%s: pc->orig_line=%d, pc->col=%d max_col=%d min_pad=%d min_col=%d\n",
+              __func__, pc->orig_line, pc->column, max_col, min_pad, min_col);
    }
    else
    {
@@ -184,8 +184,8 @@ static void align_add(ChunkStack& cs, chunk_t *pc, int& max_col, int min_pad, bo
             min_col = pc->column;
          }
       }
-      LOG_FMT(LALADD, "%s: pc->col=%d max_col=%d min_pad=%d min_col=%d multi:%s prev->col=%d prev->len=%d %s\n",
-              __func__, pc->column, max_col, min_pad, min_col, (prev->type == CT_COMMENT_MULTI) ? "Y" : "N",
+      LOG_FMT(LALADD, "%s: Pc->Orig_line=%d, pc->col=%d max_col=%d min_pad=%d min_col=%d multi:%s prev->col=%d prev->len=%d %s\n",
+              __func__, pc->orig_line, pc->column, max_col, min_pad, min_col, (prev->type == CT_COMMENT_MULTI) ? "Y" : "N",
               (prev->type == CT_COMMENT_MULTI) ? prev->orig_col_end : prev->column, prev->len(), get_token_name(prev->type));
    }
 

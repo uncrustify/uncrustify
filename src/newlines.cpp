@@ -16,6 +16,7 @@
 #include <algorithm>
 #include <cerrno>
 #include "unc_ctype.h"
+#include "unc_tools.h"
 
 
 static void newlines_double_space_struct_enum_union(chunk_t *open_brace);
@@ -634,6 +635,124 @@ static void newlines_if_for_while_switch_pre_blank_lines(chunk_t *start, argval_
       else if (chunk_is_comment(pc))
       {
          /* vbrace close is ok because it won't go into output, so we should skip it */
+         last_nl = NULL;
+         continue;
+      }
+      else
+      {
+         if (do_add) /* we found something previously besides a comment or a new line */
+         {
+            /* if we have run across a newline */
+            if (last_nl != NULL)
+            {
+               if (last_nl->nl_count < 2)
+               {
+                  double_newline(last_nl);
+               }
+            }
+            else
+            {
+               /* we didn't run into a nl, so we need to add one */
+               if (((next = chunk_get_next(pc)) != NULL) &&
+                   chunk_is_comment(next))
+               {
+                  pc = next;
+               }
+               if ((last_nl = newline_add_after(pc)) != NULL)
+               {
+                  double_newline(last_nl);
+               }
+            }
+         }
+
+         return;
+      }
+   }
+}
+
+
+/**
+ * Add or remove extra newline before the chunk.
+ * Adds before comments
+ * Adds before destructor
+ * Doesn't do anything if open brace before it
+ * "code\n\ncomment\nif (...)" or "code\ncomment\nif (...)"
+ */
+static void newlines_func_pre_blank_lines(chunk_t *start, argval_t nl_opt)
+{
+   LOG_FUNC_ENTRY();
+   chunk_t *pc;
+   chunk_t *prev;
+   chunk_t *next;
+   chunk_t *last_nl = NULL;
+   int     level    = start->level;
+   bool    do_add   = nl_opt & AV_ADD;
+
+   if ((nl_opt == AV_IGNORE) ||
+       (((start->flags & PCF_IN_PREPROC) != 0) &&
+        !cpd.settings[UO_nl_define_macro].b))
+   {
+      return;
+   }
+
+   /*
+    * look backwards until we find
+    *  open brace (don't add or remove)
+    *  2 newlines in a row (don't add)
+    *  a destructor
+    *  something else (don't remove)
+    */
+   for (pc = chunk_get_prev(start); pc != NULL; pc = chunk_get_prev(pc))
+   {
+      if (chunk_is_newline(pc))
+      {
+         last_nl = pc;
+         /* if we found 2 or more in a row */
+         if ((pc->nl_count > 1) || chunk_is_newline(chunk_get_prev_nvb(pc)))
+         {
+            /* need to remove */
+            if ((nl_opt & AV_REMOVE) && ((pc->flags & PCF_VAR_DEF) == 0))
+            {
+               /* if we're also adding, take care of that here */
+               int nl_count = do_add ? 2 : 1;
+               if (nl_count != pc->nl_count)
+               {
+                  pc->nl_count = nl_count;
+                  MARK_CHANGE();
+               }
+               /* can keep using pc because anything other than newline stops loop, and we delete if newline */
+               while (chunk_is_newline(prev = chunk_get_prev_nvb(pc)))
+               {
+                  /* Make sure we don't combine a preproc and non-preproc */
+                  if (!chunk_safe_to_del_nl(prev))
+                  {
+                     break;
+                  }
+                  chunk_del(prev);
+                  MARK_CHANGE();
+               }
+            }
+
+            return;
+         }
+      }
+      else if (chunk_is_opening_brace(pc) || (pc->level < level))
+      {
+         return;
+      }
+      else if (chunk_is_comment(pc))
+      {
+         /* vbrace close is ok because it won't go into output, so we should skip it */
+         last_nl = NULL;
+         continue;
+      }
+      else if (pc->type == CT_DESTRUCTOR)
+      {
+         last_nl = NULL;
+         continue;
+      }
+      else if (pc->type == CT_TYPE)
+      {
          last_nl = NULL;
          continue;
       }
@@ -1670,7 +1789,6 @@ static void newline_func_def(chunk_t *start)
                 //(prev->parent_type != CT_TEMPLATE)                  TODO: create some examples to test the option
                )
             {
-               log_pcf_flags((log_sev_t) 99, prev->flags);
                newline_iarf(prev, a);
             }
          }
@@ -2703,6 +2821,18 @@ void newlines_insert_blank_lines(void)
       {
          newlines_if_for_while_switch_pre_blank_lines(pc, cpd.settings[UO_nl_before_do].a);
          newlines_if_for_while_switch_post_blank_lines(pc, cpd.settings[UO_nl_after_do].a);
+      }
+      else if ((pc->type == CT_FUNC_CLASS_DEF) ||
+               (pc->type == CT_FUNC_DEF))
+      {                  // guy 2016-04-16
+         newlines_func_pre_blank_lines(pc, cpd.settings[UO_nl_before_func_class_def].a);
+         //newlines_func_post_blank_lines(pc, cpd.settings[UO_nl_after_func_class_def].a);
+      }
+      else if ((pc->type == CT_FUNC_CLASS_PROTO) ||
+               (pc->type == CT_FUNC_PROTO))
+      {                  // guy 2016-04-16
+         newlines_func_pre_blank_lines(pc, cpd.settings[UO_nl_before_func_class_proto].a);
+         //newlines_func_post_blank_lines(pc, cpd.settings[UO_nl_after_func_class_proto].a);
       }
       else
       {
