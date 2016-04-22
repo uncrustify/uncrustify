@@ -3,6 +3,8 @@
  * Does all the output & comment formatting.
  *
  * @author  Ben Gardner
+ * @author  Guy Maurel since version 0.62 for uncrustify4Qt
+ *          October 2015, 2016
  * @license GPL v2+
  */
 #include "uncrustify_types.h"
@@ -242,13 +244,14 @@ void output_parsed(FILE *pfile)
    chunk_t *pc;
    int     cnt;
 
-   save_option_file(pfile, false);
+   //save_option_file(pfile, false);
+   save_option_file_kernel(pfile, false, true);
 
    fprintf(pfile, "# -=====-\n");
    fprintf(pfile, "# Line      Tag          Parent     Columns     Br/Lvl/pp Flag Nl  Text");
    for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next(pc))
    {
-      fprintf(pfile, "\n# %3d> %13.13s[%13.13s][%2d/%2d/%2d/%2d][%d/%d/%d][%10" PRIx64 "][%d-%d]",
+      fprintf(pfile, "\n# %3d> %16.16s[%16.16s][%2d/%2d/%2d/%2d][%d/%d/%d][%10" PRIx64 "][%d-%d]",
               pc->orig_line, get_token_name(pc->type),
               get_token_name(pc->parent_type),
               pc->column, pc->orig_col, pc->orig_col_end, pc->orig_prev_sp,
@@ -263,7 +266,7 @@ void output_parsed(FILE *pfile)
          }
          if (pc->type != CT_NL_CONT)
          {
-            fprintf(pfile, "%s", pc->str.c_str());
+            fprintf(pfile, "%s", pc->text());
          }
          else
          {
@@ -474,7 +477,7 @@ void output_text(FILE *pfile)
  * @param line the comment line
  * @return 0=not present, >0=number of chars that are part of the lead
  */
-static int cmt_parse_lead(const unc_text& line, int is_last)
+static int cmt_parse_lead(const unc_text& line, bool is_last)
 {
    int len = 0;
 
@@ -532,7 +535,7 @@ static int cmt_parse_lead(const unc_text& line, int is_last)
  *  - cmt_star_cont
  *  - the first line length
  *  - the second line leader length
- *  - the last line length
+ *  - the last line length (without leading space/tab)
  *
  * If the first and last line are the same length and don't contain any alnum
  * chars and (the first line len > 2 or the second leader is the same as the
@@ -545,7 +548,7 @@ static int cmt_parse_lead(const unc_text& line, int is_last)
  * @param str       The comment string
  * @param len       Length of the comment
  * @param start_col Starting column
- * @return 0 or 1
+ * @return          cmt.xtra_indent is set to 0 or 1
  */
 static void calculate_comment_body_indent(cmt_reflow& cmt, const unc_text& str)
 {
@@ -969,7 +972,9 @@ static chunk_t *output_comment_cpp(chunk_t *first)
    leadin = "//";                                       // default setting to keep previous behaviour
    if (cpd.settings[UO_sp_cmt_cpp_doxygen].b)           // special treatment for doxygen style comments (treat as unity)
    {
-      const char *sComment = first->str.c_str();
+      const char *sComment = first->text();
+      bool grouping = (sComment[2] == '@');
+      int brace = 3;
       if ((sComment[2] == '/') || (sComment[2] == '!')) // doxygen style found!
       {
          leadin += sComment[2];                         // at least one additional char (either "///" or "//!")
@@ -977,6 +982,16 @@ static chunk_t *output_comment_cpp(chunk_t *first)
          {
             leadin += '<';
          }
+         else
+         {
+           grouping = (sComment[3] == '@');             // or a further one (grouping)
+           brace = 4;
+         }
+      }
+      if (grouping && ((sComment[brace] == '{') || (sComment[brace] == '}')))
+      {
+         leadin += '@';
+         leadin += sComment[brace];
       }
    }
 
@@ -1046,7 +1061,8 @@ static chunk_t *output_comment_cpp(chunk_t *first)
    {
       /* nothing to group: just output a single line */
       add_text("/*");
-      if (!unc_isspace(first->str[2]))
+      // patch # 32, 2012-03-23
+      if (!unc_isspace(first->str[2]) && cpd.settings[UO_sp_cmt_cpp_start].a & AV_ADD)
       {
          add_char(' ');
       }
@@ -1066,8 +1082,8 @@ static chunk_t *output_comment_cpp(chunk_t *first)
       add_text(" ");
    }
    chunk_t *pc = first;
-
    int offs;
+
    while (can_combine_comment(pc, cmt))
    {
       offs = unc_isspace(pc->str[2]) ? 1 : 0;
@@ -1390,9 +1406,12 @@ static void output_comment_multi(chunk_t *pc)
 
                   int idx;
 
+                  // Checks for and updates the lead chars.
+                  // @return 0=not present, >0=number of chars that are part of the lead
                   idx = cmt_parse_lead(line, (cmt_idx == pc->len()));
                   if (idx > 0)
                   {
+                     // >0=number of chars that are part of the lead
                      cmt.cont_text.set(line, 0, idx);
                      LOG_CONTTEXT();
                      if ((line.size() >= 2) && (line[0] == '*') && unc_isalnum(line[1]))
@@ -1402,7 +1421,12 @@ static void output_comment_multi(chunk_t *pc)
                   }
                   else
                   {
-                     add_text(cmt.cont_text);
+                     // bug #653
+                     if (cpd.lang_flags & LANG_D)
+                     {
+                        // 0=no lead char present
+                        add_text(cmt.cont_text);
+                     }
                   }
                }
 
@@ -1708,8 +1732,8 @@ static void do_kw_subst(chunk_t *pc)
    for (int kw_idx = 0; kw_idx < (int)ARRAY_SIZE(kw_subst_table); kw_idx++)
    {
       const kw_subst_t *kw = &kw_subst_table[kw_idx];
-
       int idx = pc->str.find(kw->tag);
+
       if (idx >= 0)
       {
          tmp_txt.clear();
@@ -1922,7 +1946,7 @@ void add_long_preprocessor_conditional_block_comment(void)
          pp_end = pp_start = pc;
       }
 
-      if (pc->type != CT_PP_IF)
+      if ((pc->type != CT_PP_IF) || !pp_start)
       {
          continue;
       }

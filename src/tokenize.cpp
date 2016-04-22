@@ -910,6 +910,76 @@ static bool parse_cs_string(tok_ctx& ctx, chunk_t& pc)
 
 
 /**
+ * Interpolated strings start with $" end with a single "
+ * Double quotes are escaped by doubling.
+ * Need to track embedded { } pairs and ignore anything between.
+ *
+ * @param pc   The structure to update, str is an input.
+ * @return     Whether a string was parsed
+ */
+static bool parse_cs_interpolated_string(tok_ctx& ctx, chunk_t& pc)
+{
+   pc.str = ctx.get();        // '$'
+   pc.str.append(ctx.get());  // '"'
+   pc.type = CT_STRING;
+
+   int depth = 0;
+
+   /* go until we hit a zero (end of file) or a single " */
+   while (ctx.more())
+   {
+      int ch = ctx.get();
+      pc.str.append(ch);
+
+      /* if we are inside a { }, then we only look for a } */
+      if (depth > 0)
+      {
+         if (ch == '}')
+         {
+            if (ctx.peek() == '}')
+            {
+               // }} doesn't decrease the depth
+               pc.str.append(ctx.get());  // '{'
+            }
+            else
+            {
+               depth--;
+            }
+         }
+      }
+      else
+      {
+         if (ch == '{')
+         {
+            if (ctx.peek() == '{')
+            {
+               // {{ doesn't increase the depth
+               pc.str.append(ctx.get());
+            }
+            else
+            {
+               depth++;
+            }
+         }
+         else if (ch == '"')
+         {
+            if (ctx.peek() == '"')
+            {
+               pc.str.append(ctx.get());
+            }
+            else
+            {
+               break;
+            }
+         }
+      }
+   }
+
+   return(true);
+}
+
+
+/**
  * VALA verbatim string, ends with three quotes (""")
  *
  * @param pc   The structure to update, str is an input.
@@ -1082,7 +1152,7 @@ bool parse_word(tok_ctx& ctx, chunk_t& pc, bool skipcheck)
       else
       {
          /* Turn it into a keyword now */
-         pc.type = find_keyword_type(pc.str.c_str(), pc.str.size());
+         pc.type = find_keyword_type(pc.text(), pc.str.size());
       }
    }
 
@@ -1212,6 +1282,24 @@ static bool parse_newline(tok_ctx& ctx)
    }
    ctx.restore();
    return(false);
+}
+
+
+/**
+ * PAWN #define is different than C/C++.
+ *   #define PATTERN REPLACEMENT_TEXT
+ * The PATTERN may not contain a space or '[' or ']'.
+ * A generic whitespace check should be good enough.
+ * Do not change the pattern.
+ */
+static void parse_pawn_pattern(tok_ctx& ctx, chunk_t& pc, c_token_t tt)
+{
+   pc.str.clear();
+   pc.type = tt;
+   while (!unc_isspace(ctx.peek()))
+   {
+      pc.str.append(ctx.get());
+   }
 }
 
 
@@ -1416,6 +1504,13 @@ static bool parse_next(tok_ctx& ctx, chunk_t& pc)
       }
    }
 
+   /* Check for C# Interpolated strings */
+   if (((cpd.lang_flags & LANG_CS) != 0) && (ctx.peek() == '$') && (ctx.peek(1) == '"'))
+   {
+      parse_cs_interpolated_string(ctx, pc);
+      return true;
+   }
+
    /* handle VALA """ strings """ */
    if (((cpd.lang_flags & LANG_VALA) != 0) &&
        (ctx.peek() == '"') &&
@@ -1471,6 +1566,13 @@ static bool parse_next(tok_ctx& ctx, chunk_t& pc)
    /* PAWN specific stuff */
    if ((cpd.lang_flags & LANG_PAWN) != 0)
    {
+      if ((cpd.preproc_ncnl_count == 1) &&
+          ((cpd.in_preproc == CT_PP_DEFINE) ||
+           (cpd.in_preproc == CT_PP_EMIT)))
+      {
+         parse_pawn_pattern(ctx, pc, CT_MACRO);
+         return true;
+      }
       /* Check for PAWN strings: \"hi" or !"hi" or !\"hi" or \!"hi" */
       if ((ctx.peek() == '\\') || (ctx.peek() == '!'))
       {
@@ -1485,6 +1587,18 @@ static bool parse_next(tok_ctx& ctx, chunk_t& pc)
             parse_string(ctx, pc, 2, false);
             return(true);
          }
+      }
+
+      /* handle PAWN preprocessor args %0 .. %9 */
+      if ((cpd.in_preproc == CT_PP_DEFINE) &&
+          (ctx.peek() == '%') &&
+          unc_isdigit(ctx.peek(1)))
+      {
+         pc.str.clear();
+         pc.str.append(ctx.get());
+         pc.str.append(ctx.get());
+         pc.type = CT_WORD;
+         return true;
       }
    }
 
@@ -1672,12 +1786,12 @@ void tokenize(const deque<int>& data, chunk_t *ref)
       rprev = pc;
       if (rprev != NULL)
       {
-         pc->flags |= rprev->flags & PCF_COPY_FLAGS;
+         chunk_flags_set(pc, rprev->flags & PCF_COPY_FLAGS);
 
          /* a newline can't be in a preprocessor */
          if (pc->type == CT_NEWLINE)
          {
-            pc->flags &= ~PCF_IN_PREPROC;
+            chunk_flags_clr(pc, PCF_IN_PREPROC);
          }
       }
       if (ref != NULL)
@@ -1700,7 +1814,7 @@ void tokenize(const deque<int>& data, chunk_t *ref)
       /* Special handling for preprocessor stuff */
       if (cpd.in_preproc != CT_NONE)
       {
-         pc->flags |= PCF_IN_PREPROC;
+         chunk_flags_set(pc, PCF_IN_PREPROC);
 
          /* Count words after the preprocessor */
          if (!chunk_is_comment(pc) && !chunk_is_newline(pc))

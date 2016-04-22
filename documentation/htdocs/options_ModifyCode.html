@@ -1,0 +1,146 @@
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+   <title>Uncrustify: where do the Positioning options work</title>
+</head>
+<body lang="en-US">
+<h1><a href="https://github.com/gmaurel/uncrustify4Qt">Uncrustify4Qt</a>:
+Where do the options work?</h1>
+<h2>Code modifying</h2>
+<p>
+</p>
+<table border="1">
+<tr>
+<td>
+<pre>
+namespace a::b
+{
+int foo::bar()
+{
+    switch(xx) {
+    case 1: <a name="mod_full_brace_do"></a><a name="mod_full_brace_for"></a>
+        do { ++i; } while (++cnt < 1000);
+        <a title="mod_full_brace_do"><strong><font color="red">   ^      ^</font></strong></a>
+        for (i = 0; i < 5; i++) { bar(i); }
+        <a title="mod_full_brace_for"><strong><font color="red">                        ^         ^</font></strong></a><a name="mod_full_brace_if"></a><a name="mod_full_brace_if_chain"></a><a name="mod_full_brace_nl"></a>
+        if (a != b) {
+        <a title="mod_full_brace_nl"><strong><font color="red">            ^</a>
+        <a title="mod_full_brace_if">            ^</a>
+        <a title="mod_full_brace_if_chain">            ^</font></strong></a>
+           x = a;
+           if (c == d)
+           <a title="mod_full_brace_if"><strong><font color="red">           ^</font></strong></a>
+              y = 5;
+        }
+        <a title="mod_full_brace_nl"><strong><font color="red">^</a>
+        <a title="mod_full_brace_if">^</a>
+        <a title="mod_full_brace_if_chain">^</font></strong></a><a name="mod_full_brace_while"></a>
+        while (a == b)
+        <a title="mod_full_brace_while"><strong><font color="red">              ^</font></strong></a>
+            c++;
+        <a title="mod_full_brace_while"><strong><font color="red">^</font></strong></a><a name="mod_full_paren_if_bool"></a>
+        if (( a < b) && ( b > c)) {
+        <a title="mod_full_paren_if_bool"><strong><font color="red">    ^      ^    ^      ^</font></strong></a><a name="mod_paren_on_return"></a>
+        return (nCount);
+        <a title="mod_paren_on_return"><strong><font color="red">       ^      ^</font></strong></a><a name="mod_remove_extra_semicolon"></a>
+        if (a) {
+            foo();;
+            <a title="mod_remove_extra_semicolon"><strong><font color="red">      ^</font></strong></a>
+        };
+        <a title="mod_remove_extra_semicolon"><strong><font color="red"> ^</font></strong></a>
+        break;<a name="mod_move_case_break"></a>
+    case 2: {<a name="mod_case_brace"></a>
+            int b;
+            b = 2;
+        }
+        <a title="mod_case_brace"><strong><font color="red">^</font></strong></a>
+        break;
+        <a title="mod_move_case_break"><strong><font color="red">^</font></strong></a>
+    default:<a name="mod_add_long_switch_closebrace_comment"></a>
+        handle_the_rest();
+        break;
+    } // switch
+    <a title="mod_add_long_switch_closebrace_comment"><strong><font color="red">  ^</font></strong></a><a name="mod_add_long_function_closebrace_comment"></a>
+} // foo::bar
+<a title="mod_add_long_function_closebrace_comment"><strong><font color="red">  ^</font></strong></a><a name="mod_add_long_namespace_closebrace_comment"></a>
+} // namespace a::b
+<a title="mod_add_long_namespace_closebrace_comment"><strong><font color="red">  ^</font></strong></a>
+<a name="mod_remove_empty_return"></a>
+void a()
+{
+    return;
+    <a title="mod_remove_empty_return"><strong><font color="red">^</font></strong></a>
+}
+</pre>
+</td>
+</tr>
+</table>
+<p></p>
+<h1>Register</h1>
+<table>
+  <tr>
+    <td><a href="#mod_add_long_function_closebrace_comment">mod_add_long_function_closebrace_comment</a></td>
+    <td><a href="#mod_add_long_ifdef_else_comment">mod_add_long_ifdef_else_comment</a></td>
+  </tr>
+  <tr>
+    <td><a href="#mod_add_long_ifdef_endif_comment">mod_add_long_ifdef_endif_comment</a></td>
+    <td><a href="#mod_add_long_namespace_closebrace_comment">mod_add_long_namespace_closebrace_comment</a></td>
+  </tr>
+  <tr>
+    <td><a href="#mod_add_long_switch_closebrace_comment">mod_add_long_switch_closebrace_comment</a></td>
+    <td><a href="#mod_case_brace">mod_case_brace</a></td>
+  </tr>
+  <tr>
+    <td><a href="#mod_full_brace_do">mod_full_brace_do</a></td>
+    <td><a href="#mod_full_brace_for">mod_full_brace_for</a></td>
+  </tr>
+  <tr>
+    <td><a href="#mod_full_brace_function">mod_full_brace_function</a></td>
+    <td><a href="#mod_full_brace_if_chain">mod_full_brace_if_chain</a></td>
+  </tr>
+  <tr>
+    <td><a href="#mod_full_brace_if">mod_full_brace_if</a></td>
+    <td><a href="#mod_full_brace_nl">mod_full_brace_nl</a></td>
+  </tr>
+  <tr>
+    <td><a href="#mod_full_brace_using">mod_full_brace_using</a></td>
+    <td><a href="#mod_full_brace_while">mod_full_brace_while</a></td>
+  </tr>
+  <tr>
+    <td><a href="#mod_full_paren_if_bool">mod_full_paren_if_bool</a></td>
+    <td><a href="#mod_move_case_break">mod_move_case_break</a></td>
+  </tr>
+  <tr>
+    <td><a href="#mod_paren_on_return">mod_paren_on_return</a></td>
+    <td><a href="#mod_pawn_semicolon">mod_pawn_semicolon</a></td>
+  </tr>
+  <tr>
+    <td><a href="#mod_remove_empty_return">mod_remove_empty_return</a></td>
+    <td><a href="#mod_remove_extra_semicolon">mod_remove_extra_semicolon</a></td>
+    </tr>
+  <tr>
+    <td><a href="#mod_sort_import">mod_sort_import</a></td>
+    <td><a href="#mod_sort_include">mod_sort_include</a></td>
+  </tr>
+  <tr>
+    <td><a href="#mod_sort_using">mod_sort_using</a></td>
+  </tr>
+</table>
+
+<h2>not yet shown</h2>
+mod_full_brace_using<br>
+mod_add_long_ifdef_endif_comment<br>
+mod_add_long_ifdef_else_comment<br>
+mod_sort_include<br>
+
+<h2>only for Pawn</h2>
+mod_full_brace_function<br>
+mod_pawn_semicolon<br>
+
+<h2>only for Java</h2>
+mod_sort_import<br>
+
+<h2>only for C#</h2>
+mod_sort_using<br>
+</body>
+</html>

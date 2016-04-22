@@ -3,12 +3,15 @@
  * Adds or removes inter-chunk spaces.
  *
  * @author  Ben Gardner
+ * @author  Guy Maurel since version 0.62 for uncrustify4Qt
+ *          October 2015, 2016
  * @license GPL v2+
  */
 #include "uncrustify_types.h"
 #include "chunk_list.h"
 #include "prototypes.h"
 #include "char_table.h"
+#include "options_for_QT.h"
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -81,9 +84,9 @@ static void log_rule2(int line, const char *rule, chunk_t *first, chunk_t *secon
       LOG_FMT(LSPACE, "Spacing: line %d [%s/%s] '%s' <===> [%s/%s] '%s' : %s[%d]%s",
               first->orig_line,
               get_token_name(first->type), get_token_name(first->parent_type),
-              first->str.c_str(),
+              first->text(),
               get_token_name(second->type), get_token_name(second->parent_type),
-              second->str.c_str(),
+              second->text(),
               rule, line,
               complete ? "\n" : "");
    }
@@ -536,10 +539,18 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
       return(AV_REMOVE);
    }
 
-   /* "((" vs "( (" */
+   /* "((" vs "( (" or "))" vs ") )" */
    if ((chunk_is_str(first, "(", 1) && chunk_is_str(second, "(", 1)) ||
        (chunk_is_str(first, ")", 1) && chunk_is_str(second, ")", 1)))
    {
+      // test if we are within a SIGNAL/SLOT call
+      if (QT_SIGNAL_SLOT_found) {
+        if ((first->type == CT_FPAREN_CLOSE) && (second->type == CT_FPAREN_CLOSE)) {
+          if (second->level == (QT_SIGNAL_SLOT_level)) {
+             restoreValues = true;
+          }
+        }
+      }
       log_rule("sp_paren_paren");
       return(cpd.settings[UO_sp_paren_paren].a);
    }
@@ -1041,7 +1052,9 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
       return(cpd.settings[UO_sp_getset_brace].a);
    }
 
-   if (((first->type == CT_WORD) || (first->type == CT_WORD)) &&
+   //if (((first->type == CT_WORD) || (first->type == CT_WORD)) &&   Coverity CID 76001 Same on both sides, 2016-03-16
+   //    (second->type == CT_BRACE_OPEN))
+   if ((first->type == CT_WORD) &&
        (second->type == CT_BRACE_OPEN))
    {
       if (first->parent_type == CT_NAMESPACE)
@@ -1114,6 +1127,14 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
       {
          log_rule("sp_inside_fparens");
          return(cpd.settings[UO_sp_inside_fparens].a);
+      }
+      // test if we are within a SIGNAL/SLOT call
+      if (QT_SIGNAL_SLOT_found) {
+        if (first->type == CT_FPAREN_CLOSE) {
+          if (second->level == (QT_SIGNAL_SLOT_level + 1)) {
+             restoreValues = true;
+          }
+        }
       }
       log_rule("sp_inside_fparen");
       return(cpd.settings[UO_sp_inside_fparen].a);
@@ -1689,15 +1710,29 @@ void space_text(void)
    column = pc->column;
    while (pc != NULL)
    {
-      next = chunk_get_next(pc);
-      while (chunk_is_blank(next) && !chunk_is_newline(next))
-      {
-         LOG_FMT(LSPACE, "%s: %d:%d Skip %s (%d+%d)\n", __func__,
-                 next->orig_line, next->orig_col, get_token_name(next->type),
-                 pc->column, pc->str.size());
-         next->column = pc->column + pc->str.size();
-         next         = chunk_get_next(next);
-      }
+      //LOG_FMT(LGUY, "%d:%d [%d] %s\n", pc->orig_line, pc->orig_col, __LINE__, pc->text());
+      if ((strcmp(pc->text(), "SIGNAL") == 0) ||
+          (strcmp(pc->text(), "SLOT") == 0))
+      { // guy 2015-09-22
+         LOG_FMT(LGUY, "%d: [%d] type %s SIGNAL/SLOT found\n",
+                 pc->orig_line, __LINE__, get_token_name(pc->type));
+         // flag the chunk for a second processing
+         chunk_flags_set(pc, PCF_IN_QT_MACRO);
+
+         // save the values
+         save_set_options_for_QT(pc->level);
+      } // guy
+      // Bug # 637
+      //next = chunk_get_next(pc);
+      //while (chunk_is_blank(next) && !chunk_is_newline(next))
+      //{
+      //   LOG_FMT(LSPACE, "%s: %d:%d Skip %s (%d+%d)\n", __func__,
+      //           next->orig_line, next->orig_col, get_token_name(next->type),
+      //           pc->column, pc->str.size());
+      //   next->column = pc->column + pc->str.size();
+      //   next         = chunk_get_next(next);
+      //}
+      next = pc->next;
       if (!next)
       {
          break;
@@ -1731,7 +1766,7 @@ void space_text(void)
           * Two chunks -- "()" and "[]" will always tokenize differently.
           * They are always safe to not have a space after them.
           */
-         pc->flags &= ~PCF_FORCE_SPACE;
+         chunk_flags_clr(pc, PCF_FORCE_SPACE);
          if ((pc->len() > 0) &&
              !chunk_is_str(pc, "[]", 2) &&
              !chunk_is_str(pc, "{{", 2) &&
@@ -1752,7 +1787,7 @@ void space_text(void)
                if (kw1 && kw2)
                {
                   /* back-to-back words need a space */
-                  pc->flags |= PCF_FORCE_SPACE;
+                  chunk_flags_set(pc, PCF_FORCE_SPACE);
                }
                else if (!kw1 && !kw2 && (pc->len() < 4) && (next->len() < 4))
                {
@@ -1784,7 +1819,7 @@ void space_text(void)
                      }
                      else
                      {
-                        pc->flags |= PCF_FORCE_SPACE;
+                        chunk_flags_set(pc, PCF_FORCE_SPACE);
                      }
                   }
                }
@@ -1796,7 +1831,7 @@ void space_text(void)
          if (pc->flags & PCF_FORCE_SPACE)
          {
             LOG_FMT(LSPACE, " <force between '%s' and '%s'>",
-                    pc->str.c_str(), next->str.c_str());
+                    pc->text(), next->text());
             av |= AV_ADD;
          }
          min_sp = max(1, min_sp);
@@ -1875,9 +1910,16 @@ void space_text(void)
                  (av == AV_ADD) ? "ADD" :
                  (av == AV_REMOVE) ? "REMOVE" : "FORCE",
                  column - prev_column, next->column);
+         if (restoreValues) {  // guy 2015-09-22
+            restore_options_for_QT();
+         }
       }
 
       pc = next;
+      if (QT_SIGNAL_SLOT_found) {
+         // flag the chunk for a second processing
+         chunk_flags_set(pc, PCF_IN_QT_MACRO);
+      }
    }
 }
 
@@ -2020,6 +2062,9 @@ int space_col_align(chunk_t *first, chunk_t *second)
       {
          coldiff++;
       }
+      break;
+
+   case AV_NOT_DEFINED:
       break;
    }
    LOG_FMT(LSPACE, " => %d\n", coldiff);

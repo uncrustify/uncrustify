@@ -1711,7 +1711,7 @@ class Lexer
                     // check for mantra - make real
                     if (c == 'i' || c == 'f' || c == 'F' || c == 'e' || c == 'E')
                     {
- _Real:                                                 // It's a real number. Back up and rescan as a real
+ _Real:                 // It's a real number. Back up and rescan as a real
                         p = start;
                         return inreal(t);
                     }

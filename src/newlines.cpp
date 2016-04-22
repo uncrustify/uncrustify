@@ -3,6 +3,8 @@
  * Adds or removes newlines.
  *
  * @author  Ben Gardner
+ * @author  Guy Maurel since version 0.62 for uncrustify4Qt
+ *          October 2015, 2016
  * @license GPL v2+
  */
 #include "uncrustify_types.h"
@@ -14,6 +16,7 @@
 #include <algorithm>
 #include <cerrno>
 #include "unc_ctype.h"
+#include "unc_tools.h"
 
 
 static void newlines_double_space_struct_enum_union(chunk_t *open_brace);
@@ -109,7 +112,7 @@ static void double_newline(chunk_t *nl)
    chunk_t *prev = chunk_get_prev(nl);
 
    LOG_FMT(LNEWLINE, "%s: add newline after %s on line %d",
-           __func__, prev->str.c_str(), prev->orig_line);
+           __func__, prev->text(), prev->orig_line);
 
    if (!can_increase_nl(nl))
    {
@@ -155,7 +158,7 @@ static void setup_newline_add(chunk_t *prev, chunk_t *nl, chunk_t *next)
    nl->flags       = (prev->flags & PCF_COPY_FLAGS) & ~PCF_IN_PREPROC;
    if ((prev->flags & PCF_IN_PREPROC) && (next->flags & PCF_IN_PREPROC))
    {
-      nl->flags |= PCF_IN_PREPROC;
+      chunk_flags_set(nl, PCF_IN_PREPROC);
    }
    if ((nl->flags & PCF_IN_PREPROC) != 0)
    {
@@ -188,7 +191,7 @@ chunk_t *newline_add_before(chunk_t *pc)
    }
 
    LOG_FMT(LNEWLINE, "%s: '%s' on line %d",
-           __func__, pc->str.c_str(), pc->orig_line);
+           __func__, pc->text(), pc->orig_line);
    log_func_stack_inline(LNEWLINE);
 
    setup_newline_add(prev, &nl, pc);
@@ -234,7 +237,7 @@ chunk_t *newline_add_after(chunk_t *pc)
    }
 
    LOG_FMT(LNEWLINE, "%s: '%s' on line %d",
-           __func__, pc->str.c_str(), pc->orig_line);
+           __func__, pc->text(), pc->orig_line);
    log_func_stack_inline(LNEWLINE);
 
    setup_newline_add(pc, &nl, next);
@@ -288,7 +291,7 @@ static void newline_end_newline(chunk_t *br_close)
       }
       MARK_CHANGE();
       LOG_FMT(LNEWLINE, "%s: %d:%d add newline after '%s'\n",
-              __func__, br_close->orig_line, br_close->orig_col, br_close->str.c_str());
+              __func__, br_close->orig_line, br_close->orig_col, br_close->text());
       chunk_add_after(&nl, br_close);
    }
 }
@@ -301,7 +304,7 @@ static void newline_min_after(chunk_t *ref, INT32 count, UINT64 flag)
    chunk_t *next;
 
    LOG_FMT(LNEWLINE, "%s: '%s' line %d - count=%d flg=0x%" PRIx64 ":",
-           __func__, ref->str.c_str(), ref->orig_line, count, flag);
+           __func__, ref->text(), ref->orig_line, count, flag);
    log_func_stack_inline(LNEWLINE);
 
    do
@@ -309,10 +312,16 @@ static void newline_min_after(chunk_t *ref, INT32 count, UINT64 flag)
       pc = chunk_get_next(pc);
    } while ((pc != NULL) && !chunk_is_newline(pc));
 
-   //LOG_FMT(LNEWLINE, "%s: on %s, line %d, col %d\n",
-   //        __func__, get_token_name(pc->type), pc->orig_line, pc->orig_col);
+   if (pc != NULL) {               // Coverity CID 76002
+      LOG_FMT(LNEWLINE, "%s: on %s, line %d, col %d\n",
+              __func__, get_token_name(pc->type), pc->orig_line, pc->orig_col);
+   }
 
    next = chunk_get_next(pc);
+   if (!next)
+   {
+      return;
+   }
    if (chunk_is_comment(next) && (next->nl_count == 1) &&
        chunk_is_comment(chunk_get_prev(pc)))
    {
@@ -321,7 +330,7 @@ static void newline_min_after(chunk_t *ref, INT32 count, UINT64 flag)
    }
    else
    {
-      pc->flags |= flag;
+      chunk_flags_set(pc, flag);
       if (chunk_is_newline(pc) && can_increase_nl(pc))
       {
          if (pc->nl_count < count)
@@ -360,9 +369,9 @@ chunk_t *newline_add_between(chunk_t *start, chunk_t *end)
    }
 
    LOG_FMT(LNEWLINE, "%s: '%s'[%s] line %d:%d and '%s' line %d:%d :",
-           __func__, start->str.c_str(), get_token_name(start->type),
+           __func__, start->text(), get_token_name(start->type),
            start->orig_line, start->orig_col,
-           end->str.c_str(), end->orig_line, end->orig_col);
+           end->text(), end->orig_line, end->orig_col);
    log_func_stack_inline(LNEWLINE);
 
    /* Back-up check for one-liners (should never be true!) */
@@ -420,8 +429,8 @@ void newline_del_between(chunk_t *start, chunk_t *end)
    chunk_t *pc = start;
 
    LOG_FMT(LNEWLINE, "%s: '%s' line %d:%d and '%s' line %d:%d : preproc=%d/%d ",
-           __func__, start->str.c_str(), start->orig_line, start->orig_col,
-           end->str.c_str(), end->orig_line, end->orig_col,
+           __func__, start->text(), start->orig_line, start->orig_col,
+           end->text(), end->orig_line, end->orig_col,
            ((start->flags & PCF_IN_PREPROC) != 0),
            ((end->flags & PCF_IN_PREPROC) != 0));
    log_func_stack_inline(LNEWLINE);
@@ -662,6 +671,124 @@ static void newlines_if_for_while_switch_pre_blank_lines(chunk_t *start, argval_
 }
 
 
+/**
+ * Add or remove extra newline before the chunk.
+ * Adds before comments
+ * Adds before destructor
+ * Doesn't do anything if open brace before it
+ * "code\n\ncomment\nif (...)" or "code\ncomment\nif (...)"
+ */
+static void newlines_func_pre_blank_lines(chunk_t *start, argval_t nl_opt)
+{
+   LOG_FUNC_ENTRY();
+   chunk_t *pc;
+   chunk_t *prev;
+   chunk_t *next;
+   chunk_t *last_nl = NULL;
+   int     level    = start->level;
+   bool    do_add   = nl_opt & AV_ADD;
+
+   if ((nl_opt == AV_IGNORE) ||
+       (((start->flags & PCF_IN_PREPROC) != 0) &&
+        !cpd.settings[UO_nl_define_macro].b))
+   {
+      return;
+   }
+
+   /*
+    * look backwards until we find
+    *  open brace (don't add or remove)
+    *  2 newlines in a row (don't add)
+    *  a destructor
+    *  something else (don't remove)
+    */
+   for (pc = chunk_get_prev(start); pc != NULL; pc = chunk_get_prev(pc))
+   {
+      if (chunk_is_newline(pc))
+      {
+         last_nl = pc;
+         /* if we found 2 or more in a row */
+         if ((pc->nl_count > 1) || chunk_is_newline(chunk_get_prev_nvb(pc)))
+         {
+            /* need to remove */
+            if ((nl_opt & AV_REMOVE) && ((pc->flags & PCF_VAR_DEF) == 0))
+            {
+               /* if we're also adding, take care of that here */
+               int nl_count = do_add ? 2 : 1;
+               if (nl_count != pc->nl_count)
+               {
+                  pc->nl_count = nl_count;
+                  MARK_CHANGE();
+               }
+               /* can keep using pc because anything other than newline stops loop, and we delete if newline */
+               while (chunk_is_newline(prev = chunk_get_prev_nvb(pc)))
+               {
+                  /* Make sure we don't combine a preproc and non-preproc */
+                  if (!chunk_safe_to_del_nl(prev))
+                  {
+                     break;
+                  }
+                  chunk_del(prev);
+                  MARK_CHANGE();
+               }
+            }
+
+            return;
+         }
+      }
+      else if (chunk_is_opening_brace(pc) || (pc->level < level))
+      {
+         return;
+      }
+      else if (chunk_is_comment(pc))
+      {
+         /* vbrace close is ok because it won't go into output, so we should skip it */
+         last_nl = NULL;
+         continue;
+      }
+      else if (pc->type == CT_DESTRUCTOR)
+      {
+         last_nl = NULL;
+         continue;
+      }
+      else if (pc->type == CT_TYPE)
+      {
+         last_nl = NULL;
+         continue;
+      }
+      else
+      {
+         if (do_add) /* we found something previously besides a comment or a new line */
+         {
+            /* if we have run across a newline */
+            if (last_nl != NULL)
+            {
+               if (last_nl->nl_count < 2)
+               {
+                  double_newline(last_nl);
+               }
+            }
+            else
+            {
+               /* we didn't run into a nl, so we need to add one */
+               if (((next = chunk_get_next(pc)) != NULL) &&
+                   chunk_is_comment(next))
+               {
+                  pc = next;
+               }
+               if ((last_nl = newline_add_after(pc)) != NULL)
+               {
+                  double_newline(last_nl);
+               }
+            }
+         }
+
+         return;
+      }
+   }
+}
+
+
 static chunk_t *get_closing_brace(chunk_t *start)
 {
    LOG_FUNC_ENTRY();
@@ -851,10 +978,10 @@ static void newlines_if_for_while_switch_post_blank_lines(chunk_t *start, argval
             {
                prev = chunk_get_prev_nnl(next);
                pc   = chunk_get_next_nl(next);
-               //LOG_FMT(LSYS, "  -- pc1=%s [%s]\n", pc->str.c_str(), get_token_name(pc->type));
+               //LOG_FMT(LSYS, "  -- pc1=%s [%s]\n", pc->text(), get_token_name(pc->type));
 
                pc = chunk_get_next(pc);
-               //LOG_FMT(LSYS, "  -- pc2=%s [%s]\n", pc->str.c_str(), get_token_name(pc->type));
+               //LOG_FMT(LSYS, "  -- pc2=%s [%s]\n", pc->text(), get_token_name(pc->type));
                if ((pc != NULL) && (pc->type == CT_PREPROC) &&
                    (pc->parent_type == CT_PP_ENDIF) &&
                    cpd.settings[UO_nl_squeeze_ifdef].b)
@@ -1126,8 +1253,12 @@ static chunk_t *newline_def_blk(chunk_t *start, bool fn_top)
             var_blk       = false;
          }
          else if (chunk_is_type(pc) &&
-                  ((chunk_is_type(next) || (next->type == CT_WORD) ||
-                    (next->type == CT_FUNC_CTOR_VAR))))
+                  ((chunk_is_type(next) ||
+                   (next->type == CT_WORD) ||
+                   (next->type == CT_FUNC_CTOR_VAR))) &&
+                   !(next->type == CT_DC_MEMBER))  // DbConfig::configuredDatabase()->apply(db);
+                                                   // is NOT a declaration of a variable
+                                                   // guy 2015-09-22
          {
             /* set newlines before var def block */
             if (!var_blk && !first_var_blk &&
@@ -1658,7 +1789,9 @@ static void newline_func_def(chunk_t *start)
 #endif
                 (prev->type != CT_BRACE_OPEN) &&
                 (prev->type != CT_SEMICOLON) &&
-                (prev->parent_type != CT_TEMPLATE))
+                (prev->type != CT_PRIVATE_COLON)  //&&                // guy 2015-06-06
+                //(prev->parent_type != CT_TEMPLATE)                  TODO: create some examples to test the option
+               )
             {
                newline_iarf(prev, a);
             }
@@ -1917,7 +2050,7 @@ static void undo_one_liner(chunk_t *pc)
    if (pc && (pc->flags & PCF_ONE_LINER))
    {
       LOG_FMT(LNL1LINE, "%s: [%s]", __func__, pc->text());
-      pc->flags &= ~PCF_ONE_LINER;
+      chunk_flags_clr(pc, PCF_ONE_LINER);
 
       /* scan backward */
       tmp = pc;
@@ -1928,7 +2061,7 @@ static void undo_one_liner(chunk_t *pc)
             break;
          }
          LOG_FMT(LNL1LINE, " %s", tmp->text());
-         tmp->flags &= ~PCF_ONE_LINER;
+         chunk_flags_clr(tmp, PCF_ONE_LINER);
       }
 
       /* scan forward */
@@ -1941,7 +2074,7 @@ static void undo_one_liner(chunk_t *pc)
             break;
          }
          LOG_FMT(LNL1LINE, " %s", tmp->text());
-         tmp->flags &= ~PCF_ONE_LINER;
+         chunk_flags_clr(tmp, PCF_ONE_LINER);
       }
       LOG_FMT(LNL1LINE, "\n");
    }
@@ -2693,6 +2826,18 @@ void newlines_insert_blank_lines(void)
          newlines_if_for_while_switch_pre_blank_lines(pc, cpd.settings[UO_nl_before_do].a);
          newlines_if_for_while_switch_post_blank_lines(pc, cpd.settings[UO_nl_after_do].a);
       }
+      else if ((pc->type == CT_FUNC_CLASS_DEF) ||
+               (pc->type == CT_FUNC_DEF))
+      {                  // guy 2016-04-16
+         newlines_func_pre_blank_lines(pc, cpd.settings[UO_nl_before_func_class_def].a);
+         //newlines_func_post_blank_lines(pc, cpd.settings[UO_nl_after_func_class_def].a);
+      }
+      else if ((pc->type == CT_FUNC_CLASS_PROTO) ||
+               (pc->type == CT_FUNC_PROTO))
+      {                  // guy 2016-04-16
+         newlines_func_pre_blank_lines(pc, cpd.settings[UO_nl_before_func_class_proto].a);
+         //newlines_func_post_blank_lines(pc, cpd.settings[UO_nl_after_func_class_proto].a);
+      }
       else
       {
          /* ignore it */
@@ -2800,7 +2945,7 @@ void newlines_eat_start_end(void)
             chunk.nl_count  = cpd.settings[UO_nl_start_of_file_min].n;
             chunk_add_before(&chunk, pc);
             LOG_FMT(LNEWLINE, "%s: %d:%d add newline before '%s'\n",
-                    __func__, pc->orig_line, pc->orig_col, pc->str.c_str());
+                    __func__, pc->orig_line, pc->orig_col, pc->text());
             MARK_CHANGE();
          }
       }
@@ -2870,13 +3015,29 @@ void newlines_chunk_pos(c_token_t chunk_type, tokenpos_e mode)
    {
       if (pc->type == chunk_type)
       {
+         tokenpos_e mode_local;
+         if (chunk_type == CT_COMMA) {
+            // 12 february 2016, guy
+            // for chunk_type == CT_COMMA
+            // we get 'mode' from cpd.settings[UO_pos_comma].tp
+            // BUT we must take care of cpd.settings[UO_pos_class_comma].tp
+            // TODO and cpd.settings[UO_pos_constr_comma].tp
+            if (pc->flags & PCF_IN_CLASS_BASE) {
+               // change mode
+               mode_local = cpd.settings[UO_pos_class_comma].tp;
+            } else {
+               mode_local = mode;
+            }
+         } else {
+            mode_local = mode;
+         }
          prev = chunk_get_prev_nc(pc);
          next = chunk_get_next_nc(pc);
 
          nl_flag = ((chunk_is_newline(prev) ? 1 : 0) |
                     (chunk_is_newline(next) ? 2 : 0));
 
-         if (mode & TP_JOIN)
+         if (mode_local & TP_JOIN)
          {
             if (nl_flag & 1)
             {
@@ -2901,15 +3062,15 @@ void newlines_chunk_pos(c_token_t chunk_type, tokenpos_e mode)
             continue;
          }
 
-         if (((nl_flag == 0) && ((mode & (TP_FORCE | TP_BREAK)) == 0)) ||
-             ((nl_flag == 3) && ((mode & TP_FORCE) == 0)))
+         if (((nl_flag == 0) && ((mode_local & (TP_FORCE | TP_BREAK)) == 0)) ||
+             ((nl_flag == 3) && ((mode_local & TP_FORCE) == 0)))
          {
             /* No newlines and not adding any or both and not forcing */
             continue;
          }
 
-         if (((mode & TP_LEAD) && (nl_flag == 1)) ||
-             ((mode & TP_TRAIL) && (nl_flag == 2)))
+         if (((mode_local & TP_LEAD) && (nl_flag == 1)) ||
+             ((mode_local & TP_TRAIL) && (nl_flag == 2)))
          {
             /* Already a newline before (lead) or after (trail) */
             continue;
@@ -2918,7 +3079,7 @@ void newlines_chunk_pos(c_token_t chunk_type, tokenpos_e mode)
          /* If there were no newlines, we need to add one */
          if (nl_flag == 0)
          {
-            if (mode & TP_LEAD)
+            if (mode_local & TP_LEAD)
             {
                newline_add_before(pc);
             }
@@ -2932,7 +3093,7 @@ void newlines_chunk_pos(c_token_t chunk_type, tokenpos_e mode)
          /* If there were both newlines, we need to remove one */
          if (nl_flag == 3)
          {
-            if (mode & TP_LEAD)
+            if (mode_local & TP_LEAD)
             {
                remove_next_newlines(pc);
             }
@@ -2944,7 +3105,7 @@ void newlines_chunk_pos(c_token_t chunk_type, tokenpos_e mode)
          }
 
          /* we need to move the newline */
-         if (mode & TP_LEAD)
+         if (mode_local & TP_LEAD)
          {
             chunk_t *next2 = chunk_get_next(next);
             if ((next2 != NULL) &&
@@ -3184,8 +3345,8 @@ void do_blank_lines(void)
       {
          LOG_FMT(LBLANK, "%s: line %d [%s][%s] vs [%s][%s] nl=%d\n", __func__,
                  pc->orig_line,
-                 prev->str.c_str(), get_token_name(prev->type),
-                 next->str.c_str(), get_token_name(next->type),
+                 prev->text(), get_token_name(prev->type),
+                 next->text(), get_token_name(next->type),
                  pc->nl_count);
       }
 
