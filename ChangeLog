@@ -1,10 +1,19 @@
+New:
+ A configuration file for the sources of uncrustify is provided:
+   forUncrustifySources.cfg
+ Some considerations about the problem "stable" are described at
+   forUncrustifySources.txt
+
 New options:
  - nl_before_func_class_def
  - nl_before_func_class_proto
+ - nl_before_func_body_def
+ - nl_before_func_body_proto
 
 Bugfix:
  - better descriptions for options
  - bug #631 is fixed
+ - produce a better dump output
 
 Change highlights in uncrustify-0.63 (Mar 2016)
 -------------------------------------------------------------------------------

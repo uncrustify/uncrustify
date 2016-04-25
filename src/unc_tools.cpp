@@ -9,18 +9,21 @@
 
 #include "unc_tools.h"
 
+// prot_the_line(__LINE__);
 // examine_Data(__func__, __LINE__, n);
 
-void prot_the_line(int theLine)
+void prot_the_line(int theLine, unsigned int actual_line)
 {
    chunk_t *pc;
-   LOG_FMT(LGUY, "P:(%d) ", theLine);
+   LOG_FMT(LGUY, "Prot_the_line:(%d) \n", theLine);
    for (pc = chunk_get_head(); pc != NULL; pc = pc->next)
    {
-      if (pc->type == CT_NEWLINE) {
-        LOG_FMT(LGUY, "<NL>\n");
-      } else {
-        LOG_FMT(LGUY, " %s", pc->text());
+      if (pc->orig_line == actual_line) {
+        if (pc->type == CT_NEWLINE) {
+          LOG_FMT(LGUY, "(%d) %d, <NL>(%d)\n", theLine, actual_line, pc->nl_count);
+        } else {
+          LOG_FMT(LGUY, "(%d) %d, %s\n", theLine, actual_line, pc->text());
+        }
       }
    }
    LOG_FMT(LGUY, "\n");

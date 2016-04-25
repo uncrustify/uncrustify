@@ -49,7 +49,7 @@ static chunk_t *handle_double_angle_close(chunk_t *pc)
          // bug #663
          if (((pc->flags & PCF_IN_PREPROC) != 0) &&
              ((pc->flags & PCF_IN_TEMPLATE) != 0)) {
-            log_pcf_flags((log_sev_t) LGUY, pc->flags);
+            log_pcf_flags(LGUY, pc->flags);
             // no change
          } else {
             set_chunk_type(pc, CT_COMPARE);
@@ -254,7 +254,7 @@ void tokenize_cleanup(void)
          if (cpd.lang_flags & (LANG_CPP | LANG_CS | LANG_JAVA | LANG_VALA | LANG_OC))
          {
             // bug #663
-            log_pcf_flags((log_sev_t) LGUY, pc->flags);
+            log_pcf_flags(LGUY, pc->flags);
             if ((pc->flags & PCF_IN_PREPROC) != 0) {
                tmp = chunk_get_next_type(pc, CT_ANGLE_CLOSE, pc->level);
                if (tmp != NULL)

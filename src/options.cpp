@@ -987,13 +987,13 @@ void register_options(void)
    unc_add_option("nl_ds_struct_enum_close_brace", UO_nl_ds_struct_enum_close_brace, AT_BOOL,
                   "force nl before } of a struct/union/enum\n"
                   "(lower priority than 'eat_blanks_before_close_brace')");
-   unc_add_option("nl_before_func_class_def", UO_nl_before_func_class_def, AT_IARF,
+   unc_add_option("nl_before_func_class_def", UO_nl_before_func_class_def, AT_NUM,
                   "Add or remove blank line before 'func_class_def'");
-   //unc_add_option("nl_after_func_class_def", UO_nl_after_func_class_def, AT_IARF,
+   //unc_add_option("nl_after_func_class_def", UO_nl_after_func_class_def, AT_NUM,
    //               "Add or remove blank line after 'func_class_def' statement");
-   unc_add_option("nl_before_func_class_proto", UO_nl_before_func_class_proto, AT_IARF,
+   unc_add_option("nl_before_func_class_proto", UO_nl_before_func_class_proto, AT_NUM,
                   "Add or remove blank line before 'func_class_proto'");
-   //unc_add_option("nl_after_func_class_proto", UO_nl_after_func_class_proto, AT_IARF,
+   //unc_add_option("nl_after_func_class_proto", UO_nl_after_func_class_proto, AT_NUM,
    //               "Add or remove blank line after 'func_class_proto' statement");
    unc_add_option("nl_class_colon", UO_nl_class_colon, AT_IARF,
                   "Add or remove a newline before/after a class colon,\n"
@@ -1018,6 +1018,10 @@ void register_options(void)
                   "The number of newlines after a function prototype, if followed by another function prototype");
    unc_add_option("nl_after_func_proto_group", UO_nl_after_func_proto_group, AT_NUM,
                   "The number of newlines after a function prototype, if not followed by another function prototype");
+   unc_add_option("nl_before_func_body_def", UO_nl_before_func_body_def, AT_NUM,
+                  "The number of newlines before a multi-line function def body");
+   unc_add_option("nl_before_func_body_proto", UO_nl_before_func_body_proto, AT_NUM,
+                  "The number of newlines before a multi-line function prototype body");
    unc_add_option("nl_after_func_body", UO_nl_after_func_body, AT_NUM,
                   "The number of newlines after '}' of a multi-line function body");
    unc_add_option("nl_after_func_body_class", UO_nl_after_func_body_class, AT_NUM,

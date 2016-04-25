@@ -31,14 +31,12 @@ const char *extension_add(const char *ext_text, const char *lang_text);
 /*
  * detect.cpp
  */
-
 void detect_options();
 
 
 /*
  *  output.cpp
  */
-
 void output_text(FILE *pfile);
 void output_parsed(FILE *pfile);
 void add_long_preprocessor_conditional_block_comment(void);
@@ -47,7 +45,6 @@ void add_long_preprocessor_conditional_block_comment(void);
 /*
  *  options.cpp
  */
-
 void unc_begin_group(uncrustify_groups id, const char *short_desc, const char *long_desc = NULL);
 void register_options(void);
 void set_option_defaults(void);
@@ -70,7 +67,6 @@ string op_val_to_string(argtype_e argtype, op_val_t op_val);
 /*
  *  indent.cpp
  */
-
 void indent_text(void);
 void indent_preproc(void);
 void indent_to_column(chunk_t *pc, int column);
@@ -83,7 +79,6 @@ void quick_indent_again(void);
 /*
  *  align.cpp
  */
-
 void align_all(void);
 void align_backslash_newline(void);
 void align_right_comments(void);
@@ -97,7 +92,6 @@ void quick_align_again(void);
 /*
  *  braces.cpp
  */
-
 void do_braces(void);
 void add_long_closebrace_comment(void);
 chunk_t *insert_comment_after(chunk_t *ref, c_token_t cmt_type, const unc_text& cmt_text);
@@ -106,21 +100,18 @@ chunk_t *insert_comment_after(chunk_t *ref, c_token_t cmt_type, const unc_text& 
 /*
  *  sorting.cpp
  */
-
 void sort_imports(void);
 
 
 /*
  *  parens.cpp
  */
-
 void do_parens(void);
 
 
 /*
  *  space.cpp
  */
-
 void space_text(void);
 void space_text_balance_nested_parens(void);
 int space_col_align(chunk_t *first, chunk_t *second);
@@ -131,7 +122,6 @@ void space_add_after(chunk_t *pc, int count);
 /*
  *  combine.cpp
  */
-
 void fix_symbols(void);
 void combine_labels(void);
 void mark_comments(void);
@@ -153,7 +143,6 @@ void remove_extra_returns();
 /*
  *  newlines.cpp
  */
-
 void newlines_remove_newlines(void);
 void newlines_cleanup_braces(bool first);
 void newlines_insert_blank_lines(void);
@@ -179,28 +168,24 @@ chunk_t *newline_add_between(chunk_t *start, chunk_t *end);
 /*
  *  tokenize.cpp
  */
-
 void tokenize(const deque<int>& data, chunk_t *ref);
 
 
 /*
  *  tokenize_cleanup.cpp
  */
-
 void tokenize_cleanup(void);
 
 
 /*
  *  brace_cleanup.cpp
  */
-
 void brace_cleanup(void);
 
 
 /*
  *  keywords.cpp
  */
-
 int load_keyword_file(const char *filename);
 c_token_t find_keyword_type(const char *word, int len);
 void add_keyword(const char *tag, c_token_t type);
@@ -213,7 +198,6 @@ void keywords_are_sorted(void);
 /*
  *  defines.cpp
  */
-
 int load_define_file(const char *filename);
 void add_define(const char *tag, const char *value);
 void print_defines(FILE *pfile);
@@ -229,7 +213,6 @@ const chunk_tag_t *find_punctuator(const char *str, int lang_flags);
 /*
  *  parse_frame.cpp
  */
-
 void pf_copy(struct parse_frame *dst, const struct parse_frame *src);
 void pf_push(struct parse_frame *pf);
 void pf_push_under(struct parse_frame *pf);
