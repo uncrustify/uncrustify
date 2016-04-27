@@ -23,16 +23,10 @@
 
 static map<string, option_map_value>           option_name_map;
 static map<uncrustify_groups, group_map_value> group_map;
-static uncrustify_groups current_group;
+static uncrustify_groups                       current_group;
 
 
-static void unc_add_option(const char         *name,
-                           uncrustify_options id,
-                           argtype_e          type,
-                           const char         *short_desc = NULL,
-                           const char         *long_desc = NULL,
-                           int                min_val = 0,
-                           int                max_val = 16);
+static void unc_add_option(const char *name, uncrustify_options id, argtype_e type, const char *short_desc = NULL, const char *long_desc = NULL, int min_val = 0, int max_val = 16);
 
 
 void unc_begin_group(uncrustify_groups id, const char *short_desc,
@@ -106,7 +100,7 @@ void unc_add_option(const char *name, uncrustify_options id, argtype_e type,
    {
       cpd.max_option_name_len = name_len;
    }
-}
+} // unc_add_option
 
 
 /* only compare alpha-numeric characters */
@@ -1399,7 +1393,7 @@ void register_options(void)
    unc_add_option("use_indent_continue_only_once", UO_use_indent_continue_only_once, AT_BOOL,
                   "True:  indent_continue will be used only once\n"
                   "False: indent_continue will be used every time (default)");
-}
+} // register_options
 
 
 const group_map_value *get_group_name(int ug)
@@ -1438,8 +1432,8 @@ const option_map_value *get_option_name(int uo)
 static void convert_value(const option_map_value *entry, const char *val, op_val_t *dest)
 {
    const option_map_value *tmp;
-   bool btrue;
-   int  mult;
+   bool                   btrue;
+   int                    mult;
 
    if (entry->type == AT_LINE)
    {
@@ -1508,7 +1502,7 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
       if (strcasecmp(val, "IGNORE") != 0)
       {
          LOG_FMT(LWARN, "%s:%d Expected IGNORE, JOIN, LEAD, LEAD_BREAK, LEAD_FORCE, "
-                        "TRAIL, TRAIL_BREAK, TRAIL_FORCE for %s, got %s\n",
+                 "TRAIL, TRAIL_BREAK, TRAIL_FORCE for %s, got %s\n",
                  cpd.filename, cpd.line_number, entry->name, val);
          cpd.error_count++;
       }
@@ -1621,7 +1615,7 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
            cpd.filename, cpd.line_number, entry->name, val);
    cpd.error_count++;
    dest->a = AV_IGNORE;
-}
+} // convert_value
 
 
 int set_option_value(const char *name, const char *value)
@@ -1643,23 +1637,23 @@ bool is_path_relative(const char *path)
    // X:\path\to\file style absolute disk path
    if (isalpha(path[0]) && (path[1] == ':'))
    {
-      return false;
+      return(false);
    }
 
    // \\server\path\to\file style absolute UNC path
    if ((path[0] == '\\') && (path[1] == '\\'))
    {
-      return false;
+      return(false);
    }
 #endif
 
    // /path/to/file style absolute path
    if (path[0] == '/')
    {
-      return false;
+      return(false);
    }
 
-   return true;
+   return(true);
 }
 
 
@@ -1838,7 +1832,7 @@ int load_option_file(const char *filename)
 
    fclose(pfile);
    return(0);
-}
+} // load_option_file
 
 
 int save_option_file_kernel(FILE *pfile, bool withDoc, bool only_not_default)
@@ -1893,19 +1887,24 @@ int save_option_file_kernel(FILE *pfile, bool withDoc, bool only_not_default)
 
          // guy
          bool print_option = true;
-         if (only_not_default) {
+         if (only_not_default)
+         {
             string     val_string_D;
             const char *val_default;
             val_string_D = op_val_to_string(option->type, cpd.defaults[option->id]);
             val_default  = val_string_D.c_str();
-            if ((strcmp(val_default, val_str) == 0)) {
+            if ((strcmp(val_default, val_str) == 0))
+            {
                print_option = false;
-            } else {
+            }
+            else
+            {
                print_option = true;
                count_the_not_default_options++;
             }
          }
-         if (print_option) {
+         if (print_option)
+         {
             fprintf(pfile, "%s %*.s= ",
                     option->name, cpd.max_option_name_len - name_len, " ");
             if (option->type == AT_STRING)
@@ -1987,12 +1986,12 @@ int save_option_file_kernel(FILE *pfile, bool withDoc, bool only_not_default)
    fprintf(pfile, "# option(s) with 'not default' value: %d\n#\n", count_the_not_default_options);
 
    return(0);
-}
+} // save_option_file_kernel
 
 
 int save_option_file(FILE *pfile, bool withDoc)
 {
-   return (save_option_file_kernel(pfile, withDoc, false));
+   return(save_option_file_kernel(pfile, withDoc, false));
 }
 
 
@@ -2059,7 +2058,7 @@ void print_options(FILE *pfile)
          fputs("\n\n", pfile);
       }
    }
-}
+} // print_options
 
 
 /**
@@ -2070,51 +2069,53 @@ void print_options(FILE *pfile)
 void set_option_defaults(void)
 {
    /* set all the default values to zero */
-   for (int count = 0; count < UO_option_count; count++) {
+   for (int count = 0; count < UO_option_count; count++)
+   {
       cpd.defaults[count].n = 0;
    }
    /* the options with non-zero default values */
-   cpd.defaults[UO_newlines].le                = LE_AUTO;
-   cpd.defaults[UO_input_tab_size].n           = 8;
-   cpd.defaults[UO_output_tab_size].n          = 8;
-   cpd.defaults[UO_indent_ctor_init_leading].n = 2;
-   cpd.defaults[UO_indent_columns].n           = 8;
-   cpd.defaults[UO_indent_with_tabs].n         = 1;
-   cpd.defaults[UO_indent_label].n             = 1;
-   cpd.defaults[UO_indent_access_spec].n       = 1;
-   cpd.defaults[UO_sp_before_comma].a          = AV_REMOVE;
-   cpd.defaults[UO_sp_paren_comma].a           = AV_FORCE;
-   cpd.defaults[UO_string_escape_char].n       = '\\';
-   cpd.defaults[UO_sp_not].a                   = AV_REMOVE;
-   cpd.defaults[UO_sp_inv].a                   = AV_REMOVE;
-   cpd.defaults[UO_sp_addr].a                  = AV_REMOVE;
-   cpd.defaults[UO_sp_deref].a                 = AV_REMOVE;
-   cpd.defaults[UO_sp_member].a                = AV_REMOVE;
-   cpd.defaults[UO_sp_sign].a                  = AV_REMOVE;
-   cpd.defaults[UO_sp_incdec].a                = AV_REMOVE;
-   cpd.defaults[UO_sp_after_type].a            = AV_FORCE;
-   cpd.defaults[UO_sp_before_nl_cont].a        = AV_ADD;
-   cpd.defaults[UO_sp_before_case_colon].a     = AV_REMOVE;
-   cpd.defaults[UO_sp_before_semi].a           = AV_REMOVE;
-   cpd.defaults[UO_sp_after_semi].a            = AV_ADD;
-   cpd.defaults[UO_sp_after_semi_for].a        = AV_FORCE;
-   cpd.defaults[UO_cmt_indent_multi].b         = true;
-   cpd.defaults[UO_cmt_multi_check_last].b     = true;
-   cpd.defaults[UO_pp_indent_count].n          = 1;
-   cpd.defaults[UO_align_left_shift].b         = true;
-   cpd.defaults[UO_indent_align_assign].b      = true;
-   cpd.defaults[UO_sp_pp_concat].a             = AV_ADD;
-   cpd.defaults[UO_sp_angle_shift].a           = AV_ADD;
-   cpd.defaults[UO_sp_word_brace].a            = AV_ADD;
-   cpd.defaults[UO_sp_word_brace_ns].a         = AV_ADD;
+   cpd.defaults[UO_newlines].le                            = LE_AUTO;
+   cpd.defaults[UO_input_tab_size].n                       = 8;
+   cpd.defaults[UO_output_tab_size].n                      = 8;
+   cpd.defaults[UO_indent_ctor_init_leading].n             = 2;
+   cpd.defaults[UO_indent_columns].n                       = 8;
+   cpd.defaults[UO_indent_with_tabs].n                     = 1;
+   cpd.defaults[UO_indent_label].n                         = 1;
+   cpd.defaults[UO_indent_access_spec].n                   = 1;
+   cpd.defaults[UO_sp_before_comma].a                      = AV_REMOVE;
+   cpd.defaults[UO_sp_paren_comma].a                       = AV_FORCE;
+   cpd.defaults[UO_string_escape_char].n                   = '\\';
+   cpd.defaults[UO_sp_not].a                               = AV_REMOVE;
+   cpd.defaults[UO_sp_inv].a                               = AV_REMOVE;
+   cpd.defaults[UO_sp_addr].a                              = AV_REMOVE;
+   cpd.defaults[UO_sp_deref].a                             = AV_REMOVE;
+   cpd.defaults[UO_sp_member].a                            = AV_REMOVE;
+   cpd.defaults[UO_sp_sign].a                              = AV_REMOVE;
+   cpd.defaults[UO_sp_incdec].a                            = AV_REMOVE;
+   cpd.defaults[UO_sp_after_type].a                        = AV_FORCE;
+   cpd.defaults[UO_sp_before_nl_cont].a                    = AV_ADD;
+   cpd.defaults[UO_sp_before_case_colon].a                 = AV_REMOVE;
+   cpd.defaults[UO_sp_before_semi].a                       = AV_REMOVE;
+   cpd.defaults[UO_sp_after_semi].a                        = AV_ADD;
+   cpd.defaults[UO_sp_after_semi_for].a                    = AV_FORCE;
+   cpd.defaults[UO_cmt_indent_multi].b                     = true;
+   cpd.defaults[UO_cmt_multi_check_last].b                 = true;
+   cpd.defaults[UO_pp_indent_count].n                      = 1;
+   cpd.defaults[UO_align_left_shift].b                     = true;
+   cpd.defaults[UO_indent_align_assign].b                  = true;
+   cpd.defaults[UO_sp_pp_concat].a                         = AV_ADD;
+   cpd.defaults[UO_sp_angle_shift].a                       = AV_ADD;
+   cpd.defaults[UO_sp_word_brace].a                        = AV_ADD;
+   cpd.defaults[UO_sp_word_brace_ns].a                     = AV_ADD;
    cpd.defaults[UO_indent_oc_msg_prioritize_first_colon].b = true;
-   cpd.defaults[UO_use_indent_func_call_param].b = true;
-   cpd.defaults[UO_use_indent_continue_only_once].b = false;
+   cpd.defaults[UO_use_indent_func_call_param].b           = true;
+   cpd.defaults[UO_use_indent_continue_only_once].b        = false;
    /* copy all the default values to settings array */
-   for (int count = 0; count < UO_option_count; count++) {
+   for (int count = 0; count < UO_option_count; count++)
+   {
       cpd.settings[count].a = cpd.defaults[count].a;
    }
-}
+} // set_option_defaults
 
 
 string argtype_to_string(argtype_e argtype)

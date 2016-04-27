@@ -16,6 +16,7 @@ static void split_fcn_params(chunk_t *start);
 static void split_fcn_params_full(chunk_t *start);
 static void split_for_stmt(chunk_t *start);
 
+
 static_inline bool is_past_width(chunk_t *pc)
 {
    // allow char to sit at last column by subtracting 1
@@ -210,7 +211,7 @@ static void try_split_here(cw_entry& ent, chunk_t *pc)
       ent.pc  = pc;
       ent.pri = pc_pri;
    }
-}
+} // try_split_here
 
 
 /**
@@ -365,7 +366,7 @@ static void split_line(chunk_t *start)
 
       split_before_chunk(pc);
    }
-}
+} // split_line
 
 
 /**
@@ -476,7 +477,7 @@ static void split_for_stmt(chunk_t *start)
       }
    }
    /* Oh, well. We tried. */
-}
+} // split_for_stmt
 
 
 /**
@@ -628,4 +629,4 @@ static void split_fcn_params(chunk_t *start)
       reindent_line(pc, min_col);
       cpd.changes++;
    }
-}
+} // split_fcn_params

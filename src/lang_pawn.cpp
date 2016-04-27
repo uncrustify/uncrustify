@@ -15,6 +15,7 @@ static chunk_t *pawn_mark_function0(chunk_t *start, chunk_t *fcn);
 static chunk_t *pawn_process_variable(chunk_t *start);
 static chunk_t *pawn_process_func_def(chunk_t *pc);
 
+
 chunk_t *pawn_add_vsemi_after(chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
@@ -244,7 +245,7 @@ static chunk_t *pawn_process_line(chunk_t *start)
    //LOG_FMT(LSYS, "%s: Don't understand line %d, starting with '%s' [%s]\n",
    //        __func__, start->orig_line, start->text(), get_token_name(start->type));
    return(start);
-}
+} // pawn_process_line
 
 
 /**
@@ -465,10 +466,10 @@ static chunk_t *pawn_process_func_def(chunk_t *pc)
       chunk.level       = 0;
       chunk.brace_level = 0;
       chunk.parent_type = CT_FUNC_DEF;
-      last = chunk_add_after(&chunk, last);
+      last              = chunk_add_after(&chunk, last);
    }
    return(last);
-}
+} // pawn_process_func_def
 
 
 /**

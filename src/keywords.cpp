@@ -319,7 +319,6 @@ void keywords_are_sorted(void)
          exit(EXIT_FAILURE);
       }
    }
-   return;
 }
 
 
@@ -482,7 +481,7 @@ int load_keyword_file(const char *filename)
 
    fclose(pf);
    return(SUCCESS);
-}
+} // load_keyword_file
 
 
 void print_keywords(FILE *pfile)
@@ -576,5 +575,5 @@ pattern_class get_token_pattern_class(c_token_t tok)
 
    default:
       return(PATCLS_NONE);
-   }
-}
+   } // switch
+}    // get_token_pattern_class

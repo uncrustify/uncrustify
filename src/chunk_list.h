@@ -71,6 +71,7 @@ chunk_t *chunk_get_prev_str(chunk_t *cur, const char *str, int len, int level, c
 chunk_t *chunk_get_next_nvb(chunk_t *cur, chunk_nav_t nav = CNAV_ALL);
 chunk_t *chunk_get_prev_nvb(chunk_t *cur, chunk_nav_t nav = CNAV_ALL);
 
+
 /**
  * Skips to the closing match for the current paren/brace/square.
  *
@@ -90,9 +91,9 @@ chunk_t *chunk_skip_to_match(chunk_t *cur, chunk_nav_t nav = CNAV_ALL)
         (cur->type == CT_ANGLE_OPEN) ||
         (cur->type == CT_SQUARE_OPEN)))
    {
-      return chunk_get_next_type(cur, (c_token_t)(cur->type + 1), cur->level, nav);
+      return(chunk_get_next_type(cur, (c_token_t)(cur->type + 1), cur->level, nav));
    }
-   return cur;
+   return(cur);
 }
 
 
@@ -109,9 +110,9 @@ chunk_t *chunk_skip_to_match_rev(chunk_t *cur, chunk_nav_t nav = CNAV_ALL)
         (cur->type == CT_ANGLE_CLOSE) ||
         (cur->type == CT_SQUARE_CLOSE)))
    {
-      return chunk_get_prev_type(cur, (c_token_t)(cur->type - 1), cur->level, nav);
+      return(chunk_get_prev_type(cur, (c_token_t)(cur->type - 1), cur->level, nav));
    }
-   return cur;
+   return(cur);
 }
 
 
@@ -231,11 +232,12 @@ bool chunk_is_msref(chunk_t *pc) // ms compilers for C++/CLI and WinRT use '^' i
 static_inline
 bool chunk_is_ptr_operator(chunk_t *pc)
 {
-   return chunk_is_star(pc) || chunk_is_addr(pc) || chunk_is_msref(pc);
+   return(chunk_is_star(pc) || chunk_is_addr(pc) || chunk_is_msref(pc));
 }
 
 
 bool chunk_is_newline_between(chunk_t *start, chunk_t *end);
+
 
 static_inline
 bool chunk_is_closing_brace(chunk_t *pc)
@@ -332,42 +334,42 @@ bool chunk_is_forin(chunk_t *pc)
          }
          if (next->type == CT_IN)
          {
-            return true;
+            return(true);
          }
       }
    }
-   return false;
+   return(false);
 }
 
 
 void set_chunk_type_real(chunk_t *pc, c_token_t tt);
 void set_chunk_parent_real(chunk_t *pc, c_token_t tt);
 
-#define set_chunk_type(pc, tt)   do { \
-      LOG_FUNC_CALL(); \
-      set_chunk_type_real((pc), (tt)); \
-   } while (false)
+#define set_chunk_type(pc, tt)      do { \
+      LOG_FUNC_CALL();                   \
+      set_chunk_type_real((pc), (tt));   \
+} while (false)
 
-#define set_chunk_parent(pc, tt)   do { \
-      LOG_FUNC_CALL(); \
+#define set_chunk_parent(pc, tt)    do { \
+      LOG_FUNC_CALL();                   \
       set_chunk_parent_real((pc), (tt)); \
-   } while (false)
+} while (false)
 
 void chunk_flags_set_real(chunk_t *pc, UINT64 clr_bits, UINT64 set_bits);
 
-#define chunk_flags_upd(pc, cc, ss)   do { \
-      LOG_FUNC_CALL(); \
+#define chunk_flags_upd(pc, cc, ss)    do {   \
+      LOG_FUNC_CALL();                        \
       chunk_flags_set_real((pc), (cc), (ss)); \
-   } while (false)
+} while (false)
 
-#define chunk_flags_set(pc, ss)   do { \
-      LOG_FUNC_CALL(); \
-      chunk_flags_set_real((pc), 0, (ss)); \
-   } while (false)
+#define chunk_flags_set(pc, ss)        do { \
+      LOG_FUNC_CALL();                      \
+      chunk_flags_set_real((pc), 0, (ss));  \
+} while (false)
 
-#define chunk_flags_clr(pc, cc)   do { \
-      LOG_FUNC_CALL(); \
-      chunk_flags_set_real((pc), (cc), 0); \
-   } while (false)
+#define chunk_flags_clr(pc, cc)        do { \
+      LOG_FUNC_CALL();                      \
+      chunk_flags_set_real((pc), (cc), 0);  \
+} while (false)
 
 #endif /* CHUNK_LIST_H_INCLUDED */

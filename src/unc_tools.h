@@ -15,6 +15,5 @@
 
 void prot_the_line(int theLine, int actual_line);
 void examine_Data(const char *func_name, int theLine, int what);
-// examine_Data(__func__, __LINE__, 2);
 
 #endif /* UNC_TOOLS_H_INCLUDED */

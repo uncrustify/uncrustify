@@ -33,8 +33,7 @@ struct cmt_reflow
 
 static chunk_t *output_comment_c(chunk_t *pc);
 static chunk_t *output_comment_cpp(chunk_t *pc);
-static void add_comment_text(const unc_text& text,
-                             cmt_reflow& cmt, bool esc_close);
+static void add_comment_text(const unc_text& text, cmt_reflow& cmt, bool esc_close);
 
 #define LOG_CONTTEXT() \
    LOG_FMT(LCONTTEXT, "%s:%d set cont_text to '%s'\n", __func__, __LINE__, cmt.cont_text.c_str())

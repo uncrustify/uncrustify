@@ -237,6 +237,7 @@ struct chunk_t
       reset();
    }
 
+
    void reset()
    {
       memset(&align, 0, sizeof(align));
@@ -260,10 +261,12 @@ struct chunk_t
       str.clear();
    }
 
+
    int len()
    {
       return(str.size());
    }
+
 
    const char *text()
    {

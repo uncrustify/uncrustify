@@ -48,10 +48,13 @@ static chunk_t *handle_double_angle_close(chunk_t *pc)
       {
          // bug #663
          if (((pc->flags & PCF_IN_PREPROC) != 0) &&
-             ((pc->flags & PCF_IN_TEMPLATE) != 0)) {
+             ((pc->flags & PCF_IN_TEMPLATE) != 0))
+         {
             log_pcf_flags(LGUY, pc->flags);
             // no change
-         } else {
+         }
+         else
+         {
             set_chunk_type(pc, CT_COMPARE);
          }
       }
@@ -255,16 +258,19 @@ void tokenize_cleanup(void)
          {
             // bug #663
             log_pcf_flags(LGUY, pc->flags);
-            if ((pc->flags & PCF_IN_PREPROC) != 0) {
+            if ((pc->flags & PCF_IN_PREPROC) != 0)
+            {
                tmp = chunk_get_next_type(pc, CT_ANGLE_CLOSE, pc->level);
                if (tmp != NULL)
                {
                   // mark the ANGLEs
-                  pc->flags |= PCF_IN_TEMPLATE;
+                  pc->flags  |= PCF_IN_TEMPLATE;
                   tmp->flags |= PCF_IN_TEMPLATE;
                }
                // no change
-            } else {
+            }
+            else
+            {
                check_template(pc);
             }
          }
@@ -814,7 +820,7 @@ void tokenize_cleanup(void)
       pc   = next;
       next = chunk_get_next_ncnl(pc);
    }
-}
+} // tokenize_cleanup
 
 
 /**
@@ -1022,4 +1028,4 @@ static void check_template(chunk_t *start)
    LOG_FMT(LTEMPL, " - Not a template: end = %s\n",
            (end != NULL) ? get_token_name(end->type) : "<null>");
    set_chunk_type(start, CT_COMPARE);
-}
+} // check_template

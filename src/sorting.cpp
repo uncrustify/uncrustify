@@ -56,7 +56,7 @@ static int compare_chunks(chunk_t *pc1, chunk_t *pc2)
       return(1);
    }
    return(0);
-}
+} // compare_chunks
 
 
 /**
@@ -169,4 +169,4 @@ void sort_imports(void)
       }
       pc = next;
    }
-}
+} // sort_imports

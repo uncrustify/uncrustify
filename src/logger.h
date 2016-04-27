@@ -80,10 +80,12 @@ void log_get_mask(log_mask_t& mask);
 void log_str(log_sev_t sev, const char *str, int len);
 
 #define LOG_STR(sev, str, len)                           \
-   do { if (log_sev_on(sev)) { log_str(sev, str, len); } } while (0)
+   do { if (log_sev_on(sev)) { log_str(sev, str, len); } \
+   } while (0)
 
 #define LOG_STRING(sev, str)                                     \
-   do { if (log_sev_on(sev)) { log_str(sev, str, strlen(str)); } } while (0)
+   do { if (log_sev_on(sev)) { log_str(sev, str, strlen(str)); } \
+   } while (0)
 
 
 /**
@@ -99,7 +101,8 @@ void log_fmt(log_sev_t sev, const char *fmt, ...) __attribute__((format(printf, 
 #define LOG_FMT    log_fmt
 #else
 #define LOG_FMT(sev, args...)                           \
-   do { if (log_sev_on(sev)) { log_fmt(sev, ## args); } } while (0)
+   do { if (log_sev_on(sev)) { log_fmt(sev, ## args); } \
+   } while (0)
 #endif
 
 
@@ -113,7 +116,8 @@ void log_fmt(log_sev_t sev, const char *fmt, ...) __attribute__((format(printf, 
 void log_hex(log_sev_t sev, const void *vdata, int len);
 
 #define LOG_HEX(sev, ptr, len)                           \
-   do { if (log_sev_on(sev)) { log_hex(sev, ptr, len); } } while (0)
+   do { if (log_sev_on(sev)) { log_hex(sev, ptr, len); } \
+   } while (0)
 
 
 /**
@@ -132,7 +136,8 @@ void log_hex(log_sev_t sev, const void *vdata, int len);
 void log_hex_blk(log_sev_t sev, const void *data, int len);
 
 #define LOG_HEX_BLK(sev, ptr, len)                           \
-   do { if (log_sev_on(sev)) { log_hex_blk(sev, ptr, len); } } while (0)
+   do { if (log_sev_on(sev)) { log_hex_blk(sev, ptr, len); } \
+   } while (0)
 
 
 /**

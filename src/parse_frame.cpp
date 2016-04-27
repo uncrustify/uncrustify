@@ -12,6 +12,7 @@
 #include <cstring>
 #include <cstdlib>
 
+
 /**
  * Logs one parse frame
  */
@@ -294,4 +295,4 @@ int pf_check(struct parse_frame *frm, chunk_t *pc)
    pf_log_frms(LPFCHK, "END", frm);
 
    return(pp_level);
-}
+} // pf_check
