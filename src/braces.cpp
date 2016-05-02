@@ -689,6 +689,10 @@ chunk_t *insert_comment_after(chunk_t *ref, c_token_t cmt_type,
    }
    else
    {
+      if (ref->type == CT_PP_ELSE)
+      {  // make test c/ 02501 stable
+         new_cmt.str.append(" ");
+      }
       new_cmt.str.append("/* ");
       new_cmt.str.append(cmt_text);
       new_cmt.str.append(" */");
