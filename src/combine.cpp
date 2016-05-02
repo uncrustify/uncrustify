@@ -280,7 +280,7 @@ static bool chunk_ends_type(chunk_t *start)
           (pc->type == CT_QUALIFIER))
       {
          cnt++;
-         last_lval = (pc->flags & PCF_LVALUE) != 0;
+         last_lval = (pc->flags & PCF_LVALUE);
          continue;
       }
 
@@ -597,7 +597,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
 
    /* A [] in C# and D only follows a type */
    if ((pc->type == CT_TSQUARE) &&
-       ((cpd.lang_flags & (LANG_D | LANG_CS | LANG_VALA)) != 0))
+       (cpd.lang_flags & (LANG_D | LANG_CS | LANG_VALA)))
    {
       if ((prev != NULL) && (prev->type == CT_WORD))
       {
@@ -767,7 +767,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
          flag_parens(next, 0, CT_FPAREN_OPEN, CT_ATTRIBUTE, false);
       }
    }
-   if ((cpd.lang_flags & LANG_PAWN) != 0)
+   if (cpd.lang_flags & LANG_PAWN)
    {
       if ((pc->type == CT_FUNCTION) && (pc->brace_level > 0))
       {
@@ -877,7 +877,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
        chunk_is_str(pc, ")", 1) &&
        chunk_is_str(next, "(", 1))
    {
-      if ((cpd.lang_flags & LANG_D) != 0)
+      if (cpd.lang_flags & LANG_D)
       {
          flag_parens(next, 0, CT_FPAREN_OPEN, CT_FUNC_CALL, false);
       }
@@ -937,7 +937,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
 
 
    /* Check for stuff that can only occur at the start of an expression */
-   if ((pc->flags & PCF_EXPR_START) != 0)
+   if (pc->flags & PCF_EXPR_START)
    {
       /* Change STAR, MINUS, and PLUS in the easy cases */
       if (pc->type == CT_STAR)
@@ -1270,7 +1270,7 @@ void fix_symbols(void)
 
    mark_define_expressions();
 
-   bool is_java = (cpd.lang_flags & LANG_JAVA) != 0;
+   bool is_java = (cpd.lang_flags & LANG_JAVA);
    for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next_ncnl(pc))
    {
       if ((pc->type == CT_FUNC_WRAP) ||
@@ -1343,7 +1343,7 @@ void fix_symbols(void)
        * that starts with: QUALIFIER, TYPE, or WORD
        */
       if ((square_level < 0) &&
-          ((pc->flags & PCF_STMT_START) != 0) &&
+          (pc->flags & PCF_STMT_START) &&
           ((pc->type == CT_QUALIFIER) ||
            (pc->type == CT_TYPE) ||
            (pc->type == CT_WORD)) &&
@@ -1368,7 +1368,7 @@ static void mark_lvalue(chunk_t *pc)
    LOG_FUNC_ENTRY();
    chunk_t *prev;
 
-   if ((pc->flags & PCF_IN_PREPROC) != 0)
+   if (pc->flags & PCF_IN_PREPROC)
    {
       return;
    }
@@ -1422,7 +1422,7 @@ static void mark_function_return_type(chunk_t *fname, chunk_t *start, c_token_t 
               (pc->type != CT_OPERATOR) &&
               (pc->type != CT_WORD) &&
               (pc->type != CT_ADDR)) ||
-             ((pc->flags & PCF_IN_PREPROC) != 0))
+             (pc->flags & PCF_IN_PREPROC))
          {
             break;
          }
@@ -2175,7 +2175,7 @@ static void fix_enum_struct_union(chunk_t *pc)
       {
          return;
       }
-      else if (((cpd.lang_flags & LANG_PAWN) != 0) &&
+      else if ((cpd.lang_flags & LANG_PAWN) &&
                (next->type == CT_PAREN_OPEN))
       {
          next = set_paren_parent(next, CT_ENUM);
@@ -2261,7 +2261,7 @@ static void fix_enum_struct_union(chunk_t *pc)
          /* If we hit a comma in a function param, we are done */
          if (((next->type == CT_COMMA) ||
               (next->type == CT_FPAREN_CLOSE)) &&
-             ((next->flags & (PCF_IN_FCN_DEF | PCF_IN_FCN_CALL)) != 0))
+             (next->flags & (PCF_IN_FCN_DEF | PCF_IN_FCN_CALL)))
          {
             return;
          }
@@ -2525,7 +2525,7 @@ void combine_labels(void)
          {
             chunk_t *nextprev = chunk_get_prev_ncnl(next);
 
-            if ((cpd.lang_flags & LANG_PAWN) != 0)
+            if (cpd.lang_flags & LANG_PAWN)
             {
                if ((cur->type == CT_WORD) ||
                    (cur->type == CT_BRACE_CLOSE))
@@ -3974,7 +3974,7 @@ static void mark_class_ctor(chunk_t *start)
    {
       chunk_flags_set(pc, PCF_IN_CLASS);
 
-      if ((pc->brace_level > level) || ((pc->flags & PCF_IN_PREPROC) != 0))
+      if ((pc->brace_level > level) || (pc->flags & PCF_IN_PREPROC))
       {
          pc = chunk_get_next_ncnl(pc);
          continue;

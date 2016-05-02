@@ -439,7 +439,7 @@ void align_right_comments(void)
    pc = chunk_get_head();
    while (pc != NULL)
    {
-      if ((pc->flags & PCF_RIGHT_COMMENT) != 0)
+      if (pc->flags & PCF_RIGHT_COMMENT)
       {
          pc = align_trailing_comments(pc);
       }
@@ -655,7 +655,7 @@ chunk_t *align_assign(chunk_t *first, int span, int thresh)
          var_def_cnt = 0;
          equ_count   = 0;
       }
-      else if ((pc->flags & PCF_VAR_DEF) != 0)
+      else if (pc->flags & PCF_VAR_DEF)
       {
          var_def_cnt++;
       }
@@ -1412,7 +1412,7 @@ chunk_t *align_trailing_comments(chunk_t *start)
    /* Find the max column */
    while ((pc != NULL) && (nl_count < cpd.settings[UO_align_right_cmt_span].n))
    {
-      if (((pc->flags & PCF_RIGHT_COMMENT) != 0) && (pc->column > 1))
+      if ((pc->flags & PCF_RIGHT_COMMENT) && (pc->column > 1))
       {
          cmt_type_cur = get_comment_align_type(pc);
 

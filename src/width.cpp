@@ -240,7 +240,7 @@ static void split_line(chunk_t *start)
    {
    }
    /* Check to see if we are in a for statement */
-   else if ((start->flags & PCF_IN_FOR) != 0)
+   else if (start->flags & PCF_IN_FOR)
    {
       LOG_FMT(LSPLIT, " ** FOR SPLIT **\n");
       split_for_stmt(start);
@@ -254,9 +254,9 @@ static void split_line(chunk_t *start)
    /* If this is in a function call or prototype, split on commas or right
     * after the open paren
     */
-   else if (((start->flags & PCF_IN_FCN_DEF) != 0) ||
+   else if ((start->flags & PCF_IN_FCN_DEF) ||
             ((start->level == (start->brace_level + 1)) &&
-             ((start->flags & PCF_IN_FCN_CALL) != 0)))
+             (start->flags & PCF_IN_FCN_CALL)))
    {
       LOG_FMT(LSPLIT, " ** FUNC SPLIT **\n");
 

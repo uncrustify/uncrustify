@@ -160,7 +160,7 @@ static void setup_newline_add(chunk_t *prev, chunk_t *nl, chunk_t *next)
    {
       chunk_flags_set(nl, PCF_IN_PREPROC);
    }
-   if ((nl->flags & PCF_IN_PREPROC) != 0)
+   if (nl->flags & PCF_IN_PREPROC)
    {
       set_chunk_type(nl, CT_NL_CONT);
       nl->str = "\\\n";
@@ -279,7 +279,7 @@ static void newline_end_newline(chunk_t *br_close)
       {
          nl.flags |= PCF_IN_PREPROC;
       }
-      if ((nl.flags & PCF_IN_PREPROC) != 0)
+      if (nl.flags & PCF_IN_PREPROC)
       {
          nl.type = CT_NL_CONT;
          nl.str  = "\\\n";
@@ -505,7 +505,7 @@ static bool newlines_if_for_while_switch(chunk_t *start, argval_t nl_opt)
    bool    retval = false;
 
    if ((nl_opt == AV_IGNORE) ||
-       (((start->flags & PCF_IN_PREPROC) != 0) &&
+       ((start->flags & PCF_IN_PREPROC) &&
         !cpd.settings[UO_nl_define_macro].b))
    {
       return(false);
@@ -583,7 +583,7 @@ static void newlines_if_for_while_switch_pre_blank_lines(chunk_t *start, argval_
    bool    do_add   = nl_opt & AV_ADD;
 
    if ((nl_opt == AV_IGNORE) ||
-       (((start->flags & PCF_IN_PREPROC) != 0) &&
+       ((start->flags & PCF_IN_PREPROC) &&
         !cpd.settings[UO_nl_define_macro].b))
    {
       return;
@@ -897,7 +897,7 @@ static void newlines_if_for_while_switch_post_blank_lines(chunk_t *start, argval
    int     nl_count;
 
    if ((nl_opt == AV_IGNORE) ||
-       (((start->flags & PCF_IN_PREPROC) != 0) &&
+       ((start->flags & PCF_IN_PREPROC) &&
         !cpd.settings[UO_nl_define_macro].b))
    {
       return;
@@ -1056,7 +1056,7 @@ static void newlines_struct_enum_union(chunk_t *start, argval_t nl_opt, bool lea
    chunk_t *next;
 
    if ((nl_opt == AV_IGNORE) ||
-       (((start->flags & PCF_IN_PREPROC) != 0) &&
+       ((start->flags & PCF_IN_PREPROC) &&
         !cpd.settings[UO_nl_define_macro].b))
    {
       return;
@@ -1113,7 +1113,7 @@ static void newlines_cuddle_uncuddle(chunk_t *start, argval_t nl_opt)
    LOG_FUNC_ENTRY();
    chunk_t *br_close;
 
-   if (((start->flags & PCF_IN_PREPROC) != 0) &&
+   if ((start->flags & PCF_IN_PREPROC) &&
        !cpd.settings[UO_nl_define_macro].b)
    {
       return;
@@ -1138,7 +1138,7 @@ static void newlines_do_else(chunk_t *start, argval_t nl_opt)
    chunk_t *tmp;
 
    if ((nl_opt == AV_IGNORE) ||
-       (((start->flags & PCF_IN_PREPROC) != 0) &&
+       ((start->flags & PCF_IN_PREPROC) &&
         !cpd.settings[UO_nl_define_macro].b))
    {
       return;
@@ -1390,7 +1390,7 @@ static void newlines_brace_pair(chunk_t *br_open)
    argval_t val            = AV_IGNORE;
    bool     nl_close_brace = false;
 
-   if (((br_open->flags & PCF_IN_PREPROC) != 0) &&
+   if ((br_open->flags & PCF_IN_PREPROC) &&
        !cpd.settings[UO_nl_define_macro].b)
    {
       return;
@@ -2351,7 +2351,7 @@ void newlines_cleanup_braces(bool first)
                {
                   /* no change - preserve one liner body */
                }
-               else if ((pc->flags & (PCF_IN_ARRAY_ASSIGN | PCF_IN_PREPROC)) != 0)
+               else if (pc->flags & (PCF_IN_ARRAY_ASSIGN | PCF_IN_PREPROC))
                {
                   /* no change - don't break up array assignments or preprocessors */
                }

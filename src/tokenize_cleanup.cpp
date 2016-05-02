@@ -47,8 +47,8 @@ static chunk_t *handle_double_angle_close(chunk_t *pc)
       else
       {
          // bug #663
-         if (((pc->flags & PCF_IN_PREPROC) != 0) &&
-             ((pc->flags & PCF_IN_TEMPLATE) != 0))
+         if ((pc->flags & PCF_IN_PREPROC) &&
+             (pc->flags & PCF_IN_TEMPLATE))
          {
             log_pcf_flags(LGUY, pc->flags);
             // no change
@@ -132,7 +132,7 @@ void tokenize_cleanup(void)
    next = chunk_get_next_ncnl(pc);
    while ((pc != NULL) && (next != NULL))
    {
-      if ((pc->type == CT_DOT) && ((cpd.lang_flags & LANG_ALLC) != 0))
+      if ((pc->type == CT_DOT) && (cpd.lang_flags & LANG_ALLC))
       {
          set_chunk_type(pc, CT_MEMBER);
       }
@@ -258,7 +258,7 @@ void tokenize_cleanup(void)
          {
             // bug #663
             log_pcf_flags(LGUY, pc->flags);
-            if ((pc->flags & PCF_IN_PREPROC) != 0)
+            if (pc->flags & PCF_IN_PREPROC)
             {
                tmp = chunk_get_next_type(pc, CT_ANGLE_CLOSE, pc->level);
                if (tmp != NULL)
@@ -293,7 +293,7 @@ void tokenize_cleanup(void)
          }
       }
 
-      if ((cpd.lang_flags & LANG_D) != 0)
+      if (cpd.lang_flags & LANG_D)
       {
          /* Check for the D string concat symbol '~' */
          if ((pc->type == CT_INV) &&
@@ -334,7 +334,7 @@ void tokenize_cleanup(void)
          }
       }
 
-      if ((cpd.lang_flags & LANG_CPP) != 0)
+      if (cpd.lang_flags & LANG_CPP)
       {
          /* Change Word before '::' into a type */
          if ((pc->type == CT_WORD) && (next->type == CT_DC_MEMBER))

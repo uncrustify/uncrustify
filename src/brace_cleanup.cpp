@@ -139,7 +139,7 @@ void brace_cleanup(void)
       }
 
       /* Do before assigning stuff from the frame */
-      if ((cpd.lang_flags & LANG_PAWN) != 0)
+      if (cpd.lang_flags & LANG_PAWN)
       {
          if ((frm.pse[frm.pse_tos].type == CT_VBRACE_OPEN) &&
              (pc->type == CT_NEWLINE))
@@ -353,7 +353,7 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
          cpd.consumed = true;
          close_statement(frm, pc);
       }
-      else if ((cpd.lang_flags & LANG_PAWN) != 0)
+      else if (cpd.lang_flags & LANG_PAWN)
       {
          if (pc->type == CT_BRACE_CLOSE)
          {
@@ -939,14 +939,14 @@ static chunk_t *insert_vbrace(chunk_t *pc, bool after,
 
       /* Don't back into a preprocessor */
       if (((pc->flags & PCF_IN_PREPROC) == 0) &&
-          ((ref->flags & PCF_IN_PREPROC) != 0))
+          (ref->flags & PCF_IN_PREPROC))
       {
          if (ref->type == CT_PREPROC_BODY)
          {
             do
             {
                ref = chunk_get_prev(ref);
-            } while ((ref != NULL) && ((ref->flags & PCF_IN_PREPROC) != 0));
+            } while ((ref != NULL) && (ref->flags & PCF_IN_PREPROC));
          }
          else
          {

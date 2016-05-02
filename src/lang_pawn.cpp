@@ -122,7 +122,7 @@ static bool pawn_continued(chunk_t *pc, int br_level)
        (pc->parent_type == CT_WHILE) ||
        (pc->parent_type == CT_FUNC_DEF) ||
        (pc->parent_type == CT_ENUM) ||
-       ((pc->flags & (PCF_IN_ENUM | PCF_IN_STRUCT)) != 0) ||
+       (pc->flags & (PCF_IN_ENUM | PCF_IN_STRUCT)) ||
        chunk_is_str(pc, ":", 1) ||
        chunk_is_str(pc, "+", 1) ||
        chunk_is_str(pc, "-", 1))
@@ -284,7 +284,7 @@ void pawn_add_virtual_semicolons(void)
 
    /** Add Pawn virtual semicolons */
    prev = NULL;
-   if ((cpd.lang_flags & LANG_PAWN) != 0)
+   if (cpd.lang_flags & LANG_PAWN)
    {
       pc = chunk_get_head();
       while ((pc = chunk_get_next(pc)) != NULL)
@@ -500,7 +500,7 @@ chunk_t *pawn_check_vsemicolon(chunk_t *pc)
    prev = chunk_get_prev_ncnl(pc);
    if ((prev == NULL) ||
        (prev == vb_open) ||
-       ((prev->flags & PCF_IN_PREPROC) != 0) ||
+       (prev->flags & PCF_IN_PREPROC) ||
        pawn_continued(prev, vb_open->level + 1))
    {
       if (prev != NULL)

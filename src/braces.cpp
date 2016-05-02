@@ -348,7 +348,7 @@ static void examine_brace(chunk_t *bopen)
    pc = chunk_get_next_nc(bopen);
    while ((pc != NULL) && (pc->level >= level))
    {
-      if ((pc->flags & PCF_IN_PREPROC) != 0)
+      if (pc->flags & PCF_IN_PREPROC)
       {
          LOG_FMT(LBRDEL, " PREPROC\n");
          return;
@@ -610,7 +610,7 @@ static void convert_vbrace_to_brace(void)
          continue;
       }
 
-      in_preproc = (pc->flags & PCF_IN_PREPROC) != 0;
+      in_preproc = (pc->flags & PCF_IN_PREPROC);
 
       if ((((pc->parent_type == CT_IF) ||
             (pc->parent_type == CT_ELSE) ||
@@ -781,7 +781,7 @@ void add_long_closebrace_comment(void)
       {
          ns_pc = pc;
       }
-      if ((pc->type != CT_BRACE_OPEN) || ((pc->flags & PCF_IN_PREPROC) != 0))
+      if ((pc->type != CT_BRACE_OPEN) || (pc->flags & PCF_IN_PREPROC))
       {
          continue;
       }

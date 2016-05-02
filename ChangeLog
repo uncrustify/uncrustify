@@ -3,6 +3,10 @@ New:
    forUncrustifySources.cfg
  Some considerations about the problem "stable" are described at
    forUncrustifySources.txt
+ Simplify expressions such as:
+   if ((cpd.lang_flags & LANG_PAWN) != 0)
+ to
+   if (cpd.lang_flags & LANG_PAWN)
 
 New options:
  - nl_before_func_class_def
@@ -11,6 +15,9 @@ New options:
  - nl_before_func_body_proto
 
 Bugfix:
+ - make test c/ 02501 stable
+ - The issue #467 and the test tests/output/c/02100-i2c-core.c are fixed.
+ - uncrustify all the sources with forUncrustifySources.cfg
  - better descriptions for options
  - bug #631 is fixed
  - produce a better dump output

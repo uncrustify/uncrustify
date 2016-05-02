@@ -159,7 +159,7 @@ bool chunk_is_blank(chunk_t *pc)
 static_inline
 bool chunk_is_preproc(chunk_t *pc)
 {
-   return((pc != NULL) && ((pc->flags & PCF_IN_PREPROC) != 0));
+   return((pc != NULL) && (pc->flags & PCF_IN_PREPROC));
 }
 
 

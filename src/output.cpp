@@ -375,7 +375,7 @@ void output_text(FILE *pfile)
          }
          else
          {
-            output_comment_multi_simple(pc, (pc->flags & PCF_INSERTED) != 0);
+            output_comment_multi_simple(pc, (pc->flags & PCF_INSERTED));
          }
       }
       else if (pc->type == CT_COMMENT_CPP)
@@ -453,7 +453,7 @@ void output_text(FILE *pfile)
             /* not the first item on a line */
             prev       = chunk_get_prev(pc);
             allow_tabs = (cpd.settings[UO_align_with_tabs].b &&
-                          ((pc->flags & PCF_WAS_ALIGNED) != 0) &&
+                          (pc->flags & PCF_WAS_ALIGNED) &&
                           ((prev->column + prev->len() + 1) != pc->column));
             if (cpd.settings[UO_align_keep_tabs].b)
             {
@@ -1953,7 +1953,7 @@ void add_long_preprocessor_conditional_block_comment(void)
          continue;
       }
 #if 0
-      if ((pc->flags & PCF_IN_PREPROC) != 0)
+      if (pc->flags & PCF_IN_PREPROC)
       {
          continue;
       }

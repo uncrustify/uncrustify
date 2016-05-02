@@ -994,6 +994,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
 
    if (first->type == CT_C99_MEMBER)
    {
+      // always remove space(s) after then '.' of a C99-member
       log_rule("REMOVE");
       return(AV_REMOVE);
    }
@@ -1718,7 +1719,7 @@ void space_text(void)
    column = pc->column;
    while (pc != NULL)
    {
-      //LOG_FMT(LGUY, "%d:%d [%d] %s\n", pc->orig_line, pc->orig_col, __LINE__, pc->text());
+      //LOG_FMT(LGUY, "%s: %d:%d [%d] %s\n", __func__, pc->orig_line, pc->orig_col, __LINE__, pc->text());
       if ((strcmp(pc->text(), "SIGNAL") == 0) ||
           (strcmp(pc->text(), "SLOT") == 0))
       {  // guy 2015-09-22
@@ -1868,12 +1869,15 @@ void space_text(void)
             /* the symbols will be back-to-back "a+3" */
             break;
 
-         default:
+         case AV_IGNORE:
             /* Keep the same relative spacing, if possible */
             if ((next->orig_col >= pc->orig_col_end) && (pc->orig_col_end != 0))
             {
                column += next->orig_col - pc->orig_col_end;
             }
+            break;
+
+         case AV_NOT_DEFINED:
             break;
          }
 

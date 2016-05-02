@@ -296,8 +296,8 @@ static bool d_parse_string(tok_ctx& ctx, chunk_t& pc)
 static bool parse_comment(tok_ctx& ctx, chunk_t& pc)
 {
    int  ch;
-   bool is_d    = (cpd.lang_flags & LANG_D) != 0;
-   bool is_cs   = (cpd.lang_flags & LANG_CS) != 0;
+   bool is_d    = (cpd.lang_flags & LANG_D);
+   bool is_cs   = (cpd.lang_flags & LANG_CS);
    int  d_level = 0;
    int  bs_cnt;
 
@@ -1503,7 +1503,7 @@ static bool parse_next(tok_ctx& ctx, chunk_t& pc)
    }
 
    /* Check for C# literal strings, ie @"hello" and identifiers @for*/
-   if (((cpd.lang_flags & LANG_CS) != 0) && (ctx.peek() == '@'))
+   if ((cpd.lang_flags & LANG_CS) && (ctx.peek() == '@'))
    {
       if (ctx.peek(1) == '"')
       {
@@ -1519,14 +1519,14 @@ static bool parse_next(tok_ctx& ctx, chunk_t& pc)
    }
 
    /* Check for C# Interpolated strings */
-   if (((cpd.lang_flags & LANG_CS) != 0) && (ctx.peek() == '$') && (ctx.peek(1) == '"'))
+   if ((cpd.lang_flags & LANG_CS) && (ctx.peek() == '$') && (ctx.peek(1) == '"'))
    {
       parse_cs_interpolated_string(ctx, pc);
       return(true);
    }
 
    /* handle VALA """ strings """ */
-   if (((cpd.lang_flags & LANG_VALA) != 0) &&
+   if ((cpd.lang_flags & LANG_VALA) &&
        (ctx.peek() == '"') &&
        (ctx.peek(1) == '"') &&
        (ctx.peek(2) == '"'))
@@ -1537,7 +1537,7 @@ static bool parse_next(tok_ctx& ctx, chunk_t& pc)
 
    /* handle C++0x strings u8"x" u"x" U"x" R"x" u8R"XXX(I'm a "raw UTF-8" string.)XXX" */
    ch = ctx.peek();
-   if (((cpd.lang_flags & LANG_CPP) != 0) &&
+   if ((cpd.lang_flags & LANG_CPP) &&
        ((ch == 'u') || (ch == 'U') || (ch == 'R')))
    {
       int  idx     = 0;
@@ -1578,7 +1578,7 @@ static bool parse_next(tok_ctx& ctx, chunk_t& pc)
    }
 
    /* PAWN specific stuff */
-   if ((cpd.lang_flags & LANG_PAWN) != 0)
+   if (cpd.lang_flags & LANG_PAWN)
    {
       if ((cpd.preproc_ncnl_count == 1) &&
           ((cpd.in_preproc == CT_PP_DEFINE) ||
@@ -1625,7 +1625,7 @@ static bool parse_next(tok_ctx& ctx, chunk_t& pc)
       return(true);
    }
 
-   if ((cpd.lang_flags & LANG_D) != 0)
+   if (cpd.lang_flags & LANG_D)
    {
       /* D specific stuff */
       if (d_parse_string(ctx, pc))
