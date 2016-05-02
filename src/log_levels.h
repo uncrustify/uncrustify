@@ -11,7 +11,6 @@
  */
 #ifndef LOG_LEVELS_H_INCLUDED
 #define LOG_LEVELS_H_INCLUDED
-#define DEBUG
 
 enum log_sev_t
 {

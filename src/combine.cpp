@@ -124,7 +124,8 @@ static chunk_t *flag_parens(chunk_t *po, UINT64 flags,
            po->orig_line, po->orig_col, po->text(),
            paren_close->orig_line, paren_close->orig_col, paren_close->text(),
            get_token_name(opentype), get_token_name(parenttype));
-   log_func_stack_inline(LSETTYP);
+   //log_func_stack_inline(LSETTYP);
+   log_func_stack_inline(LFLPAREN);
 
    if (po != paren_close)
    {
