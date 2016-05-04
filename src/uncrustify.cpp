@@ -471,6 +471,16 @@ int main(int argc, char *argv[])
       {
          usage_exit("Unable to load the config file", argv[0], 56);
       }
+      // test if all options are compatible to each other
+      if (cpd.settings[UO_nl_max].n > 0)
+      {
+         // test if one/some option(s) is/are not too big for that
+         if (cpd.settings[UO_nl_func_var_def_blk].n >= cpd.settings[UO_nl_max].n)
+         {
+            fprintf(stderr, "The option 'nl_func_var_def_blk' is too big against the option 'nl_max'\n");
+            exit(2);
+         }
+      }
    }
 
    if (arg.Present("--universalindent"))
@@ -1405,7 +1415,7 @@ static void uncrustify_start(const deque<int>& data)
     * At this point, the level information is available and accurate.
     */
 
-   if ((cpd.lang_flags & LANG_PAWN) != 0)
+   if (cpd.lang_flags & LANG_PAWN)
    {
       pawn_prescan();
    }
@@ -1599,7 +1609,7 @@ static void uncrustify_file(const file_mem& fm, FILE *pfout,
       }
 
       /* Scrub certain added semicolons */
-      if (((cpd.lang_flags & LANG_PAWN) != 0) &&
+      if ((cpd.lang_flags & LANG_PAWN) &&
           cpd.settings[UO_mod_pawn_semicolon].b)
       {
          pawn_scrub_vsemi();
@@ -2040,7 +2050,7 @@ void log_pcf_flags(log_sev_t sev, UINT64 flags)
    const char *tolog = NULL;
    for (int i = 0; i < (int)ARRAY_SIZE(pcf_names); i++)
    {
-      if ((flags & (1ULL << i)) != 0)
+      if (flags & (1ULL << i))
       {
          if (tolog != NULL)
          {

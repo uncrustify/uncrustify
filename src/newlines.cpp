@@ -2,6 +2,16 @@
  * @file newlines.cpp
  * Adds or removes newlines.
  *
+ * Informations
+ *   "Ignore" means do not change it.
+ *   "Add" in the context of spaces means make sure there is at least 1.
+ *   "Add" elsewhere means make sure one is present.
+ *   "Remove" mean remove the space/brace/newline/etc.
+ *   "Force" in the context of spaces means ensure that there is exactly 1.
+ *   "Force" in other contexts means the same as "add".
+ *
+ *   Rmk: spaces = space + nl
+ *
  * @author  Ben Gardner
  * @author  Guy Maurel since version 0.62 for uncrustify4Qt
  *          October 2015, 2016
