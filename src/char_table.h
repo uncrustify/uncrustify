@@ -17,7 +17,7 @@
  */
 struct CharTable
 {
-   static int         chars[128];
+   static int chars[128];
 
    enum
    {
@@ -25,6 +25,7 @@ struct CharTable
       KW2 = 0x0200,
    };
 
+<<<<<<< HEAD
    static inline int Get(int ch)
    {
       if (ch < 0)
@@ -34,6 +35,18 @@ struct CharTable
       if (ch < (int)ARRAY_SIZE(chars))
       {
          return chars[ch];
+=======
+
+   static inline int Get(int ch)
+   {
+      if (ch < 0)
+      {
+         return(0);
+      }
+      if (ch < (int)ARRAY_SIZE(chars))
+      {
+         return(chars[ch]);
+>>>>>>> uncrustify/master
       }
 
       /* HACK: If the top bit is set, then we are likely dealing with UTF-8,
@@ -45,10 +58,12 @@ struct CharTable
       return(KW1 | KW2);
    }
 
+
    static inline bool IsKw1(char ch)
    {
       return((Get(ch) & KW1) != 0);
    }
+
 
    static inline bool IsKw2(char ch)
    {

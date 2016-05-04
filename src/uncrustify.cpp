@@ -48,20 +48,12 @@ static const char *language_name_from_flags(int lang);
 static bool read_stdin(file_mem& fm);
 static void uncrustify_start(const deque<int>& data);
 static void uncrustify_end();
-static void uncrustify_file(const file_mem& fm, FILE *pfout,
-                            const char *parsed_file);
-static void do_source_file(const char *filename_in,
-                           const char *filename_out,
-                           const char *parsed_file,
-                           bool no_backup, bool keep_mtime);
-static void process_source_list(const char *source_list, const char *prefix,
-                                const char *suffix, bool no_backup, bool keep_mtime);
+static void uncrustify_file(const file_mem& fm, FILE *pfout, const char *parsed_file);
+static void do_source_file(const char *filename_in, const char *filename_out, const char *parsed_file, bool no_backup, bool keep_mtime);
+static void process_source_list(const char *source_list, const char *prefix, const char *suffix, bool no_backup, bool keep_mtime);
 static int load_header_files();
 
-static const char *make_output_filename(char *buf, int buf_size,
-                                        const char *filename,
-                                        const char *prefix,
-                                        const char *suffix);
+static const char *make_output_filename(char *buf, int buf_size, const char *filename, const char *prefix, const char *suffix);
 
 static int load_mem_file(const char *filename, file_mem& fm);
 
@@ -206,7 +198,7 @@ static void usage_exit(const char *msg, const char *argv0, int code)
            ,
            path_basename(argv0), UO_option_count);
    exit(code);
-}
+} // usage_exit
 
 
 static void version_exit(void)
@@ -271,7 +263,7 @@ int main(int argc, char *argv[])
    if (arg.Present("--show-config"))
    {
       print_options(stdout);
-      return EXIT_SUCCESS;
+      return(EXIT_SUCCESS);
    }
 
    cpd.do_check = arg.Present("--check");
@@ -303,7 +295,7 @@ int main(int argc, char *argv[])
       {
          log_pcf_flags(LSYS, strtoul(p_arg, NULL, 16));
       }
-      return EXIT_SUCCESS;
+      return(EXIT_SUCCESS);
    }
 
    /* Get the config file name */
@@ -417,12 +409,12 @@ int main(int argc, char *argv[])
    const char *suffix = arg.Param("--suffix");
    const char *assume = arg.Param("--assume");
 
-   bool no_backup        = arg.Present("--no-backup");
-   bool replace          = arg.Present("--replace");
-   bool keep_mtime       = arg.Present("--mtime");
-   bool update_config    = arg.Present("--update-config");
-   bool update_config_wd = arg.Present("--update-config-with-doc");
-   bool detect           = arg.Present("--detect");
+   bool       no_backup        = arg.Present("--no-backup");
+   bool       replace          = arg.Present("--replace");
+   bool       keep_mtime       = arg.Present("--mtime");
+   bool       update_config    = arg.Present("--update-config");
+   bool       update_config_wd = arg.Present("--update-config-with-doc");
+   bool       detect           = arg.Present("--detect");
 
    /* Grab the output override */
    output_file = arg.Param("-o");
@@ -492,14 +484,14 @@ int main(int argc, char *argv[])
          {
             fprintf(stderr, "Unable to open %s for write: %s (%d)\n",
                     output_file, strerror(errno), errno);
-            return EXIT_FAILURE;
+            return(EXIT_FAILURE);
          }
       }
 
       print_universal_indent_cfg(pfile);
       fclose(pfile);
 
-      return EXIT_SUCCESS;
+      return(EXIT_SUCCESS);
    }
 
    if (detect)
@@ -509,7 +501,7 @@ int main(int argc, char *argv[])
       if ((source_file == NULL) || (source_list != NULL))
       {
          fprintf(stderr, "The --detect option requires a single input file\n");
-         return EXIT_FAILURE;
+         return(EXIT_FAILURE);
       }
 
       /* Do some simple language detection based on the filename extension */
@@ -523,7 +515,7 @@ int main(int argc, char *argv[])
       {
          LOG_FMT(LERR, "Failed to load (%s)\n", source_file);
          cpd.error_count++;
-         return EXIT_FAILURE;
+         return(EXIT_FAILURE);
       }
 
       uncrustify_start(fm.data);
@@ -532,7 +524,7 @@ int main(int argc, char *argv[])
 
       redir_stdout(output_file);
       save_option_file(stdout, update_config_wd);
-      return EXIT_SUCCESS;
+      return(EXIT_SUCCESS);
    }
 
    if (update_config || update_config_wd)
@@ -540,7 +532,7 @@ int main(int argc, char *argv[])
       /* TODO: complain if file-processing related options are present */
       redir_stdout(output_file);
       save_option_file(stdout, update_config_wd);
-      return EXIT_SUCCESS;
+      return(EXIT_SUCCESS);
    }
 
    /* Everything beyond this point requires a config file, so complain and
@@ -658,11 +650,11 @@ int main(int argc, char *argv[])
 
    if (cpd.do_check)
    {
-      return cpd.check_fail_cnt ? EXIT_FAILURE : EXIT_SUCCESS;
+      return(cpd.check_fail_cnt ? EXIT_FAILURE : EXIT_SUCCESS);
    }
 
    return((cpd.error_count != 0) ? EXIT_FAILURE : EXIT_SUCCESS);
-}
+} // main
 
 
 static void process_source_list(const char *source_list,
@@ -723,7 +715,7 @@ static void process_source_list(const char *source_list,
    {
       fclose(p_file);
    }
-}
+} // process_source_list
 
 
 static bool read_stdin(file_mem& fm)
@@ -778,7 +770,12 @@ static void make_folders(const string& filename)
             int status;    // Coverity CID 75999
             status = mkdir(outname, 0750);
             if ((status != 0) &&
+<<<<<<< HEAD
                 (errno != 17)) {
+=======
+                (errno != EEXIST))
+            {
+>>>>>>> uncrustify/master
                LOG_FMT(LERR, "%s: Unable to create %s: %s (%d)\n",
                        __func__, outname, strerror(errno), errno);
                cpd.error_count++;
@@ -793,7 +790,7 @@ static void make_folders(const string& filename)
          last_idx = idx + 1;
       }
    }
-}
+} // make_folders
 
 
 /**
@@ -862,7 +859,7 @@ static int load_mem_file(const char *filename, file_mem& fm)
    }
    fclose(p_file);
    return(retval);
-}
+} // load_mem_file
 
 
 /**
@@ -1003,12 +1000,16 @@ static bool file_content_matches(const string& filename1, const string& filename
    close(fd2);
 
    return((len1 == 0) && (len2 == 0));
-}
+} // file_content_matches
 
 
 static string fix_filename(const char *filename)
 {
+<<<<<<< HEAD
    char *tmp_file;
+=======
+   char   *tmp_file;
+>>>>>>> uncrustify/master
    string rv;
 
    /* Create 'outfile.uncrustify' */
@@ -1019,7 +1020,11 @@ static string fix_filename(const char *filename)
    }
    rv = tmp_file;
    delete[] tmp_file;
+<<<<<<< HEAD
    return rv;
+=======
+   return(rv);
+>>>>>>> uncrustify/master
 }
 
 
@@ -1126,7 +1131,6 @@ static void do_source_file(const char *filename_in,
          else
          {
 #ifdef WIN32
-
             /* windows can't rename a file if the target exists, so delete it
              * first. This may cause data loss if the tmp file gets deleted
              * or can't be renamed.
@@ -1152,7 +1156,7 @@ static void do_source_file(const char *filename_in,
       }
 #endif
    }
-}
+} // do_source_file
 
 
 static void add_file_header()
@@ -1265,7 +1269,7 @@ static void add_func_header(c_token_t type, file_mem& fm)
          }
       }
    }
-}
+} // add_func_header
 
 
 static void add_msg_header(c_token_t type, file_mem& fm)
@@ -1365,7 +1369,7 @@ static void add_msg_header(c_token_t type, file_mem& fm)
          }
       }
    }
-}
+} // add_msg_header
 
 
 static void uncrustify_start(const deque<int>& data)
@@ -1429,7 +1433,7 @@ static void uncrustify_start(const deque<int>& data)
     * Look at all colons ':' and mark labels, :? sequences, etc.
     */
    combine_labels();
-}
+} // uncrustify_start
 
 
 static void uncrustify_file(const file_mem& fm, FILE *pfout,
@@ -1743,7 +1747,7 @@ static void uncrustify_file(const file_mem& fm, FILE *pfout,
    }
 
    uncrustify_end();
-}
+} // uncrustify_file
 
 
 static void uncrustify_end()
@@ -1849,10 +1853,10 @@ int language_flags_from_name(const char *name)
    {
       if (strcasecmp(name, language_names[i].name) == 0)
       {
-         return language_names[i].lang;
+         return(language_names[i].lang);
       }
    }
-   return 0;
+   return(0);
 }
 
 
@@ -1871,7 +1875,7 @@ static const char *language_name_from_flags(int lang)
    {
       if (language_names[i].lang == lang)
       {
-         return language_names[i].name;
+         return(language_names[i].name);
       }
    }
 
@@ -1880,10 +1884,10 @@ static const char *language_name_from_flags(int lang)
    {
       if ((language_names[i].lang & lang) != 0)
       {
-         return language_names[i].name;
+         return(language_names[i].name);
       }
    }
-   return "???";
+   return("???");
 }
 
 
@@ -1922,6 +1926,7 @@ struct lang_ext_t language_exts[] =
    { ".es",   "ECMA" },
 };
 
+
 /**
  * Set idx = 0 before the first call.
  * Done when returns NULL
@@ -1935,7 +1940,7 @@ const char *get_file_extension(int& idx)
       val = language_exts[idx].ext;
    }
    idx++;
-   return val;
+   return(val);
 }
 
 
@@ -1943,6 +1948,7 @@ const char *get_file_extension(int& idx)
 // These ARE case sensitive user file extensions.
 typedef std::map<string, string>   extension_map_t;
 static extension_map_t g_ext_map;
+
 
 const char *extension_add(const char *ext_text, const char *lang_text)
 {
@@ -1952,9 +1958,9 @@ const char *extension_add(const char *ext_text, const char *lang_text)
    {
       const char *lang_name = language_name_from_flags(lang_flags);
       g_ext_map[string(ext_text)] = lang_name;
-      return lang_name;
+      return(lang_name);
    }
-   return NULL;
+   return(NULL);
 }
 
 
@@ -2003,7 +2009,7 @@ static int language_flags_from_filename(const char *filename)
    {
       if (ends_with(filename, it->first.c_str()))
       {
-         return language_flags_from_name(it->second.c_str());
+         return(language_flags_from_name(it->second.c_str()));
       }
    }
 
@@ -2011,7 +2017,7 @@ static int language_flags_from_filename(const char *filename)
    {
       if (ends_with(filename, language_exts[i].ext))
       {
-         return language_flags_from_name(language_exts[i].name);
+         return(language_flags_from_name(language_exts[i].name));
       }
    }
 
@@ -2020,17 +2026,17 @@ static int language_flags_from_filename(const char *filename)
    {
       if (ends_with(filename, it->first.c_str(), false))
       {
-         return language_flags_from_name(it->second.c_str());
+         return(language_flags_from_name(it->second.c_str()));
       }
    }
    for (i = 0; i < (int)ARRAY_SIZE(language_exts); i++)
    {
       if (ends_with(filename, language_exts[i].ext, false))
       {
-         return language_flags_from_name(language_exts[i].name);
+         return(language_flags_from_name(language_exts[i].name));
       }
    }
-   return LANG_C;
+   return(LANG_C);
 }
 
 

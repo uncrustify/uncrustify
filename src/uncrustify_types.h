@@ -237,6 +237,10 @@ struct chunk_t
       reset();
    }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> uncrustify/master
    void reset()
    {
       memset(&align, 0, sizeof(align));
@@ -260,11 +264,19 @@ struct chunk_t
       str.clear();
    }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> uncrustify/master
    int len()
    {
       return(str.size());
    }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> uncrustify/master
    const char *text()
    {
       return(str.c_str());

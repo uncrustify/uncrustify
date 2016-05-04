@@ -104,7 +104,7 @@ void do_braces(void)
    {
       move_case_break();
    }
-}
+} // do_braces
 
 
 /**
@@ -321,7 +321,7 @@ static bool can_remove_braces(chunk_t *bopen)
            get_token_name(pc->type), pc->orig_line, if_count, semi_count);
 
    return((pc->type == CT_BRACE_CLOSE) && (pc->pp_level == bopen->pp_level));
-}
+} // can_remove_braces
 
 
 /**
@@ -348,7 +348,7 @@ static void examine_brace(chunk_t *bopen)
    pc = chunk_get_next_nc(bopen);
    while ((pc != NULL) && (pc->level >= level))
    {
-      if ((pc->flags & PCF_IN_PREPROC) != 0)
+      if (pc->flags & PCF_IN_PREPROC)
       {
          LOG_FMT(LBRDEL, " PREPROC\n");
          return;
@@ -496,7 +496,7 @@ static void examine_brace(chunk_t *bopen)
    {
       LOG_FMT(LBRDEL, " not a close brace? - '%s'\n", pc->text());
    }
-}
+} // examine_brace
 
 
 /**
@@ -610,7 +610,7 @@ static void convert_vbrace_to_brace(void)
          continue;
       }
 
-      in_preproc = (pc->flags & PCF_IN_PREPROC) != 0;
+      in_preproc = (pc->flags & PCF_IN_PREPROC);
 
       if ((((pc->parent_type == CT_IF) ||
             (pc->parent_type == CT_ELSE) ||
@@ -661,7 +661,7 @@ static void convert_vbrace_to_brace(void)
          convert_vbrace(vbc);
       }
    }
-}
+} // convert_vbrace_to_brace
 
 
 /**
@@ -689,6 +689,10 @@ chunk_t *insert_comment_after(chunk_t *ref, c_token_t cmt_type,
    }
    else
    {
+      if (ref->type == CT_PP_ELSE)
+      {  // make test c/ 02501 stable
+         new_cmt.str.append(" ");
+      }
       new_cmt.str.append("/* ");
       new_cmt.str.append(cmt_text);
       new_cmt.str.append(" */");
@@ -777,7 +781,7 @@ void add_long_closebrace_comment(void)
       {
          ns_pc = pc;
       }
-      if ((pc->type != CT_BRACE_OPEN) || ((pc->flags & PCF_IN_PREPROC) != 0))
+      if ((pc->type != CT_BRACE_OPEN) || (pc->flags & PCF_IN_PREPROC))
       {
          continue;
       }
@@ -849,7 +853,7 @@ void add_long_closebrace_comment(void)
          }
       }
    }
-}
+} // add_long_closebrace_comment
 
 
 static void move_case_break(void)
@@ -931,7 +935,7 @@ static chunk_t *mod_case_brace_remove(chunk_t *br_open)
    chunk_del(br_open);
    chunk_del(br_close);
    return(chunk_get_next(next, CNAV_PREPROC));
-}
+} // mod_case_brace_remove
 
 
 /**
@@ -1005,7 +1009,7 @@ static chunk_t *mod_case_brace_add(chunk_t *cl_colon)
    }
 
    return(br_open);
-}
+} // mod_case_brace_add
 
 
 static void mod_case_brace(void)
@@ -1156,7 +1160,7 @@ static void process_if_chain(chunk_t *br_start)
       }
       LOG_FMT(LBRCH, "\n");
    }
-}
+} // process_if_chain
 
 
 static void mod_full_brace_if_chain(void)

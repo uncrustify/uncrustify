@@ -128,7 +128,7 @@ const char *Args::Params(const char *token, int& index)
    }
 
    return(NULL);
-}
+} // Args::Params
 
 
 /**
@@ -267,4 +267,4 @@ int Args::SplitLine(char *text, char *args[], int num_args)
    *dest = 0;
 
    return(argc);
-}
+} // Args::SplitLine

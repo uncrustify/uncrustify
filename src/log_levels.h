@@ -107,6 +107,11 @@ enum log_sev_t
    LSETPAR   = 91, /* set_chunk_parent() */
    LSETTYP   = 92, /* set_chunk_type() */
    LSETFLG   = 93, /* set_chunk_flags() */
+<<<<<<< HEAD
+=======
+   LNLFUNCT  = 94, /* newlines before function */
+   LGUY98    = 98, /* for guy-test */
+>>>>>>> uncrustify/master
    LGUY      = 99, /* for guy-test */
 };
 

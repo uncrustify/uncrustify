@@ -16,9 +16,15 @@
 
 extern struct cp_data cpd;
 
+<<<<<<< HEAD
 extern bool QT_SIGNAL_SLOT_found;
 extern int QT_SIGNAL_SLOT_level;
 extern bool restoreValues;
+=======
+extern bool           QT_SIGNAL_SLOT_found;
+extern int            QT_SIGNAL_SLOT_level;
+extern bool           restoreValues;
+>>>>>>> uncrustify/master
 
 void save_set_options_for_QT(int level);
 void restore_options_for_QT();

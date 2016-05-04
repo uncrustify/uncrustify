@@ -16,6 +16,7 @@ static void split_fcn_params(chunk_t *start);
 static void split_fcn_params_full(chunk_t *start);
 static void split_for_stmt(chunk_t *start);
 
+
 static_inline bool is_past_width(chunk_t *pc)
 {
    // allow char to sit at last column by subtracting 1
@@ -210,7 +211,7 @@ static void try_split_here(cw_entry& ent, chunk_t *pc)
       ent.pc  = pc;
       ent.pri = pc_pri;
    }
-}
+} // try_split_here
 
 
 /**
@@ -239,7 +240,7 @@ static void split_line(chunk_t *start)
    {
    }
    /* Check to see if we are in a for statement */
-   else if ((start->flags & PCF_IN_FOR) != 0)
+   else if (start->flags & PCF_IN_FOR)
    {
       LOG_FMT(LSPLIT, " ** FOR SPLIT **\n");
       split_for_stmt(start);
@@ -253,9 +254,9 @@ static void split_line(chunk_t *start)
    /* If this is in a function call or prototype, split on commas or right
     * after the open paren
     */
-   else if (((start->flags & PCF_IN_FCN_DEF) != 0) ||
+   else if ((start->flags & PCF_IN_FCN_DEF) ||
             ((start->level == (start->brace_level + 1)) &&
-             ((start->flags & PCF_IN_FCN_CALL) != 0)))
+             (start->flags & PCF_IN_FCN_CALL)))
    {
       LOG_FMT(LSPLIT, " ** FUNC SPLIT **\n");
 
@@ -365,7 +366,7 @@ static void split_line(chunk_t *start)
 
       split_before_chunk(pc);
    }
-}
+} // split_line
 
 
 /**
@@ -476,7 +477,7 @@ static void split_for_stmt(chunk_t *start)
       }
    }
    /* Oh, well. We tried. */
-}
+} // split_for_stmt
 
 
 /**
@@ -628,4 +629,4 @@ static void split_fcn_params(chunk_t *start)
       reindent_line(pc, min_col);
       cpd.changes++;
    }
-}
+} // split_fcn_params

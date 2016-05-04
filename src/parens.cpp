@@ -99,7 +99,7 @@ static void add_parens_between(chunk_t *first, chunk_t *last)
       tmp->level++;
    }
    last_p->level++;
-}
+} // add_parens_between
 
 
 /**
@@ -188,4 +188,4 @@ static void check_bool_parens(chunk_t *popen, chunk_t *pclose, int nest)
    {
       add_parens_between(ref, pclose);
    }
-}
+} // check_bool_parens

@@ -40,7 +40,11 @@ The simplest way to compile this package is:
 
   1. `cd' to the directory containing the package's source code.
 
+<<<<<<< HEAD
   1.1. It might be necessary to run aclocal and autoconf before going on.
+=======
+  1.1. It might be necessary to run aclocal, autoconf and automake before going on.
+>>>>>>> uncrustify/master
 
   1.2. Now type
      `./configure' to configure the package for your system.  If you're

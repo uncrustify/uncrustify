@@ -271,3 +271,7 @@
 33036 bug_663.cfg                      cpp/bug_663.cpp
 33037 func_class.cfg                   cpp/func_class.cpp
 33038 func_class.cfg                   cpp/func_class.h
+<<<<<<< HEAD
+=======
+33039 mod_remove_empty_return.cfg      cpp/mod_remove_empty_return.cpp
+>>>>>>> uncrustify/master

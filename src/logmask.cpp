@@ -76,7 +76,7 @@ char *logmask_to_str(const log_mask_t& mask, char *buf, int size)
    buf[len] = 0;
 
    return(buf);
-}
+} // logmask_to_str
 
 
 /**
@@ -145,4 +145,4 @@ void logmask_from_string(const char *str, log_mask_t& mask)
          str++;
       }
    }
-}
+} // logmask_from_string

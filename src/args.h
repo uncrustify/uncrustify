@@ -24,7 +24,6 @@ protected:
    UINT8 *m_used;      /* array of bits */
 
 public:
-
    /**
     * Initializes the argument library.
     * This keeps a reference to argv, so don't change it.

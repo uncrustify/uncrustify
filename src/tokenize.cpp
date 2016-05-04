@@ -19,7 +19,11 @@
 
 struct tok_info
 {
-   tok_info() : last_ch(0), idx(0), row(1), col(1)
+   tok_info()
+      : last_ch(0)
+      , idx(0)
+      , row(1)
+      , col(1)
    {
    }
 
@@ -31,49 +35,58 @@ struct tok_info
 
 struct tok_ctx
 {
-   tok_ctx(const deque<int>& d) : data(d)
+   tok_ctx(const deque<int>& d)
+      : data(d)
    {
    }
 
+
    /* save before trying to parse something that may fail */
-   void              save()
+   void save()
    {
       save(s);
    }
 
-   void              save(tok_info& info)
+
+   void save(tok_info& info)
    {
       info = c;
    }
 
+
    /* restore previous saved state */
-   void              restore()
+   void restore()
    {
       restore(s);
    }
 
-   void              restore(const tok_info& info)
+
+   void restore(const tok_info& info)
    {
       c = info;
    }
 
-   bool              more()
+
+   bool more()
    {
       return(c.idx < (int)data.size());
    }
 
-   int               peek()
+
+   int peek()
    {
       return(more() ? data[c.idx] : -1);
    }
 
-   int               peek(int idx)
+
+   int peek(int idx)
    {
       idx += c.idx;
       return((idx < (int)data.size()) ? data[idx] : -1);
    }
 
-   int               get()
+
+   int get()
    {
       if (more())
       {
@@ -102,19 +115,20 @@ struct tok_ctx
             break;
          }
          c.last_ch = ch;
-         return ch;
+         return(ch);
       }
-      return -1;
+      return(-1);
    }
 
-   bool              expect(int ch)
+
+   bool expect(int ch)
    {
       if (peek() == ch)
       {
          get();
-         return true;
+         return(true);
       }
-      return false;
+      return(false);
    }
 
    const deque<int>& data;
@@ -231,7 +245,7 @@ static bool d_parse_string(tok_ctx& ctx, chunk_t& pc)
             /* Everything else is a single character */
             pc.str.append(ctx.get());
             break;
-         }
+         } // switch
       }
 
       if (pc.str.size() > 1)
@@ -246,7 +260,7 @@ static bool d_parse_string(tok_ctx& ctx, chunk_t& pc)
       return(parse_string(ctx, pc, 1, false));
    }
    return(false);
-}
+} // d_parse_string
 
 
 // /**
@@ -282,8 +296,8 @@ static bool d_parse_string(tok_ctx& ctx, chunk_t& pc)
 static bool parse_comment(tok_ctx& ctx, chunk_t& pc)
 {
    int  ch;
-   bool is_d    = (cpd.lang_flags & LANG_D) != 0;
-   bool is_cs   = (cpd.lang_flags & LANG_CS) != 0;
+   bool is_d    = (cpd.lang_flags & LANG_D);
+   bool is_cs   = (cpd.lang_flags & LANG_CS);
    int  d_level = 0;
    int  bs_cnt;
 
@@ -411,7 +425,7 @@ static bool parse_comment(tok_ctx& ctx, chunk_t& pc)
 
             tok_info ss;
             ctx.save(ss);
-            int oldsize = pc.str.size();
+            int      oldsize = pc.str.size();
 
             /* If there is another C comment right after this one, combine them */
             while ((ctx.peek() == ' ') || (ctx.peek() == '\t'))
@@ -483,7 +497,7 @@ static bool parse_comment(tok_ctx& ctx, chunk_t& pc)
       }
    }
    return(true);
-}
+} // parse_comment
 
 
 /**
@@ -785,7 +799,7 @@ static bool parse_number(tok_ctx& ctx, chunk_t& pc)
    parse_suffix(ctx, pc);
 
    return(true);
-}
+} // parse_number
 
 
 /**
@@ -866,7 +880,7 @@ static bool parse_string(tok_ctx& ctx, chunk_t& pc, int quote_idx, bool allow_es
 
    parse_suffix(ctx, pc, true);
    return(true);
-}
+} // parse_string
 
 
 /**
@@ -976,7 +990,11 @@ static bool parse_cs_interpolated_string(tok_ctx& ctx, chunk_t& pc)
    }
 
    return(true);
+<<<<<<< HEAD
 }
+=======
+} // parse_cs_interpolated_string
+>>>>>>> uncrustify/master
 
 
 /**
@@ -1023,11 +1041,11 @@ static bool tag_compare(const deque<int>& d, int a_idx, int b_idx, int len)
       {
          if (d[a_idx] != d[b_idx])
          {
-            return false;
+            return(false);
          }
       }
    }
-   return true;
+   return(true);
 }
 
 
@@ -1091,7 +1109,7 @@ static bool parse_cr_string(tok_ctx& ctx, chunk_t& pc, int q_idx)
    }
    ctx.restore();
    return(false);
-}
+} // parse_cr_string
 
 
 /**
@@ -1157,7 +1175,7 @@ bool parse_word(tok_ctx& ctx, chunk_t& pc, bool skipcheck)
    }
 
    return(true);
-}
+} // parse_word
 
 
 /**
@@ -1221,7 +1239,7 @@ static bool parse_whitespace(tok_ctx& ctx, chunk_t& pc)
       return(true);
    }
    return(false);
-}
+} // parse_whitespace
 
 
 /**
@@ -1373,7 +1391,7 @@ static bool parse_ignored(tok_ctx& ctx, chunk_t& pc)
       return(true);
    }
    return(false);
-}
+} // parse_ignored
 
 
 /**
@@ -1489,7 +1507,7 @@ static bool parse_next(tok_ctx& ctx, chunk_t& pc)
    }
 
    /* Check for C# literal strings, ie @"hello" and identifiers @for*/
-   if (((cpd.lang_flags & LANG_CS) != 0) && (ctx.peek() == '@'))
+   if ((cpd.lang_flags & LANG_CS) && (ctx.peek() == '@'))
    {
       if (ctx.peek(1) == '"')
       {
@@ -1505,25 +1523,32 @@ static bool parse_next(tok_ctx& ctx, chunk_t& pc)
    }
 
    /* Check for C# Interpolated strings */
+<<<<<<< HEAD
    if (((cpd.lang_flags & LANG_CS) != 0) && (ctx.peek() == '$') && (ctx.peek(1) == '"'))
    {
       parse_cs_interpolated_string(ctx, pc);
       return true;
+=======
+   if ((cpd.lang_flags & LANG_CS) && (ctx.peek() == '$') && (ctx.peek(1) == '"'))
+   {
+      parse_cs_interpolated_string(ctx, pc);
+      return(true);
+>>>>>>> uncrustify/master
    }
 
    /* handle VALA """ strings """ */
-   if (((cpd.lang_flags & LANG_VALA) != 0) &&
+   if ((cpd.lang_flags & LANG_VALA) &&
        (ctx.peek() == '"') &&
        (ctx.peek(1) == '"') &&
        (ctx.peek(2) == '"'))
    {
       parse_verbatim_string(ctx, pc);
-      return true;
+      return(true);
    }
 
    /* handle C++0x strings u8"x" u"x" U"x" R"x" u8R"XXX(I'm a "raw UTF-8" string.)XXX" */
    ch = ctx.peek();
-   if (((cpd.lang_flags & LANG_CPP) != 0) &&
+   if ((cpd.lang_flags & LANG_CPP) &&
        ((ch == 'u') || (ch == 'U') || (ch == 'R')))
    {
       int  idx     = 0;
@@ -1564,14 +1589,18 @@ static bool parse_next(tok_ctx& ctx, chunk_t& pc)
    }
 
    /* PAWN specific stuff */
-   if ((cpd.lang_flags & LANG_PAWN) != 0)
+   if (cpd.lang_flags & LANG_PAWN)
    {
       if ((cpd.preproc_ncnl_count == 1) &&
           ((cpd.in_preproc == CT_PP_DEFINE) ||
            (cpd.in_preproc == CT_PP_EMIT)))
       {
          parse_pawn_pattern(ctx, pc, CT_MACRO);
+<<<<<<< HEAD
          return true;
+=======
+         return(true);
+>>>>>>> uncrustify/master
       }
       /* Check for PAWN strings: \"hi" or !"hi" or !\"hi" or \!"hi" */
       if ((ctx.peek() == '\\') || (ctx.peek() == '!'))
@@ -1598,7 +1627,11 @@ static bool parse_next(tok_ctx& ctx, chunk_t& pc)
          pc.str.append(ctx.get());
          pc.str.append(ctx.get());
          pc.type = CT_WORD;
+<<<<<<< HEAD
          return true;
+=======
+         return(true);
+>>>>>>> uncrustify/master
       }
    }
 
@@ -1611,7 +1644,7 @@ static bool parse_next(tok_ctx& ctx, chunk_t& pc)
       return(true);
    }
 
-   if ((cpd.lang_flags & LANG_D) != 0)
+   if (cpd.lang_flags & LANG_D)
    {
       /* D specific stuff */
       if (d_parse_string(ctx, pc))
@@ -1655,14 +1688,14 @@ static bool parse_next(tok_ctx& ctx, chunk_t& pc)
       {
          /* literal string */
          parse_string(ctx, pc, 1, true);
-         return true;
+         return(true);
       }
       else if ((nc >= '0') && (nc <= '9'))
       {
          /* literal number */
          pc.str.append(ctx.get());  /* store the '@' */
          parse_number(ctx, pc);
-         return true;
+         return(true);
       }
    }
 
@@ -1700,7 +1733,7 @@ static bool parse_next(tok_ctx& ctx, chunk_t& pc)
            cpd.filename, pc.orig_line, (int)ctx.c.col, pc.str[0]);
    cpd.error_count++;
    return(true);
-}
+} // parse_next
 
 
 /**
@@ -1870,7 +1903,7 @@ void tokenize(const deque<int>& data, chunk_t *ref)
       cpd.newline = "\r";
       LOG_FMT(LLINEENDS, "Using CR line endings\n");
    }
-}
+} // tokenize
 
 
 // /**

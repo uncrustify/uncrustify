@@ -319,7 +319,6 @@ void keywords_are_sorted(void)
          exit(EXIT_FAILURE);
       }
    }
-   return;
 }
 
 
@@ -377,9 +376,9 @@ static const chunk_tag_t *kw_static_match(const chunk_tag_t *tag)
         iter++)
    {
       //fprintf(stderr, " check:%s", iter->tag);
-      pp_iter = (iter->lang_flags & FLAG_PP) != 0;
+      pp_iter = (iter->lang_flags & FLAG_PP);
       if ((strcmp(iter->tag, tag->tag) == 0) &&
-          ((cpd.lang_flags & iter->lang_flags) != 0) &&
+          (cpd.lang_flags & iter->lang_flags) &&
           (in_pp == pp_iter))
       {
          //fprintf(stderr, " match:%s", iter->tag);
@@ -482,7 +481,7 @@ int load_keyword_file(const char *filename)
 
    fclose(pf);
    return(SUCCESS);
-}
+} // load_keyword_file
 
 
 void print_keywords(FILE *pfile)
@@ -576,5 +575,5 @@ pattern_class get_token_pattern_class(c_token_t tok)
 
    default:
       return(PATCLS_NONE);
-   }
-}
+   } // switch
+}    // get_token_pattern_class

@@ -27,11 +27,19 @@ enum argtype_e
 /** Arg values - these are bit fields*/
 enum argval_t
 {
+<<<<<<< HEAD
    AV_IGNORE = 0,
    AV_ADD    = 1,
    AV_REMOVE = 2,
    AV_FORCE  = 3, /**< remove + add */
    AV_NOT_DEFINED = 4 /* to be used with QT, SIGNAL SLOT macros */
+=======
+   AV_IGNORE      = 0,
+   AV_ADD         = 1,
+   AV_REMOVE      = 2,
+   AV_FORCE       = 3, /**< remove + add */
+   AV_NOT_DEFINED = 4  /* to be used with QT, SIGNAL SLOT macros */
+>>>>>>> uncrustify/master
 };
 
 /** Line endings */
@@ -97,7 +105,7 @@ enum uncrustify_options
    /*
     * Basic Indenting stuff
     */
-   //UO_indent,                   //TODO: 0=don't change indentation, 1=change indentation
+   // UO_indent,                   //TODO: 0=don't change indentation, 1=change indentation
    UO_tok_split_gte,             // allow split of '>>=' in template detection
 
    UO_utf8_byte,
@@ -115,8 +123,8 @@ enum uncrustify_options
    UO_indent_continue,
    UO_indent_with_tabs,         // 1=only to the 'level' indent, 2=use tabs for indenting
    UO_indent_cmt_with_tabs,
-   //UO_indent_brace_struct,      //TODO: spaces to indent brace after struct/enum/union def
-   //UO_indent_paren,             //TODO: indent for open paren on next line (1)
+   // UO_indent_brace_struct,      //TODO: spaces to indent brace after struct/enum/union def
+   // UO_indent_paren,             //TODO: indent for open paren on next line (1)
    UO_indent_paren_nl,           // indent-align under paren for open followed by nl
    UO_indent_square_nl,          // indent-align under square for open followed by nl
    UO_indent_paren_close,        // indent of close paren after a newline
@@ -196,12 +204,12 @@ enum uncrustify_options
    UO_indent_oc_block_msg_from_keyword,
 
    UO_indent_else_if,
-   UO_indent_var_def_blk,        // indent a variable def block that appears at the top
+   UO_indent_var_def_blk,            // indent a variable def block that appears at the top
    UO_indent_var_def_cont,
-   UO_indent_shift,              // if a shift expression spans multiple lines, indent
+   UO_indent_shift,                  // if a shift expression spans multiple lines, indent
 
-   UO_indent_min_vbrace_open,               // min. indent after virtual brace open and newline
-   UO_indent_vbrace_open_on_tabstop,        // when identing after virtual brace open and newline add further spaces to reach next tabstop
+   UO_indent_min_vbrace_open,        // min. indent after virtual brace open and newline
+   UO_indent_vbrace_open_on_tabstop, // when identing after virtual brace open and newline add further spaces to reach next tabstop
 
    /*
     * Misc inter-element spacing
@@ -411,11 +419,10 @@ enum uncrustify_options
    UO_ls_for_split_full,    // try to split long 'for' statements at semi-colons
    UO_ls_func_split_full,   // try to split long func proto/def at comma
    UO_ls_code_width,        // try to split at code_width
-   //UO_ls_before_bool_op,    //TODO: break line before or after boolean op
-   //UO_ls_before_paren,      //TODO: break before open paren
-   //UO_ls_after_arith,       //TODO: break after arith op '+', etc
-   //UO_ls_honor_newlines,    //TODO: don't remove newlines on split lines
-
+   // UO_ls_before_bool_op,    //TODO: break line before or after boolean op
+   // UO_ls_before_paren,      //TODO: break before open paren
+   // UO_ls_after_arith,       //TODO: break after arith op '+', etc
+   // UO_ls_honor_newlines,    //TODO: don't remove newlines on split lines
 
    /*
     * code alignment (not left column spaces/tabs)
@@ -449,11 +456,19 @@ enum uncrustify_options
    UO_align_var_struct_gap,       // gap for struct/union
    UO_align_pp_define_together,   // align macro functions and variables together
    UO_align_pp_define_span,       // align bodies in #define statements
+<<<<<<< HEAD
    //UO_align_pp_define_col_min,    //TODO: min column for a #define value
    //UO_align_pp_define_col_max,    //TODO: max column for a #define value
    UO_align_pp_define_gap,        // min space between define label and value '#define a <---> 16'
    //UO_align_enum_col_min,         //TODO: the min column for enum '=' alignment
    //UO_align_enum_col_max,         //TODO: the max column for enum '=' alignment
+=======
+   // UO_align_pp_define_col_min,    //TODO: min column for a #define value
+   // UO_align_pp_define_col_max,    //TODO: max column for a #define value
+   UO_align_pp_define_gap,        // min space between define label and value '#define a <---> 16'
+   // UO_align_enum_col_min,         //TODO: the min column for enum '=' alignment
+   // UO_align_enum_col_max,         //TODO: the max column for enum '=' alignment
+>>>>>>> uncrustify/master
    UO_align_struct_init_span,      // align structure initializer values
    UO_align_func_proto_span,       // align function prototypes
    UO_align_func_proto_gap,        // align function prototypes
@@ -472,12 +487,21 @@ enum uncrustify_options
                                    // 1: '*' part of the type - no space
                                    // 2: '*' part of type, dangling
    UO_align_typedef_amp_style,     // align_typedef_star_style for ref '&' stuff
+<<<<<<< HEAD
    //UO_align_struct_array_brace,  // TODO: align array of structure initializers
    UO_align_left_shift,
    UO_align_asm_colon,
    UO_align_oc_msg_colon_span,
    UO_align_oc_msg_colon_first,
    UO_align_oc_decl_colon,
+=======
+   // UO_align_struct_array_brace,  // TODO: align array of structure initializers
+   UO_align_left_shift,            //
+   UO_align_asm_colon,             //
+   UO_align_oc_msg_colon_span,     //
+   UO_align_oc_msg_colon_first,    //
+   UO_align_oc_decl_colon,         //
+>>>>>>> uncrustify/master
    UO_align_keep_extra_space,      // don't squash extra whitespace
 
    /*
@@ -561,7 +585,11 @@ enum uncrustify_options
    UO_nl_version_brace,               // Add or remove newline between 'version (x)' and '{' (D)
    UO_nl_using_brace,                 // Add or remove newline between 'using' and '{'
    UO_nl_switch_brace,                // newline between 'switch' and '{'
+<<<<<<< HEAD
    UO_nl_synchronized_brace,          // newline between 'synchronized' and '{' 
+=======
+   UO_nl_synchronized_brace,          // newline between 'synchronized' and '{'
+>>>>>>> uncrustify/master
    UO_nl_brace_else,                  // newline between '}' and 'else'
    UO_nl_brace_while,                 // newline between '}' and 'while' of do stmt
 
@@ -585,9 +613,15 @@ enum uncrustify_options
    UO_nl_ds_struct_enum_cmt,          // newline between commented-elements of struct/enum
    UO_nl_ds_struct_enum_close_brace,  // force newline before '}' of struct/union/enum
    UO_nl_before_func_class_def,       // newline before 'func_class_def'                    guy 2016-04-16
+<<<<<<< HEAD
    //UO_nl_after_func_class_def,        // newline after 'func_class_def'                     guy 2016-04-16
    UO_nl_before_func_class_proto,     // newline before 'func_class_proto'                  guy 2016-04-16
    //UO_nl_after_func_class_proto,      // newline after 'func_class_proto'                   guy 2016-04-16
+=======
+   // UO_nl_after_func_class_def,        // newline after 'func_class_def'                     guy 2016-04-16
+   UO_nl_before_func_class_proto,     // newline before 'func_class_proto'                  guy 2016-04-16
+   // UO_nl_after_func_class_proto,      // newline after 'func_class_proto'                   guy 2016-04-16
+>>>>>>> uncrustify/master
 
    UO_nl_define_macro,                // alter newlines in #define macros
    UO_nl_start_of_file,               // alter newlines at the start of file
@@ -606,7 +640,7 @@ enum uncrustify_options
    UO_nl_getset_leave_one_liners,     // leave one-line get/set bodies
    UO_nl_func_leave_one_liners,       // leave one-line function def bodies
    UO_nl_cpp_lambda_leave_one_liners, // leave one-line C++11 lambda bodies
-   UO_nl_if_leave_one_liners,
+   UO_nl_if_leave_one_liners,         //
    UO_nl_while_leave_one_liners,
    UO_nl_case_colon_brace,            // Add or remove a newline between a case ':' and '{'. Overrides nl_after_case
 
@@ -623,6 +657,7 @@ enum uncrustify_options
                                       // See nl_oc_msg_leave_one_liner
    UO_nl_oc_msg_leave_one_liner,      // Don't split one-line OC messages
 
+<<<<<<< HEAD
    UO_pos_arith,                  // position of trailing/leading arithmetic ops
    UO_pos_assign,                 // position of trailing/leading =
    UO_pos_bool,                   // position of trailing/leading &&/||
@@ -637,6 +672,21 @@ enum uncrustify_options
    UO_pos_constr_colon,           // position of trailing/leading class constr colon
                                   //   (tied to UO_nl_constr_colon, UO_nl_constr_init_args, UO_pos_constr_colon, 
 
+=======
+   UO_pos_arith,                      // position of trailing/leading arithmetic ops
+   UO_pos_assign,                     // position of trailing/leading =
+   UO_pos_bool,                       // position of trailing/leading &&/||
+   UO_pos_compare,                    // position of trailing/leading <=/>, etc
+   UO_pos_conditional,                // position of trailing/leading (b ? t : f)
+   UO_pos_comma,                      // position of comma in functions
+   UO_pos_class_comma,                // position of comma in the base class list if there are more than one line,
+                                      //   (tied to UO_nl_class_init_args).
+   UO_pos_constr_comma,               // position of comma in constructor init list
+   UO_pos_class_colon,                // position of trailing/leading class colon, between class and base class list
+                                      //   (tied to UO_nl_class_colon)
+   UO_pos_constr_colon,               // position of trailing/leading class constr colon
+                                      //   (tied to UO_nl_constr_colon, UO_nl_constr_init_args, UO_pos_constr_colon,
+>>>>>>> uncrustify/master
 
    /*
     * Blank line options
@@ -649,12 +699,21 @@ enum uncrustify_options
                                      // Doesn't apply if after a brace open or other single-line C comments
    UO_nl_after_multiline_comment,    // newline after multiline comment
    UO_nl_after_label_colon,          // newline after a label followed by a colon
+<<<<<<< HEAD
+=======
+   UO_nl_before_func_body_def,       // The number of newlines before a multi-line function def body
+   UO_nl_before_func_body_proto,     // The number of newlines before a multi-line function prototype body
+>>>>>>> uncrustify/master
    UO_nl_after_func_body,            // The number of newlines after '}' of a multi-line function body
    UO_nl_after_func_body_class,      // The number of newlines after '}' of a multi-line function body in a class declaration
    UO_nl_after_func_body_one_liner,  // The number of newlines after '}' of a single line function body
    UO_nl_after_func_proto,           // The number of newlines after a function prototype, if followed by another function prototype
    UO_nl_after_func_proto_group,     // The number of newlines after a function prototype, if not followed by another function prototype
+<<<<<<< HEAD
    //UO_nl_after_ifdef,                // after #if or #ifdef - but not if covers whole file
+=======
+   // UO_nl_after_ifdef,                // after #if or #ifdef - but not if covers whole file
+>>>>>>> uncrustify/master
    UO_nl_after_struct,               // The number of newlines after '}' or ';' of a struct/enum/union definition
    UO_nl_after_class,                // The number of newlines after '}' or ';' of a class definition
    UO_nl_max,                        // maximum consecutive newlines (3 = 2 blank lines)
@@ -700,12 +759,12 @@ enum uncrustify_options
    UO_mod_add_long_switch_closebrace_comment,
    UO_mod_add_long_ifdef_else_comment,
    UO_mod_add_long_ifdef_endif_comment,
-   UO_mod_sort_import,
-   UO_mod_sort_using,
-   UO_mod_sort_include,
-   UO_mod_move_case_break,
-   UO_mod_case_brace,
-   UO_mod_remove_empty_return,
+   UO_mod_sort_import,            //
+   UO_mod_sort_using,             //
+   UO_mod_sort_include,           //
+   UO_mod_move_case_break,        //
+   UO_mod_case_brace,             //
+   UO_mod_remove_empty_return,    //
 
 
    /*
