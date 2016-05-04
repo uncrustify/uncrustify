@@ -8,6 +8,9 @@ New:
  to
    if (cpd.lang_flags & LANG_PAWN)
 
+This is an extention of uncrustify to support Qt-macros
+ - Q_GADGET
+
 New options:
  - nl_before_func_class_def
  - nl_before_func_class_proto
