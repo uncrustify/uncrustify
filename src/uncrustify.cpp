@@ -229,6 +229,13 @@ static void redir_stdout(const char *output_file)
 
 int main(int argc, char *argv[])
 {
+   /* If ran without options show the usage info */
+   if (argc == 1)
+   {
+      keywords_are_sorted();
+      usage_exit(NULL, argv[0], EXIT_SUCCESS);
+   }
+
    string     cfg_file;
    const char *parsed_file = NULL;
    const char *source_file = NULL;
@@ -237,13 +244,6 @@ int main(int argc, char *argv[])
    log_mask_t mask;
    int        idx;
    const char *p_arg;
-
-   /* If ran without options... check keyword sort and show the usage info */
-   if (argc == 1)
-   {
-      keywords_are_sorted();
-      usage_exit(NULL, argv[0], EXIT_SUCCESS);
-   }
 
    /* Build options map */
    register_options();
