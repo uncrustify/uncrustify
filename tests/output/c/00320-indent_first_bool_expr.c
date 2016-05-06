@@ -7,12 +7,14 @@ void test(void)
    b3 = (  a & b
         || c == d);
 
+
    if (  (a == 3)
       && (b == 2 & c)
       || d
       && r)
    {
    }
+
 
    if (  /*test*/ a
       || b)

@@ -35,22 +35,22 @@ void do_braces(void)
       mod_full_brace_if_chain();
    }
 
-   if (((cpd.settings[UO_mod_full_brace_if].a |
-         cpd.settings[UO_mod_full_brace_do].a |
-         cpd.settings[UO_mod_full_brace_for].a |
-         cpd.settings[UO_mod_full_brace_using].a |
-         cpd.settings[UO_mod_full_brace_while].a) & AV_REMOVE) != 0)
+   if ((cpd.settings[UO_mod_full_brace_if].a |
+        cpd.settings[UO_mod_full_brace_do].a |
+        cpd.settings[UO_mod_full_brace_for].a |
+        cpd.settings[UO_mod_full_brace_using].a |
+        cpd.settings[UO_mod_full_brace_while].a) & AV_REMOVE)
    {
       examine_braces();
    }
 
    /* convert vbraces if needed */
-   if (((cpd.settings[UO_mod_full_brace_if].a |
-         cpd.settings[UO_mod_full_brace_do].a |
-         cpd.settings[UO_mod_full_brace_for].a |
-         cpd.settings[UO_mod_full_brace_function].a |
-         cpd.settings[UO_mod_full_brace_using].a |
-         cpd.settings[UO_mod_full_brace_while].a) & AV_ADD) != 0)
+   if ((cpd.settings[UO_mod_full_brace_if].a |
+        cpd.settings[UO_mod_full_brace_do].a |
+        cpd.settings[UO_mod_full_brace_for].a |
+        cpd.settings[UO_mod_full_brace_function].a |
+        cpd.settings[UO_mod_full_brace_using].a |
+        cpd.settings[UO_mod_full_brace_while].a) & AV_ADD)
    {
       convert_vbrace_to_brace();
    }
@@ -615,23 +615,23 @@ static void convert_vbrace_to_brace(void)
       if ((((pc->parent_type == CT_IF) ||
             (pc->parent_type == CT_ELSE) ||
             (pc->parent_type == CT_ELSEIF)) &&
-           ((cpd.settings[UO_mod_full_brace_if].a & AV_ADD) != 0) &&
+           (cpd.settings[UO_mod_full_brace_if].a & AV_ADD) &&
            !cpd.settings[UO_mod_full_brace_if_chain].b)
           ||
           ((pc->parent_type == CT_FOR) &&
-           ((cpd.settings[UO_mod_full_brace_for].a & AV_ADD) != 0))
+           (cpd.settings[UO_mod_full_brace_for].a & AV_ADD))
           ||
           ((pc->parent_type == CT_DO) &&
-           ((cpd.settings[UO_mod_full_brace_do].a & AV_ADD) != 0))
+           (cpd.settings[UO_mod_full_brace_do].a & AV_ADD))
           ||
           ((pc->parent_type == CT_WHILE) &&
-           ((cpd.settings[UO_mod_full_brace_while].a & AV_ADD) != 0))
+           (cpd.settings[UO_mod_full_brace_while].a & AV_ADD))
           ||
           ((pc->parent_type == CT_USING_STMT) &&
-           ((cpd.settings[UO_mod_full_brace_using].a & AV_ADD) != 0))
+           (cpd.settings[UO_mod_full_brace_using].a & AV_ADD))
           ||
           ((pc->parent_type == CT_FUNC_DEF) &&
-           ((cpd.settings[UO_mod_full_brace_function].a & AV_ADD) != 0)))
+           (cpd.settings[UO_mod_full_brace_function].a & AV_ADD)))
       {
          /* Find the matching vbrace close */
          vbc = NULL;

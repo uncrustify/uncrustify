@@ -2956,8 +2956,8 @@ void newlines_eat_start_end(void)
 
    /* Process newlines at the start of the file */
    if ((cpd.frag_cols == 0) &&
-       (((cpd.settings[UO_nl_start_of_file].a & AV_REMOVE) != 0) ||
-        (((cpd.settings[UO_nl_start_of_file].a & AV_ADD) != 0) &&
+       ((cpd.settings[UO_nl_start_of_file].a & AV_REMOVE) ||
+        ((cpd.settings[UO_nl_start_of_file].a & AV_ADD) &&
          (cpd.settings[UO_nl_start_of_file_min].n > 0))))
    {
       pc = chunk_get_head();
@@ -2977,7 +2977,7 @@ void newlines_eat_start_end(void)
                MARK_CHANGE();
             }
          }
-         else if (((cpd.settings[UO_nl_start_of_file].a & AV_ADD) != 0) &&
+         else if ((cpd.settings[UO_nl_start_of_file].a & AV_ADD) &&
                   (cpd.settings[UO_nl_start_of_file_min].n > 0))
          {
             chunk_t chunk;
@@ -2994,8 +2994,8 @@ void newlines_eat_start_end(void)
 
    /* Process newlines at the end of the file */
    if ((cpd.frag_cols == 0) &&
-       (((cpd.settings[UO_nl_end_of_file].a & AV_REMOVE) != 0) ||
-        (((cpd.settings[UO_nl_end_of_file].a & AV_ADD) != 0) &&
+       ((cpd.settings[UO_nl_end_of_file].a & AV_REMOVE) ||
+        ((cpd.settings[UO_nl_end_of_file].a & AV_ADD) &&
          (cpd.settings[UO_nl_end_of_file_min].n > 0))))
    {
       pc = chunk_get_tail();
@@ -3018,7 +3018,7 @@ void newlines_eat_start_end(void)
                }
             }
          }
-         else if (((cpd.settings[UO_nl_end_of_file].a & AV_ADD) != 0) &&
+         else if ((cpd.settings[UO_nl_end_of_file].a & AV_ADD) &&
                   (cpd.settings[UO_nl_end_of_file_min].n > 0))
          {
             chunk_t chunk;
