@@ -304,31 +304,27 @@ int main(int argc, char *argv[])
    {
       cfg_file = p_arg;
    }
-
-   /* Try to find a config file at an alternate location */
-   if (cfg_file.empty())
+   else if (!unc_getenv("UNCRUSTIFY_CONFIG", cfg_file))
    {
-      if (!unc_getenv("UNCRUSTIFY_CONFIG", cfg_file))
+      /* Try to find a config file at an alternate location */
+      string home;
+
+      if (unc_homedir(home))
       {
-         string home;
+         struct stat tmp_stat;
+         string      path;
 
-         if (unc_homedir(home))
+         path = home + "/uncrustify.cfg";
+         if (stat(path.c_str(), &tmp_stat) == 0)
          {
-            struct stat tmp_stat;
-            string      path;
-
-            path = home + "/uncrustify.cfg";
+            cfg_file = path;
+         }
+         else
+         {
+            path = home + "/.uncrustify.cfg";
             if (stat(path.c_str(), &tmp_stat) == 0)
             {
                cfg_file = path;
-            }
-            else
-            {
-               path = home + "/.uncrustify.cfg";
-               if (stat(path.c_str(), &tmp_stat) == 0)
-               {
-                  cfg_file = path;
-               }
             }
          }
       }
