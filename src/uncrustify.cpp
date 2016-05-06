@@ -229,10 +229,11 @@ static void redir_stdout(const char *output_file)
 
 int main(int argc, char *argv[])
 {
+   assert(keywords_are_sorted());
+
    /* If ran without options show the usage info */
    if (argc == 1)
    {
-      keywords_are_sorted();
       usage_exit(NULL, argv[0], EXIT_SUCCESS);
    }
 
