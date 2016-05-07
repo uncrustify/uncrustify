@@ -1846,12 +1846,14 @@ void space_text(void)
          }
 
          int min_sp;
-         int av = do_space(pc, next, min_sp, false);
+         argval_t av = do_space(pc, next, min_sp, false);
          if (pc->flags & PCF_FORCE_SPACE)
          {
+            int av_int = av;
             LOG_FMT(LSPACE, " <force between '%s' and '%s'>",
                     pc->text(), next->text());
-            av |= AV_ADD;
+            av_int |= AV_ADD;
+            av = (argval_t) av_int;
          }
          min_sp = max(1, min_sp);
          switch (av)
