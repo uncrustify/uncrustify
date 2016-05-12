@@ -394,7 +394,7 @@ void output_text(FILE *pfile)
          }
          else
          {
-            output_comment_multi_simple(pc, (pc->flags & PCF_INSERTED));
+            output_comment_multi_simple(pc, (pc->flags & PCF_INSERTED) != 0);  // forcing value to bool
          }
       }
       else if (pc->type == CT_COMMENT_CPP)

@@ -280,7 +280,7 @@ static bool chunk_ends_type(chunk_t *start)
           (pc->type == CT_QUALIFIER))
       {
          cnt++;
-         last_lval = (pc->flags & PCF_LVALUE);
+         last_lval = (pc->flags & PCF_LVALUE) != 0;   // forcing value to bool
          continue;
       }
 
@@ -1270,7 +1270,7 @@ void fix_symbols(void)
 
    mark_define_expressions();
 
-   bool is_java = (cpd.lang_flags & LANG_JAVA);
+   bool is_java = (cpd.lang_flags & LANG_JAVA) != 0;   // forcing value to bool
    for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next_ncnl(pc))
    {
       if ((pc->type == CT_FUNC_WRAP) ||

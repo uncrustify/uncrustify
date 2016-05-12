@@ -1007,7 +1007,7 @@ void indent_text(void)
                if (cpd.settings[UO_indent_oc_block].b ||
                    cpd.settings[UO_indent_oc_block_msg_xcode_style].b)
                {
-                  bool in_oc_msg           = (pc->flags & PCF_IN_OC_MSG);
+                  bool in_oc_msg           = (pc->flags & PCF_IN_OC_MSG) != 0;     // forcing value to bool
                   bool indent_from_keyword = cpd.settings[UO_indent_oc_block_msg_from_keyword].b && in_oc_msg;
                   bool indent_from_colon   = cpd.settings[UO_indent_oc_block_msg_from_colon].b && in_oc_msg;
                   bool indent_from_caret   = cpd.settings[UO_indent_oc_block_msg_from_caret].b && in_oc_msg;

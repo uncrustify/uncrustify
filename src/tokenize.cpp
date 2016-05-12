@@ -296,8 +296,8 @@ static bool d_parse_string(tok_ctx& ctx, chunk_t& pc)
 static bool parse_comment(tok_ctx& ctx, chunk_t& pc)
 {
    int  ch;
-   bool is_d    = (cpd.lang_flags & LANG_D);
-   bool is_cs   = (cpd.lang_flags & LANG_CS);
+   bool is_d    = (cpd.lang_flags & LANG_D) != 0;          // forcing value to bool
+   bool is_cs   = (cpd.lang_flags & LANG_CS) != 0;         // forcing value to bool
    int  d_level = 0;
    int  bs_cnt;
 
