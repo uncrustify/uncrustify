@@ -1083,7 +1083,7 @@ static chunk_t *output_comment_cpp(chunk_t *first)
       /* nothing to group: just output a single line */
       add_text("/*");
       // patch # 32, 2012-03-23
-      if (!unc_isspace(first->str[2]) && cpd.settings[UO_sp_cmt_cpp_start].a & AV_ADD)
+      if (!unc_isspace(first->str[2]) && (cpd.settings[UO_sp_cmt_cpp_start].a & AV_ADD))
       {
          add_char(' ');
       }

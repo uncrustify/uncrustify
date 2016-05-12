@@ -1,3 +1,16 @@
+Change highlights in uncrustify-0.xx (xxx 2016)
+-------------------------------------------------------------------------------
+
+New:
+
+New options:
+ - nl_after_func_class_proto
+ - nl_after_func_class_proto_group
+
+Bugfix:
+ - Issue #411 is partialy fixed
+
+
 Change highlights in uncrustify-0.63 (Mar 2016)
 -------------------------------------------------------------------------------
 

@@ -1012,6 +1012,10 @@ void register_options(void)
                   "The number of newlines after a function prototype, if followed by another function prototype");
    unc_add_option("nl_after_func_proto_group", UO_nl_after_func_proto_group, AT_NUM,
                   "The number of newlines after a function prototype, if not followed by another function prototype");
+   unc_add_option("nl_after_func_class_proto", UO_nl_after_func_class_proto, AT_NUM,
+                  "The number of newlines after a function class prototype, if followed by another function class prototype");
+   unc_add_option("nl_after_func_class_proto_group", UO_nl_after_func_class_proto_group, AT_NUM,
+                  "The number of newlines after a function class prototype, if not followed by another function class prototype");
    unc_add_option("nl_before_func_body_def", UO_nl_before_func_body_def, AT_NUM,
                   "The number of newlines before a multi-line function def body");
    unc_add_option("nl_before_func_body_proto", UO_nl_before_func_body_proto, AT_NUM,

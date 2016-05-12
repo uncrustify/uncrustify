@@ -44,8 +44,7 @@ $ git log > commit.log
 5. Create a dist tarball and win32 package
 
 $ make dist
-Untar the file in a temporary folder (folder may not be under uncrustify folder)
-and run './configure && make && make check'
+Untar the file in a temporary folder and run './configure && make && make check'
 Run tests/run_tests.py
 Then, in that new folder, run 'sh make_win32.sh'.
 

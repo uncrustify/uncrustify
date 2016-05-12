@@ -340,7 +340,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
    LOG_FUNC_ENTRY();
    chunk_t *tmp;
 
-   //LOG_FMT(LGUY, "%3d > %s\n", pc->orig_line, pc->text());
+   LOG_FMT(LGUY, "(%d) %d > %s\n", __LINE__, pc->orig_line, pc->text());
    // LOG_FMT(LSYS, " %3d > ['%s' %s] ['%s' %s] ['%s' %s]\n",
    //         pc->orig_line,
    //         prev->text(), get_token_name(prev->type),
@@ -3424,7 +3424,7 @@ static void mark_function(chunk_t *pc)
             if (pc->str.equals(prev->str))
             {
                set_chunk_type(pc, CT_FUNC_CLASS_DEF);
-               LOG_FMT(LFCN, "%d:%d - FOUND %sSTRUCTOR for %s[%s]\n",
+               LOG_FMT(LFCN, "(%d) %d:%d - FOUND %sSTRUCTOR for %s[%s]\n", __LINE__,
                        prev->orig_line, prev->orig_col,
                        (destr != NULL) ? "DE" : "CON",
                        prev->text(), get_token_name(prev->type));
@@ -3653,6 +3653,8 @@ static void mark_function(chunk_t *pc)
             /* Set the parent for the semi for later */
             semi = tmp;
             set_chunk_type(pc, CT_FUNC_PROTO);
+            LOG_FMT(LFCN, "  2) Marked [%s] as FUNC_PROTO on line %d col %d\n",
+                    pc->text(), pc->orig_line, pc->orig_col);
             break;
          }
          else if (pc->type == CT_COMMA)
@@ -3814,7 +3816,7 @@ static void mark_cpp_constructor(chunk_t *pc)
       is_destr = true;
    }
 
-   LOG_FMT(LFTOR, "%d:%d FOUND %sSTRUCTOR for %s[%s] prev=%s[%s]",
+   LOG_FMT(LFTOR, "(%d) %d:%d FOUND %sSTRUCTOR for %s[%s] prev=%s[%s]", __LINE__,
            pc->orig_line, pc->orig_col,
            is_destr ? "DE" : "CON",
            pc->text(), get_token_name(pc->type),
@@ -3872,6 +3874,8 @@ static void mark_cpp_constructor(chunk_t *pc)
       {
          set_chunk_parent(tmp, CT_FUNC_CLASS_PROTO);
          set_chunk_type(pc, CT_FUNC_CLASS_PROTO);
+         LOG_FMT(LFCN, "  2) Marked [%s] as FUNC_CLASS_PROTO on line %d col %d\n",
+                 pc->text(), pc->orig_line, pc->orig_col);
       }
    }
 } // mark_cpp_constructor
@@ -3997,7 +4001,7 @@ static void mark_class_ctor(chunk_t *start)
          if ((next != NULL) && (next->len() == 1) && (next->str[0] == '('))
          {
             set_chunk_type(pc, CT_FUNC_CLASS_DEF);
-            LOG_FMT(LFTOR, "%d] Marked CTor/DTor %s\n", pc->orig_line, pc->text());
+            LOG_FMT(LFTOR, "(%d) %d] Marked CTor/DTor %s\n", __LINE__, pc->orig_line, pc->text());
             mark_cpp_constructor(pc);
          }
          else

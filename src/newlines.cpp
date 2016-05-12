@@ -3520,6 +3520,24 @@ void do_blank_lines(void)
          }
       }
 
+      /* Add blanks after function class prototypes Issue # 411 */
+      if ((prev != NULL) &&
+          (prev->type == CT_SEMICOLON) &&
+          (prev->parent_type == CT_FUNC_CLASS_PROTO))
+      {
+         if (cpd.settings[UO_nl_after_func_class_proto].n > pc->nl_count)
+         {
+            pc->nl_count = cpd.settings[UO_nl_after_func_class_proto].n;
+            MARK_CHANGE();
+         }
+         if ((cpd.settings[UO_nl_after_func_class_proto_group].n > pc->nl_count) &&
+             (next != NULL) &&
+             (next->parent_type != CT_FUNC_CLASS_PROTO))
+         {
+            blank_line_set(pc, UO_nl_after_func_class_proto_group);
+         }
+      }
+
       /* Add blanks after struct/enum/union/class */
       if ((prev != NULL) &&
           ((prev->type == CT_SEMICOLON) ||

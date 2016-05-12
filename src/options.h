@@ -654,6 +654,8 @@ enum uncrustify_options
    UO_nl_after_func_body_one_liner,  // The number of newlines after '}' of a single line function body
    UO_nl_after_func_proto,           // The number of newlines after a function prototype, if followed by another function prototype
    UO_nl_after_func_proto_group,     // The number of newlines after a function prototype, if not followed by another function prototype
+   UO_nl_after_func_class_proto,     // The number of newlines after a function class prototype, if followed by another function class prototype
+   UO_nl_after_func_class_proto_group,  // The number of newlines after a function class prototype, if not followed by another function class prototype
    // UO_nl_after_ifdef,                // after #if or #ifdef - but not if covers whole file
    UO_nl_after_struct,               // The number of newlines after '}' or ';' of a struct/enum/union definition
    UO_nl_after_class,                // The number of newlines after '}' or ';' of a class definition
