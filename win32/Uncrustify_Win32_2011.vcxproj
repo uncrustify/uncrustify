@@ -150,6 +150,7 @@
     <ClCompile Include="..\src\md5.cpp" />
     <ClCompile Include="..\src\newlines.cpp" />
     <ClCompile Include="..\src\options.cpp" />
+    <ClCompile Include="..\src\options_for_QT.cpp" />
     <ClCompile Include="..\src\output.cpp" />
     <ClCompile Include="..\src\parens.cpp" />
     <ClCompile Include="..\src\parse_frame.cpp" />
