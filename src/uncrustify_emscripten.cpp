@@ -25,6 +25,10 @@ using namespace std;
 using namespace emscripten;
 
 extern void process_option_line(char *configLine, const char *filename);
+extern void usage_exit(const char *msg, const char *argv0, int code);
+extern int load_header_files();
+extern const char *language_name_from_flags(int lang);
+extern void uncrustify_file(const file_mem &fm, FILE *pfout, const char *parsed_file, bool defer_uncrustify_end = false);
 
 
 /**
@@ -62,6 +66,7 @@ int load_option_fileChar(char *configString)
    }
    return(EXIT_SUCCESS);
 }
+
 
 // TODO: interface for args:
 // -----------------------------------------------------------------------------
