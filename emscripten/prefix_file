@@ -1,0 +1,8 @@
+/* 
+ * @file libUncrustify.js — JS port of Uncrustify
+ *
+ * @author  Ben Gardner, 
+ *          ported by Daniel Chumak with the help of emscripten
+ * @license GPLv2
+ */
+
