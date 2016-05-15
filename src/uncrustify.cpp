@@ -45,14 +45,14 @@ struct cp_data cpd;
 
 static int language_flags_from_name(const char *tag);
 static int language_flags_from_filename(const char *filename);
-static const char *language_name_from_flags(int lang);
+const char *language_name_from_flags(int lang);
 static bool read_stdin(file_mem &fm);
 static void uncrustify_start(const deque<int> &data);
 static void uncrustify_end();
-static void uncrustify_file(const file_mem &fm, FILE *pfout, const char *parsed_file, bool defer_uncrustify_end = false);
+void uncrustify_file(const file_mem &fm, FILE *pfout, const char *parsed_file, bool defer_uncrustify_end = false);
 static void do_source_file(const char *filename_in, const char *filename_out, const char *parsed_file, bool no_backup, bool keep_mtime);
 static void process_source_list(const char *source_list, const char *prefix, const char *suffix, bool no_backup, bool keep_mtime);
-static int load_header_files();
+int load_header_files();
 
 static const char *make_output_filename(char *buf, int buf_size, const char *filename, const char *prefix, const char *suffix);
 
@@ -109,7 +109,7 @@ int path_dirname_len(const char *filename)
 }
 
 
-static void usage_exit(const char *msg, const char *argv0, int code)
+void usage_exit(const char *msg, const char *argv0, int code)
 {
    if (msg != NULL)
    {
@@ -923,7 +923,7 @@ static int load_mem_file_config(const char *filename, file_mem &fm)
 }
 
 
-static int load_header_files()
+int load_header_files()
 {
    int retval = 0;
 
@@ -1562,8 +1562,8 @@ static void uncrustify_start(const deque<int> &data)
 } // uncrustify_start
 
 
-static void uncrustify_file(const file_mem &fm, FILE *pfout,
-                            const char *parsed_file, bool defer_uncrustify_end)
+void uncrustify_file(const file_mem &fm, FILE *pfout,
+                     const char *parsed_file, bool defer_uncrustify_end)
 {
    const deque<int> &data = fm.data;
 
@@ -1979,7 +1979,7 @@ int language_flags_from_name(const char *name)
  * @param lang    The LANG_xxx enum
  * @return        A string
  */
-static const char *language_name_from_flags(int lang)
+const char *language_name_from_flags(int lang)
 {
    int i;
 

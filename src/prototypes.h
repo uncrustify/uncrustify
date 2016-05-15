@@ -27,7 +27,6 @@ const char *get_file_extension(int &idx);
 void print_extensions(FILE *pfile);
 const char *extension_add(const char *ext_text, const char *lang_text);
 
-
 /*
  * detect.cpp
  */
