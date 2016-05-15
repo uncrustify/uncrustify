@@ -18,6 +18,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cerrno>
+#include <algorithm>
 #include "unc_ctype.h"
 
 
@@ -1962,6 +1963,40 @@ int load_option_file(const char *filename)
    fclose(pfile);
    return(0);
 } // load_option_file
+
+
+/**
+ * Loads options from a file represented as a single char array.
+ * Modifies: input char array, cpd.line_number
+ *
+ * @param configString char array that holds the whole config
+ * @return EXIT_SUCCESS on success
+ */
+int load_option_fileChar(char* configString)
+{
+    const int textLen    = strlen(configString);
+    char* delimPos       = &configString[0];
+    char* stringEnd      = &configString[textLen-1];
+    char* subStringStart = &configString[0];
+
+    cpd.line_number = 0;
+
+    while (true)
+    {
+        delimPos = std::find(delimPos, stringEnd, '\n');
+
+        // replaces \n with \0 to get a string with multiple terminated
+        // substrings inside
+        *delimPos = '\0';
+
+        process_option_line(subStringStart, "");
+
+        if(delimPos == stringEnd) break;
+        delimPos++;
+        subStringStart = delimPos;
+    }
+    return(EXIT_SUCCESS);
+}
 
 
 int save_option_file_kernel(FILE *pfile, bool withDoc, bool only_not_default)

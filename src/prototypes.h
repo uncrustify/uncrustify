@@ -50,6 +50,7 @@ void register_options(void);
 void set_option_defaults(void);
 void process_option_line(char *configLine, const char* filename);
 int load_option_file(const char *filename);
+int load_option_fileChar(char* configString);
 int save_option_file(FILE *pfile, bool withDoc);
 int save_option_file_kernel(FILE *pfile, bool withDoc, bool only_not_default);
 int set_option_value(const char *name, const char *value);
