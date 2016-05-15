@@ -38,6 +38,9 @@
 #endif
 #include <vector>
 #include <deque>
+#ifdef HAVE_UTIME_H
+#include <time.h>
+#endif
 
 /* Global data */
 struct cp_data cpd;
