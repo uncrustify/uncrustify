@@ -1777,12 +1777,7 @@ bool is_path_relative(const char *path)
 #endif
 
    // /path/to/file style absolute path
-   if (path[0] == '/')
-   {
-      return(false);
-   }
-
-   return(true);
+   return (path[0] != '/');
 }
 
 
