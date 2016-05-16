@@ -336,6 +336,7 @@ typedef enum
    CT_Q_EMIT,       // guy 2015-10-16
    CT_Q_FOREACH,    // guy 2015-09-23
    CT_Q_FOREVER,    // guy 2015-10-18
+   CT_Q_GADGET,     // guy 2016-05-04
    CT_Q_OBJECT,     // guy 2015-10-16
 
    /* Machine Modes */
@@ -346,7 +347,6 @@ typedef enum
    CT_SI,           // guy 2016-03-11
    CT_NOTHROW,      // guy 2016-03-11
    CT_WORD_,        // guy 2016-03-11
-
 } c_token_t;
 
 #endif /* TOKEN_ENUM_H_INCLUDED */

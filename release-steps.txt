@@ -1,3 +1,4 @@
+2016-05-10
 
 Release steps.
 Just in case I don't do a release for a while and forget what to do... =)
@@ -10,7 +11,7 @@ Just in case I don't do a release for a while and forget what to do... =)
      or
      cd tests && ./run_tests.py
 
-2. Make sure it builds for Windows via mingw
+2. Make sure it builds for Windows via mingw (under Ubuntu)
 
     sh make_win32.sh
 
@@ -25,7 +26,7 @@ Specific files to update:
 Run "sh autogen.sh" and then "./configure".
 Rebuild from scratch (make clean && make)
 
-3b. Update the option count in index.html
+3b. Update the option count in documentation/htdocs/index.html
 
 3c. Update the config files
 $ scripts/update-defaults.sh
@@ -44,13 +45,14 @@ $ git log > commit.log
 
 $ make dist
 Untar the file in a temporary folder and run './configure && make && make check'
+Run tests/run_tests.py
 Then, in that new folder, run 'sh make_win32.sh'.
 
 NOTE: "make distcheck" doesn't work, as it doesn't copy over the test script.
 No idea why.
 
 6. Create a GIT tag and push it
-$ git tag -a uncrustify-0.56 -m uncrustify-0.56
+$ git tag -a uncrustify-0.63 -m uncrustify-0.63
 $ git push --tags
 
 7. Re-run 'make dist' and copy out the release tarball.

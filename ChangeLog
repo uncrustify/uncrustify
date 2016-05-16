@@ -1,39 +1,70 @@
+Change highlights in uncrustify-0.xx (xxx 2016)
+-------------------------------------------------------------------------------
+
+New:
+
+New options:
+ - nl_after_func_class_proto
+ - nl_after_func_class_proto_group
+
 Bugfix:
- - better descriptions for options
- - bug #631 is fixed
+ - Issue #478 is fixed
+ - Issue #411 is partialy fixed
+
 
 Change highlights in uncrustify-0.63 (Mar 2016)
 -------------------------------------------------------------------------------
 
-The branch uncrustify4Qt is now merged.
-
-New
+New:
+ - The branch uncrustify4Qt is now merged.
+ - A configuration file for the sources of uncrustify is provided:
+     forUncrustifySources.cfg
+ - Some considerations about the problem "stable" are described at
+     forUncrustifySources.txt
+ - Simplify expressions such as:
+     if ((cpd.lang_flags & LANG_PAWN) != 0)
+   to
+     if (cpd.lang_flags & LANG_PAWN)
  - introduce CT_STDCALL to work with typedef void (__stdcall *func)(); Bug # 633
  - introduce some more MS calling conventions: __cdecl, __clrcall, __fastcall, __thiscall, __vectorcall
      https://msdn.microsoft.com/en-us/library/984x0h58.aspx
 
-Reverse
+New options:
+ - nl_before_func_class_def
+ - nl_before_func_class_proto
+ - nl_before_func_body_def
+ - nl_before_func_body_proto
+ - use_indent_continue_only_once
+
+Bugfix:
+ - Simplify some more expressions.
+ - Bugfix for win32 for the flags.
+ - make test c/ 00617 stable
+ - make test c/ 02501 stable
+ - The issue #467 and the test tests/output/c/02100-i2c-core.c are fixed.
+ - uncrustify all the sources with forUncrustifySources.cfg
+ - better descriptions for options
+ - bug #631 is fixed
+ - produce a better dump output
+ - DbConfig::configuredDatabase()->apply(db); is NOT a declaration of a variable
+ - bug # 657 is fixed: change 'mode' if necessary for 'pos_class_comma'
+ - fix 3 calls of unc_add_option for "align_oc_msg_colon_span",
+     "indent_oc_block_msg", "indent_oc_msg_colon"
+ - bugs #664, #662, #654, #653, #651 and #633 are fixed
+
+Reverse:
  - space: drop vbrace tokens... 2014-09-01 06:33:17
    I cannot anderstand this change.
    It makes some troubles: Bug # 637
    No test file for it found
    Reverse the change until more informations could be found
 
-Change
+Change:
  - CT_DC_MEMBER + CT_FOR into CT_DC_MEMBER + CT_FUNC_CALL
 
-Some more Qt-macros
+Some more Qt-macros:
+ - Q_GADGET
  - for_each
-
-New options:
- - use_indent_continue_only_once
-
-Bugfix:
- - DbConfig::configuredDatabase()->apply(db); is NOT a declaration of a variable
- - bug # 657 is fixed: change 'mode' if necessary for 'pos_class_comma'
- - fix 3 calls of unc_add_option for "align_oc_msg_colon_span",
-     "indent_oc_block_msg", "indent_oc_msg_colon"
- - bugs #664, #662, #654, #653, #651 and #633 are fixed
 
 
 Change highlights in uncrustify4Qt-0.62 (Oct 2015)

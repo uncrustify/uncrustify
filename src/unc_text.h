@@ -22,33 +22,40 @@ public:
    typedef deque<int>   value_type;
 
 public:
-   unc_text() : m_logok(false)
+   unc_text()
+      : m_logok(false)
    {
    }
+
 
    ~unc_text()
    {
    }
+
 
    unc_text(const unc_text& ref)
    {
       set(ref);
    }
 
+
    unc_text(const unc_text& ref, int idx, int len = -1)
    {
       set(ref, idx, len);
    }
+
 
    unc_text(const char *ascii_text)
    {
       set(ascii_text);
    }
 
+
    unc_text(const string& ascii_text)
    {
       set(ascii_text);
    }
+
 
    unc_text(const value_type& data, int idx = 0, int len = -1)
    {
@@ -58,10 +65,11 @@ public:
    void resize(size_t new_size);
    void clear();
 
+
    /* grab the number of characters */
    int size() const
    {
-      return m_chars.size();
+      return(m_chars.size());
    }
 
    void set(int ch);
@@ -135,7 +143,7 @@ public:
 
    operator const char *()
    {
-      return c_str();
+      return(c_str());
    }
 
    static int compare(const unc_text& ref1, const unc_text& ref2, int len = 0);
@@ -145,12 +153,12 @@ public:
    value_type& get()
    {
       m_logok = false;
-      return m_chars;
+      return(m_chars);
    }
 
    const value_type& get() const
    {
-      return m_chars;
+      return(m_chars);
    }
 
    int operator[](int idx) const
@@ -161,28 +169,30 @@ public:
    /* throws an exception if out of bounds */
    int& at(int idx)
    {
-      return m_chars.at(idx);
+      return(m_chars.at(idx));
    }
 
    const int& at(int idx) const
    {
-      return m_chars.at(idx);
+      return(m_chars.at(idx));
    }
 
    const int& back() const
    {
-      return m_chars.back();
+      return(m_chars.back());
    }
 
    int& back()
    {
-      return m_chars.back();
+      return(m_chars.back());
    }
+
 
    void push_back(int ch)
    {
       append(ch);
    }
+
 
    void pop_back()
    {
@@ -192,6 +202,7 @@ public:
          m_logok = false;
       }
    }
+
 
    void pop_front()
    {

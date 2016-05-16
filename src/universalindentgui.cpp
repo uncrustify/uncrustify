@@ -13,7 +13,6 @@
 #include <stdio.h>
 
 
-
 void print_universal_indent_cfg(FILE *pfile)
 {
    const group_map_value *p_grp;
@@ -247,22 +246,22 @@ void print_universal_indent_cfg(FILE *pfile)
                break;
 
             case AT_STRING:
-               {
-                  fprintf(pfile, "CallName=%s=\n", option->name);
-                  fprintf(pfile, "EditorType=string\n");
-                  string     val_string;
-                  const char *val_str;
-                  val_string = op_val_to_string(option->type, cpd.settings[option->id]);
-                  val_str    = val_string.c_str();
-                  fprintf(pfile, "ValueDefault=%s\n", val_str);
-               }
-               break;
+            {
+               fprintf(pfile, "CallName=%s=\n", option->name);
+               fprintf(pfile, "EditorType=string\n");
+               string     val_string;
+               const char *val_str;
+               val_string = op_val_to_string(option->type, cpd.settings[option->id]);
+               val_str    = val_string.c_str();
+               fprintf(pfile, "ValueDefault=%s\n", val_str);
+            }
+            break;
 
             default:
                break;
-            }
-         }
-         delete [] optionNameReadable;
+            } // switch
+         }    // switch
+         delete[] optionNameReadable;
       }
    }
-}
+} // print_universal_indent_cfg

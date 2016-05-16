@@ -18,8 +18,7 @@
 #include "unc_ctype.h"
 
 
-static chunk_t *insert_vbrace(chunk_t *pc, bool after,
-                              struct parse_frame *frm);
+static chunk_t *insert_vbrace(chunk_t *pc, bool after, struct parse_frame *frm);
 
 #define insert_vbrace_close_after(pc, frm)    insert_vbrace(pc, true, frm)
 #define insert_vbrace_open_before(pc, frm)    insert_vbrace(pc, false, frm)
@@ -57,7 +56,7 @@ static int preproc_start(struct parse_frame *frm, chunk_t *pc)
          frm->brace_level = 1;
 
          /*TODO: not sure about the next 3 lines */
-         frm->pse_tos = 1;
+         frm->pse_tos                 = 1;
          frm->pse[frm->pse_tos].type  = CT_PP_DEFINE;
          frm->pse[frm->pse_tos].stage = BS_NONE;
       }
@@ -140,7 +139,7 @@ void brace_cleanup(void)
       }
 
       /* Do before assigning stuff from the frame */
-      if ((cpd.lang_flags & LANG_PAWN) != 0)
+      if (cpd.lang_flags & LANG_PAWN)
       {
          if ((frm.pse[frm.pse_tos].type == CT_VBRACE_OPEN) &&
              (pc->type == CT_NEWLINE))
@@ -169,7 +168,7 @@ void brace_cleanup(void)
       }
       pc = chunk_get_next(pc);
    }
-}
+} // brace_cleanup
 
 
 /**
@@ -354,7 +353,7 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
          cpd.consumed = true;
          close_statement(frm, pc);
       }
-      else if ((cpd.lang_flags & LANG_PAWN) != 0)
+      else if (cpd.lang_flags & LANG_PAWN)
       {
          if (pc->type == CT_BRACE_CLOSE)
          {
@@ -644,7 +643,7 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
       LOG_FMT(LSTMT, "%s: %d> reset expr on %s\n",
               __func__, pc->orig_line, pc->text());
    }
-}
+} // parse_cleanup
 
 
 /**
@@ -796,7 +795,7 @@ static bool check_complex_statements(struct parse_frame *frm, chunk_t *pc)
    }
 
    return(false);
-}
+} // check_complex_statements
 
 
 /**
@@ -901,7 +900,7 @@ static bool handle_complex_close(struct parse_frame *frm, chunk_t *pc)
       cpd.error_count++;
    }
    return(false);
-}
+} // handle_complex_close
 
 
 static chunk_t *insert_vbrace(chunk_t *pc, bool after,
@@ -940,14 +939,14 @@ static chunk_t *insert_vbrace(chunk_t *pc, bool after,
 
       /* Don't back into a preprocessor */
       if (((pc->flags & PCF_IN_PREPROC) == 0) &&
-          ((ref->flags & PCF_IN_PREPROC) != 0))
+          (ref->flags & PCF_IN_PREPROC))
       {
          if (ref->type == CT_PREPROC_BODY)
          {
             do
             {
                ref = chunk_get_prev(ref);
-            } while ((ref != NULL) && ((ref->flags & PCF_IN_PREPROC) != 0));
+            } while ((ref != NULL) && (ref->flags & PCF_IN_PREPROC));
          }
          else
          {
@@ -958,10 +957,10 @@ static chunk_t *insert_vbrace(chunk_t *pc, bool after,
       chunk.orig_line = ref->orig_line;
       chunk.column    = ref->column + ref->len() + 1;
       chunk.type      = CT_VBRACE_OPEN;
-      rv = chunk_add_after(&chunk, ref);
+      rv              = chunk_add_after(&chunk, ref);
    }
    return(rv);
-}
+} // insert_vbrace
 
 
 /**
@@ -1034,4 +1033,4 @@ bool close_statement(struct parse_frame *frm, chunk_t *pc)
       }
    }
    return(false);
-}
+} // close_statement

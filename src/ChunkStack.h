@@ -16,9 +16,25 @@ class ChunkStack
 public:
    struct Entry
    {
-      Entry() : m_seqnum(0), m_pc(0) { }
-      Entry(const Entry& ref) : m_seqnum(ref.m_seqnum), m_pc(ref.m_pc) { }
-      Entry(int sn, chunk_t *pc) : m_seqnum(sn), m_pc(pc) { }
+      Entry()
+         : m_seqnum(0)
+         , m_pc(0)
+      {
+      }
+
+
+      Entry(const Entry& ref)
+         : m_seqnum(ref.m_seqnum)
+         , m_pc(ref.m_pc)
+      {
+      }
+
+
+      Entry(int sn, chunk_t *pc)
+         : m_seqnum(sn)
+         , m_pc(pc)
+      {
+      }
       int     m_seqnum;
       chunk_t *m_pc;
    };
@@ -28,14 +44,17 @@ protected:
    int          m_seqnum; // current seq num
 
 public:
-   ChunkStack() : m_seqnum(0)
+   ChunkStack()
+      : m_seqnum(0)
    {
    }
+
 
    ChunkStack(const ChunkStack& cs)
    {
       Set(cs);
    }
+
 
    virtual ~ChunkStack()
    {
@@ -43,15 +62,18 @@ public:
 
    void Set(const ChunkStack& cs);
 
+
    void Push_Back(chunk_t *pc)
    {
       Push_Back(pc, ++m_seqnum);
    }
 
+
    bool Empty() const
    {
       return(m_cse.empty());
    }
+
 
    int Len() const
    {
@@ -66,6 +88,7 @@ public:
    void Push_Back(chunk_t *pc, int seqnum);
 
    chunk_t *Pop_Front();
+
 
    void Reset()
    {

@@ -1,0 +1,26 @@
+2016-04-25
+
+While a line is indented, the comment at the end of the line stays at the original column.
+
+If we have:
+      else if ((pc->type == CT_FUNC_CLASS_DEF) ||
+               (pc->type == CT_FUNC_DEF) ||
+               (pc->type == CT_FUNC_CLASS_PROTO) ||
+               (pc->type == CT_FUNC_PROTO))
+      {                  // guy 2016-04-16
+
+where the brace { is at new line with a comment.
+The option nl_elseif_brace = remove
+gives:
+      else if ((pc->type == CT_FUNC_CLASS_DEF) ||
+                 (pc->type == CT_FUNC_DEF) ||
+                 (pc->type == CT_FUNC_CLASS_PROTO) ||
+                 (pc->type == CT_FUNC_PROTO)) { // guy 2016-04-16
+If using at new the same option again with a new value
+nl_elseif_brace = add
+is not able to reconstruct the original source. The comment has changed the line:
+      else if ((pc->type == CT_FUNC_CLASS_DEF) ||
+               (pc->type == CT_FUNC_DEF) ||
+               (pc->type == CT_FUNC_CLASS_PROTO) ||
+               (pc->type == CT_FUNC_PROTO))       // guy 2016-04-16
+      {

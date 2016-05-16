@@ -114,7 +114,7 @@ void remove_extra_semicolons(void)
 
       pc = next;
    }
-}
+} // remove_extra_semicolons
 
 
 /**

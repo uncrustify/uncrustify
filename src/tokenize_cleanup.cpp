@@ -46,7 +46,17 @@ static chunk_t *handle_double_angle_close(chunk_t *pc)
       }
       else
       {
-         set_chunk_type(pc, CT_COMPARE);
+         // bug #663
+         if ((pc->flags & PCF_IN_PREPROC) &&
+             (pc->flags & PCF_IN_TEMPLATE))
+         {
+            log_pcf_flags(LGUY, pc->flags);
+            // no change
+         }
+         else
+         {
+            set_chunk_type(pc, CT_COMPARE);
+         }
       }
    }
    return(next);
@@ -122,7 +132,7 @@ void tokenize_cleanup(void)
    next = chunk_get_next_ncnl(pc);
    while ((pc != NULL) && (next != NULL))
    {
-      if ((pc->type == CT_DOT) && ((cpd.lang_flags & LANG_ALLC) != 0))
+      if ((pc->type == CT_DOT) && (cpd.lang_flags & LANG_ALLC))
       {
          set_chunk_type(pc, CT_MEMBER);
       }
@@ -246,7 +256,23 @@ void tokenize_cleanup(void)
           */
          if (cpd.lang_flags & (LANG_CPP | LANG_CS | LANG_JAVA | LANG_VALA | LANG_OC))
          {
-            check_template(pc);
+            // bug #663
+            log_pcf_flags(LGUY, pc->flags);
+            if (pc->flags & PCF_IN_PREPROC)
+            {
+               tmp = chunk_get_next_type(pc, CT_ANGLE_CLOSE, pc->level);
+               if (tmp != NULL)
+               {
+                  // mark the ANGLEs
+                  pc->flags  |= PCF_IN_TEMPLATE;
+                  tmp->flags |= PCF_IN_TEMPLATE;
+               }
+               // no change
+            }
+            else
+            {
+               check_template(pc);
+            }
          }
          else
          {
@@ -267,7 +293,7 @@ void tokenize_cleanup(void)
          }
       }
 
-      if ((cpd.lang_flags & LANG_D) != 0)
+      if (cpd.lang_flags & LANG_D)
       {
          /* Check for the D string concat symbol '~' */
          if ((pc->type == CT_INV) &&
@@ -308,7 +334,7 @@ void tokenize_cleanup(void)
          }
       }
 
-      if ((cpd.lang_flags & LANG_CPP) != 0)
+      if (cpd.lang_flags & LANG_CPP)
       {
          /* Change Word before '::' into a type */
          if ((pc->type == CT_WORD) && (next->type == CT_DC_MEMBER))
@@ -794,7 +820,7 @@ void tokenize_cleanup(void)
       pc   = next;
       next = chunk_get_next_ncnl(pc);
    }
-}
+} // tokenize_cleanup
 
 
 /**
@@ -1002,4 +1028,4 @@ static void check_template(chunk_t *start)
    LOG_FMT(LTEMPL, " - Not a template: end = %s\n",
            (end != NULL) ? get_token_name(end->type) : "<null>");
    set_chunk_type(start, CT_COMPARE);
-}
+} // check_template

@@ -16,6 +16,7 @@ typedef ListManager<chunk_t>   ChunkList;
 
 ChunkList g_cl;
 
+
 chunk_t *chunk_get_head(void)
 {
    return(g_cl.GetHead());
@@ -640,7 +641,7 @@ void chunk_swap_lines(chunk_t *pc1, chunk_t *pc2)
 
       chunk_swap(pc1, pc2);
    }
-}
+} // chunk_swap_lines
 
 
 /**

@@ -109,7 +109,7 @@ int load_define_file(const char *filename)
 
    fclose(pf);
    return(SUCCESS);
-}
+} // load_define_file
 
 
 void print_defines(FILE *pfile)

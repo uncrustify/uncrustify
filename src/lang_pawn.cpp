@@ -15,6 +15,7 @@ static chunk_t *pawn_mark_function0(chunk_t *start, chunk_t *fcn);
 static chunk_t *pawn_process_variable(chunk_t *start);
 static chunk_t *pawn_process_func_def(chunk_t *pc);
 
+
 chunk_t *pawn_add_vsemi_after(chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
@@ -121,7 +122,7 @@ static bool pawn_continued(chunk_t *pc, int br_level)
        (pc->parent_type == CT_WHILE) ||
        (pc->parent_type == CT_FUNC_DEF) ||
        (pc->parent_type == CT_ENUM) ||
-       ((pc->flags & (PCF_IN_ENUM | PCF_IN_STRUCT)) != 0) ||
+       (pc->flags & (PCF_IN_ENUM | PCF_IN_STRUCT)) ||
        chunk_is_str(pc, ":", 1) ||
        chunk_is_str(pc, "+", 1) ||
        chunk_is_str(pc, "-", 1))
@@ -244,7 +245,7 @@ static chunk_t *pawn_process_line(chunk_t *start)
    //LOG_FMT(LSYS, "%s: Don't understand line %d, starting with '%s' [%s]\n",
    //        __func__, start->orig_line, start->text(), get_token_name(start->type));
    return(start);
-}
+} // pawn_process_line
 
 
 /**
@@ -283,7 +284,7 @@ void pawn_add_virtual_semicolons(void)
 
    /** Add Pawn virtual semicolons */
    prev = NULL;
-   if ((cpd.lang_flags & LANG_PAWN) != 0)
+   if (cpd.lang_flags & LANG_PAWN)
    {
       pc = chunk_get_head();
       while ((pc = chunk_get_next(pc)) != NULL)
@@ -465,10 +466,10 @@ static chunk_t *pawn_process_func_def(chunk_t *pc)
       chunk.level       = 0;
       chunk.brace_level = 0;
       chunk.parent_type = CT_FUNC_DEF;
-      last = chunk_add_after(&chunk, last);
+      last              = chunk_add_after(&chunk, last);
    }
    return(last);
-}
+} // pawn_process_func_def
 
 
 /**
@@ -499,7 +500,7 @@ chunk_t *pawn_check_vsemicolon(chunk_t *pc)
    prev = chunk_get_prev_ncnl(pc);
    if ((prev == NULL) ||
        (prev == vb_open) ||
-       ((prev->flags & PCF_IN_PREPROC) != 0) ||
+       (prev->flags & PCF_IN_PREPROC) ||
        pawn_continued(prev, vb_open->level + 1))
    {
       if (prev != NULL)

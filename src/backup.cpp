@@ -31,6 +31,7 @@
 #include "unc_ctype.h"
 #include <cstring>
 
+
 /**
  * Check the backup-md5 file and copy the input file to a backup if needed.
  */
@@ -109,7 +110,7 @@ int backup_copy_file(const char *filename, const vector<UINT8>& data)
               newpath, strerror(errno), errno);
    }
    return(FAILURE);
-}
+} // backup_copy_file
 
 
 /**
@@ -158,4 +159,4 @@ void backup_create_md5_file(const char *filename)
 
       fclose(thefile);
    }
-}
+} // backup_create_md5_file

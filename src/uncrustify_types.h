@@ -237,7 +237,8 @@ struct chunk_t
       reset();
    }
 
-   void         reset()
+
+   void reset()
    {
       memset(&align, 0, sizeof(align));
       memset(&indent, 0, sizeof(indent));
@@ -260,14 +261,16 @@ struct chunk_t
       str.clear();
    }
 
-   int          len()
+
+   int len()
    {
-      return str.size();
+      return(str.size());
    }
 
-   const char   *text()
+
+   const char *text()
    {
-      return str.c_str();
+      return(str.c_str());
    }
 
    chunk_t      *next;

@@ -35,6 +35,7 @@
    #error "Define COMINL_coENABLE is undefined"
 #endif
 
+
 #ifdef COMINL_coENABLE_3
    typedef enum
    {
@@ -45,6 +46,7 @@
    }
    BufReq_ReturnType;
 #endif
+
 
 #if COMINL_coSTART_STOP_PERIODIC == COMINL_coENABLE
 void COMINL_vidInit(void)
@@ -77,6 +79,7 @@ void COMINL_vidInit(void)
       }
    #endif /* COMINL_coRX_MESSAGE_VAR == COMINL_coENABLE */
 
+
    /* nested #if... no indentation  */
    #if COMINL_coTX_MESSAGE_VAR == COMINL_coENABLE
       /*!Trace to: VEES_R_11_04044_004.01*/
@@ -103,6 +106,7 @@ void COMINL_vidInit(void)
    #endif /* COMINL_coTX_MESSAGE_VAR == COMINL_coENABLE */
 }
 #endif
+
 
 void myfunction(void)
 {

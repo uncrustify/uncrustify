@@ -113,6 +113,7 @@ static void align_asm_colon(void);
  *     typedef uint32_t    UINT32;
  */
 
+
 /**
  * Aligns everything in the chunk stack to a particular column.
  * The stack is empty after this function.
@@ -164,8 +165,8 @@ static void align_add(ChunkStack& cs, chunk_t *pc, int& max_col, int min_pad, bo
    if ((prev == NULL) || chunk_is_newline(prev))
    {
       min_col = squeeze ? 1 : pc->column;
-      LOG_FMT(LALADD, "%s: pc->col=%d max_col=%d min_pad=%d min_col=%d\n",
-              __func__, pc->column, max_col, min_pad, min_col);
+      LOG_FMT(LALADD, "%s: pc->orig_line=%d, pc->col=%d max_col=%d min_pad=%d min_col=%d\n",
+              __func__, pc->orig_line, pc->column, max_col, min_pad, min_col);
    }
    else
    {
@@ -184,8 +185,8 @@ static void align_add(ChunkStack& cs, chunk_t *pc, int& max_col, int min_pad, bo
             min_col = pc->column;
          }
       }
-      LOG_FMT(LALADD, "%s: pc->col=%d max_col=%d min_pad=%d min_col=%d multi:%s prev->col=%d prev->len=%d %s\n",
-              __func__, pc->column, max_col, min_pad, min_col, (prev->type == CT_COMMENT_MULTI) ? "Y" : "N",
+      LOG_FMT(LALADD, "%s: Pc->Orig_line=%d, pc->col=%d max_col=%d min_pad=%d min_col=%d multi:%s prev->col=%d prev->len=%d %s\n",
+              __func__, pc->orig_line, pc->column, max_col, min_pad, min_col, (prev->type == CT_COMMENT_MULTI) ? "Y" : "N",
               (prev->type == CT_COMMENT_MULTI) ? prev->orig_col_end : prev->column, prev->len(), get_token_name(prev->type));
    }
 
@@ -199,7 +200,7 @@ static void align_add(ChunkStack& cs, chunk_t *pc, int& max_col, int min_pad, bo
    {
       max_col = min_col;
    }
-}
+} // align_add
 
 
 void quick_align_again(void)
@@ -334,7 +335,7 @@ void align_all(void)
    }
    /* Just in case something was aligned out of order... do it again */
    quick_align_again();
-}
+} // align_all
 
 
 /**
@@ -438,7 +439,7 @@ void align_right_comments(void)
    pc = chunk_get_head();
    while (pc != NULL)
    {
-      if ((pc->flags & PCF_RIGHT_COMMENT) != 0)
+      if (pc->flags & PCF_RIGHT_COMMENT)
       {
          pc = align_trailing_comments(pc);
       }
@@ -447,7 +448,7 @@ void align_right_comments(void)
          pc = chunk_get_next(pc);
       }
    }
-}
+} // align_right_comments
 
 
 /**
@@ -554,7 +555,7 @@ void align_preprocessor(void)
 
    as.End();
    asf.End();
-}
+} // align_preprocessor
 
 
 /**
@@ -654,7 +655,7 @@ chunk_t *align_assign(chunk_t *first, int span, int thresh)
          var_def_cnt = 0;
          equ_count   = 0;
       }
-      else if ((pc->flags & PCF_VAR_DEF) != 0)
+      else if (pc->flags & PCF_VAR_DEF)
       {
          var_def_cnt++;
       }
@@ -697,7 +698,7 @@ chunk_t *align_assign(chunk_t *first, int span, int thresh)
    }
 
    return(pc);
-}
+} // align_assign
 
 
 /**
@@ -775,7 +776,7 @@ static chunk_t *align_func_param(chunk_t *start)
    }
 
    return(pc);
-}
+} // align_func_param
 
 
 static void align_func_params()
@@ -911,7 +912,7 @@ static void align_same_func_call_params()
          LOG_FMT(LASFCP, "(%d) align_fnc_name [%s]\n", __LINE__, align_fcn_name.c_str());
          align_fcn_name += prev->str;
          LOG_FMT(LASFCP, "(%d) align_fnc_name [%s]\n", __LINE__, align_fcn_name.c_str());
-         prev            = chunk_get_next(prev);
+         prev = chunk_get_next(prev);
       }
       LOG_FMT(LASFCP, "(%d) align_fnc_name [%s]\n", __LINE__, align_fcn_name.c_str());
       align_fcn_name += pc->str;
@@ -998,7 +999,7 @@ static void align_same_func_call_params()
          as[idx].End();
       }
    }
-}
+} // align_same_func_call_params
 
 
 chunk_t *step_back_over_member(chunk_t *pc)
@@ -1072,7 +1073,7 @@ static void align_func_proto(int span)
    }
    as.End();
    as_br.End();
-}
+} // align_func_proto
 
 
 /**
@@ -1301,7 +1302,7 @@ static chunk_t *align_var_def_brace(chunk_t *start, int span, int *p_nl_count)
    as_br.End();
 
    return(pc);
-}
+} // align_var_def_brace
 
 
 /**
@@ -1351,6 +1352,7 @@ enum CmtAlignType
    CAT_BRACE,
    CAT_ENDIF,
 };
+
 
 static CmtAlignType get_comment_align_type(chunk_t *cmt)
 {
@@ -1410,7 +1412,7 @@ chunk_t *align_trailing_comments(chunk_t *start)
    /* Find the max column */
    while ((pc != NULL) && (nl_count < cpd.settings[UO_align_right_cmt_span].n))
    {
-      if (((pc->flags & PCF_RIGHT_COMMENT) != 0) && (pc->column > 1))
+      if ((pc->flags & PCF_RIGHT_COMMENT) && (pc->column > 1))
       {
          cmt_type_cur = get_comment_align_type(pc);
 
@@ -1465,7 +1467,7 @@ chunk_t *align_trailing_comments(chunk_t *start)
    align_stack(cs, col, (intended_col != 0), LALTC);
 
    return(chunk_get_next(pc));
-}
+} // align_trailing_comments
 
 
 /**
@@ -1496,10 +1498,10 @@ static chunk_t *skip_c99_array(chunk_t *sq_open)
 
       if (chunk_is_token(tmp, CT_ASSIGN))
       {
-         return chunk_get_next_nc(tmp);
+         return(chunk_get_next_nc(tmp));
       }
    }
-   return NULL;
+   return(NULL);
 }
 
 
@@ -1607,7 +1609,7 @@ static chunk_t *scan_ib_line(chunk_t *start, bool first_pass)
       pc = chunk_get_next_nc(pc);
    }
    return(pc);
-}
+} // scan_ib_line
 
 
 static void align_log_al(log_sev_t sev, int line)
@@ -1812,7 +1814,7 @@ static void align_init_brace(chunk_t *start)
       }
       pc = chunk_get_next(pc);
    } while ((pc != NULL) && (pc->level > start->level));
-}
+} // align_init_brace
 
 
 /**
@@ -1866,7 +1868,7 @@ static void align_typedefs(int span)
    }
 
    as.End();
-}
+} // align_typedefs
 
 
 /**
@@ -1963,7 +1965,7 @@ static void align_left_shift(void)
       pc = chunk_get_next(pc);
    }
    as.End();
-}
+} // align_left_shift
 
 
 /**
@@ -2090,7 +2092,7 @@ static void align_oc_msg_colon(chunk_t *so)
    }
    nas.End();
    cas.End();
-}
+} // align_oc_msg_colon
 
 
 /**
@@ -2190,7 +2192,7 @@ static void align_oc_decl_colon(void)
       nas.End();
       cas.End();
    }
-}
+} // align_oc_decl_colon
 
 
 /**
@@ -2222,8 +2224,8 @@ static void align_asm_colon(void)
 
       cas.Reset();
 
-      pc = chunk_get_next_ncnl(pc, CNAV_PREPROC);
-      level = pc ? pc->level : 0;
+      pc     = chunk_get_next_ncnl(pc, CNAV_PREPROC);
+      level  = pc ? pc->level : 0;
       did_nl = true;
       while (pc && (pc->level >= level))
       {
@@ -2246,4 +2248,4 @@ static void align_asm_colon(void)
       }
       cas.End();
    }
-}
+} // align_asm_colon

@@ -49,6 +49,7 @@ static const chunk_tag_t keywords[] =
    { "Q_EMIT",           CT_Q_EMIT,       LANG_CPP                                                                    }, // guy 2015-10-16
    { "Q_FOREACH",        CT_FOR,          LANG_CPP                                                                    }, // guy 2015-09-23
    { "Q_FOREVER",        CT_Q_FOREVER,    LANG_CPP                                                                    }, // guy 2015-10-18
+   { "Q_GADGET",         CT_Q_GADGET,     LANG_CPP                                                                    }, // guy 2016-05-04
    { "Q_OBJECT",         CT_Q_OBJECT,     LANG_CPP                                                                    }, // guy 2015-10-16
    { "_Bool",            CT_TYPE,         LANG_CPP                                                                    },
    { "_Complex",         CT_TYPE,         LANG_CPP                                                                    },
@@ -308,7 +309,7 @@ static int kw_compare(const void *p1, const void *p2)
 }
 
 
-void keywords_are_sorted(void)
+bool keywords_are_sorted(void)
 {
    for (int idx = 1; idx < (int)ARRAY_SIZE(keywords); idx++)
    {
@@ -316,10 +317,11 @@ void keywords_are_sorted(void)
       {
          fprintf(stderr, "%s: bad sort order at idx %d, words '%s' and '%s'\n",
                  __func__, idx - 1, keywords[idx - 1].tag, keywords[idx].tag);
-         exit(EXIT_FAILURE);
+         return(false);
       }
    }
-   return;
+
+   return(true);
 }
 
 
@@ -377,9 +379,9 @@ static const chunk_tag_t *kw_static_match(const chunk_tag_t *tag)
         iter++)
    {
       //fprintf(stderr, " check:%s", iter->tag);
-      pp_iter = (iter->lang_flags & FLAG_PP) != 0;
+      pp_iter = (iter->lang_flags & FLAG_PP) != 0;    // forcing value to bool
       if ((strcmp(iter->tag, tag->tag) == 0) &&
-          ((cpd.lang_flags & iter->lang_flags) != 0) &&
+          (cpd.lang_flags & iter->lang_flags) &&
           (in_pp == pp_iter))
       {
          //fprintf(stderr, " match:%s", iter->tag);
@@ -482,7 +484,7 @@ int load_keyword_file(const char *filename)
 
    fclose(pf);
    return(SUCCESS);
-}
+} // load_keyword_file
 
 
 void print_keywords(FILE *pfile)
@@ -576,5 +578,5 @@ pattern_class get_token_pattern_class(c_token_t tok)
 
    default:
       return(PATCLS_NONE);
-   }
-}
+   } // switch
+}    // get_token_pattern_class
