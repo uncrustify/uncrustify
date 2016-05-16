@@ -1550,6 +1550,7 @@ void indent_text(void)
                   else
                   {
                      frm.pse[frm.pse_tos].indent      = calc_indent_continue(frm, frm.pse_tos);
+                     vardefcol = frm.pse[frm.pse_tos].indent;                   // use the same variable for the next line
                      frm.pse[frm.pse_tos].indent_cont = true;
                   }
                }

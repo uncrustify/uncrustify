@@ -8,6 +8,7 @@ New options:
  - nl_after_func_class_proto_group
 
 Bugfix:
+ - Issue #478 is fixed
  - Issue #411 is partialy fixed
 
 
