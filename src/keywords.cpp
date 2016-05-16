@@ -309,7 +309,7 @@ static int kw_compare(const void *p1, const void *p2)
 }
 
 
-void keywords_are_sorted(void)
+bool keywords_are_sorted(void)
 {
    for (int idx = 1; idx < (int)ARRAY_SIZE(keywords); idx++)
    {
@@ -317,9 +317,11 @@ void keywords_are_sorted(void)
       {
          fprintf(stderr, "%s: bad sort order at idx %d, words '%s' and '%s'\n",
                  __func__, idx - 1, keywords[idx - 1].tag, keywords[idx].tag);
-         exit(EXIT_FAILURE);
+         return(false);
       }
    }
+
+   return(true);
 }
 
 

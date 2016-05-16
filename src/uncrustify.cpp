@@ -238,10 +238,11 @@ int main(int argc, char *argv[])
    int        idx;
    const char *p_arg;
 
-   /* If ran without options... check keyword sort and show the usage info */
+   /* check keyword sort */
+   assert(keywords_are_sorted());
+   /* If ran without options show the usage info */
    if (argc == 1)
    {
-      keywords_are_sorted();
       usage_exit(NULL, argv[0], EXIT_SUCCESS);
    }
 
