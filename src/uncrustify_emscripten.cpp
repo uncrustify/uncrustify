@@ -63,6 +63,50 @@ int load_option_fileChar(char *configString)
    return(EXIT_SUCCESS);
 }
 
+// TODO: interface for args:
+// -----------------------------------------------------------------------------
+// --show-config
+// --frag
+// --show
+// --type
+// -l
+// --log
+// -q
+// --version
+//
+//
+// unsure about these:
+// -----------------------------------------------------------------------------
+// --check
+// --decode
+// --parsed
+// --update-config
+// --update-config-with-doc
+// --detect
+//
+//
+// will not be included:
+// -----------------------------------------------------------------------------
+// -t ( define via multiple --type )
+// -d ( define via multiple --define)
+// --assume ( no files available to guess the lang. based on the filename ending )
+// --files ( no batch processing will be available )
+// --prefix
+// --suffix
+// --assume
+// --no-backup
+// --replace
+// --mtime
+// --universalindent
+// --help, -h, --usage, -?
+//
+//
+// done:
+// -----------------------------------------------------------------------------
+//
+// --config, -c ( use set_config( string _cfg ) )
+// --file, -f ( use uncrustify( string _file ) )
+
 
 /**
  * initializes the current libUncrustify instance,
