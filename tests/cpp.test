@@ -273,5 +273,6 @@
 33038 func_class.cfg                   cpp/func_class.h
 33039 mod_remove_empty_return.cfg      cpp/mod_remove_empty_return.cpp
 33040 bug_i_411.cfg                    cpp/bug_i_411.cpp
-33041 bug_i_411a.cfg                    cpp/bug_i_411.cpp
-33042 bug_i_411b.cfg                    cpp/bug_i_411.cpp
+33041 bug_i_411a.cfg                   cpp/bug_i_411.cpp
+33042 bug_i_411b.cfg                   cpp/bug_i_411.cpp
+33043 bug_i_478.cfg                    cpp/bug_i_478.cpp

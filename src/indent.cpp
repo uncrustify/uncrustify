@@ -1495,6 +1495,19 @@ void indent_text(void)
                    (frm.pse[frm.pse_tos].indent_cont) &&
                    (vardefcol != 0))
                {
+                  // The value of the indentation for a continuation line is calculate
+                  // differently if the line is:
+                  //   a declaration :your case with QString fileName ...
+                  //   an assigment  :your case with pSettings = new QSettings( ...
+                  // At the second case the option value might be used twice:
+                  //   at the assigment
+                  //   at the function call (if present)
+                  // If you want to prevent the double use of the option value
+                  // you may use the new option :
+                  //   use_indent_continue_only_once
+                  // with the value "true".
+                  // use/don't use indent_continue once Guy 2016-05-16
+
                   // if vardefcol isn't zero, use it
                   frm.pse[frm.pse_tos].indent = vardefcol;
                }
