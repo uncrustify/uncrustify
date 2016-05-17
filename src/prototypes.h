@@ -56,6 +56,7 @@ int set_option_value(const char *name, const char *value);
 const group_map_value *get_group_name(int ug);
 const option_map_value *get_option_name(uncrustify_options uo);
 void print_options(FILE *pfile);
+const option_map_value *unc_find_option(const char *name);
 
 string argtype_to_string(argtype_e argtype);
 string bool_to_string(bool val);

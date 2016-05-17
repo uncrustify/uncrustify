@@ -79,6 +79,70 @@ extern void uncrustify_file( const file_mem& fm, FILE *pfout,
 // --file, -f ( use uncrustify( string _file ) )
 
 
+// TODO (upstream): it would be nicer to set settings via uncrustify_options enum_id
+// but this wont work since type info is needed
+// which is inside of the
+// _static_ option_name_map<
+// option_name : string,
+// option_map_val : struct { type : argtype_e, ....} >
+// to access the right union var inside of op_val_t
+// even if option_name_map would not be static, no direct access to the type
+// info is possible since the maps needs to be iterated to find the according
+// enum_id
+//
+// int set_option_value(op_val_t option_id, const char *value)
+// string get_option_value(op_val_t option_id )
+
+
+/**
+* sets value of an option
+*
+* @param name:  name of the option
+* @param value: value that is going to be set
+* @return options enum value of the found option or -1 if option was not found
+*/
+int set_option( string name, string value )
+{
+    if( name.empty() )
+    {
+        LOG_FMT( LERR, "%s: name string is empty\n", __func__ );
+        return -1;
+    }
+    if( name.empty() )
+    {
+        LOG_FMT( LERR, "%s: value string is empty\n", __func__ );
+        return -1;
+    }
+
+    return set_option_value(name.c_str(), value.c_str() );
+}
+
+
+/**
+* returns value of an option
+*
+* @param name: name of the option
+* @return currently set value of the option
+*/
+string get_option( string name )
+{
+    if( name.empty() )
+    {
+        LOG_FMT( LERR, "%s: input string is empty\n", __func__ );
+        return "";
+    }
+
+    const auto option = unc_find_option( name.c_str() );
+    if( option == NULL )
+    {
+        LOG_FMT( LWARN, "Option %s not found\n", name.c_str() );
+        return "";
+    }
+
+    return op_val_to_string( option->type, cpd.settings[option->id] );
+}
+
+
 /**
  * initializes the current libUncrustify instance,
  * used only for emscripten binding here and will be automatically called while
@@ -220,6 +284,8 @@ EMSCRIPTEN_BINDINGS( MainModule )
     emscripten::function( STRINGIFY( uncrustify ), &uncrustify );
 
     emscripten::function( STRINGIFY( loadConfig ), &loadConfig );
+    emscripten::function( STRINGIFY( set_option ), &set_option );
+    emscripten::function( STRINGIFY( get_option ), &get_option );
 }
 
 #endif
