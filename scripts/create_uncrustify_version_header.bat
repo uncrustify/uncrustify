@@ -1,10 +1,10 @@
 @echo off
 rem Filter the package version number from the configure file
 
-set configuration_file="..\\configure"
+set configuration_file="..\\configure.ac"
 set package_version_token=PACKAGE_VERSION
 
-FOR /F "tokens=2 delims='" %%A IN ('findstr /B /R "^%package_version_token%=.*" %configuration_file%') DO set package_version=%%A
+FOR /F "tokens=2 delims=," %%A IN ('findstr /B /R "^AC_INIT(uncrustify.*" %configuration_file%') DO set package_version=%%A
 
 rem Delete existing header_output_file and create new empty one
 
