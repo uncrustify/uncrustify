@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 #
 # Scans the .test files on the command line and parses each, running
 # the tests listed.  Results are printed out.
@@ -77,6 +77,11 @@ else:
 	MISMATCH_COLOR = FG_RED #REVERSE
 	UNSTABLE_COLOR = FGB_CYAN
 
+if os.name == "nt":
+    bin_base_path = '../Win32/Debug'
+else:
+    bin_base_path = '../src'
+
 # log_levels:
 # bit 0: show a diff on unstable or failures
 # bit 1: show passes
@@ -84,14 +89,14 @@ else:
 log_level = 0
 
 def usage_exit():
-	print "Usage: \n" + sys.argv[0] + " testfile"
+	print("Usage: \n" + sys.argv[0] + " testfile")
 	sys.exit()
 
 def run_tests(test_name, config_name, input_name, lang):
-	# print "Test:  ", test_name
-	# print "Config:", config_name
-	# print "Input: ", input_name
-	# print 'Output:', expected_name
+	# print("Test:  ", test_name)
+	# print("Config:", config_name)
+	# print("Input: ", input_name)
+	# print('Output:', expected_name)
 
 	if not config_name.startswith(os.sep):
 		config_name = os.path.join('config', config_name)
@@ -110,39 +115,39 @@ def run_tests(test_name, config_name, input_name, lang):
 	except:
 		pass
 
-	cmd = "%s/uncrustify -q -c %s -f input/%s %s > %s" % (os.path.abspath('../src'), config_name, input_name, lang, resultname)
+	cmd = "%s/uncrustify -q -c %s -f input/%s %s > %s" % (os.path.abspath(bin_base_path), config_name, input_name, lang, resultname)
 	if log_level & 2:
-		print "RUN: " + cmd
+		print("RUN: " + cmd)
 	a = os.system(cmd)
 	if a != 0:
-		print FAIL_COLOR + "FAILED: " + NORMAL + test_name
+		print(FAIL_COLOR + "FAILED: " + NORMAL + test_name)
 		return -1
 
 	try:
 		if not filecmp.cmp(resultname, outputname):
-			print MISMATCH_COLOR + "MISMATCH: " + NORMAL + test_name
+			print(MISMATCH_COLOR + "MISMATCH: " + NORMAL + test_name)
 			if log_level & 1:
 				cmd = "diff -u %s %s" % (outputname, resultname)
 				sys.stdout.flush()
 				os.system(cmd)
 			return -1
 	except:
-		print MISMATCH_COLOR + "MISSING: " + NORMAL + test_name
+		print(MISMATCH_COLOR + "MISSING: " + NORMAL + test_name)
 		return -1
 
 	# The file in results matches the file in output.
 	# Re-run with the output file as the input to check stability.
-	cmd = "%s/uncrustify -q -c %s -f %s %s > %s" % (os.path.abspath('../src'), rerun_config, outputname, lang, resultname)
+	cmd = "%s/uncrustify -q -c %s -f %s %s > %s" % (os.path.abspath(bin_base_path), rerun_config, outputname, lang, resultname)
 	if log_level & 2:
-		print "RUN: " + cmd
+		print("RUN: " + cmd)
 	a = os.system(cmd)
 	if a != 0:
-		print FAIL_COLOR + "FAILED2: " + NORMAL + test_name
+		print(FAIL_COLOR + "FAILED2: " + NORMAL + test_name)
 		return -1
 
 	try:
 		if not filecmp.cmp(resultname, outputname):
-			print UNSTABLE_COLOR + "UNSTABLE: " + NORMAL + test_name
+			print(UNSTABLE_COLOR + "UNSTABLE: " + NORMAL + test_name)
 			if log_level & 1:
 				cmd = "diff -u %s %s" % (outputname, resultname)
 				sys.stdout.flush()
@@ -150,25 +155,25 @@ def run_tests(test_name, config_name, input_name, lang):
 			return -2
 	except:
 		# impossible
-		print UNSTABLE_COLOR + "MISSING: " + NORMAL + test_name
+		print(UNSTABLE_COLOR + "MISSING: " + NORMAL + test_name)
 		return -1
 
 	if log_level & 4:
-		print PASS_COLOR + "PASSED: " + NORMAL + test_name
+		print(PASS_COLOR + "PASSED: " + NORMAL + test_name)
 	return 0
 
 def process_test_file(filename):
 	fd = open(filename, "r")
 	if fd == None:
-		print "Unable to open " + filename
+		print("Unable to open " + filename)
 		return None
-	print "Processing " + filename
+	print("Processing " + filename)
 	pass_count = 0
 	fail_count = 0
 	unst_count = 0
 	for line in fd:
-		line = string.rstrip(string.lstrip(line))
-		parts = string.split(line)
+		line = line.strip()
+		parts = line.split()
 		if (len(parts) < 3) or (parts[0][0] == '#'):
 			continue
 		lang = ""
@@ -211,16 +216,16 @@ def main(argv):
 		the_tests += args
 
 	# do a sanity check on the executable
-	cmd = "%s/uncrustify > %s" % (os.path.abspath('../src'), "usage.txt")
+	cmd = "%s/uncrustify > %s" % (os.path.abspath(bin_base_path), "usage.txt")
 	if log_level & 2:
-		print "RUN: " + cmd
+		print("RUN: " + cmd)
 	a = os.system(cmd)
 	if a != 0:
-		print FAIL_COLOR + "FAILED: " + NORMAL + "Sanity check"
+		print(FAIL_COLOR + "FAILED: " + NORMAL + "Sanity check")
 		return -1
 
 	#print args
-	print "Tests: " + str(the_tests)
+	print("Tests: " + str(the_tests))
 	pass_count = 0
 	fail_count = 0
 	unst_count = 0
@@ -234,15 +239,15 @@ def main(argv):
 			fail_count += passfail[1]
 			unst_count += passfail[2]
 
-	print "Passed %d / %d tests" % (pass_count, pass_count + fail_count)
+	print("Passed %d / %d tests" % (pass_count, pass_count + fail_count))
 	if fail_count > 0:
-		print BOLD + "Failed %d test(s)" % (fail_count) + NORMAL
+		print(BOLD + "Failed %d test(s)" % (fail_count) + NORMAL)
 		sys.exit(1)
 	else:
 		txt = BOLD + "All tests passed" + NORMAL
 		if unst_count > 0:
 			txt += ", but some files were unstable"
-		print txt
+		print(txt)
 		sys.exit(0)
 
 if __name__ == '__main__':
