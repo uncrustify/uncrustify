@@ -9,6 +9,7 @@
 
 #include "prototypes.h"
 #include "options.h"
+#include "uncrustify_version.h"
 
 #include <iostream>
 #include <stdio.h>
@@ -43,7 +44,6 @@ extern void uncrustify_file( const file_mem& fm, FILE *pfout,
 // -l
 // --log
 // -q
-// --version
 //
 //
 // unsure about these:
@@ -74,7 +74,7 @@ extern void uncrustify_file( const file_mem& fm, FILE *pfout,
 //
 // done:
 // -----------------------------------------------------------------------------
-//
+// --version, -v ( use get_version() )
 // --config, -c ( use set_config( string _cfg ) )
 // --file, -f ( use uncrustify( string _file ) )
 
@@ -92,6 +92,12 @@ extern void uncrustify_file( const file_mem& fm, FILE *pfout,
 //
 // int set_option_value(op_val_t option_id, const char *value)
 // string get_option_value(op_val_t option_id )
+
+//! returns the UNCRUSTIFY_VERSION string
+string get_version()
+{
+    return UNCRUSTIFY_VERSION;
+}
 
 
 /**
@@ -281,6 +287,7 @@ EMSCRIPTEN_BINDINGS( MainModule )
     emscripten::function( STRINGIFY( initialize ), &initialize );
     emscripten::function( STRINGIFY( destruct ), &destruct );
 
+    emscripten::function( STRINGIFY( get_version ), &get_version );
     emscripten::function( STRINGIFY( uncrustify ), &uncrustify );
 
     emscripten::function( STRINGIFY( loadConfig ), &loadConfig );
