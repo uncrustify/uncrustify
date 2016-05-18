@@ -163,6 +163,10 @@ SOURCE=..\src\options.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\src\options_for_QT.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\src\output.cpp
 # End Source File
 # Begin Source File
@@ -268,6 +272,10 @@ SOURCE=..\src\md5.h
 # Begin Source File
 
 SOURCE=..\src\options.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\options_for_QT.h
 # End Source File
 # Begin Source File
 
