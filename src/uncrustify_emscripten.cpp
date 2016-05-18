@@ -10,6 +10,8 @@
 #include "prototypes.h"
 #include "options.h"
 #include "uncrustify_version.h"
+#include "logger.h"
+#include "log_levels.h"
 
 #include <iostream>
 #include <stdio.h>
@@ -77,8 +79,6 @@ int load_option_fileChar(char *configString)
 // --show
 // --type
 // -l
-// --log
-// -q
 //
 //
 // unsure about these:
@@ -110,6 +110,8 @@ int load_option_fileChar(char *configString)
 // done:
 // -----------------------------------------------------------------------------
 // --version, -v ( use get_version() )
+// --log, -L ( use log_set_sev( log_sev_t sev, bool value ) )
+// -q ( use set_quiet() )
 // --config, -c ( use set_config( string _cfg ) )
 // --file, -f ( use uncrustify( string _file ) )
 
@@ -136,6 +138,16 @@ string get_version()
 }
 
 
+//! disables all logging messages
+void set_quiet()
+{
+   // set empty mask
+   log_mask_t mask;
+
+   log_set_mask(mask);
+}
+
+
 /**
  * sets value of an option
  *
@@ -150,7 +162,7 @@ int set_option(string name, string value)
       LOG_FMT(LERR, "%s: name string is empty\n", __func__);
       return(-1);
    }
-   if (name.empty())
+   if (value.empty())
    {
       LOG_FMT(LERR, "%s: value string is empty\n", __func__);
       return(-1);
@@ -320,6 +332,105 @@ string uncrustify(string file)
 
 EMSCRIPTEN_BINDINGS(MainModule)
 {
+   enum_<log_sev_t>(STRINGIFY(log_sev_t))
+      .value(STRINGIFY(LSYS), LSYS)
+      .value(STRINGIFY(LERR), LERR)
+      .value(STRINGIFY(LWARN), LWARN)
+      .value(STRINGIFY(LNOTE), LNOTE)
+      .value(STRINGIFY(LINFO), LINFO)
+      .value(STRINGIFY(LDATA), LDATA)
+      .value(STRINGIFY(LFILELIST), LFILELIST)
+      .value(STRINGIFY(LLINEENDS), LLINEENDS)
+      .value(STRINGIFY(LCASTS), LCASTS)
+      .value(STRINGIFY(LALBR), LALBR)
+      .value(STRINGIFY(LALTD), LALTD)
+      .value(STRINGIFY(LALPP), LALPP)
+      .value(STRINGIFY(LALPROTO), LALPROTO)
+      .value(STRINGIFY(LALNLC), LALNLC)
+      .value(STRINGIFY(LALTC), LALTC)
+      .value(STRINGIFY(LALADD), LALADD)
+      .value(STRINGIFY(LALASS), LALASS)
+      .value(STRINGIFY(LFVD), LFVD)
+      .value(STRINGIFY(LFVD2), LFVD2)
+      .value(STRINGIFY(LINDENT), LINDENT)
+      .value(STRINGIFY(LINDENT2), LINDENT2)
+      .value(STRINGIFY(LINDPSE), LINDPSE)
+      .value(STRINGIFY(LINDPC), LINDPC)
+      .value(STRINGIFY(LNEWLINE), LNEWLINE)
+      .value(STRINGIFY(LPF), LPF)
+      .value(STRINGIFY(LSTMT), LSTMT)
+      .value(STRINGIFY(LTOK), LTOK)
+      .value(STRINGIFY(LALRC), LALRC)
+      .value(STRINGIFY(LCMTIND), LCMTIND)
+      .value(STRINGIFY(LINDLINE), LINDLINE)
+      .value(STRINGIFY(LSIB), LSIB)
+      .value(STRINGIFY(LRETURN), LRETURN)
+      .value(STRINGIFY(LBRDEL), LBRDEL)
+      .value(STRINGIFY(LFCN), LFCN)
+      .value(STRINGIFY(LFCNP), LFCNP)
+      .value(STRINGIFY(LPCU), LPCU)
+      .value(STRINGIFY(LDYNKW), LDYNKW)
+      .value(STRINGIFY(LOUTIND), LOUTIND)
+      .value(STRINGIFY(LBCSAFTER), LBCSAFTER)
+      .value(STRINGIFY(LBCSPOP), LBCSPOP)
+      .value(STRINGIFY(LBCSPUSH), LBCSPUSH)
+      .value(STRINGIFY(LBCSSWAP), LBCSSWAP)
+      .value(STRINGIFY(LFTOR), LFTOR)
+      .value(STRINGIFY(LAS), LAS)
+      .value(STRINGIFY(LPPIS), LPPIS)
+      .value(STRINGIFY(LTYPEDEF), LTYPEDEF)
+      .value(STRINGIFY(LVARDEF), LVARDEF)
+      .value(STRINGIFY(LDEFVAL), LDEFVAL)
+      .value(STRINGIFY(LPVSEMI), LPVSEMI)
+      .value(STRINGIFY(LPFUNC), LPFUNC)
+      .value(STRINGIFY(LSPLIT), LSPLIT)
+      .value(STRINGIFY(LFTYPE), LFTYPE)
+      .value(STRINGIFY(LTEMPL), LTEMPL)
+      .value(STRINGIFY(LPARADD), LPARADD)
+      .value(STRINGIFY(LPARADD2), LPARADD2)
+      .value(STRINGIFY(LBLANKD), LBLANKD)
+      .value(STRINGIFY(LTEMPFUNC), LTEMPFUNC)
+      .value(STRINGIFY(LSCANSEMI), LSCANSEMI)
+      .value(STRINGIFY(LDELSEMI), LDELSEMI)
+      .value(STRINGIFY(LFPARAM), LFPARAM)
+      .value(STRINGIFY(LNL1LINE), LNL1LINE)
+      .value(STRINGIFY(LPFCHK), LPFCHK)
+      .value(STRINGIFY(LAVDB), LAVDB)
+      .value(STRINGIFY(LSORT), LSORT)
+      .value(STRINGIFY(LSPACE), LSPACE)
+      .value(STRINGIFY(LALIGN), LALIGN)
+      .value(STRINGIFY(LALAGAIN), LALAGAIN)
+      .value(STRINGIFY(LOPERATOR), LOPERATOR)
+      .value(STRINGIFY(LASFCP), LASFCP)
+      .value(STRINGIFY(LINDLINED), LINDLINED)
+      .value(STRINGIFY(LBCTRL), LBCTRL)
+      .value(STRINGIFY(LRMRETURN), LRMRETURN)
+      .value(STRINGIFY(LPPIF), LPPIF)
+      .value(STRINGIFY(LMCB), LMCB)
+      .value(STRINGIFY(LBRCH), LBRCH)
+      .value(STRINGIFY(LFCNR), LFCNR)
+      .value(STRINGIFY(LOCCLASS), LOCCLASS)
+      .value(STRINGIFY(LOCMSG), LOCMSG)
+      .value(STRINGIFY(LBLANK), LBLANK)
+      .value(STRINGIFY(LOBJCWORD), LOBJCWORD)
+      .value(STRINGIFY(LCHANGE), LCHANGE)
+      .value(STRINGIFY(LCONTTEXT), LCONTTEXT)
+      .value(STRINGIFY(LANNOT), LANNOT)
+      .value(STRINGIFY(LOCBLK), LOCBLK)
+      .value(STRINGIFY(LFLPAREN), LFLPAREN)
+      .value(STRINGIFY(LOCMSGD), LOCMSGD)
+      .value(STRINGIFY(LINDENTAG), LINDENTAG)
+      .value(STRINGIFY(LNFD), LNFD)
+      .value(STRINGIFY(LJDBI), LJDBI)
+      .value(STRINGIFY(LSETPAR), LSETPAR)
+      .value(STRINGIFY(LSETTYP), LSETTYP)
+      .value(STRINGIFY(LSETFLG), LSETFLG)
+      .value(STRINGIFY(LNLFUNCT), LNLFUNCT)
+      .value(STRINGIFY(LCHUNK), LCHUNK)
+      .value(STRINGIFY(LGUY98), LGUY98)
+      .value(STRINGIFY(LGUY), LGUY);
+
+
    emscripten::function(STRINGIFY(initialize), &initialize);
    emscripten::function(STRINGIFY(destruct), &destruct);
 
@@ -330,8 +441,10 @@ EMSCRIPTEN_BINDINGS(MainModule)
 
    emscripten::function(STRINGIFY(loadConfig), &loadConfig);
 
-   emscripten::function(STRINGIFY(uncrustify), &uncrustify);
+   emscripten::function(STRINGIFY(log_set_sev), &log_set_sev);
+   emscripten::function(STRINGIFY(set_quiet), &set_quiet);
 
+   emscripten::function(STRINGIFY(uncrustify), &uncrustify);
 }
 
 #endif
