@@ -747,7 +747,15 @@ enum uncrustify_options
    UO_mod_add_long_namespace_closebrace_comment,
 
    UO_use_indent_func_call_param,     // use/don't use indent_func_call_param Guy 2015-09-24
-   UO_use_indent_continue_only_once,  // use/don't use indent_continue once Guy 2015-11-04
+   UO_use_indent_continue_only_once,  // The value of the indentation for a continuation line is calculate
+                                      // differently if the line is:
+                                      //   a declaration :your case with QString fileName ...
+                                      //   an assigment  :your case with pSettings = new QSettings( ...
+                                      // At the second case the option value might be used twice:
+                                      //   at the assigment
+                                      //   at the function call (if present)
+                                      // To prevent the double use of the option value, use this option
+                                      // with the value "true". Guy 2016-05-16
 
    /* This is used to get the enumeration count */
    UO_option_count
