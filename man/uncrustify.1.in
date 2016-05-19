@@ -27,7 +27,7 @@ Errors are always dumped to stderr
 \fB\-c\fI CFG
 Use the config file \fICFG\fR.
 .br
-If not specified, uncrustify will use \fB$UNCRUSTIFY_CONFIG\fR or \fB$HOME\\.uncrustify.cfg\fR.
+If not specified, uncrustify will use \fB$UNCRUSTIFY_CONFIG\fR or \fB$HOME/.uncrustify.cfg\fR.
 .TP
 \fB\-f\fI FILE
 Process the single file \fIFILE\fR, sending output to stdout or the file specified with \fB\-o\fR.
