@@ -1169,7 +1169,8 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
    if (first->type == CT_PAREN_CLOSE)
    {
       if ((first->flags & PCF_OC_RTYPE) /*== CT_OC_RTYPE)*/ &&
-          (first->parent_type == CT_OC_MSG_DECL))
+		  ((first->parent_type == CT_OC_MSG_DECL) ||
+           (first->parent_type == CT_OC_MSG_SPEC)))
       {
          log_rule("sp_after_oc_return_type");
          return(cpd.settings[UO_sp_after_oc_return_type].a);
