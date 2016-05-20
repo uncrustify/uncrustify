@@ -74,7 +74,6 @@ int load_option_fileChar(char *configString)
 
 // TODO: interface for args:
 // -----------------------------------------------------------------------------
-// --show-config
 // --frag
 // --show
 // --type
@@ -114,6 +113,7 @@ int load_option_fileChar(char *configString)
 // -q ( use set_quiet() )
 // --config, -c ( use set_config( string _cfg ) )
 // --file, -f ( use uncrustify( string _file ) )
+// --show-config( use show_options() )
 
 
 // TODO (upstream): it would be nicer to set settings via uncrustify_options enum_id
@@ -194,6 +194,36 @@ string get_option(string name)
    }
 
    return(op_val_to_string(option->type, cpd.settings[option->id]));
+}
+
+
+//! returns a string with option documentation
+string show_options()
+{
+   FILE   *stream;
+   char   *buf;
+   size_t len;
+
+   // TODO (upstream): see uncrustify()
+   stream = open_memstream(&buf, &len);
+   if (stream == NULL)
+   {
+      LOG_FMT(LERR, "Failed to open_memstream\n");
+      fflush(stream);
+      fclose(stream);
+      free(buf);
+      return("");
+   }
+
+
+   print_options(stream);
+   fflush(stream);
+   fclose(stream);
+
+   string out(buf);
+   free(buf);
+
+   return(out);
 }
 
 
@@ -436,6 +466,7 @@ EMSCRIPTEN_BINDINGS(MainModule)
 
    emscripten::function(STRINGIFY(get_version), &get_version);
 
+   emscripten::function(STRINGIFY(show_options), &show_options);
    emscripten::function(STRINGIFY(set_option), &set_option);
    emscripten::function(STRINGIFY(get_option), &get_option);
 
