@@ -75,7 +75,6 @@ int load_option_fileChar(char *configString)
 // TODO: interface for args:
 // -----------------------------------------------------------------------------
 // --frag
-// --show
 // --type
 // -l
 //
@@ -114,6 +113,7 @@ int load_option_fileChar(char *configString)
 // --config, -c ( use set_config( string _cfg ) )
 // --file, -f ( use uncrustify( string _file ) )
 // --show-config( use show_options() )
+// --show ( use show_log_type( bool ) )
 
 
 // TODO (upstream): it would be nicer to set settings via uncrustify_options enum_id
@@ -129,6 +129,17 @@ int load_option_fileChar(char *configString)
 //
 // int set_option_value(op_val_t option_id, const char *value)
 // string get_option_value(op_val_t option_id )
+
+
+/**
+ * Show or hide the severity prefix "<1>"
+ *
+ * @param b: true=show, false=hide
+ */
+void show_log_type(bool b)
+{
+   log_show_sev(b);
+}
 
 
 //! returns the UNCRUSTIFY_VERSION string
@@ -473,6 +484,7 @@ EMSCRIPTEN_BINDINGS(MainModule)
    emscripten::function(STRINGIFY(loadConfig), &loadConfig);
 
    emscripten::function(STRINGIFY(log_set_sev), &log_set_sev);
+   emscripten::function(STRINGIFY(show_log_type), &show_log_type);
    emscripten::function(STRINGIFY(set_quiet), &set_quiet);
 
    emscripten::function(STRINGIFY(uncrustify), &uncrustify);
