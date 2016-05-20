@@ -74,7 +74,6 @@ int load_option_fileChar(char *configString)
 
 // TODO: interface for args:
 // -----------------------------------------------------------------------------
-// --frag
 // --type
 // -l
 //
@@ -114,6 +113,7 @@ int load_option_fileChar(char *configString)
 // --file, -f ( use uncrustify( string _file ) )
 // --show-config( use show_options() )
 // --show ( use show_log_type( bool ) )
+// --frag ( use uncrustify( string _file, bool frag = true ) )
 
 
 // TODO (upstream): it would be nicer to set settings via uncrustify_options enum_id
@@ -296,9 +296,10 @@ int loadConfig(string _cfg)
  * format string
  *
  * @param file: string that is going to be formated
+ * @param frag: true=fragmented code input, false=unfragmented code input
  * @return formated string
  */
-string uncrustify(string file)
+string uncrustify(string file, bool frag)
 {
    if (file.empty())
    {
@@ -336,6 +337,8 @@ string uncrustify(string file)
            (int)fm.raw.size(), (int)fm.data.size(),
            language_name_from_flags(cpd.lang_flags));
 
+   cpd.frag = frag;
+
    FILE   *stream;
    char   *buf;
    size_t len;
@@ -369,6 +372,19 @@ string uncrustify(string file)
    }
    return(out);
 } // uncrustify
+
+
+/**
+ * format string, assume unfragmented code input
+ *
+ * @param file: string that is going to be formated
+ * @return formated string
+ */
+string uncrustify(string file)
+{
+   // overload for default frag parameter
+   return(uncrustify(file, false));
+}
 
 
 EMSCRIPTEN_BINDINGS(MainModule)
@@ -487,7 +503,8 @@ EMSCRIPTEN_BINDINGS(MainModule)
    emscripten::function(STRINGIFY(show_log_type), &show_log_type);
    emscripten::function(STRINGIFY(set_quiet), &set_quiet);
 
-   emscripten::function(STRINGIFY(uncrustify), &uncrustify);
+   emscripten::function(STRINGIFY(uncrustify), select_overload<string(string, bool)>(&uncrustify));
+   emscripten::function(STRINGIFY(uncrustify), select_overload<string(string)>(&uncrustify));
 }
 
 #endif
