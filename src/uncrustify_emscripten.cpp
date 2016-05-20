@@ -74,7 +74,6 @@ int load_option_fileChar(char *configString)
 
 // TODO: interface for args:
 // -----------------------------------------------------------------------------
-// --type
 // -l
 //
 //
@@ -114,6 +113,7 @@ int load_option_fileChar(char *configString)
 // --show-config( use show_options() )
 // --show ( use show_log_type( bool ) )
 // --frag ( use uncrustify( string _file, bool frag = true ) )
+// --type ( use add_type( string _type ) )
 
 
 // TODO (upstream): it would be nicer to set settings via uncrustify_options enum_id
@@ -129,6 +129,33 @@ int load_option_fileChar(char *configString)
 //
 // int set_option_value(op_val_t option_id, const char *value)
 // string get_option_value(op_val_t option_id )
+
+
+// TODO ( upstream ): this needs more than just adding types,
+// add ways to add and remove keywords
+
+
+/**
+ * adds a new keyword to Uncrustifys dynamic keyword map (dkwm, keywords.cpp)
+ *
+ * @param type: keyword that is going to be added
+ */
+void add_type(string type)
+{
+   if (type.empty())
+   {
+      LOG_FMT(LERR, "%s: input string is empty\n", __func__);
+      return;
+   }
+   add_keyword(type.c_str(), CT_TYPE);
+}
+
+
+//! clears Uncrustifys dynamic keyword map (dkwm, keywords.cpp)
+void clear_keywords()
+{
+   clear_keyword_file();
+}
 
 
 /**
@@ -492,6 +519,9 @@ EMSCRIPTEN_BINDINGS(MainModule)
    emscripten::function(STRINGIFY(destruct), &destruct);
 
    emscripten::function(STRINGIFY(get_version), &get_version);
+
+   emscripten::function(STRINGIFY(add_type), &add_type);
+   emscripten::function(STRINGIFY(clear_keywords), &clear_keywords);
 
    emscripten::function(STRINGIFY(show_options), &show_options);
    emscripten::function(STRINGIFY(set_option), &set_option);
