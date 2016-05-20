@@ -40,7 +40,6 @@ extern void uncrustify_file( const file_mem& fm, FILE *pfout,
 // TODO: interface for args:
 // -----------------------------------------------------------------------------
 // --frag
-// --show
 // --type
 // -l
 //
@@ -79,6 +78,7 @@ extern void uncrustify_file( const file_mem& fm, FILE *pfout,
 // --config, -c ( use set_config( string _cfg ) )
 // --file, -f ( use uncrustify( string _file ) )
 // --show-config( use show_options() )
+// --show ( use show_log_type( bool ) )
 
 
 // TODO (upstream): it would be nicer to set settings via uncrustify_options enum_id
@@ -94,6 +94,18 @@ extern void uncrustify_file( const file_mem& fm, FILE *pfout,
 //
 // int set_option_value(op_val_t option_id, const char *value)
 // string get_option_value(op_val_t option_id )
+
+
+/**
+* Show or hide the severity prefix "<1>"
+*
+* @param b: true=show, false=hide
+*/
+void show_log_type( bool b )
+{
+    log_show_sev( b );
+}
+
 
 //! returns the UNCRUSTIFY_VERSION string
 string get_version()
@@ -326,6 +338,7 @@ string uncrustify( string file )
 
 EMSCRIPTEN_BINDINGS( MainModule )
 {
+    emscripten::function( STRINGIFY( show_log_type ), &show_log_type );
     emscripten::function( STRINGIFY( show_options ), &show_options );
     emscripten::function( STRINGIFY( initialize ), &initialize );
     emscripten::function( STRINGIFY( destruct ), &destruct );
