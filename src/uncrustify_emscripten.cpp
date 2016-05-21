@@ -43,8 +43,6 @@ extern void uncrustify_file( const file_mem& fm, FILE *pfout,
 // --check
 // --decode
 // --parsed
-// --update-config
-// --update-config-with-doc
 // --detect
 //
 //
@@ -66,6 +64,8 @@ extern void uncrustify_file( const file_mem& fm, FILE *pfout,
 //
 // done:
 // -----------------------------------------------------------------------------
+// --update-config ( use show_config() )
+// --update-config-with-doc ( show_config( bool withDoc = true ) )
 // --version, -v ( use get_version() )
 // --log, -L ( use log_set_sev( log_sev_t sev, bool value ) )
 // -q ( use set_quiet() )
@@ -257,6 +257,63 @@ string show_options()
 
 
 /**
+* returns the config file string based on the current configuration
+*
+* @param withDoc:          false=without documentation,
+*                          true=with documentation text lines
+* @param only_not_default: false=containing all options,
+*                          true=containing only options with non default values
+* @return returns the config file string based on the current configuration
+*/
+string show_config( bool withDoc, bool only_not_default )
+{
+    FILE*  stream;
+    char*  buf;
+    size_t len;
+
+    // TODO (upstream): see uncrustify()
+    stream = open_memstream( &buf, &len );
+    if( stream == NULL )
+    {
+        LOG_FMT( LERR, "Failed to open_memstream\n" );
+        fflush( stream );
+        fclose( stream );
+        free( buf );
+        return "";
+    }
+
+    save_option_file_kernel( stream, withDoc, only_not_default );
+
+    fflush( stream );
+    fclose( stream );
+
+    string out( buf );
+    free( buf );
+
+    return out;
+}
+
+
+/**
+* returns the config file string with all options based on the current configuration
+*
+* @param withDoc: false= without documentation, true=with documentation text lines
+* @return returns the config file string with all options based on the current configuration
+*/
+string show_config( bool withDoc )
+{
+    return show_config( withDoc, false );
+}
+
+
+//!returns the config file string with all options and without documentation based on the current configuration
+string show_config()
+{
+    return show_config( false, false );
+}
+
+
+/**
  * initializes the current libUncrustify instance,
  * used only for emscripten binding here and will be automatically called while
  * module initialization
@@ -407,6 +464,9 @@ string uncrustify( string file )
 
 EMSCRIPTEN_BINDINGS( MainModule )
 {
+    emscripten::function( STRINGIFY( show_config ), select_overload< string( bool, bool ) >( &show_config ) );
+    emscripten::function( STRINGIFY( show_config ), select_overload< string( bool ) >( &show_config ) );
+    emscripten::function( STRINGIFY( show_config ), select_overload< string() >( &show_config ) );
     emscripten::function( STRINGIFY( set_language ), &set_language );
     emscripten::function( STRINGIFY( clear_keywords ), &clear_keywords );
     emscripten::function( STRINGIFY( add_type ), &add_type );
