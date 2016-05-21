@@ -38,10 +38,6 @@ extern void uncrustify_file( const file_mem& fm, FILE *pfout,
 
 
 // TODO: interface for args:
-// -----------------------------------------------------------------------------
-// -l
-//
-//
 // unsure about these:
 // -----------------------------------------------------------------------------
 // --check
@@ -79,6 +75,7 @@ extern void uncrustify_file( const file_mem& fm, FILE *pfout,
 // --show ( use show_log_type( bool ) )
 // --frag ( use uncrustify( string _file, bool frag = true ) )
 // --type ( use add_type( string _type ) )
+// -l ( use set_language( int langIDX ) )
 
 
 // TODO (upstream): it would be nicer to set settings via uncrustify_options enum_id
@@ -94,6 +91,37 @@ extern void uncrustify_file( const file_mem& fm, FILE *pfout,
 //
 // int set_option_value(op_val_t option_id, const char *value)
 // string get_option_value(op_val_t option_id )
+
+
+enum class lang_flags : int
+{
+    LANG_C_ = LANG_C,
+    LANG_CPP_ = LANG_CPP,
+    LANG_D_ = LANG_D,
+    LANG_CS_ = LANG_CS,
+    LANG_VALA_ = LANG_VALA,
+    LANG_JAVA_ = LANG_JAVA,
+    LANG_PAWN_ = LANG_PAWN,
+    LANG_OC_ = LANG_OC,
+    LANG_OCPP_ = LANG_OC | LANG_CPP,
+    LANG_ECMA_ = LANG_ECMA,
+//TODO ???? see language_names[] uncrustify.cpp, what about flags ?
+//    LANG_ALLC_ = LANG_ALLC,
+//    LANG_ALL_ = LANG_ALL,
+};
+
+
+// TODO (upstream): use a named enum for languages
+/**
+ *  sets the language of the to be formatted text
+ *
+ *  @param langIDX: ID of the language, see enum lang_flags or
+ *                  uncrustify_types.h
+ */
+void set_language( lang_flags langIDX )
+{
+    cpd.lang_flags = static_cast<int>(langIDX);
+}
 
 
 // TODO ( upstream ): this needs more than just adding types,
@@ -379,6 +407,7 @@ string uncrustify( string file )
 
 EMSCRIPTEN_BINDINGS( MainModule )
 {
+    emscripten::function( STRINGIFY( set_language ), &set_language );
     emscripten::function( STRINGIFY( clear_keywords ), &clear_keywords );
     emscripten::function( STRINGIFY( add_type ), &add_type );
     emscripten::function( STRINGIFY( show_log_type ), &show_log_type );
@@ -494,6 +523,21 @@ EMSCRIPTEN_BINDINGS( MainModule )
     .value( STRINGIFY( LCHUNK ), LCHUNK )
     .value( STRINGIFY( LGUY98 ), LGUY98 )
     .value( STRINGIFY( LGUY ), LGUY );
+
+    enum_< lang_flags >( STRINGIFY( lang_flags ) )
+    .value( STRINGIFY( LANG_C_ ), lang_flags::LANG_C_ )
+    .value( STRINGIFY( LANG_CPP_ ), lang_flags::LANG_CPP_ )
+    .value( STRINGIFY( LANG_D_ ), lang_flags::LANG_D_ )
+    .value( STRINGIFY( LANG_CS_ ), lang_flags::LANG_CS_ )
+    .value( STRINGIFY( LANG_VALA_ ), lang_flags::LANG_VALA_ )
+    .value( STRINGIFY( LANG_JAVA_ ), lang_flags::LANG_JAVA_ )
+    .value( STRINGIFY( LANG_PAWN_ ), lang_flags::LANG_PAWN_ )
+    .value( STRINGIFY( LANG_OC_ ), lang_flags::LANG_OC_ )
+    .value( STRINGIFY( LANG_OCPP_ ), lang_flags::LANG_OCPP_ )
+    .value( STRINGIFY( LANG_ECMA_ ), lang_flags::LANG_ECMA_ );
+//TODO ???? see language_names[] uncrustify.cpp, what about flags ?
+//    .value( STRINGIFY( LANG_ALLC_ ), lang_flags::LANG_ALLC_ )
+//    .value( STRINGIFY( LANG_ALL_ ), lang_flags::LANG_ALL_ )
 }
 
 #endif
