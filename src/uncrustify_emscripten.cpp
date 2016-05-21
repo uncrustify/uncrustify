@@ -50,7 +50,7 @@ extern void uncrustify_file( const file_mem& fm, FILE *pfout,
 // will not be included:
 // -----------------------------------------------------------------------------
 // -t ( define via multiple --type )
-// -d ( define via multiple --define)
+// -d ( define via multiple --define )
 // --assume ( no files available to guess the lang. based on the filename ending )
 // --files ( no batch processing will be available )
 // --prefix
@@ -76,6 +76,7 @@ extern void uncrustify_file( const file_mem& fm, FILE *pfout,
 // --show ( use show_log_type( bool ) )
 // --frag ( use uncrustify( string _file, bool frag = true ) )
 // --type ( use add_type( string _type ) )
+// --define ( use add_define( string _tag ) )
 // -l ( use set_language( int langIDX ) )
 
 
@@ -147,6 +148,45 @@ void add_type( string type )
 void clear_keywords()
 {
     clear_keyword_file();
+}
+
+
+/**
+* adds an entry to the define list
+*
+* @param tag:   tag string
+* @param value: value of the define
+*/
+void add_define( string tag, string val )
+{
+    if( tag.empty() )
+    {
+        LOG_FMT( LERR, "%s: tag string is empty\n", __func__ );
+        return;
+    }
+    if( val.empty() )
+    {
+        LOG_FMT( LERR, "%s: val string is empty\n", __func__ );
+        return;
+    }
+
+    add_define( tag.c_str(), val.c_str() );
+}
+
+
+/**
+* adds an entry to the define list
+*
+* @param tag: tag string
+*/
+void add_define( string tag )
+{
+    if( tag.empty() )
+    {
+        LOG_FMT( LERR, "%s: tag string is empty\n", __func__ );
+        return;
+    }
+    add_define( tag.c_str(), NULL );
 }
 
 
@@ -483,8 +523,14 @@ EMSCRIPTEN_BINDINGS( MainModule )
     emscripten::function( STRINGIFY( show_config ), select_overload< string( bool ) >( &show_config ) );
     emscripten::function( STRINGIFY( show_config ), select_overload< string() >( &show_config ) );
     emscripten::function( STRINGIFY( set_language ), &set_language );
+
     emscripten::function( STRINGIFY( clear_keywords ), &clear_keywords );
     emscripten::function( STRINGIFY( add_type ), &add_type );
+
+    emscripten::function( STRINGIFY( clear_defines ), &clear_defines );
+    emscripten::function( STRINGIFY( add_define ), select_overload< void(string, string) >( &add_define ) );
+    emscripten::function( STRINGIFY( add_define ), select_overload< void(string) >( &add_define ) );
+
     emscripten::function( STRINGIFY( show_log_type ), &show_log_type );
     emscripten::function( STRINGIFY( show_options ), &show_options );
     emscripten::function( STRINGIFY( initialize ), &initialize );
