@@ -28,6 +28,7 @@
 #include <cerrno>
 #include <algorithm>
 #include "unc_ctype.h"
+//#define DEBUG
 
 
 static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool complete);
@@ -1729,10 +1730,17 @@ void space_text(void)
    column = pc->column;
    while (pc != NULL)
    {
-      //LOG_FMT(LGUY, "%s: %d:%d [%d] %s\n", __func__, pc->orig_line, pc->orig_col, __LINE__, pc->text());
+#ifdef DEBUG
+      LOG_FMT(LGUY, "(%d) ", __LINE__);
+#endif
+      LOG_FMT(LGUY, "%s: %d:%d %s %s\n", __func__, pc->orig_line, pc->orig_col, pc->text(),
+              get_token_name(pc->type));
       if ((strcmp(pc->text(), "SIGNAL") == 0) ||
           (strcmp(pc->text(), "SLOT") == 0))
       {  // guy 2015-09-22
+#ifdef DEBUG
+         LOG_FMT(LGUY, "(%d) ", __LINE__);
+#endif
          LOG_FMT(LGUY, "%d: [%d] type %s SIGNAL/SLOT found\n",
                  pc->orig_line, __LINE__, get_token_name(pc->type));
          // flag the chunk for a second processing
@@ -1755,6 +1763,14 @@ void space_text(void)
       if (!next)
       {
          break;
+      }
+      // Issue # 481
+      if ((QT_SIGNAL_SLOT_found) &&
+          (cpd.settings[UO_sp_balance_nested_parens].b) &&
+          (next->next->type == CT_SPACE))
+      {
+         // remoce the space
+         chunk_del(next->next);
       }
 
       /* If the current chunk contains a newline, do not change the column
@@ -1879,6 +1895,7 @@ void space_text(void)
 
          case AV_REMOVE:
             /* the symbols will be back-to-back "a+3" */
+         case AV_NOT_DEFINED:
             break;
 
          case AV_IGNORE:
@@ -1887,9 +1904,6 @@ void space_text(void)
             {
                column += next->orig_col - pc->orig_col_end;
             }
-            break;
-
-         case AV_NOT_DEFINED:
             break;
          }
 

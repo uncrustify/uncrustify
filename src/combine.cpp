@@ -11,6 +11,7 @@
 #include "chunk_list.h"
 #include "ChunkStack.h"
 #include "prototypes.h"
+//#define DEBUG
 
 #include <cstdio>
 #include <cstdlib>
@@ -340,7 +341,10 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
    LOG_FUNC_ENTRY();
    chunk_t *tmp;
 
-   LOG_FMT(LGUY, "(%d) %d > %s\n", __LINE__, pc->orig_line, pc->text());
+#ifdef DEBUG
+   LOG_FMT(LGUY, "(%d) ", __LINE__);
+#endif
+   LOG_FMT(LGUY, "%s: %d:%d %s\n", __func__, pc->orig_line, pc->orig_col, pc->text());
    // LOG_FMT(LSYS, " %3d > ['%s' %s] ['%s' %s] ['%s' %s]\n",
    //         pc->orig_line,
    //         prev->text(), get_token_name(prev->type),

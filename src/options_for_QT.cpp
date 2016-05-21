@@ -12,13 +12,16 @@
 #include "options_for_QT.h"
 
 // for the modification of options within the SIGNAL/SLOT call. guy 2015-09-22
-bool     QT_SIGNAL_SLOT_found      = false;
-int      QT_SIGNAL_SLOT_level      = 0;
-bool     restoreValues             = false;
-argval_t SaveUO_sp_inside_fparen_A = AV_NOT_DEFINED;
-argval_t SaveUO_sp_paren_paren_A   = AV_NOT_DEFINED;
-argval_t SaveUO_sp_before_comma_A  = AV_NOT_DEFINED;
-argval_t SaveUO_sp_after_comma_A   = AV_NOT_DEFINED;
+bool     QT_SIGNAL_SLOT_found       = false;
+int      QT_SIGNAL_SLOT_level       = 0;
+bool     restoreValues              = false;
+argval_t SaveUO_sp_inside_fparen_A  = AV_NOT_DEFINED;
+// Issue #481
+// connect( timer,SIGNAL( timeout() ),this,SLOT( timeoutImage() ) );
+argval_t SaveUO_sp_inside_fparens_A = AV_NOT_DEFINED;
+argval_t SaveUO_sp_paren_paren_A    = AV_NOT_DEFINED;
+argval_t SaveUO_sp_before_comma_A   = AV_NOT_DEFINED;
+argval_t SaveUO_sp_after_comma_A    = AV_NOT_DEFINED;
 // Bug #654
 // connect(&mapper, SIGNAL(mapped(QString &)), this, SLOT(onSomeEvent(QString &)));
 argval_t SaveUO_sp_before_byref_A         = AV_NOT_DEFINED;
@@ -32,6 +35,7 @@ void save_set_options_for_QT(int level)
    // save the values
    QT_SIGNAL_SLOT_level             = level;
    SaveUO_sp_inside_fparen_A        = cpd.settings[UO_sp_inside_fparen].a;
+   SaveUO_sp_inside_fparens_A       = cpd.settings[UO_sp_inside_fparens].a;
    SaveUO_sp_paren_paren_A          = cpd.settings[UO_sp_paren_paren].a;
    SaveUO_sp_before_comma_A         = cpd.settings[UO_sp_before_comma].a;
    SaveUO_sp_after_comma_A          = cpd.settings[UO_sp_after_comma].a;
@@ -40,6 +44,7 @@ void save_set_options_for_QT(int level)
    SaveUO_sp_after_type_A           = cpd.settings[UO_sp_after_type].a;
    // set values for SIGNAL/SLOT
    cpd.settings[UO_sp_inside_fparen].a        = AV_REMOVE;
+   cpd.settings[UO_sp_inside_fparens].a       = AV_REMOVE;
    cpd.settings[UO_sp_paren_paren].a          = AV_REMOVE;
    cpd.settings[UO_sp_before_comma].a         = AV_REMOVE;
    cpd.settings[UO_sp_after_comma].a          = AV_REMOVE;
@@ -56,6 +61,7 @@ void restore_options_for_QT()
    // restore the values we had before SIGNAL/SLOT
    QT_SIGNAL_SLOT_level                       = 0;
    cpd.settings[UO_sp_inside_fparen].a        = SaveUO_sp_inside_fparen_A;
+   cpd.settings[UO_sp_inside_fparens].a       = SaveUO_sp_inside_fparens_A;
    cpd.settings[UO_sp_paren_paren].a          = SaveUO_sp_paren_paren_A;
    cpd.settings[UO_sp_before_comma].a         = SaveUO_sp_before_comma_A;
    cpd.settings[UO_sp_after_comma].a          = SaveUO_sp_after_comma_A;
@@ -63,6 +69,7 @@ void restore_options_for_QT()
    cpd.settings[UO_sp_before_unnamed_byref].a = SaveUO_sp_before_unnamed_byref_A;
    cpd.settings[UO_sp_after_type].a           = SaveUO_sp_after_type_A;
    SaveUO_sp_inside_fparen_A                  = AV_NOT_DEFINED;
+   SaveUO_sp_inside_fparens_A                 = AV_NOT_DEFINED;
    SaveUO_sp_paren_paren_A                    = AV_NOT_DEFINED;
    SaveUO_sp_before_comma_A                   = AV_NOT_DEFINED;
    SaveUO_sp_after_comma_A                    = AV_NOT_DEFINED;

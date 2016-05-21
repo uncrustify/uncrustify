@@ -1,6 +1,6 @@
 bool AkonadiServer::quit()
 {
-    QTimer::singleShot(0, this, SLOT(doQuit()));
+    QTimer::singleShot(   0, this, SLOT(doQuit()));
 }
 
 void AkonadiServer::incomingConnection(quintptr socketDescriptor)

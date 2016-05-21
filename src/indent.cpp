@@ -16,6 +16,7 @@
 #include <cstring>
 #include <cerrno>
 #include "unc_ctype.h"
+//#define DEBUG
 
 
 /**
@@ -546,6 +547,9 @@ void indent_text(void)
       if ((strcmp(pc->text(), "SIGNAL") == 0) ||
           (strcmp(pc->text(), "SLOT") == 0))   // guy 2015-09-22
       {
+#ifdef DEBUG
+         LOG_FMT(LGUY, "(%d) ", __LINE__);
+#endif
          LOG_FMT(LGUY, "%d: [%d] type %s SIGNAL/SLOT found\n",
                  pc->orig_line, __LINE__, get_token_name(pc->type));
       }

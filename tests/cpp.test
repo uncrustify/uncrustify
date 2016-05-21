@@ -134,7 +134,7 @@
 
 30720 wessex.cfg                       cpp/custom-open-2.cpp
 
-30730 ben.cfg                          cpp/qt-1.cpp
+30730 qt-1.cfg                         cpp/qt-1.cpp
 30731 nl_access_spec.cfg               cpp/qt-1.cpp
 
 30740 sef.cfg                          cpp/sef.cpp
@@ -276,3 +276,4 @@
 33041 bug_i_411a.cfg                   cpp/bug_i_411.cpp
 33042 bug_i_411b.cfg                   cpp/bug_i_411.cpp
 33043 bug_i_478.cfg                    cpp/bug_i_478.cpp
+33044 bug_i_481.cfg                    cpp/bug_i_481.cpp
