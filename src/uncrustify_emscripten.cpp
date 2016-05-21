@@ -76,9 +76,10 @@ int load_option_fileChar(char *configString)
 // unsure about these:
 // -----------------------------------------------------------------------------
 // --check
-// --decode
-// --parsed
-// --detect
+// --decode      TODO ???
+// --parsed, -p  TODO (upstream): see uncrustify
+// --detect      TODO (upstream): needs uncrustify start and end which both are
+//                                static
 //
 //
 // will not be included:
@@ -472,6 +473,20 @@ string uncrustify(string file, bool frag)
       return("");
    }
 
+   // TODO (upstream) One way to implement the --parsed, -p functionality would
+   // be to let the uncrustify_file function run, throw away the formated
+   // output and return the debug as a string. For this uncrustify_file would
+   // need to accept a stream, FILE or a char array pointer in which the output
+   // will be stored.
+   // Another option would be to check, inside the uncrustify_file function,
+   // if the current filename sting matches stdout or stderr and use those as
+   // output locations. This is the easier fix but the debug info in the
+   // browsers console is littered with other unneeded text.
+   // Finally, the ugliest solution, would be also possible to re route
+   // either stdout or stderr inside the Module var of emscripten to a js
+   // function which passes the debug output into a dedicated output js target.
+   // This therefore would introduce the dependency on the user to always have
+   // the output js target available.
    uncrustify_file(fm, stream, NULL);
 
    fflush(stream);
