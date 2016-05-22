@@ -1868,6 +1868,7 @@ void process_option_line(char *configLine, const char* filename)
           }
        }
     }
+#ifndef EMSCRIPTEN
     else if (strcasecmp(args[0], "include") == 0)
     {
        int save_line_no = cpd.line_number;
@@ -1888,6 +1889,7 @@ void process_option_line(char *configLine, const char* filename)
 
        cpd.line_number = save_line_no;
     }
+#endif
     else if (strcasecmp(args[0], "file_ext") == 0)
     {
        if (argc < 3)
