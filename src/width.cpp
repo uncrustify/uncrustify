@@ -299,6 +299,7 @@ static void split_line(chunk_t *start)
    {
       LOG_FMT(LSPLIT, "%s: TRY_SPLIT yielded NO SOLUTION for line %d at %s [%s]\n",
               __func__, start->orig_line, start->text(), get_token_name(start->type));
+      return;
    }
    else
    {
