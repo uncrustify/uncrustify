@@ -27,6 +27,7 @@
 #include <cerrno>
 #include "unc_ctype.h"
 #include "unc_tools.h"
+//#define DEBUG
 
 
 static void newlines_double_space_struct_enum_union(chunk_t *open_brace);
@@ -2519,6 +2520,35 @@ void newlines_cleanup_braces(bool first)
               cpd.settings[UO_nl_create_while_one_liner].b))
          {
             nl_create_one_liner(pc);
+         }
+         if ((((pc->parent_type == CT_IF) ||
+               (pc->parent_type == CT_ELSEIF) ||
+               (pc->parent_type == CT_ELSE)) &&
+              cpd.settings[UO_nl_split_if_one_liner].b) ||
+             ((pc->parent_type == CT_FOR) &&
+              cpd.settings[UO_nl_split_for_one_liner].b) ||
+             ((pc->parent_type == CT_WHILE) &&
+              cpd.settings[UO_nl_split_while_one_liner].b))
+         {
+            if (pc->flags & PCF_ONE_LINER)
+            {
+               // split one-liner
+               chunk_t *temp;
+               chunk_t *end = chunk_get_next(chunk_get_next_type(pc->next, CT_SEMICOLON, -1));
+               /* Scan for clear flag */
+#ifdef DEBUG
+               LOG_FMT(LGUY, "(%d) ", __LINE__);
+#endif
+               LOG_FMT(LGUY, "\n");
+               for (temp = pc; temp != end; temp = chunk_get_next(temp))
+               {
+                  LOG_FMT(LGUY, "%s type=%s , level=%d", temp->text(), get_token_name(temp->type), temp->level);
+                  log_pcf_flags(LGUY, temp->flags);
+                  chunk_flags_clr(temp, PCF_ONE_LINER);
+               }
+               // split
+               newline_add_between(pc, pc->next);
+            }
          }
       }
       else if (pc->type == CT_VBRACE_CLOSE)

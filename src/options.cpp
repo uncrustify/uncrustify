@@ -1004,6 +1004,15 @@ void register_options(void)
    unc_add_option("nl_create_while_one_liner", UO_nl_create_while_one_liner, AT_BOOL,
                   "Change simple unbraced while statements into a one-liner\n"
                   "'while (i<5)\\n foo(i++);' => 'while (i<5) foo(i++);'");
+   unc_add_option("nl_split_if_one_liner", UO_nl_split_if_one_liner, AT_BOOL,
+                  " Change a one-liner if statement into simple unbraced if\n"
+                  "'if(b) i++;' => 'if(b) i++;'");
+   unc_add_option("nl_split_for_one_liner", UO_nl_split_for_one_liner, AT_BOOL,
+                  "Change a one-liner for statement into simple unbraced for\n"
+                  "'for (i=0;<5;i++) foo(i);' => 'for (i=0;<5;i++) foo(i);'");
+   unc_add_option("nl_split_while_one_liner", UO_nl_split_while_one_liner, AT_BOOL,
+                  "Change simple unbraced while statements into a one-liner while\n"
+                  "'while (i<5)\\n foo(i++);' => 'while (i<5) foo(i++);'");
 
    unc_begin_group(UG_blankline, "Blank line options", "Note that it takes 2 newlines to get a blank line");
    unc_add_option("nl_max", UO_nl_max, AT_NUM,

@@ -4,10 +4,14 @@ Change highlights in uncrustify-0.xx (xxx 2016)
 New:
 
 New options:
+ - nl_split_if_one_liner
+ - nl_split_for_one_liner
+ - nl_split_while_one_liner
  - nl_after_func_class_proto
  - nl_after_func_class_proto_group
 
 Bugfix:
+ - Proposal #409 is implemented
  - Issue #481 is fixed
  - Issue #478 is fixed
  - Issue #411 is partialy fixed

@@ -614,9 +614,16 @@ enum uncrustify_options
    UO_nl_create_if_one_liner,         // Change simple unbraced if statements into a one-liner
                                       // 'if(b)\n i++;' => 'if(b) i++;'
    UO_nl_create_for_one_liner,        // Change simple unbraced for statements into a one-liner
-                                      // 'for (i=0;i<5;i++)\n foo(i);' => 'for (i=0;<5;i++) foo(i);'
+                                      // 'for (i=0;i<5;i++)\n foo(i);' => 'for (i=0;i<5;i++) foo(i);'
    UO_nl_create_while_one_liner,      // Change simple unbraced while statements into a one-liner
                                       // 'while (i<5)\n foo(i++);' => 'while (i<5) foo(i++);'
+                                      // Change that back:
+   UO_nl_split_if_one_liner,          // Change a one-liner for statement into simple unbraced for 
+                                      // 'if(b) i++;' => 'if(b)\n i++;'
+   UO_nl_split_for_one_liner,         // Change a one-liner while statement into simple unbraced while 
+                                      // 'for (i=0;i<5;i++) foo(i);' => 'for (i=0;i<5;i++)\n foo(i);'
+   UO_nl_split_while_one_liner,       // Change a one-liner if statement into simple unbraced if 
+                                      // 'while (i<5) foo(i++);' => 'while (i<5)\n foo(i++);'
 
    UO_nl_oc_msg_args,                 // Whether to put each OC message parameter on a separate line
                                       // See nl_oc_msg_leave_one_liner

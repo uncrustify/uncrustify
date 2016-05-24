@@ -297,37 +297,44 @@ static void split_line(chunk_t *start)
 
    if (ent.pc == NULL)
    {
-      LOG_FMT(LSPLIT, "%s: TRY_SPLIT yielded NO SOLUTION for line %d at %s [%s]\n",
+      LOG_FMT(LSPLIT, "\n%s:    TRY_SPLIT yielded NO SOLUTION for line %d at %s [%s]\n",
               __func__, start->orig_line, start->text(), get_token_name(start->type));
-      return;
    }
    else
    {
-      LOG_FMT(LSPLIT, "%s: TRY_SPLIT yielded '%s' [%s] on line %d\n", __func__,
+      LOG_FMT(LSPLIT, "\n%s:    TRY_SPLIT yielded '%s' [%s] on line %d\n", __func__,
               ent.pc->text(), get_token_name(ent.pc->type), ent.pc->orig_line);
+      LOG_FMT(LGUY, "%s: ent at %s, col=%d\n", __func__, ent.pc->text(), ent.pc->orig_col);
    }
 
    /* Break before the token instead of after it according to the pos_xxx rules */
-   LOG_FMT(LGUY, "%s: ent at %s, col=%d\n", __func__, ent.pc->text(), ent.pc->orig_col);
-   if (((chunk_is_token(ent.pc, CT_ARITH) || chunk_is_token(ent.pc, CT_CARET)) &&
-        (cpd.settings[UO_pos_arith].tp & TP_LEAD)) ||
-       (chunk_is_token(ent.pc, CT_ASSIGN) &&
-        (cpd.settings[UO_pos_assign].tp & TP_LEAD)) ||
-       (chunk_is_token(ent.pc, CT_COMPARE) &&
-        (cpd.settings[UO_pos_compare].tp & TP_LEAD)) ||
-       ((chunk_is_token(ent.pc, CT_COND_COLON) ||
-         chunk_is_token(ent.pc, CT_QUESTION)) &&
-        (cpd.settings[UO_pos_conditional].tp & TP_LEAD)) ||
-       (chunk_is_token(ent.pc, CT_BOOL) &&
-        (cpd.settings[UO_pos_bool].tp & TP_LEAD)))
+   if (ent.pc == NULL)
    {
-      pc = ent.pc;
+      pc = NULL;
    }
    else
    {
-      pc = chunk_get_next(ent.pc);
+      if (((chunk_is_token(ent.pc, CT_ARITH) || chunk_is_token(ent.pc, CT_CARET)) &&
+           (cpd.settings[UO_pos_arith].tp & TP_LEAD)) ||
+          (chunk_is_token(ent.pc, CT_ASSIGN) &&
+           (cpd.settings[UO_pos_assign].tp & TP_LEAD)) ||
+          (chunk_is_token(ent.pc, CT_COMPARE) &&
+           (cpd.settings[UO_pos_compare].tp & TP_LEAD)) ||
+          ((chunk_is_token(ent.pc, CT_COND_COLON) ||
+            chunk_is_token(ent.pc, CT_QUESTION)) &&
+           (cpd.settings[UO_pos_conditional].tp & TP_LEAD)) ||
+          (chunk_is_token(ent.pc, CT_BOOL) &&
+           (cpd.settings[UO_pos_bool].tp & TP_LEAD)))
+      {
+         pc = ent.pc;
+      }
+      else
+      {
+         pc = chunk_get_next(ent.pc);
+      }
+      LOG_FMT(LGUY, "%s: at %s, col=%d\n", __func__, pc->text(), pc->orig_col);
    }
-   LOG_FMT(LGUY, "%s: at %s, col=%d\n", __func__, pc->text(), pc->orig_col);
+
    if (pc == NULL)
    {
       pc = start;
