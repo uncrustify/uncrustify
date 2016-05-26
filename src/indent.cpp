@@ -16,6 +16,7 @@
 #include <cstring>
 #include <cerrno>
 #include "unc_ctype.h"
+//#include "unc_tools.h"
 //#define DEBUG
 
 
@@ -330,6 +331,11 @@ static void indent_pse_push(struct parse_frame& frm, chunk_t *pc)
    {
       /* Bump up the index and initialize it */
       frm.pse_tos++;
+#ifdef DEBUG
+      LOG_FMT(LGUY, "(%d) ", __LINE__);
+#endif
+      LOG_FMT(LGUY, "%s line=%d, +++++++++++++++++++ pse_tos=%d, type=%s\n",
+              __func__, pc->orig_line, frm.pse_tos, get_token_name(pc->type));
       memset(&frm.pse[frm.pse_tos], 0, sizeof(frm.pse[frm.pse_tos]));
 
       //LOG_FMT(LINDPSE, "%s[line %d]:%d] (pp=%d) OPEN  [%d,%s] level=%d\n",
@@ -390,6 +396,11 @@ static void indent_pse_pop(struct parse_frame& frm, chunk_t *pc)
        * just-popped indent values
        */
       frm.pse_tos--;
+#ifdef DEBUG
+      LOG_FMT(LGUY, "(%d) ", __LINE__);
+#endif
+      LOG_FMT(LGUY, "%s line=%d, ------------------- pse_tos=%d, type=%s\n",
+              __func__, pc->orig_line, frm.pse_tos, get_token_name(pc->type));
    }
 }
 
@@ -885,6 +896,10 @@ void indent_text(void)
       } while (old_pse_tos > frm.pse_tos);
 
       /* Grab a copy of the current indent */
+#ifdef DEBUG
+      LOG_FMT(LGUY, "(%d) ", __LINE__);
+#endif
+      LOG_FMT(LGUY, "frm.pse_tos=%d\n", frm.pse_tos);
       indent_column_set(frm.pse[frm.pse_tos].indent_tmp);
 
       if (!chunk_is_newline(pc) && !chunk_is_comment(pc) && log_sev_on(LINDPC))
@@ -1609,6 +1624,14 @@ void indent_text(void)
       else if ((pc->type == CT_OC_SCOPE) || (pc->type == CT_TYPEDEF))
       {
          indent_pse_push(frm, pc);
+         // Issue # 405
+         frm.pse[frm.pse_tos].indent     = frm.pse[frm.pse_tos - 1].indent;
+         frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
+#ifdef DEBUG
+         LOG_FMT(LGUY, "(%d) ", __LINE__);
+#endif
+         LOG_FMT(LGUY, "%s: .indent=%d, .indent_tmp=%d\n",
+                 __func__, frm.pse[frm.pse_tos].indent, frm.pse[frm.pse_tos].indent_tmp);
          if (cpd.settings[UO_indent_continue].n != 0)
          {
             //frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent +
@@ -1881,8 +1904,19 @@ void indent_text(void)
          {
             /* This is a big hack. We assume that since we hit a paren close,
              * that we just removed a paren open */
+#ifdef DEBUG
+            LOG_FMT(LGUY, "(%d) ", __LINE__);
+#endif
+            LOG_FMT(LGUY, "%s: indent_column is %d\n",
+                    __func__, indent_column);
             if (frm.pse[frm.pse_tos + 1].type == c_token_t(pc->type - 1))
             {
+               // Issue # 405
+#ifdef DEBUG
+               LOG_FMT(LGUY, "(%d) ", __LINE__);
+#endif
+               LOG_FMT(LGUY, "%s: [%d:%d] [%s:%s]\n",
+                       __func__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
                chunk_t *ck1 = frm.pse[frm.pse_tos + 1].pc;
                chunk_t *ck2 = chunk_get_prev(ck1);
 
@@ -1891,18 +1925,58 @@ void indent_text(void)
                if (chunk_is_newline(ck2) ||
                    (cpd.settings[UO_indent_paren_close].n == 1))
                {
+#ifdef DEBUG
+                  LOG_FMT(LGUY, "(%d) ", __LINE__);
+#endif
+                  LOG_FMT(LGUY, "%s: [%d:%d] indent_paren_close is 1\n",
+                          __func__, ck2->orig_line, ck2->orig_col);
                   indent_column_set(ck1->column);
+#ifdef DEBUG
+                  LOG_FMT(LGUY, "(%d) ", __LINE__);
+#endif
+                  LOG_FMT(LGUY, "%s: [%d:%d] indent_column set to %d\n",
+                          __func__, ck2->orig_line, ck2->orig_col, indent_column);
                }
                else
                {
                   if (cpd.settings[UO_indent_paren_close].n != 2)
                   {
+                     // 0 or 1
+#ifdef DEBUG
+                     LOG_FMT(LGUY, "(%d) ", __LINE__);
+#endif
+                     LOG_FMT(LGUY, "%s: [%d:%d] indent_paren_close is 0 or 1\n",
+                             __func__, ck2->orig_line, ck2->orig_col);
                      indent_column_set(frm.pse[frm.pse_tos + 1].indent_tmp);
+#ifdef DEBUG
+                     LOG_FMT(LGUY, "(%d) ", __LINE__);
+#endif
+                     LOG_FMT(LGUY, "%s: [%d:%d] indent_column set to %d\n",
+                             __func__, ck2->orig_line, ck2->orig_col, indent_column);
                      pc->column_indent = frm.pse[frm.pse_tos + 1].indent_tab;
                      if (cpd.settings[UO_indent_paren_close].n == 1)
                      {
+#ifdef DEBUG
+                        LOG_FMT(LGUY, "(%d) ", __LINE__);
+#endif
+                        LOG_FMT(LGUY, "%s: [%d:%d] indent_paren_close is 1\n",
+                                __func__, ck2->orig_line, ck2->orig_col);
                         indent_column--;
+#ifdef DEBUG
+                        LOG_FMT(LGUY, "(%d) ", __LINE__);
+#endif
+                        LOG_FMT(LGUY, "%s: [%d:%d] indent_column set to %d\n",
+                                __func__, ck2->orig_line, ck2->orig_col, indent_column);
                      }
+                  }
+                  else
+                  {
+                     // 2
+#ifdef DEBUG
+                     LOG_FMT(LGUY, "(%d) ", __LINE__);
+#endif
+                     LOG_FMT(LGUY, "%s: [%d:%d] indent_paren_close is 2\n",
+                             __func__, ck2->orig_line, ck2->orig_col);
                   }
                }
             }

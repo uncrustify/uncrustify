@@ -280,3 +280,4 @@
 33045 bug_i_width.cfg                  cpp/bug_i_width.cpp
 33046 bug_i_409-split.cfg              cpp/bug_i_409.cpp
 33047 bug_i_409-create.cfg             cpp/bug_i_409.cpp
+33048 bug_i_405.cfg                    cpp/bug_i_405.cpp
