@@ -137,6 +137,11 @@ void tokenize_cleanup(void)
          set_chunk_type(pc, CT_MEMBER);
       }
 
+      if ((pc->type == CT_NULLCOND) && (cpd.lang_flags & LANG_CS))
+      {
+         set_chunk_type(pc, CT_MEMBER);
+      }
+
       /* Determine the version stuff (D only) */
       if (pc->type == CT_D_VERSION)
       {

@@ -115,6 +115,7 @@ typedef enum
    CT_PP,                  /* ## */
    CT_ELLIPSIS,            /* ... */
    CT_RANGE,               /* .. */
+   CT_NULLCOND,            /* ?. */
 
    CT_SEMICOLON,
    CT_VSEMICOLON,          /* virtual semicolon for PAWN */
