@@ -754,6 +754,8 @@ void register_options(void)
                   "Don't split one-line while statements - 'while(a) b++;'");
    unc_add_option("nl_oc_msg_leave_one_liner", UO_nl_oc_msg_leave_one_liner, AT_BOOL,
                   "Don't split one-line OC messages");
+   unc_add_option("nl_oc_block_brace", UO_nl_oc_block_brace, AT_IARF,
+                  "Add or remove newline between Objective-C block signature and '{'");
 
    unc_add_option("nl_start_of_file", UO_nl_start_of_file, AT_IARF,
                   "Add or remove newlines at the start of the file");

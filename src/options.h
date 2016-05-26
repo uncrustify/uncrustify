@@ -628,6 +628,7 @@ enum uncrustify_options
    UO_nl_oc_msg_args,                 // Whether to put each OC message parameter on a separate line
                                       // See nl_oc_msg_leave_one_liner
    UO_nl_oc_msg_leave_one_liner,      // Don't split one-line OC messages
+   UO_nl_oc_block_brace,              // Add or remove newline between Objective-C block signature and '{'
 
    UO_pos_arith,                      // position of trailing/leading arithmetic ops
    UO_pos_assign,                     // position of trailing/leading =

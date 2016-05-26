@@ -2332,8 +2332,13 @@ void newlines_cleanup_braces(bool first)
 
          if ((pc->parent_type == CT_CLASS) && (pc->level == pc->brace_level))
          {
-            newlines_do_else(chunk_get_prev_nnl(pc),
-                             cpd.settings[UO_nl_class_brace].a);
+            newlines_do_else(chunk_get_prev_nnl(pc), cpd.settings[UO_nl_class_brace].a);
+         }
+
+         if (pc->parent_type == CT_OC_BLOCK_EXPR)
+         {
+            // issue # 477
+            newline_iarf_pair(chunk_get_prev(pc), pc, cpd.settings[UO_nl_oc_block_brace].a);
          }
 
          next = chunk_get_next_nnl(pc);
@@ -2439,7 +2444,7 @@ void newlines_cleanup_braces(bool first)
          {
             if ((pc->flags & PCF_ONE_LINER) == 0)
             {
-               /* Make sure the } is preceded by two newlines */
+               /* Make sure the brace is preceded by two newlines */
                prev = chunk_get_prev(pc);
                if (!chunk_is_newline(prev))
                {
