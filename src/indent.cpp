@@ -1014,8 +1014,20 @@ void indent_text(void)
          frm.level++;
          indent_pse_push(frm, pc);
 
+         if (cpd.settings[U0_indent_cs_delegate_brace].b &&
+             (pc->type == CT_BRACE_OPEN) &&
+             (pc->prev->type == CT_LAMBDA || pc->prev->prev->type == CT_LAMBDA))
+         {
+            frm.pse[frm.pse_tos].brace_indent = 1 + ((pc->brace_level+1) * indent_size);
+            indent_column                     = frm.pse[frm.pse_tos].brace_indent;
+            frm.pse[frm.pse_tos].indent       = indent_column + indent_size;
+            frm.pse[frm.pse_tos].indent_tab   = frm.pse[frm.pse_tos].indent;
+            frm.pse[frm.pse_tos].indent_tmp   = frm.pse[frm.pse_tos].indent;
+
+            frm.pse[frm.pse_tos - 1].indent_tmp = frm.pse[frm.pse_tos].indent_tmp;
+         }
          /* any '{' that is inside of a '(' overrides the '(' indent */
-         if (!cpd.settings[UO_indent_paren_open_brace].b &&
+         else if (!cpd.settings[UO_indent_paren_open_brace].b &&
              chunk_is_paren_open(frm.pse[frm.pse_tos - 1].pc) &&
              chunk_is_newline(chunk_get_next_nc(pc)))
          {
