@@ -281,3 +281,4 @@
 33046 bug_i_409-split.cfg              cpp/bug_i_409.cpp
 33047 bug_i_409-create.cfg             cpp/bug_i_409.cpp
 33048 bug_i_405.cfg                    cpp/bug_i_405.cpp
+33049 pp-pragma.cfg                    cpp/pp-pragma.cpp
