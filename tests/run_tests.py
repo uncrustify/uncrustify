@@ -9,6 +9,7 @@
 # *          October 2015
 #
 
+import argparse
 import sys
 import os
 import string
@@ -77,28 +78,13 @@ else:
     MISMATCH_COLOR = FG_RED #REVERSE
     UNSTABLE_COLOR = FGB_CYAN
 
-if os.name == "nt":
-    bin_base_path = '../Win32/Debug'
-else:
-    bin_base_path = '../src'
-
-# log_levels:
-# bit 0: show a diff on unstable or failures
-# bit 1: show passes
-# bit 2: show commands
-log_level = 0
-
-def usage_exit():
-    print("Usage: \n" + sys.argv[0] + " testfile")
-    sys.exit()
-
-def run_tests(test_name, config_name, input_name, lang):
+def run_tests(args, test_name, config_name, input_name, lang):
     # print("Test:  ", test_name)
     # print("Config:", config_name)
     # print("Input: ", input_name)
     # print('Output:', expected_name)
 
-    if not config_name.startswith(os.sep):
+    if not os.path.isabs(config_name):
         config_name = os.path.join('config', config_name)
 
     if test_name[-1] == '!':
@@ -115,8 +101,8 @@ def run_tests(test_name, config_name, input_name, lang):
     except:
         pass
 
-    cmd = "%s/uncrustify -q -c %s -f input/%s %s > %s" % (os.path.abspath(bin_base_path), config_name, input_name, lang, resultname)
-    if log_level & 2:
+    cmd = '"%s" -q -c %s -f input/%s %s > %s' % (args.exe, config_name, input_name, lang, resultname)
+    if args.c:
         print("RUN: " + cmd)
     a = os.system(cmd)
     if a != 0:
@@ -126,7 +112,7 @@ def run_tests(test_name, config_name, input_name, lang):
     try:
         if not filecmp.cmp(resultname, outputname):
             print(MISMATCH_COLOR + "MISMATCH: " + NORMAL + test_name)
-            if log_level & 1:
+            if args.d:
                 cmd = "diff -u %s %s" % (outputname, resultname)
                 sys.stdout.flush()
                 os.system(cmd)
@@ -137,8 +123,8 @@ def run_tests(test_name, config_name, input_name, lang):
 
     # The file in results matches the file in output.
     # Re-run with the output file as the input to check stability.
-    cmd = "%s/uncrustify -q -c %s -f %s %s > %s" % (os.path.abspath(bin_base_path), rerun_config, outputname, lang, resultname)
-    if log_level & 2:
+    cmd = '"%s" -q -c %s -f %s %s > %s' % (args.exe, rerun_config, outputname, lang, resultname)
+    if args.c:
         print("RUN: " + cmd)
     a = os.system(cmd)
     if a != 0:
@@ -148,7 +134,7 @@ def run_tests(test_name, config_name, input_name, lang):
     try:
         if not filecmp.cmp(resultname, outputname):
             print(UNSTABLE_COLOR + "UNSTABLE: " + NORMAL + test_name)
-            if log_level & 1:
+            if args.d:
                 cmd = "diff -u %s %s" % (outputname, resultname)
                 sys.stdout.flush()
                 os.system(cmd)
@@ -158,11 +144,11 @@ def run_tests(test_name, config_name, input_name, lang):
         print(UNSTABLE_COLOR + "MISSING: " + NORMAL + test_name)
         return -1
 
-    if log_level & 4:
+    if args.p:
         print(PASS_COLOR + "PASSED: " + NORMAL + test_name)
     return 0
 
-def process_test_file(filename):
+def process_test_file(args, filename):
     fd = open(filename, "r")
     if fd == None:
         print("Unable to open " + filename)
@@ -179,7 +165,7 @@ def process_test_file(filename):
         lang = ""
         if len(parts) > 3:
             lang = "-l " + parts[3]
-        rt = run_tests(parts[0], parts[1], parts[2], lang)
+        rt = run_tests(args, parts[0], parts[1], parts[2], lang)
         if rt < 0:
             if rt == -1:
                 fail_count += 1
@@ -193,31 +179,29 @@ def process_test_file(filename):
 # entry point
 #
 def main(argv):
-    global log_level
-    args = []
-    the_tests = []
-    for arg in argv:
-        if arg.startswith('-'):
-            for cc in arg[1:]:
-                if cc == 'd':       # show diff on failure
-                    log_level |= 1
-                elif cc == 'c':     # show commands
-                    log_level |= 2
-                elif cc == 'p':     # show passes
-                    log_level |= 4
-                else:
-                    sys.exit('Unknown option "%s"' % (cc))
-        else:
-            args.append(arg)
-
-    if len(args) == 0:
-        the_tests += "c-sharp c cpp d java pawn objective-c vala ecma".split()
+    if os.name == "nt":
+        bin_path = '../win32/Debug/uncrustify.exe'
     else:
-        the_tests += args
+        bin_path = '../src/uncrustify'
+
+    all_tests = "c-sharp c cpp d java pawn objective-c vala ecma".split()
+
+    parser = argparse.ArgumentParser(description='Run uncrustify tests')
+    parser.add_argument('-c', help='show commands', action='store_true')
+    parser.add_argument('-d', help='show diff on failure', action='store_true')
+    parser.add_argument('-p', help='show passes', action='store_true')
+    parser.add_argument('--exe', help='uncrustify executable to test',
+                        type=str, default=bin_path)
+    parser.add_argument('tests', metavar='TEST', help='test(s) to run (default all)',
+                        type=str, default=all_tests, nargs='*')
+    args = parser.parse_args()
+
+    if not os.path.isabs(args.exe):
+        args.exe = os.path.abspath(args.exe)
 
     # do a sanity check on the executable
-    cmd = "%s/uncrustify > %s" % (os.path.abspath(bin_base_path), "usage.txt")
-    if log_level & 2:
+    cmd = '"%s" > %s' % (args.exe, "usage.txt")
+    if args.c:
         print("RUN: " + cmd)
     a = os.system(cmd)
     if a != 0:
@@ -225,15 +209,15 @@ def main(argv):
         return -1
 
     #print args
-    print("Tests: " + str(the_tests))
+    print("Tests: " + str(args.tests))
     pass_count = 0
     fail_count = 0
     unst_count = 0
 
-    for item in the_tests:
+    for item in args.tests:
         if not item.endswith('.test'):
             item += '.test'
-        passfail = process_test_file(item)
+        passfail = process_test_file(args, item)
         if passfail != None:
             pass_count += passfail[0]
             fail_count += passfail[1]
@@ -251,4 +235,4 @@ def main(argv):
         sys.exit(0)
 
 if __name__ == '__main__':
-    sys.exit(main(sys.argv[1:]))
+    sys.exit(main(sys.argv))
