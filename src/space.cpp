@@ -119,6 +119,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
    int      idx;
    argval_t arg;
    chunk_t  *next;
+   chunk_t  *prev;
 
    min_sp = 1;
 
@@ -1169,7 +1170,9 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
 
    if (first->type == CT_PAREN_CLOSE)
    {
-      if (first->flags & PCF_OC_RTYPE) //== CT_OC_RTYPE)
+      if ((first->flags & PCF_OC_RTYPE) /*== CT_OC_RTYPE)*/ &&
+          ((first->parent_type == CT_OC_MSG_DECL) ||
+           (first->parent_type == CT_OC_MSG_SPEC)))
       {
          log_rule("sp_after_oc_return_type");
          return(cpd.settings[UO_sp_after_oc_return_type].a);
@@ -1376,6 +1379,11 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
 
    if ((first->type == CT_PTR_TYPE) && CharTable::IsKw1(second->str[0]))
    {
+      prev = chunk_get_prev(first);
+      if ((prev != NULL) && (prev->type == CT_IN)) {
+         log_rule("sp_deref");
+         return(cpd.settings[UO_sp_deref].a);
+      }
       if ((second->type == CT_QUALIFIER) &&
           (cpd.settings[UO_sp_after_ptr_star_qualifier].a != AV_IGNORE))
       {
@@ -1389,7 +1397,8 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
       }
    }
 
-   if (second->type == CT_PTR_TYPE)
+   if ((second->type == CT_PTR_TYPE) &&
+       (first->type != CT_IN))
    {
       if (cpd.settings[UO_sp_before_ptr_star_func].a != AV_IGNORE)
       {
