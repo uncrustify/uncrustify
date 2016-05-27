@@ -697,6 +697,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\options_for_QT.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\src\output.cpp"
 				>
 			</File>
@@ -803,6 +807,10 @@
 			</File>
 			<File
 				RelativePath="..\src\options.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\options_for_QT.h"
 				>
 			</File>
 			<File
