@@ -1312,6 +1312,15 @@ static void parse_pawn_pattern(tok_ctx& ctx, chunk_t& pc, c_token_t tt)
    pc.type = tt;
    while (!unc_isspace(ctx.peek()))
    {
+      /* end the pattern on an escaped newline */
+      if (ctx.peek() == '\\')
+      {
+         int ch = ctx.peek(1);
+         if ((ch == '\n') || (ch == '\r'))
+         {
+            break;
+         }
+      }
       pc.str.append(ctx.get());
    }
 }
