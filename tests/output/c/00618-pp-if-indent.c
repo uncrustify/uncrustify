@@ -106,7 +106,7 @@ void myfunction(void)
     int i;
     #ifdef COMINL_coTX_MESSAGE_VAR
 	#ifndef COMINL_coMIXED_MODE
-	#pragma MyPragma
+	    #pragma MyPragma
 	    int j;
 	#endif
     #endif
