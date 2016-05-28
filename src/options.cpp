@@ -26,7 +26,7 @@ static map<uncrustify_groups, group_map_value>   group_map;
 static uncrustify_groups                         current_group;
 
 
-static void unc_add_option(const char *name, uncrustify_options id, argtype_e type, const char *short_desc = NULL, const char *long_desc = NULL, int min_val = 0, int max_val = 16);
+static void unc_add_option(const char *name, uncrustify_options id, argtype_e type, const std::string& short_desc = "", const std::string& long_desc = "", int min_val = 0, int max_val = 16);
 
 
 void unc_begin_group(uncrustify_groups id, const char *short_desc,
@@ -45,7 +45,7 @@ void unc_begin_group(uncrustify_groups id, const char *short_desc,
 
 
 void unc_add_option(const char *name, uncrustify_options id, argtype_e type,
-                    const char *short_desc, const char *long_desc,
+                    const std::string& short_desc, const std::string& long_desc,
                     int min_val, int max_val)
 {
 #define OptionMaxLength 60
@@ -140,7 +140,7 @@ const option_map_value *unc_find_option(const char *name)
 
    for (option_name_map_it it = option_name_map.begin(); it != itE; it++)
    {
-      if (match_text(it->second.name, name))
+      if (match_text(it->second.name.c_str(), name))
       {
          return(&it->second);
       }
@@ -1572,7 +1572,7 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
       if (strcasecmp(val, "AUTO") != 0)
       {
          LOG_FMT(LWARN, "%s:%d Expected AUTO, LF, CRLF, or CR for %s, got %s\n",
-                 cpd.filename, cpd.line_number, entry->name, val);
+                 cpd.filename, cpd.line_number, entry->name.c_str(), val);
          cpd.error_count++;
       }
       dest->le = LE_AUTO;
@@ -1620,7 +1620,7 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
       {
          LOG_FMT(LWARN, "%s:%d Expected IGNORE, JOIN, LEAD, LEAD_BREAK, LEAD_FORCE, "
                  "TRAIL, TRAIL_BREAK, TRAIL_FORCE for %s, got %s\n",
-                 cpd.filename, cpd.line_number, entry->name, val);
+                 cpd.filename, cpd.line_number, entry->name.c_str(), val);
          cpd.error_count++;
       }
       dest->tp = TP_IGNORE;
@@ -1652,7 +1652,7 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
          }
       }
       LOG_FMT(LWARN, "%s:%d Expected a number for %s, got %s\n",
-              cpd.filename, cpd.line_number, entry->name, val);
+              cpd.filename, cpd.line_number, entry->name.c_str(), val);
       cpd.error_count++;
       dest->n = 0;
       return;
@@ -1689,7 +1689,7 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
          return;
       }
       LOG_FMT(LWARN, "%s:%d Expected 'True' or 'False' for %s, got %s\n",
-              cpd.filename, cpd.line_number, entry->name, val);
+              cpd.filename, cpd.line_number, entry->name.c_str(), val);
       cpd.error_count++;
       dest->b = false;
       return;
@@ -1729,7 +1729,7 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
       return;
    }
    LOG_FMT(LWARN, "%s:%d Expected 'Add', 'Remove', 'Force', or 'Ignore' for %s, got %s\n",
-           cpd.filename, cpd.line_number, entry->name, val);
+           cpd.filename, cpd.line_number, entry->name.c_str(), val);
    cpd.error_count++;
    dest->a = AV_IGNORE;
 } // convert_value
@@ -1968,8 +1968,8 @@ int save_option_file_kernel(FILE *pfile, bool withDoc, bool only_not_default)
    const char *val_str;
    int        val_len;
    int        name_len;
-   int        idx;
    int        count_the_not_default_options = 0;
+   std::string::size_type idx;
 
    fprintf(pfile, "# Uncrustify %s\n", UNCRUSTIFY_VERSION);
 
@@ -1989,19 +1989,22 @@ int save_option_file_kernel(FILE *pfile, bool withDoc, bool only_not_default)
       {
          const option_map_value *option = get_option_name(*it);
 
-         if (withDoc && (option->short_desc != NULL) && (*option->short_desc != 0))
+         if (withDoc && !option->short_desc.empty())
          {
             fprintf(pfile, "%s# ", first ? "" : "\n");
-            for (idx = 0; option->short_desc[idx] != 0; idx++)
+
+            const std::string::size_type short_descLenM1 = option->short_desc.length() - 1;
+
+            for (idx = 0; idx <= short_descLenM1; idx++)
             {
                fputc(option->short_desc[idx], pfile);
                if ((option->short_desc[idx] == '\n') &&
-                   (option->short_desc[idx + 1] != 0))
+                   ( idx + 1 < short_descLenM1))
                {
                   fputs("# ", pfile);
                }
             }
-            if (option->short_desc[idx - 1] != '\n')
+            if (option->short_desc[idx] != '\n')
             {
                fputc('\n', pfile);
             }
@@ -2010,7 +2013,7 @@ int save_option_file_kernel(FILE *pfile, bool withDoc, bool only_not_default)
          val_string = op_val_to_string(option->type, cpd.settings[option->id]);
          val_str    = val_string.c_str();
          val_len    = strlen(val_str);
-         name_len   = strlen(option->name);
+         name_len   = option->name.length();
 
          // guy
          bool print_option = true;
@@ -2034,7 +2037,7 @@ int save_option_file_kernel(FILE *pfile, bool withDoc, bool only_not_default)
          {
             int pad = (name_len < MAX_OPTION_NAME_LEN) ? (MAX_OPTION_NAME_LEN - name_len) : 1;
             fprintf(pfile, "%s%*.s= ",
-                    option->name, pad, " ");
+                    option->name.c_str(), pad, " ");
             if (option->type == AT_STRING)
             {
                fprintf(pfile, "\"%s\"", val_str);
@@ -2125,8 +2128,6 @@ int save_option_file(FILE *pfile, bool withDoc)
 
 void print_options(FILE *pfile)
 {
-   const char *text;
-
    const char *names[] =
    {
       "{ False, True }",
@@ -2147,26 +2148,24 @@ void print_options(FILE *pfile)
       for (option_list_it it = jt->second.options.begin(); it != jt->second.options.end(); it++)
       {
          const option_map_value *option = get_option_name(*it);
-         int                    cur     = strlen(option->name);
-         int                    pad     = (cur < MAX_OPTION_NAME_LEN) ? (MAX_OPTION_NAME_LEN - cur) : 1;
+         int cur = option->name.length();
+         int pad = (cur < MAX_OPTION_NAME_LEN) ? (MAX_OPTION_NAME_LEN - cur) : 1;
          fprintf(pfile, "%s%*c%s\n",
-                 option->name,
+                 option->name.c_str(),
                  pad, ' ',
                  names[option->type]);
 
-         text = option->short_desc;
-
-         if (text != NULL)
+         if (!option->short_desc.empty())
          {
             fputs("  ", pfile);
-            while (*text != 0)
+            const std::string::size_type textLen = option->short_desc.length();
+            for( std::string::size_type i = 0; i < textLen; i++ )
             {
-               fputc(*text, pfile);
-               if (*text == '\n')
+               fputc(option->short_desc[i], pfile);
+               if (option->short_desc[i] == '\n')
                {
                   fputs("  ", pfile);
                }
-               text++;
             }
          }
          fputs("\n\n", pfile);

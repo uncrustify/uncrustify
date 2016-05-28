@@ -85,8 +85,8 @@ void print_universal_indent_cfg(FILE *pfile)
 
          // Create a better readable name from the options name
          // by replacing '_' by a space and use some upper case characters.
-         char *optionNameReadable = new char[strlen(option->name) + 1];
-         strcpy(optionNameReadable, option->name);
+         char *optionNameReadable = new char[option->name.length() + 1];
+         strcpy(optionNameReadable, option->name.c_str());
 
          bool was_space = true;
          for (char *character = optionNameReadable; *character != 0; character++)
@@ -114,14 +114,14 @@ void print_universal_indent_cfg(FILE *pfile)
 #else    // DEBUG
          fprintf(pfile, "Description=\"<html>");
 #endif // DEBUG
-
-         const char *tmp = option->short_desc;
          ch = 0;
 
          /* Output the decription which may contain forbidden chars */
-         while (*tmp != 0)
+         const std::string::size_type descLen = option->short_desc.length();
+         for(std::string::size_type i = 0; i < descLen; i++)
          {
-            switch (*tmp)
+            char cur_char = option->short_desc[i];
+            switch (cur_char)
             {
             case '<':
                fprintf(pfile, "&lt;");
@@ -140,9 +140,8 @@ void print_universal_indent_cfg(FILE *pfile)
                break;
 
             default:
-               fputc(*tmp, pfile);
+               fputc(cur_char, pfile);
             }
-            tmp++;
          }
 
          fprintf(pfile, "</html>\"\n");
@@ -155,7 +154,7 @@ void print_universal_indent_cfg(FILE *pfile)
          case UO_indent_with_tabs:
             fprintf(pfile, "Enabled=true\n");
             fprintf(pfile, "EditorType=multiple\n");
-            fprintf(pfile, "Choices=\"%s=0|%s=1|%s=2\"\n", option->name, option->name, option->name);
+            fprintf(pfile, "Choices=\"%s=0|%s=1|%s=2\"\n", option->name.c_str(), option->name.c_str(), option->name.c_str());
             fprintf(pfile, "ChoicesReadable=\"Spaces only|Indent with tabs, align with spaces|Indent and align with tabs\"\n");
             fprintf(pfile, "ValueDefault=%d\n", cpd.settings[option->id].n);
             break;
@@ -174,14 +173,14 @@ void print_universal_indent_cfg(FILE *pfile)
                // EditorType=boolean
                // TrueFalse="align_keep_tabs=true|align_keep_tabs=false"
                fprintf(pfile, "EditorType=boolean\n");
-               fprintf(pfile, "TrueFalse=%s=true|%s=false\n", option->name, option->name);
+               fprintf(pfile, "TrueFalse=%s=true|%s=false\n", option->name.c_str(), option->name.c_str());
                fprintf(pfile, "ValueDefault=%d\n", cpd.settings[option->id].n);
                break;
 
             case AT_IARF:
                fprintf(pfile, "EditorType=multiple\n");
                fprintf(pfile, "Choices=\"%s=ignore|%s=add|%s=remove|%s=force\"\n",
-                       option->name, option->name, option->name, option->name);
+                       option->name.c_str(), option->name.c_str(), option->name.c_str(), option->name.c_str());
                fprintf(pfile, "ChoicesReadable=\"Ignore %s|Add %s|Remove %s|Force %s\"\n",
                        optionNameReadable, optionNameReadable, optionNameReadable, optionNameReadable);
                fprintf(pfile, "ValueDefault=%d\n", cpd.settings[option->id].n);
@@ -207,7 +206,7 @@ void print_universal_indent_cfg(FILE *pfile)
                // Value=0
                // ValueDefault=0
                fprintf(pfile, "EditorType=numeric\n");
-               fprintf(pfile, "CallName=\"%s=\"\n", option->name);
+               fprintf(pfile, "CallName=\"%s=\"\n", option->name.c_str());
                fprintf(pfile, "MinVal=%d\n", option->min_val);
                fprintf(pfile, "MaxVal=%d\n", option->max_val);
                fprintf(pfile, "ValueDefault=%d\n", cpd.settings[option->id].n);
@@ -224,7 +223,7 @@ void print_universal_indent_cfg(FILE *pfile)
                // Choices="newlines=auto|newlines=lf|newlines=crlf|newlines=cr"
                fprintf(pfile, "EditorType=multiple\n");
                fprintf(pfile, "Choices=\"%s=lf|%s=crlf|%s=cr|%s=auto\"\n",
-                       option->name, option->name, option->name, option->name);
+                       option->name.c_str(), option->name.c_str(), option->name.c_str(), option->name.c_str());
                fprintf(pfile, "ChoicesReadable=\"Newlines Unix|Newlines Win|Newlines Mac|Newlines Auto\"\n");
                fprintf(pfile, "ValueDefault=%d\n", cpd.settings[option->id].n);
                break;
@@ -240,8 +239,8 @@ void print_universal_indent_cfg(FILE *pfile)
                // Choices="pos_bool=ignore|pos_bool=lead|pos_bool=trail"
                fprintf(pfile, "EditorType=multiple\n");
                fprintf(pfile, "Choices=\"%s=ignore|%s=lead|%s=lead_break|%s=lead_force|%s=trail|%s=trail_break|%s=trail_force\"\n",
-                       option->name, option->name, option->name, option->name,
-                       option->name, option->name, option->name);
+                       option->name.c_str(), option->name.c_str(), option->name.c_str(), option->name.c_str(),
+                       option->name.c_str(), option->name.c_str(), option->name.c_str());
                fprintf(pfile, "ChoicesReadable=\"Ignore %s|Lead %s|Lead Break %s|Lead Force %s|Trail %s|Trail Break %s|Trail Force %s\"\n",
                        optionNameReadable, optionNameReadable, optionNameReadable,
                        optionNameReadable, optionNameReadable, optionNameReadable,
@@ -251,7 +250,7 @@ void print_universal_indent_cfg(FILE *pfile)
 
             case AT_STRING:
             {
-               fprintf(pfile, "CallName=%s=\n", option->name);
+               fprintf(pfile, "CallName=%s=\n", option->name.c_str());
                fprintf(pfile, "EditorType=string\n");
                string     val_string;
                const char *val_str;

@@ -843,9 +843,9 @@ struct option_map_value
    argtype_e          type;
    int                min_val;
    int                max_val;
-   const char         *name;
-   const char         *short_desc;
-   const char         *long_desc;
+   string             name;
+   string             short_desc;
+   string             long_desc;
 };
 
 
