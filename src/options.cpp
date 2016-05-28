@@ -21,8 +21,7 @@
 #include <algorithm>
 #include "unc_ctype.h"
 
-
-static map<uncrustify_options, option_map_value> option_name_map;
+map<uncrustify_options, option_map_value>      option_name_map;
 static map<uncrustify_groups, group_map_value>   group_map;
 static uncrustify_groups                         current_group;
 
