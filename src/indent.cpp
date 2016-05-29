@@ -399,8 +399,16 @@ static void indent_pse_pop(struct parse_frame& frm, chunk_t *pc)
 #ifdef DEBUG
       LOG_FMT(LGUY, "(%d) ", __LINE__);
 #endif
-      LOG_FMT(LGUY, "%s line=%d, ------------------- pse_tos=%d, type=%s\n",
-              __func__, pc->orig_line, frm.pse_tos, get_token_name(pc->type));
+      if (pc != NULL)
+      {
+         LOG_FMT(LGUY, "%s line=%d, ------------------- pse_tos=%d, type=%s\n",
+                 __func__, pc->orig_line, frm.pse_tos, get_token_name(pc->type));
+      }
+      else
+      {
+         LOG_FMT(LGUY, "%s ------------------- pse_tos=%d\n",
+                 __func__, frm.pse_tos);
+      }
    }
 }
 
