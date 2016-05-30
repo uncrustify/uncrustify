@@ -36,6 +36,7 @@ extern const option_map_value *unc_find_option(const char *name);
 
 
 extern map<uncrustify_options, option_map_value> option_name_map;
+extern map<uncrustify_groups, group_map_value>   group_map;
 
 
 /**
@@ -1309,6 +1310,7 @@ EMSCRIPTEN_BINDINGS(MainModule)
 //    .value( STRINGIFY( LANG_ALLC_ ), lang_flags::LANG_ALLC_ )
 //    .value( STRINGIFY( LANG_ALL_ ), lang_flags::LANG_ALL_ )
 
+
    class_<option_map_value>(STRINGIFY(option_map_value))
       .property(STRINGIFY(id), &option_map_value::id)
       .property(STRINGIFY(group_id), &option_map_value::group_id)
@@ -1319,7 +1321,15 @@ EMSCRIPTEN_BINDINGS(MainModule)
       .property(STRINGIFY(short_desc), &option_map_value_sDesc)
       .property(STRINGIFY(long_desc), &option_map_value_lDesc);
 
+   register_vector<uncrustify_options>(STRINGIFY("options"));
+
+   value_object<group_map_value>(STRINGIFY(group_map_value))
+      .field(STRINGIFY(id), &group_map_value::id)
+      .field(STRINGIFY(options), &group_map_value::options);
+
    register_map<uncrustify_options, option_map_value>(STRINGIFY(option_name_map));
+   register_map<uncrustify_groups, group_map_value>(STRINGIFY(group_map));
+
 
    emscripten::function(STRINGIFY(initialize), &initialize);
    emscripten::function(STRINGIFY(destruct), &destruct);
