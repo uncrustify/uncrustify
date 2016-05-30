@@ -27,7 +27,6 @@
 using namespace std;
 using namespace emscripten;
 
-
 extern void usage_exit( const char *msg, const char *argv0, int code );
 extern int load_header_files();
 extern const char *language_name_from_flags( int lang );
@@ -36,7 +35,7 @@ extern void uncrustify_file( const file_mem& fm, FILE *pfout,
                              bool defer_uncrustify_end = false);
 
 extern map<uncrustify_options, option_map_value> option_name_map;
-
+extern map<uncrustify_groups, group_map_value>   group_map;
 
 // TODO: interface for args:
 // unsure about these:
@@ -1135,8 +1134,14 @@ EMSCRIPTEN_BINDINGS( MainModule )
     .field( STRINGIFY( short_desc ), &option_map_value::short_desc )
     .field( STRINGIFY( long_desc ), &option_map_value::long_desc );
 
-
     register_map<uncrustify_options, option_map_value>( STRINGIFY( option_name_map ) );
+
+
+    register_vector<uncrustify_options>( STRINGIFY( "options" ) );
+    value_object< group_map_value >( STRINGIFY( group_map_value ) )
+    .field( STRINGIFY( id ), &group_map_value::id )
+    .field( STRINGIFY( options ), &group_map_value::options );
+    register_map<uncrustify_groups, group_map_value>( STRINGIFY( group_map ) );
 
 
     emscripten::function( STRINGIFY( show_config ), select_overload< string( bool, bool ) >( &show_config ) );

@@ -21,9 +21,9 @@
 #include <algorithm>
 #include "unc_ctype.h"
 
-map<uncrustify_options, option_map_value>      option_name_map;
-static map<uncrustify_groups, group_map_value>   group_map;
-static uncrustify_groups                         current_group;
+map<uncrustify_options, option_map_value> option_name_map;
+map<uncrustify_groups, group_map_value>   group_map;
+static uncrustify_groups                  current_group;
 
 
 static void unc_add_option(const char *name, uncrustify_options id, argtype_e type, const std::string& short_desc = "", const std::string& long_desc = "", int min_val = 0, int max_val = 16);
