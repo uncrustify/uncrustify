@@ -333,9 +333,9 @@ void tokenize_cleanup(void)
             pc->str.insert(0, prev->str);
             pc->orig_col  = prev->orig_col;
             pc->orig_line = prev->orig_line;
-            chunk_t *tmp = prev;
+            chunk_t *to_be_deleted = prev;
             prev = chunk_get_prev_ncnl(prev);
-            chunk_del(tmp);
+            chunk_del(to_be_deleted);
          }
       }
 

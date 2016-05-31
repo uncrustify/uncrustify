@@ -1780,14 +1780,14 @@ int load_option_file(const char *filename)
          }
          else
          {
-            c_token_t id = find_token_name(args[1]);
-            if (id != CT_NONE)
+            c_token_t token = find_token_name(args[1]);
+            if (token != CT_NONE)
             {
                LOG_FMT(LNOTE, "%s:%d set '%s':", filename, cpd.line_number, args[1]);
                for (idx = 2; idx < argc; idx++)
                {
                   LOG_FMT(LNOTE, " '%s'", args[idx]);
-                  add_keyword(args[idx], id);
+                  add_keyword(args[idx], token);
                }
                LOG_FMT(LNOTE, "\n");
             }
@@ -2035,10 +2035,8 @@ void print_options(FILE *pfile)
       "String",
    };
 
-   option_name_map_it it;
-
    /* Find the max width of the names */
-   for (it = option_name_map.begin(); it != option_name_map.end(); it++)
+   for (option_name_map_it it = option_name_map.begin(); it != option_name_map.end(); it++)
    {
       cur_width = strlen(it->second.name);
       if (cur_width > max_width)

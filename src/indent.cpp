@@ -539,7 +539,6 @@ void indent_text(void)
    int                vardefcol    = 0;
    int                shiftcontcol = 0;
    int                indent_size  = cpd.settings[UO_indent_columns].n;
-   int                tmp;
    struct parse_frame frm;
    bool               in_preproc = false;
    int                indent_column;
@@ -1269,7 +1268,7 @@ void indent_text(void)
       else if (pc->type == CT_CASE)
       {
          /* Start a case - indent UO_indent_switch_case from the switch level */
-         tmp = frm.pse[frm.pse_tos].indent + cpd.settings[UO_indent_switch_case].n;
+         int tmp = frm.pse[frm.pse_tos].indent + cpd.settings[UO_indent_switch_case].n;
 
          indent_pse_push(frm, pc);
 
@@ -1331,7 +1330,7 @@ void indent_text(void)
       {
          if (cpd.settings[UO_indent_access_spec_body].b)
          {
-            tmp = frm.pse[frm.pse_tos].indent + indent_size;
+            int tmp = frm.pse[frm.pse_tos].indent + indent_size;
 
             indent_pse_push(frm, pc);
 
@@ -1740,7 +1739,7 @@ void indent_text(void)
                   tmp->type != CT_SPAREN_CLOSE);
 
          chunk_t *prev_nonl = chunk_get_prev_ncnl(pc);
-         chunk_t *prev      = chunk_get_prev_nc(pc);
+         chunk_t *prev2     = chunk_get_prev_nc(pc);
 
          if (prev_nonl &&
              (chunk_is_semicolon(prev_nonl) || prev_nonl->type == CT_BRACE_OPEN ||
@@ -1753,7 +1752,7 @@ void indent_text(void)
             in_shift = false;
          }
 
-         if (prev && prev->type == CT_NEWLINE && in_shift)
+         if (prev2 && prev2->type == CT_NEWLINE && in_shift)
          {
             shiftcontcol                     = calc_indent_continue(frm, frm.pse_tos);
             frm.pse[frm.pse_tos].indent_cont = true;
@@ -1881,7 +1880,7 @@ void indent_text(void)
                     ((prev->type == CT_MEMBER) ||
                      (prev->type == CT_DC_MEMBER)))))
          {
-            tmp = cpd.settings[UO_indent_member].n + indent_column;
+            int tmp = cpd.settings[UO_indent_member].n + indent_column;
             LOG_FMT(LINDENT, "%s: %d] member => %d\n",
                     __func__, pc->orig_line, tmp);
             reindent_line(pc, tmp);
@@ -1910,7 +1909,7 @@ void indent_text(void)
          else if ((pc->type == CT_STRING) && (prev != NULL) && (prev->type == CT_STRING) &&
                   cpd.settings[UO_indent_align_string].b)
          {
-            tmp = (xml_indent != 0) ? xml_indent : prev->column;
+            int tmp = (xml_indent != 0) ? xml_indent : prev->column;
 
             LOG_FMT(LINDENT, "%s: %d] String => %d\n",
                     __func__, pc->orig_line, tmp);
@@ -2119,7 +2118,7 @@ void indent_text(void)
             if (!frm.pse[frm.pse_tos].non_vardef &&
                 (frm.pse[frm.pse_tos].type == CT_BRACE_OPEN))
             {
-               tmp = indent_column;
+               int tmp = indent_column;
                if (cpd.settings[UO_indent_var_def_blk].n > 0)
                {
                   tmp = cpd.settings[UO_indent_var_def_blk].n;
