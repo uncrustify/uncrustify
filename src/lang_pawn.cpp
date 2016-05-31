@@ -369,6 +369,9 @@ static chunk_t *pawn_process_func_def(chunk_t *pc)
 
    set_chunk_type(pc, CT_FUNC_DEF);
 
+   LOG_FMT(LPFUNC, "%s: %d:%d %s\n", __func__,
+           pc->orig_line, pc->orig_col, pc->text());
+
    /* If we don't have a brace open right after the close fparen, then
     * we need to add virtual braces around the function body.
     */
@@ -421,6 +424,12 @@ static chunk_t *pawn_process_func_def(chunk_t *pc)
    {
       LOG_FMT(LPFUNC, "%s: %d] '%s' fdef: expected brace open: %s\n", __func__,
               pc->orig_line, pc->text(), get_token_name(last->type));
+
+      /* do not insert a vbrace before a preproc */
+      if (last->flags & PCF_IN_PREPROC)
+      {
+         return last;
+      }
 
       chunk_t chunk;
       chunk = *last;
