@@ -110,6 +110,8 @@ void brace_cleanup(void)
    struct parse_frame frm;
    int                pp_level;
 
+   cpd.unc_stage = US_BRACE_CLEANUP;
+
    memset(&frm, 0, sizeof(frm));
 
    cpd.frame_count = 0;

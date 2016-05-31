@@ -98,6 +98,8 @@ void tokenize_cleanup(void)
    chunk_t *tmp2;
    bool    in_type_cast = false;
 
+   cpd.unc_stage = US_TOKENIZE_CLEANUP;
+
    /* Since [] is expected to be TSQUARE for the 'operator', we need to make
     * this change in the first pass.
     */

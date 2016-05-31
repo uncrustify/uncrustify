@@ -32,7 +32,6 @@
 
 static void newlines_double_space_struct_enum_union(chunk_t *open_brace);
 static bool one_liner_nl_ok(chunk_t *pc);
-static void undo_one_liner(chunk_t *pc);
 static void nl_handle_define(chunk_t *pc);
 
 static void newline_iarf_pair(chunk_t *before, chunk_t *after, argval_t av);
@@ -2089,7 +2088,7 @@ static bool one_liner_nl_ok(chunk_t *pc)
  * Clears the PCF_ONE_LINER flag on the current line.
  * Done right before inserting a newline.
  */
-static void undo_one_liner(chunk_t *pc)
+void undo_one_liner(chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
    chunk_t *tmp;
@@ -3060,7 +3059,7 @@ void newlines_eat_start_end(void)
             chunk.orig_line = pc->orig_line;
             chunk.type      = CT_NEWLINE;
             chunk.nl_count  = cpd.settings[UO_nl_end_of_file_min].n;
-            chunk_add(&chunk);
+            chunk_add_before(&chunk, NULL);
             MARK_CHANGE();
          }
       }

@@ -1374,6 +1374,8 @@ static void uncrustify_start(const deque<int>& data)
     */
    tokenize(data, NULL);
 
+   cpd.unc_stage = US_HEADER;
+
    /* Get the column for the fragment indent */
    if (cpd.frag)
    {
@@ -1483,6 +1485,8 @@ static void uncrustify_file(const file_mem& fm, FILE *pfout,
    }
 
    uncrustify_start(data);
+
+   cpd.unc_stage = US_OTHER;
 
    /**
     * Done with detection. Do the rest only if the file will go somewhere.
@@ -1749,6 +1753,8 @@ static void uncrustify_end()
 {
    /* Free all the memory */
    chunk_t *pc;
+
+   cpd.unc_stage = US_CLEANUP;
 
    while ((pc = chunk_get_head()) != NULL)
    {

@@ -106,18 +106,40 @@ chunk_t *chunk_dup(const chunk_t *pc_in)
 }
 
 
-/**
- * Add to the tail of the list
- */
-chunk_t *chunk_add(const chunk_t *pc_in)
+static void chunk_log(chunk_t *pc, const char *text)
 {
-   chunk_t *pc;
-
-   if ((pc = chunk_dup(pc_in)) != NULL)
+   if (pc && (cpd.unc_stage != US_TOKENIZE) && (cpd.unc_stage != US_CLEANUP))
    {
-      g_cl.AddTail(pc);
+      chunk_t *prev = chunk_get_prev(pc);
+      chunk_t *next = chunk_get_next(pc);
+
+      LOG_FMT(LCHUNK, " -- %s: %d:%d '%s' [%s]", text,
+              pc->orig_line, pc->orig_col, pc->text(),
+              get_token_name(pc->type));
+
+      if (prev && next)
+      {
+         LOG_FMT(LCHUNK, " @ between %d:%d '%s' [%s] and %d:%d '%s' [%s]",
+                 prev->orig_line, prev->orig_col, prev->text(),
+                 get_token_name(prev->type),
+                 next->orig_line, next->orig_col, next->text(),
+                 get_token_name(next->type));
+      }
+      else if (next)
+      {
+         LOG_FMT(LCHUNK, " @ before %d:%d '%s' [%s]",
+                 next->orig_line, next->orig_col, next->text(),
+                 get_token_name(next->type));
+      }
+      else if (prev)
+      {
+         LOG_FMT(LCHUNK, " @ after %d:%d '%s' [%s]",
+                 prev->orig_line, prev->orig_col, prev->text(),
+                 get_token_name(prev->type));
+      }
+      LOG_FMT(LCHUNK, " stage=%d", cpd.unc_stage);
+      log_func_stack_inline(LCHUNK);
    }
-   return(pc);
 }
 
 
@@ -139,6 +161,7 @@ chunk_t *chunk_add_after(const chunk_t *pc_in, chunk_t *ref)
       {
          g_cl.AddHead(pc);
       }
+      chunk_log(pc, "chunk_add");
    }
    return(pc);
 }
@@ -162,6 +185,7 @@ chunk_t *chunk_add_before(const chunk_t *pc_in, chunk_t *ref)
       {
          g_cl.AddTail(pc);
       }
+      chunk_log(pc, "chunk_add");
    }
    return(pc);
 }
@@ -169,12 +193,8 @@ chunk_t *chunk_add_before(const chunk_t *pc_in, chunk_t *ref)
 
 void chunk_del(chunk_t *pc)
 {
+   chunk_log(pc, "chunk_del");
    g_cl.Pop(pc);
-   //if ((pc->flags & PCF_OWN_STR) && (pc->str != NULL))
-   //{
-   //   delete[] (char *)pc->str;
-   //   pc->str = NULL;
-   //}
    delete pc;
 }
 

@@ -1272,6 +1272,8 @@ void fix_symbols(void)
    chunk_t *prev;
    chunk_t dummy;
 
+   cpd.unc_stage = US_FIX_SYMBOLS;
+
    mark_define_expressions();
 
    bool is_java = (cpd.lang_flags & LANG_JAVA) != 0;   // forcing value to bool
@@ -2448,6 +2450,8 @@ void combine_labels(void)
    chunk_t *tmp;
    bool    hit_case  = false;
    bool    hit_class = false;
+
+   cpd.unc_stage = US_COMBINE_LABELS;
 
    // need a stack to handle nesting inside of OC messages, which reset the scope
    std::stack<int> question_counts;
@@ -4141,6 +4145,8 @@ void mark_comments(void)
    chunk_t *next;
    bool    prev_nl = true;
    bool    next_nl;
+
+   cpd.unc_stage = US_MARK_COMMENTS;
 
    cur = chunk_get_head();
 

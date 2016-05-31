@@ -108,6 +108,7 @@ enum log_sev_t
    LSETTYP   = 92, /* set_chunk_type() */
    LSETFLG   = 93, /* set_chunk_flags() */
    LNLFUNCT  = 94, /* newlines before function */
+   LCHUNK    = 95, /* Add or del chunk */
    LGUY98    = 98, /* for guy-test */
    LGUY      = 99, /* for guy-test */
 };

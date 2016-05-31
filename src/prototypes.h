@@ -155,6 +155,7 @@ void annotations_newlines(void);
 void newline_after_multiline_comment(void);
 void newline_after_label_colon(void);
 void do_blank_lines(void);
+void undo_one_liner(chunk_t *pc);
 
 void newline_iarf(chunk_t *pc, argval_t av);
 

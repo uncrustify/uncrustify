@@ -363,12 +363,27 @@ struct file_mem
 #endif
 };
 
+enum unc_stage
+{
+   US_TOKENIZE,
+   US_HEADER,
+   US_TOKENIZE_CLEANUP,
+   US_BRACE_CLEANUP,
+   US_FIX_SYMBOLS,
+   US_MARK_COMMENTS,
+   US_COMBINE_LABELS,
+   US_OTHER,
+
+   US_CLEANUP
+};
+
 struct cp_data
 {
    deque<UINT8>       *bout;
    FILE               *fout;
    int                last_char;
    bool               do_check;
+   enum unc_stage     unc_stage;
    int                check_fail_cnt; // total failures
 
    UINT32             error_count;
