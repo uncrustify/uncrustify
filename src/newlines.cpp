@@ -3060,7 +3060,7 @@ void newlines_eat_start_end(void)
             chunk.orig_line = pc->orig_line;
             chunk.type      = CT_NEWLINE;
             chunk.nl_count  = cpd.settings[UO_nl_end_of_file_min].n;
-            chunk_add(&chunk);
+            chunk_add_before(&chunk, NULL);
             MARK_CHANGE();
          }
       }
