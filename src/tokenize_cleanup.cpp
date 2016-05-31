@@ -492,11 +492,33 @@ void tokenize_cleanup(void)
       }
 
       /* Look for <newline> 'EXEC' 'SQL' */
-      if (chunk_is_str(pc, "EXEC", 4) && chunk_is_str(next, "SQL", 3))
+      if ((chunk_is_str(pc, "EXEC", 4) && chunk_is_str(next, "SQL", 3)) ||
+          ((*pc->str == '$') && (pc->type != CT_SQL_WORD)))
       {
          tmp = chunk_get_prev(pc);
          if (chunk_is_newline(tmp))
          {
+            if (*pc->str == '$')
+            {
+               set_chunk_type(pc, CT_SQL_EXEC);
+               if (pc->len() > 1)
+               {
+                  /* SPLIT OFF '$' */
+                  chunk_t nc;
+
+                  nc = *pc;
+                  pc->str.resize(1);
+                  pc->orig_col_end = pc->orig_col + 1;
+
+                  nc.type = CT_SQL_WORD;
+                  nc.str.pop_front();
+                  nc.orig_col++;
+                  nc.column++;
+                  chunk_add_after(&nc, pc);
+
+                  next = chunk_get_next(pc);
+               }
+            }
             tmp = chunk_get_next(next);
             if (chunk_is_str_case(tmp, "BEGIN", 5))
             {
@@ -518,7 +540,7 @@ void tokenize_cleanup(void)
                {
                   break;
                }
-               if ((tmp->len() > 0) && unc_isalpha(*tmp->str))
+               if ((tmp->len() > 0) && (unc_isalpha(*tmp->str) || (*tmp->str == '$')))
                {
                   set_chunk_type(tmp, CT_SQL_WORD);
                }
