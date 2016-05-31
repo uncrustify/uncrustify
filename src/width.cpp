@@ -11,7 +11,7 @@
 #include "prototypes.h"
 #include <cstdlib>
 
-static void split_line(chunk_t *pc);
+static bool split_line(chunk_t *pc);
 static void split_fcn_params(chunk_t *start);
 static void split_fcn_params_full(chunk_t *start);
 static void split_for_stmt(chunk_t *start);
@@ -62,7 +62,12 @@ void do_code_width(void)
           (pc->type != CT_SPACE) &&
           is_past_width(pc))
       {
-         split_line(pc);
+         if (!split_line(pc))
+         {
+            LOG_FMT(LSPLIT, "%s: Bailed on %d:%d %s\n", __func__,
+                    pc->orig_line, pc->orig_col, pc->text());
+            break;
+         }
       }
    }
 }
@@ -223,7 +228,7 @@ static void try_split_here(cw_entry& ent, chunk_t *pc)
  *
  * @param start The first chunk that exceeded the limit
  */
-static void split_line(chunk_t *start)
+static bool split_line(chunk_t *start)
 {
    LOG_FUNC_ENTRY();
    LOG_FMT(LGUY, "%s: line %d, col %d token: %s\n",
@@ -236,6 +241,13 @@ static void split_line(chunk_t *start)
    /**
     * break at maximum line length if ls_code_width is true
     */
+   if (start->flags & PCF_ONE_LINER) {
+      LOG_FMT(LSPLIT, " ** ONCE LINER SPLIT **\n");
+      undo_one_liner(start);
+      newlines_cleanup_braces(false);
+      return false;
+   }
+
    if (cpd.settings[UO_ls_code_width].b)
    {
    }
@@ -246,7 +258,7 @@ static void split_line(chunk_t *start)
       split_for_stmt(start);
       if (!is_past_width(start))
       {
-         return;
+         return true;
       }
       LOG_FMT(LSPLIT, "%s: for split didn't work\n", __func__);
    }
@@ -265,11 +277,11 @@ static void split_line(chunk_t *start)
          split_fcn_params_full(start);
          if (!is_past_width(start))
          {
-            return;
+            return true;
          }
       }
       split_fcn_params(start);
-      return;
+      return true;
    }
 
    /**
@@ -355,7 +367,7 @@ static void split_line(chunk_t *start)
          LOG_FMT(LSPLIT, " ** NO GO **\n");
 
          /*TODO: Add in logic to handle 'hard' limits by backing up a token */
-         return;
+         return true;
       }
    }
 
@@ -374,6 +386,7 @@ static void split_line(chunk_t *start)
 
       split_before_chunk(pc);
    }
+   return true;
 } // split_line
 
 
