@@ -1,0 +1,8 @@
+#if AMXX_VERSION_NUM < 183
+public client_disconnect( player_id )
+#else
+public client_disconnected( player_id )
+#endif
+{
+
+}
