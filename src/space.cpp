@@ -1319,7 +1319,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
       log_rule("ADD");
       return(AV_ADD);
    }
-   
+
    if (first->type == CT_NULLCOND || second->type == CT_NULLCOND)
    {
       log_rule("sp_member");

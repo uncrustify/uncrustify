@@ -4,6 +4,7 @@ Change highlights in uncrustify-0.xx (xxx 2016)
 New:
 
 New options:
+ - indent_cs_delegate_brace
  - nl_oc_block_brace
  - nl_split_if_one_liner
  - nl_split_for_one_liner
@@ -12,12 +13,9 @@ New options:
  - nl_after_func_class_proto_group
 
 Bugfix:
- - Issue #495 is fixed
- - Proposal #477 is implemented
- - Issue #405 is fixed
- - Proposal #409 is implemented
- - Issue #481 is fixed
- - Issue #478 is fixed
+ - Bug # 620 is fixed
+ - Issues #478 #481 #405, #495 are fixed
+ - Proposal #409, #477 are implemented
  - Issue #411 is partialy fixed
 
 

@@ -158,7 +158,7 @@ static void setup_newline_add(chunk_t *prev, chunk_t *nl, chunk_t *next)
       return;
    }
 
-   undo_one_liner(prev);
+   //undo_one_liner(prev);
 
    nl->orig_line   = prev->orig_line;
    nl->level       = prev->level;
@@ -200,8 +200,8 @@ chunk_t *newline_add_before(chunk_t *pc)
       return(prev);
    }
 
-   LOG_FMT(LNEWLINE, "%s: '%s' on line %d",
-           __func__, pc->text(), pc->orig_line);
+   LOG_FMT(LNEWLINE, "%s: '%s' on line %d, col %d",
+           __func__, pc->text(), pc->orig_line, pc->orig_col);
    log_func_stack_inline(LNEWLINE);
 
    setup_newline_add(prev, &nl, pc);
@@ -388,7 +388,21 @@ chunk_t *newline_add_between(chunk_t *start, chunk_t *end)
    /* Back-up check for one-liners (should never be true!) */
    if (!one_liner_nl_ok(start))
    {
-      return(NULL);
+ //prot_the_line(__LINE__, 8);
+      LOG_FMT(LNL1LINE, "a new line may NOT be added\n");
+      if (start->next->flags & PCF_ONE_LINER)
+      {
+         LOG_FMT(LGUY98, "flag=true\n");
+         return(NULL);
+      }
+      else
+      {
+         LOG_FMT(LGUY98, "BUT start->next->flags is not PCF_ONE_LINER: a new line may be added\n");
+      }
+   }
+   else
+   {
+      LOG_FMT(LNL1LINE, "a new line may be added\n");
    }
 
    /* Scan for a line break */
@@ -1161,7 +1175,12 @@ static void newlines_do_else(chunk_t *start, argval_t nl_opt)
    {
       if (!one_liner_nl_ok(next))
       {
+         LOG_FMT(LNL1LINE, "a new line may NOT be added\n");
          return;
+      }
+      else
+      {
+         LOG_FMT(LNL1LINE, "a new line may be added\n");
       }
       if (next->type == CT_VBRACE_OPEN)
       {
@@ -1433,7 +1452,12 @@ static void newlines_brace_pair(chunk_t *br_open)
    /* Make sure we don't break a one-liner */
    if (!one_liner_nl_ok(br_open))
    {
+      LOG_FMT(LNL1LINE, "a new line may NOT be added\n");
       return;
+   }
+   else
+   {
+      LOG_FMT(LNL1LINE, "a new line may be added\n");
    }
 
    next = chunk_get_next_nc(br_open);
@@ -1968,6 +1992,9 @@ static void newline_oc_msg(chunk_t *start)
 /**
  * Checks to see if it is OK to add a newline around the chunk.
  * Don't want to break one-liners...
+ * return value:
+ *  true: a new line may be added
+ * false: a new line may NOT be added
  */
 static bool one_liner_nl_ok(chunk_t *pc)
 {
@@ -1978,7 +2005,7 @@ static bool one_liner_nl_ok(chunk_t *pc)
 
    if (!(pc->flags & PCF_ONE_LINER))
    {
-      LOG_FMT(LNL1LINE, "true (not 1-liner)\n");
+      LOG_FMT(LNL1LINE, "true (not 1-liner), a new line may be added\n");
       return(true);
    }
 
@@ -2031,7 +2058,7 @@ static bool one_liner_nl_ok(chunk_t *pc)
       if (cpd.settings[UO_nl_getset_leave_one_liners].b &&
           (pc->parent_type == CT_GETSET))
       {
-         LOG_FMT(LNL1LINE, "false (get/set)\n");
+         LOG_FMT(LNL1LINE, "false (get/set), a new line may NOT be added\n");
          return(false);
       }
 
@@ -2079,7 +2106,7 @@ static bool one_liner_nl_ok(chunk_t *pc)
          return(false);
       }
    }
-   LOG_FMT(LNL1LINE, "true\n");
+   LOG_FMT(LNL1LINE, "true, a new line may be added\n");
    return(true);
 } // one_liner_nl_ok
 
@@ -2364,6 +2391,7 @@ void newlines_cleanup_braces(bool first)
             {
                if (!one_liner_nl_ok(pc))
                {
+                  LOG_FMT(LNL1LINE, "a new line may NOT be added\n");
                   /* no change - preserve one liner body */
                }
                else if (pc->flags & (PCF_IN_ARRAY_ASSIGN | PCF_IN_PREPROC))
@@ -2652,7 +2680,12 @@ void newlines_cleanup_braces(bool first)
             {
                if (one_liner_nl_ok(next))
                {
+                  LOG_FMT(LNL1LINE, "a new line may be added\n");
                   newline_iarf(pc, AV_ADD);
+               }
+               else
+               {
+                  LOG_FMT(LNL1LINE, "a new line may NOT be added\n");
                }
             }
          }

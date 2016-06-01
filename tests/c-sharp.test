@@ -52,3 +52,4 @@
 10628 sf628.cfg                cs/sf628.cs
 10160 cs_delegate_default.cfg  cs/delegate.cs
 10161 cs_delegate_indent.cfg   cs/delegate.cs
+12001 bug_620.cfg              cs/bug_620.cs
