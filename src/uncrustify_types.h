@@ -44,6 +44,7 @@ enum brstage_e
    BS_ELSEIF,    /* expecting 'if' after 'else' */
    BS_WHILE,     /* expecting 'while' after 'do' */
    BS_CATCH,     /* expecting 'catch' or 'finally' after 'try' */
+   BS_CATCH_WHEN,  /* optional 'when' after 'catch' */
 };
 
 enum CharEncoding

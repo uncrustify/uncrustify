@@ -132,6 +132,7 @@ typedef enum
    CT_ASM,
    CT_ATTRIBUTE,
    CT_CATCH,
+   CT_WHEN,
    CT_CLASS,
    CT_DELETE,
    CT_EXPORT,
