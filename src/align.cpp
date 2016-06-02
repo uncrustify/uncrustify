@@ -1513,6 +1513,7 @@ static chunk_t *skip_c99_array(chunk_t *sq_open)
  */
 static chunk_t *scan_ib_line(chunk_t *start, bool first_pass)
 {
+   (void)first_pass;
    LOG_FUNC_ENTRY();
    chunk_t *pc;
    chunk_t *next;

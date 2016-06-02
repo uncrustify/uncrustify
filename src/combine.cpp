@@ -2662,6 +2662,7 @@ void combine_labels(void)
 
 static void mark_variable_stack(ChunkStack& cs, log_sev_t sev)
 {
+   (void)sev;
    LOG_FUNC_ENTRY();
    chunk_t *var_name;
    chunk_t *word_type;

@@ -146,11 +146,11 @@ void unc_text::set(const unc_text& ref)
 
 void unc_text::set(const unc_text& ref, int idx, int len)
 {
-   int size = ref.size();
+   int ref_size = ref.size();
 
-   fix_len_idx(size, idx, len);
+   fix_len_idx(ref_size, idx, len);
    m_logok = false;
-   if ((idx == 0) && (len == size))
+   if ((idx == 0) && (len == ref_size))
    {
       m_chars = ref.m_chars;
    }

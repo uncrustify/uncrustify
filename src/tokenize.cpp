@@ -1413,7 +1413,7 @@ static bool parse_ignored(tok_ctx& ctx, chunk_t& pc)
 static bool parse_next(tok_ctx& ctx, chunk_t& pc)
 {
    const chunk_tag_t *punc;
-   int               ch, ch1;
+   int               ch1;
 
    if (!ctx.more())
    {
@@ -1545,7 +1545,7 @@ static bool parse_next(tok_ctx& ctx, chunk_t& pc)
    }
 
    /* handle C++0x strings u8"x" u"x" U"x" R"x" u8R"XXX(I'm a "raw UTF-8" string.)XXX" */
-   ch = ctx.peek();
+   int ch = ctx.peek();
    if ((cpd.lang_flags & LANG_CPP) &&
        ((ch == 'u') || (ch == 'U') || (ch == 'R')))
    {

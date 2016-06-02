@@ -13,7 +13,7 @@ include(CTest)
 # Check compiler flags
 #
 if(MSVC)
-  add_definitions(/D_CRT_SECURE_NO_WARNINGS /D_CRT_NONSTDC_NO_WARNINGS)
+  add_definitions(/D_CRT_SECURE_NO_WARNINGS /D_CRT_NONSTDC_NO_WARNINGS /wd4267)
 elseif(CMAKE_COMPILER_IS_GNUCXX)
   set(gcc_warning_flags
     -Wall

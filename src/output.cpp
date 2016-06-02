@@ -985,7 +985,7 @@ static chunk_t *output_comment_c(chunk_t *first)
 static chunk_t *output_comment_cpp(chunk_t *first)
 {
    cmt_reflow cmt;
-   unc_text   tmp, leadin;
+   unc_text   leadin;
 
    output_cmt_start(cmt, first);
    cmt.reflow = (cpd.settings[UO_cmt_reflow_mode].n != 1);
@@ -1076,6 +1076,7 @@ static chunk_t *output_comment_cpp(chunk_t *first)
    cmt.cont_text = cpd.settings[UO_cmt_star_cont].b ? " * " : "   ";
    LOG_CONTTEXT();
 
+   unc_text tmp;
    /* See if we can combine this comment with the next comment */
    if (!cpd.settings[UO_cmt_cpp_group].b ||
        !can_combine_comment(first, cmt))
@@ -1467,6 +1468,7 @@ static void output_comment_multi(chunk_t *pc)
 
 static bool kw_fcn_filename(chunk_t *cmt, unc_text& out_txt)
 {
+   (void)cmt;
    out_txt.append(path_basename(cpd.filename));
    return(true);
 }
@@ -1557,7 +1559,6 @@ static bool kw_fcn_javaparam(chunk_t *cmt, unc_text& out_txt)
 
    chunk_t *fpo;
    chunk_t *fpc;
-   chunk_t *tmp;
    chunk_t *prev;
    bool    has_param = true;
    bool    need_nl   = false;
@@ -1609,6 +1610,7 @@ static bool kw_fcn_javaparam(chunk_t *cmt, unc_text& out_txt)
       }
    }
 
+   chunk_t *tmp;
    /* Check for 'foo()' and 'foo(void)' */
    if (chunk_get_next_ncnl(fpo) == fpc)
    {
@@ -1790,6 +1792,7 @@ static void do_kw_subst(chunk_t *pc)
  */
 static void output_comment_multi_simple(chunk_t *pc, bool kw_subst)
 {
+   (void)kw_subst;
    int        cmt_idx;
    int        ch;
    int        line_count = 0;
