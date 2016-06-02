@@ -10,4 +10,8 @@ void foo()
 	{
 		func();
 	});
+	funcwithverylongname(delegate(int i)
+	{
+		func();
+	});
 }
