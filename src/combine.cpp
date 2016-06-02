@@ -1068,7 +1068,8 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       {
          set_chunk_type(pc, CT_PTR_TYPE);
       }
-      else if (next->type == CT_SQUARE_OPEN)
+      else if ((next->type == CT_SQUARE_OPEN) &&
+               !(cpd.lang_flags & LANG_OC))                // issue # 408
       {
          set_chunk_type(pc, CT_PTR_TYPE);
       }

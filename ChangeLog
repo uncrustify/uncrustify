@@ -13,9 +13,9 @@ New options:
  - nl_after_func_class_proto_group
 
 Bugfix:
- - Bug # 620 is fixed
- - Issues #478 #481 #405, #495 are fixed
- - Proposal #409, #477 are implemented
+ - Bug #620 is fixed
+ - Issues #405, #408, #478, #481 and #495 are fixed
+ - Proposals #409 and #477 are implemented
  - Issue #411 is partialy fixed
 
 
