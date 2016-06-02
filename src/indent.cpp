@@ -549,6 +549,7 @@ void indent_text(void)
    int                sql_orig_col = 0;
    bool               in_func_def  = false;
    c_token_t          memtype;
+   bool               indent_delegate     = false;
 
    memset(&frm, 0, sizeof(frm));
    cpd.frame_count = 0;
@@ -969,6 +970,10 @@ void indent_text(void)
                           (pc->parent_type != CT_STRUCT)));
       }
 
+      if (pc->type == CT_DELEGATE || pc->type == CT_LAMBDA) {
+         indent_delegate=true;
+      }
+
       if (pc->type == CT_BRACE_CLOSE)
       {
          if (frm.pse[frm.pse_tos].type == CT_BRACE_OPEN)
@@ -1013,9 +1018,7 @@ void indent_text(void)
          frm.level++;
          indent_pse_push(frm, pc);
 
-         if (cpd.settings[U0_indent_cs_delegate_brace].b &&
-             (pc->prev->type == CT_DELEGATE || pc->prev->prev->type == CT_DELEGATE ||
-              pc->prev->type == CT_LAMBDA || pc->prev->prev->type == CT_LAMBDA))
+         if (cpd.settings[U0_indent_cs_delegate_brace].b && indent_delegate)
          {
             frm.pse[frm.pse_tos].brace_indent = 1 + ((pc->brace_level+1) * indent_size);
             indent_column                     = frm.pse[frm.pse_tos].brace_indent;
@@ -1024,6 +1027,7 @@ void indent_text(void)
             frm.pse[frm.pse_tos].indent_tmp   = frm.pse[frm.pse_tos].indent;
 
             frm.pse[frm.pse_tos - 1].indent_tmp = frm.pse[frm.pse_tos].indent_tmp;
+            indent_delegate = false;
          }
          /* any '{' that is inside of a '(' overrides the '(' indent */
          else if (!cpd.settings[UO_indent_paren_open_brace].b &&
