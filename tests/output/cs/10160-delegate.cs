@@ -6,4 +6,8 @@ void foo()
 	{
 		func();
 	});
+	funcwithverylongname(delegate
+	{
+		func();
+	});
 }

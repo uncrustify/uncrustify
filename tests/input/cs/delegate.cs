@@ -6,4 +6,8 @@ funcwithverylongname(() =>
 {
 func();
 });
+funcwithverylongname(delegate
+{
+func();
+});
 }
