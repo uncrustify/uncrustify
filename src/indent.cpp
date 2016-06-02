@@ -1014,8 +1014,8 @@ void indent_text(void)
          indent_pse_push(frm, pc);
 
          if (cpd.settings[U0_indent_cs_delegate_brace].b &&
-             (pc->type == CT_BRACE_OPEN) &&
-             (pc->prev->type == CT_LAMBDA || pc->prev->prev->type == CT_LAMBDA))
+             (pc->prev->type == CT_DELEGATE || pc->prev->prev->type == CT_DELEGATE ||
+              pc->prev->type == CT_LAMBDA || pc->prev->prev->type == CT_LAMBDA))
          {
             frm.pse[frm.pse_tos].brace_indent = 1 + ((pc->brace_level+1) * indent_size);
             indent_column                     = frm.pse[frm.pse_tos].brace_indent;
