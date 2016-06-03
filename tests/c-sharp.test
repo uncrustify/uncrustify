@@ -20,6 +20,7 @@
 
 10040 tcf.cfg                  cs/tcf.cs
 10041 tcf.cfg                  cs/gs.cs
+10042 ben.cfg                  cs/exception-filters.cs
 
 10050 cs_generics.cfg          cs/generics.cs
 

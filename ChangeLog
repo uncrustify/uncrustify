@@ -2,6 +2,9 @@ Change highlights in uncrustify-0.xx (xxx 2016)
 -------------------------------------------------------------------------------
 
 New:
+ - Support for new C#6 language elements. (Bug #672)
+    Expression filter with the keyword 'when' in try/catch is now supported.
+    Null conditional operator (?.) is now supported.
 
 New options:
  - indent_cs_delegate_brace

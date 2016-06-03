@@ -884,6 +884,12 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
    }
 
    if ((first->type == CT_PAREN_CLOSE) &&
+       (second->type == CT_WHEN))
+   {
+      return(AV_FORCE);
+   }
+
+   if ((first->type == CT_PAREN_CLOSE) &&
        ((second->type == CT_PAREN_OPEN) ||
         (second->type == CT_FPAREN_OPEN)))
    {
