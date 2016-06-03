@@ -222,13 +222,10 @@ add_executable(uncrustify
 #
 if(BUILD_TESTING)
   find_package(PythonInterp REQUIRED)
-  add_custom_command(TARGET uncrustify POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-    "$<TARGET_FILE:uncrustify>" "${PROJECT_SOURCE_DIR}/src/"
-  )
   enable_testing()
   add_test(NAME test_uncrustify
-    COMMAND ${PYTHON_EXECUTABLE} "${PROJECT_SOURCE_DIR}/tests/run_tests.py"
+    COMMAND ${PYTHON_EXECUTABLE}
+      "${PROJECT_SOURCE_DIR}/tests/run_tests.py" "--exe=$<TARGET_FILE:uncrustify>"
     WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}/tests/"
   )
 endif()
