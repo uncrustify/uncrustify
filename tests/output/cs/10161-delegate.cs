@@ -16,4 +16,8 @@ void foo()
 		{
 			func();
 		});
+	myCallback =
+		new MyCallback(
+			delegate
+				{ return true; });
 }
