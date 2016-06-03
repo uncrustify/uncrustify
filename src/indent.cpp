@@ -549,6 +549,8 @@ void indent_text(void)
    int                sql_orig_col = 0;
    bool               in_func_def  = false;
    c_token_t          memtype;
+   bool               in_delegate     = false;
+   int                delegate_column = 0;
 
    memset(&frm, 0, sizeof(frm));
    cpd.frame_count = 0;
@@ -969,6 +971,15 @@ void indent_text(void)
                           (pc->parent_type != CT_STRUCT)));
       }
 
+      if (pc->type == CT_DELEGATE || pc->type == CT_LAMBDA) {
+         in_delegate = true;
+         delegate_column = pc->column_indent;
+      }
+
+      if (pc->type == CT_SEMICOLON) {
+         in_delegate = false;
+      }
+
       if (pc->type == CT_BRACE_CLOSE)
       {
          if (frm.pse[frm.pse_tos].type == CT_BRACE_OPEN)
@@ -1013,17 +1024,25 @@ void indent_text(void)
          frm.level++;
          indent_pse_push(frm, pc);
 
-         if (cpd.settings[U0_indent_cs_delegate_brace].b &&
-             (pc->type == CT_BRACE_OPEN) &&
-             (pc->prev->type == CT_LAMBDA || pc->prev->prev->type == CT_LAMBDA))
+         if (cpd.settings[U0_indent_cs_delegate_brace].b && in_delegate)
          {
-            frm.pse[frm.pse_tos].brace_indent = 1 + ((pc->brace_level+1) * indent_size);
+            // if delegate keyword first on new line
+            if (delegate_column != 0)
+            {
+                frm.pse[frm.pse_tos].brace_indent = delegate_column + indent_size;
+            }
+            else
+            {
+                frm.pse[frm.pse_tos].brace_indent = 1 + ((pc->brace_level+1) * indent_size);
+            }
+
             indent_column                     = frm.pse[frm.pse_tos].brace_indent;
             frm.pse[frm.pse_tos].indent       = indent_column + indent_size;
             frm.pse[frm.pse_tos].indent_tab   = frm.pse[frm.pse_tos].indent;
             frm.pse[frm.pse_tos].indent_tmp   = frm.pse[frm.pse_tos].indent;
 
             frm.pse[frm.pse_tos - 1].indent_tmp = frm.pse[frm.pse_tos].indent_tmp;
+            in_delegate = false;
          }
          /* any '{' that is inside of a '(' overrides the '(' indent */
          else if (!cpd.settings[UO_indent_paren_open_brace].b &&
