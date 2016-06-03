@@ -971,7 +971,11 @@ void indent_text(void)
       }
 
       if (pc->type == CT_DELEGATE || pc->type == CT_LAMBDA) {
-         indent_delegate=true;
+         indent_delegate = true;
+      }
+
+      if (pc->type == CT_SEMICOLON) {
+         indent_delegate = false;
       }
 
       if (pc->type == CT_BRACE_CLOSE)

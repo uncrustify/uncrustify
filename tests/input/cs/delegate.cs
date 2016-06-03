@@ -1,3 +1,5 @@
+delegate void MyDelegate(int i);
+
 void foo()
 {
 obj.cb += () => { };
