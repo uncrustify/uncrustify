@@ -1,0 +1,9 @@
+language: cpp
+compiler: gcc
+os: linux
+before_script: ./autogen.sh
+branches:
+  only:
+  - master
+
+script: ./configure && make && ./run_tests.sh

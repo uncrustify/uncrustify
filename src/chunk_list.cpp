@@ -16,6 +16,7 @@ typedef ListManager<chunk_t>   ChunkList;
 
 ChunkList g_cl;
 
+
 chunk_t *chunk_get_head(void)
 {
    return(g_cl.GetHead());
@@ -105,18 +106,40 @@ chunk_t *chunk_dup(const chunk_t *pc_in)
 }
 
 
-/**
- * Add to the tail of the list
- */
-chunk_t *chunk_add(const chunk_t *pc_in)
+static void chunk_log(chunk_t *pc, const char *text)
 {
-   chunk_t *pc;
-
-   if ((pc = chunk_dup(pc_in)) != NULL)
+   if (pc && (cpd.unc_stage != US_TOKENIZE) && (cpd.unc_stage != US_CLEANUP))
    {
-      g_cl.AddTail(pc);
+      chunk_t *prev = chunk_get_prev(pc);
+      chunk_t *next = chunk_get_next(pc);
+
+      LOG_FMT(LCHUNK, " -- %s: %d:%d '%s' [%s]", text,
+              pc->orig_line, pc->orig_col, pc->text(),
+              get_token_name(pc->type));
+
+      if (prev && next)
+      {
+         LOG_FMT(LCHUNK, " @ between %d:%d '%s' [%s] and %d:%d '%s' [%s]",
+                 prev->orig_line, prev->orig_col, prev->text(),
+                 get_token_name(prev->type),
+                 next->orig_line, next->orig_col, next->text(),
+                 get_token_name(next->type));
+      }
+      else if (next)
+      {
+         LOG_FMT(LCHUNK, " @ before %d:%d '%s' [%s]",
+                 next->orig_line, next->orig_col, next->text(),
+                 get_token_name(next->type));
+      }
+      else if (prev)
+      {
+         LOG_FMT(LCHUNK, " @ after %d:%d '%s' [%s]",
+                 prev->orig_line, prev->orig_col, prev->text(),
+                 get_token_name(prev->type));
+      }
+      LOG_FMT(LCHUNK, " stage=%d", cpd.unc_stage);
+      log_func_stack_inline(LCHUNK);
    }
-   return(pc);
 }
 
 
@@ -138,6 +161,7 @@ chunk_t *chunk_add_after(const chunk_t *pc_in, chunk_t *ref)
       {
          g_cl.AddHead(pc);
       }
+      chunk_log(pc, "chunk_add");
    }
    return(pc);
 }
@@ -161,6 +185,7 @@ chunk_t *chunk_add_before(const chunk_t *pc_in, chunk_t *ref)
       {
          g_cl.AddTail(pc);
       }
+      chunk_log(pc, "chunk_add");
    }
    return(pc);
 }
@@ -168,12 +193,8 @@ chunk_t *chunk_add_before(const chunk_t *pc_in, chunk_t *ref)
 
 void chunk_del(chunk_t *pc)
 {
+   chunk_log(pc, "chunk_del");
    g_cl.Pop(pc);
-   //if ((pc->flags & PCF_OWN_STR) && (pc->str != NULL))
-   //{
-   //   delete[] (char *)pc->str;
-   //   pc->str = NULL;
-   //}
    delete pc;
 }
 
@@ -640,7 +661,7 @@ void chunk_swap_lines(chunk_t *pc1, chunk_t *pc2)
 
       chunk_swap(pc1, pc2);
    }
-}
+} // chunk_swap_lines
 
 
 /**
@@ -673,7 +694,7 @@ chunk_t *chunk_get_prev_nvb(chunk_t *cur, chunk_nav_t nav)
 }
 
 
-void set_chunk_type(chunk_t *pc, c_token_t tt)
+void set_chunk_type_real(chunk_t *pc, c_token_t tt)
 {
    LOG_FUNC_ENTRY();
    if (pc && (pc->type != tt))
@@ -688,7 +709,7 @@ void set_chunk_type(chunk_t *pc, c_token_t tt)
 }
 
 
-void set_chunk_parent(chunk_t *pc, c_token_t pt)
+void set_chunk_parent_real(chunk_t *pc, c_token_t pt)
 {
    LOG_FUNC_ENTRY();
    if (pc && (pc->parent_type != pt))
@@ -699,5 +720,24 @@ void set_chunk_parent(chunk_t *pc, c_token_t pt)
               get_token_name(pc->type), get_token_name(pt));
       log_func_stack_inline(LSETPAR);
       pc->parent_type = pt;
+   }
+}
+
+
+void chunk_flags_set_real(chunk_t *pc, UINT64 clr_bits, UINT64 set_bits)
+{
+   if (pc)
+   {
+      LOG_FUNC_ENTRY();
+      UINT64 nflags = (pc->flags & ~clr_bits) | set_bits;
+      if (pc->flags != nflags)
+      {
+         LOG_FMT(LSETFLG, "set_chunk_flags: %016" PRIx64 "^%016" PRIx64 "=%016" PRIx64 " %d:%d '%s' %s:%s",
+                 pc->flags, pc->flags ^ nflags, nflags,
+                 pc->orig_line, pc->orig_col, pc->text(),
+                 get_token_name(pc->type), get_token_name(pc->parent_type));
+         log_func_stack_inline(LSETFLG);
+         pc->flags = nflags;
+      }
    }
 }

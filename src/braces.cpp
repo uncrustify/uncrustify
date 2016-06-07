@@ -35,22 +35,22 @@ void do_braces(void)
       mod_full_brace_if_chain();
    }
 
-   if (((cpd.settings[UO_mod_full_brace_if].a |
-         cpd.settings[UO_mod_full_brace_do].a |
-         cpd.settings[UO_mod_full_brace_for].a |
-         cpd.settings[UO_mod_full_brace_using].a |
-         cpd.settings[UO_mod_full_brace_while].a) & AV_REMOVE) != 0)
+   if ((cpd.settings[UO_mod_full_brace_if].a |
+        cpd.settings[UO_mod_full_brace_do].a |
+        cpd.settings[UO_mod_full_brace_for].a |
+        cpd.settings[UO_mod_full_brace_using].a |
+        cpd.settings[UO_mod_full_brace_while].a) & AV_REMOVE)
    {
       examine_braces();
    }
 
    /* convert vbraces if needed */
-   if (((cpd.settings[UO_mod_full_brace_if].a |
-         cpd.settings[UO_mod_full_brace_do].a |
-         cpd.settings[UO_mod_full_brace_for].a |
-         cpd.settings[UO_mod_full_brace_function].a |
-         cpd.settings[UO_mod_full_brace_using].a |
-         cpd.settings[UO_mod_full_brace_while].a) & AV_ADD) != 0)
+   if ((cpd.settings[UO_mod_full_brace_if].a |
+        cpd.settings[UO_mod_full_brace_do].a |
+        cpd.settings[UO_mod_full_brace_for].a |
+        cpd.settings[UO_mod_full_brace_function].a |
+        cpd.settings[UO_mod_full_brace_using].a |
+        cpd.settings[UO_mod_full_brace_while].a) & AV_ADD)
    {
       convert_vbrace_to_brace();
    }
@@ -76,8 +76,8 @@ void do_braces(void)
       tmp = chunk_get_next_ncnl(pc);
       if ((tmp != NULL) && (tmp->type == brc_type))
       {
-         br_open->flags |= PCF_EMPTY_BODY;
-         tmp->flags     |= PCF_EMPTY_BODY;
+         chunk_flags_set(br_open, PCF_EMPTY_BODY);
+         chunk_flags_set(tmp, PCF_EMPTY_BODY);
       }
 
       /* Scan for the brace close or a newline */
@@ -104,7 +104,7 @@ void do_braces(void)
    {
       move_case_break();
    }
-}
+} // do_braces
 
 
 /**
@@ -260,12 +260,12 @@ static bool can_remove_braces(chunk_t *bopen)
                return(false);
             }
 
-            LOG_FMT(LBRDEL, " [%s %d-%d]", pc->str.c_str(), pc->orig_line, semi_count);
+            LOG_FMT(LBRDEL, " [%s %d-%d]", pc->text(), pc->orig_line, semi_count);
 
             if (pc->type == CT_ELSE)
             {
                LOG_FMT(LBRDEL, " bailed on %s on line %d\n",
-                       pc->str.c_str(), pc->orig_line);
+                       pc->text(), pc->orig_line);
                return(false);
             }
 
@@ -284,7 +284,7 @@ static bool can_remove_braces(chunk_t *bopen)
                if (++semi_count > 1)
                {
                   LOG_FMT(LBRDEL, " bailed on %d because of %s on line %d\n",
-                          bopen->orig_line, pc->str.c_str(), pc->orig_line);
+                          bopen->orig_line, pc->text(), pc->orig_line);
                   return(false);
                }
             }
@@ -321,7 +321,7 @@ static bool can_remove_braces(chunk_t *bopen)
            get_token_name(pc->type), pc->orig_line, if_count, semi_count);
 
    return((pc->type == CT_BRACE_CLOSE) && (pc->pp_level == bopen->pp_level));
-}
+} // can_remove_braces
 
 
 /**
@@ -348,7 +348,7 @@ static void examine_brace(chunk_t *bopen)
    pc = chunk_get_next_nc(bopen);
    while ((pc != NULL) && (pc->level >= level))
    {
-      if ((pc->flags & PCF_IN_PREPROC) != 0)
+      if (pc->flags & PCF_IN_PREPROC)
       {
          LOG_FMT(LBRDEL, " PREPROC\n");
          return;
@@ -399,12 +399,12 @@ static void examine_brace(chunk_t *bopen)
                return;
             }
 
-            LOG_FMT(LBRDEL, " [%s %d-%d]", pc->str.c_str(), pc->orig_line, semi_count);
+            LOG_FMT(LBRDEL, " [%s %d-%d]", pc->text(), pc->orig_line, semi_count);
 
             if (pc->type == CT_ELSE)
             {
                LOG_FMT(LBRDEL, " bailed on %s on line %d\n",
-                       pc->str.c_str(), pc->orig_line);
+                       pc->text(), pc->orig_line);
                return;
             }
 
@@ -424,7 +424,7 @@ static void examine_brace(chunk_t *bopen)
                if (++semi_count > 1)
                {
                   LOG_FMT(LBRDEL, " bailed on %d because of %s on line %d\n",
-                          bopen->orig_line, pc->str.c_str(), pc->orig_line);
+                          bopen->orig_line, pc->text(), pc->orig_line);
                   return;
                }
             }
@@ -494,9 +494,9 @@ static void examine_brace(chunk_t *bopen)
    }
    else
    {
-      LOG_FMT(LBRDEL, " not a close brace? - '%s'\n", pc->str.c_str());
+      LOG_FMT(LBRDEL, " not a close brace? - '%s'\n", pc->text());
    }
-}
+} // examine_brace
 
 
 /**
@@ -610,28 +610,28 @@ static void convert_vbrace_to_brace(void)
          continue;
       }
 
-      in_preproc = (pc->flags & PCF_IN_PREPROC) != 0;
+      in_preproc = (pc->flags & PCF_IN_PREPROC);
 
       if ((((pc->parent_type == CT_IF) ||
             (pc->parent_type == CT_ELSE) ||
             (pc->parent_type == CT_ELSEIF)) &&
-           ((cpd.settings[UO_mod_full_brace_if].a & AV_ADD) != 0) &&
+           (cpd.settings[UO_mod_full_brace_if].a & AV_ADD) &&
            !cpd.settings[UO_mod_full_brace_if_chain].b)
           ||
           ((pc->parent_type == CT_FOR) &&
-           ((cpd.settings[UO_mod_full_brace_for].a & AV_ADD) != 0))
+           (cpd.settings[UO_mod_full_brace_for].a & AV_ADD))
           ||
           ((pc->parent_type == CT_DO) &&
-           ((cpd.settings[UO_mod_full_brace_do].a & AV_ADD) != 0))
+           (cpd.settings[UO_mod_full_brace_do].a & AV_ADD))
           ||
           ((pc->parent_type == CT_WHILE) &&
-           ((cpd.settings[UO_mod_full_brace_while].a & AV_ADD) != 0))
+           (cpd.settings[UO_mod_full_brace_while].a & AV_ADD))
           ||
           ((pc->parent_type == CT_USING_STMT) &&
-           ((cpd.settings[UO_mod_full_brace_using].a & AV_ADD) != 0))
+           (cpd.settings[UO_mod_full_brace_using].a & AV_ADD))
           ||
           ((pc->parent_type == CT_FUNC_DEF) &&
-           ((cpd.settings[UO_mod_full_brace_function].a & AV_ADD) != 0)))
+           (cpd.settings[UO_mod_full_brace_function].a & AV_ADD)))
       {
          /* Find the matching vbrace close */
          vbc = NULL;
@@ -661,7 +661,7 @@ static void convert_vbrace_to_brace(void)
          convert_vbrace(vbc);
       }
    }
-}
+} // convert_vbrace_to_brace
 
 
 /**
@@ -689,6 +689,10 @@ chunk_t *insert_comment_after(chunk_t *ref, c_token_t cmt_type,
    }
    else
    {
+      if (ref->type == CT_PP_ELSE)
+      {  // make test c/ 02501 stable
+         new_cmt.str.append(" ");
+      }
       new_cmt.str.append("/* ");
       new_cmt.str.append(cmt_text);
       new_cmt.str.append(" */");
@@ -777,7 +781,7 @@ void add_long_closebrace_comment(void)
       {
          ns_pc = pc;
       }
-      if ((pc->type != CT_BRACE_OPEN) || ((pc->flags & PCF_IN_PREPROC) != 0))
+      if ((pc->type != CT_BRACE_OPEN) || (pc->flags & PCF_IN_PREPROC))
       {
          continue;
       }
@@ -811,12 +815,13 @@ void add_long_closebrace_comment(void)
                {
                   nl_min = cpd.settings[UO_mod_add_long_switch_closebrace_comment].n;
                   tag_pc = sw_pc;
-                  xstr   = sw_pc->str;
+                  xstr   = sw_pc ? sw_pc->str : NULL;
                }
                else if ((br_open->parent_type == CT_FUNC_DEF) ||
                         (br_open->parent_type == CT_OC_MSG_DECL))
                {
                   nl_min = cpd.settings[UO_mod_add_long_function_closebrace_comment].n;
+                  // 76006 Explicit null dereferenced, 2016-03-17
                   tag_pc = fcn_pc;
                   xstr.clear();
                   append_tag_name(xstr, tag_pc);
@@ -824,6 +829,7 @@ void add_long_closebrace_comment(void)
                else if (br_open->parent_type == CT_NAMESPACE)
                {
                   nl_min = cpd.settings[UO_mod_add_long_namespace_closebrace_comment].n;
+                  // 76007 Explicit null dereferenced, 2016-03-17
                   tag_pc = ns_pc;
 
                   /* obtain the next chunck, normally this is the name of the namespace
@@ -847,7 +853,7 @@ void add_long_closebrace_comment(void)
          }
       }
    }
-}
+} // add_long_closebrace_comment
 
 
 static void move_case_break(void)
@@ -913,7 +919,7 @@ static chunk_t *mod_case_brace_remove(chunk_t *br_open)
    {
       if ((pc->level == (br_open->level + 1)) && (pc->flags & PCF_VAR_DEF))
       {
-         LOG_FMT(LMCB, " - vardef on line %d: '%s'\n", pc->orig_line, pc->str.c_str());
+         LOG_FMT(LMCB, " - vardef on line %d: '%s'\n", pc->orig_line, pc->text());
          return(next);
       }
    }
@@ -929,7 +935,7 @@ static chunk_t *mod_case_brace_remove(chunk_t *br_open)
    chunk_del(br_open);
    chunk_del(br_close);
    return(chunk_get_next(next, CNAV_PREPROC));
-}
+} // mod_case_brace_remove
 
 
 /**
@@ -975,7 +981,7 @@ static chunk_t *mod_case_brace_add(chunk_t *cl_colon)
       return(next);
    }
 
-   LOG_FMT(LMCB, " - adding before '%s' on line %d\n", last->str.c_str(), last->orig_line);
+   LOG_FMT(LMCB, " - adding before '%s' on line %d\n", last->text(), last->orig_line);
 
    chunk.type        = CT_BRACE_OPEN;
    chunk.orig_line   = cl_colon->orig_line;
@@ -1003,7 +1009,7 @@ static chunk_t *mod_case_brace_add(chunk_t *cl_colon)
    }
 
    return(br_open);
-}
+} // mod_case_brace_add
 
 
 static void mod_case_brace(void)
@@ -1120,7 +1126,7 @@ static void process_if_chain(chunk_t *br_start)
       LOG_FMT(LBRCH, "%s: add braces on lines[%d]:", __func__, br_cnt);
       while (--br_cnt >= 0)
       {
-         braces[br_cnt]->flags |= PCF_KEEP_BRACE;
+         chunk_flags_set(braces[br_cnt], PCF_KEEP_BRACE);
          if ((braces[br_cnt]->type == CT_VBRACE_OPEN) ||
              (braces[br_cnt]->type == CT_VBRACE_CLOSE))
          {
@@ -1154,7 +1160,7 @@ static void process_if_chain(chunk_t *br_start)
       }
       LOG_FMT(LBRCH, "\n");
    }
-}
+} // process_if_chain
 
 
 static void mod_full_brace_if_chain(void)

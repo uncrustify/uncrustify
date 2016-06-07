@@ -14,7 +14,7 @@ int bar(int x){
 }
 int main(void){
 	bar(10);
-foo: bar(-9);
+foo:    bar(-9);
 	bar(9);
-baz: return 0;
+baz:    return 0;
 }

@@ -5,6 +5,8 @@
  * Use these for the log severities in LOG_FMT(), etc.
  *
  * @author  Ben Gardner
+ * @author  Guy Maurel since version 0.62 for uncrustify4Qt
+ *          October 2015, 2016
  * @license GPL v2+
  */
 #ifndef LOG_LEVELS_H_INCLUDED
@@ -104,6 +106,11 @@ enum log_sev_t
    LJDBI     = 90, /* Java Double Brace Init */
    LSETPAR   = 91, /* set_chunk_parent() */
    LSETTYP   = 92, /* set_chunk_type() */
+   LSETFLG   = 93, /* set_chunk_flags() */
+   LNLFUNCT  = 94, /* newlines before function */
+   LCHUNK    = 95, /* Add or del chunk */
+   LGUY98    = 98, /* for guy-test */
+   LGUY      = 99, /* for guy-test */
 };
 
 #endif /* LOG_LEVELS_H_INCLUDED */

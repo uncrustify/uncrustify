@@ -8,6 +8,7 @@
 #include "unc_text.h"
 #include "prototypes.h" /* encode_utf8() */
 
+
 static void fix_len_idx(int size, int& idx, int& len)
 {
    if (len < 0)
@@ -86,7 +87,7 @@ int unc_text::compare(const unc_text& ref1, const unc_text& ref2, int len)
       }
       if (idx == len)
       {
-         return 0;
+         return(0);
       }
       return(len1 - len2);
    }
@@ -108,23 +109,23 @@ bool unc_text::equals(const unc_text& ref) const
 
    if (ref.size() != len)
    {
-      return false;
+      return(false);
    }
    for (int idx = 0; idx < len; idx++)
    {
       if (m_chars[idx] != ref.m_chars[idx])
       {
-         return false;
+         return(false);
       }
    }
-   return true;
+   return(true);
 }
 
 
 const char *unc_text::c_str()
 {
    update_logtext();
-   return (const char *)&m_logtext[0];
+   return((const char *)&m_logtext[0]);
 }
 
 
@@ -145,11 +146,11 @@ void unc_text::set(const unc_text& ref)
 
 void unc_text::set(const unc_text& ref, int idx, int len)
 {
-   int size = ref.size();
+   int ref_size = ref.size();
 
-   fix_len_idx(size, idx, len);
+   fix_len_idx(ref_size, idx, len);
    m_logok = false;
-   if ((idx == 0) && (len == size))
+   if ((idx == 0) && (len == ref_size))
    {
       m_chars = ref.m_chars;
    }
@@ -287,7 +288,7 @@ bool unc_text::startswith(const char *text, int idx) const
    {
       if (*text != m_chars[idx])
       {
-         return false;
+         return(false);
       }
       idx++;
       text++;
@@ -306,7 +307,7 @@ bool unc_text::startswith(const unc_text& text, int idx) const
    {
       if (text.m_chars[si] != m_chars[idx])
       {
-         return false;
+         return(false);
       }
       idx++;
       si++;
@@ -335,10 +336,10 @@ int unc_text::find(const char *text, int sidx) const
       }
       if (match)
       {
-         return idx;
+         return(idx);
       }
    }
-   return -1;
+   return(-1);
 }
 
 
@@ -365,10 +366,10 @@ int unc_text::rfind(const char *text, int sidx) const
       }
       if (match)
       {
-         return idx;
+         return(idx);
       }
    }
-   return -1;
+   return(-1);
 }
 
 
@@ -394,5 +395,5 @@ int unc_text::replace(const char *oldtext, const unc_text& newtext)
       insert(fidx, newtext);
       fidx = find(oldtext, fidx + newtext.size() - olen + 1);
    }
-   return rcnt;
+   return(rcnt);
 }

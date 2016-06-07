@@ -1,52 +1,60 @@
 class Foo : public QObject
 {
-   Q_OBJECT
+    Q_OBJECT
 
- private slots:
-   void mySlot();
+private slots:
+    void mySlot( );
 
- public slots:
-   void publicSlot();
+public slots:
+    void publicSlot( );
 
- signals:
-   void somesignal();
+signals:
+    void somesignal( );
+
 };
 
-class foo {
-   bool b;
- public:
-   int  i;
+class foo
+{
+    bool b;
+
+public:
+    int i;
 };
 class bar : public
-   foo {
-   void   *p;
- protected:
-   double d;
+    foo
+{
+    void *p;
+
+protected:
+    double d;
 };
 
 class Foo1 : public QObject
 {
-   Q_OBJECT
+    Q_OBJECT
 
- private Q_SLOTS:
-   void mySlot();
+private Q_SLOTS:
+    void mySlot( );
 
- public Q_SLOTS:
-   void publicSlot();
+public Q_SLOTS:
+    void publicSlot( );
 
- Q_SIGNALS:
-   void somesignal();
+Q_SIGNALS:
+    void somesignal( );
 };
 
-class foo1 {
-   bool b;
- public:
-   int  i;
+class foo1
+{
+    bool b;
+
+public:
+    int i;
 };
 class bar : public
-   foo1 {
-   void   *p;
- protected:
-   double d;
-};
+    foo1
+{
+    void *p;
 
+protected:
+    double d;
+};

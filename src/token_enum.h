@@ -3,6 +3,8 @@
  * List of the different tokens used in the program.
  *
  * @author  Ben Gardner
+ * @author  Guy Maurel since version 0.62 for uncrustify4Qt
+ *          October 2015
  * @license GPL v2+
  */
 #ifndef TOKEN_ENUM_H_INCLUDED
@@ -102,6 +104,11 @@ typedef enum
    CT_AMP,                 /* & : raw char to be changed */
    CT_BYREF,               /* & in function def/proto params */
 
+   // CT_BITWISE_AND,         /* & */   // is a CT_ARITH
+   // CT_BITWISE_OR,          /* | */   // is a CT_ARITH
+   // CT_BITWISE_EXCLUSIVE_OR,/* ^ */   // is a CT_ARITH
+   // CT_BITWISE_NOT,         /* ~ */   // is a CT_ARITH
+
    CT_POUND,               /* # */
    CT_PREPROC,             /* # at the start of a line */
    CT_PREPROC_INDENT,      /* # at the start of a line that gets indented: #region */
@@ -109,10 +116,12 @@ typedef enum
    CT_PP,                  /* ## */
    CT_ELLIPSIS,            /* ... */
    CT_RANGE,               /* .. */
+   CT_NULLCOND,            /* ?. */
 
    CT_SEMICOLON,
    CT_VSEMICOLON,          /* virtual semicolon for PAWN */
    CT_COLON,
+   CT_ASM_COLON,
    CT_CASE_COLON,
    CT_CLASS_COLON,         /* colon after a class def */
    CT_CONSTR_COLON,        /* colon after a constructor */
@@ -125,6 +134,7 @@ typedef enum
    CT_ASM,
    CT_ATTRIBUTE,
    CT_CATCH,
+   CT_WHEN,
    CT_CLASS,
    CT_DELETE,
    CT_EXPORT,
@@ -208,6 +218,7 @@ typedef enum
    CT_MACRO_FUNC,       /* function-like macro */
    CT_MACRO,            /* a macro def */
    CT_QUALIFIER,        /* static, const, etc */
+   CT_AUTO,             /* auto */
    CT_EXTERN,           /* extern */
    CT_ALIGN,            /* paren'd qualifier: align(4) struct a { } */
    CT_TYPE,
@@ -318,9 +329,33 @@ typedef enum
    CT_FOR_COLON,    /* colon in "for ( TYPE var: EXPR ) { ... }" */
    CT_DOUBLE_BRACE, /* parent for double brace */
 
+   /* MS calling convention */
+   CT_CDECL,        /* guy 2016-01-31 */
+   CT_CLRCALL,      /* guy 2016-01-31 */
+   CT_FASTCALL,     /* guy 2016-01-31 */
+   CT_STDCALL,      /* __stdcall Bug # 633 guy 2015-11-19 */
+   CT_THISCALL,     /* guy 2016-01-31 */
+   CT_VECTORCALL,   /* guy 2016-01-31 */
+
    /* Clang */
-   CT_CNG_HASINC,       /* Clang: __has_include() */
-   CT_CNG_HASINCN,      /* Clang: __has_include_next() */
+   CT_CNG_HASINC,   /* Clang: __has_include() */
+   CT_CNG_HASINCN,  /* Clang: __has_include_next() */
+
+   /* extentions for Qt macros */
+   CT_Q_EMIT,       // guy 2015-10-16
+   CT_Q_FOREACH,    // guy 2015-09-23
+   CT_Q_FOREVER,    // guy 2015-10-18
+   CT_Q_GADGET,     // guy 2016-05-04
+   CT_Q_OBJECT,     // guy 2015-10-16
+
+   /* Machine Modes */
+   CT_MODE,         // guy 2016-03-11
+   CT_DI,           // guy 2016-03-11
+   CT_HI,           // guy 2016-03-11
+   CT_QI,           // guy 2016-03-11
+   CT_SI,           // guy 2016-03-11
+   CT_NOTHROW,      // guy 2016-03-11
+   CT_WORD_,        // guy 2016-03-11
 } c_token_t;
 
 #endif /* TOKEN_ENUM_H_INCLUDED */

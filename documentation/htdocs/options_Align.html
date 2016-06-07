@@ -1,0 +1,44 @@
+#define SUCCESS    0
+                ^
+align_pp_define_gap
+The minimum space between label and value of a preprocessor define
+
+#define set_chunk_type(pc, tt)      do { \
+      LOG_FUNC_CALL(); \
+      set_chunk_type_real((pc), (tt)); \
+} while (false)
+align_nl_cont                 = true
+
+#define LOG_STR(sev, str, len)                           \
+   do { if (log_sev_on(sev)) { log_str(sev, str, len); } } while (0)
+                                                          ^
+nl_after_brace_close
+
+
+extern struct cp_data cpd;
+
+extern bool           QT_SIGNAL_SLOT_found;
+extern int            QT_SIGNAL_SLOT_level;
+extern bool           restoreValues;
+align_var_def_span    ^
+
+enum argval_t
+{
+   AV_IGNORE      = 0,
+   AV_ADD         = 1,
+   AV_REMOVE      = 2,
+   AV_FORCE       = 3, /**< remove + add */
+   AV_NOT_DEFINED = 4  /* to be used with QT, SIGNAL SLOT macros */
+};
+                  ^
+align_var_struct_span
+
+
+   UO_indent_var_def_blk,            // indent a variable def block that appears at the top
+   UO_indent_var_def_cont,
+   UO_indent_shift,                  // if a shift expression spans multiple lines, indent
+
+   UO_indent_min_vbrace_open,        // min. indent after virtual brace open and newline
+   UO_indent_vbrace_open_on_tabstop, // when identing after virtual brace open and newline add further spaces to reach next tabstop
+
+align_right_cmt_span

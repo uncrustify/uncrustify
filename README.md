@@ -18,6 +18,7 @@ Building the program
 
 Quick start:
 ```
+$ ./autogen.sh
 $ ./configure
 $ make
 ```
@@ -51,11 +52,11 @@ called, surprisingly enough, 'Installation Directory'.
 Configuring the program
 -----------------------
 
-Examine the example config files in `etc` (such as [ben.cfg](./etc/ben.cfg)) 
+Examine the example config files in `etc` (such as [ben.cfg](./etc/ben.cfg))
 and/or read [configuration.txt](./documentation/htdocs/configuration.txt).
 Copy the existing config file that closely matches your style and put in
-`~/.uncrustify/`. Find complete configuration file options 
-[in this file](./documentation/htdocs/config.txt). Modify to your 
+`~/.uncrustify/`. Find complete configuration file options
+[in this file](./documentation/htdocs/config.txt). Modify to your
 liking.
 
 

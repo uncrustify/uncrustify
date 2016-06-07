@@ -1,3 +1,124 @@
+Change highlights in uncrustify-0.xx (xxx 2016)
+-------------------------------------------------------------------------------
+
+New:
+ - Support for new C#6 language elements. (Bug #672)
+    Expression filter with the keyword 'when' in try/catch is now supported.
+    Null conditional operator (?.) is now supported.
+
+New options:
+ - indent_cs_delegate_brace
+ - nl_oc_block_brace
+ - nl_split_if_one_liner
+ - nl_split_for_one_liner
+ - nl_split_while_one_liner
+ - nl_after_func_class_proto
+ - nl_after_func_class_proto_group
+
+Bugfix:
+ - Bug #620 is fixed
+ - Issues #405, #408, #478, #481 and #495 are fixed
+ - Proposals #409 and #477 are implemented
+ - Issue #411 is partialy fixed
+
+
+Change highlights in uncrustify-0.63 (Mar 2016)
+-------------------------------------------------------------------------------
+
+New:
+ - The branch uncrustify4Qt is now merged.
+ - A configuration file for the sources of uncrustify is provided:
+     forUncrustifySources.cfg
+ - Some considerations about the problem "stable" are described at
+     forUncrustifySources.txt
+ - Simplify expressions such as:
+     if ((cpd.lang_flags & LANG_PAWN) != 0)
+   to
+     if (cpd.lang_flags & LANG_PAWN)
+ - introduce CT_STDCALL to work with typedef void (__stdcall *func)(); Bug # 633
+ - introduce some more MS calling conventions: __cdecl, __clrcall, __fastcall, __thiscall, __vectorcall
+     https://msdn.microsoft.com/en-us/library/984x0h58.aspx
+
+New options:
+ - nl_before_func_class_def
+ - nl_before_func_class_proto
+ - nl_before_func_body_def
+ - nl_before_func_body_proto
+ - use_indent_continue_only_once
+
+Bugfix:
+ - Simplify some more expressions.
+ - Bugfix for win32 for the flags.
+ - make test c/ 00617 stable
+ - make test c/ 02501 stable
+ - The issue #467 and the test tests/output/c/02100-i2c-core.c are fixed.
+ - uncrustify all the sources with forUncrustifySources.cfg
+ - better descriptions for options
+ - bug #631 is fixed
+ - produce a better dump output
+ - DbConfig::configuredDatabase()->apply(db); is NOT a declaration of a variable
+ - bug # 657 is fixed: change 'mode' if necessary for 'pos_class_comma'
+ - fix 3 calls of unc_add_option for "align_oc_msg_colon_span",
+     "indent_oc_block_msg", "indent_oc_msg_colon"
+ - bugs #664, #662, #654, #653, #651 and #633 are fixed
+
+Reverse:
+ - space: drop vbrace tokens... 2014-09-01 06:33:17
+   I cannot anderstand this change.
+   It makes some troubles: Bug # 637
+   No test file for it found
+   Reverse the change until more informations could be found
+
+Change:
+ - CT_DC_MEMBER + CT_FOR into CT_DC_MEMBER + CT_FUNC_CALL
+
+Some more Qt-macros:
+ - Q_GADGET
+ - for_each
+
+
+Change highlights in uncrustify4Qt-0.62 (Oct 2015)
+-------------------------------------------------------------------------------
+This is an extention of uncrustify to support Qt-macros
+ - Q_OBJECT
+ - Q_EMIT
+ - SLOT
+ - SIGNAL
+ - Q_FOREACH
+ - Q_FOREVER
+
+Change highlights in uncrustify4Qt-0.62 (Oct 2015)
+-------------------------------------------------------------------------------
+New options:
+ - use_indent_func_call_param
+
+
+Change highlights in uncrustify-0.62 (2 Feb 2016)
+-------------------------------------------------------------------------------
+This release is just a roll-up of the past year.
+Many bugs were squashed and many options were added.
+
+New options:
+ - string_replace_tab_chars
+ - disable_processing_cmt
+ - enable_processing_cmt
+ - enable_digraphs
+ - indent_class_on_colon
+ - indent_shift
+ - indent_min_vbrace_open
+ - indent_vbrace_open_on_tabstop
+ - sp_after_mdatype_commas
+ - sp_before_mdatype_commas
+ - sp_between_mdatype_commas
+ - sp_cmt_cpp_doxygen
+ - sp_cmt_cpp_qttr
+ - sp_between_new_paren
+ - nl_while_leave_one_liners
+ - nl_synchronized_brace
+ - nl_before_synchronized
+ - nl_after_synchronized
+ - nl_after_label_colon
+
 
 Change highlights in uncrustify-0.61 (22 Dec 2014)
 -------------------------------------------------------------------------------

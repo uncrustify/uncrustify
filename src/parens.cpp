@@ -63,8 +63,8 @@ static void add_parens_between(chunk_t *first, chunk_t *last)
 
    LOG_FMT(LPARADD, "%s: line %d between %s [lvl=%d] and %s [lvl=%d]\n",
            __func__, first->orig_line,
-           first->str.c_str(), first->level,
-           last->str.c_str(), last->level);
+           first->text(), first->level,
+           last->text(), last->level);
 
    /* Don't do anything if we have a bad sequence, ie "&& )" */
    first_n = chunk_get_next_ncnl(first);
@@ -99,7 +99,7 @@ static void add_parens_between(chunk_t *first, chunk_t *last)
       tmp->level++;
    }
    last_p->level++;
-}
+} // add_parens_between
 
 
 /**
@@ -141,7 +141,7 @@ static void check_bool_parens(chunk_t *popen, chunk_t *pclose, int nest)
       {
          LOG_FMT(LPARADD2, " -- bail on PP %s [%s] at line %d col %d, level %d\n",
                  get_token_name(pc->type),
-                 pc->str.c_str(), pc->orig_line, pc->orig_col, pc->level);
+                 pc->text(), pc->orig_line, pc->orig_col, pc->level);
          return;
       }
 
@@ -152,7 +152,7 @@ static void check_bool_parens(chunk_t *popen, chunk_t *pclose, int nest)
       {
          LOG_FMT(LPARADD2, " -- %s [%s] at line %d col %d, level %d\n",
                  get_token_name(pc->type),
-                 pc->str.c_str(), pc->orig_line, pc->orig_col, pc->level);
+                 pc->text(), pc->orig_line, pc->orig_col, pc->level);
          if (hit_compare)
          {
             hit_compare = false;
@@ -163,7 +163,7 @@ static void check_bool_parens(chunk_t *popen, chunk_t *pclose, int nest)
       else if (pc->type == CT_COMPARE)
       {
          LOG_FMT(LPARADD2, " -- compare [%s] at line %d col %d, level %d\n",
-                 pc->str.c_str(), pc->orig_line, pc->orig_col, pc->level);
+                 pc->text(), pc->orig_line, pc->orig_col, pc->level);
          hit_compare = true;
       }
       else if (chunk_is_paren_open(pc))
@@ -188,4 +188,4 @@ static void check_bool_parens(chunk_t *popen, chunk_t *pclose, int nest)
    {
       add_parens_between(ref, pclose);
    }
-}
+} // check_bool_parens

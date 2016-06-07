@@ -155,7 +155,7 @@ void MD5::Update(const void *data, UINT32 len)
 
    /* Save off any remaining bytes of data */
    memcpy(m_in, buf, len);
-}
+} // MD5::Update
 
 
 /**
@@ -212,7 +212,7 @@ void MD5::Final(UINT8 digest[16])
       reverse_u32((UINT8 *)m_buf, 4);
    }
    memcpy(digest, m_buf, 16);
-}
+} // MD5::Final
 
 
 /* The four core functions - F1 is optimized somewhat */
@@ -226,6 +226,7 @@ void MD5::Final(UINT8 digest[16])
 /* This is the central step in the MD5 algorithm. */
 #define MD5STEP(f, w, x, y, z, data, s) \
    (w += f(x, y, z) + data, w = w << s | w >> (32 - s), w += x)
+
 
 /*
  * The core of the MD5 algorithm, this alters an existing MD5 hash to
@@ -313,7 +314,7 @@ void MD5::Transform(UINT32 buf[4], UINT32 in_data[16])
    buf[1] += b;
    buf[2] += c;
    buf[3] += d;
-}
+} // MD5::Transform
 
 
 void MD5::Calc(const void *data, UINT32 length, UINT8 digest[16])

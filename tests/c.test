@@ -24,7 +24,7 @@
 # brace styles
 00010  ben.cfg                 c/braces.c
 00011  brace-allman.cfg        c/braces.c
-00012  brace-banner.cfg        c/braces.c
+00012! brace-banner.cfg        c/braces.c
 00013  brace-gnu.cfg           c/braces.c
 00014  brace-kr.cfg            c/braces.c
 00015  brace-ws.cfg            c/braces.c
@@ -296,7 +296,15 @@
 
 02504 align_keep_extra.cfg      c/align_keep_extra.c
 
+02510 ben.cfg                   c/asm.c
+
 07630 indent-vbrace.cfg         c/indent-vbrace.c
+
+08399 ben.cfg                   c/gh399.c
 
 09594 ben.cfg                   c/sf594.c
 09588 ben.cfg                   c/sf588.c
+
+10001 sp_after_sparen.cfg       c/sp_after_sparen.c
+
+10002 bug_671.cfg               c/bug_671.c

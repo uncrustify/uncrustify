@@ -1144,7 +1144,7 @@ static s32 i2c_smbus_xfer_emulated(struct i2c_adapter * adapter, u16 addr,
   unsigned char msgbuf1[34];
   int num = read_write == I2C_SMBUS_READ ? 2 : 1;
   struct i2c_msg msg[2] = { { addr, flags, 1, msgbuf0 },
-                                { addr, flags | I2C_M_RD, 0, msgbuf1 } };
+                            { addr, flags | I2C_M_RD, 0, msgbuf1 } };
   int i;
 
   msgbuf0[0] = command;

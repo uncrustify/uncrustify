@@ -18,8 +18,7 @@
 #include "unc_ctype.h"
 
 
-static chunk_t *insert_vbrace(chunk_t *pc, bool after,
-                              struct parse_frame *frm);
+static chunk_t *insert_vbrace(chunk_t *pc, bool after, struct parse_frame *frm);
 
 #define insert_vbrace_close_after(pc, frm)    insert_vbrace(pc, true, frm)
 #define insert_vbrace_open_before(pc, frm)    insert_vbrace(pc, false, frm)
@@ -57,7 +56,7 @@ static int preproc_start(struct parse_frame *frm, chunk_t *pc)
          frm->brace_level = 1;
 
          /*TODO: not sure about the next 3 lines */
-         frm->pse_tos = 1;
+         frm->pse_tos                 = 1;
          frm->pse[frm->pse_tos].type  = CT_PP_DEFINE;
          frm->pse[frm->pse_tos].stage = BS_NONE;
       }
@@ -74,6 +73,7 @@ static int preproc_start(struct parse_frame *frm, chunk_t *pc)
 static void print_stack(log_sev_t logsev, const char *str,
                         struct parse_frame *frm, chunk_t *pc)
 {
+   (void)pc;
    LOG_FUNC_ENTRY();
    if (log_sev_on(logsev))
    {
@@ -111,6 +111,8 @@ void brace_cleanup(void)
    struct parse_frame frm;
    int                pp_level;
 
+   cpd.unc_stage = US_BRACE_CLEANUP;
+
    memset(&frm, 0, sizeof(frm));
 
    cpd.frame_count = 0;
@@ -140,7 +142,7 @@ void brace_cleanup(void)
       }
 
       /* Do before assigning stuff from the frame */
-      if ((cpd.lang_flags & LANG_PAWN) != 0)
+      if (cpd.lang_flags & LANG_PAWN)
       {
          if ((frm.pse[frm.pse_tos].type == CT_VBRACE_OPEN) &&
              (pc->type == CT_NEWLINE))
@@ -169,7 +171,7 @@ void brace_cleanup(void)
       }
       pc = chunk_get_next(pc);
    }
-}
+} // brace_cleanup
 
 
 /**
@@ -299,10 +301,9 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
        !chunk_is_str(pc, ")", 1) &&
        !chunk_is_str(pc, "]", 1))
    {
-      pc->flags |= PCF_EXPR_START;
-      pc->flags |= (frm->stmt_count == 0) ? PCF_STMT_START : 0;
+      chunk_flags_set(pc, PCF_EXPR_START | ((frm->stmt_count == 0) ? PCF_STMT_START : 0));
       LOG_FMT(LSTMT, "%d] 1.marked %s as %s start st:%d ex:%d\n",
-              pc->orig_line, pc->str.c_str(), (pc->flags & PCF_STMT_START) ? "stmt" : "expr",
+              pc->orig_line, pc->text(), (pc->flags & PCF_STMT_START) ? "stmt" : "expr",
               frm->stmt_count, frm->expr_count);
    }
    frm->stmt_count++;
@@ -312,14 +313,14 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
    {
       int tmp;
 
-      pc->flags |= PCF_IN_SPAREN;
+      chunk_flags_set(pc, PCF_IN_SPAREN);
 
       /* Mark everything in the a for statement */
       for (tmp = frm->pse_tos - 1; tmp >= 0; tmp--)
       {
          if (frm->pse[tmp].type == CT_FOR)
          {
-            pc->flags |= PCF_IN_FOR;
+            chunk_flags_set(pc, PCF_IN_FOR);
             break;
          }
       }
@@ -355,7 +356,7 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
          cpd.consumed = true;
          close_statement(frm, pc);
       }
-      else if ((cpd.lang_flags & LANG_PAWN) != 0)
+      else if (cpd.lang_flags & LANG_PAWN)
       {
          if (pc->type == CT_BRACE_CLOSE)
          {
@@ -381,7 +382,7 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
          if (pc->type == CT_SPAREN_CLOSE)
          {
             frm->sparen_count--;
-            pc->flags &= ~PCF_IN_SPAREN;
+            chunk_flags_clr(pc, PCF_IN_SPAREN);
          }
       }
 
@@ -392,7 +393,7 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
              (frm->pse[frm->pse_tos].type != CT_PP_DEFINE))
          {
             LOG_FMT(LWARN, "%s:%d Error: Unexpected '%s' for '%s', which was on line %d\n",
-                    cpd.filename, pc->orig_line, pc->str.c_str(),
+                    cpd.filename, pc->orig_line, pc->text(),
                     get_token_name(frm->pse[frm->pse_tos].pc->type),
                     frm->pse[frm->pse_tos].pc->orig_line);
             print_stack(LBCSPOP, "=Error  ", frm, pc);
@@ -608,7 +609,7 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
         (frm->pse[frm->pse_tos].type != CT_SPAREN_OPEN)))
    {
       LOG_FMT(LSTMT, "%s: %d> reset1 stmt on %s\n",
-              __func__, pc->orig_line, pc->str.c_str());
+              __func__, pc->orig_line, pc->text());
       frm->stmt_count = 0;
       frm->expr_count = 0;
    }
@@ -643,9 +644,9 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
    {
       frm->expr_count = 0;
       LOG_FMT(LSTMT, "%s: %d> reset expr on %s\n",
-              __func__, pc->orig_line, pc->str.c_str());
+              __func__, pc->orig_line, pc->text());
    }
-}
+} // parse_cleanup
 
 
 /**
@@ -720,7 +721,7 @@ static bool check_complex_statements(struct parse_frame *frm, chunk_t *pc)
       {
          /* Replace CT_TRY with CT_CATCH on the stack & we are done */
          frm->pse[frm->pse_tos].type  = pc->type;
-         frm->pse[frm->pse_tos].stage = (pc->type == CT_CATCH) ? BS_OP_PAREN1 : BS_BRACE2;
+         frm->pse[frm->pse_tos].stage = (pc->type == CT_CATCH) ? BS_CATCH_WHEN : BS_BRACE2;
          print_stack(LBCSSWAP, "=Swap   ", frm, pc);
          return(true);
       }
@@ -731,6 +732,30 @@ static bool check_complex_statements(struct parse_frame *frm, chunk_t *pc)
       if (close_statement(frm, pc))
       {
          return(true);
+      }
+   }
+
+   /* Check for optional paren and optional CT_WHEN after CT_CATCH */
+   if (frm->pse[frm->pse_tos].stage == BS_CATCH_WHEN)
+   {
+      if (pc->type == CT_PAREN_OPEN) // this is for the paren after "catch"
+      {
+         /* Replace CT_PAREN_OPEN with CT_SPAREN_OPEN */
+         set_chunk_type(pc, CT_SPAREN_OPEN);
+         frm->pse[frm->pse_tos].type  = pc->type;
+         frm->pse[frm->pse_tos].stage = BS_PAREN1;
+         return(false);
+      }
+      else if (pc->type == CT_WHEN)
+      {
+         frm->pse[frm->pse_tos].type  = pc->type;
+         frm->pse[frm->pse_tos].stage = BS_OP_PAREN1;
+         return(true);
+      }
+      else if (pc->type == CT_BRACE_OPEN)
+      {
+         frm->pse[frm->pse_tos].stage = BS_BRACE2;
+         return(false);
       }
    }
 
@@ -746,7 +771,7 @@ static bool check_complex_statements(struct parse_frame *frm, chunk_t *pc)
       }
 
       LOG_FMT(LWARN, "%s:%d Error: Expected 'while', got '%s'\n",
-              cpd.filename, pc->orig_line, pc->str.c_str());
+              cpd.filename, pc->orig_line, pc->text());
       frm->pse_tos--;
       print_stack(LBCSPOP, "-Error  ", frm, pc);
       cpd.error_count++;
@@ -778,7 +803,7 @@ static bool check_complex_statements(struct parse_frame *frm, chunk_t *pc)
       pc->flags      |= PCF_STMT_START | PCF_EXPR_START;
       frm->stmt_count = 1;
       frm->expr_count = 1;
-      LOG_FMT(LSTMT, "%d] 2.marked %s as stmt start\n", pc->orig_line, pc->str.c_str());
+      LOG_FMT(LSTMT, "%d] 2.marked %s as stmt start\n", pc->orig_line, pc->text());
    }
 
    /* Verify open paren in complex statement */
@@ -787,7 +812,7 @@ static bool check_complex_statements(struct parse_frame *frm, chunk_t *pc)
         (frm->pse[frm->pse_tos].stage == BS_WOD_PAREN)))
    {
       LOG_FMT(LWARN, "%s:%d Error: Expected '(', got '%s' for '%s'\n",
-              cpd.filename, pc->orig_line, pc->str.c_str(),
+              cpd.filename, pc->orig_line, pc->text(),
               get_token_name(frm->pse[frm->pse_tos].type));
 
       /* Throw out the complex statement */
@@ -797,7 +822,7 @@ static bool check_complex_statements(struct parse_frame *frm, chunk_t *pc)
    }
 
    return(false);
-}
+} // check_complex_statements
 
 
 /**
@@ -815,8 +840,17 @@ static bool handle_complex_close(struct parse_frame *frm, chunk_t *pc)
 
    if (frm->pse[frm->pse_tos].stage == BS_PAREN1)
    {
-      /* PAREN1 always => BRACE2 */
-      frm->pse[frm->pse_tos].stage = BS_BRACE2;
+      if (pc->next->type == CT_WHEN)
+      {
+         frm->pse[frm->pse_tos].type = pc->type;
+         frm->pse[frm->pse_tos].stage = BS_CATCH_WHEN;
+         return true;
+      }
+      else
+      {
+         /* PAREN1 always => BRACE2 */
+         frm->pse[frm->pse_tos].stage = BS_BRACE2;
+      }
    }
    else if (frm->pse[frm->pse_tos].stage == BS_BRACE2)
    {
@@ -902,7 +936,7 @@ static bool handle_complex_close(struct parse_frame *frm, chunk_t *pc)
       cpd.error_count++;
    }
    return(false);
-}
+} // handle_complex_close
 
 
 static chunk_t *insert_vbrace(chunk_t *pc, bool after,
@@ -941,14 +975,14 @@ static chunk_t *insert_vbrace(chunk_t *pc, bool after,
 
       /* Don't back into a preprocessor */
       if (((pc->flags & PCF_IN_PREPROC) == 0) &&
-          ((ref->flags & PCF_IN_PREPROC) != 0))
+          (ref->flags & PCF_IN_PREPROC))
       {
          if (ref->type == CT_PREPROC_BODY)
          {
             do
             {
                ref = chunk_get_prev(ref);
-            } while ((ref != NULL) && ((ref->flags & PCF_IN_PREPROC) != 0));
+            } while ((ref != NULL) && (ref->flags & PCF_IN_PREPROC));
          }
          else
          {
@@ -959,10 +993,10 @@ static chunk_t *insert_vbrace(chunk_t *pc, bool after,
       chunk.orig_line = ref->orig_line;
       chunk.column    = ref->column + ref->len() + 1;
       chunk.type      = CT_VBRACE_OPEN;
-      rv = chunk_add_after(&chunk, ref);
+      rv              = chunk_add_after(&chunk, ref);
    }
    return(rv);
-}
+} // insert_vbrace
 
 
 /**
@@ -981,7 +1015,7 @@ bool close_statement(struct parse_frame *frm, chunk_t *pc)
 
    LOG_FMT(LTOK, "%s:%d] %s '%s' type %s stage %d\n", __func__,
            pc->orig_line,
-           get_token_name(pc->type), pc->str.c_str(),
+           get_token_name(pc->type), pc->text(),
            get_token_name(frm->pse[frm->pse_tos].type),
            frm->pse[frm->pse_tos].stage);
 
@@ -990,7 +1024,7 @@ bool close_statement(struct parse_frame *frm, chunk_t *pc)
       frm->stmt_count = 0;
       frm->expr_count = 0;
       LOG_FMT(LSTMT, "%s: %d> reset2 stmt on %s\n",
-              __func__, pc->orig_line, pc->str.c_str());
+              __func__, pc->orig_line, pc->text());
    }
 
    /**
@@ -1035,4 +1069,4 @@ bool close_statement(struct parse_frame *frm, chunk_t *pc)
       }
    }
    return(false);
-}
+} // close_statement

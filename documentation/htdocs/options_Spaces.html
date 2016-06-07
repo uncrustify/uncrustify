@@ -1,0 +1,623 @@
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+   <title>Uncrustify: where do the Spaces options work</title>
+</head>
+<body lang="en-US">
+<h1><a href="https://github.com/gmaurel/uncrustify4Qt">Uncrustify4Qt</a>:
+Where do the options work?</h1>
+<h2>Spaces</h2>
+<p> 
+</p>
+<table border="1">
+<tr>
+<td>
+<pre>
+enum FLAGS {<a name="sp_enum_assign"></a><a name="sp_enum_before_assign"></a><a name="sp_enum_after_assign"></a>
+    FLAGS_decimal = 1,
+    <a title="sp_enum_assign"><strong><font color="red">             ^ ^</font></strong></a>
+    <a title="sp_enum_before_assign"><strong><font color="red">             ^ </a><a title="sp_enum_after_assign">^</font></strong></a>
+    FLAGS_unsigned = 2,
+<a name="sp_cmt_cpp_start"></a>
+// Comments
+<a title="sp_cmt_cpp_start"><strong><font color="red">  ^</font></strong></a><a name="sp_before_tr_emb_cmt"></a><a name="sp_num_before_tr_emb_cmt"></a>
+int a;            /* emb cmt */ int b;            // trailing cmt
+<a title="sp_before_tr_emb_cmt"><strong><font color="red">      ^</a><a title="sp_num_before_tr_emb_cmt">..........^                    ^..........^</font></strong></a><a name="sp_inside_braces_enum"></a>
+enum Status { Unknown, Success, Error };
+<a title="sp_inside_braces_enum"><strong><font color="red">             ^                       ^</font></strong></a>
+    union {
+        uint maxChars;
+        uint maxBytes;
+    } mLength;<a name="sp_inside_braces_struct"></a>
+    union { int m_size; int m_any; };
+    <a title="sp_inside_braces_struct"><strong><font color="red">       ^                      ^</font></strong></a><a name="sp_inside_braces"></a>
+    return { -1, -1, -1 };
+    <a title="sp_inside_braces"><strong><font color="red">        ^          ^</font></strong></a>
+    <a name="sp_before_dc"></a><a name="sp_after_dc"></a><a name="sp_inside_braces_empty"></a>
+class Parser :: ParserPrivate { };
+<a title="sp_before_dc"><strong><font color="red">            ^</a><a title="sp_after_dc">  ^</a><a title="sp_inside_braces_empty">               ^</font></strong></a>
+template &lt;typename T&gt; class to { };
+<a title="sp_inside_braces_empty"><strong><font color="red">                                ^</font></strong></a>
+my $all = { };
+<a title="sp_inside_braces_empty"><strong><font color="red">           ^</font></strong></a>
+enum FocusEffect { };
+<a title="sp_inside_braces_empty"><strong><font color="red">                  ^</font></strong></a>
+struct error { };
+<a title="sp_inside_braces_empty"><strong><font color="red">              ^</font></strong></a>
+};
+<a name="sp_defined_paren"></a><a name="sp_pp_concat"></a><a name="sp_before_ellipsis_1"></a>
+#define LOG_FMT (sev, args ...) \
+<a title="sp_defined_paren"><strong><font color="red">               ^</a><a title="sp_before_ellipsis">          ^</font></strong></a>
+   do { if (log_sev_on(sev)) { log_fmt(sev, ## args); } } while (0)
+   <a title="sp_pp_concat"><strong><font color="red">                                        ^  </a><a title="sp_pp_concat">^</font></strong></a>
+#endif<a name="sp_macro"></a>
+#define FS_NOCOW_FL 0x00800000
+<a title="sp_macro"><strong><font color="red">                   ^</font></strong></a><a name="sp_macro_func"></a>
+#define STRHACK(x) HACKSTR(x)
+<a title="sp_macro_func"><strong><font color="red">             ^</font></strong></a><a name="sp_before_nl_cont"></a>
+#define wakeUpCaller(cond) \
+<a title="sp_before_nl_cont"><strong><font color="red">                          ^</font></strong></a>
+    if (cond) { \
+    <a title="sp_before_nl_cont"><strong><font color="red">           ^</font></strong></a>
+        cond->release(); \
+        <a title="sp_before_nl_cont"><strong><font color="red">                ^</font></strong></a>
+     }<a name="sp_brace_typedef"></a>
+typedef struct { int val; int sel; } DiceInfo;
+<a title="sp_brace_typedef"><strong><font color="red">                                    ^</font></strong></a><a name="sp_before_ptr_star_func"></a><a name="sp_after_ptr_star_func"></a>
+void * bar()
+<a title="sp_before_ptr_star_func"><strong><font color="red">    ^ </a><a title="sp_after_ptr_star_func">^</font></strong></a>
+{<a name="sp_assign"></a><a name="sp_before_assign"></a><a name="sp_after_assign"></a>
+    int a = 5;
+    <a title="sp_assign"><strong><font color="red">     ^ ^</font></strong></a>
+    <a title="sp_before_assign"><strong><font color="red">     ^ </a><a title="sp_after_assign">^</font></strong></a><a name="sp_arith"></a><a name="sp_compare"></a><a name="sp_inside_paren"></a><a name="sp_paren_paren"></a>
+    c = a + b;
+    <a title="sp_arith"><strong><font color="red">     ^ ^</font></strong></a><a name="sp_inv"></a>
+    a = ~ b;
+    <a title="sp_inv"><strong><font color="red">     ^</font></strong></a><a name="sp_sign"></a>
+    x = - 5;
+    <a title="sp_sign"><strong><font color="red">     ^</font></strong></a>
+    y = + 7;
+    <a title="sp_sign"><strong><font color="red">     ^</font></strong></a><a name="sp_incdec"></a>
+    (-- a);
+    <a title="sp_incdec"><strong><font color="red">   ^</font></strong></a>
+    i ++;
+    <a title="sp_incdec"><strong><font color="red"> ^</font></strong></a><a name="sp_cond_question_before"></a><a name="sp_cond_question_after"></a><a name="sp_cond_question"></a><a name="sp_cond_colon"></a><a name="sp_cond_colon_before"></a><a name="sp_cond_colon_after"></a>
+    b = ( a == d ) ? 55 : 88;
+    <a title="sp_cond_question"><strong><font color="red">              ^ ^</a><a title="sp_cond_colon">  ^ ^</font></strong></a>
+    <a title="sp_cond_question_before"><strong><font color="red">              ^</a><a title="sp_cond_question_after"> ^</a><a title="sp_cond_colon_before">  ^</a><a title="sp_cond_colon_after"> ^</font></strong></a><a name="sp_cond_ternary_short"></a>
+    b = ( a == d ) ? : 88;
+    <a title="sp_cond_ternary_short"><strong><font color="red">                ^</font></strong></a><a name="sp_bool"></a>
+    if( ( a || b ) && c ) x = 1;
+    <a title="sp_bool"><strong><font color="red">       ^  ^   ^  ^</font></strong></a>
+    <a title="sp_inside_paren"><strong><font color="red">     ^      ^      ^</font></strong></a>
+    <a title="sp_paren_paren"><strong><font color="red">   ^</font></strong></a>
+    c = a > b;
+    <a title="sp_compare"><strong><font color="red">     ^ ^</font></strong></a><a name="sp_before_ptr_star"></a><a name="sp_after_ptr_star"></a><a name="sp_before_unnamed_ptr_star"></a>
+    int * i;
+    <a title="sp_before_ptr_star"><strong><font color="red">   ^ </a><a title="sp_after_ptr_star">^</font></strong></a>
+    <a title="sp_before_unnamed_ptr_star"><strong><font color="red">   ^</font></strong></a><a name="sp_between_ptr_star"></a>
+    int * * j;
+    <a title="sp_between_ptr_star"><strong><font color="red">     ^</font></strong></a><a name="sp_throw_paren"></a>
+    throw (x);
+    <a title="sp_throw_paren"><strong><font color="red">     ^</font></strong></a><a name="sp_try_brace"></a>
+    try {<a name="sp_catch_paren"></a><a name="sp_brace_catch"></a>
+    <a title="sp_try_brace"><strong><font color="red">   ^</font></strong></a>
+    } catch (const Exception &e) { }
+    <a title="sp_brace_catch"><strong><font color="red"> ^</a><a title="sp_catch_paren">     ^</font></strong></a>
+    } catch (...) { }
+    <a title="sp_brace_catch"><strong><font color="red"> ^</a><a title="sp_catch_paren">     ^</font></strong></a><a name="sp_catch_brace"></a>
+    } catch { }
+    <a title="sp_brace_catch"><strong><font color="red"> ^</a><a title="sp_catch_brace">     ^</font></strong></a>
+
+</pre>
+</td>
+</tr>
+</table>
+<p></p>
+<table border="1">
+<tr>
+<td>
+<a name="sp_before_comma"></a><a name="sp_after_comma"></a><a name="sp_before_squares"></a>
+<pre>
+int main(int argc , char *argv [])
+<a title="sp_before_comma"><strong><font color="red">                 ^</a><a title="sp_after_comma"> ^</a><a title="sp_before_squares">          ^</font></strong></a>
+{<a name="sp_before_square"></a>
+	int a [2];
+	<a title="sp_before_square"><strong><font color="red">     ^</font></strong></a><a name="sp_inside_square"></a>
+	a[ n ] = 3;
+	<a title="sp_inside_square"><strong><font color="red">  ^ ^</font></strong></a>
+	const char *names [] =
+	<a title="sp_before_squares"><strong><font color="red">                 ^</font></strong></a>
+	{
+		"{ False , True }",
+		<a title="sp_before_comma"><strong><font color="red">        ^</a><a title="sp_after_comma"> ^</font></strong></a>
+		"{ Ignore, Add, Remove, Force }",
+	<a name="sp_return_paren"></a>
+	return (-1);
+	<a title="sp_return_paren"><strong><font color="red">      ^</font></strong></a>
+
+<a name="sp_func_proto_paren"></a><a name="sp_inside_fparens"></a>
+int a ( );
+<a title="sp_func_proto_paren"><strong><font color="red">     ^</a><a title="sp_inside_fparens"> ^</font></strong></a><a name="sp_func_def_paren"></a><a name="sp_fparen_brace"></a>
+int a (int b) {}
+<a title="sp_func_def_paren"><strong><font color="red">     ^</a><a title="sp_fparen_brace">       ^</font></strong></a><a name="sp_inside_tparen"></a><a name="sp_inside_fparen"></a><a name="sp_after_tparen_close"></a>
+void ( int a ) ( int b );
+<a title="sp_inside_tparen"><strong><font color="red">      ^     ^</a><a title="sp_after_tparen_close"> ^</a><a title="sp_inside_fparen"> ^     ^</font></strong></a>
+static void sockaddr_unmapped(<a name="sp_attribute_paren"></a>
+    struct sockaddr *sa __attribute__ ((unused)),
+    <a title="sp_attribute_paren"><strong><font color="red">                                 ^</font></strong></a>
+    socklen_t *len __attribute__ ((unused)))
+    <a title="sp_attribute_paren"><strong><font color="red">                            ^</font></strong></a>
+
+</pre>
+</td>
+</tr>
+</table>
+<p>
+</p>
+<table border="1">
+<tr>
+<td>
+<a name="sp_template_angle"></a><a name="sp_before_angle"></a><a name="sp_inside_angle"></a><a name="sp_after_angle"></a>
+<pre>
+template &lt; typename T &gt; inline static bool remove(T column)
+<a title="sp_template_angle"><strong><font color="red">        ^<a title="sp_inside_angle"> ^<a title="sp_inside_angle">          ^</font></strong></a>
+<a title="sp_before_angle"><strong><font color="red">        ^</a><a title="sp_after_angle">              ^</font></strong></a>
+</pre>
+<a name="sp_before_byref_func"></a><a name="sp_after_byref_func"></a><a name="sp_before_byref"></a><a name="sp_after_byref"></a><a name="sp_before_unnamed_byref"></a>
+<pre>
+int & a(int & b);
+<a name="sp_type_func"></a><a title="sp_before_byref_func"><strong><font color="red">   ^</a><a title="sp_after_byref_func"> ^</a><a title="sp_before_byref">     ^</a><a title="sp_after_byref"> ^</font></strong></a>
+int c(int &)
+<a title="sp_type_func"><strong><font color="red">   ^</a><a title="sp_before_unnamed_byref">     ^</font></strong></a>
+{<a name="sp_func_call_paren"></a><a name="sp_addr"></a><a name="sp_before_semi"></a>
+	d = aa (& y,& d) ;
+	<a title="sp_func_call_paren"><strong><font color="red">      ^ </a><a title="sp_addr"> ^   ^</a><a title="sp_before_semi">  ^</font></strong></a><a name="sp_func_call_paren_empty"></a>
+        e = ee ();
+        <a title="sp_func_call_paren_empty"><strong><font color="red">      ^</font></strong></a><a name="sp_before_sparen"></a><a name="sp_inside_sparen"></a><a name="sp_inside_sparen_close"></a><a name="sp_inside_sparen_open"></a><a name="sp_after_sparen"></a><a name="sp_sparen_brace"></a>
+	if ( a == 5 ) ...
+	<a title="sp_before_sparen"><strong><font color="red">  ^</font></strong></a>
+        <a title="sp_inside_sparen"><strong><font color="red">    ^      ^</font></strong></a>
+        <a title="sp_inside_sparen_open"><strong><font color="red">    ^</a><a title="sp_inside_sparen_close">      ^</font></strong></a>
+            ...<a name="sp_special_semi"></a>
+        if (b) ;
+        <a title="sp_special_semi"><strong><font color="red">      ^</font></strong></a>
+	if ( a == 6 ) b = 66;        
+        <a title="sp_after_sparen"><strong><font color="red">             ^</font></strong></a>
+	if ( a == 7 ) { b = 77; }        
+        <a title="sp_sparen_brace"><strong><font color="red">             ^</font></strong></a><a name="sp_not"></a>
+        if (! a) {<a name="sp_before_semi_for"></a><a name="sp_before_semi_for"></a>
+        <a title="sp_not"><strong><font color="red">     ^</font></strong></a>
+            b = 4;<a name="sp_brace_else"></a><a name="sp_else_brace"></a>
+        } else {
+        <a title="sp_brace_else"><strong><font color="red"> ^</a><a title="sp_else_brace">    ^</font></strong></a>
+            b = 5;
+        }
+        for(a = 1 ; a < b ; a++) {
+        <a title="sp_before_semi_for"><strong><font color="red">         ^</a><a title="sp_before_semi_for_empty">       ^</font></strong></a>
+           ...<a name="sp_before_semi_for_empty"></a><a name="sp_after_semi_for_empty"></a>
+	for( ; ; ) {
+        <a title="sp_before_semi_for_empty"><strong><font color="red">    ^ ^</a><a title="sp_after_semi_for_empty"> ^</font></strong></a>
+           ...
+	switch (whatIsToDo) ...
+	<a title="sp_before_sparen"><strong><font color="red">      ^</font></strong></a>
+	while (start < end) ...
+	<a title="sp_before_sparen"><strong><font color="red">     ^</font></strong></a>
+
+</pre>
+</td>
+</tr>
+</table>
+<p>
+</p>
+<table border="1">
+<tr>
+<td>
+<a name="sp_word_brace_ns"></a>
+<pre>
+namespace Server {
+<a title="sp_word_brace_ns"><strong><font color="red">                ^</font></strong></a><a name="sp_func_class_paren"></a><a name="sp_before_class_colon"></a><a name="sp_after_class_colon"></a>
+class Cache : public QObject
+<a title="sp_before_class_colon"><strong><font color="red">           ^</a><a title="sp_after_class_colon"> ^</font></strong></a>
+Cache::StorageDebugger ()
+<a title="sp_func_class_paren"><strong><font color="red">                      ^</font></strong></a><a name="sp_before_constr_colon"></a><a name="sp_after_constr_colon"></a>
+    : mFile(0)
+<a title="sp_before_constr_colon"><strong><font color="red">   ^</a><a title="sp_after_constr_colon"> ^</font></strong></a>
+{<a name="sp_after_new"></a>
+        new service;
+        <a title="sp_after_new"><strong><font color="red">   ^</font></strong></a>
+        delete service;
+        <a title="sp_after_new"><strong><font color="red">      ^</font></strong></a>
+        delete[] buffer;
+        <a title="sp_after_new"><strong><font color="red">        ^</font></strong></a><a name="sp_addr"></a><a name="sp_deref"></a>
+        if (this == & other) return * this;
+        <a title="sp_addr"><strong><font color="red">             ^</a><a title="sp_deref">               ^</font></strong></a>
+        switch (a) {<a name="sp_before_case_colon"></a>
+        case 1 :
+        <a title="sp_before_case_colon"><strong><font color="red">      ^</font></strong></a>
+                b= 1;
+                break;
+        case 2 : {
+                b = 2;
+                break;
+        }
+        default :
+                break;
+        }<a name="sp_after_operator"></a><a name="sp_after_operator_sym"></a>
+        bool operator () (Entity::Id lhs, Entity::Id rhs) const
+        ...<a title="sp_after_operator"><strong><font color="red">          ^</a><a title="sp_after_operator_sym">  ^</font></strong></a>
+        <a name="sp_inside_paren_cast"></a><a name="sp_after_cast"></a>
+        a = ( int ) 5.6;
+        <a title="sp_inside_paren_cast"><strong><font color="red">     ^   ^</a><a title="sp_after_cast"> ^</font></strong></a><a name="sp_cpp_cast_paren"></a>
+        cpp = int (7);
+        <a title="sp_cpp_cast_paren"><strong><font color="red">         ^</font></strong></a><a name="sp_sizeof_paren"></a>
+        len = sizeof (int);
+        <a title="sp_sizeof_paren"><strong><font color="red">            ^</font></strong></a><a name="sp_word_brace"></a>
+        SomeStruct a = SomeStruct {1, 2, 3};
+        <a title="sp_word_brace"><strong><font color="red">                         ^</font></strong></a>
+	someFuncCall(SomeStruct {4, 5, 6});
+	<a title="sp_word_brace"><strong><font color="red">                       ^</font></strong></a><a name="sp_member"></a>
+        log . foo . bar = 5;
+        <a title="sp_member"><strong><font color="red">   ^ ^   ^ ^</font></strong></a>
+	other -> foo -> bar = 123;
+	<a title="sp_member"><strong><font color="red">     ^  ^   ^  ^</font></strong></a>
+}<a name="sp_cmt_cpp_doxygen"></a>
+/// doxygen sequence
+<a title="sp_cmt_cpp_doxygen"><strong><font color="red">   ^</font></strong></a>
+///< doxygen sequence
+<a title="sp_cmt_cpp_doxygen"><strong><font color="red">    ^</font></strong></a>
+//! doxygen sequence
+<a title="sp_cmt_cpp_doxygen"><strong><font color="red">   ^</font></strong></a>
+//!< doxygen sequence
+<a title="sp_cmt_cpp_doxygen"><strong><font color="red">    ^</font></strong></a>
+#if A<a name="sp_endif_cmt"></a>
+#else /* Comment A */
+<a title="sp_endif_cmt"><strong><font color="red">     ^</font></strong></a>
+#endif /* Comment B */
+<a title="sp_endif_cmt"><strong><font color="red">      ^</font></strong></a>
+</pre>
+</td>
+</tr>
+</table>
+<table border="1">
+<tr>
+<td>
+<a name="sp_assign_default"></a>
+<pre>
+void Initialize( BYTE nDelay = 100 );
+<a title="sp_assign_default"><strong><font color="red">                            ^ ^</font></strong></a><a name="sp_cpp_lambda_assign"></a>
+void f1()
+{<a name="sp_square_fparen"></a>
+      auto a = [ = ] (int *a, Something & b)
+      <a title="sp_cpp_lambda_assign"><strong><font color="red">          ^ ^</a><a title="sp_square_fparen"> ^</font></strong></a>
+
+      list[idx] (param);
+      <a title="sp_square_fparen"><strong><font color="red">         ^</font></strong></a>
+
+double foo()
+{<a name="sp_balance_nested_parens"></a>
+	return( foo(n) );
+	<a title="sp_balance_nested_parens"><strong><font color="red">       ^      ^</font></strong></a>
+
+<a name="sp_angle_paren"></a>
+Vector2&lt;double&gt; ()
+<a title="sp_angle_paren"><strong><font color="red">               ^</font></strong></a>
+
+{<a name="sp_angle_word"></a>
+        List&lt;byte&gt; bob = new List&lt;byte&gt; ();
+        <a title="sp_angle_word"><strong><font color="red">          ^</font></strong></a><a name="sp_permit_cpp11_shift"></a>
+        QVector&lt;QPair&lt;Condition, QString&gt; &gt; mWhenThen;
+        <a title="sp_permit_cpp11_shift"><strong><font color="red">                                 ^</font></strong></a>
+<a name="sp_before_ellipsis_2"></a>
+template&lt;int i, int ... Indexes, typename IdxHolder, typename ... Elements&gt;
+<a title="sp_before_ellipsis"><strong><font color="red">                   ^                                         ^</font></strong></a>
+struct index_holder_impl&lt;i, index_holder&lt;Indexes ...&gt;, IdxHolder, Elements ...&gt;
+<a title="sp_before_ellipsis"><strong><font color="red">                                                ^                         ^</font></strong></a>
+{
+	typedef typename index_holder_impl&lt;i + 1, index_holder&lt;Indexes ... i&gt;,	Elements ...&gt;::type type;
+	<a title="sp_before_ellipsis"><strong><font color="red">                                                              ^                 ^</font></strong></a>
+</pre>
+</td>
+</tr>
+</table>
+<h1>Register</h1>
+<table>
+  <tr>
+    <td><a href="#sp_addr">sp_addr</a></td>
+    <td><a href="#sp_after_angle">sp_after_angle</a></td>
+  </tr>
+  <tr>
+    <td><a href="#sp_after_assign">sp_after_assign</a></td>
+    <td><a href="#sp_after_byref_func">sp_after_byref_func</a></td>
+  </tr>
+  <tr>
+    <td><a href="#sp_after_byref">sp_after_byref</a></td>sp_inside_angle
+    <td><a href="#sp_after_cast">sp_after_cast</a></td>
+  </tr>
+  <tr>
+    <td><a href="#sp_after_class_colon">sp_after_class_colon</a></td>
+    <td><a href="#sp_after_comma">sp_after_comma</a></td>
+  </tr>
+  <tr>
+    <td><a href="#sp_after_constr_colon">sp_after_constr_colon</a></td>
+    <td><a href="#sp_after_dc">sp_after_dc</a></td>
+  </tr>
+  <tr>
+    <td><a href="#sp_after_new">sp_after_new</a></td>
+    <td><a href="#sp_after_operator">sp_after_operator</a></td>
+  </tr>
+  <tr>
+    <td><a href="#sp_after_operator_sym">sp_after_operator_sym</a></td>
+    <td><a href="#sp_after_ptr_star_func">sp_after_ptr_star_func</a></td>
+  </tr>
+  <tr>
+    <td><a href="#sp_after_ptr_star">sp_after_ptr_star</a></td>
+    <td><a href="#sp_after_semi_for_empty">sp_after_semi_for_empty</a></td>
+  </tr>
+  <tr>
+    <td><a href="#sp_after_semi_for">sp_after_semi_for</a></td>
+    <td><a href="#sp_after_sparen">sp_after_sparen</a></td>
+  </tr>
+  <tr>
+    <td><a href="#sp_angle_paren">sp_angle_paren</a></td>
+    <td><a href="#sp_angle_word">sp_angle_word</a></td>
+  </tr>
+  <tr>
+    <td><a href="#sp_arith">sp_arith</a></td>
+    <td><a href="#sp_assign_default">sp_assign_default</a></td>
+  </tr>
+  <tr>
+    <td><a href="#sp_assign">sp_assign</a></td>
+    <td><a href="#sp_attribute_paren">sp_attribute_paren</a></td>
+  </tr>
+  <tr>
+    <td><a href="#sp_balance_nested_parens">sp_balance_nested_parens</a></td>
+    <td><a href="#sp_before_angle">sp_before_angle</a></td>
+  </tr>
+  <tr>
+    <td><a href="#sp_before_assign">sp_before_assign</a></td>
+    <td><a href="#sp_before_byref_func">sp_before_byref_func</a></td>
+  </tr>
+  <tr>
+    <td><a href="#sp_before_byref">sp_before_byref</a></td>
+    <td><a href="#sp_before_case_colon">sp_before_case_colon</a></td>
+  </tr>
+  <tr>
+    <td><a href="#sp_before_class_colon">sp_before_class_colon</a></td>
+    <td><a href="#sp_before_comma">sp_before_comma</a></td>
+  </tr>
+  <tr>
+    <td><a href="#sp_before_constr_colon">sp_before_constr_colon</a></td>
+    <td><a href="#sp_before_dc">sp_before_dc</a></td>
+  </tr>
+  <tr>
+    <td><a href="#sp_before_ellipsis_1">sp_before_ellipsis(1)</a></td>
+    <td><a href="#sp_before_ellipsis_2">sp_before_ellipsis(2)</a></td>
+  </tr>
+  <tr>
+    <td><a href="#sp_before_nl_cont">sp_before_nl_cont</a></td>
+    <td><a href="#sp_before_ptr_star_func">sp_before_ptr_star_func</a></td>
+  </tr>
+  <tr>
+    <td><a href="#sp_before_ptr_star">sp_before_ptr_star</a></td>
+    <td><a href="#sp_before_semi_for_empty">sp_before_semi_for_empty</a></td>
+  </tr>
+  <tr>
+    <td><a href="#sp_before_semi_for">sp_before_semi_for</a></td>
+    <td><a href="#sp_before_semi">sp_before_semi</a></td>
+  </tr>
+  <tr>
+    <td><a href="#sp_before_sparen">sp_before_sparen</a></td>
+    <td><a href="#sp_before_square">sp_before_square</a></td>
+  </tr>
+  <tr>
+    <td><a href="#sp_before_squares">sp_before_squares</a></td>
+    <td><a href="#sp_before_tr_emb_cmt">sp_before_tr_emb_cmt</a></td>
+  </tr>
+  <tr>
+    <td><a href="#sp_before_unnamed_byref">sp_before_unnamed_byref</a></td>
+    <td><a href="#sp_before_unnamed_ptr_star">sp_before_ptr_star</a></td>
+  </tr>
+  <tr>
+    <td><a href="#sp_between_unnamed_ptr_star">sp_between_ptr_star</a></td>
+    <td><a href="#sp_bool">sp_bool</a></td>
+  </tr>
+  <tr>
+    <td><a href="#sp_brace_catch">sp_brace_catch</a></td>
+    <td><a href="#sp_brace_else">sp_brace_else</a></td>
+  </tr>
+  <tr>
+    <td><a href="#sp_brace_typedef">sp_brace_typedef</a></td>
+    <td><a href="#sp_catch_brace">sp_catch_brace</a></td>
+  </tr>
+  <tr>
+    <td><a href="#sp_catch_paren">sp_catch_paren</a></td>
+    <td><a href="#sp_cmt_cpp_doxygen">sp_cmt_cpp_doxygen</a></td>
+  </tr>
+  <tr>
+    <td><a href="#sp_cmt_cpp_start">sp_cmt_cpp_start</a></td>
+    <td><a href="#sp_compare">sp_compare</a></td>
+  </tr>
+  <tr>
+    <td><a href="#sp_cond_colon_after">sp_cond_colon_after</a></td>
+    <td><a href="#sp_cond_colon_before">sp_cond_colon_before</a></td>
+  </tr>
+  <tr>
+    <td><a href="#sp_cond_colon">sp_cond_colon</a></td>
+    <td><a href="#sp_cond_question_after">sp_cond_question_after</a></td>
+  </tr>
+  <tr>
+    <td><a href="#sp_cond_question_before">sp_cond_question_before</a></td>
+    <td><a href="#sp_cond_question">sp_cond_question</a></td>
+  </tr>
+  <tr>
+    <td><a href="#sp_cond_ternary_short">sp_cond_ternary_short</a></td>
+    <td><a href="#sp_cpp_cast_paren">sp_cpp_cast_paren</a></td>
+  </tr>
+  <tr>
+    <td><a href="#sp_cpp_lambda_assign">sp_cpp_lambda_assign</a></td>
+    <td><a href="#sp_defined_paren">sp_defined_paren</a></td>
+  </tr>
+  <tr>
+    <td><a href="#sp_deref">sp_deref</a></td>
+    <td><a href="#sp_else_brace">sp_else_brace</a></td>
+  </tr>
+  <tr>
+    <td><a href="#sp_endif_cmt">sp_endif_cmt</a></td>
+    <td><a href="#sp_enum_after_assign">sp_enum_after_assign</a></td>
+  </tr>
+  <tr>
+    <td><a href="#sp_enum_assign">sp_enum_assign</a></td>
+    <td><a href="#sp_enum_before_assign">sp_enum_before_assign</a></td>
+  </tr>
+  <tr>
+    <td><a href="#sp_fparen_brace">sp_fparen_brace</a></td>
+    <td><a href="#sp_func_call_paren_empty">sp_func_call_paren_empty</a></td>
+  </tr>
+  <tr>
+    <td><a href="#sp_func_call_paren">sp_func_call_paren</a></td>
+    <td><a href="#sp_func_class_paren">sp_func_class_paren</a></td>
+  </tr>
+  <tr>
+    <td><a href="#sp_func_def_paren">sp_func_def_paren</a></td>
+    <td><a href="#sp_func_proto_paren">sp_func_proto_paren</a></td>
+  </tr>
+  <tr>
+    <td><a href="#sp_incdec">sp_incdec</a></td>
+    <td><a href="#sp_inside_angle">sp_inside_angle</a></td>
+  </tr>
+  <tr>
+    <td><a href="#sp_inside_braces_empty">sp_inside_braces_empty</a></td>
+    <td><a href="#sp_inside_braces_enum">sp_inside_braces_enum</a></td>
+  </tr>
+  <tr>
+    <td><a href="#sp_inside_braces">sp_inside_braces</a></td>
+    <td><a href="#sp_inside_braces_struct">sp_inside_braces_struct</a></td>
+  </tr>
+  <tr>
+    <td><a href="#sp_inside_fparen">sp_inside_fparen</a></td>
+    <td><a href="#sp_inside_fparens">sp_inside_fparens</a></td>
+  </tr>
+  <tr>
+    <td><a href="#sp_inside_paren_cast">sp_inside_paren_cast</a></td>
+    <td><a href="#sp_inside_paren">sp_inside_paren</a></td>
+  </tr>
+  <tr>
+    <td><a href="#sp_inside_sparen_close">sp_inside_sparen_close</a></td>
+    <td><a href="#sp_inside_sparen_open">sp_inside_sparen_open</a></td>
+  </tr>
+  <tr>
+    <td><a href="#sp_inside_sparen">sp_inside_sparen</a></td>
+    <td><a href="#sp_inside_square">sp_inside_square</a></td>
+  </tr>
+  <tr>
+    <td><a href="#sp_inside_tparen">sp_inside_tparen</a></td>
+    <td><a href="#sp_inv">sp_inv</a></td>
+  </tr>
+  <tr>
+    <td><a href="#sp_macro_func">sp_macro_func</a></td>
+    <td><a href="#sp_macro">sp_macro</a></td>
+  </tr>
+  <tr>
+    <td><a href="#sp_member">sp_member</a></td>
+    <td><a href="#sp_not">sp_not</a></td>
+  </tr>
+  <tr>
+    <td><a href="#sp_num_before_tr_emb_cmt">sp_num_before_tr_emb_cmt</a></td>
+    <td><a href="#sp_paren_paren">sp_paren_paren</a></td>
+  </tr>
+  <tr>
+    <td><a href="#sp_permit_cpp11_shift">sp_permit_cpp11_shift</a></td>
+    <td><a href="#sp_pp_concat">sp_pp_concat</a></td>
+  </tr>
+  <tr>
+    <td><a href="#sp_return_paren">sp_return_paren</a></td>
+    <td><a href="#sp_sign">sp_sign</a></td>
+  </tr>
+  <tr>
+    <td><a href="#sp_sizeof_paren">sp_sizeof_paren</a></td>
+    <td><a href="#sp_sparen_brace">sp_sparen_brace</a></td>
+  </tr>
+  <tr>
+    <td><a href="#sp_special_semi">sp_special_semi</a></td>
+    <td><a href="#sp_square_fparen">sp_square_fparen</a></td>
+  </tr>
+  <tr>
+    <td><a href="#sp_template_angle">sp_template_angle</a></td>
+    <td><a href="#sp_throw_paren">sp_throw_paren</a></td>
+  </tr>
+  <tr>
+    <td><a href="#sp_try_brace">sp_try_brace</a></td>
+    <td><a href="#sp_type_func">sp_type_func</a></td>
+  </tr>
+  <tr>
+    <td><a href="#sp_word_brace_ns">sp_word_brace_ns</a></td>
+    <td><a href="#sp_word_brace">sp_word_brace</a></td>
+  </tr>
+</table>
+
+<h2>not yet shown</h2>
+sp_after_for_colon<br>
+sp_after_ptr_star_qualifier<br>
+sp_after_semi<br>
+sp_after_throw<br>
+sp_after_type<br>
+sp_angle_shift<br>
+sp_before_for_colon<br>
+sp_before_pp_stringify<br>
+sp_case_label<br>
+sp_cparen_oparen<br>
+sp_cpp_lambda_paren<br>
+sp_func_call_user_paren<br>
+sp_paren_comma<br>
+
+<h2>only for C#</h2>
+sp_after_mdatype_commas<br>
+sp_before_mdatype_commas<br>
+sp_between_mdatype_commas<br>
+sp_between_new_paren<br>
+sp_getset_brace<br>
+
+<h2>only for D</h2>
+sp_before_template_paren<br>
+sp_d_array_colon<br>
+sp_extern_paren<br>
+sp_invariant_paren<br>
+sp_range<br>
+sp_scope_paren<br>
+sp_version_paren<br>
+
+<h2>only for Java</h2>
+sp_annotation_paren<br>
+sp_fparen_dbrace<br>
+
+<h2>only for Pawn</h2>
+sp_after_tag<br>
+
+<h2>only for oc</h2>
+sp_after_oc_at_sel<br>
+sp_after_oc_at_sel_parens<br>
+sp_after_oc_block_caret<br>
+sp_after_oc_colon<br>
+sp_after_oc_dict_colon<br>
+sp_after_oc_msg_receiver<br>
+sp_after_oc_property<br>
+sp_after_oc_return_type<br>
+sp_after_oc_scope<br>
+sp_after_oc_type<br>
+sp_after_send_oc_colon<br>
+sp_before_oc_block_caret<br>
+sp_before_oc_colon<br>
+sp_before_oc_dict_colon<br>
+sp_before_send_oc_colon<br>
+sp_enum_paren<br>
+sp_inside_oc_at_sel_parens<br>
+sp_paren_brace<br>
+sp_ptr_star_paren<br>
+
+<h2>not C</h2>
+sp_brace_finally<br>
+sp_finally_brace<br>
+
+</body>
+</html>

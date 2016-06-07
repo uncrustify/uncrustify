@@ -13,6 +13,7 @@
 
 #include <cctype>
 
+
 /**
  * Truncate anything except EOF (-1) to 0-255
  */

@@ -16,6 +16,16 @@ EXEC SQL DECLARE csr1 CURSOR FOR
    FROM table1
    WHERE x = :hostvar1;
 
+/* dollar sign notation */
+$ DECLARE cursorName CURSOR for
+   SELECT
+   a,
+   b
+   INTO
+   $struct->a,
+   $struct->b
+   FROM table;
+
 /*----------------------------------------------------------------*/
 void main(void)
 {

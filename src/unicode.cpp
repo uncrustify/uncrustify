@@ -43,7 +43,7 @@ static bool decode_bytes(const vector<UINT8>& in_data, deque<int>& out_data)
    {
       out_data[idx] = in_data[idx];
    }
-   return true;
+   return(true);
 }
 
 
@@ -98,7 +98,7 @@ void encode_utf8(int ch, vector<UINT8>& res)
       res.push_back(0x80 | ((ch >> 6) & 0x3f));
       res.push_back(0x80 | (ch & 0x3f));
    }
-}
+} // encode_utf8
 
 
 /**
@@ -160,7 +160,7 @@ static bool decode_utf8(const vector<UINT8>& in_data, deque<int>& out_data)
       else
       {
          /* invalid UTF-8 sequence */
-         return false;
+         return(false);
       }
 
       while ((cnt-- > 0) && (idx < (int)in_data.size()))
@@ -169,19 +169,19 @@ static bool decode_utf8(const vector<UINT8>& in_data, deque<int>& out_data)
          if ((tmp & 0xC0) != 0x80)
          {
             /* invalid UTF-8 sequence */
-            return false;
+            return(false);
          }
          ch = (ch << 6) | (tmp & 0x3f);
       }
       if (cnt >= 0)
       {
          /* short UTF-8 sequence */
-         return false;
+         return(false);
       }
       out_data.push_back(ch);
    }
-   return true;
-}
+   return(true);
+} // decode_utf8
 
 
 /**
@@ -204,7 +204,7 @@ static int get_word(const vector<UINT8>& in_data, int& idx, bool be)
       ch = in_data[idx] | (in_data[idx + 1] << 8);
    }
    idx += 2;
-   return ch;
+   return(ch);
 }
 
 
@@ -220,13 +220,13 @@ static bool decode_utf16(const vector<UINT8>& in_data, deque<int>& out_data, Cha
    if (in_data.size() & 1)
    {
       /* can't have and odd length */
-      return false;
+      return(false);
    }
 
    if (in_data.size() < 2)
    {
       /* we require the BOM or at least 1 char */
-      return false;
+      return(false);
    }
 
    int idx = 2;
@@ -257,7 +257,7 @@ static bool decode_utf16(const vector<UINT8>& in_data, deque<int>& out_data, Cha
       }
       if (enc == ENC_ASCII)
       {
-         return false;
+         return(false);
       }
    }
 
@@ -273,7 +273,7 @@ static bool decode_utf16(const vector<UINT8>& in_data, deque<int>& out_data, Cha
          int tmp = get_word(in_data, idx, be);
          if ((tmp & 0xfc00) != 0xdc00)
          {
-            return false;
+            return(false);
          }
          ch |= (tmp & 0x3ff);
          ch += 0x10000;
@@ -286,11 +286,11 @@ static bool decode_utf16(const vector<UINT8>& in_data, deque<int>& out_data, Cha
       else
       {
          /* invalid character */
-         return false;
+         return(false);
       }
    }
-   return true;
-}
+   return(true);
+} // decode_utf16
 
 
 /**
@@ -306,12 +306,12 @@ static bool decode_bom(const vector<UINT8>& in_data, CharEncoding& enc)
       if ((in_data[0] == 0xfe) && (in_data[1] == 0xff))
       {
          enc = ENC_UTF16_BE;
-         return true;
+         return(true);
       }
       else if ((in_data[0] == 0xff) && (in_data[1] == 0xfe))
       {
          enc = ENC_UTF16_LE;
-         return true;
+         return(true);
       }
       else if ((in_data.size() >= 3) &&
                (in_data[0] == 0xef) &&
@@ -319,10 +319,10 @@ static bool decode_bom(const vector<UINT8>& in_data, CharEncoding& enc)
                (in_data[2] == 0xbf))
       {
          enc = ENC_UTF8;
-         return true;
+         return(true);
       }
    }
-   return false;
+   return(false);
 }
 
 
@@ -337,11 +337,11 @@ bool decode_unicode(const vector<UINT8>& in_data, deque<int>& out_data, CharEnco
       has_bom = true;
       if (enc == ENC_UTF8)
       {
-         return decode_utf8(in_data, out_data);
+         return(decode_utf8(in_data, out_data));
       }
       else
       {
-         return decode_utf16(in_data, out_data, enc);
+         return(decode_utf16(in_data, out_data, enc));
       }
    }
    has_bom = false;
@@ -352,7 +352,7 @@ bool decode_unicode(const vector<UINT8>& in_data, deque<int>& out_data, CharEnco
    if (is_ascii(in_data, non_ascii_cnt, zero_cnt))
    {
       enc = ENC_ASCII;
-      return decode_bytes(in_data, out_data);
+      return(decode_bytes(in_data, out_data));
    }
 
    /* There are alot of 0's in UTF-16 (~50%) */
@@ -362,20 +362,20 @@ bool decode_unicode(const vector<UINT8>& in_data, deque<int>& out_data, CharEnco
       /* likely is UTF-16 */
       if (decode_utf16(in_data, out_data, enc))
       {
-         return true;
+         return(true);
       }
    }
 
    if (decode_utf8(in_data, out_data))
    {
       enc = ENC_UTF8;
-      return true;
+      return(true);
    }
 
    /* it is an unrecognized byte sequence */
    enc = ENC_BYTE;
-   return decode_bytes(in_data, out_data);
-}
+   return(decode_bytes(in_data, out_data));
+} // decode_unicode
 
 
 /**

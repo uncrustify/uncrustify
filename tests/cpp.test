@@ -135,7 +135,7 @@
 
 30720 wessex.cfg                       cpp/custom-open-2.cpp
 
-30730 ben.cfg                          cpp/qt-1.cpp
+30730 qt-1.cfg                         cpp/qt-1.cpp
 30731 nl_access_spec.cfg               cpp/qt-1.cpp
 
 30740 sef.cfg                          cpp/sef.cpp
@@ -232,3 +232,54 @@
 
 31720 ben.cfg                          cpp/bit-colon.cpp
 31730 ms-style-ref.cfg                 cpp/ms-style-ref.cpp
+
+33000 tab-0-11.cfg                     cpp/tab-0.cpp
+33001 tab-1-11.cfg                     cpp/tab-1.cpp
+33002 comment_tab_f.cfg                cpp/cmt_convert_tab_to_spaces.cpp
+33003 comment_tab_t.cfg                cpp/cmt_convert_tab_to_spaces.cpp
+33004 DoxygenComments_f.cfg            cpp/DoxygenComments.cpp
+33005 DoxygenComments_t.cfg            cpp/DoxygenComments.cpp
+33006 string_replace_tab_chars_f.cfg   cpp/string_replace_tab_chars.cpp
+33007 NewLine-i.cfg                    cpp/NewLine.cpp
+33008 NewLine-r.cfg                    cpp/NewLine.cpp
+33009 NewLine-f.cfg                    cpp/NewLine0.cpp
+33010 kdepim.cfg                       cpp/Q_EMIT.cpp
+33011 kdepim.cfg                       cpp/static.h
+33012 kdepim.cfg                       cpp/Q_SIGNAL_SLOT.cpp
+33013 kdepim.cfg                       cpp/Q_2.cpp
+33014 kdepim.cfg                       cpp/DB.cpp
+33015 kdepim.cfg                       cpp/Q_FOREACH.cpp
+33016 indent_once.cfg                  cpp/indent.cpp
+33017 stdcall.cfg                      cpp/stdcall.cpp
+33018 byref-2.cfg                      cpp/byref-2.cpp
+33019 bug_657.cfg                      cpp/bug_657.cpp
+33020 bug_662.cfg                      cpp/bug_662.cpp
+33021 bug_633.cfg                      cpp/bug_633.cpp
+33022 bug_634.cfg                      cpp/bug_634.cpp
+33023 bug_651.cfg                      cpp/bug_651.cpp
+33024 bug_653.cfg                      cpp/bug_653.cpp
+33025 bug_654.cfg                      cpp/bug_654.cpp
+33026 bug_631.cfg                      cpp/bug_631.cpp
+33027 bug_664.cfg                      cpp/bug_664.cpp
+33028 braces_empty.cfg                 cpp/braces_empty.cpp
+33029 cast.cfg                         cpp/cast.cpp
+33030 kdepim.cfg                       cpp/Q_FOREVER.cpp
+33031 bug_612.cfg                      cpp/bug_612.cpp
+33032 bug_670.cfg                      cpp/bug_670.cpp
+33033 bug_670.cfg                      cpp/bug_670.h
+33034 bug_671.cfg                      cpp/bug_671.h
+33035 patch_32.cfg                     cpp/patch_32.cpp
+33036 bug_663.cfg                      cpp/bug_663.cpp
+33037 func_class.cfg                   cpp/func_class.cpp
+33038 func_class.cfg                   cpp/func_class.h
+33039 mod_remove_empty_return.cfg      cpp/mod_remove_empty_return.cpp
+33040 bug_i_411.cfg                    cpp/bug_i_411.cpp
+33041 bug_i_411a.cfg                   cpp/bug_i_411.cpp
+33042 bug_i_411b.cfg                   cpp/bug_i_411.cpp
+33043 bug_i_478.cfg                    cpp/bug_i_478.cpp
+33044 bug_i_481.cfg                    cpp/bug_i_481.cpp
+33045 bug_i_width.cfg                  cpp/bug_i_width.cpp
+33046 bug_i_409-split.cfg              cpp/bug_i_409.cpp
+33047 bug_i_409-create.cfg             cpp/bug_i_409.cpp
+33048 bug_i_405.cfg                    cpp/bug_i_405.cpp
+33049 pp-pragma.cfg                    cpp/pp-pragma.cpp

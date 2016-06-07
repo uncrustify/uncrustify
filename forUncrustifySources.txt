@@ -1,0 +1,33 @@
+2016-04-27
+
+The configuration file forUncrustifySources.cfg is the file to uncrustify the sources of uncrustify.
+
+It should be "stable". This means that if one changes (allmost) anything in a file, a new run of
+uncrustify with that configuration file, should produce the same output as the original input. 
+This cannot work for really anything, but one should try this approach.
+
+About the comments:
+While a line is indented, the comment at the end of the line stays at the original column.
+
+If we have:
+      else if ((pc->type == CT_FUNC_CLASS_DEF) ||
+               (pc->type == CT_FUNC_DEF) ||
+               (pc->type == CT_FUNC_CLASS_PROTO) ||
+               (pc->type == CT_FUNC_PROTO))
+      {                  // guy 2016-04-16
+
+where the brace { is at new line with a comment.
+The option nl_elseif_brace = remove
+gives:
+      else if ((pc->type == CT_FUNC_CLASS_DEF) ||
+                 (pc->type == CT_FUNC_DEF) ||
+                 (pc->type == CT_FUNC_CLASS_PROTO) ||
+                 (pc->type == CT_FUNC_PROTO)) { // guy 2016-04-16
+If using at new the same option again with a new value
+nl_elseif_brace = add
+is not able to reconstruct the original source. The comment has changed the line:
+      else if ((pc->type == CT_FUNC_CLASS_DEF) ||
+               (pc->type == CT_FUNC_DEF) ||
+               (pc->type == CT_FUNC_CLASS_PROTO) ||
+               (pc->type == CT_FUNC_PROTO))       // guy 2016-04-16
+      {
