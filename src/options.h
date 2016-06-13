@@ -406,6 +406,7 @@ enum uncrustify_options
    UO_sp_after_for_colon,
    UO_sp_before_for_colon,
    UO_sp_extern_paren,
+   UO_sp_skip_vbrace_tokens,
 
    /*
     * Line splitting options (for long lines)

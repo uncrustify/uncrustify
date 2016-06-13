@@ -566,6 +566,9 @@ void register_options(void)
    unc_add_option("sp_annotation_paren", UO_sp_annotation_paren, AT_IARF,
                   "Control space between a Java annotation and the open paren.");
 
+   unc_add_option("sp_skip_vbrace_tokens", UO_sp_skip_vbrace_tokens, AT_BOOL,
+                  "If true, vbrace tokens are dropped to the previous token and skipped.");
+
    unc_begin_group(UG_indent, "Indenting");
    unc_add_option("indent_columns", UO_indent_columns, AT_NUM,
                   "The number of columns to indent per level.\n"
