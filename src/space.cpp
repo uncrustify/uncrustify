@@ -874,6 +874,16 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
    }
    if (first->type == CT_FUNC_DEF)
    {
+      if ((cpd.settings[UO_sp_func_def_paren_empty].a != AV_IGNORE) &&
+          (second->type == CT_FPAREN_OPEN))
+      {
+         next = chunk_get_next_ncnl(second);
+         if (next && (next->type == CT_FPAREN_CLOSE))
+         {
+            log_rule("sp_func_def_paren_empty");
+            return(cpd.settings[UO_sp_func_def_paren_empty].a);
+         }
+      }
       log_rule("sp_func_def_paren");
       return(cpd.settings[UO_sp_func_def_paren].a);
    }
@@ -925,12 +935,32 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
        ((second->type == CT_FPAREN_OPEN) &&
         (second->parent_type == CT_FUNC_PROTO)))
    {
+      if ((cpd.settings[UO_sp_func_proto_paren_empty].a != AV_IGNORE) &&
+          (second->type == CT_FPAREN_OPEN))
+      {
+         next = chunk_get_next_ncnl(second);
+         if (next && (next->type == CT_FPAREN_CLOSE))
+         {
+            log_rule("sp_func_proto_paren_empty");
+            return(cpd.settings[UO_sp_func_proto_paren_empty].a);
+         }
+      }
       log_rule("sp_func_proto_paren");
       return(cpd.settings[UO_sp_func_proto_paren].a);
    }
    if ((first->type == CT_FUNC_CLASS_DEF) ||
        (first->type == CT_FUNC_CLASS_PROTO))
    {
+      if ((cpd.settings[UO_sp_func_class_paren_empty].a != AV_IGNORE) &&
+          (second->type == CT_FPAREN_OPEN))
+      {
+         next = chunk_get_next_ncnl(second);
+         if (next && (next->type == CT_FPAREN_CLOSE))
+         {
+            log_rule("sp_func_class_paren_empty");
+            return(cpd.settings[UO_sp_func_class_paren_empty].a);
+         }
+      }
       log_rule("sp_func_class_paren");
       return(cpd.settings[UO_sp_func_class_paren].a);
    }

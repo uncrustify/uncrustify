@@ -366,8 +366,12 @@ void register_options(void)
                   "A minimum of 1 is forced except for pointer return types.");
    unc_add_option("sp_func_proto_paren", UO_sp_func_proto_paren, AT_IARF,
                   "Add or remove space between function name and '(' on function declaration");
+   unc_add_option("sp_func_proto_paren_empty", UO_sp_func_proto_paren_empty, AT_IARF,
+                  "Add or remove space between function name and '()' on function declaration without parameters");
    unc_add_option("sp_func_def_paren", UO_sp_func_def_paren, AT_IARF,
                   "Add or remove space between function name and '(' on function definition");
+   unc_add_option("sp_func_def_paren_empty", UO_sp_func_def_paren_empty, AT_IARF,
+                  "Add or remove space between function name and '()' on function definition without parameters");
    unc_add_option("sp_inside_fparens", UO_sp_inside_fparens, AT_IARF,
                   "Add or remove space inside empty function '()'");
    unc_add_option("sp_inside_fparen", UO_sp_inside_fparen, AT_IARF,
@@ -392,6 +396,8 @@ void register_options(void)
                   "You need to set a keyword to be a user function, like this: 'set func_call_user _' in the config file.");
    unc_add_option("sp_func_class_paren", UO_sp_func_class_paren, AT_IARF,
                   "Add or remove space between a constructor/destructor and the open paren");
+   unc_add_option("sp_func_class_paren_empty", UO_sp_func_class_paren_empty, AT_IARF,
+                  "Add or remove space between a constructor without parameters or destructor and '()'");
    unc_add_option("sp_return_paren", UO_sp_return_paren, AT_IARF,
                   "Add or remove space between 'return' and '('");
    unc_add_option("sp_attribute_paren", UO_sp_attribute_paren, AT_IARF,

@@ -293,11 +293,14 @@ enum uncrustify_options
    UO_sp_before_case_colon,     // space before case ':'
 
    UO_sp_func_def_paren,        // space between 'func' and '(' - 'foo (' vs 'foo('
+   UO_sp_func_def_paren_empty,  // space between 'func' and '()' - "foo ()" vs "foo()"
    UO_sp_func_call_paren,       // space between 'func' and '(' - 'foo (' vs 'foo('
    UO_sp_func_call_paren_empty,
    UO_sp_func_call_user_paren,
    UO_sp_func_proto_paren,      // space between 'func' and '(' - 'foo (' vs 'foo('
+   UO_sp_func_proto_paren_empty,// space between 'func' and '()' - "foo ()" vs "foo()"
    UO_sp_func_class_paren,      // space between ctor/dtor and '('
+   UO_sp_func_class_paren_empty,// space between ctor/dtor and '()'
 
    UO_sp_attribute_paren,       // space between '__attribute__' and '('
    UO_sp_defined_paren,
