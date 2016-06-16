@@ -156,11 +156,11 @@ void register_options(void)
 {
    unc_begin_group(UG_general, "General options");
    unc_add_option("newlines", UO_newlines, AT_LINE,
-                  "The type of line endings");
+                  "The type of line endings. Default=Auto");
    unc_add_option("input_tab_size", UO_input_tab_size, AT_NUM,
-                  "The original size of tabs in the input", "", 1, 32);
+                  "The original size of tabs in the input. Default=8", "", 1, 32);
    unc_add_option("output_tab_size", UO_output_tab_size, AT_NUM,
-                  "The size of tabs in the output (only used if align_with_tabs=true)", "", 1, 32);
+                  "The size of tabs in the output (only used if align_with_tabs=true). Default=8", "", 1, 32);
    unc_add_option("string_escape_char", UO_string_escape_char, AT_NUM,
                   "The ASCII value of the string escape char, usually 92 (\\) or 94 (^). (Pawn)", "", 0, 255);
    unc_add_option("string_escape_char2", UO_string_escape_char2, AT_NUM,
@@ -169,14 +169,14 @@ void register_options(void)
                   "Replace tab characters found in string literals with the escape sequence \\t instead.");
    unc_add_option("tok_split_gte", UO_tok_split_gte, AT_BOOL,
                   "Allow interpreting '>=' and '>>=' as part of a template in 'void f(list<list<B>>=val);'.\n"
-                  "If true (default), 'assert(x<0 && y>=3)' will be broken.\n"
+                  "If true, 'assert(x<0 && y>=3)' will be broken. Default=False\n"
                   "Improvements to template detection may make this option obsolete.");
    unc_add_option("disable_processing_cmt", UO_disable_processing_cmt, AT_STRING,
                   "Override the default ' *INDENT-OFF*' in comments for disabling processing of part of the file.");
    unc_add_option("enable_processing_cmt", UO_enable_processing_cmt, AT_STRING,
                   "Override the default ' *INDENT-ON*' in comments for enabling processing of part of the file.");
    unc_add_option("enable_digraphs", UO_enable_digraphs, AT_BOOL,
-                  "Enable parsing of digraphs. Default=false");
+                  "Enable parsing of digraphs. Default=False");
 
    unc_add_option("utf8_bom", UO_utf8_bom, AT_IARF,
                   "Control what to do with the UTF-8 BOM (recommend 'remove')");
@@ -318,7 +318,7 @@ void register_options(void)
    unc_add_option("sp_after_comma", UO_sp_after_comma, AT_IARF,
                   "Add or remove space after ','");
    unc_add_option("sp_before_comma", UO_sp_before_comma, AT_IARF,
-                  "Add or remove space before ','");
+                  "Add or remove space before ','. Default=Remove");
    unc_add_option("sp_after_mdatype_commas", UO_sp_after_mdatype_commas, AT_IARF,
                   "Add or remove space between ',' and ']' in multidimensional array type 'int[,,]'");
    unc_add_option("sp_before_mdatype_commas", UO_sp_before_mdatype_commas, AT_IARF,
@@ -326,7 +326,7 @@ void register_options(void)
    unc_add_option("sp_between_mdatype_commas", UO_sp_between_mdatype_commas, AT_IARF,
                   "Add or remove space between ',' in multidimensional array type 'int[,,]'");
    unc_add_option("sp_paren_comma", UO_sp_paren_comma, AT_IARF,
-                  "Add or remove space between an open paren and comma: '(,' vs '( ,'\n");
+                  "Add or remove space between an open paren and comma: '(,' vs '( ,'. Default=Force");
    unc_add_option("sp_before_ellipsis", UO_sp_before_ellipsis, AT_IARF,
                   "Add or remove space before the variadic '...' when preceded by a non-punctuator");
    unc_add_option("sp_after_class_colon", UO_sp_after_class_colon, AT_IARF,
@@ -440,9 +440,9 @@ void register_options(void)
    unc_add_option("sp_getset_brace", UO_sp_getset_brace, AT_IARF,
                   "Add or remove space between get/set and '{' if on the same line");
    unc_add_option("sp_word_brace", UO_sp_word_brace, AT_IARF,
-                  "Add or remove space between a variable and '{' for C++ uniform initialization");
+                  "Add or remove space between a variable and '{' for C++ uniform initialization. Default=Add");
    unc_add_option("sp_word_brace_ns", UO_sp_word_brace_ns, AT_IARF,
-                  "Add or remove space between a variable and '{' for a namespace");
+                  "Add or remove space between a variable and '{' for a namespace. Default=Add");
    unc_add_option("sp_before_dc", UO_sp_before_dc, AT_IARF,
                   "Add or remove space before the '::' operator");
    unc_add_option("sp_after_dc", UO_sp_after_dc, AT_IARF,
@@ -569,14 +569,14 @@ void register_options(void)
    unc_begin_group(UG_indent, "Indenting");
    unc_add_option("indent_columns", UO_indent_columns, AT_NUM,
                   "The number of columns to indent per level.\n"
-                  "Usually 2, 3, 4, or 8.");
+                  "Usually 2, 3, 4, or 8. Default=8");
    unc_add_option("indent_continue", UO_indent_continue, AT_NUM,
                   "The continuation indent. If non-zero, this overrides the indent of '(' and '=' continuation indents.\n"
                   "For FreeBSD, this is set to 4. Negative value is absolute and not increased for each ( level");
    unc_add_option("indent_with_tabs", UO_indent_with_tabs, AT_NUM,
                   "How to use tabs when indenting code\n"
                   "0=spaces only\n"
-                  "1=indent with tabs to brace level, align with spaces\n"
+                  "1=indent with tabs to brace level, align with spaces (default)\n"
                   "2=indent and align with tabs, using spaces when not on a tabstop", "", 0, 2);
    unc_add_option("indent_cmt_with_tabs", UO_indent_cmt_with_tabs, AT_BOOL,
                   "Comments that are not a brace level are indented with tabs on a tabstop.\n"
@@ -620,16 +620,16 @@ void register_options(void)
                   "Whether to indent the stuff after a leading base class colon");
    unc_add_option("indent_class_on_colon", UO_indent_class_on_colon, AT_BOOL,
                   "Indent based on a class colon instead of the stuff after the colon.\n"
-                  "Requires indent_class_colon=true. Default=false");
+                  "Requires indent_class_colon=true. Default=False");
    unc_add_option("indent_constr_colon", UO_indent_constr_colon, AT_BOOL,
                   "Whether to indent the stuff after a leading class initializer colon");
    unc_add_option("indent_ctor_init_leading", UO_indent_ctor_init_leading, AT_NUM,
-                  "Virtual indent from the ':' for member initializers. Default is 2");
+                  "Virtual indent from the ':' for member initializers. Default=2");
    unc_add_option("indent_ctor_init", UO_indent_ctor_init, AT_NUM,
                   "Additional indenting for constructor initializer list");
    unc_add_option("indent_else_if", UO_indent_else_if, AT_BOOL,
                   "False=treat 'else\\nif' as 'else if' for indenting purposes\n"
-                  "True=indent the 'if' one level\n");
+                  "True=indent the 'if' one level");
    unc_add_option("indent_var_def_blk", UO_indent_var_def_blk, AT_NUM,
                   "Amount to indent variable declarations after a open brace. neg=relative, pos=absolute");
    unc_add_option("indent_var_def_cont", UO_indent_var_def_cont, AT_BOOL,
@@ -685,9 +685,10 @@ void register_options(void)
    unc_add_option("indent_label", UO_indent_label, AT_NUM,
                   "How to indent goto labels\n"
                   "  >0: absolute column where 1 is the leftmost column\n"
-                  " <=0: subtract from brace indent", "", -16, 16);
+                  " <=0: subtract from brace indent\n"
+                  "Default=1", "", -16, 16);
    unc_add_option("indent_access_spec", UO_indent_access_spec, AT_NUM,
-                  "Same as indent_label, but for access specifiers that are followed by a colon", "", -16, 16);
+                  "Same as indent_label, but for access specifiers that are followed by a colon. Default=1", "", -16, 16);
    unc_add_option("indent_access_spec_body", UO_indent_access_spec_body, AT_BOOL,
                   "Indent the code after an access specifier by one level.\n"
                   "If set, this option forces 'indent_access_spec=0'");
@@ -723,7 +724,7 @@ void register_options(void)
                   "Minimum indent for subsequent parameters", "", 0, 5000);
    unc_add_option("indent_oc_msg_prioritize_first_colon", UO_indent_oc_msg_prioritize_first_colon, AT_BOOL,
                   "If true, prioritize aligning with initial colon (and stripping spaces from lines, if necessary).\n"
-                  "Default is true.");
+                  "Default=True.");
    unc_add_option("indent_oc_block_msg_xcode_style", UO_indent_oc_block_msg_xcode_style, AT_BOOL,
                   "If indent_oc_block_msg and this option are on, blocks will be indented the way that Xcode does by default (from keyword if the parameter is on its own line; otherwise, from the previous indentation level).");
    unc_add_option("indent_oc_block_msg_from_keyword", UO_indent_oc_block_msg_from_keyword, AT_BOOL,
@@ -1130,7 +1131,7 @@ void register_options(void)
                   "Related to nl_constr_colon, nl_constr_init_args and pos_constr_colon.");
    unc_add_option("pos_class_colon", UO_pos_class_colon, AT_POS,
                   "The position of trailing/leading class colon, between class and base class list\n"
-                  "  (tied to nl_class_colon).\n");
+                  "  (tied to nl_class_colon).");
    unc_add_option("pos_constr_colon", UO_pos_constr_colon, AT_POS,
                   "The position of colons between constructor and member initialization,\n"
                   "(tied to UO_nl_constr_colon).\n"
@@ -1244,20 +1245,20 @@ void register_options(void)
                   "Aligning the open brace of single-line functions.\n"
                   "Requires align_single_line_func=true, uses align_func_proto_span");
    unc_add_option("align_single_line_brace_gap", UO_align_single_line_brace_gap, AT_NUM,
-                  "Gap for align_single_line_brace.\n");
+                  "Gap for align_single_line_brace.");
    unc_add_option("align_oc_msg_spec_span", UO_align_oc_msg_spec_span, AT_NUM,
                   "The span for aligning ObjC msg spec (0=don't align)", "", 0, 5000);
    unc_add_option("align_nl_cont", UO_align_nl_cont, AT_BOOL,
                   "Whether to align macros wrapped with a backslash and a newline.\n"
                   "This will not work right if the macro contains a multi-line comment.");
    unc_add_option("align_pp_define_together", UO_align_pp_define_together, AT_BOOL,
-                  "# Align macro functions and variables together\n");
+                  "# Align macro functions and variables together");
    unc_add_option("align_pp_define_gap", UO_align_pp_define_gap, AT_NUM,
                   "The minimum space between label and value of a preprocessor define");
    unc_add_option("align_pp_define_span", UO_align_pp_define_span, AT_NUM,
                   "The span for aligning on '#define' bodies (0=don't align, other=number of lines including comments between blocks)", "", 0, 5000);
    unc_add_option("align_left_shift", UO_align_left_shift, AT_BOOL,
-                  "Align lines that start with '<<' with previous '<<'. Default=true");
+                  "Align lines that start with '<<' with previous '<<'. Default=True");
    unc_add_option("align_asm_colon", UO_align_asm_colon, AT_BOOL,
                   "Align text after asm volatile () colons.");
 
@@ -1280,7 +1281,7 @@ void register_options(void)
                   "Whether to convert all tabs to spaces in comments. Default is to leave tabs inside comments alone, unless used for indenting.");
    unc_add_option("cmt_indent_multi", UO_cmt_indent_multi, AT_BOOL,
                   "If false, disable all multi-line comment changes, including cmt_width. keyword substitution and leading chars.\n"
-                  "Default is true.");
+                  "Default=True.");
    unc_add_option("cmt_c_group", UO_cmt_c_group, AT_BOOL,
                   "Whether to group c-comments that look like they are in a block");
    unc_add_option("cmt_c_nl_start", UO_cmt_c_nl_start, AT_BOOL,
@@ -1411,7 +1412,7 @@ void register_options(void)
 
    unc_begin_group(UG_Use_Ext, "Use or Do not Use options", "G");
    unc_add_option("use_indent_func_call_param", UO_use_indent_func_call_param, AT_BOOL,
-                  "True:  indent_func_call_param will be used\n"
+                  "True:  indent_func_call_param will be used (default)\n"
                   "False: indent_func_call_param will NOT be used");
    unc_add_option("use_indent_continue_only_once", UO_use_indent_continue_only_once, AT_BOOL,
                   "The value of the indentation for a continuation line is calculate differently if the line is:\n"
@@ -2101,6 +2102,7 @@ void set_option_defaults(void)
    {
       cpd.defaults[count].n = 0;
    }
+
    /* the options with non-zero default values */
    cpd.defaults[UO_newlines].le                            = LE_AUTO;
    cpd.defaults[UO_input_tab_size].n                       = 8;
