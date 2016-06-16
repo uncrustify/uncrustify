@@ -1423,6 +1423,9 @@ void register_options(void)
                   "To prevent the double use of the option value, use this option with the value 'true'.\n"
                   "True:  indent_continue will be used only once\n"
                   "False: indent_continue will be used every time (default)");
+   unc_add_option("use_options_overriding_for_qt_macros", UO_use_options_overriding_for_qt_macros, AT_BOOL,
+                  "SIGNAL/SLOT Qt macros have special formatting options. See options_for_QT.cpp for details.\n"
+                  "Default=True.");
 } // register_options
 
 
@@ -2138,6 +2141,8 @@ void set_option_defaults(void)
    cpd.defaults[UO_indent_oc_msg_prioritize_first_colon].b = true;
    cpd.defaults[UO_use_indent_func_call_param].b           = true;
    cpd.defaults[UO_use_indent_continue_only_once].b        = false;
+   cpd.defaults[UO_use_options_overriding_for_qt_macros].b = true;
+
    /* copy all the default values to settings array */
    for (int count = 0; count < UO_option_count; count++)
    {

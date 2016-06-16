@@ -768,6 +768,8 @@ enum uncrustify_options
                                       //   at the function call (if present)
                                       // To prevent the double use of the option value, use this option
                                       // with the value "true". Guy 2016-05-16
+   
+   UO_use_options_overriding_for_qt_macros,     // SIGNAL/SLOT Qt macros have special formatting options. See options_for_QT.cpp for details.
 
    /* This is used to get the enumeration count */
    UO_option_count
