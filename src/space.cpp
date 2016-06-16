@@ -1787,8 +1787,9 @@ void space_text(void)
 #endif
       LOG_FMT(LGUY, "%s: %d:%d %s %s\n", __func__, pc->orig_line, pc->orig_col, pc->text(),
               get_token_name(pc->type));
-      if ((strcmp(pc->text(), "SIGNAL") == 0) ||
-          (strcmp(pc->text(), "SLOT") == 0))
+      if ((cpd.settings[UO_use_options_overriding_for_qt_macros].b) &&
+         ((strcmp(pc->text(), "SIGNAL") == 0) ||
+          (strcmp(pc->text(), "SLOT") == 0)))
       {  // guy 2015-09-22
 #ifdef DEBUG
          LOG_FMT(LGUY, "(%d) ", __LINE__);
