@@ -274,7 +274,7 @@ int main(int argc, char *argv[])
    cpd.do_check = arg.Present("--check");
 
 #ifdef WIN32
-   /* tell windoze not to change what I write to stdout */
+   /* tell Windows not to change what I write to stdout */
    (void)_setmode(_fileno(stdout), _O_BINARY);
 #endif
 
