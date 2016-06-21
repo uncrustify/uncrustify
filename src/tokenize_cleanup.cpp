@@ -270,11 +270,26 @@ void tokenize_cleanup(void)
                tmp = chunk_get_next_type(pc, CT_ANGLE_CLOSE, pc->level);
                if (tmp != NULL)
                {
-                  // mark the ANGLEs
-                  pc->flags  |= PCF_IN_TEMPLATE;
-                  tmp->flags |= PCF_IN_TEMPLATE;
+                  // check the lines numbers
+                  LOG_FMT(LGUY98, "%s:(%d) pc=%s, pc->orig_line=%d\n", __func__, __LINE__, pc->text(), pc->orig_line);
+                  LOG_FMT(LGUY98, "%s:(%d) tmp=%s, tmp->orig_line=%d\n", __func__, __LINE__, tmp->text(), tmp->orig_line);
+                  if (pc->orig_line == tmp->orig_line)
+                  {
+                     // mark the ANGLEs
+                     pc->flags  |= PCF_IN_TEMPLATE;
+                     tmp->flags |= PCF_IN_TEMPLATE;
+                  }
+                  else
+                  {
+                     /* convert CT_ANGLE_OPEN to CT_COMPARE */
+                     set_chunk_type(pc, CT_COMPARE);
+                  }
                }
-               // no change
+               else
+               {
+                  /* convert CT_ANGLE_OPEN to CT_COMPARE */
+                  set_chunk_type(pc, CT_COMPARE);
+               }
             }
             else
             {
