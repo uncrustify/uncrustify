@@ -34,4 +34,3 @@ void foo()
    */else if (bar3)
     foo3();
   }
-

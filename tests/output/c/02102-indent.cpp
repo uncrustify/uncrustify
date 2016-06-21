@@ -1020,4 +1020,3 @@ void indent_preproc(void)
             __func__, pc->orig_line, pp_level, pc->len, next->column);
     }
   }
-

@@ -1,5 +1,4 @@
 
-
 BEGIN_MESSAGE_MAP(CUSB2_camera_developementDlg, CDialog)
     ON_COMMAND(IDC_ESCAPE, On_Escape)
     ON_COMMAND(IDC_8_BIT, On_8_Bit)
