@@ -282,3 +282,4 @@
 33047 bug_i_409-create.cfg             cpp/bug_i_409.cpp
 33048 bug_i_405.cfg                    cpp/bug_i_405.cpp
 33049 pp-pragma.cfg                    cpp/pp-pragma.cpp
+33050 empty.cfg                        cpp/issue_523.cpp

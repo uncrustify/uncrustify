@@ -46,17 +46,7 @@ static chunk_t *handle_double_angle_close(chunk_t *pc)
       }
       else
       {
-         // bug #663
-         if ((pc->flags & PCF_IN_PREPROC) &&
-             (pc->flags & PCF_IN_TEMPLATE))
-         {
-            log_pcf_flags(LGUY, pc->flags);
-            // no change
-         }
-         else
-         {
-            set_chunk_type(pc, CT_COMPARE);
-         }
+         set_chunk_type(pc, CT_COMPARE);
       }
    }
    return(next);
@@ -263,38 +253,7 @@ void tokenize_cleanup(void)
           */
          if (cpd.lang_flags & (LANG_CPP | LANG_CS | LANG_JAVA | LANG_VALA | LANG_OC))
          {
-            // bug #663
-            log_pcf_flags(LGUY, pc->flags);
-            if (pc->flags & PCF_IN_PREPROC)
-            {
-               tmp = chunk_get_next_type(pc, CT_ANGLE_CLOSE, pc->level);
-               if (tmp != NULL)
-               {
-                  // check the lines numbers
-                  LOG_FMT(LGUY98, "%s:(%d) pc=%s, pc->orig_line=%d\n", __func__, __LINE__, pc->text(), pc->orig_line);
-                  LOG_FMT(LGUY98, "%s:(%d) tmp=%s, tmp->orig_line=%d\n", __func__, __LINE__, tmp->text(), tmp->orig_line);
-                  if (pc->orig_line == tmp->orig_line)
-                  {
-                     // mark the ANGLEs
-                     pc->flags  |= PCF_IN_TEMPLATE;
-                     tmp->flags |= PCF_IN_TEMPLATE;
-                  }
-                  else
-                  {
-                     /* convert CT_ANGLE_OPEN to CT_COMPARE */
-                     set_chunk_type(pc, CT_COMPARE);
-                  }
-               }
-               else
-               {
-                  /* convert CT_ANGLE_OPEN to CT_COMPARE */
-                  set_chunk_type(pc, CT_COMPARE);
-               }
-            }
-            else
-            {
-               check_template(pc);
-            }
+            check_template(pc);
          }
          else
          {
@@ -1046,7 +1005,7 @@ static void check_template(chunk_t *start)
    if ((end != NULL) && (end->type == CT_ANGLE_CLOSE))
    {
       pc = chunk_get_next_ncnl(end, CNAV_PREPROC);
-      if ((pc != NULL) && (pc->type != CT_NUMBER))
+      if ((pc == NULL) || (pc->type != CT_NUMBER))
       {
          LOG_FMT(LTEMPL, " - Template Detected\n");
 
