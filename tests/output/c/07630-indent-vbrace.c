@@ -5,4 +5,3 @@ void x( void )
         b = a;
 }
 
-

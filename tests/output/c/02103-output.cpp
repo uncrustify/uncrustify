@@ -622,4 +622,3 @@ void output_comment_multi(chunk_t *pc)
       }
     }
   }
-

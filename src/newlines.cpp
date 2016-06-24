@@ -3420,7 +3420,7 @@ static void _blank_line_max(chunk_t *pc, const char *text, uncrustify_options uo
  * Scans for newline tokens and changes the nl_count.
  * A newline token has a minimum nl_count of 1.
  * Note that a blank line is actually 2 newlines, unless the newline is the
- * first chunk.  But we don't handle the first chunk.
+ * first chunk.
  * So, most comparisons have +1 below.
  */
 void do_blank_lines(void)
@@ -3432,11 +3432,10 @@ void do_blank_lines(void)
    chunk_t *pcmt;
    int     old_nl;
 
-   /* Don't process the first token, as we don't care if it is a newline */
-   pc = chunk_get_head();
-
-   while ((pc = chunk_get_next(pc)) != NULL)
+   for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next(pc))
    {
+      bool line_added = false;
+
       if (pc->type != CT_NEWLINE)
       {
          continue;
@@ -3454,6 +3453,14 @@ void do_blank_lines(void)
                  prev->text(), get_token_name(prev->type),
                  next->text(), get_token_name(next->type),
                  pc->nl_count);
+      }
+
+      // If this is the first or the last token, pretend that there is an extra line.
+      // It will be removed at the end.
+      if (pc == chunk_get_head() || next == NULL)
+      {
+         line_added = true;
+         ++pc->nl_count;
       }
 
       /* Limit consecutive newlines */
@@ -3698,6 +3705,11 @@ void do_blank_lines(void)
          {
             blank_line_set(pc, UO_nl_around_cs_property);
          }
+      }
+
+      if (line_added && pc->nl_count > 1)
+      {
+         --pc->nl_count;
       }
 
       if (old_nl != pc->nl_count)

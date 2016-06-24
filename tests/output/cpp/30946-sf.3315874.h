@@ -42,4 +42,3 @@ mat_       trans ( const mat_ & );                        /* transpose matrix  *
 quat_      trans ( const quat_ & );                       /* transpose quat   */
 double     dot ( const vec_, const vec_ );                /* vector dot product  */
 vec_       cross ( const vec_, const vec_ );              /* vector cross product  */
-
