@@ -669,44 +669,73 @@ static bool parse_number(tok_ctx& ctx, chunk_t& pc)
     */
    if (ctx.peek() == '0')
    {
-      pc.str.append(ctx.get());  /* store the '0' */
+      int     ch;
+      chunk_t pc_temp;
+      int     pc_length;
 
-      switch (unc_toupper(ctx.peek()))
+      pc.str.append(ctx.get());  /* store the '0' */
+      // MS constant might have an "h" at the end. Look for it
+      ctx.save();
+      while (ctx.more() && CharTable::IsKw2(ctx.peek()))
       {
-      case 'X':               /* hex */
+         ch = ctx.get();
+         pc_temp.str.append(ch);
+      }
+      pc_length = pc_temp.len();
+      ch = pc_temp.str[pc_length - 1];
+      ctx.restore();
+      LOG_FMT(LGUY98, "%s:(%d)pc_temp:%s\n", __func__, __LINE__, pc_temp.text());
+      if (ch == 'h')
+      {
+         // we have an MS hexadecimal number with "h" at the end
+         LOG_FMT(LGUY98, "%s:(%d) MS hexadecimal number\n", __func__, __LINE__);
          did_hex = true;
          do
          {
-            pc.str.append(ctx.get());  /* store the 'x' and then the rest */
+            pc.str.append(ctx.get());  /* store the rest */
          } while (is_hex_(ctx.peek()));
-         break;
-
-      case 'B':               /* binary */
-         do
+         pc.str.append(ctx.get());  /* store the h */
+         LOG_FMT(LGUY98, "%s:(%d)pc:%s\n", __func__, __LINE__, pc.text());
+      }
+      else
+      {
+         switch (unc_toupper(ctx.peek()))
          {
-            pc.str.append(ctx.get());  /* store the 'b' and then the rest */
-         } while (is_bin_(ctx.peek()));
-         break;
+         case 'X':               /* hex */
+            did_hex = true;
+            do
+            {
+               pc.str.append(ctx.get());  /* store the 'x' and then the rest */
+            } while (is_hex_(ctx.peek()));
+            break;
 
-      case '0':                /* octal or decimal */
-      case '1':
-      case '2':
-      case '3':
-      case '4':
-      case '5':
-      case '6':
-      case '7':
-      case '8':
-      case '9':
-         do
-         {
-            pc.str.append(ctx.get());
-         } while (is_oct_(ctx.peek()));
-         break;
+         case 'B':               /* binary */
+            do
+            {
+               pc.str.append(ctx.get());  /* store the 'b' and then the rest */
+            } while (is_bin_(ctx.peek()));
+            break;
 
-      default:
-         /* either just 0 or 0.1 or 0UL, etc */
-         break;
+         case '0':                /* octal or decimal */
+         case '1':
+         case '2':
+         case '3':
+         case '4':
+         case '5':
+         case '6':
+         case '7':
+         case '8':
+         case '9':
+            do
+            {
+               pc.str.append(ctx.get());
+            } while (is_oct_(ctx.peek()));
+            break;
+
+         default:
+            /* either just 0 or 0.1 or 0UL, etc */
+            break;
+         }
       }
    }
    else
@@ -1414,6 +1443,7 @@ static bool parse_next(tok_ctx& ctx, chunk_t& pc)
 {
    const chunk_tag_t *punc;
    int               ch1;
+   //chunk_t           pc_temp;
 
    if (!ctx.more())
    {
@@ -1629,6 +1659,8 @@ static bool parse_next(tok_ctx& ctx, chunk_t& pc)
     * Parse strings and character constants
     */
 
+//parse_word(ctx, pc_temp, true);
+//ctx.restore(ctx.c);
    if (parse_number(ctx, pc))
    {
       return(true);
@@ -1867,6 +1899,14 @@ void tokenize(const deque<int>& data, chunk_t *ref)
             pc->flags     |= PCF_IN_PREPROC;
             cpd.in_preproc = CT_PREPROC;
          }
+      }
+      if (pc->type == CT_NEWLINE)
+      {
+         LOG_FMT(LGUY, "(%d)<NL> col=%d\n", pc->orig_line, pc->orig_col);
+      }
+      else
+      {
+         LOG_FMT(LGUY, "%s:%s, %s, orig_col=%d, orig_col_end=%d\n", __func__, pc->text(), get_token_name(pc->type), pc->orig_col, pc->orig_col_end);
       }
    }
 
