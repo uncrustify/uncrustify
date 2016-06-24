@@ -1351,6 +1351,17 @@ static void add_msg_header(c_token_t type, file_mem& fm)
             do_insert = true;
             break;
          }
+         if ((ref->level == pc->level) &&
+             ((ref->flags & PCF_IN_PREPROC) ||
+              (ref->type == CT_OC_SCOPE)))
+         {
+            ref = chunk_get_prev(ref);
+            if (ref != NULL)
+            {
+               do_insert = true;
+            }
+            break;
+         }
       }
 
       if (do_insert)
