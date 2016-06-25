@@ -287,3 +287,4 @@
 33049 pp-pragma.cfg                    cpp/pp-pragma.cpp
 33050 empty.cfg                        cpp/issue_523.cpp
 33051 empty.cfg                        cpp/bug_i_503.cpp
+33052 empty.cfg                        cpp/bug_i_512.cpp
