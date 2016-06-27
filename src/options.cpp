@@ -908,10 +908,18 @@ void register_options(void)
                   "Overrides nl_func_decl_start when there is only one parameter.");
    unc_add_option("nl_func_def_start_single", UO_nl_func_def_start_single, AT_IARF,
                   "Overrides nl_func_def_start when there is only one parameter.");
+   unc_add_option("nl_func_decl_start_multi_line", UO_nl_func_decl_start_multi_line, AT_BOOL,
+                  "Whether to add newline after '(' in a function declaration if '(' and ')' are in different lines.");
+   unc_add_option("nl_func_def_start_multi_line", UO_nl_func_def_start_multi_line, AT_BOOL,
+                  "Whether to add newline after '(' in a function definition if '(' and ')' are in different lines.");
    unc_add_option("nl_func_decl_args", UO_nl_func_decl_args, AT_IARF,
                   "Add or remove newline after each ',' in a function declaration");
    unc_add_option("nl_func_def_args", UO_nl_func_def_args, AT_IARF,
                   "Add or remove newline after each ',' in a function definition");
+   unc_add_option("nl_func_decl_args_multi_line", UO_nl_func_decl_args_multi_line, AT_BOOL,
+                  "Whether to add newline after each ',' in a function declaration if '(' and ')' are in different lines.");
+   unc_add_option("nl_func_def_args_multi_line", UO_nl_func_def_args_multi_line, AT_BOOL,
+                  "Whether to add newline after each ',' in a function definition if '(' and ')' are in different lines.");
    unc_add_option("nl_func_decl_end", UO_nl_func_decl_end, AT_IARF,
                   "Add or remove newline before the ')' in a function declaration");
    unc_add_option("nl_func_def_end", UO_nl_func_def_end, AT_IARF,
@@ -920,10 +928,20 @@ void register_options(void)
                   "Overrides nl_func_decl_end when there is only one parameter.");
    unc_add_option("nl_func_def_end_single", UO_nl_func_def_end_single, AT_IARF,
                   "Overrides nl_func_def_end when there is only one parameter.");
+   unc_add_option("nl_func_decl_end_multi_line", UO_nl_func_decl_end_multi_line, AT_BOOL,
+                  "Whether to add newline before ')' in a function declaration if '(' and ')' are in different lines.");
+   unc_add_option("nl_func_def_end_multi_line", UO_nl_func_def_end_multi_line, AT_BOOL,
+                  "Whether to add newline before ')' in a function definition if '(' and ')' are in different lines.");
    unc_add_option("nl_func_decl_empty", UO_nl_func_decl_empty, AT_IARF,
                   "Add or remove newline between '()' in a function declaration.");
    unc_add_option("nl_func_def_empty", UO_nl_func_def_empty, AT_IARF,
                   "Add or remove newline between '()' in a function definition.");
+   unc_add_option("nl_func_call_start_multi_line", UO_nl_func_call_start_multi_line, AT_BOOL,
+                  "Whether to add newline after '(' in a function call if '(' and ')' are in different lines.");
+   unc_add_option("nl_func_call_args_multi_line", UO_nl_func_call_args_multi_line, AT_BOOL,
+                  "Whether to add newline after each ',' in a function call if '(' and ')' are in different lines.");
+   unc_add_option("nl_func_call_end_multi_line", UO_nl_func_call_end_multi_line, AT_BOOL,
+                  "Whether to add newline before ')' in a function call if '(' and ')' are in different lines.");
    unc_add_option("nl_oc_msg_args", UO_nl_oc_msg_args, AT_BOOL,
                   "Whether to put each OC message parameter on a separate line\n"
                   "See nl_oc_msg_leave_one_liner");
