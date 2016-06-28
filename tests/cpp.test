@@ -288,3 +288,8 @@
 33050 empty.cfg                        cpp/issue_523.cpp
 33051 empty.cfg                        cpp/bug_i_503.cpp
 33052 empty.cfg                        cpp/bug_i_512.cpp
+
+33061 empty.cfg                        cpp/if_chain_braces.cpp
+33062 if_chain_braces_0.cfg            cpp/if_chain_braces.cpp
+33063 if_chain_braces_1.cfg            cpp/if_chain_braces.cpp
+33064 if_chain_braces_2.cfg            cpp/if_chain_braces.cpp

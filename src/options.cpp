@@ -1339,6 +1339,10 @@ void register_options(void)
    unc_add_option("mod_full_brace_if_chain", UO_mod_full_brace_if_chain, AT_BOOL,
                   "Make all if/elseif/else statements in a chain be braced or not. Overrides mod_full_brace_if.\n"
                   "If any must be braced, they are all braced.  If all can be unbraced, then the braces are removed.");
+   unc_add_option("mod_full_brace_if_chain_only", UO_mod_full_brace_if_chain_only, AT_BOOL,
+                  "Make all if/elseif/else statements with at least one 'else' or 'else if' fully braced.\n"
+                  "If mod_full_brace_if_chain is used together with this option, all if-else chains will get braces,\n"
+                  "and simple 'if' statements will lose them (if possible).\n");
    unc_add_option("mod_full_brace_nl", UO_mod_full_brace_nl, AT_NUM,
                   "Don't remove braces around statements that span N newlines", "", 0, 5000);
    unc_add_option("mod_full_brace_while", UO_mod_full_brace_while, AT_IARF,

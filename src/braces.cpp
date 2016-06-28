@@ -30,7 +30,8 @@ static bool should_add_braces(chunk_t *vbopen);
 void do_braces(void)
 {
    LOG_FUNC_ENTRY();
-   if (cpd.settings[UO_mod_full_brace_if_chain].b)
+   if (cpd.settings[UO_mod_full_brace_if_chain].b
+       || cpd.settings[UO_mod_full_brace_if_chain_only].b )
    {
       mod_full_brace_if_chain();
    }
@@ -1103,6 +1104,13 @@ static void process_if_chain(chunk_t *br_start)
       {
          break;
       }
+
+      if (cpd.settings[UO_mod_full_brace_if_chain_only].b)
+      {
+         // There is an 'else' - we want full braces.
+         must_have_braces = true;
+      }
+
       pc = chunk_get_next_ncnl(pc, CNAV_PREPROC);
       if ((pc != NULL) && (pc->type == CT_ELSEIF))
       {
@@ -1141,8 +1149,11 @@ static void process_if_chain(chunk_t *br_start)
       }
       LOG_FMT(LBRCH, "\n");
    }
-   else
+   else if (cpd.settings[UO_mod_full_brace_if_chain].b)
    {
+      // This might run because either UO_mod_full_brace_if_chain or UO_mod_full_brace_if_chain_only is used.
+      // We only want to remove braces if the first one is active.
+
       LOG_FMT(LBRCH, "%s: remove braces on lines[%d]:", __func__, br_cnt);
       while (--br_cnt >= 0)
       {
