@@ -199,6 +199,9 @@
 30923 sp_before_ellipsis-f.cfg         cpp/sp_before_ellipsis.cpp
 30924 sp_before_ellipsis-r.cfg         cpp/sp_before_ellipsis.cpp
 30925 sp_func_call_empty.cfg           cpp/function-def.cpp
+30926 sp_func_class_empty.cfg          cpp/function-def.cpp
+30927 sp_func_def_empty.cfg            cpp/function-def.cpp
+30928 sp_func_proto_empty.cfg          cpp/function-def.cpp
 
 30930 indent_var_def.cfg               cpp/indent_var_def.cpp
 30931 indent_var_def_cont.cfg          cpp/indent_var_def_cont.cpp
@@ -283,3 +286,6 @@
 33047 bug_i_409-create.cfg             cpp/bug_i_409.cpp
 33048 bug_i_405.cfg                    cpp/bug_i_405.cpp
 33049 pp-pragma.cfg                    cpp/pp-pragma.cpp
+33050 empty.cfg                        cpp/issue_523.cpp
+33051 empty.cfg                        cpp/bug_i_503.cpp
+33052 empty.cfg                        cpp/bug_i_512.cpp

@@ -26,4 +26,3 @@ public hudtext16(textblock[], colr, colg, colb, posx, posy, screen, time, id)
 	}
 	return screen - y;              // we will return how many screens of text we printed
 }
-
