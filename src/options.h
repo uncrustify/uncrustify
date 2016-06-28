@@ -773,7 +773,7 @@ enum uncrustify_options
    UO_use_options_overriding_for_qt_macros,     // SIGNAL/SLOT Qt macros have special formatting options. See options_for_QT.cpp for details.
 
    /* Levels to attach to warnings (log_sev_t; default = LWARN) */
-   UO_warnlevel_tabs_found_in_verbatim_string_literals, // if UO_string_replace_tab_chars is set, then we should warn about cases we can't do the replacement
+   UO_warn_level_tabs_found_in_verbatim_string_literals, // if UO_string_replace_tab_chars is set, then we should warn about cases we can't do the replacement
 
    /* This is used to get the enumeration count */
    UO_option_count
