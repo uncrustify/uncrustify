@@ -41,3 +41,7 @@ Makefile.in
 /cov-int
 /src/token_names.h
 /aclocal.m4
+/compile
+/install-sh
+/missing
+/test-driver
