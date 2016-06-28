@@ -247,6 +247,9 @@ int main(int argc, char *argv[])
       usage_exit(NULL, argv[0], EXIT_SUCCESS);
    }
 
+   /* make sure we have token_names.h in sync with token_enum.h */
+   assert(ARRAY_SIZE(token_names) == CT_TOKEN_COUNT_);
+
    /* Build options map */
    register_options();
 
