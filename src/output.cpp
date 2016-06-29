@@ -1516,12 +1516,23 @@ static bool kw_fcn_filename(chunk_t *cmt, unc_text& out_txt)
 
 static bool kw_fcn_class(chunk_t *cmt, unc_text& out_txt)
 {
-   chunk_t *tmp;
-   if (cpd.lang_flags & LANG_OC)
+   chunk_t *tmp = NULL;
+   if ((cpd.lang_flags & LANG_CPP) && (cpd.lang_flags & LANG_OC)) {
+      chunk_t *fcn = get_next_function(cmt);
+      if (fcn->type == CT_OC_MSG_DECL)
+      {
+         tmp = get_prev_oc_class(cmt);
+      }
+      else
+      {
+         tmp = get_next_class(cmt);
+      }
+   }
+   else if (cpd.lang_flags & LANG_OC)
    {
       tmp = get_prev_oc_class(cmt);
    }
-   else
+   if (tmp == NULL)
    {
       tmp = get_next_class(cmt);
    }
@@ -1529,6 +1540,21 @@ static bool kw_fcn_class(chunk_t *cmt, unc_text& out_txt)
    if (tmp)
    {
       out_txt.append(tmp->str);
+      if (cpd.lang_flags & cpd.lang_flags)
+      {
+         while ((tmp = chunk_get_next(tmp)) != NULL)
+         {
+            if (tmp->type != CT_DC_MEMBER)
+            {
+               break;
+            }
+            tmp = chunk_get_next(tmp);
+            if (tmp) {
+               out_txt.append("::");
+               out_txt.append(tmp->str);
+            }
+         }
+      }
       return(true);
    }
    return(false);
@@ -1578,7 +1604,7 @@ static bool kw_fcn_category(chunk_t *cmt, unc_text& out_txt)
    chunk_t *category = get_prev_category(cmt);
    if (category) {
       out_txt.append('(');
-      out_txt.append(category->text());
+      out_txt.append(category->str);
       out_txt.append(')');
    }
    return(true);
@@ -1589,7 +1615,7 @@ static bool kw_fcn_scope(chunk_t *cmt, unc_text& out_txt)
 {
    chunk_t *scope = get_next_scope(cmt);
    if (scope) {
-      out_txt.append(scope->text());
+      out_txt.append(scope->str);
       return(true);
    }
    return(false);
