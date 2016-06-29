@@ -80,6 +80,7 @@ struct no_space_table_s no_space_table[] =
    { CT_PAREN_CLOSE,    CT_ADDR          },
    { CT_PAREN_CLOSE,    CT_FPAREN_OPEN   },
    { CT_OC_SEL_NAME,    CT_OC_SEL_NAME   },
+   { CT_TYPENAME,       CT_TYPE          },
 };
 
 #define log_rule(rule)                                             \

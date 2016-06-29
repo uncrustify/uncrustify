@@ -7,6 +7,7 @@ New:
     Null conditional operator (?.) is now supported.
 
 New options:
+ - sp_func_[proto,def,class]_paren_empty
  - indent_cs_delegate_brace
  - nl_oc_block_brace
  - nl_split_if_one_liner
@@ -17,7 +18,7 @@ New options:
 
 Bugfix:
  - Bug #620 is fixed
- - Issues #405, #408, #478, #481, #495, #503, #509, #513 are fixed
+ - Issues #405, #408, #478, #481, #495, #503, #509, #512, #513, #524 are fixed
  - Proposals #409 and #477 are implemented
  - Issue #411 is partialy fixed
 
