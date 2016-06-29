@@ -897,7 +897,8 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
    if ((first->type == CT_PAREN_CLOSE) &&
        (second->type == CT_WHEN))
    {
-      return(AV_FORCE);
+      log_rule("FORCE");
+      return(AV_FORCE); /* TODO: make this configurable? */
    }
 
    if ((first->type == CT_PAREN_CLOSE) &&
