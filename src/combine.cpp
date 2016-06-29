@@ -3534,7 +3534,6 @@ static void mark_function(chunk_t *pc)
 
          /* If we are on a TYPE or WORD, then we must be on a proto or def */
          if ((prev->type == CT_TYPE) ||
-             (prev->type == CT_AUTO) ||
              (prev->type == CT_WORD))
          {
             if (!hit_star)
