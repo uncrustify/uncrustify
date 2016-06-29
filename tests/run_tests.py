@@ -94,14 +94,14 @@ def run_tests(args, test_name, config_name, input_name, lang):
         rerun_config = config_name
 
     expected_name = os.path.join(os.path.dirname(input_name), test_name + '-' + os.path.basename(input_name))
-    resultname = os.path.join('results', expected_name)
+    resultname = os.path.join(args.results, expected_name)
     outputname = os.path.join('output', expected_name)
     try:
         os.makedirs(os.path.dirname(resultname))
     except:
         pass
 
-    cmd = '"%s" -q -c %s -f input/%s %s > %s' % (args.exe, config_name, input_name, lang, resultname)
+    cmd = '"%s" -q -c %s -f input/%s %s -o %s %s' % (args.exe, config_name, input_name, lang, resultname, "-LA 2>" + resultname + ".log -p " + resultname + ".unc" if args.g else "")
     if args.c:
         print("RUN: " + cmd)
     a = os.system(cmd)
@@ -113,7 +113,7 @@ def run_tests(args, test_name, config_name, input_name, lang):
         if not filecmp.cmp(resultname, outputname):
             print(MISMATCH_COLOR + "MISMATCH: " + NORMAL + test_name)
             if args.d:
-                cmd = "diff -u %s %s" % (outputname, resultname)
+                cmd = "git diff --no-index %s %s" % (outputname, resultname)
                 sys.stdout.flush()
                 os.system(cmd)
             return -1
@@ -123,7 +123,7 @@ def run_tests(args, test_name, config_name, input_name, lang):
 
     # The file in results matches the file in output.
     # Re-run with the output file as the input to check stability.
-    cmd = '"%s" -q -c %s -f %s %s > %s' % (args.exe, rerun_config, outputname, lang, resultname)
+    cmd = '"%s" -q -c %s -f %s %s -o %s' % (args.exe, rerun_config, outputname, lang, resultname)
     if args.c:
         print("RUN: " + cmd)
     a = os.system(cmd)
@@ -135,7 +135,7 @@ def run_tests(args, test_name, config_name, input_name, lang):
         if not filecmp.cmp(resultname, outputname):
             print(UNSTABLE_COLOR + "UNSTABLE: " + NORMAL + test_name)
             if args.d:
-                cmd = "diff -u %s %s" % (outputname, resultname)
+                cmd = "git diff --no-index %s %s" % (outputname, resultname)
                 sys.stdout.flush()
                 os.system(cmd)
             return -2
@@ -190,6 +190,8 @@ def main(argv):
     parser.add_argument('-c', help='show commands', action='store_true')
     parser.add_argument('-d', help='show diff on failure', action='store_true')
     parser.add_argument('-p', help='show passes', action='store_true')
+    parser.add_argument('-g', help='generate debug files (.log, .unc)', action='store_true')
+    parser.add_argument('--results', help='specify results folder', type=str, default='results')
     parser.add_argument('--exe', help='uncrustify executable to test',
                         type=str, default=bin_path)
     parser.add_argument('tests', metavar='TEST', help='test(s) to run (default all)',
