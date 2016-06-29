@@ -1094,7 +1094,8 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
          set_chunk_type(pc, CT_ADDR);
       }
       else if ((prev->type == CT_TYPE) ||
-                prev->type == CT_QUALIFIER)
+                (prev->type == CT_QUALIFIER) ||
+                (prev->type == CT_AUTO))
       {
          set_chunk_type(pc, CT_BYREF);
       }
