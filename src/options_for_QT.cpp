@@ -31,6 +31,8 @@ argval_t SaveUO_sp_after_type_A           = AV_NOT_DEFINED;
 
 void save_set_options_for_QT(int level)
 {
+   assert(cpd.settings[UO_use_options_overriding_for_qt_macros].b);
+
    LOG_FMT(LGUY, "save values\n");
    // save the values
    QT_SIGNAL_SLOT_level             = level;
@@ -57,6 +59,8 @@ void save_set_options_for_QT(int level)
 
 void restore_options_for_QT()
 {
+   assert(cpd.settings[UO_use_options_overriding_for_qt_macros].b);
+
    LOG_FMT(LGUY, "restore values\n");
    // restore the values we had before SIGNAL/SLOT
    QT_SIGNAL_SLOT_level                       = 0;
