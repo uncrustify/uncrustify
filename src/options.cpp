@@ -2139,7 +2139,7 @@ void set_option_defaults(void)
    cpd.defaults[UO_sp_word_brace_ns].a                     = AV_ADD;
    cpd.defaults[UO_indent_oc_msg_prioritize_first_colon].b = true;
    cpd.defaults[UO_use_indent_func_call_param].b           = true;
-   cpd.defaults[UO_use_indent_continue_only_once].b        = false;
+
    /* copy all the default values to settings array */
    for (int count = 0; count < UO_option_count; count++)
    {
