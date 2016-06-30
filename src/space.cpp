@@ -899,7 +899,8 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
    if ((first->type == CT_PAREN_CLOSE) &&
        (second->type == CT_WHEN))
    {
-      return(AV_FORCE);
+      log_rule("FORCE");
+      return(AV_FORCE); /* TODO: make this configurable? */
    }
 
    if ((first->type == CT_PAREN_CLOSE) &&
@@ -1794,8 +1795,9 @@ void space_text(void)
 #endif
       LOG_FMT(LGUY, "%s: %d:%d %s %s\n", __func__, pc->orig_line, pc->orig_col, pc->text(),
               get_token_name(pc->type));
-      if ((strcmp(pc->text(), "SIGNAL") == 0) ||
-          (strcmp(pc->text(), "SLOT") == 0))
+      if ((cpd.settings[UO_use_options_overriding_for_qt_macros].b) &&
+         ((strcmp(pc->text(), "SIGNAL") == 0) ||
+          (strcmp(pc->text(), "SLOT") == 0)))
       {  // guy 2015-09-22
 #ifdef DEBUG
          LOG_FMT(LGUY, "(%d) ", __LINE__);

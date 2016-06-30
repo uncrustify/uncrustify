@@ -27,6 +27,7 @@ win32/*.*sdf
 win32/*.suo
 win32/*.user
 *.obj
+*.VC.db
 autom4te.cache
 build
 *.xcodeproj/*.pbxuser
@@ -48,3 +49,7 @@ Makefile.in
 /cov-int
 /src/token_names.h
 /aclocal.m4
+/compile
+/install-sh
+/missing
+/test-driver
