@@ -1190,6 +1190,8 @@ EMSCRIPTEN_BINDINGS( MainModule )
     emscripten::function( STRINGIFY( set_option ), &set_option );
     emscripten::function( STRINGIFY( get_option ), &get_option );
 
+    emscripten::function( STRINGIFY( set_option_defaults ), &set_option_defaults );
+
     emscripten::function( STRINGIFY( set_quiet ), &set_quiet );
     emscripten::function( STRINGIFY( log_set_sev ), &log_set_sev );
 
