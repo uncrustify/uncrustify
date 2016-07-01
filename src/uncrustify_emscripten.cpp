@@ -451,6 +451,20 @@ int loadConfig(string _cfg)
 }
 
 
+//! returns a copy of the current option_name_map
+map<uncrustify_options, option_map_value> getOptionNameMap()
+{
+   return(option_name_map);
+}
+
+
+//! returns a copy of the current group_map
+map<uncrustify_groups, group_map_value> getGroupMap()
+{
+   return(group_map);
+}
+
+
 /**
  * format string
  *
@@ -1354,6 +1368,9 @@ EMSCRIPTEN_BINDINGS(MainModule)
    emscripten::function(STRINGIFY(log_set_sev), &log_set_sev);
    emscripten::function(STRINGIFY(show_log_type), &show_log_type);
    emscripten::function(STRINGIFY(set_quiet), &set_quiet);
+
+   emscripten::function(STRINGIFY(getOptionNameMap), &getOptionNameMap);
+   emscripten::function(STRINGIFY(getGroupMap), &getGroupMap);
 
    emscripten::function(STRINGIFY(set_language), &set_language);
 
