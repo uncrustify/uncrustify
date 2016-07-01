@@ -1357,6 +1357,7 @@ EMSCRIPTEN_BINDINGS(MainModule)
    emscripten::function(STRINGIFY(clear_defines), &clear_defines);
 
    emscripten::function(STRINGIFY(show_options), &show_options);
+   emscripten::function(STRINGIFY(set_option_defaults), &set_option_defaults);
    emscripten::function(STRINGIFY(set_option), &set_option);
    emscripten::function(STRINGIFY(get_option), &get_option);
 
