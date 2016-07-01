@@ -408,6 +408,20 @@ int loadConfig( string _cfg )
 }
 
 
+//! returns a copy of the current option_name_map
+map<uncrustify_options, option_map_value> getOptionNameMap()
+{
+    return option_name_map;
+}
+
+
+//! returns a copy of the current group_map
+map<uncrustify_groups, group_map_value> getGroupMap()
+{
+    return group_map;
+}
+
+
 /**
 * format string
 *
@@ -1134,14 +1148,21 @@ EMSCRIPTEN_BINDINGS( MainModule )
     .field( STRINGIFY( short_desc ), &option_map_value::short_desc )
     .field( STRINGIFY( long_desc ), &option_map_value::long_desc );
 
+
     register_map<uncrustify_options, option_map_value>( STRINGIFY( option_name_map ) );
 
 
     register_vector<uncrustify_options>( STRINGIFY( "options" ) );
+
     value_object< group_map_value >( STRINGIFY( group_map_value ) )
     .field( STRINGIFY( id ), &group_map_value::id )
     .field( STRINGIFY( options ), &group_map_value::options );
+
     register_map<uncrustify_groups, group_map_value>( STRINGIFY( group_map ) );
+
+
+    emscripten::function( STRINGIFY( getOptionNameMap ), &getOptionNameMap );
+    emscripten::function( STRINGIFY( getGroupMap ), &getGroupMap );
 
 
     emscripten::function( STRINGIFY( show_config ), select_overload< string( bool, bool ) >( &show_config ) );
