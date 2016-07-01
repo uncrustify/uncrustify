@@ -101,7 +101,7 @@ def run_tests(args, test_name, config_name, input_name, lang):
     except:
         pass
 
-    cmd = '"%s" -q -c %s -f input/%s %s -o %s %s' % (args.exe, config_name, input_name, lang, resultname, "-LA 2>" + resultname + ".log -p " + resultname + ".unc" if args.g else "")
+    cmd = '"%s" -q -c %s -f input/%s %s -o %s %s' % (args.exe, config_name, input_name, lang, resultname, "-LA 2>" + resultname + ".log -p " + resultname + ".unc" if args.g else "-L1,2")
     if args.c:
         print("RUN: " + cmd)
     a = os.system(cmd)
