@@ -289,3 +289,4 @@
 33050 empty.cfg                        cpp/issue_523.cpp
 33051 empty.cfg                        cpp/bug_i_503.cpp
 33052 empty.cfg                        cpp/bug_i_512.cpp
+33053 for_auto.cfg                     cpp/for_auto.cpp
