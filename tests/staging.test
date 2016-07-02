@@ -10,7 +10,7 @@
 # 10003 staging/633_decl-in-func-typedef.cfg staging/633_decl-in-func-typedef.cpp
 # 10004 staging/634_extern-c-no-block.cfg staging/634_extern-c-no-block.cpp
 10005 staging/Uncrustify.Cpp.cfg staging/define-indentation.cpp
-# 10006 staging/dont-detab-strings.cfg staging/dont-detab-strings.cpp
+10006 staging/dont-detab-strings.cfg staging/dont-detab-strings.cpp
 10007 staging/dont-process-defines.cfg staging/dont-process-defines.cpp
 10008 empty.cfg staging/PR326_invalid-backslash-eol-csharp.cpp
 10009 staging/STUCK_macro-difficulties.cfg staging/STUCK_macro-difficulties.cpp
