@@ -216,7 +216,6 @@ typedef enum
    CT_MACRO_FUNC,       /* function-like macro */
    CT_MACRO,            /* a macro def */
    CT_QUALIFIER,        /* static, const, etc */
-   CT_AUTO,             /* auto */
    CT_EXTERN,           /* extern */
    CT_ALIGN,            /* paren'd qualifier: align(4) struct a { } */
    CT_TYPE,
