@@ -760,6 +760,8 @@ enum uncrustify_options
    UO_cmt_insert_class_header,
    UO_cmt_insert_oc_msg_header,
    UO_cmt_insert_before_preproc,
+   UO_cmt_insert_before_inlines,
+   UO_cmt_insert_before_ctor_dtor,
 
    UO_string_escape_char,       // the string escape char to use
    UO_string_escape_char2,      // the string escape char to use

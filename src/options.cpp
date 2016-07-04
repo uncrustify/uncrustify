@@ -1344,6 +1344,14 @@ void register_options(void)
                   "If a preprocessor is encountered when stepping backwards from a function name, then\n"
                   "this option decides whether the comment should be inserted.\n"
                   "Affects cmt_insert_oc_msg_header, cmt_insert_func_header and cmt_insert_class_header.");
+   unc_add_option("cmt_insert_before_inlines", UO_cmt_insert_before_inlines, AT_BOOL,
+                  "If a function is declared inline to a class definition, then\n"
+                  "this option decides whether the comment should be inserted.\n"
+                  "Affects cmt_insert_func_header.");
+   unc_add_option("cmt_insert_before_ctor_dtor", UO_cmt_insert_before_ctor_dtor, AT_BOOL,
+                  "If the function is a constructor/destructor, then\n"
+                  "this option decides whether the comment should be inserted.\n"
+                  "Affects cmt_insert_func_header.");
 
    unc_begin_group(UG_codemodify, "Code modifying options (non-whitespace)");
    unc_add_option("mod_full_brace_do", UO_mod_full_brace_do, AT_IARF,
@@ -2150,6 +2158,7 @@ void set_option_defaults(void)
    cpd.defaults[UO_sp_after_semi_for].a                    = AV_FORCE;
    cpd.defaults[UO_cmt_indent_multi].b                     = true;
    cpd.defaults[UO_cmt_multi_check_last].b                 = true;
+   cpd.defaults[UO_cmt_insert_before_inlines].b            = true;
    cpd.defaults[UO_pp_indent_count].n                      = 1;
    cpd.defaults[UO_align_left_shift].b                     = true;
    cpd.defaults[UO_indent_align_assign].b                  = true;
