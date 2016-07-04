@@ -243,12 +243,6 @@ void output_parsed(FILE *pfile)
 {
    chunk_t *pc;
    int     cnt;
-#ifdef WIN32
-   union I64 {
-     UINT64 flagValue;
-     int IntValues[2];
-   } int64flag;
-#endif
 
    // save_option_file(pfile, false);
    save_option_file_kernel(pfile, false, true);
@@ -257,25 +251,12 @@ void output_parsed(FILE *pfile)
    fprintf(pfile, "# Line              Tag           Parent      Columns Br/Lvl/pp     Flag   Nl  Text");
    for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next(pc))
    {
-#ifdef WIN32
-      fprintf(pfile, "\n# %3d> %13.13s[%13.13s][%2d/%2d/%2d/%2d][%d/%d/%d]",
-              pc->orig_line, get_token_name(pc->type),
-              get_token_name(pc->parent_type),
-              pc->column, pc->orig_col, pc->orig_col_end, pc->orig_prev_sp,
-              pc->brace_level, pc->level, pc->pp_level);
-      int64flag.flagValue = pc->flags;
-      fprintf(pfile, "[%x%x]",
-              int64flag.IntValues[0], int64flag.IntValues[1]);
-      fprintf(pfile, "[%d-%d]",
-              pc->nl_count, pc->after_tab);
-#else
-      fprintf(pfile, "\n# %3d> %16.16s[%16.16s][%2d/%2d/%2d/%2d][%d/%d/%d][%10" PRIx64 "][%d-%d]",
+      fprintf(pfile, "\n# %3d> %16.16s[%16.16s][%3d/%3d/%3d/%3d][%d/%d/%d][%10" PRIx64 "][%d-%d]",
               pc->orig_line, get_token_name(pc->type),
               get_token_name(pc->parent_type),
               pc->column, pc->orig_col, pc->orig_col_end, pc->orig_prev_sp,
               pc->brace_level, pc->level, pc->pp_level,
               pc->flags, pc->nl_count, pc->after_tab);
-#endif
 
       if ((pc->type != CT_NEWLINE) && (pc->len() != 0))
       {
