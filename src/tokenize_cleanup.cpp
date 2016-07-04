@@ -749,7 +749,8 @@ void tokenize_cleanup(void)
                if ((tmp2 != NULL) &&
                    ((tmp2->type == CT_SEMICOLON) ||
                     (tmp2->type == CT_ASSIGN) ||
-                    (tmp2->type == CT_COMMA)))
+                    (tmp2->type == CT_COMMA) ||
+                    (tmp2->type == CT_BRACE_OPEN)))
                {
                   doit = true;
                }
