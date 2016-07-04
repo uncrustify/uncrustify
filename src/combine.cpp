@@ -535,6 +535,11 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       {
          set_paren_parent(next, pc->type);
       }
+       
+      if ((pc->type == CT_WHEN) && (pc->next->type != CT_SPAREN_OPEN))
+      {
+          set_chunk_type(pc, CT_WORD);
+      }
    }
 
    if (pc->type == CT_NEW)
