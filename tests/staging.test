@@ -9,18 +9,18 @@
 10002 staging/623_caret-spacing.cfg staging/623_caret-spacing.cpp
 # 10003 staging/633_decl-in-func-typedef.cfg staging/633_decl-in-func-typedef.cpp
 # 10004 staging/634_extern-c-no-block.cfg staging/634_extern-c-no-block.cpp
-10005 staging/Uncrustify.Cpp.cfg staging/define-indentation.cpp
-# 10006 staging/dont-detab-strings.cfg staging/dont-detab-strings.cpp
+# 10005 staging/Uncrustify.Cpp.cfg staging/define-indentation.cpp
+10006 staging/dont-detab-strings.cfg staging/dont-detab-strings.cpp
 10007 staging/dont-process-defines.cfg staging/dont-process-defines.cpp
 10008 empty.cfg staging/PR326_invalid-backslash-eol-csharp.cpp
 10009 staging/STUCK_macro-difficulties.cfg staging/STUCK_macro-difficulties.cpp
 # 10010 staging/Uncrustify.Cpp.cfg staging/_experiments.cpp
 # 10011 staging/620_getset-brace.cfg staging/620_getset-brace.cs
 # 10012 staging/621_this-spacing.cfg staging/621_this-spacing.cs
-10013 staging/625_where-constraints.cfg staging/625_where-constraints.cs
+# 10013 staging/625_where-constraints.cfg staging/625_where-constraints.cs
 # 10014 staging/630_bad-new-init-semicolon-removal.cfg staging/630_bad-new-init-semicolon-removal.cs
 10015 staging/misc-failures.cfg staging/misc-failures.cs
-# 10016 staging/new-constraint-paren-space.cfg staging/new-constraint-paren-space.cs
+10016 staging/new-constraint-paren-space.cfg staging/new-constraint-paren-space.cs
 # 10017 empty.cfg staging/PR326_invalid-backslash-eol-csharp.cs
 10018 empty.cfg staging/delete-space-oc.mm
 10019 empty.cfg staging/func-param-wrap-oc.mm
@@ -43,7 +43,7 @@
 10033 staging/Uncrustify.Cpp.cfg staging/objc.mm
 
 10034 staging/Uncrustify.Cpp.cfg staging/asm.h.mm
-10035 staging/Uncrustify.Cpp.cfg staging/definesalign.h.mm
+# 10035 staging/Uncrustify.Cpp.cfg staging/definesalign.h.mm
 10036 staging/Uncrustify.Cpp.cfg staging/inttypes.h.mm
 
 # 10037 staging/Uncrustify.CSharp.cfg staging/_experiments.cs
