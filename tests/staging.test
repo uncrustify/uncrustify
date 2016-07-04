@@ -43,7 +43,7 @@
 10033 staging/Uncrustify.Cpp.cfg staging/objc.mm
 
 10034 staging/Uncrustify.Cpp.cfg staging/asm.h.mm
-# 10035 staging/Uncrustify.Cpp.cfg staging/definesalign.h.mm
+# 10035 staging/Uncrustify.Cpp.cfg staging/definesalign.h.mm # Passes if PP_IGNORE is used
 10036 staging/Uncrustify.Cpp.cfg staging/inttypes.h.mm
 
 # 10037 staging/Uncrustify.CSharp.cfg staging/_experiments.cs
