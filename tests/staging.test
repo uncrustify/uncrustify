@@ -20,7 +20,7 @@
 # 10013 staging/625_where-constraints.cfg staging/625_where-constraints.cs
 # 10014 staging/630_bad-new-init-semicolon-removal.cfg staging/630_bad-new-init-semicolon-removal.cs
 10015 staging/misc-failures.cfg staging/misc-failures.cs
-10016 staging/new-constraint-paren-space.cfg staging/new-constraint-paren-space.cs
+# 10016 staging/new-constraint-paren-space.cfg staging/new-constraint-paren-space.cs
 # 10017 empty.cfg staging/PR326_invalid-backslash-eol-csharp.cs
 10018 empty.cfg staging/delete-space-oc.mm
 10019 empty.cfg staging/func-param-wrap-oc.mm
