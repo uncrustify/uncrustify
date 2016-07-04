@@ -1772,6 +1772,90 @@ void newline_iarf(chunk_t *pc, argval_t av)
 }
 
 
+
+/**
+ * Adds newlines to multi-line function call/decl/def
+ * Start points to the open paren
+ */
+static void newline_func_multi_line(chunk_t *start)
+{
+   LOG_FUNC_ENTRY();
+   chunk_t  *pc;
+   chunk_t  *tmp;
+   bool add_start;
+   bool add_args;
+   bool add_end;
+
+   LOG_FMT(LNFD, "%s: called on %d:%d '%s' [%s/%s]\n",
+           __func__, start->orig_line, start->orig_col,
+           start->text(), get_token_name(start->type), get_token_name(start->parent_type));
+
+   if ((start->parent_type == CT_FUNC_DEF) || (start->parent_type == CT_FUNC_CLASS_DEF))
+   {
+       add_start = cpd.settings[UO_nl_func_def_start_multi_line].b;
+       add_args = cpd.settings[UO_nl_func_def_args_multi_line].b;
+       add_end = cpd.settings[UO_nl_func_def_end_multi_line].b;
+   }
+   else if ((start->parent_type == CT_FUNC_CALL) || (start->parent_type == CT_FUNC_CALL_USER))
+   {
+       add_start = cpd.settings[UO_nl_func_call_start_multi_line].b;
+       add_args = cpd.settings[UO_nl_func_call_args_multi_line].b;
+       add_end = cpd.settings[UO_nl_func_call_end_multi_line].b;
+   }
+   else
+   {
+       add_start = cpd.settings[UO_nl_func_decl_start_multi_line].b;
+       add_args = cpd.settings[UO_nl_func_decl_args_multi_line].b;
+       add_end = cpd.settings[UO_nl_func_decl_end_multi_line].b;
+   }
+
+   if (!add_start && !add_args && !add_end)
+       return;
+
+   pc = chunk_get_next_ncnl(start);
+
+   while((pc != NULL) && (pc->level > start->level))
+   {
+       pc = chunk_get_next_ncnl(pc);
+   }
+
+   if ((pc != NULL) && (pc->type == CT_FPAREN_CLOSE) && chunk_is_newline_between(start, pc))
+   {
+      if ( add_start && !chunk_is_newline( chunk_get_next(start) ) )
+      {
+         newline_iarf(start, AV_ADD);
+      }
+
+      if ( add_end && !chunk_is_newline( chunk_get_prev(pc) ) )
+      {
+         newline_iarf(chunk_get_prev(pc), AV_ADD);
+      }
+
+      if (add_args)
+      {
+         for (pc = chunk_get_next_ncnl(start);
+              (pc != NULL) && (pc->level > start->level);
+              pc = chunk_get_next_ncnl(pc))
+         {
+            if ((pc->type == CT_COMMA) && (pc->level == (start->level + 1)))
+            {
+               tmp = chunk_get_next(pc);
+               if (chunk_is_comment(tmp))
+               {
+                  pc = tmp;
+               }
+
+               if ( !chunk_is_newline( chunk_get_next(pc) ) )
+               {
+                  newline_iarf(pc, AV_ADD);
+               }
+            }
+         }
+      }
+   }
+} // newline_func_multi_line
+
+
 /**
  * Formats a function declaration
  * Start points to the open paren
@@ -1924,13 +2008,15 @@ static void newline_func_def(chunk_t *start)
    newline_iarf(start, as);
 
    /* and fix up the close paren */
-   if ((prev != NULL) && (pc != NULL) && (pc->type == CT_FPAREN_CLOSE))
+   if ((pc != NULL) && (pc->type == CT_FPAREN_CLOSE))
    {
       prev = chunk_get_prev_nnl(pc);
-      if (prev->type != CT_FPAREN_OPEN)
+      if ((prev != NULL) && (prev->type != CT_FPAREN_OPEN))
       {
          newline_iarf(prev, ae);
       }
+
+      newline_func_multi_line(start);
    }
 } // newline_func_def
 
@@ -2714,10 +2800,20 @@ void newlines_cleanup_braces(bool first)
              &&
              ((cpd.settings[UO_nl_func_decl_start].a != AV_IGNORE) ||
               (cpd.settings[UO_nl_func_def_start].a != AV_IGNORE) ||
+              (cpd.settings[UO_nl_func_decl_start_single].a != AV_IGNORE) ||
+              (cpd.settings[UO_nl_func_def_start_single].a != AV_IGNORE) ||
+              (cpd.settings[UO_nl_func_decl_start_multi_line].b) ||
+              (cpd.settings[UO_nl_func_def_start_multi_line].b) ||
               (cpd.settings[UO_nl_func_decl_args].a != AV_IGNORE) ||
               (cpd.settings[UO_nl_func_def_args].a != AV_IGNORE) ||
+              (cpd.settings[UO_nl_func_decl_args_multi_line].b) ||
+              (cpd.settings[UO_nl_func_def_args_multi_line].b) ||
               (cpd.settings[UO_nl_func_decl_end].a != AV_IGNORE) ||
               (cpd.settings[UO_nl_func_def_end].a != AV_IGNORE) ||
+              (cpd.settings[UO_nl_func_decl_end_single].a != AV_IGNORE) ||
+              (cpd.settings[UO_nl_func_def_end_single].a != AV_IGNORE) ||
+              (cpd.settings[UO_nl_func_decl_end_multi_line].b) ||
+              (cpd.settings[UO_nl_func_def_end_multi_line].b) ||
               (cpd.settings[UO_nl_func_decl_empty].a != AV_IGNORE) ||
               (cpd.settings[UO_nl_func_def_empty].a != AV_IGNORE) ||
               (cpd.settings[UO_nl_func_type_name].a != AV_IGNORE) ||
@@ -2728,6 +2824,16 @@ void newlines_cleanup_braces(bool first)
               (cpd.settings[UO_nl_func_def_paren].a != AV_IGNORE)))
          {
             newline_func_def(pc);
+         }
+         else if (((pc->parent_type == CT_FUNC_CALL) ||
+              (pc->parent_type == CT_FUNC_CALL_USER))
+             &&
+             ((cpd.settings[UO_nl_func_call_start_multi_line].b) ||
+              (cpd.settings[UO_nl_func_call_args_multi_line].b) ||
+              (cpd.settings[UO_nl_func_call_end_multi_line].b)
+              ))
+         {
+            newline_func_multi_line(pc);
          }
          else if (first && (cpd.settings[UO_nl_remove_extra_newlines].n == 1))
          {

@@ -288,3 +288,14 @@
 33050 empty.cfg                        cpp/issue_523.cpp
 33051 empty.cfg                        cpp/bug_i_503.cpp
 33052 empty.cfg                        cpp/bug_i_512.cpp
+33070 multi_line_0.cfg                 cpp/multi_line.cpp
+33071 multi_line_1.cfg                 cpp/multi_line.cpp
+33072 multi_line_2.cfg                 cpp/multi_line.cpp
+33073 multi_line_3.cfg                 cpp/multi_line.cpp
+33074 multi_line_4.cfg                 cpp/multi_line.cpp
+33075 multi_line_5.cfg                 cpp/multi_line.cpp
+33076 multi_line_6.cfg                 cpp/multi_line.cpp
+33077 multi_line_7.cfg                 cpp/multi_line.cpp
+33078 multi_line_8.cfg                 cpp/multi_line.cpp
+33079 multi_line_9.cfg                 cpp/multi_line.cpp
+33080 multi_line_10.cfg                cpp/multi_line.cpp
