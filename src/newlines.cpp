@@ -158,7 +158,7 @@ static void setup_newline_add(chunk_t *prev, chunk_t *nl, chunk_t *next)
       return;
    }
 
-   //undo_one_liner(prev);
+   undo_one_liner(prev);
 
    nl->orig_line   = prev->orig_line;
    nl->level       = prev->level;
@@ -388,21 +388,7 @@ chunk_t *newline_add_between(chunk_t *start, chunk_t *end)
    /* Back-up check for one-liners (should never be true!) */
    if (!one_liner_nl_ok(start))
    {
- //prot_the_line(__LINE__, 8);
-      LOG_FMT(LNL1LINE, "a new line may NOT be added\n");
-      if (start->next->flags & PCF_ONE_LINER)
-      {
-         LOG_FMT(LGUY98, "flag=true\n");
-         return(NULL);
-      }
-      else
-      {
-         LOG_FMT(LGUY98, "BUT start->next->flags is not PCF_ONE_LINER: a new line may be added\n");
-      }
-   }
-   else
-   {
-      LOG_FMT(LNL1LINE, "a new line may be added\n");
+      return(NULL);
    }
 
    /* Scan for a line break */
