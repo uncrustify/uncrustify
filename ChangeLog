@@ -7,7 +7,21 @@ New:
     Null conditional operator (?.) is now supported.
 
 New options:
+ - use_options_overriding_for_qt_macros
+ - mod_full_brace_if_chain_only option
  - sp_func_[proto,def,class]_paren_empty
+ - cmt_insert_before_inlines
+ - cmt_insert_before_ctor_dtor
+ - mod_full_brace_if_chain_only
+ - nl_func_decl_start_multi_line
+ - nl_func_def_start_multi_line
+ - nl_func_decl_args_multi_line
+ - nl_func_def_args_multi_line
+ - nl_func_decl_end_multi_line
+ - nl_func_def_end_multi_line
+ - nl_func_call_start_multi_line
+ - nl_func_call_args_multi_line
+ - nl_func_call_end_multi_line
  - indent_cs_delegate_brace
  - nl_oc_block_brace
  - nl_split_if_one_liner
@@ -18,7 +32,9 @@ New options:
 
 Bugfix:
  - Bug #620 is fixed
- - Issues #405, #408, #478, #481, #495, #503, #509, #512, #513, #524 are fixed
+ - Issues #405, #408, #412, #478, #481, #495, #503, #509, #512, #513, #514,
+    #518, #519, #520, #521, #522, #524, #529, #530, #533, #536, #539, #542,
+    #543, #544 are fixed
  - Proposals #409 and #477 are implemented
  - Issue #411 is partialy fixed
 
