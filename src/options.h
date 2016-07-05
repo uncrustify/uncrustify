@@ -496,12 +496,18 @@ enum uncrustify_options
    UO_nl_func_def_start,              // newline after the '(' in a function def
    UO_nl_func_decl_start_single,      // Overrides nl_func_decl_start when there is only one parameter
    UO_nl_func_def_start_single,       // Overrides nl_func_def_start when there is only one parameter
+   UO_nl_func_decl_start_multi_line,  // newline after the '(' in a function decl if '(' and ')' are on different lines
+   UO_nl_func_def_start_multi_line,   // newline after the '(' in a function def if '(' and ')' are on different lines
    UO_nl_func_decl_args,              // newline after each ',' in a function decl
    UO_nl_func_def_args,               // Add or remove newline after each ',' in a function definition
+   UO_nl_func_decl_args_multi_line,   // newline after each ',' in a function decl if '(' and ')' are on different lines
+   UO_nl_func_def_args_multi_line,    // Add or remove newline after each ',' in a function definition if '(' and ')' are on different lines
    UO_nl_func_decl_end,               // newline before the ')' in a function decl
-   UO_nl_func_def_end,                // newline before the ')' in a function decl
+   UO_nl_func_def_end,                // newline before the ')' in a function def
    UO_nl_func_decl_end_single,        // Overrides nl_func_decl_end when there is only one parameter
    UO_nl_func_def_end_single,         // Overrides nl_func_def_end when there is only one parameter
+   UO_nl_func_decl_end_multi_line,    // newline before the ')' in a function decl if '(' and ')' are on different lines
+   UO_nl_func_def_end_multi_line,     // newline before the ')' in a function def if '(' and ')' are on different lines
    UO_nl_func_decl_empty,             // as above, but for empty parens '()'
    UO_nl_func_def_empty,              // as above, but for empty parens '()'
    UO_nl_func_type_name,              // newline between return type and func name in def
@@ -509,6 +515,11 @@ enum uncrustify_options
    UO_nl_func_scope_name,             // Add or remove newline between function scope and name in a definition
                                       // Controls the newline after '::' in 'void A::f() { }'
    UO_nl_func_proto_type_name,        // nl_func_type_name, but for prottypes
+
+   UO_nl_func_call_start_multi_line,  // newline after the '(' in a function call if '(' and ')' are on different lines
+   UO_nl_func_call_args_multi_line,   // newline after each ',' in a function call if '(' and ')' are on different lines
+   UO_nl_func_call_end_multi_line,    // newline before the ')' in a function call if '(' and ')' are on different lines
+
    UO_nl_func_var_def_blk,            // newline after first block of func variable defs
    UO_nl_typedef_blk_start,           // newline before typedef block
    UO_nl_typedef_blk_end,             // newline after typedef block
@@ -702,7 +713,8 @@ enum uncrustify_options
    UO_mod_paren_on_return,        // add or remove paren on return
    UO_mod_full_brace_nl,          // max number of newlines to span w/o braces
    UO_mod_full_brace_if,          // add or remove braces on single-line if
-   UO_mod_full_brace_if_chain,
+   UO_mod_full_brace_if_chain,      // make all if/elseif/else statements in a chain be braced or not
+   UO_mod_full_brace_if_chain_only, // make all if/elseif/else statements in a chain with at least one 'else' or 'else if' fully braced
    UO_mod_full_brace_for,         // add or remove braces on single-line for
    UO_mod_full_brace_do,          // add or remove braces on single-line do
    UO_mod_full_brace_while,       // add or remove braces on single-line while
@@ -749,6 +761,8 @@ enum uncrustify_options
    UO_cmt_insert_class_header,
    UO_cmt_insert_oc_msg_header,
    UO_cmt_insert_before_preproc,
+   UO_cmt_insert_before_inlines,
+   UO_cmt_insert_before_ctor_dtor,
 
    UO_string_escape_char,       // the string escape char to use
    UO_string_escape_char2,      // the string escape char to use

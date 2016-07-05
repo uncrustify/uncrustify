@@ -56,3 +56,4 @@
 10160 cs_delegate_default.cfg  cs/delegate.cs
 10161 cs_delegate_indent.cfg   cs/delegate.cs
 12001 bug_620.cfg              cs/bug_620.cs
+12002 empty.cfg                cs/nullable_prop.cs

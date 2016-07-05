@@ -909,10 +909,18 @@ void register_options(void)
                   "Overrides nl_func_decl_start when there is only one parameter.");
    unc_add_option("nl_func_def_start_single", UO_nl_func_def_start_single, AT_IARF,
                   "Overrides nl_func_def_start when there is only one parameter.");
+   unc_add_option("nl_func_decl_start_multi_line", UO_nl_func_decl_start_multi_line, AT_BOOL,
+                  "Whether to add newline after '(' in a function declaration if '(' and ')' are in different lines.");
+   unc_add_option("nl_func_def_start_multi_line", UO_nl_func_def_start_multi_line, AT_BOOL,
+                  "Whether to add newline after '(' in a function definition if '(' and ')' are in different lines.");
    unc_add_option("nl_func_decl_args", UO_nl_func_decl_args, AT_IARF,
                   "Add or remove newline after each ',' in a function declaration");
    unc_add_option("nl_func_def_args", UO_nl_func_def_args, AT_IARF,
                   "Add or remove newline after each ',' in a function definition");
+   unc_add_option("nl_func_decl_args_multi_line", UO_nl_func_decl_args_multi_line, AT_BOOL,
+                  "Whether to add newline after each ',' in a function declaration if '(' and ')' are in different lines.");
+   unc_add_option("nl_func_def_args_multi_line", UO_nl_func_def_args_multi_line, AT_BOOL,
+                  "Whether to add newline after each ',' in a function definition if '(' and ')' are in different lines.");
    unc_add_option("nl_func_decl_end", UO_nl_func_decl_end, AT_IARF,
                   "Add or remove newline before the ')' in a function declaration");
    unc_add_option("nl_func_def_end", UO_nl_func_def_end, AT_IARF,
@@ -921,10 +929,20 @@ void register_options(void)
                   "Overrides nl_func_decl_end when there is only one parameter.");
    unc_add_option("nl_func_def_end_single", UO_nl_func_def_end_single, AT_IARF,
                   "Overrides nl_func_def_end when there is only one parameter.");
+   unc_add_option("nl_func_decl_end_multi_line", UO_nl_func_decl_end_multi_line, AT_BOOL,
+                  "Whether to add newline before ')' in a function declaration if '(' and ')' are in different lines.");
+   unc_add_option("nl_func_def_end_multi_line", UO_nl_func_def_end_multi_line, AT_BOOL,
+                  "Whether to add newline before ')' in a function definition if '(' and ')' are in different lines.");
    unc_add_option("nl_func_decl_empty", UO_nl_func_decl_empty, AT_IARF,
                   "Add or remove newline between '()' in a function declaration.");
    unc_add_option("nl_func_def_empty", UO_nl_func_def_empty, AT_IARF,
                   "Add or remove newline between '()' in a function definition.");
+   unc_add_option("nl_func_call_start_multi_line", UO_nl_func_call_start_multi_line, AT_BOOL,
+                  "Whether to add newline after '(' in a function call if '(' and ')' are in different lines.");
+   unc_add_option("nl_func_call_args_multi_line", UO_nl_func_call_args_multi_line, AT_BOOL,
+                  "Whether to add newline after each ',' in a function call if '(' and ')' are in different lines.");
+   unc_add_option("nl_func_call_end_multi_line", UO_nl_func_call_end_multi_line, AT_BOOL,
+                  "Whether to add newline before ')' in a function call if '(' and ')' are in different lines.");
    unc_add_option("nl_oc_msg_args", UO_nl_oc_msg_args, AT_BOOL,
                   "Whether to put each OC message parameter on a separate line\n"
                   "See nl_oc_msg_leave_one_liner");
@@ -1327,6 +1345,14 @@ void register_options(void)
                   "If a preprocessor is encountered when stepping backwards from a function name, then\n"
                   "this option decides whether the comment should be inserted.\n"
                   "Affects cmt_insert_oc_msg_header, cmt_insert_func_header and cmt_insert_class_header.");
+   unc_add_option("cmt_insert_before_inlines", UO_cmt_insert_before_inlines, AT_BOOL,
+                  "If a function is declared inline to a class definition, then\n"
+                  "this option decides whether the comment should be inserted.\n"
+                  "Affects cmt_insert_func_header.");
+   unc_add_option("cmt_insert_before_ctor_dtor", UO_cmt_insert_before_ctor_dtor, AT_BOOL,
+                  "If the function is a constructor/destructor, then\n"
+                  "this option decides whether the comment should be inserted.\n"
+                  "Affects cmt_insert_func_header.");
 
    unc_begin_group(UG_codemodify, "Code modifying options (non-whitespace)");
    unc_add_option("mod_full_brace_do", UO_mod_full_brace_do, AT_IARF,
@@ -1340,6 +1366,10 @@ void register_options(void)
    unc_add_option("mod_full_brace_if_chain", UO_mod_full_brace_if_chain, AT_BOOL,
                   "Make all if/elseif/else statements in a chain be braced or not. Overrides mod_full_brace_if.\n"
                   "If any must be braced, they are all braced.  If all can be unbraced, then the braces are removed.");
+   unc_add_option("mod_full_brace_if_chain_only", UO_mod_full_brace_if_chain_only, AT_BOOL,
+                  "Make all if/elseif/else statements with at least one 'else' or 'else if' fully braced.\n"
+                  "If mod_full_brace_if_chain is used together with this option, all if-else chains will get braces,\n"
+                  "and simple 'if' statements will lose them (if possible).\n");
    unc_add_option("mod_full_brace_nl", UO_mod_full_brace_nl, AT_NUM,
                   "Don't remove braces around statements that span N newlines", "", 0, 5000);
    unc_add_option("mod_full_brace_while", UO_mod_full_brace_while, AT_IARF,
@@ -2137,6 +2167,7 @@ void set_option_defaults(void)
    cpd.defaults[UO_sp_after_semi_for].a                    = AV_FORCE;
    cpd.defaults[UO_cmt_indent_multi].b                     = true;
    cpd.defaults[UO_cmt_multi_check_last].b                 = true;
+   cpd.defaults[UO_cmt_insert_before_inlines].b            = true;
    cpd.defaults[UO_pp_indent_count].n                      = 1;
    cpd.defaults[UO_align_left_shift].b                     = true;
    cpd.defaults[UO_indent_align_assign].b                  = true;

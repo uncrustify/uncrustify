@@ -183,6 +183,9 @@
 
 30860 sf574.cfg                        cpp/sf574.cpp
 
+30870 cmt_insert-0.cfg                 cpp/cmt_insert.cpp
+30871 cmt_insert-1.cfg                 cpp/cmt_insert.cpp
+
 30900 region-0.cfg                     cpp/region.cpp
 30901 region-1.cfg                     cpp/region.cpp
 30902 region-2.cfg                     cpp/region.cpp
@@ -290,3 +293,18 @@
 33051 empty.cfg                        cpp/bug_i_503.cpp
 33052 empty.cfg                        cpp/bug_i_512.cpp
 33053 for_auto.cfg                     cpp/for_auto.cpp
+33061 empty.cfg                        cpp/if_chain_braces.cpp
+33062 if_chain_braces_0.cfg            cpp/if_chain_braces.cpp
+33063 if_chain_braces_1.cfg            cpp/if_chain_braces.cpp
+33064 if_chain_braces_2.cfg            cpp/if_chain_braces.cpp
+33070 multi_line_0.cfg                 cpp/multi_line.cpp
+33071 multi_line_1.cfg                 cpp/multi_line.cpp
+33072 multi_line_2.cfg                 cpp/multi_line.cpp
+33073 multi_line_3.cfg                 cpp/multi_line.cpp
+33074 multi_line_4.cfg                 cpp/multi_line.cpp
+33075 multi_line_5.cfg                 cpp/multi_line.cpp
+33076 multi_line_6.cfg                 cpp/multi_line.cpp
+33077 multi_line_7.cfg                 cpp/multi_line.cpp
+33078 multi_line_8.cfg                 cpp/multi_line.cpp
+33079 multi_line_9.cfg                 cpp/multi_line.cpp
+33080 multi_line_10.cfg                cpp/multi_line.cpp
