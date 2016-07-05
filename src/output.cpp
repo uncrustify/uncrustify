@@ -660,8 +660,36 @@ static chunk_t *get_next_function(chunk_t *pc)
    while ((pc = chunk_get_next(pc)) != NULL)
    {
       if ((pc->type == CT_FUNC_DEF) ||
-          (pc->type == CT_OC_MSG_DECL) ||
-          (pc->type == CT_FUNC_PROTO))
+          (pc->type == CT_FUNC_PROTO) ||
+          (pc->type == CT_FUNC_CLASS_DEF) ||
+          (pc->type == CT_FUNC_CLASS_PROTO) ||
+          (pc->type == CT_OC_MSG_DECL))
+      {
+         return(pc);
+      }
+   }
+   return(NULL);
+}
+
+
+static chunk_t *get_prev_category(chunk_t *pc)
+{
+   while ((pc = chunk_get_prev(pc)) != NULL)
+   {
+      if (pc->type == CT_OC_CATEGORY)
+      {
+         return(pc);
+      }
+   }
+   return(NULL);
+}
+
+
+static chunk_t *get_next_scope(chunk_t *pc)
+{
+   while ((pc = chunk_get_next(pc)) != NULL)
+   {
+      if (pc->type == CT_OC_SCOPE)
       {
          return(pc);
       }
@@ -682,6 +710,18 @@ static chunk_t *get_next_class(chunk_t *pc)
    return(NULL);
 }
 
+
+static chunk_t *get_prev_oc_class(chunk_t *pc)
+{
+   while ((pc = chunk_get_prev(pc)) != NULL)
+   {
+      if (pc->type == CT_OC_CLASS)
+      {
+         return(pc);
+      }
+   }
+   return(NULL);
+}
 
 static int next_up(const unc_text& text, int idx, unc_text& tag)
 {
@@ -1457,11 +1497,45 @@ static bool kw_fcn_filename(chunk_t *cmt, unc_text& out_txt)
 
 static bool kw_fcn_class(chunk_t *cmt, unc_text& out_txt)
 {
-   chunk_t *tmp = get_next_class(cmt);
+   chunk_t *tmp = NULL;
+   if ((cpd.lang_flags & LANG_CPP) && (cpd.lang_flags & LANG_OC)) {
+      chunk_t *fcn = get_next_function(cmt);
+      if (fcn->type == CT_OC_MSG_DECL)
+      {
+         tmp = get_prev_oc_class(cmt);
+      }
+      else
+      {
+         tmp = get_next_class(cmt);
+      }
+   }
+   else if (cpd.lang_flags & LANG_OC)
+   {
+      tmp = get_prev_oc_class(cmt);
+   }
+   if (tmp == NULL)
+   {
+      tmp = get_next_class(cmt);
+   }
 
    if (tmp)
    {
       out_txt.append(tmp->str);
+      if (cpd.lang_flags & cpd.lang_flags)
+      {
+         while ((tmp = chunk_get_next(tmp)) != NULL)
+         {
+            if (tmp->type != CT_DC_MEMBER)
+            {
+               break;
+            }
+            tmp = chunk_get_next(tmp);
+            if (tmp) {
+               out_txt.append("::");
+               out_txt.append(tmp->str);
+            }
+         }
+      }
       return(true);
    }
    return(false);
@@ -1506,6 +1580,29 @@ static bool kw_fcn_message(chunk_t *cmt, unc_text& out_txt)
 } // kw_fcn_message
 
 
+static bool kw_fcn_category(chunk_t *cmt, unc_text& out_txt)
+{
+   chunk_t *category = get_prev_category(cmt);
+   if (category) {
+      out_txt.append('(');
+      out_txt.append(category->str);
+      out_txt.append(')');
+   }
+   return(true);
+} // kw_fcn_category
+
+
+static bool kw_fcn_scope(chunk_t *cmt, unc_text& out_txt)
+{
+   chunk_t *scope = get_next_scope(cmt);
+   if (scope) {
+      out_txt.append(scope->str);
+      return(true);
+   }
+   return(false);
+} // kw_fcn_scope
+
+
 static bool kw_fcn_function(chunk_t *cmt, unc_text& out_txt)
 {
    chunk_t *fcn = get_next_function(cmt);
@@ -1515,6 +1612,9 @@ static bool kw_fcn_function(chunk_t *cmt, unc_text& out_txt)
       if (fcn->parent_type == CT_OPERATOR)
       {
          out_txt.append("operator ");
+      }
+      if (fcn->prev && fcn->prev->type == CT_DESTRUCTOR) {
+         out_txt.append('~');
       }
       out_txt.append(fcn->str);
       return(true);
@@ -1718,6 +1818,8 @@ static const kw_subst_t kw_subst_table[] =
    { "$(filename)",  kw_fcn_filename  },
    { "$(class)",     kw_fcn_class     },
    { "$(message)",   kw_fcn_message   },
+   { "$(category)",  kw_fcn_category  },
+   { "$(scope)",     kw_fcn_scope     },
    { "$(function)",  kw_fcn_function  },
    { "$(javaparam)", kw_fcn_javaparam },
    { "$(fclass)",    kw_fcn_fclass    },
