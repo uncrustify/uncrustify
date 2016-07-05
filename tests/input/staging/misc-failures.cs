@@ -15,6 +15,7 @@ o.Func2(a, b,
     y);
 
 
+
                 AnimatorStateMachine rootStateMachine = syncedIndex == -1
                                                         ? animatorController.layers[selectedLayerIndex].stateMachine
                                                         : animatorController.layers[syncedIndex].stateMachine;
