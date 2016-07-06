@@ -33,7 +33,7 @@
 10025 staging/Uncrustify.Cpp.cfg staging/qtargs.cpp
 # 10026 staging/Uncrustify.Cpp.cfg staging/ifoneliner.cpp
 
-10027 staging/Uncrustify.CSharp.cfg staging/oneline_property.cs
+# 10027 staging/Uncrustify.CSharp.cfg staging/oneline_property.cs
 # 10028 staging/Uncrustify.CSharp.cfg staging/ifcolalign.cs
 10029 staging/Uncrustify.CSharp.cfg staging/when.cs
 
@@ -51,3 +51,6 @@
 # 10039 empty.cfg staging/615_nested-usings.cs
 # 10040 empty.cfg staging/everything.cpp
 # 10041 empty.cfg staging/everything.cs
+
+# 10042 staging/Uncrustify.Cpp.cfg staging/indent-bad.mm
+# 10043 staging/Uncrustify.CSharp.cfg staging/nl-brace.cs
