@@ -307,3 +307,4 @@
 33078 multi_line_8.cfg                 cpp/multi_line.cpp
 33079 multi_line_9.cfg                 cpp/multi_line.cpp
 33080 multi_line_10.cfg                cpp/multi_line.cpp
+33081 namespace_namespace.cfg          cpp/namespace_namespace.cpp
