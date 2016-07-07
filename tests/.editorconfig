@@ -1,0 +1,5 @@
+# This blocks editorconfig from finding the repo root .editorconfig.
+# We don't want to use that because test files are by their very nature
+# unformatted files and we don't want to leave this up to the editors.
+
+root = true
