@@ -1,4 +1,4 @@
-public void foo()
+void foo()
 {
 	if (data)	go = new ClassA();
 	else		go = new ClassB();
