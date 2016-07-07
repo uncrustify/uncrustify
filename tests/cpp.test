@@ -239,6 +239,8 @@
 31720 ben.cfg                          cpp/bit-colon.cpp
 31730 ms-style-ref.cfg                 cpp/ms-style-ref.cpp
 
+32000 sp_skip_vbrace_tokens.cfg        cpp/sp_skip_vbrace_tokens.cpp
+
 33000 tab-0-11.cfg                     cpp/tab-0.cpp
 33001 tab-1-11.cfg                     cpp/tab-1.cpp
 33002 comment_tab_f.cfg                cpp/cmt_convert_tab_to_spaces.cpp

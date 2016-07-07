@@ -1811,16 +1811,23 @@ void space_text(void)
          save_set_options_for_QT(pc->level);
       } // guy
         // Bug # 637
-        //next = chunk_get_next(pc);
-        //while (chunk_is_blank(next) && !chunk_is_newline(next))
-        //{
-        //   LOG_FMT(LSPACE, "%s: %d:%d Skip %s (%d+%d)\n", __func__,
-        //           next->orig_line, next->orig_col, get_token_name(next->type),
-        //           pc->column, pc->str.size());
-        //   next->column = pc->column + pc->str.size();
-        //   next         = chunk_get_next(next);
-        //}
-      next = pc->next;
+      if (cpd.settings[UO_sp_skip_vbrace_tokens].b)
+      {
+         next = chunk_get_next(pc);
+         while (chunk_is_blank(next) && !chunk_is_newline(next) &&
+               (next->type == CT_VBRACE_OPEN || next->type == CT_VBRACE_CLOSE))
+         {
+            LOG_FMT(LSPACE, "%s: %d:%d Skip %s (%d+%d)\n", __func__,
+               next->orig_line, next->orig_col, get_token_name(next->type),
+               pc->column, pc->str.size());
+            next->column = pc->column + pc->str.size();
+            next = chunk_get_next(next);
+         }
+      }
+      else
+      {
+         next = pc->next;
+      }
       if (!next)
       {
          break;
