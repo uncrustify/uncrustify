@@ -45,3 +45,14 @@ namespace UnityEditor
         }
     }
 } // namespace
+
+namespace UnityEditor
+{
+    internal class TreeView
+    {
+        public System.Action<int[]> selectionChangedCallback { get; set; } // ids
+        public System.Action<int> itemDoubleClickedCallback { get; set; } // id
+        public System.Action<int[], bool> dragEndedCallback { get; set; } // dragged ids, if null then drag was not allowed, bool == true if dragging tree view items from own treeview, false if drag was started outside
+        public System.Action<int> contextClickItemCallback { get; set; } // clicked item id
+    }
+}
