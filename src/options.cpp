@@ -600,7 +600,7 @@ void register_options(void)
                   "Indent based on the size of the brace parent, i.e. 'if' => 3 spaces, 'for' => 4 spaces, etc.");
    unc_add_option("indent_paren_open_brace", UO_indent_paren_open_brace, AT_BOOL,
                   "Indent based on the paren open instead of the brace open in '({\\n', default is to indent by brace.");
-   unc_add_option("indent_cs_delegate_brace", U0_indent_cs_delegate_brace, AT_BOOL,
+   unc_add_option("indent_cs_delegate_brace", UO_indent_cs_delegate_brace, AT_BOOL,
                   "indent a C# delegate by another level, default is to not indent by another level.");
    unc_add_option("indent_namespace", UO_indent_namespace, AT_BOOL,
                   "Whether the 'namespace' body is indented");

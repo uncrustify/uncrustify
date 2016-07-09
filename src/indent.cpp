@@ -1014,7 +1014,7 @@ void indent_text(void)
          frm.level++;
          indent_pse_push(frm, pc);
 
-         if (cpd.settings[U0_indent_cs_delegate_brace].b &&
+         if (cpd.settings[UO_indent_cs_delegate_brace].b &&
              (pc->type == CT_BRACE_OPEN) &&
              (pc->prev->type == CT_LAMBDA || pc->prev->prev->type == CT_LAMBDA))
          {
