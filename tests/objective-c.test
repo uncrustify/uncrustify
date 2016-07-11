@@ -89,5 +89,6 @@
 50600  bug_i_477.cfg                                oc/bug_i_477.m
 50601  bug_i_408.cfg                                oc/bug_i_408.m
 50602  bug_i_125-412.cfg                            oc/bug_i_125-412.m
+50603  obj-c.cfg                                    oc/gh511.m
 
 50700  cmt_insert-0.cfg                             oc/cmt_insert.m
