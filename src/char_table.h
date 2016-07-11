@@ -47,13 +47,13 @@ struct CharTable
    }
 
 
-   static inline bool IsKw1(char ch)
+   static inline bool IsKw1(int ch)
    {
       return((Get(ch) & KW1) != 0);
    }
 
 
-   static inline bool IsKw2(char ch)
+   static inline bool IsKw2(int ch)
    {
       return((Get(ch) & KW2) != 0);
    }
