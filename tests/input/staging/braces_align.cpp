@@ -1,13 +1,13 @@
-char *DLLDetails[2][4]=
+char *array_assign[2][4]=
 {
 	{
-		// 32 bit
-		{"sce/vagconv2_32/vagconv2.dll"},
-		{"_sceVagConvertInit@4"},{"_sceVagConvert@12"},{"_sceVagConvertFin@4"}
+		// foo
+		{"foo"},
+		{"foo@1"},{"foo@2"},{"foo@3"}
 	},
 	{
-		// 64 bit
-		{"sce/vagconv2_64/vagconv2.dll"},
-		{"sceVagConvertInit"},{"sceVagConvert"},{"sceVagConvertFin"}
+		// bar
+		{"bar"},
+		{"bar@1"},{"bar@2"},{"bar@3"}
 	}
 };
