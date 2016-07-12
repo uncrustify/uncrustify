@@ -65,7 +65,7 @@
 
 30075 empty.cfg                        cpp/goto.cpp
 
-30080 nl_brace_brace-a.cfg             cpp/nl_brace_brace.cpp
+#30080 nl_brace_brace-a.cfg             cpp/nl_brace_brace.cpp
 
 30085 nSolve.cfg                       cpp/align_class.cpp
 
@@ -240,6 +240,7 @@
 31730 ms-style-ref.cfg                 cpp/ms-style-ref.cpp
 
 32000 sp_skip_vbrace_tokens.cfg        cpp/sp_skip_vbrace_tokens.cpp
+32001 empty.cfg                        cpp/issue_547_for_each.cpp
 
 33000 tab-0-11.cfg                     cpp/tab-0.cpp
 33001 tab-1-11.cfg                     cpp/tab-1.cpp
@@ -310,3 +311,5 @@
 33078 multi_line_8.cfg                 cpp/multi_line.cpp
 33079 multi_line_9.cfg                 cpp/multi_line.cpp
 33080 multi_line_10.cfg                cpp/multi_line.cpp
+33081 bug_i_552.cfg                    cpp/bug_i_552.cpp
+33082 namespace_namespace.cfg          cpp/namespace_namespace.cpp

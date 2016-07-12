@@ -540,7 +540,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       {
          set_paren_parent(next, pc->type);
       }
-       
+
       if ((pc->type == CT_WHEN) && (pc->next->type != CT_SPAREN_OPEN))
       {
           set_chunk_type(pc, CT_WORD);
@@ -2452,6 +2452,13 @@ static void fix_typedef(chunk_t *start)
 } // fix_typedef
 
 
+static bool cs_top_is_question(ChunkStack &cs, int level)
+{
+   chunk_t *pc = cs.Empty() ? NULL : cs.Top()->m_pc;
+   return (pc && (pc->type == CT_QUESTION) && (pc->level == level));
+}
+
+
 /**
  * Examines the whole file and changes CT_COLON to
  * CT_Q_COLON, CT_LABEL_COLON, or CT_CASE_COLON.
@@ -2470,8 +2477,7 @@ void combine_labels(void)
    cpd.unc_stage = US_COMBINE_LABELS;
 
    // need a stack to handle nesting inside of OC messages, which reset the scope
-   std::stack<int> question_counts;
-   question_counts.push(0);
+   ChunkStack cs;
 
    prev = chunk_get_head();
    cur  = chunk_get_next_nc(prev);
@@ -2494,16 +2500,25 @@ void combine_labels(void)
 
       if (prev->type == CT_SQUARE_OPEN && prev->parent_type == CT_OC_MSG)
       {
-         question_counts.push(0);
+         cs.Push_Back(prev);
       }
       else if (next->type == CT_SQUARE_CLOSE && next->parent_type == CT_OC_MSG)
       {
-         question_counts.pop();
+         /* pop until we hit '[' */
+         while (!cs.Empty())
+         {
+            chunk_t *t2 = cs.Top()->m_pc;
+            cs.Pop_Back();
+            if (t2->type == CT_SQUARE_OPEN)
+            {
+               break;
+            }
+         }
       }
 
       if (next->type == CT_QUESTION)
       {
-         ++question_counts.top();
+         cs.Push_Back(next);
       }
       else if (next->type == CT_CASE)
       {
@@ -2518,17 +2533,17 @@ void combine_labels(void)
          }
       }
       else if ((next->type == CT_COLON) ||
-               ((question_counts.top() > 0) && (next->type == CT_OC_COLON)))
+               ((next->type == CT_OC_COLON) && cs_top_is_question(cs, next->level)))
       {
          if (cur->type == CT_DEFAULT)
          {
             set_chunk_type(cur, CT_CASE);
             hit_case = true;
          }
-         if (question_counts.top() > 0)
+         if (cs_top_is_question(cs, next->level))
          {
             set_chunk_type(next, CT_COND_COLON);
-            --question_counts.top();
+            cs.Pop_Back();
          }
          else if (hit_case)
          {
