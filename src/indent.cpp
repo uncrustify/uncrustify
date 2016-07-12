@@ -1215,7 +1215,9 @@ void indent_text(void)
             next = chunk_get_next_ncnl(pc);
             if (!chunk_is_newline_between(pc, next))
             {
-               frm.pse[frm.pse_tos].indent = next->column;
+                if (cpd.settings[UO_indent_token_after_brace].b) {
+                    frm.pse[frm.pse_tos].indent = next->column;
+                }
             }
             frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
             frm.pse[frm.pse_tos].open_line  = pc->orig_line;
