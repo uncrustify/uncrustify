@@ -7,6 +7,8 @@ New:
     Null conditional operator (?.) is now supported.
 
 New options:
+ - sp_skip_vbrace_tokens
+ - indent_token_after_brace
  - use_options_overriding_for_qt_macros
  - mod_full_brace_if_chain_only option
  - sp_func_[proto,def,class]_paren_empty
@@ -34,7 +36,7 @@ Bugfix:
  - Bug #620 is fixed
  - Issues #405, #408, #412, #478, #481, #495, #503, #509, #512, #513, #514,
     #518, #519, #520, #521, #522, #524, #529, #530, #533, #536, #539, #542,
-    #543, #544 are fixed
+    #543, #544, #546 are fixed
  - Proposals #409 and #477 are implemented
  - Issue #411 is partialy fixed
 
@@ -68,7 +70,7 @@ Bugfix:
  - Bugfix for win32 for the flags.
  - make test c/ 00617 stable
  - make test c/ 02501 stable
- - The issue #467 and the test tests/output/c/02100-i2c-core.c are fixed.
+ - The issue #467 and the test tests/output/c/02100-i2c-core.c are not yet fixed.
  - uncrustify all the sources with forUncrustifySources.cfg
  - better descriptions for options
  - bug #631 is fixed

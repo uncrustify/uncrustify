@@ -203,6 +203,7 @@ enum uncrustify_options
 
    UO_indent_min_vbrace_open,        // min. indent after virtual brace open and newline
    UO_indent_vbrace_open_on_tabstop, // when identing after virtual brace open and newline add further spaces to reach next tabstop
+   UO_indent_token_after_brace,
 
    /*
     * Misc inter-element spacing

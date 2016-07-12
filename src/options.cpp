@@ -743,6 +743,9 @@ void register_options(void)
    unc_add_option("indent_vbrace_open_on_tabstop", UO_indent_vbrace_open_on_tabstop, AT_BOOL,
                   "TRUE: When identing after virtual brace open and newline add further spaces "
                   "after regular indent to reach next tabstop.");
+   unc_add_option("indent_token_after_brace", UO_indent_token_after_brace, AT_BOOL,
+                  "If true, a brace followed by another token (not a newline) will indent all contained lines to match the token."
+                  "Default=True.");
 
    unc_begin_group(UG_newline, "Newline adding and removing options");
    unc_add_option("nl_collapse_empty_body", UO_nl_collapse_empty_body, AT_BOOL,
@@ -2177,6 +2180,7 @@ void set_option_defaults(void)
    cpd.defaults[UO_indent_oc_msg_prioritize_first_colon].b = true;
    cpd.defaults[UO_use_indent_func_call_param].b           = true;
    cpd.defaults[UO_use_options_overriding_for_qt_macros].b = true;
+   cpd.defaults[UO_indent_token_after_brace].b             = true;
 
    /* copy all the default values to settings array */
    for (int count = 0; count < UO_option_count; count++)

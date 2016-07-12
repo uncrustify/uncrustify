@@ -562,6 +562,9 @@ void indent_text(void)
    pc = chunk_get_head();
    while (pc != NULL)
    {
+      LOG_FMT(LGUY, "%d: [%d] pc->text() %s\n",
+              pc->orig_line, __LINE__, pc->text());
+      log_pcf_flags(LGUY, pc->flags);
       if ((cpd.settings[UO_use_options_overriding_for_qt_macros].b) &&
          ((strcmp(pc->text(), "SIGNAL") == 0) ||
           (strcmp(pc->text(), "SLOT") == 0)))
@@ -1009,7 +1012,7 @@ void indent_text(void)
          /* Always indent on virtual braces */
          indent_column_set(frm.pse[frm.pse_tos].indent_tmp);
       }
-      else if (pc->type == CT_BRACE_OPEN && !(pc->flags & PCF_IN_ARRAY_ASSIGN))  // issue #467 and test c/  02100
+      else if (pc->type == CT_BRACE_OPEN)
       {
          frm.level++;
          indent_pse_push(frm, pc);
@@ -1018,7 +1021,7 @@ void indent_text(void)
              (pc->type == CT_BRACE_OPEN) &&
              (pc->prev->type == CT_LAMBDA || pc->prev->prev->type == CT_LAMBDA))
          {
-            frm.pse[frm.pse_tos].brace_indent = 1 + ((pc->brace_level+1) * indent_size);
+            frm.pse[frm.pse_tos].brace_indent = 1 + ((pc->brace_level + 1) * indent_size);
             indent_column                     = frm.pse[frm.pse_tos].brace_indent;
             frm.pse[frm.pse_tos].indent       = indent_column + indent_size;
             frm.pse[frm.pse_tos].indent_tab   = frm.pse[frm.pse_tos].indent;
@@ -1212,7 +1215,9 @@ void indent_text(void)
             next = chunk_get_next_ncnl(pc);
             if (!chunk_is_newline_between(pc, next))
             {
-               frm.pse[frm.pse_tos].indent = next->column;
+                if (cpd.settings[UO_indent_token_after_brace].b) {
+                    frm.pse[frm.pse_tos].indent = next->column;
+                }
             }
             frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
             frm.pse[frm.pse_tos].open_line  = pc->orig_line;
@@ -1414,8 +1419,7 @@ void indent_text(void)
                (pc->type == CT_SPAREN_OPEN) ||
                (pc->type == CT_FPAREN_OPEN) ||
                (pc->type == CT_SQUARE_OPEN) ||
-               (pc->type == CT_ANGLE_OPEN) ||
-               (pc->type == CT_BRACE_OPEN && (pc->flags & PCF_IN_ARRAY_ASSIGN))  // issue #467 and test c/  02100
+               (pc->type == CT_ANGLE_OPEN)
               )
       {
          /* Open parens and squares - never update indent_column, unless right
@@ -1431,14 +1435,7 @@ void indent_text(void)
                     __func__, __LINE__, pc->orig_line, indent_column, pc->text());
             reindent_line(pc, indent_column);
          }
-         if (pc->type == CT_BRACE_OPEN && (pc->flags & PCF_IN_ARRAY_ASSIGN))
-         {
-            frm.pse[frm.pse_tos].indent = pc->next->column;  // issue #467 and test c/  02100
-         }
-         else
-         {
-            frm.pse[frm.pse_tos].indent = pc->column + pc->len();
-         }
+         frm.pse[frm.pse_tos].indent = pc->column + pc->len();
 
          if ((pc->type == CT_SQUARE_OPEN) && (cpd.lang_flags & LANG_D))
          {
