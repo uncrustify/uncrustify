@@ -177,7 +177,7 @@ static void usage_exit(const char *msg, const char *argv0, int code)
            "\n"
            "Debug Options:\n"
            " -p FILE      : Dump debug info to a file.\n"
-           " -L SEV       : Set the log severity (see log_levels.h).\n"
+           " -L SEV       : Set the log severity (see log_levels.h; note 'A' = 'all')\n"
            " -s           : Show the log severity in the logs.\n"
            " --decode     : Decode remaining args (chunk flags) and exit.\n"
            "\n"
