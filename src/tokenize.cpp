@@ -1171,10 +1171,23 @@ bool parse_word(tok_ctx& ctx, chunk_t& pc, bool skipcheck)
    pc.str.clear();
    pc.str.append(ctx.get());
 
-   while (ctx.more() && CharTable::IsKw2(ctx.peek()))
+   while (ctx.more())
    {
-      ch = ctx.get();
-      pc.str.append(ch);
+      ch = ctx.peek();
+      if (CharTable::IsKw2(ch))
+      {
+         pc.str.append(ctx.get());
+      }
+      else if ((ch == '\\') && (unc_tolower(ctx.peek(1)) == 'u'))
+      {
+         pc.str.append(ctx.get());
+         pc.str.append(ctx.get());
+         skipcheck = true;
+      }
+      else
+      {
+         break;
+      }
 
       /* HACK: Non-ASCII character are only allowed in identifiers */
       if (ch > 0x7f)
