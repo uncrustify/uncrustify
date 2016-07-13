@@ -236,7 +236,7 @@
 02002 ben2.cfg                 c/i2c-core.c
 
 # clark's style - blank lines before and after flow control, indented comments
-#02100 clark.cfg                c/i2c-core.c
+02100 clark.cfg                c/i2c-core.c
 02101 clark.cfg                c/comment-indent.c
 02102 clark.cfg                c/indent.cpp
 02103 clark.cfg                c/output.cpp

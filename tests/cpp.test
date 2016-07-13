@@ -312,3 +312,5 @@
 33080 multi_line_10.cfg                cpp/multi_line.cpp
 33081 bug_i_552.cfg                    cpp/bug_i_552.cpp
 33082 namespace_namespace.cfg          cpp/namespace_namespace.cpp
+
+#33090 empty.cfg                        cpp/gh555.cpp
