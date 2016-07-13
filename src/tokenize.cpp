@@ -1761,6 +1761,7 @@ static bool parse_next(tok_ctx& ctx, chunk_t& pc)
 
    /* Check for pawn/ObjectiveC/Java and normal identifiers */
    if (CharTable::IsKw1(ctx.peek()) ||
+       ((ctx.peek() == '\\') && (unc_tolower(ctx.peek(1)) == 'u')) ||
        ((ctx.peek() == '@') && CharTable::IsKw1(ctx.peek(1))))
    {
       parse_word(ctx, pc, false);
