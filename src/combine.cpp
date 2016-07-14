@@ -4070,7 +4070,9 @@ static void mark_class_ctor(chunk_t *start)
    {
       chunk_flags_set(pc, PCF_IN_CLASS);
 
-      if ((pc->brace_level > level) || (pc->flags & PCF_IN_PREPROC))
+      if ((pc->brace_level > level) ||
+          (pc->flags & PCF_IN_PREPROC) ||
+          (pc->level > pc->brace_level))
       {
          pc = chunk_get_next_ncnl(pc);
          continue;
