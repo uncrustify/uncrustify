@@ -55,3 +55,4 @@
 10161 cs_delegate_indent.cfg   cs/delegate.cs
 12001 bug_620.cfg              cs/bug_620.cs
 12002 empty.cfg                cs/nullable_prop.cs
+12003 ben.cfg                  cs/fncall_as_ctor_in_attr.cs
