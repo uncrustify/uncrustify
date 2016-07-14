@@ -1,4 +1,8 @@
+class \u005FClass // underscore character
+{
+};
+
 int main()
 {
-	int IdentContainingTwoUCNCharacters \ u1234 \ U00001234 = 0;
+	string IdentContainingTwoUCNCharacters\u1234\U00001234 = "\u005FClass";
 }
