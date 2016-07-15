@@ -191,7 +191,9 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
       return(cpd.settings[UO_sp_d_array_colon].a);
    }
 
-   if ((first->type == CT_CASE) && CharTable::IsKw1(second->str[0]))
+   if ((first->type == CT_CASE) &&
+       ((CharTable::IsKw1(second->str[0]) ||
+        (second->type == CT_NUMBER))))
    {
       log_rule("sp_case_label");
       return(argval_t(cpd.settings[UO_sp_case_label].a | AV_ADD));
