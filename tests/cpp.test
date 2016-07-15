@@ -313,5 +313,6 @@
 33081 bug_i_552.cfg                    cpp/bug_i_552.cpp
 33082 namespace_namespace.cfg          cpp/namespace_namespace.cpp
 33083 bug_i_359.cfg                    cpp/bug_i_359.cpp
+33084 empty.cfg                        cpp/bug_i_568.cpp
 
 33090 empty.cfg                        cpp/gh555.cpp
