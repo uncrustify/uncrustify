@@ -1466,7 +1466,7 @@ void register_options(void)
 
    unc_begin_group(UG_warnlevels, "Warn levels - 1: error, 2: warning (default), 3: note");
    unc_add_option("warn_level_tabs_found_in_verbatim_string_literals", UO_warn_level_tabs_found_in_verbatim_string_literals, AT_NUM,
-                  "Warning is given if doing tab-to-\t replacement and we have found one in a C# verbatim string literal.", "", 1, 3);
+                  "Warning is given if doing tab-to-\\t replacement and we have found one in a C# verbatim string literal.", "", 1, 3);
 } // register_options
 
 
