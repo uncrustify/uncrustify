@@ -345,6 +345,7 @@ enum uncrustify_options
 
    UO_sp_after_operator,        // space after operator when followed by a punctuator
    UO_sp_after_operator_sym,    // space after operator when followed by a punctuator
+   UO_sp_after_operator_sym_empty,// space after operator sign when the operator has no arguments
    UO_sp_else_brace,
    UO_sp_brace_else,
    UO_sp_brace_typedef,
