@@ -2608,8 +2608,8 @@ void combine_labels(void)
                   set_chunk_type(next, CT_LABEL_COLON);
                }
                else if ((tmp == NULL) ||
-                        (tmp->type != CT_NUMBER &&
-                         tmp->type != CT_SIZEOF &&
+                        ((tmp->type != CT_NUMBER) &&
+                         (tmp->type != CT_SIZEOF) &&
                          !(tmp->flags & PCF_IN_STRUCT)) ||
                         (tmp->type == CT_NEWLINE)
                   )
