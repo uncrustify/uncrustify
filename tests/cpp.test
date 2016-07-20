@@ -315,3 +315,5 @@
 33083 bug_i_359.cfg                    cpp/bug_i_359.cpp
 
 33090 empty.cfg                        cpp/gh555.cpp
+33091 no_squeeze_ifdef.cfg             cpp/squeeze_ifdef.cpp
+33092 squeeze_ifdef.cfg                cpp/squeeze_ifdef.cpp
