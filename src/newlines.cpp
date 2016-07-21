@@ -3075,7 +3075,7 @@ void newlines_squeeze_ifdef(void)
          {
             pnl = NULL;
             nnl = chunk_get_next_nl(ppr);
-            if (ppr->type == CT_PP_ENDIF)
+            if (ppr->type == CT_PP_ELSE || ppr->type == CT_PP_ENDIF)
             {
                pnl = chunk_get_prev_nl(pc);
             }
@@ -3097,7 +3097,8 @@ void newlines_squeeze_ifdef(void)
                              __func__, tmp1->orig_line, tmp2->orig_line);
                   }
                }
-               else
+
+               if (ppr->type == CT_PP_IF || ppr->type == CT_PP_ELSE)
                {
                   if (nnl->nl_count > 1)
                   {
