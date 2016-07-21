@@ -417,6 +417,10 @@ void register_options(void)
    unc_add_option("sp_scope_paren", UO_sp_scope_paren, AT_IARF,
                   "Add or remove space between 'scope' and '(' in 'scope (something) { }' (D language)\n"
                   "If set to ignore, sp_before_sparen is used.");
+   unc_add_option("sp_super_paren", UO_sp_super_paren, AT_IARF,
+                  "Add or remove space between 'super' and '(' in 'super (something)'. Default=Remove");
+   unc_add_option("sp_this_paren", UO_sp_this_paren, AT_IARF,
+                  "Add or remove space between 'this' and '(' in 'this (something)'. Default=Remove");
    unc_add_option("sp_macro", UO_sp_macro, AT_IARF,
                   "Add or remove space between macro and value");
    unc_add_option("sp_macro_func", UO_sp_macro_func, AT_IARF,
@@ -2177,6 +2181,8 @@ void set_option_defaults(void)
    cpd.defaults[UO_sp_angle_shift].a                       = AV_ADD;
    cpd.defaults[UO_sp_word_brace].a                        = AV_ADD;
    cpd.defaults[UO_sp_word_brace_ns].a                     = AV_ADD;
+   cpd.defaults[UO_sp_super_paren].a                       = AV_REMOVE;
+   cpd.defaults[UO_sp_this_paren].a                        = AV_REMOVE;
    cpd.defaults[UO_indent_oc_msg_prioritize_first_colon].b = true;
    cpd.defaults[UO_use_indent_func_call_param].b           = true;
    cpd.defaults[UO_use_options_overriding_for_qt_macros].b = true;
