@@ -2327,8 +2327,12 @@ static void indent_comment(chunk_t *pc, int col)
    if (chunk_is_comment(prev) && (nl->nl_count == 1))
    {
       int coldiff = prev->orig_col - pc->orig_col;
+      chunk_t *pp = chunk_get_prev(prev);
 
-      if ((coldiff <= 3) && (coldiff >= -3))
+      /* Here we want to align comments that are relatively close one to another
+       * but not when the previous comment is on the same line with a preproc */
+      if ((coldiff <= 3) && (coldiff >= -3) && 
+          !chunk_is_preproc(pp))
       {
          reindent_line(pc, prev->column);
          LOG_FMT(LCMTIND, "rule 3 - prev comment, coldiff = %d, now in %d\n",
