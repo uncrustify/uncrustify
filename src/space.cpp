@@ -844,6 +844,17 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
        (first->parent_type == CT_OPERATOR) &&
        (cpd.settings[UO_sp_after_operator_sym].a != AV_IGNORE))
    {
+      if ((cpd.settings[UO_sp_after_operator_sym_empty].a != AV_IGNORE) &&
+          (second->type == CT_FPAREN_OPEN))
+      {
+         next = chunk_get_next_ncnl(second);
+         if (next && (next->type == CT_FPAREN_CLOSE))
+         {
+            log_rule("sp_after_operator_sym_empty");
+            return(cpd.settings[UO_sp_after_operator_sym_empty].a);
+         }
+      }
+
       log_rule("sp_after_operator_sym");
       return(cpd.settings[UO_sp_after_operator_sym].a);
    }
