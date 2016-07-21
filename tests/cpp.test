@@ -318,3 +318,5 @@
 33090 empty.cfg                        cpp/gh555.cpp
 33091 no_squeeze_ifdef.cfg             cpp/squeeze_ifdef.cpp
 33092 squeeze_ifdef.cfg                cpp/squeeze_ifdef.cpp
+33093 sp_angle_paren.cfg               cpp/sp_angle_paren.cpp
+33094 sp_angle_paren_empty.cfg         cpp/sp_angle_paren.cpp

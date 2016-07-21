@@ -767,6 +767,13 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
       if ((second->type == CT_FPAREN_OPEN) ||
           (second->type == CT_PAREN_OPEN))
       {
+         next = chunk_get_next_ncnl(second);
+         if (next && (next->type == CT_FPAREN_CLOSE))
+         {
+            log_rule("sp_angle_paren_empty");
+            return(cpd.settings[UO_sp_angle_paren_empty].a);
+         }
+
          log_rule("sp_angle_paren");
          return(cpd.settings[UO_sp_angle_paren].a);
       }
