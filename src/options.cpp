@@ -343,6 +343,8 @@ void register_options(void)
                   "Add or remove space between 'operator' and operator sign");
    unc_add_option("sp_after_operator_sym", UO_sp_after_operator_sym, AT_IARF,
                   "Add or remove space between the operator symbol and the open paren, as in 'operator ++('");
+   unc_add_option("sp_after_operator_sym_empty", UO_sp_after_operator_sym_empty, AT_IARF,
+                  "Add or remove space between the operator symbol and the open paren when the operator has no arguments, as in 'operator *()'");
    unc_add_option("sp_after_cast", UO_sp_after_cast, AT_IARF,
                   "Add or remove space after C/D cast, i.e. 'cast(int)a' vs 'cast(int) a' or '(int)a' vs '(int) a'");
    unc_add_option("sp_inside_paren_cast", UO_sp_inside_paren_cast, AT_IARF,
@@ -986,7 +988,7 @@ void register_options(void)
    unc_add_option("nl_define_macro", UO_nl_define_macro, AT_BOOL,
                   "Whether to alter newlines in '#define' macros");
    unc_add_option("nl_squeeze_ifdef", UO_nl_squeeze_ifdef, AT_BOOL,
-                  "Whether to not put blanks after '#ifxx', '#elxx', or before '#endif'. Does not affect the whole-file #ifdef.");
+                  "Whether to remove blanks after '#ifxx' and '#elxx', or before '#elxx' and '#endif'. Does not affect the whole-file #ifdef.");
    unc_add_option("nl_before_if", UO_nl_before_if, AT_IARF,
                   "Add or remove blank line before 'if'");
    unc_add_option("nl_after_if", UO_nl_after_if, AT_IARF,

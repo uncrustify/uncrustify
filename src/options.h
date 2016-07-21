@@ -345,6 +345,7 @@ enum uncrustify_options
 
    UO_sp_after_operator,        // space after operator when followed by a punctuator
    UO_sp_after_operator_sym,    // space after operator when followed by a punctuator
+   UO_sp_after_operator_sym_empty,// space after operator sign when the operator has no arguments
    UO_sp_else_brace,
    UO_sp_brace_else,
    UO_sp_brace_typedef,
@@ -547,7 +548,7 @@ enum uncrustify_options
    UO_nl_after_vbrace_close,          // force a newline after a virtual brace close
    UO_nl_brace_struct_var,            // force a newline after a brace close
    UO_nl_fcall_brace,                 // newline between function call and open brace
-   UO_nl_squeeze_ifdef,               // no blanks after #ifxx, #elxx, or before #endif
+   UO_nl_squeeze_ifdef,               // no blanks after #ifxx, #elxx, or before #elxx and #endif
    UO_nl_enum_brace,                  // newline between enum and brace
    UO_nl_struct_brace,                // newline between struct and brace
    UO_nl_union_brace,                 // newline between union and brace
