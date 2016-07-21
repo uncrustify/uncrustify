@@ -294,7 +294,7 @@ typedef enum
    CT_TAG,
    CT_TAG_COLON,
 
-   /* C-sharp crap */
+   /* C-sharp */
    CT_LOCK,             /* lock/unlock */
    CT_AS,
    CT_IN,               /* "foreach (T c in x)" or "foo(in char c)" or "in { ..." */

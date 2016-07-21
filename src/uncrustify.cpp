@@ -175,7 +175,7 @@ static void usage_exit(const char *msg, const char *argv0, int code)
            "\n"
            "Debug Options:\n"
            " -p FILE      : Dump debug info to a file.\n"
-           " -L SEV       : Set the log severity (see log_levels.h).\n"
+           " -L SEV       : Set the log severity (see log_levels.h; note 'A' = 'all')\n"
            " -s           : Show the log severity in the logs.\n"
            " --decode     : Decode remaining args (chunk flags) and exit.\n"
            "\n"
@@ -191,7 +191,7 @@ static void usage_exit(const char *msg, const char *argv0, int code)
            "\n"
            "Note: Use comments containing ' *INDENT-OFF*' and ' *INDENT-ON*' to disable\n"
            "      processing of parts of the source file (these can be overridden with \n"
-           "      enable_processing_cmt and disable_processing_cmt.\n"
+           "      enable_processing_cmt and disable_processing_cmt).\n"
            "\n"
            "There are currently %d options and minimal documentation.\n"
            "Try UniversalIndentGUI and good luck.\n"
@@ -274,7 +274,7 @@ int main(int argc, char *argv[])
    cpd.do_check = arg.Present("--check");
 
 #ifdef WIN32
-   /* tell windoze not to change what I write to stdout */
+   /* tell Windows not to change what I write to stdout */
    (void)_setmode(_fileno(stdout), _O_BINARY);
 #endif
 
