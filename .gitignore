@@ -1,34 +1,61 @@
-.svn
-*.o
-src/uncrustify
-Makefile
-man/Makefile
-man/uncrustify.1
-src/Makefile
-src/stamp-h1
+# Generated uncrustify files
+src/config.h
+src/token_names.h
 src/uncrustify_version.h
-*.exe
-*~
-config.log
-config.status
-*.vtg
-*.vpwh*
+
+# Testing framework
 tests/results
 tests/usage.txt
-.waf*
+*.sh.trs
+*.sh.log
+test-suite.log
+
+# UNIX build artifacts
+*.o
+src/uncrustify
+
+# Gnu autotools
+Makefile
+Makefile.in
+/autom4te.cache
+/autoscan.log
+/autoscan-*.log
+/aclocal.m4
+/autotools/compile
+/config.h.in
+/configure
+/configure.scan
+/depcomp
+/autotools/install-sh
+/autotools/missing
+/autotools/test-driver
+/stamp-h1
+/src/stamp-h1
+config.log
+config.status
+man/uncrustify.1
+
+# SlickEdit workspace history and tag files
+*.vtg
+*.vpwh*
+
+# for projects that use Waf for building: http://code.google.com/p/waf/
+.waf-*
 .lock*
-build
 waf*
+
+# Visual Studio temporary files, build results, etc
 win32/Intermediate
 win32/Release
 win32/Debug
 win32/*.*sdf
 win32/*.suo
 win32/*.user
-*.obj
-*.VC.db
-autom4te.cache
-build
+win32/**/*.VC.db
+win32/**/*.obj
+win32/**/*.exe
+
+# XCode
 *.xcodeproj/*.pbxuser
 *.xcodeproj/*.perspectivev3
 *.xcodeproj/*.mode1v3
@@ -36,12 +63,19 @@ build
 *.tmproj
 *.xcworkspace
 xcuserdata
-Debug
-.*
+
+# Windows mingw build
 uncrustify-*-win32
-src/config.h
-/configure
-Makefile.in
+
+# Sublime
+*.sublime-workspace
+
+# Coverity
 /cov-int
-/src/token_names.h
-/aclocal.m4
+
+# TRIAGE: To clasify or remove
+.svn
+*~
+.*
+Debug
+build
