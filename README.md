@@ -1,6 +1,8 @@
 README for Uncrustify
 =====================
 
+[![Build Status](https://travis-ci.org/uncrustify/uncrustify.svg?branch=master)](https://travis-ci.org/uncrustify/uncrustify)
+
 Post any bugs to the issue tracker found on the project's Sourceforge page:
   http://sourceforge.net/projects/uncrustify
 
