@@ -271,7 +271,9 @@ void register_options(void)
    unc_add_option("sp_after_angle", UO_sp_after_angle, AT_IARF,
                   "Add or remove space after '<>'");
    unc_add_option("sp_angle_paren", UO_sp_angle_paren, AT_IARF,
-                  "Add or remove space between '<>' and '(' as found in 'new List<byte>();'");
+                  "Add or remove space between '<>' and '(' as found in 'new List<byte>(foo);'");
+   unc_add_option("sp_angle_paren_empty", UO_sp_angle_paren_empty, AT_IARF,
+                  "Add or remove space between '<>' and '()' as found in 'new List<byte>();'");
    unc_add_option("sp_angle_word", UO_sp_angle_word, AT_IARF,
                   "Add or remove space between '<>' and a word as in 'List<byte> m;' or 'template <typename T> static ...'");
    unc_add_option("sp_angle_shift", UO_sp_angle_shift, AT_IARF,
