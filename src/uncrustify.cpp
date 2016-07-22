@@ -1762,6 +1762,7 @@ static void uncrustify_end()
    memset(cpd.le_counts, 0, sizeof(cpd.le_counts));
    cpd.preproc_ncnl_count    = 0;
    cpd.ifdef_over_whole_file = 0;
+   cpd.warned_unable_string_replace_tab_chars = false;
 }
 
 

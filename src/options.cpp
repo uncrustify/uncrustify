@@ -1465,6 +1465,10 @@ void register_options(void)
    unc_add_option("use_options_overriding_for_qt_macros", UO_use_options_overriding_for_qt_macros, AT_BOOL,
                   "SIGNAL/SLOT Qt macros have special formatting options. See options_for_QT.cpp for details.\n"
                   "Default=True.");
+
+   unc_begin_group(UG_warnlevels, "Warn levels - 1: error, 2: warning (default), 3: note");
+   unc_add_option("warn_level_tabs_found_in_verbatim_string_literals", UO_warn_level_tabs_found_in_verbatim_string_literals, AT_NUM,
+                  "Warning is given if doing tab-to-\\t replacement and we have found one in a C# verbatim string literal.", "", 1, 3);
 } // register_options
 
 
@@ -2183,6 +2187,7 @@ void set_option_defaults(void)
    cpd.defaults[UO_use_indent_func_call_param].b           = true;
    cpd.defaults[UO_use_options_overriding_for_qt_macros].b = true;
    cpd.defaults[UO_indent_token_after_brace].b             = true;
+   cpd.defaults[UO_warn_level_tabs_found_in_verbatim_string_literals].n = LWARN;
 
    /* copy all the default values to settings array */
    for (int count = 0; count < UO_option_count; count++)
