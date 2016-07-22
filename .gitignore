@@ -19,9 +19,14 @@ tests/usage.txt
 .lock*
 build
 waf*
+win32/Intermediate
 win32/Release
 win32/Debug
+win32/*.*sdf
+win32/*.suo
+win32/*.user
 *.obj
+*.VC.db
 autom4te.cache
 build
 *.xcodeproj/*.pbxuser
