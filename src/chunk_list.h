@@ -222,14 +222,17 @@ bool chunk_is_addr(chunk_t *pc)
       if (pc->flags & PCF_IN_TEMPLATE)
       {
          chunk_t *prev = chunk_get_prev(pc);
-         if ((prev->type == CT_COMMA) ||
-             (prev->type == CT_ANGLE_OPEN))
+         if (prev != NULL)
          {
-            return(false);
-         }
-         else
-         {
-            return(true);
+            if ((prev->type == CT_COMMA) ||
+                (prev->type == CT_ANGLE_OPEN))
+            {
+               return(false);
+            }
+            else
+            {
+               return(true);
+            }
          }
       }
       else
