@@ -1174,6 +1174,16 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
                   }
                }
             }
+            // Issue #322 STDMETHOD(GetValues)(BSTR bsName, REFDATA** pData);
+            if (pc->next->next != NULL)
+            {
+               if (pc->next->next->type == CT_STAR)
+               {
+                  // change CT_STAR => CT_PTR_TYPE
+                  set_chunk_type(pc->next, CT_PTR_TYPE);
+                  set_chunk_type(pc->next->next, CT_PTR_TYPE);
+               }
+            }
          }
       }
    }
