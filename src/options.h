@@ -551,6 +551,7 @@ enum uncrustify_options
    UO_nl_brace_struct_var,            // force a newline after a brace close
    UO_nl_fcall_brace,                 // newline between function call and open brace
    UO_nl_squeeze_ifdef,               // no blanks after #ifxx, #elxx, or before #elxx and #endif
+   UO_nl_squeeze_ifdef_top_level,     // when set, nl_squeeze_ifdef will be applied to top-level #ifdefs as well
    UO_nl_enum_brace,                  // newline between enum and brace
    UO_nl_struct_brace,                // newline between struct and brace
    UO_nl_union_brace,                 // newline between union and brace
@@ -638,11 +639,11 @@ enum uncrustify_options
    UO_nl_create_while_one_liner,      // Change simple unbraced while statements into a one-liner
                                       // 'while (i<5)\n foo(i++);' => 'while (i<5) foo(i++);'
                                       // Change that back:
-   UO_nl_split_if_one_liner,          // Change a one-liner for statement into simple unbraced for 
+   UO_nl_split_if_one_liner,          // Change a one-liner for statement into simple unbraced for
                                       // 'if(b) i++;' => 'if(b)\n i++;'
-   UO_nl_split_for_one_liner,         // Change a one-liner while statement into simple unbraced while 
+   UO_nl_split_for_one_liner,         // Change a one-liner while statement into simple unbraced while
                                       // 'for (i=0;i<5;i++) foo(i);' => 'for (i=0;i<5;i++)\n foo(i);'
-   UO_nl_split_while_one_liner,       // Change a one-liner if statement into simple unbraced if 
+   UO_nl_split_while_one_liner,       // Change a one-liner if statement into simple unbraced if
                                       // 'while (i<5) foo(i++);' => 'while (i<5)\n foo(i++);'
 
    UO_nl_oc_msg_args,                 // Whether to put each OC message parameter on a separate line
@@ -787,7 +788,7 @@ enum uncrustify_options
                                       //   at the function call (if present)
                                       // To prevent the double use of the option value, use this option
                                       // with the value "true". Guy 2016-05-16
-   
+
    UO_use_options_overriding_for_qt_macros,     // SIGNAL/SLOT Qt macros have special formatting options. See options_for_QT.cpp for details.
 
    /* Levels to attach to warnings (log_sev_t; default = LWARN) */

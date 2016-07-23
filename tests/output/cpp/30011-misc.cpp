@@ -53,4 +53,5 @@ bool foo(char c)
 #ifndef abc
 
 #define abc    123 /* some comment */
+
 #endif /* another comment

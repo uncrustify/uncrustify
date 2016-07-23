@@ -105,6 +105,7 @@ void COMINL_vidInit(void)
       }
    #endif /* COMINL_coTX_MESSAGE_VAR == COMINL_coENABLE */
 }
+
 #endif
 
 

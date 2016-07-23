@@ -66,14 +66,18 @@ static bool can_increase_nl(chunk_t *nl)
 
    if (cpd.settings[UO_nl_squeeze_ifdef].b)
    {
-      if (prev && (prev->type == CT_PREPROC) &&
-          (prev->parent_type == CT_PP_ENDIF))
+      if (prev &&
+          (prev->type == CT_PREPROC) &&
+          (prev->parent_type == CT_PP_ENDIF) &&
+          (prev->level > 0 || cpd.settings[UO_nl_squeeze_ifdef_top_level].b))
       {
          LOG_FMT(LBLANKD, "%s: nl_squeeze_ifdef %d (prev) pp_lvl=%d rv=0\n", __func__, nl->orig_line, nl->pp_level);
          return(false);
       }
-      if (next && (next->type == CT_PREPROC) &&
-          (next->parent_type == CT_PP_ENDIF))
+      if (next &&
+          (next->type == CT_PREPROC) &&
+          (next->parent_type == CT_PP_ENDIF) &&
+          (next->level > 0 || cpd.settings[UO_nl_squeeze_ifdef_top_level].b))
       {
          bool rv = ifdef_over_whole_file() && (next->flags & PCF_WF_ENDIF);
          LOG_FMT(LBLANKD, "%s: nl_squeeze_ifdef %d (next) pp_lvl=%d rv=%d\n", __func__, nl->orig_line, nl->pp_level, rv);
@@ -3065,7 +3069,7 @@ void newlines_squeeze_ifdef(void)
 
    for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next_ncnl(pc))
    {
-      if ((pc->type == CT_PREPROC) && (pc->level > 0))
+      if ((pc->type == CT_PREPROC) && (pc->level > 0 || cpd.settings[UO_nl_squeeze_ifdef_top_level].b))
       {
          ppr = chunk_get_next(pc);
 
