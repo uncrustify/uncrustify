@@ -3501,7 +3501,7 @@ static void mark_function(chunk_t *pc)
        * assignment, structure, enum, or union.
        * The close paren must be followed by an open brace, with an optional
        * qualifier (const) in between.
-       * There can be all sorts of template crap and/or '[]' in the type.
+       * There can be all sorts of template stuff and/or '[]' in the type.
        * This hack mostly checks that.
        *
        * Examples:
