@@ -214,36 +214,22 @@ bool chunk_is_star(chunk_t *pc)
 static_inline
 bool chunk_is_addr(chunk_t *pc)
 {
-   bool ret = ((pc != NULL) &&
-          ((pc->type == CT_BYREF) ||
-           ((pc->len() == 1) && (pc->str[0] == '&') && (pc->type != CT_OPERATOR_VAL))));
-   if (ret)
+   if ((pc != NULL) &&
+       ((pc->type == CT_BYREF)
+        || ((pc->len() == 1) && (pc->str[0] == '&') && (pc->type != CT_OPERATOR_VAL))))
    {
-      if (pc->flags & PCF_IN_TEMPLATE)
+      chunk_t *prev = chunk_get_prev(pc);
+
+      if ((pc->flags & PCF_IN_TEMPLATE) &&
+           ((prev != NULL) && ((prev->type == CT_COMMA) || (prev->type == CT_ANGLE_OPEN))))
       {
-         chunk_t *prev = chunk_get_prev(pc);
-         if (prev != NULL)
-         {
-            if ((prev->type == CT_COMMA) ||
-                (prev->type == CT_ANGLE_OPEN))
-            {
-               return(false);
-            }
-            else
-            {
-               return(true);
-            }
-         }
+         return(false);
       }
-      else
-      {
-         return(true);
-      }
+
+      return(true);
    }
-   else
-   {
-      return(false);
-   }
+
+   return(false);
 }
 
 
