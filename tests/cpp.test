@@ -314,6 +314,7 @@
 33082 namespace_namespace.cfg          cpp/namespace_namespace.cpp
 33083 bug_i_359.cfg                    cpp/bug_i_359.cpp
 33084 op_sym_empty.cfg                 cpp/op_sym_empty.cpp
+33085 bug_i_323.cfg                    cpp/bug_i_323.cpp
 
 33090 empty.cfg                        cpp/gh555.cpp
 33091 no_squeeze_ifdef.cfg             cpp/squeeze_ifdef.cpp
