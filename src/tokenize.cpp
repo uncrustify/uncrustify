@@ -925,6 +925,8 @@ static bool parse_cs_string(tok_ctx& ctx, chunk_t& pc)
    pc.str.append(ctx.get());
    pc.type = CT_STRING;
 
+   bool should_escape_tabs = cpd.settings[UO_string_replace_tab_chars].b;
+
    /* go until we hit a zero (end of file) or a single " */
    while (ctx.more())
    {
@@ -935,7 +937,23 @@ static bool parse_cs_string(tok_ctx& ctx, chunk_t& pc)
          pc.type = CT_STRING_MULTI;
          pc.nl_count++;
       }
-      if (ch == '"')
+      else if (ch == '\t')
+      {
+         if (should_escape_tabs && !cpd.warned_unable_string_replace_tab_chars)
+         {
+            cpd.warned_unable_string_replace_tab_chars = true;
+
+            log_sev_t warnlevel = (log_sev_t)cpd.settings[UO_warn_level_tabs_found_in_verbatim_string_literals].n;
+
+            /* a tab char can't be replaced with \\t because escapes don't work in here-strings. best we can do is warn. */
+            LOG_FMT(warnlevel, "%s:%d Detected non-replaceable tab char in literal string\n", cpd.filename, pc.orig_line);
+            if (warnlevel < LWARN)
+            {
+               cpd.error_count++;
+            }
+         }
+      }
+      else if (ch == '"')
       {
          if (ctx.peek() == '"')
          {

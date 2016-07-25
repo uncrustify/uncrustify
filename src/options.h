@@ -84,6 +84,7 @@ enum uncrustify_groups
    UG_comment,
    UG_preprocessor,
    UG_Use_Ext,
+   UG_warnlevels,
    UG_group_count
 };
 
@@ -788,6 +789,9 @@ enum uncrustify_options
                                       // with the value "true". Guy 2016-05-16
    
    UO_use_options_overriding_for_qt_macros,     // SIGNAL/SLOT Qt macros have special formatting options. See options_for_QT.cpp for details.
+
+   /* Levels to attach to warnings (log_sev_t; default = LWARN) */
+   UO_warn_level_tabs_found_in_verbatim_string_literals, // if UO_string_replace_tab_chars is set, then we should warn about cases we can't do the replacement
 
    /* This is used to get the enumeration count */
    UO_option_count
