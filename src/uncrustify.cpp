@@ -172,6 +172,7 @@ static void usage_exit(const char *msg, const char *argv0, int code)
            " --universalindent        : Output a config file for Universal Indent GUI.\n"
            " --detect                 : Detects the config from a source file. Use with '-f FILE'.\n"
            "                            Detection is fairly limited.\n"
+           " --set <option>=<value>   : Sets a new value to a config option.\n"
            "\n"
            "Debug Options:\n"
            " -p FILE      : Dump debug info to a file.\n"
@@ -473,6 +474,35 @@ int main(int argc, char *argv[])
             fprintf(stderr, "The option 'nl_func_var_def_blk' is too big against the option 'nl_max'\n");
             exit(2);
          }
+      }
+   }
+
+   /* Set config options using command line arguments.*/
+   idx = 0;
+   while ((p_arg = arg.Params("--set", idx)) != NULL)
+   {
+      char buffer[256];
+      strcpy(buffer, p_arg);
+      
+      // Tokenize and extract key and value
+      const char *token = strtok(buffer, "=");
+      const char *option = token;
+
+      token = strtok(NULL, "=");
+      const char *value = token;
+
+      if (option != NULL && value != NULL && strtok(NULL, "=") == NULL)
+      {
+         if (set_option_value(option, value) == -1)
+         {
+            fprintf(stderr, "Unknown option '%s' to override.\n", buffer);
+            return EXIT_FAILURE;
+         }
+      }
+      else
+      {
+         /* TODO: consider using defines like EX_USAGE from sysexits.h */
+         usage_exit("Error while parsing --set", argv[0], 64);
       }
    }
 
