@@ -519,6 +519,8 @@ enum uncrustify_options
    UO_nl_func_def_empty,              // as above, but for empty parens '()'
    UO_nl_func_type_name,              // newline between return type and func name in def
    UO_nl_func_type_name_class,        // newline between return type and func name in class
+   UO_nl_func_class_scope,            // Add or remove newline between class specification and '::' in 'void A::f() { }'
+                                      // Only appears in separate member implementation (does not appear with in-line implmementation)
    UO_nl_func_scope_name,             // Add or remove newline between function scope and name in a definition
                                       // Controls the newline after '::' in 'void A::f() { }'
    UO_nl_func_proto_type_name,        // nl_func_type_name, but for prottypes

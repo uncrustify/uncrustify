@@ -1879,6 +1879,15 @@ static void newline_func_def(chunk_t *start)
    /* Don't split up a function variable */
    prev = chunk_is_paren_close(prev) ? NULL : chunk_get_prev_ncnl(prev);
 
+   if ((prev != NULL) && (prev->type == CT_DC_MEMBER) && (prev->parent_type == CT_FUNC_DEF))
+   {
+       chunk_t *prev2 = chunk_get_prev_ncnl(prev);
+       if (cpd.settings[UO_nl_func_class_scope].a != AV_IGNORE)
+       {
+           newline_iarf(prev2, cpd.settings[UO_nl_func_class_scope].a);
+       }
+   }
+
    if ((prev != NULL) && (prev->type != CT_PRIVATE_COLON))
    {
       if (prev->type == CT_OPERATOR)
@@ -2808,6 +2817,7 @@ void newlines_cleanup_braces(bool first)
               (cpd.settings[UO_nl_func_def_empty].a != AV_IGNORE) ||
               (cpd.settings[UO_nl_func_type_name].a != AV_IGNORE) ||
               (cpd.settings[UO_nl_func_type_name_class].a != AV_IGNORE) ||
+              (cpd.settings[UO_nl_func_class_scope].a != AV_IGNORE) ||
               (cpd.settings[UO_nl_func_scope_name].a != AV_IGNORE) ||
               (cpd.settings[UO_nl_func_proto_type_name].a != AV_IGNORE) ||
               (cpd.settings[UO_nl_func_paren].a != AV_IGNORE) ||
