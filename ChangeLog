@@ -7,6 +7,8 @@ New:
     Null conditional operator (?.) is now supported.
 
 New options:
+ - nl_squeeze_ifdef_top_level
+ - sp_super_paren
  - sp_angle_paren_empty
  - sp_skip_vbrace_tokens
  - indent_token_after_brace
