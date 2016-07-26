@@ -2483,6 +2483,10 @@ void combine_labels(void)
    /* unlikely that the file will start with a label... */
    while (next != NULL)
    {
+#ifdef DEBUG
+      LOG_FMT(LGUY, "(%d) ", __LINE__);
+#endif
+      LOG_FMT(LGUY, "%s: cur->text=%s, line=%d, col=%d\n", __func__, (cur->type == CT_NEWLINE) ? "<NL>" : cur->text(), cur->orig_line, cur->orig_col);
       if (!(next->flags & PCF_IN_OC_MSG) && /* filter OC case of [self class] msg send */
           ((next->type == CT_CLASS) ||
            (next->type == CT_OC_CLASS) ||
@@ -2599,14 +2603,26 @@ void combine_labels(void)
             else if (cur->type == CT_WORD)
             {
                tmp = chunk_get_next_nc(next, CNAV_PREPROC);
+#ifdef DEBUG
+               LOG_FMT(LGUY, "(%d) ", __LINE__);
+#endif
+               LOG_FMT(LGUY, "%s: %d:%d, tmp=%s\n", __func__,
+                       tmp->orig_line, tmp->orig_col, (tmp->type == CT_NEWLINE) ? "<NL>" : tmp->text());
+               log_pcf_flags(LGUY, tmp->flags);
                if (next->flags & PCF_IN_FCN_CALL)
                {
                   /* Must be a macro thingy, assume some sort of label */
                   set_chunk_type(next, CT_LABEL_COLON);
                }
-               else if ((tmp == NULL) || (tmp->type != CT_NUMBER && tmp->type != CT_SIZEOF))
+               else if ((tmp == NULL) ||
+                        ((tmp->type != CT_NUMBER) &&
+                         (tmp->type != CT_SIZEOF) &&
+                         !(tmp->flags & PCF_IN_STRUCT)) ||
+                        (tmp->type == CT_NEWLINE)
+                  )
                {
-                  /* the CT_SIZEOF isn't great - test 31720 happens to use a sizeof expr, but this really should be able to handle any constant expr */
+                  /* the CT_SIZEOF isn't great - test 31720 happens to use a sizeof expr,
+                     but this really should be able to handle any constant expr */
                   set_chunk_type(cur, CT_LABEL);
                   set_chunk_type(next, CT_LABEL_COLON);
                }
