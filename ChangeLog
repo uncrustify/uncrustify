@@ -7,6 +7,7 @@ New:
     Null conditional operator (?.) is now supported.
 
 New options:
+ - nl_func_class_scope
  - nl_squeeze_ifdef_top_level
  - sp_super_paren
  - sp_angle_paren_empty
