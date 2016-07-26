@@ -61,6 +61,10 @@
 30065 class-colon-pos-sol.cfg          cpp/Example.h
 30066 class-on-colon-indent.cfg        cpp/class-init.cpp
 
+30067 nl_func_class_scope.cfg          cpp/nl_func_type_name.cpp
+30068 nl_func_class_scope.cfg          cpp/nl_func_scope_name.cpp
+30069 nl_func_class_scope.cfg          cpp/class-implementation.cpp
+
 30070 nl_func_scope_name.cfg           cpp/nl_func_scope_name.cpp
 
 30075 empty.cfg                        cpp/goto.cpp

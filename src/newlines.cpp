@@ -1879,7 +1879,7 @@ static void newline_func_def(chunk_t *start)
    /* Don't split up a function variable */
    prev = chunk_is_paren_close(prev) ? NULL : chunk_get_prev_ncnl(prev);
 
-   if ((prev != NULL) && (prev->type == CT_DC_MEMBER) && (prev->parent_type == CT_FUNC_DEF))
+   if ((prev != NULL) && (prev->type == CT_DC_MEMBER))
    {
        chunk_t *prev2 = chunk_get_prev_ncnl(prev);
        if (cpd.settings[UO_nl_func_class_scope].a != AV_IGNORE)
