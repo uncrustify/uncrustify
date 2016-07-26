@@ -1040,8 +1040,8 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
 
    if ((first->type == CT_THIS) && (second->type == CT_PAREN_OPEN))
    {
-      log_rule("REMOVE");
-      return(AV_REMOVE);
+      log_rule("sp_this_paren");
+      return(cpd.settings[UO_sp_this_paren].a);
    }
 
    if ((first->type == CT_STATE) && (second->type == CT_PAREN_OPEN))
@@ -1071,8 +1071,8 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
 
    if ((first->type == CT_SUPER) && (second->type == CT_PAREN_OPEN))
    {
-      log_rule("REMOVE");
-      return(AV_REMOVE);
+      log_rule("sp_super_paren");
+      return(cpd.settings[UO_sp_super_paren].a);
    }
 
    if ((first->type == CT_FPAREN_CLOSE) && (second->type == CT_BRACE_OPEN))

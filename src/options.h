@@ -313,6 +313,9 @@ enum uncrustify_options
    UO_sp_version_paren,
    UO_sp_scope_paren,
 
+   UO_sp_super_paren,
+   UO_sp_this_paren,
+
    UO_sp_type_func,                // space between return type and 'func'
    // a minimum of 1 is forced except for '*'
    UO_sp_before_ptr_star,          // space before a '*' that is part of a type
