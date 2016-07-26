@@ -1,10 +1,25 @@
+
+#if defined(A)
+
+extern int a;
+
+#elif defined(B)
+
+extern int b;
+
+#else
+
+extern int c;
+
+#endif
+
 int foo()
 {
 #if defined(A)
-	return 1;
+	return a;
 #elif defined(B)
-	return 2;
+	return b;
 #else
-	return 3;
+	return c;
 #endif
 }

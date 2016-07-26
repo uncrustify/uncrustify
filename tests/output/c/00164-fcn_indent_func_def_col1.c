@@ -5,6 +5,7 @@
 
 #if A
    void func1_1(void);
+
 #endif
 
 #if A
