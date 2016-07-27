@@ -153,7 +153,7 @@ static void usage_exit(const char *msg, const char *argv0, int code)
            " --prefix PFX : Prepend PFX to the output filename path.\n"
            " --replace    : Replace source files (creates a backup).\n"
            " --no-backup  : Replace files, no backup. Useful if files are under source control.\n"
-           " --if-changed : Only write to stdout/FILE if a change was detected.\n"
+           " --if-changed : Write to stdout (or create output FILE) only if a change was detected.\n"
 #ifdef HAVE_UTIME_H
            " --mtime      : Preserve mtime on replaced files.\n"
 #endif
