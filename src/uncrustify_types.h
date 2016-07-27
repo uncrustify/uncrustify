@@ -387,6 +387,7 @@ struct cp_data
    bool               do_check;
    enum unc_stage     unc_stage;
    int                check_fail_cnt; // total failures
+   bool               if_changed;
 
    UINT32             error_count;
    const char         *filename;

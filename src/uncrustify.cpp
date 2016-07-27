@@ -49,7 +49,7 @@ static const char *language_name_from_flags(int lang);
 static bool read_stdin(file_mem& fm);
 static void uncrustify_start(const deque<int>& data);
 static void uncrustify_end();
-static void uncrustify_file(const file_mem& fm, FILE *pfout, const char *parsed_file);
+static void uncrustify_file(const file_mem& fm, FILE *pfout, const char *parsed_file, bool defer_uncrustify_end = false);
 static void do_source_file(const char *filename_in, const char *filename_out, const char *parsed_file, bool no_backup, bool keep_mtime);
 static void process_source_list(const char *source_list, const char *prefix, const char *suffix, bool no_backup, bool keep_mtime);
 static int load_header_files();
@@ -153,6 +153,7 @@ static void usage_exit(const char *msg, const char *argv0, int code)
            " --prefix PFX : Prepend PFX to the output filename path.\n"
            " --replace    : Replace source files (creates a backup).\n"
            " --no-backup  : Replace files, no backup. Useful if files are under source control.\n"
+           " --if-changed : Write to stdout (or create output FILE) only if a change was detected.\n"
 #ifdef HAVE_UTIME_H
            " --mtime      : Preserve mtime on replaced files.\n"
 #endif
@@ -273,6 +274,7 @@ int main(int argc, char *argv[])
    }
 
    cpd.do_check = arg.Present("--check");
+   cpd.if_changed = arg.Present("--if-changed");
 
 #ifdef WIN32
    /* tell Windows not to change what I write to stdout */
@@ -424,10 +426,11 @@ int main(int argc, char *argv[])
    LOG_FMT(LDATA, "no_backup   = %d\n", no_backup);
    LOG_FMT(LDATA, "detect      = %d\n", detect);
    LOG_FMT(LDATA, "check       = %d\n", cpd.do_check);
+   LOG_FMT(LDATA, "if_changed  = %d\n", cpd.if_changed);
 
    if (cpd.do_check &&
        (output_file || replace || no_backup || keep_mtime || update_config ||
-        update_config_wd || detect || prefix || suffix))
+        update_config_wd || detect || prefix || suffix || cpd.if_changed))
    {
       usage_exit("Cannot use --check with output options.", argv[0], 67);
    }
@@ -604,7 +607,7 @@ int main(int argc, char *argv[])
    /* This relies on cpd.filename being the config file name */
    load_header_files();
 
-   if (cpd.do_check)
+   if (cpd.do_check || cpd.if_changed)
    {
       cpd.bout = new deque<UINT8>();
    }
@@ -1050,6 +1053,45 @@ static string fix_filename(const char *filename)
 }
 
 
+static bool bout_content_matches(const file_mem& fm, bool report_status)
+{
+   bool is_same = true;
+   /* compare the old data vs the new data */
+   if (cpd.bout->size() != fm.raw.size())
+   {
+      if (report_status)
+      {
+         fprintf(stderr, "FAIL: %s (File size changed from %u to %u)\n",
+            cpd.filename,
+            (int)fm.raw.size(), (int)cpd.bout->size());
+      }
+      is_same = false;
+   }
+   else
+   {
+      for (int idx = 0; idx < (int)fm.raw.size(); idx++)
+      {
+         if (fm.raw[idx] != (*cpd.bout)[idx])
+         {
+            if (report_status)
+            {
+               fprintf(stderr, "FAIL: %s (Difference at byte %u)\n",
+                  cpd.filename, idx);
+            }
+            is_same = false;
+            break;
+         }
+      }
+   }
+   if (is_same && report_status)
+   {
+      fprintf(stdout, "PASS: %s (%u bytes)\n", cpd.filename, (int)fm.raw.size());
+   }
+
+   return is_same;
+}
+
+
 /**
  * Does a source file.
  *
@@ -1087,6 +1129,27 @@ static void do_source_file(const char *filename_in,
 
    LOG_FMT(LSYS, "Parsing: %s as language %s\n",
            filename_in, language_name_from_flags(cpd.lang_flags));
+
+   cpd.filename = filename_in;
+
+   /* If we're only going to write on an actual change, then build the output buffer now
+    * and if there were changes, run it through the normal file write path.
+    * 
+    * Future: many code paths could be simplified if 'bout' were always used and not
+    * optionally selected in just for do_check and if_changed.
+    */
+   if (cpd.if_changed)
+   {
+      /* Cleanup is deferred because we need 'bout' preserved long enough to write it to
+       * a file (if it changed).
+       */
+      uncrustify_file(fm, NULL, parsed_file, true);
+      if (bout_content_matches(fm, false))
+      {
+         uncrustify_end();
+         return;
+      }
+   }
 
    if (!cpd.do_check)
    {
@@ -1130,8 +1193,18 @@ static void do_source_file(const char *filename_in,
       }
    }
 
-   cpd.filename = filename_in;
-   uncrustify_file(fm, pfout, parsed_file);
+   if (cpd.if_changed)
+   {
+      for (deque<UINT8>::const_iterator i = cpd.bout->begin(), end = cpd.bout->end(); i != end; ++i)
+      {
+         fputc(*i, pfout);
+      }
+      uncrustify_end();
+   }
+   else
+   {
+      uncrustify_file(fm, pfout, parsed_file);
+   }
 
    if (did_open)
    {
@@ -1144,14 +1217,16 @@ static void do_source_file(const char *filename_in,
 
       if (filename_tmp != filename_out)
       {
-         /* We need to compare and then do a rename */
-         if (file_content_matches(filename_tmp, filename_out))
+         /* We need to compare and then do a rename (but avoid redundant test when if_changed set) */
+         if (!cpd.if_changed && file_content_matches(filename_tmp, filename_out))
          {
             /* No change - remove tmp file */
             (void)unlink(filename_tmp.c_str());
          }
          else
          {
+            /* Change - rename filename_tmp to filename_out */
+
 #ifdef WIN32
             /* Atomic rename in windows can't go through stdio rename() func because underneath
              * it calls MoveFileExW without MOVEFILE_REPLACE_EXISTING.
@@ -1447,7 +1522,7 @@ static void uncrustify_start(const deque<int>& data)
 
 
 static void uncrustify_file(const file_mem& fm, FILE *pfout,
-                            const char *parsed_file)
+                            const char *parsed_file, bool defer_uncrustify_end)
 {
    const deque<int>& data = fm.data;
 
@@ -1729,39 +1804,15 @@ static void uncrustify_file(const file_mem& fm, FILE *pfout,
       }
    }
 
-   if (cpd.do_check)
+   if (cpd.do_check && !bout_content_matches(fm, true))
    {
-      bool is_same = true;
-      /* compare the old data vs the new data */
-      if (cpd.bout->size() != fm.raw.size())
-      {
-         fprintf(stderr, "FAIL: %s (File size changed from %u to %u)\n",
-                 cpd.filename,
-                 (int)fm.raw.size(), (int)cpd.bout->size());
-         cpd.check_fail_cnt++;
-         is_same = false;
-      }
-      else
-      {
-         for (int idx = 0; idx < (int)fm.raw.size(); idx++)
-         {
-            if (fm.raw[idx] != (*cpd.bout)[idx])
-            {
-               fprintf(stderr, "FAIL: %s (Difference at byte %u)\n",
-                       cpd.filename, idx);
-               cpd.check_fail_cnt++;
-               is_same = false;
-               break;
-            }
-         }
-      }
-      if (is_same)
-      {
-         fprintf(stdout, "PASS: %s (%u bytes)\n", cpd.filename, (int)fm.raw.size());
-      }
+      cpd.check_fail_cnt++;
    }
 
-   uncrustify_end();
+   if (!defer_uncrustify_end)
+   {
+      uncrustify_end();
+   }
 } // uncrustify_file
 
 
