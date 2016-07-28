@@ -767,6 +767,13 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
       if ((second->type == CT_FPAREN_OPEN) ||
           (second->type == CT_PAREN_OPEN))
       {
+         next = chunk_get_next_ncnl(second);
+         if (next && (next->type == CT_FPAREN_CLOSE))
+         {
+            log_rule("sp_angle_paren_empty");
+            return(cpd.settings[UO_sp_angle_paren_empty].a);
+         }
+
          log_rule("sp_angle_paren");
          return(cpd.settings[UO_sp_angle_paren].a);
       }
@@ -1033,8 +1040,8 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
 
    if ((first->type == CT_THIS) && (second->type == CT_PAREN_OPEN))
    {
-      log_rule("REMOVE");
-      return(AV_REMOVE);
+      log_rule("sp_this_paren");
+      return(cpd.settings[UO_sp_this_paren].a);
    }
 
    if ((first->type == CT_STATE) && (second->type == CT_PAREN_OPEN))
@@ -1064,8 +1071,8 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
 
    if ((first->type == CT_SUPER) && (second->type == CT_PAREN_OPEN))
    {
-      log_rule("REMOVE");
-      return(AV_REMOVE);
+      log_rule("sp_super_paren");
+      return(cpd.settings[UO_sp_super_paren].a);
    }
 
    if ((first->type == CT_FPAREN_CLOSE) && (second->type == CT_BRACE_OPEN))

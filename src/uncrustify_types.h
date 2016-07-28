@@ -309,7 +309,8 @@ enum
    LANG_PAWN = 0x0080,
    LANG_ECMA = 0x0100,
 
-   LANG_ALLC = 0x017f,
+   LANG_ALLC = 0x017f,     /*<< LANG_C    | LANG_CPP | LANG_D    | LANG_CS   | 
+                                LANG_JAVA | LANG_OC  | LANG_VALA | LANG_ECMA */
    LANG_ALL  = 0x0fff,
 
    FLAG_DIG  = 0x4000,     /*<< digraph/trigraph */
@@ -386,6 +387,7 @@ struct cp_data
    bool               do_check;
    enum unc_stage     unc_stage;
    int                check_fail_cnt; // total failures
+   bool               if_changed;
 
    UINT32             error_count;
    const char         *filename;
@@ -431,6 +433,8 @@ struct cp_data
    struct align_t     al[80];
    int                al_cnt;
    bool               al_c99_array;
+
+   bool               warned_unable_string_replace_tab_chars;
 
    /* Here are all the settings */
    op_val_t           settings[UO_option_count];

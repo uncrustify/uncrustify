@@ -2,7 +2,7 @@
  * @file brace_cleanup.cpp
  * Determines the brace level and paren level.
  * Inserts virtual braces as needed.
- * Handles all that preprocessor crap.
+ * Handles all that preprocessor stuff.
  *
  * @author  Ben Gardner
  * @license GPL v2+
