@@ -1879,13 +1879,9 @@ static void newline_func_def(chunk_t *start)
    /* Don't split up a function variable */
    prev = chunk_is_paren_close(prev) ? NULL : chunk_get_prev_ncnl(prev);
 
-   if ((prev != NULL) && (prev->type == CT_DC_MEMBER))
+   if ((prev != NULL) && (prev->type == CT_DC_MEMBER) && (cpd.settings[UO_nl_func_class_scope].a != AV_IGNORE) /*&& (prev->parent_type == CT_FUNC_DEF)*/)
    {
-       chunk_t *prev2 = chunk_get_prev_ncnl(prev);
-       if (cpd.settings[UO_nl_func_class_scope].a != AV_IGNORE)
-       {
-           newline_iarf(prev2, cpd.settings[UO_nl_func_class_scope].a);
-       }
+       newline_iarf(chunk_get_prev_ncnl(prev), cpd.settings[UO_nl_func_class_scope].a);
    }
 
    if ((prev != NULL) && (prev->type != CT_PRIVATE_COLON))
