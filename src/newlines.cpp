@@ -66,14 +66,18 @@ static bool can_increase_nl(chunk_t *nl)
 
    if (cpd.settings[UO_nl_squeeze_ifdef].b)
    {
-      if (prev && (prev->type == CT_PREPROC) &&
-          (prev->parent_type == CT_PP_ENDIF))
+      if (prev &&
+          (prev->type == CT_PREPROC) &&
+          (prev->parent_type == CT_PP_ENDIF) &&
+          (prev->level > 0 || cpd.settings[UO_nl_squeeze_ifdef_top_level].b))
       {
          LOG_FMT(LBLANKD, "%s: nl_squeeze_ifdef %d (prev) pp_lvl=%d rv=0\n", __func__, nl->orig_line, nl->pp_level);
          return(false);
       }
-      if (next && (next->type == CT_PREPROC) &&
-          (next->parent_type == CT_PP_ENDIF))
+      if (next &&
+          (next->type == CT_PREPROC) &&
+          (next->parent_type == CT_PP_ENDIF) &&
+          (next->level > 0 || cpd.settings[UO_nl_squeeze_ifdef_top_level].b))
       {
          bool rv = ifdef_over_whole_file() && (next->flags & PCF_WF_ENDIF);
          LOG_FMT(LBLANKD, "%s: nl_squeeze_ifdef %d (next) pp_lvl=%d rv=%d\n", __func__, nl->orig_line, nl->pp_level, rv);
@@ -1875,6 +1879,15 @@ static void newline_func_def(chunk_t *start)
    /* Don't split up a function variable */
    prev = chunk_is_paren_close(prev) ? NULL : chunk_get_prev_ncnl(prev);
 
+   if ((prev != NULL) && (prev->type == CT_DC_MEMBER) && (prev->parent_type == CT_FUNC_DEF))
+   {
+       chunk_t *prev2 = chunk_get_prev_ncnl(prev);
+       if (cpd.settings[UO_nl_func_class_scope].a != AV_IGNORE)
+       {
+           newline_iarf(prev2, cpd.settings[UO_nl_func_class_scope].a);
+       }
+   }
+
    if ((prev != NULL) && (prev->type != CT_PRIVATE_COLON))
    {
       if (prev->type == CT_OPERATOR)
@@ -2804,6 +2817,7 @@ void newlines_cleanup_braces(bool first)
               (cpd.settings[UO_nl_func_def_empty].a != AV_IGNORE) ||
               (cpd.settings[UO_nl_func_type_name].a != AV_IGNORE) ||
               (cpd.settings[UO_nl_func_type_name_class].a != AV_IGNORE) ||
+              (cpd.settings[UO_nl_func_class_scope].a != AV_IGNORE) ||
               (cpd.settings[UO_nl_func_scope_name].a != AV_IGNORE) ||
               (cpd.settings[UO_nl_func_proto_type_name].a != AV_IGNORE) ||
               (cpd.settings[UO_nl_func_paren].a != AV_IGNORE) ||
@@ -3065,7 +3079,7 @@ void newlines_squeeze_ifdef(void)
 
    for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next_ncnl(pc))
    {
-      if ((pc->type == CT_PREPROC) && (pc->level > 0))
+      if ((pc->type == CT_PREPROC) && (pc->level > 0 || cpd.settings[UO_nl_squeeze_ifdef_top_level].b))
       {
          ppr = chunk_get_next(pc);
 

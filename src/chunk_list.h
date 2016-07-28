@@ -219,9 +219,22 @@ bool chunk_is_nullable(chunk_t *pc)
 static_inline
 bool chunk_is_addr(chunk_t *pc)
 {
-   return((pc != NULL) &&
-          ((pc->type == CT_BYREF) ||
-           ((pc->len() == 1) && (pc->str[0] == '&') && (pc->type != CT_OPERATOR_VAL))));
+   if ((pc != NULL) &&
+       ((pc->type == CT_BYREF)
+        || ((pc->len() == 1) && (pc->str[0] == '&') && (pc->type != CT_OPERATOR_VAL))))
+   {
+      chunk_t *prev = chunk_get_prev(pc);
+
+      if ((pc->flags & PCF_IN_TEMPLATE) &&
+           ((prev != NULL) && ((prev->type == CT_COMMA) || (prev->type == CT_ANGLE_OPEN))))
+      {
+         return(false);
+      }
+
+      return(true);
+   }
+
+   return(false);
 }
 
 

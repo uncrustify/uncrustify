@@ -271,7 +271,9 @@ void register_options(void)
    unc_add_option("sp_after_angle", UO_sp_after_angle, AT_IARF,
                   "Add or remove space after '<>'");
    unc_add_option("sp_angle_paren", UO_sp_angle_paren, AT_IARF,
-                  "Add or remove space between '<>' and '(' as found in 'new List<byte>();'");
+                  "Add or remove space between '<>' and '(' as found in 'new List<byte>(foo);'");
+   unc_add_option("sp_angle_paren_empty", UO_sp_angle_paren_empty, AT_IARF,
+                  "Add or remove space between '<>' and '()' as found in 'new List<byte>();'");
    unc_add_option("sp_angle_word", UO_sp_angle_word, AT_IARF,
                   "Add or remove space between '<>' and a word as in 'List<byte> m;' or 'template <typename T> static ...'");
    unc_add_option("sp_angle_shift", UO_sp_angle_shift, AT_IARF,
@@ -419,6 +421,10 @@ void register_options(void)
    unc_add_option("sp_scope_paren", UO_sp_scope_paren, AT_IARF,
                   "Add or remove space between 'scope' and '(' in 'scope (something) { }' (D language)\n"
                   "If set to ignore, sp_before_sparen is used.");
+   unc_add_option("sp_super_paren", UO_sp_super_paren, AT_IARF,
+                  "Add or remove space between 'super' and '(' in 'super (something)'. Default=Remove");
+   unc_add_option("sp_this_paren", UO_sp_this_paren, AT_IARF,
+                  "Add or remove space between 'this' and '(' in 'this (something)'. Default=Remove");
    unc_add_option("sp_macro", UO_sp_macro, AT_IARF,
                   "Add or remove space between macro and value");
    unc_add_option("sp_macro_func", UO_sp_macro_func, AT_IARF,
@@ -900,6 +906,9 @@ void register_options(void)
    unc_add_option("nl_func_type_name_class", UO_nl_func_type_name_class, AT_IARF,
                   "Add or remove newline between return type and function name inside a class {}\n"
                   "Uses nl_func_type_name or nl_func_proto_type_name if set to ignore.");
+   unc_add_option("nl_func_class_scope", UO_nl_func_class_scope, AT_IARF,
+                  "Add or remove newline between class specification and '::' in 'void A::f() { }'\n"
+                  "Only appears in separate member implementation (does not appear with in-line implmementation)");
    unc_add_option("nl_func_scope_name", UO_nl_func_scope_name, AT_IARF,
                   "Add or remove newline between function scope and name\n"
                   "Controls the newline after '::' in 'void A::f() { }'");
@@ -988,7 +997,9 @@ void register_options(void)
    unc_add_option("nl_define_macro", UO_nl_define_macro, AT_BOOL,
                   "Whether to alter newlines in '#define' macros");
    unc_add_option("nl_squeeze_ifdef", UO_nl_squeeze_ifdef, AT_BOOL,
-                  "Whether to remove blanks after '#ifxx' and '#elxx', or before '#elxx' and '#endif'. Does not affect the whole-file #ifdef.");
+                  "Whether to remove blanks after '#ifxx' and '#elxx', or before '#elxx' and '#endif'. Does not affect top-level #ifdefs.");
+   unc_add_option("nl_squeeze_ifdef_top_level", UO_nl_squeeze_ifdef_top_level, AT_BOOL,
+                  "Makes the nl_squeeze_ifdef option affect the top-level #ifdefs as well.");
    unc_add_option("nl_before_if", UO_nl_before_if, AT_IARF,
                   "Add or remove blank line before 'if'");
    unc_add_option("nl_after_if", UO_nl_after_if, AT_IARF,
@@ -2183,6 +2194,8 @@ void set_option_defaults(void)
    cpd.defaults[UO_sp_angle_shift].a                       = AV_ADD;
    cpd.defaults[UO_sp_word_brace].a                        = AV_ADD;
    cpd.defaults[UO_sp_word_brace_ns].a                     = AV_ADD;
+   cpd.defaults[UO_sp_super_paren].a                       = AV_REMOVE;
+   cpd.defaults[UO_sp_this_paren].a                        = AV_REMOVE;
    cpd.defaults[UO_indent_oc_msg_prioritize_first_colon].b = true;
    cpd.defaults[UO_use_indent_func_call_param].b           = true;
    cpd.defaults[UO_use_options_overriding_for_qt_macros].b = true;

@@ -7,6 +7,10 @@ New:
     Null conditional operator (?.) is now supported.
 
 New options:
+ - nl_func_class_scope
+ - nl_squeeze_ifdef_top_level
+ - sp_super_paren
+ - sp_angle_paren_empty
  - sp_skip_vbrace_tokens
  - indent_token_after_brace
  - use_options_overriding_for_qt_macros
@@ -34,9 +38,9 @@ New options:
 
 Bugfix:
  - Bug #620 is fixed
- - Issues #359, #405, #408, #412, #478, #481, #495, #503, #509, #512, #513, #514,
+ - Issues #322, #323, #359, #405, #408, #412, #478, #481, #495, #503, #509, #512, #513, #514,
     #518, #519, #520, #521, #522, #524, #529, #530, #533, #536, #539, #542,
-    #543, #544, #546 are fixed
+    #543, #544, #546, #568 are fixed
  - Proposals #409 and #477 are implemented
  - Issue #411 is partialy fixed
 

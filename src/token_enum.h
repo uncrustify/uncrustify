@@ -356,7 +356,7 @@ typedef enum
    CT_NOTHROW,      // guy 2016-03-11
    CT_WORD_,        // guy 2016-03-11
 
-   CT_TOKEN_COUNT_     // keep this the last entry
+   CT_TOKEN_COUNT_  // NOTE: Keep this the last entry because it's used as a counter.
 } c_token_t;
 
 #endif /* TOKEN_ENUM_H_INCLUDED */

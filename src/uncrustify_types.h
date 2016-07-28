@@ -310,7 +310,8 @@ enum
    LANG_PAWN = 0x0080,
    LANG_ECMA = 0x0100,
 
-   LANG_ALLC = 0x017f,
+   LANG_ALLC = 0x017f,     /*<< LANG_C    | LANG_CPP | LANG_D    | LANG_CS   | 
+                                LANG_JAVA | LANG_OC  | LANG_VALA | LANG_ECMA */
    LANG_ALL  = 0x0fff,
 
    FLAG_DIG  = 0x4000,     /*<< digraph/trigraph */
