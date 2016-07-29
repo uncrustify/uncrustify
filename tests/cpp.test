@@ -325,3 +325,20 @@
 33094 sp_angle_paren_empty.cfg         cpp/sp_angle_paren.cpp
 33095 bug_i_322.cfg                    cpp/bug_i_322.cpp
 33096 squeeze_ifdef_top.cfg            cpp/squeeze_ifdef.cpp
+
+# numbers upto 33199 are reserved for Ben
+# 33199
+
+# numbers from 33200 upto 33299 are reserved for Mihai Popescu
+# 33200
+# 33299
+
+# numbers from 33400 upto 33499 are reserved for Jakub Schmidtke
+# 33300
+# 33399
+
+# numbers from 33300 upto 33399 are reserved for Guy Maurel
+# 33400
+# 33499
+
+#
