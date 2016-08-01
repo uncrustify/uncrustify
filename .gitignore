@@ -1,3 +1,16 @@
+# Generated uncrustify files
+src/config.h
+src/token_names.h
+src/uncrustify_version.h
+
+# Testing framework
+tests/results
+tests/usage.txt
+*.sh.trs
+*.sh.log
+test-suite.log
+
+# UNIX build artifacts
 *.o
 src/uncrustify
 
