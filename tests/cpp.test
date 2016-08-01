@@ -65,7 +65,7 @@
 
 30075 empty.cfg                        cpp/goto.cpp
 
-#30080 nl_brace_brace-a.cfg             cpp/nl_brace_brace.cpp
+30080 nl_brace_brace-a.cfg             cpp/nl_brace_brace.cpp
 
 30085 nSolve.cfg                       cpp/align_class.cpp
 
