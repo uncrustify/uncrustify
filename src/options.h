@@ -763,6 +763,10 @@ enum uncrustify_options
    UO_cmt_cpp_nl_start,         // put a blank /* at the start of a converted group
    UO_cmt_cpp_nl_end,           // put a newline before the */ in a converted group
    UO_cmt_multi_check_last,     // no space after '*' prefix when comment start and end are of equal length
+   UO_cmt_multi_first_len_minimum, // controls the xtra_indent for the last line of a multi-line comment
+                                   // For multi-line comments with a '*' lead, remove leading spaces if the first and last lines of
+                                   // the comment are the same length AND if the length is bigger as the first_len minimum.
+                                   // Default=4
    UO_cmt_convert_tab_to_spaces,
 
    UO_cmt_insert_file_header,
