@@ -754,6 +754,9 @@ void register_options(void)
    unc_add_option("indent_token_after_brace", UO_indent_token_after_brace, AT_BOOL,
                   "If true, a brace followed by another token (not a newline) will indent all contained lines to match the token."
                   "Default=True.");
+   unc_add_option("indent_cpp_lambda_body", UO_indent_cpp_lambda_body, AT_BOOL,
+                  "If true, cpp lambda body will be indented"
+                  "Default=False.");
 
    unc_begin_group(UG_newline, "Newline adding and removing options");
    unc_add_option("nl_collapse_empty_body", UO_nl_collapse_empty_body, AT_BOOL,
@@ -2200,6 +2203,7 @@ void set_option_defaults(void)
    cpd.defaults[UO_use_indent_func_call_param].b           = true;
    cpd.defaults[UO_use_options_overriding_for_qt_macros].b = true;
    cpd.defaults[UO_indent_token_after_brace].b             = true;
+   cpd.defaults[UO_indent_cpp_lambda_body].b               = false;
    cpd.defaults[UO_warn_level_tabs_found_in_verbatim_string_literals].n = LWARN;
 
    /* copy all the default values to settings array */
