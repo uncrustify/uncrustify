@@ -2,6 +2,14 @@ cmake_minimum_required(VERSION 2.8)
 
 project(uncrustify)
 
+if("${PROJECT_SOURCE_DIR}" STREQUAL "${PROJECT_BINARY_DIR}")
+  message(FATAL_ERROR "
+    In-source builds are not supported, please remove the `CMakeFiles'
+    folder and `CMakeCache.txt', and create a folder for the build:
+    mkdir build; cd build; cmake ..
+  ")
+endif()
+
 include(CheckCXXCompilerFlag)
 include(CheckIncludeFileCXX)
 include(CheckSymbolExists)
