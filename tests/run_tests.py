@@ -182,11 +182,6 @@ def process_test_file(args, filename):
 # entry point
 #
 def main(argv):
-    if os.name == "nt":
-        bin_path = '../win32/Debug/uncrustify.exe'
-    else:
-        bin_path = '../src/uncrustify'
-
     all_tests = "c-sharp c cpp d java pawn objective-c vala ecma".split()
 
     parser = argparse.ArgumentParser(description='Run uncrustify tests')
@@ -196,10 +191,21 @@ def main(argv):
     parser.add_argument('-g', help='generate debug files (.log, .unc)', action='store_true')
     parser.add_argument('--results', help='specify results folder', type=str, default='results')
     parser.add_argument('--exe', help='uncrustify executable to test',
-                        type=str, default=bin_path)
+                        type=str)
     parser.add_argument('tests', metavar='TEST', help='test(s) to run (default all)',
                         type=str, default=all_tests, nargs='*')
     args = parser.parse_args()
+
+    if not args.exe:
+        if os.name == "nt":
+            bin_path = '../win32/{0}/uncrustify.exe'
+            if args.g:
+                bin_path = bin_path.format('Debug')
+            else:
+                bin_path = bin_path.format('Release')
+        else:
+            bin_path = '../src/uncrustify'
+        args.exe = bin_path
 
     if not os.path.isabs(args.exe):
         args.exe = os.path.abspath(args.exe)
