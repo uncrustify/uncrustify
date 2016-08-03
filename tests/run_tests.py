@@ -75,11 +75,13 @@ if disablecolors:
     PASS_COLOR     = ""
     MISMATCH_COLOR = ""
     UNSTABLE_COLOR = ""
+    SKIP_COLOR     = ""
 else:
     FAIL_COLOR     = UNDERSCORE
     PASS_COLOR     = FG_GREEN
     MISMATCH_COLOR = FG_RED #REVERSE
     UNSTABLE_COLOR = FGB_CYAN
+    SKIP_COLOR     = FGB_YELLOW
 
 def run_tests(args, test_name, config_name, input_name, lang):
     # print("Test:  ", test_name)
@@ -165,6 +167,27 @@ def process_test_file(args, filename):
         parts = line.split()
         if (len(parts) < 3) or (parts[0][0] == '#'):
             continue
+        if args.r != None:
+            test_name = parts[0]
+            # remove special suffixes (eg. '!')
+            if not test_name[-1].isdigit():
+                test_name = test_name[:-1]
+            test_nb = int(test_name)
+            # parse range list (eg. 10001-10010,10030-10050,10063)
+            range_filter = args.r
+            filtered = True
+            for value in range_filter.split(","):
+                t = value.split("-")
+                a = b = int(t[0])
+                if len(t) > 1:
+                    b = int(t[1])
+                if test_nb >= a and test_nb <= b:
+                    filtered = False
+                    break
+            if filtered:
+                if args.p:
+                    print(SKIP_COLOR + "SKIPPED: " + NORMAL + parts[0])
+                continue
         lang = ""
         if len(parts) > 3:
             lang = "-l " + parts[3]
@@ -187,8 +210,9 @@ def main(argv):
     parser = argparse.ArgumentParser(description='Run uncrustify tests')
     parser.add_argument('-c', help='show commands', action='store_true')
     parser.add_argument('-d', help='show diff on failure', action='store_true')
-    parser.add_argument('-p', help='show passes', action='store_true')
+    parser.add_argument('-p', help='show passed/skipped tests', action='store_true')
     parser.add_argument('-g', help='generate debug files (.log, .unc)', action='store_true')
+    parser.add_argument('-r', help='specify test filter range list', type=str, default=None)
     parser.add_argument('--results', help='specify results folder', type=str, default='results')
     parser.add_argument('--exe', help='uncrustify executable to test',
                         type=str)
