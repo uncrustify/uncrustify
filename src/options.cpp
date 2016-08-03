@@ -1783,11 +1783,6 @@ int load_option_file(const char *filename)
    {
       cpd.line_number++;
 
-      if (cpd.line_number == 528) 
-      {
-         int guy = cpd.line_number;
-      }
-
       /* Chop off trailing comments */
       if ((ptr = strchr(buffer, '#')) != NULL)
       {
