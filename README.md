@@ -15,8 +15,67 @@ Please include the following with your issue:
 If the issue cannot be easily reproduced, then it isn't likely to be fixed.
 
 
-Building the program
+Building using CMake
 --------------------
+
+[CMake](https://cmake.org/) is a tool that generates build systems (Makefiles,
+Visual Studio project files, and others).
+
+To generate a build system for Uncrustify using CMake, create a build folder
+and run CMake from it:
+
+```.bash
+$ mkdir build
+$ cd build
+$ cmake ..
+```
+
+Then use the build tools of your build system (in many cases this will simply
+be `make`, but on Windows it could be MSBuild or Visual Studio). Or use CMake
+to invoke it:
+
+```.bash
+$ cmake --build .
+```
+
+If testing is enabled, CMake generates a `test` target, which you can _build_
+using your build system tools (usually `make test`). This can also be invoked
+using CTest:
+
+```.bash
+$ ctest -V -C Debug
+```
+
+There is also an `install` target, which can be used to install the Uncrustify
+executable (typically `make install`).
+
+
+A note on CMake configurations
+------------------------------
+
+Some build systems are single-configuration, which means you specify the build
+type when running CMake (by setting the `CMAKE_BUILD_TYPE` variable), and the
+generated files then build that configuration.
+
+An example of a single-configuration build system is Makefiles. You can build
+the Release configuration of Uncrustify (from the build folder) with:
+
+```.bash
+$ cmake -DCMAKE_BUILD_TYPE=Release ..
+$ make
+```
+
+Other build systems are multi-configuration, which means you specify the build
+type when building.
+
+An example of a multi-configuration build system is Visual Studio project
+files. When you open the project in Visual Studio, you can select which
+configuration to build. You can also do this while building from the command
+line with `cmake --build . --config Release`.
+
+
+Building using Autotools
+------------------------
 
 Quick start:
 ```
