@@ -1,5 +1,14 @@
 language: cpp
 
+env:
+  matrix:
+    # - COMPILER=clang
+    # - COMPILER=clang-3.8
+    - COMPILER=gcc-6
+    - COMPILER=gcc-6 BUILD_TYPE=asan
+    # - COMPILER=gcc-6 BUILD_TYPE=ubsan
+    # - BUILD_TYPE=coverage
+
 branches:
   only:
   - master
@@ -13,13 +22,41 @@ addons:
     - g++-6
 
 before_install:
-  - export CC=gcc-6
-  - export CXX=g++-6
+  - |-
+    case "${COMPILER}" in
+      "clang")
+        export CC=clang
+        export CXX=clang++
+        ;;
+      "clang-"*)
+        export CC=clang-${COMPILER#*-}
+        export CXX=clang++-${COMPILER#*-}
+        ;;
+      "gcc-"*)
+        export CC=gcc-${COMPILER#*-}
+        export CXX=g++-${COMPILER#*-}
+        ;;
+    esac
   - ${CXX} --version
 
 before_script:
   - mkdir build
   - cd build
-  - cmake ..
+  - |-
+    case "${BUILD_TYPE}" in
+      "coverage")
+        cmake -DCMAKE_BUILD_TYPE=Debug -DBUILD_COVERAGE=ON ..
+        ;;
+      "asan")
+        cmake -DCMAKE_BUILD_TYPE=Debug -DENABLE_SANITIZER=address -DCMAKE_CXX_FLAGS="-fuse-ld=gold" ..
+        ;;
+      "ubsan")
+        cmake -DCMAKE_BUILD_TYPE=Debug -DENABLE_SANITIZER=undefined -DCMAKE_CXX_FLAGS="-fuse-ld=gold" ..
+        ;;
+      *)
+        cmake ..
+        ;;
+    esac
+
 
 script: make VERBOSE=1 && make test
