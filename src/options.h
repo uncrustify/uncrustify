@@ -206,6 +206,8 @@ enum uncrustify_options
    UO_indent_vbrace_open_on_tabstop, // when identing after virtual brace open and newline add further spaces to reach next tabstop
    UO_indent_token_after_brace,
 
+   UO_indent_cpp_lambda_body,        // indent cpp lambda or not
+
    /*
     * Misc inter-element spacing
     */
