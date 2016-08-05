@@ -31,6 +31,7 @@
 
 
 static void newlines_double_space_struct_enum_union(chunk_t *open_brace);
+static void newlines_enum_entries(chunk_t *open_brace, argval_t av);
 static bool one_liner_nl_ok(chunk_t *pc);
 static void nl_handle_define(chunk_t *pc);
 
@@ -2440,6 +2441,12 @@ void newlines_cleanup_braces(bool first)
             }
          }
 
+         if ((pc->parent_type == CT_ENUM) &&
+             (cpd.settings[UO_nl_enum_own_lines].a != AV_IGNORE))
+         {
+            newlines_enum_entries(pc, cpd.settings[UO_nl_enum_own_lines].a);
+         }
+
          if (cpd.settings[UO_nl_ds_struct_enum_cmt].b &&
              ((pc->parent_type == CT_ENUM) ||
               (pc->parent_type == CT_STRUCT) ||
@@ -3849,6 +3856,30 @@ void newlines_cleanup_dup(void)
       }
       pc = next;
    }
+}
+
+
+/**
+ * If requested, make sure each entry in an enum is on its own line
+ */
+static void newlines_enum_entries(chunk_t *open_brace, argval_t av)
+{
+   LOG_FUNC_ENTRY();
+   chunk_t *pc = open_brace;
+
+   while (((pc = chunk_get_next_nc(pc)) != NULL) &&
+          (pc->level > open_brace->level))
+   {
+      if ((pc->level != (open_brace->level + 1)) ||
+          (pc->type != CT_COMMA))
+      {
+         continue;
+      }
+
+      newline_iarf(pc, av);
+   }
+
+   newline_iarf(open_brace, av);
 }
 
 

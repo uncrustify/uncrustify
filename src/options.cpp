@@ -901,6 +901,8 @@ void register_options(void)
    unc_add_option("nl_constr_init_args", UO_nl_constr_init_args, AT_IARF,
                   "Add or remove newline after each ',' in the constructor member initialization.\n"
                   "Related to nl_constr_colon, pos_constr_colon and pos_constr_comma.");
+   unc_add_option("nl_enum_own_lines", UO_nl_enum_own_lines, AT_IARF,
+                  "Add or remove newline before first element, after comma, and after last element in enum");
    unc_add_option("nl_func_type_name", UO_nl_func_type_name, AT_IARF,
                   "Add or remove newline between return type and function name in a function definition");
    unc_add_option("nl_func_type_name_class", UO_nl_func_type_name_class, AT_IARF,

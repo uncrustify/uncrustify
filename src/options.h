@@ -624,6 +624,7 @@ enum uncrustify_options
    UO_nl_constr_colon,                // newline before/after class constr colon (tied to UO_pos_constr_colon)
    UO_nl_class_init_args,             // newline before/after each comma in the base class list (tied to UO_pos_class_comma)
    UO_nl_constr_init_args,            // newline after comma in class init args
+   UO_nl_enum_own_lines,              // put each element of an enum def. on its own line
    UO_nl_collapse_empty_body,         // change '{ \n }' into '{}'
    UO_nl_class_leave_one_liners,      // leave one-line function bodies in 'class xx { here }'
    UO_nl_assign_leave_one_liners,     // leave one-line assign bodies in 'foo_t f = { a, b, c };'
