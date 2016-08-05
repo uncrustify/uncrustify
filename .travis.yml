@@ -4,6 +4,19 @@ branches:
   only:
   - master
 
+addons:
+  apt:
+    sources:
+    - ubuntu-toolchain-r-test
+    packages:
+    - gcc-6
+    - g++-6
+
+before_install:
+  - export CC=gcc-6
+  - export CXX=g++-6
+  - ${CXX} --version
+
 before_script:
   - mkdir build
   - cd build
