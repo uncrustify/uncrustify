@@ -325,3 +325,5 @@
 33094 sp_angle_paren_empty.cfg         cpp/sp_angle_paren.cpp
 33095 bug_i_322.cfg                    cpp/bug_i_322.cpp
 33096 squeeze_ifdef_top.cfg            cpp/squeeze_ifdef.cpp
+
+33200 first_len_minimum.cfg            cpp/first_len_minimum.cpp

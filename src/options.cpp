@@ -1344,6 +1344,11 @@ void register_options(void)
                   "For multi-line comments with a '*' lead, remove leading spaces if the first and last lines of\n"
                   "the comment are the same length. Default=True");
 
+   unc_add_option("cmt_multi_first_len_minimum", UO_cmt_multi_first_len_minimum, AT_NUM,
+                  "For multi-line comments with a '*' lead, remove leading spaces if the first and last lines of\n"
+                  "the comment are the same length AND if the length is bigger as the first_len minimum. Default=4",
+                  "", 1, 20);
+
    unc_add_option("cmt_insert_file_header", UO_cmt_insert_file_header, AT_STRING,
                   "The filename that contains text to insert at the head of a file if the file doesn't start with a C/C++ comment.\n"
                   "Will substitute $(filename) with the current file's name.");
@@ -2186,6 +2191,7 @@ void set_option_defaults(void)
    cpd.defaults[UO_sp_after_semi_for].a                    = AV_FORCE;
    cpd.defaults[UO_cmt_indent_multi].b                     = true;
    cpd.defaults[UO_cmt_multi_check_last].b                 = true;
+   cpd.defaults[UO_cmt_multi_first_len_minimum].n          = 4;
    cpd.defaults[UO_cmt_insert_before_inlines].b            = true;
    cpd.defaults[UO_pp_indent_count].n                      = 1;
    cpd.defaults[UO_align_left_shift].b                     = true;
