@@ -1,9 +1,12 @@
 language: cpp
-compiler: gcc
-os: linux
-before_script: ./autogen.sh
+
 branches:
   only:
   - master
 
-script: ./configure && make && ./run_tests.sh
+before_script:
+  - mkdir build
+  - cd build
+  - cmake ..
+
+script: make VERBOSE=1 && make test
