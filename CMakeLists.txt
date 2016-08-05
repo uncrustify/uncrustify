@@ -218,6 +218,11 @@ add_executable(uncrustify
 )
 
 #
+# Generate uncrustify.1
+#
+configure_file(man/uncrustify.1.in uncrustify.1 @ONLY)
+
+#
 # Tests
 #
 if(BUILD_TESTING)
@@ -237,6 +242,10 @@ endif()
 #
 # Install
 #
+include(GNUInstallDirs)
 install(TARGETS uncrustify
-  RUNTIME DESTINATION bin
+  RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
+)
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/uncrustify.1"
+  DESTINATION "${CMAKE_INSTALL_MANDIR}/man1"
 )
