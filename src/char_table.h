@@ -10,6 +10,8 @@
 #define CHAR_TABLE_H_INCLUDED
 
 
+#define CharTable_Length 128
+
 /**
  * bit0-7 = paired char
  * bit8 = OK for keyword 1st char
@@ -17,7 +19,8 @@
  */
 struct CharTable
 {
-   static int chars[128];
+   //static int chars[128];
+   static int chars[CharTable_Length];
 
    enum
    {
@@ -32,7 +35,9 @@ struct CharTable
       {
          return(0);
       }
-      if (ch < (int)ARRAY_SIZE(chars))
+      //if (ch < (int)ARRAY_SIZE(chars))
+      // Coverity: CID 76238 (#1 of 1): Out-of-bounds read (OVERRUN)
+      if (ch < CharTable_Length)
       {
          return(chars[ch]);
       }
@@ -60,7 +65,8 @@ struct CharTable
 };
 
 #ifdef DEFINE_CHAR_TABLE
-int CharTable::chars[128] =
+//int CharTable::chars[128] =
+int CharTable::chars[CharTable_Length] =
 {
    0x000, 0x000, 0x000, 0x000, 0x000, 0x000, 0x000, 0x000,   /* [........] */
    0x000, 0x000, 0x000, 0x000, 0x000, 0x000, 0x000, 0x000,   /* [........] */
