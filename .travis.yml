@@ -5,6 +5,7 @@ env:
     # - COMPILER=clang
     # - COMPILER=clang-3.8
     - COMPILER=gcc-6
+    - COMPILER=gcc-6 BUILD_TYPE=release
     - COMPILER=gcc-6 BUILD_TYPE=asan
     # - COMPILER=gcc-6 BUILD_TYPE=ubsan
     # - BUILD_TYPE=coverage
@@ -52,6 +53,9 @@ before_script:
         ;;
       "ubsan")
         cmake -DCMAKE_BUILD_TYPE=Debug -DENABLE_SANITIZER=undefined -DCMAKE_CXX_FLAGS="-fuse-ld=gold" ..
+        ;;
+      "release")
+        cmake -DCMAKE_BUILD_TYPE=Release ..
         ;;
       *)
         cmake ..
