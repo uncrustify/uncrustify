@@ -2,6 +2,14 @@ cmake_minimum_required(VERSION 2.8)
 
 project(uncrustify)
 
+if("${PROJECT_SOURCE_DIR}" STREQUAL "${PROJECT_BINARY_DIR}")
+  message(FATAL_ERROR "
+    In-source builds are not supported, please remove the `CMakeFiles'
+    folder and `CMakeCache.txt', and create a folder for the build:
+    mkdir build; cd build; cmake ..
+  ")
+endif()
+
 include(CheckCXXCompilerFlag)
 include(CheckIncludeFileCXX)
 include(CheckSymbolExists)
@@ -218,21 +226,34 @@ add_executable(uncrustify
 )
 
 #
+# Generate uncrustify.1
+#
+configure_file(man/uncrustify.1.in uncrustify.1 @ONLY)
+
+#
 # Tests
 #
 if(BUILD_TESTING)
   find_package(PythonInterp REQUIRED)
   enable_testing()
-  add_test(NAME test_uncrustify
-    COMMAND ${PYTHON_EXECUTABLE}
-      "${PROJECT_SOURCE_DIR}/tests/run_tests.py" "--exe=$<TARGET_FILE:uncrustify>"
-    WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}/tests/"
-  )
+  foreach(test_lang c-sharp c cpp d java pawn objective-c vala ecma)
+    string(REGEX REPLACE "[^a-zA-Z0-9]" "_" test_name "uncrustify_test_${test_lang}")
+    add_test(NAME ${test_name}
+      COMMAND ${PYTHON_EXECUTABLE}
+        "${PROJECT_SOURCE_DIR}/tests/run_tests.py" ${test_lang} "--exe=$<TARGET_FILE:uncrustify>"
+      WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}/tests"
+    )
+    unset(test_name)
+  endforeach()
 endif()
 
 #
 # Install
 #
+include(GNUInstallDirs)
 install(TARGETS uncrustify
-  RUNTIME DESTINATION bin
+  RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
+)
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/uncrustify.1"
+  DESTINATION "${CMAKE_INSTALL_MANDIR}/man1"
 )
