@@ -19,7 +19,6 @@
  */
 struct CharTable
 {
-   //static int chars[128];
    static int chars[CharTable_Length];
 
    enum
@@ -35,11 +34,14 @@ struct CharTable
       {
          return(0);
       }
-      //if (ch < (int)ARRAY_SIZE(chars))
       // Coverity: CID 76238 (#1 of 1): Out-of-bounds read (OVERRUN)
       if (ch < CharTable_Length)
       {
          return(chars[ch]);
+      }
+      else
+      {
+         return(0);
       }
 
       /* HACK: If the top bit is set, then we are likely dealing with UTF-8,
