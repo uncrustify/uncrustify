@@ -3881,11 +3881,26 @@ static void mark_function(chunk_t *pc)
    fix_fcn_def_params(next);
    mark_function_return_type(pc, chunk_get_prev_ncnl(pc), pc->type);
 
+   /* mark C# where chunk */
+   if ((cpd.lang_flags & LANG_CS) &&
+       ((pc->type == CT_FUNC_DEF) || (pc->type == CT_FUNC_PROTO)))
+   {
+	   tmp = chunk_get_next_ncnl(paren_close);
+	   int in_where_spec_flags = 0;
+	   while ((tmp != NULL) &&
+		   (tmp->type != CT_BRACE_OPEN) && (tmp->type != CT_SEMICOLON))
+	   {
+		   mark_where_chunk(tmp, pc->type, tmp->flags | in_where_spec_flags);
+		   in_where_spec_flags = tmp->flags & PCF_IN_WHERE_SPEC;
+
+		   tmp = chunk_get_next_ncnl(tmp);
+	   }
+   }
+
    /* Find the brace pair and set the parent */
    if (pc->type == CT_FUNC_DEF)
    {
       tmp = chunk_get_next_ncnl(paren_close);
-      int in_where_spec_flags = 0;
       while ((tmp != NULL) &&
              (tmp->type != CT_BRACE_OPEN))
       {
@@ -3895,9 +3910,6 @@ static void mark_function(chunk_t *pc)
          {
             chunk_flags_set(tmp, PCF_OLD_FCN_PARAMS);
          }
-
-         mark_where_chunk(tmp, CT_FUNC_DEF, tmp->flags | in_where_spec_flags);
-         in_where_spec_flags = tmp->flags & PCF_IN_WHERE_SPEC;
 
          tmp = chunk_get_next_ncnl(tmp);
       }
@@ -4001,7 +4013,7 @@ static int mark_where_chunk(chunk_t *pc, c_token_t parent_type, int flags)
    /* TODO: should have options to control spacing around the ':' as well as newline ability for the
       constraint clauses (should it break up a 'where A : B where C : D' on the same line? wrap? etc.) */
 
-   if (chunk_is_str(pc, "where", 5))
+   if (pc->type == CT_WHERE)
    {
       set_chunk_type(pc, CT_WHERE_SPEC);
       set_chunk_parent(pc, parent_type);
