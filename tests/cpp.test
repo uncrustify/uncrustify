@@ -321,6 +321,7 @@
 33084 op_sym_empty.cfg                 cpp/op_sym_empty.cpp
 33085 bug_i_323.cfg                    cpp/bug_i_323.cpp
 33086 empty.cfg                        cpp/bug_i_568.cpp
+33087 bug_i_596.cfg                    cpp/bug_i_596.cpp
 33088 empty.cfg                        cpp/bug_i_197.cpp
 
 33090 empty.cfg                        cpp/gh555.cpp
