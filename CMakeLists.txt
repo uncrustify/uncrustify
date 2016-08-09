@@ -209,6 +209,24 @@ add_executable(uncrustify
   src/unc_tools.h
 )
 
+if(CMAKE_VERSION VERSION_LESS 2.8.10)
+  if(CMAKE_CONFIGURATION_TYPES OR CMAKE_BUILD_TYPE)
+    # Multi-configuration or build type set
+    set_property(TARGET uncrustify APPEND PROPERTY
+      COMPILE_DEFINITIONS_DEBUG DEBUG
+    )
+  else()
+    # Single-configuration with no build type set
+    set_property(TARGET uncrustify APPEND PROPERTY
+      COMPILE_DEFINITIONS DEBUG
+    )
+  endif()
+else()
+  set_property(TARGET uncrustify APPEND PROPERTY
+    COMPILE_DEFINITIONS $<$<OR:$<CONFIG:Debug>,$<CONFIG:>>:DEBUG>
+  )
+endif()
+
 #
 # Generate uncrustify.1
 #
