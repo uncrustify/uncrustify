@@ -1017,7 +1017,18 @@ void indent_text(void)
          frm.level++;
          indent_pse_push(frm, pc);
 
-         if (cpd.settings[UO_indent_cs_delegate_brace].b &&
+         if (cpd.settings[UO_indent_cpp_lambda_body].b &&
+             pc->parent_type == CT_CPP_LAMBDA)
+         {
+            frm.pse[frm.pse_tos].brace_indent = frm.pse[frm.pse_tos-1].indent;
+            indent_column                     = frm.pse[frm.pse_tos].brace_indent;
+            frm.pse[frm.pse_tos].indent       = indent_column + indent_size;
+            frm.pse[frm.pse_tos].indent_tab   = frm.pse[frm.pse_tos].indent;
+            frm.pse[frm.pse_tos].indent_tmp   = frm.pse[frm.pse_tos].indent;
+
+            frm.pse[frm.pse_tos - 1].indent_tmp = frm.pse[frm.pse_tos].indent_tmp;
+         }
+         else if (cpd.settings[UO_indent_cs_delegate_brace].b &&
              (pc->type == CT_BRACE_OPEN) &&
              (pc->prev->type == CT_LAMBDA || pc->prev->prev->type == CT_LAMBDA))
          {

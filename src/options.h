@@ -206,6 +206,8 @@ enum uncrustify_options
    UO_indent_vbrace_open_on_tabstop, // when identing after virtual brace open and newline add further spaces to reach next tabstop
    UO_indent_token_after_brace,
 
+   UO_indent_cpp_lambda_body,        // indent cpp lambda or not
+
    /*
     * Misc inter-element spacing
     */
@@ -624,6 +626,7 @@ enum uncrustify_options
    UO_nl_constr_colon,                // newline before/after class constr colon (tied to UO_pos_constr_colon)
    UO_nl_class_init_args,             // newline before/after each comma in the base class list (tied to UO_pos_class_comma)
    UO_nl_constr_init_args,            // newline after comma in class init args
+   UO_nl_enum_own_lines,              // put each element of an enum def. on its own line
    UO_nl_collapse_empty_body,         // change '{ \n }' into '{}'
    UO_nl_class_leave_one_liners,      // leave one-line function bodies in 'class xx { here }'
    UO_nl_assign_leave_one_liners,     // leave one-line assign bodies in 'foo_t f = { a, b, c };'
@@ -763,6 +766,10 @@ enum uncrustify_options
    UO_cmt_cpp_nl_start,         // put a blank /* at the start of a converted group
    UO_cmt_cpp_nl_end,           // put a newline before the */ in a converted group
    UO_cmt_multi_check_last,     // no space after '*' prefix when comment start and end are of equal length
+   UO_cmt_multi_first_len_minimum, // controls the xtra_indent for the last line of a multi-line comment
+                                   // For multi-line comments with a '*' lead, remove leading spaces if the first and last lines of
+                                   // the comment are the same length AND if the length is bigger as the first_len minimum.
+                                   // Default=4
    UO_cmt_convert_tab_to_spaces,
 
    UO_cmt_insert_file_header,
