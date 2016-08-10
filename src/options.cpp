@@ -754,6 +754,9 @@ void register_options(void)
    unc_add_option("indent_token_after_brace", UO_indent_token_after_brace, AT_BOOL,
                   "If true, a brace followed by another token (not a newline) will indent all contained lines to match the token."
                   "Default=True.");
+   unc_add_option("indent_cpp_lambda_body", UO_indent_cpp_lambda_body, AT_BOOL,
+                  "If true, cpp lambda body will be indented"
+                  "Default=False.");
 
    unc_begin_group(UG_newline, "Newline adding and removing options");
    unc_add_option("nl_collapse_empty_body", UO_nl_collapse_empty_body, AT_BOOL,
@@ -901,6 +904,8 @@ void register_options(void)
    unc_add_option("nl_constr_init_args", UO_nl_constr_init_args, AT_IARF,
                   "Add or remove newline after each ',' in the constructor member initialization.\n"
                   "Related to nl_constr_colon, pos_constr_colon and pos_constr_comma.");
+   unc_add_option("nl_enum_own_lines", UO_nl_enum_own_lines, AT_IARF,
+                  "Add or remove newline before first element, after comma, and after last element in enum");
    unc_add_option("nl_func_type_name", UO_nl_func_type_name, AT_IARF,
                   "Add or remove newline between return type and function name in a function definition");
    unc_add_option("nl_func_type_name_class", UO_nl_func_type_name_class, AT_IARF,
@@ -1343,6 +1348,11 @@ void register_options(void)
    unc_add_option("cmt_multi_check_last", UO_cmt_multi_check_last, AT_BOOL,
                   "For multi-line comments with a '*' lead, remove leading spaces if the first and last lines of\n"
                   "the comment are the same length. Default=True");
+
+   unc_add_option("cmt_multi_first_len_minimum", UO_cmt_multi_first_len_minimum, AT_NUM,
+                  "For multi-line comments with a '*' lead, remove leading spaces if the first and last lines of\n"
+                  "the comment are the same length AND if the length is bigger as the first_len minimum. Default=4",
+                  "", 1, 20);
 
    unc_add_option("cmt_insert_file_header", UO_cmt_insert_file_header, AT_STRING,
                   "The filename that contains text to insert at the head of a file if the file doesn't start with a C/C++ comment.\n"
@@ -2186,6 +2196,7 @@ void set_option_defaults(void)
    cpd.defaults[UO_sp_after_semi_for].a                    = AV_FORCE;
    cpd.defaults[UO_cmt_indent_multi].b                     = true;
    cpd.defaults[UO_cmt_multi_check_last].b                 = true;
+   cpd.defaults[UO_cmt_multi_first_len_minimum].n          = 4;
    cpd.defaults[UO_cmt_insert_before_inlines].b            = true;
    cpd.defaults[UO_pp_indent_count].n                      = 1;
    cpd.defaults[UO_align_left_shift].b                     = true;
@@ -2200,6 +2211,7 @@ void set_option_defaults(void)
    cpd.defaults[UO_use_indent_func_call_param].b           = true;
    cpd.defaults[UO_use_options_overriding_for_qt_macros].b = true;
    cpd.defaults[UO_indent_token_after_brace].b             = true;
+   cpd.defaults[UO_indent_cpp_lambda_body].b               = false;
    cpd.defaults[UO_warn_level_tabs_found_in_verbatim_string_literals].n = LWARN;
 
    /* copy all the default values to settings array */

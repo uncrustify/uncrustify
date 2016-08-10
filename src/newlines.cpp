@@ -31,6 +31,7 @@
 
 
 static void newlines_double_space_struct_enum_union(chunk_t *open_brace);
+static void newlines_enum_entries(chunk_t *open_brace, argval_t av);
 static bool one_liner_nl_ok(chunk_t *pc);
 static void nl_handle_define(chunk_t *pc);
 
@@ -1879,13 +1880,9 @@ static void newline_func_def(chunk_t *start)
    /* Don't split up a function variable */
    prev = chunk_is_paren_close(prev) ? NULL : chunk_get_prev_ncnl(prev);
 
-   if ((prev != NULL) && (prev->type == CT_DC_MEMBER) && (prev->parent_type == CT_FUNC_DEF))
+   if ((prev != NULL) && (prev->type == CT_DC_MEMBER) && (cpd.settings[UO_nl_func_class_scope].a != AV_IGNORE))
    {
-       chunk_t *prev2 = chunk_get_prev_ncnl(prev);
-       if (cpd.settings[UO_nl_func_class_scope].a != AV_IGNORE)
-       {
-           newline_iarf(prev2, cpd.settings[UO_nl_func_class_scope].a);
-       }
+       newline_iarf(chunk_get_prev_ncnl(prev), cpd.settings[UO_nl_func_class_scope].a);
    }
 
    if ((prev != NULL) && (prev->type != CT_PRIVATE_COLON))
@@ -2438,6 +2435,12 @@ void newlines_cleanup_braces(bool first)
             {
                newline_iarf_pair(pc, next, cpd.settings[UO_nl_brace_brace].a);
             }
+         }
+
+         if ((pc->parent_type == CT_ENUM) &&
+             (cpd.settings[UO_nl_enum_own_lines].a != AV_IGNORE))
+         {
+            newlines_enum_entries(pc, cpd.settings[UO_nl_enum_own_lines].a);
          }
 
          if (cpd.settings[UO_nl_ds_struct_enum_cmt].b &&
@@ -3849,6 +3852,30 @@ void newlines_cleanup_dup(void)
       }
       pc = next;
    }
+}
+
+
+/**
+ * If requested, make sure each entry in an enum is on its own line
+ */
+static void newlines_enum_entries(chunk_t *open_brace, argval_t av)
+{
+   LOG_FUNC_ENTRY();
+   chunk_t *pc = open_brace;
+
+   while (((pc = chunk_get_next_nc(pc)) != NULL) &&
+          (pc->level > open_brace->level))
+   {
+      if ((pc->level != (open_brace->level + 1)) ||
+          (pc->type != CT_COMMA))
+      {
+         continue;
+      }
+
+      newline_iarf(pc, av);
+   }
+
+   newline_iarf(open_brace, av);
 }
 
 

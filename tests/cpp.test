@@ -61,6 +61,10 @@
 30065 class-colon-pos-sol.cfg          cpp/Example.h
 30066 class-on-colon-indent.cfg        cpp/class-init.cpp
 
+30067 nl_func_class_scope.cfg          cpp/nl_func_type_name.cpp
+30068 nl_func_class_scope.cfg          cpp/nl_func_scope_name.cpp
+30069 nl_func_class_scope.cfg          cpp/class-implementation.cpp
+
 30070 nl_func_scope_name.cfg           cpp/nl_func_scope_name.cpp
 
 30075 empty.cfg                        cpp/goto.cpp
@@ -317,6 +321,8 @@
 33084 op_sym_empty.cfg                 cpp/op_sym_empty.cpp
 33085 bug_i_323.cfg                    cpp/bug_i_323.cpp
 33086 empty.cfg                        cpp/bug_i_568.cpp
+33087 bug_i_596.cfg                    cpp/bug_i_596.cpp
+33088 empty.cfg                        cpp/bug_i_197.cpp
 
 33090 empty.cfg                        cpp/gh555.cpp
 33091 no_squeeze_ifdef.cfg             cpp/squeeze_ifdef.cpp
@@ -325,3 +331,5 @@
 33094 sp_angle_paren_empty.cfg         cpp/sp_angle_paren.cpp
 33095 bug_i_322.cfg                    cpp/bug_i_322.cpp
 33096 squeeze_ifdef_top.cfg            cpp/squeeze_ifdef.cpp
+
+33200 first_len_minimum.cfg            cpp/first_len_minimum.cpp
