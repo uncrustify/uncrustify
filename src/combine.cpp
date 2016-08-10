@@ -2631,7 +2631,7 @@ void combine_labels(void)
                else if ((tmp == NULL) ||
                         ((tmp->type != CT_NUMBER) &&
                          (tmp->type != CT_SIZEOF) &&
-                         !(tmp->flags & PCF_IN_STRUCT)) ||
+                         !(tmp->flags & (PCF_IN_STRUCT | PCF_IN_CLASS))) ||
                         (tmp->type == CT_NEWLINE)
                   )
                {
