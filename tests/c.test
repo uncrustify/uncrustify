@@ -143,6 +143,11 @@
 
 00440   bug_489.cfg c/bug_489.c
 
+00451   nl_enum_own_lines-1.cfg c/enum_gallery.c
+00452   nl_enum_own_lines-2.cfg c/enum_gallery.c
+00453   nl_enum_own_lines-3.cfg c/enum_gallery.c
+00454   nl_enum_own_lines-4.cfg c/enum_gallery.c
+
 # boolean and comma positioning
 00501   bool-pos-eol.cfg        c/bool-pos.c
 00502   bool-pos-sol.cfg        c/bool-pos.c

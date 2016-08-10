@@ -535,6 +535,7 @@ static int cmt_parse_lead(const unc_text& line, bool is_last)
  * The decision is based on:
  *  - cmt_indent_multi
  *  - cmt_star_cont
+ *  - cmt_multi_first_len_minimum
  *  - the first line length
  *  - the second line leader length
  *  - the last line length (without leading space/tab)
@@ -645,8 +646,12 @@ static void calculate_comment_body_indent(cmt_reflow& cmt, const unc_text& str)
 
    // LOG_FMT(LSYS, "%s: first=%d last=%d width=%d\n", __func__, first_len, last_len, width);
 
-   /*TODO: make the first_len minimum (4) configurable? */
-   if ((first_len == last_len) && ((first_len > 4) || (first_len == width)))
+   // If the first and last line are the same length and don't contain any alnum
+   // chars and (the first line len > cmt_multi_first_len_minimum or
+   // the second leader is the same as the first line length), then the indent is 0.
+   if ((first_len == last_len) &&
+       ((first_len > cpd.settings[UO_cmt_multi_first_len_minimum].n) ||
+        (first_len == width)))
    {
       return;
    }

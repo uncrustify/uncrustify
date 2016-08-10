@@ -951,7 +951,21 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       /* Change STAR, MINUS, and PLUS in the easy cases */
       if (pc->type == CT_STAR)
       {
-         set_chunk_type(pc, (prev->type == CT_ANGLE_CLOSE) ? CT_PTR_TYPE : CT_DEREF);
+         // issue #596
+         // [0x100062020:IN_SPAREN,IN_FOR,STMT_START,EXPR_START,PUNCTUATOR]
+         // prev->type is CT_COLON ==> CT_DEREF
+         if (prev->type == CT_ANGLE_CLOSE)
+         {
+            set_chunk_type(pc, CT_PTR_TYPE);
+         }
+         else if (prev->type == CT_COLON)
+         {
+            set_chunk_type(pc, CT_DEREF);
+         }
+         else
+         {
+            set_chunk_type(pc, CT_DEREF);
+         }
       }
       if ((cpd.lang_flags & LANG_CPP) && (pc->type == CT_CARET) && (prev->type == CT_ANGLE_CLOSE))
       {
@@ -2988,6 +3002,30 @@ static chunk_t *skip_expression(chunk_t *start)
 
 
 /**
+ * help function for mark_variable_definition...
+ */
+bool go_on(chunk_t *pc, chunk_t *start)
+{
+   if (pc == NULL)
+   {
+      return false;
+   }
+   if (pc->level != start->level)
+   {
+      return false;
+   }
+   if (pc->flags & PCF_IN_FOR)
+   {
+      return((!chunk_is_semicolon(pc)) && (!(pc->type == CT_COLON)));
+   }
+   else
+   {
+      return(!chunk_is_semicolon(pc));
+   }
+} // go_on
+
+
+/**
  * We are on the first word of a variable definition.
  * Mark all the variable names with PCF_VAR_1ST and PCF_VAR_DEF as appropriate.
  * Also mark any '*' encountered as a CT_PTR_TYPE.
@@ -3016,8 +3054,8 @@ static chunk_t *mark_variable_definition(chunk_t *start)
            get_token_name(pc->type));
 
    pc = start;
-   while ((pc != NULL) && !chunk_is_semicolon(pc) &&
-          (pc->level == start->level))
+   // issue #596
+   while (go_on(pc, start))
    {
       if ((pc->type == CT_WORD) || (pc->type == CT_FUNC_CTOR_VAR))
       {
