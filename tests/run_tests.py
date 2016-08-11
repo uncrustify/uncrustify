@@ -220,6 +220,10 @@ def main(argv):
                         type=str, default=all_tests, nargs='*')
     args = parser.parse_args()
 
+    # Save current working directory from which the script is called to be able to resolve relative --exe paths
+    cwd = os.getcwd()
+    os.chdir(os.path.dirname(os.path.realpath(__file__)))
+
     if not args.exe:
         if os.name == "nt":
             bin_path = '../win32/{0}/uncrustify.exe'
@@ -229,10 +233,14 @@ def main(argv):
                 bin_path = bin_path.format('Release')
         else:
             bin_path = '../src/uncrustify'
-        args.exe = bin_path
+        args.exe = os.path.abspath(bin_path)
+    else:
+        if not os.path.isabs(args.exe):
+            args.exe = os.path.normpath(os.path.join(cwd, args.exe))
 
-    if not os.path.isabs(args.exe):
-        args.exe = os.path.abspath(args.exe)
+    if not os.path.exists(args.exe):
+        print(FAIL_COLOR + "FAILED: " + NORMAL + "Can find uncrustify executable")
+        return -1
 
     # do a sanity check on the executable
     cmd = '"%s" > %s' % (args.exe, "usage.txt")
