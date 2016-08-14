@@ -82,6 +82,8 @@ static void split_off_angle_close(chunk_t *pc)
 
 void tokenize_cleanup(void)
 {
+   LOG_FUNC_ENTRY();
+
    chunk_t *pc   = chunk_get_head();
    chunk_t *prev = NULL;
    chunk_t *next;
