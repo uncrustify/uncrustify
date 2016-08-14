@@ -1,8 +1,5 @@
-#! /bin/sh
+#!/bin/sh
 
-cd tests
-
-./run_tests.py $@
+python tests/run_tests.py $@
 
 exit $?
-

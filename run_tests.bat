@@ -1,3 +1,3 @@
 @echo off
-cd tests
-python run_tests.py %*
+python tests\run_tests.py %*
+exit /b %ERRORLEVEL%
