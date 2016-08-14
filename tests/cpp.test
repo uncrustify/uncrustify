@@ -245,6 +245,7 @@
 
 32000 sp_skip_vbrace_tokens.cfg        cpp/sp_skip_vbrace_tokens.cpp
 32001 empty.cfg                        cpp/issue_547_for_each.cpp
+32002 proto-wrap.cfg                   cpp/proto-wrap.cpp
 
 33000 tab-0-11.cfg                     cpp/tab-0.cpp
 33001 tab-1-11.cfg                     cpp/tab-1.cpp
