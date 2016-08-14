@@ -85,10 +85,10 @@ void AlignStack::Add(chunk_t *start, int seqnum)
    chunk_t *prev;
    chunk_t *next;
 
-   int     col_adj = 0; /* Amount the column is shifted for 'dangle' mode */
-   int     tmp_col;
-   int     endcol;
-   int     gap;
+   int col_adj = 0;     /* Amount the column is shifted for 'dangle' mode */
+   int tmp_col;
+   int endcol;
+   int gap;
 
    m_last_added = 0;
 
@@ -337,9 +337,9 @@ void AlignStack::NewLines(int cnt)
  */
 void AlignStack::Flush()
 {
-   int                     last_seqnum = 0;
-   int                     idx;
-   int                     tmp_col;
+   int last_seqnum = 0;
+   int idx;
+   int tmp_col;
    const ChunkStack::Entry *ce = NULL;
    chunk_t                 *pc;
 

@@ -31,7 +31,7 @@ public:
    StarStyle  m_star_style;
    StarStyle  m_amp_style;
    /* do not include the first item if it causes it to be indented */
-   bool       m_skip_first;
+   bool m_skip_first;
 
 
    AlignStack()
@@ -50,7 +50,6 @@ public:
    {
    }
 
-
    AlignStack(const AlignStack& ref)
       : m_aligned(ref.m_aligned)
       , m_skipped(ref.m_skipped)
@@ -68,7 +67,6 @@ public:
       , m_last_added(ref.m_last_added)
    {
    }
-
 
    ~AlignStack()
    {

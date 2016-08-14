@@ -59,4 +59,5 @@ bool unc_homedir(std::string& home)
    return(false);
 }
 
+
 #endif /* if defined(_WIN32) && !defined(__CYGWIN__) */

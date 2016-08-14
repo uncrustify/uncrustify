@@ -22,19 +22,18 @@ public:
       {
       }
 
-
       Entry(const Entry& ref)
          : m_seqnum(ref.m_seqnum)
          , m_pc(ref.m_pc)
       {
       }
 
-
       Entry(int sn, chunk_t *pc)
          : m_seqnum(sn)
          , m_pc(pc)
       {
       }
+
       int     m_seqnum;
       chunk_t *m_pc;
    };
@@ -49,12 +48,10 @@ public:
    {
    }
 
-
    ChunkStack(const ChunkStack& cs)
    {
       Set(cs);
    }
-
 
    virtual ~ChunkStack()
    {
@@ -68,12 +65,10 @@ public:
       Push_Back(pc, ++m_seqnum);
    }
 
-
    bool Empty() const
    {
       return(m_cse.empty());
    }
-
 
    int Len() const
    {

@@ -17,7 +17,7 @@
  */
 struct CharTable
 {
-   static int chars[128];
+   static int         chars[128];
 
    enum
    {
@@ -26,7 +26,7 @@ struct CharTable
    };
 
 
-   static inline int Get(int ch)
+   static inline int  Get(int ch)
    {
       if (ch < 0)
       {
@@ -46,12 +46,10 @@ struct CharTable
       return(KW1 | KW2);
    }
 
-
    static inline bool IsKw1(int ch)
    {
       return((Get(ch) & KW1) != 0);
    }
-
 
    static inline bool IsKw2(int ch)
    {

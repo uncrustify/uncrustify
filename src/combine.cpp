@@ -538,7 +538,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
 
       if ((pc->type == CT_WHEN) && (pc->next->type != CT_SPAREN_OPEN))
       {
-          set_chunk_type(pc, CT_WORD);
+         set_chunk_type(pc, CT_WORD);
       }
    }
 
@@ -1062,7 +1062,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
    }
 
    /* Change CT_STAR to CT_PTR_TYPE or CT_ARITH or CT_DEREF */
-   if (pc->type == CT_STAR || ((cpd.lang_flags & LANG_CPP) && (pc->type == CT_CARET)))
+   if ((pc->type == CT_STAR) || ((cpd.lang_flags & LANG_CPP) && (pc->type == CT_CARET)))
    {
       if (chunk_is_paren_close(next) || (next->type == CT_COMMA))
       {
@@ -2286,7 +2286,7 @@ static void fix_enum_struct_union(chunk_t *pc)
             flags &= ~PCF_VAR_1ST;       /* clear the first flag for the next items */
          }
 
-         if (next->type == CT_STAR || ((cpd.lang_flags & LANG_CPP) && (next->type == CT_CARET)))
+         if ((next->type == CT_STAR) || ((cpd.lang_flags & LANG_CPP) && (next->type == CT_CARET)))
          {
             set_chunk_type(next, CT_PTR_TYPE);
          }
@@ -2463,10 +2463,11 @@ static void fix_typedef(chunk_t *start)
 } // fix_typedef
 
 
-static bool cs_top_is_question(ChunkStack &cs, int level)
+static bool cs_top_is_question(ChunkStack& cs, int level)
 {
    chunk_t *pc = cs.Empty() ? NULL : cs.Top()->m_pc;
-   return (pc && (pc->type == CT_QUESTION) && (pc->level == level));
+
+   return(pc && (pc->type == CT_QUESTION) && (pc->level == level));
 }
 
 
@@ -2513,11 +2514,11 @@ void combine_labels(void)
          hit_class = false;
       }
 
-      if (prev->type == CT_SQUARE_OPEN && prev->parent_type == CT_OC_MSG)
+      if ((prev->type == CT_SQUARE_OPEN) && (prev->parent_type == CT_OC_MSG))
       {
          cs.Push_Back(prev);
       }
-      else if (next->type == CT_SQUARE_CLOSE && next->parent_type == CT_OC_MSG)
+      else if ((next->type == CT_SQUARE_CLOSE) && (next->parent_type == CT_OC_MSG))
       {
          /* pop until we hit '[' */
          while (!cs.Empty())
@@ -2633,10 +2634,10 @@ void combine_labels(void)
                          (tmp->type != CT_SIZEOF) &&
                          !(tmp->flags & (PCF_IN_STRUCT | PCF_IN_CLASS))) ||
                         (tmp->type == CT_NEWLINE)
-                  )
+                        )
                {
                   /* the CT_SIZEOF isn't great - test 31720 happens to use a sizeof expr,
-                     but this really should be able to handle any constant expr */
+                   * but this really should be able to handle any constant expr */
                   set_chunk_type(cur, CT_LABEL);
                   set_chunk_type(next, CT_LABEL_COLON);
                }
@@ -5609,7 +5610,7 @@ static void handle_cs_array_type(chunk_t *pc)
       while (pc != prev)
       {
          pc->parent_type = CT_TYPE;
-         pc              = chunk_get_prev(pc);
+         pc = chunk_get_prev(pc);
       }
       prev->parent_type = CT_TYPE;
    }
@@ -5661,9 +5662,9 @@ void remove_extra_returns()
 static void handle_wrap(chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
-   chunk_t  *opp  = chunk_get_next(pc);
-   chunk_t  *name = chunk_get_next(opp);
-   chunk_t  *clp  = chunk_get_next(name);
+   chunk_t *opp  = chunk_get_next(pc);
+   chunk_t *name = chunk_get_next(opp);
+   chunk_t *clp  = chunk_get_next(name);
 
    argval_t pav = (pc->type == CT_FUNC_WRAP) ?
                   cpd.settings[UO_sp_func_call_paren].a :

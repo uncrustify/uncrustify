@@ -384,7 +384,7 @@ void output_text(FILE *pfile)
          // keep trailing spaces if they are still present in a chunk;
          // note that tokenize() already strips spaces in comments, so if they made it up to here, they are to stay
          cpd.output_trailspace = true;
-         pc                    = output_comment_cpp(pc);
+         pc = output_comment_cpp(pc);
          cpd.output_trailspace = tmp;
       }
       else if (pc->type == CT_COMMENT)
@@ -727,6 +727,7 @@ static chunk_t *get_prev_oc_class(chunk_t *pc)
    }
    return(NULL);
 }
+
 
 static int next_up(const unc_text& text, int idx, unc_text& tag)
 {
@@ -1273,8 +1274,8 @@ static void output_comment_multi(chunk_t *pc)
          int  nxt_len            = 0;
          int  next_nonempty_line = -1;
          int  prev_nonempty_line = -1;
-         int  nwidx              = line.size();
-         bool star_is_bullet     = false;
+         int  nwidx          = line.size();
+         bool star_is_bullet = false;
 
          /* strip trailing whitespace from the line collected so far */
          while (nwidx > 0)
@@ -1503,7 +1504,9 @@ static bool kw_fcn_filename(chunk_t *cmt, unc_text& out_txt)
 static bool kw_fcn_class(chunk_t *cmt, unc_text& out_txt)
 {
    chunk_t *tmp = NULL;
-   if ((cpd.lang_flags & LANG_CPP) && (cpd.lang_flags & LANG_OC)) {
+
+   if ((cpd.lang_flags & LANG_CPP) && (cpd.lang_flags & LANG_OC))
+   {
       chunk_t *fcn = get_next_function(cmt);
       if (fcn->type == CT_OC_MSG_DECL)
       {
@@ -1535,7 +1538,8 @@ static bool kw_fcn_class(chunk_t *cmt, unc_text& out_txt)
                break;
             }
             tmp = chunk_get_next(tmp);
-            if (tmp) {
+            if (tmp)
+            {
                out_txt.append("::");
                out_txt.append(tmp->str);
             }
@@ -1588,7 +1592,9 @@ static bool kw_fcn_message(chunk_t *cmt, unc_text& out_txt)
 static bool kw_fcn_category(chunk_t *cmt, unc_text& out_txt)
 {
    chunk_t *category = get_prev_category(cmt);
-   if (category) {
+
+   if (category)
+   {
       out_txt.append('(');
       out_txt.append(category->str);
       out_txt.append(')');
@@ -1600,7 +1606,9 @@ static bool kw_fcn_category(chunk_t *cmt, unc_text& out_txt)
 static bool kw_fcn_scope(chunk_t *cmt, unc_text& out_txt)
 {
    chunk_t *scope = get_next_scope(cmt);
-   if (scope) {
+
+   if (scope)
+   {
       out_txt.append(scope->str);
       return(true);
    }
@@ -1618,7 +1626,8 @@ static bool kw_fcn_function(chunk_t *cmt, unc_text& out_txt)
       {
          out_txt.append("operator ");
       }
-      if (fcn->prev && fcn->prev->type == CT_DESTRUCTOR) {
+      if (fcn->prev && (fcn->prev->type == CT_DESTRUCTOR))
+      {
          out_txt.append('~');
       }
       out_txt.append(fcn->str);

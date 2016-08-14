@@ -215,13 +215,13 @@ static_inline
 bool chunk_is_addr(chunk_t *pc)
 {
    if ((pc != NULL) &&
-       ((pc->type == CT_BYREF)
-        || ((pc->len() == 1) && (pc->str[0] == '&') && (pc->type != CT_OPERATOR_VAL))))
+       ((pc->type == CT_BYREF) ||
+        ((pc->len() == 1) && (pc->str[0] == '&') && (pc->type != CT_OPERATOR_VAL))))
    {
       chunk_t *prev = chunk_get_prev(pc);
 
       if ((pc->flags & PCF_IN_TEMPLATE) &&
-           ((prev != NULL) && ((prev->type == CT_COMMA) || (prev->type == CT_ANGLE_OPEN))))
+          ((prev != NULL) && ((prev->type == CT_COMMA) || (prev->type == CT_ANGLE_OPEN))))
       {
          return(false);
       }
@@ -357,31 +357,36 @@ bool chunk_is_forin(chunk_t *pc)
 void set_chunk_type_real(chunk_t *pc, c_token_t tt);
 void set_chunk_parent_real(chunk_t *pc, c_token_t tt);
 
-#define set_chunk_type(pc, tt)      do { \
-      LOG_FUNC_CALL();                   \
-      set_chunk_type_real((pc), (tt));   \
-} while (false)
+#define set_chunk_type(pc, tt)         \
+   do {                                \
+      LOG_FUNC_CALL();                 \
+      set_chunk_type_real((pc), (tt)); \
+   } while (false)
 
-#define set_chunk_parent(pc, tt)    do { \
+#define set_chunk_parent(pc, tt)         \
+   do {                                  \
       LOG_FUNC_CALL();                   \
       set_chunk_parent_real((pc), (tt)); \
-} while (false)
+   } while (false)
 
 void chunk_flags_set_real(chunk_t *pc, UINT64 clr_bits, UINT64 set_bits);
 
-#define chunk_flags_upd(pc, cc, ss)    do {   \
+#define chunk_flags_upd(pc, cc, ss)           \
+   do {                                       \
       LOG_FUNC_CALL();                        \
       chunk_flags_set_real((pc), (cc), (ss)); \
-} while (false)
+   } while (false)
 
-#define chunk_flags_set(pc, ss)        do { \
-      LOG_FUNC_CALL();                      \
-      chunk_flags_set_real((pc), 0, (ss));  \
-} while (false)
+#define chunk_flags_set(pc, ss)            \
+   do {                                    \
+      LOG_FUNC_CALL();                     \
+      chunk_flags_set_real((pc), 0, (ss)); \
+   } while (false)
 
-#define chunk_flags_clr(pc, cc)        do { \
-      LOG_FUNC_CALL();                      \
-      chunk_flags_set_real((pc), (cc), 0);  \
-} while (false)
+#define chunk_flags_clr(pc, cc)            \
+   do {                                    \
+      LOG_FUNC_CALL();                     \
+      chunk_flags_set_real((pc), (cc), 0); \
+   } while (false)
 
 #endif /* CHUNK_LIST_H_INCLUDED */

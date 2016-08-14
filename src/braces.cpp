@@ -30,8 +30,8 @@ static bool should_add_braces(chunk_t *vbopen);
 void do_braces(void)
 {
    LOG_FUNC_ENTRY();
-   if (cpd.settings[UO_mod_full_brace_if_chain].b
-       || cpd.settings[UO_mod_full_brace_if_chain_only].b )
+   if (cpd.settings[UO_mod_full_brace_if_chain].b ||
+       cpd.settings[UO_mod_full_brace_if_chain_only].b)
    {
       mod_full_brace_if_chain();
    }

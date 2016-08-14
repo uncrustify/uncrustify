@@ -76,4 +76,5 @@ static inline int unc_isupper(int ch)
    return(isalpha(unc_fix_ctype(ch)) && (unc_toupper(unc_fix_ctype(ch)) == ch));
 }
 
+
 #endif /* UNC_CTYPE_H_INCLUDED */

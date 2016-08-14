@@ -56,7 +56,7 @@ static int preproc_start(struct parse_frame *frm, chunk_t *pc)
          frm->brace_level = 1;
 
          /*TODO: not sure about the next 3 lines */
-         frm->pse_tos                 = 1;
+         frm->pse_tos = 1;
          frm->pse[frm->pse_tos].type  = CT_PP_DEFINE;
          frm->pse[frm->pse_tos].stage = BS_NONE;
       }
@@ -842,7 +842,7 @@ static bool handle_complex_close(struct parse_frame *frm, chunk_t *pc)
    {
       if (pc->next->type == CT_WHEN)
       {
-         frm->pse[frm->pse_tos].type = pc->type;
+         frm->pse[frm->pse_tos].type  = pc->type;
          frm->pse[frm->pse_tos].stage = BS_CATCH_WHEN;
          return true;
       }
@@ -993,7 +993,7 @@ static chunk_t *insert_vbrace(chunk_t *pc, bool after,
       chunk.orig_line = ref->orig_line;
       chunk.column    = ref->column + ref->len() + 1;
       chunk.type      = CT_VBRACE_OPEN;
-      rv              = chunk_add_after(&chunk, ref);
+      rv = chunk_add_after(&chunk, ref);
    }
    return(rv);
 } // insert_vbrace

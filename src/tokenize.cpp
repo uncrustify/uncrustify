@@ -40,53 +40,45 @@ struct tok_ctx
    {
    }
 
-
    /* save before trying to parse something that may fail */
-   void save()
+   void              save()
    {
       save(s);
    }
 
-
-   void save(tok_info& info)
+   void              save(tok_info& info)
    {
       info = c;
    }
 
-
    /* restore previous saved state */
-   void restore()
+   void              restore()
    {
       restore(s);
    }
 
-
-   void restore(const tok_info& info)
+   void              restore(const tok_info& info)
    {
       c = info;
    }
 
-
-   bool more()
+   bool              more()
    {
       return(c.idx < (int)data.size());
    }
 
-
-   int peek()
+   int               peek()
    {
       return(more() ? data[c.idx] : -1);
    }
 
-
-   int peek(int idx)
+   int               peek(int idx)
    {
       idx += c.idx;
       return((idx < (int)data.size()) ? data[idx] : -1);
    }
 
-
-   int get()
+   int               get()
    {
       if (more())
       {
@@ -120,8 +112,7 @@ struct tok_ctx
       return(-1);
    }
 
-
-   bool expect(int ch)
+   bool              expect(int ch)
    {
       if (peek() == ch)
       {
@@ -425,7 +416,7 @@ static bool parse_comment(tok_ctx& ctx, chunk_t& pc)
 
             tok_info ss;
             ctx.save(ss);
-            int      oldsize = pc.str.size();
+            int oldsize = pc.str.size();
 
             /* If there is another C comment right after this one, combine them */
             while ((ctx.peek() == ' ') || (ctx.peek() == '\t'))
@@ -682,7 +673,7 @@ static bool parse_number(tok_ctx& ctx, chunk_t& pc)
          pc_temp.str.append(ch);
       }
       pc_length = pc_temp.len();
-      ch = pc_temp.str[pc_length - 1];
+      ch        = pc_temp.str[pc_length - 1];
       ctx.restore();
       LOG_FMT(LGUY98, "%s:(%d)pc_temp:%s\n", __func__, __LINE__, pc_temp.text());
       if (ch == 'h')
@@ -692,9 +683,9 @@ static bool parse_number(tok_ctx& ctx, chunk_t& pc)
          did_hex = true;
          do
          {
-            pc.str.append(ctx.get());  /* store the rest */
+            pc.str.append(ctx.get()); /* store the rest */
          } while (is_hex_(ctx.peek()));
-         pc.str.append(ctx.get());  /* store the h */
+         pc.str.append(ctx.get());    /* store the h */
          LOG_FMT(LGUY98, "%s:(%d)pc:%s\n", __func__, __LINE__, pc.text());
       }
       else
@@ -1474,6 +1465,7 @@ static bool parse_next(tok_ctx& ctx, chunk_t& pc)
 {
    const chunk_tag_t *punc;
    int               ch1;
+
    //chunk_t           pc_temp;
 
    if (!ctx.more())

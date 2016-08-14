@@ -34,17 +34,17 @@ using namespace std;
 enum brstage_e
 {
    BS_NONE,
-   BS_PAREN1,    /* if/for/switch/while/synchronized */
-   BS_OP_PAREN1, /* optional paren: catch () { */
-   BS_WOD_PAREN, /* while of do parens */
-   BS_WOD_SEMI,  /* semicolon after while of do */
-   BS_BRACE_DO,  /* do */
-   BS_BRACE2,    /* if/else/for/switch/while */
-   BS_ELSE,      /* expecting 'else' after 'if' */
-   BS_ELSEIF,    /* expecting 'if' after 'else' */
-   BS_WHILE,     /* expecting 'while' after 'do' */
-   BS_CATCH,     /* expecting 'catch' or 'finally' after 'try' */
-   BS_CATCH_WHEN,  /* optional 'when' after 'catch' */
+   BS_PAREN1,     /* if/for/switch/while/synchronized */
+   BS_OP_PAREN1,  /* optional paren: catch () { */
+   BS_WOD_PAREN,  /* while of do parens */
+   BS_WOD_SEMI,   /* semicolon after while of do */
+   BS_BRACE_DO,   /* do */
+   BS_BRACE2,     /* if/else/for/switch/while */
+   BS_ELSE,       /* expecting 'else' after 'if' */
+   BS_ELSEIF,     /* expecting 'if' after 'else' */
+   BS_WHILE,      /* expecting 'while' after 'do' */
+   BS_CATCH,      /* expecting 'catch' or 'finally' after 'try' */
+   BS_CATCH_WHEN, /* optional 'when' after 'catch' */
 };
 
 enum CharEncoding
@@ -238,8 +238,7 @@ struct chunk_t
       reset();
    }
 
-
-   void reset()
+   void         reset()
    {
       memset(&align, 0, sizeof(align));
       memset(&indent, 0, sizeof(indent));
@@ -262,14 +261,12 @@ struct chunk_t
       str.clear();
    }
 
-
-   int len()
+   int          len()
    {
       return(str.size());
    }
 
-
-   const char *text()
+   const char   *text()
    {
       return(str.c_str());
    }
@@ -309,8 +306,8 @@ enum
    LANG_PAWN = 0x0080,
    LANG_ECMA = 0x0100,
 
-   LANG_ALLC = 0x017f,     /*<< LANG_C    | LANG_CPP | LANG_D    | LANG_CS   | 
-                                LANG_JAVA | LANG_OC  | LANG_VALA | LANG_ECMA */
+   LANG_ALLC = 0x017f,     /*<< LANG_C    | LANG_CPP | LANG_D    | LANG_CS   |
+                            *   LANG_JAVA | LANG_OC  | LANG_VALA | LANG_ECMA */
    LANG_ALL  = 0x0fff,
 
    FLAG_DIG  = 0x4000,     /*<< digraph/trigraph */

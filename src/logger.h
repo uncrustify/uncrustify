@@ -100,7 +100,7 @@ void log_fmt(log_sev_t sev, const char *fmt, ...) __attribute__((format(printf, 
 #ifdef NO_MACRO_VARARG
 #define LOG_FMT    log_fmt
 #else
-#define LOG_FMT(sev, args...)                           \
+#define LOG_FMT(sev, args ...)                          \
    do { if (log_sev_on(sev)) { log_fmt(sev, ## args); } \
    } while (0)
 #endif
