@@ -665,6 +665,7 @@ enum uncrustify_options
    UO_pos_compare,                    // position of trailing/leading <=/>, etc
    UO_pos_conditional,                // position of trailing/leading (b ? t : f)
    UO_pos_comma,                      // position of comma in functions
+   UO_pos_enum_comma,                 // position of comma in enum entries
    UO_pos_class_comma,                // position of comma in the base class list if there are more than one line,
                                       //   (tied to UO_nl_class_init_args).
    UO_pos_constr_comma,               // position of comma in constructor init list
