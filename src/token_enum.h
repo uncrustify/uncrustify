@@ -135,6 +135,7 @@ typedef enum
    CT_ATTRIBUTE,
    CT_CATCH,
    CT_WHEN,
+   CT_WHERE,            /* C# where clause */
    CT_CLASS,
    CT_DELETE,
    CT_EXPORT,
