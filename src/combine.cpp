@@ -1389,6 +1389,7 @@ void fix_symbols(void)
           (pc->flags & PCF_STMT_START) &&
           ((pc->type == CT_QUALIFIER) ||
            (pc->type == CT_TYPE) ||
+           (pc->type == CT_TYPENAME) ||
            (pc->type == CT_WORD)) &&
           (pc->parent_type != CT_ENUM) &&
           ((pc->flags & PCF_IN_ENUM) == 0))
@@ -2899,6 +2900,7 @@ static chunk_t *fix_var_def(chunk_t *start)
           ((pc->type == CT_TYPE) ||
            (pc->type == CT_WORD) ||
            (pc->type == CT_QUALIFIER) ||
+           (pc->type == CT_TYPENAME) ||
            (pc->type == CT_DC_MEMBER) ||
            (pc->type == CT_MEMBER) ||
            chunk_is_ptr_operator(pc)))
