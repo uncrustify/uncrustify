@@ -16,11 +16,7 @@ protected:
   typename TImage::PixelType m_Label;
   int                        m_Axis;
   bool                       m_HeuristicAlignment;
-  
-  aLongTypeNameButNotSpecial m_Label;
-  int                        m_Axis;
-  bool                       m_HeuristicAlignment;
- 
+
 private:
   MorphologicalContourInterpolator( const Self& ) ITK_DELETE_FUNCTION;
   void
