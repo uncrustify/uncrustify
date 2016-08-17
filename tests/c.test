@@ -24,7 +24,7 @@
 # brace styles
 00010  ben.cfg                 c/braces.c
 00011  brace-allman.cfg        c/braces.c
-00012  brace-banner.cfg        c/braces.c
+00012! brace-banner.cfg        c/braces.c
 00013  brace-gnu.cfg           c/braces.c
 00014  brace-kr.cfg            c/braces.c
 00015  brace-ws.cfg            c/braces.c
@@ -143,6 +143,11 @@
 00432   indent_paren_close-2.cfg c/paren-indent.c
 
 00440   bug_489.cfg c/bug_489.c
+
+00451   nl_enum_own_lines-1.cfg c/enum_gallery.c
+00452   nl_enum_own_lines-2.cfg c/enum_gallery.c
+00453   nl_enum_own_lines-3.cfg c/enum_gallery.c
+00454   nl_enum_own_lines-4.cfg c/enum_gallery.c
 
 # boolean and comma positioning
 00501   bool-pos-eol.cfg        c/bool-pos.c
@@ -279,6 +284,7 @@
 02432 align_right_cmt_gap-2.cfg c/cmt_right_align.c
 
 02440 empty.cfg                 c/string_utf8.c
+02441 empty.cfg                 c/utf8-identifiers.c
 
 02451 return-1.cfg              c/nl_return_expr.c
 02452 return-2.cfg              c/nl_return_expr.c
@@ -296,7 +302,15 @@
 
 02504 align_keep_extra.cfg      c/align_keep_extra.c
 
+02510 ben.cfg                   c/asm.c
+
 07630 indent-vbrace.cfg         c/indent-vbrace.c
+
+08399 ben.cfg                   c/gh399.c
 
 09594 ben.cfg                   c/sf594.c
 09588 ben.cfg                   c/sf588.c
+
+10001 sp_after_sparen.cfg       c/sp_after_sparen.c
+
+10002 bug_671.cfg               c/bug_671.c

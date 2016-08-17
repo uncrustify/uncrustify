@@ -39,6 +39,7 @@ public:
    void vote(chunk_t *first, chunk_t *second);
 };
 
+
 void sp_votes::vote(chunk_t *first, chunk_t *second)
 {
    if ((first == NULL) || chunk_is_newline(first) ||
@@ -90,6 +91,7 @@ sp_votes::~sp_votes()
 
 
 #define SP_VOTE_VAR(x)    sp_votes vote_ ## x(cpd.settings[UO_ ## x].a)
+
 
 /**
  * Detect spacing options
@@ -388,7 +390,7 @@ static void detect_space_options()
       prev = pc;
       pc   = next;
    }
-}
+} // detect_space_options
 
 
 // unc_add_option("sp_after_operator", UO_sp_after_operator, AT_IARF,

@@ -63,6 +63,7 @@ static const chunk_tag_t symbols2[] =
    { "->", CT_MEMBER,       LANG_C | LANG_CPP | LANG_CS | LANG_OC | LANG_D | LANG_VALA },
    { ".*", CT_MEMBER,       LANG_C | LANG_CPP | LANG_D                                 },
    { "..", CT_RANGE,        LANG_D                                                     },
+   { "?.", CT_NULLCOND,     LANG_CS                                                    }, // null conditional operator
    { "/=", CT_ASSIGN,       LANG_ALL                                                   },
    { "::", CT_DC_MEMBER,    LANG_C | LANG_CPP | LANG_CS | LANG_D | LANG_VALA           },
    { "<<", CT_ARITH,        LANG_ALL                                                   },
@@ -120,12 +121,13 @@ static const chunk_tag_t symbols1[] =
 
 #include "punctuators.h"
 
+
 const chunk_tag_t *find_punctuator(const char *str, int lang_flags)
 {
    const chunk_tag_t    *p_match = NULL;
    const lookup_entry_t *p_tab   = punc_table;
 
-   int ch_idx = 0;
+   int                  ch_idx = 0;
 
    /*REVISIT: it might be faster to do a bsearch() on the first char.
     *         the rest of the group have at most 5 entries, so it wouldn't help
@@ -137,7 +139,7 @@ const chunk_tag_t *find_punctuator(const char *str, int lang_flags)
       {
          /* Match */
          if ((p_tab->tag != NULL) &&
-             ((p_tab->tag->lang_flags & lang_flags) != 0) &&
+             (p_tab->tag->lang_flags & lang_flags) &&
              (((p_tab->tag->lang_flags & FLAG_DIG) == 0) ||
               cpd.settings[UO_enable_digraphs].b))
          {

@@ -5,11 +5,12 @@
  * @author  Ben Gardner
  * @license GPL v2+
  */
-#if defined(_WIN32) && !defined(__CYGWIN__)
+#if defined (_WIN32) && !defined (__CYGWIN__)
 
 #include "windows_compat.h"
 #include <string>
 #include <cstdio>
+
 
 bool unc_getenv(const char *name, std::string& str)
 {
@@ -20,7 +21,7 @@ bool unc_getenv(const char *name, std::string& str)
    {
       if (GetLastError() == ERROR_ENVVAR_NOT_FOUND)
       {
-         return false;
+         return(false);
       }
    }
 
@@ -35,7 +36,7 @@ bool unc_getenv(const char *name, std::string& str)
    printf("%s: name=%s len=%d value=%s\n", __func__, name, (int)len, str.c_str());
    free(buf);
 
-   return true;
+   return(true);
 }
 
 
@@ -43,19 +44,19 @@ bool unc_homedir(std::string& home)
 {
    if (unc_getenv("HOME", home))
    {
-      return true;
+      return(true);
    }
    if (unc_getenv("USERPROFILE", home))
    {
-      return true;
+      return(true);
    }
    std::string hd, hp;
    if (unc_getenv("HOMEDRIVE", hd) && unc_getenv("HOMEPATH", hp))
    {
       home = hd + hp;
-      return true;
+      return(true);
    }
-   return false;
+   return(false);
 }
 
 #endif /* if defined(_WIN32) && !defined(__CYGWIN__) */

@@ -61,7 +61,7 @@ LHASH_OF(CONF_VALUE) *CONF_load(LHASH_OF(CONF_VALUE) *conf, const char *file,
 
 #ifdef OPENSSL_SYS_VMS
 	in = BIO_new_file(file, "r");
-#else /* ifdef OPENSSL_SYS_VMS */
+#else  /* ifdef OPENSSL_SYS_VMS */
 	in = BIO_new_file(file, "rb");
 #endif /* ifdef OPENSSL_SYS_VMS */
 	if (in == NULL)

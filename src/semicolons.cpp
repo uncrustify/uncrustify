@@ -57,7 +57,7 @@ void remove_extra_semicolons(void)
       {
          LOG_FMT(LSCANSEMI, "Semi on %d:%d parent=%s, prev = '%s' [%s/%s]\n",
                  pc->orig_line, pc->orig_col, get_token_name(pc->parent_type),
-                 prev->str.c_str(),
+                 prev->text(),
                  get_token_name(prev->type), get_token_name(prev->parent_type));
 
          if (pc->parent_type == CT_TYPEDEF)
@@ -114,7 +114,7 @@ void remove_extra_semicolons(void)
 
       pc = next;
    }
-}
+} // remove_extra_semicolons
 
 
 /**

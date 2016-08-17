@@ -1,3 +1,945 @@
+commit 6aeb46f1cd34104e6c9134f079469b3385274f4c
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Tue Feb 2 20:16:57 2016 -0600
+
+    Rework make_win32.sh to build outside of the source tree.
+
+commit b08b81937aa0ff9438d6479ddb83419356877b30
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Tue Feb 2 20:16:31 2016 -0600
+
+    Update version, config files, run update-defaults.sh, etc
+
+commit 34a104aa67cb26c2c3273b769412a403dd6674db
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Mon Feb 1 20:54:41 2016 -0600
+
+    Update release steps
+
+commit a8f4771b2e4ad48d91f14d2c2ceba228c5f93c9d
+Author: bengardner <gardner.ben@gmail.com>
+Date:   Sun Jan 31 19:23:17 2016 -0600
+
+    PAWN: Cannot modify the #define PATTERN at all
+
+    So keep it as a single chunk. Go with CT_MACRO for the type for now.
+
+commit 41d1e76ccf3ce9d5c968422f2ffe11b1782adc4c
+Author: bengardner <gardner.ben@gmail.com>
+Date:   Sun Jan 31 18:24:41 2016 -0600
+
+    Correctly parse PAWN #define args
+
+    Parses the following with %1=>WORD
+       #define xx(%1, %2) foo(%1, %2)
+
+commit 10478309dca1c5c5928a9851a4b5916a007969b0
+Author: bengardner <gardner.ben@gmail.com>
+Date:   Sun Jan 31 18:12:58 2016 -0600
+
+    Revert "Correctly parse VALA #define args"
+
+    This reverts commit 602b49c1f98eb51ec9589aa9edf1ac6c1ac1e4c9.
+
+commit 602b49c1f98eb51ec9589aa9edf1ac6c1ac1e4c9
+Author: bengardner <gardner.ben@gmail.com>
+Date:   Sun Jan 31 13:38:48 2016 -0600
+
+    Correctly parse VALA #define args
+
+    Parses the following with %1=WORD
+    #define xx(%1, %2) foo(%1, %2)
+
+commit 0ce3c3d1107f3fee593c374b87d31e31be74db9e
+Merge: 244c9de 4c69239
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sun Jan 31 12:53:26 2016 -0600
+
+    Merge pull request #427 from benwaffle/master
+
+    Add some missing vala keywords
+
+commit 4c692395e54183409f31f86e12b51859a6bbc645
+Author: Ben Iofel <iofelben@gmail.com>
+Date:   Fri Jan 29 18:13:42 2016 -0500
+
+    Add some missing vala keywords
+
+commit 244c9de670ccfa47f63dffa7ce43643000d6d352
+Merge: 62a2ad9 97fab82
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Thu Jan 28 17:12:06 2016 -0600
+
+    Merge pull request #423 from Lykurg/assume2
+
+    Automatic language detection for stdin (--assume)
+
+commit 97fab8240389a9bc829588ed24c2b295c6ec3bec
+Author: Lorenz Haas <git@lorenz-haas.de>
+Date:   Mon Jan 18 21:00:41 2016 +0100
+
+    Automatic language detection for stdin (--assume)
+
+    While -f uses the simple automatic language detection with stdin
+    one is out of luck. With the new argument --assume one can specify
+    the filename Uncrustify should use to perform the automatic
+    language detection even for content pushed to stdin.
+
+commit 62a2ad9977f189bb4f6efb44ebfe07deffdd1e42
+Merge: 9a46c56 672fd1c
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Wed Dec 9 17:32:30 2015 -0600
+
+    Merge pull request #413 from jlee975/patch-1
+
+    Address issue #373.
+    Checks the chunk prior to the '::' and forces a space if it is a known keyword.
+
+commit 672fd1c0143c535be37bf2bca4ea276a9ba352d3
+Author: jlee975 <jonathan.lee.975@gmail.com>
+Date:   Wed Dec 9 11:54:03 2015 -0600
+
+    Address issue #373
+
+    sp_before_dc should not apply to global scope operator.
+
+commit 9a46c565e315d3eae16085e759febc9c5e809591
+Merge: 15ee014 eef47c5
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Tue Nov 24 21:33:10 2015 -0600
+
+    Merge pull request #372 from ravethetadpole/while_one_liners
+
+    add nl_while_leave_one_liners
+
+commit 15ee014c5261a26d46d3479f0f7330db719f183a
+Author: Lorenz Haas <lykurg@gmail.com>
+Date:   Fri Apr 24 14:01:11 2015 +0200
+
+    Doxygen comments in CPP style like '//:', '//=', '//~' where not handled
+    properly when spaces were to be added with option sp_cmt_cpp_start.
+
+    The new option sp_cmt_cpp_qttr treats those comment leadings as a unity,
+    if set to TRUE.
+
+    Before sp_cmt_cpp_start=add converted '//:foo' to '// :foo'. Now it will
+    correctly be converted to '//: foo'.
+
+commit efe1adb92ec09073778247412bba38a8f5dd4e64
+Merge: 97ac4c9 7d0f864
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Tue Nov 24 21:23:28 2015 -0600
+
+    Merge branch 'npnth-master'
+
+commit 7d0f864a52c0f58703ea1bc07cad592d3db10697
+Merge: 97ac4c9 55581c4
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Tue Nov 24 21:22:26 2015 -0600
+
+    Merge branch 'master' of https://github.com/npnth/uncrustify into npnth-master
+
+commit 97ac4c96b24ab428a4325e05347cabe19cfdab93
+Merge: 4d68949 c2c2ac0
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Tue Oct 27 16:26:25 2015 -0500
+
+    Merge pull request #392 from icyflame/patch-1
+
+    Add file links to the readme
+
+commit 4d6894996b26fd0ba26275b59ece063a5082bdb2
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Wed Oct 21 10:16:58 2015 -0500
+
+    Expand digraphs test a bit.
+
+commit 485eb91664716ffac58a49394e628e5e5db13af5
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Wed Oct 21 10:15:51 2015 -0500
+
+    Add option: enable_digraphs and disable digraphs by default
+
+commit c2c2ac07fc60efd80631c325e113963c1a605815
+Author: Siddharth Kannan <kannan.siddharth12@gmail.com>
+Date:   Mon Aug 10 17:42:20 2015 +0530
+
+    Add file links to the readme
+
+    - Instead of just referencing a file, add a link to it.
+    - This makes the configuration file location much more prominent.
+
+commit fc5228ecd9f579f366919e5d13f26ae5149f80f1
+Merge: b3f3e21 abf3bef
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Thu Jul 30 15:28:13 2015 -0500
+
+    Merge pull request #385 from tpltnt/md-readme
+
+    Readme markdown
+
+commit b3f3e216af06574e465fe315ef19927caff21ebc
+Merge: b6593c1 420c240
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Thu Jul 30 12:35:59 2015 -0500
+
+    Merge pull request #387 from dirk-thomas/fix_windows_warnings
+
+    fix warnings on Windows
+
+commit 420c240949aacf87d1924e488f65e80e8923c171
+Author: Dirk Thomas <dthomas@osrfoundation.org>
+Date:   Wed Jul 29 18:15:41 2015 -0700
+
+    fix warnings on Windows
+
+commit abf3bef2940b8e5450cc4fde46d3ddc6c92148a8
+Author: tpltnt <tpltnt.github@dropcut.net>
+Date:   Tue Jul 21 21:37:02 2015 +0200
+
+    added markdown to README, closes #383
+
+    * marked shell commands
+    * separated list of steps
+
+commit 55581c4e060763aa5984194aa3f948baa870ba99
+Author: Gilles <npnth2@gmail.com>
+Date:   Thu Jul 9 21:35:10 2015 -0400
+
+    Handle Java's `synchronized(foo){ ... }` construction
+
+    Add a new CT for `synchronized` for java, which behaves like a vanilla
+    if/for/while/switch construction if a parenthesis follows the keyword
+    (otherwise, tokenize_cleanup reverts it to being a qualifier). This
+    adds options `nl_synchronized_brace`, `nl_before_synchronized`, and
+    `nl_after_synchronized`, which work in the obvious way. Since
+    `synchronized` requires braces, no special handling of braceless code
+    is necessary.
+
+    Also update defaults.cfg by update-default-cfg.sh to appropriately
+    handle these new options and add tests 80060 and 80061.
+
+commit eef47c5b357912fe1c0136e338a895f580dc256e
+Author: RaveTheTadpole <RaveTheTadpole@users.noreply.github.com>
+Date:   Mon May 4 10:50:19 2015 -0500
+
+    add nl_while_leave_one_liners
+
+    Preserve one-line while statements. It is a
+    straightforward extension of other leave_one_liners
+    options.
+
+commit b6593c1bd9f2d5f2980c7e219df9109bef49e845
+Merge: 2f8c55d 27bbbfc
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Fri Apr 3 16:58:54 2015 -0500
+
+    Merge branch 'Unity-Technologies-features/msref-support'
+
+commit 27bbbfc407aa11ecc3ee4f5d2597bce280be6ddf
+Merge: 2f8c55d c8b80c8
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Fri Apr 3 16:58:18 2015 -0500
+
+    Merge branch 'features/msref-support' of https://github.com/Unity-Technologies/uncrustify into Unity-Technologies-features/msref-support
+
+    Conflicts:
+    	tests/cpp.test
+
+commit 2f8c55d3c41e6caeb71f8d9775ebefc60c43d511
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Fri Apr 3 16:31:05 2015 -0500
+
+    run_tests.py needs Python 2.
+
+commit 9ac5184a3c7ceceedbe2777eb992565e39264091
+Author: Guy Maurel <guy.maurel@kde.org>
+Date:   Fri Mar 27 14:32:52 2015 +0100
+
+    correct the function keywords_are_sorted
+
+commit c0ee10411e8095c93c5baa845d168862f4ec2df1
+Author: Guy Maurel <guy.maurel@kde.org>
+Date:   Mon Mar 30 17:12:54 2015 +0200
+
+    Typo
+
+commit c8b80c898214f3c572532e6acf39238031079632
+Author: Scott Bilas <scobi@unity3d.com>
+Date:   Wed Mar 25 08:15:38 2015 +0100
+
+    Fixing issues as per Ben's review comments on https://github.com/bengardner/uncrustify/pull/350
+
+commit db37e6d0d01f050a530c7a1596099ea6a8ea249c
+Merge: f23de29 faa87cd
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Tue Mar 24 22:10:13 2015 -0500
+
+    Merge pull request #346 from 4picht/master
+
+    allow indent_ctor_init to be negative
+
+commit f23de290bd80cedc4b2544c2e6243abc0b2dc57f
+Merge: 40a6abd a940421
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Tue Mar 24 22:07:25 2015 -0500
+
+    Merge pull request #347 from clbr/issue314
+
+    Add a new option for indenting continued shift expressions
+
+commit 40a6abd8008c7156b64c23b3e49258206da54479
+Merge: e4cd86e 12c1768
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Tue Mar 24 21:52:16 2015 -0500
+
+    Merge pull request #349 from Unity-Technologies/fixes/bit-colon-class
+
+    Fix: C++ bitfields were being detected in structs, but not in classes
+
+commit e4cd86ecbd32e6bc56337a4f2ee11af28759b590
+Merge: cd1c861 a0086de
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Tue Mar 24 21:48:21 2015 -0500
+
+    Merge pull request #356 from iv-mexx/feature/fixObjCTernaryMethodCall
+
+    Fix ObjC 'Methodcall in ternary expression'
+
+commit a0086de8b5e65c828c4a45058ea040e6d9836634
+Author: MeXx <mexx@devsub.net>
+Date:   Wed Mar 25 00:47:19 2015 +0100
+
+    Added a more complicated testcase for ternary operator in ObjC
+
+commit 55c91fb34857184d6e5cd97b3899eca36cd07537
+Merge: fa11a5e 2216026
+Author: MeXx <mexx@devsub.net>
+Date:   Wed Mar 25 00:44:31 2015 +0100
+
+    Merge branch 'fixes/objective-c-ternary' into feature/fixObjCTernaryMethodCall
+
+commit 2216026a78ccd0904b4f1a23fc2cf735601c142e
+Author: MeXx <mexx@devsub.net>
+Date:   Mon Mar 23 22:33:45 2015 +0100
+
+    ObjC: Add testcase to reproduce ObjC methodcall-in-ternary-expression issue #355
+
+commit 4da23e911865870cd2e7a1e3d2b6a5d79d7e3156
+Author: Scott Bilas <scobi@unity3d.com>
+Date:   Thu Mar 19 15:39:48 2015 +0100
+
+    Ok that last hard coded fix wasn't the best idea. Too many cases. What we really need is a stack of question counts that is associated with the OC messages. I also updated the unit test for the case that was failing. Note that this has to be interpreted as OC+ to pick up the '::' in the sample.
+
+commit 2f9fb388111d644bf23b2a610b8c19d14084c8be
+Author: Scott Bilas <scobi@unity3d.com>
+Date:   Thu Mar 19 14:18:52 2015 +0100
+
+    Fixed issue 635. Just a new case that needed to be handled surrounding ternary and OC messages.
+
+commit fa11a5e0e7ecfbbed7e712bfe92a6496ba675ef6
+Author: MeXx <mexx@devsub.net>
+Date:   Mon Mar 23 22:38:23 2015 +0100
+
+    ObjC/combine_labels: dont reduce question_count if the colon is inside a ObjC message call, fixes #355
+
+commit ead319cab7b2012ccb0e8d7880fe7a18f5d73505
+Author: MeXx <mexx@devsub.net>
+Date:   Mon Mar 23 22:33:45 2015 +0100
+
+    ObjC: Add testcase to reproduce ObjC methodcall-in-ternary-expression issue #355
+
+commit 8f3027c635041fdcf90c263b35cfda3bbeeed291
+Author: Scott Bilas <scobi@unity3d.com>
+Date:   Thu Feb 26 11:46:15 2015 +0100
+
+    Pick a better number to base this on
+
+commit 083e919cdaaf3056bc3419b9ce659752bfa67296
+Author: Scott Bilas <scobi@unity3d.com>
+Date:   Wed Feb 25 16:04:59 2015 +0100
+
+    Implementing support for MS's C++ extensions for C++/CLI and WinRT on the ^ character acting as markup for a reference (similar to * for pointers).
+
+    Conflicts:
+    	tests/cpp.test
+
+commit 12c1768e10bf5423b77dc97a9f6382eec5197144
+Author: Scott Bilas <scobi@unity3d.com>
+Date:   Wed Feb 25 15:00:17 2015 +0100
+
+    Fix: C++ bitfields were being detected in structs, but not in classes
+
+commit a94042179131b1f7da04c137243c74c22eabb4d5
+Author: Lauri Kasanen <curaga@operamail.com>
+Date:   Fri Feb 13 21:04:57 2015 +0200
+
+    Add a new option for indenting continued shift expressions
+
+    Fixes #314. Including both a new more extensive test case
+    as well as an adapted existing test case.
+
+    This project has been sponsored by The Measurement Factory.
+
+    Signed-off-by: Lauri Kasanen <curaga@operamail.com>
+
+commit faa87cda17b896abb6b0893ae85bed57730c1ff9
+Author: Julian Picht <julian.picht@4Com.de>
+Date:   Mon Feb 23 10:51:28 2015 +0100
+
+    allow indent_ctor_init to be negative
+
+commit cd1c8619321efc96afc1ab1e7d09e924f008acaa
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Thu Feb 19 20:49:42 2015 -0600
+
+    Allow casting of this in "(Foo)this"
+
+commit e13ae46d98fcb28448db8941ef65ffda47d4bd9c
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Thu Feb 19 20:23:30 2015 -0600
+
+    run_tests.py: Don't add .test if it already has it
+
+commit bfdcd34d7d64dd030df10bd7e3bb0467934d4f33
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Thu Feb 19 20:23:08 2015 -0600
+
+    Add another semicolon removal test
+
+commit 85af83abab2f63cc9ef1ca9d4d0d6dba082ad479
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Thu Feb 19 20:22:46 2015 -0600
+
+    Prevent semicolon removal after 'new' statements by marking braces
+
+commit fd743dec0631d76100cf21c4875a55af5cc062ad
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Thu Feb 19 20:08:50 2015 -0600
+
+    Add test for sp_between_new_paren
+
+commit 88ade49e56e7b081c4a468623251d6c535ea9f46
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Thu Feb 19 20:08:09 2015 -0600
+
+    Add new option sp_between_new_paren
+
+commit 8a23fdf630d24decce329c3663d7d73d3eb0a964
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Thu Feb 19 19:53:48 2015 -0600
+
+    Add a test for not splitting "} while"
+
+commit ec88fea43c2ac1dbd85e5cf07423bb4e872e34ac
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Thu Feb 19 19:53:02 2015 -0600
+
+    Don't insert a newline in "do {} while()" via nl_after_brace_close
+
+commit 3801c8e4755a59f92b0ff3668470b37c5dd8103e
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Thu Feb 19 19:46:08 2015 -0600
+
+    Add logging for adding newlines
+
+commit 288df3e25977ea8ead8ce19d31438240a29ab46c
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Thu Feb 19 19:32:18 2015 -0600
+
+    Update test results for nl_squeeze_ifdef fix
+
+commit 2176b8bf65f93257a4e86b5f63db97b7192a193c
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Thu Feb 19 19:30:37 2015 -0600
+
+    nl_squeeze_ifdef should not remove blanks before whole-file #endif.
+
+    This was messing up my style.
+
+commit 32bd357e9beefb5e72469c78208861e3f57985a5
+Merge: 3ea72e3 6155faf
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Wed Feb 18 22:08:04 2015 -0600
+
+    Merge pull request #345 from shazron/npm-package
+
+    Added package.json for npm
+
+commit 3ea72e33125db3f854f6285f8efd69bc42e05d4f
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Wed Feb 18 22:07:39 2015 -0600
+
+    Run uncrustify on itself using etc/ben.cfg, with a few manual fixes.
+
+commit 1369245fbb8d1cbed4957a97d9dd6cce2a5ac6d7
+Merge: 094e094 698dfcd
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Wed Feb 18 21:53:04 2015 -0600
+
+    Merge pull request #341 from nicodecker/vbr_indent
+
+    New options for indenting at virtual brace open
+
+commit 094e0947415d5228ede9ccc2ab00f7f93adefbfa
+Merge: 58a76e6 c6aca7b
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Wed Feb 18 21:52:37 2015 -0600
+
+    Merge pull request #342 from nicodecker/doxygen_comments
+
+    Option for space handling in doxygen comments
+
+commit 58a76e6131f6d23af8faa09401ff562552208041
+Merge: f62fda6 b44f525
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Wed Feb 18 21:51:19 2015 -0600
+
+    Merge pull request #340 from nicodecker/frag_at_col
+
+    Fixed wrong position of comment in case of --frag
+
+commit f62fda639756684d964d2b60c7549c6a9d176182
+Merge: 5d839c3 40b536a
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Wed Feb 18 21:50:42 2015 -0600
+
+    Merge pull request #343 from nicodecker/fix_cmd_processing
+
+    Bugfix: Undesired effect of disable_processing_cmt
+
+commit 6155faf25f8a02578cf99b2b4fdbae7cfdea26d7
+Author: Shazron Abdullah <shazron@gmail.com>
+Date:   Wed Feb 18 15:08:22 2015 -0700
+
+    Added package.json for npm
+
+commit 40b536ae657a7f3d6c7ec4df051ad172516a5af7
+Author: Nico Decker <nico-gitcode@nicodecker.de>
+Date:   Wed Feb 18 13:05:23 2015 +0100
+
+    Bugfix: Undesired effect of enable_processing_cmt
+
+    The same bug as existed for disable_processing_cmt exists for
+    enable_processing_cmt as well.
+
+    Fixed in the same way by treating NULL and "" equally.
+
+commit f68d75d9dba517a9217cc5dd0cd4e5ae1fe7ca50
+Author: Nico Decker <nico-gitcode@nicodecker.de>
+Date:   Wed Feb 18 08:45:32 2015 +0100
+
+    Bugfix: Undesired effect of disable_processing_cmt
+
+    The new option disable_processing_cmt that has been added recently had
+    an undesired side effect. Unfortunatly, due to its nature, it was
+    not revealed by the test facility.
+
+    Configuration created before the option was introduced works fine
+    even with versions containing the new option. But in the configuration
+    created with those new versions  the option was automatically set to "".
+    In the code this lead to unformatted text after the first comment!
+
+    Fixed by treating NULL and "" equally.
+
+commit c6aca7b2c95079ef51d573c2538bd3067255012f
+Author: Nico Decker <nico-gitcode@nicodecker.de>
+Date:   Wed Feb 18 08:27:56 2015 +0100
+
+    Option for space handling in doxygen comments
+
+    Doxygen comments in CPP style like '//!', '//!<', '///' and '///<'
+    where not handled properly when spaces were to be added with option
+    sp_cmt_cpp_start.
+
+    The new option sp_cmt_cpp_doxygen treats those comment leadins
+    as a unity, if set to TRUE.
+
+    Before sp_cmt_cpp_start=add converted '//!x' to '// !x'. No it
+    will correctly be converted to '//! x'.
+
+commit 698dfcd40824635ba41d543abaec08b98d0abce0
+Author: Nico Decker <nico-gitcode@nicodecker.de>
+Date:   Sat Feb 14 18:35:38 2015 +0100
+
+    Added test for indenting after vbrace-open
+
+commit b44f5259de9d834d4aaf863720b204ae138d413b
+Author: Nico Decker <nico-gitcode@nicodecker.de>
+Date:   Sat Feb 14 17:54:39 2015 +0100
+
+    Fixed wrong position of comment in case of --frag
+
+    In case of command line option --frag the position configured
+    in align_right_cmt_at_col was not correct anymore.
+
+commit 5d839c344385bec76d5cf029c3bdb1576e4ca0d3
+Merge: 3105b16 fa34bee
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Feb 14 10:35:42 2015 -0600
+
+    Merge pull request #337 from nicodecker/frag_tabstop
+
+    Fixed wrong tabstop behaviour in case --frag is used.
+
+commit 3105b166dc7fd7b25d550d9cd1fd28c44c222bb6
+Merge: f0f17a1 73d1466
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Feb 14 10:35:25 2015 -0600
+
+    Merge pull request #339 from nicodecker/frag_eof
+
+    No eof/bof newline modifications for --frag
+
+commit 73d1466b974809a42e960b490ec80fe2b2a476fd
+Author: Nico Decker <nico-gitcode@nicodecker.de>
+Date:   Sat Feb 14 14:14:41 2015 +0100
+
+    No eof/bof newline modifications for --frag
+
+    When command line option --frag is used there is no real end-of-file
+    or begin-of-file; therefore do not perform any modifications concerning
+    options
+     - nl_end_of_file_min
+     - nl_end_of_file
+     - nl_start_of_file_min
+     - nl_start_of_file
+
+commit 343cfd27900724643762613fec811fd1c2d1b785
+Author: Nico Decker <nico-gitcode@nicodecker.de>
+Date:   Sat Feb 14 13:53:40 2015 +0100
+
+    Introduced new options indent_min_vbrace_open and indent_vbrace_open_on_tabstop.
+
+    The new options allow to applay special indent after virtual braces and
+    newline.
+
+commit fa34bee5a08abff08a71dddf019f1ffaf352afa9
+Author: Nico Decker <nico-gitcode@nicodecker.de>
+Date:   Sat Feb 14 13:24:55 2015 +0100
+
+    Fixed wrong tabstop behaviour in case --frag is used.
+
+    calc_next_tab_column() did not take indent of first line into accout
+    when command line option --frag was used.
+
+commit f0f17a1599f8a775942f2796761c80b06abee1b7
+Merge: 7757d42 ef37f0a
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Fri Feb 13 09:26:38 2015 -0600
+
+    Merge pull request #333 from Unity-Technologies/fixes/encoding-ignore
+
+    Fixed bug with my 'ignore' change that broke non-ASCII encodings.
+
+commit ef37f0a104f06e94caa74cad9f1f13ab8c9cebd4
+Author: Scott Bilas <scobi@unity3d.com>
+Date:   Thu Feb 12 16:46:23 2015 +0100
+
+    Fixed bug with my 'ignore' change that broke non-ASCII encodings. Added tests to keep it from coming back.
+
+commit 7757d42c2c5124e00ef0a346d3f5e8ea7bb79d29
+Merge: 36cb55c ffaf3fb
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Thu Feb 12 07:53:49 2015 -0600
+
+    Merge branch 'Unity-Technologies-features/string-replace-tab-chars'
+
+commit ffaf3fbdac70bd7befc47b415b0cc58a520cad40
+Merge: 36cb55c 3a27deb
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Thu Feb 12 07:53:17 2015 -0600
+
+    Merge branch 'features/string-replace-tab-chars' of https://github.com/Unity-Technologies/uncrustify into Unity-Technologies-features/string-replace-tab-chars
+
+commit 36cb55cbb585da4ecba2706a9b2e39bde4d4d2d3
+Merge: 3c1b714 a97b482
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Thu Feb 12 07:47:12 2015 -0600
+
+    Merge pull request #332 from Unity-Technologies/fixes/indent-off-for-realz
+
+    Made *INDENT-OFF* truly disable all reformatting
+
+commit 3c1b714f44ede1f9badd88f9dc8db2a739fe168a
+Merge: 0f4fdaa 1933349
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Thu Feb 12 07:46:12 2015 -0600
+
+    Merge pull request #330 from Unity-Technologies/fixes/windows-config-relative-paths
+
+    Implementing code on Windows to deal with relative file paths from an 'include' in a config file
+
+commit 3a27debe358b9f3b092a2a016822e014411bdbf4
+Author: Scott Bilas <scobi@unity3d.com>
+Date:   Thu Feb 12 11:54:53 2015 +0100
+
+    New option 'string_replace_tab_chars' that will convert tab chars found in ordinary literal C style strings to '\t' instead.
+
+    It's very difficult to have tab chars in strings participate in reformatting of the outer code in a consistent way. For example, unit tests that compare code in strings against files on disk will suddenly fail if the contents of the strings change in any way. Switching to \t chars is one way to avoid this problem, plus make the code more readable.
+
+    Conflicts:
+    	src/options.h
+
+commit a97b4827d7d6d94206e63227dbe80b8c124ad9c4
+Author: Scott Bilas <scobi@unity3d.com>
+Date:   Thu Feb 12 11:52:08 2015 +0100
+
+    Made *INDENT-OFF* truly disable all reformatting. Previously was still reformatting tab chars found in the ignored chunks.
+
+commit e2e0f40a852bc0480a781a66141b81a9c0d1d67d
+Author: Scott Bilas <scobi@unity3d.com>
+Date:   Thu Feb 12 11:29:57 2015 +0100
+
+    minor spelling fix
+
+commit 193334979f55229daabcdcd520eeeafdc108e399
+Author: Scott Bilas <scobi@unity3d.com>
+Date:   Thu Feb 12 10:59:27 2015 +0100
+
+    Implementing code on Windows to deal with relative file paths from an 'include' in a config file
+
+commit 0f4fdaa2468624c100723841e1796fa9eb2e8e51
+Merge: b3f4c00 90e0d3a
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Wed Feb 11 21:54:54 2015 -0600
+
+    Merge branch 'Unity-Technologies-staging'
+
+commit 90e0d3aa2c8c3695333752d8790ef304f92eb1a1
+Merge: b3f4c00 5bb6bc4
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Wed Feb 11 21:54:31 2015 -0600
+
+    Merge branch 'staging' of https://github.com/Unity-Technologies/uncrustify into Unity-Technologies-staging
+
+    Conflicts:
+    	tests/c-sharp.test
+
+commit b3f4c005638e476b2e653b44b558111efbfc1b23
+Merge: 66812c4 5824499
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Wed Feb 11 21:51:55 2015 -0600
+
+    Merge pull request #325 from MarekFort/master
+
+    Add support for indent_class_on_colon
+
+commit 66812c4cf8228ea6ef91fef16399b90c18ff49bf
+Merge: 2286fad 3f4406d
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Wed Feb 11 21:50:43 2015 -0600
+
+    Merge pull request #327 from Unity-Technologies/fixes/delegate-semicolon-removal
+
+    Fixed another case for bug #628 (older C# 'delegate' syntax)
+
+commit 2286fad0c73d83d0f477f386077dcf5b813d6d3e
+Merge: e3469f0 3a1e3bb
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Wed Feb 11 21:48:49 2015 -0600
+
+    Merge pull request #321 from Ditti4/master
+
+    Fix some mistakes in the documentation
+
+commit e3469f0eec27845c7237462bc3e31b53c7e11cd5
+Merge: b5e20df 575453f
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Wed Feb 11 21:46:29 2015 -0600
+
+    Merge pull request #328 from Unity-Technologies/features/option-processing-cmt
+
+    New options and tests for enable_processing_cmt/disable_processing_cmt t...
+
+commit b5e20dfeea723bc9fd7f8f9384dbafe3688e778a
+Merge: 261cfdb 77dbf12
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Wed Feb 11 21:44:05 2015 -0600
+
+    Merge pull request #329 from mikekov/master
+
+    Keep trailing space in C++ comments if it follows backslash to prevent '\' from turning into line continuation
+
+commit 77dbf12633753fa2377db8c10354bbad84e89e6d
+Author: Mike <michal_kowalski@hotmail.com>
+Date:   Wed Feb 11 11:18:12 2015 -0800
+
+    Keep trailing space in C++ comments if it follows backslash to prevent '\'
+    from becoming line continuation
+
+commit 575453f1144d79c9c47d1e30dfc8e47fb3cfb746
+Author: Scott Bilas <scobi@unity3d.com>
+Date:   Tue Feb 10 15:51:11 2015 +0100
+
+    New options and tests for enable_processing_cmt/disable_processing_cmt that permits overriding the default UNCRUSTIFY_ON_TEXT/UNCRUSTIFY_OFF_TEXT.
+
+commit 3f4406ddf9f73d3ebacd2a385ae84fd21303379c
+Author: Scott Bilas <scobi@unity3d.com>
+Date:   Wed Feb 11 11:13:36 2015 +0100
+
+    Fixed another case for bug #628 (older C# 'delegate' syntax)
+
+commit 261cfdb0f19afa785fcab54d93e3522058c0645f
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Tue Feb 10 22:08:02 2015 -0600
+
+    Add test for SF#628
+
+commit 2e7f4d9660096e30d6c25e53e9e7bd068008561e
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Tue Feb 10 22:07:29 2015 -0600
+
+    Fix marking of "=> { }" lambda expressions in C#.
+
+    Prevents semicolon removal.
+
+commit e0706629876026a937bf36d2cafa9f7a990954c5
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Tue Feb 10 21:45:37 2015 -0600
+
+    Add C++ digraph test from SF#629
+
+commit 8182cd2658a8fc53911ea169b93d34bea2a07524
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Tue Feb 10 21:44:31 2015 -0600
+
+    Add partial support for digraphs.
+
+    Uncrustify may still choke on them in the input, but it won't create them.
+
+commit 5bb6bc4eaa184f973f74e4aaf04232b5eedf3ad9
+Author: Scott Bilas <scobi@unity3d.com>
+Date:   Tue Feb 10 00:10:17 2015 +0100
+
+    Fixed bug with backslash at end of comment affecting the next line in C#. C# has no preprocessor, and backslashes at EOL don't mean anything special.
+
+    Also added tests for C# to verify fix, and to C++ to make sure normal behavior maintained.
+
+commit 9bad4d26b408b401a523687dbc6a55bba1ec7ef2
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sun Feb 8 17:00:26 2015 -0600
+
+    Add tests for the new options.
+
+commit fa792758e12688aac95944204cb6430f4ad83d75
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sun Feb 8 16:59:38 2015 -0600
+
+    Add options to control spacing in C# array types: "int [,,] x;"
+
+    sp_before_mdatype_commas
+    sp_between_mdatype_commas
+    sp_after_mdatype_commas
+
+commit 5bfa2736a73d2ad6d6e91a33299bf2433a74c7b0
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sun Feb 8 16:15:26 2015 -0600
+
+    Don't crash if the input ends with a VBRACE_CLOSE.
+
+    Fixes SF#616.
+
+commit 5824499fad6bbfa87e2066a38ae2e4d50b044eb9
+Author: Marek Fort <marek.fort@chyronhego.com>
+Date:   Sun Feb 8 15:20:07 2015 +0100
+
+    Add support for indent_class_on_colon
+
+commit 3a1e3bb0d06bcc4dc0f3ba235dea9aa227ea7df7
+Author: Dittrich, Rico <rico.dittrich@elcon-system.com>
+Date:   Thu Feb 5 11:01:47 2015 +0100
+
+    Fix some mistakes in the documentation
+
+commit 4e20f20fbeabae560f3471a99a9191ea7718875b
+Merge: 3319eef 2b82c2b
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Tue Jan 6 20:40:10 2015 -0600
+
+    Merge pull request #316 from npnth/nl_after_label_colon
+
+    Add nl_after_label_colon option
+
+commit 2b82c2b06abd30ef7de2829b4fee7af3e068ceaf
+Author: Gilles <npnth2@gmail.com>
+Date:   Tue Jan 6 18:22:37 2015 -0500
+
+    Add tests for nl_after_label_colon
+
+    Ensure that nl_after_label_colon does not adversely affect colons in
+    switch statements or bitfields.
+
+commit 3561d7d4dedfa125d1d0b212f8ce2fb1397f18e4
+Author: Gilles <npnth2@gmail.com>
+Date:   Tue Jan 6 18:07:00 2015 -0500
+
+    Remove newline dependence in CT_LABEL_COLON detection
+
+    Make combine_labels default to viewing a WORD + COLON combination as a
+    label, not a bitfield definition. Colons that are inside structs or
+    typedefs are considered bitfields.  This allows labels to be tagged as
+    such even if they are not preceded by a newline.
+
+commit b4cbf3cd44ae1f2895617ba68c784deec2159e92
+Author: Gilles <npnth2@gmail.com>
+Date:   Tue Jan 6 17:15:28 2015 -0500
+
+    Add default value for nl_after_label_colon
+
+    This option defaults to false
+
+commit 083c2cb3f6caeae6b570a22242a19b6d4c482d35
+Author: Gilles <npnth2@gmail.com>
+Date:   Tue Jan 6 16:42:29 2015 -0500
+
+    Add support for nl_after_label_colon
+
+    Add as a boolean option nl_after_label_colon. If this is set to true,
+    a newline is appended to any LABEL COLON token sequence.
+
+commit 3319eefebdd947da8da84272e67fdf392c00790b
+Merge: f65394e 083a4fc
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Sat Jan 3 12:07:24 2015 -0600
+
+    Merge pull request #315 from npnth/master
+
+    Unify handling of newlines following { among if/else
+
+commit 083a4fc7b517343e8790f22b418afd08fc209890
+Author: Gilles <npnth2@gmail.com>
+Date:   Thu Jan 1 22:50:56 2015 -0500
+
+    Add test for nl_remove_extra_newlines=2, nl_after_brace_open=false
+
+    In this situation, ensure that both if and else treat their
+    immediately-following open braces similarly.
+
+commit 12a955e769169d696eb9787451916568cfc84ac1
+Author: Gilles <npnth2@gmail.com>
+Date:   Thu Jan 1 22:34:52 2015 -0500
+
+    Make newlines_do_else handle braces like newlines_if_for_while_switch
+
+    Remove option-checking in the handling of newlines directly after
+    CT_BRACE_OPEN in newlines_do_else. This matches the way
+    newlines_if_for_while_switch handles the same situation, preventing
+    awkward mismatches visually between if/else blocks when
+    nl_after_brace_open is false.
+
+commit f65394e32925d3978bf2838f76bf19fa9791a7e0
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Mon Dec 22 21:37:33 2014 -0600
+
+    Extract the commit log
+
+commit b82c7cbf7c8028fb91faa3767321e9e1c0f0e34b
+Author: Ben Gardner <gardner.ben@gmail.com>
+Date:   Mon Dec 22 21:37:17 2014 -0600
+
+    Update changelog
+
 commit 2b76d7a8f4d0c80f3917064b2f4e8309ec55cb3a
 Author: Ben Gardner <gardner.ben@gmail.com>
 Date:   Mon Dec 22 21:26:42 2014 -0600
@@ -28,7 +970,7 @@ Author: Ben Gardner <gardner.ben@gmail.com>
 Date:   Mon Dec 22 14:02:08 2014 -0600
 
     Do not mark the parent of the brace that contains a CS_PROPERTY as GETSET.
-    
+
     Fixes SF#607
 
 commit 7909e742826539ec3d075df82439c72a6e93ddd6
@@ -43,7 +985,7 @@ Author: Ben Gardner <gardner.ben@gmail.com>
 Date:   Thu Dec 18 20:28:08 2014 -0600
 
     Merge pull request #312 from lgauthier/master
-    
+
     Added fix for issue #124
 
 commit 5814e8db5033408759d4f2785ed440a7f364d60d
@@ -106,7 +1048,7 @@ Author: Ben Gardner <gardner.ben@gmail.com>
 Date:   Tue Oct 14 14:49:56 2014 -0500
 
     Rework make_win32.sh to build with the latest mingw32.
-    
+
     Add a few more files.
 
 commit 531332f38876a189f849b20f47612958093c0924
@@ -144,7 +1086,7 @@ Author: Ben Gardner <gardner.ben@gmail.com>
 Date:   Mon Oct 6 21:44:40 2014 -0500
 
     Handle multi-line string spacing better.
-    
+
     Fixes SF#602
 
 commit 76ab215694fd733877f544635760658c1e021541
@@ -159,7 +1101,7 @@ Author: Ben Gardner <gardner.ben@gmail.com>
 Date:   Mon Oct 6 20:46:59 2014 -0500
 
     Merge pull request #298 from Unity-Technologies/staging
-    
+
     Fix for bug #600
 
 commit b28e364b3778a9ae2ca912302fdb2ab6a24987c3
@@ -305,7 +1247,7 @@ Author: Ben Gardner <gardner.ben@gmail.com>
 Date:   Sat Sep 6 15:34:39 2014 -0500
 
     Don't pass the FILE or encoding to write_char().
-    
+
     Preparing for multiple output paths.
 
 commit 77473c4d192a18bb507f2db8daeeb97feb00c329
@@ -439,12 +1381,12 @@ Author: Ben Gardner <gardner.ben@gmail.com>
 Date:   Mon Sep 1 21:20:30 2014 -0500
 
     Change default to have the '{' indent override the '(' indent.
-    
+
     Example:
     gtkwidget.enabled.connect((widdget) => {
         message("Clicked");
     });
-    
+
     The old way would have the brace indent relative to the open paren:
     gtkwidget.enabled.connect((widdget) => {
                                   message("Clicked");
@@ -479,7 +1421,7 @@ Author: Ben Gardner <gardner.ben@gmail.com>
 Date:   Mon Sep 1 20:34:39 2014 -0500
 
     Fix variable def continuation indent for pointer vars.
-    
+
     Example:
     SomeType *a,
              *b;
@@ -513,7 +1455,7 @@ Author: Ben Gardner <gardner.ben@gmail.com>
 Date:   Mon Sep 1 15:37:20 2014 -0500
 
     Add option indent_namespace_single_indent
-    
+
     Thanks to gnoorlanderwork for the idea.
 
 commit 7f3296723c6f97adc7164c1fd3c922b1bd18a35c
@@ -569,7 +1511,7 @@ Author: Ben Gardner <gardner.ben@gmail.com>
 Date:   Sun Aug 31 23:32:10 2014 -0500
 
     Force a space before a comment if there was a space in the input
-    
+
     Otherwise try to keep them in the same column as the input.
 
 commit bc5e0894f37b0b76d7cc87eef7a60c8dc1b4c683
@@ -657,7 +1599,7 @@ Author: Ben Gardner <gardner.ben@gmail.com>
 Date:   Sat Aug 30 16:41:12 2014 -0500
 
     Merge pull request #283 from Speedy37/master
-    
+
     Fix parsing issue with Objective-C message send.
 
 commit 2b81408f08af6be29fa32adea9538759047378dc
@@ -696,7 +1638,7 @@ Author: Ben Gardner <gardner.ben@gmail.com>
 Date:   Thu Aug 28 23:00:33 2014 -0500
 
     Indent by brace in '({\n', add option indent_paren_open_brace to revert
-    
+
     This is mainly for objective C code.
 
 commit c5e9583136dc576805dae5ea1ca2490622d56051
@@ -830,7 +1772,7 @@ Author: Ben Gardner <gardner.ben@gmail.com>
 Date:   Wed Aug 20 10:28:36 2014 -0500
 
     A change in preproc level should reset '<<' aligning.
-    
+
     It probably should reset other aligning, too, but no one has complained.
 
 commit 71417801533cb5e0c7c112fafcd0bdd520c7edfc
@@ -839,7 +1781,7 @@ Author: Ben Gardner <gardner.ben@gmail.com>
 Date:   Tue Aug 19 22:37:28 2014 -0500
 
     Merge pull request #285 from PerfectCarl/patch-1
-    
+
     Mention VALA in -l option in the help message
 
 commit d33176e1afa755c1a9299fa5893c7179369e4339
@@ -865,7 +1807,7 @@ Author: Vincent Rouillé <v-rouille@logitud.fr>
 Date:   Mon Aug 18 16:29:30 2014 +0200
 
     Fix parsing issue with Objective-C message send.
-    
+
     Parsing message like  [(id)obj msg:var] was failing.
 
 commit add39bf18ae0f76f53d9d8703805c7543d61db15
@@ -879,7 +1821,7 @@ Author: Ben Gardner <gardner.ben@gmail.com>
 Date:   Sat Aug 16 20:29:04 2014 -0500
 
     indent_continue should also apply to class constructor calls.
-    
+
     Not sure why that was explicitly disabled, but no tests failed after
     removing that check.
 
@@ -936,7 +1878,7 @@ Author: Ben Gardner <bgardner@wabtec.com>
 Date:   Fri Aug 8 17:33:34 2014 -0500
 
     Drop new option dont_protect_xcode_code_placeholders
-    
+
     I don't see how anyone would not want this.
 
 commit a442258c580a71066b7b64cfe6fd033a7decb11c
@@ -945,7 +1887,7 @@ Author: Ben Gardner <bgardner@wabtec.com>
 Date:   Fri Aug 8 17:24:03 2014 -0500
 
     Merge branch 'jgross-xcode-placeholders' of https://github.com/JoshuaGross/uncrustify into JoshuaGross-jgross-xcode-placeholders
-    
+
     Conflicts:
     	tests/objective-c.test
 
@@ -955,7 +1897,7 @@ Author: Ben Gardner <gardner.ben@gmail.com>
 Date:   Fri Aug 8 17:19:29 2014 -0500
 
     Merge pull request #263 from mys007/master
-    
+
     Fix Issue 262
 
 commit f28d310ae56840e50b22c51d9da5a9e4027b061d
@@ -964,7 +1906,7 @@ Author: Ben Gardner <bgardner@wabtec.com>
 Date:   Fri Aug 8 17:16:50 2014 -0500
 
     Merge branch 'master' of https://github.com/orudge/uncrustify into orudge-master
-    
+
     Conflicts:
     	src/punctuators.cpp
 
@@ -987,7 +1929,7 @@ Author: Ben Gardner <gardner.ben@gmail.com>
 Date:   Fri Aug 8 16:58:16 2014 -0500
 
     Merge pull request #277 from tintou/master
-    
+
     Added missing vala punctuators.
 
 commit 034f7e218e3140b2261ae5a0b2b2b7513d9ffc26
@@ -995,7 +1937,7 @@ Author: Ben Gardner <gardner.ben@gmail.com>
 Date:   Mon Aug 4 22:53:47 2014 -0500
 
     Add basic support for VALA verbatim strings.
-    
+
     It looks like it is stripping trailing spaces in the string, but that is
     a separate issue.
 
@@ -1040,10 +1982,10 @@ Author: Ben Gardner <gardner.ben@gmail.com>
 Date:   Thu Apr 3 23:00:34 2014 -0500
 
     Fix indent error if an open paren is the first thing on a line
-    
+
     We cannot use the column of the paren until it has been indented, so indent
     it right away.
-    
+
     Fixes SF#572
 
 commit c883fb79794806105f01b02d45e8da69d288d9b5
@@ -1063,7 +2005,7 @@ Author: Ben Gardner <gardner.ben@gmail.com>
 Date:   Thu Apr 3 21:57:22 2014 -0500
 
     Do not remove a newline before a function if preceded by a Vbrace close
-    
+
     Fixes SF#574
 
 commit f4b55060cb678f5ab86af43f37ca1da88dbcbb1c
@@ -1095,7 +2037,7 @@ Author: Ben Gardner <gardner.ben@gmail.com>
 Date:   Thu Jan 23 21:23:14 2014 -0600
 
     Fix compile warning about uninitialized variable.
-    
+
     The condition "can't happen", but may as well make the compiler happy.
 
 commit b4c8b3610166b580f557e0f90f9c091b63830e25
@@ -1107,53 +2049,53 @@ Date:   Wed Oct 23 17:19:07 2013 -0700
     * Fix `for...in` for Objective-C.
     * Allow methods to be invoked on Objective-C primitives, like NSStrings.
     * Unit tests for the above.
-    
+
     Fix case of block literal being mistaken for block signature.
-    
+
     Adding another test case for situations where extra space is added around a block passed in as the first argument of a C method invocation.
-    
+
     Adding the cfg file for our new tests.
-    
+
     Fix case where a block is passed as the first argument of a C-style method invocation; the parser marked the whole thing as a block type definition.
-    
+
     Add another test for short ternary expressions and make sure it takes precedence over question mark spacing.
-    
+
     Strengthening tests to make sure that short ternary doesn't break regular ternary expressions.
-    
+
     Test showing how Uncrustify fails to treat messages on string literals properly.
-    
+
     Allow messages to be sent to NSStrings.
-    
+
     Add tests that show that casting to (id) breaks parsing (meaningless operation but syntactically valid).
-    
+
     Allow `(id)[obj args]` as a valid Objective-C casting statement.
-    
+
     Fix test case expected output.
-    
+
     Fix for (x in y) for objective-c
-    
+
     Improving indentation support of blocks being passed into message invocations.
-    
+
     New options for indenting blocks in message invocations in different ways.
-    
+
     Fix the block indentation options for Objective-C; it was very aggressively indenting more than was necessary.
-    
+
     Mimic Objective-C style inline-block indentation.
-    
+
     Prioritize aligning everything with the first message in a message invocation, if possible (as long as it doesn't force us to go below the current indentation level, we're fine).
-    
+
     Xcode-style block-in-message indenting.
-    
+
     Fix segfault
-    
+
     Put parens around bitwise op
-    
+
     Fix indentation
-    
+
     Move check for for...in loops in Objective-C to a helper function in chunk_list.h
-    
+
     Adding small test-case for for...in loops with id type declarations.
-    
+
     Adding small test-case for for...in loops with id type declarations.
 
 commit 59aef5ceaba9e7dfa8f0e7a5d31cbe1d21cb2d53
@@ -1162,7 +2104,7 @@ Author: Ben Gardner <gardner.ben@gmail.com>
 Date:   Mon Jan 13 14:17:17 2014 -0800
 
     Merge pull request #231 from Lykurg/fixspelling
-    
+
     Fix typo in documentation
 
 commit b1ccf9dbbd34a0a8533423e25412e418e2a9af33
@@ -1188,7 +2130,7 @@ Author: Tim Hütz <tim@huetz.biz>
 Date:   Sun Dec 29 12:35:48 2013 +0100
 
     Fix build on Windows
-    
+
     Added the missing include statements to build uncrustify
     on Windows (using Visual Studio Express 2013).
 
@@ -1235,7 +2177,7 @@ Author: Ben Gardner <gardner.ben@gmail.com>
 Date:   Mon Dec 16 17:37:02 2013 -0800
 
     Merge pull request #205 from loudnate/patch-1
-    
+
     Correcting issues in default objc.cfg
 
 commit 7c85198f51d813884447bd2c8f2f9823aabc5252
@@ -1250,7 +2192,7 @@ Author: Ben Gardner <gardner.ben@gmail.com>
 Date:   Tue Oct 15 20:37:57 2013 -0700
 
     Merge pull request #207 from idpaterson/pull-requests/oc-ns-enum-alt
-    
+
     Added support for NS_ENUM and NS_OPTIONS modern Obj-C enums
 
 commit b8ed112d479a23f7576e38f5e899eab4e38b9bea
@@ -1295,7 +2237,7 @@ Author: S. Gilles <sgilles@umd.edu>
 Date:   Sat Sep 7 01:41:48 2013 -0400
 
     Less fragile array-as-type handling
-    
+
     Handle [], [N]-skipping in a better section of the code, which fixes
     some restrictions on the number of type tokens before an array for
     recognition (i.e. `final int[] a;' would be recognized, but `int a[];'
@@ -1306,7 +2248,7 @@ Author: Ben Gardner <gardner.ben@gmail.com>
 Date:   Thu Sep 5 20:49:12 2013 -0500
 
     Update the README file to indicate that bugs should go on the sf.net site
-    
+
     That info is also in the BUGS file, but github.com doesn't show that.
 
 commit e84a5811953b5fe95edb74e8268dd504a5d540e5
@@ -1339,7 +2281,7 @@ Date:   Sat Aug 31 00:37:56 2013 -0500
 
     New options: indent_constr_colon, nl_constr_colon, nl_constr_init_args,
     pos_constr_comma, pos_constr_colon
-    
+
     This should finish the split between the class initializer list and base
     class list.
 
@@ -1348,7 +2290,7 @@ Author: Ben Gardner <gardner.ben@gmail.com>
 Date:   Fri Aug 30 23:56:02 2013 -0500
 
     Add options sp_after_constr_colon and sp_before_constr_colon
-    
+
     Assuming that indent_ctor_init_leading was only meant to apply to the
     constructor colon, not the class declaration.
     No tests fail, but that may be because there is no test coverage.
@@ -1358,7 +2300,7 @@ Author: Ben Gardner <gardner.ben@gmail.com>
 Date:   Fri Aug 30 23:48:13 2013 -0500
 
     Split the constructor initializer use CLASS_COLON into CONSTR_COLON.
-    
+
     Keep all the options the same, so there is no change in test output.
 
 commit 25dd1fdc9923250ee0f1da92a8ceb3053ef0fa23
@@ -1378,7 +2320,7 @@ Author: S. Gilles <sgilles@umd.edu>
 Date:   Sat Aug 17 19:06:44 2013 -0400
 
     Treat class names with array indicators as CT_TYPE in Java
-    
+
     Extends the 'word followed by word is type' check to skip past
     intermediary (nested and stacked) sets of bracket.
 
@@ -1407,7 +2349,7 @@ Author: Ben Gardner <gardner.ben@gmail.com>
 Date:   Wed Aug 14 22:16:55 2013 -0700
 
     Merge pull request #196 from villytiger/decltype
-    
+
     Fix applying sp_before_dc rule with decltype
 
 commit d8a4ec8182c77f56b4389197c580d704bba0f706
@@ -1415,7 +2357,7 @@ Author: Ilya Lyubimov <Lubimov@rutoken.ru>
 Date:   Thu Aug 8 22:07:46 2013 +0400
 
     Fix applying sp_before_dc rule with decltype
-    
+
     Rule wasn't applied and one space was forcely added in the following example:
     std::vector<uint8_t> v;
     decltype(v)::const_iterator it;
@@ -1425,7 +2367,7 @@ Author: S. Gilles <sgilles@umd.edu>
 Date:   Sun Aug 4 15:41:04 2013 -0400
 
     Explicitly recognize '@interface' as class-like keyword
-    
+
     In Java, treat '@interface' like the keyword 'class', including all
     implied indentation. This changes the results of 80010, and as such is
     a distinct commit.
@@ -1435,7 +2377,7 @@ Author: S. Gilles <sgilles@umd.com>
 Date:   Sun Aug 4 04:10:13 2013 -0400
 
     Better handling of Java interfaces
-    
+
     Handle Java interfaces without relying on untracked newlines so that
     nl_remove_extra_newlines can be nonzero. Also handle the keyword
     @interface during tokenization so that it is not mishandled. Tests
@@ -1471,7 +2413,7 @@ Author: Ben Gardner <gardner.ben@gmail.com>
 Date:   Sat Jul 13 10:31:03 2013 -0700
 
     Merge pull request #185 from mmcdole/master
-    
+
     Fix nested block indentation in Objective-C
 
 commit 936558e04a1a234cfb3c5eee34ee68b06b418f1b
@@ -1491,7 +2433,7 @@ Author: Ben Gardner <gardner.ben@gmail.com>
 Date:   Sat Jul 13 12:07:47 2013 -0500
 
     Add sp_cond_colon_before/after and sp_cond_question_before/after.
-    
+
     Thanks to Daniel Burr.
 
 commit 67ce0bfe08b4b5f9282c1eaf508a67009bfae4c2
@@ -1499,7 +2441,7 @@ Author: Ben Gardner <gardner.ben@gmail.com>
 Date:   Sun Jun 30 22:00:55 2013 -0500
 
     A stray colon in a 'for' statement is likely a FOR_COLON.
-    
+
     Thanks to github user shhccie for finding the issue.
 
 commit 06c8ecb30abd418c7e6297f43449ce24cc91f6b3
@@ -1609,7 +2551,7 @@ Author: Ben Gardner <gardner.ben@gmail.com>
 Date:   Wed Jun 5 22:55:07 2013 -0500
 
     Require '{', ';', or '=' after a function type.
-    
+
     Fixes part of SF#532.
 
 commit 6bc77231195f6ca75472a428c8d5bc26629c4637
@@ -1629,7 +2571,7 @@ Author: Ben Gardner <gardner.ben@gmail.com>
 Date:   Wed Jun 5 22:00:42 2013 -0500
 
     No return type for constructor/destructor
-    
+
     Affects nl_func_proto_type_name and nl_func_type_name.
     Fixes SF#530
 
@@ -1639,7 +2581,7 @@ Author: Ben Gardner <gardner.ben@gmail.com>
 Date:   Tue Jun 4 21:32:15 2013 -0700
 
     Merge pull request #180 from berenm/cpp-lambdas
-    
+
     Better support for C++11 lambdas formatting.
 
 commit a290e0c455383748f2e436671611dae758c711a9
@@ -1648,7 +2590,7 @@ Author: Ben Gardner <gardner.ben@gmail.com>
 Date:   Tue Jun 4 21:29:13 2013 -0700
 
     Merge pull request #181 from berenm/cpp-braced-init
-    
+
     Support C++11 braced initializer lists.
 
 commit 61f8b869c18502375afacb8a325fd569ec4f500b
@@ -1668,7 +2610,7 @@ Author: Beren Minor <beren.minor+git@gmail.com>
 Date:   Tue Jun 4 12:02:36 2013 +0200
 
     Support newline addition/removal before opening brace for C++11 lambda.
-    
+
     Add new nl_cpp_ldef_brace option to add/remove/force newline before C++11
     lambda opening brace.
 
@@ -1677,7 +2619,7 @@ Author: Beren Minor <beren.minor+git@gmail.com>
 Date:   Tue Jun 4 11:04:27 2013 +0200
 
     Support one-liner C++11 lambdas. (Closes #162)
-    
+
     Add new nl_cpp_lambda_leave_one_liners option to leave one-liner C++11
     lambdas.
 
@@ -1718,7 +2660,7 @@ Author: Ben Gardner <gardner.ben@gmail.com>
 Date:   Sat Jun 1 08:09:09 2013 -0700
 
     Merge pull request #173 from nightdelphin/fix_keyword
-    
+
     Fix "finally" keyword in keywords.cpp
 
 commit 6f840f2da5f316a67146fe7a366b412593cd189c
@@ -1756,7 +2698,7 @@ Author: Ben Gardner <ben@ben-MS-7637.(none)>
 Date:   Sun May 26 22:00:11 2013 -0500
 
     Add sp_word_brace_ns and sp_word_brace to control space in 'word {'
-    
+
     Addresses SF#545
 
 commit 1b5bdb93aa143de4ad50d2446b73ac390fd62c1d
@@ -1788,7 +2730,7 @@ Author: Ben Gardner <ben@ben-MS-7637.(none)>
 Date:   Sun May 26 21:06:26 2013 -0500
 
     Fix nl_func_type_name for template functions.
-    
+
     Fixes SF#546
 
 commit 0288131faf20267b174f44ecf87c0ea426940d3c
@@ -1802,7 +2744,7 @@ Author: Ben Gardner <ben@ben-MS-7637.(none)>
 Date:   Sat May 25 17:19:27 2013 -0500
 
     Add a new token for the 'class' in 'enum class'.
-    
+
     May fix SF#548
 
 commit 9936f1b7d5de8b72a0f2d7f768e62403f6196589
@@ -1822,7 +2764,7 @@ Author: Ben Gardner <ben@ben-MS-7637.(none)>
 Date:   Sat May 25 16:52:46 2013 -0500
 
     Don't remove braces if it contains a switch statement and other stuff.
-    
+
     Fixes SF#549
 
 commit c658f44a26fe827577866585b0c359323e1a2e01
@@ -1830,7 +2772,7 @@ Author: Ben Gardner <ben@ben-MS-7637.(none)>
 Date:   Sat May 25 12:08:46 2013 -0500
 
     Don't try to align '<<' in enums.
-    
+
     Fixes SF#550
 
 commit 7689235fda8d378ea09825ab049c8df7d465cbaa
@@ -1850,7 +2792,7 @@ Author: Ben Gardner <ben@ben-MS-7637.(none)>
 Date:   Tue Apr 9 06:56:01 2013 -0500
 
     create_one_liner: Bail if there is more than one newline
-    
+
     This used to bail if there were any newlines, which prevented creating
     one liners.
 
@@ -1877,7 +2819,7 @@ Author: Ben Gardner <ben@ben-MS-7637.(none)>
 Date:   Tue Apr 9 06:04:59 2013 -0500
 
     Add option sp_cparen_oparen
-    
+
     Controls the spacing between a close paren and open paren.
 
 commit 20a311344bd331ac9bff4872582225111f1ff75f
@@ -1886,7 +2828,7 @@ Author: Ben Gardner <gardner.ben@gmail.com>
 Date:   Mon Mar 25 19:06:06 2013 -0700
 
     Merge pull request #158 from madscientist/ms/wrap
-    
+
     C++ comments with long first words were wrapped, leaving an empty comment line.
 
 commit 816cbb971be2a0ee6f2a2b8f898d3fbc228d2997
@@ -1895,7 +2837,7 @@ Author: Ben Gardner <gardner.ben@gmail.com>
 Date:   Mon Mar 25 19:04:48 2013 -0700
 
     Merge pull request #157 from madscientist/ms/stdin
-    
+
     Allow "-" to mean read filenames from stdin with -F/--files.
 
 commit 620ff3ca8559f69381482336dd5b73872cf50f97
@@ -1922,7 +2864,7 @@ Author: Ben Gardner <gardner.ben@gmail.com>
 Date:   Tue Jan 15 18:46:53 2013 -0800
 
     Merge pull request #130 from rolandschulz/master
-    
+
     Add option to disable tightening when aligning
 
 commit 847c1f08134c717bdf813e0d82f1ce1001ee23fc
@@ -1930,9 +2872,9 @@ Author: Ben Gardner <ben@ben-MS-7637.(none)>
 Date:   Tue Jan 15 20:44:32 2013 -0600
 
     Update semicolon removal test for typedefs.
-    
+
     This addresses NS_ENUM & NS_OPTIONS declarations (OC).
-    
+
     From: Jim Frisby
 
 commit 24d820b1db375efb142019eba47e5bb6e5b864dd
@@ -1946,7 +2888,7 @@ Author: Roland Schulz <roland@utk.edu>
 Date:   Tue Jan 1 16:05:28 2013 -0500
 
     Add option to disable tightening when aligning
-    
+
     Fixes #122
 
 commit 15dc4bb3a821b823ce96e7cd288b48d274b0900c
@@ -1955,7 +2897,7 @@ Author: Ben Gardner <gardner.ben@gmail.com>
 Date:   Mon Jan 14 06:05:44 2013 -0800
 
     Merge pull request #128 from ryanmaxwell/master
-    
+
     Correction for issue #127
 
 commit be4dc5d7a229ea5280ef525876c27144dc747624
@@ -2047,7 +2989,7 @@ Author: Ben Gardner <ben@ben-MS-7637.(none)>
 Date:   Sat Dec 29 22:38:53 2012 -0600
 
     Add option: indent_oc_block_msg
-    
+
     Indents blocks relative to the tag name inside messages.
     Really hacky, but it seems to work.
 
@@ -2062,7 +3004,7 @@ Author: Ben Gardner <ben@ben-MS-7637.(none)>
 Date:   Sat Dec 29 15:47:04 2012 -0600
 
     New option: indent_oc_msg_colon
-    
+
     Insert a CT_SPACE in front of the longest arg to make it work.
 
 commit f3aa1441a79f5968436e4b607ed8d3c8b8209c0f
@@ -2094,7 +3036,7 @@ Author: Ben Gardner <ben@ben-MS-7637.(none)>
 Date:   Sat Dec 29 10:52:16 2012 -0600
 
     Add option: align_oc_msg_colon_first
-    
+
     Controls whether the first OC message arg is aligned with the rest if it is
     short.
 
@@ -2109,7 +3051,7 @@ Author: Ben Gardner <ben@ben-MS-7637.(none)>
 Date:   Sat Dec 29 10:50:16 2012 -0600
 
     Add options: nl_oc_msg_leave_one_liner and nl_oc_msg_args
-    
+
     Splits OC message arguments to one-per-line.
 
 commit a317d7df902664efdcff5797685e9587a92b7bd7
@@ -2171,7 +3113,7 @@ Author: Ben Gardner <ben@ben-MS-7637.(none)>
 Date:   Thu Dec 27 19:50:20 2012 -0600
 
     Skip the 'mutable' keyword in C++ lambda expressions
-    
+
     Thanks to Jorge Amado
 
 commit 126a8b4474e9c260775a571804725316073a5db0
@@ -2464,7 +3406,7 @@ Author: Ben Gardner <ben@ben-MS-7637.(none)>
 Date:   Wed Nov 21 16:47:48 2012 -0600
 
     Align FUNC_CTOR_VAR with regular variables
-    
+
     Patch from SF#495, thanks to Jean-Marc Bourguet
 
 commit 571d39af2e2ca5cec7d1665d25e2e2b640275b3a
@@ -2478,7 +3420,7 @@ Author: Ben Gardner <ben@ben-MS-7637.(none)>
 Date:   Wed Nov 21 16:41:35 2012 -0600
 
     Do a better job of marking the C++ constructor initialization functions.
-    
+
     Fixes SF#484.
 
 commit a8b1eb768712d0e0dd5efd00e0ff88027160b787
@@ -2492,7 +3434,7 @@ Author: Ben Gardner <ben@ben-MS-7637.(none)>
 Date:   Wed Nov 21 15:52:14 2012 -0600
 
     sp_cmt_cpp_start: Do not insert a space in '////'
-    
+
     Thanks to sf.net user stsi
 
 commit 374c12df306f5d3f36c2026d734f758d87dc2e18
@@ -2715,7 +3657,7 @@ Date:   Sun Nov 18 21:45:45 2012 -0600
      sp_annotation_paren
      nl_after_annotation
      nl_between_annotation
-    
+
     Thanks to skarekar.
 
 commit 5421d10fca9a51e1311e3c791cbb8e2ab649eecd
@@ -2738,7 +3680,7 @@ Author: Ben Gardner <ben@ben-MS-7637.(none)>
 Date:   Wed Oct 17 22:47:52 2012 -0500
 
     Fix spelling errors in comments
-    
+
     Thanks to Ger Hobbelt
 
 commit 97bae9f6766596f45ae1a6f3b960aeff468b7bf6
@@ -2746,7 +3688,7 @@ Author: Ben Gardner <ben@ben-MS-7637.(none)>
 Date:   Wed Oct 17 22:28:51 2012 -0500
 
     Remove unused parameter to print_options()
-    
+
     Thanks to Ger Hobbelt
 
 commit 46b78ef42a3ad960cee0eeb2c9b69f4cd6208e15
@@ -2754,7 +3696,7 @@ Author: Ben Gardner <ben@ben-MS-7637.(none)>
 Date:   Wed Oct 17 22:27:39 2012 -0500
 
     Use the cross-platform 'safe' isalpha() wrapper.
-    
+
     Thanks to Ger Hobbelt
 
 commit eb7ce00527e1f9fb7e1b9748a9458fdea4a0cf87
@@ -2762,7 +3704,7 @@ Author: Ben Gardner <ben@ben-MS-7637.(none)>
 Date:   Wed Oct 17 22:23:53 2012 -0500
 
     Use the log_sev_t enum instead of int where it makes sense
-    
+
     Thanks to Ger Hobbelt
 
 commit 4976ecf46bf5c99070442ed61d2c4d61d2313078
@@ -2770,7 +3712,7 @@ Author: Ben Gardner <ben@ben-MS-7637.(none)>
 Date:   Wed Oct 17 22:12:52 2012 -0500
 
     Remove unused variable.
-    
+
     Thanks to Ger Hobbelt
 
 commit 8177f573f0c6e5915b82fc785ac4314408933290
@@ -2778,7 +3720,7 @@ Author: Ben Gardner <ben@ben-MS-7637.(none)>
 Date:   Wed Oct 17 21:41:49 2012 -0500
 
     Use EXIT_SUCCESS and EXIT_FAILURE instead of 0 and 1 for portability
-    
+
     Thanks to Ger Hobbelt
 
 commit 9a96fd27e29d64ad813e9d99a135ef0e3079567b
@@ -2786,7 +3728,7 @@ Author: Ben Gardner <ben@ben-MS-7637.(none)>
 Date:   Wed Oct 17 21:38:25 2012 -0500
 
     Add some enum value comments
-    
+
     Thanks to Ger Hobbelt
 
 commit 3653536c281c6bcc982da4bfe71a56536d734298
@@ -2794,7 +3736,7 @@ Author: Ben Gardner <ben@ben-MS-7637.(none)>
 Date:   Wed Oct 17 21:36:30 2012 -0500
 
     Use GetEnvironmentVariableA() instead of GetEnvironmentVariable()
-    
+
     Thanks to Ger Hobbelt
 
 commit db25fd2c9345eb506d57db33a501a81e68121976
@@ -2802,7 +3744,7 @@ Author: Ben Gardner <ben@ben-MS-7637.(none)>
 Date:   Wed Oct 17 21:35:15 2012 -0500
 
     Whitespace cleanup a bit
-    
+
     Thanks to Ger Hobbelt
 
 commit 6c430a023695451d5eb17027a098cc0d4e816aa6
@@ -2822,14 +3764,14 @@ Author: David Schaefgen <david.schaefgen@gmail.com>
 Date:   Tue Oct 16 09:38:47 2012 -0500
 
     Finish FIX | Issue #99
-    
+
     Found an additional case, anonymous block arguments to Objective-C
     messages, i.e.:
-    
+
     - (void)resetCells:(void (^)(UIView *view, NSUInteger idx))handler {...}
-    
+
     or this in an @interface
-    
+
     - (void)resetCells:(void (^)(UIView *view, NSUInteger idx))handler;
 
 commit 4eaee0e7f8b7621eb24a0fe24b7959047e74b011
@@ -2837,7 +3779,7 @@ Author: Ben Gardner <ben@ben-MS-7637.(none)>
 Date:   Mon Oct 15 20:46:09 2012 -0500
 
     Fix the '>' + '>' => '>>' detection logic
-    
+
     The memcmp() was incorrect since the token string storage was changed.
     The extra else if () logic added recently was not needed. At least, it
     didn't make any difference in the tests once tif was fixed.
@@ -2847,7 +3789,7 @@ Author: Ben Gardner <ben@ben-MS-7637.(none)>
 Date:   Mon Oct 15 20:40:03 2012 -0500
 
     Save off current template test results.
-    
+
     Apparently, this "bool X = j<3>>1;" is now the template 'j' passed a value
     of 3 compared against 1.
 
@@ -2863,7 +3805,7 @@ Author: Ben Gardner <gardner.ben@gmail.com>
 Date:   Fri Oct 12 10:39:47 2012 -0700
 
     Merge pull request #89 from jasonfharris/master
-    
+
     Request for fix to make ObjC handle method one liners (nl_func_leave_one_liners)
 
 commit be15b031d9aa3ca652184bc4fc9d602e4e54688e
@@ -2872,7 +3814,7 @@ Author: Ben Gardner <gardner.ben@gmail.com>
 Date:   Fri Oct 12 10:38:17 2012 -0700
 
     Merge pull request #90 from aniec07/master
-    
+
     Bug 3555610, bugs of >> worked on version 0.57
 
 commit ccd991fc2e0a2865a79f11c82a92a863303b6788
@@ -2881,7 +3823,7 @@ Author: Ben Gardner <gardner.ben@gmail.com>
 Date:   Fri Oct 12 10:36:18 2012 -0700
 
     Merge pull request #100 from daschae/master
-    
+
     FIX | issue 99 -> Type pointers in Objective-C block argument definitions and literal blocks star is arith rather than ptr_type
 
 commit 0befe17a9705c9a1849dc8fd44f60a131f0a45b0
@@ -2889,10 +3831,10 @@ Author: David Schaefgen <david.schaefgen@gmail.com>
 Date:   Thu Oct 11 18:24:01 2012 -0500
 
     FIX | issue #99
-    
+
     Type pointers in Objective-C block argument definitions and literal
     blocks star is arith rather than ptr_type.
-    
+
     Pass everything starting with the open paren through
     fix_fcn_def_params(chunk_t *) to process the arguments like function
     parameters.
@@ -2908,7 +3850,7 @@ Author: Anirban Pramanick <pramanick89@gmail.com>
 Date:   Wed Aug 22 12:22:44 2012 +0530
 
     Update src/tokenize_cleanup.cpp
-    
+
     Changes pertaining to bugs of >> - ID: 3555610
     Resolve conflict between template and comparator followed by shift operator
     The function handle_double_angle_close is called when then second '>' of  '>>' is reached.
@@ -2920,7 +3862,7 @@ Author: Anirban Pramanick <pramanick89@gmail.com>
 Date:   Wed Aug 22 12:09:27 2012 +0530
 
     Update tests/output/cpp/30103-templates.cpp
-    
+
     bugs of >> - ID: 3555610
     Resolve conflict between template and comparator followed by shift operator
 
@@ -2929,7 +3871,7 @@ Author: Anirban Pramanick <pramanick89@gmail.com>
 Date:   Wed Aug 22 12:07:54 2012 +0530
 
     Update tests/output/cpp/30102-templates.cpp
-    
+
     Did not remove the syntax error line that was similar to bugs ID: 3555610
 
 commit 7d47d1624ae6affa797d75cfcb4462d4bbaa7542
@@ -2937,7 +3879,7 @@ Author: Anirban Pramanick <pramanick89@gmail.com>
 Date:   Wed Aug 22 12:07:05 2012 +0530
 
     Update tests/output/cpp/30102-templates.cpp
-    
+
     bugs of >> - ID: 3555610
     Resolve conflict between template and comparator followed by shift operator
 
@@ -2946,7 +3888,7 @@ Author: Anirban Pramanick <pramanick89@gmail.com>
 Date:   Wed Aug 22 12:05:56 2012 +0530
 
     Update tests/output/cpp/30101-templates.cpp
-    
+
     bugs of >> - ID: 3555610
     Resolve conflict between template and comparator followed by shift operator
 
@@ -2955,7 +3897,7 @@ Author: Anirban Pramanick <pramanick89@gmail.com>
 Date:   Wed Aug 22 12:04:10 2012 +0530
 
     Update tests/output/cpp/30100-templates.cpp
-    
+
     bugs of >> - ID: 3555610
     Resolve conflict between template and comparator followed by shift operator
 
@@ -2964,7 +3906,7 @@ Author: Anirban Pramanick <pramanick89@gmail.com>
 Date:   Wed Aug 22 12:00:51 2012 +0530
 
     Update tests/output/cpp/30023-templates.cpp
-    
+
     bugs of >> - ID: 3555610
     Test case to resolve conflict between template and comparator followed by shift operator.
 
@@ -2973,7 +3915,7 @@ Author: Anirban Pramanick <pramanick89@gmail.com>
 Date:   Wed Aug 22 11:53:16 2012 +0530
 
     Update tests/input/cpp/templates.cpp
-    
+
     Y<X<6>>1>> x4 is detected as a syntax error in C++. However a condition like:
     if ( j<3>>1 )
     is not a syntax error. But Uncrustify detects the latter as a template and forces a space making it as:
@@ -2995,7 +3937,7 @@ Author: Ben Gardner <gardner.ben@gmail.com>
 Date:   Wed Jul 18 09:49:41 2012 -0700
 
     Merge pull request #85 from kastiglione/fix-blocks-spacing
-    
+
     Mark functions inside block expressions
 
 commit 65dd5597686d1772d951fc6698578afbf8ebf3ac
@@ -3004,7 +3946,7 @@ Author: Ben Gardner <gardner.ben@gmail.com>
 Date:   Wed Jul 18 09:47:32 2012 -0700
 
     Merge pull request #86 from Hackerpilot/master
-    
+
     Add support for D's new lambda operator
 
 commit 4c8a0340cbb9c551e58618e5b485e304167a57fd
@@ -3037,7 +3979,7 @@ Author: Ben Gardner <gardner.ben@gmail.com>
 Date:   Sun Jun 24 15:27:57 2012 -0700
 
     Merge pull request #84 from GerHobbelt/issue-084
-    
+
     bugfix: wrong offset passed to peek() --> CRLF not recognized correctly
 
 commit f4505271868e251e694f2aff5da8804342b55505
@@ -3076,7 +4018,7 @@ Author: Ben Gardner <gardner.ben@gmail.com>
 Date:   Tue Jun 5 15:25:02 2012 -0700
 
     Merge pull request #79 from pwaller/remove_ns_close_semicolon
-    
+
     Remove semicolons after namespace close brace
 
 commit 1b6c857876e78b46d1a2c6d0c7ae8dbba1504fb7
@@ -3148,7 +4090,7 @@ Author: Ben Gardner <gardner.ben@gmail.com>
 Date:   Sat Apr 28 14:26:40 2012 -0700
 
     Merge pull request #65 from JanX2/master
-    
+
     Updated Xcode project with recent changes
 
 commit a3a56c1fad9d23afecc691723a622a3d9c678890
@@ -3210,12 +4152,12 @@ Author: Oleg Smolsky <oleg@smolsky.net>
 Date:   Sun Apr 1 11:33:14 2012 -0700
 
     Moved a hard-coded constant out into an option
-    
+
         indent_ctor_init_leading  = 4        # virtual indent from the ':' for member
                                              # initializers. Default is 2.
                                              # (applies to the leading colon case)
     this is needed for handling member initializer lists:
-    
+
     Thread::Thread()
         :   m_bStarted(false),
             m_log(/Thread)
@@ -3311,7 +4253,7 @@ Author: Ben Gardner <gardner.ben@gmail.com>
 Date:   Tue Mar 20 21:21:32 2012 -0500
 
     Merge branch 'rdan-20120129' of https://github.com/rdan/uncrustify into rdan-rdan-20120129
-    
+
     Conflicts:
     	src/indent.cpp
 
@@ -3321,7 +4263,7 @@ Author: Ben Gardner <gardner.ben@gmail.com>
 Date:   Tue Mar 20 19:16:30 2012 -0700
 
     Merge pull request #57 from mkonig/mos_extensions
-    
+
     Added a script that generates uncrustify_version.h on windows.
 
 commit d519bfa85552cebc5388b979668ea7c5d1c53853
@@ -3330,7 +4272,7 @@ Author: Ben Gardner <gardner.ben@gmail.com>
 Date:   Tue Mar 20 19:13:46 2012 -0700
 
     Merge pull request #63 from bitserf/objc-method-spec-colons
-    
+
     Tweak align_oc_decl_colon to also align colons of Objective-C method prototypes
 
 commit e2e075683a576be33afdab4eac922c3afd52bb2b
@@ -3360,7 +4302,7 @@ Date:   Mon Feb 13 00:50:12 2012 +0100
 
     - Correction of my previous commit (bug detected with file "pp-if-indent.c", file added to tests). The bug is present only when the option added is active.
     - Correction of a bug that was already in uncrustify detected with file "pp-if-indent.c". It generated the following output:
-    
+
     pp-if-indent.c:19 Unmatched PP_IF_INDENT
     pp-if-indent.c:21 Unmatched BRACE_OPEN
     pp-if-indent.c:30 Unmatched PP_IF_INDENT
@@ -3397,13 +4339,13 @@ Date:   Sun Feb 12 13:07:29 2012 +0100
 
     Correction of an issue:
     In the following code
-    
+
     #if A
      void function(void)
      {
      }
     #endif
-    
+
     A is qualified as Tag=CT_TYPE/Parent=FUNC_DEF instead of Tag=WORD/Parent=NONE.
 
 commit 95eb26256066b608063f42d8ca7ade73e8fb2922
@@ -3591,9 +4533,9 @@ Date:   Sat Nov 26 12:03:15 2011 -0600
 
     From: Jim Meyering
     include <unitsd.h> for open, close, unlink
-    
+
     Otherwise, I get errors like these on Fedora 16:
-    
+
       uncrustify.cpp: In function 'bool file_content_matches(const string&,\
         const string&)':
       uncrustify.cpp:903:16: error: 'close' was not declared in this scope
@@ -3609,7 +4551,7 @@ Author: Ben Gardner <gardner.ben@gmail.com>
 Date:   Sat Nov 26 09:56:03 2011 -0800
 
     Merge pull request #47 from meyering/multi-line-comment--do-not-elide-utf8-characters
-    
+
     do not elide UTF-8 characters from multi-line comments
 
 commit fbf046e03e41fb8c137c2ed49c120bf389cbbc75
@@ -3617,18 +4559,18 @@ Author: Jim Meyering <meyering@redhat.com>
 Date:   Fri Nov 25 19:47:25 2011 +0100
 
     do not elide UTF-8 characters from multi-line comments
-    
+
     Before this change, uncrustify would remove UTF-8 characters from
     multi-line comments.  E.g., here, uncrustify would remove an a-acute
     from a 2-line comment:
-    
+
         $ printf '/*\303\241\n*/\n' > utf8.c
         $ src/uncrustify -q utf8.c; wc -c utf8.c utf8.c.unc*
          8 utf8.c
          6 utf8.c.uncrustify
-    
+
     This fixes it and adds a test to exercise the fix.
-    
+
     * src/output.cpp (output_comment_multi_simple): Correct the type of
     "ch": use "int", not char, to avoid sign-extension with signed char.
     * tests/c.test: New file.
@@ -3731,7 +4673,7 @@ Date:   Thu Nov 10 05:52:17 2011 -0600
 
     Increase the span of '<<' slignment so that 'q' and 'xyz' align in the
     following code snippet:
-    
+
     void bar()
     {
       out << "q"
@@ -3752,7 +4694,7 @@ Date:   Thu Nov 10 05:37:07 2011 -0600
 
     From: Jim Meyering
     Fix handling of virtual braces when calculating the comment column.
-    
+
     foo ()
     {
       if (1)
@@ -3764,7 +4706,7 @@ Author: Ben Gardner <gardner.ben@gmail.com>
 Date:   Thu Nov 10 05:29:04 2011 -0600
 
     Fix handling of templates in constructors:
-    
+
     TOTO<char*const>::~TOTO<char*const> ()
     {
     }
@@ -3776,15 +4718,15 @@ Date:   Thu Nov 10 05:18:30 2011 -0600
     From: Todd Richmond
     do_code_width() must be followed by newlines_cleanup_braces because
     breaking lines might also break one-liners such as
-    
+
     enum x = { 1, var_too_long_for_code_width };
-    
+
     which reformats to
-    
+
     enum x = { 1,
     var_too_long_for_code_width
     };
-    
+
     instead of putting the newline after the {
 
 commit 004a21be1b633306c6e655719a06d09bf7e3ee95
@@ -3824,17 +4766,17 @@ Date:   Thu Nov 3 21:11:26 2011 -0500
     nl_after_class newlines which were designed for the actual struct
     definition, not instances of the struct. This adds an extra newline
     within a var def block
-    
+
     int x() {
     struct b c;
     struct d e;
     }
-    
+
     formats to
-    
+
     int x() {
     struct b c;
-    
+
     struct d e;
     }
 
@@ -3845,7 +4787,7 @@ Date:   Thu Nov 3 21:04:26 2011 -0500
     From: Todd Richmond
     Two wide strings concatenated together without a space causes the
     second L to trail the first string instead of lead the 2nd string.
-    
+
     #define x L"a"L"b"
     formats to L"a"L "b"
     instead of
@@ -3857,17 +4799,17 @@ Date:   Tue Oct 25 18:47:42 2011 -0500
 
     From: Todd Richmond
     Rework long line splitting code.
-    
+
     This patch does the following
-    
+
     1) makes indenting for indent_continue != 0 consistent except that >0 is
     old behavior of grouping constructs like ?: or functions
-    
+
     2) fixes a bug found with the fix for 3426636 (long typedefs). The old
     code never indented properly because it added indent_size to 0 instead of
     the previous indent. In test cases that showed up as a 3 char indent
     instead of 4
-    
+
     3) fix test cases for the long typedef lines. Note that your final typedef
     change caused typedefed functions to tread the arguments as a function
     which causes the lines to indent to the fparen. I think your change is
@@ -3894,13 +4836,13 @@ Date:   Tue Oct 25 18:27:31 2011 -0500
     If mod_full_brace_if = add and mod_full_brace_if_chain = true, it will eat
     a required line break after the closing if statement, regardless of having
     { } or not.
-    
+
     if (a)
     b();
     c();
-    
+
     reformats to
-    
+
     if (a)
     b(); c();
 
@@ -3910,7 +4852,7 @@ Author: Ben Gardner <gardner.ben@gmail.com>
 Date:   Mon Oct 24 10:29:55 2011 -0700
 
     Merge pull request #45 from Uncommon/master
-    
+
     Add missing files to Xcode project
 
 commit c9768db3e058dd2b63303f3f09d0a6a2ab479be6
@@ -3992,7 +4934,7 @@ Author: Ben Gardner <gardner.ben@gmail.com>
 Date:   Thu Oct 20 21:54:03 2011 -0500
 
     Remove unused variables that g++ 4.6 found.
-    
+
     Signed-off-by: Ben Gardner <gardner.ben@gmail.com>
 
 commit db9c795e9d756ed3eff50510311b62436f51ac20
@@ -4028,7 +4970,7 @@ Author: Ben Gardner <gardner.ben@gmail.com>
 Date:   Thu Oct 13 22:28:20 2011 -0500
 
     From: Todd Richmond
-    
+
     Update sub.cfg
 
 commit 2720231d94a927f6ee9e83e9fecedef7e7b75e52
@@ -4042,7 +4984,7 @@ Author: Ben Gardner <gardner.ben@gmail.com>
 Date:   Thu Oct 13 22:06:04 2011 -0500
 
     From: Todd Richmond
-    
+
     Rework long line splitting
 
 commit e00f3545a4430f89d627d92f0bdaf63b6f18cbfc
@@ -4050,7 +4992,7 @@ Author: Ben Gardner <gardner.ben@gmail.com>
 Date:   Thu Oct 13 21:58:05 2011 -0500
 
     From: Todd Richmond
-    
+
     Add support for negative indent_continue values.
 
 commit 6aeed7a617bb0058092c36dc1cf5cbc6232b1831
@@ -4058,7 +5000,7 @@ Author: Ben Gardner <gardner.ben@gmail.com>
 Date:   Thu Oct 13 21:55:05 2011 -0500
 
     From: Todd Richmond
-    
+
     Add project name to VS2010 project file
 
 commit d3a972aaf7ea9ef20c0f7c5436ae4d598aa381c4
@@ -4066,13 +5008,13 @@ Author: Ben Gardner <gardner.ben@gmail.com>
 Date:   Thu Oct 13 21:49:16 2011 -0500
 
     From: Todd Richmond
-    
+
     uncrustify needs a "join" option to go with the other lead/trail options.
     The requirement is to remove extraneous newlines and merge them into the
     same format they would have if newlines were not found in the original.
     This is critical for function calls/deffs where arguments are not brought
     back together to maximize line length
-    
+
     The attached diff is quite simple and resolves the test cases I tried so
     far. It also undoes the splits that were added by the over-aggressive
     splitting that I resolved in my previous large diff
@@ -4082,12 +5024,12 @@ Author: Ben Gardner <gardner.ben@gmail.com>
 Date:   Thu Oct 13 21:41:30 2011 -0500
 
     From: Todd Richmond
-    
+
     If mod_remove_extra_semicolon=true, extra semicolons will be removed from
     within a macro such as
-    
+
     #define ENDSTRUCT };
-    
+
     There might be other modifying options as well that should not take effect
     within macros
 
@@ -4096,16 +5038,16 @@ Author: Ben Gardner <gardner.ben@gmail.com>
 Date:   Thu Oct 13 21:38:51 2011 -0500
 
     From: Todd Richmond
-    
+
     To denote that a string is unicode, L"string" is used, but uncustify will
     insert a space in the # cpp operator for common macros such as
-    
+
     #define KEYWORD(_keyword_) L#_keyword_
-    
+
     which reformats to
-    
+
     #define KEYWORD(_keyword_) L # _keyword_
-    
+
     sp_pp_stringify will remove the trailing space but not the leading space
     which is an invalid construct
 
@@ -4114,7 +5056,7 @@ Author: Ben Gardner <gardner.ben@gmail.com>
 Date:   Thu Oct 13 21:35:38 2011 -0500
 
     From: Todd Richmond
-    
+
     In Visual Studio in C/C++, the "interface" keyword should be treated like
     "class" as it allows derivations like ": public foo"
 
@@ -4123,24 +5065,24 @@ Author: Jim Meyering <meyering@redhat.com>
 Date:   Sun Oct 2 12:59:57 2011 +0200
 
     handle a backslash followed by a literal newline
-    
+
     Without this change, uncrustify's lexer would get confused for any C
     code containing a string like this:
-    
+
       f ("\
       Some text\n");
-    
+
     That led to a diagnostic like "Garbage in col 8: 5c" typically
     followed by a cascade of unwarranted diagnostics.
-    
+
     The fix is to reset "escaped" also when handling a literal
     newline or a carriage return.
-    
+
     Also included: a test case to exercise the bug/fix:
       tests/c.test
       tests/input/c/backslash-newline-lex.c
       tests/output/c/01060-backslash-newline-lex.c
-    
+
     Signed-off-by: Ben Gardner <gardner.ben@gmail.com>
 
 commit c404574dd88dba6520ca545ed1b388d678049c21
@@ -4218,7 +5160,7 @@ Date:   Mon Sep 19 21:17:43 2011 -0500
 
     From: Jott
     Fixed a crash in indent_text.
-    
+
     When a closing paren is missing at the end of a file, the next token is NULL.
     To reproduce, create a file with just x( in it and without a newline.
 
@@ -4228,7 +5170,7 @@ Author: Ben Gardner <gardner.ben@gmail.com>
 Date:   Mon Sep 19 19:13:57 2011 -0700
 
     Merge pull request #38 from jott/6827f9ff03920b7b2f178474292176c6078edc11
-    
+
     Fixed an infinite loop in parse_word.
 
 commit 26804b5098a0b1d7e288186caeadbd412e2297f6
@@ -4284,10 +5226,10 @@ Author: Ben Gardner <gardner.ben@gmail.com>
 Date:   Tue Sep 6 22:25:52 2011 -0500
 
     Merge branch 'master' of https://github.com/hschmidt/uncrustify into hschmidt-master
-    
+
     Conflicts:
     	src/token_names.h
-    
+
     Assuming that the change in test 50007 was intentional
 
 commit eb394d1ad6001cebf6ef2ef3572e1ae13a200e86
@@ -4296,7 +5238,7 @@ Author: Ben Gardner <gardner.ben@gmail.com>
 Date:   Tue Sep 6 22:17:45 2011 -0500
 
     Merge branch 'indent_ctor_init' of https://github.com/patnotz/uncrustify into patnotz-indent_ctor_init
-    
+
     Conflicts:
     	tests/cpp.test
 
@@ -4312,7 +5254,7 @@ Author: Ben Gardner <gardner.ben@gmail.com>
 Date:   Tue Sep 6 21:47:20 2011 -0500
 
     Merge branch 'sp_before_tr_emb_cmt' of https://github.com/patnotz/uncrustify into patnotz-sp_before_tr_emb_cmt
-    
+
     Conflicts:
     	src/tokenize_cleanup.cpp
 
@@ -4497,7 +5439,7 @@ Author: Ben Gardner <gardner.ben@gmail.com>
 Date:   Fri Aug 26 19:21:23 2011 -0700
 
     Merge pull request #32 from patnotz/testing-howto
-    
+
     Tweaks to the TESTING how-to
 
 commit 878becb3b0f205974efe86fef36616326c706487
@@ -4511,12 +5453,12 @@ Author: Pat Notz <patnotz@gmail.com>
 Date:   Tue Aug 2 22:29:59 2011 -0600
 
     Add option for controlling space before trailing/embedded comments
-    
+
     Two new options:
-    
+
        # Controls the spaces before a trailing or embedded comment
        sp_before_tr_emb_cmt = ignore
-    
+
        # Number of spaces before a trailing or embedded comment
        sp_num_before_tr_emb_cmt = 0
 
@@ -4525,7 +5467,7 @@ Author: Pat Notz <patnotz@gmail.com>
 Date:   Fri Aug 26 11:36:38 2011 -0600
 
     Tweaks to the TESTING how-to
-    
+
      - correct "run-tests.py" to "run_tests.py"
      - add tip about 'run_tests.py LANG'
      - can do "cd tests; ./run_tests.py", not "./tests/run_tests.py"
@@ -4535,7 +5477,7 @@ Author: Pat Notz <patnotz@gmail.com>
 Date:   Fri Aug 26 15:54:21 2011 -0600
 
     Add indent_ctor_init option for extra indenting of ctor initializers
-    
+
     if indent_ctor_init > 0 then that many extra spaces are added to the
     indetation of the constructor initializer list.
 
@@ -4551,7 +5493,7 @@ Author: Ben Gardner <gardner.ben@gmail.com>
 Date:   Thu Aug 25 18:41:04 2011 -0700
 
     Merge pull request #29 from JanX2/master
-    
+
     Fixed Xcode build settings
 
 commit 69486ca2d0187c8a3e0fe08da1ea1196f2d53237
@@ -4560,7 +5502,7 @@ Author: Ben Gardner <gardner.ben@gmail.com>
 Date:   Thu Aug 25 18:32:21 2011 -0700
 
     Merge pull request #31 from patnotz/testing-howto
-    
+
     Add TESTING file to document running and adding tests
 
 commit c44ee6dfb5b60e32725f8df25c9dc93f58177452
@@ -4568,7 +5510,7 @@ Author: Pat Notz <patnotz@gmail.com>
 Date:   Tue Aug 23 10:16:34 2011 -0600
 
     Add TESTING file to document running and adding tests
-    
+
     The content of this file is from messages from Ger Hobbelt and Ben
     Gardner.
 
@@ -5212,9 +6154,9 @@ Author: Hannes Schmidt <git3@hannesschmidt.net>
 Date:   Sat Dec 4 16:06:49 2010 -0800
 
     Fix detection of whether inside Obj-C msg send
-    
+
     Fixes sp_before_send_oc_colon and sp_after_send_oc_colon that were probabably broken by 42b1ed31999d4926188acf881912b49958282dac. Also revives the intent of cb9c866934ff2937e59eebab7dfeb937de73f792 broken by the same commit.
-    
+
     Signed-off-by: Hannes Schmidt <git3@hannesschmidt.net>
 
 commit a22f48121a9eeb207230c0063d0c51f38ce8fa82
@@ -5332,7 +6274,7 @@ Date:   Thu Oct 7 21:52:27 2010 -0500
 
     Treat 'try' followed by a colon as a qualifier to handle this format:
       A::A(int) try : B() { } catch (...) { }
-    
+
     Otherwise, a virtual brace is inserted after 'try'.
 
 commit 4c5d7b7377efcda9e2c1573e2178ebe5a5386b55
@@ -5553,7 +6495,7 @@ Author: Ben Gardner <gardner.ben@gmail.com>
 Date:   Fri May 28 17:03:52 2010 -0500
 
     Use silent rules instead of nostdinc
-    
+
     A nice feature of automake is that it allows a VPATH build. That is,
     a build from outside the source tree. This is disabled in uncrustify
     via nostdinc in /src/Makefile.am. If the purpose of using nostdinc
@@ -5619,7 +6561,7 @@ Date:   Mon May 17 18:21:09 2010 -0500
 
     Reduce the number of places where the version needs to be manually entered.
     Automatically generate the man and version files.
-    
+
     From: Ger Hobbelt
 
 commit efb84c2491d76b5f32e22b54561c69afb11796bf
@@ -5818,18 +6760,18 @@ Author: Ben Gardner <gardner.ben@gmail.com>
 Date:   Sat Jan 9 11:09:56 2010 -0600
 
     From: Mathieu Lacage
-    
+
     Force uncrustify to respect the nl_func_leave_one_liners configuration
     option for constructors and destructors.
-    
+
     i.e., if nl_func_leave_one_liners=True:
-    
+
     Foo::Foo() {}
-    
+
     is left as-is.
-    
+
     Without this patch, it is transformed into:
-    
+
     Foo::Foo() {
     }
 
@@ -5877,7 +6819,7 @@ Author: Ben Gardner <gardner.ben@gmail.com>
 Date:   Wed Dec 30 16:43:29 2009 -0600
 
     Allow a function prototype to be wrapped in a function call at the top level.
-    
+
     #define MACRO(a) a
     MACRO(void foo(void));
 
@@ -6335,10 +7277,10 @@ Author: Ben Gardner <gardner.ben@gmail.com>
 Date:   Thu Nov 19 19:30:47 2009 -0600
 
     nl_struct_brace should not apply outside of a 'struct' declaration.
-    
+
     // applies
     struct foo { int x; int y; };
-    
+
     // does not apply
     struct foo bar = { 5, 6 };
 
@@ -6425,7 +7367,7 @@ Author: Ben Gardner <gardner.ben@gmail.com>
 Date:   Wed Nov 11 22:42:00 2009 -0600
 
     Minor whitespace and comment changes
-    
+
     Signed-off-by: Ben Gardner <gardner.ben@gmail.com>
 
 commit e28fc35ab98e7efe5449bbae1f9ae5a92ec1808a
@@ -6433,7 +7375,7 @@ Author: rdan <rdanioux@free.fr>
 Date:   Thu Nov 12 05:35:49 2009 +0800
 
     Code updates to be able to run tests script in python under windoze with uncrustify compiled in debug mode with Visual C++ 2005
-    
+
     Signed-off-by: rdan <rdanioux@free.fr>
 
 commit b38dfb52efef5c703316bb9bcb33d64e1283b5ee
@@ -6500,7 +7442,7 @@ Author: Ben Gardner <ben@ben-desktop.(none)>
 Date:   Tue Oct 27 19:12:38 2009 -0500
 
     Merge branch 'objc'
-    
+
     Conflicts:
     	src/align.cpp
     	tests/run_tests.py
@@ -6594,7 +7536,7 @@ Author: André Berg <andre.bergmedia@googlemail.com>
 Date:   Sat Oct 24 13:03:31 2009 +0800
 
     Bug fix: Fix for detecting class category and extension parens.
-    
+
     Was confusing type with parent_type earlier.
 
 commit b92b77b739d9b652071dbf8067f0cb19f6f9eb96
@@ -6602,7 +7544,7 @@ Author: André Berg <andre.bergmedia@googlemail.com>
 Date:   Sat Oct 24 12:49:32 2009 +0800
 
     First (devel) version of changes for OC blocks support.
-    
+
     - Register new chunk types in token_enum.h
     - Add early detection of block pointer caret to tokenize_cleanup.cpp
     - Do the marking in combine.cpp
@@ -6618,15 +7560,15 @@ Author: André Berg <andre.bergmedia@googlemail.com>
 Date:   Thu Oct 22 00:08:38 2009 +0800
 
     Improvement: Change oc_msg_colon_align from boolean to span with number.
-    
+
     Makes just much more sense that way. The align feature works great but
     a bit too aggressively since it would just go and align method calls
     happening at the very top of an enclosing method with method calls all
     the way at the bottom of the enclosing method. I think a span of 1 will
     fit what most Objective-C programmers use.
-    
+
     Uptaded a lot of the oc test cases to test for this behaviour.
-    
+
     Xcode project update: Add missing oc test cases.
 
 commit 0d8540ee1ab4f923e63474b31a355f467f47d1ae
@@ -6640,7 +7582,7 @@ Author: André Berg <andre.bergmedia@googlemail.com>
 Date:   Wed Oct 21 15:39:56 2009 +0800
 
     Tests: Add a sample of real world objective-c code to the tests.
-    
+
     This sample also includes blocks which currently are not marked in uncrustify.
     Will change that later.
 
@@ -6649,7 +7591,7 @@ Author: André Berg <andre.bergmedia@googlemail.com>
 Date:   Wed Oct 21 15:36:19 2009 +0800
 
     Bug fix: line_len can become 0 here which subsequently causes a segmentation fault.
-    
+
     This is a workaround because larger issues seem to be at stake as
     I have seen line to contain garbage value at some point half into the
     sentence.
@@ -6697,10 +7639,10 @@ Author: André Berg <andre.bergmedia@googlemail.com>
 Date:   Tue Oct 20 00:29:46 2009 +0800
 
     Add new Objective-C test for a more complex method. Details follow...
-    
+
     The complex_method.m test was showing a problem with method argument types in the form of (typeName **)
     where the first star would get parsed as ARITH and the the second star would get parsed as DEREF.
-    
+
     I have a fix available, coming in one of the next commits.
 
 commit 67a83fb1248674908de7c8e14b82ac63a1032e9b

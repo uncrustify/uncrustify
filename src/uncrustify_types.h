@@ -44,6 +44,7 @@ enum brstage_e
    BS_ELSEIF,    /* expecting 'if' after 'else' */
    BS_WHILE,     /* expecting 'while' after 'do' */
    BS_CATCH,     /* expecting 'catch' or 'finally' after 'try' */
+   BS_CATCH_WHEN,  /* optional 'when' after 'catch' */
 };
 
 enum CharEncoding
@@ -163,6 +164,7 @@ struct parse_frame
 #define PCF_OC_RTYPE           PCF_BIT(37)  /* inside OC return type */
 #define PCF_OC_ATYPE           PCF_BIT(38)  /* inside OC arg type */
 #define PCF_WF_ENDIF           PCF_BIT(39)  /* #endif for whole file ifdef */
+#define PCF_IN_QT_MACRO        PCF_BIT(40)  /* in a QT-macro, i.e. SIGNAL, SLOT */
 
 #ifdef DEFINE_PCF_NAMES
 static const char *pcf_names[] =
@@ -207,6 +209,7 @@ static const char *pcf_names[] =
    "OC_RTYPE",          // 37
    "OC_ATYPE",          // 38
    "WF_ENDIF",          // 39
+   "IN_QT_MACRO",       // 40
 };
 #endif
 
@@ -236,7 +239,8 @@ struct chunk_t
       reset();
    }
 
-   void         reset()
+
+   void reset()
    {
       memset(&align, 0, sizeof(align));
       memset(&indent, 0, sizeof(indent));
@@ -259,14 +263,16 @@ struct chunk_t
       str.clear();
    }
 
-   int          len()
+
+   int len()
    {
-      return str.size();
+      return(str.size());
    }
 
-   const char   *text()
+
+   const char *text()
    {
-      return str.c_str();
+      return(str.c_str());
    }
 
    chunk_t      *next;
@@ -304,7 +310,8 @@ enum
    LANG_PAWN = 0x0080,
    LANG_ECMA = 0x0100,
 
-   LANG_ALLC = 0x017f,
+   LANG_ALLC = 0x017f,     /*<< LANG_C    | LANG_CPP | LANG_D    | LANG_CS   | 
+                                LANG_JAVA | LANG_OC  | LANG_VALA | LANG_ECMA */
    LANG_ALL  = 0x0fff,
 
    FLAG_DIG  = 0x4000,     /*<< digraph/trigraph */
@@ -359,12 +366,27 @@ struct file_mem
 #endif
 };
 
+enum unc_stage
+{
+   US_TOKENIZE,
+   US_HEADER,
+   US_TOKENIZE_CLEANUP,
+   US_BRACE_CLEANUP,
+   US_FIX_SYMBOLS,
+   US_MARK_COMMENTS,
+   US_COMBINE_LABELS,
+   US_OTHER,
+
+   US_CLEANUP
+};
+
 struct cp_data
 {
    deque<UINT8>       *bout;
    FILE               *fout;
    int                last_char;
    bool               do_check;
+   enum unc_stage     unc_stage;
    int                check_fail_cnt; // total failures
    bool               if_changed;
 
@@ -422,6 +444,9 @@ struct cp_data
    struct parse_frame frames[16];
    int                frame_count;
    int                pp_level;
+
+   /* the default values for settings */
+   op_val_t           defaults[UO_option_count];
 };
 
 extern struct cp_data cpd;

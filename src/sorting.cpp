@@ -56,7 +56,7 @@ static int compare_chunks(chunk_t *pc1, chunk_t *pc2)
       return(1);
    }
    return(0);
-}
+} // compare_chunks
 
 
 /**
@@ -72,7 +72,7 @@ static void do_the_sort(chunk_t **chunks, int num_chunks)
    LOG_FMT(LSORT, "%s: %d chunks:", __func__, num_chunks);
    for (idx = 0; idx < num_chunks; idx++)
    {
-      LOG_FMT(LSORT, " [%s]", chunks[idx]->str.c_str());
+      LOG_FMT(LSORT, " [%s]", chunks[idx]->text());
    }
    LOG_FMT(LSORT, "\n");
 
@@ -169,4 +169,4 @@ void sort_imports(void)
       }
       pc = next;
    }
-}
+} // sort_imports

@@ -27,7 +27,7 @@ Errors are always dumped to stderr
 \fB\-c\fI CFG
 Use the config file \fICFG\fR.
 .br
-If not specified, uncrustify will use \fB$UNCRUSTIFY_CONFIG\fR or \fB$HOME\\.uncrustify.cfg\fR.
+If not specified, uncrustify will use \fB$UNCRUSTIFY_CONFIG\fR or \fB$HOME/.uncrustify.cfg\fR.
 .TP
 \fB\-f\fI FILE
 Process the single file \fIFILE\fR, sending output to stdout or the file specified with \fB\-o\fR.
@@ -153,6 +153,8 @@ Use the issue tracker at <http://sourceforge.net/projects/uncrustify>
 
 .SH COPYRIGHT
 Copyright (C) 2006\(hy2014 Ben Gardner
+.br
+Copyright (C) 2015, 2016 Guy Maurel
 
 .SH LICENSE
 GNU GPL version 2 or later <http://gnu.org/licenses/gpl.html>

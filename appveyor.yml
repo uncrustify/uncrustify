@@ -1,0 +1,26 @@
+version: "{build}"
+platform: x64
+environment:
+  matrix:
+     - CONFIG: Debug
+     - CONFIG: Release
+clone_folder: C:\projects\uncrustify
+branches:
+  only:
+    - master
+clone_depth: 10
+skip_tags: true
+install:
+  - "SET PATH=C:/Python35-x64;C:/Python35-x64/Scripts;%PATH%"
+build_script:
+  - echo Running CMake...
+  - cd c:\projects\uncrustify
+  - mkdir build
+  - cd build
+  - cmake -G "Visual Studio 14 2015 Win64" ..
+  - set MSBuildLogger="C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
+  - set MSBuildOptions=/v:m /p:Configuration=%CONFIG% /logger:%MSBuildLogger%
+  - msbuild %MSBuildOptions% uncrustify.sln
+test_script:
+  - ctest -C %CONFIG% -V
+deploy: off

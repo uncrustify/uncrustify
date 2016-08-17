@@ -12,6 +12,7 @@
 #include <cstring>
 #include <cstdlib>
 
+
 /**
  * Logs one parse frame
  */
@@ -208,7 +209,7 @@ int pf_check(struct parse_frame *frm, chunk_t *pc)
            __func__, pc->orig_line, get_token_name(pc->parent_type));
    pf_log_frms(LPFCHK, "TOP", frm);
 
-   if ((pc->flags & PCF_IN_PREPROC) != 0)
+   if (pc->flags & PCF_IN_PREPROC)
    {
       LOG_FMT(LPF, " <In> ");
       pf_log(LPF, frm);
@@ -294,4 +295,4 @@ int pf_check(struct parse_frame *frm, chunk_t *pc)
    pf_log_frms(LPFCHK, "END", frm);
 
    return(pp_level);
-}
+} // pf_check

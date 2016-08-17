@@ -6,6 +6,8 @@
  *  - detect "version = 10;" vs "version (xxx) {"
  *
  * @author  Ben Gardner
+ * @author  Guy Maurel since version 0.62 for uncrustify4Qt
+ *          October 2015, 2016
  * @license GPL v2+
  */
 #include "uncrustify_types.h"
@@ -44,6 +46,7 @@ static chunk_t *handle_double_angle_close(chunk_t *pc)
       }
       else
       {
+         // bug #663
          set_chunk_type(pc, CT_COMPARE);
       }
    }
@@ -79,12 +82,16 @@ static void split_off_angle_close(chunk_t *pc)
 
 void tokenize_cleanup(void)
 {
+   LOG_FUNC_ENTRY();
+
    chunk_t *pc   = chunk_get_head();
    chunk_t *prev = NULL;
    chunk_t *next;
    chunk_t *tmp;
    chunk_t *tmp2;
    bool    in_type_cast = false;
+
+   cpd.unc_stage = US_TOKENIZE_CLEANUP;
 
    /* Since [] is expected to be TSQUARE for the 'operator', we need to make
     * this change in the first pass.
@@ -99,8 +106,11 @@ void tokenize_cleanup(void)
             /* Change '[' + ']' into '[]' */
             set_chunk_type(pc, CT_TSQUARE);
             pc->str = "[]";
+            // bug # 664
+            // The original orig_col_end of CT_SQUARE_CLOSE is stored at orig_col_end of CT_TSQUARE.
+            // pc->orig_col_end += 1;
+            pc->orig_col_end = next->orig_col_end;
             chunk_del(next);
-            pc->orig_col_end += 1;
          }
       }
       if ((pc->type == CT_SEMICOLON) &&
@@ -117,7 +127,12 @@ void tokenize_cleanup(void)
    next = chunk_get_next_ncnl(pc);
    while ((pc != NULL) && (next != NULL))
    {
-      if ((pc->type == CT_DOT) && ((cpd.lang_flags & LANG_ALLC) != 0))
+      if ((pc->type == CT_DOT) && (cpd.lang_flags & LANG_ALLC))
+      {
+         set_chunk_type(pc, CT_MEMBER);
+      }
+
+      if ((pc->type == CT_NULLCOND) && (cpd.lang_flags & LANG_CS))
       {
          set_chunk_type(pc, CT_MEMBER);
       }
@@ -158,8 +173,10 @@ void tokenize_cleanup(void)
        * Change CT_BASE before CT_PAREN_OPEN to CT_WORD.
        * public myclass() : base() {
        * }
+       * -or-
+       * var x = (T)base.y;
        */
-      if ((pc->type == CT_BASE) && (next->type == CT_PAREN_OPEN))
+      if ((pc->type == CT_BASE) && ((next->type == CT_PAREN_OPEN) || (next->type == CT_DOT)))
       {
          set_chunk_type(pc, CT_WORD);
       }
@@ -243,6 +260,7 @@ void tokenize_cleanup(void)
           */
          if (cpd.lang_flags & (LANG_CPP | LANG_CS | LANG_JAVA | LANG_VALA | LANG_OC))
          {
+            // bug #663
             check_template(pc);
          }
          else
@@ -264,7 +282,7 @@ void tokenize_cleanup(void)
          }
       }
 
-      if ((cpd.lang_flags & LANG_D) != 0)
+      if (cpd.lang_flags & LANG_D)
       {
          /* Check for the D string concat symbol '~' */
          if ((pc->type == CT_INV) &&
@@ -299,13 +317,13 @@ void tokenize_cleanup(void)
             pc->str.insert(0, prev->str);
             pc->orig_col  = prev->orig_col;
             pc->orig_line = prev->orig_line;
-            chunk_t *tmp = prev;
+            chunk_t *to_be_deleted = prev;
             prev = chunk_get_prev_ncnl(prev);
-            chunk_del(tmp);
+            chunk_del(to_be_deleted);
          }
       }
 
-      if ((cpd.lang_flags & LANG_CPP) != 0)
+      if (cpd.lang_flags & LANG_CPP)
       {
          /* Change Word before '::' into a type */
          if ((pc->type == CT_WORD) && (next->type == CT_DC_MEMBER))
@@ -426,7 +444,7 @@ void tokenize_cleanup(void)
          set_chunk_parent(next, CT_OPERATOR);
 
          LOG_FMT(LOPERATOR, "%s: %d:%d operator '%s'\n",
-                 __func__, pc->orig_line, pc->orig_col, next->str.c_str());
+                 __func__, pc->orig_line, pc->orig_col, next->text());
       }
 
       /* Change private, public, protected into either a qualifier or label */
@@ -446,7 +464,7 @@ void tokenize_cleanup(void)
             set_chunk_type(next, CT_PRIVATE_COLON);
             if ((tmp = chunk_get_next_ncnl(next)) != NULL)
             {
-               tmp->flags |= PCF_STMT_START | PCF_EXPR_START;
+               chunk_flags_set(tmp, PCF_STMT_START | PCF_EXPR_START);
             }
          }
          else
@@ -456,11 +474,33 @@ void tokenize_cleanup(void)
       }
 
       /* Look for <newline> 'EXEC' 'SQL' */
-      if (chunk_is_str(pc, "EXEC", 4) && chunk_is_str(next, "SQL", 3))
+      if ((chunk_is_str(pc, "EXEC", 4) && chunk_is_str(next, "SQL", 3)) ||
+          ((*pc->str == '$') && (pc->type != CT_SQL_WORD)))
       {
          tmp = chunk_get_prev(pc);
          if (chunk_is_newline(tmp))
          {
+            if (*pc->str == '$')
+            {
+               set_chunk_type(pc, CT_SQL_EXEC);
+               if (pc->len() > 1)
+               {
+                  /* SPLIT OFF '$' */
+                  chunk_t nc;
+
+                  nc = *pc;
+                  pc->str.resize(1);
+                  pc->orig_col_end = pc->orig_col + 1;
+
+                  nc.type = CT_SQL_WORD;
+                  nc.str.pop_front();
+                  nc.orig_col++;
+                  nc.column++;
+                  chunk_add_after(&nc, pc);
+
+                  next = chunk_get_next(pc);
+               }
+            }
             tmp = chunk_get_next(next);
             if (chunk_is_str_case(tmp, "BEGIN", 5))
             {
@@ -482,7 +522,7 @@ void tokenize_cleanup(void)
                {
                   break;
                }
-               if ((tmp->len() > 0) && unc_isalpha(*tmp->str))
+               if ((tmp->len() > 0) && (unc_isalpha(*tmp->str) || (*tmp->str == '$')))
                {
                   set_chunk_type(tmp, CT_SQL_WORD);
                }
@@ -559,7 +599,7 @@ void tokenize_cleanup(void)
          tmp = chunk_get_next_ncnl(next);
          if (tmp != NULL)
          {
-            tmp->flags |= PCF_STMT_START | PCF_EXPR_START;
+            chunk_flags_set(tmp, PCF_STMT_START | PCF_EXPR_START);
          }
 
          tmp = chunk_get_next_type(pc, CT_OC_END, pc->level);
@@ -577,7 +617,7 @@ void tokenize_cleanup(void)
             if (get_token_pattern_class(tmp->type) != PATCLS_NONE)
             {
                LOG_FMT(LOBJCWORD, "@interface %d:%d change '%s' (%s) to CT_WORD\n",
-                       pc->orig_line, pc->orig_col, tmp->str.c_str(),
+                       pc->orig_line, pc->orig_col, tmp->text(),
                        get_token_name(tmp->type));
                set_chunk_type(tmp, CT_WORD);
             }
@@ -627,7 +667,7 @@ void tokenize_cleanup(void)
       {
          if (next->type != CT_PAREN_OPEN)
          {
-            next->flags |= PCF_STMT_START | PCF_EXPR_START;
+            chunk_flags_set(next, PCF_STMT_START | PCF_EXPR_START);
          }
          else
          {
@@ -640,7 +680,7 @@ void tokenize_cleanup(void)
                tmp = chunk_get_next_ncnl(tmp);
                if (tmp != NULL)
                {
-                  tmp->flags |= PCF_STMT_START | PCF_EXPR_START;
+                  chunk_flags_set(tmp, PCF_STMT_START | PCF_EXPR_START);
 
                   tmp = chunk_get_next_type(tmp, CT_SEMICOLON, pc->level);
                   if (tmp != NULL)
@@ -745,13 +785,20 @@ void tokenize_cleanup(void)
          set_chunk_type(pc, CT_QUALIFIER);
       }
 
+      // guy 2015-11-05
+      // change CT_DC_MEMBER + CT_FOR into CT_DC_MEMBER + CT_FUNC_CALL
+      if ((pc->type == CT_FOR) &&
+          (pc->prev->type == CT_DC_MEMBER))
+      {
+         set_chunk_type(pc, CT_FUNC_CALL);
+      }
       /* TODO: determine other stuff here */
 
       prev = pc;
       pc   = next;
       next = chunk_get_next_ncnl(pc);
    }
-}
+} // tokenize_cleanup
 
 
 /**
@@ -789,7 +836,7 @@ static void check_template(chunk_t *start)
          if ((pc->str[0] == '>') && (pc->len() > 1))
          {
             LOG_FMT(LTEMPL, " {split '%s' at %d:%d}",
-                    pc->str.c_str(), pc->orig_line, pc->orig_col);
+                    pc->text(), pc->orig_line, pc->orig_col);
             split_off_angle_close(pc);
          }
 
@@ -873,7 +920,7 @@ static void check_template(chunk_t *start)
              (cpd.settings[UO_tok_split_gte].b || chunk_is_str(pc, ">>", 2)))
          {
             LOG_FMT(LTEMPL, " {split '%s' at %d:%d}",
-                    pc->str.c_str(), pc->orig_line, pc->orig_col);
+                    pc->text(), pc->orig_line, pc->orig_col);
             split_off_angle_close(pc);
          }
 
@@ -933,7 +980,7 @@ static void check_template(chunk_t *start)
    if ((end != NULL) && (end->type == CT_ANGLE_CLOSE))
    {
       pc = chunk_get_next_ncnl(end, CNAV_PREPROC);
-      if ((pc != NULL) && (pc->type != CT_NUMBER))
+      if ((pc == NULL) || (pc->type != CT_NUMBER))
       {
          LOG_FMT(LTEMPL, " - Template Detected\n");
 
@@ -942,8 +989,8 @@ static void check_template(chunk_t *start)
          pc = start;
          while (pc != end)
          {
-            next       = chunk_get_next_ncnl(pc, CNAV_PREPROC);
-            pc->flags |= PCF_IN_TEMPLATE;
+            next = chunk_get_next_ncnl(pc, CNAV_PREPROC);
+            chunk_flags_set(pc, PCF_IN_TEMPLATE);
             if (next->type != CT_PAREN_OPEN)
             {
                make_type(pc);
@@ -951,7 +998,7 @@ static void check_template(chunk_t *start)
             pc = next;
          }
          set_chunk_parent(end, CT_TEMPLATE);
-         end->flags |= PCF_IN_TEMPLATE;
+         chunk_flags_set(end, PCF_IN_TEMPLATE);
          return;
       }
    }
@@ -959,4 +1006,4 @@ static void check_template(chunk_t *start)
    LOG_FMT(LTEMPL, " - Not a template: end = %s\n",
            (end != NULL) ? get_token_name(end->type) : "<null>");
    set_chunk_type(start, CT_COMPARE);
-}
+} // check_template

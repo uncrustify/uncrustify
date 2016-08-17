@@ -19,6 +19,7 @@
 #include "log_levels.h"
 #include "md5.h"
 #include "backup.h"
+//#include "unc_tools.h"
 
 #include <cstdio>
 #include <cstdlib>
@@ -48,20 +49,12 @@ static const char *language_name_from_flags(int lang);
 static bool read_stdin(file_mem& fm);
 static void uncrustify_start(const deque<int>& data);
 static void uncrustify_end();
-static void uncrustify_file(const file_mem& fm, FILE *pfout,
-                            const char *parsed_file, bool defer_uncrustify_end = false);
-static void do_source_file(const char *filename_in,
-                           const char *filename_out,
-                           const char *parsed_file,
-                           bool no_backup, bool keep_mtime);
-static void process_source_list(const char *source_list, const char *prefix,
-                                const char *suffix, bool no_backup, bool keep_mtime);
+static void uncrustify_file(const file_mem& fm, FILE *pfout, const char *parsed_file, bool defer_uncrustify_end = false);
+static void do_source_file(const char *filename_in, const char *filename_out, const char *parsed_file, bool no_backup, bool keep_mtime);
+static void process_source_list(const char *source_list, const char *prefix, const char *suffix, bool no_backup, bool keep_mtime);
 static int load_header_files();
 
-static const char *make_output_filename(char *buf, int buf_size,
-                                        const char *filename,
-                                        const char *prefix,
-                                        const char *suffix);
+static const char *make_output_filename(char *buf, int buf_size, const char *filename, const char *prefix, const char *suffix);
 
 static int load_mem_file(const char *filename, file_mem& fm);
 
@@ -133,9 +126,10 @@ static void usage_exit(const char *msg, const char *argv0, int code)
            "\n"
            "If no input files are specified, the input is read from stdin\n"
            "If reading from stdin, you should specify the language using -l\n"
+           "or specify a filename using --assume for automatic language detection.\n"
            "\n"
-           "If -F is used or files are specified on the command line, the output filename is\n"
-           "'prefix/filename' + suffix\n"
+           "If -F is used or files are specified on the command line,\n"
+           "the output filename is 'prefix/filename' + suffix\n"
            "\n"
            "When reading from stdin or doing a single file via the '-f' option,\n"
            "the output is dumped to stdout, unless redirected with -o FILE.\n"
@@ -146,44 +140,46 @@ static void usage_exit(const char *msg, const char *argv0, int code)
            "The '--prefix' and '--suffix' options may not be used with '--replace' or '--no-backup'.\n"
            "\n"
            "Basic Options:\n"
-           " -c CFG       : use the config file CFG\n"
-           " -f FILE      : process the single file FILE (output to stdout, use with -o)\n"
-           " -o FILE      : Redirect stdout to FILE\n"
-           " -F FILE      : read files to process from FILE, one filename per line (- is stdin)\n"
+           " -c CFG       : Use the config file CFG.\n"
+           " -f FILE      : Process the single file FILE (output to stdout, use with -o).\n"
+           " -o FILE      : Redirect stdout to FILE.\n"
+           " -F FILE      : Read files to process from FILE, one filename per line (- is stdin).\n"
            " --check      : Do not output the new text, instead verify that nothing changes when\n"
            "                the file(s) are processed.\n"
            "                The status of every file is printed to stderr.\n"
            "                The exit code is EXIT_SUCCESS if there were no changes, EXIT_FAILURE otherwise.\n"
-           " files        : files to process (can be combined with -F)\n"
+           " files        : Files to process (can be combined with -F).\n"
            " --suffix SFX : Append SFX to the output filename. The default is '.uncrustify'\n"
            " --prefix PFX : Prepend PFX to the output filename path.\n"
-           " --replace    : replace source files (creates a backup)\n"
-           " --no-backup  : replace files, no backup. Useful if files are under source control\n"
-           " --if-changed : only write to stdout/FILE if a change was detected.\n"
+           " --replace    : Replace source files (creates a backup).\n"
+           " --no-backup  : Replace files, no backup. Useful if files are under source control.\n"
+           " --if-changed : Write to stdout (or create output FILE) only if a change was detected.\n"
 #ifdef HAVE_UTIME_H
-           " --mtime      : preserve mtime on replaced files\n"
+           " --mtime      : Preserve mtime on replaced files.\n"
 #endif
-           " -l           : language override: C, CPP, D, CS, JAVA, PAWN, OC, OC+, VALA\n"
-           " -t           : load a file with types (usually not needed)\n"
-           " -q           : quiet mode - no output on stderr (-L will override)\n"
-           " --frag       : code fragment, assume the first line is indented correctly\n"
+           " -l           : Language override: C, CPP, D, CS, JAVA, PAWN, OC, OC+, VALA.\n"
+           " -t           : Load a file with types (usually not needed).\n"
+           " -q           : Quiet mode - no output on stderr (-L will override).\n"
+           " --frag       : Code fragment, assume the first line is indented correctly.\n"
+           " --assume FN  : Uses the filename FN for automatic language detection if reading\n"
+           "                from stdin unless -l is specified.\n"
            "\n"
            "Config/Help Options:\n"
-           " -h -? --help --usage     : print this message and exit\n"
-           " --version                : print the version and exit\n"
-           " --show-config            : print out option documentation and exit\n"
-           " --update-config          : Output a new config file. Use with -o FILE\n"
-           " --update-config-with-doc : Output a new config file. Use with -o FILE\n"
-           " --universalindent        : Output a config file for Universal Indent GUI\n"
-           " --detect                 : detects the config from a source file. Use with '-f FILE'\n"
+           " -h -? --help --usage     : Print this message and exit.\n"
+           " --version                : Print the version and exit.\n"
+           " --show-config            : Print out option documentation and exit.\n"
+           " --update-config          : Output a new config file. Use with -o FILE.\n"
+           " --update-config-with-doc : Output a new config file. Use with -o FILE.\n"
+           " --universalindent        : Output a config file for Universal Indent GUI.\n"
+           " --detect                 : Detects the config from a source file. Use with '-f FILE'.\n"
            "                            Detection is fairly limited.\n"
            " --set <option>=<value>   : Sets a new value to a config option.\n"
            "\n"
            "Debug Options:\n"
-           " -p FILE      : dump debug info to a file\n"
-           " -L SEV       : Set the log severity (see log_levels.h)\n"
-           " -s           : Show the log severity in the logs\n"
-           " --decode     : decode remaining args (chunk flags) and exit\n"
+           " -p FILE      : Dump debug info to a file.\n"
+           " -L SEV       : Set the log severity (see log_levels.h; note 'A' = 'all')\n"
+           " -s           : Show the log severity in the logs.\n"
+           " --decode     : Decode remaining args (chunk flags) and exit.\n"
            "\n"
            "Usage Examples\n"
            "cat foo.d | uncrustify -q -c my.cfg -l d\n"
@@ -205,7 +201,7 @@ static void usage_exit(const char *msg, const char *argv0, int code)
            ,
            path_basename(argv0), UO_option_count);
    exit(code);
-}
+} // usage_exit
 
 
 static void version_exit(void)
@@ -227,6 +223,7 @@ static void redir_stdout(const char *output_file)
       {
          LOG_FMT(LERR, "Unable to open %s for write: %s (%d)\n",
                  output_file, strerror(errno), errno);
+         cpd.error_count++;
          usage_exit(NULL, NULL, 56);
       }
       LOG_FMT(LNOTE, "Redirecting output to %s\n", output_file);
@@ -245,12 +242,16 @@ int main(int argc, char *argv[])
    int        idx;
    const char *p_arg;
 
-   /* If ran without options... check keyword sort and show the usage info */
+   /* check keyword sort */
+   assert(keywords_are_sorted());
+   /* If ran without options show the usage info */
    if (argc == 1)
    {
-      keywords_are_sorted();
       usage_exit(NULL, argv[0], EXIT_SUCCESS);
    }
+
+   /* make sure we have token_names.h in sync with token_enum.h */
+   assert(ARRAY_SIZE(token_names) == CT_TOKEN_COUNT_);
 
    /* Build options map */
    register_options();
@@ -270,14 +271,14 @@ int main(int argc, char *argv[])
    if (arg.Present("--show-config"))
    {
       print_options(stdout);
-      return EXIT_SUCCESS;
+      return(EXIT_SUCCESS);
    }
 
    cpd.do_check = arg.Present("--check");
    cpd.if_changed = arg.Present("--if-changed");
 
 #ifdef WIN32
-   /* tell windoze not to change what I write to stdout */
+   /* tell Windows not to change what I write to stdout */
    (void)_setmode(_fileno(stdout), _O_BINARY);
 #endif
 
@@ -303,7 +304,7 @@ int main(int argc, char *argv[])
       {
          log_pcf_flags(LSYS, strtoul(p_arg, NULL, 16));
       }
-      return EXIT_SUCCESS;
+      return(EXIT_SUCCESS);
    }
 
    /* Get the config file name */
@@ -312,32 +313,20 @@ int main(int argc, char *argv[])
    {
       cfg_file = p_arg;
    }
-
-   /* Try to find a config file at an alternate location */
-   if (cfg_file.empty())
+   else if (!unc_getenv("UNCRUSTIFY_CONFIG", cfg_file))
    {
-      if (!unc_getenv("UNCRUSTIFY_CONFIG", cfg_file))
+      /* Try to find a config file at an alternate location */
+      string home;
+
+      if (unc_homedir(home))
       {
-         string home;
+         struct stat tmp_stat;
+         string      path;
 
-         if (unc_homedir(home))
+         path = home + "/uncrustify.cfg";
+         if (stat(path.c_str(), &tmp_stat) == 0)
          {
-            struct stat tmp_stat;
-            string      path;
-
-            path = home + "/uncrustify.cfg";
-            if (stat(path.c_str(), &tmp_stat) == 0)
-            {
-               cfg_file = path;
-            }
-            else
-            {
-               path = home + "/.uncrustify.cfg";
-               if (stat(path.c_str(), &tmp_stat) == 0)
-               {
-                  cfg_file = path;
-               }
-            }
+            cfg_file = path;
          }
       }
    }
@@ -415,13 +404,14 @@ int main(int argc, char *argv[])
 
    const char *prefix = arg.Param("--prefix");
    const char *suffix = arg.Param("--suffix");
+   const char *assume = arg.Param("--assume");
 
-   bool no_backup        = arg.Present("--no-backup");
-   bool replace          = arg.Present("--replace");
-   bool keep_mtime       = arg.Present("--mtime");
-   bool update_config    = arg.Present("--update-config");
-   bool update_config_wd = arg.Present("--update-config-with-doc");
-   bool detect           = arg.Present("--detect");
+   bool       no_backup        = arg.Present("--no-backup");
+   bool       replace          = arg.Present("--replace");
+   bool       keep_mtime       = arg.Present("--mtime");
+   bool       update_config    = arg.Present("--update-config");
+   bool       update_config_wd = arg.Present("--update-config-with-doc");
+   bool       detect           = arg.Present("--detect");
 
    /* Grab the output override */
    output_file = arg.Param("-o");
@@ -432,6 +422,7 @@ int main(int argc, char *argv[])
    LOG_FMT(LDATA, "source_list = %s\n", (source_list != NULL) ? source_list : "null");
    LOG_FMT(LDATA, "prefix      = %s\n", (prefix != NULL) ? prefix : "null");
    LOG_FMT(LDATA, "suffix      = %s\n", (suffix != NULL) ? suffix : "null");
+   LOG_FMT(LDATA, "assume      = %s\n", (assume != NULL) ? assume : "null");
    LOG_FMT(LDATA, "replace     = %d\n", replace);
    LOG_FMT(LDATA, "no_backup   = %d\n", no_backup);
    LOG_FMT(LDATA, "detect      = %d\n", detect);
@@ -478,6 +469,16 @@ int main(int argc, char *argv[])
       {
          usage_exit("Unable to load the config file", argv[0], 56);
       }
+      // test if all options are compatible to each other
+      if (cpd.settings[UO_nl_max].n > 0)
+      {
+         // test if one/some option(s) is/are not too big for that
+         if (cpd.settings[UO_nl_func_var_def_blk].n >= cpd.settings[UO_nl_max].n)
+         {
+            fprintf(stderr, "The option 'nl_func_var_def_blk' is too big against the option 'nl_max'\n");
+            exit(2);
+         }
+      }
    }
 
    /* Set config options using command line arguments.*/
@@ -520,14 +521,14 @@ int main(int argc, char *argv[])
          {
             fprintf(stderr, "Unable to open %s for write: %s (%d)\n",
                     output_file, strerror(errno), errno);
-            return EXIT_FAILURE;
+            return(EXIT_FAILURE);
          }
       }
 
       print_universal_indent_cfg(pfile);
       fclose(pfile);
 
-      return EXIT_SUCCESS;
+      return(EXIT_SUCCESS);
    }
 
    if (detect)
@@ -537,7 +538,7 @@ int main(int argc, char *argv[])
       if ((source_file == NULL) || (source_list != NULL))
       {
          fprintf(stderr, "The --detect option requires a single input file\n");
-         return EXIT_FAILURE;
+         return(EXIT_FAILURE);
       }
 
       /* Do some simple language detection based on the filename extension */
@@ -551,7 +552,7 @@ int main(int argc, char *argv[])
       {
          LOG_FMT(LERR, "Failed to load (%s)\n", source_file);
          cpd.error_count++;
-         return EXIT_FAILURE;
+         return(EXIT_FAILURE);
       }
 
       uncrustify_start(fm.data);
@@ -560,7 +561,7 @@ int main(int argc, char *argv[])
 
       redir_stdout(output_file);
       save_option_file(stdout, update_config_wd);
-      return EXIT_SUCCESS;
+      return(EXIT_SUCCESS);
    }
 
    if (update_config || update_config_wd)
@@ -568,7 +569,7 @@ int main(int argc, char *argv[])
       /* TODO: complain if file-processing related options are present */
       redir_stdout(output_file);
       save_option_file(stdout, update_config_wd);
-      return EXIT_SUCCESS;
+      return(EXIT_SUCCESS);
    }
 
    /* Everything beyond this point requires a config file, so complain and
@@ -617,7 +618,14 @@ int main(int argc, char *argv[])
       /* no input specified, so use stdin */
       if (cpd.lang_flags == 0)
       {
-         cpd.lang_flags = LANG_C;
+         if (assume != NULL)
+         {
+            cpd.lang_flags = language_flags_from_filename(assume);
+         }
+         else
+         {
+            cpd.lang_flags = LANG_C;
+         }
       }
 
       if (!cpd.do_check)
@@ -629,6 +637,7 @@ int main(int argc, char *argv[])
       if (!read_stdin(fm))
       {
          LOG_FMT(LERR, "Failed to read stdin\n");
+         cpd.error_count++;
          return(100);
       }
 
@@ -679,11 +688,11 @@ int main(int argc, char *argv[])
 
    if (cpd.do_check)
    {
-      return cpd.check_fail_cnt ? EXIT_FAILURE : EXIT_SUCCESS;
+      return(cpd.check_fail_cnt ? EXIT_FAILURE : EXIT_SUCCESS);
    }
 
    return((cpd.error_count != 0) ? EXIT_FAILURE : EXIT_SUCCESS);
-}
+} // main
 
 
 static void process_source_list(const char *source_list,
@@ -744,7 +753,7 @@ static void process_source_list(const char *source_list,
    {
       fclose(p_file);
    }
-}
+} // process_source_list
 
 
 static bool read_stdin(file_mem& fm)
@@ -796,7 +805,16 @@ static void make_folders(const string& filename)
              (strcmp(&outname[last_idx], "..") != 0))
          {
             //fprintf(stderr, "%s: %s\n", __func__, outname);
-            mkdir(outname, 0750);
+            int status;    // Coverity CID 75999
+            status = mkdir(outname, 0750);
+            if ((status != 0) &&
+                (errno != EEXIST))
+            {
+               LOG_FMT(LERR, "%s: Unable to create %s: %s (%d)\n",
+                       __func__, outname, strerror(errno), errno);
+               cpd.error_count++;
+               return;
+            }
          }
          outname[idx] = PATH_SEP;
       }
@@ -806,7 +824,7 @@ static void make_folders(const string& filename)
          last_idx = idx + 1;
       }
    }
-}
+} // make_folders
 
 
 /**
@@ -861,12 +879,14 @@ static int load_mem_file(const char *filename, file_mem& fm)
       else if (!decode_unicode(fm.raw, fm.data, fm.enc, fm.bom))
       {
          LOG_FMT(LERR, "%s: failed to decode the file '%s'\n", __func__, filename);
+         cpd.error_count++;
       }
       else
       {
          LOG_FMT(LNOTE, "%s: '%s' encoding looks like %s (%d)\n", __func__, filename,
                  fm.enc == ENC_ASCII ? "ASCII" :
                  fm.enc == ENC_BYTE ? "BYTES" :
+                 fm.enc == ENC_UTF8 ? "UTF-8" :
                  fm.enc == ENC_UTF16_LE ? "UTF-16-LE" :
                  fm.enc == ENC_UTF16_BE ? "UTF-16-BE" : "Error",
                  fm.enc);
@@ -875,7 +895,7 @@ static int load_mem_file(const char *filename, file_mem& fm)
    }
    fclose(p_file);
    return(retval);
-}
+} // load_mem_file
 
 
 /**
@@ -1016,12 +1036,13 @@ static bool file_content_matches(const string& filename1, const string& filename
    close(fd2);
 
    return((len1 == 0) && (len2 == 0));
-}
+} // file_content_matches
 
 
-const char *fix_filename(const char *filename)
+static string fix_filename(const char *filename)
 {
-   char *tmp_file;
+   char   *tmp_file;
+   string rv;
 
    /* Create 'outfile.uncrustify' */
    tmp_file = new char[strlen(filename) + 16 + 1]; /* + 1 for '\0' */
@@ -1029,7 +1050,9 @@ const char *fix_filename(const char *filename)
    {
       sprintf(tmp_file, "%s.uncrustify", filename);
    }
-   return(tmp_file);
+   rv = tmp_file;
+   delete[] tmp_file;
+   return(rv);
 }
 
 
@@ -1232,7 +1255,7 @@ static void do_source_file(const char *filename_in,
       }
 #endif
    }
-}
+} // do_source_file
 
 
 static void add_file_header()
@@ -1278,6 +1301,11 @@ static void add_func_header(c_token_t type, file_mem& fm)
    for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next_ncnlnp(pc))
    {
       if (pc->type != type)
+      {
+         continue;
+      }
+      if ((pc->flags & PCF_IN_CLASS) &&
+         !cpd.settings[UO_cmt_insert_before_inlines].b)
       {
          continue;
       }
@@ -1345,7 +1373,7 @@ static void add_func_header(c_token_t type, file_mem& fm)
          }
       }
    }
-}
+} // add_func_header
 
 
 static void add_msg_header(c_token_t type, file_mem& fm)
@@ -1364,7 +1392,7 @@ static void add_msg_header(c_token_t type, file_mem& fm)
 
       do_insert = false;
 
-      /* On a function proto or def. Back up to a close brace or semicolon on
+      /* On a message decl. Back up to a Objective-C scope
        * the same level
        */
       ref = pc;
@@ -1378,27 +1406,10 @@ static void add_msg_header(c_token_t type, file_mem& fm)
             continue;
          }
 
-         if ((ref->level != pc->level) && (ref->type == CT_OC_CATEGORY))
+         /* If we hit a parentheses around return type, back up to the open parentheses */
+         if (ref->type == CT_PAREN_CLOSE)
          {
-            ref = chunk_get_next_ncnl(ref);
-            if (ref)
-            {
-               do_insert = true;
-            }
-            break;
-         }
-
-         /* Bail if we change level or find an access specifier colon */
-         if ((ref->level != pc->level) || (ref->type == CT_PRIVATE_COLON))
-         {
-            do_insert = true;
-            break;
-         }
-
-         /* If we hit an angle close, back up to the angle open */
-         if (ref->type == CT_ANGLE_CLOSE)
-         {
-            ref = chunk_get_prev_type(ref, CT_ANGLE_OPEN, ref->level, CNAV_PREPROC);
+            ref = chunk_get_prev_type(ref, CT_PAREN_OPEN, ref->level, CNAV_PREPROC);
             continue;
          }
 
@@ -1416,20 +1427,19 @@ static void add_msg_header(c_token_t type, file_mem& fm)
                }
             }
          }
-
-         /* Ignore 'right' comments */
-         if (chunk_is_comment(ref) && chunk_is_newline(chunk_get_prev(ref)))
-         {
-            break;
-         }
-
          if ((ref->level == pc->level) &&
              ((ref->flags & PCF_IN_PREPROC) ||
-              (ref->type == CT_SEMICOLON) ||
-              (ref->type == CT_BRACE_CLOSE) ||
-              (ref->type == CT_OC_CLASS)))
+              (ref->type == CT_OC_SCOPE)))
          {
-            do_insert = true;
+            ref = chunk_get_prev(ref);
+            if (ref != NULL)
+            {
+               /* Ignore 'right' comments */
+               if (chunk_is_newline(ref) && chunk_is_comment(chunk_get_prev(ref))) {
+                  break;
+               }
+               do_insert = true;
+            }
             break;
          }
       }
@@ -1445,7 +1455,7 @@ static void add_msg_header(c_token_t type, file_mem& fm)
          }
       }
    }
-}
+} // add_msg_header
 
 
 static void uncrustify_start(const deque<int>& data)
@@ -1454,6 +1464,8 @@ static void uncrustify_start(const deque<int>& data)
     * Parse the text into chunks
     */
    tokenize(data, NULL);
+
+   cpd.unc_stage = US_HEADER;
 
    /* Get the column for the fragment indent */
    if (cpd.frag)
@@ -1493,7 +1505,7 @@ static void uncrustify_start(const deque<int>& data)
     * At this point, the level information is available and accurate.
     */
 
-   if ((cpd.lang_flags & LANG_PAWN) != 0)
+   if (cpd.lang_flags & LANG_PAWN)
    {
       pawn_prescan();
    }
@@ -1509,7 +1521,7 @@ static void uncrustify_start(const deque<int>& data)
     * Look at all colons ':' and mark labels, :? sequences, etc.
     */
    combine_labels();
-}
+} // uncrustify_start
 
 
 static void uncrustify_file(const file_mem& fm, FILE *pfout,
@@ -1565,6 +1577,8 @@ static void uncrustify_file(const file_mem& fm, FILE *pfout,
 
    uncrustify_start(data);
 
+   cpd.unc_stage = US_OTHER;
+
    /**
     * Done with detection. Do the rest only if the file will go somewhere.
     * The detection code needs as few changes as possible.
@@ -1576,6 +1590,9 @@ static void uncrustify_file(const file_mem& fm, FILE *pfout,
       if (cpd.func_hdr.data.size() > 0)
       {
          add_func_header(CT_FUNC_DEF, cpd.func_hdr);
+         if (cpd.settings[UO_cmt_insert_before_ctor_dtor].b) {
+            add_func_header(CT_FUNC_CLASS_DEF, cpd.func_hdr);
+         }
       }
       if (cpd.class_hdr.data.size() > 0)
       {
@@ -1624,6 +1641,7 @@ static void uncrustify_file(const file_mem& fm, FILE *pfout,
          old_changes = cpd.changes;
 
          LOG_FMT(LNEWLINE, "Newline loop start: %d\n", cpd.changes);
+         LOG_FMT(LGUY, "Newline loop start: %d\n", cpd.changes);
 
          annotations_newlines();
          newlines_cleanup_dup();
@@ -1686,7 +1704,7 @@ static void uncrustify_file(const file_mem& fm, FILE *pfout,
       }
 
       /* Scrub certain added semicolons */
-      if (((cpd.lang_flags & LANG_PAWN) != 0) &&
+      if ((cpd.lang_flags & LANG_PAWN) &&
           cpd.settings[UO_mod_pawn_semicolon].b)
       {
          pawn_scrub_vsemi();
@@ -1747,7 +1765,6 @@ static void uncrustify_file(const file_mem& fm, FILE *pfout,
          if (cpd.settings[UO_code_width].n > 0)
          {
             LOG_FMT(LNEWLINE, "Code_width loop start: %d\n", cpd.changes);
-
             do_code_width();
             if ((old_changes != cpd.changes) && first)
             {
@@ -1787,6 +1804,7 @@ static void uncrustify_file(const file_mem& fm, FILE *pfout,
       {
          LOG_FMT(LERR, "%s: Failed to open '%s' for write: %s (%d)\n",
                  __func__, parsed_file, strerror(errno), errno);
+         cpd.error_count++;
       }
    }
 
@@ -1799,13 +1817,15 @@ static void uncrustify_file(const file_mem& fm, FILE *pfout,
    {
       uncrustify_end();
    }
-}
+} // uncrustify_file
 
 
 static void uncrustify_end()
 {
    /* Free all the memory */
    chunk_t *pc;
+
+   cpd.unc_stage = US_CLEANUP;
 
    while ((pc = chunk_get_head()) != NULL)
    {
@@ -1907,10 +1927,10 @@ int language_flags_from_name(const char *name)
    {
       if (strcasecmp(name, language_names[i].name) == 0)
       {
-         return language_names[i].lang;
+         return(language_names[i].lang);
       }
    }
-   return 0;
+   return(0);
 }
 
 
@@ -1929,7 +1949,7 @@ static const char *language_name_from_flags(int lang)
    {
       if (language_names[i].lang == lang)
       {
-         return language_names[i].name;
+         return(language_names[i].name);
       }
    }
 
@@ -1938,10 +1958,10 @@ static const char *language_name_from_flags(int lang)
    {
       if ((language_names[i].lang & lang) != 0)
       {
-         return language_names[i].name;
+         return(language_names[i].name);
       }
    }
-   return "???";
+   return("???");
 }
 
 
@@ -1980,6 +2000,7 @@ struct lang_ext_t language_exts[] =
    { ".es",   "ECMA" },
 };
 
+
 /**
  * Set idx = 0 before the first call.
  * Done when returns NULL
@@ -1993,7 +2014,7 @@ const char *get_file_extension(int& idx)
       val = language_exts[idx].ext;
    }
    idx++;
-   return val;
+   return(val);
 }
 
 
@@ -2001,6 +2022,7 @@ const char *get_file_extension(int& idx)
 // These ARE case sensitive user file extensions.
 typedef std::map<string, string>   extension_map_t;
 static extension_map_t g_ext_map;
+
 
 const char *extension_add(const char *ext_text, const char *lang_text)
 {
@@ -2010,9 +2032,9 @@ const char *extension_add(const char *ext_text, const char *lang_text)
    {
       const char *lang_name = language_name_from_flags(lang_flags);
       g_ext_map[string(ext_text)] = lang_name;
-      return lang_name;
+      return(lang_name);
    }
-   return NULL;
+   return(NULL);
 }
 
 
@@ -2061,7 +2083,7 @@ static int language_flags_from_filename(const char *filename)
    {
       if (ends_with(filename, it->first.c_str()))
       {
-         return language_flags_from_name(it->second.c_str());
+         return(language_flags_from_name(it->second.c_str()));
       }
    }
 
@@ -2069,7 +2091,7 @@ static int language_flags_from_filename(const char *filename)
    {
       if (ends_with(filename, language_exts[i].ext))
       {
-         return language_flags_from_name(language_exts[i].name);
+         return(language_flags_from_name(language_exts[i].name));
       }
    }
 
@@ -2078,17 +2100,17 @@ static int language_flags_from_filename(const char *filename)
    {
       if (ends_with(filename, it->first.c_str(), false))
       {
-         return language_flags_from_name(it->second.c_str());
+         return(language_flags_from_name(it->second.c_str()));
       }
    }
    for (i = 0; i < (int)ARRAY_SIZE(language_exts); i++)
    {
       if (ends_with(filename, language_exts[i].ext, false))
       {
-         return language_flags_from_name(language_exts[i].name);
+         return(language_flags_from_name(language_exts[i].name));
       }
    }
-   return LANG_C;
+   return(LANG_C);
 }
 
 
@@ -2104,7 +2126,7 @@ void log_pcf_flags(log_sev_t sev, UINT64 flags)
    const char *tolog = NULL;
    for (int i = 0; i < (int)ARRAY_SIZE(pcf_names); i++)
    {
-      if ((flags & (1ULL << i)) != 0)
+      if (flags & (1ULL << i))
       {
          if (tolog != NULL)
          {

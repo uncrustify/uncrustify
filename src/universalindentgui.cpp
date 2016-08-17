@@ -1,12 +1,16 @@
 /**
  * @file universalindentgui.cpp
  * Exports the config file for UniversalIndentGUI
+ *
+ * @author  Ben Gardner
+ * @author  Guy Maurel since version 0.62 for uncrustify4Qt
+ *          October 2015, 2016
+ * @license GPL v2+
  */
 #include "prototypes.h"
 #include "uncrustify_version.h"
 #include "unc_ctype.h"
 #include <stdio.h>
-
 
 
 void print_universal_indent_cfg(FILE *pfile)
@@ -101,7 +105,11 @@ void print_universal_indent_cfg(FILE *pfile)
 
          fprintf(pfile, "\n[%s]\n", optionNameReadable);
          fprintf(pfile, "Category=%d\n", idx);
-         fprintf(pfile, "Description=\"<html>");
+         fprintf(pfile, "Description=\"<html>(123)");
+         // (123) is a placeholder to be changed with the vim command:
+         // :%s/(\(\d\)\+)/\=printf('(%d)', line('.'))
+         // to the real line number
+         // guy 2016-03-07
 
          const char *tmp = option->short_desc;
          ch = 0;
@@ -238,22 +246,22 @@ void print_universal_indent_cfg(FILE *pfile)
                break;
 
             case AT_STRING:
-               {
-                  fprintf(pfile, "CallName=%s=\n", option->name);
-                  fprintf(pfile, "EditorType=string\n");
-                  string     val_string;
-                  const char *val_str;
-                  val_string = op_val_to_string(option->type, cpd.settings[option->id]);
-                  val_str    = val_string.c_str();
-                  fprintf(pfile, "ValueDefault=%s\n", val_str);
-               }
-               break;
+            {
+               fprintf(pfile, "CallName=%s=\n", option->name);
+               fprintf(pfile, "EditorType=string\n");
+               string     val_string;
+               const char *val_str;
+               val_string = op_val_to_string(option->type, cpd.settings[option->id]);
+               val_str    = val_string.c_str();
+               fprintf(pfile, "ValueDefault=%s\n", val_str);
+            }
+            break;
 
             default:
                break;
-            }
-         }
-         delete [] optionNameReadable;
+            } // switch
+         }    // switch
+         delete[] optionNameReadable;
       }
    }
-}
+} // print_universal_indent_cfg

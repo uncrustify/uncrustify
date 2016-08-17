@@ -3,12 +3,15 @@
  * Labels the chunks as needed.
  *
  * @author  Ben Gardner
+ * @author  Guy Maurel since version 0.62 for uncrustify4Qt
+ *          October 2015, 2016
  * @license GPL v2+
  */
 #include "uncrustify_types.h"
 #include "chunk_list.h"
 #include "ChunkStack.h"
 #include "prototypes.h"
+//#define DEBUG
 
 #include <cstdio>
 #include <cstdlib>
@@ -58,6 +61,7 @@ static void handle_java_assert(chunk_t *pc);
 static chunk_t *get_d_template_types(ChunkStack& cs, chunk_t *open_paren);
 static bool chunkstack_match(ChunkStack& cs, chunk_t *pc);
 
+
 void make_type(chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
@@ -84,13 +88,13 @@ void flag_series(chunk_t *start, chunk_t *end, UINT64 set_flags, UINT64 clr_flag
    LOG_FUNC_ENTRY();
    while (start && (start != end))
    {
-      start->flags = (start->flags & ~clr_flags) | set_flags;
+      chunk_flags_upd(start, clr_flags, set_flags);
 
       start = chunk_get_next(start, nav);
    }
    if (end)
    {
-      end->flags = (end->flags & ~clr_flags) | set_flags;
+      chunk_flags_upd(end, clr_flags, set_flags);
    }
 }
 
@@ -113,8 +117,9 @@ static chunk_t *flag_parens(chunk_t *po, UINT64 flags,
    if (paren_close == NULL)
    {
       LOG_FMT(LERR, "flag_parens: no match for [%s] at [%d:%d]",
-              po->str.c_str(), po->orig_line, po->orig_col);
+              po->text(), po->orig_line, po->orig_col);
       log_func_stack_inline(LERR);
+      cpd.error_count++;
       return(NULL);
    }
 
@@ -122,7 +127,8 @@ static chunk_t *flag_parens(chunk_t *po, UINT64 flags,
            po->orig_line, po->orig_col, po->text(),
            paren_close->orig_line, paren_close->orig_col, paren_close->text(),
            get_token_name(opentype), get_token_name(parenttype));
-   log_func_stack_inline(LSETTYP);
+   //log_func_stack_inline(LSETTYP);
+   log_func_stack_inline(LFLPAREN);
 
    if (po != paren_close)
    {
@@ -133,7 +139,7 @@ static chunk_t *flag_parens(chunk_t *po, UINT64 flags,
               pc != paren_close;
               pc = chunk_get_next(pc, CNAV_PREPROC))
          {
-            pc->flags |= flags;
+            chunk_flags_set(pc, flags);
             if (parent_all)
             {
                set_chunk_parent(pc, parenttype);
@@ -154,7 +160,7 @@ static chunk_t *flag_parens(chunk_t *po, UINT64 flags,
       }
    }
    return(chunk_get_next_ncnl(paren_close, CNAV_PREPROC));
-}
+} // flag_parens
 
 
 /**
@@ -186,6 +192,74 @@ chunk_t *set_paren_parent(chunk_t *start, c_token_t parent)
 }
 
 
+/**
+ * Mark the parens and colons in:
+ *   asm volatile ( "xx" : "xx" (l), "yy"(h) : ...  );
+ *
+ * @param pc the CT_ASM item
+ */
+static void flag_asm(chunk_t *pc)
+{
+   LOG_FUNC_ENTRY();
+   chunk_t *po;
+   chunk_t *tmp;
+   chunk_t *end;
+
+   tmp = chunk_get_next_ncnl(pc, CNAV_PREPROC);
+   if (!chunk_is_token(tmp, CT_QUALIFIER))
+   {
+      return;
+   }
+   po = chunk_get_next_ncnl(tmp, CNAV_PREPROC);
+   if (!chunk_is_paren_open(po))
+   {
+      return;
+   }
+   end = chunk_skip_to_match(po, CNAV_PREPROC);
+   if (!end)
+   {
+      return;
+   }
+   set_chunk_parent(po, CT_ASM);
+   set_chunk_parent(end, CT_ASM);
+   for (tmp = chunk_get_next_ncnl(po, CNAV_PREPROC);
+        tmp != end;
+        tmp = chunk_get_next_ncnl(tmp, CNAV_PREPROC))
+   {
+      if (tmp->type == CT_COLON)
+      {
+         set_chunk_type(tmp, CT_ASM_COLON);
+      }
+      else if (tmp->type == CT_DC_MEMBER)
+      {
+         /* if there is a string on both sides, then this is two ASM_COLONs */
+         if (chunk_is_token(chunk_get_next_ncnl(tmp, CNAV_PREPROC), CT_STRING) &&
+             chunk_is_token(chunk_get_prev_ncnl(tmp, CNAV_PREPROC), CT_STRING))
+         {
+            chunk_t nc;
+
+            nc = *tmp;
+
+            tmp->str.resize(1);
+            tmp->orig_col_end = tmp->orig_col + 1;
+            set_chunk_type(tmp, CT_ASM_COLON);
+
+            nc.type = tmp->type;
+            nc.str.pop_front();
+            nc.orig_col++;
+            nc.column++;
+            chunk_add_after(&nc, tmp);
+         }
+      }
+   }
+   tmp = chunk_get_next_ncnl(end, CNAV_PREPROC);
+   if (chunk_is_token(tmp, CT_SEMICOLON))
+   {
+      set_chunk_parent(tmp, CT_ASM);
+   }
+} // flag_asm
+
+
 /* Scan backwards to see if we might be on a type declaration */
 static bool chunk_ends_type(chunk_t *start)
 {
@@ -198,7 +272,7 @@ static bool chunk_ends_type(chunk_t *start)
    for (/* nada */; pc != NULL; pc = chunk_get_prev_ncnl(pc))
    {
       LOG_FMT(LFTYPE, "%s: [%s] %s flags %" PRIx64 " on line %d, col %d\n",
-              __func__, get_token_name(pc->type), pc->str.c_str(),
+              __func__, get_token_name(pc->type), pc->text(),
               pc->flags, pc->orig_line, pc->orig_col);
 
       if ((pc->type == CT_WORD) ||
@@ -210,11 +284,11 @@ static bool chunk_ends_type(chunk_t *start)
           ((cpd.lang_flags & LANG_CS) && (pc->type == CT_MEMBER)))
       {
          cnt++;
-         last_lval = (pc->flags & PCF_LVALUE) != 0;
+         last_lval = (pc->flags & PCF_LVALUE) != 0;   // forcing value to bool
          continue;
       }
 
-      if (chunk_is_semicolon(pc) ||
+      if ((chunk_is_semicolon(pc) && ((pc->flags & PCF_IN_FOR) == 0)) ||
           (pc->type == CT_TYPEDEF) ||
           (pc->type == CT_BRACE_OPEN) ||
           (pc->type == CT_BRACE_CLOSE) ||
@@ -235,7 +309,7 @@ static bool chunk_ends_type(chunk_t *start)
    LOG_FMT(LFTYPE, "%s verdict: %s\n", __func__, ret ? "yes" : "no");
 
    return(ret);
-}
+} // chunk_ends_type
 
 
 /* skip to the final word/type in a :: chain
@@ -246,7 +320,7 @@ static chunk_t *skip_dc_member(chunk_t *start)
    LOG_FUNC_ENTRY();
    if (!start)
    {
-      return NULL;
+      return(NULL);
    }
 
    chunk_t *pc   = start;
@@ -256,7 +330,7 @@ static chunk_t *skip_dc_member(chunk_t *start)
       pc   = chunk_get_next_ncnl(next);
       next = chunk_get_next_ncnl(pc);
    }
-   return pc;
+   return(pc);
 }
 
 
@@ -270,11 +344,15 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
    LOG_FUNC_ENTRY();
    chunk_t *tmp;
 
+#ifdef DEBUG
+   LOG_FMT(LGUY, "(%d) ", __LINE__);
+#endif
+   LOG_FMT(LGUY, "%s: %d:%d %s\n", __func__, pc->orig_line, pc->orig_col, pc->text());
    // LOG_FMT(LSYS, " %3d > ['%s' %s] ['%s' %s] ['%s' %s]\n",
    //         pc->orig_line,
-   //         prev->str.c_str(), get_token_name(prev->type),
-   //         pc->str.c_str(), get_token_name(pc->type),
-   //         next->str.c_str(), get_token_name(next->type));
+   //         prev->text(), get_token_name(prev->type),
+   //         pc->text(), get_token_name(pc->type),
+   //         next->text(), get_token_name(next->type));
 
    if ((pc->type == CT_OC_AT) && next)
    {
@@ -291,85 +369,88 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
    }
 
    /* D stuff */
-   if ((cpd.lang_flags & LANG_D) &&
-       (pc->type == CT_QUALIFIER) &&
-       chunk_is_str(pc, "const", 5) &&
-       (next->type == CT_PAREN_OPEN))
+   if (next != NULL)              // Coverity CID 76005
    {
-      set_chunk_type(pc, CT_D_CAST);
-      set_paren_parent(next, pc->type);
-   }
-
-   if ((next->type == CT_PAREN_OPEN) &&
-       ((pc->type == CT_D_CAST) ||
-        (pc->type == CT_DELEGATE) ||
-        (pc->type == CT_ALIGN)))
-   {
-      /* mark the parenthesis parent */
-      tmp = set_paren_parent(next, pc->type);
-
-      /* For a D cast - convert the next item */
-      if ((pc->type == CT_D_CAST) && (tmp != NULL))
+      if ((cpd.lang_flags & LANG_D) &&
+          (pc->type == CT_QUALIFIER) &&
+          chunk_is_str(pc, "const", 5) &&
+          (next->type == CT_PAREN_OPEN))
       {
-         if (tmp->type == CT_STAR)
-         {
-            set_chunk_type(tmp, CT_DEREF);
-         }
-         else if (tmp->type == CT_AMP)
-         {
-            set_chunk_type(tmp, CT_ADDR);
-         }
-         else if (tmp->type == CT_MINUS)
-         {
-            set_chunk_type(tmp, CT_NEG);
-         }
-         else if (tmp->type == CT_PLUS)
-         {
-            set_chunk_type(tmp, CT_POS);
-         }
+         set_chunk_type(pc, CT_D_CAST);
+         set_paren_parent(next, pc->type);
       }
 
-      /* For a delegate, mark previous words as types and the item after the
-       * close paren as a variable def
-       */
-      if (pc->type == CT_DELEGATE)
+      if ((next->type == CT_PAREN_OPEN) &&
+          ((pc->type == CT_D_CAST) ||
+           (pc->type == CT_DELEGATE) ||
+           (pc->type == CT_ALIGN)))
       {
-         if (tmp != NULL)
+         /* mark the parenthesis parent */
+         tmp = set_paren_parent(next, pc->type);
+
+         /* For a D cast - convert the next item */
+         if ((pc->type == CT_D_CAST) && (tmp != NULL))
          {
-            set_chunk_parent(tmp, CT_DELEGATE);
-            if (tmp->level == tmp->brace_level)
+            if (tmp->type == CT_STAR)
             {
-               tmp->flags |= PCF_VAR_1ST_DEF;
+               set_chunk_type(tmp, CT_DEREF);
+            }
+            else if (tmp->type == CT_AMP)
+            {
+               set_chunk_type(tmp, CT_ADDR);
+            }
+            else if (tmp->type == CT_MINUS)
+            {
+               set_chunk_type(tmp, CT_NEG);
+            }
+            else if (tmp->type == CT_PLUS)
+            {
+               set_chunk_type(tmp, CT_POS);
             }
          }
 
-         if (cpd.lang_flags & LANG_D)
+         /* For a delegate, mark previous words as types and the item after the
+          * close paren as a variable def
+          */
+         if (pc->type == CT_DELEGATE)
          {
-            for (tmp = chunk_get_prev_ncnl(pc); tmp != NULL; tmp = chunk_get_prev_ncnl(tmp))
+            if (tmp != NULL)
             {
-               if (chunk_is_semicolon(tmp) ||
-                  (tmp->type == CT_BRACE_OPEN) ||
-                  (tmp->type == CT_VBRACE_OPEN))
+               set_chunk_parent(tmp, CT_DELEGATE);
+               if (tmp->level == tmp->brace_level)
                {
-                  break;
+                  chunk_flags_set(tmp, PCF_VAR_1ST_DEF);
                }
-               make_type(tmp);
+            }
+
+	         if (cpd.lang_flags & LANG_D)
+	         {
+    	        for (tmp = chunk_get_prev_ncnl(pc); tmp != NULL; tmp = chunk_get_prev_ncnl(tmp))
+	            {
+            	   if (chunk_is_semicolon(tmp) ||
+        	           (tmp->type == CT_BRACE_OPEN) ||
+    	               (tmp->type == CT_VBRACE_OPEN))
+	               {
+            	      break;
+        	       }
+    	           make_type(tmp);
+	            }
             }
          }
-      }
 
-      if ((pc->type == CT_ALIGN) && (tmp != NULL))
-      {
-         if (tmp->type == CT_BRACE_OPEN)
+         if ((pc->type == CT_ALIGN) && (tmp != NULL))
          {
-            set_paren_parent(tmp, pc->type);
+            if (tmp->type == CT_BRACE_OPEN)
+            {
+               set_paren_parent(tmp, pc->type);
+            }
+            else if (tmp->type == CT_COLON)
+            {
+               set_chunk_parent(tmp, pc->type);
+            }
          }
-         else if (tmp->type == CT_COLON)
-         {
-            set_chunk_parent(tmp, pc->type);
-         }
-      }
-   } /* paren open + cast/align/delegate */
+      } /* paren open + cast/align/delegate */
+   }
 
    if (pc->type == CT_INVARIANT)
    {
@@ -401,6 +482,10 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       flag_parens(prev, 0, CT_NONE, CT_GETSET, false);
    }
 
+   if (pc->type == CT_ASM)
+   {
+      flag_asm(pc);
+   }
 
    /* Objective C stuff */
    if (cpd.lang_flags & LANG_OC)
@@ -456,6 +541,11 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       {
          set_paren_parent(next, pc->type);
       }
+
+      if ((pc->type == CT_WHEN) && (pc->next->type != CT_SPAREN_OPEN))
+      {
+          set_chunk_type(pc, CT_WORD);
+      }
    }
 
    if (pc->type == CT_NEW)
@@ -464,7 +554,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       tmp = next;
       if (tmp->type == CT_TSQUARE)
       {
-         ts = tmp;
+         ts  = tmp;
          tmp = chunk_get_next_ncnl(tmp);
       }
       if (tmp && (tmp->type == CT_BRACE_OPEN))
@@ -500,8 +590,8 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
          }
          if ((tmp->type == CT_SQUARE_CLOSE) && (next->level == tmp->level))
          {
-            tmp->flags  |= PCF_ONE_LINER;
-            next->flags |= PCF_ONE_LINER;
+            chunk_flags_set(tmp, PCF_ONE_LINER);
+            chunk_flags_set(next, PCF_ONE_LINER);
             break;
          }
       }
@@ -522,7 +612,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
 
    /* A [] in C# and D only follows a type */
    if ((pc->type == CT_TSQUARE) &&
-       ((cpd.lang_flags & (LANG_D | LANG_CS | LANG_VALA)) != 0))
+       (cpd.lang_flags & (LANG_D | LANG_CS | LANG_VALA)))
    {
       if ((prev != NULL) && (prev->type == CT_WORD))
       {
@@ -530,7 +620,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       }
       if ((next != NULL) && (next->type == CT_WORD))
       {
-         next->flags |= PCF_VAR_1ST_DEF;
+         chunk_flags_set(next, PCF_VAR_1ST_DEF);
       }
    }
 
@@ -692,7 +782,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
          flag_parens(next, 0, CT_FPAREN_OPEN, CT_ATTRIBUTE, false);
       }
    }
-   if ((cpd.lang_flags & LANG_PAWN) != 0)
+   if (cpd.lang_flags & LANG_PAWN)
    {
       if ((pc->type == CT_FUNCTION) && (pc->brace_level > 0))
       {
@@ -802,7 +892,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
        chunk_is_str(pc, ")", 1) &&
        chunk_is_str(next, "(", 1))
    {
-      if ((cpd.lang_flags & LANG_D) != 0)
+      if (cpd.lang_flags & LANG_D)
       {
          flag_parens(next, 0, CT_FPAREN_OPEN, CT_FUNC_CALL, false);
       }
@@ -862,12 +952,26 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
 
 
    /* Check for stuff that can only occur at the start of an expression */
-   if ((pc->flags & PCF_EXPR_START) != 0)
+   if (pc->flags & PCF_EXPR_START)
    {
       /* Change STAR, MINUS, and PLUS in the easy cases */
       if (pc->type == CT_STAR)
       {
-         set_chunk_type(pc, (prev->type == CT_ANGLE_CLOSE) ? CT_PTR_TYPE : CT_DEREF);
+         // issue #596
+         // [0x100062020:IN_SPAREN,IN_FOR,STMT_START,EXPR_START,PUNCTUATOR]
+         // prev->type is CT_COLON ==> CT_DEREF
+         if (prev->type == CT_ANGLE_CLOSE)
+         {
+            set_chunk_type(pc, CT_PTR_TYPE);
+         }
+         else if (prev->type == CT_COLON)
+         {
+            set_chunk_type(pc, CT_DEREF);
+         }
+         else
+         {
+            set_chunk_type(pc, CT_DEREF);
+         }
       }
       if ((cpd.lang_flags & LANG_CPP) && (pc->type == CT_CARET) && (prev->type == CT_ANGLE_CLOSE))
       {
@@ -993,7 +1097,8 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       {
          set_chunk_type(pc, CT_PTR_TYPE);
       }
-      else if (next->type == CT_SQUARE_OPEN)
+      else if ((next->type == CT_SQUARE_OPEN) &&
+               !(cpd.lang_flags & LANG_OC))                // issue # 408
       {
          set_chunk_type(pc, CT_PTR_TYPE);
       }
@@ -1021,6 +1126,13 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       {
          set_chunk_type(pc, CT_BYREF);
       }
+      else if ((next->type == CT_FPAREN_CLOSE) ||
+               (next->type == CT_COMMA))
+      {
+         // fix the bug #654
+         // connect(&mapper, SIGNAL(mapped(QString &)), this, SLOT(onSomeEvent(QString &)));
+         set_chunk_type(pc, CT_BYREF);
+      }
       else
       {
          set_chunk_type(pc, CT_ARITH);
@@ -1034,7 +1146,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
             {
                set_chunk_type(prev, CT_TYPE);
                set_chunk_type(pc, CT_ADDR);
-               next->flags |= PCF_VAR_1ST;
+               chunk_flags_set(next, PCF_VAR_1ST);
             }
          }
       }
@@ -1056,7 +1168,84 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
          set_chunk_type(pc, CT_ARITH);
       }
    }
-}
+
+   /**
+    * Bug # 634
+    * Check for extern "C" NSString* i;
+    * NSString is a type
+    * change CT_WORD => CT_TYPE     for pc
+    * change CT_STAR => CT_PTR_TYPE for pc-next
+    */
+   if (pc->type == CT_WORD)             // here NSString
+   {
+      if (pc->next != NULL)             // here *
+      {
+         if (pc->next->type == CT_STAR) // here *
+         {
+            if (pc->prev != NULL)
+            {
+               if (pc->prev->type == CT_STRING)
+               {
+                  if (unc_text::compare(pc->prev->text(), "\"C\"") == 0)
+                  {
+                     if (pc->prev->prev->type == CT_EXTERN)
+                     {
+                        // change CT_WORD => CT_TYPE
+                        set_chunk_type(pc, CT_TYPE);
+                        // change CT_STAR => CT_PTR_TYPE
+                        set_chunk_type(pc->next, CT_PTR_TYPE);
+                     }
+                  }
+               }
+            }
+            // Issue #322 STDMETHOD(GetValues)(BSTR bsName, REFDATA** pData);
+            if ((pc->next->next) && (pc->next->next->type == CT_STAR))
+            {
+               // change CT_STAR => CT_PTR_TYPE
+               set_chunk_type(pc->next, CT_PTR_TYPE);
+               set_chunk_type(pc->next->next, CT_PTR_TYPE);
+            }
+         }
+      }
+   }
+
+   /**
+    * Bug # 634
+    * Check for __attribute__((visibility ("default"))) NSString* i;
+    * NSString is a type
+    * change CT_WORD => CT_TYPE     for pc
+    * change CT_STAR => CT_PTR_TYPE for pc-next
+    */
+   if (pc->type == CT_WORD)             // here NSString
+   {
+      if (pc->next != NULL)             // here *
+      {
+         if (pc->next->type == CT_STAR) // here *
+         {
+            tmp = pc;
+            while ((tmp != NULL))
+            {
+               if (tmp->type == CT_ATTRIBUTE)
+               {
+                  LOG_FMT(LGUY, "ATTRIBUTE found %s:%s\n",
+                          get_token_name(tmp->type), tmp->text());
+                  LOG_FMT(LGUY, "for token %s:%s\n", get_token_name(pc->type), pc->text());
+                  // change CT_WORD => CT_TYPE
+                  set_chunk_type(pc, CT_TYPE);
+                  // change CT_STAR => CT_PTR_TYPE
+                  set_chunk_type(pc->next, CT_PTR_TYPE);
+               }
+               if (tmp->flags & PCF_STMT_START)
+               {
+                  // we are at beginnig of the line
+                  break;
+               }
+               tmp = chunk_get_prev(tmp);
+            }
+         }
+      }
+   }
+} // do_symbol_check
 
 
 /**
@@ -1120,9 +1309,11 @@ void fix_symbols(void)
    chunk_t *prev;
    chunk_t dummy;
 
+   cpd.unc_stage = US_FIX_SYMBOLS;
+
    mark_define_expressions();
 
-   bool is_java = (cpd.lang_flags & LANG_JAVA) != 0;
+   bool is_java = (cpd.lang_flags & LANG_JAVA) != 0;   // forcing value to bool
    for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next_ncnl(pc))
    {
       if ((pc->type == CT_FUNC_WRAP) ||
@@ -1195,9 +1386,10 @@ void fix_symbols(void)
        * that starts with: QUALIFIER, TYPE, or WORD
        */
       if ((square_level < 0) &&
-          ((pc->flags & PCF_STMT_START) != 0) &&
+          (pc->flags & PCF_STMT_START) &&
           ((pc->type == CT_QUALIFIER) ||
            (pc->type == CT_TYPE) ||
+           (pc->type == CT_TYPENAME) ||
            (pc->type == CT_WORD)) &&
           (pc->parent_type != CT_ENUM) &&
           ((pc->flags & PCF_IN_ENUM) == 0))
@@ -1209,7 +1401,7 @@ void fix_symbols(void)
          pc = chunk_get_next_ncnl(pc);
       }
    }
-}
+} // fix_symbols
 
 
 /* Just hit an assign. Go backwards until we hit an open brace/paren/square or
@@ -1220,7 +1412,7 @@ static void mark_lvalue(chunk_t *pc)
    LOG_FUNC_ENTRY();
    chunk_t *prev;
 
-   if ((pc->flags & PCF_IN_PREPROC) != 0)
+   if (pc->flags & PCF_IN_PREPROC)
    {
       return;
    }
@@ -1241,7 +1433,7 @@ static void mark_lvalue(chunk_t *pc)
       {
          break;
       }
-      prev->flags |= PCF_LVALUE;
+      chunk_flags_set(prev, PCF_LVALUE);
       if ((prev->level == pc->level) && chunk_is_str(prev, "&", 1))
       {
          make_type(prev);
@@ -1274,7 +1466,7 @@ static void mark_function_return_type(chunk_t *fname, chunk_t *start, c_token_t 
               (pc->type != CT_OPERATOR) &&
               (pc->type != CT_WORD) &&
               (pc->type != CT_ADDR)) ||
-             ((pc->flags & PCF_IN_PREPROC) != 0))
+             (pc->flags & PCF_IN_PREPROC))
          {
             break;
          }
@@ -1303,7 +1495,7 @@ static void mark_function_return_type(chunk_t *fname, chunk_t *start, c_token_t 
       }
       LOG_FMT(LFCNR, "\n");
    }
-}
+} // mark_function_return_type
 
 
 /**
@@ -1321,7 +1513,7 @@ static bool mark_function_type(chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
    LOG_FMT(LFTYPE, "%s: [%s] %s @ %d:%d\n",
-           __func__, get_token_name(pc->type), pc->str.c_str(),
+           __func__, get_token_name(pc->type), pc->text(),
            pc->orig_line, pc->orig_col);
 
    int       star_count = 0;
@@ -1382,7 +1574,7 @@ static bool mark_function_type(chunk_t *pc)
    while ((tmp = chunk_get_prev_ncnl(tmp)) != NULL)
    {
       LOG_FMT(LFTYPE, " -- [%s] %s on line %d, col %d",
-              get_token_name(tmp->type), tmp->str.c_str(),
+              get_token_name(tmp->type), tmp->text(),
               tmp->orig_line, tmp->orig_col);
 
       if (chunk_is_star(tmp) || chunk_is_token(tmp, CT_PTR_TYPE) ||
@@ -1391,6 +1583,42 @@ static bool mark_function_type(chunk_t *pc)
          star_count++;
          ptrcnk = tmp;
          LOG_FMT(LFTYPE, " -- PTR_TYPE\n");
+      }
+      else if (tmp->type == CT_CDECL)
+      {
+         // Bug # 633
+         // MS-specific extension to specify calling convention.
+         LOG_FMT(LFTYPE, " -- MS calling convention CT_CDECL(%s)\n", tmp->text());
+      }
+      else if (tmp->type == CT_CLRCALL)
+      {
+         // Bug # 633
+         // MS-specific extension to specify calling convention.
+         LOG_FMT(LFTYPE, " -- MS calling convention CT_CLRCALL(%s)\n", tmp->text());
+      }
+      else if (tmp->type == CT_FASTCALL)
+      {
+         // Bug # 633
+         // MS-specific extension to specify calling convention.
+         LOG_FMT(LFTYPE, " -- MS calling convention CT_FASTCALL(%s)\n", tmp->text());
+      }
+      else if (tmp->type == CT_STDCALL)
+      {
+         // Bug # 633
+         // MS-specific extension to specify calling convention.
+         LOG_FMT(LFTYPE, " -- MS calling convention CT_STDCALL(%s)\n", tmp->text());
+      }
+      else if (tmp->type == CT_THISCALL)
+      {
+         // Bug # 633
+         // MS-specific extension to specify calling convention.
+         LOG_FMT(LFTYPE, " -- MS calling convention CT_THISCALL(%s)\n", tmp->text());
+      }
+      else if (tmp->type == CT_VECTORCALL)
+      {
+         // Bug # 633
+         // MS-specific extension to specify calling convention.
+         LOG_FMT(LFTYPE, " -- MS calling convention CT_VECTORCALL(%s)\n", tmp->text());
       }
       else if (chunk_is_word(tmp) ||
                (tmp->type == CT_WORD) ||
@@ -1412,7 +1640,7 @@ static bool mark_function_type(chunk_t *pc)
       else
       {
          LOG_FMT(LFTYPE, " --  unexpected token [%s] %s on line %d, col %d\n",
-                 get_token_name(tmp->type), tmp->str.c_str(),
+                 get_token_name(tmp->type), tmp->text(),
                  tmp->orig_line, tmp->orig_col);
          goto nogo_exit;
       }
@@ -1446,7 +1674,7 @@ static bool mark_function_type(chunk_t *pc)
       else
       {
          set_chunk_type(varcnk, CT_FUNC_VAR);
-         varcnk->flags |= PCF_VAR_1ST_DEF;
+         chunk_flags_set(varcnk, PCF_VAR_1ST_DEF);
       }
    }
    set_chunk_type(pc, CT_TPAREN_CLOSE);
@@ -1473,14 +1701,14 @@ static bool mark_function_type(chunk_t *pc)
    while ((tmp = chunk_get_prev_ncnl(tmp)) != NULL)
    {
       LOG_FMT(LFTYPE, " ++ [%s] %s on line %d, col %d\n",
-              get_token_name(tmp->type), tmp->str.c_str(),
+              get_token_name(tmp->type), tmp->text(),
               tmp->orig_line, tmp->orig_col);
 
       if (*tmp->str == '(')
       {
          if ((pc->flags & PCF_IN_TYPEDEF) == 0)
          {
-            tmp->flags |= PCF_VAR_1ST_DEF;
+            chunk_flags_set(tmp, PCF_VAR_1ST_DEF);
          }
          set_chunk_type(tmp, CT_TPAREN_OPEN);
          set_chunk_parent(tmp, ptp);
@@ -1495,14 +1723,14 @@ static bool mark_function_type(chunk_t *pc)
                 (tmp->type == CT_FUNC_PROTO))
             {
                set_chunk_type(tmp, CT_TYPE);
-               tmp->flags &= ~PCF_VAR_1ST_DEF;
+               chunk_flags_clr(tmp, PCF_VAR_1ST_DEF);
             }
          }
          mark_function_return_type(varcnk, tmp, ptp);
          break;
       }
    }
-   return true;
+   return(true);
 
 nogo_exit:
    tmp = chunk_get_next_ncnl(pc);
@@ -1512,8 +1740,8 @@ nogo_exit:
               tmp->orig_line, tmp->orig_col);
       flag_parens(tmp, 0, CT_FPAREN_OPEN, CT_FUNC_CALL, false);
    }
-   return false;
-}
+   return(false);
+} // mark_function_type
 
 
 static void process_returns(void)
@@ -1644,7 +1872,7 @@ static chunk_t *process_return(chunk_t *pc)
       }
    }
    return(semi);
-}
+} // process_return
 
 
 static bool is_ucase_str(const char *str, int len)
@@ -1868,14 +2096,14 @@ static void fix_casts(chunk_t *start)
                (!((pc->type == CT_SQUARE_OPEN) && (cpd.lang_flags & LANG_OC))))
       {
          LOG_FMT(LCASTS, " -- not a cast - followed by '%s' %s\n",
-                 pc->str.c_str(), get_token_name(pc->type));
+                 pc->text(), get_token_name(pc->type));
          return;
       }
 
       if (nope)
       {
          LOG_FMT(LCASTS, " -- not a cast - '%s' followed by %s\n",
-                 pc->str.c_str(), get_token_name(after->type));
+                 pc->text(), get_token_name(after->type));
          return;
       }
    }
@@ -1897,7 +2125,7 @@ static void fix_casts(chunk_t *start)
    {
       set_chunk_parent(pc, CT_C_CAST);
       make_type(pc);
-      LOG_FMT(LCASTS, " %s", pc->str.c_str());
+      LOG_FMT(LCASTS, " %s", pc->text());
    }
    LOG_FMT(LCASTS, " )%s\n", detail);
 
@@ -1905,13 +2133,13 @@ static void fix_casts(chunk_t *start)
    pc = chunk_get_next_ncnl(paren_close);
    if (pc != NULL)
    {
-      pc->flags |= PCF_EXPR_START;
+      chunk_flags_set(pc, PCF_EXPR_START);
       if (chunk_is_opening_brace(pc))
       {
          set_paren_parent(pc, start->parent_type);
       }
    }
-}
+} // fix_casts
 
 
 /**
@@ -1992,7 +2220,7 @@ static void fix_enum_struct_union(chunk_t *pc)
       {
          return;
       }
-      else if (((cpd.lang_flags & LANG_PAWN) != 0) &&
+      else if ((cpd.lang_flags & LANG_PAWN) &&
                (next->type == CT_PAREN_OPEN))
       {
          next = set_paren_parent(next, CT_ENUM);
@@ -2066,8 +2294,8 @@ static void fix_enum_struct_union(chunk_t *pc)
       {
          if (next->type == CT_WORD)
          {
-            next->flags |= flags;
-            flags       &= ~PCF_VAR_1ST; /* clear the first flag for the next items */
+            chunk_flags_set(next, flags);
+            flags &= ~PCF_VAR_1ST;       /* clear the first flag for the next items */
          }
 
          if (next->type == CT_STAR || ((cpd.lang_flags & LANG_CPP) && (next->type == CT_CARET)))
@@ -2078,7 +2306,7 @@ static void fix_enum_struct_union(chunk_t *pc)
          /* If we hit a comma in a function param, we are done */
          if (((next->type == CT_COMMA) ||
               (next->type == CT_FPAREN_CLOSE)) &&
-             ((next->flags & (PCF_IN_FCN_DEF | PCF_IN_FCN_CALL)) != 0))
+             (next->flags & (PCF_IN_FCN_DEF | PCF_IN_FCN_CALL)))
          {
             return;
          }
@@ -2091,7 +2319,7 @@ static void fix_enum_struct_union(chunk_t *pc)
    {
       set_chunk_parent(next, pc->type);
    }
-}
+} // fix_enum_struct_union
 
 
 /**
@@ -2100,7 +2328,12 @@ static void fix_enum_struct_union(chunk_t *pc)
  * next ',' or ';' or '__attribute__' is a type.
  *
  * typedef [type...] [*] type [, [*]type] ;
+ * typedef <return type>([*]func)();
  * typedef <return type>([*]func)(params);
+ * typedef <return type>(__stdcall *func)(); Bug # 633    MS-specific extension, guy 2015-11-19
+ *                                           other calling conventions as detailled at:
+ *                                           https://msdn.microsoft.com/en-us/library/984x0h58.aspx
+ *                                           __cdecl, __clrcall, __fastcall, __thiscall, __vectorcall
  * typedef <return type>func(params);
  * typedef <enum/struct/union> [type] [*] type [, [*]type] ;
  * typedef <enum/struct/union> [type] { ... } [*] type [, [*]type] ;
@@ -2123,7 +2356,7 @@ static void fix_typedef(chunk_t *start)
    while (((next = chunk_get_next_ncnl(next, CNAV_PREPROC)) != NULL) &&
           (next->level >= start->level))
    {
-      next->flags |= PCF_IN_TYPEDEF;
+      chunk_flags_set(next, PCF_IN_TYPEDEF);
       if (start->level == next->level)
       {
          if (chunk_is_semicolon(next))
@@ -2145,7 +2378,7 @@ static void fix_typedef(chunk_t *start)
          {
             the_type = next;
          }
-         next->flags &= ~PCF_VAR_1ST_DEF;
+         chunk_flags_clr(next, PCF_VAR_1ST_DEF);
          if (*next->str == '(')
          {
             last_op = next;
@@ -2187,7 +2420,7 @@ static void fix_typedef(chunk_t *start)
       {
          LOG_FMT(LTYPEDEF, "%s:  -- align anchor on [%s] @ %d:%d\n", __func__,
                  the_type->text(), the_type->orig_line, the_type->orig_col);
-         the_type->flags |= PCF_ANCHOR;
+         chunk_flags_set(the_type, PCF_ANCHOR);
       }
 
       /* already did everything we need to do */
@@ -2207,8 +2440,8 @@ static void fix_typedef(chunk_t *start)
       {
          /* We have just a regular typedef */
          LOG_FMT(LTYPEDEF, "%s: regular typedef [%s] on line %d\n", __func__,
-                 the_type->str.c_str(), the_type->orig_line);
-         the_type->flags |= PCF_ANCHOR;
+                 the_type->text(), the_type->orig_line);
+         chunk_flags_set(the_type, PCF_ANCHOR);
       }
       return;
    }
@@ -2236,9 +2469,16 @@ static void fix_typedef(chunk_t *start)
    if (the_type != NULL)
    {
       LOG_FMT(LTYPEDEF, "%s: %s typedef [%s] on line %d\n",
-              __func__, get_token_name(tag), the_type->str.c_str(), the_type->orig_line);
-      the_type->flags |= PCF_ANCHOR;
+              __func__, get_token_name(tag), the_type->text(), the_type->orig_line);
+      chunk_flags_set(the_type, PCF_ANCHOR);
    }
+} // fix_typedef
+
+
+static bool cs_top_is_question(ChunkStack &cs, int level)
+{
+   chunk_t *pc = cs.Empty() ? NULL : cs.Top()->m_pc;
+   return (pc && (pc->type == CT_QUESTION) && (pc->level == level));
 }
 
 
@@ -2254,12 +2494,13 @@ void combine_labels(void)
    chunk_t *prev;
    chunk_t *next;
    chunk_t *tmp;
-   bool    hit_case       = false;
-   bool    hit_class      = false;
+   bool    hit_case  = false;
+   bool    hit_class = false;
+
+   cpd.unc_stage = US_COMBINE_LABELS;
 
    // need a stack to handle nesting inside of OC messages, which reset the scope
-   std::stack<int> question_counts;
-   question_counts.push(0);
+   ChunkStack cs;
 
    prev = chunk_get_head();
    cur  = chunk_get_next_nc(prev);
@@ -2268,6 +2509,10 @@ void combine_labels(void)
    /* unlikely that the file will start with a label... */
    while (next != NULL)
    {
+#ifdef DEBUG
+      LOG_FMT(LGUY, "(%d) ", __LINE__);
+#endif
+      LOG_FMT(LGUY, "%s: cur->text=%s, line=%d, col=%d\n", __func__, (cur->type == CT_NEWLINE) ? "<NL>" : cur->text(), cur->orig_line, cur->orig_col);
       if (!(next->flags & PCF_IN_OC_MSG) && /* filter OC case of [self class] msg send */
           ((next->type == CT_CLASS) ||
            (next->type == CT_OC_CLASS) ||
@@ -2282,16 +2527,25 @@ void combine_labels(void)
 
       if (prev->type == CT_SQUARE_OPEN && prev->parent_type == CT_OC_MSG)
       {
-         question_counts.push(0);
+         cs.Push_Back(prev);
       }
       else if (next->type == CT_SQUARE_CLOSE && next->parent_type == CT_OC_MSG)
       {
-         question_counts.pop();
+         /* pop until we hit '[' */
+         while (!cs.Empty())
+         {
+            chunk_t *t2 = cs.Top()->m_pc;
+            cs.Pop_Back();
+            if (t2->type == CT_SQUARE_OPEN)
+            {
+               break;
+            }
+         }
       }
 
       if (next->type == CT_QUESTION)
       {
-         ++question_counts.top();
+         cs.Push_Back(next);
       }
       else if (next->type == CT_CASE)
       {
@@ -2306,17 +2560,17 @@ void combine_labels(void)
          }
       }
       else if ((next->type == CT_COLON) ||
-               ((question_counts.top() > 0) && (next->type == CT_OC_COLON)))
+               ((next->type == CT_OC_COLON) && cs_top_is_question(cs, next->level)))
       {
          if (cur->type == CT_DEFAULT)
          {
             set_chunk_type(cur, CT_CASE);
             hit_case = true;
          }
-         if (question_counts.top() > 0)
+         if (cs_top_is_question(cs, next->level))
          {
             set_chunk_type(next, CT_COND_COLON);
-            --question_counts.top();
+            cs.Pop_Back();
          }
          else if (hit_case)
          {
@@ -2341,7 +2595,7 @@ void combine_labels(void)
          {
             chunk_t *nextprev = chunk_get_prev_ncnl(next);
 
-            if ((cpd.lang_flags & LANG_PAWN) != 0)
+            if (cpd.lang_flags & LANG_PAWN)
             {
                if ((cur->type == CT_WORD) ||
                    (cur->type == CT_BRACE_CLOSE))
@@ -2379,14 +2633,26 @@ void combine_labels(void)
             else if (cur->type == CT_WORD)
             {
                tmp = chunk_get_next_nc(next, CNAV_PREPROC);
+#ifdef DEBUG
+               LOG_FMT(LGUY, "(%d) ", __LINE__);
+#endif
+               LOG_FMT(LGUY, "%s: %d:%d, tmp=%s\n", __func__,
+                       tmp->orig_line, tmp->orig_col, (tmp->type == CT_NEWLINE) ? "<NL>" : tmp->text());
+               log_pcf_flags(LGUY, tmp->flags);
                if (next->flags & PCF_IN_FCN_CALL)
                {
                   /* Must be a macro thingy, assume some sort of label */
                   set_chunk_type(next, CT_LABEL_COLON);
                }
-               else if ((tmp == NULL) || (tmp->type != CT_NUMBER && tmp->type != CT_SIZEOF))
+               else if ((tmp == NULL) ||
+                        ((tmp->type != CT_NUMBER) &&
+                         (tmp->type != CT_SIZEOF) &&
+                         !(tmp->flags & (PCF_IN_STRUCT | PCF_IN_CLASS))) ||
+                        (tmp->type == CT_NEWLINE)
+                  )
                {
-                  /* the CT_SIZEOF isn't great - test 31720 happens to use a sizeof expr, but this really should be able to handle any constant expr */
+                  /* the CT_SIZEOF isn't great - test 31720 happens to use a sizeof expr,
+                     but this really should be able to handle any constant expr */
                   set_chunk_type(cur, CT_LABEL);
                   set_chunk_type(next, CT_LABEL_COLON);
                }
@@ -2464,11 +2730,12 @@ void combine_labels(void)
       cur  = next;
       next = chunk_get_next_nc(cur);
    }
-}
+} // combine_labels
 
 
 static void mark_variable_stack(ChunkStack& cs, log_sev_t sev)
 {
+   (void)sev;
    LOG_FUNC_ENTRY();
    chunk_t *var_name;
    chunk_t *word_type;
@@ -2490,10 +2757,10 @@ static void mark_variable_stack(ChunkStack& cs, log_sev_t sev)
       {
          if ((word_type->type == CT_WORD) || (word_type->type == CT_TYPE))
          {
-            LOG_FMT(LFCNP, " <%s>", word_type->str.c_str());
+            LOG_FMT(LFCNP, " <%s>", word_type->text());
 
             set_chunk_type(word_type, CT_TYPE);
-            word_type->flags |= PCF_VAR_TYPE;
+            chunk_flags_set(word_type, PCF_VAR_TYPE);
          }
          word_cnt++;
       }
@@ -2502,18 +2769,18 @@ static void mark_variable_stack(ChunkStack& cs, log_sev_t sev)
       {
          if (word_cnt)
          {
-            LOG_FMT(LFCNP, " [%s]\n", var_name->str.c_str());
-            var_name->flags |= PCF_VAR_DEF;
+            LOG_FMT(LFCNP, " [%s]\n", var_name->text());
+            chunk_flags_set(var_name, PCF_VAR_DEF);
          }
          else
          {
-            LOG_FMT(LFCNP, " <%s>\n", var_name->str.c_str());
+            LOG_FMT(LFCNP, " <%s>\n", var_name->text());
             set_chunk_type(var_name, CT_TYPE);
-            var_name->flags |= PCF_VAR_TYPE;
+            chunk_flags_set(var_name, PCF_VAR_TYPE);
          }
       }
    }
-}
+} // mark_variable_stack
 
 
 /**
@@ -2523,34 +2790,40 @@ static void mark_variable_stack(ChunkStack& cs, log_sev_t sev)
  */
 static void fix_fcn_def_params(chunk_t *start)
 {
+   if (start == NULL)
+   {
+      return;
+   }
    LOG_FUNC_ENTRY();
    LOG_FMT(LFCNP, "%s: %s [%s] on line %d, level %d\n",
-           __func__, start->str.c_str(), get_token_name(start->type), start->orig_line, start->level);
+           __func__, start->text(), get_token_name(start->type), start->orig_line, start->level);
 
    while ((start != NULL) && !chunk_is_paren_open(start))
    {
       start = chunk_get_next_ncnl(start);
    }
 
-   assert((start->len() == 1) && (start->str[0] == '('));
+   if (start != NULL)                 // Coverity CID 76003
+   {
+      assert((start->len() == 1) && (start->str[0] == '('));
+   }
 
    ChunkStack cs;
+   int        level = start->level + 1;
+   chunk_t    *pc   = start;
 
-   int level = start->level + 1;
-
-   chunk_t *pc = start;
    while ((pc = chunk_get_next_ncnl(pc)) != NULL)
    {
       if (((start->len() == 1) && (start->str[0] == ')')) ||
           (pc->level < level))
       {
-         LOG_FMT(LFCNP, "%s: bailed on %s on line %d\n", __func__, pc->str.c_str(), pc->orig_line);
+         LOG_FMT(LFCNP, "%s: bailed on %s on line %d\n", __func__, pc->text(), pc->orig_line);
          break;
       }
 
       LOG_FMT(LFCNP, "%s: %s %s on line %d, level %d\n", __func__,
               (pc->level > level) ? "skipping" : "looking at",
-              pc->str.c_str(), pc->orig_line, pc->level);
+              pc->text(), pc->orig_line, pc->level);
 
       if (pc->level > level)
       {
@@ -2586,7 +2859,7 @@ static void fix_fcn_def_params(chunk_t *start)
       }
    }
    mark_variable_stack(cs, LFCNP);
-}
+} // fix_fcn_def_params
 
 
 /**
@@ -2627,11 +2900,12 @@ static chunk_t *fix_var_def(chunk_t *start)
           ((pc->type == CT_TYPE) ||
            (pc->type == CT_WORD) ||
            (pc->type == CT_QUALIFIER) ||
+           (pc->type == CT_TYPENAME) ||
            (pc->type == CT_DC_MEMBER) ||
            (pc->type == CT_MEMBER) ||
            chunk_is_ptr_operator(pc)))
    {
-      LOG_FMT(LFVD, " %s[%s]", pc->str.c_str(), get_token_name(pc->type));
+      LOG_FMT(LFVD, " %s[%s]", pc->text(), get_token_name(pc->type));
       cs.Push_Back(pc);
       pc = chunk_get_next_ncnl(pc);
 
@@ -2693,7 +2967,7 @@ static chunk_t *fix_var_def(chunk_t *start)
       ref_idx = idx + 1;
    }
    tmp_pc = cs.Get(ref_idx)->m_pc;
-   LOG_FMT(LFVD, " ref_idx(%d) => %s\n", ref_idx, tmp_pc->str.c_str());
+   LOG_FMT(LFVD, " ref_idx(%d) => %s\n", ref_idx, tmp_pc->text());
 
    /* No type part found! */
    if (ref_idx <= 0)
@@ -2706,8 +2980,8 @@ static chunk_t *fix_var_def(chunk_t *start)
    {
       tmp_pc = cs.Get(idx)->m_pc;
       make_type(tmp_pc);
-      tmp_pc->flags |= PCF_VAR_TYPE;
-      LOG_FMT(LFVD2, " %s[%s]", tmp_pc->str.c_str(), get_token_name(tmp_pc->type));
+      chunk_flags_set(tmp_pc, PCF_VAR_TYPE);
+      LOG_FMT(LFVD2, " %s[%s]", tmp_pc->text(), get_token_name(tmp_pc->type));
    }
    LOG_FMT(LFVD2, "\n");
 
@@ -2720,7 +2994,7 @@ static chunk_t *fix_var_def(chunk_t *start)
       return(chunk_get_next_ncnl(end));
    }
    return(skip_to_next_statement(end));
-}
+} // fix_var_def
 
 
 /**
@@ -2742,6 +3016,30 @@ static chunk_t *skip_expression(chunk_t *start)
    }
    return(pc);
 }
+
+
+/**
+ * help function for mark_variable_definition...
+ */
+bool go_on(chunk_t *pc, chunk_t *start)
+{
+   if (pc == NULL)
+   {
+      return false;
+   }
+   if (pc->level != start->level)
+   {
+      return false;
+   }
+   if (pc->flags & PCF_IN_FOR)
+   {
+      return((!chunk_is_semicolon(pc)) && (!(pc->type == CT_COLON)));
+   }
+   else
+   {
+      return(!chunk_is_semicolon(pc));
+   }
+} // go_on
 
 
 /**
@@ -2769,24 +3067,24 @@ static chunk_t *mark_variable_definition(chunk_t *start)
 
    LOG_FMT(LVARDEF, "%s: line %d, col %d '%s' type %s\n",
            __func__,
-           pc->orig_line, pc->orig_col, pc->str.c_str(),
+           pc->orig_line, pc->orig_col, pc->text(),
            get_token_name(pc->type));
 
    pc = start;
-   while ((pc != NULL) && !chunk_is_semicolon(pc) &&
-          (pc->level == start->level))
+   // issue #596
+   while (go_on(pc, start))
    {
       if ((pc->type == CT_WORD) || (pc->type == CT_FUNC_CTOR_VAR))
       {
          UINT64 flg = pc->flags;
          if ((pc->flags & PCF_IN_ENUM) == 0)
          {
-            pc->flags |= flags;
+            chunk_flags_set(pc, flags);
          }
          flags &= ~PCF_VAR_1ST;
 
          LOG_FMT(LVARDEF, "%s:%d marked '%s'[%s] in col %d flags: %#" PRIx64 " -> %#" PRIx64 "\n",
-                 __func__, pc->orig_line, pc->str.c_str(),
+                 __func__, pc->orig_line, pc->text(),
                  get_token_name(pc->type), pc->orig_col, flg, pc->flags);
       }
       else if (chunk_is_star(pc) || chunk_is_msref(pc))
@@ -2805,7 +3103,7 @@ static chunk_t *mark_variable_definition(chunk_t *start)
       pc = chunk_get_next_ncnl(pc);
    }
    return(pc);
-}
+} // mark_variable_definition
 
 
 /**
@@ -2842,7 +3140,7 @@ static bool can_be_full_param(chunk_t *start, chunk_t *end)
 
    for (pc = start; pc != end; pc = chunk_get_next_ncnl(pc, CNAV_PREPROC))
    {
-      LOG_FMT(LFPARAM, " [%s]", pc->str.c_str());
+      LOG_FMT(LFPARAM, " [%s]", pc->text());
 
       if ((pc->type == CT_QUALIFIER) ||
           (pc->type == CT_STRUCT) ||
@@ -2911,7 +3209,7 @@ static bool can_be_full_param(chunk_t *start, chunk_t *end)
          else
          {
             LOG_FMT(LFPARAM, " <== [%s] not fcn type!\n", get_token_name(pc->type));
-            return false;
+            return(false);
          }
       }
       else if (((word_cnt == 1) || (word_cnt == type_count)) &&
@@ -2951,6 +3249,11 @@ static bool can_be_full_param(chunk_t *start, chunk_t *end)
          /* skip over any array stuff */
          pc = chunk_skip_to_match(pc, CNAV_PREPROC);
       }
+      else if ((word_cnt == 2) && (pc->type == CT_SQUARE_OPEN))
+      {
+         /* Bug #671: is it such as: bool foo[FOO_MAX] */
+         pc = chunk_skip_to_match(pc, CNAV_PREPROC);
+      }
       else if ((word_cnt == 1) && (cpd.lang_flags & LANG_CPP) &&
                chunk_is_str(pc, "&&", 2))
       {
@@ -2976,7 +3279,7 @@ static bool can_be_full_param(chunk_t *start, chunk_t *end)
    LOG_FMT(LFPARAM, " <== [%s] %s!\n",
            get_token_name(pc->type), ret ? "Yup" : "Unlikely");
    return(ret);
-}
+} // can_be_full_param
 
 
 /**
@@ -3079,16 +3382,16 @@ static void mark_function(chunk_t *pc)
 
    LOG_FMT(LFCN, "%s: %d] %s[%s] - parent=%s level=%d/%d, next=%s[%s] - level=%d\n",
            __func__,
-           pc->orig_line, pc->str.c_str(),
+           pc->orig_line, pc->text(),
            get_token_name(pc->type), get_token_name(pc->parent_type),
            pc->level, pc->brace_level,
-           next->str.c_str(), get_token_name(next->type), next->level);
+           next->text(), get_token_name(next->type), next->level);
 
    if (pc->flags & PCF_IN_CONST_ARGS)
    {
       set_chunk_type(pc, CT_FUNC_CTOR_VAR);
       LOG_FMT(LFCN, "  1) Marked [%s] as FUNC_CTOR_VAR on line %d col %d\n",
-              pc->str.c_str(), pc->orig_line, pc->orig_col);
+              pc->text(), pc->orig_line, pc->orig_col);
       next = skip_template_next(next);
       flag_parens(next, 0, CT_FPAREN_OPEN, pc->type, true);
       return;
@@ -3105,7 +3408,7 @@ static void mark_function(chunk_t *pc)
    if ((paren_open == NULL) || (paren_close == NULL))
    {
       LOG_FMT(LFCN, "No parens found for [%s] on line %d col %d\n",
-              pc->str.c_str(), pc->orig_line, pc->orig_col);
+              pc->text(), pc->orig_line, pc->orig_col);
       return;
    }
 
@@ -3166,7 +3469,7 @@ static void mark_function(chunk_t *pc)
          else
          {
             LOG_FMT(LFCN, "%s: [%d/%d] function type, changing [%s] into a type\n",
-                    __func__, pc->orig_line, pc->orig_col, pc->str.c_str());
+                    __func__, pc->orig_line, pc->orig_col, pc->text());
             if (tmp2)
             {
                set_chunk_type(tmp2, CT_FUNC_TYPE);
@@ -3176,10 +3479,10 @@ static void mark_function(chunk_t *pc)
 
          set_chunk_type(pc, CT_TYPE);
          set_chunk_type(tmp1, CT_PTR_TYPE);
-         pc->flags &= ~PCF_VAR_1ST_DEF;
+         chunk_flags_clr(pc, PCF_VAR_1ST_DEF);
          if (tmp2 != NULL)
          {
-            tmp2->flags |= PCF_VAR_1ST_DEF;
+            chunk_flags_set(tmp2, PCF_VAR_1ST_DEF);
          }
          flag_parens(tmp, 0, CT_FPAREN_OPEN, CT_FUNC_PROTO, false);
          fix_fcn_def_params(tmp);
@@ -3187,7 +3490,7 @@ static void mark_function(chunk_t *pc)
       }
 
       LOG_FMT(LFCN, "%s: chained function calls? [%d.%d] [%s]\n",
-              __func__, pc->orig_line, pc->orig_col, pc->str.c_str());
+              __func__, pc->orig_line, pc->orig_col, pc->text());
    }
 
    /* Assume it is a function call if not already labeled */
@@ -3218,21 +3521,21 @@ static void mark_function(chunk_t *pc)
       {
          prev = chunk_get_prev_ncnlnp(prev);
          // LOG_FMT(LSYS, "%s: prev1 = %s (%s)\n", __func__,
-         //         get_token_name(prev->type), prev->str.c_str());
+         //         get_token_name(prev->type), prev->text());
          prev = skip_template_prev(prev);
          prev = skip_attribute_prev(prev);
          // LOG_FMT(LSYS, "%s: prev2 = %s [%d](%s) pc = %s [%d](%s)\n", __func__,
-         //         get_token_name(prev->type), prev->len, prev->str.c_str(),
-         //         get_token_name(pc->type), pc->len, pc->str.c_str());
+         //         get_token_name(prev->type), prev->len, prev->text(),
+         //         get_token_name(pc->type), pc->len, pc->text());
          if ((prev != NULL) && ((prev->type == CT_WORD) || (prev->type == CT_TYPE)))
          {
             if (pc->str.equals(prev->str))
             {
                set_chunk_type(pc, CT_FUNC_CLASS_DEF);
-               LOG_FMT(LFCN, "%d:%d - FOUND %sSTRUCTOR for %s[%s]\n",
+               LOG_FMT(LFCN, "(%d) %d:%d - FOUND %sSTRUCTOR for %s[%s]\n", __LINE__,
                        prev->orig_line, prev->orig_col,
                        (destr != NULL) ? "DE" : "CON",
-                       prev->str.c_str(), get_token_name(prev->type));
+                       prev->text(), get_token_name(prev->type));
 
                mark_cpp_constructor(pc);
                return;
@@ -3269,7 +3572,7 @@ static void mark_function(chunk_t *pc)
        * assignment, structure, enum, or union.
        * The close paren must be followed by an open brace, with an optional
        * qualifier (const) in between.
-       * There can be all sorts of template crap and/or '[]' in the type.
+       * There can be all sorts of template stuff and/or '[]' in the type.
        * This hack mostly checks that.
        *
        * Examples:
@@ -3322,7 +3625,7 @@ static void mark_function(chunk_t *pc)
                isa_def = false;
                break;
             }
-            LOG_FMT(LFCN, " <skip %s>", prev->str.c_str());
+            LOG_FMT(LFCN, " <skip %s>", prev->text());
             prev = chunk_get_prev_ncnlnp(prev);
             continue;
          }
@@ -3355,7 +3658,7 @@ static void mark_function(chunk_t *pc)
              !chunk_is_ptr_operator(prev))
          {
             LOG_FMT(LFCN, " --> Stopping on %s [%s]\n",
-                    prev->str.c_str(), get_token_name(prev->type));
+                    prev->text(), get_token_name(prev->type));
             /* certain tokens are unlikely to precede a proto or def */
             if ((prev->type == CT_ARITH) ||
                 (prev->type == CT_ASSIGN) ||
@@ -3387,7 +3690,7 @@ static void mark_function(chunk_t *pc)
       }
 
       //LOG_FMT(LFCN, " -- stopped on %s [%s]\n",
-      //        prev->str.c_str(), get_token_name(prev->type));
+      //        prev->text(), get_token_name(prev->type));
 
       if (isa_def && (prev != NULL) &&
           ((chunk_is_paren_close(prev) && (prev->parent_type != CT_D_CAST)) ||
@@ -3395,13 +3698,13 @@ static void mark_function(chunk_t *pc)
            (prev->type == CT_RETURN)))
       {
          LOG_FMT(LFCN, " -- overriding DEF due to %s [%s]\n",
-                 prev->str.c_str(), get_token_name(prev->type));
+                 prev->text(), get_token_name(prev->type));
          isa_def = false;
       }
       if (isa_def)
       {
          set_chunk_type(pc, CT_FUNC_DEF);
-         LOG_FMT(LFCN, "%s: '%s' is FCN_DEF:", __func__, pc->str.c_str());
+         LOG_FMT(LFCN, "%s: '%s' is FCN_DEF:", __func__, pc->text());
          if (prev == NULL)
          {
             prev = chunk_get_head();
@@ -3409,7 +3712,7 @@ static void mark_function(chunk_t *pc)
          for (tmp = prev; tmp != pc; tmp = chunk_get_next_ncnl(tmp))
          {
             LOG_FMT(LFCN, " %s[%s]",
-                    tmp->str.c_str(), get_token_name(tmp->type));
+                    tmp->text(), get_token_name(tmp->type));
             make_type(tmp);
          }
          LOG_FMT(LFCN, "\n");
@@ -3420,7 +3723,7 @@ static void mark_function(chunk_t *pc)
    {
       LOG_FMT(LFCN, "  Detected %s '%s' on line %d col %d\n",
               get_token_name(pc->type),
-              pc->str.c_str(), pc->orig_line, pc->orig_col);
+              pc->text(), pc->orig_line, pc->orig_col);
 
       tmp = flag_parens(next, PCF_IN_FCN_CALL, CT_FPAREN_OPEN, CT_FUNC_CALL, false);
       if (tmp && (tmp->type == CT_BRACE_OPEN) && (tmp->parent_type != CT_DOUBLE_BRACE))
@@ -3462,13 +3765,15 @@ static void mark_function(chunk_t *pc)
             /* Set the parent for the semi for later */
             semi = tmp;
             set_chunk_type(pc, CT_FUNC_PROTO);
+            LOG_FMT(LFCN, "  2) Marked [%s] as FUNC_PROTO on line %d col %d\n",
+                    pc->text(), pc->orig_line, pc->orig_col);
             break;
          }
          else if (pc->type == CT_COMMA)
          {
             set_chunk_type(pc, CT_FUNC_CTOR_VAR);
             LOG_FMT(LFCN, "  2) Marked [%s] as FUNC_CTOR_VAR on line %d col %d\n",
-                    pc->str.c_str(), pc->orig_line, pc->orig_col);
+                    pc->text(), pc->orig_line, pc->orig_col);
             break;
          }
       }
@@ -3488,7 +3793,7 @@ static void mark_function(chunk_t *pc)
        (pc->parent_type != CT_OPERATOR))
    {
       LOG_FMT(LFPARAM, "%s :: checking '%s' for constructor variable %s %s\n",
-              __func__, pc->str.c_str(),
+              __func__, pc->text(),
               get_token_name(paren_open->type),
               get_token_name(paren_close->type));
 
@@ -3527,7 +3832,7 @@ static void mark_function(chunk_t *pc)
       {
          set_chunk_type(pc, CT_FUNC_CTOR_VAR);
          LOG_FMT(LFCN, "  3) Marked [%s] as FUNC_CTOR_VAR on line %d col %d\n",
-                 pc->str.c_str(), pc->orig_line, pc->orig_col);
+                 pc->text(), pc->orig_line, pc->orig_col);
       }
       else if (pc->brace_level > 0)
       {
@@ -3549,7 +3854,7 @@ static void mark_function(chunk_t *pc)
                {
                   set_chunk_type(pc, CT_FUNC_CTOR_VAR);
                   LOG_FMT(LFCN, "  4) Marked [%s] as FUNC_CTOR_VAR on line %d col %d\n",
-                          pc->str.c_str(), pc->orig_line, pc->orig_col);
+                          pc->text(), pc->orig_line, pc->orig_col);
                }
             }
          }
@@ -3565,7 +3870,7 @@ static void mark_function(chunk_t *pc)
 
    if (pc->type == CT_FUNC_CTOR_VAR)
    {
-      pc->flags |= PCF_VAR_1ST_DEF;
+      chunk_flags_set(pc, PCF_VAR_1ST_DEF);
       return;
    }
 
@@ -3578,23 +3883,35 @@ static void mark_function(chunk_t *pc)
    fix_fcn_def_params(next);
    mark_function_return_type(pc, chunk_get_prev_ncnl(pc), pc->type);
 
+   /* mark C# where chunk */
+   if ((cpd.lang_flags & LANG_CS) &&
+       ((pc->type == CT_FUNC_DEF) || (pc->type == CT_FUNC_PROTO)))
+   {
+	   tmp = chunk_get_next_ncnl(paren_close);
+	   int in_where_spec_flags = 0;
+	   while ((tmp != NULL) &&
+		   (tmp->type != CT_BRACE_OPEN) && (tmp->type != CT_SEMICOLON))
+	   {
+		   mark_where_chunk(tmp, pc->type, tmp->flags | in_where_spec_flags);
+		   in_where_spec_flags = tmp->flags & PCF_IN_WHERE_SPEC;
+
+		   tmp = chunk_get_next_ncnl(tmp);
+	   }
+   }
+
    /* Find the brace pair and set the parent */
    if (pc->type == CT_FUNC_DEF)
    {
       tmp = chunk_get_next_ncnl(paren_close);
-      int in_where_spec_flags = 0;
       while ((tmp != NULL) &&
              (tmp->type != CT_BRACE_OPEN))
       {
-         //LOG_FMT(LSYS, "%s: set parent to FUNC_DEF on line %d: [%s]\n", __func__, tmp->orig_line, tmp->str.c_str());
+         //LOG_FMT(LSYS, "%s: set parent to FUNC_DEF on line %d: [%s]\n", __func__, tmp->orig_line, tmp->text());
          set_chunk_parent(tmp, CT_FUNC_DEF);
          if (!chunk_is_semicolon(tmp))
          {
-            tmp->flags |= PCF_OLD_FCN_PARAMS;
+            chunk_flags_set(tmp, PCF_OLD_FCN_PARAMS);
          }
-
-         mark_where_chunk(tmp, CT_FUNC_DEF, tmp->flags | in_where_spec_flags);
-         in_where_spec_flags = tmp->flags & PCF_IN_WHERE_SPEC;
 
          tmp = chunk_get_next_ncnl(tmp);
       }
@@ -3608,7 +3925,7 @@ static void mark_function(chunk_t *pc)
          }
       }
    }
-}
+} // mark_function
 
 
 static void mark_cpp_constructor(chunk_t *pc)
@@ -3628,18 +3945,18 @@ static void mark_cpp_constructor(chunk_t *pc)
       is_destr = true;
    }
 
-   LOG_FMT(LFTOR, "%d:%d FOUND %sSTRUCTOR for %s[%s] prev=%s[%s]",
+   LOG_FMT(LFTOR, "(%d) %d:%d FOUND %sSTRUCTOR for %s[%s] prev=%s[%s]", __LINE__,
            pc->orig_line, pc->orig_col,
            is_destr ? "DE" : "CON",
-           pc->str.c_str(), get_token_name(pc->type),
-           tmp->str.c_str(), get_token_name(tmp->type));
+           pc->text(), get_token_name(pc->type),
+           tmp->text(), get_token_name(tmp->type));
 
    paren_open = skip_template_next(chunk_get_next_ncnl(pc));
    if (!chunk_is_str(paren_open, "(", 1))
    {
       LOG_FMT(LWARN, "%s:%d Expected '(', got: [%s]\n",
               cpd.filename, paren_open->orig_line,
-              paren_open->str.c_str());
+              paren_open->text());
       return;
    }
 
@@ -3647,7 +3964,7 @@ static void mark_cpp_constructor(chunk_t *pc)
    fix_fcn_def_params(paren_open);
    after = flag_parens(paren_open, PCF_IN_FCN_CALL, CT_FPAREN_OPEN, CT_FUNC_CLASS_PROTO, false);
 
-   LOG_FMT(LFTOR, "[%s]\n", after->str.c_str());
+   LOG_FMT(LFTOR, "[%s]\n", after->text());
 
    /* Scan until the brace open, mark everything */
    tmp = paren_open;
@@ -3655,8 +3972,8 @@ static void mark_cpp_constructor(chunk_t *pc)
    while ((tmp != NULL) && (tmp->type != CT_BRACE_OPEN) &&
           !chunk_is_semicolon(tmp))
    {
-      tmp->flags |= PCF_IN_CONST_ARGS;
-      tmp         = chunk_get_next_ncnl(tmp);
+      chunk_flags_set(tmp, PCF_IN_CONST_ARGS);
+      tmp = chunk_get_next_ncnl(tmp);
       if (chunk_is_str(tmp, ":", 1) && (tmp->level == paren_open->level))
       {
          set_chunk_type(tmp, CT_CONSTR_COLON);
@@ -3686,9 +4003,11 @@ static void mark_cpp_constructor(chunk_t *pc)
       {
          set_chunk_parent(tmp, CT_FUNC_CLASS_PROTO);
          set_chunk_type(pc, CT_FUNC_CLASS_PROTO);
+         LOG_FMT(LFCN, "  2) Marked [%s] as FUNC_CLASS_PROTO on line %d col %d\n",
+                 pc->text(), pc->orig_line, pc->orig_col);
       }
    }
-}
+} // mark_cpp_constructor
 
 
 static int mark_where_chunk(chunk_t *pc, c_token_t parent_type, int flags)
@@ -3696,7 +4015,7 @@ static int mark_where_chunk(chunk_t *pc, c_token_t parent_type, int flags)
    /* TODO: should have options to control spacing around the ':' as well as newline ability for the
       constraint clauses (should it break up a 'where A : B where C : D' on the same line? wrap? etc.) */
 
-   if (chunk_is_str(pc, "where", 5))
+   if (pc->type == CT_WHERE)
    {
       set_chunk_type(pc, CT_WHERE_SPEC);
       set_chunk_parent(pc, parent_type);
@@ -3763,7 +4082,7 @@ static void mark_class_ctor(chunk_t *start)
    if (pc == NULL)
    {
       LOG_FMT(LFTOR, "%s: Called on %s on line %d. Bailed on NULL\n",
-              __func__, pclass->str.c_str(), pclass->orig_line);
+              __func__, pclass->text(), pclass->orig_line);
       return;
    }
 
@@ -3771,17 +4090,20 @@ static void mark_class_ctor(chunk_t *start)
    cs.Push_Back(pclass);
 
    LOG_FMT(LFTOR, "%s: Called on %s on line %d (next='%s')\n",
-           __func__, pclass->str.c_str(), pclass->orig_line, pc->str.c_str());
+           __func__, pclass->text(), pclass->orig_line, pc->text());
 
    /* detect D template class: "class foo(x) { ... }" */
-   if ((cpd.lang_flags & LANG_D) && (next->type == CT_PAREN_OPEN))
+   if (next != NULL)              // Coverity CID 76004
    {
-      set_chunk_parent(next, CT_TEMPLATE);
-
-      next = get_d_template_types(cs, next);
-      if (next && (next->type == CT_PAREN_CLOSE))
+      if ((cpd.lang_flags & LANG_D) && (next->type == CT_PAREN_OPEN))
       {
          set_chunk_parent(next, CT_TEMPLATE);
+
+         next = get_d_template_types(cs, next);
+         if (next && (next->type == CT_PAREN_CLOSE))
+         {
+            set_chunk_parent(next, CT_TEMPLATE);
+         }
       }
    }
 
@@ -3789,7 +4111,7 @@ static void mark_class_ctor(chunk_t *start)
    int flags = 0;
    while ((pc != NULL) && (pc->type != CT_BRACE_OPEN))
    {
-      LOG_FMT(LFTOR, " [%s]", pc->str.c_str());
+      LOG_FMT(LFTOR, " [%s]", pc->text());
 
       flags = mark_where_chunk(pc, start->type, flags);
 
@@ -3807,8 +4129,8 @@ static void mark_class_ctor(chunk_t *start)
                  __func__, pc->orig_line);
          return;
       }
-      pc->flags |= flags;
-      pc         = chunk_get_next_ncnl(pc, CNAV_PREPROC);
+      chunk_flags_set(pc, flags);
+      pc = chunk_get_next_ncnl(pc, CNAV_PREPROC);
    }
 
    if (pc == NULL)
@@ -3822,9 +4144,11 @@ static void mark_class_ctor(chunk_t *start)
    pc = chunk_get_next_ncnl(pc, CNAV_PREPROC);
    while (pc != NULL)
    {
-      pc->flags |= PCF_IN_CLASS;
+      chunk_flags_set(pc, PCF_IN_CLASS);
 
-      if ((pc->brace_level > level) || ((pc->flags & PCF_IN_PREPROC) != 0))
+      if ((pc->brace_level > level) ||
+          (pc->level > pc->brace_level) ||
+          (pc->flags & PCF_IN_PREPROC))
       {
          pc = chunk_get_next_ncnl(pc);
          continue;
@@ -3847,7 +4171,7 @@ static void mark_class_ctor(chunk_t *start)
          if ((next != NULL) && (next->len() == 1) && (next->str[0] == '('))
          {
             set_chunk_type(pc, CT_FUNC_CLASS_DEF);
-            LOG_FMT(LFTOR, "%d] Marked CTor/DTor %s\n", pc->orig_line, pc->str.c_str());
+            LOG_FMT(LFTOR, "(%d) %d] Marked CTor/DTor %s\n", __LINE__, pc->orig_line, pc->text());
             mark_cpp_constructor(pc);
          }
          else
@@ -3857,7 +4181,7 @@ static void mark_class_ctor(chunk_t *start)
       }
       pc = next;
    }
-}
+} // mark_class_ctor
 
 
 /**
@@ -3902,14 +4226,14 @@ static void mark_namespace(chunk_t *pns)
 
          if (diff > cpd.settings[UO_indent_namespace_limit].n)
          {
-            pc->flags       |= PCF_LONG_BLOCK;
-            br_close->flags |= PCF_LONG_BLOCK;
+            chunk_flags_set(pc, PCF_LONG_BLOCK);
+            chunk_flags_set(br_close, PCF_LONG_BLOCK);
          }
       }
       flag_parens(pc, PCF_IN_NAMESPACE, CT_NONE, CT_NAMESPACE, false);
       return;
    }
-}
+} // mark_namespace
 
 
 /**
@@ -3954,7 +4278,7 @@ static void mark_struct_union_body(chunk_t *start)
           !((pc->level == start->level) && (pc->type == CT_BRACE_CLOSE)))
    {
       // LOG_FMT(LSYS, "%s: %d:%d %s:%s\n", __func__, pc->orig_line, pc->orig_col,
-      //         pc->str.c_str(), get_token_name(pc->parent_type));
+      //         pc->text(), get_token_name(pc->parent_type));
       if ((pc->type == CT_BRACE_OPEN) ||
           (pc->type == CT_BRACE_CLOSE) ||
           (pc->type == CT_SEMICOLON))
@@ -3987,6 +4311,8 @@ void mark_comments(void)
    chunk_t *next;
    bool    prev_nl = true;
    bool    next_nl;
+
+   cpd.unc_stage = US_MARK_COMMENTS;
 
    cur = chunk_get_head();
 
@@ -4075,8 +4401,8 @@ static void mark_define_expressions(void)
                  (prev->type == CT_COLON) ||
                  (prev->type == CT_QUESTION)))
             {
-               pc->flags |= PCF_EXPR_START;
-               first      = false;
+               chunk_flags_set(pc, PCF_EXPR_START);
+               first = false;
             }
          }
       }
@@ -4084,7 +4410,7 @@ static void mark_define_expressions(void)
       prev = pc;
       pc   = chunk_get_next(pc);
    }
-}
+} // mark_define_expressions
 
 
 /**
@@ -4144,7 +4470,7 @@ static void handle_cpp_template(chunk_t *pc)
          }
       }
    }
-}
+} // handle_cpp_template
 
 
 /**
@@ -4221,12 +4547,16 @@ static void handle_cpp_lambda(chunk_t *sq_o)
       nc = *sq_o;
       set_chunk_type(sq_o, CT_SQUARE_OPEN);
       sq_o->str.resize(1);
+      // bug # 664
+      // The original orig_col of CT_SQUARE_CLOSE is stored at orig_col_end of CT_TSQUARE.
+      // CT_SQUARE_CLOSE orig_col and orig_col_end values are calculate from orig_col_end of CT_TSQUARE.
+      nc.orig_col        = sq_o->orig_col_end - 1;
+      nc.column          = nc.orig_col;
+      nc.orig_col_end    = sq_o->orig_col_end;
       sq_o->orig_col_end = sq_o->orig_col + 1;
 
       nc.type = CT_SQUARE_CLOSE;
       nc.str.pop_front();
-      nc.orig_col++;
-      nc.column++;
       sq_c = chunk_add_after(&nc, sq_o);
    }
    set_chunk_parent(sq_o, CT_CPP_LAMBDA);
@@ -4250,7 +4580,7 @@ static void handle_cpp_lambda(chunk_t *sq_o)
    }
 
    fix_fcn_def_params(pa_o);
-}
+} // handle_cpp_lambda
 
 
 /**
@@ -4280,7 +4610,7 @@ static chunk_t *get_d_template_types(ChunkStack& cs, chunk_t *open_paren)
          maybe_type = true;
       }
    }
-   return tmp;
+   return(tmp);
 }
 
 
@@ -4294,10 +4624,10 @@ static bool chunkstack_match(ChunkStack& cs, chunk_t *pc)
       tmp = cs.GetChunk(idx);
       if (pc->str.equals(tmp->str))
       {
-         return true;
+         return(true);
       }
    }
-   return false;
+   return(false);
 }
 
 
@@ -4320,7 +4650,8 @@ static void handle_d_template(chunk_t *pc)
 
    name = chunk_get_next_ncnl(pc);
    po   = chunk_get_next_ncnl(name);
-   if (!name || ((name->type != CT_WORD) && (name->type != CT_WORD)))
+   //if (!name || ((name->type != CT_WORD) && (name->type != CT_WORD)))  Coverity CID 76000 Same on both sides, 2016-03-16
+   if (!name || (name->type != CT_WORD))
    {
       /* TODO: log an error, expected NAME */
       return;
@@ -4369,7 +4700,7 @@ static void handle_d_template(chunk_t *pc)
       /* TODO: log an error, expected '}' */
    }
    set_chunk_parent(tmp, CT_TEMPLATE);
-}
+} // handle_d_template
 
 
 /**
@@ -4397,7 +4728,7 @@ static void mark_template_func(chunk_t *pc, chunk_t *pc_next)
          if (angle_close->flags & PCF_IN_FCN_CALL)
          {
             LOG_FMT(LTEMPFUNC, "%s: marking '%s' in line %d as a FUNC_CALL\n",
-                    __func__, pc->str.c_str(), pc->orig_line);
+                    __func__, pc->text(), pc->orig_line);
             set_chunk_type(pc, CT_FUNC_CALL);
             flag_parens(after, PCF_IN_FCN_CALL, CT_FPAREN_OPEN, CT_FUNC_CALL, false);
          }
@@ -4411,7 +4742,7 @@ static void mark_template_func(chunk_t *pc, chunk_t *pc_next)
              */
 
             LOG_FMT(LTEMPFUNC, "%s: marking '%s' in line %d as a FUNC_CALL 2\n",
-                    __func__, pc->str.c_str(), pc->orig_line);
+                    __func__, pc->text(), pc->orig_line);
             // its a function!!!
             set_chunk_type(pc, CT_FUNC_CALL);
             mark_function(pc);
@@ -4421,8 +4752,8 @@ static void mark_template_func(chunk_t *pc, chunk_t *pc_next)
       {
          // its a type!
          set_chunk_type(pc, CT_TYPE);
-         pc->flags    |= PCF_VAR_TYPE;
-         after->flags |= PCF_VAR_DEF;
+         chunk_flags_set(pc, PCF_VAR_TYPE);
+         chunk_flags_set(after, PCF_VAR_DEF);
       }
    }
 }
@@ -4509,7 +4840,7 @@ chunk_t *skip_tsquare_next(chunk_t *ary_def)
    if (ary_def && ((ary_def->type == CT_SQUARE_OPEN) ||
                    (ary_def->type == CT_TSQUARE)))
    {
-      return chunk_get_next_nisq(ary_def);
+      return(chunk_get_next_nisq(ary_def));
    }
    return(ary_def);
 }
@@ -4569,7 +4900,7 @@ static void handle_oc_class(chunk_t *pc)
    int     do_pl     = 1;
 
    LOG_FMT(LOCCLASS, "%s: start [%s] [%s] line %d\n", __func__,
-           pc->str.c_str(), get_token_name(pc->parent_type), pc->orig_line);
+           pc->text(), get_token_name(pc->parent_type), pc->orig_line);
 
    if (pc->parent_type == CT_OC_PROTOCOL)
    {
@@ -4586,7 +4917,7 @@ static void handle_oc_class(chunk_t *pc)
    while ((tmp = chunk_get_next_nnl(tmp)) != NULL)
    {
       LOG_FMT(LOCCLASS, "%s:       %d [%s]\n", __func__,
-              tmp->orig_line, tmp->str.c_str());
+              tmp->orig_line, tmp->text());
 
       if (tmp->type == CT_OC_END)
       {
@@ -4628,8 +4959,8 @@ static void handle_oc_class(chunk_t *pc)
          if (chunk_is_newline(chunk_get_prev(tmp)))
          {
             set_chunk_type(tmp, CT_OC_SCOPE);
-            tmp->flags |= PCF_STMT_START;
-            hit_scope   = true;
+            chunk_flags_set(tmp, PCF_STMT_START);
+            hit_scope = true;
          }
       }
       if (do_pl == 2)
@@ -4646,7 +4977,7 @@ static void handle_oc_class(chunk_t *pc)
          set_chunk_parent(tmp, CT_OC_CLASS);
       }
    }
-}
+} // handle_oc_class
 
 
 /* Mark Objective-C blocks (aka lambdas or closures)
@@ -4746,14 +5077,14 @@ static void handle_oc_block_literal(chunk_t *pc)
    {
       LOG_FMT(LOCBLK, " -- lbp %s[%s]\n", lbp->text(), get_token_name(lbp->type));
       make_type(lbp);
-      lbp->flags |= PCF_OC_RTYPE;
+      chunk_flags_set(lbp, PCF_OC_RTYPE);
       set_chunk_parent(lbp, CT_OC_BLOCK_EXPR);
       lbp = chunk_get_prev_ncnl(lbp);
    }
    /* mark the braces */
    set_chunk_parent(bbo, CT_OC_BLOCK_EXPR);
    set_chunk_parent(bbc, CT_OC_BLOCK_EXPR);
-}
+} // handle_oc_block_literal
 
 
 /**
@@ -4806,7 +5137,7 @@ static void handle_oc_block_type(chunk_t *pc)
       // We run into this situation if a block literal is enclosed in parentheses.
       if (chunk_is_closing_brace(nam))
       {
-         return handle_oc_block_literal(pc);
+         return(handle_oc_block_literal(pc));
       }
 
       if (chunk_is_paren_close(apc))
@@ -4845,7 +5176,7 @@ static void handle_oc_block_type(chunk_t *pc)
          mark_function_return_type(nam, chunk_get_prev_ncnl(tpo), pt);
       }
    }
-}
+} // handle_oc_block_type
 
 
 /**
@@ -4863,27 +5194,27 @@ static chunk_t *handle_oc_md_type(chunk_t *paren_open, c_token_t ptype, UINT64 f
        ((paren_close = chunk_skip_to_match(paren_open)) == NULL))
    {
       did_it = false;
-      return paren_open;
+      return(paren_open);
    }
 
    did_it = true;
 
    set_chunk_parent(paren_open, ptype);
-   paren_open->flags |= flags;
+   chunk_flags_set(paren_open, flags);
    set_chunk_parent(paren_close, ptype);
-   paren_close->flags |= flags;
+   chunk_flags_set(paren_close, flags);
 
    for (chunk_t *cur = chunk_get_next_ncnl(paren_open);
         cur != paren_close;
         cur = chunk_get_next_ncnl(cur))
    {
       LOG_FMT(LOCMSGD, " <%s|%s>", cur->text(), get_token_name(cur->type));
-      cur->flags |= flags;
+      chunk_flags_set(cur, flags);
       make_type(cur);
    }
 
    /* returning the chunk after the paren close */
-   return chunk_get_next_ncnl(paren_close);
+   return(chunk_get_next_ncnl(paren_close));
 }
 
 
@@ -4908,11 +5239,11 @@ static void handle_oc_message_decl(chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
    chunk_t   *tmp;
-   bool      in_paren  = false;
-   int       paren_cnt = 0;
-   int       arg_cnt   = 0;
    c_token_t pt;
    bool      did_it;
+   //bool      in_paren  = false;
+   //int       paren_cnt = 0;
+   //int       arg_cnt   = 0;
 
    /* Figure out if this is a spec or decl */
    tmp = pc;
@@ -4996,7 +5327,7 @@ static void handle_oc_message_decl(chunk_t *pc)
          }
          pc = tmp;
          /* we should now be on the arg name */
-         pc->flags |= PCF_VAR_DEF;
+         chunk_flags_set(pc, PCF_VAR_DEF);
          LOG_FMT(LOCMSGD, " arg[%s]", pc->text());
          pc = chunk_get_next_ncnl(pc);
       }
@@ -5019,77 +5350,77 @@ static void handle_oc_message_decl(chunk_t *pc)
    }
 
    LOG_FMT(LOCMSGD, "\n");
-   return;
 
    /* Mark everything */
-   tmp = pc;
-   while ((tmp = chunk_get_next(tmp)) != NULL)
-   {
-      LOG_FMT(LOCMSGD, " [%s]", tmp->text());
+   // 76020 Structurally dead code, 2016-03-16
+   //tmp = pc;
+   //while ((tmp = chunk_get_next(tmp)) != NULL)
+   //{
+   //   LOG_FMT(LOCMSGD, " [%s]", tmp->text());
 
-      if ((tmp->type == CT_SEMICOLON) ||
-          (tmp->type == CT_BRACE_OPEN))
-      {
-         set_chunk_parent(tmp, pt);
-         break;
-      }
+   //   if ((tmp->type == CT_SEMICOLON) ||
+   //       (tmp->type == CT_BRACE_OPEN))
+   //   {
+   //      set_chunk_parent(tmp, pt);
+   //      break;
+   //   }
 
-      /* Mark first parens as return type */
-      if ((arg_cnt == 0) &&
-          ((tmp->type == CT_PAREN_OPEN) ||
-           (tmp->type == CT_PAREN_CLOSE)))
-      {
-         set_chunk_parent(tmp, CT_OC_RTYPE);
-         in_paren = (tmp->type == CT_PAREN_OPEN);
-         if (!in_paren)
-         {
-            paren_cnt++;
-            arg_cnt++;
-         }
-      }
-      else if ((tmp->type == CT_PAREN_OPEN) ||
-               (tmp->type == CT_PAREN_CLOSE))
-      {
-         set_chunk_parent(tmp, pt);
-         in_paren = (tmp->type == CT_PAREN_OPEN);
-         if (!in_paren)
-         {
-            paren_cnt++;
-         }
-      }
-      else if (tmp->type == CT_WORD)
-      {
-         if (in_paren)
-         {
-            set_chunk_type(tmp, CT_TYPE);
-            set_chunk_parent(tmp, pt);
-         }
-         else if (paren_cnt == 1)
-         {
-            set_chunk_type(tmp, pt);
-         }
-         else
-         {
-            tmp->flags |= PCF_VAR_DEF;
-         }
-      }
-      else if (tmp->type == CT_COLON)
-      {
-         set_chunk_type(tmp, CT_OC_COLON);
-         set_chunk_parent(tmp, pt);
-      }
-   }
+   //   /* Mark first parens as return type */
+   //   if ((arg_cnt == 0) &&
+   //       ((tmp->type == CT_PAREN_OPEN) ||
+   //        (tmp->type == CT_PAREN_CLOSE)))
+   //   {
+   //      set_chunk_parent(tmp, CT_OC_RTYPE);
+   //      in_paren = (tmp->type == CT_PAREN_OPEN);
+   //      if (!in_paren)
+   //      {
+   //         paren_cnt++;
+   //         arg_cnt++;
+   //      }
+   //   }
+   //   else if ((tmp->type == CT_PAREN_OPEN) ||
+   //            (tmp->type == CT_PAREN_CLOSE))
+   //   {
+   //      set_chunk_parent(tmp, pt);
+   //      in_paren = (tmp->type == CT_PAREN_OPEN);
+   //      if (!in_paren)
+   //      {
+   //         paren_cnt++;
+   //      }
+   //   }
+   //   else if (tmp->type == CT_WORD)
+   //   {
+   //      if (in_paren)
+   //      {
+   //         set_chunk_type(tmp, CT_TYPE);
+   //         set_chunk_parent(tmp, pt);
+   //      }
+   //      else if (paren_cnt == 1)
+   //      {
+   //         set_chunk_type(tmp, pt);
+   //      }
+   //      else
+   //      {
+   //         tmp->flags |= PCF_VAR_DEF;
+   //      }
+   //   }
+   //   else if (tmp->type == CT_COLON)
+   //   {
+   //      set_chunk_type(tmp, CT_OC_COLON);
+   //      set_chunk_parent(tmp, pt);
+   //   }
+   //}
 
-   if ((tmp != NULL) && (tmp->type == CT_BRACE_OPEN))
-   {
-      tmp = chunk_skip_to_match(tmp);
-      if (tmp)
-      {
-         set_chunk_parent(tmp, pt);
-      }
-   }
-   LOG_FMT(LOCMSGD, "\n");
-}
+   //if ((tmp != NULL) && (tmp->type == CT_BRACE_OPEN))
+   //{
+   //   tmp = chunk_skip_to_match(tmp);
+   //   if (tmp)
+   //   {
+   //      set_chunk_parent(tmp, pt);
+   //   }
+   //}
+   //LOG_FMT(LOCMSGD, "\n");
+} // handle_oc_message_decl
 
 
 /**
@@ -5129,9 +5460,9 @@ static void handle_oc_message_send(chunk_t *os)
    }
 
    set_chunk_parent(os, CT_OC_MSG);
-   os->flags |= PCF_IN_OC_MSG;
+   chunk_flags_set(os, PCF_IN_OC_MSG);
    set_chunk_parent(cs, CT_OC_MSG);
-   cs->flags |= PCF_IN_OC_MSG;
+   chunk_flags_set(cs, PCF_IN_OC_MSG);
 
    /* expect a word first thing or [...] */
    tmp = chunk_get_next_ncnl(os);
@@ -5181,6 +5512,45 @@ static void handle_oc_message_send(chunk_t *os)
       }
       tmp = chunk_get_next_ncnl(ac);
    }
+   /* handle 'object.property' and 'collection[index]' */
+   else
+   {
+      while (tmp)
+      {
+         if (tmp->type == CT_MEMBER)  /* move past [object.prop1.prop2  */
+         {
+            chunk_t *typ = chunk_get_next_ncnl(tmp);
+            if (typ && ((typ->type == CT_WORD) || (typ->type == CT_TYPE)))
+            {
+               tmp = chunk_get_next_ncnl(typ);
+            }
+            else
+            {
+               break;
+            }
+         }
+         else if (tmp->type == CT_SQUARE_OPEN)  /* move past [collection[index]  */
+         {
+            chunk_t *tcs = chunk_get_next_ncnl(tmp);
+            while (tcs && (tcs->level > tmp->level))
+            {
+               tcs = chunk_get_next_ncnl(tcs);
+            }
+            if (tcs && (tcs->type == CT_SQUARE_CLOSE))
+            {
+               tmp = chunk_get_next_ncnl(tcs);
+            }
+            else
+            {
+               break;
+            }
+         }
+         else
+         {
+            break;
+         }
+      }
+   }
 
    if (tmp && ((tmp->type == CT_WORD) || (tmp->type == CT_TYPE)))
    {
@@ -5191,7 +5561,7 @@ static void handle_oc_message_send(chunk_t *os)
 
    for (tmp = chunk_get_next(os); tmp != cs; tmp = chunk_get_next(tmp))
    {
-      tmp->flags |= PCF_IN_OC_MSG;
+      chunk_flags_set(tmp, PCF_IN_OC_MSG);
       if (tmp->level == cs->level + 1)
       {
          if (tmp->type == CT_COLON)
@@ -5214,7 +5584,7 @@ static void handle_oc_message_send(chunk_t *os)
       }
       prev = tmp;
    }
-}
+} // handle_oc_message_send
 
 
 /**
@@ -5258,7 +5628,7 @@ static void handle_cs_square_stmt(chunk_t *os)
    tmp = chunk_get_next_ncnl(cs);
    if (tmp != NULL)
    {
-      tmp->flags |= PCF_STMT_START | PCF_EXPR_START;
+      chunk_flags_set(tmp, PCF_STMT_START | PCF_EXPR_START);
    }
 }
 
@@ -5326,7 +5696,7 @@ static void handle_cs_array_type(chunk_t *pc)
       while (pc != prev)
       {
          pc->parent_type = CT_TYPE;
-         pc = chunk_get_prev(pc);
+         pc              = chunk_get_prev(pc);
       }
       prev->parent_type = CT_TYPE;
    }
@@ -5378,9 +5748,9 @@ void remove_extra_returns()
 static void handle_wrap(chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
-   chunk_t *opp  = chunk_get_next(pc);
-   chunk_t *name = chunk_get_next(opp);
-   chunk_t *clp  = chunk_get_next(name);
+   chunk_t  *opp  = chunk_get_next(pc);
+   chunk_t  *name = chunk_get_next(opp);
+   chunk_t  *clp  = chunk_get_next(name);
 
    argval_t pav = (pc->type == CT_FUNC_WRAP) ?
                   cpd.settings[UO_sp_func_call_paren].a :
@@ -5419,7 +5789,7 @@ static void handle_wrap(chunk_t *pc)
 /**
  * A proto wrap chunk and what follows should be treated as a function proto.
  *
- * RETTYPE PROTO_WRAP( NAME, PARAMS );
+ * RETTYPE PROTO_WRAP( NAME, PARAMS ); or RETTYPE PROTO_WRAP( NAME, (PARAMS) );
  * RETTYPE gets changed with make_type().
  * PROTO_WRAP is marked as CT_FUNC_PROTO or CT_FUNC_DEF.
  * NAME is marked as CT_WORD.
@@ -5436,7 +5806,6 @@ static void handle_proto_wrap(chunk_t *pc)
 
    if (!opp || !name || !clp || !cma || !tmp ||
        ((name->type != CT_WORD) && (name->type != CT_TYPE)) ||
-       (tmp->type != CT_PAREN_OPEN) ||
        (opp->type != CT_PAREN_OPEN))
    {
       return;
@@ -5457,7 +5826,17 @@ static void handle_proto_wrap(chunk_t *pc)
    set_chunk_parent(clp, pc->type);
 
    set_chunk_parent(tmp, CT_PROTO_WRAP);
-   fix_fcn_def_params(tmp);
+
+   if (tmp->type == CT_PAREN_OPEN)
+   {
+	  fix_fcn_def_params(tmp);
+   }
+   else
+   {
+      fix_fcn_def_params(opp);
+      set_chunk_type(name, CT_WORD);
+   }
+
    tmp = chunk_skip_to_match(tmp);
    if (tmp)
    {
@@ -5478,7 +5857,7 @@ static void handle_proto_wrap(chunk_t *pc)
       set_chunk_parent(tmp, pc->type);
       make_type(tmp);
    }
-}
+} // handle_proto_wrap
 
 
 /**

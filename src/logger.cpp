@@ -19,7 +19,9 @@
 
 struct log_fcn_info
 {
-   log_fcn_info(const char *name, int line) : name(name), line(line)
+   log_fcn_info(const char *name_, int line_)
+      : name(name_)
+      , line(line_)
    {
    }
 
@@ -31,7 +33,12 @@ static std::deque<log_fcn_info> g_fq;
 /** Private log structure */
 struct log_buf
 {
-   log_buf() : log_file(0), sev(LSYS), in_log(0), buf_len(0), show_hdr(false)
+   log_buf()
+      : log_file(0)
+      , sev(LSYS)
+      , in_log(0)
+      , buf_len(0)
+      , show_hdr(false)
    {
    }
 
@@ -381,7 +388,7 @@ void log_hex_blk(log_sev_t sev, const void *data, int len)
       }
       log_str(sev, buf, 73);
    }
-}
+} // log_hex_blk
 
 
 log_func::log_func(const char *name, int line)

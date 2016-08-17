@@ -112,3 +112,8 @@ class MyBlah {
     }
 }
 
+var x = (T)base.y;
+var x = (T)z.y;
+
+public myclass() : base() {
+}

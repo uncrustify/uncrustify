@@ -1,0 +1,127 @@
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+   <title>Uncrustify: where do the Indenting options work</title>
+</head>
+<body lang="en-US">
+<h1><a href="https://github.com/gmaurel/uncrustify4Qt">Uncrustify4Qt</a>:
+Where do the options work?</h1>
+<h2>Indenting</h2>
+<p>
+</p>
+<table border="1">
+<tr>
+<td>
+<pre><a name="indent_with_tabs"></a><a name="indent_cmt_with_tabs"></a>
+// indent_with_tabs     = 0 spaces only
+// indent_cmt_with_tabs = false
+int foo::bar()
+{<a name="indent_columns"></a>
+    int a;
+<a title="indent_columns"><strong><font color="red">^^^^</font></strong></a><a name="indent_continue"></a><a name="use_indent_continue_only_once"></a>
+    double a_very_long_variable = test (foobar1,
+        foobar5);
+    <a title="indent_continue/use_indent_continue_only_once"><strong><font color="red">^^^^</font></strong></a>
+}
+</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre>
+class Test
+{<a name="indent_access_spec"></a>
+ private:
+<a title="indent_access_spec"><strong><font color="red">^</font></strong></a>
+   int a;
+}
+</pre>
+</td>
+</tr>
+</table>
+<p></p>
+<h1>Register</h1>
+<table>
+  <tr>
+    <td><a href="#indent_columns">indent_columns</a></td>
+    <td><a href="#indent_continue">indent_continue</a></td>
+    <td><a href="#indent_with_tabs">indent_with_tabs</a></td>
+    <td><a href="#indent_cmt_with_tabs">indent_cmt_with_tabs</a></td>
+    <td><a href="#indent_align_string">indent_align_string</a></td>
+    <td><a href="#indent_xml_string">indent_xml_string</a></td>
+    <td><a href="#indent_brace">indent_brace</a></td>
+    <td><a href="#indent_braces">indent_braces</a></td>
+    <td><a href="#indent_braces_no_func">indent_braces_no_func</a></td>
+    <td><a href="#indent_braces_no_class">indent_braces_no_class</a></td>
+    <td><a href="#indent_braces_no_struct">indent_braces_no_struct</a></td>
+    <td><a href="#indent_brace_parent">indent_brace_parent</a></td>
+    <td><a href="#indent_paren_open_brace">indent_paren_open_brace</a></td>
+    <td><a href="#indent_namespace">indent_namespace</a></td>
+    <td><a href="#indent_namespace_single_indent">indent_namespace_single_indent</a></td>
+    <td><a href="#indent_namespace_level">indent_namespace_level</a></td>
+    <td><a href="#indent_namespace_limit">indent_namespace_limit</a></td>
+    <td><a href="#indent_extern">indent_extern</a></td>
+    <td><a href="#indent_class">indent_class</a></td>
+    <td><a href="#indent_class_colon">indent_class_colon</a></td>
+    <td><a href="#indent_class_on_colon">indent_class_on_colon</a></td>
+    <td><a href="#indent_constr_colon">indent_constr_colon</a></td>
+    <td><a href="#indent_ctor_init_leading">indent_ctor_init_leading</a></td>
+    <td><a href="#indent_ctor_init">indent_ctor_init</a></td>
+    <td><a href="#indent_else_if">indent_else_if</a></td>
+    <td><a href="#indent_var_def_blk">indent_var_def_blk</a></td>
+    <td><a href="#indent_var_def_cont">indent_var_def_cont</a></td>
+    <td><a href="#indent_shift">indent_shift</a></td>
+    <td><a href="#indent_func_def_force_col1">indent_func_def_force_col1</a></td>
+    <td><a href="#indent_func_call_param">indent_func_call_param</a></td>
+    <td><a href="#indent_func_def_param">indent_func_def_param</a></td>
+    <td><a href="#indent_func_proto_param">indent_func_proto_param</a></td>
+    <td><a href="#indent_func_class_param">indent_func_class_param</a></td>
+    <td><a href="#indent_func_ctor_var_param">indent_func_ctor_var_param</a></td>
+    <td><a href="#indent_template_param">indent_template_param</a></td>
+    <td><a href="#indent_func_param_double">indent_func_param_double</a></td>
+    <td><a href="#indent_func_const">indent_func_const</a></td>
+    <td><a href="#indent_func_throw">indent_func_throw</a></td>
+    <td><a href="#indent_member">indent_member</a></td>
+    <td><a href="#indent_sing_line_comments">indent_sing_line_comments</a></td>
+    <td><a href="#indent_relative_single_line_comments">indent_relative_single_line_comments</a></td>
+    <td><a href="#indent_switch_case">indent_switch_case</a></td>
+    <td><a href="#indent_case_shift">indent_case_shift</a></td>
+    <td><a href="#indent_case_brace">indent_case_brace</a></td>
+    <td><a href="#indent_col1_comment">indent_col1_comment</a></td>
+    <td><a href="#indent_label">indent_label</a></td>
+    <td><a href="#indent_access_spec">indent_access_spec</a></td>
+    <td><a href="#indent_access_spec_body">indent_access_spec_body</a></td>
+    <td><a href="#indent_paren_nl">indent_paren_nl</a></td>
+    <td><a href="#indent_paren_close">indent_paren_close</a></td>
+    <td><a href="#indent_comma_paren">indent_comma_paren</a></td>
+    <td><a href="#indent_bool_paren">indent_bool_paren</a></td>
+    <td><a href="#indent_first_bool_expr">indent_first_bool_expr</a></td>
+    <td><a href="#indent_square_nl">indent_square_nl</a></td>
+    <td><a href="#indent_preserve_sql">indent_preserve_sql</a></td>
+    <td><a href="#indent_align_assign">indent_align_assign</a></td>
+
+    <td><a href="#indent_min_vbrace_open">indent_min_vbrace_open</a></td>
+    <td><a href="#indent_vbrace_open_on_tabstop">indent_vbrace_open_on_tabstop</a></td>
+    <td><a href="#use_indent_continue_only_once">use_indent_continue_only_once</a></td>
+  </tr>
+  <tr>
+  </tr>
+</table>
+
+<h2>not yet shown</h2>
+
+<h2>only for Pawn</h2>
+
+<h2>only for Java</h2>
+
+<h2>only for objective C</h2>
+indent_oc_msg_colon<br>
+indent_oc_msg_prioritize_first_colon<br>
+indent_oc_block_msg_xcode_style<br>
+indent_oc_block_msg_from_keyword<br>
+indent_oc_block_msg_from_colon<br>
+indent_oc_block_msg_from_caret<br>
+indent_oc_block_msg_from_brace<br>
+
+</body>
+</html>
