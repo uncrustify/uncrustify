@@ -15,6 +15,7 @@
 template<class T> class ListManager
 {
 protected:
+
    /* Pointers to the head and tail.
     * They are either both NULL or both non-NULL.
     */
@@ -36,30 +37,25 @@ public:
       last  = NULL;
    }
 
-
    T *GetHead()
    {
       return(first);
    }
-
 
    T *GetTail()
    {
       return(last);
    }
 
-
    T *GetNext(T *ref)
    {
       return((ref != NULL) ? ref->next : NULL);
    }
 
-
    T *GetPrev(T *ref)
    {
       return((ref != NULL) ? ref->prev : NULL);
    }
-
 
    void InitEntry(T *obj) const
    {
@@ -69,7 +65,6 @@ public:
          obj->prev = NULL;
       }
    }
-
 
    void Pop(T *obj)
    {
@@ -95,7 +90,6 @@ public:
          obj->prev = NULL;
       }
    }
-
 
    void Swap(T *obj1, T *obj2)
    {
@@ -125,7 +119,6 @@ public:
       }
    }
 
-
    void AddAfter(T *obj, T *ref)
    {
       if ((obj != NULL) && (ref != NULL))
@@ -144,7 +137,6 @@ public:
          ref->next = obj;
       }
    }
-
 
    void AddBefore(T *obj, T *ref)
    {
@@ -165,7 +157,6 @@ public:
       }
    }
 
-
    void AddTail(T *obj)
    {
       obj->next = NULL;
@@ -181,7 +172,6 @@ public:
       }
       last = obj;
    }
-
 
    void AddHead(T *obj)
    {

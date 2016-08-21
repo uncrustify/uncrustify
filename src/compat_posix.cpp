@@ -33,4 +33,5 @@ bool unc_homedir(std::string& home)
    return(false);
 }
 
+
 #endif /* ifndef WIN32 */

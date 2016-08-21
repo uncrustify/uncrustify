@@ -241,7 +241,8 @@ static bool split_line(chunk_t *start)
    /**
     * break at maximum line length if ls_code_width is true
     */
-   if (start->flags & PCF_ONE_LINER) {
+   if (start->flags & PCF_ONE_LINER)
+   {
       LOG_FMT(LSPLIT, " ** ONCE LINER SPLIT **\n");
       undo_one_liner(start);
       newlines_cleanup_braces(false);

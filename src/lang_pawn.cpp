@@ -475,7 +475,7 @@ static chunk_t *pawn_process_func_def(chunk_t *pc)
       chunk.level       = 0;
       chunk.brace_level = 0;
       chunk.parent_type = CT_FUNC_DEF;
-      last              = chunk_add_after(&chunk, last);
+      last = chunk_add_after(&chunk, last);
    }
    return(last);
 } // pawn_process_func_def

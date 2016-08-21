@@ -23,7 +23,7 @@
 
 static map<string, option_map_value>           option_name_map;
 static map<uncrustify_groups, group_map_value> group_map;
-static uncrustify_groups                       current_group;
+static uncrustify_groups current_group;
 
 
 static void unc_add_option(const char *name, uncrustify_options id, argtype_e type, const char *short_desc = NULL, const char *long_desc = NULL, int min_val = 0, int max_val = 16);
@@ -1529,8 +1529,8 @@ const option_map_value *get_option_name(int uo)
 static void convert_value(const option_map_value *entry, const char *val, op_val_t *dest)
 {
    const option_map_value *tmp;
-   bool                   btrue;
-   int                    mult;
+   bool btrue;
+   int  mult;
 
    if (entry->type == AT_LINE)
    {
@@ -1599,7 +1599,7 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
       if (strcasecmp(val, "IGNORE") != 0)
       {
          LOG_FMT(LWARN, "%s:%d Expected IGNORE, JOIN, LEAD, LEAD_BREAK, LEAD_FORCE, "
-                 "TRAIL, TRAIL_BREAK, TRAIL_FORCE for %s, got %s\n",
+                        "TRAIL, TRAIL_BREAK, TRAIL_FORCE for %s, got %s\n",
                  cpd.filename, cpd.line_number, entry->name, val);
          cpd.error_count++;
       }
@@ -2170,17 +2170,17 @@ void set_option_defaults(void)
    }
 
    /* the options with non-zero default values */
-   cpd.defaults[UO_newlines].le                            = LE_AUTO;
-   cpd.defaults[UO_input_tab_size].n                       = 8;
-   cpd.defaults[UO_output_tab_size].n                      = 8;
-   cpd.defaults[UO_indent_ctor_init_leading].n             = 2;
-   cpd.defaults[UO_indent_columns].n                       = 8;
-   cpd.defaults[UO_indent_with_tabs].n                     = 1;
-   cpd.defaults[UO_indent_label].n                         = 1;
-   cpd.defaults[UO_indent_access_spec].n                   = 1;
-   cpd.defaults[UO_sp_before_comma].a                      = AV_REMOVE;
-   cpd.defaults[UO_sp_paren_comma].a                       = AV_FORCE;
-   cpd.defaults[UO_string_escape_char].n                   = '\\';
+   cpd.defaults[UO_newlines].le                = LE_AUTO;
+   cpd.defaults[UO_input_tab_size].n           = 8;
+   cpd.defaults[UO_output_tab_size].n          = 8;
+   cpd.defaults[UO_indent_ctor_init_leading].n = 2;
+   cpd.defaults[UO_indent_columns].n           = 8;
+   cpd.defaults[UO_indent_with_tabs].n         = 1;
+   cpd.defaults[UO_indent_label].n             = 1;
+   cpd.defaults[UO_indent_access_spec].n       = 1;
+   cpd.defaults[UO_sp_before_comma].a          = AV_REMOVE;
+   cpd.defaults[UO_sp_paren_comma].a           = AV_FORCE;
+   cpd.defaults[UO_string_escape_char].n       = '\\';
    cpd.defaults[UO_sp_not].a                               = AV_REMOVE;
    cpd.defaults[UO_sp_inv].a                               = AV_REMOVE;
    cpd.defaults[UO_sp_addr].a                              = AV_REMOVE;

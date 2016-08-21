@@ -273,7 +273,7 @@ int main(int argc, char *argv[])
       return(EXIT_SUCCESS);
    }
 
-   cpd.do_check = arg.Present("--check");
+   cpd.do_check   = arg.Present("--check");
    cpd.if_changed = arg.Present("--if-changed");
 
 #ifdef WIN32
@@ -405,12 +405,12 @@ int main(int argc, char *argv[])
    const char *suffix = arg.Param("--suffix");
    const char *assume = arg.Param("--assume");
 
-   bool       no_backup        = arg.Present("--no-backup");
-   bool       replace          = arg.Present("--replace");
-   bool       keep_mtime       = arg.Present("--mtime");
-   bool       update_config    = arg.Present("--update-config");
-   bool       update_config_wd = arg.Present("--update-config-with-doc");
-   bool       detect           = arg.Present("--detect");
+   bool no_backup        = arg.Present("--no-backup");
+   bool replace          = arg.Present("--replace");
+   bool keep_mtime       = arg.Present("--mtime");
+   bool update_config    = arg.Present("--update-config");
+   bool update_config_wd = arg.Present("--update-config-with-doc");
+   bool detect           = arg.Present("--detect");
 
    /* Grab the output override */
    output_file = arg.Param("-o");
@@ -486,15 +486,15 @@ int main(int argc, char *argv[])
    {
       char buffer[256];
       strcpy(buffer, p_arg);
-      
+
       // Tokenize and extract key and value
-      const char *token = strtok(buffer, "=");
+      const char *token  = strtok(buffer, "=");
       const char *option = token;
 
       token = strtok(NULL, "=");
       const char *value = token;
 
-      if (option != NULL && value != NULL && strtok(NULL, "=") == NULL)
+      if ((option != NULL) && (value != NULL) && (strtok(NULL, "=") == NULL))
       {
          if (set_option_value(option, value) == -1)
          {
@@ -1056,14 +1056,15 @@ static string fix_filename(const char *filename)
 static bool bout_content_matches(const file_mem& fm, bool report_status)
 {
    bool is_same = true;
+
    /* compare the old data vs the new data */
    if (cpd.bout->size() != fm.raw.size())
    {
       if (report_status)
       {
          fprintf(stderr, "FAIL: %s (File size changed from %u to %u)\n",
-            cpd.filename,
-            (int)fm.raw.size(), (int)cpd.bout->size());
+                 cpd.filename,
+                 (int)fm.raw.size(), (int)cpd.bout->size());
       }
       is_same = false;
    }
@@ -1076,7 +1077,7 @@ static bool bout_content_matches(const file_mem& fm, bool report_status)
             if (report_status)
             {
                fprintf(stderr, "FAIL: %s (Difference at byte %u)\n",
-                  cpd.filename, idx);
+                       cpd.filename, idx);
             }
             is_same = false;
             break;
@@ -1134,7 +1135,7 @@ static void do_source_file(const char *filename_in,
 
    /* If we're only going to write on an actual change, then build the output buffer now
     * and if there were changes, run it through the normal file write path.
-    * 
+    *
     * Future: many code paths could be simplified if 'bout' were always used and not
     * optionally selected in just for do_check and if_changed.
     */
@@ -1228,6 +1229,7 @@ static void do_source_file(const char *filename_in,
             /* Change - rename filename_tmp to filename_out */
 
 #ifdef WIN32
+
             /* Atomic rename in windows can't go through stdio rename() func because underneath
              * it calls MoveFileExW without MOVEFILE_REPLACE_EXISTING.
              */
@@ -1302,7 +1304,7 @@ static void add_func_header(c_token_t type, file_mem& fm)
          continue;
       }
       if ((pc->flags & PCF_IN_CLASS) &&
-         !cpd.settings[UO_cmt_insert_before_inlines].b)
+          !cpd.settings[UO_cmt_insert_before_inlines].b)
       {
          continue;
       }
@@ -1432,7 +1434,8 @@ static void add_msg_header(c_token_t type, file_mem& fm)
             if (ref != NULL)
             {
                /* Ignore 'right' comments */
-               if (chunk_is_newline(ref) && chunk_is_comment(chunk_get_prev(ref))) {
+               if (chunk_is_newline(ref) && chunk_is_comment(chunk_get_prev(ref)))
+               {
                   break;
                }
                do_insert = true;
@@ -1587,7 +1590,8 @@ static void uncrustify_file(const file_mem& fm, FILE *pfout,
       if (cpd.func_hdr.data.size() > 0)
       {
          add_func_header(CT_FUNC_DEF, cpd.func_hdr);
-         if (cpd.settings[UO_cmt_insert_before_ctor_dtor].b) {
+         if (cpd.settings[UO_cmt_insert_before_ctor_dtor].b)
+         {
             add_func_header(CT_FUNC_CLASS_DEF, cpd.func_hdr);
          }
       }

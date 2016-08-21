@@ -319,7 +319,7 @@ bool unc_text::startswith(const unc_text& text, int idx) const
 
 int unc_text::find(const char *text, int sidx) const
 {
-   int len  = strlen(text);
+   int len = strlen(text);
    int midx = size() - len;
    int idx, ii;
 

@@ -193,7 +193,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
 
    if ((first->type == CT_CASE) &&
        ((CharTable::IsKw1(second->str[0]) ||
-        (second->type == CT_NUMBER))))
+         (second->type == CT_NUMBER))))
    {
       log_rule("sp_case_label");
       return(argval_t(cpd.settings[UO_sp_case_label].a | AV_ADD));
@@ -385,7 +385,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
          }
       }
       else if (!chunk_is_comment(second) &&
-               second->type != CT_BRACE_CLOSE)  // issue #197
+               (second->type != CT_BRACE_CLOSE)) // issue #197
       {
          log_rule("sp_after_semi");
          return(cpd.settings[UO_sp_after_semi].a);
@@ -1379,7 +1379,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
       return(AV_ADD);
    }
 
-   if (first->type == CT_NULLCOND || second->type == CT_NULLCOND)
+   if ((first->type == CT_NULLCOND) || (second->type == CT_NULLCOND))
    {
       log_rule("sp_member");
       return(cpd.settings[UO_sp_member].a);
@@ -1445,7 +1445,8 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
    if ((first->type == CT_PTR_TYPE) && CharTable::IsKw1(second->str[0]))
    {
       prev = chunk_get_prev(first);
-      if ((prev != NULL) && (prev->type == CT_IN)) {
+      if ((prev != NULL) && (prev->type == CT_IN))
+      {
          log_rule("sp_deref");
          return(cpd.settings[UO_sp_deref].a);
       }
@@ -1810,8 +1811,8 @@ void space_text(void)
       LOG_FMT(LGUY, "%s: %d:%d %s %s\n", __func__, pc->orig_line, pc->orig_col, pc->text(),
               get_token_name(pc->type));
       if ((cpd.settings[UO_use_options_overriding_for_qt_macros].b) &&
-         ((strcmp(pc->text(), "SIGNAL") == 0) ||
-          (strcmp(pc->text(), "SLOT") == 0)))
+          ((strcmp(pc->text(), "SIGNAL") == 0) ||
+           (strcmp(pc->text(), "SLOT") == 0)))
       {  // guy 2015-09-22
 #ifdef DEBUG
          LOG_FMT(LGUY, "(%d) ", __LINE__);
@@ -1829,13 +1830,13 @@ void space_text(void)
       {
          next = chunk_get_next(pc);
          while (chunk_is_blank(next) && !chunk_is_newline(next) &&
-               (next->type == CT_VBRACE_OPEN || next->type == CT_VBRACE_CLOSE))
+                (next->type == CT_VBRACE_OPEN || next->type == CT_VBRACE_CLOSE))
          {
             LOG_FMT(LSPACE, "%s: %d:%d Skip %s (%d+%d)\n", __func__,
-               next->orig_line, next->orig_col, get_token_name(next->type),
-               pc->column, pc->str.size());
+                    next->orig_line, next->orig_col, get_token_name(next->type),
+                    pc->column, pc->str.size());
             next->column = pc->column + pc->str.size();
-            next = chunk_get_next(next);
+            next         = chunk_get_next(next);
          }
       }
       else
@@ -1943,7 +1944,7 @@ void space_text(void)
             }
          }
 
-         int min_sp;
+         int      min_sp;
          argval_t av = do_space(pc, next, min_sp, false);
          if (pc->flags & PCF_FORCE_SPACE)
          {
@@ -1951,7 +1952,7 @@ void space_text(void)
             LOG_FMT(LSPACE, " <force between '%s' and '%s'>",
                     pc->text(), next->text());
             av_int |= AV_ADD;
-            av = (argval_t) av_int;
+            av      = (argval_t)av_int;
          }
          min_sp = max(1, min_sp);
          switch (av)
@@ -1976,7 +1977,7 @@ void space_text(void)
             break;
 
          case AV_REMOVE:
-            /* the symbols will be back-to-back "a+3" */
+         /* the symbols will be back-to-back "a+3" */
          case AV_NOT_DEFINED:
             break;
 

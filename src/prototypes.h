@@ -328,4 +328,5 @@ int align_tab_column(int col)
    return(col);
 }
 
+
 #endif /* C_PARSE_PROTOTYPES_H_INCLUDED */

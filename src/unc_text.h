@@ -27,35 +27,29 @@ public:
    {
    }
 
-
    ~unc_text()
    {
    }
-
 
    unc_text(const unc_text& ref)
    {
       set(ref);
    }
 
-
    unc_text(const unc_text& ref, int idx, int len = -1)
    {
       set(ref, idx, len);
    }
-
 
    unc_text(const char *ascii_text)
    {
       set(ascii_text);
    }
 
-
    unc_text(const string& ascii_text)
    {
       set(ascii_text);
    }
-
 
    unc_text(const value_type& data, int idx = 0, int len = -1)
    {
@@ -187,12 +181,10 @@ public:
       return(m_chars.back());
    }
 
-
    void push_back(int ch)
    {
       append(ch);
    }
-
 
    void pop_back()
    {
@@ -202,7 +194,6 @@ public:
          m_logok = false;
       }
    }
-
 
    void pop_front()
    {
