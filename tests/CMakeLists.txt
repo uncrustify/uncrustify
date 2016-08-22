@@ -40,7 +40,7 @@ foreach(test_lang c-sharp c cpp d java pawn objective-c vala ecma)
         set(test_output output/${test_expected})
         set(test_result results/${test_expected})
 
-        if("${CMAKE_MATCH_2}" STREQUAL "!")
+        if("${CMAKE_MATCH_2} " STREQUAL "! ")
           string(REGEX REPLACE "\\.[^.]*" ".rerun.cfg" test_rerun_config ${test_config})
         else()
           set(test_rerun_config ${test_config})
