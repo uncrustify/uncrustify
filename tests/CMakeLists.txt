@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8.11)
+cmake_minimum_required(VERSION 2.8)
 
 function(add_uncrustify_test name lang config rerun_config input result output)
   add_test(NAME ${name}
