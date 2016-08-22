@@ -5704,7 +5704,7 @@ static void handle_wrap(chunk_t *pc)
 /**
  * A proto wrap chunk and what follows should be treated as a function proto.
  *
- * RETTYPE PROTO_WRAP( NAME, PARAMS );
+ * RETTYPE PROTO_WRAP( NAME, PARAMS ); or RETTYPE PROTO_WRAP( NAME, (PARAMS) );
  * RETTYPE gets changed with make_type().
  * PROTO_WRAP is marked as CT_FUNC_PROTO or CT_FUNC_DEF.
  * NAME is marked as CT_WORD.
@@ -5721,7 +5721,6 @@ static void handle_proto_wrap(chunk_t *pc)
 
    if (!opp || !name || !clp || !cma || !tmp ||
        ((name->type != CT_WORD) && (name->type != CT_TYPE)) ||
-       (tmp->type != CT_PAREN_OPEN) ||
        (opp->type != CT_PAREN_OPEN))
    {
       return;
@@ -5742,7 +5741,17 @@ static void handle_proto_wrap(chunk_t *pc)
    set_chunk_parent(clp, pc->type);
 
    set_chunk_parent(tmp, CT_PROTO_WRAP);
-   fix_fcn_def_params(tmp);
+
+   if (tmp->type == CT_PAREN_OPEN)
+   {
+	  fix_fcn_def_params(tmp);
+   }
+   else
+   {
+      fix_fcn_def_params(opp);
+      set_chunk_type(name, CT_WORD);
+   }
+
    tmp = chunk_skip_to_match(tmp);
    if (tmp)
    {
