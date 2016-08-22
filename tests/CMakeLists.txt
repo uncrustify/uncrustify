@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 2.8.11)
 
 function(add_uncrustify_test name lang config rerun_config input result output)
   add_test(NAME ${name}
@@ -33,7 +33,7 @@ foreach(test_lang c-sharp c cpp d java pawn objective-c vala ecma)
         set(test_config config/${CMAKE_MATCH_3})
         set(test_input input/${CMAKE_MATCH_4})
 
-        get_filename_component(test_dir ${CMAKE_MATCH_4} DIRECTORY)
+        get_filename_component(test_dir ${CMAKE_MATCH_4} PATH)
         get_filename_component(test_file ${CMAKE_MATCH_4} NAME)
 
         set(test_expected ${test_dir}/${CMAKE_MATCH_1}-${test_file})
