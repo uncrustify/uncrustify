@@ -917,7 +917,7 @@ static void check_template(chunk_t *start)
 
          if ((tokens[num_tokens - 1] == CT_ANGLE_OPEN) &&
              (pc->str[0] == '>') && (pc->len() > 1) &&
-             (cpd.settings[UO_tok_split_gte].b || chunk_is_str(pc, ">>", 2)))
+             (cpd.settings[UO_tok_split_gte].b || (chunk_is_str(pc, ">>", 2) && (num_tokens >= 2))))
          {
             LOG_FMT(LTEMPL, " {split '%s' at %d:%d}",
                     pc->text(), pc->orig_line, pc->orig_col);
@@ -962,12 +962,12 @@ static void check_template(chunk_t *start)
             {
                break;
             }
-            tokens[num_tokens++] = pc->type;
+            tokens[num_tokens++] = CT_PAREN_OPEN;
          }
          else if (pc->type == CT_PAREN_CLOSE)
          {
             num_tokens--;
-            if (tokens[num_tokens] != (pc->type - 1))
+            if (tokens[num_tokens] != CT_PAREN_OPEN)
             {
                /* unbalanced parens */
                break;
