@@ -241,12 +241,47 @@ if(BUILD_TESTING)
 endif()
 
 #
+# Package
+#
+set(CPACK_PACKAGE_NAME "uncrustify")
+set(CPACK_PACKAGE_VERSION "${PACKAGE_VERSION}")
+set(CPACK_PACKAGE_VENDOR "Ben Gardner")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Code beautifier")
+set(CPACK_PACKAGE_DESCRIPTION_FILE "${PROJECT_SOURCE_DIR}/README.md")
+set(CPACK_RESOURCE_FILE_LICENSE "${PROJECT_SOURCE_DIR}/COPYING")
+set(CPACK_RESOURCE_FILE_README "${PROJECT_SOURCE_DIR}/README.md")
+set(CPACK_SOURCE_IGNORE_FILES "/\\\\.git/;/\\\\.hg/;/tests/results/;/build.*/")
+if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+  set(CPACK_INCLUDE_TOPLEVEL_DIRECTORY FALSE)
+  set(CPACK_GENERATOR "ZIP")
+endif()
+include(CPack)
+
+#
 # Install
 #
-include(GNUInstallDirs)
-install(TARGETS uncrustify
-  RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
-)
-install(FILES "${CMAKE_CURRENT_BINARY_DIR}/uncrustify.1"
-  DESTINATION "${CMAKE_INSTALL_MANDIR}/man1"
-)
+if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+  install(TARGETS uncrustify DESTINATION ".")
+  install(
+    FILES
+      "${PROJECT_SOURCE_DIR}/README.md"
+      "${PROJECT_SOURCE_DIR}/BUGS"
+      "${PROJECT_SOURCE_DIR}/ChangeLog"
+    DESTINATION "."
+  )
+  install(FILES "${PROJECT_SOURCE_DIR}/documentation/htdocs/index.html"
+    DESTINATION "doc"
+  )
+  install(DIRECTORY "${PROJECT_SOURCE_DIR}/etc/"
+    DESTINATION "cfg"
+    FILES_MATCHING PATTERN "*.cfg"
+  )
+else()
+  include(GNUInstallDirs)
+  install(TARGETS uncrustify
+    RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
+  )
+  install(FILES "${CMAKE_CURRENT_BINARY_DIR}/uncrustify.1"
+    DESTINATION "${CMAKE_INSTALL_MANDIR}/man1"
+  )
+endif()
