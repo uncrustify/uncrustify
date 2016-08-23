@@ -313,3 +313,4 @@
 10001 sp_after_sparen.cfg       c/sp_after_sparen.c
 
 10002 bug_671.cfg               c/bug_671.c
+10003 bug_i_222.cfg             c/bug_i_222.c
