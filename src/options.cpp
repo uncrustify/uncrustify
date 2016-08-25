@@ -747,16 +747,13 @@ void register_options(void)
    unc_add_option("indent_oc_block_msg_from_brace", UO_indent_oc_block_msg_from_brace, AT_BOOL,
                   "If indent_oc_block_msg and this option are on, blocks will be indented from where the brace is.");
    unc_add_option("indent_min_vbrace_open", UO_indent_min_vbrace_open, AT_NUM,
-                  "When identing after virtual brace open and newline add further spaces to reach this min. indent.");
+                  "When indenting after virtual brace open and newline add further spaces to reach this min. indent.");
    unc_add_option("indent_vbrace_open_on_tabstop", UO_indent_vbrace_open_on_tabstop, AT_BOOL,
-                  "TRUE: When identing after virtual brace open and newline add further spaces "
-                  "after regular indent to reach next tabstop.");
+                  "TRUE: When indenting after virtual brace open and newline add further spaces after regular indent to reach next tabstop.");
    unc_add_option("indent_token_after_brace", UO_indent_token_after_brace, AT_BOOL,
-                  "If true, a brace followed by another token (not a newline) will indent all contained lines to match the token."
-                  "Default=True.");
+                  "If true, a brace followed by another token (not a newline) will indent all contained lines to match the token. Default=True.");
    unc_add_option("indent_cpp_lambda_body", UO_indent_cpp_lambda_body, AT_BOOL,
-                  "If true, cpp lambda body will be indented"
-                  "Default=False.");
+                  "If true, cpp lambda body will be indented.");
 
    unc_begin_group(UG_newline, "Newline adding and removing options");
    unc_add_option("nl_collapse_empty_body", UO_nl_collapse_empty_body, AT_BOOL,
