@@ -384,8 +384,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
             return(cpd.settings[UO_sp_after_semi_for].a);
          }
       }
-      else if (!chunk_is_comment(second) &&
-               second->type != CT_BRACE_CLOSE)  // issue #197
+      else if (!chunk_is_comment(second))
       {
          log_rule("sp_after_semi");
          return(cpd.settings[UO_sp_after_semi].a);
