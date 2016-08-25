@@ -88,6 +88,7 @@ void examine_Data(const char *func_name, int theLine, int what)
             LOG_FMT(LGUY, "(%d)%s %s, col=%d, column=%d\n", pc->orig_line, pc->text(), get_token_name(pc->type), pc->orig_col, pc->column);
          }
       }
+      break;
 
    case 4:
       LOG_FMT(LGUY, "4:(%d)\n", theLine);
