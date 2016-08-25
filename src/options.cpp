@@ -1162,6 +1162,8 @@ void register_options(void)
                   "The position of conditional (b ? t : f) operators in wrapped expressions");
    unc_add_option("pos_comma", UO_pos_comma, AT_POS,
                   "The position of the comma in wrapped expressions");
+   unc_add_option("pos_enum_comma", UO_pos_enum_comma, AT_POS,
+                  "The position of the comma in enum entries");
    unc_add_option("pos_class_comma", UO_pos_class_comma, AT_POS,
                   "The position of the comma in the base class list if there are more than one line,\n"
                   "  (tied to nl_class_init_args).");

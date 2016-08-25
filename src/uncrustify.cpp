@@ -1716,7 +1716,7 @@ static void uncrustify_file(const file_mem& fm, FILE *pfout,
             newlines_chunk_pos(CT_COND_COLON, cpd.settings[UO_pos_conditional].tp);
             newlines_chunk_pos(CT_QUESTION, cpd.settings[UO_pos_conditional].tp);
          }
-         if (cpd.settings[UO_pos_comma].tp != TP_IGNORE)
+         if (cpd.settings[UO_pos_comma].tp != TP_IGNORE || cpd.settings[UO_pos_enum_comma].tp != TP_IGNORE)
          {
             newlines_chunk_pos(CT_COMMA, cpd.settings[UO_pos_comma].tp);
          }

@@ -149,6 +149,7 @@
 30750 ben.cfg                          cpp/lambda.cpp
 30751 lambda1.cfg                      cpp/lambda.cpp
 30752 lambda2.cfg                      cpp/lambda.cpp
+30753 lambda3.cfg                      cpp/lambda2.cpp
 
 30800 star_pos-0.cfg                   cpp/align-star-amp-pos.cpp
 30801 star_pos-1.cfg                   cpp/align-star-amp-pos.cpp
@@ -333,5 +334,12 @@
 33094 sp_angle_paren_empty.cfg         cpp/sp_angle_paren.cpp
 33095 bug_i_322.cfg                    cpp/bug_i_322.cpp
 33096 squeeze_ifdef_top.cfg            cpp/squeeze_ifdef.cpp
+
+33097 enum_comma-1.cfg                 cpp/enum_comma.h
+33098 enum_comma-2.cfg                 cpp/enum_comma.h
+33099 enum_comma-3.cfg                 cpp/enum_comma.h
+33100 enum_comma-4.cfg                 cpp/enum_comma.h
+33101 enum_comma-5.cfg                 cpp/enum_comma.h
+33102 enum_comma-6.cfg                 cpp/enum_comma.h
 
 33200 first_len_minimum.cfg            cpp/first_len_minimum.cpp
