@@ -1126,7 +1126,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       {
          set_chunk_type(pc, CT_BYREF);
       }
-      else if ((next->type == CT_FPAREN_CLOSE) ||
+      else if (chunk_is_paren_close(next) ||
                (next->type == CT_COMMA))
       {
          // fix the bug #654
