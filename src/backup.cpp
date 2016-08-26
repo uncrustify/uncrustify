@@ -103,11 +103,13 @@ int backup_copy_file(const char *filename, const vector<UINT8>& data)
       }
       LOG_FMT(LERR, "fwrite(%s) failed: %s (%d)\n",
               newpath, strerror(my_errno), my_errno);
+      cpd.error_count++;
    }
    else
    {
       LOG_FMT(LERR, "fopen(%s) failed: %s (%d)\n",
               newpath, strerror(errno), errno);
+      cpd.error_count++;
    }
    return(FAILURE);
 } // backup_copy_file
@@ -133,6 +135,7 @@ void backup_create_md5_file(const char *filename)
    {
       LOG_FMT(LERR, "%s: fopen(%s) failed: %s (%d)\n",
               __func__, filename, strerror(errno), errno);
+      cpd.error_count++;
       return;
    }
 
