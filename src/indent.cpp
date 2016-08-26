@@ -1417,9 +1417,19 @@ void indent_text(void)
                else
                {
                   next = chunk_get_next(pc);
-                  if ((next != NULL) && !chunk_is_newline(next))
+                  if (next != NULL)
                   {
-                     frm.pse[frm.pse_tos].indent = next->column;
+                     if (cpd.settings[UO_indent_ctor_init].n != 0)
+                     {
+                        frm.pse[frm.pse_tos].indent     += cpd.settings[UO_indent_ctor_init].n;
+                        frm.pse[frm.pse_tos].indent_tmp += cpd.settings[UO_indent_ctor_init].n;
+                        frm.pse[frm.pse_tos].indent_tab += cpd.settings[UO_indent_ctor_init].n;
+                        indent_column_set(frm.pse[frm.pse_tos].indent_tmp);
+                     }
+                     else if (!chunk_is_newline(next))
+                     {
+                        frm.pse[frm.pse_tos].indent = next->column;
+                     }
                   }
                }
             }
