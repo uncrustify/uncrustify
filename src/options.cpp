@@ -1237,12 +1237,18 @@ void register_options(void)
                   "The span for aligning on '=' in enums (0=don't align)", "", 0, 5000);
    unc_add_option("align_enum_equ_thresh", UO_align_enum_equ_thresh, AT_NUM,
                   "The threshold for aligning on '=' in enums (0=no limit)", "", 0, 5000);
+   unc_add_option("align_var_class_span", UO_align_var_class_span, AT_NUM,
+                  "The span for aligning class (0=don't align)", "", 0, 5000);
+   unc_add_option("align_var_class_thresh", UO_align_var_class_thresh, AT_NUM,
+                  "The threshold for aligning class member definitions (0=no limit)", "", 0, 5000);
+   unc_add_option("align_var_class_gap", UO_align_var_class_gap, AT_NUM,
+                  "The gap for aligning class member definitions");
    unc_add_option("align_var_struct_span", UO_align_var_struct_span, AT_NUM,
                   "The span for aligning struct/union (0=don't align)", "", 0, 5000);
    unc_add_option("align_var_struct_thresh", UO_align_var_struct_thresh, AT_NUM,
                   "The threshold for aligning struct/union member definitions (0=no limit)", "", 0, 5000);
    unc_add_option("align_var_struct_gap", UO_align_var_struct_gap, AT_NUM,
-                  "The gap for aligning struct/union member definitions");
+                  "The gap for aligning struct/union member definitions");                  
    unc_add_option("align_struct_init_span", UO_align_struct_init_span, AT_NUM,
                   "The span for aligning struct initializer values (0=don't align)", "", 0, 5000);
    unc_add_option("align_typedef_gap", UO_align_typedef_gap, AT_NUM,

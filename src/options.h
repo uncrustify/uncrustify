@@ -457,6 +457,9 @@ enum uncrustify_options
    UO_align_var_def_amp_style,    // see UO_align_typedef_star_style
    UO_align_var_def_colon,        // align the colon in struct bit fields
    UO_align_var_def_attribute,
+   UO_align_var_class_span,       // span for class (0=don't align)
+   UO_align_var_class_thresh,     // threshold for class, 0=no limit
+   UO_align_var_class_gap,        // gap for class
    UO_align_var_struct_span,      // span for struct/union (0=don't align)
    UO_align_var_struct_thresh,    // threshold for struct/union, 0=no limit
    UO_align_var_struct_gap,       // gap for struct/union
