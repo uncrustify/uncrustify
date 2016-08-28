@@ -352,6 +352,10 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
    //         pc->text(), get_token_name(pc->type),
    //         next->text(), get_token_name(next->type));
 
+   if (next == NULL)
+   {
+      return;
+   }
    if ((pc->type == CT_OC_AT) && next)
    {
       if ((next->type == CT_PAREN_OPEN) ||
@@ -2789,10 +2793,11 @@ static void fix_fcn_def_params(chunk_t *start)
       start = chunk_get_next_ncnl(start);
    }
 
-   if (start != NULL)                 // Coverity CID 76003
+   if (start == NULL)// Coverity CID 76003, 1100782
    {
-      assert((start->len() == 1) && (start->str[0] == '('));
+      return;
    }
+   assert((start->len() == 1) && (start->str[0] == '('));
 
    ChunkStack cs;
    int        level = start->level + 1;
