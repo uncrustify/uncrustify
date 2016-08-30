@@ -939,7 +939,8 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
            (next->type == CT_UNION)) &&
           (prev->type != CT_SIZEOF) &&
           (prev->parent_type != CT_OPERATOR) &&
-          ((pc->flags & PCF_IN_TYPEDEF) == 0))
+          ((pc->flags & PCF_IN_TYPEDEF) == 0) &&
+          ((pc->flags & PCF_IN_FCN_DEF) == 0))  // issue # 222
       {
          fix_casts(pc);
       }
@@ -1195,6 +1196,13 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
                // change CT_STAR => CT_PTR_TYPE
                set_chunk_type(pc->next, CT_PTR_TYPE);
                set_chunk_type(pc->next->next, CT_PTR_TYPE);
+            }
+            // Issue #222 whatever3 *(func_ptr)( whatever4 *foo2, ...
+            if ((pc->next->next) &&
+                (pc->next->next->type == CT_WORD) &&
+                (pc->flags & PCF_IN_FCN_DEF))
+            {
+                  set_chunk_type(pc->next, CT_PTR_TYPE);
             }
          }
       }
