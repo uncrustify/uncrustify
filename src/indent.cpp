@@ -1342,14 +1342,22 @@ void indent_text(void)
              (cpd.settings[UO_mod_case_brace].a & AV_REMOVE)) &&
              (prev->parent_type == CT_CASE))
          {
-            /* Affects the brace and closes the case */
-            int tmp = frm.pse[frm.pse_tos].indent - indent_size;
-
-            frm.pse[frm.pse_tos].indent     = tmp;
-            frm.pse[frm.pse_tos].indent_tmp = tmp + indent_size;
-            frm.pse[frm.pse_tos].indent_tab = tmp;
-
-            indent_column_set(frm.pse[frm.pse_tos].indent_tmp);
+		   if (cpd.settings[UO_indent_case_brace].n > 0)
+		   {
+		   	  /* Affects the brace and closes the case */
+              int tmp = frm.pse[frm.pse_tos].indent - cpd.settings[UO_indent_case_brace].n;
+              
+              frm.pse[frm.pse_tos].indent     = tmp;
+              frm.pse[frm.pse_tos].indent_tmp = tmp + cpd.settings[UO_indent_case_brace].n;
+              frm.pse[frm.pse_tos].indent_tab = tmp;
+              
+              indent_column_set(frm.pse[frm.pse_tos].indent_tmp);
+		   }
+		   else
+		   {
+              /* This only affects the 'break', so no need for a stack entry */
+              indent_column_set(prev->column);
+		   }
          }
       }
       else if (pc->type == CT_LABEL)
