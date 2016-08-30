@@ -666,18 +666,44 @@ void indent_text(void)
               (pc->parent_type == CT_PP_ELSE)))
          {
             next = chunk_get_next(pc);
-            /* Hack to get the logs to look right */
-            memtype = next->type;
-            set_chunk_type(next, CT_PP_IF_INDENT);
-            indent_pse_push(frm, next);
-            set_chunk_type(next, memtype);
+            int should_indent_preproc = true;
+            chunk_t* preproc_next = chunk_get_next_nl(pc);
+            preproc_next = chunk_get_next_nblank(preproc_next);
 
-            /* Indent one level except if the #if is a #include guard */
-            int extra = ((pc->pp_level == 0) && ifdef_over_whole_file()) ? 0 : indent_size;
-            frm.pse[frm.pse_tos].indent     = frm.pse[frm.pse_tos - 1].indent + extra;
-            frm.pse[frm.pse_tos].indent_tab = frm.pse[frm.pse_tos - 1].indent_tab + extra;
-            frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
-            frm.pse[frm.pse_tos].in_preproc = false;
+            /* Look ahead at what's on the line after the #if */
+            while (preproc_next->type != CT_NEWLINE)
+            {
+                if ((((preproc_next->type == CT_BRACE_OPEN) ||
+                    (preproc_next->type == CT_BRACE_CLOSE)) &&
+                    !cpd.settings[UO_pp_indent_brace].b) ||
+                    (preproc_next->type == CT_FUNC_DEF &&
+                    !cpd.settings[UO_pp_indent_func_def].b) ||
+                    (preproc_next->type == CT_CASE &&
+                    !cpd.settings[UO_pp_indent_case].b) ||
+                    (preproc_next->type == CT_EXTERN &&
+                    !cpd.settings[UO_pp_indent_extern].b))
+                {
+                    should_indent_preproc = false;
+                    break;
+                }
+                preproc_next = chunk_get_next(preproc_next);
+            }
+
+            if (should_indent_preproc)
+            {
+                /* Hack to get the logs to look right */
+                memtype = next->type;
+                set_chunk_type(next, CT_PP_IF_INDENT);
+                indent_pse_push(frm, next);
+                set_chunk_type(next, memtype);
+
+                /* Indent one level except if the #if is a #include guard */
+                int extra = ((pc->pp_level == 0) && ifdef_over_whole_file()) ? 0 : indent_size;
+                frm.pse[frm.pse_tos].indent     = frm.pse[frm.pse_tos - 1].indent + extra;
+                frm.pse[frm.pse_tos].indent_tab = frm.pse[frm.pse_tos - 1].indent_tab + extra;
+                frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
+                frm.pse[frm.pse_tos].in_preproc = false;
+            }
          }
 
          /* Transition into a preproc by creating a dummy indent */
@@ -1312,11 +1338,18 @@ void indent_text(void)
       {
          prev = chunk_get_prev_ncnl(pc);
          if ((prev != NULL) &&
-             (prev->type == CT_BRACE_CLOSE) &&
+             (prev->type == CT_BRACE_CLOSE) ||
+             (cpd.settings[UO_mod_case_brace].a & AV_REMOVE)) &&
              (prev->parent_type == CT_CASE))
          {
-            /* This only affects the 'break', so no need for a stack entry */
-            indent_column_set(prev->column);
+            /* Affects the brace and closes the case */
+            int tmp = frm.pse[frm.pse_tos].indent - indent_size;
+
+            frm.pse[frm.pse_tos].indent     = tmp;
+            frm.pse[frm.pse_tos].indent_tmp = tmp + indent_size;
+            frm.pse[frm.pse_tos].indent_tab = tmp;
+
+            indent_column_set(frm.pse[frm.pse_tos].indent_tmp);
          }
       }
       else if (pc->type == CT_LABEL)
@@ -1531,7 +1564,8 @@ void indent_text(void)
 
          if ((pc->type == CT_FPAREN_OPEN) &&
              chunk_is_newline(chunk_get_prev(pc)) &&
-             !chunk_is_newline(chunk_get_next(pc)))
+             (!chunk_is_newline(chunk_get_next(pc)) ||
+             cpd.settings[UO_indent_paren_after_func_def].b))
          {
             frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent + indent_size;
             indent_column_set(frm.pse[frm.pse_tos].indent);

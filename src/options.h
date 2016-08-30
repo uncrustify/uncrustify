@@ -134,6 +134,10 @@ enum uncrustify_options
    UO_pp_region_indent_code,     // whether to indent the code inside region stuff
    UO_pp_indent_if,
    UO_pp_if_indent_code,
+   UO_pp_indent_case,            // whether to indent case statements inside preproc
+   UO_pp_indent_func_def,        // whether to indent whole function definitions inside preproc
+   UO_pp_indent_extern,          // whether to indent whole extern "C" blocks inside preproc
+   UO_pp_indent_brace,           // whether to indent braces inside preprocessors (true) or not (false)
 
    UO_indent_switch_case,         // spaces to indent case from switch
    UO_indent_case_shift,          // spaces to shift the line with the 'case'
@@ -167,6 +171,7 @@ enum uncrustify_options
 
    UO_indent_func_const,                    // indentation for standalone 'const' qualifier
    UO_indent_func_throw,                    // indentation for standalone 'throw' qualifier
+   UO_indent_paren_after_func_def,          // indent paren after function definition
 
    UO_indent_namespace,                     // indent stuff inside namespace braces
    UO_indent_namespace_single_indent,       // indent one namespace and no sub-namespaces
@@ -501,6 +506,8 @@ enum uncrustify_options
    UO_nl_cpp_ldef_brace,              // '[&x](int a) {' vs '[&x](int a)\n{'
    UO_nl_func_paren,                  // newline between function and open paren
    UO_nl_func_def_paren,              // Add or remove newline between a function name and the opening '(' in the definition
+   UO_nl_func_paren_empty,            // Overrides nl_func_paren for functions with no parameters
+   UO_nl_func_def_paren_empty,        // Overrides nl_func_def_paren for functions with no parameters
    UO_nl_func_decl_start,             // newline after the '(' in a function decl
    UO_nl_func_def_start,              // newline after the '(' in a function def
    UO_nl_func_decl_start_single,      // Overrides nl_func_decl_start when there is only one parameter
