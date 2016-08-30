@@ -105,11 +105,15 @@ void print_universal_indent_cfg(FILE *pfile)
 
          fprintf(pfile, "\n[%s]\n", optionNameReadable);
          fprintf(pfile, "Category=%d\n", idx);
+#ifdef DEBUG
          fprintf(pfile, "Description=\"<html>(123)");
          // (123) is a placeholder to be changed with the vim command:
          // :%s/(\(\d\)\+)/\=printf('(%d)', line('.'))
          // to the real line number
          // guy 2016-03-07
+#else // DEBUG
+         fprintf(pfile, "Description=\"<html>");
+#endif // DEBUG
 
          const char *tmp = option->short_desc;
          ch = 0;
