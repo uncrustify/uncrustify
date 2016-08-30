@@ -223,6 +223,7 @@ static void redir_stdout(const char *output_file)
       {
          LOG_FMT(LERR, "Unable to open %s for write: %s (%d)\n",
                  output_file, strerror(errno), errno);
+         cpd.error_count++;
          usage_exit(NULL, NULL, 56);
       }
       LOG_FMT(LNOTE, "Redirecting output to %s\n", output_file);
@@ -636,6 +637,7 @@ int main(int argc, char *argv[])
       if (!read_stdin(fm))
       {
          LOG_FMT(LERR, "Failed to read stdin\n");
+         cpd.error_count++;
          return(100);
       }
 
@@ -877,6 +879,7 @@ static int load_mem_file(const char *filename, file_mem& fm)
       else if (!decode_unicode(fm.raw, fm.data, fm.enc, fm.bom))
       {
          LOG_FMT(LERR, "%s: failed to decode the file '%s'\n", __func__, filename);
+         cpd.error_count++;
       }
       else
       {
@@ -1665,7 +1668,7 @@ static void uncrustify_file(const file_mem& fm, FILE *pfout,
             newlines_chunk_pos(CT_COND_COLON, cpd.settings[UO_pos_conditional].tp);
             newlines_chunk_pos(CT_QUESTION, cpd.settings[UO_pos_conditional].tp);
          }
-         if (cpd.settings[UO_pos_comma].tp != TP_IGNORE)
+         if (cpd.settings[UO_pos_comma].tp != TP_IGNORE || cpd.settings[UO_pos_enum_comma].tp != TP_IGNORE)
          {
             newlines_chunk_pos(CT_COMMA, cpd.settings[UO_pos_comma].tp);
          }
@@ -1801,6 +1804,7 @@ static void uncrustify_file(const file_mem& fm, FILE *pfout,
       {
          LOG_FMT(LERR, "%s: Failed to open '%s' for write: %s (%d)\n",
                  __func__, parsed_file, strerror(errno), errno);
+         cpd.error_count++;
       }
    }
 

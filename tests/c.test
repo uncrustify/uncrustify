@@ -310,7 +310,6 @@
 09594 ben.cfg                   c/sf594.c
 09588 ben.cfg                   c/sf588.c
 
-10001 sp_after_sparen.cfg       c/sp_after_sparen.c
+09601 sp_after_sparen.cfg       c/sp_after_sparen.c
 
-10002 bug_671.cfg               c/bug_671.c
-10003 bug_i_222.cfg             c/bug_i_222.c
+09602 bug_671.cfg               c/bug_671.c

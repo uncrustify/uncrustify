@@ -283,7 +283,8 @@ void align_all(void)
 
    /* Align variable definitions */
    if ((cpd.settings[UO_align_var_def_span].n > 0) ||
-       (cpd.settings[UO_align_var_struct_span].n > 0))
+       (cpd.settings[UO_align_var_struct_span].n > 0) ||
+       (cpd.settings[UO_align_var_class_span].n > 0) )
    {
       align_var_def_brace(chunk_get_head(), cpd.settings[UO_align_var_def_span].n, NULL);
    }
@@ -1111,6 +1112,12 @@ static chunk_t *align_var_def_brace(chunk_t *start, int span, int *p_nl_count)
       myspan   = cpd.settings[UO_align_var_struct_span].n;
       mythresh = cpd.settings[UO_align_var_struct_thresh].n;
       mygap    = cpd.settings[UO_align_var_struct_gap].n;
+   }
+   else if (start->parent_type == CT_CLASS)
+   {
+       myspan = cpd.settings[UO_align_var_class_span].n;
+       mythresh = cpd.settings[UO_align_var_class_thresh].n;
+       mygap = cpd.settings[UO_align_var_class_gap].n;
    }
    else
    {

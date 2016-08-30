@@ -118,6 +118,7 @@ static chunk_t *flag_parens(chunk_t *po, UINT64 flags,
       LOG_FMT(LERR, "flag_parens: no match for [%s] at [%d:%d]",
               po->text(), po->orig_line, po->orig_col);
       log_func_stack_inline(LERR);
+      cpd.error_count++;
       return(NULL);
    }
 
@@ -1387,6 +1388,7 @@ void fix_symbols(void)
           (pc->flags & PCF_STMT_START) &&
           ((pc->type == CT_QUALIFIER) ||
            (pc->type == CT_TYPE) ||
+           (pc->type == CT_TYPENAME) ||
            (pc->type == CT_WORD)) &&
           (pc->parent_type != CT_ENUM) &&
           ((pc->flags & PCF_IN_ENUM) == 0))
@@ -2639,7 +2641,7 @@ void combine_labels(void)
                else if ((tmp == NULL) ||
                         ((tmp->type != CT_NUMBER) &&
                          (tmp->type != CT_SIZEOF) &&
-                         !(tmp->flags & PCF_IN_STRUCT)) ||
+                         !(tmp->flags & (PCF_IN_STRUCT | PCF_IN_CLASS))) ||
                         (tmp->type == CT_NEWLINE)
                   )
                {
@@ -2892,6 +2894,7 @@ static chunk_t *fix_var_def(chunk_t *start)
           ((pc->type == CT_TYPE) ||
            (pc->type == CT_WORD) ||
            (pc->type == CT_QUALIFIER) ||
+           (pc->type == CT_TYPENAME) ||
            (pc->type == CT_DC_MEMBER) ||
            (pc->type == CT_MEMBER) ||
            chunk_is_ptr_operator(pc)))
@@ -5710,7 +5713,7 @@ static void handle_wrap(chunk_t *pc)
 /**
  * A proto wrap chunk and what follows should be treated as a function proto.
  *
- * RETTYPE PROTO_WRAP( NAME, PARAMS );
+ * RETTYPE PROTO_WRAP( NAME, PARAMS ); or RETTYPE PROTO_WRAP( NAME, (PARAMS) );
  * RETTYPE gets changed with make_type().
  * PROTO_WRAP is marked as CT_FUNC_PROTO or CT_FUNC_DEF.
  * NAME is marked as CT_WORD.
@@ -5727,7 +5730,6 @@ static void handle_proto_wrap(chunk_t *pc)
 
    if (!opp || !name || !clp || !cma || !tmp ||
        ((name->type != CT_WORD) && (name->type != CT_TYPE)) ||
-       (tmp->type != CT_PAREN_OPEN) ||
        (opp->type != CT_PAREN_OPEN))
    {
       return;
@@ -5748,7 +5750,17 @@ static void handle_proto_wrap(chunk_t *pc)
    set_chunk_parent(clp, pc->type);
 
    set_chunk_parent(tmp, CT_PROTO_WRAP);
-   fix_fcn_def_params(tmp);
+
+   if (tmp->type == CT_PAREN_OPEN)
+   {
+	  fix_fcn_def_params(tmp);
+   }
+   else
+   {
+      fix_fcn_def_params(opp);
+      set_chunk_type(name, CT_WORD);
+   }
+
    tmp = chunk_skip_to_match(tmp);
    if (tmp)
    {

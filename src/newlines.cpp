@@ -3231,7 +3231,7 @@ void newlines_chunk_pos(c_token_t chunk_type, tokenpos_e mode)
    chunk_t *prev;
    int     nl_flag;
 
-   if ((mode & (TP_JOIN | TP_LEAD | TP_TRAIL)) == 0)
+   if ((mode & (TP_JOIN | TP_LEAD | TP_TRAIL)) == 0 && chunk_type != CT_COMMA)
    {
       return;
    }
@@ -3252,6 +3252,10 @@ void newlines_chunk_pos(c_token_t chunk_type, tokenpos_e mode)
             {
                // change mode
                mode_local = cpd.settings[UO_pos_class_comma].tp;
+            }
+            else if (pc->flags & PCF_IN_ENUM)
+            {
+               mode_local = cpd.settings[UO_pos_enum_comma].tp;
             }
             else
             {

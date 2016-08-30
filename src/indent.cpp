@@ -1028,9 +1028,8 @@ void indent_text(void)
 
             frm.pse[frm.pse_tos - 1].indent_tmp = frm.pse[frm.pse_tos].indent_tmp;
          }
-         else if (cpd.settings[UO_indent_cs_delegate_brace].b &&
-             (pc->type == CT_BRACE_OPEN) &&
-             (pc->prev->type == CT_LAMBDA || pc->prev->prev->type == CT_LAMBDA))
+         else if ((cpd.lang_flags & LANG_CS) && cpd.settings[UO_indent_cs_delegate_brace].b &&
+             (pc->parent_type == CT_LAMBDA || pc->parent_type == CT_DELEGATE))
          {
             frm.pse[frm.pse_tos].brace_indent = 1 + ((pc->brace_level + 1) * indent_size);
             indent_column                     = frm.pse[frm.pse_tos].brace_indent;
@@ -1418,9 +1417,19 @@ void indent_text(void)
                else
                {
                   next = chunk_get_next(pc);
-                  if ((next != NULL) && !chunk_is_newline(next))
+                  if (next != NULL)
                   {
-                     frm.pse[frm.pse_tos].indent = next->column;
+                     if (cpd.settings[UO_indent_ctor_init].n != 0)
+                     {
+                        frm.pse[frm.pse_tos].indent     += cpd.settings[UO_indent_ctor_init].n;
+                        frm.pse[frm.pse_tos].indent_tmp += cpd.settings[UO_indent_ctor_init].n;
+                        frm.pse[frm.pse_tos].indent_tab += cpd.settings[UO_indent_ctor_init].n;
+                        indent_column_set(frm.pse[frm.pse_tos].indent_tmp);
+                     }
+                     else if (!chunk_is_newline(next))
+                     {
+                        frm.pse[frm.pse_tos].indent = next->column;
+                     }
                   }
                }
             }
