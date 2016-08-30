@@ -1338,7 +1338,7 @@ void indent_text(void)
       {
          prev = chunk_get_prev_ncnl(pc);
          if ((prev != NULL) &&
-             (prev->type == CT_BRACE_CLOSE) ||
+             ((prev->type == CT_BRACE_CLOSE) ||
              (cpd.settings[UO_mod_case_brace].a & AV_REMOVE)) &&
              (prev->parent_type == CT_CASE))
          {
