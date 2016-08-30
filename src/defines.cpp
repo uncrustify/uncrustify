@@ -119,7 +119,7 @@ void print_defines(FILE *pfile)
    for (it = defines.begin(); it != defines.end(); ++it)
    {
       fprintf(pfile, "define %*.s%s \"%s\"\n",
-              cpd.max_option_name_len - 6, " ", (*it).first.c_str(), (*it).second.c_str());
+              MAX_OPTION_NAME_LEN - 6, " ", (*it).first.c_str(), (*it).second.c_str());
    }
 }
 
