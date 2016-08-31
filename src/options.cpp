@@ -94,12 +94,6 @@ void unc_add_option(const char *name, uncrustify_options id, argtype_e type,
    }
 
    option_name_map[name] = value;
-
-   int name_len = strlen(name);
-   if (name_len > cpd.max_option_name_len)
-   {
-      cpd.max_option_name_len = name_len;
-   }
 } // unc_add_option
 
 
@@ -2010,8 +2004,9 @@ int save_option_file_kernel(FILE *pfile, bool withDoc, bool only_not_default)
          }
          if (print_option)
          {
-            fprintf(pfile, "%s %*.s= ",
-                    option->name, cpd.max_option_name_len - name_len, " ");
+            int pad = (name_len < MAX_OPTION_NAME_LEN) ? (MAX_OPTION_NAME_LEN - name_len) : 1;
+            fprintf(pfile, "%s%*.s= ",
+                    option->name, pad, " ");
             if (option->type == AT_STRING)
             {
                fprintf(pfile, "\"%s\"", val_str);
@@ -2102,8 +2097,6 @@ int save_option_file(FILE *pfile, bool withDoc)
 
 void print_options(FILE *pfile)
 {
-   int        max_width = 0;
-   int        cur_width;
    const char *text;
 
    const char *names[] =
@@ -2116,17 +2109,6 @@ void print_options(FILE *pfile)
       "String",
    };
 
-   /* Find the max width of the names */
-   for (option_name_map_it it = option_name_map.begin(); it != option_name_map.end(); it++)
-   {
-      cur_width = strlen(it->second.name);
-      if (cur_width > max_width)
-      {
-         max_width = cur_width;
-      }
-   }
-   max_width++;
-
    fprintf(pfile, "# Uncrustify %s\n", UNCRUSTIFY_VERSION);
 
    /* Print the all out */
@@ -2137,10 +2119,11 @@ void print_options(FILE *pfile)
       for (option_list_it it = jt->second.options.begin(); it != jt->second.options.end(); it++)
       {
          const option_map_value *option = get_option_name(*it);
-         cur_width = strlen(option->name);
+         int cur = strlen(option->name);
+         int pad = (cur < MAX_OPTION_NAME_LEN) ? (MAX_OPTION_NAME_LEN - cur) : 1;
          fprintf(pfile, "%s%*c%s\n",
                  option->name,
-                 max_width - cur_width, ' ',
+                 pad, ' ',
                  names[option->type]);
 
          text = option->short_desc;

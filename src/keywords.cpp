@@ -496,29 +496,29 @@ void print_keywords(FILE *pfile)
       if (tt == CT_TYPE)
       {
          fprintf(pfile, "type %*.s%s\n",
-                 cpd.max_option_name_len - 4, " ", (*it).first.c_str());
+                 MAX_OPTION_NAME_LEN - 4, " ", (*it).first.c_str());
       }
       else if (tt == CT_MACRO_OPEN)
       {
          fprintf(pfile, "macro-open %*.s%s\n",
-                 cpd.max_option_name_len - 11, " ", (*it).first.c_str());
+                 MAX_OPTION_NAME_LEN - 11, " ", (*it).first.c_str());
       }
       else if (tt == CT_MACRO_CLOSE)
       {
          fprintf(pfile, "macro-close %*.s%s\n",
-                 cpd.max_option_name_len - 12, " ", (*it).first.c_str());
+                 MAX_OPTION_NAME_LEN - 12, " ", (*it).first.c_str());
       }
       else if (tt == CT_MACRO_ELSE)
       {
          fprintf(pfile, "macro-else %*.s%s\n",
-                 cpd.max_option_name_len - 11, " ", (*it).first.c_str());
+                 MAX_OPTION_NAME_LEN - 11, " ", (*it).first.c_str());
       }
       else
       {
          const char *tn = get_token_name(tt);
 
          fprintf(pfile, "set %s %*.s%s\n", tn,
-                 int(cpd.max_option_name_len - (4 + strlen(tn))), " ", (*it).first.c_str());
+                 int(MAX_OPTION_NAME_LEN - (4 + strlen(tn))), " ", (*it).first.c_str());
       }
    }
 }
