@@ -1476,14 +1476,14 @@ void register_options(void)
                   "Control whether to indent the code between #if, #else and #endif.");
    unc_add_option("pp_define_at_level", UO_pp_define_at_level, AT_BOOL,
                   "Whether to indent '#define' at the brace level (true) or from column 1 (false)");
-   unc_add_option("pp_indent_case", UO_pp_indent_case, AT_BOOL,
-                  "Whether to indent case statements inside preprocessors (true) or not (false)");
-   unc_add_option("pp_indent_extern", UO_pp_indent_extern, AT_BOOL,
-                  "Whether to indent extern 'C' statements inside preprocessors (true) or not (false)");
-   unc_add_option("pp_indent_func_def", UO_pp_indent_func_def, AT_BOOL,
-                  "Whether to indent entire function definitions inside preprocessors (true) or not (false)");
-   unc_add_option("pp_indent_brace", UO_pp_indent_brace, AT_BOOL,
-                  "Whether to indent braces inside preprocessors (true) or not (false)");
+   unc_add_option("pp_no_indent_case", UO_pp_no_indent_case, AT_BOOL,
+                  "Overrides the indent from pp_if_indent_code for case statements");
+   unc_add_option("pp_no_indent_func_def", UO_pp_no_indent_func_def, AT_BOOL,
+                  "Overrides the indent from pp_if_indent_code for function definitions");
+   unc_add_option("pp_no_indent_extern", UO_pp_no_indent_extern, AT_BOOL,
+                  "Overrides the indent from pp_if_indent_code for extern C blocks");
+   unc_add_option("pp_no_indent_brace", UO_pp_no_indent_brace, AT_BOOL,
+                  "Overrides the indent from pp_if_indent_code for braces");
 
    unc_begin_group(UG_Use_Ext, "Use or Do not Use options", "G");
    unc_add_option("use_indent_func_call_param", UO_use_indent_func_call_param, AT_BOOL,

@@ -134,10 +134,10 @@ enum uncrustify_options
    UO_pp_region_indent_code,     // whether to indent the code inside region stuff
    UO_pp_indent_if,
    UO_pp_if_indent_code,
-   UO_pp_indent_case,            // whether to indent case statements inside preproc
-   UO_pp_indent_func_def,        // whether to indent whole function definitions inside preproc
-   UO_pp_indent_extern,          // whether to indent whole extern "C" blocks inside preproc
-   UO_pp_indent_brace,           // whether to indent braces inside preprocessors (true) or not (false)
+   UO_pp_no_indent_case,         // Overrides the indent from pp_if_indent_code for case statements
+   UO_pp_no_indent_func_def,     // Overrides the indent from pp_if_indent_code for function definitions
+   UO_pp_no_indent_extern,       // Overrides the indent from pp_if_indent_code for extern "C" blocks
+   UO_pp_no_indent_brace,        // Overrides the indent from pp_if_indent_code for braces
 
    UO_indent_switch_case,         // spaces to indent case from switch
    UO_indent_case_shift,          // spaces to shift the line with the 'case'
