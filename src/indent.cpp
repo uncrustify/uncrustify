@@ -675,13 +675,13 @@ void indent_text(void)
             {
                 if ((((preproc_next->type == CT_BRACE_OPEN) ||
                     (preproc_next->type == CT_BRACE_CLOSE)) &&
-                    cpd.settings[UO_pp_no_indent_brace].b) ||
+                    !cpd.settings[UO_pp_indent_brace].b) ||
                     (preproc_next->type == CT_FUNC_DEF &&
-                    cpd.settings[UO_pp_no_indent_func_def].b) ||
+                    !cpd.settings[UO_pp_indent_func_def].b) ||
                     (preproc_next->type == CT_CASE &&
-                    cpd.settings[UO_pp_no_indent_case].b) ||
+                    !cpd.settings[UO_pp_indent_case].b) ||
                     (preproc_next->type == CT_EXTERN &&
-                    cpd.settings[UO_pp_no_indent_extern].b))
+                    !cpd.settings[UO_pp_indent_extern].b))
                 {
                     should_indent_preproc = false;
                     break;
