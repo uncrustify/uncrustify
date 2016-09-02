@@ -671,7 +671,8 @@ void indent_text(void)
             preproc_next = chunk_get_next_nblank(preproc_next);
 
             /* Look ahead at what's on the line after the #if */
-            while (preproc_next->type != CT_NEWLINE)
+            while ((preproc_next != NULL) &&
+			       (preproc_next->type != CT_NEWLINE))
             {
                 if ((((preproc_next->type == CT_BRACE_OPEN) ||
                     (preproc_next->type == CT_BRACE_CLOSE)) &&
@@ -1338,8 +1339,7 @@ void indent_text(void)
       {
          prev = chunk_get_prev_ncnl(pc);
          if ((prev != NULL) &&
-             ((prev->type == CT_BRACE_CLOSE) ||
-             (cpd.settings[UO_mod_case_brace].a & AV_REMOVE)) &&
+             (prev->type == CT_BRACE_CLOSE) &&
              (prev->parent_type == CT_CASE))
          {
             if (cpd.settings[UO_indent_case_brace].n > 0)
