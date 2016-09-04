@@ -336,7 +336,7 @@ static chunk_t *skip_dc_member(chunk_t *start)
  * This is called on every chunk.
  * First on all non-preprocessor chunks and then on each preprocessor chunk.
  * It does all the detection and classifying.
- * This is only called by fix_symbols at line 1345.
+ * This is only called by fix_symbols.
  * The three parameters never get the value NULL.
  * it is not necessary to test.
  */

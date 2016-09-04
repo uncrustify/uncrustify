@@ -7,7 +7,6 @@ New:
     Null conditional operator (?.) is now supported.
 
 New options:
- - nl_func_class_scope option
  - indent_cs_delegate_brace
  - nl_enum_own_lines
  - cmt_multi_first_len_minimum
