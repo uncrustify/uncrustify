@@ -230,6 +230,52 @@ static void redir_stdout(const char *output_file)
    }
 }
 
+#ifdef WIN32
+
+void setup_crash_handling()
+{
+   // prevent crash popup. uncrustify is a batch processing tool and a popup is unacceptable.
+   ::SetErrorMode(::GetErrorMode() | SEM_NOGPFAULTERRORBOX);
+
+   struct local
+   {
+      static LONG WINAPI crash_filter(_In_ struct _EXCEPTION_POINTERS* exceptionInfo)
+      {
+         __try
+         {
+            LOG_FMT(LERR, "crash_filter: exception 0x%08X at [%d:%d] (ip=%p)",
+               exceptionInfo->ExceptionRecord->ExceptionCode,
+               cpd.line_number, cpd.column,
+               exceptionInfo->ExceptionRecord->ExceptionAddress);
+            log_func_stack(LERR, " [CallStack:", "]\n", 0);
+
+            // treat an exception the same as a parse failure. exceptions can result from parse failures where we
+            // do not have specific handling (null-checks for particular parse paths etc.) and callers generally
+            // won't care about the difference. they just want to know it failed.
+            exit(EXIT_FAILURE);
+         }
+         __except(EXCEPTION_EXECUTE_HANDLER)
+         {
+            // have to be careful of crashes in crash handling code
+         }
+
+         // safety - note that this will not flush like we need, but at least will get the right return code
+         ::ExitProcess(EXIT_FAILURE);
+      }
+   };
+
+   // route all crashes through our own handler
+   ::SetUnhandledExceptionFilter(local::crash_filter);
+}
+
+#else
+
+void setup_crash_handling()
+{
+   // TODO: unixes
+}
+
+#endif
 
 int main(int argc, char *argv[])
 {
@@ -241,6 +287,8 @@ int main(int argc, char *argv[])
    log_mask_t mask;
    int        idx;
    const char *p_arg;
+
+   setup_crash_handling();
 
    /* check keyword sort */
    assert(keywords_are_sorted());
@@ -1668,7 +1716,7 @@ static void uncrustify_file(const file_mem& fm, FILE *pfout,
             newlines_chunk_pos(CT_COND_COLON, cpd.settings[UO_pos_conditional].tp);
             newlines_chunk_pos(CT_QUESTION, cpd.settings[UO_pos_conditional].tp);
          }
-         if (cpd.settings[UO_pos_comma].tp != TP_IGNORE)
+         if (cpd.settings[UO_pos_comma].tp != TP_IGNORE || cpd.settings[UO_pos_enum_comma].tp != TP_IGNORE)
          {
             newlines_chunk_pos(CT_COMMA, cpd.settings[UO_pos_comma].tp);
          }

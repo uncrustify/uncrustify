@@ -1,8 +1,8 @@
 README for Uncrustify
 =====================
 
-[![Build Status](https://travis-ci.org/uncrustify/uncrustify.svg?branch=master)](https://travis-ci.org/uncrustify/uncrustify)
-[![Build status](https://ci.appveyor.com/api/projects/status/3x4q3gq9p4cqtcs8?svg=true)](https://ci.appveyor.com/project/uncrustify/uncrustify)
+[![Travis CI](https://img.shields.io/travis/Unity-Technologies/uncrustify/master.svg?style=flat-square&label=Linux)](https://travis-ci.org/Unity-Technologies/uncrustify)
+[![AppVeyor](https://img.shields.io/appveyor/ci/henriksunity/uncrustify/master.svg?style=flat-square&label=Windows)](https://ci.appveyor.com/project/henriksunity/uncrustify)
 
 Post any bugs to the issue tracker found on the project's GitHub page:
   https://github.com/uncrustify/uncrustify/issues

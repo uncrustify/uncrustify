@@ -19,8 +19,9 @@ def main (argv):
             return 1
     elif os.path.exists(hg_path):
         try:
-            branch = subprocess.check_output(['hg', 'log', '-r', '.', '--template', '{latesttag}']).strip()
-            txt = subprocess.check_output(['git', '--git-dir=.hg/git', 'describe', '--long', '--always', branch]).strip()
+            subprocess.check_call(['hg', 'gexport'])
+            node = subprocess.check_output(['hg', '--config', 'defaults.log=', 'log', '-r', '.', '--template', '{gitnode}']).strip()
+            txt = subprocess.check_output(['git', '--git-dir=.hg/git', 'describe', '--long', '--tags', '--always', node]).strip()
         except:
             print "Failed to retrieve version from hg"
             return 1

@@ -1,0 +1,43 @@
+#
+# Regression test suite. These are staging tests which were fixed.
+# 
+# test.name  config.file  input.file 
+#
+
+10001 staging/622_ifdef-indentation.cfg staging/622_ifdef-indentation.cpp
+10002 staging/623_caret-spacing.cfg staging/623_caret-spacing.cpp
+10005 staging/Uncrustify.Cpp.cfg staging/define-indentation.cpp
+10006 staging/dont-detab-strings.cfg staging/dont-detab-strings.cpp
+10007 staging/dont-process-defines.cfg staging/dont-process-defines.cpp
+10008 empty.cfg staging/PR326_invalid-backslash-eol-csharp.cpp
+10009 staging/STUCK_macro-difficulties.cfg staging/STUCK_macro-difficulties.cpp
+10011 staging/620_getset-brace.cfg staging/620_getset-brace.cs
+10013 staging/625_where-constraints.cfg staging/625_where-constraints.cs
+10015 staging/misc-failures.cfg staging/misc-failures.cs
+10018 empty.cfg staging/delete-space-oc.mm
+10019 empty.cfg staging/func-param-wrap-oc.mm
+10020 staging/Uncrustify.Cpp.cfg staging/macro_spaces.cpp
+10021 staging/Uncrustify.Cpp.cfg staging/braces_align.cpp
+10022 staging/Uncrustify.Cpp.cfg staging/foreach.cpp
+10023 staging/Uncrustify.Cpp.cfg staging/for_auto.cpp
+10024 staging/Uncrustify.Cpp.cfg staging/ifcomment.cpp
+10025 staging/Uncrustify.Cpp.cfg staging/qtargs.cpp
+10028 staging/Uncrustify.CSharp.cfg staging/ifcolalign.cs
+10029 staging/Uncrustify.CSharp.cfg staging/when.cs
+10030 staging/Uncrustify.Cpp.cfg staging/argtypes.mm
+10031 staging/Uncrustify.Cpp.cfg staging/casting.mm
+10032 staging/Uncrustify.Cpp.cfg staging/newlines.mm
+10033 staging/Uncrustify.Cpp.cfg staging/objc.mm
+10034 staging/Uncrustify.Cpp.cfg staging/asm.h.mm
+10035 staging/Uncrustify.Cpp.cfg staging/definesalign.h.mm
+10036 staging/Uncrustify.Cpp.cfg staging/inttypes.h.mm
+10044 staging/Uncrustify.CSharp.cfg staging/ifcomment.cs
+10046 staging/Uncrustify.Cpp.cfg    staging/UNI-1333.mm
+10048 staging/Uncrustify.Cpp.cfg    staging/UNI-1335.cpp
+10069 staging/Uncrustify.Cpp.cfg    staging/UNI-1980.cpp
+10070 staging/Uncrustify.Cpp.cfg    staging/UNI-1981.cpp
+10071 staging/Uncrustify.Cpp.cfg    staging/UNI-1983.cpp
+10073 staging/Uncrustify.CSharp.cfg staging/UNI-2008.cs
+10077 staging/Uncrustify.CSharp.cfg staging/UNI-1919.cs
+10100 staging/issue_564.cfg staging/issue_564.cpp
+10101 staging/issue_574.cfg staging/issue_574.cpp

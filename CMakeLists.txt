@@ -236,44 +236,52 @@ configure_file(man/uncrustify.1.in uncrustify.1 @ONLY)
 # Tests
 #
 if(BUILD_TESTING)
-  find_package(PythonInterp REQUIRED)
   enable_testing()
-  # parse the .test files and create one test per line
-  foreach(test_lang c-sharp c cpp d java pawn objective-c vala ecma)
-    file(READ "tests/${test_lang}.test" content)
-    string(REPLACE "\n" ";" lines "${content}")
-    foreach(line ${lines})
-      string(STRIP "${line}" line)
-      string(SUBSTRING "${line}" 0 1 first)
-      # trailing space avoids double evaluation with older CMake versions
-      if(NOT "${first} " STREQUAL "# ")
-        separate_arguments(parts UNIX_COMMAND "${line}")
-        list(LENGTH parts length)
-        if(length EQUAL 3)
-          list(GET parts 0 test_number)
-          string(REGEX REPLACE "[^0-9]" "" test_number "${test_number}")
-          string(REGEX REPLACE "[^a-zA-Z0-9_]" "_" test_name "${test_lang}_${test_number}")
-          add_test(NAME ${test_name}
-            COMMAND ${PYTHON_EXECUTABLE}
-              "${PROJECT_SOURCE_DIR}/tests/run_tests.py" ${test_lang} "-r" "${test_number}" "--exe=$<TARGET_FILE:uncrustify>"
-            WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}/tests"
-          )
-          set_tests_properties(${test_name}
-            PROPERTIES LABELS "${test_lang}"
-          )
-        endif()
-      endif()
-    endforeach()
-  endforeach()
+  add_subdirectory(tests)
 endif()
+
+#
+# Package
+#
+set(CPACK_PACKAGE_NAME "uncrustify")
+set(CPACK_PACKAGE_VERSION "${PACKAGE_VERSION}")
+set(CPACK_PACKAGE_VENDOR "Ben Gardner")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Code beautifier")
+set(CPACK_PACKAGE_DESCRIPTION_FILE "${PROJECT_SOURCE_DIR}/README.md")
+set(CPACK_RESOURCE_FILE_LICENSE "${PROJECT_SOURCE_DIR}/COPYING")
+set(CPACK_RESOURCE_FILE_README "${PROJECT_SOURCE_DIR}/README.md")
+set(CPACK_SOURCE_IGNORE_FILES "/\\\\.git/;/\\\\.hg/;/tests/results/;/build.*/")
+if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+  set(CPACK_INCLUDE_TOPLEVEL_DIRECTORY FALSE)
+  set(CPACK_GENERATOR "ZIP")
+endif()
+include(CPack)
 
 #
 # Install
 #
-include(GNUInstallDirs)
-install(TARGETS uncrustify
-  RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
-)
-install(FILES "${CMAKE_CURRENT_BINARY_DIR}/uncrustify.1"
-  DESTINATION "${CMAKE_INSTALL_MANDIR}/man1"
-)
+if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+  install(TARGETS uncrustify DESTINATION ".")
+  install(
+    FILES
+      "${PROJECT_SOURCE_DIR}/README.md"
+      "${PROJECT_SOURCE_DIR}/BUGS"
+      "${PROJECT_SOURCE_DIR}/ChangeLog"
+    DESTINATION "."
+  )
+  install(FILES "${PROJECT_SOURCE_DIR}/documentation/htdocs/index.html"
+    DESTINATION "doc"
+  )
+  install(DIRECTORY "${PROJECT_SOURCE_DIR}/etc/"
+    DESTINATION "cfg"
+    FILES_MATCHING PATTERN "*.cfg"
+  )
+else()
+  include(GNUInstallDirs)
+  install(TARGETS uncrustify
+    RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
+  )
+  install(FILES "${CMAKE_CURRENT_BINARY_DIR}/uncrustify.1"
+    DESTINATION "${CMAKE_INSTALL_MANDIR}/man1"
+  )
+endif()
