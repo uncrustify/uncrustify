@@ -1477,13 +1477,13 @@ void register_options(void)
    unc_add_option("pp_define_at_level", UO_pp_define_at_level, AT_BOOL,
                   "Whether to indent '#define' at the brace level (true) or from column 1 (false)");
    unc_add_option("pp_indent_case", UO_pp_indent_case, AT_BOOL,
-                  "Whether to indent case statements between #if, #else, and #endif.");
+                  "Whether to indent case statements between #if, #else, and #endif");
    unc_add_option("pp_indent_func_def", UO_pp_indent_func_def, AT_BOOL,
-                  "Whether to indent whole function definitions between #if, #else, and #endif."");
+                  "Whether to indent whole function definitions between #if, #else, and #endif");
    unc_add_option("pp_indent_extern", UO_pp_indent_extern, AT_BOOL,
-                  "Whether to indent extern C blocks between #if, #else, and #endif."");
+                  "Whether to indent extern C blocks between #if, #else, and #endif");
    unc_add_option("pp_indent_brace", UO_pp_indent_brace, AT_BOOL,
-                  "Whether to indent braces directly inside #if, #else, and #endif."");
+                  "Whether to indent braces directly inside #if, #else, and #endif");
 
    unc_begin_group(UG_Use_Ext, "Use or Do not Use options", "G");
    unc_add_option("use_indent_func_call_param", UO_use_indent_func_call_param, AT_BOOL,

@@ -1344,7 +1344,7 @@ void indent_text(void)
          {
             if (cpd.settings[UO_indent_case_brace].n > 0)
             {
-                  /* Affects the brace and closes the case */
+               /* Affects the brace and closes the case */
                int tmp = frm.pse[frm.pse_tos].indent - cpd.settings[UO_indent_case_brace].n;
                
                frm.pse[frm.pse_tos].indent     = tmp;
