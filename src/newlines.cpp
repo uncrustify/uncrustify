@@ -1475,6 +1475,7 @@ static void newlines_brace_pair(chunk_t *br_open)
          if (next->nl_count > 1)
          {
             next->nl_count = 1;
+            LOG_FMT(LBLANKD, "%s: eat_blanks_after_open_brace %d\n", __func__, next->orig_line);
             MARK_CHANGE();
          }
       }
@@ -2555,6 +2556,7 @@ void newlines_cleanup_braces(bool first)
                if (prev->nl_count != 1)
                {
                   prev->nl_count = 1;
+                  LOG_FMT(LBLANKD, "%s: eat_blanks_before_close_brace %d\n", __func__, prev->orig_line);
                   MARK_CHANGE();
                }
             }
@@ -3151,12 +3153,14 @@ void newlines_eat_start_end(void)
          {
             if (cpd.settings[UO_nl_start_of_file].a == AV_REMOVE)
             {
+               LOG_FMT(LBLANKD, "%s: eat_blanks_start_of_file %d\n", __func__, pc->orig_line);
                chunk_del(pc);
                MARK_CHANGE();
             }
             else if ((cpd.settings[UO_nl_start_of_file].a == AV_FORCE) ||
                      (pc->nl_count < cpd.settings[UO_nl_start_of_file_min].n))
             {
+               LOG_FMT(LBLANKD, "%s: set_blanks_start_of_file %d\n", __func__, pc->orig_line);
                pc->nl_count = cpd.settings[UO_nl_start_of_file_min].n;
                MARK_CHANGE();
             }
@@ -3189,6 +3193,7 @@ void newlines_eat_start_end(void)
          {
             if (cpd.settings[UO_nl_end_of_file].a == AV_REMOVE)
             {
+               LOG_FMT(LBLANKD, "%s: eat_blanks_end_of_file %d\n", __func__, pc->orig_line);
                chunk_del(pc);
                MARK_CHANGE();
             }
@@ -3197,6 +3202,7 @@ void newlines_eat_start_end(void)
             {
                if (pc->nl_count != cpd.settings[UO_nl_end_of_file_min].n)
                {
+                  LOG_FMT(LBLANKD, "%s: set_blanks_end_of_file %d\n", __func__, pc->orig_line);
                   pc->nl_count = cpd.settings[UO_nl_end_of_file_min].n;
                   MARK_CHANGE();
                }
@@ -3210,6 +3216,8 @@ void newlines_eat_start_end(void)
             chunk.type      = CT_NEWLINE;
             chunk.nl_count  = cpd.settings[UO_nl_end_of_file_min].n;
             chunk_add_before(&chunk, NULL);
+            LOG_FMT(LNEWLINE, "%s: %d:%d add newline before '%s'\n",
+                    __func__, pc->orig_line, pc->orig_col, pc->text());
             MARK_CHANGE();
          }
       }
