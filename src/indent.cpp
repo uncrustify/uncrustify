@@ -2105,7 +2105,7 @@ void indent_text(void)
             }
 
             /* [Unity-only hack] Do nothing. We're using 'define' as CT_PP_IGNORE to avoid reformatting of complex and weird macros. Likewise leave indentation alone because probably also weird. */
-            for (chunk_t* i = prev; i; i = i->prev)
+            for (chunk_t* i = pc; i; i = i->prev)
             {
                if (i->type == CT_PP_IGNORE)
                {

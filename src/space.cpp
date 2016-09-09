@@ -129,6 +129,11 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
       log_rule("IGNORED");
       return(AV_REMOVE);
    }
+   if ((first->type == CT_PP_IGNORE) && (second->type == CT_PP_IGNORE))
+   {
+	   log_rule("PP_IGNORE");
+	   return(AV_IGNORE);
+   }
    if ((first->type == CT_PP) || (second->type == CT_PP))
    {
       log_rule("sp_pp_concat");

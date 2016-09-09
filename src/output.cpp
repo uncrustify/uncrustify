@@ -337,21 +337,30 @@ void output_text(FILE *pfile)
             }
             else
             {
-               /* Try to keep the same relative spacing */
                prev = chunk_get_prev(pc);
-               while ((prev != NULL) && (prev->orig_col == 0) && (prev->nl_count == 0))
-               {
-                  prev = chunk_get_prev(prev);
-               }
 
-               if ((prev != NULL) && (prev->nl_count == 0))
+               if (prev && prev->type == CT_PP_IGNORE)
                {
-                  int orig_sp = (pc->orig_col - prev->orig_col_end);
-                  pc->column = cpd.column + orig_sp;
-                  if ((cpd.settings[UO_sp_before_nl_cont].a != AV_IGNORE) &&
-                      (pc->column < (cpd.column + 1)))
+                  /* Want to completely leave alone PP_IGNORE'd blocks because they likely have special column aligned newline continuations (common in multiline macros) */
+                  pc->column = pc->orig_col;
+               }
+               else
+               {
+                  /* Try to keep the same relative spacing */
+                  while ((prev != NULL) && (prev->orig_col == 0) && (prev->nl_count == 0))
                   {
-                     pc->column = cpd.column + 1;
+                     prev = chunk_get_prev(prev);
+                  }
+
+                  if ((prev != NULL) && (prev->nl_count == 0))
+                  {
+                     int orig_sp = (pc->orig_col - prev->orig_col_end);
+                     pc->column = cpd.column + orig_sp;
+                     if ((cpd.settings[UO_sp_before_nl_cont].a != AV_IGNORE) &&
+                         (pc->column < (cpd.column + 1)))
+                     {
+                        pc->column = cpd.column + 1;
+                     }
                   }
                }
             }
