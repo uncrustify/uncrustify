@@ -1944,7 +1944,7 @@ void tokenize(const deque<int>& data, chunk_t *ref)
          else if (cpd.in_preproc == CT_PP_IGNORE)
          {
             // ASSERT(cpd.settings[UO_pp_ignore_define_body].b);
-            if (pc->type != CT_NL_CONT)
+            if (pc->type != CT_NL_CONT && pc->type != CT_COMMENT_CPP)
                set_chunk_type(pc, CT_PP_IGNORE);
          }
          else if (cpd.in_preproc == CT_PP_DEFINE && pc->type == CT_PAREN_CLOSE
