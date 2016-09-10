@@ -34,9 +34,12 @@
 10044 staging/Uncrustify.CSharp.cfg staging/ifcomment.cs
 10046 staging/Uncrustify.Cpp.cfg    staging/UNI-1333.mm
 10048 staging/Uncrustify.Cpp.cfg    staging/UNI-1335.cpp
+10052 staging/Uncrustify.Cpp.cfg    staging/UNI-1339.cpp
+10055 staging/Uncrustify.CSharp.cfg staging/UNI-1345.cs
 10069 staging/Uncrustify.Cpp.cfg    staging/UNI-1980.cpp
 10070 staging/Uncrustify.Cpp.cfg    staging/UNI-1981.cpp
 10071 staging/Uncrustify.Cpp.cfg    staging/UNI-1983.cpp
+10072 staging/Uncrustify.CSharp.cfg staging/UNI-2007.cs
 10073 staging/Uncrustify.CSharp.cfg staging/UNI-2008.cs
 10077 staging/Uncrustify.CSharp.cfg staging/UNI-1919.cs
 10100 staging/issue_564.cfg staging/issue_564.cpp
