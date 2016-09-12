@@ -2104,23 +2104,10 @@ void indent_text(void)
                }
             }
 
-            /* [Unity-only hack] Do nothing. We're using 'define' as CT_PP_IGNORE to avoid reformatting of complex and weird macros. Likewise leave indentation alone because probably also weird. */
-            for (chunk_t* i = prev; i; i = i->prev)
-            {
-               if (i->type == CT_PP_IGNORE)
-               {
-                  use_ident = false;
-                  break;
-               }
-               else if (i->type != CT_PREPROC_BODY)
-               {
-                  break;
-               }
-            }
-
             if (pc->column != indent_column)
             {
-               if (use_ident)
+               if (use_ident &&
+                   pc->type != CT_PP_IGNORE) // Leave indentation alone for PP_IGNORE tokens
                {
                   LOG_FMT(LINDENT, "%s[line %d]: %d] indent => %d [%s]\n",
                           __func__, __LINE__, pc->orig_line, indent_column, pc->text());
