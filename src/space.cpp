@@ -131,8 +131,9 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
    }
    if ((first->type == CT_PP_IGNORE) && (second->type == CT_PP_IGNORE))
    {
-	   log_rule("PP_IGNORE");
-	   return(AV_IGNORE);
+      // Leave spacing alone between PP_IGNORE tokens as we don't want the default behavior (which is ADD).
+      log_rule("PP_IGNORE");
+      return(AV_IGNORE);
    }
    if ((first->type == CT_PP) || (second->type == CT_PP))
    {

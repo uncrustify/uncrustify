@@ -1235,7 +1235,7 @@ bool parse_word(tok_ctx& ctx, chunk_t& pc, bool skipcheck)
          pc.type = find_keyword_type(pc.text(), pc.str.size());
 
          /* Special pattern: if we're trying to redirect a preprocessor directive to PP_IGNORE,
-             then ensure we're actually part of a preprocessor before doing the swap, or we'll
+            then ensure we're actually part of a preprocessor before doing the swap, or we'll
             end up with a function named 'define' as PP_IGNORE. This is necessary because with
             the config 'set' feature, there's no way to do a pair of tokens as a word
             substitution. */
