@@ -121,13 +121,28 @@ endif()
 #
 # Generate uncrustify_version.h
 #
-file(STRINGS configure.ac PACKAGE_VERSION REGEX "^AC_INIT")
+set(PACKAGE_VERSION "0.63")
 
-if(${PACKAGE_VERSION} MATCHES "^AC_INIT\\(uncrustify,([^,]+),")
-  set(PACKAGE_VERSION "${CMAKE_MATCH_1}")
-  message(STATUS "PACKAGE_VERSION: ${PACKAGE_VERSION}")
-else()
-  message(FATAL_ERROR "Unable to determine PACKAGE_VERSION")
+if (MAKE_VERSION)
+  find_package(PythonInterp REQUIRED)
+  execute_process(
+    COMMAND ${PYTHON_EXECUTABLE} make_version.py
+    WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+    RESULT_VARIABLE make_version_error
+    OUTPUT_VARIABLE make_version_output
+  )
+
+  if (make_version_error)
+    message(WARNING ${make_version_output})
+  else()
+    if (${make_version_output} MATCHES "full version: (.*)\n tag version: (.*)")
+      set(full_version ${CMAKE_MATCH_1})
+      set(tag_version ${CMAKE_MATCH_2})
+      message(STATUS "Uncrustify full version: ${full_version}")
+      message(STATUS "Uncrustify  tag version: ${tag_version}")
+    endif()
+    set(PACKAGE_VERSION "${full_version}")
+  endif()
 endif()
 
 configure_file(src/uncrustify_version.h.in uncrustify_version.h @ONLY)

@@ -36,24 +36,6 @@ def main (argv):
     print 'full version:', full_vers
     print ' tag version:', tag_vers
 
-    # rebuild uncrustify_version.h
-    fn = os.path.join(root, 'src', 'uncrustify_version.h.in')
-    with open(fn, 'rb') as fh:
-        data = fh.read()
-    with open(fn[:-3], 'wb') as fh:
-        fh.write(data.replace('@PACKAGE_VERSION@', full_vers))
-
-    # rebuild configure.in
-    fn = os.path.join(root, 'configure.ac')
-    with open(fn, 'rb') as fh:
-        data = fh.read()
-    with open(fn, 'wb') as fh:
-        for line in data.splitlines():
-            if line.startswith('AC_INIT(uncrustify'):
-                pts = line.split(',', 2)
-                line = '%s,%s,%s' % (pts[0], tag_vers, pts[2])
-            fh.write(line)
-            fh.write('\n')
     return 0
 
 if __name__ == '__main__':
