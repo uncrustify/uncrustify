@@ -1310,6 +1310,35 @@ static void add_func_header(c_token_t type, file_mem& fm)
          continue;
       }
 
+      // Check for one liners for classes. Declarations only. Walk down the chunks.
+      ref = pc;
+
+      if (ref->type == CT_CLASS && ref->parent_type == CT_NONE && ref->next) {
+        ref = ref->next;
+        if (ref->type == CT_TYPE && ref->parent_type == type && ref->next) {
+          ref = ref->next;
+          if (ref->type == CT_SEMICOLON && ref->parent_type == CT_NONE ) {
+            continue;
+          }
+        }
+      }
+
+      // Check for one liners for functions. There'll be a closing brace w/o any newlines. Walk down the chunks.
+      ref = pc;
+
+      if (ref->type == CT_FUNC_DEF && ref->parent_type == CT_NONE && ref->next) {
+        int found_brace = 0; // Set if a close brace is found before a newline
+        while (ref->type != CT_NEWLINE && (ref = ref->next)) {
+          if (ref->type == CT_BRACE_CLOSE) {
+            found_brace = 1;
+            break;
+          }
+        }
+        if (found_brace) {
+          continue;
+        }
+      }
+
       do_insert = false;
 
       /* On a function proto or def. Back up to a close brace or semicolon on
@@ -1740,6 +1769,7 @@ static void uncrustify_file(const file_mem& fm, FILE *pfout,
       /* Insert trailing comments after certain close braces */
       if ((cpd.settings[UO_mod_add_long_switch_closebrace_comment].n > 0) ||
           (cpd.settings[UO_mod_add_long_function_closebrace_comment].n > 0) ||
+          (cpd.settings[UO_mod_add_long_class_closebrace_comment].n > 0) ||
           (cpd.settings[UO_mod_add_long_namespace_closebrace_comment].n > 0))
       {
          add_long_closebrace_comment();
