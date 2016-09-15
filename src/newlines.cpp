@@ -1969,7 +1969,6 @@ static void newline_func_def(chunk_t *start)
         (pc != NULL) && (pc->level > start->level);
         pc = chunk_get_next_ncnl(pc))
    {
-      prev = pc;
       if ((pc->type == CT_COMMA) && (pc->level == (start->level + 1)))
       {
          comma_count++;
