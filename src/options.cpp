@@ -1421,6 +1421,9 @@ void register_options(void)
    unc_add_option("mod_add_long_namespace_closebrace_comment", UO_mod_add_long_namespace_closebrace_comment, AT_NUM,
                   "If a namespace body exceeds the specified number of newlines and doesn't have a comment after\n"
                   "the close brace, a comment will be added.");
+   unc_add_option("mod_add_long_class_closebrace_comment", UO_mod_add_long_class_closebrace_comment, AT_NUM,
+                  "If a class body exceeds the specified number of newlines and doesn't have a comment after\n"
+                  "the close brace, a comment will be added.");
    unc_add_option("mod_add_long_switch_closebrace_comment", UO_mod_add_long_switch_closebrace_comment, AT_NUM,
                   "If a switch body exceeds the specified number of newlines and doesn't have a comment after\n"
                   "the close brace, a comment will be added.");

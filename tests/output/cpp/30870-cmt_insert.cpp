@@ -76,3 +76,7 @@ map<string, int> func()
 int some_func(void)
 {
 }
+
+class some_class_declaration;
+
+int some_func_declaration();

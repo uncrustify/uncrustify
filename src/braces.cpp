@@ -760,9 +760,11 @@ void add_long_closebrace_comment(void)
    chunk_t  *tmp;
    chunk_t  *br_open;
    chunk_t  *br_close;
-   chunk_t  *fcn_pc = NULL;
-   chunk_t  *sw_pc  = NULL;
-   chunk_t  *ns_pc  = NULL;
+   chunk_t  *fcn_pc    = NULL;
+   chunk_t  *sw_pc     = NULL;
+   chunk_t  *ns_pc     = NULL;
+   chunk_t *cl_pc      = NULL;
+   chunk_t *cl_semi_pc = NULL;
    unc_text xstr;
    int      nl_count;
 
@@ -781,6 +783,10 @@ void add_long_closebrace_comment(void)
       else if (pc->type == CT_NAMESPACE)
       {
          ns_pc = pc;
+      }
+      else if (pc->type == CT_CLASS)
+      {
+         cl_pc = pc;
       }
       if ((pc->type != CT_BRACE_OPEN) || (pc->flags & PCF_IN_PREPROC))
       {
@@ -807,6 +813,17 @@ void add_long_closebrace_comment(void)
 
             /* Found the matching close brace - make sure a newline is next */
             tmp = chunk_get_next(tmp);
+
+            // Check for end of class
+            if (tmp != NULL && tmp->parent_type == CT_CLASS && tmp->type == CT_SEMICOLON)
+            {
+               cl_semi_pc = tmp;
+               tmp        = chunk_get_next(tmp);
+               if (tmp != NULL && !chunk_is_newline(tmp)) {
+                  tmp = cl_semi_pc;
+                  cl_semi_pc = NULL;
+               }
+            }
             if ((tmp == NULL) || chunk_is_newline(tmp))
             {
                int     nl_min  = 0;
@@ -838,6 +855,17 @@ void add_long_closebrace_comment(void)
                   xstr = ns_pc->str;
                   xstr.append(" ");
                   append_tag_name(xstr, chunk_get_next(ns_pc));
+               }
+               else if (br_open->parent_type == CT_CLASS && cl_semi_pc && cl_pc)
+               {
+                  nl_min = cpd.settings[UO_mod_add_long_class_closebrace_comment].n;
+                  tag_pc = cl_pc;
+                  xstr   = tag_pc->str;
+                  xstr.append(" ");
+                  append_tag_name(xstr, chunk_get_next(cl_pc));
+                  br_close   = cl_semi_pc;
+                  cl_semi_pc = NULL;
+                  cl_pc      = NULL;
                }
 
                if ((nl_min > 0) && (nl_count >= nl_min) && (tag_pc != NULL))

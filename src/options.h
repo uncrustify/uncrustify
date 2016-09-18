@@ -793,6 +793,7 @@ enum uncrustify_options
 
    /* Hack, add comments to the ends of namespaces */
    UO_mod_add_long_namespace_closebrace_comment,
+   UO_mod_add_long_class_closebrace_comment,
 
    UO_use_indent_func_call_param,     // use/don't use indent_func_call_param Guy 2015-09-24
    UO_use_indent_continue_only_once,  // The value of the indentation for a continuation line is calculate
