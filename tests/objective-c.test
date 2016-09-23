@@ -92,3 +92,5 @@
 50603  obj-c.cfg                                    oc/gh511.m
 
 50700  cmt_insert-0.cfg                             oc/cmt_insert.m
+
+50800  obj-c-properties.cfg                               oc/properties.m
