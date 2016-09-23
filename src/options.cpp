@@ -1459,7 +1459,7 @@ void register_options(void)
                   "Determines weight of getter type (getter=) (Obj-C)");
    unc_add_option("mod_sort_oc_property_setter_weight", UO_mod_sort_oc_property_setter_weight, AT_NUM,
                   "Determines weight of setter type (setter=) (Obj-C)");
-    unc_add_option("UO_mod_sort_oc_property_nullability_weight", UO_mod_sort_oc_property_nullability_weight, AT_NUM,
+    unc_add_option("mod_sort_oc_property_nullability_weight", UO_mod_sort_oc_property_nullability_weight, AT_NUM,
                    "Determines weight of nullability type (nullable/nonnull) (Obj-C)");
 
    unc_begin_group(UG_preprocessor, "Preprocessor options");
