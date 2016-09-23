@@ -5673,6 +5673,7 @@ static void handle_oc_property_decl(chunk_t *os)
                     for(int j = 0; j < chunk_group.size(); j++)
                     {
                         chunk_t *chunk = chunk_group[j];
+                        chunk->orig_prev_sp = 0;
                         if(chunk != curr_chunk)
                         {
                             chunk_move_after(chunk, curr_chunk);
@@ -5687,10 +5688,11 @@ static void handle_oc_property_decl(chunk_t *os)
                     /* add the parens */
                     chunk_t endchunk;
                     endchunk.type        = CT_COMMA;
-                    endchunk.str         = ",";
+                    endchunk.str         = ", ";
                     endchunk.level       = curr_chunk->level;
                     endchunk.brace_level = curr_chunk->brace_level;
                     endchunk.orig_line   = curr_chunk->orig_line;
+                    endchunk.column = curr_chunk->orig_col_end + 1;
                     endchunk.parent_type = curr_chunk->parent_type;
                     endchunk.flags       = curr_chunk->flags & PCF_COPY_FLAGS;
                     chunk_add_after(&endchunk, curr_chunk);
