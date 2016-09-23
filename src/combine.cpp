@@ -5529,9 +5529,10 @@ static void handle_oc_property_decl(chunk_t *os)
         
         std::vector<ChunkGroup> thread_chunks;      // atomic/nonatomic
         std::vector<ChunkGroup> readwrite_chunks;   // readwrite, readonly
-        std::vector<ChunkGroup> ref_chunks;         // retain, copy, assign, weak, strong
+        std::vector<ChunkGroup> ref_chunks;         // retain, copy, assign, weak, strong, unsafe_unretained
         std::vector<ChunkGroup> getter_chunks;      // getter
         std::vector<ChunkGroup> setter_chunks;      // setter
+        std::vector<ChunkGroup> nullability_chunks; // nonnull/nullable
         
         if(next->type == CT_PAREN_OPEN)
         {
@@ -5601,6 +5602,12 @@ static void handle_oc_property_decl(chunk_t *os)
                         chunkGroup.push_back(next);
                         ref_chunks.push_back(chunkGroup);
                     }
+                    else if(chunk_is_str(next, "unsafe_unretained", 17))
+                    {
+                        ChunkGroup chunkGroup;
+                        chunkGroup.push_back(next);
+                        ref_chunks.push_back(chunkGroup);
+                    }
                     else if(chunk_is_str(next, "getter", 6))
                     {
                         ChunkGroup chunkGroup;
@@ -5623,6 +5630,18 @@ static void handle_oc_property_decl(chunk_t *os)
                         next = next->prev;
                         setter_chunks.push_back(chunkGroup);
                     }
+                    else if(chunk_is_str(next, "nullable", 8))
+                    {
+                        ChunkGroup chunkGroup;
+                        chunkGroup.push_back(next);
+                        nullability_chunks.push_back(chunkGroup);
+                    }
+                    else if(chunk_is_str(next, "nonnull", 7))
+                    {
+                        ChunkGroup chunkGroup;
+                        chunkGroup.push_back(next);
+                        nullability_chunks.push_back(chunkGroup);
+                    }
                 }
                 next = chunk_get_next(next);
             }
@@ -5633,6 +5652,7 @@ static void handle_oc_property_decl(chunk_t *os)
             int ref_w = cpd.settings[UO_mod_sort_oc_property_reference_weight].n;
             int getter_w = cpd.settings[UO_mod_sort_oc_property_getter_weight].n;
             int setter_w = cpd.settings[UO_mod_sort_oc_property_setter_weight].n;
+            int nullability_w = cpd.settings[UO_mod_sort_oc_property_nullability_weight].n;
             
             std::multimap< int, std::vector<ChunkGroup> > sorted_chunk_map;
             sorted_chunk_map.insert(pair< int, std::vector<ChunkGroup> >(thread_w, thread_chunks));
@@ -5640,6 +5660,7 @@ static void handle_oc_property_decl(chunk_t *os)
             sorted_chunk_map.insert(pair< int, std::vector<ChunkGroup> >(ref_w, ref_chunks));
             sorted_chunk_map.insert(pair< int, std::vector<ChunkGroup> >(getter_w, getter_chunks));
             sorted_chunk_map.insert(pair< int, std::vector<ChunkGroup> >(setter_w, setter_chunks));
+            sorted_chunk_map.insert(pair< int, std::vector<ChunkGroup> >(nullability_w, nullability_chunks));
             
             
             chunk_t *curr_chunk = open_paren;
