@@ -3661,6 +3661,20 @@ void do_blank_lines(void)
          }
       }
 
+      /** Control blanks before a class */
+      if ((prev != NULL) &&
+          ((prev->type == CT_SEMICOLON) ||
+           (prev->type == CT_BRACE_CLOSE)) &&
+          (prev->parent_type == CT_CLASS))
+      {
+         chunk_t *tmp = chunk_get_prev_type(prev, CT_CLASS, prev->level);
+         tmp = chunk_get_prev_nc(tmp);
+         if (cpd.settings[UO_nl_before_class].n > pc->nl_count)
+         {
+            blank_line_set(tmp, UO_nl_before_class);
+         }
+      }
+
       /** Control blanks after an access spec */
       if ((cpd.settings[UO_nl_after_access_spec].n > 0) &&
           (cpd.settings[UO_nl_after_access_spec].n != pc->nl_count) &&
