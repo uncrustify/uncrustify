@@ -1,12 +1,9 @@
-public class MyGenericClass<T> where T : IComparable
-{
-}
+public class MyGenericClass<T> where T : IComparable {}
 
 class MyClass<T, U>
     where T : class
     where U : struct
-{
-}
+{}
 
 public class MyGenericClass<T> where T : IComparable, new()
 {
