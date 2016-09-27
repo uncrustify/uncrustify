@@ -1650,12 +1650,14 @@ void indent_text(void)
             if (!cpd.settings[UO_indent_new_after_return].b || next == NULL || next->type != CT_NEW)
             {
                indent_pse_push(frm, pc);
-               if (chunk_is_newline(next))
+               if (chunk_is_newline(next) || (pc->type == CT_RETURN && cpd.settings[UO_indent_return_single].b))
                {
+                  // apply normal single indentation
                   frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent + indent_size;
                }
                else
                {
+                  // indent after the return token
                   frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent + pc->len() + 1;
                }
                frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos - 1].indent;
