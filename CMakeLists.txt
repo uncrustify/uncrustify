@@ -54,8 +54,7 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
 # Determine config
 #
 if(WIN32)
-  # Windows builds use win32/windows_compat.h instead of config.h
-  include_directories(${PROJECT_SOURCE_DIR}/win32)
+  # Windows builds use src/windows_compat.h instead of config.h
 else()
   # Generate CMake config.h.in
   file(READ src/config.h.in config_lines)
