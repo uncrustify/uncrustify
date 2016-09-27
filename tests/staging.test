@@ -20,7 +20,6 @@
 
 10042 staging/Uncrustify.Cpp.cfg staging/indent-bad.mm
 10043 staging/Uncrustify.CSharp.cfg staging/nl-brace.cs
-10045 staging/Uncrustify.CSharp.cfg staging/UNI-1288.cs
 10049 staging/Uncrustify.Cpp.cfg    staging/UNI-1336.cpp
 10050 staging/Uncrustify.Cpp.cfg    staging/UNI-1337.cpp
 10051 staging/Uncrustify.CSharp.cfg staging/UNI-1338.cs

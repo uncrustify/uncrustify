@@ -33,6 +33,7 @@
 10036 staging/Uncrustify.Cpp.cfg staging/inttypes.h.mm
 10044 staging/Uncrustify.CSharp.cfg staging/ifcomment.cs
 10046 staging/Uncrustify.Cpp.cfg    staging/UNI-1333.mm
+10045 staging/Uncrustify.CSharp.cfg staging/UNI-1288.cs
 10047 staging/Uncrustify.Cpp.cfg    staging/UNI-1334.cpp
 10048 staging/Uncrustify.Cpp.cfg    staging/UNI-1335.cpp
 10052 staging/Uncrustify.Cpp.cfg    staging/UNI-1339.cpp
