@@ -118,7 +118,7 @@ set(PACKAGE_VERSION "0.63")
 if (MAKE_VERSION)
   find_package(PythonInterp REQUIRED)
   execute_process(
-    COMMAND ${PYTHON_EXECUTABLE} make_version.py
+    COMMAND ${PYTHON_EXECUTABLE} scripts/make_version.py
     WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
     RESULT_VARIABLE make_version_error
     OUTPUT_VARIABLE make_version_output
