@@ -755,6 +755,9 @@ void register_options(void)
    unc_add_option("indent_cpp_lambda_body", UO_indent_cpp_lambda_body, AT_BOOL,
                   "If true, cpp lambda body will be indented.");
 
+   unc_add_option("indent_new_after_return", UO_indent_new_after_return, AT_BOOL,
+                  "If true, the indentation of the chunks after a `return new` sequence will be set at return indentation column.");
+
    unc_begin_group(UG_newline, "Newline adding and removing options");
    unc_add_option("nl_collapse_empty_body", UO_nl_collapse_empty_body, AT_BOOL,
                   "Whether to collapse empty blocks between '{' and '}'");

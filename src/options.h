@@ -209,6 +209,8 @@ enum uncrustify_options
 
    UO_indent_cpp_lambda_body,        // indent cpp lambda or not
 
+   UO_indent_new_after_return,
+
    /*
     * Misc inter-element spacing
     */
