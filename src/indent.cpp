@@ -1647,10 +1647,10 @@ void indent_text(void)
             next = chunk_get_next(pc);
             // Avoid indentation on return token if the next token is a new token
             // to properly indent object initializers returned by functions.
-            if (!cpd.settings[UO_indent_new_after_return].b || next == NULL || next->type != CT_NEW)
+            if (!cpd.settings[UO_indent_off_after_return_new].b || next == NULL || next->type != CT_NEW)
             {
                indent_pse_push(frm, pc);
-               if (chunk_is_newline(next) || (pc->type == CT_RETURN && cpd.settings[UO_indent_return_single].b))
+               if (chunk_is_newline(next) || (pc->type == CT_RETURN && cpd.settings[UO_indent_single_after_return].b))
                {
                   // apply normal single indentation
                   frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent + indent_size;
