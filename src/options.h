@@ -209,6 +209,9 @@ enum uncrustify_options
 
    UO_indent_cpp_lambda_body,        // indent cpp lambda or not
 
+   UO_indent_off_after_return_new,   // indent 'return new' construct to the indentation of the token before the return
+   UO_indent_single_after_return,    // indent return to a single indentation rather than after the return token (default)
+
    /*
     * Misc inter-element spacing
     */

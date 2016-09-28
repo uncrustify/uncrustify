@@ -1644,16 +1644,24 @@ void indent_text(void)
          /* don't count returns inside a () or [] */
          if (pc->level == pc->brace_level)
          {
-            indent_pse_push(frm, pc);
-            if (chunk_is_newline(chunk_get_next(pc)))
+            next = chunk_get_next(pc);
+            // Avoid indentation on return token if the next token is a new token
+            // to properly indent object initializers returned by functions.
+            if (!cpd.settings[UO_indent_off_after_return_new].b || next == NULL || next->type != CT_NEW)
             {
-               frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent + indent_size;
+               indent_pse_push(frm, pc);
+               if (chunk_is_newline(next) || (pc->type == CT_RETURN && cpd.settings[UO_indent_single_after_return].b))
+               {
+                  // apply normal single indentation
+                  frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent + indent_size;
+               }
+               else
+               {
+                  // indent after the return token
+                  frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent + pc->len() + 1;
+               }
+               frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos - 1].indent;
             }
-            else
-            {
-               frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent + pc->len() + 1;
-            }
-            frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos - 1].indent;
          }
       }
       else if ((pc->type == CT_OC_SCOPE) || (pc->type == CT_TYPEDEF))
