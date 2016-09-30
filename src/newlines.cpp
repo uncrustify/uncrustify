@@ -3488,6 +3488,12 @@ void newlines_class_colon_pos(c_token_t tok)
                   {
                      newline_add_after(pc);
                   }
+                  prev = chunk_get_prev_nc(pc);
+                  if (chunk_is_newline(prev) && chunk_safe_to_del_nl(prev))
+                  {
+                      chunk_del(prev);
+                      MARK_CHANGE();
+                  }
                }
                else if (pcc & TP_LEAD)
                {
