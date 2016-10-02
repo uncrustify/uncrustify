@@ -699,6 +699,7 @@ enum uncrustify_options
    UO_nl_after_func_class_proto_group,  // The number of newlines after a function class prototype, if not followed by another function class prototype
    // UO_nl_after_ifdef,                // after #if or #ifdef - but not if covers whole file
    UO_nl_after_struct,               // The number of newlines after '}' or ';' of a struct/enum/union definition
+   UO_nl_before_class,               // The number of newlines before a class definition
    UO_nl_after_class,                // The number of newlines after '}' or ';' of a class definition
    UO_nl_max,                        // maximum consecutive newlines (3 = 2 blank lines)
    UO_nl_before_access_spec,         // The number of newlines before a 'private:', 'public:', 'protected:', 'signals:', or 'slots:' label

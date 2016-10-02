@@ -54,16 +54,8 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
 # Determine config
 #
 if(WIN32)
-  # Windows builds use win32/windows_compat.h instead of config.h
-  include_directories(${PROJECT_SOURCE_DIR}/win32)
+  # Windows builds use src/windows_compat.h instead of config.h
 else()
-  # Generate CMake config.h.in
-  file(READ src/config.h.in config_lines)
-  string(REPLACE "#undef" "#cmakedefine" config_lines "${config_lines}")
-  file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/config.h.in ${config_lines})
-
-  unset(config_lines)
-
   # Generate config.h
   set(avail_headers "")
 
@@ -115,7 +107,7 @@ else()
 
   check_type_size(_Bool _BOOL LANGUAGE C)
 
-  configure_file(${CMAKE_CURRENT_BINARY_DIR}/config.h.in config.h @ONLY)
+  configure_file(src/config.h.in config.h @ONLY)
 endif()
 
 #
@@ -126,7 +118,7 @@ set(PACKAGE_VERSION "0.63")
 if (MAKE_VERSION)
   find_package(PythonInterp REQUIRED)
   execute_process(
-    COMMAND ${PYTHON_EXECUTABLE} make_version.py
+    COMMAND ${PYTHON_EXECUTABLE} scripts/make_version.py
     WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
     RESULT_VARIABLE make_version_error
     OUTPUT_VARIABLE make_version_output

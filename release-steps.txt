@@ -1,74 +1,56 @@
-2016-05-10
+2016-10-02
 
 Release steps.
 Just in case I don't do a release for a while and forget what to do... =)
 
-1. Make sure all tests pass
+1. Make sure CI has passed. This should ensure all tests pass and building
+   (including cross-compiling) for Windows works.
 
-   Run all tests (requires python):
+2. Update documentation for the release
 
-     make check
-     or
-     cd tests && ./run_tests.py
-
-2. Make sure it builds for Windows via mingw (under Ubuntu)
-
-    sh make_win32.sh
-
-3. Update documentation for the release
-
-3a. Update the version number and rebuild.
+2a. Update the version number and rebuild.
 Replace the old version with the new version everywhere except in ChangeLog.
 Specific files to update:
-    configure.ac
+    CMakeLists.txt
     documentation/htdocs/index.html
 
-Run "sh autogen.sh" and then "./configure".
-Rebuild from scratch (make clean && make)
+2b. Update the option count in documentation/htdocs/index.html
 
-3b. Update the option count in documentation/htdocs/index.html
-
-3c. Update the config files
+2c. Update the config files
 $ scripts/update-defaults.sh
 
-3d. Update the man file, if any command-line options have changed.
+2d. Update the man file, if any command-line options have changed.
 
-3e. Update the ChangeLog to indicate the release date
+2e. Update the ChangeLog to indicate the release date
 
-3f. Generate a commit.log
+2f. Generate a commit.log
 $ git log > commit.log
 
-4. Make sure there are no modified files in the workspace.
+3. Make sure there are no modified files in the workspace.
    Check in all the changes you just made.
 
-5. Create a dist tarball and win32 package
-
-$ make dist
-Untar the file in a temporary folder and run './configure && make && make check'
-Run tests/run_tests.py
-Then, in that new folder, run 'sh make_win32.sh'.
-
-NOTE: "make distcheck" doesn't work, as it doesn't copy over the test script.
-No idea why.
-
-6. Create a GIT tag and push it
-$ git tag -a uncrustify-0.63 -m uncrustify-0.63
+4. Create a GIT tag and push it
+$ git tag -a uncrustify-0.64 -m uncrustify-0.64
 $ git push --tags
 
-7. Re-run 'make dist' and copy out the release tarball.
+5. The source tarball is available from the release on GitHub, or use
+$ git archive -o uncrustify-0.64.tar.gz uncrustify-0.64
 
-8. Update and build for windows via mingw (save the zip file this time)
+6. Build for windows via mingw (save the zip file)
 
-    sh make_win32.sh
+$ mkdir buildwin
+$ cd buildwin
+$ cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=../cmake/Toolchain-mingw32.cmake -DCMAKE_EXE_LINKER_FLAGS="-static -s" ..
+$ make
+$ cpack
 
-9. Update the web page files
+7. Update the web page files
 $ cd uncrustify-$UNC_REL/
 $ scp -r documentation/htdocs/* ChangeLog USER,uncrustify@web.sourceforge.net:htdocs/
 
-10. Use the web interface (file manager) to create the release folder and
+8. Use the web interface (file manager) to create the release folder and
 upload the files to sourceforge.
 
-11. (optional) Create a news item
+9. (optional) Create a news item
 
-12. (optional) Update freshmeat.net project
-
+10. (optional) Update freshmeat.net project
