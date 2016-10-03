@@ -1449,6 +1449,20 @@ void register_options(void)
                   "Will only remove the braces if there are no variable declarations in the block.");
    unc_add_option("mod_remove_empty_return", UO_mod_remove_empty_return, AT_BOOL,
                   "If TRUE, it will remove a void 'return;' that appears as the last statement in a function.");
+   unc_add_option("mod_sort_oc_properties", UO_mod_sort_oc_properties, AT_BOOL,
+                  "If TRUE, it will organize the properties (Obj-C)");
+   unc_add_option("mod_sort_oc_property_thread_safe_weight", UO_mod_sort_oc_property_thread_safe_weight, AT_NUM,
+                  "Determines weight of atomic/nonatomic (Obj-C)");
+   unc_add_option("mod_sort_oc_property_readwrite_weight", UO_mod_sort_oc_property_readwrite_weight, AT_NUM,
+                  "Determines weight of readwrite (Obj-C)");
+   unc_add_option("mod_sort_oc_property_reference_weight", UO_mod_sort_oc_property_reference_weight, AT_NUM,
+                  "Determines weight of reference type (retain, copy, assign, weak, strong) (Obj-C)");
+   unc_add_option("mod_sort_oc_property_getter_weight", UO_mod_sort_oc_property_getter_weight, AT_NUM,
+                  "Determines weight of getter type (getter=) (Obj-C)");
+   unc_add_option("mod_sort_oc_property_setter_weight", UO_mod_sort_oc_property_setter_weight, AT_NUM,
+                  "Determines weight of setter type (setter=) (Obj-C)");
+    unc_add_option("mod_sort_oc_property_nullability_weight", UO_mod_sort_oc_property_nullability_weight, AT_NUM,
+                   "Determines weight of nullability type (nullable/nonnull) (Obj-C)");
 
    unc_begin_group(UG_preprocessor, "Preprocessor options");
    unc_add_option("pp_indent", UO_pp_indent, AT_IARF,
