@@ -5,12 +5,12 @@
 set(CMAKE_SYSTEM_NAME Windows)
 
 if(NOT COMPILER_PREFIX)
-  if(EXISTS /usr/i586-mingw32msvc)
-    # mingw
-    set(COMPILER_PREFIX "i586-mingw32msvc")
-  elseif(EXISTS /usr/i686-w64-mingw32)
+  if(EXISTS /usr/i686-w64-mingw32)
     # mingw-w64
     set(COMPILER_PREFIX "i686-w64-mingw32")
+  elseif(EXISTS /usr/i586-mingw32msvc)
+    # mingw
+    set(COMPILER_PREFIX "i586-mingw32msvc")
   else()
     message(FATAL_ERROR "Unable to detect cross-compiler prefix (COMPILER_PREFIX)")
   endif()
