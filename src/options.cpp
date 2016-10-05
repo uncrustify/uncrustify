@@ -48,6 +48,13 @@ void unc_add_option(const char *name, uncrustify_options id, argtype_e type,
                     const char *short_desc, const char *long_desc,
                     int min_val, int max_val)
 {
+#define OptionMaxLength 60
+   int lengthOfTheOption = strlen(name);
+   if (lengthOfTheOption > OptionMaxLength) {
+      fprintf(stderr, "FATAL: length of the option name (%s) is too big (%d)\n", name, lengthOfTheOption);
+      fprintf(stderr, "FATAL: the maximal length of an option name is %d characters\n", OptionMaxLength);
+      exit(EXIT_FAILURE);
+   }
    group_map[current_group].options.push_back(id);
 
    option_map_value value;
