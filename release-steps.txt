@@ -1,4 +1,4 @@
-2016-10-02
+2016-10-05
 
 Release steps.
 Just in case I don't do a release for a while and forget what to do... =)
@@ -10,14 +10,15 @@ Just in case I don't do a release for a while and forget what to do... =)
 2. Update documentation for the release
 
 2a. Update the version number and rebuild.
-Replace the old version with the new version everywhere except in ChangeLog.
-Specific files to update:
+   Replace the old version with the new version everywhere except in ChangeLog.
+   Specific files to update:
     CMakeLists.txt
       At line # Generate uncrustify_version.h
     documentation/htdocs/index.html
       At line <li>Highly configurable
 
 2b. Update the option count in documentation/htdocs/index.html
+   Use script/count_the_options.sh to count the options.
 
 2c. Update the config files
 $ scripts/update-defaults.sh
@@ -35,17 +36,23 @@ $ git commit <all the files created above>
 $ git push
 
 4. Create a GIT tag and push it
-$ git tag -a uncrustify-0.64 -m uncrustify-0.64
+$ git tag -a uncrustify-0.nn -m uncrustify-0.nn
 $ git push --tags
 
 5. The source tarball is available from the release on GitHub, or use
-$ git archive -o uncrustify-0.64.tar.gz uncrustify-0.64
+$ git archive -o uncrustify-0.nn.tar.gz uncrustify-0.nn
 
 6. Build for windows via mingw (save the zip file)
    Make sure the compiler mingw-w64 is installed.
 
-$ mkdir buildwin
-$ cd buildwin
+$ mkdir buildwin-32
+$ cd buildwin-32
+$ cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=../cmake/Toolchain-mingw32.cmake -DCMAKE_EXE_LINKER_FLAGS="-static -s" ..
+$ make
+$ cpack
+
+$ mkdir buildwin-64
+$ cd buildwin-64
 $ cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=../cmake/Toolchain-mingw64.cmake -DCMAKE_EXE_LINKER_FLAGS="-static -s" ..
 $ make
 $ cpack
