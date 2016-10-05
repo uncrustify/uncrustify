@@ -78,4 +78,4 @@ uncrustify-*-win32
 *~
 .*
 Debug
-build
+build*
