@@ -1546,7 +1546,7 @@ void indent_text(void)
             frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent + indent_size;
             indent_column_set(frm.pse[frm.pse_tos].indent);
          }
-         if ((cpd.settings[UO_indent_continue].n != 0) && (!skipped))
+         if ((pc->parent_type != CT_OC_AT) && (cpd.settings[UO_indent_continue].n != 0) && (!skipped))
          {
             frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent;
             if ((pc->level == pc->brace_level) &&
