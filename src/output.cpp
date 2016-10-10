@@ -248,7 +248,7 @@ void output_parsed(FILE *pfile)
    save_option_file_kernel(pfile, false, true);
 
    fprintf(pfile, "# -=====-\n");
-   fprintf(pfile, "# Line              Tag           Parent      Columns Br/Lvl/pp     Flag   Nl  Text");
+   fprintf(pfile, "# Line              Tag           Parent          Columns Br/Lvl/pp     Flag   Nl  Text");
    for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next(pc))
    {
       fprintf(pfile, "\n# %3d> %16.16s[%16.16s][%3d/%3d/%3d/%3d][%d/%d/%d][%10" PRIx64 "][%d-%d]",
