@@ -5525,7 +5525,6 @@ static void handle_oc_property_decl(chunk_t *os)
 
         chunk_t *next = chunk_get_next(os);
         chunk_t *open_paren = NULL;
-        chunk_t *close_paren = NULL;
         
         std::vector<ChunkGroup> thread_chunks;      // atomic/nonatomic
         std::vector<ChunkGroup> readwrite_chunks;   // readwrite, readonly
@@ -5645,7 +5644,6 @@ static void handle_oc_property_decl(chunk_t *os)
                 }
                 next = chunk_get_next(next);
             }
-            close_paren = next;
 
             int thread_w = cpd.settings[UO_mod_sort_oc_property_thread_safe_weight].n;
             int readwrite_w = cpd.settings[UO_mod_sort_oc_property_readwrite_weight].n;
@@ -5667,10 +5665,10 @@ static void handle_oc_property_decl(chunk_t *os)
             for (multimap<int, std::vector<ChunkGroup> >::reverse_iterator it = sorted_chunk_map.rbegin(); it != sorted_chunk_map.rend(); ++it)
             {
                 std::vector<ChunkGroup> chunk_groups = (*it).second;
-                for(int i = 0; i < chunk_groups.size(); i++)
+                for(std::vector<int>::size_type i = 0; i < chunk_groups.size(); i++)
                 {
                     ChunkGroup chunk_group = chunk_groups[i];
-                    for(int j = 0; j < chunk_group.size(); j++)
+                    for(std::vector<int>::size_type j = 0; j < chunk_group.size(); j++)
                     {
                         chunk_t *chunk = chunk_group[j];
                         chunk->orig_prev_sp = 0;
@@ -5692,7 +5690,7 @@ static void handle_oc_property_decl(chunk_t *os)
                     endchunk.level       = curr_chunk->level;
                     endchunk.brace_level = curr_chunk->brace_level;
                     endchunk.orig_line   = curr_chunk->orig_line;
-                    endchunk.column = curr_chunk->orig_col_end + 1;
+                    endchunk.column = (int)curr_chunk->orig_col_end + 1;
                     endchunk.parent_type = curr_chunk->parent_type;
                     endchunk.flags       = curr_chunk->flags & PCF_COPY_FLAGS;
                     chunk_add_after(&endchunk, curr_chunk);
