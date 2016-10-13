@@ -13,7 +13,7 @@
 #include "uncrustify_types.h"
 #include "chunk_list.h"
 
-void prot_the_line(int theLine, int actual_line);
+void prot_the_line(int theLine, unsigned int actual_line);
 void examine_Data(const char *func_name, int theLine, int what);
 
 #endif /* UNC_TOOLS_H_INCLUDED */

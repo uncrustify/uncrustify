@@ -9,7 +9,7 @@
 
 #include "unc_tools.h"
 
-// prot_the_line(__LINE__);
+// prot_the_line(__LINE__, 6);
 // examine_Data(__func__, __LINE__, n);
 
 
@@ -29,7 +29,7 @@ void prot_the_line(int theLine, unsigned int actual_line)
          }
          else
          {
-            LOG_FMT(LGUY, "(%d) %d, %s\n", theLine, actual_line, pc->text());
+            LOG_FMT(LGUY, "(%d) %d, %s, col=%d\n", theLine, actual_line, pc->text(), pc->column);
          }
       }
    }

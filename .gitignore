@@ -1,7 +1,7 @@
 # Generated uncrustify files
-src/config.h
-src/token_names.h
-src/uncrustify_version.h
+#src/config.h
+#src/token_names.h
+#src/uncrustify_version.h
 
 # Testing framework
 tests/results
@@ -11,7 +11,7 @@ tests/usage.txt
 test-suite.log
 
 # UNIX build artifacts
-*.o
+#*.o
 src/uncrustify
 
 # Gnu autotools
