@@ -113,7 +113,7 @@ endif()
 #
 # Generate uncrustify_version.h
 #
-set(PACKAGE_VERSION "0.63")
+set(PACKAGE_VERSION "0.64")
 
 if (MAKE_VERSION)
   find_package(PythonInterp REQUIRED)

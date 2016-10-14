@@ -9,9 +9,10 @@ Just in case I don't do a release for a while and forget what to do... =)
 
 2. Update documentation for the release
 
-2a. Update the version number and rebuild.
+2a. Update the version number and rebuild (make sure the option CMAKE_BUILD_TYPE is set to Release).
    Replace the old version with the new version everywhere except in ChangeLog.
    Specific files to update:
+    ChangeLog
     CMakeLists.txt
       At line # Generate uncrustify_version.h
     documentation/htdocs/index.html
@@ -21,48 +22,48 @@ Just in case I don't do a release for a while and forget what to do... =)
    Use script/count_the_options.sh to count the options.
 
 2c. Update the config files
-$ scripts/update-defaults.sh
+   $ scripts/update-defaults.sh
 
 2d. Update the man file, if any command-line options have changed.
 
 2e. Update the ChangeLog to indicate the release date
 
-2f. Generate a commit.log
-$ git log > commit.log
+2f. (optional) Generate a commit.log
+   $ git log > commit.log
 
 3. Make sure there are no modified files in the workspace.
    Check in all the changes you just made.
-$ git commit <all the files created above>
-$ git push
+   $ git commit <all the files created above>
+   $ git push
 
 4. Create a GIT tag and push it
-$ git tag -a uncrustify-0.nn -m uncrustify-0.nn
-$ git push --tags
+   $ git tag -a uncrustify-0.nn -m uncrustify-0.nn
+   $ git push --tags
 
 5. The source tarball is available from the release on GitHub, or use
-$ git archive -o uncrustify-0.nn.tar.gz uncrustify-0.nn
+   $ git archive -o uncrustify-0.nn.tar.gz uncrustify-0.nn
 
 6. Build for windows via mingw (save the zip file)
    Make sure the compiler mingw-w64 is installed.
 
-$ mkdir buildwin-32
-$ cd buildwin-32
-$ cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=../cmake/Toolchain-mingw32.cmake -DCMAKE_EXE_LINKER_FLAGS="-static -s" ..
-$ make
-$ cpack
+   $ mkdir buildwin-32
+   $ cd buildwin-32
+   $ cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=../cmake/Toolchain-mingw32.cmake -DCMAKE_EXE_LINKER_FLAGS="-static -s" ..
+   $ make
+   $ cpack
 
-$ mkdir buildwin-64
-$ cd buildwin-64
-$ cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=../cmake/Toolchain-mingw64.cmake -DCMAKE_EXE_LINKER_FLAGS="-static -s" ..
-$ make
-$ cpack
+   $ mkdir buildwin-64
+   $ cd buildwin-64
+   $ cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=../cmake/Toolchain-mingw64.cmake -DCMAKE_EXE_LINKER_FLAGS="-static -s" ..
+   $ make
+   $ cpack
 
 7. Update the web page files
-$ cd uncrustify-$UNC_REL/
-$ scp -r documentation/htdocs/* ChangeLog USER,uncrustify@web.sourceforge.net:htdocs/
+   $ cd uncrustify-$UNC_REL/
+   $ scp -r documentation/htdocs/* ChangeLog USER,uncrustify@web.sourceforge.net:htdocs/
 
 8. Use the web interface (file manager) to create the release folder and
-upload the files to sourceforge.
+   upload the files to sourceforge.
 
 9. (optional) Create a news item
 
