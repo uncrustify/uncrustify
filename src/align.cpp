@@ -18,7 +18,6 @@
 #include <cerrno>
 #include "unc_ctype.h"
 
-
 static chunk_t *align_var_def_brace(chunk_t *pc, int span, int *nl_count);
 static chunk_t *align_trailing_comments(chunk_t *start);
 static void align_init_brace(chunk_t *start);
@@ -1164,6 +1163,8 @@ static chunk_t *align_var_def_brace(chunk_t *start, int span, int *p_nl_count)
    pc = chunk_get_next(start);
    while ((pc != NULL) && ((pc->level >= start->level) || (pc->level == 0)))
    {
+      LOG_FMT(LGUY, "%s: pc->text()=%s, pc->orig_line=%d, pc->orig_col=%d\n",
+              __func__, pc->text(), pc->orig_line, pc->orig_col);
       if (chunk_is_comment(pc))
       {
          if (pc->nl_count > 0)
@@ -1260,6 +1261,20 @@ static chunk_t *align_var_def_brace(chunk_t *start, int span, int *p_nl_count)
       {
          if (!did_this_line)
          {
+            if ((start->parent_type == CT_STRUCT) &&
+                (as.m_star_style == AlignStack::SS_INCLUDE))
+            {
+               // we must look after the previous token
+               chunk_t *prev_local = pc->prev;
+               while ((prev_local->type == CT_PTR_TYPE) ||
+                      (prev_local->type == CT_ADDR))
+               {
+                  LOG_FMT(LAVDB, "    prev_local=%s, prev_local->type=%s\n",
+                          prev_local->text(), get_token_name(prev_local->type));
+                  prev_local = prev_local->prev;
+               }
+               pc = prev_local->next;
+            }
             LOG_FMT(LAVDB, "    add=[%s] line=%d col=%d level=%d\n",
                     pc->text(), pc->orig_line, pc->orig_col, pc->level);
 

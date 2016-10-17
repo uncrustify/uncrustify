@@ -128,6 +128,7 @@
 00403   align-2.cfg            c/align-var.c
 00404   align-3.cfg            c/align-var.c
 00405   align-3.cfg            c/bits.c
+00406   bug_i_771.cfg          c/bug_i_771.c
 
 00411   ben.cfg                c/align-typedef.c
 00412   align_typedef_func-0.cfg c/align-typedef.c
