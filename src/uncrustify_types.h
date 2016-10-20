@@ -323,13 +323,21 @@ enum
 enum pattern_class
 {
    PATCLS_NONE,
-   PATCLS_BRACED,   // keyword + braced stmt:          do, try
-   PATCLS_PBRACED,  // keyword + parens + braced stmt: switch, if, for, while
-   PATCLS_OPBRACED, // keyword + optional parens + braced stmt: catch, version
-   PATCLS_VBRACED,  // keyword + value + braced stmt: namespace
-   PATCLS_PAREN,    // keyword + parens: while-of-do
+   PATCLS_BRACED,   // keyword + braced stmt:
+                    //    do, try, finally, body, unittest, unsafe, volatile
+                    //    add, get, remove, set
+   PATCLS_PBRACED,  // keyword + parens + braced stmt:
+                    //    if, elseif, switch, for, while, synchronized,
+                    //    using, lock, with, version, CT_D_SCOPE_IF
+   PATCLS_OPBRACED, // keyword + optional parens + braced stmt:
+                    //    catch, version, debug
+   PATCLS_VBRACED,  // keyword + value + braced stmt:
+                    //    namespace
+   PATCLS_PAREN,    // keyword + parens:
+                    //    while-of-do
    PATCLS_OPPAREN,  // keyword + optional parens: invariant (D lang)
    PATCLS_ELSE,     // Special case of PATCLS_BRACED for handling CT_IF
+                    //    else
 };
 
 struct chunk_tag_t

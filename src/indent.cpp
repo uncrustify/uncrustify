@@ -562,8 +562,8 @@ void indent_text(void)
    pc = chunk_get_head();
    while (pc != NULL)
    {
-      LOG_FMT(LGUY, "%d: [%d] pc->text() %s\n",
-              pc->orig_line, __LINE__, pc->text());
+      LOG_FMT(LGUY, "%d:%d [%d] pc->text() %s\n",
+              pc->orig_line, pc->orig_col, __LINE__, pc->text());
       log_pcf_flags(LGUY, pc->flags);
       if ((cpd.settings[UO_use_options_overriding_for_qt_macros].b) &&
          ((strcmp(pc->text(), "SIGNAL") == 0) ||

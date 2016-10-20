@@ -207,6 +207,8 @@ enum uncrustify_options
    UO_indent_token_after_brace,
 
    UO_indent_cpp_lambda_body,        // indent cpp lambda or not
+   UO_indent_using_block,            // indent (or not) an using block if no braces are used, 
+                                     // default: true. Only for C#
 
    /*
     * Misc inter-element spacing
@@ -819,7 +821,7 @@ enum uncrustify_options
 
    UO_use_options_overriding_for_qt_macros,     // SIGNAL/SLOT Qt macros have special formatting options. See options_for_QT.cpp for details.
 
-   /* Levels to attach to warnings (log_sev_t; default = LWARN) */
+   /* Levels to attach to warnings (log_sev_t; default : LWARN) */
    UO_warn_level_tabs_found_in_verbatim_string_literals, // if UO_string_replace_tab_chars is set, then we should warn about cases we can't do the replacement
 
    /* This is used to get the enumeration count */
