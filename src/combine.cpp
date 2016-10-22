@@ -571,8 +571,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
 
    /* C++11 Lambda stuff */
    if ((cpd.lang_flags & LANG_CPP) &&
-       ((pc->type == CT_SQUARE_OPEN) || (pc->type == CT_TSQUARE)) &&
-       !CharTable::IsKw1(prev->str[0]))
+       ((pc->type == CT_SQUARE_OPEN) || (pc->type == CT_TSQUARE)))
    {
       handle_cpp_lambda(pc);
    }
