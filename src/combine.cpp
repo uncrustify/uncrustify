@@ -11,7 +11,6 @@
 #include "chunk_list.h"
 #include "ChunkStack.h"
 #include "prototypes.h"
-//#define DEBUG
 
 #include <cstdio>
 #include <cstdlib>
@@ -4178,14 +4177,26 @@ static void mark_struct_union_body(chunk_t *start)
           (pc->type == CT_SEMICOLON))
       {
          pc = chunk_get_next_ncnl(pc);
+         if (pc == NULL)
+         {
+            break;
+         }
       }
       if (pc->type == CT_ALIGN)
       {
          pc = skip_align(pc); // "align(x)" or "align(x):"
+         if (pc == NULL)
+         {
+            break;
+         }
       }
       else
       {
          pc = fix_var_def(pc);
+         if (pc == NULL)
+         {
+            break;
+         }
       }
    }
 }

@@ -392,8 +392,8 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
          if ((frm->pse[frm->pse_tos].type != CT_NONE) &&
              (frm->pse[frm->pse_tos].type != CT_PP_DEFINE))
          {
-            LOG_FMT(LWARN, "%s:%d Error: Unexpected '%s' for '%s', which was on line %d\n",
-                    cpd.filename, pc->orig_line, pc->text(),
+            LOG_FMT(LWARN, "%s: %s:%d Error: Unexpected '%s' for '%s', which was on line %d\n",
+                    __func__, cpd.filename, pc->orig_line, pc->text(),
                     get_token_name(frm->pse[frm->pse_tos].pc->type),
                     frm->pse[frm->pse_tos].pc->orig_line);
             print_stack(LBCSPOP, "=Error  ", frm, pc);
@@ -939,6 +939,11 @@ static bool handle_complex_close(struct parse_frame *frm, chunk_t *pc)
 } // handle_complex_close
 
 
+/*
+ * the value of after determines:
+ *   true:  insert_vbrace_close_after(pc, frm)
+ *   false: insert_vbrace_open_before(pc, frm)
+ */
 static chunk_t *insert_vbrace(chunk_t *pc, bool after,
                               struct parse_frame *frm)
 {
