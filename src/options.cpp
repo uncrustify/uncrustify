@@ -673,6 +673,8 @@ void register_options(void)
                   "Indentation column for standalone 'const' function decl/proto qualifier");
    unc_add_option("indent_func_throw", UO_indent_func_throw, AT_NUM,
                   "Indentation column for standalone 'throw' function decl/proto qualifier");
+   unc_add_option("indent_paren_after_func_def", UO_indent_paren_after_func_def, AT_BOOL,
+                  "Indent paren after a function definition");
 
    unc_add_option("indent_member", UO_indent_member, AT_NUM,
                   "The number of spaces to indent a continued '->' or '.'\n"
@@ -924,6 +926,10 @@ void register_options(void)
                   "Add or remove newline between a function name and the opening '(' in the declaration");
    unc_add_option("nl_func_def_paren", UO_nl_func_def_paren, AT_IARF,
                   "Add or remove newline between a function name and the opening '(' in the definition");
+   unc_add_option("nl_func_paren_empty", UO_nl_func_paren_empty, AT_IARF,
+                  "Overrides nl_func_paren for functions with no parameters");
+   unc_add_option("nl_func_def_paren_empty", UO_nl_func_def_paren_empty, AT_IARF,
+                  "Overrides nl_func_def_paren for functions with no parameters");
    unc_add_option("nl_func_decl_start", UO_nl_func_decl_start, AT_IARF,
                   "Add or remove newline after '(' in a function declaration");
    unc_add_option("nl_func_def_start", UO_nl_func_def_start, AT_IARF,
@@ -1496,6 +1502,14 @@ void register_options(void)
                   "Control whether to indent the code between #if, #else and #endif.");
    unc_add_option("pp_define_at_level", UO_pp_define_at_level, AT_BOOL,
                   "Whether to indent '#define' at the brace level (true) or from column 1 (false)");
+   unc_add_option("pp_indent_case", UO_pp_indent_case, AT_BOOL,
+                  "Whether to indent case statements between #if, #else, and #endif");
+   unc_add_option("pp_indent_func_def", UO_pp_indent_func_def, AT_BOOL,
+                  "Whether to indent whole function definitions between #if, #else, and #endif");
+   unc_add_option("pp_indent_extern", UO_pp_indent_extern, AT_BOOL,
+                  "Whether to indent extern C blocks between #if, #else, and #endif");
+   unc_add_option("pp_indent_brace", UO_pp_indent_brace, AT_BOOL,
+                  "Whether to indent braces directly inside #if, #else, and #endif");
 
    unc_begin_group(UG_Use_Ext, "Use or Do not Use options", "G");
    unc_add_option("use_indent_func_call_param", UO_use_indent_func_call_param, AT_BOOL,
@@ -2216,6 +2230,10 @@ void set_option_defaults(void)
    cpd.defaults[UO_cmt_multi_first_len_minimum].n          = 4;
    cpd.defaults[UO_cmt_insert_before_inlines].b            = true;
    cpd.defaults[UO_pp_indent_count].n                      = 1;
+   cpd.defaults[UO_pp_indent_case].b                       = true;
+   cpd.defaults[UO_pp_indent_func_def].b                   = true;
+   cpd.defaults[UO_pp_indent_extern].b                     = true;
+   cpd.defaults[UO_pp_indent_brace].b                      = true;
    cpd.defaults[UO_align_left_shift].b                     = true;
    cpd.defaults[UO_indent_align_assign].b                  = true;
    cpd.defaults[UO_sp_pp_concat].a                         = AV_ADD;
