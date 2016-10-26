@@ -70,7 +70,7 @@ public:
     * @param idx     Pointer to the index that you initialized to 0
     * @return        NULL or the pointer to the string.
     */
-   const char *Params(const char *token, int& index);
+   const char *Params(const char *token, int &index);
 
    /**
     * Marks an argument as being used.
@@ -94,7 +94,7 @@ public:
     * @param idx  Pointer to the index
     * @return     NULL (done) or the pointer to the string
     */
-   const char *Unused(int& idx);
+   const char *Unused(int &idx);
 
    /**
     * Takes text and splits it into arguments.

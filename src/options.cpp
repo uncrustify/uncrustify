@@ -48,9 +48,10 @@ void unc_add_option(const char *name, uncrustify_options id, argtype_e type,
                     const char *short_desc, const char *long_desc,
                     int min_val, int max_val)
 {
-#define OptionMaxLength 60
+#define OptionMaxLength    60
    int lengthOfTheOption = strlen(name);
-   if (lengthOfTheOption > OptionMaxLength) {
+   if (lengthOfTheOption > OptionMaxLength)
+   {
       fprintf(stderr, "FATAL: length of the option name (%s) is too big (%d)\n", name, lengthOfTheOption);
       fprintf(stderr, "FATAL: the maximal length of an option name is %d characters\n", OptionMaxLength);
       exit(EXIT_FAILURE);
@@ -1251,7 +1252,7 @@ void register_options(void)
    unc_add_option("align_var_struct_thresh", UO_align_var_struct_thresh, AT_NUM,
                   "The threshold for aligning struct/union member definitions (0=no limit)", "", 0, 5000);
    unc_add_option("align_var_struct_gap", UO_align_var_struct_gap, AT_NUM,
-                  "The gap for aligning struct/union member definitions");                  
+                  "The gap for aligning struct/union member definitions");
    unc_add_option("align_struct_init_span", UO_align_struct_init_span, AT_NUM,
                   "The span for aligning struct initializer values (0=don't align)", "", 0, 5000);
    unc_add_option("align_typedef_gap", UO_align_typedef_gap, AT_NUM,
@@ -1468,8 +1469,8 @@ void register_options(void)
                   "Determines weight of getter type (getter=) (Obj-C)");
    unc_add_option("mod_sort_oc_property_setter_weight", UO_mod_sort_oc_property_setter_weight, AT_NUM,
                   "Determines weight of setter type (setter=) (Obj-C)");
-    unc_add_option("mod_sort_oc_property_nullability_weight", UO_mod_sort_oc_property_nullability_weight, AT_NUM,
-                   "Determines weight of nullability type (nullable/nonnull) (Obj-C)");
+   unc_add_option("mod_sort_oc_property_nullability_weight", UO_mod_sort_oc_property_nullability_weight, AT_NUM,
+                  "Determines weight of nullability type (nullable/nonnull) (Obj-C)");
 
    unc_begin_group(UG_preprocessor, "Preprocessor options");
    unc_add_option("pp_indent", UO_pp_indent, AT_IARF,
@@ -2145,8 +2146,8 @@ void print_options(FILE *pfile)
       for (option_list_it it = jt->second.options.begin(); it != jt->second.options.end(); it++)
       {
          const option_map_value *option = get_option_name(*it);
-         int cur = strlen(option->name);
-         int pad = (cur < MAX_OPTION_NAME_LEN) ? (MAX_OPTION_NAME_LEN - cur) : 1;
+         int                    cur     = strlen(option->name);
+         int                    pad     = (cur < MAX_OPTION_NAME_LEN) ? (MAX_OPTION_NAME_LEN - cur) : 1;
          fprintf(pfile, "%s%*c%s\n",
                  option->name,
                  pad, ' ',
@@ -2187,48 +2188,48 @@ void set_option_defaults(void)
    }
 
    /* the options with non-zero default values */
-   cpd.defaults[UO_newlines].le                            = LE_AUTO;
-   cpd.defaults[UO_input_tab_size].n                       = 8;
-   cpd.defaults[UO_output_tab_size].n                      = 8;
-   cpd.defaults[UO_indent_ctor_init_leading].n             = 2;
-   cpd.defaults[UO_indent_columns].n                       = 8;
-   cpd.defaults[UO_indent_with_tabs].n                     = 1;
-   cpd.defaults[UO_indent_label].n                         = 1;
-   cpd.defaults[UO_indent_access_spec].n                   = 1;
-   cpd.defaults[UO_sp_before_comma].a                      = AV_REMOVE;
-   cpd.defaults[UO_sp_paren_comma].a                       = AV_FORCE;
-   cpd.defaults[UO_string_escape_char].n                   = '\\';
-   cpd.defaults[UO_sp_not].a                               = AV_REMOVE;
-   cpd.defaults[UO_sp_inv].a                               = AV_REMOVE;
-   cpd.defaults[UO_sp_addr].a                              = AV_REMOVE;
-   cpd.defaults[UO_sp_deref].a                             = AV_REMOVE;
-   cpd.defaults[UO_sp_member].a                            = AV_REMOVE;
-   cpd.defaults[UO_sp_sign].a                              = AV_REMOVE;
-   cpd.defaults[UO_sp_incdec].a                            = AV_REMOVE;
-   cpd.defaults[UO_sp_after_type].a                        = AV_FORCE;
-   cpd.defaults[UO_sp_before_nl_cont].a                    = AV_ADD;
-   cpd.defaults[UO_sp_before_case_colon].a                 = AV_REMOVE;
-   cpd.defaults[UO_sp_before_semi].a                       = AV_REMOVE;
-   cpd.defaults[UO_sp_after_semi].a                        = AV_ADD;
-   cpd.defaults[UO_sp_after_semi_for].a                    = AV_FORCE;
-   cpd.defaults[UO_cmt_indent_multi].b                     = true;
-   cpd.defaults[UO_cmt_multi_check_last].b                 = true;
-   cpd.defaults[UO_cmt_multi_first_len_minimum].n          = 4;
-   cpd.defaults[UO_cmt_insert_before_inlines].b            = true;
-   cpd.defaults[UO_pp_indent_count].n                      = 1;
-   cpd.defaults[UO_align_left_shift].b                     = true;
-   cpd.defaults[UO_indent_align_assign].b                  = true;
-   cpd.defaults[UO_sp_pp_concat].a                         = AV_ADD;
-   cpd.defaults[UO_sp_angle_shift].a                       = AV_ADD;
-   cpd.defaults[UO_sp_word_brace].a                        = AV_ADD;
-   cpd.defaults[UO_sp_word_brace_ns].a                     = AV_ADD;
-   cpd.defaults[UO_sp_super_paren].a                       = AV_REMOVE;
-   cpd.defaults[UO_sp_this_paren].a                        = AV_REMOVE;
-   cpd.defaults[UO_indent_oc_msg_prioritize_first_colon].b = true;
-   cpd.defaults[UO_use_indent_func_call_param].b           = true;
-   cpd.defaults[UO_use_options_overriding_for_qt_macros].b = true;
-   cpd.defaults[UO_indent_token_after_brace].b             = true;
-   cpd.defaults[UO_indent_cpp_lambda_body].b               = false;
+   cpd.defaults[UO_newlines].le                                         = LE_AUTO;
+   cpd.defaults[UO_input_tab_size].n                                    = 8;
+   cpd.defaults[UO_output_tab_size].n                                   = 8;
+   cpd.defaults[UO_indent_ctor_init_leading].n                          = 2;
+   cpd.defaults[UO_indent_columns].n                                    = 8;
+   cpd.defaults[UO_indent_with_tabs].n                                  = 1;
+   cpd.defaults[UO_indent_label].n                                      = 1;
+   cpd.defaults[UO_indent_access_spec].n                                = 1;
+   cpd.defaults[UO_sp_before_comma].a                                   = AV_REMOVE;
+   cpd.defaults[UO_sp_paren_comma].a                                    = AV_FORCE;
+   cpd.defaults[UO_string_escape_char].n                                = '\\';
+   cpd.defaults[UO_sp_not].a                                            = AV_REMOVE;
+   cpd.defaults[UO_sp_inv].a                                            = AV_REMOVE;
+   cpd.defaults[UO_sp_addr].a                                           = AV_REMOVE;
+   cpd.defaults[UO_sp_deref].a                                          = AV_REMOVE;
+   cpd.defaults[UO_sp_member].a                                         = AV_REMOVE;
+   cpd.defaults[UO_sp_sign].a                                           = AV_REMOVE;
+   cpd.defaults[UO_sp_incdec].a                                         = AV_REMOVE;
+   cpd.defaults[UO_sp_after_type].a                                     = AV_FORCE;
+   cpd.defaults[UO_sp_before_nl_cont].a                                 = AV_ADD;
+   cpd.defaults[UO_sp_before_case_colon].a                              = AV_REMOVE;
+   cpd.defaults[UO_sp_before_semi].a                                    = AV_REMOVE;
+   cpd.defaults[UO_sp_after_semi].a                                     = AV_ADD;
+   cpd.defaults[UO_sp_after_semi_for].a                                 = AV_FORCE;
+   cpd.defaults[UO_cmt_indent_multi].b                                  = true;
+   cpd.defaults[UO_cmt_multi_check_last].b                              = true;
+   cpd.defaults[UO_cmt_multi_first_len_minimum].n                       = 4;
+   cpd.defaults[UO_cmt_insert_before_inlines].b                         = true;
+   cpd.defaults[UO_pp_indent_count].n                                   = 1;
+   cpd.defaults[UO_align_left_shift].b                                  = true;
+   cpd.defaults[UO_indent_align_assign].b                               = true;
+   cpd.defaults[UO_sp_pp_concat].a                                      = AV_ADD;
+   cpd.defaults[UO_sp_angle_shift].a                                    = AV_ADD;
+   cpd.defaults[UO_sp_word_brace].a                                     = AV_ADD;
+   cpd.defaults[UO_sp_word_brace_ns].a                                  = AV_ADD;
+   cpd.defaults[UO_sp_super_paren].a                                    = AV_REMOVE;
+   cpd.defaults[UO_sp_this_paren].a                                     = AV_REMOVE;
+   cpd.defaults[UO_indent_oc_msg_prioritize_first_colon].b              = true;
+   cpd.defaults[UO_use_indent_func_call_param].b                        = true;
+   cpd.defaults[UO_use_options_overriding_for_qt_macros].b              = true;
+   cpd.defaults[UO_indent_token_after_brace].b                          = true;
+   cpd.defaults[UO_indent_cpp_lambda_body].b                            = false;
    cpd.defaults[UO_warn_level_tabs_found_in_verbatim_string_literals].n = LWARN;
 
    /* copy all the default values to settings array */

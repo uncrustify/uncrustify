@@ -195,7 +195,7 @@ void AlignStack::Add(chunk_t *start, int seqnum)
             ali  = prev;
             prev = chunk_get_prev(ali);
             // this is correct, even Coverity says:
-            // CID 76021 (#1 of 1): Unused value (UNUSED_VALUE)returned_pointer: Assigning value from 
+            // CID 76021 (#1 of 1): Unused value (UNUSED_VALUE)returned_pointer: Assigning value from
             // chunk_get_prev(ali, CNAV_ALL) to prev here, but that stored value is overwritten before it can be used.
          }
       }
@@ -407,6 +407,8 @@ void AlignStack::Flush()
       m_max_col = align_tab_column(m_max_col);
    }
 
+   LOG_FMT(LAS, "%s: m_aligned.Len()=%d\n", __func__,
+           m_aligned.Len());
    for (idx = 0; idx < m_aligned.Len(); idx++)
    {
       ce = m_aligned.Get(idx);

@@ -12,7 +12,7 @@
 #include <cstdio>
 
 
-bool unc_getenv(const char *name, std::string& str)
+bool unc_getenv(const char *name, std::string &str)
 {
    DWORD len = GetEnvironmentVariableA(name, NULL, 0);
    char  *buf;
@@ -40,7 +40,7 @@ bool unc_getenv(const char *name, std::string& str)
 }
 
 
-bool unc_homedir(std::string& home)
+bool unc_homedir(std::string &home)
 {
    if (unc_getenv("HOME", home))
    {

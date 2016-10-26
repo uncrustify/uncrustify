@@ -51,7 +51,7 @@ public:
    }
 
 
-   AlignStack(const AlignStack& ref)
+   AlignStack(const AlignStack &ref)
       : m_aligned(ref.m_aligned)
       , m_skipped(ref.m_skipped)
       , m_max_col(ref.m_max_col)

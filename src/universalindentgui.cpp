@@ -111,7 +111,7 @@ void print_universal_indent_cfg(FILE *pfile)
          // :%s/(\(\d\)\+)/\=printf('(%d)', line('.'))
          // to the real line number
          // guy 2016-03-07
-#else // DEBUG
+#else    // DEBUG
          fprintf(pfile, "Description=\"<html>");
 #endif // DEBUG
 

@@ -9,7 +9,7 @@
 #include "prototypes.h" /* encode_utf8() */
 
 
-static void fix_len_idx(int size, int& idx, int& len)
+static void fix_len_idx(int size, int &idx, int &len)
 {
    if (len < 0)
    {
@@ -69,7 +69,7 @@ void unc_text::update_logtext()
 }
 
 
-int unc_text::compare(const unc_text& ref1, const unc_text& ref2, int len)
+int unc_text::compare(const unc_text &ref1, const unc_text &ref2, int len)
 {
    int idx, len1, len2;
 
@@ -103,7 +103,7 @@ int unc_text::compare(const unc_text& ref1, const unc_text& ref2, int len)
 }
 
 
-bool unc_text::equals(const unc_text& ref) const
+bool unc_text::equals(const unc_text &ref) const
 {
    int len = size();
 
@@ -137,14 +137,14 @@ void unc_text::set(int ch)
 }
 
 
-void unc_text::set(const unc_text& ref)
+void unc_text::set(const unc_text &ref)
 {
    m_chars = ref.m_chars;
    m_logok = false;
 }
 
 
-void unc_text::set(const unc_text& ref, int idx, int len)
+void unc_text::set(const unc_text &ref, int idx, int len)
 {
    int ref_size = ref.size();
 
@@ -166,7 +166,7 @@ void unc_text::set(const unc_text& ref, int idx, int len)
 }
 
 
-void unc_text::set(const string& ascii_text)
+void unc_text::set(const string &ascii_text)
 {
    int len = ascii_text.size();
 
@@ -192,7 +192,7 @@ void unc_text::set(const char *ascii_text)
 }
 
 
-void unc_text::set(const value_type& data, int idx, int len)
+void unc_text::set(const value_type &data, int idx, int len)
 {
    fix_len_idx(data.size(), idx, len);
    m_chars.resize(len);
@@ -232,7 +232,7 @@ void unc_text::insert(int idx, int ch)
 }
 
 
-void unc_text::insert(int idx, const unc_text& ref)
+void unc_text::insert(int idx, const unc_text &ref)
 {
    if (idx >= 0)
    {
@@ -249,14 +249,14 @@ void unc_text::append(int ch)
 }
 
 
-void unc_text::append(const unc_text& ref)
+void unc_text::append(const unc_text &ref)
 {
    m_chars.insert(m_chars.end(), ref.m_chars.begin(), ref.m_chars.end());
    m_logok = false;
 }
 
 
-void unc_text::append(const string& ascii_text)
+void unc_text::append(const string &ascii_text)
 {
    unc_text tmp(ascii_text);
 
@@ -272,7 +272,7 @@ void unc_text::append(const char *ascii_text)
 }
 
 
-void unc_text::append(const value_type& data, int idx, int len)
+void unc_text::append(const value_type &data, int idx, int len)
 {
    unc_text tmp(data, idx, len);
 
@@ -298,7 +298,7 @@ bool unc_text::startswith(const char *text, int idx) const
 }
 
 
-bool unc_text::startswith(const unc_text& text, int idx) const
+bool unc_text::startswith(const unc_text &text, int idx) const
 {
    bool match = false;
    int  si    = 0;
@@ -319,7 +319,7 @@ bool unc_text::startswith(const unc_text& text, int idx) const
 
 int unc_text::find(const char *text, int sidx) const
 {
-   int len  = strlen(text);
+   int len = strlen(text);
    int midx = size() - len;
    int idx, ii;
 
@@ -382,7 +382,7 @@ void unc_text::erase(int idx, int len)
 }
 
 
-int unc_text::replace(const char *oldtext, const unc_text& newtext)
+int unc_text::replace(const char *oldtext, const unc_text &newtext)
 {
    int fidx = find(oldtext);
    int olen = strlen(oldtext);

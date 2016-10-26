@@ -120,7 +120,7 @@ static void align_asm_colon(void);
  * @param col           the column
  * @param align_single  align even if there is only one item on the stack
  */
-static void align_stack(ChunkStack& cs, int col, bool align_single, log_sev_t sev)
+static void align_stack(ChunkStack &cs, int col, bool align_single, log_sev_t sev)
 {
    LOG_FUNC_ENTRY();
    chunk_t *pc;
@@ -154,7 +154,7 @@ static void align_stack(ChunkStack& cs, int col, bool align_single, log_sev_t se
  * @param max_col    pointer to the column variable
  * @param extra_pad  extra padding
  */
-static void align_add(ChunkStack& cs, chunk_t *pc, int& max_col, int min_pad, bool squeeze)
+static void align_add(ChunkStack &cs, chunk_t *pc, int &max_col, int min_pad, bool squeeze)
 {
    LOG_FUNC_ENTRY();
    chunk_t *prev;
@@ -283,7 +283,7 @@ void align_all(void)
    /* Align variable definitions */
    if ((cpd.settings[UO_align_var_def_span].n > 0) ||
        (cpd.settings[UO_align_var_struct_span].n > 0) ||
-       (cpd.settings[UO_align_var_class_span].n > 0) )
+       (cpd.settings[UO_align_var_class_span].n > 0))
    {
       align_var_def_brace(chunk_get_head(), cpd.settings[UO_align_var_def_span].n, NULL);
    }
@@ -803,7 +803,7 @@ static void align_func_params()
 }
 
 
-static void align_params(chunk_t *start, deque<chunk_t *>& chunks)
+static void align_params(chunk_t *start, deque<chunk_t *> &chunks)
 {
    LOG_FUNC_ENTRY();
    chunk_t *pc       = start;
@@ -1114,9 +1114,9 @@ static chunk_t *align_var_def_brace(chunk_t *start, int span, int *p_nl_count)
    }
    else if (start->parent_type == CT_CLASS)
    {
-       myspan = cpd.settings[UO_align_var_class_span].n;
-       mythresh = cpd.settings[UO_align_var_class_thresh].n;
-       mygap = cpd.settings[UO_align_var_class_gap].n;
+      myspan   = cpd.settings[UO_align_var_class_span].n;
+      mythresh = cpd.settings[UO_align_var_class_thresh].n;
+      mygap    = cpd.settings[UO_align_var_class_gap].n;
    }
    else
    {
