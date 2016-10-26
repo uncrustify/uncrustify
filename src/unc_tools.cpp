@@ -23,7 +23,11 @@ void prot_the_line(int theLine, unsigned int actual_line)
    {
       if (pc->orig_line == actual_line)
       {
-         if (pc->type == CT_NEWLINE)
+         if (pc->type == CT_VBRACE_OPEN)
+         {
+            LOG_FMT(LGUY, "(%d) %d, <VBRACE_OPEN>\n", theLine, actual_line);
+         }
+         else if (pc->type == CT_NEWLINE)
          {
             LOG_FMT(LGUY, "(%d) %d, <NL>(%d)\n", theLine, actual_line, pc->nl_count);
          }

@@ -564,7 +564,8 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
 
    pattern_class patcls = get_token_pattern_class(pc->type);
 
-   /** Create a stack entry for complex statements IF/DO/FOR/WHILE/SWITCH */
+   /** Create a stack entry for complex statements: */
+   /** if, elseif, switch, for, while, synchronized, using, lock, with, version, CT_D_SCOPE_IF */
    if (patcls == PATCLS_BRACED)
    {
       push_fmr_pse(frm, pc,
@@ -782,28 +783,37 @@ static bool check_complex_statements(struct parse_frame *frm, chunk_t *pc)
        ((frm->pse[frm->pse_tos].stage == BS_BRACE2) ||
         (frm->pse[frm->pse_tos].stage == BS_BRACE_DO)))
    {
-      parent = frm->pse[frm->pse_tos].type;
+      if ((cpd.lang_flags & LANG_CS) &&
+          (pc->type == CT_USING_STMT) &&
+          (!cpd.settings[UO_indent_using_block].b))
+      {
+         // don't indent the using block
+      }
+      else
+      {
+         parent = frm->pse[frm->pse_tos].type;
 
-      vbrace = insert_vbrace_open_before(pc, frm);
-      set_chunk_parent(vbrace, parent);
+         vbrace = insert_vbrace_open_before(pc, frm);
+         set_chunk_parent(vbrace, parent);
 
-      frm->level++;
-      frm->brace_level++;
+         frm->level++;
+         frm->brace_level++;
 
-      push_fmr_pse(frm, vbrace, BS_NONE, "+VBrace ");
-      frm->pse[frm->pse_tos].parent = parent;
+         push_fmr_pse(frm, vbrace, BS_NONE, "+VBrace ");
+         frm->pse[frm->pse_tos].parent = parent;
 
-      /* update the level of pc */
-      pc->level       = frm->level;
-      pc->brace_level = frm->brace_level;
+         /* update the level of pc */
+         pc->level       = frm->level;
+         pc->brace_level = frm->brace_level;
 
-      /* Mark as a start of a statement */
-      frm->stmt_count = 0;
-      frm->expr_count = 0;
-      pc->flags      |= PCF_STMT_START | PCF_EXPR_START;
-      frm->stmt_count = 1;
-      frm->expr_count = 1;
-      LOG_FMT(LSTMT, "%d] 2.marked %s as stmt start\n", pc->orig_line, pc->text());
+         /* Mark as a start of a statement */
+         frm->stmt_count = 0;
+         frm->expr_count = 0;
+         pc->flags      |= PCF_STMT_START | PCF_EXPR_START;
+         frm->stmt_count = 1;
+         frm->expr_count = 1;
+         LOG_FMT(LSTMT, "%d] 2.marked %s as stmt start\n", pc->orig_line, pc->text());
+      }
    }
 
    /* Verify open paren in complex statement */
@@ -1028,6 +1038,7 @@ bool close_statement(struct parse_frame *frm, chunk_t *pc)
    }
 
    /**
+    * Insert a CT_VBRACE_CLOSE, if needed:
     * If we are in a virtual brace and we are not ON a CT_VBRACE_CLOSE add one
     */
    if (frm->pse[frm->pse_tos].type == CT_VBRACE_OPEN)
