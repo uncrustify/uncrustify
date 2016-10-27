@@ -50,7 +50,8 @@ void unc_add_option(const char *name, uncrustify_options id, argtype_e type,
 {
 #define OptionMaxLength 60
    int lengthOfTheOption = strlen(name);
-   if (lengthOfTheOption > OptionMaxLength) {
+   if (lengthOfTheOption > OptionMaxLength)
+   {
       fprintf(stderr, "FATAL: length of the option name (%s) is too big (%d)\n", name, lengthOfTheOption);
       fprintf(stderr, "FATAL: the maximal length of an option name is %d characters\n", OptionMaxLength);
       exit(EXIT_FAILURE);
@@ -1254,7 +1255,7 @@ void register_options(void)
    unc_add_option("align_var_struct_thresh", UO_align_var_struct_thresh, AT_NUM,
                   "The threshold for aligning struct/union member definitions (0=no limit)", "", 0, 5000);
    unc_add_option("align_var_struct_gap", UO_align_var_struct_gap, AT_NUM,
-                  "The gap for aligning struct/union member definitions");                  
+                  "The gap for aligning struct/union member definitions");
    unc_add_option("align_struct_init_span", UO_align_struct_init_span, AT_NUM,
                   "The span for aligning struct initializer values (0=don't align)", "", 0, 5000);
    unc_add_option("align_typedef_gap", UO_align_typedef_gap, AT_NUM,
@@ -1471,8 +1472,8 @@ void register_options(void)
                   "Determines weight of getter type (getter=) (Obj-C)");
    unc_add_option("mod_sort_oc_property_setter_weight", UO_mod_sort_oc_property_setter_weight, AT_NUM,
                   "Determines weight of setter type (setter=) (Obj-C)");
-    unc_add_option("mod_sort_oc_property_nullability_weight", UO_mod_sort_oc_property_nullability_weight, AT_NUM,
-                   "Determines weight of nullability type (nullable/nonnull) (Obj-C)");
+   unc_add_option("mod_sort_oc_property_nullability_weight", UO_mod_sort_oc_property_nullability_weight, AT_NUM,
+                  "Determines weight of nullability type (nullable/nonnull) (Obj-C)");
 
    unc_begin_group(UG_preprocessor, "Preprocessor options");
    unc_add_option("pp_indent", UO_pp_indent, AT_IARF,
@@ -2148,8 +2149,8 @@ void print_options(FILE *pfile)
       for (option_list_it it = jt->second.options.begin(); it != jt->second.options.end(); it++)
       {
          const option_map_value *option = get_option_name(*it);
-         int cur = strlen(option->name);
-         int pad = (cur < MAX_OPTION_NAME_LEN) ? (MAX_OPTION_NAME_LEN - cur) : 1;
+         int                    cur     = strlen(option->name);
+         int                    pad     = (cur < MAX_OPTION_NAME_LEN) ? (MAX_OPTION_NAME_LEN - cur) : 1;
          fprintf(pfile, "%s%*c%s\n",
                  option->name,
                  pad, ' ',
