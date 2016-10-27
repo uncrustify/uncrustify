@@ -23,7 +23,7 @@ protected:
 
 private:
    /* Hide copy constructor */
-   ListManager(const ListManager& ref)
+   ListManager(const ListManager &ref)
    {
       first = NULL;
       last  = NULL;

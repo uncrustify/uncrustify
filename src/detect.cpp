@@ -26,7 +26,7 @@ protected:
    argval_t *m_av;
 
 public:
-   sp_votes(argval_t& av)
+   sp_votes(argval_t &av)
    {
       m_add    = 0;
       m_remove = 0;

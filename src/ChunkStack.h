@@ -23,7 +23,7 @@ public:
       }
 
 
-      Entry(const Entry& ref)
+      Entry(const Entry &ref)
          : m_seqnum(ref.m_seqnum)
          , m_pc(ref.m_pc)
       {
@@ -50,7 +50,7 @@ public:
    }
 
 
-   ChunkStack(const ChunkStack& cs)
+   ChunkStack(const ChunkStack &cs)
    {
       Set(cs);
    }
@@ -60,7 +60,7 @@ public:
    {
    }
 
-   void Set(const ChunkStack& cs);
+   void Set(const ChunkStack &cs);
 
 
    void Push_Back(chunk_t *pc)

@@ -304,12 +304,12 @@ enum uncrustify_options
    UO_sp_func_call_paren,       // space between 'func' and '(' - 'foo (' vs 'foo('
    UO_sp_func_call_paren_empty,
    UO_sp_func_call_user_paren,
-   UO_sp_func_proto_paren,      // space between 'func' and '(' - 'foo (' vs 'foo('
-   UO_sp_func_proto_paren_empty,// space between 'func' and '()' - "foo ()" vs "foo()"
-   UO_sp_func_class_paren,      // space between ctor/dtor and '('
-   UO_sp_func_class_paren_empty,// space between ctor/dtor and '()'
+   UO_sp_func_proto_paren,       // space between 'func' and '(' - 'foo (' vs 'foo('
+   UO_sp_func_proto_paren_empty, // space between 'func' and '()' - "foo ()" vs "foo()"
+   UO_sp_func_class_paren,       // space between ctor/dtor and '('
+   UO_sp_func_class_paren_empty, // space between ctor/dtor and '()'
 
-   UO_sp_attribute_paren,       // space between '__attribute__' and '('
+   UO_sp_attribute_paren,        // space between '__attribute__' and '('
    UO_sp_defined_paren,
    UO_sp_throw_paren,
    UO_sp_after_throw,
@@ -340,21 +340,21 @@ enum uncrustify_options
    UO_sp_before_semi_for_empty, // space before ';' in empty for statement
    UO_sp_after_semi,
    UO_sp_after_semi_for,
-   UO_sp_after_semi_for_empty,  // space after final ';' in empty for statement
-   UO_sp_inside_braces,         // space inside '{' and '}' - '{ 1, 2, 3 }'
-   UO_sp_inside_braces_empty,   // space inside '{' and '}' - '{ }'
-   UO_sp_inside_braces_enum,    // space inside enum '{' and '}' - '{ a, b, c }'
-   UO_sp_inside_braces_struct,  // space inside struct/union '{' and '}'
+   UO_sp_after_semi_for_empty,     // space after final ';' in empty for statement
+   UO_sp_inside_braces,            // space inside '{' and '}' - '{ 1, 2, 3 }'
+   UO_sp_inside_braces_empty,      // space inside '{' and '}' - '{ }'
+   UO_sp_inside_braces_enum,       // space inside enum '{' and '}' - '{ a, b, c }'
+   UO_sp_inside_braces_struct,     // space inside struct/union '{' and '}'
 
-   UO_sp_macro,                 // space between macro and value, ie '#define a 6'
-   UO_sp_macro_func,            // space between macro and value, ie '#define a 6'
+   UO_sp_macro,                    // space between macro and value, ie '#define a 6'
+   UO_sp_macro_func,               // space between macro and value, ie '#define a 6'
 
-   UO_sp_square_fparen,         // weird pawn stuff: native yark[rect](a[rect])
-   UO_sp_after_tag,             // pawn: space after a tag colon
+   UO_sp_square_fparen,            // weird pawn stuff: native yark[rect](a[rect])
+   UO_sp_after_tag,                // pawn: space after a tag colon
 
-   UO_sp_after_operator,        // space after operator when followed by a punctuator
-   UO_sp_after_operator_sym,    // space after operator when followed by a punctuator
-   UO_sp_after_operator_sym_empty,// space after operator sign when the operator has no arguments
+   UO_sp_after_operator,           // space after operator when followed by a punctuator
+   UO_sp_after_operator_sym,       // space after operator when followed by a punctuator
+   UO_sp_after_operator_sym_empty, // space after operator sign when the operator has no arguments
    UO_sp_else_brace,
    UO_sp_brace_else,
    UO_sp_brace_typedef,
@@ -683,66 +683,66 @@ enum uncrustify_options
     * Blank line options
     */
 
-   UO_nl_before_block_comment,       // before a block comment (stand-alone comment-multi), except after brace open
-   UO_nl_before_cpp_comment,         // The minimum number of newlines before a CPP comment
-                                     // Doesn't apply if after a brace open or other CPP comments
-   UO_nl_before_c_comment,           // The minimum number of newlines before a single-line C comment
-                                     // Doesn't apply if after a brace open or other single-line C comments
-   UO_nl_after_multiline_comment,    // newline after multiline comment
-   UO_nl_after_label_colon,          // newline after a label followed by a colon
-   UO_nl_before_func_body_def,       // The number of newlines before a multi-line function def body
-   UO_nl_before_func_body_proto,     // The number of newlines before a multi-line function prototype body
-   UO_nl_after_func_body,            // The number of newlines after '}' of a multi-line function body
-   UO_nl_after_func_body_class,      // The number of newlines after '}' of a multi-line function body in a class declaration
-   UO_nl_after_func_body_one_liner,  // The number of newlines after '}' of a single line function body
-   UO_nl_after_func_proto,           // The number of newlines after a function prototype, if followed by another function prototype
-   UO_nl_after_func_proto_group,     // The number of newlines after a function prototype, if not followed by another function prototype
-   UO_nl_after_func_class_proto,     // The number of newlines after a function class prototype, if followed by another function class prototype
-   UO_nl_after_func_class_proto_group,  // The number of newlines after a function class prototype, if not followed by another function class prototype
+   UO_nl_before_block_comment,         // before a block comment (stand-alone comment-multi), except after brace open
+   UO_nl_before_cpp_comment,           // The minimum number of newlines before a CPP comment
+                                       // Doesn't apply if after a brace open or other CPP comments
+   UO_nl_before_c_comment,             // The minimum number of newlines before a single-line C comment
+                                       // Doesn't apply if after a brace open or other single-line C comments
+   UO_nl_after_multiline_comment,      // newline after multiline comment
+   UO_nl_after_label_colon,            // newline after a label followed by a colon
+   UO_nl_before_func_body_def,         // The number of newlines before a multi-line function def body
+   UO_nl_before_func_body_proto,       // The number of newlines before a multi-line function prototype body
+   UO_nl_after_func_body,              // The number of newlines after '}' of a multi-line function body
+   UO_nl_after_func_body_class,        // The number of newlines after '}' of a multi-line function body in a class declaration
+   UO_nl_after_func_body_one_liner,    // The number of newlines after '}' of a single line function body
+   UO_nl_after_func_proto,             // The number of newlines after a function prototype, if followed by another function prototype
+   UO_nl_after_func_proto_group,       // The number of newlines after a function prototype, if not followed by another function prototype
+   UO_nl_after_func_class_proto,       // The number of newlines after a function class prototype, if followed by another function class prototype
+   UO_nl_after_func_class_proto_group, // The number of newlines after a function class prototype, if not followed by another function class prototype
    // UO_nl_after_ifdef,                // after #if or #ifdef - but not if covers whole file
-   UO_nl_after_struct,               // The number of newlines after '}' or ';' of a struct/enum/union definition
-   UO_nl_before_class,               // The number of newlines before a class definition
-   UO_nl_after_class,                // The number of newlines after '}' or ';' of a class definition
-   UO_nl_max,                        // maximum consecutive newlines (3 = 2 blank lines)
-   UO_nl_before_access_spec,         // The number of newlines before a 'private:', 'public:', 'protected:', 'signals:', or 'slots:' label
-                                     // Will not change the newline count if after a brace open (0 = No change)
-   UO_nl_after_access_spec,          // The number of newlines after a 'private:', 'public:', 'protected:', 'signals:' or 'slots:' label
-                                     // (0 = No change)
-   UO_nl_comment_func_def,           // The number of newlines between a function def and the function comment
-                                     // (0 = No change)
-   UO_nl_after_try_catch_finally,    // The number of newlines after a try-catch-finally block that isn't followed by a brace close
-                                     // (0 = No change)
-   UO_nl_between_get_set,            // The number of newlines between the get/set/add/remove handlers in C#
-                                     // (0 = No change)
-   UO_nl_around_cs_property,         // The number of newlines before and after a property, indexer or event decl
-                                     // (0 = No change)
-   UO_nl_property_brace,             // Add or remove newline between C# property and the '{'
+   UO_nl_after_struct,                 // The number of newlines after '}' or ';' of a struct/enum/union definition
+   UO_nl_before_class,                 // The number of newlines before a class definition
+   UO_nl_after_class,                  // The number of newlines after '}' or ';' of a class definition
+   UO_nl_max,                          // maximum consecutive newlines (3 = 2 blank lines)
+   UO_nl_before_access_spec,           // The number of newlines before a 'private:', 'public:', 'protected:', 'signals:', or 'slots:' label
+                                       // Will not change the newline count if after a brace open (0 = No change)
+   UO_nl_after_access_spec,            // The number of newlines after a 'private:', 'public:', 'protected:', 'signals:' or 'slots:' label
+                                       // (0 = No change)
+   UO_nl_comment_func_def,             // The number of newlines between a function def and the function comment
+                                       // (0 = No change)
+   UO_nl_after_try_catch_finally,      // The number of newlines after a try-catch-finally block that isn't followed by a brace close
+                                       // (0 = No change)
+   UO_nl_between_get_set,              // The number of newlines between the get/set/add/remove handlers in C#
+                                       // (0 = No change)
+   UO_nl_around_cs_property,           // The number of newlines before and after a property, indexer or event decl
+                                       // (0 = No change)
+   UO_nl_property_brace,               // Add or remove newline between C# property and the '{'
 
-   UO_eat_blanks_after_open_brace,   // remove blank lines after {
-   UO_eat_blanks_before_close_brace, // remove blank lines before }
-   UO_nl_remove_extra_newlines,      // How aggressively to remove extra newlines not in preproc
-                                     // (0 = No change)
-                                     // (1 = Remove most newlines not handled by other config)
-                                     // (2 = Remove all newlines and reformat completely by config)
+   UO_eat_blanks_after_open_brace,     // remove blank lines after {
+   UO_eat_blanks_before_close_brace,   // remove blank lines before }
+   UO_nl_remove_extra_newlines,        // How aggressively to remove extra newlines not in preproc
+                                       // (0 = No change)
+                                       // (1 = Remove most newlines not handled by other config)
+                                       // (2 = Remove all newlines and reformat completely by config)
 
 
    /*
     * code modifying options (non-whitespace)
     */
 
-   UO_mod_paren_on_return,        // add or remove paren on return
-   UO_mod_full_brace_nl,          // max number of newlines to span w/o braces
-   UO_mod_full_brace_if,          // add or remove braces on single-line if
+   UO_mod_paren_on_return,          // add or remove paren on return
+   UO_mod_full_brace_nl,            // max number of newlines to span w/o braces
+   UO_mod_full_brace_if,            // add or remove braces on single-line if
    UO_mod_full_brace_if_chain,      // make all if/elseif/else statements in a chain be braced or not
    UO_mod_full_brace_if_chain_only, // make all if/elseif/else statements in a chain with at least one 'else' or 'else if' fully braced
-   UO_mod_full_brace_for,         // add or remove braces on single-line for
-   UO_mod_full_brace_do,          // add or remove braces on single-line do
-   UO_mod_full_brace_while,       // add or remove braces on single-line while
-   UO_mod_full_brace_using,       // add or remove braces on using
-   UO_mod_pawn_semicolon,         // add optional semicolons
-   UO_mod_full_brace_function,    // add optional braces on Pawn functions
+   UO_mod_full_brace_for,           // add or remove braces on single-line for
+   UO_mod_full_brace_do,            // add or remove braces on single-line do
+   UO_mod_full_brace_while,         // add or remove braces on single-line while
+   UO_mod_full_brace_using,         // add or remove braces on using
+   UO_mod_pawn_semicolon,           // add optional semicolons
+   UO_mod_full_brace_function,      // add optional braces on Pawn functions
    UO_mod_full_paren_if_bool,
-   UO_mod_remove_extra_semicolon, // remove extra semicolons
+   UO_mod_remove_extra_semicolon,   // remove extra semicolons
    UO_mod_add_long_function_closebrace_comment,
    UO_mod_add_long_switch_closebrace_comment,
    UO_mod_add_long_ifdef_else_comment,
@@ -764,25 +764,25 @@ enum uncrustify_options
    UO_mod_sort_oc_property_getter_weight,       // Determines weight of getter type (getter=)
    UO_mod_sort_oc_property_setter_weight,       // Determines weight of setter type (setter=)
    UO_mod_sort_oc_property_nullability_weight,  // Determines weight of nullability type (nullable/nonnull)
-    
+
    /*
     * Comment modifications
     */
 
-   UO_cmt_width,                // column to wrap comments
-   UO_cmt_reflow_mode,          // comment reflow style
-   UO_cmt_indent_multi,         // change left indent of multiline comments
-   UO_cmt_star_cont,            // put a star on subsequent comment lines
-   UO_cmt_sp_before_star_cont,  // # of spaces for subsequent comment lines (before possible star)
-   UO_cmt_sp_after_star_cont,   // # of spaces for subsequent comment lines (after star)
-   UO_cmt_cpp_to_c,             // convert CPP comments to C comments
-   UO_cmt_cpp_group,            // if UO_cmt_cpp_to_c, try to group in one big C comment
-   UO_cmt_c_group,              // try to group neighboring C comments
-   UO_cmt_c_nl_start,           // put a blank /* at the start of a combined group
-   UO_cmt_c_nl_end,             // put a newline before the */ in a combined group
-   UO_cmt_cpp_nl_start,         // put a blank /* at the start of a converted group
-   UO_cmt_cpp_nl_end,           // put a newline before the */ in a converted group
-   UO_cmt_multi_check_last,     // no space after '*' prefix when comment start and end are of equal length
+   UO_cmt_width,                   // column to wrap comments
+   UO_cmt_reflow_mode,             // comment reflow style
+   UO_cmt_indent_multi,            // change left indent of multiline comments
+   UO_cmt_star_cont,               // put a star on subsequent comment lines
+   UO_cmt_sp_before_star_cont,     // # of spaces for subsequent comment lines (before possible star)
+   UO_cmt_sp_after_star_cont,      // # of spaces for subsequent comment lines (after star)
+   UO_cmt_cpp_to_c,                // convert CPP comments to C comments
+   UO_cmt_cpp_group,               // if UO_cmt_cpp_to_c, try to group in one big C comment
+   UO_cmt_c_group,                 // try to group neighboring C comments
+   UO_cmt_c_nl_start,              // put a blank /* at the start of a combined group
+   UO_cmt_c_nl_end,                // put a newline before the */ in a combined group
+   UO_cmt_cpp_nl_start,            // put a blank /* at the start of a converted group
+   UO_cmt_cpp_nl_end,              // put a newline before the */ in a converted group
+   UO_cmt_multi_check_last,        // no space after '*' prefix when comment start and end are of equal length
    UO_cmt_multi_first_len_minimum, // controls the xtra_indent for the last line of a multi-line comment
                                    // For multi-line comments with a '*' lead, remove leading spaces if the first and last lines of
                                    // the comment are the same length AND if the length is bigger as the first_len minimum.
@@ -808,18 +808,18 @@ enum uncrustify_options
    UO_mod_add_long_namespace_closebrace_comment,
    UO_mod_add_long_class_closebrace_comment,
 
-   UO_use_indent_func_call_param,     // use/don't use indent_func_call_param Guy 2015-09-24
-   UO_use_indent_continue_only_once,  // The value of the indentation for a continuation line is calculate
-                                      // differently if the line is:
-                                      //   a declaration :your case with QString fileName ...
-                                      //   an assigment  :your case with pSettings = new QSettings( ...
-                                      // At the second case the option value might be used twice:
-                                      //   at the assigment
-                                      //   at the function call (if present)
-                                      // To prevent the double use of the option value, use this option
-                                      // with the value "true". Guy 2016-05-16
+   UO_use_indent_func_call_param,           // use/don't use indent_func_call_param Guy 2015-09-24
+   UO_use_indent_continue_only_once,        // The value of the indentation for a continuation line is calculate
+                                            // differently if the line is:
+                                            //   a declaration :your case with QString fileName ...
+                                            //   an assigment  :your case with pSettings = new QSettings( ...
+                                            // At the second case the option value might be used twice:
+                                            //   at the assigment
+                                            //   at the function call (if present)
+                                            // To prevent the double use of the option value, use this option
+                                            // with the value "true". Guy 2016-05-16
 
-   UO_use_options_overriding_for_qt_macros,     // SIGNAL/SLOT Qt macros have special formatting options. See options_for_QT.cpp for details.
+   UO_use_options_overriding_for_qt_macros, // SIGNAL/SLOT Qt macros have special formatting options. See options_for_QT.cpp for details.
 
    /* Levels to attach to warnings (log_sev_t; default : LWARN) */
    UO_warn_level_tabs_found_in_verbatim_string_literals, // if UO_string_replace_tab_chars is set, then we should warn about cases we can't do the replacement

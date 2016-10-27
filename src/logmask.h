@@ -25,7 +25,7 @@ typedef std::bitset<256>   log_mask_t;
  * @param sev  The severity to check
  * @return     true (is set) or false (not set)
  */
-static_inline bool logmask_test(const log_mask_t& mask, log_sev_t sev)
+static_inline bool logmask_test(const log_mask_t &mask, log_sev_t sev)
 {
    return(mask.test(sev));
 }
@@ -37,7 +37,7 @@ static_inline bool logmask_test(const log_mask_t& mask, log_sev_t sev)
  * @param sev     The severity to check
  * @param value   true (set bit) or false (clear bit)
  */
-static_inline void logmask_set_sev(log_mask_t& mask, log_sev_t sev, bool value)
+static_inline void logmask_set_sev(log_mask_t &mask, log_sev_t sev, bool value)
 {
    mask.set(sev, value);
 }
@@ -48,7 +48,7 @@ static_inline void logmask_set_sev(log_mask_t& mask, log_sev_t sev, bool value)
  *
  * @param value   true (set bit) or false (clear bit)
  */
-static_inline void logmask_set_all(log_mask_t& mask, bool value)
+static_inline void logmask_set_all(log_mask_t &mask, bool value)
 {
    if (value)
    {
@@ -71,7 +71,7 @@ static_inline void logmask_set_all(log_mask_t& mask, bool value)
  * @param size the size of the buffer
  * @return     buf (pass through)
  */
-char *logmask_to_str(const log_mask_t& mask, char *buf, int size);
+char *logmask_to_str(const log_mask_t &mask, char *buf, int size);
 
 
 /**
@@ -80,6 +80,6 @@ char *logmask_to_str(const log_mask_t& mask, char *buf, int size);
  * @param str     The string to parse
  * @param mask    The mask to populate
  */
-void logmask_from_string(const char *str, log_mask_t& mask);
+void logmask_from_string(const char *str, log_mask_t &mask);
 
 #endif /* LOGMASK_H_INCLUDED */

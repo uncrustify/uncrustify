@@ -86,7 +86,7 @@ const char *Args::Param(const char *token)
  * @param token   The token string to match
  * @return        NULL or the pointer to the string
  */
-const char *Args::Params(const char *token, int& index)
+const char *Args::Params(const char *token, int &index)
 {
    int idx;
    int token_len;
@@ -168,7 +168,7 @@ void Args::SetUsed(int idx)
  * @param idx  Pointer to the index
  * @return     NULL (done) or the pointer to the string
  */
-const char *Args::Unused(int& index)
+const char *Args::Unused(int &index)
 {
    int idx;
 

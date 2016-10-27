@@ -31,7 +31,7 @@ void do_braces(void)
 {
    LOG_FUNC_ENTRY();
    if (cpd.settings[UO_mod_full_brace_if_chain].b
-       || cpd.settings[UO_mod_full_brace_if_chain_only].b )
+       || cpd.settings[UO_mod_full_brace_if_chain_only].b)
    {
       mod_full_brace_if_chain();
    }
@@ -670,7 +670,7 @@ static void convert_vbrace_to_brace(void)
  * Returns the added chunk or NULL
  */
 chunk_t *insert_comment_after(chunk_t *ref, c_token_t cmt_type,
-                              const unc_text& cmt_text)
+                              const unc_text &cmt_text)
 {
    LOG_FUNC_ENTRY();
    chunk_t new_cmt;
@@ -711,7 +711,7 @@ chunk_t *insert_comment_after(chunk_t *ref, c_token_t cmt_type,
  * Collect the text into txt that contains the full tag name.
  * Mainly for collecting namespace 'a.b.c' or function 'foo::bar()' names.
  */
-static void append_tag_name(unc_text& txt, chunk_t *pc)
+static void append_tag_name(unc_text &txt, chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
    chunk_t *tmp = pc;
@@ -760,11 +760,11 @@ void add_long_closebrace_comment(void)
    chunk_t  *tmp;
    chunk_t  *br_open;
    chunk_t  *br_close;
-   chunk_t  *fcn_pc    = NULL;
-   chunk_t  *sw_pc     = NULL;
-   chunk_t  *ns_pc     = NULL;
-   chunk_t *cl_pc      = NULL;
-   chunk_t *cl_semi_pc = NULL;
+   chunk_t  *fcn_pc     = NULL;
+   chunk_t  *sw_pc      = NULL;
+   chunk_t  *ns_pc      = NULL;
+   chunk_t  *cl_pc      = NULL;
+   chunk_t  *cl_semi_pc = NULL;
    unc_text xstr;
    int      nl_count;
 
@@ -819,8 +819,9 @@ void add_long_closebrace_comment(void)
             {
                cl_semi_pc = tmp;
                tmp        = chunk_get_next(tmp);
-               if (tmp != NULL && !chunk_is_newline(tmp)) {
-                  tmp = cl_semi_pc;
+               if (tmp != NULL && !chunk_is_newline(tmp))
+               {
+                  tmp        = cl_semi_pc;
                   cl_semi_pc = NULL;
                }
             }

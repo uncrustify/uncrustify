@@ -15,7 +15,7 @@
 /**
  * See if all characters are ASCII (0-127)
  */
-static bool is_ascii(const vector<UINT8>& data, int& non_ascii_cnt, int& zero_cnt)
+static bool is_ascii(const vector<UINT8> &data, int &non_ascii_cnt, int &zero_cnt)
 {
    non_ascii_cnt = zero_cnt = 0;
    for (int idx = 0; idx < (int)data.size(); idx++)
@@ -36,7 +36,7 @@ static bool is_ascii(const vector<UINT8>& data, int& non_ascii_cnt, int& zero_cn
 /**
  * Convert the array of bytes into an array of ints
  */
-static bool decode_bytes(const vector<UINT8>& in_data, deque<int>& out_data)
+static bool decode_bytes(const vector<UINT8> &in_data, deque<int> &out_data)
 {
    out_data.resize(in_data.size());
    for (int idx = 0; idx < (int)in_data.size(); idx++)
@@ -47,7 +47,7 @@ static bool decode_bytes(const vector<UINT8>& in_data, deque<int>& out_data)
 }
 
 
-void encode_utf8(int ch, vector<UINT8>& res)
+void encode_utf8(int ch, vector<UINT8> &res)
 {
    if (ch < 0)
    {
@@ -105,7 +105,7 @@ void encode_utf8(int ch, vector<UINT8>& res)
  * Decode UTF-8 sequences from in_data and put the chars in out_data.
  * If there are any decoding errors, then return false.
  */
-static bool decode_utf8(const vector<UINT8>& in_data, deque<int>& out_data)
+static bool decode_utf8(const vector<UINT8> &in_data, deque<int> &out_data)
 {
    int idx = 0;
    int ch, tmp, cnt;
@@ -187,7 +187,7 @@ static bool decode_utf8(const vector<UINT8>& in_data, deque<int>& out_data)
 /**
  * Extract 2 bytes from the stream and increment idx by 2
  */
-static int get_word(const vector<UINT8>& in_data, int& idx, bool be)
+static int get_word(const vector<UINT8> &in_data, int &idx, bool be)
 {
    int ch;
 
@@ -213,7 +213,7 @@ static int get_word(const vector<UINT8>& in_data, int& idx, bool be)
  * Sets enc based on the BOM.
  * Must have the BOM as the first two bytes.
  */
-static bool decode_utf16(const vector<UINT8>& in_data, deque<int>& out_data, CharEncoding& enc)
+static bool decode_utf16(const vector<UINT8> &in_data, deque<int> &out_data, CharEncoding &enc)
 {
    out_data.clear();
 
@@ -298,7 +298,7 @@ static bool decode_utf16(const vector<UINT8>& in_data, deque<int>& out_data, Cha
  * If found, set enc and return true.
  * Sets enc to ENC_ASCII and returns false if not found.
  */
-static bool decode_bom(const vector<UINT8>& in_data, CharEncoding& enc)
+static bool decode_bom(const vector<UINT8> &in_data, CharEncoding &enc)
 {
    enc = ENC_ASCII;
    if (in_data.size() >= 2)
@@ -329,7 +329,7 @@ static bool decode_bom(const vector<UINT8>& in_data, CharEncoding& enc)
 /**
  * Figure out the encoding and convert to an int sequence
  */
-bool decode_unicode(const vector<UINT8>& in_data, deque<int>& out_data, CharEncoding& enc, bool& has_bom)
+bool decode_unicode(const vector<UINT8> &in_data, deque<int> &out_data, CharEncoding &enc, bool &has_bom)
 {
    /* check for a BOM */
    if (decode_bom(in_data, enc))
@@ -518,7 +518,7 @@ void write_char(int ch)
 }
 
 
-void write_string(const unc_text& text)
+void write_string(const unc_text &text)
 {
    for (int idx = 0; idx < (int)text.size(); idx++)
    {
