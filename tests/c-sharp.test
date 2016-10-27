@@ -58,3 +58,4 @@
 12003 ben.cfg                  cs/fncall_as_ctor_in_attr.cs
 12004 verbatim_strings.cfg     cs/verbatim_strings.cs
 
+12101 bug_i_679.cfg            cs/bug_i_679.cs

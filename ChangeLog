@@ -1,5 +1,14 @@
+Change highlights in uncrustify-0.xx (x 2016)
+-------------------------------------------------------------------------------
+
+New:
+
+New options:
+  - indent_using_block                             Oct 20
+
 Bugfix:
  - Issue #679 is fixed
+ - Proposal #679 is implemented
 
 Change highlights in uncrustify-0.64 (October 2016)
 -------------------------------------------------------------------------------

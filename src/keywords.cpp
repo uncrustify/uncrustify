@@ -50,7 +50,7 @@ static const chunk_tag_t keywords[] =
    { "Q_FOREACH",        CT_FOR,          LANG_CPP                                                                    }, // guy 2015-09-23
    { "Q_FOREVER",        CT_Q_FOREVER,    LANG_CPP                                                                    }, // guy 2015-10-18
    { "Q_GADGET",         CT_Q_GADGET,     LANG_CPP                                                                    }, // guy 2016-05-04
-   { "Q_OBJECT",         CT_Q_OBJECT,     LANG_CPP                                                                    }, // guy 2015-10-16
+   { "Q_OBJECT",         CT_COMMENT_EMBED, LANG_CPP                                                                   },
    { "_Bool",            CT_TYPE,         LANG_CPP                                                                    },
    { "_Complex",         CT_TYPE,         LANG_CPP                                                                    },
    { "_Imaginary",       CT_TYPE,         LANG_CPP                                                                    },
