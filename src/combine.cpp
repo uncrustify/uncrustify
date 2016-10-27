@@ -36,7 +36,7 @@ static chunk_t *mark_variable_definition(chunk_t *start);
 static void mark_define_expressions(void);
 static void process_returns(void);
 static chunk_t *process_return(chunk_t *pc);
-static int mark_where_chunk(chunk_t *pc, c_token_t parent_type, int flags);
+static UINT64 mark_where_chunk(chunk_t *pc, c_token_t parent_type, UINT64 flags);
 static void mark_class_ctor(chunk_t *pclass);
 static void mark_namespace(chunk_t *pns);
 static void mark_cpp_constructor(chunk_t *pc);
@@ -4010,7 +4010,7 @@ static void mark_cpp_constructor(chunk_t *pc)
 } // mark_cpp_constructor
 
 
-static int mark_where_chunk(chunk_t *pc, c_token_t parent_type, int flags)
+static UINT64 mark_where_chunk(chunk_t *pc, c_token_t parent_type, UINT64 flags)
 {
    /* TODO: should have options to control spacing around the ':' as well as newline ability for the
       constraint clauses (should it break up a 'where A : B where C : D' on the same line? wrap? etc.) */
@@ -4108,7 +4108,7 @@ static void mark_class_ctor(chunk_t *start)
    }
 
    /* Find the open brace, abort on semicolon */
-   int flags = 0;
+   UINT64 flags = 0;
    while ((pc != NULL) && (pc->type != CT_BRACE_OPEN))
    {
       LOG_FMT(LFTOR, " [%s]", pc->text());
