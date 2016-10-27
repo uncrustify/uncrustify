@@ -919,10 +919,14 @@ static bool parse_string(tok_ctx& ctx, chunk_t& pc, int quote_idx, bool allow_es
  * @param pc   The structure to update, str is an input.
  * @return     Whether a string was parsed
  */
-static bool parse_cs_string(tok_ctx& ctx, chunk_t& pc)
+static bool parse_cs_verbatim_string(tok_ctx& ctx, chunk_t& pc, bool interpolated = false)
 {
    pc.str = ctx.get();
    pc.str.append(ctx.get());
+   if (interpolated)
+   {
+      pc.str.append(ctx.get());
+   }
    pc.type = CT_STRING;
 
    bool should_escape_tabs = cpd.settings[UO_string_replace_tab_chars].b;
@@ -980,6 +984,10 @@ static bool parse_cs_string(tok_ctx& ctx, chunk_t& pc)
  */
 static bool parse_cs_interpolated_string(tok_ctx& ctx, chunk_t& pc)
 {
+   // NOTE: this function is broken, don't use. interpolated strings come in regular and verbatim styles, but
+   // this function assumes only verbatim. probably many more edge cases. don't really see the point of this
+   // special handling, when all we need to do is handle the initial $. this is done properly in parse_cs_string.
+
    pc.str = ctx.get();        // '$'
    pc.str.append(ctx.get());  // '"'
    pc.type = CT_STRING;
@@ -1038,6 +1046,32 @@ static bool parse_cs_interpolated_string(tok_ctx& ctx, chunk_t& pc)
 
    return(true);
 } // parse_cs_interpolated_string
+
+
+static bool parse_cs_string(tok_ctx& ctx, chunk_t& pc)
+{
+   // for interpolated strings, keep the $ bound to the "
+   if (ctx.peek() == '$')
+   {
+      if (ctx.peek(1) == '@' && ctx.peek(2) == '"')
+      {
+         // interpolated verbatim string
+         return parse_cs_verbatim_string(ctx, pc, true);
+      }
+      else if (ctx.peek(1) == '"')
+      {
+         // interpolated regular string
+         return parse_string(ctx, pc, 1, true);
+      }
+   }
+   else if (ctx.peek() == '@' && ctx.peek(1) == '"')
+   {
+      // ordinary verbatim string
+      return parse_cs_verbatim_string(ctx, pc);
+   }
+
+   return false;
+}
 
 
 /**
@@ -1586,27 +1620,19 @@ static bool parse_next(tok_ctx& ctx, chunk_t& pc)
       return(true);
    }
 
-   /* Check for C# literal strings, ie @"hello" and identifiers @for*/
-   if ((cpd.lang_flags & LANG_CS) && (ctx.peek() == '@'))
+   if (cpd.lang_flags & LANG_CS)
    {
-      if (ctx.peek(1) == '"')
+      if (parse_cs_string(ctx, pc))
       {
-         parse_cs_string(ctx, pc);
          return(true);
       }
+
       /* check for non-keyword identifiers such as @if @switch, etc */
-      if (CharTable::IsKw1(ctx.peek(1)))
+      if ((ctx.peek() == '@') && CharTable::IsKw1(ctx.peek(1)))
       {
          parse_word(ctx, pc, true);
          return(true);
       }
-   }
-
-   /* Check for C# Interpolated strings */
-   if ((cpd.lang_flags & LANG_CS) && (ctx.peek() == '$') && (ctx.peek(1) == '"'))
-   {
-      parse_cs_interpolated_string(ctx, pc);
-      return(true);
    }
 
    /* handle VALA """ strings """ */
