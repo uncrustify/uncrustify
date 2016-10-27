@@ -250,6 +250,7 @@
 32003 issue_633_typename.cfg           cpp/issue_633_typename.cpp
 32004 empty.cfg                        cpp/issue_624_angle.cpp
 32005 align_var_class_span.cfg         cpp/issue_633_typename.cpp
+32006 bug_i_687.cfg                    cpp/bug_i_687.cpp
 
 33000 tab-0-11.cfg                     cpp/tab-0.cpp
 33001 tab-1-11.cfg                     cpp/tab-1.cpp

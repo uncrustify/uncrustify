@@ -31,6 +31,14 @@ void prot_the_line(int theLine, unsigned int actual_line)
          {
             LOG_FMT(LGUY, "(%d) %d, <NL>(%d)\n", theLine, actual_line, pc->nl_count);
          }
+         else if (pc->type == CT_VBRACE_CLOSE)
+         {
+            LOG_FMT(LGUY, "(%d) %d, <CT_VBRACE_CLOSE>\n", theLine, actual_line);
+         }
+         else if (pc->type == CT_VBRACE_OPEN)
+         {
+            LOG_FMT(LGUY, "(%d) %d, <CT_VBRACE_OPEN>\n", theLine, actual_line);
+         }
          else
          {
             LOG_FMT(LGUY, "(%d) %d, %s, col=%d\n", theLine, actual_line, pc->text(), pc->column);
