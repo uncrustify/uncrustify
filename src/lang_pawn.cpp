@@ -428,7 +428,7 @@ static chunk_t *pawn_process_func_def(chunk_t *pc)
       /* do not insert a vbrace before a preproc */
       if (last->flags & PCF_IN_PREPROC)
       {
-         return last;
+         return(last);
       }
 
       chunk_t chunk;

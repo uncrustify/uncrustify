@@ -12,10 +12,10 @@
 #include "options_for_QT.h"
 
 // for the modification of options within the SIGNAL/SLOT call. guy 2015-09-22
-bool     QT_SIGNAL_SLOT_found       = false;
-int      QT_SIGNAL_SLOT_level       = 0;
-bool     restoreValues              = false;
-argval_t SaveUO_sp_inside_fparen_A  = AV_NOT_DEFINED;
+bool     QT_SIGNAL_SLOT_found      = false;
+int      QT_SIGNAL_SLOT_level      = 0;
+bool     restoreValues             = false;
+argval_t SaveUO_sp_inside_fparen_A = AV_NOT_DEFINED;
 // Issue #481
 // connect( timer,SIGNAL( timeout() ),this,SLOT( timeoutImage() ) );
 argval_t SaveUO_sp_inside_fparens_A = AV_NOT_DEFINED;

@@ -35,7 +35,7 @@ struct tok_info
 
 struct tok_ctx
 {
-   tok_ctx(const deque<int>& d)
+   tok_ctx(const deque<int> &d)
       : data(d)
    {
    }
@@ -48,7 +48,7 @@ struct tok_ctx
    }
 
 
-   void save(tok_info& info)
+   void save(tok_info &info)
    {
       info = c;
    }
@@ -61,7 +61,7 @@ struct tok_ctx
    }
 
 
-   void restore(const tok_info& info)
+   void restore(const tok_info &info)
    {
       c = info;
    }
@@ -131,12 +131,12 @@ struct tok_ctx
       return(false);
    }
 
-   const deque<int>& data;
+   const deque<int> &data;
    tok_info          c; /* current */
    tok_info          s; /* saved */
 };
 
-static bool parse_string(tok_ctx& ctx, chunk_t& pc, int quote_idx, bool allow_escape);
+static bool parse_string(tok_ctx &ctx, chunk_t &pc, int quote_idx, bool allow_escape);
 
 
 /**
@@ -160,7 +160,7 @@ static bool parse_string(tok_ctx& ctx, chunk_t& pc, int quote_idx, bool allow_es
  * @param pc   The structure to update, str is an input.
  * @return     Whether a string was parsed
  */
-static bool d_parse_string(tok_ctx& ctx, chunk_t& pc)
+static bool d_parse_string(tok_ctx &ctx, chunk_t &pc)
 {
    int ch = ctx.peek();
 
@@ -293,7 +293,7 @@ static bool d_parse_string(tok_ctx& ctx, chunk_t& pc)
  * @param pc   The structure to update, str is an input.
  * @return     Whether a comment was parsed
  */
-static bool parse_comment(tok_ctx& ctx, chunk_t& pc)
+static bool parse_comment(tok_ctx &ctx, chunk_t &pc)
 {
    int  ch;
    bool is_d    = (cpd.lang_flags & LANG_D) != 0;          // forcing value to bool
@@ -507,7 +507,7 @@ static bool parse_comment(tok_ctx& ctx, chunk_t& pc)
  * @param pc   The structure to update, str is an input.
  * @return     Whether a placeholder was parsed.
  */
-static bool parse_code_placeholder(tok_ctx& ctx, chunk_t& pc)
+static bool parse_code_placeholder(tok_ctx &ctx, chunk_t &pc)
 {
    int last2 = 0, last1 = 0;
 
@@ -545,7 +545,7 @@ static bool parse_code_placeholder(tok_ctx& ctx, chunk_t& pc)
  * If for a string, explicitly exclude common format and scan specifiers, ie,
  * PRIx32 and SCNx64.
  */
-static void parse_suffix(tok_ctx& ctx, chunk_t& pc, bool forstring = false)
+static void parse_suffix(tok_ctx &ctx, chunk_t &pc, bool forstring = false)
 {
    if (CharTable::IsKw1(ctx.peek()))
    {
@@ -645,7 +645,7 @@ static bool is_hex_(int ch)
  * @param pc   The structure to update, str is an input.
  * @return     Whether a number was parsed
  */
-static bool parse_number(tok_ctx& ctx, chunk_t& pc)
+static bool parse_number(tok_ctx &ctx, chunk_t &pc)
 {
    int  tmp;
    bool is_float;
@@ -682,7 +682,7 @@ static bool parse_number(tok_ctx& ctx, chunk_t& pc)
          pc_temp.str.append(ch);
       }
       pc_length = pc_temp.len();
-      ch = pc_temp.str[pc_length - 1];
+      ch        = pc_temp.str[pc_length - 1];
       ctx.restore();
       LOG_FMT(LGUY98, "%s:(%d)pc_temp:%s\n", __func__, __LINE__, pc_temp.text());
       if (ch == 'h')
@@ -692,9 +692,9 @@ static bool parse_number(tok_ctx& ctx, chunk_t& pc)
          did_hex = true;
          do
          {
-            pc.str.append(ctx.get());  /* store the rest */
+            pc.str.append(ctx.get()); /* store the rest */
          } while (is_hex_(ctx.peek()));
-         pc.str.append(ctx.get());  /* store the h */
+         pc.str.append(ctx.get());    /* store the h */
          LOG_FMT(LGUY98, "%s:(%d)pc:%s\n", __func__, __LINE__, pc.text());
       }
       else
@@ -839,7 +839,7 @@ static bool parse_number(tok_ctx& ctx, chunk_t& pc)
  * @param pc   The structure to update, str is an input.
  * @return     Whether a string was parsed
  */
-static bool parse_string(tok_ctx& ctx, chunk_t& pc, int quote_idx, bool allow_escape)
+static bool parse_string(tok_ctx &ctx, chunk_t &pc, int quote_idx, bool allow_escape)
 {
    bool escaped = 0;
    int  end_ch;
@@ -919,7 +919,7 @@ static bool parse_string(tok_ctx& ctx, chunk_t& pc, int quote_idx, bool allow_es
  * @param pc   The structure to update, str is an input.
  * @return     Whether a string was parsed
  */
-static bool parse_cs_string(tok_ctx& ctx, chunk_t& pc)
+static bool parse_cs_string(tok_ctx &ctx, chunk_t &pc)
 {
    pc.str = ctx.get();
    pc.str.append(ctx.get());
@@ -967,7 +967,7 @@ static bool parse_cs_string(tok_ctx& ctx, chunk_t& pc)
    }
 
    return(true);
-}
+} // parse_cs_string
 
 
 /**
@@ -978,7 +978,7 @@ static bool parse_cs_string(tok_ctx& ctx, chunk_t& pc)
  * @param pc   The structure to update, str is an input.
  * @return     Whether a string was parsed
  */
-static bool parse_cs_interpolated_string(tok_ctx& ctx, chunk_t& pc)
+static bool parse_cs_interpolated_string(tok_ctx &ctx, chunk_t &pc)
 {
    pc.str = ctx.get();        // '$'
    pc.str.append(ctx.get());  // '"'
@@ -1045,7 +1045,7 @@ static bool parse_cs_interpolated_string(tok_ctx& ctx, chunk_t& pc)
  *
  * @param pc   The structure to update, str is an input.
  */
-static void parse_verbatim_string(tok_ctx& ctx, chunk_t& pc)
+static void parse_verbatim_string(tok_ctx &ctx, chunk_t &pc)
 {
    pc.type = CT_STRING;
 
@@ -1076,7 +1076,7 @@ static void parse_verbatim_string(tok_ctx& ctx, chunk_t& pc)
 }
 
 
-static bool tag_compare(const deque<int>& d, int a_idx, int b_idx, int len)
+static bool tag_compare(const deque<int> &d, int a_idx, int b_idx, int len)
 {
    if (a_idx != b_idx)
    {
@@ -1096,7 +1096,7 @@ static bool tag_compare(const deque<int>& d, int a_idx, int b_idx, int len)
  * Parses a C++0x 'R' string. R"( xxx )" R"tag(  )tag" u8R"(x)" uR"(x)"
  * Newlines may be in the string.
  */
-static bool parse_cr_string(tok_ctx& ctx, chunk_t& pc, int q_idx)
+static bool parse_cr_string(tok_ctx &ctx, chunk_t &pc, int q_idx)
 {
    int cnt;
    int tag_idx = ctx.c.idx + q_idx + 1;
@@ -1162,7 +1162,7 @@ static bool parse_cr_string(tok_ctx& ctx, chunk_t& pc, int q_idx)
  * @param pc   The structure to update, str is an input.
  * @return     Whether a word was parsed (always true)
  */
-bool parse_word(tok_ctx& ctx, chunk_t& pc, bool skipcheck)
+bool parse_word(tok_ctx &ctx, chunk_t &pc, bool skipcheck)
 {
    int             ch;
    static unc_text intr_txt("@interface");
@@ -1240,7 +1240,7 @@ bool parse_word(tok_ctx& ctx, chunk_t& pc, bool skipcheck)
  * @param pc   The structure to update, str is an input.
  * @return     Whether whitespace was parsed
  */
-static bool parse_whitespace(tok_ctx& ctx, chunk_t& pc)
+static bool parse_whitespace(tok_ctx &ctx, chunk_t &pc)
 {
    int nl_count = 0;
    int ch       = -2;
@@ -1303,7 +1303,7 @@ static bool parse_whitespace(tok_ctx& ctx, chunk_t& pc)
  * If there is nothing but whitespace until the newline, then this is a
  * backslash newline
  */
-static bool parse_bs_newline(tok_ctx& ctx, chunk_t& pc)
+static bool parse_bs_newline(tok_ctx &ctx, chunk_t &pc)
 {
    ctx.save();
    ctx.get(); /* skip the '\' */
@@ -1336,7 +1336,7 @@ static bool parse_bs_newline(tok_ctx& ctx, chunk_t& pc)
  * This is not the same as parse_whitespace() because it only consumes until
  * a single newline is encountered.
  */
-static bool parse_newline(tok_ctx& ctx)
+static bool parse_newline(tok_ctx &ctx)
 {
    ctx.save();
 
@@ -1366,7 +1366,7 @@ static bool parse_newline(tok_ctx& ctx)
  * A generic whitespace check should be good enough.
  * Do not change the pattern.
  */
-static void parse_pawn_pattern(tok_ctx& ctx, chunk_t& pc, c_token_t tt)
+static void parse_pawn_pattern(tok_ctx &ctx, chunk_t &pc, c_token_t tt)
 {
    pc.str.clear();
    pc.type = tt;
@@ -1386,7 +1386,7 @@ static void parse_pawn_pattern(tok_ctx& ctx, chunk_t& pc, c_token_t tt)
 }
 
 
-static bool parse_ignored(tok_ctx& ctx, chunk_t& pc)
+static bool parse_ignored(tok_ctx &ctx, chunk_t &pc)
 {
    int nl_count = 0;
 
@@ -1470,10 +1470,11 @@ static bool parse_ignored(tok_ctx& ctx, chunk_t& pc)
  * @param pc      The structure to update, str is an input.
  * @return        true/false - whether anything was parsed
  */
-static bool parse_next(tok_ctx& ctx, chunk_t& pc)
+static bool parse_next(tok_ctx &ctx, chunk_t &pc)
 {
    const chunk_tag_t *punc;
    int               ch1;
+
    //chunk_t           pc_temp;
 
    if (!ctx.more())
@@ -1801,7 +1802,7 @@ static bool parse_next(tok_ctx& ctx, chunk_t& pc)
  * All the tokens are inserted before ref. If ref is NULL, they are inserted
  * at the end of the list.  Line numbers are relative to the start of the data.
  */
-void tokenize(const deque<int>& data, chunk_t *ref)
+void tokenize(const deque<int> &data, chunk_t *ref)
 {
    tok_ctx            ctx(data);
    chunk_t            chunk;

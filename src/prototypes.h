@@ -23,7 +23,7 @@ c_token_t find_token_name(const char *text);
 void log_pcf_flags(log_sev_t sev, UINT64 flags);
 const char *path_basename(const char *path);
 int path_dirname_len(const char *filename);
-const char *get_file_extension(int& idx);
+const char *get_file_extension(int &idx);
 void print_extensions(FILE *pfile);
 const char *extension_add(const char *ext_text, const char *lang_text);
 
@@ -94,7 +94,7 @@ void quick_align_again(void);
  */
 void do_braces(void);
 void add_long_closebrace_comment(void);
-chunk_t *insert_comment_after(chunk_t *ref, c_token_t cmt_type, const unc_text& cmt_text);
+chunk_t *insert_comment_after(chunk_t *ref, c_token_t cmt_type, const unc_text &cmt_text);
 
 
 /*
@@ -169,7 +169,7 @@ chunk_t *newline_add_between(chunk_t *start, chunk_t *end);
 /*
  *  tokenize.cpp
  */
-void tokenize(const deque<int>& data, chunk_t *ref);
+void tokenize(const deque<int> &data, chunk_t *ref);
 
 
 /*
@@ -250,9 +250,9 @@ void print_universal_indent_cfg(FILE *pfile);
  */
 void write_bom();
 void write_char(int ch);
-void write_string(const unc_text& text);
-bool decode_unicode(const vector<UINT8>& in_data, deque<int>& out_data, CharEncoding& enc, bool& has_bom);
-void encode_utf8(int ch, vector<UINT8>& res);
+void write_string(const unc_text &text);
+bool decode_unicode(const vector<UINT8> &in_data, deque<int> &out_data, CharEncoding &enc, bool &has_bom);
+void encode_utf8(int ch, vector<UINT8> &res);
 
 
 /*
@@ -263,8 +263,8 @@ void remove_extra_semicolons(void);
 /*
  * compat_posix.cpp / compat_win32.cpp
  */
-bool unc_getenv(const char *name, std::string& str);
-bool unc_homedir(std::string& home);
+bool unc_getenv(const char *name, std::string &str);
+bool unc_homedir(std::string &home);
 
 
 /**

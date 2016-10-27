@@ -10,7 +10,7 @@
 #include <cstdlib>
 
 
-void ChunkStack::Set(const ChunkStack& cs)
+void ChunkStack::Set(const ChunkStack &cs)
 {
    m_cse.resize(cs.m_cse.size());
    for (int idx = 0; idx < (int)m_cse.size(); idx++)

@@ -33,7 +33,7 @@ struct cmt_reflow
 
 static chunk_t *output_comment_c(chunk_t *pc);
 static chunk_t *output_comment_cpp(chunk_t *pc);
-static void add_comment_text(const unc_text& text, cmt_reflow& cmt, bool esc_close);
+static void add_comment_text(const unc_text &text, cmt_reflow &cmt, bool esc_close);
 
 #define LOG_CONTTEXT() \
    LOG_FMT(LCONTTEXT, "%s:%d set cont_text to '%s'\n", __func__, __LINE__, cmt.cont_text.c_str())
@@ -128,7 +128,7 @@ static void add_text(const char *ascii_text)
 }
 
 
-static void add_text(const unc_text& text, bool is_ignored = false)
+static void add_text(const unc_text &text, bool is_ignored = false)
 {
    for (int idx = 0; idx < text.size(); idx++)
    {
@@ -149,7 +149,7 @@ static void add_text(const unc_text& text, bool is_ignored = false)
  * Count the number of characters to the end of the next chunk of text.
  * If it exceeds the limit, return true.
  */
-static bool next_word_exceeds_limit(const unc_text& text, int idx)
+static bool next_word_exceeds_limit(const unc_text &text, int idx)
 {
    int length = 0;
 
@@ -477,7 +477,7 @@ void output_text(FILE *pfile)
  * @param line the comment line
  * @return 0=not present, >0=number of chars that are part of the lead
  */
-static int cmt_parse_lead(const unc_text& line, bool is_last)
+static int cmt_parse_lead(const unc_text &line, bool is_last)
 {
    int len = 0;
 
@@ -553,7 +553,7 @@ static int cmt_parse_lead(const unc_text& line, bool is_last)
  * @param start_col Starting column
  * @return          cmt.xtra_indent is set to 0 or 1
  */
-static void calculate_comment_body_indent(cmt_reflow& cmt, const unc_text& str)
+static void calculate_comment_body_indent(cmt_reflow &cmt, const unc_text &str)
 {
    int idx       = 0;
    int first_len = 0;
@@ -728,7 +728,8 @@ static chunk_t *get_prev_oc_class(chunk_t *pc)
    return(NULL);
 }
 
-static int next_up(const unc_text& text, int idx, unc_text& tag)
+
+static int next_up(const unc_text &text, int idx, unc_text &tag)
 {
    int offs = 0;
 
@@ -758,8 +759,8 @@ static int next_up(const unc_text& text, int idx, unc_text& tag)
  * If the last char on a line is a ':' or '.', then the next line won't be
  * combined.
  */
-static void add_comment_text(const unc_text& text,
-                             cmt_reflow& cmt, bool esc_close)
+static void add_comment_text(const unc_text &text,
+                             cmt_reflow &cmt, bool esc_close)
 {
    bool was_star  = false;
    bool was_slash = false;
@@ -848,7 +849,7 @@ static void add_comment_text(const unc_text& text,
 } // add_comment_text
 
 
-static void output_cmt_start(cmt_reflow& cmt, chunk_t *pc)
+static void output_cmt_start(cmt_reflow &cmt, chunk_t *pc)
 {
    cmt.pc          = pc;
    cmt.column      = pc->column;
@@ -913,7 +914,7 @@ static void output_cmt_start(cmt_reflow& cmt, chunk_t *pc)
  *  2. There is exactly one newline between then
  *  3. They are indented to the same level
  */
-static bool can_combine_comment(chunk_t *pc, cmt_reflow& cmt)
+static bool can_combine_comment(chunk_t *pc, cmt_reflow &cmt)
 {
    /* We can't combine if there is something other than a newline next */
    if (pc->parent_type == CT_COMMENT_START)
@@ -1158,7 +1159,7 @@ static chunk_t *output_comment_cpp(chunk_t *first)
 } // output_comment_cpp
 
 
-static void cmt_trim_whitespace(unc_text& line, bool in_preproc)
+static void cmt_trim_whitespace(unc_text &line, bool in_preproc)
 {
    /* Remove trailing whitespace on the line */
    while ((line.size() > 0) &&
@@ -1492,7 +1493,7 @@ static void output_comment_multi(chunk_t *pc)
 } // output_comment_multi
 
 
-static bool kw_fcn_filename(chunk_t *cmt, unc_text& out_txt)
+static bool kw_fcn_filename(chunk_t *cmt, unc_text &out_txt)
 {
    (void)cmt;
    out_txt.append(path_basename(cpd.filename));
@@ -1500,10 +1501,12 @@ static bool kw_fcn_filename(chunk_t *cmt, unc_text& out_txt)
 }
 
 
-static bool kw_fcn_class(chunk_t *cmt, unc_text& out_txt)
+static bool kw_fcn_class(chunk_t *cmt, unc_text &out_txt)
 {
    chunk_t *tmp = NULL;
-   if ((cpd.lang_flags & LANG_CPP) && (cpd.lang_flags & LANG_OC)) {
+
+   if ((cpd.lang_flags & LANG_CPP) && (cpd.lang_flags & LANG_OC))
+   {
       chunk_t *fcn = get_next_function(cmt);
       if (fcn->type == CT_OC_MSG_DECL)
       {
@@ -1535,7 +1538,8 @@ static bool kw_fcn_class(chunk_t *cmt, unc_text& out_txt)
                break;
             }
             tmp = chunk_get_next(tmp);
-            if (tmp) {
+            if (tmp)
+            {
                out_txt.append("::");
                out_txt.append(tmp->str);
             }
@@ -1544,10 +1548,10 @@ static bool kw_fcn_class(chunk_t *cmt, unc_text& out_txt)
       return(true);
    }
    return(false);
-}
+} // kw_fcn_class
 
 
-static bool kw_fcn_message(chunk_t *cmt, unc_text& out_txt)
+static bool kw_fcn_message(chunk_t *cmt, unc_text &out_txt)
 {
    chunk_t *fcn = get_next_function(cmt);
 
@@ -1585,10 +1589,12 @@ static bool kw_fcn_message(chunk_t *cmt, unc_text& out_txt)
 } // kw_fcn_message
 
 
-static bool kw_fcn_category(chunk_t *cmt, unc_text& out_txt)
+static bool kw_fcn_category(chunk_t *cmt, unc_text &out_txt)
 {
    chunk_t *category = get_prev_category(cmt);
-   if (category) {
+
+   if (category)
+   {
       out_txt.append('(');
       out_txt.append(category->str);
       out_txt.append(')');
@@ -1597,10 +1603,12 @@ static bool kw_fcn_category(chunk_t *cmt, unc_text& out_txt)
 } // kw_fcn_category
 
 
-static bool kw_fcn_scope(chunk_t *cmt, unc_text& out_txt)
+static bool kw_fcn_scope(chunk_t *cmt, unc_text &out_txt)
 {
    chunk_t *scope = get_next_scope(cmt);
-   if (scope) {
+
+   if (scope)
+   {
       out_txt.append(scope->str);
       return(true);
    }
@@ -1608,7 +1616,7 @@ static bool kw_fcn_scope(chunk_t *cmt, unc_text& out_txt)
 } // kw_fcn_scope
 
 
-static bool kw_fcn_function(chunk_t *cmt, unc_text& out_txt)
+static bool kw_fcn_function(chunk_t *cmt, unc_text &out_txt)
 {
    chunk_t *fcn = get_next_function(cmt);
 
@@ -1618,7 +1626,8 @@ static bool kw_fcn_function(chunk_t *cmt, unc_text& out_txt)
       {
          out_txt.append("operator ");
       }
-      if (fcn->prev && fcn->prev->type == CT_DESTRUCTOR) {
+      if (fcn->prev && fcn->prev->type == CT_DESTRUCTOR)
+      {
          out_txt.append('~');
       }
       out_txt.append(fcn->str);
@@ -1634,7 +1643,7 @@ static bool kw_fcn_function(chunk_t *cmt, unc_text& out_txt)
  * If the arg list is '()' or '(void)', then no @params are added.
  * Likewise, if the return value is 'void', then no @return is added.
  */
-static bool kw_fcn_javaparam(chunk_t *cmt, unc_text& out_txt)
+static bool kw_fcn_javaparam(chunk_t *cmt, unc_text &out_txt)
 {
    chunk_t *fcn = get_next_function(cmt);
 
@@ -1765,7 +1774,7 @@ static bool kw_fcn_javaparam(chunk_t *cmt, unc_text& out_txt)
 } // kw_fcn_javaparam
 
 
-static bool kw_fcn_fclass(chunk_t *cmt, unc_text& out_txt)
+static bool kw_fcn_fclass(chunk_t *cmt, unc_text &out_txt)
 {
    chunk_t *fcn = get_next_function(cmt);
 
@@ -1814,7 +1823,7 @@ static bool kw_fcn_fclass(chunk_t *cmt, unc_text& out_txt)
 struct kw_subst_t
 {
    const char *tag;
-   bool       (*func)(chunk_t *cmt, unc_text& out_txt);
+   bool       (*func)(chunk_t *cmt, unc_text &out_txt);
 };
 
 
@@ -1983,7 +1992,7 @@ static void output_comment_multi_simple(chunk_t *pc, bool kw_subst)
 /**
  * This renders the #if condition to a string buffer.
  */
-static void generate_if_conditional_as_text(unc_text& dst, chunk_t *ifdef)
+static void generate_if_conditional_as_text(unc_text &dst, chunk_t *ifdef)
 {
    chunk_t *pc;
    int     column = -1;

@@ -141,7 +141,7 @@ static int get_split_pri(c_token_t tok)
  *  - ? :
  *  - function open paren not followed by close paren
  */
-static void try_split_here(cw_entry& ent, chunk_t *pc)
+static void try_split_here(cw_entry &ent, chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
    chunk_t *next;
@@ -241,11 +241,12 @@ static bool split_line(chunk_t *start)
    /**
     * break at maximum line length if ls_code_width is true
     */
-   if (start->flags & PCF_ONE_LINER) {
+   if (start->flags & PCF_ONE_LINER)
+   {
       LOG_FMT(LSPLIT, " ** ONCE LINER SPLIT **\n");
       undo_one_liner(start);
       newlines_cleanup_braces(false);
-      return false;
+      return(false);
    }
 
    if (cpd.settings[UO_ls_code_width].b)
@@ -258,7 +259,7 @@ static bool split_line(chunk_t *start)
       split_for_stmt(start);
       if (!is_past_width(start))
       {
-         return true;
+         return(true);
       }
       LOG_FMT(LSPLIT, "%s: for split didn't work\n", __func__);
    }
@@ -277,11 +278,11 @@ static bool split_line(chunk_t *start)
          split_fcn_params_full(start);
          if (!is_past_width(start))
          {
-            return true;
+            return(true);
          }
       }
       split_fcn_params(start);
-      return true;
+      return(true);
    }
 
    /**
@@ -367,7 +368,7 @@ static bool split_line(chunk_t *start)
          LOG_FMT(LSPLIT, " ** NO GO **\n");
 
          /*TODO: Add in logic to handle 'hard' limits by backing up a token */
-         return true;
+         return(true);
       }
    }
 
@@ -386,7 +387,7 @@ static bool split_line(chunk_t *start)
 
       split_before_chunk(pc);
    }
-   return true;
+   return(true);
 } // split_line
 
 

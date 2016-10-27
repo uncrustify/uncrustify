@@ -321,7 +321,7 @@ void reindent_line(chunk_t *pc, int column)
  * @param frm  The parse frame
  * @param pc   The chunk causing the push
  */
-static void indent_pse_push(struct parse_frame& frm, chunk_t *pc)
+static void indent_pse_push(struct parse_frame &frm, chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
    static int ref = 0;
@@ -369,7 +369,7 @@ static void indent_pse_push(struct parse_frame& frm, chunk_t *pc)
  * @param frm  The parse frame
  * @param pc   The chunk causing the push
  */
-static void indent_pse_pop(struct parse_frame& frm, chunk_t *pc)
+static void indent_pse_pop(struct parse_frame &frm, chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
    /* Bump up the index and initialize it */
@@ -444,15 +444,15 @@ static int token_indent(c_token_t type)
 }
 
 
-#define indent_column_set(X)                              \
-   do {                                                   \
-      indent_column = (X);                                \
+#define indent_column_set(X)                                                \
+   do {                                                                     \
+      indent_column = (X);                                                  \
       LOG_FMT(LINDENT2, "%s:[line %d], orig_line=%d, indent_column = %d\n", \
-              __func__, __LINE__, pc->orig_line, indent_column);                   \
+              __func__, __LINE__, pc->orig_line, indent_column);            \
    } while (0)
 
 
-static int calc_indent_continue(struct parse_frame& frm, int pse_tos)
+static int calc_indent_continue(struct parse_frame &frm, int pse_tos)
 {
    int ic = cpd.settings[UO_indent_continue].n;
 
@@ -566,8 +566,8 @@ void indent_text(void)
               pc->orig_line, pc->orig_col, __LINE__, pc->text());
       log_pcf_flags(LGUY, pc->flags);
       if ((cpd.settings[UO_use_options_overriding_for_qt_macros].b) &&
-         ((strcmp(pc->text(), "SIGNAL") == 0) ||
-          (strcmp(pc->text(), "SLOT") == 0)))
+          ((strcmp(pc->text(), "SIGNAL") == 0) ||
+           (strcmp(pc->text(), "SLOT") == 0)))
       {  // guy 2015-09-22
 #ifdef DEBUG
          LOG_FMT(LGUY, "(%d) ", __LINE__);
@@ -1020,7 +1020,7 @@ void indent_text(void)
          if (cpd.settings[UO_indent_cpp_lambda_body].b &&
              pc->parent_type == CT_CPP_LAMBDA)
          {
-            frm.pse[frm.pse_tos].brace_indent = frm.pse[frm.pse_tos-1].indent;
+            frm.pse[frm.pse_tos].brace_indent = frm.pse[frm.pse_tos - 1].indent;
             indent_column                     = frm.pse[frm.pse_tos].brace_indent;
             frm.pse[frm.pse_tos].indent       = indent_column + indent_size;
             frm.pse[frm.pse_tos].indent_tab   = frm.pse[frm.pse_tos].indent;
@@ -1029,7 +1029,7 @@ void indent_text(void)
             frm.pse[frm.pse_tos - 1].indent_tmp = frm.pse[frm.pse_tos].indent_tmp;
          }
          else if ((cpd.lang_flags & LANG_CS) && cpd.settings[UO_indent_cs_delegate_brace].b &&
-             (pc->parent_type == CT_LAMBDA || pc->parent_type == CT_DELEGATE))
+                  (pc->parent_type == CT_LAMBDA || pc->parent_type == CT_DELEGATE))
          {
             frm.pse[frm.pse_tos].brace_indent = 1 + ((pc->brace_level + 1) * indent_size);
             indent_column                     = frm.pse[frm.pse_tos].brace_indent;
@@ -1041,8 +1041,8 @@ void indent_text(void)
          }
          /* any '{' that is inside of a '(' overrides the '(' indent */
          else if (!cpd.settings[UO_indent_paren_open_brace].b &&
-             chunk_is_paren_open(frm.pse[frm.pse_tos - 1].pc) &&
-             chunk_is_newline(chunk_get_next_nc(pc)))
+                  chunk_is_paren_open(frm.pse[frm.pse_tos - 1].pc) &&
+                  chunk_is_newline(chunk_get_next_nc(pc)))
          {
             /* FIXME: I don't know how much of this is necessary, but it seems to work */
             frm.pse[frm.pse_tos].brace_indent = 1 + (pc->brace_level * indent_size);
@@ -1225,9 +1225,10 @@ void indent_text(void)
             next = chunk_get_next_ncnl(pc);
             if (!chunk_is_newline_between(pc, next))
             {
-                if (cpd.settings[UO_indent_token_after_brace].b) {
-                    frm.pse[frm.pse_tos].indent = next->column;
-                }
+               if (cpd.settings[UO_indent_token_after_brace].b)
+               {
+                  frm.pse[frm.pse_tos].indent = next->column;
+               }
             }
             frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
             frm.pse[frm.pse_tos].open_line  = pc->orig_line;
@@ -1440,7 +1441,7 @@ void indent_text(void)
                (pc->type == CT_FPAREN_OPEN) ||
                (pc->type == CT_SQUARE_OPEN) ||
                (pc->type == CT_ANGLE_OPEN)
-              )
+               )
       {
          /* Open parens and squares - never update indent_column, unless right
           * after a newline.
@@ -1627,7 +1628,7 @@ void indent_text(void)
                   else
                   {
                      frm.pse[frm.pse_tos].indent      = calc_indent_continue(frm, frm.pse_tos);
-                     vardefcol = frm.pse[frm.pse_tos].indent;                   // use the same variable for the next line
+                     vardefcol                        = frm.pse[frm.pse_tos].indent; // use the same variable for the next line
                      frm.pse[frm.pse_tos].indent_cont = true;
                   }
                }
@@ -1691,7 +1692,7 @@ void indent_text(void)
       }
       else if (pc->type == CT_C99_MEMBER)
       {
-            // nothing to do
+         // nothing to do
       }
       else
       {
@@ -2346,12 +2347,12 @@ static void indent_comment(chunk_t *pc, int col)
    prev = chunk_get_prev(nl);
    if (chunk_is_comment(prev) && (nl->nl_count == 1))
    {
-      int coldiff = prev->orig_col - pc->orig_col;
-      chunk_t *pp = chunk_get_prev(prev);
+      int     coldiff = prev->orig_col - pc->orig_col;
+      chunk_t *pp     = chunk_get_prev(prev);
 
       /* Here we want to align comments that are relatively close one to another
        * but not when the previous comment is on the same line with a preproc */
-      if ((coldiff <= 3) && (coldiff >= -3) && 
+      if ((coldiff <= 3) && (coldiff >= -3) &&
           !chunk_is_preproc(pp))
       {
          reindent_line(pc, prev->column);
