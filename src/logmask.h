@@ -16,7 +16,7 @@
 
 
 /** A simple array of 256 bits */
-typedef std::bitset<256>   log_mask_t;
+typedef std::bitset<256> log_mask_t;
 
 
 /**

@@ -48,7 +48,7 @@ void unc_add_option(const char *name, uncrustify_options id, argtype_e type,
                     const char *short_desc, const char *long_desc,
                     int min_val, int max_val)
 {
-#define OptionMaxLength 60
+#define OptionMaxLength    60
    int lengthOfTheOption = strlen(name);
    if (lengthOfTheOption > OptionMaxLength)
    {

@@ -20,7 +20,7 @@
 using namespace std;
 
 /* Dynamic keyword map */
-typedef map<string, c_token_t>   dkwmap;
+typedef map<string, c_token_t> dkwmap;
 static dkwmap dkwm;
 
 
