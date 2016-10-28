@@ -840,6 +840,13 @@ void indent_text(void)
             {
                indent_pse_pop(frm, pc);
             }
+            /* End ObjC class colon stuff inside of generic definition (like Test<T1: id<T3>>) */
+            if ((frm.pse[frm.pse_tos].type == CT_CLASS_COLON) &&
+                (pc->type == CT_ANGLE_CLOSE) &&
+                (pc->parent_type == CT_OC_GENERIC_SPEC))
+            {
+               indent_pse_pop(frm, pc);
+            }
 
             /* a case is ended with another case or a close brace */
             if ((frm.pse[frm.pse_tos].type == CT_CASE) &&

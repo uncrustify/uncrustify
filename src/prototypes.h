@@ -176,6 +176,7 @@ void tokenize(const deque<int> &data, chunk_t *ref);
  *  tokenize_cleanup.cpp
  */
 void tokenize_cleanup(void);
+void split_off_angle_close(chunk_t *pc);
 
 
 /*
