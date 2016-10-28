@@ -352,3 +352,4 @@
 33202 initlist_leading_commas.cfg      cpp/initlist_leading_commas.cpp
 
 34001 nl_before_after.cfg              cpp/nl_before_after.h
+34002 bug_i_793.cfg                    cpp/bug_i_793.cpp

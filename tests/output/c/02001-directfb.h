@@ -233,7 +233,7 @@ typedef int                  register_t __attribute__((__mode__(__word__)));
 
 #1 "/usr/include/bits/sigset.h" 1 3 4
 #23 "/usr/include/bits/sigset.h" 3 4
-typedef int   __sig_atomic_t;
+typedef int __sig_atomic_t;
 
 
 
@@ -245,7 +245,7 @@ typedef struct
 
 
 
-typedef __sigset_t   sigset_t;
+typedef __sigset_t sigset_t;
 
 
 
@@ -268,11 +268,11 @@ struct timeval
 #47 "/usr/include/sys/select.h" 2 3 4
 
 
-typedef __suseconds_t   suseconds_t;
+typedef __suseconds_t suseconds_t;
 
 
 
-typedef long int        __fd_mask;
+typedef long int      __fd_mask;
 #67 "/usr/include/sys/select.h" 3 4
 typedef struct
 {
@@ -281,7 +281,7 @@ typedef struct
 
 
 
-typedef __fd_mask   fd_mask;
+typedef __fd_mask fd_mask;
 #99 "/usr/include/sys/select.h" 3 4
 
 #109 "/usr/include/sys/select.h" 3 4
@@ -331,15 +331,15 @@ __attribute__((__nothrow__)) gnu_dev_makedev(unsigned int __major, unsigned int 
 
 #220 "/usr/include/sys/types.h" 2 3 4
 #231 "/usr/include/sys/types.h" 3 4
-typedef __blkcnt_t     blkcnt_t;
+typedef __blkcnt_t   blkcnt_t;
 
 
 
-typedef __fsblkcnt_t   fsblkcnt_t;
+typedef __fsblkcnt_t fsblkcnt_t;
 
 
 
-typedef __fsfilcnt_t   fsfilcnt_t;
+typedef __fsfilcnt_t fsfilcnt_t;
 #266 "/usr/include/sys/types.h" 3 4
 #1 "/usr/include/bits/pthreadtypes.h" 1 3 4
 #23 "/usr/include/bits/pthreadtypes.h" 3 4
@@ -351,7 +351,7 @@ struct __sched_param
 };
 #24 "/usr/include/bits/pthreadtypes.h" 2 3 4
 
-typedef int   __atomic_lock_t;
+typedef int __atomic_lock_t;
 
 
 struct _pthread_fastlock
@@ -362,7 +362,7 @@ struct _pthread_fastlock
 
 
 
-typedef struct _pthread_descr_struct * _pthread_descr;
+typedef struct _pthread_descr_struct *_pthread_descr;
 
 
 
@@ -381,7 +381,7 @@ typedef struct __pthread_attr_s
 
 
 
-__extension__ typedef long long   __pthread_cond_align_t;
+__extension__ typedef long long __pthread_cond_align_t;
 
 
 
@@ -402,7 +402,7 @@ typedef struct
 } pthread_condattr_t;
 
 
-typedef unsigned int   pthread_key_t;
+typedef unsigned int pthread_key_t;
 
 
 
@@ -424,9 +424,9 @@ typedef struct
 
 
 
-typedef int                 pthread_once_t;
+typedef int               pthread_once_t;
 #152 "/usr/include/bits/pthreadtypes.h" 3 4
-typedef unsigned long int   pthread_t;
+typedef unsigned long int pthread_t;
 #267 "/usr/include/sys/types.h" 2 3 4
 
 
@@ -452,8 +452,8 @@ typedef struct
 typedef void (*__kernel_sighandler_t)(int);
 
 
-typedef int   __kernel_key_t;
-typedef int   __kernel_mqd_t;
+typedef int __kernel_key_t;
+typedef int __kernel_mqd_t;
 
 #1 "/usr/lib/gcc/i486-linux-gnu/4.0.3/include/asm/posix_types.h" 1 3 4
 #14 "/usr/lib/gcc/i486-linux-gnu/4.0.3/include/asm/posix_types.h" 3 4
@@ -461,35 +461,35 @@ typedef int   __kernel_mqd_t;
 #11 "/usr/include/asm/posix_types.h" 3 4
 #1 "/usr/include/asm-i386/posix_types.h" 1 3 4
 #10 "/usr/include/asm-i386/posix_types.h" 3 4
-typedef unsigned long    __kernel_ino_t;
-typedef unsigned short   __kernel_mode_t;
-typedef unsigned short   __kernel_nlink_t;
-typedef long             __kernel_off_t;
-typedef int              __kernel_pid_t;
-typedef unsigned short   __kernel_ipc_pid_t;
-typedef unsigned short   __kernel_uid_t;
-typedef unsigned short   __kernel_gid_t;
-typedef unsigned int     __kernel_size_t;
-typedef int              __kernel_ssize_t;
-typedef int              __kernel_ptrdiff_t;
-typedef long             __kernel_time_t;
-typedef long             __kernel_suseconds_t;
-typedef long             __kernel_clock_t;
-typedef int              __kernel_timer_t;
-typedef int              __kernel_clockid_t;
-typedef int              __kernel_daddr_t;
-typedef char *           __kernel_caddr_t;
-typedef unsigned short   __kernel_uid16_t;
-typedef unsigned short   __kernel_gid16_t;
-typedef unsigned int     __kernel_uid32_t;
-typedef unsigned int     __kernel_gid32_t;
+typedef unsigned long  __kernel_ino_t;
+typedef unsigned short __kernel_mode_t;
+typedef unsigned short __kernel_nlink_t;
+typedef long           __kernel_off_t;
+typedef int            __kernel_pid_t;
+typedef unsigned short __kernel_ipc_pid_t;
+typedef unsigned short __kernel_uid_t;
+typedef unsigned short __kernel_gid_t;
+typedef unsigned int   __kernel_size_t;
+typedef int            __kernel_ssize_t;
+typedef int            __kernel_ptrdiff_t;
+typedef long           __kernel_time_t;
+typedef long           __kernel_suseconds_t;
+typedef long           __kernel_clock_t;
+typedef int            __kernel_timer_t;
+typedef int            __kernel_clockid_t;
+typedef int            __kernel_daddr_t;
+typedef char *         __kernel_caddr_t;
+typedef unsigned short __kernel_uid16_t;
+typedef unsigned short __kernel_gid16_t;
+typedef unsigned int   __kernel_uid32_t;
+typedef unsigned int   __kernel_gid32_t;
 
-typedef unsigned short   __kernel_old_uid_t;
-typedef unsigned short   __kernel_old_gid_t;
-typedef unsigned short   __kernel_old_dev_t;
+typedef unsigned short __kernel_old_uid_t;
+typedef unsigned short __kernel_old_gid_t;
+typedef unsigned short __kernel_old_dev_t;
 
 
-typedef long long        __kernel_loff_t;
+typedef long long      __kernel_loff_t;
 
 
 typedef struct
@@ -506,34 +506,34 @@ typedef struct
 
 
 
-typedef unsigned short         umode_t;
+typedef unsigned short       umode_t;
 
 
 
-typedef __signed__ char        __s8;
-typedef unsigned char          __u8;
+typedef __signed__ char      __s8;
+typedef unsigned char        __u8;
 
-typedef __signed__ short       __s16;
-typedef unsigned short         __u16;
+typedef __signed__ short     __s16;
+typedef unsigned short       __u16;
 
-typedef __signed__ int         __s32;
-typedef unsigned int           __u32;
+typedef __signed__ int       __s32;
+typedef unsigned int         __u32;
 
 
-typedef __signed__ long long   __s64;
-typedef unsigned long long     __u64;
+typedef __signed__ long long __s64;
+typedef unsigned long long   __u64;
 #12 "/usr/include/asm/types.h" 2 3 4
 #7 "/usr/include/linux/types.h" 2 3 4
 #133 "/usr/include/linux/types.h" 3 4
-typedef __u16                  __le16;
-typedef __u16                  __be16;
-typedef __u32                  __le32;
-typedef __u32                  __be32;
+typedef __u16                __le16;
+typedef __u16                __be16;
+typedef __u32                __le32;
+typedef __u32                __be32;
 
 
 
-typedef __u64                  __le64;
-typedef __u64                  __be64;
+typedef __u64                __le64;
+typedef __u64                __be64;
 #6 "/usr/include/directfb/dfb_types.h" 2
 #32 "/usr/include/directfb/directfb.h" 2
 #1 "/usr/include/sys/time.h" 1 3 4
@@ -552,7 +552,7 @@ struct timezone
    int tz_dsttime;
 };
 
-typedef struct timezone *__restrict   __timezone_ptr_t;
+typedef struct timezone *__restrict __timezone_ptr_t;
 #72 "/usr/include/sys/time.h" 3 4
 extern int gettimeofday(struct timeval *__restrict __tv,
                         __timezone_ptr_t __tz) __attribute__((__nothrow__));
@@ -592,7 +592,7 @@ struct itimerval
 
 
 
-typedef int   __itimer_which_t;
+typedef int __itimer_which_t;
 
 
 
@@ -1130,55 +1130,55 @@ const char *DirectFBCheckVersion(unsigned int required_major,
 
 
 
-typedef struct _IDirectFB                IDirectFB;
+typedef struct _IDirectFB              IDirectFB;
 
 
 
-typedef struct _IDirectFBScreen          IDirectFBScreen;
+typedef struct _IDirectFBScreen        IDirectFBScreen;
 
 
 
-typedef struct _IDirectFBDisplayLayer    IDirectFBDisplayLayer;
+typedef struct _IDirectFBDisplayLayer  IDirectFBDisplayLayer;
 
 
 
-typedef struct _IDirectFBSurface         IDirectFBSurface;
+typedef struct _IDirectFBSurface       IDirectFBSurface;
 
 
 
-typedef struct _IDirectFBPalette         IDirectFBPalette;
+typedef struct _IDirectFBPalette       IDirectFBPalette;
 
 
 
-typedef struct _IDirectFBWindow          IDirectFBWindow;
+typedef struct _IDirectFBWindow        IDirectFBWindow;
 
 
 
-typedef struct _IDirectFBInputDevice     IDirectFBInputDevice;
+typedef struct _IDirectFBInputDevice   IDirectFBInputDevice;
 
 
 
-typedef struct _IDirectFBEventBuffer     IDirectFBEventBuffer;
+typedef struct _IDirectFBEventBuffer   IDirectFBEventBuffer;
 
 
 
-typedef struct _IDirectFBFont            IDirectFBFont;
+typedef struct _IDirectFBFont          IDirectFBFont;
 
 
 
-typedef struct _IDirectFBImageProvider   IDirectFBImageProvider;
+typedef struct _IDirectFBImageProvider IDirectFBImageProvider;
 
 
 
-typedef struct _IDirectFBVideoProvider   IDirectFBVideoProvider;
+typedef struct _IDirectFBVideoProvider IDirectFBVideoProvider;
 
 
 
-typedef struct _IDirectFBDataBuffer      IDirectFBDataBuffer;
+typedef struct _IDirectFBDataBuffer    IDirectFBDataBuffer;
 
 
 
-typedef struct _IDirectFBGL              IDirectFBGL;
+typedef struct _IDirectFBGL            IDirectFBGL;
 
 
 
@@ -1359,13 +1359,13 @@ DFBResult DirectFBCreate(
    );
 
 
-typedef unsigned int   DFBScreenID;
-typedef unsigned int   DFBDisplayLayerID;
-typedef unsigned int   DFBDisplayLayerSourceID;
-typedef unsigned int   DFBWindowID;
-typedef unsigned int   DFBInputDeviceID;
+typedef unsigned int DFBScreenID;
+typedef unsigned int DFBDisplayLayerID;
+typedef unsigned int DFBDisplayLayerSourceID;
+typedef unsigned int DFBWindowID;
+typedef unsigned int DFBInputDeviceID;
 
-typedef __u32          DFBDisplayLayerIDs;
+typedef __u32        DFBDisplayLayerIDs;
 #428 "/usr/include/directfb/directfb.h"
 typedef enum
 {

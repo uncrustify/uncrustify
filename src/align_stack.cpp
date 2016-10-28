@@ -346,7 +346,22 @@ void AlignStack::Flush()
    const ChunkStack::Entry *ce = NULL;
    chunk_t                 *pc;
 
+   LOG_FMT(LAS, "%s: m_aligned.Len()=%d\n", __func__, m_aligned.Len());
    LOG_FMT(LAS, "Flush (min=%d, max=%d)\n", m_min_col, m_max_col);
+   if (m_aligned.Len() == 1)
+   {
+      // check if we have *one* typedef in the line
+      pc = m_aligned.Get(0)->m_pc;
+      chunk_t *temp = chunk_get_prev_type(pc, CT_TYPEDEF, pc->level);
+      if (temp != NULL)
+      {
+         if (pc->orig_line == temp->orig_line )
+         {
+             // reset the gap only for *this* stack
+             m_gap = 1;
+         }
+      }
+   }
 
    m_last_added = 0;
    m_max_col    = 0;
