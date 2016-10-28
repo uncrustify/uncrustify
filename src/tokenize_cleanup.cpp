@@ -478,7 +478,7 @@ void tokenize_cleanup(void)
           ((*pc->str == '$') && (pc->type != CT_SQL_WORD) &&
             /* but avoid breaking tokenization for C# 6 interpolated strings. */
             ((cpd.lang_flags & LANG_CS) == 0 ||
-               pc->type == CT_STRING && !pc->str.startswith("$\"") && !pc->str.startswith("$@\""))))
+               ((pc->type == CT_STRING) && (!pc->str.startswith("$\"")) && (!pc->str.startswith("$@\""))))))
       {
          tmp = chunk_get_prev(pc);
          if (chunk_is_newline(tmp))
