@@ -475,7 +475,10 @@ void tokenize_cleanup(void)
 
       /* Look for <newline> 'EXEC' 'SQL' */
       if ((chunk_is_str(pc, "EXEC", 4) && chunk_is_str(next, "SQL", 3)) ||
-          ((*pc->str == '$') && (pc->type != CT_SQL_WORD)))
+          ((*pc->str == '$') && (pc->type != CT_SQL_WORD) &&
+            /* but avoid breaking tokenization for C# 6 interpolated strings. */
+            ((cpd.lang_flags & LANG_CS) == 0 ||
+               pc->type == CT_STRING && !pc->str.startswith("$\"") && !pc->str.startswith("$@\""))))
       {
          tmp = chunk_get_prev(pc);
          if (chunk_is_newline(tmp))
