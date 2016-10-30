@@ -15,6 +15,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <cerrno>
+#include <stack>
 #include "unc_ctype.h"
 
 struct tok_info
@@ -911,92 +912,186 @@ static bool parse_string(tok_ctx& ctx, chunk_t& pc, int quote_idx, bool allow_es
    return(true);
 } // parse_string
 
+enum cs_string_t
+{
+   CS_STRING_NONE          = 0,
+   CS_STRING_STRING        = 1 << 0,   // is any kind of string
+   CS_STRING_VERBATIM      = 1 << 1,   // @"" style string
+   CS_STRING_INTERPOLATED  = 1 << 2,   // $"" or $@"" style string
+};
+
+static cs_string_t operator |= (cs_string_t& value, cs_string_t or)
+{
+   return value = static_cast<cs_string_t>(value | or);
+}
+
+static cs_string_t parse_cs_string_start(tok_ctx& ctx, chunk_t& pc)
+{
+   cs_string_t stringType = CS_STRING_NONE;
+   int offset = 0;
+
+   if (ctx.peek(offset) == '$')
+   {
+      stringType |= CS_STRING_INTERPOLATED;
+      ++offset;
+   }
+
+   if (ctx.peek(offset) == '@')
+   {
+      stringType |= CS_STRING_VERBATIM;
+      ++offset;
+   }
+
+   if (ctx.peek(offset) == '"')
+   {
+      stringType |= CS_STRING_STRING;
+
+      pc.type = CT_STRING;
+
+      for (int i = 0; i <= offset; ++i)
+         pc.str.append(ctx.get());
+   }
+
+   return stringType;
+}
 
 /**
- * Literal string, ends with single "
- * Two "" don't end the string.
- *
- * @param pc   The structure to update, str is an input.
- * @return     Whether a string was parsed
+ * C# strings are complex enough (mostly due to interpolation and nesting) that they need a custom parser.
  */
-static bool parse_cs_verbatim_string(tok_ctx& ctx, chunk_t& pc, bool interpolated = false)
+static bool parse_cs_string(tok_ctx& ctx, chunk_t& pc)
 {
-   pc.str = ctx.get();
-   pc.str.append(ctx.get());
-   if (interpolated)
+   cs_string_t stringType = parse_cs_string_start(ctx, pc);
+   if (stringType == 0)
+      return false;
+
+   // an interpolated string can contain {expressions}, which can contain $"strings", which in turn
+   // can contain {expressions}, so we must track both as they are interleaved, in order to properly
+   // parse the outermost string.
+
+   struct CsStringParseState
    {
-      pc.str.append(ctx.get());
-   }
-   pc.type = CT_STRING;
+      cs_string_t type;
+      int braceDepth;
+
+      CsStringParseState(cs_string_t stringType)
+      {
+         type = stringType;
+         braceDepth = 0;
+      }
+   };
+
+   std::stack<CsStringParseState> parseState; // each entry is a nested string
+   parseState.push(CsStringParseState(stringType));
 
    bool should_escape_tabs = cpd.settings[UO_string_replace_tab_chars].b;
 
-   /* go until we hit a zero (end of file) or a single " */
    while (ctx.more())
    {
+      if (parseState.top().braceDepth > 0)
+      {
+         // all we can do when in an expr is look for expr close with }, or a new string opening. must do this first
+         // so we can peek and potentially consume chars for new string openings, before the ch=get() happens later,
+         // which is needed for newline processing.
+
+         if (ctx.peek() == '}')
+         {
+            pc.str.append(ctx.get());
+
+            if (ctx.peek() == '}')
+               pc.str.append(ctx.get()); // in interpolated string, `}}` is escape'd `}`
+            else
+               --parseState.top().braceDepth;
+
+            continue;
+         }
+
+         stringType = parse_cs_string_start(ctx, pc);
+         if (stringType)
+         {
+            parseState.push(CsStringParseState(stringType));
+            continue;
+         }
+      }
+
+      int lastcol = ctx.c.col;
       int ch = ctx.get();
+
       pc.str.append(ch);
-      if ((ch == '\n') || (ch == '\r'))
+
+      if (ch == '\n')
       {
          pc.type = CT_STRING_MULTI;
          pc.nl_count++;
       }
-      else if (ch == '\t')
+      else if (ch == '\r')
       {
-         if (should_escape_tabs && !cpd.warned_unable_string_replace_tab_chars)
+         pc.type = CT_STRING_MULTI;
+      }
+      else if (parseState.top().braceDepth > 0)
+      {
+         // do nothing. if we're in a brace, we only want the newline handling, and skip the rest.
+      }
+      else if ((ch == '\t') && should_escape_tabs)
+      {
+         if (parseState.top().type & CS_STRING_VERBATIM)
          {
-            cpd.warned_unable_string_replace_tab_chars = true;
-
-            log_sev_t warnlevel = (log_sev_t)cpd.settings[UO_warn_level_tabs_found_in_verbatim_string_literals].n;
-
-            /* a tab char can't be replaced with \\t because escapes don't work in here-strings. best we can do is warn. */
-            LOG_FMT(warnlevel, "%s:%d Detected non-replaceable tab char in literal string\n", cpd.filename, pc.orig_line);
-            if (warnlevel < LWARN)
+            if (!cpd.warned_unable_string_replace_tab_chars)
             {
-               cpd.error_count++;
+               cpd.warned_unable_string_replace_tab_chars = true;
+
+               log_sev_t warnlevel = (log_sev_t)cpd.settings[UO_warn_level_tabs_found_in_verbatim_string_literals].n;
+
+               // a tab char can't be replaced with \\t because escapes don't work in here-strings. best we can do is warn.
+               LOG_FMT(warnlevel, "%s:%d Detected non-replaceable tab char in literal string\n", cpd.filename, pc.orig_line);
+               if (warnlevel < LWARN)
+               {
+                  cpd.error_count++;
+               }
             }
          }
+         else
+         {
+            ctx.c.col = lastcol + 2;
+            pc.str.pop_back(); // remove \t
+            pc.str.append("\\t");
+
+            continue;
+         }
+      }
+      else if (ch == '\\' && !(parseState.top().type & CS_STRING_VERBATIM))
+      {
+         // catch escaped quote in order to avoid ending string (but also must handle \\ to avoid accidental 'escape' seq of `\\"`)
+         if (ctx.peek() == '"' || ctx.peek() == '\\')
+            pc.str.append(ctx.get());
       }
       else if (ch == '"')
       {
-         if (ctx.peek() == '"')
+         if ((parseState.top().type & CS_STRING_VERBATIM) && (ctx.peek() == '"'))
          {
+            // in verbatim string, `""` is escape'd `"`
             pc.str.append(ctx.get());
          }
          else
          {
-            break;
+            // end of string
+            parseState.pop();
+            if (parseState.empty())
+               break;
+         }
+      }
+      else if (parseState.top().type & CS_STRING_INTERPOLATED)
+      {
+         if (ch == '{')
+         {
+            if (ctx.peek() == '{')
+               pc.str.append(ctx.get()); // in interpolated string, `{{` is escape'd `{`
+            else
+               ++parseState.top().braceDepth;
          }
       }
    }
 
-   return(true);
-}
-
-
-static bool parse_cs_string(tok_ctx& ctx, chunk_t& pc)
-{
-   // for interpolated strings, keep the $ bound to the "
-   if (ctx.peek() == '$')
-   {
-      if (ctx.peek(1) == '@' && ctx.peek(2) == '"')
-      {
-         // interpolated verbatim string
-         return parse_cs_verbatim_string(ctx, pc, true);
-      }
-      else if (ctx.peek(1) == '"')
-      {
-         // interpolated regular string
-         return parse_string(ctx, pc, 1, true);
-      }
-   }
-   else if (ctx.peek() == '@' && ctx.peek(1) == '"')
-   {
-      // ordinary verbatim string
-      return parse_cs_verbatim_string(ctx, pc);
-   }
-
-   return false;
+   return true;
 }
 
 
