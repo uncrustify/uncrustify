@@ -920,9 +920,9 @@ enum cs_string_t
    CS_STRING_INTERPOLATED  = 1 << 2,   // $"" or $@"" style string
 };
 
-static cs_string_t operator |= (cs_string_t& value, cs_string_t or)
+static cs_string_t operator |= (cs_string_t& value, cs_string_t other)
 {
-   return value = static_cast<cs_string_t>(value | or);
+   return value = static_cast<cs_string_t>(value | other);
 }
 
 static cs_string_t parse_cs_string_start(tok_ctx& ctx, chunk_t& pc)
