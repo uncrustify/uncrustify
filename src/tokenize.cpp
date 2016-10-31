@@ -955,6 +955,20 @@ static cs_string_t parse_cs_string_start(tok_ctx& ctx, chunk_t& pc)
    return stringType;
 }
 
+
+struct CsStringParseState
+{
+   cs_string_t type;
+   int braceDepth;
+
+   CsStringParseState(cs_string_t stringType)
+   {
+      type = stringType;
+      braceDepth = 0;
+   }
+};
+
+
 /**
  * C# strings are complex enough (mostly due to interpolation and nesting) that they need a custom parser.
  */
@@ -967,18 +981,6 @@ static bool parse_cs_string(tok_ctx& ctx, chunk_t& pc)
    // an interpolated string can contain {expressions}, which can contain $"strings", which in turn
    // can contain {expressions}, so we must track both as they are interleaved, in order to properly
    // parse the outermost string.
-
-   struct CsStringParseState
-   {
-      cs_string_t type;
-      int braceDepth;
-
-      CsStringParseState(cs_string_t stringType)
-      {
-         type = stringType;
-         braceDepth = 0;
-      }
-   };
 
    std::stack<CsStringParseState> parseState; // each entry is a nested string
    parseState.push(CsStringParseState(stringType));
