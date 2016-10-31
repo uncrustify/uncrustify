@@ -4,10 +4,10 @@ env:
   matrix:
     # - COMPILER=clang
     # - COMPILER=clang-3.8
-    - COMPILER=gcc-6
-    - COMPILER=gcc-6 BUILD_TYPE=release
-    - COMPILER=gcc-6 BUILD_TYPE=asan
-    # - COMPILER=gcc-6 BUILD_TYPE=ubsan
+    - COMPILER=gcc-5
+    - COMPILER=gcc-5 BUILD_TYPE=release
+    - COMPILER=gcc-5 BUILD_TYPE=asan
+    # - COMPILER=gcc-5 BUILD_TYPE=ubsan
     # - BUILD_TYPE=coverage
 
 branches:
@@ -19,8 +19,8 @@ addons:
     sources:
     - ubuntu-toolchain-r-test
     packages:
-    - gcc-6
-    - g++-6
+    - gcc-5
+    - g++-5
 
 before_install:
   - |-
