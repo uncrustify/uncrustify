@@ -355,10 +355,10 @@ void AlignStack::Flush()
       chunk_t *temp = chunk_get_prev_type(pc, CT_TYPEDEF, pc->level);
       if (temp != NULL)
       {
-         if (pc->orig_line == temp->orig_line )
+         if (pc->orig_line == temp->orig_line)
          {
-             // reset the gap only for *this* stack
-             m_gap = 1;
+            // reset the gap only for *this* stack
+            m_gap = 1;
          }
       }
    }

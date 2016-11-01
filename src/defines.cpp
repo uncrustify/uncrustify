@@ -21,7 +21,7 @@
 
 using namespace std;
 
-typedef map<string, string>   defmap;
+typedef map<string, string> defmap;
 defmap defines;
 
 

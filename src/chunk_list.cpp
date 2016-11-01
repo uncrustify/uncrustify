@@ -12,7 +12,7 @@
 #include "ListManager.h"
 #include "prototypes.h"
 
-typedef ListManager<chunk_t>   ChunkList;
+typedef ListManager<chunk_t> ChunkList;
 
 ChunkList g_cl;
 

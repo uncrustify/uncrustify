@@ -19,7 +19,7 @@ using namespace std;
 class unc_text
 {
 public:
-   typedef deque<int>   value_type;
+   typedef deque<int> value_type;
 
 public:
    unc_text()
