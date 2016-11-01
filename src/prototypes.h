@@ -27,7 +27,6 @@ const char *get_file_extension(int &idx);
 void print_extensions(FILE *pfile);
 const char *extension_add(const char *ext_text, const char *lang_text);
 
-
 /*
  * detect.cpp
  */
@@ -48,13 +47,16 @@ void add_long_preprocessor_conditional_block_comment(void);
 void unc_begin_group(uncrustify_groups id, const char *short_desc, const char *long_desc = NULL);
 void register_options(void);
 void set_option_defaults(void);
+void process_option_line(char *configLine, const char* filename);
 int load_option_file(const char *filename);
+int load_option_fileChar(char* configString);
 int save_option_file(FILE *pfile, bool withDoc);
 int save_option_file_kernel(FILE *pfile, bool withDoc, bool only_not_default);
 int set_option_value(const char *name, const char *value);
 const group_map_value *get_group_name(int ug);
-const option_map_value *get_option_name(int uo);
+const option_map_value *get_option_name(uncrustify_options uo);
 void print_options(FILE *pfile);
+const option_map_value *unc_find_option(const char *name);
 
 string argtype_to_string(argtype_e argtype);
 string bool_to_string(bool val);

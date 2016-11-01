@@ -242,9 +242,9 @@ static bool decode_utf16(const vector<UINT8> &in_data, deque<int> &out_data, Cha
    {
       /* If we have a few words, we can take a guess, assuming the first few
        * chars are ASCII */
-      enc = ENC_ASCII;
       idx = 0;
-      if (in_data.size() >= 6)
+      if (in_data.size() < 6) { return(false); }
+      else
       {
          if ((in_data[0] == 0) && (in_data[2] == 0) && (in_data[4] == 0))
          {
@@ -254,14 +254,11 @@ static bool decode_utf16(const vector<UINT8> &in_data, deque<int> &out_data, Cha
          {
             enc = ENC_UTF16_LE;
          }
-      }
-      if (enc == ENC_ASCII)
-      {
-         return(false);
+         else { return(false); }
       }
    }
 
-   bool be = (enc == ENC_UTF16_BE);
+   const bool be = (enc == ENC_UTF16_BE);
 
    while (idx < (int)in_data.size())
    {

@@ -10,7 +10,7 @@
 #ifndef OPTIONS_H_INCLUDED
 #define OPTIONS_H_INCLUDED
 
-#include <list>
+#include <vector>
 #include <map>
 #include <string>
 
@@ -833,7 +833,7 @@ struct group_map_value
    uncrustify_groups        id;
    const char               *short_desc;
    const char               *long_desc;
-   list<uncrustify_options> options;
+   std::vector<uncrustify_options> options;
 };
 
 struct option_map_value
@@ -843,15 +843,15 @@ struct option_map_value
    argtype_e          type;
    int                min_val;
    int                max_val;
-   const char         *name;
-   const char         *short_desc;
-   const char         *long_desc;
+   string             name;
+   string             short_desc;
+   string             long_desc;
 };
 
 
-typedef map<string, option_map_value>::iterator             option_name_map_it;
+typedef map<uncrustify_options, option_map_value>::iterator option_name_map_it;
 typedef map<uncrustify_groups, group_map_value>::iterator   group_map_it;
-typedef list<uncrustify_options>::iterator                  option_list_it;
-typedef list<uncrustify_options>::const_iterator            option_list_cit;
+typedef std::vector<uncrustify_options>::iterator           option_list_it;
+typedef std::vector<uncrustify_options>::const_iterator     option_list_cit;
 
 #endif /* OPTIONS_H_INCLUDED */

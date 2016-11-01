@@ -18,15 +18,15 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cerrno>
+#include <algorithm>
 #include "unc_ctype.h"
 
+map<uncrustify_options, option_map_value> option_name_map;
+map<uncrustify_groups, group_map_value>   group_map;
+static uncrustify_groups                  current_group;
 
-static map<string, option_map_value>           option_name_map;
-static map<uncrustify_groups, group_map_value> group_map;
-static uncrustify_groups                       current_group;
 
-
-static void unc_add_option(const char *name, uncrustify_options id, argtype_e type, const char *short_desc = NULL, const char *long_desc = NULL, int min_val = 0, int max_val = 16);
+static void unc_add_option(const char *name, uncrustify_options id, argtype_e type, const std::string& short_desc = "", const std::string& long_desc = "", int min_val = 0, int max_val = 16);
 
 
 void unc_begin_group(uncrustify_groups id, const char *short_desc,
@@ -45,7 +45,7 @@ void unc_begin_group(uncrustify_groups id, const char *short_desc,
 
 
 void unc_add_option(const char *name, uncrustify_options id, argtype_e type,
-                    const char *short_desc, const char *long_desc,
+                    const std::string& short_desc, const std::string& long_desc,
                     int min_val, int max_val)
 {
 #define OptionMaxLength    60
@@ -101,7 +101,7 @@ void unc_add_option(const char *name, uncrustify_options id, argtype_e type,
       exit(EXIT_FAILURE);
    }
 
-   option_name_map[name] = value;
+   option_name_map[id] = value;
 } // unc_add_option
 
 
@@ -136,21 +136,16 @@ static bool match_text(const char *str1, const char *str2)
 
 const option_map_value *unc_find_option(const char *name)
 {
-   if (option_name_map.find(name) == option_name_map.end())
+   const option_name_map_it itE = option_name_map.end();
+
+   for (option_name_map_it it = option_name_map.begin(); it != itE; it++)
    {
-      /* Try a more aggressive search */
-      for (option_name_map_it it = option_name_map.begin();
-           it != option_name_map.end();
-           it++)
+      if (match_text(it->second.name.c_str(), name))
       {
-         if (match_text(it->second.name, name))
-         {
-            return(&it->second);
-         }
+         return(&it->second);
       }
-      return(NULL);
    }
-   return(&option_name_map[name]);
+   return(NULL);
 }
 
 
@@ -1540,18 +1535,11 @@ const group_map_value *get_group_name(int ug)
 }
 
 
-const option_map_value *get_option_name(int uo)
+const option_map_value *get_option_name(uncrustify_options option)
 {
-   for (option_name_map_it it = option_name_map.begin();
-        it != option_name_map.end();
-        it++)
-   {
-      if (it->second.id == uo)
-      {
-         return(&it->second);
-      }
-   }
-   return(NULL);
+   const option_name_map_it it = option_name_map.find(option);
+
+   return((it == option_name_map.end()) ? NULL : (&it->second));
 }
 
 
@@ -1584,7 +1572,7 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
       if (strcasecmp(val, "AUTO") != 0)
       {
          LOG_FMT(LWARN, "%s:%d Expected AUTO, LF, CRLF, or CR for %s, got %s\n",
-                 cpd.filename, cpd.line_number, entry->name, val);
+                 cpd.filename, cpd.line_number, entry->name.c_str(), val);
          cpd.error_count++;
       }
       dest->le = LE_AUTO;
@@ -1632,7 +1620,7 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
       {
          LOG_FMT(LWARN, "%s:%d Expected IGNORE, JOIN, LEAD, LEAD_BREAK, LEAD_FORCE, "
                  "TRAIL, TRAIL_BREAK, TRAIL_FORCE for %s, got %s\n",
-                 cpd.filename, cpd.line_number, entry->name, val);
+                 cpd.filename, cpd.line_number, entry->name.c_str(), val);
          cpd.error_count++;
       }
       dest->tp = TP_IGNORE;
@@ -1664,7 +1652,7 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
          }
       }
       LOG_FMT(LWARN, "%s:%d Expected a number for %s, got %s\n",
-              cpd.filename, cpd.line_number, entry->name, val);
+              cpd.filename, cpd.line_number, entry->name.c_str(), val);
       cpd.error_count++;
       dest->n = 0;
       return;
@@ -1701,7 +1689,7 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
          return;
       }
       LOG_FMT(LWARN, "%s:%d Expected 'True' or 'False' for %s, got %s\n",
-              cpd.filename, cpd.line_number, entry->name, val);
+              cpd.filename, cpd.line_number, entry->name.c_str(), val);
       cpd.error_count++;
       dest->b = false;
       return;
@@ -1741,7 +1729,7 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
       return;
    }
    LOG_FMT(LWARN, "%s:%d Expected 'Add', 'Remove', 'Force', or 'Ignore' for %s, got %s\n",
-           cpd.filename, cpd.line_number, entry->name, val);
+           cpd.filename, cpd.line_number, entry->name.c_str(), val);
    cpd.error_count++;
    dest->a = AV_IGNORE;
 } // convert_value
@@ -1777,12 +1765,167 @@ bool is_path_relative(const char *path)
 #endif
 
    // /path/to/file style absolute path
-   if (path[0] == '/')
-   {
-      return(false);
-   }
+   return (path[0] != '/');
+}
 
-   return(true);
+
+/**
+ * processes a single line string to extract configuration settings
+ * increments cpd.line_number and cpd.error_count, modifies configLine parameter
+ *
+ * @param configLine: single line string that will be processed
+ * @param filename: for log messages, file from which the configLine param was
+ *                  extracted
+ */
+void process_option_line(char *configLine, const char* filename)
+{
+    char *ptr;
+    char *args[32];
+    int  argc;
+    int  idx;
+
+    cpd.line_number++;
+
+    /* Chop off trailing comments */
+    if ((ptr = strchr(configLine, '#')) != NULL)
+    {
+       *ptr = 0;
+    }
+
+    /* Blow away the '=' to make things simple */
+    if ((ptr = strchr(configLine, '=')) != NULL)
+    {
+       *ptr = ' ';
+    }
+
+    /* Blow away all commas */
+    ptr = configLine;
+    while ((ptr = strchr(ptr, ',')) != NULL)
+    {
+       *ptr = ' ';
+    }
+
+    /* Split the line */
+    argc = Args::SplitLine(configLine, args, ARRAY_SIZE(args) - 1);
+    if (argc < 2)
+    {
+       if (argc > 0)
+       {
+          LOG_FMT(LWARN, "%s:%d Wrong number of arguments: %s...\n",
+                  filename, cpd.line_number, configLine);
+          cpd.error_count++;
+       }
+       return;
+    }
+    args[argc] = NULL;
+
+    if (strcasecmp(args[0], "type") == 0)
+    {
+       for (idx = 1; idx < argc; idx++)
+       {
+          add_keyword(args[idx], CT_TYPE);
+       }
+    }
+    else if (strcasecmp(args[0], "define") == 0)
+    {
+       add_define(args[1], args[2]);
+    }
+    else if (strcasecmp(args[0], "macro-open") == 0)
+    {
+       add_keyword(args[1], CT_MACRO_OPEN);
+    }
+    else if (strcasecmp(args[0], "macro-close") == 0)
+    {
+       add_keyword(args[1], CT_MACRO_CLOSE);
+    }
+    else if (strcasecmp(args[0], "macro-else") == 0)
+    {
+       add_keyword(args[1], CT_MACRO_ELSE);
+    }
+    else if (strcasecmp(args[0], "set") == 0)
+    {
+       if (argc < 3)
+       {
+          LOG_FMT(LWARN, "%s:%d 'set' requires at least three arguments\n",
+                  filename, cpd.line_number);
+       }
+       else
+       {
+          c_token_t token = find_token_name(args[1]);
+          if (token != CT_NONE)
+          {
+             LOG_FMT(LNOTE, "%s:%d set '%s':", filename, cpd.line_number, args[1]);
+             for (idx = 2; idx < argc; idx++)
+             {
+                LOG_FMT(LNOTE, " '%s'", args[idx]);
+                add_keyword(args[idx], token);
+             }
+             LOG_FMT(LNOTE, "\n");
+          }
+          else
+          {
+             LOG_FMT(LWARN, "%s:%d unknown type '%s':", filename, cpd.line_number, args[1]);
+          }
+       }
+    }
+#ifndef EMSCRIPTEN
+    else if (strcasecmp(args[0], "include") == 0)
+    {
+       int save_line_no = cpd.line_number;
+
+       if (is_path_relative(args[1]))
+       {
+          /* include is a relative path to the current config file */
+          unc_text ut = filename;
+          ut.resize(path_dirname_len(filename));
+          ut.append(args[1]);
+          (void)load_option_file(ut.c_str());
+       }
+       else
+       {
+          /* include is an absolute Unix path */
+          (void)load_option_file(args[1]);
+       }
+
+       cpd.line_number = save_line_no;
+    }
+#endif
+    else if (strcasecmp(args[0], "file_ext") == 0)
+    {
+       if (argc < 3)
+       {
+          LOG_FMT(LWARN, "%s:%d 'file_ext' requires at least three arguments\n",
+                  filename, cpd.line_number);
+       }
+       else
+       {
+          for (idx = 2; idx < argc; idx++)
+          {
+             const char *lang_name = extension_add(args[idx], args[1]);
+             if (lang_name)
+             {
+                LOG_FMT(LNOTE, "%s:%d file_ext '%s' => '%s'\n",
+                        filename, cpd.line_number, args[idx], lang_name);
+             }
+             else
+             {
+                LOG_FMT(LWARN, "%s:%d file_ext has unknown language '%s'\n",
+                        filename, cpd.line_number, args[1]);
+             }
+          }
+       }
+    }
+    else
+    {
+       /* must be a regular option = value */
+       const int id = set_option_value(args[0], args[1]);
+       if (id < 0)
+       {
+          LOG_FMT(LWARN, "%s:%d Unknown symbol '%s'\n",
+                  filename, cpd.line_number, args[0]);
+          cpd.error_count++;
+       }
+    }
 }
 
 
@@ -1790,11 +1933,6 @@ int load_option_file(const char *filename)
 {
    FILE *pfile;
    char buffer[256];
-   char *ptr;
-   int  id;
-   char *args[32];
-   int  argc;
-   int  idx;
 
    cpd.line_number = 0;
 
@@ -1818,150 +1956,46 @@ int load_option_file(const char *filename)
    /* Read in the file line by line */
    while (fgets(buffer, sizeof(buffer), pfile) != NULL)
    {
-      cpd.line_number++;
-
-      /* Chop off trailing comments */
-      if ((ptr = strchr(buffer, '#')) != NULL)
-      {
-         *ptr = 0;
-      }
-
-      /* Blow away the '=' to make things simple */
-      if ((ptr = strchr(buffer, '=')) != NULL)
-      {
-         *ptr = ' ';
-      }
-
-      /* Blow away all commas */
-      ptr = buffer;
-      while ((ptr = strchr(ptr, ',')) != NULL)
-      {
-         *ptr = ' ';
-      }
-
-      /* Split the line */
-      argc = Args::SplitLine(buffer, args, ARRAY_SIZE(args) - 1);
-      if (argc < 2)
-      {
-         if (argc > 0)
-         {
-            LOG_FMT(LWARN, "%s:%d Wrong number of arguments: %s...\n",
-                    filename, cpd.line_number, buffer);
-            cpd.error_count++;
-         }
-         continue;
-      }
-      args[argc] = NULL;
-
-      if (strcasecmp(args[0], "type") == 0)
-      {
-         for (idx = 1; idx < argc; idx++)
-         {
-            add_keyword(args[idx], CT_TYPE);
-         }
-      }
-      else if (strcasecmp(args[0], "define") == 0)
-      {
-         add_define(args[1], args[2]);
-      }
-      else if (strcasecmp(args[0], "macro-open") == 0)
-      {
-         add_keyword(args[1], CT_MACRO_OPEN);
-      }
-      else if (strcasecmp(args[0], "macro-close") == 0)
-      {
-         add_keyword(args[1], CT_MACRO_CLOSE);
-      }
-      else if (strcasecmp(args[0], "macro-else") == 0)
-      {
-         add_keyword(args[1], CT_MACRO_ELSE);
-      }
-      else if (strcasecmp(args[0], "set") == 0)
-      {
-         if (argc < 3)
-         {
-            LOG_FMT(LWARN, "%s:%d 'set' requires at least three arguments\n",
-                    filename, cpd.line_number);
-         }
-         else
-         {
-            c_token_t token = find_token_name(args[1]);
-            if (token != CT_NONE)
-            {
-               LOG_FMT(LNOTE, "%s:%d set '%s':", filename, cpd.line_number, args[1]);
-               for (idx = 2; idx < argc; idx++)
-               {
-                  LOG_FMT(LNOTE, " '%s'", args[idx]);
-                  add_keyword(args[idx], token);
-               }
-               LOG_FMT(LNOTE, "\n");
-            }
-            else
-            {
-               LOG_FMT(LWARN, "%s:%d unknown type '%s':", filename, cpd.line_number, args[1]);
-            }
-         }
-      }
-      else if (strcasecmp(args[0], "include") == 0)
-      {
-         int save_line_no = cpd.line_number;
-
-         if (is_path_relative(args[1]))
-         {
-            /* include is a relative path to the current config file */
-            unc_text ut = filename;
-            ut.resize(path_dirname_len(filename));
-            ut.append(args[1]);
-            (void)load_option_file(ut.c_str());
-         }
-         else
-         {
-            /* include is an absolute Unix path */
-            (void)load_option_file(args[1]);
-         }
-
-         cpd.line_number = save_line_no;
-      }
-      else if (strcasecmp(args[0], "file_ext") == 0)
-      {
-         if (argc < 3)
-         {
-            LOG_FMT(LWARN, "%s:%d 'file_ext' requires at least three arguments\n",
-                    filename, cpd.line_number);
-         }
-         else
-         {
-            for (idx = 2; idx < argc; idx++)
-            {
-               const char *lang_name = extension_add(args[idx], args[1]);
-               if (lang_name)
-               {
-                  LOG_FMT(LNOTE, "%s:%d file_ext '%s' => '%s'\n",
-                          filename, cpd.line_number, args[idx], lang_name);
-               }
-               else
-               {
-                  LOG_FMT(LWARN, "%s:%d file_ext has unknown language '%s'\n",
-                          filename, cpd.line_number, args[1]);
-               }
-            }
-         }
-      }
-      else
-      {
-         /* must be a regular option = value */
-         if ((id = set_option_value(args[0], args[1])) < 0)
-         {
-            LOG_FMT(LWARN, "%s:%d Unknown symbol '%s'\n",
-                    filename, cpd.line_number, args[0]);
-            cpd.error_count++;
-         }
-      }
+      process_option_line(buffer, filename);
    }
 
    fclose(pfile);
    return(0);
 } // load_option_file
+
+
+/**
+ * Loads options from a file represented as a single char array.
+ * Modifies: input char array, cpd.line_number
+ *
+ * @param configString char array that holds the whole config
+ * @return EXIT_SUCCESS on success
+ */
+int load_option_fileChar(char* configString)
+{
+    const int textLen    = strlen(configString);
+    char* delimPos       = &configString[0];
+    char* stringEnd      = &configString[textLen-1];
+    char* subStringStart = &configString[0];
+
+    cpd.line_number = 0;
+
+    while (true)
+    {
+        delimPos = std::find(delimPos, stringEnd, '\n');
+
+        // replaces \n with \0 to get a string with multiple terminated
+        // substrings inside
+        *delimPos = '\0';
+
+        process_option_line(subStringStart, "");
+
+        if(delimPos == stringEnd) break;
+        delimPos++;
+        subStringStart = delimPos;
+    }
+    return(EXIT_SUCCESS);
+}
 
 
 int save_option_file_kernel(FILE *pfile, bool withDoc, bool only_not_default)
@@ -1970,8 +2004,8 @@ int save_option_file_kernel(FILE *pfile, bool withDoc, bool only_not_default)
    const char *val_str;
    int        val_len;
    int        name_len;
-   int        idx;
    int        count_the_not_default_options = 0;
+   std::string::size_type idx;
 
    fprintf(pfile, "# Uncrustify %s\n", UNCRUSTIFY_VERSION);
 
@@ -1991,19 +2025,22 @@ int save_option_file_kernel(FILE *pfile, bool withDoc, bool only_not_default)
       {
          const option_map_value *option = get_option_name(*it);
 
-         if (withDoc && (option->short_desc != NULL) && (*option->short_desc != 0))
+         if (withDoc && !option->short_desc.empty())
          {
             fprintf(pfile, "%s# ", first ? "" : "\n");
-            for (idx = 0; option->short_desc[idx] != 0; idx++)
+
+            const std::string::size_type short_descLenM1 = option->short_desc.length() - 1;
+
+            for (idx = 0; idx <= short_descLenM1; idx++)
             {
                fputc(option->short_desc[idx], pfile);
                if ((option->short_desc[idx] == '\n') &&
-                   (option->short_desc[idx + 1] != 0))
+                   ( idx + 1 < short_descLenM1))
                {
                   fputs("# ", pfile);
                }
             }
-            if (option->short_desc[idx - 1] != '\n')
+            if (option->short_desc[idx] != '\n')
             {
                fputc('\n', pfile);
             }
@@ -2012,7 +2049,7 @@ int save_option_file_kernel(FILE *pfile, bool withDoc, bool only_not_default)
          val_string = op_val_to_string(option->type, cpd.settings[option->id]);
          val_str    = val_string.c_str();
          val_len    = strlen(val_str);
-         name_len   = strlen(option->name);
+         name_len   = option->name.length();
 
          // guy
          bool print_option = true;
@@ -2036,7 +2073,7 @@ int save_option_file_kernel(FILE *pfile, bool withDoc, bool only_not_default)
          {
             int pad = (name_len < MAX_OPTION_NAME_LEN) ? (MAX_OPTION_NAME_LEN - name_len) : 1;
             fprintf(pfile, "%s%*.s= ",
-                    option->name, pad, " ");
+                    option->name.c_str(), pad, " ");
             if (option->type == AT_STRING)
             {
                fprintf(pfile, "\"%s\"", val_str);
@@ -2127,8 +2164,6 @@ int save_option_file(FILE *pfile, bool withDoc)
 
 void print_options(FILE *pfile)
 {
-   const char *text;
-
    const char *names[] =
    {
       "{ False, True }",
@@ -2149,26 +2184,24 @@ void print_options(FILE *pfile)
       for (option_list_it it = jt->second.options.begin(); it != jt->second.options.end(); it++)
       {
          const option_map_value *option = get_option_name(*it);
-         int                    cur     = strlen(option->name);
-         int                    pad     = (cur < MAX_OPTION_NAME_LEN) ? (MAX_OPTION_NAME_LEN - cur) : 1;
+         int cur = option->name.length();
+         int pad = (cur < MAX_OPTION_NAME_LEN) ? (MAX_OPTION_NAME_LEN - cur) : 1;
          fprintf(pfile, "%s%*c%s\n",
-                 option->name,
+                 option->name.c_str(),
                  pad, ' ',
                  names[option->type]);
 
-         text = option->short_desc;
-
-         if (text != NULL)
+         if (!option->short_desc.empty())
          {
             fputs("  ", pfile);
-            while (*text != 0)
+            const std::string::size_type textLen = option->short_desc.length();
+            for( std::string::size_type i = 0; i < textLen; i++ )
             {
-               fputc(*text, pfile);
-               if (*text == '\n')
+               fputc(option->short_desc[i], pfile);
+               if (option->short_desc[i] == '\n')
                {
                   fputs("  ", pfile);
                }
-               text++;
             }
          }
          fputs("\n\n", pfile);
