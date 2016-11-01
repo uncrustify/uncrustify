@@ -4804,8 +4804,10 @@ static void handle_oc_class(chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
    chunk_t *tmp;
-   bool    hit_scope = false;
-   int     do_pl     = 1;
+   bool    hit_scope     = false;
+   bool    passed_name   = false; // Did we pass the name of the class and now there can be only protocols, not generics
+   int     generic_level = 0;     //level of depth of generic
+   int     do_pl         = 1;     //1 = no protocol found, 2 = '<' found, 0 = '>' found
 
    LOG_FMT(LOCCLASS, "%s: start [%s] [%s] line %d\n", __func__,
            pc->text(), get_token_name(pc->parent_type), pc->orig_line);
@@ -4831,17 +4833,52 @@ static void handle_oc_class(chunk_t *pc)
       {
          break;
       }
-      if ((do_pl == 1) && chunk_is_str(tmp, "<", 1))
+      if (tmp->type == CT_PAREN_OPEN)
+      {
+         passed_name = true;
+      }
+      if (chunk_is_str(tmp, "<", 1))
       {
          set_chunk_type(tmp, CT_ANGLE_OPEN);
-         set_chunk_parent(tmp, CT_OC_PROTO_LIST);
+         if (passed_name)
+         {
+            set_chunk_parent(tmp, CT_OC_PROTO_LIST);
+         }
+         else
+         {
+            set_chunk_parent(tmp, CT_OC_GENERIC_SPEC);
+            generic_level++;
+         }
          do_pl = 2;
       }
-      if ((do_pl == 2) && chunk_is_str(tmp, ">", 1))
+      if (chunk_is_str(tmp, ">", 1))
       {
          set_chunk_type(tmp, CT_ANGLE_CLOSE);
-         set_chunk_parent(tmp, CT_OC_PROTO_LIST);
-         do_pl = 0;
+         if (passed_name)
+         {
+            set_chunk_parent(tmp, CT_OC_PROTO_LIST);
+            do_pl = 0;
+         }
+         else
+         {
+            set_chunk_parent(tmp, CT_OC_GENERIC_SPEC);
+            generic_level--;
+            if (generic_level == 0)
+            {
+               do_pl = 0;
+            }
+         }
+      }
+      if (chunk_is_str(tmp, ">>", 2))
+      {
+         set_chunk_type(tmp, CT_ANGLE_CLOSE);
+         set_chunk_parent(tmp, CT_OC_GENERIC_SPEC);
+         split_off_angle_close(tmp);
+         generic_level -= 1;
+         if (generic_level == 0)
+         {
+            do_pl = 0;
+         }
       }
       if (tmp->type == CT_BRACE_OPEN)
       {
@@ -4855,6 +4892,10 @@ static void handle_oc_class(chunk_t *pc)
       }
       else if (tmp->type == CT_COLON)
       {
+         if (do_pl != 2)
+         {
+            passed_name = true;
+         }
          set_chunk_type(tmp, hit_scope ? CT_OC_COLON : CT_CLASS_COLON);
          if (tmp->type == CT_CLASS_COLON)
          {
@@ -4873,7 +4914,14 @@ static void handle_oc_class(chunk_t *pc)
       }
       if (do_pl == 2)
       {
-         set_chunk_parent(tmp, CT_OC_PROTO_LIST);
+         if (passed_name)
+         {
+            set_chunk_parent(tmp, CT_OC_PROTO_LIST);
+         }
+         else
+         {
+            set_chunk_parent(tmp, CT_OC_GENERIC_SPEC);
+         }
       }
    }
 

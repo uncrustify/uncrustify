@@ -54,7 +54,7 @@ static chunk_t *handle_double_angle_close(chunk_t *pc)
 }
 
 
-static void split_off_angle_close(chunk_t *pc)
+void split_off_angle_close(chunk_t *pc)
 {
    chunk_t nc;
 
