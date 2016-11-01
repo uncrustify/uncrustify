@@ -951,6 +951,10 @@ static cs_string_t parse_cs_string_start(tok_ctx& ctx, chunk_t& pc)
       for (int i = 0; i <= offset; ++i)
          pc.str.append(ctx.get());
    }
+   else
+   {
+      stringType = CS_STRING_NONE;
+   }
 
    return stringType;
 }

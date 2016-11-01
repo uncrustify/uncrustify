@@ -28,6 +28,10 @@ $@"{$@"\""abc{$@" def {"{ghi}"}
     {jkl} {{mno}}\"""}"
 }".Dump();
 
+// ensure we didn't break @for etc
+
+var @for = @base + @this - $@"{@while}";
+
 // from roslyn's InterpolationTests.cs
 
 Console.WriteLine($"{number}");
