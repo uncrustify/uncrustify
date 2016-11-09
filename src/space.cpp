@@ -500,6 +500,19 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
          return(cpd.settings[UO_sp_after_comma].a);
       }
    }
+   // test if we are within a SIGNAL/SLOT call
+   if (QT_SIGNAL_SLOT_found)
+   {
+      if ((first->type == CT_FPAREN_CLOSE) &&
+          ((second->type == CT_FPAREN_CLOSE) ||
+           (second->type == CT_COMMA)))
+      {
+         if (second->level == (QT_SIGNAL_SLOT_level))
+         {
+            restoreValues = true;
+         }
+      }
+   }
    if (second->type == CT_COMMA)
    {
       if ((first->type == CT_SQUARE_OPEN) &&
@@ -561,17 +574,6 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
    if ((chunk_is_str(first, "(", 1) && chunk_is_str(second, "(", 1)) ||
        (chunk_is_str(first, ")", 1) && chunk_is_str(second, ")", 1)))
    {
-      // test if we are within a SIGNAL/SLOT call
-      if (QT_SIGNAL_SLOT_found)
-      {
-         if ((first->type == CT_FPAREN_CLOSE) && (second->type == CT_FPAREN_CLOSE))
-         {
-            if (second->level == (QT_SIGNAL_SLOT_level))
-            {
-               restoreValues = true;
-            }
-         }
-      }
       log_rule("sp_paren_paren");
       return(cpd.settings[UO_sp_paren_paren].a);
    }
@@ -1204,17 +1206,6 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
       {
          log_rule("sp_inside_fparens");
          return(cpd.settings[UO_sp_inside_fparens].a);
-      }
-      // test if we are within a SIGNAL/SLOT call
-      if (QT_SIGNAL_SLOT_found)
-      {
-         if (first->type == CT_FPAREN_CLOSE)
-         {
-            if (second->level == (QT_SIGNAL_SLOT_level + 1))
-            {
-               restoreValues = true;
-            }
-         }
       }
       log_rule("sp_inside_fparen");
       return(cpd.settings[UO_sp_inside_fparen].a);
@@ -1849,11 +1840,14 @@ void space_text(void)
       }
       // Issue # 481
       if ((QT_SIGNAL_SLOT_found) &&
-          (cpd.settings[UO_sp_balance_nested_parens].b) &&
-          (next->next->type == CT_SPACE))
+          (cpd.settings[UO_sp_balance_nested_parens].b))
       {
-         // remoce the space
-         chunk_del(next->next);
+         if ((next->next != NULL) &&
+             (next->next->type == CT_SPACE))
+         {
+            // remove the space
+            chunk_del(next->next);
+         }
       }
 
       /* If the current chunk contains a newline, do not change the column

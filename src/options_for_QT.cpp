@@ -33,7 +33,7 @@ void save_set_options_for_QT(int level)
 {
    assert(cpd.settings[UO_use_options_overriding_for_qt_macros].b);
 
-   LOG_FMT(LGUY, "save values\n");
+   LOG_FMT(LGUY, "save values, level=%d\n", level);
    // save the values
    QT_SIGNAL_SLOT_level             = level;
    SaveUO_sp_inside_fparen_A        = cpd.settings[UO_sp_inside_fparen].a;
