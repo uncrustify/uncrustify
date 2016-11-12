@@ -270,8 +270,8 @@ bool unc_text::startswith(const char *text, size_t idx) const
 
 bool unc_text::startswith(const unc_text &text, size_t idx) const
 {
-   bool match = false;
-   size_t  si = 0;
+   bool   match = false;
+   size_t si    = 0;
 
    while ((idx < size()) && (si < text.size()))
    {
@@ -298,7 +298,8 @@ int unc_text::find(const char *text, size_t sidx) const
    // the length of 'text' we are looking for
    size_t len = strlen(text);
    // the length of the string we are looking in
-   size_t si  = size();
+   size_t si = size();
+
    if (si < len)
    {
       // not enought place for 'text'
@@ -338,7 +339,7 @@ int unc_text::rfind(const char *text, size_t sidx) const
       sidx = midx;
    }
 
-   for (size_t idx = sidx; idx  != 0; idx--)
+   for (size_t idx = sidx; idx != 0; idx--)
    {
       bool match = true;
       for (size_t ii = 0; ii < len; ii++)
@@ -369,7 +370,7 @@ void unc_text::erase(size_t idx, size_t len)
 
 int unc_text::replace(const char *oldtext, const unc_text &newtext)
 {
-   int fidx            = find(oldtext);
+   int    fidx         = find(oldtext);
    size_t olen         = strlen(oldtext);
    size_t rcnt         = 0;
    size_t newtext_size = newtext.size();
