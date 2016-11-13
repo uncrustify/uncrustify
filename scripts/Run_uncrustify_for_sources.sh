@@ -17,15 +17,21 @@ mkdir -p results
 for file in ${list_of_H} ${list_of_C}
 do
   uncrustify -q -c ./forUncrustifySources.cfg -f ${SRC}/${file} -o results/${file}
-  diff ${SRC}/${file} results/${file} > /dev/null 2>&1
+  cmp -s ${SRC}/${file} results/${file}
   how_different=${?}
   #echo "the status of is "${how_different}
   if [ ${how_different} != "0" ] ;
   then
     echo "Problem with "${file}
-    echo "the command is: diff ${SRC}/${file} results/${file}"
+    echo "use: diff ${SRC}/${file} results/${file} to find why"
   else
     rm results/${file}
   fi
 done
-rmdir results
+rmdir --ignore-fail-on-non-empty results
+if [[ -d results ]]
+then
+  echo "some problem(s) are still present"
+else
+  echo "all sources are uncrustify-ed"
+fi
