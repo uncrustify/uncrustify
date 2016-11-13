@@ -32,6 +32,8 @@ rmdir --ignore-fail-on-non-empty results
 if [[ -d results ]]
 then
   echo "some problem(s) are still present"
+  exit 1
 else
   echo "all sources are uncrustify-ed"
+  exit 0
 fi
