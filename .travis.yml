@@ -81,3 +81,5 @@ before_script:
 script:
   - make VERBOSE=1
   - if [ "x${BUILD_TYPE}" != "xcross" ]; then ctest -V; fi
+    # test if allthe sources are conform to the forUncrustifySources.cfg config file
+  - cd ../; ./scripts/Run_uncrustify_for_sources.sh

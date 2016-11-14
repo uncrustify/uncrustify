@@ -19,7 +19,6 @@
 #include "log_levels.h"
 #include "md5.h"
 #include "backup.h"
-//#include "unc_tools.h"
 
 #include <cstdio>
 #include <cstdlib>
