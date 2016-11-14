@@ -14,8 +14,8 @@ cd ${where}
 #
 mkdir -p results
 #
-find . -name uncrustify
-ls -l ./build/uncrustify
+#find . -name uncrustify
+#ls -l ./build/uncrustify
 for file in ${list_of_H} ${list_of_C}
 do
   ./build/uncrustify -q -c ./forUncrustifySources.cfg -f ${SRC}/${file} -o results/${file}
@@ -29,7 +29,6 @@ do
   else
     rm results/${file}
   fi
-exit
 done
 rmdir --ignore-fail-on-non-empty results
 if [[ -d results ]]
