@@ -47,8 +47,6 @@ branches:
   - master
 
 before_install:
-    # test if allthe sources are conform to the forUncrustifySources.cfg config file
-  - ./scripts/Run_uncrustify_for_sources.sh
   - if [ -n "${C_COMPILER}" ]; then export CC="${C_COMPILER}"; fi
   - if [ -n "${CXX_COMPILER}" ]; then export CXX="${CXX_COMPILER}"; fi
   - ${CXX} --version
@@ -83,3 +81,5 @@ before_script:
 script:
   - make VERBOSE=1
   - if [ "x${BUILD_TYPE}" != "xcross" ]; then ctest -V; fi
+    # test if allthe sources are conform to the forUncrustifySources.cfg config file
+  - ./scripts/Run_uncrustify_for_sources.sh
