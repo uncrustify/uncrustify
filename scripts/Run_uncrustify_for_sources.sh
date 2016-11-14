@@ -14,9 +14,11 @@ cd ${where}
 #
 mkdir -p results
 #
+find . -name uncrustify
+ls -l ./build/uncrustify
 for file in ${list_of_H} ${list_of_C}
 do
-  .build/uncrustify -q -c ./forUncrustifySources.cfg -f ${SRC}/${file} -o results/${file}
+  ./build/uncrustify -q -c ./forUncrustifySources.cfg -f ${SRC}/${file} -o results/${file}
   cmp -s ${SRC}/${file} results/${file}
   how_different=${?}
   #echo "the status of is "${how_different}
@@ -27,6 +29,7 @@ do
   else
     rm results/${file}
   fi
+exit
 done
 rmdir --ignore-fail-on-non-empty results
 if [[ -d results ]]
