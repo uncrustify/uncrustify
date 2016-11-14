@@ -688,12 +688,16 @@ int main(int argc, char *argv[])
    clear_keyword_file();
    clear_defines();
 
-   if (cpd.do_check)
+   if (cpd.error_count != 0)
    {
-      return(cpd.check_fail_cnt ? EXIT_FAILURE : EXIT_SUCCESS);
+      return(EXIT_FAILURE);
+   }
+   if (cpd.do_check && (cpd.check_fail_cnt != 0))
+   {
+      return(EXIT_FAILURE);
    }
 
-   return((cpd.error_count != 0) ? EXIT_FAILURE : EXIT_SUCCESS);
+   return(EXIT_SUCCESS);
 } // main
 
 
