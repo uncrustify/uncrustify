@@ -10,6 +10,9 @@
 #ifndef OPTIONS_H_INCLUDED
 #define OPTIONS_H_INCLUDED
 
+#ifdef EMSCRIPTEN
+#include <vector>
+#endif
 #include <list>
 #include <map>
 #include <string>
@@ -828,12 +831,19 @@ enum uncrustify_options
    UO_option_count
 };
 
+
+#ifdef EMSCRIPTEN
+#define group_map_value_options_t    vector<uncrustify_options>
+#else
+#define group_map_value_options_t    list<uncrustify_options>
+#endif
+
 struct group_map_value
 {
-   uncrustify_groups        id;
-   const char               *short_desc;
-   const char               *long_desc;
-   list<uncrustify_options> options;
+   uncrustify_groups         id;
+   const char                *short_desc;
+   const char                *long_desc;
+   group_map_value_options_t options;
 };
 
 struct option_map_value
@@ -851,7 +861,7 @@ struct option_map_value
 
 typedef map<string, option_map_value>::iterator             option_name_map_it;
 typedef map<uncrustify_groups, group_map_value>::iterator   group_map_it;
-typedef list<uncrustify_options>::iterator                  option_list_it;
-typedef list<uncrustify_options>::const_iterator            option_list_cit;
+typedef group_map_value_options_t::iterator                 option_list_it;
+typedef group_map_value_options_t::const_iterator           option_list_cit;
 
 #endif /* OPTIONS_H_INCLUDED */
