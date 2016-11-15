@@ -1,5 +1,5 @@
 /**
- * @file chunk_list.c
+ * @file chunk_list.h
  * Manages and navigates the list of chunks.
  *
  * @author  Ben Gardner
@@ -64,8 +64,8 @@ chunk_t *chunk_get_prev_ncnlnp(chunk_t *cur, chunk_nav_t nav = CNAV_ALL);
 chunk_t *chunk_get_next_type(chunk_t *cur, c_token_t type, int level, chunk_nav_t nav = CNAV_ALL);
 chunk_t *chunk_get_prev_type(chunk_t *cur, c_token_t type, int level, chunk_nav_t nav = CNAV_ALL);
 
-chunk_t *chunk_get_next_str(chunk_t *cur, const char *str, int len, int level, chunk_nav_t nav = CNAV_ALL);
-chunk_t *chunk_get_prev_str(chunk_t *cur, const char *str, int len, int level, chunk_nav_t nav = CNAV_ALL);
+chunk_t *chunk_get_next_str(chunk_t *cur, const char *str, size_t len, int level, chunk_nav_t nav = CNAV_ALL);
+chunk_t *chunk_get_prev_str(chunk_t *cur, const char *str, size_t len, int level, chunk_nav_t nav = CNAV_ALL);
 
 chunk_t *chunk_get_next_nvb(chunk_t *cur, chunk_nav_t nav = CNAV_ALL);
 chunk_t *chunk_get_prev_nvb(chunk_t *cur, chunk_nav_t nav = CNAV_ALL);
@@ -184,14 +184,14 @@ bool chunk_is_token(chunk_t *pc, c_token_t c_token)
 
 
 static_inline
-bool chunk_is_str(chunk_t *pc, const char *str, int len)
+bool chunk_is_str(chunk_t *pc, const char *str, size_t len)
 {
    return((pc != NULL) && (pc->len() == len) && (memcmp(pc->text(), str, len) == 0));
 }
 
 
 static_inline
-bool chunk_is_str_case(chunk_t *pc, const char *str, int len)
+bool chunk_is_str_case(chunk_t *pc, const char *str, size_t len)
 {
    return((pc != NULL) && (pc->len() == len) && (strncasecmp(pc->text(), str, len) == 0));
 }

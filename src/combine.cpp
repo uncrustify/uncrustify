@@ -2159,8 +2159,8 @@ static void fix_enum_struct_union(chunk_t *pc)
    LOG_FUNC_ENTRY();
    chunk_t *next;
    chunk_t *prev        = NULL;
-   int     flags        = PCF_VAR_1ST_DEF;
-   int     in_fcn_paren = pc->flags & PCF_IN_FCN_DEF;
+   size_t  flags        = PCF_VAR_1ST_DEF;
+   size_t  in_fcn_paren = pc->flags & PCF_IN_FCN_DEF;
 
    /* Make sure this wasn't a cast */
    if (pc->parent_type == CT_C_CAST)
@@ -3019,7 +3019,7 @@ static chunk_t *mark_variable_definition(chunk_t *start)
 {
    LOG_FUNC_ENTRY();
    chunk_t *pc   = start;
-   int     flags = PCF_VAR_1ST_DEF;
+   size_t  flags = PCF_VAR_1ST_DEF;
 
    if (start == NULL)
    {
@@ -4010,7 +4010,7 @@ static void mark_class_ctor(chunk_t *start)
    }
 
    /* Find the open brace, abort on semicolon */
-   int flags = 0;
+   size_t flags = 0;
    while ((pc != NULL) && (pc->type != CT_BRACE_OPEN))
    {
       LOG_FMT(LFTOR, " [%s]", pc->text());
@@ -4122,7 +4122,7 @@ static void mark_namespace(chunk_t *pns)
       if ((cpd.settings[UO_indent_namespace_limit].n > 0) &&
           ((br_close = chunk_skip_to_match(pc)) != NULL))
       {
-         int diff = br_close->orig_line - pc->orig_line;
+         int diff = (int)br_close->orig_line - (int)pc->orig_line;
 
          if (diff > cpd.settings[UO_indent_namespace_limit].n)
          {
@@ -4459,7 +4459,7 @@ static void handle_cpp_lambda(chunk_t *sq_o)
       // The original orig_col of CT_SQUARE_CLOSE is stored at orig_col_end of CT_TSQUARE.
       // CT_SQUARE_CLOSE orig_col and orig_col_end values are calculate from orig_col_end of CT_TSQUARE.
       nc.orig_col        = sq_o->orig_col_end - 1;
-      nc.column          = nc.orig_col;
+      nc.column          = (int)nc.orig_col;
       nc.orig_col_end    = sq_o->orig_col_end;
       sq_o->orig_col_end = sq_o->orig_col + 1;
 

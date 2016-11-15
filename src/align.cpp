@@ -154,17 +154,17 @@ static void align_stack(ChunkStack &cs, int col, bool align_single, log_sev_t se
  * @param max_col    pointer to the column variable
  * @param extra_pad  extra padding
  */
-static void align_add(ChunkStack &cs, chunk_t *pc, int &max_col, int min_pad, bool squeeze)
+static void align_add(ChunkStack &cs, chunk_t *pc, int &max_col, size_t min_pad, bool squeeze)
 {
    LOG_FUNC_ENTRY();
    chunk_t *prev;
-   int     min_col;
+   size_t  min_col;
 
    prev = chunk_get_prev(pc);
    if ((prev == NULL) || chunk_is_newline(prev))
    {
       min_col = squeeze ? 1 : pc->column;
-      LOG_FMT(LALADD, "%s: pc->orig_line=%d, pc->col=%d max_col=%d min_pad=%d min_col=%d\n",
+      LOG_FMT(LALADD, "%s: pc->orig_line=%d, pc->col=%d max_col=%d min_pad=%lu min_col=%lu\n",
               __func__, pc->orig_line, pc->column, max_col, min_pad, min_col);
    }
    else
@@ -184,7 +184,7 @@ static void align_add(ChunkStack &cs, chunk_t *pc, int &max_col, int min_pad, bo
             min_col = pc->column;
          }
       }
-      LOG_FMT(LALADD, "%s: Pc->Orig_line=%d, pc->col=%d max_col=%d min_pad=%d min_col=%d multi:%s prev->col=%d prev->len=%d %s\n",
+      LOG_FMT(LALADD, "%s: Pc->Orig_line=%d, pc->col=%d max_col=%d min_pad=%lu min_col=%lu multi:%s prev->col=%d prev->len()=%lu %s\n",
               __func__, pc->orig_line, pc->column, max_col, min_pad, min_col, (prev->type == CT_COMMENT_MULTI) ? "Y" : "N",
               (prev->type == CT_COMMENT_MULTI) ? prev->orig_col_end : prev->column, prev->len(), get_token_name(prev->type));
    }
@@ -851,7 +851,7 @@ static void align_same_func_call_params()
    deque<chunk_t *>  chunks;
    deque<AlignStack> as;
    AlignStack        fcn_as;
-   int               idx;
+   size_t            idx;
    const char        *add_str;
 
    fcn_as.Start(3);
@@ -862,7 +862,7 @@ static void align_same_func_call_params()
       {
          if (chunk_is_newline(pc))
          {
-            for (idx = 0; idx < (int)as.size(); idx++)
+            for (idx = 0; idx < as.size(); idx++)
             {
                as[idx].NewLines(pc->nl_count);
             }
@@ -877,7 +877,7 @@ static void align_same_func_call_params()
 
                /* Flush it all! */
                fcn_as.Flush();
-               for (idx = 0; idx < (int)as.size(); idx++)
+               for (idx = 0; idx < as.size(); idx++)
                {
                   as[idx].Flush();
                }
@@ -941,7 +941,7 @@ static void align_same_func_call_params()
 
             /* Flush it all! */
             fcn_as.Flush();
-            for (idx = 0; idx < (int)as.size(); idx++)
+            for (idx = 0; idx < as.size(); idx++)
             {
                as[idx].Flush();
             }
@@ -966,10 +966,10 @@ static void align_same_func_call_params()
          align_params(pc, chunks);
          LOG_FMT(LASFCP, " %d items:", (int)chunks.size());
 
-         for (idx = 0; idx < (int)chunks.size(); idx++)
+         for (idx = 0; idx < chunks.size(); idx++)
          {
             LOG_FMT(LASFCP, " [%s]", chunks[idx]->text());
-            if (idx >= (int)as.size())
+            if (idx >= as.size())
             {
                as.resize(idx + 1);
                as[idx].Start(3);
@@ -994,7 +994,7 @@ static void align_same_func_call_params()
    {
       LOG_FMT(LASFCP, "  ++ Ended with %d fcns\n", align_len);
       fcn_as.End();
-      for (idx = 0; idx < (int)as.size(); idx++)
+      for (idx = 0; idx < as.size(); idx++)
       {
          as[idx].End();
       }
@@ -1441,7 +1441,7 @@ chunk_t *align_trailing_comments(chunk_t *start)
          if (cmt_type_cur == cmt_type_start)
          {
             col = 1 + (pc->brace_level * cpd.settings[UO_indent_columns].n);
-            LOG_FMT(LALADD, "%s: line=%d col=%d max_col=%d pc->col=%d pc->len=%d %s\n",
+            LOG_FMT(LALADD, "%s: line=%d col=%d max_col=%d pc->col=%d pc->len=%lu %s\n",
                     __func__, pc->orig_line, col, min_col, pc->column, pc->len(),
                     get_token_name(pc->type));
             if ((min_orig < 0) || (min_orig > pc->column))
@@ -1498,7 +1498,7 @@ chunk_t *align_trailing_comments(chunk_t *start)
  * @param idx  The index to start shifting
  * @param num  The number of columns to shift
  */
-void ib_shift_out(int idx, int num)
+void ib_shift_out(size_t idx, int num)
 {
    while (idx < cpd.al_cnt)
    {
@@ -1542,7 +1542,7 @@ static chunk_t *scan_ib_line(chunk_t *start, bool first_pass)
    chunk_t *prev_match = NULL;
    chunk_t *tmp;
    int     token_width;
-   int     idx = 0;
+   size_t  idx = 0;
 
    /* Skip past C99 "[xx] =" stuff */
    tmp = skip_c99_array(start);
@@ -1583,7 +1583,7 @@ static chunk_t *scan_ib_line(chunk_t *start, bool first_pass)
          /* Is this a new entry? */
          if (idx >= cpd.al_cnt)
          {
-            LOG_FMT(LSIB, " - New   [%d] %.2d/%d - %10.10s\n", idx,
+            LOG_FMT(LSIB, " - New   [%lu] %.2d/%d - %10.10s\n", idx,
                     pc->column, token_width, get_token_name(pc->type));
 
             cpd.al[cpd.al_cnt].type = pc->type;
@@ -1597,7 +1597,7 @@ static chunk_t *scan_ib_line(chunk_t *start, bool first_pass)
             /* expect to match stuff */
             if (cpd.al[idx].type == pc->type)
             {
-               LOG_FMT(LSIB, " - Match [%d] %.2d/%d - %10.10s", idx,
+               LOG_FMT(LSIB, " - Match [%lu] %.2d/%d - %10.10s", idx,
                        pc->column, token_width, get_token_name(pc->type));
 
                /* Shift out based on column */
