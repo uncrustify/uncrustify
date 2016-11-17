@@ -21,9 +21,9 @@
 #include "unc_ctype.h"
 
 
-static map<string, option_map_value>           option_name_map;
-static map<uncrustify_groups, group_map_value> group_map;
-static uncrustify_groups                       current_group;
+static map<uncrustify_options, option_map_value> option_name_map;
+static map<uncrustify_groups, group_map_value>   group_map;
+static uncrustify_groups                         current_group;
 
 
 static void unc_add_option(const char *name, uncrustify_options id, argtype_e type, const char *short_desc = NULL, const char *long_desc = NULL, int min_val = 0, int max_val = 16);
@@ -101,7 +101,7 @@ void unc_add_option(const char *name, uncrustify_options id, argtype_e type,
       exit(EXIT_FAILURE);
    }
 
-   option_name_map[name] = value;
+   option_name_map[id] = value;
 } // unc_add_option
 
 
@@ -136,21 +136,16 @@ static bool match_text(const char *str1, const char *str2)
 
 const option_map_value *unc_find_option(const char *name)
 {
-   if (option_name_map.find(name) == option_name_map.end())
+   const option_name_map_it itE = option_name_map.end();
+
+   for (option_name_map_it it = option_name_map.begin(); it != itE; it++)
    {
-      /* Try a more aggressive search */
-      for (option_name_map_it it = option_name_map.begin();
-           it != option_name_map.end();
-           it++)
+      if (match_text(it->second.name, name))
       {
-         if (match_text(it->second.name, name))
-         {
-            return(&it->second);
-         }
+         return(&it->second);
       }
-      return(NULL);
    }
-   return(&option_name_map[name]);
+   return(NULL);
 }
 
 
@@ -1540,18 +1535,11 @@ const group_map_value *get_group_name(int ug)
 }
 
 
-const option_map_value *get_option_name(int uo)
+const option_map_value *get_option_name(uncrustify_options option)
 {
-   for (option_name_map_it it = option_name_map.begin();
-        it != option_name_map.end();
-        it++)
-   {
-      if (it->second.id == uo)
-      {
-         return(&it->second);
-      }
-   }
-   return(NULL);
+   const option_name_map_it it = option_name_map.find(option);
+
+   return((it == option_name_map.end()) ? NULL : (&it->second));
 }
 
 
@@ -1777,12 +1765,7 @@ bool is_path_relative(const char *path)
 #endif
 
    // /path/to/file style absolute path
-   if (path[0] == '/')
-   {
-      return(false);
-   }
-
-   return(true);
+   return(path[0] != '/');
 }
 
 

@@ -859,9 +859,9 @@ struct option_map_value
 };
 
 
-typedef map<string, option_map_value>::iterator             option_name_map_it;
-typedef map<uncrustify_groups, group_map_value>::iterator   group_map_it;
-typedef group_map_value_options_t::iterator                 option_list_it;
-typedef group_map_value_options_t::const_iterator           option_list_cit;
+typedef map<uncrustify_options, option_map_value>::iterator   option_name_map_it;
+typedef map<uncrustify_groups, group_map_value>::iterator     group_map_it;
+typedef list<uncrustify_options>::iterator                    option_list_it;
+typedef list<uncrustify_options>::const_iterator              option_list_cit;
 
 #endif /* OPTIONS_H_INCLUDED */
