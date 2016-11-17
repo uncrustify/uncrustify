@@ -832,12 +832,6 @@ enum uncrustify_options
 };
 
 
-#ifdef EMSCRIPTEN
-#define group_map_value_options_t    vector<uncrustify_options>
-#else
-#define group_map_value_options_t    list<uncrustify_options>
-#endif
-
 struct group_map_value
 {
    uncrustify_groups         id;
