@@ -141,11 +141,6 @@ public:
    /* get the UTF-8 string for logging */
    const char *c_str();
 
-   operator const char *()
-   {
-      return(c_str());
-   }
-
    static int compare(const unc_text &ref1, const unc_text &ref2, size_t len = 0);
    bool equals(const unc_text &ref) const;
 

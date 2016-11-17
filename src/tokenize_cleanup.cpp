@@ -471,12 +471,12 @@ void tokenize_cleanup(void)
 
       /* Look for <newline> 'EXEC' 'SQL' */
       if ((chunk_is_str(pc, "EXEC", 4) && chunk_is_str(next, "SQL", 3)) ||
-          ((*pc->str == '$') && (pc->type != CT_SQL_WORD)))
+          ((*pc->str.c_str() == '$') && (pc->type != CT_SQL_WORD)))
       {
          tmp = chunk_get_prev(pc);
          if (chunk_is_newline(tmp))
          {
-            if (*pc->str == '$')
+            if (*pc->str.c_str() == '$')
             {
                set_chunk_type(pc, CT_SQL_EXEC);
                if (pc->len() > 1)
@@ -518,7 +518,7 @@ void tokenize_cleanup(void)
                {
                   break;
                }
-               if ((tmp->len() > 0) && (unc_isalpha(*tmp->str) || (*tmp->str == '$')))
+               if ((tmp->len() > 0) && (unc_isalpha(*tmp->str.c_str()) || (*tmp->str.c_str() == '$')))
                {
                   set_chunk_type(tmp, CT_SQL_WORD);
                }
@@ -725,10 +725,10 @@ void tokenize_cleanup(void)
       /* Detect "pragma region" and "pragma endregion" */
       if ((pc->type == CT_PP_PRAGMA) && (next->type == CT_PREPROC_BODY))
       {
-         if ((memcmp(next->str, "region", 6) == 0) ||
-             (memcmp(next->str, "endregion", 9) == 0))
+         if ((memcmp(next->str.c_str(), "region", 6) == 0) ||
+             (memcmp(next->str.c_str(), "endregion", 9) == 0))
          {
-            set_chunk_type(pc, (*next->str == 'r') ? CT_PP_REGION : CT_PP_ENDREGION);
+            set_chunk_type(pc, (*next->str.c_str() == 'r') ? CT_PP_REGION : CT_PP_ENDREGION);
 
             set_chunk_parent(prev, pc->type);
          }
