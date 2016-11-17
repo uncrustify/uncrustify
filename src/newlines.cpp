@@ -1488,6 +1488,7 @@ static void newlines_brace_pair(chunk_t *br_open)
        (br_open->parent_type == CT_FUNC_CALL) ||
        (br_open->parent_type == CT_FUNC_CALL_USER) ||
        (br_open->parent_type == CT_FUNC_CLASS_DEF) ||
+       (br_open->parent_type == CT_OC_CLASS) ||
        (br_open->parent_type == CT_OC_MSG_DECL) ||
        (br_open->parent_type == CT_CS_PROPERTY) ||
        (br_open->parent_type == CT_CPP_LAMBDA))
@@ -1504,6 +1505,7 @@ static void newlines_brace_pair(chunk_t *br_open)
 
       val = (((br_open->parent_type == CT_FUNC_DEF) ||
               (br_open->parent_type == CT_FUNC_CLASS_DEF) ||
+              (br_open->parent_type == CT_OC_CLASS) ||
               (br_open->parent_type == CT_OC_MSG_DECL)) ?
              cpd.settings[UO_nl_fdef_brace].a :
              ((br_open->parent_type == CT_CS_PROPERTY) ?
