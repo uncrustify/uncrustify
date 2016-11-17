@@ -17,6 +17,10 @@ Just in case I don't do a release for a while and forget what to do... =)
       At line # Generate uncrustify_version.h
     documentation/htdocs/index.html
       At line <li>Highly configurable
+    package.json
+      At line "version"
+      At line "preinstall"
+      At line "url"
 
 2b. Update the option count in documentation/htdocs/index.html
    Use script/count_the_options.sh to count the options.
