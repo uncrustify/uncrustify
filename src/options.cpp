@@ -1769,15 +1769,170 @@ bool is_path_relative(const char *path)
 }
 
 
+/**
+ * processes a single line string to extract configuration settings
+ * increments cpd.line_number and cpd.error_count, modifies configLine parameter
+ *
+ * @param configLine: single line string that will be processed
+ * @param filename: for log messages, file from which the configLine param was
+ *                  extracted
+ */
+void process_option_line(char *configLine, const char *filename)
+{
+   char *ptr;
+   char *args[32];
+   int  argc;
+   int  idx;
+
+   cpd.line_number++;
+
+   /* Chop off trailing comments */
+   if ((ptr = strchr(configLine, '#')) != NULL)
+   {
+      *ptr = 0;
+   }
+
+   /* Blow away the '=' to make things simple */
+   if ((ptr = strchr(configLine, '=')) != NULL)
+   {
+      *ptr = ' ';
+   }
+
+   /* Blow away all commas */
+   ptr = configLine;
+   while ((ptr = strchr(ptr, ',')) != NULL)
+   {
+      *ptr = ' ';
+   }
+
+   /* Split the line */
+   argc = Args::SplitLine(configLine, args, ARRAY_SIZE(args) - 1);
+   if (argc < 2)
+   {
+      if (argc > 0)
+      {
+         LOG_FMT(LWARN, "%s:%d Wrong number of arguments: %s...\n",
+                 filename, cpd.line_number, configLine);
+         cpd.error_count++;
+      }
+      return;
+   }
+   args[argc] = NULL;
+
+   if (strcasecmp(args[0], "type") == 0)
+   {
+      for (idx = 1; idx < argc; idx++)
+      {
+         add_keyword(args[idx], CT_TYPE);
+      }
+   }
+   else if (strcasecmp(args[0], "define") == 0)
+   {
+      add_define(args[1], args[2]);
+   }
+   else if (strcasecmp(args[0], "macro-open") == 0)
+   {
+      add_keyword(args[1], CT_MACRO_OPEN);
+   }
+   else if (strcasecmp(args[0], "macro-close") == 0)
+   {
+      add_keyword(args[1], CT_MACRO_CLOSE);
+   }
+   else if (strcasecmp(args[0], "macro-else") == 0)
+   {
+      add_keyword(args[1], CT_MACRO_ELSE);
+   }
+   else if (strcasecmp(args[0], "set") == 0)
+   {
+      if (argc < 3)
+      {
+         LOG_FMT(LWARN, "%s:%d 'set' requires at least three arguments\n",
+                 filename, cpd.line_number);
+      }
+      else
+      {
+         c_token_t token = find_token_name(args[1]);
+         if (token != CT_NONE)
+         {
+            LOG_FMT(LNOTE, "%s:%d set '%s':", filename, cpd.line_number, args[1]);
+            for (idx = 2; idx < argc; idx++)
+            {
+               LOG_FMT(LNOTE, " '%s'", args[idx]);
+               add_keyword(args[idx], token);
+            }
+            LOG_FMT(LNOTE, "\n");
+         }
+         else
+         {
+            LOG_FMT(LWARN, "%s:%d unknown type '%s':", filename, cpd.line_number, args[1]);
+         }
+      }
+   }
+#ifndef EMSCRIPTEN
+   else if (strcasecmp(args[0], "include") == 0)
+   {
+      int save_line_no = cpd.line_number;
+
+      if (is_path_relative(args[1]))
+      {
+         /* include is a relative path to the current config file */
+         unc_text ut = filename;
+         ut.resize(path_dirname_len(filename));
+         ut.append(args[1]);
+         (void)load_option_file(ut.c_str());
+      }
+      else
+      {
+         /* include is an absolute Unix path */
+         (void)load_option_file(args[1]);
+      }
+
+      cpd.line_number = save_line_no;
+   }
+#endif
+   else if (strcasecmp(args[0], "file_ext") == 0)
+   {
+      if (argc < 3)
+      {
+         LOG_FMT(LWARN, "%s:%d 'file_ext' requires at least three arguments\n",
+                 filename, cpd.line_number);
+      }
+      else
+      {
+         for (idx = 2; idx < argc; idx++)
+         {
+            const char *lang_name = extension_add(args[idx], args[1]);
+            if (lang_name)
+            {
+               LOG_FMT(LNOTE, "%s:%d file_ext '%s' => '%s'\n",
+                       filename, cpd.line_number, args[idx], lang_name);
+            }
+            else
+            {
+               LOG_FMT(LWARN, "%s:%d file_ext has unknown language '%s'\n",
+                       filename, cpd.line_number, args[1]);
+            }
+         }
+      }
+   }
+   else
+   {
+      /* must be a regular option = value */
+      const int id = set_option_value(args[0], args[1]);
+      if (id < 0)
+      {
+         LOG_FMT(LWARN, "%s:%d Unknown symbol '%s'\n",
+                 filename, cpd.line_number, args[0]);
+         cpd.error_count++;
+      }
+   }
+} // process_option_line
+
+
 int load_option_file(const char *filename)
 {
    FILE *pfile;
    char buffer[256];
-   char *ptr;
-   int  id;
-   char *args[32];
-   int  argc;
-   int  idx;
 
    cpd.line_number = 0;
 
@@ -1801,145 +1956,7 @@ int load_option_file(const char *filename)
    /* Read in the file line by line */
    while (fgets(buffer, sizeof(buffer), pfile) != NULL)
    {
-      cpd.line_number++;
-
-      /* Chop off trailing comments */
-      if ((ptr = strchr(buffer, '#')) != NULL)
-      {
-         *ptr = 0;
-      }
-
-      /* Blow away the '=' to make things simple */
-      if ((ptr = strchr(buffer, '=')) != NULL)
-      {
-         *ptr = ' ';
-      }
-
-      /* Blow away all commas */
-      ptr = buffer;
-      while ((ptr = strchr(ptr, ',')) != NULL)
-      {
-         *ptr = ' ';
-      }
-
-      /* Split the line */
-      argc = Args::SplitLine(buffer, args, ARRAY_SIZE(args) - 1);
-      if (argc < 2)
-      {
-         if (argc > 0)
-         {
-            LOG_FMT(LWARN, "%s:%d Wrong number of arguments: %s...\n",
-                    filename, cpd.line_number, buffer);
-            cpd.error_count++;
-         }
-         continue;
-      }
-      args[argc] = NULL;
-
-      if (strcasecmp(args[0], "type") == 0)
-      {
-         for (idx = 1; idx < argc; idx++)
-         {
-            add_keyword(args[idx], CT_TYPE);
-         }
-      }
-      else if (strcasecmp(args[0], "define") == 0)
-      {
-         add_define(args[1], args[2]);
-      }
-      else if (strcasecmp(args[0], "macro-open") == 0)
-      {
-         add_keyword(args[1], CT_MACRO_OPEN);
-      }
-      else if (strcasecmp(args[0], "macro-close") == 0)
-      {
-         add_keyword(args[1], CT_MACRO_CLOSE);
-      }
-      else if (strcasecmp(args[0], "macro-else") == 0)
-      {
-         add_keyword(args[1], CT_MACRO_ELSE);
-      }
-      else if (strcasecmp(args[0], "set") == 0)
-      {
-         if (argc < 3)
-         {
-            LOG_FMT(LWARN, "%s:%d 'set' requires at least three arguments\n",
-                    filename, cpd.line_number);
-         }
-         else
-         {
-            c_token_t token = find_token_name(args[1]);
-            if (token != CT_NONE)
-            {
-               LOG_FMT(LNOTE, "%s:%d set '%s':", filename, cpd.line_number, args[1]);
-               for (idx = 2; idx < argc; idx++)
-               {
-                  LOG_FMT(LNOTE, " '%s'", args[idx]);
-                  add_keyword(args[idx], token);
-               }
-               LOG_FMT(LNOTE, "\n");
-            }
-            else
-            {
-               LOG_FMT(LWARN, "%s:%d unknown type '%s':", filename, cpd.line_number, args[1]);
-            }
-         }
-      }
-      else if (strcasecmp(args[0], "include") == 0)
-      {
-         int save_line_no = cpd.line_number;
-
-         if (is_path_relative(args[1]))
-         {
-            /* include is a relative path to the current config file */
-            unc_text ut = filename;
-            ut.resize(path_dirname_len(filename));
-            ut.append(args[1]);
-            (void)load_option_file(ut.c_str());
-         }
-         else
-         {
-            /* include is an absolute Unix path */
-            (void)load_option_file(args[1]);
-         }
-
-         cpd.line_number = save_line_no;
-      }
-      else if (strcasecmp(args[0], "file_ext") == 0)
-      {
-         if (argc < 3)
-         {
-            LOG_FMT(LWARN, "%s:%d 'file_ext' requires at least three arguments\n",
-                    filename, cpd.line_number);
-         }
-         else
-         {
-            for (idx = 2; idx < argc; idx++)
-            {
-               const char *lang_name = extension_add(args[idx], args[1]);
-               if (lang_name)
-               {
-                  LOG_FMT(LNOTE, "%s:%d file_ext '%s' => '%s'\n",
-                          filename, cpd.line_number, args[idx], lang_name);
-               }
-               else
-               {
-                  LOG_FMT(LWARN, "%s:%d file_ext has unknown language '%s'\n",
-                          filename, cpd.line_number, args[1]);
-               }
-            }
-         }
-      }
-      else
-      {
-         /* must be a regular option = value */
-         if ((id = set_option_value(args[0], args[1])) < 0)
-         {
-            LOG_FMT(LWARN, "%s:%d Unknown symbol '%s'\n",
-                    filename, cpd.line_number, args[0]);
-            cpd.error_count++;
-         }
-      }
+      process_option_line(buffer, filename);
    }
 
    fclose(pfile);
