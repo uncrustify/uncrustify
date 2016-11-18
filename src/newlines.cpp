@@ -1278,6 +1278,10 @@ static chunk_t *newline_def_blk(chunk_t *start, bool fn_top)
            (pc->level == 0)))
       {
          next = chunk_get_next_ncnl(pc);
+         if (next == NULL)
+         {
+            break;
+         }
          prev = chunk_get_prev_ncnl(pc);
          if (pc->type == CT_TYPEDEF)
          {
