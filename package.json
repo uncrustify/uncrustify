@@ -4,7 +4,7 @@
   "description": "A highly configurable, easily modifiable source code beautifier for C, C++, C#, ObjectiveC, D, Java, Pawn and VALA",
   "main": "uncrustify",
   "scripts": {
-      "preinstall": "mkdir build; cd build; cmake .."
+      "preinstall": "mkdir -p build && cd build && cmake .. && make"
   },
   "bin" : "src/uncrustify" ,
   "repository": {
@@ -16,5 +16,5 @@
     "source code beautifier"
   ],
   "author": "Ben Gardner",
-  "license": "GPLv3"
+  "license": "GPL v2+"
 }
