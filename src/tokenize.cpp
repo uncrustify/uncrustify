@@ -671,7 +671,7 @@ static bool parse_number(tok_ctx &ctx, chunk_t &pc)
    {
       int     ch;
       chunk_t pc_temp;
-      int     pc_length;
+      size_t  pc_length;
 
       pc.str.append(ctx.get());  /* store the '0' */
       // MS constant might have an "h" at the end. Look for it
@@ -682,7 +682,7 @@ static bool parse_number(tok_ctx &ctx, chunk_t &pc)
          pc_temp.str.append(ch);
       }
       pc_length = pc_temp.len();
-      ch        = pc_temp.str[pc_length - 1];
+      ch        = (pc_length > 0) ? pc_temp.str[pc_length - 1] : -1;
       ctx.restore();
       LOG_FMT(LGUY98, "%s:(%d)pc_temp:%s\n", __func__, __LINE__, pc_temp.text());
       if (ch == 'h')

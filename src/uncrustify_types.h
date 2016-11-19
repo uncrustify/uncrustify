@@ -263,7 +263,7 @@ struct chunk_t
    }
 
 
-   int len()
+   size_t len()
    {
       return(str.size());
    }
