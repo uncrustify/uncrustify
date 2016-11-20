@@ -1,6 +1,7 @@
 #import <Foundation/NSObject.h>
 
-@interface Fraction : NSObject {
+@interface Fraction : NSObject
+{
    int numerator;
    int denominator;
 }
