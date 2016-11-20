@@ -648,6 +648,10 @@ void indent_text(void)
              (pc->parent_type == CT_PP_REGION))
          {
             next = chunk_get_next(pc);
+            if (next == NULL)
+            {
+               break;
+            }
             /* Hack to get the logs to look right */
             set_chunk_type(next, CT_PP_REGION_INDENT);
             indent_pse_push(frm, next);
@@ -666,6 +670,10 @@ void indent_text(void)
               (pc->parent_type == CT_PP_ELSE)))
          {
             next = chunk_get_next(pc);
+            if (next == NULL)
+            {
+               break;
+            }
             /* Hack to get the logs to look right */
             memtype = next->type;
             set_chunk_type(next, CT_PP_IF_INDENT);
@@ -1230,6 +1238,10 @@ void indent_text(void)
              *   b--; };
              */
             next = chunk_get_next_ncnl(pc);
+            if (next == NULL)
+            {
+               break;
+            }
             if (!chunk_is_newline_between(pc, next))
             {
                if (cpd.settings[UO_indent_token_after_brace].b)
@@ -1335,13 +1347,16 @@ void indent_text(void)
             indent_column_set(cpd.settings[UO_indent_label].n);
 
             next = chunk_get_next(pc);   /* colon */
-            next = chunk_get_next(next); /* possible statement */
-
-            if ((next != NULL) && !chunk_is_newline(next) &&
-                /* label (+ 2, because there is colon and space after it) must fit into indent */
-                (cpd.settings[UO_indent_label].n + pc->len() + 2 <= frm.pse[frm.pse_tos].indent))
+            if (next != NULL)
             {
-               reindent_line(next, frm.pse[frm.pse_tos].indent);
+               next = chunk_get_next(next); /* possible statement */
+
+               if ((next != NULL) && !chunk_is_newline(next) &&
+                   /* label (+ 2, because there is colon and space after it) must fit into indent */
+                   (cpd.settings[UO_indent_label].n + pc->len() + 2 <= frm.pse[frm.pse_tos].indent))
+               {
+                  reindent_line(next, frm.pse[frm.pse_tos].indent);
+               }
             }
          }
          else
@@ -1522,6 +1537,10 @@ void indent_text(void)
                   (chunk_is_str(pc, "[", 1) && !cpd.settings[UO_indent_square_nl].b))
          {
             next = chunk_get_next_nc(pc);
+            if (next == NULL)
+            {
+               break;
+            }
             if (chunk_is_newline(next))
             {
                int sub = 1;
@@ -1541,6 +1560,10 @@ void indent_text(void)
                   if (next->type == CT_SPACE)
                   {
                      next = chunk_get_next_nc(next);
+                     if (next == NULL)
+                     {
+                        break;
+                     }
                   }
                   frm.pse[frm.pse_tos].indent = next->column;
                }
@@ -2483,6 +2506,10 @@ void indent_preproc(void)
       }
 
       next = chunk_get_next_ncnl(pc);
+      if (next == NULL)
+      {
+         break;
+      }
 
       pp_level = pc->pp_level - pp_level_sub;
       if (pp_level < 0)
