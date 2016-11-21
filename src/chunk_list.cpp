@@ -207,7 +207,7 @@ void chunk_move_after(chunk_t *pc_in, chunk_t *ref)
 
    /* HACK: Adjust the original column */
    pc_in->column       = ref->column + space_col_align(ref, pc_in);
-   pc_in->orig_col     = pc_in->column;
+   pc_in->orig_col     = (UINT32)pc_in->column;
    pc_in->orig_col_end = pc_in->orig_col + pc_in->len();
 }
 
@@ -470,7 +470,7 @@ chunk_t *chunk_get_next_type(chunk_t *cur, c_token_t type,
 }
 
 
-chunk_t *chunk_get_next_str(chunk_t *cur, const char *str, int len, int level,
+chunk_t *chunk_get_next_str(chunk_t *cur, const char *str, size_t len, int level,
                             chunk_nav_t nav)
 {
    chunk_t *pc = cur;
@@ -515,7 +515,7 @@ chunk_t *chunk_get_prev_type(chunk_t *cur, c_token_t type,
 }
 
 
-chunk_t *chunk_get_prev_str(chunk_t *cur, const char *str, int len, int level,
+chunk_t *chunk_get_prev_str(chunk_t *cur, const char *str, size_t len, int level,
                             chunk_nav_t nav)
 {
    chunk_t *pc = cur;
