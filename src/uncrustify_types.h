@@ -263,7 +263,7 @@ struct chunk_t
    }
 
 
-   deque<int>::size_type len()
+   size_t len()
    {
       return(str.size());
    }

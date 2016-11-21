@@ -67,7 +67,7 @@ public:
 
 
    /* grab the number of characters */
-   deque<int>::size_type size() const
+   size_t size() const
    {
       return(m_chars.size());
    }
