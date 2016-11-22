@@ -669,11 +669,12 @@ static bool parse_number(tok_ctx &ctx, chunk_t &pc)
     */
    if (ctx.peek() == '0')
    {
+      pc.str.append(ctx.get());  /* store the '0' */
       int     ch;
       chunk_t pc_temp;
-      int     pc_length;
+      size_t  pc_length;
 
-      pc.str.append(ctx.get());  /* store the '0' */
+      pc_temp.str.append('0');
       // MS constant might have an "h" at the end. Look for it
       ctx.save();
       while (ctx.more() && CharTable::IsKw2(ctx.peek()))
@@ -684,18 +685,18 @@ static bool parse_number(tok_ctx &ctx, chunk_t &pc)
       pc_length = pc_temp.len();
       ch        = pc_temp.str[pc_length - 1];
       ctx.restore();
-      LOG_FMT(LGUY98, "%s:(%d)pc_temp:%s\n", __func__, __LINE__, pc_temp.text());
+      LOG_FMT(LGUY, "%s(%d): pc_temp:%s\n", __func__, __LINE__, pc_temp.text());
       if (ch == 'h')
       {
          // we have an MS hexadecimal number with "h" at the end
-         LOG_FMT(LGUY98, "%s:(%d) MS hexadecimal number\n", __func__, __LINE__);
+         LOG_FMT(LGUY, "%s(%d): MS hexadecimal number\n", __func__, __LINE__);
          did_hex = true;
          do
          {
             pc.str.append(ctx.get()); /* store the rest */
          } while (is_hex_(ctx.peek()));
          pc.str.append(ctx.get());    /* store the h */
-         LOG_FMT(LGUY98, "%s:(%d)pc:%s\n", __func__, __LINE__, pc.text());
+         LOG_FMT(LGUY, "%s(%d): pc:%s\n", __func__, __LINE__, pc.text());
       }
       else
       {
@@ -1935,11 +1936,13 @@ void tokenize(const deque<int> &data, chunk_t *ref)
       }
       if (pc->type == CT_NEWLINE)
       {
-         LOG_FMT(LGUY, "(%d)<NL> col=%d\n", pc->orig_line, pc->orig_col);
+         LOG_FMT(LGUY, "%s(%d): (%d)<NL> col=%d\n",
+                 __func__, __LINE__, pc->orig_line, pc->orig_col);
       }
       else
       {
-         LOG_FMT(LGUY, "%s:%s, %s, orig_col=%d, orig_col_end=%d\n", __func__, pc->text(), get_token_name(pc->type), pc->orig_col, pc->orig_col_end);
+         LOG_FMT(LGUY, "%s(%d): text():%s, type:%s, orig_col=%d, orig_col_end=%d\n",
+                 __func__, __LINE__, pc->text(), get_token_name(pc->type), pc->orig_col, pc->orig_col_end);
       }
    }
 
