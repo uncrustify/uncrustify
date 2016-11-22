@@ -1670,7 +1670,7 @@ static bool mark_function_type(chunk_t *pc)
               get_token_name(tmp->type), tmp->text(),
               tmp->orig_line, tmp->orig_col);
 
-      if (*tmp->str == '(')
+      if (*tmp->str.c_str() == '(')
       {
          if ((pc->flags & PCF_IN_TYPEDEF) == 0)
          {
@@ -2342,7 +2342,7 @@ static void fix_typedef(chunk_t *start)
             the_type = next;
          }
          chunk_flags_clr(next, PCF_VAR_1ST_DEF);
-         if (*next->str == '(')
+         if (*next->str.c_str() == '(')
          {
             last_op = next;
          }
