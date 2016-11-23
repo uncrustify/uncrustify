@@ -184,9 +184,9 @@ static void align_add(ChunkStack &cs, chunk_t *pc, int &max_col, size_t min_pad,
             min_col = pc->column;
          }
       }
-      LOG_FMT(LALADD, "%s: Pc->Orig_line=%d, pc->col=%d max_col=%d min_pad=%lu min_col=%lu multi:%s prev->col=%d prev->len()=%lu %s\n",
+      LOG_FMT(LALADD, "%s: pc->Orig_line=%d, pc->col=%d max_col=%d min_pad=%lu min_col=%lu multi:%s prev->col=%d prev->len()=%lu %s\n",
               __func__, pc->orig_line, pc->column, max_col, min_pad, min_col, (prev->type == CT_COMMENT_MULTI) ? "Y" : "N",
-              (prev->type == CT_COMMENT_MULTI) ? prev->orig_col_end : prev->column, prev->len(), get_token_name(prev->type));
+              (prev->type == CT_COMMENT_MULTI) ? prev->orig_col_end : (UINT32)prev->column, prev->len(), get_token_name(prev->type));
    }
 
    if (cs.Empty())
