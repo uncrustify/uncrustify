@@ -2089,6 +2089,29 @@ void indent_text(void)
                     __func__, __LINE__, pc->orig_line, indent_column, pc->text());
             reindent_line(pc, indent_column);
          }
+         else if ((cpd.settings[UO_indent_ternary_operator].n == 1) &&
+                  (((pc->type == CT_ADDR) ||
+                    (pc->type == CT_WORD) ||
+                    (pc->type == CT_DEREF) ||
+                    (pc->type == CT_NUMBER) ||
+                    (pc->type == CT_STRING) ||
+                    (pc->type == CT_PAREN_OPEN)) &&
+                   (prev->type == CT_COND_COLON)))
+         {
+            chunk_t *tmp = chunk_get_prev_type(prev, CT_QUESTION, -1);
+            tmp = chunk_get_next_ncnl(tmp);
+            LOG_FMT(LINDENT, "%s: %d] ternarydefcol => %d [%s]\n",
+                    __func__, pc->orig_line, tmp->column, pc->text());
+            reindent_line(pc, tmp->column);
+         }
+         else if ((cpd.settings[UO_indent_ternary_operator].n == 2) &&
+                  (pc->type == CT_COND_COLON))
+         {
+            chunk_t *tmp = chunk_get_prev_type(pc, CT_QUESTION, -1);
+            LOG_FMT(LINDENT, "%s: %d] ternarydefcol => %d [%s]\n",
+                    __func__, pc->orig_line, tmp->column, pc->text());
+            reindent_line(pc, tmp->column);
+         }
          else
          {
             bool use_ident = true;

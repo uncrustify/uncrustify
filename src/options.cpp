@@ -757,6 +757,11 @@ void register_options(void)
    unc_add_option("indent_using_block", UO_indent_using_block, AT_BOOL,
                   "indent (or not) an using block if no braces are used. Only for C#."
                   "Default=True");
+   unc_add_option("indent_ternary_operator", UO_indent_ternary_operator, AT_NUM,
+                  "indent the continuation of ternary operator.\n"
+                  "0: (Default) off\n"
+                  "1: When the `if_false` is a continuation, indent it under `if_false`\n"
+                  "2: When the `:` is a continuation, indent it under `?`", "", 0, 2);
 
    unc_begin_group(UG_newline, "Newline adding and removing options");
    unc_add_option("nl_collapse_empty_body", UO_nl_collapse_empty_body, AT_BOOL,

@@ -212,6 +212,7 @@ enum uncrustify_options
    UO_indent_cpp_lambda_body,        // indent cpp lambda or not
    UO_indent_using_block,            // indent (or not) an using block if no braces are used,
                                      // default: true. Only for C#
+   UO_indent_ternary_operator,       // indent continuation of ternary operator
 
    /*
     * Misc inter-element spacing
