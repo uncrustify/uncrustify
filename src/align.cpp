@@ -2064,7 +2064,7 @@ static void align_oc_msg_colon(chunk_t *so)
    int     first_len = 0;
    int     len_diff;
    int     tlen;
-   int     mlen = 0;
+   int     mlen        = 0;
    int     indent_size = cpd.settings[UO_indent_columns].n;
    chunk_t *longest    = NULL;
 
