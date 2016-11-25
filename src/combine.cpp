@@ -2676,7 +2676,7 @@ void combine_labels(void)
                }
                else
                {
-                  LOG_FMT(LWARN, "%s:%d unexpected colon in col %d n-parent=%s c-parent=%s l=%d bl=%d\n",
+                  LOG_FMT(LWARN, "%s:%d unexpected colon in col %d n-parent=%s c-parent=%s l=%lu bl=%lu\n",
                           cpd.filename, next->orig_line, next->orig_col,
                           get_token_name(next->parent_type),
                           get_token_name(cur->parent_type),
@@ -2755,7 +2755,7 @@ static void fix_fcn_def_params(chunk_t *start)
       return;
    }
    LOG_FUNC_ENTRY();
-   LOG_FMT(LFCNP, "%s: %s [%s] on line %d, level %d\n",
+   LOG_FMT(LFCNP, "%s: %s [%s] on line %d, level %lu\n",
            __func__, start->text(), get_token_name(start->type), start->orig_line, start->level);
 
    while ((start != NULL) && !chunk_is_paren_open(start))
@@ -2770,7 +2770,7 @@ static void fix_fcn_def_params(chunk_t *start)
    assert((start->len() == 1) && (start->str[0] == '('));
 
    ChunkStack cs;
-   int        level = start->level + 1;
+   size_t     level = start->level + 1;
    chunk_t    *pc   = start;
 
    while ((pc = chunk_get_next_ncnl(pc)) != NULL)
@@ -2782,8 +2782,8 @@ static void fix_fcn_def_params(chunk_t *start)
          break;
       }
 
-      LOG_FMT(LFCNP, "%s: %s %s on line %d, level %d\n", __func__,
-              (pc->level > level) ? "skipping" : "looking at",
+      LOG_FMT(LFCNP, "%s: %s %s on line %d, level %lu\n",
+              __func__, (pc->level > level) ? "skipping" : "looking at",
               pc->text(), pc->orig_line, pc->level);
 
       if (pc->level > level)
@@ -3341,7 +3341,7 @@ static void mark_function(chunk_t *pc)
       next = chunk_get_next_ncnlnp(next);
    }
 
-   LOG_FMT(LFCN, "%s: %d] %s[%s] - parent=%s level=%d/%d, next=%s[%s] - level=%d\n",
+   LOG_FMT(LFCN, "%s: %d] %s[%s] - parent=%s level=%lu/%lu, next=%s[%s] - level=%lu\n",
            __func__,
            pc->orig_line, pc->text(),
            get_token_name(pc->type), get_token_name(pc->parent_type),
@@ -3979,7 +3979,7 @@ static void mark_class_ctor(chunk_t *start)
    }
 
    chunk_t *pc   = chunk_get_next_ncnl(pclass, CNAV_PREPROC);
-   int     level = pclass->brace_level + 1;
+   size_t  level = pclass->brace_level + 1;
 
    if (pc == NULL)
    {

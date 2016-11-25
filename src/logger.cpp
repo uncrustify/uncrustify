@@ -142,10 +142,6 @@ static void log_flush(bool force_nl)
          g_log.buf[g_log.buf_len++] = '\n';
          g_log.buf[g_log.buf_len]   = 0;
       }
-      //if (fwrite(g_log.buf, g_log.buf_len, 1, g_log.log_file) != 1)
-      //{
-      //   /* maybe we should log something to complain... =) */
-      //}
 
       g_log.buf_len = 0;
    }
@@ -419,10 +415,6 @@ void log_func_stack(log_sev_t sev, const char *prefix, const char *suffix, size_
    {
       LOG_FMT(sev, "%s", prefix);
    }
-   //if (skip_cnt < 0)
-   //{
-   //   skip_cnt = 0;
-   //}
 #ifdef DEBUG
    const char *sep      = "";
    size_t     g_fq_size = g_fq.size();
