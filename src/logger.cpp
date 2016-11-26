@@ -424,9 +424,9 @@ void log_func_stack(log_sev_t sev, const char *prefix, const char *suffix, size_
    //   skip_cnt = 0;
    //}
 #ifdef DEBUG
-   const char *sep      = "";
-   size_t     g_fq_size = g_fq.size();
-   size_t     begin_with;
+   const char *sep = "";
+   size_t g_fq_size = g_fq.size();
+   size_t begin_with;
    if (g_fq_size > (skip_cnt + 1))
    {
       begin_with = g_fq_size - (skip_cnt + 1);
