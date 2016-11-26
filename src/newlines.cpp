@@ -3080,6 +3080,53 @@ void newlines_insert_blank_lines(void)
 } // newlines_insert_blank_lines
 
 
+/**
+ * Handle removal of extra blank lines in functions
+ * x <= 0: do nothing, x > 0: allow max x-1 blank lines
+ */
+void newlines_functions_remove_extra_blank_lines(void)
+{
+   LOG_FUNC_ENTRY();
+
+   const int nl_max_blank_in_func = cpd.settings[UO_nl_max_blank_in_func].n;
+   if (nl_max_blank_in_func <= 0)
+   {
+      return;
+   }
+
+   for (chunk_t *pc = chunk_get_head(); pc != NULL; pc = chunk_get_next(pc))
+   {
+      if (pc->type != CT_BRACE_OPEN ||
+          (pc->parent_type != CT_FUNC_DEF && pc->parent_type != CT_CPP_LAMBDA))
+      {
+         continue;
+      }
+
+      const int startMoveLevel = pc->level;
+
+      while (pc != NULL)
+      {
+         if (pc->type == CT_BRACE_CLOSE && pc->level == startMoveLevel)
+         {
+            break;
+         }
+
+         // delete newlines
+         if (pc->nl_count > nl_max_blank_in_func)
+         {
+            pc->nl_count = nl_max_blank_in_func;
+            MARK_CHANGE();
+            remove_next_newlines(pc);
+         }
+         else
+         {
+            pc = chunk_get_next(pc);
+         }
+      }
+   }
+}
+
+
 void newlines_squeeze_ifdef(void)
 {
    LOG_FUNC_ENTRY();

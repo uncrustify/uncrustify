@@ -709,6 +709,7 @@ enum uncrustify_options
    UO_nl_after_class,                  // The number of newlines after '}' or ';' of a class definition
    UO_nl_max,                          // maximum consecutive newlines (3 = 2 blank lines)
    UO_nl_before_access_spec,           // The number of newlines before a 'private:', 'public:', 'protected:', 'signals:', or 'slots:' label
+   UO_nl_max_blank_in_func,            // maximum n-1 consecutive newlines in function (n <= 0 = No change)
                                        // Will not change the newline count if after a brace open (0 = No change)
    UO_nl_after_access_spec,            // The number of newlines after a 'private:', 'public:', 'protected:', 'signals:' or 'slots:' label
                                        // (0 = No change)
