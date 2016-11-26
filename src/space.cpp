@@ -1823,7 +1823,7 @@ void space_text(void)
          while (chunk_is_blank(next) && !chunk_is_newline(next) &&
                 (next->type == CT_VBRACE_OPEN || next->type == CT_VBRACE_CLOSE))
          {
-            LOG_FMT(LSPACE, "%s: %d:%d Skip %s (%d+%lu)\n", __func__,
+            LOG_FMT(LSPACE, "%s: %d:%d Skip %s (%d+%d)\n", __func__,
                     next->orig_line, next->orig_col, get_token_name(next->type),
                     pc->column, pc->str.size());
             next->column = pc->column + pc->str.size();
@@ -1911,7 +1911,7 @@ void space_text(void)
 
                   const chunk_tag_t *ct;
                   ct = find_punctuator(buf, cpd.lang_flags);
-                  if ((ct != NULL) && (strlen(ct->tag) != pc->len()))
+                  if ((ct != NULL) && ((int)strlen(ct->tag) != pc->len()))
                   {
                      /* punctuator parsed to a different size.. */
 
@@ -2161,7 +2161,7 @@ int space_col_align(chunk_t *first, chunk_t *second)
    }
    else
    {
-      LOG_FMT(LSPACE, "len=%lu", first->len());
+      LOG_FMT(LSPACE, "len=%d", first->len());
       coldiff = first->len();
    }
    switch (av)
@@ -2189,13 +2189,13 @@ int space_col_align(chunk_t *first, chunk_t *second)
 } // space_col_align
 
 
-void space_add_after(chunk_t *pc, size_t count)
+void space_add_after(chunk_t *pc, int count)
 {
    LOG_FUNC_ENTRY();
-   //if (count <= 0)
-   //{
-   //   return;
-   //}
+   if (count <= 0)
+   {
+      return;
+   }
 
    chunk_t *next = chunk_get_next(pc);
 

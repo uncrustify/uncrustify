@@ -77,7 +77,7 @@ void log_get_mask(log_mask_t &mask);
  * @param str  The pointer to the string
  * @param len  The length of the string from strlen(str)
  */
-void log_str(log_sev_t sev, const char *str, size_t len);
+void log_str(log_sev_t sev, const char *str, int len);
 
 #define LOG_STR(sev, str, len)                           \
    do { if (log_sev_on(sev)) { log_str(sev, str, len); } \
@@ -113,7 +113,7 @@ void log_fmt(log_sev_t sev, const char *fmt, ...) __attribute__((format(printf, 
  * @param data    The data to log
  * @param len     The number of bytes to log
  */
-void log_hex(log_sev_t sev, const void *vdata, size_t len);
+void log_hex(log_sev_t sev, const void *vdata, int len);
 
 #define LOG_HEX(sev, ptr, len)                           \
    do { if (log_sev_on(sev)) { log_hex(sev, ptr, len); } \
@@ -133,7 +133,7 @@ void log_hex(log_sev_t sev, const void *vdata, size_t len);
  * @param data    The data to log
  * @param len     The number of bytes to log
  */
-void log_hex_blk(log_sev_t sev, const void *data, size_t len);
+void log_hex_blk(log_sev_t sev, const void *data, int len);
 
 #define LOG_HEX_BLK(sev, ptr, len)                           \
    do { if (log_sev_on(sev)) { log_hex_blk(sev, ptr, len); } \
@@ -188,7 +188,7 @@ public:
    ~log_func();
 };
 void log_func_call(int line);
-void log_func_stack(log_sev_t sev, const char *prefix = 0, const char *suffix = "\n", size_t skip_cnt = 0);
+void log_func_stack(log_sev_t sev, const char *prefix = 0, const char *suffix = "\n", int skip_cnt = 0);
 
 #define log_func_stack_inline(_sev)    log_func_stack((_sev), " [CallStack:", "]\n", 1)
 
