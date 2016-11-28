@@ -21,7 +21,7 @@ indent_text(566): 3:1 pc->text() TelegramIndex
 [0x60402:IN_STRUCT,IN_CLASS,STMT_START,EXPR_START]
 indent_text(783): frm.pse_tos=1, ... indent_tmp=9
 indent_text(940): frm.pse_tos=1, ... indent_tmp=9
-reindent_line(232): 3] col 1 on 'TelegramIndex' [FUNC_CLASS_DEF/NONE] => 9 [CallStack: indent_text:526]
+reindent_line(232): 3] col 1 on 'TelegramIndex' [FUNC_CLASS_DEF/NONE] => 9 [CallStack:-DEBUG NOT SET-]
 indent_text(566): 3:14 pc->text() (
 [0x100000502:IN_STRUCT,IN_CONST_ARGS,IN_CLASS,PUNCTUATOR]
 indent_text(783): frm.pse_tos=1, ... indent_tmp=9
@@ -76,7 +76,7 @@ indent_text(566): 4:1 pc->text() pTelName
 [0x60502:IN_STRUCT,IN_CONST_ARGS,IN_CLASS,STMT_START,EXPR_START]
 indent_text(783): frm.pse_tos=2, ... indent_tmp=17
 indent_text(940): frm.pse_tos=2, ... indent_tmp=17
-reindent_line(232): 4] col 1 on 'pTelName' [FUNC_CTOR_VAR/NONE] => 17 [CallStack: indent_text:526]
+reindent_line(232): 4] col 1 on 'pTelName' [FUNC_CTOR_VAR/NONE] => 17 [CallStack:-DEBUG NOT SET-]
 indent_text(566): 4:9 pc->text() (
 [0x100000502:IN_STRUCT,IN_CONST_ARGS,IN_CLASS,PUNCTUATOR]
 indent_text(783): frm.pse_tos=2, ... indent_tmp=17
@@ -102,7 +102,7 @@ indent_text(566): 5:1 pc->text() nTelIndex
 [0x40502:IN_STRUCT,IN_CONST_ARGS,IN_CLASS,EXPR_START]
 indent_text(783): frm.pse_tos=2, ... indent_tmp=17
 indent_text(940): frm.pse_tos=2, ... indent_tmp=17
-reindent_line(232): 5] col 1 on 'nTelIndex' [FUNC_CTOR_VAR/NONE] => 17 [CallStack: indent_text:526]
+reindent_line(232): 5] col 1 on 'nTelIndex' [FUNC_CTOR_VAR/NONE] => 17 [CallStack:-DEBUG NOT SET-]
 indent_text(566): 5:10 pc->text() (
 [0x100000502:IN_STRUCT,IN_CONST_ARGS,IN_CLASS,PUNCTUATOR]
 indent_text(783): frm.pse_tos=2, ... indent_tmp=17
@@ -126,7 +126,7 @@ indent_text(783): frm.pse_tos=2, ... indent_tmp=17
 (394) indent_pse_pop(398): orig_line=6, ------------------- pse_tos=1, type=BRACE_OPEN
 indent_text(940): frm.pse_tos=1, ... indent_tmp=9
 indent_pse_push(333): line=6, +++++++++++++++++++ pse_tos=2, type=BRACE_OPEN
-reindent_line(232): 6] col 1 on '{' [BRACE_OPEN/FUNC_CLASS_DEF] => 9 [CallStack: indent_text:526]
+reindent_line(232): 6] col 1 on '{' [BRACE_OPEN/FUNC_CLASS_DEF] => 9 [CallStack:-DEBUG NOT SET-]
 indent_text(561): 6 NEWLINE
 indent_text(783): frm.pse_tos=2, ... indent_tmp=17
 indent_text(940): frm.pse_tos=2, ... indent_tmp=17
@@ -135,7 +135,7 @@ indent_text(566): 7:1 pc->text() }
 indent_text(783): frm.pse_tos=2, ... indent_tmp=17
 indent_text(940): frm.pse_tos=2, ... indent_tmp=17
 (394) indent_pse_pop(398): orig_line=7, ------------------- pse_tos=1, type=BRACE_CLOSE
-reindent_line(232): 7] col 1 on '}' [BRACE_CLOSE/FUNC_CLASS_DEF] => 9 [CallStack: indent_text:526]
+reindent_line(232): 7] col 1 on '}' [BRACE_CLOSE/FUNC_CLASS_DEF] => 9 [CallStack:-DEBUG NOT SET-]
 indent_text(561): 7 NEWLINE
 indent_text(783): frm.pse_tos=1, ... indent_tmp=9
 indent_text(940): frm.pse_tos=1, ... indent_tmp=9
@@ -143,7 +143,7 @@ indent_text(566): 9:1 pc->text() ~
 [0x100060402:IN_STRUCT,IN_CLASS,STMT_START,EXPR_START,PUNCTUATOR]
 indent_text(783): frm.pse_tos=1, ... indent_tmp=9
 indent_text(940): frm.pse_tos=1, ... indent_tmp=9
-reindent_line(232): 9] col 1 on '~' [DESTRUCTOR/NONE] => 9 [CallStack: indent_text:526]
+reindent_line(232): 9] col 1 on '~' [DESTRUCTOR/NONE] => 9 [CallStack:-DEBUG NOT SET-]
 indent_text(566): 9:2 pc->text() TelegramIndex
 [0x40402:IN_STRUCT,IN_CLASS,EXPR_START]
 indent_text(783): frm.pse_tos=1, ... indent_tmp=9
@@ -166,7 +166,7 @@ indent_text(566): 10:1 pc->text() {
 indent_text(783): frm.pse_tos=1, ... indent_tmp=9
 indent_text(940): frm.pse_tos=1, ... indent_tmp=9
 indent_pse_push(333): line=10, +++++++++++++++++++ pse_tos=2, type=BRACE_OPEN
-reindent_line(232): 10] col 1 on '{' [BRACE_OPEN/FUNC_CLASS_DEF] => 9 [CallStack: indent_text:526]
+reindent_line(232): 10] col 1 on '{' [BRACE_OPEN/FUNC_CLASS_DEF] => 9 [CallStack:-DEBUG NOT SET-]
 indent_text(561): 10 NEWLINE
 indent_text(783): frm.pse_tos=2, ... indent_tmp=17
 indent_text(940): frm.pse_tos=2, ... indent_tmp=17
@@ -175,7 +175,7 @@ indent_text(566): 11:1 pc->text() }
 indent_text(783): frm.pse_tos=2, ... indent_tmp=17
 indent_text(940): frm.pse_tos=2, ... indent_tmp=17
 (394) indent_pse_pop(398): orig_line=11, ------------------- pse_tos=1, type=BRACE_CLOSE
-reindent_line(232): 11] col 1 on '}' [BRACE_CLOSE/FUNC_CLASS_DEF] => 9 [CallStack: indent_text:526]
+reindent_line(232): 11] col 1 on '}' [BRACE_CLOSE/FUNC_CLASS_DEF] => 9 [CallStack:-DEBUG NOT SET-]
 indent_text(561): 11 NEWLINE
 indent_text(783): frm.pse_tos=1, ... indent_tmp=9
 indent_text(940): frm.pse_tos=1, ... indent_tmp=9
@@ -183,7 +183,7 @@ indent_text(566): 13:1 pc->text() const
 [0x470402:IN_STRUCT,IN_CLASS,FORCE_SPACE,STMT_START,EXPR_START,VAR_TYPE]
 indent_text(783): frm.pse_tos=1, ... indent_tmp=9
 indent_text(940): frm.pse_tos=1, ... indent_tmp=9
-reindent_line(232): 13] col 1 on 'const' [QUALIFIER/NONE] => 9 [CallStack: indent_text:526]
+reindent_line(232): 13] col 1 on 'const' [QUALIFIER/NONE] => 9 [CallStack:-DEBUG NOT SET-]
 indent_text(566): 13:7 pc->text() char
 [0x400402:IN_STRUCT,IN_CLASS,VAR_TYPE]
 indent_text(783): frm.pse_tos=1, ... indent_tmp=9
@@ -211,7 +211,7 @@ indent_text(566): 14:1 pc->text() unsigned
 [0x470402:IN_STRUCT,IN_CLASS,FORCE_SPACE,STMT_START,EXPR_START,VAR_TYPE]
 indent_text(783): frm.pse_tos=1, ... indent_tmp=9
 indent_text(940): frm.pse_tos=1, ... indent_tmp=9
-reindent_line(232): 14] col 1 on 'unsigned' [TYPE/NONE] => 9 [CallStack: indent_text:526]
+reindent_line(232): 14] col 1 on 'unsigned' [TYPE/NONE] => 9 [CallStack:-DEBUG NOT SET-]
 indent_text(566): 14:10 pc->text() long
 [0x410402:IN_STRUCT,IN_CLASS,FORCE_SPACE,VAR_TYPE]
 indent_text(783): frm.pse_tos=1, ... indent_tmp=9

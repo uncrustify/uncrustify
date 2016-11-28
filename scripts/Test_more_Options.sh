@@ -52,6 +52,7 @@ do
   then
     echo "Problem with "${file}
     echo "use: diff ${LFile} ${OutputFile} to find why"
+    diff ${LFile} ${OutputFile}
     break
   else
     rm ${LFile}
