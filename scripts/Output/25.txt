@@ -1,0 +1,6 @@
+Newline loop start: 0
+newline_add_between: ';'[SEMICOLON] line 14:24 and '}' line 15:1 : [CallStack: newlines_brace_pair:1414, newlines_cleanup_braces:2327]
+newline_add_between: '{'[BRACE_OPEN] line 6:1 and '}' line 7:1 : [CallStack: newlines_brace_pair:1414, newlines_cleanup_braces:2327]
+newline_add_between: '{'[BRACE_OPEN] line 6:1 and '}' line 7:1 : [CallStack: newlines_brace_pair:1414, newlines_cleanup_braces:2327]
+newline_add_between: '{'[BRACE_OPEN] line 10:1 and '}' line 11:1 : [CallStack: newlines_brace_pair:1414, newlines_cleanup_braces:2327]
+newline_add_between: '{'[BRACE_OPEN] line 10:1 and '}' line 11:1 : [CallStack: newlines_brace_pair:1414, newlines_cleanup_braces:2327]

@@ -1,0 +1,151 @@
+Spacing: line 1 [STRUCT/NONE] 'struct' <===> [TYPE/STRUCT] 'TelegramIndex' : ADD[1773] <force between 'struct' and 'TelegramIndex'> = ADD @ 1 => 8
+ = REMOVE @ 0 => 21
+ = REMOVE @ 0 => 2
+Spacing: line 3 [FUNC_CLASS_DEF/NONE] 'TelegramIndex' <===> [FPAREN_OPEN/FUNC_CLASS_DEF] '(' : sp_func_class_paren[989] = IGNORE @ 0 => 14
+Spacing: line 3 [FPAREN_OPEN/FUNC_CLASS_DEF] '(' <===> [QUALIFIER/NONE] 'const' : sp_inside_fparen[1210] = IGNORE @ 0 => 15
+Spacing: line 3 [QUALIFIER/NONE] 'const' <===> [TYPE/NONE] 'char' : sp_after_type[1604] <force between 'const' and 'char'> = FORCE @ 1 => 21
+Spacing: line 3 [TYPE/NONE] 'char' <===> [PTR_TYPE/NONE] '*' : IGNORE[1624] = IGNORE @ 0 => 25
+Spacing: line 3 [PTR_TYPE/NONE] '*' <===> [WORD/NONE] 'pN' : IGNORE[1624] = IGNORE @ 1 => 27
+Spacing: line 3 [WORD/NONE] 'pN' <===> [COMMA/NONE] ',' : sp_before_comma[530] = REMOVE @ 0 => 29
+Spacing: line 3 [COMMA/NONE] ',' <===> [TYPE/NONE] 'unsigned' : sp_after_comma[499] = IGNORE @ 1 => 31
+Spacing: line 3 [TYPE/NONE] 'unsigned' <===> [TYPE/NONE] 'long' : sp_after_type[1604] <force between 'unsigned' and 'long'> = FORCE @ 1 => 40
+Spacing: line 3 [TYPE/NONE] 'long' <===> [WORD/NONE] 'nI' : sp_after_type[1604] <force between 'long' and 'nI'> = FORCE @ 1 => 45
+Spacing: line 3 [WORD/NONE] 'nI' <===> [FPAREN_CLOSE/FUNC_CLASS_DEF] ')' : sp_inside_fparen[1210] = IGNORE @ 0 => 47
+Spacing: line 3 [FPAREN_CLOSE/FUNC_CLASS_DEF] ')' <===> [CONSTR_COLON/NONE] ':' : ADD[1773] = ADD @ 1 => 49
+ = REMOVE @ 0 => 50
+Spacing: line 4 [FUNC_CTOR_VAR/NONE] 'pTelName' <===> [FPAREN_OPEN/FUNC_CTOR_VAR] '(' : sp_func_call_paren[886] = IGNORE @ 0 => 9
+Spacing: line 4 [FPAREN_OPEN/FUNC_CTOR_VAR] '(' <===> [WORD/NONE] 'pN' : sp_inside_fparen[1210] = IGNORE @ 0 => 10
+Spacing: line 4 [WORD/NONE] 'pN' <===> [FPAREN_CLOSE/FUNC_CTOR_VAR] ')' : sp_inside_fparen[1210] = IGNORE @ 0 => 12
+Spacing: line 4 [FPAREN_CLOSE/FUNC_CTOR_VAR] ')' <===> [COMMA/NONE] ',' : sp_before_comma[530] = REMOVE @ 0 => 13
+ = REMOVE @ 0 => 14
+Spacing: line 5 [FUNC_CTOR_VAR/NONE] 'nTelIndex' <===> [FPAREN_OPEN/FUNC_CTOR_VAR] '(' : sp_func_call_paren[886] = IGNORE @ 0 => 10
+Spacing: line 5 [FPAREN_OPEN/FUNC_CTOR_VAR] '(' <===> [WORD/NONE] 'n' : sp_inside_fparen[1210] = IGNORE @ 0 => 11
+Spacing: line 5 [WORD/NONE] 'n' <===> [FPAREN_CLOSE/FUNC_CTOR_VAR] ')' : sp_inside_fparen[1210] = IGNORE @ 0 => 12
+ = REMOVE @ 0 => 13
+ = REMOVE @ 0 => 2
+ = REMOVE @ 0 => 2
+Spacing: line 9 [DESTRUCTOR/NONE] '~' <===> [FUNC_CLASS_DEF/DESTRUCTOR] 'TelegramIndex' : REMOVE[569] = REMOVE @ 0 => 2
+Spacing: line 9 [FUNC_CLASS_DEF/DESTRUCTOR] 'TelegramIndex' <===> [FPAREN_OPEN/FUNC_CLASS_DEF] '(' : sp_func_class_paren[989] = IGNORE @ 0 => 15
+Spacing: line 9 [FPAREN_OPEN/FUNC_CLASS_DEF] '(' <===> [FPAREN_CLOSE/FUNC_CLASS_DEF] ')' : sp_inside_fparens[1207] = IGNORE @ 0 => 16
+ = REMOVE @ 0 => 17
+ = REMOVE @ 0 => 2
+ = REMOVE @ 0 => 2
+Spacing: line 13 [QUALIFIER/NONE] 'const' <===> [TYPE/NONE] 'char' : sp_after_type[1604] <force between 'const' and 'char'> = FORCE @ 1 => 7
+Spacing: line 13 [TYPE/NONE] 'char' <===> [PTR_TYPE/NONE] '*' : IGNORE[1624] = IGNORE @ 0 => 11
+Spacing: line 13 [PTR_TYPE/NONE] '*' <===> [QUALIFIER/NONE] 'const' : IGNORE[1624] = IGNORE @ 1 => 13
+Spacing: line 13 [QUALIFIER/NONE] 'const' <===> [WORD/NONE] 'pTelName' : sp_after_type[1604] <force between 'const' and 'pTelName'> = FORCE @ 1 => 19
+Spacing: line 13 [WORD/NONE] 'pTelName' <===> [SEMICOLON/NONE] ';' : sp_before_semi[327] = REMOVE @ 0 => 27
+ = REMOVE @ 0 => 28
+Spacing: line 14 [TYPE/NONE] 'unsigned' <===> [TYPE/NONE] 'long' : sp_after_type[1604] <force between 'unsigned' and 'long'> = FORCE @ 1 => 10
+Spacing: line 14 [TYPE/NONE] 'long' <===> [WORD/NONE] 'nTelIndex' : sp_after_type[1604] <force between 'long' and 'nTelIndex'> = FORCE @ 1 => 15
+Spacing: line 14 [WORD/NONE] 'nTelIndex' <===> [SEMICOLON/NONE] ';' : sp_before_semi[327] = REMOVE @ 0 => 24
+ = REMOVE @ 0 => 25
+Spacing: line 15 [BRACE_CLOSE/STRUCT] '}' <===> [SEMICOLON/STRUCT] ';' : sp_before_semi[327] = REMOVE @ 0 => 2
+ = REMOVE @ 0 => 3
+space_col_align: 3:1 [FUNC_CLASS_DEF/NONE] 'TelegramIndex' <==> 3:14 [FPAREN_OPEN/FUNC_CLASS_DEF] '(' [CallStack: reindent_line:228, indent_text:526]
+Spacing: line 3 [FUNC_CLASS_DEF/NONE] 'TelegramIndex' <===> [FPAREN_OPEN/FUNC_CLASS_DEF] '(' : sp_func_class_paren[989]
+space_col_align: av=0, len=13 => 13
+space_col_align: 3:14 [FPAREN_OPEN/FUNC_CLASS_DEF] '(' <==> 3:15 [QUALIFIER/NONE] 'const' [CallStack: reindent_line:228, indent_text:526]
+Spacing: line 3 [FPAREN_OPEN/FUNC_CLASS_DEF] '(' <===> [QUALIFIER/NONE] 'const' : sp_inside_fparen[1210]
+space_col_align: av=0, len=1 => 1
+space_col_align: 3:15 [QUALIFIER/NONE] 'const' <==> 3:21 [TYPE/NONE] 'char' [CallStack: reindent_line:228, indent_text:526]
+Spacing: line 3 [QUALIFIER/NONE] 'const' <===> [TYPE/NONE] 'char' : sp_after_type[1604]
+space_col_align: av=3, len=5 => 6
+space_col_align: 3:21 [TYPE/NONE] 'char' <==> 3:25 [PTR_TYPE/NONE] '*' [CallStack: reindent_line:228, indent_text:526]
+Spacing: line 3 [TYPE/NONE] 'char' <===> [PTR_TYPE/NONE] '*' : IGNORE[1624]
+space_col_align: av=0, len=4 => 4
+space_col_align: 3:25 [PTR_TYPE/NONE] '*' <==> 3:27 [WORD/NONE] 'pN' [CallStack: reindent_line:228, indent_text:526]
+Spacing: line 3 [PTR_TYPE/NONE] '*' <===> [WORD/NONE] 'pN' : IGNORE[1624]
+space_col_align: av=0, len=1 => 2
+space_col_align: 3:27 [WORD/NONE] 'pN' <==> 3:29 [COMMA/NONE] ',' [CallStack: reindent_line:228, indent_text:526]
+Spacing: line 3 [WORD/NONE] 'pN' <===> [COMMA/NONE] ',' : sp_before_comma[530]
+space_col_align: av=2, len=2 => 2
+space_col_align: 3:29 [COMMA/NONE] ',' <==> 3:31 [TYPE/NONE] 'unsigned' [CallStack: reindent_line:228, indent_text:526]
+Spacing: line 3 [COMMA/NONE] ',' <===> [TYPE/NONE] 'unsigned' : sp_after_comma[499]
+space_col_align: av=0, len=1 => 2
+space_col_align: 3:31 [TYPE/NONE] 'unsigned' <==> 3:40 [TYPE/NONE] 'long' [CallStack: reindent_line:228, indent_text:526]
+Spacing: line 3 [TYPE/NONE] 'unsigned' <===> [TYPE/NONE] 'long' : sp_after_type[1604]
+space_col_align: av=3, len=8 => 9
+space_col_align: 3:40 [TYPE/NONE] 'long' <==> 3:45 [WORD/NONE] 'nI' [CallStack: reindent_line:228, indent_text:526]
+Spacing: line 3 [TYPE/NONE] 'long' <===> [WORD/NONE] 'nI' : sp_after_type[1604]
+space_col_align: av=3, len=4 => 5
+space_col_align: 3:45 [WORD/NONE] 'nI' <==> 3:47 [FPAREN_CLOSE/FUNC_CLASS_DEF] ')' [CallStack: reindent_line:228, indent_text:526]
+Spacing: line 3 [WORD/NONE] 'nI' <===> [FPAREN_CLOSE/FUNC_CLASS_DEF] ')' : sp_inside_fparen[1210]
+space_col_align: av=0, len=2 => 2
+space_col_align: 3:47 [FPAREN_CLOSE/FUNC_CLASS_DEF] ')' <==> 3:49 [CONSTR_COLON/NONE] ':' [CallStack: reindent_line:228, indent_text:526]
+Spacing: line 3 [FPAREN_CLOSE/FUNC_CLASS_DEF] ')' <===> [CONSTR_COLON/NONE] ':' : ADD[1773]
+space_col_align: av=1, len=1 => 2
+space_col_align: 3:49 [CONSTR_COLON/NONE] ':' <==> 3:50 [NEWLINE/NONE] '' [CallStack: reindent_line:228, indent_text:526]
+space_col_align: av=2, len=1 => 1
+space_col_align: 4:1 [FUNC_CTOR_VAR/NONE] 'pTelName' <==> 4:9 [FPAREN_OPEN/FUNC_CTOR_VAR] '(' [CallStack: reindent_line:228, indent_text:526]
+Spacing: line 4 [FUNC_CTOR_VAR/NONE] 'pTelName' <===> [FPAREN_OPEN/FUNC_CTOR_VAR] '(' : sp_func_call_paren[886]
+space_col_align: av=0, len=8 => 8
+space_col_align: 4:9 [FPAREN_OPEN/FUNC_CTOR_VAR] '(' <==> 4:10 [WORD/NONE] 'pN' [CallStack: reindent_line:228, indent_text:526]
+Spacing: line 4 [FPAREN_OPEN/FUNC_CTOR_VAR] '(' <===> [WORD/NONE] 'pN' : sp_inside_fparen[1210]
+space_col_align: av=0, len=1 => 1
+space_col_align: 4:10 [WORD/NONE] 'pN' <==> 4:12 [FPAREN_CLOSE/FUNC_CTOR_VAR] ')' [CallStack: reindent_line:228, indent_text:526]
+Spacing: line 4 [WORD/NONE] 'pN' <===> [FPAREN_CLOSE/FUNC_CTOR_VAR] ')' : sp_inside_fparen[1210]
+space_col_align: av=0, len=2 => 2
+space_col_align: 4:12 [FPAREN_CLOSE/FUNC_CTOR_VAR] ')' <==> 4:13 [COMMA/NONE] ',' [CallStack: reindent_line:228, indent_text:526]
+Spacing: line 4 [FPAREN_CLOSE/FUNC_CTOR_VAR] ')' <===> [COMMA/NONE] ',' : sp_before_comma[530]
+space_col_align: av=2, len=1 => 1
+space_col_align: 4:13 [COMMA/NONE] ',' <==> 4:14 [NEWLINE/NONE] '' [CallStack: reindent_line:228, indent_text:526]
+space_col_align: av=2, len=1 => 1
+space_col_align: 5:1 [FUNC_CTOR_VAR/NONE] 'nTelIndex' <==> 5:10 [FPAREN_OPEN/FUNC_CTOR_VAR] '(' [CallStack: reindent_line:228, indent_text:526]
+Spacing: line 5 [FUNC_CTOR_VAR/NONE] 'nTelIndex' <===> [FPAREN_OPEN/FUNC_CTOR_VAR] '(' : sp_func_call_paren[886]
+space_col_align: av=0, len=9 => 9
+space_col_align: 5:10 [FPAREN_OPEN/FUNC_CTOR_VAR] '(' <==> 5:11 [WORD/NONE] 'n' [CallStack: reindent_line:228, indent_text:526]
+Spacing: line 5 [FPAREN_OPEN/FUNC_CTOR_VAR] '(' <===> [WORD/NONE] 'n' : sp_inside_fparen[1210]
+space_col_align: av=0, len=1 => 1
+space_col_align: 5:11 [WORD/NONE] 'n' <==> 5:12 [FPAREN_CLOSE/FUNC_CTOR_VAR] ')' [CallStack: reindent_line:228, indent_text:526]
+Spacing: line 5 [WORD/NONE] 'n' <===> [FPAREN_CLOSE/FUNC_CTOR_VAR] ')' : sp_inside_fparen[1210]
+space_col_align: av=0, len=1 => 1
+space_col_align: 5:12 [FPAREN_CLOSE/FUNC_CTOR_VAR] ')' <==> 5:13 [NEWLINE/NONE] '' [CallStack: reindent_line:228, indent_text:526]
+space_col_align: av=2, len=1 => 1
+space_col_align: 6:1 [BRACE_OPEN/FUNC_CLASS_DEF] '{' <==> 6:2 [NEWLINE/NONE] '' [CallStack: reindent_line:228, indent_text:526]
+space_col_align: av=2, len=1 => 1
+space_col_align: 7:1 [BRACE_CLOSE/FUNC_CLASS_DEF] '}' <==> 7:2 [NEWLINE/NONE] '' [CallStack: reindent_line:228, indent_text:526]
+space_col_align: av=2, len=1 => 1
+space_col_align: 9:1 [DESTRUCTOR/NONE] '~' <==> 9:2 [FUNC_CLASS_DEF/DESTRUCTOR] 'TelegramIndex' [CallStack: reindent_line:228, indent_text:526]
+Spacing: line 9 [DESTRUCTOR/NONE] '~' <===> [FUNC_CLASS_DEF/DESTRUCTOR] 'TelegramIndex' : REMOVE[569]
+space_col_align: av=2, len=1 => 1
+space_col_align: 9:2 [FUNC_CLASS_DEF/DESTRUCTOR] 'TelegramIndex' <==> 9:15 [FPAREN_OPEN/FUNC_CLASS_DEF] '(' [CallStack: reindent_line:228, indent_text:526]
+Spacing: line 9 [FUNC_CLASS_DEF/DESTRUCTOR] 'TelegramIndex' <===> [FPAREN_OPEN/FUNC_CLASS_DEF] '(' : sp_func_class_paren[989]
+space_col_align: av=0, len=13 => 13
+space_col_align: 9:15 [FPAREN_OPEN/FUNC_CLASS_DEF] '(' <==> 9:16 [FPAREN_CLOSE/FUNC_CLASS_DEF] ')' [CallStack: reindent_line:228, indent_text:526]
+Spacing: line 9 [FPAREN_OPEN/FUNC_CLASS_DEF] '(' <===> [FPAREN_CLOSE/FUNC_CLASS_DEF] ')' : sp_inside_fparens[1207]
+space_col_align: av=0, len=1 => 1
+space_col_align: 9:16 [FPAREN_CLOSE/FUNC_CLASS_DEF] ')' <==> 9:17 [NEWLINE/NONE] '' [CallStack: reindent_line:228, indent_text:526]
+space_col_align: av=2, len=1 => 1
+space_col_align: 10:1 [BRACE_OPEN/FUNC_CLASS_DEF] '{' <==> 10:2 [NEWLINE/NONE] '' [CallStack: reindent_line:228, indent_text:526]
+space_col_align: av=2, len=1 => 1
+space_col_align: 11:1 [BRACE_CLOSE/FUNC_CLASS_DEF] '}' <==> 11:2 [NEWLINE/NONE] '' [CallStack: reindent_line:228, indent_text:526]
+space_col_align: av=2, len=1 => 1
+space_col_align: 13:1 [QUALIFIER/NONE] 'const' <==> 13:7 [TYPE/NONE] 'char' [CallStack: reindent_line:228, indent_text:526]
+Spacing: line 13 [QUALIFIER/NONE] 'const' <===> [TYPE/NONE] 'char' : sp_after_type[1604]
+space_col_align: av=3, len=5 => 6
+space_col_align: 13:7 [TYPE/NONE] 'char' <==> 13:11 [PTR_TYPE/NONE] '*' [CallStack: reindent_line:228, indent_text:526]
+Spacing: line 13 [TYPE/NONE] 'char' <===> [PTR_TYPE/NONE] '*' : IGNORE[1624]
+space_col_align: av=0, len=4 => 4
+space_col_align: 13:11 [PTR_TYPE/NONE] '*' <==> 13:13 [QUALIFIER/NONE] 'const' [CallStack: reindent_line:228, indent_text:526]
+Spacing: line 13 [PTR_TYPE/NONE] '*' <===> [QUALIFIER/NONE] 'const' : IGNORE[1624]
+space_col_align: av=0, len=1 => 2
+space_col_align: 13:13 [QUALIFIER/NONE] 'const' <==> 13:19 [WORD/NONE] 'pTelName' [CallStack: reindent_line:228, indent_text:526]
+Spacing: line 13 [QUALIFIER/NONE] 'const' <===> [WORD/NONE] 'pTelName' : sp_after_type[1604]
+space_col_align: av=3, len=5 => 6
+space_col_align: 13:19 [WORD/NONE] 'pTelName' <==> 13:27 [SEMICOLON/NONE] ';' [CallStack: reindent_line:228, indent_text:526]
+Spacing: line 13 [WORD/NONE] 'pTelName' <===> [SEMICOLON/NONE] ';' : sp_before_semi[327]
+space_col_align: av=2, len=8 => 8
+space_col_align: 13:27 [SEMICOLON/NONE] ';' <==> 13:28 [NEWLINE/NONE] '' [CallStack: reindent_line:228, indent_text:526]
+space_col_align: av=2, len=1 => 1
+space_col_align: 14:1 [TYPE/NONE] 'unsigned' <==> 14:10 [TYPE/NONE] 'long' [CallStack: reindent_line:228, indent_text:526]
+Spacing: line 14 [TYPE/NONE] 'unsigned' <===> [TYPE/NONE] 'long' : sp_after_type[1604]
+space_col_align: av=3, len=8 => 9
+space_col_align: 14:10 [TYPE/NONE] 'long' <==> 14:15 [WORD/NONE] 'nTelIndex' [CallStack: reindent_line:228, indent_text:526]
+Spacing: line 14 [TYPE/NONE] 'long' <===> [WORD/NONE] 'nTelIndex' : sp_after_type[1604]
+space_col_align: av=3, len=4 => 5
+space_col_align: 14:15 [WORD/NONE] 'nTelIndex' <==> 14:24 [SEMICOLON/NONE] ';' [CallStack: reindent_line:228, indent_text:526]
+Spacing: line 14 [WORD/NONE] 'nTelIndex' <===> [SEMICOLON/NONE] ';' : sp_before_semi[327]
+space_col_align: av=2, len=9 => 9
+space_col_align: 14:24 [SEMICOLON/NONE] ';' <==> 14:25 [NEWLINE/NONE] '' [CallStack: reindent_line:228, indent_text:526]
+space_col_align: av=2, len=1 => 1
