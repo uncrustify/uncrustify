@@ -74,21 +74,6 @@ files. When you open the project in Visual Studio, you can select which
 configuration to build. You can also do this while building from the command
 line with `cmake --build . --config Release`.
 
-
-Building using Autotools
-------------------------
-
-Quick start:
-```
-$ ./autogen.sh
-$ ./configure
-$ make
-```
-
-The executable is src/uncrustify.
-Copy that to your ~/bin/ folder or wherever you want.
-
-
 Building the program using Xcode on Mac OS X
 ---------------------------------------------
 
