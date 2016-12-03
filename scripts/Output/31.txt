@@ -1,0 +1,472 @@
+indent_text(566): 1:1 pc->text() struct
+[0x70000:FORCE_SPACE,STMT_START,EXPR_START]
+indent_text(783): frm.pse_tos=0, ... indent_tmp=1
+indent_text(940): frm.pse_tos=0, ... indent_tmp=1
+indent_text(566): 1:8 pc->text() TelegramIndex
+[0x0:]
+indent_text(783): frm.pse_tos=0, ... indent_tmp=1
+indent_text(940): frm.pse_tos=0, ... indent_tmp=1
+indent_text(561): 1 NEWLINE
+indent_text(783): frm.pse_tos=0, ... indent_tmp=1
+indent_text(940): frm.pse_tos=0, ... indent_tmp=1
+indent_text(566): 2:1 pc->text() {
+[0x100000000:PUNCTUATOR]
+indent_text(783): frm.pse_tos=0, ... indent_tmp=1
+indent_text(940): frm.pse_tos=0, ... indent_tmp=1
+indent_pse_push(333): line=2, +++++++++++++++++++ pse_tos=1, type=BRACE_OPEN
+indent_text(561): 2 NEWLINE
+indent_text(783): frm.pse_tos=1, ... indent_tmp=9
+indent_text(940): frm.pse_tos=1, ... indent_tmp=9
+indent_text(566): 3:1 pc->text() TelegramIndex
+[0x60402:IN_STRUCT,IN_CLASS,STMT_START,EXPR_START]
+indent_text(783): frm.pse_tos=1, ... indent_tmp=9
+indent_text(940): frm.pse_tos=1, ... indent_tmp=9
+reindent_line(232): 3] col 1 on 'TelegramIndex' [FUNC_CLASS_DEF/NONE] => 9 [CallStack:-DEBUG NOT SET-]
+indent_text(566): 3:14 pc->text() (
+[0x100000502:IN_STRUCT,IN_CONST_ARGS,IN_CLASS,PUNCTUATOR]
+indent_text(783): frm.pse_tos=1, ... indent_tmp=9
+indent_text(940): frm.pse_tos=1, ... indent_tmp=9
+indent_pse_push(333): line=3, +++++++++++++++++++ pse_tos=2, type=FPAREN_OPEN
+indent_text(566): 3:15 pc->text() const
+[0x50512:IN_STRUCT,IN_FCN_CALL,IN_CONST_ARGS,IN_CLASS,FORCE_SPACE,EXPR_START]
+indent_text(783): frm.pse_tos=2, ... indent_tmp=23
+indent_text(940): frm.pse_tos=2, ... indent_tmp=23
+indent_text(566): 3:21 pc->text() char
+[0x400512:IN_STRUCT,IN_FCN_CALL,IN_CONST_ARGS,IN_CLASS,VAR_TYPE]
+indent_text(783): frm.pse_tos=2, ... indent_tmp=23
+indent_text(940): frm.pse_tos=2, ... indent_tmp=23
+indent_text(566): 3:25 pc->text() *
+[0x100000512:IN_STRUCT,IN_FCN_CALL,IN_CONST_ARGS,IN_CLASS,PUNCTUATOR]
+indent_text(783): frm.pse_tos=2, ... indent_tmp=23
+indent_text(940): frm.pse_tos=2, ... indent_tmp=23
+indent_text(566): 3:27 pc->text() pN
+[0x800512:IN_STRUCT,IN_FCN_CALL,IN_CONST_ARGS,IN_CLASS,VAR_DEF]
+indent_text(783): frm.pse_tos=2, ... indent_tmp=23
+indent_text(940): frm.pse_tos=2, ... indent_tmp=23
+indent_text(566): 3:29 pc->text() ,
+[0x100000512:IN_STRUCT,IN_FCN_CALL,IN_CONST_ARGS,IN_CLASS,PUNCTUATOR]
+indent_text(783): frm.pse_tos=2, ... indent_tmp=23
+indent_text(940): frm.pse_tos=2, ... indent_tmp=23
+indent_text(566): 3:31 pc->text() unsigned
+[0x450512:IN_STRUCT,IN_FCN_CALL,IN_CONST_ARGS,IN_CLASS,FORCE_SPACE,EXPR_START,VAR_TYPE]
+indent_text(783): frm.pse_tos=2, ... indent_tmp=23
+indent_text(940): frm.pse_tos=2, ... indent_tmp=23
+indent_text(566): 3:40 pc->text() long
+[0x410512:IN_STRUCT,IN_FCN_CALL,IN_CONST_ARGS,IN_CLASS,FORCE_SPACE,VAR_TYPE]
+indent_text(783): frm.pse_tos=2, ... indent_tmp=23
+indent_text(940): frm.pse_tos=2, ... indent_tmp=23
+indent_text(566): 3:45 pc->text() nI
+[0x800512:IN_STRUCT,IN_FCN_CALL,IN_CONST_ARGS,IN_CLASS,VAR_DEF]
+indent_text(783): frm.pse_tos=2, ... indent_tmp=23
+indent_text(940): frm.pse_tos=2, ... indent_tmp=23
+indent_text(566): 3:47 pc->text() )
+[0x100000502:IN_STRUCT,IN_CONST_ARGS,IN_CLASS,PUNCTUATOR]
+indent_text(783): frm.pse_tos=2, ... indent_tmp=23
+(394) indent_pse_pop(398): orig_line=3, ------------------- pse_tos=1, type=FPAREN_CLOSE
+indent_text(940): frm.pse_tos=1, ... indent_tmp=9
+indent_text(566): 3:49 pc->text() :
+[0x100000502:IN_STRUCT,IN_CONST_ARGS,IN_CLASS,PUNCTUATOR]
+indent_text(783): frm.pse_tos=1, ... indent_tmp=9
+indent_text(940): frm.pse_tos=1, ... indent_tmp=9
+indent_pse_push(333): line=3, +++++++++++++++++++ pse_tos=2, type=CONSTR_COLON
+indent_text(561): 3 NEWLINE
+indent_text(783): frm.pse_tos=2, ... indent_tmp=17
+indent_text(940): frm.pse_tos=2, ... indent_tmp=17
+indent_text(566): 4:1 pc->text() pTelName
+[0x60502:IN_STRUCT,IN_CONST_ARGS,IN_CLASS,STMT_START,EXPR_START]
+indent_text(783): frm.pse_tos=2, ... indent_tmp=17
+indent_text(940): frm.pse_tos=2, ... indent_tmp=17
+reindent_line(232): 4] col 1 on 'pTelName' [FUNC_CTOR_VAR/NONE] => 17 [CallStack:-DEBUG NOT SET-]
+indent_text(566): 4:9 pc->text() (
+[0x100000502:IN_STRUCT,IN_CONST_ARGS,IN_CLASS,PUNCTUATOR]
+indent_text(783): frm.pse_tos=2, ... indent_tmp=17
+indent_text(940): frm.pse_tos=2, ... indent_tmp=17
+indent_pse_push(333): line=4, +++++++++++++++++++ pse_tos=3, type=FPAREN_OPEN
+indent_text(566): 4:10 pc->text() pN
+[0x40512:IN_STRUCT,IN_FCN_CALL,IN_CONST_ARGS,IN_CLASS,EXPR_START]
+indent_text(783): frm.pse_tos=3, ... indent_tmp=26
+indent_text(940): frm.pse_tos=3, ... indent_tmp=26
+indent_text(566): 4:12 pc->text() )
+[0x100000502:IN_STRUCT,IN_CONST_ARGS,IN_CLASS,PUNCTUATOR]
+indent_text(783): frm.pse_tos=3, ... indent_tmp=26
+(394) indent_pse_pop(398): orig_line=4, ------------------- pse_tos=2, type=FPAREN_CLOSE
+indent_text(940): frm.pse_tos=2, ... indent_tmp=17
+indent_text(566): 4:13 pc->text() ,
+[0x100000502:IN_STRUCT,IN_CONST_ARGS,IN_CLASS,PUNCTUATOR]
+indent_text(783): frm.pse_tos=2, ... indent_tmp=17
+indent_text(940): frm.pse_tos=2, ... indent_tmp=17
+indent_text(561): 4 NEWLINE
+indent_text(783): frm.pse_tos=2, ... indent_tmp=17
+indent_text(940): frm.pse_tos=2, ... indent_tmp=17
+indent_text(566): 5:1 pc->text() nTelIndex
+[0x40502:IN_STRUCT,IN_CONST_ARGS,IN_CLASS,EXPR_START]
+indent_text(783): frm.pse_tos=2, ... indent_tmp=17
+indent_text(940): frm.pse_tos=2, ... indent_tmp=17
+reindent_line(232): 5] col 1 on 'nTelIndex' [FUNC_CTOR_VAR/NONE] => 17 [CallStack:-DEBUG NOT SET-]
+indent_text(566): 5:10 pc->text() (
+[0x100000502:IN_STRUCT,IN_CONST_ARGS,IN_CLASS,PUNCTUATOR]
+indent_text(783): frm.pse_tos=2, ... indent_tmp=17
+indent_text(940): frm.pse_tos=2, ... indent_tmp=17
+indent_pse_push(333): line=5, +++++++++++++++++++ pse_tos=3, type=FPAREN_OPEN
+indent_text(566): 5:11 pc->text() n
+[0x40512:IN_STRUCT,IN_FCN_CALL,IN_CONST_ARGS,IN_CLASS,EXPR_START]
+indent_text(783): frm.pse_tos=3, ... indent_tmp=27
+indent_text(940): frm.pse_tos=3, ... indent_tmp=27
+indent_text(566): 5:12 pc->text() )
+[0x100000502:IN_STRUCT,IN_CONST_ARGS,IN_CLASS,PUNCTUATOR]
+indent_text(783): frm.pse_tos=3, ... indent_tmp=27
+(394) indent_pse_pop(398): orig_line=5, ------------------- pse_tos=2, type=FPAREN_CLOSE
+indent_text(940): frm.pse_tos=2, ... indent_tmp=17
+indent_text(561): 5 NEWLINE
+indent_text(783): frm.pse_tos=2, ... indent_tmp=17
+indent_text(940): frm.pse_tos=2, ... indent_tmp=17
+indent_text(566): 6:1 pc->text() {
+[0x140000402:IN_STRUCT,IN_CLASS,EMPTY_BODY,PUNCTUATOR]
+indent_text(783): frm.pse_tos=2, ... indent_tmp=17
+(394) indent_pse_pop(398): orig_line=6, ------------------- pse_tos=1, type=BRACE_OPEN
+indent_text(940): frm.pse_tos=1, ... indent_tmp=9
+indent_pse_push(333): line=6, +++++++++++++++++++ pse_tos=2, type=BRACE_OPEN
+reindent_line(232): 6] col 1 on '{' [BRACE_OPEN/FUNC_CLASS_DEF] => 9 [CallStack:-DEBUG NOT SET-]
+indent_text(561): 6 NEWLINE
+indent_text(783): frm.pse_tos=2, ... indent_tmp=17
+indent_text(940): frm.pse_tos=2, ... indent_tmp=17
+indent_text(566): 7:1 pc->text() }
+[0x140000402:IN_STRUCT,IN_CLASS,EMPTY_BODY,PUNCTUATOR]
+indent_text(783): frm.pse_tos=2, ... indent_tmp=17
+indent_text(940): frm.pse_tos=2, ... indent_tmp=17
+(394) indent_pse_pop(398): orig_line=7, ------------------- pse_tos=1, type=BRACE_CLOSE
+reindent_line(232): 7] col 1 on '}' [BRACE_CLOSE/FUNC_CLASS_DEF] => 9 [CallStack:-DEBUG NOT SET-]
+indent_text(561): 7 NEWLINE
+indent_text(783): frm.pse_tos=1, ... indent_tmp=9
+indent_text(940): frm.pse_tos=1, ... indent_tmp=9
+indent_text(566): 9:1 pc->text() ~
+[0x100060402:IN_STRUCT,IN_CLASS,STMT_START,EXPR_START,PUNCTUATOR]
+indent_text(783): frm.pse_tos=1, ... indent_tmp=9
+indent_text(940): frm.pse_tos=1, ... indent_tmp=9
+reindent_line(232): 9] col 1 on '~' [DESTRUCTOR/NONE] => 9 [CallStack:-DEBUG NOT SET-]
+indent_text(566): 9:2 pc->text() TelegramIndex
+[0x40402:IN_STRUCT,IN_CLASS,EXPR_START]
+indent_text(783): frm.pse_tos=1, ... indent_tmp=9
+indent_text(940): frm.pse_tos=1, ... indent_tmp=9
+indent_text(566): 9:15 pc->text() (
+[0x100000502:IN_STRUCT,IN_CONST_ARGS,IN_CLASS,PUNCTUATOR]
+indent_text(783): frm.pse_tos=1, ... indent_tmp=9
+indent_text(940): frm.pse_tos=1, ... indent_tmp=9
+indent_pse_push(333): line=9, +++++++++++++++++++ pse_tos=2, type=FPAREN_OPEN
+indent_text(566): 9:16 pc->text() )
+[0x100000502:IN_STRUCT,IN_CONST_ARGS,IN_CLASS,PUNCTUATOR]
+indent_text(783): frm.pse_tos=2, ... indent_tmp=24
+(394) indent_pse_pop(398): orig_line=9, ------------------- pse_tos=1, type=FPAREN_CLOSE
+indent_text(940): frm.pse_tos=1, ... indent_tmp=9
+indent_text(561): 9 NEWLINE
+indent_text(783): frm.pse_tos=1, ... indent_tmp=9
+indent_text(940): frm.pse_tos=1, ... indent_tmp=9
+indent_text(566): 10:1 pc->text() {
+[0x140000402:IN_STRUCT,IN_CLASS,EMPTY_BODY,PUNCTUATOR]
+indent_text(783): frm.pse_tos=1, ... indent_tmp=9
+indent_text(940): frm.pse_tos=1, ... indent_tmp=9
+indent_pse_push(333): line=10, +++++++++++++++++++ pse_tos=2, type=BRACE_OPEN
+reindent_line(232): 10] col 1 on '{' [BRACE_OPEN/FUNC_CLASS_DEF] => 9 [CallStack:-DEBUG NOT SET-]
+indent_text(561): 10 NEWLINE
+indent_text(783): frm.pse_tos=2, ... indent_tmp=17
+indent_text(940): frm.pse_tos=2, ... indent_tmp=17
+indent_text(566): 11:1 pc->text() }
+[0x140000402:IN_STRUCT,IN_CLASS,EMPTY_BODY,PUNCTUATOR]
+indent_text(783): frm.pse_tos=2, ... indent_tmp=17
+indent_text(940): frm.pse_tos=2, ... indent_tmp=17
+(394) indent_pse_pop(398): orig_line=11, ------------------- pse_tos=1, type=BRACE_CLOSE
+reindent_line(232): 11] col 1 on '}' [BRACE_CLOSE/FUNC_CLASS_DEF] => 9 [CallStack:-DEBUG NOT SET-]
+indent_text(561): 11 NEWLINE
+indent_text(783): frm.pse_tos=1, ... indent_tmp=9
+indent_text(940): frm.pse_tos=1, ... indent_tmp=9
+indent_text(566): 13:1 pc->text() const
+[0x470402:IN_STRUCT,IN_CLASS,FORCE_SPACE,STMT_START,EXPR_START,VAR_TYPE]
+indent_text(783): frm.pse_tos=1, ... indent_tmp=9
+indent_text(940): frm.pse_tos=1, ... indent_tmp=9
+reindent_line(232): 13] col 1 on 'const' [QUALIFIER/NONE] => 9 [CallStack:-DEBUG NOT SET-]
+indent_text(566): 13:7 pc->text() char
+[0x400402:IN_STRUCT,IN_CLASS,VAR_TYPE]
+indent_text(783): frm.pse_tos=1, ... indent_tmp=9
+indent_text(940): frm.pse_tos=1, ... indent_tmp=9
+indent_text(566): 13:11 pc->text() *
+[0x100400402:IN_STRUCT,IN_CLASS,VAR_TYPE,PUNCTUATOR]
+indent_text(783): frm.pse_tos=1, ... indent_tmp=9
+indent_text(940): frm.pse_tos=1, ... indent_tmp=9
+indent_text(566): 13:13 pc->text() const
+[0x410402:IN_STRUCT,IN_CLASS,FORCE_SPACE,VAR_TYPE]
+indent_text(783): frm.pse_tos=1, ... indent_tmp=9
+indent_text(940): frm.pse_tos=1, ... indent_tmp=9
+indent_text(566): 13:19 pc->text() pTelName
+[0x1800402:IN_STRUCT,IN_CLASS,VAR_DEF,VAR_1ST]
+indent_text(783): frm.pse_tos=1, ... indent_tmp=9
+indent_text(940): frm.pse_tos=1, ... indent_tmp=9
+indent_text(566): 13:27 pc->text() ;
+[0x100000402:IN_STRUCT,IN_CLASS,PUNCTUATOR]
+indent_text(783): frm.pse_tos=1, ... indent_tmp=9
+indent_text(940): frm.pse_tos=1, ... indent_tmp=9
+indent_text(561): 13 NEWLINE
+indent_text(783): frm.pse_tos=1, ... indent_tmp=9
+indent_text(940): frm.pse_tos=1, ... indent_tmp=9
+indent_text(566): 14:1 pc->text() unsigned
+[0x470402:IN_STRUCT,IN_CLASS,FORCE_SPACE,STMT_START,EXPR_START,VAR_TYPE]
+indent_text(783): frm.pse_tos=1, ... indent_tmp=9
+indent_text(940): frm.pse_tos=1, ... indent_tmp=9
+reindent_line(232): 14] col 1 on 'unsigned' [TYPE/NONE] => 9 [CallStack:-DEBUG NOT SET-]
+indent_text(566): 14:10 pc->text() long
+[0x410402:IN_STRUCT,IN_CLASS,FORCE_SPACE,VAR_TYPE]
+indent_text(783): frm.pse_tos=1, ... indent_tmp=9
+indent_text(940): frm.pse_tos=1, ... indent_tmp=9
+indent_text(566): 14:15 pc->text() nTelIndex
+[0x1800402:IN_STRUCT,IN_CLASS,VAR_DEF,VAR_1ST]
+indent_text(783): frm.pse_tos=1, ... indent_tmp=9
+indent_text(940): frm.pse_tos=1, ... indent_tmp=9
+indent_text(566): 14:24 pc->text() ;
+[0x100000402:IN_STRUCT,IN_CLASS,PUNCTUATOR]
+indent_text(783): frm.pse_tos=1, ... indent_tmp=9
+indent_text(940): frm.pse_tos=1, ... indent_tmp=9
+indent_text(561): 14 NEWLINE
+indent_text(783): frm.pse_tos=1, ... indent_tmp=9
+indent_text(940): frm.pse_tos=1, ... indent_tmp=9
+indent_text(566): 15:1 pc->text() }
+[0x100000400:IN_CLASS,PUNCTUATOR]
+indent_text(783): frm.pse_tos=1, ... indent_tmp=9
+indent_text(940): frm.pse_tos=1, ... indent_tmp=9
+(394) indent_pse_pop(398): orig_line=15, ------------------- pse_tos=0, type=BRACE_CLOSE
+indent_text(566): 15:2 pc->text() ;
+[0x100000000:PUNCTUATOR]
+indent_text(783): frm.pse_tos=0, ... indent_tmp=1
+indent_text(940): frm.pse_tos=0, ... indent_tmp=1
+indent_text(561): 15 NEWLINE
+indent_text(783): frm.pse_tos=0, ... indent_tmp=1
+indent_text(940): frm.pse_tos=0, ... indent_tmp=1
+indent_text(566): 1:1 pc->text() struct
+[0x70000:FORCE_SPACE,STMT_START,EXPR_START]
+indent_text(783): frm.pse_tos=0, ... indent_tmp=1
+indent_text(940): frm.pse_tos=0, ... indent_tmp=1
+indent_text(566): 1:8 pc->text() TelegramIndex
+[0x0:]
+indent_text(783): frm.pse_tos=0, ... indent_tmp=1
+indent_text(940): frm.pse_tos=0, ... indent_tmp=1
+indent_text(561): 1 NEWLINE
+indent_text(783): frm.pse_tos=0, ... indent_tmp=1
+indent_text(940): frm.pse_tos=0, ... indent_tmp=1
+indent_text(566): 2:1 pc->text() {
+[0x100000000:PUNCTUATOR]
+indent_text(783): frm.pse_tos=0, ... indent_tmp=1
+indent_text(940): frm.pse_tos=0, ... indent_tmp=1
+indent_pse_push(333): line=2, +++++++++++++++++++ pse_tos=1, type=BRACE_OPEN
+indent_text(561): 2 NEWLINE
+indent_text(783): frm.pse_tos=1, ... indent_tmp=9
+indent_text(940): frm.pse_tos=1, ... indent_tmp=9
+indent_text(566): 3:1 pc->text() TelegramIndex
+[0x60402:IN_STRUCT,IN_CLASS,STMT_START,EXPR_START]
+indent_text(783): frm.pse_tos=1, ... indent_tmp=9
+indent_text(940): frm.pse_tos=1, ... indent_tmp=9
+indent_text(566): 3:14 pc->text() (
+[0x100000502:IN_STRUCT,IN_CONST_ARGS,IN_CLASS,PUNCTUATOR]
+indent_text(783): frm.pse_tos=1, ... indent_tmp=9
+indent_text(940): frm.pse_tos=1, ... indent_tmp=9
+indent_pse_push(333): line=3, +++++++++++++++++++ pse_tos=2, type=FPAREN_OPEN
+indent_text(566): 3:15 pc->text() const
+[0x50512:IN_STRUCT,IN_FCN_CALL,IN_CONST_ARGS,IN_CLASS,FORCE_SPACE,EXPR_START]
+indent_text(783): frm.pse_tos=2, ... indent_tmp=23
+indent_text(940): frm.pse_tos=2, ... indent_tmp=23
+indent_text(566): 3:21 pc->text() char
+[0x400512:IN_STRUCT,IN_FCN_CALL,IN_CONST_ARGS,IN_CLASS,VAR_TYPE]
+indent_text(783): frm.pse_tos=2, ... indent_tmp=23
+indent_text(940): frm.pse_tos=2, ... indent_tmp=23
+indent_text(566): 3:25 pc->text() *
+[0x100000512:IN_STRUCT,IN_FCN_CALL,IN_CONST_ARGS,IN_CLASS,PUNCTUATOR]
+indent_text(783): frm.pse_tos=2, ... indent_tmp=23
+indent_text(940): frm.pse_tos=2, ... indent_tmp=23
+indent_text(566): 3:27 pc->text() pN
+[0x800512:IN_STRUCT,IN_FCN_CALL,IN_CONST_ARGS,IN_CLASS,VAR_DEF]
+indent_text(783): frm.pse_tos=2, ... indent_tmp=23
+indent_text(940): frm.pse_tos=2, ... indent_tmp=23
+indent_text(566): 3:29 pc->text() ,
+[0x100000512:IN_STRUCT,IN_FCN_CALL,IN_CONST_ARGS,IN_CLASS,PUNCTUATOR]
+indent_text(783): frm.pse_tos=2, ... indent_tmp=23
+indent_text(940): frm.pse_tos=2, ... indent_tmp=23
+indent_text(566): 3:31 pc->text() unsigned
+[0x450512:IN_STRUCT,IN_FCN_CALL,IN_CONST_ARGS,IN_CLASS,FORCE_SPACE,EXPR_START,VAR_TYPE]
+indent_text(783): frm.pse_tos=2, ... indent_tmp=23
+indent_text(940): frm.pse_tos=2, ... indent_tmp=23
+indent_text(566): 3:40 pc->text() long
+[0x410512:IN_STRUCT,IN_FCN_CALL,IN_CONST_ARGS,IN_CLASS,FORCE_SPACE,VAR_TYPE]
+indent_text(783): frm.pse_tos=2, ... indent_tmp=23
+indent_text(940): frm.pse_tos=2, ... indent_tmp=23
+indent_text(566): 3:45 pc->text() nI
+[0x800512:IN_STRUCT,IN_FCN_CALL,IN_CONST_ARGS,IN_CLASS,VAR_DEF]
+indent_text(783): frm.pse_tos=2, ... indent_tmp=23
+indent_text(940): frm.pse_tos=2, ... indent_tmp=23
+indent_text(566): 3:47 pc->text() )
+[0x100000502:IN_STRUCT,IN_CONST_ARGS,IN_CLASS,PUNCTUATOR]
+indent_text(783): frm.pse_tos=2, ... indent_tmp=23
+(394) indent_pse_pop(398): orig_line=3, ------------------- pse_tos=1, type=FPAREN_CLOSE
+indent_text(940): frm.pse_tos=1, ... indent_tmp=9
+indent_text(566): 3:49 pc->text() :
+[0x100000502:IN_STRUCT,IN_CONST_ARGS,IN_CLASS,PUNCTUATOR]
+indent_text(783): frm.pse_tos=1, ... indent_tmp=9
+indent_text(940): frm.pse_tos=1, ... indent_tmp=9
+indent_pse_push(333): line=3, +++++++++++++++++++ pse_tos=2, type=CONSTR_COLON
+indent_text(561): 3 NEWLINE
+indent_text(783): frm.pse_tos=2, ... indent_tmp=17
+indent_text(940): frm.pse_tos=2, ... indent_tmp=17
+indent_text(566): 4:1 pc->text() pTelName
+[0x60502:IN_STRUCT,IN_CONST_ARGS,IN_CLASS,STMT_START,EXPR_START]
+indent_text(783): frm.pse_tos=2, ... indent_tmp=17
+indent_text(940): frm.pse_tos=2, ... indent_tmp=17
+indent_text(566): 4:9 pc->text() (
+[0x100000502:IN_STRUCT,IN_CONST_ARGS,IN_CLASS,PUNCTUATOR]
+indent_text(783): frm.pse_tos=2, ... indent_tmp=17
+indent_text(940): frm.pse_tos=2, ... indent_tmp=17
+indent_pse_push(333): line=4, +++++++++++++++++++ pse_tos=3, type=FPAREN_OPEN
+indent_text(566): 4:10 pc->text() pN
+[0x40512:IN_STRUCT,IN_FCN_CALL,IN_CONST_ARGS,IN_CLASS,EXPR_START]
+indent_text(783): frm.pse_tos=3, ... indent_tmp=26
+indent_text(940): frm.pse_tos=3, ... indent_tmp=26
+indent_text(566): 4:12 pc->text() )
+[0x100000502:IN_STRUCT,IN_CONST_ARGS,IN_CLASS,PUNCTUATOR]
+indent_text(783): frm.pse_tos=3, ... indent_tmp=26
+(394) indent_pse_pop(398): orig_line=4, ------------------- pse_tos=2, type=FPAREN_CLOSE
+indent_text(940): frm.pse_tos=2, ... indent_tmp=17
+indent_text(566): 4:13 pc->text() ,
+[0x100000502:IN_STRUCT,IN_CONST_ARGS,IN_CLASS,PUNCTUATOR]
+indent_text(783): frm.pse_tos=2, ... indent_tmp=17
+indent_text(940): frm.pse_tos=2, ... indent_tmp=17
+indent_text(561): 4 NEWLINE
+indent_text(783): frm.pse_tos=2, ... indent_tmp=17
+indent_text(940): frm.pse_tos=2, ... indent_tmp=17
+indent_text(566): 5:1 pc->text() nTelIndex
+[0x40502:IN_STRUCT,IN_CONST_ARGS,IN_CLASS,EXPR_START]
+indent_text(783): frm.pse_tos=2, ... indent_tmp=17
+indent_text(940): frm.pse_tos=2, ... indent_tmp=17
+indent_text(566): 5:10 pc->text() (
+[0x100000502:IN_STRUCT,IN_CONST_ARGS,IN_CLASS,PUNCTUATOR]
+indent_text(783): frm.pse_tos=2, ... indent_tmp=17
+indent_text(940): frm.pse_tos=2, ... indent_tmp=17
+indent_pse_push(333): line=5, +++++++++++++++++++ pse_tos=3, type=FPAREN_OPEN
+indent_text(566): 5:11 pc->text() n
+[0x40512:IN_STRUCT,IN_FCN_CALL,IN_CONST_ARGS,IN_CLASS,EXPR_START]
+indent_text(783): frm.pse_tos=3, ... indent_tmp=27
+indent_text(940): frm.pse_tos=3, ... indent_tmp=27
+indent_text(566): 5:12 pc->text() )
+[0x100000502:IN_STRUCT,IN_CONST_ARGS,IN_CLASS,PUNCTUATOR]
+indent_text(783): frm.pse_tos=3, ... indent_tmp=27
+(394) indent_pse_pop(398): orig_line=5, ------------------- pse_tos=2, type=FPAREN_CLOSE
+indent_text(940): frm.pse_tos=2, ... indent_tmp=17
+indent_text(561): 5 NEWLINE
+indent_text(783): frm.pse_tos=2, ... indent_tmp=17
+indent_text(940): frm.pse_tos=2, ... indent_tmp=17
+indent_text(566): 6:1 pc->text() {
+[0x140000402:IN_STRUCT,IN_CLASS,EMPTY_BODY,PUNCTUATOR]
+indent_text(783): frm.pse_tos=2, ... indent_tmp=17
+(394) indent_pse_pop(398): orig_line=6, ------------------- pse_tos=1, type=BRACE_OPEN
+indent_text(940): frm.pse_tos=1, ... indent_tmp=9
+indent_pse_push(333): line=6, +++++++++++++++++++ pse_tos=2, type=BRACE_OPEN
+indent_text(561): 6 NEWLINE
+indent_text(783): frm.pse_tos=2, ... indent_tmp=17
+indent_text(940): frm.pse_tos=2, ... indent_tmp=17
+indent_text(566): 7:1 pc->text() }
+[0x140000402:IN_STRUCT,IN_CLASS,EMPTY_BODY,PUNCTUATOR]
+indent_text(783): frm.pse_tos=2, ... indent_tmp=17
+indent_text(940): frm.pse_tos=2, ... indent_tmp=17
+(394) indent_pse_pop(398): orig_line=7, ------------------- pse_tos=1, type=BRACE_CLOSE
+indent_text(561): 7 NEWLINE
+indent_text(783): frm.pse_tos=1, ... indent_tmp=9
+indent_text(940): frm.pse_tos=1, ... indent_tmp=9
+indent_text(566): 9:1 pc->text() ~
+[0x100060402:IN_STRUCT,IN_CLASS,STMT_START,EXPR_START,PUNCTUATOR]
+indent_text(783): frm.pse_tos=1, ... indent_tmp=9
+indent_text(940): frm.pse_tos=1, ... indent_tmp=9
+indent_text(566): 9:2 pc->text() TelegramIndex
+[0x40402:IN_STRUCT,IN_CLASS,EXPR_START]
+indent_text(783): frm.pse_tos=1, ... indent_tmp=9
+indent_text(940): frm.pse_tos=1, ... indent_tmp=9
+indent_text(566): 9:15 pc->text() (
+[0x100000502:IN_STRUCT,IN_CONST_ARGS,IN_CLASS,PUNCTUATOR]
+indent_text(783): frm.pse_tos=1, ... indent_tmp=9
+indent_text(940): frm.pse_tos=1, ... indent_tmp=9
+indent_pse_push(333): line=9, +++++++++++++++++++ pse_tos=2, type=FPAREN_OPEN
+indent_text(566): 9:16 pc->text() )
+[0x100000502:IN_STRUCT,IN_CONST_ARGS,IN_CLASS,PUNCTUATOR]
+indent_text(783): frm.pse_tos=2, ... indent_tmp=24
+(394) indent_pse_pop(398): orig_line=9, ------------------- pse_tos=1, type=FPAREN_CLOSE
+indent_text(940): frm.pse_tos=1, ... indent_tmp=9
+indent_text(561): 9 NEWLINE
+indent_text(783): frm.pse_tos=1, ... indent_tmp=9
+indent_text(940): frm.pse_tos=1, ... indent_tmp=9
+indent_text(566): 10:1 pc->text() {
+[0x140000402:IN_STRUCT,IN_CLASS,EMPTY_BODY,PUNCTUATOR]
+indent_text(783): frm.pse_tos=1, ... indent_tmp=9
+indent_text(940): frm.pse_tos=1, ... indent_tmp=9
+indent_pse_push(333): line=10, +++++++++++++++++++ pse_tos=2, type=BRACE_OPEN
+indent_text(561): 10 NEWLINE
+indent_text(783): frm.pse_tos=2, ... indent_tmp=17
+indent_text(940): frm.pse_tos=2, ... indent_tmp=17
+indent_text(566): 11:1 pc->text() }
+[0x140000402:IN_STRUCT,IN_CLASS,EMPTY_BODY,PUNCTUATOR]
+indent_text(783): frm.pse_tos=2, ... indent_tmp=17
+indent_text(940): frm.pse_tos=2, ... indent_tmp=17
+(394) indent_pse_pop(398): orig_line=11, ------------------- pse_tos=1, type=BRACE_CLOSE
+indent_text(561): 11 NEWLINE
+indent_text(783): frm.pse_tos=1, ... indent_tmp=9
+indent_text(940): frm.pse_tos=1, ... indent_tmp=9
+indent_text(566): 13:1 pc->text() const
+[0x470402:IN_STRUCT,IN_CLASS,FORCE_SPACE,STMT_START,EXPR_START,VAR_TYPE]
+indent_text(783): frm.pse_tos=1, ... indent_tmp=9
+indent_text(940): frm.pse_tos=1, ... indent_tmp=9
+indent_text(566): 13:7 pc->text() char
+[0x400402:IN_STRUCT,IN_CLASS,VAR_TYPE]
+indent_text(783): frm.pse_tos=1, ... indent_tmp=9
+indent_text(940): frm.pse_tos=1, ... indent_tmp=9
+indent_text(566): 13:11 pc->text() *
+[0x100400402:IN_STRUCT,IN_CLASS,VAR_TYPE,PUNCTUATOR]
+indent_text(783): frm.pse_tos=1, ... indent_tmp=9
+indent_text(940): frm.pse_tos=1, ... indent_tmp=9
+indent_text(566): 13:13 pc->text() const
+[0x410402:IN_STRUCT,IN_CLASS,FORCE_SPACE,VAR_TYPE]
+indent_text(783): frm.pse_tos=1, ... indent_tmp=9
+indent_text(940): frm.pse_tos=1, ... indent_tmp=9
+indent_text(566): 13:19 pc->text() pTelName
+[0x1800402:IN_STRUCT,IN_CLASS,VAR_DEF,VAR_1ST]
+indent_text(783): frm.pse_tos=1, ... indent_tmp=9
+indent_text(940): frm.pse_tos=1, ... indent_tmp=9
+indent_text(566): 13:27 pc->text() ;
+[0x100000402:IN_STRUCT,IN_CLASS,PUNCTUATOR]
+indent_text(783): frm.pse_tos=1, ... indent_tmp=9
+indent_text(940): frm.pse_tos=1, ... indent_tmp=9
+indent_text(561): 13 NEWLINE
+indent_text(783): frm.pse_tos=1, ... indent_tmp=9
+indent_text(940): frm.pse_tos=1, ... indent_tmp=9
+indent_text(566): 14:1 pc->text() unsigned
+[0x470402:IN_STRUCT,IN_CLASS,FORCE_SPACE,STMT_START,EXPR_START,VAR_TYPE]
+indent_text(783): frm.pse_tos=1, ... indent_tmp=9
+indent_text(940): frm.pse_tos=1, ... indent_tmp=9
+indent_text(566): 14:10 pc->text() long
+[0x410402:IN_STRUCT,IN_CLASS,FORCE_SPACE,VAR_TYPE]
+indent_text(783): frm.pse_tos=1, ... indent_tmp=9
+indent_text(940): frm.pse_tos=1, ... indent_tmp=9
+indent_text(566): 14:15 pc->text() nTelIndex
+[0x1800402:IN_STRUCT,IN_CLASS,VAR_DEF,VAR_1ST]
+indent_text(783): frm.pse_tos=1, ... indent_tmp=9
+indent_text(940): frm.pse_tos=1, ... indent_tmp=9
+indent_text(566): 14:24 pc->text() ;
+[0x100000402:IN_STRUCT,IN_CLASS,PUNCTUATOR]
+indent_text(783): frm.pse_tos=1, ... indent_tmp=9
+indent_text(940): frm.pse_tos=1, ... indent_tmp=9
+indent_text(561): 14 NEWLINE
+indent_text(783): frm.pse_tos=1, ... indent_tmp=9
+indent_text(940): frm.pse_tos=1, ... indent_tmp=9
+indent_text(566): 15:1 pc->text() }
+[0x100000400:IN_CLASS,PUNCTUATOR]
+indent_text(783): frm.pse_tos=1, ... indent_tmp=9
+indent_text(940): frm.pse_tos=1, ... indent_tmp=9
+(394) indent_pse_pop(398): orig_line=15, ------------------- pse_tos=0, type=BRACE_CLOSE
+indent_text(566): 15:2 pc->text() ;
+[0x100000000:PUNCTUATOR]
+indent_text(783): frm.pse_tos=0, ... indent_tmp=1
+indent_text(940): frm.pse_tos=0, ... indent_tmp=1
+indent_text(561): 15 NEWLINE
+indent_text(783): frm.pse_tos=0, ... indent_tmp=1
+indent_text(940): frm.pse_tos=0, ... indent_tmp=1
