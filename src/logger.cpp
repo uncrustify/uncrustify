@@ -46,7 +46,7 @@ struct log_buf
    log_sev_t  sev;
    int        in_log;
    char       buf[256];
-   int        buf_len;
+   size_t     buf_len;
    log_mask_t mask;
    bool       show_hdr;
 };
@@ -173,12 +173,12 @@ static size_t log_start(log_sev_t sev)
    /* If not in a log, the buffer is empty. Add the header, if enabled. */
    if (!g_log.in_log && g_log.show_hdr)
    {
-      g_log.buf_len = snprintf(g_log.buf, sizeof(g_log.buf), "<%d>", sev);
+      g_log.buf_len = (size_t)snprintf(g_log.buf, sizeof(g_log.buf), "<%d>", sev);
    }
 
-   int cap = ((int)sizeof(g_log.buf) - 2) - g_log.buf_len;
+   size_t cap = (sizeof(g_log.buf) - 2) - g_log.buf_len;
 
-   return((cap > 0) ? (size_t)cap : 0);
+   return((cap > 0) ? cap : 0);
 }
 
 
@@ -203,7 +203,7 @@ static void log_end(void)
  * @param str  The pointer to the string
  * @param len  The length of the string from strlen(str)
  */
-void log_str(log_sev_t sev, const char *str, int len)
+void log_str(log_sev_t sev, const char *str, size_t len)
 {
    if ((str == NULL) || (len <= 0) || !log_sev_on(sev))
    {
@@ -213,7 +213,7 @@ void log_str(log_sev_t sev, const char *str, int len)
    size_t cap = log_start(sev);
    if (cap > 0)
    {
-      if (len > (int)cap)
+      if (len > cap)
       {
          len = cap;
       }
@@ -235,7 +235,7 @@ void log_str(log_sev_t sev, const char *str, int len)
 void log_fmt(log_sev_t sev, const char *fmt, ...)
 {
    va_list args;
-   int     len;
+   size_t  len;
    size_t  cap;
 
    if ((fmt == NULL) || !log_sev_on(sev))
@@ -251,12 +251,12 @@ void log_fmt(log_sev_t sev, const char *fmt, ...)
 
    /* Add on the variable log parameters to the log string */
    va_start(args, fmt);
-   len = vsnprintf(&g_log.buf[g_log.buf_len], cap, fmt, args);
+   len = (size_t)vsnprintf(&g_log.buf[g_log.buf_len], cap, fmt, args);
    va_end(args);
 
    if (len > 0)
    {
-      if (len > (int)cap)
+      if (len > cap)
       {
          len = cap;
       }
@@ -275,10 +275,10 @@ void log_fmt(log_sev_t sev, const char *fmt, ...)
  * @param data    The data to log
  * @param len     The number of bytes to log
  */
-void log_hex(log_sev_t sev, const void *vdata, int len)
+void log_hex(log_sev_t sev, const void *vdata, size_t len)
 {
    const UINT8 *dat = (const UINT8 *)vdata;
-   int         idx;
+   size_t      idx;
    char        buf[80];
 
    if ((vdata == NULL) || !log_sev_on(sev))
@@ -293,7 +293,7 @@ void log_hex(log_sev_t sev, const void *vdata, int len)
       buf[idx++] = to_hex_char(*dat);
       dat++;
 
-      if (idx >= (int)(sizeof(buf) - 3))
+      if (idx >= (sizeof(buf) - 3))
       {
          buf[idx] = 0;
          log_str(sev, buf, idx);
@@ -317,18 +317,18 @@ void log_hex(log_sev_t sev, const void *vdata, int len)
  * @param data    The data to log
  * @param len     The number of bytes to log
  */
-void log_hex_blk(log_sev_t sev, const void *data, int len)
+void log_hex_blk(log_sev_t sev, const void *data, size_t len)
 {
    static char buf[80] = "nnn | XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX | cccccccccccccccc\n";
    const UINT8 *dat    = (const UINT8 *)data;
-   int         idx;
+   size_t      idx;
    int         count;
    int         str_idx = 0;
    int         chr_idx = 0;
    int         tmp;
    int         total;
 
-   if ((data == NULL) || (len <= 0) || !log_sev_on(sev))
+   if ((data == NULL) || !log_sev_on(sev))
    {
       return;
    }
@@ -413,22 +413,29 @@ void log_func_call(int line)
 }
 
 
-void log_func_stack(log_sev_t sev, const char *prefix, const char *suffix, int skip_cnt)
+void log_func_stack(log_sev_t sev, const char *prefix, const char *suffix, size_t skip_cnt)
 {
    if (prefix)
    {
       LOG_FMT(sev, "%s", prefix);
    }
-   if (skip_cnt < 0)
-   {
-      skip_cnt = 0;
-   }
+   //if (skip_cnt < 0)
+   //{
+   //   skip_cnt = 0;
+   //}
 #ifdef DEBUG
    const char *sep = "";
-   for (int idx = (int)g_fq.size() - (skip_cnt + 1); idx >= 0; idx--)
+   size_t g_fq_size = g_fq.size();
+   size_t begin_with;
+   if (g_fq_size > (skip_cnt + 1))
    {
-      LOG_FMT(sev, "%s %s:%d", sep, g_fq[idx].name, g_fq[idx].line);
-      sep = ",";
+      begin_with = g_fq_size - (skip_cnt + 1);
+      for (size_t idx = begin_with; idx != 0; idx--)
+      {
+         LOG_FMT(sev, "%s %s:%d", sep, g_fq[idx].name, g_fq[idx].line);
+         sep = ",";
+      }
+      LOG_FMT(sev, "%s %s:%d", sep, g_fq[0].name, g_fq[0].line);
    }
 #else
    LOG_FMT(sev, "-DEBUG NOT SET-");
