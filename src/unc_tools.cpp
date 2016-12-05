@@ -9,6 +9,8 @@
 
 #include "unc_tools.h"
 
+// examples:
+// prot_the_line(__LINE__, pc->orig_line);
 // prot_the_line(__LINE__, 6);
 // examine_Data(__func__, __LINE__, n);
 
@@ -38,6 +40,10 @@ void prot_the_line(int theLine, unsigned int actual_line)
          else if (pc->type == CT_VBRACE_OPEN)
          {
             LOG_FMT(LGUY, "(%d) %d, <CT_VBRACE_OPEN>\n", theLine, actual_line);
+         }
+         else if (pc->type == CT_SPACE)
+         {
+            LOG_FMT(LGUY, "(%d) %d, <CT_SPACE>\n", theLine, actual_line);
          }
          else
          {
