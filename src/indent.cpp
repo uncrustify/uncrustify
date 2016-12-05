@@ -2557,7 +2557,7 @@ void indent_preproc(void)
          }
       }
 
-      LOG_FMT(LPPIS, "%s(%d): orig_line %d to %d (len %d, next->col %d)\n",
+      LOG_FMT(LPPIS, "%s(%d): orig_line %d to %d (len %lu, next->col %d)\n",
               __func__, __LINE__, pc->orig_line, 1 + pp_level, pc->len(),
               next ? next->column : -1);
    }
