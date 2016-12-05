@@ -419,10 +419,6 @@ void log_func_stack(log_sev_t sev, const char *prefix, const char *suffix, size_
    {
       LOG_FMT(sev, "%s", prefix);
    }
-   //if (skip_cnt < 0)
-   //{
-   //   skip_cnt = 0;
-   //}
 #ifdef DEBUG
    const char *sep      = "";
    size_t     g_fq_size = g_fq.size();
