@@ -28,7 +28,6 @@
 #include <cerrno>
 #include <algorithm>
 #include "unc_ctype.h"
-//#define DEBUG
 
 
 static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool complete);
@@ -1823,7 +1822,7 @@ void space_text(void)
          while (chunk_is_blank(next) && !chunk_is_newline(next) &&
                 (next->type == CT_VBRACE_OPEN || next->type == CT_VBRACE_CLOSE))
          {
-            LOG_FMT(LSPACE, "%s: %d:%d Skip %s (%d+%d)\n", __func__,
+            LOG_FMT(LSPACE, "%s: %d:%d Skip %s (%d+%lu)\n", __func__,
                     next->orig_line, next->orig_col, get_token_name(next->type),
                     pc->column, pc->str.size());
             next->column = pc->column + pc->str.size();
@@ -2085,17 +2084,20 @@ void space_text_balance_nested_parens(void)
          /* insert a space between the two closing parens */
          space_add_after(first, 1);
 
-         /* find the opening paren that matches the 'next' close paren and force
-          * a space after it */
-         cur = first;
-         while ((cur = chunk_get_prev(cur)) != NULL)
-         {
-            if (cur->level == next->level)
-            {
-               space_add_after(cur, 1);
-               break;
-            }
-         }
+         // issue # 752
+         // the next lines are never used in the tests.
+         // TODO: why that?
+         ///* find the opening paren that matches the 'next' close paren and force
+         // * a space after it */
+         //cur = first;
+         //while ((cur = chunk_get_prev(cur)) != NULL)
+         //{
+         //   if (cur->level == next->level)
+         //   {
+         //      //space_add_after(cur, 1);
+         //      break;
+         //   }
+         //}
       }
 
       first = next;
