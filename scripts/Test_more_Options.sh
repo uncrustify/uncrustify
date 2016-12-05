@@ -26,7 +26,6 @@ mkdir -p ${RESULTS}
   then
     echo "Problem with "${file}
     echo "use: diff ${RESULTS}/${file} ${SCRIPTS}/Test_more/${file} to find why"
-    break
   else
     rm results/${file}
   fi
@@ -45,17 +44,19 @@ do
   OutputFile="${OUTPUT}/${L_Value}.txt"
   LFile="${RESULTS}/${L_Value}.txt"
   ./build/uncrustify -c /dev/null -f ${InputFile} -o /dev/null -L ${L_Value} 2> ${LFile}
-  cmp -s ${LFile} ${OutputFile}
+  sed 's/[0-9]/x/g' ${LFile} > ${LFile}.sed 
+  cmp -s ${LFile}.sed ${OutputFile}
   how_different=${?}
   #echo "the status of is "${how_different}
   if [ ${how_different} != "0" ] ;
   then
     echo "Problem with "${file}
-    echo "use: diff ${LFile} ${OutputFile} to find why"
+    echo "use: diff ${LFile}.sed ${OutputFile} to find why"
     diff ${LFile} ${OutputFile}
     break
   else
     rm ${LFile}
+    rm ${LFile}.sed
   fi
 done
 
