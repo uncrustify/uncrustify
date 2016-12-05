@@ -15,6 +15,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <cerrno>
+#include <sysexits.h>
 #include "unc_ctype.h"
 
 
@@ -353,7 +354,7 @@ static void indent_pse_push(struct parse_frame &frm, chunk_t *pc)
       /* the stack depth is too small */
       /* fatal error */
       fprintf(stderr, "the stack depth is too small\n");
-      exit(2);
+      exit(EX_SOFTWARE);
    }
 }
 
@@ -403,7 +404,15 @@ static void indent_pse_pop(struct parse_frame &frm, chunk_t *pc)
                  __func__, __LINE__, frm.pse_tos);
       }
    }
-}
+   else
+   {
+      /* fatal error */
+      fprintf(stderr, "the stack index is already zero\n");
+      fprintf(stderr, "at line=%d, type is %s\n",
+              pc->orig_line, get_token_name(pc->type));
+      exit(EX_SOFTWARE);
+   }
+} // indent_pse_pop
 
 
 static int token_indent(c_token_t type)
@@ -1008,6 +1017,13 @@ void indent_text(void)
 
             indent_pse_pop(frm, pc);
             frm.level--;
+         }
+         else
+         {
+            /* fatal error */
+            fprintf(stderr, "Unmatched BRACE_CLOSE\nat line=%d, column=%d\n",
+                    pc->orig_line, pc->orig_col);
+            exit(EX_DATAERR);
          }
       }
       else if (pc->type == CT_VBRACE_OPEN)
