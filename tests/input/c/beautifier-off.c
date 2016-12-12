@@ -14,10 +14,10 @@
 printf("a multilinemacro"); \
 printf("a multilinemacro2");
 
-/* *INDENT-OFF* */
-
 int main(int argc, char *argv[])
 {
+/* *INDENT-OFF* */
+
    int a, b;
 a = 1; // stupid comment \
 b = 2;

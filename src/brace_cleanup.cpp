@@ -15,6 +15,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <cerrno>
+#include <sysexits.h>
 #include "unc_ctype.h"
 
 
@@ -646,6 +647,19 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
       frm->expr_count = 0;
       LOG_FMT(LSTMT, "%s: %d> reset expr on %s\n",
               __func__, pc->orig_line, pc->text());
+   }
+   else if (pc->type == CT_BRACE_CLOSE)
+   {
+      if (!cpd.consumed)
+      {
+         if (!cpd.unc_off_used)
+         {
+            /* fatal error */
+            fprintf(stderr, "Unmatched BRACE_CLOSE\nat line=%d, column=%d\n",
+                    pc->orig_line, pc->orig_col);
+            exit(EX_DATAERR);
+         }
+      }
    }
 } // parse_cleanup
 

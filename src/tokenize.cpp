@@ -494,6 +494,8 @@ static bool parse_comment(tok_ctx &ctx, chunk_t &pc)
       {
          LOG_FMT(LBCTRL, "Found '%s' on line %d\n", offtext, pc.orig_line);
          cpd.unc_off = true;
+         // Issue #842
+         cpd.unc_off_used = true;
       }
    }
    return(true);
@@ -1941,8 +1943,9 @@ void tokenize(const deque<int> &data, chunk_t *ref)
       }
       else
       {
-         LOG_FMT(LGUY, "%s(%d): text():%s, type:%s, orig_col=%d, orig_col_end=%d\n",
-                 __func__, __LINE__, pc->text(), get_token_name(pc->type), pc->orig_col, pc->orig_col_end);
+         LOG_FMT(LGUY, "%s(%d): text():%s, type:%s, orig_line=%d, orig_col=%d, orig_col_end=%d\n",
+                 __func__, __LINE__, pc->text(), get_token_name(pc->type),
+                 pc->orig_line, pc->orig_col, pc->orig_col_end);
       }
    }
 

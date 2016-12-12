@@ -334,7 +334,7 @@ static void indent_pse_push(struct parse_frame &frm, chunk_t *pc)
               __func__, __LINE__, pc->orig_line, frm.pse_tos, get_token_name(pc->type));
       memset(&frm.pse[frm.pse_tos], 0, sizeof(frm.pse[frm.pse_tos]));
 
-      //LOG_FMT(LINDPSE, "%s[line %d]:%d] (pp=%d) OPEN  [%d,%s] level=%d\n",
+      //LOG_FMT(LINDPSE, "%s(%d):%d] (pp=%d) OPEN  [%d,%s] level=%d\n",
       //        __func__, __LINE__, pc->orig_line, cpd.pp_level, frm.pse_tos, get_token_name(pc->type), pc->level);
 
       frm.pse[frm.pse_tos].pc          = pc;
@@ -446,11 +446,11 @@ static int token_indent(c_token_t type)
 }
 
 
-#define indent_column_set(X)                                                \
-   do {                                                                     \
-      indent_column = (X);                                                  \
-      LOG_FMT(LINDENT2, "%s:[line %d], orig_line=%d, indent_column = %d\n", \
-              __func__, __LINE__, pc->orig_line, indent_column);            \
+#define indent_column_set(X)                                           \
+   do {                                                                \
+      indent_column = (X);                                             \
+      LOG_FMT(LINDENT2, "%s:(%d), orig_line=%d, indent_column = %d\n", \
+              __func__, __LINE__, pc->orig_line, indent_column);       \
    } while (0)
 
 
@@ -1018,13 +1018,6 @@ void indent_text(void)
             indent_pse_pop(frm, pc);
             frm.level--;
          }
-         else
-         {
-            /* fatal error */
-            fprintf(stderr, "Unmatched BRACE_CLOSE\nat line=%d, column=%d\n",
-                    pc->orig_line, pc->orig_col);
-            exit(EX_DATAERR);
-         }
       }
       else if (pc->type == CT_VBRACE_OPEN)
       {
@@ -1495,7 +1488,7 @@ void indent_text(void)
          if (chunk_is_newline(chunk_get_prev(pc)) &&
              (pc->column != indent_column))
          {
-            LOG_FMT(LINDENT, "%s[line %d]: %d] indent => %d [%s]\n",
+            LOG_FMT(LINDENT, "%s(%d): %d] indent => %d [%s]\n",
                     __func__, __LINE__, pc->orig_line, indent_column, pc->text());
             reindent_line(pc, indent_column);
          }
@@ -2116,16 +2109,16 @@ void indent_text(void)
          {
             chunk_t *tmp = chunk_get_prev_type(prev, CT_QUESTION, -1);
             tmp = chunk_get_next_ncnl(tmp);
-            LOG_FMT(LINDENT, "%s: %d] ternarydefcol => %d [%s]\n",
-                    __func__, pc->orig_line, tmp->column, pc->text());
+            LOG_FMT(LINDENT, "%s(%d): %d] ternarydefcol => %d [%s]\n",
+                    __func__, __LINE__, pc->orig_line, tmp->column, pc->text());
             reindent_line(pc, tmp->column);
          }
          else if ((cpd.settings[UO_indent_ternary_operator].n == 2) &&
                   (pc->type == CT_COND_COLON))
          {
             chunk_t *tmp = chunk_get_prev_type(pc, CT_QUESTION, -1);
-            LOG_FMT(LINDENT, "%s: %d] ternarydefcol => %d [%s]\n",
-                    __func__, pc->orig_line, tmp->column, pc->text());
+            LOG_FMT(LINDENT, "%s(%d): %d] ternarydefcol => %d [%s]\n",
+                    __func__, __LINE__, pc->orig_line, tmp->column, pc->text());
             reindent_line(pc, tmp->column);
          }
          else

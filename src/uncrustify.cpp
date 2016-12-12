@@ -244,6 +244,9 @@ int main(int argc, char *argv[])
    int        idx;
    const char *p_arg;
 
+   /* initialize the global data */
+   cpd.unc_off_used = false;
+
    /* check keyword sort */
    assert(keywords_are_sorted());
    /* If ran without options show the usage info */
