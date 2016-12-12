@@ -202,7 +202,7 @@ static void output_to_column(int column, bool allow_tabs)
  * indent_cmt_with_tabs as the rules.
  * base_col is the indent of the first line of the comment.
  * On the first line, column == base_col.
- * On subsequnet lines, column >= base_col.
+ * On subsequent lines, column >= base_col.
  *
  * @param brace_col the brace-level indent of the comment
  * @param base_col  the indent of the start of the comment (multiline)
