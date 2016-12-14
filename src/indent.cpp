@@ -15,7 +15,6 @@
 #include <cstdlib>
 #include <cstring>
 #include <cerrno>
-#include <sysexits.h>
 #include "unc_ctype.h"
 
 
@@ -354,7 +353,7 @@ static void indent_pse_push(struct parse_frame &frm, chunk_t *pc)
       /* the stack depth is too small */
       /* fatal error */
       fprintf(stderr, "the stack depth is too small\n");
-      exit(EX_SOFTWARE);
+      exit(EXIT_FAILURE);
    }
 }
 
@@ -410,7 +409,7 @@ static void indent_pse_pop(struct parse_frame &frm, chunk_t *pc)
       fprintf(stderr, "the stack index is already zero\n");
       fprintf(stderr, "at line=%d, type is %s\n",
               pc->orig_line, get_token_name(pc->type));
-      exit(EX_SOFTWARE);
+      exit(EXIT_FAILURE);
    }
 } // indent_pse_pop
 
