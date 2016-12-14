@@ -166,7 +166,7 @@ struct parse_frame
 #define PCF_IN_QT_MACRO        PCF_BIT(40)  /* in a QT-macro, i.e. SIGNAL, SLOT */
 
 #ifdef DEFINE_PCF_NAMES
-static const char* const pcf_names[] =
+static const char *pcf_names[] =
 {
    "IN_PREPROC",        // 0
    "IN_STRUCT",         // 1
