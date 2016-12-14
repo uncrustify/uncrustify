@@ -5,6 +5,7 @@
  * @author  Ben Gardner
  * @license GPL v2+
  */
+
 #define DEFINE_PCF_NAMES
 #define DEFINE_CHAR_TABLE
 
