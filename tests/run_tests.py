@@ -239,7 +239,7 @@ def main(argv):
             args.exe = os.path.normpath(os.path.join(cwd, args.exe))
 
     if not os.path.exists(args.exe):
-        print(FAIL_COLOR + "FAILED: " + NORMAL + "Can find uncrustify executable")
+        print(FAIL_COLOR + "FAILED: " + NORMAL + "Cannot find uncrustify executable")
         return -1
 
     # do a sanity check on the executable

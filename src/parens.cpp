@@ -112,7 +112,7 @@ static void add_parens_between(chunk_t *first, chunk_t *last)
  * This basically just checks for a CT_COMPARE that isn't surrounded by parens.
  * The edges for the compare are the open, close and any CT_BOOL tokens.
  *
- * This only handleds VERY simple patterns:
+ * This only handles VERY simple patterns:
  *   (!a && b)         => (!a && b)          -- no change
  *   (a && b == 1)     => (a && (b == 1))
  *   (a == 1 || b > 2) => ((a == 1) || (b > 2))
