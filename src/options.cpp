@@ -95,6 +95,11 @@ void unc_add_option(const char *name, uncrustify_options id, argtype_e type,
       value.max_val = 0;
       break;
 
+   case AT_UNUM:
+      value.min_val = min_val;
+      value.max_val = max_val;
+      break;
+
    default:
       fprintf(stderr, "FATAL: Illegal option type %d for '%s'\n", type, name);
       exit(EXIT_FAILURE);
@@ -1215,7 +1220,7 @@ void register_options(void)
    unc_add_option("align_same_func_call_params", UO_align_same_func_call_params, AT_BOOL,
                   "Align parameters in single-line functions that have the same name.\n"
                   "The function names must already be aligned with each other.");
-   unc_add_option("align_var_def_span", UO_align_var_def_span, AT_NUM,
+   unc_add_option("align_var_def_span", UO_align_var_def_span, AT_UNUM,
                   "The span for aligning variable definitions (0=don't align)", "", 0, 5000);
    unc_add_option("align_var_def_star_style", UO_align_var_def_star_style, AT_NUM,
                   "How to align the star in variable definitions.\n"
@@ -1279,7 +1284,7 @@ void register_options(void)
                   "1: The '&' is part of type name: typedef int  &pint;\n"
                   "2: The '&' is part of the type, but dangling: typedef int &pint;", "", 0, 2);
 
-   unc_add_option("align_right_cmt_span", UO_align_right_cmt_span, AT_NUM,
+   unc_add_option("align_right_cmt_span", UO_align_right_cmt_span, AT_UNUM,
                   "The span for aligning comments that end lines (0=don't align)", "", 0, 5000);
    unc_add_option("align_right_cmt_mix", UO_align_right_cmt_mix, AT_BOOL,
                   "If aligning comments, mix with comments after '}' and #endif with less than 3 spaces before the comment");
@@ -1633,12 +1638,14 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
       return;
    }
 
-   if (entry->type == AT_NUM)
+   if ((entry->type == AT_NUM) ||
+       (entry->type == AT_UNUM))
    {
       if (unc_isdigit(*val) ||
           (unc_isdigit(val[1]) && ((*val == '-') || (*val == '+'))))
       {
          dest->n = strtol(val, NULL, 0);
+         // is the same as dest->u
          return;
       }
       else
@@ -1654,6 +1661,7 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
          if (((tmp = unc_find_option(val)) != NULL) && (tmp->type == entry->type))
          {
             dest->n = cpd.settings[tmp->id].n * mult;
+            // is the same as dest->u
             return;
          }
       }
@@ -1661,6 +1669,7 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
               cpd.filename, cpd.line_number, entry->name, val);
       cpd.error_count++;
       dest->n = 0;
+      // is the same as dest->u
       return;
    }
 
