@@ -31,7 +31,7 @@ const char *extension_add(const char *ext_text, const char *lang_text);
 /*
  * detect.cpp
  */
-void detect_options();
+void detect_options(void);
 
 
 /*
@@ -72,7 +72,7 @@ void indent_text(void);
 void indent_preproc(void);
 void indent_to_column(chunk_t *pc, int column);
 void align_to_column(chunk_t *pc, int column);
-bool ifdef_over_whole_file();
+bool ifdef_over_whole_file(void);
 void reindent_line(chunk_t *pc, int column);
 void quick_indent_again(void);
 
@@ -138,7 +138,7 @@ chunk_t *skip_tsquare_next(chunk_t *ary_def);
 chunk_t *skip_attribute_next(chunk_t *attr);
 chunk_t *skip_attribute_prev(chunk_t *fp_close);
 
-void remove_extra_returns();
+void remove_extra_returns(void);
 
 
 /*
@@ -236,7 +236,7 @@ void do_code_width(void);
  * lang_pawn.cpp
  */
 void pawn_prescan(void);
-void pawn_add_virtual_semicolons();
+void pawn_add_virtual_semicolons(void);
 chunk_t *pawn_check_vsemicolon(chunk_t *pc);
 void pawn_scrub_vsemi(void);
 chunk_t *pawn_add_vsemi_after(chunk_t *pc);
@@ -251,7 +251,7 @@ void print_universal_indent_cfg(FILE *pfile);
 /*
  * unicode.cpp
  */
-void write_bom();
+void write_bom(void);
 void write_char(int ch);
 void write_string(const unc_text &text);
 bool decode_unicode(const vector<UINT8> &in_data, deque<int> &out_data, CharEncoding &enc, bool &has_bom);

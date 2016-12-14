@@ -460,7 +460,7 @@ static void write_utf16(int ch, bool be)
 }
 
 
-void write_bom()
+void write_bom(void)
 {
    switch (cpd.enc)
    {

@@ -5861,7 +5861,7 @@ static void handle_cs_array_type(chunk_t *pc)
 /**
  * Remove 'return;' that appears as the last statement in a function
  */
-void remove_extra_returns()
+void remove_extra_returns(void)
 {
    LOG_FUNC_ENTRY();
    chunk_t *pc;
