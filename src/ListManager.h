@@ -7,6 +7,9 @@
  * @license GPL v2+
  */
 
+#ifndef _LIST_MANAGER_H_
+#define _LIST_MANAGER_H_
+
 /**
  * A simple list manager for a double-linked list.
  * Class T must define 'next' and 'prev', which must be pointers to type T.
@@ -199,3 +202,5 @@ public:
       first = obj;
    }
 };
+
+#endif /* _LIST_MANAGER_H_ */

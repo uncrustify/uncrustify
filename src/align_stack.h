@@ -6,6 +6,10 @@
  * @author  Ben Gardner
  * @license GPL v2+
  */
+
+#ifndef _ALIGN_STACK_H
+#define _ALIGN_STACK_H
+
 #include "ChunkStack.h"
 
 class AlignStack
@@ -87,3 +91,6 @@ protected:
 
    ChunkStack m_scratch; /* used in ReAddSkipped() */
 };
+
+#endif /* _ALIGN_STACK_H */
+
