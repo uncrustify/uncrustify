@@ -15,11 +15,6 @@
 #include <cstdlib>
 #include <cstring>
 #include <cerrno>
-#ifdef WIN32
-#define EX_DATAERR    65 // data format error
-#else // not WIN32
-#include <sysexits.h>
-#endif   // ifdef WIN32
 #include "unc_ctype.h"
 
 
@@ -661,7 +656,7 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
             /* fatal error */
             fprintf(stderr, "Unmatched BRACE_CLOSE\nat line=%d, column=%d\n",
                     pc->orig_line, pc->orig_col);
-            exit(EX_DATAERR);
+            exit(EXIT_FAILURE);
          }
       }
    }
