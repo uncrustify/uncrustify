@@ -20,6 +20,59 @@
 #include <cerrno>
 #include "unc_ctype.h"
 
+static const char *DOC_TEXT_END =
+   "\n"
+   "# Meaning of the settings:\n"
+   "#   Ignore - do not do any changes\n"
+   "#   Add    - make sure there is 1 or more space/brace/newline/etc\n"
+   "#   Remove - removes space/brace/newline/etc\n"
+   "#   Force  - in the context of spaces means make sure there is exactly 1,\n"
+   "#            in other contexts it behaves like Add\n"
+   "#\n"
+   "#\n"
+   "# You can force a token to be a type with the 'type' option.\n"
+   "# Example:\n"
+   "# type myfoo1 myfoo2\n"
+   "#\n"
+   "# You can create custom macro-based indentation using macro-open,\n"
+   "# macro-else and macro-close.\n"
+   "# Example:\n"
+   "# macro-open  BEGIN_TEMPLATE_MESSAGE_MAP\n"
+   "# macro-open  BEGIN_MESSAGE_MAP\n"
+   "# macro-close END_MESSAGE_MAP\n"
+   "#\n"
+   "# You can assign any keyword to any type with the set option.\n"
+   "# set func_call_user _ N_\n"
+   "#\n"
+   "# The full syntax description of all custom definition config entries\n"
+   "# is shown below:\n"
+   "#\n"
+   "# define custom tokens as:\n"
+   "# - embed whitespace in token using '\' escape character, or\n"
+   "#   put token in quotes\n"
+   "# - these: ' \" and ` are recognized as quote delimiters\n"
+   "#\n"
+   "# type token1 token2 token3 ...\n"
+   "#             ^ optionally specify multiple tokens on a single line\n"
+   "# define def_token output_token\n"
+   "#                  ^ output_token is optional, then NULL is assumed\n"
+   "# macro-open token\n"
+   "# macro-close token\n"
+   "# macro-else token\n"
+   "# set id token1 token2 ...\n"
+   "#               ^ optionally specify multiple tokens on a single line\n"
+   "#     ^ id is one of the names in token_enum.h sans the CT_ prefix,\n"
+   "#       e.g. PP_PRAGMA\n"
+   "#\n"
+   "# all tokens are separated by any mix of ',' commas, '=' equal signs\n"
+   "# and whitespace (space, tab)\n"
+   "#\n"
+   "# You can add support for other file extensions using the 'file_ext' command.\n"
+   "# The first arg is the language name used with the '-l' option.\n"
+   "# The remaining args are file extensions, matched with 'endswith'.\n"
+   "#   file_ext CPP .ch .cxx .cpp.in\n"
+   "#\n";
+
 map<uncrustify_options, option_map_value> option_name_map;
 map<uncrustify_groups, group_map_value>   group_map;
 static uncrustify_groups                  current_group;
@@ -2064,51 +2117,7 @@ int save_option_file_kernel(FILE *pfile, bool withDoc, bool only_not_default)
 
    if (withDoc)
    {
-      fprintf(pfile,
-              "\n"
-              "# You can force a token to be a type with the 'type' option.\n"
-              "# Example:\n"
-              "# type myfoo1 myfoo2\n"
-              "#\n"
-              "# You can create custom macro-based indentation using macro-open,\n"
-              "# macro-else and macro-close.\n"
-              "# Example:\n"
-              "# macro-open  BEGIN_TEMPLATE_MESSAGE_MAP\n"
-              "# macro-open  BEGIN_MESSAGE_MAP\n"
-              "# macro-close END_MESSAGE_MAP\n"
-              "#\n"
-              "# You can assign any keyword to any type with the set option.\n"
-              "# set func_call_user _ N_\n"
-              "#\n"
-              "# The full syntax description of all custom definition config entries\n"
-              "# is shown below:\n"
-              "#\n"
-              "# define custom tokens as:\n"
-              "# - embed whitespace in token using '\' escape character, or\n"
-              "#   put token in quotes\n"
-              "# - these: ' \" and ` are recognized as quote delimiters\n"
-              "#\n"
-              "# type token1 token2 token3 ...\n"
-              "#             ^ optionally specify multiple tokens on a single line\n"
-              "# define def_token output_token\n"
-              "#                  ^ output_token is optional, then NULL is assumed\n"
-              "# macro-open token\n"
-              "# macro-close token\n"
-              "# macro-else token\n"
-              "# set id token1 token2 ...\n"
-              "#               ^ optionally specify multiple tokens on a single line\n"
-              "#     ^ id is one of the names in token_enum.h sans the CT_ prefix,\n"
-              "#       e.g. PP_PRAGMA\n"
-              "#\n"
-              "# all tokens are separated by any mix of ',' commas, '=' equal signs\n"
-              "# and whitespace (space, tab)\n"
-              "#\n"
-              "# You can add support for other file extensions using the 'file_ext' command.\n"
-              "# The first arg is the language name used with the '-l' option.\n"
-              "# The remaining args are file extensions, matched with 'endswith'.\n"
-              "#   file_ext CPP .ch .cxx .cpp.in\n"
-              "#\n"
-              );
+      fprintf(pfile, DOC_TEXT_END);
    }
 
    /* Print custom keywords */
@@ -2180,6 +2189,7 @@ void print_options(FILE *pfile)
          fputs("\n\n", pfile);
       }
    }
+   fprintf(pfile, DOC_TEXT_END);
 } // print_options
 
 
