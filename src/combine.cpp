@@ -2315,6 +2315,10 @@ static void fix_typedef(chunk_t *start)
    /* Mark everything in the typedef and scan for ")(", which makes it a
     * function type
     */
+   if (start == NULL)
+   {
+      return;
+   }
    next = start;
    while (((next = chunk_get_next_ncnl(next, CNAV_PREPROC)) != NULL) &&
           (next->level >= start->level))
@@ -2395,6 +2399,10 @@ static void fix_typedef(chunk_t *start)
     * for a function type
     */
    next = chunk_get_next_ncnl(start, CNAV_PREPROC);
+   if (next == NULL)
+   {
+      return;
+   }
    if ((next->type != CT_ENUM) &&
        (next->type != CT_STRUCT) &&
        (next->type != CT_UNION))
@@ -2414,9 +2422,17 @@ static void fix_typedef(chunk_t *start)
 
    /* the next item should be either a type or { */
    next = chunk_get_next_ncnl(next, CNAV_PREPROC);
+   if (next == NULL)
+   {
+      return;
+   }
    if (next->type == CT_TYPE)
    {
       next = chunk_get_next_ncnl(next, CNAV_PREPROC);
+   }
+   if (next == NULL)
+   {
+      return;
    }
    if (next->type == CT_BRACE_OPEN)
    {
@@ -3277,6 +3293,10 @@ static void mark_function(chunk_t *pc)
 
    prev = chunk_get_prev_ncnlnp(pc);
    next = chunk_get_next_ncnlnp(pc);
+   if (next == NULL)
+   {
+      return;
+   }
 
    /* Find out what is before the operator */
    if (pc->parent_type == CT_OPERATOR)
@@ -3339,6 +3359,10 @@ static void mark_function(chunk_t *pc)
    if (chunk_is_ptr_operator(next))
    {
       next = chunk_get_next_ncnlnp(next);
+      if (next == NULL)
+      {
+         return;
+      }
    }
 
    LOG_FMT(LFCN, "%s: %d] %s[%s] - parent=%s level=%lu/%lu, next=%s[%s] - level=%lu\n",
@@ -3354,13 +3378,25 @@ static void mark_function(chunk_t *pc)
       LOG_FMT(LFCN, "  1) Marked [%s] as FUNC_CTOR_VAR on line %d col %d\n",
               pc->text(), pc->orig_line, pc->orig_col);
       next = skip_template_next(next);
+      if (next == NULL)
+      {
+         return;
+      }
       flag_parens(next, 0, CT_FPAREN_OPEN, pc->type, true);
       return;
    }
 
    /* Skip over any template and attribute madness */
    next = skip_template_next(next);
+   if (next == NULL)
+   {
+      return;
+   }
    next = skip_attribute_next(next);
+   if (next == NULL)
+   {
+      return;
+   }
 
    /* Find the open and close paren */
    paren_open  = chunk_get_next_str(pc, "(", 1, pc->level);
@@ -3833,6 +3869,10 @@ static void mark_function(chunk_t *pc)
    if (next->type == CT_TSQUARE)
    {
       next = chunk_get_next_ncnl(next);
+      if (next == NULL)
+      {
+         return;
+      }
    }
 
    /* Mark parameters and return type */
