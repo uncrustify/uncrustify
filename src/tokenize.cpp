@@ -11,7 +11,6 @@
 #include "char_table.h"
 #include "prototypes.h"
 #include "chunk_list.h"
-#include <stdbool.h>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
