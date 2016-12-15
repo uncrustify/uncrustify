@@ -2407,7 +2407,7 @@ static void indent_comment(chunk_t *pc, int col)
 /**
  * Scan to see if the whole file is covered by one #ifdef
  */
-bool ifdef_over_whole_file()
+bool ifdef_over_whole_file(void)
 {
    LOG_FUNC_ENTRY();
    chunk_t *pc;

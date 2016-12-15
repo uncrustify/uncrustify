@@ -21,13 +21,13 @@
 static chunk_t *align_var_def_brace(chunk_t *pc, size_t span, size_t *nl_count);
 static chunk_t *align_trailing_comments(chunk_t *start);
 static void align_init_brace(chunk_t *start);
-static void align_func_params();
+static void align_func_params(void);
 static void align_same_func_call_params();
 static void align_func_proto(int span);
 static void align_oc_msg_spec(int span);
 static void align_typedefs(int span);
 static void align_left_shift(void);
-static void align_oc_msg_colons();
+static void align_oc_msg_colons(void);
 static void align_oc_msg_colon(chunk_t *so);
 static void align_oc_decl_colon(void);
 static void align_asm_colon(void);
@@ -779,7 +779,7 @@ static chunk_t *align_func_param(chunk_t *start)
 } // align_func_param
 
 
-static void align_func_params()
+static void align_func_params(void)
 {
    LOG_FUNC_ENTRY();
    chunk_t *pc;
@@ -2125,7 +2125,7 @@ static void align_oc_msg_colon(chunk_t *so)
 /**
  * Aligns OC messages
  */
-static void align_oc_msg_colons()
+static void align_oc_msg_colons(void)
 {
    LOG_FUNC_ENTRY();
    chunk_t *pc;

@@ -44,7 +44,7 @@ struct no_space_table_s
  *
  * TODO: some of these are no longer needed.
  */
-struct no_space_table_s no_space_table[] =
+const struct no_space_table_s no_space_table[] =
 {
    { CT_OC_AT,          CT_UNKNOWN       },
    { CT_INCDEC_BEFORE,  CT_WORD          },
