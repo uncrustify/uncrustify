@@ -38,7 +38,6 @@
 int backup_copy_file(const char *filename, const vector<UINT8> &data)
 {
    char  newpath[1024];
-   char  buffer[128];
    char  md5_str_in[33];
    char  md5_str[33];
    UINT8 dig[16];
@@ -59,6 +58,7 @@ int backup_copy_file(const char *filename, const vector<UINT8> &data)
    FILE *thefile = fopen(newpath, "rb");
    if (thefile != NULL)
    {
+      char buffer[128];
       if (fgets(buffer, sizeof(buffer), thefile) != NULL)
       {
          for (int i = 0; buffer[i] != 0; i++)

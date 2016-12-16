@@ -90,6 +90,7 @@ void pf_push(struct parse_frame *pf)
    {
       pf_copy(&cpd.frames[cpd.frame_count], pf);
       cpd.frame_count++;
+
       pf->ref_no = ref_no++;
    }
    LOG_FMT(LPF, "%s(%d): count = %d\n", __func__, __LINE__, cpd.frame_count);
@@ -103,16 +104,13 @@ void pf_push(struct parse_frame *pf)
  */
 void pf_push_under(struct parse_frame *pf)
 {
-   struct parse_frame *npf1;
-   struct parse_frame *npf2;
-
    LOG_FMT(LPF, "%s(%d): before count = %d\n", __func__, __LINE__, cpd.frame_count);
 
    if ((cpd.frame_count < (int)ARRAY_SIZE(cpd.frames)) &&
        (cpd.frame_count >= 1))
    {
-      npf1 = &cpd.frames[cpd.frame_count - 1];
-      npf2 = &cpd.frames[cpd.frame_count];
+      struct parse_frame *npf1 = &cpd.frames[cpd.frame_count - 1];
+      struct parse_frame *npf2 = &cpd.frames[cpd.frame_count];
       pf_copy(npf2, npf1);
       pf_copy(npf1, pf);
       cpd.frame_count++;

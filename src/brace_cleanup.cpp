@@ -110,7 +110,6 @@ void brace_cleanup(void)
    LOG_FUNC_ENTRY();
    chunk_t            *pc;
    struct parse_frame frm;
-   int                pp_level;
 
    cpd.unc_stage = US_BRACE_CLEANUP;
 
@@ -136,7 +135,7 @@ void brace_cleanup(void)
       }
 
       /* Check for a preprocessor start */
-      pp_level = cpd.pp_level;
+      int pp_level = cpd.pp_level;
       if (pc->type == CT_PREPROC)
       {
          pp_level = preproc_start(&frm, pc);
@@ -287,7 +286,6 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
    c_token_t parent = CT_NONE;
-   chunk_t   *prev;
 
    LOG_FMT(LTOK, "%s:%lu] %16s - tos:%d/%16s stg:%d\n",
            __func__, pc->orig_line, get_token_name(pc->type),
@@ -478,7 +476,7 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
        (pc->type == CT_SPAREN_OPEN) ||
        (pc->type == CT_BRACE_OPEN))
    {
-      prev = chunk_get_prev_ncnl(pc);
+      chunk_t *prev = chunk_get_prev_ncnl(pc);
       if (prev != NULL)
       {
          if ((pc->type == CT_PAREN_OPEN) ||
@@ -680,7 +678,6 @@ static bool check_complex_statements(struct parse_frame *frm, chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
    c_token_t parent;
-   chunk_t   *vbrace;
 
    /* Turn an optional paren into either a real paren or a brace */
    if (frm->pse[frm->pse_tos].stage == BS_OP_PAREN1)
@@ -807,7 +804,7 @@ static bool check_complex_statements(struct parse_frame *frm, chunk_t *pc)
       {
          parent = frm->pse[frm->pse_tos].type;
 
-         vbrace = insert_vbrace_open_before(pc, frm);
+         chunk_t *vbrace = insert_vbrace_open_before(pc, frm);
          set_chunk_parent(vbrace, parent);
 
          frm->level++;

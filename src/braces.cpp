@@ -1046,11 +1046,10 @@ static void mod_case_brace(void)
 {
    LOG_FUNC_ENTRY();
    chunk_t *pc = chunk_get_head();
-   chunk_t *next;
 
    while (pc != NULL)
    {
-      next = chunk_get_next_ncnl(pc, CNAV_PREPROC);
+      chunk_t *next = chunk_get_next_ncnl(pc, CNAV_PREPROC);
       if (next == NULL)
       {
          return;

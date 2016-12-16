@@ -156,7 +156,6 @@ void align_to_column(chunk_t *pc, int column)
 
    int col_delta = column - pc->column;
    int min_col   = column;
-   int min_delta;
 
    pc->column = column;
    do
@@ -169,10 +168,10 @@ void align_to_column(chunk_t *pc, int column)
       {
          break;
       }
-      min_delta = space_col_align(pc, next);
-      min_col  += min_delta;
-      prev      = pc;
-      pc        = next;
+      int min_delta = space_col_align(pc, next);
+      min_col += min_delta;
+      prev     = pc;
+      pc       = next;
 
       if (chunk_is_comment(pc) && (pc->parent_type != CT_COMMENT_EMBED))
       {

@@ -178,12 +178,11 @@ static bool next_word_exceeds_limit(const unc_text &text, int idx)
  */
 static void output_to_column(int column, bool allow_tabs)
 {
-   int nc;
-
    cpd.did_newline = 0;
    if (allow_tabs)
    {
       /* tab out as far as possible and then use spaces */
+      int nc;
       while ((nc = next_tab_column(cpd.column)) <= column)
       {
          add_text("\t");
@@ -1201,7 +1200,6 @@ static void output_comment_multi(chunk_t *pc)
 {
    int        cmt_col;
    int        cmt_idx;
-   int        ch;
    unc_text   line;
    int        line_count = 0;
    int        ccol; /* the col of subsequent comment lines */
@@ -1231,7 +1229,7 @@ static void output_comment_multi(chunk_t *pc)
    line.clear();
    while (cmt_idx < pc->len())
    {
-      ch = pc->str[cmt_idx++];
+      int ch = pc->str[cmt_idx++];
 
       /* handle the CRLF and CR endings. convert both to LF */
       if (ch == '\r')
@@ -1654,7 +1652,6 @@ static bool kw_fcn_javaparam(chunk_t *cmt, unc_text &out_txt)
 
    chunk_t *fpo;
    chunk_t *fpc;
-   chunk_t *prev;
    bool    has_param = true;
    bool    need_nl   = false;
 
@@ -1723,8 +1720,8 @@ static bool kw_fcn_javaparam(chunk_t *cmt, unc_text &out_txt)
 
    if (has_param)
    {
-      tmp  = fpo;
-      prev = NULL;
+      chunk_t *prev = NULL;
+      tmp = fpo;
       while ((tmp = chunk_get_next(tmp)) != NULL)
       {
          if ((tmp->type == CT_COMMA) || (tmp == fpc))
@@ -1891,7 +1888,6 @@ static void output_comment_multi_simple(chunk_t *pc, bool kw_subst)
 {
    (void)kw_subst;
    int        cmt_idx;
-   int        ch;
    int        line_count = 0;
    int        ccol;
    int        col_diff = 0;
@@ -1917,7 +1913,7 @@ static void output_comment_multi_simple(chunk_t *pc, bool kw_subst)
    line.clear();
    while (cmt_idx < pc->len())
    {
-      ch = pc->str[cmt_idx++];
+      int ch = pc->str[cmt_idx++];
 
       /* handle the CRLF and CR endings. convert both to LF */
       if (ch == '\r')

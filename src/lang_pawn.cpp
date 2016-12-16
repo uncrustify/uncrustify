@@ -325,12 +325,11 @@ void pawn_add_virtual_semicolons(void)
 static chunk_t *pawn_mark_function0(chunk_t *start, chunk_t *fcn)
 {
    LOG_FUNC_ENTRY();
-   chunk_t *last;
 
    /* handle prototypes */
    if (start == fcn)
    {
-      last = chunk_get_next_type(fcn, CT_PAREN_CLOSE, fcn->level);
+      chunk_t *last = chunk_get_next_type(fcn, CT_PAREN_CLOSE, fcn->level);
       last = chunk_get_next(last);
       if ((last != NULL) && (last->type == CT_SEMICOLON))
       {
@@ -365,7 +364,6 @@ static chunk_t *pawn_process_func_def(chunk_t *pc)
    /* We are on a function definition */
    chunk_t *clp;
    chunk_t *last;
-   chunk_t *next;
 
    set_chunk_type(pc, CT_FUNC_DEF);
 
@@ -449,7 +447,7 @@ static chunk_t *pawn_process_func_def(chunk_t *pc)
          if ((prev->type == CT_NEWLINE) &&
              (prev->level == 0))
          {
-            next = chunk_get_next_ncnl(prev);
+            chunk_t *next = chunk_get_next_ncnl(prev);
             if ((next != NULL) &&
                 (next->type != CT_ELSE) &&
                 (next->type != CT_WHILE_OF_DO))

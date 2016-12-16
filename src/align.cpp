@@ -123,7 +123,6 @@ static void align_asm_colon(void);
 static void align_stack(ChunkStack &cs, int col, bool align_single, log_sev_t sev)
 {
    LOG_FUNC_ENTRY();
-   chunk_t *pc;
 
    if (cpd.settings[UO_align_on_tabstop].b)
    {
@@ -133,6 +132,7 @@ static void align_stack(ChunkStack &cs, int col, bool align_single, log_sev_t se
    if ((cs.Len() > 1) || (align_single && (cs.Len() == 1)))
    {
       LOG_FMT(sev, "%s: max_col=%d\n", __func__, col);
+      chunk_t *pc;
       while ((pc = cs.Pop_Back()) != NULL)
       {
          align_to_column(pc, col);
@@ -458,12 +458,11 @@ void align_struct_initializers(void)
 {
    LOG_FUNC_ENTRY();
    chunk_t *pc;
-   chunk_t *prev;
 
    pc = chunk_get_head();
    while (pc != NULL)
    {
-      prev = chunk_get_prev_ncnl(pc);
+      chunk_t *prev = chunk_get_prev_ncnl(pc);
       if ((prev != NULL) && (prev->type == CT_ASSIGN) &&
           ((pc->type == CT_BRACE_OPEN) ||
            ((cpd.lang_flags & LANG_D) && (pc->type == CT_SQUARE_OPEN))))
@@ -1539,7 +1538,6 @@ static chunk_t *scan_ib_line(chunk_t *start, bool first_pass)
    (void)first_pass;
    LOG_FUNC_ENTRY();
    chunk_t *pc;
-   chunk_t *next;
    chunk_t *prev_match = NULL;
    chunk_t *tmp;
    size_t  token_width;
@@ -1567,7 +1565,7 @@ static chunk_t *scan_ib_line(chunk_t *start, bool first_pass)
       //LOG_FMT(LSIB, "%s:     '%s'   col %d/%d line %lu\n", __func__,
       //        pc->text(), pc->column, pc->orig_col, pc->orig_line);
 
-      next = chunk_get_next(pc);
+      chunk_t *next = chunk_get_next(pc);
       if ((next == NULL) || chunk_is_comment(next))
       {
          /* do nothing */
@@ -1638,12 +1636,10 @@ static chunk_t *scan_ib_line(chunk_t *start, bool first_pass)
 
 static void align_log_al(log_sev_t sev, size_t line)
 {
-   size_t idx;
-
    if (log_sev_on(sev))
    {
-      log_fmt(sev, "%s: line %lu, %lu)",
-              __func__, line, cpd.al_cnt);
+      log_fmt(sev, "%s: line %lu, %lu)", __func__, line, cpd.al_cnt);
+      size_t idx;
       for (idx = 0; idx < cpd.al_cnt; idx++)
       {
          log_fmt(sev, " %lu/%lu=%s", cpd.al[idx].col, cpd.al[idx].len,
@@ -2064,7 +2060,6 @@ static void align_oc_msg_colon(chunk_t *so)
    int     len;
    int     first_len = 0;
    int     len_diff;
-   int     tlen;
    int     mlen        = 0;
    int     indent_size = cpd.settings[UO_indent_columns].n;
    chunk_t *longest    = NULL;
@@ -2073,7 +2068,7 @@ static void align_oc_msg_colon(chunk_t *so)
    {
       tmp = nas.m_aligned.GetChunk(idx);
 
-      tlen = tmp->str.size();
+      int tlen = tmp->str.size();
       if (tlen > mlen)
       {
          mlen = tlen;
