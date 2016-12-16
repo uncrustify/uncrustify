@@ -164,7 +164,7 @@ static bool should_add_braces(chunk_t *vbopen)
       return(false);
    }
 
-   LOG_FMT(LBRDEL, "%s: start on %d : ", __func__, vbopen->orig_line);
+   LOG_FMT(LBRDEL, "%s: start on %lu : ", __func__, vbopen->orig_line);
    for (pc = chunk_get_next_nc(vbopen, CNAV_PREPROC);
         (pc != NULL) && (pc->level > vbopen->level);
         pc = chunk_get_next_nc(pc, CNAV_PREPROC))
@@ -194,7 +194,7 @@ static bool can_remove_braces(chunk_t *bopen)
    chunk_t *pc;
    chunk_t *prev      = NULL;
    int     semi_count = 0;
-   int     level      = bopen->level + 1;
+   size_t  level      = bopen->level + 1;
    bool    hit_semi   = false;
    bool    was_fcn    = false;
    int     nl_max     = cpd.settings[UO_mod_full_brace_nl].n;
@@ -214,7 +214,7 @@ static bool can_remove_braces(chunk_t *bopen)
       return(false);
    }
 
-   LOG_FMT(LBRDEL, "%s: start on %d : ", __func__, bopen->orig_line);
+   LOG_FMT(LBRDEL, "%s: start on %lu : ", __func__, bopen->orig_line);
 
    pc = chunk_get_next_nc(bopen, CNAV_ALL);
    while ((pc != NULL) && (pc->level >= level))
@@ -261,11 +261,11 @@ static bool can_remove_braces(chunk_t *bopen)
                return(false);
             }
 
-            LOG_FMT(LBRDEL, " [%s %d-%d]", pc->text(), pc->orig_line, semi_count);
+            LOG_FMT(LBRDEL, " [%s %lu-%d]", pc->text(), pc->orig_line, semi_count);
 
             if (pc->type == CT_ELSE)
             {
-               LOG_FMT(LBRDEL, " bailed on %s on line %d\n",
+               LOG_FMT(LBRDEL, " bailed on %s on line %lu\n",
                        pc->text(), pc->orig_line);
                return(false);
             }
@@ -284,7 +284,7 @@ static bool can_remove_braces(chunk_t *bopen)
                hit_semi |= chunk_is_semicolon(pc);
                if (++semi_count > 1)
                {
-                  LOG_FMT(LBRDEL, " bailed on %d because of %s on line %d\n",
+                  LOG_FMT(LBRDEL, " bailed on %lu because of %s on line %lu\n",
                           bopen->orig_line, pc->text(), pc->orig_line);
                   return(false);
                }
@@ -311,14 +311,14 @@ static bool can_remove_braces(chunk_t *bopen)
           ((prev->type == CT_BRACE_CLOSE) || (prev->type == CT_VBRACE_CLOSE)) &&
           (prev->parent_type == CT_IF))
       {
-         LOG_FMT(LBRDEL, " - bailed on '%s'[%s] on line %d due to 'if' and 'else' sequence\n",
+         LOG_FMT(LBRDEL, " - bailed on '%s'[%s] on line %lu due to 'if' and 'else' sequence\n",
                  get_token_name(pc->type), get_token_name(pc->parent_type),
                  pc->orig_line);
          return(false);
       }
    }
 
-   LOG_FMT(LBRDEL, " - end on '%s' on line %d. if_count=%d semi_count=%d\n",
+   LOG_FMT(LBRDEL, " - end on '%s' on line %lu. if_count=%d semi_count=%d\n",
            get_token_name(pc->type), pc->orig_line, if_count, semi_count);
 
    return((pc->type == CT_BRACE_CLOSE) && (pc->pp_level == bopen->pp_level));
@@ -336,7 +336,7 @@ static void examine_brace(chunk_t *bopen)
    chunk_t *next;
    chunk_t *prev      = NULL;
    int     semi_count = 0;
-   int     level      = bopen->level + 1;
+   size_t  level      = bopen->level + 1;
    bool    hit_semi   = false;
    bool    was_fcn    = false;
    int     nl_max     = cpd.settings[UO_mod_full_brace_nl].n;
@@ -344,7 +344,7 @@ static void examine_brace(chunk_t *bopen)
    int     if_count   = 0;
    int     br_count   = 0;
 
-   LOG_FMT(LBRDEL, "%s: start on %d : ", __func__, bopen->orig_line);
+   LOG_FMT(LBRDEL, "%s: start on %lu : ", __func__, bopen->orig_line);
 
    pc = chunk_get_next_nc(bopen);
    while ((pc != NULL) && (pc->level >= level))
@@ -400,11 +400,11 @@ static void examine_brace(chunk_t *bopen)
                return;
             }
 
-            LOG_FMT(LBRDEL, " [%s %d-%d]", pc->text(), pc->orig_line, semi_count);
+            LOG_FMT(LBRDEL, " [%s %lu-%d]", pc->text(), pc->orig_line, semi_count);
 
             if (pc->type == CT_ELSE)
             {
-               LOG_FMT(LBRDEL, " bailed on %s on line %d\n",
+               LOG_FMT(LBRDEL, " bailed on %s on line %lu\n",
                        pc->text(), pc->orig_line);
                return;
             }
@@ -424,7 +424,7 @@ static void examine_brace(chunk_t *bopen)
                hit_semi |= chunk_is_semicolon(pc);
                if (++semi_count > 1)
                {
-                  LOG_FMT(LBRDEL, " bailed on %d because of %s on line %d\n",
+                  LOG_FMT(LBRDEL, " bailed on %lu because of %s on line %lu\n",
                           bopen->orig_line, pc->text(), pc->orig_line);
                   return;
                }
@@ -441,7 +441,7 @@ static void examine_brace(chunk_t *bopen)
       return;
    }
 
-   LOG_FMT(LBRDEL, " - end on '%s' on line %d. if_count=%d semi_count=%d\n",
+   LOG_FMT(LBRDEL, " - end on '%s' on line %lu. if_count=%d semi_count=%d\n",
            get_token_name(pc->type), pc->orig_line, if_count, semi_count);
 
    if (pc->type == CT_BRACE_CLOSE)
@@ -467,7 +467,7 @@ static void examine_brace(chunk_t *bopen)
             if (next->type == CT_IF)
             {
                prev = chunk_get_prev_ncnl(bopen);
-               LOG_FMT(LBRDEL, " else-if removing braces on line %d and %d\n",
+               LOG_FMT(LBRDEL, " else-if removing braces on line %lu and %lu\n",
                        bopen->orig_line, pc->orig_line);
 
                chunk_del(bopen);
@@ -485,7 +485,7 @@ static void examine_brace(chunk_t *bopen)
          convert_brace(bopen);
          convert_brace(pc);
 
-         LOG_FMT(LBRDEL, " removing braces on line %d and %d\n",
+         LOG_FMT(LBRDEL, " removing braces on line %lu and %lu\n",
                  bopen->orig_line, pc->orig_line);
       }
       else
@@ -920,7 +920,7 @@ static chunk_t *mod_case_brace_remove(chunk_t *br_open)
    chunk_t *br_close;
    chunk_t *next = chunk_get_next_ncnl(br_open, CNAV_PREPROC);
 
-   LOG_FMT(LMCB, "%s: line %d", __func__, br_open->orig_line);
+   LOG_FMT(LMCB, "%s: line %lu", __func__, br_open->orig_line);
 
    /* Find the matching brace close */
    br_close = chunk_get_next_type(br_open, CT_BRACE_CLOSE, br_open->level, CNAV_PREPROC);
@@ -949,11 +949,11 @@ static chunk_t *mod_case_brace_remove(chunk_t *br_open)
    {
       if ((pc->level == (br_open->level + 1)) && (pc->flags & PCF_VAR_DEF))
       {
-         LOG_FMT(LMCB, " - vardef on line %d: '%s'\n", pc->orig_line, pc->text());
+         LOG_FMT(LMCB, " - vardef on line %lu: '%s'\n", pc->orig_line, pc->text());
          return(next);
       }
    }
-   LOG_FMT(LMCB, " - removing braces on lines %d and %d\n",
+   LOG_FMT(LMCB, " - removing braces on lines %lu and %lu\n",
            br_open->orig_line, br_close->orig_line);
 
    for (pc = br_open; pc != br_close; pc = chunk_get_next_ncnl(pc, CNAV_PREPROC))
@@ -981,7 +981,7 @@ static chunk_t *mod_case_brace_add(chunk_t *cl_colon)
    chunk_t *br_close;
    chunk_t chunk;
 
-   LOG_FMT(LMCB, "%s: line %d", __func__, pc->orig_line);
+   LOG_FMT(LMCB, "%s: line %lu", __func__, pc->orig_line);
 
    while ((pc = chunk_get_next_ncnl(pc, CNAV_PREPROC)) != NULL)
    {
@@ -1011,7 +1011,7 @@ static chunk_t *mod_case_brace_add(chunk_t *cl_colon)
       return(next);
    }
 
-   LOG_FMT(LMCB, " - adding before '%s' on line %d\n", last->text(), last->orig_line);
+   LOG_FMT(LMCB, " - adding before '%s' on line %lu\n", last->text(), last->orig_line);
 
    chunk.type        = CT_BRACE_OPEN;
    chunk.orig_line   = cl_colon->orig_line;
@@ -1093,14 +1093,14 @@ static void process_if_chain(chunk_t *br_start)
 
    pc = br_start;
 
-   LOG_FMT(LBRCH, "%s: if starts on line %d\n", __func__, br_start->orig_line);
+   LOG_FMT(LBRCH, "%s: if starts on line %lu\n", __func__, br_start->orig_line);
 
    while (pc != NULL)
    {
       if (pc->type == CT_BRACE_OPEN)
       {
          tmp = can_remove_braces(pc);
-         LOG_FMT(LBRCH, "  [%d] line %d - can%s remove %s\n",
+         LOG_FMT(LBRCH, "  [%d] line %lu - can%s remove %s\n",
                  br_cnt, pc->orig_line, tmp ? "" : "not",
                  get_token_name(pc->type));
          if (!tmp)
@@ -1115,7 +1115,7 @@ static void process_if_chain(chunk_t *br_start)
          {
             must_have_braces = true;
          }
-         LOG_FMT(LBRCH, "  [%d] line %d - %s %s\n",
+         LOG_FMT(LBRCH, "  [%d] line %lu - %s %s\n",
                  br_cnt, pc->orig_line, tmp ? "should add" : "ignore",
                  get_token_name(pc->type));
       }
@@ -1167,12 +1167,12 @@ static void process_if_chain(chunk_t *br_start)
          if ((braces[br_cnt]->type == CT_VBRACE_OPEN) ||
              (braces[br_cnt]->type == CT_VBRACE_CLOSE))
          {
-            LOG_FMT(LBRCH, " %d", braces[br_cnt]->orig_line);
+            LOG_FMT(LBRCH, " %lu", braces[br_cnt]->orig_line);
             convert_vbrace(braces[br_cnt]);
          }
          else
          {
-            LOG_FMT(LBRCH, " {%d}", braces[br_cnt]->orig_line);
+            LOG_FMT(LBRCH, " {%lu}", braces[br_cnt]->orig_line);
          }
          braces[br_cnt] = NULL;
       }
@@ -1189,12 +1189,12 @@ static void process_if_chain(chunk_t *br_start)
          if ((braces[br_cnt]->type == CT_BRACE_OPEN) ||
              (braces[br_cnt]->type == CT_BRACE_CLOSE))
          {
-            LOG_FMT(LBRCH, " {%d}", braces[br_cnt]->orig_line);
+            LOG_FMT(LBRCH, " {%lu}", braces[br_cnt]->orig_line);
             convert_brace(braces[br_cnt]);
          }
          else
          {
-            LOG_FMT(LBRCH, " %d", braces[br_cnt]->orig_line);
+            LOG_FMT(LBRCH, " %lu", braces[br_cnt]->orig_line);
          }
          braces[br_cnt] = NULL;
       }
