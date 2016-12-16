@@ -22,12 +22,11 @@ static void check_bool_parens(chunk_t *popen, chunk_t *pclose, int nest);
 void do_parens(void)
 {
    LOG_FUNC_ENTRY();
-   chunk_t *pc;
    chunk_t *pclose;
 
    if (cpd.settings[UO_mod_full_paren_if_bool].b)
    {
-      pc = chunk_get_head();
+      chunk_t *pc = chunk_get_head();
       while ((pc = chunk_get_next_ncnl(pc)) != NULL)
       {
          if ((pc->type != CT_SPAREN_OPEN) ||
