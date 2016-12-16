@@ -28,7 +28,6 @@
 #include <cerrno>
 #include <algorithm>
 #include "unc_ctype.h"
-//#define DEBUG
 
 
 static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool complete);
@@ -2085,17 +2084,20 @@ void space_text_balance_nested_parens(void)
          /* insert a space between the two closing parens */
          space_add_after(first, 1);
 
-         /* find the opening paren that matches the 'next' close paren and force
-          * a space after it */
-         cur = first;
-         while ((cur = chunk_get_prev(cur)) != NULL)
-         {
-            if (cur->level == next->level)
-            {
-               space_add_after(cur, 1);
-               break;
-            }
-         }
+         // issue # 752
+         // the next lines are never used in the tests.
+         // TODO: why that?
+         ///* find the opening paren that matches the 'next' close paren and force
+         // * a space after it */
+         //cur = first;
+         //while ((cur = chunk_get_prev(cur)) != NULL)
+         //{
+         //   if (cur->level == next->level)
+         //   {
+         //      //space_add_after(cur, 1);
+         //      break;
+         //   }
+         //}
       }
 
       first = next;

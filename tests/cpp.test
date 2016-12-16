@@ -348,6 +348,7 @@
 33102 enum_comma-6.cfg                 cpp/enum_comma.h
 
 33150 bug_i_753.cfg                    cpp/bug_i_753.cpp
+33151 bug_i_752.cfg                    cpp/bug_i_752.cpp
 
 33200 first_len_minimum.cfg            cpp/first_len_minimum.cpp
 
