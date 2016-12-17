@@ -117,7 +117,7 @@ void tokenize_cleanup(void)
           (pc->flags & PCF_IN_PREPROC) &&
           !chunk_get_next_ncnl(pc, CNAV_PREPROC))
       {
-         LOG_FMT(LNOTE, "%s:%d Detected a macro that ends with a semicolon. Possible failures if used.\n",
+         LOG_FMT(LNOTE, "%s:%lu Detected a macro that ends with a semicolon. Possible failures if used.\n",
                  cpd.filename, pc->orig_line);
       }
    }
@@ -148,7 +148,7 @@ void tokenize_cleanup(void)
          {
             if (next->type != CT_ASSIGN)
             {
-               LOG_FMT(LERR, "%s:%d %s: version: Unexpected token %s\n",
+               LOG_FMT(LERR, "%s:%lu %s: version: Unexpected token %s\n",
                        cpd.filename, pc->orig_line, __func__, get_token_name(next->type));
                cpd.error_count++;
             }
@@ -439,7 +439,7 @@ void tokenize_cleanup(void)
          }
          set_chunk_parent(next, CT_OPERATOR);
 
-         LOG_FMT(LOPERATOR, "%s: %d:%d operator '%s'\n",
+         LOG_FMT(LOPERATOR, "%s: %lu:%lu operator '%s'\n",
                  __func__, pc->orig_line, pc->orig_col, next->text());
       }
 
@@ -612,7 +612,7 @@ void tokenize_cleanup(void)
          {
             if (get_token_pattern_class(tmp->type) != PATCLS_NONE)
             {
-               LOG_FMT(LOBJCWORD, "@interface %d:%d change '%s' (%s) to CT_WORD\n",
+               LOG_FMT(LOBJCWORD, "@interface %lu:%lu change '%s' (%s) to CT_WORD\n",
                        pc->orig_line, pc->orig_col, tmp->text(),
                        get_token_name(tmp->type));
                set_chunk_type(tmp, CT_WORD);
@@ -843,7 +843,7 @@ static void check_template(chunk_t *start)
    chunk_t *next;
    bool    in_if = false;
 
-   LOG_FMT(LTEMPL, "%s: Line %d, col %d:", __func__, start->orig_line, start->orig_col);
+   LOG_FMT(LTEMPL, "%s: Line %lu, col %lu:", __func__, start->orig_line, start->orig_col);
 
    prev = chunk_get_prev_ncnl(start, CNAV_PREPROC);
    if (prev == NULL)
@@ -865,7 +865,7 @@ static void check_template(chunk_t *start)
 
          if ((pc->str[0] == '>') && (pc->len() > 1))
          {
-            LOG_FMT(LTEMPL, " {split '%s' at %d:%d}",
+            LOG_FMT(LTEMPL, " {split '%s' at %lu:%lu}",
                     pc->text(), pc->orig_line, pc->orig_col);
             split_off_angle_close(pc);
          }
@@ -949,7 +949,7 @@ static void check_template(chunk_t *start)
              (pc->str[0] == '>') && (pc->len() > 1) &&
              (cpd.settings[UO_tok_split_gte].b || (chunk_is_str(pc, ">>", 2) && (num_tokens >= 2))))
          {
-            LOG_FMT(LTEMPL, " {split '%s' at %d:%d}",
+            LOG_FMT(LTEMPL, " {split '%s' at %lu:%lu}",
                     pc->text(), pc->orig_line, pc->orig_col);
             split_off_angle_close(pc);
          }
