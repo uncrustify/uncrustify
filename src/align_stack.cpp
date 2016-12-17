@@ -207,7 +207,7 @@ void AlignStack::Add(chunk_t *start, int seqnum)
       if (!cpd.settings[UO_align_keep_extra_space].b)
       {
          int tmp_col = ref->column;
-         tmp         = ref;
+         tmp = ref;
          while (tmp != start)
          {
             next     = chunk_get_next(tmp);

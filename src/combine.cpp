@@ -2708,7 +2708,7 @@ static void mark_variable_stack(ChunkStack &cs, log_sev_t sev)
       LOG_FMT(LFCNP, "%s: parameter on line %d :",
               __func__, var_name->orig_line);
 
-      int word_cnt = 0;
+      int     word_cnt = 0;
       chunk_t *word_type;
       while ((word_type = cs.Pop_Back()) != NULL)
       {
@@ -4221,7 +4221,7 @@ void mark_comments(void)
 
    while (cur != NULL)
    {
-      next         = chunk_get_next_nvb(cur);
+      next = chunk_get_next_nvb(cur);
       bool next_nl = (next == NULL) || chunk_is_newline(next);
 
       if (chunk_is_comment(cur))

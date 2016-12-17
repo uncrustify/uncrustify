@@ -723,7 +723,7 @@ static void process_source_list(const char *source_list,
    {
       line++;
       char *fname = linebuf;
-      int   len   = strlen(fname);
+      int  len    = strlen(fname);
       while ((len > 0) && unc_isspace(*fname))
       {
          fname++;

@@ -1716,7 +1716,7 @@ static bool kw_fcn_javaparam(chunk_t *cmt, unc_text &out_txt)
    if (has_param)
    {
       chunk_t *prev = NULL;
-      tmp           = fpo;
+      tmp = fpo;
       while ((tmp = chunk_get_next(tmp)) != NULL)
       {
          if ((tmp->type == CT_COMMA) || (tmp == fpc))

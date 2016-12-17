@@ -94,7 +94,7 @@ const char *Args::Params(const char *token, int &index)
 
    for (int idx = index; idx < m_count; idx++)
    {
-	  int arg_len = (int)strlen(m_values[idx]);
+      int arg_len = (int)strlen(m_values[idx]);
 
       if ((arg_len >= token_len) &&
           (memcmp(token, m_values[idx], token_len) == 0))

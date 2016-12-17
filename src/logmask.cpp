@@ -24,7 +24,7 @@ char *logmask_to_str(const log_mask_t &mask, char *buf, int size)
 {
    int  last_sev = -1;
    bool is_range = false;
-   int  len = 0;
+   int  len      = 0;
 
    if ((buf == NULL) || (size <= 0))
    {

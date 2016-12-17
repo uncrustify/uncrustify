@@ -87,7 +87,7 @@ int load_define_file(const char *filename)
          *ptr = 0;
       }
 
-      int  argc = Args::SplitLine(buf, args, ARRAY_SIZE(args) - 1);
+      int argc = Args::SplitLine(buf, args, ARRAY_SIZE(args) - 1);
       args[argc] = 0;
 
       if (argc > 0)
