@@ -909,7 +909,7 @@ static void check_template(chunk_t *start)
 
       /* Scan back and make sure we aren't inside square parens */
       bool in_if = false;
-      pc = start;
+      pc         = start;
       while ((pc = chunk_get_prev_ncnl(pc, CNAV_PREPROC)) != NULL)
       {
          if ((pc->type == CT_SEMICOLON) ||

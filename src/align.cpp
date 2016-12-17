@@ -805,13 +805,11 @@ static void align_func_params(void)
 static void align_params(chunk_t *start, deque<chunk_t *> &chunks)
 {
    LOG_FUNC_ENTRY();
-   chunk_t *pc       = start;
-   bool    hit_comma = true;
+   bool hit_comma = true;
 
    chunks.clear();
 
-   pc = chunk_get_next_type(start, CT_FPAREN_OPEN, start->level);
-
+   chunk_t *pc = chunk_get_next_type(start, CT_FPAREN_OPEN, start->level);
    while ((pc = chunk_get_next(pc)) != NULL)
    {
       if (chunk_is_newline(pc) ||
@@ -1639,8 +1637,7 @@ static void align_log_al(log_sev_t sev, size_t line)
    if (log_sev_on(sev))
    {
       log_fmt(sev, "%s: line %lu, %lu)", __func__, line, cpd.al_cnt);
-      size_t idx;
-      for (idx = 0; idx < cpd.al_cnt; idx++)
+      for (size_t idx = 0; idx < cpd.al_cnt; idx++)
       {
          log_fmt(sev, " %lu/%lu=%s", cpd.al[idx].col, cpd.al[idx].len,
                  get_token_name(cpd.al[idx].type));

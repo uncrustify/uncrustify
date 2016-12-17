@@ -24,7 +24,6 @@ char *logmask_to_str(const log_mask_t &mask, char *buf, int size)
 {
    int  last_sev = -1;
    bool is_range = false;
-   int  sev;
    int  len = 0;
 
    if ((buf == NULL) || (size <= 0))
@@ -32,7 +31,7 @@ char *logmask_to_str(const log_mask_t &mask, char *buf, int size)
       return(buf);
    }
 
-   for (sev = 0; sev < 256; sev++)
+   for (int sev = 0; sev < 256; sev++)
    {
       if (logmask_test(mask, (log_sev_t)sev))
       {
@@ -91,7 +90,6 @@ void logmask_from_string(const char *str, log_mask_t &mask)
    bool was_dash   = false;
    int  last_level = -1;
    int  level;
-   int  idx;
 
    if (str == NULL)
    {
@@ -124,7 +122,7 @@ void logmask_from_string(const char *str, log_mask_t &mask)
          logmask_set_sev(mask, (log_sev_t)level, true);
          if (was_dash)
          {
-            for (idx = last_level + 1; idx < level; idx++)
+            for (int idx = last_level + 1; idx < level; idx++)
             {
                logmask_set_sev(mask, (log_sev_t)idx, true);
             }

@@ -1709,7 +1709,7 @@ static bool parse_next(tok_ctx &ctx, chunk_t &pc)
       /* Not D stuff */
 
       /* Check for L'a', L"abc", 'a', "abc", <abc> strings */
-      ch  = ctx.peek();
+      ch      = ctx.peek();
       int ch1 = ctx.peek(1);
       if ((((ch == 'L') || (ch == 'S')) &&
            ((ch1 == '"') || (ch1 == '\''))) ||

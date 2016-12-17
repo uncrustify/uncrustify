@@ -598,13 +598,12 @@ static void convert_vbrace(chunk_t *vbr)
 static void convert_vbrace_to_brace(void)
 {
    LOG_FUNC_ENTRY();
-   chunk_t *pc;
    chunk_t *tmp;
    chunk_t *vbc;
    bool    in_preproc;
 
    /* Find every vbrace open */
-   for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next_ncnl(pc))
+   for (chunk_t *pc = chunk_get_head(); pc != NULL; pc = chunk_get_next_ncnl(pc))
    {
       if (pc->type != CT_VBRACE_OPEN)
       {
@@ -889,10 +888,9 @@ void add_long_closebrace_comment(void)
 static void move_case_break(void)
 {
    LOG_FUNC_ENTRY();
-   chunk_t *pc;
    chunk_t *prev = NULL;
 
-   for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next_ncnl(pc))
+   for (chunk_t *pc = chunk_get_head(); pc != NULL; pc = chunk_get_next_ncnl(pc))
    {
       if ((pc->type == CT_BREAK) &&
           (prev != NULL) &&
@@ -1205,9 +1203,8 @@ static void process_if_chain(chunk_t *br_start)
 static void mod_full_brace_if_chain(void)
 {
    LOG_FUNC_ENTRY();
-   chunk_t *pc;
 
-   for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next(pc))
+   for (chunk_t *pc = chunk_get_head(); pc != NULL; pc = chunk_get_next(pc))
    {
       if (((pc->type == CT_BRACE_OPEN) || (pc->type == CT_VBRACE_OPEN)) &&
           (pc->parent_type == CT_IF))
