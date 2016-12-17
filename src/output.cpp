@@ -240,15 +240,12 @@ static void cmt_output_indent(int brace_col, int base_col, int column)
 
 void output_parsed(FILE *pfile)
 {
-   chunk_t *pc;
-   int     cnt;
-
    // save_option_file(pfile, false);
    save_option_file_kernel(pfile, false, true);
 
    fprintf(pfile, "# -=====-\n");
    fprintf(pfile, "# Line              Tag           Parent          Columns Br/Lvl/pp     Flag   Nl  Text");
-   for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next(pc))
+   for (chunk_t *pc = chunk_get_head(); pc != NULL; pc = chunk_get_next(pc))
    {
       fprintf(pfile, "\n# %3zd> %16.16s[%16.16s][%3d/%3lu/%3d/%3d][%lu/%lu/%lu][%10" PRIx64 "][%lu-%d]",
               pc->orig_line, get_token_name(pc->type),
@@ -259,7 +256,7 @@ void output_parsed(FILE *pfile)
 
       if ((pc->type != CT_NEWLINE) && (pc->len() != 0))
       {
-         for (cnt = 0; cnt < pc->column; cnt++)
+         for (int cnt = 0; cnt < pc->column; cnt++)
          {
             fprintf(pfile, " ");
          }
@@ -285,7 +282,6 @@ void output_text(FILE *pfile)
 {
    chunk_t *pc;
    chunk_t *prev;
-   int     cnt;
    int     lvlcol;
    bool    allow_tabs;
 
@@ -317,7 +313,7 @@ void output_text(FILE *pfile)
                                  chunk_is_comment(pc));
       if (pc->type == CT_NEWLINE)
       {
-         for (cnt = 0; cnt < pc->nl_count; cnt++)
+         for (int cnt = 0; cnt < pc->nl_count; cnt++)
          {
             add_char('\n');
          }
@@ -1269,7 +1265,6 @@ static void output_comment_multi(chunk_t *pc)
           (ch == '\n') &&
           (cmt_idx < pc->len()))
       {
-         int  nxt_len            = 0;
          int  next_nonempty_line = -1;
          int  prev_nonempty_line = -1;
          int  nwidx              = line.size();
@@ -1293,7 +1288,7 @@ static void output_comment_multi(chunk_t *pc)
          }
 
          int remaining = pc->len() - cmt_idx;
-         for (nxt_len = 0;
+         for (int nxt_len = 0;
               (nxt_len <= remaining) &&
               (pc->str[nxt_len] != 'r') &&
               (pc->str[nxt_len] != '\n');
@@ -1990,11 +1985,10 @@ static void output_comment_multi_simple(chunk_t *pc, bool kw_subst)
  */
 static void generate_if_conditional_as_text(unc_text &dst, chunk_t *ifdef)
 {
-   chunk_t *pc;
-   int     column = -1;
+   int column = -1;
 
    dst.clear();
-   for (pc = ifdef; pc != NULL; pc = chunk_get_next(pc))
+   for (chunk_t *pc = ifdef; pc != NULL; pc = chunk_get_next(pc))
    {
       if (column == -1)
       {
@@ -2017,9 +2011,7 @@ static void generate_if_conditional_as_text(unc_text &dst, chunk_t *ifdef)
       }
       else // if (pc->type == CT_JUNK) || else
       {
-         int spacing;
-
-         for (spacing = pc->column - column; spacing > 0; spacing--)
+         for (int spacing = pc->column - column; spacing > 0; spacing--)
          {
             dst += ' ';
             column++;
@@ -2047,7 +2039,6 @@ static void generate_if_conditional_as_text(unc_text &dst, chunk_t *ifdef)
  */
 void add_long_preprocessor_conditional_block_comment(void)
 {
-   chunk_t *pc;
    chunk_t *tmp;
    chunk_t *br_open;
    chunk_t *br_close;
@@ -2055,7 +2046,7 @@ void add_long_preprocessor_conditional_block_comment(void)
    chunk_t *pp_end   = NULL;
    int     nl_count;
 
-   for (pc = chunk_get_head(); pc; pc = chunk_get_next_ncnl(pc))
+   for (chunk_t *pc = chunk_get_head(); pc; pc = chunk_get_next_ncnl(pc))
    {
       /* just track the preproc level: */
       if (pc->type == CT_PREPROC)

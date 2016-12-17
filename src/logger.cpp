@@ -321,7 +321,6 @@ void log_hex_blk(log_sev_t sev, const void *data, size_t len)
 {
    static char buf[80] = "nnn | XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX | cccccccccccccccc\n";
    const UINT8 *dat    = (const UINT8 *)data;
-   size_t      idx;
    int         count;
    int         str_idx = 0;
    int         chr_idx = 0;
@@ -340,7 +339,7 @@ void log_hex_blk(log_sev_t sev, const void *data, size_t len)
    /* Loop through the data of the current iov */
    count = 0;
    total = 0;
-   for (idx = 0; idx < len; idx++)
+   for (size_t idx = 0; idx < len; idx++)
    {
       if (count == 0)
       {

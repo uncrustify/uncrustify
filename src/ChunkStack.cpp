@@ -108,9 +108,8 @@ void ChunkStack::Zap(size_t idx)
 void ChunkStack::Collapse()
 {
    size_t wr_idx = 0;
-   size_t rd_idx;
 
-   for (rd_idx = 0; rd_idx < m_cse.size(); rd_idx++)
+   for (size_t rd_idx = 0; rd_idx < (int)m_cse.size(); rd_idx++)
    {
       if (m_cse[rd_idx].m_pc != NULL)
       {

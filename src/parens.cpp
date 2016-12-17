@@ -58,7 +58,6 @@ static void add_parens_between(chunk_t *first, chunk_t *last)
    chunk_t pc;
    chunk_t *first_n;
    chunk_t *last_p;
-   chunk_t *tmp;
 
    LOG_FMT(LPARADD, "%s: line %lu between %s [lvl=%lu] and %s [lvl=%lu]\n",
            __func__, first->orig_line,
@@ -91,7 +90,7 @@ static void add_parens_between(chunk_t *first, chunk_t *last)
 
    chunk_add_after(&pc, last_p);
 
-   for (tmp = first_n;
+   for (chunk_t *tmp = first_n;
         tmp != last_p;
         tmp = chunk_get_next_ncnl(tmp))
    {

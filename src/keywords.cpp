@@ -365,10 +365,9 @@ static const chunk_tag_t *kw_static_first(const chunk_tag_t *tag)
 
 static const chunk_tag_t *kw_static_match(const chunk_tag_t *tag)
 {
-   bool              in_pp = ((cpd.in_preproc != CT_NONE) && (cpd.in_preproc != CT_PP_DEFINE));
-   const chunk_tag_t *iter;
+   bool in_pp = ((cpd.in_preproc != CT_NONE) && (cpd.in_preproc != CT_PP_DEFINE));
 
-   for (iter = kw_static_first(tag);
+   for (const chunk_tag_t *iter = kw_static_first(tag);
         iter < &keywords[ARRAY_SIZE(keywords)];
         iter++)
    {

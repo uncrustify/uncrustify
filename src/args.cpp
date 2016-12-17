@@ -50,8 +50,7 @@ bool Args::Present(const char *token)
 {
    if (token != NULL)
    {
-      int idx;
-      for (idx = 0; idx < m_count; idx++)
+      for (int idx = 0; idx < m_count; idx++)
       {
          if (strcmp(token, m_values[idx]) == 0)
          {
@@ -93,8 +92,7 @@ const char *Args::Params(const char *token, int &index)
 
    int token_len = (int)strlen(token);
 
-   int idx;
-   for (idx = index; idx < m_count; idx++)
+   for (int idx = index; idx < m_count; idx++)
    {
       int arg_len = (int)strlen(m_values[idx]);
 
@@ -165,14 +163,12 @@ void Args::SetUsed(int idx)
  */
 const char *Args::Unused(int &index)
 {
-   int idx;
-
    if (m_used == NULL)
    {
       return(NULL);
    }
 
-   for (idx = index; idx < m_count; idx++)
+   for (int idx = index; idx < m_count; idx++)
    {
       if (!GetUsed(idx))
       {

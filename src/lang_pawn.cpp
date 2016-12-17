@@ -60,16 +60,13 @@ void pawn_scrub_vsemi(void)
       return;
    }
 
-   chunk_t *pc;
-   chunk_t *prev;
-
-   for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next(pc))
+   for (chunk_t *pc = chunk_get_head(); pc != NULL; pc = chunk_get_next(pc))
    {
       if (pc->type != CT_VSEMICOLON)
       {
          continue;
       }
-      prev = chunk_get_prev_ncnl(pc);
+      chunk_t *prev = chunk_get_prev_ncnl(pc);
       if ((prev != NULL) && (prev->type == CT_BRACE_CLOSE))
       {
          if ((prev->parent_type == CT_IF) ||

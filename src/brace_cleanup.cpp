@@ -78,11 +78,9 @@ static void print_stack(log_sev_t logsev, const char *str,
    LOG_FUNC_ENTRY();
    if (log_sev_on(logsev))
    {
-      int idx;
-
       log_fmt(logsev, "%8.8s", str);
 
-      for (idx = 1; idx <= frm->pse_tos; idx++)
+      for (int idx = 1; idx <= frm->pse_tos; idx++)
       {
          if (frm->pse[idx].stage != BS_NONE)
          {
@@ -310,12 +308,10 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
 
    if (frm->sparen_count > 0)
    {
-      int tmp;
-
       chunk_flags_set(pc, PCF_IN_SPAREN);
 
       /* Mark everything in the a for statement */
-      for (tmp = frm->pse_tos - 1; tmp >= 0; tmp--)
+      for (int tmp = frm->pse_tos - 1; tmp >= 0; tmp--)
       {
          if (frm->pse[tmp].type == CT_FOR)
          {

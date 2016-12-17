@@ -2417,7 +2417,6 @@ static void indent_comment(chunk_t *pc, int col)
 bool ifdef_over_whole_file(void)
 {
    LOG_FUNC_ENTRY();
-   chunk_t *pc;
    chunk_t *next;
    chunk_t *end_pp = NULL;
 
@@ -2429,7 +2428,7 @@ bool ifdef_over_whole_file(void)
       return(cpd.ifdef_over_whole_file > 0);
    }
 
-   for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next(pc))
+   for (chunk_t *pc = chunk_get_head(); pc != NULL; pc = chunk_get_next(pc))
    {
       if (chunk_is_comment(pc) || chunk_is_newline(pc))
       {
@@ -2492,7 +2491,6 @@ bool ifdef_over_whole_file(void)
 void indent_preproc(void)
 {
    LOG_FUNC_ENTRY();
-   chunk_t *pc;
    chunk_t *next;
    int     pp_level;
    int     pp_level_sub = 0;
@@ -2503,7 +2501,7 @@ void indent_preproc(void)
       pp_level_sub = 1;
    }
 
-   for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next(pc))
+   for (chunk_t *pc = chunk_get_head(); pc != NULL; pc = chunk_get_next(pc))
    {
       if (pc->type != CT_PREPROC)
       {

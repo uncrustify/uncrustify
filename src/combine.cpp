@@ -200,25 +200,25 @@ chunk_t *set_paren_parent(chunk_t *start, c_token_t parent)
 static void flag_asm(chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
-   chunk_t *po;
-   chunk_t *tmp;
-   chunk_t *end;
 
-   tmp = chunk_get_next_ncnl(pc, CNAV_PREPROC);
+   chunk_t *tmp = chunk_get_next_ncnl(pc, CNAV_PREPROC);
    if (!chunk_is_token(tmp, CT_QUALIFIER))
    {
       return;
    }
-   po = chunk_get_next_ncnl(tmp, CNAV_PREPROC);
+
+   chunk_t *po = chunk_get_next_ncnl(tmp, CNAV_PREPROC);
    if (!chunk_is_paren_open(po))
    {
       return;
    }
-   end = chunk_skip_to_match(po, CNAV_PREPROC);
+
+   chunk_t *end = chunk_skip_to_match(po, CNAV_PREPROC);
    if (!end)
    {
       return;
    }
+
    set_chunk_parent(po, CT_ASM);
    set_chunk_parent(end, CT_ASM);
    for (tmp = chunk_get_next_ncnl(po, CNAV_PREPROC);
@@ -4559,9 +4559,8 @@ static chunk_t *get_d_template_types(ChunkStack &cs, chunk_t *open_paren)
 
 static bool chunkstack_match(ChunkStack &cs, chunk_t *pc)
 {
-   int idx;
+   for (int idx = 0; idx < cs.Len(); idx++)
 
-   for (idx = 0; idx < cs.Len(); idx++)
    {
       chunk_t *tmp = cs.GetChunk(idx);
       if (pc->str.equals(tmp->str))

@@ -382,7 +382,6 @@ static void newline_min_after(chunk_t *ref, INT32 count, UINT64 flag)
 chunk_t *newline_add_between(chunk_t *start, chunk_t *end)
 {
    LOG_FUNC_ENTRY();
-   chunk_t *pc;
 
    if ((start == NULL) || (end == NULL))
    {
@@ -402,6 +401,7 @@ chunk_t *newline_add_between(chunk_t *start, chunk_t *end)
    }
 
    /* Scan for a line break */
+   chunk_t *pc;
    for (pc = start; pc != end; pc = chunk_get_next(pc))
    {
       if (chunk_is_newline(pc))
@@ -597,7 +597,6 @@ static bool newlines_if_for_while_switch(chunk_t *start, argval_t nl_opt)
 static void newlines_if_for_while_switch_pre_blank_lines(chunk_t *start, argval_t nl_opt)
 {
    LOG_FUNC_ENTRY();
-   chunk_t *pc;
    chunk_t *prev;
    chunk_t *next;
    chunk_t *last_nl = NULL;
@@ -617,7 +616,7 @@ static void newlines_if_for_while_switch_pre_blank_lines(chunk_t *start, argval_
     *  2 newlines in a row (don't add)
     *  something else (don't remove)
     */
-   for (pc = chunk_get_prev(start); pc != NULL; pc = chunk_get_prev(pc))
+   for (chunk_t *pc = chunk_get_prev(start); pc != NULL; pc = chunk_get_prev(pc))
    {
       if (chunk_is_newline(pc))
       {
@@ -2670,14 +2669,13 @@ void newlines_cleanup_braces(bool first)
             if (pc->flags & PCF_ONE_LINER)
             {
                // split one-liner
-               chunk_t *temp;
                chunk_t *end = chunk_get_next(chunk_get_next_type(pc->next, CT_SEMICOLON, -1));
                /* Scan for clear flag */
 #ifdef DEBUG
                LOG_FMT(LGUY, "(%d) ", __LINE__);
 #endif
                LOG_FMT(LGUY, "\n");
-               for (temp = pc; temp != end; temp = chunk_get_next(temp))
+               for (chunk_t *temp = pc; temp != end; temp = chunk_get_next(temp))
                {
                   LOG_FMT(LGUY, "%s type=%s , level=%lu", temp->text(), get_token_name(temp->type), temp->level);
                   log_pcf_flags(LGUY, temp->flags);
@@ -2982,10 +2980,9 @@ static void nl_handle_define(chunk_t *pc)
 void newline_after_multiline_comment(void)
 {
    LOG_FUNC_ENTRY();
-   chunk_t *pc;
    chunk_t *tmp;
 
-   for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next(pc))
+   for (chunk_t *pc = chunk_get_head(); pc != NULL; pc = chunk_get_next(pc))
    {
       if (pc->type != CT_COMMENT_MULTI)
       {
@@ -3011,9 +3008,8 @@ void newline_after_multiline_comment(void)
 void newline_after_label_colon(void)
 {
    LOG_FUNC_ENTRY();
-   chunk_t *pc;
 
-   for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next(pc))
+   for (chunk_t *pc = chunk_get_head(); pc != NULL; pc = chunk_get_next(pc))
    {
       if (pc->type != CT_LABEL_COLON)
       {
@@ -3031,9 +3027,8 @@ void newline_after_label_colon(void)
 void newlines_insert_blank_lines(void)
 {
    LOG_FUNC_ENTRY();
-   chunk_t *pc;
 
-   for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next_ncnl(pc))
+   for (chunk_t *pc = chunk_get_head(); pc != NULL; pc = chunk_get_next_ncnl(pc))
    {
       if (pc->type == CT_IF)
       {
@@ -3289,7 +3284,6 @@ void newlines_eat_start_end(void)
 void newlines_chunk_pos(c_token_t chunk_type, tokenpos_e mode)
 {
    LOG_FUNC_ENTRY();
-   chunk_t *pc;
    chunk_t *next;
    chunk_t *prev;
    int     nl_flag;
@@ -3299,7 +3293,7 @@ void newlines_chunk_pos(c_token_t chunk_type, tokenpos_e mode)
       return;
    }
 
-   for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next_ncnl(pc))
+   for (chunk_t *pc = chunk_get_head(); pc != NULL; pc = chunk_get_next_ncnl(pc))
    {
       if (pc->type == chunk_type)
       {
@@ -3444,7 +3438,6 @@ void newlines_chunk_pos(c_token_t chunk_type, tokenpos_e mode)
 void newlines_class_colon_pos(c_token_t tok)
 {
    LOG_FUNC_ENTRY();
-   chunk_t    *pc;
    chunk_t    *next;
    chunk_t    *prev;
    chunk_t    *ccolon = NULL;
@@ -3466,7 +3459,7 @@ void newlines_class_colon_pos(c_token_t tok)
       pcc  = cpd.settings[UO_pos_constr_comma].tp;
    }
 
-   for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next_ncnl(pc))
+   for (chunk_t *pc = chunk_get_head(); pc != NULL; pc = chunk_get_next_ncnl(pc))
    {
       if (!ccolon && (pc->type != tok))
       {
@@ -3609,13 +3602,12 @@ static void _blank_line_max(chunk_t *pc, const char *text, uncrustify_options uo
 void do_blank_lines(void)
 {
    LOG_FUNC_ENTRY();
-   chunk_t *pc;
    chunk_t *next;
    chunk_t *prev;
    chunk_t *pcmt;
    int     old_nl;
 
-   for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next(pc))
+   for (chunk_t *pc = chunk_get_head(); pc != NULL; pc = chunk_get_next(pc))
    {
       bool line_added = false;
 
