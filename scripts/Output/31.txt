@@ -13,7 +13,7 @@ indent_text(xxx): x:x pc->text() {
 [xxxxxxxxxxx:PUNCTUATOR]
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=x
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=x
-indent_pse_push(xxx): line=x, +++++++++++++++++++ pse_tos=x, type=BRACE_OPEN
+indent_pse_push(xxx): line=x, pse_tos=x, type=BRACE_OPEN
 indent_text(xxx): x NEWLINE
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=x
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=x
@@ -26,7 +26,7 @@ indent_text(xxx): x:xx pc->text() (
 [xxxxxxxxxxx:IN_STRUCT,IN_CONST_ARGS,IN_CLASS,PUNCTUATOR]
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=x
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=x
-indent_pse_push(xxx): line=x, +++++++++++++++++++ pse_tos=x, type=FPAREN_OPEN
+indent_pse_push(xxx): line=x, pse_tos=x, type=FPAREN_OPEN
 indent_text(xxx): x:xx pc->text() const
 [xxxxxxx:IN_STRUCT,IN_FCN_CALL,IN_CONST_ARGS,IN_CLASS,FORCE_SPACE,EXPR_START]
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=xx
@@ -62,13 +62,13 @@ indent_text(xxx): frm.pse_tos=x, ... indent_tmp=xx
 indent_text(xxx): x:xx pc->text() )
 [xxxxxxxxxxx:IN_STRUCT,IN_CONST_ARGS,IN_CLASS,PUNCTUATOR]
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=xx
-(xxx) indent_pse_pop(xxx): orig_line=x, ------------------- pse_tos=x, type=FPAREN_CLOSE
+(xxx) indent_pse_pop(xxx): orig_line=x, pse_tos=x, type=FPAREN_CLOSE
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=x
 indent_text(xxx): x:xx pc->text() :
 [xxxxxxxxxxx:IN_STRUCT,IN_CONST_ARGS,IN_CLASS,PUNCTUATOR]
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=x
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=x
-indent_pse_push(xxx): line=x, +++++++++++++++++++ pse_tos=x, type=CONSTR_COLON
+indent_pse_push(xxx): line=x, pse_tos=x, type=CONSTR_COLON
 indent_text(xxx): x NEWLINE
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=xx
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=xx
@@ -81,7 +81,7 @@ indent_text(xxx): x:x pc->text() (
 [xxxxxxxxxxx:IN_STRUCT,IN_CONST_ARGS,IN_CLASS,PUNCTUATOR]
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=xx
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=xx
-indent_pse_push(xxx): line=x, +++++++++++++++++++ pse_tos=x, type=FPAREN_OPEN
+indent_pse_push(xxx): line=x, pse_tos=x, type=FPAREN_OPEN
 indent_text(xxx): x:xx pc->text() pN
 [xxxxxxx:IN_STRUCT,IN_FCN_CALL,IN_CONST_ARGS,IN_CLASS,EXPR_START]
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=xx
@@ -89,7 +89,7 @@ indent_text(xxx): frm.pse_tos=x, ... indent_tmp=xx
 indent_text(xxx): x:xx pc->text() )
 [xxxxxxxxxxx:IN_STRUCT,IN_CONST_ARGS,IN_CLASS,PUNCTUATOR]
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=xx
-(xxx) indent_pse_pop(xxx): orig_line=x, ------------------- pse_tos=x, type=FPAREN_CLOSE
+(xxx) indent_pse_pop(xxx): orig_line=x, pse_tos=x, type=FPAREN_CLOSE
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=xx
 indent_text(xxx): x:xx pc->text() ,
 [xxxxxxxxxxx:IN_STRUCT,IN_CONST_ARGS,IN_CLASS,PUNCTUATOR]
@@ -107,7 +107,7 @@ indent_text(xxx): x:xx pc->text() (
 [xxxxxxxxxxx:IN_STRUCT,IN_CONST_ARGS,IN_CLASS,PUNCTUATOR]
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=xx
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=xx
-indent_pse_push(xxx): line=x, +++++++++++++++++++ pse_tos=x, type=FPAREN_OPEN
+indent_pse_push(xxx): line=x, pse_tos=x, type=FPAREN_OPEN
 indent_text(xxx): x:xx pc->text() n
 [xxxxxxx:IN_STRUCT,IN_FCN_CALL,IN_CONST_ARGS,IN_CLASS,EXPR_START]
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=xx
@@ -115,7 +115,7 @@ indent_text(xxx): frm.pse_tos=x, ... indent_tmp=xx
 indent_text(xxx): x:xx pc->text() )
 [xxxxxxxxxxx:IN_STRUCT,IN_CONST_ARGS,IN_CLASS,PUNCTUATOR]
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=xx
-(xxx) indent_pse_pop(xxx): orig_line=x, ------------------- pse_tos=x, type=FPAREN_CLOSE
+(xxx) indent_pse_pop(xxx): orig_line=x, pse_tos=x, type=FPAREN_CLOSE
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=xx
 indent_text(xxx): x NEWLINE
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=xx
@@ -123,9 +123,9 @@ indent_text(xxx): frm.pse_tos=x, ... indent_tmp=xx
 indent_text(xxx): x:x pc->text() {
 [xxxxxxxxxxx:IN_STRUCT,IN_CLASS,EMPTY_BODY,PUNCTUATOR]
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=xx
-(xxx) indent_pse_pop(xxx): orig_line=x, ------------------- pse_tos=x, type=BRACE_OPEN
+(xxx) indent_pse_pop(xxx): orig_line=x, pse_tos=x, type=BRACE_OPEN
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=x
-indent_pse_push(xxx): line=x, +++++++++++++++++++ pse_tos=x, type=BRACE_OPEN
+indent_pse_push(xxx): line=x, pse_tos=x, type=BRACE_OPEN
 reindent_line(xxx): x] col x on '{' [BRACE_OPEN/FUNC_CLASS_DEF] => x [CallStack:-DEBUG NOT SET-]
 indent_text(xxx): x NEWLINE
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=xx
@@ -134,7 +134,7 @@ indent_text(xxx): x:x pc->text() }
 [xxxxxxxxxxx:IN_STRUCT,IN_CLASS,EMPTY_BODY,PUNCTUATOR]
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=xx
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=xx
-(xxx) indent_pse_pop(xxx): orig_line=x, ------------------- pse_tos=x, type=BRACE_CLOSE
+(xxx) indent_pse_pop(xxx): orig_line=x, pse_tos=x, type=BRACE_CLOSE
 reindent_line(xxx): x] col x on '}' [BRACE_CLOSE/FUNC_CLASS_DEF] => x [CallStack:-DEBUG NOT SET-]
 indent_text(xxx): x NEWLINE
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=x
@@ -152,11 +152,11 @@ indent_text(xxx): x:xx pc->text() (
 [xxxxxxxxxxx:IN_STRUCT,IN_CONST_ARGS,IN_CLASS,PUNCTUATOR]
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=x
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=x
-indent_pse_push(xxx): line=x, +++++++++++++++++++ pse_tos=x, type=FPAREN_OPEN
+indent_pse_push(xxx): line=x, pse_tos=x, type=FPAREN_OPEN
 indent_text(xxx): x:xx pc->text() )
 [xxxxxxxxxxx:IN_STRUCT,IN_CONST_ARGS,IN_CLASS,PUNCTUATOR]
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=xx
-(xxx) indent_pse_pop(xxx): orig_line=x, ------------------- pse_tos=x, type=FPAREN_CLOSE
+(xxx) indent_pse_pop(xxx): orig_line=x, pse_tos=x, type=FPAREN_CLOSE
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=x
 indent_text(xxx): x NEWLINE
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=x
@@ -165,7 +165,7 @@ indent_text(xxx): xx:x pc->text() {
 [xxxxxxxxxxx:IN_STRUCT,IN_CLASS,EMPTY_BODY,PUNCTUATOR]
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=x
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=x
-indent_pse_push(xxx): line=xx, +++++++++++++++++++ pse_tos=x, type=BRACE_OPEN
+indent_pse_push(xxx): line=xx, pse_tos=x, type=BRACE_OPEN
 reindent_line(xxx): xx] col x on '{' [BRACE_OPEN/FUNC_CLASS_DEF] => x [CallStack:-DEBUG NOT SET-]
 indent_text(xxx): xx NEWLINE
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=xx
@@ -174,7 +174,7 @@ indent_text(xxx): xx:x pc->text() }
 [xxxxxxxxxxx:IN_STRUCT,IN_CLASS,EMPTY_BODY,PUNCTUATOR]
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=xx
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=xx
-(xxx) indent_pse_pop(xxx): orig_line=xx, ------------------- pse_tos=x, type=BRACE_CLOSE
+(xxx) indent_pse_pop(xxx): orig_line=xx, pse_tos=x, type=BRACE_CLOSE
 reindent_line(xxx): xx] col x on '}' [BRACE_CLOSE/FUNC_CLASS_DEF] => x [CallStack:-DEBUG NOT SET-]
 indent_text(xxx): xx NEWLINE
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=x
@@ -231,7 +231,7 @@ indent_text(xxx): xx:x pc->text() }
 [xxxxxxxxxxx:IN_CLASS,PUNCTUATOR]
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=x
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=x
-(xxx) indent_pse_pop(xxx): orig_line=xx, ------------------- pse_tos=x, type=BRACE_CLOSE
+(xxx) indent_pse_pop(xxx): orig_line=xx, pse_tos=x, type=BRACE_CLOSE
 indent_text(xxx): xx:x pc->text() ;
 [xxxxxxxxxxx:PUNCTUATOR]
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=x
@@ -254,7 +254,7 @@ indent_text(xxx): x:x pc->text() {
 [xxxxxxxxxxx:PUNCTUATOR]
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=x
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=x
-indent_pse_push(xxx): line=x, +++++++++++++++++++ pse_tos=x, type=BRACE_OPEN
+indent_pse_push(xxx): line=x, pse_tos=x, type=BRACE_OPEN
 indent_text(xxx): x NEWLINE
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=x
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=x
@@ -266,7 +266,7 @@ indent_text(xxx): x:xx pc->text() (
 [xxxxxxxxxxx:IN_STRUCT,IN_CONST_ARGS,IN_CLASS,PUNCTUATOR]
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=x
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=x
-indent_pse_push(xxx): line=x, +++++++++++++++++++ pse_tos=x, type=FPAREN_OPEN
+indent_pse_push(xxx): line=x, pse_tos=x, type=FPAREN_OPEN
 indent_text(xxx): x:xx pc->text() const
 [xxxxxxx:IN_STRUCT,IN_FCN_CALL,IN_CONST_ARGS,IN_CLASS,FORCE_SPACE,EXPR_START]
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=xx
@@ -302,13 +302,13 @@ indent_text(xxx): frm.pse_tos=x, ... indent_tmp=xx
 indent_text(xxx): x:xx pc->text() )
 [xxxxxxxxxxx:IN_STRUCT,IN_CONST_ARGS,IN_CLASS,PUNCTUATOR]
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=xx
-(xxx) indent_pse_pop(xxx): orig_line=x, ------------------- pse_tos=x, type=FPAREN_CLOSE
+(xxx) indent_pse_pop(xxx): orig_line=x, pse_tos=x, type=FPAREN_CLOSE
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=x
 indent_text(xxx): x:xx pc->text() :
 [xxxxxxxxxxx:IN_STRUCT,IN_CONST_ARGS,IN_CLASS,PUNCTUATOR]
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=x
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=x
-indent_pse_push(xxx): line=x, +++++++++++++++++++ pse_tos=x, type=CONSTR_COLON
+indent_pse_push(xxx): line=x, pse_tos=x, type=CONSTR_COLON
 indent_text(xxx): x NEWLINE
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=xx
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=xx
@@ -320,7 +320,7 @@ indent_text(xxx): x:x pc->text() (
 [xxxxxxxxxxx:IN_STRUCT,IN_CONST_ARGS,IN_CLASS,PUNCTUATOR]
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=xx
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=xx
-indent_pse_push(xxx): line=x, +++++++++++++++++++ pse_tos=x, type=FPAREN_OPEN
+indent_pse_push(xxx): line=x, pse_tos=x, type=FPAREN_OPEN
 indent_text(xxx): x:xx pc->text() pN
 [xxxxxxx:IN_STRUCT,IN_FCN_CALL,IN_CONST_ARGS,IN_CLASS,EXPR_START]
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=xx
@@ -328,7 +328,7 @@ indent_text(xxx): frm.pse_tos=x, ... indent_tmp=xx
 indent_text(xxx): x:xx pc->text() )
 [xxxxxxxxxxx:IN_STRUCT,IN_CONST_ARGS,IN_CLASS,PUNCTUATOR]
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=xx
-(xxx) indent_pse_pop(xxx): orig_line=x, ------------------- pse_tos=x, type=FPAREN_CLOSE
+(xxx) indent_pse_pop(xxx): orig_line=x, pse_tos=x, type=FPAREN_CLOSE
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=xx
 indent_text(xxx): x:xx pc->text() ,
 [xxxxxxxxxxx:IN_STRUCT,IN_CONST_ARGS,IN_CLASS,PUNCTUATOR]
@@ -345,7 +345,7 @@ indent_text(xxx): x:xx pc->text() (
 [xxxxxxxxxxx:IN_STRUCT,IN_CONST_ARGS,IN_CLASS,PUNCTUATOR]
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=xx
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=xx
-indent_pse_push(xxx): line=x, +++++++++++++++++++ pse_tos=x, type=FPAREN_OPEN
+indent_pse_push(xxx): line=x, pse_tos=x, type=FPAREN_OPEN
 indent_text(xxx): x:xx pc->text() n
 [xxxxxxx:IN_STRUCT,IN_FCN_CALL,IN_CONST_ARGS,IN_CLASS,EXPR_START]
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=xx
@@ -353,7 +353,7 @@ indent_text(xxx): frm.pse_tos=x, ... indent_tmp=xx
 indent_text(xxx): x:xx pc->text() )
 [xxxxxxxxxxx:IN_STRUCT,IN_CONST_ARGS,IN_CLASS,PUNCTUATOR]
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=xx
-(xxx) indent_pse_pop(xxx): orig_line=x, ------------------- pse_tos=x, type=FPAREN_CLOSE
+(xxx) indent_pse_pop(xxx): orig_line=x, pse_tos=x, type=FPAREN_CLOSE
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=xx
 indent_text(xxx): x NEWLINE
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=xx
@@ -361,9 +361,9 @@ indent_text(xxx): frm.pse_tos=x, ... indent_tmp=xx
 indent_text(xxx): x:x pc->text() {
 [xxxxxxxxxxx:IN_STRUCT,IN_CLASS,EMPTY_BODY,PUNCTUATOR]
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=xx
-(xxx) indent_pse_pop(xxx): orig_line=x, ------------------- pse_tos=x, type=BRACE_OPEN
+(xxx) indent_pse_pop(xxx): orig_line=x, pse_tos=x, type=BRACE_OPEN
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=x
-indent_pse_push(xxx): line=x, +++++++++++++++++++ pse_tos=x, type=BRACE_OPEN
+indent_pse_push(xxx): line=x, pse_tos=x, type=BRACE_OPEN
 indent_text(xxx): x NEWLINE
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=xx
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=xx
@@ -371,7 +371,7 @@ indent_text(xxx): x:x pc->text() }
 [xxxxxxxxxxx:IN_STRUCT,IN_CLASS,EMPTY_BODY,PUNCTUATOR]
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=xx
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=xx
-(xxx) indent_pse_pop(xxx): orig_line=x, ------------------- pse_tos=x, type=BRACE_CLOSE
+(xxx) indent_pse_pop(xxx): orig_line=x, pse_tos=x, type=BRACE_CLOSE
 indent_text(xxx): x NEWLINE
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=x
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=x
@@ -387,11 +387,11 @@ indent_text(xxx): x:xx pc->text() (
 [xxxxxxxxxxx:IN_STRUCT,IN_CONST_ARGS,IN_CLASS,PUNCTUATOR]
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=x
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=x
-indent_pse_push(xxx): line=x, +++++++++++++++++++ pse_tos=x, type=FPAREN_OPEN
+indent_pse_push(xxx): line=x, pse_tos=x, type=FPAREN_OPEN
 indent_text(xxx): x:xx pc->text() )
 [xxxxxxxxxxx:IN_STRUCT,IN_CONST_ARGS,IN_CLASS,PUNCTUATOR]
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=xx
-(xxx) indent_pse_pop(xxx): orig_line=x, ------------------- pse_tos=x, type=FPAREN_CLOSE
+(xxx) indent_pse_pop(xxx): orig_line=x, pse_tos=x, type=FPAREN_CLOSE
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=x
 indent_text(xxx): x NEWLINE
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=x
@@ -400,7 +400,7 @@ indent_text(xxx): xx:x pc->text() {
 [xxxxxxxxxxx:IN_STRUCT,IN_CLASS,EMPTY_BODY,PUNCTUATOR]
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=x
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=x
-indent_pse_push(xxx): line=xx, +++++++++++++++++++ pse_tos=x, type=BRACE_OPEN
+indent_pse_push(xxx): line=xx, pse_tos=x, type=BRACE_OPEN
 indent_text(xxx): xx NEWLINE
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=xx
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=xx
@@ -408,7 +408,7 @@ indent_text(xxx): xx:x pc->text() }
 [xxxxxxxxxxx:IN_STRUCT,IN_CLASS,EMPTY_BODY,PUNCTUATOR]
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=xx
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=xx
-(xxx) indent_pse_pop(xxx): orig_line=xx, ------------------- pse_tos=x, type=BRACE_CLOSE
+(xxx) indent_pse_pop(xxx): orig_line=xx, pse_tos=x, type=BRACE_CLOSE
 indent_text(xxx): xx NEWLINE
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=x
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=x
@@ -462,7 +462,7 @@ indent_text(xxx): xx:x pc->text() }
 [xxxxxxxxxxx:IN_CLASS,PUNCTUATOR]
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=x
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=x
-(xxx) indent_pse_pop(xxx): orig_line=xx, ------------------- pse_tos=x, type=BRACE_CLOSE
+(xxx) indent_pse_pop(xxx): orig_line=xx, pse_tos=x, type=BRACE_CLOSE
 indent_text(xxx): xx:x pc->text() ;
 [xxxxxxxxxxx:PUNCTUATOR]
 indent_text(xxx): frm.pse_tos=x, ... indent_tmp=x
