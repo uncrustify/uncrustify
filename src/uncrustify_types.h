@@ -403,26 +403,27 @@ struct cp_data
    UINT32             error_count;
    const char         *filename;
 
-   file_mem           file_hdr;   /* for cmt_insert_file_header */
-   file_mem           file_ftr;   /* for cmt_insert_file_footer */
-   file_mem           func_hdr;   /* for cmt_insert_func_header */
-   file_mem           oc_msg_hdr; /* for cmt_insert_oc_msg_header */
-   file_mem           class_hdr;  /* for cmt_insert_class_header */
+   file_mem           file_hdr;   // for cmt_insert_file_header
+   file_mem           file_ftr;   // for cmt_insert_file_footer
+   file_mem           func_hdr;   // for cmt_insert_func_header
+   file_mem           oc_msg_hdr; // for cmt_insert_oc_msg_header
+   file_mem           class_hdr;  // for cmt_insert_class_header
 
    int                lang_flags; // LANG_xxx
    bool               lang_forced;
 
    bool               unc_off;
+   bool               unc_off_used; // to check if "unc_off" is used
    UINT32             line_number;
-   UINT16             column;  /* column for parsing */
-   UINT16             spaces;  /* space count on output */
+   UINT16             column;       // column for parsing
+   UINT16             spaces;       // space count on output
 
    int                ifdef_over_whole_file;
 
    bool               frag;
    UINT16             frag_cols;
 
-   /* stuff to auto-detect line endings */
+   // stuff to auto-detect line endings
    UINT32             le_counts[LE_AUTO];
    unc_text           newline;
 
@@ -437,7 +438,7 @@ struct cp_data
    bool               bom;
    CharEncoding       enc;
 
-   /* bumped up when a line is split or indented */
+   // bumped up when a line is split or indented
    int                changes;
    int                pass_count;
 
@@ -447,14 +448,14 @@ struct cp_data
 
    bool               warned_unable_string_replace_tab_chars;
 
-   /* Here are all the settings */
+   // Here are all the settings
    op_val_t           settings[UO_option_count];
 
    struct parse_frame frames[16];
    int                frame_count;
    int                pp_level;
 
-   /* the default values for settings */
+   // the default values for settings
    op_val_t           defaults[UO_option_count];
 };
 

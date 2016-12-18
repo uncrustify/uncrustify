@@ -494,6 +494,8 @@ static bool parse_comment(tok_ctx &ctx, chunk_t &pc)
       {
          LOG_FMT(LBCTRL, "Found '%s' on line %lu\n", offtext, pc.orig_line);
          cpd.unc_off = true;
+         // Issue #842
+         cpd.unc_off_used = true;
       }
    }
    return(true);

@@ -13,8 +13,8 @@
 SCRIPTS="./scripts"
 RESULTS="./results"
 #
-mkdir -p ${RESULTS}
-rm -rf ${RESULTS}/*
+rm -rf ${RESULTS}
+mkdir ${RESULTS}
 #
 # Test help
 #   -h -? --help --usage
@@ -37,7 +37,7 @@ rm -rf ${RESULTS}/*
 # look at src/log_levels.h
 INPUT="scripts/Input"
 OUTPUT="scripts/Output"
-#set -x
+
 Liste_of_Ls_A="9 21 25 28 31 36 66 92"
 for L_Value in ${Liste_of_Ls_A}
 do
@@ -58,6 +58,29 @@ do
   else
     rm ${LFile}
     rm ${LFile}.sed
+  fi
+done
+
+CONFIG="scripts/Config"
+Liste_of_Error_Tests="I-842"
+for Error_T in ${Liste_of_Error_Tests}
+do
+  ConfigFile="${CONFIG}/${Error_T}.cfg"
+  InputFile="${INPUT}/${Error_T}.cpp"
+  OutputFile="${OUTPUT}/${Error_T}.txt"
+  ErrFile="${RESULTS}/${Error_T}.txt"
+  ./build/uncrustify -q -c ${ConfigFile} -f ${InputFile} -o /dev/null 2> ${ErrFile}
+  cmp -s ${ErrFile} ${OutputFile}
+  how_different=${?}
+  #echo "the status of is "${how_different}
+  if [ ${how_different} != "0" ] ;
+  then
+    echo "Problem with "${Error_T}
+    echo "use: diff ${ErrFile} ${OutputFile} to find why"
+    diff ${ErrFile} ${OutputFile}
+    break
+  else
+    rm ${ErrFile}
   fi
 done
 

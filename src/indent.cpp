@@ -333,7 +333,7 @@ static void indent_pse_push(struct parse_frame &frm, chunk_t *pc)
               __func__, __LINE__, pc->orig_line, frm.pse_tos, get_token_name(pc->type));
       memset(&frm.pse[frm.pse_tos], 0, sizeof(frm.pse[frm.pse_tos]));
 
-      //LOG_FMT(LINDPSE, "%s[line %d]:%d] (pp=%d) OPEN  [%d,%s] level=%d\n",
+      //LOG_FMT(LINDPSE, "%s(%d):%d] (pp=%d) OPEN  [%d,%s] level=%d\n",
       //        __func__, __LINE__, pc->orig_line, cpd.pp_level, frm.pse_tos, get_token_name(pc->type), pc->level);
 
       frm.pse[frm.pse_tos].pc          = pc;
@@ -353,7 +353,7 @@ static void indent_pse_push(struct parse_frame &frm, chunk_t *pc)
       /* the stack depth is too small */
       /* fatal error */
       fprintf(stderr, "the stack depth is too small\n");
-      exit(2);
+      exit(EXIT_FAILURE);
    }
 }
 
@@ -403,7 +403,15 @@ static void indent_pse_pop(struct parse_frame &frm, chunk_t *pc)
                  __func__, __LINE__, frm.pse_tos);
       }
    }
-}
+   else
+   {
+      /* fatal error */
+      fprintf(stderr, "the stack index is already zero\n");
+      fprintf(stderr, "at line=%d, type is %s\n",
+              pc->orig_line, get_token_name(pc->type));
+      exit(EXIT_FAILURE);
+   }
+} // indent_pse_pop
 
 
 static int token_indent(c_token_t type)

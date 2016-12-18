@@ -5,6 +5,7 @@
  * @author  Ben Gardner
  * @license GPL v2+
  */
+
 #define DEFINE_PCF_NAMES
 #define DEFINE_CHAR_TABLE
 
@@ -243,6 +244,9 @@ int main(int argc, char *argv[])
    log_mask_t mask;
    int        idx;
    const char *p_arg;
+
+   /* initialize the global data */
+   cpd.unc_off_used = false;
 
    /* check keyword sort */
    assert(keywords_are_sorted());
