@@ -13,8 +13,8 @@
 SCRIPTS="./scripts"
 RESULTS="./results"
 #
-mkdir -p ${RESULTS}
-rm -rf ${RESULTS}/*
+rm -rf ${RESULTS}
+mkdir ${RESULTS}
 #
 # Test help
 #   -h -? --help --usage

@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# 27. 10. 2016
+# 18 12. 2016
 #
 SRC="./src"
 #
@@ -12,26 +12,29 @@ list_of_H=`ls *.h`
 list_of_C=`ls *.cpp`
 cd ${where}
 #
-mkdir -p results
+RESULTS="./results"
+#
+rm -rf ${RESULTS}
+mkdir ${RESULTS}
 #
 #find . -name uncrustify
 #ls -l ./build/uncrustify
 for file in ${list_of_H} ${list_of_C}
 do
-  ./build/uncrustify -q -c ./forUncrustifySources.cfg -f ${SRC}/${file} -o results/${file}
-  cmp -s ${SRC}/${file} results/${file}
+  ./build/uncrustify -q -c ./forUncrustifySources.cfg -f ${SRC}/${file} -o ${RESULTS}/${file}
+  cmp -s ${SRC}/${file} ${RESULTS}/${file}
   how_different=${?}
   #echo "the status of is "${how_different}
   if [ ${how_different} != "0" ] ;
   then
     echo "Problem with "${file}
-    echo "use: diff ${SRC}/${file} results/${file} to find why"
+    echo "use: diff ${SRC}/${file} ${RESULTS}/${file} to find why"
   else
-    rm results/${file}
+    rm ${RESULTS}/${file}
   fi
 done
-rmdir --ignore-fail-on-non-empty results
-if [[ -d results ]]
+rmdir --ignore-fail-on-non-empty ${RESULTS}
+if [[ -d ${RESULTS} ]]
 then
   echo "some problem(s) are still present"
   exit 1
