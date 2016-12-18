@@ -79,6 +79,7 @@ void pf_copy(struct parse_frame *dst, const struct parse_frame *src)
 void pf_push(struct parse_frame *pf)
 {
    static int ref_no = 1;
+
    if (cpd.frame_count < (int)ARRAY_SIZE(cpd.frames))
    {
       pf_copy(&cpd.frames[cpd.frame_count], pf);
