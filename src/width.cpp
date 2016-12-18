@@ -64,8 +64,8 @@ void do_code_width(void)
       {
          if (!split_line(pc))
          {
-            LOG_FMT(LSPLIT, "%s: Bailed on %d:%d %s\n", __func__,
-                    pc->orig_line, pc->orig_col, pc->text());
+            LOG_FMT(LSPLIT, "%s: Bailed on %lu:%lu %s\n",
+                    __func__, pc->orig_line, pc->orig_col, pc->text());
             break;
          }
       }
@@ -231,9 +231,7 @@ static void try_split_here(cw_entry &ent, chunk_t *pc)
 static bool split_line(chunk_t *start)
 {
    LOG_FUNC_ENTRY();
-   LOG_FMT(LGUY, "%s: line %d, col %d token: %s\n",
-           __func__, start->orig_line, start->column, start->text());
-   LOG_FMT(LSPLIT, "%s: line %d, col %d token: '%s' [%s] (IN_FUNC=%d) ",
+   LOG_FMT(LSPLIT, "%s: line %lu, col %d token: '%s' [%s] (IN_FUNC=%d) ",
            __func__, start->orig_line, start->column, start->text(),
            get_token_name(start->type),
            (start->flags & (PCF_IN_FCN_DEF | PCF_IN_FCN_CALL)) != 0);
@@ -296,7 +294,7 @@ static bool split_line(chunk_t *start)
 
    while (((pc = chunk_get_prev(pc)) != NULL) && !chunk_is_newline(pc))
    {
-      LOG_FMT(LGUY, "%s: at %s, col=%d\n", __func__, pc->text(), pc->orig_col);
+      LOG_FMT(LSPLIT, "%s: at %s, col=%lu\n", __func__, pc->text(), pc->orig_col);
       if (pc->type != CT_SPACE)
       {
          try_split_here(ent, pc);
@@ -310,14 +308,15 @@ static bool split_line(chunk_t *start)
 
    if (ent.pc == NULL)
    {
-      LOG_FMT(LSPLIT, "\n%s:    TRY_SPLIT yielded NO SOLUTION for line %d at %s [%s]\n",
+      LOG_FMT(LSPLIT, "\n%s:    TRY_SPLIT yielded NO SOLUTION for line %lu at %s [%s]\n",
               __func__, start->orig_line, start->text(), get_token_name(start->type));
    }
    else
    {
-      LOG_FMT(LSPLIT, "\n%s:    TRY_SPLIT yielded '%s' [%s] on line %d\n", __func__,
-              ent.pc->text(), get_token_name(ent.pc->type), ent.pc->orig_line);
-      LOG_FMT(LGUY, "%s: ent at %s, col=%d\n", __func__, ent.pc->text(), ent.pc->orig_col);
+      LOG_FMT(LSPLIT, "\n%s:    TRY_SPLIT yielded '%s' [%s] on line %lu\n",
+              __func__, ent.pc->text(), get_token_name(ent.pc->type), ent.pc->orig_line);
+      LOG_FMT(LSPLIT, "%s: ent at %s, col=%lu\n",
+              __func__, ent.pc->text(), ent.pc->orig_col);
    }
 
    /* Break before the token instead of after it according to the pos_xxx rules */
@@ -345,7 +344,7 @@ static bool split_line(chunk_t *start)
       {
          pc = chunk_get_next(ent.pc);
       }
-      LOG_FMT(LGUY, "%s: at %s, col=%d\n", __func__, pc->text(), pc->orig_col);
+      LOG_FMT(LSPLIT, "%s: at %s, col=%lu\n", __func__, pc->text(), pc->orig_col);
    }
 
    if (pc == NULL)
@@ -409,7 +408,7 @@ static void split_for_stmt(chunk_t *start)
    chunk_t *open_paren = NULL;
    int     nl_cnt      = 0;
 
-   LOG_FMT(LSPLIT, "%s: starting on %s, line %d\n",
+   LOG_FMT(LSPLIT, "%s: starting on %s, line %lu\n",
            __func__, start->text(), start->orig_line);
 
    /* Find the open paren so we know the level and count newlines */
@@ -428,7 +427,7 @@ static void split_for_stmt(chunk_t *start)
    }
    if (open_paren == NULL)
    {
-      LOG_FMT(LSYS, "No open paren\n");
+      LOG_FMT(LSPLIT, "No open paren\n");
       return;
    }
 
