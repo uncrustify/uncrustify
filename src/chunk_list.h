@@ -13,7 +13,7 @@
 
 
 /**
- * Specifies how to handle proprocessors.
+ * Specifies how to handle preprocessors.
  * CNAV_ALL (default)
  *  - return the true next/prev
  *

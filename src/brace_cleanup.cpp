@@ -648,6 +648,19 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
       LOG_FMT(LSTMT, "%s: %lu> reset expr on %s\n",
               __func__, pc->orig_line, pc->text());
    }
+   else if (pc->type == CT_BRACE_CLOSE)
+   {
+      if (!cpd.consumed)
+      {
+         if (!cpd.unc_off_used)
+         {
+            /* fatal error */
+            fprintf(stderr, "Unmatched BRACE_CLOSE\nat line=%d, column=%d\n",
+                    pc->orig_line, pc->orig_col);
+            exit(EXIT_FAILURE);
+         }
+      }
+   }
 } // parse_cleanup
 
 

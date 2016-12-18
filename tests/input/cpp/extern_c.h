@@ -7,8 +7,8 @@ typedef void* disConnectionH;
 
 #ifdef __cplusplus
 extern "C"
-{
 #endif
+{
 	
 	disConnectionH createDisConnection();
 	
@@ -28,8 +28,6 @@ extern "C"
 	
 	void FreeDisConnection(disConnectionH connection);
 	
-#ifdef __cplusplus
 }
-#endif
 #endif
 
