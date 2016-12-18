@@ -18,10 +18,8 @@
 // protocol of the line
 void prot_the_line(int theLine, unsigned int actual_line)
 {
-   chunk_t *pc;
-
    LOG_FMT(LGUY, "Prot_the_line:(%d) \n", theLine);
-   for (pc = chunk_get_head(); pc != NULL; pc = pc->next)
+   for (chunk_t *pc = chunk_get_head(); pc != NULL; pc = pc->next)
    {
       if (pc->orig_line == actual_line)
       {

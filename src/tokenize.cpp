@@ -299,7 +299,6 @@ static bool parse_comment(tok_ctx &ctx, chunk_t &pc)
    bool is_d    = (cpd.lang_flags & LANG_D) != 0;          // forcing value to bool
    bool is_cs   = (cpd.lang_flags & LANG_CS) != 0;         // forcing value to bool
    int  d_level = 0;
-   int  bs_cnt;
 
    /* does this start with '/ /' or '/ *' or '/ +' (d) */
    if ((ctx.peek() != '/') ||
@@ -321,7 +320,7 @@ static bool parse_comment(tok_ctx &ctx, chunk_t &pc)
       pc.type = CT_COMMENT_CPP;
       while (true)
       {
-         bs_cnt = 0;
+         int bs_cnt = 0;
          while (ctx.more())
          {
             ch = ctx.peek();
@@ -511,7 +510,7 @@ static bool parse_comment(tok_ctx &ctx, chunk_t &pc)
  */
 static bool parse_code_placeholder(tok_ctx &ctx, chunk_t &pc)
 {
-   int last2 = 0, last1 = 0;
+   int last1 = 0;
 
    if ((ctx.peek() != '<') || (ctx.peek(1) != '#'))
    {
@@ -527,7 +526,7 @@ static bool parse_code_placeholder(tok_ctx &ctx, chunk_t &pc)
    /* grab everything until '#>', fail if not found. */
    while (ctx.more())
    {
-      last2 = last1;
+      int last2 = last1;
       last1 = ctx.get();
       pc.str.append(last1);
 
@@ -1167,7 +1166,6 @@ static bool parse_cr_string(tok_ctx &ctx, chunk_t &pc, int q_idx)
  */
 bool parse_word(tok_ctx &ctx, chunk_t &pc, bool skipcheck)
 {
-   int             ch;
    static unc_text intr_txt("@interface");
 
    /* The first character is already valid */
@@ -1176,7 +1174,7 @@ bool parse_word(tok_ctx &ctx, chunk_t &pc, bool skipcheck)
 
    while (ctx.more())
    {
-      ch = ctx.peek();
+      int ch = ctx.peek();
       if (CharTable::IsKw2(ch))
       {
          pc.str.append(ctx.get());
@@ -1476,7 +1474,6 @@ static bool parse_ignored(tok_ctx &ctx, chunk_t &pc)
 static bool parse_next(tok_ctx &ctx, chunk_t &pc)
 {
    const chunk_tag_t *punc;
-   int               ch1;
 
    //chunk_t           pc_temp;
 
@@ -1714,8 +1711,8 @@ static bool parse_next(tok_ctx &ctx, chunk_t &pc)
       /* Not D stuff */
 
       /* Check for L'a', L"abc", 'a', "abc", <abc> strings */
-      ch  = ctx.peek();
-      ch1 = ctx.peek(1);
+      ch = ctx.peek();
+      int ch1 = ctx.peek(1);
       if ((((ch == 'L') || (ch == 'S')) &&
            ((ch1 == '"') || (ch1 == '\''))) ||
           (ch == '"') ||

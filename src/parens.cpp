@@ -22,12 +22,11 @@ static void check_bool_parens(chunk_t *popen, chunk_t *pclose, int nest);
 void do_parens(void)
 {
    LOG_FUNC_ENTRY();
-   chunk_t *pc;
    chunk_t *pclose;
 
    if (cpd.settings[UO_mod_full_paren_if_bool].b)
    {
-      pc = chunk_get_head();
+      chunk_t *pc = chunk_get_head();
       while ((pc = chunk_get_next_ncnl(pc)) != NULL)
       {
          if ((pc->type != CT_SPAREN_OPEN) ||
@@ -59,7 +58,6 @@ static void add_parens_between(chunk_t *first, chunk_t *last)
    chunk_t pc;
    chunk_t *first_n;
    chunk_t *last_p;
-   chunk_t *tmp;
 
    LOG_FMT(LPARADD, "%s: line %lu between %s [lvl=%lu] and %s [lvl=%lu]\n",
            __func__, first->orig_line,
@@ -92,7 +90,7 @@ static void add_parens_between(chunk_t *first, chunk_t *last)
 
    chunk_add_after(&pc, last_p);
 
-   for (tmp = first_n;
+   for (chunk_t *tmp = first_n;
         tmp != last_p;
         tmp = chunk_get_next_ncnl(tmp))
    {

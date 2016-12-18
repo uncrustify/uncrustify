@@ -18,14 +18,12 @@
  */
 void pf_log(log_sev_t logsev, struct parse_frame *pf)
 {
-   int idx;
-
    LOG_FMT(logsev, "[%s] BrLevel=%d Level=%d PseTos=%d\n",
            get_token_name(pf->in_ifdef),
            pf->brace_level, pf->level, pf->pse_tos);
 
    LOG_FMT(logsev, " *");
-   for (idx = 1; idx <= pf->pse_tos; idx++)
+   for (int idx = 1; idx <= pf->pse_tos; idx++)
    {
       LOG_FMT(logsev, " [%s-%d]",
               get_token_name(pf->pse[idx].type),
@@ -37,10 +35,8 @@ void pf_log(log_sev_t logsev, struct parse_frame *pf)
 
 static void pf_log_frms(log_sev_t logsev, const char *txt, struct parse_frame *pf)
 {
-   int idx;
-
    LOG_FMT(logsev, "%s Parse Frames(%d):", txt, cpd.frame_count);
-   for (idx = 0; idx < cpd.frame_count; idx++)
+   for (int idx = 0; idx < cpd.frame_count; idx++)
    {
       LOG_FMT(logsev, " [%s-%d]",
               get_token_name(cpd.frames[idx].in_ifdef),
@@ -55,11 +51,9 @@ static void pf_log_frms(log_sev_t logsev, const char *txt, struct parse_frame *p
  */
 void pf_log_all(log_sev_t logsev)
 {
-   int idx;
-
    LOG_FMT(logsev, "##=- Parse Frame : %d entries\n", cpd.frame_count);
 
-   for (idx = 0; idx < cpd.frame_count; idx++)
+   for (int idx = 0; idx < cpd.frame_count; idx++)
    {
       LOG_FMT(logsev, "##  <%d> ", idx);
 
@@ -90,6 +84,7 @@ void pf_push(struct parse_frame *pf)
    {
       pf_copy(&cpd.frames[cpd.frame_count], pf);
       cpd.frame_count++;
+
       pf->ref_no = ref_no++;
    }
    LOG_FMT(LPF, "%s(%d): count = %d\n", __func__, __LINE__, cpd.frame_count);
@@ -103,16 +98,13 @@ void pf_push(struct parse_frame *pf)
  */
 void pf_push_under(struct parse_frame *pf)
 {
-   struct parse_frame *npf1;
-   struct parse_frame *npf2;
-
    LOG_FMT(LPF, "%s(%d): before count = %d\n", __func__, __LINE__, cpd.frame_count);
 
    if ((cpd.frame_count < (int)ARRAY_SIZE(cpd.frames)) &&
        (cpd.frame_count >= 1))
    {
-      npf1 = &cpd.frames[cpd.frame_count - 1];
-      npf2 = &cpd.frames[cpd.frame_count];
+      struct parse_frame *npf1 = &cpd.frames[cpd.frame_count - 1];
+      struct parse_frame *npf2 = &cpd.frames[cpd.frame_count];
       pf_copy(npf2, npf1);
       pf_copy(npf1, pf);
       cpd.frame_count++;

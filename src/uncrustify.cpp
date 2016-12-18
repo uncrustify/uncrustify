@@ -721,15 +721,13 @@ static void process_source_list(const char *source_list,
    }
 
    char linebuf[256];
-   char *fname;
    int  line = 0;
-   int  len;
 
    while (fgets(linebuf, sizeof(linebuf), p_file) != NULL)
    {
       line++;
-      fname = linebuf;
-      len   = strlen(fname);
+      char *fname = linebuf;
+      int  len    = strlen(fname);
       while ((len > 0) && unc_isspace(*fname))
       {
          fname++;
@@ -770,8 +768,6 @@ static bool read_stdin(file_mem &fm)
 {
    deque<UINT8> dq;
    char         buf[4096];
-   int          len;
-   int          idx;
 
    fm.raw.clear();
    fm.data.clear();
@@ -779,8 +775,8 @@ static bool read_stdin(file_mem &fm)
 
    while (!feof(stdin))
    {
-      len = fread(buf, 1, sizeof(buf), stdin);
-      for (idx = 0; idx < len; idx++)
+      int len = fread(buf, 1, sizeof(buf), stdin);
+      for (int idx = 0; idx < len; idx++)
       {
          dq.push_back(buf[idx]);
       }
@@ -794,13 +790,12 @@ static bool read_stdin(file_mem &fm)
 
 static void make_folders(const string &filename)
 {
-   int  idx;
    int  last_idx = 0;
    char outname[4096];
 
    snprintf(outname, sizeof(outname), "%s", filename.c_str());
 
-   for (idx = 0; outname[idx] != 0; idx++)
+   for (int idx = 0; outname[idx] != 0; idx++)
    {
       if ((outname[idx] == '/') || (outname[idx] == '\\'))
       {
@@ -999,7 +994,6 @@ static bool file_content_matches(const string &filename1, const string &filename
    int         fd1, fd2;
    UINT8       buf1[1024], buf2[1024];
    int         len1 = 0, len2 = 0;
-   int         minlen;
 
    /* Check the sizes first */
    if ((stat(filename1.c_str(), &st1) != 0) ||
@@ -1033,7 +1027,7 @@ static bool file_content_matches(const string &filename1, const string &filename
       {
          break;
       }
-      minlen = (len1 < len2) ? len1 : len2;
+      int minlen = (len1 < len2) ? len1 : len2;
       if (memcmp(buf1, buf2, minlen) != 0)
       {
          break;
@@ -1921,11 +1915,9 @@ const char *get_token_name(c_token_t token)
  */
 c_token_t find_token_name(const char *text)
 {
-   int idx;
-
    if ((text != NULL) && (*text != 0))
    {
-      for (idx = 1; idx < (int)ARRAY_SIZE(token_names); idx++)
+      for (int idx = 1; idx < (int)ARRAY_SIZE(token_names); idx++)
       {
          if (strcasecmp(text, token_names[idx]) == 0)
          {
@@ -1971,9 +1963,7 @@ static lang_name_t language_names[] =
 
 int language_flags_from_name(const char *name)
 {
-   int i;
-
-   for (i = 0; i < (int)ARRAY_SIZE(language_names); i++)
+   for (int i = 0; i < (int)ARRAY_SIZE(language_names); i++)
    {
       if (strcasecmp(name, language_names[i].name) == 0)
       {

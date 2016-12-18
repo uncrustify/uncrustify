@@ -1613,8 +1613,6 @@ const option_map_value *get_option_name(uncrustify_options option)
 static void convert_value(const option_map_value *entry, const char *val, op_val_t *dest)
 {
    const option_map_value *tmp;
-   bool                   btrue;
-   int                    mult;
 
    if (entry->type == AT_LINE)
    {
@@ -1704,7 +1702,7 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
       else
       {
          /* Try to see if it is a variable */
-         mult = 1;
+         int mult = 1;
          if (*val == '-')
          {
             mult = -1;
@@ -1744,7 +1742,7 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
          return;
       }
 
-      btrue = true;
+      bool btrue = true;
       if ((*val == '-') || (*val == '~'))
       {
          btrue = false;

@@ -64,9 +64,7 @@ int load_define_file(const char *filename)
 {
    FILE *pf;
    char buf[160];
-   char *ptr;
    char *args[3];
-   int  argc;
    int  line_no = 0;
 
    pf = fopen(filename, "r");
@@ -83,12 +81,13 @@ int load_define_file(const char *filename)
       line_no++;
 
       /* remove comments */
+      char *ptr;
       if ((ptr = strchr(buf, '#')) != NULL)
       {
          *ptr = 0;
       }
 
-      argc       = Args::SplitLine(buf, args, ARRAY_SIZE(args) - 1);
+      int argc = Args::SplitLine(buf, args, ARRAY_SIZE(args) - 1);
       args[argc] = 0;
 
       if (argc > 0)
