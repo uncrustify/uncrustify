@@ -202,7 +202,7 @@ static void output_to_column(int column, bool allow_tabs)
  * indent_cmt_with_tabs as the rules.
  * base_col is the indent of the first line of the comment.
  * On the first line, column == base_col.
- * On subsequnet lines, column >= base_col.
+ * On subsequent lines, column >= base_col.
  *
  * @param brace_col the brace-level indent of the comment
  * @param base_col  the indent of the start of the comment (multiline)
@@ -251,7 +251,7 @@ void output_parsed(FILE *pfile)
    fprintf(pfile, "# Line              Tag           Parent          Columns Br/Lvl/pp     Flag   Nl  Text");
    for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next(pc))
    {
-      fprintf(pfile, "\n# %3d> %16.16s[%16.16s][%3d/%3d/%3d/%3d][%d/%d/%d][%10" PRIx64 "][%d-%d]",
+      fprintf(pfile, "\n# %3d> %16.16s[%16.16s][%3d/%3lu/%3d/%3d][%lu/%lu/%lu][%10" PRIx64 "][%lu-%d]",
               pc->orig_line, get_token_name(pc->type),
               get_token_name(pc->parent_type),
               pc->column, pc->orig_col, pc->orig_col_end, pc->orig_prev_sp,
@@ -435,7 +435,7 @@ void output_text(FILE *pfile)
                          (chunk_is_comment(pc) &&
                           (cpd.settings[UO_indent_with_tabs].n != 0));
 
-            LOG_FMT(LOUTIND, "  %d> col %d/%d/%d - ", pc->orig_line, pc->column, pc->column_indent, cpd.column);
+            LOG_FMT(LOUTIND, "  %lu> col %d/%lu/%d - ", pc->orig_line, pc->column, pc->column_indent, cpd.column);
          }
          else
          {
@@ -2100,7 +2100,7 @@ void add_long_preprocessor_conditional_block_comment(void)
          {
             br_close = tmp;
 
-            LOG_FMT(LPPIF, "found #if / %s section on lines %d and %d, nl_count=%d\n",
+            LOG_FMT(LPPIF, "found #if / %s section on lines %lu and %lu, nl_count=%d\n",
                     (tmp->type == CT_PP_ENDIF ? "#endif" : "#else"),
                     br_open->orig_line, br_close->orig_line, nl_count);
 

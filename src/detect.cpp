@@ -481,7 +481,7 @@ static void detect_space_options()
 /**
  * Call all the detect_xxxx() functions
  */
-void detect_options()
+void detect_options(void)
 {
    detect_space_options();
 }

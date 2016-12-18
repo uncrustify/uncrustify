@@ -21,13 +21,13 @@
 static chunk_t *align_var_def_brace(chunk_t *pc, size_t span, size_t *nl_count);
 static chunk_t *align_trailing_comments(chunk_t *start);
 static void align_init_brace(chunk_t *start);
-static void align_func_params();
+static void align_func_params(void);
 static void align_same_func_call_params();
 static void align_func_proto(int span);
 static void align_oc_msg_spec(int span);
 static void align_typedefs(int span);
 static void align_left_shift(void);
-static void align_oc_msg_colons();
+static void align_oc_msg_colons(void);
 static void align_oc_msg_colon(chunk_t *so);
 static void align_oc_decl_colon(void);
 static void align_asm_colon(void);
@@ -281,11 +281,11 @@ void align_all(void)
    }
 
    /* Align variable definitions */
-   if ((cpd.settings[UO_align_var_def_span].n > 0) ||
+   if ((cpd.settings[UO_align_var_def_span].u > 0) ||
        (cpd.settings[UO_align_var_struct_span].n > 0) ||
        (cpd.settings[UO_align_var_class_span].n > 0))
    {
-      align_var_def_brace(chunk_get_head(), cpd.settings[UO_align_var_def_span].n, NULL);
+      align_var_def_brace(chunk_get_head(), cpd.settings[UO_align_var_def_span].u, NULL);
    }
 
    /* Align assignments */
@@ -406,7 +406,7 @@ void align_right_comments(void)
             prev = chunk_get_prev(pc);
             if (pc->orig_col < (prev->orig_col_end + cpd.settings[UO_align_right_cmt_gap].n))
             {
-               LOG_FMT(LALTC, "NOT changing END comment on line %lu (%d <= %d + %d)\n",
+               LOG_FMT(LALTC, "NOT changing END comment on line %lu (%lu <= %d + %d)\n",
                        pc->orig_line,
                        pc->orig_col, prev->orig_col_end, cpd.settings[UO_align_right_cmt_gap].n);
                skip = true;
@@ -516,7 +516,7 @@ void align_preprocessor(void)
          break;
       }
 
-      LOG_FMT(LALPP, "%s: define (%s) on line %lu col %d\n",
+      LOG_FMT(LALPP, "%s: define (%s) on line %lu col %lu\n",
               __func__, pc->text(), pc->orig_line, pc->orig_col);
 
       cur_as = &as;
@@ -531,7 +531,7 @@ void align_preprocessor(void)
          pc = chunk_get_next_nc(pc); // point to open (
          pc = chunk_get_next_type(pc, CT_FPAREN_CLOSE, pc->level);
 
-         LOG_FMT(LALPP, "%s: jumped to (%s) on line %lu col %d\n",
+         LOG_FMT(LALPP, "%s: jumped to (%s) on line %lu col %lu\n",
                  __func__, pc->text(), pc->orig_line, pc->orig_col);
       }
 
@@ -546,7 +546,7 @@ void align_preprocessor(void)
        * a value is given */
       if (!chunk_is_newline(pc))
       {
-         LOG_FMT(LALPP, "%s: align on '%s', line %lu col %d\n",
+         LOG_FMT(LALPP, "%s: align on '%s', line %lu col %lu\n",
                  __func__, pc->text(), pc->orig_line, pc->orig_col);
 
          cur_as->Add(pc);
@@ -779,7 +779,7 @@ static chunk_t *align_func_param(chunk_t *start)
 } // align_func_param
 
 
-static void align_func_params()
+static void align_func_params(void)
 {
    LOG_FUNC_ENTRY();
    chunk_t *pc;
@@ -917,7 +917,7 @@ static void align_same_func_call_params()
       LOG_FMT(LASFCP, "(%d) align_fnc_name [%s]\n", __LINE__, align_fcn_name.c_str());
       align_fcn_name += pc->str;
       LOG_FMT(LASFCP, "(%d) align_fnc_name [%s]\n", __LINE__, align_fcn_name.c_str());
-      LOG_FMT(LASFCP, "Func Call @ %lu:%d [%s]\n",
+      LOG_FMT(LASFCP, "Func Call @ %lu:%lu [%s]\n",
               align_fcn->orig_line,
               align_fcn->orig_col,
               align_fcn_name.c_str());
@@ -1163,7 +1163,7 @@ static chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_co
    pc = chunk_get_next(start);
    while ((pc != NULL) && ((pc->level >= start->level) || (pc->level == 0)))
    {
-      LOG_FMT(LGUY, "%s: pc->text()=%s, pc->orig_line=%lu, pc->orig_col=%d\n",
+      LOG_FMT(LGUY, "%s: pc->text()=%s, pc->orig_line=%lu, pc->orig_col=%lu\n",
               __func__, pc->text(), pc->orig_line, pc->orig_col);
       if (chunk_is_comment(pc))
       {
@@ -1184,7 +1184,7 @@ static chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_co
              ((pc->type == CT_FUNC_DEF) &&
               cpd.settings[UO_align_single_line_func].b))
          {
-            LOG_FMT(LAVDB, "    add=[%s] line=%lu col=%d level=%lu\n",
+            LOG_FMT(LAVDB, "    add=[%s] line=%lu col=%lu level=%lu\n",
                     pc->text(), pc->orig_line, pc->orig_col, pc->level);
 
             as.Add(pc);
@@ -1275,7 +1275,7 @@ static chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_co
                }
                pc = prev_local->next;
             }
-            LOG_FMT(LAVDB, "    add=[%s] line=%lu col=%d level=%lu\n",
+            LOG_FMT(LAVDB, "    add=[%s] line=%lu col=%lu level=%lu\n",
                     pc->text(), pc->orig_line, pc->orig_col, pc->level);
 
             as.Add(step_back_over_member(pc));
@@ -1433,7 +1433,7 @@ chunk_t *align_trailing_comments(chunk_t *start)
            __func__, pc->orig_line);
 
    /* Find the max column */
-   while ((pc != NULL) && (nl_count < cpd.settings[UO_align_right_cmt_span].n))
+   while ((pc != NULL) && (nl_count < cpd.settings[UO_align_right_cmt_span].u))
    {
       if ((pc->flags & PCF_RIGHT_COMMENT) && (pc->column > 1))
       {
@@ -1557,7 +1557,7 @@ static chunk_t *scan_ib_line(chunk_t *start, bool first_pass)
 
    if (pc != NULL)
    {
-      LOG_FMT(LSIB, "%s: start=%s col %d/%d line %lu\n",
+      LOG_FMT(LSIB, "%s: start=%s col %d/%lu line %lu\n",
               __func__, get_token_name(pc->type), pc->column, pc->orig_col, pc->orig_line);
    }
 
@@ -1699,7 +1699,7 @@ static void align_init_brace(chunk_t *start)
    cpd.al_cnt       = 0;
    cpd.al_c99_array = false;
 
-   LOG_FMT(LALBR, "%s: start @ %lu:%d\n", __func__, start->orig_line, start->orig_col);
+   LOG_FMT(LALBR, "%s: start @ %lu:%lu\n", __func__, start->orig_line, start->orig_col);
 
    pc = chunk_get_next_ncnl(start);
    pc = scan_ib_line(pc, true);
@@ -1875,7 +1875,7 @@ static void align_typedefs(int span)
          if (pc->flags & PCF_ANCHOR)
          {
             as.Add(pc);
-            LOG_FMT(LALTD, "%s: typedef @ %lu:%d, tag '%s' @ %lu:%d\n",
+            LOG_FMT(LALTD, "%s: typedef @ %lu:%lu, tag '%s' @ %lu:%lu\n",
                     __func__, c_typedef->orig_line, c_typedef->orig_col,
                     pc->text(), pc->orig_line, pc->orig_col);
             c_typedef = NULL;
@@ -2060,7 +2060,8 @@ static void align_oc_msg_colon(chunk_t *so)
    cas.m_skip_first = !cpd.settings[UO_align_oc_msg_colon_first].b;
 
    /* find the longest args that isn't the first one */
-   int     idx, len;
+   int     idx;
+   int     len;
    int     first_len = 0;
    int     len_diff;
    int     tlen;
@@ -2125,7 +2126,7 @@ static void align_oc_msg_colon(chunk_t *so)
 /**
  * Aligns OC messages
  */
-static void align_oc_msg_colons()
+static void align_oc_msg_colons(void)
 {
    LOG_FUNC_ENTRY();
    chunk_t *pc;

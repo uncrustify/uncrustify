@@ -844,7 +844,7 @@ static bool parse_number(tok_ctx &ctx, chunk_t &pc)
  */
 static bool parse_string(tok_ctx &ctx, chunk_t &pc, int quote_idx, bool allow_escape)
 {
-   bool escaped = 0;
+   bool escaped = false;
    int  end_ch;
    char escape_char        = cpd.settings[UO_string_escape_char].n;
    char escape_char2       = cpd.settings[UO_string_escape_char2].n;
@@ -878,7 +878,7 @@ static bool parse_string(tok_ctx &ctx, chunk_t &pc, int quote_idx, bool allow_es
       {
          pc.nl_count++;
          pc.type = CT_STRING_MULTI;
-         escaped = 0;
+         escaped = false;
          continue;
       }
       if ((ch == '\r') && (ctx.peek() != '\n'))
@@ -886,7 +886,7 @@ static bool parse_string(tok_ctx &ctx, chunk_t &pc, int quote_idx, bool allow_es
          pc.str.append(ctx.get());
          pc.nl_count++;
          pc.type = CT_STRING_MULTI;
-         escaped = 0;
+         escaped = false;
          continue;
       }
       if (!escaped)

@@ -21,6 +21,6 @@ extern int            QT_SIGNAL_SLOT_level;
 extern bool           restoreValues;
 
 void save_set_options_for_QT(int level);
-void restore_options_for_QT();
+void restore_options_for_QT(void);
 
 #endif /* OPTIONS_FOR_QT_H_INCLUDED */

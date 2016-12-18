@@ -15,7 +15,7 @@
 // examine_Data(__func__, __LINE__, n);
 
 
-// protocoll of the line
+// protocol of the line
 void prot_the_line(int theLine, unsigned int actual_line)
 {
    chunk_t *pc;

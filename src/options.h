@@ -25,6 +25,7 @@ enum argtype_e
    AT_LINE,    /**< Line Endings */
    AT_POS,     /**< start/end or Trail/Lead */
    AT_STRING,  /**< string value */
+   AT_UNUM,    /**< unsigned Number */
 };
 
 /** Arg values - these are bit fields*/
@@ -70,6 +71,7 @@ union op_val_t
    lineends_e le;
    tokenpos_e tp;
    const char *str;
+   size_t     u;
 };
 
 /** Groups for options */

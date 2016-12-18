@@ -57,7 +57,7 @@ void save_set_options_for_QT(int level)
 }
 
 
-void restore_options_for_QT()
+void restore_options_for_QT(void)
 {
    assert(cpd.settings[UO_use_options_overriding_for_qt_macros].b);
 
