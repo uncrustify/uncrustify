@@ -401,8 +401,7 @@ chunk_t *newline_add_between(chunk_t *start, chunk_t *end)
    }
 
    /* Scan for a line break */
-   chunk_t *pc;
-   for (pc = start; pc != end; pc = chunk_get_next(pc))
+   for (chunk_t *pc = start; pc != end; pc = chunk_get_next(pc))
    {
       if (chunk_is_newline(pc))
       {
@@ -415,7 +414,7 @@ chunk_t *newline_add_between(chunk_t *start, chunk_t *end)
     */
    if (end->type == CT_BRACE_OPEN)
    {
-      pc = chunk_get_next(end);
+      chunk_t *pc = chunk_get_next(end);
       if (chunk_is_comment(pc))
       {
          pc = chunk_get_next(pc);

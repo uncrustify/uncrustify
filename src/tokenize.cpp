@@ -1979,9 +1979,7 @@ void tokenize(const deque<int> &data, chunk_t *ref)
 // int str_find(const char *needle, int needle_len,
 //              const char *haystack, int haystack_len)
 // {
-//    int idx;
-//
-//    for (idx = 0; idx < (haystack_len - needle_len); idx++)
+//    for (int idx = 0; idx < (haystack_len - needle_len); idx++)
 //    {
 //       if (memcmp(needle, haystack + idx, needle_len) == 0)
 //       {

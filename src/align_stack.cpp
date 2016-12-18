@@ -334,8 +334,7 @@ void AlignStack::NewLines(size_t cnt)
 void AlignStack::Flush()
 {
    size_t                  last_seqnum = 0;
-   size_t                  idx;
-   const ChunkStack::Entry *ce = NULL;
+   const ChunkStack::Entry *ce         = NULL;
    chunk_t                 *pc;
 
    LOG_FMT(LAS, "%s: m_aligned.Len()=%lu\n", __func__, m_aligned.Len());
@@ -359,7 +358,7 @@ void AlignStack::Flush()
    m_max_col    = 0;
 
    /* Recalculate the max_col - it may have shifted since the last Add() */
-   for (idx = 0; idx < m_aligned.Len(); idx++)
+   for (size_t idx = 0; idx < m_aligned.Len(); idx++)
    {
       pc = m_aligned.Get(idx)->m_pc;
 
@@ -416,7 +415,7 @@ void AlignStack::Flush()
 
    LOG_FMT(LAS, "%s: m_aligned.Len()=%lu\n",
            __func__, m_aligned.Len());
-   for (idx = 0; idx < m_aligned.Len(); idx++)
+   for (size_t idx = 0; idx < m_aligned.Len(); idx++)
    {
       ce = m_aligned.Get(idx);
       pc = ce->m_pc;
@@ -465,7 +464,7 @@ void AlignStack::Flush()
    else
    {
       /* Remove all items with seqnum < last_seqnum */
-      for (idx = 0; idx < m_skipped.Len(); idx++)
+      for (size_t idx = 0; idx < m_skipped.Len(); idx++)
       {
          if (m_skipped.Get(idx)->m_seqnum < last_seqnum)
          {
