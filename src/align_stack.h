@@ -26,10 +26,10 @@ public:
    ChunkStack m_skipped;   /* contains the tokens sent to Add() */
    int        m_max_col;
    int        m_min_col;
-   int        m_span;
+   size_t     m_span;
    int        m_thresh;
-   int        m_seqnum;
-   int        m_nl_seqnum;
+   size_t     m_seqnum;
+   size_t     m_nl_seqnum;
    int        m_gap;
    bool       m_right_align;
    StarStyle  m_star_style;
@@ -78,16 +78,16 @@ public:
    {
    }
 
-   void Start(int span, int threshold = 0);
-   void Add(chunk_t *pc, int seqnum = 0);
-   void NewLines(int cnt);
+   void Start(size_t span, size_t threshold = 0);
+   void Add(chunk_t *pc, size_t seqnum = 0);
+   void NewLines(size_t cnt);
    void Flush();
    void Reset();
    void End();
 
 protected:
-   int m_last_added; /* 0=none, 1=aligned, 2=skipped */
-   void ReAddSkipped();
+   size_t m_last_added; /* 0=none, 1=aligned, 2=skipped */
+   void   ReAddSkipped();
 
    ChunkStack m_scratch; /* used in ReAddSkipped() */
 };

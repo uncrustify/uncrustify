@@ -13,7 +13,7 @@
 void ChunkStack::Set(const ChunkStack &cs)
 {
    m_cse.resize(cs.m_cse.size());
-   for (int idx = 0; idx < (int)m_cse.size(); idx++)
+   for (size_t idx = 0; idx < m_cse.size(); idx++)
    {
       m_cse[idx].m_pc     = cs.m_cse[idx].m_pc;
       m_cse[idx].m_seqnum = cs.m_cse[idx].m_seqnum;
@@ -32,9 +32,9 @@ const ChunkStack::Entry *ChunkStack::Top() const
 }
 
 
-const ChunkStack::Entry *ChunkStack::Get(int idx) const
+const ChunkStack::Entry *ChunkStack::Get(size_t idx) const
 {
-   if ((idx >= 0) && (idx < (int)m_cse.size()))
+   if (idx < m_cse.size())
    {
       return(&m_cse[idx]);
    }
@@ -42,9 +42,9 @@ const ChunkStack::Entry *ChunkStack::Get(int idx) const
 }
 
 
-chunk_t *ChunkStack::GetChunk(int idx) const
+chunk_t *ChunkStack::GetChunk(size_t idx) const
 {
-   if ((idx >= 0) && (idx < (int)m_cse.size()))
+   if (idx < m_cse.size())
    {
       return(m_cse[idx].m_pc);
    }
@@ -78,7 +78,7 @@ chunk_t *ChunkStack::Pop_Back()
 }
 
 
-void ChunkStack::Push_Back(chunk_t *pc, int seqnum)
+void ChunkStack::Push_Back(chunk_t *pc, size_t seqnum)
 {
    m_cse.push_back(Entry(seqnum, pc));
    if (m_seqnum < seqnum)
@@ -93,9 +93,9 @@ void ChunkStack::Push_Back(chunk_t *pc, int seqnum)
  *
  * @param idx  The item to remove
  */
-void ChunkStack::Zap(int idx)
+void ChunkStack::Zap(size_t idx)
 {
-   if ((idx >= 0) && (idx < (int)m_cse.size()))
+   if (idx < m_cse.size())
    {
       m_cse[idx].m_pc = NULL;
    }
@@ -107,10 +107,10 @@ void ChunkStack::Zap(int idx)
  */
 void ChunkStack::Collapse()
 {
-   int wr_idx = 0;
-   int rd_idx;
+   size_t wr_idx = 0;
+   size_t rd_idx;
 
-   for (rd_idx = 0; rd_idx < (int)m_cse.size(); rd_idx++)
+   for (rd_idx = 0; rd_idx < m_cse.size(); rd_idx++)
    {
       if (m_cse[rd_idx].m_pc != NULL)
       {

@@ -25,7 +25,7 @@ static void align_func_params(void);
 static void align_same_func_call_params();
 static void align_func_proto(int span);
 static void align_oc_msg_spec(int span);
-static void align_typedefs(int span);
+static void align_typedefs(size_t span);
 static void align_left_shift(void);
 static void align_oc_msg_colons(void);
 static void align_oc_msg_colon(chunk_t *so);
@@ -265,9 +265,9 @@ void quick_indent_again(void)
 void align_all(void)
 {
    LOG_FUNC_ENTRY();
-   if (cpd.settings[UO_align_typedef_span].n > 0)
+   if (cpd.settings[UO_align_typedef_span].u > 0)
    {
-      align_typedefs(cpd.settings[UO_align_typedef_span].n);
+      align_typedefs(cpd.settings[UO_align_typedef_span].u);
    }
 
    if (cpd.settings[UO_align_left_shift].b)
@@ -1850,7 +1850,7 @@ static void align_init_brace(chunk_t *start)
  * typedef char       bar_t;
  * typedef const char cc_t;
  */
-static void align_typedefs(int span)
+static void align_typedefs(size_t span)
 {
    LOG_FUNC_ENTRY();
    chunk_t    *pc;
@@ -1858,9 +1858,9 @@ static void align_typedefs(int span)
    AlignStack as;
 
    as.Start(span);
-   as.m_gap        = cpd.settings[UO_align_typedef_gap].n;
-   as.m_star_style = (AlignStack::StarStyle)cpd.settings[UO_align_typedef_star_style].n;
-   as.m_amp_style  = (AlignStack::StarStyle)cpd.settings[UO_align_typedef_amp_style].n;
+   as.m_gap        = cpd.settings[UO_align_typedef_gap].u;
+   as.m_star_style = (AlignStack::StarStyle)cpd.settings[UO_align_typedef_star_style].u;
+   as.m_amp_style  = (AlignStack::StarStyle)cpd.settings[UO_align_typedef_amp_style].u;
 
    pc = chunk_get_head();
    while (pc != NULL)
