@@ -30,18 +30,18 @@ public:
       }
 
 
-      Entry(int sn, chunk_t *pc)
+      Entry(size_t sn, chunk_t *pc)
          : m_seqnum(sn)
          , m_pc(pc)
       {
       }
-      int     m_seqnum;
+      size_t  m_seqnum;
       chunk_t *m_pc;
    };
 
 protected:
    deque<Entry> m_cse;
-   int          m_seqnum; // current seq num
+   size_t       m_seqnum; // current seq num
 
 public:
    ChunkStack()
@@ -75,17 +75,17 @@ public:
    }
 
 
-   int Len() const
+   size_t Len() const
    {
       return(m_cse.size());
    }
 
    const Entry *Top() const;
-   const Entry *Get(int idx) const;
-   chunk_t *GetChunk(int idx) const;
+   const Entry *Get(size_t idx) const;
+   chunk_t *GetChunk(size_t idx) const;
 
    chunk_t *Pop_Back();
-   void Push_Back(chunk_t *pc, int seqnum);
+   void Push_Back(chunk_t *pc, size_t seqnum);
 
    chunk_t *Pop_Front();
 
@@ -95,7 +95,7 @@ public:
       m_cse.clear();
    }
 
-   void Zap(int idx);
+   void Zap(size_t idx);
    void Collapse();
 };
 

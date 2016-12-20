@@ -2379,11 +2379,11 @@ static void fix_typedef(chunk_t *start)
               __func__, the_type->text(), the_type->orig_line);
 
       /* If we are aligning on the open paren, grab that instead */
-      if (open_paren && (cpd.settings[UO_align_typedef_func].n == 1))
+      if (open_paren && (cpd.settings[UO_align_typedef_func].u == 1))
       {
          the_type = open_paren;
       }
-      if (cpd.settings[UO_align_typedef_func].n != 0)
+      if (cpd.settings[UO_align_typedef_func].u != 0)
       {
          LOG_FMT(LTYPEDEF, "%s:  -- align anchor on [%s] @ %lu:%lu\n",
                  __func__, the_type->text(), the_type->orig_line, the_type->orig_col);

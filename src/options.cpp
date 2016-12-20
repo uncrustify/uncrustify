@@ -1317,21 +1317,21 @@ void register_options(void)
                   "The gap for aligning struct/union member definitions");
    unc_add_option("align_struct_init_span", UO_align_struct_init_span, AT_NUM,
                   "The span for aligning struct initializer values (0=don't align)", "", 0, 5000);
-   unc_add_option("align_typedef_gap", UO_align_typedef_gap, AT_NUM,
+   unc_add_option("align_typedef_gap", UO_align_typedef_gap, AT_UNUM,
                   "The minimum space between the type and the synonym of a typedef");
-   unc_add_option("align_typedef_span", UO_align_typedef_span, AT_NUM,
+   unc_add_option("align_typedef_span", UO_align_typedef_span, AT_UNUM,
                   "The span for aligning single-line typedefs (0=don't align)");
-   unc_add_option("align_typedef_func", UO_align_typedef_func, AT_NUM,
+   unc_add_option("align_typedef_func", UO_align_typedef_func, AT_UNUM,
                   "How to align typedef'd functions with other typedefs\n"
                   "0: Don't mix them at all\n"
                   "1: align the open paren with the types\n"
                   "2: align the function type name with the other type names", "", 0, 2);
-   unc_add_option("align_typedef_star_style", UO_align_typedef_star_style, AT_NUM,
+   unc_add_option("align_typedef_star_style", UO_align_typedef_star_style, AT_UNUM,
                   "Controls the positioning of the '*' in typedefs. Just try it.\n"
                   "0: Align on typedef type, ignore '*'\n"
                   "1: The '*' is part of type name: typedef int  *pint;\n"
                   "2: The '*' is part of the type, but dangling: typedef int *pint;", "", 0, 2);
-   unc_add_option("align_typedef_amp_style", UO_align_typedef_amp_style, AT_NUM,
+   unc_add_option("align_typedef_amp_style", UO_align_typedef_amp_style, AT_UNUM,
                   "Controls the positioning of the '&' in typedefs. Just try it.\n"
                   "0: Align on typedef type, ignore '&'\n"
                   "1: The '&' is part of type name: typedef int  &pint;\n"
