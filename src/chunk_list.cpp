@@ -507,7 +507,7 @@ chunk_t *chunk_get_prev_type(chunk_t *cur, c_token_t type,
       pc = chunk_get_prev(pc, nav);
       if (pc != NULL)
       {
-         LOG_FMT(LCHUNK, "%s(%d): pc: %s, type is %s, orig_line=%d, orig_col=%d\n",
+         LOG_FMT(LCHUNK, "%s(%d): pc: %s, type is %s, orig_line=%zd, orig_col=%zd\n",
                  __func__, __LINE__, pc->text(), get_token_name(pc->type), pc->orig_line, pc->orig_col);
       }
       if ((pc == NULL) ||
