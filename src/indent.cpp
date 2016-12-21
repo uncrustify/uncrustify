@@ -407,7 +407,7 @@ static void indent_pse_pop(struct parse_frame &frm, chunk_t *pc)
    {
       /* fatal error */
       fprintf(stderr, "the stack index is already zero\n");
-      fprintf(stderr, "at line=%d, type is %s\n",
+      fprintf(stderr, "at line=%zd, type is %s\n",
               pc->orig_line, get_token_name(pc->type));
       exit(EXIT_FAILURE);
    }

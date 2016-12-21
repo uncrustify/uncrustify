@@ -2126,7 +2126,7 @@ int save_option_file_kernel(FILE *pfile, bool withDoc, bool only_not_default)
 
    if (withDoc)
    {
-      fprintf(pfile, DOC_TEXT_END);
+      fprintf(pfile, "%s", DOC_TEXT_END);
    }
 
    /* Print custom keywords */
@@ -2198,7 +2198,7 @@ void print_options(FILE *pfile)
          fputs("\n\n", pfile);
       }
    }
-   fprintf(pfile, DOC_TEXT_END);
+   fprintf(pfile, "%s", DOC_TEXT_END);
 } // print_options
 
 
