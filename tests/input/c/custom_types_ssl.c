@@ -2,8 +2,9 @@
 #define HEADER_CONF_H
 
 #ifdef  __cplusplus
-extern "C" {
+extern "C"
 #endif
+{
 
 typedef struct
 	{
@@ -39,9 +40,7 @@ int CONF_dump_fp(LHASH_OF(CONF_VALUE) *conf, FILE *out);
 int CONF_dump_bio(LHASH_OF(CONF_VALUE) *conf, BIO *out);
 
 
-#ifdef __cplusplus
 }
-#endif
 
 
 void CONF_set_nconf(CONF *conf, LHASH_OF(CONF_VALUE) *hash)
