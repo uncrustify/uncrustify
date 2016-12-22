@@ -1348,8 +1348,10 @@ void indent_text(void)
              (prev->type == CT_BRACE_CLOSE) &&
              (prev->parent_type == CT_CASE))
          {
+            // issue #663
+            chunk_t *temp = chunk_get_prev_type(pc, CT_BRACE_OPEN, pc->level);
             /* This only affects the 'break', so no need for a stack entry */
-            indent_column_set(prev->column);
+            indent_column_set(temp->column);
          }
       }
       else if (pc->type == CT_LABEL)
