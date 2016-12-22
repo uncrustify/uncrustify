@@ -2282,6 +2282,9 @@ string argtype_to_string(argtype_e argtype)
    case AT_NUM:
       return("number");
 
+   case AT_UNUM:
+      return("unsigned number");
+
    case AT_LINE:
       return("auto/lf/crlf/cr");
 
@@ -2417,6 +2420,9 @@ string op_val_to_string(argtype_e argtype, op_val_t op_val)
 
    case AT_NUM:
       return(number_to_string(op_val.n));
+
+   case AT_UNUM:
+      return(number_to_string(op_val.u));
 
    case AT_LINE:
       return(lineends_to_string(op_val.le));
