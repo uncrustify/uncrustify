@@ -470,7 +470,7 @@ void tokenize_cleanup(void)
       }
 
       /* Look for <newline> 'EXEC' 'SQL' */
-      if ((chunk_is_str(pc, "EXEC", 4) && chunk_is_str(next, "SQL", 3)) ||
+      if ((chunk_is_str_case(pc, "EXEC", 4) && chunk_is_str_case(next, "SQL", 3)) ||
           ((*pc->str.c_str() == '$') && (pc->type != CT_SQL_WORD)))
       {
          tmp = chunk_get_prev(pc);
