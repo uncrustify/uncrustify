@@ -1,0 +1,1 @@
+friend class ::MultiLabelMeshPipeline;

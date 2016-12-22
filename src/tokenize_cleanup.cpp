@@ -348,7 +348,9 @@ void tokenize_cleanup(void)
       /* Interface is only a keyword in MS land if followed by 'class' or 'struct'
        * likewise, 'class' may be a member name in Java.
        */
-      if ((pc->type == CT_CLASS) && !CharTable::IsKw1(next->str[0]))
+      if ((pc->type == CT_CLASS) &&
+          !CharTable::IsKw1(next->str[0]) &&
+          pc->next->type != CT_DC_MEMBER)
       {
          set_chunk_type(pc, CT_WORD);
       }
