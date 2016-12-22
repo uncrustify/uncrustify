@@ -348,7 +348,22 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
 #ifdef DEBUG
    LOG_FMT(LGUY, "(%d) ", __LINE__);
 #endif
-   LOG_FMT(LGUY, "%s: %lu:%lu %s\n", __func__, pc->orig_line, pc->orig_col, pc->text());
+   if (pc->type == CT_NEWLINE)
+   {
+      LOG_FMT(LGUY, "%s: %lu:%lu CT_NEWLINE\n", __func__, pc->orig_line, pc->orig_col);
+   }
+   else if (pc->type == CT_VBRACE_OPEN)
+   {
+      LOG_FMT(LGUY, "%s: %lu:%lu CT_VBRACE_OPEN\n", __func__, pc->orig_line, pc->orig_col);
+   }
+   else if (pc->type == CT_VBRACE_CLOSE)
+   {
+      LOG_FMT(LGUY, "%s: %lu:%lu CT_VBRACE_CLOSE\n", __func__, pc->orig_line, pc->orig_col);
+   }
+   else
+   {
+      LOG_FMT(LGUY, "%s: %lu:%lu %s\n", __func__, pc->orig_line, pc->orig_col, pc->text());
+   }
    // LOG_FMT(LSYS, " %3d > ['%s' %s] ['%s' %s] ['%s' %s]\n",
    //         pc->orig_line,
    //         prev->text(), get_token_name(prev->type),
@@ -2492,8 +2507,22 @@ void combine_labels(void)
 #ifdef DEBUG
       LOG_FMT(LGUY, "(%d) ", __LINE__);
 #endif
-      LOG_FMT(LGUY, "%s: cur->text=%s, line=%lu, col=%lu\n",
-              __func__, (cur->type == CT_NEWLINE) ? "<NL>" : cur->text(), cur->orig_line, cur->orig_col);
+      if (cur->type == CT_NEWLINE)
+      {
+         LOG_FMT(LGUY, "%s: %lu:%lu CT_NEWLINE\n", __func__, cur->orig_line, cur->orig_col);
+      }
+      else if (cur->type == CT_VBRACE_OPEN)
+      {
+         LOG_FMT(LGUY, "%s: %lu:%lu CT_VBRACE_OPEN\n", __func__, cur->orig_line, cur->orig_col);
+      }
+      else if (cur->type == CT_VBRACE_CLOSE)
+      {
+         LOG_FMT(LGUY, "%s: %lu:%lu CT_VBRACE_CLOSE\n", __func__, cur->orig_line, cur->orig_col);
+      }
+      else
+      {
+         LOG_FMT(LGUY, "%s: %lu:%lu %s\n", __func__, cur->orig_line, cur->orig_col, cur->text());
+      }
       if (!(next->flags & PCF_IN_OC_MSG) && /* filter OC case of [self class] msg send */
           ((next->type == CT_CLASS) ||
            (next->type == CT_OC_CLASS) ||
