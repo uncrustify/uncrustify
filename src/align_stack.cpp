@@ -20,7 +20,7 @@
  */
 void AlignStack::Start(size_t span, size_t thresh)
 {
-   LOG_FMT(LAS, "Start(%lu, %lu)\n", span, thresh);
+   LOG_FMT(LAS, "Start(%zu, %zu)\n", span, thresh);
 
    m_aligned.Reset();
    m_skipped.Reset();
@@ -54,7 +54,7 @@ void AlignStack::ReAddSkipped()
       for (size_t idx = 0; idx < m_scratch.Len(); idx++)
       {
          ce = m_scratch.Get(idx);
-         LOG_FMT(LAS, "ReAddSkipped [%lu] - ", ce->m_seqnum);
+         LOG_FMT(LAS, "ReAddSkipped [%zu] - ", ce->m_seqnum);
          Add(ce->m_pc, ce->m_seqnum);
       }
 
@@ -269,7 +269,7 @@ void AlignStack::Add(chunk_t *start, size_t seqnum)
       m_aligned.Push_Back(ali, seqnum);
       m_last_added = 1;
 
-      LOG_FMT(LAS, "Add-[%s]: line %lu, col %d, adj %d : ref=[%s] endcol=%lu\n",
+      LOG_FMT(LAS, "Add-[%s]: line %zu, col %zu, adj %d : ref=[%s] endcol=%zu\n",
               ali->text(), ali->orig_line, ali->column, ali->align.col_adj,
               ref->text(), endcol);
 
@@ -280,7 +280,7 @@ void AlignStack::Add(chunk_t *start, size_t seqnum)
 
       if (endcol > m_max_col)
       {
-         LOG_FMT(LAS, "Add-aligned [%lu/%lu/%lu]: line %lu, col %d : max_col old %lu, new %lu - min_col %lu\n",
+         LOG_FMT(LAS, "Add-aligned [%zu/%zu/%zu]: line %zu, col %zu : max_col old %zu, new %zu - min_col %zu\n",
                  seqnum, m_nl_seqnum, m_seqnum,
                  ali->orig_line, ali->column, m_max_col, endcol, m_min_col);
          m_max_col = endcol;
@@ -296,7 +296,7 @@ void AlignStack::Add(chunk_t *start, size_t seqnum)
       }
       else
       {
-         LOG_FMT(LAS, "Add-aligned [%lu/%lu/%lu]: line %lu, col %d : col %lu <= %lu - min_col %lu\n",
+         LOG_FMT(LAS, "Add-aligned [%zu/%zu/%zu]: line %zu, col %zu : col %zu <= %zu - min_col %zu\n",
                  seqnum, m_nl_seqnum, m_seqnum,
                  ali->orig_line, ali->column, endcol, m_max_col, m_min_col);
       }
@@ -307,7 +307,7 @@ void AlignStack::Add(chunk_t *start, size_t seqnum)
       m_skipped.Push_Back(start, seqnum);
       m_last_added = 2;
 
-      LOG_FMT(LAS, "Add-skipped [%lu/%lu/%lu]: line %lu, col %d <= %lu + %lu\n",
+      LOG_FMT(LAS, "Add-skipped [%zu/%zu/%zu]: line %zu, col %zu <= %zu + %zu\n",
               seqnum, m_nl_seqnum, m_seqnum,
               start->orig_line, start->column, m_max_col, m_thresh);
    }
@@ -324,12 +324,12 @@ void AlignStack::NewLines(size_t cnt)
       m_seqnum += cnt;
       if (m_seqnum > (m_nl_seqnum + m_span))
       {
-         LOG_FMT(LAS, "Newlines<%lu>-", cnt);
+         LOG_FMT(LAS, "Newlines<%zu>-", cnt);
          Flush();
       }
       else
       {
-         LOG_FMT(LAS, "Newlines<%lu>\n", cnt);
+         LOG_FMT(LAS, "Newlines<%zu>\n", cnt);
       }
    }
 }
@@ -347,8 +347,8 @@ void AlignStack::Flush()
    const ChunkStack::Entry *ce = NULL;
    chunk_t                 *pc;
 
-   LOG_FMT(LAS, "%s: m_aligned.Len()=%lu\n", __func__, m_aligned.Len());
-   LOG_FMT(LAS, "Flush (min=%lu, max=%lu)\n", m_min_col, m_max_col);
+   LOG_FMT(LAS, "%s: m_aligned.Len()=%zu\n", __func__, m_aligned.Len());
+   LOG_FMT(LAS, "Flush (min=%zu, max=%zu)\n", m_min_col, m_max_col);
    if (m_aligned.Len() == 1)
    {
       // check if we have *one* typedef in the line
@@ -423,7 +423,7 @@ void AlignStack::Flush()
       m_max_col = align_tab_column(m_max_col);
    }
 
-   LOG_FMT(LAS, "%s: m_aligned.Len()=%lu\n",
+   LOG_FMT(LAS, "%s: m_aligned.Len()=%zu\n",
            __func__, m_aligned.Len());
    for (idx = 0; idx < m_aligned.Len(); idx++)
    {
@@ -435,7 +435,7 @@ void AlignStack::Flush()
       {
          if (m_skip_first && (pc->column != tmp_col))
          {
-            LOG_FMT(LAS, "%s: %lu:%lu dropping first item due to skip_first\n",
+            LOG_FMT(LAS, "%s: %zu:%zu dropping first item due to skip_first\n",
                     __func__, pc->orig_line, pc->orig_col);
             m_skip_first = false;
             m_aligned.Pop_Front();
@@ -453,7 +453,7 @@ void AlignStack::Flush()
       pc->align.next = m_aligned.GetChunk(idx + 1);
 
       /* Indent the token, taking col_adj into account */
-      LOG_FMT(LAS, "%s: line %lu: '%s' to col %lu (adj=%d)\n",
+      LOG_FMT(LAS, "%s: line %zu: '%s' to col %zu (adj=%d)\n",
               __func__, pc->orig_line, pc->text(), tmp_col, pc->align.col_adj);
       align_to_column(pc, tmp_col);
    }
