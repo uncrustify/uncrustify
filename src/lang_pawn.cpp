@@ -40,7 +40,7 @@ chunk_t *pawn_add_vsemi_after(chunk_t *pc)
    chunk.column     += pc->len();
    chunk.parent_type = CT_NONE;
 
-   LOG_FMT(LPVSEMI, "%s: Added VSEMI on line %lu, prev='%s' [%s]\n",
+   LOG_FMT(LPVSEMI, "%s: Added VSEMI on line %zu, prev='%s' [%s]\n",
            __func__, pc->orig_line, pc->text(),
            get_token_name(pc->type));
 
@@ -334,7 +334,7 @@ static chunk_t *pawn_mark_function0(chunk_t *start, chunk_t *fcn)
       last = chunk_get_next(last);
       if ((last != NULL) && (last->type == CT_SEMICOLON))
       {
-         LOG_FMT(LPFUNC, "%s: %lu] '%s' proto due to semicolon\n",
+         LOG_FMT(LPFUNC, "%s: %zu] '%s' proto due to semicolon\n",
                  __func__, fcn->orig_line, fcn->text());
          set_chunk_type(fcn, CT_FUNC_PROTO);
          return(last);
@@ -345,7 +345,7 @@ static chunk_t *pawn_mark_function0(chunk_t *start, chunk_t *fcn)
       if ((start->type == CT_FORWARD) ||
           (start->type == CT_NATIVE))
       {
-         LOG_FMT(LPFUNC, "%s: %lu] '%s' [%s] proto due to %s\n",
+         LOG_FMT(LPFUNC, "%s: %zu] '%s' [%s] proto due to %s\n",
                  __func__, fcn->orig_line, fcn->text(),
                  get_token_name(fcn->type),
                  get_token_name(start->type));
@@ -369,7 +369,7 @@ static chunk_t *pawn_process_func_def(chunk_t *pc)
 
    set_chunk_type(pc, CT_FUNC_DEF);
 
-   LOG_FMT(LPFUNC, "%s: %lu:%lu %s\n",
+   LOG_FMT(LPFUNC, "%s: %zu:%zu %s\n",
            __func__, pc->orig_line, pc->orig_col, pc->text());
 
    /* If we don't have a brace open right after the close fparen, then
@@ -380,14 +380,14 @@ static chunk_t *pawn_process_func_def(chunk_t *pc)
 
    if (last != NULL)
    {
-      LOG_FMT(LPFUNC, "%s: %lu] last is '%s' [%s]\n",
+      LOG_FMT(LPFUNC, "%s: %zu] last is '%s' [%s]\n",
               __func__, last->orig_line, last->text(), get_token_name(last->type));
    }
 
    /* See if there is a state clause after the function */
    if ((last != NULL) && chunk_is_str(last, "<", 1))
    {
-      LOG_FMT(LPFUNC, "%s: %lu] '%s' has state angle open %s\n",
+      LOG_FMT(LPFUNC, "%s: %zu] '%s' has state angle open %s\n",
               __func__, pc->orig_line, pc->text(), get_token_name(last->type));
 
       set_chunk_type(last, CT_ANGLE_OPEN);
@@ -399,7 +399,7 @@ static chunk_t *pawn_process_func_def(chunk_t *pc)
 
       if (last != NULL)
       {
-         LOG_FMT(LPFUNC, "%s: %lu] '%s' has state angle close %s\n",
+         LOG_FMT(LPFUNC, "%s: %zu] '%s' has state angle close %s\n",
                  __func__, pc->orig_line, pc->text(), get_token_name(last->type));
          set_chunk_type(last, CT_ANGLE_CLOSE);
          set_chunk_parent(last, CT_FUNC_DEF);
@@ -422,7 +422,7 @@ static chunk_t *pawn_process_func_def(chunk_t *pc)
    }
    else
    {
-      LOG_FMT(LPFUNC, "%s: %lu] '%s' fdef: expected brace open: %s\n",
+      LOG_FMT(LPFUNC, "%s: %zu] '%s' fdef: expected brace open: %s\n",
               __func__, pc->orig_line, pc->text(), get_token_name(last->type));
 
       /* do not insert a vbrace before a preproc */
@@ -444,7 +444,7 @@ static chunk_t *pawn_process_func_def(chunk_t *pc)
       prev = chunk_get_next_ncnl(prev);
       do
       {
-         LOG_FMT(LPFUNC, "%s:%lu] check %s, level %lu\n",
+         LOG_FMT(LPFUNC, "%s:%zu] check %s, level %zu\n",
                  __func__, prev->orig_line, get_token_name(prev->type), prev->level);
          if ((prev->type == CT_NEWLINE) &&
              (prev->level == 0))
@@ -464,7 +464,7 @@ static chunk_t *pawn_process_func_def(chunk_t *pc)
 
       if (last != NULL)
       {
-         LOG_FMT(LPFUNC, "%s:%lu] ended on %s, level %lu\n",
+         LOG_FMT(LPFUNC, "%s:%zu] ended on %s, level %zu\n",
                  __func__, last->orig_line, get_token_name(last->type), last->level);
       }
 
@@ -514,7 +514,7 @@ chunk_t *pawn_check_vsemicolon(chunk_t *pc)
    {
       if (prev != NULL)
       {
-         LOG_FMT(LPVSEMI, "%s:  no  VSEMI on line %lu, prev='%s' [%s]\n",
+         LOG_FMT(LPVSEMI, "%s:  no  VSEMI on line %zu, prev='%s' [%s]\n",
                  __func__, prev->orig_line, prev->text(), get_token_name(prev->type));
       }
       return(pc);

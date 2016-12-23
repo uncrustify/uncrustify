@@ -203,13 +203,13 @@ int pf_check(struct parse_frame *frm, chunk_t *pc)
 
    if (pc->parent_type != next->type)
    {
-      LOG_FMT(LNOTE, "%s(%d): Preproc parent not set correctly on line %lu: got %s expected %s\n",
+      LOG_FMT(LNOTE, "%s(%d): Preproc parent not set correctly on line %zu: got %s expected %s\n",
               __func__, __LINE__, pc->orig_line, get_token_name(pc->parent_type),
               get_token_name(next->type));
       set_chunk_parent(pc, next->type);
    }
 
-   LOG_FMT(LPFCHK, "%s(%d): %lu] %s\n",
+   LOG_FMT(LPFCHK, "%s(%d): %zu] %s\n",
            __func__, __LINE__, pc->orig_line, get_token_name(pc->parent_type));
    pf_log_frms(LPFCHK, "TOP", frm);
 
@@ -288,7 +288,7 @@ int pf_check(struct parse_frame *frm, chunk_t *pc)
 
    if (txt != NULL)
    {
-      LOG_FMT(LPF, "%s(%d): %lu> %s: %s in_ifdef=%d/%d counts=%d/%d\n", __func__, __LINE__,
+      LOG_FMT(LPF, "%s(%d): %zu> %s: %s in_ifdef=%d/%d counts=%d/%d\n", __func__, __LINE__,
               pc->orig_line, get_token_name(pc->parent_type), txt,
               in_ifdef, frm->in_ifdef, b4_cnt, cpd.frame_count);
       pf_log_all(LPF);

@@ -478,7 +478,7 @@ static bool parse_comment(tok_ctx &ctx, chunk_t &pc)
 
       if (pc.str.find(ontext) >= 0)
       {
-         LOG_FMT(LBCTRL, "Found '%s' on line %lu\n", ontext, pc.orig_line);
+         LOG_FMT(LBCTRL, "Found '%s' on line %zu\n", ontext, pc.orig_line);
          cpd.unc_off = false;
       }
    }
@@ -492,7 +492,7 @@ static bool parse_comment(tok_ctx &ctx, chunk_t &pc)
 
       if (pc.str.find(offtext) >= 0)
       {
-         LOG_FMT(LBCTRL, "Found '%s' on line %lu\n", offtext, pc.orig_line);
+         LOG_FMT(LBCTRL, "Found '%s' on line %zu\n", offtext, pc.orig_line);
          cpd.unc_off = true;
          // Issue #842
          cpd.unc_off_used = true;
@@ -949,7 +949,7 @@ static bool parse_cs_string(tok_ctx &ctx, chunk_t &pc)
             log_sev_t warnlevel = (log_sev_t)cpd.settings[UO_warn_level_tabs_found_in_verbatim_string_literals].n;
 
             /* a tab char can't be replaced with \\t because escapes don't work in here-strings. best we can do is warn. */
-            LOG_FMT(warnlevel, "%s:%lu Detected non-replaceable tab char in literal string\n", cpd.filename, pc.orig_line);
+            LOG_FMT(warnlevel, "%s:%zu Detected non-replaceable tab char in literal string\n", cpd.filename, pc.orig_line);
             if (warnlevel < LWARN)
             {
                cpd.error_count++;
@@ -1787,7 +1787,7 @@ static bool parse_next(tok_ctx &ctx, chunk_t &pc)
    pc.type = CT_UNKNOWN;
    pc.str.append(ctx.get());
 
-   LOG_FMT(LWARN, "%s:%lu Garbage in col %d: %x\n",
+   LOG_FMT(LWARN, "%s:%zu Garbage in col %d: %x\n",
            cpd.filename, pc.orig_line, (int)ctx.c.col, pc.str[0]);
    cpd.error_count++;
    return(true);
@@ -1938,12 +1938,12 @@ void tokenize(const deque<int> &data, chunk_t *ref)
       }
       if (pc->type == CT_NEWLINE)
       {
-         LOG_FMT(LGUY, "%s(%d): (%lu)<NL> col=%lu\n",
+         LOG_FMT(LGUY, "%s(%d): (%zu)<NL> col=%zu\n",
                  __func__, __LINE__, pc->orig_line, pc->orig_col);
       }
       else
       {
-         LOG_FMT(LGUY, "%s(%d): text():%s, type:%s, orig_col=%lu, orig_col_end=%d\n",
+         LOG_FMT(LGUY, "%s(%d): text():%s, type:%s, orig_col=%zu, orig_col_end=%d\n",
                  __func__, __LINE__, pc->text(), get_token_name(pc->type), pc->orig_col, pc->orig_col_end);
       }
    }
