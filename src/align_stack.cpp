@@ -95,7 +95,8 @@ void AlignStack::Add(chunk_t *start, size_t seqnum)
    /* Check threshold limits */
    if ((m_max_col == 0) || (m_thresh == 0) ||
        (((start->column + m_gap) <= (m_max_col + m_thresh)) &&
-        (((start->column + m_gap) >= (m_max_col - m_thresh)) ||
+        (((start->column + m_gap + m_thresh) >= (m_max_col)) ||
+         // change the expression to mind negative expression
          (start->column >= m_min_col))))
    {
       /* we are adding it, so update the newline seqnum */
@@ -279,7 +280,7 @@ void AlignStack::Add(chunk_t *start, size_t seqnum)
 
       if (endcol > m_max_col)
       {
-         LOG_FMT(LAS, "Add-aligned [%lu/%lu/%lu]: line %lu, col %d : max_col old %d, new %lu - min_col %d\n",
+         LOG_FMT(LAS, "Add-aligned [%lu/%lu/%lu]: line %lu, col %d : max_col old %lu, new %lu - min_col %lu\n",
                  seqnum, m_nl_seqnum, m_seqnum,
                  ali->orig_line, ali->column, m_max_col, endcol, m_min_col);
          m_max_col = endcol;
@@ -295,7 +296,7 @@ void AlignStack::Add(chunk_t *start, size_t seqnum)
       }
       else
       {
-         LOG_FMT(LAS, "Add-aligned [%lu/%lu/%lu]: line %lu, col %d : col %lu <= %d - min_col %d\n",
+         LOG_FMT(LAS, "Add-aligned [%lu/%lu/%lu]: line %lu, col %d : col %lu <= %lu - min_col %lu\n",
                  seqnum, m_nl_seqnum, m_seqnum,
                  ali->orig_line, ali->column, endcol, m_max_col, m_min_col);
       }
@@ -306,7 +307,7 @@ void AlignStack::Add(chunk_t *start, size_t seqnum)
       m_skipped.Push_Back(start, seqnum);
       m_last_added = 2;
 
-      LOG_FMT(LAS, "Add-skipped [%lu/%lu/%lu]: line %lu, col %d <= %d + %d\n",
+      LOG_FMT(LAS, "Add-skipped [%lu/%lu/%lu]: line %lu, col %d <= %lu + %lu\n",
               seqnum, m_nl_seqnum, m_seqnum,
               start->orig_line, start->column, m_max_col, m_thresh);
    }
@@ -347,7 +348,7 @@ void AlignStack::Flush()
    chunk_t                 *pc;
 
    LOG_FMT(LAS, "%s: m_aligned.Len()=%lu\n", __func__, m_aligned.Len());
-   LOG_FMT(LAS, "Flush (min=%d, max=%d)\n", m_min_col, m_max_col);
+   LOG_FMT(LAS, "Flush (min=%lu, max=%lu)\n", m_min_col, m_max_col);
    if (m_aligned.Len() == 1)
    {
       // check if we have *one* typedef in the line

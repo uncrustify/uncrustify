@@ -138,7 +138,7 @@ static void align_stack(ChunkStack &cs, int col, bool align_single, log_sev_t se
          align_to_column(pc, col);
          chunk_flags_set(pc, PCF_WAS_ALIGNED);
 
-         LOG_FMT(sev, "%s: indented [%s] on line %lu to %d\n",
+         LOG_FMT(sev, "%s: indented [%s] on line %lu to %lu\n",
                  __func__, pc->text(), pc->orig_line, pc->column);
       }
    }
@@ -164,7 +164,7 @@ static void align_add(ChunkStack &cs, chunk_t *pc, size_t &max_col, size_t min_p
    if ((prev == NULL) || chunk_is_newline(prev))
    {
       min_col = squeeze ? 1 : pc->column;
-      LOG_FMT(LALADD, "%s: pc->orig_line=%lu, pc->col=%d max_col=%lu min_pad=%lu min_col=%lu\n",
+      LOG_FMT(LALADD, "%s: pc->orig_line=%lu, pc->col=%lu max_col=%lu min_pad=%lu min_col=%lu\n",
               __func__, pc->orig_line, pc->column, max_col, min_pad, min_col);
    }
    else
@@ -184,7 +184,7 @@ static void align_add(ChunkStack &cs, chunk_t *pc, size_t &max_col, size_t min_p
             min_col = pc->column;
          }
       }
-      LOG_FMT(LALADD, "%s: pc->orig_line=%lu, pc->col=%d max_col=%lu min_pad=%lu min_col=%lu multi:%s prev->col=%d prev->len()=%lu %s\n",
+      LOG_FMT(LALADD, "%s: pc->orig_line=%lu, pc->col=%lu max_col=%lu min_pad=%lu min_col=%lu multi:%s prev->col=%d prev->len()=%lu %s\n",
               __func__, pc->orig_line, pc->column, max_col, min_pad, min_col, (prev->type == CT_COMMENT_MULTI) ? "Y" : "N",
               (prev->type == CT_COMMENT_MULTI) ? prev->orig_col_end : (UINT32)prev->column, prev->len(), get_token_name(prev->type));
    }
@@ -252,7 +252,7 @@ void quick_indent_again(void)
             int col = pc->indent.ref->column + pc->indent.delta;
 
             indent_to_column(pc, col);
-            LOG_FMT(LINDENTAG, "%s: [%lu] indent [%s] to %d based on [%s] @ %lu:%d\n",
+            LOG_FMT(LINDENTAG, "%s: [%lu] indent [%s] to %d based on [%s] @ %lu:%lu\n",
                     __func__, pc->orig_line, pc->text(), col,
                     pc->indent.ref->text(),
                     pc->indent.ref->orig_line, pc->indent.ref->column);
@@ -427,7 +427,7 @@ void align_right_comments(void)
             /* If the comment is further right than the brace level... */
             if (pc->column >= max_col)
             {
-               LOG_FMT(LALTC, "Changing WHOLE comment on line %lu into a RIGHT-comment (col=%d col_ind=%lu max_col=%lu)\n",
+               LOG_FMT(LALTC, "Changing WHOLE comment on line %lu into a RIGHT-comment (col=%lu col_ind=%lu max_col=%lu)\n",
                        pc->orig_line, pc->column, pc->column_indent, max_col);
 
                chunk_flags_set(pc, PCF_RIGHT_COMMENT);
@@ -1442,7 +1442,7 @@ chunk_t *align_trailing_comments(chunk_t *start)
          if (cmt_type_cur == cmt_type_start)
          {
             col = 1 + (pc->brace_level * cpd.settings[UO_indent_columns].n);
-            LOG_FMT(LALADD, "%s: line=%lu col=%lu min_col=%lu pc->col=%d pc->len=%lu %s\n",
+            LOG_FMT(LALADD, "%s: line=%lu col=%lu min_col=%lu pc->col=%lu pc->len=%lu %s\n",
                     __func__, pc->orig_line, col, min_col, pc->column, pc->len(),
                     get_token_name(pc->type));
             if ((min_orig == 0) || (min_orig > pc->column))
@@ -1557,7 +1557,7 @@ static chunk_t *scan_ib_line(chunk_t *start, bool first_pass)
 
    if (pc != NULL)
    {
-      LOG_FMT(LSIB, "%s: start=%s col %d/%lu line %lu\n",
+      LOG_FMT(LSIB, "%s: start=%s col %lu/%lu line %lu\n",
               __func__, get_token_name(pc->type), pc->column, pc->orig_col, pc->orig_line);
    }
 
@@ -1584,7 +1584,7 @@ static chunk_t *scan_ib_line(chunk_t *start, bool first_pass)
          /* Is this a new entry? */
          if (idx >= cpd.al_cnt)
          {
-            LOG_FMT(LSIB, " - New   [%lu] %.2d/%lu - %10.10s\n",
+            LOG_FMT(LSIB, " - New   [%lu] %.2lu/%lu - %10.10s\n",
                     idx, pc->column, token_width, get_token_name(pc->type));
 
             cpd.al[cpd.al_cnt].type = pc->type;
@@ -1598,7 +1598,7 @@ static chunk_t *scan_ib_line(chunk_t *start, bool first_pass)
             /* expect to match stuff */
             if (cpd.al[idx].type == pc->type)
             {
-               LOG_FMT(LSIB, " - Match [%lu] %.2d/%lu - %10.10s",
+               LOG_FMT(LSIB, " - Match [%lu] %.2lu/%lu - %10.10s",
                        idx, pc->column, token_width, get_token_name(pc->type));
 
                /* Shift out based on column */
@@ -1606,7 +1606,7 @@ static chunk_t *scan_ib_line(chunk_t *start, bool first_pass)
                {
                   if (pc->column > cpd.al[idx].col)
                   {
-                     LOG_FMT(LSIB, " [ pc->col(%d) > col(%lu) ] ",
+                     LOG_FMT(LSIB, " [ pc->col(%lu) > col(%lu) ] ",
                              pc->column, cpd.al[idx].col);
 
                      ib_shift_out(idx, pc->column - cpd.al[idx].col);
