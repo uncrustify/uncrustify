@@ -655,7 +655,7 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
          if (!cpd.unc_off_used)
          {
             /* fatal error */
-            fprintf(stderr, "Unmatched BRACE_CLOSE\nat line=%lu, column=%lu\n",
+            fprintf(stderr, "Unmatched BRACE_CLOSE\nat line=%zu, column=%zu\n",
                     pc->orig_line, pc->orig_col);
             exit(EXIT_FAILURE);
          }
