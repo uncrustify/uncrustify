@@ -312,8 +312,8 @@ typedef enum
 
    /* Embedded SQL - always terminated with a semicolon */
    CT_SQL_EXEC,         /* the 'EXEC' in 'EXEC SQL ...' */
-   CT_SQL_BEGIN,        /* the 'EXEC' in 'EXEC SQL BEGIN ...' */
-   CT_SQL_END,          /* the 'EXEC' in 'EXEC SQL END ...' */
+   CT_SQL_BEGIN,        /* the 'BEGINN' in 'EXEC SQL BEGIN ...' */
+   CT_SQL_END,          /* the 'END' in 'EXEC SQL END ...' */
    CT_SQL_WORD,         /* CT_WORDs in the 'EXEC SQL' statement */
 
    /* Vala stuff */

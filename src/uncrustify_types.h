@@ -285,7 +285,7 @@ struct chunk_t
    UINT32       orig_col_end;     /* is always > 1 */
    UINT32       orig_prev_sp;     /* whitespace before this token */
    UINT64       flags;            /* see PCF_xxx */
-   int          column;           /* column of chunk */
+   size_t       column;           /* column of chunk */
    size_t       column_indent;    /* if 1st on a line, set to the 'indent'
                                    * column, which may be less than the real column
                                    * used to indent with tabs */

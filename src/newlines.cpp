@@ -210,11 +210,13 @@ chunk_t *newline_add_before(chunk_t *pc)
       return(prev);
    }
 
-   LOG_FMT(LNEWLINE, "%s: '%s' on line %lu, col %lu",
-           __func__, pc->text(), pc->orig_line, pc->orig_col);
+   LOG_FMT(LNEWLINE, "%s: '%s' on line %lu, col %lu, pc->column=%lu",
+           __func__, pc->text(), pc->orig_line, pc->orig_col, pc->column);
    log_func_stack_inline(LNEWLINE);
 
    setup_newline_add(prev, &nl, pc);
+   LOG_FMT(LNEWLINE, "%s: '%s' on line %lu, col %lu, nl.column=%lu\n",
+           __func__, nl.text(), nl.orig_line, nl.orig_col, nl.column);
 
    MARK_CHANGE();
    return(chunk_add_before(&nl, pc));

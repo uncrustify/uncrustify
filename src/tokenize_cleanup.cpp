@@ -348,7 +348,9 @@ void tokenize_cleanup(void)
       /* Interface is only a keyword in MS land if followed by 'class' or 'struct'
        * likewise, 'class' may be a member name in Java.
        */
-      if ((pc->type == CT_CLASS) && !CharTable::IsKw1(next->str[0]))
+      if ((pc->type == CT_CLASS) &&
+          !CharTable::IsKw1(next->str[0]) &&
+          pc->next->type != CT_DC_MEMBER)
       {
          set_chunk_type(pc, CT_WORD);
       }
@@ -470,7 +472,7 @@ void tokenize_cleanup(void)
       }
 
       /* Look for <newline> 'EXEC' 'SQL' */
-      if ((chunk_is_str(pc, "EXEC", 4) && chunk_is_str(next, "SQL", 3)) ||
+      if ((chunk_is_str_case(pc, "EXEC", 4) && chunk_is_str_case(next, "SQL", 3)) ||
           ((*pc->str.c_str() == '$') && (pc->type != CT_SQL_WORD)))
       {
          tmp = chunk_get_prev(pc);
