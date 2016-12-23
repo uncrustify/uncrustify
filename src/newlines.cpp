@@ -2629,7 +2629,6 @@ void newlines_cleanup_braces(bool first)
                 !chunk_is_newline(next) &&
                 !chunk_is_comment(next))
             {
-         // CT_PAREN_CLOSE
                newline_end_newline(pc);
             }
          }
