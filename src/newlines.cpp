@@ -2620,6 +2620,7 @@ void newlines_cleanup_braces(bool first)
             if ((next != NULL) &&
                 (next->type != CT_SEMICOLON) &&
                 (next->type != CT_COMMA) &&
+                (next->type != CT_SPAREN_CLOSE) &&   // Issue #664
                 (next->type != CT_SQUARE_CLOSE) &&
                 (next->type != CT_FPAREN_CLOSE) &&
                 (next->type != CT_WHILE_OF_DO) &&
@@ -2628,6 +2629,7 @@ void newlines_cleanup_braces(bool first)
                 !chunk_is_newline(next) &&
                 !chunk_is_comment(next))
             {
+         // CT_PAREN_CLOSE
                newline_end_newline(pc);
             }
          }
