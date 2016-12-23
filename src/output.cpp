@@ -348,8 +348,10 @@ void output_text(FILE *pfile)
                {
                   int orig_sp = (pc->orig_col - prev->orig_col_end);
                   pc->column = cpd.column + orig_sp;
+                  // the value might be negative --> use an int
+                  int columnDiff = cpd.column + orig_sp;
                   if ((cpd.settings[UO_sp_before_nl_cont].a != AV_IGNORE) &&
-                      (pc->column < (cpd.column + 1)))
+                      (columnDiff < (cpd.column + 1)))
                   {
                      pc->column = cpd.column + 1;
                   }

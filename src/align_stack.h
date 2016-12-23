@@ -24,13 +24,13 @@ public:
 
    ChunkStack m_aligned;   /* contains the token that is aligned */
    ChunkStack m_skipped;   /* contains the tokens sent to Add() */
-   int        m_max_col;
-   int        m_min_col;
+   size_t     m_max_col;
+   size_t     m_min_col;
    size_t     m_span;
-   int        m_thresh;
+   size_t     m_thresh;
    size_t     m_seqnum;
    size_t     m_nl_seqnum;
-   int        m_gap;
+   size_t     m_gap;
    bool       m_right_align;
    StarStyle  m_star_style;
    StarStyle  m_amp_style;
