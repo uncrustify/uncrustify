@@ -372,7 +372,7 @@ static void indent_pse_pop(struct parse_frame &frm, chunk_t *pc)
    {
       if (pc != NULL)
       {
-         LOG_FMT(LINDPSE, "%4lu] (pp=%d) CLOSE [%d,%s] on %s, started on line %d, level=%d/%zu\n",
+         LOG_FMT(LINDPSE, "%4zu] (pp=%d) CLOSE [%d,%s] on %s, started on line %d, level=%d/%zu\n",
                  pc->orig_line, cpd.pp_level, frm.pse_tos,
                  get_token_name(frm.pse[frm.pse_tos].type),
                  get_token_name(pc->type),
