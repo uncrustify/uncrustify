@@ -251,7 +251,7 @@ void output_parsed(FILE *pfile)
    fprintf(pfile, "# Line              Tag           Parent          Columns Br/Lvl/pp     Flag   Nl  Text");
    for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next(pc))
    {
-      fprintf(pfile, "\n# %3zd> %16.16s[%16.16s][%3zd/%3lu/%3d/%3d][%zu/%zu/%zu][%10" PRIx64 "][%zu-%d]",
+      fprintf(pfile, "\n# %3zu> %16.16s[%16.16s][%3zu/%3lu/%3d/%3d][%zu/%zu/%zu][%10" PRIx64 "][%zu-%d]",
               pc->orig_line, get_token_name(pc->type),
               get_token_name(pc->parent_type),
               pc->column, pc->orig_col, pc->orig_col_end, pc->orig_prev_sp,
