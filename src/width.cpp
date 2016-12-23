@@ -231,7 +231,7 @@ static void try_split_here(cw_entry &ent, chunk_t *pc)
 static bool split_line(chunk_t *start)
 {
    LOG_FUNC_ENTRY();
-   LOG_FMT(LSPLIT, "%s: line %lu, col %d token: '%s' [%s] (IN_FUNC=%d) ",
+   LOG_FMT(LSPLIT, "%s: line %lu, col %zd token: '%s' [%s] (IN_FUNC=%d) ",
            __func__, start->orig_line, start->column, start->text(),
            get_token_name(start->type),
            (start->flags & (PCF_IN_FCN_DEF | PCF_IN_FCN_CALL)) != 0);

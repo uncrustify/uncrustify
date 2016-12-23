@@ -251,7 +251,7 @@ void output_parsed(FILE *pfile)
    fprintf(pfile, "# Line              Tag           Parent          Columns Br/Lvl/pp     Flag   Nl  Text");
    for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next(pc))
    {
-      fprintf(pfile, "\n# %3zd> %16.16s[%16.16s][%3d/%3lu/%3d/%3d][%lu/%lu/%lu][%10" PRIx64 "][%lu-%d]",
+      fprintf(pfile, "\n# %3zd> %16.16s[%16.16s][%3zd/%3lu/%3d/%3d][%lu/%lu/%lu][%10" PRIx64 "][%lu-%d]",
               pc->orig_line, get_token_name(pc->type),
               get_token_name(pc->parent_type),
               pc->column, pc->orig_col, pc->orig_col_end, pc->orig_prev_sp,
@@ -401,7 +401,7 @@ void output_text(FILE *pfile)
       else if (pc->len() == 0)
       {
          /* don't do anything for non-visible stuff */
-         LOG_FMT(LOUTIND, " <%d> -", pc->column);
+         LOG_FMT(LOUTIND, " <%zd> -", pc->column);
       }
       else
       {
@@ -437,7 +437,7 @@ void output_text(FILE *pfile)
                          (chunk_is_comment(pc) &&
                           (cpd.settings[UO_indent_with_tabs].n != 0));
 
-            LOG_FMT(LOUTIND, "  %lu> col %d/%lu/%d - ", pc->orig_line, pc->column, pc->column_indent, cpd.column);
+            LOG_FMT(LOUTIND, "  %lu> col %zd/%lu/%d - ", pc->orig_line, pc->column, pc->column_indent, cpd.column);
          }
          else
          {
@@ -461,7 +461,7 @@ void output_text(FILE *pfile)
             {
                allow_tabs |= pc->after_tab;
             }
-            LOG_FMT(LOUTIND, " %d(%d) -", pc->column, allow_tabs);
+            LOG_FMT(LOUTIND, " %zd(%d) -", pc->column, allow_tabs);
          }
 
          output_to_column(pc->column, allow_tabs);

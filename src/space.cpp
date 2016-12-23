@@ -1822,7 +1822,7 @@ void space_text(void)
          while (chunk_is_blank(next) && !chunk_is_newline(next) &&
                 (next->type == CT_VBRACE_OPEN || next->type == CT_VBRACE_CLOSE))
          {
-            LOG_FMT(LSPACE, "%s: %lu:%lu Skip %s (%d+%lu)\n",
+            LOG_FMT(LSPACE, "%s: %lu:%lu Skip %s (%zd+%lu)\n",
                     __func__, next->orig_line, next->orig_col, get_token_name(next->type),
                     pc->column, pc->str.size());
             next->column = pc->column + pc->str.size();
@@ -2019,7 +2019,7 @@ void space_text(void)
          }
          next->column = column;
 
-         LOG_FMT(LSPACE, " = %s @ %d => %d\n",
+         LOG_FMT(LSPACE, " = %s @ %d => %zd\n",
                  (av == AV_IGNORE) ? "IGNORE" :
                  (av == AV_ADD) ? "ADD" :
                  (av == AV_REMOVE) ? "REMOVE" : "FORCE",

@@ -269,7 +269,7 @@ void AlignStack::Add(chunk_t *start, size_t seqnum)
       m_aligned.Push_Back(ali, seqnum);
       m_last_added = 1;
 
-      LOG_FMT(LAS, "Add-[%s]: line %lu, col %d, adj %d : ref=[%s] endcol=%lu\n",
+      LOG_FMT(LAS, "Add-[%s]: line %lu, col %zd, adj %d : ref=[%s] endcol=%lu\n",
               ali->text(), ali->orig_line, ali->column, ali->align.col_adj,
               ref->text(), endcol);
 
@@ -280,7 +280,7 @@ void AlignStack::Add(chunk_t *start, size_t seqnum)
 
       if (endcol > m_max_col)
       {
-         LOG_FMT(LAS, "Add-aligned [%lu/%lu/%lu]: line %lu, col %d : max_col old %lu, new %lu - min_col %lu\n",
+         LOG_FMT(LAS, "Add-aligned [%lu/%lu/%lu]: line %lu, col %zd : max_col old %lu, new %lu - min_col %lu\n",
                  seqnum, m_nl_seqnum, m_seqnum,
                  ali->orig_line, ali->column, m_max_col, endcol, m_min_col);
          m_max_col = endcol;
@@ -296,7 +296,7 @@ void AlignStack::Add(chunk_t *start, size_t seqnum)
       }
       else
       {
-         LOG_FMT(LAS, "Add-aligned [%lu/%lu/%lu]: line %lu, col %d : col %lu <= %lu - min_col %lu\n",
+         LOG_FMT(LAS, "Add-aligned [%lu/%lu/%lu]: line %lu, col %zd : col %lu <= %lu - min_col %lu\n",
                  seqnum, m_nl_seqnum, m_seqnum,
                  ali->orig_line, ali->column, endcol, m_max_col, m_min_col);
       }
@@ -307,7 +307,7 @@ void AlignStack::Add(chunk_t *start, size_t seqnum)
       m_skipped.Push_Back(start, seqnum);
       m_last_added = 2;
 
-      LOG_FMT(LAS, "Add-skipped [%lu/%lu/%lu]: line %lu, col %d <= %lu + %lu\n",
+      LOG_FMT(LAS, "Add-skipped [%lu/%lu/%lu]: line %lu, col %zd <= %lu + %lu\n",
               seqnum, m_nl_seqnum, m_seqnum,
               start->orig_line, start->column, m_max_col, m_thresh);
    }

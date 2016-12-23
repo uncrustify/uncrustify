@@ -150,7 +150,7 @@ void align_to_column(chunk_t *pc, int column)
       return;
    }
 
-   LOG_FMT(LINDLINE, "%s(%d): %lu] col %d on %s [%s] => %d\n",
+   LOG_FMT(LINDLINE, "%s(%d): %lu] col %zd on %s [%s] => %d\n",
            __func__, __LINE__, pc->orig_line, pc->column, pc->text(),
            get_token_name(pc->type), column);
 
@@ -209,7 +209,7 @@ void align_to_column(chunk_t *pc, int column)
             pc->column = min_col;
          }
       }
-      LOG_FMT(LINDLINED, "   %s set column of %s on line %lu to col %d (orig %lu)\n",
+      LOG_FMT(LINDLINED, "   %s set column of %s on line %lu to col %zd (orig %lu)\n",
               (almod == ALMODE_KEEP_ABS) ? "abs" :
               (almod == ALMODE_KEEP_REL) ? "rel" : "sft",
               get_token_name(pc->type), pc->orig_line, pc->column, pc->orig_col);
@@ -226,7 +226,7 @@ void align_to_column(chunk_t *pc, int column)
 void reindent_line(chunk_t *pc, int column)
 {
    LOG_FUNC_ENTRY();
-   LOG_FMT(LINDLINE, "%s(%d): %lu] col %d on '%s' [%s/%s] => %d",
+   LOG_FMT(LINDLINE, "%s(%d): %lu] col %zd on '%s' [%s/%s] => %d",
            __func__, __LINE__, pc->orig_line, pc->column, pc->text(),
            get_token_name(pc->type), get_token_name(pc->parent_type),
            column);
@@ -288,7 +288,7 @@ void reindent_line(chunk_t *pc, int column)
          {
             pc->column = min_col; // + 1;
          }
-         LOG_FMT(LINDLINE, "%s(%d): set comment on line %lu to col %d (orig %lu)\n",
+         LOG_FMT(LINDLINE, "%s(%d): set comment on line %lu to col %zd (orig %lu)\n",
                  __func__, __LINE__, pc->orig_line, pc->column, pc->orig_col);
       }
       else
@@ -307,7 +307,7 @@ void reindent_line(chunk_t *pc, int column)
          {
             LOG_FMT(LINDLINED, "'%s'", pc->text());
          }
-         LOG_FMT(LINDLINED, " to %d (orig %lu)\n", pc->column, pc->orig_col);
+         LOG_FMT(LINDLINED, " to %zd (orig %lu)\n", pc->column, pc->orig_col);
       }
    } while ((pc != NULL) && (pc->nl_count == 0));
 } // reindent_line
@@ -1931,7 +1931,7 @@ void indent_text(void)
                   cpd.settings[UO_indent_preserve_sql].b)
          {
             reindent_line(pc, sql_col + (pc->orig_col - sql_orig_col));
-            LOG_FMT(LINDENT, "Indent SQL: [%s] to %d (%d/%d)\n",
+            LOG_FMT(LINDENT, "Indent SQL: [%s] to %zd (%d/%d)\n",
                     pc->text(), pc->column, sql_col, sql_orig_col);
          }
          else if (((pc->flags & PCF_STMT_START) == 0) &&
@@ -2110,7 +2110,7 @@ void indent_text(void)
          {
             chunk_t *tmp = chunk_get_prev_type(prev, CT_QUESTION, -1);
             tmp = chunk_get_next_ncnl(tmp);
-            LOG_FMT(LINDENT, "%s: %lu] ternarydefcol => %d [%s]\n",
+            LOG_FMT(LINDENT, "%s: %lu] ternarydefcol => %zd [%s]\n",
                     __func__, pc->orig_line, tmp->column, pc->text());
             reindent_line(pc, tmp->column);
          }
@@ -2118,7 +2118,7 @@ void indent_text(void)
                   (pc->type == CT_COND_COLON))
          {
             chunk_t *tmp = chunk_get_prev_type(pc, CT_QUESTION, -1);
-            LOG_FMT(LINDENT, "%s: %lu] ternarydefcol => %d [%s]\n",
+            LOG_FMT(LINDENT, "%s: %lu] ternarydefcol => %zd [%s]\n",
                     __func__, pc->orig_line, tmp->column, pc->text());
             reindent_line(pc, tmp->column);
          }
@@ -2394,7 +2394,7 @@ static void indent_comment(chunk_t *pc, int col)
           !chunk_is_preproc(pp))
       {
          reindent_line(pc, prev->column);
-         LOG_FMT(LCMTIND, "rule 3 - prev comment, coldiff = %d, now in %d\n",
+         LOG_FMT(LCMTIND, "rule 3 - prev comment, coldiff = %d, now in %zd\n",
                  coldiff, pc->column);
          return;
       }
@@ -2405,7 +2405,7 @@ static void indent_comment(chunk_t *pc, int col)
        single_line_comment_indent_rule_applies(pc))
    {
       reindent_line(pc, col + cpd.settings[UO_indent_sing_line_comments].n);
-      LOG_FMT(LCMTIND, "rule 4 - single line comment indent, now in %d\n", pc->column);
+      LOG_FMT(LCMTIND, "rule 4 - single line comment indent, now in %zd\n", pc->column);
       return;
    }
    LOG_FMT(LCMTIND, "rule 5 - fall-through, stay in %d\n", col);
@@ -2567,7 +2567,7 @@ void indent_preproc(void)
          }
       }
 
-      LOG_FMT(LPPIS, "%s(%d): orig_line %lu to %d (len %lu, next->col %d)\n",
+      LOG_FMT(LPPIS, "%s(%d): orig_line %lu to %d (len %lu, next->col %zd)\n",
               __func__, __LINE__, pc->orig_line, 1 + pp_level, pc->len(),
               next ? next->column : -1);
    }
