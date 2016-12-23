@@ -365,3 +365,5 @@
 34100 empty.cfg                        cpp/bug_i_525.cpp
 34101 empty.cfg                        cpp/bug_i_646.cpp
 34105 bug_i_663.cfg                    cpp/bug_i_663.cpp
+34108 bug_i_666.cfg                    cpp/bug_i_666.cpp
+
