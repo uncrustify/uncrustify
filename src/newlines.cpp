@@ -384,7 +384,6 @@ static void newline_min_after(chunk_t *ref, INT32 count, UINT64 flag)
 chunk_t *newline_add_between(chunk_t *start, chunk_t *end)
 {
    LOG_FUNC_ENTRY();
-   chunk_t *pc;
 
    if ((start == NULL) || (end == NULL))
    {
@@ -404,7 +403,7 @@ chunk_t *newline_add_between(chunk_t *start, chunk_t *end)
    }
 
    /* Scan for a line break */
-   for (pc = start; pc != end; pc = chunk_get_next(pc))
+   for (chunk_t *pc = start; pc != end; pc = chunk_get_next(pc))
    {
       if (chunk_is_newline(pc))
       {
@@ -417,7 +416,7 @@ chunk_t *newline_add_between(chunk_t *start, chunk_t *end)
     */
    if (end->type == CT_BRACE_OPEN)
    {
-      pc = chunk_get_next(end);
+      chunk_t *pc = chunk_get_next(end);
       if (chunk_is_comment(pc))
       {
          pc = chunk_get_next(pc);
@@ -526,8 +525,6 @@ static bool newlines_if_for_while_switch(chunk_t *start, argval_t nl_opt)
 {
    LOG_FUNC_ENTRY();
    chunk_t *pc;
-   chunk_t *close_paren;
-   chunk_t *brace_open;
    bool    retval = false;
 
    if ((nl_opt == AV_IGNORE) ||
@@ -540,8 +537,8 @@ static bool newlines_if_for_while_switch(chunk_t *start, argval_t nl_opt)
    pc = chunk_get_next_ncnl(start);
    if ((pc != NULL) && (pc->type == CT_SPAREN_OPEN))
    {
-      close_paren = chunk_get_next_type(pc, CT_SPAREN_CLOSE, pc->level);
-      brace_open  = chunk_get_next_ncnl(close_paren);
+      chunk_t *close_paren = chunk_get_next_type(pc, CT_SPAREN_CLOSE, pc->level);
+      chunk_t *brace_open  = chunk_get_next_ncnl(close_paren);
 
       if ((brace_open != NULL) &&
           ((brace_open->type == CT_BRACE_OPEN) ||
@@ -601,7 +598,6 @@ static bool newlines_if_for_while_switch(chunk_t *start, argval_t nl_opt)
 static void newlines_if_for_while_switch_pre_blank_lines(chunk_t *start, argval_t nl_opt)
 {
    LOG_FUNC_ENTRY();
-   chunk_t *pc;
    chunk_t *prev;
    chunk_t *next;
    chunk_t *last_nl = NULL;
@@ -621,7 +617,7 @@ static void newlines_if_for_while_switch_pre_blank_lines(chunk_t *start, argval_
     *  2 newlines in a row (don't add)
     *  something else (don't remove)
     */
-   for (pc = chunk_get_prev(start); pc != NULL; pc = chunk_get_prev(pc))
+   for (chunk_t *pc = chunk_get_prev(start); pc != NULL; pc = chunk_get_prev(pc))
    {
       if (chunk_is_newline(pc))
       {
@@ -921,7 +917,6 @@ static void newlines_if_for_while_switch_post_blank_lines(chunk_t *start, argval
    chunk_t *next;
    chunk_t *prev;
    bool    have_pre_vbrace_nl = false;
-   int     nl_count;
 
    if ((nl_opt == AV_IGNORE) ||
        ((start->flags & PCF_IN_PREPROC) &&
@@ -1013,7 +1008,7 @@ static void newlines_if_for_while_switch_post_blank_lines(chunk_t *start, argval
       {
          /* if vbrace, have to check before and after */
          /* if chunk before vbrace, check its count */
-         nl_count = have_pre_vbrace_nl ? prev->nl_count : 0;
+         int nl_count = have_pre_vbrace_nl ? prev->nl_count : 0;
          if (chunk_is_newline(next = chunk_get_next_nvb(pc)))
          {
             nl_count += next->nl_count;
@@ -1080,7 +1075,6 @@ static void newlines_struct_enum_union(chunk_t *start, argval_t nl_opt, bool lea
 {
    LOG_FUNC_ENTRY();
    chunk_t *pc;
-   chunk_t *next;
 
    if ((nl_opt == AV_IGNORE) ||
        ((start->flags & PCF_IN_PREPROC) &&
@@ -1110,7 +1104,7 @@ static void newlines_struct_enum_union(chunk_t *start, argval_t nl_opt, bool lea
    if ((pc != NULL) && (pc->type == CT_BRACE_OPEN))
    {
       /* Skip over embedded C comments */
-      next = chunk_get_next(pc);
+      chunk_t *next = chunk_get_next(pc);
       while ((next != NULL) && (next->type == CT_COMMENT))
       {
          next = chunk_get_next(next);
@@ -1162,7 +1156,6 @@ static void newlines_do_else(chunk_t *start, argval_t nl_opt)
 {
    LOG_FUNC_ENTRY();
    chunk_t *next;
-   chunk_t *tmp;
 
    if ((nl_opt == AV_IGNORE) ||
        ((start->flags & PCF_IN_PREPROC) &&
@@ -1191,7 +1184,7 @@ static void newlines_do_else(chunk_t *start, argval_t nl_opt)
          if (nl_opt & AV_ADD)
          {
             newline_iarf_pair(start, chunk_get_next_ncnl(next), nl_opt);
-            tmp = chunk_get_next_type(next, CT_VBRACE_CLOSE, next->level);
+            chunk_t *tmp = chunk_get_next_type(next, CT_VBRACE_CLOSE, next->level);
             if (!chunk_is_newline(chunk_get_next_nc(tmp)) &&
                 !chunk_is_newline(chunk_get_prev_nc(tmp)))
             {
@@ -2219,7 +2212,6 @@ static bool one_liner_nl_ok(chunk_t *pc)
 void undo_one_liner(chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
-   chunk_t *tmp;
 
    if (pc && (pc->flags & PCF_ONE_LINER))
    {
@@ -2227,7 +2219,7 @@ void undo_one_liner(chunk_t *pc)
       chunk_flags_clr(pc, PCF_ONE_LINER);
 
       /* scan backward */
-      tmp = pc;
+      chunk_t *tmp = pc;
       while ((tmp = chunk_get_prev(tmp)) != NULL)
       {
          if (!(tmp->flags & PCF_ONE_LINER))
@@ -2680,14 +2672,13 @@ void newlines_cleanup_braces(bool first)
             if (pc->flags & PCF_ONE_LINER)
             {
                // split one-liner
-               chunk_t *temp;
                chunk_t *end = chunk_get_next(chunk_get_next_type(pc->next, CT_SEMICOLON, -1));
                /* Scan for clear flag */
 #ifdef DEBUG
                LOG_FMT(LGUY, "(%d) ", __LINE__);
 #endif
                LOG_FMT(LGUY, "\n");
-               for (temp = pc; temp != end; temp = chunk_get_next(temp))
+               for (chunk_t *temp = pc; temp != end; temp = chunk_get_next(temp))
                {
                   LOG_FMT(LGUY, "%s type=%s , level=%zu", temp->text(), get_token_name(temp->type), temp->level);
                   log_pcf_flags(LGUY, temp->flags);
@@ -2992,10 +2983,9 @@ static void nl_handle_define(chunk_t *pc)
 void newline_after_multiline_comment(void)
 {
    LOG_FUNC_ENTRY();
-   chunk_t *pc;
    chunk_t *tmp;
 
-   for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next(pc))
+   for (chunk_t *pc = chunk_get_head(); pc != NULL; pc = chunk_get_next(pc))
    {
       if (pc->type != CT_COMMENT_MULTI)
       {
@@ -3021,9 +3011,8 @@ void newline_after_multiline_comment(void)
 void newline_after_label_colon(void)
 {
    LOG_FUNC_ENTRY();
-   chunk_t *pc;
 
-   for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next(pc))
+   for (chunk_t *pc = chunk_get_head(); pc != NULL; pc = chunk_get_next(pc))
    {
       if (pc->type != CT_LABEL_COLON)
       {
@@ -3041,9 +3030,8 @@ void newline_after_label_colon(void)
 void newlines_insert_blank_lines(void)
 {
    LOG_FUNC_ENTRY();
-   chunk_t *pc;
 
-   for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next_ncnl(pc))
+   for (chunk_t *pc = chunk_get_head(); pc != NULL; pc = chunk_get_next_ncnl(pc))
    {
       if (pc->type == CT_IF)
       {
@@ -3299,7 +3287,6 @@ void newlines_eat_start_end(void)
 void newlines_chunk_pos(c_token_t chunk_type, tokenpos_e mode)
 {
    LOG_FUNC_ENTRY();
-   chunk_t *pc;
    chunk_t *next;
    chunk_t *prev;
    int     nl_flag;
@@ -3309,7 +3296,7 @@ void newlines_chunk_pos(c_token_t chunk_type, tokenpos_e mode)
       return;
    }
 
-   for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next_ncnl(pc))
+   for (chunk_t *pc = chunk_get_head(); pc != NULL; pc = chunk_get_next_ncnl(pc))
    {
       if (pc->type == chunk_type)
       {
@@ -3454,7 +3441,6 @@ void newlines_chunk_pos(c_token_t chunk_type, tokenpos_e mode)
 void newlines_class_colon_pos(c_token_t tok)
 {
    LOG_FUNC_ENTRY();
-   chunk_t    *pc;
    chunk_t    *next;
    chunk_t    *prev;
    chunk_t    *ccolon = NULL;
@@ -3476,7 +3462,7 @@ void newlines_class_colon_pos(c_token_t tok)
       pcc  = cpd.settings[UO_pos_constr_comma].tp;
    }
 
-   for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next_ncnl(pc))
+   for (chunk_t *pc = chunk_get_head(); pc != NULL; pc = chunk_get_next_ncnl(pc))
    {
       if (!ccolon && (pc->type != tok))
       {
@@ -3619,13 +3605,12 @@ static void _blank_line_max(chunk_t *pc, const char *text, uncrustify_options uo
 void do_blank_lines(void)
 {
    LOG_FUNC_ENTRY();
-   chunk_t *pc;
    chunk_t *next;
    chunk_t *prev;
    chunk_t *pcmt;
    int     old_nl;
 
-   for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next(pc))
+   for (chunk_t *pc = chunk_get_head(); pc != NULL; pc = chunk_get_next(pc))
    {
       bool line_added = false;
 

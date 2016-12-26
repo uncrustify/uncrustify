@@ -67,7 +67,8 @@ static int compare_chunks(chunk_t *pc1, chunk_t *pc2)
 static void do_the_sort(chunk_t **chunks, int num_chunks)
 {
    LOG_FUNC_ENTRY();
-   int start_idx, min_idx, idx;
+   int min_idx;
+   int idx;
 
    LOG_FMT(LSORT, "%s: %d chunks:", __func__, num_chunks);
    for (idx = 0; idx < num_chunks; idx++)
@@ -76,6 +77,7 @@ static void do_the_sort(chunk_t **chunks, int num_chunks)
    }
    LOG_FMT(LSORT, "\n");
 
+   int start_idx;
    for (start_idx = 0; start_idx < (num_chunks - 1); start_idx++)
    {
       /* Find the index of the minimum value */

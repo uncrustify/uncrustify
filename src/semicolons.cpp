@@ -45,13 +45,13 @@ void remove_extra_semicolons(void)
    LOG_FUNC_ENTRY();
    chunk_t *pc;
    chunk_t *next;
-   chunk_t *prev;
 
    pc = chunk_get_head();
    while (pc != NULL)
    {
       next = chunk_get_next_ncnl(pc);
 
+      chunk_t *prev;
       if ((pc->type == CT_SEMICOLON) && !(pc->flags & PCF_IN_PREPROC) &&
           ((prev = chunk_get_prev_ncnl(pc)) != NULL))
       {

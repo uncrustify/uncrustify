@@ -51,11 +51,10 @@ static void split_before_chunk(chunk_t *pc)
 void do_code_width(void)
 {
    LOG_FUNC_ENTRY();
-   chunk_t *pc;
 
    LOG_FMT(LSPLIT, "%s\n", __func__);
 
-   for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next(pc))
+   for (chunk_t *pc = chunk_get_head(); pc != NULL; pc = chunk_get_next(pc))
    {
       if (!chunk_is_newline(pc) &&
           !chunk_is_comment(pc) &&
@@ -112,9 +111,7 @@ static const token_pri pri_table[] =
 
 static int get_split_pri(c_token_t tok)
 {
-   int idx;
-
-   for (idx = 0; idx < (int)ARRAY_SIZE(pri_table); idx++)
+   for (int idx = 0; idx < (int)ARRAY_SIZE(pri_table); idx++)
    {
       if (pri_table[idx].tok == tok)
       {

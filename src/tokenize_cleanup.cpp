@@ -843,7 +843,6 @@ static void check_template(chunk_t *start)
    chunk_t *end;
    chunk_t *prev;
    chunk_t *next;
-   bool    in_if = false;
 
    LOG_FMT(LTEMPL, "%s: Line %zu, col %zu:", __func__, start->orig_line, start->orig_col);
 
@@ -911,6 +910,7 @@ static void check_template(chunk_t *start)
       LOG_FMT(LTEMPL, " - prev %s -", get_token_name(prev->type));
 
       /* Scan back and make sure we aren't inside square parens */
+      bool in_if = false;
       pc = start;
       while ((pc = chunk_get_prev_ncnl(pc, CNAV_PREPROC)) != NULL)
       {

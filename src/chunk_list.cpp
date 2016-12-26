@@ -544,9 +544,7 @@ chunk_t *chunk_get_prev_str(chunk_t *cur, const char *str, size_t len, int level
  */
 bool chunk_is_newline_between(chunk_t *start, chunk_t *end)
 {
-   chunk_t *pc;
-
-   for (pc = start; pc != end; pc = chunk_get_next(pc))
+   for (chunk_t *pc = start; pc != end; pc = chunk_get_next(pc))
    {
       if (chunk_is_newline(pc))
       {
