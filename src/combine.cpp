@@ -114,14 +114,14 @@ static chunk_t *flag_parens(chunk_t *po, UINT64 flags,
    paren_close = chunk_skip_to_match(po, CNAV_PREPROC);
    if (paren_close == NULL)
    {
-      LOG_FMT(LERR, "flag_parens: no match for [%s] at [%lu:%lu]",
+      LOG_FMT(LERR, "flag_parens: no match for [%s] at [%zu:%zu]",
               po->text(), po->orig_line, po->orig_col);
       log_func_stack_inline(LERR);
       cpd.error_count++;
       return(NULL);
    }
 
-   LOG_FMT(LFLPAREN, "flag_parens: %lu:%lu [%s] and %lu:%lu [%s] type=%s ptype=%s",
+   LOG_FMT(LFLPAREN, "flag_parens: %zu:%zu [%s] and %zu:%zu [%s] type=%s ptype=%s",
            po->orig_line, po->orig_col, po->text(),
            paren_close->orig_line, paren_close->orig_col, paren_close->text(),
            get_token_name(opentype), get_token_name(parenttype));
@@ -179,7 +179,7 @@ chunk_t *set_paren_parent(chunk_t *start, c_token_t parent)
    end = chunk_skip_to_match(start, CNAV_PREPROC);
    if (end != NULL)
    {
-      LOG_FMT(LFLPAREN, "set_paren_parent: %lu:%lu [%s] and %lu:%lu [%s] type=%s ptype=%s",
+      LOG_FMT(LFLPAREN, "set_paren_parent: %zu:%zu [%s] and %zu:%zu [%s] type=%s ptype=%s",
               start->orig_line, start->orig_col, start->text(),
               end->orig_line, end->orig_col, end->text(),
               get_token_name(start->type), get_token_name(parent));
@@ -270,7 +270,7 @@ static bool chunk_ends_type(chunk_t *start)
 
    for (/* nada */; pc != NULL; pc = chunk_get_prev_ncnl(pc))
    {
-      LOG_FMT(LFTYPE, "%s: [%s] %s flags %" PRIx64 " on line %lu, col %lu\n",
+      LOG_FMT(LFTYPE, "%s: [%s] %s flags %" PRIx64 " on line %zu, col %zu\n",
               __func__, get_token_name(pc->type), pc->text(),
               pc->flags, pc->orig_line, pc->orig_col);
 
@@ -350,19 +350,19 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
 #endif
    if (pc->type == CT_NEWLINE)
    {
-      LOG_FMT(LGUY, "%s: %lu:%lu CT_NEWLINE\n", __func__, pc->orig_line, pc->orig_col);
+      LOG_FMT(LGUY, "%s: %zu:%zu CT_NEWLINE\n", __func__, pc->orig_line, pc->orig_col);
    }
    else if (pc->type == CT_VBRACE_OPEN)
    {
-      LOG_FMT(LGUY, "%s: %lu:%lu CT_VBRACE_OPEN\n", __func__, pc->orig_line, pc->orig_col);
+      LOG_FMT(LGUY, "%s: %zu:%zu CT_VBRACE_OPEN\n", __func__, pc->orig_line, pc->orig_col);
    }
    else if (pc->type == CT_VBRACE_CLOSE)
    {
-      LOG_FMT(LGUY, "%s: %lu:%lu CT_VBRACE_CLOSE\n", __func__, pc->orig_line, pc->orig_col);
+      LOG_FMT(LGUY, "%s: %zu:%zu CT_VBRACE_CLOSE\n", __func__, pc->orig_line, pc->orig_col);
    }
    else
    {
-      LOG_FMT(LGUY, "%s: %lu:%lu %s\n", __func__, pc->orig_line, pc->orig_col, pc->text());
+      LOG_FMT(LGUY, "%s: %zu:%zu %s\n", __func__, pc->orig_line, pc->orig_col, pc->text());
    }
    // LOG_FMT(LSYS, " %3d > ['%s' %s] ['%s' %s] ['%s' %s]\n",
    //         pc->orig_line,
@@ -1272,7 +1272,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
 static void check_double_brace_init(chunk_t *bo1)
 {
    LOG_FUNC_ENTRY();
-   LOG_FMT(LJDBI, "%s: %lu:%lu", __func__, bo1->orig_line, bo1->orig_col);
+   LOG_FMT(LJDBI, "%s: %zu:%zu", __func__, bo1->orig_line, bo1->orig_col);
    chunk_t *pc = chunk_get_prev_ncnl(bo1);
    if (chunk_is_paren_close(pc))
    {
@@ -1284,7 +1284,7 @@ static void check_double_brace_init(chunk_t *bo1)
          chunk_t *bc1 = chunk_get_next(bc2);
          if (chunk_is_token(bc1, CT_BRACE_CLOSE))
          {
-            LOG_FMT(LJDBI, " - end %lu:%lu\n", bc2->orig_line, bc2->orig_col);
+            LOG_FMT(LJDBI, " - end %zu:%zu\n", bc2->orig_line, bc2->orig_col);
             /* delete bo2 and bc1 */
             bo1->str         += bo2->str;
             bo1->orig_col_end = bo2->orig_col_end;
@@ -1471,7 +1471,7 @@ static void mark_function_return_type(chunk_t *fname, chunk_t *start, c_token_t 
    if (pc)
    {
       /* Step backwards from pc and mark the parent of the return type */
-      LOG_FMT(LFCNR, "%s: (backwards) return type for '%s' @ %lu:%lu",
+      LOG_FMT(LFCNR, "%s: (backwards) return type for '%s' @ %zu:%zu",
               __func__, fname->text(), fname->orig_line, fname->orig_col);
 
       chunk_t *first = pc;
@@ -1527,7 +1527,7 @@ static void mark_function_return_type(chunk_t *fname, chunk_t *start, c_token_t 
 static bool mark_function_type(chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
-   LOG_FMT(LFTYPE, "%s: [%s] %s @ %lu:%lu\n",
+   LOG_FMT(LFTYPE, "%s: [%s] %s @ %zu:%zu\n",
            __func__, get_token_name(pc->type), pc->text(),
            pc->orig_line, pc->orig_col);
 
@@ -1554,7 +1554,7 @@ static bool mark_function_type(chunk_t *pc)
       }
       else
       {
-         LOG_FMT(LFTYPE, "%s: not a word '%s' [%s] @ %lu:%lu\n",
+         LOG_FMT(LFTYPE, "%s: not a word '%s' [%s] @ %zu:%zu\n",
                  __func__, varcnk->text(), get_token_name(varcnk->type),
                  varcnk->orig_line, varcnk->orig_col);
          goto nogo_exit;
@@ -1588,7 +1588,7 @@ static bool mark_function_type(chunk_t *pc)
    tmp = pc;
    while ((tmp = chunk_get_prev_ncnl(tmp)) != NULL)
    {
-      LOG_FMT(LFTYPE, " -- [%s] %s on line %lu, col %lu",
+      LOG_FMT(LFTYPE, " -- [%s] %s on line %zu, col %zu",
               get_token_name(tmp->type), tmp->text(),
               tmp->orig_line, tmp->orig_col);
 
@@ -1618,7 +1618,7 @@ static bool mark_function_type(chunk_t *pc)
       }
       else
       {
-         LOG_FMT(LFTYPE, " --  unexpected token [%s] %s on line %lu, col %lu\n",
+         LOG_FMT(LFTYPE, " --  unexpected token [%s] %s on line %zu, col %zu\n",
                  get_token_name(tmp->type), tmp->text(),
                  tmp->orig_line, tmp->orig_col);
          goto nogo_exit;
@@ -1679,7 +1679,7 @@ static bool mark_function_type(chunk_t *pc)
    tmp = pc;
    while ((tmp = chunk_get_prev_ncnl(tmp)) != NULL)
    {
-      LOG_FMT(LFTYPE, " ++ [%s] %s on line %lu, col %lu\n",
+      LOG_FMT(LFTYPE, " ++ [%s] %s on line %zu, col %zu\n",
               get_token_name(tmp->type), tmp->text(),
               tmp->orig_line, tmp->orig_col);
 
@@ -1715,7 +1715,7 @@ nogo_exit:
    tmp = chunk_get_next_ncnl(pc);
    if (chunk_is_paren_open(tmp))
    {
-      LOG_FMT(LFTYPE, "%s:%d setting FUNC_CALL on %lu:%lu\n",
+      LOG_FMT(LFTYPE, "%s:%d setting FUNC_CALL on %zu:%zu\n",
               __func__, __LINE__, tmp->orig_line, tmp->orig_col);
       flag_parens(tmp, 0, CT_FPAREN_OPEN, CT_FUNC_CALL, false);
    }
@@ -1778,7 +1778,7 @@ static chunk_t *process_return(chunk_t *pc)
       {
          if (cpd.settings[UO_mod_paren_on_return].a == AV_REMOVE)
          {
-            LOG_FMT(LRETURN, "%s: removing parens on line %lu\n",
+            LOG_FMT(LRETURN, "%s: removing parens on line %zu\n",
                     __func__, pc->orig_line);
 
             /* lower the level of everything */
@@ -1798,7 +1798,7 @@ static chunk_t *process_return(chunk_t *pc)
          }
          else
          {
-            LOG_FMT(LRETURN, "%s: keeping parens on line %lu\n",
+            LOG_FMT(LRETURN, "%s: keeping parens on line %zu\n",
                     __func__, pc->orig_line);
 
             /* mark & keep them */
@@ -1842,7 +1842,7 @@ static chunk_t *process_return(chunk_t *pc)
       chunk.orig_line = semi->orig_line;
       cpar            = chunk_add_before(&chunk, semi);
 
-      LOG_FMT(LRETURN, "%s: added parens on line %lu\n",
+      LOG_FMT(LRETURN, "%s: added parens on line %zu\n",
               __func__, pc->orig_line);
 
       for (temp = next; temp != cpar; temp = chunk_get_next(temp))
@@ -1906,7 +1906,7 @@ static void fix_casts(chunk_t *start)
    bool       doubtful_cast = false;
 
 
-   LOG_FMT(LCASTS, "%s:line %lu, col %lu:", __func__, start->orig_line, start->orig_col);
+   LOG_FMT(LCASTS, "%s:line %zu, col %zu:", __func__, start->orig_line, start->orig_col);
 
    prev = chunk_get_prev_ncnl(start);
    if ((prev != NULL) && (prev->type == CT_PP_DEFINED))
@@ -2323,7 +2323,7 @@ static void fix_typedef(chunk_t *start)
    chunk_t   *last_op = NULL;
    c_token_t tag;
 
-   LOG_FMT(LTYPEDEF, "%s: typedef @ %lu:%lu\n", __func__, start->orig_line, start->orig_col);
+   LOG_FMT(LTYPEDEF, "%s: typedef @ %zu:%zu\n", __func__, start->orig_line, start->orig_col);
 
    /* Mark everything in the typedef and scan for ")(", which makes it a
     * function type
@@ -2388,7 +2388,7 @@ static void fix_typedef(chunk_t *start)
       }
       set_chunk_parent(the_type, CT_TYPEDEF);
 
-      LOG_FMT(LTYPEDEF, "%s: fcn typedef [%s] on line %lu\n",
+      LOG_FMT(LTYPEDEF, "%s: fcn typedef [%s] on line %zu\n",
               __func__, the_type->text(), the_type->orig_line);
 
       /* If we are aligning on the open paren, grab that instead */
@@ -2398,7 +2398,7 @@ static void fix_typedef(chunk_t *start)
       }
       if (cpd.settings[UO_align_typedef_func].u != 0)
       {
-         LOG_FMT(LTYPEDEF, "%s:  -- align anchor on [%s] @ %lu:%lu\n",
+         LOG_FMT(LTYPEDEF, "%s:  -- align anchor on [%s] @ %zu:%zu\n",
                  __func__, the_type->text(), the_type->orig_line, the_type->orig_col);
          chunk_flags_set(the_type, PCF_ANCHOR);
       }
@@ -2423,7 +2423,7 @@ static void fix_typedef(chunk_t *start)
       if (the_type != NULL)
       {
          /* We have just a regular typedef */
-         LOG_FMT(LTYPEDEF, "%s: regular typedef [%s] on line %lu\n",
+         LOG_FMT(LTYPEDEF, "%s: regular typedef [%s] on line %zu\n",
                  __func__, the_type->text(), the_type->orig_line);
          chunk_flags_set(the_type, PCF_ANCHOR);
       }
@@ -2460,7 +2460,7 @@ static void fix_typedef(chunk_t *start)
 
    if (the_type != NULL)
    {
-      LOG_FMT(LTYPEDEF, "%s: %s typedef [%s] on line %lu\n",
+      LOG_FMT(LTYPEDEF, "%s: %s typedef [%s] on line %zu\n",
               __func__, get_token_name(tag), the_type->text(), the_type->orig_line);
       chunk_flags_set(the_type, PCF_ANCHOR);
    }
@@ -2507,19 +2507,19 @@ void combine_labels(void)
 #endif
       if (cur->type == CT_NEWLINE)
       {
-         LOG_FMT(LGUY, "%s: %lu:%lu CT_NEWLINE\n", __func__, cur->orig_line, cur->orig_col);
+         LOG_FMT(LGUY, "%s: %zu:%zu CT_NEWLINE\n", __func__, cur->orig_line, cur->orig_col);
       }
       else if (cur->type == CT_VBRACE_OPEN)
       {
-         LOG_FMT(LGUY, "%s: %lu:%lu CT_VBRACE_OPEN\n", __func__, cur->orig_line, cur->orig_col);
+         LOG_FMT(LGUY, "%s: %zu:%zu CT_VBRACE_OPEN\n", __func__, cur->orig_line, cur->orig_col);
       }
       else if (cur->type == CT_VBRACE_CLOSE)
       {
-         LOG_FMT(LGUY, "%s: %lu:%lu CT_VBRACE_CLOSE\n", __func__, cur->orig_line, cur->orig_col);
+         LOG_FMT(LGUY, "%s: %zu:%zu CT_VBRACE_CLOSE\n", __func__, cur->orig_line, cur->orig_col);
       }
       else
       {
-         LOG_FMT(LGUY, "%s: %lu:%lu %s\n", __func__, cur->orig_line, cur->orig_col, cur->text());
+         LOG_FMT(LGUY, "%s: %zu:%zu %s\n", __func__, cur->orig_line, cur->orig_col, cur->text());
       }
       if (!(next->flags & PCF_IN_OC_MSG) && /* filter OC case of [self class] msg send */
           ((next->type == CT_CLASS) ||
@@ -2640,7 +2640,7 @@ void combine_labels(void)
 #ifdef DEBUG
                LOG_FMT(LGUY, "(%d) ", __LINE__);
 #endif
-               LOG_FMT(LGUY, "%s: %lu:%lu, tmp=%s\n",
+               LOG_FMT(LGUY, "%s: %zu:%zu, tmp=%s\n",
                        __func__, tmp->orig_line, tmp->orig_col, (tmp->type == CT_NEWLINE) ? "<NL>" : tmp->text());
                log_pcf_flags(LGUY, tmp->flags);
                if (next->flags & PCF_IN_FCN_CALL)
@@ -2720,7 +2720,7 @@ void combine_labels(void)
                }
                else
                {
-                  LOG_FMT(LWARN, "%s:%lu unexpected colon in col %lu n-parent=%s c-parent=%s l=%lu bl=%lu\n",
+                  LOG_FMT(LWARN, "%s:%zu unexpected colon in col %zu n-parent=%s c-parent=%s l=%zu bl=%zu\n",
                           cpd.filename, next->orig_line, next->orig_col,
                           get_token_name(next->parent_type),
                           get_token_name(cur->parent_type),
@@ -2751,7 +2751,7 @@ static void mark_variable_stack(ChunkStack &cs, log_sev_t sev)
 
    if (var_name != NULL)
    {
-      LOG_FMT(LFCNP, "%s: parameter on line %lu :",
+      LOG_FMT(LFCNP, "%s: parameter on line %zu :",
               __func__, var_name->orig_line);
 
       int     word_cnt = 0;
@@ -2798,7 +2798,7 @@ static void fix_fcn_def_params(chunk_t *start)
       return;
    }
    LOG_FUNC_ENTRY();
-   LOG_FMT(LFCNP, "%s: %s [%s] on line %lu, level %lu\n",
+   LOG_FMT(LFCNP, "%s: %s [%s] on line %zu, level %zu\n",
            __func__, start->text(), get_token_name(start->type), start->orig_line, start->level);
 
    while ((start != NULL) && !chunk_is_paren_open(start))
@@ -2821,12 +2821,12 @@ static void fix_fcn_def_params(chunk_t *start)
       if (((start->len() == 1) && (start->str[0] == ')')) ||
           (pc->level < level))
       {
-         LOG_FMT(LFCNP, "%s: bailed on %s on line %lu\n",
+         LOG_FMT(LFCNP, "%s: bailed on %s on line %zu\n",
                  __func__, pc->text(), pc->orig_line);
          break;
       }
 
-      LOG_FMT(LFCNP, "%s: %s %s on line %lu, level %lu\n",
+      LOG_FMT(LFCNP, "%s: %s %s on line %zu, level %zu\n",
               __func__, (pc->level > level) ? "skipping" : "looking at",
               pc->text(), pc->orig_line, pc->level);
 
@@ -2898,7 +2898,7 @@ static chunk_t *fix_var_def(chunk_t *start)
    ChunkStack cs;
    int        idx, ref_idx;
 
-   LOG_FMT(LFVD, "%s: start[%lu:%lu]", __func__, pc->orig_line, pc->orig_col);
+   LOG_FMT(LFVD, "%s: start[%zu:%zu]", __func__, pc->orig_line, pc->orig_col);
 
    /* Scan for words and types and stars oh my! */
    while ((pc != NULL) &&
@@ -2980,7 +2980,7 @@ static chunk_t *fix_var_def(chunk_t *start)
       return(skip_to_next_statement(end));
    }
 
-   LOG_FMT(LFVD2, "%s:%lu TYPE : ", __func__, start->orig_line);
+   LOG_FMT(LFVD2, "%s:%zu TYPE : ", __func__, start->orig_line);
    for (idx = 0; idx < cs.Len() - 1; idx++)
    {
       tmp_pc = cs.Get(idx)->m_pc;
@@ -3070,7 +3070,7 @@ static chunk_t *mark_variable_definition(chunk_t *start)
       return(NULL);
    }
 
-   LOG_FMT(LVARDEF, "%s: line %lu, col %lu '%s' type %s\n",
+   LOG_FMT(LVARDEF, "%s: line %zu, col %zu '%s' type %s\n",
            __func__, pc->orig_line, pc->orig_col, pc->text(),
            get_token_name(pc->type));
 
@@ -3087,7 +3087,7 @@ static chunk_t *mark_variable_definition(chunk_t *start)
          }
          flags &= ~PCF_VAR_1ST;
 
-         LOG_FMT(LVARDEF, "%s:%lu marked '%s'[%s] in col %lu flags: %#" PRIx64 " -> %#" PRIx64 "\n",
+         LOG_FMT(LVARDEF, "%s:%zu marked '%s'[%s] in col %zu flags: %#" PRIx64 " -> %#" PRIx64 "\n",
                  __func__, pc->orig_line, pc->text(),
                  get_token_name(pc->type), pc->orig_col, flg, pc->flags);
       }
@@ -3391,7 +3391,7 @@ static void mark_function(chunk_t *pc)
       }
    }
 
-   LOG_FMT(LFCN, "%s: %lu] %s[%s] - parent=%s level=%lu/%lu, next=%s[%s] - level=%lu\n",
+   LOG_FMT(LFCN, "%s: %zu] %s[%s] - parent=%s level=%zu/%zu, next=%s[%s] - level=%zu\n",
            __func__, pc->orig_line, pc->text(),
            get_token_name(pc->type), get_token_name(pc->parent_type),
            pc->level, pc->brace_level,
@@ -3400,7 +3400,7 @@ static void mark_function(chunk_t *pc)
    if (pc->flags & PCF_IN_CONST_ARGS)
    {
       set_chunk_type(pc, CT_FUNC_CTOR_VAR);
-      LOG_FMT(LFCN, "  1) Marked [%s] as FUNC_CTOR_VAR on line %lu col %lu\n",
+      LOG_FMT(LFCN, "  1) Marked [%s] as FUNC_CTOR_VAR on line %zu col %zu\n",
               pc->text(), pc->orig_line, pc->orig_col);
       next = skip_template_next(next);
       if (next == NULL)
@@ -3429,7 +3429,7 @@ static void mark_function(chunk_t *pc)
 
    if ((paren_open == NULL) || (paren_close == NULL))
    {
-      LOG_FMT(LFCN, "No parens found for [%s] on line %lu col %lu\n",
+      LOG_FMT(LFCN, "No parens found for [%s] on line %zu col %zu\n",
               pc->text(), pc->orig_line, pc->orig_col);
       return;
    }
@@ -3480,17 +3480,17 @@ static void mark_function(chunk_t *pc)
       {
          if (tmp2)
          {
-            LOG_FMT(LFCN, "%s: [%lu/%lu] function variable [%s], changing [%s] into a type\n",
+            LOG_FMT(LFCN, "%s: [%zu/%zu] function variable [%s], changing [%s] into a type\n",
                     __func__, pc->orig_line, pc->orig_col, tmp2->text(), pc->text());
             set_chunk_type(tmp2, CT_FUNC_VAR);
             flag_parens(paren_open, 0, CT_PAREN_OPEN, CT_FUNC_VAR, false);
 
-            LOG_FMT(LFCN, "%s: paren open @ %lu:%lu\n",
+            LOG_FMT(LFCN, "%s: paren open @ %zu:%zu\n",
                     __func__, paren_open->orig_line, paren_open->orig_col);
          }
          else
          {
-            LOG_FMT(LFCN, "%s: [%lu/%lu] function type, changing [%s] into a type\n",
+            LOG_FMT(LFCN, "%s: [%zu/%zu] function type, changing [%s] into a type\n",
                     __func__, pc->orig_line, pc->orig_col, pc->text());
             if (tmp2)
             {
@@ -3511,7 +3511,7 @@ static void mark_function(chunk_t *pc)
          return;
       }
 
-      LOG_FMT(LFCN, "%s: chained function calls? [%lu.%lu] [%s]\n",
+      LOG_FMT(LFCN, "%s: chained function calls? [%zu.%zu] [%s]\n",
               __func__, pc->orig_line, pc->orig_col, pc->text());
    }
 
@@ -3554,7 +3554,7 @@ static void mark_function(chunk_t *pc)
             if (pc->str.equals(prev->str))
             {
                set_chunk_type(pc, CT_FUNC_CLASS_DEF);
-               LOG_FMT(LFCN, "(%d) %lu:%lu - FOUND %sSTRUCTOR for %s[%s]\n", __LINE__,
+               LOG_FMT(LFCN, "(%d) %zu:%zu - FOUND %sSTRUCTOR for %s[%s]\n", __LINE__,
                        prev->orig_line, prev->orig_col,
                        (destr != NULL) ? "DE" : "CON",
                        prev->text(), get_token_name(prev->type));
@@ -3738,7 +3738,7 @@ static void mark_function(chunk_t *pc)
 
    if (pc->type != CT_FUNC_DEF)
    {
-      LOG_FMT(LFCN, "  Detected %s '%s' on line %lu col %lu\n",
+      LOG_FMT(LFCN, "  Detected %s '%s' on line %zu col %zu\n",
               get_token_name(pc->type),
               pc->text(), pc->orig_line, pc->orig_col);
 
@@ -3782,14 +3782,14 @@ static void mark_function(chunk_t *pc)
             /* Set the parent for the semi for later */
             semi = tmp;
             set_chunk_type(pc, CT_FUNC_PROTO);
-            LOG_FMT(LFCN, "  2) Marked [%s] as FUNC_PROTO on line %lu col %lu\n",
+            LOG_FMT(LFCN, "  2) Marked [%s] as FUNC_PROTO on line %zu col %zu\n",
                     pc->text(), pc->orig_line, pc->orig_col);
             break;
          }
          else if (pc->type == CT_COMMA)
          {
             set_chunk_type(pc, CT_FUNC_CTOR_VAR);
-            LOG_FMT(LFCN, "  2) Marked [%s] as FUNC_CTOR_VAR on line %lu col %lu\n",
+            LOG_FMT(LFCN, "  2) Marked [%s] as FUNC_CTOR_VAR on line %zu col %zu\n",
                     pc->text(), pc->orig_line, pc->orig_col);
             break;
          }
@@ -3848,7 +3848,7 @@ static void mark_function(chunk_t *pc)
       if (!is_param)
       {
          set_chunk_type(pc, CT_FUNC_CTOR_VAR);
-         LOG_FMT(LFCN, "  3) Marked [%s] as FUNC_CTOR_VAR on line %lu col %lu\n",
+         LOG_FMT(LFCN, "  3) Marked [%s] as FUNC_CTOR_VAR on line %zu col %zu\n",
                  pc->text(), pc->orig_line, pc->orig_col);
       }
       else if (pc->brace_level > 0)
@@ -3870,7 +3870,7 @@ static void mark_function(chunk_t *pc)
                    (p_op->parent_type != CT_NAMESPACE))
                {
                   set_chunk_type(pc, CT_FUNC_CTOR_VAR);
-                  LOG_FMT(LFCN, "  4) Marked [%s] as FUNC_CTOR_VAR on line %lu col %lu\n",
+                  LOG_FMT(LFCN, "  4) Marked [%s] as FUNC_CTOR_VAR on line %zu col %zu\n",
                           pc->text(), pc->orig_line, pc->orig_col);
                }
             }
@@ -3949,7 +3949,7 @@ static void mark_cpp_constructor(chunk_t *pc)
       is_destr = true;
    }
 
-   LOG_FMT(LFTOR, "(%d) %lu:%lu FOUND %sSTRUCTOR for %s[%s] prev=%s[%s]",
+   LOG_FMT(LFTOR, "(%d) %zu:%zu FOUND %sSTRUCTOR for %s[%s] prev=%s[%s]",
            __LINE__, pc->orig_line, pc->orig_col,
            is_destr ? "DE" : "CON",
            pc->text(), get_token_name(pc->type),
@@ -3958,7 +3958,7 @@ static void mark_cpp_constructor(chunk_t *pc)
    paren_open = skip_template_next(chunk_get_next_ncnl(pc));
    if (!chunk_is_str(paren_open, "(", 1))
    {
-      LOG_FMT(LWARN, "%s:%lu Expected '(', got: [%s]\n",
+      LOG_FMT(LWARN, "%s:%zu Expected '(', got: [%s]\n",
               cpd.filename, paren_open->orig_line,
               paren_open->text());
       return;
@@ -4007,7 +4007,7 @@ static void mark_cpp_constructor(chunk_t *pc)
       {
          set_chunk_parent(tmp, CT_FUNC_CLASS_PROTO);
          set_chunk_type(pc, CT_FUNC_CLASS_PROTO);
-         LOG_FMT(LFCN, "  2) Marked [%s] as FUNC_CLASS_PROTO on line %lu col %lu\n",
+         LOG_FMT(LFCN, "  2) Marked [%s] as FUNC_CLASS_PROTO on line %zu col %zu\n",
                  pc->text(), pc->orig_line, pc->orig_col);
       }
    }
@@ -4048,7 +4048,7 @@ static void mark_class_ctor(chunk_t *start)
 
    if (pc == NULL)
    {
-      LOG_FMT(LFTOR, "%s: Called on %s on line %lu. Bailed on NULL\n",
+      LOG_FMT(LFTOR, "%s: Called on %s on line %zu. Bailed on NULL\n",
               __func__, pclass->text(), pclass->orig_line);
       return;
    }
@@ -4056,7 +4056,7 @@ static void mark_class_ctor(chunk_t *start)
    /* Add the class name */
    cs.Push_Back(pclass);
 
-   LOG_FMT(LFTOR, "%s: Called on %s on line %lu (next='%s')\n",
+   LOG_FMT(LFTOR, "%s: Called on %s on line %zu (next='%s')\n",
            __func__, pclass->text(), pclass->orig_line, pc->text());
 
    /* detect D template class: "class foo(x) { ... }" */
@@ -4084,13 +4084,13 @@ static void mark_class_ctor(chunk_t *start)
       {
          set_chunk_type(pc, CT_CLASS_COLON);
          flags |= PCF_IN_CLASS_BASE;
-         LOG_FMT(LFTOR, "%s: class colon on line %lu\n",
+         LOG_FMT(LFTOR, "%s: class colon on line %zu\n",
                  __func__, pc->orig_line);
       }
 
       if (chunk_is_semicolon(pc))
       {
-         LOG_FMT(LFTOR, "%s: bailed on semicolon on line %lu\n",
+         LOG_FMT(LFTOR, "%s: bailed on semicolon on line %zu\n",
                  __func__, pc->orig_line);
          return;
       }
@@ -4121,7 +4121,7 @@ static void mark_class_ctor(chunk_t *start)
 
       if ((pc->type == CT_BRACE_CLOSE) && (pc->brace_level < level))
       {
-         LOG_FMT(LFTOR, "%s: %lu] Hit brace close\n", __func__, pc->orig_line);
+         LOG_FMT(LFTOR, "%s: %zu] Hit brace close\n", __func__, pc->orig_line);
          pc = chunk_get_next_ncnl(pc, CNAV_PREPROC);
          if (pc && (pc->type == CT_SEMICOLON))
          {
@@ -4136,7 +4136,7 @@ static void mark_class_ctor(chunk_t *start)
          if ((next != NULL) && (next->len() == 1) && (next->str[0] == '('))
          {
             set_chunk_type(pc, CT_FUNC_CLASS_DEF);
-            LOG_FMT(LFTOR, "(%d) %lu] Marked CTor/DTor %s\n", __LINE__, pc->orig_line, pc->text());
+            LOG_FMT(LFTOR, "(%d) %zu] Marked CTor/DTor %s\n", __LINE__, pc->orig_line, pc->text());
             mark_cpp_constructor(pc);
          }
          else
@@ -4697,7 +4697,7 @@ static void mark_template_func(chunk_t *pc, chunk_t *pc_next)
       {
          if (angle_close->flags & PCF_IN_FCN_CALL)
          {
-            LOG_FMT(LTEMPFUNC, "%s: marking '%s' in line %lu as a FUNC_CALL\n",
+            LOG_FMT(LTEMPFUNC, "%s: marking '%s' in line %zu as a FUNC_CALL\n",
                     __func__, pc->text(), pc->orig_line);
             set_chunk_type(pc, CT_FUNC_CALL);
             flag_parens(after, PCF_IN_FCN_CALL, CT_FPAREN_OPEN, CT_FUNC_CALL, false);
@@ -4711,7 +4711,7 @@ static void mark_template_func(chunk_t *pc, chunk_t *pc_next)
              *   std::pair<int, double>(*it, double(*it) + 1.0));
              */
 
-            LOG_FMT(LTEMPFUNC, "%s: marking '%s' in line %lu as a FUNC_CALL 2\n",
+            LOG_FMT(LTEMPFUNC, "%s: marking '%s' in line %zu as a FUNC_CALL 2\n",
                     __func__, pc->text(), pc->orig_line);
             // its a function!!!
             set_chunk_type(pc, CT_FUNC_CALL);
@@ -4871,7 +4871,7 @@ static void handle_oc_class(chunk_t *pc)
    int     generic_level = 0;     //level of depth of generic
    int     do_pl         = 1;     //1 = no protocol found, 2 = '<' found, 0 = '>' found
 
-   LOG_FMT(LOCCLASS, "%s: start [%s] [%s] line %lu\n",
+   LOG_FMT(LOCCLASS, "%s: start [%s] [%s] line %zu\n",
            __func__, pc->text(), get_token_name(pc->parent_type), pc->orig_line);
 
    if (pc->parent_type == CT_OC_PROTOCOL)
@@ -4888,7 +4888,7 @@ static void handle_oc_class(chunk_t *pc)
    tmp = pc;
    while ((tmp = chunk_get_next_nnl(tmp)) != NULL)
    {
-      LOG_FMT(LOCCLASS, "%s:       %lu [%s]\n",
+      LOG_FMT(LOCCLASS, "%s:       %zu [%s]\n",
               __func__, tmp->orig_line, tmp->text());
 
       if (tmp->type == CT_OC_END)
@@ -5027,7 +5027,7 @@ static void handle_oc_block_literal(chunk_t *pc)
    /* block literal: '^ RTYPE ( ARGS ) { }'
     * RTYPE and ARGS are optional
     */
-   LOG_FMT(LOCBLK, "%s: block literal @ %lu:%lu\n", __func__, pc->orig_line, pc->orig_col);
+   LOG_FMT(LOCBLK, "%s: block literal @ %zu:%zu\n", __func__, pc->orig_line, pc->orig_col);
 
    apo = NULL;
    bbo = NULL;
@@ -5077,7 +5077,7 @@ static void handle_oc_block_literal(chunk_t *pc)
       chunk_t *apc = chunk_skip_to_match(apo);  /* arg paren close */
       if (chunk_is_paren_close(apc))
       {
-         LOG_FMT(LOCBLK, " -- marking parens @ %lu:%lu and %lu:%lu\n",
+         LOG_FMT(LOCBLK, " -- marking parens @ %zu:%zu and %zu:%zu\n",
                  apo->orig_line, apo->orig_col, apc->orig_line, apc->orig_col);
          flag_parens(apo, PCF_OC_ATYPE, CT_FPAREN_OPEN, CT_OC_BLOCK_EXPR, true);
          fix_fcn_def_params(apo);
@@ -5126,7 +5126,7 @@ static void handle_oc_block_type(chunk_t *pc)
 
    if (pc->flags & PCF_IN_TYPEDEF)
    {
-      LOG_FMT(LOCBLK, "%s: skip block type @ %lu:%lu -- in typedef\n",
+      LOG_FMT(LOCBLK, "%s: skip block type @ %zu:%zu -- in typedef\n",
               __func__, pc->orig_line, pc->orig_col);
       return;
    }
@@ -5171,7 +5171,7 @@ static void handle_oc_block_type(chunk_t *pc)
             set_chunk_type(nam, CT_FUNC_TYPE);
             pt = CT_FUNC_TYPE;
          }
-         LOG_FMT(LOCBLK, "%s: block type @ %lu:%lu (%s)[%s]\n",
+         LOG_FMT(LOCBLK, "%s: block type @ %zu:%zu (%s)[%s]\n",
                  __func__, pc->orig_line, pc->orig_col, nam->text(), get_token_name(nam->type));
          set_chunk_type(pc, CT_PTR_TYPE);
          set_chunk_parent(pc, pt);  //CT_OC_BLOCK_TYPE;
@@ -5280,7 +5280,7 @@ static void handle_oc_message_decl(chunk_t *pc)
    set_chunk_type(pc, CT_OC_SCOPE);
    set_chunk_parent(pc, pt);
 
-   LOG_FMT(LOCMSGD, "%s: %s @ %lu:%lu -", __func__, get_token_name(pt), pc->orig_line, pc->orig_col);
+   LOG_FMT(LOCMSGD, "%s: %s @ %zu:%zu -", __func__, get_token_name(pt), pc->orig_line, pc->orig_col);
 
    /* format: -(TYPE) NAME [: (TYPE)NAME */
 
@@ -5333,7 +5333,7 @@ static void handle_oc_message_decl(chunk_t *pc)
          tmp = handle_oc_md_type(pc, pt, PCF_OC_ATYPE, did_it);
          if (!did_it)
          {
-            LOG_FMT(LWARN, "%s: %lu:%lu expected type\n", __func__, pc->orig_line, pc->orig_col);
+            LOG_FMT(LWARN, "%s: %zu:%zu expected type\n", __func__, pc->orig_line, pc->orig_col);
             break;
          }
          pc = tmp;
@@ -5462,7 +5462,7 @@ static void handle_oc_message_send(chunk_t *os)
       return;
    }
 
-   LOG_FMT(LOCMSG, "%s: line %lu, col %lu\n", __func__, os->orig_line, os->orig_col);
+   LOG_FMT(LOCMSG, "%s: line %zu, col %zu\n", __func__, os->orig_line, os->orig_col);
 
    tmp = chunk_get_next_ncnl(cs);
    if (chunk_is_semicolon(tmp))
@@ -5483,7 +5483,7 @@ static void handle_oc_message_send(chunk_t *os)
    }
    else if ((tmp->type != CT_WORD) && (tmp->type != CT_TYPE) && (tmp->type != CT_STRING))
    {
-      LOG_FMT(LOCMSG, "%s: %lu:%lu expected identifier, not '%s' [%s]\n",
+      LOG_FMT(LOCMSG, "%s: %zu:%zu expected identifier, not '%s' [%s]\n",
               __func__, tmp->orig_line, tmp->orig_col,
               tmp->text(), get_token_name(tmp->type));
       return;
@@ -5936,7 +5936,7 @@ void remove_extra_returns(void)
              ((cl_br->parent_type == CT_FUNC_DEF) ||
               (cl_br->parent_type == CT_FUNC_CLASS_DEF)))
          {
-            LOG_FMT(LRMRETURN, "Removed 'return;' on line %lu\n", pc->orig_line);
+            LOG_FMT(LRMRETURN, "Removed 'return;' on line %zu\n", pc->orig_line);
             chunk_del(pc);
             chunk_del(semi);
             pc = cl_br;

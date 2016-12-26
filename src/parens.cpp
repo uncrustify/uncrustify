@@ -59,7 +59,7 @@ static void add_parens_between(chunk_t *first, chunk_t *last)
    chunk_t *first_n;
    chunk_t *last_p;
 
-   LOG_FMT(LPARADD, "%s: line %lu between %s [lvl=%lu] and %s [lvl=%lu]\n",
+   LOG_FMT(LPARADD, "%s: line %zu between %s [lvl=%zu] and %s [lvl=%zu]\n",
            __func__, first->orig_line,
            first->text(), first->level,
            last->text(), last->level);
@@ -126,7 +126,7 @@ static void check_bool_parens(chunk_t *popen, chunk_t *pclose, int nest)
    chunk_t *next;
    bool    hit_compare = false;
 
-   LOG_FMT(LPARADD, "%s(%d): popen on %lu, col %lu, pclose on %lu, col %lu, level=%lu\n",
+   LOG_FMT(LPARADD, "%s(%d): popen on %zu, col %zu, pclose on %zu, col %zu, level=%zu\n",
            __func__, nest,
            popen->orig_line, popen->orig_col,
            pclose->orig_line, pclose->orig_col,
@@ -137,7 +137,7 @@ static void check_bool_parens(chunk_t *popen, chunk_t *pclose, int nest)
    {
       if (pc->flags & PCF_IN_PREPROC)
       {
-         LOG_FMT(LPARADD2, " -- bail on PP %s [%s] at line %lu col %lu, level %lu\n",
+         LOG_FMT(LPARADD2, " -- bail on PP %s [%s] at line %zu col %zu, level %zu\n",
                  get_token_name(pc->type),
                  pc->text(), pc->orig_line, pc->orig_col, pc->level);
          return;
@@ -148,7 +148,7 @@ static void check_bool_parens(chunk_t *popen, chunk_t *pclose, int nest)
           (pc->type == CT_COND_COLON) ||
           (pc->type == CT_COMMA))
       {
-         LOG_FMT(LPARADD2, " -- %s [%s] at line %lu col %lu, level %lu\n",
+         LOG_FMT(LPARADD2, " -- %s [%s] at line %zu col %zu, level %zu\n",
                  get_token_name(pc->type),
                  pc->text(), pc->orig_line, pc->orig_col, pc->level);
          if (hit_compare)
@@ -160,7 +160,7 @@ static void check_bool_parens(chunk_t *popen, chunk_t *pclose, int nest)
       }
       else if (pc->type == CT_COMPARE)
       {
-         LOG_FMT(LPARADD2, " -- compare [%s] at line %lu col %lu, level %lu\n",
+         LOG_FMT(LPARADD2, " -- compare [%s] at line %zu col %zu, level %zu\n",
                  pc->text(), pc->orig_line, pc->orig_col, pc->level);
          hit_compare = true;
       }

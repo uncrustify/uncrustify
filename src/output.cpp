@@ -247,7 +247,7 @@ void output_parsed(FILE *pfile)
    fprintf(pfile, "# Line              Tag           Parent          Columns Br/Lvl/pp     Flag   Nl  Text");
    for (chunk_t *pc = chunk_get_head(); pc != NULL; pc = chunk_get_next(pc))
    {
-      fprintf(pfile, "\n# %3zd> %16.16s[%16.16s][%3d/%3zu/%3d/%3d][%zu/%zu/%zu][%10" PRIx64 "][%zu-%d]",
+      fprintf(pfile, "\n# %3zu> %16.16s[%16.16s][%3zu/%3zu/%3d/%3d][%zu/%zu/%zu][%10" PRIx64 "][%zu-%d]",
               pc->orig_line, get_token_name(pc->type),
               get_token_name(pc->parent_type),
               pc->column, pc->orig_col, pc->orig_col_end, pc->orig_prev_sp,
@@ -396,7 +396,7 @@ void output_text(FILE *pfile)
       else if (pc->len() == 0)
       {
          /* don't do anything for non-visible stuff */
-         LOG_FMT(LOUTIND, " <%d> -", pc->column);
+         LOG_FMT(LOUTIND, " <%zu> -", pc->column);
       }
       else
       {
@@ -432,7 +432,7 @@ void output_text(FILE *pfile)
                          (chunk_is_comment(pc) &&
                           (cpd.settings[UO_indent_with_tabs].n != 0));
 
-            LOG_FMT(LOUTIND, "  %lu> col %d/%lu/%d - ", pc->orig_line, pc->column, pc->column_indent, cpd.column);
+            LOG_FMT(LOUTIND, "  %zu> col %zu/%zu/%d - ", pc->orig_line, pc->column, pc->column_indent, cpd.column);
          }
          else
          {
@@ -456,7 +456,7 @@ void output_text(FILE *pfile)
             {
                allow_tabs |= pc->after_tab;
             }
-            LOG_FMT(LOUTIND, " %d(%d) -", pc->column, allow_tabs);
+            LOG_FMT(LOUTIND, " %zu(%d) -", pc->column, allow_tabs);
          }
 
          output_to_column(pc->column, allow_tabs);
@@ -2089,7 +2089,7 @@ void add_long_preprocessor_conditional_block_comment(void)
          {
             br_close = tmp;
 
-            LOG_FMT(LPPIF, "found #if / %s section on lines %lu and %lu, nl_count=%d\n",
+            LOG_FMT(LPPIF, "found #if / %s section on lines %zu and %zu, nl_count=%d\n",
                     (tmp->type == CT_PP_ENDIF ? "#endif" : "#else"),
                     br_open->orig_line, br_close->orig_line, nl_count);
 

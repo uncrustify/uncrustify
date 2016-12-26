@@ -113,13 +113,13 @@ static void chunk_log(chunk_t *pc, const char *text)
       chunk_t *prev = chunk_get_prev(pc);
       chunk_t *next = chunk_get_next(pc);
 
-      LOG_FMT(LCHUNK, " -- %s: %lu:%lu '%s' [%s]",
+      LOG_FMT(LCHUNK, " -- %s: %zu:%zu '%s' [%s]",
               text, pc->orig_line, pc->orig_col, pc->text(),
               get_token_name(pc->type));
 
       if (prev && next)
       {
-         LOG_FMT(LCHUNK, " @ between %lu:%lu '%s' [%s] and %lu:%lu '%s' [%s]",
+         LOG_FMT(LCHUNK, " @ between %zu:%zu '%s' [%s] and %zu:%zu '%s' [%s]",
                  prev->orig_line, prev->orig_col, prev->text(),
                  get_token_name(prev->type),
                  next->orig_line, next->orig_col, next->text(),
@@ -127,13 +127,13 @@ static void chunk_log(chunk_t *pc, const char *text)
       }
       else if (next)
       {
-         LOG_FMT(LCHUNK, " @ before %lu:%lu '%s' [%s]",
+         LOG_FMT(LCHUNK, " @ before %zu:%zu '%s' [%s]",
                  next->orig_line, next->orig_col, next->text(),
                  get_token_name(next->type));
       }
       else if (prev)
       {
-         LOG_FMT(LCHUNK, " @ after %lu:%lu '%s' [%s]",
+         LOG_FMT(LCHUNK, " @ after %zu:%zu '%s' [%s]",
                  prev->orig_line, prev->orig_col, prev->text(),
                  get_token_name(prev->type));
       }
@@ -507,7 +507,7 @@ chunk_t *chunk_get_prev_type(chunk_t *cur, c_token_t type,
       pc = chunk_get_prev(pc, nav);
       if (pc != NULL)
       {
-         LOG_FMT(LCHUNK, "%s(%d): pc: %s, type is %s, orig_line=%zd, orig_col=%zd\n",
+         LOG_FMT(LCHUNK, "%s(%d): pc: %s, type is %s, orig_line=%zu, orig_col=%zu\n",
                  __func__, __LINE__, pc->text(), get_token_name(pc->type), pc->orig_line, pc->orig_col);
       }
       if ((pc == NULL) ||
@@ -702,7 +702,7 @@ void set_chunk_type_real(chunk_t *pc, c_token_t tt)
    LOG_FUNC_ENTRY();
    if (pc && (pc->type != tt))
    {
-      LOG_FMT(LSETTYP, "set_chunk_type: %lu:%lu '%s' %s:%s => %s:%s",
+      LOG_FMT(LSETTYP, "set_chunk_type: %zu:%zu '%s' %s:%s => %s:%s",
               pc->orig_line, pc->orig_col, pc->text(),
               get_token_name(pc->type), get_token_name(pc->parent_type),
               get_token_name(tt), get_token_name(pc->parent_type));
@@ -717,7 +717,7 @@ void set_chunk_parent_real(chunk_t *pc, c_token_t pt)
    LOG_FUNC_ENTRY();
    if (pc && (pc->parent_type != pt))
    {
-      LOG_FMT(LSETPAR, "set_chunk_parent: %lu:%lu '%s' %s:%s => %s:%s",
+      LOG_FMT(LSETPAR, "set_chunk_parent: %zu:%zu '%s' %s:%s => %s:%s",
               pc->orig_line, pc->orig_col, pc->text(),
               get_token_name(pc->type), get_token_name(pc->parent_type),
               get_token_name(pc->type), get_token_name(pt));
@@ -735,7 +735,7 @@ void chunk_flags_set_real(chunk_t *pc, UINT64 clr_bits, UINT64 set_bits)
       UINT64 nflags = (pc->flags & ~clr_bits) | set_bits;
       if (pc->flags != nflags)
       {
-         LOG_FMT(LSETFLG, "set_chunk_flags: %016" PRIx64 "^%016" PRIx64 "=%016" PRIx64 " %lu:%lu '%s' %s:%s",
+         LOG_FMT(LSETFLG, "set_chunk_flags: %016" PRIx64 "^%016" PRIx64 "=%016" PRIx64 " %zu:%zu '%s' %s:%s",
                  pc->flags, pc->flags ^ nflags, nflags,
                  pc->orig_line, pc->orig_col, pc->text(),
                  get_token_name(pc->type), get_token_name(pc->parent_type));
