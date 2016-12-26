@@ -42,36 +42,37 @@ extern map<uncrustify_groups, group_map_value>   group_map;
 /**
  * Loads options from a file represented as a single char array.
  * Modifies: input char array, cpd.line_number
+ * Expects: \0 terminated char array
  *
  * @param configString char array that holds the whole config
  * @return EXIT_SUCCESS on success
  */
 int load_option_fileChar(char *configString)
 {
-   const int textLen         = strlen(configString);
-   char      *delimPos       = &configString[0];
-   char      *stringEnd      = &configString[textLen - 1];
-   char      *subStringStart = &configString[0];
+   char *delimPos       = &configString[0];
+   char *subStringStart = &configString[0];
 
    cpd.line_number = 0;
 
    while (true)
    {
-      delimPos = std::find(delimPos, stringEnd, '\n');
+      delimPos = strchr(delimPos, '\n');
+      if (delimPos == nullptr)
+      {
+         break;
+      }
 
-      // replaces \n with \0 to get a string with multiple terminated
-      // substrings inside
+      // replaces \n with \0 -> string including multiple terminated substrings
       *delimPos = '\0';
 
       process_option_line(subStringStart, "");
 
-      if (delimPos == stringEnd)
-      {
-         break;
-      }
       delimPos++;
       subStringStart = delimPos;
    }
+   //get last line, expectation: ends with \0
+   process_option_line(subStringStart, "");
+
    return(EXIT_SUCCESS);
 }
 
@@ -434,7 +435,10 @@ int loadConfig(string _cfg)
    }
 
    unique_ptr<char[]> cfg(new char[_cfg.length() + 1]);
-   std::strcpy(cfg.get(), _cfg.c_str());
+   strcpy(cfg.get(), _cfg.c_str());
+
+   // reset everything in case a config was loaded previously
+   set_option_defaults();
 
    if (load_option_fileChar(cfg.get()) != EXIT_SUCCESS)
    {
@@ -711,6 +715,7 @@ EMSCRIPTEN_BINDINGS(MainModule)
       .value(STRINGIFY(UO_indent_token_after_brace), UO_indent_token_after_brace)
       .value(STRINGIFY(UO_indent_cpp_lambda_body), UO_indent_cpp_lambda_body)
       .value(STRINGIFY(UO_indent_using_block), UO_indent_using_block)
+      .value(STRINGIFY(UO_indent_ternary_operator), UO_indent_ternary_operator)
       .value(STRINGIFY(UO_sp_paren_brace), UO_sp_paren_brace)
       .value(STRINGIFY(UO_sp_fparen_brace), UO_sp_fparen_brace)
       .value(STRINGIFY(UO_sp_fparen_dbrace), UO_sp_fparen_dbrace)
@@ -1111,6 +1116,7 @@ EMSCRIPTEN_BINDINGS(MainModule)
       .value(STRINGIFY(UO_nl_after_class), UO_nl_after_class)
       .value(STRINGIFY(UO_nl_max), UO_nl_max)
       .value(STRINGIFY(UO_nl_before_access_spec), UO_nl_before_access_spec)
+      .value(STRINGIFY(UO_nl_max_blank_in_func), UO_nl_max_blank_in_func)
       .value(STRINGIFY(UO_nl_after_access_spec), UO_nl_after_access_spec)
       .value(STRINGIFY(UO_nl_comment_func_def), UO_nl_comment_func_def)
       .value(STRINGIFY(UO_nl_after_try_catch_finally), UO_nl_after_try_catch_finally)
@@ -1208,7 +1214,8 @@ EMSCRIPTEN_BINDINGS(MainModule)
       .value(STRINGIFY(AT_NUM), AT_NUM)
       .value(STRINGIFY(AT_LINE), AT_LINE)
       .value(STRINGIFY(AT_POS), AT_POS)
-      .value(STRINGIFY(AT_STRING), AT_STRING);
+      .value(STRINGIFY(AT_STRING), AT_STRING)
+      .value(STRINGIFY(AT_UNUM), AT_UNUM);
 
    enum_<log_sev_t>(STRINGIFY(log_sev_t))
       .value(STRINGIFY(LSYS), LSYS)
