@@ -48,12 +48,10 @@ void AlignStack::ReAddSkipped()
       m_scratch.Set(m_skipped);
       m_skipped.Reset();
 
-      const ChunkStack::Entry *ce;
-
       /* Need to add them in order so that m_nl_seqnum is correct */
       for (size_t idx = 0; idx < m_scratch.Len(); idx++)
       {
-         ce = m_scratch.Get(idx);
+         const ChunkStack::Entry *ce = m_scratch.Get(idx);
          LOG_FMT(LAS, "ReAddSkipped [%lu] - ", ce->m_seqnum);
          Add(ce->m_pc, ce->m_seqnum);
       }
@@ -81,14 +79,8 @@ void AlignStack::Add(chunk_t *start, size_t seqnum)
 
    chunk_t *ali;
    chunk_t *ref;
-   chunk_t *tmp;
    chunk_t *prev;
    chunk_t *next;
-
-   size_t  col_adj = 0; /* Amount the column is shifted for 'dangle' mode */
-   size_t  tmp_col;
-   size_t  endcol;
-   size_t  gap;
 
    m_last_added = 0;
 
@@ -211,11 +203,12 @@ void AlignStack::Add(chunk_t *start, size_t seqnum)
          }
       }
 
+      chunk_t *tmp;
       /* Tighten down the spacing between ref and start */
       if (!cpd.settings[UO_align_keep_extra_space].b)
       {
-         tmp_col = ref->column;
-         tmp     = ref;
+         size_t tmp_col = ref->column;
+         tmp = ref;
          while (tmp != start)
          {
             next     = chunk_get_next(tmp);
@@ -229,8 +222,8 @@ void AlignStack::Add(chunk_t *start, size_t seqnum)
       }
 
       /* Set the column adjust and gap */
-      col_adj = 0;
-      gap     = 0;
+      size_t col_adj = 0; /* Amount the column is shifted for 'dangle' mode */
+      size_t gap     = 0;
       if (ref != ali)
       {
          gap = ali->column - (ref->column + ref->len());
@@ -249,7 +242,7 @@ void AlignStack::Add(chunk_t *start, size_t seqnum)
       }
 
       /* See if this pushes out the max_col */
-      endcol = ali->column + col_adj;
+      size_t endcol = ali->column + col_adj;
       if (gap < m_gap)
       {
          endcol += m_gap - gap;
@@ -342,9 +335,7 @@ void AlignStack::NewLines(size_t cnt)
 void AlignStack::Flush()
 {
    size_t                  last_seqnum = 0;
-   size_t                  idx;
-   size_t                  tmp_col;
-   const ChunkStack::Entry *ce = NULL;
+   const ChunkStack::Entry *ce         = NULL;
    chunk_t                 *pc;
 
    LOG_FMT(LAS, "%s: m_aligned.Len()=%lu\n", __func__, m_aligned.Len());
@@ -368,7 +359,7 @@ void AlignStack::Flush()
    m_max_col    = 0;
 
    /* Recalculate the max_col - it may have shifted since the last Add() */
-   for (idx = 0; idx < m_aligned.Len(); idx++)
+   for (size_t idx = 0; idx < m_aligned.Len(); idx++)
    {
       pc = m_aligned.Get(idx)->m_pc;
 
@@ -425,12 +416,12 @@ void AlignStack::Flush()
 
    LOG_FMT(LAS, "%s: m_aligned.Len()=%lu\n",
            __func__, m_aligned.Len());
-   for (idx = 0; idx < m_aligned.Len(); idx++)
+   for (size_t idx = 0; idx < m_aligned.Len(); idx++)
    {
       ce = m_aligned.Get(idx);
       pc = ce->m_pc;
 
-      tmp_col = m_max_col - pc->align.col_adj;
+      size_t tmp_col = m_max_col - pc->align.col_adj;
       if (idx == 0)
       {
          if (m_skip_first && (pc->column != tmp_col))
@@ -474,7 +465,7 @@ void AlignStack::Flush()
    else
    {
       /* Remove all items with seqnum < last_seqnum */
-      for (idx = 0; idx < m_skipped.Len(); idx++)
+      for (size_t idx = 0; idx < m_skipped.Len(); idx++)
       {
          if (m_skipped.Get(idx)->m_seqnum < last_seqnum)
          {

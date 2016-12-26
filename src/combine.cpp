@@ -110,7 +110,6 @@ static chunk_t *flag_parens(chunk_t *po, UINT64 flags,
 {
    LOG_FUNC_ENTRY();
    chunk_t *paren_close;
-   chunk_t *pc;
 
    paren_close = chunk_skip_to_match(po, CNAV_PREPROC);
    if (paren_close == NULL)
@@ -134,6 +133,7 @@ static chunk_t *flag_parens(chunk_t *po, UINT64 flags,
       if ((flags != 0) ||
           (parent_all && (parenttype != CT_NONE)))
       {
+         chunk_t *pc;
          for (pc = chunk_get_next(po, CNAV_PREPROC);
               pc != paren_close;
               pc = chunk_get_next(pc, CNAV_PREPROC))
@@ -200,25 +200,25 @@ chunk_t *set_paren_parent(chunk_t *start, c_token_t parent)
 static void flag_asm(chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
-   chunk_t *po;
-   chunk_t *tmp;
-   chunk_t *end;
 
-   tmp = chunk_get_next_ncnl(pc, CNAV_PREPROC);
+   chunk_t *tmp = chunk_get_next_ncnl(pc, CNAV_PREPROC);
    if (!chunk_is_token(tmp, CT_QUALIFIER))
    {
       return;
    }
-   po = chunk_get_next_ncnl(tmp, CNAV_PREPROC);
+
+   chunk_t *po = chunk_get_next_ncnl(tmp, CNAV_PREPROC);
    if (!chunk_is_paren_open(po))
    {
       return;
    }
-   end = chunk_skip_to_match(po, CNAV_PREPROC);
+
+   chunk_t *end = chunk_skip_to_match(po, CNAV_PREPROC);
    if (!end)
    {
       return;
    }
+
    set_chunk_parent(po, CT_ASM);
    set_chunk_parent(end, CT_ASM);
    for (tmp = chunk_get_next_ncnl(po, CNAV_PREPROC);
@@ -1322,8 +1322,6 @@ void fix_symbols(void)
 {
    LOG_FUNC_ENTRY();
    chunk_t *pc;
-   chunk_t *next;
-   chunk_t *prev;
    chunk_t dummy;
 
    cpd.unc_stage = US_FIX_SYMBOLS;
@@ -1357,12 +1355,12 @@ void fix_symbols(void)
    }
    while (pc != NULL)
    {
-      prev = chunk_get_prev_ncnl(pc, CNAV_PREPROC);
+      chunk_t *prev = chunk_get_prev_ncnl(pc, CNAV_PREPROC);
       if (prev == NULL)
       {
          prev = &dummy;
       }
-      next = chunk_get_next_ncnl(pc, CNAV_PREPROC);
+      chunk_t *next = chunk_get_next_ncnl(pc, CNAV_PREPROC);
       if (next == NULL)
       {
          next = &dummy;
@@ -2743,12 +2741,9 @@ static void mark_variable_stack(ChunkStack &cs, log_sev_t sev)
 {
    (void)sev;
    LOG_FUNC_ENTRY();
-   chunk_t *var_name;
-   chunk_t *word_type;
-   int     word_cnt = 0;
 
    /* throw out the last word and mark the rest */
-   var_name = cs.Pop_Back();
+   chunk_t *var_name = cs.Pop_Back();
    if (var_name && (var_name->prev->type == CT_DC_MEMBER))
    {
       cs.Push_Back(var_name);
@@ -2759,6 +2754,8 @@ static void mark_variable_stack(ChunkStack &cs, log_sev_t sev)
       LOG_FMT(LFCNP, "%s: parameter on line %lu :",
               __func__, var_name->orig_line);
 
+      int     word_cnt = 0;
+      chunk_t *word_type;
       while ((word_type = cs.Pop_Back()) != NULL)
       {
          if ((word_type->type == CT_WORD) || (word_type->type == CT_TYPE))
@@ -3319,7 +3316,6 @@ static void mark_function(chunk_t *pc)
    chunk_t *semi = NULL;
    chunk_t *paren_open;
    chunk_t *paren_close;
-   chunk_t *pc_op = NULL;
 
    prev = chunk_get_prev_ncnlnp(pc);
    next = chunk_get_next_ncnlnp(pc);
@@ -3331,7 +3327,7 @@ static void mark_function(chunk_t *pc)
    /* Find out what is before the operator */
    if (pc->parent_type == CT_OPERATOR)
    {
-      pc_op = chunk_get_prev_type(pc, CT_OPERATOR, pc->level);
+      chunk_t *pc_op = chunk_get_prev_type(pc, CT_OPERATOR, pc->level);
       if ((pc_op != NULL) && (pc_op->flags & PCF_EXPR_START))
       {
          set_chunk_type(pc, CT_FUNC_CALL);
@@ -4287,7 +4283,6 @@ void mark_comments(void)
    chunk_t *cur;
    chunk_t *next;
    bool    prev_nl = true;
-   bool    next_nl;
 
    cpd.unc_stage = US_MARK_COMMENTS;
 
@@ -4295,8 +4290,8 @@ void mark_comments(void)
 
    while (cur != NULL)
    {
-      next    = chunk_get_next_nvb(cur);
-      next_nl = (next == NULL) || chunk_is_newline(next);
+      next = chunk_get_next_nvb(cur);
+      bool next_nl = (next == NULL) || chunk_is_newline(next);
 
       if (chunk_is_comment(cur))
       {
@@ -4593,12 +4588,10 @@ static chunk_t *get_d_template_types(ChunkStack &cs, chunk_t *open_paren)
 
 static bool chunkstack_match(ChunkStack &cs, chunk_t *pc)
 {
-   chunk_t *tmp;
-   int     idx;
+   for (int idx = 0; idx < cs.Len(); idx++)
 
-   for (idx = 0; idx < cs.Len(); idx++)
    {
-      tmp = cs.GetChunk(idx);
+      chunk_t *tmp = cs.GetChunk(idx);
       if (pc->str.equals(tmp->str))
       {
          return(true);
@@ -5028,7 +5021,6 @@ static void handle_oc_block_literal(chunk_t *pc)
    }
 
    chunk_t *apo;  /* arg paren open */
-   chunk_t *apc;  /* arg paren close */
    chunk_t *bbo;  /* block brace open */
    chunk_t *bbc;  /* block brace close */
 
@@ -5082,7 +5074,7 @@ static void handle_oc_block_literal(chunk_t *pc)
    chunk_t *lbp; /* last before paren - end of return type, if any */
    if (apo)
    {
-      apc = chunk_skip_to_match(apo);
+      chunk_t *apc = chunk_skip_to_match(apo);  /* arg paren close */
       if (chunk_is_paren_close(apc))
       {
          LOG_FMT(LOCBLK, " -- marking parens @ %lu:%lu and %lu:%lu\n",
@@ -5139,23 +5131,17 @@ static void handle_oc_block_type(chunk_t *pc)
       return;
    }
 
-   chunk_t *tpo;  /* type paren open */
-   chunk_t *tpc;  /* type paren close */
-   chunk_t *nam;  /* name (if any) of '^' */
-   chunk_t *apo;  /* arg paren open */
-   chunk_t *apc;  /* arg paren close */
-
    /* make sure we have '( ^' */
-   tpo = chunk_get_prev_ncnl(pc);
+   chunk_t *tpo = chunk_get_prev_ncnl(pc); /* type paren open */
    if (chunk_is_paren_open(tpo))
    {
       /* block type: 'RTYPE (^LABEL)(ARGS)'
        * LABEL is optional.
        */
-      tpc = chunk_skip_to_match(tpo);  /* type close paren (after '^') */
-      nam = chunk_get_prev_ncnl(tpc);  /* name (if any) or '^' */
-      apo = chunk_get_next_ncnl(tpc);  /* arg open paren */
-      apc = chunk_skip_to_match(apo);  /* arg close paren */
+      chunk_t *tpc = chunk_skip_to_match(tpo);  /* type close paren (after '^') */
+      chunk_t *nam = chunk_get_prev_ncnl(tpc);  /* name (if any) or '^' */
+      chunk_t *apo = chunk_get_next_ncnl(tpc);  /* arg open paren */
+      chunk_t *apc = chunk_skip_to_match(apo);  /* arg close paren */
 
       // If this is a block literal instead of a block type, 'nam' will actually
       // be the closing bracket of the block.

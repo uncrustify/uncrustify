@@ -108,7 +108,8 @@ void encode_utf8(int ch, vector<UINT8> &res)
 static bool decode_utf8(const vector<UINT8> &in_data, deque<int> &out_data)
 {
    int idx = 0;
-   int ch, tmp, cnt;
+   int tmp;
+   int cnt;
 
    out_data.clear();
 
@@ -126,7 +127,7 @@ static bool decode_utf8(const vector<UINT8> &in_data, deque<int> &out_data)
 
    while (idx < (int)in_data.size())
    {
-      ch = in_data[idx++];
+      int ch = in_data[idx++];
       if (ch < 0x80)                   /* 1-byte sequence */
       {
          out_data.push_back(ch);
