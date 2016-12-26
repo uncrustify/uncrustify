@@ -93,7 +93,7 @@ static void log_rule2(int line, const char *rule, chunk_t *first, chunk_t *secon
    LOG_FUNC_ENTRY();
    if (second->type != CT_NEWLINE)
    {
-      LOG_FMT(LSPACE, "Spacing: line %lu [%s/%s] '%s' <===> [%s/%s] '%s' : %s[%d]%s",
+      LOG_FMT(LSPACE, "Spacing: line %zu [%s/%s] '%s' <===> [%s/%s] '%s' : %s[%d]%s",
               first->orig_line,
               get_token_name(first->type), get_token_name(first->parent_type),
               first->text(),
@@ -119,7 +119,6 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
    int      idx;
    argval_t arg;
    chunk_t  *next;
-   chunk_t  *prev;
 
    min_sp = 1;
 
@@ -1434,7 +1433,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
 
    if ((first->type == CT_PTR_TYPE) && CharTable::IsKw1(second->str[0]))
    {
-      prev = chunk_get_prev(first);
+      chunk_t *prev = chunk_get_prev(first);
       if ((prev != NULL) && (prev->type == CT_IN))
       {
          log_rule("sp_deref");
@@ -1798,7 +1797,7 @@ void space_text(void)
 #ifdef DEBUG
       LOG_FMT(LGUY, "(%d) ", __LINE__);
 #endif
-      LOG_FMT(LGUY, "%s: %lu:%lu %s %s\n",
+      LOG_FMT(LGUY, "%s: %zu:%zu %s %s\n",
               __func__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
       if ((cpd.settings[UO_use_options_overriding_for_qt_macros].b) &&
           ((strcmp(pc->text(), "SIGNAL") == 0) ||
@@ -1807,7 +1806,7 @@ void space_text(void)
 #ifdef DEBUG
          LOG_FMT(LGUY, "(%d) ", __LINE__);
 #endif
-         LOG_FMT(LGUY, "%lu: [%d] type %s SIGNAL/SLOT found\n",
+         LOG_FMT(LGUY, "%zu: [%d] type %s SIGNAL/SLOT found\n",
                  pc->orig_line, __LINE__, get_token_name(pc->type));
          // flag the chunk for a second processing
          chunk_flags_set(pc, PCF_IN_QT_MACRO);
@@ -1822,7 +1821,7 @@ void space_text(void)
          while (chunk_is_blank(next) && !chunk_is_newline(next) &&
                 (next->type == CT_VBRACE_OPEN || next->type == CT_VBRACE_CLOSE))
          {
-            LOG_FMT(LSPACE, "%s: %lu:%lu Skip %s (%d+%lu)\n",
+            LOG_FMT(LSPACE, "%s: %zu:%zu Skip %s (%zu+%zu)\n",
                     __func__, next->orig_line, next->orig_col, get_token_name(next->type),
                     pc->column, pc->str.size());
             next->column = pc->column + pc->str.size();
@@ -2019,7 +2018,7 @@ void space_text(void)
          }
          next->column = column;
 
-         LOG_FMT(LSPACE, " = %s @ %d => %d\n",
+         LOG_FMT(LSPACE, " = %s @ %d => %zu\n",
                  (av == AV_IGNORE) ? "IGNORE" :
                  (av == AV_ADD) ? "ADD" :
                  (av == AV_REMOVE) ? "REMOVE" : "FORCE",
@@ -2144,7 +2143,7 @@ int space_col_align(chunk_t *first, chunk_t *second)
    int      coldiff, min_sp;
    argval_t av;
 
-   LOG_FMT(LSPACE, "%s: %lu:%lu [%s/%s] '%s' <==> %lu:%lu [%s/%s] '%s'",
+   LOG_FMT(LSPACE, "%s: %zu:%zu [%s/%s] '%s' <==> %zu:%zu [%s/%s] '%s'",
            __func__, first->orig_line, first->orig_col,
            get_token_name(first->type), get_token_name(first->parent_type),
            first->text(),
@@ -2158,12 +2157,12 @@ int space_col_align(chunk_t *first, chunk_t *second)
    LOG_FMT(LSPACE, "%s: av=%d, ", __func__, av);
    if (first->nl_count)
    {
-      LOG_FMT(LSPACE, "nl_count=%lu, orig_col_end=%d", first->nl_count, first->orig_col_end);
+      LOG_FMT(LSPACE, "nl_count=%zu, orig_col_end=%d", first->nl_count, first->orig_col_end);
       coldiff = first->orig_col_end - 1;
    }
    else
    {
-      LOG_FMT(LSPACE, "len=%lu", first->len());
+      LOG_FMT(LSPACE, "len=%zu", first->len());
       coldiff = first->len();
    }
    switch (av)

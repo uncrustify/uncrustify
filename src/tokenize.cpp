@@ -299,7 +299,6 @@ static bool parse_comment(tok_ctx &ctx, chunk_t &pc)
    bool is_d    = (cpd.lang_flags & LANG_D) != 0;          // forcing value to bool
    bool is_cs   = (cpd.lang_flags & LANG_CS) != 0;         // forcing value to bool
    int  d_level = 0;
-   int  bs_cnt;
 
    /* does this start with '/ /' or '/ *' or '/ +' (d) */
    if ((ctx.peek() != '/') ||
@@ -321,7 +320,7 @@ static bool parse_comment(tok_ctx &ctx, chunk_t &pc)
       pc.type = CT_COMMENT_CPP;
       while (true)
       {
-         bs_cnt = 0;
+         int bs_cnt = 0;
          while (ctx.more())
          {
             ch = ctx.peek();
@@ -478,7 +477,7 @@ static bool parse_comment(tok_ctx &ctx, chunk_t &pc)
 
       if (pc.str.find(ontext) >= 0)
       {
-         LOG_FMT(LBCTRL, "Found '%s' on line %lu\n", ontext, pc.orig_line);
+         LOG_FMT(LBCTRL, "Found '%s' on line %zu\n", ontext, pc.orig_line);
          cpd.unc_off = false;
       }
    }
@@ -492,7 +491,7 @@ static bool parse_comment(tok_ctx &ctx, chunk_t &pc)
 
       if (pc.str.find(offtext) >= 0)
       {
-         LOG_FMT(LBCTRL, "Found '%s' on line %lu\n", offtext, pc.orig_line);
+         LOG_FMT(LBCTRL, "Found '%s' on line %zu\n", offtext, pc.orig_line);
          cpd.unc_off = true;
          // Issue #842
          cpd.unc_off_used = true;
@@ -511,7 +510,7 @@ static bool parse_comment(tok_ctx &ctx, chunk_t &pc)
  */
 static bool parse_code_placeholder(tok_ctx &ctx, chunk_t &pc)
 {
-   int last2 = 0, last1 = 0;
+   int last1 = 0;
 
    if ((ctx.peek() != '<') || (ctx.peek(1) != '#'))
    {
@@ -527,7 +526,7 @@ static bool parse_code_placeholder(tok_ctx &ctx, chunk_t &pc)
    /* grab everything until '#>', fail if not found. */
    while (ctx.more())
    {
-      last2 = last1;
+      int last2 = last1;
       last1 = ctx.get();
       pc.str.append(last1);
 
@@ -949,7 +948,7 @@ static bool parse_cs_string(tok_ctx &ctx, chunk_t &pc)
             log_sev_t warnlevel = (log_sev_t)cpd.settings[UO_warn_level_tabs_found_in_verbatim_string_literals].n;
 
             /* a tab char can't be replaced with \\t because escapes don't work in here-strings. best we can do is warn. */
-            LOG_FMT(warnlevel, "%s:%lu Detected non-replaceable tab char in literal string\n", cpd.filename, pc.orig_line);
+            LOG_FMT(warnlevel, "%s:%zu Detected non-replaceable tab char in literal string\n", cpd.filename, pc.orig_line);
             if (warnlevel < LWARN)
             {
                cpd.error_count++;
@@ -1167,7 +1166,6 @@ static bool parse_cr_string(tok_ctx &ctx, chunk_t &pc, int q_idx)
  */
 bool parse_word(tok_ctx &ctx, chunk_t &pc, bool skipcheck)
 {
-   int             ch;
    static unc_text intr_txt("@interface");
 
    /* The first character is already valid */
@@ -1176,7 +1174,7 @@ bool parse_word(tok_ctx &ctx, chunk_t &pc, bool skipcheck)
 
    while (ctx.more())
    {
-      ch = ctx.peek();
+      int ch = ctx.peek();
       if (CharTable::IsKw2(ch))
       {
          pc.str.append(ctx.get());
@@ -1476,7 +1474,6 @@ static bool parse_ignored(tok_ctx &ctx, chunk_t &pc)
 static bool parse_next(tok_ctx &ctx, chunk_t &pc)
 {
    const chunk_tag_t *punc;
-   int               ch1;
 
    //chunk_t           pc_temp;
 
@@ -1714,8 +1711,8 @@ static bool parse_next(tok_ctx &ctx, chunk_t &pc)
       /* Not D stuff */
 
       /* Check for L'a', L"abc", 'a', "abc", <abc> strings */
-      ch  = ctx.peek();
-      ch1 = ctx.peek(1);
+      ch = ctx.peek();
+      int ch1 = ctx.peek(1);
       if ((((ch == 'L') || (ch == 'S')) &&
            ((ch1 == '"') || (ch1 == '\''))) ||
           (ch == '"') ||
@@ -1787,7 +1784,7 @@ static bool parse_next(tok_ctx &ctx, chunk_t &pc)
    pc.type = CT_UNKNOWN;
    pc.str.append(ctx.get());
 
-   LOG_FMT(LWARN, "%s:%lu Garbage in col %d: %x\n",
+   LOG_FMT(LWARN, "%s:%zu Garbage in col %d: %x\n",
            cpd.filename, pc.orig_line, (int)ctx.c.col, pc.str[0]);
    cpd.error_count++;
    return(true);
@@ -1938,12 +1935,12 @@ void tokenize(const deque<int> &data, chunk_t *ref)
       }
       if (pc->type == CT_NEWLINE)
       {
-         LOG_FMT(LGUY, "%s(%d): (%lu)<NL> col=%lu\n",
+         LOG_FMT(LGUY, "%s(%d): (%zu)<NL> col=%zu\n",
                  __func__, __LINE__, pc->orig_line, pc->orig_col);
       }
       else
       {
-         LOG_FMT(LGUY, "%s(%d): text():%s, type:%s, orig_col=%lu, orig_col_end=%d\n",
+         LOG_FMT(LGUY, "%s(%d): text():%s, type:%s, orig_col=%zu, orig_col_end=%d\n",
                  __func__, __LINE__, pc->text(), get_token_name(pc->type), pc->orig_col, pc->orig_col_end);
       }
    }
@@ -1982,9 +1979,7 @@ void tokenize(const deque<int> &data, chunk_t *ref)
 // int str_find(const char *needle, int needle_len,
 //              const char *haystack, int haystack_len)
 // {
-//    int idx;
-//
-//    for (idx = 0; idx < (haystack_len - needle_len); idx++)
+//    for (int idx = 0; idx < (haystack_len - needle_len); idx++)
 //    {
 //       if (memcmp(needle, haystack + idx, needle_len) == 0)
 //       {

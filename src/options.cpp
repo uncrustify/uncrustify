@@ -1613,8 +1613,6 @@ const option_map_value *get_option_name(uncrustify_options option)
 static void convert_value(const option_map_value *entry, const char *val, op_val_t *dest)
 {
    const option_map_value *tmp;
-   bool                   btrue;
-   int                    mult;
 
    if (entry->type == AT_LINE)
    {
@@ -1635,7 +1633,7 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
       }
       if (strcasecmp(val, "AUTO") != 0)
       {
-         LOG_FMT(LWARN, "%s:%d Expected AUTO, LF, CRLF, or CR for %s, got %s\n",
+         LOG_FMT(LERR, "%s:%d Expected AUTO, LF, CRLF, or CR for %s, got %s\n",
                  cpd.filename, cpd.line_number, entry->name, val);
          cpd.error_count++;
       }
@@ -1682,7 +1680,7 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
       }
       if (strcasecmp(val, "IGNORE") != 0)
       {
-         LOG_FMT(LWARN, "%s:%d Expected IGNORE, JOIN, LEAD, LEAD_BREAK, LEAD_FORCE, "
+         LOG_FMT(LERR, "%s:%d Expected IGNORE, JOIN, LEAD, LEAD_BREAK, LEAD_FORCE, "
                  "TRAIL, TRAIL_BREAK, TRAIL_FORCE for %s, got %s\n",
                  cpd.filename, cpd.line_number, entry->name, val);
          cpd.error_count++;
@@ -1704,7 +1702,7 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
       else
       {
          /* Try to see if it is a variable */
-         mult = 1;
+         int mult = 1;
          if (*val == '-')
          {
             mult = -1;
@@ -1718,7 +1716,7 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
             return;
          }
       }
-      LOG_FMT(LWARN, "%s:%d Expected a number for %s, got %s\n",
+      LOG_FMT(LERR, "%s:%d Expected a number for %s, got %s\n",
               cpd.filename, cpd.line_number, entry->name, val);
       cpd.error_count++;
       dest->n = 0;
@@ -1744,7 +1742,7 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
          return;
       }
 
-      btrue = true;
+      bool btrue = true;
       if ((*val == '-') || (*val == '~'))
       {
          btrue = false;
@@ -1756,7 +1754,7 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
          dest->b = cpd.settings[tmp->id].b ? btrue : !btrue;
          return;
       }
-      LOG_FMT(LWARN, "%s:%d Expected 'True' or 'False' for %s, got %s\n",
+      LOG_FMT(LERR, "%s:%d Expected 'True' or 'False' for %s, got %s\n",
               cpd.filename, cpd.line_number, entry->name, val);
       cpd.error_count++;
       dest->b = false;
@@ -1796,7 +1794,7 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
       dest->a = cpd.settings[tmp->id].a;
       return;
    }
-   LOG_FMT(LWARN, "%s:%d Expected 'Add', 'Remove', 'Force', or 'Ignore' for %s, got %s\n",
+   LOG_FMT(LERR, "%s:%d Expected 'Add', 'Remove', 'Force', or 'Ignore' for %s, got %s\n",
            cpd.filename, cpd.line_number, entry->name, val);
    cpd.error_count++;
    dest->a = AV_IGNORE;
@@ -1879,7 +1877,7 @@ void process_option_line(char *configLine, const char *filename)
    {
       if (argc > 0)
       {
-         LOG_FMT(LWARN, "%s:%d Wrong number of arguments: %s...\n",
+         LOG_FMT(LERR, "%s:%d Wrong number of arguments: %s...\n",
                  filename, cpd.line_number, configLine);
          cpd.error_count++;
       }
@@ -1914,7 +1912,7 @@ void process_option_line(char *configLine, const char *filename)
    {
       if (argc < 3)
       {
-         LOG_FMT(LWARN, "%s:%d 'set' requires at least three arguments\n",
+         LOG_FMT(LERR, "%s:%d 'set' requires at least three arguments\n",
                  filename, cpd.line_number);
       }
       else
@@ -1932,7 +1930,7 @@ void process_option_line(char *configLine, const char *filename)
          }
          else
          {
-            LOG_FMT(LWARN, "%s:%d unknown type '%s':", filename, cpd.line_number, args[1]);
+            LOG_FMT(LERR, "%s:%d unknown type '%s':", filename, cpd.line_number, args[1]);
          }
       }
    }
@@ -1962,7 +1960,7 @@ void process_option_line(char *configLine, const char *filename)
    {
       if (argc < 3)
       {
-         LOG_FMT(LWARN, "%s:%d 'file_ext' requires at least three arguments\n",
+         LOG_FMT(LERR, "%s:%d 'file_ext' requires at least three arguments\n",
                  filename, cpd.line_number);
       }
       else
@@ -1977,7 +1975,7 @@ void process_option_line(char *configLine, const char *filename)
             }
             else
             {
-               LOG_FMT(LWARN, "%s:%d file_ext has unknown language '%s'\n",
+               LOG_FMT(LERR, "%s:%d file_ext has unknown language '%s'\n",
                        filename, cpd.line_number, args[1]);
             }
          }
@@ -1989,7 +1987,7 @@ void process_option_line(char *configLine, const char *filename)
       const int id = set_option_value(args[0], args[1]);
       if (id < 0)
       {
-         LOG_FMT(LWARN, "%s:%d Unknown symbol '%s'\n",
+         LOG_FMT(LERR, "%s:%d Unknown symbol '%s'\n",
                  filename, cpd.line_number, args[0]);
          cpd.error_count++;
       }
@@ -2295,7 +2293,7 @@ string argtype_to_string(argtype_e argtype)
       return("string");
 
    default:
-      LOG_FMT(LWARN, "Unknown argtype '%d'\n", argtype);
+      LOG_FMT(LERR, "Unknown argtype '%d'\n", argtype);
       return("");
    }
 }
@@ -2331,7 +2329,7 @@ string argval_to_string(argval_t argval)
       return("force");
 
    default:
-      LOG_FMT(LWARN, "Unknown argval '%d'\n", argval);
+      LOG_FMT(LERR, "Unknown argval '%d'\n", argval);
       return("");
    }
 }
@@ -2367,7 +2365,7 @@ string lineends_to_string(lineends_e linends)
       return("auto");
 
    default:
-      LOG_FMT(LWARN, "Unknown lineends '%d'\n", linends);
+      LOG_FMT(LERR, "Unknown lineends '%d'\n", linends);
       return("");
    }
 }
@@ -2402,7 +2400,7 @@ string tokenpos_to_string(tokenpos_e tokenpos)
       return("trail_force");
 
    default:
-      LOG_FMT(LWARN, "Unknown tokenpos '%d'\n", tokenpos);
+      LOG_FMT(LERR, "Unknown tokenpos '%d'\n", tokenpos);
       return("");
    }
 }
@@ -2434,7 +2432,7 @@ string op_val_to_string(argtype_e argtype, op_val_t op_val)
       return(op_val.str != NULL ? op_val.str : "");
 
    default:
-      LOG_FMT(LWARN, "Unknown argtype '%d'\n", argtype);
+      LOG_FMT(LERR, "Unknown argtype '%d'\n", argtype);
       return("");
    }
 }
