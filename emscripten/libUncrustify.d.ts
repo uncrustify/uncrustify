@@ -1,3 +1,6 @@
+/**
+*  Emscriptens interface for bound std::vectors
+*/
 interface EmscriptenVector< T >
 {
     get( i : number ) : T
@@ -6,21 +9,46 @@ interface EmscriptenVector< T >
     size() : number;
     get() : T;
     set( elem : T );
+//TODO:
+//    isAliasOf();
+//    clone();
+//    delete();
+//    isDeleted() : boolean;
+//    deleteLater();
 }
 
+/**
+*  Emscriptens interface for bound std::maps
+*/
 interface EmscriptenMap< K, V >
 {
     size() : number;
     get( elem : K ) : V;
+
+//TODO:
+    //et() : void;
+    //isAliasOf() : void;
+    //clone() : void;
+    //delete() : void;
+    //isDeleted() : void;
+    //deleteLater() : void;
 }
 
+/**
+*  Emscriptens interface for bound enum types
+*/
 interface EmscriptenEnumType
 {
+    //! returns list with value objects of an enum
     values() : EmscriptenVector<EmscriptenEnumTypeObject>;
 }
 
+/**
+*  Emscriptens interface for bound enum type value objects
+*/
 interface EmscriptenEnumTypeObject
 {
+    //! return value of an enum value object
     value : number;
 }
 
@@ -30,6 +58,8 @@ declare namespace LibUncrustify
 
     // Example how to iterate below options : forin iterate Options,
     // skip 'values' key, [ s : Options_STRING ] : EmscriptenEnumTypeObject;
+
+    //! Uncrustifys options enum
     export interface Options extends EmscriptenEnumType
     {
         UO_newlines : EmscriptenEnumTypeObject;
@@ -600,6 +630,7 @@ declare namespace LibUncrustify
         UO_warn_level_tabs_found_in_verbatim_string_literals : EmscriptenEnumTypeObject;
     }
 
+    //! Uncrustifys group enum
     export interface Groups extends EmscriptenEnumType
     {
         UG_general : EmscriptenEnumTypeObject;
@@ -618,6 +649,7 @@ declare namespace LibUncrustify
         UG_group_count : EmscriptenEnumTypeObject;
     }
 
+    //! Uncrustifys option argument type enum
     export interface Argtype extends EmscriptenEnumType
     {
         AT_BOOL : EmscriptenEnumTypeObject;
@@ -629,6 +661,7 @@ declare namespace LibUncrustify
         AT_UNUM : EmscriptenEnumTypeObject;
     }
 
+    //! Uncrustifys log severity enum
     export interface LogSev extends EmscriptenEnumType
     {
         LSYS : EmscriptenEnumTypeObject;
@@ -729,6 +762,7 @@ declare namespace LibUncrustify
         LGUY : EmscriptenEnumTypeObject;
     }
 
+    //! Uncrustifys language enum
     export interface LangFlags extends EmscriptenEnumType
     {
         LANG_C_ : EmscriptenEnumTypeObject;
@@ -745,21 +779,35 @@ declare namespace LibUncrustify
 
     // </editor-fold>
 
+    //! interface for Emscriptens group_map value pair
     export interface group_map_value
     {
+        //! group enum value object
         id : EmscriptenEnumTypeObject;
+        //! list of options enum value objects
         options : EmscriptenVector<EmscriptenEnumTypeObject>;
     }
 
+    //! interface for Emscriptens group_map value pair
     export interface option_map_value
     {
+        //! option enum value object
         id : EmscriptenEnumTypeObject;
+        //! group enum value object
         group_id :EmscriptenEnumTypeObject;
+
+        //! option argument type enum value object
         type : EmscriptenEnumTypeObject;
+
+        //! option min value
         min_val : number;
+        //! option max value
         max_val : number;
+        //! option name
         name : string;
+        //! option short description
         short_desc : string;
+        //! option extra description
         long_desc : string;
     }
 
@@ -771,37 +819,136 @@ declare namespace LibUncrustify
         uncrustify_groups : Groups;
         log_sev_t : LogSev;
 
+        //! sets all option values to their default values
         set_option_defaults() : void;
+
+        //! sets the language of the to be formatted text
         set_language( langIDX : EmscriptenEnumTypeObject ) : void;
+
+        //! adds a new keyword to Uncrustifys dynamic keyword map (dkwm, keywords.cpp)
         add_type( type : string ) : void;
+
+        // clears Uncrustifys dynamic keyword map (dkwm, keywords.cpp)
         clear_keywords() : void;
-        add_define( tag : string, val : string ) : void;
+
+        /**
+        * Adds an entry to the define list
+        *
+        * @param tag        tag string
+        * @param value      value of the define
+        */
+        add_define( tag : string, value : string ) : void;
+
+        /**
+        * Adds an entry to the define list
+        *
+        * @param tag        tag string
+        */
         add_define( tag : string ) : void;
+
+        /**
+        * Show or hide the severity prefix "<1>"
+        *
+        * @param b true=show  false=hide
+        */
         show_log_type( b : boolean ) : void;
+
+        //! returns the UNCRUSTIFY_VERSION string
         get_version() : string;
+
+        //! disables all logging messages
         set_quiet() : void;
+
+        /**
+        * sets value of an option
+        *
+        * @param name   name of the option
+        * @param value  value that is going to be set
+        * @return options enum value of the found option or -1 if option was not found
+        */
         set_option( name : string, value : string ) : number;
+
+        /**
+        * returns value of an option
+        *
+        * @param name   name of the option
+        * @return currently set value of the option
+        */
         get_option( name : string ) : string;
+
+        //! returns a string with option documentation
         show_options() : string;
+
+        /**
+        * returns the config file string based on the current configuration
+        *
+        * @param withDoc  false= without documentation true=with documentation text lines
+        * @param only_not_default  false=containing all options true=containing only options with non default values
+        * @return returns the config file string based on the current configuration
+        */
         show_config( withDoc : boolean, only_not_default : boolean ) : string;
+
+        /**
+        * returns the config file string with all options based on the current configuration
+        *
+        * @param withDoc  false= without documentation true=with documentation text lines
+        * @return returns the config file string with all options based on the current configuration
+        */
         show_config( withDoc : boolean ) : string;
+
+        /**
+        * returns the config file string with all options and without documentation based on the current configuration
+        *
+        * @return returns the config file string with all options without documentation based on the current configuration
+        */
         show_config() : string;
+
+        //! initializes the current libUncrustify instance
         initialize() : void;
+
+        //! destroys the current libUncrustify instance
         destruct() : void;
+
+        /**
+        * reads option file string, sets the defined options
+        *
+        * @return returns EXIT_SUCCESS on success
+        */
         loadConfig( cfg : string ) : number;
+
+        /**
+         * format text
+         *
+         * @param file file string that is going to be formated
+         * @param frag true=fragmented code input false=unfragmented code input
+         * @return formated file string
+         */
         uncrustify( file : string, frag : boolean ) : string;
+
+        /**
+         * format text, asumme unfragmented input
+         *
+         * @param file file string that is going to be formated
+         * @return formated file string
+         */
         uncrustify( file : string ) : string;
         uncrustify( file : string, frag : boolean, langIDX : EmscriptenEnumTypeObject ) : string;
+
+        //! clears defines map  (defines, defines.cpp)
         clear_defines() : void;
+
+        //! returns a copy of the current option_name_map
         getOptionNameMap() : EmscriptenMap<EmscriptenEnumTypeObject, option_map_value>;
+
+        //! returns a copy of the current group_map
         getGroupMap() : EmscriptenMap<EmscriptenEnumTypeObject, group_map_value>;
     }
+
     var Uncrustify : {
         (module?: Object): Uncrustify;
         new (module?: Object): Uncrustify;
     };
 }
-
 
 declare var uncrustify : LibUncrustify.Uncrustify;
 
