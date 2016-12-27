@@ -164,7 +164,7 @@ static bool should_add_braces(chunk_t *vbopen)
    LOG_FMT(LBRDEL, "%s: start on %zu : ", __func__, vbopen->orig_line);
    chunk_t *pc;
    int     nl_count = 0;
-  
+
    for (pc = chunk_get_next_nc(vbopen, CNAV_PREPROC);
         (pc != NULL) && (pc->level > vbopen->level);
         pc = chunk_get_next_nc(pc, CNAV_PREPROC))
