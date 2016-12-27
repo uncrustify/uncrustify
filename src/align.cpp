@@ -1562,9 +1562,8 @@ static chunk_t *scan_ib_line(chunk_t *start, bool first_pass)
          /* Is this a new entry? */
          if (idx >= cpd.al_cnt)
          {
-            LOG_FMT(LSIB, " - New   [%zu] %.2lu/%zu - %10.10s\n",
+            LOG_FMT(LSIB, " - New   [%zu] %.2zu/%zu - %10.10s\n",
                     idx, pc->column, token_width, get_token_name(pc->type));
-
             cpd.al[cpd.al_cnt].type = pc->type;
             cpd.al[cpd.al_cnt].col  = pc->column;
             cpd.al[cpd.al_cnt].len  = token_width;
@@ -1576,7 +1575,7 @@ static chunk_t *scan_ib_line(chunk_t *start, bool first_pass)
             /* expect to match stuff */
             if (cpd.al[idx].type == pc->type)
             {
-               LOG_FMT(LSIB, " - Match [%zu] %.2lu/%zu - %10.10s",
+               LOG_FMT(LSIB, " - Match [%zu] %.2zu/%zu - %10.10s",
                        idx, pc->column, token_width, get_token_name(pc->type));
 
                /* Shift out based on column */
