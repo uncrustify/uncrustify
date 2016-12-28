@@ -23,30 +23,31 @@ void prot_the_line(int theLine, unsigned int actual_line)
    {
       if (pc->orig_line == actual_line)
       {
+         LOG_FMT(LGUY, "(%d) orig_line=%d, ", theLine, actual_line);
          if (pc->type == CT_VBRACE_OPEN)
          {
-            LOG_FMT(LGUY, "(%d) %d, <VBRACE_OPEN>\n", theLine, actual_line);
+            LOG_FMT(LGUY, "<VBRACE_OPEN>\n");
          }
          else if (pc->type == CT_NEWLINE)
          {
-            LOG_FMT(LGUY, "(%d) %d, <NL>(%zu)\n", theLine, actual_line, pc->nl_count);
+            LOG_FMT(LGUY, "<NL>(%zu)\n", pc->nl_count);
          }
          else if (pc->type == CT_VBRACE_CLOSE)
          {
-            LOG_FMT(LGUY, "(%d) %d, <CT_VBRACE_CLOSE>\n", theLine, actual_line);
+            LOG_FMT(LGUY, "<CT_VBRACE_CLOSE>\n");
          }
          else if (pc->type == CT_VBRACE_OPEN)
          {
-            LOG_FMT(LGUY, "(%d) %d, <CT_VBRACE_OPEN>\n", theLine, actual_line);
+            LOG_FMT(LGUY, "<CT_VBRACE_OPEN>\n");
          }
          else if (pc->type == CT_SPACE)
          {
-            LOG_FMT(LGUY, "(%d) %d, <CT_SPACE>\n", theLine, actual_line);
+            LOG_FMT(LGUY, "<CT_SPACE>\n");
          }
          else
          {
-            LOG_FMT(LGUY, "(%d) orig_line=%d, text() %s, type %s, col=%zu\n",
-                    theLine, actual_line, pc->text(), get_token_name(pc->type), pc->orig_col);
+            LOG_FMT(LGUY, "text() %s, type %s, col=%zu\n",
+                    pc->text(), get_token_name(pc->type), pc->orig_col);
          }
       }
    }
