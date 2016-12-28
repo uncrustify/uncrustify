@@ -419,17 +419,18 @@ void destruct()
  */
 int loadConfig(string _cfg)
 {
+   // reset everything in case a config was loaded previously
+   clear_keyword_file();
+   clear_defines();
+   set_option_defaults();
+
    if (_cfg.empty())
    {
-      LOG_FMT(LERR, "%s: input string is empty\n", __func__);
-      return(EXIT_FAILURE);
+      return(EXIT_SUCCESS);
    }
 
    unique_ptr<char[]> cfg(new char[_cfg.length() + 1]);
    strcpy(cfg.get(), _cfg.c_str());
-
-   // reset everything in case a config was loaded previously
-   set_option_defaults();
 
    if (load_option_fileChar(cfg.get()) != EXIT_SUCCESS)
    {
@@ -439,7 +440,6 @@ int loadConfig(string _cfg)
 
    /* This relies on cpd.filename being the config file name */
    load_header_files();
-
 
    LOG_FMT(LSYS, "finished loading config\n");
    return(EXIT_SUCCESS);
