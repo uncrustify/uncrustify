@@ -424,6 +424,7 @@ enum uncrustify_options
    UO_sp_before_for_colon,
    UO_sp_extern_paren,
    UO_sp_skip_vbrace_tokens,
+   UO_force_tab_after_define,   // force <TAB> after #define, Issue # 876
 
    /*
     * Line splitting options (for long lines)

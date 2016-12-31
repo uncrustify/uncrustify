@@ -24,7 +24,7 @@ Just in case I don't do a release for a while and forget what to do... =)
 
 2b. Update the option count in documentation/htdocs/index.html
    Use script/count_the_options.sh to count the options.
-   Change the number also at ./scripts/More_Options_to_Test/help.txt
+   Change the number of options at ./scripts/More_Options_to_Test/help.txt
 
 2c. Update the config files
    $ scripts/update-defaults.sh
