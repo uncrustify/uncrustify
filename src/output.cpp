@@ -864,7 +864,7 @@ static void output_cmt_start(cmt_reflow &cmt, chunk_t *pc)
 
    if (cmt.brace_col == 0)
    {
-      cmt.brace_col = 1 + (pc->brace_level * cpd.settings[UO_output_tab_size].n);
+      cmt.brace_col = 1 + (pc->brace_level * cpd.settings[UO_output_tab_size].u);
    }
 
    // LOG_FMT(LSYS, "%s: line %d, brace=%d base=%d col=%d orig=%d aligned=%x\n",

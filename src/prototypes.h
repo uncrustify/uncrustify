@@ -279,7 +279,7 @@ bool unc_homedir(std::string &home);
  * @return the next tabstop column
  */
 static_inline
-int calc_next_tab_column(int col, int tabsize)
+size_t calc_next_tab_column(int col, int tabsize)
 {
    if (col <= 0)
    {
@@ -305,9 +305,9 @@ int calc_next_tab_column(int col, int tabsize)
  * @return the next tabstop column
  */
 static_inline
-int next_tab_column(int col)
+size_t next_tab_column(size_t col)
 {
-   return(calc_next_tab_column(col, cpd.settings[UO_output_tab_size].n));
+   return(calc_next_tab_column(col, cpd.settings[UO_output_tab_size].u));
 }
 
 
@@ -318,13 +318,14 @@ int next_tab_column(int col)
  * @return the next tabstop column
  */
 static_inline
-int align_tab_column(int col)
+size_t align_tab_column(size_t col)
 {
-   if (col <= 0)
+   //if (col <= 0)
+   if (col == 0)
    {
       col = 1;
    }
-   if ((col % cpd.settings[UO_output_tab_size].n) != 1)
+   if ((col % cpd.settings[UO_output_tab_size].u) != 1)
    {
       col = next_tab_column(col);
    }

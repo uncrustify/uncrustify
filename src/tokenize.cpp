@@ -94,7 +94,7 @@ struct tok_ctx
          switch (ch)
          {
          case '\t':
-            c.col = calc_next_tab_column(c.col, cpd.settings[UO_input_tab_size].n);
+            c.col = calc_next_tab_column(c.col, cpd.settings[UO_input_tab_size].u);
             break;
 
          case '\n':

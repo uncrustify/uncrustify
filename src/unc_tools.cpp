@@ -46,8 +46,8 @@ void prot_the_line(int theLine, unsigned int actual_line)
          }
          else
          {
-            LOG_FMT(LGUY, "text() %s, type %s, col=%zu\n",
-                    pc->text(), get_token_name(pc->type), pc->orig_col);
+            LOG_FMT(LGUY, "text() %s, type %s, orig_col=%zu, column=%zu\n",
+                    pc->text(), get_token_name(pc->type), pc->orig_col, pc->column);
          }
       }
    }

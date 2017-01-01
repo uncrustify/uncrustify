@@ -270,41 +270,41 @@ void align_all(void)
       align_left_shift();
    }
 
-   if (cpd.settings[UO_align_oc_msg_colon_span].n > 0)
+   if (cpd.settings[UO_align_oc_msg_colon_span].u > 0)
    {
       align_oc_msg_colons();
    }
 
    /* Align variable definitions */
    if ((cpd.settings[UO_align_var_def_span].u > 0) ||
-       (cpd.settings[UO_align_var_struct_span].n > 0) ||
-       (cpd.settings[UO_align_var_class_span].n > 0))
+       (cpd.settings[UO_align_var_struct_span].u > 0) ||
+       (cpd.settings[UO_align_var_class_span].u > 0))
    {
       align_var_def_brace(chunk_get_head(), cpd.settings[UO_align_var_def_span].u, NULL);
    }
 
    /* Align assignments */
    align_assign(chunk_get_head(),
-                cpd.settings[UO_align_assign_span].n,
-                cpd.settings[UO_align_assign_thresh].n);
+                cpd.settings[UO_align_assign_span].u,
+                cpd.settings[UO_align_assign_thresh].u);
 
    /* Align structure initializers */
-   if (cpd.settings[UO_align_struct_init_span].n > 0)
+   if (cpd.settings[UO_align_struct_init_span].u > 0)
    {
       align_struct_initializers();
    }
 
    /* Align function prototypes */
-   if ((cpd.settings[UO_align_func_proto_span].n > 0) &&
+   if ((cpd.settings[UO_align_func_proto_span].u > 0) &&
        !cpd.settings[UO_align_mix_var_proto].b)
    {
-      align_func_proto(cpd.settings[UO_align_func_proto_span].n);
+      align_func_proto(cpd.settings[UO_align_func_proto_span].u);
    }
 
    /* Align function prototypes */
-   if (cpd.settings[UO_align_oc_msg_spec_span].n > 0)
+   if (cpd.settings[UO_align_oc_msg_spec_span].u > 0)
    {
-      align_oc_msg_spec(cpd.settings[UO_align_oc_msg_spec_span].n);
+      align_oc_msg_spec(cpd.settings[UO_align_oc_msg_spec_span].u);
    }
 
    /* Align OC colons */
@@ -396,6 +396,10 @@ void align_right_comments(void)
             chunk_t *prev = chunk_get_prev(pc);
             if (pc->orig_col < (prev->orig_col_end + cpd.settings[UO_align_right_cmt_gap].n))
             {
+               // note the use of -5 here (-1 would probably have worked as well) to force
+               // comments which are stuck to the previous token (gap=0) into alignment with the
+               // others. Not the major feature, but a nice find. (min_val/max_val in
+               // options.cpp isn't validated against, it seems; well, I don't mind! :-) )
                LOG_FMT(LALTC, "NOT changing END comment on line %zu (%zu <= %d + %d)\n",
                        pc->orig_line,
                        pc->orig_col, prev->orig_col_end, cpd.settings[UO_align_right_cmt_gap].n);
@@ -607,8 +611,8 @@ chunk_t *align_assign(chunk_t *first, int span, int thresh)
       if ((pc->type == CT_BRACE_OPEN) ||
           (pc->type == CT_VBRACE_OPEN))
       {
-         int myspan;
-         int mythresh;
+         size_t myspan;
+         size_t mythresh;
 
          tmp = pc->orig_line;
 
@@ -619,8 +623,8 @@ chunk_t *align_assign(chunk_t *first, int span, int thresh)
          }
          else
          {
-            myspan   = cpd.settings[UO_align_assign_span].n;
-            mythresh = cpd.settings[UO_align_assign_thresh].n;
+            myspan   = cpd.settings[UO_align_assign_span].u;
+            mythresh = cpd.settings[UO_align_assign_thresh].u;
          }
 
          pc = align_assign(chunk_get_next_ncnl(pc), myspan, mythresh);
@@ -713,8 +717,8 @@ static chunk_t *align_func_param(chunk_t *start)
    AlignStack as;
    as.Start(2, 0);
 
-   as.m_star_style = (AlignStack::StarStyle)cpd.settings[UO_align_var_def_star_style].n;
-   as.m_amp_style  = (AlignStack::StarStyle)cpd.settings[UO_align_var_def_amp_style].n;
+   as.m_star_style = (AlignStack::StarStyle)cpd.settings[UO_align_var_def_star_style].u;
+   as.m_amp_style  = (AlignStack::StarStyle)cpd.settings[UO_align_var_def_amp_style].u;
 
    bool    did_this_line = false;
    int     comma_count   = 0;
@@ -1012,8 +1016,8 @@ static void align_func_proto(int span)
    AlignStack as;
    as.Start(span, 0);
    as.m_gap        = cpd.settings[UO_align_func_proto_gap].n;
-   as.m_star_style = (AlignStack::StarStyle)cpd.settings[UO_align_var_def_star_style].n;
-   as.m_amp_style  = (AlignStack::StarStyle)cpd.settings[UO_align_var_def_amp_style].n;
+   as.m_star_style = (AlignStack::StarStyle)cpd.settings[UO_align_var_def_star_style].u;
+   as.m_amp_style  = (AlignStack::StarStyle)cpd.settings[UO_align_var_def_amp_style].u;
 
    AlignStack as_br;
    as_br.Start(span, 0);
@@ -1068,9 +1072,9 @@ static chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_co
    chunk_t *next;
    chunk_t *prev;
    UINT64  align_mask  = PCF_IN_FCN_DEF | PCF_VAR_1ST;
-   int     myspan      = span;
-   int     mythresh    = 0;
-   int     mygap       = 0;
+   size_t  myspan      = span;
+   size_t  mythresh    = 0;
+   size_t  mygap       = 0;
    bool    fp_active   = cpd.settings[UO_align_mix_var_proto].b;
    bool    fp_look_bro = false;
 
@@ -1084,20 +1088,20 @@ static chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_co
    if ((start->parent_type == CT_STRUCT) ||
        (start->parent_type == CT_UNION))
    {
-      myspan   = cpd.settings[UO_align_var_struct_span].n;
-      mythresh = cpd.settings[UO_align_var_struct_thresh].n;
-      mygap    = cpd.settings[UO_align_var_struct_gap].n;
+      myspan   = cpd.settings[UO_align_var_struct_span].u;
+      mythresh = cpd.settings[UO_align_var_struct_thresh].u;
+      mygap    = cpd.settings[UO_align_var_struct_gap].u;
    }
    else if (start->parent_type == CT_CLASS)
    {
-      myspan   = cpd.settings[UO_align_var_class_span].n;
-      mythresh = cpd.settings[UO_align_var_class_thresh].n;
-      mygap    = cpd.settings[UO_align_var_class_gap].n;
+      myspan   = cpd.settings[UO_align_var_class_span].u;
+      mythresh = cpd.settings[UO_align_var_class_thresh].u;
+      mygap    = cpd.settings[UO_align_var_class_gap].u;
    }
    else
    {
-      mythresh = cpd.settings[UO_align_var_def_thresh].n;
-      mygap    = cpd.settings[UO_align_var_def_gap].n;
+      mythresh = cpd.settings[UO_align_var_def_thresh].u;
+      mygap    = cpd.settings[UO_align_var_def_gap].u;
    }
 
    /* can't be any variable definitions in a "= {" block */
@@ -1123,8 +1127,8 @@ static chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_co
    AlignStack as;
    as.Start(myspan, mythresh);
    as.m_gap        = mygap;
-   as.m_star_style = (AlignStack::StarStyle)cpd.settings[UO_align_var_def_star_style].n;
-   as.m_amp_style  = (AlignStack::StarStyle)cpd.settings[UO_align_var_def_amp_style].n;
+   as.m_star_style = (AlignStack::StarStyle)cpd.settings[UO_align_var_def_star_style].u;
+   as.m_amp_style  = (AlignStack::StarStyle)cpd.settings[UO_align_var_def_amp_style].u;
 
    /* Set up the bit colon aligner */
    AlignStack as_bc;
@@ -1421,7 +1425,7 @@ chunk_t *align_trailing_comments(chunk_t *start)
 
          if (cmt_type_cur == cmt_type_start)
          {
-            col = 1 + (pc->brace_level * cpd.settings[UO_indent_columns].n);
+            col = 1 + (pc->brace_level * cpd.settings[UO_indent_columns].u);
             LOG_FMT(LALADD, "%s: line=%zu col=%zu min_col=%zu pc->col=%zu pc->len=%zu %s\n",
                     __func__, pc->orig_line, col, min_col, pc->column, pc->len(),
                     get_token_name(pc->type));
@@ -1926,7 +1930,7 @@ static void align_left_shift(void)
             chunk_t *prev = chunk_get_prev(pc);
             if (prev && chunk_is_newline(prev))
             {
-               indent_to_column(pc, pc->column_indent + cpd.settings[UO_indent_columns].n);
+               indent_to_column(pc, pc->column_indent + cpd.settings[UO_indent_columns].u);
                pc->column_indent = pc->column;
                pc->flags        |= PCF_DONT_INDENT;
             }
@@ -1952,7 +1956,7 @@ static void align_left_shift(void)
          chunk_t *prev = chunk_get_prev(pc);
          if (prev && chunk_is_newline(prev))
          {
-            indent_to_column(pc, pc->column_indent + cpd.settings[UO_indent_columns].n);
+            indent_to_column(pc, pc->column_indent + cpd.settings[UO_indent_columns].u);
             pc->column_indent = pc->column;
             pc->flags        |= PCF_DONT_INDENT;
          }
@@ -1978,7 +1982,7 @@ static void align_oc_msg_colon(chunk_t *so)
    nas.m_right_align = !cpd.settings[UO_align_on_tabstop].b;
 
    AlignStack cas;   /* for the colons */
-   int        span = cpd.settings[UO_align_oc_msg_colon_span].n;
+   size_t     span = cpd.settings[UO_align_oc_msg_colon_span].u;
    cas.Start(span);
 
    size_t  level = so->level;
@@ -1986,7 +1990,7 @@ static void align_oc_msg_colon(chunk_t *so)
 
    bool    did_line  = false;
    bool    has_colon = false;
-   int     lcnt      = 0; /* line count with no colon for span */
+   size_t  lcnt      = 0; /* line count with no colon for span */
 
    while ((pc != NULL) && (pc->level > level))
    {
@@ -2003,7 +2007,7 @@ static void align_oc_msg_colon(chunk_t *so)
          did_line  = false;
          has_colon = !has_colon;
       }
-      else if (!did_line && (lcnt - 1 < span) && (pc->type == CT_OC_COLON))
+      else if (!did_line && (lcnt < span + 1) && (pc->type == CT_OC_COLON))
       {
          has_colon = true;
          cas.Add(pc);
@@ -2051,7 +2055,7 @@ static void align_oc_msg_colon(chunk_t *so)
    /* add spaces before the longest arg */
    len = cpd.settings[UO_indent_oc_msg_colon].n;
    int len_diff    = mlen - first_len;
-   int indent_size = cpd.settings[UO_indent_columns].n;
+   int indent_size = cpd.settings[UO_indent_columns].u;
    /* Align with first colon if possible by removing spaces */
    if (longest &&
        cpd.settings[UO_indent_oc_msg_prioritize_first_colon].b &&
@@ -2072,7 +2076,7 @@ static void align_oc_msg_colon(chunk_t *so)
       chunk.flags       = longest->flags & PCF_COPY_FLAGS;
 
       /* start at one since we already indent for the '[' */
-      for (int idx = 1; idx < len; idx++)
+      for (size_t idx = 1; idx < len; idx++)
       {
          chunk.str.append(' ');
       }

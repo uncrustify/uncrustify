@@ -216,8 +216,8 @@ struct align_ptr_t
 {
    chunk_t *next;       /* NULL or the chunk that should be under this one */
    bool    right_align; /* AlignStack.m_right_align */
-   int     star_style;  /* AlignStack.m_star_style */
-   int     amp_style;   /* AlignStack.m_amp_style */
+   size_t  star_style;  /* AlignStack.m_star_style */
+   size_t  amp_style;   /* AlignStack.m_amp_style */
    int     gap;         /* AlignStack.m_gap */
 
    /* col_adj is the amount to alter the column for the token.
