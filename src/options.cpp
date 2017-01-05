@@ -77,6 +77,7 @@ map<uncrustify_options, option_map_value> option_name_map;
 map<uncrustify_groups, group_map_value>   group_map;
 static uncrustify_groups                  current_group;
 
+const char *get_argtype_name(argtype_e argtype);
 
 static void unc_add_option(const char *name, uncrustify_options id, argtype_e type, const char *short_desc = NULL, const char *long_desc = NULL, int min_val = 0, int max_val = 16);
 
@@ -211,10 +212,10 @@ void register_options(void)
    unc_begin_group(UG_general, "General options");
    unc_add_option("newlines", UO_newlines, AT_LINE,
                   "The type of line endings. Default=Auto");
-   unc_add_option("input_tab_size", UO_input_tab_size, AT_NUM,
+   unc_add_option("input_tab_size", UO_input_tab_size, AT_UNUM,
                   "The original size of tabs in the input. Default=8", "", 1, 32);
-   unc_add_option("output_tab_size", UO_output_tab_size, AT_NUM,
-                  "The size of tabs in the output (only used if align_with_tabs=True). Default=8", "", 1, 32);
+   unc_add_option("output_tab_size", UO_output_tab_size, AT_UNUM,
+                  "The size of tabs in the output (only used if align_with_tabs=true). Default=8", "", 1, 32);
    unc_add_option("string_escape_char", UO_string_escape_char, AT_NUM,
                   "The ASCII value of the string escape char, usually 92 (\\) or 94 (^). (Pawn)", "", 0, 255);
    unc_add_option("string_escape_char2", UO_string_escape_char2, AT_NUM,
@@ -624,7 +625,7 @@ void register_options(void)
                   "If True, a <TAB> is inserted after #define.");
 
    unc_begin_group(UG_indent, "Indenting");
-   unc_add_option("indent_columns", UO_indent_columns, AT_NUM,
+   unc_add_option("indent_columns", UO_indent_columns, AT_UNUM,
                   "The number of columns to indent per level.\n"
                   "Usually 2, 3, 4, or 8. Default=8");
    unc_add_option("indent_continue", UO_indent_continue, AT_NUM,
@@ -687,7 +688,7 @@ void register_options(void)
    unc_add_option("indent_else_if", UO_indent_else_if, AT_BOOL,
                   "False=treat 'else\\nif' as 'else if' for indenting purposes\n"
                   "True=indent the 'if' one level");
-   unc_add_option("indent_var_def_blk", UO_indent_var_def_blk, AT_NUM,
+   unc_add_option("indent_var_def_blk", UO_indent_var_def_blk, AT_UNUM,
                   "Amount to indent variable declarations after a open brace. neg=relative, pos=absolute");
    unc_add_option("indent_var_def_cont", UO_indent_var_def_cont, AT_BOOL,
                   "Indent continued variable declarations instead of aligning.");
@@ -716,7 +717,7 @@ void register_options(void)
                   "Indentation column for standalone 'const' function decl/proto qualifier");
    unc_add_option("indent_func_throw", UO_indent_func_throw, AT_NUM,
                   "Indentation column for standalone 'throw' function decl/proto qualifier");
-   unc_add_option("indent_member", UO_indent_member, AT_NUM,
+   unc_add_option("indent_member", UO_indent_member, AT_UNUM,
                   "The number of spaces to indent a continued '->' or '.'\n"
                   "Usually set to 0, 1, or indent_columns.");
    unc_add_option("indent_sing_line_comments", UO_indent_sing_line_comments, AT_NUM,
@@ -724,13 +725,13 @@ void register_options(void)
    unc_add_option("indent_relative_single_line_comments", UO_indent_relative_single_line_comments, AT_BOOL,
                   "If set, will indent trailing single line ('//') comments relative\n"
                   "to the code instead of trying to keep the same absolute column");
-   unc_add_option("indent_switch_case", UO_indent_switch_case, AT_NUM,
+   unc_add_option("indent_switch_case", UO_indent_switch_case, AT_UNUM,
                   "Spaces to indent 'case' from 'switch'\n"
                   "Usually 0 or indent_columns.");
    unc_add_option("indent_case_shift", UO_indent_case_shift, AT_NUM,
                   "Spaces to shift the 'case' line, without affecting any other lines\n"
                   "Usually 0.");
-   unc_add_option("indent_case_brace", UO_indent_case_brace, AT_NUM,
+   unc_add_option("indent_case_brace", UO_indent_case_brace, AT_UNUM,
                   "Spaces to indent '{' from 'case'.\n"
                   "By default, the brace will appear under the 'c' in case.\n"
                   "Usually set to 0 or indent_columns.");
@@ -1257,19 +1258,19 @@ void register_options(void)
                   "The function names must already be aligned with each other.");
    unc_add_option("align_var_def_span", UO_align_var_def_span, AT_UNUM,
                   "The span for aligning variable definitions (0=don't align)", "", 0, 5000);
-   unc_add_option("align_var_def_star_style", UO_align_var_def_star_style, AT_NUM,
+   unc_add_option("align_var_def_star_style", UO_align_var_def_star_style, AT_UNUM,
                   "How to align the star in variable definitions.\n"
                   " 0=Part of the type     'void *   foo;'\n"
                   " 1=Part of the variable 'void     *foo;'\n"
                   " 2=Dangling             'void    *foo;'", "", 0, 2);
-   unc_add_option("align_var_def_amp_style", UO_align_var_def_amp_style, AT_NUM,
+   unc_add_option("align_var_def_amp_style", UO_align_var_def_amp_style, AT_UNUM,
                   "How to align the '&' in variable definitions.\n"
                   " 0=Part of the type\n"
                   " 1=Part of the variable\n"
                   " 2=Dangling", "", 0, 2);
-   unc_add_option("align_var_def_thresh", UO_align_var_def_thresh, AT_NUM,
+   unc_add_option("align_var_def_thresh", UO_align_var_def_thresh, AT_UNUM,
                   "The threshold for aligning variable definitions (0=no limit)", "", 0, 5000);
-   unc_add_option("align_var_def_gap", UO_align_var_def_gap, AT_NUM,
+   unc_add_option("align_var_def_gap", UO_align_var_def_gap, AT_UNUM,
                   "The gap for aligning variable definitions");
    unc_add_option("align_var_def_colon", UO_align_var_def_colon, AT_BOOL,
                   "Whether to align the colon in struct bit fields");
@@ -1277,27 +1278,27 @@ void register_options(void)
                   "Whether to align any attribute after the variable name");
    unc_add_option("align_var_def_inline", UO_align_var_def_inline, AT_BOOL,
                   "Whether to align inline struct/enum/union variable definitions");
-   unc_add_option("align_assign_span", UO_align_assign_span, AT_NUM,
+   unc_add_option("align_assign_span", UO_align_assign_span, AT_UNUM,
                   "The span for aligning on '=' in assignments (0=don't align)", "", 0, 5000);
-   unc_add_option("align_assign_thresh", UO_align_assign_thresh, AT_NUM,
+   unc_add_option("align_assign_thresh", UO_align_assign_thresh, AT_UNUM,
                   "The threshold for aligning on '=' in assignments (0=no limit)", "", 0, 5000);
    unc_add_option("align_enum_equ_span", UO_align_enum_equ_span, AT_NUM,
                   "The span for aligning on '=' in enums (0=don't align)", "", 0, 5000);
    unc_add_option("align_enum_equ_thresh", UO_align_enum_equ_thresh, AT_NUM,
                   "The threshold for aligning on '=' in enums (0=no limit)", "", 0, 5000);
-   unc_add_option("align_var_class_span", UO_align_var_class_span, AT_NUM,
+   unc_add_option("align_var_class_span", UO_align_var_class_span, AT_UNUM,
                   "The span for aligning class (0=don't align)", "", 0, 5000);
-   unc_add_option("align_var_class_thresh", UO_align_var_class_thresh, AT_NUM,
+   unc_add_option("align_var_class_thresh", UO_align_var_class_thresh, AT_UNUM,
                   "The threshold for aligning class member definitions (0=no limit)", "", 0, 5000);
-   unc_add_option("align_var_class_gap", UO_align_var_class_gap, AT_NUM,
+   unc_add_option("align_var_class_gap", UO_align_var_class_gap, AT_UNUM,
                   "The gap for aligning class member definitions");
-   unc_add_option("align_var_struct_span", UO_align_var_struct_span, AT_NUM,
+   unc_add_option("align_var_struct_span", UO_align_var_struct_span, AT_UNUM,
                   "The span for aligning struct/union (0=don't align)", "", 0, 5000);
-   unc_add_option("align_var_struct_thresh", UO_align_var_struct_thresh, AT_NUM,
+   unc_add_option("align_var_struct_thresh", UO_align_var_struct_thresh, AT_UNUM,
                   "The threshold for aligning struct/union member definitions (0=no limit)", "", 0, 5000);
-   unc_add_option("align_var_struct_gap", UO_align_var_struct_gap, AT_NUM,
+   unc_add_option("align_var_struct_gap", UO_align_var_struct_gap, AT_UNUM,
                   "The gap for aligning struct/union member definitions");
-   unc_add_option("align_struct_init_span", UO_align_struct_init_span, AT_NUM,
+   unc_add_option("align_struct_init_span", UO_align_struct_init_span, AT_UNUM,
                   "The span for aligning struct initializer values (0=don't align)", "", 0, 5000);
    unc_add_option("align_typedef_gap", UO_align_typedef_gap, AT_UNUM,
                   "The minimum space between the type and the synonym of a typedef");
@@ -1324,10 +1325,12 @@ void register_options(void)
                   "If aligning comments, mix with comments after '}' and #endif with less than 3 spaces before the comment");
    unc_add_option("align_right_cmt_gap", UO_align_right_cmt_gap, AT_NUM,
                   "If a trailing comment is more than this number of columns away from the text it follows,\n"
-                  "it will qualify for being aligned. This has to be > 0 to do anything.");
+                  "it will qualify for being aligned. This has to be > 0 to do anything.\n"
+                  "A negative value to force comments which are stuck to the previous token\n"
+                  " (gap=0) into alignment with the others.");
    unc_add_option("align_right_cmt_at_col", UO_align_right_cmt_at_col, AT_NUM,
                   "Align trailing comment at or beyond column N; 'pulls in' comments as a bonus side effect (0=ignore)", "", 0, 200);
-   unc_add_option("align_func_proto_span", UO_align_func_proto_span, AT_NUM,
+   unc_add_option("align_func_proto_span", UO_align_func_proto_span, AT_UNUM,
                   "The span for aligning function prototypes (0=don't align)", "", 0, 5000);
    unc_add_option("align_func_proto_gap", UO_align_func_proto_gap, AT_NUM,
                   "Minimum gap between the return type and the function name.");
@@ -1343,7 +1346,7 @@ void register_options(void)
                   "Requires align_single_line_func=True, uses align_func_proto_span");
    unc_add_option("align_single_line_brace_gap", UO_align_single_line_brace_gap, AT_NUM,
                   "Gap for align_single_line_brace.");
-   unc_add_option("align_oc_msg_spec_span", UO_align_oc_msg_spec_span, AT_NUM,
+   unc_add_option("align_oc_msg_spec_span", UO_align_oc_msg_spec_span, AT_UNUM,
                   "The span for aligning ObjC msg spec (0=don't align)", "", 0, 5000);
    unc_add_option("align_nl_cont", UO_align_nl_cont, AT_BOOL,
                   "Whether to align macros wrapped with a backslash and a newline.\n"
@@ -1358,7 +1361,7 @@ void register_options(void)
                   "Align lines that start with '<<' with previous '<<'. Default=True");
    unc_add_option("align_asm_colon", UO_align_asm_colon, AT_BOOL,
                   "Align text after asm volatile () colons.");
-   unc_add_option("align_oc_msg_colon_span", UO_align_oc_msg_colon_span, AT_NUM,
+   unc_add_option("align_oc_msg_colon_span", UO_align_oc_msg_colon_span, AT_UNUM,
                   "Span for aligning parameters in an Obj-C message call on the ':' (0=don't align)", "", 0, 5000);
    unc_add_option("align_oc_msg_colon_first", UO_align_oc_msg_colon_first, AT_BOOL,
                   "If True, always align with the first parameter, even if it is too short.");
@@ -1610,7 +1613,7 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
       }
       if (strcasecmp(val, "AUTO") != 0)
       {
-         LOG_FMT(LERR, "%s:%d Expected AUTO, LF, CRLF, or CR for %s, got %s\n",
+         fprintf(stderr, "%s:%d Expected AUTO, LF, CRLF, or CR for %s, got %s\n",
                  cpd.filename, cpd.line_number, entry->name, val);
          cpd.error_count++;
       }
@@ -1657,7 +1660,7 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
       }
       if (strcasecmp(val, "IGNORE") != 0)
       {
-         LOG_FMT(LERR, "%s:%d Expected IGNORE, JOIN, LEAD, LEAD_BREAK, LEAD_FORCE, "
+         fprintf(stderr, "%s:%d Expected IGNORE, JOIN, LEAD, LEAD_BREAK, LEAD_FORCE, "
                  "TRAIL, TRAIL_BREAK, TRAIL_FORCE for %s, got %s\n",
                  cpd.filename, cpd.line_number, entry->name, val);
          cpd.error_count++;
@@ -1672,6 +1675,13 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
       if (unc_isdigit(*val) ||
           (unc_isdigit(val[1]) && ((*val == '-') || (*val == '+'))))
       {
+         if ((entry->type == AT_UNUM) &&
+             (*val == '-'))
+         {
+            fprintf(stderr, "%s:%d\n  for the option '%s' is a negative value not possible: %s",
+                    cpd.filename, cpd.line_number, entry->name, val);
+            exit(2);
+         }
          dest->n = strtol(val, NULL, 0);
          // is the same as dest->u
          return;
@@ -1686,14 +1696,28 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
             val++;
          }
 
-         if (((tmp = unc_find_option(val)) != NULL) && (tmp->type == entry->type))
+         tmp = unc_find_option(val);
+         if (tmp == NULL)
+         {
+            fprintf(stderr, "%s:%d\n  for the assigment: unknown option '%s':",
+                    cpd.filename, cpd.line_number, val);
+            exit(2);
+         }
+         if (tmp->type == entry->type)
          {
             dest->n = cpd.settings[tmp->id].n * mult;
             // is the same as dest->u
             return;
          }
+         else
+         {
+            fprintf(stderr, "%s:%d\n  for the assigment: expected type for %s is %s, got %s\n",
+                    cpd.filename, cpd.line_number,
+                    entry->name, get_argtype_name(entry->type), get_argtype_name(tmp->type));
+            exit(2);
+         }
       }
-      LOG_FMT(LERR, "%s:%d Expected a number for %s, got %s\n",
+      fprintf(stderr, "%s:%d Expected a number for %s, got %s\n",
               cpd.filename, cpd.line_number, entry->name, val);
       cpd.error_count++;
       dest->n = 0;
@@ -1731,7 +1755,7 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
          dest->b = cpd.settings[tmp->id].b ? btrue : !btrue;
          return;
       }
-      LOG_FMT(LERR, "%s:%d Expected 'True' or 'False' for %s, got %s\n",
+      fprintf(stderr, "%s:%d Expected 'True' or 'False' for %s, got %s\n",
               cpd.filename, cpd.line_number, entry->name, val);
       cpd.error_count++;
       dest->b = false;
@@ -1771,7 +1795,7 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
       dest->a = cpd.settings[tmp->id].a;
       return;
    }
-   LOG_FMT(LERR, "%s:%d Expected 'Add', 'Remove', 'Force', or 'Ignore' for %s, got %s\n",
+   fprintf(stderr, "%s:%d Expected 'Add', 'Remove', 'Force', or 'Ignore' for %s, got %s\n",
            cpd.filename, cpd.line_number, entry->name, val);
    cpd.error_count++;
    dest->a = AV_IGNORE;
@@ -1854,7 +1878,7 @@ void process_option_line(char *configLine, const char *filename)
    {
       if (argc > 0)
       {
-         LOG_FMT(LERR, "%s:%d Wrong number of arguments: %s...\n",
+         fprintf(stderr, "%s:%d Wrong number of arguments: %s...\n",
                  filename, cpd.line_number, configLine);
          cpd.error_count++;
       }
@@ -1889,7 +1913,7 @@ void process_option_line(char *configLine, const char *filename)
    {
       if (argc < 3)
       {
-         LOG_FMT(LERR, "%s:%d 'set' requires at least three arguments\n",
+         fprintf(stderr, "%s:%d 'set' requires at least three arguments\n",
                  filename, cpd.line_number);
       }
       else
@@ -1907,7 +1931,7 @@ void process_option_line(char *configLine, const char *filename)
          }
          else
          {
-            LOG_FMT(LERR, "%s:%d unknown type '%s':", filename, cpd.line_number, args[1]);
+            fprintf(stderr, "%s:%d unknown type '%s':", filename, cpd.line_number, args[1]);
          }
       }
    }
@@ -1937,7 +1961,7 @@ void process_option_line(char *configLine, const char *filename)
    {
       if (argc < 3)
       {
-         LOG_FMT(LERR, "%s:%d 'file_ext' requires at least three arguments\n",
+         fprintf(stderr, "%s:%d 'file_ext' requires at least three arguments\n",
                  filename, cpd.line_number);
       }
       else
@@ -1952,7 +1976,7 @@ void process_option_line(char *configLine, const char *filename)
             }
             else
             {
-               LOG_FMT(LERR, "%s:%d file_ext has unknown language '%s'\n",
+               fprintf(stderr, "%s:%d file_ext has unknown language '%s'\n",
                        filename, cpd.line_number, args[1]);
             }
          }
@@ -1964,7 +1988,7 @@ void process_option_line(char *configLine, const char *filename)
       const int id = set_option_value(args[0], args[1]);
       if (id < 0)
       {
-         LOG_FMT(LERR, "%s:%d Unknown symbol '%s'\n",
+         fprintf(stderr, "%s:%d Unknown symbol '%s'\n",
                  filename, cpd.line_number, args[0]);
          cpd.error_count++;
       }
@@ -1990,7 +2014,7 @@ int load_option_file(const char *filename)
    pfile = fopen(filename, "r");
    if (pfile == NULL)
    {
-      LOG_FMT(LERR, "%s: fopen(%s) failed: %s (%d)\n",
+      fprintf(stderr, "%s: fopen(%s) failed: %s (%d)\n",
               __func__, filename, strerror(errno), errno);
       cpd.error_count++;
       return(-1);
@@ -2198,7 +2222,7 @@ void set_option_defaults(void)
    cpd.defaults[UO_cmt_multi_first_len_minimum].n                       = 4;
    cpd.defaults[UO_indent_access_spec].n                                = 1;
    cpd.defaults[UO_indent_align_assign].b                               = true;
-   cpd.defaults[UO_indent_columns].n                                    = 8;
+   cpd.defaults[UO_indent_columns].u                                    = 8;
    cpd.defaults[UO_indent_cpp_lambda_body].b                            = false;
    cpd.defaults[UO_indent_ctor_init_leading].n                          = 2;
    cpd.defaults[UO_indent_label].n                                      = 1;
@@ -2206,9 +2230,9 @@ void set_option_defaults(void)
    cpd.defaults[UO_indent_token_after_brace].b                          = true;
    cpd.defaults[UO_indent_using_block].b                                = true;
    cpd.defaults[UO_indent_with_tabs].n                                  = 1;
-   cpd.defaults[UO_input_tab_size].n                                    = 8;
+   cpd.defaults[UO_input_tab_size].u                                    = 8;
    cpd.defaults[UO_newlines].le                                         = LE_AUTO;
-   cpd.defaults[UO_output_tab_size].n                                   = 8;
+   cpd.defaults[UO_output_tab_size].u                                   = 8;
    cpd.defaults[UO_pp_indent_count].n                                   = 1;
    cpd.defaults[UO_sp_addr].a                                           = AV_REMOVE;
    cpd.defaults[UO_sp_after_semi].a                                     = AV_ADD;
@@ -2270,7 +2294,39 @@ string argtype_to_string(argtype_e argtype)
       return("string");
 
    default:
-      LOG_FMT(LERR, "Unknown argtype '%d'\n", argtype);
+      fprintf(stderr, "Unknown argtype '%d'\n", argtype);
+      return("");
+   }
+}
+
+
+const char *get_argtype_name(argtype_e argtype)
+{
+   switch (argtype)
+   {
+   case AT_BOOL:
+      return("AT_BOOL");
+
+   case AT_IARF:
+      return("AT_IARF");
+
+   case AT_NUM:
+      return("AT_NUM");
+
+   case AT_UNUM:
+      return("AT_UNUM");
+
+   case AT_LINE:
+      return("AT_LINE");
+
+   case AT_POS:
+      return("AT_POS");
+
+   case AT_STRING:
+      return("AT_STRING");
+
+   default:
+      fprintf(stderr, "Unknown argtype '%d'\n", argtype);
       return("");
    }
 }
@@ -2306,7 +2362,7 @@ string argval_to_string(argval_t argval)
       return("force");
 
    default:
-      LOG_FMT(LERR, "Unknown argval '%d'\n", argval);
+      fprintf(stderr, "Unknown argval '%d'\n", argval);
       return("");
    }
 }
@@ -2342,7 +2398,7 @@ string lineends_to_string(lineends_e linends)
       return("auto");
 
    default:
-      LOG_FMT(LERR, "Unknown lineends '%d'\n", linends);
+      fprintf(stderr, "Unknown lineends '%d'\n", linends);
       return("");
    }
 }
@@ -2377,7 +2433,7 @@ string tokenpos_to_string(tokenpos_e tokenpos)
       return("trail_force");
 
    default:
-      LOG_FMT(LERR, "Unknown tokenpos '%d'\n", tokenpos);
+      fprintf(stderr, "Unknown tokenpos '%d'\n", tokenpos);
       return("");
    }
 }
@@ -2409,7 +2465,7 @@ string op_val_to_string(argtype_e argtype, op_val_t op_val)
       return(op_val.str != NULL ? op_val.str : "");
 
    default:
-      LOG_FMT(LERR, "Unknown argtype '%d'\n", argtype);
+      fprintf(stderr, "Unknown argtype '%d'\n", argtype);
       return("");
    }
 }
