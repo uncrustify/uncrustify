@@ -309,6 +309,8 @@ void output_text(FILE *pfile)
 
    for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next(pc))
    {
+      LOG_FMT(LOUTIND, "text() %s, type %s, col=%zu\n",
+              pc->text(), get_token_name(pc->type), pc->orig_col);
       cpd.output_tab_as_space = (cpd.settings[UO_cmt_convert_tab_to_spaces].b &&
                                  chunk_is_comment(pc));
       if (pc->type == CT_NEWLINE)
@@ -461,6 +463,13 @@ void output_text(FILE *pfile)
 
          output_to_column(pc->column, allow_tabs);
          add_text(pc->str);
+         if (pc->type == CT_PP_DEFINE)  // Issue #876
+         {
+            if (cpd.settings[UO_force_tab_after_define].b)
+            {
+               add_char('\t');
+            }
+         }
          cpd.did_newline       = chunk_is_newline(pc);
          cpd.output_trailspace = false;
       }
