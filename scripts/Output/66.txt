@@ -1,151 +1,306 @@
-Spacing: line x [STRUCT/NONE] 'struct' <===> [TYPE/STRUCT] 'TelegramIndex' : ADD[xxxx] <force between 'struct' and 'TelegramIndex'> = ADD @ x => x
+space_text: x:x struct STRUCT
+do_space: x:x struct STRUCT
+
+
+(xxxx) do_space: WARNING: unrecognize do_space: first: x:x struct STRUCT and second: x:x TelegramIndex TYPE
+
+
+Spacing: line x [STRUCT/NONE] 'struct' <===> [TYPE/STRUCT] 'TelegramIndex' : ADD as default value[xxxx] <force between 'struct' and 'TelegramIndex'> = ADD @ x => x
+space_text: x:x TelegramIndex TYPE
+do_space: x:x TelegramIndex TYPE
  = REMOVE @ x => xx
+space_text: x:xx  NEWLINE
+space_text: x:x { BRACE_OPEN
+do_space: x:x { BRACE_OPEN
  = REMOVE @ x => x
-Spacing: line x [FUNC_CLASS_DEF/NONE] 'TelegramIndex' <===> [FPAREN_OPEN/FUNC_CLASS_DEF] '(' : sp_func_class_paren[xxx] = IGNORE @ x => xx
+space_text: x:x  NEWLINE
+space_text: x:x TelegramIndex FUNC_CLASS_DEF
+do_space: x:x TelegramIndex FUNC_CLASS_DEF
+Spacing: line x [FUNC_CLASS_DEF/NONE] 'TelegramIndex' <===> [FPAREN_OPEN/FUNC_CLASS_DEF] '(' : sp_func_class_paren[xxxx] = IGNORE @ x => xx
+space_text: x:xx ( FPAREN_OPEN
+do_space: x:xx ( FPAREN_OPEN
 Spacing: line x [FPAREN_OPEN/FUNC_CLASS_DEF] '(' <===> [QUALIFIER/NONE] 'const' : sp_inside_fparen[xxxx] = IGNORE @ x => xx
+space_text: x:xx const QUALIFIER
+do_space: x:xx const QUALIFIER
 Spacing: line x [QUALIFIER/NONE] 'const' <===> [TYPE/NONE] 'char' : sp_after_type[xxxx] <force between 'const' and 'char'> = FORCE @ x => xx
+space_text: x:xx char TYPE
+do_space: x:xx char TYPE
 Spacing: line x [TYPE/NONE] 'char' <===> [PTR_TYPE/NONE] '*' : IGNORE[xxxx] = IGNORE @ x => xx
+space_text: x:xx * PTR_TYPE
+do_space: x:xx * PTR_TYPE
 Spacing: line x [PTR_TYPE/NONE] '*' <===> [WORD/NONE] 'pN' : IGNORE[xxxx] = IGNORE @ x => xx
+space_text: x:xx pN WORD
+do_space: x:xx pN WORD
 Spacing: line x [WORD/NONE] 'pN' <===> [COMMA/NONE] ',' : sp_before_comma[xxx] = REMOVE @ x => xx
+space_text: x:xx , COMMA
+do_space: x:xx , COMMA
 Spacing: line x [COMMA/NONE] ',' <===> [TYPE/NONE] 'unsigned' : sp_after_comma[xxx] = IGNORE @ x => xx
+space_text: x:xx unsigned TYPE
+do_space: x:xx unsigned TYPE
 Spacing: line x [TYPE/NONE] 'unsigned' <===> [TYPE/NONE] 'long' : sp_after_type[xxxx] <force between 'unsigned' and 'long'> = FORCE @ x => xx
+space_text: x:xx long TYPE
+do_space: x:xx long TYPE
 Spacing: line x [TYPE/NONE] 'long' <===> [WORD/NONE] 'nI' : sp_after_type[xxxx] <force between 'long' and 'nI'> = FORCE @ x => xx
+space_text: x:xx nI WORD
+do_space: x:xx nI WORD
 Spacing: line x [WORD/NONE] 'nI' <===> [FPAREN_CLOSE/FUNC_CLASS_DEF] ')' : sp_inside_fparen[xxxx] = IGNORE @ x => xx
-Spacing: line x [FPAREN_CLOSE/FUNC_CLASS_DEF] ')' <===> [CONSTR_COLON/NONE] ':' : ADD[xxxx] = ADD @ x => xx
+space_text: x:xx ) FPAREN_CLOSE
+do_space: x:xx ) FPAREN_CLOSE
+
+
+(xxxx) do_space: WARNING: unrecognize do_space: first: x:xx ) FPAREN_CLOSE and second: x:xx : CONSTR_COLON
+
+
+Spacing: line x [FPAREN_CLOSE/FUNC_CLASS_DEF] ')' <===> [CONSTR_COLON/NONE] ':' : ADD as default value[xxxx] = ADD @ x => xx
+space_text: x:xx : CONSTR_COLON
+do_space: x:xx : CONSTR_COLON
  = REMOVE @ x => xx
+space_text: x:xx  NEWLINE
+space_text: x:x pTelName FUNC_CTOR_VAR
+do_space: x:x pTelName FUNC_CTOR_VAR
 Spacing: line x [FUNC_CTOR_VAR/NONE] 'pTelName' <===> [FPAREN_OPEN/FUNC_CTOR_VAR] '(' : sp_func_call_paren[xxx] = IGNORE @ x => x
+space_text: x:x ( FPAREN_OPEN
+do_space: x:x ( FPAREN_OPEN
 Spacing: line x [FPAREN_OPEN/FUNC_CTOR_VAR] '(' <===> [WORD/NONE] 'pN' : sp_inside_fparen[xxxx] = IGNORE @ x => xx
+space_text: x:xx pN WORD
+do_space: x:xx pN WORD
 Spacing: line x [WORD/NONE] 'pN' <===> [FPAREN_CLOSE/FUNC_CTOR_VAR] ')' : sp_inside_fparen[xxxx] = IGNORE @ x => xx
+space_text: x:xx ) FPAREN_CLOSE
+do_space: x:xx ) FPAREN_CLOSE
 Spacing: line x [FPAREN_CLOSE/FUNC_CTOR_VAR] ')' <===> [COMMA/NONE] ',' : sp_before_comma[xxx] = REMOVE @ x => xx
+space_text: x:xx , COMMA
+do_space: x:xx , COMMA
  = REMOVE @ x => xx
+space_text: x:xx  NEWLINE
+space_text: x:x nTelIndex FUNC_CTOR_VAR
+do_space: x:x nTelIndex FUNC_CTOR_VAR
 Spacing: line x [FUNC_CTOR_VAR/NONE] 'nTelIndex' <===> [FPAREN_OPEN/FUNC_CTOR_VAR] '(' : sp_func_call_paren[xxx] = IGNORE @ x => xx
+space_text: x:xx ( FPAREN_OPEN
+do_space: x:xx ( FPAREN_OPEN
 Spacing: line x [FPAREN_OPEN/FUNC_CTOR_VAR] '(' <===> [WORD/NONE] 'n' : sp_inside_fparen[xxxx] = IGNORE @ x => xx
+space_text: x:xx n WORD
+do_space: x:xx n WORD
 Spacing: line x [WORD/NONE] 'n' <===> [FPAREN_CLOSE/FUNC_CTOR_VAR] ')' : sp_inside_fparen[xxxx] = IGNORE @ x => xx
+space_text: x:xx ) FPAREN_CLOSE
+do_space: x:xx ) FPAREN_CLOSE
  = REMOVE @ x => xx
+space_text: x:xx  NEWLINE
+space_text: x:x { BRACE_OPEN
+do_space: x:x { BRACE_OPEN
  = REMOVE @ x => x
+space_text: x:x  NEWLINE
+space_text: x:x } BRACE_CLOSE
+do_space: x:x } BRACE_CLOSE
  = REMOVE @ x => x
+space_text: x:x  NEWLINE
+space_text: x:x ~ DESTRUCTOR
+do_space: x:x ~ DESTRUCTOR
 Spacing: line x [DESTRUCTOR/NONE] '~' <===> [FUNC_CLASS_DEF/DESTRUCTOR] 'TelegramIndex' : REMOVE[xxx] = REMOVE @ x => x
-Spacing: line x [FUNC_CLASS_DEF/DESTRUCTOR] 'TelegramIndex' <===> [FPAREN_OPEN/FUNC_CLASS_DEF] '(' : sp_func_class_paren[xxx] = IGNORE @ x => xx
+space_text: x:x TelegramIndex FUNC_CLASS_DEF
+do_space: x:x TelegramIndex FUNC_CLASS_DEF
+Spacing: line x [FUNC_CLASS_DEF/DESTRUCTOR] 'TelegramIndex' <===> [FPAREN_OPEN/FUNC_CLASS_DEF] '(' : sp_func_class_paren[xxxx] = IGNORE @ x => xx
+space_text: x:xx ( FPAREN_OPEN
+do_space: x:xx ( FPAREN_OPEN
 Spacing: line x [FPAREN_OPEN/FUNC_CLASS_DEF] '(' <===> [FPAREN_CLOSE/FUNC_CLASS_DEF] ')' : sp_inside_fparens[xxxx] = IGNORE @ x => xx
+space_text: x:xx ) FPAREN_CLOSE
+do_space: x:xx ) FPAREN_CLOSE
  = REMOVE @ x => xx
+space_text: x:xx  NEWLINE
+space_text: xx:x { BRACE_OPEN
+do_space: xx:x { BRACE_OPEN
  = REMOVE @ x => x
+space_text: xx:x  NEWLINE
+space_text: xx:x } BRACE_CLOSE
+do_space: xx:x } BRACE_CLOSE
  = REMOVE @ x => x
+space_text: xx:x  NEWLINE
+space_text: xx:x const QUALIFIER
+do_space: xx:x const QUALIFIER
 Spacing: line xx [QUALIFIER/NONE] 'const' <===> [TYPE/NONE] 'char' : sp_after_type[xxxx] <force between 'const' and 'char'> = FORCE @ x => x
+space_text: xx:x char TYPE
+do_space: xx:x char TYPE
 Spacing: line xx [TYPE/NONE] 'char' <===> [PTR_TYPE/NONE] '*' : IGNORE[xxxx] = IGNORE @ x => xx
+space_text: xx:xx * PTR_TYPE
+do_space: xx:xx * PTR_TYPE
 Spacing: line xx [PTR_TYPE/NONE] '*' <===> [QUALIFIER/NONE] 'const' : IGNORE[xxxx] = IGNORE @ x => xx
+space_text: xx:xx const QUALIFIER
+do_space: xx:xx const QUALIFIER
 Spacing: line xx [QUALIFIER/NONE] 'const' <===> [WORD/NONE] 'pTelName' : sp_after_type[xxxx] <force between 'const' and 'pTelName'> = FORCE @ x => xx
+space_text: xx:xx pTelName WORD
+do_space: xx:xx pTelName WORD
 Spacing: line xx [WORD/NONE] 'pTelName' <===> [SEMICOLON/NONE] ';' : sp_before_semi[xxx] = REMOVE @ x => xx
+space_text: xx:xx ; SEMICOLON
+do_space: xx:xx ; SEMICOLON
  = REMOVE @ x => xx
+space_text: xx:xx  NEWLINE
+space_text: xx:x unsigned TYPE
+do_space: xx:x unsigned TYPE
 Spacing: line xx [TYPE/NONE] 'unsigned' <===> [TYPE/NONE] 'long' : sp_after_type[xxxx] <force between 'unsigned' and 'long'> = FORCE @ x => xx
+space_text: xx:xx long TYPE
+do_space: xx:xx long TYPE
 Spacing: line xx [TYPE/NONE] 'long' <===> [WORD/NONE] 'nTelIndex' : sp_after_type[xxxx] <force between 'long' and 'nTelIndex'> = FORCE @ x => xx
+space_text: xx:xx nTelIndex WORD
+do_space: xx:xx nTelIndex WORD
 Spacing: line xx [WORD/NONE] 'nTelIndex' <===> [SEMICOLON/NONE] ';' : sp_before_semi[xxx] = REMOVE @ x => xx
+space_text: xx:xx ; SEMICOLON
+do_space: xx:xx ; SEMICOLON
  = REMOVE @ x => xx
+space_text: xx:xx  NEWLINE
+space_text: xx:x } BRACE_CLOSE
+do_space: xx:x } BRACE_CLOSE
 Spacing: line xx [BRACE_CLOSE/STRUCT] '}' <===> [SEMICOLON/STRUCT] ';' : sp_before_semi[xxx] = REMOVE @ x => x
+space_text: xx:x ; SEMICOLON
+do_space: xx:x ; SEMICOLON
  = REMOVE @ x => x
+space_text: xx:x  NEWLINE
 space_col_align: x:x [FUNC_CLASS_DEF/NONE] 'TelegramIndex' <==> x:xx [FPAREN_OPEN/FUNC_CLASS_DEF] '(' [CallStack:-DEBUG NOT SET-]
-Spacing: line x [FUNC_CLASS_DEF/NONE] 'TelegramIndex' <===> [FPAREN_OPEN/FUNC_CLASS_DEF] '(' : sp_func_class_paren[xxx]
+do_space: x:x TelegramIndex FUNC_CLASS_DEF
+Spacing: line x [FUNC_CLASS_DEF/NONE] 'TelegramIndex' <===> [FPAREN_OPEN/FUNC_CLASS_DEF] '(' : sp_func_class_paren[xxxx]
 space_col_align: av=x, len=xx => xx
 space_col_align: x:xx [FPAREN_OPEN/FUNC_CLASS_DEF] '(' <==> x:xx [QUALIFIER/NONE] 'const' [CallStack:-DEBUG NOT SET-]
+do_space: x:xx ( FPAREN_OPEN
 Spacing: line x [FPAREN_OPEN/FUNC_CLASS_DEF] '(' <===> [QUALIFIER/NONE] 'const' : sp_inside_fparen[xxxx]
 space_col_align: av=x, len=x => x
 space_col_align: x:xx [QUALIFIER/NONE] 'const' <==> x:xx [TYPE/NONE] 'char' [CallStack:-DEBUG NOT SET-]
+do_space: x:xx const QUALIFIER
 Spacing: line x [QUALIFIER/NONE] 'const' <===> [TYPE/NONE] 'char' : sp_after_type[xxxx]
 space_col_align: av=x, len=x => x
 space_col_align: x:xx [TYPE/NONE] 'char' <==> x:xx [PTR_TYPE/NONE] '*' [CallStack:-DEBUG NOT SET-]
+do_space: x:xx char TYPE
 Spacing: line x [TYPE/NONE] 'char' <===> [PTR_TYPE/NONE] '*' : IGNORE[xxxx]
 space_col_align: av=x, len=x => x
 space_col_align: x:xx [PTR_TYPE/NONE] '*' <==> x:xx [WORD/NONE] 'pN' [CallStack:-DEBUG NOT SET-]
+do_space: x:xx * PTR_TYPE
 Spacing: line x [PTR_TYPE/NONE] '*' <===> [WORD/NONE] 'pN' : IGNORE[xxxx]
 space_col_align: av=x, len=x => x
 space_col_align: x:xx [WORD/NONE] 'pN' <==> x:xx [COMMA/NONE] ',' [CallStack:-DEBUG NOT SET-]
+do_space: x:xx pN WORD
 Spacing: line x [WORD/NONE] 'pN' <===> [COMMA/NONE] ',' : sp_before_comma[xxx]
 space_col_align: av=x, len=x => x
 space_col_align: x:xx [COMMA/NONE] ',' <==> x:xx [TYPE/NONE] 'unsigned' [CallStack:-DEBUG NOT SET-]
+do_space: x:xx , COMMA
 Spacing: line x [COMMA/NONE] ',' <===> [TYPE/NONE] 'unsigned' : sp_after_comma[xxx]
 space_col_align: av=x, len=x => x
 space_col_align: x:xx [TYPE/NONE] 'unsigned' <==> x:xx [TYPE/NONE] 'long' [CallStack:-DEBUG NOT SET-]
+do_space: x:xx unsigned TYPE
 Spacing: line x [TYPE/NONE] 'unsigned' <===> [TYPE/NONE] 'long' : sp_after_type[xxxx]
 space_col_align: av=x, len=x => x
 space_col_align: x:xx [TYPE/NONE] 'long' <==> x:xx [WORD/NONE] 'nI' [CallStack:-DEBUG NOT SET-]
+do_space: x:xx long TYPE
 Spacing: line x [TYPE/NONE] 'long' <===> [WORD/NONE] 'nI' : sp_after_type[xxxx]
 space_col_align: av=x, len=x => x
 space_col_align: x:xx [WORD/NONE] 'nI' <==> x:xx [FPAREN_CLOSE/FUNC_CLASS_DEF] ')' [CallStack:-DEBUG NOT SET-]
+do_space: x:xx nI WORD
 Spacing: line x [WORD/NONE] 'nI' <===> [FPAREN_CLOSE/FUNC_CLASS_DEF] ')' : sp_inside_fparen[xxxx]
 space_col_align: av=x, len=x => x
 space_col_align: x:xx [FPAREN_CLOSE/FUNC_CLASS_DEF] ')' <==> x:xx [CONSTR_COLON/NONE] ':' [CallStack:-DEBUG NOT SET-]
-Spacing: line x [FPAREN_CLOSE/FUNC_CLASS_DEF] ')' <===> [CONSTR_COLON/NONE] ':' : ADD[xxxx]
+do_space: x:xx ) FPAREN_CLOSE
+
+
+(xxxx) do_space: WARNING: unrecognize do_space: first: x:xx ) FPAREN_CLOSE and second: x:xx : CONSTR_COLON
+
+
+Spacing: line x [FPAREN_CLOSE/FUNC_CLASS_DEF] ')' <===> [CONSTR_COLON/NONE] ':' : ADD as default value[xxxx]
 space_col_align: av=x, len=x => x
 space_col_align: x:xx [CONSTR_COLON/NONE] ':' <==> x:xx [NEWLINE/NONE] '' [CallStack:-DEBUG NOT SET-]
+do_space: x:xx : CONSTR_COLON
 space_col_align: av=x, len=x => x
 space_col_align: x:x [FUNC_CTOR_VAR/NONE] 'pTelName' <==> x:x [FPAREN_OPEN/FUNC_CTOR_VAR] '(' [CallStack:-DEBUG NOT SET-]
+do_space: x:x pTelName FUNC_CTOR_VAR
 Spacing: line x [FUNC_CTOR_VAR/NONE] 'pTelName' <===> [FPAREN_OPEN/FUNC_CTOR_VAR] '(' : sp_func_call_paren[xxx]
 space_col_align: av=x, len=x => x
 space_col_align: x:x [FPAREN_OPEN/FUNC_CTOR_VAR] '(' <==> x:xx [WORD/NONE] 'pN' [CallStack:-DEBUG NOT SET-]
+do_space: x:x ( FPAREN_OPEN
 Spacing: line x [FPAREN_OPEN/FUNC_CTOR_VAR] '(' <===> [WORD/NONE] 'pN' : sp_inside_fparen[xxxx]
 space_col_align: av=x, len=x => x
 space_col_align: x:xx [WORD/NONE] 'pN' <==> x:xx [FPAREN_CLOSE/FUNC_CTOR_VAR] ')' [CallStack:-DEBUG NOT SET-]
+do_space: x:xx pN WORD
 Spacing: line x [WORD/NONE] 'pN' <===> [FPAREN_CLOSE/FUNC_CTOR_VAR] ')' : sp_inside_fparen[xxxx]
 space_col_align: av=x, len=x => x
 space_col_align: x:xx [FPAREN_CLOSE/FUNC_CTOR_VAR] ')' <==> x:xx [COMMA/NONE] ',' [CallStack:-DEBUG NOT SET-]
+do_space: x:xx ) FPAREN_CLOSE
 Spacing: line x [FPAREN_CLOSE/FUNC_CTOR_VAR] ')' <===> [COMMA/NONE] ',' : sp_before_comma[xxx]
 space_col_align: av=x, len=x => x
 space_col_align: x:xx [COMMA/NONE] ',' <==> x:xx [NEWLINE/NONE] '' [CallStack:-DEBUG NOT SET-]
+do_space: x:xx , COMMA
 space_col_align: av=x, len=x => x
 space_col_align: x:x [FUNC_CTOR_VAR/NONE] 'nTelIndex' <==> x:xx [FPAREN_OPEN/FUNC_CTOR_VAR] '(' [CallStack:-DEBUG NOT SET-]
+do_space: x:x nTelIndex FUNC_CTOR_VAR
 Spacing: line x [FUNC_CTOR_VAR/NONE] 'nTelIndex' <===> [FPAREN_OPEN/FUNC_CTOR_VAR] '(' : sp_func_call_paren[xxx]
 space_col_align: av=x, len=x => x
 space_col_align: x:xx [FPAREN_OPEN/FUNC_CTOR_VAR] '(' <==> x:xx [WORD/NONE] 'n' [CallStack:-DEBUG NOT SET-]
+do_space: x:xx ( FPAREN_OPEN
 Spacing: line x [FPAREN_OPEN/FUNC_CTOR_VAR] '(' <===> [WORD/NONE] 'n' : sp_inside_fparen[xxxx]
 space_col_align: av=x, len=x => x
 space_col_align: x:xx [WORD/NONE] 'n' <==> x:xx [FPAREN_CLOSE/FUNC_CTOR_VAR] ')' [CallStack:-DEBUG NOT SET-]
+do_space: x:xx n WORD
 Spacing: line x [WORD/NONE] 'n' <===> [FPAREN_CLOSE/FUNC_CTOR_VAR] ')' : sp_inside_fparen[xxxx]
 space_col_align: av=x, len=x => x
 space_col_align: x:xx [FPAREN_CLOSE/FUNC_CTOR_VAR] ')' <==> x:xx [NEWLINE/NONE] '' [CallStack:-DEBUG NOT SET-]
+do_space: x:xx ) FPAREN_CLOSE
 space_col_align: av=x, len=x => x
 space_col_align: x:x [BRACE_OPEN/FUNC_CLASS_DEF] '{' <==> x:x [NEWLINE/NONE] '' [CallStack:-DEBUG NOT SET-]
+do_space: x:x { BRACE_OPEN
 space_col_align: av=x, len=x => x
 space_col_align: x:x [BRACE_CLOSE/FUNC_CLASS_DEF] '}' <==> x:x [NEWLINE/NONE] '' [CallStack:-DEBUG NOT SET-]
+do_space: x:x } BRACE_CLOSE
 space_col_align: av=x, len=x => x
 space_col_align: x:x [DESTRUCTOR/NONE] '~' <==> x:x [FUNC_CLASS_DEF/DESTRUCTOR] 'TelegramIndex' [CallStack:-DEBUG NOT SET-]
+do_space: x:x ~ DESTRUCTOR
 Spacing: line x [DESTRUCTOR/NONE] '~' <===> [FUNC_CLASS_DEF/DESTRUCTOR] 'TelegramIndex' : REMOVE[xxx]
 space_col_align: av=x, len=x => x
 space_col_align: x:x [FUNC_CLASS_DEF/DESTRUCTOR] 'TelegramIndex' <==> x:xx [FPAREN_OPEN/FUNC_CLASS_DEF] '(' [CallStack:-DEBUG NOT SET-]
-Spacing: line x [FUNC_CLASS_DEF/DESTRUCTOR] 'TelegramIndex' <===> [FPAREN_OPEN/FUNC_CLASS_DEF] '(' : sp_func_class_paren[xxx]
+do_space: x:x TelegramIndex FUNC_CLASS_DEF
+Spacing: line x [FUNC_CLASS_DEF/DESTRUCTOR] 'TelegramIndex' <===> [FPAREN_OPEN/FUNC_CLASS_DEF] '(' : sp_func_class_paren[xxxx]
 space_col_align: av=x, len=xx => xx
 space_col_align: x:xx [FPAREN_OPEN/FUNC_CLASS_DEF] '(' <==> x:xx [FPAREN_CLOSE/FUNC_CLASS_DEF] ')' [CallStack:-DEBUG NOT SET-]
+do_space: x:xx ( FPAREN_OPEN
 Spacing: line x [FPAREN_OPEN/FUNC_CLASS_DEF] '(' <===> [FPAREN_CLOSE/FUNC_CLASS_DEF] ')' : sp_inside_fparens[xxxx]
 space_col_align: av=x, len=x => x
 space_col_align: x:xx [FPAREN_CLOSE/FUNC_CLASS_DEF] ')' <==> x:xx [NEWLINE/NONE] '' [CallStack:-DEBUG NOT SET-]
+do_space: x:xx ) FPAREN_CLOSE
 space_col_align: av=x, len=x => x
 space_col_align: xx:x [BRACE_OPEN/FUNC_CLASS_DEF] '{' <==> xx:x [NEWLINE/NONE] '' [CallStack:-DEBUG NOT SET-]
+do_space: xx:x { BRACE_OPEN
 space_col_align: av=x, len=x => x
 space_col_align: xx:x [BRACE_CLOSE/FUNC_CLASS_DEF] '}' <==> xx:x [NEWLINE/NONE] '' [CallStack:-DEBUG NOT SET-]
+do_space: xx:x } BRACE_CLOSE
 space_col_align: av=x, len=x => x
 space_col_align: xx:x [QUALIFIER/NONE] 'const' <==> xx:x [TYPE/NONE] 'char' [CallStack:-DEBUG NOT SET-]
+do_space: xx:x const QUALIFIER
 Spacing: line xx [QUALIFIER/NONE] 'const' <===> [TYPE/NONE] 'char' : sp_after_type[xxxx]
 space_col_align: av=x, len=x => x
 space_col_align: xx:x [TYPE/NONE] 'char' <==> xx:xx [PTR_TYPE/NONE] '*' [CallStack:-DEBUG NOT SET-]
+do_space: xx:x char TYPE
 Spacing: line xx [TYPE/NONE] 'char' <===> [PTR_TYPE/NONE] '*' : IGNORE[xxxx]
 space_col_align: av=x, len=x => x
 space_col_align: xx:xx [PTR_TYPE/NONE] '*' <==> xx:xx [QUALIFIER/NONE] 'const' [CallStack:-DEBUG NOT SET-]
+do_space: xx:xx * PTR_TYPE
 Spacing: line xx [PTR_TYPE/NONE] '*' <===> [QUALIFIER/NONE] 'const' : IGNORE[xxxx]
 space_col_align: av=x, len=x => x
 space_col_align: xx:xx [QUALIFIER/NONE] 'const' <==> xx:xx [WORD/NONE] 'pTelName' [CallStack:-DEBUG NOT SET-]
+do_space: xx:xx const QUALIFIER
 Spacing: line xx [QUALIFIER/NONE] 'const' <===> [WORD/NONE] 'pTelName' : sp_after_type[xxxx]
 space_col_align: av=x, len=x => x
 space_col_align: xx:xx [WORD/NONE] 'pTelName' <==> xx:xx [SEMICOLON/NONE] ';' [CallStack:-DEBUG NOT SET-]
+do_space: xx:xx pTelName WORD
 Spacing: line xx [WORD/NONE] 'pTelName' <===> [SEMICOLON/NONE] ';' : sp_before_semi[xxx]
 space_col_align: av=x, len=x => x
 space_col_align: xx:xx [SEMICOLON/NONE] ';' <==> xx:xx [NEWLINE/NONE] '' [CallStack:-DEBUG NOT SET-]
+do_space: xx:xx ; SEMICOLON
 space_col_align: av=x, len=x => x
 space_col_align: xx:x [TYPE/NONE] 'unsigned' <==> xx:xx [TYPE/NONE] 'long' [CallStack:-DEBUG NOT SET-]
+do_space: xx:x unsigned TYPE
 Spacing: line xx [TYPE/NONE] 'unsigned' <===> [TYPE/NONE] 'long' : sp_after_type[xxxx]
 space_col_align: av=x, len=x => x
 space_col_align: xx:xx [TYPE/NONE] 'long' <==> xx:xx [WORD/NONE] 'nTelIndex' [CallStack:-DEBUG NOT SET-]
+do_space: xx:xx long TYPE
 Spacing: line xx [TYPE/NONE] 'long' <===> [WORD/NONE] 'nTelIndex' : sp_after_type[xxxx]
 space_col_align: av=x, len=x => x
 space_col_align: xx:xx [WORD/NONE] 'nTelIndex' <==> xx:xx [SEMICOLON/NONE] ';' [CallStack:-DEBUG NOT SET-]
+do_space: xx:xx nTelIndex WORD
 Spacing: line xx [WORD/NONE] 'nTelIndex' <===> [SEMICOLON/NONE] ';' : sp_before_semi[xxx]
 space_col_align: av=x, len=x => x
 space_col_align: xx:xx [SEMICOLON/NONE] ';' <==> xx:xx [NEWLINE/NONE] '' [CallStack:-DEBUG NOT SET-]
+do_space: xx:xx ; SEMICOLON
 space_col_align: av=x, len=x => x
