@@ -26,7 +26,8 @@ mkdir ${RESULTS}
   if [ ${how_different} != "0" ] ;
   then
     echo "Problem with "${file}
-    echo "use: diff ${RESULTS}/${file} ${SCRIPTS}/Test_more/${file} to find why"
+    echo "use: diff ${RESULTS}/${file} ${SCRIPTS}/More_Options_to_Test/${file} to find why"
+    diff ${RESULTS}/${file} ${SCRIPTS}/More_Options_to_Test/${file}
   else
     rm results/${file}
   fi
@@ -53,6 +54,7 @@ do
   then
     echo "Problem with "${file}
     echo "use: diff ${LFile}.sed ${OutputFile} to find why"
+    diff ${LFile}.sed ${OutputFile}
     diff ${LFile} ${OutputFile}
     break
   else
