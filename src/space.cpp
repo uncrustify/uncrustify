@@ -122,6 +122,11 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
 
    min_sp = 1;
 
+#ifdef DEBUG
+   LOG_FMT(LSPACE, "(%d) ", __LINE__);
+#endif
+   LOG_FMT(LSPACE, "%s: %zu:%zu %s %s\n",
+           __func__, first->orig_line, first->orig_col, first->text(), get_token_name(first->type));
    if ((first->type == CT_IGNORED) || (second->type == CT_IGNORED))
    {
       log_rule("IGNORED");
@@ -430,6 +435,14 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
    {
       log_rule("sp_after_dc");
       return(cpd.settings[UO_sp_after_dc].a);
+   }
+   // Issue #889
+   // mapped_file_source abc((int) ::CW2A(sTemp));
+   if ((first->type == CT_PAREN_CLOSE) && (second->type == CT_DC_MEMBER) &&
+       (second->next != NULL) && (second->next->type == CT_FUNC_CALL))
+   {
+      log_rule("sp_889_a");
+      return(AV_REMOVE);
    }
    if (second->type == CT_DC_MEMBER)
    {
@@ -1756,6 +1769,8 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
       return(cpd.settings[UO_sp_extern_paren].a);
    }
 
+   // this table lists out all combos where a space should NOT be present
+   // CT_UNKNOWN is a wildcard.
    for (idx = 0; idx < (int)ARRAY_SIZE(no_space_table); idx++)
    {
       if (((no_space_table[idx].first == CT_UNKNOWN) ||
@@ -1764,11 +1779,25 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
           ((no_space_table[idx].second == CT_UNKNOWN) ||
            (no_space_table[idx].second == second->type)))
       {
-         log_rule("REMOVE");
+         log_rule("REMOVE from no_space_table");
          return(AV_REMOVE);
       }
    }
-   log_rule("ADD");
+
+   // Issue #889
+   // mapped_file_source abc((int) A::CW2A(sTemp));
+   if ((first->type == CT_PAREN_CLOSE) && (second->type == CT_TYPE) &&
+       (second->next != NULL) && (second->next->type == CT_DC_MEMBER) &&
+       (second->next->next != NULL) && (second->next->next->type == CT_FUNC_CALL))
+   {
+      log_rule("sp_889_b");
+      return(AV_REMOVE);
+   }
+
+   LOG_FMT(LSPACE, "\n\n(%d) %s: WARNING: unrecognize do_space: first: %zu:%zu %s %s and second: %zu:%zu %s %s\n\n\n",
+           __LINE__, __func__, first->orig_line, first->orig_col, first->text(), get_token_name(first->type),
+           second->orig_line, second->orig_col, second->text(), get_token_name(second->type));
+   log_rule("ADD as default value");
    return(AV_ADD);
 } // do_space
 
@@ -1795,18 +1824,18 @@ void space_text(void)
    while (pc != NULL)
    {
 #ifdef DEBUG
-      LOG_FMT(LGUY, "(%d) ", __LINE__);
+      LOG_FMT(LSPACE, "(%d) ", __LINE__);
 #endif
-      LOG_FMT(LGUY, "%s: %zu:%zu %s %s\n",
+      LOG_FMT(LSPACE, "%s: %zu:%zu %s %s\n",
               __func__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
       if ((cpd.settings[UO_use_options_overriding_for_qt_macros].b) &&
           ((strcmp(pc->text(), "SIGNAL") == 0) ||
            (strcmp(pc->text(), "SLOT") == 0)))
       {  // guy 2015-09-22
 #ifdef DEBUG
-         LOG_FMT(LGUY, "(%d) ", __LINE__);
+         LOG_FMT(LSPACE, "(%d) ", __LINE__);
 #endif
-         LOG_FMT(LGUY, "%zu: [%d] type %s SIGNAL/SLOT found\n",
+         LOG_FMT(LSPACE, "%zu: [%d] type %s SIGNAL/SLOT found\n",
                  pc->orig_line, __LINE__, get_token_name(pc->type));
          // flag the chunk for a second processing
          chunk_flags_set(pc, PCF_IN_QT_MACRO);
