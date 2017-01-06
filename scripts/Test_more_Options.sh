@@ -13,6 +13,17 @@
 SCRIPTS="./scripts"
 RESULTS="./results"
 #
+# control the CMAKE_BUILD_TYPE
+CMAKE_BUILD_TYPE=`grep -i CMAKE_BUILD_TYPE:STRING=release ./build/CMakeCache.txt`
+how_different=${?}
+if [ ${how_different} == "0" ] ;
+then
+  echo "CMAKE_BUILD_TYPE is correct"
+else
+  echo "CMAKE_BUILD_TYPE must be 'Release' to test"
+  exit 1
+fi
+#
 rm -rf ${RESULTS}
 mkdir ${RESULTS}
 #
@@ -22,7 +33,6 @@ mkdir ${RESULTS}
   ./build/uncrustify > ${RESULTS}/${file} 
   cmp -s ${RESULTS}/${file} ${SCRIPTS}/More_Options_to_Test/${file} 
   how_different=${?}
-  #echo "the status of is "${how_different}
   if [ ${how_different} != "0" ] ;
   then
     echo "Problem with "${file}
@@ -52,7 +62,7 @@ do
   #echo "the status of is "${how_different}
   if [ ${how_different} != "0" ] ;
   then
-    echo "Problem with "${file}
+    echo "Problem with "${InputFile}
     echo "use: diff ${LFile}.sed ${OutputFile} to find why"
     diff ${LFile}.sed ${OutputFile}
     diff ${LFile} ${OutputFile}

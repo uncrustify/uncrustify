@@ -1,10 +1,5 @@
 space_text: x:x struct STRUCT
 do_space: x:x struct STRUCT
-
-
-(xxxx) do_space: WARNING: unrecognize do_space: first: x:x struct STRUCT and second: x:x TelegramIndex TYPE
-
-
 Spacing: line x [STRUCT/NONE] 'struct' <===> [TYPE/STRUCT] 'TelegramIndex' : ADD as default value[xxxx] <force between 'struct' and 'TelegramIndex'> = ADD @ x => x
 space_text: x:x TelegramIndex TYPE
 do_space: x:x TelegramIndex TYPE
@@ -46,11 +41,6 @@ do_space: x:xx nI WORD
 Spacing: line x [WORD/NONE] 'nI' <===> [FPAREN_CLOSE/FUNC_CLASS_DEF] ')' : sp_inside_fparen[xxxx] = IGNORE @ x => xx
 space_text: x:xx ) FPAREN_CLOSE
 do_space: x:xx ) FPAREN_CLOSE
-
-
-(xxxx) do_space: WARNING: unrecognize do_space: first: x:xx ) FPAREN_CLOSE and second: x:xx : CONSTR_COLON
-
-
 Spacing: line x [FPAREN_CLOSE/FUNC_CLASS_DEF] ')' <===> [CONSTR_COLON/NONE] ':' : ADD as default value[xxxx] = ADD @ x => xx
 space_text: x:xx : CONSTR_COLON
 do_space: x:xx : CONSTR_COLON
@@ -195,11 +185,6 @@ Spacing: line x [WORD/NONE] 'nI' <===> [FPAREN_CLOSE/FUNC_CLASS_DEF] ')' : sp_in
 space_col_align: av=x, len=x => x
 space_col_align: x:xx [FPAREN_CLOSE/FUNC_CLASS_DEF] ')' <==> x:xx [CONSTR_COLON/NONE] ':' [CallStack:-DEBUG NOT SET-]
 do_space: x:xx ) FPAREN_CLOSE
-
-
-(xxxx) do_space: WARNING: unrecognize do_space: first: x:xx ) FPAREN_CLOSE and second: x:xx : CONSTR_COLON
-
-
 Spacing: line x [FPAREN_CLOSE/FUNC_CLASS_DEF] ')' <===> [CONSTR_COLON/NONE] ':' : ADD as default value[xxxx]
 space_col_align: av=x, len=x => x
 space_col_align: x:xx [CONSTR_COLON/NONE] ':' <==> x:xx [NEWLINE/NONE] '' [CallStack:-DEBUG NOT SET-]
