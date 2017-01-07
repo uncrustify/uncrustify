@@ -279,9 +279,9 @@ bool unc_homedir(std::string &home);
  * @return the next tabstop column
  */
 static_inline
-size_t calc_next_tab_column(int col, int tabsize)
+size_t calc_next_tab_column(size_t col, size_t tabsize)
 {
-   if (col <= 0)
+   if (col == 0)
    {
       col = 1;
    }

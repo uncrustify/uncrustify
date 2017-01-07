@@ -416,7 +416,7 @@ void align_right_comments(void)
          /* Change certain WHOLE comments into RIGHT-alignable comments */
          if (pc->parent_type == CT_COMMENT_WHOLE)
          {
-            size_t max_col = pc->column_indent + cpd.settings[UO_input_tab_size].n;
+            size_t max_col = pc->column_indent + cpd.settings[UO_input_tab_size].u;
 
             /* If the comment is further right than the brace level... */
             if (pc->column >= max_col)
@@ -476,12 +476,12 @@ void align_preprocessor(void)
    AlignStack as;    // value macros
    AlignStack *cur_as = &as;
 
-   as.Start(cpd.settings[UO_align_pp_define_span].n);
-   as.m_gap = cpd.settings[UO_align_pp_define_gap].n;
+   as.Start(cpd.settings[UO_align_pp_define_span].u);
+   as.m_gap = cpd.settings[UO_align_pp_define_gap].u;
 
    AlignStack asf;   // function macros
-   asf.Start(cpd.settings[UO_align_pp_define_span].n);
-   asf.m_gap = cpd.settings[UO_align_pp_define_gap].n;
+   asf.Start(cpd.settings[UO_align_pp_define_span].u);
+   asf.m_gap = cpd.settings[UO_align_pp_define_gap].u;
 
    chunk_t *pc = chunk_get_head();
    while (pc != NULL)
@@ -618,8 +618,8 @@ chunk_t *align_assign(chunk_t *first, int span, int thresh)
 
          if (pc->parent_type == CT_ENUM)
          {
-            myspan   = cpd.settings[UO_align_enum_equ_span].n;
-            mythresh = cpd.settings[UO_align_enum_equ_thresh].n;
+            myspan   = cpd.settings[UO_align_enum_equ_span].u;
+            mythresh = cpd.settings[UO_align_enum_equ_thresh].u;
          }
          else
          {
