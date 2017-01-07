@@ -441,7 +441,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
    if ((first->type == CT_PAREN_CLOSE) && (second->type == CT_DC_MEMBER) &&
        (second->next != NULL) && (second->next->type == CT_FUNC_CALL))
    {
-      log_rule("REMOVE_889_a");
+      log_rule("REMOVE_889_A");
       return(AV_REMOVE);
    }
    if (second->type == CT_DC_MEMBER)
@@ -1790,7 +1790,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
        (second->next != NULL) && (second->next->type == CT_DC_MEMBER) &&
        (second->next->next != NULL) && (second->next->next->type == CT_FUNC_CALL))
    {
-      log_rule("REMOVE_889_b");
+      log_rule("REMOVE_889_B");
       return(AV_REMOVE);
    }
 
