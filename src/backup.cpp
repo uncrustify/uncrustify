@@ -92,8 +92,8 @@ int backup_copy_file(const char *filename, const vector<UINT8> &data)
    thefile = fopen(newpath, "wb");
    if (thefile != NULL)
    {
-      int retval   = fwrite(&data[0], data.size(), 1, thefile);
-      int my_errno = errno;
+      size_t retval   = fwrite(&data[0], data.size(), 1, thefile);
+      int    my_errno = errno;
 
       fclose(thefile);
 
@@ -121,12 +121,12 @@ int backup_copy_file(const char *filename, const vector<UINT8> &data)
  */
 void backup_create_md5_file(const char *filename)
 {
-   UINT8 dig[16];
-   MD5   md5;
-   FILE  *thefile;
-   UINT8 buf[4096];
-   INT32 len;
-   char  newpath[1024];
+   UINT8  dig[16];
+   MD5    md5;
+   FILE   *thefile;
+   UINT8  buf[4096];
+   size_t len;
+   char   newpath[1024];
 
    md5.Init();
 
