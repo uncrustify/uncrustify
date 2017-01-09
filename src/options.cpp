@@ -1282,9 +1282,9 @@ void register_options(void)
                   "The span for aligning on '=' in assignments (0=don't align)", "", 0, 5000);
    unc_add_option("align_assign_thresh", UO_align_assign_thresh, AT_UNUM,
                   "The threshold for aligning on '=' in assignments (0=no limit)", "", 0, 5000);
-   unc_add_option("align_enum_equ_span", UO_align_enum_equ_span, AT_NUM,
+   unc_add_option("align_enum_equ_span", UO_align_enum_equ_span, AT_UNUM,
                   "The span for aligning on '=' in enums (0=don't align)", "", 0, 5000);
-   unc_add_option("align_enum_equ_thresh", UO_align_enum_equ_thresh, AT_NUM,
+   unc_add_option("align_enum_equ_thresh", UO_align_enum_equ_thresh, AT_UNUM,
                   "The threshold for aligning on '=' in enums (0=no limit)", "", 0, 5000);
    unc_add_option("align_var_class_span", UO_align_var_class_span, AT_UNUM,
                   "The span for aligning class (0=don't align)", "", 0, 5000);
@@ -1353,9 +1353,9 @@ void register_options(void)
                   "This will not work right if the macro contains a multi-line comment.");
    unc_add_option("align_pp_define_together", UO_align_pp_define_together, AT_BOOL,
                   "# Align macro functions and variables together");
-   unc_add_option("align_pp_define_gap", UO_align_pp_define_gap, AT_NUM,
+   unc_add_option("align_pp_define_gap", UO_align_pp_define_gap, AT_UNUM,
                   "The minimum space between label and value of a preprocessor define");
-   unc_add_option("align_pp_define_span", UO_align_pp_define_span, AT_NUM,
+   unc_add_option("align_pp_define_span", UO_align_pp_define_span, AT_UNUM,
                   "The span for aligning on '#define' bodies (0=don't align, other=number of lines including comments between blocks)", "", 0, 5000);
    unc_add_option("align_left_shift", UO_align_left_shift, AT_BOOL,
                   "Align lines that start with '<<' with previous '<<'. Default=True");

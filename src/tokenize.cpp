@@ -1275,7 +1275,7 @@ static bool parse_whitespace(tok_ctx &ctx, chunk_t &pc)
          break;
 
       case '\t':
-         pc.orig_prev_sp += calc_next_tab_column(cpd.column, cpd.settings[UO_input_tab_size].n) - cpd.column;
+         pc.orig_prev_sp += calc_next_tab_column(cpd.column, cpd.settings[UO_input_tab_size].u) - cpd.column;
          break;
 
       case ' ':
