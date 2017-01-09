@@ -6,10 +6,15 @@
  * @license GPL v2+
  */
 
+#include "width.h"
 #include "uncrustify_types.h"
 #include "chunk_list.h"
 #include "prototypes.h"
+#include "uncrustify.h"
+#include "indent.h"
+#include "newlines.h"
 #include <cstdlib>
+
 
 static bool split_line(chunk_t *pc);
 static void split_fcn_params(chunk_t *start);

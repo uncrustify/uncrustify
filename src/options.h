@@ -864,9 +864,18 @@ struct option_map_value
 };
 
 
+string argtype_to_string(argtype_e argtype);
+string bool_to_string(bool val);
+string argval_to_string(argval_t argval);
+string number_to_string(int number);
+string lineends_to_string(lineends_e linends);
+string tokenpos_to_string(tokenpos_e tokenpos);
+string op_val_to_string(argtype_e argtype, op_val_t op_val);
+
 typedef map<uncrustify_options, option_map_value>::iterator   option_name_map_it;
 typedef map<uncrustify_groups, group_map_value>::iterator     group_map_it;
 typedef group_map_value_options_t::iterator                   option_list_it;
 typedef group_map_value_options_t::const_iterator             option_list_cit;
+
 
 #endif /* OPTIONS_H_INCLUDED */

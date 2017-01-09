@@ -8,6 +8,7 @@
  * @author  Ben Gardner
  * @license GPL v2+
  */
+#include "defines.h"
 #include "uncrustify_types.h"
 #include "char_table.h"
 #include "args.h"
@@ -25,12 +26,6 @@ typedef map<string, string> defmap;
 defmap defines;
 
 
-/**
- * Adds an entry to the define list
- *
- * @param tag        The tag (string) must be zero terminated
- * @param value      NULL or the value of the define
- */
 void add_define(const char *tag, const char *value)
 {
    if ((tag == NULL) || (*tag == 0))
@@ -54,12 +49,6 @@ void add_define(const char *tag, const char *value)
 }
 
 
-/**
- * Loads the defines from a file
- *
- * @param filename   The path to the file to load
- * @return           SUCCESS or FAILURE
- */
 int load_define_file(const char *filename)
 {
    FILE   *pf;

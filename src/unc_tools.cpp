@@ -8,6 +8,7 @@
  */
 
 #include "unc_tools.h"
+#include "uncrustify.h"
 
 // examples:
 // prot_the_line(__LINE__, pc->orig_line);
