@@ -11,7 +11,8 @@ exports.test = function(libUncrustify, assert){
 };
 
 if (module == require.main) {
-	var uncrustify = require('../libUncrustify.js');
+    if(process.argv.length < 3) {throw "libUncrustify.js path missing";}
+	var uncrustify = require(process.argv[2]);
 	var assert = require("assert");
 	exports.test(uncrustify, assert);
 }
