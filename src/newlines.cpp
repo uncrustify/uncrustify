@@ -747,13 +747,21 @@ static void newlines_func_pre_blank_lines(chunk_t *start)
       else if (chunk_is_comment(pc))
       {
          LOG_FMT(LNLFUNCT, "   <chunk_is_comment> found at line=%zu column=%zu\n", pc->orig_line, pc->orig_col);
-         if (last_comment)
+         if ((pc->orig_line < start->orig_line
+              && ((start->orig_line - pc->orig_line
+                   - (pc->type == CT_COMMENT_MULTI ? pc->nl_count : 0))) < 2) ||
+             (last_comment != NULL
+              && pc->type == CT_COMMENT_CPP     // combine only cpp comments
+              && last_comment->type == pc->type // don't mix comment types
+              && last_comment->orig_line > pc->orig_line
+              && (last_comment->orig_line - pc->orig_line) < 2))
          {
-            do_it = true;
-            break;
+            last_comment = pc;
+            continue;
          }
-         last_comment = pc;
-         continue;
+
+         do_it = true;
+         break;
       }
       else if (pc->type == CT_DESTRUCTOR)
       {
