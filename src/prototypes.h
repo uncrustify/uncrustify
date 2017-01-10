@@ -86,7 +86,7 @@ void align_right_comments(void);
 void align_preprocessor(void);
 void align_struct_initializers(void);
 chunk_t *align_nl_cont(chunk_t *start);
-chunk_t *align_assign(chunk_t *first, int span, int thresh);
+chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh);
 void quick_align_again(void);
 
 
