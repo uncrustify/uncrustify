@@ -1453,7 +1453,7 @@ void register_options(void)
                   "Make all if/elseif/else statements with at least one 'else' or 'else if' fully braced.\n"
                   "If mod_full_brace_if_chain is used together with this option, all if-else chains will get braces,\n"
                   "and simple 'if' statements will lose them (if possible).\n");
-   unc_add_option("mod_full_brace_nl", UO_mod_full_brace_nl, AT_NUM,
+   unc_add_option("mod_full_brace_nl", UO_mod_full_brace_nl, AT_UNUM,
                   "Don't remove braces around statements that span N newlines", "", 0, 5000);
    unc_add_option("mod_full_brace_while", UO_mod_full_brace_while, AT_IARF,
                   "Add or remove braces on single-line 'while' statement");
@@ -1467,22 +1467,22 @@ void register_options(void)
                   "Add parens on 'while' and 'if' statement around bools");
    unc_add_option("mod_remove_extra_semicolon", UO_mod_remove_extra_semicolon, AT_BOOL,
                   "Whether to remove superfluous semicolons");
-   unc_add_option("mod_add_long_function_closebrace_comment", UO_mod_add_long_function_closebrace_comment, AT_NUM,
+   unc_add_option("mod_add_long_function_closebrace_comment", UO_mod_add_long_function_closebrace_comment, AT_UNUM,
                   "If a function body exceeds the specified number of newlines and doesn't have a comment after\n"
                   "the close brace, a comment will be added.");
-   unc_add_option("mod_add_long_namespace_closebrace_comment", UO_mod_add_long_namespace_closebrace_comment, AT_NUM,
+   unc_add_option("mod_add_long_namespace_closebrace_comment", UO_mod_add_long_namespace_closebrace_comment, AT_UNUM,
                   "If a namespace body exceeds the specified number of newlines and doesn't have a comment after\n"
                   "the close brace, a comment will be added.");
-   unc_add_option("mod_add_long_class_closebrace_comment", UO_mod_add_long_class_closebrace_comment, AT_NUM,
+   unc_add_option("mod_add_long_class_closebrace_comment", UO_mod_add_long_class_closebrace_comment, AT_UNUM,
                   "If a class body exceeds the specified number of newlines and doesn't have a comment after\n"
                   "the close brace, a comment will be added.");
-   unc_add_option("mod_add_long_switch_closebrace_comment", UO_mod_add_long_switch_closebrace_comment, AT_NUM,
+   unc_add_option("mod_add_long_switch_closebrace_comment", UO_mod_add_long_switch_closebrace_comment, AT_UNUM,
                   "If a switch body exceeds the specified number of newlines and doesn't have a comment after\n"
                   "the close brace, a comment will be added.");
    unc_add_option("mod_add_long_ifdef_endif_comment", UO_mod_add_long_ifdef_endif_comment, AT_NUM,
                   "If an #ifdef body exceeds the specified number of newlines and doesn't have a comment after\n"
                   "the #endif, a comment will be added.");
-   unc_add_option("mod_add_long_ifdef_else_comment", UO_mod_add_long_ifdef_else_comment, AT_NUM,
+   unc_add_option("mod_add_long_ifdef_else_comment", UO_mod_add_long_ifdef_else_comment, AT_UNUM,
                   "If an #ifdef or #else body exceeds the specified number of newlines and doesn't have a comment after\n"
                   "the #else, a comment will be added.");
    unc_add_option("mod_sort_import", UO_mod_sort_import, AT_BOOL,
