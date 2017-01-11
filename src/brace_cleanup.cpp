@@ -32,11 +32,11 @@ static bool check_complex_statements(struct parse_frame *frm, chunk_t *pc);
 static bool handle_complex_close(struct parse_frame *frm, chunk_t *pc);
 
 
-static int preproc_start(struct parse_frame *frm, chunk_t *pc)
+static size_t preproc_start(struct parse_frame *frm, chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
    chunk_t *next;
-   int     pp_level = cpd.pp_level;
+   size_t  pp_level = cpd.pp_level;
 
    /* Get the type of preprocessor and handle it */
    next = chunk_get_next_ncnl(pc);
@@ -80,7 +80,7 @@ static void print_stack(log_sev_t logsev, const char *str,
    {
       log_fmt(logsev, "%8.8s", str);
 
-      for (int idx = 1; idx <= frm->pse_tos; idx++)
+      for (size_t idx = 1; idx <= frm->pse_tos; idx++)
       {
          if (frm->pse[idx].stage != BS_NONE)
          {
@@ -133,7 +133,7 @@ void brace_cleanup(void)
       }
 
       /* Check for a preprocessor start */
-      int pp_level = cpd.pp_level;
+      size_t pp_level = cpd.pp_level;
       if (pc->type == CT_PREPROC)
       {
          pp_level = preproc_start(&frm, pc);
@@ -285,7 +285,7 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
    LOG_FUNC_ENTRY();
    c_token_t parent = CT_NONE;
 
-   LOG_FMT(LTOK, "%s:%zu] %16s - tos:%d/%16s stg:%d\n",
+   LOG_FMT(LTOK, "%s:%zu] %16s - tos:%zu/%16s stg:%d\n",
            __func__, pc->orig_line, get_token_name(pc->type),
            frm->pse_tos, get_token_name(frm->pse[frm->pse_tos].type),
            frm->pse[frm->pse_tos].stage);
