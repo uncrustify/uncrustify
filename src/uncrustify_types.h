@@ -105,7 +105,7 @@ struct parse_frame
    int                      sparen_count;
 
    struct paren_stack_entry pse[128];
-   int                      pse_tos;
+   size_t                   pse_tos;
    int                      paren_count;
 
    c_token_t                in_ifdef;
