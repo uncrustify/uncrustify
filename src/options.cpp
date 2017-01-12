@@ -775,7 +775,7 @@ void register_options(void)
    unc_add_option("indent_oc_block_msg", UO_indent_oc_block_msg, AT_NUM,
                   "Indent OC blocks in a message relative to the parameter name.\n"
                   "0=use indent_oc_block rules, 1+=spaces to indent", "", 0, 16);
-   unc_add_option("indent_oc_msg_colon", UO_indent_oc_msg_colon, AT_NUM,
+   unc_add_option("indent_oc_msg_colon", UO_indent_oc_msg_colon, AT_UNUM,
                   "Minimum indent for subsequent parameters", "", 0, 5000);
    unc_add_option("indent_oc_msg_prioritize_first_colon", UO_indent_oc_msg_prioritize_first_colon, AT_BOOL,
                   "If True, prioritize aligning with initial colon (and stripping spaces from lines, if necessary).\n"
@@ -1231,7 +1231,7 @@ void register_options(void)
                   "Related to nl_constr_colon, nl_constr_init_args and pos_constr_comma.");
 
    unc_begin_group(UG_linesplit, "Line Splitting options");
-   unc_add_option("code_width", UO_code_width, AT_NUM,
+   unc_add_option("code_width", UO_code_width, AT_UNUM,
                   "Try to limit code width to N number of columns", "", 16, 256);
    unc_add_option("ls_for_split_full", UO_ls_for_split_full, AT_BOOL,
                   "Whether to fully split long 'for' statements at semi-colons");
@@ -1328,11 +1328,11 @@ void register_options(void)
                   "it will qualify for being aligned. This has to be > 0 to do anything.\n"
                   "A negative value to force comments which are stuck to the previous token\n"
                   " (gap=0) into alignment with the others.");
-   unc_add_option("align_right_cmt_at_col", UO_align_right_cmt_at_col, AT_NUM,
+   unc_add_option("align_right_cmt_at_col", UO_align_right_cmt_at_col, AT_UNUM,
                   "Align trailing comment at or beyond column N; 'pulls in' comments as a bonus side effect (0=ignore)", "", 0, 200);
    unc_add_option("align_func_proto_span", UO_align_func_proto_span, AT_UNUM,
                   "The span for aligning function prototypes (0=don't align)", "", 0, 5000);
-   unc_add_option("align_func_proto_gap", UO_align_func_proto_gap, AT_NUM,
+   unc_add_option("align_func_proto_gap", UO_align_func_proto_gap, AT_UNUM,
                   "Minimum gap between the return type and the function name.");
    unc_add_option("align_on_operator", UO_align_on_operator, AT_BOOL,
                   "Align function protos on the 'operator' keyword instead of what follows");
@@ -1344,7 +1344,7 @@ void register_options(void)
    unc_add_option("align_single_line_brace", UO_align_single_line_brace, AT_BOOL,
                   "Aligning the open brace of single-line functions.\n"
                   "Requires align_single_line_func=True, uses align_func_proto_span");
-   unc_add_option("align_single_line_brace_gap", UO_align_single_line_brace_gap, AT_NUM,
+   unc_add_option("align_single_line_brace_gap", UO_align_single_line_brace_gap, AT_UNUM,
                   "Gap for align_single_line_brace.");
    unc_add_option("align_oc_msg_spec_span", UO_align_oc_msg_spec_span, AT_UNUM,
                   "The span for aligning ObjC msg spec (0=don't align)", "", 0, 5000);
@@ -1369,7 +1369,7 @@ void register_options(void)
                   "Aligning parameters in an Obj-C '+' or '-' declaration on the ':'");
 
    unc_begin_group(UG_comment, "Comment modifications");
-   unc_add_option("cmt_width", UO_cmt_width, AT_NUM,
+   unc_add_option("cmt_width", UO_cmt_width, AT_UNUM,
                   "Try to wrap comments at cmt_width columns", "", 16, 256);
    unc_add_option("cmt_reflow_mode", UO_cmt_reflow_mode, AT_NUM,
                   "Set the comment reflow mode (Default=0)\n"

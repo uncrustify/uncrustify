@@ -23,8 +23,8 @@ static chunk_t *align_trailing_comments(chunk_t *start);
 static void align_init_brace(chunk_t *start);
 static void align_func_params(void);
 static void align_same_func_call_params();
-static void align_func_proto(int span);
-static void align_oc_msg_spec(int span);
+static void align_func_proto(size_t span);
+static void align_oc_msg_spec(size_t span);
 static void align_typedefs(size_t span);
 static void align_left_shift(void);
 static void align_oc_msg_colons(void);
@@ -120,7 +120,7 @@ static void align_asm_colon(void);
  * @param col           the column
  * @param align_single  align even if there is only one item on the stack
  */
-static void align_stack(ChunkStack &cs, int col, bool align_single, log_sev_t sev)
+static void align_stack(ChunkStack &cs, size_t col, bool align_single, log_sev_t sev)
 {
    LOG_FUNC_ENTRY();
 
@@ -131,7 +131,7 @@ static void align_stack(ChunkStack &cs, int col, bool align_single, log_sev_t se
 
    if ((cs.Len() > 1) || (align_single && (cs.Len() == 1)))
    {
-      LOG_FMT(sev, "%s: max_col=%d\n", __func__, col);
+      LOG_FMT(sev, "%s: max_col=%zu\n", __func__, col);
       chunk_t *pc;
       while ((pc = cs.Pop_Back()) != NULL)
       {
@@ -244,10 +244,10 @@ void quick_indent_again(void)
          chunk_t *tmp = chunk_get_prev(pc);
          if (chunk_is_newline(tmp))
          {
-            int col = pc->indent.ref->column + pc->indent.delta;
+            size_t col = pc->indent.ref->column + pc->indent.delta;
 
             indent_to_column(pc, col);
-            LOG_FMT(LINDENTAG, "%s: [%zu] indent [%s] to %d based on [%s] @ %zu:%zu\n",
+            LOG_FMT(LINDENTAG, "%s: [%zu] indent [%s] to %zu based on [%s] @ %zu:%zu\n",
                     __func__, pc->orig_line, pc->text(), col,
                     pc->indent.ref->text(),
                     pc->indent.ref->orig_line, pc->indent.ref->column);
@@ -336,7 +336,7 @@ void align_all(void)
 /**
  * Aligns all function prototypes in the file.
  */
-static void align_oc_msg_spec(int span)
+static void align_oc_msg_spec(size_t span)
 {
    LOG_FUNC_ENTRY();
    LOG_FMT(LALIGN, "%s\n", __func__);
@@ -556,13 +556,13 @@ void align_preprocessor(void)
  * For variable definitions, only consider the '=' for the first variable.
  * Otherwise, only look at the first '=' on the line.
  */
-chunk_t *align_assign(chunk_t *first, int span, int thresh)
+chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh)
 {
    LOG_FUNC_ENTRY();
    size_t my_level;
    size_t tmp;
-   int    var_def_cnt = 0;
-   int    equ_count   = 0;
+   size_t var_def_cnt = 0;
+   size_t equ_count   = 0;
 
    if (first == NULL)
    {
@@ -575,7 +575,7 @@ chunk_t *align_assign(chunk_t *first, int span, int thresh)
       return(chunk_get_next(first));
    }
 
-   LOG_FMT(LALASS, "%s[%zu]: checking %s on line %zu - span=%d thresh=%d\n",
+   LOG_FMT(LALASS, "%s[%zu]: checking %s on line %zu - span=%zu thresh=%zu\n",
            __func__, my_level, first->text(), first->orig_line,
            span, thresh);
 
@@ -691,25 +691,6 @@ chunk_t *align_assign(chunk_t *first, int span, int thresh)
 } // align_assign
 
 
-/**
- * Counts how many '*' pointers are in a row, going backwards
- *
- * @param pc   Pointer to the last '*' in the series
- * @return     The count, including the current one
- */
-int count_prev_ptr_type(chunk_t *pc)
-{
-   int count = 0;
-
-   while ((pc != NULL) && (pc->type == CT_PTR_TYPE))
-   {
-      count++;
-      pc = chunk_get_prev_nc(pc);
-   }
-   return(count);
-}
-
-
 static chunk_t *align_func_param(chunk_t *start)
 {
    LOG_FUNC_ENTRY();
@@ -721,8 +702,8 @@ static chunk_t *align_func_param(chunk_t *start)
    as.m_amp_style  = (AlignStack::StarStyle)cpd.settings[UO_align_var_def_amp_style].u;
 
    bool    did_this_line = false;
-   int     comma_count   = 0;
-   int     chunk_count   = 0;
+   size_t  comma_count   = 0;
+   size_t  chunk_count   = 0;
 
    chunk_t *pc = start;
    while ((pc = chunk_get_next(pc)) != NULL)
@@ -830,7 +811,7 @@ static void align_same_func_call_params()
    chunk_t           *pc;
    chunk_t           *align_root = NULL;
    chunk_t           *align_cur  = NULL;
-   int               align_len   = 0;
+   size_t            align_len   = 0;
    chunk_t           *align_fcn;
    unc_text          align_fcn_name;
    unc_text          align_root_name;
@@ -858,7 +839,7 @@ static void align_same_func_call_params()
             /* if we drop below the brace level that started it, we are done */
             if (align_root && (align_root->brace_level > pc->brace_level))
             {
-               LOG_FMT(LASFCP, "  ++ (drop) Ended with %d fcns\n", align_len);
+               LOG_FMT(LASFCP, "  ++ (drop) Ended with %zu fcns\n", align_len);
 
                /* Flush it all! */
                fcn_as.Flush();
@@ -922,7 +903,7 @@ static void align_same_func_call_params()
          }
          else
          {
-            LOG_FMT(LASFCP, "  ++ Ended with %d fcns\n", align_len);
+            LOG_FMT(LASFCP, "  ++ Ended with %zu fcns\n", align_len);
 
             /* Flush it all! */
             fcn_as.Flush();
@@ -977,7 +958,7 @@ static void align_same_func_call_params()
 
    if (align_len > 1)
    {
-      LOG_FMT(LASFCP, "  ++ Ended with %d fcns\n", align_len);
+      LOG_FMT(LASFCP, "  ++ Ended with %zu fcns\n", align_len);
       fcn_as.End();
       for (size_t idx = 0; idx < as.size(); idx++)
       {
@@ -1005,7 +986,7 @@ chunk_t *step_back_over_member(chunk_t *pc)
 /**
  * Aligns all function prototypes in the file.
  */
-static void align_func_proto(int span)
+static void align_func_proto(size_t span)
 {
    LOG_FUNC_ENTRY();
    chunk_t *toadd;
@@ -1015,13 +996,13 @@ static void align_func_proto(int span)
 
    AlignStack as;
    as.Start(span, 0);
-   as.m_gap        = cpd.settings[UO_align_func_proto_gap].n;
+   as.m_gap        = cpd.settings[UO_align_func_proto_gap].u;
    as.m_star_style = (AlignStack::StarStyle)cpd.settings[UO_align_var_def_star_style].u;
    as.m_amp_style  = (AlignStack::StarStyle)cpd.settings[UO_align_var_def_amp_style].u;
 
    AlignStack as_br;
    as_br.Start(span, 0);
-   as_br.m_gap = cpd.settings[UO_align_single_line_brace_gap].n;
+   as_br.m_gap = cpd.settings[UO_align_single_line_brace_gap].u;
 
    for (chunk_t *pc = chunk_get_head(); pc != NULL; pc = chunk_get_next(pc))
    {
@@ -1141,7 +1122,7 @@ static chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_co
    /* Set up the brace open aligner */
    AlignStack as_br;
    as_br.Start(myspan, mythresh);
-   as_br.m_gap = cpd.settings[UO_align_single_line_brace_gap].n;
+   as_br.m_gap = cpd.settings[UO_align_single_line_brace_gap].u;
 
    bool    did_this_line = false;
    chunk_t *pc           = chunk_get_next(start);
@@ -1409,7 +1390,7 @@ chunk_t *align_trailing_comments(chunk_t *start)
    ChunkStack   cs;
    CmtAlignType cmt_type_start, cmt_type_cur;
    size_t       col;
-   size_t       intended_col = cpd.settings[UO_align_right_cmt_at_col].n;
+   size_t       intended_col = cpd.settings[UO_align_right_cmt_at_col].u;
 
    cmt_type_start = get_comment_align_type(pc);
 
@@ -2028,8 +2009,8 @@ static void align_oc_msg_colon(chunk_t *so)
    cas.m_skip_first = !cpd.settings[UO_align_oc_msg_colon_first].b;
 
    /* find the longest args that isn't the first one */
-   int     first_len = 0;
-   int     mlen      = 0;
+   size_t  first_len = 0;
+   size_t  mlen      = 0;
    chunk_t *longest  = NULL;
 
    size_t  len = nas.m_aligned.Len();
@@ -2037,7 +2018,7 @@ static void align_oc_msg_colon(chunk_t *so)
    {
       chunk_t *tmp = nas.m_aligned.GetChunk(idx);
 
-      int     tlen = tmp->str.size();
+      size_t  tlen = tmp->str.size();
       if (tlen > mlen)
       {
          mlen = tlen;
@@ -2053,9 +2034,9 @@ static void align_oc_msg_colon(chunk_t *so)
    }
 
    /* add spaces before the longest arg */
-   len = cpd.settings[UO_indent_oc_msg_colon].n;
-   int len_diff    = mlen - first_len;
-   int indent_size = cpd.settings[UO_indent_columns].u;
+   len = cpd.settings[UO_indent_oc_msg_colon].u;
+   size_t len_diff    = mlen - first_len;
+   size_t indent_size = cpd.settings[UO_indent_columns].u;
    /* Align with first colon if possible by removing spaces */
    if (longest &&
        cpd.settings[UO_indent_oc_msg_prioritize_first_colon].b &&
