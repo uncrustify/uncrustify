@@ -449,7 +449,7 @@ chunk_t *chunk_get_prev_nc(chunk_t *cur, chunk_nav_t nav)
  *
  * @param cur     Starting chunk
  * @param type    The type to look for
- * @param level   -1 (any level) or the level to match
+ * @param level   -1 or ANY_LEVEL (any level) or the level to match
  * @return        NULL or the match
  */
 chunk_t *chunk_get_next_type(chunk_t *cur, c_token_t type,
@@ -494,7 +494,7 @@ chunk_t *chunk_get_next_str(chunk_t *cur, const char *str, size_t len, int level
  *
  * @param cur     Starting chunk
  * @param type    The type to look for
- * @param level   -1 (any level) or the level to match
+ * @param level   -1 or ANY_LEVEL (any level) or the level to match
  * @return        NULL or the match
  */
 chunk_t *chunk_get_prev_type(chunk_t *cur, c_token_t type,
@@ -657,7 +657,7 @@ void chunk_swap_lines(chunk_t *pc1, chunk_t *pc2)
     */
    if ((pc1 != NULL) && (pc2 != NULL))
    {
-      int nl_count = pc1->nl_count;
+      size_t nl_count = pc1->nl_count;
 
       pc1->nl_count = pc2->nl_count;
       pc2->nl_count = nl_count;
