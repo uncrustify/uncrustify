@@ -200,7 +200,7 @@ static bool can_remove_braces(chunk_t *bopen)
    size_t  nl_max     = cpd.settings[UO_mod_full_brace_nl].u;
    size_t  nl_count   = 0;
    size_t  if_count   = 0;
-   size_t  br_count   = 0;
+   int     br_count   = 0;
 
    /* Cannot remove braces inside a preprocessor */
    if (bopen->flags & PCF_IN_PREPROC)
@@ -341,7 +341,7 @@ static void examine_brace(chunk_t *bopen)
    size_t  nl_max     = cpd.settings[UO_mod_full_brace_nl].u;
    size_t  nl_count   = 0;
    size_t  if_count   = 0;
-   size_t  br_count   = 0;
+   int     br_count   = 0;
 
    LOG_FMT(LBRDEL, "%s: start on %zu : ", __func__, bopen->orig_line);
 
