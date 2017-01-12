@@ -155,7 +155,7 @@ static void examine_braces(void)
 static bool should_add_braces(chunk_t *vbopen)
 {
    LOG_FUNC_ENTRY();
-   int nl_max = cpd.settings[UO_mod_full_brace_nl].n;
+   size_t nl_max = cpd.settings[UO_mod_full_brace_nl].u;
    if (nl_max == 0)
    {
       return(false);
@@ -163,7 +163,7 @@ static bool should_add_braces(chunk_t *vbopen)
 
    LOG_FMT(LBRDEL, "%s: start on %zu : ", __func__, vbopen->orig_line);
    chunk_t *pc;
-   int     nl_count = 0;
+   size_t  nl_count = 0;
 
    for (pc = chunk_get_next_nc(vbopen, CNAV_PREPROC);
         (pc != NULL) && (pc->level > vbopen->level);
@@ -176,7 +176,7 @@ static bool should_add_braces(chunk_t *vbopen)
    }
    if ((pc != NULL) && (nl_count > nl_max) && (vbopen->pp_level == pc->pp_level))
    {
-      LOG_FMT(LBRDEL, " exceeded %d newlines\n", nl_max);
+      LOG_FMT(LBRDEL, " exceeded %zu newlines\n", nl_max);
       return(true);
    }
    return(false);
@@ -193,13 +193,13 @@ static bool can_remove_braces(chunk_t *bopen)
    LOG_FUNC_ENTRY();
    chunk_t *pc;
    chunk_t *prev      = NULL;
-   int     semi_count = 0;
+   size_t  semi_count = 0;
    size_t  level      = bopen->level + 1;
    bool    hit_semi   = false;
    bool    was_fcn    = false;
-   int     nl_max     = cpd.settings[UO_mod_full_brace_nl].n;
-   int     nl_count   = 0;
-   int     if_count   = 0;
+   size_t  nl_max     = cpd.settings[UO_mod_full_brace_nl].u;
+   size_t  nl_count   = 0;
+   size_t  if_count   = 0;
    int     br_count   = 0;
 
    /* Cannot remove braces inside a preprocessor */
@@ -230,7 +230,7 @@ static bool can_remove_braces(chunk_t *bopen)
          nl_count += pc->nl_count;
          if ((nl_max > 0) && (nl_count > nl_max))
          {
-            LOG_FMT(LBRDEL, " exceeded %d newlines\n", nl_max);
+            LOG_FMT(LBRDEL, " exceeded %zu newlines\n", nl_max);
             return(false);
          }
       }
@@ -261,7 +261,7 @@ static bool can_remove_braces(chunk_t *bopen)
                return(false);
             }
 
-            LOG_FMT(LBRDEL, " [%s %zu-%d]", pc->text(), pc->orig_line, semi_count);
+            LOG_FMT(LBRDEL, " [%s %zu-%zu]", pc->text(), pc->orig_line, semi_count);
 
             if (pc->type == CT_ELSE)
             {
@@ -318,7 +318,7 @@ static bool can_remove_braces(chunk_t *bopen)
       }
    }
 
-   LOG_FMT(LBRDEL, " - end on '%s' on line %zu. if_count=%d semi_count=%d\n",
+   LOG_FMT(LBRDEL, " - end on '%s' on line %zu. if_count=%zu semi_count=%zu\n",
            get_token_name(pc->type), pc->orig_line, if_count, semi_count);
 
    return((pc->type == CT_BRACE_CLOSE) && (pc->pp_level == bopen->pp_level));
@@ -334,13 +334,13 @@ static void examine_brace(chunk_t *bopen)
    LOG_FUNC_ENTRY();
    chunk_t *next;
    chunk_t *prev      = NULL;
-   int     semi_count = 0;
+   size_t  semi_count = 0;
    size_t  level      = bopen->level + 1;
    bool    hit_semi   = false;
    bool    was_fcn    = false;
-   int     nl_max     = cpd.settings[UO_mod_full_brace_nl].n;
-   int     nl_count   = 0;
-   int     if_count   = 0;
+   size_t  nl_max     = cpd.settings[UO_mod_full_brace_nl].u;
+   size_t  nl_count   = 0;
+   size_t  if_count   = 0;
    int     br_count   = 0;
 
    LOG_FMT(LBRDEL, "%s: start on %zu : ", __func__, bopen->orig_line);
@@ -359,7 +359,7 @@ static void examine_brace(chunk_t *bopen)
          nl_count += pc->nl_count;
          if ((nl_max > 0) && (nl_count > nl_max))
          {
-            LOG_FMT(LBRDEL, " exceeded %d newlines\n", nl_max);
+            LOG_FMT(LBRDEL, " exceeded %zu newlines\n", nl_max);
             return;
          }
       }
@@ -399,7 +399,7 @@ static void examine_brace(chunk_t *bopen)
                return;
             }
 
-            LOG_FMT(LBRDEL, " [%s %zu-%d]", pc->text(), pc->orig_line, semi_count);
+            LOG_FMT(LBRDEL, " [%s %zu-%zu]", pc->text(), pc->orig_line, semi_count);
 
             if (pc->type == CT_ELSE)
             {
@@ -440,7 +440,7 @@ static void examine_brace(chunk_t *bopen)
       return;
    }
 
-   LOG_FMT(LBRDEL, " - end on '%s' on line %zu. if_count=%d semi_count=%d\n",
+   LOG_FMT(LBRDEL, " - end on '%s' on line %zu. if_count=%zu semi_count=%zu\n",
            get_token_name(pc->type), pc->orig_line, if_count, semi_count);
 
    if (pc->type == CT_BRACE_CLOSE)
@@ -454,7 +454,7 @@ static void examine_brace(chunk_t *bopen)
       if ((if_count > 0) &&
           ((next->type == CT_ELSE) || (next->type == CT_ELSEIF)))
       {
-         LOG_FMT(LBRDEL, " bailed on because 'else' is next and %d ifs\n", if_count);
+         LOG_FMT(LBRDEL, " bailed on because 'else' is next and %zu ifs\n", if_count);
          return;
       }
 
@@ -759,7 +759,7 @@ void add_long_closebrace_comment(void)
    chunk_t  *cl_pc      = NULL;
    chunk_t  *cl_semi_pc = NULL;
    unc_text xstr;
-   int      nl_count;
+   size_t   nl_count;
 
    for (chunk_t *pc = chunk_get_head(); pc; pc = chunk_get_next_ncnl(pc))
    {
@@ -820,19 +820,19 @@ void add_long_closebrace_comment(void)
             }
             if ((tmp == NULL) || chunk_is_newline(tmp))
             {
-               int     nl_min  = 0;
+               size_t  nl_min  = 0;
                chunk_t *tag_pc = NULL;
 
                if (br_open->parent_type == CT_SWITCH)
                {
-                  nl_min = cpd.settings[UO_mod_add_long_switch_closebrace_comment].n;
+                  nl_min = cpd.settings[UO_mod_add_long_switch_closebrace_comment].u;
                   tag_pc = sw_pc;
                   xstr   = sw_pc ? sw_pc->str : NULL;
                }
                else if ((br_open->parent_type == CT_FUNC_DEF) ||
                         (br_open->parent_type == CT_OC_MSG_DECL))
                {
-                  nl_min = cpd.settings[UO_mod_add_long_function_closebrace_comment].n;
+                  nl_min = cpd.settings[UO_mod_add_long_function_closebrace_comment].u;
                   // 76006 Explicit null dereferenced, 2016-03-17
                   tag_pc = fcn_pc;
                   xstr.clear();
@@ -840,7 +840,7 @@ void add_long_closebrace_comment(void)
                }
                else if (br_open->parent_type == CT_NAMESPACE)
                {
-                  nl_min = cpd.settings[UO_mod_add_long_namespace_closebrace_comment].n;
+                  nl_min = cpd.settings[UO_mod_add_long_namespace_closebrace_comment].u;
                   // 76007 Explicit null dereferenced, 2016-03-17
                   tag_pc = ns_pc;
 
@@ -852,7 +852,7 @@ void add_long_closebrace_comment(void)
                }
                else if (br_open->parent_type == CT_CLASS && cl_semi_pc && cl_pc)
                {
-                  nl_min = cpd.settings[UO_mod_add_long_class_closebrace_comment].n;
+                  nl_min = cpd.settings[UO_mod_add_long_class_closebrace_comment].u;
                   tag_pc = cl_pc;
                   xstr   = tag_pc->str;
                   xstr.append(" ");
