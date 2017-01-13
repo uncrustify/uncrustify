@@ -12,6 +12,9 @@
 #include "char_table.h"
 
 
+#define ANY_LEVEL    -1
+
+
 /**
  * Specifies how to handle preprocessors.
  * CNAV_ALL (default)
