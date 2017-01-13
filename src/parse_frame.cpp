@@ -18,7 +18,7 @@
  */
 void pf_log(log_sev_t logsev, struct parse_frame *pf)
 {
-   LOG_FMT(logsev, "[%s] BrLevel=%d Level=%d PseTos=%d\n",
+   LOG_FMT(logsev, "[%s] BrLevel=%d Level=%d PseTos=%zu\n",
            get_token_name(pf->in_ifdef),
            pf->brace_level, pf->level, pf->pse_tos);
 
