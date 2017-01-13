@@ -154,8 +154,6 @@ void set_language(lang_flags langIDX)
 /**
  * adds a new keyword to Uncrustify's dynamic keyword map (dkwm, keywords.cpp)
  *
- * @TODO this needs more than just adding types, remove keywords is also needed
- *
  * @param type: keyword that is going to be added
  */
 void add_type(string type)
@@ -1346,7 +1344,9 @@ EMSCRIPTEN_BINDINGS(MainModule)
    emscripten::function(STRINGIFY(get_version), &get_version);
 
    emscripten::function(STRINGIFY(add_type), &add_type);
+   emscripten::function(STRINGIFY(remove_keyword), &remove_keyword);
    emscripten::function(STRINGIFY(clear_keywords), &clear_keywords);
+
    emscripten::function(STRINGIFY(add_define), select_overload<void(string, string)>(&add_define));
    emscripten::function(STRINGIFY(add_define), select_overload<void(string)>(&add_define));
    emscripten::function(STRINGIFY(clear_defines), &clear_defines);

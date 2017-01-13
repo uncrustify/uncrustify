@@ -828,6 +828,9 @@ declare namespace LibUncrustify
         //! adds a new keyword to Uncrustifys dynamic keyword map (dkwm, keywords.cpp)
         add_type( type : string ) : void;
 
+        //! removes a keyword from Uncrustifys dynamic keyword map (dkwm, keywords.cpp)
+        remove_keyword( tag : string )
+
         // clears Uncrustifys dynamic keyword map (dkwm, keywords.cpp)
         clear_keywords() : void;
 
