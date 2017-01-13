@@ -243,6 +243,7 @@ int main(int argc, char *argv[])
    const char *source_list = NULL;
    log_mask_t mask;
    int        idx;
+   int        return_code;
    const char *p_arg;
 
    /* initialize the global data */
@@ -371,7 +372,11 @@ int main(int argc, char *argv[])
    idx = 0;
    while ((p_arg = arg.Params("-d", idx)) != NULL)
    {
-      load_define_file(p_arg);
+      return_code = load_define_file(p_arg);
+      if (return_code != SUCCESS)
+      {
+         return(return_code);
+      }
    }
 
    /* add defines */
