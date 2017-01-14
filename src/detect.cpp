@@ -307,12 +307,12 @@ static void detect_space_options()
          {
             if (prev->type == CT_SPAREN_OPEN)
             {
-               /* emtpy, ie for (;;) */
+               /* empty, ie for (;;) */
                vote_sp_before_semi_for_empty.vote(prev, pc);
             }
             else if (next->type == CT_SPAREN_CLOSE)
             {
-               /* emtpy, ie for (;;) */
+               /* empty, ie for (;;) */
                vote_sp_after_semi_for_empty.vote(pc, next);
             }
             else if (prev->type != CT_SEMICOLON)

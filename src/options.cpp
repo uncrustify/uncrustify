@@ -1547,9 +1547,9 @@ void register_options(void)
    unc_add_option("use_indent_continue_only_once", UO_use_indent_continue_only_once, AT_BOOL,
                   "The value of the indentation for a continuation line is calculate differently if the line is:\n"
                   "  a declaration :your case with QString fileName ...\n"
-                  "  an assigment  :your case with pSettings = new QSettings( ...\n"
+                  "  an assignment  :your case with pSettings = new QSettings( ...\n"
                   "At the second case the option value might be used twice:\n"
-                  "  at the assigment\n"
+                  "  at the assignment\n"
                   "  at the function call (if present)\n"
                   "To prevent the double use of the option value, use this option with the value 'True'.\n"
                   "True:  indent_continue will be used only once\n"

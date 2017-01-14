@@ -47,7 +47,7 @@ static void align_asm_colon(void);
  *        char cat;
  *        int  id       : 5;
  *        int  name_len : 6;
- *        int  heigth   : 12;
+ *        int  height   : 12;
  *     };
  *
  *   - variable definitions & assignments in normal code
@@ -1620,7 +1620,7 @@ static void align_log_al(log_sev_t sev, size_t line)
  * It then scans subsequent lines and adjusts the column.
  * Finally it does a second pass to align everything.
  *
- * Aligns all the '=' signs in stucture assignments.
+ * Aligns all the '=' signs in structure assignments.
  * a = {
  *    .a    = 1;
  *    .type = fast;

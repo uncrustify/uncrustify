@@ -210,7 +210,7 @@ static int get_word(const vector<UINT8> &in_data, int &idx, bool be)
 
 
 /**
- * Deocde a UTF-16 sequence.
+ * Decode a UTF-16 sequence.
  * Sets enc based on the BOM.
  * Must have the BOM as the first two bytes.
  */

@@ -98,7 +98,7 @@
  *    baseclass2
  * {
  *
- * Return: same as assignemts
+ * Return: same as assignments
  * If the return statement is not fully paren'd, then the indent continues at
  * the column of the item after the return. If it is paren'd, then the paren
  * rules apply.
@@ -1607,9 +1607,9 @@ void indent_text(void)
                   // The value of the indentation for a continuation line is calculate
                   // differently if the line is:
                   //   a declaration :your case with QString fileName ...
-                  //   an assigment  :your case with pSettings = new QSettings( ...
+                  //   an assignment  :your case with pSettings = new QSettings( ...
                   // At the second case the option value might be used twice:
-                  //   at the assigment
+                  //   at the assignment
                   //   at the function call (if present)
                   // If you want to prevent the double use of the option value
                   // you may use the new option :

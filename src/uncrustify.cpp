@@ -16,11 +16,10 @@
 #include "prototypes.h"
 #include "token_names.h"
 #include "args.h"
+#include "backup.h"
 #include "logger.h"
 #include "log_levels.h"
 #include "md5.h"
-#include "backup.h"
-
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -986,7 +985,7 @@ static const char *make_output_filename(char *buf, int buf_size,
 
 
 /**
- * Reinvent the wheel with a file comparision function...
+ * Reinvent the wheel with a file comparison function...
  */
 static bool file_content_matches(const string &filename1, const string &filename2)
 {
