@@ -1399,7 +1399,7 @@ void fix_symbols(void)
       }
       else
       {
-         if (pc->level <= square_level)
+         if (pc->level <= (size_t)square_level)
          {
             square_level = -1;
          }
@@ -2991,9 +2991,9 @@ static chunk_t *fix_var_def(chunk_t *start)
    }
 
    LOG_FMT(LFVD2, "%s:%zu TYPE : ", __func__, start->orig_line);
-   for (idx = 0; idx < cs.Len() - 1; idx++)
+   for (size_t idxForCs = 0; idxForCs < cs.Len() - 1; idxForCs++)
    {
-      tmp_pc = cs.Get(idx)->m_pc;
+      tmp_pc = cs.Get(idxForCs)->m_pc;
       make_type(tmp_pc);
       chunk_flags_set(tmp_pc, PCF_VAR_TYPE);
       LOG_FMT(LFVD2, " %s[%s]", tmp_pc->text(), get_token_name(tmp_pc->type));
@@ -3226,7 +3226,7 @@ static bool can_be_full_param(chunk_t *start, chunk_t *end)
             return(false);
          }
       }
-      else if (((word_cnt == 1) || (word_cnt == type_count)) &&
+      else if (((word_cnt == 1) || ((size_t)word_cnt == type_count)) &&
                (pc->type == CT_PAREN_OPEN))
       {
          /* Check for func proto param 'void (*name)' or 'void (*name)(params)' */
