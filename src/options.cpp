@@ -667,7 +667,7 @@ void register_options(void)
                   "Requires indent_namespace=True.");
    unc_add_option("indent_namespace_level", UO_indent_namespace_level, AT_NUM,
                   "The number of spaces to indent a namespace block");
-   unc_add_option("indent_namespace_limit", UO_indent_namespace_limit, AT_NUM,
+   unc_add_option("indent_namespace_limit", UO_indent_namespace_limit, AT_UNUM,
                   "If the body of the namespace is longer than this number, it won't be indented.\n"
                   "Requires indent_namespace=True. Default=0 (no limit)", "", 0, 255);
    unc_add_option("indent_extern", UO_indent_extern, AT_BOOL,

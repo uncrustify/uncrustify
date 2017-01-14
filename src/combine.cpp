@@ -61,6 +61,14 @@ static chunk_t *get_d_template_types(ChunkStack &cs, chunk_t *open_paren);
 static bool chunkstack_match(ChunkStack &cs, chunk_t *pc);
 
 
+enum PLBfound
+{
+   FOUND_ANGLE_CLOSE = 0, // '>' found
+   NO_PROTOCOL_FOUND = 1, // no protocol found,
+   FOUND_ANGLE_OPEN  = 2  // '<' found
+};
+
+
 void make_type(chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
@@ -265,7 +273,7 @@ static bool chunk_ends_type(chunk_t *start)
    LOG_FUNC_ENTRY();
    chunk_t *pc       = start;
    bool    ret       = false;
-   int     cnt       = 0;
+   size_t  cnt       = 0;
    bool    last_lval = false;
 
    for (/* nada */; pc != NULL; pc = chunk_get_prev_ncnl(pc))
@@ -1532,8 +1540,8 @@ static bool mark_function_type(chunk_t *pc)
            __func__, get_token_name(pc->type), pc->text(),
            pc->orig_line, pc->orig_col);
 
-   int       star_count = 0;
-   int       word_count = 0;
+   size_t    star_count = 0;
+   size_t    word_count = 0;
    chunk_t   *ptrcnk    = NULL;
    chunk_t   *varcnk    = NULL;
    chunk_t   *tmp;
@@ -1630,7 +1638,7 @@ static bool mark_function_type(chunk_t *pc)
        (word_count > 1) ||
        ((star_count + word_count) == 0))
    {
-      LOG_FMT(LFTYPE, "%s: bad counts word:%d, star:%d\n", __func__,
+      LOG_FMT(LFTYPE, "%s: bad counts word:%zu, star:%zu\n", __func__,
               word_count, star_count);
       goto nogo_exit;
    }
@@ -1855,7 +1863,7 @@ static chunk_t *process_return(chunk_t *pc)
 } // process_return
 
 
-static bool is_ucase_str(const char *str, int len)
+static bool is_ucase_str(const char *str, size_t len)
 {
    while (len-- > 0)
    {
@@ -1900,9 +1908,9 @@ static void fix_casts(chunk_t *start)
    chunk_t    *paren_close;
    const char *verb       = "likely";
    const char *detail     = "";
-   int        count       = 0;
+   size_t     count       = 0;
    int        word_count  = 0;
-   int        word_consec = 0;
+   size_t     word_consec = 0;
    bool       nope;
    bool       doubtful_cast = false;
 
@@ -2468,7 +2476,7 @@ static void fix_typedef(chunk_t *start)
 } // fix_typedef
 
 
-static bool cs_top_is_question(ChunkStack &cs, int level)
+static bool cs_top_is_question(ChunkStack &cs, size_t level)
 {
    chunk_t *pc = cs.Empty() ? NULL : cs.Top()->m_pc;
 
@@ -2755,7 +2763,7 @@ static void mark_variable_stack(ChunkStack &cs, log_sev_t sev)
       LOG_FMT(LFCNP, "%s: parameter on line %zu :",
               __func__, var_name->orig_line);
 
-      int     word_cnt = 0;
+      size_t  word_cnt = 0;
       chunk_t *word_type;
       while ((word_type = cs.Pop_Back()) != NULL)
       {
@@ -2897,7 +2905,8 @@ static chunk_t *fix_var_def(chunk_t *start)
    chunk_t    *end;
    chunk_t    *tmp_pc;
    ChunkStack cs;
-   int        idx, ref_idx;
+   int        idx;
+   int        ref_idx;
 
    LOG_FMT(LFVD, "%s: start[%zu:%zu]", __func__, pc->orig_line, pc->orig_col);
 
@@ -3138,7 +3147,7 @@ static bool can_be_full_param(chunk_t *start, chunk_t *end)
    chunk_t *pc;
    chunk_t *last;
    int     word_cnt   = 0;
-   int     type_count = 0;
+   size_t  type_count = 0;
    bool    ret;
 
    LOG_FMT(LFPARAM, "%s:", __func__);
@@ -3266,7 +3275,7 @@ static bool can_be_full_param(chunk_t *start, chunk_t *end)
       }
       else
       {
-         LOG_FMT(LFPARAM, " <== [%s] no way! tc=%d wc=%d\n",
+         LOG_FMT(LFPARAM, " <== [%s] no way! tc=%zu wc=%d\n",
                  get_token_name(pc->type), type_count, word_cnt);
          return(false);
       }
@@ -4268,12 +4277,13 @@ static void mark_namespace(chunk_t *pns)
          continue;
       }
 
-      if ((cpd.settings[UO_indent_namespace_limit].n > 0) &&
+      if ((cpd.settings[UO_indent_namespace_limit].u > 0) &&
           ((br_close = chunk_skip_to_match(pc)) != NULL))
       {
-         int diff = (int)br_close->orig_line - (int)pc->orig_line;
+         // br_close->orig_line is always >= pc->orig_line;
+         size_t diff = br_close->orig_line - pc->orig_line;
 
-         if (diff > cpd.settings[UO_indent_namespace_limit].n)
+         if (diff > cpd.settings[UO_indent_namespace_limit].u)
          {
             chunk_flags_set(pc, PCF_LONG_BLOCK);
             chunk_flags_set(br_close, PCF_LONG_BLOCK);
@@ -4486,7 +4496,7 @@ static void handle_cpp_template(chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
    chunk_t *tmp;
-   int     level;
+   size_t  level;
 
    tmp = chunk_get_next_ncnl(pc);
    if (tmp->type != CT_ANGLE_OPEN)
@@ -4518,7 +4528,7 @@ static void handle_cpp_template(chunk_t *pc)
       {
          set_chunk_parent(tmp, CT_TEMPLATE);
 
-         /* REVISTI: This may be a bit risky - might need to track the { }; */
+         /* REVISIT: This may be a bit risky - might need to track the { }; */
          tmp = chunk_get_next_type(tmp, CT_SEMICOLON, tmp->level);
          if (tmp != NULL)
          {
@@ -4672,7 +4682,7 @@ static chunk_t *get_d_template_types(ChunkStack &cs, chunk_t *open_paren)
 
 static bool chunkstack_match(ChunkStack &cs, chunk_t *pc)
 {
-   for (int idx = 0; idx < cs.Len(); idx++)
+   for (size_t idx = 0; idx < cs.Len(); idx++)
 
    {
       chunk_t *tmp = cs.GetChunk(idx);
@@ -4949,11 +4959,11 @@ chunk_t *skip_attribute_prev(chunk_t *fp_close)
 static void handle_oc_class(chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
-   chunk_t *tmp;
-   bool    hit_scope     = false;
-   bool    passed_name   = false; // Did we pass the name of the class and now there can be only protocols, not generics
-   int     generic_level = 0;     //level of depth of generic
-   int     do_pl         = 1;     //1 = no protocol found, 2 = '<' found, 0 = '>' found
+   chunk_t  *tmp;
+   bool     hit_scope     = false;
+   bool     passed_name   = false; // Did we pass the name of the class and now there can be only protocols, not generics
+   int      generic_level = 0;     // level of depth of generic
+   PLBfound do_pl         = NO_PROTOCOL_FOUND;
 
    LOG_FMT(LOCCLASS, "%s: start [%s] [%s] line %zu\n",
            __func__, pc->text(), get_token_name(pc->parent_type), pc->orig_line);
@@ -4995,7 +5005,7 @@ static void handle_oc_class(chunk_t *pc)
             set_chunk_parent(tmp, CT_OC_GENERIC_SPEC);
             generic_level++;
          }
-         do_pl = 2;
+         do_pl = FOUND_ANGLE_OPEN;
       }
       if (chunk_is_str(tmp, ">", 1))
       {
@@ -5003,7 +5013,7 @@ static void handle_oc_class(chunk_t *pc)
          if (passed_name)
          {
             set_chunk_parent(tmp, CT_OC_PROTO_LIST);
-            do_pl = 0;
+            do_pl = FOUND_ANGLE_CLOSE;
          }
          else
          {
@@ -5011,7 +5021,7 @@ static void handle_oc_class(chunk_t *pc)
             generic_level--;
             if (generic_level == 0)
             {
-               do_pl = 0;
+               do_pl = FOUND_ANGLE_CLOSE;
             }
          }
       }
@@ -5023,12 +5033,12 @@ static void handle_oc_class(chunk_t *pc)
          generic_level -= 1;
          if (generic_level == 0)
          {
-            do_pl = 0;
+            do_pl = FOUND_ANGLE_CLOSE;
          }
       }
       if (tmp->type == CT_BRACE_OPEN)
       {
-         do_pl = 0;
+         do_pl = FOUND_ANGLE_CLOSE;
          set_chunk_parent(tmp, CT_OC_CLASS);
          tmp = chunk_get_next_type(tmp, CT_BRACE_CLOSE, tmp->level);
          if (tmp != NULL)
@@ -5038,7 +5048,7 @@ static void handle_oc_class(chunk_t *pc)
       }
       else if (tmp->type == CT_COLON)
       {
-         if (do_pl != 2)
+         if (do_pl != FOUND_ANGLE_OPEN)
          {
             passed_name = true;
          }
@@ -5050,7 +5060,7 @@ static void handle_oc_class(chunk_t *pc)
       }
       else if (chunk_is_str(tmp, "-", 1) || chunk_is_str(tmp, "+", 1))
       {
-         do_pl = 0;
+         do_pl = FOUND_ANGLE_CLOSE;
          if (chunk_is_newline(chunk_get_prev(tmp)))
          {
             set_chunk_type(tmp, CT_OC_SCOPE);
@@ -5058,7 +5068,7 @@ static void handle_oc_class(chunk_t *pc)
             hit_scope = true;
          }
       }
-      if (do_pl == 2)
+      if (do_pl == FOUND_ANGLE_OPEN)
       {
          if (passed_name)
          {
