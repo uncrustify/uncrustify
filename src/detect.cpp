@@ -20,9 +20,9 @@
 class sp_votes
 {
 protected:
-   int      m_add;
-   int      m_remove;
-   int      m_force;
+   size_t   m_add;
+   size_t   m_remove;
+   size_t   m_force;
    argval_t *m_av;
 
 public:
@@ -391,91 +391,6 @@ static void detect_space_options()
       pc   = next;
    }
 } // detect_space_options
-
-
-// unc_add_option("sp_after_operator", UO_sp_after_operator, AT_IARF,
-//                "Add or remove space between 'operator' and operator sign");
-// unc_add_option("sp_after_operator_sym", UO_sp_after_operator_sym, AT_IARF,
-//                "Add or remove space between the operator symbol and the open paren, as in 'operator ++('");
-// unc_add_option("sp_after_cast", UO_sp_after_cast, AT_IARF,
-//                "Add or remove space after C/D cast, ie 'cast(int)a' vs 'cast(int) a' or '(int)a' vs '(int) a'");
-// unc_add_option("sp_inside_paren_cast", UO_sp_inside_paren_cast, AT_IARF,
-//                "Add or remove spaces inside cast parens");
-// unc_add_option("sp_sizeof_paren", UO_sp_sizeof_paren, AT_IARF,
-//                "Add or remove space between 'sizeof' and '('");
-// unc_add_option("sp_after_tag", UO_sp_after_tag, AT_IARF,
-//                "Add or remove space after the tag keyword (Pawn)");
-// unc_add_option("sp_inside_braces_enum", UO_sp_inside_braces_enum, AT_IARF,
-//                "Add or remove space inside enum '{' and '}'");
-// unc_add_option("sp_inside_braces_struct", UO_sp_inside_braces_struct, AT_IARF,
-//                "Add or remove space inside struct/union '{' and '}'");
-// unc_add_option("sp_type_func", UO_sp_type_func, AT_IARF,
-//                "Add or remove space between return type and function name\n"
-//                "A minimum of 1 is forced except for pointer return types.");
-// unc_add_option("sp_func_proto_paren", UO_sp_func_proto_paren, AT_IARF,
-//                "Add or remove space between function name and '(' on function declaration");
-// unc_add_option("sp_func_def_paren", UO_sp_func_def_paren, AT_IARF,
-//                "Add or remove space between function name and '(' on function definition");
-// unc_add_option("sp_inside_fparens", UO_sp_inside_fparens, AT_IARF,
-//                "Add or remove space inside empty function '()'");
-// unc_add_option("sp_inside_fparen", UO_sp_inside_fparen, AT_IARF,
-//                "Add or remove space inside function '(' and ')'");
-// unc_add_option("sp_square_fparen", UO_sp_square_fparen, AT_IARF,
-//                "Add or remove space between ']' and '(' when part of a function call.");
-// unc_add_option("sp_fparen_brace", UO_sp_fparen_brace, AT_IARF,
-//                "Add or remove space between ')' and '{' of function");
-// unc_add_option("sp_func_call_paren", UO_sp_func_call_paren, AT_IARF,
-//                "Add or remove space between function name and '(' on function calls");
-// unc_add_option("sp_func_class_paren", UO_sp_func_class_paren, AT_IARF,
-//                "Add or remove space between a constructor/destructor and the open paren");
-// unc_add_option("sp_return_paren", UO_sp_return_paren, AT_IARF,
-//                "Add or remove space between 'return' and '('");
-// unc_add_option("sp_attribute_paren", UO_sp_attribute_paren, AT_IARF,
-//                "Add or remove space between '__attribute__' and '('");
-// unc_add_option("sp_defined_paren", UO_sp_defined_paren, AT_IARF,
-//                "Add or remove space between 'defined' and '(' in '#if defined (FOO)'");
-// unc_add_option("sp_macro", UO_sp_macro, AT_IARF,
-//                "Add or remove space between macro and value");
-// unc_add_option("sp_macro_func", UO_sp_macro_func, AT_IARF,
-//                "Add or remove space between macro function ')' and value");
-// unc_add_option("sp_before_dc", UO_sp_before_dc, AT_IARF,
-//                "Add or remove space before the '::' operator");
-// unc_add_option("sp_after_dc", UO_sp_after_dc, AT_IARF,
-//                "Add or remove space after the '::' operator");
-// unc_add_option("sp_d_array_colon", UO_sp_d_array_colon, AT_IARF,
-//                "Add or remove around the D named array initializer ':' operator");
-// unc_add_option("sp_not", UO_sp_not, AT_IARF,
-//                "Add or remove space after the '!' (not) operator.");
-// unc_add_option("sp_inv", UO_sp_inv, AT_IARF, "Add or remove space after the '~' (invert) operator.");
-// unc_add_option("sp_addr", UO_sp_addr, AT_IARF,
-//                "Add or remove space after the '&' (address-of) operator.\n"
-//                "This does not affect the spacing after a '&' that is part of a type.");
-// unc_add_option("sp_member", UO_sp_member, AT_IARF,
-//                "Add or remove space around the '.' or '->' operators\n");
-// unc_add_option("sp_deref", UO_sp_deref, AT_IARF,
-//                "Add or remove space after the '*' (dereference) operator.\n"
-//                "This does not affect the spacing after a '*' that is part of a type.");
-// unc_add_option("sp_sign", UO_sp_sign, AT_IARF,
-//                "Add or remove space after '+' or '-', as in 'x = -5' or 'y = +7'");
-// unc_add_option("sp_incdec", UO_sp_incdec, AT_IARF,
-//                "Add or remove space before or after '++' and '--', as in '(--x)' or 'y++;'");
-//
-// unc_add_option("sp_before_nl_cont", UO_sp_before_nl_cont, AT_IARF,
-//                "Add or remove space before a backslash-newline at the end of a line");
-//
-// unc_add_option("sp_after_oc_scope", UO_sp_after_oc_scope, AT_IARF,
-//                "Add or remove space after the scope '+' or '-', as in '-(void) foo;' or '+(int) bar;'");
-// unc_add_option("sp_before_oc_colon", UO_sp_before_oc_colon, AT_IARF,
-//                "Add or remove space after the colon in message specs\n"
-//                "'-(int) f: (int) x;' vs '+(int) f : (int) x;'");
-// unc_add_option("sp_after_oc_type", UO_sp_after_oc_type, AT_IARF,
-//                "Add or remove space after the (type) in message specs\n"
-//                "'-(int) f: (int) x;' vs '+(int)f : (int)x;'");
-//
-// unc_add_option("sp_cond_colon", UO_sp_cond_colon, AT_IARF,
-//                "Add or remove space around the ':' in 'b ? t : f'");
-// unc_add_option("sp_cond_question", UO_sp_cond_question, AT_IARF,
-//                "Add or remove space around the '?' in 'b ? t : f'");
 
 
 /**
