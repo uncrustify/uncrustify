@@ -62,10 +62,10 @@ void add_define(const char *tag, const char *value)
  */
 int load_define_file(const char *filename)
 {
-   FILE *pf;
-   char buf[160];
-   char *args[3];
-   int  line_no = 0;
+   FILE   *pf;
+   char   buf[160];
+   char   *args[3];
+   size_t line_no = 0;
 
    pf = fopen(filename, "r");
    if (pf == NULL)
@@ -94,12 +94,12 @@ int load_define_file(const char *filename)
       {
          if ((argc <= 2) && CharTable::IsKw1(*args[0]))
          {
-            LOG_FMT(LDEFVAL, "%s: line %d - %s\n", filename, line_no, args[0]);
+            LOG_FMT(LDEFVAL, "%s: line %zu - %s\n", filename, line_no, args[0]);
             add_define(args[0], args[1]);
          }
          else
          {
-            LOG_FMT(LWARN, "%s: line %d invalid (starts with '%s')\n",
+            LOG_FMT(LWARN, "%s: line %zu invalid (starts with '%s')\n",
                     filename, line_no, args[0]);
             cpd.error_count++;
          }
