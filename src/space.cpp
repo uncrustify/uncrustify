@@ -1795,7 +1795,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
    }
 
 #ifdef DEBUG
-   // these lines are only usefull for debugging uncrustify itself
+   // these lines are only useful for debugging uncrustify itself
    LOG_FMT(LSPACE, "\n\n(%d) %s: WARNING: unrecognize do_space: first: %zu:%zu %s %s and second: %zu:%zu %s %s\n\n\n",
            __LINE__, __func__, first->orig_line, first->orig_col, first->text(), get_token_name(first->type),
            second->orig_line, second->orig_col, second->text(), get_token_name(second->type));

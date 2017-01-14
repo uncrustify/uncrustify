@@ -283,7 +283,7 @@ chunk_t *newline_force_after(chunk_t *pc)
 
 
 /**
- * Ensure that the next non-comment token after close brace is a nl
+ * Ensure that the next non-comment token after close brace is a newline
  */
 static void newline_end_newline(chunk_t *br_close)
 {

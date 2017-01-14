@@ -118,7 +118,7 @@ void print_universal_indent_cfg(FILE *pfile)
          const char *tmp = option->short_desc;
          ch = 0;
 
-         /* Output the decription which may contain forbidden chars */
+         /* Output the description which may contain forbidden chars */
          while (*tmp != 0)
          {
             switch (*tmp)

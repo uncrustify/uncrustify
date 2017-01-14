@@ -393,7 +393,7 @@ chunk_t *chunk_get_next_nc(chunk_t *cur, chunk_nav_t nav)
 
 /**
  * Gets the next chunk not in or part of balanced square
- * brackets. This handles stacked [] instances to acommodate
+ * brackets. This handles stacked [] instances to accommodate
  * multi-dimensional array declarations
  *
  * @param cur     Starting chunk
@@ -540,7 +540,7 @@ chunk_t *chunk_get_prev_str(chunk_t *cur, const char *str, size_t len, int level
 
 
 /**
- * Check to see if there is a newline bewteen the two chunks
+ * Check to see if there is a newline between the two chunks
  */
 bool chunk_is_newline_between(chunk_t *start, chunk_t *end)
 {

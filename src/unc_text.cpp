@@ -302,7 +302,7 @@ int unc_text::find(const char *text, size_t sidx) const
 
    if (si < len)
    {
-      // not enought place for 'text'
+      // not enough place for 'text'
       return(-1);
    }
    size_t midx = size() - len;
