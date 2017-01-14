@@ -857,7 +857,7 @@ static bool handle_complex_close(struct parse_frame *frm, chunk_t *pc)
 
    if (frm->pse[frm->pse_tos].stage == BS_PAREN1)
    {
-      if (pc->next->type == CT_WHEN)
+      if ((pc->next != NULL) && (pc->next->type == CT_WHEN))
       {
          frm->pse[frm->pse_tos].type  = pc->type;
          frm->pse[frm->pse_tos].stage = BS_CATCH_WHEN;
