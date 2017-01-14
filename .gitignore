@@ -1,9 +1,10 @@
 # Generated uncrustify files
-#src/config.h
-#src/token_names.h
-#src/uncrustify_version.h
+src/config.h
+src/token_names.h
+src/uncrustify_version.h
 
 # Testing framework
+results/
 tests/results
 tests/usage.txt
 *.sh.trs
@@ -11,7 +12,7 @@ tests/usage.txt
 test-suite.log
 
 # UNIX build artifacts
-#*.o
+*.[oaisS]
 src/uncrustify
 
 # Gnu autotools
@@ -77,5 +78,14 @@ uncrustify-*-win32
 .svn
 *~
 .*
-Debug
 build*
+
+
+# Eclipse Build Directories
+Debug/
+Release/
+
+# Eclipse Configuration
+.cproject
+.project
+.settings
