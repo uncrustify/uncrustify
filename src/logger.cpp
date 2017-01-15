@@ -205,7 +205,7 @@ static void log_end(void)
  */
 void log_str(log_sev_t sev, const char *str, size_t len)
 {
-   if ((str == NULL) || (len <= 0) || !log_sev_on(sev))
+   if ((str == NULL) || (len == 0) || !log_sev_on(sev))
    {
       return;
    }
