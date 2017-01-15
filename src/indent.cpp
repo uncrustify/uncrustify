@@ -318,7 +318,7 @@ void reindent_line(chunk_t *pc, int column)
  * @param frm  The parse frame
  * @param pc   The chunk causing the push
  */
-static void indent_pse_push(struct parse_frame &frm, chunk_t *pc)
+static void indent_pse_push(parse_frame_t &frm, chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
    static int ref = 0;
@@ -363,7 +363,7 @@ static void indent_pse_push(struct parse_frame &frm, chunk_t *pc)
  * @param frm  The parse frame
  * @param pc   The chunk causing the push
  */
-static void indent_pse_pop(struct parse_frame &frm, chunk_t *pc)
+static void indent_pse_pop(parse_frame_t &frm, chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
    /* Bump up the index and initialize it */
@@ -452,7 +452,7 @@ static int token_indent(c_token_t type)
    } while (0)
 
 
-static int calc_indent_continue(struct parse_frame &frm, int pse_tos)
+static int calc_indent_continue(parse_frame_t &frm, int pse_tos)
 {
    int ic = cpd.settings[UO_indent_continue].n;
 
@@ -531,24 +531,24 @@ static chunk_t *oc_msg_prev_colon(chunk_t *pc)
 void indent_text(void)
 {
    LOG_FUNC_ENTRY();
-   chunk_t            *pc;
-   chunk_t            *next;
-   chunk_t            *prev       = NULL;
-   bool               did_newline = true;
-   int                idx;
-   int                vardefcol    = 0;
-   int                shiftcontcol = 0;
-   int                indent_size  = cpd.settings[UO_indent_columns].n;
-   struct parse_frame frm;
-   bool               in_preproc = false;
-   int                indent_column;
-   int                parent_token_indent = 0;
-   int                xml_indent          = 0;
-   bool               token_used;
-   int                sql_col      = 0;
-   int                sql_orig_col = 0;
-   bool               in_func_def  = false;
-   c_token_t          memtype;
+   chunk_t       *pc;
+   chunk_t       *next;
+   chunk_t       *prev       = NULL;
+   bool          did_newline = true;
+   int           idx;
+   int           vardefcol    = 0;
+   int           shiftcontcol = 0;
+   int           indent_size  = cpd.settings[UO_indent_columns].n;
+   parse_frame_t frm;
+   bool          in_preproc = false;
+   int           indent_column;
+   int           parent_token_indent = 0;
+   int           xml_indent          = 0;
+   bool          token_used;
+   int           sql_col      = 0;
+   int           sql_orig_col = 0;
+   bool          in_func_def  = false;
+   c_token_t     memtype;
 
    memset(&frm, 0, sizeof(frm));
    cpd.frame_count = 0;

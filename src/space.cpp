@@ -32,7 +32,7 @@
 
 static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool complete);
 
-struct no_space_table_s
+struct no_space_table_t
 {
    c_token_t first;
    c_token_t second;
@@ -43,7 +43,7 @@ struct no_space_table_s
  *
  * TODO: some of these are no longer needed.
  */
-const struct no_space_table_s no_space_table[] =
+const no_space_table_t no_space_table[] =
 {
    { CT_OC_AT,          CT_UNKNOWN       },
    { CT_INCDEC_BEFORE,  CT_WORD          },
