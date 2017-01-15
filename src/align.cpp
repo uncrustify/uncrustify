@@ -570,7 +570,7 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh)
    }
    my_level = first->level;
 
-   if (span <= 0)
+   if (span == 0)
    {
       return(chunk_get_next(first));
    }

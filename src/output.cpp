@@ -1533,7 +1533,7 @@ static bool kw_fcn_class(chunk_t *cmt, unc_text &out_txt)
    if (tmp)
    {
       out_txt.append(tmp->str);
-      if (cpd.lang_flags & cpd.lang_flags)
+      if (cpd.lang_flags & cpd.lang_flags) /* \todo strange condition ? */
       {
          while ((tmp = chunk_get_next(tmp)) != NULL)
          {

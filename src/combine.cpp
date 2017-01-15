@@ -1543,7 +1543,6 @@ static bool mark_function_type(chunk_t *pc)
    size_t    star_count = 0;
    size_t    word_count = 0;
    chunk_t   *ptrcnk    = NULL;
-   chunk_t   *varcnk    = NULL;
    chunk_t   *tmp;
    chunk_t   *apo;
    chunk_t   *apc;
@@ -1552,7 +1551,7 @@ static bool mark_function_type(chunk_t *pc)
    c_token_t pt, ptp;
 
    /* Scan backwards across the name, which can only be a word and single star */
-   varcnk = chunk_get_prev_ncnl(pc);
+   chunk_t *varcnk = varcnk = chunk_get_prev_ncnl(pc);
    if (!chunk_is_word(varcnk))
    {
       if ((cpd.lang_flags & LANG_OC) && chunk_is_str(varcnk, "^", 1) &&
@@ -3243,7 +3242,7 @@ static bool can_be_full_param(chunk_t *start, chunk_t *end)
          }
          LOG_FMT(LFPARAM, " <skip fcn type>");
          tmp1 = chunk_get_next_ncnl(tmp3, CNAV_PREPROC);
-         tmp2 = chunk_get_next_ncnl(tmp1, CNAV_PREPROC);
+         tmp2 = chunk_get_next_ncnl(tmp1, CNAV_PREPROC); /* \todo where is tmp2 used? */
          if (chunk_is_str(tmp1, "(", 1))
          {
             tmp3 = chunk_skip_to_match(tmp1, CNAV_PREPROC);
@@ -4458,7 +4457,6 @@ static void mark_define_expressions(void)
                  (prev->type == CT_RETURN) ||
                  (prev->type == CT_GOTO) ||
                  (prev->type == CT_CONTINUE) ||
-                 (prev->type == CT_PAREN_OPEN) ||
                  (prev->type == CT_FPAREN_OPEN) ||
                  (prev->type == CT_SPAREN_OPEN) ||
                  (prev->type == CT_BRACE_OPEN) ||
