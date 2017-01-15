@@ -10,9 +10,47 @@
 #include "ChunkStack.h"
 #include "prototypes.h"
 
+
+/**
+ * Checks to see if a token continues a statement to the next line.
+ * We need to check for 'open' braces/paren/etc because the level doesn't
+ * change until the token after the open.
+ */
+static bool pawn_continued(chunk_t *pc, int br_level);
+
+
+/**
+ * Functions prototypes and definitions can only appear in level 0.
+ *
+ * Function prototypes start with "native", "forward", or are just a function
+ * with a trailing semicolon instead of a open brace (or something else)
+ *
+ * somefunc(params)              <-- def
+ * stock somefunc(params)        <-- def
+ * somefunc(params);             <-- proto
+ * forward somefunc(params)      <-- proto
+ * native somefunc[rect](params) <-- proto
+ *
+ * Functions start with 'stock', 'static', 'public', or '@' (on level 0)
+ *
+ * Variable definitions start with 'stock', 'static', 'new', or 'public'.
+ */
 static chunk_t *pawn_process_line(chunk_t *start);
+
+
+/**
+ * We are on a level 0 function proto of def
+ */
 static chunk_t *pawn_mark_function0(chunk_t *start, chunk_t *fcn);
+
+
+/**
+ * follows a variable definition at level 0 until the end.
+ * Adds a semicolon at the end, if needed.
+ */
 static chunk_t *pawn_process_variable(chunk_t *start);
+
+
 static chunk_t *pawn_process_func_def(chunk_t *pc);
 
 
@@ -82,11 +120,6 @@ void pawn_scrub_vsemi(void)
 }
 
 
-/**
- * Checks to see if a token continues a statement to the next line.
- * We need to check for 'open' braces/paren/etc because the level doesn't
- * change until the token after the open.
- */
 static bool pawn_continued(chunk_t *pc, int br_level)
 {
    LOG_FUNC_ENTRY();
@@ -168,22 +201,6 @@ void pawn_prescan(void)
 }
 
 
-/**
- * Functions prototypes and definitions can only appear in level 0.
- *
- * Function prototypes start with "native", "forward", or are just a function
- * with a trailing semicolon instead of a open brace (or something else)
- *
- * somefunc(params)              <-- def
- * stock somefunc(params)        <-- def
- * somefunc(params);             <-- proto
- * forward somefunc(params)      <-- proto
- * native somefunc[rect](params) <-- proto
- *
- * Functions start with 'stock', 'static', 'public', or '@' (on level 0)
- *
- * Variable definitions start with 'stock', 'static', 'new', or 'public'.
- */
 static chunk_t *pawn_process_line(chunk_t *start)
 {
    LOG_FUNC_ENTRY();
@@ -245,10 +262,6 @@ static chunk_t *pawn_process_line(chunk_t *start)
 } // pawn_process_line
 
 
-/**
- * follows a variable definition at level 0 until the end.
- * Adds a semicolon at the end, if needed.
- */
 static chunk_t *pawn_process_variable(chunk_t *start)
 {
    LOG_FUNC_ENTRY();
@@ -316,9 +329,6 @@ void pawn_add_virtual_semicolons(void)
 }
 
 
-/**
- * We are on a level 0 function proto of def
- */
 static chunk_t *pawn_mark_function0(chunk_t *start, chunk_t *fcn)
 {
    LOG_FUNC_ENTRY();

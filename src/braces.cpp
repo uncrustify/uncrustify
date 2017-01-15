@@ -15,16 +15,84 @@
 #include "unc_ctype.h"
 
 
+/**
+ * Converts a single brace into a virtual brace
+ */
 static void convert_brace(chunk_t *br);
+
+
+/**
+ * Converts a single virtual brace into a brace
+ */
 static void convert_vbrace(chunk_t *br);
+
+
 static void convert_vbrace_to_brace(void);
+
+
+/**
+ * Go backwards to honor brace newline removal limits
+ */
 static void examine_braces(void);
+
+
+/**
+ * Step forward and count the number of semi colons at the current level.
+ * Abort if more than 1 or if we enter a preprocessor
+ */
 static void examine_brace(chunk_t *bopen);
+
+
 static void move_case_break(void);
+
+
 static void mod_case_brace(void);
+
+
 static void mod_full_brace_if_chain(void);
+
+
+/**
+ * Checks to see if the braces can be removed.
+ *  - less than a certain length
+ *  - doesn't mess up if/else stuff
+ */
 static bool can_remove_braces(chunk_t *bopen);
+
+
+/**
+ * Checks to see if the virtual braces should be converted to real braces.
+ *  - over a certain length
+ *
+ * @param vbopen Virtual Brace Open chunk
+ * @return true (convert to real braces) or false (leave alone)
+ */
 static bool should_add_braces(chunk_t *vbopen);
+
+
+/**
+ * Collect the text into txt that contains the full tag name.
+ * Mainly for collecting namespace 'a.b.c' or function 'foo::bar()' names.
+ */
+static void append_tag_name(unc_text &txt, chunk_t *pc);
+
+
+/**
+ * Remove the case brace, if allowable.
+ */
+static chunk_t *mod_case_brace_remove(chunk_t *br_open);
+
+
+/**
+ * Add the case brace, if allowable.
+ */
+static chunk_t *mod_case_brace_add(chunk_t *cl_colon);
+
+
+/**
+ * Traverse the if chain and see if all can be removed
+ */
+static void process_if_chain(chunk_t *br_start);
 
 
 void do_braces(void)
@@ -108,9 +176,6 @@ void do_braces(void)
 } // do_braces
 
 
-/**
- * Go backwards to honor brace newline removal limits
- */
 static void examine_braces(void)
 {
    LOG_FUNC_ENTRY();
@@ -145,13 +210,6 @@ static void examine_braces(void)
 }
 
 
-/**
- * Checks to see if the virtual braces should be converted to real braces.
- *  - over a certain length
- *
- * @param vbopen Virtual Brace Open chunk
- * @return true (convert to real braces) or false (leave alone)
- */
 static bool should_add_braces(chunk_t *vbopen)
 {
    LOG_FUNC_ENTRY();
@@ -183,11 +241,6 @@ static bool should_add_braces(chunk_t *vbopen)
 }
 
 
-/**
- * Checks to see if the braces can be removed.
- *  - less than a certain length
- *  - doesn't mess up if/else stuff
- */
 static bool can_remove_braces(chunk_t *bopen)
 {
    LOG_FUNC_ENTRY();
@@ -325,10 +378,6 @@ static bool can_remove_braces(chunk_t *bopen)
 } // can_remove_braces
 
 
-/**
- * Step forward and count the number of semi colons at the current level.
- * Abort if more than 1 or if we enter a preprocessor
- */
 static void examine_brace(chunk_t *bopen)
 {
    LOG_FUNC_ENTRY();
@@ -499,9 +548,6 @@ static void examine_brace(chunk_t *bopen)
 } // examine_brace
 
 
-/**
- * Converts a single brace into a virtual brace
- */
 static void convert_brace(chunk_t *br)
 {
    LOG_FUNC_ENTRY();
@@ -545,9 +591,6 @@ static void convert_brace(chunk_t *br)
 }
 
 
-/**
- * Converts a single virtual brace into a brace
- */
 static void convert_vbrace(chunk_t *vbr)
 {
    LOG_FUNC_ENTRY();
@@ -703,10 +746,6 @@ chunk_t *insert_comment_after(chunk_t *ref, c_token_t cmt_type,
 }
 
 
-/**
- * Collect the text into txt that contains the full tag name.
- * Mainly for collecting namespace 'a.b.c' or function 'foo::bar()' names.
- */
 static void append_tag_name(unc_text &txt, chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
@@ -902,9 +941,6 @@ static void move_case_break(void)
 }
 
 
-/**
- * Remove the case brace, if allowable.
- */
 static chunk_t *mod_case_brace_remove(chunk_t *br_open)
 {
    LOG_FUNC_ENTRY();
@@ -958,9 +994,6 @@ static chunk_t *mod_case_brace_remove(chunk_t *br_open)
 } // mod_case_brace_remove
 
 
-/**
- * Add the case brace, if allowable.
- */
 static chunk_t *mod_case_brace_add(chunk_t *cl_colon)
 {
    LOG_FUNC_ENTRY();
@@ -1065,9 +1098,6 @@ static void mod_case_brace(void)
 }
 
 
-/**
- * Traverse the if chain and see if all can be removed
- */
 static void process_if_chain(chunk_t *br_start)
 {
    LOG_FUNC_ENTRY();

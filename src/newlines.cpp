@@ -30,12 +30,252 @@
 //#define DEBUG
 
 
+static void mark_change(const char *func, int line);
+
+
+/**
+ * Check to see if we are allowed to increase the newline count.
+ * We can't increase the nl count:
+ *  - if nl_squeeze_ifdef and a preproc is after the newline.
+ *  - if eat_blanks_before_close_brace and the next is '}'
+ *  - if eat_blanks_after_open_brace and the prev is '{'
+ */
+static bool can_increase_nl(chunk_t *nl);
+
+
+/**
+ * Double the newline, if allowed.
+ */
+static void double_newline(chunk_t *nl);
+
+
+/**
+ * Basic approach:
+ * 1. Find next open brace
+ * 2. Find next close brace
+ * 3. Determine why the braces are there
+ * a. struct/union/enum "enum [name] {"
+ * c. assignment "= {"
+ * b. if/while/switch/for/etc ") {"
+ * d. else "} else {"
+ */
+static void setup_newline_add(chunk_t *prev, chunk_t *nl, chunk_t *next);
+
+
+/**
+ * Make sure there is a blank line after a commented group of values
+ */
 static void newlines_double_space_struct_enum_union(chunk_t *open_brace);
+
+
+/**
+ * If requested, make sure each entry in an enum is on its own line
+ */
 static void newlines_enum_entries(chunk_t *open_brace, argval_t av);
+
+
+/**
+ * Checks to see if it is OK to add a newline around the chunk.
+ * Don't want to break one-liners...
+ * return value:
+ *  true: a new line may be added
+ * false: a new line may NOT be added
+ */
 static bool one_liner_nl_ok(chunk_t *pc);
+
+
+static void nl_create_one_liner(chunk_t *vbrace_open);
+
+
+/**
+ * Find the next newline or nl_cont
+ */
 static void nl_handle_define(chunk_t *pc);
 
+
+/**
+ * Does the Ignore, Add, Remove, or Force thing between two chunks
+ *
+ * @param before The first chunk
+ * @param after  The second chunk
+ * @param av     The IARF value
+ */
 static void newline_iarf_pair(chunk_t *before, chunk_t *after, argval_t av);
+
+
+/**
+ * Adds newlines to multi-line function call/decl/def
+ * Start points to the open paren
+ */
+static void newline_func_multi_line(chunk_t *start);
+
+
+/**
+ * Formats a function declaration
+ * Start points to the open paren
+ */
+static void newline_func_def(chunk_t *start);
+
+
+/**
+ * Formats a message, adding newlines before the item before the colons.
+ *
+ * Start points to the open '[' in:
+ * [myObject doFooWith:arg1 name:arg2  // some lines with >1 arg
+ *            error:arg3];
+ */
+static void newline_oc_msg(chunk_t *start);
+
+
+/**
+ * Ensure that the next non-comment token after close brace is a newline
+ */
+static void newline_end_newline(chunk_t *br_close);
+
+
+static void newline_min_after(chunk_t *ref, INT32 count, UINT64 flag);
+
+
+/**
+ * Add or remove a newline between the closing paren and opening brace.
+ * Also uncuddles anything on the closing brace. (may get fixed later)
+ *
+ * "if (...) { \n" or "if (...) \n { \n"
+ *
+ * For virtual braces, we can only add a newline after the vbrace open.
+ * If we do so, also add a newline after the vbrace close.
+ */
+static bool newlines_if_for_while_switch(chunk_t *start, argval_t nl_opt);
+
+
+/**
+ * Add or remove extra newline before the chunk.
+ * Adds before comments
+ * Doesn't do anything if open brace before it
+ * "code\n\ncomment\nif (...)" or "code\ncomment\nif (...)"
+ */
+static void newlines_if_for_while_switch_pre_blank_lines(chunk_t *start, argval_t nl_opt);
+
+
+static void _blank_line_set(chunk_t *pc, const char *text, uncrustify_options uo);
+
+
+/**
+ * Add one/two newline(s) before the chunk.
+ * Adds before comments
+ * Adds before destructor
+ * Doesn't do anything if open brace before it
+ * "code\n\ncomment\nif (...)" or "code\ncomment\nif (...)"
+ */
+static void newlines_func_pre_blank_lines(chunk_t *start);
+
+
+static chunk_t *get_closing_brace(chunk_t *start);
+
+
+/**
+ * remove any consecutive newlines following this chunk
+ * skip vbraces
+ */
+static void remove_next_newlines(chunk_t *start);
+
+
+/**
+ * Add or remove extra newline after end of the block started in chunk.
+ * Doesn't do anything if close brace after it
+ * Interesting issue is that at this point, nls can be before or after vbraces
+ * VBraces will stay VBraces, conversion to real ones should have already happened
+ * "if (...)\ncode\ncode" or "if (...)\ncode\n\ncode"
+ */
+static void newlines_if_for_while_switch_post_blank_lines(chunk_t *start, argval_t nl_opt);
+
+
+/**
+ * Adds or removes a newline between the keyword and the open brace.
+ * If there is something after the '{' on the same line, then
+ * the newline is removed unconditionally.
+ * If there is a '=' between the keyword and '{', do nothing.
+ *
+ * "struct [name] {" or "struct [name] \n {"
+ */
+static void newlines_struct_enum_union(chunk_t *start, argval_t nl_opt, bool leave_trailing);
+
+
+/**
+ * Cuddles or un-cuddles a chunk with a previous close brace
+ *
+ * "} while" vs "} \n while"
+ * "} else" vs "} \n else"
+ *
+ * @param start   The chunk - should be CT_ELSE or CT_WHILE_OF_DO
+ */
+static void newlines_cuddle_uncuddle(chunk_t *start, argval_t nl_opt);
+
+
+/**
+ * Adds/removes a newline between else and '{'.
+ * "else {" or "else \n {"
+ */
+static void newlines_do_else(chunk_t *start, argval_t nl_opt);
+
+
+/**
+ * Put a newline before and after a block of variable definitions
+ */
+static chunk_t *newline_def_blk(chunk_t *start, bool fn_top);
+
+
+/**
+ * Handles the brace_on_func_line setting and decides if the closing brace
+ * of a pair should be right after a newline.
+ * The only cases where the closing brace shouldn't be the first thing on a line
+ * is where the opening brace has junk after it AND where a one-liner in a
+ * class is supposed to be preserved.
+ *
+ * General rule for break before close brace:
+ * If the brace is part of a function (call or definition) OR if the only
+ * thing after the opening brace is comments, the there must be a newline
+ * before the close brace.
+ *
+ * Example of no newline before close
+ * struct mystring { int  len;
+ *                   char str[]; };
+ * while (*(++ptr) != 0) { }
+ *
+ * Examples of newline before close
+ * void foo() {
+ * }
+ */
+static void newlines_brace_pair(chunk_t *br_open);
+
+
+/**
+ * Put a empty line between the 'case' statement and the previous case colon
+ * or semicolon.
+ * Does not work with PAWN (?)
+ */
+static void newline_case(chunk_t *start);
+
+
+static void newline_case_colon(chunk_t *start);
+
+
+/**
+ * Put a blank line before a return statement, unless it is after an open brace
+ */
+static void newline_before_return(chunk_t *start);
+
+
+/**
+ * Put a empty line after a return statement, unless it is followed by a
+ * close brace.
+ *
+ * May not work with PAWN
+ */
+static void newline_after_return(chunk_t *start);
+
+
+static void _blank_line_max(chunk_t *pc, const char *text, uncrustify_options uo);
 
 #define MARK_CHANGE()    mark_change(__func__, __LINE__)
 
@@ -52,13 +292,6 @@ static void mark_change(const char *func, int line)
 }
 
 
-/**
- * Check to see if we are allowed to increase the newline count.
- * We can't increase the nl count:
- *  - if nl_squeeze_ifdef and a preproc is after the newline.
- *  - if eat_blanks_before_close_brace and the next is '}'
- *  - if eat_blanks_after_open_brace and the prev is '{'
- */
 static bool can_increase_nl(chunk_t *nl)
 {
    LOG_FUNC_ENTRY();
@@ -125,9 +358,6 @@ static bool can_increase_nl(chunk_t *nl)
 } // can_increase_nl
 
 
-/**
- * Double the newline, if allowed.
- */
 static void double_newline(chunk_t *nl)
 {
    LOG_FUNC_ENTRY();
@@ -150,16 +380,6 @@ static void double_newline(chunk_t *nl)
 }
 
 
-/*
- * Basic approach:
- * 1. Find next open brace
- * 2. Find next close brace
- * 3. Determine why the braces are there
- * a. struct/union/enum "enum [name] {"
- * c. assignment "= {"
- * b. if/while/switch/for/etc ") {"
- * d. else "} else {"
- */
 static void setup_newline_add(chunk_t *prev, chunk_t *nl, chunk_t *next)
 {
    LOG_FUNC_ENTRY();
@@ -282,9 +502,6 @@ chunk_t *newline_force_after(chunk_t *pc)
 }
 
 
-/**
- * Ensure that the next non-comment token after close brace is a newline
- */
 static void newline_end_newline(chunk_t *br_close)
 {
    LOG_FUNC_ENTRY();
@@ -512,15 +729,6 @@ void newline_del_between(chunk_t *start, chunk_t *end)
 } // newline_del_between
 
 
-/**
- * Add or remove a newline between the closing paren and opening brace.
- * Also uncuddles anything on the closing brace. (may get fixed later)
- *
- * "if (...) { \n" or "if (...) \n { \n"
- *
- * For virtual braces, we can only add a newline after the vbrace open.
- * If we do so, also add a newline after the vbrace close.
- */
 static bool newlines_if_for_while_switch(chunk_t *start, argval_t nl_opt)
 {
    LOG_FUNC_ENTRY();
@@ -589,12 +797,6 @@ static bool newlines_if_for_while_switch(chunk_t *start, argval_t nl_opt)
 } // newlines_if_for_while_switch
 
 
-/**
- * Add or remove extra newline before the chunk.
- * Adds before comments
- * Doesn't do anything if open brace before it
- * "code\n\ncomment\nif (...)" or "code\ncomment\nif (...)"
- */
 static void newlines_if_for_while_switch_pre_blank_lines(chunk_t *start, argval_t nl_opt)
 {
    LOG_FUNC_ENTRY();
@@ -712,13 +914,6 @@ static void _blank_line_set(chunk_t *pc, const char *text, uncrustify_options uo
 #define blank_line_set(pc, op)    _blank_line_set(pc, #op, op)
 
 
-/**
- * Add one/two newline(s) before the chunk.
- * Adds before comments
- * Adds before destructor
- * Doesn't do anything if open brace before it
- * "code\n\ncomment\nif (...)" or "code\ncomment\nif (...)"
- */
 static void newlines_func_pre_blank_lines(chunk_t *start)
 {
    LOG_FUNC_ENTRY();
@@ -883,10 +1078,6 @@ static chunk_t *get_closing_brace(chunk_t *start)
 }
 
 
-/**
- * remove any consecutive newlines following this chunk
- * skip vbraces
- */
 static void remove_next_newlines(chunk_t *start)
 {
    LOG_FUNC_ENTRY();
@@ -911,13 +1102,6 @@ static void remove_next_newlines(chunk_t *start)
 }
 
 
-/**
- * Add or remove extra newline after end of the block started in chunk.
- * Doesn't do anything if close brace after it
- * Interesting issue is that at this point, nls can be before or after vbraces
- * VBraces will stay VBraces, conversion to real ones should have already happened
- * "if (...)\ncode\ncode" or "if (...)\ncode\n\ncode"
- */
 static void newlines_if_for_while_switch_post_blank_lines(chunk_t *start, argval_t nl_opt)
 {
    LOG_FUNC_ENTRY();
@@ -1071,14 +1255,6 @@ static void newlines_if_for_while_switch_post_blank_lines(chunk_t *start, argval
 } // newlines_if_for_while_switch_post_blank_lines
 
 
-/**
- * Adds or removes a newline between the keyword and the open brace.
- * If there is something after the '{' on the same line, then
- * the newline is removed unconditionally.
- * If there is a '=' between the keyword and '{', do nothing.
- *
- * "struct [name] {" or "struct [name] \n {"
- */
 static void newlines_struct_enum_union(chunk_t *start, argval_t nl_opt, bool leave_trailing)
 {
    LOG_FUNC_ENTRY();
@@ -1129,14 +1305,6 @@ static void newlines_struct_enum_union(chunk_t *start, argval_t nl_opt, bool lea
 } // newlines_struct_enum_union
 
 
-/**
- * Cuddles or un-cuddles a chunk with a previous close brace
- *
- * "} while" vs "} \n while"
- * "} else" vs "} \n else"
- *
- * @param start   The chunk - should be CT_ELSE or CT_WHILE_OF_DO
- */
 static void newlines_cuddle_uncuddle(chunk_t *start, argval_t nl_opt)
 {
    LOG_FUNC_ENTRY();
@@ -1156,10 +1324,6 @@ static void newlines_cuddle_uncuddle(chunk_t *start, argval_t nl_opt)
 }
 
 
-/**
- * Adds/removes a newline between else and '{'.
- * "else {" or "else \n {"
- */
 static void newlines_do_else(chunk_t *start, argval_t nl_opt)
 {
    LOG_FUNC_ENTRY();
@@ -1210,9 +1374,6 @@ static void newlines_do_else(chunk_t *start, argval_t nl_opt)
 } // newlines_do_else
 
 
-/**
- * Put a newline before and after a block of variable definitions
- */
 static chunk_t *newline_def_blk(chunk_t *start, bool fn_top)
 {
    LOG_FUNC_ENTRY();
@@ -1396,28 +1557,6 @@ static chunk_t *newline_def_blk(chunk_t *start, bool fn_top)
 } // newline_def_blk
 
 
-/**
- * Handles the brace_on_func_line setting and decides if the closing brace
- * of a pair should be right after a newline.
- * The only cases where the closing brace shouldn't be the first thing on a line
- * is where the opening brace has junk after it AND where a one-liner in a
- * class is supposed to be preserved.
- *
- * General rule for break before close brace:
- * If the brace is part of a function (call or definition) OR if the only
- * thing after the opening brace is comments, the there must be a newline
- * before the close brace.
- *
- * Example of no newline before close
- * struct mystring { int  len;
- *                   char str[]; };
- * while (*(++ptr) != 0) { }
- *
- * Examples of newline before close
- * void foo() {
- * }
- *
- */
 static void newlines_brace_pair(chunk_t *br_open)
 {
    LOG_FUNC_ENTRY();
@@ -1583,11 +1722,6 @@ static void newlines_brace_pair(chunk_t *br_open)
 } // newlines_brace_pair
 
 
-/**
- * Put a empty line between the 'case' statement and the previous case colon
- * or semicolon.
- * Does not work with PAWN (?)
- */
 static void newline_case(chunk_t *start)
 {
    LOG_FUNC_ENTRY();
@@ -1653,9 +1787,6 @@ static void newline_case_colon(chunk_t *start)
 }
 
 
-/**
- * Put a blank line before a return statement, unless it is after an open brace
- */
 static void newline_before_return(chunk_t *start)
 {
    LOG_FUNC_ENTRY();
@@ -1697,12 +1828,6 @@ static void newline_before_return(chunk_t *start)
 }
 
 
-/**
- * Put a empty line after a return statement, unless it is followed by a
- * close brace.
- *
- * May not work with PAWN
- */
 static void newline_after_return(chunk_t *start)
 {
    LOG_FUNC_ENTRY();
@@ -1736,13 +1861,6 @@ static void newline_after_return(chunk_t *start)
 }
 
 
-/**
- * Does the Ignore, Add, Remove, or Force thing between two chunks
- *
- * @param before The first chunk
- * @param after  The second chunk
- * @param av     The IARF value
- */
 static void newline_iarf_pair(chunk_t *before, chunk_t *after, argval_t av)
 {
    LOG_FUNC_ENTRY();
@@ -1781,10 +1899,6 @@ void newline_iarf(chunk_t *pc, argval_t av)
 }
 
 
-/**
- * Adds newlines to multi-line function call/decl/def
- * Start points to the open paren
- */
 static void newline_func_multi_line(chunk_t *start)
 {
    LOG_FUNC_ENTRY();
@@ -1866,10 +1980,6 @@ static void newline_func_multi_line(chunk_t *start)
 } // newline_func_multi_line
 
 
-/**
- * Formats a function declaration
- * Start points to the open paren
- */
 static void newline_func_def(chunk_t *start)
 {
    LOG_FUNC_ENTRY();
@@ -2035,13 +2145,6 @@ static void newline_func_def(chunk_t *start)
 } // newline_func_def
 
 
-/**
- * Formats a message, adding newlines before the item before the colons.
- *
- * Start points to the open '[' in:
- * [myObject doFooWith:arg1 name:arg2  // some lines with >1 arg
- *            error:arg3];
- */
 static void newline_oc_msg(chunk_t *start)
 {
    LOG_FUNC_ENTRY();
@@ -2091,13 +2194,6 @@ static void newline_oc_msg(chunk_t *start)
 } // newline_oc_msg
 
 
-/**
- * Checks to see if it is OK to add a newline around the chunk.
- * Don't want to break one-liners...
- * return value:
- *  true: a new line may be added
- * false: a new line may NOT be added
- */
 static bool one_liner_nl_ok(chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
@@ -2956,9 +3052,6 @@ void newlines_cleanup_braces(bool first)
 } // newlines_cleanup_braces
 
 
-/**
- * Find the next newline or nl_cont
- */
 static void nl_handle_define(chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
@@ -3945,9 +4038,6 @@ void newlines_cleanup_dup(void)
 }
 
 
-/**
- * If requested, make sure each entry in an enum is on its own line
- */
 static void newlines_enum_entries(chunk_t *open_brace, argval_t av)
 {
    LOG_FUNC_ENTRY();
@@ -3969,9 +4059,6 @@ static void newlines_enum_entries(chunk_t *open_brace, argval_t av)
 }
 
 
-/**
- * Make sure there is a blank line after a commented group of values
- */
 static void newlines_double_space_struct_enum_union(chunk_t *open_brace)
 {
    LOG_FUNC_ENTRY();

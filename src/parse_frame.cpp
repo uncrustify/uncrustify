@@ -13,6 +13,18 @@
 #include <cstdlib>
 
 
+static void pf_log_frms(log_sev_t logsev, const char *txt, struct parse_frame *pf);
+
+
+/**
+ * Copy the 2nd top item off the stack into pf.
+ * This is called on #else and #elif.
+ * The stack contains [...] [base] [if] at this point.
+ * We want to copy [base].
+ */
+static void pf_copy_2nd_tos(struct parse_frame *pf);
+
+
 /**
  * Logs one parse frame
  */
@@ -128,12 +140,6 @@ void pf_copy_tos(parse_frame_t *pf)
 }
 
 
-/**
- * Copy the 2nd top item off the stack into pf.
- * This is called on #else and #elif.
- * The stack contains [...] [base] [if] at this point.
- * We want to copy [base].
- */
 static void pf_copy_2nd_tos(parse_frame_t *pf)
 {
    if (cpd.frame_count > 1)

@@ -14,6 +14,10 @@
 
 typedef ListManager<chunk_t> ChunkList;
 
+
+static void chunk_log(chunk_t *pc, const char *text);
+
+
 ChunkList g_cl;
 
 

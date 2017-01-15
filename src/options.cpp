@@ -79,6 +79,18 @@ static uncrustify_groups                  current_group;
 
 const char *get_argtype_name(argtype_e argtype);
 
+/**
+ *  only compare alpha-numeric characters
+ */
+static bool match_text(const char *str1, const char *str2);
+
+
+/**
+ * Convert the value string to the correct type in dest.
+ */
+static void convert_value(const option_map_value *entry, const char *val, op_val_t *dest);
+
+
 static void unc_add_option(const char *name, uncrustify_options id, argtype_e type, const char *short_desc = NULL, const char *long_desc = NULL, int min_val = 0, int max_val = 16);
 
 
@@ -163,7 +175,6 @@ void unc_add_option(const char *name, uncrustify_options id, argtype_e type,
 } // unc_add_option
 
 
-/* only compare alpha-numeric characters */
 static bool match_text(const char *str1, const char *str2)
 {
    int matches = 0;
@@ -1587,9 +1598,6 @@ const option_map_value *get_option_name(uncrustify_options option)
 }
 
 
-/**
- * Convert the value string to the correct type in dest.
- */
 static void convert_value(const option_map_value *entry, const char *val, op_val_t *dest)
 {
    const option_map_value *tmp;

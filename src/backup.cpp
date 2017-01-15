@@ -32,9 +32,6 @@
 #include <cstring>
 
 
-/**
- * Check the backup-md5 file and copy the input file to a backup if needed.
- */
 int backup_copy_file(const char *filename, const vector<UINT8> &data)
 {
    char  newpath[1024];
@@ -115,10 +112,6 @@ int backup_copy_file(const char *filename, const vector<UINT8> &data)
 } // backup_copy_file
 
 
-/**
- * This should be called after the file was written to disk.
- * It will be read back and an md5 will be calculated over it.
- */
 void backup_create_md5_file(const char *filename)
 {
    UINT8  dig[16];

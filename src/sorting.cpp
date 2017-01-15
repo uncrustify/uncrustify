@@ -9,10 +9,20 @@
 #include "chunk_list.h"
 #include "prototypes.h"
 
-
 /**
  * Compare two series of chunks, starting with the given ones.
  */
+static int compare_chunks(chunk_t *pc1, chunk_t *pc2);
+
+
+/**
+ * Sorting should be pretty rare and should usually only include a few chunks.
+ * We need to minimize the number of swaps, as those are expensive.
+ * So, we do a min sort.
+ */
+static void do_the_sort(chunk_t **chunks, int num_chunks);
+
+
 static int compare_chunks(chunk_t *pc1, chunk_t *pc2)
 {
    LOG_FUNC_ENTRY();
@@ -59,11 +69,6 @@ static int compare_chunks(chunk_t *pc1, chunk_t *pc2)
 } // compare_chunks
 
 
-/**
- * Sorting should be pretty rare and should usually only include a few chunks.
- * We need to minimize the number of swaps, as those are expensive.
- * So, we do a min sort.
- */
 static void do_the_sort(chunk_t **chunks, int num_chunks)
 {
    LOG_FUNC_ENTRY();

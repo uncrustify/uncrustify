@@ -136,7 +136,108 @@ struct tok_ctx
    tok_info          s; /* saved */
 };
 
+
+/**
+ * Count the number of characters in a quoted string.
+ * The next bit of text starts with a quote char " or ' or <.
+ * Count the number of characters until the matching character.
+ *
+ * @param pc   The structure to update, str is an input.
+ * @return     Whether a string was parsed
+ */
 static bool parse_string(tok_ctx &ctx, chunk_t &pc, int quote_idx, bool allow_escape);
+
+
+/**
+ * Literal string, ends with single "
+ * Two "" don't end the string.
+ *
+ * @param pc   The structure to update, str is an input.
+ * @return     Whether a string was parsed
+ */
+static bool parse_cs_string(tok_ctx &ctx, chunk_t &pc);
+
+
+/**
+ * Interpolated strings start with $" end with a single "
+ * Double quotes are escaped by doubling.
+ * Need to track embedded { } pairs and ignore anything between.
+ *
+ * @param pc   The structure to update, str is an input.
+ * @return     Whether a string was parsed
+ */
+static bool parse_cs_interpolated_string(tok_ctx &ctx, chunk_t &pc);
+
+
+/**
+ * VALA verbatim string, ends with three quotes (""")
+ *
+ * @param pc   The structure to update, str is an input.
+ */
+static void parse_verbatim_string(tok_ctx &ctx, chunk_t &pc);
+
+
+static bool tag_compare(const deque<int> &d, int a_idx, int b_idx, int len);
+
+
+/**
+ * Parses a C++0x 'R' string. R"( xxx )" R"tag(  )tag" u8R"(x)" uR"(x)"
+ * Newlines may be in the string.
+ */
+static bool parse_cr_string(tok_ctx &ctx, chunk_t &pc, int q_idx);
+
+
+/**
+ * Count the number of whitespace characters.
+ *
+ * @param pc   The structure to update, str is an input.
+ * @return     Whether whitespace was parsed
+ */
+static bool parse_whitespace(tok_ctx &ctx, chunk_t &pc);
+
+
+/**
+ * Called when we hit a backslash.
+ * If there is nothing but whitespace until the newline, then this is a
+ * backslash newline
+ */
+static bool parse_bs_newline(tok_ctx &ctx, chunk_t &pc);
+
+
+/**
+ * Parses any number of tab or space chars followed by a newline.
+ * Does not change pc.len if a newline isn't found.
+ * This is not the same as parse_whitespace() because it only consumes until
+ * a single newline is encountered.
+ */
+static bool parse_newline(tok_ctx &ctx);
+
+
+/**
+ * PAWN #define is different than C/C++.
+ *   #define PATTERN REPLACEMENT_TEXT
+ * The PATTERN may not contain a space or '[' or ']'.
+ * A generic whitespace check should be good enough.
+ * Do not change the pattern.
+ */
+static void parse_pawn_pattern(tok_ctx &ctx, chunk_t &pc, c_token_t tt);
+
+
+static bool parse_ignored(tok_ctx &ctx, chunk_t &pc);
+
+
+/**
+ * Skips the next bit of whatever and returns the type of block.
+ *
+ * pc.str is the input text.
+ * pc.len in the output length.
+ * pc.type is the output type
+ * pc.column is output column
+ *
+ * @param pc      The structure to update, str is an input.
+ * @return        true/false - whether anything was parsed
+ */
+static bool parse_next(tok_ctx &ctx, chunk_t &pc);
 
 
 /**
@@ -160,6 +261,69 @@ static bool parse_string(tok_ctx &ctx, chunk_t &pc, int quote_idx, bool allow_es
  * @param pc   The structure to update, str is an input.
  * @return     Whether a string was parsed
  */
+static bool d_parse_string(tok_ctx &ctx, chunk_t &pc);
+
+
+/**
+ * Figure of the length of the comment at text.
+ * The next bit of text starts with a '/', so it might be a comment.
+ * There are three types of comments:
+ *  - C comments that start with  '/ *' and end with '* /'
+ *  - C++ comments that start with //
+ *  - D nestable comments '/+' '+/'
+ *
+ * @param pc   The structure to update, str is an input.
+ * @return     Whether a comment was parsed
+ */
+static bool parse_comment(tok_ctx &ctx, chunk_t &pc);
+
+
+/**
+ * Figure of the length of the code placeholder at text, if present.
+ * This is only for Xcode which sometimes inserts temporary code placeholder chunks, which in plaintext <#look like this#>.
+ *
+ * @param pc   The structure to update, str is an input.
+ * @return     Whether a placeholder was parsed.
+ */
+static bool parse_code_placeholder(tok_ctx &ctx, chunk_t &pc);
+
+
+/**
+ * Parse any attached suffix, which may be a user-defined literal suffix.
+ * If for a string, explicitly exclude common format and scan specifiers, ie,
+ * PRIx32 and SCNx64.
+ */
+static void parse_suffix(tok_ctx &ctx, chunk_t &pc, bool forstring);
+
+
+static bool is_bin(int ch);
+static bool is_bin_(int ch);
+static bool is_oct(int ch);
+static bool is_oct_(int ch);
+static bool is_dec(int ch);
+static bool is_dec_(int ch);
+static bool is_hex(int ch);
+static bool is_hex_(int ch);
+
+
+/**
+ * Count the number of characters in the number.
+ * The next bit of text starts with a number (0-9 or '.'), so it is a number.
+ * Count the number of characters in the number.
+ *
+ * This should cover all number formats for all languages.
+ * Note that this is not a strict parser. It will happily parse numbers in
+ * an invalid format.
+ *
+ * For example, only D allows underscores in the numbers, but they are
+ * allowed in all formats.
+ *
+ * @param pc   The structure to update, str is an input.
+ * @return     Whether a number was parsed
+ */
+static bool parse_number(tok_ctx &ctx, chunk_t &pc);
+
+
 static bool d_parse_string(tok_ctx &ctx, chunk_t &pc)
 {
    int ch = ctx.peek();
@@ -263,36 +427,29 @@ static bool d_parse_string(tok_ctx &ctx, chunk_t &pc)
 } // d_parse_string
 
 
-// /**
-//  * A string-in-string search.  Like strstr() with a haystack length.
-//  */
-// static const char *str_search(const char *needle, const char *haystack, int haystack_len)
-// {
-//    int needle_len = strlen(needle);
-//
-//    while (haystack_len-- >= needle_len)
-//    {
-//       if (memcmp(needle, haystack, needle_len) == 0)
-//       {
-//          return(haystack);
-//       }
-//       haystack++;
-//    }
-//    return(NULL);
-// }
+#if 0
 
 
 /**
- * Figure of the length of the comment at text.
- * The next bit of text starts with a '/', so it might be a comment.
- * There are three types of comments:
- *  - C comments that start with  '/ *' and end with '* /'
- *  - C++ comments that start with //
- *  - D nestable comments '/+' '+/'
- *
- * @param pc   The structure to update, str is an input.
- * @return     Whether a comment was parsed
+ * A string-in-string search.  Like strstr() with a haystack length.
  */
+static const char *str_search(const char *needle, const char *haystack, int haystack_len)
+{
+   int needle_len = strlen(needle);
+
+   while (haystack_len-- >= needle_len)
+   {
+      if (memcmp(needle, haystack, needle_len) == 0)
+      {
+         return(haystack);
+      }
+      haystack++;
+   }
+   return(NULL);
+}
+#endif
+
+
 static bool parse_comment(tok_ctx &ctx, chunk_t &pc)
 {
    int  ch;
@@ -501,13 +658,6 @@ static bool parse_comment(tok_ctx &ctx, chunk_t &pc)
 } // parse_comment
 
 
-/**
- * Figure of the length of the code placeholder at text, if present.
- * This is only for Xcode which sometimes inserts temporary code placeholder chunks, which in plaintext <#look like this#>.
- *
- * @param pc   The structure to update, str is an input.
- * @return     Whether a placeholder was parsed.
- */
 static bool parse_code_placeholder(tok_ctx &ctx, chunk_t &pc)
 {
    int last1 = 0;
@@ -541,11 +691,6 @@ static bool parse_code_placeholder(tok_ctx &ctx, chunk_t &pc)
 }
 
 
-/**
- * Parse any attached suffix, which may be a user-defined literal suffix.
- * If for a string, explicitly exclude common format and scan specifiers, ie,
- * PRIx32 and SCNx64.
- */
 static void parse_suffix(tok_ctx &ctx, chunk_t &pc, bool forstring = false)
 {
    if (CharTable::IsKw1(ctx.peek()))
@@ -631,21 +776,6 @@ static bool is_hex_(int ch)
 }
 
 
-/**
- * Count the number of characters in the number.
- * The next bit of text starts with a number (0-9 or '.'), so it is a number.
- * Count the number of characters in the number.
- *
- * This should cover all number formats for all languages.
- * Note that this is not a strict parser. It will happily parse numbers in
- * an invalid format.
- *
- * For example, only D allows underscores in the numbers, but they are
- * allowed in all formats.
- *
- * @param pc   The structure to update, str is an input.
- * @return     Whether a number was parsed
- */
 static bool parse_number(tok_ctx &ctx, chunk_t &pc)
 {
    int  tmp;
@@ -833,14 +963,6 @@ static bool parse_number(tok_ctx &ctx, chunk_t &pc)
 } // parse_number
 
 
-/**
- * Count the number of characters in a quoted string.
- * The next bit of text starts with a quote char " or ' or <.
- * Count the number of characters until the matching character.
- *
- * @param pc   The structure to update, str is an input.
- * @return     Whether a string was parsed
- */
 static bool parse_string(tok_ctx &ctx, chunk_t &pc, int quote_idx, bool allow_escape)
 {
    bool escaped = false;
@@ -914,13 +1036,6 @@ static bool parse_string(tok_ctx &ctx, chunk_t &pc, int quote_idx, bool allow_es
 } // parse_string
 
 
-/**
- * Literal string, ends with single "
- * Two "" don't end the string.
- *
- * @param pc   The structure to update, str is an input.
- * @return     Whether a string was parsed
- */
 static bool parse_cs_string(tok_ctx &ctx, chunk_t &pc)
 {
    pc.str = ctx.get();
@@ -972,14 +1087,6 @@ static bool parse_cs_string(tok_ctx &ctx, chunk_t &pc)
 } // parse_cs_string
 
 
-/**
- * Interpolated strings start with $" end with a single "
- * Double quotes are escaped by doubling.
- * Need to track embedded { } pairs and ignore anything between.
- *
- * @param pc   The structure to update, str is an input.
- * @return     Whether a string was parsed
- */
 static bool parse_cs_interpolated_string(tok_ctx &ctx, chunk_t &pc)
 {
    pc.str = ctx.get();        // '$'
@@ -1042,11 +1149,6 @@ static bool parse_cs_interpolated_string(tok_ctx &ctx, chunk_t &pc)
 } // parse_cs_interpolated_string
 
 
-/**
- * VALA verbatim string, ends with three quotes (""")
- *
- * @param pc   The structure to update, str is an input.
- */
 static void parse_verbatim_string(tok_ctx &ctx, chunk_t &pc)
 {
    pc.type = CT_STRING;
@@ -1094,10 +1196,6 @@ static bool tag_compare(const deque<int> &d, int a_idx, int b_idx, int len)
 }
 
 
-/**
- * Parses a C++0x 'R' string. R"( xxx )" R"tag(  )tag" u8R"(x)" uR"(x)"
- * Newlines may be in the string.
- */
 static bool parse_cr_string(tok_ctx &ctx, chunk_t &pc, int q_idx)
 {
    int cnt;
@@ -1235,12 +1333,6 @@ bool parse_word(tok_ctx &ctx, chunk_t &pc, bool skipcheck)
 } // parse_word
 
 
-/**
- * Count the number of whitespace characters.
- *
- * @param pc   The structure to update, str is an input.
- * @return     Whether whitespace was parsed
- */
 static bool parse_whitespace(tok_ctx &ctx, chunk_t &pc)
 {
    int nl_count = 0;
@@ -1299,11 +1391,6 @@ static bool parse_whitespace(tok_ctx &ctx, chunk_t &pc)
 } // parse_whitespace
 
 
-/**
- * Called when we hit a backslash.
- * If there is nothing but whitespace until the newline, then this is a
- * backslash newline
- */
 static bool parse_bs_newline(tok_ctx &ctx, chunk_t &pc)
 {
    ctx.save();
@@ -1331,12 +1418,6 @@ static bool parse_bs_newline(tok_ctx &ctx, chunk_t &pc)
 }
 
 
-/**
- * Parses any number of tab or space chars followed by a newline.
- * Does not change pc.len if a newline isn't found.
- * This is not the same as parse_whitespace() because it only consumes until
- * a single newline is encountered.
- */
 static bool parse_newline(tok_ctx &ctx)
 {
    ctx.save();
@@ -1360,13 +1441,6 @@ static bool parse_newline(tok_ctx &ctx)
 }
 
 
-/**
- * PAWN #define is different than C/C++.
- *   #define PATTERN REPLACEMENT_TEXT
- * The PATTERN may not contain a space or '[' or ']'.
- * A generic whitespace check should be good enough.
- * Do not change the pattern.
- */
 static void parse_pawn_pattern(tok_ctx &ctx, chunk_t &pc, c_token_t tt)
 {
    pc.str.clear();
@@ -1460,17 +1534,6 @@ static bool parse_ignored(tok_ctx &ctx, chunk_t &pc)
 } // parse_ignored
 
 
-/**
- * Skips the next bit of whatever and returns the type of block.
- *
- * pc.str is the input text.
- * pc.len in the output length.
- * pc.type is the output type
- * pc.column is output column
- *
- * @param pc      The structure to update, str is an input.
- * @return        true/false - whether anything was parsed
- */
 static bool parse_next(tok_ctx &ctx, chunk_t &pc)
 {
    const chunk_tag_t *punc;

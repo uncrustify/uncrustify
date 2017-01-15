@@ -20,44 +20,481 @@
 #include <cassert>
 #include <stack>
 
+
+/**
+ * Flags everything from the open paren to the close paren.
+ *
+ * @param po   Pointer to the open parenthesis
+ * @return     The token after the close paren
+ */
+static chunk_t *flag_parens(chunk_t *po, UINT64 flags, c_token_t opentype, c_token_t parenttype, bool parent_all);
+
+
+/**
+ * Mark the parens and colons in:
+ *   asm volatile ( "xx" : "xx" (l), "yy"(h) : ...  );
+ *
+ * @param pc the CT_ASM item
+ */
+static void flag_asm(chunk_t *pc);
+
+
+/**
+ * Scan backwards to see if we might be on a type declaration
+ */
+static bool chunk_ends_type(chunk_t *start);
+
+
+/**
+ * skip to the final word/type in a :: chain
+ * pc is either a word or a ::
+ */
+static chunk_t *skip_dc_member(chunk_t *start);
+
+
+/**
+ * Skips to the start of the next statement.
+ */
+static chunk_t *skip_to_next_statement(chunk_t *pc);
+
+
+/**
+ * Skips everything until a comma or semicolon at the same level.
+ * Returns the semicolon, comma, or close brace/paren or NULL.
+ */
+static chunk_t *skip_expression(chunk_t *start);
+
+
+/**
+ * Skips the D 'align()' statement and the colon, if present.
+ *    align(2) int foo;  -- returns 'int'
+ *    align(4):          -- returns 'int'
+ *    int bar;
+ */
+static chunk_t *skip_align(chunk_t *start);
+
+/**
+ * Combines two tokens into {{ and }} if inside parens and nothing is between
+ * either pair.
+ */
+static void check_double_brace_init(chunk_t *bo1);
+
+/**
+ * Simply change any STAR to PTR_TYPE and WORD to TYPE
+ *
+ * @param start points to the open paren
+ */
 static void fix_fcn_def_params(chunk_t *pc);
+
+
+/**
+ * We are on a typedef.
+ * If the next word is not enum/union/struct, then the last word before the
+ * next ',' or ';' or '__attribute__' is a type.
+ *
+ * typedef [type...] [*] type [, [*]type] ;
+ * typedef <return type>([*]func)();
+ * typedef <return type>([*]func)(params);
+ * typedef <return type>(__stdcall *func)(); Bug # 633    MS-specific extension
+ *                                           include the config-file "test/config/MS-calling_conventions.cfg"
+ * typedef <return type>func(params);
+ * typedef <enum/struct/union> [type] [*] type [, [*]type] ;
+ * typedef <enum/struct/union> [type] { ... } [*] type [, [*]type] ;
+ */
 static void fix_typedef(chunk_t *pc);
+
+
+/**
+ * We are on an enum/struct/union tag that is NOT inside a typedef.
+ * If there is a {...} and words before the ';', then they are variables.
+ *
+ * tag { ... } [*] word [, [*]word] ;
+ * tag [word/type] { ... } [*] word [, [*]word] ;
+ * enum [word/type [: int_type]] { ... } [*] word [, [*]word] ;
+ * tag [word/type] [word]; -- this gets caught later.
+ * fcn(tag [word/type] [word])
+ * a = (tag [word/type] [*])&b;
+ *
+ * REVISIT: should this be consolidated with the typedef code?
+ */
 static void fix_enum_struct_union(chunk_t *pc);
+
+
+/**
+ * Checks to see if the current paren is part of a cast.
+ * We already verified that this doesn't follow function, TYPE, IF, FOR,
+ * SWITCH, or WHILE and is followed by WORD, TYPE, STRUCT, ENUM, or UNION.
+ *
+ * @param start   Pointer to the open paren
+ */
 static void fix_casts(chunk_t *pc);
+
+
+/**
+ * CT_TYPE_CAST follows this pattern:
+ * dynamic_cast<...>(...)
+ *
+ * Mark everything between the <> as a type and set the paren parent
+ */
 static void fix_type_cast(chunk_t *pc);
+
+
+/**
+ * We are on the start of a sequence that could be a var def
+ *  - FPAREN_OPEN (parent == CT_FOR)
+ *  - BRACE_OPEN
+ *  - SEMICOLON
+ */
 static chunk_t *fix_var_def(chunk_t *pc);
+
+
+/**
+ * We are on a function word. we need to:
+ *  - find out if this is a call or prototype or implementation
+ *  - mark return type
+ *  - mark parameter types
+ *  - mark brace pair
+ *
+ * REVISIT:
+ * This whole function is a mess.
+ * It needs to be reworked to eliminate duplicate logic and determine the
+ * function type more directly.
+ *  1. Skip to the close paren and see what is after.
+ *     a. semicolon - function call or function proto
+ *     b. open brace - function call (ie, list_for_each) or function def
+ *     c. open paren - function type or chained function call
+ *     d. qualifier - function def or proto, continue to semicolon or open brace
+ *  2. Examine the 'parameters' to see if it can be a proto/def
+ *  3. Examine what is before the function name to see if it is a proto or call
+ * Constructor/destructor detection should have already been done when the
+ * 'class' token was encountered (see mark_class_ctor).
+ */
 static void mark_function(chunk_t *pc);
+
+
+/**
+ * Checks to see if a series of chunks could be a C++ parameter
+ * FOO foo(5, &val);
+ *
+ * WORD means CT_WORD or CT_TYPE
+ *
+ * "WORD WORD"          ==> true
+ * "QUALIFIER ??"       ==> true
+ * "TYPE"               ==> true
+ * "WORD"               ==> true
+ * "WORD.WORD"          ==> true
+ * "WORD::WORD"         ==> true
+ * "WORD * WORD"        ==> true
+ * "WORD & WORD"        ==> true
+ * "NUMBER"             ==> false
+ * "STRING"             ==> false
+ * "OPEN PAREN"         ==> false
+ *
+ * @param start the first chunk to look at
+ * @param end   the chunk after the last one to look at
+ */
+static bool can_be_full_param(chunk_t *start, chunk_t *end);
+
+
+/**
+ * Changes the return type to type and set the parent.
+ *
+ * @param pc the last chunk of the return type
+ * @param parent_type CT_NONE (no change) or the new parent type
+ */
 static void mark_function_return_type(chunk_t *fname, chunk_t *pc, c_token_t parent_type);
+
+
+/**
+ * Process a function type that is not in a typedef.
+ * pc points to the first close paren.
+ *
+ * void (*func)(params);
+ * const char * (*func)(params);
+ * const char * (^func)(params);   -- Objective C
+ *
+ * @param pc   Points to the first closing paren
+ * @return whether a function type was processed
+ */
 static bool mark_function_type(chunk_t *pc);
+
+
+/**
+ * Examines the stuff between braces { }.
+ * There should only be variable definitions and methods.
+ * Skip the methods, as they will get handled elsewhere.
+ */
 static void mark_struct_union_body(chunk_t *start);
+
+
+/**
+ * We are on the first word of a variable definition.
+ * Mark all the variable names with PCF_VAR_1ST and PCF_VAR_DEF as appropriate.
+ * Also mark any '*' encountered as a CT_PTR_TYPE.
+ * Skip over []. Go until a ';' is hit.
+ *
+ * Example input:
+ * int   a = 3, b, c = 2;              ## called with 'a'
+ * foo_t f = {1, 2, 3}, g = {5, 6, 7}; ## called with 'f'
+ * struct {...} *a, *b;                ## called with 'a' or '*'
+ * myclass a(4);
+ */
 static chunk_t *mark_variable_definition(chunk_t *start);
 
+
+/**
+ * Marks statement starts in a macro body.
+ * REVISIT: this may already be done
+ */
 static void mark_define_expressions(void);
+
+
 static void process_returns(void);
+
+/**
+ * Processes a return statement, labeling the parens and marking the parent.
+ * May remove or add parens around the return statement
+ *
+ * @param pc   Pointer to the return chunk
+ */
 static chunk_t *process_return(chunk_t *pc);
+
+
+/**
+ * We're on a 'class' or 'struct'.
+ * Scan for CT_FUNCTION with a string that matches pclass->str
+ */
 static void mark_class_ctor(chunk_t *pclass);
+
+
+/**
+ * We're on a 'namespace' skip the word and then set the parent of the braces.
+ */
 static void mark_namespace(chunk_t *pns);
+
+
 static void mark_cpp_constructor(chunk_t *pc);
+
+
+/**
+ *  Just hit an assign. Go backwards until we hit an open brace/paren/square or
+ * semicolon (TODO: other limiter?) and mark as a LValue.
+ */
 static void mark_lvalue(chunk_t *pc);
+
+
+/**
+ * We are on a word followed by a angle open which is part of a template.
+ * If the angle close is followed by a open paren, then we are on a template
+ * function def or a template function call:
+ *   Vector2<float>(...) [: ...[, ...]] { ... }
+ * Or we could be on a variable def if it's followed by a word:
+ *   Renderer<rgb32> rend;
+ */
 static void mark_template_func(chunk_t *pc, chunk_t *pc_next);
+
+
+/**
+ * Just mark every CT_WORD until a semicolon as CT_SQL_WORD.
+ * Adjust the levels if pc is CT_SQL_BEGIN
+ */
 static void mark_exec_sql(chunk_t *pc);
+
+
+/**
+ * Process an ObjC 'class'
+ * pc is the chunk after '@implementation' or '@interface' or '@protocol'.
+ * Change colons, etc. Processes stuff until '@end'.
+ * Skips anything in braces.
+ */
 static void handle_oc_class(chunk_t *pc);
+
+
+/**
+ *  Mark Objective-C blocks (aka lambdas or closures)
+ *  The syntax and usage is exactly like C function pointers
+ *  but instead of an asterisk they have a caret as pointer symbol.
+ *  Although it may look expensive this functions is only triggered
+ *  on appearance of an OC_BLOCK_CARET for LANG_OC.
+ *  repeat(10, ^{ putc('0'+d); });
+ *  typedef void (^workBlk_t)(void);
+ *
+ * @param pc points to the '^'
+ */
 static void handle_oc_block_literal(chunk_t *pc);
+
+
+/**
+ * Mark Objective-C block types.
+ * The syntax and usage is exactly like C function pointers
+ * but instead of an asterisk they have a caret as pointer symbol.
+ *  typedef void (^workBlk_t)(void);
+ *  const char * (^workVar)(void);
+ *  -(void)Foo:(void(^)())blk { }
+ *
+ * This is triggered when the sequence '(' '^' is found.
+ *
+ * @param pc points to the '^'
+ */
 static void handle_oc_block_type(chunk_t *pc);
+
+
+/**
+ * Process an ObjC message spec/dec
+ *
+ * Specs:
+ * -(void) foo ARGS;
+ *
+ * Decl:
+ * -(void) foo ARGS {  }
+ *
+ * LABEL : (ARGTYPE) ARGNAME
+ *
+ * ARGS is ': (ARGTYPE) ARGNAME [MOREARGS...]'
+ * MOREARGS is ' [ LABEL] : (ARGTYPE) ARGNAME '
+ * -(void) foo: (int) arg: {  }
+ * -(void) foo: (int) arg: {  }
+ * -(void) insertObject:(id)anObject atIndex:(int)index
+ */
 static void handle_oc_message_decl(chunk_t *pc);
+
+
+/**
+ * Process an ObjC message send statement:
+ * [ class func: val1 name2: val2 name3: val3] ; // named params
+ * [ class func: val1      : val2      : val3] ; // unnamed params
+ * [ class <proto> self method ] ; // with protocol
+ * [[NSMutableString alloc] initWithString: @"" ] // class from msg
+ * [func(a,b,c) lastObject ] // class from func
+ *
+ * Mainly find the matching ']' and ';' and mark the colons.
+ *
+ * @param os points to the open square '['
+ */
 static void handle_oc_message_send(chunk_t *pc);
+
+
+/**
+ * Process @Property values and re-arrange them if necessary
+ */
 static void handle_oc_property_decl(chunk_t *pc);
+
+
+/**
+ * Process a type that is enclosed in parens in message decls.
+ * TODO: handle block types, which get special formatting
+ *
+ * @param pc points to the open paren
+ * @return the chunk after the type
+ */
+static chunk_t *handle_oc_md_type(chunk_t *paren_open, c_token_t ptype, UINT64 flags, bool &did_it);
+
+/**
+ * Process an C# [] thingy:
+ *    [assembly: xxx]
+ *    [AttributeUsage()]
+ *    [@X]
+ *
+ * Set the next chunk to a statement start after the close ']'
+ *
+ * @param os points to the open square '['
+ */
 static void handle_cs_square_stmt(chunk_t *pc);
+
+
+/**
+ * We are on a brace open that is preceded by a word or square close.
+ * Set the brace parent to CT_CS_PROPERTY and find the first item in the
+ * property and set its parent, too.
+ */
 static void handle_cs_property(chunk_t *pc);
+
+
+/**
+ * We hit a ']' followed by a WORD. This may be a multidimensional array type.
+ * Example: int[,,] x;
+ * If there is nothing but commas between the open and close, then mark it.
+ */
 static void handle_cs_array_type(chunk_t *pc);
+
+
+/**
+ * We are on the C++ 'template' keyword.
+ * What follows should be the following:
+ *
+ * template <class identifier> function_declaration;
+ * template <typename identifier> function_declaration;
+ * template <class identifier> class class_declaration;
+ * template <typename identifier> class class_declaration;
+ *
+ * Change the 'class' inside the <> to CT_TYPE.
+ * Set the parent to the class after the <> to CT_TEMPLATE.
+ * Set the parent of the semicolon to CT_TEMPLATE.
+ */
 static void handle_cpp_template(chunk_t *pc);
+
+
+/**
+ * Verify and then mark C++ lambda expressions.
+ * The expected format is '[...](...){...}' or '[...](...) -> type {...}'
+ * sq_o is '[' CT_SQUARE_OPEN or '[]' CT_TSQUARE
+ * Split the '[]' so we can control the space
+ */
 static void handle_cpp_lambda(chunk_t *pc);
+
+
+/**
+ * We are on the D 'template' keyword.
+ * What follows should be the following:
+ *
+ * template NAME ( TYPELIST ) { BODY }
+ *
+ * Set the parent of NAME to template, change NAME to CT_TYPE.
+ * Set the parent of the parens and braces to CT_TEMPLATE.
+ * Scan the body for each type in TYPELIST and change the type to CT_TYPE.
+ */
 static void handle_d_template(chunk_t *pc);
+
+
+/**
+ * A func wrap chunk and what follows should be treated as a function name.
+ * Create new text for the chunk and call it a CT_FUNCTION.
+ *
+ * A type wrap chunk and what follows should be treated as a simple type.
+ * Create new text for the chunk and call it a CT_TYPE.
+ */
 static void handle_wrap(chunk_t *pc);
+
+
+/**
+ * A proto wrap chunk and what follows should be treated as a function proto.
+ *
+ * RETTYPE PROTO_WRAP( NAME, PARAMS ); or RETTYPE PROTO_WRAP( NAME, (PARAMS) );
+ * RETTYPE gets changed with make_type().
+ * PROTO_WRAP is marked as CT_FUNC_PROTO or CT_FUNC_DEF.
+ * NAME is marked as CT_WORD.
+ * PARAMS is all marked as prototype parameters.
+ */
 static void handle_proto_wrap(chunk_t *pc);
+
+
 static bool is_oc_block(chunk_t *pc);
+
+
+/**
+ * Java assert statements are: "assert EXP1 [: EXP2] ;"
+ * Mark the parent of the colon and semicolon
+ */
 static void handle_java_assert(chunk_t *pc);
+
+
+/**
+ * Parse off the types in the D template args, adds to cs
+ * returns the close_paren
+ */
 static chunk_t *get_d_template_types(ChunkStack &cs, chunk_t *open_paren);
+
+
 static bool chunkstack_match(ChunkStack &cs, chunk_t *pc);
 
 
@@ -106,15 +543,8 @@ void flag_series(chunk_t *start, chunk_t *end, UINT64 set_flags, UINT64 clr_flag
 }
 
 
-/**
- * Flags everything from the open paren to the close paren.
- *
- * @param po   Pointer to the open parenthesis
- * @return     The token after the close paren
- */
-static chunk_t *flag_parens(chunk_t *po, UINT64 flags,
-                            c_token_t opentype, c_token_t parenttype,
-                            bool parent_all)
+static chunk_t *flag_parens(chunk_t *po, UINT64 flags, c_token_t opentype,
+                            c_token_t parenttype, bool parent_all)
 {
    LOG_FUNC_ENTRY();
    chunk_t *paren_close;
@@ -177,7 +607,7 @@ static chunk_t *flag_parens(chunk_t *po, UINT64 flags,
  *
  * @param start   The open paren
  * @param parent  The type to assign as the parent
- * @reutrn        The chunk after the close paren
+ * @return        The chunk after the close paren
  */
 chunk_t *set_paren_parent(chunk_t *start, c_token_t parent)
 {
@@ -199,12 +629,6 @@ chunk_t *set_paren_parent(chunk_t *start, c_token_t parent)
 }
 
 
-/**
- * Mark the parens and colons in:
- *   asm volatile ( "xx" : "xx" (l), "yy"(h) : ...  );
- *
- * @param pc the CT_ASM item
- */
 static void flag_asm(chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
@@ -267,7 +691,6 @@ static void flag_asm(chunk_t *pc)
 } // flag_asm
 
 
-/* Scan backwards to see if we might be on a type declaration */
 static bool chunk_ends_type(chunk_t *start)
 {
    LOG_FUNC_ENTRY();
@@ -318,9 +741,6 @@ static bool chunk_ends_type(chunk_t *start)
 } // chunk_ends_type
 
 
-/* skip to the final word/type in a :: chain
- * pc is either a word or a ::
- */
 static chunk_t *skip_dc_member(chunk_t *start)
 {
    LOG_FUNC_ENTRY();
@@ -1274,10 +1694,6 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
 } // do_symbol_check
 
 
-/**
- * Combines two tokens into {{ and }} if inside parens and nothing is between
- * either pair.
- */
 static void check_double_brace_init(chunk_t *bo1)
 {
    LOG_FUNC_ENTRY();
@@ -1428,9 +1844,6 @@ void fix_symbols(void)
 } // fix_symbols
 
 
-/* Just hit an assign. Go backwards until we hit an open brace/paren/square or
- * semicolon (TODO: other limiter?) and mark as a LValue.
- */
 static void mark_lvalue(chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
@@ -1466,12 +1879,6 @@ static void mark_lvalue(chunk_t *pc)
 }
 
 
-/**
- * Changes the return type to type and set the parent.
- *
- * @param pc the last chunk of the return type
- * @param parent_type CT_NONE (no change) or the new parent type
- */
 static void mark_function_return_type(chunk_t *fname, chunk_t *start, c_token_t parent_type)
 {
    LOG_FUNC_ENTRY();
@@ -1522,17 +1929,6 @@ static void mark_function_return_type(chunk_t *fname, chunk_t *start, c_token_t 
 } // mark_function_return_type
 
 
-/**
- * Process a function type that is not in a typedef.
- * pc points to the first close paren.
- *
- * void (*func)(params);
- * const char * (*func)(params);
- * const char * (^func)(params);   -- Objective C
- *
- * @param pc   Points to the first closing paren
- * @return whether a function type was processed
- */
 static bool mark_function_type(chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
@@ -1750,12 +2146,6 @@ static void process_returns(void)
 }
 
 
-/**
- * Processes a return statement, labeling the parens and marking the parent.
- * May remove or add parens around the return statement
- *
- * @param pc   Pointer to the return chunk
- */
 static chunk_t *process_return(chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
@@ -1889,13 +2279,6 @@ static bool is_oc_block(chunk_t *pc)
 }
 
 
-/**
- * Checks to see if the current paren is part of a cast.
- * We already verified that this doesn't follow function, TYPE, IF, FOR,
- * SWITCH, or WHILE and is followed by WORD, TYPE, STRUCT, ENUM, or UNION.
- *
- * @param start   Pointer to the open paren
- */
 static void fix_casts(chunk_t *start)
 {
    LOG_FUNC_ENTRY();
@@ -2128,12 +2511,6 @@ static void fix_casts(chunk_t *start)
 } // fix_casts
 
 
-/**
- * CT_TYPE_CAST follows this pattern:
- * dynamic_cast<...>(...)
- *
- * Mark everything between the <> as a type and set the paren parent
- */
 static void fix_type_cast(chunk_t *start)
 {
    LOG_FUNC_ENTRY();
@@ -2162,19 +2539,6 @@ static void fix_type_cast(chunk_t *start)
 }
 
 
-/**
- * We are on an enum/struct/union tag that is NOT inside a typedef.
- * If there is a {...} and words before the ';', then they are variables.
- *
- * tag { ... } [*] word [, [*]word] ;
- * tag [word/type] { ... } [*] word [, [*]word] ;
- * enum [word/type [: int_type]] { ... } [*] word [, [*]word] ;
- * tag [word/type] [word]; -- this gets caught later.
- * fcn(tag [word/type] [word])
- * a = (tag [word/type] [*])&b;
- *
- * REVISIT: should this be consolidated with the typedef code?
- */
 static void fix_enum_struct_union(chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
@@ -2308,20 +2672,6 @@ static void fix_enum_struct_union(chunk_t *pc)
 } // fix_enum_struct_union
 
 
-/**
- * We are on a typedef.
- * If the next word is not enum/union/struct, then the last word before the
- * next ',' or ';' or '__attribute__' is a type.
- *
- * typedef [type...] [*] type [, [*]type] ;
- * typedef <return type>([*]func)();
- * typedef <return type>([*]func)(params);
- * typedef <return type>(__stdcall *func)(); Bug # 633    MS-specific extension
- *                                           include the config-file "test/config/MS-calling_conventions.cfg"
- * typedef <return type>func(params);
- * typedef <enum/struct/union> [type] [*] type [, [*]type] ;
- * typedef <enum/struct/union> [type] { ... } [*] type [, [*]type] ;
- */
 static void fix_typedef(chunk_t *start)
 {
    LOG_FUNC_ENTRY();
@@ -2794,11 +3144,6 @@ static void mark_variable_stack(ChunkStack &cs, log_sev_t sev)
 } // mark_variable_stack
 
 
-/**
- * Simply change any STAR to PTR_TYPE and WORD to TYPE
- *
- * @param start points to the open paren
- */
 static void fix_fcn_def_params(chunk_t *start)
 {
    if (start == NULL)
@@ -2875,9 +3220,6 @@ static void fix_fcn_def_params(chunk_t *start)
 } // fix_fcn_def_params
 
 
-/**
- * Skips to the start of the next statement.
- */
 static chunk_t *skip_to_next_statement(chunk_t *pc)
 {
    while ((pc != NULL) && !chunk_is_semicolon(pc) &&
@@ -2890,13 +3232,6 @@ static chunk_t *skip_to_next_statement(chunk_t *pc)
 }
 
 
-/**
- * We are on the start of a sequence that could be a var def
- *  - FPAREN_OPEN (parent == CT_FOR)
- *  - BRACE_OPEN
- *  - SEMICOLON
- *
- */
 static chunk_t *fix_var_def(chunk_t *start)
 {
    LOG_FUNC_ENTRY();
@@ -3011,10 +3346,6 @@ static chunk_t *fix_var_def(chunk_t *start)
 } // fix_var_def
 
 
-/**
- * Skips everything until a comma or semicolon at the same level.
- * Returns the semicolon, comma, or close brace/paren or NULL.
- */
 static chunk_t *skip_expression(chunk_t *start)
 {
    chunk_t *pc = start;
@@ -3056,18 +3387,6 @@ bool go_on(chunk_t *pc, chunk_t *start)
 } // go_on
 
 
-/**
- * We are on the first word of a variable definition.
- * Mark all the variable names with PCF_VAR_1ST and PCF_VAR_DEF as appropriate.
- * Also mark any '*' encountered as a CT_PTR_TYPE.
- * Skip over []. Go until a ';' is hit.
- *
- * Example input:
- * int   a = 3, b, c = 2;              ## called with 'a'
- * foo_t f = {1, 2, 3}, g = {5, 6, 7}; ## called with 'f'
- * struct {...} *a, *b;                ## called with 'a' or '*'
- * myclass a(4);
- */
 static chunk_t *mark_variable_definition(chunk_t *start)
 {
    LOG_FUNC_ENTRY();
@@ -3119,27 +3438,6 @@ static chunk_t *mark_variable_definition(chunk_t *start)
 } // mark_variable_definition
 
 
-/**
- * Checks to see if a series of chunks could be a C++ parameter
- * FOO foo(5, &val);
- *
- * WORD means CT_WORD or CT_TYPE
- *
- * "WORD WORD"          ==> true
- * "QUALIFIER ??"       ==> true
- * "TYPE"               ==> true
- * "WORD"               ==> true
- * "WORD.WORD"          ==> true
- * "WORD::WORD"         ==> true
- * "WORD * WORD"        ==> true
- * "WORD & WORD"        ==> true
- * "NUMBER"             ==> false
- * "STRING"             ==> false
- * "OPEN PAREN"         ==> false
- *
- * @param start the first chunk to look at
- * @param end   the chunk after the last one to look at
- */
 static bool can_be_full_param(chunk_t *start, chunk_t *end)
 {
    LOG_FUNC_ENTRY();
@@ -3295,27 +3593,6 @@ static bool can_be_full_param(chunk_t *start, chunk_t *end)
 } // can_be_full_param
 
 
-/**
- * We are on a function word. we need to:
- *  - find out if this is a call or prototype or implementation
- *  - mark return type
- *  - mark parameter types
- *  - mark brace pair
- *
- * REVISIT:
- * This whole function is a mess.
- * It needs to be reworked to eliminate duplicate logic and determine the
- * function type more directly.
- *  1. Skip to the close paren and see what is after.
- *     a. semicolon - function call or function proto
- *     b. open brace - function call (ie, list_for_each) or function def
- *     c. open paren - function type or chained function call
- *     d. qualifier - function def or proto, continue to semicolon or open brace
- *  2. Examine the 'parameters' to see if it can be a proto/def
- *  3. Examine what is before the function name to see if it is a proto or call
- * Constructor/destructor detection should have already been done when the
- * 'class' token was encountered (see mark_class_ctor).
- */
 static void mark_function(chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
@@ -4106,10 +4383,6 @@ static void mark_cpp_constructor(chunk_t *pc)
 } // mark_cpp_constructor
 
 
-/**
- * We're on a 'class' or 'struct'.
- * Scan for CT_FUNCTION with a string that matches pclass->str
- */
 static void mark_class_ctor(chunk_t *start)
 {
    LOG_FUNC_ENTRY();
@@ -4241,9 +4514,6 @@ static void mark_class_ctor(chunk_t *start)
 } // mark_class_ctor
 
 
-/**
- * We're on a 'namespace' skip the word and then set the parent of the braces.
- */
 static void mark_namespace(chunk_t *pns)
 {
    LOG_FUNC_ENTRY();
@@ -4294,12 +4564,6 @@ static void mark_namespace(chunk_t *pns)
 } // mark_namespace
 
 
-/**
- * Skips the D 'align()' statement and the colon, if present.
- *    align(2) int foo;  -- returns 'int'
- *    align(4):          -- returns 'int'
- *    int bar;
- */
 static chunk_t *skip_align(chunk_t *start)
 {
    chunk_t *pc = start;
@@ -4321,11 +4585,6 @@ static chunk_t *skip_align(chunk_t *start)
 }
 
 
-/**
- * Examines the stuff between braces { }.
- * There should only be variable definitions and methods.
- * Skip the methods, as they will get handled elsewhere.
- */
 static void mark_struct_union_body(chunk_t *start)
 {
    LOG_FUNC_ENTRY();
@@ -4412,10 +4671,6 @@ void mark_comments(void)
 }
 
 
-/**
- * Marks statement starts in a macro body.
- * REVISIT: this may already be done
- */
 static void mark_define_expressions(void)
 {
    LOG_FUNC_ENTRY();
@@ -4477,19 +4732,6 @@ static void mark_define_expressions(void)
 } // mark_define_expressions
 
 
-/**
- * We are on the C++ 'template' keyword.
- * What follows should be the following:
- *
- * template <class identifier> function_declaration;
- * template <typename identifier> function_declaration;
- * template <class identifier> class class_declaration;
- * template <typename identifier> class class_declaration;
- *
- * Change the 'class' inside the <> to CT_TYPE.
- * Set the parent to the class after the <> to CT_TEMPLATE.
- * Set the parent of the semicolon to CT_TEMPLATE.
- */
 static void handle_cpp_template(chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
@@ -4537,12 +4779,6 @@ static void handle_cpp_template(chunk_t *pc)
 } // handle_cpp_template
 
 
-/**
- * Verify and then mark C++ lambda expressions.
- * The expected format is '[...](...){...}' or '[...](...) -> type {...}'
- * sq_o is '[' CT_SQUARE_OPEN or '[]' CT_TSQUARE
- * Split the '[]' so we can control the space
- */
 static void handle_cpp_lambda(chunk_t *sq_o)
 {
    LOG_FUNC_ENTRY();
@@ -4647,10 +4883,6 @@ static void handle_cpp_lambda(chunk_t *sq_o)
 } // handle_cpp_lambda
 
 
-/**
- * Parse off the types in the D template args, adds to cs
- * returns the close_paren
- */
 static chunk_t *get_d_template_types(ChunkStack &cs, chunk_t *open_paren)
 {
    LOG_FUNC_ENTRY();
@@ -4693,16 +4925,6 @@ static bool chunkstack_match(ChunkStack &cs, chunk_t *pc)
 }
 
 
-/**
- * We are on the D 'template' keyword.
- * What follows should be the following:
- *
- * template NAME ( TYPELIST ) { BODY }
- *
- * Set the parent of NAME to template, change NAME to CT_TYPE.
- * Set the parent of the parens and braces to CT_TEMPLATE.
- * Scan the body for each type in TYPELIST and change the type to CT_TYPE.
- */
 static void handle_d_template(chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
@@ -4765,14 +4987,6 @@ static void handle_d_template(chunk_t *pc)
 } // handle_d_template
 
 
-/**
- * We are on a word followed by a angle open which is part of a template.
- * If the angle close is followed by a open paren, then we are on a template
- * function def or a template function call:
- *   Vector2<float>(...) [: ...[, ...]] { ... }
- * Or we could be on a variable def if it's followed by a word:
- *   Renderer<rgb32> rend;
- */
 static void mark_template_func(chunk_t *pc, chunk_t *pc_next)
 {
    LOG_FUNC_ENTRY();
@@ -4821,10 +5035,6 @@ static void mark_template_func(chunk_t *pc, chunk_t *pc_next)
 }
 
 
-/**
- * Just mark every CT_WORD until a semicolon as CT_SQL_WORD.
- * Adjust the levels if pc is CT_SQL_BEGIN
- */
 static void mark_exec_sql(chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
@@ -4948,12 +5158,6 @@ chunk_t *skip_attribute_prev(chunk_t *fp_close)
 }
 
 
-/**
- * Process an ObjC 'class'
- * pc is the chunk after '@implementation' or '@interface' or '@protocol'.
- * Change colons, etc. Processes stuff until '@end'.
- * Skips anything in braces.
- */
 static void handle_oc_class(chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
@@ -5090,16 +5294,6 @@ static void handle_oc_class(chunk_t *pc)
 } // handle_oc_class
 
 
-/* Mark Objective-C blocks (aka lambdas or closures)
- *  The syntax and usage is exactly like C function pointers
- *  but instead of an asterisk they have a caret as pointer symbol.
- *  Although it may look expensive this functions is only triggered
- *  on appearance of an OC_BLOCK_CARET for LANG_OC.
- *  repeat(10, ^{ putc('0'+d); });
- *  typedef void (^workBlk_t)(void);
- *
- * @param pc points to the '^'
- */
 static void handle_oc_block_literal(chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
@@ -5196,18 +5390,6 @@ static void handle_oc_block_literal(chunk_t *pc)
 } // handle_oc_block_literal
 
 
-/**
- * Mark Objective-C block types.
- * The syntax and usage is exactly like C function pointers
- * but instead of an asterisk they have a caret as pointer symbol.
- *  typedef void (^workBlk_t)(void);
- *  const char * (^workVar)(void);
- *  -(void)Foo:(void(^)())blk { }
- *
- * This is triggered when the sequence '(' '^' is found.
- *
- * @param pc points to the '^'
- */
 static void handle_oc_block_type(chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
@@ -5282,13 +5464,6 @@ static void handle_oc_block_type(chunk_t *pc)
 } // handle_oc_block_type
 
 
-/**
- * Process a type that is enclosed in parens in message decls.
- * TODO: handle block types, which get special formatting
- *
- * @param pc points to the open paren
- * @return the chunk after the type
- */
 static chunk_t *handle_oc_md_type(chunk_t *paren_open, c_token_t ptype, UINT64 flags, bool &did_it)
 {
    chunk_t *paren_close;
@@ -5321,23 +5496,6 @@ static chunk_t *handle_oc_md_type(chunk_t *paren_open, c_token_t ptype, UINT64 f
 }
 
 
-/**
- * Process an ObjC message spec/dec
- *
- * Specs:
- * -(void) foo ARGS;
- *
- * Decl:
- * -(void) foo ARGS {  }
- *
- * LABEL : (ARGTYPE) ARGNAME
- *
- * ARGS is ': (ARGTYPE) ARGNAME [MOREARGS...]'
- * MOREARGS is ' [ LABEL] : (ARGTYPE) ARGNAME '
- * -(void) foo: (int) arg: {  }
- * -(void) foo: (int) arg: {  }
- * -(void) insertObject:(id)anObject atIndex:(int)index
- */
 static void handle_oc_message_decl(chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
@@ -5526,18 +5684,6 @@ static void handle_oc_message_decl(chunk_t *pc)
 } // handle_oc_message_decl
 
 
-/**
- * Process an ObjC message send statement:
- * [ class func: val1 name2: val2 name3: val3] ; // named params
- * [ class func: val1      : val2      : val3] ; // unnamed params
- * [ class <proto> self method ] ; // with protocol
- * [[NSMutableString alloc] initWithString: @"" ] // class from msg
- * [func(a,b,c) lastObject ] // class from func
- *
- * Mainly find the matching ']' and ';' and mark the colons.
- *
- * @param os points to the open square '['
- */
 static void handle_oc_message_send(chunk_t *os)
 {
    LOG_FUNC_ENTRY();
@@ -5690,9 +5836,6 @@ static void handle_oc_message_send(chunk_t *os)
 } // handle_oc_message_send
 
 
-/*
- * Process @Property values and re-arrange them if necessary
- */
 static void handle_oc_property_decl(chunk_t *os)
 {
    if (cpd.settings[UO_mod_sort_oc_properties].b)
@@ -5894,16 +6037,6 @@ static void handle_oc_property_decl(chunk_t *os)
 } // handle_oc_property_decl
 
 
-/**
- * Process an C# [] thingy:
- *    [assembly: xxx]
- *    [AttributeUsage()]
- *    [@X]
- *
- * Set the next chunk to a statement start after the close ']'
- *
- * @param os points to the open square '['
- */
 static void handle_cs_square_stmt(chunk_t *os)
 {
    LOG_FUNC_ENTRY();
@@ -5940,11 +6073,6 @@ static void handle_cs_square_stmt(chunk_t *os)
 }
 
 
-/**
- * We are on a brace open that is preceded by a word or square close.
- * Set the brace parent to CT_CS_PROPERTY and find the first item in the
- * property and set its parent, too.
- */
 static void handle_cs_property(chunk_t *bro)
 {
    LOG_FUNC_ENTRY();
@@ -5977,11 +6105,6 @@ static void handle_cs_property(chunk_t *bro)
 }
 
 
-/**
- * We hit a ']' followed by a WORD. This may be a multidimensional array type.
- * Example: int[,,] x;
- * If there is nothing but commas between the open and close, then mark it.
- */
 static void handle_cs_array_type(chunk_t *pc)
 {
    chunk_t *prev = chunk_get_prev(pc);
@@ -6040,13 +6163,6 @@ void remove_extra_returns(void)
 }
 
 
-/**
- * A func wrap chunk and what follows should be treated as a function name.
- * Create new text for the chunk and call it a CT_FUNCTION.
- *
- * A type wrap chunk and what follows should be treated as a simple type.
- * Create new text for the chunk and call it a CT_TYPE.
- */
 static void handle_wrap(chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
@@ -6088,15 +6204,6 @@ static void handle_wrap(chunk_t *pc)
 }
 
 
-/**
- * A proto wrap chunk and what follows should be treated as a function proto.
- *
- * RETTYPE PROTO_WRAP( NAME, PARAMS ); or RETTYPE PROTO_WRAP( NAME, (PARAMS) );
- * RETTYPE gets changed with make_type().
- * PROTO_WRAP is marked as CT_FUNC_PROTO or CT_FUNC_DEF.
- * NAME is marked as CT_WORD.
- * PARAMS is all marked as prototype parameters.
- */
 static void handle_proto_wrap(chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
@@ -6162,10 +6269,6 @@ static void handle_proto_wrap(chunk_t *pc)
 } // handle_proto_wrap
 
 
-/**
- * Java assert statments are: "assert EXP1 [: EXP2] ;"
- * Mark the parent of the colon and semicolon
- */
 static void handle_java_assert(chunk_t *pc)
 {
    LOG_FUNC_ENTRY();

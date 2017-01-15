@@ -25,6 +25,23 @@ static dkwmap dkwm;
 
 
 /**
+ * Compares two chunk_tag_t entries using strcmp on the strings
+ *
+ * @param p1   The 'left' entry
+ * @param p2   The 'right' entry
+ */
+static int kw_compare(const void *p1, const void *p2);
+
+
+/**
+ * Backs up to the first string match in keywords.
+ */
+static const chunk_tag_t *kw_static_first(const chunk_tag_t *tag);
+
+
+static const chunk_tag_t *kw_static_match(const chunk_tag_t *tag);
+
+/**
  * interesting static keywords - keep sorted.
  * Table should include the Name, Type, and Language flags.
  */
@@ -288,12 +305,6 @@ void init_keywords()
 }
 
 
-/**
- * Compares two chunk_tag_t entries using strcmp on the strings
- *
- * @param p1   The 'left' entry
- * @param p2   The 'right' entry
- */
 static int kw_compare(const void *p1, const void *p2)
 {
    const chunk_tag_t *t1 = (const chunk_tag_t *)p1;
@@ -346,9 +357,6 @@ void add_keyword(const char *tag, c_token_t type)
 }
 
 
-/**
- * Backs up to the first string match in keywords.
- */
 static const chunk_tag_t *kw_static_first(const chunk_tag_t *tag)
 {
    const chunk_tag_t *prev = tag - 1;

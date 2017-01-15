@@ -9,6 +9,9 @@
 #include "prototypes.h" /* encode_utf8() */
 
 
+static void fix_len_idx(size_t size, size_t &idx, size_t &len);
+
+
 static void fix_len_idx(size_t size, size_t &idx, size_t &len)
 {
    if (idx >= size)

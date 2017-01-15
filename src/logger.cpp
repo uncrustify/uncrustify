@@ -17,6 +17,7 @@
 #include "unc_ctype.h"
 #include "log_levels.h"
 
+
 struct log_fcn_info
 {
    log_fcn_info(const char *name_, int line_)
@@ -51,6 +52,30 @@ struct log_buf
    bool       show_hdr;
 };
 static struct log_buf g_log;
+
+
+/**
+ * Flushes the cached log text to the stream
+ *
+ * @param force_nl   Append NL if not present
+ */
+static void log_flush(bool force_nl);
+
+
+/**
+ * Starts the log statement by flushing if needed and printing the header
+ *
+ * @param sev  The log severity
+ * @return     The number of bytes available
+ */
+static size_t log_start(log_sev_t sev);
+
+
+/**
+ * Cleans up after a log statement by detecting whether the log is done,
+ * (it ends in a newline) and possibly flushing the log.
+ */
+static void log_end(void);
 
 
 /**
@@ -128,11 +153,6 @@ void log_get_mask(log_mask_t &mask)
 }
 
 
-/**
- * Flushes the cached log text to the stream
- *
- * @param force_nl   Append NL if not present
- */
 static void log_flush(bool force_nl)
 {
    if (g_log.buf_len > 0)
@@ -152,12 +172,6 @@ static void log_flush(bool force_nl)
 }
 
 
-/**
- * Starts the log statement by flushing if needed and printing the header
- *
- * @param sev  The log severity
- * @return     The number of bytes available
- */
 static size_t log_start(log_sev_t sev)
 {
    if (sev != g_log.sev)
@@ -182,10 +196,6 @@ static size_t log_start(log_sev_t sev)
 }
 
 
-/**
- * Cleans up after a log statement by detecting whether the log is done,
- * (it ends in a newline) and possibly flushing the log.
- */
 static void log_end(void)
 {
    g_log.in_log = (g_log.buf[g_log.buf_len - 1] != '\n');
