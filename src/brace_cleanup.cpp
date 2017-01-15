@@ -19,20 +19,20 @@
 #include "unc_ctype.h"
 
 
-static chunk_t *insert_vbrace(chunk_t *pc, bool after, struct parse_frame *frm);
+static chunk_t *insert_vbrace(chunk_t *pc, bool after, parse_frame_t *frm);
 
 #define insert_vbrace_close_after(pc, frm)    insert_vbrace(pc, true, frm)
 #define insert_vbrace_open_before(pc, frm)    insert_vbrace(pc, false, frm)
 
-static void parse_cleanup(struct parse_frame *frm, chunk_t *pc);
+static void parse_cleanup(parse_frame_t *frm, chunk_t *pc);
 
-static bool close_statement(struct parse_frame *frm, chunk_t *pc);
+static bool close_statement(parse_frame_t *frm, chunk_t *pc);
 
-static bool check_complex_statements(struct parse_frame *frm, chunk_t *pc);
-static bool handle_complex_close(struct parse_frame *frm, chunk_t *pc);
+static bool check_complex_statements(parse_frame_t *frm, chunk_t *pc);
+static bool handle_complex_close(parse_frame_t *frm, chunk_t *pc);
 
 
-static size_t preproc_start(struct parse_frame *frm, chunk_t *pc)
+static size_t preproc_start(parse_frame_t *frm, chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
    chunk_t *next;
@@ -72,7 +72,7 @@ static size_t preproc_start(struct parse_frame *frm, chunk_t *pc)
 
 
 static void print_stack(log_sev_t logsev, const char *str,
-                        struct parse_frame *frm, chunk_t *pc)
+                        parse_frame_t *frm, chunk_t *pc)
 {
    (void)pc;
    LOG_FUNC_ENTRY();
@@ -106,8 +106,8 @@ static void print_stack(log_sev_t logsev, const char *str,
 void brace_cleanup(void)
 {
    LOG_FUNC_ENTRY();
-   chunk_t            *pc;
-   struct parse_frame frm;
+   chunk_t       *pc;
+   parse_frame_t frm;
 
    cpd.unc_stage = US_BRACE_CLEANUP;
 
@@ -204,7 +204,7 @@ static bool maybe_while_of_do(chunk_t *pc)
 }
 
 
-static void push_fmr_pse(struct parse_frame *frm, chunk_t *pc,
+static void push_fmr_pse(parse_frame_t *frm, chunk_t *pc,
                          brstage_e stage, const char *logtext)
 {
    LOG_FUNC_ENTRY();
@@ -280,7 +280,7 @@ static void push_fmr_pse(struct parse_frame *frm, chunk_t *pc,
  * When a #define is entered, the current frame is pushed and cleared.
  * When a #define is exited, the frame is popped.
  */
-static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
+static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
    c_token_t parent = CT_NONE;
@@ -670,7 +670,7 @@ static void parse_cleanup(struct parse_frame *frm, chunk_t *pc)
  * @param pc   The current chunk
  * @return     true - done with this chunk, false - keep processing
  */
-static bool check_complex_statements(struct parse_frame *frm, chunk_t *pc)
+static bool check_complex_statements(parse_frame_t *frm, chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
    c_token_t parent;
@@ -850,7 +850,7 @@ static bool check_complex_statements(struct parse_frame *frm, chunk_t *pc)
  * @param pc   The current chunk
  * @return     true - done with this chunk, false - keep processing
  */
-static bool handle_complex_close(struct parse_frame *frm, chunk_t *pc)
+static bool handle_complex_close(parse_frame_t *frm, chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
    chunk_t *next;
@@ -961,8 +961,7 @@ static bool handle_complex_close(struct parse_frame *frm, chunk_t *pc)
  *   true:  insert_vbrace_close_after(pc, frm)
  *   false: insert_vbrace_open_before(pc, frm)
  */
-static chunk_t *insert_vbrace(chunk_t *pc, bool after,
-                              struct parse_frame *frm)
+static chunk_t *insert_vbrace(chunk_t *pc, bool after, parse_frame_t *frm)
 {
    LOG_FUNC_ENTRY();
    chunk_t chunk;
@@ -1030,7 +1029,7 @@ static chunk_t *insert_vbrace(chunk_t *pc, bool after,
  *
  * @return     true - done with this chunk, false - keep processing
  */
-bool close_statement(struct parse_frame *frm, chunk_t *pc)
+bool close_statement(parse_frame_t *frm, chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
    chunk_t *vbc = pc;

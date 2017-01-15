@@ -42,7 +42,7 @@
 #endif
 
 /* Global data */
-struct cp_data cpd;
+cp_data_t cpd;
 
 
 static int language_flags_from_name(const char *tag);

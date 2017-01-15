@@ -16,7 +16,7 @@
 /**
  * Logs one parse frame
  */
-void pf_log(log_sev_t logsev, struct parse_frame *pf)
+void pf_log(log_sev_t logsev, parse_frame_t *pf)
 {
    LOG_FMT(logsev, "[%s] BrLevel=%d Level=%d PseTos=%zu\n",
            get_token_name(pf->in_ifdef),
@@ -33,7 +33,7 @@ void pf_log(log_sev_t logsev, struct parse_frame *pf)
 }
 
 
-static void pf_log_frms(log_sev_t logsev, const char *txt, struct parse_frame *pf)
+static void pf_log_frms(log_sev_t logsev, const char *txt, parse_frame_t *pf)
 {
    LOG_FMT(logsev, "%s Parse Frames(%d):", txt, cpd.frame_count);
    for (int idx = 0; idx < cpd.frame_count; idx++)
@@ -66,9 +66,9 @@ void pf_log_all(log_sev_t logsev)
 /**
  * Copies src to dst.
  */
-void pf_copy(struct parse_frame *dst, const struct parse_frame *src)
+void pf_copy(parse_frame_t *dst, const parse_frame_t *src)
 {
-   memcpy(dst, src, sizeof(struct parse_frame));
+   memcpy(dst, src, sizeof(parse_frame_t));
 }
 
 
@@ -76,7 +76,7 @@ void pf_copy(struct parse_frame *dst, const struct parse_frame *src)
  * Push a copy of the parse frame onto the stack.
  * This is called on #if and #ifdef.
  */
-void pf_push(struct parse_frame *pf)
+void pf_push(parse_frame_t *pf)
 {
    static int ref_no = 1;
 
@@ -96,15 +96,15 @@ void pf_push(struct parse_frame *pf)
  * If this were a linked list, just add before the last item.
  * This is called on the first #else and #elif.
  */
-void pf_push_under(struct parse_frame *pf)
+void pf_push_under(parse_frame_t *pf)
 {
    LOG_FMT(LPF, "%s(%d): before count = %d\n", __func__, __LINE__, cpd.frame_count);
 
    if ((cpd.frame_count < (int)ARRAY_SIZE(cpd.frames)) &&
        (cpd.frame_count >= 1))
    {
-      struct parse_frame *npf1 = &cpd.frames[cpd.frame_count - 1];
-      struct parse_frame *npf2 = &cpd.frames[cpd.frame_count];
+      parse_frame_t *npf1 = &cpd.frames[cpd.frame_count - 1];
+      parse_frame_t *npf2 = &cpd.frames[cpd.frame_count];
       pf_copy(npf2, npf1);
       pf_copy(npf1, pf);
       cpd.frame_count++;
@@ -118,7 +118,7 @@ void pf_push_under(struct parse_frame *pf)
  * Copy the top item off the stack into pf.
  * This is called on #else and #elif.
  */
-void pf_copy_tos(struct parse_frame *pf)
+void pf_copy_tos(parse_frame_t *pf)
 {
    if (cpd.frame_count > 0)
    {
@@ -134,7 +134,7 @@ void pf_copy_tos(struct parse_frame *pf)
  * The stack contains [...] [base] [if] at this point.
  * We want to copy [base].
  */
-static void pf_copy_2nd_tos(struct parse_frame *pf)
+static void pf_copy_2nd_tos(parse_frame_t *pf)
 {
    if (cpd.frame_count > 1)
    {
@@ -161,7 +161,7 @@ void pf_trash_tos(void)
  * Pop the top item off the stack and copy into pf.
  * This is called on #endif
  */
-void pf_pop(struct parse_frame *pf)
+void pf_pop(parse_frame_t *pf)
 {
    if (cpd.frame_count > 0)
    {
@@ -175,7 +175,7 @@ void pf_pop(struct parse_frame *pf)
 /**
  * Returns the pp_indent to use for this line
  */
-int pf_check(struct parse_frame *frm, chunk_t *pc)
+int pf_check(parse_frame_t *frm, chunk_t *pc)
 {
    int        in_ifdef = frm->in_ifdef;
    int        b4_cnt   = cpd.frame_count;

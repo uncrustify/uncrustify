@@ -1804,13 +1804,13 @@ static bool parse_next(tok_ctx &ctx, chunk_t &pc)
  */
 void tokenize(const deque<int> &data, chunk_t *ref)
 {
-   tok_ctx            ctx(data);
-   chunk_t            chunk;
-   chunk_t            *pc    = NULL;
-   chunk_t            *rprev = NULL;
-   struct parse_frame frm;
-   bool               last_was_tab = false;
-   int                prev_sp      = 0;
+   tok_ctx       ctx(data);
+   chunk_t       chunk;
+   chunk_t       *pc    = NULL;
+   chunk_t       *rprev = NULL;
+   parse_frame_t frm;
+   bool          last_was_tab = false;
+   int           prev_sp      = 0;
 
    cpd.unc_stage = US_TOKENIZE;
 

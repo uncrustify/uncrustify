@@ -74,7 +74,7 @@ struct indent_ptr_t
 /**
  * Structure for counting nested level
  */
-struct paren_stack_entry
+struct paren_stack_entry_t
 {
    c_token_t    type;         /**< the type that opened the entry */
    int          level;        /**< Level of opening type */
@@ -95,25 +95,25 @@ struct paren_stack_entry
 };
 
 /* TODO: put this on a linked list */
-struct parse_frame
+struct parse_frame_t
 {
-   int                      ref_no;
-   int                      level;           // level of parens/square/angle/brace
-   int                      brace_level;     // level of brace/vbrace
-   int                      pp_level;        // level of preproc #if stuff
+   int                 ref_no;
+   int                 level;           // level of parens/square/angle/brace
+   int                 brace_level;     // level of brace/vbrace
+   int                 pp_level;        // level of preproc #if stuff
 
-   int                      sparen_count;
+   int                 sparen_count;
 
-   struct paren_stack_entry pse[128];
-   size_t                   pse_tos;
-   int                      paren_count;
+   paren_stack_entry_t pse[128];
+   size_t              pse_tos;
+   int                 paren_count;
 
-   c_token_t                in_ifdef;
-   int                      stmt_count;
-   int                      expr_count;
+   c_token_t           in_ifdef;
+   int                 stmt_count;
+   int                 expr_count;
 
-   bool                     maybe_decl;
-   bool                     maybe_cast;
+   bool                maybe_decl;
+   bool                maybe_cast;
 };
 
 #define PCF_BIT(b)    (1ULL << b)
@@ -390,75 +390,75 @@ enum unc_stage
 /* this set a limit to the name padding */
 #define MAX_OPTION_NAME_LEN    32
 
-struct cp_data
+struct cp_data_t
 {
-   deque<UINT8>       *bout;
-   FILE               *fout;
-   int                last_char;
-   bool               do_check;
-   enum unc_stage     unc_stage;
-   int                check_fail_cnt; // total failures
-   bool               if_changed;
+   deque<UINT8>   *bout;
+   FILE           *fout;
+   int            last_char;
+   bool           do_check;
+   enum unc_stage unc_stage;
+   int            check_fail_cnt;     // total failures
+   bool           if_changed;
 
-   UINT32             error_count;
-   const char         *filename;
+   UINT32         error_count;
+   const char     *filename;
 
-   file_mem           file_hdr;   // for cmt_insert_file_header
-   file_mem           file_ftr;   // for cmt_insert_file_footer
-   file_mem           func_hdr;   // for cmt_insert_func_header
-   file_mem           oc_msg_hdr; // for cmt_insert_oc_msg_header
-   file_mem           class_hdr;  // for cmt_insert_class_header
+   file_mem       file_hdr;       // for cmt_insert_file_header
+   file_mem       file_ftr;       // for cmt_insert_file_footer
+   file_mem       func_hdr;       // for cmt_insert_func_header
+   file_mem       oc_msg_hdr;     // for cmt_insert_oc_msg_header
+   file_mem       class_hdr;      // for cmt_insert_class_header
 
-   int                lang_flags; // LANG_xxx
-   bool               lang_forced;
+   int            lang_flags;     // LANG_xxx
+   bool           lang_forced;
 
-   bool               unc_off;
-   bool               unc_off_used; // to check if "unc_off" is used
-   UINT32             line_number;
-   UINT16             column;       // column for parsing
-   UINT16             spaces;       // space count on output
+   bool           unc_off;
+   bool           unc_off_used;     // to check if "unc_off" is used
+   UINT32         line_number;
+   UINT16         column;           // column for parsing
+   UINT16         spaces;           // space count on output
 
-   int                ifdef_over_whole_file;
+   int            ifdef_over_whole_file;
 
-   bool               frag;
-   UINT16             frag_cols;
+   bool           frag;
+   UINT16         frag_cols;
 
    // stuff to auto-detect line endings
-   UINT32             le_counts[LE_AUTO];
-   unc_text           newline;
+   UINT32         le_counts[LE_AUTO];
+   unc_text       newline;
 
-   bool               consumed;
+   bool           consumed;
 
-   int                did_newline;
-   c_token_t          in_preproc;
-   int                preproc_ncnl_count;
-   bool               output_trailspace;
-   bool               output_tab_as_space;
+   int            did_newline;
+   c_token_t      in_preproc;
+   int            preproc_ncnl_count;
+   bool           output_trailspace;
+   bool           output_tab_as_space;
 
-   bool               bom;
-   CharEncoding       enc;
+   bool           bom;
+   CharEncoding   enc;
 
    // bumped up when a line is split or indented
-   int                changes;
-   int                pass_count;
+   int            changes;
+   int            pass_count;
 
-   struct align_t     al[80];
-   size_t             al_cnt;
-   bool               al_c99_array;
+   align_t        al[80];
+   size_t         al_cnt;
+   bool           al_c99_array;
 
-   bool               warned_unable_string_replace_tab_chars;
+   bool           warned_unable_string_replace_tab_chars;
 
    // Here are all the settings
-   op_val_t           settings[UO_option_count];
+   op_val_t       settings[UO_option_count];
 
-   struct parse_frame frames[16];
-   int                frame_count;
-   int                pp_level;
+   parse_frame_t  frames[16];
+   int            frame_count;
+   int            pp_level;
 
    // the default values for settings
-   op_val_t           defaults[UO_option_count];
+   op_val_t       defaults[UO_option_count];
 };
 
-extern struct cp_data cpd;
+extern cp_data_t cpd;
 
 #endif /* UNCRUSTIFY_TYPES_H_INCLUDED */
