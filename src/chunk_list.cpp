@@ -461,7 +461,9 @@ chunk_t *chunk_get_next_type(chunk_t *cur, c_token_t type,
    {
       pc = chunk_get_next(pc, nav);
       if ((pc == NULL) ||
-          ((pc->type == type) && ((pc->level == level) || (level < 0))))
+          ((pc->type == type) &&
+           ((pc->level == (size_t)level) || (level < 0))))
+      //                                     ANY_LEVEL
       {
          break;
       }
@@ -480,7 +482,8 @@ chunk_t *chunk_get_next_str(chunk_t *cur, const char *str, size_t len, int level
       pc = chunk_get_next(pc, nav);
       if ((pc == NULL) ||
           ((pc->len() == len) && (memcmp(str, pc->text(), len) == 0) &&
-           ((pc->level == level) || (level < 0))))
+           ((pc->level == (size_t)level) || (level < 0))))
+      //                                     ANY_LEVEL
       {
          break;
       }
@@ -511,7 +514,9 @@ chunk_t *chunk_get_prev_type(chunk_t *cur, c_token_t type,
                  __func__, __LINE__, pc->text(), get_token_name(pc->type), pc->orig_line, pc->orig_col);
       }
       if ((pc == NULL) ||
-          ((pc->type == type) && ((pc->level == level) || (level < 0))))
+          ((pc->type == type) &&
+           ((pc->level == (size_t)level) || (level < 0))))
+      //                                     ANY_LEVEL
       {
          break;
       }
@@ -530,7 +535,8 @@ chunk_t *chunk_get_prev_str(chunk_t *cur, const char *str, size_t len, int level
       pc = chunk_get_prev(pc, nav);
       if ((pc == NULL) ||
           ((pc->len() == len) && (memcmp(str, pc->text(), len) == 0) &&
-           ((pc->level == level) || (level < 0))))
+           ((pc->level == (size_t)level) || (level < 0))))
+      //                                     ANY_LEVEL
       {
          break;
       }
