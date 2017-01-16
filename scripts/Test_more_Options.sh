@@ -56,7 +56,7 @@ do
   OutputFile="${OUTPUT}/${L_Value}.txt"
   LFile="${RESULTS}/${L_Value}.txt"
   ./build/uncrustify -c /dev/null -f ${InputFile} -o /dev/null -L ${L_Value} 2> ${LFile}
-  sed 's/[0-9]/x/g' ${LFile} > ${LFile}.sed 
+  sed 's/[0-9]//g' ${LFile} > ${LFile}.sed 
   cmp -s ${LFile}.sed ${OutputFile}
   how_different=${?}
   #echo "the status of is "${how_different}
