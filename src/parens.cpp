@@ -46,7 +46,6 @@ static void check_bool_parens(chunk_t *popen, chunk_t *pclose, int nest);
 void do_parens(void)
 {
    LOG_FUNC_ENTRY();
-   chunk_t *pclose;
 
    if (cpd.settings[UO_mod_full_paren_if_bool].b)
    {
@@ -62,7 +61,7 @@ void do_parens(void)
          }
 
          /* Grab the close sparen */
-         pclose = chunk_get_next_type(pc, CT_SPAREN_CLOSE, pc->level, CNAV_PREPROC);
+         chunk_t *pclose = chunk_get_next_type(pc, CT_SPAREN_CLOSE, pc->level, CNAV_PREPROC);
          if (pclose != NULL)
          {
             check_bool_parens(pc, pclose, 0);
@@ -76,9 +75,6 @@ void do_parens(void)
 static void add_parens_between(chunk_t *first, chunk_t *last)
 {
    LOG_FUNC_ENTRY();
-   chunk_t pc;
-   chunk_t *first_n;
-   chunk_t *last_p;
 
    LOG_FMT(LPARADD, "%s: line %zu between %s [lvl=%zu] and %s [lvl=%zu]\n",
            __func__, first->orig_line,
@@ -86,12 +82,13 @@ static void add_parens_between(chunk_t *first, chunk_t *last)
            last->text(), last->level);
 
    /* Don't do anything if we have a bad sequence, ie "&& )" */
-   first_n = chunk_get_next_ncnl(first);
+   chunk_t *first_n = chunk_get_next_ncnl(first);
    if (first_n == last)
    {
       return;
    }
 
+   chunk_t pc;
    pc.type        = CT_PAREN_OPEN;
    pc.str         = "(";
    pc.flags       = first_n->flags & PCF_COPY_FLAGS;
@@ -101,7 +98,7 @@ static void add_parens_between(chunk_t *first, chunk_t *last)
 
    chunk_add_before(&pc, first_n);
 
-   last_p         = chunk_get_prev_ncnl(last, CNAV_PREPROC);
+   chunk_t *last_p = chunk_get_prev_ncnl(last, CNAV_PREPROC);
    pc.type        = CT_PAREN_CLOSE;
    pc.str         = ")";
    pc.flags       = last_p->flags & PCF_COPY_FLAGS;
@@ -124,9 +121,8 @@ static void add_parens_between(chunk_t *first, chunk_t *last)
 static void check_bool_parens(chunk_t *popen, chunk_t *pclose, int nest)
 {
    LOG_FUNC_ENTRY();
-   chunk_t *pc;
-   chunk_t *ref = popen;
-   chunk_t *next;
+
+   chunk_t *ref        = popen;
    bool    hit_compare = false;
 
    LOG_FMT(LPARADD, "%s(%d): popen on %zu, col %zu, pclose on %zu, col %zu, level=%zu\n",
@@ -135,7 +131,7 @@ static void check_bool_parens(chunk_t *popen, chunk_t *pclose, int nest)
            pclose->orig_line, pclose->orig_col,
            popen->level);
 
-   pc = popen;
+   chunk_t *pc = popen;
    while (((pc = chunk_get_next_ncnl(pc)) != NULL) && (pc != pclose))
    {
       if (pc->flags & PCF_IN_PREPROC)
@@ -169,7 +165,7 @@ static void check_bool_parens(chunk_t *popen, chunk_t *pclose, int nest)
       }
       else if (chunk_is_paren_open(pc))
       {
-         next = chunk_skip_to_match(pc);
+         chunk_t *next = chunk_skip_to_match(pc);
          if (next != NULL)
          {
             check_bool_parens(pc, next, nest + 1);

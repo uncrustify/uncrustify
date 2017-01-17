@@ -142,7 +142,6 @@ static void split_before_chunk(chunk_t *pc)
 void do_code_width(void)
 {
    LOG_FUNC_ENTRY();
-
    LOG_FMT(LSPLIT, "%s\n", __func__);
 
    for (chunk_t *pc = chunk_get_head(); pc != NULL; pc = chunk_get_next(pc))
@@ -204,17 +203,15 @@ static int get_split_pri(c_token_t tok)
 static void try_split_here(cw_entry &ent, chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
-   chunk_t *next;
-   chunk_t *prev;
-   int     pc_pri = get_split_pri(pc->type);
 
+   int pc_pri = get_split_pri(pc->type);
    if (pc_pri == 0)
    {
       return;
    }
 
    /* Can't split after a newline */
-   prev = chunk_get_prev(pc);
+   chunk_t *prev = chunk_get_prev(pc);
    if ((prev == NULL) || (chunk_is_newline(prev) && (pc->type != CT_STRING)))
    {
       return;
@@ -223,7 +220,7 @@ static void try_split_here(cw_entry &ent, chunk_t *pc)
    /* Can't split a function without arguments */
    if (pc->type == CT_FPAREN_OPEN)
    {
-      next = chunk_get_next(pc);
+      chunk_t *next = chunk_get_next(pc);
       if (next->type == CT_FPAREN_CLOSE)
       {
          return;
@@ -233,7 +230,7 @@ static void try_split_here(cw_entry &ent, chunk_t *pc)
    /* Only split concatenated strings */
    if (pc->type == CT_STRING)
    {
-      next = chunk_get_next(pc);
+      chunk_t *next = chunk_get_next(pc);
       if (next->type != CT_STRING)
       {
          return;
@@ -249,7 +246,7 @@ static void try_split_here(cw_entry &ent, chunk_t *pc)
    /* don't break after last term of a qualified type */
    if (pc_pri == 25)
    {
-      next = chunk_get_next(pc);
+      chunk_t *next = chunk_get_next(pc);
       if ((next->type != CT_WORD) && (get_split_pri(next->type) != 25))
       {
          return;
@@ -447,7 +444,6 @@ static void split_for_stmt(chunk_t *start)
    int     count   = 0;
    int     max_cnt = cpd.settings[UO_ls_for_split_full].b ? 2 : 1;
    chunk_t *st[2];
-   chunk_t *pc;
    chunk_t *open_paren = NULL;
    int     nl_cnt      = 0;
 
@@ -455,7 +451,7 @@ static void split_for_stmt(chunk_t *start)
            __func__, start->text(), start->orig_line);
 
    /* Find the open paren so we know the level and count newlines */
-   pc = start;
+   chunk_t *pc = start;
    while ((pc = chunk_get_prev(pc)) != NULL)
    {
       if (pc->type == CT_SPAREN_OPEN)
@@ -549,11 +545,8 @@ static void split_fcn_params_full(chunk_t *start)
    LOG_FUNC_ENTRY();
    LOG_FMT(LSPLIT, "%s", __func__);
 
-   chunk_t *fpo;
-   chunk_t *pc;
-
    /* Find the opening fparen */
-   fpo = start;
+   chunk_t *fpo = start;
    while (((fpo = chunk_get_prev(fpo)) != NULL) &&
           (fpo->type != CT_FPAREN_OPEN))
    {
@@ -561,7 +554,7 @@ static void split_fcn_params_full(chunk_t *start)
    }
 
    /* Now break after every comma */
-   pc = fpo;
+   chunk_t *pc = fpo;
    while ((pc = chunk_get_next_ncnl(pc)) != NULL)
    {
       if (pc->level <= fpo->level)
@@ -581,27 +574,22 @@ static void split_fcn_params(chunk_t *start)
    LOG_FUNC_ENTRY();
    LOG_FMT(LSPLIT, "  %s: ", __func__);
 
-   chunk_t *prev;
-   chunk_t *fpo;
-   chunk_t *pc;
-   int     cur_width = 0;
-   int     last_col  = -1;
-   int     min_col;
-
    /* Find the opening fparen */
-   fpo = start;
+   chunk_t *fpo = start;
    while (((fpo = chunk_get_prev(fpo)) != NULL) &&
           (fpo->type != CT_FPAREN_OPEN))
    {
       /* do nothing */
    }
 
-   pc      = chunk_get_next_ncnl(fpo);
-   min_col = pc->column;
+   chunk_t *pc     = chunk_get_next_ncnl(fpo);
+   int     min_col = pc->column;
 
    LOG_FMT(LSPLIT, " mincol=%d, max_width=%d ",
            min_col, cpd.settings[UO_code_width].n - min_col);
 
+   int cur_width = 0;
+   int last_col  = -1;
    while (pc != NULL)
    {
       if (chunk_is_newline(pc))
@@ -634,7 +622,7 @@ static void split_fcn_params(chunk_t *start)
    }
 
    /* back up until the prev is a comma */
-   prev = pc;
+   chunk_t *prev = pc;
    while ((prev = chunk_get_prev(prev)) != NULL)
    {
       if (chunk_is_newline(prev) || (prev->type == CT_COMMA))

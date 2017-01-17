@@ -127,11 +127,11 @@ const chunk_tag_t *find_punctuator(const char *str, int lang_flags)
    const chunk_tag_t    *p_match = NULL;
    const lookup_entry_t *p_tab   = punc_table;
 
-   int                  ch_idx = 0;
-
    /*REVISIT: it might be faster to do a bsearch() on the first char.
     *         the rest of the group have at most 5 entries, so it wouldn't help
     */
+
+   int ch_idx = 0;
 
    while (ch_idx < 4)
    {

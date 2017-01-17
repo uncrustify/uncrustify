@@ -71,11 +71,9 @@ static int compare_chunks(chunk_t *pc1, chunk_t *pc2)
 static void do_the_sort(chunk_t **chunks, int num_chunks)
 {
    LOG_FUNC_ENTRY();
-   int min_idx;
-   int idx;
 
    LOG_FMT(LSORT, "%s: %d chunks:", __func__, num_chunks);
-   for (idx = 0; idx < num_chunks; idx++)
+   for (int idx = 0; idx < num_chunks; idx++)
    {
       LOG_FMT(LSORT, " [%s]", chunks[idx]->text());
    }
@@ -85,8 +83,8 @@ static void do_the_sort(chunk_t **chunks, int num_chunks)
    for (start_idx = 0; start_idx < (num_chunks - 1); start_idx++)
    {
       /* Find the index of the minimum value */
-      min_idx = start_idx;
-      for (idx = start_idx + 1; idx < num_chunks; idx++)
+      int min_idx = start_idx;
+      for (int idx = start_idx + 1; idx < num_chunks; idx++)
       {
          if (compare_chunks(chunks[idx], chunks[min_idx]) < 0)
          {
@@ -111,15 +109,13 @@ void sort_imports(void)
    LOG_FUNC_ENTRY();
    chunk_t *chunks[256];  /* 256 should be enough, right? */
    int     num_chunks = 0;
-   chunk_t *pc;
-   chunk_t *next;
-   chunk_t *p_last = NULL;
-   chunk_t *p_imp  = NULL;
+   chunk_t *p_last    = NULL;
+   chunk_t *p_imp     = NULL;
 
-   pc = chunk_get_head();
+   chunk_t *pc = chunk_get_head();
    while (pc != NULL)
    {
-      next = chunk_get_next(pc);
+      chunk_t *next = chunk_get_next(pc);
 
       if (chunk_is_newline(pc))
       {

@@ -45,14 +45,11 @@ static void remove_semicolon(chunk_t *pc)
 void remove_extra_semicolons(void)
 {
    LOG_FUNC_ENTRY();
-   chunk_t *pc;
-   chunk_t *next;
 
-   pc = chunk_get_head();
+   chunk_t *pc = chunk_get_head();
    while (pc != NULL)
    {
-      next = chunk_get_next_ncnl(pc);
-
+      chunk_t *next = chunk_get_next_ncnl(pc);
       chunk_t *prev;
       if ((pc->type == CT_SEMICOLON) && !(pc->flags & PCF_IN_PREPROC) &&
           ((prev = chunk_get_prev_ncnl(pc)) != NULL))
@@ -122,9 +119,7 @@ void remove_extra_semicolons(void)
 static void check_unknown_brace_close(chunk_t *semi, chunk_t *brace_close)
 {
    LOG_FUNC_ENTRY();
-   chunk_t *pc;
-
-   pc = chunk_get_prev_type(brace_close, CT_BRACE_OPEN, brace_close->level);
+   chunk_t *pc = chunk_get_prev_type(brace_close, CT_BRACE_OPEN, brace_close->level);
    pc = chunk_get_prev_ncnl(pc);
    if ((pc != NULL) &&
        (pc->type != CT_RETURN) &&

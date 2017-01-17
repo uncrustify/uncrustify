@@ -121,17 +121,14 @@ static void log_rule2(int line, const char *rule, chunk_t *first, chunk_t *secon
 static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool complete = true)
 {
    LOG_FUNC_ENTRY();
-   int      idx;
-   argval_t arg;
-   chunk_t  *next;
-
-   min_sp = 1;
 
 #ifdef DEBUG
    LOG_FMT(LSPACE, "(%d) ", __LINE__);
 #endif
    LOG_FMT(LSPACE, "%s: %zu:%zu %s %s\n",
            __func__, first->orig_line, first->orig_col, first->text(), get_token_name(first->type));
+
+   min_sp = 1;
    if ((first->type == CT_IGNORED) || (second->type == CT_IGNORED))
    {
       log_rule("IGNORED");
@@ -283,14 +280,14 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
    if (first->type == CT_MACRO)
    {
       log_rule("sp_macro");
-      arg = cpd.settings[UO_sp_macro].a;
+      argval_t arg = cpd.settings[UO_sp_macro].a;
       return((argval_t)(arg | ((arg != AV_IGNORE) ? AV_ADD : AV_IGNORE)));
    }
 
    if ((first->type == CT_FPAREN_CLOSE) && (first->parent_type == CT_MACRO_FUNC))
    {
       log_rule("sp_macro_func");
-      arg = cpd.settings[UO_sp_macro_func].a;
+      argval_t arg = cpd.settings[UO_sp_macro_func].a;
       return((argval_t)(arg | ((arg != AV_IGNORE) ? AV_ADD : AV_IGNORE)));
    }
 
@@ -323,7 +320,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
          }
       }
 
-      arg = cpd.settings[UO_sp_before_semi].a;
+      argval_t arg = cpd.settings[UO_sp_before_semi].a;
       if ((first->type == CT_SPAREN_CLOSE) &&
           (first->parent_type != CT_WHILE_OF_DO))
       {
@@ -786,7 +783,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
       if ((second->type == CT_FPAREN_OPEN) ||
           (second->type == CT_PAREN_OPEN))
       {
-         next = chunk_get_next_ncnl(second);
+         chunk_t *next = chunk_get_next_ncnl(second);
          if (next && (next->type == CT_FPAREN_CLOSE))
          {
             log_rule("sp_angle_paren_empty");
@@ -828,7 +825,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
    {
       if (cpd.settings[UO_sp_before_byref_func].a != AV_IGNORE)
       {
-         next = chunk_get_next(second);
+         chunk_t *next = chunk_get_next(second);
          if ((next != NULL) &&
              ((next->type == CT_FUNC_DEF) ||
               (next->type == CT_FUNC_PROTO)))
@@ -839,7 +836,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
 
       if (cpd.settings[UO_sp_before_unnamed_byref].a != AV_IGNORE)
       {
-         next = chunk_get_next_nc(second);
+         chunk_t *next = chunk_get_next_nc(second);
          if ((next != NULL) && (next->type != CT_WORD))
          {
             log_rule("sp_before_unnamed_byref");
@@ -873,7 +870,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
       if ((cpd.settings[UO_sp_after_operator_sym_empty].a != AV_IGNORE) &&
           (second->type == CT_FPAREN_OPEN))
       {
-         next = chunk_get_next_ncnl(second);
+         chunk_t *next = chunk_get_next_ncnl(second);
          if (next && (next->type == CT_FPAREN_CLOSE))
          {
             log_rule("sp_after_operator_sym_empty");
@@ -892,7 +889,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
       if ((cpd.settings[UO_sp_func_call_paren_empty].a != AV_IGNORE) &&
           (second->type == CT_FPAREN_OPEN))
       {
-         next = chunk_get_next_ncnl(second);
+         chunk_t *next = chunk_get_next_ncnl(second);
          if (next && (next->type == CT_FPAREN_CLOSE))
          {
             log_rule("sp_func_call_paren_empty");
@@ -917,7 +914,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
       if ((cpd.settings[UO_sp_func_def_paren_empty].a != AV_IGNORE) &&
           (second->type == CT_FPAREN_OPEN))
       {
-         next = chunk_get_next_ncnl(second);
+         chunk_t *next = chunk_get_next_ncnl(second);
          if (next && (next->type == CT_FPAREN_CLOSE))
          {
             log_rule("sp_func_def_paren_empty");
@@ -979,7 +976,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
       if ((cpd.settings[UO_sp_func_proto_paren_empty].a != AV_IGNORE) &&
           (second->type == CT_FPAREN_OPEN))
       {
-         next = chunk_get_next_ncnl(second);
+         chunk_t *next = chunk_get_next_ncnl(second);
          if (next && (next->type == CT_FPAREN_CLOSE))
          {
             log_rule("sp_func_proto_paren_empty");
@@ -995,7 +992,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
       if ((cpd.settings[UO_sp_func_class_paren_empty].a != AV_IGNORE) &&
           (second->type == CT_FPAREN_OPEN))
       {
-         next = chunk_get_next_ncnl(second);
+         chunk_t *next = chunk_get_next_ncnl(second);
          if (next && (next->type == CT_FPAREN_CLOSE))
          {
             log_rule("sp_func_class_paren_empty");
@@ -1400,7 +1397,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
    }
    if ((first->type == CT_BOOL) || (second->type == CT_BOOL))
    {
-      arg = cpd.settings[UO_sp_bool].a;
+      argval_t arg = cpd.settings[UO_sp_bool].a;
       if ((cpd.settings[UO_pos_bool].tp != TP_IGNORE) &&
           (first->orig_line != second->orig_line) &&
           (arg != AV_REMOVE))
@@ -1476,7 +1473,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
       if (cpd.settings[UO_sp_before_ptr_star_func].a != AV_IGNORE)
       {
          /* Find the next non-'*' chunk */
-         next = second;
+         chunk_t *next = second;
          do
          {
             next = chunk_get_next(next);
@@ -1492,7 +1489,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
 
       if (cpd.settings[UO_sp_before_unnamed_ptr_star].a != AV_IGNORE)
       {
-         next = chunk_get_next_nc(second);
+         chunk_t *next = chunk_get_next_nc(second);
          while ((next != NULL) && (next->type == CT_PTR_TYPE))
          {
             next = chunk_get_next_nc(next);
@@ -1616,7 +1613,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
    if ((second->type != CT_PTR_TYPE) &&
        ((first->type == CT_QUALIFIER) || (first->type == CT_TYPE)))
    {
-      arg = cpd.settings[UO_sp_after_type].a;
+      argval_t arg = cpd.settings[UO_sp_after_type].a;
       log_rule("sp_after_type");
       return((arg != AV_REMOVE) ? arg : AV_FORCE);
    }
@@ -1776,7 +1773,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
 
    // this table lists out all combos where a space should NOT be present
    // CT_UNKNOWN is a wildcard.
-   for (idx = 0; idx < (int)ARRAY_SIZE(no_space_table); idx++)
+   for (int idx = 0; idx < (int)ARRAY_SIZE(no_space_table); idx++)
    {
       if (((no_space_table[idx].first == CT_UNKNOWN) ||
            (no_space_table[idx].first == first->type))
@@ -1813,18 +1810,16 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
 void space_text(void)
 {
    LOG_FUNC_ENTRY();
-   chunk_t *pc;
-   chunk_t *next;
-   chunk_t *tmp;
-   int     column, prev_column;
-   int     delta;
 
-   pc = chunk_get_head();
+   chunk_t *pc = chunk_get_head();
    if (pc == NULL)
    {
       return;
    }
-   column = pc->column;
+
+   chunk_t *next;
+   int     prev_column;
+   int     column = pc->column;
    while (pc != NULL)
    {
 #ifdef DEBUG
@@ -1918,7 +1913,7 @@ void space_text(void)
              !pc->str.startswith("@\""))
          {
             /* Find the next non-empty chunk on this line */
-            tmp = next;
+            chunk_t *tmp = next;
             while ((tmp != NULL) && (tmp->len() == 0) && !chunk_is_newline(tmp))
             {
                tmp = chunk_get_next(tmp);
@@ -1988,7 +1983,8 @@ void space_text(void)
             break;
 
          case AV_ADD:
-            delta = min_sp;
+         {
+            int delta = min_sp;
             if ((next->orig_col >= pc->orig_col_end) && (pc->orig_col_end != 0))
             {
                /* Keep the same relative spacing, minimum 1 */
@@ -2000,6 +1996,7 @@ void space_text(void)
             }
             column += delta;
             break;
+         }
 
          case AV_REMOVE:
          /* the symbols will be back-to-back "a+3" */
@@ -2075,15 +2072,11 @@ void space_text(void)
 void space_text_balance_nested_parens(void)
 {
    LOG_FUNC_ENTRY();
-   chunk_t *first;
-   chunk_t *next;
-   chunk_t *cur;
-   chunk_t *prev;
 
-   first = chunk_get_head();
+   chunk_t *first = chunk_get_head();
    while (first != NULL)
    {
-      next = chunk_get_next(first);
+      chunk_t *next = chunk_get_next(first);
       if (next == NULL)
       {
          break;
@@ -2096,8 +2089,8 @@ void space_text_balance_nested_parens(void)
 
          /* find the closing paren that matches the 'first' open paren and force
           * a space before it */
-         cur  = next;
-         prev = cur;
+         chunk_t *cur  = next;
+         chunk_t *prev = cur;
          while ((cur = chunk_get_next(cur)) != NULL)
          {
             if (cur->level == first->level)
@@ -2137,8 +2130,9 @@ void space_text_balance_nested_parens(void)
 int space_needed(chunk_t *first, chunk_t *second)
 {
    LOG_FUNC_ENTRY();
-   int min_sp;
    LOG_FMT(LSPACE, "%s\n", __func__);
+
+   int min_sp;
    switch (do_space(first, second, min_sp))
    {
    case AV_ADD:
@@ -2158,8 +2152,6 @@ int space_needed(chunk_t *first, chunk_t *second)
 int space_col_align(chunk_t *first, chunk_t *second)
 {
    LOG_FUNC_ENTRY();
-   int      coldiff, min_sp;
-   argval_t av;
 
    LOG_FMT(LSPACE, "%s: %zu:%zu [%s/%s] '%s' <==> %zu:%zu [%s/%s] '%s'",
            __func__, first->orig_line, first->orig_col,
@@ -2170,9 +2162,11 @@ int space_col_align(chunk_t *first, chunk_t *second)
            second->text());
    log_func_stack_inline(LSPACE);
 
-   av = do_space(first, second, min_sp);
+   int      min_sp;
+   argval_t av = do_space(first, second, min_sp);
 
    LOG_FMT(LSPACE, "%s: av=%d, ", __func__, av);
+   int coldiff;
    if (first->nl_count)
    {
       LOG_FMT(LSPACE, "nl_count=%zu, orig_col_end=%d", first->nl_count, first->orig_col_end);

@@ -298,14 +298,11 @@ bool unc_text::startswith(const unc_text &text, size_t idx) const
  */
 int unc_text::find(const char *text, size_t sidx) const
 {
-   // the length of 'text' we are looking for
-   size_t len = strlen(text);
-   // the length of the string we are looking in
-   size_t si = size();
+   size_t len = strlen(text); // the length of 'text' we are looking for
+   size_t si  = size();       // the length of the string we are looking in
 
-   if (si < len)
+   if (si < len)              // not enough place for 'text'
    {
-      // not enough place for 'text'
       return(-1);
    }
    size_t midx = size() - len;
@@ -321,9 +318,8 @@ int unc_text::find(const char *text, size_t sidx) const
             break;
          }
       }
-      if (match)
+      if (match) // found at position 'idx'
       {
-         // found at position 'idx'
          return(idx);
       }
    }

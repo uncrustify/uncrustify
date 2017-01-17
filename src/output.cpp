@@ -214,13 +214,10 @@ static void output_to_column(int column, bool allow_tabs)
  */
 static void cmt_output_indent(int brace_col, int base_col, int column)
 {
-   int iwt;
-   int tab_col;
+   int iwt = cpd.settings[UO_indent_cmt_with_tabs].b ? 2 :
+             (cpd.settings[UO_indent_with_tabs].n ? 1 : 0);
 
-   iwt = cpd.settings[UO_indent_cmt_with_tabs].b ? 2 :
-         (cpd.settings[UO_indent_with_tabs].n ? 1 : 0);
-
-   tab_col = (iwt == 0) ? 0 : ((iwt == 1) ? brace_col : base_col);
+   int tab_col = (iwt == 0) ? 0 : ((iwt == 1) ? brace_col : base_col);
 
    // LOG_FMT(LSYS, "%s(brace=%d base=%d col=%d iwt=%d) tab=%d cur=%d\n",
    //        __func__, brace_col, base_col, column, iwt, tab_col, cpd.column);
@@ -282,13 +279,7 @@ void output_parsed(FILE *pfile)
 
 void output_text(FILE *pfile)
 {
-   chunk_t *pc;
-   chunk_t *prev;
-   int     lvlcol;
-   bool    allow_tabs;
-
-   cpd.fout = pfile;
-
+   cpd.fout        = pfile;
    cpd.did_newline = 1;
    cpd.column      = 1;
 
@@ -297,6 +288,7 @@ void output_text(FILE *pfile)
       write_bom();
    }
 
+   chunk_t *pc;
    if (cpd.frag_cols > 0)
    {
       int indent = cpd.frag_cols - 1;
@@ -337,7 +329,7 @@ void output_text(FILE *pfile)
             else
             {
                /* Try to keep the same relative spacing */
-               prev = chunk_get_prev(pc);
+               chunk_t *prev = chunk_get_prev(pc);
                while ((prev != NULL) && (prev->orig_col == 0) && (prev->nl_count == 0))
                {
                   prev = chunk_get_prev(prev);
@@ -404,12 +396,14 @@ void output_text(FILE *pfile)
       }
       else
       {
+         bool allow_tabs;
          cpd.output_trailspace = (pc->type == CT_STRING_MULTI);
          /* indent to the 'level' first */
          if (cpd.did_newline)
          {
             if (cpd.settings[UO_indent_with_tabs].n == 1)
             {
+               int lvlcol;
                /* FIXME: it would be better to properly set column_indent in
                 * indent_text(), but this hack for '}' and ':' seems to work. */
                if ((pc->type == CT_BRACE_CLOSE) ||
@@ -452,7 +446,7 @@ void output_text(FILE *pfile)
             }
 
             /* not the first item on a line */
-            prev       = chunk_get_prev(pc);
+            chunk_t *prev = chunk_get_prev(pc);
             allow_tabs = (cpd.settings[UO_align_with_tabs].b &&
                           (pc->flags & PCF_WAS_ALIGNED) &&
                           ((prev->column + prev->len() + 1) != pc->column));
@@ -563,12 +557,6 @@ static int cmt_parse_lead(const unc_text &line, bool is_last)
  */
 static void calculate_comment_body_indent(cmt_reflow &cmt, const unc_text &str)
 {
-   int idx       = 0;
-   int first_len = 0;
-   int last_len  = 0;
-   int width     = 0;
-   int len       = str.size();
-
    cmt.xtra_indent = 0;
 
    if (!cpd.settings[UO_cmt_indent_multi].b)
@@ -576,6 +564,9 @@ static void calculate_comment_body_indent(cmt_reflow &cmt, const unc_text &str)
       return;
    }
 
+   int idx      = 0;
+   int len      = str.size();
+   int last_len = 0;
    if (cpd.settings[UO_cmt_multi_check_last].b)
    {
       /* find the last line length */
@@ -595,6 +586,7 @@ static void calculate_comment_body_indent(cmt_reflow &cmt, const unc_text &str)
    }
 
    /* find the first line length */
+   int first_len = 0;
    for (idx = 0; idx < len; idx++)
    {
       if ((str[idx] == '\n') || (str[idx] == '\r'))
@@ -616,7 +608,7 @@ static void calculate_comment_body_indent(cmt_reflow &cmt, const unc_text &str)
    }
 
    /* Scan the second line */
-   width = 0;
+   int width = 0;
    for (/* nada */; idx < len - 1; idx++)
    {
       if ((str[idx] == ' ') || (str[idx] == '\t'))
@@ -685,6 +677,11 @@ static chunk_t *get_next_function(chunk_t *pc)
 }
 
 
+/* \todo better use generic functions for the following functions
+ *
+ * static chunk_t *check_prev_category(chunk_t *pc, c_token_t* cat)
+ * static chunk_t *check_next_category(chunk_t *pc, c_token_t* cat)
+ */
 static chunk_t *get_prev_category(chunk_t *pc)
 {
    while ((pc = chunk_get_prev(pc)) != NULL)
@@ -773,9 +770,8 @@ static void add_comment_text(const unc_text &text,
    bool was_star  = false;
    bool was_slash = false;
    bool in_word   = false;
-   int  tmp;
-   int  len    = text.size();
-   int  ch_cnt = 0; /* chars since newline */
+   int  len       = text.size();
+   int  ch_cnt    = 0; /* chars since newline */
 
    /* If the '//' is included write it first else we may wrap an empty line */
    int idx = 0;
@@ -804,7 +800,7 @@ static void add_comment_text(const unc_text &text,
          }
 
          /* hack to get escaped newlines to align and not dup the leading '//' */
-         tmp = next_up(text, idx + 1, cmt.cont_text);
+         int tmp = next_up(text, idx + 1, cmt.cont_text);
          if (tmp < 0)
          {
             add_text(cmt.cont_text);
@@ -1020,12 +1016,11 @@ static chunk_t *output_comment_c(chunk_t *first)
 static chunk_t *output_comment_cpp(chunk_t *first)
 {
    cmt_reflow cmt;
-   unc_text   leadin;
 
    output_cmt_start(cmt, first);
    cmt.reflow = (cpd.settings[UO_cmt_reflow_mode].n != 1);
 
-   leadin = "//";                                       // default setting to keep previous behaviour
+   unc_text leadin = "//";                              // default setting to keep previous behaviour
    if (cpd.settings[UO_sp_cmt_cpp_doxygen].b)           // special treatment for doxygen style comments (treat as unity)
    {
       const char *sComment = first->text();
@@ -1207,13 +1202,6 @@ static void cmt_trim_whitespace(unc_text &line, bool in_preproc)
  */
 static void output_comment_multi(chunk_t *pc)
 {
-   int        cmt_col;
-   int        cmt_idx;
-   unc_text   line;
-   int        line_count = 0;
-   int        ccol; /* the col of subsequent comment lines */
-   int        col_diff = 0;
-   bool       nl_end   = false;
    cmt_reflow cmt;
 
    // LOG_FMT(LSYS, "%s: line %d\n", __func__, pc->orig_line);
@@ -1221,8 +1209,8 @@ static void output_comment_multi(chunk_t *pc)
    output_cmt_start(cmt, pc);
    cmt.reflow = (cpd.settings[UO_cmt_reflow_mode].n != 1);
 
-   cmt_col  = cmt.base_col;
-   col_diff = pc->orig_col - cmt.base_col;
+   int cmt_col  = cmt.base_col;
+   int col_diff = pc->orig_col - cmt.base_col;
 
    calculate_comment_body_indent(cmt, pc->str);
 
@@ -1233,8 +1221,11 @@ static void output_comment_multi(chunk_t *pc)
    // LOG_FMT(LSYS, "Indenting1 line %d to col %d (orig=%d) col_diff=%d xtra=%d cont='%s'\n",
    //        pc->orig_line, cmt_col, pc->orig_col, col_diff, cmt.xtra_indent, cmt.cont_text.c_str());
 
-   ccol    = pc->column;
-   cmt_idx = 0;
+   int      line_count = 0;
+   int      ccol       = pc->column; /* the col of subsequent comment lines */
+   int      cmt_idx    = 0;
+   bool     nl_end     = false;
+   unc_text line;
    line.clear();
    while (cmt_idx < pc->len())
    {
@@ -1852,8 +1843,6 @@ static const kw_subst_t kw_subst_table[] =
  */
 static void do_kw_subst(chunk_t *pc)
 {
-   unc_text tmp_txt;
-
    for (int kw_idx = 0; kw_idx < (int)ARRAY_SIZE(kw_subst_table); kw_idx++)
    {
       const kw_subst_t *kw = &kw_subst_table[kw_idx];
@@ -1861,6 +1850,7 @@ static void do_kw_subst(chunk_t *pc)
 
       if (idx >= 0)
       {
+         unc_text tmp_txt;
          tmp_txt.clear();
          if (kw->func(pc, tmp_txt))
          {
@@ -1895,16 +1885,10 @@ static void do_kw_subst(chunk_t *pc)
 static void output_comment_multi_simple(chunk_t *pc, bool kw_subst)
 {
    (void)kw_subst;
-   int        cmt_idx;
-   int        line_count = 0;
-   int        ccol;
-   int        col_diff = 0;
-   bool       nl_end   = false;
    cmt_reflow cmt;
-   unc_text   line;
-
    output_cmt_start(cmt, pc);
 
+   int col_diff = 0;
    if (chunk_is_newline(chunk_get_prev(pc)))
    {
       /* The comment should be indented correctly */
@@ -1916,9 +1900,12 @@ static void output_comment_multi_simple(chunk_t *pc, bool kw_subst)
       col_diff = 0;
    }
 
-   ccol    = pc->column;
-   cmt_idx = 0;
+   unc_text line;
    line.clear();
+   int      line_count = 0;
+   int      cmt_idx    = 0;
+   int      ccol       = pc->column;
+   bool     nl_end     = false;
    while (cmt_idx < pc->len())
    {
       int ch = pc->str[cmt_idx++];
@@ -2038,12 +2025,8 @@ static void generate_if_conditional_as_text(unc_text &dst, chunk_t *ifdef)
 
 void add_long_preprocessor_conditional_block_comment(void)
 {
-   chunk_t *tmp;
-   chunk_t *br_open;
-   chunk_t *br_close;
    chunk_t *pp_start = NULL;
    chunk_t *pp_end   = NULL;
-   int     nl_count;
 
    for (chunk_t *pc = chunk_get_head(); pc; pc = chunk_get_next_ncnl(pc))
    {
@@ -2064,10 +2047,11 @@ void add_long_preprocessor_conditional_block_comment(void)
       }
 #endif
 
-      br_open  = pc;
-      nl_count = 0;
+      chunk_t *br_close;
+      chunk_t *br_open = pc;
+      int     nl_count = 0;
 
-      tmp = pc;
+      chunk_t *tmp = pc;
       while ((tmp = chunk_get_next(tmp)) != NULL)
       {
          /* just track the preproc level: */

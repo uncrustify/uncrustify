@@ -391,27 +391,25 @@ static const chunk_tag_t *kw_static_match(const chunk_tag_t *tag)
 
 c_token_t find_keyword_type(const char *word, int len)
 {
-   string            ss(word, len);
-   chunk_tag_t       key;
-   const chunk_tag_t *p_ret;
-
    if (len <= 0)
    {
       return(CT_NONE);
    }
 
    /* check the dynamic word list first */
+   string           ss(word, len);
    dkwmap::iterator it = dkwm.find(ss);
    if (it != dkwm.end())
    {
       return((*it).second);
    }
 
+   chunk_tag_t key;
    key.tag = ss.c_str();
 
    /* check the static word list */
-   p_ret = (const chunk_tag_t *)bsearch(&key, keywords, ARRAY_SIZE(keywords),
-                                        sizeof(keywords[0]), kw_compare);
+   const chunk_tag_t *p_ret = (const chunk_tag_t *)bsearch(&key, keywords, ARRAY_SIZE(keywords),
+                                                           sizeof(keywords[0]), kw_compare);
    if (p_ret != NULL)
    {
       p_ret = kw_static_match(p_ret);
@@ -422,12 +420,8 @@ c_token_t find_keyword_type(const char *word, int len)
 
 int load_keyword_file(const char *filename)
 {
-   FILE *pf;
-   char buf[256];
-   char *args[3];
-   int  line_no = 0;
+   FILE *pf = fopen(filename, "r");
 
-   pf = fopen(filename, "r");
    if (pf == NULL)
    {
       LOG_FMT(LERR, "%s: fopen(%s) failed: %s (%d)\n",
@@ -436,6 +430,9 @@ int load_keyword_file(const char *filename)
       return(FAILURE);
    }
 
+   char buf[256];
+   char *args[3];
+   int  line_no = 0;
    while (fgets(buf, sizeof(buf), pf) != NULL)
    {
       line_no++;

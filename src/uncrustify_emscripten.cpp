@@ -173,7 +173,7 @@ void set_language(lang_flags langIDX)
 
 
 /**
- * adds a new keyword to Uncrustifys dynamic keyword map (dkwm, keywords.cpp)
+ * adds a new keyword to Uncrustify's dynamic keyword map (dkwm, keywords.cpp)
  *
  * @param type: keyword that is going to be added
  */
@@ -188,7 +188,7 @@ void add_type(string type)
 }
 
 
-//! clears Uncrustifys dynamic keyword map (dkwm, keywords.cpp)
+//! clears Uncrustify's dynamic keyword map (dkwm, keywords.cpp)
 void clear_keywords()
 {
    clear_keyword_file();
@@ -314,12 +314,12 @@ string get_option(string name)
 //! returns a string with option documentation
 string show_options()
 {
-   FILE   *stream;
    char   *buf;
    size_t len;
 
    // TODO (upstream): see uncrustify()
-   stream = open_memstream(&buf, &len);
+   FILE *stream = open_memstream(&buf, &len);
+
    if (stream == NULL)
    {
       LOG_FMT(LERR, "Failed to open_memstream\n");
@@ -352,12 +352,12 @@ string show_options()
  */
 string show_config(bool withDoc, bool only_not_default)
 {
-   FILE   *stream;
    char   *buf;
    size_t len;
 
    // TODO (upstream): see uncrustify()
-   stream = open_memstream(&buf, &len);
+   FILE *stream = open_memstream(&buf, &len);
+
    if (stream == NULL)
    {
       LOG_FMT(LERR, "Failed to open_memstream\n");
@@ -516,7 +516,6 @@ string uncrustify(string file, bool frag)
 
    cpd.frag = frag;
 
-   FILE   *stream;
    char   *buf;
    size_t len;
 
@@ -525,7 +524,7 @@ string uncrustify(string file, bool frag)
    // windows lacks open_memstream, only UNIX/BSD is supported
    // apparently emscripten has its own implementation, if that is not working
    // see: stackoverflow.com/questions/10305095#answer-10341073
-   stream = open_memstream(&buf, &len);
+   FILE *stream = open_memstream(&buf, &len);
    if (stream == NULL)
    {
       LOG_FMT(LERR, "Failed to open_memstream\n");

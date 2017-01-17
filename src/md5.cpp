@@ -107,10 +107,10 @@ void MD5::Init()
 void MD5::Update(const void *data, UINT32 len)
 {
    const UINT8 *buf = (const UINT8 *)data;
-   UINT32      t;
 
    /* Update bitcount */
-   t = m_bits[0];
+   UINT32 t = m_bits[0];
+
    if ((m_bits[0] = t + ((UINT32)len << 3)) < t)
    {
       m_bits[1]++;   /* Carry from low to high */
@@ -164,15 +164,13 @@ void MD5::Update(const void *data, UINT32 len)
  */
 void MD5::Final(UINT8 digest[16])
 {
-   UINT32 count;
-   UINT8  *p;
-
    /* Compute number of bytes mod 64 */
-   count = (m_bits[0] >> 3) & 0x3F;
+   UINT32 count = (m_bits[0] >> 3) & 0x3F;
 
    /* Set the first char of padding to 0x80.  This is safe since there is
     * always at least one byte free */
-   p    = m_in + count;
+   UINT8 *p = m_in + count;
+
    *p++ = 0x80;
 
    /* Bytes of padding needed to make 64 bytes */
@@ -235,12 +233,10 @@ void MD5::Final(UINT8 digest[16])
  */
 void MD5::Transform(UINT32 buf[4], UINT32 in_data[16])
 {
-   UINT32 a, b, c, d;
-
-   a = buf[0];
-   b = buf[1];
-   c = buf[2];
-   d = buf[3];
+   UINT32 a = buf[0];
+   UINT32 b = buf[1];
+   UINT32 c = buf[2];
+   UINT32 d = buf[3];
 
    MD5STEP(F1, a, b, c, d, in_data[0] + 0xd76aa478, 7);
    MD5STEP(F1, d, a, b, c, in_data[1] + 0xe8c7b756, 12);

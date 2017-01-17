@@ -244,10 +244,6 @@ void log_str(log_sev_t sev, const char *str, size_t len)
  */
 void log_fmt(log_sev_t sev, const char *fmt, ...)
 {
-   va_list args;
-   size_t  len;
-   size_t  cap;
-
    if ((fmt == NULL) || !log_sev_on(sev))
    {
       return;
@@ -257,11 +253,12 @@ void log_fmt(log_sev_t sev, const char *fmt, ...)
     * that would have been stored if the buffer was large enough instead of
     * the number of characters actually stored.
     */
-   cap = log_start(sev);
+   size_t cap = log_start(sev);
 
    /* Add on the variable log parameters to the log string */
+   va_list args;
    va_start(args, fmt);
-   len = (size_t)vsnprintf(&g_log.buf[g_log.buf_len], cap, fmt, args);
+   size_t  len = (size_t)vsnprintf(&g_log.buf[g_log.buf_len], cap, fmt, args);
    va_end(args);
 
    if (len > 0)
@@ -287,16 +284,14 @@ void log_fmt(log_sev_t sev, const char *fmt, ...)
  */
 void log_hex(log_sev_t sev, const void *vdata, size_t len)
 {
-   const UINT8 *dat = (const UINT8 *)vdata;
-   size_t      idx;
-   char        buf[80];
-
    if ((vdata == NULL) || !log_sev_on(sev))
    {
       return;
    }
 
-   idx = 0;
+   char        buf[80];
+   const UINT8 *dat = (const UINT8 *)vdata;
+   size_t      idx  = 0;
    while (len-- > 0)
    {
       buf[idx++] = to_hex_char(*dat >> 4);
@@ -329,17 +324,15 @@ void log_hex(log_sev_t sev, const void *vdata, size_t len)
  */
 void log_hex_blk(log_sev_t sev, const void *data, size_t len)
 {
-   static char buf[80] = "nnn | XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX | cccccccccccccccc\n";
-   const UINT8 *dat    = (const UINT8 *)data;
-   int         count;
-   int         str_idx = 0;
-   int         chr_idx = 0;
-   int         total;
-
    if ((data == NULL) || !log_sev_on(sev))
    {
       return;
    }
+
+   static char buf[80] = "nnn | XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX | cccccccccccccccc\n";
+   const UINT8 *dat    = (const UINT8 *)data;
+   int         str_idx = 0;
+   int         chr_idx = 0;
 
    /*
     * Dump the specified number of bytes in hex, 16 byte per line by
@@ -347,8 +340,8 @@ void log_hex_blk(log_sev_t sev, const void *data, size_t len)
     */
 
    /* Loop through the data of the current iov */
-   count = 0;
-   total = 0;
+   int count = 0;
+   int total = 0;
    for (size_t idx = 0; idx < len; idx++)
    {
       if (count == 0)

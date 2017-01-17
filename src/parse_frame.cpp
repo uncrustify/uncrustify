@@ -185,17 +185,15 @@ void pf_pop(parse_frame_t *pf)
  */
 int pf_check(parse_frame_t *frm, chunk_t *pc)
 {
-   int        in_ifdef = frm->in_ifdef;
-   int        b4_cnt   = cpd.frame_count;
-   int        pp_level = cpd.pp_level;
-   const char *txt     = NULL;
-   chunk_t    *next;
+   int in_ifdef = frm->in_ifdef;
+   int b4_cnt   = cpd.frame_count;
+   int pp_level = cpd.pp_level;
 
    if (pc->type != CT_PREPROC)
    {
       return(pp_level);
    }
-   next = chunk_get_next(pc);
+   chunk_t *next = chunk_get_next(pc);
    if (next == NULL)
    {
       return(pp_level);
@@ -213,6 +211,7 @@ int pf_check(parse_frame_t *frm, chunk_t *pc)
            __func__, __LINE__, pc->orig_line, get_token_name(pc->parent_type));
    pf_log_frms(LPFCHK, "TOP", frm);
 
+   const char *txt = NULL;
    if (pc->flags & PCF_IN_PREPROC)
    {
       LOG_FMT(LPF, " <In> ");

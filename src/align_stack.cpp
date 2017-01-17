@@ -79,11 +79,6 @@ void AlignStack::Add(chunk_t *start, size_t seqnum)
       seqnum = m_seqnum;
    }
 
-   chunk_t *ali;
-   chunk_t *ref;
-   chunk_t *prev;
-   chunk_t *next;
-
    m_last_added = 0;
 
    /* Check threshold limits */
@@ -161,21 +156,21 @@ void AlignStack::Add(chunk_t *start, size_t seqnum)
       }
 
       /* Find ref. Back up to the real item that is aligned. */
-      prev = start;
+      chunk_t *prev = start;
       while (((prev = chunk_get_prev(prev)) != NULL) &&
              (chunk_is_ptr_operator(prev) ||
               (prev->type == CT_TPAREN_OPEN)))
       {
          /* do nothing - we want prev when this exits */
       }
-      ref = prev;
+      chunk_t *ref = prev;
       if (chunk_is_newline(ref))
       {
          ref = chunk_get_next(ref);
       }
 
       /* Find the item that we are going to align. */
-      ali = start;
+      chunk_t *ali = start;
       if (m_star_style != SS_IGNORE)
       {
          /* back up to the first '*' or '^' preceding the token */
@@ -213,7 +208,7 @@ void AlignStack::Add(chunk_t *start, size_t seqnum)
          tmp = ref;
          while (tmp != start)
          {
-            next     = chunk_get_next(tmp);
+            chunk_t *next = chunk_get_next(tmp);
             tmp_col += space_col_align(tmp, next);
             if (next->column != tmp_col)
             {
