@@ -30,8 +30,8 @@
 #include "md5.h"
 #include "newlines.h"
 #include "output.h"
+#include "options.h"
 #include "parens.h"
-#include "prototypes.h"
 #include "space.h"
 #include "semicolons.h"
 #include "sorting.h"
@@ -93,6 +93,9 @@ const char *language_name_from_flags(int lang);
 static bool read_stdin(file_mem &fm);
 
 
+static void make_folders(const string &filename);
+
+
 static void uncrustify_start(const deque<int> &data);
 
 
@@ -117,10 +120,10 @@ void uncrustify_file(const file_mem &fm, FILE *pfout, const char *parsed_file, b
 static void do_source_file(const char *filename_in, const char *filename_out, const char *parsed_file, bool no_backup, bool keep_mtime);
 
 
-static void add_file_header();
+static void add_file_header(void);
 
 
-static void add_file_footer();
+static void add_file_footer(void);
 
 
 static void add_func_header(c_token_t type, file_mem &fm);
@@ -133,6 +136,7 @@ static void process_source_list(const char *source_list, const char *prefix, con
 
 
 int load_header_files(void);
+
 
 static const char *make_output_filename(char *buf, int buf_size, const char *filename, const char *prefix, const char *suffix);
 
@@ -159,6 +163,12 @@ static int load_mem_file(const char *filename, file_mem &fm);
  * Try to load the file from the config folder first and then by name
  */
 static int load_mem_file_config(const char *filename, file_mem &fm);
+
+
+static void version_exit(void);
+
+
+static void redir_stdout(const char *output_file);
 
 
 /**
@@ -1346,7 +1356,7 @@ static void do_source_file(const char *filename_in,
 } // do_source_file
 
 
-static void add_file_header()
+static void add_file_header(void)
 {
    if (!chunk_is_comment(chunk_get_head()))
    {
@@ -1356,7 +1366,7 @@ static void add_file_header()
 }
 
 
-static void add_file_footer()
+static void add_file_footer(void)
 {
    chunk_t *pc = chunk_get_tail();
 
@@ -1992,10 +2002,6 @@ const char *get_token_name(c_token_t token)
 }
 
 
-/**
- * Grab the token id for the text.
- * returns CT_NONE on failure to match
- */
 c_token_t find_token_name(const char *text)
 {
    if ((text != NULL) && (*text != 0))

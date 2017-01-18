@@ -187,8 +187,13 @@ public:
    log_func(const char *name, int line);
    ~log_func();
 };
+
+
 void log_func_call(int line);
+
+
 void log_func_stack(log_sev_t sev, const char *prefix = 0, const char *suffix = "\n", size_t skip_cnt = 0);
+
 
 #define log_func_stack_inline(_sev)    log_func_stack((_sev), " [CallStack:", "]\n", 1)
 

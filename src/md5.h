@@ -23,6 +23,11 @@ public:
    void Init();
    void Update(const void *data, UINT32 len);
 
+
+   /**
+    * Final wrapup - pad to 64-byte boundary with the bit pattern
+    * 1 0* (64-bit count of bits processed, MSB-first)
+    */
    void Final(UINT8 digest[16]);
 
    /* internal function */

@@ -9,7 +9,6 @@
 #include "width.h"
 #include "uncrustify_types.h"
 #include "chunk_list.h"
-#include "prototypes.h"
 #include "uncrustify.h"
 #include "indent.h"
 #include "newlines.h"
@@ -135,10 +134,6 @@ static void split_before_chunk(chunk_t *pc)
 }
 
 
-/**
- * Step forward until a token goes beyond the limit and then call split_line()
- * to split the line at or before that point.
- */
 void do_code_width(void)
 {
    LOG_FUNC_ENTRY();

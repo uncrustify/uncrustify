@@ -290,12 +290,6 @@ bool unc_text::startswith(const unc_text &text, size_t idx) const
 }
 
 
-/*
- * look for 'text', beginning with position 'sidx'
- * return value:
- *           -1: if not found
- * the position: if found
- */
 int unc_text::find(const char *text, size_t sidx) const
 {
    size_t len = strlen(text); // the length of 'text' we are looking for

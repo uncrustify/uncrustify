@@ -9,7 +9,6 @@
  */
 #include "keywords.h"
 #include "uncrustify_types.h"
-#include "prototypes.h"
 #include "char_table.h"
 #include "args.h"
 #include <cstring>
@@ -42,6 +41,7 @@ static const chunk_tag_t *kw_static_first(const chunk_tag_t *tag);
 
 
 static const chunk_tag_t *kw_static_match(const chunk_tag_t *tag);
+
 
 /**
  * interesting static keywords - keep sorted.
@@ -302,7 +302,7 @@ static const chunk_tag_t keywords[] =
 };
 
 
-void init_keywords()
+void init_keywords(void)
 {
 }
 

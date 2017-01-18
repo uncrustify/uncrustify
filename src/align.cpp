@@ -12,7 +12,6 @@
 #include "chunk_list.h"
 #include "ChunkStack.h"
 #include "align_stack.h"
-#include "prototypes.h"
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -20,6 +19,7 @@
 #include "uncrustify.h"
 #include "indent.h"
 #include "space.h"
+#include "tabulator.h"
 
 
 /*
@@ -111,6 +111,18 @@
  */
 static void align_stack(ChunkStack &cs, size_t col, bool align_single, log_sev_t sev);
 
+
+/**
+ * Adds an item to the align stack and adjust the nl_count and max_col.
+ * Adjust max_col as needed
+ *
+ * @param pc         the item to add
+ * @param max_col    pointer to the column variable
+ * @param extra_pad  extra padding
+ */
+static void align_add(ChunkStack &cs, chunk_t *pc, size_t &max_col, size_t min_pad, bool squeeze);
+
+
 /**
  * Scan everything at the current level until the close brace and find the
  * variable def align column.  Also aligns bit-colons, but that assumes that
@@ -135,6 +147,34 @@ static chunk_t *align_var_def_brace(chunk_t *pc, size_t span, size_t *nl_count);
  * @return        pointer the last item looked at
  */
 static chunk_t *align_trailing_comments(chunk_t *start);
+
+
+/**
+ * Shifts out all columns by a certain amount.
+ *
+ * @param idx  The index to start shifting
+ * @param num  The number of columns to shift
+ */
+void ib_shift_out(size_t idx, size_t num);
+
+
+/**
+ * If sq_open is CT_SQUARE_OPEN and the matching close is followed by '=',
+ * then return the chunk after the '='.  Otherwise, return NULL.
+ */
+static chunk_t *skip_c99_array(chunk_t *sq_open);
+
+
+/**
+ * Scans a line for stuff to align on.
+ *
+ * We trigger on BRACE_OPEN, FPAREN_OPEN, ASSIGN, and COMMA.
+ * We want to align the NEXT item.
+ */
+static chunk_t *scan_ib_line(chunk_t *start, bool first_pass);
+
+
+static void align_log_al(log_sev_t sev, size_t line);
 
 
 /**
@@ -175,7 +215,13 @@ static void align_init_brace(chunk_t *start);
 static void align_func_params(void);
 
 
+static void align_params(chunk_t *start, deque<chunk_t *> &chunks);
+
+
 static void align_same_func_call_params(void);
+
+
+chunk_t *step_back_over_member(chunk_t *pc);
 
 
 /**
@@ -188,6 +234,9 @@ static void align_func_proto(size_t span);
  * Aligns all function prototypes in the file.
  */
 static void align_oc_msg_spec(size_t span);
+
+
+static chunk_t *align_func_param(chunk_t *start);
 
 
 /**
@@ -267,14 +316,6 @@ static void align_stack(ChunkStack &cs, size_t col, bool align_single, log_sev_t
 }
 
 
-/**
- * Adds an item to the align stack and adjust the nl_count and max_col.
- * Adjust max_col as needed
- *
- * @param pc         the item to add
- * @param max_col    pointer to the column variable
- * @param extra_pad  extra padding
- */
 static void align_add(ChunkStack &cs, chunk_t *pc, size_t &max_col, size_t min_pad, bool squeeze)
 {
    LOG_FUNC_ENTRY();
@@ -1413,18 +1454,10 @@ chunk_t *align_nl_cont(chunk_t *start)
 }
 
 
-enum CmtAlignType
+static CmtAlignType_t get_comment_align_type(chunk_t *cmt)
 {
-   CAT_REGULAR,
-   CAT_BRACE,
-   CAT_ENDIF,
-};
-
-
-static CmtAlignType get_comment_align_type(chunk_t *cmt)
-{
-   chunk_t      *prev;
-   CmtAlignType cmt_type = CAT_REGULAR;
+   chunk_t        *prev;
+   CmtAlignType_t cmt_type = CAT_REGULAR;
 
    if (!cpd.settings[UO_align_right_cmt_mix].b &&
        ((prev = chunk_get_prev(cmt)) != NULL))
@@ -1448,15 +1481,15 @@ static CmtAlignType get_comment_align_type(chunk_t *cmt)
 chunk_t *align_trailing_comments(chunk_t *start)
 {
    LOG_FUNC_ENTRY();
-   size_t       min_col  = 0;
-   size_t       min_orig = 0;
-   chunk_t      *pc      = start;
-   size_t       nl_count = 0;
-   ChunkStack   cs;
-   size_t       col;
-   size_t       intended_col = cpd.settings[UO_align_right_cmt_at_col].u;
-   CmtAlignType cmt_type_cur;
-   CmtAlignType cmt_type_start = get_comment_align_type(pc);
+   size_t         min_col  = 0;
+   size_t         min_orig = 0;
+   chunk_t        *pc      = start;
+   size_t         nl_count = 0;
+   ChunkStack     cs;
+   size_t         col;
+   size_t         intended_col = cpd.settings[UO_align_right_cmt_at_col].u;
+   CmtAlignType_t cmt_type_cur;
+   CmtAlignType_t cmt_type_start = get_comment_align_type(pc);
 
    LOG_FMT(LALADD, "%s: start on line=%zu\n",
            __func__, pc->orig_line);
@@ -1522,12 +1555,6 @@ chunk_t *align_trailing_comments(chunk_t *start)
 } // align_trailing_comments
 
 
-/**
- * Shifts out all columns by a certain amount.
- *
- * @param idx  The index to start shifting
- * @param num  The number of columns to shift
- */
 void ib_shift_out(size_t idx, size_t num)
 {
    while (idx < cpd.al_cnt)
@@ -1538,10 +1565,6 @@ void ib_shift_out(size_t idx, size_t num)
 }
 
 
-/**
- * If sq_open is CT_SQUARE_OPEN and the matching close is followed by '=',
- * then return the chunk after the '='.  Otherwise, return NULL.
- */
 static chunk_t *skip_c99_array(chunk_t *sq_open)
 {
    if (chunk_is_token(sq_open, CT_SQUARE_OPEN))
@@ -1557,12 +1580,6 @@ static chunk_t *skip_c99_array(chunk_t *sq_open)
 }
 
 
-/**
- * Scans a line for stuff to align on.
- *
- * We trigger on BRACE_OPEN, FPAREN_OPEN, ASSIGN, and COMMA.
- * We want to align the NEXT item.
- */
 static chunk_t *scan_ib_line(chunk_t *start, bool first_pass)
 {
    UNUSED(first_pass);

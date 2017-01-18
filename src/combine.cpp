@@ -14,7 +14,6 @@
 #include "uncrustify.h"
 #include "lang_pawn.h"
 #include "newlines.h"
-#include "prototypes.h"
 #include "tokenize_cleanup.h"
 
 #include <cstdio>
@@ -500,7 +499,7 @@ static chunk_t *get_d_template_types(ChunkStack &cs, chunk_t *open_paren);
 static bool chunkstack_match(ChunkStack &cs, chunk_t *pc);
 
 
-enum PLBfound
+enum PLBfound_t
 {
    FOUND_ANGLE_CLOSE = 0, // '>' found
    NO_PROTOCOL_FOUND = 1, // no protocol found,
@@ -602,15 +601,6 @@ static chunk_t *flag_parens(chunk_t *po, UINT64 flags, c_token_t opentype,
 } // flag_parens
 
 
-/**
- * Sets the parent of the open paren/brace/square/angle and the closing.
- * Note - it is assumed that pc really does point to an open item and the
- * close must be open + 1.
- *
- * @param start   The open paren
- * @param parent  The type to assign as the parent
- * @return        The chunk after the close paren
- */
 chunk_t *set_paren_parent(chunk_t *start, c_token_t parent)
 {
    LOG_FUNC_ENTRY();
@@ -762,14 +752,6 @@ static chunk_t *skip_dc_member(chunk_t *start)
 }
 
 
-/**
- * This is called on every chunk.
- * First on all non-preprocessor chunks and then on each preprocessor chunk.
- * It does all the detection and classifying.
- * This is only called by fix_symbols.
- * The three parameters never get the value NULL.
- * it is not necessary to test.
- */
 void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
 {
    LOG_FUNC_ENTRY();
@@ -2314,6 +2296,10 @@ static void fix_casts(chunk_t *start)
       {
          word_count--;
       }
+      else
+      {
+//         word_consec = 0;	/* \todo is this still used? */
+      }
 
       last = pc;
       pc   = chunk_get_next_ncnl(pc);
@@ -3217,7 +3203,6 @@ static chunk_t *fix_var_def(chunk_t *start)
    chunk_t    *end;
    chunk_t    *tmp_pc;
    ChunkStack cs;
-   int        idx;
    int        ref_idx;
 
    LOG_FMT(LFVD, "%s: start[%zu:%zu]", __func__, pc->orig_line, pc->orig_col);
@@ -3272,7 +3257,7 @@ static chunk_t *fix_var_def(chunk_t *start)
        ((cs.Get(cs.Len() - 2)->m_pc->type == CT_MEMBER) ||
         (cs.Get(cs.Len() - 2)->m_pc->type == CT_DC_MEMBER)))
    {
-      idx = cs.Len() - 2;
+      int idx = cs.Len() - 2;
       while (idx > 0)
       {
          tmp_pc = cs.Get(idx)->m_pc;
@@ -3515,7 +3500,7 @@ static bool can_be_full_param(chunk_t *start, chunk_t *end)
          }
          LOG_FMT(LFPARAM, " <skip fcn type>");
          tmp1 = chunk_get_next_ncnl(tmp3, CNAV_PREPROC);
-         tmp2 = chunk_get_next_ncnl(tmp1, CNAV_PREPROC); /* \todo where is tmp2 used? */
+//         tmp2 = chunk_get_next_ncnl(tmp1, CNAV_PREPROC); /* \todo where is tmp2 used? */
          if (chunk_is_str(tmp1, "(", 1))
          {
             tmp3 = chunk_skip_to_match(tmp1, CNAV_PREPROC);
@@ -5085,11 +5070,11 @@ chunk_t *skip_attribute_prev(chunk_t *fp_close)
 static void handle_oc_class(chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
-   chunk_t  *tmp;
-   bool     hit_scope     = false;
-   bool     passed_name   = false; // Did we pass the name of the class and now there can be only protocols, not generics
-   int      generic_level = 0;     // level of depth of generic
-   PLBfound do_pl         = NO_PROTOCOL_FOUND;
+   chunk_t    *tmp;
+   bool       hit_scope     = false;
+   bool       passed_name   = false; // Did we pass the name of the class and now there can be only protocols, not generics
+   int        generic_level = 0;     // level of depth of generic
+   PLBfound_t do_pl         = NO_PROTOCOL_FOUND;
 
    LOG_FMT(LOCCLASS, "%s: start [%s] [%s] line %zu\n",
            __func__, pc->text(), get_token_name(pc->parent_type), pc->orig_line);

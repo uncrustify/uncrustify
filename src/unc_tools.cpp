@@ -10,13 +10,7 @@
 #include "unc_tools.h"
 #include "uncrustify.h"
 
-// examples:
-// prot_the_line(__LINE__, pc->orig_line);
-// prot_the_line(__LINE__, 6);
-// examine_Data(__func__, __LINE__, n);
 
-
-// protocol of the line
 void prot_the_line(int theLine, unsigned int actual_line)
 {
    LOG_FMT(LGUY, "Prot_the_line:(%d) \n", theLine);
@@ -37,9 +31,9 @@ void prot_the_line(int theLine, unsigned int actual_line)
          {
             LOG_FMT(LGUY, "<CT_VBRACE_CLOSE>\n");
          }
-         else if (pc->type == CT_VBRACE_OPEN)
-         {
-            LOG_FMT(LGUY, "<CT_VBRACE_OPEN>\n");
+         else if (pc->type == CT_VBRACE_OPEN)    /* \todo this is the same as line 28 */
+         {                                       /* shall it be removed or should it */
+            LOG_FMT(LGUY, "<CT_VBRACE_OPEN>\n"); /* be changed to something else? */
          }
          else if (pc->type == CT_SPACE)
          {

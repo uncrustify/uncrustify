@@ -22,7 +22,6 @@
  * @author  Ben Gardner
  * @license GPL v2+
  */
-#include "prototypes.h"
 #include "backup.h"
 #include "md5.h"
 #include "logger.h"

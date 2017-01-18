@@ -10,7 +10,6 @@
 #include "indent.h"
 #include "uncrustify_types.h"
 #include "chunk_list.h"
-#include "prototypes.h"
 #include "options_for_QT.h"
 #include <cstdio>
 #include <cstdlib>
@@ -20,6 +19,7 @@
 #include "align.h"
 #include "space.h"
 #include "parse_frame.h"
+#include "tabulator.h"
 
 
 /**

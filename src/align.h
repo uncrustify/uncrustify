@@ -11,6 +11,14 @@
 #include "uncrustify_types.h"
 
 
+enum CmtAlignType_t
+{
+   CAT_REGULAR,
+   CAT_BRACE,
+   CAT_ENDIF,
+};
+
+
 void align_all(void);
 
 
@@ -44,6 +52,9 @@ void align_struct_initializers(void);
  * @return        pointer the last item looked at (NULL/newline/comment)
  */
 chunk_t *align_nl_cont(chunk_t *start);
+
+
+static CmtAlignType_t get_comment_align_type(chunk_t *cmt);
 
 
 /**

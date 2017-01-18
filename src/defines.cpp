@@ -18,7 +18,6 @@
 #include <map>
 #include "unc_ctype.h"
 #include "chunk_list.h"
-#include "prototypes.h"
 
 using namespace std;
 

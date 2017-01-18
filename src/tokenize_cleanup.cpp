@@ -11,15 +11,15 @@
  * @license GPL v2+
  */
 #include "tokenize_cleanup.h"
-#include "uncrustify_types.h"
-#include "prototypes.h"
-#include "chunk_list.h"
 #include "char_table.h"
-#include "unc_ctype.h"
-#include "uncrustify.h"
-#include "space.h"
+#include "chunk_list.h"
 #include "combine.h"
 #include "keywords.h"
+#include "punctuators.h"
+#include "space.h"
+#include "uncrustify.h"
+#include "uncrustify_types.h"
+#include "unc_ctype.h"
 #include <cstring>
 
 

@@ -10,7 +10,7 @@
 #include "tokenize.h"
 #include "uncrustify_types.h"
 #include "char_table.h"
-#include "prototypes.h"
+#include "punctuators.h"
 #include "chunk_list.h"
 #include <cstdio>
 #include <cstdlib>
@@ -18,6 +18,7 @@
 #include "unc_ctype.h"
 #include "uncrustify.h"
 #include "keywords.h"
+#include "tabulator.h"
 
 
 struct tok_info
@@ -138,6 +139,16 @@ struct tok_ctx
    tok_info          c; /* current */
    tok_info          s; /* saved */
 };
+
+
+/**
+ * Count the number of characters in a word.
+ * The first character is already valid for a keyword
+ *
+ * @param pc   The structure to update, str is an input.
+ * @return     Whether a word was parsed (always true)
+ */
+static bool parse_word(tok_ctx &ctx, chunk_t &pc, bool skipcheck);
 
 
 /**
@@ -1252,14 +1263,7 @@ static bool parse_cr_string(tok_ctx &ctx, chunk_t &pc, int q_idx)
 } // parse_cr_string
 
 
-/**
- * Count the number of characters in a word.
- * The first character is already valid for a keyword
- *
- * @param pc   The structure to update, str is an input.
- * @return     Whether a word was parsed (always true)
- */
-bool parse_word(tok_ctx &ctx, chunk_t &pc, bool skipcheck)
+static bool parse_word(tok_ctx &ctx, chunk_t &pc, bool skipcheck)
 {
    static unc_text intr_txt("@interface");
 
@@ -1848,17 +1852,6 @@ static bool parse_next(tok_ctx &ctx, chunk_t &pc)
 } // parse_next
 
 
-/**
- * This function parses or tokenizes the whole buffer into a list.
- * It has to do some tricks to parse preprocessors.
- *
- * If output_text() were called immediately after, two things would happen:
- *  - trailing whitespace are removed.
- *  - leading space & tabs are converted to the appropriate format.
- *
- * All the tokens are inserted before ref. If ref is NULL, they are inserted
- * at the end of the list.  Line numbers are relative to the start of the data.
- */
 void tokenize(const deque<int> &data, chunk_t *ref)
 {
    tok_ctx       ctx(data);

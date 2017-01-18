@@ -8,7 +8,6 @@
  * @license GPL v2+
  */
 #include "universalindentgui.h"
-#include "prototypes.h"
 #include "uncrustify_version.h"
 #include "unc_ctype.h"
 #include "uncrustify.h"

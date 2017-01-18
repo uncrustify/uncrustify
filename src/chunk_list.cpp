@@ -10,7 +10,6 @@
 #include <cstdlib>
 
 #include "ListManager.h"
-#include "prototypes.h"
 #include "uncrustify.h"
 #include "space.h"
 
@@ -260,9 +259,6 @@ void chunk_move_after(chunk_t *pc_in, chunk_t *ref)
 }
 
 
-/**
- * Gets the next NEWLINE chunk
- */
 chunk_t *chunk_get_next_nl(chunk_t *cur, chunk_nav_t nav)
 {
    chunk_t *pc = cur;
@@ -275,9 +271,6 @@ chunk_t *chunk_get_next_nl(chunk_t *cur, chunk_nav_t nav)
 }
 
 
-/**
- * Gets the prev NEWLINE chunk
- */
 chunk_t *chunk_get_prev_nl(chunk_t *cur, chunk_nav_t nav)
 {
    chunk_t *pc = cur;
@@ -290,9 +283,6 @@ chunk_t *chunk_get_prev_nl(chunk_t *cur, chunk_nav_t nav)
 }
 
 
-/**
- * Gets the next non-NEWLINE chunk
- */
 chunk_t *chunk_get_next_nnl(chunk_t *cur, chunk_nav_t nav)
 {
    chunk_t *pc = cur;
@@ -305,9 +295,6 @@ chunk_t *chunk_get_next_nnl(chunk_t *cur, chunk_nav_t nav)
 }
 
 
-/**
- * Gets the prev non-NEWLINE chunk
- */
 chunk_t *chunk_get_prev_nnl(chunk_t *cur, chunk_nav_t nav)
 {
    chunk_t *pc = cur;
@@ -320,9 +307,6 @@ chunk_t *chunk_get_prev_nnl(chunk_t *cur, chunk_nav_t nav)
 }
 
 
-/**
- * Gets the next non-NEWLINE and non-comment chunk
- */
 chunk_t *chunk_get_next_ncnl(chunk_t *cur, chunk_nav_t nav)
 {
    chunk_t *pc = cur;
@@ -335,9 +319,6 @@ chunk_t *chunk_get_next_ncnl(chunk_t *cur, chunk_nav_t nav)
 }
 
 
-/**
- * Gets the next non-NEWLINE and non-comment chunk, non-preprocessor chunk
- */
 chunk_t *chunk_get_next_ncnlnp(chunk_t *cur, chunk_nav_t nav)
 {
    chunk_t *pc = cur;
@@ -439,15 +420,6 @@ chunk_t *chunk_get_next_nc(chunk_t *cur, chunk_nav_t nav)
 }
 
 
-/**
- * Gets the next chunk not in or part of balanced square
- * brackets. This handles stacked [] instances to accommodate
- * multi-dimensional array declarations
- *
- * @param cur     Starting chunk
- * @return        NULL or the next chunk not in or part of
- *                square brackets
- */
 chunk_t *chunk_get_next_nisq(chunk_t *cur, chunk_nav_t nav)
 {
    chunk_t *pc = cur;
@@ -462,9 +434,6 @@ chunk_t *chunk_get_next_nisq(chunk_t *cur, chunk_nav_t nav)
 }
 
 
-/**
- * Gets the prev non-NEWLINE and non-comment chunk
- */
 chunk_t *chunk_get_prev_ncnl(chunk_t *cur, chunk_nav_t nav)
 {
    chunk_t *pc = cur;
@@ -477,9 +446,6 @@ chunk_t *chunk_get_prev_ncnl(chunk_t *cur, chunk_nav_t nav)
 }
 
 
-/**
- * Gets the prev non-comment chunk
- */
 chunk_t *chunk_get_prev_nc(chunk_t *cur, chunk_nav_t nav)
 {
    chunk_t *pc = cur;
@@ -492,14 +458,6 @@ chunk_t *chunk_get_prev_nc(chunk_t *cur, chunk_nav_t nav)
 }
 
 
-/**
- * Grabs the next chunk of the given type at the level.
- *
- * @param cur     Starting chunk
- * @param type    The type to look for
- * @param level   -1 or ANY_LEVEL (any level) or the level to match
- * @return        NULL or the match
- */
 chunk_t *chunk_get_next_type(chunk_t *cur, c_token_t type,
                              int level, chunk_nav_t nav)
 {
@@ -540,14 +498,6 @@ chunk_t *chunk_get_next_str(chunk_t *cur, const char *str, size_t len, int level
 }
 
 
-/**
- * Grabs the prev chunk of the given type at the level.
- *
- * @param cur     Starting chunk
- * @param type    The type to look for
- * @param level   -1 or ANY_LEVEL (any level) or the level to match
- * @return        NULL or the match
- */
 chunk_t *chunk_get_prev_type(chunk_t *cur, c_token_t type,
                              int level, chunk_nav_t nav)
 {
@@ -593,9 +543,6 @@ chunk_t *chunk_get_prev_str(chunk_t *cur, const char *str, size_t len, int level
 }
 
 
-/**
- * Check to see if there is a newline between the two chunks
- */
 bool chunk_is_newline_between(chunk_t *start, chunk_t *end)
 {
    for (chunk_t *pc = start; pc != end; pc = chunk_get_next(pc))
@@ -609,26 +556,12 @@ bool chunk_is_newline_between(chunk_t *start, chunk_t *end)
 }
 
 
-/**
- * Swaps the two chunks.
- *
- * @param pc1  The first chunk
- * @param pc2  The second chunk
- */
 void chunk_swap(chunk_t *pc1, chunk_t *pc2)
 {
    g_cl.Swap(pc1, pc2);
 }
 
 
-/**
- * Finds the first chunk on the line that pc is on.
- * This just backs up until a newline or NULL is hit.
- *
- * given: [ a - b - c - n1 - d - e - n2 ]
- * input: [ a | b | c | n1 ] => a
- * input: [ d | e | n2 ]     => d
- */
 chunk_t *chunk_first_on_line(chunk_t *pc)
 {
    chunk_t *first = pc;
@@ -642,12 +575,6 @@ chunk_t *chunk_first_on_line(chunk_t *pc)
 }
 
 
-/**
- * Swaps two lines that are started with the specified chunks.
- *
- * @param pc1  The first chunk of line 1
- * @param pc2  The first chunk of line 2
- */
 void chunk_swap_lines(chunk_t *pc1, chunk_t *pc2)
 {
    chunk_t *ref2;
@@ -721,9 +648,6 @@ void chunk_swap_lines(chunk_t *pc1, chunk_t *pc2)
 } // chunk_swap_lines
 
 
-/**
- * Gets the next non-vbrace chunk
- */
 chunk_t *chunk_get_next_nvb(chunk_t *cur, chunk_nav_t nav)
 {
    chunk_t *pc = cur;
@@ -736,9 +660,6 @@ chunk_t *chunk_get_next_nvb(chunk_t *cur, chunk_nav_t nav)
 }
 
 
-/**
- * Gets the prev non-vbrace chunk
- */
 chunk_t *chunk_get_prev_nvb(chunk_t *cur, chunk_nav_t nav)
 {
    chunk_t *pc = cur;

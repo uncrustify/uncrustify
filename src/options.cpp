@@ -9,7 +9,6 @@
  */
 #include "uncrustify_types.h"
 #include "args.h"
-#include "prototypes.h"
 #include "uncrustify_version.h"
 #include "uncrustify.h"
 #include "keywords.h"
@@ -80,7 +79,9 @@ map<uncrustify_options, option_map_value> option_name_map;
 map<uncrustify_groups, group_map_value>   group_map;
 static uncrustify_groups                  current_group;
 
+
 const char *get_argtype_name(argtype_e argtype);
+
 
 /**
  *  only compare alpha-numeric characters
@@ -1846,14 +1847,6 @@ bool is_path_relative(const char *path)
 }
 
 
-/**
- * processes a single line string to extract configuration settings
- * increments cpd.line_number and cpd.error_count, modifies configLine parameter
- *
- * @param configLine: single line string that will be processed
- * @param filename: for log messages, file from which the configLine param was
- *                  extracted
- */
 void process_option_line(char *configLine, const char *filename)
 {
    cpd.line_number++;
@@ -2200,11 +2193,6 @@ void print_options(FILE *pfile)
 } // print_options
 
 
-/**
- * Sets non-zero settings defaults
- *
- * TODO: select from various sets? - i.e., K&R, GNU, Linux, Ben
- */
 void set_option_defaults(void)
 {
    /* set all the default values to zero */

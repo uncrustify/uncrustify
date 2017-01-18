@@ -21,6 +21,9 @@
 #ifndef BACKUP_H_INCLUDED
 #define BACKUP_H_INCLUDED
 
+#include "uncrustify_types.h"
+#include <vector>
+
 #define UNC_BACKUP_SUFFIX        ".unc-backup~"
 #define UNC_BACKUP_MD5_SUFFIX    ".unc-backup.md5~"
 
@@ -57,5 +60,6 @@ int backup_copy_file(const char *filename, const vector<UINT8> &data);
  * @param filename   The file that was written (full path)
  */
 void backup_create_md5_file(const char *filename);
+
 
 #endif /* BACKUP_H_INCLUDED */

@@ -9,7 +9,6 @@
 #include "uncrustify_types.h"
 #include "chunk_list.h"
 #include "ChunkStack.h"
-#include "prototypes.h"
 #include "uncrustify.h"
 
 #include <cstdio>

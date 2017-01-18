@@ -185,6 +185,7 @@ add_executable(uncrustify
   src/semicolons.cpp
   src/sorting.cpp
   src/space.cpp
+  src/tabulator.cpp
   src/tokenize.cpp
   src/tokenize_cleanup.cpp
   src/uncrustify.cpp
@@ -207,7 +208,7 @@ add_executable(uncrustify
   src/md5.h
   src/options.h
   src/options_for_QT.h
-  src/prototypes.h
+  src/punc_table.h
   src/punctuators.h
   src/token_enum.h
   src/uncrustify_types.h

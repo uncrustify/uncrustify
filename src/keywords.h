@@ -11,6 +11,8 @@
 #include "uncrustify_types.h"
 
 
+void init_keywords(void);
+
 /**
  * Loads the dynamic keywords from a file
  *

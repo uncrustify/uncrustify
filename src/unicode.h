@@ -32,4 +32,5 @@ bool decode_unicode(const vector<UINT8> &in_data, deque<int> &out_data, CharEnco
 
 void encode_utf8(int ch, vector<UINT8> &res);
 
+
 #endif /* UNICODE_H_INCLUDED */

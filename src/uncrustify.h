@@ -14,13 +14,18 @@
 #include "base_types.h"
 
 
+int main(int argc, char *argv[]);
+
+
 const char *get_token_name(c_token_t token);
+
 
 /**
  * Grab the token id for the text.
  * returns CT_NONE on failure to match
  */
 c_token_t find_token_name(const char *text);
+
 
 void log_pcf_flags(log_sev_t sev, UINT64 flags);
 
@@ -62,5 +67,9 @@ void print_extensions(FILE *pfile);
 
 
 const char *extension_add(const char *ext_text, const char *lang_text);
+
+
+void usage_exit(const char *msg, const char *argv0, int code);
+
 
 #endif /* UNCRUSTIFY_H_INCLUDED */

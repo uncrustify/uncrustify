@@ -864,13 +864,78 @@ struct option_map_value
 };
 
 
+const option_map_value *unc_find_option(const char *name);
+
+
+/**
+ * Sets non-zero settings defaults
+ *
+ * TODO: select from various sets? - i.e., K&R, GNU, Linux, Ben
+ */
+void set_option_defaults(void);
+
+
+void register_options(void);
+
+
+void unc_begin_group(uncrustify_groups id, const char *short_desc, const char *long_desc = NULL);
+
+
+/**
+ * processes a single line string to extract configuration settings
+ * increments cpd.line_number and cpd.error_count, modifies configLine parameter
+ *
+ * @param configLine: single line string that will be processed
+ * @param filename: for log messages, file from which the configLine param was
+ *                  extracted
+ */
+void process_option_line(char *configLine, const char *filename);
+
+
+int load_option_file(const char *filename);
+
+
+int save_option_file(FILE *pfile, bool withDoc);
+
+
+int save_option_file_kernel(FILE *pfile, bool withDoc, bool only_not_default);
+
+
+int set_option_value(const char *name, const char *value);
+
+
+bool is_path_relative(const char *path);
+
+
+const group_map_value *get_group_name(int ug);
+
+
+const option_map_value *get_option_name(uncrustify_options uo);
+
+
+void print_options(FILE *pfile);
+
+
 string argtype_to_string(argtype_e argtype);
+
+
 string bool_to_string(bool val);
+
+
 string argval_to_string(argval_t argval);
+
+
 string number_to_string(int number);
+
+
 string lineends_to_string(lineends_e linends);
+
+
 string tokenpos_to_string(tokenpos_e tokenpos);
+
+
 string op_val_to_string(argtype_e argtype, op_val_t op_val);
+
 
 typedef map<uncrustify_options, option_map_value>::iterator   option_name_map_it;
 typedef map<uncrustify_groups, group_map_value>::iterator     group_map_it;

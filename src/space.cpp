@@ -20,7 +20,7 @@
 #include "space.h"
 #include "uncrustify_types.h"
 #include "chunk_list.h"
-#include "prototypes.h"
+#include "punctuators.h"
 #include "char_table.h"
 #include "options_for_QT.h"
 #include <cstdio>
@@ -29,9 +29,6 @@
 #include <algorithm>
 #include "unc_ctype.h"
 #include "uncrustify.h"
-
-
-static void log_rule2(int line, const char *rule, chunk_t *first, chunk_t *second, bool complete);
 
 
 /**
@@ -43,6 +40,10 @@ static void log_rule2(int line, const char *rule, chunk_t *first, chunk_t *secon
  * @return        AV_IGNORE, AV_ADD, AV_REMOVE or AV_FORCE
  */
 static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool complete);
+
+
+static void log_rule2(int line, const char *rule, chunk_t *first, chunk_t *second, bool complete);
+
 
 struct no_space_table_t
 {

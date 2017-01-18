@@ -8,10 +8,10 @@
  * @license GPL v2+
  */
 #include "align_stack.h"
-#include "prototypes.h"
 #include "chunk_list.h"
 #include "indent.h"
 #include "space.h"
+#include "tabulator.h"
 
 
 /**
