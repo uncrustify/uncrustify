@@ -23,7 +23,6 @@
 #include "space.h"
 
 
-
 /*
  *   Here are the items aligned:
  *

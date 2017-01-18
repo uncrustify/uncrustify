@@ -29,6 +29,7 @@ do
   then
     echo "Problem with "${file}
     echo "use: diff ${SRC}/${file} ${RESULTS}/${file} to find why"
+    diff ${SRC}/${file} ${RESULTS}/${file}
   else
     rm ${RESULTS}/${file}
   fi
