@@ -17,6 +17,7 @@
 10023 region-3.cfg             cs/region.cs
 
 10030 sort_imports.cfg         cs/sort_using.cs
+10031 bug_i_935.cfg            cs/bug_i_935.cs
 
 10040 tcf.cfg                  cs/tcf.cs
 10041 tcf.cfg                  cs/gs.cs
