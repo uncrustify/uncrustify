@@ -15,7 +15,8 @@
  * Loads the dynamic keywords from a file
  *
  * @param filename   The path to the file to load
- * @return           SUCCESS or FAILURE
+ * @retval           EX_OK    - successfully read keywords from file
+ * @retval           EX_IOERR - reading keywords file failed
  */
 int load_keyword_file(const char *filename);
 

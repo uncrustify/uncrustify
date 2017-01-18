@@ -102,7 +102,7 @@ chunk_t *chunk_dup(const chunk_t *pc_in)
    pc = new chunk_t;
    if (pc == NULL)
    {
-      exit(1);
+      exit(EXIT_FAILURE);
    }
 
    /* Copy all fields and then init the entry */

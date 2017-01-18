@@ -307,7 +307,7 @@ void usage_exit(const char *msg, const char *argv0, int code)
 static void version_exit(void)
 {
    printf("uncrustify %s\n", UNCRUSTIFY_VERSION);
-   exit(0);
+   exit(EX_OK);
 }
 
 
@@ -324,7 +324,7 @@ static void redir_stdout(const char *output_file)
          LOG_FMT(LERR, "Unable to open %s for write: %s (%d)\n",
                  output_file, strerror(errno), errno);
          cpd.error_count++;
-         usage_exit(NULL, NULL, 56);
+         usage_exit(NULL, NULL, EX_IOERR);
       }
       LOG_FMT(LNOTE, "Redirecting output to %s\n", output_file);
    }
@@ -464,7 +464,7 @@ int main(int argc, char *argv[])
    while ((p_arg = arg.Params("-d", idx)) != NULL)
    {
       int return_code = load_define_file(p_arg);
-      if (return_code != SUCCESS)
+      if (return_code != EX_OK)
       {
          return(return_code);
       }
@@ -537,7 +537,7 @@ int main(int argc, char *argv[])
        (output_file || replace || no_backup || keep_mtime || update_config ||
         update_config_wd || detect || prefix || suffix || cpd.if_changed))
    {
-      usage_exit("Cannot use --check with output options.", argv[0], 67);
+      usage_exit("Cannot use --check with output options.", argv[0], EX_NOUSER);
    }
 
    if (!cpd.do_check)
@@ -546,11 +546,11 @@ int main(int argc, char *argv[])
       {
          if ((prefix != NULL) || (suffix != NULL))
          {
-            usage_exit("Cannot use --replace with --prefix or --suffix", argv[0], 66);
+            usage_exit("Cannot use --replace with --prefix or --suffix", argv[0], EX_NOINPUT);
          }
          if ((source_file != NULL) || (output_file != NULL))
          {
-            usage_exit("Cannot use --replace or --no-backup with -f or -o", argv[0], 66);
+            usage_exit("Cannot use --replace or --no-backup with -f or -o", argv[0], EX_NOINPUT);
          }
       }
       else
@@ -571,7 +571,7 @@ int main(int argc, char *argv[])
       cpd.filename = cfg_file.c_str();
       if (load_option_file(cpd.filename) < 0)
       {
-         usage_exit("Unable to load the config file", argv[0], 56);
+         usage_exit("Unable to load the config file", argv[0], EX_IOERR);
       }
       // test if all options are compatible to each other
       if (cpd.settings[UO_nl_max].n > 0)
@@ -580,7 +580,7 @@ int main(int argc, char *argv[])
          if (cpd.settings[UO_nl_func_var_def_blk].n >= cpd.settings[UO_nl_max].n)
          {
             fprintf(stderr, "The option 'nl_func_var_def_blk' is too big against the option 'nl_max'\n");
-            exit(2);
+            exit(EX_CONFIG);
          }
       }
    }
@@ -610,7 +610,7 @@ int main(int argc, char *argv[])
       else
       {
          /* TODO: consider using defines like EX_USAGE from sysexits.h */
-         usage_exit("Error while parsing --set", argv[0], 64);
+         usage_exit("Error while parsing --set", argv[0], EX_USAGE);
       }
    }
 
@@ -682,7 +682,7 @@ int main(int argc, char *argv[])
    if (cfg_file.empty())
    {
       usage_exit("Specify the config file with '-c file' or set UNCRUSTIFY_CONFIG",
-                 argv[0], 58);
+                 argv[0], EX_IOERR);
    }
 
    /*
@@ -699,13 +699,13 @@ int main(int argc, char *argv[])
       if (source_file != NULL)
       {
          usage_exit("Cannot specify both the single file option and a multi-file option.",
-                    argv[0], 67);
+                    argv[0], EX_NOUSER);
       }
 
       if (output_file != NULL)
       {
          usage_exit("Cannot specify -o with a multi-file option.",
-                    argv[0], 68);
+                    argv[0], EX_NOHOST);
       }
    }
 
@@ -1256,7 +1256,7 @@ static void do_source_file(const char *filename_in,
 
             if (!no_backup)
             {
-               if (backup_copy_file(filename_in, fm.raw) != SUCCESS)
+               if (backup_copy_file(filename_in, fm.raw) != EX_OK)
                {
                   LOG_FMT(LERR, "%s: Failed to create backup file for %s\n",
                           __func__, filename_in);

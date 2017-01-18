@@ -79,7 +79,7 @@ int backup_copy_file(const char *filename, const vector<UINT8> &data)
    if (memcmp(md5_str, md5_str_in, 32) == 0)
    {
       LOG_FMT(LNOTE, "%s: MD5 match for %s\n", __func__, filename);
-      return(SUCCESS);
+      return(EX_OK);
    }
 
    LOG_FMT(LNOTE, "%s: MD5 mismatch - backing up %s\n", __func__, filename);
@@ -97,7 +97,7 @@ int backup_copy_file(const char *filename, const vector<UINT8> &data)
 
       if (retval == 1)
       {
-         return(SUCCESS);
+         return(EX_OK);
       }
       LOG_FMT(LERR, "fwrite(%s) failed: %s (%d)\n",
               newpath, strerror(my_errno), my_errno);
@@ -109,7 +109,7 @@ int backup_copy_file(const char *filename, const vector<UINT8> &data)
               newpath, strerror(errno), errno);
       cpd.error_count++;
    }
-   return(FAILURE);
+   return(EX_IOERR);
 } // backup_copy_file
 
 
