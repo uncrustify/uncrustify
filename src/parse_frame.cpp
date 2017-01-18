@@ -5,9 +5,11 @@
  * @author  Ben Gardner
  * @license GPL v2+
  */
+#include "parse_frame.h"
 #include "uncrustify_types.h"
 #include "prototypes.h"
 #include "chunk_list.h"
+#include "uncrustify.h"
 #include <cstdio>
 #include <cstring>
 #include <cstdlib>

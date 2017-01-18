@@ -5,6 +5,7 @@
  * @author  Ben Gardner
  * @license GPL v2+
  */
+#include "braces.h"
 #include "uncrustify_types.h"
 #include "chunk_list.h"
 #include "prototypes.h"
@@ -13,6 +14,9 @@
 #include <cstring>
 #include <cerrno>
 #include "unc_ctype.h"
+#include "uncrustify.h"
+#include "combine.h"
+#include "newlines.h"
 
 
 static void convert_brace(chunk_t *br);

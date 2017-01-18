@@ -1,13 +1,12 @@
 /**
- * @file braces.cpp
- * Adds or removes braces.
+ * @file sorting.cpp
+ * Sorts chunks and imports
  *
  * @author  Ben Gardner
  * @license GPL v2+
  */
-#include "uncrustify_types.h"
+#include "sorting.h"
 #include "chunk_list.h"
-#include "prototypes.h"
 
 
 /**

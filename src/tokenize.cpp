@@ -7,6 +7,7 @@
  * @author  Ben Gardner
  * @license GPL v2+
  */
+#include "tokenize.h"
 #include "uncrustify_types.h"
 #include "char_table.h"
 #include "prototypes.h"
@@ -16,6 +17,9 @@
 #include <cstring>
 #include <cerrno>
 #include "unc_ctype.h"
+#include "uncrustify.h"
+#include "keywords.h"
+
 
 struct tok_info
 {

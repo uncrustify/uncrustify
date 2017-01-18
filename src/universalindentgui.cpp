@@ -7,9 +7,11 @@
  *          October 2015, 2016
  * @license GPL v2+
  */
+#include "universalindentgui.h"
 #include "prototypes.h"
 #include "uncrustify_version.h"
 #include "unc_ctype.h"
+#include "uncrustify.h"
 #include <stdio.h>
 
 

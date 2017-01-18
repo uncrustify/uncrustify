@@ -13,13 +13,37 @@
 #include "uncrustify_types.h"
 #include "char_table.h"
 #include "chunk_list.h"
-#include "prototypes.h"
-#include "token_names.h"
+
+#include "align.h"
 #include "args.h"
+#include "brace_cleanup.h"
+#include "braces.h"
 #include "backup.h"
+#include "combine.h"
+#include "compat.h"
+#include "detect.h"
+#include "defines.h"
+#include "indent.h"
+#include "keywords.h"
 #include "logger.h"
 #include "log_levels.h"
+#include "lang_pawn.h"
 #include "md5.h"
+#include "newlines.h"
+#include "output.h"
+#include "parens.h"
+#include "prototypes.h"
+#include "space.h"
+#include "semicolons.h"
+#include "sorting.h"
+#include "tokenize.h"
+#include "tokenize_cleanup.h"
+#include "token_names.h"
+#include "uncrustify.h"
+#include "unicode.h"
+#include "universalindentgui.h"
+#include "width.h"
+
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -98,9 +122,6 @@ const char *path_basename(const char *path)
 }
 
 
-/**
- * Returns the length of the directory part of the filename.
- */
 int path_dirname_len(const char *filename)
 {
    if (filename == NULL)
@@ -2044,10 +2065,6 @@ struct lang_ext_t language_exts[] =
 };
 
 
-/**
- * Set idx = 0 before the first call.
- * Done when returns NULL
- */
 const char *get_file_extension(int &idx)
 {
    const char *val = NULL;
@@ -2081,9 +2098,6 @@ const char *extension_add(const char *ext_text, const char *lang_text)
 }
 
 
-/**
- * Prints custom file extensions to the file
- */
 void print_extensions(FILE *pfile)
 {
    for (int idx = 0; idx < (int)ARRAY_SIZE(language_names); idx++)

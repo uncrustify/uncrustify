@@ -17,6 +17,7 @@
  *          October 2015, 2016
  * @license GPL v2+
  */
+#include "newlines.h"
 #include "uncrustify_types.h"
 #include "chunk_list.h"
 #include "prototypes.h"
@@ -27,6 +28,11 @@
 #include <cerrno>
 #include "unc_ctype.h"
 #include "unc_tools.h"
+#include "uncrustify.h"
+#include "indent.h"
+#include "space.h"
+#include "combine.h"
+#include "keywords.h"
 //#define DEBUG
 
 

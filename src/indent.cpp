@@ -7,6 +7,7 @@
  *          October 2015, 2016
  * @license GPL v2+
  */
+#include "indent.h"
 #include "uncrustify_types.h"
 #include "chunk_list.h"
 #include "prototypes.h"
@@ -16,6 +17,10 @@
 #include <cstring>
 #include <cerrno>
 #include "unc_ctype.h"
+#include "uncrustify.h"
+#include "align.h"
+#include "space.h"
+#include "parse_frame.h"
 
 
 /**
@@ -141,7 +146,6 @@ enum align_mode
 };
 
 
-/* Same as indent_to_column, except we can move both ways */
 void align_to_column(chunk_t *pc, int column)
 {
    LOG_FUNC_ENTRY();
@@ -216,12 +220,6 @@ void align_to_column(chunk_t *pc, int column)
 } // align_to_column
 
 
-/**
- * Changes the initial indent for a line to the given column
- *
- * @param pc      The chunk at the start of the line
- * @param column  The desired column
- */
 void reindent_line(chunk_t *pc, int column)
 {
    LOG_FUNC_ENTRY();
@@ -523,11 +521,6 @@ static chunk_t *oc_msg_prev_colon(chunk_t *pc)
 }
 
 
-/**
- * Change the top-level indentation only by changing the column member in
- * the chunk structures.
- * The level indicator must already be set.
- */
 void indent_text(void)
 {
    LOG_FUNC_ENTRY();
@@ -2413,9 +2406,6 @@ static void indent_comment(chunk_t *pc, int col)
 } // indent_comment
 
 
-/**
- * Scan to see if the whole file is covered by one #ifdef
- */
 bool ifdef_over_whole_file(void)
 {
    LOG_FUNC_ENTRY();
@@ -2485,11 +2475,6 @@ bool ifdef_over_whole_file(void)
 } // ifdef_over_whole_file
 
 
-/**
- * Indent the preprocessor stuff from column 1.
- * FIXME: This is broken if there is a comment or escaped newline
- * between '#' and 'define'.
- */
 void indent_preproc(void)
 {
    LOG_FUNC_ENTRY();

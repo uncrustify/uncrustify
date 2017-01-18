@@ -5,10 +5,12 @@
  * @author  Ben Gardner
  * @license GPL v2+
  */
+#include "semicolons.h"
 #include "uncrustify_types.h"
 #include "chunk_list.h"
 #include "ChunkStack.h"
 #include "prototypes.h"
+#include "uncrustify.h"
 
 #include <cstdio>
 #include <cstdlib>
@@ -31,15 +33,6 @@ static void remove_semicolon(chunk_t *pc)
 }
 
 
-/**
- * Removes superfluous semicolons:
- *  - after brace close whose parent is IF, ELSE, SWITCH, WHILE, FOR, NAMESPACE
- *  - after another semicolon where parent is not FOR
- *  - (D) after brace close whose parent is ENUM/STRUCT/UNION
- *  - (Java) after brace close whose parent is SYNCHRONIZED
- *  - after an open brace
- *  - when not in a #DEFINE
- */
 void remove_extra_semicolons(void)
 {
    LOG_FUNC_ENTRY();

@@ -7,10 +7,15 @@
  *          October 2015, 2016
  * @license GPL v2+
  */
+#include "combine.h"
 #include "uncrustify_types.h"
 #include "chunk_list.h"
 #include "ChunkStack.h"
+#include "uncrustify.h"
+#include "lang_pawn.h"
+#include "newlines.h"
 #include "prototypes.h"
+#include "tokenize_cleanup.h"
 
 #include <cstdio>
 #include <cstdlib>
@@ -1312,21 +1317,6 @@ static void check_double_brace_init(chunk_t *bo1)
 }
 
 
-/**
- * Change CT_INCDEC_AFTER + WORD to CT_INCDEC_BEFORE
- * Change number/word + CT_ADDR to CT_ARITH
- * Change number/word + CT_STAR to CT_ARITH
- * Change number/word + CT_NEG to CT_ARITH
- * Change word + ( to a CT_FUNCTION
- * Change struct/union/enum + CT_WORD => CT_TYPE
- * Force parens on return.
- *
- * TODO: This could be done earlier.
- *
- * Patterns detected:
- *   STRUCT/ENUM/UNION + WORD :: WORD => TYPE
- *   WORD + '('               :: WORD => FUNCTION
- */
 void fix_symbols(void)
 {
    LOG_FUNC_ENTRY();
@@ -2483,11 +2473,6 @@ static bool cs_top_is_question(ChunkStack &cs, size_t level)
 }
 
 
-/**
- * Examines the whole file and changes CT_COLON to
- * CT_Q_COLON, CT_LABEL_COLON, or CT_CASE_COLON.
- * It also changes the CT_WORD before CT_LABEL_COLON into CT_LABEL.
- */
 void combine_labels(void)
 {
    LOG_FUNC_ENTRY();
@@ -4367,9 +4352,6 @@ static void mark_struct_union_body(chunk_t *start)
 }
 
 
-/**
- * Sets the parent for comments.
- */
 void mark_comments(void)
 {
    LOG_FUNC_ENTRY();
@@ -4859,11 +4841,6 @@ static void mark_exec_sql(chunk_t *pc)
 }
 
 
-/**
- * Skips over the rest of the template if ang_open is indeed a CT_ANGLE_OPEN.
- * Points to the chunk after the CT_ANGLE_CLOSE.
- * If the chunk isn't an CT_ANGLE_OPEN, then it is returned.
- */
 chunk_t *skip_template_next(chunk_t *ang_open)
 {
    if ((ang_open != NULL) && (ang_open->type == CT_ANGLE_OPEN))
@@ -4876,11 +4853,6 @@ chunk_t *skip_template_next(chunk_t *ang_open)
 }
 
 
-/**
- * Skips over the rest of the template if ang_close is indeed a CT_ANGLE_CLOSE.
- * Points to the chunk before the CT_ANGLE_OPEN
- * If the chunk isn't an CT_ANGLE_CLOSE, then it is returned.
- */
 chunk_t *skip_template_prev(chunk_t *ang_close)
 {
    if ((ang_close != NULL) && (ang_close->type == CT_ANGLE_CLOSE))
@@ -4893,10 +4865,6 @@ chunk_t *skip_template_prev(chunk_t *ang_close)
 }
 
 
-/**
- * Skips the rest of the array definitions if ary_def is indeed a
- * CT_TSQUARE or CT_SQUARE_OPEN
- */
 chunk_t *skip_tsquare_next(chunk_t *ary_def)
 {
    if (ary_def && ((ary_def->type == CT_SQUARE_OPEN) ||
@@ -4908,11 +4876,6 @@ chunk_t *skip_tsquare_next(chunk_t *ary_def)
 }
 
 
-/**
- * If attr is CT_ATTRIBUTE, then skip it and the parens and return the chunk
- * after the CT_FPAREN_CLOSE.
- * If the chunk isn't an CT_ATTRIBUTE, then it is returned.
- */
 chunk_t *skip_attribute_next(chunk_t *attr)
 {
    if ((attr != NULL) && (attr->type == CT_ATTRIBUTE))
@@ -4929,11 +4892,6 @@ chunk_t *skip_attribute_next(chunk_t *attr)
 }
 
 
-/**
- * If fp_close is a CT_FPAREN_CLOSE with a parent of CT_ATTRIBUTE, then skip it
- * and the '__attribute__' thingy and return the chunk before CT_ATTRIBUTE.
- * Otherwise return fp_close.
- */
 chunk_t *skip_attribute_prev(chunk_t *fp_close)
 {
    if ((fp_close != NULL) &&
@@ -6005,9 +5963,6 @@ static void handle_cs_array_type(chunk_t *pc)
 }
 
 
-/**
- * Remove 'return;' that appears as the last statement in a function
- */
 void remove_extra_returns(void)
 {
    LOG_FUNC_ENTRY();

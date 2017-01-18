@@ -5,6 +5,7 @@
  * @author  Ben Gardner
  * @license GPL v2+
  */
+#include "detect.h"
 #include "uncrustify_types.h"
 #include "chunk_list.h"
 #include "ChunkStack.h"
@@ -393,9 +394,6 @@ static void detect_space_options()
 } // detect_space_options
 
 
-/**
- * Call all the detect_xxxx() functions
- */
 void detect_options(void)
 {
    detect_space_options();

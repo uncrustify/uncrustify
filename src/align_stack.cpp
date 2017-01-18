@@ -1,6 +1,6 @@
 /**
  * @file align_stack.cpp
- * Manages a align stack, which is just a pair of chunk stacks.
+ * Manages an align stack, which is just a pair of chunk stacks.
  * There can be at most 1 item per line in the stack.
  * The seqnum is actually a line counter.
  *
@@ -10,6 +10,8 @@
 #include "align_stack.h"
 #include "prototypes.h"
 #include "chunk_list.h"
+#include "indent.h"
+#include "space.h"
 
 
 /**

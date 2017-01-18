@@ -7,6 +7,7 @@
  *          October 2015, 2016
  * @license GPL v2+
  */
+#include "align.h"
 #include "uncrustify_types.h"
 #include "chunk_list.h"
 #include "ChunkStack.h"
@@ -17,6 +18,10 @@
 #include <cstring>
 #include <cerrno>
 #include "unc_ctype.h"
+#include "uncrustify.h"
+#include "indent.h"
+#include "space.h"
+
 
 static chunk_t *align_var_def_brace(chunk_t *pc, size_t span, size_t *nl_count);
 static chunk_t *align_trailing_comments(chunk_t *start);
@@ -359,10 +364,6 @@ static void align_oc_msg_spec(size_t span)
 }
 
 
-/**
- * Aligns all backslash-newline combos in the file.
- * This should be done LAST.
- */
 void align_backslash_newline(void)
 {
    LOG_FUNC_ENTRY();
@@ -445,9 +446,6 @@ void align_right_comments(void)
 } // align_right_comments
 
 
-/**
- * Aligns stuff inside a multi-line "= { ... }" sequence.
- */
 void align_struct_initializers(void)
 {
    LOG_FUNC_ENTRY();
@@ -466,9 +464,6 @@ void align_struct_initializers(void)
 }
 
 
-/**
- * Scans the whole file for #defines. Aligns all within X lines of each other
- */
 void align_preprocessor(void)
 {
    LOG_FUNC_ENTRY();
@@ -549,13 +544,6 @@ void align_preprocessor(void)
 } // align_preprocessor
 
 
-/**
- * Aligns all assignment operators on the same level as first, starting with
- * first.
- *
- * For variable definitions, only consider the '=' for the first variable.
- * Otherwise, only look at the first '=' on the line.
- */
 chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh)
 {
    LOG_FUNC_ENTRY();
@@ -1292,13 +1280,6 @@ static chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_co
 } // align_var_def_brace
 
 
-/**
- * For a series of lines ending in backslash-newline, align them.
- * The series ends when a newline or multi-line C comment is encountered.
- *
- * @param start   Start point
- * @return        pointer the last item looked at (NULL/newline/comment)
- */
 chunk_t *align_nl_cont(chunk_t *start)
 {
    LOG_FUNC_ENTRY();
