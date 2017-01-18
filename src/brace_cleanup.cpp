@@ -24,6 +24,11 @@
 #include "keywords.h"
 
 
+/*
+ * the value of after determines:
+ *   true:  insert_vbrace_close_after(pc, frm)
+ *   false: insert_vbrace_open_before(pc, frm)
+ */
 static chunk_t *insert_vbrace(chunk_t *pc, bool after, parse_frame_t *frm);
 
 #define insert_vbrace_close_after(pc, frm)    insert_vbrace(pc, true, frm)
@@ -33,7 +38,41 @@ static void parse_cleanup(parse_frame_t *frm, chunk_t *pc);
 
 static bool close_statement(parse_frame_t *frm, chunk_t *pc);
 
+/**
+ * Called when a statement was just closed and the pse_tos was just
+ * decremented.
+ *
+ * - if the TOS is now VBRACE, insert a CT_VBRACE_CLOSE and recurse.
+ * - if the TOS is a complex statement, call handle_complex_close()
+ *
+ * @return     true - done with this chunk, false - keep processing
+ */
+static bool close_statement(parse_frame_t *frm, chunk_t *pc);
+
+
+/**
+ * Checks the progression of complex statements.
+ * - checks for else after if
+ * - checks for if after else
+ * - checks for while after do
+ * - checks for open brace in BRACE2 and BRACE_DO stages, inserts open VBRACE
+ * - checks for open paren in PAREN1 and PAREN2 stages, complains
+ *
+ * @param frm  The parse frame
+ * @param pc   The current chunk
+ * @return     true - done with this chunk, false - keep processing
+ */
 static bool check_complex_statements(parse_frame_t *frm, chunk_t *pc);
+
+
+/**
+ * Handles a close paren or brace - just progress the stage, if the end
+ * of the statement is hit, call close_statement()
+ *
+ * @param frm  The parse frame
+ * @param pc   The current chunk
+ * @return     true - done with this chunk, false - keep processing
+ */
 static bool handle_complex_close(parse_frame_t *frm, chunk_t *pc);
 
 
@@ -663,18 +702,6 @@ static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
 } // parse_cleanup
 
 
-/**
- * Checks the progression of complex statements.
- * - checks for else after if
- * - checks for if after else
- * - checks for while after do
- * - checks for open brace in BRACE2 and BRACE_DO stages, inserts open VBRACE
- * - checks for open paren in PAREN1 and PAREN2 stages, complains
- *
- * @param frm  The parse frame
- * @param pc   The current chunk
- * @return     true - done with this chunk, false - keep processing
- */
 static bool check_complex_statements(parse_frame_t *frm, chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
@@ -847,14 +874,6 @@ static bool check_complex_statements(parse_frame_t *frm, chunk_t *pc)
 } // check_complex_statements
 
 
-/**
- * Handles a close paren or brace - just progress the stage, if the end
- * of the statement is hit, call close_statement()
- *
- * @param frm  The parse frame
- * @param pc   The current chunk
- * @return     true - done with this chunk, false - keep processing
- */
 static bool handle_complex_close(parse_frame_t *frm, chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
@@ -961,11 +980,6 @@ static bool handle_complex_close(parse_frame_t *frm, chunk_t *pc)
 } // handle_complex_close
 
 
-/*
- * the value of after determines:
- *   true:  insert_vbrace_close_after(pc, frm)
- *   false: insert_vbrace_open_before(pc, frm)
- */
 static chunk_t *insert_vbrace(chunk_t *pc, bool after, parse_frame_t *frm)
 {
    LOG_FUNC_ENTRY();
@@ -1025,15 +1039,6 @@ static chunk_t *insert_vbrace(chunk_t *pc, bool after, parse_frame_t *frm)
 } // insert_vbrace
 
 
-/**
- * Called when a statement was just closed and the pse_tos was just
- * decremented.
- *
- * - if the TOS is now VBRACE, insert a CT_VBRACE_CLOSE and recurse.
- * - if the TOS is a complex statement, call handle_complex_close()
- *
- * @return     true - done with this chunk, false - keep processing
- */
 bool close_statement(parse_frame_t *frm, chunk_t *pc)
 {
    LOG_FUNC_ENTRY();

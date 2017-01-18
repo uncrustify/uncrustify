@@ -22,6 +22,11 @@
 #include "keywords.h"
 #include <cstring>
 
+
+/**
+ * If there is nothing but CT_WORD and CT_MEMBER, then it's probably a
+ * template thingy.  Otherwise, it's likely a comparison.
+ */
 static void check_template(chunk_t *start);
 
 
@@ -29,6 +34,9 @@ static void check_template(chunk_t *start);
  * Convert '>' + '>' into '>>'
  * If we only have a single '>', then change it to CT_COMPARE.
  */
+static chunk_t *handle_double_angle_close(chunk_t *pc);
+
+
 static chunk_t *handle_double_angle_close(chunk_t *pc)
 {
    chunk_t *next = chunk_get_next(pc);
@@ -838,10 +846,6 @@ void tokenize_cleanup(void)
 } // tokenize_cleanup
 
 
-/**
- * If there is nothing but CT_WORD and CT_MEMBER, then it's probably a
- * template thingy.  Otherwise, it's likely a comparison.
- */
 static void check_template(chunk_t *start)
 {
    chunk_t *pc;

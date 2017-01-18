@@ -124,7 +124,81 @@
  *    thatreallyannoysme.whenIhavetomaintain[thecode] = 3;
  */
 
+/**
+ * REVISIT: This needs to be re-checked, maybe cleaned up
+ *
+ * Indents comments in a (hopefully) smart manner.
+ *
+ * There are two type of comments that get indented:
+ *  - stand alone (ie, no tokens on the line before the comment)
+ *  - trailing comments (last token on the line apart from a linefeed)
+ *    + note that a stand-alone comment is a special case of a trailing
+ *
+ * The stand alone comments will get indented in one of three ways:
+ *  - column 1:
+ *    + There is an empty line before the comment AND the indent level is 0
+ *    + The comment was originally in column 1
+ *
+ *  - Same column as trailing comment on previous line (ie, aligned)
+ *    + if originally within TBD (3) columns of the previous comment
+ *
+ *  - syntax indent level
+ *    + doesn't fit in the previous categories
+ *
+ * Options modify this behavior:
+ *  - keep original column (don't move the comment, if possible)
+ *  - keep relative column (move out the same amount as first item on line)
+ *  - fix trailing comment in column TBD
+ *
+ * @param pc   The comment, which is the first item on a line
+ * @param col  The column if this is to be put at indent level
+ */
 static void indent_comment(chunk_t *pc, int col);
+
+
+/**
+ * Starts a new entry
+ *
+ * @param frm  The parse frame
+ * @param pc   The chunk causing the push
+ */
+static void indent_pse_push(struct parse_frame &frm, chunk_t *pc);
+
+
+/**
+ * Removes the top entry
+ *
+ * @param frm  The parse frame
+ * @param pc   The chunk causing the push
+ */
+static void indent_pse_pop(struct parse_frame &frm, chunk_t *pc);
+
+
+static int token_indent(c_token_t type);
+
+
+static int calc_indent_continue(struct parse_frame &frm, int pse_tos);
+
+
+/**
+ * We are on a '{' that has parent = OC_BLOCK_EXPR
+ * find the column of the param tag
+ */
+static chunk_t *oc_msg_block_indent(chunk_t *pc, bool from_brace, bool from_caret, bool from_colon, bool from_keyword);
+
+
+/**
+ * We are on a '{' that has parent = OC_BLOCK_EXPR
+ */
+static chunk_t *oc_msg_prev_colon(chunk_t *pc);
+
+
+/**
+ * returns true if forward scan reveals only single newlines or comments
+ * stops when hits code
+ * false if next thing hit is a closing brace, also if 2 newlines in a row
+ */
+static bool single_line_comment_indent_rule_applies(chunk_t *start);
 
 
 void indent_to_column(chunk_t *pc, int column)
@@ -310,12 +384,6 @@ void reindent_line(chunk_t *pc, int column)
 } // reindent_line
 
 
-/**
- * Starts a new entry
- *
- * @param frm  The parse frame
- * @param pc   The chunk causing the push
- */
 static void indent_pse_push(parse_frame_t &frm, chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
@@ -355,12 +423,6 @@ static void indent_pse_push(parse_frame_t &frm, chunk_t *pc)
 }
 
 
-/**
- * Removes the top entry
- *
- * @param frm  The parse frame
- * @param pc   The chunk causing the push
- */
 static void indent_pse_pop(parse_frame_t &frm, chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
@@ -462,10 +524,6 @@ static int calc_indent_continue(parse_frame_t &frm, int pse_tos)
 }
 
 
-/**
- * We are on a '{' that has parent = OC_BLOCK_EXPR
- * find the column of the param tag
- */
 static chunk_t *oc_msg_block_indent(chunk_t *pc, bool from_brace,
                                     bool from_caret, bool from_colon,
                                     bool from_keyword)
@@ -512,9 +570,6 @@ static chunk_t *oc_msg_block_indent(chunk_t *pc, bool from_brace,
 } // oc_msg_block_indent
 
 
-/**
- * We are on a '{' that has parent = OC_BLOCK_EXPR
- */
 static chunk_t *oc_msg_prev_colon(chunk_t *pc)
 {
    return(chunk_get_prev_type(pc, CT_OC_COLON, pc->level, CNAV_ALL));
@@ -2263,11 +2318,6 @@ null_pc:
 } // indent_text
 
 
-/**
- * returns true if forward scan reveals only single newlines or comments
- * stops when hits code
- * false if next thing hit is a closing brace, also if 2 newlines in a row
- */
 static bool single_line_comment_indent_rule_applies(chunk_t *start)
 {
    LOG_FUNC_ENTRY();
@@ -2314,35 +2364,6 @@ static bool single_line_comment_indent_rule_applies(chunk_t *start)
 }
 
 
-/**
- * REVISIT: This needs to be re-checked, maybe cleaned up
- *
- * Indents comments in a (hopefully) smart manner.
- *
- * There are two type of comments that get indented:
- *  - stand alone (ie, no tokens on the line before the comment)
- *  - trailing comments (last token on the line apart from a linefeed)
- *    + note that a stand-alone comment is a special case of a trailing
- *
- * The stand alone comments will get indented in one of three ways:
- *  - column 1:
- *    + There is an empty line before the comment AND the indent level is 0
- *    + The comment was originally in column 1
- *
- *  - Same column as trailing comment on previous line (ie, aligned)
- *    + if originally within TBD (3) columns of the previous comment
- *
- *  - syntax indent level
- *    + doesn't fit in the previous categories
- *
- * Options modify this behavior:
- *  - keep original column (don't move the comment, if possible)
- *  - keep relative column (move out the same amount as first item on line)
- *  - fix trailing comment in column TBD
- *
- * @param pc   The comment, which is the first item on a line
- * @param col  The column if this is to be put at indent level
- */
 static void indent_comment(chunk_t *pc, int col)
 {
    LOG_FUNC_ENTRY();

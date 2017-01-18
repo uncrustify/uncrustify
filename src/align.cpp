@@ -23,21 +23,6 @@
 #include "space.h"
 
 
-static chunk_t *align_var_def_brace(chunk_t *pc, size_t span, size_t *nl_count);
-static chunk_t *align_trailing_comments(chunk_t *start);
-static void align_init_brace(chunk_t *start);
-static void align_func_params(void);
-static void align_same_func_call_params();
-static void align_func_proto(size_t span);
-static void align_oc_msg_spec(size_t span);
-static void align_typedefs(size_t span);
-static void align_left_shift(void);
-static void align_oc_msg_colons(void);
-static void align_oc_msg_colon(chunk_t *so);
-static void align_oc_decl_colon(void);
-static void align_asm_colon(void);
-
-
 /*
  *   Here are the items aligned:
  *
@@ -125,6 +110,138 @@ static void align_asm_colon(void);
  * @param col           the column
  * @param align_single  align even if there is only one item on the stack
  */
+static void align_stack(ChunkStack &cs, size_t col, bool align_single, log_sev_t sev);
+
+/**
+ * Scan everything at the current level until the close brace and find the
+ * variable def align column.  Also aligns bit-colons, but that assumes that
+ * bit-types are the same! But that should always be the case...
+ */
+static chunk_t *align_var_def_brace(chunk_t *pc, size_t span, size_t *nl_count);
+
+
+/**
+ * For a series of lines ending in a comment, align them.
+ * The series ends when more than align_right_cmt_span newlines are found.
+ *
+ * Interesting info:
+ *  - least physically allowed column
+ *  - intended column
+ *  - least original cmt column
+ *
+ * min_col is the minimum allowed column (based on prev token col/size)
+ * cmt_col less than
+ *
+ * @param start   Start point
+ * @return        pointer the last item looked at
+ */
+static chunk_t *align_trailing_comments(chunk_t *start);
+
+
+/**
+ * Generically aligns on '=', '{', '(' and item after ','
+ * It scans the first line and picks up the location of those tags.
+ * It then scans subsequent lines and adjusts the column.
+ * Finally it does a second pass to align everything.
+ *
+ * Aligns all the '=' signs in structure assignments.
+ * a = {
+ *    .a    = 1;
+ *    .type = fast;
+ * };
+ *
+ * And aligns on '{', numbers, strings, words.
+ * colors[] = {
+ *    {"red",   {255, 0,   0}}, {"blue",   {  0, 255, 0}},
+ *    {"green", {  0, 0, 255}}, {"purple", {255, 255, 0}},
+ * };
+ *
+ * For the C99 indexed array assignment, the leading []= is skipped (no aligning)
+ * struct foo_t bars[] =
+ * {
+ *    [0] = { .name = "bar",
+ *            .age  = 21 },
+ *    [1] = { .name = "barley",
+ *            .age  = 55 },
+ * };
+ *
+ * NOTE: this assumes that spacing is at the minimum correct spacing (ie force)
+ *       if it isn't, some extra spaces will be inserted.
+ *
+ * @param start   Points to the open brace chunk
+ */
+static void align_init_brace(chunk_t *start);
+
+
+static void align_func_params(void);
+
+
+static void align_same_func_call_params(void);
+
+
+/**
+ * Aligns all function prototypes in the file.
+ */
+static void align_func_proto(size_t span);
+
+
+/**
+ * Aligns all function prototypes in the file.
+ */
+static void align_oc_msg_spec(size_t span);
+
+
+/**
+ * Aligns simple typedefs that are contained on a single line each.
+ * This should be called after the typedef target is marked as a type.
+ *
+ * typedef int        foo_t;
+ * typedef char       bar_t;
+ * typedef const char cc_t;
+ */
+static void align_typedefs(size_t span);
+
+
+/**
+ * Align '<<' (CT_ARITH?)
+ */
+static void align_left_shift(void);
+
+
+/**
+ * Aligns OC messages
+ */
+static void align_oc_msg_colons(void);
+
+
+/**
+ * Aligns an OC message
+ *
+ * @param so   the square open of the message
+ */
+static void align_oc_msg_colon(chunk_t *so);
+
+
+/**
+ * Aligns OC declarations on the colon
+ * -(void) doSomething: (NSString*) param1
+ *                with: (NSString*) param2
+ */
+static void align_oc_decl_colon(void);
+
+
+/**
+ * Aligns asm declarations on the colon
+ * asm volatile (
+ *    "xxx"
+ *    : "x"(h),
+ *      "y"(l),
+ *    : "z"(h)
+ *    );
+ */
+static void align_asm_colon(void);
+
+
 static void align_stack(ChunkStack &cs, size_t col, bool align_single, log_sev_t sev)
 {
    LOG_FUNC_ENTRY();
@@ -338,9 +455,6 @@ void align_all(void)
 } // align_all
 
 
-/**
- * Aligns all function prototypes in the file.
- */
 static void align_oc_msg_spec(size_t span)
 {
    LOG_FUNC_ENTRY();
@@ -793,7 +907,7 @@ static void align_params(chunk_t *start, deque<chunk_t *> &chunks)
 }
 
 
-static void align_same_func_call_params()
+static void align_same_func_call_params(void)
 {
    LOG_FUNC_ENTRY();
    chunk_t           *pc;
@@ -971,9 +1085,6 @@ chunk_t *step_back_over_member(chunk_t *pc)
 }
 
 
-/**
- * Aligns all function prototypes in the file.
- */
 static void align_func_proto(size_t span)
 {
    LOG_FUNC_ENTRY();
@@ -1030,11 +1141,6 @@ static void align_func_proto(size_t span)
 } // align_func_proto
 
 
-/**
- * Scan everything at the current level until the close brace and find the
- * variable def align column.  Also aligns bit-colons, but that assumes that
- * bit-types are the same! But that should always be the case...
- */
 static chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_count)
 {
    LOG_FUNC_ENTRY();
@@ -1346,21 +1452,6 @@ static CmtAlignType get_comment_align_type(chunk_t *cmt)
 }
 
 
-/**
- * For a series of lines ending in a comment, align them.
- * The series ends when more than align_right_cmt_span newlines are found.
- *
- * Interesting info:
- *  - least physically allowed column
- *  - intended column
- *  - least original cmt column
- *
- * min_col is the minimum allowed column (based on prev token col/size)
- * cmt_col less than
- *
- * @param start   Start point
- * @return        pointer the last item looked at
- */
 chunk_t *align_trailing_comments(chunk_t *start)
 {
    LOG_FUNC_ENTRY();
@@ -1595,38 +1686,6 @@ static void align_log_al(log_sev_t sev, size_t line)
 }
 
 
-/**
- * Generically aligns on '=', '{', '(' and item after ','
- * It scans the first line and picks up the location of those tags.
- * It then scans subsequent lines and adjusts the column.
- * Finally it does a second pass to align everything.
- *
- * Aligns all the '=' signs in structure assignments.
- * a = {
- *    .a    = 1;
- *    .type = fast;
- * };
- *
- * And aligns on '{', numbers, strings, words.
- * colors[] = {
- *    {"red",   {255, 0,   0}}, {"blue",   {  0, 255, 0}},
- *    {"green", {  0, 0, 255}}, {"purple", {255, 255, 0}},
- * };
- *
- * For the C99 indexed array assignment, the leading []= is skipped (no aligning)
- * struct foo_t bars[] =
- * {
- *    [0] = { .name = "bar",
- *            .age  = 21 },
- *    [1] = { .name = "barley",
- *            .age  = 55 },
- * };
- *
- * NOTE: this assumes that spacing is at the minimum correct spacing (ie force)
- *       if it isn't, some extra spaces will be inserted.
- *
- * @param start   Points to the open brace chunk
- */
 static void align_init_brace(chunk_t *start)
 {
    LOG_FUNC_ENTRY();
@@ -1782,14 +1841,6 @@ static void align_init_brace(chunk_t *start)
 } // align_init_brace
 
 
-/**
- * Aligns simple typedefs that are contained on a single line each.
- * This should be called after the typedef target is marked as a type.
- *
- * typedef int        foo_t;
- * typedef char       bar_t;
- * typedef const char cc_t;
- */
 static void align_typedefs(size_t span)
 {
    LOG_FUNC_ENTRY();
@@ -1835,9 +1886,6 @@ static void align_typedefs(size_t span)
 } // align_typedefs
 
 
-/**
- * Align '<<' (CT_ARITH?)
- */
 static void align_left_shift(void)
 {
    LOG_FUNC_ENTRY();
@@ -1930,11 +1978,6 @@ static void align_left_shift(void)
 } // align_left_shift
 
 
-/**
- * Aligns an OC message
- *
- * @param so   the square open of the message
- */
 static void align_oc_msg_colon(chunk_t *so)
 {
    LOG_FUNC_ENTRY();
@@ -2050,9 +2093,6 @@ static void align_oc_msg_colon(chunk_t *so)
 } // align_oc_msg_colon
 
 
-/**
- * Aligns OC messages
- */
 static void align_oc_msg_colons(void)
 {
    LOG_FUNC_ENTRY();
@@ -2067,11 +2107,6 @@ static void align_oc_msg_colons(void)
 }
 
 
-/**
- * Aligns OC declarations on the colon
- * -(void) doSomething: (NSString*) param1
- *                with: (NSString*) param2
- */
 static void align_oc_decl_colon(void)
 {
    LOG_FUNC_ENTRY();
@@ -2146,15 +2181,6 @@ static void align_oc_decl_colon(void)
 } // align_oc_decl_colon
 
 
-/**
- * Aligns asm declarations on the colon
- * asm volatile (
- *    "xxx"
- *    : "x"(h),
- *      "y"(l),
- *    : "z"(h)
- *    );
- */
 static void align_asm_colon(void)
 {
    LOG_FUNC_ENTRY();

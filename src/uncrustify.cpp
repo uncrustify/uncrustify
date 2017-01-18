@@ -70,19 +70,96 @@ cp_data_t cpd;
 
 
 static int language_flags_from_name(const char *tag);
+
+
+/**
+ * Find the language for the file extension
+ * Default to C
+ *
+ * @param filename   The name of the file
+ * @return           LANG_xxx
+ */
 static int language_flags_from_filename(const char *filename);
+
+
+/**
+ * Gets the tag text for a language
+ *
+ * @param lang    The LANG_xxx enum
+ * @return        A string
+ */
 const char *language_name_from_flags(int lang);
+
+
 static bool read_stdin(file_mem &fm);
+
+
 static void uncrustify_start(const deque<int> &data);
+
+
 static void uncrustify_end(void);
+
+
+static bool ends_with(const char *filename, const char *tag, bool case_sensitive);
+
+
 void uncrustify_file(const file_mem &fm, FILE *pfout, const char *parsed_file, bool defer_uncrustify_end = false);
+
+
+/**
+ * Does a source file.
+ *
+ * @param filename_in  the file to read
+ * @param filename_out NULL (stdout) or the file to write
+ * @param parsed_file  NULL or the filename for the parsed debug info
+ * @param no_backup    don't create a backup, if filename_out == filename_in
+ * @param keep_mtime   don't change the mtime (dangerous)
+ */
 static void do_source_file(const char *filename_in, const char *filename_out, const char *parsed_file, bool no_backup, bool keep_mtime);
+
+
+static void add_file_header();
+
+
+static void add_file_footer();
+
+
+static void add_func_header(c_token_t type, file_mem &fm);
+
+
+static void add_msg_header(c_token_t type, file_mem &fm);
+
+
 static void process_source_list(const char *source_list, const char *prefix, const char *suffix, bool no_backup, bool keep_mtime);
+
+
 int load_header_files(void);
 
 static const char *make_output_filename(char *buf, int buf_size, const char *filename, const char *prefix, const char *suffix);
 
+
+/**
+ * Reinvent the wheel with a file comparison function...
+ */
+static bool file_content_matches(const string &filename1, const string &filename2);
+
+
+static string fix_filename(const char *filename);
+
+
+static bool bout_content_matches(const file_mem &fm, bool report_status);
+
+
+/**
+ * Loads a file into memory
+ */
 static int load_mem_file(const char *filename, file_mem &fm);
+
+
+/**
+ * Try to load the file from the config folder first and then by name
+ */
+static int load_mem_file_config(const char *filename, file_mem &fm);
 
 
 /**
@@ -856,9 +933,6 @@ static void make_folders(const string &filename)
 } // make_folders
 
 
-/**
- * Loads a file into memory
- */
 static int load_mem_file(const char *filename, file_mem &fm)
 {
    int         retval = -1;
@@ -927,9 +1001,6 @@ static int load_mem_file(const char *filename, file_mem &fm)
 } // load_mem_file
 
 
-/**
- * Try to load the file from the config folder first and then by name
- */
 static int load_mem_file_config(const char *filename, file_mem &fm)
 {
    int  retval;
@@ -1009,9 +1080,6 @@ static const char *make_output_filename(char *buf, int buf_size,
 }
 
 
-/**
- * Reinvent the wheel with a file comparison function...
- */
 static bool file_content_matches(const string &filename1, const string &filename2)
 {
    struct stat st1, st2;
@@ -1124,15 +1192,6 @@ static bool bout_content_matches(const file_mem &fm, bool report_status)
 }
 
 
-/**
- * Does a source file.
- *
- * @param filename_in  the file to read
- * @param filename_out NULL (stdout) or the file to write
- * @param parsed_file  NULL or the filename for the parsed debug info
- * @param no_backup    don't create a backup, if filename_out == filename_in
- * @param keep_mtime   don't change the mtime (dangerous)
- */
 static void do_source_file(const char *filename_in,
                            const char *filename_out,
                            const char *parsed_file,
@@ -1998,12 +2057,6 @@ int language_flags_from_name(const char *name)
 }
 
 
-/**
- * Gets the tag text for a language
- *
- * @param lang    The LANG_xxx enum
- * @return        A string
- */
 const char *language_name_from_flags(int lang)
 {
    int i;
@@ -2124,13 +2177,6 @@ void print_extensions(FILE *pfile)
 }
 
 
-/**
- * Find the language for the file extension
- * Default to C
- *
- * @param filename   The name of the file
- * @return           LANG_xxx
- */
 static int language_flags_from_filename(const char *filename)
 {
    int i;

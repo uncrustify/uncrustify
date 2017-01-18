@@ -18,6 +18,11 @@
 #include "unc_ctype.h"
 
 
+/**
+ * Detect spacing options
+ */
+static void detect_space_options(void);
+
 class sp_votes
 {
 protected:
@@ -94,10 +99,7 @@ sp_votes::~sp_votes()
 #define SP_VOTE_VAR(x)    sp_votes vote_ ## x(cpd.settings[UO_ ## x].a)
 
 
-/**
- * Detect spacing options
- */
-static void detect_space_options()
+static void detect_space_options(void)
 {
    SP_VOTE_VAR(sp_arith);
    SP_VOTE_VAR(sp_before_assign);

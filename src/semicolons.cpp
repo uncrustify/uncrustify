@@ -19,6 +19,15 @@
 #include "unc_ctype.h"
 #include <cassert>
 
+
+static void remove_semicolon(chunk_t *pc);
+
+
+/**
+ * We are on a semicolon that is after an unidentified brace close.
+ * Check for what is before the brace open.
+ * Do not remove if it is a square close, word, type, or paren close.
+ */
 static void check_unknown_brace_close(chunk_t *semi, chunk_t *brace_close);
 
 
@@ -110,11 +119,6 @@ void remove_extra_semicolons(void)
 } // remove_extra_semicolons
 
 
-/**
- * We are on a semicolon that is after an unidentified brace close.
- * Check for what is before the brace open.
- * Do not remove if it is a square close, word, type, or paren close.
- */
 static void check_unknown_brace_close(chunk_t *semi, chunk_t *brace_close)
 {
    LOG_FUNC_ENTRY();

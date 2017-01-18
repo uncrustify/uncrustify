@@ -16,9 +16,98 @@
 #include <cstdlib>
 
 
+struct cw_entry
+{
+   chunk_t *pc;
+   int     pri;
+};
+
+struct token_pri
+{
+   c_token_t tok;
+   int       pri;
+};
+
+
+static_inline bool is_past_width(chunk_t *pc);
+
+
+/**
+ * Split right after the chunk
+ */
+static void split_before_chunk(chunk_t *pc);
+
+
+static int get_split_pri(c_token_t tok);
+
+
+/**
+ * Checks to see if pc is a better spot to split.
+ * This should only be called going BACKWARDS (ie prev)
+ * A lower level wins
+ *
+ * Splitting Preference:
+ *  - semicolon
+ *  - comma
+ *  - boolean op
+ *  - comparison
+ *  - arithmetic op
+ *  - assignment
+ *  - concatenated strings
+ *  - ? :
+ *  - function open paren not followed by close paren
+ */
+static void try_split_here(cw_entry &ent, chunk_t *pc);
+
+
+/**
+ * Scan backwards to find the most appropriate spot to split the line
+ * and insert a newline.
+ *
+ * See if this needs special function handling.
+ * Scan backwards and find the best token for the split.
+ *
+ * @param start The first chunk that exceeded the limit
+ */
+
 static bool split_line(chunk_t *pc);
+
+
+/**
+ * Figures out where to split a function def/proto/call
+ *
+ * For fcn protos and defs. Also fcn calls where level == brace_level:
+ *   - find the open fparen
+ *     + if it doesn't have a newline right after it
+ *       * see if all parameters will fit individually after the paren
+ *       * if not, throw a newline after the open paren & return
+ *   - scan backwards to the open fparen or comma
+ *     + if there isn't a newline after that item, add one & return
+ *     + otherwise, add a newline before the start token
+ *
+ * @param start   the offending token
+ * @return        the token that should have a newline
+ *                inserted before it
+ */
 static void split_fcn_params(chunk_t *start);
+
+
+/**
+ * Splits the parameters at every comma that is at the fparen level.
+ *
+ * @param start   the offending token
+ */
 static void split_fcn_params_full(chunk_t *start);
+
+
+/**
+ * A for statement is too long.
+ * Step backwards and forwards to find the semicolons
+ * Try splitting at the semicolons first.
+ * If that doesn't work, then look for a comma at paren level.
+ * If that doesn't work, then look for an assignment at paren level.
+ * If that doesn't work, then give up.
+ */
 static void split_for_stmt(chunk_t *start);
 
 
@@ -29,9 +118,6 @@ static_inline bool is_past_width(chunk_t *pc)
 }
 
 
-/**
- * Split right after the chunk
- */
 static void split_before_chunk(chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
@@ -77,18 +163,6 @@ void do_code_width(void)
 }
 
 
-struct cw_entry
-{
-   chunk_t *pc;
-   int     pri;
-};
-
-struct token_pri
-{
-   c_token_t tok;
-   int       pri;
-};
-
 static const token_pri pri_table[] =
 {
    { CT_SEMICOLON,    1 },
@@ -127,22 +201,6 @@ static int get_split_pri(c_token_t tok)
 }
 
 
-/**
- * Checks to see if pc is a better spot to split.
- * This should only be called going BACKWARDS (ie prev)
- * A lower level wins
- *
- * Splitting Preference:
- *  - semicolon
- *  - comma
- *  - boolean op
- *  - comparison
- *  - arithmetic op
- *  - assignment
- *  - concatenated strings
- *  - ? :
- *  - function open paren not followed by close paren
- */
 static void try_split_here(cw_entry &ent, chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
@@ -221,15 +279,6 @@ static void try_split_here(cw_entry &ent, chunk_t *pc)
 } // try_split_here
 
 
-/**
- * Scan backwards to find the most appropriate spot to split the line
- * and insert a newline.
- *
- * See if this needs special function handling.
- * Scan backwards and find the best token for the split.
- *
- * @param start The first chunk that exceeded the limit
- */
 static bool split_line(chunk_t *start)
 {
    LOG_FUNC_ENTRY();
@@ -392,14 +441,6 @@ static bool split_line(chunk_t *start)
 } // split_line
 
 
-/**
- * A for statement is too long.
- * Step backwards and forwards to find the semicolons
- * Try splitting at the semicolons first.
- * If that doesn't work, then look for a comma at paren level.
- * If that doesn't work, then look for an assignment at paren level.
- * If that doesn't work, then give up.
- */
 static void split_for_stmt(chunk_t *start)
 {
    LOG_FUNC_ENTRY();
@@ -503,11 +544,6 @@ static void split_for_stmt(chunk_t *start)
 } // split_for_stmt
 
 
-/**
- * Splits the parameters at every comma that is at the fparen level.
- *
- * @param start   the offending token
- */
 static void split_fcn_params_full(chunk_t *start)
 {
    LOG_FUNC_ENTRY();
@@ -540,22 +576,6 @@ static void split_fcn_params_full(chunk_t *start)
 }
 
 
-/**
- * Figures out where to split a function def/proto/call
- *
- * For fcn protos and defs. Also fcn calls where level == brace_level:
- *   - find the open fparen
- *     + if it doesn't have a newline right after it
- *       * see if all parameters will fit individually after the paren
- *       * if not, throw a newline after the open paren & return
- *   - scan backwards to the open fparen or comma
- *     + if there isn't a newline after that item, add one & return
- *     + otherwise, add a newline before the start token
- *
- * @param start   the offending token
- * @return        the token that should have a newline
- *                inserted before it
- */
 static void split_fcn_params(chunk_t *start)
 {
    LOG_FUNC_ENTRY();
