@@ -72,9 +72,7 @@ chunk_t *pawn_add_vsemi_after(chunk_t *pc)
    {
       return(pc);
    }
-   chunk_t chunk;
-
-   chunk             = *pc;
+   chunk_t chunk = *pc;
    chunk.type        = CT_VSEMICOLON;
    chunk.str         = cpd.settings[UO_mod_pawn_semicolon].b ? ";" : "";
    chunk.column     += pc->len();
@@ -166,13 +164,9 @@ void pawn_prescan(void)
    LOG_FUNC_ENTRY();
 
    /* Start at the beginning and step through the entire file, and clean up
-    * any questionable stuff
-    */
-
-   chunk_t *pc;
+    * any questionable stuff */
    bool    did_nl = true;
-
-   pc = chunk_get_head();
+   chunk_t *pc    = chunk_get_head();
    while (pc != NULL)
    {
       if (did_nl && (pc->type != CT_PREPROC) &&
@@ -195,8 +189,6 @@ void pawn_prescan(void)
 static chunk_t *pawn_process_line(chunk_t *start)
 {
    LOG_FUNC_ENTRY();
-   chunk_t *pc;
-   chunk_t *fcn = NULL;
 
    //LOG_FMT(LSYS, "%s: %d - %s\n", __func__,
    //        start->orig_line, start->text());
@@ -208,11 +200,12 @@ static chunk_t *pawn_process_line(chunk_t *start)
    }
 
    /* if a open paren is found before an assign, then this is a function */
+   chunk_t *fcn = NULL;
    if (start->type == CT_WORD)
    {
       fcn = start;
    }
-   pc = start;
+   chunk_t *pc = start;
    while (((pc = chunk_get_next_nc(pc)) != NULL) &&
           !chunk_is_str(pc, "(", 1) &&
           (pc->type != CT_ASSIGN) &&
@@ -280,14 +273,12 @@ static chunk_t *pawn_process_variable(chunk_t *start)
 void pawn_add_virtual_semicolons(void)
 {
    LOG_FUNC_ENTRY();
-   chunk_t *prev;
-   chunk_t *pc;
 
    /** Add Pawn virtual semicolons */
-   prev = NULL;
    if (cpd.lang_flags & LANG_PAWN)
    {
-      pc = chunk_get_head();
+      chunk_t *prev = NULL;
+      chunk_t *pc   = chunk_get_head();
       while ((pc = chunk_get_next(pc)) != NULL)
       {
          if (!chunk_is_comment(pc) &&
@@ -359,10 +350,8 @@ static chunk_t *pawn_mark_function0(chunk_t *start, chunk_t *fcn)
 static chunk_t *pawn_process_func_def(chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
-   /* We are on a function definition */
-   chunk_t *clp;
-   chunk_t *last;
 
+   /* We are on a function definition */
    set_chunk_type(pc, CT_FUNC_DEF);
 
    LOG_FMT(LPFUNC, "%s: %zu:%zu %s\n",
@@ -371,8 +360,8 @@ static chunk_t *pawn_process_func_def(chunk_t *pc)
    /* If we don't have a brace open right after the close fparen, then
     * we need to add virtual braces around the function body.
     */
-   clp  = chunk_get_next_str(pc, ")", 1, 0);
-   last = chunk_get_next_ncnl(clp);
+   chunk_t *clp  = chunk_get_next_str(pc, ")", 1, 0);
+   chunk_t *last = chunk_get_next_ncnl(clp);
 
    if (last != NULL)
    {
@@ -427,8 +416,7 @@ static chunk_t *pawn_process_func_def(chunk_t *pc)
          return(last);
       }
 
-      chunk_t chunk;
-      chunk = *last;
+      chunk_t chunk = *last;
       chunk.str.clear();
       chunk.type        = CT_VBRACE_OPEN;
       chunk.parent_type = CT_FUNC_DEF;
@@ -480,11 +468,9 @@ static chunk_t *pawn_process_func_def(chunk_t *pc)
 chunk_t *pawn_check_vsemicolon(chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
-   chunk_t *vb_open;
-   chunk_t *prev;
 
    /* Grab the open VBrace */
-   vb_open = chunk_get_prev_type(pc, CT_VBRACE_OPEN, -1);
+   chunk_t *vb_open = chunk_get_prev_type(pc, CT_VBRACE_OPEN, -1);
 
    /**
     * Grab the item before the newline
@@ -495,7 +481,7 @@ chunk_t *pawn_check_vsemicolon(chunk_t *pc)
     *  - it is something that needs a continuation
     *    + arith, assign, bool, comma, compare
     */
-   prev = chunk_get_prev_ncnl(pc);
+   chunk_t *prev = chunk_get_prev_ncnl(pc);
    if ((prev == NULL) ||
        (prev == vb_open) ||
        (prev->flags & PCF_IN_PREPROC) ||

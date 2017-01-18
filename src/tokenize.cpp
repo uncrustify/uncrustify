@@ -456,7 +456,6 @@ static const char *str_search(const char *needle, const char *haystack, int hays
 
 static bool parse_comment(tok_ctx &ctx, chunk_t &pc)
 {
-   int  ch;
    bool is_d    = (cpd.lang_flags & LANG_D) != 0;          // forcing value to bool
    bool is_cs   = (cpd.lang_flags & LANG_CS) != 0;         // forcing value to bool
    int  d_level = 0;
@@ -473,7 +472,7 @@ static bool parse_comment(tok_ctx &ctx, chunk_t &pc)
 
    /* account for opening two chars */
    pc.str = ctx.get();   /* opening '/' */
-   ch     = ctx.get();
+   int ch = ctx.get();
    pc.str.append(ch);    /* second char */
 
    if (ch == '/')
@@ -664,8 +663,6 @@ static bool parse_comment(tok_ctx &ctx, chunk_t &pc)
 
 static bool parse_code_placeholder(tok_ctx &ctx, chunk_t &pc)
 {
-   int last1 = 0;
-
    if ((ctx.peek() != '<') || (ctx.peek(1) != '#'))
    {
       return(false);
@@ -678,6 +675,7 @@ static bool parse_code_placeholder(tok_ctx &ctx, chunk_t &pc)
    pc.str.append(ctx.get());
 
    /* grab everything until '#>', fail if not found. */
+   int last1 = 0;
    while (ctx.more())
    {
       int last2 = last1;
@@ -699,9 +697,8 @@ static void parse_suffix(tok_ctx &ctx, chunk_t &pc, bool forstring = false)
 {
    if (CharTable::IsKw1(ctx.peek()))
    {
-      int      slen    = 0;
-      int      oldsize = pc.str.size();
-      tok_info ss;
+      int slen    = 0;
+      int oldsize = pc.str.size();
 
       /* don't add the suffix if we see L" or L' or S" */
       int p1 = ctx.peek();
@@ -712,6 +709,8 @@ static void parse_suffix(tok_ctx &ctx, chunk_t &pc, bool forstring = false)
       {
          return;
       }
+
+      tok_info ss;
       ctx.save(ss);
       while (ctx.more() && CharTable::IsKw2(ctx.peek()))
       {
@@ -782,10 +781,6 @@ static bool is_hex_(int ch)
 
 static bool parse_number(tok_ctx &ctx, chunk_t &pc)
 {
-   int  tmp;
-   bool is_float;
-   bool did_hex = false;
-
    /* A number must start with a digit or a dot, followed by a digit */
    if (!is_dec(ctx.peek()) &&
        ((ctx.peek() != '.') || !is_dec(ctx.peek(1))))
@@ -793,7 +788,7 @@ static bool parse_number(tok_ctx &ctx, chunk_t &pc)
       return(false);
    }
 
-   is_float = (ctx.peek() == '.');
+   bool is_float = (ctx.peek() == '.');
    if (is_float && (ctx.peek(1) == '.'))
    {
       return(false);
@@ -802,6 +797,7 @@ static bool parse_number(tok_ctx &ctx, chunk_t &pc)
    /* Check for Hex, Octal, or Binary
     * Note that only D and Pawn support binary, but who cares?
     */
+   bool did_hex = false;
    if (ctx.peek() == '0')
    {
       pc.str.append(ctx.get());  /* store the '0' */
@@ -909,7 +905,7 @@ static bool parse_number(tok_ctx &ctx, chunk_t &pc)
     * C/C++/D/Java: eEpP
     * C#/Pawn:      eE
     */
-   tmp = unc_toupper(ctx.peek());
+   int tmp = unc_toupper(ctx.peek());
    if ((tmp == 'E') || (tmp == 'P'))
    {
       is_float = true;
@@ -937,7 +933,7 @@ static bool parse_number(tok_ctx &ctx, chunk_t &pc)
     */
    while (1)
    {
-      tmp = unc_toupper(ctx.peek());
+      int tmp = unc_toupper(ctx.peek());
       if ((tmp == 'I') || (tmp == 'F') || (tmp == 'D') || (tmp == 'M'))
       {
          is_float = true;
@@ -969,8 +965,6 @@ static bool parse_number(tok_ctx &ctx, chunk_t &pc)
 
 static bool parse_string(tok_ctx &ctx, chunk_t &pc, int quote_idx, bool allow_escape)
 {
-   bool escaped = false;
-   int  end_ch;
    char escape_char        = cpd.settings[UO_string_escape_char].n;
    char escape_char2       = cpd.settings[UO_string_escape_char2].n;
    bool should_escape_tabs = cpd.settings[UO_string_replace_tab_chars].b && (cpd.lang_flags & LANG_ALLC);
@@ -982,9 +976,10 @@ static bool parse_string(tok_ctx &ctx, chunk_t &pc, int quote_idx, bool allow_es
    }
 
    pc.type = CT_STRING;
-   end_ch  = CharTable::Get(ctx.peek()) & 0xff;
+   int end_ch = CharTable::Get(ctx.peek()) & 0xff;
    pc.str.append(ctx.get());  /* store the " */
 
+   bool escaped = false;
    while (ctx.more())
    {
       int lastcol = ctx.c.col;
@@ -1202,7 +1197,6 @@ static bool tag_compare(const deque<int> &d, int a_idx, int b_idx, int len)
 
 static bool parse_cr_string(tok_ctx &ctx, chunk_t &pc, int q_idx)
 {
-   int cnt;
    int tag_idx = ctx.c.idx + q_idx + 1;
    int tag_len = 0;
 
@@ -1210,7 +1204,7 @@ static bool parse_cr_string(tok_ctx &ctx, chunk_t &pc, int q_idx)
 
    /* Copy the prefix + " to the string */
    pc.str.clear();
-   cnt = q_idx + 1;
+   int cnt = q_idx + 1;
    while (cnt--)
    {
       pc.str.append(ctx.get());
@@ -1540,10 +1534,6 @@ static bool parse_ignored(tok_ctx &ctx, chunk_t &pc)
 
 static bool parse_next(tok_ctx &ctx, chunk_t &pc)
 {
-   const chunk_tag_t *punc;
-
-   //chunk_t           pc_temp;
-
    if (!ctx.more())
    {
       //fprintf(stderr, "All done!\n");
@@ -1835,6 +1825,7 @@ static bool parse_next(tok_ctx &ctx, chunk_t &pc)
    punc_txt[1] = ctx.peek(1);
    punc_txt[2] = ctx.peek(2);
    punc_txt[3] = ctx.peek(3);
+   const chunk_tag_t *punc;
    if ((punc = find_punctuator(punc_txt, cpd.lang_flags)) != NULL)
    {
       int cnt = strlen(punc->tag);

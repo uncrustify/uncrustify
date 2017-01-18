@@ -1603,8 +1603,6 @@ const option_map_value *get_option_name(uncrustify_options option)
 
 static void convert_value(const option_map_value *entry, const char *val, op_val_t *dest)
 {
-   const option_map_value *tmp;
-
    if (entry->type == AT_LINE)
    {
       if (strcasecmp(val, "CRLF") == 0)
@@ -1680,6 +1678,7 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
       return;
    }
 
+   const option_map_value *tmp;
    if ((entry->type == AT_NUM) ||
        (entry->type == AT_UNUM))
    {
@@ -1857,13 +1856,9 @@ bool is_path_relative(const char *path)
  */
 void process_option_line(char *configLine, const char *filename)
 {
-   char *ptr;
-   char *args[32];
-   int  argc;
-   int  idx;
-
    cpd.line_number++;
 
+   char *ptr;
    /* Chop off trailing comments */
    if ((ptr = strchr(configLine, '#')) != NULL)
    {
@@ -1884,7 +1879,8 @@ void process_option_line(char *configLine, const char *filename)
    }
 
    /* Split the line */
-   argc = Args::SplitLine(configLine, args, ARRAY_SIZE(args) - 1);
+   char *args[32];
+   int  argc = Args::SplitLine(configLine, args, ARRAY_SIZE(args) - 1);
    if (argc < 2)
    {
       if (argc > 0)
@@ -1899,7 +1895,7 @@ void process_option_line(char *configLine, const char *filename)
 
    if (strcasecmp(args[0], "type") == 0)
    {
-      for (idx = 1; idx < argc; idx++)
+      for (int idx = 1; idx < argc; idx++)
       {
          add_keyword(args[idx], CT_TYPE);
       }
@@ -1933,7 +1929,7 @@ void process_option_line(char *configLine, const char *filename)
          if (token != CT_NONE)
          {
             LOG_FMT(LNOTE, "%s:%d set '%s':", filename, cpd.line_number, args[1]);
-            for (idx = 2; idx < argc; idx++)
+            for (int idx = 2; idx < argc; idx++)
             {
                LOG_FMT(LNOTE, " '%s'", args[idx]);
                add_keyword(args[idx], token);
@@ -1977,7 +1973,7 @@ void process_option_line(char *configLine, const char *filename)
       }
       else
       {
-         for (idx = 2; idx < argc; idx++)
+         for (int idx = 2; idx < argc; idx++)
          {
             const char *lang_name = extension_add(args[idx], args[1]);
             if (lang_name)
@@ -2009,9 +2005,6 @@ void process_option_line(char *configLine, const char *filename)
 
 int load_option_file(const char *filename)
 {
-   FILE *pfile;
-   char buffer[256];
-
    cpd.line_number = 0;
 
 #ifdef WIN32
@@ -2022,7 +2015,7 @@ int load_option_file(const char *filename)
    }
 #endif
 
-   pfile = fopen(filename, "r");
+   FILE *pfile = fopen(filename, "r");
    if (pfile == NULL)
    {
       fprintf(stderr, "%s: fopen(%s) failed: %s (%d)\n",
@@ -2032,6 +2025,7 @@ int load_option_file(const char *filename)
    }
 
    /* Read in the file line by line */
+   char buffer[256];
    while (fgets(buffer, sizeof(buffer), pfile) != NULL)
    {
       process_option_line(buffer, filename);
@@ -2044,12 +2038,7 @@ int load_option_file(const char *filename)
 
 int save_option_file_kernel(FILE *pfile, bool withDoc, bool only_not_default)
 {
-   string     val_string;
-   const char *val_str;
-   int        val_len;
-   int        name_len;
-   int        idx;
-   int        count_the_not_default_options = 0;
+   int count_the_not_default_options = 0;
 
    fprintf(pfile, "# Uncrustify %s\n", UNCRUSTIFY_VERSION);
 
@@ -2072,6 +2061,7 @@ int save_option_file_kernel(FILE *pfile, bool withDoc, bool only_not_default)
          if (withDoc && (option->short_desc != NULL) && (*option->short_desc != 0))
          {
             fprintf(pfile, "%s# ", first ? "" : "\n");
+            int idx;
             for (idx = 0; option->short_desc[idx] != 0; idx++)
             {
                fputc(option->short_desc[idx], pfile);
@@ -2086,11 +2076,11 @@ int save_option_file_kernel(FILE *pfile, bool withDoc, bool only_not_default)
                fputc('\n', pfile);
             }
          }
-         first      = false;
-         val_string = op_val_to_string(option->type, cpd.settings[option->id]);
-         val_str    = val_string.c_str();
-         val_len    = strlen(val_str);
-         name_len   = strlen(option->name);
+         first = false;
+         string     val_string = op_val_to_string(option->type, cpd.settings[option->id]);
+         const char *val_str   = val_string.c_str();
+         int        val_len    = strlen(val_str);
+         int        name_len   = strlen(option->name);
 
          // guy
          bool print_option = true;
@@ -2161,8 +2151,6 @@ int save_option_file(FILE *pfile, bool withDoc)
 
 void print_options(FILE *pfile)
 {
-   const char *text;
-
    const char *names[] =
    {
       "{ False, True }",
@@ -2190,7 +2178,7 @@ void print_options(FILE *pfile)
                  pad, ' ',
                  names[option->type]);
 
-         text = option->short_desc;
+         const char *text = option->short_desc;
 
          if (text != NULL)
          {

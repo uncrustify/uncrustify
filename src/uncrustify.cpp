@@ -333,15 +333,6 @@ static void redir_stdout(const char *output_file)
 
 int main(int argc, char *argv[])
 {
-   string     cfg_file;
-   const char *parsed_file = NULL;
-   const char *source_file = NULL;
-   const char *output_file = NULL;
-   const char *source_list = NULL;
-   log_mask_t mask;
-   int        idx;
-   const char *p_arg;
-
    /* initialize the global data */
    cpd.unc_off_used = false;
 
@@ -360,7 +351,6 @@ int main(int argc, char *argv[])
    register_options();
 
    Args arg(argc, argv);
-
    if (arg.Present("--version") || arg.Present("-v"))
    {
       version_exit();
@@ -387,11 +377,14 @@ int main(int argc, char *argv[])
 
    /* Init logging */
    log_init(cpd.do_check ? stdout : stderr);
+   log_mask_t mask;
    if (arg.Present("-q"))
    {
       logmask_from_string("", mask);
       log_set_mask(mask);
    }
+
+   const char *p_arg;
    if (((p_arg = arg.Param("-L")) != NULL) ||
        ((p_arg = arg.Param("--log")) != NULL))
    {
@@ -402,7 +395,7 @@ int main(int argc, char *argv[])
 
    if (arg.Present("--decode"))
    {
-      idx = 1;
+      int idx = 1;
       while ((p_arg = arg.Unused(idx)) != NULL)
       {
          log_pcf_flags(LSYS, strtoul(p_arg, NULL, 16));
@@ -411,6 +404,7 @@ int main(int argc, char *argv[])
    }
 
    /* Get the config file name */
+   string cfg_file;
    if (((p_arg = arg.Param("--config")) != NULL) ||
        ((p_arg = arg.Param("-c")) != NULL))
    {
@@ -435,6 +429,7 @@ int main(int argc, char *argv[])
    }
 
    /* Get the parsed file name */
+   const char *parsed_file = NULL;
    if (((parsed_file = arg.Param("--parsed")) != NULL) ||
        ((parsed_file = arg.Param("-p")) != NULL))
    {
@@ -451,7 +446,7 @@ int main(int argc, char *argv[])
    set_option_defaults();
 
    /* Load type files */
-   idx = 0;
+   int idx = 0;
    while ((p_arg = arg.Params("-t", idx)) != NULL)
    {
       load_keyword_file(p_arg);
@@ -497,12 +492,14 @@ int main(int argc, char *argv[])
    }
 
    /* Get the source file name */
+   const char *source_file = NULL;
    if (((source_file = arg.Param("--file")) == NULL) &&
        ((source_file = arg.Param("-f")) == NULL))
    {
       // not using a single file, source_file is NULL
    }
 
+   const char *source_list = NULL;
    if (((source_list = arg.Param("--files")) == NULL) &&
        ((source_list = arg.Param("-F")) == NULL))
    {
@@ -521,7 +518,7 @@ int main(int argc, char *argv[])
    bool       detect           = arg.Present("--detect");
 
    /* Grab the output override */
-   output_file = arg.Param("-o");
+   const char *output_file = arg.Param("-o");
 
    LOG_FMT(LDATA, "config_file = %s\n", cfg_file.c_str());
    LOG_FMT(LDATA, "output_file = %s\n", (output_file != NULL) ? output_file : "null");
@@ -2059,10 +2056,8 @@ int language_flags_from_name(const char *name)
 
 const char *language_name_from_flags(int lang)
 {
-   int i;
-
    /* Check for an exact match first */
-   for (i = 0; i < (int)ARRAY_SIZE(language_names); i++)
+   for (int i = 0; i < (int)ARRAY_SIZE(language_names); i++)
    {
       if (language_names[i].lang == lang)
       {
@@ -2071,7 +2066,7 @@ const char *language_name_from_flags(int lang)
    }
 
    /* Check for the first set language bit */
-   for (i = 0; i < (int)ARRAY_SIZE(language_names); i++)
+   for (int i = 0; i < (int)ARRAY_SIZE(language_names); i++)
    {
       if ((language_names[i].lang & lang) != 0)
       {
@@ -2179,8 +2174,6 @@ void print_extensions(FILE *pfile)
 
 static int language_flags_from_filename(const char *filename)
 {
-   int i;
-
    /* check custom extensions first */
    for (extension_map_t::iterator it = g_ext_map.begin(); it != g_ext_map.end(); ++it)
    {
@@ -2190,7 +2183,7 @@ static int language_flags_from_filename(const char *filename)
       }
    }
 
-   for (i = 0; i < (int)ARRAY_SIZE(language_exts); i++)
+   for (int i = 0; i < (int)ARRAY_SIZE(language_exts); i++)
    {
       if (ends_with(filename, language_exts[i].ext))
       {
@@ -2206,7 +2199,7 @@ static int language_flags_from_filename(const char *filename)
          return(language_flags_from_name(it->second.c_str()));
       }
    }
-   for (i = 0; i < (int)ARRAY_SIZE(language_exts); i++)
+   for (int i = 0; i < (int)ARRAY_SIZE(language_exts); i++)
    {
       if (ends_with(filename, language_exts[i].ext, false))
       {

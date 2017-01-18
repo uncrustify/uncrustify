@@ -820,9 +820,9 @@ enum uncrustify_options
    UO_use_indent_continue_only_once,        // The value of the indentation for a continuation line is calculate
                                             // differently if the line is:
                                             //   a declaration :your case with QString fileName ...
-                                            //   an assigment  :your case with pSettings = new QSettings( ...
+                                            //   an assignment  :your case with pSettings = new QSettings( ...
                                             // At the second case the option value might be used twice:
-                                            //   at the assigment
+                                            //   at the assignment
                                             //   at the function call (if present)
                                             // To prevent the double use of the option value, use this option
                                             // with the value "true". Guy 2016-05-16

@@ -58,9 +58,9 @@ void prot_the_line(int theLine, unsigned int actual_line)
 
 void examine_Data(const char *func_name, int theLine, int what)
 {
-   chunk_t *pc;
-
    LOG_FMT(LGUY, "\n%s:", func_name);
+
+   chunk_t *pc;
    switch (what)
    {
    case 1:

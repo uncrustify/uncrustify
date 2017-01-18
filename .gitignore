@@ -12,7 +12,7 @@ tests/usage.txt
 test-suite.log
 
 # UNIX build artifacts
-*.[oaisS]
+*.[oadisS]
 src/uncrustify
 
 # Gnu autotools
@@ -84,6 +84,7 @@ build*
 # Eclipse Build Directories
 Debug/
 Release/
+build/
 
 # Eclipse Configuration
 .cproject

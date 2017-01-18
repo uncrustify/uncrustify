@@ -51,12 +51,8 @@ void add_define(const char *tag, const char *value)
 
 int load_define_file(const char *filename)
 {
-   FILE   *pf;
-   char   buf[160];
-   char   *args[3];
-   size_t line_no = 0;
+   FILE *pf = fopen(filename, "r");
 
-   pf = fopen(filename, "r");
    if (pf == NULL)
    {
       LOG_FMT(LERR, "%s: fopen(%s) failed: %s (%d)\n",
@@ -65,6 +61,9 @@ int load_define_file(const char *filename)
       return(FAILURE);
    }
 
+   char   buf[160];
+   char   *args[3];
+   size_t line_no = 0;
    while (fgets(buf, sizeof(buf), pf) != NULL)
    {
       line_no++;
