@@ -362,6 +362,7 @@
 34004 nl_max_blank_in_func-1.cfg       cpp/nl_max_blank_in_func.cpp
 34005 nl_max_blank_in_func-2.cfg       cpp/nl_max_blank_in_func.cpp
 34006 empty.cfg                        cpp/bug_i_575.cpp
+34007 bug_i_928.cfg                    cpp/bug_i_928.cpp
 
 34100 empty.cfg                        cpp/bug_i_525.cpp
 34101 empty.cfg                        cpp/bug_i_646.cpp

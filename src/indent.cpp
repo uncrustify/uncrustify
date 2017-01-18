@@ -1087,7 +1087,8 @@ void indent_text(void)
          /* Always indent on virtual braces */
          indent_column_set(frm.pse[frm.pse_tos].indent_tmp);
       }
-      else if (pc->type == CT_BRACE_OPEN)
+      else if ((pc->type == CT_BRACE_OPEN) &&
+               ((pc->next != NULL) && pc->next->type != CT_NAMESPACE))
       {
          frm.level++;
          indent_pse_push(frm, pc);
