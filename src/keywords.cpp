@@ -7,6 +7,7 @@
  *          October 2015, 2016
  * @license GPL v2+
  */
+#include "keywords.h"
 #include "uncrustify_types.h"
 #include "prototypes.h"
 #include "char_table.h"
@@ -16,6 +17,7 @@
 #include <cstdlib>
 #include <map>
 #include "unc_ctype.h"
+#include "uncrustify.h"
 
 using namespace std;
 
@@ -331,12 +333,6 @@ bool keywords_are_sorted(void)
 }
 
 
-/**
- * Adds a keyword to the list of dynamic keywords
- *
- * @param tag        The tag (string) must be zero terminated
- * @param type       The type, usually CT_TYPE
- */
 void add_keyword(const char *tag, c_token_t type)
 {
    string ss = tag;
@@ -393,13 +389,6 @@ static const chunk_tag_t *kw_static_match(const chunk_tag_t *tag)
 }
 
 
-/**
- * Search first the dynamic and then the static table for a matching keyword
- *
- * @param word    Pointer to the text -- NOT zero terminated
- * @param len     The length of the text
- * @return        CT_WORD (no match) or the keyword token
- */
 c_token_t find_keyword_type(const char *word, int len)
 {
    string            ss(word, len);
@@ -431,12 +420,6 @@ c_token_t find_keyword_type(const char *word, int len)
 }
 
 
-/**
- * Loads the dynamic keywords from a file
- *
- * @param filename   The path to the file to load
- * @return           SUCCESS or FAILURE
- */
 int load_keyword_file(const char *filename)
 {
    FILE *pf;
@@ -529,9 +512,6 @@ void clear_keyword_file(void)
 }
 
 
-/**
- * Returns the pattern that the keyword needs based on the token
- */
 pattern_class get_token_pattern_class(c_token_t tok)
 {
    switch (tok)

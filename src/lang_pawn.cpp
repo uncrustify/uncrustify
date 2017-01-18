@@ -5,10 +5,12 @@
  * @author  Ben Gardner
  * @license GPL v2+
  */
+#include "lang_pawn.h"
 #include "uncrustify_types.h"
 #include "chunk_list.h"
 #include "ChunkStack.h"
 #include "prototypes.h"
+#include "uncrustify.h"
 
 
 /**
@@ -86,10 +88,6 @@ chunk_t *pawn_add_vsemi_after(chunk_t *pc)
 }
 
 
-/**
- * Turns certain virtual semicolons invisible.
- *  - after a close brace with a parent of switch, case, else, if
- */
 void pawn_scrub_vsemi(void)
 {
    LOG_FUNC_ENTRY();
@@ -163,13 +161,6 @@ static bool pawn_continued(chunk_t *pc, int br_level)
 }
 
 
-/**
- * Does a scan of level 0 BEFORE stuff in combine.cpp is called.
- * At this point, VSemis have been added only in VBraces.
- * Otherwise, all level info is correct, except for unbraced functions.
- *
- * We are looking for unbraced functions.
- */
 void pawn_prescan(void)
 {
    LOG_FUNC_ENTRY();
@@ -486,13 +477,6 @@ static chunk_t *pawn_process_func_def(chunk_t *pc)
 } // pawn_process_func_def
 
 
-/**
- * We are in a virtual brace and hit a newline.
- * If this should end the vbrace, then insert a VSEMICOLON and return that.
- *
- * @param pc   The newline (CT_NEWLINE)
- * @return     Either the newline or the newly inserted virtual semicolon
- */
 chunk_t *pawn_check_vsemicolon(chunk_t *pc)
 {
    LOG_FUNC_ENTRY();

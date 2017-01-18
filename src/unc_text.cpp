@@ -6,7 +6,7 @@
  * @license GPL v2+
  */
 #include "unc_text.h"
-#include "prototypes.h" /* encode_utf8() */
+#include "unicode.h" /* encode_utf8() */
 
 
 static void fix_len_idx(size_t size, size_t &idx, size_t &len);

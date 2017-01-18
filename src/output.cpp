@@ -7,11 +7,16 @@
  *          October 2015, 2016
  * @license GPL v2+
  */
+#include "output.h"
 #include "uncrustify_types.h"
 #include "uncrustify_version.h"
 #include "prototypes.h"
 #include "chunk_list.h"
 #include "unc_ctype.h"
+#include "uncrustify.h"
+#include "indent.h"
+#include "braces.h"
+#include "unicode.h"
 #include <cstdlib>
 
 static void output_comment_multi(chunk_t *pc);
@@ -275,9 +280,6 @@ void output_parsed(FILE *pfile)
 } // output_parsed
 
 
-/**
- * This renders the chunk list to a file.
- */
 void output_text(FILE *pfile)
 {
    chunk_t *pc;
@@ -2034,20 +2036,6 @@ static void generate_if_conditional_as_text(unc_text &dst, chunk_t *ifdef)
 } // generate_if_conditional_as_text
 
 
-/*
- * See also it's preprocessor counterpart
- *   add_long_closebrace_comment
- * in braces.cpp
- *
- * Note: since this concerns itself with the preprocessor -- which is line-oriented --
- * it turns out that just looking at pc->pp_level is NOT the right thing to do.
- * See a --parsed dump if you don't believe this: an '#endif' will be one level
- * UP from the corresponding #ifdef when you look at the tokens 'ifdef' versus 'endif',
- * but it's a whole another story when you look at their CT_PREPROC ('#') tokens!
- *
- * Hence we need to track and seek matching CT_PREPROC pp_levels here, which complicates
- * things a little bit, but not much.
- */
 void add_long_preprocessor_conditional_block_comment(void)
 {
    chunk_t *tmp;

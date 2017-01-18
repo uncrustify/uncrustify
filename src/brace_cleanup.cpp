@@ -8,6 +8,7 @@
  * @license GPL v2+
  */
 
+#include "brace_cleanup.h"
 #include "uncrustify_types.h"
 #include "char_table.h"
 #include "prototypes.h"
@@ -17,6 +18,10 @@
 #include <cstring>
 #include <cerrno>
 #include "unc_ctype.h"
+#include "uncrustify.h"
+#include "lang_pawn.h"
+#include "parse_frame.h"
+#include "keywords.h"
 
 
 /*

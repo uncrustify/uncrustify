@@ -30,6 +30,7 @@
 #include <cerrno>
 #include "unc_ctype.h"
 #include <cstring>
+#include "uncrustify.h"
 
 
 int backup_copy_file(const char *filename, const vector<UINT8> &data)

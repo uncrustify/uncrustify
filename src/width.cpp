@@ -6,9 +6,13 @@
  * @license GPL v2+
  */
 
+#include "width.h"
 #include "uncrustify_types.h"
 #include "chunk_list.h"
 #include "prototypes.h"
+#include "uncrustify.h"
+#include "indent.h"
+#include "newlines.h"
 #include <cstdlib>
 
 
@@ -65,6 +69,7 @@ static void try_split_here(cw_entry &ent, chunk_t *pc);
  *
  * @param start The first chunk that exceeded the limit
  */
+
 static bool split_line(chunk_t *pc);
 
 

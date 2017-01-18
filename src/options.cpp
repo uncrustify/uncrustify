@@ -11,6 +11,9 @@
 #include "args.h"
 #include "prototypes.h"
 #include "uncrustify_version.h"
+#include "uncrustify.h"
+#include "keywords.h"
+#include "defines.h"
 #include <cstring>
 #ifdef HAVE_STRINGS_H
 #include <strings.h>  /* strcasecmp() */

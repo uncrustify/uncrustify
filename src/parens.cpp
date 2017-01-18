@@ -5,14 +5,15 @@
  * @author  Ben Gardner
  * @license GPL v2+
  */
+#include "parens.h"
 #include "uncrustify_types.h"
 #include "chunk_list.h"
-#include "prototypes.h"
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
 #include <cerrno>
 #include "unc_ctype.h"
+#include "uncrustify.h"
 
 
 /**

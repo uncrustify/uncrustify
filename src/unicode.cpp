@@ -5,6 +5,8 @@
  * @author  Ben Gardner
  * @license GPL v2+
  */
+#include "unicode.h"
+#include "uncrustify.h"
 #include "uncrustify_types.h"
 #include "prototypes.h"
 #include "unc_ctype.h"
@@ -360,9 +362,6 @@ static bool decode_bom(const vector<UINT8> &in_data, CharEncoding &enc)
 }
 
 
-/**
- * Figure out the encoding and convert to an int sequence
- */
 bool decode_unicode(const vector<UINT8> &in_data, deque<int> &out_data, CharEncoding &enc, bool &has_bom)
 {
    /* check for a BOM */
@@ -512,9 +511,6 @@ void write_bom(void)
 }
 
 
-/**
- * @param ch the 31-bit char value
- */
 void write_char(int ch)
 {
    if (ch >= 0)

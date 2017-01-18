@@ -17,6 +17,7 @@
  *          October 2015, 2016
  * @license GPL v2+
  */
+#include "space.h"
 #include "uncrustify_types.h"
 #include "chunk_list.h"
 #include "prototypes.h"
@@ -28,6 +29,7 @@
 #include <cerrno>
 #include <algorithm>
 #include "unc_ctype.h"
+#include "uncrustify.h"
 
 
 static void log_rule2(int line, const char *rule, chunk_t *first, chunk_t *second, bool complete);
@@ -1808,10 +1810,6 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
 } // do_space
 
 
-/**
- * Marches through the whole file and checks to see how many spaces should be
- * between two chunks
- */
 void space_text(void)
 {
    LOG_FUNC_ENTRY();
@@ -2074,9 +2072,6 @@ void space_text(void)
 } // space_text
 
 
-/**
- * Marches through the whole file and adds spaces around nested parens
- */
 void space_text_balance_nested_parens(void)
 {
    LOG_FUNC_ENTRY();
@@ -2139,9 +2134,6 @@ void space_text_balance_nested_parens(void)
 } // space_text_balance_nested_parens
 
 
-/**
- * Determines if a space is required between two chunks
- */
 int space_needed(chunk_t *first, chunk_t *second)
 {
    LOG_FUNC_ENTRY();
@@ -2163,15 +2155,6 @@ int space_needed(chunk_t *first, chunk_t *second)
 }
 
 
-/**
- * Calculates the column difference between two chunks.
- * The rules are bent a bit here, as AV_IGNORE and AV_ADD become AV_FORCE.
- * So the column difference is either first->len or first->len + 1.
- *
- * @param first   The first chunk
- * @param second  The second chunk
- * @return        the column difference between the two chunks
- */
 int space_col_align(chunk_t *first, chunk_t *second)
 {
    LOG_FUNC_ENTRY();
