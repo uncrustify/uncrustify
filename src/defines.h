@@ -15,7 +15,8 @@
  * Loads the defines from a file
  *
  * @param filename   The path to the file to load
- * @return           SUCCESS or FAILURE
+ * @retval           EX_OK    - defines successfully loaded from file
+ * @retval           EX_IOERR - reading defines file failed
  */
 int load_define_file(const char *filename);
 

@@ -38,7 +38,8 @@
  * @param filename   The file that was read (full path)
  * @param file_data  The file data
  * @param file_len   The file length
- * @return           SUCCESS or FAILURE
+ * @retval           EX_OK    - successfully created backup file
+ * @retval           EX_IOERR - could not create backup file
  */
 int backup_copy_file(const char *filename, const vector<UINT8> &data);
 

@@ -1690,7 +1690,7 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
          {
             fprintf(stderr, "%s:%d\n  for the option '%s' is a negative value not possible: %s",
                     cpd.filename, cpd.line_number, entry->name, val);
-            exit(2);
+            exit(EX_CONFIG);
          }
          dest->n = strtol(val, NULL, 0);
          // is the same as dest->u
@@ -1711,7 +1711,7 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
          {
             fprintf(stderr, "%s:%d\n  for the assigment: unknown option '%s':",
                     cpd.filename, cpd.line_number, val);
-            exit(2);
+            exit(EX_CONFIG);
          }
          if (tmp->type == entry->type)
          {
@@ -1724,7 +1724,7 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
             fprintf(stderr, "%s:%d\n  for the assigment: expected type for %s is %s, got %s\n",
                     cpd.filename, cpd.line_number,
                     entry->name, get_argtype_name(entry->type), get_argtype_name(tmp->type));
-            exit(2);
+            exit(EX_CONFIG);
          }
       }
       fprintf(stderr, "%s:%d Expected a number for %s, got %s\n",

@@ -58,7 +58,7 @@ int load_define_file(const char *filename)
       LOG_FMT(LERR, "%s: fopen(%s) failed: %s (%d)\n",
               __func__, filename, strerror(errno), errno);
       cpd.error_count++;
-      return(FAILURE);
+      return(EX_IOERR);
    }
 
    char   buf[160];
@@ -95,7 +95,7 @@ int load_define_file(const char *filename)
    }
 
    fclose(pf);
-   return(SUCCESS);
+   return(EX_OK);
 } // load_define_file
 
 
