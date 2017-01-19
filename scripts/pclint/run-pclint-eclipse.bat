@@ -32,25 +32,53 @@ rem FIXME: works only if there are no spaces in the paths
 dir /s/b %EXC_DIR%\*.lnt		> .\%OUT_DIR%\exceptions.lnt
 
 rem to check single files activate one of the lines below
-rem dir /s/b %SRC_DIR%\newlines.cpp	> .\%OUT_DIR%\files.lnt
-rem dir /s/b %SRC_DIR%\indent.cpp 	>> .\%OUT_DIR%\files.lnt
-rem dir /s/b %SRC_DIR%\a*.cpp 	>> .\%OUT_DIR%\files.lnt
-rem dir /s/b %SRC_DIR%\b*.cpp 	>> .\%OUT_DIR%\files.lnt
-rem dir /s/b %SRC_DIR%\c*.cpp 	>> .\%OUT_DIR%\files.lnt
-rem dir /s/b %SRC_DIR%\d*.cpp 	>> .\%OUT_DIR%\files.lnt
-rem dir /s/b %SRC_DIR%\l*.cpp 	>> .\%OUT_DIR%\files.lnt
-rem dir /s/b %SRC_DIR%\o*.cpp 	>> .\%OUT_DIR%\files.lnt
-rem dir /s/b %SRC_DIR%\p*.cpp 	>> .\%OUT_DIR%\files.lnt
-rem dir /s/b %SRC_DIR%\u*.cpp 	>> .\%OUT_DIR%\files.lnt
+rem dir /s/b %SRC_DIR%\align_stack.cpp	> .\%OUT_DIR%\files.lnt
+rem dir /s/b %SRC_DIR%\align.cpp		> .\%OUT_DIR%\files.lnt
+rem dir /s/b %SRC_DIR%\args.cpp			> .\%OUT_DIR%\files.lnt
+rem dir /s/b %SRC_DIR%\backup.cpp		> .\%OUT_DIR%\files.lnt
+rem dir /s/b %SRC_DIR%\brace_cleanup.cpp> .\%OUT_DIR%\files.lnt
+rem dir /s/b %SRC_DIR%\braces.cpp		> .\%OUT_DIR%\files.lnt
+rem dir /s/b %SRC_DIR%\chunk_list.cpp	> .\%OUT_DIR%\files.lnt
+rem dir /s/b %SRC_DIR%\ChunkStack.cpp	> .\%OUT_DIR%\files.lnt
+rem dir /s/b %SRC_DIR%\combine.cpp		> .\%OUT_DIR%\files.lnt
+rem dir /s/b %SRC_DIR%\compat_posix.cpp	> .\%OUT_DIR%\files.lnt
+rem dir /s/b %SRC_DIR%\compat_win32.cpp	> .\%OUT_DIR%\files.lnt
+rem dir /s/b %SRC_DIR%\defines.cpp		> .\%OUT_DIR%\files.lnt
+rem dir /s/b %SRC_DIR%\detect.cpp		> .\%OUT_DIR%\files.lnt
+rem dir /s/b %SRC_DIR%\indent.cpp 		> .\%OUT_DIR%\files.lnt
+rem dir /s/b %SRC_DIR%\keywords.cpp 	> .\%OUT_DIR%\files.lnt
+rem dir /s/b %SRC_DIR%\lang_pawn.cpp 	> .\%OUT_DIR%\files.lnt
+rem dir /s/b %SRC_DIR%\logger.cpp	 	> .\%OUT_DIR%\files.lnt
+rem dir /s/b %SRC_DIR%\logmask.cpp	 	> .\%OUT_DIR%\files.lnt
+rem dir /s/b %SRC_DIR%\md5.cpp		 	> .\%OUT_DIR%\files.lnt
+rem dir /s/b %SRC_DIR%\newlines.cpp	 	> .\%OUT_DIR%\files.lnt
+rem dir /s/b %SRC_DIR%\options_for_QT.cpp	> .\%OUT_DIR%\files.lnt
+rem dir /s/b %SRC_DIR%\options.cpp	 	> .\%OUT_DIR%\files.lnt
+rem dir /s/b %SRC_DIR%\output.cpp	 	> .\%OUT_DIR%\files.lnt
+rem dir /s/b %SRC_DIR%\parens.cpp	 	> .\%OUT_DIR%\files.lnt
+rem dir /s/b %SRC_DIR%\parse_frame.cpp	> .\%OUT_DIR%\files.lnt
+rem dir /s/b %SRC_DIR%\punctuators.cpp	> .\%OUT_DIR%\files.lnt
+rem dir /s/b %SRC_DIR%\semicolons.cpp	> .\%OUT_DIR%\files.lnt
+rem dir /s/b %SRC_DIR%\sorting.cpp	 	> .\%OUT_DIR%\files.lnt
+rem dir /s/b %SRC_DIR%\space.cpp	 	> .\%OUT_DIR%\files.lnt
+rem dir /s/b %SRC_DIR%\tokenize_cleanup.cpp	 	> .\%OUT_DIR%\files.lnt
+rem dir /s/b %SRC_DIR%\tokenize.cpp	 	> .\%OUT_DIR%\files.lnt
+rem dir /s/b %SRC_DIR%\unc_text.cpp	 	> .\%OUT_DIR%\files.lnt
+rem dir /s/b %SRC_DIR%\unc_tools.cpp	> .\%OUT_DIR%\files.lnt
+rem dir /s/b %SRC_DIR%\uncrustify_emscripten.cpp 	> .\%OUT_DIR%\files.lnt
+rem dir /s/b %SRC_DIR%\uncrustify.cpp 	> .\%OUT_DIR%\files.lnt
+rem dir /s/b %SRC_DIR%\unicode.cpp 	> .\%OUT_DIR%\files.lnt
+rem dir /s/b %SRC_DIR%\universalindentgui.cpp 	> .\%OUT_DIR%\files.lnt
+rem dir /s/b %SRC_DIR%\width.cpp 	> .\%OUT_DIR%\files.lnt
 
 rem to check all source files use the line below
 dir /s/b %SRC_DIR%\*.cpp 	> .\%OUT_DIR%\files.lnt
 
 rem use this to save the pclint errors to a file for later review
-lint-nt .\%LNT_DIR%\pclint_cfg_eclipse.lnt .\%OUT_DIR%\exceptions.lnt .\%OUT_DIR%\files.lnt > .\%OUT_DIR%\pclint-results.xml
+rem lint-nt .\%LNT_DIR%\pclint_cfg_eclipse.lnt .\%OUT_DIR%\exceptions.lnt .\%OUT_DIR%\files.lnt > .\%OUT_DIR%\pclint-results.xml
 
 rem to make eclipse parse the pclint errors it has to be output to the console
-rem lint-nt .\%LNT_DIR%\pclint_cfg_eclipse.lnt .\%OUT_DIR%\exceptions.lnt .\%OUT_DIR%\files.lnt
+lint-nt .\%LNT_DIR%\pclint_cfg_eclipse.lnt .\%OUT_DIR%\exceptions.lnt .\%OUT_DIR%\files.lnt
 
 rem type %OUT_DIR%\pclint-results.xml | more
 rem type %OUT_DIR%\pclint-results.xml
