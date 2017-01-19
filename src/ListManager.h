@@ -7,8 +7,8 @@
  * @license GPL v2+
  */
 
-#ifndef _LIST_MANAGER_H_
-#define _LIST_MANAGER_H_
+#ifndef LIST_MANAGER_H_INCLUDED
+#define LIST_MANAGER_H_INCLUDED
 
 /**
  * A simple list manager for a double-linked list.
@@ -203,4 +203,4 @@ public:
    }
 };
 
-#endif /* _LIST_MANAGER_H_ */
+#endif /* LIST_MANAGER_H_INCLUDED */

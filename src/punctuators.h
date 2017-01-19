@@ -3,8 +3,8 @@
  * Automatically generated
  */
 
-#ifndef _PUNCTUATORS_H_
-#define _PUNCTUATORS_H_
+#ifndef PUNCTUATORS_H_INCLUDED
+#define PUNCTUATORS_H_INCLUDED
 
 static const lookup_entry_t punc_table[] =
 {
@@ -91,4 +91,4 @@ static const lookup_entry_t punc_table[] =
    { '~',  0,  0, &symbols2[31] },   //  80: '~~'
 };
 
-#endif /* _PUNCTUATORS_H_ */
+#endif /* PUNCTUATORS_H_INCLUDED */
