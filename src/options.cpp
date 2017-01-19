@@ -849,11 +849,11 @@ void register_options(void)
                   "Add or remove newline between Objective-C block signature and '{'");
    unc_add_option("nl_start_of_file", UO_nl_start_of_file, AT_IARF,
                   "Add or remove newlines at the start of the file");
-   unc_add_option("nl_start_of_file_min", UO_nl_start_of_file_min, AT_NUM,
+   unc_add_option("nl_start_of_file_min", UO_nl_start_of_file_min, AT_UNUM,
                   "The number of newlines at the start of the file (only used if nl_start_of_file is 'add' or 'force'");
    unc_add_option("nl_end_of_file", UO_nl_end_of_file, AT_IARF,
                   "Add or remove newline at the end of the file");
-   unc_add_option("nl_end_of_file_min", UO_nl_end_of_file_min, AT_NUM,
+   unc_add_option("nl_end_of_file_min", UO_nl_end_of_file_min, AT_UNUM,
                   "The number of newlines at the end of the file (only used if nl_end_of_file is 'add' or 'force')");
    unc_add_option("nl_assign_brace", UO_nl_assign_brace, AT_IARF,
                   "Add or remove newline between '=' and '{'");
@@ -861,27 +861,27 @@ void register_options(void)
                   "Add or remove newline between '=' and '[' (D only)");
    unc_add_option("nl_after_square_assign", UO_nl_after_square_assign, AT_IARF,
                   "Add or remove newline after '= [' (D only). Will also affect the newline before the ']'");
-   unc_add_option("nl_func_var_def_blk", UO_nl_func_var_def_blk, AT_NUM,
+   unc_add_option("nl_func_var_def_blk", UO_nl_func_var_def_blk, AT_UNUM,
                   "The number of blank lines after a block of variable definitions at the top of a function body\n"
                   "0 = No change (default)");
-   unc_add_option("nl_typedef_blk_start", UO_nl_typedef_blk_start, AT_NUM,
+   unc_add_option("nl_typedef_blk_start", UO_nl_typedef_blk_start, AT_UNUM,
                   "The number of newlines before a block of typedefs\n"
                   "0 = No change (default)\n"
                   "the option 'nl_after_access_spec' takes preference over 'nl_typedef_blk_start'");
-   unc_add_option("nl_typedef_blk_end", UO_nl_typedef_blk_end, AT_NUM,
+   unc_add_option("nl_typedef_blk_end", UO_nl_typedef_blk_end, AT_UNUM,
                   "The number of newlines after a block of typedefs\n"
                   "0 = No change (default)");
-   unc_add_option("nl_typedef_blk_in", UO_nl_typedef_blk_in, AT_NUM,
+   unc_add_option("nl_typedef_blk_in", UO_nl_typedef_blk_in, AT_UNUM,
                   "The maximum consecutive newlines within a block of typedefs\n"
                   "0 = No change (default)");
-   unc_add_option("nl_var_def_blk_start", UO_nl_var_def_blk_start, AT_NUM,
+   unc_add_option("nl_var_def_blk_start", UO_nl_var_def_blk_start, AT_UNUM,
                   "The number of newlines before a block of variable definitions not at the top of a function body\n"
                   "0 = No change (default)\n"
                   "the option 'nl_after_access_spec' takes preference over 'nl_var_def_blk_start'");
-   unc_add_option("nl_var_def_blk_end", UO_nl_var_def_blk_end, AT_NUM,
+   unc_add_option("nl_var_def_blk_end", UO_nl_var_def_blk_end, AT_UNUM,
                   "The number of newlines after a block of variable definitions not at the top of a function body\n"
                   "0 = No change (default)");
-   unc_add_option("nl_var_def_blk_in", UO_nl_var_def_blk_in, AT_NUM,
+   unc_add_option("nl_var_def_blk_in", UO_nl_var_def_blk_in, AT_UNUM,
                   "The maximum consecutive newlines within a block of variable definitions\n"
                   "0 = No change (default)");
    unc_add_option("nl_fcall_brace", UO_nl_fcall_brace, AT_IARF,
@@ -1098,11 +1098,11 @@ void register_options(void)
    unc_add_option("nl_ds_struct_enum_close_brace", UO_nl_ds_struct_enum_close_brace, AT_BOOL,
                   "force nl before } of a struct/union/enum\n"
                   "(lower priority than 'eat_blanks_before_close_brace')");
-   unc_add_option("nl_before_func_class_def", UO_nl_before_func_class_def, AT_NUM,
+   unc_add_option("nl_before_func_class_def", UO_nl_before_func_class_def, AT_UNUM,
                   "Add or remove blank line before 'func_class_def'");
    //unc_add_option("nl_after_func_class_def", UO_nl_after_func_class_def, AT_NUM,
    //               "Add or remove blank line after 'func_class_def' statement");
-   unc_add_option("nl_before_func_class_proto", UO_nl_before_func_class_proto, AT_NUM,
+   unc_add_option("nl_before_func_class_proto", UO_nl_before_func_class_proto, AT_UNUM,
                   "Add or remove blank line before 'func_class_proto'");
    //unc_add_option("nl_after_func_class_proto", UO_nl_after_func_class_proto, AT_NUM,
    //               "Add or remove blank line after 'func_class_proto' statement");
@@ -1132,65 +1132,65 @@ void register_options(void)
                   "'while (i<5)\\n foo(i++);' => 'while (i<5) foo(i++);'");
 
    unc_begin_group(UG_blankline, "Blank line options", "Note that it takes 2 newlines to get a blank line");
-   unc_add_option("nl_max", UO_nl_max, AT_NUM,
+   unc_add_option("nl_max", UO_nl_max, AT_UNUM,
                   "The maximum consecutive newlines (3 = 2 blank lines)");
-   unc_add_option("nl_max_blank_in_func", UO_nl_max_blank_in_func, AT_NUM,
+   unc_add_option("nl_max_blank_in_func", UO_nl_max_blank_in_func, AT_UNUM,
                   "The maximum consecutive newlines in function");
-   unc_add_option("nl_after_func_proto", UO_nl_after_func_proto, AT_NUM,
+   unc_add_option("nl_after_func_proto", UO_nl_after_func_proto, AT_UNUM,
                   "The number of newlines after a function prototype, if followed by another function prototype");
-   unc_add_option("nl_after_func_proto_group", UO_nl_after_func_proto_group, AT_NUM,
+   unc_add_option("nl_after_func_proto_group", UO_nl_after_func_proto_group, AT_UNUM,
                   "The number of newlines after a function prototype, if not followed by another function prototype");
-   unc_add_option("nl_after_func_class_proto", UO_nl_after_func_class_proto, AT_NUM,
+   unc_add_option("nl_after_func_class_proto", UO_nl_after_func_class_proto, AT_UNUM,
                   "The number of newlines after a function class prototype, if followed by another function class prototype");
-   unc_add_option("nl_after_func_class_proto_group", UO_nl_after_func_class_proto_group, AT_NUM,
+   unc_add_option("nl_after_func_class_proto_group", UO_nl_after_func_class_proto_group, AT_UNUM,
                   "The number of newlines after a function class prototype, if not followed by another function class prototype");
-   unc_add_option("nl_before_func_body_def", UO_nl_before_func_body_def, AT_NUM,
+   unc_add_option("nl_before_func_body_def", UO_nl_before_func_body_def, AT_UNUM,
                   "The number of newlines before a multi-line function def body");
-   unc_add_option("nl_before_func_body_proto", UO_nl_before_func_body_proto, AT_NUM,
+   unc_add_option("nl_before_func_body_proto", UO_nl_before_func_body_proto, AT_UNUM,
                   "The number of newlines before a multi-line function prototype body");
-   unc_add_option("nl_after_func_body", UO_nl_after_func_body, AT_NUM,
+   unc_add_option("nl_after_func_body", UO_nl_after_func_body, AT_UNUM,
                   "The number of newlines after '}' of a multi-line function body");
-   unc_add_option("nl_after_func_body_class", UO_nl_after_func_body_class, AT_NUM,
+   unc_add_option("nl_after_func_body_class", UO_nl_after_func_body_class, AT_UNUM,
                   "The number of newlines after '}' of a multi-line function body in a class declaration");
-   unc_add_option("nl_after_func_body_one_liner", UO_nl_after_func_body_one_liner, AT_NUM,
+   unc_add_option("nl_after_func_body_one_liner", UO_nl_after_func_body_one_liner, AT_UNUM,
                   "The number of newlines after '}' of a single line function body");
-   unc_add_option("nl_before_block_comment", UO_nl_before_block_comment, AT_NUM,
+   unc_add_option("nl_before_block_comment", UO_nl_before_block_comment, AT_UNUM,
                   "The minimum number of newlines before a multi-line comment.\n"
                   "Doesn't apply if after a brace open or another multi-line comment.");
-   unc_add_option("nl_before_c_comment", UO_nl_before_c_comment, AT_NUM,
+   unc_add_option("nl_before_c_comment", UO_nl_before_c_comment, AT_UNUM,
                   "The minimum number of newlines before a single-line C comment.\n"
                   "Doesn't apply if after a brace open or other single-line C comments.");
-   unc_add_option("nl_before_cpp_comment", UO_nl_before_cpp_comment, AT_NUM,
+   unc_add_option("nl_before_cpp_comment", UO_nl_before_cpp_comment, AT_UNUM,
                   "The minimum number of newlines before a CPP comment.\n"
                   "Doesn't apply if after a brace open or other CPP comments.");
    unc_add_option("nl_after_multiline_comment", UO_nl_after_multiline_comment, AT_BOOL,
                   "Whether to force a newline after a multi-line comment.");
    unc_add_option("nl_after_label_colon", UO_nl_after_label_colon, AT_BOOL,
                   "Whether to force a newline after a label's colon.");
-   unc_add_option("nl_after_struct", UO_nl_after_struct, AT_NUM,
+   unc_add_option("nl_after_struct", UO_nl_after_struct, AT_UNUM,
                   "The number of newlines after '}' or ';' of a struct/enum/union definition");
-   unc_add_option("nl_before_class", UO_nl_before_class, AT_NUM,
+   unc_add_option("nl_before_class", UO_nl_before_class, AT_UNUM,
                   "The number of newlines before a class definition");
-   unc_add_option("nl_after_class", UO_nl_after_class, AT_NUM,
+   unc_add_option("nl_after_class", UO_nl_after_class, AT_UNUM,
                   "The number of newlines after '}' or ';' of a class definition");
-   unc_add_option("nl_before_access_spec", UO_nl_before_access_spec, AT_NUM,
+   unc_add_option("nl_before_access_spec", UO_nl_before_access_spec, AT_UNUM,
                   "The number of newlines before a 'private:', 'public:', 'protected:', 'signals:', or 'slots:' label.\n"
                   "Will not change the newline count if after a brace open.\n"
                   "0 = No change.");
-   unc_add_option("nl_after_access_spec", UO_nl_after_access_spec, AT_NUM,
+   unc_add_option("nl_after_access_spec", UO_nl_after_access_spec, AT_UNUM,
                   "The number of newlines after a 'private:', 'public:', 'protected:', 'signals:' or 'slots:' label.\n"
                   "0 = No change.\n"
                   "the option 'nl_after_access_spec' takes preference over 'nl_typedef_blk_start' and 'nl_var_def_blk_start'");
-   unc_add_option("nl_comment_func_def", UO_nl_comment_func_def, AT_NUM,
+   unc_add_option("nl_comment_func_def", UO_nl_comment_func_def, AT_UNUM,
                   "The number of newlines between a function def and the function comment.\n"
                   "0 = No change.");
-   unc_add_option("nl_after_try_catch_finally", UO_nl_after_try_catch_finally, AT_NUM,
+   unc_add_option("nl_after_try_catch_finally", UO_nl_after_try_catch_finally, AT_UNUM,
                   "The number of newlines after a try-catch-finally block that isn't followed by a brace close.\n"
                   "0 = No change.");
-   unc_add_option("nl_around_cs_property", UO_nl_around_cs_property, AT_NUM,
+   unc_add_option("nl_around_cs_property", UO_nl_around_cs_property, AT_UNUM,
                   "The number of newlines before and after a property, indexer or event decl.\n"
                   "0 = No change.");
-   unc_add_option("nl_between_get_set", UO_nl_between_get_set, AT_NUM,
+   unc_add_option("nl_between_get_set", UO_nl_between_get_set, AT_UNUM,
                   "The number of newlines between the get/set/add/remove handlers in C#.\n"
                   "0 = No change.");
    unc_add_option("nl_property_brace", UO_nl_property_brace, AT_IARF,
@@ -1199,7 +1199,7 @@ void register_options(void)
                   "Whether to remove blank lines after '{'");
    unc_add_option("eat_blanks_before_close_brace", UO_eat_blanks_before_close_brace, AT_BOOL,
                   "Whether to remove blank lines before '}'");
-   unc_add_option("nl_remove_extra_newlines", UO_nl_remove_extra_newlines, AT_NUM,
+   unc_add_option("nl_remove_extra_newlines", UO_nl_remove_extra_newlines, AT_UNUM,
                   "How aggressively to remove extra newlines not in preproc.\n"
                   "0: No change\n"
                   "1: Remove most newlines not handled by other config\n"
