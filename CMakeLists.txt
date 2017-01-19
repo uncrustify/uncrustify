@@ -49,6 +49,8 @@ if(ENABLE_SANITIZER)
 endif()
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
+include_directories(${PROJECT_SOURCE_DIR}/include)
+include_directories(${PROJECT_SOURCE_DIR}/src)
 
 #
 # Determine config
@@ -181,11 +183,13 @@ add_executable(uncrustify
   src/output.cpp
   src/parens.cpp
   src/parse_frame.cpp
+  src/punc_table.h
   src/punctuators.cpp
   src/semicolons.cpp
   src/sorting.cpp
   src/space.cpp
   src/tabulator.cpp
+  src/token_enum.h
   src/tokenize.cpp
   src/tokenize_cleanup.cpp
   src/uncrustify.cpp
@@ -194,27 +198,50 @@ add_executable(uncrustify
   src/unicode.cpp
   src/universalindentgui.cpp
   src/width.cpp
-  src/align_stack.h
-  src/args.h
-  src/backup.h
-  src/base_types.h
-  src/char_table.h
-  src/ChunkStack.h
-  src/chunk_list.h
-  src/ListManager.h
-  src/logger.h
-  src/logmask.h
-  src/log_levels.h
-  src/md5.h
-  src/options.h
-  src/options_for_QT.h
-  src/punc_table.h
-  src/punctuators.h
-  src/token_enum.h
-  src/uncrustify_types.h
-  src/unc_ctype.h
-  src/unc_text.h
-  src/unc_tools.h
+  include/align_stack.h
+  include/align.h
+  include/args.h
+  include/backup.h
+  include/base_types.h
+  include/brace_cleanup.h
+  include/braces.h
+  include/char_table.h
+  include/ChunkStack.h
+  include/chunk_list.h
+  include/combine.h
+  include/compat.h
+  include/defines.h
+  include/detect.h
+  include/error_types.h
+  include/indent.h
+  include/keywords.h
+  include/lang_pawn.h
+  include/ListManager.h
+  include/log_levels.h
+  include/logger.h
+  include/logmask.h
+  include/md5.h
+  include/newlines.h
+  include/options_for_QT.h
+  include/options.h
+  include/output.h
+  include/parens.h
+  include/parse_frame.h
+  include/punctuators.h
+  include/semicolons.h
+  include/sorting.h
+  include/space.h
+  include/tabulator.h
+  include/tokenize_cleanup.h
+  include/tokenize.h
+  include/unc_ctype.h
+  include/unc_text.h
+  include/unc_tools.h
+  include/uncrustify_types.h
+  include/unicode.h
+  include/universalindentgui.h
+  include/width.h
+  include/windows_compat.h
 )
 
 if(CMAKE_VERSION VERSION_LESS 2.8.10)

@@ -138,7 +138,7 @@ static void cmt_output_indent(int brace_col, int base_col, int column);
  * @param line the comment line
  * @return 0=not present, >0=number of chars that are part of the lead
  */
-static int cmt_parse_lead(const unc_text &line, bool is_last);
+static size_t cmt_parse_lead(const unc_text &line, bool is_last);
 
 
 /**

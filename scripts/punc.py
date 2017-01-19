@@ -90,9 +90,14 @@ def main():
         add_to_db(a, db)
 
     print("/**")
-    print(" * @file punctuators.h")
+    print(" * @file punc_table.h")
     print(" * Automatically generated")
     print(" */")
+    print("\n")
+    print("#ifndef PUNC_TABLE_H_INCLUDED")
+    print("#define PUNC_TABLE_H_INCLUDED")
+    print("\n")
+    print("\n")
     print("static const lookup_entry_t punc_table[] =")
     print("{")
 
@@ -118,7 +123,9 @@ def main():
         idx += 1
 
     print("};")
+    print("\n")
+    print("#endif /* PUNC_TABLE_H_INCLUDED */")
+    print("\n")
 
 if __name__ == '__main__':
     exit(main())
-
