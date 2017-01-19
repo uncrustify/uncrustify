@@ -15,9 +15,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
-#include <cerrno>
 #include "unc_ctype.h"
-#include <cassert>
 
 
 static void remove_semicolon(chunk_t *pc);

@@ -6,7 +6,7 @@
  * @license GPL v2+
  */
 #include "uncrustify_types.h"
-#include <cstring>
+#include "prototypes.h"
 
 
 /**

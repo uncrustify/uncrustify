@@ -25,7 +25,6 @@
 #include <cstdlib>
 #include <cstring>
 #include <algorithm>
-#include <cerrno>
 #include "unc_ctype.h"
 #include "unc_tools.h"
 #include "uncrustify.h"
@@ -1114,7 +1113,6 @@ static void newlines_if_for_while_switch_post_blank_lines(chunk_t *start, argval
    chunk_t *pc;
    chunk_t *next;
    chunk_t *prev;
-   bool    have_pre_vbrace_nl = false;
 
    if ((nl_opt == AV_IGNORE) ||
        ((start->flags & PCF_IN_PREPROC) &&
@@ -1166,7 +1164,7 @@ static void newlines_if_for_while_switch_post_blank_lines(chunk_t *start, argval
       return;
    }
 
-   have_pre_vbrace_nl = isVBrace && chunk_is_newline(prev);
+   bool have_pre_vbrace_nl = isVBrace && chunk_is_newline(prev);
    if (nl_opt & AV_REMOVE)
    {
       /* if vbrace, have to check before and after */

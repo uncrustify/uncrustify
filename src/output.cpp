@@ -9,7 +9,6 @@
  */
 #include "output.h"
 #include "uncrustify_types.h"
-#include "uncrustify_version.h"
 #include "prototypes.h"
 #include "chunk_list.h"
 #include "unc_ctype.h"
@@ -26,7 +25,7 @@ static void do_kw_subst(chunk_t *pc);
 struct cmt_reflow
 {
    chunk_t  *pc;
-   int      column;        /* Column of the comment start */
+   size_t   column;        /* Column of the comment start */
    int      brace_col;     /* Brace column (for indenting with tabs) */
    int      base_col;      /* Base column (for indenting with tabs) */
    int      word_count;    /* number of words on this line */
@@ -36,17 +35,43 @@ struct cmt_reflow
 };
 
 
+/**
+ * Outputs the C comment at pc.
+ * C comment combining is done here
+ *
+ * @return the last chunk output'd
+ */
 static chunk_t *output_comment_c(chunk_t *pc);
+
+
+/**
+ * Outputs the CPP comment at pc.
+ * CPP comment combining is done here
+ *
+ * @return the last chunk output'd
+ */
 static chunk_t *output_comment_cpp(chunk_t *pc);
+
+
+/**
+ * Outputs a comment. The initial opening '//' may be included in the text.
+ * Subsequent openings (if combining comments), should not be included.
+ * The closing (for C/D comments) should not be included.
+ *
+ * TODO:
+ * If reflowing text, the comment should be added one word (or line) at a time.
+ * A newline should only be sent if a blank line is encountered or if the next
+ * line is indented beyond the current line (optional?).
+ * If the last char on a line is a ':' or '.', then the next line won't be
+ * combined.
+ */
 static void add_comment_text(const unc_text &text, cmt_reflow &cmt, bool esc_close);
+
 
 #define LOG_CONTTEXT() \
    LOG_FMT(LCONTTEXT, "%s:%d set cont_text to '%s'\n", __func__, __LINE__, cmt.cont_text.c_str())
 
 
-/**
- * All output text is sent here, one char at a time.
- */
 static void add_char(UINT32 ch)
 {
    /* If we did a '\r' and it isn't followed by a '\n', then output a newline */
@@ -109,7 +134,7 @@ static void add_char(UINT32 ch)
          write_char(ch);
          if (ch == '\t')
          {
-            cpd.column = next_tab_column(cpd.column);
+            cpd.column = (UINT16)next_tab_column(cpd.column);
          }
          else
          {
@@ -150,10 +175,6 @@ static void add_text(const unc_text &text, bool is_ignored = false)
 }
 
 
-/**
- * Count the number of characters to the end of the next chunk of text.
- * If it exceeds the limit, return true.
- */
 static bool next_word_exceeds_limit(const unc_text &text, int idx)
 {
    int length = 0;
@@ -175,22 +196,17 @@ static bool next_word_exceeds_limit(const unc_text &text, int idx)
 }
 
 
-/**
- * Advance to a specific column
- * cpd.column is the current column
- *
- * @param column  The column to advance to
- */
-static void output_to_column(int column, bool allow_tabs)
+static void output_to_column(size_t column, bool allow_tabs)
 {
    cpd.did_newline = 0;
    if (allow_tabs)
    {
       /* tab out as far as possible and then use spaces */
-      int nc;
-      while ((nc = next_tab_column(cpd.column)) <= column)
+      size_t next_column = next_tab_column(cpd.column);
+      while (next_column <= column)
       {
          add_text("\t");
+         next_column = next_tab_column(cpd.column);
       }
    }
    /* space out the final bit */
@@ -201,17 +217,6 @@ static void output_to_column(int column, bool allow_tabs)
 }
 
 
-/**
- * Output a comment to the column using indent_with_tabs and
- * indent_cmt_with_tabs as the rules.
- * base_col is the indent of the first line of the comment.
- * On the first line, column == base_col.
- * On subsequent lines, column >= base_col.
- *
- * @param brace_col the brace-level indent of the comment
- * @param base_col  the indent of the start of the comment (multiline)
- * @param column    the column that we should end up in
- */
 static void cmt_output_indent(int brace_col, int base_col, int column)
 {
    int iwt = cpd.settings[UO_indent_cmt_with_tabs].b ? 2 :
@@ -249,7 +254,7 @@ void output_parsed(FILE *pfile)
    fprintf(pfile, "# Line              Tag           Parent          Columns Br/Lvl/pp     Flag   Nl  Text");
    for (chunk_t *pc = chunk_get_head(); pc != NULL; pc = chunk_get_next(pc))
    {
-      fprintf(pfile, "\n# %3zu> %16.16s[%16.16s][%3zu/%3zu/%3d/%3d][%zu/%zu/%zu][%10" PRIx64 "][%zu-%d]",
+      fprintf(pfile, "\n# %3zu> %16.16s[%16.16s][%3zu/%3zu/%3u/%3u][%zu/%zu/%zu][%10" PRIx64 "][%zu-%d]",
               pc->orig_line, get_token_name(pc->type),
               get_token_name(pc->parent_type),
               pc->column, pc->orig_col, pc->orig_col_end, pc->orig_prev_sp,
@@ -403,7 +408,7 @@ void output_text(FILE *pfile)
          {
             if (cpd.settings[UO_indent_with_tabs].n == 1)
             {
-               int lvlcol;
+               size_t lvlcol;
                /* FIXME: it would be better to properly set column_indent in
                 * indent_text(), but this hack for '}' and ':' seems to work. */
                if ((pc->type == CT_BRACE_CLOSE) ||
@@ -752,18 +757,6 @@ static int next_up(const unc_text &text, int idx, unc_text &tag)
 }
 
 
-/**
- * Outputs a comment. The initial opening '//' may be included in the text.
- * Subsequent openings (if combining comments), should not be included.
- * The closing (for C/D comments) should not be included.
- *
- * TODO:
- * If reflowing text, the comment should be added one word (or line) at a time.
- * A newline should only be sent if a blank line is encountered or if the next
- * line is indented beyond the current line (optional?).
- * If the last char on a line is a ':' or '.', then the next line won't be
- * combined.
- */
 static void add_comment_text(const unc_text &text,
                              cmt_reflow &cmt, bool esc_close)
 {
@@ -945,12 +938,6 @@ static bool can_combine_comment(chunk_t *pc, cmt_reflow &cmt)
 } // can_combine_comment
 
 
-/**
- * Outputs the C comment at pc.
- * C comment combining is done here
- *
- * @return the last chunk output'd
- */
 static chunk_t *output_comment_c(chunk_t *first)
 {
    cmt_reflow cmt;
@@ -1007,14 +994,13 @@ static chunk_t *output_comment_c(chunk_t *first)
 } // output_comment_c
 
 
-/**
- * Outputs the CPP comment at pc.
- * CPP comment combining is done here
- *
- * @return the last chunk output'd
- */
 static chunk_t *output_comment_cpp(chunk_t *first)
 {
+   if (first == NULL)
+   {
+      return(first);
+   }
+
    cmt_reflow cmt;
 
    output_cmt_start(cmt, first);
@@ -1024,8 +1010,12 @@ static chunk_t *output_comment_cpp(chunk_t *first)
    if (cpd.settings[UO_sp_cmt_cpp_doxygen].b)           // special treatment for doxygen style comments (treat as unity)
    {
       const char *sComment = first->text();
-      bool       grouping  = (sComment[2] == '@');
-      int        brace     = 3;
+      if (sComment == NULL)
+      {
+         return(first);
+      }
+      bool grouping = (sComment[2] == '@');
+      int  brace    = 3;
       if ((sComment[2] == '/') || (sComment[2] == '!')) // doxygen style found!
       {
          leadin += sComment[2];                         // at least one additional char (either "///" or "//!")
@@ -1222,7 +1212,7 @@ static void output_comment_multi(chunk_t *pc)
    //        pc->orig_line, cmt_col, pc->orig_col, col_diff, cmt.xtra_indent, cmt.cont_text.c_str());
 
    int      line_count = 0;
-   int      ccol       = pc->column; /* the col of subsequent comment lines */
+   size_t   ccol       = pc->column; /* the col of subsequent comment lines */
    int      cmt_idx    = 0;
    bool     nl_end     = false;
    unc_text line;
@@ -1492,7 +1482,7 @@ static void output_comment_multi(chunk_t *pc)
 
 static bool kw_fcn_filename(chunk_t *cmt, unc_text &out_txt)
 {
-   (void)cmt;
+   UNUSED(cmt);
    out_txt.append(path_basename(cpd.filename));
    return(true);
 }
@@ -1884,7 +1874,7 @@ static void do_kw_subst(chunk_t *pc)
  */
 static void output_comment_multi_simple(chunk_t *pc, bool kw_subst)
 {
-   (void)kw_subst;
+   UNUSED(kw_subst);
    cmt_reflow cmt;
    output_cmt_start(cmt, pc);
 
