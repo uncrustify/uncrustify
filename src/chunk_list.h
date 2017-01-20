@@ -75,6 +75,28 @@ chunk_t *chunk_get_prev_nvb(chunk_t *cur, chunk_nav_t nav = CNAV_ALL);
 
 
 /**
+ * \brief reverse search a chunk of a given category in a chunk list
+ *
+ * @retval NULL    - no object found, or invalid parameters provided
+ * @retval chunk_t - pointer to the found object
+ */
+chunk_t *search_prev_chunk(chunk_t         *pc, /**< [in] chunk list to search in */
+                           const c_token_t cat  /**< [in] category to search for */
+                           );
+
+
+/**
+ * \brief forward search a chunk of a given category in a chunk list
+ *
+ * @retval NULL    - no object found, or invalid parameters provided
+ * @retval chunk_t - pointer to the found object
+ */
+chunk_t *search_next_chunk(chunk_t         *pc, /**< [in] chunk list to search in */
+                           const c_token_t cat  /**< [in] category to search for */
+                           );
+
+
+/**
  * Skips to the closing match for the current paren/brace/square.
  *
  * @param cur  The opening or closing paren/brace/square

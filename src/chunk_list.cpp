@@ -18,6 +18,21 @@
 typedef ListManager<chunk_t> ChunkList;
 
 
+/**
+ * \brief search a chunk of a given category in a chunk list
+ *
+ * follows a chunk list until it finds a chunk of a given category.
+ * The search direction is determined by parameter dir.
+ *
+ * @retval NULL    - no object found, or invalid parameters provided
+ * @retval chunk_t - pointer to the found object
+ */
+static chunk_t *search_chunk(chunk_t         *pc, /**< [in] chunk list to search in */
+                             const c_token_t cat, /**< [in] category to search for */
+                             const bool      dir  /**< [in] search forward=true, backward=false */
+                             );
+
+
 static void chunk_log(chunk_t *pc, const char *text);
 
 
@@ -33,6 +48,32 @@ chunk_t *chunk_get_head(void)
 chunk_t *chunk_get_tail(void)
 {
    return(g_cl.GetTail());
+}
+
+
+chunk_t *search_prev_chunk(chunk_t *pc, const c_token_t cat)
+{
+   return(search_chunk(pc, cat, false));
+}
+
+
+chunk_t *search_next_chunk(chunk_t *pc, const c_token_t cat)
+{
+   return(search_chunk(pc, cat, true));
+}
+
+
+static chunk_t *search_chunk(chunk_t *pc, const c_token_t cat, const bool dir)
+{
+   /* no need to check if pc != NULL as this is done in chunk_get_next/prev */
+   while ((pc = (dir == true) ? chunk_get_next(pc) : chunk_get_prev(pc)) != NULL)
+   {
+      if (pc->type == cat)
+      {
+         return(pc);
+      }
+   }
+   return(NULL);
 }
 
 

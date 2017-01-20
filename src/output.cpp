@@ -660,6 +660,7 @@ static void calculate_comment_body_indent(cmt_reflow &cmt, const unc_text &str)
 } // calculate_comment_body_indent
 
 
+/* \todo can we use search_next_chunk here? */
 static chunk_t *get_next_function(chunk_t *pc)
 {
    while ((pc = chunk_get_next(pc)) != NULL)
@@ -677,60 +678,27 @@ static chunk_t *get_next_function(chunk_t *pc)
 }
 
 
-/* \todo better use generic functions for the following functions
- *
- * static chunk_t *check_prev_category(chunk_t *pc, c_token_t* cat)
- * static chunk_t *check_next_category(chunk_t *pc, c_token_t* cat)
- */
+static chunk_t *get_next_class(chunk_t *pc)
+{
+   return(chunk_get_next(search_next_chunk(pc, CT_CLASS)));
+}
+
+
 static chunk_t *get_prev_category(chunk_t *pc)
 {
-   while ((pc = chunk_get_prev(pc)) != NULL)
-   {
-      if (pc->type == CT_OC_CATEGORY)
-      {
-         return(pc);
-      }
-   }
-   return(NULL);
+   return(search_prev_chunk(pc, CT_OC_CATEGORY));
 }
 
 
 static chunk_t *get_next_scope(chunk_t *pc)
 {
-   while ((pc = chunk_get_next(pc)) != NULL)
-   {
-      if (pc->type == CT_OC_SCOPE)
-      {
-         return(pc);
-      }
-   }
-   return(NULL);
-}
-
-
-static chunk_t *get_next_class(chunk_t *pc)
-{
-   while ((pc = chunk_get_next(pc)) != NULL)
-   {
-      if (pc->type == CT_CLASS)
-      {
-         return(chunk_get_next(pc));
-      }
-   }
-   return(NULL);
+   return(search_next_chunk(pc, CT_OC_SCOPE));
 }
 
 
 static chunk_t *get_prev_oc_class(chunk_t *pc)
 {
-   while ((pc = chunk_get_prev(pc)) != NULL)
-   {
-      if (pc->type == CT_OC_CLASS)
-      {
-         return(pc);
-      }
-   }
-   return(NULL);
+   return(search_prev_chunk(pc, CT_OC_CLASS));
 }
 
 
