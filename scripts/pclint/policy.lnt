@@ -1,0 +1,396 @@
+// uncrustify policy
+-passes(2)              // number of analysis passes (higher values give better detection but slower)                                           
+-static_depth(2)        // number of analyzed redirection for static variables 
+//-w2                   // suppress informational messages  
+// -strong(AJX)    		// All typedefs must match exactly
+-w3						// display informational messages  
+//-w4      				// use the maximum warning level
+//+fpn     				// warns about the use of pointer parameters without first checking for NULL
+//+fsc       			// assumes string constants are const char*
+
+// all checks from 0 to 599 are enabled by +w2 
+-e10					// Expecting identifier or other declarator
+-e18					// symbol redefined
+-e19					// useless declaration
+-e14					// symbol previously defined
+-e26					// expected an expression found const/return
+-e30					// expected an integer constant
+-e31					// redefinition of symbol
+-e32					// field size should not be zero
+-e36					// redefining the storage class of symbol
+-e40					// undeclared identifier
+-e46					// field type should be an integral or enumeration type
+-e48					// bad type
+-e49					// expected a typed
+-e50					// attempted to take the address of a non-lvalue
+-e52					// expected an lvalue
+-e55					// bad type
+-e56					// bad type
+-e63					// expected an lvalue
+-e64					// type mismatch
+-e78					// typedef'd symbol used in expression
+-e85 					// array has dimension 0
+-e96					// unmatched left brace for linkage specification
+-e114					// inconsistent
+-e119					// too many arguments 
+-e123					// macro defined with arguments
+-e129					// declaration expected
+-e200					// internal error
+-e438					// last value assignd to variable not used
+-e451					// header without include guard
+-e457					// enable for checking multithreading
+-e458					// enable for checking multithreading
+-e459					// enable for checking multithreading
+-e506					// allow constant value booleans
+-e514					// unusual use of boolean expression
+-e516					// symbol has arg type conflict
+-e520					// highest operation lacks side effects
+-e522					// highest operation lacks side effects
+-e526					// symbol not defined
+-e528					// symbol not referenced
+-e534					// ignoring return value of function
+-e537					// do not warn about repeated inclusion
+-e574					// signed / unsigned mix with relational
+-e578					// Declaration of symbol hides symbol
+-e585					// not a valid Trigraph sequence
+
++e601 					// Expected a type for symbol Symbol
++e602 					// Comment within comment
++e603 					// Symbol not initialized
++e604 					// Returning address of auto variable
++e605 					// Increase in pointer capability
++e606 					// Non-ANSI escape sequence:
++e607 					// Parameter of macro found within string
++e608 					// Assigning to an array parameter
++e609 					// Suspicious pointer conversion
++e610 					// Suspicious pointer combination
++e611 					// Suspicious cast
++e612 					// Expected a declarator
+-e613 					// Possible use of null pointer
++e614 					// auto aggregate initializer not constant
++e615 					// auto aggregate initializer has side effects
++e616 					// control flows into case/default
++e617 					// String is both a module and an include file
++e618 					// Storage class specified after a type
++e619 					// Loss of precision (Context) (Pointer to Pointer)
++e620 					// Suspicious constant (small L or one?)
++e621 					// Identifier clash
++e622 					// Size of argument no. Integer inconsistent with format
++e623 					// redefining the storage class of symbol
++e624 					// typedef redeclared
++e625 					// auto symbol has unusual type modifier
++e626 					// Integer inconsistent with format
++e627 					// indirect object inconsistent with format
+-e628 					// no argument information provided for function
++e629 					// static class for function is non standard
++e630 					// ambiguous reference to symbol
++e631 					// tag 'Symbol' defined differently at Location
++e632 					// Assignment to strong type
++e633 					// Assignment from a strong type
++e634 					// Strong type mismatch in equality or conditional
++e635 					// resetting strong parent of type
++e636 					// ptr to strong type versus another type
++e637 					// Expected index type for strong type
++e638 					// Strong type mismatch for type in relational
++e639 					// Strong type mismatch for type in binary operation
++e640 					// Expected strong type 'Name' in Boolean context
+-e641 					// Converting enum to int
++e642 					// Format char 'Char' not supported by wsprintf
++e643 					// Loss of precision in pointer cast
++e644 					// Variable may not have been initialized
++e645 					// Symbol may not have been initialized
++e646 					// case/default within Kind loop; may have been misplaced
++e647 					// Suspicious truncation
++e648 					// Overflow in computing constant for operation:
++e649 					// Sign fill during constant shift
++e650 					// Constant out of range for operator
++e651 					// Potentially confusing initializer
+-e652 					// #define of symbol 'Symbol' declared previously
++e653 					// Possible loss of fraction
++e654 					// Option String obsolete; use -width(W,I)
+-e655 					// bit-wise operation uses (compatible) enum's
++e656 					// Arithmetic operation uses (compatible) enum's
++e657 					// Unusual (nonportable) anonymous struct or union
++e658 					// Anonymous union assumed
++e659 					// Nothing follows '}'
++e660 					// Option requests removing an extent that is not on the list
++e661 					// possible access of out-of-bounds pointer
++e662 					// possible creation of out-of-bounds pointer
++e663 					// Suspicious array to pointer conversion
++e664 					// Left side of logical OR (||) or logical AND (&&) does not return
++e665 					// Unparenthesized parameter Integer in macro is passed an expression
++e666 					// Expression with side effects passed to repeated parameter
++e667 					// Inconsistent use of qualifiers for symbol
++e668 					// Possibly passing a null pointer to function
++e669 					// Possible data overrun for function
++e670 					// Possible access beyond array for function
++e671 					// Possibly passing to function a negative value
++e672 					// Possible memory leak in assignment to pointer
++e673 					// Possibly inappropriate deallocation
++e674 					// Returning address of auto through variable
++e675 					// No prior semantics associated with symbol
++e676 					// Possibly negative subscript
++e677 					// sizeof used within preprocessor statement
++e678					// Member field length (Integer) too small for enum precision
++e679 					// Suspicious Truncation in arithmetic expression combining with pointer
++e680 					// Suspicious Truncation in arithmetic expression converted to pointer
++e681 					// Loop is not entered
++e682 					// sizeof applied to a parameter whose type is a sized array
++e683 					// function 'Symbol' #define'd
++e684 					// Passing address of auto variable into caller space
++e685 					// Relational operator always evaluates to same result
++e686 					// Option is suspicious
++e687 					// Suspicious use of comma operator
++e688 					// Cast used within preprocessor conditional statement
++e689 					// Apparent end of comment ignored
++e690 					// Possible access of pointer pointing Integer bytes past null character by operator
++e691 					// Suspicious use of backslash
++e692 					// Decimal character follows octal escape sequence
++e693 					// Hexadecimal digit immediately after is suspicious in string literal.
++e694 					// The type of constant (precision Integer) is dialect dependent
++e695 					// Inline function defined without a storage-class specifier ('static' recommended)
++e696 					// Variable has value that is out of range for operator
++e697 					// Quasi-boolean values should be equality-compared only with 0
++e698 					// Casual use of realloc can create a memory leak
+
++e701					// Shift left of signed int variable
+-e702					// Shift right of signed int variable
++e703 					// Shift left of signed long variable
++e704 					// Shift right of signed long variable
++e705 					// Integer nominally inconsistent with format
++e706 					// indirect object inconsistent with format
++e707 					// Mixing narrow and wide string literals in concatenation
++e708 					// union initialization
+-e712 					// Loss of precision
+-e713 					// Loss of precision
+-e714 					// external variable not referenced
+-e715 					// Symbol not referenced
+-e716					// while(1) found, allow endless loops
+-e717					// do ... while(0) found
++e718 					// Symbol undeclared, assumed to return int
++e719 					// Too many arguments for format
++e720 					// Boolean test of assignment
++e721 					// Suspicious use of ;
++e722 					// Suspicious use of ;
++e723 					// Suspicious use of = -- A preprocessor definition began with an = sign.
++e725 					// Expected positive indentation from Location
+-e726 					// Extraneous comma ignored
++e727 					// local static variable not explicitly initialized
++e728 					// global static variable not explicitly initialized
++e729 					// exteral variable not explicitly initialized
+-e730 					// Boolean argument to function
+-e731					// Boolean argument to equal/not equal
+-e732 					// Loss of sign
++e733 					// Assigning address of auto variable to outer scope symbol
++e734 					// Loss of precision int
++e735 					// Loss of precision double
++e736 					// Loss of precision float
+-e737 					// Loss of sign in promotion from Type1 to Type2
++e738 					// Symbol not explicitly initialized
++e739 					// Trigraph Sequence in literal (Quiet Change)
++e740 					// Unusual pointer cast (incompatible indirect types)
++e741 					// Unusual pointer cast (function qualification)
++e742 					// Multiple character constant
++e743 					// Negative character constant
++e744 					// switch statement has no default
++e745 					// function has no explicit type or class, int assumed
++e746 					// call to function not made in the presence of a prototype
+-e747	 				// (noisy when using bool) Significant prototype coercion Type1 to Type2
++e748 					// Symbol is a register variable used with setjmp
+-e749					// check for unused enum values
+-e750					// ignore    unused local macros
+-e751					// check for unused local typedefs
+-e752 					// check for unused local declarations
+-e753					// check for unused local struct, union or enum tag
+-e754					// check for unused local structure member
+-e755					// ignore    unused global macros
+-e756					// check for unused global typedefs
+-e757 					// check for unused global declarations
+-e758					// check for unused global struct, union or enum tag
+-e759					// check if symbol can be moved from header to module
++e760 					// check for redundant macros
+-e761 					// check for redundant typedefs
++e762 					// check for redundantly declared symbol
++e763 					// check for redundant declaration for symbol
++e764 					// check for switch statement without a case
+-e765 					// check for external symbols that could be made static
++e766					// check for unused headers
++e767 					// check for differing macros
+-e768 					// check for global struct member that is never referenced
+-e769 					// check for global enumeration constant that is never referenced
++e770 					// tag is defined identically at several locations
++e771 					// check for uninitialized symbols
++e772 					// check for uninitialized symbols
++e773 					// Expression-like macro not parenthesized
+-e774 					// Boolean within 'String' always evaluates to [True/False]
++e775					// non-negative quantity cannot be less than zero
++e776 					// Possible truncation of addition
++e777 					// Testing float's for equality
+-e778 					// Constant expression evaluates to 0
++e779 					// String constant in comparison operator
++e780 					// Vacuous array element
++e782 					// Line exceeds Integer characters
++e783 					// Line does not end with new-line
++e784 					// Nul character truncated from string
++e785 					// Too few initializers for aggregate
++e786 					// String concatenation within initializer
++e787 					// enum constant should not be used within switch
+-e788 					// enum constant not used within defaulted switch
++e789 					// Assigning address of auto variable to static
++e790 					// Suspicious truncation, integral to float
++e791 					// unusual option sequence
++e792 					// void cast of void expression
++e793 					// ANSI/ISO limit of String 'Name' exceeded
++e794 					// Conceivable use of null pointer
++e795					// Conceivable division by 0
++e796 					// Conceivable access of out-of-bounds pointer
++e797 					// Conceivable creation of out-of-bounds pointer
++e798 					// Redundant character
++e799 					// numerical constant 'Integer' larger than unsigned long
+
+-e801 					// Use of goto is deprecated
++e802 					// Conceivably passing a null pointer to function
++e803 					// Conceivable data overrun for function
++e804 					// Conceivable access beyond array for function
++e805 					// Expected L"..." to initialize wide char string
++e806 					// Small bit field is signed rather than unsigned
++e807 					// Conceivably passing to function a negative value
++e808 					// No explicit type given to symbol
++e809 					// Possible return of address of auto through variable
++e810 					// Arithmetic modification of custodial variable
++e811 					// Possible deallocation of pointer alias
++e812 					// static variable 'Symbol' has size 'Integer'
++e813 					// auto variable 'Symbol' in function 'Symbol' has size 'Integer'
++e814 					// useless declaration
++e815 					// Arithmetic modification of unsaved pointer
++e816					// Non-ANSI format specification
++e817 					// Conceivably negative subscript
+-e818 					// Pointer parameter could be declared ptr to const
++e820 					// Boolean test of a parenthesized assignment
++e821 					// Right hand side of assignment not parenthesized
++e825 					// control flows into case/default without -fallthrough comment
++e826 					// Suspicious pointer-to-pointer conversion
++e827 					// Loop not reachable
++e828 					// redefinition of functions
++e829 					// dangerous header was used
++e830					// print error location indicator
++e831					// print error location indicator
++e832 					// Parameter 'Symbol' not explicitly declared
++e833 					// Symbol is typed differently in another module
+-e834 					// missing parentheses between operators
+-e835 					// A zero has been given as [left/right] argument to operator
++e836 					// Conceivable access of pointer pointing Integer bytes past nul
++e838 					// Previously assigned value to variable has not been used
++e839 					// Storage class of symbol 'Symbol' assumed static
++e840 					// Use of null character in a string literal
+-e843 					// Variable 'Symbol' (Location) could be declared as const
++e844 					// Pointer variable could be declared as pointing to const
+-e845					// The [left/right] argument to operator is certain to be 0
++e846 					// Signedness of bit-field is implementation defined
++e847 					// Thread has unprotected call to thread unsafe function
++e849 					// Two enumerators have the same value
+-e850 					// loop index variable is modified in body of the for loop
+-e864 					// Expression possibly depends on order of evaluation
++e866 					// Unusual use of 'String' in argument to sizeof
+
++e900					// print total number of errors/warnings
+-e904 					// Return statement before end of function 'Symbol'
++e905 					// Non-literal format specifier used (with arguments)
+-e909 					// Implicit conversion from Type to bool
+-e910 					// Implicit conversion (Context) from 0 to pointer
+-e911 					// (noisy) Implicit expression promotion from Type to Type
+-e912					// (noisy) Implicit binary conversion from Type1 to Type2
++e913 					// Implicit adjustment of expected argument type from Type1 to Type2
++e914 					// Implicit adjustment of function return value from Type1 to Type2
+-e915					// (noisy) Implicit conversion (Context) Type1 to Type2
+-e916 					// Implicit pointer assignment conversion
+-e917 					// (noisy) Prototype coercion Type1 to Type2
+-e918 					// Prototype coercion (Context) of pointers
+-e919 					// (noisy) Implicit conversion (Context) Type to Type
+-e920 					// Cast from Type to void
+-e931 					// Both sides have side effects
++e932 					// Passing near pointer to library function 'Symbol'
++e933 					// Passing near pointer to far function (Context)
++e934 					// taking address of near auto variable 'Symbol'
+-e935 					// (noisy) int within struct
++e936 					// type is missing for function arguments
++e937 					// type is missing for function arguments
++e939 					// return type is missing for function
++e940 					// omitted braces within an initialize
++e943 					// Too few initializers for aggregate
++e945 					// Undefined struct used with extern
+-e946 					// Relational or subtract operator applied to pointers
++e947 					// Subtract operator applied to pointers
+-e950 					// Non-ISO/ANSI reserved word or construct:
++e951 					// Pointer to incomplete type employed in operation
+-e952 					// Parameter could be declared const
+-e953 					// Variable could be declared as const
+-e954 					// Pointer variable could be declared as pointing to a const
++e955 					// Parameter name missing from prototype for function
+-e956 					// (use for multithreaded SW) Non const, non volatile static or external variable
++e957 					// Function defined without a prototype in scope
+-e958	 				// (can help to save some bytes of memory) Padding of Integer byte(s) is required to align string on Integer byte boundary
++e962 					// Macro defined identically at another location
++e963       			// expect modifier (const, volatile) before type
+-e964					// Header file not directly used in module
+-e966 					// Indirectly included header file 'FileName' not used in module
++e967 					// Header file 'FileName' does not have a standard include guard
+-e970					// (noisy) Use of modifier or type outside of a typedef
+-e971					// (noisy) Use of 'char' without 'signed' or 'unsigned'
++e974 					// print Worst case function for stack usage:
+-e1013					// symbol is not a member of class
+-e1015					// symbol not found in class
+-e1025					// no function or template matches invocation
+-e1039					// symbol is not a member of class
+-e1040					// symbol is not a legal declaration within class
+-e1042					// a least one class like operand is required with operator
+-e1048					// expected a constant expression
+-e1051					// symbol is both a function and a variable
+-e1052					// a type was expected, class assumed
+-e1054					// template variable declaration expects a type
+-e1055					// symbol undeclared, assumed to return int
+-e1057					// member cannot be used without an object				
+-e1058					// initializing a non-const reference
+-e1065					// symbol not declared as "C"
+-e1062					// template must be either a class or a function
+-e1066					// symbol declared as "C" 
+-e1075					// Ambiguous reference to symbol
+-e1077					// could not evaluate default template parameter			
+-e1086					// do not warn about compount literals
+-e1087					// previous declaration is incompatible
+-e1401					// member not initialized by constructor
+-e1502					// object has no nonstatic data member
+-e1526					// Member function not defined
+-e1529					// symbol not first checking for assignment to this
+-e1536					// exposing low access member
+-e1540					// pointer member neither freed nor zeroed by destructor
+-e1551					// function may throw exception in destructor 			
+-e1554					// direct pointer copy of member within copy constructor
+-e1561					// reference initialization causes loss of const/volatile
+-e1566					// member might have been initialized by a separate function
+-e1702					// operator is both an ordinary function and a member function
+-e1704					// constructor has private access specification
+-e1711					// function needs not to be virtual
+-e1712					// default constructor not defined for class			
+-e1714					// Member function not referenced
+-e1725					// class member is a reference
+-e1732					// constructor for class has no assignment operator
+-e1733					// constructor for class has no copy constructor
+-e1736					// redundant access specifier
+-e1740					// pointer member not directly freed or zeroed by destructor
+-e1746					// parameter could be made const reference
+-e1757					// discarded instance of post decrement/increment
+-e1762					// member could be made const
+-e1764					// reference parameter could be declared const 
+-e1776					// converting a string literal to char*
+-e1786					// implicit conversion to bool
+-e1788					// variable is referenced only by its constructor or destructor
+-e1795					// Template was defined but not instantiated
+-e1904					// allow old style comments
+-e1923					// ignore defines that could be const variables
+-e1924					// C-style cast
+
+//scripts/pclint/au-sm123.lnt 	// also check Scott Meyers rules of all three books
+//scripts/pclint/au-misra3.lnt	// Misra 2012 rules
+//scripts/pclint/au-barr10.lnt	// Top 10 Bug-Killing Rules
+//scripts/pclint/au-ds.lnt 		// Dan Saks

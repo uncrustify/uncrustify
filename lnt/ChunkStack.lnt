@@ -1,0 +1,5 @@
+-esym(526, clear, empty, size)
+-esym(628, clear, empty, size)
+-esym(746, clear, empty, size, pop_back, pop_front)
+-esym(1013, empty)
+-esym(1055, clear, empty, size)

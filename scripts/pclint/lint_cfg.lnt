@@ -1,0 +1,55 @@
+// These settings are used to adjust the pcLint checking for
+// the operating unit source code
+
+// show pclint where to find Header files
+-i".\include"
+-i".\lib"
+-i".\src"
+
+-iC:\mingw\include
+-iC:\mingw\lib\gcc\mingw32\4.8.1\include\
+-iC:\mingw\lib\gcc\mingw32\4.8.1\include\-fixed
+-iC:\mingw\lib\gcc\mingw32\4.8.1\include\c++\
+-iC:\mingw\lib\gcc\mingw32\4.8.1\include\c++\mingw32
+//+libdir(D:\Programme\linaro\gcc-linaro-arm-linux-gnueabihf-4.9-2014.08\*)	// define a directory as holding only headers, may be used with * or ?
+//+libdir(D:\Programme\linaro\gcc-linaro-arm-linux-gnueabihf-4.9-2014.08\libc\usr\include\*)
+
+//+libclass(ansi)	// use this if only ANSI headers are seen as unchecked libraries
++libclass(foreign)	// ignore all headers comeing from a foreign directory using -i or the INCLUDE environment variable
+//+libclass(angle)	// ingore all headers specified with angle brackets
+//+libclass(all)	// ignore all header files
++libh(co-ggc.lnt)	// ignore this file
+//+libdir(uncrustify/scripts/*)
+//-wlib(1)
+
+// Compiler specific configuration for Visual DSP
+
+// co-tiger.lnt use this file for tiger sharc as reference
+scripts\pclint\co-gcc.lnt 	// Compiler Options for GCC
+
+// Configuration for checking the operating unit source code
+
+//-d__ARM_PCS_VFP
+-d__cplusplus
+-d_GNU_SOURCE
+//-d__GNUC__
+-d__STDC__
+//-d__GLIBCXX__=20130531
+//-d__SIZE_TYPE__=int
+//-d__PTRDIFF_TYPE__=int
+//-d__CHAR_BIT__=8
+-dWIN32
+-d__i386__
+-dDEFINE_CHAR_TABLE
+-dDEFINE_PCF_NAMES 
+
+// define compiler specific keywords
+
+//+rw(__inline)				// activate the __inline keyword
+//+ppw(import)				// activate #import
+//-d"_exit=_up_to_brackets"
+//-d"extern 'C'=gobble"
+//+fkp        				// complain about non-KR extensions
+
+// To print a stack usage report pclint has to know how much space is required by some functions
+// define an upper limit of stack space usage for recursion and function pointers

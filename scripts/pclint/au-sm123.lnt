@@ -1,0 +1,237 @@
+/* Date Stamp */ -d"_lint_au_sm123_lnt=au-sm123.lnt modified 5-Jan-2006"
+/* To document usage use: -message( "Using " _lint_au_sm123_lnt ) */
+// ---------------------------------------------------------------------
+// This file is provided by Gimpel Software (www.gimpel.com) for use with
+// its products PC-lint and FlexeLint.
+//
+// Redistribution and use of this file, with or without modification, is
+// permitted provided that any such redistribution retains this notice.
+// ---------------------------------------------------------------------
+// au-sm123.lnt -- Author options - Scott Meyers
+
+/*
+    This options file can be used to explicitly activate those
+    checks advocated in the publications:
+
+    [12] Meyers, Scott, Effective C++, Addison-Wesley, Reading Mass., 1992
+    [23] Meyers, Scott, More Effective C++, Addison-Wesley, 1996
+    [30] Meyers, Scott, Effective C++ Third Edition, Addison-Wesley, 2005
+
+    You can use this file directly when linting your programs as in:
+
+    lin  au-sm123  files
+
+    Most of the Scott Meyers checks are on by default.  The
+    Elective Notes (19??), however, are not and so this file
+    is necessary to get the full impact of the Scott Meyers
+    multi-volume set of recommendations.
+
+    Also, this file explicitly activates those Warnings and
+    Informationals advocated by Scott Meyers just in case they were
+    suppressed previously.  For example,
+
+    lin -w2 au-sm123  files
+
+    has the effect of removing all Informational messages
+    other than those reactivated in this file.
+
+    If you do not want code to adhere to all of the Scott Meyers'
+    checks we recommend that, rather than editing this file, you
+    include it within a file of your own.  For example: let
+    my-sm.lnt contain
+
+    au-sm123.lnt
+	-e1932   // allow concrete base classes
+
+    In this way you inherit the checks specified in this file
+    except for the ones that you wish to specifically exclude.
+
+    Then you can use my-sm.lnt in place of au-sm123.lnt
+
+    You might consider placing this file (au-sm123.lnt) or your own
+    derivation of it (as shown above) in your global options
+    file.
+
+ */
+
++e424   // Inappropriate deallocation -- [12, Item 5], [30, Item 16]
+-append(424, -- Effective C++ #5 & Eff. C++ 3rd Ed. item 16)
++e530   //  Symbol not initialized -- [30, Item 4]
+-append( 530, --- Eff. C++ 3rd Ed. item 4 )
++e603   //  Symbol not initialized -- [30, Item 4]
+-append( 603, --- Eff. C++ 3rd Ed. item 4 )
++e605   // Increase in pointer capability -- [12, Item 29]
+-append(605, -- Effective C++ #29 )
++e644   //  Variable may not have been initialized -- [30, Item 4]
+-append( 644, --- Eff. C++ 3rd Ed. item 4 )
++e645   //  Symbol may not have been initialized -- [30, Item 4]
+-append( 645, --- Eff. C++ 3rd Ed. item 4 )
++e673   //  Possibly inappropriate deallocation (Name1) for 'Name2' data. -- [30, Item 16]
+-append( 673, --- Eff. C++ 3rd Ed. item 16 )
++e727   //  Symbol not explicitly initialized -- [30, Item 4]
+-append( 727, --- Eff. C++ 3rd Ed. item 4 )
++e728   //  Symbol not explicitly initialized -- [30, Item 4]
+-append( 728, --- Eff. C++ 3rd Ed. item 4 )
++e729   //  Symbol not explicitly initialized -- [30, Item 4]
+-append( 729, --- Eff. C++ 3rd Ed. item 4 )
++e738   //  Symbol not explicitly initialized -- [30, Item 4]
+-append( 738, --- Eff. C++ 3rd Ed. item 4 )
++e771   //  Symbol conceivably not initialized -- [30, Item 4]
+-append( 771, --- Eff. C++ 3rd Ed. item 4 )
++e772   //  Symbol conceivably not initialized -- [30, Item 4]
+-append( 772, --- Eff. C++ 3rd Ed. item 4 )
++e794   // Conceivable use of null pointer -- [12, Item 7]
+-append(794, -- Effective C++ #7 )
++e802   // Conceivably passing a null pointer to function -- [12, Item 7]
+-append(802, -- Effective C++ #7 )
++e818   //  Pointer parameter could be declared ptr to const -- [30, Item 3]
+-append( 818, --- Eff. C++ 3rd Ed. item 3 )
++e952   //  Parameter could be declared const -- [30, Item 3]
+-append( 952, --- Eff. C++ 3rd Ed. item 3 )
++e953   //  Variable could be declared as const -- [30, Item 3]
+-append( 953, --- Eff. C++ 3rd Ed. item 3 )
++e954   //  Pointer variable could be declared as pointing to a const -- [30, Item 3]
+-append( 954, --- Eff. C++ 3rd Ed. item 3 )
++e1072  //  Reference variable must be initialized -- [30, Item 4]
+-append( 1072, --- Eff. C++ 3rd Ed. item 4 )
++e1401  //  member symbol not initialized by constructor -- [30, Item 4], [30, Item 13]
+-append( 1401, --- Eff. C++ 3rd Ed. item 4 & Eff. C++ 3rd Ed. item 13)
++e1402  //  member not initialized -- [30, Item 4]
+-append( 1402, --- Eff. C++ 3rd Ed. item 4 )
++e1403  //  member not initialized -- [30, Item 4]
+-append( 1403, --- Eff. C++ 3rd Ed. item 4 )
++e1411  //  Member with different signature hides virtual member -- [30, Item 33]
+-append( 1411, --- Eff. C++ 3rd Ed. item 33 )
++e1412  //  Reference member is not initialized -- [30, Item 4]
+-append( 1412, --- Eff. C++ 3rd Ed. item 4 )
++e1413  //  function is returning a temporary via a reference -- [30, Item 21]
+-append( 1413, --- Eff. C++ 3rd Ed. item 21 )
++e1506  //  Call to virtual function within a constructor or destructor -- [30, Item 9]
+-append( 1506, --- Eff. C++ 3rd Ed. item 9 )
++e1509  // base class destructor for class is not virtual -- [12, Item 14], [30, Item 7]
+-append(1509, -- Effective C++ #14 & Eff. C++ 3rd Ed. item 7)
++e1510  // base class has no destructor -- [12, Item 14]
+-append(1510, -- Effective C++ #14 )
++e1511  // Member hides non-virtual member -- [12, Item 37], [30, Item 33], [30, Item 36]
+-append(1511, -- Effective C++ #37 & Eff. C++ 3rd Ed. item 33& Eff. C++ 3rd Ed. item 36)
++e1516  //  Data member hides inherited member -- [30, Item 33]
+-append( 1516, --- Eff. C++ 3rd Ed. item 33 )
++e1529  // not first checking for assignment to this -- [12, Item 17], [30, Item 11]
+-append(1529, -- Effective C++ #17 & Eff. C++ 3rd Ed. item 11)
++e1531  //  Symbol should have compared argument against sizeof(class) -- [30, Item 51]
+-append( 1531, --- Eff. C++ 3rd Ed. item 51 )
++e1534  // static variable found within inline function -- [23, Item 26], [30, Item 30]
+-append(1534, -- More Effective C++ #26 & Eff. C++ 3rd Ed. item 30)
++e1536  // Exposing low access member -- [12, Item 30]
+-append(1536, -- Effective C++ #30 )
++e1537  // const function returns pointer data member -- [12, Item 29 ], [30, Item 28]
+-append(1537, -- Effective C++ #29 & Eff. C++ 3rd Ed. item 28)
++e1539  // member not assigned by assignment operator -- [12, Item 16], [30, Item 12]
+-append(1539, -- Effective C++ #16 & Eff. C++ 3rd Ed. item 12)
++e1540  // pointer member freed nor zero'ed by destructor -- [12, Item 6]
+-append(1540, -- Effective C++ #6 )
++e1541  //  member possibly not initialized by constructor -- [30, Item 4], [30, Item 13]
+-append( 1541, --- Eff. C++ 3rd Ed. item 4 & Eff. C++ 3rd Ed. item 13)
++e1542  //  member possibly not initialized -- [30, Item 4]
+-append( 1542, --- Eff. C++ 3rd Ed. item 4 )
++e1543  //  member possibly not initialized -- [30, Item 4]
+-append( 1543, --- Eff. C++ 3rd Ed. item 4 )
++e1544  // value indeterminate (order of initialization) -- [12, Item 47]
+-append(1544, -- Effective C++ #47 )
++e1546  // throw() called within destuctor -- [23, Item 11], [30, Item 8]
+-append(1546, -- Effective C++ #11 & Eff. C++ 3rd Ed. item 8)
++e1547  // Assignment of array to pointer to base -- [23, Item 3]
+-append(1547, -- More Effective C++ #3 )
++e1549  // Exception thrown for function not declared to throw -- [23, Item 11]
+-append(1549, -- More Effective C++ #11 )
++e1551  // function may throw an exception in destructor -- [23, Item 11], [30, Item 8]
+-append(1551, -- More Effective C++ #11 & Eff. C++ 3rd Ed. item 8)
++e1557  //  const member is not initialized -- [30, Item 4]
+-append( 1557, --- Eff. C++ 3rd Ed. item 4 )
++e1559  //  Uncaught exception 'Name' may be thrown in destructor -- [30, Item 8]
+-append( 1559, --- Eff. C++ 3rd Ed. item 8 )
++e1722  // assignment operator does not return a reference -- [12, Item 15], [30, Item 10]
+-append(1722, -- Effective C++ #15 & Eff. C++ 3rd Ed. item 10)
++e1724  //  Argument to copy constructor for class should be a const reference -- [30, Item 3], [30, Item 20]
+-append( 1724, --- Eff. C++ 3rd Ed. item 3 & Eff. C++ 3rd Ed. item 20)
++e1727  //  inline not previously defined inline at -- [30, Item 30]
+-append( 1727, --- Eff. C++ 3rd Ed. item 30 )
++e1729  // Initializer inversion detected for member -- [12, Item 13]
+-append(1729, -- Effective C++ #13 )
++e1732  // new in constructor for class which has no assignment operator -- [12, Item 11]
+-append(1732, -- Effective C++ #11 )
++e1733  // new in constructor for class which has no copy constructor -- [12, Item 11]
+-append(1733, -- Effective C++ #11 )
++e1735  // Virtual function has default parameter -- [12, Item 38]
+-append(1735, -- Effective C++ #38 )
++e1737  // 'Symbol' hides global operator new -- [12, Item 9]
+-append(1737, -- Effective C++ #9 )
++e1739  // Binary operator should be non-member function -- [12, Item 19], [30, Item 24]
+-append(1739, -- Effective C++ #19 & Eff. C++ 3rd Ed. item 24)
++e1740  // pointer member not directly freed or zero'ed by destructor -- [12, Item 6]
+-append(1740, -- Effective C++ #6 )
++e1741  //  member conceivably not initialized by constructor -- [30, Item 4], [30, Item 13]
+-append( 1741, --- Eff. C++ 3rd Ed. item 4 & Eff. C++ 3rd Ed. item 13)
++e1742  //  member conceivably not initialized -- [30, Item 4]
+-append( 1742, --- Eff. C++ 3rd Ed. item 4 )
++e1743  //  member conceivably not initialized -- [30, Item 4]
+-append( 1743, --- Eff. C++ 3rd Ed. item 4 )
++e1744  //  member possibly not initialized by private constructor -- [30, Item 4]
+-append( 1744, --- Eff. C++ 3rd Ed. item 4 )
++e1745  // member not assigned by private assignment operator -- [12, Item 16], [30, Item 12]
+-append(1745, -- Effective C++ #16 & Eff. C++ 3rd Ed. item 12)
++e1746  // parameter of function could be made const ref -- [12, Item 22], [30, Item 3], [30, Item 20]
+-append(1746, -- Effective C++ #22 & Eff. C++ 3rd Ed. item 3& Eff. C++ 3rd Ed. item 20)
++e1747  // binary operator returning a reference -- [12, Item 23]
+-append(1747, -- Effective C++ #23 )
++e1749  // base class of class need not be virtual -- [23, Item 24]
+-append(1749, -- More Effective C++ #24 )
++e1752  // catch parameter Integer is not a reference -- [23, Item 13]
+-append(1752, -- More Effective C++ #13 )
++e1753  // Overloading special operator -- [23, Item 7]
+-append(1753, -- More Effective C++ #7 )
++e1754  // Expected 'Symbol' to be declared for class 'Symbol' -- [23, Item 22]
+-append(1754, -- More Effective C++ #22 )
++e1757  // Discarded instance of post decrement/increment -- [23, Item 6]
+-append(1757, -- More Effective C++ #6 )
++e1758  // Prefix increment/decrement operator returns a non-reference. -- [23, Item 6]
+-append(1758, -- More Effective C++ #6 )
++e1759  // Postfix increment/decrement operator returns a reference. -- [23, Item 6]
+-append(1759, -- More Effective C++ #6 )
++e1762  //  Member function could be made const -- [30, Item 3]
+-append( 1762, --- Eff. C++ 3rd Ed. item 3 )
++e1764  //  Reference parameter could be declared const reference -- [30, Item 3]
+-append( 1764, --- Eff. C++ 3rd Ed. item 3 )
++e1770  //  function defined without function 'String' -- [30, Item 52]
+-append( 1770, --- Eff. C++ 3rd Ed. item 52 )
++e1772  //  Assignment operator is not returning *this -- [30, Item 10]
+-append( 1772, --- Eff. C++ 3rd Ed. item 10 )
++e1904  // Old-style C comment -- [12, Item 4]
+-append(1904, -- Effective C++ #4 )
++e1921  //  Symbol not checking argument against sizeof(class) -- [30, Item 51]
+-append( 1921, --- Eff. C++ 3rd Ed. item 51 )
++e1923  // macro could become const variable -- [12, Item 1], [30, Item 2]
+-append(1923, -- Effective C++ #1 & Eff. C++ 3rd Ed. item 2)
++e1924  // C-style cast -- [23, Item 2]
+-append(1924, -- More Effective C++ #2 )
++e1925  // public data member -- [12, Item 20], [30, Item 22]
+-append(1925, -- Effective C++ #20 & Eff. C++ 3rd Ed. item 22)
++e1926  // 'Symbol's default constructor implicitly called -- [12, Item 12]
+-append(1926, -- Effective C++ #12 )
++e1927  // 'Symbol' was not initialized in the constructor init list -- [12, Item 12]
+-append(1927, -- Effective C++ #12 )
++e1928  // 'Symbol' did not appear in the ctor initializer list -- [12, Item 12]
+-append(1928, -- Effective C++ #12 )
++e1929  // function returning a reference -- [12, Item 23], [30, Item 21]
+-append(1929, -- Effective C++ #23 & Eff. C++ 3rd Ed. item 21)
+-esym( 1929, operator<<, operator>> )  // but these op's are OK
++e1930  // Conversion operator found -- [23, Item 5]
+-append(1930, -- More Effective C++ #5 )
++e1931  // Constructor can be used for implicit conversions -- [23, Item 5]
+-append(1931, -- More Effective C++ #5 )
++e1932  // Base class is not abstract. -- [23, Item 33]
+-append(1932, -- More Effective C++ #33 )
++e1934  // flags member functions operator<< and operator>>
+-append(1934, -- Effective C++ #19 )
++e1961  //  virtual member function could be made const -- [30, Item 3]
+-append( 1961, --- Eff. C++ 3rd Ed. item 3 )
