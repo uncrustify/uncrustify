@@ -326,7 +326,7 @@ typedef enum
    CT_FOR_COLON,    /* colon in "for ( TYPE var: EXPR ) { ... }" */
    CT_DOUBLE_BRACE, /* parent for double brace */
 
-   /* extentions for Qt macros */
+   /* extensions for Qt macros */
    CT_Q_EMIT,       // guy 2015-10-16
    CT_Q_FOREACH,    // guy 2015-09-23
    CT_Q_FOREVER,    // guy 2015-10-18
