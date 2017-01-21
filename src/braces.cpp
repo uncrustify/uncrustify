@@ -741,6 +741,12 @@ chunk_t *insert_comment_after(chunk_t *ref, c_token_t cmt_type,
 static void append_tag_name(unc_text &txt, chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
+
+   if (pc == NULL)
+   {
+      return;
+   }
+
    chunk_t *tmp = pc;
 
    /* step backwards over all a::b stuff */
@@ -1092,6 +1098,12 @@ static void mod_case_brace(void)
 static void process_if_chain(chunk_t *br_start)
 {
    LOG_FUNC_ENTRY();
+
+   if (br_start == NULL)
+   {
+      return;
+   }
+
    chunk_t *braces[256];
    int     br_cnt           = 0;
    bool    must_have_braces = false;

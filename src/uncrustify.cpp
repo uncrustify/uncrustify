@@ -1288,7 +1288,10 @@ static void do_source_file(const char *filename_in,
    {
       for (deque<UINT8>::const_iterator i = cpd.bout->begin(), end = cpd.bout->end(); i != end; ++i)
       {
-         fputc(*i, pfout);
+         if (pfout != NULL)
+         {
+            fputc(*i, pfout);
+         }
       }
       uncrustify_end();
    }
@@ -1299,7 +1302,10 @@ static void do_source_file(const char *filename_in,
 
    if (did_open)
    {
-      fclose(pfout);
+      if (pfout != NULL)
+      {
+         fclose(pfout);
+      }
 
       if (need_backup)
       {

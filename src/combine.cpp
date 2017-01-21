@@ -2334,6 +2334,12 @@ static void fix_casts(chunk_t *start)
    }
    paren_close = pc;
 
+   if (last == NULL)
+   {
+      /* \todo can we be sure that last is never NULL here? */
+      return;
+   }
+
    /* If last is a type or star/caret, we have a cast for sure */
    if ((last->type == CT_STAR) ||
        (last->type == CT_CARET) ||
@@ -3556,15 +3562,21 @@ static bool can_be_full_param(chunk_t *start, chunk_t *end)
    chunk_t *last = chunk_get_prev_ncnl(pc);
    if (chunk_is_ptr_operator(last))
    {
-      LOG_FMT(LFPARAM, " <== [%s] sure!\n", get_token_name(pc->type));
+      if (pc != NULL)
+      {
+         LOG_FMT(LFPARAM, " <== [%s] sure!\n", get_token_name(pc->type));
+      }
       return(true);
    }
 
    bool ret = ((word_cnt >= 2) ||
                ((word_cnt == 1) && (type_count == 1)));
 
-   LOG_FMT(LFPARAM, " <== [%s] %s!\n",
-           get_token_name(pc->type), ret ? "Yup" : "Unlikely");
+   if (pc != NULL)
+   {
+      LOG_FMT(LFPARAM, " <== [%s] %s!\n",
+              get_token_name(pc->type), ret ? "Yup" : "Unlikely");
+   }
    return(ret);
 } // can_be_full_param
 
