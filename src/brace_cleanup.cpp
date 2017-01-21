@@ -116,7 +116,7 @@ static size_t preproc_start(parse_frame_t *frm, chunk_t *pc)
 static void print_stack(log_sev_t logsev, const char *str,
                         parse_frame_t *frm, chunk_t *pc)
 {
-   (void)pc;
+   UNUSED(pc);
    LOG_FUNC_ENTRY();
    if (log_sev_on(logsev))
    {
