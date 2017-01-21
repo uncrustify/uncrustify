@@ -19,11 +19,8 @@
 
 #include <cstdio>
 #include <cstdlib>
-#include <cstring>
-#include <cerrno>
 #include "unc_ctype.h"
 #include <cassert>
-#include <stack>
 
 
 /**
@@ -605,15 +602,6 @@ static chunk_t *flag_parens(chunk_t *po, UINT64 flags, c_token_t opentype,
 } // flag_parens
 
 
-/**
- * Sets the parent of the open paren/brace/square/angle and the closing.
- * Note - it is assumed that pc really does point to an open item and the
- * close must be open + 1.
- *
- * @param start   The open paren
- * @param parent  The type to assign as the parent
- * @return        The chunk after the close paren
- */
 chunk_t *set_paren_parent(chunk_t *start, c_token_t parent)
 {
    LOG_FUNC_ENTRY();
@@ -765,14 +753,6 @@ static chunk_t *skip_dc_member(chunk_t *start)
 }
 
 
-/**
- * This is called on every chunk.
- * First on all non-preprocessor chunks and then on each preprocessor chunk.
- * It does all the detection and classifying.
- * This is only called by fix_symbols.
- * The three parameters never get the value NULL.
- * it is not necessary to test.
- */
 void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
 {
    LOG_FUNC_ENTRY();
@@ -2278,11 +2258,10 @@ static void fix_casts(chunk_t *start)
    chunk_t    *after;
    chunk_t    *last = NULL;
    chunk_t    *paren_close;
-   const char *verb       = "likely";
-   const char *detail     = "";
-   size_t     count       = 0;
-   int        word_count  = 0;
-   size_t     word_consec = 0;
+   const char *verb      = "likely";
+   const char *detail    = "";
+   size_t     count      = 0;
+   int        word_count = 0;
    bool       nope;
    bool       doubtful_cast = false;
 
@@ -2313,15 +2292,10 @@ static void fix_casts(chunk_t *start)
       if (pc->type == CT_WORD)
       {
          word_count++;
-         word_consec++;
       }
       else if (pc->type == CT_DC_MEMBER)
       {
          word_count--;
-      }
-      else
-      {
-         word_consec = 0;
       }
 
       last = pc;
@@ -2342,6 +2316,12 @@ static void fix_casts(chunk_t *start)
       return;
    }
    paren_close = pc;
+
+   if (last == NULL)
+   {
+      /* \todo can we be sure that last is never NULL here? */
+      return;
+   }
 
    /* If last is a type or star/caret, we have a cast for sure */
    if ((last->type == CT_STAR) ||
@@ -3082,7 +3062,7 @@ void combine_labels(void)
 
 static void mark_variable_stack(ChunkStack &cs, log_sev_t sev)
 {
-   (void)sev;
+   UNUSED(sev);
    LOG_FUNC_ENTRY();
 
    /* throw out the last word and mark the rest */
@@ -3350,9 +3330,6 @@ static chunk_t *skip_expression(chunk_t *start)
 }
 
 
-/**
- * help function for mark_variable_definition...
- */
 bool go_on(chunk_t *pc, chunk_t *start)
 {
    if ((pc == NULL) ||
@@ -3426,13 +3403,12 @@ static chunk_t *mark_variable_definition(chunk_t *start)
 static bool can_be_full_param(chunk_t *start, chunk_t *end)
 {
    LOG_FUNC_ENTRY();
-   chunk_t *pc;
-   chunk_t *last;
-   int     word_cnt   = 0;
-   size_t  type_count = 0;
-   bool    ret;
 
    LOG_FMT(LFPARAM, "%s:", __func__);
+
+   int     word_cnt   = 0;
+   size_t  type_count = 0;
+   chunk_t *pc;
 
    for (pc = start; pc != end; pc = chunk_get_next_ncnl(pc, CNAV_PREPROC))
    {
@@ -3563,17 +3539,24 @@ static bool can_be_full_param(chunk_t *start, chunk_t *end)
       }
    }
 
-   last = chunk_get_prev_ncnl(pc);
+   chunk_t *last = chunk_get_prev_ncnl(pc);
    if (chunk_is_ptr_operator(last))
    {
-      LOG_FMT(LFPARAM, " <== [%s] sure!\n", get_token_name(pc->type));
+      if (pc != NULL)
+      {
+         LOG_FMT(LFPARAM, " <== [%s] sure!\n", get_token_name(pc->type));
+      }
       return(true);
    }
 
-   ret = ((word_cnt >= 2) || ((word_cnt == 1) && (type_count == 1)));
+   bool ret = ((word_cnt >= 2) ||
+               ((word_cnt == 1) && (type_count == 1)));
 
-   LOG_FMT(LFPARAM, " <== [%s] %s!\n",
-           get_token_name(pc->type), ret ? "Yup" : "Unlikely");
+   if (pc != NULL)
+   {
+      LOG_FMT(LFPARAM, " <== [%s] %s!\n",
+              get_token_name(pc->type), ret ? "Yup" : "Unlikely");
+   }
    return(ret);
 } // can_be_full_param
 
@@ -5230,7 +5213,6 @@ static void handle_oc_class(chunk_t *pc)
 static void handle_oc_block_literal(chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
-   chunk_t *tmp  = pc;
    chunk_t *prev = chunk_get_prev_ncnl(pc);
    chunk_t *next = chunk_get_next_ncnl(pc);
 
@@ -5239,19 +5221,17 @@ static void handle_oc_block_literal(chunk_t *pc)
       return; /* let's be paranoid */
    }
 
-   chunk_t *apo;  /* arg paren open */
-   chunk_t *bbo;  /* block brace open */
-   chunk_t *bbc;  /* block brace close */
-
    /* block literal: '^ RTYPE ( ARGS ) { }'
     * RTYPE and ARGS are optional
     */
    LOG_FMT(LOCBLK, "%s: block literal @ %zu:%zu\n", __func__, pc->orig_line, pc->orig_col);
 
-   apo = NULL;
-   bbo = NULL;
+   chunk_t *apo = NULL;  /* arg paren open */
+   chunk_t *bbo = NULL;  /* block brace open */
+   chunk_t *bbc;         /* block brace close */
 
    LOG_FMT(LOCBLK, "%s:  + scan", __func__);
+   chunk_t *tmp;
    for (tmp = next; tmp; tmp = chunk_get_next_ncnl(tmp))
    {
       LOG_FMT(LOCBLK, " %s", tmp->text());
@@ -6038,7 +6018,7 @@ static void handle_cs_property(chunk_t *bro)
 
 static void handle_cs_array_type(chunk_t *pc)
 {
-   chunk_t *prev = chunk_get_prev(pc);
+   chunk_t *prev;
 
    for (prev = chunk_get_prev(pc);
         prev && (prev->type == CT_COMMA);

@@ -179,6 +179,8 @@ public:
 
    int &back()
    {
+      /* \todo returning a temporary via a reference
+       * this has to be checked and probably changed */
       return(m_chars.back());
    }
 

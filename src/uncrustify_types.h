@@ -28,6 +28,16 @@ using namespace std;
 #define UNCRUSTIFY_OFF_TEXT    " *INDENT-OFF*"
 #define UNCRUSTIFY_ON_TEXT     " *INDENT-ON*"
 
+
+/**
+ * @brief Macro to inform the compiler that a variable is intentionally
+ * not in use.
+ *
+ * @param [in] variableName: The unused variable.
+ */
+#define UNUSED(variableName)    ((void)variableName)
+
+
 /**
  * Brace stage enum used in brace_cleanup
  */
@@ -459,6 +469,6 @@ struct cp_data_t
    op_val_t       defaults[UO_option_count];
 };
 
-extern cp_data_t cpd;
+extern cp_data_t cpd;   /* \todo can we avoid this external variable? */
 
 #endif /* UNCRUSTIFY_TYPES_H_INCLUDED */

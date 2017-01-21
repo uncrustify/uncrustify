@@ -12,7 +12,6 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
-#include <cerrno>
 #include "unc_ctype.h"
 #include "uncrustify.h"
 #include "combine.h"
@@ -742,6 +741,12 @@ chunk_t *insert_comment_after(chunk_t *ref, c_token_t cmt_type,
 static void append_tag_name(unc_text &txt, chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
+
+   if (pc == NULL)
+   {
+      return;
+   }
+
    chunk_t *tmp = pc;
 
    /* step backwards over all a::b stuff */
@@ -858,7 +863,7 @@ void add_long_closebrace_comment(void)
                {
                   nl_min = cpd.settings[UO_mod_add_long_switch_closebrace_comment].u;
                   tag_pc = sw_pc;
-                  xstr   = sw_pc ? sw_pc->str : NULL;
+                  xstr   = sw_pc ? sw_pc->str : NULL; /* \todo NULL is no unc_text structure */
                }
                else if ((br_open->parent_type == CT_FUNC_DEF) ||
                         (br_open->parent_type == CT_OC_MSG_DECL))
@@ -1093,6 +1098,12 @@ static void mod_case_brace(void)
 static void process_if_chain(chunk_t *br_start)
 {
    LOG_FUNC_ENTRY();
+
+   if (br_start == NULL)
+   {
+      return;
+   }
+
    chunk_t *braces[256];
    int     br_cnt           = 0;
    bool    must_have_braces = false;

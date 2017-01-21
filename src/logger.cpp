@@ -10,7 +10,7 @@
  * @license GPL v2+
  */
 #include "logger.h"
-
+#include "uncrustify_types.h"
 #include <cstdio>
 #include <deque>
 #include <stdarg.h>
@@ -360,7 +360,7 @@ void log_hex_blk(log_sev_t sev, const void *data, size_t len)
       buf[str_idx + 1] = to_hex_char(tmp);
       str_idx         += 3;
 
-      buf[chr_idx++] = unc_isprint(tmp) ? tmp : '.';
+      buf[chr_idx++] = (char)(unc_isprint(tmp) ? tmp : '.');
 
       total++;
       count++;
@@ -416,6 +416,8 @@ void log_func_call(int line)
 
 void log_func_stack(log_sev_t sev, const char *prefix, const char *suffix, size_t skip_cnt)
 {
+   UNUSED(skip_cnt);
+
    if (prefix)
    {
       LOG_FMT(sev, "%s", prefix);

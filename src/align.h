@@ -56,6 +56,24 @@ chunk_t *align_nl_cont(chunk_t *start);
 chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh);
 
 
+/**
+ * Shifts out all columns by a certain amount.
+ *
+ * @param idx  The index to start shifting
+ * @param num  The number of columns to shift
+ */
+void ib_shift_out(size_t idx, size_t num);
+
+
+/**
+ * If sq_open is CT_SQUARE_OPEN and the matching close is followed by '=',
+ * then return the chunk after the '='.  Otherwise, return NULL.
+ */
+static chunk_t *skip_c99_array(chunk_t *sq_open);
+
+
+chunk_t *step_back_over_member(chunk_t *pc);
+
 void quick_align_again(void);
 
 

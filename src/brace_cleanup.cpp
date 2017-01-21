@@ -10,13 +10,11 @@
 
 #include "brace_cleanup.h"
 #include "uncrustify_types.h"
-#include "char_table.h"
 #include "prototypes.h"
 #include "chunk_list.h"
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
-#include <cerrno>
 #include "unc_ctype.h"
 #include "uncrustify.h"
 #include "lang_pawn.h"
@@ -36,7 +34,6 @@ static chunk_t *insert_vbrace(chunk_t *pc, bool after, parse_frame_t *frm);
 
 static void parse_cleanup(parse_frame_t *frm, chunk_t *pc);
 
-static bool close_statement(parse_frame_t *frm, chunk_t *pc);
 
 /**
  * Called when a statement was just closed and the pse_tos was just
@@ -118,7 +115,7 @@ static size_t preproc_start(parse_frame_t *frm, chunk_t *pc)
 static void print_stack(log_sev_t logsev, const char *str,
                         parse_frame_t *frm, chunk_t *pc)
 {
-   (void)pc;
+   UNUSED(pc);
    LOG_FUNC_ENTRY();
    if (log_sev_on(logsev))
    {
@@ -327,7 +324,6 @@ static void push_fmr_pse(parse_frame_t *frm, chunk_t *pc,
 static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
-   c_token_t parent = CT_NONE;
 
    LOG_FMT(LTOK, "%s:%zu] %16s - tos:%zu/%16s stg:%d\n",
            __func__, pc->orig_line, get_token_name(pc->type),
@@ -510,7 +506,7 @@ static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
    }
 
    /* Get the parent type for brace and paren open */
-   parent = pc->parent_type;
+   c_token_t parent = pc->parent_type;
    if ((pc->type == CT_PAREN_OPEN) ||
        (pc->type == CT_FPAREN_OPEN) ||
        (pc->type == CT_SPAREN_OPEN) ||
@@ -1039,7 +1035,7 @@ static chunk_t *insert_vbrace(chunk_t *pc, bool after, parse_frame_t *frm)
 } // insert_vbrace
 
 
-bool close_statement(parse_frame_t *frm, chunk_t *pc)
+static bool close_statement(parse_frame_t *frm, chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
    chunk_t *vbc = pc;

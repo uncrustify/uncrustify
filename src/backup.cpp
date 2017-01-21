@@ -63,7 +63,7 @@ int backup_copy_file(const char *filename, const vector<UINT8> &data)
          {
             if (unc_isxdigit(buffer[i]))
             {
-               md5_str_in[i] = unc_tolower(buffer[i]);
+               md5_str_in[i] = (char)unc_tolower(buffer[i]);
             }
             else
             {

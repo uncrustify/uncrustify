@@ -112,9 +112,9 @@ void unc_begin_group(uncrustify_groups id, const char *short_desc,
 }
 
 
-void unc_add_option(const char *name, uncrustify_options id, argtype_e type,
-                    const char *short_desc, const char *long_desc,
-                    int min_val, int max_val)
+static void unc_add_option(const char *name, uncrustify_options id, argtype_e type,
+                           const char *short_desc, const char *long_desc,
+                           int min_val, int max_val)
 {
 #define OptionMaxLength    60
    int lengthOfTheOption = strlen(name);
@@ -1622,7 +1622,7 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
       }
       if (strcasecmp(val, "AUTO") != 0)
       {
-         fprintf(stderr, "%s:%d Expected AUTO, LF, CRLF, or CR for %s, got %s\n",
+         fprintf(stderr, "%s:%u Expected AUTO, LF, CRLF, or CR for %s, got %s\n",
                  cpd.filename, cpd.line_number, entry->name, val);
          cpd.error_count++;
       }
@@ -1669,7 +1669,7 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
       }
       if (strcasecmp(val, "IGNORE") != 0)
       {
-         fprintf(stderr, "%s:%d Expected IGNORE, JOIN, LEAD, LEAD_BREAK, LEAD_FORCE, "
+         fprintf(stderr, "%s:%u Expected IGNORE, JOIN, LEAD, LEAD_BREAK, LEAD_FORCE, "
                  "TRAIL, TRAIL_BREAK, TRAIL_FORCE for %s, got %s\n",
                  cpd.filename, cpd.line_number, entry->name, val);
          cpd.error_count++;
@@ -1688,7 +1688,7 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
          if ((entry->type == AT_UNUM) &&
              (*val == '-'))
          {
-            fprintf(stderr, "%s:%d\n  for the option '%s' is a negative value not possible: %s",
+            fprintf(stderr, "%s:%u\n  for the option '%s' is a negative value not possible: %s",
                     cpd.filename, cpd.line_number, entry->name, val);
             exit(EX_CONFIG);
          }
@@ -1709,7 +1709,7 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
          tmp = unc_find_option(val);
          if (tmp == NULL)
          {
-            fprintf(stderr, "%s:%d\n  for the assigment: unknown option '%s':",
+            fprintf(stderr, "%s:%u\n  for the assigment: unknown option '%s':",
                     cpd.filename, cpd.line_number, val);
             exit(EX_CONFIG);
          }
@@ -1721,13 +1721,13 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
          }
          else
          {
-            fprintf(stderr, "%s:%d\n  for the assigment: expected type for %s is %s, got %s\n",
+            fprintf(stderr, "%s:%u\n  for the assigment: expected type for %s is %s, got %s\n",
                     cpd.filename, cpd.line_number,
                     entry->name, get_argtype_name(entry->type), get_argtype_name(tmp->type));
             exit(EX_CONFIG);
          }
       }
-      fprintf(stderr, "%s:%d Expected a number for %s, got %s\n",
+      fprintf(stderr, "%s:%u Expected a number for %s, got %s\n",
               cpd.filename, cpd.line_number, entry->name, val);
       cpd.error_count++;
       dest->n = 0;
@@ -1765,7 +1765,7 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
          dest->b = cpd.settings[tmp->id].b ? btrue : !btrue;
          return;
       }
-      fprintf(stderr, "%s:%d Expected 'True' or 'False' for %s, got %s\n",
+      fprintf(stderr, "%s:%u Expected 'True' or 'False' for %s, got %s\n",
               cpd.filename, cpd.line_number, entry->name, val);
       cpd.error_count++;
       dest->b = false;
@@ -1805,7 +1805,7 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
       dest->a = cpd.settings[tmp->id].a;
       return;
    }
-   fprintf(stderr, "%s:%d Expected 'Add', 'Remove', 'Force', or 'Ignore' for %s, got %s\n",
+   fprintf(stderr, "%s:%u Expected 'Add', 'Remove', 'Force', or 'Ignore' for %s, got %s\n",
            cpd.filename, cpd.line_number, entry->name, val);
    cpd.error_count++;
    dest->a = AV_IGNORE;
@@ -1885,7 +1885,7 @@ void process_option_line(char *configLine, const char *filename)
    {
       if (argc > 0)
       {
-         fprintf(stderr, "%s:%d Wrong number of arguments: %s...\n",
+         fprintf(stderr, "%s:%u Wrong number of arguments: %s...\n",
                  filename, cpd.line_number, configLine);
          cpd.error_count++;
       }
@@ -1920,7 +1920,7 @@ void process_option_line(char *configLine, const char *filename)
    {
       if (argc < 3)
       {
-         fprintf(stderr, "%s:%d 'set' requires at least three arguments\n",
+         fprintf(stderr, "%s:%u 'set' requires at least three arguments\n",
                  filename, cpd.line_number);
       }
       else
@@ -1938,7 +1938,7 @@ void process_option_line(char *configLine, const char *filename)
          }
          else
          {
-            fprintf(stderr, "%s:%d unknown type '%s':", filename, cpd.line_number, args[1]);
+            fprintf(stderr, "%s:%u unknown type '%s':", filename, cpd.line_number, args[1]);
          }
       }
    }
@@ -1968,7 +1968,7 @@ void process_option_line(char *configLine, const char *filename)
    {
       if (argc < 3)
       {
-         fprintf(stderr, "%s:%d 'file_ext' requires at least three arguments\n",
+         fprintf(stderr, "%s:%u 'file_ext' requires at least three arguments\n",
                  filename, cpd.line_number);
       }
       else
@@ -1978,12 +1978,12 @@ void process_option_line(char *configLine, const char *filename)
             const char *lang_name = extension_add(args[idx], args[1]);
             if (lang_name)
             {
-               LOG_FMT(LNOTE, "%s:%d file_ext '%s' => '%s'\n",
+               LOG_FMT(LNOTE, "%s:%u file_ext '%s' => '%s'\n",
                        filename, cpd.line_number, args[idx], lang_name);
             }
             else
             {
-               fprintf(stderr, "%s:%d file_ext has unknown language '%s'\n",
+               fprintf(stderr, "%s:%u file_ext has unknown language '%s'\n",
                        filename, cpd.line_number, args[1]);
             }
          }
@@ -1995,7 +1995,7 @@ void process_option_line(char *configLine, const char *filename)
       const int id = set_option_value(args[0], args[1]);
       if (id < 0)
       {
-         fprintf(stderr, "%s:%d Unknown symbol '%s'\n",
+         fprintf(stderr, "%s:%u Unknown symbol '%s'\n",
                  filename, cpd.line_number, args[0]);
          cpd.error_count++;
       }
