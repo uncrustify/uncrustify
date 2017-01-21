@@ -61,6 +61,9 @@ const char *get_file_extension(int &idx);
 void print_extensions(FILE *pfile);
 
 
+void usage_exit(const char *msg, const char *argv0, int code);
+
+
 const char *extension_add(const char *ext_text, const char *lang_text);
 
 #endif /* UNCRUSTIFY_H_INCLUDED */

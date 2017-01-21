@@ -11,6 +11,19 @@
 #include <stdio.h>
 #include "unc_text.h"
 
+/**
+ * All output text is sent here, one char at a time.
+ */
+static void add_char(UINT32 ch);
+
+/**
+ * Advance to a specific column
+ * cpd.column is the current column
+ *
+ * @param column  The column to advance to
+ */
+static void output_to_column(size_t column, bool allow_tabs);
+
 
 /**
  * This renders the chunk list to a file.
@@ -36,5 +49,20 @@ void output_parsed(FILE *pfile);
  * things a little bit, but not much.
  */
 void add_long_preprocessor_conditional_block_comment(void);
+
+
+/**
+ * Output a comment to the column using indent_with_tabs and
+ * indent_cmt_with_tabs as the rules.
+ * base_col is the indent of the first line of the comment.
+ * On the first line, column == base_col.
+ * On subsequent lines, column >= base_col.
+ *
+ * @param brace_col the brace-level indent of the comment
+ * @param base_col  the indent of the start of the comment (multiline)
+ * @param column    the column that we should end up in
+ */
+static void cmt_output_indent(int brace_col, int base_col, int column);
+
 
 #endif /* OUTPUT_H_INCLUDED */

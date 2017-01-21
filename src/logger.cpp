@@ -360,7 +360,7 @@ void log_hex_blk(log_sev_t sev, const void *data, size_t len)
       buf[str_idx + 1] = to_hex_char(tmp);
       str_idx         += 3;
 
-      buf[chr_idx++] = unc_isprint(tmp) ? tmp : '.';
+      buf[chr_idx++] = (char)(unc_isprint(tmp) ? tmp : '.');
 
       total++;
       count++;

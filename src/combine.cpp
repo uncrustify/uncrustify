@@ -602,15 +602,6 @@ static chunk_t *flag_parens(chunk_t *po, UINT64 flags, c_token_t opentype,
 } // flag_parens
 
 
-/**
- * Sets the parent of the open paren/brace/square/angle and the closing.
- * Note - it is assumed that pc really does point to an open item and the
- * close must be open + 1.
- *
- * @param start   The open paren
- * @param parent  The type to assign as the parent
- * @return        The chunk after the close paren
- */
 chunk_t *set_paren_parent(chunk_t *start, c_token_t parent)
 {
    LOG_FUNC_ENTRY();
@@ -762,14 +753,6 @@ static chunk_t *skip_dc_member(chunk_t *start)
 }
 
 
-/**
- * This is called on every chunk.
- * First on all non-preprocessor chunks and then on each preprocessor chunk.
- * It does all the detection and classifying.
- * This is only called by fix_symbols.
- * The three parameters never get the value NULL.
- * it is not necessary to test.
- */
 void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
 {
    LOG_FUNC_ENTRY();
@@ -3341,9 +3324,6 @@ static chunk_t *skip_expression(chunk_t *start)
 }
 
 
-/**
- * help function for mark_variable_definition...
- */
 bool go_on(chunk_t *pc, chunk_t *start)
 {
    if ((pc == NULL) ||

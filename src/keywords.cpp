@@ -302,7 +302,7 @@ static const chunk_tag_t keywords[] =
 };
 
 
-void init_keywords()
+void init_keywords(void)
 {
 }
 

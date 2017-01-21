@@ -100,7 +100,7 @@ void print_universal_indent_cfg(FILE *pfile)
             }
             else if (was_space)
             {
-               *character = unc_toupper(*character);
+               *character = (char)unc_toupper(*character);
                was_space  = false;
             }
          }

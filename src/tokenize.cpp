@@ -141,6 +141,16 @@ struct tok_ctx
 
 
 /**
+ * Count the number of characters in a word.
+ * The first character is already valid for a keyword
+ *
+ * @param pc   The structure to update, str is an input.
+ * @return     Whether a word was parsed (always true)
+ */
+static bool parse_word(tok_ctx &ctx, chunk_t &pc, bool skipcheck);
+
+
+/**
  * Count the number of characters in a quoted string.
  * The next bit of text starts with a quote char " or ' or <.
  * Count the number of characters until the matching character.
@@ -964,8 +974,8 @@ static bool parse_number(tok_ctx &ctx, chunk_t &pc)
 
 static bool parse_string(tok_ctx &ctx, chunk_t &pc, int quote_idx, bool allow_escape)
 {
-   char escape_char        = cpd.settings[UO_string_escape_char].n;
-   char escape_char2       = cpd.settings[UO_string_escape_char2].n;
+   char escape_char        = (char)cpd.settings[UO_string_escape_char].n;
+   char escape_char2       = (char)cpd.settings[UO_string_escape_char2].n;
    bool should_escape_tabs = cpd.settings[UO_string_replace_tab_chars].b && (cpd.lang_flags & LANG_ALLC);
 
    pc.str.clear();
@@ -1252,14 +1262,7 @@ static bool parse_cr_string(tok_ctx &ctx, chunk_t &pc, int q_idx)
 } // parse_cr_string
 
 
-/**
- * Count the number of characters in a word.
- * The first character is already valid for a keyword
- *
- * @param pc   The structure to update, str is an input.
- * @return     Whether a word was parsed (always true)
- */
-bool parse_word(tok_ctx &ctx, chunk_t &pc, bool skipcheck)
+static bool parse_word(tok_ctx &ctx, chunk_t &pc, bool skipcheck)
 {
    static unc_text intr_txt("@interface");
 
@@ -1820,10 +1823,10 @@ static bool parse_next(tok_ctx &ctx, chunk_t &pc)
 
    /* see if we have a punctuator */
    char punc_txt[4];
-   punc_txt[0] = ctx.peek();
-   punc_txt[1] = ctx.peek(1);
-   punc_txt[2] = ctx.peek(2);
-   punc_txt[3] = ctx.peek(3);
+   punc_txt[0] = (char)ctx.peek();
+   punc_txt[1] = (char)ctx.peek(1);
+   punc_txt[2] = (char)ctx.peek(2);
+   punc_txt[3] = (char)ctx.peek(3);
    const chunk_tag_t *punc;
    if ((punc = find_punctuator(punc_txt, cpd.lang_flags)) != NULL)
    {

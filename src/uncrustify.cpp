@@ -117,10 +117,10 @@ void uncrustify_file(const file_mem &fm, FILE *pfout, const char *parsed_file, b
 static void do_source_file(const char *filename_in, const char *filename_out, const char *parsed_file, bool no_backup, bool keep_mtime);
 
 
-static void add_file_header();
+static void add_file_header(void);
 
 
-static void add_file_footer();
+static void add_file_footer(void);
 
 
 static void add_func_header(c_token_t type, file_mem &fm);
@@ -887,8 +887,8 @@ static bool read_stdin(file_mem &fm)
 
 static void make_folders(const string &filename)
 {
-   int  last_idx = 0;
-   char outname[4096];
+   UINT32 last_idx = 0;
+   char   outname[4096];
 
    snprintf(outname, sizeof(outname), "%s", filename.c_str());
 
@@ -1099,13 +1099,13 @@ static bool file_content_matches(const string &filename1, const string &filename
       return(false);
    }
 
-   int   len1 = 0;
-   int   len2 = 0;
-   UINT8 buf1[1024];
-   UINT8 buf2[1024];
+   size_t len1 = 0;
+   size_t len2 = 0;
+   UINT8  buf1[1024];
+   UINT8  buf2[1024];
    memset(buf1, 0, sizeof(buf1));
    memset(buf2, 0, sizeof(buf2));
-   while ((len1 >= 0) && (len2 >= 0))
+   while (true)
    {
       if (len1 == 0)
       {
@@ -1115,14 +1115,16 @@ static bool file_content_matches(const string &filename1, const string &filename
       {
          len2 = read(fd2, buf2, sizeof(buf2));
       }
-      if ((len1 <= 0) || (len2 <= 0))
+      if ((len1 == 0) || (len2 == 0))
       {
-         break;
+         break; /* reached end of either files */
+         /* \todo what is if one file is longer
+         * than the other, do we miss that ? */
       }
-      int minlen = (len1 < len2) ? len1 : len2;
+      int minlen = min(len1, len2);
       if (memcmp(buf1, buf2, minlen) != 0)
       {
-         break;
+         break; /* found a difference */
       }
       len1 -= minlen;
       len2 -= minlen;
@@ -1161,15 +1163,15 @@ static bool bout_content_matches(const file_mem &fm, bool report_status)
    {
       if (report_status)
       {
-         fprintf(stderr, "FAIL: %s (File size changed from %u to %u)\n",
+         fprintf(stderr, "FAIL: %s (File size changed from %zu to %zu)\n",
                  cpd.filename,
-                 (int)fm.raw.size(), (int)cpd.bout->size());
+                 fm.raw.size(), cpd.bout->size());
       }
       is_same = false;
    }
    else
    {
-      for (int idx = 0; idx < (int)fm.raw.size(); idx++)
+      for (UINT32 idx = 0; idx < (int)fm.raw.size(); idx++)
       {
          if (fm.raw[idx] != (*cpd.bout)[idx])
          {
@@ -1185,7 +1187,7 @@ static bool bout_content_matches(const file_mem &fm, bool report_status)
    }
    if (is_same && report_status)
    {
-      fprintf(stdout, "PASS: %s (%u bytes)\n", cpd.filename, (int)fm.raw.size());
+      fprintf(stdout, "PASS: %s (%zu bytes)\n", cpd.filename, fm.raw.size());
    }
 
    return(is_same);
@@ -1346,7 +1348,7 @@ static void do_source_file(const char *filename_in,
 } // do_source_file
 
 
-static void add_file_header()
+static void add_file_header(void)
 {
    if (!chunk_is_comment(chunk_get_head()))
    {
@@ -1356,7 +1358,7 @@ static void add_file_header()
 }
 
 
-static void add_file_footer()
+static void add_file_footer(void)
 {
    chunk_t *pc = chunk_get_tail();
 
@@ -1597,7 +1599,7 @@ static void uncrustify_start(const deque<int> &data)
    {
       chunk_t *pc = chunk_get_head();
 
-      cpd.frag_cols = (pc != NULL) ? pc->orig_col : 0;
+      cpd.frag_cols = (UINT16)((pc != NULL) ? pc->orig_col : 0);
    }
 
    /* Add the file header */
@@ -2044,7 +2046,7 @@ static lang_name_t language_names[] =
 };
 
 
-int language_flags_from_name(const char *name)
+static int language_flags_from_name(const char *name)
 {
    for (int i = 0; i < (int)ARRAY_SIZE(language_names); i++)
    {

@@ -13,7 +13,7 @@
 
 #define HAVE_SYS_STAT_H
 
-#define NO_MACRO_VARARG
+#define NO_MACRO_VARARG    /* variable parameter numbers don't work on windows */
 
 typedef char                 CHAR;
 

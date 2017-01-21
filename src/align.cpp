@@ -1445,7 +1445,7 @@ static CmtAlignType get_comment_align_type(chunk_t *cmt)
 }
 
 
-chunk_t *align_trailing_comments(chunk_t *start)
+static chunk_t *align_trailing_comments(chunk_t *start)
 {
    LOG_FUNC_ENTRY();
    size_t       min_col  = 0;
@@ -1522,12 +1522,6 @@ chunk_t *align_trailing_comments(chunk_t *start)
 } // align_trailing_comments
 
 
-/**
- * Shifts out all columns by a certain amount.
- *
- * @param idx  The index to start shifting
- * @param num  The number of columns to shift
- */
 void ib_shift_out(size_t idx, size_t num)
 {
    while (idx < cpd.al_cnt)
@@ -1538,10 +1532,6 @@ void ib_shift_out(size_t idx, size_t num)
 }
 
 
-/**
- * If sq_open is CT_SQUARE_OPEN and the matching close is followed by '=',
- * then return the chunk after the '='.  Otherwise, return NULL.
- */
 static chunk_t *skip_c99_array(chunk_t *sq_open)
 {
    if (chunk_is_token(sq_open, CT_SQUARE_OPEN))

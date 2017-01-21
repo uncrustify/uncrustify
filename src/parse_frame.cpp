@@ -27,9 +27,6 @@ static void pf_log_frms(log_sev_t logsev, const char *txt, struct parse_frame *p
 static void pf_copy_2nd_tos(struct parse_frame *pf);
 
 
-/**
- * Logs one parse frame
- */
 void pf_log(log_sev_t logsev, parse_frame_t *pf)
 {
    LOG_FMT(logsev, "[%s] BrLevel=%d Level=%d PseTos=%zu\n",
@@ -60,9 +57,6 @@ static void pf_log_frms(log_sev_t logsev, const char *txt, parse_frame_t *pf)
 }
 
 
-/**
- * Logs the entire parse frame stack
- */
 void pf_log_all(log_sev_t logsev)
 {
    LOG_FMT(logsev, "##=- Parse Frame : %d entries\n", cpd.frame_count);
@@ -77,19 +71,12 @@ void pf_log_all(log_sev_t logsev)
 }
 
 
-/**
- * Copies src to dst.
- */
 void pf_copy(parse_frame_t *dst, const parse_frame_t *src)
 {
    memcpy(dst, src, sizeof(parse_frame_t));
 }
 
 
-/**
- * Push a copy of the parse frame onto the stack.
- * This is called on #if and #ifdef.
- */
 void pf_push(parse_frame_t *pf)
 {
    static int ref_no = 1;

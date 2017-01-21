@@ -320,9 +320,6 @@ chunk_t *chunk_get_prev_nnl(chunk_t *cur, chunk_nav_t nav)
 }
 
 
-/**
- * Gets the next non-NEWLINE and non-comment chunk
- */
 chunk_t *chunk_get_next_ncnl(chunk_t *cur, chunk_nav_t nav)
 {
    chunk_t *pc = cur;
