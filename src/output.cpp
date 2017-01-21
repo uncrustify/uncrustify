@@ -680,25 +680,25 @@ static chunk_t *get_next_function(chunk_t *pc)
 
 static chunk_t *get_next_class(chunk_t *pc)
 {
-   return(chunk_get_next(search_next_chunk(pc, CT_CLASS)));
+   return(chunk_get_next(chunk_search_next_cat(pc, CT_CLASS)));
 }
 
 
 static chunk_t *get_prev_category(chunk_t *pc)
 {
-   return(search_prev_chunk(pc, CT_OC_CATEGORY));
+   return(chunk_search_prev_cat(pc, CT_OC_CATEGORY));
 }
 
 
 static chunk_t *get_next_scope(chunk_t *pc)
 {
-   return(search_next_chunk(pc, CT_OC_SCOPE));
+   return(chunk_search_next_cat(pc, CT_OC_SCOPE));
 }
 
 
 static chunk_t *get_prev_oc_class(chunk_t *pc)
 {
-   return(search_prev_chunk(pc, CT_OC_CLASS));
+   return(chunk_search_prev_cat(pc, CT_OC_CLASS));
 }
 
 
