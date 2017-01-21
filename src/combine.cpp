@@ -3079,7 +3079,7 @@ void combine_labels(void)
 
 static void mark_variable_stack(ChunkStack &cs, log_sev_t sev)
 {
-   (void)sev;
+   UNUSED(sev);
    LOG_FUNC_ENTRY();
 
    /* throw out the last word and mark the rest */

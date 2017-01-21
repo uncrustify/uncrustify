@@ -371,7 +371,7 @@ int main(int argc, char *argv[])
 
 #ifdef WIN32
    /* tell Windows not to change what I write to stdout */
-   (void)_setmode(_fileno(stdout), _O_BINARY);
+   UNUSED(_setmode(_fileno(stdout), _O_BINARY));
 #endif
 
    /* Init logging */
@@ -1308,7 +1308,7 @@ static void do_source_file(const char *filename_in,
          if (!cpd.if_changed && file_content_matches(filename_tmp, filename_out))
          {
             /* No change - remove tmp file */
-            (void)unlink(filename_tmp.c_str());
+            UNUSED(unlink(filename_tmp.c_str()));
          }
          else
          {
@@ -1335,7 +1335,7 @@ static void do_source_file(const char *filename_in,
       {
          /* update mtime -- don't care if it fails */
          fm.utb.actime = time(NULL);
-         (void)utime(filename_in, &fm.utb);
+         UNUSED(utime(filename_in, &fm.utb));
       }
 #endif
    }

@@ -63,7 +63,7 @@ public:
    const char *Param(const char *token);
 
    /**
-    * Similiar to arg_param, but can iterate over all matches.
+    * Similar to arg_param, but can iterate over all matches.
     * Set index to 0 before the first call.
     *
     * @param token   The token string to match
