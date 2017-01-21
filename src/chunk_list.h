@@ -211,7 +211,12 @@ bool chunk_is_token(chunk_t *pc, c_token_t c_token)
 static_inline
 bool chunk_is_str(chunk_t *pc, const char *str, size_t len)
 {
-   return((pc != NULL) && (pc->len() == len) && (memcmp(pc->text(), str, len) == 0));
+   return((pc != NULL) &&                       /* valid pc pointer */
+          (pc->len() == len) &&                 /* token size equals size parameter */
+          (memcmp(pc->text(), str, len) == 0)); /* token name is the same as str parameter */
+
+   /* \todo possible access beyond array for memcmp, check this
+    * why not use strncmp here?  */
 }
 
 

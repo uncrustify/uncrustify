@@ -857,7 +857,7 @@ void add_long_closebrace_comment(void)
                {
                   nl_min = cpd.settings[UO_mod_add_long_switch_closebrace_comment].u;
                   tag_pc = sw_pc;
-                  xstr   = sw_pc ? sw_pc->str : NULL;
+                  xstr   = sw_pc ? sw_pc->str : NULL; /* \todo NULL is no unc_text structure */
                }
                else if ((br_open->parent_type == CT_FUNC_DEF) ||
                         (br_open->parent_type == CT_OC_MSG_DECL))

@@ -56,6 +56,7 @@ void prot_the_line(int theLine, unsigned int actual_line)
 }
 
 
+/* \todo examine_Data seems not to be used, is it still required? */
 void examine_Data(const char *func_name, int theLine, int what)
 {
    LOG_FMT(LGUY, "\n%s:", func_name);
@@ -125,6 +126,9 @@ void examine_Data(const char *func_name, int theLine, int what)
             }
          }
       }
+      break;
+
+   default:
       break;
    } // switch
 }    // examine_Data
