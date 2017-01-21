@@ -1411,14 +1411,14 @@ void register_options(void)
                   "Whether to change cpp-comments into c-comments");
    unc_add_option("cmt_star_cont", UO_cmt_star_cont, AT_BOOL,
                   "Whether to put a star on subsequent comment lines");
-   unc_add_option("cmt_sp_before_star_cont", UO_cmt_sp_before_star_cont, AT_NUM,
+   unc_add_option("cmt_sp_before_star_cont", UO_cmt_sp_before_star_cont, AT_UNUM,
                   "The number of spaces to insert at the start of subsequent comment lines");
    unc_add_option("cmt_sp_after_star_cont", UO_cmt_sp_after_star_cont, AT_NUM,
                   "The number of spaces to insert after the star on subsequent comment lines");
    unc_add_option("cmt_multi_check_last", UO_cmt_multi_check_last, AT_BOOL,
                   "For multi-line comments with a '*' lead, remove leading spaces if the first and last lines of\n"
                   "the comment are the same length. Default=True");
-   unc_add_option("cmt_multi_first_len_minimum", UO_cmt_multi_first_len_minimum, AT_NUM,
+   unc_add_option("cmt_multi_first_len_minimum", UO_cmt_multi_first_len_minimum, AT_UNUM,
                   "For multi-line comments with a '*' lead, remove leading spaces if the first and last lines of\n"
                   "the comment are the same length AND if the length is bigger as the first_len minimum. Default=4",
                   "", 1, 20);
@@ -1493,7 +1493,7 @@ void register_options(void)
    unc_add_option("mod_add_long_switch_closebrace_comment", UO_mod_add_long_switch_closebrace_comment, AT_UNUM,
                   "If a switch body exceeds the specified number of newlines and doesn't have a comment after\n"
                   "the close brace, a comment will be added.");
-   unc_add_option("mod_add_long_ifdef_endif_comment", UO_mod_add_long_ifdef_endif_comment, AT_NUM,
+   unc_add_option("mod_add_long_ifdef_endif_comment", UO_mod_add_long_ifdef_endif_comment, AT_UNUM,
                   "If an #ifdef body exceeds the specified number of newlines and doesn't have a comment after\n"
                   "the #endif, a comment will be added.");
    unc_add_option("mod_add_long_ifdef_else_comment", UO_mod_add_long_ifdef_else_comment, AT_UNUM,
