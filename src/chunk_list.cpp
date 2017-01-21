@@ -137,10 +137,8 @@ chunk_t *chunk_get_prev(chunk_t *cur, nav_t nav)
 
 chunk_t *chunk_dup(const chunk_t *pc_in)
 {
-   chunk_t *pc;
+   chunk_t *pc = new chunk_t; /* Allocate a new chunk */
 
-   /* Allocate the entry */
-   pc = new chunk_t;
    if (pc == NULL)
    {
       exit(EXIT_FAILURE);
@@ -156,10 +154,11 @@ chunk_t *chunk_dup(const chunk_t *pc_in)
 
 static void chunk_log(chunk_t *pc, const char *text)
 {
-   if (pc && (cpd.unc_stage != US_TOKENIZE) && (cpd.unc_stage != US_CLEANUP))
+   if ((pc != NULL) && (cpd.unc_stage != US_TOKENIZE) && (cpd.unc_stage != US_CLEANUP))
    {
-      chunk_t *prev = chunk_get_prev(pc);
-      chunk_t *next = chunk_get_next(pc);
+      const log_sev_t log   = LCHUNK;
+      chunk_t         *prev = chunk_get_prev(pc);
+      chunk_t         *next = chunk_get_next(pc);
 
       LOG_FMT(LCHUNK, " -- %s: %zu:%zu '%s' [%s]",
               text, pc->orig_line, pc->orig_col, pc->text(),
@@ -185,8 +184,8 @@ static void chunk_log(chunk_t *pc, const char *text)
                  prev->orig_line, prev->orig_col, prev->text(),
                  get_token_name(prev->type));
       }
-      LOG_FMT(LCHUNK, " stage=%d", cpd.unc_stage);
-      log_func_stack_inline(LCHUNK);
+      LOG_FMT(log, " stage=%d", cpd.unc_stage);
+      log_func_stack_inline(log);
    }
 }
 
@@ -558,9 +557,6 @@ chunk_t *chunk_first_on_line(chunk_t *pc)
 
 void chunk_swap_lines(chunk_t *pc1, chunk_t *pc2)
 {
-   chunk_t *ref2;
-   chunk_t *tmp;
-
    pc1 = chunk_first_on_line(pc1);
    pc2 = chunk_first_on_line(pc2);
 
@@ -574,12 +570,12 @@ void chunk_swap_lines(chunk_t *pc1, chunk_t *pc2)
     * ? - start1 - a1 - b1 - nl1 - ? - ref2 - start2 - a2 - b2 - nl2 - ?
     *      ^- pc1                              ^- pc2
     */
-   ref2 = chunk_get_prev(pc2);
+   chunk_t *ref2 = chunk_get_prev(pc2);
 
    /* Move the line started at pc2 before pc1 */
    while ((pc2 != NULL) && !chunk_is_newline(pc2))
    {
-      tmp = chunk_get_next(pc2);
+      chunk_t *tmp = chunk_get_next(pc2);
       g_cl.Pop(pc2);
       g_cl.AddBefore(pc2, pc1);
       pc2 = tmp;
@@ -594,7 +590,7 @@ void chunk_swap_lines(chunk_t *pc1, chunk_t *pc2)
    /* Now move the line started at pc1 after ref2 */
    while ((pc1 != NULL) && !chunk_is_newline(pc1))
    {
-      tmp = chunk_get_next(pc1);
+      chunk_t *tmp = chunk_get_next(pc1);
       g_cl.Pop(pc1);
       if (ref2 != NULL)
       {
@@ -685,7 +681,7 @@ void set_chunk_parent_real(chunk_t *pc, c_token_t pt)
 
 void chunk_flags_set_real(chunk_t *pc, UINT64 clr_bits, UINT64 set_bits)
 {
-   if (pc)
+   if (pc != NULL)
    {
       LOG_FUNC_ENTRY();
       UINT64 nflags = (pc->flags & ~clr_bits) | set_bits;
