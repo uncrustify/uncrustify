@@ -152,6 +152,14 @@ chunk_t *chunk_dup(const chunk_t *pc_in)
 }
 
 
+static void chunk_log_msg(chunk_t *chunk, const log_sev_t log, const char *str)
+{
+   LOG_FMT(log, "%s %zu:%zu '%s' [%s]",
+           str, chunk->orig_line, chunk->orig_col, chunk->text(),
+           get_token_name(chunk->type));
+}
+
+
 static void chunk_log(chunk_t *pc, const char *text)
 {
    if ((pc != NULL) && (cpd.unc_stage != US_TOKENIZE) && (cpd.unc_stage != US_CLEANUP))
@@ -160,29 +168,20 @@ static void chunk_log(chunk_t *pc, const char *text)
       chunk_t         *prev = chunk_get_prev(pc);
       chunk_t         *next = chunk_get_next(pc);
 
-      LOG_FMT(LCHUNK, " -- %s: %zu:%zu '%s' [%s]",
-              text, pc->orig_line, pc->orig_col, pc->text(),
-              get_token_name(pc->type));
+      chunk_log_msg(pc, log, text);
 
       if (prev && next)
       {
-         LOG_FMT(LCHUNK, " @ between %zu:%zu '%s' [%s] and %zu:%zu '%s' [%s]",
-                 prev->orig_line, prev->orig_col, prev->text(),
-                 get_token_name(prev->type),
-                 next->orig_line, next->orig_col, next->text(),
-                 get_token_name(next->type));
+         chunk_log_msg(prev, log, " @ between");
+         chunk_log_msg(next, log, " and");
       }
       else if (next)
       {
-         LOG_FMT(LCHUNK, " @ before %zu:%zu '%s' [%s]",
-                 next->orig_line, next->orig_col, next->text(),
-                 get_token_name(next->type));
+         chunk_log_msg(next, log, " @ before");
       }
       else if (prev)
       {
-         LOG_FMT(LCHUNK, " @ after %zu:%zu '%s' [%s]",
-                 prev->orig_line, prev->orig_col, prev->text(),
-                 get_token_name(prev->type));
+         chunk_log_msg(prev, log, " @ after");
       }
       LOG_FMT(log, " stage=%d", cpd.unc_stage);
       log_func_stack_inline(log);
