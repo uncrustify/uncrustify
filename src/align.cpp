@@ -502,9 +502,9 @@ void align_right_comments(void)
           (pc->type == CT_COMMENT_CPP) ||
           (pc->type == CT_COMMENT_MULTI))
       {
-         bool skip = false;
          if (pc->parent_type == CT_COMMENT_END)
          {
+            bool    skip  = false;
             chunk_t *prev = chunk_get_prev(pc);
             if (pc->orig_col < (prev->orig_col_end + cpd.settings[UO_align_right_cmt_gap].n))
             {

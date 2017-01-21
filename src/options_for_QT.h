@@ -14,11 +14,9 @@
 
 #include "uncrustify_types.h"
 
-extern cp_data_t cpd;
-
-extern bool      QT_SIGNAL_SLOT_found;
-extern int       QT_SIGNAL_SLOT_level;
-extern bool      restoreValues;
+extern bool QT_SIGNAL_SLOT_found;
+extern int  QT_SIGNAL_SLOT_level;
+extern bool restoreValues;
 
 void save_set_options_for_QT(int level);
 void restore_options_for_QT(void);
