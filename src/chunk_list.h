@@ -24,7 +24,7 @@
  *  - If not in a preprocessor, skip over any encountered preprocessor stuff
  *  - If in a preprocessor, fail to leave (return NULL)
  */
-enum chunk_nav_t
+enum nav_t
 {
    CNAV_ALL,
    CNAV_PREPROC,
@@ -41,37 +41,37 @@ void chunk_move_after(chunk_t *pc_in, chunk_t *ref);
 
 chunk_t *chunk_get_head(void);
 chunk_t *chunk_get_tail(void);
-chunk_t *chunk_get_next(chunk_t *cur, chunk_nav_t nav = CNAV_ALL);
-chunk_t *chunk_get_prev(chunk_t *cur, chunk_nav_t nav = CNAV_ALL);
+chunk_t *chunk_get_next(chunk_t *cur, nav_t nav = CNAV_ALL);
+chunk_t *chunk_get_prev(chunk_t *cur, nav_t nav = CNAV_ALL);
 
 void chunk_swap(chunk_t *pc1, chunk_t *pc2);
 void chunk_swap_lines(chunk_t *pc1, chunk_t *pc2);
 chunk_t *chunk_first_on_line(chunk_t *pc);
 
-chunk_t *chunk_get_next_nl(chunk_t *cur, chunk_nav_t nav = CNAV_ALL);
-chunk_t *chunk_get_next_nc(chunk_t *cur, chunk_nav_t nav = CNAV_ALL);
-chunk_t *chunk_get_next_nnl(chunk_t *cur, chunk_nav_t nav = CNAV_ALL);
-chunk_t *chunk_get_next_ncnl(chunk_t *cur, chunk_nav_t nav = CNAV_ALL);
-chunk_t *chunk_get_next_ncnlnp(chunk_t *cur, chunk_nav_t nav = CNAV_ALL);
-chunk_t *chunk_get_next_nisq(chunk_t *cur, chunk_nav_t nav = CNAV_ALL);
+chunk_t *chunk_get_next_nl(chunk_t *cur, nav_t nav = CNAV_ALL);
+chunk_t *chunk_get_next_nc(chunk_t *cur, nav_t nav = CNAV_ALL);
+chunk_t *chunk_get_next_nnl(chunk_t *cur, nav_t nav = CNAV_ALL);
+chunk_t *chunk_get_next_ncnl(chunk_t *cur, nav_t nav = CNAV_ALL);
+chunk_t *chunk_get_next_ncnlnp(chunk_t *cur, nav_t nav = CNAV_ALL);
+chunk_t *chunk_get_next_nisq(chunk_t *cur, nav_t nav = CNAV_ALL);
 
-chunk_t *chunk_get_next_nblank(chunk_t *cur, chunk_nav_t nav = CNAV_ALL);
-chunk_t *chunk_get_prev_nblank(chunk_t *cur, chunk_nav_t nav = CNAV_ALL);
+chunk_t *chunk_get_next_nblank(chunk_t *cur, nav_t nav = CNAV_ALL);
+chunk_t *chunk_get_prev_nblank(chunk_t *cur, nav_t nav = CNAV_ALL);
 
-chunk_t *chunk_get_prev_nl(chunk_t *cur, chunk_nav_t nav = CNAV_ALL);
-chunk_t *chunk_get_prev_nc(chunk_t *cur, chunk_nav_t nav = CNAV_ALL);
-chunk_t *chunk_get_prev_nnl(chunk_t *cur, chunk_nav_t nav = CNAV_ALL);
-chunk_t *chunk_get_prev_ncnl(chunk_t *cur, chunk_nav_t nav = CNAV_ALL);
-chunk_t *chunk_get_prev_ncnlnp(chunk_t *cur, chunk_nav_t nav = CNAV_ALL);
+chunk_t *chunk_get_prev_nl(chunk_t *cur, nav_t nav = CNAV_ALL);
+chunk_t *chunk_get_prev_nc(chunk_t *cur, nav_t nav = CNAV_ALL);
+chunk_t *chunk_get_prev_nnl(chunk_t *cur, nav_t nav = CNAV_ALL);
+chunk_t *chunk_get_prev_ncnl(chunk_t *cur, nav_t nav = CNAV_ALL);
+chunk_t *chunk_get_prev_ncnlnp(chunk_t *cur, nav_t nav = CNAV_ALL);
 
-chunk_t *chunk_get_next_type(chunk_t *cur, c_token_t type, int level, chunk_nav_t nav = CNAV_ALL);
-chunk_t *chunk_get_prev_type(chunk_t *cur, c_token_t type, int level, chunk_nav_t nav = CNAV_ALL);
+chunk_t *chunk_get_next_type(chunk_t *cur, c_token_t type, int level, nav_t nav = CNAV_ALL);
+chunk_t *chunk_get_prev_type(chunk_t *cur, c_token_t type, int level, nav_t nav = CNAV_ALL);
 
-chunk_t *chunk_get_next_str(chunk_t *cur, const char *str, size_t len, int level, chunk_nav_t nav = CNAV_ALL);
-chunk_t *chunk_get_prev_str(chunk_t *cur, const char *str, size_t len, int level, chunk_nav_t nav = CNAV_ALL);
+chunk_t *chunk_get_next_str(chunk_t *cur, const char *str, size_t len, int level, nav_t nav = CNAV_ALL);
+chunk_t *chunk_get_prev_str(chunk_t *cur, const char *str, size_t len, int level, nav_t nav = CNAV_ALL);
 
-chunk_t *chunk_get_next_nvb(chunk_t *cur, chunk_nav_t nav = CNAV_ALL);
-chunk_t *chunk_get_prev_nvb(chunk_t *cur, chunk_nav_t nav = CNAV_ALL);
+chunk_t *chunk_get_next_nvb(chunk_t *cur, nav_t nav = CNAV_ALL);
+chunk_t *chunk_get_prev_nvb(chunk_t *cur, nav_t nav = CNAV_ALL);
 
 
 /**
@@ -80,9 +80,9 @@ chunk_t *chunk_get_prev_nvb(chunk_t *cur, chunk_nav_t nav = CNAV_ALL);
  * @retval NULL    - no object found, or invalid parameters provided
  * @retval chunk_t - pointer to the found object
  */
-chunk_t *search_prev_chunk(chunk_t         *pc, /**< [in] chunk list to search in */
-                           const c_token_t cat  /**< [in] category to search for */
-                           );
+chunk_t *chunk_search_prev_cat(chunk_t         *pc, /**< [in] chunk list to search in */
+                               const c_token_t cat  /**< [in] category to search for */
+                               );
 
 
 /**
@@ -91,9 +91,9 @@ chunk_t *search_prev_chunk(chunk_t         *pc, /**< [in] chunk list to search i
  * @retval NULL    - no object found, or invalid parameters provided
  * @retval chunk_t - pointer to the found object
  */
-chunk_t *search_next_chunk(chunk_t         *pc, /**< [in] chunk list to search in */
-                           const c_token_t cat  /**< [in] category to search for */
-                           );
+chunk_t *chunk_search_next_cat(chunk_t         *pc, /**< [in] chunk list to search in */
+                               const c_token_t cat  /**< [in] category to search for */
+                               );
 
 
 /**
@@ -103,7 +103,7 @@ chunk_t *search_next_chunk(chunk_t         *pc, /**< [in] chunk list to search i
  * @return     NULL or the matching paren/brace/square
  */
 static_inline
-chunk_t *chunk_skip_to_match(chunk_t *cur, chunk_nav_t nav = CNAV_ALL)
+chunk_t *chunk_skip_to_match(chunk_t *cur, nav_t nav = CNAV_ALL)
 {
    if (cur &&
        ((cur->type == CT_PAREN_OPEN) ||
@@ -122,7 +122,7 @@ chunk_t *chunk_skip_to_match(chunk_t *cur, chunk_nav_t nav = CNAV_ALL)
 
 
 static_inline
-chunk_t *chunk_skip_to_match_rev(chunk_t *cur, chunk_nav_t nav = CNAV_ALL)
+chunk_t *chunk_skip_to_match_rev(chunk_t *cur, nav_t nav = CNAV_ALL)
 {
    if (cur &&
        ((cur->type == CT_PAREN_CLOSE) ||

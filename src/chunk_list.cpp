@@ -15,7 +15,7 @@
 #include "space.h"
 
 
-typedef ListManager<chunk_t> ChunkList;
+typedef ListManager<chunk_t> ChunkList_t;
 
 
 /**
@@ -36,7 +36,7 @@ static chunk_t *search_chunk(chunk_t         *pc, /**< [in] chunk list to search
 static void chunk_log(chunk_t *pc, const char *text);
 
 
-ChunkList g_cl;
+ChunkList_t g_cl;
 
 
 chunk_t *chunk_get_head(void)
@@ -51,13 +51,13 @@ chunk_t *chunk_get_tail(void)
 }
 
 
-chunk_t *search_prev_chunk(chunk_t *pc, const c_token_t cat)
+chunk_t *chunk_search_prev_cat(chunk_t *pc, const c_token_t cat)
 {
    return(search_chunk(pc, cat, false));
 }
 
 
-chunk_t *search_next_chunk(chunk_t *pc, const c_token_t cat)
+chunk_t *chunk_search_next_cat(chunk_t *pc, const c_token_t cat)
 {
    return(search_chunk(pc, cat, true));
 }
@@ -77,7 +77,7 @@ static chunk_t *search_chunk(chunk_t *pc, const c_token_t cat, const bool dir)
 }
 
 
-chunk_t *chunk_get_next(chunk_t *cur, chunk_nav_t nav)
+chunk_t *chunk_get_next(chunk_t *cur, nav_t nav)
 {
    if (cur == NULL)
    {
@@ -106,7 +106,7 @@ chunk_t *chunk_get_next(chunk_t *cur, chunk_nav_t nav)
 }
 
 
-chunk_t *chunk_get_prev(chunk_t *cur, chunk_nav_t nav)
+chunk_t *chunk_get_prev(chunk_t *cur, nav_t nav)
 {
    if (cur == NULL)
    {
@@ -263,7 +263,7 @@ void chunk_move_after(chunk_t *pc_in, chunk_t *ref)
 /**
  * Gets the next NEWLINE chunk
  */
-chunk_t *chunk_get_next_nl(chunk_t *cur, chunk_nav_t nav)
+chunk_t *chunk_get_next_nl(chunk_t *cur, nav_t nav)
 {
    chunk_t *pc = cur;
 
@@ -278,7 +278,7 @@ chunk_t *chunk_get_next_nl(chunk_t *cur, chunk_nav_t nav)
 /**
  * Gets the prev NEWLINE chunk
  */
-chunk_t *chunk_get_prev_nl(chunk_t *cur, chunk_nav_t nav)
+chunk_t *chunk_get_prev_nl(chunk_t *cur, nav_t nav)
 {
    chunk_t *pc = cur;
 
@@ -293,7 +293,7 @@ chunk_t *chunk_get_prev_nl(chunk_t *cur, chunk_nav_t nav)
 /**
  * Gets the next non-NEWLINE chunk
  */
-chunk_t *chunk_get_next_nnl(chunk_t *cur, chunk_nav_t nav)
+chunk_t *chunk_get_next_nnl(chunk_t *cur, nav_t nav)
 {
    chunk_t *pc = cur;
 
@@ -308,7 +308,7 @@ chunk_t *chunk_get_next_nnl(chunk_t *cur, chunk_nav_t nav)
 /**
  * Gets the prev non-NEWLINE chunk
  */
-chunk_t *chunk_get_prev_nnl(chunk_t *cur, chunk_nav_t nav)
+chunk_t *chunk_get_prev_nnl(chunk_t *cur, nav_t nav)
 {
    chunk_t *pc = cur;
 
@@ -323,7 +323,7 @@ chunk_t *chunk_get_prev_nnl(chunk_t *cur, chunk_nav_t nav)
 /**
  * Gets the next non-NEWLINE and non-comment chunk
  */
-chunk_t *chunk_get_next_ncnl(chunk_t *cur, chunk_nav_t nav)
+chunk_t *chunk_get_next_ncnl(chunk_t *cur, nav_t nav)
 {
    chunk_t *pc = cur;
 
@@ -338,7 +338,7 @@ chunk_t *chunk_get_next_ncnl(chunk_t *cur, chunk_nav_t nav)
 /**
  * Gets the next non-NEWLINE and non-comment chunk, non-preprocessor chunk
  */
-chunk_t *chunk_get_next_ncnlnp(chunk_t *cur, chunk_nav_t nav)
+chunk_t *chunk_get_next_ncnlnp(chunk_t *cur, nav_t nav)
 {
    chunk_t *pc = cur;
 
@@ -366,7 +366,7 @@ chunk_t *chunk_get_next_ncnlnp(chunk_t *cur, chunk_nav_t nav)
 /**
  * Gets the prev non-NEWLINE and non-comment chunk, non-preprocessor chunk
  */
-chunk_t *chunk_get_prev_ncnlnp(chunk_t *cur, chunk_nav_t nav)
+chunk_t *chunk_get_prev_ncnlnp(chunk_t *cur, nav_t nav)
 {
    chunk_t *pc = cur;
 
@@ -394,7 +394,7 @@ chunk_t *chunk_get_prev_ncnlnp(chunk_t *cur, chunk_nav_t nav)
 /**
  * Gets the next non-blank chunk
  */
-chunk_t *chunk_get_next_nblank(chunk_t *cur, chunk_nav_t nav)
+chunk_t *chunk_get_next_nblank(chunk_t *cur, nav_t nav)
 {
    chunk_t *pc = cur;
 
@@ -411,7 +411,7 @@ chunk_t *chunk_get_next_nblank(chunk_t *cur, chunk_nav_t nav)
 /**
  * Gets the prev non-blank chunk
  */
-chunk_t *chunk_get_prev_nblank(chunk_t *cur, chunk_nav_t nav)
+chunk_t *chunk_get_prev_nblank(chunk_t *cur, nav_t nav)
 {
    chunk_t *pc = cur;
 
@@ -427,7 +427,7 @@ chunk_t *chunk_get_prev_nblank(chunk_t *cur, chunk_nav_t nav)
 /**
  * Gets the next non-comment chunk
  */
-chunk_t *chunk_get_next_nc(chunk_t *cur, chunk_nav_t nav)
+chunk_t *chunk_get_next_nc(chunk_t *cur, nav_t nav)
 {
    chunk_t *pc = cur;
 
@@ -448,7 +448,7 @@ chunk_t *chunk_get_next_nc(chunk_t *cur, chunk_nav_t nav)
  * @return        NULL or the next chunk not in or part of
  *                square brackets
  */
-chunk_t *chunk_get_next_nisq(chunk_t *cur, chunk_nav_t nav)
+chunk_t *chunk_get_next_nisq(chunk_t *cur, nav_t nav)
 {
    chunk_t *pc = cur;
 
@@ -465,7 +465,7 @@ chunk_t *chunk_get_next_nisq(chunk_t *cur, chunk_nav_t nav)
 /**
  * Gets the prev non-NEWLINE and non-comment chunk
  */
-chunk_t *chunk_get_prev_ncnl(chunk_t *cur, chunk_nav_t nav)
+chunk_t *chunk_get_prev_ncnl(chunk_t *cur, nav_t nav)
 {
    chunk_t *pc = cur;
 
@@ -480,7 +480,7 @@ chunk_t *chunk_get_prev_ncnl(chunk_t *cur, chunk_nav_t nav)
 /**
  * Gets the prev non-comment chunk
  */
-chunk_t *chunk_get_prev_nc(chunk_t *cur, chunk_nav_t nav)
+chunk_t *chunk_get_prev_nc(chunk_t *cur, nav_t nav)
 {
    chunk_t *pc = cur;
 
@@ -501,7 +501,7 @@ chunk_t *chunk_get_prev_nc(chunk_t *cur, chunk_nav_t nav)
  * @return        NULL or the match
  */
 chunk_t *chunk_get_next_type(chunk_t *cur, c_token_t type,
-                             int level, chunk_nav_t nav)
+                             int level, nav_t nav)
 {
    chunk_t *pc = cur;
 
@@ -521,7 +521,7 @@ chunk_t *chunk_get_next_type(chunk_t *cur, c_token_t type,
 
 
 chunk_t *chunk_get_next_str(chunk_t *cur, const char *str, size_t len, int level,
-                            chunk_nav_t nav)
+                            nav_t nav)
 {
    chunk_t *pc = cur;
 
@@ -549,7 +549,7 @@ chunk_t *chunk_get_next_str(chunk_t *cur, const char *str, size_t len, int level
  * @return        NULL or the match
  */
 chunk_t *chunk_get_prev_type(chunk_t *cur, c_token_t type,
-                             int level, chunk_nav_t nav)
+                             int level, nav_t nav)
 {
    chunk_t *pc = cur;
 
@@ -574,7 +574,7 @@ chunk_t *chunk_get_prev_type(chunk_t *cur, c_token_t type,
 
 
 chunk_t *chunk_get_prev_str(chunk_t *cur, const char *str, size_t len, int level,
-                            chunk_nav_t nav)
+                            nav_t nav)
 {
    chunk_t *pc = cur;
 
@@ -724,7 +724,7 @@ void chunk_swap_lines(chunk_t *pc1, chunk_t *pc2)
 /**
  * Gets the next non-vbrace chunk
  */
-chunk_t *chunk_get_next_nvb(chunk_t *cur, chunk_nav_t nav)
+chunk_t *chunk_get_next_nvb(chunk_t *cur, nav_t nav)
 {
    chunk_t *pc = cur;
 
@@ -739,7 +739,7 @@ chunk_t *chunk_get_next_nvb(chunk_t *cur, chunk_nav_t nav)
 /**
  * Gets the prev non-vbrace chunk
  */
-chunk_t *chunk_get_prev_nvb(chunk_t *cur, chunk_nav_t nav)
+chunk_t *chunk_get_prev_nvb(chunk_t *cur, nav_t nav)
 {
    chunk_t *pc = cur;
 

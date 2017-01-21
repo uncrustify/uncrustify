@@ -47,7 +47,7 @@ void mark_comments(void);
 void make_type(chunk_t *pc);
 
 
-void flag_series(chunk_t *start, chunk_t *end, UINT64 set_flags, UINT64 clr_flags = 0, chunk_nav_t nav = CNAV_ALL);
+void flag_series(chunk_t *start, chunk_t *end, UINT64 set_flags, UINT64 clr_flags = 0, nav_t nav = CNAV_ALL);
 
 
 /**
