@@ -5,8 +5,8 @@
  *
  * @license GPL v2+
  */
-#ifndef _ERROR_TYPES_H_
-#define _ERROR_TYPES_H_
+#ifndef ERROR_TYPES_H_INCLUDED
+#define ERROR_TYPES_H_INCLUDED
 
 #if 1
 #include <stdlib.h>      /* provides EXIT_SUCCESS and EXIT FAILURE */
@@ -51,4 +51,4 @@
 #include "sysexits.h"      /* comes from BSD */
 #endif
 
-#endif /* _ERROR_TYPES_H_ */
+#endif /* ERROR_TYPES_H_INCLUDED */

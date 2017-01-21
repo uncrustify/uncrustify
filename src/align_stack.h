@@ -7,8 +7,8 @@
  * @license GPL v2+
  */
 
-#ifndef _ALIGN_STACK_H
-#define _ALIGN_STACK_H
+#ifndef ALIGN_STACK_H_INCLUDED
+#define ALIGN_STACK_H_INCLUDED
 
 #include "ChunkStack.h"
 
@@ -92,5 +92,5 @@ protected:
    ChunkStack m_scratch; /* used in ReAddSkipped() */
 };
 
-#endif /* _ALIGN_STACK_H */
+#endif /* ALIGN_STACK_H_INCLUDED */
 
