@@ -9,12 +9,10 @@
 #include "uncrustify_types.h"
 #include "chunk_list.h"
 #include "ChunkStack.h"
-#include "align_stack.h"
 #include "prototypes.h"
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
-#include <cerrno>
 #include "unc_ctype.h"
 
 

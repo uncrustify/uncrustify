@@ -25,7 +25,6 @@
 #include <cstdlib>
 #include <cstring>
 #include <algorithm>
-#include <cerrno>
 #include "unc_ctype.h"
 #include "unc_tools.h"
 #include "uncrustify.h"

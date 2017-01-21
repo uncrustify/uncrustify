@@ -13,7 +13,6 @@
 #include "uncrustify_types.h"
 #include "char_table.h"
 #include "chunk_list.h"
-
 #include "align.h"
 #include "args.h"
 #include "brace_cleanup.h"
