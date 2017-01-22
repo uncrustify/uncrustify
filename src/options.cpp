@@ -734,7 +734,7 @@ void register_options(void)
    unc_add_option("indent_member", UO_indent_member, AT_UNUM,
                   "The number of spaces to indent a continued '->' or '.'\n"
                   "Usually set to 0, 1, or indent_columns.");
-   unc_add_option("indent_sing_line_comments", UO_indent_sing_line_comments, AT_NUM,
+   unc_add_option("indent_sing_line_comments", UO_indent_sing_line_comments, AT_UNUM,
                   "Spaces to indent single line ('//') comments on lines before code");
    unc_add_option("indent_relative_single_line_comments", UO_indent_relative_single_line_comments, AT_BOOL,
                   "If set, will indent trailing single line ('//') comments relative\n"
@@ -804,7 +804,7 @@ void register_options(void)
                   "If indent_oc_block_msg and this option are on, blocks will be indented from where the block caret is.");
    unc_add_option("indent_oc_block_msg_from_brace", UO_indent_oc_block_msg_from_brace, AT_BOOL,
                   "If indent_oc_block_msg and this option are on, blocks will be indented from where the brace is.");
-   unc_add_option("indent_min_vbrace_open", UO_indent_min_vbrace_open, AT_NUM,
+   unc_add_option("indent_min_vbrace_open", UO_indent_min_vbrace_open, AT_UNUM,
                   "When identing after virtual brace open and newline add further spaces to reach this min. indent.");
    unc_add_option("indent_vbrace_open_on_tabstop", UO_indent_vbrace_open_on_tabstop, AT_BOOL,
                   "True: When identing after virtual brace open and newline add further spaces "
@@ -1533,13 +1533,13 @@ void register_options(void)
                   "Control indent of preprocessors inside #if blocks at brace level 0 (file-level)");
    unc_add_option("pp_indent_at_level", UO_pp_indent_at_level, AT_BOOL,
                   "Whether to indent #if/#else/#endif at the brace level (True) or from column 1 (False)");
-   unc_add_option("pp_indent_count", UO_pp_indent_count, AT_NUM,
+   unc_add_option("pp_indent_count", UO_pp_indent_count, AT_UNUM,
                   "Specifies the number of columns to indent preprocessors per level at brace level 0 (file-level).\n"
                   "If pp_indent_at_level=False, specifies the number of columns to indent preprocessors per level at brace level > 0 (function-level).\n"
                   "Default=1");
    unc_add_option("pp_space", UO_pp_space, AT_IARF,
                   "Add or remove space after # based on pp_level of #if blocks");
-   unc_add_option("pp_space_count", UO_pp_space_count, AT_NUM,
+   unc_add_option("pp_space_count", UO_pp_space_count, AT_UNUM,
                   "Sets the number of spaces added with pp_space");
    unc_add_option("pp_indent_region", UO_pp_indent_region, AT_NUM,
                   "The indent for #region and #endregion in C# and '#pragma region' in C/C++");
