@@ -1179,7 +1179,7 @@ static void output_comment_multi(chunk_t *pc)
    cmt.reflow = (cpd.settings[UO_cmt_reflow_mode].n != 1);
 
    size_t cmt_col  = cmt.base_col;
-   int col_diff = pc->orig_col - cmt.base_col;
+   int    col_diff = pc->orig_col - cmt.base_col;
 
    calculate_comment_body_indent(cmt, pc->str);
 
@@ -1190,7 +1190,7 @@ static void output_comment_multi(chunk_t *pc)
    // LOG_FMT(LSYS, "Indenting1 line %d to col %d (orig=%d) col_diff=%d xtra=%d cont='%s'\n",
    //        pc->orig_line, cmt_col, pc->orig_col, col_diff, cmt.xtra_indent, cmt.cont_text.c_str());
 
-   size_t      line_count = 0;
+   size_t   line_count = 0;
    size_t   ccol       = pc->column; /* the col of subsequent comment lines */
    size_t   cmt_idx    = 0;
    bool     nl_end     = false;
@@ -2018,7 +2018,7 @@ void add_long_preprocessor_conditional_block_comment(void)
 
       chunk_t *br_close;
       chunk_t *br_open = pc;
-      size_t   nl_count = 0;
+      size_t  nl_count = 0;
 
       chunk_t *tmp = pc;
       while ((tmp = chunk_get_next(tmp)) != NULL)
