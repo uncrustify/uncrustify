@@ -151,6 +151,7 @@
 30752 lambda2.cfg                      cpp/lambda.cpp
 30753 lambda3.cfg                      cpp/lambda2.cpp
 30754 bug_i_682.cfg                    cpp/bug_i_682.h
+30755 bug_i_938.cfg                    cpp/bug_i_938.h
 
 30800 star_pos-0.cfg                   cpp/align-star-amp-pos.cpp
 30801 star_pos-1.cfg                   cpp/align-star-amp-pos.cpp

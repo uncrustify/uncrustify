@@ -3776,7 +3776,7 @@ void do_blank_lines(void)
          if ((prev == NULL) ||
              ((prev->type != CT_BRACE_OPEN) &&
               (prev->type != CT_VBRACE_OPEN) &&
-              (pcmt->type != CT_COMMENT)))
+              (pcmt != NULL) && (pcmt->type != CT_COMMENT)))
          {
             blank_line_set(pc, UO_nl_before_c_comment);
          }
@@ -3791,7 +3791,7 @@ void do_blank_lines(void)
          if ((prev == NULL) ||
              ((prev->type != CT_BRACE_OPEN) &&
               (prev->type != CT_VBRACE_OPEN) &&
-              (pcmt->type != CT_COMMENT_CPP)))
+              (pcmt != NULL) && (pcmt->type != CT_COMMENT_CPP)))
          {
             blank_line_set(pc, UO_nl_before_cpp_comment);
          }
@@ -3932,7 +3932,7 @@ void do_blank_lines(void)
 
       /* Change blanks between a function comment and body */
       if ((cpd.settings[UO_nl_comment_func_def].u != 0) &&
-          (pcmt->type == CT_COMMENT_MULTI) &&
+          (pcmt != NULL) && (pcmt->type == CT_COMMENT_MULTI) &&
           (pcmt->parent_type == CT_COMMENT_WHOLE) &&
           (next != NULL) && ((next->parent_type == CT_FUNC_DEF) ||
                              (next->parent_type == CT_FUNC_CLASS_DEF)))
