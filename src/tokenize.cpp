@@ -15,7 +15,6 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
-#include <cerrno>
 #include "unc_ctype.h"
 #include "uncrustify.h"
 #include "keywords.h"

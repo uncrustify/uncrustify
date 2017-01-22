@@ -9,6 +9,7 @@
 #define OUTPUT_H_INCLUDED
 
 #include <stdio.h>
+#include "unc_text.h"
 
 
 /**

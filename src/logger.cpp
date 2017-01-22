@@ -10,7 +10,7 @@
  * @license GPL v2+
  */
 #include "logger.h"
-
+#include "uncrustify_types.h"
 #include <cstdio>
 #include <deque>
 #include <stdarg.h>

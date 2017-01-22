@@ -9,7 +9,6 @@
  */
 #include "output.h"
 #include "uncrustify_types.h"
-#include "uncrustify_version.h"
 #include "prototypes.h"
 #include "chunk_list.h"
 #include "unc_ctype.h"
