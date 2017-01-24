@@ -1460,7 +1460,7 @@ static void output_comment_multi(chunk_t *pc)
 
 static bool kw_fcn_filename(chunk_t *cmt, unc_text &out_txt)
 {
-   (void)cmt;
+   UNUSED(cmt);
    out_txt.append(path_basename(cpd.filename));
    return(true);
 }
@@ -1852,7 +1852,7 @@ static void do_kw_subst(chunk_t *pc)
  */
 static void output_comment_multi_simple(chunk_t *pc, bool kw_subst)
 {
-   (void)kw_subst;
+   UNUSED(kw_subst);
    cmt_reflow cmt;
    output_cmt_start(cmt, pc);
 

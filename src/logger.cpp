@@ -416,6 +416,8 @@ void log_func_call(int line)
 
 void log_func_stack(log_sev_t sev, const char *prefix, const char *suffix, size_t skip_cnt)
 {
+   UNUSED(skip_cnt);
+
    if (prefix)
    {
       LOG_FMT(sev, "%s", prefix);
