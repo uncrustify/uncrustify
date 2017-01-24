@@ -186,10 +186,11 @@ static void output_to_column(size_t column, bool allow_tabs)
    if (allow_tabs)
    {
       /* tab out as far as possible and then use spaces */
-      size_t nc;
-      while ((nc = next_tab_column(cpd.column)) <= column)
+      size_t next_column = next_tab_column(cpd.column);
+      while (next_column <= column)
       {
          add_text("\t");
+         next_column = next_tab_column(cpd.column);
       }
    }
    /* space out the final bit */
@@ -1102,7 +1103,7 @@ static chunk_t *output_comment_cpp(chunk_t *first)
       add_text(" ");
    }
    chunk_t *pc = first;
-   size_t  offs;
+   int     offs;
 
    while (can_combine_comment(pc, cmt))
    {

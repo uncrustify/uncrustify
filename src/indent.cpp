@@ -161,7 +161,7 @@ static void indent_comment(chunk_t *pc, int col);
  * @param frm  The parse frame
  * @param pc   The chunk causing the push
  */
-static void indent_pse_push(struct parse_frame &frm, chunk_t *pc);
+static void indent_pse_push(parse_frame_t &frm, chunk_t *pc);
 
 
 /**
@@ -170,13 +170,13 @@ static void indent_pse_push(struct parse_frame &frm, chunk_t *pc);
  * @param frm  The parse frame
  * @param pc   The chunk causing the push
  */
-static void indent_pse_pop(struct parse_frame &frm, chunk_t *pc);
+static void indent_pse_pop(parse_frame_t &frm, chunk_t *pc);
 
 
 static int token_indent(c_token_t type);
 
 
-static int calc_indent_continue(struct parse_frame &frm, int pse_tos);
+static int calc_indent_continue(parse_frame_t &frm, int pse_tos);
 
 
 /**

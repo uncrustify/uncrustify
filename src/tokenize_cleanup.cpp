@@ -93,7 +93,6 @@ void tokenize_cleanup(void)
 {
    LOG_FUNC_ENTRY();
 
-   chunk_t *pc   = chunk_get_head();
    chunk_t *prev = NULL;
    chunk_t *next;
    bool    in_type_cast = false;
@@ -103,6 +102,7 @@ void tokenize_cleanup(void)
    /* Since [] is expected to be TSQUARE for the 'operator', we need to make
     * this change in the first pass.
     */
+   chunk_t *pc;
    for (pc = chunk_get_head(); pc != NULL; pc = chunk_get_next_ncnl(pc))
    {
       if (pc->type == CT_SQUARE_OPEN)
