@@ -431,7 +431,6 @@ int load_keyword_file(const char *filename)
    }
 
    char buf[256];
-   char *args[3];
    int  line_no = 0;
    while (fgets(buf, sizeof(buf), pf) != NULL)
    {
@@ -444,7 +443,8 @@ int load_keyword_file(const char *filename)
          *ptr = 0;
       }
 
-      int argc = Args::SplitLine(buf, args, ARRAY_SIZE(args) - 1);
+      char *args[3];
+      int  argc = Args::SplitLine(buf, args, ARRAY_SIZE(args) - 1);
       args[argc] = 0;
 
       if (argc > 0)

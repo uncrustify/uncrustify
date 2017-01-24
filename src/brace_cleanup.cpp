@@ -116,7 +116,7 @@ static size_t preproc_start(parse_frame_t *frm, chunk_t *pc)
 static void print_stack(log_sev_t logsev, const char *str,
                         parse_frame_t *frm, chunk_t *pc)
 {
-   (void)pc;
+   UNUSED(pc);
    LOG_FUNC_ENTRY();
    if (log_sev_on(logsev))
    {
@@ -325,7 +325,6 @@ static void push_fmr_pse(parse_frame_t *frm, chunk_t *pc,
 static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
-   c_token_t parent = CT_NONE;
 
    LOG_FMT(LTOK, "%s:%zu] %16s - tos:%zu/%16s stg:%d\n",
            __func__, pc->orig_line, get_token_name(pc->type),
@@ -508,7 +507,7 @@ static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
    }
 
    /* Get the parent type for brace and paren open */
-   parent = pc->parent_type;
+   c_token_t parent = pc->parent_type;
    if ((pc->type == CT_PAREN_OPEN) ||
        (pc->type == CT_FPAREN_OPEN) ||
        (pc->type == CT_SPAREN_OPEN) ||

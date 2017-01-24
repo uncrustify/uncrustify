@@ -186,10 +186,11 @@ static void output_to_column(size_t column, bool allow_tabs)
    if (allow_tabs)
    {
       /* tab out as far as possible and then use spaces */
-      size_t nc;
-      while ((nc = next_tab_column(cpd.column)) <= column)
+      size_t next_column = next_tab_column(cpd.column);
+      while (next_column <= column)
       {
          add_text("\t");
+         next_column = next_tab_column(cpd.column);
       }
    }
    /* space out the final bit */
@@ -1102,7 +1103,7 @@ static chunk_t *output_comment_cpp(chunk_t *first)
       add_text(" ");
    }
    chunk_t *pc = first;
-   size_t  offs;
+   int     offs;
 
    while (can_combine_comment(pc, cmt))
    {
@@ -1460,7 +1461,7 @@ static void output_comment_multi(chunk_t *pc)
 
 static bool kw_fcn_filename(chunk_t *cmt, unc_text &out_txt)
 {
-   (void)cmt;
+   UNUSED(cmt);
    out_txt.append(path_basename(cpd.filename));
    return(true);
 }
@@ -1852,7 +1853,7 @@ static void do_kw_subst(chunk_t *pc)
  */
 static void output_comment_multi_simple(chunk_t *pc, bool kw_subst)
 {
-   (void)kw_subst;
+   UNUSED(kw_subst);
    cmt_reflow cmt;
    output_cmt_start(cmt, pc);
 

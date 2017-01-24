@@ -441,9 +441,7 @@ static bool split_line(chunk_t *start)
 static void split_for_stmt(chunk_t *start)
 {
    LOG_FUNC_ENTRY();
-   int     count   = 0;
-   int     max_cnt = cpd.settings[UO_ls_for_split_full].b ? 2 : 1;
-   chunk_t *st[2];
+   int     max_cnt     = cpd.settings[UO_ls_for_split_full].b ? 2 : 1;
    chunk_t *open_paren = NULL;
    int     nl_cnt      = 0;
 
@@ -471,6 +469,8 @@ static void split_for_stmt(chunk_t *start)
    }
 
    /* see if we started on the semicolon */
+   int     count = 0;
+   chunk_t *st[2];
    pc = start;
    if ((pc->type == CT_SEMICOLON) && (pc->parent_type == CT_FOR))
    {
@@ -500,6 +500,7 @@ static void split_for_stmt(chunk_t *start)
 
    while (--count >= 0)
    {
+      /* \todo st[0] may be uninitialized here */
       LOG_FMT(LSPLIT, "%s: split before %s\n", __func__, st[count]->text());
       split_before_chunk(chunk_get_next(st[count]));
    }
