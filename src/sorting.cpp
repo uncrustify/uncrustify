@@ -7,6 +7,70 @@
  */
 #include "sorting.h"
 #include "chunk_list.h"
+#include "prototypes.h"
+#include <regex>
+
+
+struct include_category
+{
+   include_category(const char* pattern)
+      : regex(pattern)
+   {
+   };
+   std::regex regex;
+};
+
+enum
+{
+   kIncludeCategoriesCount = UO_include_category_last - UO_include_category_first + 1,
+};
+
+include_category* include_categories[kIncludeCategoriesCount];
+
+
+static void prepare_categories()
+{
+   for(int i=0; i<kIncludeCategoriesCount; i++)
+   {
+      if (cpd.settings[UO_include_category_first + i].str != NULL)
+      {
+         include_categories[i] = new include_category(cpd.settings[UO_include_category_first + i].str);
+      }
+      else
+      {
+         include_categories[i] = NULL;
+      }
+   }
+}
+
+static void cleanup_categories()
+{
+   for(int i=0; i<kIncludeCategoriesCount; i++)
+   {
+      if (include_categories[i] != NULL)
+      {
+         delete include_categories[i];
+         include_categories[i] = NULL;
+      }
+   }
+}
+
+static int get_chunk_priority(chunk_t* pc)
+{
+   for(int i=0; i<kIncludeCategoriesCount; i++)
+   {
+      if (include_categories[i] != NULL)
+      {
+         if (std::regex_match(pc->text(), include_categories[i]->regex))
+         {
+            return i;
+         }
+      }
+   }
+   
+   return kIncludeCategoriesCount;
+}
+
 
 /**
  * Compare two series of chunks, starting with the given ones.
@@ -31,9 +95,16 @@ static int compare_chunks(chunk_t *pc1, chunk_t *pc2)
    {
       return(0);
    }
-
    while ((pc1 != NULL) && (pc2 != NULL))
    {
+      int ppc1 = get_chunk_priority(pc1);
+      int ppc2 = get_chunk_priority(pc2);
+      
+      if (ppc1 != ppc2)
+      {
+         return(ppc1 - ppc2);
+      }
+      
       LOG_FMT(LSORT, "text=%s, pc1->len=%zu, line=%zu, column=%zu\n", pc1->text(), pc1->len(), pc1->orig_line, pc1->orig_col);
       LOG_FMT(LSORT, "text=%s, pc2->len=%zu, line=%zu, column=%zu\n", pc2->text(), pc2->len(), pc2->orig_line, pc2->orig_col);
       size_t min_len = (pc1->len() < pc2->len()) ? pc1->len() : pc2->len();
@@ -131,6 +202,8 @@ void sort_imports(void)
    chunk_t *p_last    = NULL;
    chunk_t *p_imp     = NULL;
 
+   prepare_categories();
+
    chunk_t *pc = chunk_get_head();
    while (pc != NULL)
    {
@@ -158,14 +231,13 @@ void sort_imports(void)
             }
             did_import = true;
          }
-         if (!did_import || (pc->nl_count > 1))
+         if (!did_import || (pc->nl_count > 1) || next == NULL)
          {
             if (num_chunks > 1)
             {
                do_the_sort(chunks, num_chunks);
             }
             num_chunks = 0;
-            memset(chunks, 0, sizeof(chunks));
          }
          p_imp  = NULL;
          p_last = NULL;
@@ -198,4 +270,6 @@ void sort_imports(void)
       }
       pc = next;
    }
+
+   cleanup_categories();
 } // sort_imports
