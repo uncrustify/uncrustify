@@ -6,6 +6,7 @@
  * @license GPL v2+
  */
 #include "unc_text.h"
+#include "unc_ctype.h"
 #include "unicode.h" /* encode_utf8() */
 
 
@@ -63,9 +64,24 @@ int unc_text::compare(const unc_text &ref1, const unc_text &ref2, size_t len)
 
    for (idx = 0; (idx < len1) && (idx < len2) && (idx < len); idx++)
    {
-      if (ref1.m_chars[idx] != ref2.m_chars[idx])
+      // exactly the same character ?
+      if (ref1.m_chars[idx] == ref2.m_chars[idx])
       {
-         return(ref1.m_chars[idx] - ref2.m_chars[idx]);
+         continue;
+      }
+
+      int diff = unc_tolower(ref1.m_chars[idx]) - unc_tolower(ref2.m_chars[idx]);
+      if (diff == 0)
+      {
+         // if we're comparing the same character but in different case
+         // we want to favor lowercase before uppercase (e.g. a before A)
+         // so the order is the reverse of ASCII order (we negate).
+         return -(ref1.m_chars[idx] - ref2.m_chars[idx]);
+      }
+      else
+      {
+         // return the case-insensitive diff to sort alphabetically
+         return diff;
       }
    }
    if (idx == len)
