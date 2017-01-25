@@ -1953,12 +1953,12 @@ void process_option_line(char *configLine, const char *filename)
          unc_text ut = filename;
          ut.resize(path_dirname_len(filename));
          ut.append(args[1]);
-         (void)load_option_file(ut.c_str());
+         UNUSED(load_option_file(ut.c_str()));
       }
       else
       {
          /* include is an absolute Unix path */
-         (void)load_option_file(args[1]);
+         UNUSED(load_option_file(args[1]));
       }
 
       cpd.line_number = save_line_no;

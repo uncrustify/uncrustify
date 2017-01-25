@@ -371,7 +371,7 @@ int main(int argc, char *argv[])
 
 #ifdef WIN32
    /* tell Windows not to change what I write to stdout */
-   (void)_setmode(_fileno(stdout), _O_BINARY);
+   UNUSED(_setmode(_fileno(stdout), _O_BINARY));
 #endif
 
    /* Init logging */
@@ -428,7 +428,7 @@ int main(int argc, char *argv[])
    }
 
    /* Get the parsed file name */
-   const char *parsed_file = NULL;
+   const char *parsed_file;
    if (((parsed_file = arg.Param("--parsed")) != NULL) ||
        ((parsed_file = arg.Param("-p")) != NULL))
    {
@@ -491,14 +491,14 @@ int main(int argc, char *argv[])
    }
 
    /* Get the source file name */
-   const char *source_file = NULL;
+   const char *source_file;
    if (((source_file = arg.Param("--file")) == NULL) &&
        ((source_file = arg.Param("-f")) == NULL))
    {
       // not using a single file, source_file is NULL
    }
 
-   const char *source_list = NULL;
+   const char *source_list;
    if (((source_list = arg.Param("--files")) == NULL) &&
        ((source_list = arg.Param("-F")) == NULL))
    {
@@ -1080,8 +1080,6 @@ static bool file_content_matches(const string &filename1, const string &filename
 {
    struct stat st1, st2;
    int         fd1, fd2;
-   UINT8       buf1[1024], buf2[1024];
-   int         len1 = 0, len2 = 0;
 
    /* Check the sizes first */
    if ((stat(filename1.c_str(), &st1) != 0) ||
@@ -1101,6 +1099,12 @@ static bool file_content_matches(const string &filename1, const string &filename
       return(false);
    }
 
+   int   len1 = 0;
+   int   len2 = 0;
+   UINT8 buf1[1024];
+   UINT8 buf2[1024];
+   memset(buf1, 0, sizeof(buf1));
+   memset(buf2, 0, sizeof(buf2));
    while ((len1 >= 0) && (len2 >= 0))
    {
       if (len1 == 0)
@@ -1308,7 +1312,7 @@ static void do_source_file(const char *filename_in,
          if (!cpd.if_changed && file_content_matches(filename_tmp, filename_out))
          {
             /* No change - remove tmp file */
-            (void)unlink(filename_tmp.c_str());
+            UNUSED(unlink(filename_tmp.c_str()));
          }
          else
          {
@@ -1335,7 +1339,7 @@ static void do_source_file(const char *filename_in,
       {
          /* update mtime -- don't care if it fails */
          fm.utb.actime = time(NULL);
-         (void)utime(filename_in, &fm.utb);
+         UNUSED(utime(filename_in, &fm.utb));
       }
 #endif
    }

@@ -260,8 +260,8 @@ void print_universal_indent_cfg(FILE *pfile)
                val_string = op_val_to_string(option->type, cpd.settings[option->id]);
                val_str    = val_string.c_str();
                fprintf(pfile, "ValueDefault=%s\n", val_str);
+               break;
             }
-            break;
 
             default:
                break;

@@ -502,9 +502,9 @@ void align_right_comments(void)
           (pc->type == CT_COMMENT_CPP) ||
           (pc->type == CT_COMMENT_MULTI))
       {
-         bool skip = false;
          if (pc->parent_type == CT_COMMENT_END)
          {
+            bool    skip  = false;
             chunk_t *prev = chunk_get_prev(pc);
             if (pc->orig_col < (prev->orig_col_end + cpd.settings[UO_align_right_cmt_gap].n))
             {
@@ -1565,7 +1565,7 @@ static chunk_t *skip_c99_array(chunk_t *sq_open)
  */
 static chunk_t *scan_ib_line(chunk_t *start, bool first_pass)
 {
-   (void)first_pass;
+   UNUSED(first_pass);
    LOG_FUNC_ENTRY();
    chunk_t *prev_match = NULL;
    size_t  idx         = 0;
