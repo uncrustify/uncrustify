@@ -814,7 +814,7 @@ enum uncrustify_options
    UO_enable_processing_cmt,    // override UNCRUSTIFY_DEFAULT_ON_TEXT
 
    UO_include_category_first,
-   UO_include_category_0 = UO_include_category_first,
+   UO_include_category_0    = UO_include_category_first,
    UO_include_category_1,
    UO_include_category_2,
    UO_include_category_last = UO_include_category_2,
