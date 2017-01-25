@@ -27,11 +27,11 @@ void indent_text(void);
 void indent_preproc(void);
 
 
-void indent_to_column(chunk_t *pc, int column);
+void indent_to_column(chunk_t *pc, size_t column);
 
 
 /** Same as indent_to_column, except we can move both ways */
-void align_to_column(chunk_t *pc, int column);
+void align_to_column(chunk_t *pc, size_t column);
 
 
 /**
@@ -46,7 +46,7 @@ bool ifdef_over_whole_file(void);
  * @param pc      The chunk at the start of the line
  * @param column  The desired column
  */
-void reindent_line(chunk_t *pc, int column);
+void reindent_line(chunk_t *pc, size_t column);
 
 
 void quick_indent_again(void);

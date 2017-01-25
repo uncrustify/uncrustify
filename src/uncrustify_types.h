@@ -87,12 +87,12 @@ struct indent_ptr_t
 struct paren_stack_entry_t
 {
    c_token_t    type;         /**< the type that opened the entry */
-   int          level;        /**< Level of opening type */
+   size_t       level;        /**< Level of opening type */
    int          open_line;    /**< line that open symbol is on */
    chunk_t      *pc;          /**< Chunk that opened the level */
    int          brace_indent; /**< indent for braces - may not relate to indent */
    int          indent;       /**< indent level (depends on use) */
-   int          indent_tmp;   /**< temporary indent level (depends on use) */
+   size_t       indent_tmp;   /**< temporary indent level (depends on use) */
    int          indent_tab;   /**< the 'tab' indent (always <= real column) */
    bool         indent_cont;  /**< indent_continue was applied */
    int          ref;
