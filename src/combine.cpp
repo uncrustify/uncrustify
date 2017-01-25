@@ -2336,7 +2336,6 @@ static void fix_casts(chunk_t *start)
 
    if (last == NULL)
    {
-      /* \todo can we be sure that last is never NULL here? */
       return;
    }
 

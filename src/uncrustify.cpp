@@ -1284,20 +1284,20 @@ static void do_source_file(const char *filename_in,
       }
    }
 
-   if (cpd.if_changed)
+   if (pfout != NULL)
    {
-      for (deque<UINT8>::const_iterator i = cpd.bout->begin(), end = cpd.bout->end(); i != end; ++i)
+      if (cpd.if_changed)
       {
-         if (pfout != NULL)
+         for (deque<UINT8>::const_iterator i = cpd.bout->begin(), end = cpd.bout->end(); i != end; ++i)
          {
             fputc(*i, pfout);
          }
+         uncrustify_end();
       }
-      uncrustify_end();
-   }
-   else
-   {
-      uncrustify_file(fm, pfout, parsed_file);
+      else
+      {
+         uncrustify_file(fm, pfout, parsed_file);
+      }
    }
 
    if (did_open)
