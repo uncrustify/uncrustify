@@ -23,6 +23,7 @@ include(CTest)
 if(MSVC)
   add_definitions(/D_CRT_SECURE_NO_WARNINGS /D_CRT_NONSTDC_NO_WARNINGS /wd4267)
 elseif(CMAKE_COMPILER_IS_GNUCXX)
+  add_definitions(-std=gnu++0x)
   set(gcc_warning_flags
     -Wall
     -Wextra
@@ -30,6 +31,7 @@ elseif(CMAKE_COMPILER_IS_GNUCXX)
     -Wpointer-arith
     -Wcast-qual
     -Wcast-align
+    -Wc++11-extensions
   )
   foreach(flag ${gcc_warning_flags})
     string(REGEX REPLACE "[^a-zA-Z0-9]+" "_" flag_var "CXXFLAG_${flag}")
@@ -41,6 +43,7 @@ elseif(CMAKE_COMPILER_IS_GNUCXX)
   endforeach()
   unset(gcc_warning_flags)
 elseif(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+  add_definitions(-std=gnu++0x)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
 endif()
 

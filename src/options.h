@@ -89,6 +89,7 @@ enum uncrustify_groups
    UG_comment,
    UG_preprocessor,
    UG_Use_Ext,
+   UG_sort_includes,
    UG_warnlevels,
    UG_group_count
 };
@@ -811,6 +812,12 @@ enum uncrustify_options
    UO_string_replace_tab_chars, // replace tab chars found in strings to the escape sequence \t
    UO_disable_processing_cmt,   // override UNCRUSTIFY_DEFAULT_OFF_TEXT
    UO_enable_processing_cmt,    // override UNCRUSTIFY_DEFAULT_ON_TEXT
+
+   UO_include_category_first,
+   UO_include_category_0    = UO_include_category_first,
+   UO_include_category_1,
+   UO_include_category_2,
+   UO_include_category_last = UO_include_category_2,
 
    /* Hack, add comments to the ends of namespaces */
    UO_mod_add_long_namespace_closebrace_comment,

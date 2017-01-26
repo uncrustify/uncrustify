@@ -1554,6 +1554,14 @@ void register_options(void)
    unc_add_option("pp_define_at_level", UO_pp_define_at_level, AT_BOOL,
                   "Whether to indent '#define' at the brace level (True) or from column 1 (false)");
 
+   unc_begin_group(UG_sort_includes, "Sort includes options");
+   unc_add_option("include_category_0", UO_include_category_0, AT_STRING,
+                  "The regex for include category with priority 0.");
+   unc_add_option("include_category_1", UO_include_category_1, AT_STRING,
+                  "The regex for include category with priority 1.");
+   unc_add_option("include_category_2", UO_include_category_2, AT_STRING,
+                  "The regex for include category with priority 2.");
+
    unc_begin_group(UG_Use_Ext, "Use or Do not Use options", "G");
    unc_add_option("use_indent_func_call_param", UO_use_indent_func_call_param, AT_BOOL,
                   "True:  indent_func_call_param will be used (default)\n"
