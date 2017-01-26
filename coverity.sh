@@ -32,6 +32,7 @@ if [ -z "$NOTIFICATION_EMAIL" ] ; then
 	NOTIFICATION_EMAIL=$(git config user.email)
 	if [ -z "$NOTIFICATION_EMAIL" ] ; then
 		echo "No notification email address set."
+		exit 1
 	fi
 fi
 
