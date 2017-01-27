@@ -5856,6 +5856,7 @@ static void handle_oc_property_decl(chunk_t *os)
                      next = chunk_get_next(next);
                   } while (next && next->type != CT_COMMA && next->type != CT_PAREN_CLOSE);
                   next = next->prev;
+                  // coverity CID 160946
                   if (next == NULL)
                   {
                      break;
