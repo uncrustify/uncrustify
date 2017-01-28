@@ -225,9 +225,10 @@ static chunk_t *chunk_search_type(chunk_t *cur, const c_token_t type,
 
 inline bool is_expected_type_and_level(chunk_t *pc, c_token_t type, int level)
 {
-   return(((pc->type == type) &&            /* the type is as expected and */
-           ((pc->level == (size_t)level) || /* the level is as expected or */
-            (level < 0))));                 /* we don't care about the level */
+   /* we don't care about the level (if it is negative) or it is as expected  */
+   /* and the type is as expected */
+   return((level < 0 || pc->level == static_cast<size_t>(level))
+          && pc->type == type);
 }
 
 
@@ -256,10 +257,10 @@ static chunk_t *chunk_search_typelevel(chunk_t *cur, c_token_t type, nav_t nav, 
 
 inline bool is_expected_string_and_level(chunk_t *pc, const char *str, int level, size_t len)
 {
-   return(pc->len() == len                     /* the length is as expected */
-          && memcmp(str, pc->text(), len) == 0 /* and the strings are equal*/
-          && (pc->level == (size_t)level       /* and the level is as expected  */
-              || level < 0));                  /*     or we don't care about the level */
+   /* we don't care about the level (if it is negative) or it is as expected  */
+   return((level < 0 || pc->level == static_cast<size_t>(level))
+          && pc->len() == len                      /* and the length is as expected */
+          && memcmp(str, pc->text(), len) == 0);   /* and the strings are equal*/
 }
 
 
