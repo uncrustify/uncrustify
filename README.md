@@ -3,6 +3,7 @@ README for Uncrustify
 
 [![Travis CI](https://img.shields.io/travis/uncrustify/uncrustify/master.svg?style=flat-square&label=Linux)](https://travis-ci.org/uncrustify/uncrustify)
 [![AppVeyor](https://img.shields.io/appveyor/ci/uncrustify/uncrustify/master.svg?style=flat-square&label=Windows)](https://ci.appveyor.com/project/uncrustify/uncrustify)
+<a href="#"><img src="https://img.shields.io/badge/C++-11-blue.svg?style=flat-square"></a>
 
 Post any bugs to the issue tracker found on the project's GitHub page:
   https://github.com/uncrustify/uncrustify/issues
