@@ -34,7 +34,6 @@ static chunk_t *insert_vbrace(chunk_t *pc, bool after, parse_frame_t *frm);
 
 static void parse_cleanup(parse_frame_t *frm, chunk_t *pc);
 
-static bool close_statement(parse_frame_t *frm, chunk_t *pc);
 
 /**
  * Called when a statement was just closed and the pse_tos was just
