@@ -469,6 +469,6 @@ struct cp_data_t
    op_val_t       defaults[UO_option_count];
 };
 
-extern cp_data_t cpd;
+extern cp_data_t cpd;   /* \todo can we avoid this external variable? */
 
 #endif /* UNCRUSTIFY_TYPES_H_INCLUDED */

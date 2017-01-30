@@ -738,6 +738,7 @@ void tokenize_cleanup(void)
       {
          if ((memcmp(next->str.c_str(), "region", 6) == 0) ||
              (memcmp(next->str.c_str(), "endregion", 9) == 0))
+         /* \todo probably better use strncmp */
          {
             set_chunk_type(pc, (*next->str.c_str() == 'r') ? CT_PP_REGION : CT_PP_ENDREGION);
 

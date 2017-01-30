@@ -149,12 +149,12 @@ void MD5::Update(const void *data, UINT32 len)
          reverse_u32(m_in, 16);
       }
       Transform(m_buf, (UINT32 *)m_in);
-      buf += 64;
+      buf += 64;        /* \todo possible creation of out-of-bounds pointer 64 beyond end of data */
       len -= 64;
    }
 
    /* Save off any remaining bytes of data */
-   memcpy(m_in, buf, len);
+   memcpy(m_in, buf, len);      /* \todo possible access beyond array */
 } // MD5::Update
 
 
@@ -223,7 +223,7 @@ void MD5::Final(UINT8 digest[16])
 
 /* This is the central step in the MD5 algorithm. */
 #define MD5STEP(f, w, x, y, z, data, s) \
-   (w += f(x, y, z) + data, w = w << s | w >> (32 - s), w += x)
+   ((w) += f((x), (y), (z)) + (data), (w) = (w) << (s) | (w) >> (32 - (s)), (w) += (x))
 
 
 /*

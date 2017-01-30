@@ -1124,12 +1124,14 @@ static bool file_content_matches(const string &filename1, const string &filename
       }
       if ((len1 <= 0) || (len2 <= 0))
       {
-         break;
+         break; /* reached end of either files */
+         /* \todo what is if one file is longer
+         * than the other, do we miss that ? */
       }
       int minlen = (len1 < len2) ? len1 : len2;
       if (memcmp(buf1, buf2, minlen) != 0)
       {
-         break;
+         break; /* found a difference */
       }
       len1 -= minlen;
       len2 -= minlen;
@@ -1426,8 +1428,8 @@ static void add_func_header(c_token_t type, file_mem &fm)
 
       if (ref->type == CT_FUNC_DEF && ref->parent_type == CT_NONE && ref->next)
       {
-         int found_brace = 0; // Set if a close brace is found before a newline
-         while (ref->type != CT_NEWLINE && (ref = ref->next))
+         int found_brace = 0;                                   // Set if a close brace is found before a newline
+         while ((ref->type != CT_NEWLINE) && (ref = ref->next)) /* \todo is the assignment of ref wanted here?, better move it to the loop */
          {
             if (ref->type == CT_BRACE_CLOSE)
             {

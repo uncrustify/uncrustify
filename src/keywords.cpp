@@ -430,7 +430,8 @@ int load_keyword_file(const char *filename)
       return(EX_IOERR);
    }
 
-   char buf[256];
+   char buf[256];       /* \todo what is the meaning of 256 ? */
+   char *args[3];       /* \todo what is the meaning of 3 ? */
    int  line_no = 0;
    while (fgets(buf, sizeof(buf), pf) != NULL)
    {
@@ -445,7 +446,7 @@ int load_keyword_file(const char *filename)
 
       char *args[3];
       int  argc = Args::SplitLine(buf, args, ARRAY_SIZE(args) - 1);
-      args[argc] = 0;
+      args[argc] = 0;  /* \todo what is this used for? can this write beyond args? */
 
       if (argc > 0)
       {
