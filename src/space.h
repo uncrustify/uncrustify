@@ -39,7 +39,7 @@ int space_col_align(chunk_t *first, chunk_t *second);
 /**
  * Determines if a space is required between two chunks
  */
-int space_needed(chunk_t *first, chunk_t *second);
+size_t space_needed(chunk_t *first, chunk_t *second);
 
 
 void space_add_after(chunk_t *pc, size_t count);
