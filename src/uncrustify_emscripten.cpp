@@ -8,6 +8,9 @@
 #ifdef EMSCRIPTEN
 
 #include "prototypes.h"
+#include "unicode.h"
+#include "defines.h"
+#include "keywords.h"
 #include "options.h"
 #include "uncrustify_version.h"
 #include "logger.h"
@@ -30,7 +33,7 @@ using namespace emscripten;
 extern void process_option_line(char *configLine, const char *filename);
 extern void usage_exit(const char *msg, const char *argv0, int code);
 extern int load_header_files();
-extern const char *language_name_from_flags(int lang);
+extern const char *language_name_from_flags(size_t lang);
 extern void uncrustify_file(const file_mem &fm, FILE *pfout, const char *parsed_file, bool defer_uncrustify_end = false);
 extern const option_map_value *unc_find_option(const char *name);
 
@@ -498,7 +501,7 @@ string uncrustify(string file, bool frag)
    file_mem fm;
    fm.raw.clear();
    fm.data.clear();
-   fm.enc = char_encoding_e::ASCII;
+   fm.enc = char_encoding_e::e_ASCII;
    fm.raw = vector<UINT8>(file.begin(), file.end());
 
    if (!decode_unicode(fm.raw, fm.data, fm.enc, fm.bom))
@@ -1387,3 +1390,4 @@ EMSCRIPTEN_BINDINGS(MainModule)
 }
 
 #endif
+
