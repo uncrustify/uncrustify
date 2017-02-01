@@ -31,7 +31,7 @@
 #include "uncrustify.h"
 
 
-static void log_rule2(int line, const char *rule, chunk_t *first, chunk_t *second, bool complete);
+static void log_rule2(size_t line, const char *rule, chunk_t *first, chunk_t *second, bool complete);
 
 
 /**
@@ -100,12 +100,12 @@ const no_space_table_t no_space_table[] =
    } while (0)
 
 
-static void log_rule2(int line, const char *rule, chunk_t *first, chunk_t *second, bool complete)
+static void log_rule2(size_t line, const char *rule, chunk_t *first, chunk_t *second, bool complete)
 {
    LOG_FUNC_ENTRY();
    if (second->type != CT_NEWLINE)
    {
-      LOG_FMT(LSPACE, "Spacing: line %zu [%s/%s] '%s' <===> [%s/%s] '%s' : %s[%d]%s",
+      LOG_FMT(LSPACE, "Spacing: line %zu [%s/%s] '%s' <===> [%s/%s] '%s' : %s[%zu]%s",
               first->orig_line,
               get_token_name(first->type), get_token_name(first->parent_type),
               first->text(),
@@ -349,7 +349,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
         (second->parent_type == CT_COMMENT_EMBED)))
    {
       log_rule("sp_before_tr_emb_cmt");
-      min_sp = cpd.settings[UO_sp_num_before_tr_emb_cmt].n;
+      min_sp = cpd.settings[UO_sp_num_before_tr_emb_cmt].u;
       return(cpd.settings[UO_sp_before_tr_emb_cmt].a);
    }
 
@@ -519,7 +519,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
           ((second->type == CT_FPAREN_CLOSE) ||
            (second->type == CT_COMMA)))
       {
-         if (second->level == (QT_SIGNAL_SLOT_level))
+         if (second->level == QT_SIGNAL_SLOT_level)
          {
             restoreValues = true;
          }
@@ -1352,7 +1352,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
    if ((cpd.settings[UO_sp_after_constr_colon].a != AV_IGNORE) &&
        (first->type == CT_CONSTR_COLON))
    {
-      min_sp = cpd.settings[UO_indent_ctor_init_leading].n - 1; // default indent is 1 space
+      min_sp = cpd.settings[UO_indent_ctor_init_leading].u - 1; // default indent is 1 space
 
       log_rule("sp_after_constr_colon");
       return(cpd.settings[UO_sp_after_constr_colon].a);
@@ -1772,7 +1772,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
 
    // this table lists out all combos where a space should NOT be present
    // CT_UNKNOWN is a wildcard.
-   for (int idx = 0; idx < (int)ARRAY_SIZE(no_space_table); idx++)
+   for (size_t idx = 0; idx < ARRAY_SIZE(no_space_table); idx++)
    {
       if (((no_space_table[idx].first == CT_UNKNOWN) ||
            (no_space_table[idx].first == first->type))
@@ -1817,8 +1817,8 @@ void space_text(void)
    }
 
    chunk_t *next;
-   int     prev_column;
-   int     column = pc->column;
+   size_t  prev_column;
+   size_t  column = pc->column;
    while (pc != NULL)
    {
 #ifdef DEBUG
@@ -2013,7 +2013,7 @@ void space_text(void)
 
          if (chunk_is_comment(next) &&
              chunk_is_newline(chunk_get_next(next)) &&
-             (column < (int)next->orig_col))
+             (column < next->orig_col))
          {
             /* do some comment adjustments if sp_before_tr_emb_cmt and
              * sp_endif_cmt did not apply.
@@ -2035,7 +2035,7 @@ void space_text(void)
                {
                   /* If there was a space, we need to force one, otherwise
                    * try to keep the comment in the same column. */
-                  int col_min = pc->column + pc->len() + ((next->orig_prev_sp > 0) ? 1 : 0);
+                  size_t col_min = pc->column + pc->len() + ((next->orig_prev_sp > 0) ? 1 : 0);
                   column = next->orig_col;
                   if (column < col_min)
                   {
@@ -2047,7 +2047,7 @@ void space_text(void)
          }
          next->column = column;
 
-         LOG_FMT(LSPACE, " = %s @ %d => %zu\n",
+         LOG_FMT(LSPACE, " = %s @ %zu => %zu\n",
                  (av == AV_IGNORE) ? "IGNORE" :
                  (av == AV_ADD) ? "ADD" :
                  (av == AV_REMOVE) ? "REMOVE" : "FORCE",
@@ -2126,7 +2126,7 @@ void space_text_balance_nested_parens(void)
 } // space_text_balance_nested_parens
 
 
-int space_needed(chunk_t *first, chunk_t *second)
+size_t space_needed(chunk_t *first, chunk_t *second)
 {
    LOG_FUNC_ENTRY();
    LOG_FMT(LSPACE, "%s\n", __func__);
@@ -2165,7 +2165,7 @@ int space_col_align(chunk_t *first, chunk_t *second)
    argval_t av = do_space(first, second, min_sp);
 
    LOG_FMT(LSPACE, "%s: av=%d, ", __func__, av);
-   int coldiff;
+   size_t coldiff;
    if (first->nl_count)
    {
       LOG_FMT(LSPACE, "nl_count=%zu, orig_col_end=%d", first->nl_count, first->orig_col_end);
@@ -2196,7 +2196,7 @@ int space_col_align(chunk_t *first, chunk_t *second)
    case AV_NOT_DEFINED:
       break;
    }
-   LOG_FMT(LSPACE, " => %d\n", coldiff);
+   LOG_FMT(LSPACE, " => %zu\n", coldiff);
    return(coldiff);
 } // space_col_align
 

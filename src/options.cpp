@@ -629,7 +629,7 @@ void register_options(void)
                   "Controls the spaces between new and '(' in 'new()'");
    unc_add_option("sp_before_tr_emb_cmt", UO_sp_before_tr_emb_cmt, AT_IARF,
                   "Controls the spaces before a trailing or embedded comment");
-   unc_add_option("sp_num_before_tr_emb_cmt", UO_sp_num_before_tr_emb_cmt, AT_NUM,
+   unc_add_option("sp_num_before_tr_emb_cmt", UO_sp_num_before_tr_emb_cmt, AT_UNUM,
                   "Number of spaces before a trailing or embedded comment");
    unc_add_option("sp_annotation_paren", UO_sp_annotation_paren, AT_IARF,
                   "Control space between a Java annotation and the open paren.");
