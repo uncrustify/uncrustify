@@ -19,6 +19,8 @@ function(add_uncrustify_test name lang config rerun_config input result output)
 endfunction()
 
 foreach(test_lang c-sharp c cpp d java pawn objective-c vala ecma)
+  # Create dependency on test file so CMake re-runs if changed
+  configure_file("${test_lang}.test" "${test_lang}.test" COPYONLY)
   file(READ "${test_lang}.test" content)
   string(REPLACE "\n" ";" lines "${content}")
   foreach(line ${lines})
