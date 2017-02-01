@@ -645,6 +645,9 @@ void register_options(void)
    unc_add_option("indent_continue", UO_indent_continue, AT_NUM,
                   "The continuation indent. If non-zero, this overrides the indent of '(' and '=' continuation indents.\n"
                   "For FreeBSD, this is set to 4. Negative value is absolute and not increased for each ( level");
+   unc_add_option("indent_param", UO_indent_param, AT_UNUM,
+                  "The continuation indent for func_*_param if they are true.\n"
+                  "If non-zero, this overrides the indent.");
    unc_add_option("indent_with_tabs", UO_indent_with_tabs, AT_NUM,
                   "How to use tabs when indenting code\n"
                   "0=spaces only\n"
