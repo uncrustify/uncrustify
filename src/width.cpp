@@ -19,13 +19,13 @@
 struct cw_entry
 {
    chunk_t *pc;
-   int     pri;
+   size_t  pri;
 };
 
 struct token_pri
 {
    c_token_t tok;
-   int       pri;
+   size_t    pri;
 };
 
 
@@ -38,7 +38,7 @@ static_inline bool is_past_width(chunk_t *pc);
 static void split_before_chunk(chunk_t *pc);
 
 
-static int get_split_pri(c_token_t tok);
+static size_t get_split_pri(c_token_t tok);
 
 
 /**
@@ -114,7 +114,7 @@ static void split_for_stmt(chunk_t *start);
 static_inline bool is_past_width(chunk_t *pc)
 {
    // allow char to sit at last column by subtracting 1
-   return((pc->column + pc->len() - 1) > cpd.settings[UO_code_width].n);
+   return((pc->column + pc->len() - 1) > cpd.settings[UO_code_width].u);
 }
 
 
@@ -187,9 +187,9 @@ static const token_pri pri_table[] =
 };
 
 
-static int get_split_pri(c_token_t tok)
+static size_t get_split_pri(c_token_t tok)
 {
-   for (int idx = 0; idx < (int)ARRAY_SIZE(pri_table); idx++)
+   for (size_t idx = 0; idx < ARRAY_SIZE(pri_table); idx++)
    {
       if (pri_table[idx].tok == tok)
       {
@@ -204,7 +204,7 @@ static void try_split_here(cw_entry &ent, chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
 
-   int pc_pri = get_split_pri(pc->type);
+   size_t pc_pri = get_split_pri(pc->type);
    if (pc_pri == 0)
    {
       return;
@@ -441,9 +441,9 @@ static bool split_line(chunk_t *start)
 static void split_for_stmt(chunk_t *start)
 {
    LOG_FUNC_ENTRY();
-   int     max_cnt     = cpd.settings[UO_ls_for_split_full].b ? 2 : 1;
+   size_t  max_cnt     = cpd.settings[UO_ls_for_split_full].b ? 2 : 1;
    chunk_t *open_paren = NULL;
-   int     nl_cnt      = 0;
+   size_t  nl_cnt      = 0;
 
    LOG_FMT(LSPLIT, "%s: starting on %s, line %zu\n",
            __func__, start->text(), start->orig_line);
@@ -478,7 +478,7 @@ static void split_for_stmt(chunk_t *start)
    }
 
    /* first scan backwards for the semicolons */
-   while ((count < max_cnt) && ((pc = chunk_get_prev(pc)) != NULL) &&
+   while ((count < (int)max_cnt) && ((pc = chunk_get_prev(pc)) != NULL) &&
           (pc->flags & PCF_IN_SPAREN))
    {
       if ((pc->type == CT_SEMICOLON) && (pc->parent_type == CT_FOR))
@@ -489,7 +489,7 @@ static void split_for_stmt(chunk_t *start)
 
    /* And now scan forward */
    pc = start;
-   while ((count < max_cnt) && ((pc = chunk_get_next(pc)) != NULL) &&
+   while ((count < (int)max_cnt) && ((pc = chunk_get_next(pc)) != NULL) &&
           (pc->flags & PCF_IN_SPAREN))
    {
       if ((pc->type == CT_SEMICOLON) && (pc->parent_type == CT_FOR))
@@ -584,10 +584,10 @@ static void split_fcn_params(chunk_t *start)
    }
 
    chunk_t *pc     = chunk_get_next_ncnl(fpo);
-   int     min_col = pc->column;
+   size_t  min_col = pc->column;
 
-   LOG_FMT(LSPLIT, " mincol=%d, max_width=%d ",
-           min_col, cpd.settings[UO_code_width].n - min_col);
+   LOG_FMT(LSPLIT, " mincol=%zu, max_width=%zu ",
+           min_col, cpd.settings[UO_code_width].u - min_col);
 
    int cur_width = 0;
    int last_col  = -1;
@@ -612,7 +612,7 @@ static void split_fcn_params(chunk_t *start)
          {
             cur_width--;
             LOG_FMT(LSPLIT, " width=%d ", cur_width);
-            if (((last_col - 1) > cpd.settings[UO_code_width].n) ||
+            if (((last_col - 1) > (int)cpd.settings[UO_code_width].u) ||
                 (pc->type == CT_FPAREN_CLOSE))
             {
                break;
