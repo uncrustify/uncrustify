@@ -30,7 +30,7 @@ foreach(test_lang c-sharp c cpp d java pawn objective-c vala ecma imported)
     if(NOT "${first} " STREQUAL "# ")
       if("${line}" MATCHES "^([0-9]+)([!]?)[ ]+([^ ]+)[ ]+([^ ]+)$")
         set(test_number "${CMAKE_MATCH_1}")
-        set(test_name "${test_number}")
+        set(test_name "${test_lang}_${{test_number}")
 
         set(test_config config/${CMAKE_MATCH_3})
         set(test_input input/${CMAKE_MATCH_4})
