@@ -1,8 +1,49 @@
 /*
- * uncrustify_emscripten.cpp
+ * uncrustify_emscripten.cpp - JavaScript Emscripten binding interface
  *
  *  Created on: May 8, 2016
  *      Author: Daniel Chumak
+ *
+ * INTERFACE:
+ * ============================================================================
+ * unsure about these:
+ *   --check       TODO ???
+ *   --decode      TODO ???
+ *   --parsed, -p  TODO ???
+ *   --detect      TODO needs uncrustify start and end which both are static
+ *
+ *
+ * will not be included:
+ * ----------------------------------------------------------------------------
+ *   -t ( define via multiple --type )
+ *   -d ( define via multiple --define )
+ *   --assume ( no files available to guess the lang. based on the filename ending )
+ *   --files ( no batch processing will be available )
+ *   --prefix
+ *   --suffix
+ *   --assume
+ *   --no-backup
+ *   --replace
+ *   --mtime
+ *   --universalindent
+ *   -help, -h, --usage, -?
+ *
+ *
+ * done:
+ * ----------------------------------------------------------------------------
+ *   --update-config ( use show_config() )
+ *   --update-config-with-doc ( show_config( bool withDoc = true ) )
+ *   --version, -v ( use get_version() )
+ *   --log, -L ( use log_set_sev( log_sev_t sev, bool value ) )
+ *   -q ( use set_quiet() )
+ *   --config, -c ( use set_config( string _cfg ) )
+ *   --file, -f ( use uncrustify( string _file ) )
+ *   --show-config( use show_options() )
+ *   --show ( use show_log_type( bool ) )
+ *   --frag ( use uncrustify( string _file, bool frag = true ) )
+ *   --type ( use add_type( string _type ) )
+ *   --define ( use add_define( string _tag ) )
+ *   -l ( use set_language( int langIDX ) )
  */
 
 #ifdef EMSCRIPTEN
@@ -30,13 +71,13 @@
 using namespace std;
 using namespace emscripten;
 
+
 extern void process_option_line(char *configLine, const char *filename);
 extern void usage_exit(const char *msg, const char *argv0, int code);
 extern int load_header_files();
 extern const char *language_name_from_flags(size_t lang);
 extern void uncrustify_file(const file_mem &fm, FILE *pfout, const char *parsed_file, bool defer_uncrustify_end = false);
 extern const option_map_value *unc_find_option(const char *name);
-
 
 extern map<uncrustify_options, option_map_value> option_name_map;
 extern map<uncrustify_groups, group_map_value>   group_map;
@@ -80,64 +121,6 @@ int load_option_fileChar(char *configString)
 }
 
 
-// TODO: interface for args:
-// unsure about these:
-// -----------------------------------------------------------------------------
-// --check
-// --decode      TODO ???
-// --parsed, -p  TODO (upstream): see uncrustify
-// --detect      TODO (upstream): needs uncrustify start and end which both are
-//                                static
-//
-//
-// will not be included:
-// -----------------------------------------------------------------------------
-// -t ( define via multiple --type )
-// -d ( define via multiple --define )
-// --assume ( no files available to guess the lang. based on the filename ending )
-// --files ( no batch processing will be available )
-// --prefix
-// --suffix
-// --assume
-// --no-backup
-// --replace
-// --mtime
-// --universalindent
-// --help, -h, --usage, -?
-//
-//
-// done:
-// -----------------------------------------------------------------------------
-// --update-config ( use show_config() )
-// --update-config-with-doc ( show_config( bool withDoc = true ) )
-// --version, -v ( use get_version() )
-// --log, -L ( use log_set_sev( log_sev_t sev, bool value ) )
-// -q ( use set_quiet() )
-// --config, -c ( use set_config( string _cfg ) )
-// --file, -f ( use uncrustify( string _file ) )
-// --show-config( use show_options() )
-// --show ( use show_log_type( bool ) )
-// --frag ( use uncrustify( string _file, bool frag = true ) )
-// --type ( use add_type( string _type ) )
-// --define ( use add_define( string _tag ) )
-// -l ( use set_language( int langIDX ) )
-
-
-// TODO (upstream): it would be nicer to set settings via uncrustify_options enum_id
-// but this wont work since type info is needed
-// which is inside of the
-// _static_ option_name_map<
-// option_name : string,
-// option_map_val : struct { type : argtype_e, ....} >
-// to access the right union var inside of op_val_t
-// even if option_name_map would not be static, no direct access to the type
-// info is possible since the maps needs to be iterated to find the according
-// enum_id
-//
-// int set_option_value(op_val_t option_id, const char *value)
-// string get_option_value(op_val_t option_id )
-
-
 enum class lang_flags : int
 {
    LANG_C_    = LANG_C,
@@ -156,9 +139,6 @@ enum class lang_flags : int
 };
 
 
-// TODO (upstream): use a named enum for languages
-
-
 /**
  *  sets the language of the to be formatted text
  *
@@ -171,12 +151,10 @@ void set_language(lang_flags langIDX)
 }
 
 
-// TODO ( upstream ): this needs more than just adding types,
-// add ways to add and remove keywords
-
-
 /**
  * adds a new keyword to Uncrustify's dynamic keyword map (dkwm, keywords.cpp)
+ *
+ * @TODO this needs more than just adding types, remove keywords is also needed
  *
  * @param type: keyword that is going to be added
  */
@@ -265,6 +243,18 @@ void set_quiet()
 }
 
 
+// TODO it would be nicer to set settings via uncrustify_options enum_id
+//
+// int set_option_value(op_val_t option_id, const char *value) string
+// get_option_value(op_val_t option_id )
+//
+// but this wont work since type info is needed which is inside of the _static_
+// option_name_map< option_name : string, option_map_val : struct { type :
+// argtype_e, ....} > to access the right union var inside of op_val_t even if
+// option_name_map would not be static, no direct access to the type info is
+// possible since the maps needs to be iterated to find the according enum_id
+
+
 /**
  * sets value of an option
  *
@@ -320,8 +310,7 @@ string show_options()
    char   *buf;
    size_t len;
 
-   // TODO (upstream): see uncrustify()
-   FILE *stream = open_memstream(&buf, &len);
+   FILE   *stream = open_memstream(&buf, &len);
 
    if (stream == NULL)
    {
@@ -358,8 +347,7 @@ string show_config(bool withDoc, bool only_not_default)
    char   *buf;
    size_t len;
 
-   // TODO (upstream): see uncrustify()
-   FILE *stream = open_memstream(&buf, &len);
+   FILE   *stream = open_memstream(&buf, &len);
 
    if (stream == NULL)
    {
@@ -522,7 +510,7 @@ string uncrustify(string file, bool frag)
    char   *buf;
    size_t len;
 
-   // TODO (upstream): uncrustify uses FILE instead of streams for its outputs
+   // uncrustify uses FILE instead of streams for its outputs
    // to redirect FILE writes into a char* open_memstream is used
    // windows lacks open_memstream, only UNIX/BSD is supported
    // apparently emscripten has its own implementation, if that is not working
@@ -537,7 +525,7 @@ string uncrustify(string file, bool frag)
       return("");
    }
 
-   // TODO (upstream) One way to implement the --parsed, -p functionality would
+   // TODO One way to implement the --parsed, -p functionality would
    // be to let the uncrustify_file function run, throw away the formated
    // output and return the debug as a string. For this uncrustify_file would
    // need to accept a stream, FILE or a char array pointer in which the output
@@ -585,7 +573,6 @@ string uncrustify(string file, bool frag, lang_flags langIDX)
 
    cpd.lang_flags = tmpLang;
 
-   // overload for default frag parameter
    return(ret);
 }
 
@@ -598,7 +585,6 @@ string uncrustify(string file, bool frag, lang_flags langIDX)
  */
 string uncrustify(string file)
 {
-   // overload for default frag parameter
    return(uncrustify(file, false));
 }
 
