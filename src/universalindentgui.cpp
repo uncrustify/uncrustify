@@ -24,8 +24,8 @@ void print_universal_indent_cfg(FILE *pfile)
    fprintf(pfile, "[header]\n");
 
    /* Add all the categories */
-   char ch = '=';
-   int  idx;
+   char   ch = '=';
+   size_t idx;
 
    fprintf(pfile, "categories");
    for (idx = 0; idx < UG_group_count; idx++)
@@ -45,10 +45,10 @@ void print_universal_indent_cfg(FILE *pfile)
 
 
    /* Add all the recognized file extensions */
-   ch  = '=';
-   idx = 0;
+   ch = '=';
+   int fileIdx = 0;
    fprintf(pfile, "fileTypes");
-   while ((p_name = get_file_extension(idx)) != NULL)
+   while ((p_name = get_file_extension(fileIdx)) != NULL)
    {
       fprintf(pfile, "%c*%s", ch, p_name);
       ch = '|';
@@ -106,7 +106,7 @@ void print_universal_indent_cfg(FILE *pfile)
          }
 
          fprintf(pfile, "\n[%s]\n", optionNameReadable);
-         fprintf(pfile, "Category=%d\n", idx);
+         fprintf(pfile, "Category=%zu\n", idx);
 #ifdef DEBUG
          fprintf(pfile, "Description=\"<html>(123)");
          // (123) is a placeholder to be changed with the vim command:

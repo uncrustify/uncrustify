@@ -1590,7 +1590,7 @@ void register_options(void)
 } // register_options
 
 
-const group_map_value *get_group_name(int ug)
+const group_map_value *get_group_name(size_t ug)
 {
    for (group_map_it it = group_map.begin();
         it != group_map.end();
