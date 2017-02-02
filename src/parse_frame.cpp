@@ -15,7 +15,7 @@
 #include <cstdlib>
 
 
-static void pf_log_frms(log_sev_t logsev, const char *txt, struct parse_frame *pf);
+void pf_log_frms(log_sev_t logsev, const char *txt, struct parse_frame *pf);
 
 
 /**
@@ -24,7 +24,7 @@ static void pf_log_frms(log_sev_t logsev, const char *txt, struct parse_frame *p
  * The stack contains [...] [base] [if] at this point.
  * We want to copy [base].
  */
-static void pf_copy_2nd_tos(struct parse_frame *pf);
+void pf_copy_2nd_tos(parse_frame *pf);
 
 
 /**
@@ -37,7 +37,7 @@ void pf_log(log_sev_t logsev, parse_frame_t *pf)
            pf->brace_level, pf->level, pf->pse_tos);
 
    LOG_FMT(logsev, " *");
-   for (int idx = 1; idx <= pf->pse_tos; idx++)
+   for (size_t idx = 1; idx <= pf->pse_tos; idx++)
    {
       LOG_FMT(logsev, " [%s-%d]",
               get_token_name(pf->pse[idx].type),
@@ -47,7 +47,7 @@ void pf_log(log_sev_t logsev, parse_frame_t *pf)
 }
 
 
-static void pf_log_frms(log_sev_t logsev, const char *txt, parse_frame_t *pf)
+void pf_log_frms(log_sev_t logsev, const char *txt, parse_frame_t *pf)
 {
    LOG_FMT(logsev, "%s Parse Frames(%d):", txt, cpd.frame_count);
    for (int idx = 0; idx < cpd.frame_count; idx++)
@@ -142,7 +142,7 @@ void pf_copy_tos(parse_frame_t *pf)
 }
 
 
-static void pf_copy_2nd_tos(parse_frame_t *pf)
+void pf_copy_2nd_tos(parse_frame_t *pf)
 {
    if (cpd.frame_count > 1)
    {
