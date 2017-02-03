@@ -500,14 +500,6 @@ static chunk_t *get_d_template_types(ChunkStack &cs, chunk_t *open_paren);
 static bool chunkstack_match(ChunkStack &cs, chunk_t *pc);
 
 
-enum PLBfound
-{
-   FOUND_ANGLE_CLOSE = 0, // '>' found
-   NO_PROTOCOL_FOUND = 1, // no protocol found,
-   FOUND_ANGLE_OPEN  = 2  // '<' found
-};
-
-
 void make_type(chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
@@ -5084,12 +5076,19 @@ chunk_t *skip_attribute_prev(chunk_t *fp_close)
 
 static void handle_oc_class(chunk_t *pc)
 {
+   enum class angle_state_e : unsigned int
+   {
+      NONE  = 0,
+      OPEN  = 1, // '<' found
+      CLOSE = 2, // '>' found
+   };
+
    LOG_FUNC_ENTRY();
-   chunk_t  *tmp;
-   bool     hit_scope     = false;
-   bool     passed_name   = false; // Did we pass the name of the class and now there can be only protocols, not generics
-   int      generic_level = 0;     // level of depth of generic
-   PLBfound do_pl         = NO_PROTOCOL_FOUND;
+   chunk_t       *tmp;
+   bool          hit_scope     = false;
+   bool          passed_name   = false; // Did we pass the name of the class and now there can be only protocols, not generics
+   int           generic_level = 0;     // level of depth of generic
+   angle_state_e as            = angle_state_e::NONE;
 
    LOG_FMT(LOCCLASS, "%s: start [%s] [%s] line %zu\n",
            __func__, pc->text(), get_token_name(pc->parent_type), pc->orig_line);
@@ -5131,7 +5130,7 @@ static void handle_oc_class(chunk_t *pc)
             set_chunk_parent(tmp, CT_OC_GENERIC_SPEC);
             generic_level++;
          }
-         do_pl = FOUND_ANGLE_OPEN;
+         as = angle_state_e::OPEN;
       }
       if (chunk_is_str(tmp, ">", 1))
       {
@@ -5139,7 +5138,7 @@ static void handle_oc_class(chunk_t *pc)
          if (passed_name)
          {
             set_chunk_parent(tmp, CT_OC_PROTO_LIST);
-            do_pl = FOUND_ANGLE_CLOSE;
+            as = angle_state_e::CLOSE;
          }
          else
          {
@@ -5147,7 +5146,7 @@ static void handle_oc_class(chunk_t *pc)
             generic_level--;
             if (generic_level == 0)
             {
-               do_pl = FOUND_ANGLE_CLOSE;
+               as = angle_state_e::CLOSE;
             }
          }
       }
@@ -5159,12 +5158,12 @@ static void handle_oc_class(chunk_t *pc)
          generic_level -= 1;
          if (generic_level == 0)
          {
-            do_pl = FOUND_ANGLE_CLOSE;
+            as = angle_state_e::CLOSE;
          }
       }
       if (tmp->type == CT_BRACE_OPEN)
       {
-         do_pl = FOUND_ANGLE_CLOSE;
+         as = angle_state_e::CLOSE;
          set_chunk_parent(tmp, CT_OC_CLASS);
          tmp = chunk_get_next_type(tmp, CT_BRACE_CLOSE, tmp->level);
          if (tmp != NULL)
@@ -5174,7 +5173,7 @@ static void handle_oc_class(chunk_t *pc)
       }
       else if (tmp->type == CT_COLON)
       {
-         if (do_pl != FOUND_ANGLE_OPEN)
+         if (as != angle_state_e::OPEN)
          {
             passed_name = true;
          }
@@ -5186,7 +5185,7 @@ static void handle_oc_class(chunk_t *pc)
       }
       else if (chunk_is_str(tmp, "-", 1) || chunk_is_str(tmp, "+", 1))
       {
-         do_pl = FOUND_ANGLE_CLOSE;
+         as = angle_state_e::CLOSE;
          if (chunk_is_newline(chunk_get_prev(tmp)))
          {
             set_chunk_type(tmp, CT_OC_SCOPE);
@@ -5194,7 +5193,7 @@ static void handle_oc_class(chunk_t *pc)
             hit_scope = true;
          }
       }
-      if (do_pl == FOUND_ANGLE_OPEN)
+      if (as == angle_state_e::OPEN)
       {
          if (passed_name)
          {
