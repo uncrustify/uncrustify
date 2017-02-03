@@ -20,10 +20,10 @@ typedef ListManager<chunk_t> ChunkList_t;
 
 /** use this enum to define in what direction or location an
  * operation shall be performed. */
-enum loc_t
+enum class direction_e : unsigned int
 {
-   BEFORE, /**< indicates a position or direction upwards (=pref) */
-   AFTER   /**< indicates a position or direction downwards (=next) */
+   FORWARD,
+   BACKWARD
 };
 
 
@@ -70,7 +70,7 @@ typedef chunk_t * (*search_t)(chunk_t *cur, scope_e scope);
  * @retval NULL      no requested chunk was found or invalid parameters provided
  * @retval chunk_t   pointer to the found chunk
  */
-static chunk_t *chunk_search(chunk_t *cur, const check_t check_fct, const scope_e scope = scope_e::ALL, const loc_t dir = AFTER, const bool cond = true);
+static chunk_t *chunk_search(chunk_t *cur, const check_t check_fct, const scope_e scope = scope_e::ALL, const direction_e dir = direction_e::FORWARD, const bool cond = true);
 
 
 static void chunk_log(chunk_t *pc, const char *text);
@@ -94,7 +94,7 @@ static void chunk_log(chunk_t *pc, const char *text);
  * @retval NULL      no chunk found or invalid parameters provided
  * @retval chunk_t   pointer to the found chunk
  */
-static chunk_t *chunk_search_type(chunk_t *cur, const c_token_t type, const scope_e scope = scope_e::ALL, const loc_t dir = AFTER);
+static chunk_t *chunk_search_type(chunk_t *cur, const c_token_t type, const scope_e scope = scope_e::ALL, const direction_e dir = direction_e::FORWARD);
 
 
 /**
@@ -108,7 +108,7 @@ static chunk_t *chunk_search_type(chunk_t *cur, const c_token_t type, const scop
  * @retval NULL      no chunk found or invalid parameters provided
  * @retval chunk_t   pointer to the found chunk
  */
-static chunk_t *chunk_search_typelevel(chunk_t *cur, c_token_t type, scope_e scope = scope_e::ALL, loc_t dir = AFTER, int level = -1);
+static chunk_t *chunk_search_typelevel(chunk_t *cur, c_token_t type, scope_e scope = scope_e::ALL, direction_e dir = direction_e::FORWARD, int level = -1);
 
 
 /**
@@ -123,7 +123,7 @@ static chunk_t *chunk_search_typelevel(chunk_t *cur, c_token_t type, scope_e sco
  * @retval NULL      no chunk found or invalid parameters provided
  * @retval chunk_t   pointer to the found chunk
  */
-static chunk_t *chunk_get_ncnlnp(chunk_t *cur, const scope_e scope = scope_e::ALL, const loc_t dir = AFTER);
+static chunk_t *chunk_get_ncnlnp(chunk_t *cur, const scope_e scope = scope_e::ALL, const direction_e dir = direction_e::FORWARD);
 
 
 /**
@@ -142,7 +142,7 @@ static chunk_t *chunk_get_ncnlnp(chunk_t *cur, const scope_e scope = scope_e::AL
  * @retval NULL      no chunk found or invalid parameters provided
  * @retval chunk_t   pointer to the found chunk
  */
-static chunk_t *chunk_search_str(chunk_t *cur, const char *str, size_t len, scope_e scope, loc_t dir, int level);
+static chunk_t *chunk_search_str(chunk_t *cur, const char *str, size_t len, scope_e scope, direction_e dir, int level);
 
 
 /**
@@ -155,7 +155,7 @@ static chunk_t *chunk_search_str(chunk_t *cur, const char *str, size_t len, scop
  * @param  pos       insert before or after
  * @return chunk_t   pointer to the copied chunk
  */
-static chunk_t *chunk_add(const chunk_t *pc_in, chunk_t *ref, const loc_t pos = AFTER);
+static chunk_t *chunk_add(const chunk_t *pc_in, chunk_t *ref, const direction_e pos = direction_e::FORWARD);
 
 
 /**
@@ -167,7 +167,7 @@ static chunk_t *chunk_add(const chunk_t *pc_in, chunk_t *ref, const loc_t pos = 
  * @param  dir       search direction
  * @return pointer to chunk search function
  */
-static search_t select_search_fct(const loc_t dir = AFTER);
+static search_t select_search_fct(const direction_e dir = direction_e::FORWARD);
 
 
 void set_chunk_real(chunk_t *pc, c_token_t token, log_sev_t what, const char *str);
@@ -188,26 +188,26 @@ chunk_t *chunk_get_tail(void)
 }
 
 
-static search_t select_search_fct(const loc_t dir)
+static search_t select_search_fct(const direction_e dir)
 {
-   return((dir == AFTER) ? chunk_get_next : chunk_get_prev);
+   return((dir == direction_e::FORWARD) ? chunk_get_next : chunk_get_prev);
 }
 
 
 chunk_t *chunk_search_prev_cat(chunk_t *pc, const c_token_t cat)
 {
-   return(chunk_search_type(pc, cat, scope_e::ALL, BEFORE));
+   return(chunk_search_type(pc, cat, scope_e::ALL, direction_e::BACKWARD));
 }
 
 
 chunk_t *chunk_search_next_cat(chunk_t *pc, const c_token_t cat)
 {
-   return(chunk_search_type(pc, cat, scope_e::ALL, AFTER));
+   return(chunk_search_type(pc, cat, scope_e::ALL, direction_e::FORWARD));
 }
 
 
 static chunk_t *chunk_search_type(chunk_t *cur, const c_token_t type,
-                                  const scope_e scope, const loc_t dir)
+                                  const scope_e scope, const direction_e dir)
 {
    /* Depending on the parameter dir the search function searches
     * in forward or backward direction */
@@ -232,7 +232,7 @@ inline bool is_expected_type_and_level(chunk_t *pc, c_token_t type, int level)
 }
 
 
-static chunk_t *chunk_search_typelevel(chunk_t *cur, c_token_t type, scope_e scope, loc_t dir, int level)
+static chunk_t *chunk_search_typelevel(chunk_t *cur, c_token_t type, scope_e scope, direction_e dir, int level)
 {
    /* Depending on the parameter dir the search function searches
     * in forward or backward direction */
@@ -264,7 +264,7 @@ inline bool is_expected_string_and_level(chunk_t *pc, const char *str, int level
 }
 
 
-static chunk_t *chunk_search_str(chunk_t *cur, const char *str, size_t len, scope_e scope, loc_t dir, int level)
+static chunk_t *chunk_search_str(chunk_t *cur, const char *str, size_t len, scope_e scope, direction_e dir, int level)
 {
    /* Depending on the parameter dir the search function searches
     * in forward or backward direction */
@@ -281,7 +281,7 @@ static chunk_t *chunk_search_str(chunk_t *cur, const char *str, size_t len, scop
 
 
 static chunk_t *chunk_search(chunk_t *cur, const check_t check_fct, const scope_e scope,
-                             const loc_t dir, const bool cond)
+                             const direction_e dir, const bool cond)
 {
    /* Depending on the parameter dir the search function searches
     * in forward or backward direction */
@@ -417,13 +417,13 @@ static void chunk_log(chunk_t *pc, const char *text)
 
 chunk_t *chunk_add_after(const chunk_t *pc_in, chunk_t *ref)
 {
-   return(chunk_add(pc_in, ref, AFTER));
+   return(chunk_add(pc_in, ref, direction_e::FORWARD));
 }
 
 
 chunk_t *chunk_add_before(const chunk_t *pc_in, chunk_t *ref)
 {
-   return(chunk_add(pc_in, ref, BEFORE));
+   return(chunk_add(pc_in, ref, direction_e::BACKWARD));
 }
 
 
@@ -450,103 +450,103 @@ void chunk_move_after(chunk_t *pc_in, chunk_t *ref)
 
 chunk_t *chunk_get_next_nl(chunk_t *cur, scope_e scope)
 {
-   return(chunk_search(cur, chunk_is_newline, scope, AFTER, true));
+   return(chunk_search(cur, chunk_is_newline, scope, direction_e::FORWARD, true));
 }
 
 
 chunk_t *chunk_get_prev_nl(chunk_t *cur, scope_e scope)
 {
-   return(chunk_search(cur, chunk_is_newline, scope, BEFORE, true));
+   return(chunk_search(cur, chunk_is_newline, scope, direction_e::BACKWARD, true));
 }
 
 
 chunk_t *chunk_get_next_nnl(chunk_t *cur, scope_e scope)
 {
-   return(chunk_search(cur, chunk_is_newline, scope, AFTER, false));
+   return(chunk_search(cur, chunk_is_newline, scope, direction_e::FORWARD, false));
 }
 
 
 chunk_t *chunk_get_prev_nnl(chunk_t *cur, scope_e scope)
 {
-   return(chunk_search(cur, chunk_is_newline, scope, BEFORE, false));
+   return(chunk_search(cur, chunk_is_newline, scope, direction_e::BACKWARD, false));
 }
 
 
 chunk_t *chunk_get_next_ncnl(chunk_t *cur, scope_e scope)
 {
-   return(chunk_search(cur, chunk_is_comment_or_newline, scope, AFTER, false));
+   return(chunk_search(cur, chunk_is_comment_or_newline, scope, direction_e::FORWARD, false));
 }
 
 
 chunk_t *chunk_get_next_ncnlnp(chunk_t *cur, scope_e scope)
 {
-   return(chunk_get_ncnlnp(cur, scope, AFTER));
+   return(chunk_get_ncnlnp(cur, scope, direction_e::FORWARD));
 }
 
 
 chunk_t *chunk_get_prev_ncnlnp(chunk_t *cur, scope_e scope)
 {
-   return(chunk_get_ncnlnp(cur, scope, BEFORE));
+   return(chunk_get_ncnlnp(cur, scope, direction_e::BACKWARD));
 }
 
 
 chunk_t *chunk_get_next_nblank(chunk_t *cur, scope_e scope)
 {
-   return(chunk_search(cur, chunk_is_comment_newline_or_blank, scope, AFTER, false));
+   return(chunk_search(cur, chunk_is_comment_newline_or_blank, scope, direction_e::FORWARD, false));
 }
 
 
 chunk_t *chunk_get_prev_nblank(chunk_t *cur, scope_e scope)
 {
-   return(chunk_search(cur, chunk_is_comment_newline_or_blank, scope, BEFORE, false));
+   return(chunk_search(cur, chunk_is_comment_newline_or_blank, scope, direction_e::BACKWARD, false));
 }
 
 
 chunk_t *chunk_get_next_nc(chunk_t *cur, scope_e scope)
 {
-   return(chunk_search(cur, chunk_is_comment, scope, AFTER, false));
+   return(chunk_search(cur, chunk_is_comment, scope, direction_e::FORWARD, false));
 }
 
 
 chunk_t *chunk_get_next_nisq(chunk_t *cur, scope_e scope)
 {
-   return(chunk_search(cur, chunk_is_balanced_square, scope, AFTER, false));
+   return(chunk_search(cur, chunk_is_balanced_square, scope, direction_e::FORWARD, false));
 }
 
 
 chunk_t *chunk_get_prev_ncnl(chunk_t *cur, scope_e scope)
 {
-   return(chunk_search(cur, chunk_is_comment_or_newline, scope, BEFORE, false));
+   return(chunk_search(cur, chunk_is_comment_or_newline, scope, direction_e::BACKWARD, false));
 }
 
 
 chunk_t *chunk_get_prev_nc(chunk_t *cur, scope_e scope)
 {
-   return(chunk_search(cur, chunk_is_comment, scope, BEFORE, false));
+   return(chunk_search(cur, chunk_is_comment, scope, direction_e::BACKWARD, false));
 }
 
 
 chunk_t *chunk_get_next_type(chunk_t *cur, c_token_t type, int level, scope_e scope)
 {
-   return(chunk_search_typelevel(cur, type, scope, AFTER, level));
+   return(chunk_search_typelevel(cur, type, scope, direction_e::FORWARD, level));
 }
 
 
 chunk_t *chunk_get_next_str(chunk_t *cur, const char *str, size_t len, int level, scope_e scope)
 {
-   return(chunk_search_str(cur, str, len, scope, AFTER, level));
+   return(chunk_search_str(cur, str, len, scope, direction_e::FORWARD, level));
 }
 
 
 chunk_t *chunk_get_prev_type(chunk_t *cur, c_token_t type, int level, scope_e scope)
 {
-   return(chunk_search_typelevel(cur, type, scope, BEFORE, level));
+   return(chunk_search_typelevel(cur, type, scope, direction_e::BACKWARD, level));
 }
 
 
 chunk_t *chunk_get_prev_str(chunk_t *cur, const char *str, size_t len, int level, scope_e scope)
 {
-   return(chunk_search_str(cur, str, len, scope, BEFORE, level));
+   return(chunk_search_str(cur, str, len, scope, direction_e::BACKWARD, level));
 }
 
 
@@ -656,13 +656,13 @@ void chunk_swap_lines(chunk_t *pc1, chunk_t *pc2)
 
 chunk_t *chunk_get_next_nvb(chunk_t *cur, const scope_e scope)
 {
-   return(chunk_search(cur, chunk_is_vbrace, scope, AFTER, false));
+   return(chunk_search(cur, chunk_is_vbrace, scope, direction_e::FORWARD, false));
 }
 
 
 chunk_t *chunk_get_prev_nvb(chunk_t *cur, const scope_e scope)
 {
-   return(chunk_search(cur, chunk_is_vbrace, scope, BEFORE, false));
+   return(chunk_search(cur, chunk_is_vbrace, scope, direction_e::BACKWARD, false));
 }
 
 
@@ -733,7 +733,7 @@ void set_chunk_real(chunk_t *pc, c_token_t token, log_sev_t what, const char *st
 }
 
 
-static chunk_t *chunk_get_ncnlnp(chunk_t *cur, const scope_e scope, const loc_t dir)
+static chunk_t *chunk_get_ncnlnp(chunk_t *cur, const scope_e scope, const direction_e dir)
 {
    chunk_t *pc = cur;
 
@@ -744,7 +744,7 @@ static chunk_t *chunk_get_ncnlnp(chunk_t *cur, const scope_e scope, const loc_t 
 }
 
 
-static chunk_t *chunk_add(const chunk_t *pc_in, chunk_t *ref, const loc_t pos)
+static chunk_t *chunk_add(const chunk_t *pc_in, chunk_t *ref, const direction_e pos)
 {
    chunk_t *pc = chunk_dup(pc_in);
 
@@ -752,11 +752,11 @@ static chunk_t *chunk_add(const chunk_t *pc_in, chunk_t *ref, const loc_t pos)
    {
       if (ref != NULL) /* ref is a valid chunk */
       {
-         (pos == AFTER) ? g_cl.AddAfter(pc, ref) : g_cl.AddBefore(pc, ref);
+         (pos == direction_e::FORWARD) ? g_cl.AddAfter(pc, ref) : g_cl.AddBefore(pc, ref);
       }
       else /* ref == NULL */
       {
-         (pos == AFTER) ? g_cl.AddHead(pc) : g_cl.AddTail(pc);
+         (pos == direction_e::FORWARD) ? g_cl.AddHead(pc) : g_cl.AddTail(pc);
       }
       chunk_log(pc, "chunk_add");
    }
