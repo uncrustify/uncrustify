@@ -1461,7 +1461,7 @@ static void add_func_header(c_token_t type, file_mem &fm)
          /* If we hit an angle close, back up to the angle open */
          if (ref->type == CT_ANGLE_CLOSE)
          {
-            ref = chunk_get_prev_type(ref, CT_ANGLE_OPEN, ref->level, CNAV_PREPROC);
+            ref = chunk_get_prev_type(ref, CT_ANGLE_OPEN, ref->level, scope_e::PREPROC);
             continue;
          }
 
@@ -1542,7 +1542,7 @@ static void add_msg_header(c_token_t type, file_mem &fm)
          /* If we hit a parentheses around return type, back up to the open parentheses */
          if (ref->type == CT_PAREN_CLOSE)
          {
-            ref = chunk_get_prev_type(ref, CT_PAREN_OPEN, ref->level, CNAV_PREPROC);
+            ref = chunk_get_prev_type(ref, CT_PAREN_OPEN, ref->level, scope_e::PREPROC);
             continue;
          }
 

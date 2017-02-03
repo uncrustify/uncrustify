@@ -568,7 +568,7 @@ static chunk_t *oc_msg_block_indent(chunk_t *pc, bool from_brace,
 
 static chunk_t *oc_msg_prev_colon(chunk_t *pc)
 {
-   return(chunk_get_prev_type(pc, CT_OC_COLON, pc->level, CNAV_ALL));
+   return(chunk_get_prev_type(pc, CT_OC_COLON, pc->level, scope_e::ALL));
 }
 
 

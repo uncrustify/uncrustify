@@ -23,18 +23,18 @@
 
 
 /**
- * Specifies how to handle preprocessors.
- * CNAV_ALL (default)
+ * Specifies which chuncks should/should not be found.
+ * ALL (default)
  *  - return the true next/prev
  *
- * CNAV_PREPROC
+ * PREPROC
  *  - If not in a preprocessor, skip over any encountered preprocessor stuff
  *  - If in a preprocessor, fail to leave (return NULL)
  */
-enum nav_t
+enum class scope_e : unsigned int
 {
-   CNAV_ALL,      /**< search in all kind of chunks */
-   CNAV_PREPROC,  /**< search only in preprocessor chunks */
+   ALL,      /**< search in all kind of chunks */
+   PREPROC,  /**< search only in preprocessor chunks */
 };
 
 
@@ -84,11 +84,11 @@ chunk_t *chunk_get_tail(void);
 
 
 /** provide the next chunk in a chunk list */
-chunk_t *chunk_get_next(chunk_t *cur, nav_t nav = CNAV_ALL);
+chunk_t *chunk_get_next(chunk_t *cur, scope_e scope = scope_e::ALL);
 
 
 /** provide the previous chunk in a chunk list */
-chunk_t *chunk_get_prev(chunk_t *cur, nav_t nav = CNAV_ALL);
+chunk_t *chunk_get_prev(chunk_t *cur, scope_e scope = scope_e::ALL);
 
 
 /**
@@ -123,31 +123,31 @@ chunk_t *chunk_first_on_line(chunk_t *pc);
 /**
  * Gets the next NEWLINE chunk
  */
-chunk_t *chunk_get_next_nl(chunk_t *cur, nav_t nav = CNAV_ALL);
+chunk_t *chunk_get_next_nl(chunk_t *cur, scope_e scope = scope_e::ALL);
 
 
 /**
  * Gets the next non-comment chunk
  */
-chunk_t *chunk_get_next_nc(chunk_t *cur, nav_t nav = CNAV_ALL);
+chunk_t *chunk_get_next_nc(chunk_t *cur, scope_e scope = scope_e::ALL);
 
 
 /**
  * Gets the next non-NEWLINE chunk
  */
-chunk_t *chunk_get_next_nnl(chunk_t *cur, nav_t nav = CNAV_ALL);
+chunk_t *chunk_get_next_nnl(chunk_t *cur, scope_e scope = scope_e::ALL);
 
 
 /**
  * Gets the next non-NEWLINE and non-comment chunk
  */
-chunk_t *chunk_get_next_ncnl(chunk_t *cur, nav_t nav = CNAV_ALL);
+chunk_t *chunk_get_next_ncnl(chunk_t *cur, scope_e scope = scope_e::ALL);
 
 
 /**
  * Gets the next non-NEWLINE and non-comment chunk, non-preprocessor chunk
  */
-chunk_t *chunk_get_next_ncnlnp(chunk_t *cur, nav_t nav = CNAV_ALL);
+chunk_t *chunk_get_next_ncnlnp(chunk_t *cur, scope_e scope = scope_e::ALL);
 
 
 /**
@@ -156,52 +156,52 @@ chunk_t *chunk_get_next_ncnlnp(chunk_t *cur, nav_t nav = CNAV_ALL);
  * multi-dimensional array declarations
  *
  * @param  cur     Starting chunk
- * @param  nav     chunk section to consider
+ * @param  scope   chunk section to consider
  * @return         NULL or the next chunk not in or part of square brackets
  */
-chunk_t *chunk_get_next_nisq(chunk_t *cur, nav_t nav = CNAV_ALL);
+chunk_t *chunk_get_next_nisq(chunk_t *cur, scope_e scope = scope_e::ALL);
 
 
 /**
  * Gets the next non-blank chunk
  */
-chunk_t *chunk_get_next_nblank(chunk_t *cur, nav_t nav = CNAV_ALL);
+chunk_t *chunk_get_next_nblank(chunk_t *cur, scope_e scope = scope_e::ALL);
 
 
 /**
  * Gets the prev non-blank chunk
  */
-chunk_t *chunk_get_prev_nblank(chunk_t *cur, nav_t nav = CNAV_ALL);
+chunk_t *chunk_get_prev_nblank(chunk_t *cur, scope_e scope = scope_e::ALL);
 
 
 /**
  * Gets the prev NEWLINE chunk
  */
-chunk_t *chunk_get_prev_nl(chunk_t *cur, nav_t nav = CNAV_ALL);
+chunk_t *chunk_get_prev_nl(chunk_t *cur, scope_e scope = scope_e::ALL);
 
 
 /**
  * Gets the prev non-comment chunk
  */
-chunk_t *chunk_get_prev_nc(chunk_t *cur, nav_t nav = CNAV_ALL);
+chunk_t *chunk_get_prev_nc(chunk_t *cur, scope_e scope = scope_e::ALL);
 
 
 /**
  * Gets the prev non-NEWLINE chunk
  */
-chunk_t *chunk_get_prev_nnl(chunk_t *cur, nav_t nav = CNAV_ALL);
+chunk_t *chunk_get_prev_nnl(chunk_t *cur, scope_e scope = scope_e::ALL);
 
 
 /**
  * Gets the prev non-NEWLINE and non-comment chunk
  */
-chunk_t *chunk_get_prev_ncnl(chunk_t *cur, nav_t nav = CNAV_ALL);
+chunk_t *chunk_get_prev_ncnl(chunk_t *cur, scope_e scope = scope_e::ALL);
 
 
 /**
  * Gets the prev non-NEWLINE and non-comment chunk, non-preprocessor chunk
  */
-chunk_t *chunk_get_prev_ncnlnp(chunk_t *cur, nav_t nav = CNAV_ALL);
+chunk_t *chunk_get_prev_ncnlnp(chunk_t *cur, scope_e scope = scope_e::ALL);
 
 
 /**
@@ -212,7 +212,7 @@ chunk_t *chunk_get_prev_ncnlnp(chunk_t *cur, nav_t nav = CNAV_ALL);
  * @param level   -1 or ANY_LEVEL (any level) or the level to match
  * @return        NULL or the match
  */
-chunk_t *chunk_get_next_type(chunk_t *cur, c_token_t type, int level, nav_t nav = CNAV_ALL);
+chunk_t *chunk_get_next_type(chunk_t *cur, c_token_t type, int level, scope_e scope = scope_e::ALL);
 
 
 /**
@@ -223,33 +223,33 @@ chunk_t *chunk_get_next_type(chunk_t *cur, c_token_t type, int level, nav_t nav 
  * @param level   -1 or ANY_LEVEL (any level) or the level to match
  * @return        NULL or the match
  */
-chunk_t *chunk_get_prev_type(chunk_t *cur, c_token_t type, int level, nav_t nav = CNAV_ALL);
+chunk_t *chunk_get_prev_type(chunk_t *cur, c_token_t type, int level, scope_e scope = scope_e::ALL);
 
 
-chunk_t *chunk_get_next_str(chunk_t *cur, const char *str, size_t len, int level, nav_t nav = CNAV_ALL);
+chunk_t *chunk_get_next_str(chunk_t *cur, const char *str, size_t len, int level, scope_e scope = scope_e::ALL);
 
 
-chunk_t *chunk_get_prev_str(chunk_t *cur, const char *str, size_t len, int level, nav_t nav = CNAV_ALL);
+chunk_t *chunk_get_prev_str(chunk_t *cur, const char *str, size_t len, int level, scope_e scope = scope_e::ALL);
 
 
 /**
  * \brief Gets the next non-vbrace chunk
  *
  * @param  cur    chunk to start search
- * @param  nav    chunk section to consider
+ * @param  scope    chunk section to consider
  * @return        pointer to found chunk or NULL if no chunk was found
  */
-chunk_t *chunk_get_next_nvb(chunk_t *cur, const nav_t nav = CNAV_ALL);
+chunk_t *chunk_get_next_nvb(chunk_t *cur, const scope_e scope = scope_e::ALL);
 
 
 /**
  * \brief Gets the previous non-vbrace chunk
  *
  * @param  cur    chunk to start search
- * @param  nav    chunk section to consider
+ * @param  scope    chunk section to consider
  * @return        pointer to found chunk or NULL if no chunk was found
  */
-chunk_t *chunk_get_prev_nvb(chunk_t *cur, const nav_t nav = CNAV_ALL);
+chunk_t *chunk_get_prev_nvb(chunk_t *cur, const scope_e scope = scope_e::ALL);
 
 
 /**
@@ -285,10 +285,10 @@ chunk_t *chunk_search_next_cat(chunk_t *pc, const c_token_t cat);
  * Skips to the closing match for the current paren/brace/square.
  *
  * @param  cur     The opening or closing paren/brace/square
- * @param  nav     chunk section to consider
+ * @param  scope   chunk section to consider
  * @return         NULL or the matching paren/brace/square
  */
-static_inline chunk_t *chunk_skip_to_match(chunk_t *cur, nav_t nav = CNAV_ALL)
+static_inline chunk_t *chunk_skip_to_match(chunk_t *cur, scope_e scope = scope_e::ALL)
 {
    if (cur &&
        ((cur->type == CT_PAREN_OPEN) ||
@@ -300,13 +300,13 @@ static_inline chunk_t *chunk_skip_to_match(chunk_t *cur, nav_t nav = CNAV_ALL)
         (cur->type == CT_ANGLE_OPEN) ||
         (cur->type == CT_SQUARE_OPEN)))
    {
-      return(chunk_get_next_type(cur, (c_token_t)(cur->type + 1), cur->level, nav));
+      return(chunk_get_next_type(cur, (c_token_t)(cur->type + 1), cur->level, scope));
    }
    return(cur);
 }
 
 
-static_inline chunk_t *chunk_skip_to_match_rev(chunk_t *cur, nav_t nav = CNAV_ALL)
+static_inline chunk_t *chunk_skip_to_match_rev(chunk_t *cur, scope_e scope = scope_e::ALL)
 {
    if (cur &&
        ((cur->type == CT_PAREN_CLOSE) ||
@@ -318,7 +318,7 @@ static_inline chunk_t *chunk_skip_to_match_rev(chunk_t *cur, nav_t nav = CNAV_AL
         (cur->type == CT_ANGLE_CLOSE) ||
         (cur->type == CT_SQUARE_CLOSE)))
    {
-      return(chunk_get_prev_type(cur, (c_token_t)(cur->type - 1), cur->level, nav));
+      return(chunk_get_prev_type(cur, (c_token_t)(cur->type - 1), cur->level, scope));
    }
    return(cur);
 }
