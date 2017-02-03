@@ -354,7 +354,7 @@ struct chunk_tag_t
 {
    const char *tag;
    c_token_t  type;
-   int        lang_flags;
+   size_t     lang_flags;
 };
 
 struct lookup_entry_t
@@ -419,7 +419,7 @@ struct cp_data_t
    file_mem       oc_msg_hdr;     // for cmt_insert_oc_msg_header
    file_mem       class_hdr;      // for cmt_insert_class_header
 
-   int            lang_flags;     // LANG_xxx
+   size_t         lang_flags;     // LANG_xxx
    bool           lang_forced;
 
    bool           unc_off;
