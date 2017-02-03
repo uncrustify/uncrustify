@@ -73,7 +73,6 @@ using namespace emscripten;
 
 
 extern void process_option_line(char *configLine, const char *filename);
-extern void usage_exit(const char *msg, const char *argv0, int code);
 extern int load_header_files();
 extern const char *language_name_from_flags(size_t lang);
 extern void uncrustify_file(const file_mem &fm, FILE *pfout, const char *parsed_file, bool defer_uncrustify_end = false);
@@ -393,11 +392,11 @@ string show_config()
  * used only for emscripten binding here and will be automatically called while
  * module initialization
  */
-void initialize()
+void _initialize()
 {
    register_options();
    set_option_defaults();
-   log_init(stderr);
+   log_init(stdout);
 
    LOG_FMT(LSYS, "Initialized libUncrustify\n");
 }
@@ -416,22 +415,19 @@ void destruct()
  *
  * @return returns EXIT_SUCCESS on success
  */
-int loadConfig(string _cfg)
+int _loadConfig(intptr_t _cfg)
 {
    // reset everything in case a config was loaded previously
    clear_keyword_file();
    clear_defines();
    set_option_defaults();
 
-   if (_cfg.empty())
-   {
-      return(EXIT_SUCCESS);
-   }
+   // embind complains about char* so we use an int to get the pointer and cast it
+   // memory management is done in /emscripten/postfix_module.js
+   char *cfg = reinterpret_cast<char *>(_cfg);
 
-   unique_ptr<char[]> cfg(new char[_cfg.length() + 1]);
-   strcpy(cfg.get(), _cfg.c_str());
 
-   if (load_option_fileChar(cfg.get()) != EXIT_SUCCESS)
+   if (load_option_fileChar(cfg) != EXIT_SUCCESS)
    {
       LOG_FMT(LERR, "unable to load the config\n");
       return(EXIT_FAILURE);
@@ -462,18 +458,13 @@ map<uncrustify_groups, group_map_value> getGroupMap()
 /**
  * format string
  *
- * @param file: string that is going to be formated
+ * @param file: pointer to the file char* string that is going to be formatted
  * @param frag: true=fragmented code input, false=unfragmented code input
- * @return formated string
+ *
+ * @return pointer to the formatted file char* string
  */
-string uncrustify(string file, bool frag)
+intptr_t _uncrustify(intptr_t _file, bool frag)
 {
-   if (file.empty())
-   {
-      LOG_FMT(LERR, "%s: file string is empty\n", __func__);
-      return("");
-   }
-
    // Problem: uncrustify originally is not a lib and uses global vars such as
    // cpd.error_count for the whole program execution
    // to know if errors occurred during the formating step we reset this var here
@@ -489,12 +480,22 @@ string uncrustify(string file, bool frag)
    fm.raw.clear();
    fm.data.clear();
    fm.enc = char_encoding_e::e_ASCII;
-   fm.raw = vector<UINT8>(file.begin(), file.end());
+   fm.raw = vector<UINT8>();
+
+   // embind complains about char* so we use an intptr_t to get the pointer and
+   // cast it, memory management is done in /emscripten/postfix_module.js
+   char *file = reinterpret_cast<char *>(_file);
+
+   char c;
+   for (auto idx = 0; (c = file[idx]) != 0; ++idx)
+   {
+      fm.raw.push_back(c);
+   }
 
    if (!decode_unicode(fm.raw, fm.data, fm.enc, fm.bom))
    {
       LOG_FMT(LERR, "Failed to read code\n");
-      return("");
+      return(0);
    }
 
    cpd.filename = "stdin";
@@ -521,7 +522,7 @@ string uncrustify(string file, bool frag)
       fflush(stream);
       fclose(stream);
       free(buf);
-      return("");
+      return(0);
    }
 
    // TODO One way to implement the --parsed, -p functionality would
@@ -543,32 +544,31 @@ string uncrustify(string file, bool frag)
    fflush(stream);
    fclose(stream);
 
-   string out(buf);
-   free(buf);
-
    if (cpd.error_count != 0)
    {
       LOG_FMT(LWARN, "%d errors occurred during formating\n", cpd.error_count);
    }
-   return(out);
+
+   // buf is deleted inside js code
+   return(reinterpret_cast<intptr_t>(buf));
 } // uncrustify
 
 
 /**
  * format string with specified language
  *
- * @param file: string that is going to be formated
+ * @param file: pointer to the file char* string that is going to be formatted
  * @param frag: true=fragmented code input, false=unfragmented code input
  * @param langIDX: specifies in which language the input file is written
- * @return formated string
+ *
+ * @return pointer to the formatted file char* string
  */
-string uncrustify(string file, bool frag, lang_flags langIDX)
+intptr_t _uncrustify(intptr_t file, bool frag, lang_flags langIDX)
 {
    auto tmpLang = cpd.lang_flags;
 
    cpd.lang_flags = static_cast<int>(langIDX);
-
-   auto ret = uncrustify(file, frag);
+   auto ret = _uncrustify(file, frag);
 
    cpd.lang_flags = tmpLang;
 
@@ -579,12 +579,13 @@ string uncrustify(string file, bool frag, lang_flags langIDX)
 /**
  * format string, assume unfragmented code input
  *
- * @param file: string that is going to be formated
- * @return formated string
+ * @param file: pointer to the file char* string that is going to be formatted
+ *
+ * @return pointer to the formatted file char* string
  */
-string uncrustify(string file)
+intptr_t _uncrustify(intptr_t file)
 {
-   return(uncrustify(file, false));
+   return(_uncrustify(file, false));
 }
 
 
@@ -1615,7 +1616,7 @@ EMSCRIPTEN_BINDINGS(MainModule)
    register_map<uncrustify_groups, group_map_value>(STRINGIFY(group_map));
 
 
-   emscripten::function(STRINGIFY(initialize), &initialize);
+   emscripten::function(STRINGIFY(_initialize), &_initialize);
    emscripten::function(STRINGIFY(destruct), &destruct);
 
    emscripten::function(STRINGIFY(get_version), &get_version);
@@ -1633,7 +1634,7 @@ EMSCRIPTEN_BINDINGS(MainModule)
    emscripten::function(STRINGIFY(set_option), &set_option);
    emscripten::function(STRINGIFY(get_option), &get_option);
 
-   emscripten::function(STRINGIFY(loadConfig), &loadConfig);
+   emscripten::function(STRINGIFY(_loadConfig), &_loadConfig);
    emscripten::function(STRINGIFY(show_config), select_overload<string(bool, bool)>(&show_config));
    emscripten::function(STRINGIFY(show_config), select_overload<string(bool)>(&show_config));
    emscripten::function(STRINGIFY(show_config), select_overload<string()>(&show_config));
@@ -1647,9 +1648,9 @@ EMSCRIPTEN_BINDINGS(MainModule)
 
    emscripten::function(STRINGIFY(set_language), &set_language);
 
-   emscripten::function(STRINGIFY(uncrustify), select_overload<string(string, bool, lang_flags)>(&uncrustify));
-   emscripten::function(STRINGIFY(uncrustify), select_overload<string(string, bool)>(&uncrustify));
-   emscripten::function(STRINGIFY(uncrustify), select_overload<string(string)>(&uncrustify));
+   emscripten::function(STRINGIFY(_uncrustify), select_overload<intptr_t(intptr_t, bool, lang_flags)>(&_uncrustify));
+   emscripten::function(STRINGIFY(_uncrustify), select_overload<intptr_t(intptr_t, bool)>(&_uncrustify));
+   emscripten::function(STRINGIFY(_uncrustify), select_overload<intptr_t(intptr_t)>(&_uncrustify));
 }
 
 #endif
