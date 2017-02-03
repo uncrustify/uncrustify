@@ -208,11 +208,11 @@ void indent_to_column(chunk_t *pc, size_t column)
 }
 
 
-enum align_mode
+enum class align_mode_e : unsigned int
 {
-   ALMODE_SHIFT,     /* shift relative to the current column */
-   ALMODE_KEEP_ABS,  /* try to keep the original absolute column */
-   ALMODE_KEEP_REL,  /* try to keep the original gap */
+   SHIFT,     /* shift relative to the current column */
+   KEEP_ABS,  /* try to keep the original absolute column */
+   KEEP_REL,  /* try to keep the original gap */
 };
 
 
@@ -234,9 +234,9 @@ void align_to_column(chunk_t *pc, size_t column)
    pc->column = column;
    do
    {
-      chunk_t    *next = chunk_get_next(pc);
-      chunk_t    *prev;
-      align_mode almod = ALMODE_SHIFT;
+      chunk_t      *next = chunk_get_next(pc);
+      chunk_t      *prev;
+      align_mode_e almod = align_mode_e::SHIFT;
 
       if (next == NULL)
       {
@@ -251,10 +251,10 @@ void align_to_column(chunk_t *pc, size_t column)
       {
          almod = (chunk_is_single_line_comment(pc) &&
                   cpd.settings[UO_indent_relative_single_line_comments].b) ?
-                 ALMODE_KEEP_REL : ALMODE_KEEP_ABS;
+                 align_mode_e::KEEP_REL : align_mode_e::KEEP_ABS;
       }
 
-      if (almod == ALMODE_KEEP_ABS)
+      if (almod == align_mode_e::KEEP_ABS)
       {
          /* Keep same absolute column */
          pc->column = pc->orig_col;
@@ -263,7 +263,7 @@ void align_to_column(chunk_t *pc, size_t column)
             pc->column = min_col;
          }
       }
-      else if (almod == ALMODE_KEEP_REL)
+      else if (almod == align_mode_e::KEEP_REL)
       {
          /* Keep same relative column */
          int orig_delta = pc->orig_col - prev->orig_col;
@@ -273,7 +273,7 @@ void align_to_column(chunk_t *pc, size_t column)
          }
          pc->column = prev->column + orig_delta;
       }
-      else /* ALMODE_SHIFT */
+      else /* SHIFT */
       {
          /* Shift by the same amount */
          pc->column += col_delta;
@@ -283,8 +283,8 @@ void align_to_column(chunk_t *pc, size_t column)
          }
       }
       LOG_FMT(LINDLINED, "   %s set column of %s on line %zu to col %zu (orig %zu)\n",
-              (almod == ALMODE_KEEP_ABS) ? "abs" :
-              (almod == ALMODE_KEEP_REL) ? "rel" : "sft",
+              (almod == align_mode_e::KEEP_ABS) ? "abs" :
+              (almod == align_mode_e::KEEP_REL) ? "rel" : "sft",
               get_token_name(pc->type), pc->orig_line, pc->column, pc->orig_col);
    } while ((pc != NULL) && (pc->nl_count == 0));
 } // align_to_column
