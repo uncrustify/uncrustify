@@ -498,7 +498,7 @@ string uncrustify(string file, bool frag)
    file_mem fm;
    fm.raw.clear();
    fm.data.clear();
-   fm.enc = ENC_ASCII;
+   fm.enc = char_encoding_e::ASCII;
    fm.raw = vector<UINT8>(file.begin(), file.end());
 
    if (!decode_unicode(fm.raw, fm.data, fm.enc, fm.bom))
