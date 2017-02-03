@@ -148,14 +148,13 @@ SET_TARGET_PROPERTIES(${project_name}
                     -s MODULARIZE=1 \
                     -s EXPORT_NAME=\"'${project_name}'\" \
                     -s ERROR_ON_UNDEFINED_SYMBOLS=1 \
-                    -s ALLOW_MEMORY_GROWTH=1 \
                     --memory-init-file 0\
                     --pre-js ${CMAKE_CURRENT_LIST_DIR}/prefix_module.js \
                     --post-js ${CMAKE_CURRENT_LIST_DIR}/postfix_module.js \
                     ")
 
-#EM_LINK_PRE_JS(${project_name} ${CMAKE_CURRENT_LIST_DIR}/prefix_module.js)
-#EM_LINK_POST_JS(${project_name} ${CMAKE_CURRENT_LIST_DIR}/postfix_module.js)
+EM_LINK_PRE_JS(${project_name} ${CMAKE_CURRENT_LIST_DIR}/prefix_module.js)
+EM_LINK_POST_JS(${project_name} ${CMAKE_CURRENT_LIST_DIR}/postfix_module.js)
 
 # ------------------------------------------------------------------------------
 
