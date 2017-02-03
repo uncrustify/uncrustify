@@ -8,6 +8,5 @@
 10008 empty.cfg                        cpp/PR326_invalid-backslash-eol-csharp.cpp
 10009 STUCK_macro-difficulties.cfg     cpp/STUCK_macro-difficulties.cpp
 10018 empty.cfg                        cpp/delete-space-oc.mm
-10019 empty.cfg                        cpp/func-param-wrap-oc.mm
 10100 issue_564.cfg                    cpp/issue_564.cpp
 10101 issue_574.cfg                    cpp/issue_574.cpp
