@@ -389,7 +389,7 @@ static const chunk_tag_t *kw_static_match(const chunk_tag_t *tag)
 }
 
 
-c_token_t find_keyword_type(const char *word, int len)
+c_token_t find_keyword_type(const char *word, size_t len)
 {
    if (len <= 0)
    {
@@ -430,10 +430,13 @@ int load_keyword_file(const char *filename)
       return(EX_IOERR);
    }
 
-   char buf[256];       /* \todo what is the meaning of 256 ? */
-   char *args[3];       /* \todo what is the meaning of 3 ? */
-   int  line_no = 0;
-   while (fgets(buf, sizeof(buf), pf) != NULL)
+#define MAXLENGTHOFLINE    256
+#define NUMBEROFARGS       2
+   // maximal length of a line in the file
+   char   buf[MAXLENGTHOFLINE];
+   char   *args[NUMBEROFARGS];
+   size_t line_no = 0;
+   while (fgets(buf, MAXLENGTHOFLINE, pf) != NULL)
    {
       line_no++;
 
@@ -441,12 +444,12 @@ int load_keyword_file(const char *filename)
       char *ptr;
       if ((ptr = strchr(buf, '#')) != NULL)
       {
+         // a comment line
          *ptr = 0;
+         continue;
       }
 
-      char *args[3];
-      int  argc = Args::SplitLine(buf, args, ARRAY_SIZE(args) - 1);
-      args[argc] = 0;  /* \todo what is this used for? can this write beyond args? */
+      size_t argc = Args::SplitLine(buf, args, NUMBEROFARGS);
 
       if (argc > 0)
       {
@@ -456,10 +459,15 @@ int load_keyword_file(const char *filename)
          }
          else
          {
-            LOG_FMT(LWARN, "%s:%d Invalid line (starts with '%s')\n",
+            LOG_FMT(LWARN, "%s:%zu Invalid line (starts with '%s')\n",
                     filename, line_no, args[0]);
             cpd.error_count++;
          }
+      }
+      else
+      {
+         // the line is empty
+         continue;
       }
    }
 
