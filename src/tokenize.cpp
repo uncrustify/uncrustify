@@ -1869,7 +1869,7 @@ void tokenize(const deque<int> &data, chunk_t *ref)
    bool          last_was_tab = false;
    size_t        prev_sp      = 0;
 
-   cpd.unc_stage = US_TOKENIZE;
+   cpd.unc_stage = unc_stage_e::TOKENIZE;
 
    memset(&frm, 0, sizeof(frm));
 

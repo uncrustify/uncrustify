@@ -150,7 +150,7 @@ void brace_cleanup(void)
    chunk_t       *pc;
    parse_frame_t frm;
 
-   cpd.unc_stage = US_BRACE_CLEANUP;
+   cpd.unc_stage = unc_stage_e::BRACE_CLEANUP;
 
    memset(&frm, 0, sizeof(frm));
 

@@ -383,18 +383,18 @@ struct file_mem
 #endif
 };
 
-enum unc_stage
+enum class unc_stage_e : unsigned int
 {
-   US_TOKENIZE,
-   US_HEADER,
-   US_TOKENIZE_CLEANUP,
-   US_BRACE_CLEANUP,
-   US_FIX_SYMBOLS,
-   US_MARK_COMMENTS,
-   US_COMBINE_LABELS,
-   US_OTHER,
+   TOKENIZE,
+   HEADER,
+   TOKENIZE_CLEANUP,
+   BRACE_CLEANUP,
+   FIX_SYMBOLS,
+   MARK_COMMENTS,
+   COMBINE_LABELS,
+   OTHER,
 
-   US_CLEANUP
+   CLEANUP
 };
 
 /* this set a limit to the name padding */
@@ -406,7 +406,7 @@ struct cp_data_t
    FILE            *fout;
    int             last_char;
    bool            do_check;
-   enum unc_stage  unc_stage;
+   unc_stage_e     unc_stage;
    int             check_fail_cnt;    // total failures
    bool            if_changed;
 

@@ -388,7 +388,7 @@ static void chunk_log_msg(chunk_t *chunk, const log_sev_t log, const char *str)
 
 static void chunk_log(chunk_t *pc, const char *text)
 {
-   if ((pc != NULL) && (cpd.unc_stage != US_TOKENIZE) && (cpd.unc_stage != US_CLEANUP))
+   if ((pc != NULL) && (cpd.unc_stage != unc_stage_e::TOKENIZE) && (cpd.unc_stage != unc_stage_e::CLEANUP))
    {
       const log_sev_t log   = LCHUNK;
       chunk_t         *prev = chunk_get_prev(pc);

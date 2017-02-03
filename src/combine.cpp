@@ -1728,7 +1728,7 @@ void fix_symbols(void)
    chunk_t *pc;
    chunk_t dummy;
 
-   cpd.unc_stage = US_FIX_SYMBOLS;
+   cpd.unc_stage = unc_stage_e::FIX_SYMBOLS;
 
    mark_define_expressions();
 
@@ -2816,7 +2816,7 @@ void combine_labels(void)
    bool    hit_case  = false;
    bool    hit_class = false;
 
-   cpd.unc_stage = US_COMBINE_LABELS;
+   cpd.unc_stage = unc_stage_e::COMBINE_LABELS;
 
    // need a stack to handle nesting inside of OC messages, which reset the scope
    ChunkStack cs;
@@ -4594,7 +4594,7 @@ void mark_comments(void)
 {
    LOG_FUNC_ENTRY();
 
-   cpd.unc_stage = US_MARK_COMMENTS;
+   cpd.unc_stage = unc_stage_e::MARK_COMMENTS;
 
    bool    prev_nl = true;
    chunk_t *cur    = chunk_get_head();
