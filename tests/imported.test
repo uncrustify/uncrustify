@@ -1,6 +1,8 @@
 # This file contains tests examples we copied from other distributions.
 #
 #
+# this suite is not an ordinary language test suite.
+#
 # adopt tests from UT
 10001 622_ifdef-indentation.cfg        cpp/622_ifdef-indentation.cpp
 10002 623_caret-spacing.cfg            cpp/623_caret-spacing.cpp

@@ -4,6 +4,8 @@
 # Range: 30000 - 39999
 # test.name  config.file  input.file
 
+# there are additional tests inside imported.test.
+
 30000 ben.cfg                          cpp/cout.cpp
 #30001 ben.cfg                          cpp/alt_tokens.cpp
 30002 ben.cfg                          cpp/constructor.cpp
