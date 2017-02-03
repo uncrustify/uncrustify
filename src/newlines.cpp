@@ -2350,7 +2350,7 @@ static void nl_create_one_liner(chunk_t *vbrace_open)
    /* See if we get a newline between the next text and the vbrace_close */
    chunk_t *tmp   = chunk_get_next_ncnl(vbrace_open);
    chunk_t *first = tmp;
-   if (!first || (get_token_pattern_class(first->type) != PATCLS_NONE))
+   if (!first || (get_token_pattern_class(first->type) != pattern_class_e::NONE))
    {
       return;
    }

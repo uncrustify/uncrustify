@@ -597,17 +597,17 @@ static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
       set_chunk_parent(pc, parent);
    }
 
-   pattern_class patcls = get_token_pattern_class(pc->type);
+   pattern_class_e patcls = get_token_pattern_class(pc->type);
 
    /** Create a stack entry for complex statements: */
    /** if, elseif, switch, for, while, synchronized, using, lock, with, version, CT_D_SCOPE_IF */
-   if (patcls == PATCLS_BRACED)
+   if (patcls == pattern_class_e::BRACED)
    {
       push_fmr_pse(frm, pc,
                    (pc->type == CT_DO) ? brace_stage_e::BRACE_DO : brace_stage_e::BRACE2,
                    "+ComplexBraced");
    }
-   else if (patcls == PATCLS_PBRACED)
+   else if (patcls == pattern_class_e::PBRACED)
    {
       brace_stage_e bs = brace_stage_e::PAREN1;
 
@@ -618,11 +618,11 @@ static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
       }
       push_fmr_pse(frm, pc, bs, "+ComplexParenBraced");
    }
-   else if (patcls == PATCLS_OPBRACED)
+   else if (patcls == pattern_class_e::OPBRACED)
    {
       push_fmr_pse(frm, pc, brace_stage_e::OP_PAREN1, "+ComplexOpParenBraced");
    }
-   else if (patcls == PATCLS_ELSE)
+   else if (patcls == pattern_class_e::ELSE)
    {
       push_fmr_pse(frm, pc, brace_stage_e::ELSEIF, "+ComplexElse");
    }

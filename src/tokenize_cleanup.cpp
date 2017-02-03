@@ -621,7 +621,7 @@ void tokenize_cleanup(void)
          chunk_t *tmp = chunk_get_next_ncnl(pc, CNAV_PREPROC);
          while ((tmp != NULL) && (tmp->type != CT_OC_END))
          {
-            if (get_token_pattern_class(tmp->type) != PATCLS_NONE)
+            if (get_token_pattern_class(tmp->type) != pattern_class_e::NONE)
             {
                LOG_FMT(LOBJCWORD, "@interface %zu:%zu change '%s' (%s) to CT_WORD\n",
                        pc->orig_line, pc->orig_col, tmp->text(),
