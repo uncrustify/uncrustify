@@ -17,7 +17,7 @@
  */
 struct CharTable
 {
-   static int chars[128];
+   static size_t chars[128];
 
    enum
    {
@@ -26,13 +26,9 @@ struct CharTable
    };
 
 
-   static inline int Get(int ch)
+   static inline size_t Get(size_t ch)
    {
-      if (ch < 0)
-      {
-         return(0);
-      }
-      if (ch < (int)ARRAY_SIZE(chars))
+      if (ch < ARRAY_SIZE(chars))
       {
          return(chars[ch]);
       }
@@ -47,20 +43,20 @@ struct CharTable
    }
 
 
-   static inline bool IsKw1(int ch)
+   static inline bool IsKw1(size_t ch)
    {
       return((Get(ch) & KW1) != 0);
    }
 
 
-   static inline bool IsKw2(int ch)
+   static inline bool IsKw2(size_t ch)
    {
       return((Get(ch) & KW2) != 0);
    }
 };
 
 #ifdef DEFINE_CHAR_TABLE
-int CharTable::chars[128] =
+size_t CharTable::chars[128] =
 {
    0x000, 0x000, 0x000, 0x000, 0x000, 0x000, 0x000, 0x000,   /* [........] */
    0x000, 0x000, 0x000, 0x000, 0x000, 0x000, 0x000, 0x000,   /* [........] */
