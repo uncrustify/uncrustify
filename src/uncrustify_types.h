@@ -41,20 +41,20 @@ using namespace std;
 /**
  * Brace stage enum used in brace_cleanup
  */
-enum brstage_e
+enum class brace_stage_e : unsigned int
 {
-   BS_NONE,
-   BS_PAREN1,     /* if/for/switch/while/synchronized */
-   BS_OP_PAREN1,  /* optional paren: catch () { */
-   BS_WOD_PAREN,  /* while of do parens */
-   BS_WOD_SEMI,   /* semicolon after while of do */
-   BS_BRACE_DO,   /* do */
-   BS_BRACE2,     /* if/else/for/switch/while */
-   BS_ELSE,       /* expecting 'else' after 'if' */
-   BS_ELSEIF,     /* expecting 'if' after 'else' */
-   BS_WHILE,      /* expecting 'while' after 'do' */
-   BS_CATCH,      /* expecting 'catch' or 'finally' after 'try' */
-   BS_CATCH_WHEN, /* optional 'when' after 'catch' */
+   NONE,
+   PAREN1,     /* if/for/switch/while/synchronized */
+   OP_PAREN1,  /* optional paren: catch () { */
+   WOD_PAREN,  /* while of do parens */
+   WOD_SEMI,   /* semicolon after while of do */
+   BRACE_DO,   /* do */
+   BRACE2,     /* if/else/for/switch/while */
+   ELSE,       /* expecting 'else' after 'if' */
+   ELSEIF,     /* expecting 'if' after 'else' */
+   WHILE,      /* expecting 'while' after 'do' */
+   CATCH,      /* expecting 'catch' or 'finally' after 'try' */
+   CATCH_WHEN, /* optional 'when' after 'catch' */
 };
 
 enum CharEncoding
@@ -86,22 +86,22 @@ struct indent_ptr_t
  */
 struct paren_stack_entry_t
 {
-   c_token_t    type;         /**< the type that opened the entry */
-   size_t       level;        /**< Level of opening type */
-   size_t       open_line;    /**< line that open symbol is on */
-   chunk_t      *pc;          /**< Chunk that opened the level */
-   int          brace_indent; /**< indent for braces - may not relate to indent */
-   size_t       indent;       /**< indent level (depends on use) */
-   size_t       indent_tmp;   /**< temporary indent level (depends on use) */
-   size_t       indent_tab;   /**< the 'tab' indent (always <= real column) */
-   bool         indent_cont;  /**< indent_continue was applied */
-   int          ref;
-   c_token_t    parent;       /**< if, for, function, etc */
-   brstage_e    stage;
-   bool         in_preproc;   /**< whether this was created in a preprocessor */
-   size_t       ns_cnt;
-   bool         non_vardef;   /**< Hit a non-vardef line */
-   indent_ptr_t ip;
+   c_token_t     type;         /**< the type that opened the entry */
+   size_t        level;        /**< Level of opening type */
+   size_t        open_line;    /**< line that open symbol is on */
+   chunk_t       *pc;          /**< Chunk that opened the level */
+   int           brace_indent; /**< indent for braces - may not relate to indent */
+   size_t        indent;       /**< indent level (depends on use) */
+   size_t        indent_tmp;   /**< temporary indent level (depends on use) */
+   size_t        indent_tab;   /**< the 'tab' indent (always <= real column) */
+   bool          indent_cont;  /**< indent_continue was applied */
+   int           ref;
+   c_token_t     parent;       /**< if, for, function, etc */
+   brace_stage_e stage;
+   bool          in_preproc;   /**< whether this was created in a preprocessor */
+   size_t        ns_cnt;
+   bool          non_vardef;   /**< Hit a non-vardef line */
+   indent_ptr_t  ip;
 };
 
 /* TODO: put this on a linked list */

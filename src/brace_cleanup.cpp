@@ -100,7 +100,7 @@ static size_t preproc_start(parse_frame_t *frm, chunk_t *pc)
          /*TODO: not sure about the next 3 lines */
          frm->pse_tos                 = 1;
          frm->pse[frm->pse_tos].type  = CT_PP_DEFINE;
-         frm->pse[frm->pse_tos].stage = BS_NONE;
+         frm->pse[frm->pse_tos].stage = brace_stage_e::NONE;
       }
       else
       {
@@ -123,7 +123,7 @@ static void print_stack(log_sev_t logsev, const char *str,
 
       for (size_t idx = 1; idx <= frm->pse_tos; idx++)
       {
-         if (frm->pse[idx].stage != BS_NONE)
+         if (frm->pse[idx].stage != brace_stage_e::NONE)
          {
             LOG_FMT(logsev, " [%s - %d]", get_token_name(frm->pse[idx].type),
                     frm->pse[idx].stage);
@@ -246,7 +246,7 @@ static bool maybe_while_of_do(chunk_t *pc)
 
 
 static void push_fmr_pse(parse_frame_t *frm, chunk_t *pc,
-                         brstage_e stage, const char *logtext)
+                         brace_stage_e stage, const char *logtext)
 {
    LOG_FUNC_ENTRY();
    if (frm->pse_tos < ((int)ARRAY_SIZE(frm->pse) - 1))
@@ -370,7 +370,7 @@ static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
    }
 
    /* Check the progression of complex statements */
-   if (frm->pse[frm->pse_tos].stage != BS_NONE)
+   if (frm->pse[frm->pse_tos].stage != brace_stage_e::NONE)
    {
       if (check_complex_statements(frm, pc))
       {
@@ -456,7 +456,7 @@ static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
          print_stack(LBCSPOP, "-Close  ", frm, pc);
 
          /* See if we are in a complex statement */
-         if (frm->pse[frm->pse_tos].stage != BS_NONE)
+         if (frm->pse[frm->pse_tos].stage != brace_stage_e::NONE)
          {
             handle_complex_close(frm, pc);
          }
@@ -467,7 +467,7 @@ static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
     * sparen, so we need to check cpd.consumed to see if the close sparen was
     * aleady handled.
     */
-   if (frm->pse[frm->pse_tos].stage == BS_WOD_SEMI)
+   if (frm->pse[frm->pse_tos].stage == brace_stage_e::WOD_SEMI)
    {
       chunk_t *tmp = pc;
 
@@ -520,7 +520,7 @@ static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
              (pc->type == CT_SPAREN_OPEN))
          {
             /* Set the parent for parens and change paren type */
-            if (frm->pse[frm->pse_tos].stage != BS_NONE)
+            if (frm->pse[frm->pse_tos].stage != brace_stage_e::NONE)
             {
                set_chunk_type(pc, CT_SPAREN_OPEN);
                parent = frm->pse[frm->pse_tos].type;
@@ -547,7 +547,7 @@ static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
          else  /* must be CT_BRACE_OPEN */
          {
             /* Set the parent for open braces */
-            if (frm->pse[frm->pse_tos].stage != BS_NONE)
+            if (frm->pse[frm->pse_tos].stage != brace_stage_e::NONE)
             {
                parent = frm->pse[frm->pse_tos].type;
             }
@@ -592,7 +592,7 @@ static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
       {
          frm->brace_level++;
       }
-      push_fmr_pse(frm, pc, BS_NONE, "+Open   ");
+      push_fmr_pse(frm, pc, brace_stage_e::NONE, "+Open   ");
       frm->pse[frm->pse_tos].parent = parent;
       set_chunk_parent(pc, parent);
    }
@@ -604,27 +604,27 @@ static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
    if (patcls == PATCLS_BRACED)
    {
       push_fmr_pse(frm, pc,
-                   (pc->type == CT_DO) ? BS_BRACE_DO : BS_BRACE2,
+                   (pc->type == CT_DO) ? brace_stage_e::BRACE_DO : brace_stage_e::BRACE2,
                    "+ComplexBraced");
    }
    else if (patcls == PATCLS_PBRACED)
    {
-      brstage_e bs = BS_PAREN1;
+      brace_stage_e bs = brace_stage_e::PAREN1;
 
       if ((pc->type == CT_WHILE) && maybe_while_of_do(pc))
       {
          set_chunk_type(pc, CT_WHILE_OF_DO);
-         bs = BS_WOD_PAREN;
+         bs = brace_stage_e::WOD_PAREN;
       }
       push_fmr_pse(frm, pc, bs, "+ComplexParenBraced");
    }
    else if (patcls == PATCLS_OPBRACED)
    {
-      push_fmr_pse(frm, pc, BS_OP_PAREN1, "+ComplexOpParenBraced");
+      push_fmr_pse(frm, pc, brace_stage_e::OP_PAREN1, "+ComplexOpParenBraced");
    }
    else if (patcls == PATCLS_ELSE)
    {
-      push_fmr_pse(frm, pc, BS_ELSEIF, "+ComplexElse");
+      push_fmr_pse(frm, pc, brace_stage_e::ELSEIF, "+ComplexElse");
    }
 
    /* Mark simple statement/expression starts
@@ -704,19 +704,19 @@ static bool check_complex_statements(parse_frame_t *frm, chunk_t *pc)
    c_token_t parent;
 
    /* Turn an optional paren into either a real paren or a brace */
-   if (frm->pse[frm->pse_tos].stage == BS_OP_PAREN1)
+   if (frm->pse[frm->pse_tos].stage == brace_stage_e::OP_PAREN1)
    {
-      frm->pse[frm->pse_tos].stage = (pc->type != CT_PAREN_OPEN) ? BS_BRACE2 : BS_PAREN1;
+      frm->pse[frm->pse_tos].stage = (pc->type != CT_PAREN_OPEN) ? brace_stage_e::BRACE2 : brace_stage_e::PAREN1;
    }
 
    /* Check for CT_ELSE after CT_IF */
-   while (frm->pse[frm->pse_tos].stage == BS_ELSE)
+   while (frm->pse[frm->pse_tos].stage == brace_stage_e::ELSE)
    {
       if (pc->type == CT_ELSE)
       {
          /* Replace CT_IF with CT_ELSE on the stack & we are done */
          frm->pse[frm->pse_tos].type  = CT_ELSE;
-         frm->pse[frm->pse_tos].stage = BS_ELSEIF;
+         frm->pse[frm->pse_tos].stage = brace_stage_e::ELSEIF;
          print_stack(LBCSSWAP, "=Swap   ", frm, pc);
          return(true);
       }
@@ -731,7 +731,7 @@ static bool check_complex_statements(parse_frame_t *frm, chunk_t *pc)
    }
 
    /* Check for CT_IF after CT_ELSE */
-   if (frm->pse[frm->pse_tos].stage == BS_ELSEIF)
+   if (frm->pse[frm->pse_tos].stage == brace_stage_e::ELSEIF)
    {
       if (pc->type == CT_IF)
       {
@@ -741,23 +741,23 @@ static bool check_complex_statements(parse_frame_t *frm, chunk_t *pc)
             /* Replace CT_ELSE with CT_IF */
             set_chunk_type(pc, CT_ELSEIF);
             frm->pse[frm->pse_tos].type  = CT_ELSEIF;
-            frm->pse[frm->pse_tos].stage = BS_PAREN1;
+            frm->pse[frm->pse_tos].stage = brace_stage_e::PAREN1;
             return(true);
          }
       }
 
       /* Jump to the 'expecting brace' stage */
-      frm->pse[frm->pse_tos].stage = BS_BRACE2;
+      frm->pse[frm->pse_tos].stage = brace_stage_e::BRACE2;
    }
 
    /* Check for CT_CATCH or CT_FINALLY after CT_TRY or CT_CATCH */
-   while (frm->pse[frm->pse_tos].stage == BS_CATCH)
+   while (frm->pse[frm->pse_tos].stage == brace_stage_e::CATCH)
    {
       if ((pc->type == CT_CATCH) || (pc->type == CT_FINALLY))
       {
          /* Replace CT_TRY with CT_CATCH on the stack & we are done */
          frm->pse[frm->pse_tos].type  = pc->type;
-         frm->pse[frm->pse_tos].stage = (pc->type == CT_CATCH) ? BS_CATCH_WHEN : BS_BRACE2;
+         frm->pse[frm->pse_tos].stage = (pc->type == CT_CATCH) ? brace_stage_e::CATCH_WHEN : brace_stage_e::BRACE2;
          print_stack(LBCSSWAP, "=Swap   ", frm, pc);
          return(true);
       }
@@ -772,37 +772,37 @@ static bool check_complex_statements(parse_frame_t *frm, chunk_t *pc)
    }
 
    /* Check for optional paren and optional CT_WHEN after CT_CATCH */
-   if (frm->pse[frm->pse_tos].stage == BS_CATCH_WHEN)
+   if (frm->pse[frm->pse_tos].stage == brace_stage_e::CATCH_WHEN)
    {
       if (pc->type == CT_PAREN_OPEN) // this is for the paren after "catch"
       {
          /* Replace CT_PAREN_OPEN with CT_SPAREN_OPEN */
          set_chunk_type(pc, CT_SPAREN_OPEN);
          frm->pse[frm->pse_tos].type  = pc->type;
-         frm->pse[frm->pse_tos].stage = BS_PAREN1;
+         frm->pse[frm->pse_tos].stage = brace_stage_e::PAREN1;
          return(false);
       }
       else if (pc->type == CT_WHEN)
       {
          frm->pse[frm->pse_tos].type  = pc->type;
-         frm->pse[frm->pse_tos].stage = BS_OP_PAREN1;
+         frm->pse[frm->pse_tos].stage = brace_stage_e::OP_PAREN1;
          return(true);
       }
       else if (pc->type == CT_BRACE_OPEN)
       {
-         frm->pse[frm->pse_tos].stage = BS_BRACE2;
+         frm->pse[frm->pse_tos].stage = brace_stage_e::BRACE2;
          return(false);
       }
    }
 
    /* Check for CT_WHILE after the CT_DO */
-   if (frm->pse[frm->pse_tos].stage == BS_WHILE)
+   if (frm->pse[frm->pse_tos].stage == brace_stage_e::WHILE)
    {
       if (pc->type == CT_WHILE)
       {
          set_chunk_type(pc, CT_WHILE_OF_DO);
          frm->pse[frm->pse_tos].type  = CT_WHILE_OF_DO; //CT_WHILE;
-         frm->pse[frm->pse_tos].stage = BS_WOD_PAREN;
+         frm->pse[frm->pse_tos].stage = brace_stage_e::WOD_PAREN;
          return(true);
       }
 
@@ -815,8 +815,8 @@ static bool check_complex_statements(parse_frame_t *frm, chunk_t *pc)
 
    /* Insert a CT_VBRACE_OPEN, if needed */
    if ((pc->type != CT_BRACE_OPEN) &&
-       ((frm->pse[frm->pse_tos].stage == BS_BRACE2) ||
-        (frm->pse[frm->pse_tos].stage == BS_BRACE_DO)))
+       ((frm->pse[frm->pse_tos].stage == brace_stage_e::BRACE2) ||
+        (frm->pse[frm->pse_tos].stage == brace_stage_e::BRACE_DO)))
    {
       if ((cpd.lang_flags & LANG_CS) &&
           (pc->type == CT_USING_STMT) &&
@@ -834,7 +834,7 @@ static bool check_complex_statements(parse_frame_t *frm, chunk_t *pc)
          frm->level++;
          frm->brace_level++;
 
-         push_fmr_pse(frm, vbrace, BS_NONE, "+VBrace ");
+         push_fmr_pse(frm, vbrace, brace_stage_e::NONE, "+VBrace ");
          frm->pse[frm->pse_tos].parent = parent;
 
          /* update the level of pc */
@@ -853,8 +853,8 @@ static bool check_complex_statements(parse_frame_t *frm, chunk_t *pc)
 
    /* Verify open paren in complex statement */
    if ((pc->type != CT_PAREN_OPEN) &&
-       ((frm->pse[frm->pse_tos].stage == BS_PAREN1) ||
-        (frm->pse[frm->pse_tos].stage == BS_WOD_PAREN)))
+       ((frm->pse[frm->pse_tos].stage == brace_stage_e::PAREN1) ||
+        (frm->pse[frm->pse_tos].stage == brace_stage_e::WOD_PAREN)))
    {
       LOG_FMT(LWARN, "%s:%zu Error: Expected '(', got '%s' for '%s'\n",
               cpd.filename, pc->orig_line, pc->text(),
@@ -875,27 +875,27 @@ static bool handle_complex_close(parse_frame_t *frm, chunk_t *pc)
    LOG_FUNC_ENTRY();
    chunk_t *next;
 
-   if (frm->pse[frm->pse_tos].stage == BS_PAREN1)
+   if (frm->pse[frm->pse_tos].stage == brace_stage_e::PAREN1)
    {
       if ((pc->next != NULL) && (pc->next->type == CT_WHEN))
       {
          frm->pse[frm->pse_tos].type  = pc->type;
-         frm->pse[frm->pse_tos].stage = BS_CATCH_WHEN;
+         frm->pse[frm->pse_tos].stage = brace_stage_e::CATCH_WHEN;
          return(true);
       }
       else
       {
          /* PAREN1 always => BRACE2 */
-         frm->pse[frm->pse_tos].stage = BS_BRACE2;
+         frm->pse[frm->pse_tos].stage = brace_stage_e::BRACE2;
       }
    }
-   else if (frm->pse[frm->pse_tos].stage == BS_BRACE2)
+   else if (frm->pse[frm->pse_tos].stage == brace_stage_e::BRACE2)
    {
       /* BRACE2: IF => ELSE, anyting else => close */
       if ((frm->pse[frm->pse_tos].type == CT_IF) ||
           (frm->pse[frm->pse_tos].type == CT_ELSEIF))
       {
-         frm->pse[frm->pse_tos].stage = BS_ELSE;
+         frm->pse[frm->pse_tos].stage = brace_stage_e::ELSE;
 
          /* If the next chunk isn't CT_ELSE, close the statement */
          next = chunk_get_next_ncnl(pc);
@@ -912,7 +912,7 @@ static bool handle_complex_close(parse_frame_t *frm, chunk_t *pc)
       else if ((frm->pse[frm->pse_tos].type == CT_TRY) ||
                (frm->pse[frm->pse_tos].type == CT_CATCH))
       {
-         frm->pse[frm->pse_tos].stage = BS_CATCH;
+         frm->pse[frm->pse_tos].stage = brace_stage_e::CATCH;
 
          /* If the next chunk isn't CT_CATCH or CT_FINALLY, close the statement */
          next = chunk_get_next_ncnl(pc);
@@ -930,7 +930,7 @@ static bool handle_complex_close(parse_frame_t *frm, chunk_t *pc)
       }
       else
       {
-         LOG_FMT(LNOTE, "%s: close_statement on %s BS_BRACE2\n", __func__,
+         LOG_FMT(LNOTE, "%s: close_statement on %s brace_stage_e::BRACE2\n", __func__,
                  get_token_name(frm->pse[frm->pse_tos].type));
          frm->pse_tos--;
          print_stack(LBCSPOP, "-HCC B2 ", frm, pc);
@@ -940,20 +940,20 @@ static bool handle_complex_close(parse_frame_t *frm, chunk_t *pc)
          }
       }
    }
-   else if (frm->pse[frm->pse_tos].stage == BS_BRACE_DO)
+   else if (frm->pse[frm->pse_tos].stage == brace_stage_e::BRACE_DO)
    {
-      frm->pse[frm->pse_tos].stage = BS_WHILE;
+      frm->pse[frm->pse_tos].stage = brace_stage_e::WHILE;
    }
-   else if (frm->pse[frm->pse_tos].stage == BS_WOD_PAREN)
+   else if (frm->pse[frm->pse_tos].stage == brace_stage_e::WOD_PAREN)
    {
-      LOG_FMT(LNOTE, "%s: close_statement on %s BS_WOD_PAREN\n", __func__,
+      LOG_FMT(LNOTE, "%s: close_statement on %s brace_stage_e::WOD_PAREN\n", __func__,
               get_token_name(frm->pse[frm->pse_tos].type));
-      frm->pse[frm->pse_tos].stage = BS_WOD_SEMI;
+      frm->pse[frm->pse_tos].stage = brace_stage_e::WOD_SEMI;
       print_stack(LBCSPOP, "-HCC WoDP ", frm, pc);
    }
-   else if (frm->pse[frm->pse_tos].stage == BS_WOD_SEMI)
+   else if (frm->pse[frm->pse_tos].stage == brace_stage_e::WOD_SEMI)
    {
-      LOG_FMT(LNOTE, "%s: close_statement on %s BS_WOD_SEMI\n", __func__,
+      LOG_FMT(LNOTE, "%s: close_statement on %s brace_stage_e::WOD_SEMI\n", __func__,
               get_token_name(frm->pse[frm->pse_tos].type));
       frm->pse_tos--;
       print_stack(LBCSPOP, "-HCC WoDS ", frm, pc);
@@ -1089,7 +1089,7 @@ bool close_statement(parse_frame_t *frm, chunk_t *pc)
    }
 
    /* See if we are done with a complex statement */
-   if (frm->pse[frm->pse_tos].stage != BS_NONE)
+   if (frm->pse[frm->pse_tos].stage != brace_stage_e::NONE)
    {
       if (handle_complex_close(frm, vbc))
       {
