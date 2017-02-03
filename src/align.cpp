@@ -1413,18 +1413,18 @@ chunk_t *align_nl_cont(chunk_t *start)
 }
 
 
-enum CmtAlignType
+enum class comment_align_e : unsigned int
 {
-   CAT_REGULAR,
-   CAT_BRACE,
-   CAT_ENDIF,
+   REGULAR,
+   BRACE,
+   ENDIF,
 };
 
 
-static CmtAlignType get_comment_align_type(chunk_t *cmt)
+static comment_align_e get_comment_align_type(chunk_t *cmt)
 {
-   chunk_t      *prev;
-   CmtAlignType cmt_type = CAT_REGULAR;
+   chunk_t         *prev;
+   comment_align_e cmt_type = comment_align_e::REGULAR;
 
    if (!cpd.settings[UO_align_right_cmt_mix].b &&
        ((prev = chunk_get_prev(cmt)) != NULL))
@@ -1437,7 +1437,7 @@ static CmtAlignType get_comment_align_type(chunk_t *cmt)
          /* REVISIT: someone may want this configurable */
          if ((cmt->column - (prev->column + prev->len())) < 3)
          {
-            cmt_type = (prev->type == CT_PP_ENDIF) ? CAT_ENDIF : CAT_BRACE;
+            cmt_type = (prev->type == CT_PP_ENDIF) ? comment_align_e::ENDIF : comment_align_e::BRACE;
          }
       }
    }
@@ -1448,15 +1448,15 @@ static CmtAlignType get_comment_align_type(chunk_t *cmt)
 chunk_t *align_trailing_comments(chunk_t *start)
 {
    LOG_FUNC_ENTRY();
-   size_t       min_col  = 0;
-   size_t       min_orig = 0;
-   chunk_t      *pc      = start;
-   size_t       nl_count = 0;
-   ChunkStack   cs;
-   size_t       col;
-   size_t       intended_col = cpd.settings[UO_align_right_cmt_at_col].u;
-   CmtAlignType cmt_type_cur;
-   CmtAlignType cmt_type_start = get_comment_align_type(pc);
+   size_t          min_col  = 0;
+   size_t          min_orig = 0;
+   chunk_t         *pc      = start;
+   size_t          nl_count = 0;
+   ChunkStack      cs;
+   size_t          col;
+   size_t          intended_col = cpd.settings[UO_align_right_cmt_at_col].u;
+   comment_align_e cmt_type_cur;
+   comment_align_e cmt_type_start = get_comment_align_type(pc);
 
    LOG_FMT(LALADD, "%s: start on line=%zu\n",
            __func__, pc->orig_line);
