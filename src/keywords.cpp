@@ -446,7 +446,7 @@ int load_keyword_file(const char *filename)
       {
          // a comment line
          *ptr = 0;
-         continue;
+         // don't use the rest of the line
       }
 
       size_t argc = Args::SplitLine(buf, args, NUMBEROFARGS);
