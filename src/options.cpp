@@ -230,9 +230,9 @@ void register_options(void)
                   "The original size of tabs in the input. Default=8", "", 1, 32);
    unc_add_option("output_tab_size", UO_output_tab_size, AT_UNUM,
                   "The size of tabs in the output (only used if align_with_tabs=true). Default=8", "", 1, 32);
-   unc_add_option("string_escape_char", UO_string_escape_char, AT_NUM,
+   unc_add_option("string_escape_char", UO_string_escape_char, AT_UNUM,
                   "The ASCII value of the string escape char, usually 92 (\\) or 94 (^). (Pawn)", "", 0, 255);
-   unc_add_option("string_escape_char2", UO_string_escape_char2, AT_NUM,
+   unc_add_option("string_escape_char2", UO_string_escape_char2, AT_UNUM,
                   "Alternate string escape char for Pawn. Only works right before the quote char.", "", 0, 255);
    unc_add_option("string_replace_tab_chars", UO_string_replace_tab_chars, AT_BOOL,
                   "Replace tab characters found in string literals with the escape sequence \\t instead.");
@@ -1585,7 +1585,7 @@ void register_options(void)
                   "Default=True");
 
    unc_begin_group(UG_warnlevels, "Warn levels - 1: error, 2: warning (default), 3: note");
-   unc_add_option("warn_level_tabs_found_in_verbatim_string_literals", UO_warn_level_tabs_found_in_verbatim_string_literals, AT_NUM,
+   unc_add_option("warn_level_tabs_found_in_verbatim_string_literals", UO_warn_level_tabs_found_in_verbatim_string_literals, AT_UNUM,
                   "Warning is given if doing tab-to-\\t replacement and we have found one in a C# verbatim string literal.", "", 1, 3);
 } // register_options
 
