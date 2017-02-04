@@ -28,7 +28,7 @@ int load_keyword_file(const char *filename);
  * @param len     The length of the text
  * @return        CT_WORD (no match) or the keyword token
  */
-c_token_t find_keyword_type(const char *word, int len);
+c_token_t find_keyword_type(const char *word, size_t len);
 
 
 /**
