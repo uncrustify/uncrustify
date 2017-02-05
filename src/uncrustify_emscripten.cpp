@@ -120,31 +120,13 @@ int load_option_fileChar(char *configString)
 }
 
 
-enum class lang_flags : int
-{
-   LANG_C_    = LANG_C,
-   LANG_CPP_  = LANG_CPP,
-   LANG_D_    = LANG_D,
-   LANG_CS_   = LANG_CS,
-   LANG_VALA_ = LANG_VALA,
-   LANG_JAVA_ = LANG_JAVA,
-   LANG_PAWN_ = LANG_PAWN,
-   LANG_OC_   = LANG_OC,
-   LANG_OCPP_ = LANG_OC | LANG_CPP,
-   LANG_ECMA_ = LANG_ECMA,
-//TODO ???? see language_names[] uncrustify.cpp, what about flags ?
-//    LANG_ALLC_ = LANG_ALLC,
-//    LANG_ALL_ = LANG_ALL,
-};
-
-
 /**
  *  sets the language of the to be formatted text
  *
  *  @param langIDX: ID of the language, see enum lang_flags or
  *                  uncrustify_types.h
  */
-void set_language(lang_flags langIDX)
+void set_language(lang_flag_e langIDX)
 {
    cpd.lang_flags = static_cast<int>(langIDX);
 }
@@ -563,7 +545,7 @@ intptr_t _uncrustify(intptr_t _file, bool frag)
  *
  * @return pointer to the formatted file char* string
  */
-intptr_t _uncrustify(intptr_t file, bool frag, lang_flags langIDX)
+intptr_t _uncrustify(intptr_t file, bool frag, lang_flag_e langIDX)
 {
    auto tmpLang = cpd.lang_flags;
 
@@ -1580,20 +1562,19 @@ EMSCRIPTEN_BINDINGS(MainModule)
       .value(STRINGIFY(CT_NOTHROW), CT_NOTHROW)
       .value(STRINGIFY(CT_WORD_), CT_WORD_);
 
-   enum_<lang_flags>(STRINGIFY(lang_flags))
-      .value(STRINGIFY(LANG_C_), lang_flags::LANG_C_)
-      .value(STRINGIFY(LANG_CPP_), lang_flags::LANG_CPP_)
-      .value(STRINGIFY(LANG_D_), lang_flags::LANG_D_)
-      .value(STRINGIFY(LANG_CS_), lang_flags::LANG_CS_)
-      .value(STRINGIFY(LANG_VALA_), lang_flags::LANG_VALA_)
-      .value(STRINGIFY(LANG_JAVA_), lang_flags::LANG_JAVA_)
-      .value(STRINGIFY(LANG_PAWN_), lang_flags::LANG_PAWN_)
-      .value(STRINGIFY(LANG_OC_), lang_flags::LANG_OC_)
-      .value(STRINGIFY(LANG_OCPP_), lang_flags::LANG_OCPP_)
-      .value(STRINGIFY(LANG_ECMA_), lang_flags::LANG_ECMA_);
+   enum_<lang_flag_e>(STRINGIFY(lang_flag_e))
+      .value(STRINGIFY(LANG_C), LANG_C)
+      .value(STRINGIFY(LANG_CPP), LANG_CPP)
+      .value(STRINGIFY(LANG_D), LANG_D)
+      .value(STRINGIFY(LANG_CS), LANG_CS)
+      .value(STRINGIFY(LANG_VALA), LANG_VALA)
+      .value(STRINGIFY(LANG_JAVA), LANG_JAVA)
+      .value(STRINGIFY(LANG_PAWN), LANG_PAWN)
+      .value(STRINGIFY(LANG_OC), LANG_OC)
+      .value(STRINGIFY(LANG_ECMA), LANG_ECMA);
 //TODO ???? see language_names[] uncrustify.cpp, what about flags ?
-//    .value( STRINGIFY( LANG_ALLC_ ), lang_flags::LANG_ALLC_ )
-//    .value( STRINGIFY( LANG_ALL_ ), lang_flags::LANG_ALL_ )
+//    .value( STRINGIFY( LANG_ALLC_ ), LANG_ALLC_ )
+//    .value( STRINGIFY( LANG_ALL_ ), LANG_ALL_ )
 
 
    class_<option_map_value>(STRINGIFY(option_map_value))
@@ -1648,7 +1629,7 @@ EMSCRIPTEN_BINDINGS(MainModule)
 
    emscripten::function(STRINGIFY(set_language), &set_language);
 
-   emscripten::function(STRINGIFY(_uncrustify), select_overload<intptr_t(intptr_t, bool, lang_flags)>(&_uncrustify));
+   emscripten::function(STRINGIFY(_uncrustify), select_overload<intptr_t(intptr_t, bool, lang_flag_e)>(&_uncrustify));
    emscripten::function(STRINGIFY(_uncrustify), select_overload<intptr_t(intptr_t, bool)>(&_uncrustify));
    emscripten::function(STRINGIFY(_uncrustify), select_overload<intptr_t(intptr_t)>(&_uncrustify));
 }

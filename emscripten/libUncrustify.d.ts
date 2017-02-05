@@ -1094,7 +1094,7 @@ declare namespace LibUncrustify
 
     export interface Uncrustify
     {
-        lang_flags : LangFlags;
+        lang_flag_e : LangFlag;
         argtype_e : Argtype;
         uncrustify_options : Options;
         uncrustify_groups : Groups;
