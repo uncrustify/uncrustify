@@ -5759,7 +5759,7 @@ static void handle_oc_property_decl(chunk_t *os)
 {
    if (cpd.settings[UO_mod_sort_oc_properties].b)
    {
-      typedef std::vector<chunk_t *> ChunkGroup;
+      using ChunkGroup = std::vector<chunk_t *>;
 
       chunk_t                 *next       = chunk_get_next(os);
       chunk_t                 *open_paren = nullptr;

@@ -880,10 +880,10 @@ string lineends_to_string(lineends_e linends);
 string tokenpos_to_string(tokenpos_e tokenpos);
 string op_val_to_string(argtype_e argtype, op_val_t op_val);
 
-typedef map<uncrustify_options, option_map_value>::iterator   option_name_map_it;
-typedef map<uncrustify_groups, group_map_value>::iterator     group_map_it;
-typedef group_map_value_options_t::iterator                   option_list_it;
-typedef group_map_value_options_t::const_iterator             option_list_cit;
+using option_name_map_it = map<uncrustify_options, option_map_value>::iterator;
+using group_map_it       = map<uncrustify_groups, group_map_value>::iterator;
+using option_list_it     = group_map_value_options_t::iterator;
+using option_list_cit    = group_map_value_options_t::const_iterator;
 
 
 #endif /* OPTIONS_H_INCLUDED */

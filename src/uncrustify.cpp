@@ -2140,7 +2140,7 @@ const char *get_file_extension(int &idx)
 
 // maps a file extension to a language flag. include the ".", as in ".c".
 // These ARE case sensitive user file extensions.
-typedef std::map<string, string> extension_map_t;
+using extension_map_t = std::map<string, string>;
 static extension_map_t g_ext_map;
 
 

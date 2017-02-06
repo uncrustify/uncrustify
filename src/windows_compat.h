@@ -15,16 +15,18 @@
 
 #define NO_MACRO_VARARG
 
-typedef char                 CHAR;
 
-typedef signed char          INT8;
-typedef short                INT16;
-typedef int                  INT32;
+using CHAR = char;
 
-typedef unsigned char        UINT8;
-typedef unsigned short       UINT16;
-typedef unsigned int         UINT32;
-typedef unsigned long long   UINT64;
+using INT8  = signed char;
+using INT16 = short;
+using INT32 = int;
+
+using UINT8  = unsigned char;
+using UINT16 = unsigned short;
+using UINT32 = unsigned int;
+using UINT64 = unsigned long long;
+
 
 #ifndef PRIx64
 #define PRIx64    "llx"

@@ -16,7 +16,7 @@
 #include "space.h"
 
 
-typedef ListManager<chunk_t> ChunkList_t;
+using ChunkList_t = ListManager<chunk_t>;
 
 /** use this enum to define in what direction or location an
  * operation shall be performed. */
@@ -34,7 +34,7 @@ enum class direction_e : unsigned int
  * for a function pointer of type
  * bool function(chunk_t *pc)
  ******************************************************************************/
-typedef bool (*check_t)(chunk_t *pc);
+using check_t  = bool (*)(chunk_t *);
 
 
 /***************************************************************************//**
@@ -44,7 +44,7 @@ typedef bool (*check_t)(chunk_t *pc);
  * for a function pointer of type
  * chunk_t *function(chunk_t *cur, nav_t scope)
  ******************************************************************************/
-typedef chunk_t * (*search_t)(chunk_t *cur, scope_e scope);
+using search_t = chunk_t * (*)(chunk_t *, scope_e);
 
 
 /**
