@@ -1772,13 +1772,10 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
 
    // this table lists out all combos where a space should NOT be present
    // CT_UNKNOWN is a wildcard.
-   for (size_t idx = 0; idx < ARRAY_SIZE(no_space_table); idx++)
+   for (auto it : no_space_table)
    {
-      if (((no_space_table[idx].first == CT_UNKNOWN) ||
-           (no_space_table[idx].first == first->type))
-          &&
-          ((no_space_table[idx].second == CT_UNKNOWN) ||
-           (no_space_table[idx].second == second->type)))
+      if (((it.first == CT_UNKNOWN) || (it.first == first->type))
+          && ((it.second == CT_UNKNOWN) || (it.second == second->type)))
       {
          log_rule("REMOVE from no_space_table");
          return(AV_REMOVE);

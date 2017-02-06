@@ -923,9 +923,9 @@ static void align_same_func_call_params(void)
       {
          if (chunk_is_newline(pc))
          {
-            for (size_t idx = 0; idx < as.size(); idx++)
+            for (auto &as_v : as)
             {
-               as[idx].NewLines(pc->nl_count);
+               as_v.NewLines(pc->nl_count);
             }
             fcn_as.NewLines(pc->nl_count);
          }
@@ -938,9 +938,9 @@ static void align_same_func_call_params(void)
 
                /* Flush it all! */
                fcn_as.Flush();
-               for (size_t idx = 0; idx < as.size(); idx++)
+               for (auto &as_v : as)
                {
-                  as[idx].Flush();
+                  as_v.Flush();
                }
                align_root = nullptr;
             }
@@ -1002,9 +1002,9 @@ static void align_same_func_call_params(void)
 
             /* Flush it all! */
             fcn_as.Flush();
-            for (size_t idx = 0; idx < as.size(); idx++)
+            for (auto &as_v : as)
             {
-               as[idx].Flush();
+               as_v.Flush();
             }
             align_root = nullptr;
          }
@@ -1055,9 +1055,9 @@ static void align_same_func_call_params(void)
    {
       LOG_FMT(LASFCP, "  ++ Ended with %zu fcns\n", align_len);
       fcn_as.End();
-      for (size_t idx = 0; idx < as.size(); idx++)
+      for (auto &as_v : as)
       {
-         as[idx].End();
+         as_v.End();
       }
    }
 } // align_same_func_call_params

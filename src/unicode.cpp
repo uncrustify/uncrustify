@@ -74,13 +74,13 @@ static bool is_ascii(const vector<UINT8> &data, size_t &non_ascii_cnt, size_t &z
 {
    non_ascii_cnt = 0;
    zero_cnt      = 0;
-   for (size_t idx = 0; idx < data.size(); idx++)
+   for (unsigned char value : data)
    {
-      if (data[idx] & 0x80)
+      if (value & 0x80)
       {
          non_ascii_cnt++;
       }
-      if (!data[idx])
+      if (!value)
       {
          zero_cnt++;
       }
@@ -437,9 +437,9 @@ static void write_utf8(int ch)
    vv.reserve(6);
 
    encode_utf8(ch, vv);
-   for (size_t idx = 0; idx < vv.size(); idx++)
+   for (unsigned char char_val : vv)
    {
-      write_byte(vv[idx]);
+      write_byte(char_val);
    }
 }
 

@@ -81,9 +81,9 @@ void print_universal_indent_cfg(FILE *pfile)
          continue;
       }
 
-      for (option_list_cit it = p_grp->options.begin(); it != p_grp->options.end(); it++)
+      for (auto optionEnumVal : p_grp->options)
       {
-         const option_map_value *option = get_option_name(*it);
+         const option_map_value *option = get_option_name(optionEnumVal);
 
          // Create a better readable name from the options name
          // by replacing '_' by a space and use some upper case characters.

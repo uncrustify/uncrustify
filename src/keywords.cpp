@@ -478,35 +478,35 @@ int load_keyword_file(const char *filename)
 
 void print_keywords(FILE *pfile)
 {
-   for (dkwmap::iterator it = dkwm.begin(); it != dkwm.end(); ++it)
+   for (const auto &keyword_pair : dkwm)
    {
-      c_token_t tt = (*it).second;
+      c_token_t tt = keyword_pair.second;
       if (tt == CT_TYPE)
       {
          fprintf(pfile, "type %*.s%s\n",
-                 MAX_OPTION_NAME_LEN - 4, " ", (*it).first.c_str());
+                 MAX_OPTION_NAME_LEN - 4, " ", keyword_pair.first.c_str());
       }
       else if (tt == CT_MACRO_OPEN)
       {
          fprintf(pfile, "macro-open %*.s%s\n",
-                 MAX_OPTION_NAME_LEN - 11, " ", (*it).first.c_str());
+                 MAX_OPTION_NAME_LEN - 11, " ", keyword_pair.first.c_str());
       }
       else if (tt == CT_MACRO_CLOSE)
       {
          fprintf(pfile, "macro-close %*.s%s\n",
-                 MAX_OPTION_NAME_LEN - 12, " ", (*it).first.c_str());
+                 MAX_OPTION_NAME_LEN - 12, " ", keyword_pair.first.c_str());
       }
       else if (tt == CT_MACRO_ELSE)
       {
          fprintf(pfile, "macro-else %*.s%s\n",
-                 MAX_OPTION_NAME_LEN - 11, " ", (*it).first.c_str());
+                 MAX_OPTION_NAME_LEN - 11, " ", keyword_pair.first.c_str());
       }
       else
       {
          const char *tn = get_token_name(tt);
 
          fprintf(pfile, "set %s %*.s%s\n", tn,
-                 int(MAX_OPTION_NAME_LEN - (4 + strlen(tn))), " ", (*it).first.c_str());
+                 int(MAX_OPTION_NAME_LEN - (4 + strlen(tn))), " ", keyword_pair.first.c_str());
       }
    }
 }
