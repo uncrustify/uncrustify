@@ -66,7 +66,7 @@ chunk_t *pawn_add_vsemi_after(chunk_t *pc)
    }
 
    chunk_t *next = chunk_get_next_nc(pc);
-   if ((next != NULL) &&
+   if ((next != nullptr) &&
        ((next->type == CT_VSEMICOLON) ||
         (next->type == CT_SEMICOLON)))
    {
@@ -94,14 +94,14 @@ void pawn_scrub_vsemi(void)
       return;
    }
 
-   for (chunk_t *pc = chunk_get_head(); pc != NULL; pc = chunk_get_next(pc))
+   for (chunk_t *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next(pc))
    {
       if (pc->type != CT_VSEMICOLON)
       {
          continue;
       }
       chunk_t *prev = chunk_get_prev_ncnl(pc);
-      if ((prev != NULL) && (prev->type == CT_BRACE_CLOSE))
+      if ((prev != nullptr) && (prev->type == CT_BRACE_CLOSE))
       {
          if ((prev->parent_type == CT_IF) ||
              (prev->parent_type == CT_ELSE) ||
@@ -119,7 +119,7 @@ void pawn_scrub_vsemi(void)
 static bool pawn_continued(chunk_t *pc, size_t br_level)
 {
    LOG_FUNC_ENTRY();
-   if (pc == NULL)
+   if (pc == nullptr)
    {
       return(false);
    }
@@ -167,7 +167,7 @@ void pawn_prescan(void)
     * any questionable stuff */
    bool    did_nl = true;
    chunk_t *pc    = chunk_get_head();
-   while (pc != NULL)
+   while (pc != nullptr)
    {
       if (did_nl && (pc->type != CT_PREPROC) &&
           !chunk_is_newline(pc) && (pc->level == 0))
@@ -176,7 +176,7 @@ void pawn_prescan(void)
          pc = pawn_process_line(pc);
       }
       /* note that continued lines are ignored */
-      if (pc != NULL)
+      if (pc != nullptr)
       {
          did_nl = (pc->type == CT_NEWLINE);
       }
@@ -200,13 +200,13 @@ static chunk_t *pawn_process_line(chunk_t *start)
    }
 
    /* if a open paren is found before an assign, then this is a function */
-   chunk_t *fcn = NULL;
+   chunk_t *fcn = nullptr;
    if (start->type == CT_WORD)
    {
       fcn = start;
    }
    chunk_t *pc = start;
-   while (((pc = chunk_get_next_nc(pc)) != NULL) &&
+   while (((pc = chunk_get_next_nc(pc)) != nullptr) &&
           !chunk_is_str(pc, "(", 1) &&
           (pc->type != CT_ASSIGN) &&
           (pc->type != CT_NEWLINE))
@@ -220,7 +220,7 @@ static chunk_t *pawn_process_line(chunk_t *start)
       }
    }
 
-   if (pc != NULL)
+   if (pc != nullptr)
    {
       if (pc->type == CT_ASSIGN)
       {
@@ -228,7 +228,7 @@ static chunk_t *pawn_process_line(chunk_t *start)
       }
    }
 
-   if (fcn != NULL)
+   if (fcn != nullptr)
    {
       //LOG_FMT(LSYS, "FUNCTION: %s\n", fcn->text());
       return(pawn_mark_function0(start, fcn));
@@ -249,10 +249,10 @@ static chunk_t *pawn_process_line(chunk_t *start)
 static chunk_t *pawn_process_variable(chunk_t *start)
 {
    LOG_FUNC_ENTRY();
-   chunk_t *prev = NULL;
+   chunk_t *prev = nullptr;
    chunk_t *pc   = start;
 
-   while ((pc = chunk_get_next_nc(pc)) != NULL)
+   while ((pc = chunk_get_next_nc(pc)) != nullptr)
    {
       if ((pc->type == CT_NEWLINE) &&
           !pawn_continued(prev, start->level))
@@ -277,9 +277,9 @@ void pawn_add_virtual_semicolons(void)
    /** Add Pawn virtual semicolons */
    if (cpd.lang_flags & LANG_PAWN)
    {
-      chunk_t *prev = NULL;
+      chunk_t *prev = nullptr;
       chunk_t *pc   = chunk_get_head();
-      while ((pc = chunk_get_next(pc)) != NULL)
+      while ((pc = chunk_get_next(pc)) != nullptr)
       {
          if (!chunk_is_comment(pc) &&
              !chunk_is_newline(pc) &&
@@ -288,7 +288,7 @@ void pawn_add_virtual_semicolons(void)
          {
             prev = pc;
          }
-         if ((prev == NULL) ||
+         if ((prev == nullptr) ||
              ((pc->type != CT_NEWLINE) &&
               (pc->type != CT_BRACE_CLOSE) &&
               (pc->type != CT_VBRACE_CLOSE)))
@@ -304,7 +304,7 @@ void pawn_add_virtual_semicolons(void)
              !pawn_continued(prev, prev->brace_level))
          {
             pawn_add_vsemi_after(prev);
-            prev = NULL;
+            prev = nullptr;
          }
       }
    }
@@ -320,7 +320,7 @@ static chunk_t *pawn_mark_function0(chunk_t *start, chunk_t *fcn)
    {
       chunk_t *last = chunk_get_next_type(fcn, CT_PAREN_CLOSE, fcn->level);
       last = chunk_get_next(last);
-      if ((last != NULL) && (last->type == CT_SEMICOLON))
+      if ((last != nullptr) && (last->type == CT_SEMICOLON))
       {
          LOG_FMT(LPFUNC, "%s: %zu] '%s' proto due to semicolon\n",
                  __func__, fcn->orig_line, fcn->text());
@@ -363,26 +363,26 @@ static chunk_t *pawn_process_func_def(chunk_t *pc)
    chunk_t *clp  = chunk_get_next_str(pc, ")", 1, 0);
    chunk_t *last = chunk_get_next_ncnl(clp);
 
-   if (last != NULL)
+   if (last != nullptr)
    {
       LOG_FMT(LPFUNC, "%s: %zu] last is '%s' [%s]\n",
               __func__, last->orig_line, last->text(), get_token_name(last->type));
    }
 
    /* See if there is a state clause after the function */
-   if ((last != NULL) && chunk_is_str(last, "<", 1))
+   if ((last != nullptr) && chunk_is_str(last, "<", 1))
    {
       LOG_FMT(LPFUNC, "%s: %zu] '%s' has state angle open %s\n",
               __func__, pc->orig_line, pc->text(), get_token_name(last->type));
 
       set_chunk_type(last, CT_ANGLE_OPEN);
       set_chunk_parent(last, CT_FUNC_DEF);
-      while (((last = chunk_get_next(last)) != NULL) &&
+      while (((last = chunk_get_next(last)) != nullptr) &&
              !chunk_is_str(last, ">", 1))
       {
       }
 
-      if (last != NULL)
+      if (last != nullptr)
       {
          LOG_FMT(LPFUNC, "%s: %zu] '%s' has state angle close %s\n",
                  __func__, pc->orig_line, pc->text(), get_token_name(last->type));
@@ -392,7 +392,7 @@ static chunk_t *pawn_process_func_def(chunk_t *pc)
       last = chunk_get_next_ncnl(last);
    }
 
-   if (last == NULL)
+   if (last == nullptr)
    {
       return(last);
    }
@@ -400,7 +400,7 @@ static chunk_t *pawn_process_func_def(chunk_t *pc)
    {
       set_chunk_parent(last, CT_FUNC_DEF);
       last = chunk_get_next_type(last, CT_BRACE_CLOSE, last->level);
-      if (last != NULL)
+      if (last != nullptr)
       {
          set_chunk_parent(last, CT_FUNC_DEF);
       }
@@ -434,7 +434,7 @@ static chunk_t *pawn_process_func_def(chunk_t *pc)
              (prev->level == 0))
          {
             chunk_t *next = chunk_get_next_ncnl(prev);
-            if ((next != NULL) &&
+            if ((next != nullptr) &&
                 (next->type != CT_ELSE) &&
                 (next->type != CT_WHILE_OF_DO))
             {
@@ -444,9 +444,9 @@ static chunk_t *pawn_process_func_def(chunk_t *pc)
          prev->level++;
          prev->brace_level++;
          last = prev;
-      } while ((prev = chunk_get_next(prev)) != NULL);
+      } while ((prev = chunk_get_next(prev)) != nullptr);
 
-      if (last != NULL)
+      if (last != nullptr)
       {
          LOG_FMT(LPFUNC, "%s:%zu] ended on %s, level %zu\n",
                  __func__, last->orig_line, get_token_name(last->type), last->level);
@@ -482,12 +482,12 @@ chunk_t *pawn_check_vsemicolon(chunk_t *pc)
     *    + arith, assign, bool, comma, compare
     */
    chunk_t *prev = chunk_get_prev_ncnl(pc);
-   if ((prev == NULL) ||
+   if ((prev == nullptr) ||
        (prev == vb_open) ||
        (prev->flags & PCF_IN_PREPROC) ||
        pawn_continued(prev, vb_open->level + 1))
    {
-      if (prev != NULL)
+      if (prev != nullptr)
       {
          LOG_FMT(LPVSEMI, "%s:  no  VSEMI on line %zu, prev='%s' [%s]\n",
                  __func__, prev->orig_line, prev->text(), get_token_name(prev->type));

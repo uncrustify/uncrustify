@@ -385,7 +385,7 @@ static const chunk_tag_t *kw_static_match(const chunk_tag_t *tag)
          return(iter);
       }
    }
-   return(NULL);
+   return(nullptr);
 }
 
 
@@ -410,11 +410,11 @@ c_token_t find_keyword_type(const char *word, size_t len)
    /* check the static word list */
    const chunk_tag_t *p_ret = (const chunk_tag_t *)bsearch(&key, keywords, ARRAY_SIZE(keywords),
                                                            sizeof(keywords[0]), kw_compare);
-   if (p_ret != NULL)
+   if (p_ret != nullptr)
    {
       p_ret = kw_static_match(p_ret);
    }
-   return((p_ret != NULL) ? p_ret->type : CT_WORD);
+   return((p_ret != nullptr) ? p_ret->type : CT_WORD);
 }
 
 
@@ -422,7 +422,7 @@ int load_keyword_file(const char *filename)
 {
    FILE *pf = fopen(filename, "r");
 
-   if (pf == NULL)
+   if (pf == nullptr)
    {
       LOG_FMT(LERR, "%s: fopen(%s) failed: %s (%d)\n",
               __func__, filename, strerror(errno), errno);
@@ -436,13 +436,13 @@ int load_keyword_file(const char *filename)
    char   buf[MAXLENGTHOFLINE];
    char   *args[NUMBEROFARGS];
    size_t line_no = 0;
-   while (fgets(buf, MAXLENGTHOFLINE, pf) != NULL)
+   while (fgets(buf, MAXLENGTHOFLINE, pf) != nullptr)
    {
       line_no++;
 
       /* remove comments */
       char *ptr;
-      if ((ptr = strchr(buf, '#')) != NULL)
+      if ((ptr = strchr(buf, '#')) != nullptr)
       {
          // a comment line
          *ptr = 0;

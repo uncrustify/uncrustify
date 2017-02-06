@@ -124,7 +124,7 @@ static const chunk_tag_t symbols1[] =
 
 const chunk_tag_t *find_punctuator(const char *str, int lang_flags)
 {
-   const chunk_tag_t    *p_match = NULL;
+   const chunk_tag_t    *p_match = nullptr;
    const lookup_entry_t *p_tab   = punc_table;
 
    /*REVISIT: it might be faster to do a bsearch() on the first char.
@@ -138,7 +138,7 @@ const chunk_tag_t *find_punctuator(const char *str, int lang_flags)
       if (p_tab->ch == str[ch_idx])
       {
          /* Match */
-         if ((p_tab->tag != NULL) &&
+         if ((p_tab->tag != nullptr) &&
              (p_tab->tag->lang_flags & lang_flags) &&
              (((p_tab->tag->lang_flags & FLAG_DIG) == 0) ||
               cpd.settings[UO_enable_digraphs].b))

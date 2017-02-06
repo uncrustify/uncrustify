@@ -28,7 +28,7 @@ const ChunkStack::Entry *ChunkStack::Top() const
    {
       return(&m_cse[m_cse.size() - 1]);
    }
-   return(NULL);
+   return(nullptr);
 }
 
 
@@ -38,7 +38,7 @@ const ChunkStack::Entry *ChunkStack::Get(size_t idx) const
    {
       return(&m_cse[idx]);
    }
-   return(NULL);
+   return(nullptr);
 }
 
 
@@ -48,13 +48,13 @@ chunk_t *ChunkStack::GetChunk(size_t idx) const
    {
       return(m_cse[idx].m_pc);
    }
-   return(NULL);
+   return(nullptr);
 }
 
 
 chunk_t *ChunkStack::Pop_Front()
 {
-   chunk_t *pc = NULL;
+   chunk_t *pc = nullptr;
 
    if (m_cse.size() > 0)
    {
@@ -67,7 +67,7 @@ chunk_t *ChunkStack::Pop_Front()
 
 chunk_t *ChunkStack::Pop_Back()
 {
-   chunk_t *pc = NULL;
+   chunk_t *pc = nullptr;
 
    if (m_cse.size() > 0)
    {
@@ -97,7 +97,7 @@ void ChunkStack::Zap(size_t idx)
 {
    if (idx < m_cse.size())
    {
-      m_cse[idx].m_pc = NULL;
+      m_cse[idx].m_pc = nullptr;
    }
 }
 
@@ -111,7 +111,7 @@ void ChunkStack::Collapse()
 
    for (size_t rd_idx = 0; rd_idx < m_cse.size(); rd_idx++)
    {
-      if (m_cse[rd_idx].m_pc != NULL)
+      if (m_cse[rd_idx].m_pc != nullptr)
       {
          if (rd_idx != wr_idx)
          {

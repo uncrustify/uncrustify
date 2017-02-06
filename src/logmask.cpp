@@ -22,7 +22,7 @@
  */
 char *logmask_to_str(const log_mask_t &mask, char *buf, int size)
 {
-   if ((buf == NULL) || (size <= 0))
+   if ((buf == nullptr) || (size <= 0))
    {
       return(buf);
    }
@@ -86,7 +86,7 @@ char *logmask_to_str(const log_mask_t &mask, char *buf, int size)
  */
 void logmask_from_string(const char *str, log_mask_t &mask)
 {
-   if (str == NULL)
+   if (str == nullptr)
    {
       return;
    }

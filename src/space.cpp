@@ -440,7 +440,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
    // Issue #889
    // mapped_file_source abc((int) ::CW2A(sTemp));
    if ((first->type == CT_PAREN_CLOSE) && (second->type == CT_DC_MEMBER) &&
-       (second->next != NULL) && (second->next->type == CT_FUNC_CALL))
+       (second->next != nullptr) && (second->next->type == CT_FUNC_CALL))
    {
       log_rule("REMOVE_889_A");
       return(AV_REMOVE);
@@ -825,7 +825,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
       if (cpd.settings[UO_sp_before_byref_func].a != AV_IGNORE)
       {
          chunk_t *next = chunk_get_next(second);
-         if ((next != NULL) &&
+         if ((next != nullptr) &&
              ((next->type == CT_FUNC_DEF) ||
               (next->type == CT_FUNC_PROTO)))
          {
@@ -836,7 +836,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
       if (cpd.settings[UO_sp_before_unnamed_byref].a != AV_IGNORE)
       {
          chunk_t *next = chunk_get_next_nc(second);
-         if ((next != NULL) && (next->type != CT_WORD))
+         if ((next != nullptr) && (next->type != CT_WORD))
          {
             log_rule("sp_before_unnamed_byref");
             return(cpd.settings[UO_sp_before_unnamed_byref].a);
@@ -1448,7 +1448,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
    if ((first->type == CT_PTR_TYPE) && CharTable::IsKw1(second->str[0]))
    {
       chunk_t *prev = chunk_get_prev(first);
-      if ((prev != NULL) && (prev->type == CT_IN))
+      if ((prev != nullptr) && (prev->type == CT_IN))
       {
          log_rule("sp_deref");
          return(cpd.settings[UO_sp_deref].a);
@@ -1476,9 +1476,9 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
          do
          {
             next = chunk_get_next(next);
-         } while ((next != NULL) && (next->type == CT_PTR_TYPE));
+         } while ((next != nullptr) && (next->type == CT_PTR_TYPE));
 
-         if ((next != NULL) &&
+         if ((next != nullptr) &&
              ((next->type == CT_FUNC_DEF) ||
               (next->type == CT_FUNC_PROTO)))
          {
@@ -1489,11 +1489,11 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
       if (cpd.settings[UO_sp_before_unnamed_ptr_star].a != AV_IGNORE)
       {
          chunk_t *next = chunk_get_next_nc(second);
-         while ((next != NULL) && (next->type == CT_PTR_TYPE))
+         while ((next != nullptr) && (next->type == CT_PTR_TYPE))
          {
             next = chunk_get_next_nc(next);
          }
-         if ((next != NULL) && (next->type != CT_WORD))
+         if ((next != nullptr) && (next->type != CT_WORD))
          {
             log_rule("sp_before_unnamed_ptr_star");
             return(cpd.settings[UO_sp_before_unnamed_ptr_star].a);
@@ -1788,8 +1788,8 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
    // Issue #889
    // mapped_file_source abc((int) A::CW2A(sTemp));
    if ((first->type == CT_PAREN_CLOSE) && (second->type == CT_TYPE) &&
-       (second->next != NULL) && (second->next->type == CT_DC_MEMBER) &&
-       (second->next->next != NULL) && (second->next->next->type == CT_FUNC_CALL))
+       (second->next != nullptr) && (second->next->type == CT_DC_MEMBER) &&
+       (second->next->next != nullptr) && (second->next->next->type == CT_FUNC_CALL))
    {
       log_rule("REMOVE_889_B");
       return(AV_REMOVE);
@@ -1811,7 +1811,7 @@ void space_text(void)
    LOG_FUNC_ENTRY();
 
    chunk_t *pc = chunk_get_head();
-   if (pc == NULL)
+   if (pc == nullptr)
    {
       return;
    }
@@ -1819,7 +1819,7 @@ void space_text(void)
    chunk_t *next;
    size_t  prev_column;
    size_t  column = pc->column;
-   while (pc != NULL)
+   while (pc != nullptr)
    {
 #ifdef DEBUG
       LOG_FMT(LSPACE, "(%d) ", __LINE__);
@@ -1867,7 +1867,7 @@ void space_text(void)
       if ((QT_SIGNAL_SLOT_found) &&
           (cpd.settings[UO_sp_balance_nested_parens].b))
       {
-         if ((next->next != NULL) &&
+         if ((next->next != nullptr) &&
              (next->next->type == CT_SPACE))
          {
             // remove the space
@@ -1913,11 +1913,11 @@ void space_text(void)
          {
             /* Find the next non-empty chunk on this line */
             chunk_t *tmp = next;
-            while ((tmp != NULL) && (tmp->len() == 0) && !chunk_is_newline(tmp))
+            while ((tmp != nullptr) && (tmp->len() == 0) && !chunk_is_newline(tmp))
             {
                tmp = chunk_get_next(tmp);
             }
-            if ((tmp != NULL) && (tmp->len() > 0))
+            if ((tmp != nullptr) && (tmp->len() > 0))
             {
                bool kw1 = CharTable::IsKw2(pc->str[pc->len() - 1]);
                bool kw2 = CharTable::IsKw1(next->str[0]);
@@ -1936,7 +1936,7 @@ void space_text(void)
 
                   const chunk_tag_t *ct;
                   ct = find_punctuator(buf, cpd.lang_flags);
-                  if ((ct != NULL) && (strlen(ct->tag) != pc->len()))
+                  if ((ct != nullptr) && (strlen(ct->tag) != pc->len()))
                   {
                      /* punctuator parsed to a different size.. */
 
@@ -2073,10 +2073,10 @@ void space_text_balance_nested_parens(void)
    LOG_FUNC_ENTRY();
 
    chunk_t *first = chunk_get_head();
-   while (first != NULL)
+   while (first != nullptr)
    {
       chunk_t *next = chunk_get_next(first);
-      if (next == NULL)
+      if (next == nullptr)
       {
          break;
       }
@@ -2090,7 +2090,7 @@ void space_text_balance_nested_parens(void)
           * a space before it */
          chunk_t *cur  = next;
          chunk_t *prev = cur;
-         while ((cur = chunk_get_next(cur)) != NULL)
+         while ((cur = chunk_get_next(cur)) != nullptr)
          {
             if (cur->level == first->level)
             {
@@ -2212,7 +2212,7 @@ void space_add_after(chunk_t *pc, size_t count)
    chunk_t *next = chunk_get_next(pc);
 
    /* don't add at the end of the file or before a newline */
-   if ((next == NULL) || chunk_is_newline(next))
+   if ((next == nullptr) || chunk_is_newline(next))
    {
       return;
    }

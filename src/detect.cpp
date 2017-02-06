@@ -46,8 +46,8 @@ public:
 
 void sp_votes::vote(chunk_t *first, chunk_t *second)
 {
-   if ((first == NULL) || chunk_is_newline(first) ||
-       (second == NULL) || chunk_is_newline(second))
+   if ((first == nullptr) || chunk_is_newline(first) ||
+       (second == nullptr) || chunk_is_newline(second))
    {
       return;
    }
@@ -154,10 +154,10 @@ static void detect_space_options(void)
    chunk_t *pc   = chunk_get_next(prev);
    chunk_t *next;
 
-   while (pc != NULL)
+   while (pc != nullptr)
    {
       next = chunk_get_next(pc);
-      if (next == NULL)
+      if (next == nullptr)
       {
          break;
       }

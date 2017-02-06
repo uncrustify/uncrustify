@@ -20,7 +20,7 @@
 void prot_the_line(int theLine, unsigned int actual_line)
 {
    LOG_FMT(LGUY, "Prot_the_line:(%d) \n", theLine);
-   for (chunk_t *pc = chunk_get_head(); pc != NULL; pc = pc->next)
+   for (chunk_t *pc = chunk_get_head(); pc != nullptr; pc = pc->next)
    {
       if (pc->orig_line == actual_line)
       {
@@ -65,7 +65,7 @@ void examine_Data(const char *func_name, int theLine, int what)
    switch (what)
    {
    case 1:
-      for (pc = chunk_get_head(); pc != NULL; pc = pc->next)
+      for (pc = chunk_get_head(); pc != nullptr; pc = pc->next)
       {
          if ((pc->type == CT_SQUARE_CLOSE) ||
              (pc->type == CT_TSQUARE))
@@ -79,7 +79,7 @@ void examine_Data(const char *func_name, int theLine, int what)
 
    case 2:
       LOG_FMT(LGUY, "2:(%d)\n", theLine);
-      for (pc = chunk_get_head(); pc != NULL; pc = pc->next)
+      for (pc = chunk_get_head(); pc != nullptr; pc = pc->next)
       {
          if (pc->orig_line == 7)
          {
@@ -97,7 +97,7 @@ void examine_Data(const char *func_name, int theLine, int what)
 
    case 3:
       LOG_FMT(LGUY, "3:(%d)\n", theLine);
-      for (pc = chunk_get_head(); pc != NULL; pc = pc->next)
+      for (pc = chunk_get_head(); pc != nullptr; pc = pc->next)
       {
          if (pc->type == CT_NEWLINE)
          {
@@ -112,7 +112,7 @@ void examine_Data(const char *func_name, int theLine, int what)
 
    case 4:
       LOG_FMT(LGUY, "4:(%d)\n", theLine);
-      for (pc = chunk_get_head(); pc != NULL; pc = pc->next)
+      for (pc = chunk_get_head(); pc != nullptr; pc = pc->next)
       {
          if (pc->orig_line == 6)
          {
