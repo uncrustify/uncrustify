@@ -478,7 +478,7 @@ static void split_for_stmt(chunk_t *start)
    }
 
    /* first scan backwards for the semicolons */
-   while ((count < (int)max_cnt) && ((pc = chunk_get_prev(pc)) != nullptr) &&
+   while ((count < static_cast<int>(max_cnt)) && ((pc = chunk_get_prev(pc)) != nullptr) &&
           (pc->flags & PCF_IN_SPAREN))
    {
       if ((pc->type == CT_SEMICOLON) && (pc->parent_type == CT_FOR))
@@ -489,7 +489,7 @@ static void split_for_stmt(chunk_t *start)
 
    /* And now scan forward */
    pc = start;
-   while ((count < (int)max_cnt) && ((pc = chunk_get_next(pc)) != nullptr) &&
+   while ((count < static_cast<int>(max_cnt)) && ((pc = chunk_get_next(pc)) != nullptr) &&
           (pc->flags & PCF_IN_SPAREN))
    {
       if ((pc->type == CT_SEMICOLON) && (pc->parent_type == CT_FOR))
@@ -612,7 +612,7 @@ static void split_fcn_params(chunk_t *start)
          {
             cur_width--;
             LOG_FMT(LSPLIT, " width=%d ", cur_width);
-            if (((last_col - 1) > (int)cpd.settings[UO_code_width].u) ||
+            if (((last_col - 1) > static_cast<int>(cpd.settings[UO_code_width].u)) ||
                 (pc->type == CT_FPAREN_CLOSE))
             {
                break;

@@ -280,14 +280,14 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
    {
       log_rule("sp_macro");
       argval_t arg = cpd.settings[UO_sp_macro].a;
-      return((argval_t)(arg | ((arg != AV_IGNORE) ? AV_ADD : AV_IGNORE)));
+      return(static_cast<argval_t>(arg | ((arg != AV_IGNORE) ? AV_ADD : AV_IGNORE)));
    }
 
    if ((first->type == CT_FPAREN_CLOSE) && (first->parent_type == CT_MACRO_FUNC))
    {
       log_rule("sp_macro_func");
       argval_t arg = cpd.settings[UO_sp_macro_func].a;
-      return((argval_t)(arg | ((arg != AV_IGNORE) ? AV_ADD : AV_IGNORE)));
+      return(static_cast<argval_t>(arg | ((arg != AV_IGNORE) ? AV_ADD : AV_IGNORE)));
    }
 
    if (first->type == CT_PREPROC)
@@ -324,7 +324,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
           (first->parent_type != CT_WHILE_OF_DO))
       {
          log_rule("sp_before_semi|sp_special_semi");
-         arg = (argval_t)(arg | cpd.settings[UO_sp_special_semi].a);
+         arg = static_cast<argval_t>(arg | cpd.settings[UO_sp_special_semi].a);
       }
       else
       {
@@ -1417,7 +1417,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
           (first->orig_line != second->orig_line) &&
           (arg != AV_REMOVE))
       {
-         arg = (argval_t)(arg | AV_ADD);
+         arg = static_cast<argval_t>(arg | AV_ADD);
       }
       log_rule("sp_bool");
       return(arg);
@@ -1535,7 +1535,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
       if (first->type != CT_PTR_TYPE)
       {
          log_rule("sp_type_func|ADD");
-         return((argval_t)(cpd.settings[UO_sp_type_func].a | AV_ADD));
+         return(static_cast<argval_t>(cpd.settings[UO_sp_type_func].a | AV_ADD));
       }
       log_rule("sp_type_func");
       return(cpd.settings[UO_sp_type_func].a);
@@ -1985,7 +1985,7 @@ void space_text(void)
             LOG_FMT(LSPACE, " <force between '%s' and '%s'>",
                     pc->text(), next->text());
             av_int |= AV_ADD;
-            av      = (argval_t)av_int;
+            av      = static_cast<argval_t>(av_int);
          }
          min_sp = max(1, min_sp);
          switch (av)

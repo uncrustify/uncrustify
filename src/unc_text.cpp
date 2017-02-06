@@ -113,7 +113,7 @@ bool unc_text::equals(const unc_text &ref) const
 const char *unc_text::c_str()
 {
    update_logtext();
-   return((const char *)&m_logtext[0]);
+   return(reinterpret_cast<const char *>(&m_logtext[0]));
 }
 
 
@@ -218,14 +218,14 @@ void unc_text::clear()
 
 void unc_text::insert(size_t idx, int ch)
 {
-   m_chars.insert(m_chars.begin() + (int)idx, ch);
+   m_chars.insert(m_chars.begin() + static_cast<int>(idx), ch);
    m_logok = false;
 }
 
 
 void unc_text::insert(size_t idx, const unc_text &ref)
 {
-   m_chars.insert(m_chars.begin() + (int)idx, ref.m_chars.begin(), ref.m_chars.end());
+   m_chars.insert(m_chars.begin() + static_cast<int>(idx), ref.m_chars.begin(), ref.m_chars.end());
    m_logok = false;
 }
 
@@ -377,7 +377,7 @@ void unc_text::erase(size_t idx, size_t len)
 {
    if (len >= 1)
    {
-      m_chars.erase(m_chars.begin() + (int)idx, m_chars.begin() + (int)idx + (int)len);
+      m_chars.erase(m_chars.begin() + static_cast<int>(idx), m_chars.begin() + static_cast<int>(idx) + static_cast<int>(len));
    }
 }
 
@@ -392,9 +392,9 @@ int unc_text::replace(const char *oldtext, const unc_text &newtext)
    while (fidx >= 0)
    {
       rcnt++;
-      erase((size_t)fidx, olen);
-      insert((size_t)fidx, newtext);
-      fidx = find(oldtext, (size_t)fidx + newtext_size - olen + 1);
+      erase(static_cast<size_t>(fidx), olen);
+      insert(static_cast<size_t>(fidx), newtext);
+      fidx = find(oldtext, static_cast<size_t>(fidx) + newtext_size - olen + 1);
    }
    return(rcnt);
 }

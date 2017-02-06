@@ -1794,7 +1794,7 @@ void fix_symbols(void)
       }
       else
       {
-         if (pc->level <= (size_t)square_level)
+         if (pc->level <= static_cast<size_t>(square_level))
          {
             square_level = -1;
          }
@@ -3506,7 +3506,7 @@ static bool can_be_full_param(chunk_t *start, chunk_t *end)
             return(false);
          }
       }
-      else if (((word_cnt == 1) || ((size_t)word_cnt == type_count)) &&
+      else if (((word_cnt == 1) || (static_cast<size_t>(word_cnt) == type_count)) &&
                (pc->type == CT_PAREN_OPEN))
       {
          /* Check for func proto param 'void (*name)' or 'void (*name)(params)' */
@@ -4817,7 +4817,7 @@ static void handle_cpp_lambda(chunk_t *sq_o)
       // The original orig_col of CT_SQUARE_CLOSE is stored at orig_col_end of CT_TSQUARE.
       // CT_SQUARE_CLOSE orig_col and orig_col_end values are calculate from orig_col_end of CT_TSQUARE.
       nc.orig_col        = sq_o->orig_col_end - 1;
-      nc.column          = (int)nc.orig_col;
+      nc.column          = static_cast<int>(nc.orig_col);
       nc.orig_col_end    = sq_o->orig_col_end;
       sq_o->orig_col_end = sq_o->orig_col + 1;
 
@@ -5950,7 +5950,7 @@ static void handle_oc_property_decl(chunk_t *os)
                endchunk.level       = curr_chunk->level;
                endchunk.brace_level = curr_chunk->brace_level;
                endchunk.orig_line   = curr_chunk->orig_line;
-               endchunk.column      = (int)curr_chunk->orig_col_end + 1;
+               endchunk.column      = static_cast<int>(curr_chunk->orig_col_end) + 1;
                endchunk.parent_type = curr_chunk->parent_type;
                endchunk.flags       = curr_chunk->flags & PCF_COPY_FLAGS;
                chunk_add_after(&endchunk, curr_chunk);

@@ -94,7 +94,7 @@ void pf_push(parse_frame_t *pf)
 {
    static int ref_no = 1;
 
-   if (cpd.frame_count < (int)ARRAY_SIZE(cpd.frames))
+   if (cpd.frame_count < static_cast<int> ARRAY_SIZE(cpd.frames))
    {
       pf_copy(&cpd.frames[cpd.frame_count], pf);
       cpd.frame_count++;
@@ -114,7 +114,7 @@ void pf_push_under(parse_frame_t *pf)
 {
    LOG_FMT(LPF, "%s(%d): before count = %d\n", __func__, __LINE__, cpd.frame_count);
 
-   if ((cpd.frame_count < (int)ARRAY_SIZE(cpd.frames)) &&
+   if ((cpd.frame_count < static_cast<int> ARRAY_SIZE(cpd.frames)) &&
        (cpd.frame_count >= 1))
    {
       parse_frame_t *npf1 = &cpd.frames[cpd.frame_count - 1];

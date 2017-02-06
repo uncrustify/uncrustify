@@ -9,7 +9,7 @@
 #ifndef UNCRUSTIFY_VERSION_H_INCLUDED
 #define UNCRUSTIFY_VERSION_H_INCLUDED
 
-#if defined(DEBUG) || defined(_DEBUG)
+#if defined (DEBUG) || defined (_DEBUG)
 #define UNCRUSTIFY_VERSION    "@PACKAGE_VERSION@_d"
 #else
 #define UNCRUSTIFY_VERSION    "@PACKAGE_VERSION@"

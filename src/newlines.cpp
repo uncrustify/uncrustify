@@ -902,7 +902,7 @@ static void _blank_line_set(chunk_t *pc, const char *text, uncrustify_options uo
    const option_map_value *option = get_option_name(uo);
    if (option->type != AT_UNUM)
    {
-      fprintf(stderr, "Program error for UO_=%d\n", (int)uo);
+      fprintf(stderr, "Program error for UO_=%d\n", static_cast<int>(uo));
       fprintf(stderr, "Please make a report\n");
       exit(2);
    }
@@ -3774,7 +3774,7 @@ static void _blank_line_max(chunk_t *pc, const char *text, uncrustify_options uo
    const option_map_value *option = get_option_name(uo);
    if (option->type != AT_UNUM)
    {
-      fprintf(stderr, "Program error for UO_=%d\n", (int)uo);
+      fprintf(stderr, "Program error for UO_=%d\n", static_cast<int>(uo));
       fprintf(stderr, "Please make a report\n");
       exit(2);
    }
