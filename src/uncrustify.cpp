@@ -1610,13 +1610,13 @@ static void uncrustify_start(const deque<int> &data)
    }
 
    /* Add the file header */
-   if (cpd.file_hdr.data.size() > 0)
+   if (!cpd.file_hdr.data.empty())
    {
       add_file_header();
    }
 
    /* Add the file footer */
-   if (cpd.file_ftr.data.size() > 0)
+   if (!cpd.file_ftr.data.empty())
    {
       add_file_footer();
    }
@@ -1721,7 +1721,7 @@ void uncrustify_file(const file_mem &fm, FILE *pfout,
       /**
        * Add comments before function defs and classes
        */
-      if (cpd.func_hdr.data.size() > 0)
+      if (!cpd.func_hdr.data.empty())
       {
          add_func_header(CT_FUNC_DEF, cpd.func_hdr);
          if (cpd.settings[UO_cmt_insert_before_ctor_dtor].b)
@@ -1729,11 +1729,11 @@ void uncrustify_file(const file_mem &fm, FILE *pfout,
             add_func_header(CT_FUNC_CLASS_DEF, cpd.func_hdr);
          }
       }
-      if (cpd.class_hdr.data.size() > 0)
+      if (!cpd.class_hdr.data.empty())
       {
          add_func_header(CT_CLASS, cpd.class_hdr);
       }
-      if (cpd.oc_msg_hdr.data.size() > 0)
+      if (!cpd.oc_msg_hdr.data.empty())
       {
          add_msg_header(CT_OC_MSG_DECL, cpd.oc_msg_hdr);
       }

@@ -24,7 +24,7 @@ void ChunkStack::Set(const ChunkStack &cs)
 
 const ChunkStack::Entry *ChunkStack::Top() const
 {
-   if (m_cse.size() > 0)
+   if (!m_cse.empty())
    {
       return(&m_cse[m_cse.size() - 1]);
    }
@@ -56,7 +56,7 @@ chunk_t *ChunkStack::Pop_Front()
 {
    chunk_t *pc = NULL;
 
-   if (m_cse.size() > 0)
+   if (!m_cse.empty())
    {
       pc = m_cse[0].m_pc;
       m_cse.pop_front();
@@ -69,7 +69,7 @@ chunk_t *ChunkStack::Pop_Back()
 {
    chunk_t *pc = NULL;
 
-   if (m_cse.size() > 0)
+   if (!m_cse.empty())
    {
       pc = m_cse[m_cse.size() - 1].m_pc;
       m_cse.pop_back();
