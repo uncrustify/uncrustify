@@ -1585,9 +1585,9 @@ void indent_text(void)
                skipped = true;
             }
             // PR#381
-            if (cpd.settings[UO_indent_param].n != 0)
+            if (cpd.settings[UO_indent_param].u != 0)
             {
-               frm.pse[frm.pse_tos].indent = frm.pse[idx].indent + cpd.settings[UO_indent_param].n;
+               frm.pse[frm.pse_tos].indent = frm.pse[idx].indent + cpd.settings[UO_indent_param].u;
             }
             else
             {

@@ -781,8 +781,8 @@ static void add_comment_text(const unc_text &text,
       }
       else if (cmt.reflow &&
                (text[idx] == ' ') &&
-               (cpd.settings[UO_cmt_width].n > 0) &&
-               ((cpd.column > cpd.settings[UO_cmt_width].n) ||
+               (cpd.settings[UO_cmt_width].u > 0) &&
+               ((cpd.column > cpd.settings[UO_cmt_width].u) ||
                 ((ch_cnt > 1) && next_word_exceeds_limit(text, idx))))
       {
          in_word = false;

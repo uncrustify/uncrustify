@@ -128,7 +128,7 @@ static void split_before_chunk(chunk_t *pc)
    {
       newline_add_before(pc);
       // reindent needs to include the indent_continue value and was off by one
-      reindent_line(pc, pc->brace_level * cpd.settings[UO_indent_columns].n +
+      reindent_line(pc, pc->brace_level * cpd.settings[UO_indent_columns].u +
                     abs(cpd.settings[UO_indent_continue].n) + 1);
       cpd.changes++;
    }
@@ -636,10 +636,10 @@ static void split_fcn_params(chunk_t *start)
          pc = chunk_get_next(prev);
          if (!cpd.settings[UO_indent_paren_nl].b)
          {
-            min_col = pc->brace_level * cpd.settings[UO_indent_columns].n + 1;
+            min_col = pc->brace_level * cpd.settings[UO_indent_columns].u + 1;
             if (cpd.settings[UO_indent_continue].n == 0)
             {
-               min_col += cpd.settings[UO_indent_columns].n;
+               min_col += cpd.settings[UO_indent_columns].u;
             }
             else
             {
