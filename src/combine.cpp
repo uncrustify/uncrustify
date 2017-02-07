@@ -2543,8 +2543,9 @@ static void fix_enum_struct_union(chunk_t *pc)
       {
          return;
       }
-      else if ((cpd.lang_flags & LANG_PAWN) &&
-               (next->type == CT_PAREN_OPEN))
+
+      if ((cpd.lang_flags & LANG_PAWN) &&
+          (next->type == CT_PAREN_OPEN))
       {
          next = set_paren_parent(next, CT_ENUM);
       }
@@ -3338,19 +3339,17 @@ static chunk_t *skip_expression(chunk_t *start)
  */
 bool go_on(chunk_t *pc, chunk_t *start)
 {
-   if ((pc == nullptr) ||
-       (pc->level != start->level))
+   if ((pc == nullptr) || (pc->level != start->level))
    {
       return(false);
    }
+
    if (pc->flags & PCF_IN_FOR)
    {
       return((!chunk_is_semicolon(pc)) && (!(pc->type == CT_COLON)));
    }
-   else
-   {
-      return(!chunk_is_semicolon(pc));
-   }
+
+   return(!chunk_is_semicolon(pc));
 } // go_on
 
 
@@ -3677,6 +3676,7 @@ static void mark_function(chunk_t *pc)
    {
       return;
    }
+
    next = skip_attribute_next(next);
    if (next == nullptr)
    {
@@ -3856,11 +3856,9 @@ static void mark_function(chunk_t *pc)
                mark_cpp_constructor(pc);
                return;
             }
-            else
-            {
-               /* Point to the item previous to the class name */
-               prev = chunk_get_prev_ncnlnp(prev);
-            }
+
+            /* Point to the item previous to the class name */
+            prev = chunk_get_prev_ncnlnp(prev);
          }
       }
    }

@@ -93,7 +93,8 @@ static void add_char(UINT32 ch)
          }
          return;
       }
-      else if ((ch == ' ') && !cpd.output_trailspace)
+
+      if ((ch == ' ') && !cpd.output_trailspace)
       {
          cpd.spaces++;
          cpd.column++;
