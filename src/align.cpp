@@ -1413,18 +1413,18 @@ chunk_t *align_nl_cont(chunk_t *start)
 }
 
 
-enum CmtAlignType
+enum class comment_align_e : unsigned int
 {
-   CAT_REGULAR,
-   CAT_BRACE,
-   CAT_ENDIF,
+   REGULAR,
+   BRACE,
+   ENDIF,
 };
 
 
-static CmtAlignType get_comment_align_type(chunk_t *cmt)
+static comment_align_e get_comment_align_type(chunk_t *cmt)
 {
-   chunk_t      *prev;
-   CmtAlignType cmt_type = CAT_REGULAR;
+   chunk_t         *prev;
+   comment_align_e cmt_type = comment_align_e::REGULAR;
 
    if (!cpd.settings[UO_align_right_cmt_mix].b &&
        ((prev = chunk_get_prev(cmt)) != NULL))
@@ -1437,7 +1437,7 @@ static CmtAlignType get_comment_align_type(chunk_t *cmt)
          /* REVISIT: someone may want this configurable */
          if ((cmt->column - (prev->column + prev->len())) < 3)
          {
-            cmt_type = (prev->type == CT_PP_ENDIF) ? CAT_ENDIF : CAT_BRACE;
+            cmt_type = (prev->type == CT_PP_ENDIF) ? comment_align_e::ENDIF : comment_align_e::BRACE;
          }
       }
    }
@@ -1448,15 +1448,15 @@ static CmtAlignType get_comment_align_type(chunk_t *cmt)
 chunk_t *align_trailing_comments(chunk_t *start)
 {
    LOG_FUNC_ENTRY();
-   size_t       min_col  = 0;
-   size_t       min_orig = 0;
-   chunk_t      *pc      = start;
-   size_t       nl_count = 0;
-   ChunkStack   cs;
-   size_t       col;
-   size_t       intended_col = cpd.settings[UO_align_right_cmt_at_col].u;
-   CmtAlignType cmt_type_cur;
-   CmtAlignType cmt_type_start = get_comment_align_type(pc);
+   size_t          min_col  = 0;
+   size_t          min_orig = 0;
+   chunk_t         *pc      = start;
+   size_t          nl_count = 0;
+   ChunkStack      cs;
+   size_t          col;
+   size_t          intended_col = cpd.settings[UO_align_right_cmt_at_col].u;
+   comment_align_e cmt_type_cur;
+   comment_align_e cmt_type_start = get_comment_align_type(pc);
 
    LOG_FMT(LALADD, "%s: start on line=%zu\n",
            __func__, pc->orig_line);
@@ -1980,7 +1980,7 @@ static void align_oc_msg_colon(chunk_t *so)
    cas.Start(span);
 
    size_t  level = so->level;
-   chunk_t *pc   = chunk_get_next_ncnl(so, CNAV_PREPROC);
+   chunk_t *pc   = chunk_get_next_ncnl(so, scope_e::PREPROC);
 
    bool    did_line  = false;
    bool    has_colon = false;
@@ -2015,7 +2015,7 @@ static void align_oc_msg_colon(chunk_t *so)
          }
          did_line = true;
       }
-      pc = chunk_get_next(pc, CNAV_PREPROC);
+      pc = chunk_get_next(pc, scope_e::PREPROC);
    }
 
    nas.m_skip_first = !cpd.settings[UO_align_oc_msg_colon_first].b;
@@ -2120,7 +2120,7 @@ static void align_oc_decl_colon(void)
       cas.Reset();
 
       size_t level = pc->level;
-      pc = chunk_get_next_ncnl(pc, CNAV_PREPROC);
+      pc = chunk_get_next_ncnl(pc, scope_e::PREPROC);
 
       did_line = false;
 
@@ -2142,8 +2142,8 @@ static void align_oc_decl_colon(void)
          {
             cas.Add(pc);
 
-            chunk_t *tmp  = chunk_get_prev(pc, CNAV_PREPROC);
-            chunk_t *tmp2 = chunk_get_prev_ncnl(tmp, CNAV_PREPROC);
+            chunk_t *tmp  = chunk_get_prev(pc, scope_e::PREPROC);
+            chunk_t *tmp2 = chunk_get_prev_ncnl(tmp, scope_e::PREPROC);
 
             /* Check for an un-labeled parameter */
             if ((tmp != NULL) &&
@@ -2162,7 +2162,7 @@ static void align_oc_decl_colon(void)
             }
             did_line = true;
          }
-         pc = chunk_get_next(pc, CNAV_PREPROC);
+         pc = chunk_get_next(pc, scope_e::PREPROC);
       }
       nas.End();
       cas.End();
@@ -2189,7 +2189,7 @@ static void align_asm_colon(void)
 
       cas.Reset();
 
-      pc = chunk_get_next_ncnl(pc, CNAV_PREPROC);
+      pc = chunk_get_next_ncnl(pc, scope_e::PREPROC);
       size_t level = pc ? pc->level : 0;
       did_nl = true;
       while (pc && (pc->level >= level))
@@ -2209,7 +2209,7 @@ static void align_asm_colon(void)
             did_nl = false;
             cas.Add(pc);
          }
-         pc = chunk_get_next_nc(pc, CNAV_PREPROC);
+         pc = chunk_get_next_nc(pc, scope_e::PREPROC);
       }
       cas.End();
    }

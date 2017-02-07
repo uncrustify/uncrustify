@@ -186,7 +186,7 @@ void AlignStack::Add(chunk_t *start, size_t seqnum)
             prev = chunk_get_prev(ali);
             // this is correct, even Coverity says:
             // CID 76021 (#1 of 1): Unused value (UNUSED_VALUE)returned_pointer: Assigning value from
-            // chunk_get_prev(ali, CNAV_ALL) to prev here, but that stored value is overwritten before it can be used.
+            // chunk_get_prev(ali, nav_e::ALL) to prev here, but that stored value is overwritten before it can be used.
          }
       }
       if (m_amp_style != SS_IGNORE)

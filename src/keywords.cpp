@@ -518,7 +518,7 @@ void clear_keyword_file(void)
 }
 
 
-pattern_class get_token_pattern_class(c_token_t tok)
+pattern_class_e get_token_pattern_class(c_token_t tok)
 {
    switch (tok)
    {
@@ -533,10 +533,10 @@ pattern_class get_token_pattern_class(c_token_t tok)
    case CT_D_WITH:
    case CT_D_VERSION_IF:
    case CT_D_SCOPE_IF:
-      return(PATCLS_PBRACED);
+      return(pattern_class_e::PBRACED);
 
    case CT_ELSE:
-      return(PATCLS_ELSE);
+      return(pattern_class_e::ELSE);
 
    case CT_DO:
    case CT_TRY:
@@ -546,23 +546,23 @@ pattern_class get_token_pattern_class(c_token_t tok)
    case CT_UNSAFE:
    case CT_VOLATILE:
    case CT_GETSET:
-      return(PATCLS_BRACED);
+      return(pattern_class_e::BRACED);
 
    case CT_CATCH:
    case CT_D_VERSION:
    case CT_DEBUG:
-      return(PATCLS_OPBRACED);
+      return(pattern_class_e::OPBRACED);
 
    case CT_NAMESPACE:
-      return(PATCLS_VBRACED);
+      return(pattern_class_e::VBRACED);
 
    case CT_WHILE_OF_DO:
-      return(PATCLS_PAREN);
+      return(pattern_class_e::PAREN);
 
    case CT_INVARIANT:
-      return(PATCLS_OPPAREN);
+      return(pattern_class_e::OPPAREN);
 
    default:
-      return(PATCLS_NONE);
+      return(pattern_class_e::NONE);
    } // switch
 }    // get_token_pattern_class

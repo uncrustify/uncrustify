@@ -60,7 +60,7 @@ void do_parens(void)
          }
 
          /* Grab the close sparen */
-         chunk_t *pclose = chunk_get_next_type(pc, CT_SPAREN_CLOSE, pc->level, CNAV_PREPROC);
+         chunk_t *pclose = chunk_get_next_type(pc, CT_SPAREN_CLOSE, pc->level, scope_e::PREPROC);
          if (pclose != NULL)
          {
             check_bool_parens(pc, pclose, 0);
@@ -97,7 +97,7 @@ static void add_parens_between(chunk_t *first, chunk_t *last)
 
    chunk_add_before(&pc, first_n);
 
-   chunk_t *last_p = chunk_get_prev_ncnl(last, CNAV_PREPROC);
+   chunk_t *last_p = chunk_get_prev_ncnl(last, scope_e::PREPROC);
    pc.type        = CT_PAREN_CLOSE;
    pc.str         = ")";
    pc.flags       = last_p->flags & PCF_COPY_FLAGS;

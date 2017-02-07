@@ -97,7 +97,7 @@ void tokenize_cleanup(void)
    chunk_t *next;
    bool    in_type_cast = false;
 
-   cpd.unc_stage = US_TOKENIZE_CLEANUP;
+   cpd.unc_stage = unc_stage_e::TOKENIZE_CLEANUP;
 
    /* Since [] is expected to be TSQUARE for the 'operator', we need to make
     * this change in the first pass.
@@ -122,7 +122,7 @@ void tokenize_cleanup(void)
       }
       if ((pc->type == CT_SEMICOLON) &&
           (pc->flags & PCF_IN_PREPROC) &&
-          !chunk_get_next_ncnl(pc, CNAV_PREPROC))
+          !chunk_get_next_ncnl(pc, scope_e::PREPROC))
       {
          LOG_FMT(LNOTE, "%s:%zu Detected a macro that ends with a semicolon. Possible failures if used.\n",
                  cpd.filename, pc->orig_line);
@@ -618,17 +618,17 @@ void tokenize_cleanup(void)
 
       if (pc->type == CT_OC_INTF)
       {
-         chunk_t *tmp = chunk_get_next_ncnl(pc, CNAV_PREPROC);
+         chunk_t *tmp = chunk_get_next_ncnl(pc, scope_e::PREPROC);
          while ((tmp != NULL) && (tmp->type != CT_OC_END))
          {
-            if (get_token_pattern_class(tmp->type) != PATCLS_NONE)
+            if (get_token_pattern_class(tmp->type) != pattern_class_e::NONE)
             {
                LOG_FMT(LOBJCWORD, "@interface %zu:%zu change '%s' (%s) to CT_WORD\n",
                        pc->orig_line, pc->orig_col, tmp->text(),
                        get_token_name(tmp->type));
                set_chunk_type(tmp, CT_WORD);
             }
-            tmp = chunk_get_next_ncnl(tmp, CNAV_PREPROC);
+            tmp = chunk_get_next_ncnl(tmp, scope_e::PREPROC);
          }
       }
 
@@ -847,7 +847,7 @@ static void check_template(chunk_t *start)
 {
    LOG_FMT(LTEMPL, "%s: Line %zu, col %zu:", __func__, start->orig_line, start->orig_col);
 
-   chunk_t *prev = chunk_get_prev_ncnl(start, CNAV_PREPROC);
+   chunk_t *prev = chunk_get_prev_ncnl(start, scope_e::PREPROC);
    if (prev == NULL)
    {
       return;
@@ -861,9 +861,9 @@ static void check_template(chunk_t *start)
 
       /* We have: "template< ... >", which is a template declaration */
       size_t level = 1;
-      for (pc = chunk_get_next_ncnl(start, CNAV_PREPROC);
+      for (pc = chunk_get_next_ncnl(start, scope_e::PREPROC);
            pc != NULL;
-           pc = chunk_get_next_ncnl(pc, CNAV_PREPROC))
+           pc = chunk_get_next_ncnl(pc, scope_e::PREPROC))
       {
          LOG_FMT(LTEMPL, " [%s,%zu]", get_token_name(pc->type), level);
 
@@ -915,7 +915,7 @@ static void check_template(chunk_t *start)
       /* Scan back and make sure we aren't inside square parens */
       bool in_if = false;
       pc = start;
-      while ((pc = chunk_get_prev_ncnl(pc, CNAV_PREPROC)) != NULL)
+      while ((pc = chunk_get_prev_ncnl(pc, scope_e::PREPROC)) != NULL)
       {
          if ((pc->type == CT_SEMICOLON) ||
              (pc->type == CT_BRACE_OPEN) ||
@@ -945,9 +945,9 @@ static void check_template(chunk_t *start)
       size_t    num_tokens = 1;
 
       tokens[0] = CT_ANGLE_OPEN;
-      for (pc = chunk_get_next_ncnl(start, CNAV_PREPROC);
+      for (pc = chunk_get_next_ncnl(start, scope_e::PREPROC);
            pc != NULL;
-           pc = chunk_get_next_ncnl(pc, CNAV_PREPROC))
+           pc = chunk_get_next_ncnl(pc, scope_e::PREPROC))
       {
          LOG_FMT(LTEMPL, " [%s,%zu]", get_token_name(pc->type), num_tokens);
 
@@ -1017,7 +1017,7 @@ static void check_template(chunk_t *start)
 
    if ((end != NULL) && (end->type == CT_ANGLE_CLOSE))
    {
-      pc = chunk_get_next_ncnl(end, CNAV_PREPROC);
+      pc = chunk_get_next_ncnl(end, scope_e::PREPROC);
       if ((pc == NULL) || (pc->type != CT_NUMBER))
       {
          LOG_FMT(LTEMPL, " - Template Detected\n");
@@ -1027,7 +1027,7 @@ static void check_template(chunk_t *start)
          pc = start;
          while (pc != end)
          {
-            chunk_t *next = chunk_get_next_ncnl(pc, CNAV_PREPROC);
+            chunk_t *next = chunk_get_next_ncnl(pc, scope_e::PREPROC);
             chunk_flags_set(pc, PCF_IN_TEMPLATE);
             if (next->type != CT_PAREN_OPEN)
             {

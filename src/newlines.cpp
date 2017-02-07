@@ -2205,7 +2205,7 @@ static bool one_liner_nl_ok(chunk_t *pc)
    {
       br_open = chunk_get_prev_type(br_open,
                                     br_open->type == CT_BRACE_CLOSE ? CT_BRACE_OPEN : CT_VBRACE_OPEN,
-                                    br_open->level, CNAV_ALL);
+                                    br_open->level, scope_e::ALL);
    }
    else
    {
@@ -2350,7 +2350,7 @@ static void nl_create_one_liner(chunk_t *vbrace_open)
    /* See if we get a newline between the next text and the vbrace_close */
    chunk_t *tmp   = chunk_get_next_ncnl(vbrace_open);
    chunk_t *first = tmp;
-   if (!first || (get_token_pattern_class(first->type) != PATCLS_NONE))
+   if (!first || (get_token_pattern_class(first->type) != pattern_class_e::NONE))
    {
       return;
    }
@@ -2525,7 +2525,7 @@ void newlines_cleanup_braces(bool first)
          if ((pc->parent_type == CT_DOUBLE_BRACE) &&
              (cpd.settings[UO_nl_paren_dbrace_open].a != AV_IGNORE))
          {
-            prev = chunk_get_prev_ncnl(pc, CNAV_PREPROC);
+            prev = chunk_get_prev_ncnl(pc, scope_e::PREPROC);
             if (chunk_is_paren_close(prev))
             {
                newline_iarf_pair(prev, pc, cpd.settings[UO_nl_paren_dbrace_open].a);
@@ -2534,7 +2534,7 @@ void newlines_cleanup_braces(bool first)
 
          if (cpd.settings[UO_nl_brace_brace].a != AV_IGNORE)
          {
-            next = chunk_get_next_nc(pc, CNAV_PREPROC);
+            next = chunk_get_next_nc(pc, scope_e::PREPROC);
             if ((next != NULL) && (next->type == CT_BRACE_OPEN))
             {
                newline_iarf_pair(pc, next, cpd.settings[UO_nl_brace_brace].a);
@@ -2625,7 +2625,7 @@ void newlines_cleanup_braces(bool first)
       {
          if (cpd.settings[UO_nl_brace_brace].a != AV_IGNORE)
          {
-            next = chunk_get_next_nc(pc, CNAV_PREPROC);
+            next = chunk_get_next_nc(pc, scope_e::PREPROC);
             if ((next != NULL) && (next->type == CT_BRACE_CLOSE))
             {
                newline_iarf_pair(pc, next, cpd.settings[UO_nl_brace_brace].a);
@@ -2634,7 +2634,7 @@ void newlines_cleanup_braces(bool first)
 
          if (cpd.settings[UO_nl_brace_square].a != AV_IGNORE)
          {
-            next = chunk_get_next_nc(pc, CNAV_PREPROC);
+            next = chunk_get_next_nc(pc, scope_e::PREPROC);
             if ((next != NULL) && (next->type == CT_SQUARE_CLOSE))
             {
                newline_iarf_pair(pc, next, cpd.settings[UO_nl_brace_square].a);
@@ -2643,7 +2643,7 @@ void newlines_cleanup_braces(bool first)
 
          if (cpd.settings[UO_nl_brace_fparen].a != AV_IGNORE)
          {
-            next = chunk_get_next_nc(pc, CNAV_PREPROC);
+            next = chunk_get_next_nc(pc, scope_e::PREPROC);
             if ((next != NULL) && (next->type == CT_FPAREN_CLOSE))
             {
                newline_iarf_pair(pc, next, cpd.settings[UO_nl_brace_fparen].a);
@@ -2690,7 +2690,7 @@ void newlines_cleanup_braces(bool first)
               (pc->parent_type == CT_ENUM) ||
               (pc->parent_type == CT_UNION)))
          {
-            next = chunk_get_next_ncnl(pc, CNAV_PREPROC);
+            next = chunk_get_next_ncnl(pc, scope_e::PREPROC);
             if (next &&
                 (next->type != CT_SEMICOLON) &&
                 (next->type != CT_COMMA))
@@ -2725,7 +2725,7 @@ void newlines_cleanup_braces(bool first)
          if (cpd.settings[UO_nl_after_vbrace_open].b ||
              cpd.settings[UO_nl_after_vbrace_open_empty].b)
          {
-            next = chunk_get_next(pc, CNAV_PREPROC);
+            next = chunk_get_next(pc, scope_e::PREPROC);
             bool add_it;
             if (chunk_is_semicolon(next))
             {
