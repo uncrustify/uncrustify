@@ -2,6 +2,6 @@
 
 ops.pProgressCallback = reinterpret_cast<      ::ProgressCallback*>(progressCallback);
 ops.pProgressCallback = reinterpret_cast< ::ProgressCallback*>(progressCallback);
-ops.pProgressCallback = reinterpret_cast< ::ProgressCallback*>(progressCallback);
+ops.pProgressCallback = reinterpret_cast<::ProgressCallback*>(progressCallback);
 ops.pProgressCallback = reinterpret_cast<ProgressCallback*>(progressCallback);
 ops.pProgressCallback = reinterpret_cast<ProgressCallback*>(progressCallback);
