@@ -32,8 +32,8 @@
 10035 staging/Uncrustify.Cpp.cfg staging/definesalign.h.mm
 10036 staging/Uncrustify.Cpp.cfg staging/inttypes.h.mm
 10044 staging/Uncrustify.CSharp.cfg staging/ifcomment.cs
-10046 staging/Uncrustify.Cpp.cfg    staging/UNI-1333.mm
 10045 staging/Uncrustify.CSharp.cfg staging/UNI-1288.cs
+10046 staging/Uncrustify.Cpp.cfg    staging/UNI-1333.mm
 10047 staging/Uncrustify.Cpp.cfg    staging/UNI-1334.cpp
 10048 staging/Uncrustify.Cpp.cfg    staging/UNI-1335.cpp
 10052 staging/Uncrustify.Cpp.cfg    staging/UNI-1339.cpp
@@ -44,9 +44,10 @@
 10072 staging/Uncrustify.CSharp.cfg staging/UNI-2007.cs
 10073 staging/Uncrustify.CSharp.cfg staging/UNI-2008.cs
 10077 staging/Uncrustify.CSharp.cfg staging/UNI-1919.cs
+10078 staging/Uncrustify.CSharp.cfg staging/UNI-3484.cs
+10079 staging/Uncrustify.Cpp.Cfg    staging/UNI-9650.cpp
 10100 staging/issue_564.cfg staging/issue_564.cpp
 10101 staging/issue_574.cfg staging/issue_574.cpp
 10102 staging/Uncrustify.Cpp.cfg    staging/pp-ignore.mm
 10103 staging/Uncrustify.CSharp.cfg staging/UNI-2506.cs
 10104 staging/Uncrustify.CSharp.cfg staging/UNI-2505.cs
-10078 staging/Uncrustify.CSharp.cfg staging/UNI-3484.cs
