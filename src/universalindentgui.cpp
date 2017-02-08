@@ -12,6 +12,7 @@
 #include "uncrustify_version.h"
 #include "unc_ctype.h"
 #include "uncrustify.h"
+#include "error_types.h"
 #include <stdio.h>
 
 
@@ -72,6 +73,9 @@ void print_universal_indent_cfg(FILE *pfile)
            "version=%s\n",
            UNCRUSTIFY_VERSION);
 
+#ifdef DEBUG
+   size_t optionNumber = 0;
+#endif // DEBUG
    /* Now add each option */
    for (idx = 0; idx < UG_group_count; idx++)
    {
@@ -108,11 +112,8 @@ void print_universal_indent_cfg(FILE *pfile)
          fprintf(pfile, "\n[%s]\n", optionNameReadable);
          fprintf(pfile, "Category=%zu\n", idx);
 #ifdef DEBUG
-         fprintf(pfile, "Description=\"<html>(123)");
-         // (123) is a placeholder to be changed with the vim command:
-         // :%s/(\(\d\)\+)/\=printf('(%d)', line('.'))
-         // to the real line number
-         // guy 2016-03-07
+         optionNumber++;
+         fprintf(pfile, "Description=\"<html>(%zu)", optionNumber);
 #else    // DEBUG
          fprintf(pfile, "Description=\"<html>");
 #endif // DEBUG
@@ -215,6 +216,23 @@ void print_universal_indent_cfg(FILE *pfile)
                fprintf(pfile, "ValueDefault=%d\n", cpd.settings[option->id].n);
                break;
 
+            case AT_UNUM:
+               // [input_tab_size]
+               // CallName="input_tab_size="
+               // Category=3
+               // Description="<html>The original size of tabs in the input. Default=8</html>"
+               // EditorType=numeric
+               // Enabled=false
+               // MaxVal=32
+               // MinVal=1
+               // ValueDefault=8
+               fprintf(pfile, "EditorType=numeric\n");
+               fprintf(pfile, "CallName=\"%s=\"\n", option->name);
+               fprintf(pfile, "MinVal=%d\n", option->min_val);
+               fprintf(pfile, "MaxVal=%d\n", option->max_val);
+               fprintf(pfile, "ValueDefault=%zu\n", cpd.settings[option->id].u);
+               break;
+
             case AT_LINE:
                // [newlines]
                // Category=0
@@ -264,6 +282,8 @@ void print_universal_indent_cfg(FILE *pfile)
             }
 
             default:
+               fprintf(stderr, "FATAL: Illegal option type %d for '%s'\n", option->type, option->name);
+               exit(EX_SOFTWARE);
                break;
             } // switch
          }    // switch
