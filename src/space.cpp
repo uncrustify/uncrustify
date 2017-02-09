@@ -753,7 +753,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int& min_sp, bool comp
       // special: if we're not supporting digraphs, then we shouldn't create them!
       if ((op == AV_REMOVE) &&
           !cpd.settings[UO_enable_digraphs].b &&
-          (first->type == CT_ANGLE_OPEN) && (second->str[0] == ':') && (second->str[1] == ':'))
+          (first->type == CT_ANGLE_OPEN) && (second->type == CT_DC_MEMBER))
       {
          op = AV_IGNORE;
       }
