@@ -629,7 +629,7 @@ static bool parse_comment(tok_ctx &ctx, chunk_t &pc)
    if (cpd.unc_off)
    {
       const char *ontext = cpd.settings[UO_enable_processing_cmt].str;
-      if ((ontext == NULL) || !ontext[0])
+      if ((ontext == nullptr) || !ontext[0])
       {
          ontext = UNCRUSTIFY_ON_TEXT;
       }
@@ -643,7 +643,7 @@ static bool parse_comment(tok_ctx &ctx, chunk_t &pc)
    else
    {
       const char *offtext = cpd.settings[UO_disable_processing_cmt].str;
-      if ((offtext == NULL) || !offtext[0])
+      if ((offtext == nullptr) || !offtext[0])
       {
          offtext = UNCRUSTIFY_OFF_TEXT;
       }
@@ -1490,7 +1490,7 @@ static bool parse_ignored(tok_ctx &ctx, chunk_t &pc)
    }
    /* Note that we aren't actually making sure this is in a comment, yet */
    const char *ontext = cpd.settings[UO_enable_processing_cmt].str;
-   if (ontext == NULL)
+   if (ontext == nullptr)
    {
       ontext = UNCRUSTIFY_ON_TEXT;
    }
@@ -1825,7 +1825,7 @@ static bool parse_next(tok_ctx &ctx, chunk_t &pc)
    punc_txt[2] = ctx.peek(2);
    punc_txt[3] = ctx.peek(3);
    const chunk_tag_t *punc;
-   if ((punc = find_punctuator(punc_txt, cpd.lang_flags)) != NULL)
+   if ((punc = find_punctuator(punc_txt, cpd.lang_flags)) != nullptr)
    {
       int cnt = strlen(punc->tag);
       while (cnt--)
@@ -1863,8 +1863,8 @@ void tokenize(const deque<int> &data, chunk_t *ref)
 {
    tok_ctx       ctx(data);
    chunk_t       chunk;
-   chunk_t       *pc    = NULL;
-   chunk_t       *rprev = NULL;
+   chunk_t       *pc    = nullptr;
+   chunk_t       *rprev = nullptr;
    parse_frame_t frm;
    bool          last_was_tab = false;
    size_t        prev_sp      = 0;
@@ -1931,7 +1931,7 @@ void tokenize(const deque<int> &data, chunk_t *ref)
 
       /* Add the chunk to the list */
       rprev = pc;
-      if (rprev != NULL)
+      if (rprev != nullptr)
       {
          chunk_flags_set(pc, rprev->flags & PCF_COPY_FLAGS);
 
@@ -1941,7 +1941,7 @@ void tokenize(const deque<int> &data, chunk_t *ref)
             chunk_flags_clr(pc, PCF_IN_PREPROC);
          }
       }
-      if (ref != NULL)
+      if (ref != nullptr)
       {
          chunk.flags |= PCF_INSERTED;
       }
@@ -1983,7 +1983,7 @@ void tokenize(const deque<int> &data, chunk_t *ref)
       {
          /* Check for a preprocessor start */
          if ((pc->type == CT_POUND) &&
-             ((rprev == NULL) || (rprev->type == CT_NEWLINE)))
+             ((rprev == nullptr) || (rprev->type == CT_NEWLINE)))
          {
             set_chunk_type(pc, CT_PREPROC);
             pc->flags     |= PCF_IN_PREPROC;

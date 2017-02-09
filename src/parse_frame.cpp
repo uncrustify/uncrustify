@@ -194,7 +194,7 @@ int pf_check(parse_frame_t *frm, chunk_t *pc)
       return(pp_level);
    }
    chunk_t *next = chunk_get_next(pc);
-   if (next == NULL)
+   if (next == nullptr)
    {
       return(pp_level);
    }
@@ -211,7 +211,7 @@ int pf_check(parse_frame_t *frm, chunk_t *pc)
            __func__, __LINE__, pc->orig_line, get_token_name(pc->parent_type));
    pf_log_frms(LPFCHK, "TOP", frm);
 
-   const char *txt = NULL;
+   const char *txt = nullptr;
    if (pc->flags & PCF_IN_PREPROC)
    {
       LOG_FMT(LPF, " <In> ");
@@ -285,7 +285,7 @@ int pf_check(parse_frame_t *frm, chunk_t *pc)
       }
    }
 
-   if (txt != NULL)
+   if (txt != nullptr)
    {
       LOG_FMT(LPF, "%s(%d): %zu> %s: %s in_ifdef=%d/%d counts=%d/%d\n", __func__, __LINE__,
               pc->orig_line, get_token_name(pc->parent_type), txt,

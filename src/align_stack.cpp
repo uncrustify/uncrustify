@@ -157,7 +157,7 @@ void AlignStack::Add(chunk_t *start, size_t seqnum)
 
       /* Find ref. Back up to the real item that is aligned. */
       chunk_t *prev = start;
-      while (((prev = chunk_get_prev(prev)) != NULL) &&
+      while (((prev = chunk_get_prev(prev)) != nullptr) &&
              (chunk_is_ptr_operator(prev) ||
               (prev->type == CT_TPAREN_OPEN)))
       {
@@ -332,7 +332,7 @@ void AlignStack::NewLines(size_t cnt)
 void AlignStack::Flush()
 {
    size_t                  last_seqnum = 0;
-   const ChunkStack::Entry *ce         = NULL;
+   const ChunkStack::Entry *ce         = nullptr;
    chunk_t                 *pc;
 
    LOG_FMT(LAS, "%s: m_aligned.Len()=%zu\n", __func__, m_aligned.Len());
@@ -342,7 +342,7 @@ void AlignStack::Flush()
       // check if we have *one* typedef in the line
       pc = m_aligned.Get(0)->m_pc;
       chunk_t *temp = chunk_get_prev_type(pc, CT_TYPEDEF, pc->level);
-      if (temp != NULL)
+      if (temp != nullptr)
       {
          if (pc->orig_line == temp->orig_line)
          {
@@ -384,7 +384,7 @@ void AlignStack::Flush()
          if (pc->align.start->type == CT_NEG)
          {
             tmp = chunk_get_next(pc->align.start);
-            if ((tmp != NULL) && (tmp->type == CT_NUMBER))
+            if ((tmp != nullptr) && (tmp->type == CT_NUMBER))
             {
                start_len += tmp->len();
             }
@@ -446,7 +446,7 @@ void AlignStack::Flush()
       align_to_column(pc, tmp_col);
    }
 
-   if (ce != NULL)
+   if (ce != nullptr)
    {
       last_seqnum = ce->m_seqnum;
       m_aligned.Reset();

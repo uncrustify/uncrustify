@@ -35,7 +35,7 @@ static std::deque<log_fcn_info> g_fq;
 struct log_buf
 {
    log_buf()
-      : log_file(0)
+      : log_file(nullptr)
       , sev(LSYS)
       , in_log(0)
       , buf_len(0)
@@ -92,7 +92,7 @@ void log_init(FILE *log_file)
    log_set_sev(LERR, true);
    log_set_sev(LWARN, true);
 
-   g_log.log_file = (log_file != NULL) ? log_file : stderr;
+   g_log.log_file = (log_file != nullptr) ? log_file : stderr;
 }
 
 
@@ -215,7 +215,7 @@ static void log_end(void)
  */
 void log_str(log_sev_t sev, const char *str, size_t len)
 {
-   if ((str == NULL) || (len == 0) || !log_sev_on(sev))
+   if ((str == nullptr) || (len == 0) || !log_sev_on(sev))
    {
       return;
    }
@@ -244,7 +244,7 @@ void log_str(log_sev_t sev, const char *str, size_t len)
  */
 void log_fmt(log_sev_t sev, const char *fmt, ...)
 {
-   if ((fmt == NULL) || !log_sev_on(sev))
+   if ((fmt == nullptr) || !log_sev_on(sev))
    {
       return;
    }
@@ -284,7 +284,7 @@ void log_fmt(log_sev_t sev, const char *fmt, ...)
  */
 void log_hex(log_sev_t sev, const void *vdata, size_t len)
 {
-   if ((vdata == NULL) || !log_sev_on(sev))
+   if ((vdata == nullptr) || !log_sev_on(sev))
    {
       return;
    }
@@ -324,7 +324,7 @@ void log_hex(log_sev_t sev, const void *vdata, size_t len)
  */
 void log_hex_blk(log_sev_t sev, const void *data, size_t len)
 {
-   if ((data == NULL) || !log_sev_on(sev))
+   if ((data == nullptr) || !log_sev_on(sev))
    {
       return;
    }
