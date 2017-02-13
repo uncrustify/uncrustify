@@ -12,6 +12,7 @@
 #include "prototypes.h"
 #include "uncrustify_version.h"
 #include "uncrustify.h"
+#include "error_types.h"
 #include "keywords.h"
 #include "defines.h"
 #include <cstring>
@@ -122,7 +123,7 @@ void unc_add_option(const char *name, uncrustify_options id, argtype_e type,
    {
       fprintf(stderr, "FATAL: length of the option name (%s) is too big (%d)\n", name, lengthOfTheOption);
       fprintf(stderr, "FATAL: the maximal length of an option name is %d characters\n", OptionMaxLength);
-      exit(EXIT_FAILURE);
+      exit(EX_SOFTWARE);
    }
    group_map[current_group].options.push_back(id);
 
@@ -152,6 +153,11 @@ void unc_add_option(const char *name, uncrustify_options id, argtype_e type,
       value.max_val = max_val;
       break;
 
+   case AT_UNUM:
+      value.min_val = min_val;
+      value.max_val = max_val;
+      break;
+
    case AT_LINE:
       value.max_val = 3;
       break;
@@ -164,14 +170,9 @@ void unc_add_option(const char *name, uncrustify_options id, argtype_e type,
       value.max_val = 0;
       break;
 
-   case AT_UNUM:
-      value.min_val = min_val;
-      value.max_val = max_val;
-      break;
-
    default:
       fprintf(stderr, "FATAL: Illegal option type %d for '%s'\n", type, name);
-      exit(EXIT_FAILURE);
+      exit(EX_SOFTWARE);
    }
 
    option_name_map[id] = value;
@@ -2313,7 +2314,7 @@ string argtype_to_string(argtype_e argtype)
 
    default:
       fprintf(stderr, "Unknown argtype '%d'\n", argtype);
-      return("");
+      exit(EX_SOFTWARE);
    }
 }
 
@@ -2345,7 +2346,7 @@ const char *get_argtype_name(argtype_e argtype)
 
    default:
       fprintf(stderr, "Unknown argtype '%d'\n", argtype);
-      return("");
+      exit(EX_SOFTWARE);
    }
 }
 
@@ -2484,6 +2485,6 @@ string op_val_to_string(argtype_e argtype, op_val_t op_val)
 
    default:
       fprintf(stderr, "Unknown argtype '%d'\n", argtype);
-      return("");
+      exit(EX_SOFTWARE);
    }
 }
