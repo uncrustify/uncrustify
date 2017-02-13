@@ -209,13 +209,11 @@ static bool match_text(const char *str1, const char *str2)
 
 const option_map_value *unc_find_option(const char *name)
 {
-   const option_name_map_it itE = option_name_map.end();
-
-   for (option_name_map_it it = option_name_map.begin(); it != itE; it++)
+   for (const auto &it : option_name_map)
    {
-      if (match_text(it->second.name, name))
+      if (match_text(it.second.name, name))
       {
-         return(&it->second);
+         return(&it.second);
       }
    }
    return(nullptr);
@@ -1593,13 +1591,11 @@ void register_options(void)
 
 const group_map_value *get_group_name(size_t ug)
 {
-   for (group_map_it it = group_map.begin();
-        it != group_map.end();
-        it++)
+   for (const auto &it : group_map)
    {
-      if (it->second.id == ug)
+      if (it.second.id == ug)
       {
-         return(&it->second);
+         return(&it.second);
       }
    }
    return(nullptr);
@@ -2063,20 +2059,20 @@ int save_option_file_kernel(FILE *pfile, bool withDoc, bool only_not_default)
    fprintf(pfile, "# Uncrustify %s\n", UNCRUSTIFY_VERSION);
 
    /* Print the options by group */
-   for (group_map_it jt = group_map.begin(); jt != group_map.end(); jt++)
+   for (auto &jt : group_map)
    {
       if (withDoc)
       {
          fputs("\n#\n", pfile);
-         fprintf(pfile, "# %s\n", jt->second.short_desc);
+         fprintf(pfile, "# %s\n", jt.second.short_desc);
          fputs("#\n\n", pfile);
       }
 
       bool first = true;
 
-      for (option_list_it it = jt->second.options.begin(); it != jt->second.options.end(); it++)
+      for (auto option_id : jt.second.options)
       {
-         const option_map_value *option = get_option_name(*it);
+         const option_map_value *option = get_option_name(option_id);
 
          if (withDoc && (option->short_desc != nullptr) && (*option->short_desc != 0))
          {
@@ -2184,13 +2180,13 @@ void print_options(FILE *pfile)
    fprintf(pfile, "# Uncrustify %s\n", UNCRUSTIFY_VERSION);
 
    /* Print the all out */
-   for (group_map_it jt = group_map.begin(); jt != group_map.end(); jt++)
+   for (auto &jt : group_map)
    {
-      fprintf(pfile, "#\n# %s\n#\n\n", jt->second.short_desc);
+      fprintf(pfile, "#\n# %s\n#\n\n", jt.second.short_desc);
 
-      for (option_list_it it = jt->second.options.begin(); it != jt->second.options.end(); it++)
+      for (auto option_id : jt.second.options)
       {
-         const option_map_value *option = get_option_name(*it);
+         const option_map_value *option = get_option_name(option_id);
          int                    cur     = strlen(option->name);
          int                    pad     = (cur < MAX_OPTION_NAME_LEN) ? (MAX_OPTION_NAME_LEN - cur) : 1;
          fprintf(pfile, "%s%*c%s\n",
@@ -2228,9 +2224,9 @@ void print_options(FILE *pfile)
 void set_option_defaults(void)
 {
    /* set all the default values to zero */
-   for (int count = 0; count < UO_option_count; count++)
+   for (auto &count : cpd.defaults)
    {
-      cpd.defaults[count].n = 0;
+      count.n = 0;
    }
 
    /* the options with non-zero default values */

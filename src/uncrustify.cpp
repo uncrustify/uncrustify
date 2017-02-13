@@ -2055,11 +2055,11 @@ static lang_name_t language_names[] =
 
 size_t language_flags_from_name(const char *name)
 {
-   for (size_t i = 0; i < ARRAY_SIZE(language_names); i++)
+   for (const auto &language : language_names)
    {
-      if (strcasecmp(name, language_names[i].name) == 0)
+      if (strcasecmp(name, language.name) == 0)
       {
-         return(language_names[i].lang);
+         return(language.lang);
       }
    }
    return(0);
@@ -2069,20 +2069,20 @@ size_t language_flags_from_name(const char *name)
 const char *language_name_from_flags(size_t lang)
 {
    /* Check for an exact match first */
-   for (size_t i = 0; i < ARRAY_SIZE(language_names); i++)
+   for (auto &language_name : language_names)
    {
-      if (language_names[i].lang == lang)
+      if (language_name.lang == lang)
       {
-         return(language_names[i].name);
+         return(language_name.name);
       }
    }
 
    /* Check for the first set language bit */
-   for (size_t i = 0; i < ARRAY_SIZE(language_names); i++)
+   for (auto &language_name : language_names)
    {
-      if ((language_names[i].lang & lang) != 0)
+      if ((language_name.lang & lang) != 0)
       {
-         return(language_names[i].name);
+         return(language_name.name);
       }
    }
    return("???");
@@ -2160,22 +2160,22 @@ const char *extension_add(const char *ext_text, const char *lang_text)
 
 void print_extensions(FILE *pfile)
 {
-   for (int idx = 0; idx < (int)ARRAY_SIZE(language_names); idx++)
+   for (auto &language : language_names)
    {
-      const char *lang_name = language_names[idx].name;
-      bool       did_one    = false;
-      for (extension_map_t::iterator it = g_ext_map.begin(); it != g_ext_map.end(); ++it)
+      bool did_one = false;
+      for (auto &extension_val : g_ext_map)
       {
-         if (strcmp(it->second.c_str(), lang_name) == 0)
+         if (strcmp(extension_val.second.c_str(), language.name) == 0)
          {
             if (!did_one)
             {
-               fprintf(pfile, "file_ext %s", it->second.c_str());
+               fprintf(pfile, "file_ext %s", extension_val.second.c_str());
                did_one = true;
             }
-            fprintf(pfile, " %s", it->first.c_str());
+            fprintf(pfile, " %s", extension_val.first.c_str());
          }
       }
+
       if (did_one)
       {
          fprintf(pfile, "\n");
@@ -2187,35 +2187,35 @@ void print_extensions(FILE *pfile)
 static size_t language_flags_from_filename(const char *filename)
 {
    /* check custom extensions first */
-   for (extension_map_t::iterator it = g_ext_map.begin(); it != g_ext_map.end(); ++it)
+   for (const auto &extension_val : g_ext_map)
    {
-      if (ends_with(filename, it->first.c_str()))
+      if (ends_with(filename, extension_val.first.c_str()))
       {
-         return(language_flags_from_name(it->second.c_str()));
+         return(language_flags_from_name(extension_val.second.c_str()));
       }
    }
 
-   for (size_t i = 0; i < ARRAY_SIZE(language_exts); i++)
+   for (auto &lanugage : language_exts)
    {
-      if (ends_with(filename, language_exts[i].ext))
+      if (ends_with(filename, lanugage.ext))
       {
-         return(language_flags_from_name(language_exts[i].name));
+         return(language_flags_from_name(lanugage.name));
       }
    }
 
    /* check again without case sensitivity */
-   for (extension_map_t::iterator it = g_ext_map.begin(); it != g_ext_map.end(); ++it)
+   for (auto &extension_val : g_ext_map)
    {
-      if (ends_with(filename, it->first.c_str(), false))
+      if (ends_with(filename, extension_val.first.c_str(), false))
       {
-         return(language_flags_from_name(it->second.c_str()));
+         return(language_flags_from_name(extension_val.second.c_str()));
       }
    }
-   for (size_t i = 0; i < ARRAY_SIZE(language_exts); i++)
+   for (auto &lanugage : language_exts)
    {
-      if (ends_with(filename, language_exts[i].ext, false))
+      if (ends_with(filename, lanugage.ext, false))
       {
-         return(language_flags_from_name(language_exts[i].name));
+         return(language_flags_from_name(lanugage.name));
       }
    }
    return(LANG_C);

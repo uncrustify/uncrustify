@@ -1812,35 +1812,35 @@ static const kw_subst_t kw_subst_table[] =
  */
 static void do_kw_subst(chunk_t *pc)
 {
-   for (size_t kw_idx = 0; kw_idx < ARRAY_SIZE(kw_subst_table); kw_idx++)
+   for (const auto &kw : kw_subst_table)
    {
-      const kw_subst_t *kw = &kw_subst_table[kw_idx];
-      int              idx = pc->str.find(kw->tag);
-
-      if (idx >= 0)
+      int idx = pc->str.find(kw.tag);
+      if (idx < 0)
       {
-         unc_text tmp_txt;
-         tmp_txt.clear();
-         if (kw->func(pc, tmp_txt))
+         continue;
+      }
+
+      unc_text tmp_txt;
+      tmp_txt.clear();
+      if (kw.func(pc, tmp_txt))
+      {
+         /* if the replacement contains '\n' we need to fix the lead */
+         if (tmp_txt.find("\n") >= 0)
          {
-            /* if the replacement contains '\n' we need to fix the lead */
-            if (tmp_txt.find("\n") >= 0)
+            size_t nl_idx = pc->str.rfind("\n", idx);
+            if (nl_idx > 0)
             {
-               size_t nl_idx = pc->str.rfind("\n", idx);
-               if (nl_idx > 0)
+               unc_text nl_txt;
+               nl_txt.append("\n");
+               nl_idx++;
+               while ((nl_idx < (size_t)idx) && !unc_isalnum(pc->str[nl_idx]))
                {
-                  unc_text nl_txt;
-                  nl_txt.append("\n");
-                  nl_idx++;
-                  while ((nl_idx < (size_t)idx) && !unc_isalnum(pc->str[nl_idx]))
-                  {
-                     nl_txt.append(pc->str[nl_idx++]);
-                  }
-                  tmp_txt.replace("\n", nl_txt);
+                  nl_txt.append(pc->str[nl_idx++]);
                }
+               tmp_txt.replace("\n", nl_txt);
             }
-            pc->str.replace(kw->tag, tmp_txt);
          }
+         pc->str.replace(kw.tag, tmp_txt);
       }
    }
 } // do_kw_subst

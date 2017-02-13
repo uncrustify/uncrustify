@@ -37,18 +37,17 @@ void unc_text::update_logtext()
       /* make a pessimistic guess at the size */
       m_logtext.clear();
       m_logtext.reserve(m_chars.size() * 3);
-      for (value_type::iterator it = m_chars.begin(); it != m_chars.end(); ++it)
+      for (int m_char : m_chars)
       {
-         int val = *it;
-         if (*it == '\n')
+         if (m_char == '\n')
          {
-            val = 0x2424;
+            m_char = 0x2424;
          }
-         else if (*it == '\r')
+         else if (m_char == '\r')
          {
-            val = 0x240d;
+            m_char = 0x240d;
          }
-         encode_utf8(val, m_logtext);
+         encode_utf8(m_char, m_logtext);
       }
       m_logtext.push_back(0);
       m_logok = true;

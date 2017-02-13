@@ -189,11 +189,11 @@ static const token_pri pri_table[] =
 
 static size_t get_split_pri(c_token_t tok)
 {
-   for (size_t idx = 0; idx < ARRAY_SIZE(pri_table); idx++)
+   for (auto token : pri_table)
    {
-      if (pri_table[idx].tok == tok)
+      if (token.tok == tok)
       {
-         return(pri_table[idx].pri);
+         return(token.pri);
       }
    }
    return(0);

@@ -5912,12 +5912,10 @@ static void handle_oc_property_decl(chunk_t *os)
          for (multimap<int, std::vector<ChunkGroup> >::reverse_iterator it = sorted_chunk_map.rbegin(); it != sorted_chunk_map.rend(); ++it)
          {
             std::vector<ChunkGroup> chunk_groups = (*it).second;
-            for (std::vector<int>::size_type i = 0; i < chunk_groups.size(); i++)
+            for (auto chunk_group : chunk_groups)
             {
-               ChunkGroup chunk_group = chunk_groups[i];
-               for (std::vector<int>::size_type j = 0; j < chunk_group.size(); j++)
+               for (auto chunk : chunk_group)
                {
-                  chunk_t *chunk = chunk_group[j];
                   chunk->orig_prev_sp = 0;
                   if (chunk != curr_chunk)
                   {
