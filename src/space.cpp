@@ -714,6 +714,24 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
       return(cpd.settings[UO_sp_assign].a);
    }
 
+   if (first->type == CT_BIT_COLON)
+   {
+      if (first->flags & PCF_IN_ENUM)
+      {
+         log_rule("sp_enum_colon");
+         return(cpd.settings[UO_sp_enum_colon].a);
+      }
+   }
+
+   if (second->type == CT_BIT_COLON)
+   {
+      if (second->flags & PCF_IN_ENUM)
+      {
+         log_rule("sp_enum_colon");
+         return(cpd.settings[UO_sp_enum_colon].a);
+      }
+   }
+
    if (second->type == CT_OC_BLOCK_CARET)
    {
       log_rule("sp_before_oc_block_caret");

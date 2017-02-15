@@ -199,7 +199,8 @@ static void newlines_if_for_while_switch_post_blank_lines(chunk_t *start, argval
  *
  * "struct [name] {" or "struct [name] \n {"
  */
-static void newlines_struct_enum_union(chunk_t *start, argval_t nl_opt, bool leave_trailing);
+static void newlines_struct_union(chunk_t *start, argval_t nl_opt, bool leave_trailing);
+static void newlines_enum(chunk_t *start);
 
 
 /**
@@ -1259,7 +1260,7 @@ static void newlines_if_for_while_switch_post_blank_lines(chunk_t *start, argval
 } // newlines_if_for_while_switch_post_blank_lines
 
 
-static void newlines_struct_enum_union(chunk_t *start, argval_t nl_opt, bool leave_trailing)
+static void newlines_struct_union(chunk_t *start, argval_t nl_opt, bool leave_trailing)
 {
    LOG_FUNC_ENTRY();
    chunk_t *pc;
@@ -1306,7 +1307,109 @@ static void newlines_struct_enum_union(chunk_t *start, argval_t nl_opt, bool lea
 
       newline_iarf_pair(start, pc, nl_opt);
    }
-} // newlines_struct_enum_union
+} // newlines_struct_union
+
+
+// enum {
+// enum class angle_state_e : unsigned int {
+// enum-key attr(optional) identifier(optional) enum-base(optional) { enumerator-list(optional) }
+// enum-key attr(optional) nested-name-specifier(optional) identifier enum-base(optional) ; TODO
+// enum-key         - one of enum, enum class or enum struct  TODO
+// identifier       - the name of the enumeration that's being declared
+// enum-base(C++11) - colon (:), followed by a type-specifier-seq
+// enumerator-list  - comma-separated list of enumerator definitions
+static void newlines_enum(chunk_t *start)
+{
+   LOG_FUNC_ENTRY();
+   chunk_t  *pc;
+   chunk_t  *pcClass;
+   chunk_t  *pcType;
+   chunk_t  *pcColon;
+   chunk_t  *pcType1;
+   chunk_t  *pcType2;
+   argval_t nl_opt;
+
+   if ((start->flags & PCF_IN_PREPROC) &&
+       !cpd.settings[UO_nl_define_macro].b)
+   {
+      return;
+   }
+
+   // look for 'enum class'
+   pcClass = chunk_get_next_ncnl(start);
+   if ((pcClass != nullptr) &&
+       (pcClass->type == CT_ENUM_CLASS))
+   {
+      newline_iarf_pair(start, pcClass, cpd.settings[UO_nl_enum_class].a);
+      // look for 'identifier'/ 'type'
+      pcType = chunk_get_next_ncnl(pcClass);
+      if ((pcType != nullptr) &&
+          (pcType->type == CT_TYPE))
+      {
+         newline_iarf_pair(pcClass, pcType, cpd.settings[UO_nl_enum_class_identifier].a);
+         // look for ':'
+         pcColon = chunk_get_next_ncnl(pcType);
+         if ((pcColon != nullptr) &&
+             (pcColon->type == CT_BIT_COLON))
+         {
+            newline_iarf_pair(pcType, pcColon, cpd.settings[UO_nl_enum_identifier_colon].a);
+            // look for 'type' i.e. unsigned
+            pcType1 = chunk_get_next_ncnl(pcColon);
+            if ((pcType1 != nullptr) &&
+                (pcType1->type == CT_TYPE))
+            {
+               newline_iarf_pair(pcColon, pcType1, cpd.settings[UO_nl_enum_colon_type].a);
+               // look for 'type' i.e. int
+               pcType2 = chunk_get_next_ncnl(pcType1);
+               if ((pcType2 != nullptr) &&
+                   (pcType2->type == CT_TYPE))
+               {
+                  newline_iarf_pair(pcType1, pcType2, cpd.settings[UO_nl_enum_colon_type].a);
+               }
+            }
+         }
+      }
+   }
+
+   /* step past any junk between the keyword and the open brace
+    * Quit if we hit a semicolon or '=', which are not expected.
+    */
+   size_t level = start->level;
+   pc = start;
+   while (((pc = chunk_get_next_ncnl(pc)) != nullptr) && (pc->level >= level))
+   {
+      if ((pc->level == level) &&
+          ((pc->type == CT_BRACE_OPEN) ||
+           chunk_is_semicolon(pc) ||
+           (pc->type == CT_ASSIGN)))
+      {
+         break;
+      }
+      start = pc;
+   }
+
+   /* If we hit a brace open, then we need to toy with the newlines */
+   if ((pc != nullptr) && (pc->type == CT_BRACE_OPEN))
+   {
+      /* Skip over embedded C comments */
+      chunk_t *next = chunk_get_next(pc);
+      while ((next != nullptr) && (next->type == CT_COMMENT))
+      {
+         next = chunk_get_next(next);
+      }
+      if (!chunk_is_comment(next) &&
+          !chunk_is_newline(next))
+      {
+         nl_opt = AV_IGNORE;
+      }
+      else
+      {
+         nl_opt = cpd.settings[UO_nl_enum_brace].a;
+      }
+
+      newline_iarf_pair(start, pc, nl_opt);
+   }
+} // newlines_enum
 
 
 static void newlines_cuddle_uncuddle(chunk_t *start, argval_t nl_opt)
@@ -2803,15 +2906,15 @@ void newlines_cleanup_braces(bool first)
       }
       else if (pc->type == CT_STRUCT)
       {
-         newlines_struct_enum_union(pc, cpd.settings[UO_nl_struct_brace].a, true);
+         newlines_struct_union(pc, cpd.settings[UO_nl_struct_brace].a, true);
       }
       else if (pc->type == CT_UNION)
       {
-         newlines_struct_enum_union(pc, cpd.settings[UO_nl_union_brace].a, true);
+         newlines_struct_union(pc, cpd.settings[UO_nl_union_brace].a, true);
       }
       else if (pc->type == CT_ENUM)
       {
-         newlines_struct_enum_union(pc, cpd.settings[UO_nl_enum_brace].a, true);
+         newlines_enum(pc);
       }
       else if (pc->type == CT_CASE)
       {
@@ -2967,7 +3070,7 @@ void newlines_cleanup_braces(bool first)
       }
       else if (pc->type == CT_NAMESPACE)
       {
-         newlines_struct_enum_union(pc, cpd.settings[UO_nl_namespace_brace].a, false);
+         newlines_struct_union(pc, cpd.settings[UO_nl_namespace_brace].a, false);
       }
       else if (pc->type == CT_SQUARE_OPEN)
       {

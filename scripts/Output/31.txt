@@ -1,16 +1,16 @@
 indent_text(): : pc->text() struct
-[x:FORCE_SPACE,STMT_START,EXPR_START]
+[x:IN_STRUCT,FORCE_SPACE,STMT_START,EXPR_START]
 indent_text(): frm.pse_tos=, ... indent_tmp=
 indent_text(): frm.pse_tos=, ... indent_tmp=
 indent_text(): : pc->text() TelegramIndex
-[x:]
+[x:IN_STRUCT]
 indent_text(): frm.pse_tos=, ... indent_tmp=
 indent_text(): frm.pse_tos=, ... indent_tmp=
 indent_text():  NEWLINE
 indent_text(): frm.pse_tos=, ... indent_tmp=
 indent_text(): frm.pse_tos=, ... indent_tmp=
 indent_text(): : pc->text() {
-[x:PUNCTUATOR]
+[x:IN_STRUCT,PUNCTUATOR]
 indent_text(): frm.pse_tos=, ... indent_tmp=
 indent_text(): frm.pse_tos=, ... indent_tmp=
 indent_pse_push(): line=, pse_tos=, type=BRACE_OPEN
@@ -240,18 +240,18 @@ indent_text():  NEWLINE
 indent_text(): frm.pse_tos=, ... indent_tmp=
 indent_text(): frm.pse_tos=, ... indent_tmp=
 indent_text(): : pc->text() struct
-[x:FORCE_SPACE,STMT_START,EXPR_START]
+[x:IN_STRUCT,FORCE_SPACE,STMT_START,EXPR_START]
 indent_text(): frm.pse_tos=, ... indent_tmp=
 indent_text(): frm.pse_tos=, ... indent_tmp=
 indent_text(): : pc->text() TelegramIndex
-[x:]
+[x:IN_STRUCT]
 indent_text(): frm.pse_tos=, ... indent_tmp=
 indent_text(): frm.pse_tos=, ... indent_tmp=
 indent_text():  NEWLINE
 indent_text(): frm.pse_tos=, ... indent_tmp=
 indent_text(): frm.pse_tos=, ... indent_tmp=
 indent_text(): : pc->text() {
-[x:PUNCTUATOR]
+[x:IN_STRUCT,PUNCTUATOR]
 indent_text(): frm.pse_tos=, ... indent_tmp=
 indent_text(): frm.pse_tos=, ... indent_tmp=
 indent_pse_push(): line=, pse_tos=, type=BRACE_OPEN

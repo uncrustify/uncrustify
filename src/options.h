@@ -301,6 +301,7 @@ enum uncrustify_options
    UO_sp_enum_assign,           // space around = in enum
    UO_sp_enum_before_assign,    // space before = in enum
    UO_sp_enum_after_assign,     // space after = in enum
+   UO_sp_enum_colon,            // space around ':' in enum
    UO_sp_after_class_colon,     // space after class ':'
    UO_sp_before_class_colon,    // space before class ':'
    UO_sp_after_constr_colon,    // space after class constructor ':'
@@ -574,6 +575,12 @@ enum uncrustify_options
    UO_nl_squeeze_ifdef,               // no blanks after #ifxx, #elxx, or before #elxx and #endif
    UO_nl_squeeze_ifdef_top_level,     // when set, nl_squeeze_ifdef will be applied to top-level #ifdefs as well
    UO_nl_enum_brace,                  // newline between enum and brace
+   UO_nl_enum_class,                  // newline between enum and class
+   UO_nl_enum_class_identifier,       // newline between enum class and 'identifier'
+   UO_nl_enum_identifier_colon,       // newline between enum class 'type' and ':'
+   UO_nl_enum_colon_type,             // newline between enum class identifier :' and 'type'
+                                      // newline between enum class identifier :' 'type' and 'type'
+                                      // i.e.            enum class abcd : unsigned int
    UO_nl_struct_brace,                // newline between struct and brace
    UO_nl_union_brace,                 // newline between union and brace
    UO_nl_assign_brace,                // newline between '=' and '{'
