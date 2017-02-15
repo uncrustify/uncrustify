@@ -344,15 +344,15 @@ static bool decode_bom(const vector<UINT8> &in_data, char_encoding_e &enc)
          enc = char_encoding_e::UTF16_BE;
          return(true);
       }
-      else if ((in_data[0] == 0xff) && (in_data[1] == 0xfe))
+
+      if ((in_data[0] == 0xff) && (in_data[1] == 0xfe))
       {
          enc = char_encoding_e::UTF16_LE;
          return(true);
       }
-      else if ((in_data.size() >= 3) &&
-               (in_data[0] == 0xef) &&
-               (in_data[1] == 0xbb) &&
-               (in_data[2] == 0xbf))
+
+      if ((in_data.size() >= 3) && (in_data[0] == 0xef) && (in_data[1] == 0xbb)
+          && (in_data[2] == 0xbf))
       {
          enc = char_encoding_e::UTF8;
          return(true);
@@ -372,10 +372,8 @@ bool decode_unicode(const vector<UINT8> &in_data, deque<int> &out_data, char_enc
       {
          return(decode_utf8(in_data, out_data));
       }
-      else
-      {
-         return(decode_utf16(in_data, out_data, enc));
-      }
+
+      return(decode_utf16(in_data, out_data, enc));
    }
    has_bom = false;
 

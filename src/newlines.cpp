@@ -568,16 +568,14 @@ static void newline_min_after(chunk_t *ref, size_t count, UINT64 flag)
       newline_min_after(next, count, flag);
       return;
    }
-   else
+
+   chunk_flags_set(pc, flag);
+   if (chunk_is_newline(pc) && can_increase_nl(pc))
    {
-      chunk_flags_set(pc, flag);
-      if (chunk_is_newline(pc) && can_increase_nl(pc))
+      if (pc->nl_count < count)
       {
-         if (pc->nl_count < count)
-         {
-            pc->nl_count = count;
-            MARK_CHANGE();
-         }
+         pc->nl_count = count;
+         MARK_CHANGE();
       }
    }
 } // newline_min_after
@@ -1453,10 +1451,9 @@ static void newlines_do_else(chunk_t *start, argval_t nl_opt)
          LOG_FMT(LNL1LINE, "a new line may NOT be added\n");
          return;
       }
-      else
-      {
-         LOG_FMT(LNL1LINE, "a new line may be added\n");
-      }
+
+      LOG_FMT(LNL1LINE, "a new line may be added\n");
+
       if (next->type == CT_VBRACE_OPEN)
       {
          /* Can only add - we don't want to create a one-line here */
@@ -1705,10 +1702,8 @@ static void newlines_brace_pair(chunk_t *br_open)
       LOG_FMT(LNL1LINE, "a new line may NOT be added\n");
       return;
    }
-   else
-   {
-      LOG_FMT(LNL1LINE, "a new line may be added\n");
-   }
+
+   LOG_FMT(LNL1LINE, "a new line may be added\n");
 
    next = chunk_get_next_nc(br_open);
    chunk_t *prev;

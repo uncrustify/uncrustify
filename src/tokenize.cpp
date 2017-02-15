@@ -335,7 +335,8 @@ static bool d_parse_string(tok_ctx &ctx, chunk_t &pc)
    {
       return(parse_string(ctx, pc, 0, true));
    }
-   else if (ch == '\\')
+
+   if (ch == '\\')
    {
       ctx.save();
       int cnt;
@@ -1722,8 +1723,9 @@ static bool parse_next(tok_ctx &ctx, chunk_t &pc)
             parse_string(ctx, pc, 1, (ctx.peek() == '!'));
             return(true);
          }
-         else if (((ctx.peek(1) == '\\') || (ctx.peek(1) == '!')) &&
-                  (ctx.peek(2) == '"'))
+
+         if (((ctx.peek(1) == '\\') || (ctx.peek(1) == '!'))
+             && (ctx.peek(2) == '"'))
          {
             parse_string(ctx, pc, 2, false);
             return(true);
@@ -1800,7 +1802,8 @@ static bool parse_next(tok_ctx &ctx, chunk_t &pc)
          parse_string(ctx, pc, 1, true);
          return(true);
       }
-      else if ((nc >= '0') && (nc <= '9'))
+
+      if ((nc >= '0') && (nc <= '9'))
       {
          /* literal number */
          pc.str.append(ctx.get());  /* store the '@' */

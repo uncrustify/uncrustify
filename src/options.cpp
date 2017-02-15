@@ -1699,14 +1699,12 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
    }
 
    const option_map_value *tmp;
-   if ((entry->type == AT_NUM) ||
-       (entry->type == AT_UNUM))
+   if ((entry->type == AT_NUM) || (entry->type == AT_UNUM))
    {
-      if (unc_isdigit(*val) ||
-          (unc_isdigit(val[1]) && ((*val == '-') || (*val == '+'))))
+      if (unc_isdigit(*val)
+          || (unc_isdigit(val[1]) && ((*val == '-') || (*val == '+'))))
       {
-         if ((entry->type == AT_UNUM) &&
-             (*val == '-'))
+         if ((entry->type == AT_UNUM) && (*val == '-'))
          {
             fprintf(stderr, "%s:%d\n  for the option '%s' is a negative value not possible: %s",
                     cpd.filename, cpd.line_number, entry->name, val);
@@ -1716,50 +1714,42 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
          // is the same as dest->u
          return;
       }
-      else
-      {
-         /* Try to see if it is a variable */
-         int mult = 1;
-         if (*val == '-')
-         {
-            mult = -1;
-            val++;
-         }
 
-         tmp = unc_find_option(val);
-         if (tmp == nullptr)
-         {
-            fprintf(stderr, "%s:%d\n  for the assigment: unknown option '%s':",
-                    cpd.filename, cpd.line_number, val);
-            exit(EX_CONFIG);
-         }
-         // indent_case_brace = -indent_columns
-         LOG_FMT(LNOTE, "line_number=%d, entry(%s) %s, tmp(%s) %s\n",
-                 cpd.line_number,
-                 get_argtype_name(entry->type), entry->name,
-                 get_argtype_name(tmp->type), tmp->name);
-         if ((tmp->type == entry->type) ||
-             ((tmp->type == AT_UNUM) && (entry->type == AT_NUM)) ||
-             ((tmp->type == AT_NUM) && (entry->type == AT_UNUM) && (cpd.settings[tmp->id].n * mult) > 0))
-         {
-            dest->n = cpd.settings[tmp->id].n * mult;
-            // is the same as dest->u
-            return;
-         }
-         else
-         {
-            fprintf(stderr, "%s:%d\n  for the assigment: expected type for %s is %s, got %s\n",
-                    cpd.filename, cpd.line_number,
-                    entry->name, get_argtype_name(entry->type), get_argtype_name(tmp->type));
-            exit(EX_CONFIG);
-         }
+      /* Try to see if it is a variable */
+      int mult = 1;
+      if (*val == '-')
+      {
+         mult = -1;
+         val++;
       }
-      fprintf(stderr, "%s:%d Expected a number for %s, got %s\n",
-              cpd.filename, cpd.line_number, entry->name, val);
-      cpd.error_count++;
-      dest->n = 0;
-      // is the same as dest->u
-      return;
+
+      tmp = unc_find_option(val);
+      if (tmp == nullptr)
+      {
+         fprintf(stderr, "%s:%d\n  for the assigment: unknown option '%s':",
+                 cpd.filename, cpd.line_number, val);
+         exit(EX_CONFIG);
+      }
+
+      // indent_case_brace = -indent_columns
+      LOG_FMT(LNOTE, "line_number=%d, entry(%s) %s, tmp(%s) %s\n",
+              cpd.line_number, get_argtype_name(entry->type),
+              entry->name, get_argtype_name(tmp->type), tmp->name);
+
+      if ((tmp->type == entry->type)
+          || ((tmp->type == AT_UNUM) && (entry->type == AT_NUM))
+          || ((tmp->type == AT_NUM) && (entry->type == AT_UNUM)
+              && (cpd.settings[tmp->id].n * mult) > 0))
+      {
+         dest->n = cpd.settings[tmp->id].n * mult;
+         // is the same as dest->u
+         return;
+      }
+
+      fprintf(stderr, "%s:%d\n  for the assigment: expected type for %s is %s, got %s\n",
+              cpd.filename, cpd.line_number,
+              entry->name, get_argtype_name(entry->type), get_argtype_name(tmp->type));
+      exit(EX_CONFIG);
    }
 
    if (entry->type == AT_BOOL)
@@ -1792,6 +1782,7 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
          dest->b = cpd.settings[tmp->id].b ? btrue : !btrue;
          return;
       }
+
       fprintf(stderr, "%s:%d Expected 'True' or 'False' for %s, got %s\n",
               cpd.filename, cpd.line_number, entry->name, val);
       cpd.error_count++;
@@ -2364,10 +2355,8 @@ string bool_to_string(bool val)
    {
       return("true");
    }
-   else
-   {
-      return("false");
-   }
+
+   return("false");
 }
 
 
