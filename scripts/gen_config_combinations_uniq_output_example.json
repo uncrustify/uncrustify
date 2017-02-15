@@ -1,0 +1,25 @@
+{
+    "option_settings": {
+        "AT_BOOL": ["False", "True"],
+        "AT_IARF": ["ignore", "add", "remove", "force"],
+        "AT_POS": ["ignore", "join", "lead", "lead_break", "lead_force",
+                   "trail", "trail_break", "trail_force"
+                   ],
+        "AT_LINE": ["auto", "lf", "crlf", "cr"],
+        "AT_NUM": [-2, -1, 0, 1, 2, 3],
+        "AT_UNUM": [0, 1, 2, 3]
+    },
+    "options": [{
+        "name": "nl_func_type_name",
+        "type": "AT_IARF"
+    }, {
+        "name": "nl_template_class",
+        "type": "AT_IARF"
+    }],
+    "out_dir": "./out_uniq_outputs",
+    "in_files": ["../src/uncrustify.cpp", "../src/width.h"],
+    "unc_bin": "../build/uncrustify",
+    "cleanup_lvl" : 0,
+    "force_cleanup": false,
+    "json_output": false
+}
