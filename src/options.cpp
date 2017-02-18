@@ -1567,6 +1567,8 @@ void register_options(void)
                   "Control whether to indent the code between #if, #else and #endif.");
    unc_add_option("pp_define_at_level", UO_pp_define_at_level, AT_BOOL,
                   "Whether to indent '#define' at the brace level (True) or from column 1 (false)");
+   unc_add_option("pp_ignore_define_body", UO_pp_ignore_define_body, AT_BOOL,
+                  "Whether to ignore the '#define' body while formatting.");
 
    unc_begin_group(UG_sort_includes, "Sort includes options");
    unc_add_option("include_category_0", UO_include_category_0, AT_STRING,

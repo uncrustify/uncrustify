@@ -398,6 +398,8 @@ static void setup_newline_add(chunk_t *prev, chunk_t *nl, chunk_t *next)
    nl->pp_level    = prev->pp_level;
    nl->nl_count    = 1;
    nl->flags       = (prev->flags & PCF_COPY_FLAGS) & ~PCF_IN_PREPROC;
+   nl->orig_col    = prev->orig_col_end;
+   nl->column      = prev->orig_col;
    if ((prev->flags & PCF_IN_PREPROC) && (next->flags & PCF_IN_PREPROC))
    {
       chunk_flags_set(nl, PCF_IN_PREPROC);

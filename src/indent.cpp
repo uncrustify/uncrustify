@@ -2198,7 +2198,8 @@ void indent_text(void)
             }
             if (pc->column != indent_column)
             {
-               if (use_ident)
+               if (use_ident &&
+                   pc->type != CT_PP_IGNORE) // Leave indentation alone for PP_IGNORE tokens
                {
                   LOG_FMT(LINDENT, "%s(%d): orig_line=%zu] indent => %zu [%s]\n",
                           __func__, __LINE__, pc->orig_line, indent_column, pc->text());

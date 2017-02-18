@@ -292,7 +292,7 @@ struct chunk_t
    c_token_t    parent_type;      /* usually CT_NONE */
    size_t       orig_line;
    size_t       orig_col;         /* is always > 0 */
-   UINT32       orig_col_end;     /* is always > 1 */
+   size_t       orig_col_end;     /* is always > 1 */
    UINT32       orig_prev_sp;     /* whitespace before this token */
    UINT64       flags;            /* see PCF_xxx */
    size_t       column;           /* column of chunk */
@@ -425,7 +425,7 @@ struct cp_data_t
    bool            unc_off;
    bool            unc_off_used;    // to check if "unc_off" is used
    UINT32          line_number;
-   UINT16          column;          // column for parsing
+   size_t          column;          // column for parsing
    UINT16          spaces;          // space count on output
 
    int             ifdef_over_whole_file;
