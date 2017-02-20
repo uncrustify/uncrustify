@@ -1199,7 +1199,7 @@ static chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_co
    /* Set up the bit colon aligner */
    AlignStack as_bc;
    as_bc.Start(myspan, 0);
-   as_bc.m_gap = cpd.settings[UO_align_var_def_colon_gap].n;
+   as_bc.m_gap = cpd.settings[UO_align_var_def_colon_gap].u;
 
    AlignStack as_at; /* attribute */
    as_at.Start(myspan, 0);
