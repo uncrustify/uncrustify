@@ -72,7 +72,7 @@ void examine_Data(const char *func_name, int theLine, int what)
          {
             LOG_FMT(LGUY, "\n");
             LOG_FMT(LGUY, "1:(%d),", theLine);
-            LOG_FMT(LGUY, "%s, orig_col=%zu, orig_col_end=%d\n", pc->text(), pc->orig_col, pc->orig_col_end);
+            LOG_FMT(LGUY, "%s, orig_col=%zu, orig_col_end=%zu\n", pc->text(), pc->orig_col, pc->orig_col_end);
          }
       }
       break;
