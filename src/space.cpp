@@ -133,6 +133,12 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
       log_rule("IGNORED");
       return(AV_REMOVE);
    }
+   if ((first->type == CT_PP_IGNORE) && (second->type == CT_PP_IGNORE))
+   {
+      // Leave spacing alone between PP_IGNORE tokens as we don't want the default behavior (which is ADD).
+      log_rule("PP_IGNORE");
+      return(AV_IGNORE);
+   }
    if ((first->type == CT_PP) || (second->type == CT_PP))
    {
       log_rule("sp_pp_concat");
@@ -2182,7 +2188,7 @@ int space_col_align(chunk_t *first, chunk_t *second)
    size_t coldiff;
    if (first->nl_count)
    {
-      LOG_FMT(LSPACE, "nl_count=%zu, orig_col_end=%d", first->nl_count, first->orig_col_end);
+      LOG_FMT(LSPACE, "nl_count=%zu, orig_col_end=%zu", first->nl_count, first->orig_col_end);
       coldiff = first->orig_col_end - 1;
    }
    else
