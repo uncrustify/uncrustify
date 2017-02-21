@@ -794,6 +794,7 @@ enum uncrustify_options
    UO_pp_indent_if,          //
    UO_pp_if_indent_code,     //
    UO_pp_define_at_level,    // indent #define at brace level
+   UO_pp_ignore_define_body, // "Whether to ignore the '#define' body while formatting."
 
    // group: UG_sort_includes, "Sort includes options"                                              11
    UO_include_category_0,  //
