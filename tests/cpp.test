@@ -377,3 +377,5 @@
 34112 empty.cfg                        cpp/bug_i_889.cpp
 34113 bug_902-1.cfg                    cpp/bug_902.cpp
 34114 bug_902-2.cfg                    cpp/bug_902.cpp
+
+34120 bug_i_999.cfg                    cpp/bug_i_999.cpp

@@ -750,7 +750,9 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh)
          /* we hit the second variable def - don't look for assigns, don't align */
          vdas.Reset();
       }
-      else if ((equ_count == 0) && (pc->type == CT_ASSIGN))
+      else if ((equ_count == 0) &&
+               (pc->type == CT_ASSIGN) &&
+               ((pc->flags & PCF_IN_TEMPLATE) == 0)) // Issue #999
       {
          //fprintf(stderr, "%s:  ** %s level=%d line=%zu col=%d prev=%d count=%d\n",
          //        __func__, pc->str, pc->level, pc->orig_line, pc->orig_col, prev_equ_type,
