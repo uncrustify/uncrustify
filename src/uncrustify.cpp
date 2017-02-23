@@ -204,7 +204,7 @@ int path_dirname_len(const char *filename)
    {
       return(0);
    }
-   return((int)(path_basename(filename) - filename));
+   return(static_cast<int>(path_basename(filename) - filename));
 }
 
 
@@ -1172,13 +1172,13 @@ static bool bout_content_matches(const file_mem &fm, bool report_status)
       {
          fprintf(stderr, "FAIL: %s (File size changed from %u to %u)\n",
                  cpd.filename,
-                 (int)fm.raw.size(), (int)cpd.bout->size());
+                 static_cast<int>(fm.raw.size()), static_cast<int>(cpd.bout->size()));
       }
       is_same = false;
    }
    else
    {
-      for (int idx = 0; idx < (int)fm.raw.size(); idx++)
+      for (int idx = 0; idx < static_cast<int>(fm.raw.size()); idx++)
       {
          if (fm.raw[idx] != (*cpd.bout)[idx])
          {
@@ -1194,7 +1194,7 @@ static bool bout_content_matches(const file_mem &fm, bool report_status)
    }
    if (is_same && report_status)
    {
-      fprintf(stdout, "PASS: %s (%u bytes)\n", cpd.filename, (int)fm.raw.size());
+      fprintf(stdout, "PASS: %s (%u bytes)\n", cpd.filename, static_cast<int>(fm.raw.size()));
    }
 
    return(is_same);
@@ -1697,7 +1697,7 @@ void uncrustify_file(const file_mem &fm, FILE *pfout,
    }
 
    /* Check for embedded 0's (represents a decoding failure or corrupt file) */
-   for (int idx = 0; idx < (int)data.size() - 1; idx++)
+   for (int idx = 0; idx < static_cast<int>(data.size()) - 1; idx++)
    {
       if (data[idx] == 0)
       {
@@ -1992,7 +1992,7 @@ static void uncrustify_end()
 
 const char *get_token_name(c_token_t token)
 {
-   if ((token >= 0) && (token < (int)ARRAY_SIZE(token_names)) &&
+   if ((token >= 0) && (token < static_cast<int> ARRAY_SIZE(token_names)) &&
        (token_names[token] != nullptr))
    {
       return(token_names[token]);
@@ -2009,11 +2009,11 @@ c_token_t find_token_name(const char *text)
 {
    if ((text != nullptr) && (*text != 0))
    {
-      for (int idx = 1; idx < (int)ARRAY_SIZE(token_names); idx++)
+      for (int idx = 1; idx < static_cast<int> ARRAY_SIZE(token_names); idx++)
       {
          if (strcasecmp(text, token_names[idx]) == 0)
          {
-            return((c_token_t)idx);
+            return(static_cast<c_token_t>(idx));
          }
       }
    }
@@ -2129,7 +2129,7 @@ const char *get_file_extension(int &idx)
 {
    const char *val = nullptr;
 
-   if (idx < (int)ARRAY_SIZE(language_exts))
+   if (idx < static_cast<int> ARRAY_SIZE(language_exts))
    {
       val = language_exts[idx].ext;
    }

@@ -443,7 +443,7 @@ void chunk_move_after(chunk_t *pc_in, chunk_t *ref)
 
    /* HACK: Adjust the original column */
    pc_in->column       = ref->column + space_col_align(ref, pc_in);
-   pc_in->orig_col     = (UINT32)pc_in->column;
+   pc_in->orig_col     = static_cast<UINT32>(pc_in->column);
    pc_in->orig_col_end = pc_in->orig_col + pc_in->len();
 }
 

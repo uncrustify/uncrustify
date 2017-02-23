@@ -1413,7 +1413,7 @@ void indent_text(void)
 
                if ((next != nullptr) && !chunk_is_newline(next) &&
                    /* label (+ 2, because there is colon and space after it) must fit into indent */
-                   (cpd.settings[UO_indent_label].n + (int)pc->len() + 2 <= (int)frm.pse[frm.pse_tos].indent))
+                   (cpd.settings[UO_indent_label].n + static_cast<int>(pc->len()) + 2 <= static_cast<int>(frm.pse[frm.pse_tos].indent)))
                {
                   reindent_line(next, frm.pse[frm.pse_tos].indent);
                }

@@ -187,7 +187,7 @@ static size_t log_start(log_sev_t sev)
    /* If not in a log, the buffer is empty. Add the header, if enabled. */
    if (!g_log.in_log && g_log.show_hdr)
    {
-      g_log.buf_len = (size_t)snprintf(g_log.buf, sizeof(g_log.buf), "<%d>", sev);
+      g_log.buf_len = static_cast<size_t>(snprintf(g_log.buf, sizeof(g_log.buf), "<%d>", sev));
    }
 
    size_t cap = (sizeof(g_log.buf) - 2) - g_log.buf_len;
@@ -199,7 +199,7 @@ static size_t log_start(log_sev_t sev)
 static void log_end(void)
 {
    g_log.in_log = (g_log.buf[g_log.buf_len - 1] != '\n');
-   if (!g_log.in_log || (g_log.buf_len > (int)(sizeof(g_log.buf) / 2)))
+   if (!g_log.in_log || (g_log.buf_len > static_cast<int>(sizeof(g_log.buf) / 2)))
    {
       log_flush(false);
    }
@@ -258,7 +258,7 @@ void log_fmt(log_sev_t sev, const char *fmt, ...)
    /* Add on the variable log parameters to the log string */
    va_list args;
    va_start(args, fmt);
-   size_t  len = (size_t)vsnprintf(&g_log.buf[g_log.buf_len], cap, fmt, args);
+   size_t  len = static_cast<size_t>(vsnprintf(&g_log.buf[g_log.buf_len], cap, fmt, args));
    va_end(args);
 
    if (len > 0)
@@ -290,7 +290,7 @@ void log_hex(log_sev_t sev, const void *vdata, size_t len)
    }
 
    char        buf[80];
-   const UINT8 *dat = (const UINT8 *)vdata;
+   const UINT8 *dat = static_cast<const UINT8 *>(vdata);
    size_t      idx  = 0;
    while (len-- > 0)
    {
@@ -330,7 +330,7 @@ void log_hex_blk(log_sev_t sev, const void *data, size_t len)
    }
 
    static char buf[80] = "nnn | XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX | cccccccccccccccc\n";
-   const UINT8 *dat    = (const UINT8 *)data;
+   const UINT8 *dat    = static_cast<const UINT8 *>(data);
    int         str_idx = 0;
    int         chr_idx = 0;
 

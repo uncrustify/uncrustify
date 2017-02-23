@@ -419,7 +419,7 @@ static void write_byte(int ch)
       }
       if (cpd.bout)
       {
-         cpd.bout->push_back((UINT8)ch);
+         cpd.bout->push_back(static_cast<UINT8>(ch));
       }
    }
    else
