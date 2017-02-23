@@ -12,7 +12,11 @@ BEGIN {
     if (slash > 0) {
       #printf("%d, UO_part=%s\n", slash, UO_part);
     } else {
-      count = count + 1;
+      option_count = index(UO_part, "UO_option_count");
+      if (option_count == 0)
+      {
+        count = count + 1;
+      }
     }
   }
 }

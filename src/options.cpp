@@ -80,6 +80,10 @@ static const char *DOC_TEXT_END =
 map<uncrustify_options, option_map_value> option_name_map;
 map<uncrustify_groups, group_map_value>   group_map;
 static uncrustify_groups                  current_group;
+#ifdef DEBUG
+static int                                checkGroupNumber  = -1;
+static int                                checkOptionNumber = -1;
+#endif // DEBUG
 
 const char *get_argtype_name(argtype_e argtype);
 
@@ -101,6 +105,22 @@ static void unc_add_option(const char *name, uncrustify_options id, argtype_e ty
 void unc_begin_group(uncrustify_groups id, const char *short_desc,
                      const char *long_desc)
 {
+#ifdef DEBUG
+   // The order of the calls of 'unc_begin_group' in the function 'register_options'
+   // is the master over all.
+   // This order must be the same in the declaration of the enum uncrustify_groups
+   // This will be checked here
+   checkGroupNumber++;
+   if (checkGroupNumber != id)
+   {
+      fprintf(stderr, "FATAL: The order of 'groups for options' is not the same:\n");
+      fprintf(stderr,
+              "   Number in the options.cpp file = %d\n"
+              "   Number in the options.h   file = %d\n"
+              "   for the group '%s'\n", id, checkGroupNumber, short_desc);
+      exit(EX_SOFTWARE);
+   }
+#endif // DEBUG
    current_group = id;
 
    group_map_value value;
@@ -117,6 +137,22 @@ void unc_add_option(const char *name, uncrustify_options id, argtype_e type,
                     const char *short_desc, const char *long_desc,
                     int min_val, int max_val)
 {
+#ifdef DEBUG
+   // The order of the calls of 'unc_add_option' in the function 'register_options'
+   // is the master over all.
+   // This order must be the same in the declaration of the enum uncrustify_options
+   // This will be checked here
+   checkOptionNumber++;
+   if (checkOptionNumber != id)
+   {
+      fprintf(stderr, "FATAL: The order of 'options' is not the same:\n");
+      fprintf(stderr,
+              "   Number in the options.cpp file = %d\n"
+              "   Number in the options.h   file = %d\n"
+              "   for the group '%s'\n", id, checkOptionNumber, name);
+      exit(EX_SOFTWARE);
+   }
+#endif // DEBUG
 #define OptionMaxLength    60
    int lengthOfTheOption = strlen(name);
    if (lengthOfTheOption > OptionMaxLength)
@@ -1301,6 +1337,8 @@ void register_options(void)
                   "The gap for aligning variable definitions");
    unc_add_option("align_var_def_colon", UO_align_var_def_colon, AT_BOOL,
                   "Whether to align the colon in struct bit fields");
+   unc_add_option("align_var_def_colon_gap", UO_align_var_def_colon_gap, AT_UNUM,
+                  "align variable defs gap for bit colons");
    unc_add_option("align_var_def_attribute", UO_align_var_def_attribute, AT_BOOL,
                   "Whether to align any attribute after the variable name");
    unc_add_option("align_var_def_inline", UO_align_var_def_inline, AT_BOOL,
