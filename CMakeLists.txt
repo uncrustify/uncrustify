@@ -295,3 +295,8 @@ else()
     DESTINATION "${CMAKE_INSTALL_MANDIR}/man1"
   )
 endif()
+
+#
+# add to build the compile_commands.json file, to be used by clang-tidy
+#
+set(CMAKE_EXPORT_COMPILE_COMMANDS "ON" CACHE BOOL "to create the compile_commands.json file" FORCE)
