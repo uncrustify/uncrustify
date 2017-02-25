@@ -271,7 +271,6 @@ typedef enum
    CT_PP_LINE,
    CT_PP_SECTION,
    CT_PP_ASM,           /* start of assembly code section */
-   CT_PP_ENDASM,        /* end of assembly code section */
    CT_PP_UNDEF,
    CT_PP_PROPERTY,
 

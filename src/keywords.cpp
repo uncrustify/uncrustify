@@ -153,7 +153,6 @@ static const chunk_tag_t keywords[] =
    { "else",             CT_PP_ELSE,       LANG_ALL | FLAG_PP                                                          }, // PAWN
    { "elseif",           CT_PP_ELSE,       LANG_PAWN | FLAG_PP                                                         }, // PAWN
    { "emit",             CT_PP_EMIT,       LANG_PAWN | FLAG_PP                                                         }, // PAWN
-   { "endasm",           CT_PP_ENDASM,     LANG_ALL | FLAG_PP                                                          },
    { "endif",            CT_PP_ENDIF,      LANG_ALL | FLAG_PP                                                          }, // PAWN
    { "endinput",         CT_PP_ENDINPUT,   LANG_PAWN | FLAG_PP                                                         }, // PAWN
    { "endregion",        CT_PP_ENDREGION,  LANG_ALL | FLAG_PP                                                          },
