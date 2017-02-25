@@ -1990,7 +1990,7 @@ void tokenize(const deque<int> &data, chunk_t *ref)
       /* Disable indentation when #asm directive found */
       if (pc->type == CT_PP_ASM)
       {
-         LOG_FMT(LBCTRL, "Found a directive %s on line %d\n", "#asm", pc->orig_line);
+         LOG_FMT(LBCTRL, "Found a directive %s on line %zu\n", "#asm", pc->orig_line);
          cpd.unc_off = true;
       }
 
@@ -2010,7 +2010,7 @@ void tokenize(const deque<int> &data, chunk_t *ref)
          {
             if (memcmp(pc->text(), "asm", 3) == 0)
             {
-               LOG_FMT(LBCTRL, "Found a pragma %s on line %d\n", "asm", pc->orig_line);
+               LOG_FMT(LBCTRL, "Found a pragma %s on line %zu\n", "asm", pc->orig_line);
                cpd.unc_off = true;
             }
          }
