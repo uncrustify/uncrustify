@@ -102,6 +102,7 @@ static const chunk_tag_t keywords[] =
    { "and_eq",           CT_SASSIGN,       LANG_C | LANG_CPP                                                           },
    { "as",               CT_AS,            LANG_CS | LANG_VALA                                                         },
    { "asm",              CT_ASM,           LANG_C | LANG_CPP | LANG_D                                                  },
+   { "asm",              CT_PP_ASM,        LANG_ALL | FLAG_PP                                                          },
    { "assert",           CT_ASSERT,        LANG_JAVA                                                                   },
    { "assert",           CT_FUNCTION,      LANG_D | LANG_PAWN                                                          }, // PAWN
    { "assert",           CT_PP_ASSERT,     LANG_PAWN | FLAG_PP                                                         }, // PAWN

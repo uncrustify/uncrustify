@@ -303,6 +303,7 @@
 02504 align_keep_extra.cfg      c/align_keep_extra.c
 
 02510 ben.cfg                   c/asm.c
+10004 ben.cfg                   c/pragma_asm.c
 
 07630 indent-vbrace.cfg         c/indent-vbrace.c
 

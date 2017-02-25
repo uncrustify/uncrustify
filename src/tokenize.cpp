@@ -1491,7 +1491,7 @@ static bool parse_ignored(tok_ctx &ctx, chunk_t &pc)
       return(true);
    }
 
-   /* See if the UO_enable_processing_cmt text is on this line */
+   /* See if the UO_enable_processing_cmt or #pragma endasm / #endasm text is on this line */
    ctx.save();
    pc.str.clear();
    while (ctx.more() &&
@@ -1503,6 +1503,16 @@ static bool parse_ignored(tok_ctx &ctx, chunk_t &pc)
    if (pc.str.size() == 0)
    {
       /* end of file? */
+      return(false);
+   }
+   /* HACK: turn on if we find '#endasm' or '#pragma' and 'endasm' separated by blanks */
+   if ((((pc.str.find("#pragma ") >= 0) || (pc.str.find("#pragma	") >= 0)) &&
+        ((pc.str.find(" endasm") >= 0) || (pc.str.find("	endasm") >= 0))) ||
+       (pc.str.find("#endasm") >= 0))
+   {
+      cpd.unc_off = false;
+      ctx.restore();
+      pc.str.clear();
       return(false);
    }
    /* Note that we aren't actually making sure this is in a comment, yet */
@@ -1977,6 +1987,13 @@ void tokenize(const deque<int> &data, chunk_t *ref)
          cpd.preproc_ncnl_count = 0;
       }
 
+      /* Disable indentation when #asm directive found */
+      if (pc->type == CT_PP_ASM)
+      {
+         LOG_FMT(LBCTRL, "Found a directive %s on line %d\n", "#asm", pc->orig_line);
+         cpd.unc_off = true;
+      }
+
       /* Special handling for preprocessor stuff */
       if (cpd.in_preproc != CT_NONE)
       {
@@ -1986,6 +2003,16 @@ void tokenize(const deque<int> &data, chunk_t *ref)
          if (!chunk_is_comment(pc) && !chunk_is_newline(pc))
          {
             cpd.preproc_ncnl_count++;
+         }
+
+         /* Disable indentation if a #pragma asm directive is found */
+         if (cpd.in_preproc == CT_PP_PRAGMA)
+         {
+            if (memcmp(pc->text(), "asm", 3) == 0)
+            {
+               LOG_FMT(LBCTRL, "Found a pragma %s on line %d\n", "asm", pc->orig_line);
+               cpd.unc_off = true;
+            }
          }
 
          /* Figure out the type of preprocessor for #include parsing */
