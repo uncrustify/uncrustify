@@ -1329,7 +1329,7 @@ void indent_text(void)
                }
             }
             frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
-            frm.pse[frm.pse_tos].open_line = pc->orig_line;
+            frm.pse[frm.pse_tos].open_line  = pc->orig_line;
             LOG_FMT(LINDLINE, "%s(%d): frm.pse_tos=%zu, ... indent_tmp=%zu\n",
                     __func__, __LINE__, frm.pse_tos, frm.pse[frm.pse_tos].indent_tmp);
 
