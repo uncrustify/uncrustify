@@ -2744,6 +2744,11 @@ void newlines_cleanup_braces(bool first)
          if (cpd.settings[UO_nl_brace_fparen].a != AV_IGNORE)
          {
             next = chunk_get_next_nc(pc, scope_e::PREPROC);
+            if ((next != nullptr) && (next->type == CT_NEWLINE) &&
+                (cpd.settings[UO_nl_brace_fparen].a == AV_REMOVE))
+            {
+               next = chunk_get_next_nc(next, scope_e::PREPROC);  // Issue #1000
+            }
             if ((next != nullptr) && (next->type == CT_FPAREN_CLOSE))
             {
                newline_iarf_pair(pc, next, cpd.settings[UO_nl_brace_fparen].a);
