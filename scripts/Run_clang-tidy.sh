@@ -1,8 +1,11 @@
 #!/bin/bash
 #
-# 22 februar 2017
+# 2017-02-27
 #
-SRC="./src"
+script_dir="$(dirname "$(readlink -f "$0")")"
+#
+SRC="${script_dir}/../src"
+BUILD="${script_dir}/../build"
 #
 where=`pwd`
 #
@@ -10,37 +13,37 @@ where=`pwd`
 cd ${SRC}
 list_of_C=`ls *.cpp`
 list_of_H=`ls *.h`
+list_of_files="${list_of_C} ${list_of_H}" 
 cd ${where}
 #
-RESULTS="./results"
+RESULTS="${script_dir}/../results"
 #
 rm -rf ${RESULTS}
 mkdir ${RESULTS}
 #
-cp build/compile_commands.json ${SRC}
+COMPILE_COMMANDS="compile_commands.json"
+cp ${BUILD}/${COMPILE_COMMANDS} ${SRC}
 #
 list_of_Check="readability-else-after-return"
 #
-for file in ${list_of_H} ${list_of_C}
+for file in ${list_of_files}
 do
   echo "test for "${file}
-  OUTPUT=${RESULTS}/${file}.txt
+  OUTPUT="${RESULTS}/${file}.txt"
   for check in ${list_of_Check}
   do
     clang-tidy -checks="-*, ${check}" -header-filter="./src/*" ${SRC}/${file} \
       > ${OUTPUT} 2>/dev/null
-    #ls -l ${OUTPUT}
     if [[ -s ${OUTPUT} ]]
     then
-      #echo "nicht zero"
       head ${OUTPUT}
     else
-      #echo "zero"
       rm -f ${OUTPUT}
     fi
   done
 done
 #
+rm ${SRC}/${COMPILE_COMMANDS}
 rmdir --ignore-fail-on-non-empty ${RESULTS}
 if [[ -d ${RESULTS} ]]
 then
