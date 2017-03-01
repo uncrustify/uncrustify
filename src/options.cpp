@@ -691,8 +691,7 @@ void register_options(void)
                   "1=indent with tabs to brace level, align with spaces (default)\n"
                   "2=indent and align with tabs, using spaces when not on a tabstop", "", 0, 2);
    unc_add_option("indent_cmt_with_tabs", UO_indent_cmt_with_tabs, AT_BOOL,
-                  "Comments that are not a brace level are indented with tabs on a tabstop.\n"
-                  "Requires indent_with_tabs=2. If false, will use spaces.");
+                  "Comments that are not at brace level are indented with tabs on a tabstop.");
    unc_add_option("indent_align_string", UO_indent_align_string, AT_BOOL,
                   "Whether to indent strings broken by '\\' so that they line up");
    unc_add_option("indent_xml_string", UO_indent_xml_string, AT_UNUM,
