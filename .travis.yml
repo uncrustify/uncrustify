@@ -55,6 +55,7 @@ before_install:
   - cd build
 
 before_script:
+  - set -e
   - |-
     case "${BUILD_TYPE}" in
       "coverage")
