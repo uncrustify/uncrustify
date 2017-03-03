@@ -32,7 +32,7 @@ do
   OUTPUT="${RESULTS}/${file}.txt"
   for check in ${list_of_Check}
   do
-    clang-tidy -checks="-*, ${check}" -header-filter="./src/*" ${SRC}/${file} \
+    clang-tidy -checks="-*, ${check}" -header-filter="./${SRC}/*" ${SRC}/${file} \
       > ${OUTPUT} 2>/dev/null
     if [[ -s ${OUTPUT} ]]
     then
