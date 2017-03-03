@@ -59,11 +59,11 @@ enum class brace_stage_e : unsigned int
 
 enum class char_encoding_e : unsigned int
 {
-   ASCII,     /* 0-127 */
-   BYTE,      /* 0-255, not UTF-8 */
-   UTF8,
-   UTF16_LE,
-   UTF16_BE,
+   e_ASCII,     /* 0-127 */
+   e_BYTE,      /* 0-255, not UTF-8 */
+   e_UTF8,
+   e_UTF16_LE,
+   e_UTF16_BE,
 };
 
 struct chunk_t;

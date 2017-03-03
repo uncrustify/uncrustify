@@ -875,7 +875,7 @@ static bool read_stdin(file_mem &fm)
 
    fm.raw.clear();
    fm.data.clear();
-   fm.enc = char_encoding_e::ASCII;
+   fm.enc = char_encoding_e::e_ASCII;
 
    while (!feof(stdin))
    {
@@ -944,7 +944,7 @@ static int load_mem_file(const char *filename, file_mem &fm)
 
    fm.raw.clear();
    fm.data.clear();
-   fm.enc = char_encoding_e::ASCII;
+   fm.enc = char_encoding_e::e_ASCII;
 
    /* Grab the stat info for the file */
    if (stat(filename, &my_stat) < 0)
@@ -970,7 +970,7 @@ static int load_mem_file(const char *filename, file_mem &fm)
       /* Empty file */
       retval = 0;
       fm.bom = false;
-      fm.enc = char_encoding_e::ASCII;
+      fm.enc = char_encoding_e::e_ASCII;
       fm.data.clear();
    }
    else
@@ -990,11 +990,11 @@ static int load_mem_file(const char *filename, file_mem &fm)
       else
       {
          LOG_FMT(LNOTE, "%s: '%s' encoding looks like %s (%d)\n", __func__, filename,
-                 fm.enc == char_encoding_e::ASCII ? "ASCII" :
-                 fm.enc == char_encoding_e::BYTE ? "BYTES" :
-                 fm.enc == char_encoding_e::UTF8 ? "UTF-8" :
-                 fm.enc == char_encoding_e::UTF16_LE ? "UTF-16-LE" :
-                 fm.enc == char_encoding_e::UTF16_BE ? "UTF-16-BE" : "Error",
+                 fm.enc == char_encoding_e::e_ASCII ? "ASCII" :
+                 fm.enc == char_encoding_e::e_BYTE ? "BYTES" :
+                 fm.enc == char_encoding_e::e_UTF8 ? "UTF-8" :
+                 fm.enc == char_encoding_e::e_UTF16_LE ? "UTF-16-LE" :
+                 fm.enc == char_encoding_e::e_UTF16_BE ? "UTF-16-BE" : "Error",
                  fm.enc);
          retval = 0;
       }
@@ -1667,19 +1667,19 @@ void uncrustify_file(const file_mem &fm, FILE *pfout,
    cpd.bom = fm.bom;
    cpd.enc = fm.enc;
    if (cpd.settings[UO_utf8_force].b ||
-       ((cpd.enc == char_encoding_e::BYTE) && cpd.settings[UO_utf8_byte].b))
+       ((cpd.enc == char_encoding_e::e_BYTE) && cpd.settings[UO_utf8_byte].b))
    {
-      cpd.enc = char_encoding_e::UTF8;
+      cpd.enc = char_encoding_e::e_UTF8;
    }
    argval_t av;
    switch (cpd.enc)
    {
-   case char_encoding_e::UTF8:
+   case char_encoding_e::e_UTF8:
       av = cpd.settings[UO_utf8_bom].a;
       break;
 
-   case char_encoding_e::UTF16_LE:
-   case char_encoding_e::UTF16_BE:
+   case char_encoding_e::e_UTF16_LE:
+   case char_encoding_e::e_UTF16_BE:
       av = AV_FORCE;
       break;
 
