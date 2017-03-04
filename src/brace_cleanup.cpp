@@ -126,7 +126,7 @@ static void print_stack(log_sev_t logsev, const char *str,
          if (frm->pse[idx].stage != brace_stage_e::NONE)
          {
             LOG_FMT(logsev, " [%s - %d]", get_token_name(frm->pse[idx].type),
-                    (unsigned int)frm->pse[idx].stage);
+                    (int)frm->pse[idx].stage);
          }
          else
          {
@@ -328,7 +328,7 @@ static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
    LOG_FMT(LTOK, "%s:%zu] %16s - tos:%zu/%16s TOS.stage:%d\n",
            __func__, pc->orig_line, get_token_name(pc->type),
            frm->pse_tos, get_token_name(frm->pse[frm->pse_tos].type),
-           (unsigned int)frm->pse[frm->pse_tos].stage);
+           (int)frm->pse[frm->pse_tos].stage);
 
    /* Mark statement starts */
    if (((frm->stmt_count == 0) || (frm->expr_count == 0)) &&
@@ -969,7 +969,7 @@ static bool handle_complex_close(parse_frame_t *frm, chunk_t *pc)
       LOG_FMT(LWARN, "%s:%zu Error: TOS.type='%s' TOS.stage=%d\n",
               cpd.filename, pc->orig_line,
               get_token_name(frm->pse[frm->pse_tos].type),
-              (unsigned int)frm->pse[frm->pse_tos].stage);
+              (int)frm->pse[frm->pse_tos].stage);
       cpd.error_count++;
    }
    return(false);
@@ -1044,7 +1044,7 @@ bool close_statement(parse_frame_t *frm, chunk_t *pc)
            pc->orig_line,
            get_token_name(pc->type), pc->text(),
            get_token_name(frm->pse[frm->pse_tos].type),
-           (unsigned int)frm->pse[frm->pse_tos].stage);
+           (int)frm->pse[frm->pse_tos].stage);
 
    if (cpd.consumed)
    {

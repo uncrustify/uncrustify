@@ -409,7 +409,7 @@ static void chunk_log(chunk_t *pc, const char *text)
       {
          chunk_log_msg(prev, log, " @ after");
       }
-      LOG_FMT(log, " stage=%d", cpd.unc_stage);
+      LOG_FMT(log, " stage=%zu", (int)cpd.unc_stage);
       log_func_stack_inline(log);
    }
 }
