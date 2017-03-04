@@ -1,0 +1,161 @@
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+   <title>Uncrustify: The align typedef options</title>
+</head>
+<body lang="en-US">
+<h2>align_typedef</h2>
+<h3>align_typedef_span</h3>
+The span for aligning single-line typedefs (0=don't align)
+<table border="border">
+<tr>
+	<td valign="bottom">original<br>align_typedef_span=0</td>
+	<td valign="bottom">align_typedef_span=1</td>
+	<td valign="bottom">align_typedef_span=2</td>
+</tr>
+<tr>
+	<td><pre>
+typedef int MY_INT;
+int a;
+typedef int      *MY_INTP;
+typedef float  My_Float;
+   </pre>
+   <i>no alignment</i>
+   </td>
+	<td><pre>
+typedef int MY_INT;
+int a;
+typedef int   *MY_INTP;
+typedef float My_Float;
+   </pre>
+   <i>The third line is not catch in the span</i>
+   </td>
+	<td><pre>
+typedef int   MY_INT;
+int a;
+typedef int   *MY_INTP;
+typedef float My_Float;
+   </pre>
+   <i>all the lines are catched</i>
+   </td>
+</tr>
+</table>
+<p></p>
+<h3>align_typedef_gap</h3>
+The minimum space between the type and the synonym of a typedef<br>
+Can be only used if align_typedef_span >= 1
+<table border="border">
+<tr>
+	<td valign="bottom">original<br>align_typedef_span=2</td>
+	<td valign="bottom">align_typedef_gap=1</td>
+	<td valign="bottom">align_typedef_gap=3</td>
+</tr>
+<tr>
+	<td><pre>
+typedef int   MY_INT;
+int a;
+typedef int   *MY_INTP;
+typedef float My_Float;
+   </pre>
+   <i>as above</i>
+   </td>
+	<td><pre>
+typedef int   MY_INT;
+int a;
+typedef int   *MY_INTP;
+typedef float My_Float;
+   </pre>
+   <i>no change</i>
+   </td>
+   	<td><pre>
+typedef int     MY_INT;
+int a;
+typedef int     *MY_INTP;
+typedef float   My_Float;
+   </pre>
+   <i>the gap has 3 spaces</i>
+   </td>
+</tr>
+</table>
+<p></p>
+<h3>align_typedef_star_style</h3>
+Controls the positioning of the '*' in typedefs.<BR>
+0: Align on typedef type, ignore '*'<BR>
+1: The '*' is part of type name<BR>
+2: The '*' is part of the type, but dangling
+<table border="border">
+<tr>
+	<td valign="bottom">original</td>
+	<td valign="bottom">align_typedef_gap=3<br>align_typedef_star_style=0</td>
+	<td valign="bottom">align_typedef_gap=3<br>align_typedef_star_style=1</td>
+	<td valign="bottom">align_typedef_gap=3<br>align_typedef_star_style=2</td>
+</tr>
+<tr>
+	<td><pre>
+typedef int MY_INT;
+int a;
+typedef int  *    MY_INTP;
+typedef float  My_Float;
+   </pre>
+   <i>no alignment</i>
+   </td>
+	<td><pre>
+typedef int     MY_INT;
+int a;
+typedef int *   MY_INTP;
+typedef float   My_Float;
+	   </pre>
+   <i>the star is ignored</i>
+   </td>
+	<td><pre>
+typedef int     MY_INT;
+int a;
+typedef int     *MY_INTP;
+typedef float   My_Float;
+	   </pre>
+   <i>the star is part of type name</i>
+   </td>
+	<td><pre>
+typedef int     MY_INT;
+int a;
+typedef int    *MY_INTP;
+typedef float   My_Float;
+	   </pre>
+   <i>the star is part of type name, but dangling</i>
+   </td>
+</tr>
+</table>
+<p></p>
+<h3>align_typedef_func</h3>
+How to align typedef'd functions with other typedefs<BR>
+0: Don't mix them at all<BR>
+1: align the open paren with the types
+<table border="border">
+<tr>
+	<td valign="bottom">original</td>
+	<td valign="bottom">align_typedef_gap=3<br>align_typedef_star_style=1<br>align_typedef_func=1</td>
+</tr>
+<tr>
+	<td><pre>
+typedef int MY_INT;
+int a;
+typedef int  *    MY_INTP;
+typedef float  My_Float;
+typedef int      (*foo_t)(void *bar);
+typedef int          (*somefunc_t)(void *barstool);
+   </pre>
+   <i>no alignment</i>
+   </td>
+	<td><pre>
+typedef int     MY_INT;
+int a;
+typedef int     *MY_INTP;
+typedef float   My_Float;
+typedef int     (*foo_t)(void *bar);
+typedef int     (*somefunc_t)(void *barstool);
+	   </pre>
+   </td>
+</tr>
+</table>
+</body>
+</html>
