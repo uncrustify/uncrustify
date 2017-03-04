@@ -55,6 +55,7 @@ before_install:
   - cd build
 
 before_script:
+  # to stop the script after an error/warning
   - set -e
   - |-
     case "${BUILD_TYPE}" in
