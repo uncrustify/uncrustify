@@ -1348,8 +1348,7 @@ void register_options(void)
    unc_add_option("align_assign_thresh", UO_align_assign_thresh, AT_UNUM,
                   "The threshold for aligning on '=' in assignments (0=no limit)", "", 0, 5000);
    unc_add_option("align_enum_equ_span", UO_align_enum_equ_span, AT_UNUM,
-                  "The span for aligning on '=' in enums (0=don't align)\n"
-                  "Note: align_assign_span must be set also.", "", 0, 5000);
+                  "The span for aligning on '=' in enums (0=don't align)", "", 0, 5000);
    unc_add_option("align_enum_equ_thresh", UO_align_enum_equ_thresh, AT_UNUM,
                   "The threshold for aligning on '=' in enums (0=no limit)", "", 0, 5000);
    unc_add_option("align_var_class_span", UO_align_var_class_span, AT_UNUM,
