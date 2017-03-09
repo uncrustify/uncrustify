@@ -686,7 +686,7 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
    size_t  equ_count   = 0;
    size_t  tmp;
    chunk_t *pc = first;
-   while ((pc != nullptr) && ((pc->level >= my_level) || (pc->level == 0)))
+   while (pc != nullptr)
    {
       /* Don't check inside PAREN or SQUARE groups */
       if ((pc->type == CT_SPAREN_OPEN) ||
@@ -735,6 +735,14 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
             }
          }
          continue;
+      }
+
+      /* Done with this brace set? */
+      if ((pc->type == CT_BRACE_CLOSE) ||
+          (pc->type == CT_VBRACE_CLOSE))
+      {
+         pc = chunk_get_next(pc);
+         break;
       }
 
       if (chunk_is_newline(pc))
