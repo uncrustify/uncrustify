@@ -406,7 +406,8 @@ void align_all(void)
    /* Align assignments */
    align_assign(chunk_get_head(),
                 cpd.settings[UO_align_assign_span].u,
-                cpd.settings[UO_align_assign_thresh].u);
+                cpd.settings[UO_align_assign_thresh].u,
+                nullptr);
 
    /* Align structure initializers */
    if (cpd.settings[UO_align_struct_init_span].u > 0)
@@ -654,7 +655,7 @@ void align_preprocessor(void)
 } // align_preprocessor
 
 
-chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh)
+chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_count)
 {
    LOG_FUNC_ENTRY();
 
@@ -710,7 +711,7 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh)
          size_t myspan;
          size_t mythresh;
 
-         tmp = pc->orig_line;
+         size_t sub_nl_count = 0;
 
          if (pc->parent_type == CT_ENUM)
          {
@@ -723,12 +724,15 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh)
             mythresh = cpd.settings[UO_align_assign_thresh].u;
          }
 
-         pc = align_assign(chunk_get_next_ncnl(pc), myspan, mythresh);
-         if (pc != nullptr)
+         pc = align_assign(chunk_get_next_ncnl(pc), myspan, mythresh, &sub_nl_count);
+         if (sub_nl_count > 0)
          {
-            /* do a rough count of the number of lines just spanned */
-            as.NewLines(pc->orig_line - tmp);
-            vdas.NewLines(pc->orig_line - tmp);
+            as.NewLines(sub_nl_count);
+            vdas.NewLines(sub_nl_count);
+            if (p_nl_count != nullptr)
+            {
+               *p_nl_count += sub_nl_count;
+            }
          }
          continue;
       }
@@ -737,6 +741,10 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh)
       {
          as.NewLines(pc->nl_count);
          vdas.NewLines(pc->nl_count);
+         if (p_nl_count != nullptr)
+         {
+            *p_nl_count += pc->nl_count;
+         }
 
          var_def_cnt = 0;
          equ_count   = 0;
