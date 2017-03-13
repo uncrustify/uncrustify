@@ -1316,7 +1316,12 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
       }
       if (first->parent_type == CT_NEW)
       {
-         if(cpd.settings[UO_sp_inside_newop_paren].a != AV_IGNORE)
+         if (cpd.settings[UO_sp_inside_newop_paren_open].a != AV_IGNORE)
+         {
+            log_rule("sp_inside_newop_paren_open");
+            return(cpd.settings[UO_sp_inside_newop_paren_open].a);
+         }
+         if (cpd.settings[UO_sp_inside_newop_paren].a != AV_IGNORE)
          {
             log_rule("sp_inside_newop_paren");
             return(cpd.settings[UO_sp_inside_newop_paren].a);
@@ -1337,7 +1342,12 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
       }
       if (second->parent_type == CT_NEW)
       {
-         if(cpd.settings[UO_sp_inside_newop_paren].a != AV_IGNORE)
+         if (cpd.settings[UO_sp_inside_newop_paren_close].a != AV_IGNORE)
+         {
+            log_rule("sp_inside_newop_paren_close");
+            return(cpd.settings[UO_sp_inside_newop_paren_close].a);
+         }
+         if (cpd.settings[UO_sp_inside_newop_paren].a != AV_IGNORE)
          {
             log_rule("sp_inside_newop_paren");
             return(cpd.settings[UO_sp_inside_newop_paren].a);
