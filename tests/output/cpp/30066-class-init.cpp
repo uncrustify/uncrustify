@@ -4,7 +4,7 @@ class Foo : public Bar
 
 };
 
-#define CTOR( i, _ ) : T( X()) \
+#define CTOR( i, _ ) : T( X() ) \
                      , y() \
 { }
 
