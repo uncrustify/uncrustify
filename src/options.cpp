@@ -666,6 +666,8 @@ void register_options(void)
                   "Controls the spaces between new and '(' in 'new()'");
    unc_add_option("sp_after_newop_paren", UO_sp_after_newop_paren, AT_IARF,
                   "Controls the spaces between ')' and 'type' in 'new(foo) BAR'");
+   unc_add_option("sp_inside_newop_paren", UO_sp_inside_newop_paren, AT_IARF,
+                  "Controls the spaces inside paren of the new operator: 'new(foo) BAR'");
    unc_add_option("sp_before_tr_emb_cmt", UO_sp_before_tr_emb_cmt, AT_IARF,
                   "Controls the spaces before a trailing or embedded comment");
    unc_add_option("sp_num_before_tr_emb_cmt", UO_sp_num_before_tr_emb_cmt, AT_UNUM,
