@@ -192,4 +192,9 @@ void log_func_stack(log_sev_t sev, const char *prefix = 0, const char *suffix = 
 
 #define log_func_stack_inline(_sev)    log_func_stack((_sev), " [CallStack:", "]\n", 1)
 
+/*
+ * helper function for fprintf
+ */
+char *make_message(const char *fmt, ...);
+
 #endif /* LOGGER_H_INCLUDED */
