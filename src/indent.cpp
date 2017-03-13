@@ -462,8 +462,13 @@ static void indent_pse_pop(parse_frame_t &frm, chunk_t *pc)
    {
       /* fatal error */
       fprintf(stderr, "the stack index is already zero\n");
-      fprintf(stderr, "at line=%zu, type is %s\n",
-              pc->orig_line, get_token_name(pc->type));
+      {
+         char *outputMessage;
+         outputMessage = make_message("at line=%zu, type is %s\n",
+                                      pc->orig_line, get_token_name(pc->type));
+         fprintf(stderr, "%s", outputMessage);
+         free(outputMessage);
+      }
       exit(EXIT_FAILURE);
    }
 } // indent_pse_pop

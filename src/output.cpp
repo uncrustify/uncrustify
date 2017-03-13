@@ -250,12 +250,17 @@ void output_parsed(FILE *pfile)
    fprintf(pfile, "# Line              Tag           Parent          Columns Br/Lvl/pp     Flag   Nl  Text");
    for (chunk_t *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next(pc))
    {
-      fprintf(pfile, "\n# %3zu> %16.16s[%16.16s][%3zu/%3zu/%3zu/%3d][%zu/%zu/%zu][%10" PRIx64 "][%zu-%d]",
-              pc->orig_line, get_token_name(pc->type),
-              get_token_name(pc->parent_type),
-              pc->column, pc->orig_col, pc->orig_col_end, pc->orig_prev_sp,
-              pc->brace_level, pc->level, pc->pp_level,
-              pc->flags, pc->nl_count, pc->after_tab);
+      {
+         char *outputMessage;
+         outputMessage = make_message("\n# %3zu> %16.16s[%16.16s][%3zu/%3zu/%3zu/%3d][%zu/%zu/%zu][%10" PRIx64 "][%zu-%d]",
+                                      pc->orig_line, get_token_name(pc->type),
+                                      get_token_name(pc->parent_type),
+                                      pc->column, pc->orig_col, pc->orig_col_end, pc->orig_prev_sp,
+                                      pc->brace_level, pc->level, pc->pp_level,
+                                      pc->flags, pc->nl_count, pc->after_tab);
+         fprintf(pfile, "%s", outputMessage);
+         free(outputMessage);
+      }
 
       if ((pc->type != CT_NEWLINE) && (pc->len() != 0))
       {
