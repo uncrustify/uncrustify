@@ -354,8 +354,13 @@ void output_text(FILE *pfile)
                      int orig_sp = (pc->orig_col - prev->orig_col_end);
                      if ((int)(cpd.column + orig_sp) < 0)
                      {
-                        fprintf(stderr, "FATAL: negative value.\n   pc->orig_col=%zu prev->orig_col_end=%zu\n",
-                                pc->orig_col, prev->orig_col_end);
+                        {
+                           char *outputMessage;
+                           outputMessage = make_message("FATAL: negative value.\n   pc->orig_col=%zu prev->orig_col_end=%zu\n",
+                                                        pc->orig_col, prev->orig_col_end);
+                           fprintf(stderr, "%s", outputMessage);
+                           free(outputMessage);
+                        }
                         exit(EX_SOFTWARE);
                      }
                      pc->column = cpd.column + orig_sp;
