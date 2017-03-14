@@ -16,6 +16,7 @@
 #include "indent.h"
 #include "braces.h"
 #include "unicode.h"
+#include "helper_for_print.h"
 #include <cstdlib>
 
 static void output_comment_multi(chunk_t *pc);
@@ -250,17 +251,15 @@ void output_parsed(FILE *pfile)
    fprintf(pfile, "# Line              Tag           Parent          Columns Br/Lvl/pp     Flag   Nl  Text");
    for (chunk_t *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next(pc))
    {
-      {
-         char *outputMessage;
-         outputMessage = make_message("\n# %3zu> %16.16s[%16.16s][%3zu/%3zu/%3zu/%3d][%zu/%zu/%zu][%10" PRIx64 "][%zu-%d]",
-                                      pc->orig_line, get_token_name(pc->type),
-                                      get_token_name(pc->parent_type),
-                                      pc->column, pc->orig_col, pc->orig_col_end, pc->orig_prev_sp,
-                                      pc->brace_level, pc->level, pc->pp_level,
-                                      pc->flags, pc->nl_count, pc->after_tab);
-         fprintf(pfile, "%s", outputMessage);
-         free(outputMessage);
-      }
+      char *outputMessage;
+      outputMessage = make_message("\n# %3zu> %16.16s[%16.16s][%3zu/%3zu/%3zu/%3d][%zu/%zu/%zu][%10" PRIx64 "][%zu-%d]",
+                                   pc->orig_line, get_token_name(pc->type),
+                                   get_token_name(pc->parent_type),
+                                   pc->column, pc->orig_col, pc->orig_col_end, pc->orig_prev_sp,
+                                   pc->brace_level, pc->level, pc->pp_level,
+                                   pc->flags, pc->nl_count, pc->after_tab);
+      fprintf(pfile, "%s", outputMessage);
+      free(outputMessage);
 
       if ((pc->type != CT_NEWLINE) && (pc->len() != 0))
       {
@@ -354,13 +353,11 @@ void output_text(FILE *pfile)
                      int orig_sp = (pc->orig_col - prev->orig_col_end);
                      if ((int)(cpd.column + orig_sp) < 0)
                      {
-                        {
-                           char *outputMessage;
-                           outputMessage = make_message("FATAL: negative value.\n   pc->orig_col=%zu prev->orig_col_end=%zu\n",
-                                                        pc->orig_col, prev->orig_col_end);
-                           fprintf(stderr, "%s", outputMessage);
-                           free(outputMessage);
-                        }
+                        char *outputMessage;
+                        outputMessage = make_message("FATAL: negative value.\n   pc->orig_col=%zu prev->orig_col_end=%zu\n",
+                                                     pc->orig_col, prev->orig_col_end);
+                        fprintf(stderr, "%s", outputMessage);
+                        free(outputMessage);
                         exit(EX_SOFTWARE);
                      }
                      pc->column = cpd.column + orig_sp;

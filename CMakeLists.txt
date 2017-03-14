@@ -172,6 +172,7 @@ add_executable(uncrustify
   src/compat_win32.cpp
   src/defines.cpp
   src/detect.cpp
+  src/helper_for_print.cpp
   src/indent.cpp
   src/keywords.cpp
   src/lang_pawn.cpp
@@ -203,6 +204,7 @@ add_executable(uncrustify
   src/char_table.h
   src/ChunkStack.h
   src/chunk_list.h
+  src/helper_for_print.h
   src/ListManager.h
   src/logger.h
   src/logmask.h

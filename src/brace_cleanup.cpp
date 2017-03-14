@@ -21,6 +21,7 @@
 #include "parse_frame.h"
 #include "keywords.h"
 #include "logger.h"
+#include "helper_for_print.h"
 
 
 /*
@@ -690,13 +691,11 @@ static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
          if (!cpd.unc_off_used)
          {
             /* fatal error */
-            {
-               char *outputMessage;
-               outputMessage = make_message("Unmatched BRACE_CLOSE\nat line=%zu, column=%zu\n",
-                                            pc->orig_line, pc->orig_col);
-               fprintf(stderr, "%s", outputMessage);
-               free(outputMessage);
-            }
+            char *outputMessage;
+            outputMessage = make_message("Unmatched BRACE_CLOSE\nat line=%zu, column=%zu\n",
+                                         pc->orig_line, pc->orig_col);
+            fprintf(stderr, "%s", outputMessage);
+            free(outputMessage);
             exit(EXIT_FAILURE);
          }
       }
