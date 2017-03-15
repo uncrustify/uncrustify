@@ -691,11 +691,13 @@ static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
          if (!cpd.unc_off_used)
          {
             /* fatal error */
-            char *outputMessage;
-            outputMessage = make_message("Unmatched BRACE_CLOSE\nat line=%zu, column=%zu\n",
-                                         pc->orig_line, pc->orig_col);
-            fprintf(stderr, "%s", outputMessage);
-            free(outputMessage);
+            //char *outputMessage;
+            //outputMessage = make_message("Unmatched BRACE_CLOSE\nat line=%zu, column=%zu\n",
+            //                             pc->orig_line, pc->orig_col);
+            //fprintf(stderr, "%s", outputMessage);
+            //free(outputMessage);
+            fprintf(std::cerr, "Unmatched BRACE_CLOSE\nat line=%zu, column=%zu\n",
+                    pc->orig_line, pc->orig_col);
             exit(EXIT_FAILURE);
          }
       }
