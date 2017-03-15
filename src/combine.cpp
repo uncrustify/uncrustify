@@ -1862,15 +1862,23 @@ static void mark_function_return_type(chunk_t *fname, chunk_t *start, c_token_t 
    LOG_FUNC_ENTRY();
    chunk_t *pc = start;
 
-   if (pc)
+   if (pc != nullptr)
    {
       /* Step backwards from pc and mark the parent of the return type */
       LOG_FMT(LFCNR, "%s: (backwards) return type for '%s' @ %zu:%zu",
               __func__, fname->text(), fname->orig_line, fname->orig_col);
+#ifdef DEBUG
+      LOG_FMT(LFCN, "\n");
+#endif
 
       chunk_t *first = pc;
-      while (pc)
+      chunk_t *save;
+      while (pc != nullptr)
       {
+         LOG_FMT(LFCNR, "%s(%d): pc: %s, type is %s\n", __func__, __LINE__, pc->text(), get_token_name(pc->type));
+#ifdef DEBUG
+         log_pcf_flags(LFCNR, pc->flags);
+#endif
          if ((!chunk_is_type(pc) &&
               (pc->type != CT_OPERATOR) &&
               (pc->type != CT_WORD) &&
@@ -1883,11 +1891,36 @@ static void mark_function_return_type(chunk_t *fname, chunk_t *start, c_token_t 
          {
             first = pc;
          }
-         pc = chunk_get_prev_ncnl(pc);
+         save = pc; // keep a copy
+         pc   = chunk_get_prev_ncnl(pc);
+         if (pc != nullptr)
+         {
+            log_pcf_flags(LFCNR, pc->flags);
+            // Issue #1027
+            if ((pc->flags & PCF_IN_TEMPLATE) &&
+                (pc->type == CT_ANGLE_CLOSE))
+            {
+               // look for the opening angle
+               pc = chunk_get_prev_type(pc, CT_ANGLE_OPEN, save->level);
+               if (pc != nullptr)
+               {
+                  // get the prev
+                  pc = chunk_get_prev(pc);
+                  if (pc != nullptr)
+                  {
+                     if (pc->type == CT_TYPE)
+                     {
+                        first = save;
+                        break;
+                     }
+                  }
+               }
+            }
+         }
       }
 
       pc = first;
-      while (pc)
+      while (pc != nullptr)
       {
          LOG_FMT(LFCNR, " [%s|%s]", pc->text(), get_token_name(pc->type));
 
@@ -3893,6 +3926,9 @@ static void mark_function(chunk_t *pc)
       LOG_FMT(LFCN, "(%d) ", __LINE__);
 #endif
       LOG_FMT(LFCN, "  Checking func call: prev=%s", (prev == NULL) ? "<null>" : get_token_name(prev->type));
+#ifdef DEBUG
+      LOG_FMT(LFCN, "\n");
+#endif
 
       // if (!chunk_ends_type(prev))
       // {
@@ -5533,7 +5569,7 @@ static void handle_oc_message_decl(chunk_t *pc)
    {
       set_chunk_parent(pc, pt);
       pc = chunk_skip_to_match(pc);
-      if (pc)
+      if (pc != nullptr)
       {
          set_chunk_parent(pc, pt);
       }
