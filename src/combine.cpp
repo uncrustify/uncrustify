@@ -996,7 +996,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
          ts  = tmp;
          tmp = chunk_get_next_ncnl(tmp);
       }
-      if (tmp && (tmp->type == CT_BRACE_OPEN))
+      if (tmp && (tmp->type == CT_BRACE_OPEN || CT_PAREN_OPEN))
       {
          set_paren_parent(tmp, pc->type);
          if (ts)

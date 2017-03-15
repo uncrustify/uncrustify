@@ -583,14 +583,6 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
       return(AV_REMOVE);
    }
 
-   /* "((" vs "( (" or "))" vs ") )" */
-   if ((chunk_is_str(first, "(", 1) && chunk_is_str(second, "(", 1)) ||
-       (chunk_is_str(first, ")", 1) && chunk_is_str(second, ")", 1)))
-   {
-      log_rule("sp_paren_paren");
-      return(cpd.settings[UO_sp_paren_paren].a);
-   }
-
    if ((first->type == CT_CATCH) && (second->type == CT_SPAREN_OPEN) &&
        (cpd.settings[UO_sp_catch_paren].a != AV_IGNORE))
    {
@@ -1228,6 +1220,13 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
          log_rule("ADD");
          return(AV_ADD);
       }
+
+      /* C++ new operator: new(bar) Foo */
+      if (first->parent_type == CT_NEW)
+      {
+         log_rule("sp_after_newop_paren");
+         return(cpd.settings[UO_sp_after_newop_paren].a);
+      }
    }
 
    /* "foo(...)" vs "foo( ... )" */
@@ -1307,6 +1306,19 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
          log_rule("sp_inside_paren_cast");
          return(cpd.settings[UO_sp_inside_paren_cast].a);
       }
+      if (first->parent_type == CT_NEW)
+      {
+         if (cpd.settings[UO_sp_inside_newop_paren_open].a != AV_IGNORE)
+         {
+            log_rule("sp_inside_newop_paren_open");
+            return(cpd.settings[UO_sp_inside_newop_paren_open].a);
+         }
+         if (cpd.settings[UO_sp_inside_newop_paren].a != AV_IGNORE)
+         {
+            log_rule("sp_inside_newop_paren");
+            return(cpd.settings[UO_sp_inside_newop_paren].a);
+         }
+      }
       log_rule("sp_inside_paren");
       return(cpd.settings[UO_sp_inside_paren].a);
    }
@@ -1319,6 +1331,19 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
       {
          log_rule("sp_inside_paren_cast");
          return(cpd.settings[UO_sp_inside_paren_cast].a);
+      }
+      if (second->parent_type == CT_NEW)
+      {
+         if (cpd.settings[UO_sp_inside_newop_paren_close].a != AV_IGNORE)
+         {
+            log_rule("sp_inside_newop_paren_close");
+            return(cpd.settings[UO_sp_inside_newop_paren_close].a);
+         }
+         if (cpd.settings[UO_sp_inside_newop_paren].a != AV_IGNORE)
+         {
+            log_rule("sp_inside_newop_paren");
+            return(cpd.settings[UO_sp_inside_newop_paren].a);
+         }
       }
       log_rule("sp_inside_paren");
       return(cpd.settings[UO_sp_inside_paren].a);
@@ -1761,6 +1786,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
 
    if ((first->type == CT_NEW) && (second->type == CT_PAREN_OPEN))
    {
+      // c# new Constraint, c++ new operator
       log_rule("sp_between_new_paren");
       return(cpd.settings[UO_sp_between_new_paren].a);
    }
@@ -1788,6 +1814,14 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
    {
       log_rule("sp_extern_paren");
       return(cpd.settings[UO_sp_extern_paren].a);
+   }
+
+   /* "((" vs "( (" or "))" vs ") )" */
+   if ((chunk_is_str(first, "(", 1) && chunk_is_str(second, "(", 1)) ||
+       (chunk_is_str(first, ")", 1) && chunk_is_str(second, ")", 1)))
+   {
+      log_rule("sp_paren_paren");
+      return(cpd.settings[UO_sp_paren_paren].a);
    }
 
    // this table lists out all combos where a space should NOT be present

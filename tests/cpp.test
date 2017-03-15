@@ -380,3 +380,8 @@
 
 34130 bug_i_1000-f.cfg                 cpp/bug_i_1000.cpp
 34131 bug_i_1000-r.cfg                 cpp/bug_i_1000.cpp
+
+34132 new_op_a.cfg                     cpp/new_op.cpp
+34133 new_op_f.cfg                     cpp/new_op.cpp
+34134 new_op_r.cfg                     cpp/new_op.cpp
+34135 new_op_paren_open_close.cfg      cpp/new_op.cpp
