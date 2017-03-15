@@ -404,10 +404,14 @@ void align_all(void)
    }
 
    /* Align assignments */
-   align_assign(chunk_get_head(),
-                cpd.settings[UO_align_assign_span].u,
-                cpd.settings[UO_align_assign_thresh].u,
-                nullptr);
+   if ((cpd.settings[UO_align_enum_equ_span].u > 0) ||
+       (cpd.settings[UO_align_assign_span].u > 0))
+   {
+      align_assign(chunk_get_head(),
+                   cpd.settings[UO_align_assign_span].u,
+                   cpd.settings[UO_align_assign_thresh].u,
+                   nullptr);
+   }
 
    /* Align structure initializers */
    if (cpd.settings[UO_align_struct_init_span].u > 0)
@@ -664,11 +668,6 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
       return(nullptr);
    }
    size_t my_level = first->level;
-
-   if (span == 0)
-   {
-      return(chunk_get_next(first));
-   }
 
    LOG_FMT(LALASS, "%s[%zu]: checking %s on line %zu - span=%zu thresh=%zu\n",
            __func__, my_level, first->text(), first->orig_line, span, thresh);
