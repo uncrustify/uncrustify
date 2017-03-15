@@ -13,6 +13,7 @@
 #include "unc_ctype.h"
 #include "uncrustify.h"
 #include "error_types.h"
+#include "helper_for_print.h"
 #include <stdio.h>
 
 
@@ -110,9 +111,14 @@ void print_universal_indent_cfg(FILE *pfile)
          }
 
          fprintf(pfile, "\n[%s]\n", optionNameReadable);
-         fprintf(pfile, "Category=%zu\n", idx);
+         char *outputMessage;
+         outputMessage = make_message("Category=%zu\n", idx);
+         fprintf(pfile, "%s", outputMessage);
+         free(outputMessage);
 #ifdef DEBUG
-         fprintf(pfile, "Description=\"<html>(%zu)", optionNumber);
+         outputMessage = make_message("Description=\"<html>(%zu)", optionNumber);
+         fprintf(pfile, "%s", outputMessage);
+         free(outputMessage);
          optionNumber++;
 #else    // DEBUG
          fprintf(pfile, "Description=\"<html>");
@@ -230,7 +236,9 @@ void print_universal_indent_cfg(FILE *pfile)
                fprintf(pfile, "CallName=\"%s=\"\n", option->name);
                fprintf(pfile, "MinVal=%d\n", option->min_val);
                fprintf(pfile, "MaxVal=%d\n", option->max_val);
-               fprintf(pfile, "ValueDefault=%zu\n", cpd.settings[option->id].u);
+               outputMessage = make_message("ValueDefault=%zu\n", cpd.settings[option->id].u);
+               fprintf(pfile, "%s", outputMessage);
+               free(outputMessage);
                break;
 
             case AT_LINE:

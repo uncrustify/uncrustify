@@ -41,7 +41,7 @@ void pf_log(log_sev_t logsev, parse_frame_t *pf)
    {
       LOG_FMT(logsev, " [%s-%d]",
               get_token_name(pf->pse[idx].type),
-              pf->pse[idx].stage);
+              (int)pf->pse[idx].stage);
    }
    LOG_FMT(logsev, "\n");
 }
