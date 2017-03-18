@@ -707,14 +707,16 @@ void set_chunk_real(chunk_t *pc, c_token_t token, log_sev_t what, const char *st
 
    switch (what)
    {
-   case (LSETTYP): where = &pc->type;
-      type               = &token;
-      parent_type        = &pc->parent_type;
+   case (LSETTYP):
+      where       = &pc->type;
+      type        = &token;
+      parent_type = &pc->parent_type;
       break;
 
-   case (LSETPAR): where = &pc->parent_type;
-      type               = &pc->type;
-      parent_type        = &token;
+   case (LSETPAR):
+      where       = &pc->parent_type;
+      type        = &pc->type;
+      parent_type = &token;
       break;
 
    default:
