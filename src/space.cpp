@@ -487,11 +487,19 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
          break;
       }
 
-      if ((first->type == CT_WORD) || (first->type == CT_TYPE) || (first->type == CT_PAREN_CLOSE) ||
-          CharTable::IsKw1(first->str[0]))
+      // Issue #1005
+      if (!((first->type == CT_TYPE) &&
+            (first->prev != nullptr) &&
+            (first->prev->type == CT_FRIEND)))
       {
-         log_rule("sp_before_dc");
-         return(cpd.settings[UO_sp_before_dc].a);
+         if ((first->type == CT_WORD) ||
+             (first->type == CT_PAREN_CLOSE) ||
+             (first->type == CT_TYPE) ||
+             CharTable::IsKw1(first->str[0]))
+         {
+            log_rule("sp_before_dc");
+            return(cpd.settings[UO_sp_before_dc].a);
+         }
       }
    }
 
