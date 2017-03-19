@@ -355,6 +355,7 @@
 
 33150 bug_i_753.cfg                    cpp/bug_i_753.cpp
 33151 bug_i_752.cfg                    cpp/bug_i_752.cpp
+33152 bug_1004.cfg                     cpp/bug_1004.cpp
 
 33200 first_len_minimum.cfg            cpp/first_len_minimum.cpp
 
