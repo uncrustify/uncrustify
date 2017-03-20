@@ -43,7 +43,7 @@
  *   --frag ( use uncrustify( string _file, bool frag = true ) )
  *   --type ( use add_keyword( string _type, c_token_t type ) )
  *   --define ( use add_define( string _tag ) )
- *   -l ( use set_language( int langIDX ) )
+ *   -l ( use uncrustify() )
  */
 
 #ifdef EMSCRIPTEN
@@ -117,18 +117,6 @@ int load_option_fileChar(char *configString)
    process_option_line(subStringStart, "");
 
    return(EXIT_SUCCESS);
-}
-
-
-/**
- *  sets the language of the to be formatted text
- *
- *  @param langIDX: ID of the language, see enum lang_flags or
- *                  uncrustify_types.h
- */
-void set_language(lang_flag_e langIDX)
-{
-   cpd.lang_flags = static_cast<int>(langIDX);
 }
 
 
@@ -441,22 +429,17 @@ map<uncrustify_groups, group_map_value> getGroupMap()
  * format string
  *
  * @param file: pointer to the file char* string that is going to be formatted
+ * @param langIDX: specifies in which language the input file is written
  * @param frag: true=fragmented code input, false=unfragmented code input
  *
  * @return pointer to the formatted file char* string
  */
-intptr_t _uncrustify(intptr_t _file, bool frag)
+intptr_t _uncrustify(intptr_t _file, lang_flag_e langIDX, bool frag)
 {
    // Problem: uncrustify originally is not a lib and uses global vars such as
    // cpd.error_count for the whole program execution
    // to know if errors occurred during the formating step we reset this var here
    cpd.error_count = 0;
-
-   if (cpd.lang_flags == 0)   // 0 == undefined
-   {
-      LOG_FMT(LWARN, "language of input file not defined, C++ will be assumed\n");
-      cpd.lang_flags = LANG_CPP;
-   }
 
    file_mem fm;
    fm.raw.clear();
@@ -487,7 +470,6 @@ intptr_t _uncrustify(intptr_t _file, bool frag)
            (int)fm.raw.size(), (int)fm.data.size(),
            language_name_from_flags(cpd.lang_flags));
 
-   cpd.frag = frag;
 
    char   *buf;
    size_t len;
@@ -506,6 +488,17 @@ intptr_t _uncrustify(intptr_t _file, bool frag)
       free(buf);
       return(0);
    }
+
+   if (langIDX == 0)   // 0 == undefined
+   {
+      LOG_FMT(LWARN, "language of input file not defined, C++ will be assumed\n");
+      cpd.lang_flags = LANG_CPP;
+   }
+   else
+   {
+      cpd.lang_flags = langIDX;
+   }
+   cpd.frag = frag;
 
    // TODO One way to implement the --parsed, -p functionality would
    // be to let the uncrustify_file function run, throw away the formated
@@ -537,37 +530,16 @@ intptr_t _uncrustify(intptr_t _file, bool frag)
 
 
 /**
- * format string with specified language
+ * format string, assume unfragmented code input
  *
  * @param file: pointer to the file char* string that is going to be formatted
- * @param frag: true=fragmented code input, false=unfragmented code input
  * @param langIDX: specifies in which language the input file is written
  *
  * @return pointer to the formatted file char* string
  */
-intptr_t _uncrustify(intptr_t file, bool frag, lang_flag_e langIDX)
+intptr_t _uncrustify(intptr_t file, lang_flag_e langIDX)
 {
-   auto tmpLang = cpd.lang_flags;
-
-   cpd.lang_flags = static_cast<int>(langIDX);
-   auto ret = _uncrustify(file, frag);
-
-   cpd.lang_flags = tmpLang;
-
-   return(ret);
-}
-
-
-/**
- * format string, assume unfragmented code input
- *
- * @param file: pointer to the file char* string that is going to be formatted
- *
- * @return pointer to the formatted file char* string
- */
-intptr_t _uncrustify(intptr_t file)
-{
-   return(_uncrustify(file, false));
+   return(_uncrustify(file, langIDX, false));
 }
 
 
@@ -1647,11 +1619,8 @@ EMSCRIPTEN_BINDINGS(MainModule)
    emscripten::function(STRINGIFY(getOptionNameMap), &getOptionNameMap);
    emscripten::function(STRINGIFY(getGroupMap), &getGroupMap);
 
-   emscripten::function(STRINGIFY(set_language), &set_language);
-
-   emscripten::function(STRINGIFY(_uncrustify), select_overload<intptr_t(intptr_t, bool, lang_flag_e)>(&_uncrustify));
-   emscripten::function(STRINGIFY(_uncrustify), select_overload<intptr_t(intptr_t, bool)>(&_uncrustify));
-   emscripten::function(STRINGIFY(_uncrustify), select_overload<intptr_t(intptr_t)>(&_uncrustify));
+   emscripten::function(STRINGIFY(_uncrustify), select_overload<intptr_t(intptr_t, lang_flag_e, bool)>(&_uncrustify));
+   emscripten::function(STRINGIFY(_uncrustify), select_overload<intptr_t(intptr_t, lang_flag_e)>(&_uncrustify));
 }
 
 #endif

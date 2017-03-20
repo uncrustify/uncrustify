@@ -1124,9 +1124,6 @@ declare namespace LibUncrustify
         //! sets all option values to their default values
         set_option_defaults() : void;
 
-        //! sets the language of the to be formatted text
-        set_language( langIDX : EmscriptenEnumTypeObject ) : void;
-
         //! adds a new keyword to Uncrustifys dynamic keyword map (dkwm, keywords.cpp)
         add_keyword( tag : string, type : Token ) : void
 
@@ -1225,19 +1222,14 @@ declare namespace LibUncrustify
          * format text
          *
          * @param file file string that is going to be formated
-         * @param frag true=fragmented code input false=unfragmented code input
-         * @return formated file string
-         */
-        uncrustify( file : string, frag : boolean ) : string;
-
-        /**
-         * format text, asumme unfragmented input
+         * @param lang specifies in which language the input file is written (see LangFlag)
+         * @param frag [optional] true=fragmented code input
+         *                        false=unfragmented code input [default]
          *
-         * @param file file string that is going to be formated
-         * @return formated file string
+         * @return formatted file string
          */
-        uncrustify( file : string ) : string;
-        uncrustify( file : string, frag : boolean, langIDX : EmscriptenEnumTypeObject ) : string;
+        uncrustify( file : string, lang : EmscriptenEnumTypeObject, frag : boolean ) : string;
+        uncrustify( file : string, lang : EmscriptenEnumTypeObject ) : string;
 
         //! clears defines map  (defines, defines.cpp)
         clear_defines() : void;

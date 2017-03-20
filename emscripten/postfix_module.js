@@ -7,7 +7,7 @@
      * passes it to the actual _uncrustify function while also managing the
      * memory on the emscripten heap.
      */
-    Module["uncrustify"] = function(str, frag, langIDX)
+    Module["uncrustify"] = function(str, langIDX, frag)
     {
         if( !str || typeof(str) !== "string" || str.length === 0 ) {return;}
 
@@ -16,26 +16,24 @@
         var stringInputPtr = Module._malloc(nDataBytes);
         Module.stringToUTF8(str, stringInputPtr, nDataBytes);
 
-
-        var retStringPointer;
+        var retStringPointer = 0;
 
         switch(arguments.length)
         {
             // depending in the number of args the internal select_overload
             // function resolves the appropriate internal _uncrustify function
-            case 1:
-            {
-                retStringPointer = Module["_uncrustify"](stringInputPtr);
-                break;
-            }
             case 2:
             {
-                retStringPointer = Module["_uncrustify"](stringInputPtr, frag);
+                retStringPointer = Module["_uncrustify"](stringInputPtr, langIDX);
                 break;
             }
             case 3:
             {
-                retStringPointer = Module["_uncrustify"](stringInputPtr, frag, langIDX);
+                retStringPointer = Module["_uncrustify"](stringInputPtr, langIDX, frag);
+                break;
+            }
+            default:
+            {
                 break;
             }
         }
