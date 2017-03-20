@@ -285,7 +285,7 @@ def write_output_dict_pretty(out_dict, out_path):
                         combination_string = out_dict["option_settings"][
                                 out_dict["options"][combination_idx]["type"]][
                                             combination_id]
-                        combination_strings.append(combination_string)
+                        combination_strings.append(str(combination_string))
                     f.write("    (%s: %s)\n" % (file_idx,
                                                 " - ".join(combination_strings)))
             f.write("\n")
