@@ -9,7 +9,6 @@
  * unsure about these:
  *   --check       TODO ???
  *   --decode      TODO ???
- *   --parsed, -p  TODO ???
  *   --detect      TODO needs uncrustify start and end which both are static
  *
  *
@@ -44,6 +43,7 @@
  *   --type ( use add_keyword( string _type, c_token_t type ) )
  *   --define ( use add_define( string _tag ) )
  *   -l ( use uncrustify() )
+ *   --parsed, -p  ( use debug() )
  */
 
 #ifdef EMSCRIPTEN
@@ -56,6 +56,7 @@
 #include "uncrustify_version.h"
 #include "logger.h"
 #include "log_levels.h"
+#include "output.h"
 
 #include <iostream>
 #include <stdio.h>
@@ -77,6 +78,7 @@ extern int load_header_files();
 extern const char *language_name_from_flags(size_t lang);
 extern void uncrustify_file(const file_mem &fm, FILE *pfout, const char *parsed_file, bool defer_uncrustify_end = false);
 extern const option_map_value *unc_find_option(const char *name);
+extern void uncrustify_end();
 
 extern map<uncrustify_options, option_map_value> option_name_map;
 extern map<uncrustify_groups, group_map_value>   group_map;
@@ -431,10 +433,11 @@ map<uncrustify_groups, group_map_value> getGroupMap()
  * @param file: pointer to the file char* string that is going to be formatted
  * @param langIDX: specifies in which language the input file is written
  * @param frag: true=fragmented code input, false=unfragmented code input
+ * @param defer: true=do not perform cleanup of Uncrustify structures
  *
  * @return pointer to the formatted file char* string
  */
-intptr_t _uncrustify(intptr_t _file, lang_flag_e langIDX, bool frag)
+intptr_t _uncrustify(intptr_t _file, lang_flag_e langIDX, bool frag, bool defer)
 {
    // Problem: uncrustify originally is not a lib and uses global vars such as
    // cpd.error_count for the whole program execution
@@ -514,7 +517,7 @@ intptr_t _uncrustify(intptr_t _file, lang_flag_e langIDX, bool frag)
    // function which passes the debug output into a dedicated output js target.
    // This therefore would introduce the dependency on the user to always have
    // the output js target available.
-   uncrustify_file(fm, stream, NULL);
+   uncrustify_file(fm, stream, NULL, defer);
 
    fflush(stream);
    fclose(stream);
@@ -530,6 +533,21 @@ intptr_t _uncrustify(intptr_t _file, lang_flag_e langIDX, bool frag)
 
 
 /**
+ * format string
+ *
+ * @param file: pointer to the file char* string that is going to be formatted
+ * @param langIDX: specifies in which language the input file is written
+ * @param frag: true=fragmented code input, false=unfragmented code input
+ *
+ * @return pointer to the formatted file char* string
+ */
+intptr_t _uncrustify(intptr_t file, lang_flag_e langIDX, bool frag)
+{
+   return(_uncrustify(file, langIDX, frag, false));
+}
+
+
+/**
  * format string, assume unfragmented code input
  *
  * @param file: pointer to the file char* string that is going to be formatted
@@ -539,7 +557,63 @@ intptr_t _uncrustify(intptr_t _file, lang_flag_e langIDX, bool frag)
  */
 intptr_t _uncrustify(intptr_t file, lang_flag_e langIDX)
 {
-   return(_uncrustify(file, langIDX, false));
+   return(_uncrustify(file, langIDX, false, false));
+}
+
+
+/**
+ * generate debug output
+ *
+ * @param file: pointer to the file char* string that is going to be formatted
+ * @param langIDX: specifies in which language the input file is written
+ * @param frag: true=fragmented code input, false=unfragmented code input
+ *
+ * @return pointer to the debug file char* string
+ */
+intptr_t _debug(intptr_t _file, lang_flag_e langIDX, bool frag)
+{
+   auto formatted_str_ptr = _uncrustify(_file, langIDX, frag, true);
+   char *formatted_str    = reinterpret_cast<char *>(formatted_str_ptr);
+
+   // Lazy solution: Throw away the formated file output.
+   // Maybe later add option to return both formatted file string and debug
+   // file string together ... somehow.
+   free(formatted_str);
+
+   char   *buf;
+   size_t len;
+   FILE   *stream = open_memstream(&buf, &len);
+   if (stream == NULL)
+   {
+      LOG_FMT(LERR, "Failed to open_memstream\n");
+      fflush(stream);
+      fclose(stream);
+      free(buf);
+      return(0);
+   }
+   output_parsed(stream);
+   fflush(stream);
+   fclose(stream);
+
+   // start deferred _uncrustify cleanup
+   uncrustify_end();
+
+   // buf is deleted inside js code
+   return(reinterpret_cast<intptr_t>(buf));
+} // uncrustify
+
+
+/**
+ * generate debug output, assume unfragmented code input
+ *
+ * @param file: pointer to the file char* string that is going to be formatted
+ * @param langIDX: specifies in which language the input file is written
+ *
+ * @return pointer to the debug file char* string
+ */
+intptr_t _debug(intptr_t _file, lang_flag_e langIDX)
+{
+   return(_debug(_file, langIDX, false));
 }
 
 
@@ -1619,8 +1693,12 @@ EMSCRIPTEN_BINDINGS(MainModule)
    emscripten::function(STRINGIFY(getOptionNameMap), &getOptionNameMap);
    emscripten::function(STRINGIFY(getGroupMap), &getGroupMap);
 
+   emscripten::function(STRINGIFY(_uncrustify), select_overload<intptr_t(intptr_t, lang_flag_e, bool, bool)>(&_uncrustify));
    emscripten::function(STRINGIFY(_uncrustify), select_overload<intptr_t(intptr_t, lang_flag_e, bool)>(&_uncrustify));
    emscripten::function(STRINGIFY(_uncrustify), select_overload<intptr_t(intptr_t, lang_flag_e)>(&_uncrustify));
+
+   emscripten::function(STRINGIFY(_debug), select_overload<intptr_t(intptr_t, lang_flag_e, bool)>(&_debug));
+   emscripten::function(STRINGIFY(_debug), select_overload<intptr_t(intptr_t, lang_flag_e)>(&_debug));
 }
 
 #endif

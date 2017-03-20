@@ -96,7 +96,7 @@ static bool read_stdin(file_mem &fm);
 static void uncrustify_start(const deque<int> &data);
 
 
-static void uncrustify_end(void);
+void uncrustify_end(void);
 
 
 static bool ends_with(const char *filename, const char *tag, bool case_sensitive);
@@ -1957,7 +1957,7 @@ void uncrustify_file(const file_mem &fm, FILE *pfout,
 } // uncrustify_file
 
 
-static void uncrustify_end()
+void uncrustify_end()
 {
    /* Free all the memory */
    chunk_t *pc;

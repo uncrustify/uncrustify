@@ -1231,6 +1231,19 @@ declare namespace LibUncrustify
         uncrustify( file : string, lang : EmscriptenEnumTypeObject, frag : boolean ) : string;
         uncrustify( file : string, lang : EmscriptenEnumTypeObject ) : string;
 
+        /**
+         * generate debug output
+         *
+         * @param file file string that is going to be formated
+         * @param lang specifies in which language the input file is written (see LangFlag)
+         * @param frag [optional] true=fragmented code input
+         *                        false=unfragmented code input [default]
+         *
+         * @return debug output string
+         */
+        debug( file : string, lang : EmscriptenEnumTypeObject, frag : boolean ) : string;
+        debug( file : string, lang : EmscriptenEnumTypeObject ) : string;
+
         //! clears defines map  (defines, defines.cpp)
         clear_defines() : void;
 
