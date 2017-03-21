@@ -388,3 +388,4 @@
 34135 new_op_paren_open_close.cfg      cpp/new_op.cpp
 
 34140 bug_1027.cfg                     cpp/bug_1027.cpp
+34141 bug_1005.cfg                     cpp/bug_1005.cpp

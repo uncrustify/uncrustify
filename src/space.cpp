@@ -487,6 +487,18 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
          break;
       }
 
+      // Issue #1005
+      /* '::' at the start of an identifier is not member access, but global scope operator.
+       * Detect if previous chunk is a type and previous-previous is "friend"
+       */
+      if ((first->type == CT_TYPE) &&
+          (first->prev != nullptr) &&
+          (first->prev->type == CT_FRIEND))
+      {
+         log_rule("FORCE");
+         return(AV_FORCE);
+      }
+
       if ((first->type == CT_WORD) || (first->type == CT_TYPE) || (first->type == CT_PAREN_CLOSE) ||
           CharTable::IsKw1(first->str[0]))
       {
