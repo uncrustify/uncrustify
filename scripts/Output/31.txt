@@ -15,6 +15,7 @@ indent_text(): : pc->text() {
 indent_text(): frm.pse_tos=, ... indent_tmp=
 indent_text(): frm.pse_tos=, ... indent_tmp=
 indent_pse_push(): line=, pse_tos=, type=BRACE_OPEN
+indent_text(): frm.pse_tos=, ... indent=
 indent_text(): frm.pse_tos=, ... indent_tmp=
 indent_text():  NEWLINE
 indent_text(): frm.pse_tos=, ... indent_tmp=
@@ -30,6 +31,8 @@ indent_text(): : pc->text() (
 indent_text(): frm.pse_tos=, ... indent_tmp=
 indent_text(): frm.pse_tos=, ... indent_tmp=
 indent_pse_push(): line=, pse_tos=, type=FPAREN_OPEN
+indent_text(): frm.pse_tos=, ... indent=
+indent_text(): frm.pse_tos=, ... indent=
 indent_text(): frm.pse_tos=, ... indent_tmp=
 indent_text(): : pc->text() const
 [x:IN_STRUCT,IN_FCN_CALL,IN_CONST_ARGS,IN_CLASS,FORCE_SPACE,EXPR_START]
@@ -73,6 +76,7 @@ indent_text(): : pc->text() :
 indent_text(): frm.pse_tos=, ... indent_tmp=
 indent_text(): frm.pse_tos=, ... indent_tmp=
 indent_pse_push(): line=, pse_tos=, type=CONSTR_COLON
+indent_text(): frm.pse_tos=, ... indent=
 indent_text(): frm.pse_tos=, ... indent_tmp=
 indent_text():  NEWLINE
 indent_text(): frm.pse_tos=, ... indent_tmp=
@@ -88,6 +92,8 @@ indent_text(): : pc->text() (
 indent_text(): frm.pse_tos=, ... indent_tmp=
 indent_text(): frm.pse_tos=, ... indent_tmp=
 indent_pse_push(): line=, pse_tos=, type=FPAREN_OPEN
+indent_text(): frm.pse_tos=, ... indent=
+indent_text(): frm.pse_tos=, ... indent=
 indent_text(): frm.pse_tos=, ... indent_tmp=
 indent_text(): : pc->text() pN
 [x:IN_STRUCT,IN_FCN_CALL,IN_CONST_ARGS,IN_CLASS,EXPR_START]
@@ -116,6 +122,8 @@ indent_text(): : pc->text() (
 indent_text(): frm.pse_tos=, ... indent_tmp=
 indent_text(): frm.pse_tos=, ... indent_tmp=
 indent_pse_push(): line=, pse_tos=, type=FPAREN_OPEN
+indent_text(): frm.pse_tos=, ... indent=
+indent_text(): frm.pse_tos=, ... indent=
 indent_text(): frm.pse_tos=, ... indent_tmp=
 indent_text(): : pc->text() n
 [x:IN_STRUCT,IN_FCN_CALL,IN_CONST_ARGS,IN_CLASS,EXPR_START]
@@ -136,6 +144,7 @@ indent_text(): frm.pse_tos=, ... indent_tmp=
 () indent_pse_pop(): orig_line=, pse_tos=, type=BRACE_OPEN
 indent_text(): frm.pse_tos=, ... indent_tmp=
 indent_pse_push(): line=, pse_tos=, type=BRACE_OPEN
+indent_text(): frm.pse_tos=, ... indent=
 indent_text(): frm.pse_tos=, ... indent_tmp=
 reindent_line(): ] col  on '{' [BRACE_OPEN/FUNC_CLASS_DEF] =>  [CallStack:-DEBUG NOT SET-]
 indent_text():  NEWLINE
@@ -166,6 +175,8 @@ indent_text(): : pc->text() (
 indent_text(): frm.pse_tos=, ... indent_tmp=
 indent_text(): frm.pse_tos=, ... indent_tmp=
 indent_pse_push(): line=, pse_tos=, type=FPAREN_OPEN
+indent_text(): frm.pse_tos=, ... indent=
+indent_text(): frm.pse_tos=, ... indent=
 indent_text(): frm.pse_tos=, ... indent_tmp=
 indent_text(): : pc->text() )
 [x:IN_STRUCT,IN_CONST_ARGS,IN_CLASS,PUNCTUATOR]
@@ -181,6 +192,7 @@ indent_text(): : pc->text() {
 indent_text(): frm.pse_tos=, ... indent_tmp=
 indent_text(): frm.pse_tos=, ... indent_tmp=
 indent_pse_push(): line=, pse_tos=, type=BRACE_OPEN
+indent_text(): frm.pse_tos=, ... indent=
 indent_text(): frm.pse_tos=, ... indent_tmp=
 reindent_line(): ] col  on '{' [BRACE_OPEN/FUNC_CLASS_DEF] =>  [CallStack:-DEBUG NOT SET-]
 indent_text():  NEWLINE
@@ -277,6 +289,7 @@ indent_text(): : pc->text() {
 indent_text(): frm.pse_tos=, ... indent_tmp=
 indent_text(): frm.pse_tos=, ... indent_tmp=
 indent_pse_push(): line=, pse_tos=, type=BRACE_OPEN
+indent_text(): frm.pse_tos=, ... indent=
 indent_text(): frm.pse_tos=, ... indent_tmp=
 indent_text():  NEWLINE
 indent_text(): frm.pse_tos=, ... indent_tmp=
@@ -291,6 +304,8 @@ indent_text(): : pc->text() (
 indent_text(): frm.pse_tos=, ... indent_tmp=
 indent_text(): frm.pse_tos=, ... indent_tmp=
 indent_pse_push(): line=, pse_tos=, type=FPAREN_OPEN
+indent_text(): frm.pse_tos=, ... indent=
+indent_text(): frm.pse_tos=, ... indent=
 indent_text(): frm.pse_tos=, ... indent_tmp=
 indent_text(): : pc->text() const
 [x:IN_STRUCT,IN_FCN_CALL,IN_CONST_ARGS,IN_CLASS,FORCE_SPACE,EXPR_START]
@@ -334,6 +349,7 @@ indent_text(): : pc->text() :
 indent_text(): frm.pse_tos=, ... indent_tmp=
 indent_text(): frm.pse_tos=, ... indent_tmp=
 indent_pse_push(): line=, pse_tos=, type=CONSTR_COLON
+indent_text(): frm.pse_tos=, ... indent=
 indent_text(): frm.pse_tos=, ... indent_tmp=
 indent_text():  NEWLINE
 indent_text(): frm.pse_tos=, ... indent_tmp=
@@ -348,6 +364,8 @@ indent_text(): : pc->text() (
 indent_text(): frm.pse_tos=, ... indent_tmp=
 indent_text(): frm.pse_tos=, ... indent_tmp=
 indent_pse_push(): line=, pse_tos=, type=FPAREN_OPEN
+indent_text(): frm.pse_tos=, ... indent=
+indent_text(): frm.pse_tos=, ... indent=
 indent_text(): frm.pse_tos=, ... indent_tmp=
 indent_text(): : pc->text() pN
 [x:IN_STRUCT,IN_FCN_CALL,IN_CONST_ARGS,IN_CLASS,EXPR_START]
@@ -375,6 +393,8 @@ indent_text(): : pc->text() (
 indent_text(): frm.pse_tos=, ... indent_tmp=
 indent_text(): frm.pse_tos=, ... indent_tmp=
 indent_pse_push(): line=, pse_tos=, type=FPAREN_OPEN
+indent_text(): frm.pse_tos=, ... indent=
+indent_text(): frm.pse_tos=, ... indent=
 indent_text(): frm.pse_tos=, ... indent_tmp=
 indent_text(): : pc->text() n
 [x:IN_STRUCT,IN_FCN_CALL,IN_CONST_ARGS,IN_CLASS,EXPR_START]
@@ -395,6 +415,7 @@ indent_text(): frm.pse_tos=, ... indent_tmp=
 () indent_pse_pop(): orig_line=, pse_tos=, type=BRACE_OPEN
 indent_text(): frm.pse_tos=, ... indent_tmp=
 indent_pse_push(): line=, pse_tos=, type=BRACE_OPEN
+indent_text(): frm.pse_tos=, ... indent=
 indent_text(): frm.pse_tos=, ... indent_tmp=
 indent_text():  NEWLINE
 indent_text(): frm.pse_tos=, ... indent_tmp=
@@ -422,6 +443,8 @@ indent_text(): : pc->text() (
 indent_text(): frm.pse_tos=, ... indent_tmp=
 indent_text(): frm.pse_tos=, ... indent_tmp=
 indent_pse_push(): line=, pse_tos=, type=FPAREN_OPEN
+indent_text(): frm.pse_tos=, ... indent=
+indent_text(): frm.pse_tos=, ... indent=
 indent_text(): frm.pse_tos=, ... indent_tmp=
 indent_text(): : pc->text() )
 [x:IN_STRUCT,IN_CONST_ARGS,IN_CLASS,PUNCTUATOR]
@@ -437,6 +460,7 @@ indent_text(): : pc->text() {
 indent_text(): frm.pse_tos=, ... indent_tmp=
 indent_text(): frm.pse_tos=, ... indent_tmp=
 indent_pse_push(): line=, pse_tos=, type=BRACE_OPEN
+indent_text(): frm.pse_tos=, ... indent=
 indent_text(): frm.pse_tos=, ... indent_tmp=
 indent_text():  NEWLINE
 indent_text(): frm.pse_tos=, ... indent_tmp=
