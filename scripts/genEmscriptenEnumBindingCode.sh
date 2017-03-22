@@ -7,19 +7,22 @@ enum0Name="uncrustify_options"
 enum1Name="uncrustify_groups"
 enum2Name="argtype_e"
 enum3Name="log_sev_t"
-enum4Name="lang_flags"
+enum4Name="c_token_t"
+enum5Name="lang_flag_e"
 
-enum0SName="Options"
-enum1SName="Groups"
+enum0SName="Option"
+enum1SName="Group"
 enum2SName="Argtype"
 enum3SName="LogSev"
-enum4SName="LangFlags"
+enum4SName="Token"
+enum5SName="LangFlag"
 
 enum0File="$script_dir/../src/options.h"
 enum1File="$script_dir/../src/options.h"
 enum2File="$script_dir/../src/options.h"
 enum3File="$script_dir/../src/log_levels.h"
-enum4File="$script_dir/../src/uncrustify_emscripten.cpp"
+enum4File="$script_dir/../src/token_enum.h"
+enum5File="$script_dir/../src/uncrustify_types.h"
 
 ###########################################################################
 
@@ -34,7 +37,7 @@ print_enumCode () {
 
     enumName=$1
     filePath=$2
-    
+
     # remove the first two params from $@
     shift 2
 
@@ -47,13 +50,12 @@ print_enumCode () {
 
     echo -n "   enum_<$enumName>(STRINGIFY($enumName))"
     for option in $enumValues; do
-        if [ "$option" != "UO_option_count" ]; then
-            echo -en "\n      .value(STRINGIFY($option), $option)"
-        fi
+        echo -en "\n      .value(STRINGIFY($option), $option)"
     done
     echo ";"
     echo
 }
+
 
 print_tsCode () {
     if [ "$#" -lt 3 ] || [ "$1" == "" ] || [ "$2" == "" ] || ! [ -f "$3" ]; then
@@ -81,20 +83,20 @@ print_tsCode () {
     echo "    export interface $subsName extends EmscriptenEnumType"
     echo "    {"
     for option in $enumValues; do
-        if [ "$option" != "UO_option_count" ]; then
-            echo "        $option : EmscriptenEnumTypeObject;"
-        fi
+        echo "        $option : EmscriptenEnumTypeObject;"
     done
     echo "    }"
     echo
 }
+
 
 if [ "$#" -ne 0 ] && [ "$1" -eq "1" ]; then
     print_tsCode $enum0Name $enum0SName $enum0File
     print_tsCode $enum1Name $enum1SName $enum1File
     print_tsCode $enum2Name $enum2SName $enum2File
     print_tsCode $enum3Name $enum3SName $enum3File
-    print_tsCode $enum4Name $enum4SName $enum4File \
+    print_tsCode $enum4Name $enum4SName $enum4File
+    print_tsCode $enum5Name $enum5SName $enum5File \
         "-extra-arg=-std=c++1z" \
         "-extra-arg=-DEMSCRIPTEN"
 else
@@ -102,7 +104,8 @@ else
     print_enumCode $enum1Name $enum1File
     print_enumCode $enum2Name $enum2File
     print_enumCode $enum3Name $enum3File
-    print_enumCode $enum4Name $enum4File \
+    print_enumCode $enum4Name $enum4File
+    print_enumCode $enum5Name $enum5File \
         "-extra-arg=-std=c++1z" \
         "-extra-arg=-DEMSCRIPTEN"
 fi

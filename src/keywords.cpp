@@ -354,6 +354,26 @@ void add_keyword(const char *tag, c_token_t type)
 }
 
 
+void remove_keyword(const string &tag)
+{
+   if (tag.empty())
+   {
+      return;
+   }
+
+   /* See if the keyword exists in the map */
+   dkwmap::iterator it = dkwm.find(tag);
+   if (it == dkwm.end())
+   {
+      return;
+   }
+
+   /* Remove the keyword */
+   dkwm.erase(it);
+   LOG_FMT(LDYNKW, "%s: removed '%s'\n", __func__, tag.c_str());
+}
+
+
 static const chunk_tag_t *kw_static_first(const chunk_tag_t *tag)
 {
    const chunk_tag_t *prev = tag - 1;

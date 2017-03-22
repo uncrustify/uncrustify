@@ -3,7 +3,7 @@ exports.test = function(libUncrustify, assert){
 
     var input = '        string a = "aaaa";';
     var expectedOutput = 'string a = "aaaa";';
-    var generatedOutput = uncrustify.uncrustify( input );
+    var generatedOutput = uncrustify.uncrustify( input, uncrustify.lang_flag_e.LANG_CPP );
 
     assert.deepEqual(expectedOutput, generatedOutput, "comparing expectedOutput and generatedOutput");
 

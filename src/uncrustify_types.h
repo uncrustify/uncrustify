@@ -307,7 +307,7 @@ struct chunk_t
    unc_text     str;              /* the token text */
 };
 
-enum
+enum lang_flag_e
 {
    LANG_C    = 0x0001,
    LANG_CPP  = 0x0002,
