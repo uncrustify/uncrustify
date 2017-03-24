@@ -443,16 +443,27 @@ intptr_t _uncrustify(intptr_t _file, lang_flag_e langIDX, bool frag, bool defer)
    // cpd.error_count for the whole program execution
    // to know if errors occurred during the formating step we reset this var here
    cpd.error_count = 0;
+   cpd.filename    = "stdin";
+   cpd.frag        = frag;
+   if (langIDX == 0)   // 0 == undefined
+   {
+      LOG_FMT(LWARN, "language of input file not defined, C++ will be assumed\n");
+      cpd.lang_flags = LANG_CPP;
+   }
+   else
+   {
+      cpd.lang_flags = langIDX;
+   }
+
+   // embind complains about char* so we use an intptr_t to get the pointer and
+   // cast it, memory management is done in /emscripten/postfix_module.js
+   char     *file = reinterpret_cast<char *>(_file);
 
    file_mem fm;
    fm.raw.clear();
    fm.data.clear();
    fm.enc = char_encoding_e::e_ASCII;
    fm.raw = vector<UINT8>();
-
-   // embind complains about char* so we use an intptr_t to get the pointer and
-   // cast it, memory management is done in /emscripten/postfix_module.js
-   char *file = reinterpret_cast<char *>(_file);
 
    char c;
    for (auto idx = 0; (c = file[idx]) != 0; ++idx)
@@ -465,8 +476,6 @@ intptr_t _uncrustify(intptr_t _file, lang_flag_e langIDX, bool frag, bool defer)
       LOG_FMT(LERR, "Failed to read code\n");
       return(0);
    }
-
-   cpd.filename = "stdin";
 
    /* Done reading from stdin */
    LOG_FMT(LSYS, "Parsing: %d bytes (%d chars) from stdin as language %s\n",
@@ -491,17 +500,6 @@ intptr_t _uncrustify(intptr_t _file, lang_flag_e langIDX, bool frag, bool defer)
       free(buf);
       return(0);
    }
-
-   if (langIDX == 0)   // 0 == undefined
-   {
-      LOG_FMT(LWARN, "language of input file not defined, C++ will be assumed\n");
-      cpd.lang_flags = LANG_CPP;
-   }
-   else
-   {
-      cpd.lang_flags = langIDX;
-   }
-   cpd.frag = frag;
 
    // TODO One way to implement the --parsed, -p functionality would
    // be to let the uncrustify_file function run, throw away the formated
