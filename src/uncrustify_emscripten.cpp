@@ -181,7 +181,7 @@ void add_define(string tag)
       LOG_FMT(LERR, "%s: tag string is empty\n", __func__);
       return;
    }
-   add_define(tag.c_str(), NULL);
+   add_define(tag.c_str(), nullptr);
 }
 
 
@@ -264,7 +264,7 @@ string get_option(string name)
    }
 
    const auto option = unc_find_option(name.c_str());
-   if (option == NULL)
+   if (option == nullptr)
    {
       LOG_FMT(LWARN, "Option %s not found\n", name.c_str());
       return("");
@@ -282,7 +282,7 @@ string show_options()
 
    FILE   *stream = open_memstream(&buf, &len);
 
-   if (stream == NULL)
+   if (stream == nullptr)
    {
       LOG_FMT(LERR, "Failed to open_memstream\n");
       fflush(stream);
@@ -319,7 +319,7 @@ string show_config(bool withDoc, bool only_not_default)
 
    FILE   *stream = open_memstream(&buf, &len);
 
-   if (stream == NULL)
+   if (stream == nullptr)
    {
       LOG_FMT(LERR, "Failed to open_memstream\n");
       fflush(stream);
@@ -512,7 +512,7 @@ intptr_t _uncrustify(intptr_t _file, lang_flag_e langIDX, bool frag, bool defer)
    // function which passes the debug output into a dedicated output js target.
    // This therefore would introduce the dependency on the user to always have
    // the output js target available.
-   uncrustify_file(fm, stream, NULL, defer);
+   uncrustify_file(fm, stream, nullptr, defer);
 
    fflush(stream);
    fclose(stream);
@@ -621,21 +621,21 @@ intptr_t _debug(intptr_t _file, lang_flag_e langIDX)
 //! helper function to access option_map_value::name
 string option_map_value_name(const option_map_value &o)
 {
-   return((o.name != NULL) ? string(o.name) : "");
+   return((o.name != nullptr) ? string(o.name) : "");
 }
 
 
 //! helper function to access option_map_value::short_desc
 string option_map_value_sDesc(const option_map_value &o)
 {
-   return((o.short_desc != NULL) ? string(o.short_desc) : "");
+   return((o.short_desc != nullptr) ? string(o.short_desc) : "");
 }
 
 
 //! helper function to access option_map_value::long_desc
 string option_map_value_lDesc(const option_map_value &o)
 {
-   return((o.long_desc != NULL) ? string(o.long_desc) : "");
+   return((o.long_desc != nullptr) ? string(o.long_desc) : "");
 }
 
 
