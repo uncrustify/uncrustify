@@ -483,8 +483,8 @@ intptr_t _uncrustify(intptr_t _file, lang_flag_e langIDX, bool frag, bool defer)
            language_name_from_flags(cpd.lang_flags));
 
 
-   char   *buf;
-   size_t len;
+   char   *buf = nullptr;
+   size_t len  = 0;
 
    // uncrustify uses FILE instead of streams for its outputs
    // to redirect FILE writes into a char* open_memstream is used
@@ -492,12 +492,9 @@ intptr_t _uncrustify(intptr_t _file, lang_flag_e langIDX, bool frag, bool defer)
    // apparently emscripten has its own implementation, if that is not working
    // see: stackoverflow.com/questions/10305095#answer-10341073
    FILE *stream = open_memstream(&buf, &len);
-   if (stream == NULL)
+   if (stream == nullptr)
    {
       LOG_FMT(LERR, "Failed to open_memstream\n");
-      fflush(stream);
-      fclose(stream);
-      free(buf);
       return(0);
    }
 
@@ -525,6 +522,10 @@ intptr_t _uncrustify(intptr_t _file, lang_flag_e langIDX, bool frag, bool defer)
       LOG_FMT(LWARN, "%d errors occurred during formating\n", cpd.error_count);
    }
 
+   if (len == 0)
+   {
+      return(0);
+   }
    // buf is deleted inside js code
    return(reinterpret_cast<intptr_t>(buf));
 } // uncrustify
@@ -578,15 +579,12 @@ intptr_t _debug(intptr_t _file, lang_flag_e langIDX, bool frag)
    // file string together ... somehow.
    free(formatted_str);
 
-   char   *buf;
-   size_t len;
+   char   *buf    = nullptr;
+   size_t len     = 0;
    FILE   *stream = open_memstream(&buf, &len);
-   if (stream == NULL)
+   if (stream == nullptr)
    {
       LOG_FMT(LERR, "Failed to open_memstream\n");
-      fflush(stream);
-      fclose(stream);
-      free(buf);
       return(0);
    }
    output_parsed(stream);
@@ -595,6 +593,11 @@ intptr_t _debug(intptr_t _file, lang_flag_e langIDX, bool frag)
 
    // start deferred _uncrustify cleanup
    uncrustify_end();
+
+   if (len == 0)
+   {
+      return(0);
+   }
 
    // buf is deleted inside js code
    return(reinterpret_cast<intptr_t>(buf));
