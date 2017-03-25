@@ -116,27 +116,24 @@ endif()
 #
 # Generate uncrustify_version.h
 #
-set(PACKAGE_VERSION "0.64")
 
-if (MAKE_VERSION)
-  find_package(PythonInterp REQUIRED)
-  execute_process(
-    COMMAND ${PYTHON_EXECUTABLE} scripts/make_version.py
-    WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
-    RESULT_VARIABLE make_version_error
-    OUTPUT_VARIABLE make_version_output
-  )
+find_package(PythonInterp REQUIRED)
+execute_process(
+  COMMAND ${PYTHON_EXECUTABLE} scripts/make_version.py
+  WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+  RESULT_VARIABLE make_version_error
+  OUTPUT_VARIABLE make_version_output
+)
 
-  if (make_version_error)
-    message(WARNING ${make_version_output})
+if (make_version_error)
+  message(WARNING ${make_version_output})
+else()
+  if (${make_version_output} MATCHES "full version: (.*)\n tag version: (.*)\n")
+    set(FULL_VERSION ${CMAKE_MATCH_1})
+    set(PACKAGE_VERSION ${CMAKE_MATCH_2})
   else()
-    if (${make_version_output} MATCHES "full version: (.*)\n tag version: (.*)")
-      set(full_version ${CMAKE_MATCH_1})
-      set(tag_version ${CMAKE_MATCH_2})
-      message(STATUS "Uncrustify full version: ${full_version}")
-      message(STATUS "Uncrustify  tag version: ${tag_version}")
-    endif()
-    set(PACKAGE_VERSION "${full_version}")
+    set(FULL_VERSION "undefined")
+    set(PACKAGE_VERSION "undefined")
   endif()
 endif()
 
