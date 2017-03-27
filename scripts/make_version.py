@@ -34,8 +34,8 @@ def main():
     # convert the git describe text to a version
     pts = txt.decode("ascii").split('-', 2)
     # pts[0] is "uncrustify"
-    print("full version: %s.%s" % (pts[1], pts[2]))
-    print(" tag version: %s" % pts[1])
+    print("current: %s.%s" % (pts[1], pts[2]))
+    print("release: %s" % pts[1])
 
     return EX_OK
 

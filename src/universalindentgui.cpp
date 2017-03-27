@@ -70,9 +70,12 @@ void print_universal_indent_cfg(FILE *pfile)
            "parameterOrder=ipo\n"
            "showHelpParameter=-h\n"
            "stringparaminquotes=false\n"
-           "useCfgFileParameter=\"-c \"\n"
-           "version=%s\n",
-           UNCRUSTIFY_VERSION);
+           "useCfgFileParameter=\"-c \"\n");
+#if defined (DEBUG)  || defined (_DEBUG)
+   fprintf(pfile, "version=%s\n", UNCRUSTIFY_CURRENT_VERSION);
+#else
+   fprintf(pfile, "version=%s\n", UNCRUSTIFY_VERSION);
+#endif // DEBUG
 
 #ifdef DEBUG
    size_t optionNumber = 0;

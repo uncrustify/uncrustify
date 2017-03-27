@@ -2105,9 +2105,10 @@ int save_option_file_kernel(FILE *pfile, bool withDoc, bool only_not_default)
 {
    int count_the_not_default_options = 0;
 
+#if defined (DEBUG)  || defined (_DEBUG)
+   fprintf(pfile, "# Uncrustify %s\n", UNCRUSTIFY_CURRENT_VERSION);
+#else
    fprintf(pfile, "# Uncrustify %s\n", UNCRUSTIFY_VERSION);
-#ifdef DEBUG
-   fprintf(pfile, "# Uncrustify %s\n", UNCRUSTIFY_FULL_VERSION);
 #endif // DEBUG
 
    /* Print the options by group */
@@ -2229,9 +2230,10 @@ void print_options(FILE *pfile)
       "String",
    };
 
+#if defined (DEBUG)  || defined (_DEBUG)
+   fprintf(pfile, "# Uncrustify %s\n", UNCRUSTIFY_CURRENT_VERSION);
+#else
    fprintf(pfile, "# Uncrustify %s\n", UNCRUSTIFY_VERSION);
-#ifdef DEBUG
-   fprintf(pfile, "# Uncrustify %s\n", UNCRUSTIFY_FULL_VERSION);
 #endif // DEBUG
 
    /* Print the all out */
