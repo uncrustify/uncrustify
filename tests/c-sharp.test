@@ -61,3 +61,6 @@
 12004 verbatim_strings.cfg     cs/verbatim_strings.cs
 
 12101 bug_i_679.cfg            cs/bug_i_679.cs
+
+12102 mod_full_brace_nl_block_rem_mlcond-0.cfg cs/mod_full_brace_nl_block_rem_mlcond.cs
+12103 mod_full_brace_nl_block_rem_mlcond-1.cfg cs/mod_full_brace_nl_block_rem_mlcond.cs

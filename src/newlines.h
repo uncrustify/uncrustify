@@ -9,7 +9,7 @@
 #define NEWLINES_H_INCLUDED
 
 #include "uncrustify_types.h"
-
+#include "chunk_list.h"
 
 void newlines_remove_newlines(void);
 void newlines_cleanup_braces(bool first);
@@ -34,5 +34,7 @@ chunk_t *newline_add_after(chunk_t *pc);
 chunk_t *newline_force_after(chunk_t *pc);
 void newline_del_between(chunk_t *start, chunk_t *end);
 chunk_t *newline_add_between(chunk_t *start, chunk_t *end);
+
+int newlines_between(chunk_t *pcS, chunk_t *pcE, scope_e scope = scope_e::ALL);
 
 #endif /* NEWLINES_H_INCLUDED */
