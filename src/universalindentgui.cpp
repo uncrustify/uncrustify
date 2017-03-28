@@ -71,7 +71,7 @@ void print_universal_indent_cfg(FILE *pfile)
            "showHelpParameter=-h\n"
            "stringparaminquotes=false\n"
            "useCfgFileParameter=\"-c \"\n");
-#if defined (DEBUG)  || defined (_DEBUG)
+#if defined (DEBUG) || defined (_DEBUG)
    fprintf(pfile, "version=%s\n", UNCRUSTIFY_CURRENT_VERSION);
 #else
    fprintf(pfile, "version=%s\n", UNCRUSTIFY_VERSION);
