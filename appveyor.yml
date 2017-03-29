@@ -3,7 +3,7 @@ platform: x64
 environment:
   matrix:
      - CONFIG: Debug
-     - CONFIG: Release
+#     - CONFIG: Release
 clone_folder: C:\projects\uncrustify
 branches:
   only:
@@ -22,5 +22,7 @@ build_script:
   - set MSBuildOptions=/v:m /p:Configuration=%CONFIG% /logger:%MSBuildLogger%
   - msbuild %MSBuildOptions% uncrustify.sln
 test_script:
-  - ctest -C %CONFIG% -V
+  - echo This is a test only guy
+  - C:/projects/uncrustify/build/Debug/uncrustify.exe -c C:/projects/uncrustify/tests/config/mono.cfg -f C:/projects/uncrustify/tests/input/cs/simple.cs -L A
+#  - ctest -C %CONFIG% -V
 deploy: off
