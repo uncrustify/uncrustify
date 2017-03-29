@@ -767,7 +767,7 @@ void indent_text(void)
             /* Indent one level except if the #if is a #include guard */
             size_t extra = ((pc->pp_level == 0) && ifdef_over_whole_file()) ? 0 : indent_size;
             frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent + extra;
-            //log_indent();
+            log_indent();
             frm.pse[frm.pse_tos].indent_tab = frm.pse[frm.pse_tos - 1].indent_tab + extra;
             frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
             frm.pse[frm.pse_tos].in_preproc = false;
@@ -784,7 +784,7 @@ void indent_text(void)
             frm.pse[frm.pse_tos].indent_tmp = cpd.settings[UO_pp_define_at_level].b ?
                                               frm.pse[frm.pse_tos - 1].indent_tmp : 1;
             frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos].indent_tmp + indent_size;
-            //log_indent();
+            log_indent();
             frm.pse[frm.pse_tos].indent_tab = frm.pse[frm.pse_tos].indent;
             //log_indent_tmp();
          }
@@ -793,7 +793,7 @@ void indent_text(void)
          {
             frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos - 1].indent_tmp;
             frm.pse[frm.pse_tos].indent     = frm.pse[frm.pse_tos].indent_tmp + indent_size;
-            //log_indent();
+            log_indent();
             frm.pse[frm.pse_tos].indent_tab = frm.pse[frm.pse_tos].indent;
             //log_indent_tmp();
          }
@@ -804,14 +804,14 @@ void indent_text(void)
                  (frm.pse[frm.pse_tos].type != CT_PP_ENDIF)))
             {
                frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 2].indent;
-               //log_indent();
+               log_indent();
             }
             else
             {
                frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent;
-               //log_indent();
+               log_indent();
             }
-            //log_indent();
+            log_indent();
             if ((pc->parent_type == CT_PP_REGION) ||
                 (pc->parent_type == CT_PP_ENDREGION))
             {
@@ -819,12 +819,12 @@ void indent_text(void)
                if (val > 0)
                {
                   frm.pse[frm.pse_tos].indent = val;
-                  //log_indent();
+                  log_indent();
                }
                else
                {
                   frm.pse[frm.pse_tos].indent += val;
-                  //log_indent();
+                  log_indent();
                }
             }
             else if ((pc->parent_type == CT_PP_IF) ||
@@ -835,7 +835,7 @@ void indent_text(void)
                if (val > 0)
                {
                   frm.pse[frm.pse_tos].indent = val;
-                  //log_indent();
+                  log_indent();
                }
                else
                {
@@ -1119,7 +1119,7 @@ void indent_text(void)
             iNewIndent = next_tab_column(iNewIndent);
          }
          frm.pse[frm.pse_tos].indent = iNewIndent;
-         //log_indent();
+         log_indent();
          frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
          frm.pse[frm.pse_tos].indent_tab = frm.pse[frm.pse_tos].indent;
          //log_indent_tmp();
@@ -1139,7 +1139,7 @@ void indent_text(void)
             frm.pse[frm.pse_tos].brace_indent = frm.pse[frm.pse_tos - 1].indent;
             indent_column                     = frm.pse[frm.pse_tos].brace_indent;
             frm.pse[frm.pse_tos].indent       = indent_column + indent_size;
-            //log_indent();
+            log_indent();
             frm.pse[frm.pse_tos].indent_tab = frm.pse[frm.pse_tos].indent;
             frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
             //log_indent_tmp();
