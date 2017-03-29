@@ -136,6 +136,7 @@
 30703 func-def-3.cfg                   cpp/function-def.cpp
 
 30705 func_param.cfg                   cpp/func_param.cpp
+30706 bug_1020.cfg                     cpp/bug_1020.cpp
 
 30711 del_semicolon.cfg                cpp/semicolons.cpp
 
