@@ -2026,7 +2026,7 @@ void space_text(void)
             }
          }
 
-         int      min_sp;
+         int min_sp;
 #ifdef DEBUG
          LOG_FMT(LSPACE, "(%d) ", __LINE__);
 #endif
