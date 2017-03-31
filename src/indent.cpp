@@ -509,7 +509,7 @@ static size_t token_indent(c_token_t type)
       indent_column = (X);                                                    \
       LOG_FMT(LINDENT2, "%s:[line %d], orig_line=%zu, indent_column = %zu\n", \
               __func__, __LINE__, pc->orig_line, indent_column);              \
-   } while (0)
+   } while (false)
 
 
 static size_t calc_indent_continue(parse_frame_t &frm, size_t pse_tos)
@@ -576,27 +576,27 @@ static chunk_t *oc_msg_prev_colon(chunk_t *pc)
 }
 
 
-#define log_indent()                          \
-   do { _log_indent(__func__, __LINE__, frm); \
+#define log_indent()                           \
+   do { _log_indent(__func__, __LINE__, &frm); \
    } while (false)
 
 
-static void _log_indent(const char *func, const uint32_t line, parse_frame_t frm)
+static void _log_indent(const char *func, const uint32_t line, parse_frame_t *frm)
 {
    LOG_FMT(LINDLINE, "%s(%d): frm.pse_tos=%zu, ... indent=%zu\n",
-           func, line, frm.pse_tos, frm.pse[frm.pse_tos].indent);
+           func, line, frm->pse_tos, frm->pse[frm->pse_tos].indent);
 }
 
 
-#define log_indent_tmp()                          \
-   do { _log_indent_tmp(__func__, __LINE__, frm); \
+#define log_indent_tmp()                           \
+   do { _log_indent_tmp(__func__, __LINE__, &frm); \
    } while (false)
 
 
-static void _log_indent_tmp(const char *func, const uint32_t line, parse_frame_t frm)
+static void _log_indent_tmp(const char *func, const uint32_t line, parse_frame_t *frm)
 {
    LOG_FMT(LINDLINE, "%s(%d): frm.pse_tos=%zu, ... indent_tmp=%zu\n",
-           func, line, frm.pse_tos, frm.pse[frm.pse_tos].indent_tmp);
+           func, line, frm->pse_tos, frm->pse[frm->pse_tos].indent_tmp);
 }
 
 
