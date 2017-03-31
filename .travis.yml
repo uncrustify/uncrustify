@@ -4,43 +4,43 @@ sudo: false
 matrix:
   include:
     - env: BUILD_TYPE=debug
-#    - env: BUILD_TYPE=release
+    - env: BUILD_TYPE=release
 
-#    # GCC 6
-#    - env: C_COMPILER=gcc-6 CXX_COMPILER=g++-6
-#      addons:
-#        apt:
-#          sources:
-#            - ubuntu-toolchain-r-test
-#          packages:
-#            - gcc-6
-#            - g++-6
-#
-#    # Clang 3.8 address sanitizer
-#    - env: BUILD_TYPE=asan C_COMPILER=clang-3.8 CXX_COMPILER=clang++-3.8
-#      addons:
-#        apt:
-#          sources:
-#            - ubuntu-toolchain-r-test
-#            - llvm-toolchain-precise-3.8
-#          packages:
-#            - clang-3.8
-#
-#    # mingw-w64 Win64 cross-compile
-#    - env: BUILD_TYPE=cross C_COMPILER=x86_64-w64-mingw32-gcc CXX_COMPILER=x86_64-w64-mingw32-g++
-#      addons:
-#        apt:
-#          packages:
-#            - mingw-w64
-#            - binutils-mingw-w64
-#            - binutils-mingw-w64-i686
-#            - binutils-mingw-w64-x86-64
-#            - gcc-mingw-w64
-#            - gcc-mingw-w64-i686
-#            - gcc-mingw-w64-x86-64
-#            - g++-mingw-w64
-#            - g++-mingw-w64-i686
-#            - g++-mingw-w64-x86-64
+    # GCC 6
+    - env: C_COMPILER=gcc-6 CXX_COMPILER=g++-6
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - gcc-6
+            - g++-6
+
+    # Clang 3.8 address sanitizer
+    - env: BUILD_TYPE=asan C_COMPILER=clang-3.8 CXX_COMPILER=clang++-3.8
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+            - llvm-toolchain-precise-3.8
+          packages:
+            - clang-3.8
+
+    # mingw-w64 Win64 cross-compile
+    - env: BUILD_TYPE=cross C_COMPILER=x86_64-w64-mingw32-gcc CXX_COMPILER=x86_64-w64-mingw32-g++
+      addons:
+        apt:
+          packages:
+            - mingw-w64
+            - binutils-mingw-w64
+            - binutils-mingw-w64-i686
+            - binutils-mingw-w64-x86-64
+            - gcc-mingw-w64
+            - gcc-mingw-w64-i686
+            - gcc-mingw-w64-x86-64
+            - g++-mingw-w64
+            - g++-mingw-w64-i686
+            - g++-mingw-w64-x86-64
 
 branches:
   only:
@@ -82,9 +82,9 @@ before_script:
 
 script:
   - make VERBOSE=1
-#  - if [ "x${BUILD_TYPE}" != "xcross" ]; then ctest -V; fi
-#    # test if all the sources are conform to the forUncrustifySources.cfg config file
-#  - if [ "x${BUILD_TYPE}" == "xrelease" ]; then cd ../; ./scripts/Run_uncrustify_for_sources.sh; fi
-#    # test if uncrustify runs for (some) command line options
-#  - if [ "x${BUILD_TYPE}" == "xrelease" ]; then ./scripts/Test_more_Options.sh; fi
-  - /home/travis/build/uncrustify/uncrustify/build/uncrustify -c /home/travis/build/uncrustify/uncrustify/tests/config/mono.cfg -f /home/travis/build/uncrustify/uncrustify/tests/input/cs/simple.cs -L A
+  - if [ "x${BUILD_TYPE}" != "xcross" ]; then ctest -V; fi
+    # test if all the sources are conform to the forUncrustifySources.cfg config file
+  - if [ "x${BUILD_TYPE}" == "xrelease" ]; then cd ../; ./scripts/Run_uncrustify_for_sources.sh; fi
+    # test if uncrustify runs for (some) command line options
+  - if [ "x${BUILD_TYPE}" == "xrelease" ]; then ./scripts/Test_more_Options.sh; fi
+#  - /home/travis/build/uncrustify/uncrustify/build/uncrustify -c /home/travis/build/uncrustify/uncrustify/tests/config/mono.cfg -f /home/travis/build/uncrustify/uncrustify/tests/input/cs/simple.cs -L A
