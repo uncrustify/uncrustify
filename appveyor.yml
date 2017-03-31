@@ -10,6 +10,9 @@ branches:
     - master
 clone_depth: 10
 skip_tags: true
+init:
+  - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+
 install:
   - "SET PATH=C:/Python35-x64;C:/Python35-x64/Scripts;%PATH%"
 build_script:

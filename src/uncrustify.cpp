@@ -64,7 +64,6 @@
 #include <time.h>
 #endif
 
-#include <sys/resource.h>
 
 /* Global data */
 cp_data_t cpd;
