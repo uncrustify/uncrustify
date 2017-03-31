@@ -333,10 +333,6 @@ static void redir_stdout(const char *output_file)
 
 int main(int argc, char *argv[])
 {
-struct rlimit old;
-getrlimit(RLIMIT_STACK, &old);
-printf("Previous limits: soft=%lld; hard=%lld\n",
-                   (long long) old.rlim_cur, (long long) old.rlim_max);
    /* initialize the global data */
    cpd.unc_off_used = false;
 
