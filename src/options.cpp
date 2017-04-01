@@ -2120,28 +2120,42 @@ int save_option_file_kernel(FILE *pfile, bool withDoc, bool only_not_default)
    /* Print the options by group */
    for (auto &jt : group_map)
    {
-      if (withDoc)
-      {
-         fputs("\n#\n", pfile);
-         fprintf(pfile, "# %s\n", jt.second.short_desc);
-         fputs("#\n\n", pfile);
-      }
-
       bool first = true;
 
       for (auto option_id : jt.second.options)
       {
-         const option_map_value *option = get_option_name(option_id);
+         const auto *option     = get_option_name(option_id);
+         const auto val_string  = op_val_to_string(option->type, cpd.settings[option->id]);
+         const auto val_default = op_val_to_string(option->type, cpd.defaults[option->id]);
+
+         if (val_string != val_default)
+         {
+            count_the_not_default_options++;
+         }
+         else if (only_not_default)
+         {
+            continue;
+         }
+         // ...................................................................
 
          if (withDoc && (option->short_desc != nullptr) && (*option->short_desc != 0))
          {
+            if (first)
+            {
+               // print group description
+               fputs("\n#\n", pfile);
+               fprintf(pfile, "# %s\n", jt.second.short_desc);
+               fputs("#\n\n", pfile);
+            }
+
             fprintf(pfile, "%s# ", first ? "" : "\n");
-            int idx;
-            for (idx = 0; option->short_desc[idx] != 0; idx++)
+
+            auto idx = 0;
+            for ( ; option->short_desc[idx] != 0; idx++)
             {
                fputc(option->short_desc[idx], pfile);
-               if ((option->short_desc[idx] == '\n') &&
-                   (option->short_desc[idx + 1] != 0))
+               if (option->short_desc[idx] == '\n'
+                   && option->short_desc[idx + 1] != 0)
                {
                   fputs("# ", pfile);
                }
@@ -2152,50 +2166,28 @@ int save_option_file_kernel(FILE *pfile, bool withDoc, bool only_not_default)
             }
          }
          first = false;
-         string     val_string = op_val_to_string(option->type, cpd.settings[option->id]);
-         const char *val_str   = val_string.c_str();
-         int        val_len    = strlen(val_str);
-         int        name_len   = strlen(option->name);
 
-         // guy
-         bool print_option = true;
-         if (only_not_default)
+         const auto name_len = strlen(option->name);
+         const int  pad      = (name_len < MAX_OPTION_NAME_LEN)
+                               ? (MAX_OPTION_NAME_LEN - name_len) : 1;
+
+         fprintf(pfile, "%s%*.s= ", option->name, pad, " ");
+
+         if (option->type == AT_STRING)
          {
-            string     val_string_D;
-            const char *val_default;
-            val_string_D = op_val_to_string(option->type, cpd.defaults[option->id]);
-            val_default  = val_string_D.c_str();
-            if ((strcmp(val_default, val_str) == 0))
-            {
-               print_option = false;
-            }
-            else
-            {
-               print_option = true;
-               count_the_not_default_options++;
-            }
+            fprintf(pfile, "\"%s\"", val_string.c_str());
          }
-         if (print_option)
+         else
          {
-            int pad = (name_len < MAX_OPTION_NAME_LEN) ? (MAX_OPTION_NAME_LEN - name_len) : 1;
-            fprintf(pfile, "%s%*.s= ",
-                    option->name, pad, " ");
-            if (option->type == AT_STRING)
-            {
-               fprintf(pfile, "\"%s\"", val_str);
-            }
-            else
-            {
-               fprintf(pfile, "%s", val_str);
-            }
-            if (withDoc)
-            {
-               fprintf(pfile, "%*.s # %s",
-                       8 - val_len, " ",
-                       argtype_to_string(option->type).c_str());
-            }
-            fputs("\n", pfile);
+            fprintf(pfile, "%s", val_string.c_str());
          }
+         if (withDoc)
+         {
+            const int val_len = val_string.length();
+            fprintf(pfile, "%*.s # %s", 8 - val_len, " ",
+                    argtype_to_string(option->type).c_str());
+         }
+         fputs("\n", pfile);
       }
    }
 
