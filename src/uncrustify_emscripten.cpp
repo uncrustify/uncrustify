@@ -181,7 +181,7 @@ void add_define(string tag)
       LOG_FMT(LERR, "%s: tag string is empty\n", __func__);
       return;
    }
-   add_define(tag.c_str(), NULL);
+   add_define(tag.c_str(), nullptr);
 }
 
 
@@ -264,7 +264,7 @@ string get_option(string name)
    }
 
    const auto option = unc_find_option(name.c_str());
-   if (option == NULL)
+   if (option == nullptr)
    {
       LOG_FMT(LWARN, "Option %s not found\n", name.c_str());
       return("");
@@ -282,7 +282,7 @@ string show_options()
 
    FILE   *stream = open_memstream(&buf, &len);
 
-   if (stream == NULL)
+   if (stream == nullptr)
    {
       LOG_FMT(LERR, "Failed to open_memstream\n");
       fflush(stream);
@@ -319,7 +319,7 @@ string show_config(bool withDoc, bool only_not_default)
 
    FILE   *stream = open_memstream(&buf, &len);
 
-   if (stream == NULL)
+   if (stream == nullptr)
    {
       LOG_FMT(LERR, "Failed to open_memstream\n");
       fflush(stream);
@@ -443,16 +443,27 @@ intptr_t _uncrustify(intptr_t _file, lang_flag_e langIDX, bool frag, bool defer)
    // cpd.error_count for the whole program execution
    // to know if errors occurred during the formating step we reset this var here
    cpd.error_count = 0;
+   cpd.filename    = "stdin";
+   cpd.frag        = frag;
+   if (langIDX == 0)   // 0 == undefined
+   {
+      LOG_FMT(LWARN, "language of input file not defined, C++ will be assumed\n");
+      cpd.lang_flags = LANG_CPP;
+   }
+   else
+   {
+      cpd.lang_flags = langIDX;
+   }
+
+   // embind complains about char* so we use an intptr_t to get the pointer and
+   // cast it, memory management is done in /emscripten/postfix_module.js
+   char     *file = reinterpret_cast<char *>(_file);
 
    file_mem fm;
    fm.raw.clear();
    fm.data.clear();
    fm.enc = char_encoding_e::e_ASCII;
    fm.raw = vector<UINT8>();
-
-   // embind complains about char* so we use an intptr_t to get the pointer and
-   // cast it, memory management is done in /emscripten/postfix_module.js
-   char *file = reinterpret_cast<char *>(_file);
 
    char c;
    for (auto idx = 0; (c = file[idx]) != 0; ++idx)
@@ -466,16 +477,14 @@ intptr_t _uncrustify(intptr_t _file, lang_flag_e langIDX, bool frag, bool defer)
       return(0);
    }
 
-   cpd.filename = "stdin";
-
    /* Done reading from stdin */
    LOG_FMT(LSYS, "Parsing: %d bytes (%d chars) from stdin as language %s\n",
            (int)fm.raw.size(), (int)fm.data.size(),
            language_name_from_flags(cpd.lang_flags));
 
 
-   char   *buf;
-   size_t len;
+   char   *buf = nullptr;
+   size_t len  = 0;
 
    // uncrustify uses FILE instead of streams for its outputs
    // to redirect FILE writes into a char* open_memstream is used
@@ -483,25 +492,11 @@ intptr_t _uncrustify(intptr_t _file, lang_flag_e langIDX, bool frag, bool defer)
    // apparently emscripten has its own implementation, if that is not working
    // see: stackoverflow.com/questions/10305095#answer-10341073
    FILE *stream = open_memstream(&buf, &len);
-   if (stream == NULL)
+   if (stream == nullptr)
    {
       LOG_FMT(LERR, "Failed to open_memstream\n");
-      fflush(stream);
-      fclose(stream);
-      free(buf);
       return(0);
    }
-
-   if (langIDX == 0)   // 0 == undefined
-   {
-      LOG_FMT(LWARN, "language of input file not defined, C++ will be assumed\n");
-      cpd.lang_flags = LANG_CPP;
-   }
-   else
-   {
-      cpd.lang_flags = langIDX;
-   }
-   cpd.frag = frag;
 
    // TODO One way to implement the --parsed, -p functionality would
    // be to let the uncrustify_file function run, throw away the formated
@@ -517,7 +512,7 @@ intptr_t _uncrustify(intptr_t _file, lang_flag_e langIDX, bool frag, bool defer)
    // function which passes the debug output into a dedicated output js target.
    // This therefore would introduce the dependency on the user to always have
    // the output js target available.
-   uncrustify_file(fm, stream, NULL, defer);
+   uncrustify_file(fm, stream, nullptr, defer);
 
    fflush(stream);
    fclose(stream);
@@ -527,6 +522,10 @@ intptr_t _uncrustify(intptr_t _file, lang_flag_e langIDX, bool frag, bool defer)
       LOG_FMT(LWARN, "%d errors occurred during formating\n", cpd.error_count);
    }
 
+   if (len == 0)
+   {
+      return(0);
+   }
    // buf is deleted inside js code
    return(reinterpret_cast<intptr_t>(buf));
 } // uncrustify
@@ -580,15 +579,12 @@ intptr_t _debug(intptr_t _file, lang_flag_e langIDX, bool frag)
    // file string together ... somehow.
    free(formatted_str);
 
-   char   *buf;
-   size_t len;
+   char   *buf    = nullptr;
+   size_t len     = 0;
    FILE   *stream = open_memstream(&buf, &len);
-   if (stream == NULL)
+   if (stream == nullptr)
    {
       LOG_FMT(LERR, "Failed to open_memstream\n");
-      fflush(stream);
-      fclose(stream);
-      free(buf);
       return(0);
    }
    output_parsed(stream);
@@ -597,6 +593,11 @@ intptr_t _debug(intptr_t _file, lang_flag_e langIDX, bool frag)
 
    // start deferred _uncrustify cleanup
    uncrustify_end();
+
+   if (len == 0)
+   {
+      return(0);
+   }
 
    // buf is deleted inside js code
    return(reinterpret_cast<intptr_t>(buf));
@@ -620,21 +621,21 @@ intptr_t _debug(intptr_t _file, lang_flag_e langIDX)
 //! helper function to access option_map_value::name
 string option_map_value_name(const option_map_value &o)
 {
-   return((o.name != NULL) ? string(o.name) : "");
+   return((o.name != nullptr) ? string(o.name) : "");
 }
 
 
 //! helper function to access option_map_value::short_desc
 string option_map_value_sDesc(const option_map_value &o)
 {
-   return((o.short_desc != NULL) ? string(o.short_desc) : "");
+   return((o.short_desc != nullptr) ? string(o.short_desc) : "");
 }
 
 
 //! helper function to access option_map_value::long_desc
 string option_map_value_lDesc(const option_map_value &o)
 {
-   return((o.long_desc != NULL) ? string(o.long_desc) : "");
+   return((o.long_desc != nullptr) ? string(o.long_desc) : "");
 }
 
 

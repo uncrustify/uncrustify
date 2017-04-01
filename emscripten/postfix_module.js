@@ -9,8 +9,7 @@
      */
     Module["uncrustify"] = function(str, langIDX, frag, defer)
     {
-        if( !str || typeof(str) !== "string" || str.length === 0 ) {return;}
-
+        if( !str || typeof(str) !== "string" || str.length === 0 ) {return "";}
 
         var nDataBytes = lengthBytesUTF8(str)+1; // +1 for \0
         var stringInputPtr = Module._malloc(nDataBytes);
@@ -64,8 +63,7 @@
      */
     Module["debug"] = function(str, langIDX, frag)
     {
-        if( !str || typeof(str) !== "string" || str.length === 0 ) {return;}
-
+        if( !str || typeof(str) !== "string" || str.length === 0 ) {return "";}
 
         var nDataBytes = lengthBytesUTF8(str)+1; // +1 for \0
         var stringInputPtr = Module._malloc(nDataBytes);
