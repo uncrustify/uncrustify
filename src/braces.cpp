@@ -16,6 +16,7 @@
 #include "uncrustify.h"
 #include "combine.h"
 #include "newlines.h"
+#include "chunk_list.h"
 
 
 /**
@@ -98,6 +99,42 @@ static chunk_t *mod_case_brace_add(chunk_t *cl_colon);
 static void process_if_chain(chunk_t *br_start);
 
 
+//TODO: this should take in const refs, like almost all chunk OP
+bool paren_multiline_before_brace(chunk_t *brace, c_token_t paren_t = CT_SPAREN_CLOSE)
+{
+   if (brace == nullptr
+       || (brace->type != CT_BRACE_OPEN && brace->type != CT_BRACE_CLOSE)
+       || (brace->parent_type != CT_IF
+           && brace->parent_type != CT_ELSEIF
+           && brace->parent_type != CT_FOR
+           && brace->parent_type != CT_USING_STMT
+           && brace->parent_type != CT_WHILE
+           && brace->parent_type != CT_FUNC_CLASS_DEF
+           && brace->parent_type != CT_FUNC_DEF))
+   {
+      return(false);
+   }
+
+   // find paren pair of the if/for/while/...
+   auto paren_close = chunk_get_prev_type(brace, paren_t, brace->level, scope_e::ALL);
+   auto paren_open  = chunk_skip_to_match_rev(paren_close, scope_e::ALL);
+
+   if (paren_close != nullptr && paren_close != brace
+       && paren_open != nullptr && paren_open != paren_close)
+   {
+      // determine amount of lines in the paren pair spans
+      const auto lineSpan = newlines_between(paren_open, paren_close) + 1;
+      // don't exec examine_brace() (brace removal) if too big span
+      if (lineSpan >= 1)
+      {
+         return(true);
+      }
+   }
+
+   return(false);
+}
+
+
 void do_braces(void)
 {
    LOG_FUNC_ENTRY();
@@ -178,29 +215,36 @@ static void examine_braces(void)
 {
    LOG_FUNC_ENTRY();
 
-   chunk_t *pc = chunk_get_tail();
-   while (pc != nullptr)
+   const auto multiline_block = cpd.settings[UO_mod_full_brace_nl_block_rem_mlcond].b;
+
+   for (auto pc = chunk_get_tail(); pc != nullptr; )
    {
-      chunk_t *prev = chunk_get_prev_type(pc, CT_BRACE_OPEN, -1);
-      if ((pc->type == CT_BRACE_OPEN) &&
-          ((pc->flags & PCF_IN_PREPROC) == 0))
+      auto prev = chunk_get_prev_type(pc, CT_BRACE_OPEN, -1);
+
+      if (pc->type == CT_BRACE_OPEN
+          && ((pc->flags & PCF_IN_PREPROC) == 0)
+          && (((pc->parent_type == CT_IF
+                || pc->parent_type == CT_ELSE
+                || pc->parent_type == CT_ELSEIF)
+               && cpd.settings[UO_mod_full_brace_if].a == AV_REMOVE)
+              || (pc->parent_type == CT_DO
+                  && cpd.settings[UO_mod_full_brace_do].a == AV_REMOVE)
+              || (pc->parent_type == CT_FOR
+                  && cpd.settings[UO_mod_full_brace_for].a == AV_REMOVE)
+              || (pc->parent_type == CT_USING_STMT
+                  && cpd.settings[UO_mod_full_brace_using].a == AV_REMOVE)
+              || (pc->parent_type == CT_WHILE
+                  && cpd.settings[UO_mod_full_brace_while].a == AV_REMOVE)))
       {
-         if ((((pc->parent_type == CT_IF) ||
-               (pc->parent_type == CT_ELSE) ||
-               (pc->parent_type == CT_ELSEIF)) &&
-              ((cpd.settings[UO_mod_full_brace_if].a) == AV_REMOVE)) ||
-             ((pc->parent_type == CT_DO) &&
-              ((cpd.settings[UO_mod_full_brace_do].a) == AV_REMOVE)) ||
-             ((pc->parent_type == CT_FOR) &&
-              ((cpd.settings[UO_mod_full_brace_for].a) == AV_REMOVE)) ||
-             ((pc->parent_type == CT_USING_STMT) &&
-              ((cpd.settings[UO_mod_full_brace_using].a) == AV_REMOVE)) ||
-             ((pc->parent_type == CT_WHILE) &&
-              ((cpd.settings[UO_mod_full_brace_while].a) == AV_REMOVE)))
+         if (multiline_block && paren_multiline_before_brace(pc))
          {
-            examine_brace(pc);
+            pc = prev;
+            continue;
          }
+
+         examine_brace(pc);
       }
+
       pc = prev;
    }
 }
@@ -1190,11 +1234,14 @@ static void process_if_chain(chunk_t *br_start)
       // This might run because either UO_mod_full_brace_if_chain or UO_mod_full_brace_if_chain_only is used.
       // We only want to remove braces if the first one is active.
 
+      const auto multiline_block = cpd.settings[UO_mod_full_brace_nl_block_rem_mlcond].b;
+
       LOG_FMT(LBRCH, "%s: remove braces on lines[%d]:", __func__, br_cnt);
       while (--br_cnt >= 0)
       {
-         if ((braces[br_cnt]->type == CT_BRACE_OPEN) ||
-             (braces[br_cnt]->type == CT_BRACE_CLOSE))
+         if ((braces[br_cnt]->type == CT_BRACE_OPEN
+              || braces[br_cnt]->type == CT_BRACE_CLOSE)
+             && ((multiline_block) ? !paren_multiline_before_brace(braces[br_cnt]) : true))
          {
             LOG_FMT(LBRCH, " {%zu}", braces[br_cnt]->orig_line);
             convert_brace(braces[br_cnt]);

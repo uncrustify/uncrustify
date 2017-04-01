@@ -4227,3 +4227,22 @@ void annotations_newlines(void)
       }
    }
 } // annotations_newlines
+
+
+int newlines_between(chunk_t *pcS, chunk_t *pcE, scope_e scope)
+{
+   if (pcS == nullptr || pcE == nullptr)
+   {
+      return(-1);
+   }
+
+   auto nl_count = 0;
+
+   auto it = pcS;
+   for ( ; it != pcE; it = chunk_get_next(it, scope))
+   {
+      nl_count += it->nl_count;
+   }
+
+   return((it == chunk_get_tail()) ? -1 : nl_count);
+}

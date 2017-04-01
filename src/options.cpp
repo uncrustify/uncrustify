@@ -1528,6 +1528,12 @@ void register_options(void)
                   "and simple 'if' statements will lose them (if possible).\n");
    unc_add_option("mod_full_brace_nl", UO_mod_full_brace_nl, AT_UNUM,
                   "Don't remove braces around statements that span N newlines", "", 0, 5000);
+   unc_add_option("mod_full_brace_nl_block_rem_mlcond", UO_mod_full_brace_nl_block_rem_mlcond, AT_BOOL,
+                  "Blocks removal of braces if the parenthesis of if/for/while/.. span multiple lines.",
+                  "Affected options:"
+                  "mod_full_brace_for, mod_full_brace_if, mod_full_brace_if_chain, mod_full_brace_if_chain_only, mod_full_brace_while,mod_full_brace_using"
+                  "Not affected options:"
+                  "mod_full_brace_do, mod_full_brace_function");
    unc_add_option("mod_full_brace_while", UO_mod_full_brace_while, AT_IARF,
                   "Add or remove braces on single-line 'while' statement");
    unc_add_option("mod_full_brace_using", UO_mod_full_brace_using, AT_IARF,
