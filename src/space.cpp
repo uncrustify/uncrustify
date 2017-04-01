@@ -2026,7 +2026,12 @@ void space_text(void)
             }
          }
 
-         int      min_sp;
+         int min_sp;
+#ifdef DEBUG
+         LOG_FMT(LSPACE, "(%d) ", __LINE__);
+#endif
+         LOG_FMT(LSPACE, "%s: %zu:%zu %s %s\n",
+                 __func__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
          argval_t av = do_space(pc, next, min_sp, false);
          if (pc->flags & PCF_FORCE_SPACE)
          {
