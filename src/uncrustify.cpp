@@ -421,13 +421,18 @@ int main(int argc, char *argv[])
 
       if (unc_homedir(home))
       {
-         struct stat tmp_stat;
-         string      path;
+         struct stat tmp_stat = {};
 
-         path = home + "/uncrustify.cfg";
-         if (stat(path.c_str(), &tmp_stat) == 0)
+         const auto  path0 = home + "/.uncrustify.cfg";
+         const auto  path1 = home + "/uncrustify.cfg";
+
+         if (stat(path0.c_str(), &tmp_stat) == 0)
          {
-            cfg_file = path;
+            cfg_file = path0;
+         }
+         else if (stat(path1.c_str(), &tmp_stat) == 0)
+         {
+            cfg_file = path1;
          }
       }
    }
