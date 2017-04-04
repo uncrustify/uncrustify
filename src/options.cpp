@@ -1448,7 +1448,7 @@ void register_options(void)
                   "Set the comment reflow mode (Default=0)\n"
                   "0: no reflowing (apart from the line wrapping due to cmt_width)\n"
                   "1: no touching at all\n"
-                  "2: full reflow\n", "", 0, 2);
+                  "2: full reflow", "", 0, 2);
    unc_add_option("cmt_convert_tab_to_spaces", UO_cmt_convert_tab_to_spaces, AT_BOOL,
                   "Whether to convert all tabs to spaces in comments. Default is to leave tabs inside comments alone, unless used for indenting.");
    unc_add_option("cmt_indent_multi", UO_cmt_indent_multi, AT_BOOL,
@@ -1525,7 +1525,7 @@ void register_options(void)
    unc_add_option("mod_full_brace_if_chain_only", UO_mod_full_brace_if_chain_only, AT_BOOL,
                   "Make all if/elseif/else statements with at least one 'else' or 'else if' fully braced.\n"
                   "If mod_full_brace_if_chain is used together with this option, all if-else chains will get braces,\n"
-                  "and simple 'if' statements will lose them (if possible).\n");
+                  "and simple 'if' statements will lose them (if possible).");
    unc_add_option("mod_full_brace_nl", UO_mod_full_brace_nl, AT_UNUM,
                   "Don't remove braces around statements that span N newlines", "", 0, 5000);
    unc_add_option("mod_full_brace_nl_block_rem_mlcond", UO_mod_full_brace_nl_block_rem_mlcond, AT_BOOL,
