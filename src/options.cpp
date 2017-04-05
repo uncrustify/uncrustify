@@ -1448,7 +1448,7 @@ void register_options(void)
                   "Set the comment reflow mode (Default=0)\n"
                   "0: no reflowing (apart from the line wrapping due to cmt_width)\n"
                   "1: no touching at all\n"
-                  "2: full reflow\n", "", 0, 2);
+                  "2: full reflow", "", 0, 2);
    unc_add_option("cmt_convert_tab_to_spaces", UO_cmt_convert_tab_to_spaces, AT_BOOL,
                   "Whether to convert all tabs to spaces in comments. Default is to leave tabs inside comments alone, unless used for indenting.");
    unc_add_option("cmt_indent_multi", UO_cmt_indent_multi, AT_BOOL,
@@ -1525,7 +1525,7 @@ void register_options(void)
    unc_add_option("mod_full_brace_if_chain_only", UO_mod_full_brace_if_chain_only, AT_BOOL,
                   "Make all if/elseif/else statements with at least one 'else' or 'else if' fully braced.\n"
                   "If mod_full_brace_if_chain is used together with this option, all if-else chains will get braces,\n"
-                  "and simple 'if' statements will lose them (if possible).\n");
+                  "and simple 'if' statements will lose them (if possible).");
    unc_add_option("mod_full_brace_nl", UO_mod_full_brace_nl, AT_UNUM,
                   "Don't remove braces around statements that span N newlines", "", 0, 5000);
    unc_add_option("mod_full_brace_nl_block_rem_mlcond", UO_mod_full_brace_nl_block_rem_mlcond, AT_BOOL,
@@ -2120,28 +2120,42 @@ int save_option_file_kernel(FILE *pfile, bool withDoc, bool only_not_default)
    /* Print the options by group */
    for (auto &jt : group_map)
    {
-      if (withDoc)
-      {
-         fputs("\n#\n", pfile);
-         fprintf(pfile, "# %s\n", jt.second.short_desc);
-         fputs("#\n\n", pfile);
-      }
-
       bool first = true;
 
       for (auto option_id : jt.second.options)
       {
-         const option_map_value *option = get_option_name(option_id);
+         const auto *option     = get_option_name(option_id);
+         const auto val_string  = op_val_to_string(option->type, cpd.settings[option->id]);
+         const auto val_default = op_val_to_string(option->type, cpd.defaults[option->id]);
+
+         if (val_string != val_default)
+         {
+            count_the_not_default_options++;
+         }
+         else if (only_not_default)
+         {
+            continue;
+         }
+         // ...................................................................
 
          if (withDoc && (option->short_desc != nullptr) && (*option->short_desc != 0))
          {
+            if (first)
+            {
+               // print group description
+               fputs("\n#\n", pfile);
+               fprintf(pfile, "# %s\n", jt.second.short_desc);
+               fputs("#\n\n", pfile);
+            }
+
             fprintf(pfile, "%s# ", first ? "" : "\n");
-            int idx;
-            for (idx = 0; option->short_desc[idx] != 0; idx++)
+
+            auto idx = 0;
+            for ( ; option->short_desc[idx] != 0; idx++)
             {
                fputc(option->short_desc[idx], pfile);
-               if ((option->short_desc[idx] == '\n') &&
-                   (option->short_desc[idx + 1] != 0))
+               if (option->short_desc[idx] == '\n'
+                   && option->short_desc[idx + 1] != 0)
                {
                   fputs("# ", pfile);
                }
@@ -2152,50 +2166,28 @@ int save_option_file_kernel(FILE *pfile, bool withDoc, bool only_not_default)
             }
          }
          first = false;
-         string     val_string = op_val_to_string(option->type, cpd.settings[option->id]);
-         const char *val_str   = val_string.c_str();
-         int        val_len    = strlen(val_str);
-         int        name_len   = strlen(option->name);
 
-         // guy
-         bool print_option = true;
-         if (only_not_default)
+         const auto name_len = strlen(option->name);
+         const int  pad      = (name_len < MAX_OPTION_NAME_LEN)
+                               ? (MAX_OPTION_NAME_LEN - name_len) : 1;
+
+         fprintf(pfile, "%s%*.s= ", option->name, pad, " ");
+
+         if (option->type == AT_STRING)
          {
-            string     val_string_D;
-            const char *val_default;
-            val_string_D = op_val_to_string(option->type, cpd.defaults[option->id]);
-            val_default  = val_string_D.c_str();
-            if ((strcmp(val_default, val_str) == 0))
-            {
-               print_option = false;
-            }
-            else
-            {
-               print_option = true;
-               count_the_not_default_options++;
-            }
+            fprintf(pfile, "\"%s\"", val_string.c_str());
          }
-         if (print_option)
+         else
          {
-            int pad = (name_len < MAX_OPTION_NAME_LEN) ? (MAX_OPTION_NAME_LEN - name_len) : 1;
-            fprintf(pfile, "%s%*.s= ",
-                    option->name, pad, " ");
-            if (option->type == AT_STRING)
-            {
-               fprintf(pfile, "\"%s\"", val_str);
-            }
-            else
-            {
-               fprintf(pfile, "%s", val_str);
-            }
-            if (withDoc)
-            {
-               fprintf(pfile, "%*.s # %s",
-                       8 - val_len, " ",
-                       argtype_to_string(option->type).c_str());
-            }
-            fputs("\n", pfile);
+            fprintf(pfile, "%s", val_string.c_str());
          }
+         if (withDoc)
+         {
+            const int val_len = val_string.length();
+            fprintf(pfile, "%*.s # %s", 8 - val_len, " ",
+                    argtype_to_string(option->type).c_str());
+         }
+         fputs("\n", pfile);
       }
    }
 
