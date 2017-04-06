@@ -4229,20 +4229,20 @@ void annotations_newlines(void)
 } // annotations_newlines
 
 
-int newlines_between(chunk_t *pcS, chunk_t *pcE, scope_e scope)
+bool newlines_between(chunk_t *pc_start, chunk_t *pc_end, size_t &newlines, scope_e scope)
 {
-   if (pcS == nullptr || pcE == nullptr)
+   if (pc_start == nullptr || pc_end == nullptr)
    {
-      return(-1);
+      return(false);
    }
 
-   auto nl_count = 0;
+   newlines = 0;
 
-   auto it = pcS;
-   for ( ; it != pcE; it = chunk_get_next(it, scope))
+   auto it = pc_start;
+   for ( ; it != nullptr && it != pc_end; it = chunk_get_next(it, scope))
    {
-      nl_count += it->nl_count;
+      newlines += it->nl_count;
    }
 
-   return((it == chunk_get_tail()) ? -1 : nl_count);
+   return(it == pc_end);
 }

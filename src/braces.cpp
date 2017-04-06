@@ -99,8 +99,24 @@ static chunk_t *mod_case_brace_add(chunk_t *cl_colon);
 static void process_if_chain(chunk_t *br_start);
 
 
-//TODO: this should take in const refs, like almost all chunk OP
-bool paren_multiline_before_brace(chunk_t *brace, c_token_t paren_t = CT_SPAREN_CLOSE)
+/**
+ * Check if parenthesis pair that comes before a brace spans multiple lines
+ *
+ *
+ * @param brace  the brace chunk whose predecessing parenthesis will be checked
+ *
+ * @pre   the brace chunk cannot be a nullptr,
+ *        it needs to be of type CT_BRACE_OPEN or CT_BRACE_CLOSE,
+ *        its parent type needs to be one of this types:
+ *            CT_IF, CT_ELSEIF, CT_FOR, CT_USING_STMT, CT_WHILE,
+ *            CT_FUNC_CLASS_DEF, CT_FUNC_DEF
+ *
+ * @return  false: if preconditions are not met,
+ *                 if an error occurs while  counting the newline between the
+ *                 parenthesis or
+ *                 when no newlines are found between the parenthesis
+ */
+static bool paren_multiline_before_brace(chunk_t *brace)
 {
    if (brace == nullptr
        || (brace->type != CT_BRACE_OPEN && brace->type != CT_BRACE_CLOSE)
@@ -114,24 +130,29 @@ bool paren_multiline_before_brace(chunk_t *brace, c_token_t paren_t = CT_SPAREN_
    {
       return(false);
    }
+   const auto paren_t = CT_SPAREN_CLOSE;
 
    // find paren pair of the if/for/while/...
    auto paren_close = chunk_get_prev_type(brace, paren_t, brace->level, scope_e::ALL);
    auto paren_open  = chunk_skip_to_match_rev(paren_close, scope_e::ALL);
 
-   if (paren_close != nullptr && paren_close != brace
-       && paren_open != nullptr && paren_open != paren_close)
+   if (paren_close == nullptr || paren_open == nullptr
+       || paren_close == brace || paren_open == paren_close)
    {
-      // determine amount of lines in the paren pair spans
-      const auto lineSpan = newlines_between(paren_open, paren_close) + 1;
-      // don't exec examine_brace() (brace removal) if too big span
-      if (lineSpan >= 1)
-      {
-         return(true);
-      }
+      return(false);
    }
 
-   return(false);
+   // determine amount of lines in the paren pair spans
+   auto       nl_count = size_t {};
+   const auto ret_flag = newlines_between(paren_open, paren_close, nl_count);
+   if (!ret_flag)
+   {
+      LOG_FMT(LERR, "newlines_between error\n");
+      return(false);
+   }
+
+   // nl_count = 0 -> 1 line
+   return(nl_count > 0);
 }
 
 

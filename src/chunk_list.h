@@ -23,7 +23,7 @@
 
 
 /**
- * Specifies which chuncks should/should not be found.
+ * Specifies which chunks should/should not be found.
  * ALL (default)
  *  - return the true next/prev
  *

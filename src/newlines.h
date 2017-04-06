@@ -35,6 +35,18 @@ chunk_t *newline_force_after(chunk_t *pc);
 void newline_del_between(chunk_t *start, chunk_t *end);
 chunk_t *newline_add_between(chunk_t *start, chunk_t *end);
 
-int newlines_between(chunk_t *pcS, chunk_t *pcE, scope_e scope = scope_e::ALL);
+/**
+ * Counts newlines between two chunk elements
+ *
+ * @param  pc_start chunk from which the counting of newlines will start
+ * @param  pc_end   chunk at which the counting of newlines will end
+ * @param  newlines reference in which the amount of newlines will be written to
+ *                  (will be initialized with 0)
+ * @param  scope    specifies region chunks should/should not be considered.
+ *
+ * @return false   if pc_start or pc_end are nullptr or if pc_end is not reached
+ *         true    if above cases are not met
+ */
+bool newlines_between(chunk_t *pc_start, chunk_t *pc_end, size_t &newlines, scope_e scope = scope_e::ALL);
 
 #endif /* NEWLINES_H_INCLUDED */

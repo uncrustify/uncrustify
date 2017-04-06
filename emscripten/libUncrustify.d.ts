@@ -599,6 +599,7 @@ declare namespace LibUncrustify
         UO_mod_full_brace_if_chain : EmscriptenEnumTypeObject;
         UO_mod_full_brace_if_chain_only : EmscriptenEnumTypeObject;
         UO_mod_full_brace_nl : EmscriptenEnumTypeObject;
+        UO_mod_full_brace_nl_block_rem_mlcond : EmscriptenEnumTypeObject;
         UO_mod_full_brace_while : EmscriptenEnumTypeObject;
         UO_mod_full_brace_using : EmscriptenEnumTypeObject;
         UO_mod_paren_on_return : EmscriptenEnumTypeObject;
