@@ -117,11 +117,12 @@ endif()
 # Generate uncrustify_version.h
 #
 
-# FIXME: checking for CMAKE_BUILD_TYPE and passing it to make_version.py 
+# FIXME: checking for CMAKE_BUILD_TYPE and passing it to make_version.py
 # does not work with VS .sln projects
 if( NOT CMAKE_BUILD_TYPE )
   set( CMAKE_BUILD_TYPE Release )
 endif()
+set( FALLBACK_VERSION "Uncrustify-0.64_f" )
 
 find_package(PythonInterp REQUIRED)
 execute_process(
@@ -133,7 +134,8 @@ execute_process(
 
 message(STATUS )
 if (make_version_error)
-    message(FATAL_ERROR "${make_version_error}: ${make_version_output}, scripts/make_version.py doesn't work properly")
+    message(WARNING "${make_version_error}: ${make_version_output}, scripts/make_version.py doesn't work properly")
+    set( CURRENT_VERSION ${FALLBACK_VERSION} )
 else()
     string(STRIP ${make_version_output} CURRENT_VERSION)
 endif()

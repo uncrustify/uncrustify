@@ -22,6 +22,7 @@ def main(args):
     if len(args) > 0:
         is_debug_build = str(args[0]).lower() == "debug"
 
+
     root = dirname(dirname(abspath(__file__)))
     git_path = join(root, '.git')
     hg_path = join(root, '.hg')
@@ -59,7 +60,7 @@ def main(args):
 
     version_pattern = re.compile(r"""
         ^
-        (                      #1: full match 
+        (                      #1: full match
             uncrustify-
             (\d+\.\d+(\.\d+)?) #2: version 0.64.2 (,#3 optional 3rd nr)
             (                  #4: additional version info (long string format)
