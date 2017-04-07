@@ -120,8 +120,30 @@ do
   fi
 done
 
+#
+# Test -p
+#
+ResultsFile="${RESULTS}/p.txt"
+InputFile="${INPUT}/28.cpp"
+OutputFile="${OUTPUT}/p.txt"
+ConfigFile="${CONFIG}/mini_nd.cfg"
+
+./build/uncrustify -c "${ConfigFile}" -f "${InputFile}" -p "${ResultsFile}" &> /dev/null
+sed 's/# Uncrustify.*//g' "${ResultsFile}" > "${ResultsFile}.sed"
+cmp -s "${ResultsFile}.sed" "${OutputFile}"
+how_different=${?}
+if [ ${how_different} != "0" ] ;
+then
+  echo "Problem with ${ResultsFile}.sed"
+  echo "use: diff ${ResultsFile}.sed ${OutputFile} to find why"
+  diff "${ResultsFile}.sed" "${OutputFile}"
+else
+  rm "${ResultsFile}"
+  rm "${ResultsFile}.sed"
+fi
+
+
 # Debug Options:
-#   -p TODO
 #   -L
 # look at src/log_levels.h
 
