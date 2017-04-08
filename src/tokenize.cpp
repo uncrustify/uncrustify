@@ -1890,17 +1890,14 @@ static bool parse_next(tok_ctx &ctx, chunk_t &pc)
  */
 void tokenize(const deque<int> &data, chunk_t *ref)
 {
-   tok_ctx       ctx(data);
-   chunk_t       chunk;
-   chunk_t       *pc    = nullptr;
-   chunk_t       *rprev = nullptr;
-   parse_frame_t frm;
-   bool          last_was_tab = false;
-   size_t        prev_sp      = 0;
+   tok_ctx ctx(data);
+   chunk_t chunk;
+   chunk_t *pc          = nullptr;
+   chunk_t *rprev       = nullptr;
+   bool    last_was_tab = false;
+   size_t  prev_sp      = 0;
 
    cpd.unc_stage = unc_stage_e::TOKENIZE;
-
-   memset(&frm, 0, sizeof(frm));
 
    while (ctx.more())
    {
