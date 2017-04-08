@@ -556,16 +556,19 @@ static void examine_brace(chunk_t *bopen)
    if (pc->type == CT_BRACE_CLOSE)
    {
       next = chunk_get_next_ncnl(pc);
-      while ((next != nullptr) && (next->type == CT_VBRACE_CLOSE))
+      if (next != nullptr)
       {
-         next = chunk_get_next_ncnl(next);
-      }
-      LOG_FMT(LBRDEL, " next is '%s'\n", get_token_name(next->type));
-      if ((if_count > 0) &&
-          ((next->type == CT_ELSE) || (next->type == CT_ELSEIF)))
-      {
-         LOG_FMT(LBRDEL, " bailed on because 'else' is next and %zu ifs\n", if_count);
-         return;
+         while ((next != nullptr) && (next->type == CT_VBRACE_CLOSE))
+         {
+            next = chunk_get_next_ncnl(next);
+         }
+         LOG_FMT(LBRDEL, " next is '%s'\n", get_token_name(next->type));
+         if ((if_count > 0) &&
+             ((next->type == CT_ELSE) || (next->type == CT_ELSEIF)))
+         {
+            LOG_FMT(LBRDEL, " bailed on because 'else' is next and %zu ifs\n", if_count);
+            return;
+         }
       }
 
       if (semi_count > 0)
