@@ -34,36 +34,41 @@ CONFIG="scripts/Config"
 #
 # Test help
 #   -h -? --help --usage
-  file="help.txt"
-  ./build/uncrustify > "${RESULTS}/${file}"
-  cmp -s "${RESULTS}/${file}" "${SCRIPTS}/More_Options_to_Test/${file}"
-  how_different=${?}
-  if [ ${how_different} != "0" ] ;
-  then
-    echo
-    echo "Problem with "${file}
-    echo "use: diff ${RESULTS}/${file} ${SCRIPTS}/More_Options_to_Test/${file} to find why"
-    diff "${RESULTS}/${file}" "${SCRIPTS}/More_Options_to_Test/${file}"
-  else
-    rm "results/${file}"
-  fi
+file="help.txt"
+
+./build/uncrustify > "${RESULTS}/${file}"
+cmp -s "${RESULTS}/${file}" "${SCRIPTS}/More_Options_to_Test/${file}"
+how_different=${?}
+if [ ${how_different} != "0" ] ;
+then
+  echo
+  echo "Problem with "${file}
+  echo "use: diff ${RESULTS}/${file} ${SCRIPTS}/More_Options_to_Test/${file} to find why"
+  diff "${RESULTS}/${file}" "${SCRIPTS}/More_Options_to_Test/${file}"
+else
+  rm "results/${file}"
+fi
 
 #
 # Test --show-config
 #
-  file="show_config.txt"
-  ./build/uncrustify --show-config > "${RESULTS}/${file}"
-  cmp -s "${RESULTS}/${file}" "${SCRIPTS}/More_Options_to_Test/${file}"
-  how_different=${?}
-  if [ ${how_different} != "0" ] ;
-  then
-    echo
-    echo "Problem with ${file}"
-    echo "use: diff ${RESULTS}/${file} ${SCRIPTS}/More_Options_to_Test/${file} to find why"
-    diff "${RESULTS}/${file}" "${SCRIPTS}/More_Options_to_Test/${file}"
-  else
-    rm "results/${file}"
-  fi
+file="show_config.txt"
+
+./build/uncrustify --show-config > "${RESULTS}/${file}"
+sed 's/# Uncrustify.*//g' "${RESULTS}/${file}" > "${RESULTS}/${file}.sed"
+cmp -s "${RESULTS}/${file}.sed" "${SCRIPTS}/More_Options_to_Test/${file}"
+how_different=${?}
+if [ ${how_different} != "0" ] ;
+then
+  echo
+  echo "Problem with ${RESULTS}/${file}.sed"
+  echo "use: diff ${RESULTS}/${file}.sed ${SCRIPTS}/More_Options_to_Test/${file} to find why"
+  diff "${RESULTS}/${file}.sed" "${SCRIPTS}/More_Options_to_Test/${file}"
+else
+  rm "results/${file}"
+  rm "results/${file}.sed"
+fi
+
 #
 # Test --update-config
 #
@@ -73,17 +78,20 @@ do
   ResultsFile="${RESULTS}/${ConfigFileName}_uc.txt"
   OutputFile="${OUTPUT}/${ConfigFileName}_uc.txt"
   ConfigFile="${CONFIG}/${ConfigFileName}.cfg"
+
   ./build/uncrustify -c "${ConfigFile}" --update-config &> "${ResultsFile}"
-  cmp -s "${ResultsFile}" "${OutputFile}"
+  sed 's/# Uncrustify.*//g' "${ResultsFile}" > "${ResultsFile}.sed"
+  cmp -s "${ResultsFile}.sed" "${OutputFile}"
   how_different=${?}
   if [ ${how_different} != "0" ] ;
   then
     echo
-    echo "Problem with ${ResultsFile}"
-    echo "use: diff ${ResultsFile} ${OutputFile} to find why"
-    diff "${ResultsFile}" "${OutputFile}"
+    echo "Problem with ${ResultsFile}.sed"
+    echo "use: diff ${ResultsFile}.sed ${OutputFile} to find why"
+    diff "${ResultsFile}.sed" "${OutputFile}"
   else
     rm "${ResultsFile}"
+    rm "${ResultsFile}.sed"
   fi
 done
 
@@ -96,21 +104,46 @@ do
   ResultsFile="${RESULTS}/${ConfigFileName}_ucwd.txt"
   OutputFile="${OUTPUT}/${ConfigFileName}_ucwd.txt"
   ConfigFile="${CONFIG}/${ConfigFileName}.cfg"
+
   ./build/uncrustify -c "${ConfigFile}" --update-config-with-doc &> "${ResultsFile}"
-  cmp -s "${ResultsFile}" "${OutputFile}"
+  sed 's/# Uncrustify.*//g' "${ResultsFile}" > "${ResultsFile}.sed"
+  cmp -s "${ResultsFile}.sed" "${OutputFile}"
   how_different=${?}
   if [ ${how_different} != "0" ] ;
   then
-    echo "Problem with "${ResultsFile}
-    echo "use: diff ${ResultsFile} ${OutputFile} to find why"
-    diff "${ResultsFile}" "${OutputFile}"
+    echo "Problem with ${ResultsFile}.sed"
+    echo "use: diff ${ResultsFile}.sed ${OutputFile} to find why"
+    diff "${ResultsFile}.sed" "${OutputFile}"
   else
     rm "${ResultsFile}"
+    rm "${ResultsFile}.sed"
   fi
 done
 
+#
+# Test -p
+#
+ResultsFile="${RESULTS}/p.txt"
+InputFile="${INPUT}/28.cpp"
+OutputFile="${OUTPUT}/p.txt"
+ConfigFile="${CONFIG}/mini_nd.cfg"
+
+./build/uncrustify -c "${ConfigFile}" -f "${InputFile}" -p "${ResultsFile}" &> /dev/null
+sed 's/# Uncrustify.*//g' "${ResultsFile}" > "${ResultsFile}.sed"
+cmp -s "${ResultsFile}.sed" "${OutputFile}"
+how_different=${?}
+if [ ${how_different} != "0" ] ;
+then
+  echo "Problem with ${ResultsFile}.sed"
+  echo "use: diff ${ResultsFile}.sed ${OutputFile} to find why"
+  diff "${ResultsFile}.sed" "${OutputFile}"
+else
+  rm "${ResultsFile}"
+  rm "${ResultsFile}.sed"
+fi
+
+
 # Debug Options:
-#   -p TODO
 #   -L
 # look at src/log_levels.h
 

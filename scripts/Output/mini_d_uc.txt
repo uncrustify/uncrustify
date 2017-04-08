@@ -1,5 +1,5 @@
 scripts/Config/mini_d.cfg:2 Unknown symbol 'not_existing_option'
-# Uncrustify 0.64
+
 newlines                        = auto
 input_tab_size                  = 8
 output_tab_size                 = 8
