@@ -2312,6 +2312,10 @@ static void fix_casts(chunk_t *start)
    LOG_FMT(LCASTS, "%s:line %zu, col %zu:", __func__, start->orig_line, start->orig_col);
 
    prev = chunk_get_prev_ncnl(start);
+   if (prev == nullptr)
+   {
+      return;
+   }
    if ((prev != nullptr) && (prev->type == CT_PP_DEFINED))
    {
       LOG_FMT(LCASTS, " -- not a cast - after defined\n");
