@@ -2111,11 +2111,7 @@ int save_option_file_kernel(FILE *pfile, bool withDoc, bool only_not_default)
 {
    int count_the_not_default_options = 0;
 
-#if defined (DEBUG) || defined (_DEBUG)
-   fprintf(pfile, "# Uncrustify %s\n", UNCRUSTIFY_CURRENT_VERSION);
-#else
-   fprintf(pfile, "# Uncrustify %s\n", UNCRUSTIFY_VERSION);
-#endif // DEBUG
+   fprintf(pfile, "# %s\n", UNCRUSTIFY_VERSION);
 
    /* Print the options by group */
    for (auto &jt : group_map)
@@ -2230,11 +2226,7 @@ void print_options(FILE *pfile)
       "Unsigned Number",
    };
 
-#if defined (DEBUG) || defined (_DEBUG)
-   fprintf(pfile, "# Uncrustify %s\n", UNCRUSTIFY_CURRENT_VERSION);
-#else
-   fprintf(pfile, "# Uncrustify %s\n", UNCRUSTIFY_VERSION);
-#endif // DEBUG
+   fprintf(pfile, "# %s\n", UNCRUSTIFY_VERSION);
 
    /* Print the all out */
    for (auto &jt : group_map)

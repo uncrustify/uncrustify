@@ -117,23 +117,27 @@ endif()
 # Generate uncrustify_version.h
 #
 
+# FIXME: checking for CMAKE_BUILD_TYPE and passing it to make_version.py
+# does not work with VS .sln projects
+if( NOT CMAKE_BUILD_TYPE )
+  set( CMAKE_BUILD_TYPE Release )
+endif()
+set( FALLBACK_VERSION "Uncrustify-0.64_f" )
+
 find_package(PythonInterp REQUIRED)
 execute_process(
-  COMMAND ${PYTHON_EXECUTABLE} scripts/make_version.py
+  COMMAND ${PYTHON_EXECUTABLE} scripts/make_version.py ${CMAKE_BUILD_TYPE}
   WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
   RESULT_VARIABLE make_version_error
   OUTPUT_VARIABLE make_version_output
 )
 
+message(STATUS )
 if (make_version_error)
-  message(WARNING ${make_version_output})
+    message(WARNING "${make_version_error}: ${make_version_output}, scripts/make_version.py doesn't work properly")
+    set( CURRENT_VERSION ${FALLBACK_VERSION} )
 else()
-  if (${make_version_output} MATCHES "current: (.*)\nrelease: (.*)\n")
-    set(CURRENT_VERSION ${CMAKE_MATCH_1})
-    set(PACKAGE_VERSION ${CMAKE_MATCH_2})
-  else()
-    message(FATAL_ERROR "scripts/make_version.py doesn't work properly")
-  endif()
+    string(STRIP ${make_version_output} CURRENT_VERSION)
 endif()
 
 configure_file(src/uncrustify_version.h.in uncrustify_version.h @ONLY)
@@ -252,7 +256,7 @@ endif()
 # Package
 #
 set(CPACK_PACKAGE_NAME "uncrustify")
-set(CPACK_PACKAGE_VERSION "${PACKAGE_VERSION}")
+set(CPACK_PACKAGE_VERSION "${CURRENT_VERSION}")
 set(CPACK_PACKAGE_VENDOR "Ben Gardner")
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Code beautifier")
 set(CPACK_PACKAGE_DESCRIPTION_FILE "${PROJECT_SOURCE_DIR}/README.md")
