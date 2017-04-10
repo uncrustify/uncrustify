@@ -707,7 +707,7 @@ void register_options(void)
    unc_add_option("indent_param", UO_indent_param, AT_UNUM,
                   "The continuation indent for func_*_param if they are true.\n"
                   "If non-zero, this overrides the indent.");
-   unc_add_option("indent_with_tabs", UO_indent_with_tabs, AT_NUM,
+   unc_add_option("indent_with_tabs", UO_indent_with_tabs, AT_UNUM,
                   "How to use tabs when indenting code\n"
                   "0=spaces only\n"
                   "1=indent with tabs to brace level, align with spaces (default)\n"
@@ -2334,7 +2334,7 @@ void set_option_defaults(void)
    cpd.defaults[UO_indent_oc_msg_prioritize_first_colon].b              = true;
    cpd.defaults[UO_indent_token_after_brace].b                          = true;
    cpd.defaults[UO_indent_using_block].b                                = true;
-   cpd.defaults[UO_indent_with_tabs].n                                  = 1;
+   cpd.defaults[UO_indent_with_tabs].u                                  = 1;
    cpd.defaults[UO_input_tab_size].u                                    = 8;
    cpd.defaults[UO_newlines].le                                         = LE_AUTO;
    cpd.defaults[UO_output_tab_size].u                                   = 8;

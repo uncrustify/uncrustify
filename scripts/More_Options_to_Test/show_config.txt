@@ -651,7 +651,7 @@ indent_param                    Unsigned Number
   The continuation indent for func_*_param if they are true.
   If non-zero, this overrides the indent.
 
-indent_with_tabs                Number
+indent_with_tabs                Unsigned Number
   How to use tabs when indenting code
   0=spaces only
   1=indent with tabs to brace level, align with spaces (default)

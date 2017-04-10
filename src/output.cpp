@@ -217,7 +217,7 @@ static void output_to_column(size_t column, bool allow_tabs)
 static void cmt_output_indent(size_t brace_col, size_t base_col, size_t column)
 {
    size_t iwt = cpd.settings[UO_indent_cmt_with_tabs].b ? 2 :
-                (cpd.settings[UO_indent_with_tabs].n ? 1 : 0);
+                (cpd.settings[UO_indent_with_tabs].u ? 1 : 0);
 
    size_t tab_col = (iwt == 0) ? 0 : ((iwt == 1) ? brace_col : base_col);
 

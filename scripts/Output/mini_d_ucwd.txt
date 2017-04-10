@@ -657,7 +657,7 @@ indent_param                    = 0        # unsigned number
 # 0=spaces only
 # 1=indent with tabs to brace level, align with spaces (default)
 # 2=indent and align with tabs, using spaces when not on a tabstop
-indent_with_tabs                = 1        # number
+indent_with_tabs                = 1        # unsigned number
 
 # Comments that are not a brace level are indented with tabs on a tabstop.
 # Requires indent_with_tabs=2. If false, will use spaces.
