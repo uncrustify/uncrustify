@@ -816,38 +816,30 @@ void indent_text(void)
             }
             log_indent();
 
-            if ((pc->parent_type == CT_PP_REGION) ||
-                (pc->parent_type == CT_PP_ENDREGION))
-            {
-               const auto val = cpd.settings[UO_pp_indent_region].n;
-               if (val != 0)
-               {
-                  auto &indent = frm.pse[frm.pse_tos].indent;
 
-                  indent = (val > 0) ? val                    // reassign if positive val,
-                           : (cast_abs(indent, val) < indent) // else if no underflow
-                           ? (indent + val) : 0;              // reduce, else 0
-
-                  log_indent();
-               }
-            }
-            else if ((pc->parent_type == CT_PP_IF) ||
-                     (pc->parent_type == CT_PP_ELSE) ||
-                     (pc->parent_type == CT_PP_ENDIF))
+            auto val = 0;
+            if (pc->parent_type == CT_PP_REGION
+                || pc->parent_type == CT_PP_ENDREGION)
             {
-               int val = cpd.settings[UO_pp_indent_if].n;
-               if (val > 0)
-               {
-                  frm.pse[frm.pse_tos].indent = val;
-                  log_indent();
-               }
-               else
-               {
-                  frm.pse[frm.pse_tos].indent += val;
-                  LOG_FMT(LINDLINE, "%s(%d): frm.pse_tos=%zu, ... indent=%zu\n",
-                          __func__, __LINE__, frm.pse_tos, frm.pse[frm.pse_tos].indent);
-               }
+               val = cpd.settings[UO_pp_indent_region].n;
+               log_indent();
             }
+            else if (pc->parent_type == CT_PP_IF
+                     || pc->parent_type == CT_PP_ELSE
+                     || pc->parent_type == CT_PP_ENDIF)
+            {
+               val = cpd.settings[UO_pp_indent_if].n;
+               log_indent();
+            }
+            if (val != 0)
+            {
+               auto &indent = frm.pse[frm.pse_tos].indent;
+
+               indent = (val > 0) ? val                     // reassign if positive val,
+                        : (cast_abs(indent, val) < indent)  // else if no underflow
+                        ? (indent + val) : 0;               // reduce, else 0
+            }
+
             frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
             log_indent_tmp();
          }
