@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 3.0.0)
 
 SET(emscripten_root_path "$ENV{EMSCRIPTEN}")
 
-# Abort if not found. 
+# Abort if not found.
 if ("${emscripten_root_path}" STREQUAL "")
   MESSAGE(FATAL_ERROR "Could not locate the Emscripten directory via the \
                        EMSCRIPTEN environment variable! Set it up or pass \
@@ -90,33 +90,35 @@ else()
   configure_file("${unc_projdir}/src/config.h.in" config.h @ONLY)
 endif()
 
+
 #
 # Generate uncrustify_version.h
 #
-set(PACKAGE_VERSION "0.64")
+
+# FIXME: checking for CMAKE_BUILD_TYPE and passing it to make_version.py
+# does not work with VS .sln projects
+if( NOT CMAKE_BUILD_TYPE )
+  set( CMAKE_BUILD_TYPE Release )
+endif()
+set( FALLBACK_VERSION "Uncrustify-0.64_f" )
 
 find_package(PythonInterp REQUIRED)
 execute_process(
-  COMMAND ${PYTHON_EXECUTABLE} "${unc_projdir}/scripts/make_version.py"
+  COMMAND ${PYTHON_EXECUTABLE} "${unc_projdir}/scripts/make_version.py" ${CMAKE_BUILD_TYPE}
   WORKING_DIRECTORY ${unc_projdir}
   RESULT_VARIABLE make_version_error
   OUTPUT_VARIABLE make_version_output
 )
 
-if(${make_version_error})
-  message(WARNING ${make_version_output})
+if (make_version_error)
+    message(WARNING "${make_version_error}: ${make_version_output}, ../scripts/make_version.py doesn't work properly")
+    set( CURRENT_VERSION ${FALLBACK_VERSION} )
 else()
-  if (${make_version_output} MATCHES "full version: (.*)\n tag version: (.*)")
-    set(full_version ${CMAKE_MATCH_1})
-    set(tag_version ${CMAKE_MATCH_2})
-    message(STATUS "Uncrustify full version: ${full_version}")
-    message(STATUS "Uncrustify  tag version: ${tag_version}")
-  endif()
-  set(PACKAGE_VERSION "${full_version}")
+    string(STRIP ${make_version_output} CURRENT_VERSION)
 endif()
 
-
 configure_file("${unc_projdir}/src/uncrustify_version.h.in" uncrustify_version.h @ONLY)
+
 
 #
 # Generate token_names.h
@@ -140,7 +142,7 @@ ADD_EXECUTABLE(${project_name} ${unc_infiles} ${unc_projdir}/src/token_enum.h)
 SET(unc_compile_flags "--bind -O3")
 SET_TARGET_PROPERTIES(${project_name}
     PROPERTIES
-        COMPILE_FLAGS "${unc_compile_flags}" 
+        COMPILE_FLAGS "${unc_compile_flags}"
         LINK_FLAGS "${unc_compile_flags} \
                     -s TOTAL_MEMORY=67108864 \
                     -s ALLOW_MEMORY_GROWTH=1 \
