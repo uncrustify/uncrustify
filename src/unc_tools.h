@@ -16,4 +16,10 @@
 void prot_the_line(int theLine, unsigned int actual_line);
 void examine_Data(const char *func_name, int theLine, int what);
 
+// dump the chunk list to a file
+void dump_out(unsigned int type);
+
+// create chunk list from a file
+void dump_in(unsigned int type);
+
 #endif /* UNC_TOOLS_H_INCLUDED */
