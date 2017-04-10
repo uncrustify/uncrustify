@@ -309,8 +309,8 @@ void reindent_line(chunk_t *pc, size_t column)
       return;
    }
 
-   size_t col_delta = column - pc->column;
-   size_t min_col   = column;
+   auto col_delta = static_cast<int>(column) - static_cast<int>(pc->column);
+   auto min_col   = column;
 
    pc->column = column;
    do
@@ -355,21 +355,15 @@ void reindent_line(chunk_t *pc, size_t column)
 
       if (is_comment && (pc->parent_type != CT_COMMENT_EMBED) && !keep)
       {
-         pc->column = pc->orig_col;
-         if (pc->column < min_col)
-         {
-            pc->column = min_col; // + 1;
-         }
+         pc->column = max(pc->orig_col, min_col);
          LOG_FMT(LINDLINE, "%s(%d): set comment on line %zu to col %zu (orig %zu)\n",
                  __func__, __LINE__, pc->orig_line, pc->column, pc->orig_col);
       }
       else
       {
-         pc->column += col_delta;
-         if (pc->column < min_col)
-         {
-            pc->column = min_col;
-         }
+         auto tmp_col = static_cast<int>(pc->column) + col_delta;
+         pc->column = max(tmp_col, static_cast<int>(min_col));
+
          LOG_FMT(LINDLINED, "   set column of ");
          if (pc->type == CT_NEWLINE)
          {
