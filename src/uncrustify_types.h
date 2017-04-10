@@ -28,6 +28,14 @@ using namespace std;
 #define UNCRUSTIFY_OFF_TEXT    " *INDENT-OFF*"
 #define UNCRUSTIFY_ON_TEXT     " *INDENT-ON*"
 
+//! returns type (with removed reference) of a variable
+#define noref_decl_t(X)              remove_reference<decltype((X))>::type
+
+//! static casts Y to the type (with removed reference) of X
+#define s_cast_noref_decl_t(X, Y)    static_cast<noref_decl_t(X)>(Y)
+
+//! performs abs on Y after static casting it to the type (with removed reference) of X
+#define cast_abs(X, Y)               s_cast_noref_decl_t(X, abs(Y))
 
 /**
  * @brief Macro to inform the compiler that a variable is intentionally
@@ -35,7 +43,7 @@ using namespace std;
  *
  * @param [in] variableName: The unused variable.
  */
-#define UNUSED(variableName)    ((void)variableName)
+#define UNUSED(variableName)         ((void)variableName)
 
 
 /**

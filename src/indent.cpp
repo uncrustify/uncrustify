@@ -815,18 +815,19 @@ void indent_text(void)
                log_indent();
             }
             log_indent();
+
             if ((pc->parent_type == CT_PP_REGION) ||
                 (pc->parent_type == CT_PP_ENDREGION))
             {
-               int val = cpd.settings[UO_pp_indent_region].n;
-               if (val > 0)
+               const auto val = cpd.settings[UO_pp_indent_region].n;
+               if (val != 0)
                {
-                  frm.pse[frm.pse_tos].indent = val;
-                  log_indent();
-               }
-               else
-               {
-                  frm.pse[frm.pse_tos].indent += val;
+                  auto &indent = frm.pse[frm.pse_tos].indent;
+
+                  indent = (val > 0) ? val                    // reassign if positive val,
+                           : (cast_abs(indent, val) < indent) // else if no underflow
+                           ? (indent + val) : 0;              // reduce, else 0
+
                   log_indent();
                }
             }
