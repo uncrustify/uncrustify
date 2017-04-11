@@ -1284,14 +1284,17 @@ void indent_text(void)
             }
             else if (pc->parent_type == CT_CASE)
             {
+               const auto tmp_indent = static_cast<int>(frm.pse[frm.pse_tos - 1].indent)
+                                       - static_cast<int>(indent_size)
+                                       + cpd.settings[UO_indent_case_brace].n;
+
                /* An open brace with the parent of case does not indent by default
                 * UO_indent_case_brace can be used to indent the brace.
                 * So we need to take the CASE indent, subtract off the
                 * indent_size that was added above and then add indent_case_brace.
                 * may take negative value
                 */
-               indent_column_set(frm.pse[frm.pse_tos - 1].indent - indent_size +
-                                 cpd.settings[UO_indent_case_brace].n);
+               indent_column_set(max(tmp_indent, 0));
 
                /* Stuff inside the brace still needs to be indented */
                frm.pse[frm.pse_tos].indent = indent_column + indent_size;
