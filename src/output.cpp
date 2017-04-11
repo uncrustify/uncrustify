@@ -2068,8 +2068,10 @@ void add_long_preprocessor_conditional_block_comment(void)
             tmp = chunk_get_next(tmp);
 
             LOG_FMT(LPPIF, "next item type %d (is %s)\n",
-                    (tmp ? tmp->type : -1), (tmp ? chunk_is_newline(tmp) ? "newline"
-                                             : chunk_is_comment(tmp) ? "comment" : "other" : "---"));
+                    (tmp ? tmp->type : -1),
+                    (tmp ? chunk_is_newline(tmp) ? "newline"
+                                                 : chunk_is_comment(tmp) ? "comment"
+                                                                         : "other" : "---"));
             if ((tmp == nullptr) || (tmp->type == CT_NEWLINE) /* chunk_is_newline(tmp) */)
             {
                size_t nl_min;
