@@ -2352,24 +2352,24 @@ void indent_text(void)
             sql_orig_col = pc->orig_col;
          }
 
-         /* Handle indent for variable defs at the top of a block of code */
+         // Handle indent for variable defs at the top of a block of code
          if (pc->flags & PCF_VAR_TYPE)
          {
             if (!frm.pse[frm.pse_tos].non_vardef &&
                 (frm.pse[frm.pse_tos].type == CT_BRACE_OPEN))
             {
-               size_t tmp = indent_column;
-               if (cpd.settings[UO_indent_var_def_blk].n > 0)
+               const auto val = cpd.settings[UO_indent_var_def_blk].n;
+               if (val != 0)
                {
-                  tmp = cpd.settings[UO_indent_var_def_blk].n;
+                  auto indent = indent_column;
+                  indent = (val > 0) ? val                     // reassign if positive val,
+                           : (cast_abs(indent, val) < indent)  // else if no underflow
+                           ? (indent + val) : 0;               // reduce, else 0
+
+                  reindent_line(pc, indent);
+                  LOG_FMT(LINDENT, "%s(%d): %zu] var_type indent => %zu [%s]\n",
+                          __func__, __LINE__, pc->orig_line, indent, pc->text());
                }
-               else
-               {
-                  tmp += cpd.settings[UO_indent_var_def_blk].n;
-               }
-               reindent_line(pc, tmp);
-               LOG_FMT(LINDENT, "%s(%d): %zu] var_type indent => %zu [%s]\n",
-                       __func__, __LINE__, pc->orig_line, tmp, pc->text());
             }
          }
          else
