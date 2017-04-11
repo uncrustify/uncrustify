@@ -1727,7 +1727,7 @@ align_oc_decl_colon             { False, True }
 cmt_width                       Unsigned Number
   Try to wrap comments at cmt_width columns
 
-cmt_reflow_mode                 Number
+cmt_reflow_mode                 Unsigned Number
   Set the comment reflow mode (Default=0)
   0: no reflowing (apart from the line wrapping due to cmt_width)
   1: no touching at all

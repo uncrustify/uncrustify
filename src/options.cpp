@@ -1469,7 +1469,7 @@ void register_options(void)
    unc_begin_group(UG_comment, "Comment modifications");
    unc_add_option("cmt_width", UO_cmt_width, AT_UNUM,
                   "Try to wrap comments at cmt_width columns", "", 0, 256);
-   unc_add_option("cmt_reflow_mode", UO_cmt_reflow_mode, AT_NUM,
+   unc_add_option("cmt_reflow_mode", UO_cmt_reflow_mode, AT_UNUM,
                   "Set the comment reflow mode (Default=0)\n"
                   "0: no reflowing (apart from the line wrapping due to cmt_width)\n"
                   "1: no touching at all\n"

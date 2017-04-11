@@ -1733,7 +1733,7 @@ cmt_width                       = 0        # unsigned number
 # 0: no reflowing (apart from the line wrapping due to cmt_width)
 # 1: no touching at all
 # 2: full reflow
-cmt_reflow_mode                 = 0        # number
+cmt_reflow_mode                 = 0        # unsigned number
 
 # Whether to convert all tabs to spaces in comments. Default is to leave tabs inside comments alone, unless used for indenting.
 cmt_convert_tab_to_spaces       = false    # false/true
