@@ -509,13 +509,9 @@ void align_right_comments(void)
       {
          if (pc->parent_type == CT_COMMENT_END)
          {
-            chunk_t    *prev = chunk_get_prev(pc);
+            chunk_t *prev = chunk_get_prev(pc);
 
-            const auto val          = cpd.settings[UO_align_right_cmt_gap].n;
-            const auto no_underflow = cast_abs(prev->orig_col_end, val) < prev->orig_col_end;
-            const auto tmp          = (no_underflow) ? (prev->orig_col_end + val) : 0;
-
-            if (pc->orig_col < tmp)
+            if (pc->orig_col < prev->orig_col_end + cpd.settings[UO_align_right_cmt_gap].u)
             {
                LOG_FMT(LALTC, "NOT changing END comment on line %zu (%zu <= %zu + %d)\n",
                        pc->orig_line, pc->orig_col, prev->orig_col_end,

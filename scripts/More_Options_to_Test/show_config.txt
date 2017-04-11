@@ -1657,11 +1657,9 @@ align_right_cmt_span            Unsigned Number
 align_right_cmt_mix             { False, True }
   If aligning comments, mix with comments after '}' and #endif with less than 3 spaces before the comment
 
-align_right_cmt_gap             Number
+align_right_cmt_gap             Unsigned Number
   If a trailing comment is more than this number of columns away from the text it follows,
   it will qualify for being aligned. This has to be > 0 to do anything.
-  A negative value to force comments which are stuck to the previous token
-   (gap=0) into alignment with the others.
 
 align_right_cmt_at_col          Unsigned Number
   Align trailing comment at or beyond column N; 'pulls in' comments as a bonus side effect (0=ignore)
