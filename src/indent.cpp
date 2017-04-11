@@ -1532,14 +1532,17 @@ void indent_text(void)
          else
          {
             /* Access spec labels get sent to the left or backed up */
-            if (cpd.settings[UO_indent_access_spec].n > 0)
+            const auto val = cpd.settings[UO_indent_access_spec].n;
+            if (val > 0)
             {
-               indent_column_set(cpd.settings[UO_indent_access_spec].n);
+               indent_column_set(val);
             }
             else
             {
-               indent_column_set(frm.pse[frm.pse_tos].indent +
-                                 cpd.settings[UO_indent_access_spec].n);
+               const auto pse_indent   = frm.pse[frm.pse_tos].indent;
+               const auto no_underflow = cast_abs(pse_indent, val) < pse_indent;
+
+               indent_column_set(no_underflow ? (pse_indent + val) : 0);
             }
          }
       }
