@@ -1571,14 +1571,21 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
          if (prev->type == CT_WORD)
          {
             tmp = chunk_get_prev_ncnl(prev);
-            if ((tmp != nullptr) &&
-                (chunk_is_semicolon(tmp) ||
-                 (tmp->type == CT_BRACE_OPEN) ||
-                 (tmp->type == CT_QUALIFIER)))
+            if (tmp != nullptr)
             {
-               set_chunk_type(prev, CT_TYPE);
-               set_chunk_type(pc, CT_ADDR);
-               chunk_flags_set(next, PCF_VAR_1ST);
+               if (chunk_is_semicolon(tmp)
+                   || tmp->type == CT_BRACE_OPEN
+                   || tmp->type == CT_QUALIFIER)
+               {
+                  set_chunk_type(prev, CT_TYPE);
+                  set_chunk_type(pc, CT_ADDR);
+                  chunk_flags_set(next, PCF_VAR_1ST);
+               }
+               else if (tmp->type == CT_DC_MEMBER)
+               {
+                  set_chunk_type(prev, CT_TYPE);
+                  set_chunk_type(pc, CT_BYREF);
+               }
             }
          }
       }

@@ -390,3 +390,4 @@
 
 34140 bug_1027.cfg                     cpp/bug_1027.cpp
 34141 bug_1005.cfg                     cpp/bug_1005.cpp
+34142 sp_before_byref-r.cfg            cpp/I1112-1.cpp
