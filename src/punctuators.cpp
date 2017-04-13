@@ -19,72 +19,100 @@
  */
 
 
+/* 6-char symbols */
+static const chunk_tag_t symbols6[] =
+{
+   { R"_(??(??))_", CT_TSQUARE, LANG_C | LANG_CPP | FLAG_DIG }, // trigraph []
+   { R"_(??!??!)_", CT_BOOL,    LANG_C | LANG_CPP | FLAG_DIG }, // trigraph ||
+   { R"_(??=??=)_", CT_PP,      LANG_C | LANG_CPP | FLAG_DIG }, // trigraph ##
+};
+
+/* 5-char symbols */
+static const chunk_tag_t symbols5[] =
+{
+   { R"_(??!=)_", CT_ASSIGN, LANG_C | LANG_CPP | FLAG_DIG }, // trigraph |=
+   { R"_(??'=)_", CT_ASSIGN, LANG_C | LANG_CPP | FLAG_DIG }, // trigraph ^=
+   { R"_(??=@)_", CT_POUND,  LANG_C | LANG_CPP | FLAG_DIG }, // trigraph #@ MS extension
+};
+
 /* 4-char symbols */
 static const chunk_tag_t symbols4[] =
 {
-   { "!<>=", CT_COMPARE, LANG_D                         },
-   { ">>>=", CT_ASSIGN,  LANG_D | LANG_JAVA | LANG_PAWN },
-   { "%:%:", CT_PP,      LANG_CPP | FLAG_DIG            }, // digraph ##
+   { "!<>=",      CT_COMPARE, LANG_D                         },
+   { ">>>=",      CT_ASSIGN,  LANG_D | LANG_JAVA | LANG_PAWN },
+   { R"_(<::>)_", CT_TSQUARE, LANG_C | LANG_CPP | FLAG_DIG   }, // digraph []
+   { R"_(%:%:)_", CT_PP,      LANG_C | LANG_CPP | FLAG_DIG   }, // digraph ##
 };
 
 /* 3-char symbols */
 static const chunk_tag_t symbols3[] =
 {
-   { "!<=", CT_COMPARE,  LANG_D                                             },
-   { "!<>", CT_COMPARE,  LANG_D                                             },
-   { "!==", CT_COMPARE,  LANG_D                                             },
-   { "!>=", CT_COMPARE,  LANG_D                                             },
-   { "->*", CT_MEMBER,   LANG_C | LANG_CPP | LANG_D                         },
-   { "...", CT_ELLIPSIS, LANG_C | LANG_CPP | LANG_D | LANG_PAWN | LANG_JAVA },
-   { "<<=", CT_ASSIGN,   LANG_ALL                                           },
-   { "<>=", CT_COMPARE,  LANG_D                                             },
-   { "===", CT_COMPARE,  LANG_D                                             },
-   { ">>=", CT_ASSIGN,   LANG_ALL                                           },
-   { ">>>", CT_ARITH,    LANG_D | LANG_JAVA | LANG_PAWN                     },
+   { "!<=",      CT_COMPARE,      LANG_D                                             },
+   { "!<>",      CT_COMPARE,      LANG_D                                             },
+   { "!==",      CT_COMPARE,      LANG_D | LANG_ECMA                                 },
+   { "!>=",      CT_COMPARE,      LANG_D                                             },
+   { "->*",      CT_MEMBER,       LANG_C | LANG_CPP | LANG_D                         },
+   { "...",      CT_ELLIPSIS,     LANG_C | LANG_CPP | LANG_D | LANG_PAWN | LANG_JAVA },
+   { "<<=",      CT_ASSIGN,       LANG_ALL                                           },
+   { "<>=",      CT_COMPARE,      LANG_D                                             },
+   { "===",      CT_COMPARE,      LANG_D | LANG_ECMA                                 },
+   { ">>=",      CT_ASSIGN,       LANG_ALL                                           },
+   { ">>>",      CT_ARITH,        LANG_D | LANG_JAVA | LANG_PAWN | LANG_ECMA         },
+   { "->*",      CT_MEMBER,       LANG_C | LANG_CPP | LANG_D                         },
+   { "%:@",      CT_POUND,        LANG_C | LANG_CPP | LANG_OC                        }, // digraph  #@ MS extension
+   { R"_(??=)_", CT_POUND,        LANG_C | LANG_CPP | FLAG_DIG                       }, // trigraph #
+   { R"_(??()_", CT_SQUARE_OPEN,  LANG_C | LANG_CPP | FLAG_DIG                       }, // trigraph [
+   { R"_(??))_", CT_SQUARE_CLOSE, LANG_C | LANG_CPP | FLAG_DIG                       }, // trigraph ]
+   { R"_(??')_", CT_CARET,        LANG_C | LANG_CPP | FLAG_DIG                       }, // trigraph ^
+   { R"_(??<)_", CT_BRACE_OPEN,   LANG_C | LANG_CPP | FLAG_DIG                       }, // trigraph {
+   { R"_(??>)_", CT_BRACE_CLOSE,  LANG_C | LANG_CPP | FLAG_DIG                       }, // trigraph }
+   { R"_(??-)_", CT_INV,          LANG_C | LANG_CPP | FLAG_DIG                       }, // trigraph ~
+   { R"_(??!)_", CT_ARITH,        LANG_C | LANG_CPP | FLAG_DIG                       }, // trigraph |
 };
+///{ R"_(??/)_", CT_UNKNOWN,      LANG_C | LANG_CPP | FLAG_DIG                       }, // trigraph '\'
 
 /* 2-char symbols */
 static const chunk_tag_t symbols2[] =
 {
-   { "!<", CT_COMPARE,      LANG_D                                                     },
-   { "!=", CT_COMPARE,      LANG_ALL                                                   },
-   { "!>", CT_COMPARE,      LANG_D                                                     },
-   { "!~", CT_COMPARE,      LANG_D                                                     },
-   { "##", CT_PP,           LANG_C | LANG_CPP | LANG_OC                                },
-   { "#@", CT_POUND,        LANG_C | LANG_CPP | LANG_OC                                }, /* MS extension */
-   { "%=", CT_ASSIGN,       LANG_ALL                                                   },
-   { "&&", CT_BOOL,         LANG_ALL                                                   },
-   { "&=", CT_ASSIGN,       LANG_ALL                                                   },
-   { "*=", CT_ASSIGN,       LANG_ALL                                                   },
-   { "++", CT_INCDEC_AFTER, LANG_ALL                                                   },
-   { "+=", CT_ASSIGN,       LANG_ALL                                                   },
-   { "--", CT_INCDEC_AFTER, LANG_ALL                                                   },
-   { "-=", CT_ASSIGN,       LANG_ALL                                                   },
-   { "->", CT_MEMBER,       LANG_C | LANG_CPP | LANG_CS | LANG_OC | LANG_D | LANG_VALA },
-   { ".*", CT_MEMBER,       LANG_C | LANG_CPP | LANG_D                                 },
-   { "..", CT_RANGE,        LANG_D                                                     },
-   { "?.", CT_NULLCOND,     LANG_CS                                                    }, // null conditional operator
-   { "/=", CT_ASSIGN,       LANG_ALL                                                   },
-   { "::", CT_DC_MEMBER,    LANG_C | LANG_CPP | LANG_CS | LANG_D | LANG_VALA           },
-   { "<<", CT_ARITH,        LANG_ALL                                                   },
-   { "<=", CT_COMPARE,      LANG_ALL                                                   },
-   { "<>", CT_COMPARE,      LANG_D                                                     },
-   { "==", CT_COMPARE,      LANG_ALL                                                   },
-   { ">=", CT_COMPARE,      LANG_ALL                                                   },
-   { ">>", CT_ARITH,        LANG_ALL                                                   },
-   { "[]", CT_TSQUARE,      LANG_ALL                                                   },
-   { "^=", CT_ASSIGN,       LANG_ALL                                                   },
-   { "|=", CT_ASSIGN,       LANG_ALL                                                   },
-   { "||", CT_BOOL,         LANG_ALL                                                   },
-   { "~=", CT_COMPARE,      LANG_D                                                     },
-   { "~~", CT_COMPARE,      LANG_D                                                     },
-   { "=>", CT_LAMBDA,       LANG_VALA | LANG_CS | LANG_D                               },
-   { "??", CT_COMPARE,      LANG_CS | LANG_VALA                                        },
-   { "<%", CT_BRACE_OPEN,   LANG_C | LANG_CPP | FLAG_DIG                               }, // digraph {
-   { "%>", CT_BRACE_CLOSE,  LANG_C | LANG_CPP | FLAG_DIG                               }, // digraph }
-   { "<:", CT_SQUARE_OPEN,  LANG_C | LANG_CPP | FLAG_DIG                               }, // digraph [
-   { ":>", CT_SQUARE_CLOSE, LANG_C | LANG_CPP | FLAG_DIG                               }, // digraph ]
-   { "%:", CT_POUND,        LANG_C | LANG_CPP | FLAG_DIG                               }, // digraph #
+   { "!<",      CT_COMPARE,      LANG_D                                                     },
+   { "!=",      CT_COMPARE,      LANG_ALL                                                   },
+   { "!>",      CT_COMPARE,      LANG_D                                                     },
+   { "!~",      CT_COMPARE,      LANG_D                                                     },
+   { "##",      CT_PP,           LANG_C | LANG_CPP | LANG_OC                                },
+   { "#@",      CT_POUND,        LANG_C | LANG_CPP | LANG_OC                                }, /* MS extension */
+   { "%=",      CT_ASSIGN,       LANG_ALL                                                   },
+   { "&&",      CT_BOOL,         LANG_ALL                                                   },
+   { "&=",      CT_ASSIGN,       LANG_ALL                                                   },
+   { "*=",      CT_ASSIGN,       LANG_ALL                                                   },
+   { "++",      CT_INCDEC_AFTER, LANG_ALL                                                   },
+   { "+=",      CT_ASSIGN,       LANG_ALL                                                   },
+   { "--",      CT_INCDEC_AFTER, LANG_ALL                                                   },
+   { "-=",      CT_ASSIGN,       LANG_ALL                                                   },
+   { "->",      CT_MEMBER,       LANG_C | LANG_CPP | LANG_CS | LANG_OC | LANG_D | LANG_VALA },
+   { ".*",      CT_MEMBER,       LANG_C | LANG_CPP | LANG_D                                 },
+   { "..",      CT_RANGE,        LANG_D                                                     },
+   { "?.",      CT_NULLCOND,     LANG_CS                                                    }, // null conditional operator
+   { "/=",      CT_ASSIGN,       LANG_ALL                                                   },
+   { "::",      CT_DC_MEMBER,    LANG_C | LANG_CPP | LANG_CS | LANG_D | LANG_VALA           },
+   { "<<",      CT_ARITH,        LANG_ALL                                                   },
+   { "<=",      CT_COMPARE,      LANG_ALL                                                   },
+   { "<>",      CT_COMPARE,      LANG_D                                                     },
+   { "==",      CT_COMPARE,      LANG_ALL                                                   },
+   { ">=",      CT_COMPARE,      LANG_ALL                                                   },
+   { ">>",      CT_ARITH,        LANG_ALL                                                   },
+   { "[]",      CT_TSQUARE,      LANG_ALL                                                   },
+   { "^=",      CT_ASSIGN,       LANG_ALL                                                   },
+   { "|=",      CT_ASSIGN,       LANG_ALL                                                   },
+   { "||",      CT_BOOL,         LANG_ALL                                                   },
+   { "~=",      CT_COMPARE,      LANG_D                                                     },
+   { "~~",      CT_COMPARE,      LANG_D                                                     },
+   { "=>",      CT_LAMBDA,       LANG_VALA | LANG_CS | LANG_D                               },
+   { "??",      CT_COMPARE,      LANG_CS | LANG_VALA                                        },
+   { R"_(<%)_", CT_BRACE_OPEN,   LANG_C | LANG_CPP | FLAG_DIG                               }, // digraph {
+   { R"_(%>)_", CT_BRACE_CLOSE,  LANG_C | LANG_CPP | FLAG_DIG                               }, // digraph }
+   { R"_(<:)_", CT_SQUARE_OPEN,  LANG_C | LANG_CPP | FLAG_DIG                               }, // digraph [
+   { R"_(:>)_", CT_SQUARE_CLOSE, LANG_C | LANG_CPP | FLAG_DIG                               }, // digraph ]
+   { R"_(%:)_", CT_POUND,        LANG_C | LANG_CPP | FLAG_DIG                               }, // digraph #
 };
 
 /* 1-char symbols */
@@ -127,21 +155,20 @@ const chunk_tag_t *find_punctuator(const char *str, int lang_flags)
    const chunk_tag_t    *p_match = nullptr;
    const lookup_entry_t *p_tab   = punc_table;
 
-   /*REVISIT: it might be faster to do a bsearch() on the first char.
-    *         the rest of the group have at most 5 entries, so it wouldn't help
-    */
+   /*TODO: it might be faster to do a bsearch() on the first char.
+    *      the rest of the group have at most 5 additional entries, so it
+    *      wouldn't help */
+   auto ch_idx = int {};
 
-   int ch_idx = 0;
-
-   while (ch_idx < 4)
+   while (ch_idx < 6 && str[ch_idx] != '\0') //!< symbols6: max punc len = 6
    {
       if (p_tab->ch == str[ch_idx])
       {
          /* Match */
-         if ((p_tab->tag != nullptr) &&
-             (p_tab->tag->lang_flags & lang_flags) &&
-             (((p_tab->tag->lang_flags & FLAG_DIG) == 0) ||
-              cpd.settings[UO_enable_digraphs].b))
+         if (p_tab->tag != nullptr
+             && (p_tab->tag->lang_flags & lang_flags) != 0
+             && ((p_tab->tag->lang_flags & FLAG_DIG) == 0
+                 || cpd.settings[UO_enable_digraphs].b))
          {
             p_match = p_tab->tag;
          }
@@ -164,4 +191,4 @@ const chunk_tag_t *find_punctuator(const char *str, int lang_flags)
       }
    }
    return(p_match);
-}
+} // find_punctuator
