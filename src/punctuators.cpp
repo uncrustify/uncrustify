@@ -7,7 +7,7 @@
  */
 #include "uncrustify_types.h"
 #include "prototypes.h"
-
+#include <algorithm>
 
 /**
  *
@@ -152,43 +152,48 @@ static const chunk_tag_t symbols1[] =
 
 const chunk_tag_t *find_punctuator(const char *str, int lang_flags)
 {
-   const chunk_tag_t    *p_match = nullptr;
-   const lookup_entry_t *p_tab   = punc_table;
+   if (str == nullptr || str[0] == '\0')
+   {
+      return(nullptr);
+   }
 
-   /*TODO: it might be faster to do a bsearch() on the first char.
-    *      the rest of the group have at most 5 additional entries, so it
-    *      wouldn't help */
-   auto ch_idx = int {};
+   const auto binary_find =
+      [](const lookup_entry_t *first, const lookup_entry_t *last, const char &value)
+      {
+         const auto tmp = std::lower_bound(first, last, value,
+                                           lookup_entry_t::comperator());
+
+         return((value == tmp->ch) ? tmp : nullptr);
+      };
+
+   const chunk_tag_t *match  = nullptr;
+   const auto        *parent = punc_table; //!< graph in table form, initially point at first entry
+   auto              ch_idx  = int {};
 
    while (ch_idx < 6 && str[ch_idx] != '\0') //!< symbols6: max punc len = 6
    {
-      if (p_tab->ch == str[ch_idx])
+      // search for next parent node in all current child nodes
+      parent = binary_find(parent, next(parent, parent->left_in_group), str[ch_idx]);
+      if (parent == nullptr)
       {
-         /* Match */
-         if (p_tab->tag != nullptr
-             && (p_tab->tag->lang_flags & lang_flags) != 0
-             && ((p_tab->tag->lang_flags & FLAG_DIG) == 0
-                 || cpd.settings[UO_enable_digraphs].b))
-         {
-            p_match = p_tab->tag;
-         }
-         if (p_tab->next_idx == 0)
-         {
-            /* This is the end of the chain */
-            break;
-         }
-         p_tab = &punc_table[p_tab->next_idx];
-         ch_idx++;
+         break; // no nodes found with the searched char
       }
-      else if (p_tab->left_in_group == 0)
+
+      if (parent->tag != nullptr
+          && (parent->tag->lang_flags & lang_flags) != 0  // punctuator lang and processing lang match
+          && ((parent->tag->lang_flags & FLAG_DIG) == 0   // punctuator is not a di/tri-graph
+              || cpd.settings[UO_enable_digraphs].b))     // or di/tri-graph processing is enabled
       {
-         /* The last entry in this group didn't match */
-         break;
+         match = parent->tag;
       }
-      else
+
+      if (parent->next_idx == 0)
       {
-         p_tab++;
+         break;                               // no child nodes, leaf reached
       }
+      parent = &punc_table[parent->next_idx]; // point at the first child node
+      ch_idx++;
+      continue;
    }
-   return(p_match);
+   return(match);
 } // find_punctuator

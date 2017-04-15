@@ -357,13 +357,6 @@ struct chunk_tag_t
    size_t     lang_flags;
 };
 
-struct lookup_entry_t
-{
-   char              ch;
-   char              left_in_group;
-   UINT16            next_idx;
-   const chunk_tag_t *tag;
-};
 
 struct align_t
 {
