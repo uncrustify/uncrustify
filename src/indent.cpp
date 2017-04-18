@@ -2072,6 +2072,7 @@ void indent_text(void)
           */
 
          prev = chunk_get_prev_ncnl(pc);
+         auto prevv = chunk_get_prev_ncnl(prev);
          next = chunk_get_next_ncnl(pc);
 
          bool do_vardefcol = false;
@@ -2106,18 +2107,22 @@ void indent_text(void)
             LOG_FMT(LINDENT, "Indent SQL: [%s] to %zu (%zu/%zu)\n",
                     pc->text(), pc->column, sql_col, sql_orig_col);
          }
-         else if (((pc->flags & PCF_STMT_START) == 0) &&
-                  ((pc->type == CT_MEMBER) ||
-                   (pc->type == CT_DC_MEMBER) ||
-                   ((prev != nullptr) &&
-                    ((prev->type == CT_MEMBER) ||
-                     (prev->type == CT_DC_MEMBER)))))
+         else if ((pc->flags & PCF_STMT_START) == 0
+                  && (pc->type == CT_MEMBER
+                      || (pc->type == CT_DC_MEMBER
+                          && prev != nullptr
+                          && prev->type == CT_TYPE)
+                      || (prev != nullptr
+                          && (prev->type == CT_MEMBER
+                              || (prev->type == CT_DC_MEMBER
+                                  && prevv->type == CT_TYPE)))))
          {
             size_t tmp = cpd.settings[UO_indent_member].u + indent_column;
             LOG_FMT(LINDENT, "%s(%d): %zu] member => %zu\n",
                     __func__, __LINE__, pc->orig_line, tmp);
             reindent_line(pc, tmp);
          }
+
          else if (do_vardefcol)
          {
             LOG_FMT(LINDENT, "%s(%d): %zu] Vardefcol => %zu\n",
