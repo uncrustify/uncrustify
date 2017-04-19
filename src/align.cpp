@@ -356,6 +356,7 @@ void quick_align_again(void)
 void quick_indent_again(void)
 {
    LOG_FUNC_ENTRY();
+   LOG_FMT(LALAGAIN, "%s:\n", __func__);
 
    for (chunk_t *pc = chunk_get_head(); pc; pc = chunk_get_next(pc))
    {

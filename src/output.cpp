@@ -185,6 +185,13 @@ static bool next_word_exceeds_limit(const unc_text &text, size_t idx)
 static void output_to_column(size_t column, bool allow_tabs)
 {
    cpd.did_newline = 0;
+   if (column > 1000)
+   {
+      // might be a value underflow
+      fprintf(stderr, "%s: the column value is too big %zu\n\n", __func__, column);
+      exit(EX_SOFTWARE);
+   }
+   cpd.did_newline = 0;
    if (allow_tabs)
    {
       /* tab out as far as possible and then use spaces */
@@ -308,8 +315,16 @@ void output_text(FILE *pfile)
 
    for (pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next(pc))
    {
-      LOG_FMT(LOUTIND, "text() %s, type %s, col=%zu\n",
-              pc->text(), get_token_name(pc->type), pc->orig_col);
+      if (pc->type == CT_NEWLINE)
+      {
+         LOG_FMT(LOUTIND, "%s: type NEWLINE, col=%zu\n",
+                 __func__, pc->orig_col);
+      }
+      else
+      {
+         LOG_FMT(LOUTIND, "%s: text() %s, type %s, col=%zu\n",
+                 __func__, pc->text(), get_token_name(pc->type), pc->orig_col);
+      }
       cpd.output_tab_as_space = (cpd.settings[UO_cmt_convert_tab_to_spaces].b &&
                                  chunk_is_comment(pc));
       if (pc->type == CT_NEWLINE)
@@ -452,6 +467,9 @@ void output_text(FILE *pfile)
                           (cpd.settings[UO_indent_with_tabs].n != 0));
 
             LOG_FMT(LOUTIND, "  %zu> col %zu/%zu/%zu - ", pc->orig_line, pc->column, pc->column_indent, cpd.column);
+#ifdef DEBUG
+            LOG_FMT(LOUTIND, "\n");
+#endif // DEBUG
          }
          else
          {
@@ -475,7 +493,10 @@ void output_text(FILE *pfile)
             {
                allow_tabs |= pc->after_tab;
             }
-            LOG_FMT(LOUTIND, " %zu(%d) -", pc->column, allow_tabs);
+            LOG_FMT(LOUTIND, " %zu(%s) -", pc->column, allow_tabs ? "true" : "false");
+#ifdef DEBUG
+            LOG_FMT(LOUTIND, "\n");
+#endif // DEBUG
          }
 
          output_to_column(pc->column, allow_tabs);
