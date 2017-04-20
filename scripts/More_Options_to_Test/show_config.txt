@@ -754,7 +754,8 @@ indent_template_param           { False, True }
   Same as indent_func_call_param, but for templates
 
 indent_func_param_double        { False, True }
-  Double the indent for indent_func_xxx_param options
+  Double the indent for indent_func_xxx_param options.
+  Use both values of the options indent_columns and indent_param
 
 indent_func_const               Unsigned Number
   Indentation column for standalone 'const' function decl/proto qualifier

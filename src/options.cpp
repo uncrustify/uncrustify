@@ -774,7 +774,8 @@ void register_options(void)
    unc_add_option("indent_template_param", UO_indent_template_param, AT_BOOL,
                   "Same as indent_func_call_param, but for templates");
    unc_add_option("indent_func_param_double", UO_indent_func_param_double, AT_BOOL,
-                  "Double the indent for indent_func_xxx_param options");
+                  "Double the indent for indent_func_xxx_param options.\n"
+                  "Use both values of the options indent_columns and indent_param");
    unc_add_option("indent_func_const", UO_indent_func_const, AT_UNUM,
                   "Indentation column for standalone 'const' function decl/proto qualifier");
    unc_add_option("indent_func_throw", UO_indent_func_throw, AT_UNUM,
