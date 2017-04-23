@@ -355,6 +355,7 @@ enum uncrustify_options
    UO_indent_func_ctor_var_param,           //
    UO_indent_template_param,                //
    UO_indent_func_param_double,             // double the tab indent for
+                                            // Use both values of the options indent_columns and indent_param
    UO_indent_func_const,                    // indentation for standalone 'const' qualifier
    UO_indent_func_throw,                    // indentation for standalone 'throw' qualifier
    UO_indent_member,                        // indent lines broken at a member '.' or '->'
