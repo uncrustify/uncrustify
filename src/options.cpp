@@ -1304,7 +1304,7 @@ void register_options(void)
 
    unc_begin_group(UG_linesplit, "Line Splitting options");
    unc_add_option("code_width", UO_code_width, AT_UNUM,
-                  "Try to limit code width to N number of columns", "", 16, 256);
+                  "Try to limit code width to N number of columns", "", 0, 256);
    unc_add_option("ls_for_split_full", UO_ls_for_split_full, AT_BOOL,
                   "Whether to fully split long 'for' statements at semi-colons");
    unc_add_option("ls_func_split_full", UO_ls_func_split_full, AT_BOOL,
@@ -1444,7 +1444,7 @@ void register_options(void)
 
    unc_begin_group(UG_comment, "Comment modifications");
    unc_add_option("cmt_width", UO_cmt_width, AT_UNUM,
-                  "Try to wrap comments at cmt_width columns", "", 16, 256);
+                  "Try to wrap comments at cmt_width columns", "", 0, 256);
    unc_add_option("cmt_reflow_mode", UO_cmt_reflow_mode, AT_NUM,
                   "Set the comment reflow mode (Default=0)\n"
                   "0: no reflowing (apart from the line wrapping due to cmt_width)\n"
@@ -2325,8 +2325,58 @@ void set_option_defaults(void)
    cpd.defaults[UO_use_options_overriding_for_qt_macros].b              = true;
    cpd.defaults[UO_warn_level_tabs_found_in_verbatim_string_literals].n = LWARN;
 
+#ifdef DEBUG
+   // test all the default values if they are in the allowed interval
+   for (const auto &id : option_name_map)
+   {
+      option_map_value value = id.second;
+      if (value.type == AT_UNUM)
+      {
+         size_t min_value     = value.min_val;
+         size_t max_value     = value.max_val;
+         size_t default_value = cpd.defaults[id.first].u;
+         if (default_value > max_value)
+         {
+            fprintf(stderr, "option '%s' is not correctly set:\n", id.second.name);
+            fprintf(stderr, "The default value '%zu' is more than the max value '%zu'.\n",
+                    default_value, max_value);
+            exit(EX_SOFTWARE);
+         }
+         if ((min_value > 0) &&
+             (default_value < min_value))
+         {
+            fprintf(stderr, "option '%s' is not correctly set:\n", id.second.name);
+            fprintf(stderr, "The default value '%zu' is less than the min value '%zu'.\n",
+                    default_value, min_value);
+            exit(EX_SOFTWARE);
+         }
+      }
+
+      if (value.type == AT_NUM)
+      {
+         int min_value     = value.min_val;
+         int max_value     = value.max_val;
+         int default_value = cpd.defaults[id.first].u;
+         if (default_value > max_value)
+         {
+            fprintf(stderr, "option '%s' is not correctly set:\n", id.second.name);
+            fprintf(stderr, "The default value '%d' is more than the max value '%d'.\n",
+                    default_value, max_value);
+            exit(EX_SOFTWARE);
+         }
+         if (default_value < min_value)
+         {
+            fprintf(stderr, "option '%s' is not correctly set:\n", id.second.name);
+            fprintf(stderr, "The default value '%d' is less than the min value '%d'.\n",
+                    default_value, min_value);
+            exit(EX_SOFTWARE);
+         }
+      }
+   }
+#endif // DEBUG
+
    /* copy all the default values to settings array */
-   for (int count = 0; count < UO_option_count; count++)
+   for (unsigned int count = 0; count < UO_option_count; count++)
    {
       cpd.settings[count].a = cpd.defaults[count].a;
    }
