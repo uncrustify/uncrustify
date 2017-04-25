@@ -18,3 +18,5 @@
 60030  amxmodx.cfg                          pawn/crusty_ex-1.sma
 
 60040  amxmodx.cfg                          pawn/preproc.pawn
+
+60050  mod_full_brace_function-f.cfg        pawn/gh419.pawn
