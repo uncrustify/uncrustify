@@ -24,58 +24,60 @@
 #include <cerrno>
 #include "unc_ctype.h"
 
-static const char *DOC_TEXT_END =
-   "\n"
-   "# Meaning of the settings:\n"
-   "#   Ignore - do not do any changes\n"
-   "#   Add    - make sure there is 1 or more space/brace/newline/etc\n"
-   "#   Remove - removes space/brace/newline/etc\n"
-   "#   Force  - in the context of spaces means make sure there is exactly 1,\n"
-   "#            in other contexts it behaves like Add\n"
-   "#\n"
-   "#\n"
-   "# You can force a token to be a type with the 'type' option.\n"
-   "# Example:\n"
-   "# type myfoo1 myfoo2\n"
-   "#\n"
-   "# You can create custom macro-based indentation using macro-open,\n"
-   "# macro-else and macro-close.\n"
-   "# Example:\n"
-   "# macro-open  BEGIN_TEMPLATE_MESSAGE_MAP\n"
-   "# macro-open  BEGIN_MESSAGE_MAP\n"
-   "# macro-close END_MESSAGE_MAP\n"
-   "#\n"
-   "# You can assign any keyword to any type with the set option.\n"
-   "# set func_call_user _ N_\n"
-   "#\n"
-   "# The full syntax description of all custom definition config entries\n"
-   "# is shown below:\n"
-   "#\n"
-   "# define custom tokens as:\n"
-   "# - embed whitespace in token using '\' escape character, or\n"
-   "#   put token in quotes\n"
-   "# - these: ' \" and ` are recognized as quote delimiters\n"
-   "#\n"
-   "# type token1 token2 token3 ...\n"
-   "#             ^ optionally specify multiple tokens on a single line\n"
-   "# define def_token output_token\n"
-   "#                  ^ output_token is optional, then NULL is assumed\n"
-   "# macro-open token\n"
-   "# macro-close token\n"
-   "# macro-else token\n"
-   "# set id token1 token2 ...\n"
-   "#               ^ optionally specify multiple tokens on a single line\n"
-   "#     ^ id is one of the names in token_enum.h sans the CT_ prefix,\n"
-   "#       e.g. PP_PRAGMA\n"
-   "#\n"
-   "# all tokens are separated by any mix of ',' commas, '=' equal signs\n"
-   "# and whitespace (space, tab)\n"
-   "#\n"
-   "# You can add support for other file extensions using the 'file_ext' command.\n"
-   "# The first arg is the language name used with the '-l' option.\n"
-   "# The remaining args are file extensions, matched with 'endswith'.\n"
-   "#   file_ext CPP .ch .cxx .cpp.in\n"
-   "#\n";
+static const char *DOC_TEXT_END = R"___(
+# Meaning of the settings:
+#   Ignore - do not do any changes
+#   Add    - makes sure there is 1 or more space/brace/newline/etc
+#   Force  - makes sure there is exactly 1 space/brace/newline/etc,
+#            behaves like Add in some contexts
+#   Remove - removes space/brace/newline/etc
+#
+#
+# - Token(s) can be treated as specific type(s) with the 'set' option:
+#     `set tokenType tokenString [tokenString...]`
+#
+#     Example:
+#       `set BOOL __AND__ __OR__`
+#
+#     tokenTypes are defined in src/token_enum.h, use them without the
+#     'CT_' prefix: 'CT_BOOL' -> 'BOOL'
+#
+#
+# - Token(s) can be treated as type(s) with the 'type' option.
+#     `type tokenString [tokenString...]`
+#
+#     Example:
+#       `type int c_uint_8 Rectangle` 
+#
+#     This can also be achieved with `set TYPE int c_uint_8 Rectangle`
+#
+#
+# To embed whitespace in tokenStrings use the '\' escape character, or quote  
+# the tokenStrings. These quotes are supported: "'`
+#
+#
+# - Support for the auto detection of languages through the file ending can be 
+#   added using the 'file_ext' command.
+#     `file_ext langType langString [langString..]`
+#
+#     Example:
+#       `file_ext CPP .ch .cxx .cpp.in`
+#
+#     langTypes are defined in uncrusify_types.h in the lang_flag_e enum, use 
+#     them without the 'LANG_' prefix: 'LANG_CPP' -> 'CPP'
+#
+#
+# - Custom macro-based indentation can be set up using 'macro-open',
+#   'macro-else' and 'macro-close'.
+#     `(macro-open | macro-else | macro-close) tokenString`
+#
+#     Example:
+#       `macro-open  BEGIN_TEMPLATE_MESSAGE_MAP`
+#       `macro-open  BEGIN_MESSAGE_MAP`
+#       `macro-close END_MESSAGE_MAP`
+#
+#)___";
+
 
 map<uncrustify_options, option_map_value> option_name_map;
 map<uncrustify_groups, group_map_value>   group_map;

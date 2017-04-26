@@ -1990,53 +1990,54 @@ warn_level_tabs_found_in_verbatim_string_literals = 2        # unsigned number
 
 # Meaning of the settings:
 #   Ignore - do not do any changes
-#   Add    - make sure there is 1 or more space/brace/newline/etc
+#   Add    - makes sure there is 1 or more space/brace/newline/etc
+#   Force  - makes sure there is exactly 1 space/brace/newline/etc,
+#            behaves like Add in some contexts
 #   Remove - removes space/brace/newline/etc
-#   Force  - in the context of spaces means make sure there is exactly 1,
-#            in other contexts it behaves like Add
 #
 #
-# You can force a token to be a type with the 'type' option.
-# Example:
-# type myfoo1 myfoo2
+# - Token(s) can be treated as specific type(s) with the 'set' option:
+#     `set tokenType tokenString [tokenString...]`
 #
-# You can create custom macro-based indentation using macro-open,
-# macro-else and macro-close.
-# Example:
-# macro-open  BEGIN_TEMPLATE_MESSAGE_MAP
-# macro-open  BEGIN_MESSAGE_MAP
-# macro-close END_MESSAGE_MAP
+#     Example:
+#       `set BOOL __AND__ __OR__`
 #
-# You can assign any keyword to any type with the set option.
-# set func_call_user _ N_
+#     tokenTypes are defined in src/token_enum.h, use them without the
+#     'CT_' prefix: 'CT_BOOL' -> 'BOOL'
 #
-# The full syntax description of all custom definition config entries
-# is shown below:
 #
-# define custom tokens as:
-# - embed whitespace in token using '' escape character, or
-#   put token in quotes
-# - these: ' " and ` are recognized as quote delimiters
+# - Token(s) can be treated as type(s) with the 'type' option.
+#     `type tokenString [tokenString...]`
 #
-# type token1 token2 token3 ...
-#             ^ optionally specify multiple tokens on a single line
-# define def_token output_token
-#                  ^ output_token is optional, then NULL is assumed
-# macro-open token
-# macro-close token
-# macro-else token
-# set id token1 token2 ...
-#               ^ optionally specify multiple tokens on a single line
-#     ^ id is one of the names in token_enum.h sans the CT_ prefix,
-#       e.g. PP_PRAGMA
+#     Example:
+#       `type int c_uint_8 Rectangle` 
 #
-# all tokens are separated by any mix of ',' commas, '=' equal signs
-# and whitespace (space, tab)
+#     This can also be achieved with `set TYPE int c_uint_8 Rectangle`
 #
-# You can add support for other file extensions using the 'file_ext' command.
-# The first arg is the language name used with the '-l' option.
-# The remaining args are file extensions, matched with 'endswith'.
-#   file_ext CPP .ch .cxx .cpp.in
 #
-# option(s) with 'not default' value: 0
+# To embed whitespace in tokenStrings use the '\' escape character, or quote  
+# the tokenStrings. These quotes are supported: "'`
+#
+#
+# - Support for the auto detection of languages through the file ending can be 
+#   added using the 'file_ext' command.
+#     `file_ext langType langString [langString..]`
+#
+#     Example:
+#       `file_ext CPP .ch .cxx .cpp.in`
+#
+#     langTypes are defined in uncrusify_types.h in the lang_flag_e enum, use 
+#     them without the 'LANG_' prefix: 'LANG_CPP' -> 'CPP'
+#
+#
+# - Custom macro-based indentation can be set up using 'macro-open',
+#   'macro-else' and 'macro-close'.
+#     `(macro-open | macro-else | macro-close) tokenString`
+#
+#     Example:
+#       `macro-open  BEGIN_TEMPLATE_MESSAGE_MAP`
+#       `macro-open  BEGIN_MESSAGE_MAP`
+#       `macro-close END_MESSAGE_MAP`
+#
+## option(s) with 'not default' value: 0
 #
