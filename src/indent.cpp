@@ -1693,6 +1693,7 @@ void indent_text(void)
             }
             if (cpd.settings[UO_indent_func_param_double].b)
             {
+               // double is: Use both values of the options indent_columns and indent_param
                frm.pse[frm.pse_tos].indent += indent_size;
                log_indent();
             }
