@@ -862,8 +862,8 @@ static void check_template(chunk_t *start)
    {
       LOG_FMT(LTEMPL, " CT_TEMPLATE:");
 #ifdef DEBUG
-   LOG_FMT(LSPLIT, "\n");
-#endif // DEBUG
+      LOG_FMT(LSPLIT, "\n");
+#endif
 
       /* We have: "template< ... >", which is a template declaration */
       size_t level = 1;
@@ -878,8 +878,8 @@ static void check_template(chunk_t *start)
             LOG_FMT(LTEMPL, " {split '%s' at %zu:%zu}",
                     pc->text(), pc->orig_line, pc->orig_col);
 #ifdef DEBUG
-   LOG_FMT(LSPLIT, "\n");
-#endif // DEBUG
+            LOG_FMT(LSPLIT, "\n");
+#endif
             split_off_angle_close(pc);
          }
 
@@ -916,16 +916,16 @@ static void check_template(chunk_t *start)
       {
          LOG_FMT(LTEMPL, " - after %s + ( - Not a template\n", get_token_name(prev->type));
 #ifdef DEBUG
-   LOG_FMT(LSPLIT, "\n");
-#endif // DEBUG
+         LOG_FMT(LSPLIT, "\n");
+#endif
          set_chunk_type(start, CT_COMPARE);
          return;
       }
 
       LOG_FMT(LTEMPL, " - prev %s -", get_token_name(prev->type));
 #ifdef DEBUG
-   LOG_FMT(LSPLIT, "\n");
-#endif // DEBUG
+      LOG_FMT(LSPLIT, "\n");
+#endif
 
       /* Scan back and make sure we aren't inside square parens */
       bool in_if = false;
@@ -967,8 +967,8 @@ static void check_template(chunk_t *start)
             LOG_FMT(LTEMPL, " {split '%s' at %zu:%zu}",
                     pc->text(), pc->orig_line, pc->orig_col);
 #ifdef DEBUG
-   LOG_FMT(LSPLIT, "\n");
-#endif // DEBUG
+            LOG_FMT(LSPLIT, "\n");
+#endif
             split_off_angle_close(pc);
          }
 
