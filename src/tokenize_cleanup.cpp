@@ -846,6 +846,9 @@ void tokenize_cleanup(void)
 static void check_template(chunk_t *start)
 {
    LOG_FMT(LTEMPL, "%s: Line %zu, col %zu:", __func__, start->orig_line, start->orig_col);
+#ifdef DEBUG
+   LOG_FMT(LSPLIT, "\n");
+#endif // DEBUG
 
    chunk_t *prev = chunk_get_prev_ncnl(start, scope_e::PREPROC);
    if (prev == nullptr)
@@ -858,6 +861,9 @@ static void check_template(chunk_t *start)
    if (prev->type == CT_TEMPLATE)
    {
       LOG_FMT(LTEMPL, " CT_TEMPLATE:");
+#ifdef DEBUG
+      LOG_FMT(LSPLIT, "\n");
+#endif
 
       /* We have: "template< ... >", which is a template declaration */
       size_t level = 1;
@@ -871,6 +877,9 @@ static void check_template(chunk_t *start)
          {
             LOG_FMT(LTEMPL, " {split '%s' at %zu:%zu}",
                     pc->text(), pc->orig_line, pc->orig_col);
+#ifdef DEBUG
+            LOG_FMT(LSPLIT, "\n");
+#endif
             split_off_angle_close(pc);
          }
 
@@ -906,11 +915,17 @@ static void check_template(chunk_t *start)
           (prev->parent_type != CT_OPERATOR))
       {
          LOG_FMT(LTEMPL, " - after %s + ( - Not a template\n", get_token_name(prev->type));
+#ifdef DEBUG
+         LOG_FMT(LSPLIT, "\n");
+#endif
          set_chunk_type(start, CT_COMPARE);
          return;
       }
 
       LOG_FMT(LTEMPL, " - prev %s -", get_token_name(prev->type));
+#ifdef DEBUG
+      LOG_FMT(LSPLIT, "\n");
+#endif
 
       /* Scan back and make sure we aren't inside square parens */
       bool in_if = false;
@@ -928,12 +943,6 @@ static void check_template(chunk_t *start)
          {
             in_if = true;
             break;
-         }
-         if (pc->type == CT_SQUARE_OPEN)
-         {
-            LOG_FMT(LTEMPL, " - Not a template: after a square open\n");
-            set_chunk_type(start, CT_COMPARE);
-            return;
          }
       }
 
@@ -957,6 +966,9 @@ static void check_template(chunk_t *start)
          {
             LOG_FMT(LTEMPL, " {split '%s' at %zu:%zu}",
                     pc->text(), pc->orig_line, pc->orig_col);
+#ifdef DEBUG
+            LOG_FMT(LSPLIT, "\n");
+#endif
             split_off_angle_close(pc);
          }
 
