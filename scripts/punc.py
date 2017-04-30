@@ -5,7 +5,9 @@
 # @author  Ben Gardner
 # @license GPL v2+
 #
+from __future__ import print_function  # python >= 2.6
 from os.path import dirname, join, abspath
+from sys import stderr, exit as sys_exit
 
 
 def scan_file(file_path):
@@ -27,7 +29,17 @@ def scan_file(file_path):
                 idx2 = line.find('CT_')
                 if idx1 >= 0 and idx2 > idx1:
                     tok = line[idx1 + 1:idx2].strip()
-                    tok = tok[1:-2]  # strip off open quotes and commas
+                    if tok.startswith('R"'):
+                        pos_paren_open = tok.find('(')
+                        pos_paren_close = tok.rfind(')')
+
+                        if pos_paren_open == -1 or pos_paren_close == -1:
+                            print("raw string parenthesis not found", file=stderr)
+                            sys_exit(-1)
+
+                        tok = tok[pos_paren_open+1:pos_paren_close]
+                    else:
+                        tok = tok[1:-2]  # strip off open quotes and commas
                     args.append([tok, '%s[%d]' % (cur_token, token_idx)])
                     token_idx += 1
     return args
@@ -93,6 +105,10 @@ def main():
     print(" * @file punctuators.h")
     print(" * Automatically generated")
     print(" */")
+    print("")
+    print("#ifndef PUNCTUATORS_H_INCLUDED")
+    print("#define PUNCTUATORS_H_INCLUDED")
+    print("")
     print("static const lookup_entry_t punc_table[] =")
     print("{")
 
@@ -109,15 +125,19 @@ def main():
     for i in arr:
         rec = i[4]
         if len(i[0]) == 0:
-            print("   {   0,  0,  0, NULL %s },   // %3d:" % ((max_len - 4) * ' ', idx))
+            print("   {   0,  0,  0, NULL %s },   // %3d:"
+                  % ((max_len - 4) * ' ', idx))
         elif rec is None:
-            print("   { '%s', %2d, %2d, NULL %s },   // %3d: '%s'" % (i[0], i[2], i[3], (max_len - 4) * ' ', idx, i[1]))
+            print("   { '%s', %2d, %2d, NULL %s },   // %3d: '%s'"
+                  % (i[0].replace("'", "\\'"), i[2], i[3], (max_len - 4) * ' ', idx, i[1]))
         else:
-            print("   { '%s', %2d, %2d, &%s%s },   // %3d: '%s'" % (i[0], i[2], i[3], rec[1],
-                                                                    (max_len - len(rec[1])) * ' ', idx, i[1]))
+            print("   { '%s', %2d, %2d, &%s%s },   // %3d: '%s'"
+                  % (i[0].replace("'", "\\'"), i[2], i[3], rec[1], (max_len - len(rec[1])) * ' ', idx, i[1]))
         idx += 1
 
     print("};")
+    print("")
+    print("#endif /* PUNCTUATORS_H_INCLUDED */")
 
 if __name__ == '__main__':
     exit(main())
