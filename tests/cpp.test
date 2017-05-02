@@ -392,8 +392,8 @@
 34141 bug_1005.cfg                     cpp/bug_1005.cpp
 34142 sp_before_byref-r.cfg            cpp/I1112-1.cpp
 34143 I1112-2.cfg                      cpp/I1112-2.cpp
+34144 sp_before_ptr_star-r.cfg         cpp/I1112-3.cpp
 
-
-34144 i683.cfg                         cpp/i683.cpp
+34145 i683.cfg                         cpp/i683.cpp
 
 34150 bug_1032.cfg                     cpp/bug_1032.cpp

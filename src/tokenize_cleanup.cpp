@@ -235,15 +235,26 @@ void tokenize_cleanup(void)
       }
 
       /**
-       * Change CT_STAR to CT_PTR_TYPE if preceded by CT_TYPE,
-       * CT_QUALIFIER, or CT_PTR_TYPE.
+       * Change CT_STAR to CT_PTR_TYPE if preceded by
+       *     CT_TYPE, CT_QUALIFIER, or CT_PTR_TYPE
+       * or by a CT_WORD which is preceded by CT_DC_MEMBER: '::aaa *b'
        */
-      if ((next->type == CT_STAR) &&
-          ((pc->type == CT_TYPE) ||
-           (pc->type == CT_QUALIFIER) ||
-           (pc->type == CT_PTR_TYPE)))
+      if (next->type == CT_STAR)
       {
-         set_chunk_type(next, CT_PTR_TYPE);
+         if (pc->type == CT_TYPE
+             || pc->type == CT_QUALIFIER
+             || pc->type == CT_PTR_TYPE)
+         {
+            set_chunk_type(next, CT_PTR_TYPE);
+         }
+         else if (pc->type == CT_WORD
+                  && prev != nullptr
+                  && prev->type == CT_DC_MEMBER
+                  && (cpd.lang_flags & LANG_CPP) != 0)
+         {
+            set_chunk_type(pc, CT_TYPE);
+            set_chunk_type(next, CT_PTR_TYPE);
+         }
       }
 
       if ((pc->type == CT_TYPE_CAST) &&
