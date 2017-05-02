@@ -18,5 +18,8 @@
 80060 java_synchronized_1.cfg java/synchronized.java
 80061 java_synchronized_2.cfg java/synchronized.java
 80062 sp_this_paren.cfg       java/sp_this_paren.java
+80063 empty.cfg               java/i1121.java
 
 80100 sf567.cfg               java/sf567.java
+
+
