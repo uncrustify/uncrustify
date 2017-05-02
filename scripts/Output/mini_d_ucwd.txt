@@ -1256,7 +1256,8 @@ nl_squeeze_ifdef_top_level      = false    # false/true
 # Add or remove blank line before 'if'
 nl_before_if                    = ignore   # ignore/add/remove/force
 
-# Add or remove blank line after 'if' statement
+# Add or remove blank line after 'if' statement.
+# Add/Force work only if the next token is not a closing brace
 nl_after_if                     = ignore   # ignore/add/remove/force
 
 # Add or remove blank line before 'for'

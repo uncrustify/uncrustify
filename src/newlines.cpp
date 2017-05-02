@@ -371,7 +371,7 @@ static void double_newline(chunk_t *nl)
    LOG_FMT(LNEWLINE, "%s:%d: add newline after ", __func__, __LINE__);
    if (prev->type == CT_VBRACE_CLOSE)
    {
-       LOG_FMT(LNEWLINE, "VBRACE_CLOSE ");
+      LOG_FMT(LNEWLINE, "VBRACE_CLOSE ");
    }
    else
    {
@@ -1302,7 +1302,7 @@ static void newlines_if_for_while_switch_post_blank_lines(chunk_t *start, argval
                prev = chunk_get_prev_nnl(next);
                LOG_FMT(LNEWLINE, "   %d:prev->... , type %s, line %zu, column %zu,\n",
                        __LINE__, get_token_name(prev->type), prev->orig_line, prev->orig_col);
-               pc   = chunk_get_next_nl(next);
+               pc = chunk_get_next_nl(next);
                LOG_FMT(LNEWLINE, "   %d:pc->...   , type %s, line %zu, column %zu,\n",
                        __LINE__, get_token_name(pc->type), pc->orig_line, pc->orig_col);
                chunk_t *pc2 = chunk_get_next(pc);
