@@ -1132,7 +1132,8 @@ void register_options(void)
    unc_add_option("nl_before_if", UO_nl_before_if, AT_IARF,
                   "Add or remove blank line before 'if'");
    unc_add_option("nl_after_if", UO_nl_after_if, AT_IARF,
-                  "Add or remove blank line after 'if' statement");
+                  "Add or remove blank line after 'if' statement.\n"
+                  "Add/Force work only if the next token is not a closing brace");
    unc_add_option("nl_before_for", UO_nl_before_for, AT_IARF,
                   "Add or remove blank line before 'for'");
    unc_add_option("nl_after_for", UO_nl_after_for, AT_IARF,

@@ -1255,7 +1255,8 @@ nl_before_if                    { Ignore, Add, Remove, Force }
   Add or remove blank line before 'if'
 
 nl_after_if                     { Ignore, Add, Remove, Force }
-  Add or remove blank line after 'if' statement
+  Add or remove blank line after 'if' statement.
+  Add/Force work only if the next token is not a closing brace
 
 nl_before_for                   { Ignore, Add, Remove, Force }
   Add or remove blank line before 'for'

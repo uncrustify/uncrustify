@@ -250,7 +250,6 @@ int i2c_del_adapter(struct i2c_adapter *adap)
                 "for driver [%s]\n", driver->name);
         goto out_unlock;
         }
-
     }
 
   /* detach any active clients. This must be done first, because
