@@ -255,6 +255,7 @@ enum c_token_t
    CT_OC_BLOCK_EXPR,    /* ObjC: block expression with arg: '^(int arg) { arg++; };' and without (called a block literal): '^{ ... };' */
    CT_OC_BLOCK_CARET,   /* ObjC: block pointer caret: '^' */
    CT_OC_AT,            /* ObjC: boxed constants using '@' */
+   CT_OC_PROPERTY_ATTR, /* ObjC: property attribute (strong, weak, readonly, etc...) */
 
    /* start PP types */
    CT_PP_DEFINE,        /* #define */

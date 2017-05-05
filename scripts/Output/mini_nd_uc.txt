@@ -557,6 +557,7 @@ mod_move_case_break             = false
 mod_case_brace                  = ignore
 mod_remove_empty_return         = false
 mod_sort_oc_properties          = false
+mod_sort_oc_property_class_weight = 0
 mod_sort_oc_property_thread_safe_weight = 0
 mod_sort_oc_property_readwrite_weight = 0
 mod_sort_oc_property_reference_weight = 0
