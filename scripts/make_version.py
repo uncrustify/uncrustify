@@ -32,7 +32,7 @@ def main(args):
 
     if exists(git_path):
         try:
-            proc = Popen(['git', 'describe', '--always', '--dirty'], stdout=PIPE, stderr=PIPE)
+            proc = Popen(['git', 'describe', '--always', '--dirty'], stdout=PIPE, stderr=PIPE, cwd=root)
             txt_b, error_txt_b = proc.communicate()
             txt = txt_b.decode("UTF-8").strip().lower()
             error_txt = "%d: %s" % (proc.returncode, error_txt_b.decode("UTF-8").strip().lower())
@@ -42,12 +42,12 @@ def main(args):
     elif exists(hg_path):
         try:
             check_call(['hg', 'gexport'])
-            proc0 = Popen(['hg', '--config', 'defaults.log=', 'log', '-r', '.', '--template', '{gitnode}'], stdout=PIPE, stderr=PIPE)
+            proc0 = Popen(['hg', '--config', 'defaults.log=', 'log', '-r', '.', '--template', '{gitnode}'], stdout=PIPE, stderr=PIPE, cwd=root)
             node_b, error_txt_b = proc0.communicate()
             node = node_b.decode("UTF-8")
             error_txt = "%d: %s" % (proc0.returncode, error_txt_b.decode("UTF-8").strip().lower())
 
-            proc1 = Popen(['git', '--git-dir=.hg/git', 'describe', '--tags', '--always','--dirty', node], stdout=PIPE, stderr=PIPE)
+            proc1 = Popen(['git', '--git-dir=.hg/git', 'describe', '--long', '--tags','--always', node], stdout=PIPE, stderr=PIPE, cwd=root)
             txt_b, error_txt_b = proc1.communicate()
             txt = txt_b.decode("UTF-8").lower()
             error_txt += ", %d: %s" % (proc1.returncode, error_txt_b.decode("UTF-8").strip().lower())
@@ -55,7 +55,7 @@ def main(args):
             print("Failed to retrieve version from hg")
             exit(EX_IOERR)
     else:
-        print("Unknown version control system.")
+        print("Unknown version control system in '%s'." % root)
         exit(EX_USAGE)
 
     version_pattern = re.compile(r"""
@@ -76,7 +76,7 @@ def main(args):
     r_match = version_pattern.match(txt)
 
     if r_match is None:
-        print("Regex version match failed on: %s, %s" % (txt, error_txt))
+        print("Regex version match failed on: '%s' (%s)" % (txt, error_txt))
         exit(EX_IOERR)
 
     version_string = "Uncrustify"

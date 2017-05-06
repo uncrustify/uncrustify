@@ -134,7 +134,8 @@ execute_process(
 
 message(STATUS )
 if (make_version_error)
-    message(WARNING "${make_version_error}: ${make_version_output}, scripts/make_version.py doesn't work properly")
+    message(WARNING "scripts/make_version.py exited with code ${make_version_error}: ${make_version_output}\n"
+                    "As a fallback, version '${FALLBACK_VERSION}' will be used.")
     set( CURRENT_VERSION ${FALLBACK_VERSION} )
 else()
     string(STRIP ${make_version_output} CURRENT_VERSION)
