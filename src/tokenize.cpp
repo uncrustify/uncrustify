@@ -1689,19 +1689,22 @@ static bool parse_next(tok_ctx &ctx, chunk_t &pc)
       return(true);
    }
 
-   /* handle C++0x strings u8"x" u"x" U"x" R"x" u8R"XXX(I'm a "raw UTF-8" string.)XXX" */
-   size_t ch = ctx.peek();
-   if ((cpd.lang_flags & LANG_CPP) &&
-       ((ch == 'u') || (ch == 'U') || (ch == 'R')))
+   /*
+    * handle C++(11) string/char literal prefixes u8|u|U|L|R including all
+    * possible combinations and optional R delimiters: R"delim(x)delim"
+    */
+   auto ch = ctx.peek();
+   if ((cpd.lang_flags & LANG_CPP)
+       && (ch == 'u' || ch == 'U' || ch == 'R' || ch == 'L'))
    {
-      size_t idx     = 0;
-      bool   is_real = false;
+      auto idx     = size_t {};
+      auto is_real = false;
 
-      if ((ch == 'u') && (ctx.peek(1) == '8'))
+      if (ch == 'u' && ctx.peek(1) == '8')
       {
          idx = 2;
       }
-      else if (unc_tolower(ch) == 'u')
+      else if (unc_tolower(ch) == 'u' || ch == 'L')
       {
          idx++;
       }
@@ -1711,23 +1714,19 @@ static bool parse_next(tok_ctx &ctx, chunk_t &pc)
          idx++;
          is_real = true;
       }
-      if (ctx.peek(idx) == '"')
+      const auto quote = ctx.peek(idx);
+
+      if (is_real)
       {
-         if (is_real)
+         if (quote == '"' && parse_cr_string(ctx, pc, idx))
          {
-            if (parse_cr_string(ctx, pc, idx))
-            {
-               return(true);
-            }
+            return(true);
          }
-         else
-         {
-            if (parse_string(ctx, pc, idx, true))
-            {
-               parse_suffix(ctx, pc, true);
-               return(true);
-            }
-         }
+      }
+      else if ((quote == '"' || quote == '\'')
+               && parse_string(ctx, pc, idx, true))
+      {
+         return(true);
       }
    }
 
