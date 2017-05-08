@@ -36,6 +36,24 @@ static void check_template(chunk_t *start);
  */
 static chunk_t *handle_double_angle_close(chunk_t *pc);
 
+/**
+ * Marks ObjC specific chunks in propery declaration, by setting
+ * parent types and chunk types.
+ */
+void cleanup_objc_property(chunk_t *start);
+
+/**
+ * Marks ObjC specific chunks in propery declaration (getter/setter attribute)
+ * Will mark 'test4Setter'and ':' in '@property (setter=test4Setter:, strong) int test4;' as CT_OC_SEL_NAME
+ */
+void mark_selectors_in_property_with_open_paren(chunk_t *open_paren);
+
+/**
+ * Marks ObjC specific chunks in propery declaration ( attributes)
+ * Changes  all the CT_WORD to CT_OC_PROPERTY_ATTR
+ */
+void mark_attributes_in_property_with_open_paren(chunk_t *open_paren);
+
 
 static chunk_t *handle_double_angle_close(chunk_t *pc)
 {
@@ -689,24 +707,7 @@ void tokenize_cleanup(void)
          }
          else
          {
-            set_chunk_parent(next, pc->type);
-
-            chunk_t *tmp = chunk_get_next_type(pc, CT_PAREN_CLOSE, pc->level);
-            if (tmp != nullptr)
-            {
-               set_chunk_parent(tmp, pc->type);
-               tmp = chunk_get_next_ncnl(tmp);
-               if (tmp != nullptr)
-               {
-                  chunk_flags_set(tmp, PCF_STMT_START | PCF_EXPR_START);
-
-                  tmp = chunk_get_next_type(tmp, CT_SEMICOLON, pc->level);
-                  if (tmp != nullptr)
-                  {
-                     set_chunk_parent(tmp, pc->type);
-                  }
-               }
-            }
+            cleanup_objc_property(pc);
          }
       }
 
@@ -1068,3 +1069,88 @@ static void check_template(chunk_t *start)
            (end != NULL) ? get_token_name(end->type) : "<null>");
    set_chunk_type(start, CT_COMPARE);
 } // check_template
+
+
+void cleanup_objc_property(chunk_t *start)
+{
+   assert(start && start->type == CT_OC_PROPERTY);
+
+   chunk_t *open_paren = chunk_get_next_type(start, CT_PAREN_OPEN, start->level);
+
+   if (!open_paren)
+   {
+      LOG_FMT(LTEMPL, "Property is not followed by openning paren\n");
+      return;
+   }
+
+   set_chunk_parent(open_paren, start->type);
+
+   chunk_t *tmp = chunk_get_next_type(start, CT_PAREN_CLOSE, start->level);
+   if (tmp != NULL)
+   {
+      set_chunk_parent(tmp, start->type);
+      tmp = chunk_get_next_ncnl(tmp);
+      if (tmp != NULL)
+      {
+         chunk_flags_set(tmp, PCF_STMT_START | PCF_EXPR_START);
+
+         tmp = chunk_get_next_type(tmp, CT_SEMICOLON, start->level);
+         if (tmp != NULL)
+         {
+            set_chunk_parent(tmp, start->type);
+         }
+      }
+   }
+   mark_selectors_in_property_with_open_paren(open_paren);
+   mark_attributes_in_property_with_open_paren(open_paren);
+}
+
+
+void mark_selectors_in_property_with_open_paren(chunk_t *open_paren)
+{
+   assert(open_paren && open_paren->type == CT_PAREN_OPEN);
+
+   chunk_t *tmp = open_paren;
+
+   while (tmp && tmp->type != CT_PAREN_CLOSE)
+   {
+      if (tmp->type == CT_WORD &&
+          (chunk_is_str(tmp, "setter", 6) ||
+           chunk_is_str(tmp, "getter", 6)))
+      {
+         tmp = tmp->next;
+         while (tmp && tmp->type != CT_COMMA && tmp->type != CT_PAREN_CLOSE)
+         {
+            if (tmp->type == CT_WORD ||
+                chunk_is_str(tmp, ":", 1))
+            {
+               tmp->type = CT_OC_SEL_NAME;
+            }
+            tmp = tmp->next;
+         }
+      }
+      else
+      {
+         tmp = tmp->next;
+      }
+   }
+}
+
+
+void mark_attributes_in_property_with_open_paren(chunk_t *open_paren)
+{
+   assert(open_paren && open_paren->type == CT_PAREN_OPEN);
+
+   chunk_t *tmp = open_paren;
+
+   while (tmp && tmp->type != CT_PAREN_CLOSE)
+   {
+      if ((tmp->type == CT_COMMA || tmp->type == CT_PAREN_OPEN) &&
+          tmp->next && tmp->next->type == CT_WORD)
+      {
+         tmp->next->type = CT_OC_PROPERTY_ATTR;
+      }
+      tmp = tmp->next;
+   }
+}
+

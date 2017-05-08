@@ -5827,12 +5827,13 @@ static void handle_oc_property_decl(chunk_t *os)
       chunk_t                 *next       = chunk_get_next(os);
       chunk_t                 *open_paren = nullptr;
 
-      std::vector<ChunkGroup> thread_chunks;      // atomic/nonatomic
+      std::vector<ChunkGroup> class_chunks;       // class
+      std::vector<ChunkGroup> thread_chunks;      // atomic, nonatomic
       std::vector<ChunkGroup> readwrite_chunks;   // readwrite, readonly
       std::vector<ChunkGroup> ref_chunks;         // retain, copy, assign, weak, strong, unsafe_unretained
       std::vector<ChunkGroup> getter_chunks;      // getter
       std::vector<ChunkGroup> setter_chunks;      // setter
-      std::vector<ChunkGroup> nullability_chunks; // nonnull/nullable
+      std::vector<ChunkGroup> nullability_chunks; // nonnull, nullable, null_unspecified, null_resettable
 
 
       if (next->type == CT_PAREN_OPEN)
@@ -5847,63 +5848,28 @@ static void handle_oc_property_decl(chunk_t *os)
          // now.
          while (next != nullptr && next->type != CT_PAREN_CLOSE)
          {
-            if (next->type == CT_WORD)
+            if (next->type == CT_OC_PROPERTY_ATTR)
             {
-               if (chunk_is_str(next, "atomic", 6))
+               if (chunk_is_str(next, "atomic", 6) ||
+                   chunk_is_str(next, "nonatomic", 9))
                {
                   ChunkGroup chunkGroup;
                   chunkGroup.push_back(next);
                   thread_chunks.push_back(chunkGroup);
                }
-               else if (chunk_is_str(next, "nonatomic", 9))
-               {
-                  ChunkGroup chunkGroup;
-                  chunkGroup.push_back(next);
-                  thread_chunks.push_back(chunkGroup);
-               }
-               else if (chunk_is_str(next, "readonly", 8))
+               else if (chunk_is_str(next, "readonly", 8) ||
+                        chunk_is_str(next, "readwrite", 9))
                {
                   ChunkGroup chunkGroup;
                   chunkGroup.push_back(next);
                   readwrite_chunks.push_back(chunkGroup);
                }
-               else if (chunk_is_str(next, "readwrite", 9))
-               {
-                  ChunkGroup chunkGroup;
-                  chunkGroup.push_back(next);
-                  readwrite_chunks.push_back(chunkGroup);
-               }
-               else if (chunk_is_str(next, "assign", 6))
-               {
-                  ChunkGroup chunkGroup;
-                  chunkGroup.push_back(next);
-                  ref_chunks.push_back(chunkGroup);
-               }
-               else if (chunk_is_str(next, "retain", 6))
-               {
-                  ChunkGroup chunkGroup;
-                  chunkGroup.push_back(next);
-                  ref_chunks.push_back(chunkGroup);
-               }
-               else if (chunk_is_str(next, "copy", 4))
-               {
-                  ChunkGroup chunkGroup;
-                  chunkGroup.push_back(next);
-                  ref_chunks.push_back(chunkGroup);
-               }
-               else if (chunk_is_str(next, "strong", 6))
-               {
-                  ChunkGroup chunkGroup;
-                  chunkGroup.push_back(next);
-                  ref_chunks.push_back(chunkGroup);
-               }
-               else if (chunk_is_str(next, "weak", 4))
-               {
-                  ChunkGroup chunkGroup;
-                  chunkGroup.push_back(next);
-                  ref_chunks.push_back(chunkGroup);
-               }
-               else if (chunk_is_str(next, "unsafe_unretained", 17))
+               else if (chunk_is_str(next, "assign", 6) ||
+                        chunk_is_str(next, "retain", 6) ||
+                        chunk_is_str(next, "copy", 4) ||
+                        chunk_is_str(next, "strong", 6) ||
+                        chunk_is_str(next, "weak", 4) ||
+                        chunk_is_str(next, "unsafe_unretained", 17))
                {
                   ChunkGroup chunkGroup;
                   chunkGroup.push_back(next);
@@ -5940,22 +5906,27 @@ static void handle_oc_property_decl(chunk_t *os)
                   }
                   setter_chunks.push_back(chunkGroup);
                }
-               else if (chunk_is_str(next, "nullable", 8))
+               else if (chunk_is_str(next, "nullable", 8) ||
+                        chunk_is_str(next, "nonnull", 7) ||
+                        chunk_is_str(next, "null_resettable", 15) ||
+                        chunk_is_str(next, "null_unspecified", 16)
+                        )
                {
                   ChunkGroup chunkGroup;
                   chunkGroup.push_back(next);
                   nullability_chunks.push_back(chunkGroup);
                }
-               else if (chunk_is_str(next, "nonnull", 7))
+               else if (chunk_is_str(next, "class", 5))
                {
                   ChunkGroup chunkGroup;
                   chunkGroup.push_back(next);
-                  nullability_chunks.push_back(chunkGroup);
+                  class_chunks.push_back(chunkGroup);
                }
             }
             next = chunk_get_next(next);
          }
 
+         int                                          class_w       = cpd.settings[UO_mod_sort_oc_property_class_weight].n;
          int                                          thread_w      = cpd.settings[UO_mod_sort_oc_property_thread_safe_weight].n;
          int                                          readwrite_w   = cpd.settings[UO_mod_sort_oc_property_readwrite_weight].n;
          int                                          ref_w         = cpd.settings[UO_mod_sort_oc_property_reference_weight].n;
@@ -5964,6 +5935,7 @@ static void handle_oc_property_decl(chunk_t *os)
          int                                          nullability_w = cpd.settings[UO_mod_sort_oc_property_nullability_weight].n;
 
          std::multimap<int, std::vector<ChunkGroup> > sorted_chunk_map;
+         sorted_chunk_map.insert(pair<int, std::vector<ChunkGroup> >(class_w, class_chunks));
          sorted_chunk_map.insert(pair<int, std::vector<ChunkGroup> >(thread_w, thread_chunks));
          sorted_chunk_map.insert(pair<int, std::vector<ChunkGroup> >(readwrite_w, readwrite_chunks));
          sorted_chunk_map.insert(pair<int, std::vector<ChunkGroup> >(ref_w, ref_chunks));
@@ -5994,7 +5966,7 @@ static void handle_oc_property_decl(chunk_t *os)
                /* add the parens */
                chunk_t endchunk;
                endchunk.type        = CT_COMMA;
-               endchunk.str         = ", ";
+               endchunk.str         = ",";
                endchunk.level       = curr_chunk->level;
                endchunk.brace_level = curr_chunk->brace_level;
                endchunk.orig_line   = curr_chunk->orig_line;

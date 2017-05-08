@@ -781,6 +781,7 @@ enum uncrustify_options
    UO_mod_remove_empty_return,                   //
    UO_mod_sort_oc_properties,                    // organizes objective c properties
    //  Sorting options for objc properties
+   UO_mod_sort_oc_property_class_weight,         // Determines weight of class
    UO_mod_sort_oc_property_thread_safe_weight,   // Determines weight of atomic/nonatomic
    UO_mod_sort_oc_property_readwrite_weight,     // Determines weight of readwrite
    UO_mod_sort_oc_property_reference_weight,     // Determines weight of reference type
@@ -788,6 +789,7 @@ enum uncrustify_options
    UO_mod_sort_oc_property_getter_weight,        // Determines weight of getter type (getter=)
    UO_mod_sort_oc_property_setter_weight,        // Determines weight of setter type (setter=)
    UO_mod_sort_oc_property_nullability_weight,   // Determines weight of nullability type (nullable/nonnull)
+
 
    // group: UG_preprocessor, "Preprocessor options"                                                10
    UO_pp_indent,             // indent preproc 1 space per level (add/ignore/remove)

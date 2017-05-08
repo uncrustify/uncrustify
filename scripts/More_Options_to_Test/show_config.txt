@@ -1885,8 +1885,11 @@ mod_remove_empty_return         { False, True }
 mod_sort_oc_properties          { False, True }
   If True, it will organize the properties (Obj-C)
 
+mod_sort_oc_property_class_weight Number
+  Determines weight of class property modifier (Obj-C)
+
 mod_sort_oc_property_thread_safe_weight Number
-  Determines weight of atomic/nonatomic (Obj-C)
+  Determines weight of atomic, nonatomic (Obj-C)
 
 mod_sort_oc_property_readwrite_weight Number
   Determines weight of readwrite (Obj-C)
@@ -1901,7 +1904,7 @@ mod_sort_oc_property_setter_weight Number
   Determines weight of setter type (setter=) (Obj-C)
 
 mod_sort_oc_property_nullability_weight Number
-  Determines weight of nullability type (nullable/nonnull) (Obj-C)
+  Determines weight of nullability type (nullable, nonnull, null_unspecified, null_resettable) (Obj-C)
 
 #
 # Preprocessor options
