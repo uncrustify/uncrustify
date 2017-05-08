@@ -1631,23 +1631,6 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
       }
    }
 
-   if (second->type == CT_BRACE_CLOSE)
-   {
-      if (second->parent_type == CT_ENUM)
-      {
-         log_rule("sp_inside_braces_enum");
-         return(cpd.settings[UO_sp_inside_braces_enum].a);
-      }
-
-      if ((second->parent_type == CT_UNION) || (second->parent_type == CT_STRUCT))
-      {
-         log_rule("sp_inside_braces_struct");
-         return(cpd.settings[UO_sp_inside_braces_struct].a);
-      }
-
-      log_rule("sp_inside_braces");
-      return(cpd.settings[UO_sp_inside_braces].a);
-   }
 
    if ((first->type == CT_BRACE_CLOSE) &&
        (first->flags & PCF_IN_TYPEDEF) &&
