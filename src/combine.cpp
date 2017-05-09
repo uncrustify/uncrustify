@@ -1390,6 +1390,34 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
    }
 
 
+   if ((cpd.lang_flags & LANG_CPP) != 0)
+   {
+      // check for type initializer list: auto a = ... int{0};
+      if ((pc->type == CT_WORD || pc->type == CT_TYPE))
+      {
+         auto brace_open = chunk_get_next_ncnl(pc);
+         if (brace_open != nullptr && brace_open->type == CT_BRACE_OPEN
+             && brace_open->parent_type != CT_STRUCT
+             && brace_open->parent_type != CT_ENUM
+             && brace_open->parent_type != CT_CLASS
+             && brace_open->parent_type != CT_NAMESPACE
+             && brace_open->parent_type != CT_FUNC_DEF                              // guard arrow return type
+             && brace_open->parent_type != CT_FUNC_PROTO                            // --||--
+             && brace_open->parent_type != CT_CPP_LAMBDA                            // --||--
+             )
+         {
+            auto brace_close = chunk_skip_to_match(next);
+            if (brace_close != nullptr && brace_close->type == CT_BRACE_CLOSE)
+            {
+               pc->type                 = CT_TYPE;
+               brace_close->parent_type = CT_TYPE;
+               brace_open->parent_type  = CT_TYPE;
+            }
+         }
+      }
+   }
+
+
    /* Check for stuff that can only occur at the start of an expression */
    if (pc->flags & PCF_EXPR_START)
    {

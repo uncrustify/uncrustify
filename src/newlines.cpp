@@ -2745,6 +2745,11 @@ void newlines_cleanup_braces(bool first)
             break;
          }
 
+         case CT_TYPE:
+         {
+            newline_iarf_pair(chunk_get_prev_nnl(pc), pc, cpd.settings[UO_nl_type_brace_init_lst].a);
+            break;
+         }
 
          case CT_OC_BLOCK_EXPR:
          {
@@ -2785,10 +2790,16 @@ void newlines_cleanup_braces(bool first)
          {
             next = chunk_get_next_ncnl(pc);
 
+            // Handle unnamed temporary direct-list-initialization
+            if (pc->parent_type == CT_TYPE
+                && cpd.settings[UO_nl_type_brace_init_lst_open].a != AV_IGNORE)
+            {
+               newline_iarf_pair(pc, chunk_get_next_nnl(pc),
+                                 cpd.settings[UO_nl_type_brace_init_lst_open].a);
+            }
             // Handle nl_after_brace_open
-            if (((pc->parent_type == CT_CPP_LAMBDA) ||
-                 (pc->level == pc->brace_level)) &&
-                cpd.settings[UO_nl_after_brace_open].b)
+            else if ((pc->parent_type == CT_CPP_LAMBDA || pc->level == pc->brace_level)
+                     && cpd.settings[UO_nl_after_brace_open].b)
             {
                if (!one_liner_nl_ok(pc))
                {
@@ -2825,6 +2836,7 @@ void newlines_cleanup_braces(bool first)
       }
       else if (pc->type == CT_BRACE_CLOSE)
       {
+         // newline between a close brace and x
          if (cpd.settings[UO_nl_brace_brace].a != AV_IGNORE)
          {
             next = chunk_get_next_nc(pc, scope_e::PREPROC);
@@ -2857,6 +2869,16 @@ void newlines_cleanup_braces(bool first)
             }
          }
 
+         // newline before a close brace
+         if (pc->parent_type == CT_TYPE
+             && cpd.settings[UO_nl_type_brace_init_lst_close].a != AV_IGNORE)
+         {
+            // Handle unnamed temporary direct-list-initialization
+            newline_iarf_pair(chunk_get_prev_nnl(pc), pc,
+                              cpd.settings[UO_nl_type_brace_init_lst_close].a);
+         }
+
+         // blanks before a close brace
          if (cpd.settings[UO_eat_blanks_before_close_brace].b)
          {
             /* Limit the newlines before the close brace to 1 */
@@ -2891,7 +2913,7 @@ void newlines_cleanup_braces(bool first)
             }
          }
 
-         /* Force a newline after a close brace */
+         // newline after a close brace
          if ((cpd.settings[UO_nl_brace_struct_var].a != AV_IGNORE) &&
              ((pc->parent_type == CT_STRUCT) ||
               (pc->parent_type == CT_ENUM) ||

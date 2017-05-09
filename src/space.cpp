@@ -1036,6 +1036,12 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
       return(cpd.settings[UO_sp_inside_braces_empty].a);
    }
 
+   if (second->type == CT_BRACE_OPEN && second->parent_type == CT_TYPE)
+   {
+      // 'int{9}' vs 'int {9}'
+      return(cpd.settings[UO_sp_type_brace_init_lst].a);
+   }
+
    if (second->type == CT_BRACE_CLOSE)
    {
       if (second->parent_type == CT_ENUM)
@@ -1049,6 +1055,20 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
          log_rule("sp_inside_braces_struct");
          return(cpd.settings[UO_sp_inside_braces_struct].a);
       }
+      if (second->parent_type == CT_TYPE)
+      {
+         if (cpd.settings[UO_sp_before_type_brace_init_lst_close].a != AV_IGNORE)
+         {
+            log_rule("sp_before_init_braces_close");
+            return(cpd.settings[UO_sp_before_type_brace_init_lst_close].a);
+         }
+         if (cpd.settings[UO_sp_inside_type_brace_init_lst].a != AV_IGNORE)
+         {
+            log_rule("sp_inside_init_braces");
+            return(cpd.settings[UO_sp_inside_type_brace_init_lst].a);
+         }
+      }
+
       log_rule("sp_inside_braces");
       return(cpd.settings[UO_sp_inside_braces].a);
    }
@@ -1622,6 +1642,18 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
       {
          log_rule("sp_inside_braces_struct");
          return(cpd.settings[UO_sp_inside_braces_struct].a);
+      }
+
+      if (first->parent_type == CT_TYPE)
+      {
+         if (cpd.settings[UO_sp_after_type_brace_init_lst_open].a != AV_IGNORE)
+         {
+            log_rule("sp_after_init_braces_open");
+            return(cpd.settings[UO_sp_after_type_brace_init_lst_open].a);
+         }
+
+         log_rule("sp_inside_braces_struct");
+         return(cpd.settings[UO_sp_inside_type_brace_init_lst].a);
       }
 
       if (!chunk_is_comment(second))
