@@ -127,8 +127,10 @@
 
 30300 ben.cfg                          cpp/enum_shr.cpp
 30301 al.cfg                           cpp/enum_class.h
-30310 sp_word_brace_force.cfg          cpp/uniform_initialization.cpp
-30311 sp_word_brace_remove.cfg         cpp/uniform_initialization.cpp
+
+# TODO find a better example for 30310, 30311
+#30310 sp_word_brace_force.cfg          cpp/uniform_initialization.cpp
+#30311 sp_word_brace_remove.cfg         cpp/uniform_initialization.cpp
 
 # function def newlines
 30701 func-def-1.cfg                   cpp/function-def.cpp
@@ -399,3 +401,27 @@
 34150 bug_1032.cfg                     cpp/bug_1032.cpp
 34151 bug_666.cfg                      cpp/bug_666.cpp
 34152 bug_1068.cfg                     cpp/bug_1068.cpp
+
+
+34153  nl_type_brace_init_lst-f.cfg               cpp/type_brace_init_lst.cpp
+34154  nl_type_brace_init_lst-r.cfg               cpp/type_brace_init_lst.cpp
+
+34155  nl_type_brace_init_lst_open-f.cfg          cpp/type_brace_init_lst.cpp
+34156  nl_type_brace_init_lst_open-r.cfg          cpp/type_brace_init_lst.cpp
+
+34157  nl_type_brace_init_lst_close-f.cfg         cpp/type_brace_init_lst.cpp
+34158  nl_type_brace_init_lst_close-r.cfg         cpp/type_brace_init_lst.cpp
+
+
+34159  sp_type_brace_init_lst-f.cfg               cpp/type_brace_init_lst.cpp
+34160  sp_type_brace_init_lst-r.cfg               cpp/type_brace_init_lst.cpp
+
+34161  sp_inside_type_brace_init_lst-f.cfg        cpp/type_brace_init_lst.cpp
+34162  sp_inside_type_brace_init_lst-r.cfg        cpp/type_brace_init_lst.cpp
+
+34163  sp_after_type_brace_init_lst_open-f.cfg    cpp/type_brace_init_lst.cpp
+34164  sp_after_type_brace_init_lst_open-r.cfg    cpp/type_brace_init_lst.cpp
+
+34165  sp_before_type_brace_init_lst_close-f.cfg  cpp/type_brace_init_lst.cpp
+34166  sp_before_type_brace_init_lst_close-r.cfg  cpp/type_brace_init_lst.cpp
+
