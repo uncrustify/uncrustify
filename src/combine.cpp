@@ -1190,10 +1190,20 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
           */
          tmp = chunk_get_next_type(next, CT_PAREN_CLOSE, next->level);
          tmp = chunk_get_next(tmp);
+         chunk_t *tmpA = chunk_get_next_type(tmp, CT_ASSIGN, pc->level);
          if ((tmp != nullptr) && (tmp->type == CT_PAREN_OPEN))
          {
-            /* we have "TYPE(...)(" */
-            set_chunk_type(pc, CT_FUNCTION);
+            if ((tmpA != nullptr) && (tmpA->type == CT_ASSIGN))
+            {
+               // we have "TYPE(...)(...) =" such as
+               // Issue #1041
+               // void (*g_func_table[32])(void) =
+            }
+            else
+            {
+               /* we have "TYPE(...)(" */
+               set_chunk_type(pc, CT_FUNCTION);
+            }
          }
          else
          {
