@@ -1189,38 +1189,41 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
           * FIXME: this check can be done better...
           */
          tmp = chunk_get_next_type(next, CT_PAREN_CLOSE, next->level);
-         tmp = chunk_get_next(tmp);
-         chunk_t *tmpA = chunk_get_next_type(tmp, CT_ASSIGN, pc->level);
-         if ((tmp != nullptr) && (tmp->type == CT_PAREN_OPEN))
+         if (tmp != nullptr)
          {
-            if ((tmpA != nullptr) && (tmpA->type == CT_ASSIGN))
+            chunk_t *tmpA = chunk_get_next_type(tmp, CT_ASSIGN, pc->level);
+            tmp = chunk_get_next(tmp);
+            if ((tmp != nullptr) && (tmp->type == CT_PAREN_OPEN))
             {
-               // we have "TYPE(...)(...) =" such as
-               // Issue #1041
-               // void (*g_func_table[32])(void) =
-            }
-            else
-            {
-               /* we have "TYPE(...)(" */
-               set_chunk_type(pc, CT_FUNCTION);
-            }
-         }
-         else
-         {
-            if ((pc->parent_type == CT_NONE) &&
-                ((pc->flags & PCF_IN_TYPEDEF) == 0))
-            {
-               tmp = chunk_get_next_ncnl(next);
-               if ((tmp != nullptr) && (tmp->type == CT_PAREN_CLOSE))
+               if ((tmpA != nullptr) && (tmpA->type == CT_ASSIGN))
                {
-                  /* we have TYPE() */
-                  set_chunk_type(pc, CT_FUNCTION);
+                  // we have "TYPE(...)(...) =" such as
+                  // Issue #1041
+                  // void (*g_func_table[32])(void) =
                }
                else
                {
-                  /* we have TYPE(...) */
-                  set_chunk_type(pc, CT_CPP_CAST);
-                  set_paren_parent(next, CT_CPP_CAST);
+                  /* we have "TYPE(...)(" */
+                  set_chunk_type(pc, CT_FUNCTION);
+               }
+            }
+            else
+            {
+               if ((pc->parent_type == CT_NONE) &&
+                   ((pc->flags & PCF_IN_TYPEDEF) == 0))
+               {
+                  tmp = chunk_get_next_ncnl(next);
+                  if ((tmp != nullptr) && (tmp->type == CT_PAREN_CLOSE))
+                  {
+                     /* we have TYPE() */
+                     set_chunk_type(pc, CT_FUNCTION);
+                  }
+                  else
+                  {
+                     /* we have TYPE(...) */
+                     set_chunk_type(pc, CT_CPP_CAST);
+                     set_paren_parent(next, CT_CPP_CAST);
+                  }
                }
             }
          }
