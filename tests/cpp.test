@@ -427,3 +427,4 @@
 34165  sp_before_type_brace_init_lst_close-f.cfg  cpp/type_brace_init_lst.cpp
 34166  sp_before_type_brace_init_lst_close-r.cfg  cpp/type_brace_init_lst.cpp
 
+34170  empty.cfg                       cpp/i1082.cpp
