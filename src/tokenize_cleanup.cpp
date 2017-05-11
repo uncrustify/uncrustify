@@ -817,7 +817,11 @@ void tokenize_cleanup(void)
       {
          if (prev->type == CT_TYPE)
          {
-            set_chunk_type(pc, CT_BYREF);
+            // Issue # 1002
+            if ((pc->flags & PCF_IN_TEMPLATE) == 0)
+            {
+               set_chunk_type(pc, CT_BYREF);
+            }
          }
       }
 

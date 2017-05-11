@@ -395,6 +395,8 @@
 34144 sp_before_ptr_star-r.cfg         cpp/I1112-3.cpp
 
 34145 i683.cfg                         cpp/i683.cpp
+34146 bug_1002.cfg                     cpp/bug_1002.cpp
+34147 bug_1002-r.cfg                   cpp/bug_1002.cpp
 
 34150 bug_1032.cfg                     cpp/bug_1032.cpp
 34151 bug_666.cfg                      cpp/bug_666.cpp
