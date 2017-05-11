@@ -3050,8 +3050,7 @@ void combine_labels(void)
                         ((tmp->type != CT_NUMBER) &&
                          (tmp->type != CT_SIZEOF) &&
                          !(tmp->flags & (PCF_IN_STRUCT | PCF_IN_CLASS))) ||
-                        (tmp->type == CT_NEWLINE)
-                        )
+                        (tmp->type == CT_NEWLINE))
                {
                   /* the CT_SIZEOF isn't great - test 31720 happens to use a sizeof expr,
                    * but this really should be able to handle any constant expr */
@@ -5922,8 +5921,7 @@ static void handle_oc_property_decl(chunk_t *os)
                else if (chunk_is_str(next, "nullable", 8) ||
                         chunk_is_str(next, "nonnull", 7) ||
                         chunk_is_str(next, "null_resettable", 15) ||
-                        chunk_is_str(next, "null_unspecified", 16)
-                        )
+                        chunk_is_str(next, "null_unspecified", 16))
                {
                   ChunkGroup chunkGroup;
                   chunkGroup.push_back(next);
