@@ -2612,6 +2612,16 @@ void newlines_cleanup_braces(bool first)
       if (pc->type == CT_IF)
       {
          newlines_if_for_while_switch(pc, cpd.settings[UO_nl_if_brace].a);
+         tmp = chunk_get_next_type(pc, CT_SPAREN_CLOSE, pc->level);
+         if (tmp != nullptr)
+         {
+            prev = chunk_get_prev(tmp);
+            if (prev != nullptr)
+            {
+               // Issue #1139
+               newline_iarf_pair(prev, tmp, cpd.settings[UO_nl_before_closing_paren].a);
+            }
+         }
       }
       else if (pc->type == CT_ELSEIF)
       {

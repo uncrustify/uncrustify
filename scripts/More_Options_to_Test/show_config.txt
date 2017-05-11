@@ -1011,6 +1011,9 @@ nl_else_brace                   { Ignore, Add, Remove, Force }
 nl_else_if                      { Ignore, Add, Remove, Force }
   Add or remove newline between 'else' and 'if'
 
+nl_before_closing_paren         { Ignore, Add, Remove, Force }
+  Add or remove newline before closing parenthesis
+
 nl_brace_finally                { Ignore, Add, Remove, Force }
   Add or remove newline between '}' and 'finally'
 
@@ -1491,7 +1494,7 @@ pos_class_colon                 { Ignore, Lead, Trail }
 
 pos_constr_colon                { Ignore, Lead, Trail }
   The position of colons between constructor and member initialization,
-  (tied to UO_nl_constr_colon).
+  (tied to nl_constr_colon).
   Related to nl_constr_colon, nl_constr_init_args and pos_constr_comma.
 
 #
