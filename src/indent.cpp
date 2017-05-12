@@ -15,6 +15,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <algorithm>
 #include "unc_ctype.h"
 #include "uncrustify.h"
 #include "align.h"
@@ -1594,12 +1595,16 @@ void indent_text(void)
                frm.pse[frm.pse_tos].indent = pc->column;
                log_indent();
             }
-            else if (cpd.settings[UO_indent_ctor_init].u != 0)
+            else if (cpd.settings[UO_indent_ctor_init].n != 0)
             {
-               frm.pse[frm.pse_tos].indent += cpd.settings[UO_indent_ctor_init].u;
+               // If the std::max() calls were specialized with size_t (the type of the underlying variable),
+               // they would never actually do their job, because size_t is unsigned and therefore even
+               // a "negative" result would be always greater than zero.
+               // Using ptrdiff_t (a standard signed type of the same size as size_t) in order to avoid that.
+               frm.pse[frm.pse_tos].indent = std::max<ptrdiff_t>(frm.pse[frm.pse_tos].indent + cpd.settings[UO_indent_ctor_init].n, 0);
                log_indent();
-               frm.pse[frm.pse_tos].indent_tmp += cpd.settings[UO_indent_ctor_init].u;
-               frm.pse[frm.pse_tos].indent_tab += cpd.settings[UO_indent_ctor_init].u;
+               frm.pse[frm.pse_tos].indent_tmp = std::max<ptrdiff_t>(frm.pse[frm.pse_tos].indent_tmp + cpd.settings[UO_indent_ctor_init].n, 0);
+               frm.pse[frm.pse_tos].indent_tab = std::max<ptrdiff_t>(frm.pse[frm.pse_tos].indent_tab + cpd.settings[UO_indent_ctor_init].n, 0);
                log_indent_tmp();
                indent_column_set(frm.pse[frm.pse_tos].indent_tmp);
             }
