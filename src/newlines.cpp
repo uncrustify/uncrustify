@@ -2698,15 +2698,71 @@ void newlines_cleanup_braces(bool first)
       }
       else if (pc->type == CT_BRACE_OPEN)
       {
-         if ((pc->parent_type == CT_DOUBLE_BRACE) &&
-             (cpd.settings[UO_nl_paren_dbrace_open].a != AV_IGNORE))
+         switch (pc->parent_type)
          {
-            prev = chunk_get_prev_ncnl(pc, scope_e::PREPROC);
-            if (chunk_is_paren_close(prev))
+         case CT_DOUBLE_BRACE:
+         {
+            if (cpd.settings[UO_nl_paren_dbrace_open].a != AV_IGNORE)
             {
-               newline_iarf_pair(prev, pc, cpd.settings[UO_nl_paren_dbrace_open].a);
+               prev = chunk_get_prev_ncnl(pc, scope_e::PREPROC);
+               if (chunk_is_paren_close(prev))
+               {
+                  newline_iarf_pair(prev, pc, cpd.settings[UO_nl_paren_dbrace_open].a);
+               }
             }
+            break;
          }
+
+         case CT_ENUM:
+         {
+            if (cpd.settings[UO_nl_enum_own_lines].a != AV_IGNORE)
+            {
+               newlines_enum_entries(pc, cpd.settings[UO_nl_enum_own_lines].a);
+            }
+            if (cpd.settings[UO_nl_ds_struct_enum_cmt].b)
+            {
+               newlines_double_space_struct_enum_union(pc);
+            }
+            break;
+         }
+
+         case CT_STRUCT:
+         case CT_UNION:
+         {
+            if (cpd.settings[UO_nl_ds_struct_enum_cmt].b)
+            {
+               newlines_double_space_struct_enum_union(pc);
+            }
+            break;
+         }
+
+         case CT_CLASS:
+         {
+            if (pc->level == pc->brace_level)
+            {
+               newlines_do_else(chunk_get_prev_nnl(pc), cpd.settings[UO_nl_class_brace].a);
+            }
+            break;
+         }
+
+         case CT_TYPE:
+         {
+            newline_iarf_pair(chunk_get_prev_nnl(pc), pc, cpd.settings[UO_nl_type_brace_init_lst].a);
+            break;
+         }
+
+         case CT_OC_BLOCK_EXPR:
+         {
+            // issue # 477
+            newline_iarf_pair(chunk_get_prev(pc), pc, cpd.settings[UO_nl_oc_block_brace].a);
+            break;
+         }
+
+         default:
+         {
+            break;
+         }
+         } // switch
 
          if (cpd.settings[UO_nl_brace_brace].a != AV_IGNORE)
          {
@@ -2715,31 +2771,6 @@ void newlines_cleanup_braces(bool first)
             {
                newline_iarf_pair(pc, next, cpd.settings[UO_nl_brace_brace].a);
             }
-         }
-
-         if ((pc->parent_type == CT_ENUM) &&
-             (cpd.settings[UO_nl_enum_own_lines].a != AV_IGNORE))
-         {
-            newlines_enum_entries(pc, cpd.settings[UO_nl_enum_own_lines].a);
-         }
-
-         if (cpd.settings[UO_nl_ds_struct_enum_cmt].b &&
-             ((pc->parent_type == CT_ENUM) ||
-              (pc->parent_type == CT_STRUCT) ||
-              (pc->parent_type == CT_UNION)))
-         {
-            newlines_double_space_struct_enum_union(pc);
-         }
-
-         if ((pc->parent_type == CT_CLASS) && (pc->level == pc->brace_level))
-         {
-            newlines_do_else(chunk_get_prev_nnl(pc), cpd.settings[UO_nl_class_brace].a);
-         }
-
-         if (pc->parent_type == CT_OC_BLOCK_EXPR)
-         {
-            // issue # 477
-            newline_iarf_pair(chunk_get_prev(pc), pc, cpd.settings[UO_nl_oc_block_brace].a);
          }
 
          next = chunk_get_next_nnl(pc);
@@ -2759,10 +2790,16 @@ void newlines_cleanup_braces(bool first)
          {
             next = chunk_get_next_ncnl(pc);
 
+            // Handle unnamed temporary direct-list-initialization
+            if (pc->parent_type == CT_TYPE
+                && cpd.settings[UO_nl_type_brace_init_lst_open].a != AV_IGNORE)
+            {
+               newline_iarf_pair(pc, chunk_get_next_nnl(pc),
+                                 cpd.settings[UO_nl_type_brace_init_lst_open].a);
+            }
             // Handle nl_after_brace_open
-            if (((pc->parent_type == CT_CPP_LAMBDA) ||
-                 (pc->level == pc->brace_level)) &&
-                cpd.settings[UO_nl_after_brace_open].b)
+            else if ((pc->parent_type == CT_CPP_LAMBDA || pc->level == pc->brace_level)
+                     && cpd.settings[UO_nl_after_brace_open].b)
             {
                if (!one_liner_nl_ok(pc))
                {
@@ -2799,6 +2836,7 @@ void newlines_cleanup_braces(bool first)
       }
       else if (pc->type == CT_BRACE_CLOSE)
       {
+         // newline between a close brace and x
          if (cpd.settings[UO_nl_brace_brace].a != AV_IGNORE)
          {
             next = chunk_get_next_nc(pc, scope_e::PREPROC);
@@ -2831,6 +2869,16 @@ void newlines_cleanup_braces(bool first)
             }
          }
 
+         // newline before a close brace
+         if (pc->parent_type == CT_TYPE
+             && cpd.settings[UO_nl_type_brace_init_lst_close].a != AV_IGNORE)
+         {
+            // Handle unnamed temporary direct-list-initialization
+            newline_iarf_pair(chunk_get_prev_nnl(pc), pc,
+                              cpd.settings[UO_nl_type_brace_init_lst_close].a);
+         }
+
+         // blanks before a close brace
          if (cpd.settings[UO_eat_blanks_before_close_brace].b)
          {
             /* Limit the newlines before the close brace to 1 */
@@ -2865,7 +2913,7 @@ void newlines_cleanup_braces(bool first)
             }
          }
 
-         /* Force a newline after a close brace */
+         // newline after a close brace
          if ((cpd.settings[UO_nl_brace_struct_var].a != AV_IGNORE) &&
              ((pc->parent_type == CT_STRUCT) ||
               (pc->parent_type == CT_ENUM) ||
