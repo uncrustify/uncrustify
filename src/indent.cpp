@@ -1560,55 +1560,56 @@ void indent_text(void)
          frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
          frm.pse[frm.pse_tos].indent_tab = frm.pse[frm.pse_tos].indent;
          log_indent_tmp();
-
          indent_column_set(frm.pse[frm.pse_tos].indent_tmp);
 
-         if ((cpd.settings[UO_indent_class_colon].b && (pc->type == CT_CLASS_COLON)) ||
-             (cpd.settings[UO_indent_constr_colon].b && (pc->type == CT_CONSTR_COLON)))
+         if (cpd.settings[UO_indent_class_colon].b && (pc->type == CT_CLASS_COLON))
          {
-            prev = chunk_get_prev(pc);
-            if (chunk_is_newline(prev) && (pc->type == CT_CONSTR_COLON))
+            if (cpd.settings[UO_indent_class_on_colon].b)
             {
-               frm.pse[frm.pse_tos].indent += cpd.settings[UO_indent_ctor_init_leading].u;
+               frm.pse[frm.pse_tos].indent = pc->column;
                log_indent();
-
-               if (cpd.settings[UO_indent_ctor_init].u != 0)
-               {
-                  frm.pse[frm.pse_tos].indent += cpd.settings[UO_indent_ctor_init].u;
-                  log_indent();
-                  frm.pse[frm.pse_tos].indent_tmp += cpd.settings[UO_indent_ctor_init].u;
-                  frm.pse[frm.pse_tos].indent_tab += cpd.settings[UO_indent_ctor_init].u;
-                  log_indent_tmp();
-                  indent_column_set(frm.pse[frm.pse_tos].indent_tmp);
-               }
             }
             else
             {
-               if (cpd.settings[UO_indent_class_on_colon].b && (pc->type == CT_CLASS_COLON))
+               next = chunk_get_next(pc);
+               if ((next != nullptr) && !chunk_is_newline(next))
                {
-                  frm.pse[frm.pse_tos].indent = pc->column;
+                  frm.pse[frm.pse_tos].indent = next->column;
                   log_indent();
                }
-               else
+            }
+         }
+         else if (cpd.settings[UO_indent_constr_colon].b && (pc->type == CT_CONSTR_COLON))
+         {
+            prev = chunk_get_prev(pc);
+            if (chunk_is_newline(prev))
+            {
+               frm.pse[frm.pse_tos].indent += cpd.settings[UO_indent_ctor_init_leading].u;
+               log_indent();
+            }
+
+            // TODO: Create a dedicated indent_constr_on_colon?
+            if (cpd.settings[UO_indent_class_on_colon].b)
+            {
+               frm.pse[frm.pse_tos].indent = pc->column;
+               log_indent();
+            }
+            else if (cpd.settings[UO_indent_ctor_init].u != 0)
+            {
+               frm.pse[frm.pse_tos].indent += cpd.settings[UO_indent_ctor_init].u;
+               log_indent();
+               frm.pse[frm.pse_tos].indent_tmp += cpd.settings[UO_indent_ctor_init].u;
+               frm.pse[frm.pse_tos].indent_tab += cpd.settings[UO_indent_ctor_init].u;
+               log_indent_tmp();
+               indent_column_set(frm.pse[frm.pse_tos].indent_tmp);
+            }
+            else
+            {
+               next = chunk_get_next(pc);
+               if ((next != nullptr) && !chunk_is_newline(next))
                {
-                  next = chunk_get_next(pc);
-                  if (next != nullptr)
-                  {
-                     if (cpd.settings[UO_indent_ctor_init].u != 0 && (pc->type == CT_CONSTR_COLON))
-                     {
-                        frm.pse[frm.pse_tos].indent += cpd.settings[UO_indent_ctor_init].u;
-                        log_indent();
-                        frm.pse[frm.pse_tos].indent_tmp += cpd.settings[UO_indent_ctor_init].u;
-                        frm.pse[frm.pse_tos].indent_tab += cpd.settings[UO_indent_ctor_init].u;
-                        log_indent_tmp();
-                        indent_column_set(frm.pse[frm.pse_tos].indent_tmp);
-                     }
-                     else if (!chunk_is_newline(next))
-                     {
-                        frm.pse[frm.pse_tos].indent = next->column;
-                        log_indent();
-                     }
-                  }
+                  frm.pse[frm.pse_tos].indent = next->column;
+                  log_indent();
                }
             }
          }
