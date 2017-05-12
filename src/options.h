@@ -439,7 +439,7 @@ enum uncrustify_options
    UO_nl_elseif_brace,                // newline between close paren and open brace in 'else if () {'
    UO_nl_else_brace,                  // newline between 'else' and '{'
    UO_nl_else_if,                     // newline between 'else' and 'if'
-   UO_nl_before_closing_paren,        // newline before closing parenthesis
+   UO_nl_before_if_closing_paren,     // newline before 'if'/'else if' closing parenthesis
    UO_nl_brace_finally,               // newline between '}' and 'finally'
    UO_nl_finally_brace,               // newline between 'finally' and '{'
    UO_nl_try_brace,                   // newline between 'try' and '{'

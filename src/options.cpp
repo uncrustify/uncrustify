@@ -964,8 +964,8 @@ void register_options(void)
                   "Add or remove newline between 'else' and '{'");
    unc_add_option("nl_else_if", UO_nl_else_if, AT_IARF,
                   "Add or remove newline between 'else' and 'if'");
-   unc_add_option("nl_before_closing_paren", UO_nl_before_closing_paren, AT_IARF,
-                  "Add or remove newline before closing parenthesis");
+   unc_add_option("nl_before_if_closing_paren", UO_nl_before_if_closing_paren, AT_IARF,
+                  "Add or remove newline before 'if'/'else if' closing parenthesis");
    unc_add_option("nl_brace_finally", UO_nl_brace_finally, AT_IARF,
                   "Add or remove newline between '}' and 'finally'");
    unc_add_option("nl_finally_brace", UO_nl_finally_brace, AT_IARF,

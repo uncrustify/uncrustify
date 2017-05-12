@@ -1011,8 +1011,8 @@ nl_else_brace                   { Ignore, Add, Remove, Force }
 nl_else_if                      { Ignore, Add, Remove, Force }
   Add or remove newline between 'else' and 'if'
 
-nl_before_closing_paren         { Ignore, Add, Remove, Force }
-  Add or remove newline before closing parenthesis
+nl_before_if_closing_paren      { Ignore, Add, Remove, Force }
+  Add or remove newline before 'if'/'else if' closing parenthesis
 
 nl_brace_finally                { Ignore, Add, Remove, Force }
   Add or remove newline between '}' and 'finally'

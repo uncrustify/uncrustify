@@ -2617,7 +2617,7 @@ void newlines_cleanup_braces(bool first)
             if (prev != nullptr)
             {
                // Issue #1139
-               newline_iarf_pair(prev, tmp, cpd.settings[UO_nl_before_closing_paren].a);
+               newline_iarf_pair(prev, tmp, cpd.settings[UO_nl_before_if_closing_paren].a);
             }
          }
       }
@@ -2633,7 +2633,7 @@ void newlines_cleanup_braces(bool first)
             if (prev != nullptr)
             {
                // Issue #1139
-               newline_iarf_pair(prev, tmp, cpd.settings[UO_nl_before_closing_paren].a);
+               newline_iarf_pair(prev, tmp, cpd.settings[UO_nl_before_if_closing_paren].a);
             }
          }
       }
