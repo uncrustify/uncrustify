@@ -1567,7 +1567,7 @@ void indent_text(void)
              (cpd.settings[UO_indent_constr_colon].b && (pc->type == CT_CONSTR_COLON)))
          {
             prev = chunk_get_prev(pc);
-            if (chunk_is_newline(prev))
+            if (chunk_is_newline(prev) && (pc->type == CT_CONSTR_COLON))
             {
                frm.pse[frm.pse_tos].indent += cpd.settings[UO_indent_ctor_init_leading].u;
                log_indent();
@@ -1594,7 +1594,7 @@ void indent_text(void)
                   next = chunk_get_next(pc);
                   if (next != nullptr)
                   {
-                     if (cpd.settings[UO_indent_ctor_init].u != 0)
+                     if (cpd.settings[UO_indent_ctor_init].u != 0 && (pc->type == CT_CONSTR_COLON))
                      {
                         frm.pse[frm.pse_tos].indent += cpd.settings[UO_indent_ctor_init].u;
                         log_indent();
