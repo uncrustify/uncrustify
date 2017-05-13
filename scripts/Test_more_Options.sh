@@ -10,7 +10,7 @@
 # It might be usefull to complete the list below.
 #
 #set -x
-exit 0
+#exit 0
 SCRIPTS="./scripts"
 RESULTS="./results"
 #

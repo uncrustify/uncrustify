@@ -311,6 +311,15 @@ sp_inside_braces_enum           { Ignore, Add, Remove, Force }
 sp_inside_braces_struct         { Ignore, Add, Remove, Force }
   Add or remove space inside struct/union '{' and '}'
 
+sp_after_type_brace_init_lst_open { Ignore, Add, Remove, Force }
+  Add or remove space after open brace in an unnamed temporary direct-list-initialization
+
+sp_before_type_brace_init_lst_close { Ignore, Add, Remove, Force }
+  Add or remove space before close brace in an unnamed temporary direct-list-initialization
+
+sp_inside_type_brace_init_lst   { Ignore, Add, Remove, Force }
+  Add or remove space inside an unnamed temporary direct-list-initialization
+
 sp_inside_braces                { Ignore, Add, Remove, Force }
   Add or remove space inside '{' and '}'
 
@@ -320,6 +329,9 @@ sp_inside_braces_empty          { Ignore, Add, Remove, Force }
 sp_type_func                    { Ignore, Add, Remove, Force }
   Add or remove space between return type and function name
   A minimum of 1 is forced except for pointer return types.
+
+sp_type_brace_init_lst          { Ignore, Add, Remove, Force }
+  Add or remove space between type and open brace of an unnamed temporary direct-list-initialization
 
 sp_func_proto_paren             { Ignore, Add, Remove, Force }
   Add or remove space between function name and '(' on function declaration
@@ -1216,6 +1228,15 @@ nl_after_semicolon              { False, True }
 
 nl_paren_dbrace_open            { Ignore, Add, Remove, Force }
   Java: Control the newline between the ')' and '{{' of the double brace initializer.
+
+nl_type_brace_init_lst          { Ignore, Add, Remove, Force }
+  Whether to put a newline after the type in an unnamed temporary direct-list-initialization
+
+nl_type_brace_init_lst_open     { Ignore, Add, Remove, Force }
+  Whether to put a newline after open brace in an unnamed temporary direct-list-initialization
+
+nl_type_brace_init_lst_close    { Ignore, Add, Remove, Force }
+  Whether to put a newline before close brace in an unnamed temporary direct-list-initialization
 
 nl_after_brace_open             { False, True }
   Whether to put a newline after brace open.
