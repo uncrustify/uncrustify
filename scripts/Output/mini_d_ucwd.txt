@@ -313,6 +313,15 @@ sp_inside_braces_enum           = ignore   # ignore/add/remove/force
 # Add or remove space inside struct/union '{' and '}'
 sp_inside_braces_struct         = ignore   # ignore/add/remove/force
 
+# Add or remove space after open brace in an unnamed temporary direct-list-initialization
+sp_after_type_brace_init_lst_open = ignore   # ignore/add/remove/force
+
+# Add or remove space before close brace in an unnamed temporary direct-list-initialization
+sp_before_type_brace_init_lst_close = ignore   # ignore/add/remove/force
+
+# Add or remove space inside an unnamed temporary direct-list-initialization
+sp_inside_type_brace_init_lst   = ignore   # ignore/add/remove/force
+
 # Add or remove space inside '{' and '}'
 sp_inside_braces                = ignore   # ignore/add/remove/force
 
@@ -322,6 +331,9 @@ sp_inside_braces_empty          = ignore   # ignore/add/remove/force
 # Add or remove space between return type and function name
 # A minimum of 1 is forced except for pointer return types.
 sp_type_func                    = ignore   # ignore/add/remove/force
+
+# Add or remove space between type and open brace of an unnamed temporary direct-list-initialization
+sp_type_brace_init_lst          = ignore   # ignore/add/remove/force
 
 # Add or remove space between function name and '(' on function declaration
 sp_func_proto_paren             = ignore   # ignore/add/remove/force
@@ -1218,6 +1230,15 @@ nl_after_semicolon              = false    # false/true
 
 # Java: Control the newline between the ')' and '{{' of the double brace initializer.
 nl_paren_dbrace_open            = ignore   # ignore/add/remove/force
+
+# Whether to put a newline after the type in an unnamed temporary direct-list-initialization
+nl_type_brace_init_lst          = ignore   # ignore/add/remove/force
+
+# Whether to put a newline after open brace in an unnamed temporary direct-list-initialization
+nl_type_brace_init_lst_open     = ignore   # ignore/add/remove/force
+
+# Whether to put a newline before close brace in an unnamed temporary direct-list-initialization
+nl_type_brace_init_lst_close    = ignore   # ignore/add/remove/force
 
 # Whether to put a newline after brace open.
 # This also adds a newline before the matching brace close.
