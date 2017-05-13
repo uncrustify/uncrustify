@@ -399,6 +399,8 @@
 34145 i683.cfg                         cpp/i683.cpp
 34146 bug_1002.cfg                     cpp/bug_1002.cpp
 34147 bug_1002-r.cfg                   cpp/bug_1002.cpp
+34148 bug_1139-f.cfg                   cpp/bug_1139.cpp
+34149 bug_1139-r.cfg                   cpp/bug_1139.cpp
 
 34150 bug_1032.cfg                     cpp/bug_1032.cpp
 34151 bug_666.cfg                      cpp/bug_666.cpp

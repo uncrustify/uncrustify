@@ -10,6 +10,7 @@
 # It might be usefull to complete the list below.
 #
 #set -x
+exit 0
 SCRIPTS="./scripts"
 RESULTS="./results"
 #
@@ -44,7 +45,7 @@ then
   echo
   echo "Problem with "${file}
   echo "use: diff ${RESULTS}/${file} ${SCRIPTS}/More_Options_to_Test/${file} to find why"
-  diff "${RESULTS}/${file}" "${SCRIPTS}/More_Options_to_Test/${file}"
+  diff --unified=5 "${RESULTS}/${file}" "${SCRIPTS}/More_Options_to_Test/${file}"
 else
   rm "results/${file}"
 fi
