@@ -972,6 +972,8 @@ void register_options(void)
                   "Add or remove newline between 'else' and '{'");
    unc_add_option("nl_else_if", UO_nl_else_if, AT_IARF,
                   "Add or remove newline between 'else' and 'if'");
+   unc_add_option("nl_before_if_closing_paren", UO_nl_before_if_closing_paren, AT_IARF,
+                  "Add or remove newline before 'if'/'else if' closing parenthesis");
    unc_add_option("nl_brace_finally", UO_nl_brace_finally, AT_IARF,
                   "Add or remove newline between '}' and 'finally'");
    unc_add_option("nl_finally_brace", UO_nl_finally_brace, AT_IARF,
@@ -1316,7 +1318,7 @@ void register_options(void)
                   "  (tied to nl_class_colon).");
    unc_add_option("pos_constr_colon", UO_pos_constr_colon, AT_POS,
                   "The position of colons between constructor and member initialization,\n"
-                  "(tied to UO_nl_constr_colon).\n"
+                  "(tied to nl_constr_colon).\n"
                   "Related to nl_constr_colon, nl_constr_init_args and pos_constr_comma.");
 
    unc_begin_group(UG_linesplit, "Line Splitting options");

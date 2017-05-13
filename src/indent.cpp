@@ -1617,8 +1617,7 @@ void indent_text(void)
                (pc->type == CT_SPAREN_OPEN) ||
                (pc->type == CT_FPAREN_OPEN) ||
                (pc->type == CT_SQUARE_OPEN) ||
-               (pc->type == CT_ANGLE_OPEN)
-               )
+               (pc->type == CT_ANGLE_OPEN))
       {
          /* Open parens and squares - never update indent_column, unless right
           * after a newline.

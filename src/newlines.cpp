@@ -2239,9 +2239,7 @@ static void newline_func_def(chunk_t *start)
                 (prev->type != CT_VBRACE_CLOSE) &&
                 (prev->type != CT_BRACE_OPEN) &&
                 (prev->type != CT_SEMICOLON) &&
-                (prev->type != CT_PRIVATE_COLON)  //&&                // guy 2015-06-06
-                //(prev->parent_type != CT_TEMPLATE)                  TODO: create some examples to test the option
-                )
+                (prev->type != CT_PRIVATE_COLON))
             {
                newline_iarf(prev, a);
             }
@@ -2612,12 +2610,32 @@ void newlines_cleanup_braces(bool first)
       if (pc->type == CT_IF)
       {
          newlines_if_for_while_switch(pc, cpd.settings[UO_nl_if_brace].a);
+         tmp = chunk_get_next_type(pc, CT_SPAREN_CLOSE, pc->level);
+         if (tmp != nullptr)
+         {
+            prev = chunk_get_prev(tmp);
+            if (prev != nullptr)
+            {
+               // Issue #1139
+               newline_iarf_pair(prev, tmp, cpd.settings[UO_nl_before_if_closing_paren].a);
+            }
+         }
       }
       else if (pc->type == CT_ELSEIF)
       {
          argval_t arg = cpd.settings[UO_nl_elseif_brace].a;
          newlines_if_for_while_switch(
             pc, (arg != AV_IGNORE) ? arg : cpd.settings[UO_nl_if_brace].a);
+         tmp = chunk_get_next_type(pc, CT_SPAREN_CLOSE, pc->level);
+         if (tmp != nullptr)
+         {
+            prev = chunk_get_prev(tmp);
+            if (prev != nullptr)
+            {
+               // Issue #1139
+               newline_iarf_pair(prev, tmp, cpd.settings[UO_nl_before_if_closing_paren].a);
+            }
+         }
       }
       else if (pc->type == CT_FOR)
       {
