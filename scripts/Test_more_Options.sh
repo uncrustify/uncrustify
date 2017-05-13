@@ -44,7 +44,7 @@ then
   echo
   echo "Problem with "${file}
   echo "use: diff ${RESULTS}/${file} ${SCRIPTS}/More_Options_to_Test/${file} to find why"
-  diff "${RESULTS}/${file}" "${SCRIPTS}/More_Options_to_Test/${file}"
+  diff --unified=5 "${RESULTS}/${file}" "${SCRIPTS}/More_Options_to_Test/${file}"
 else
   rm "results/${file}"
 fi
