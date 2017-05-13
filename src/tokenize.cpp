@@ -737,7 +737,7 @@ static bool is_bin(int ch)
 
 static bool is_bin_(int ch)
 {
-   return(is_bin(ch) || (ch == '_'));
+   return(is_bin(ch) || ch == '_' || ch == '\'');
 }
 
 
@@ -749,7 +749,7 @@ static bool is_oct(int ch)
 
 static bool is_oct_(int ch)
 {
-   return(is_oct(ch) || (ch == '_'));
+   return(is_oct(ch) || ch == '_' || ch == '\'');
 }
 
 
@@ -761,7 +761,8 @@ static bool is_dec(int ch)
 
 static bool is_dec_(int ch)
 {
-   return(is_dec(ch) || (ch == '_'));
+   // number separators: JAVA: "_", C++14: "'"
+   return(is_dec(ch) || (ch == '_') || (ch == '\''));
 }
 
 
@@ -775,37 +776,40 @@ static bool is_hex(int ch)
 
 static bool is_hex_(int ch)
 {
-   return(is_hex(ch) || (ch == '_'));
+   return(is_hex(ch) || ch == '_' || ch == '\'');
 }
 
 
 static bool parse_number(tok_ctx &ctx, chunk_t &pc)
 {
-   /* A number must start with a digit or a dot, followed by a digit */
-   if (!is_dec(ctx.peek()) &&
-       ((ctx.peek() != '.') || !is_dec(ctx.peek(1))))
+   /*
+    * A number must start with a digit or a dot, followed by a digit
+    * (signs handled elsewhere)
+    */
+   if (!is_dec(ctx.peek()) && ((ctx.peek() != '.') || !is_dec(ctx.peek(1))))
    {
       return(false);
    }
 
    bool is_float = (ctx.peek() == '.');
-   if (is_float && (ctx.peek(1) == '.'))
+   if (is_float && (ctx.peek(1) == '.')) // make sure it isn't '..'
    {
       return(false);
    }
 
    /* Check for Hex, Octal, or Binary
-    * Note that only D and Pawn support binary, but who cares?
+    * Note that only D, C++14 and Pawn support binary, but who cares?
     */
    bool did_hex = false;
    if (ctx.peek() == '0')
    {
-      pc.str.append(ctx.get());  /* store the '0' */
       size_t  ch;
       chunk_t pc_temp;
       size_t  pc_length;
 
+      pc.str.append(ctx.get());  /* store the '0' */
       pc_temp.str.append('0');
+
       // MS constant might have an "h" at the end. Look for it
       ctx.save();
       while (ctx.more() && CharTable::IsKw2(ctx.peek()))
@@ -813,10 +817,10 @@ static bool parse_number(tok_ctx &ctx, chunk_t &pc)
          ch = ctx.get();
          pc_temp.str.append(ch);
       }
-      pc_length = pc_temp.len();
-      ch        = pc_temp.str[pc_length - 1];
+      ch = pc_temp.str[pc_temp.len() - 1];
       ctx.restore();
       LOG_FMT(LGUY, "%s(%d): pc_temp:%s\n", __func__, __LINE__, pc_temp.text());
+
       if (ch == 'h')
       {
          // we have an MS hexadecimal number with "h" at the end
@@ -1689,19 +1693,22 @@ static bool parse_next(tok_ctx &ctx, chunk_t &pc)
       return(true);
    }
 
-   /* handle C++0x strings u8"x" u"x" U"x" R"x" u8R"XXX(I'm a "raw UTF-8" string.)XXX" */
-   size_t ch = ctx.peek();
-   if ((cpd.lang_flags & LANG_CPP) &&
-       ((ch == 'u') || (ch == 'U') || (ch == 'R')))
+   /*
+    * handle C++(11) string/char literal prefixes u8|u|U|L|R including all
+    * possible combinations and optional R delimiters: R"delim(x)delim"
+    */
+   auto ch = ctx.peek();
+   if ((cpd.lang_flags & LANG_CPP)
+       && (ch == 'u' || ch == 'U' || ch == 'R' || ch == 'L'))
    {
-      size_t idx     = 0;
-      bool   is_real = false;
+      auto idx     = size_t {};
+      auto is_real = false;
 
-      if ((ch == 'u') && (ctx.peek(1) == '8'))
+      if (ch == 'u' && ctx.peek(1) == '8')
       {
          idx = 2;
       }
-      else if (unc_tolower(ch) == 'u')
+      else if (unc_tolower(ch) == 'u' || ch == 'L')
       {
          idx++;
       }
@@ -1711,23 +1718,19 @@ static bool parse_next(tok_ctx &ctx, chunk_t &pc)
          idx++;
          is_real = true;
       }
-      if (ctx.peek(idx) == '"')
+      const auto quote = ctx.peek(idx);
+
+      if (is_real)
       {
-         if (is_real)
+         if (quote == '"' && parse_cr_string(ctx, pc, idx))
          {
-            if (parse_cr_string(ctx, pc, idx))
-            {
-               return(true);
-            }
+            return(true);
          }
-         else
-         {
-            if (parse_string(ctx, pc, idx, true))
-            {
-               parse_suffix(ctx, pc, true);
-               return(true);
-            }
-         }
+      }
+      else if ((quote == '"' || quote == '\'')
+               && parse_string(ctx, pc, idx, true))
+      {
+         return(true);
       }
    }
 

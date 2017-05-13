@@ -212,10 +212,14 @@ enum uncrustify_options
    UO_sp_after_tag,                // pawn: space after a tag colon
    UO_sp_inside_braces_enum,       // space inside enum '{' and '}' - '{ a, b, c }'
    UO_sp_inside_braces_struct,     // space inside struct/union '{' and '}'
+   UO_sp_after_type_brace_init_lst_open,
+   UO_sp_before_type_brace_init_lst_close,
+   UO_sp_inside_type_brace_init_lst,
    UO_sp_inside_braces,            // space inside '{' and '}' - '{ 1, 2, 3 }'
    UO_sp_inside_braces_empty,      // space inside '{' and '}' - '{ }'
    UO_sp_type_func,                // space between return type and 'func'
                                    // a minimum of 1 is forced except for '*'
+   UO_sp_type_brace_init_lst,
    UO_sp_func_proto_paren,         // space between 'func' and '(' - 'foo (' vs 'foo('
    UO_sp_func_proto_paren_empty,   // space between 'func' and '()' - "foo ()" vs "foo()"
    UO_sp_func_def_paren,           // space between 'func' and '(' - 'foo (' vs 'foo('
@@ -524,6 +528,9 @@ enum uncrustify_options
    UO_nl_after_semicolon,             // disallow multiple statements on a line 'a=1;b=4;'
    UO_nl_paren_dbrace_open,           // Java: Control the newline between the ')' and '{{' of the
                                       // double brace initializer
+   UO_nl_type_brace_init_lst,         // newline between type and unnamed temporary direct-list-initialization
+   UO_nl_type_brace_init_lst_open,    // newline after open brace in unnamed temporary direct-list-initialization
+   UO_nl_type_brace_init_lst_close,   // newline before close brace in unnamed temporary direct-list-initialization
    UO_nl_after_brace_open,            // force a newline after a brace open
    UO_nl_after_brace_open_cmt,        // put the newline before the comment
    UO_nl_after_vbrace_open,           // force a newline after a virtual brace open

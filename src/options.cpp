@@ -468,6 +468,12 @@ void register_options(void)
                   "Add or remove space inside enum '{' and '}'");
    unc_add_option("sp_inside_braces_struct", UO_sp_inside_braces_struct, AT_IARF,
                   "Add or remove space inside struct/union '{' and '}'");
+   unc_add_option("sp_after_type_brace_init_lst_open", UO_sp_after_type_brace_init_lst_open, AT_IARF,
+                  "Add or remove space after open brace in an unnamed temporary direct-list-initialization");
+   unc_add_option("sp_before_type_brace_init_lst_close", UO_sp_before_type_brace_init_lst_close, AT_IARF,
+                  "Add or remove space before close brace in an unnamed temporary direct-list-initialization");
+   unc_add_option("sp_inside_type_brace_init_lst", UO_sp_inside_type_brace_init_lst, AT_IARF,
+                  "Add or remove space inside an unnamed temporary direct-list-initialization");
    unc_add_option("sp_inside_braces", UO_sp_inside_braces, AT_IARF,
                   "Add or remove space inside '{' and '}'");
    unc_add_option("sp_inside_braces_empty", UO_sp_inside_braces_empty, AT_IARF,
@@ -475,6 +481,8 @@ void register_options(void)
    unc_add_option("sp_type_func", UO_sp_type_func, AT_IARF,
                   "Add or remove space between return type and function name\n"
                   "A minimum of 1 is forced except for pointer return types.");
+   unc_add_option("sp_type_brace_init_lst", UO_sp_type_brace_init_lst, AT_IARF,
+                  "Add or remove space between type and open brace of an unnamed temporary direct-list-initialization");
    unc_add_option("sp_func_proto_paren", UO_sp_func_proto_paren, AT_IARF,
                   "Add or remove space between function name and '(' on function declaration");
    unc_add_option("sp_func_proto_paren_empty", UO_sp_func_proto_paren_empty, AT_IARF,
@@ -1104,6 +1112,12 @@ void register_options(void)
                   "Whether to put a newline after semicolons, except in 'for' statements");
    unc_add_option("nl_paren_dbrace_open", UO_nl_paren_dbrace_open, AT_IARF,
                   "Java: Control the newline between the ')' and '{{' of the double brace initializer.");
+   unc_add_option("nl_type_brace_init_lst", UO_nl_type_brace_init_lst, AT_IARF,
+                  "Whether to put a newline after the type in an unnamed temporary direct-list-initialization");
+   unc_add_option("nl_type_brace_init_lst_open", UO_nl_type_brace_init_lst_open, AT_IARF,
+                  "Whether to put a newline after open brace in an unnamed temporary direct-list-initialization");
+   unc_add_option("nl_type_brace_init_lst_close", UO_nl_type_brace_init_lst_close, AT_IARF,
+                  "Whether to put a newline before close brace in an unnamed temporary direct-list-initialization");
    unc_add_option("nl_after_brace_open", UO_nl_after_brace_open, AT_BOOL,
                   "Whether to put a newline after brace open.\n"
                   "This also adds a newline before the matching brace close.");
