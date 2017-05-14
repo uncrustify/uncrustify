@@ -161,9 +161,13 @@ declare namespace LibUncrustify
         UO_sp_after_tag : EmscriptenEnumTypeObject;
         UO_sp_inside_braces_enum : EmscriptenEnumTypeObject;
         UO_sp_inside_braces_struct : EmscriptenEnumTypeObject;
+        UO_sp_after_type_brace_init_lst_open : EmscriptenEnumTypeObject;
+        UO_sp_before_type_brace_init_lst_close : EmscriptenEnumTypeObject;
+        UO_sp_inside_type_brace_init_lst : EmscriptenEnumTypeObject;
         UO_sp_inside_braces : EmscriptenEnumTypeObject;
         UO_sp_inside_braces_empty : EmscriptenEnumTypeObject;
         UO_sp_type_func : EmscriptenEnumTypeObject;
+        UO_sp_type_brace_init_lst : EmscriptenEnumTypeObject;
         UO_sp_func_proto_paren : EmscriptenEnumTypeObject;
         UO_sp_func_proto_paren_empty : EmscriptenEnumTypeObject;
         UO_sp_func_def_paren : EmscriptenEnumTypeObject;
@@ -368,6 +372,7 @@ declare namespace LibUncrustify
         UO_nl_elseif_brace : EmscriptenEnumTypeObject;
         UO_nl_else_brace : EmscriptenEnumTypeObject;
         UO_nl_else_if : EmscriptenEnumTypeObject;
+        UO_nl_before_if_closing_paren : EmscriptenEnumTypeObject;
         UO_nl_brace_finally : EmscriptenEnumTypeObject;
         UO_nl_finally_brace : EmscriptenEnumTypeObject;
         UO_nl_try_brace : EmscriptenEnumTypeObject;
@@ -433,6 +438,9 @@ declare namespace LibUncrustify
         UO_nl_return_expr : EmscriptenEnumTypeObject;
         UO_nl_after_semicolon : EmscriptenEnumTypeObject;
         UO_nl_paren_dbrace_open : EmscriptenEnumTypeObject;
+        UO_nl_type_brace_init_lst : EmscriptenEnumTypeObject;
+        UO_nl_type_brace_init_lst_open : EmscriptenEnumTypeObject;
+        UO_nl_type_brace_init_lst_close : EmscriptenEnumTypeObject;
         UO_nl_after_brace_open : EmscriptenEnumTypeObject;
         UO_nl_after_brace_open_cmt : EmscriptenEnumTypeObject;
         UO_nl_after_vbrace_open : EmscriptenEnumTypeObject;
@@ -619,6 +627,7 @@ declare namespace LibUncrustify
         UO_mod_case_brace : EmscriptenEnumTypeObject;
         UO_mod_remove_empty_return : EmscriptenEnumTypeObject;
         UO_mod_sort_oc_properties : EmscriptenEnumTypeObject;
+        UO_mod_sort_oc_property_class_weight : EmscriptenEnumTypeObject;
         UO_mod_sort_oc_property_thread_safe_weight : EmscriptenEnumTypeObject;
         UO_mod_sort_oc_property_readwrite_weight : EmscriptenEnumTypeObject;
         UO_mod_sort_oc_property_reference_weight : EmscriptenEnumTypeObject;
@@ -990,6 +999,7 @@ declare namespace LibUncrustify
         CT_OC_BLOCK_EXPR : EmscriptenEnumTypeObject;
         CT_OC_BLOCK_CARET : EmscriptenEnumTypeObject;
         CT_OC_AT : EmscriptenEnumTypeObject;
+        CT_OC_PROPERTY_ATTR : EmscriptenEnumTypeObject;
         CT_PP_DEFINE : EmscriptenEnumTypeObject;
         CT_PP_DEFINED : EmscriptenEnumTypeObject;
         CT_PP_INCLUDE : EmscriptenEnumTypeObject;
