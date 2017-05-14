@@ -805,7 +805,6 @@ static bool parse_number(tok_ctx &ctx, chunk_t &pc)
    {
       size_t  ch;
       chunk_t pc_temp;
-      size_t  pc_length;
 
       pc.str.append(ctx.get());  /* store the '0' */
       pc_temp.str.append('0');

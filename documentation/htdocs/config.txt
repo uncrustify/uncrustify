@@ -1,4 +1,4 @@
-# Uncrustify 0.64
+# Uncrustify-0.64-629-b807675-dirty
 #
 # General options
 #
@@ -6,16 +6,16 @@
 newlines                        { Auto, LF, CR, CRLF }
   The type of line endings. Default=Auto
 
-input_tab_size                  Number
+input_tab_size                  Unsigned Number
   The original size of tabs in the input. Default=8
 
-output_tab_size                 Number
+output_tab_size                 Unsigned Number
   The size of tabs in the output (only used if align_with_tabs=true). Default=8
 
-string_escape_char              Number
+string_escape_char              Unsigned Number
   The ASCII value of the string escape char, usually 92 (\) or 94 (^). (Pawn)
 
-string_escape_char2             Number
+string_escape_char2             Unsigned Number
   Alternate string escape char for Pawn. Only works right before the quote char.
 
 string_replace_tab_chars        { False, True }
@@ -23,7 +23,7 @@ string_replace_tab_chars        { False, True }
 
 tok_split_gte                   { False, True }
   Allow interpreting '>=' and '>>=' as part of a template in 'void f(list<list<B>>=val);'.
-  If true, 'assert(x<0 && y>=3)' will be broken. Default=False
+  If True, 'assert(x<0 && y>=3)' will be broken. Default=False
   Improvements to template detection may make this option obsolete.
 
 disable_processing_cmt          String
@@ -43,250 +43,6 @@ utf8_byte                       { False, True }
 
 utf8_force                      { False, True }
   Force the output encoding to UTF-8
-
-#
-# Indenting
-#
-
-indent_columns                  Number
-  The number of columns to indent per level.
-  Usually 2, 3, 4, or 8. Default=8
-
-indent_continue                 Number
-  The continuation indent. If non-zero, this overrides the indent of '(' and '=' continuation indents.
-  For FreeBSD, this is set to 4. Negative value is absolute and not increased for each ( level
-
-indent_with_tabs                Number
-  How to use tabs when indenting code
-  0=spaces only
-  1=indent with tabs to brace level, align with spaces (default)
-  2=indent and align with tabs, using spaces when not on a tabstop
-
-indent_cmt_with_tabs            { False, True }
-  Comments that are not a brace level are indented with tabs on a tabstop.
-  Requires indent_with_tabs=2. If false, will use spaces.
-
-indent_align_string             { False, True }
-  Whether to indent strings broken by '\' so that they line up
-
-indent_xml_string               Number
-  The number of spaces to indent multi-line XML strings.
-  Requires indent_align_string=True
-
-indent_brace                    Number
-  Spaces to indent '{' from level
-
-indent_braces                   { False, True }
-  Whether braces are indented to the body level
-
-indent_braces_no_func           { False, True }
-  Disabled indenting function braces if indent_braces is true
-
-indent_braces_no_class          { False, True }
-  Disabled indenting class braces if indent_braces is true
-
-indent_braces_no_struct         { False, True }
-  Disabled indenting struct braces if indent_braces is true
-
-indent_brace_parent             { False, True }
-  Indent based on the size of the brace parent, i.e. 'if' => 3 spaces, 'for' => 4 spaces, etc.
-
-indent_paren_open_brace         { False, True }
-  Indent based on the paren open instead of the brace open in '({\n', default is to indent by brace.
-
-indent_cs_delegate_brace        { False, True }
-  indent a C# delegate by another level, default is to not indent by another level.
-
-indent_namespace                { False, True }
-  Whether the 'namespace' body is indented
-
-indent_namespace_single_indent  { False, True }
-  Only indent one namespace and no sub-namespaces.
-  Requires indent_namespace=true.
-
-indent_namespace_level          Number
-  The number of spaces to indent a namespace block
-
-indent_namespace_limit          Number
-  If the body of the namespace is longer than this number, it won't be indented.
-  Requires indent_namespace=true. Default=0 (no limit)
-
-indent_extern                   { False, True }
-  Whether the 'extern "C"' body is indented
-
-indent_class                    { False, True }
-  Whether the 'class' body is indented
-
-indent_class_colon              { False, True }
-  Whether to indent the stuff after a leading base class colon
-
-indent_class_on_colon           { False, True }
-  Indent based on a class colon instead of the stuff after the colon.
-  Requires indent_class_colon=true. Default=False
-
-indent_constr_colon             { False, True }
-  Whether to indent the stuff after a leading class initializer colon
-
-indent_ctor_init_leading        Number
-  Virtual indent from the ':' for member initializers. Default=2
-
-indent_ctor_init                Number
-  Additional indenting for constructor initializer list
-
-indent_else_if                  { False, True }
-  False=treat 'else\nif' as 'else if' for indenting purposes
-  True=indent the 'if' one level
-
-indent_var_def_blk              Number
-  Amount to indent variable declarations after a open brace. neg=relative, pos=absolute
-
-indent_var_def_cont             { False, True }
-  Indent continued variable declarations instead of aligning.
-
-indent_shift                    { False, True }
-  Indent continued shift expressions ('<<' and '>>') instead of aligning.
-  Turn align_left_shift off when enabling this.
-
-indent_func_def_force_col1      { False, True }
-  True:  force indentation of function definition to start in column 1
-  False: use the default behavior
-
-indent_func_call_param          { False, True }
-  True:  indent continued function call parameters one indent level
-  False: align parameters under the open paren
-
-indent_func_def_param           { False, True }
-  Same as indent_func_call_param, but for function defs
-
-indent_func_proto_param         { False, True }
-  Same as indent_func_call_param, but for function protos
-
-indent_func_class_param         { False, True }
-  Same as indent_func_call_param, but for class declarations
-
-indent_func_ctor_var_param      { False, True }
-  Same as indent_func_call_param, but for class variable constructors
-
-indent_template_param           { False, True }
-  Same as indent_func_call_param, but for templates
-
-indent_func_param_double        { False, True }
-  Double the indent for indent_func_xxx_param options
-
-indent_func_const               Number
-  Indentation column for standalone 'const' function decl/proto qualifier
-
-indent_func_throw               Number
-  Indentation column for standalone 'throw' function decl/proto qualifier
-
-indent_member                   Number
-  The number of spaces to indent a continued '->' or '.'
-  Usually set to 0, 1, or indent_columns.
-
-indent_sing_line_comments       Number
-  Spaces to indent single line ('//') comments on lines before code
-
-indent_relative_single_line_comments { False, True }
-  If set, will indent trailing single line ('//') comments relative
-  to the code instead of trying to keep the same absolute column
-
-indent_switch_case              Number
-  Spaces to indent 'case' from 'switch'
-  Usually 0 or indent_columns.
-
-indent_case_shift               Number
-  Spaces to shift the 'case' line, without affecting any other lines
-  Usually 0.
-
-indent_case_brace               Number
-  Spaces to indent '{' from 'case'.
-  By default, the brace will appear under the 'c' in case.
-  Usually set to 0 or indent_columns.
-
-indent_col1_comment             { False, True }
-  Whether to indent comments found in first column
-
-indent_label                    Number
-  How to indent goto labels
-    >0: absolute column where 1 is the leftmost column
-   <=0: subtract from brace indent
-  Default=1
-
-indent_access_spec              Number
-  Same as indent_label, but for access specifiers that are followed by a colon. Default=1
-
-indent_access_spec_body         { False, True }
-  Indent the code after an access specifier by one level.
-  If set, this option forces 'indent_access_spec=0'
-
-indent_paren_nl                 { False, True }
-  If an open paren is followed by a newline, indent the next line so that it lines up after the open paren (not recommended)
-
-indent_paren_close              Number
-  Controls the indent of a close paren after a newline.
-  0: Indent to body level
-  1: Align under the open paren
-  2: Indent to the brace level
-
-indent_comma_paren              { False, True }
-  Controls the indent of a comma when inside a paren.If TRUE, aligns under the open paren
-
-indent_bool_paren               { False, True }
-  Controls the indent of a BOOL operator when inside a paren.If TRUE, aligns under the open paren
-
-indent_first_bool_expr          { False, True }
-  If 'indent_bool_paren' is true, controls the indent of the first expression. If TRUE, aligns the first expression to the following ones
-
-indent_square_nl                { False, True }
-  If an open square is followed by a newline, indent the next line so that it lines up after the open square (not recommended)
-
-indent_preserve_sql             { False, True }
-  Don't change the relative indent of ESQL/C 'EXEC SQL' bodies
-
-indent_align_assign             { False, True }
-  Align continued statements at the '='. Default=True
-  If FALSE or the '=' is followed by a newline, the next line is indent one tab.
-
-indent_oc_block                 { False, True }
-  Indent OC blocks at brace level instead of usual rules.
-
-indent_oc_block_msg             Number
-  Indent OC blocks in a message relative to the parameter name.
-  0=use indent_oc_block rules, 1+=spaces to indent
-
-indent_oc_msg_colon             Number
-  Minimum indent for subsequent parameters
-
-indent_oc_msg_prioritize_first_colon { False, True }
-  If true, prioritize aligning with initial colon (and stripping spaces from lines, if necessary).
-  Default=True.
-
-indent_oc_block_msg_xcode_style { False, True }
-  If indent_oc_block_msg and this option are on, blocks will be indented the way that Xcode does by default (from keyword if the parameter is on its own line; otherwise, from the previous indentation level).
-
-indent_oc_block_msg_from_keyword { False, True }
-  If indent_oc_block_msg and this option are on, blocks will be indented from where the brace is relative to a msg keyword.
-
-indent_oc_block_msg_from_colon  { False, True }
-  If indent_oc_block_msg and this option are on, blocks will be indented from where the brace is relative to a msg colon.
-
-indent_oc_block_msg_from_caret  { False, True }
-  If indent_oc_block_msg and this option are on, blocks will be indented from where the block caret is.
-
-indent_oc_block_msg_from_brace  { False, True }
-  If indent_oc_block_msg and this option are on, blocks will be indented from where the brace is.
-
-indent_min_vbrace_open          Number
-  When identing after virtual brace open and newline add further spaces to reach this min. indent.
-
-indent_vbrace_open_on_tabstop   { False, True }
-  TRUE: When identing after virtual brace open and newline add further spaces after regular indent to reach next tabstop.
-
-indent_token_after_brace        { False, True }
-  If true, a brace followed by another token (not a newline) will indent all contained lines to match the token.Default=True.
-
-indent_cpp_lambda_body          { False, True }
-  If true, cpp lambda body will be indentedDefault=False.
 
 #
 # Spacing options
@@ -325,6 +81,9 @@ sp_enum_before_assign           { Ignore, Add, Remove, Force }
 
 sp_enum_after_assign            { Ignore, Add, Remove, Force }
   Add or remove space after assignment '=' in enum. Overrides sp_enum_assign.
+
+sp_enum_colon                   { Ignore, Add, Remove, Force }
+  Add or remove space around assignment ':' in enum
 
 sp_pp_concat                    { Ignore, Add, Remove, Force }
   Add or remove space around preprocessor '##' concatenation operator. Default=Add
@@ -552,6 +311,15 @@ sp_inside_braces_enum           { Ignore, Add, Remove, Force }
 sp_inside_braces_struct         { Ignore, Add, Remove, Force }
   Add or remove space inside struct/union '{' and '}'
 
+sp_after_type_brace_init_lst_open { Ignore, Add, Remove, Force }
+  Add or remove space after open brace in an unnamed temporary direct-list-initialization
+
+sp_before_type_brace_init_lst_close { Ignore, Add, Remove, Force }
+  Add or remove space before close brace in an unnamed temporary direct-list-initialization
+
+sp_inside_type_brace_init_lst   { Ignore, Add, Remove, Force }
+  Add or remove space inside an unnamed temporary direct-list-initialization
+
 sp_inside_braces                { Ignore, Add, Remove, Force }
   Add or remove space inside '{' and '}'
 
@@ -561,6 +329,9 @@ sp_inside_braces_empty          { Ignore, Add, Remove, Force }
 sp_type_func                    { Ignore, Add, Remove, Force }
   Add or remove space between return type and function name
   A minimum of 1 is forced except for pointer return types.
+
+sp_type_brace_init_lst          { Ignore, Add, Remove, Force }
+  Add or remove space between type and open brace of an unnamed temporary direct-list-initialization
 
 sp_func_proto_paren             { Ignore, Add, Remove, Force }
   Add or remove space between function name and '(' on function declaration
@@ -823,10 +594,10 @@ sp_cmt_cpp_start                { Ignore, Add, Remove, Force }
   Control the space after the opening of a C++ comment '// A' vs '//A'
 
 sp_cmt_cpp_doxygen              { False, True }
-  TRUE: If space is added with sp_cmt_cpp_start, do it after doxygen sequences like '///', '///<', '//!' and '//!<'.
+  True: If space is added with sp_cmt_cpp_start, do it after doxygen sequences like '///', '///<', '//!' and '//!<'.
 
 sp_cmt_cpp_qttr                 { False, True }
-  TRUE: If space is added with sp_cmt_cpp_start, do it after Qt translator or meta-data comments like '//:', '//=', and '//~'.
+  True: If space is added with sp_cmt_cpp_start, do it after Qt translator or meta-data comments like '//:', '//=', and '//~'.
 
 sp_endif_cmt                    { Ignore, Add, Remove, Force }
   Controls the spaces between #else or #endif and a trailing comment
@@ -837,197 +608,291 @@ sp_after_new                    { Ignore, Add, Remove, Force }
 sp_between_new_paren            { Ignore, Add, Remove, Force }
   Controls the spaces between new and '(' in 'new()'
 
+sp_after_newop_paren            { Ignore, Add, Remove, Force }
+  Controls the spaces between ')' and 'type' in 'new(foo) BAR'
+
+sp_inside_newop_paren           { Ignore, Add, Remove, Force }
+  Controls the spaces inside paren of the new operator: 'new(foo) BAR'
+
+sp_inside_newop_paren_open      { Ignore, Add, Remove, Force }
+  Controls the space after open paren of the new operator: 'new(foo) BAR'
+
+sp_inside_newop_paren_close     { Ignore, Add, Remove, Force }
+  Controls the space before close paren of the new operator: 'new(foo) BAR'
+
 sp_before_tr_emb_cmt            { Ignore, Add, Remove, Force }
   Controls the spaces before a trailing or embedded comment
 
-sp_num_before_tr_emb_cmt        Number
+sp_num_before_tr_emb_cmt        Unsigned Number
   Number of spaces before a trailing or embedded comment
 
 sp_annotation_paren             { Ignore, Add, Remove, Force }
   Control space between a Java annotation and the open paren.
 
 sp_skip_vbrace_tokens           { False, True }
-  If true, vbrace tokens are dropped to the previous token and skipped.
+  If True, vbrace tokens are dropped to the previous token and skipped.
+
+force_tab_after_define          { False, True }
+  If True, a <TAB> is inserted after #define.
 
 #
-# Code alignment (not left column spaces/tabs)
+# Indenting
 #
 
-align_keep_tabs                 { False, True }
-  Whether to keep non-indenting tabs
+indent_columns                  Unsigned Number
+  The number of columns to indent per level.
+  Usually 2, 3, 4, or 8. Default=8
 
-align_with_tabs                 { False, True }
-  Whether to use tabs for aligning
+indent_continue                 Number
+  The continuation indent. If non-zero, this overrides the indent of '(' and '=' continuation indents.
+  For FreeBSD, this is set to 4. Negative value is absolute and not increased for each ( level
 
-align_on_tabstop                { False, True }
-  Whether to bump out to the next tab when aligning
+indent_param                    Unsigned Number
+  The continuation indent for func_*_param if they are true.
+  If non-zero, this overrides the indent.
 
-align_number_left               { False, True }
-  Whether to left-align numbers
+indent_with_tabs                Number
+  How to use tabs when indenting code
+  0=spaces only
+  1=indent with tabs to brace level, align with spaces (default)
+  2=indent and align with tabs, using spaces when not on a tabstop
 
-align_keep_extra_space          { False, True }
-  Whether to keep whitespace not required for alignment.
+indent_cmt_with_tabs            { False, True }
+  Comments that are not a brace level are indented with tabs on a tabstop.
+  Requires indent_with_tabs=2. If false, will use spaces.
 
-align_func_params               { False, True }
-  Align variable definitions in prototypes and functions
+indent_align_string             { False, True }
+  Whether to indent strings broken by '\' so that they line up
 
-align_same_func_call_params     { False, True }
-  Align parameters in single-line functions that have the same name.
-  The function names must already be aligned with each other.
+indent_xml_string               Unsigned Number
+  The number of spaces to indent multi-line XML strings.
+  Requires indent_align_string=True
 
-align_var_def_span              Number
-  The span for aligning variable definitions (0=don't align)
+indent_brace                    Unsigned Number
+  Spaces to indent '{' from level
 
-align_var_def_star_style        Number
-  How to align the star in variable definitions.
-   0=Part of the type     'void *   foo;'
-   1=Part of the variable 'void     *foo;'
-   2=Dangling             'void    *foo;'
+indent_braces                   { False, True }
+  Whether braces are indented to the body level
 
-align_var_def_amp_style         Number
-  How to align the '&' in variable definitions.
-   0=Part of the type
-   1=Part of the variable
-   2=Dangling
+indent_braces_no_func           { False, True }
+  Disabled indenting function braces if indent_braces is True
 
-align_var_def_thresh            Number
-  The threshold for aligning variable definitions (0=no limit)
+indent_braces_no_class          { False, True }
+  Disabled indenting class braces if indent_braces is True
 
-align_var_def_gap               Number
-  The gap for aligning variable definitions
+indent_braces_no_struct         { False, True }
+  Disabled indenting struct braces if indent_braces is True
 
-align_var_def_colon             { False, True }
-  Whether to align the colon in struct bit fields
+indent_brace_parent             { False, True }
+  Indent based on the size of the brace parent, i.e. 'if' => 3 spaces, 'for' => 4 spaces, etc.
 
-align_var_def_attribute         { False, True }
-  Whether to align any attribute after the variable name
+indent_paren_open_brace         { False, True }
+  Indent based on the paren open instead of the brace open in '({\n', default is to indent by brace.
 
-align_var_def_inline            { False, True }
-  Whether to align inline struct/enum/union variable definitions
+indent_cs_delegate_brace        { False, True }
+  indent a C# delegate by another level, default is to not indent by another level.
 
-align_assign_span               Number
-  The span for aligning on '=' in assignments (0=don't align)
+indent_namespace                { False, True }
+  Whether the 'namespace' body is indented
 
-align_assign_thresh             Number
-  The threshold for aligning on '=' in assignments (0=no limit)
+indent_namespace_single_indent  { False, True }
+  Only indent one namespace and no sub-namespaces.
+  Requires indent_namespace=True.
 
-align_enum_equ_span             Number
-  The span for aligning on '=' in enums (0=don't align)
+indent_namespace_level          Unsigned Number
+  The number of spaces to indent a namespace block
 
-align_enum_equ_thresh           Number
-  The threshold for aligning on '=' in enums (0=no limit)
+indent_namespace_limit          Unsigned Number
+  If the body of the namespace is longer than this number, it won't be indented.
+  Requires indent_namespace=True. Default=0 (no limit)
 
-align_var_class_span            Number
-  The span for aligning class (0=don't align)
+indent_extern                   { False, True }
+  Whether the 'extern "C"' body is indented
 
-align_var_class_thresh          Number
-  The threshold for aligning class member definitions (0=no limit)
+indent_class                    { False, True }
+  Whether the 'class' body is indented
 
-align_var_class_gap             Number
-  The gap for aligning class member definitions
+indent_class_colon              { False, True }
+  Whether to indent the stuff after a leading base class colon
 
-align_var_struct_span           Number
-  The span for aligning struct/union (0=don't align)
+indent_class_on_colon           { False, True }
+  Indent based on a class colon instead of the stuff after the colon.
+  Requires indent_class_colon=True. Default=False
 
-align_var_struct_thresh         Number
-  The threshold for aligning struct/union member definitions (0=no limit)
+indent_constr_colon             { False, True }
+  Whether to indent the stuff after a leading class initializer colon
 
-align_var_struct_gap            Number
-  The gap for aligning struct/union member definitions
+indent_ctor_init_leading        Unsigned Number
+  Virtual indent from the ':' for member initializers. Default=2
 
-align_struct_init_span          Number
-  The span for aligning struct initializer values (0=don't align)
+indent_ctor_init                Unsigned Number
+  Additional indenting for constructor initializer list
 
-align_typedef_gap               Number
-  The minimum space between the type and the synonym of a typedef
+indent_else_if                  { False, True }
+  False=treat 'else\nif' as 'else if' for indenting purposes
+  True=indent the 'if' one level
 
-align_typedef_span              Number
-  The span for aligning single-line typedefs (0=don't align)
+indent_var_def_blk              Number
+  Amount to indent variable declarations after a open brace. neg=relative, pos=absolute
 
-align_typedef_func              Number
-  How to align typedef'd functions with other typedefs
-  0: Don't mix them at all
-  1: align the open paren with the types
-  2: align the function type name with the other type names
+indent_var_def_cont             { False, True }
+  Indent continued variable declarations instead of aligning.
 
-align_typedef_star_style        Number
-  Controls the positioning of the '*' in typedefs. Just try it.
-  0: Align on typedef type, ignore '*'
-  1: The '*' is part of type name: typedef int  *pint;
-  2: The '*' is part of the type, but dangling: typedef int *pint;
+indent_shift                    { False, True }
+  Indent continued shift expressions ('<<' and '>>') instead of aligning.
+  Turn align_left_shift off when enabling this.
 
-align_typedef_amp_style         Number
-  Controls the positioning of the '&' in typedefs. Just try it.
-  0: Align on typedef type, ignore '&'
-  1: The '&' is part of type name: typedef int  &pint;
-  2: The '&' is part of the type, but dangling: typedef int &pint;
+indent_func_def_force_col1      { False, True }
+  True:  force indentation of function definition to start in column 1
+  False: use the default behavior
 
-align_right_cmt_span            Number
-  The span for aligning comments that end lines (0=don't align)
+indent_func_call_param          { False, True }
+  True:  indent continued function call parameters one indent level
+  False: align parameters under the open paren
 
-align_right_cmt_mix             { False, True }
-  If aligning comments, mix with comments after '}' and #endif with less than 3 spaces before the comment
+indent_func_def_param           { False, True }
+  Same as indent_func_call_param, but for function defs
 
-align_right_cmt_gap             Number
-  If a trailing comment is more than this number of columns away from the text it follows,
-  it will qualify for being aligned. This has to be > 0 to do anything.
+indent_func_proto_param         { False, True }
+  Same as indent_func_call_param, but for function protos
 
-align_right_cmt_at_col          Number
-  Align trailing comment at or beyond column N; 'pulls in' comments as a bonus side effect (0=ignore)
+indent_func_class_param         { False, True }
+  Same as indent_func_call_param, but for class declarations
 
-align_func_proto_span           Number
-  The span for aligning function prototypes (0=don't align)
+indent_func_ctor_var_param      { False, True }
+  Same as indent_func_call_param, but for class variable constructors
 
-align_func_proto_gap            Number
-  Minimum gap between the return type and the function name.
+indent_template_param           { False, True }
+  Same as indent_func_call_param, but for templates
 
-align_on_operator               { False, True }
-  Align function protos on the 'operator' keyword instead of what follows
+indent_func_param_double        { False, True }
+  Double the indent for indent_func_xxx_param options.
+  Use both values of the options indent_columns and indent_param
 
-align_mix_var_proto             { False, True }
-  Whether to mix aligning prototype and variable declarations.
-  If true, align_var_def_XXX options are used instead of align_func_proto_XXX options.
+indent_func_const               Unsigned Number
+  Indentation column for standalone 'const' function decl/proto qualifier
 
-align_single_line_func          { False, True }
-  Align single-line functions with function prototypes, uses align_func_proto_span
+indent_func_throw               Unsigned Number
+  Indentation column for standalone 'throw' function decl/proto qualifier
 
-align_single_line_brace         { False, True }
-  Aligning the open brace of single-line functions.
-  Requires align_single_line_func=true, uses align_func_proto_span
+indent_member                   Unsigned Number
+  The number of spaces to indent a continued '->' or '.'
+  Usually set to 0, 1, or indent_columns.
 
-align_single_line_brace_gap     Number
-  Gap for align_single_line_brace.
+indent_sing_line_comments       Unsigned Number
+  Spaces to indent single line ('//') comments on lines before code
 
-align_oc_msg_spec_span          Number
-  The span for aligning ObjC msg spec (0=don't align)
+indent_relative_single_line_comments { False, True }
+  If set, will indent trailing single line ('//') comments relative
+  to the code instead of trying to keep the same absolute column
 
-align_nl_cont                   { False, True }
-  Whether to align macros wrapped with a backslash and a newline.
-  This will not work right if the macro contains a multi-line comment.
+indent_switch_case              Unsigned Number
+  Spaces to indent 'case' from 'switch'
+  Usually 0 or indent_columns.
 
-align_pp_define_together        { False, True }
-  # Align macro functions and variables together
+indent_case_shift               Unsigned Number
+  Spaces to shift the 'case' line, without affecting any other lines
+  Usually 0.
 
-align_pp_define_gap             Number
-  The minimum space between label and value of a preprocessor define
+indent_case_brace               Number
+  Spaces to indent '{' from 'case'.
+  By default, the brace will appear under the 'c' in case.
+  Usually set to 0 or indent_columns.
+  negative value are OK.
 
-align_pp_define_span            Number
-  The span for aligning on '#define' bodies (0=don't align, other=number of lines including comments between blocks)
+indent_col1_comment             { False, True }
+  Whether to indent comments found in first column
 
-align_left_shift                { False, True }
-  Align lines that start with '<<' with previous '<<'. Default=True
+indent_label                    Number
+  How to indent goto labels
+    >0: absolute column where 1 is the leftmost column
+   <=0: subtract from brace indent
+  Default=1
 
-align_asm_colon                 { False, True }
-  Align text after asm volatile () colons.
+indent_access_spec              Number
+  Same as indent_label, but for access specifiers that are followed by a colon. Default=1
 
-align_oc_msg_colon_span         Number
-  Span for aligning parameters in an Obj-C message call on the ':' (0=don't align)
+indent_access_spec_body         { False, True }
+  Indent the code after an access specifier by one level.
+  If set, this option forces 'indent_access_spec=0'
 
-align_oc_msg_colon_first        { False, True }
-  If true, always align with the first parameter, even if it is too short.
+indent_paren_nl                 { False, True }
+  If an open paren is followed by a newline, indent the next line so that it lines up after the open paren (not recommended)
 
-align_oc_decl_colon             { False, True }
-  Aligning parameters in an Obj-C '+' or '-' declaration on the ':'
+indent_paren_close              Unsigned Number
+  Controls the indent of a close paren after a newline.
+  0: Indent to body level
+  1: Align under the open paren
+  2: Indent to the brace level
+
+indent_comma_paren              { False, True }
+  Controls the indent of a comma when inside a paren.If True, aligns under the open paren
+
+indent_bool_paren               { False, True }
+  Controls the indent of a BOOL operator when inside a paren.If True, aligns under the open paren
+
+indent_first_bool_expr          { False, True }
+  If 'indent_bool_paren' is True, controls the indent of the first expression. If True, aligns the first expression to the following ones
+
+indent_square_nl                { False, True }
+  If an open square is followed by a newline, indent the next line so that it lines up after the open square (not recommended)
+
+indent_preserve_sql             { False, True }
+  Don't change the relative indent of ESQL/C 'EXEC SQL' bodies
+
+indent_align_assign             { False, True }
+  Align continued statements at the '='. Default=True
+  If False or the '=' is followed by a newline, the next line is indent one tab.
+
+indent_oc_block                 { False, True }
+  Indent OC blocks at brace level instead of usual rules.
+
+indent_oc_block_msg             Unsigned Number
+  Indent OC blocks in a message relative to the parameter name.
+  0=use indent_oc_block rules, 1+=spaces to indent
+
+indent_oc_msg_colon             Unsigned Number
+  Minimum indent for subsequent parameters
+
+indent_oc_msg_prioritize_first_colon { False, True }
+  If True, prioritize aligning with initial colon (and stripping spaces from lines, if necessary).
+  Default=True
+
+indent_oc_block_msg_xcode_style { False, True }
+  If indent_oc_block_msg and this option are on, blocks will be indented the way that Xcode does by default (from keyword if the parameter is on its own line; otherwise, from the previous indentation level).
+
+indent_oc_block_msg_from_keyword { False, True }
+  If indent_oc_block_msg and this option are on, blocks will be indented from where the brace is relative to a msg keyword.
+
+indent_oc_block_msg_from_colon  { False, True }
+  If indent_oc_block_msg and this option are on, blocks will be indented from where the brace is relative to a msg colon.
+
+indent_oc_block_msg_from_caret  { False, True }
+  If indent_oc_block_msg and this option are on, blocks will be indented from where the block caret is.
+
+indent_oc_block_msg_from_brace  { False, True }
+  If indent_oc_block_msg and this option are on, blocks will be indented from where the brace is.
+
+indent_min_vbrace_open          Unsigned Number
+  When identing after virtual brace open and newline add further spaces to reach this min. indent.
+
+indent_vbrace_open_on_tabstop   { False, True }
+  True: When identing after virtual brace open and newline add further spaces after regular indent to reach next tabstop.
+
+indent_token_after_brace        { False, True }
+  If True, a brace followed by another token (not a newline) will indent all contained lines to match the token.Default=True
+
+indent_cpp_lambda_body          { False, True }
+  If True, cpp lambda body will be indentedDefault=False
+
+indent_using_block              { False, True }
+  indent (or not) an using block if no braces are used. Only for C#.Default=True
+
+indent_ternary_operator         Unsigned Number
+  indent the continuation of ternary operator.
+  0: (Default) off
+  1: When the `if_false` is a continuation, indent it under `if_false`
+  2: When the `:` is a continuation, indent it under `?`
 
 #
 # Newline adding and removing options
@@ -1069,13 +934,13 @@ nl_oc_block_brace               { Ignore, Add, Remove, Force }
 nl_start_of_file                { Ignore, Add, Remove, Force }
   Add or remove newlines at the start of the file
 
-nl_start_of_file_min            Number
+nl_start_of_file_min            Unsigned Number
   The number of newlines at the start of the file (only used if nl_start_of_file is 'add' or 'force'
 
 nl_end_of_file                  { Ignore, Add, Remove, Force }
   Add or remove newline at the end of the file
 
-nl_end_of_file_min              Number
+nl_end_of_file_min              Unsigned Number
   The number of newlines at the end of the file (only used if nl_end_of_file is 'add' or 'force')
 
 nl_assign_brace                 { Ignore, Add, Remove, Force }
@@ -1087,33 +952,33 @@ nl_assign_square                { Ignore, Add, Remove, Force }
 nl_after_square_assign          { Ignore, Add, Remove, Force }
   Add or remove newline after '= [' (D only). Will also affect the newline before the ']'
 
-nl_func_var_def_blk             Number
+nl_func_var_def_blk             Unsigned Number
   The number of blank lines after a block of variable definitions at the top of a function body
   0 = No change (default)
 
-nl_typedef_blk_start            Number
+nl_typedef_blk_start            Unsigned Number
   The number of newlines before a block of typedefs
   0 = No change (default)
   the option 'nl_after_access_spec' takes preference over 'nl_typedef_blk_start'
 
-nl_typedef_blk_end              Number
+nl_typedef_blk_end              Unsigned Number
   The number of newlines after a block of typedefs
   0 = No change (default)
 
-nl_typedef_blk_in               Number
+nl_typedef_blk_in               Unsigned Number
   The maximum consecutive newlines within a block of typedefs
   0 = No change (default)
 
-nl_var_def_blk_start            Number
+nl_var_def_blk_start            Unsigned Number
   The number of newlines before a block of variable definitions not at the top of a function body
   0 = No change (default)
   the option 'nl_after_access_spec' takes preference over 'nl_var_def_blk_start'
 
-nl_var_def_blk_end              Number
+nl_var_def_blk_end              Unsigned Number
   The number of newlines after a block of variable definitions not at the top of a function body
   0 = No change (default)
 
-nl_var_def_blk_in               Number
+nl_var_def_blk_in               Unsigned Number
   The maximum consecutive newlines within a block of variable definitions
   0 = No change (default)
 
@@ -1123,6 +988,18 @@ nl_fcall_brace                  { Ignore, Add, Remove, Force }
 
 nl_enum_brace                   { Ignore, Add, Remove, Force }
   Add or remove newline between 'enum' and '{'
+
+nl_enum_class                   { Ignore, Add, Remove, Force }
+  Add or remove newline between 'enum' and 'class'
+
+nl_enum_class_identifier        { Ignore, Add, Remove, Force }
+  Add or remove newline between 'enum class' and the identifier
+
+nl_enum_identifier_colon        { Ignore, Add, Remove, Force }
+  Add or remove newline between 'enum class' type and ':'
+
+nl_enum_colon_type              { Ignore, Add, Remove, Force }
+  Add or remove newline between 'enum class identifier :' and 'type' and/or 'type'
 
 nl_struct_brace                 { Ignore, Add, Remove, Force }
   Add or remove newline between 'struct and '{'
@@ -1145,6 +1022,9 @@ nl_else_brace                   { Ignore, Add, Remove, Force }
 
 nl_else_if                      { Ignore, Add, Remove, Force }
   Add or remove newline between 'else' and 'if'
+
+nl_before_if_closing_paren      { Ignore, Add, Remove, Force }
+  Add or remove newline before 'if'/'else if' closing parenthesis
 
 nl_brace_finally                { Ignore, Add, Remove, Force }
   Add or remove newline between '}' and 'finally'
@@ -1349,12 +1229,21 @@ nl_after_semicolon              { False, True }
 nl_paren_dbrace_open            { Ignore, Add, Remove, Force }
   Java: Control the newline between the ')' and '{{' of the double brace initializer.
 
+nl_type_brace_init_lst          { Ignore, Add, Remove, Force }
+  Whether to put a newline after the type in an unnamed temporary direct-list-initialization
+
+nl_type_brace_init_lst_open     { Ignore, Add, Remove, Force }
+  Whether to put a newline after open brace in an unnamed temporary direct-list-initialization
+
+nl_type_brace_init_lst_close    { Ignore, Add, Remove, Force }
+  Whether to put a newline before close brace in an unnamed temporary direct-list-initialization
+
 nl_after_brace_open             { False, True }
   Whether to put a newline after brace open.
   This also adds a newline before the matching brace close.
 
 nl_after_brace_open_cmt         { False, True }
-  If nl_after_brace_open and nl_after_brace_open_cmt are true, a newline is
+  If nl_after_brace_open and nl_after_brace_open_cmt are True, a newline is
   placed between the open brace and a trailing single-line comment.
 
 nl_after_vbrace_open            { False, True }
@@ -1390,7 +1279,8 @@ nl_before_if                    { Ignore, Add, Remove, Force }
   Add or remove blank line before 'if'
 
 nl_after_if                     { Ignore, Add, Remove, Force }
-  Add or remove blank line after 'if' statement
+  Add or remove blank line after 'if' statement.
+  Add/Force work only if the next token is not a closing brace
 
 nl_before_for                   { Ignore, Add, Remove, Force }
   Add or remove blank line before 'for'
@@ -1429,10 +1319,10 @@ nl_ds_struct_enum_close_brace   { False, True }
   force nl before } of a struct/union/enum
   (lower priority than 'eat_blanks_before_close_brace')
 
-nl_before_func_class_def        Number
+nl_before_func_class_def        Unsigned Number
   Add or remove blank line before 'func_class_def'
 
-nl_before_func_class_proto      Number
+nl_before_func_class_proto      Unsigned Number
   Add or remove blank line before 'func_class_proto'
 
 nl_class_colon                  { Ignore, Add, Remove, Force }
@@ -1466,6 +1356,124 @@ nl_split_for_one_liner          { False, True }
 nl_split_while_one_liner        { False, True }
   Change simple unbraced while statements into a one-liner while
   'while (i<5)\n foo(i++);' => 'while (i<5) foo(i++);'
+
+#
+# Blank line options
+#
+
+nl_max                          Unsigned Number
+  The maximum consecutive newlines (3 = 2 blank lines)
+
+nl_max_blank_in_func            Unsigned Number
+  The maximum consecutive newlines in function
+
+nl_after_func_proto             Unsigned Number
+  The number of newlines after a function prototype, if followed by another function prototype
+
+nl_after_func_proto_group       Unsigned Number
+  The number of newlines after a function prototype, if not followed by another function prototype
+
+nl_after_func_class_proto       Unsigned Number
+  The number of newlines after a function class prototype, if followed by another function class prototype
+
+nl_after_func_class_proto_group Unsigned Number
+  The number of newlines after a function class prototype, if not followed by another function class prototype
+
+nl_before_func_body_def         Unsigned Number
+  The number of newlines before a multi-line function def body
+
+nl_before_func_body_proto       Unsigned Number
+  The number of newlines before a multi-line function prototype body
+
+nl_after_func_body              Unsigned Number
+  The number of newlines after '}' of a multi-line function body
+
+nl_after_func_body_class        Unsigned Number
+  The number of newlines after '}' of a multi-line function body in a class declaration
+
+nl_after_func_body_one_liner    Unsigned Number
+  The number of newlines after '}' of a single line function body
+
+nl_before_block_comment         Unsigned Number
+  The minimum number of newlines before a multi-line comment.
+  Doesn't apply if after a brace open or another multi-line comment.
+
+nl_before_c_comment             Unsigned Number
+  The minimum number of newlines before a single-line C comment.
+  Doesn't apply if after a brace open or other single-line C comments.
+
+nl_before_cpp_comment           Unsigned Number
+  The minimum number of newlines before a CPP comment.
+  Doesn't apply if after a brace open or other CPP comments.
+
+nl_after_multiline_comment      { False, True }
+  Whether to force a newline after a multi-line comment.
+
+nl_after_label_colon            { False, True }
+  Whether to force a newline after a label's colon.
+
+nl_after_struct                 Unsigned Number
+  The number of newlines after '}' or ';' of a struct/enum/union definition
+
+nl_before_class                 Unsigned Number
+  The number of newlines before a class definition
+
+nl_after_class                  Unsigned Number
+  The number of newlines after '}' or ';' of a class definition
+
+nl_before_access_spec           Unsigned Number
+  The number of newlines before a 'private:', 'public:', 'protected:', 'signals:', or 'slots:' label.
+  Will not change the newline count if after a brace open.
+  0 = No change.
+
+nl_after_access_spec            Unsigned Number
+  The number of newlines after a 'private:', 'public:', 'protected:', 'signals:' or 'slots:' label.
+  0 = No change.
+  the option 'nl_after_access_spec' takes preference over 'nl_typedef_blk_start' and 'nl_var_def_blk_start'
+
+nl_comment_func_def             Unsigned Number
+  The number of newlines between a function def and the function comment.
+  0 = No change.
+
+nl_after_try_catch_finally      Unsigned Number
+  The number of newlines after a try-catch-finally block that isn't followed by a brace close.
+  0 = No change.
+
+nl_around_cs_property           Unsigned Number
+  The number of newlines before and after a property, indexer or event decl.
+  0 = No change.
+
+nl_between_get_set              Unsigned Number
+  The number of newlines between the get/set/add/remove handlers in C#.
+  0 = No change.
+
+nl_property_brace               { Ignore, Add, Remove, Force }
+  Add or remove newline between C# property and the '{'
+
+eat_blanks_after_open_brace     { False, True }
+  Whether to remove blank lines after '{'
+
+eat_blanks_before_close_brace   { False, True }
+  Whether to remove blank lines before '}'
+
+nl_remove_extra_newlines        Unsigned Number
+  How aggressively to remove extra newlines not in preproc.
+  0: No change
+  1: Remove most newlines not handled by other config
+  2: Remove all newlines and reformat completely by config
+
+nl_before_return                { False, True }
+  Whether to put a blank line before 'return' statements, unless after an open brace.
+
+nl_after_return                 { False, True }
+  Whether to put a blank line after 'return' statements, unless followed by a close brace.
+
+nl_after_annotation             { Ignore, Add, Remove, Force }
+  Whether to put a newline after a Java annotation statement.
+  Only affects annotations that are after a newline.
+
+nl_between_annotation           { Ignore, Add, Remove, Force }
+  Controls the newline between two annotations.
 
 #
 # Positioning options
@@ -1507,14 +1515,14 @@ pos_class_colon                 { Ignore, Lead, Trail }
 
 pos_constr_colon                { Ignore, Lead, Trail }
   The position of colons between constructor and member initialization,
-  (tied to UO_nl_constr_colon).
+  (tied to nl_constr_colon).
   Related to nl_constr_colon, nl_constr_init_args and pos_constr_comma.
 
 #
 # Line Splitting options
 #
 
-code_width                      Number
+code_width                      Unsigned Number
   Try to limit code width to N number of columns
 
 ls_for_split_full               { False, True }
@@ -1527,252 +1535,209 @@ ls_code_width                   { False, True }
   Whether to split lines as close to code_width as possible and ignore some groupings
 
 #
-# Blank line options
+# Code alignment (not left column spaces/tabs)
 #
 
-nl_max                          Number
-  The maximum consecutive newlines (3 = 2 blank lines)
+align_keep_tabs                 { False, True }
+  Whether to keep non-indenting tabs
 
-nl_after_func_proto             Number
-  The number of newlines after a function prototype, if followed by another function prototype
+align_with_tabs                 { False, True }
+  Whether to use tabs for aligning
 
-nl_after_func_proto_group       Number
-  The number of newlines after a function prototype, if not followed by another function prototype
+align_on_tabstop                { False, True }
+  Whether to bump out to the next tab when aligning
 
-nl_after_func_class_proto       Number
-  The number of newlines after a function class prototype, if followed by another function class prototype
+align_number_left               { False, True }
+  Whether to left-align numbers
 
-nl_after_func_class_proto_group Number
-  The number of newlines after a function class prototype, if not followed by another function class prototype
+align_keep_extra_space          { False, True }
+  Whether to keep whitespace not required for alignment.
 
-nl_before_func_body_def         Number
-  The number of newlines before a multi-line function def body
+align_func_params               { False, True }
+  Align variable definitions in prototypes and functions
 
-nl_before_func_body_proto       Number
-  The number of newlines before a multi-line function prototype body
+align_same_func_call_params     { False, True }
+  Align parameters in single-line functions that have the same name.
+  The function names must already be aligned with each other.
 
-nl_after_func_body              Number
-  The number of newlines after '}' of a multi-line function body
+align_var_def_span              Unsigned Number
+  The span for aligning variable definitions (0=don't align)
 
-nl_after_func_body_class        Number
-  The number of newlines after '}' of a multi-line function body in a class declaration
+align_var_def_star_style        Unsigned Number
+  How to align the star in variable definitions.
+   0=Part of the type     'void *   foo;'
+   1=Part of the variable 'void     *foo;'
+   2=Dangling             'void    *foo;'
 
-nl_after_func_body_one_liner    Number
-  The number of newlines after '}' of a single line function body
+align_var_def_amp_style         Unsigned Number
+  How to align the '&' in variable definitions.
+   0=Part of the type
+   1=Part of the variable
+   2=Dangling
 
-nl_before_block_comment         Number
-  The minimum number of newlines before a multi-line comment.
-  Doesn't apply if after a brace open or another multi-line comment.
+align_var_def_thresh            Unsigned Number
+  The threshold for aligning variable definitions (0=no limit)
 
-nl_before_c_comment             Number
-  The minimum number of newlines before a single-line C comment.
-  Doesn't apply if after a brace open or other single-line C comments.
+align_var_def_gap               Unsigned Number
+  The gap for aligning variable definitions
 
-nl_before_cpp_comment           Number
-  The minimum number of newlines before a CPP comment.
-  Doesn't apply if after a brace open or other CPP comments.
+align_var_def_colon             { False, True }
+  Whether to align the colon in struct bit fields
 
-nl_after_multiline_comment      { False, True }
-  Whether to force a newline after a multi-line comment.
+align_var_def_colon_gap         Unsigned Number
+  align variable defs gap for bit colons
 
-nl_after_label_colon            { False, True }
-  Whether to force a newline after a label's colon.
+align_var_def_attribute         { False, True }
+  Whether to align any attribute after the variable name
 
-nl_after_struct                 Number
-  The number of newlines after '}' or ';' of a struct/enum/union definition
+align_var_def_inline            { False, True }
+  Whether to align inline struct/enum/union variable definitions
 
-nl_before_class                 Number
-  The number of newlines before a class definition
+align_assign_span               Unsigned Number
+  The span for aligning on '=' in assignments (0=don't align)
 
-nl_after_class                  Number
-  The number of newlines after '}' or ';' of a class definition
+align_assign_thresh             Unsigned Number
+  The threshold for aligning on '=' in assignments (0=no limit)
 
-nl_before_access_spec           Number
-  The number of newlines before a 'private:', 'public:', 'protected:', 'signals:', or 'slots:' label.
-  Will not change the newline count if after a brace open.
-  0 = No change.
+align_enum_equ_span             Unsigned Number
+  The span for aligning on '=' in enums (0=don't align)
 
-nl_after_access_spec            Number
-  The number of newlines after a 'private:', 'public:', 'protected:', 'signals:' or 'slots:' label.
-  0 = No change.
-  the option 'nl_after_access_spec' takes preference over 'nl_typedef_blk_start' and 'nl_var_def_blk_start'
+align_enum_equ_thresh           Unsigned Number
+  The threshold for aligning on '=' in enums (0=no limit)
 
-nl_comment_func_def             Number
-  The number of newlines between a function def and the function comment.
-  0 = No change.
+align_var_class_span            Unsigned Number
+  The span for aligning class (0=don't align)
 
-nl_after_try_catch_finally      Number
-  The number of newlines after a try-catch-finally block that isn't followed by a brace close.
-  0 = No change.
+align_var_class_thresh          Unsigned Number
+  The threshold for aligning class member definitions (0=no limit)
 
-nl_around_cs_property           Number
-  The number of newlines before and after a property, indexer or event decl.
-  0 = No change.
+align_var_class_gap             Unsigned Number
+  The gap for aligning class member definitions
 
-nl_between_get_set              Number
-  The number of newlines between the get/set/add/remove handlers in C#.
-  0 = No change.
+align_var_struct_span           Unsigned Number
+  The span for aligning struct/union (0=don't align)
 
-nl_property_brace               { Ignore, Add, Remove, Force }
-  Add or remove newline between C# property and the '{'
+align_var_struct_thresh         Unsigned Number
+  The threshold for aligning struct/union member definitions (0=no limit)
 
-eat_blanks_after_open_brace     { False, True }
-  Whether to remove blank lines after '{'
+align_var_struct_gap            Unsigned Number
+  The gap for aligning struct/union member definitions
 
-eat_blanks_before_close_brace   { False, True }
-  Whether to remove blank lines before '}'
+align_struct_init_span          Unsigned Number
+  The span for aligning struct initializer values (0=don't align)
 
-nl_remove_extra_newlines        Number
-  How aggressively to remove extra newlines not in preproc.
-  0: No change
-  1: Remove most newlines not handled by other config
-  2: Remove all newlines and reformat completely by config
+align_typedef_gap               Unsigned Number
+  The minimum space between the type and the synonym of a typedef
 
-nl_before_return                { False, True }
-  Whether to put a blank line before 'return' statements, unless after an open brace.
+align_typedef_span              Unsigned Number
+  The span for aligning single-line typedefs (0=don't align)
 
-nl_after_return                 { False, True }
-  Whether to put a blank line after 'return' statements, unless followed by a close brace.
+align_typedef_func              Unsigned Number
+  How to align typedef'd functions with other typedefs
+  0: Don't mix them at all
+  1: align the open paren with the types
+  2: align the function type name with the other type names
 
-nl_after_annotation             { Ignore, Add, Remove, Force }
-  Whether to put a newline after a Java annotation statement.
-  Only affects annotations that are after a newline.
+align_typedef_star_style        Unsigned Number
+  Controls the positioning of the '*' in typedefs. Just try it.
+  0: Align on typedef type, ignore '*'
+  1: The '*' is part of type name: typedef int  *pint;
+  2: The '*' is part of the type, but dangling: typedef int *pint;
 
-nl_between_annotation           { Ignore, Add, Remove, Force }
-  Controls the newline between two annotations.
+align_typedef_amp_style         Unsigned Number
+  Controls the positioning of the '&' in typedefs. Just try it.
+  0: Align on typedef type, ignore '&'
+  1: The '&' is part of type name: typedef int  &pint;
+  2: The '&' is part of the type, but dangling: typedef int &pint;
 
-#
-# Code modifying options (non-whitespace)
-#
+align_right_cmt_span            Unsigned Number
+  The span for aligning comments that end lines (0=don't align)
 
-mod_full_brace_do               { Ignore, Add, Remove, Force }
-  Add or remove braces on single-line 'do' statement
+align_right_cmt_mix             { False, True }
+  If aligning comments, mix with comments after '}' and #endif with less than 3 spaces before the comment
 
-mod_full_brace_for              { Ignore, Add, Remove, Force }
-  Add or remove braces on single-line 'for' statement
+align_right_cmt_gap             Number
+  If a trailing comment is more than this number of columns away from the text it follows,
+  it will qualify for being aligned. This has to be > 0 to do anything.
+  A negative value to force comments which are stuck to the previous token
+   (gap=0) into alignment with the others.
 
-mod_full_brace_function         { Ignore, Add, Remove, Force }
-  Add or remove braces on single-line function definitions. (Pawn)
+align_right_cmt_at_col          Unsigned Number
+  Align trailing comment at or beyond column N; 'pulls in' comments as a bonus side effect (0=ignore)
 
-mod_full_brace_if               { Ignore, Add, Remove, Force }
-  Add or remove braces on single-line 'if' statement. Will not remove the braces if they contain an 'else'.
+align_func_proto_span           Unsigned Number
+  The span for aligning function prototypes (0=don't align)
 
-mod_full_brace_if_chain         { False, True }
-  Make all if/elseif/else statements in a chain be braced or not. Overrides mod_full_brace_if.
-  If any must be braced, they are all braced.  If all can be unbraced, then the braces are removed.
+align_func_proto_gap            Unsigned Number
+  Minimum gap between the return type and the function name.
 
-mod_full_brace_if_chain_only    { False, True }
-  Make all if/elseif/else statements with at least one 'else' or 'else if' fully braced.
-  If mod_full_brace_if_chain is used together with this option, all if-else chains will get braces,
-  and simple 'if' statements will lose them (if possible).
-  
+align_on_operator               { False, True }
+  Align function protos on the 'operator' keyword instead of what follows
 
-mod_full_brace_nl               Number
-  Don't remove braces around statements that span N newlines
+align_mix_var_proto             { False, True }
+  Whether to mix aligning prototype and variable declarations.
+  If True, align_var_def_XXX options are used instead of align_func_proto_XXX options.
 
-mod_full_brace_while            { Ignore, Add, Remove, Force }
-  Add or remove braces on single-line 'while' statement
+align_single_line_func          { False, True }
+  Align single-line functions with function prototypes, uses align_func_proto_span
 
-mod_full_brace_using            { Ignore, Add, Remove, Force }
-  Add or remove braces on single-line 'using ()' statement
+align_single_line_brace         { False, True }
+  Aligning the open brace of single-line functions.
+  Requires align_single_line_func=True, uses align_func_proto_span
 
-mod_paren_on_return             { Ignore, Add, Remove, Force }
-  Add or remove unnecessary paren on 'return' statement
+align_single_line_brace_gap     Unsigned Number
+  Gap for align_single_line_brace.
 
-mod_pawn_semicolon              { False, True }
-  Whether to change optional semicolons to real semicolons
+align_oc_msg_spec_span          Unsigned Number
+  The span for aligning ObjC msg spec (0=don't align)
 
-mod_full_paren_if_bool          { False, True }
-  Add parens on 'while' and 'if' statement around bools
+align_nl_cont                   { False, True }
+  Whether to align macros wrapped with a backslash and a newline.
+  This will not work right if the macro contains a multi-line comment.
 
-mod_remove_extra_semicolon      { False, True }
-  Whether to remove superfluous semicolons
+align_pp_define_together        { False, True }
+  # Align macro functions and variables together
 
-mod_add_long_function_closebrace_comment Number
-  If a function body exceeds the specified number of newlines and doesn't have a comment after
-  the close brace, a comment will be added.
+align_pp_define_gap             Unsigned Number
+  The minimum space between label and value of a preprocessor define
 
-mod_add_long_namespace_closebrace_comment Number
-  If a namespace body exceeds the specified number of newlines and doesn't have a comment after
-  the close brace, a comment will be added.
+align_pp_define_span            Unsigned Number
+  The span for aligning on '#define' bodies (0=don't align, other=number of lines including comments between blocks)
 
-mod_add_long_class_closebrace_comment Number
-  If a class body exceeds the specified number of newlines and doesn't have a comment after
-  the close brace, a comment will be added.
+align_left_shift                { False, True }
+  Align lines that start with '<<' with previous '<<'. Default=True
 
-mod_add_long_switch_closebrace_comment Number
-  If a switch body exceeds the specified number of newlines and doesn't have a comment after
-  the close brace, a comment will be added.
+align_asm_colon                 { False, True }
+  Align text after asm volatile () colons.
 
-mod_add_long_ifdef_endif_comment Number
-  If an #ifdef body exceeds the specified number of newlines and doesn't have a comment after
-  the #endif, a comment will be added.
+align_oc_msg_colon_span         Unsigned Number
+  Span for aligning parameters in an Obj-C message call on the ':' (0=don't align)
 
-mod_add_long_ifdef_else_comment Number
-  If an #ifdef or #else body exceeds the specified number of newlines and doesn't have a comment after
-  the #else, a comment will be added.
+align_oc_msg_colon_first        { False, True }
+  If True, always align with the first parameter, even if it is too short.
 
-mod_sort_import                 { False, True }
-  If TRUE, will sort consecutive single-line 'import' statements [Java, D]
-
-mod_sort_using                  { False, True }
-  If TRUE, will sort consecutive single-line 'using' statements [C#]
-
-mod_sort_include                { False, True }
-  If TRUE, will sort consecutive single-line '#include' statements [C/C++] and '#import' statements [Obj-C]
-  This is generally a bad idea, as it may break your code.
-
-mod_move_case_break             { False, True }
-  If TRUE, it will move a 'break' that appears after a fully braced 'case' before the close brace.
-
-mod_case_brace                  { Ignore, Add, Remove, Force }
-  Will add or remove the braces around a fully braced case statement.
-  Will only remove the braces if there are no variable declarations in the block.
-
-mod_remove_empty_return         { False, True }
-  If TRUE, it will remove a void 'return;' that appears as the last statement in a function.
-
-mod_sort_oc_properties          { False, True }
-  If TRUE, it will organize the properties (Obj-C)
-
-mod_sort_oc_property_thread_safe_weight Number
-  Determines weight of atomic/nonatomic (Obj-C)
-
-mod_sort_oc_property_readwrite_weight Number
-  Determines weight of readwrite (Obj-C)
-
-mod_sort_oc_property_reference_weight Number
-  Determines weight of reference type (retain, copy, assign, weak, strong) (Obj-C)
-
-mod_sort_oc_property_getter_weight Number
-  Determines weight of getter type (getter=) (Obj-C)
-
-mod_sort_oc_property_setter_weight Number
-  Determines weight of setter type (setter=) (Obj-C)
-
-mod_sort_oc_property_nullability_weight Number
-  Determines weight of nullability type (nullable/nonnull) (Obj-C)
+align_oc_decl_colon             { False, True }
+  Aligning parameters in an Obj-C '+' or '-' declaration on the ':'
 
 #
 # Comment modifications
 #
 
-cmt_width                       Number
+cmt_width                       Unsigned Number
   Try to wrap comments at cmt_width columns
 
 cmt_reflow_mode                 Number
-  Set the comment reflow mode (default: 0)
+  Set the comment reflow mode (Default=0)
   0: no reflowing (apart from the line wrapping due to cmt_width)
   1: no touching at all
   2: full reflow
-  
 
 cmt_convert_tab_to_spaces       { False, True }
   Whether to convert all tabs to spaces in comments. Default is to leave tabs inside comments alone, unless used for indenting.
 
 cmt_indent_multi                { False, True }
-  If false, disable all multi-line comment changes, including cmt_width. keyword substitution and leading chars.
-  Default=True.
+  If False, disable all multi-line comment changes, including cmt_width. keyword substitution and leading chars.
+  Default=True
 
 cmt_c_group                     { False, True }
   Whether to group c-comments that look like they are in a block
@@ -1798,7 +1763,7 @@ cmt_cpp_to_c                    { False, True }
 cmt_star_cont                   { False, True }
   Whether to put a star on subsequent comment lines
 
-cmt_sp_before_star_cont         Number
+cmt_sp_before_star_cont         Unsigned Number
   The number of spaces to insert at the start of subsequent comment lines
 
 cmt_sp_after_star_cont          Number
@@ -1808,7 +1773,7 @@ cmt_multi_check_last            { False, True }
   For multi-line comments with a '*' lead, remove leading spaces if the first and last lines of
   the comment are the same length. Default=True
 
-cmt_multi_first_len_minimum     Number
+cmt_multi_first_len_minimum     Unsigned Number
   For multi-line comments with a '*' lead, remove leading spaces if the first and last lines of
   the comment are the same length AND if the length is bigger as the first_len minimum. Default=4
 
@@ -1849,6 +1814,123 @@ cmt_insert_before_ctor_dtor     { False, True }
   Affects cmt_insert_func_header.
 
 #
+# Code modifying options (non-whitespace)
+#
+
+mod_full_brace_do               { Ignore, Add, Remove, Force }
+  Add or remove braces on single-line 'do' statement
+
+mod_full_brace_for              { Ignore, Add, Remove, Force }
+  Add or remove braces on single-line 'for' statement
+
+mod_full_brace_function         { Ignore, Add, Remove, Force }
+  Add or remove braces on single-line function definitions. (Pawn)
+
+mod_full_brace_if               { Ignore, Add, Remove, Force }
+  Add or remove braces on single-line 'if' statement. Will not remove the braces if they contain an 'else'.
+
+mod_full_brace_if_chain         { False, True }
+  Make all if/elseif/else statements in a chain be braced or not. Overrides mod_full_brace_if.
+  If any must be braced, they are all braced.  If all can be unbraced, then the braces are removed.
+
+mod_full_brace_if_chain_only    { False, True }
+  Make all if/elseif/else statements with at least one 'else' or 'else if' fully braced.
+  If mod_full_brace_if_chain is used together with this option, all if-else chains will get braces,
+  and simple 'if' statements will lose them (if possible).
+
+mod_full_brace_nl               Unsigned Number
+  Don't remove braces around statements that span N newlines
+
+mod_full_brace_nl_block_rem_mlcond { False, True }
+  Blocks removal of braces if the parenthesis of if/for/while/.. span multiple lines.
+
+mod_full_brace_while            { Ignore, Add, Remove, Force }
+  Add or remove braces on single-line 'while' statement
+
+mod_full_brace_using            { Ignore, Add, Remove, Force }
+  Add or remove braces on single-line 'using ()' statement
+
+mod_paren_on_return             { Ignore, Add, Remove, Force }
+  Add or remove unnecessary paren on 'return' statement
+
+mod_pawn_semicolon              { False, True }
+  Whether to change optional semicolons to real semicolons
+
+mod_full_paren_if_bool          { False, True }
+  Add parens on 'while' and 'if' statement around bools
+
+mod_remove_extra_semicolon      { False, True }
+  Whether to remove superfluous semicolons
+
+mod_add_long_function_closebrace_comment Unsigned Number
+  If a function body exceeds the specified number of newlines and doesn't have a comment after
+  the close brace, a comment will be added.
+
+mod_add_long_namespace_closebrace_comment Unsigned Number
+  If a namespace body exceeds the specified number of newlines and doesn't have a comment after
+  the close brace, a comment will be added.
+
+mod_add_long_class_closebrace_comment Unsigned Number
+  If a class body exceeds the specified number of newlines and doesn't have a comment after
+  the close brace, a comment will be added.
+
+mod_add_long_switch_closebrace_comment Unsigned Number
+  If a switch body exceeds the specified number of newlines and doesn't have a comment after
+  the close brace, a comment will be added.
+
+mod_add_long_ifdef_endif_comment Unsigned Number
+  If an #ifdef body exceeds the specified number of newlines and doesn't have a comment after
+  the #endif, a comment will be added.
+
+mod_add_long_ifdef_else_comment Unsigned Number
+  If an #ifdef or #else body exceeds the specified number of newlines and doesn't have a comment after
+  the #else, a comment will be added.
+
+mod_sort_import                 { False, True }
+  If True, will sort consecutive single-line 'import' statements [Java, D]
+
+mod_sort_using                  { False, True }
+  If True, will sort consecutive single-line 'using' statements [C#]
+
+mod_sort_include                { False, True }
+  If True, will sort consecutive single-line '#include' statements [C/C++] and '#import' statements [Obj-C]
+  This is generally a bad idea, as it may break your code.
+
+mod_move_case_break             { False, True }
+  If True, it will move a 'break' that appears after a fully braced 'case' before the close brace.
+
+mod_case_brace                  { Ignore, Add, Remove, Force }
+  Will add or remove the braces around a fully braced case statement.
+  Will only remove the braces if there are no variable declarations in the block.
+
+mod_remove_empty_return         { False, True }
+  If True, it will remove a void 'return;' that appears as the last statement in a function.
+
+mod_sort_oc_properties          { False, True }
+  If True, it will organize the properties (Obj-C)
+
+mod_sort_oc_property_class_weight Number
+  Determines weight of class property modifier (Obj-C)
+
+mod_sort_oc_property_thread_safe_weight Number
+  Determines weight of atomic, nonatomic (Obj-C)
+
+mod_sort_oc_property_readwrite_weight Number
+  Determines weight of readwrite (Obj-C)
+
+mod_sort_oc_property_reference_weight Number
+  Determines weight of reference type (retain, copy, assign, weak, strong) (Obj-C)
+
+mod_sort_oc_property_getter_weight Number
+  Determines weight of getter type (getter=) (Obj-C)
+
+mod_sort_oc_property_setter_weight Number
+  Determines weight of setter type (setter=) (Obj-C)
+
+mod_sort_oc_property_nullability_weight Number
+  Determines weight of nullability type (nullable, nonnull, null_unspecified, null_resettable) (Obj-C)
+
+#
 # Preprocessor options
 #
 
@@ -1856,17 +1938,17 @@ pp_indent                       { Ignore, Add, Remove, Force }
   Control indent of preprocessors inside #if blocks at brace level 0 (file-level)
 
 pp_indent_at_level              { False, True }
-  Whether to indent #if/#else/#endif at the brace level (true) or from column 1 (false)
+  Whether to indent #if/#else/#endif at the brace level (True) or from column 1 (False)
 
-pp_indent_count                 Number
+pp_indent_count                 Unsigned Number
   Specifies the number of columns to indent preprocessors per level at brace level 0 (file-level).
-  If pp_indent_at_level=false, specifies the number of columns to indent preprocessors per level at brace level > 0 (function-level).
-  Default=1.
+  If pp_indent_at_level=False, specifies the number of columns to indent preprocessors per level at brace level > 0 (function-level).
+  Default=1
 
 pp_space                        { Ignore, Add, Remove, Force }
   Add or remove space after # based on pp_level of #if blocks
 
-pp_space_count                  Number
+pp_space_count                  Unsigned Number
   Sets the number of spaces added with pp_space
 
 pp_indent_region                Number
@@ -1876,7 +1958,7 @@ pp_region_indent_code           { False, True }
   Whether to indent the code between #region and #endregion
 
 pp_indent_if                    Number
-  If pp_indent_at_level=true, sets the indent for #if, #else and #endif when not at file-level.
+  If pp_indent_at_level=True, sets the indent for #if, #else and #endif when not at file-level.
   0:  indent preprocessors using output_tab_size.
   >0: column at which all preprocessors will be indented.
 
@@ -1884,7 +1966,23 @@ pp_if_indent_code               { False, True }
   Control whether to indent the code between #if, #else and #endif.
 
 pp_define_at_level              { False, True }
-  Whether to indent '#define' at the brace level (true) or from column 1 (false)
+  Whether to indent '#define' at the brace level (True) or from column 1 (false)
+
+pp_ignore_define_body           { False, True }
+  Whether to ignore the '#define' body while formatting.
+
+#
+# Sort includes options
+#
+
+include_category_0              String
+  The regex for include category with priority 0.
+
+include_category_1              String
+  The regex for include category with priority 1.
+
+include_category_2              String
+  The regex for include category with priority 2.
 
 #
 # Use or Do not Use options
@@ -1897,22 +1995,75 @@ use_indent_func_call_param      { False, True }
 use_indent_continue_only_once   { False, True }
   The value of the indentation for a continuation line is calculate differently if the line is:
     a declaration :your case with QString fileName ...
-    an assigment  :your case with pSettings = new QSettings( ...
+    an assignment  :your case with pSettings = new QSettings( ...
   At the second case the option value might be used twice:
-    at the assigment
+    at the assignment
     at the function call (if present)
-  To prevent the double use of the option value, use this option with the value 'true'.
+  To prevent the double use of the option value, use this option with the value 'True'.
   True:  indent_continue will be used only once
   False: indent_continue will be used every time (default)
 
 use_options_overriding_for_qt_macros { False, True }
   SIGNAL/SLOT Qt macros have special formatting options. See options_for_QT.cpp for details.
-  Default=True.
+  Default=True
 
 #
 # Warn levels - 1: error, 2: warning (default), 3: note
 #
 
-warn_level_tabs_found_in_verbatim_string_literals Number
+warn_level_tabs_found_in_verbatim_string_literals Unsigned Number
   Warning is given if doing tab-to-\t replacement and we have found one in a C# verbatim string literal.
 
+
+# Meaning of the settings:
+#   Ignore - do not do any changes
+#   Add    - makes sure there is 1 or more space/brace/newline/etc
+#   Force  - makes sure there is exactly 1 space/brace/newline/etc,
+#            behaves like Add in some contexts
+#   Remove - removes space/brace/newline/etc
+#
+#
+# - Token(s) can be treated as specific type(s) with the 'set' option:
+#     `set tokenType tokenString [tokenString...]`
+#
+#     Example:
+#       `set BOOL __AND__ __OR__`
+#
+#     tokenTypes are defined in src/token_enum.h, use them without the
+#     'CT_' prefix: 'CT_BOOL' -> 'BOOL'
+#
+#
+# - Token(s) can be treated as type(s) with the 'type' option.
+#     `type tokenString [tokenString...]`
+#
+#     Example:
+#       `type int c_uint_8 Rectangle`
+#
+#     This can also be achieved with `set TYPE int c_uint_8 Rectangle`
+#
+#
+# To embed whitespace in tokenStrings use the '\' escape character, or quote
+# the tokenStrings. These quotes are supported: "'`
+#
+#
+# - Support for the auto detection of languages through the file ending can be
+#   added using the 'file_ext' command.
+#     `file_ext langType langString [langString..]`
+#
+#     Example:
+#       `file_ext CPP .ch .cxx .cpp.in`
+#
+#     langTypes are defined in uncrusify_types.h in the lang_flag_e enum, use
+#     them without the 'LANG_' prefix: 'LANG_CPP' -> 'CPP'
+#
+#
+# - Custom macro-based indentation can be set up using 'macro-open',
+#   'macro-else' and 'macro-close'.
+#     `(macro-open | macro-else | macro-close) tokenString`
+#
+#     Example:
+#       `macro-open  BEGIN_TEMPLATE_MESSAGE_MAP`
+#       `macro-open  BEGIN_MESSAGE_MAP`
+#       `macro-close END_MESSAGE_MAP`
+#
+#
