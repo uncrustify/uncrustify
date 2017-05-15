@@ -1,10 +1,5 @@
-if (Application.platform == RuntimePlatform.LinuxEditor)
-{
-    return new ProcessStartInfo("smthg")
-        {
-            Arguments = string.Format ("-9 --ss -S aa \"{0}\"", file),
-            WorkingDirectory = Directory.GetCurrentDirectory(),
-            UseShellExecute = false,
-            CreateNoWindow = true
-        };
-}
+throw new System.Exception(
+    "'Fast Rebuild' option requires prebuilt JavaScript version of Unity engine. The following files are missing: "
+    + (!File.Exists(UnityNativeJs) ? "\n" + UnityNativeJs : "")
+    + (!File.Exists(UnityNativeJs + ".mem") ? "\n" + UnityNativeJs + ".mem" : "")
+);
