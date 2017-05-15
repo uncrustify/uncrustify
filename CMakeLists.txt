@@ -122,7 +122,22 @@ endif()
 if( NOT CMAKE_BUILD_TYPE )
   set( CMAKE_BUILD_TYPE Release )
 endif()
-set( FALLBACK_VERSION "Uncrustify-0.64_f" )
+
+# get a fallback version string from the package.json file to guard against
+# failure of the make_version.py script
+set(FALLBACK_VERSION "")
+file(READ "package.json" content)
+string(REPLACE "\n" ";" lines "${content}")
+foreach(line ${lines})
+    string(STRIP "${line}" line)
+    if("${line}" MATCHES "^\"version\" *: *\"([0-9.]+)\"")
+        set(FALLBACK_VERSION "Uncrustify-${CMAKE_MATCH_1}")
+        break()
+    endif()
+endforeach()
+if ("${FALLBACK_VERSION}" STREQUAL "")
+    message(FATAL_ERROR "Could not extract version info from package.json")
+endif()
 
 find_package(PythonInterp REQUIRED)
 execute_process(
@@ -134,8 +149,8 @@ execute_process(
 
 message(STATUS )
 if (make_version_error)
-    message(WARNING "scripts/make_version.py exited with code ${make_version_error}: ${make_version_output}\n"
-                    "As a fallback, version '${FALLBACK_VERSION}' will be used.")
+    message(STATUS "scripts/make_version.py exited with code ${make_version_error}: ${make_version_output}\n"
+                   "As a fallback, version '${FALLBACK_VERSION}' will be used.")
     set( CURRENT_VERSION ${FALLBACK_VERSION} )
 else()
     string(STRIP ${make_version_output} CURRENT_VERSION)
