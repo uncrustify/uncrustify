@@ -727,8 +727,9 @@ indent_constr_colon             = false    # false/true
 # Virtual indent from the ':' for member initializers. Default=2
 indent_ctor_init_leading        = 2        # unsigned number
 
-# Additional indenting for constructor initializer list
-indent_ctor_init                = 0        # unsigned number
+# Additional indent for constructor initializer list.
+# Negative values decrease indent down to the first column. Default=0
+indent_ctor_init                = 0        # number
 
 # False=treat 'else\nif' as 'else if' for indenting purposes
 # True=indent the 'if' one level

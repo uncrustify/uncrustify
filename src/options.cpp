@@ -755,8 +755,9 @@ void register_options(void)
                   "Whether to indent the stuff after a leading class initializer colon");
    unc_add_option("indent_ctor_init_leading", UO_indent_ctor_init_leading, AT_UNUM,
                   "Virtual indent from the ':' for member initializers. Default=2");
-   unc_add_option("indent_ctor_init", UO_indent_ctor_init, AT_UNUM,
-                  "Additional indenting for constructor initializer list");
+   unc_add_option("indent_ctor_init", UO_indent_ctor_init, AT_NUM,
+                  "Additional indent for constructor initializer list.\n"
+                  "Negative values decrease indent down to the first column. Default=0");
    unc_add_option("indent_else_if", UO_indent_else_if, AT_BOOL,
                   "False=treat 'else\\nif' as 'else if' for indenting purposes\n"
                   "True=indent the 'if' one level");
