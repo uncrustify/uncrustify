@@ -156,7 +156,11 @@ public:
       return(m_chars);
    }
 
+#ifdef EMSCRIPTEN
+   int operator[](int idx) const
+#else
    int operator[](size_t idx) const
+#endif
    {
       return((idx < m_chars.size()) ? m_chars[idx] : 0);
    }
