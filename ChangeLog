@@ -13,21 +13,30 @@ New options:
   - mod_sort_oc_property_class_weight              May 05
   - mod_full_brace_nl_block_rem_mlcond             Mar 17
   - sp_inside_newop_paren_open                     Mar 13
-  - sp_inside_newop_paren_clos                     Mar 13
   - sp_inside_newop_paren                          Mar 13
   - sp_after_newop_paren                           Mar 13
   - sp_inside_newop_paren_close                    Mar 13
+  - pp_ignore_define_body                          Feb 18
   - sp_enum_colon                                  Feb 13
   - nl_enum_class                                  Feb 13
   - nl_enum_class_identifier                       Feb 13
   - nl_enum_identifier_colon                       Feb 13
   - nl_enum_colon_type                             Feb 13
-  - indent_param                             2017  Feb 01
-  - nl_max_blank_in_func_minus_one           2016  Nov 26
+  - indent_param                                   Feb 01
+  - include_category_0                             Jan 24
+  - include_category_1                             Jan 24
+  - include_category_2                       2017  Jan 24
+  - force_tab_after_define                   2016  Dec 29
   - nl_max_blank_in_func                           Nov 26
   - indent_ternary_operator                        Nov 24
+  - indent_using_block                             Oct 20
 
+New:
+  - emscripten interface
+  - removal of autogen / configure build
 
+Removed option:
+  - dont_protect_xcode_code_placeholders
 
 Bugfix:
  - Issue #324, 398, 404, 497, 525, 575, 633, 638, 643, 646, 663, 664, 666,
