@@ -1375,8 +1375,12 @@ void indent_text(void)
             {
                if (cpd.settings[UO_indent_token_after_brace].b)
                {
-                  frm.pse[frm.pse_tos].indent = next->column;
-                  log_indent();
+                  // Issue #1108
+                  if (!(pc->flags & PCF_ONE_LINER))
+                  {
+                     frm.pse[frm.pse_tos].indent = next->column;
+                     log_indent();
+                  }
                }
             }
             frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;

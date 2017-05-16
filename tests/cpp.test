@@ -102,6 +102,7 @@
 30205 cmt_right.cfg                    cpp/cmt_right.cpp
 30206 empty.cfg                        cpp/cmt_backslash_eol.cpp
 30207 cmt_indent_pp.cfg                cpp/cmt_indent_pp.h
+30208 bug_1108.cfg                     cpp/bug_1108.cpp
 
 30250 align_fcall.cfg                  cpp/align_fcall.cpp
 30251 align_fcall-2.cfg                cpp/align_fcall.cpp
