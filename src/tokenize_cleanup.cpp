@@ -861,7 +861,7 @@ void tokenize_cleanup(void)
 
 static void check_template(chunk_t *start)
 {
-   LOG_FMT(LTEMPL, "%s: Line %zu, col %zu:", __func__, start->orig_line, start->orig_col);
+   LOG_FMT(LTEMPL, "%s(%d): Line %zu, col %zu:", __func__, __LINE__, start->orig_line, start->orig_col);
 #ifdef DEBUG
    LOG_FMT(LSPLIT, "\n");
 #endif // DEBUG
@@ -1055,9 +1055,17 @@ static void check_template(chunk_t *start)
          pc = start;
          while (pc != end)
          {
-            chunk_t *next = chunk_get_next_ncnl(pc, scope_e::PREPROC);
             chunk_flags_set(pc, PCF_IN_TEMPLATE);
-            if (next->type != CT_PAREN_OPEN)
+            chunk_t *next = chunk_get_next_ncnl(pc, scope_e::PREPROC);
+            if (next == nullptr)
+            {
+               return;
+            }
+            // Issue #1127
+            if ((next->type != CT_PAREN_OPEN) &&
+                (next->type != CT_NUMBER) &&
+                (next->type != CT_STAR) &&
+                (next->type != CT_ARITH))
             {
                make_type(pc);
             }
