@@ -34,15 +34,19 @@ New options:
 New:
   - emscripten interface
   - removal of autogen / configure build
+  - list options that are now AT_UNUM type
 
 Removed option:
   - dont_protect_xcode_code_placeholders
 
+Removed MS calling convention keywords:
+  - __cdecl, __clrcall, __fastcall, __stdcall, __thiscall, __vectorcall
+
 Bugfix:
- - Issue #324, 398, 404, 497, 525, 575, 633, 638, 643, 646, 663, 664, 666,
-     679, 682, 687, 726, 752, 753, 793, 815, 825, 842, 857, 859, 870, 869,
+ - Issue # 324, 398, 404, 497, 525, 575, 633, 638, 643, 646, 663, 666,
+     679, 682, 687, 726, 752, 753, 793, 815, 825, 842, 857, 859, 869, 870,
      889, 902, 916, 917, 928, 935, 938, 940, 972, 1002, 1005, 1020, 1030,
-     1032, 1041, 1068, 1112, 1117, 1139 are fixed
+     1032, 1041, 1068, 1117, 1139 are fixed
  - Proposal #381, 876 are adopted.
 
 Change highlights in uncrustify-0.64 (October 2016)
