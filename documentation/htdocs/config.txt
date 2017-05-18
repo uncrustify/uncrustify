@@ -1,4 +1,4 @@
-# Uncrustify-0.64-629-b807675-dirty
+# Uncrustify-0.64-640-0ce591e
 #
 # General options
 #
@@ -725,8 +725,9 @@ indent_constr_colon             { False, True }
 indent_ctor_init_leading        Unsigned Number
   Virtual indent from the ':' for member initializers. Default=2
 
-indent_ctor_init                Unsigned Number
-  Additional indenting for constructor initializer list
+indent_ctor_init                Number
+  Additional indent for constructor initializer list.
+  Negative values decrease indent down to the first column. Default=0
 
 indent_else_if                  { False, True }
   False=treat 'else\nif' as 'else if' for indenting purposes
