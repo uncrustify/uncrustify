@@ -24,7 +24,6 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
-#include <algorithm>
 #include "unc_ctype.h"
 #include "unc_tools.h"
 #include "uncrustify.h"

@@ -1,14 +1,53 @@
-Change highlights in uncrustify-0.xx (x 2016)
+Change highlights in uncrustify-0.65 (May 2017)
 -------------------------------------------------------------------------------
 
-New:
-
 New options:
+  - nl_before_if_closing_paren                     May 12
+  - sp_after_type_brace_init_lst_open              May 09
+  - sp_before_type_brace_init_lst_close            May 09
+  - sp_inside_type_brace_init_lst                  May 09
+  - sp_type_brace_init_lst                         May 09
+  - nl_type_brace_init_lst                         May 09
+  - nl_type_brace_init_lst_open                    May 09
+  - nl_type_brace_init_lst_close                   May 09
+  - mod_sort_oc_property_class_weight              May 05
+  - mod_full_brace_nl_block_rem_mlcond             Mar 17
+  - sp_inside_newop_paren_open                     Mar 13
+  - sp_inside_newop_paren                          Mar 13
+  - sp_after_newop_paren                           Mar 13
+  - sp_inside_newop_paren_close                    Mar 13
+  - pp_ignore_define_body                          Feb 18
+  - sp_enum_colon                                  Feb 13
+  - nl_enum_class                                  Feb 13
+  - nl_enum_class_identifier                       Feb 13
+  - nl_enum_identifier_colon                       Feb 13
+  - nl_enum_colon_type                             Feb 13
+  - indent_param                                   Feb 01
+  - include_category_0                             Jan 24
+  - include_category_1                             Jan 24
+  - include_category_2                       2017  Jan 24
+  - force_tab_after_define                   2016  Dec 29
+  - nl_max_blank_in_func                           Nov 26
+  - indent_ternary_operator                        Nov 24
   - indent_using_block                             Oct 20
 
+New:
+  - emscripten interface
+  - removal of autogen / configure build
+  - list options that are now AT_UNUM type
+
+Removed option:
+  - dont_protect_xcode_code_placeholders
+
+Removed MS calling convention keywords:
+  - __cdecl, __clrcall, __fastcall, __stdcall, __thiscall, __vectorcall
+
 Bugfix:
- - Issue #679 is fixed
- - Proposal #679 is implemented
+ - Issue # 324, 398, 404, 497, 525, 575, 633, 638, 643, 646, 663, 666,
+     679, 682, 687, 726, 752, 753, 793, 815, 825, 842, 857, 859, 869, 870,
+     889, 902, 916, 917, 928, 935, 938, 940, 972, 1002, 1005, 1020, 1030,
+     1032, 1041, 1068, 1117, 1139 are fixed
+ - Proposal #381, 876 are adopted.
 
 Change highlights in uncrustify-0.64 (October 2016)
 -------------------------------------------------------------------------------

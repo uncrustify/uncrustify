@@ -299,6 +299,9 @@ void reindent_line(chunk_t *pc, size_t column)
            __func__, __LINE__, pc->orig_line, pc->column, pc->text(),
            get_token_name(pc->type), get_token_name(pc->parent_type),
            column);
+#ifdef DEBUG
+   LOG_FMT(LINDLINE, "\n");
+#endif
    log_func_stack_inline(LINDLINE);
 
    if (column == pc->column)
@@ -429,7 +432,9 @@ static void indent_pse_pop(parse_frame_t &frm, chunk_t *pc)
    {
       if (pc != nullptr)
       {
-         LOG_FMT(LINDPSE, "%4zu] (pp=%d) CLOSE [%zu,%s] on %s, started on line %zu, level=%zu/%zu\n",
+         LOG_FMT(LINDPSE, "%s(%d):\n",
+                 __func__, __LINE__);
+         LOG_FMT(LINDPSE, "  %zu] (pp=%d) CLOSE [%zu,%s] on %s, started on line %zu, level=%zu/%zu\n",
                  pc->orig_line, cpd.pp_level, frm.pse_tos,
                  get_token_name(frm.pse[frm.pse_tos].type),
                  get_token_name(pc->type),
@@ -439,7 +444,9 @@ static void indent_pse_pop(parse_frame_t &frm, chunk_t *pc)
       }
       else
       {
-         LOG_FMT(LINDPSE, " EOF] CLOSE [%zu,%s], started on line %zu\n",
+         LOG_FMT(LINDPSE, "%s(%d):\n",
+                 __func__, __LINE__);
+         LOG_FMT(LINDPSE, "   EOF] CLOSE [%zu,%s], started on line %zu\n",
                  frm.pse_tos, get_token_name(frm.pse[frm.pse_tos].type),
                  frm.pse[frm.pse_tos].open_line);
       }
@@ -448,7 +455,6 @@ static void indent_pse_pop(parse_frame_t &frm, chunk_t *pc)
        * just-popped indent values
        */
       frm.pse_tos--;
-      LOG_FMT(LINDLINE, "(%d) ", __LINE__);
       if (pc != nullptr)
       {
          LOG_FMT(LINDLINE, "%s(%d): orig_line=%zu, pse_tos=%zu, type=%s\n",
@@ -2511,6 +2517,9 @@ static void indent_comment(chunk_t *pc, size_t col)
 
    LOG_FMT(LCMTIND, "%s(%d): orig_line %zu, orig_col %zu, level %zu: ",
            __func__, __LINE__, pc->orig_line, pc->orig_col, pc->level);
+#ifdef DEBUG
+   LOG_FMT(LCMTIND, "\n");
+#endif
 
    /* force column 1 comment to column 1 if not changing them */
    if ((pc->orig_col == 1) && !cpd.settings[UO_indent_col1_comment].b &&
@@ -2571,8 +2580,7 @@ bool ifdef_over_whole_file(void)
    LOG_FUNC_ENTRY();
    chunk_t *next;
    chunk_t *end_pp = nullptr;
-
-   size_t  stage = 0;
+   size_t  stage   = 0;
 
    /* the results for this file are cached */
    if (cpd.ifdef_over_whole_file)

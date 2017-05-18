@@ -1,4 +1,4 @@
-2016-10-05
+2017-05-05
 
 Release steps.
 Just in case I don't do a release for a while and forget what to do... =)
@@ -14,17 +14,19 @@ Just in case I don't do a release for a while and forget what to do... =)
    Specific files to update:
     ChangeLog
     CMakeLists.txt
-      At line # Generate uncrustify_version.h
+      At lines under "# Generate uncrustify_version.h"
+      (Check the value of "FALLBACK_VERSION")
     documentation/htdocs/index.html
       At line <li>Highly configurable
+      TODO: (automat for this) Change the values of <options> and version.
     package.json
-      At line "version"
+      At line "version" the number
       At line "preinstall"
       At line "url"
 
 2b. Update the option count in documentation/htdocs/index.html
    Use script/count_the_options.sh to count the options.
-   Change the number of options at ./scripts/More_Options_to_Test/help.txt
+   Check the number of options at ./scripts/More_Options_to_Test/help.txt
 
 2c. Update the config files
    $ scripts/update-defaults.sh
@@ -47,6 +49,7 @@ Just in case I don't do a release for a while and forget what to do... =)
 
 5. The source tarball is available from the release on GitHub, or use
    $ git archive -o uncrustify-0.nn.tar.gz uncrustify-0.nn
+   Test it somewhere else
 
 6. Build for windows via mingw (save the zip file)
    Make sure the compiler mingw-w64 is installed.
