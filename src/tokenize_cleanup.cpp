@@ -863,7 +863,7 @@ static void check_template(chunk_t *start)
 {
    LOG_FMT(LTEMPL, "%s(%d): Line %zu, col %zu:", __func__, __LINE__, start->orig_line, start->orig_col);
 #ifdef DEBUG
-   LOG_FMT(LSPLIT, "\n");
+   LOG_FMT(LTEMPL, "\n");
 #endif // DEBUG
 
    chunk_t *prev = chunk_get_prev_ncnl(start, scope_e::PREPROC);
@@ -878,7 +878,7 @@ static void check_template(chunk_t *start)
    {
       LOG_FMT(LTEMPL, " CT_TEMPLATE:");
 #ifdef DEBUG
-      LOG_FMT(LSPLIT, "\n");
+      LOG_FMT(LTEMPL, "\n");
 #endif
 
       /* We have: "template< ... >", which is a template declaration */
@@ -888,13 +888,16 @@ static void check_template(chunk_t *start)
            pc = chunk_get_next_ncnl(pc, scope_e::PREPROC))
       {
          LOG_FMT(LTEMPL, " [%s,%zu]", get_token_name(pc->type), level);
+#ifdef DEBUG
+         LOG_FMT(LTEMPL, "\n");
+#endif
 
          if ((pc->str[0] == '>') && (pc->len() > 1))
          {
             LOG_FMT(LTEMPL, " {split '%s' at %zu:%zu}",
                     pc->text(), pc->orig_line, pc->orig_col);
 #ifdef DEBUG
-            LOG_FMT(LSPLIT, "\n");
+            LOG_FMT(LTEMPL, "\n");
 #endif
             split_off_angle_close(pc);
          }
@@ -932,7 +935,7 @@ static void check_template(chunk_t *start)
       {
          LOG_FMT(LTEMPL, " - after %s + ( - Not a template\n", get_token_name(prev->type));
 #ifdef DEBUG
-         LOG_FMT(LSPLIT, "\n");
+         LOG_FMT(LTEMPL, "\n");
 #endif
          set_chunk_type(start, CT_COMPARE);
          return;
@@ -940,7 +943,7 @@ static void check_template(chunk_t *start)
 
       LOG_FMT(LTEMPL, " - prev %s -", get_token_name(prev->type));
 #ifdef DEBUG
-      LOG_FMT(LSPLIT, "\n");
+      LOG_FMT(LTEMPL, "\n");
 #endif
 
       /* Scan back and make sure we aren't inside square parens */
@@ -975,6 +978,9 @@ static void check_template(chunk_t *start)
            pc = chunk_get_next_ncnl(pc, scope_e::PREPROC))
       {
          LOG_FMT(LTEMPL, " [%s,%zu]", get_token_name(pc->type), num_tokens);
+#ifdef DEBUG
+         LOG_FMT(LTEMPL, "\n");
+#endif
 
          if ((tokens[num_tokens - 1] == CT_ANGLE_OPEN) &&
              (pc->str[0] == '>') && (pc->len() > 1) &&
@@ -983,7 +989,7 @@ static void check_template(chunk_t *start)
             LOG_FMT(LTEMPL, " {split '%s' at %zu:%zu}",
                     pc->text(), pc->orig_line, pc->orig_col);
 #ifdef DEBUG
-            LOG_FMT(LSPLIT, "\n");
+            LOG_FMT(LTEMPL, "\n");
 #endif
             split_off_angle_close(pc);
          }
@@ -1049,10 +1055,14 @@ static void check_template(chunk_t *start)
       if ((pc == nullptr) || (pc->type != CT_NUMBER))
       {
          LOG_FMT(LTEMPL, " - Template Detected\n");
+         LOG_FMT(LTEMPL, "     from line %zu, column %zu\n", start->orig_line, start->orig_col);
+         LOG_FMT(LTEMPL, "     to   line %zu, column %zu\n", end->orig_line, end->orig_col);
 
          set_chunk_parent(start, CT_TEMPLATE);
 
          pc = start;
+         bool expressionIsNumeric = false;
+         chunk_t *savepc;
          while (pc != end)
          {
             chunk_flags_set(pc, PCF_IN_TEMPLATE);
@@ -1062,14 +1072,29 @@ static void check_template(chunk_t *start)
                return;
             }
             // Issue #1127
+            // MyFoo<mySize * 2> foo1;
+            // MyFoo<2*mySize * 2> foo1;
             if ((next->type != CT_PAREN_OPEN) &&
                 (next->type != CT_NUMBER) &&
                 (next->type != CT_STAR) &&
                 (next->type != CT_ARITH))
             {
-               make_type(pc);
+               // save to be used if expression is not numeric
+               savepc = pc;
+            }
+            if ((pc->type == CT_NUMBER) ||
+                ((pc->type == CT_ARITH) &&
+                 (pc->type != CT_STAR)))
+            {
+               expressionIsNumeric = true;
+               break;
             }
             pc = next;
+         }
+         LOG_FMT(LTEMPL, "expressionIsNumeric is %s\n", expressionIsNumeric ? "TRUE": "FALSE");
+         if (!expressionIsNumeric)
+         {
+            make_type(savepc);
          }
          set_chunk_parent(end, CT_TEMPLATE);
          chunk_flags_set(end, PCF_IN_TEMPLATE);
