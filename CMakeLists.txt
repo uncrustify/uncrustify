@@ -117,11 +117,6 @@ endif()
 # Generate uncrustify_version.h
 #
 
-# FIXME: checking for CMAKE_BUILD_TYPE and passing it to make_version.py
-# does not work with VS .sln projects
-if(NOT CMAKE_BUILD_TYPE)
-  set(CMAKE_BUILD_TYPE Release)
-endif()
 # FIXME: the version number should be automatically integrated
 set(FALLBACK_VERSION "Uncrustify-0.65_f")
 
