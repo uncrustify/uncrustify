@@ -1065,19 +1065,23 @@ static void check_template(chunk_t *start)
          chunk_t *savepc;
          while (pc != end)
          {
-            chunk_flags_set(pc, PCF_IN_TEMPLATE);
             chunk_t *next = chunk_get_next_ncnl(pc, scope_e::PREPROC);
-            if (next == nullptr)
-            {
-               return;
-            }
-            // Issue #1127
-            // MyFoo<mySize * 2> foo1;
-            // MyFoo<2*mySize * 2> foo1;
-            if ((next->type != CT_PAREN_OPEN) &&
-                (next->type != CT_NUMBER) &&
-                (next->type != CT_STAR) &&
-                (next->type != CT_ARITH))
+//<<<<<<< HEAD
+//            if (next == nullptr)
+//            {
+//               return;
+//            }
+//            // Issue #1127
+//            // MyFoo<mySize * 2> foo1;
+//            // MyFoo<2*mySize * 2> foo1;
+//            if ((next->type != CT_PAREN_OPEN) &&
+//                (next->type != CT_NUMBER) &&
+//                (next->type != CT_STAR) &&
+//                (next->type != CT_ARITH))
+//=======
+            chunk_flags_set(pc, PCF_IN_TEMPLATE);
+            if (next->type != CT_PAREN_OPEN)
+//>>>>>>> parent of b9c4f21... a bugfix for #1127
             {
                // save to be used if expression is not numeric
                savepc = pc;
