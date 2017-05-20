@@ -1061,27 +1061,20 @@ static void check_template(chunk_t *start)
          set_chunk_parent(start, CT_TEMPLATE);
 
          pc = start;
-         bool expressionIsNumeric = false;
-         chunk_t *savepc;
+         bool    expressionIsNumeric = false;
+         chunk_t *savepc             = nullptr;
          while (pc != end)
          {
             chunk_t *next = chunk_get_next_ncnl(pc, scope_e::PREPROC);
-//<<<<<<< HEAD
-//            if (next == nullptr)
-//            {
-//               return;
-//            }
-//            // Issue #1127
-//            // MyFoo<mySize * 2> foo1;
-//            // MyFoo<2*mySize * 2> foo1;
-//            if ((next->type != CT_PAREN_OPEN) &&
-//                (next->type != CT_NUMBER) &&
-//                (next->type != CT_STAR) &&
-//                (next->type != CT_ARITH))
-//=======
+            if (next == nullptr)
+            {
+               return;
+            }
+            // Issue #1127
+            // MyFoo<mySize * 2> foo1;
+            // MyFoo<2*mySize * 2> foo1;
             chunk_flags_set(pc, PCF_IN_TEMPLATE);
             if (next->type != CT_PAREN_OPEN)
-//>>>>>>> parent of b9c4f21... a bugfix for #1127
             {
                // save to be used if expression is not numeric
                savepc = pc;
@@ -1095,9 +1088,13 @@ static void check_template(chunk_t *start)
             }
             pc = next;
          }
-         LOG_FMT(LTEMPL, "expressionIsNumeric is %s\n", expressionIsNumeric ? "TRUE": "FALSE");
+         LOG_FMT(LTEMPL, "expressionIsNumeric is %s\n", expressionIsNumeric ? "TRUE" : "FALSE");
          if (!expressionIsNumeric)
          {
+            if (savepc == nullptr)
+            {
+               return;
+            }
             make_type(savepc);
          }
          set_chunk_parent(end, CT_TEMPLATE);
