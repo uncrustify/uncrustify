@@ -82,6 +82,7 @@
 30094 align-1.cfg                      cpp/bug_495.cpp
 30095 ben.cfg                          cpp/bug_485.cpp
 
+30099 bug_1127.cfg                     cpp/bug_1127.cpp
 30100 nl_template_class-force.cfg      cpp/templates.cpp
 30101 nl_template_class-remove.cfg     cpp/templates.cpp
 30102 template_sp-force.cfg            cpp/templates.cpp
