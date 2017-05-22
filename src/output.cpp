@@ -9,6 +9,7 @@
  */
 #include "output.h"
 #include "uncrustify_types.h"
+#include "uncrustify_version.h"
 #include "prototypes.h"
 #include "chunk_list.h"
 #include "unc_ctype.h"
@@ -182,7 +183,7 @@ static bool next_word_exceeds_limit(const unc_text &text, size_t idx)
  *
  * @param column  The column to advance to
  */
-static void output_to_column(size_t column, bool allow_tabs)
+static void output_to_column(int column, bool allow_tabs)
 {
    cpd.did_newline = 0;
    if (allow_tabs)
@@ -192,7 +193,7 @@ static void output_to_column(size_t column, bool allow_tabs)
       while (next_column <= column)
       {
          add_text("\t");
-         next_column = next_tab_column(cpd.column);
+         nc = next_tab_column(cpd.column);
       }
    }
    /* space out the final bit */
@@ -1005,6 +1006,11 @@ static chunk_t *output_comment_c(chunk_t *first)
  */
 static chunk_t *output_comment_cpp(chunk_t *first)
 {
+   if (first == NULL)
+   {
+      return(first);
+   }
+
    cmt_reflow cmt;
 
    output_cmt_start(cmt, first);
@@ -1014,8 +1020,12 @@ static chunk_t *output_comment_cpp(chunk_t *first)
    if (cpd.settings[UO_sp_cmt_cpp_doxygen].b)           // special treatment for doxygen style comments (treat as unity)
    {
       const char *sComment = first->text();
-      bool       grouping  = (sComment[2] == '@');
-      size_t     brace     = 3;
+      if (sComment == NULL)
+      {
+         return(first);
+      }
+      bool   grouping = (sComment[2] == '@');
+      size_t brace    = 3;
       if ((sComment[2] == '/') || (sComment[2] == '!')) // doxygen style found!
       {
          leadin += sComment[2];                         // at least one additional char (either "///" or "//!")
@@ -1124,7 +1134,7 @@ static chunk_t *output_comment_cpp(chunk_t *first)
       add_text(" ");
    }
    chunk_t *pc = first;
-   int     offs;
+   size_t  offs;
 
    while (can_combine_comment(pc, cmt))
    {

@@ -442,6 +442,10 @@ c_token_t find_keyword_type(const char *word, size_t len)
 
 int load_keyword_file(const char *filename)
 {
+   if (filename == NULL)
+   {
+      return(EX_CONFIG);
+   }
    FILE *pf = fopen(filename, "r");
 
    if (pf == nullptr)

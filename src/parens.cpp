@@ -75,6 +75,12 @@ static void add_parens_between(chunk_t *first, chunk_t *last)
 {
    LOG_FUNC_ENTRY();
 
+   if ((first == NULL) ||
+       (last == NULL))
+   {
+      return;
+   }
+
    LOG_FMT(LPARADD, "%s: line %zu between %s [lvl=%zu] and %s [lvl=%zu]\n",
            __func__, first->orig_line,
            first->text(), first->level,
