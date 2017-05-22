@@ -32,16 +32,16 @@
 
 /* some of my favorite aliases */
 
-typedef char       CHAR;
+using CHAR = char;
 
-typedef int8_t     INT8;
-typedef int16_t    INT16;
-typedef int32_t    INT32;
+using INT8  = int8_t;
+using INT16 = int16_t;
+using INT32 = int32_t;
 
-typedef uint8_t    UINT8;
-typedef uint16_t   UINT16;
-typedef uint32_t   UINT32;
-typedef uint64_t   UINT64;
+using UINT8  = uint8_t;
+using UINT16 = uint16_t;
+using UINT32 = uint32_t;
+using UINT64 = uint64_t;
 #endif   /* ifdef WIN32 */
 
 

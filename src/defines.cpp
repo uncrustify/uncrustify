@@ -22,7 +22,7 @@
 
 using namespace std;
 
-typedef map<string, string> defmap;
+using defmap = map<string, string>;
 defmap defines;
 
 
