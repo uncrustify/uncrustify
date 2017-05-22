@@ -32,6 +32,7 @@ elseif(CMAKE_COMPILER_IS_GNUCXX)
     -Wcast-qual
     -Wcast-align
     -Wc++11-extensions
+    -Werror
   )
   foreach(flag ${gcc_warning_flags})
     string(REGEX REPLACE "[^a-zA-Z0-9]+" "_" flag_var "CXXFLAG_${flag}")
