@@ -2376,7 +2376,16 @@ void indent_text(void)
                }
                else
                {
-                  tmp += cpd.settings[UO_indent_var_def_blk].n;
+                  // Issue #1111
+                  int def_blk = abs(cpd.settings[UO_indent_var_def_blk].n);
+                  if ((size_t)def_blk > tmp)
+                  {
+                     tmp = 0;
+                  }
+                  else
+                  {
+                     tmp -= def_blk;
+                  }
                }
                reindent_line(pc, tmp);
                LOG_FMT(LINDENT, "%s(%d): %zu] var_type indent => %zu [%s]\n",
