@@ -318,6 +318,7 @@
 33052 empty.cfg                        cpp/bug_i_512.cpp
 33053 for_auto.cfg                     cpp/for_auto.cpp
 33054 bug_i_825.cfg                    cpp/bug_i_825.cpp
+33056 empty.cfg                        cpp/bug_33056.cpp
 33061 empty.cfg                        cpp/if_chain_braces.cpp
 33062 if_chain_braces_0.cfg            cpp/if_chain_braces.cpp
 33063 if_chain_braces_1.cfg            cpp/if_chain_braces.cpp
