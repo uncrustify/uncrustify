@@ -769,10 +769,6 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
                (pc->type == CT_ASSIGN) &&
                ((pc->flags & PCF_IN_TEMPLATE) == 0)) // Issue #999
       {
-         //fprintf(stderr, "%s:  ** %s level=%d line=%zu col=%d prev=%d count=%d\n",
-         //        __func__, pc->str, pc->level, pc->orig_line, pc->orig_col, prev_equ_type,
-         //        equ_count);
-
          equ_count++;
          if (var_def_cnt != 0)
          {

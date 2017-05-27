@@ -55,14 +55,6 @@ static struct log_buf g_log;
 
 
 /**
- * Flushes the cached log text to the stream
- *
- * @param force_nl   Append NL if not present
- */
-static void log_flush(bool force_nl);
-
-
-/**
  * Starts the log statement by flushing if needed and printing the header
  *
  * @param sev  The log severity
@@ -153,7 +145,7 @@ void log_get_mask(log_mask_t &mask)
 }
 
 
-static void log_flush(bool force_nl)
+void log_flush(bool force_nl)
 {
    if (g_log.buf_len > 0)
    {

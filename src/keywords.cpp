@@ -325,6 +325,7 @@ bool keywords_are_sorted(void)
       {
          fprintf(stderr, "%s: bad sort order at idx %d, words '%s' and '%s'\n",
                  __func__, idx - 1, keywords[idx - 1].tag, keywords[idx].tag);
+         log_flush(true);
          cpd.error_count++;
          return(false);
       }
@@ -383,7 +384,6 @@ static const chunk_tag_t *kw_static_first(const chunk_tag_t *tag)
       tag = prev;
       prev--;
    }
-   //fprintf(stderr, "first:%s -", tag->tag);
    return(tag);
 }
 
@@ -396,13 +396,11 @@ static const chunk_tag_t *kw_static_match(const chunk_tag_t *tag)
         iter < &keywords[ARRAY_SIZE(keywords)];
         iter++)
    {
-      //fprintf(stderr, " check:%s", iter->tag);
       bool pp_iter = (iter->lang_flags & FLAG_PP) != 0; // forcing value to bool
       if ((strcmp(iter->tag, tag->tag) == 0) &&
           (cpd.lang_flags & iter->lang_flags) &&
           (in_pp == pp_iter))
       {
-         //fprintf(stderr, " match:%s", iter->tag);
          return(iter);
       }
    }

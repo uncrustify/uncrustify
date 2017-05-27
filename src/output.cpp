@@ -358,6 +358,7 @@ void output_text(FILE *pfile)
                                                      pc->orig_col, prev->orig_col_end);
                         fprintf(stderr, "%s", outputMessage);
                         free(outputMessage);
+                        log_flush(true);
                         exit(EX_SOFTWARE);
                      }
                      pc->column = cpd.column + orig_sp;

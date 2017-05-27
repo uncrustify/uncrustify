@@ -268,6 +268,7 @@ void dump_in(unsigned int type)
             else
             {
                fprintf(stderr, "on line=%d, for '%s'\n", lineNumber, parts[0]);
+               log_flush(true);
                exit(EX_SOFTWARE);
             }
          }
@@ -289,6 +290,7 @@ void dump_in(unsigned int type)
    else
    {
       fprintf(stderr, "FATAL: file not found '%s'\n", dumpFileName);
+      log_flush(true);
       exit(EX_SOFTWARE);
    }
 } // dump_in

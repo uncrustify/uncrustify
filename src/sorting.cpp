@@ -230,6 +230,7 @@ void sort_imports(void)
             {
                fprintf(stderr, "Number of 'import' to be sorted is too big for the current value %d.\n", MAX_NUMBER_TO_SORT);
                fprintf(stderr, "Please make a report.\n");
+               log_flush(true);
                cpd.error_count++;
                exit(2);
             }

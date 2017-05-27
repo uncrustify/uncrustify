@@ -214,10 +214,12 @@ void usage_exit(const char *msg, const char *argv0, int code)
    if (msg != nullptr)
    {
       fprintf(stderr, "%s\n", msg);
+      log_flush(true);
    }
    if ((code != EXIT_SUCCESS) || (argv0 == nullptr))
    {
       fprintf(stderr, "Try running with -h for usage information\n");
+      log_flush(true);
       exit(code);
    }
    fprintf(stdout,
@@ -585,6 +587,7 @@ int main(int argc, char *argv[])
          if (cpd.settings[UO_nl_func_var_def_blk].u >= cpd.settings[UO_nl_max].u)
          {
             fprintf(stderr, "The option 'nl_func_var_def_blk' is too big against the option 'nl_max'\n");
+            log_flush(true);
             exit(EX_CONFIG);
          }
       }
@@ -599,6 +602,7 @@ int main(int argc, char *argv[])
       if (argLength > MAXLENGTHFORARG)
       {
          fprintf(stderr, "The buffer is to short for the set argument '%s'\n", p_arg);
+         log_flush(true);
          exit(EX_SOFTWARE);
       }
       char buffer[MAXLENGTHFORARG];
@@ -616,6 +620,7 @@ int main(int argc, char *argv[])
          if (set_option_value(option, value) == -1)
          {
             fprintf(stderr, "Unknown option '%s' to override.\n", buffer);
+            log_flush(true);
             return(EXIT_FAILURE);
          }
       }
@@ -637,6 +642,7 @@ int main(int argc, char *argv[])
          {
             fprintf(stderr, "Unable to open %s for write: %s (%d)\n",
                     output_file, strerror(errno), errno);
+            log_flush(true);
             return(EXIT_FAILURE);
          }
       }
@@ -654,6 +660,7 @@ int main(int argc, char *argv[])
       if ((source_file == nullptr) || (source_list != nullptr))
       {
          fprintf(stderr, "The --detect option requires a single input file\n");
+         log_flush(true);
          return(EXIT_FAILURE);
       }
 
@@ -919,7 +926,6 @@ static void make_folders(const string &filename)
          if ((strcmp(&outname[last_idx], ".") != 0) &&
              (strcmp(&outname[last_idx], "..") != 0))
          {
-            //fprintf(stderr, "%s: %s\n", __func__, outname);
             int status;    // Coverity CID 75999
             status = mkdir(outname, 0750);
             if ((status != 0) &&
@@ -1179,6 +1185,7 @@ static bool bout_content_matches(const file_mem &fm, bool report_status)
          fprintf(stderr, "FAIL: %s (File size changed from %u to %u)\n",
                  cpd.filename,
                  static_cast<int>(fm.raw.size()), static_cast<int>(cpd.bout->size()));
+         log_flush(true);
       }
       is_same = false;
    }
@@ -1192,6 +1199,7 @@ static bool bout_content_matches(const file_mem &fm, bool report_status)
             {
                fprintf(stderr, "FAIL: %s (Difference at byte %u)\n",
                        cpd.filename, idx);
+               log_flush(true);
             }
             is_same = false;
             break;
