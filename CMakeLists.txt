@@ -117,29 +117,36 @@ endif()
 # Generate uncrustify_version.h
 #
 
-# FIXME: checking for CMAKE_BUILD_TYPE and passing it to make_version.py
-# does not work with VS .sln projects
-if(NOT CMAKE_BUILD_TYPE)
-  set(CMAKE_BUILD_TYPE Release)
-endif()
 # FIXME: the version number should be automatically integrated
-set(FALLBACK_VERSION "Uncrustify-0.65_f")
+set(CURRENT_VERSION "Uncrustify-0.65_f")
 
-find_package(PythonInterp REQUIRED)
-execute_process(
-  COMMAND ${PYTHON_EXECUTABLE} scripts/make_version.py ${CMAKE_BUILD_TYPE}
-  WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
-  RESULT_VARIABLE make_version_error
-  OUTPUT_VARIABLE make_version_output
-)
+option(NoGitVersionString "Do not use make_version.py and git to build a version string" OFF)
+if(NOT NoGitVersionString)
+    find_package(PythonInterp)
+    if(PythonInterp_FOUND)
+        set(version_debug_flag "")
+        STRING(REGEX MATCH "-g[0-3]?" version_debug_flag ${CMAKE_CXX_FLAGS})
 
-message(STATUS )
-if (make_version_error)
-    message(WARNING "scripts/make_version.py exited with code ${make_version_error}: ${make_version_output}\n"
-                    "As a fallback, version '${FALLBACK_VERSION}' will be used.")
-    set( CURRENT_VERSION ${FALLBACK_VERSION} )
-else()
-    string(STRIP ${make_version_output} CURRENT_VERSION)
+        # checking for build type and passing it to make_version.py
+        # FIXME: does not work with VS .sln projects
+        if(NOT "${version_debug_flag}" STREQUAL "" OR "${CMAKE_BUILD_TYPE}" STREQUAL "Debug" )
+            set(version_debug_flag "Debug")
+        endif()
+
+        execute_process(
+            COMMAND ${PYTHON_EXECUTABLE} scripts/make_version.py ${version_debug_flag}
+            WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+            RESULT_VARIABLE make_version_error
+            OUTPUT_VARIABLE make_version_output
+        )
+
+        if (make_version_error)
+            message(STATUS "scripts/make_version.py exited with code ${make_version_error}: ${make_version_output}\n"
+                           "As a fallback, version '${CURRENT_VERSION}' will be used.")
+        else()
+            string(STRIP ${make_version_output} CURRENT_VERSION)
+        endif()
+    endif()
 endif()
 
 configure_file(src/uncrustify_version.h.in uncrustify_version.h @ONLY)
