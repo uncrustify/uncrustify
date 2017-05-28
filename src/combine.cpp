@@ -1734,6 +1734,15 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
          }
       }
    }
+
+   // Issue #548
+   // inline T && someFunc(foo * *p, bar && q) { }
+   if ((pc->type == CT_BOOL) &&
+       chunk_is_str(pc, "&&", 2) &&
+       chunk_ends_type(pc->prev))
+   {
+      set_chunk_type(pc, CT_BYREF);
+   }
 } // do_symbol_check
 
 
