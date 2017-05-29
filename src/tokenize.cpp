@@ -1565,7 +1565,6 @@ static bool parse_next(tok_ctx &ctx, chunk_t &pc)
 {
    if (!ctx.more())
    {
-      //fprintf(stderr, "All done!\n");
       return(false);
    }
 

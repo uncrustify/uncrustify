@@ -1468,11 +1468,9 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       if (pc->type == CT_INCDEC_AFTER)
       {
          set_chunk_type(pc, CT_INCDEC_BEFORE);
-         //fprintf(stderr, "%s: %d> changed INCDEC_AFTER to INCDEC_BEFORE\n", __func__, pc->orig_line);
       }
       if (pc->type == CT_AMP)
       {
-         //fprintf(stderr, "Changed AMP to ADDR on line %d\n", pc->orig_line);
          set_chunk_type(pc, CT_ADDR);
       }
       if (pc->type == CT_CARET)

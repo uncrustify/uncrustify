@@ -916,6 +916,7 @@ static void _blank_line_set(chunk_t *pc, const char *text, uncrustify_options uo
    {
       fprintf(stderr, "Program error for UO_=%d\n", static_cast<int>(uo));
       fprintf(stderr, "Please make a report\n");
+      log_flush(true);
       exit(2);
    }
 
@@ -3928,6 +3929,7 @@ static void _blank_line_max(chunk_t *pc, const char *text, uncrustify_options uo
    {
       fprintf(stderr, "Program error for UO_=%d\n", static_cast<int>(uo));
       fprintf(stderr, "Please make a report\n");
+      log_flush(true);
       exit(2);
    }
    if ((cpd.settings[uo].u > 0) && (pc->nl_count > cpd.settings[uo].u))

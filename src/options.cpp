@@ -120,6 +120,7 @@ void unc_begin_group(uncrustify_groups id, const char *short_desc,
               "   Number in the options.cpp file = %d\n"
               "   Number in the options.h   file = %d\n"
               "   for the group '%s'\n", id, checkGroupNumber, short_desc);
+      log_flush(true);
       exit(EX_SOFTWARE);
    }
 #endif // DEBUG
@@ -152,6 +153,7 @@ void unc_add_option(const char *name, uncrustify_options id, argtype_e type,
               "   Number in the options.cpp file = %d\n"
               "   Number in the options.h   file = %d\n"
               "   for the group '%s'\n", id, checkOptionNumber, name);
+      log_flush(true);
       exit(EX_SOFTWARE);
    }
 #endif // DEBUG
@@ -161,6 +163,7 @@ void unc_add_option(const char *name, uncrustify_options id, argtype_e type,
    {
       fprintf(stderr, "FATAL: length of the option name (%s) is too big (%d)\n", name, lengthOfTheOption);
       fprintf(stderr, "FATAL: the maximal length of an option name is %d characters\n", OptionMaxLength);
+      log_flush(true);
       exit(EX_SOFTWARE);
    }
    group_map[current_group].options.push_back(id);
@@ -210,6 +213,7 @@ void unc_add_option(const char *name, uncrustify_options id, argtype_e type,
 
    default:
       fprintf(stderr, "FATAL: Illegal option type %d for '%s'\n", type, name);
+      log_flush(true);
       exit(EX_SOFTWARE);
    }
 
@@ -1720,6 +1724,7 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
       {
          fprintf(stderr, "%s:%d Expected AUTO, LF, CRLF, or CR for %s, got %s\n",
                  cpd.filename, cpd.line_number, entry->name, val);
+         log_flush(true);
          cpd.error_count++;
       }
       dest->le = LE_AUTO;
@@ -1768,6 +1773,7 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
          fprintf(stderr, "%s:%d Expected IGNORE, JOIN, LEAD, LEAD_BREAK, LEAD_FORCE, "
                  "TRAIL, TRAIL_BREAK, TRAIL_FORCE for %s, got %s\n",
                  cpd.filename, cpd.line_number, entry->name, val);
+         log_flush(true);
          cpd.error_count++;
       }
       dest->tp = TP_IGNORE;
@@ -1784,6 +1790,7 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
          {
             fprintf(stderr, "%s:%d\n  for the option '%s' is a negative value not possible: %s",
                     cpd.filename, cpd.line_number, entry->name, val);
+            log_flush(true);
             exit(EX_CONFIG);
          }
          dest->n = strtol(val, nullptr, 0);
@@ -1804,6 +1811,7 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
       {
          fprintf(stderr, "%s:%d\n  for the assigment: unknown option '%s':",
                  cpd.filename, cpd.line_number, val);
+         log_flush(true);
          exit(EX_CONFIG);
       }
 
@@ -1825,6 +1833,7 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
       fprintf(stderr, "%s:%d\n  for the assigment: expected type for %s is %s, got %s\n",
               cpd.filename, cpd.line_number,
               entry->name, get_argtype_name(entry->type), get_argtype_name(tmp->type));
+      log_flush(true);
       exit(EX_CONFIG);
    }
 
@@ -1861,6 +1870,7 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
 
       fprintf(stderr, "%s:%d Expected 'True' or 'False' for %s, got %s\n",
               cpd.filename, cpd.line_number, entry->name, val);
+      log_flush(true);
       cpd.error_count++;
       dest->b = false;
       return;
@@ -1901,6 +1911,7 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
    }
    fprintf(stderr, "%s:%d Expected 'Add', 'Remove', 'Force', or 'Ignore' for %s, got %s\n",
            cpd.filename, cpd.line_number, entry->name, val);
+   log_flush(true);
    cpd.error_count++;
    dest->a = AV_IGNORE;
 } // convert_value
@@ -1981,6 +1992,7 @@ void process_option_line(char *configLine, const char *filename)
       {
          fprintf(stderr, "%s:%d Wrong number of arguments: %s...\n",
                  filename, cpd.line_number, configLine);
+         log_flush(true);
          cpd.error_count++;
       }
       return;
@@ -2016,6 +2028,7 @@ void process_option_line(char *configLine, const char *filename)
       {
          fprintf(stderr, "%s:%d 'set' requires at least three arguments\n",
                  filename, cpd.line_number);
+         log_flush(true);
       }
       else
       {
@@ -2033,6 +2046,7 @@ void process_option_line(char *configLine, const char *filename)
          else
          {
             fprintf(stderr, "%s:%d unknown type '%s':", filename, cpd.line_number, args[1]);
+            log_flush(true);
          }
       }
    }
@@ -2064,6 +2078,7 @@ void process_option_line(char *configLine, const char *filename)
       {
          fprintf(stderr, "%s:%d 'file_ext' requires at least three arguments\n",
                  filename, cpd.line_number);
+         log_flush(true);
       }
       else
       {
@@ -2079,6 +2094,7 @@ void process_option_line(char *configLine, const char *filename)
             {
                fprintf(stderr, "%s:%d file_ext has unknown language '%s'\n",
                        filename, cpd.line_number, args[1]);
+               log_flush(true);
             }
          }
       }
@@ -2091,6 +2107,7 @@ void process_option_line(char *configLine, const char *filename)
       {
          fprintf(stderr, "%s:%d Unknown symbol '%s'\n",
                  filename, cpd.line_number, args[0]);
+         log_flush(true);
          cpd.error_count++;
       }
    }
@@ -2114,6 +2131,7 @@ int load_option_file(const char *filename)
    {
       fprintf(stderr, "%s: fopen(%s) failed: %s (%d)\n",
               __func__, filename, strerror(errno), errno);
+      log_flush(true);
       cpd.error_count++;
       return(-1);
    }
@@ -2362,6 +2380,7 @@ void set_option_defaults(void)
             fprintf(stderr, "option '%s' is not correctly set:\n", id.second.name);
             fprintf(stderr, "The default value '%zu' is more than the max value '%zu'.\n",
                     default_value, max_value);
+            log_flush(true);
             exit(EX_SOFTWARE);
          }
          if ((min_value > 0) &&
@@ -2370,6 +2389,7 @@ void set_option_defaults(void)
             fprintf(stderr, "option '%s' is not correctly set:\n", id.second.name);
             fprintf(stderr, "The default value '%zu' is less than the min value '%zu'.\n",
                     default_value, min_value);
+            log_flush(true);
             exit(EX_SOFTWARE);
          }
       }
@@ -2384,6 +2404,7 @@ void set_option_defaults(void)
             fprintf(stderr, "option '%s' is not correctly set:\n", id.second.name);
             fprintf(stderr, "The default value '%d' is more than the max value '%d'.\n",
                     default_value, max_value);
+            log_flush(true);
             exit(EX_SOFTWARE);
          }
          if (default_value < min_value)
@@ -2391,6 +2412,7 @@ void set_option_defaults(void)
             fprintf(stderr, "option '%s' is not correctly set:\n", id.second.name);
             fprintf(stderr, "The default value '%d' is less than the min value '%d'.\n",
                     default_value, min_value);
+            log_flush(true);
             exit(EX_SOFTWARE);
          }
       }
@@ -2432,6 +2454,7 @@ string argtype_to_string(argtype_e argtype)
 
    default:
       fprintf(stderr, "Unknown argtype '%d'\n", argtype);
+      log_flush(true);
       exit(EX_SOFTWARE);
    }
 }
@@ -2464,6 +2487,7 @@ const char *get_argtype_name(argtype_e argtype)
 
    default:
       fprintf(stderr, "Unknown argtype '%d'\n", argtype);
+      log_flush(true);
       exit(EX_SOFTWARE);
    }
 }
@@ -2498,6 +2522,7 @@ string argval_to_string(argval_t argval)
 
    default:
       fprintf(stderr, "Unknown argval '%d'\n", argval);
+      log_flush(true);
       return("");
    }
 }
@@ -2534,6 +2559,7 @@ string lineends_to_string(lineends_e linends)
 
    default:
       fprintf(stderr, "Unknown lineends '%d'\n", linends);
+      log_flush(true);
       return("");
    }
 }
@@ -2569,6 +2595,7 @@ string tokenpos_to_string(tokenpos_e tokenpos)
 
    default:
       fprintf(stderr, "Unknown tokenpos '%d'\n", tokenpos);
+      log_flush(true);
       return("");
    }
 }
@@ -2601,6 +2628,7 @@ string op_val_to_string(argtype_e argtype, op_val_t op_val)
 
    default:
       fprintf(stderr, "Unknown argtype '%d'\n", argtype);
+      log_flush(true);
       exit(EX_SOFTWARE);
    }
 }

@@ -176,7 +176,6 @@ void pf_pop(parse_frame_t *pf)
       pf_copy_tos(pf);
       pf_trash_tos();
    }
-   //fprintf(stderr, "%s: count = %d\n", __func__, cpd.frame_count);
 }
 
 

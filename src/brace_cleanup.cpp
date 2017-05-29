@@ -696,6 +696,7 @@ static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
                                          pc->orig_line, pc->orig_col);
             fprintf(stderr, "%s", outputMessage);
             free(outputMessage);
+            log_flush(true);
             exit(EXIT_FAILURE);
          }
       }

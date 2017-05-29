@@ -97,6 +97,14 @@ void log_str(log_sev_t sev, const char *str, size_t len);
  */
 void log_fmt(log_sev_t sev, const char *fmt, ...) __attribute__((format(printf, 2, 3)));
 
+/**
+ * Flushes the cached log text to the stream
+ *
+ * @param force_nl   Append NL if not present
+ */
+void log_flush(bool force_nl);
+
+
 #ifdef NO_MACRO_VARARG
 #define LOG_FMT    log_fmt
 #else
