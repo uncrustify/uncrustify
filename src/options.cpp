@@ -707,7 +707,7 @@ void register_options(void)
    unc_add_option("indent_param", UO_indent_param, AT_UNUM,
                   "The continuation indent for func_*_param if they are true.\n"
                   "If non-zero, this overrides the indent.");
-   unc_add_option("indent_with_tabs", UO_indent_with_tabs, AT_NUM,
+   unc_add_option("indent_with_tabs", UO_indent_with_tabs, AT_UNUM,
                   "How to use tabs when indenting code\n"
                   "0=spaces only\n"
                   "1=indent with tabs to brace level, align with spaces (default)\n"
@@ -1421,11 +1421,9 @@ void register_options(void)
                   "The span for aligning comments that end lines (0=don't align)", "", 0, 5000);
    unc_add_option("align_right_cmt_mix", UO_align_right_cmt_mix, AT_BOOL,
                   "If aligning comments, mix with comments after '}' and #endif with less than 3 spaces before the comment");
-   unc_add_option("align_right_cmt_gap", UO_align_right_cmt_gap, AT_NUM,
+   unc_add_option("align_right_cmt_gap", UO_align_right_cmt_gap, AT_UNUM,
                   "If a trailing comment is more than this number of columns away from the text it follows,\n"
-                  "it will qualify for being aligned. This has to be > 0 to do anything.\n"
-                  "A negative value to force comments which are stuck to the previous token\n"
-                  " (gap=0) into alignment with the others.");
+                  "it will qualify for being aligned. This has to be > 0 to do anything.");
    unc_add_option("align_right_cmt_at_col", UO_align_right_cmt_at_col, AT_UNUM,
                   "Align trailing comment at or beyond column N; 'pulls in' comments as a bonus side effect (0=ignore)", "", 0, 200);
    unc_add_option("align_func_proto_span", UO_align_func_proto_span, AT_UNUM,
@@ -1469,7 +1467,7 @@ void register_options(void)
    unc_begin_group(UG_comment, "Comment modifications");
    unc_add_option("cmt_width", UO_cmt_width, AT_UNUM,
                   "Try to wrap comments at cmt_width columns", "", 0, 256);
-   unc_add_option("cmt_reflow_mode", UO_cmt_reflow_mode, AT_NUM,
+   unc_add_option("cmt_reflow_mode", UO_cmt_reflow_mode, AT_UNUM,
                   "Set the comment reflow mode (Default=0)\n"
                   "0: no reflowing (apart from the line wrapping due to cmt_width)\n"
                   "1: no touching at all\n"
@@ -2334,7 +2332,7 @@ void set_option_defaults(void)
    cpd.defaults[UO_indent_oc_msg_prioritize_first_colon].b              = true;
    cpd.defaults[UO_indent_token_after_brace].b                          = true;
    cpd.defaults[UO_indent_using_block].b                                = true;
-   cpd.defaults[UO_indent_with_tabs].n                                  = 1;
+   cpd.defaults[UO_indent_with_tabs].u                                  = 1;
    cpd.defaults[UO_input_tab_size].u                                    = 8;
    cpd.defaults[UO_newlines].le                                         = LE_AUTO;
    cpd.defaults[UO_output_tab_size].u                                   = 8;

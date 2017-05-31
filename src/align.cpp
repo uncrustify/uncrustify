@@ -509,20 +509,15 @@ void align_right_comments(void)
       {
          if (pc->parent_type == CT_COMMENT_END)
          {
-            bool    skip  = false;
             chunk_t *prev = chunk_get_prev(pc);
-            if (pc->orig_col < (prev->orig_col_end + cpd.settings[UO_align_right_cmt_gap].n))
+
+            if (pc->orig_col < prev->orig_col_end + cpd.settings[UO_align_right_cmt_gap].u)
             {
-               // note the use of -5 here (-1 would probably have worked as well) to force
-               // comments which are stuck to the previous token (gap=0) into alignment with the
-               // others. Not the major feature, but a nice find. (min_val/max_val in
-               // options.cpp isn't validated against, it seems; well, I don't mind! :-) )
                LOG_FMT(LALTC, "NOT changing END comment on line %zu (%zu <= %zu + %d)\n",
-                       pc->orig_line,
-                       pc->orig_col, prev->orig_col_end, cpd.settings[UO_align_right_cmt_gap].n);
-               skip = true;
+                       pc->orig_line, pc->orig_col, prev->orig_col_end,
+                       cpd.settings[UO_align_right_cmt_gap].n);
             }
-            if (!skip)
+            else
             {
                LOG_FMT(LALTC, "Changing END comment on line %zu into a RIGHT-comment\n",
                        pc->orig_line);

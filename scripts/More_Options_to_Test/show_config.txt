@@ -651,7 +651,7 @@ indent_param                    Unsigned Number
   The continuation indent for func_*_param if they are true.
   If non-zero, this overrides the indent.
 
-indent_with_tabs                Number
+indent_with_tabs                Unsigned Number
   How to use tabs when indenting code
   0=spaces only
   1=indent with tabs to brace level, align with spaces (default)
@@ -1657,11 +1657,9 @@ align_right_cmt_span            Unsigned Number
 align_right_cmt_mix             { False, True }
   If aligning comments, mix with comments after '}' and #endif with less than 3 spaces before the comment
 
-align_right_cmt_gap             Number
+align_right_cmt_gap             Unsigned Number
   If a trailing comment is more than this number of columns away from the text it follows,
   it will qualify for being aligned. This has to be > 0 to do anything.
-  A negative value to force comments which are stuck to the previous token
-   (gap=0) into alignment with the others.
 
 align_right_cmt_at_col          Unsigned Number
   Align trailing comment at or beyond column N; 'pulls in' comments as a bonus side effect (0=ignore)
@@ -1727,7 +1725,7 @@ align_oc_decl_colon             { False, True }
 cmt_width                       Unsigned Number
   Try to wrap comments at cmt_width columns
 
-cmt_reflow_mode                 Number
+cmt_reflow_mode                 Unsigned Number
   Set the comment reflow mode (Default=0)
   0: no reflowing (apart from the line wrapping due to cmt_width)
   1: no touching at all

@@ -217,7 +217,7 @@ static void output_to_column(size_t column, bool allow_tabs)
 static void cmt_output_indent(size_t brace_col, size_t base_col, size_t column)
 {
    size_t iwt = cpd.settings[UO_indent_cmt_with_tabs].b ? 2 :
-                (cpd.settings[UO_indent_with_tabs].n ? 1 : 0);
+                (cpd.settings[UO_indent_with_tabs].u ? 1 : 0);
 
    size_t tab_col = (iwt == 0) ? 0 : ((iwt == 1) ? brace_col : base_col);
 
@@ -947,7 +947,7 @@ static chunk_t *output_comment_c(chunk_t *first)
    cmt_reflow cmt;
 
    output_cmt_start(cmt, first);
-   cmt.reflow = (cpd.settings[UO_cmt_reflow_mode].n != 1);
+   cmt.reflow = (cpd.settings[UO_cmt_reflow_mode].u != 1);
 
    /* See if we can combine this comment with the next comment */
    if (!cpd.settings[UO_cmt_c_group].b ||
@@ -1009,7 +1009,7 @@ static chunk_t *output_comment_cpp(chunk_t *first)
    cmt_reflow cmt;
 
    output_cmt_start(cmt, first);
-   cmt.reflow = (cpd.settings[UO_cmt_reflow_mode].n != 1);
+   cmt.reflow = (cpd.settings[UO_cmt_reflow_mode].u != 1);
 
    unc_text leadin = "//";                              // default setting to keep previous behaviour
    if (cpd.settings[UO_sp_cmt_cpp_doxygen].b)           // special treatment for doxygen style comments (treat as unity)
@@ -1198,7 +1198,7 @@ static void output_comment_multi(chunk_t *pc)
    // LOG_FMT(LSYS, "%s: line %d\n", __func__, pc->orig_line);
 
    output_cmt_start(cmt, pc);
-   cmt.reflow = (cpd.settings[UO_cmt_reflow_mode].n != 1);
+   cmt.reflow = (cpd.settings[UO_cmt_reflow_mode].u != 1);
 
    size_t cmt_col  = cmt.base_col;
    int    col_diff = pc->orig_col - cmt.base_col;
@@ -1256,7 +1256,7 @@ static void output_comment_multi(chunk_t *pc)
        * Now see if we need/must fold the next line with the current to enable
        * full reflow
        */
-      if ((cpd.settings[UO_cmt_reflow_mode].n == 2) &&
+      if ((cpd.settings[UO_cmt_reflow_mode].u == 2) &&
           (ch == '\n') &&
           (cmt_idx < pc->len()))
       {

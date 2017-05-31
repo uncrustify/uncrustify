@@ -657,7 +657,7 @@ indent_param                    = 0        # unsigned number
 # 0=spaces only
 # 1=indent with tabs to brace level, align with spaces (default)
 # 2=indent and align with tabs, using spaces when not on a tabstop
-indent_with_tabs                = 1        # number
+indent_with_tabs                = 1        # unsigned number
 
 # Comments that are not a brace level are indented with tabs on a tabstop.
 # Requires indent_with_tabs=2. If false, will use spaces.
@@ -1661,9 +1661,7 @@ align_right_cmt_mix             = false    # false/true
 
 # If a trailing comment is more than this number of columns away from the text it follows,
 # it will qualify for being aligned. This has to be > 0 to do anything.
-# A negative value to force comments which are stuck to the previous token
-#  (gap=0) into alignment with the others.
-align_right_cmt_gap             = 0        # number
+align_right_cmt_gap             = 0        # unsigned number
 
 # Align trailing comment at or beyond column N; 'pulls in' comments as a bonus side effect (0=ignore)
 align_right_cmt_at_col          = 0        # unsigned number
@@ -1733,7 +1731,7 @@ cmt_width                       = 0        # unsigned number
 # 0: no reflowing (apart from the line wrapping due to cmt_width)
 # 1: no touching at all
 # 2: full reflow
-cmt_reflow_mode                 = 0        # number
+cmt_reflow_mode                 = 0        # unsigned number
 
 # Whether to convert all tabs to spaces in comments. Default is to leave tabs inside comments alone, unless used for indenting.
 cmt_convert_tab_to_spaces       = false    # false/true
