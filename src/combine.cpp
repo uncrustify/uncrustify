@@ -4718,10 +4718,12 @@ static void mark_class_ctor(chunk_t *start)
       next = chunk_get_next_ncnl(pc, scope_e::PREPROC);
       if (chunkstack_match(cs, pc))
       {
-         if ((next != nullptr) && (next->len() == 1) && (next->str[0] == '('))
+         // Issue #1003, next->type should not be CT_FPAREN_OPEN
+         if ((next != nullptr) && (next->type == CT_PAREN_OPEN))
          {
             set_chunk_type(pc, CT_FUNC_CLASS_DEF);
-            LOG_FMT(LFTOR, "(%d) %zu] Marked CTor/DTor %s\n", __LINE__, pc->orig_line, pc->text());
+            LOG_FMT(LFTOR, "%s(%d): type is %s, orig_line is %zu, orig_col is %zu, Marked CTor/DTor %s\n",
+                    __func__, __LINE__, get_token_name(pc->type), pc->orig_line, pc->orig_col, pc->text());
             mark_cpp_constructor(pc);
          }
          else
