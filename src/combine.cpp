@@ -787,25 +787,22 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
    LOG_FUNC_ENTRY();
    chunk_t *tmp;
 
-#ifdef DEBUG
-   LOG_FMT(LGUY, "(%d) ", __LINE__);
-#endif
    if (pc->type == CT_NEWLINE)
    {
-      LOG_FMT(LGUY, "%s: %zu:%zu CT_NEWLINE\n", __func__, pc->orig_line, pc->orig_col);
+      LOG_FMT(LGUY, "%s(%d): %zu:%zu CT_NEWLINE\n", __func__, __LINE__, pc->orig_line, pc->orig_col);
    }
    else if (pc->type == CT_VBRACE_OPEN)
    {
-      LOG_FMT(LGUY, "%s: %zu:%zu CT_VBRACE_OPEN\n", __func__, pc->orig_line, pc->orig_col);
+      LOG_FMT(LGUY, "%s(%d): %zu:%zu CT_VBRACE_OPEN\n", __func__, __LINE__, pc->orig_line, pc->orig_col);
    }
    else if (pc->type == CT_VBRACE_CLOSE)
    {
-      LOG_FMT(LGUY, "%s: %zu:%zu CT_VBRACE_CLOSE\n", __func__, pc->orig_line, pc->orig_col);
+      LOG_FMT(LGUY, "%s(%d): %zu:%zu CT_VBRACE_CLOSE\n", __func__, __LINE__, pc->orig_line, pc->orig_col);
    }
    else
    {
-      LOG_FMT(LGUY, "%s: %zu:%zu %s:%s\n",
-              __func__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
+      LOG_FMT(LGUY, "%s(%d): %zu:%zu %s:%s\n",
+              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
    }
    // LOG_FMT(LSYS, " %3d > ['%s' %s] ['%s' %s] ['%s' %s]\n",
    //         pc->orig_line,
@@ -3018,24 +3015,21 @@ void combine_labels(void)
    /* unlikely that the file will start with a label... */
    while (next != nullptr)
    {
-#ifdef DEBUG
-      LOG_FMT(LGUY, "(%d) ", __LINE__);
-#endif
       if (cur->type == CT_NEWLINE)
       {
-         LOG_FMT(LGUY, "%s: %zu:%zu CT_NEWLINE\n", __func__, cur->orig_line, cur->orig_col);
+         LOG_FMT(LGUY, "%s(%d): %zu:%zu CT_NEWLINE\n", __func__, __LINE__, cur->orig_line, cur->orig_col);
       }
       else if (cur->type == CT_VBRACE_OPEN)
       {
-         LOG_FMT(LGUY, "%s: %zu:%zu CT_VBRACE_OPEN\n", __func__, cur->orig_line, cur->orig_col);
+         LOG_FMT(LGUY, "%s(%d): %zu:%zu CT_VBRACE_OPEN\n", __func__, __LINE__, cur->orig_line, cur->orig_col);
       }
       else if (cur->type == CT_VBRACE_CLOSE)
       {
-         LOG_FMT(LGUY, "%s: %zu:%zu CT_VBRACE_CLOSE\n", __func__, cur->orig_line, cur->orig_col);
+         LOG_FMT(LGUY, "%s(%d): %zu:%zu CT_VBRACE_CLOSE\n", __func__, __LINE__, cur->orig_line, cur->orig_col);
       }
       else
       {
-         LOG_FMT(LGUY, "%s: %zu:%zu %s\n", __func__, cur->orig_line, cur->orig_col, cur->text());
+         LOG_FMT(LGUY, "%s(%d): %zu:%zu %s\n", __func__, __LINE__, cur->orig_line, cur->orig_col, cur->text());
       }
       if (!(next->flags & PCF_IN_OC_MSG) && /* filter OC case of [self class] msg send */
           ((next->type == CT_CLASS) ||
@@ -4718,10 +4712,12 @@ static void mark_class_ctor(chunk_t *start)
       next = chunk_get_next_ncnl(pc, scope_e::PREPROC);
       if (chunkstack_match(cs, pc))
       {
-         if ((next != nullptr) && (next->len() == 1) && (next->str[0] == '('))
+         // Issue #1003, next->type should not be CT_FPAREN_OPEN
+         if ((next != nullptr) && (next->type == CT_PAREN_OPEN))
          {
             set_chunk_type(pc, CT_FUNC_CLASS_DEF);
-            LOG_FMT(LFTOR, "(%d) %zu] Marked CTor/DTor %s\n", __LINE__, pc->orig_line, pc->text());
+            LOG_FMT(LFTOR, "%s(%d): type is %s, orig_line is %zu, orig_col is %zu, Marked CTor/DTor %s\n",
+                    __func__, __LINE__, get_token_name(pc->type), pc->orig_line, pc->orig_col, pc->text());
             mark_cpp_constructor(pc);
          }
          else

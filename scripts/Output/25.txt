@@ -1,50 +1,50 @@
 Newline loop start: 
-newline_add_between:: ';'[SEMICOLON] line : and '}' line : : [CallStack:-DEBUG NOT SET-]
-newline_add_between:: '{'[BRACE_OPEN] line : and '}' line : : [CallStack:-DEBUG NOT SET-]
-newline_add_between:: '{'[BRACE_OPEN] line : and '}' line : : [CallStack:-DEBUG NOT SET-]
-newline_add_between:: '{'[BRACE_OPEN] line : and '}' line : : [CallStack:-DEBUG NOT SET-]
-newline_add_between:: '{'[BRACE_OPEN] line : and '}' line : : [CallStack:-DEBUG NOT SET-]
-newlines_insert_blank_lines:: for-loop: line , column , struct type STRUCT
-newlines_insert_blank_lines:: for-loop: line , column , TelegramIndex type TYPE
-newlines_insert_blank_lines:: for-loop: line , column , { type BRACE_OPEN
-newlines_insert_blank_lines:: for-loop: line , column , TelegramIndex type FUNC_CLASS_DEF
-newlines_insert_blank_lines:: for-loop: line , column , ( type FPAREN_OPEN
-newlines_insert_blank_lines:: for-loop: line , column , const type QUALIFIER
-newlines_insert_blank_lines:: for-loop: line , column , char type TYPE
-newlines_insert_blank_lines:: for-loop: line , column , * type PTR_TYPE
-newlines_insert_blank_lines:: for-loop: line , column , pN type WORD
-newlines_insert_blank_lines:: for-loop: line , column , , type COMMA
-newlines_insert_blank_lines:: for-loop: line , column , unsigned type TYPE
-newlines_insert_blank_lines:: for-loop: line , column , long type TYPE
-newlines_insert_blank_lines:: for-loop: line , column , nI type WORD
-newlines_insert_blank_lines:: for-loop: line , column , ) type FPAREN_CLOSE
-newlines_insert_blank_lines:: for-loop: line , column , : type CONSTR_COLON
-newlines_insert_blank_lines:: for-loop: line , column , pTelName type FUNC_CTOR_VAR
-newlines_insert_blank_lines:: for-loop: line , column , ( type FPAREN_OPEN
-newlines_insert_blank_lines:: for-loop: line , column , pN type WORD
-newlines_insert_blank_lines:: for-loop: line , column , ) type FPAREN_CLOSE
-newlines_insert_blank_lines:: for-loop: line , column , , type COMMA
-newlines_insert_blank_lines:: for-loop: line , column , nTelIndex type FUNC_CTOR_VAR
-newlines_insert_blank_lines:: for-loop: line , column , ( type FPAREN_OPEN
-newlines_insert_blank_lines:: for-loop: line , column , n type WORD
-newlines_insert_blank_lines:: for-loop: line , column , ) type FPAREN_CLOSE
-newlines_insert_blank_lines:: for-loop: line , column , { type BRACE_OPEN
-newlines_insert_blank_lines:: for-loop: line , column , } type BRACE_CLOSE
-newlines_insert_blank_lines:: for-loop: line , column , ~ type DESTRUCTOR
-newlines_insert_blank_lines:: for-loop: line , column , TelegramIndex type FUNC_CLASS_DEF
-newlines_insert_blank_lines:: for-loop: line , column , ( type FPAREN_OPEN
-newlines_insert_blank_lines:: for-loop: line , column , ) type FPAREN_CLOSE
-newlines_insert_blank_lines:: for-loop: line , column , { type BRACE_OPEN
-newlines_insert_blank_lines:: for-loop: line , column , } type BRACE_CLOSE
-newlines_insert_blank_lines:: for-loop: line , column , const type QUALIFIER
-newlines_insert_blank_lines:: for-loop: line , column , char type TYPE
-newlines_insert_blank_lines:: for-loop: line , column , * type PTR_TYPE
-newlines_insert_blank_lines:: for-loop: line , column , const type QUALIFIER
-newlines_insert_blank_lines:: for-loop: line , column , pTelName type WORD
-newlines_insert_blank_lines:: for-loop: line , column , ; type SEMICOLON
-newlines_insert_blank_lines:: for-loop: line , column , unsigned type TYPE
-newlines_insert_blank_lines:: for-loop: line , column , long type TYPE
-newlines_insert_blank_lines:: for-loop: line , column , nTelIndex type WORD
-newlines_insert_blank_lines:: for-loop: line , column , ; type SEMICOLON
-newlines_insert_blank_lines:: for-loop: line , column , } type BRACE_CLOSE
-newlines_insert_blank_lines:: for-loop: line , column , ; type SEMICOLON
+newline_add_between(): ';'[SEMICOLON] line : and '}' line : : [CallStack:-DEBUG NOT SET-]
+newline_add_between(): '{'[BRACE_OPEN] line : and '}' line : : [CallStack:-DEBUG NOT SET-]
+newline_add_between(): '{'[BRACE_OPEN] line : and '}' line : : [CallStack:-DEBUG NOT SET-]
+newline_add_between(): '{'[BRACE_OPEN] line : and '}' line : : [CallStack:-DEBUG NOT SET-]
+newline_add_between(): '{'[BRACE_OPEN] line : and '}' line : : [CallStack:-DEBUG NOT SET-]
+newlines_insert_blank_lines(): orig_line is , orig_col is , struct type is STRUCT
+newlines_insert_blank_lines(): orig_line is , orig_col is , TelegramIndex type is TYPE
+newlines_insert_blank_lines(): orig_line is , orig_col is , { type is BRACE_OPEN
+newlines_insert_blank_lines(): orig_line is , orig_col is , TelegramIndex type is FUNC_CLASS_DEF
+newlines_insert_blank_lines(): orig_line is , orig_col is , ( type is FPAREN_OPEN
+newlines_insert_blank_lines(): orig_line is , orig_col is , const type is QUALIFIER
+newlines_insert_blank_lines(): orig_line is , orig_col is , char type is TYPE
+newlines_insert_blank_lines(): orig_line is , orig_col is , * type is PTR_TYPE
+newlines_insert_blank_lines(): orig_line is , orig_col is , pN type is WORD
+newlines_insert_blank_lines(): orig_line is , orig_col is , , type is COMMA
+newlines_insert_blank_lines(): orig_line is , orig_col is , unsigned type is TYPE
+newlines_insert_blank_lines(): orig_line is , orig_col is , long type is TYPE
+newlines_insert_blank_lines(): orig_line is , orig_col is , nI type is WORD
+newlines_insert_blank_lines(): orig_line is , orig_col is , ) type is FPAREN_CLOSE
+newlines_insert_blank_lines(): orig_line is , orig_col is , : type is CONSTR_COLON
+newlines_insert_blank_lines(): orig_line is , orig_col is , pTelName type is FUNC_CTOR_VAR
+newlines_insert_blank_lines(): orig_line is , orig_col is , ( type is FPAREN_OPEN
+newlines_insert_blank_lines(): orig_line is , orig_col is , pN type is WORD
+newlines_insert_blank_lines(): orig_line is , orig_col is , ) type is FPAREN_CLOSE
+newlines_insert_blank_lines(): orig_line is , orig_col is , , type is COMMA
+newlines_insert_blank_lines(): orig_line is , orig_col is , nTelIndex type is FUNC_CTOR_VAR
+newlines_insert_blank_lines(): orig_line is , orig_col is , ( type is FPAREN_OPEN
+newlines_insert_blank_lines(): orig_line is , orig_col is , n type is WORD
+newlines_insert_blank_lines(): orig_line is , orig_col is , ) type is FPAREN_CLOSE
+newlines_insert_blank_lines(): orig_line is , orig_col is , { type is BRACE_OPEN
+newlines_insert_blank_lines(): orig_line is , orig_col is , } type is BRACE_CLOSE
+newlines_insert_blank_lines(): orig_line is , orig_col is , ~ type is DESTRUCTOR
+newlines_insert_blank_lines(): orig_line is , orig_col is , TelegramIndex type is FUNC_CLASS_DEF
+newlines_insert_blank_lines(): orig_line is , orig_col is , ( type is FPAREN_OPEN
+newlines_insert_blank_lines(): orig_line is , orig_col is , ) type is FPAREN_CLOSE
+newlines_insert_blank_lines(): orig_line is , orig_col is , { type is BRACE_OPEN
+newlines_insert_blank_lines(): orig_line is , orig_col is , } type is BRACE_CLOSE
+newlines_insert_blank_lines(): orig_line is , orig_col is , const type is QUALIFIER
+newlines_insert_blank_lines(): orig_line is , orig_col is , char type is TYPE
+newlines_insert_blank_lines(): orig_line is , orig_col is , * type is PTR_TYPE
+newlines_insert_blank_lines(): orig_line is , orig_col is , const type is QUALIFIER
+newlines_insert_blank_lines(): orig_line is , orig_col is , pTelName type is WORD
+newlines_insert_blank_lines(): orig_line is , orig_col is , ; type is SEMICOLON
+newlines_insert_blank_lines(): orig_line is , orig_col is , unsigned type is TYPE
+newlines_insert_blank_lines(): orig_line is , orig_col is , long type is TYPE
+newlines_insert_blank_lines(): orig_line is , orig_col is , nTelIndex type is WORD
+newlines_insert_blank_lines(): orig_line is , orig_col is , ; type is SEMICOLON
+newlines_insert_blank_lines(): orig_line is , orig_col is , } type is BRACE_CLOSE
+newlines_insert_blank_lines(): orig_line is , orig_col is , ; type is SEMICOLON

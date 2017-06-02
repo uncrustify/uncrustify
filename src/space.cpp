@@ -104,8 +104,8 @@ static void log_rule2(size_t line, const char *rule, chunk_t *first, chunk_t *se
    LOG_FUNC_ENTRY();
    if (second->type != CT_NEWLINE)
    {
-      LOG_FMT(LSPACE, "Spacing: line %zu [%s/%s] '%s' <===> [%s/%s] '%s' : %s[%zu]%s",
-              first->orig_line,
+      LOG_FMT(LSPACE, "%s(%d): Spacing: line %zu [%s/%s] '%s' <===> [%s/%s] '%s' : %s[%zu]%s",
+              __func__, __LINE__, first->orig_line,
               get_token_name(first->type), get_token_name(first->parent_type),
               first->text(),
               get_token_name(second->type), get_token_name(second->parent_type),
@@ -120,11 +120,8 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
 {
    LOG_FUNC_ENTRY();
 
-#ifdef DEBUG
-   LOG_FMT(LSPACE, "(%d) ", __LINE__);
-#endif
-   LOG_FMT(LSPACE, "%s: %zu:%zu %s %s\n",
-           __func__, first->orig_line, first->orig_col, first->text(), get_token_name(first->type));
+   LOG_FMT(LSPACE, "%s(%d): orig_line is %zu, orig_col is %zu, type is %s, %s\n",
+           __func__, __LINE__, first->orig_line, first->orig_col, get_token_name(first->type), first->text());
 
    min_sp = 1;
    if ((first->type == CT_IGNORED) || (second->type == CT_IGNORED))
@@ -1874,8 +1871,8 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
 
 #ifdef DEBUG
    // these lines are only useful for debugging uncrustify itself
-   LOG_FMT(LSPACE, "\n\n(%d) %s: WARNING: unrecognize do_space: first: %zu:%zu %s %s and second: %zu:%zu %s %s\n\n\n",
-           __LINE__, __func__, first->orig_line, first->orig_col, first->text(), get_token_name(first->type),
+   LOG_FMT(LSPACE, "\n\n%s(%d): WARNING: unrecognize do_space: first: %zu:%zu %s %s and second: %zu:%zu %s %s\n\n\n",
+           __func__, __LINE__, first->orig_line, first->orig_col, first->text(), get_token_name(first->type),
            second->orig_line, second->orig_col, second->text(), get_token_name(second->type));
 #endif
    log_rule("ADD as default value");
@@ -1898,20 +1895,14 @@ void space_text(void)
    size_t  column = pc->column;
    while (pc != nullptr)
    {
-#ifdef DEBUG
-      LOG_FMT(LSPACE, "(%d) ", __LINE__);
-#endif
-      LOG_FMT(LSPACE, "%s: %zu:%zu %s %s\n",
-              __func__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
+      LOG_FMT(LSPACE, "%s(%d): orig_col is %zu, orig_col is %zu, %s type is %s\n",
+              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
       if ((cpd.settings[UO_use_options_overriding_for_qt_macros].b) &&
           ((strcmp(pc->text(), "SIGNAL") == 0) ||
            (strcmp(pc->text(), "SLOT") == 0)))
       {  // guy 2015-09-22
-#ifdef DEBUG
-         LOG_FMT(LSPACE, "(%d) ", __LINE__);
-#endif
-         LOG_FMT(LSPACE, "%zu: [%d] type %s SIGNAL/SLOT found\n",
-                 pc->orig_line, __LINE__, get_token_name(pc->type));
+         LOG_FMT(LSPACE, "%s(%d): orig_col is %zu, type is %s SIGNAL/SLOT found\n",
+                 __func__, __LINE__, pc->orig_line, get_token_name(pc->type));
          // flag the chunk for a second processing
          chunk_flags_set(pc, PCF_IN_QT_MACRO);
 
@@ -1925,8 +1916,8 @@ void space_text(void)
          while (chunk_is_blank(next) && !chunk_is_newline(next) &&
                 (next->type == CT_VBRACE_OPEN || next->type == CT_VBRACE_CLOSE))
          {
-            LOG_FMT(LSPACE, "%s: %zu:%zu Skip %s (%zu+%zu)\n",
-                    __func__, next->orig_line, next->orig_col, get_token_name(next->type),
+            LOG_FMT(LSPACE, "%s(%d): orig_line is %zu, orig_col is %zu, Skip %s (%zu+%zu)\n",
+                    __func__, __LINE__, next->orig_line, next->orig_col, get_token_name(next->type),
                     pc->column, pc->str.size());
             next->column = pc->column + pc->str.size();
             next         = chunk_get_next(next);
@@ -2041,11 +2032,8 @@ void space_text(void)
          }
 
          int min_sp;
-#ifdef DEBUG
-         LOG_FMT(LSPACE, "(%d) ", __LINE__);
-#endif
-         LOG_FMT(LSPACE, "%s: %zu:%zu %s %s\n",
-                 __func__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
+         LOG_FMT(LSPACE, "%s(%d): orig_line is %zu, orig_col is %zu, %s type is %s\n",
+                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
          argval_t av = do_space(pc, next, min_sp, false);
          if (pc->flags & PCF_FORCE_SPACE)
          {
@@ -2211,7 +2199,7 @@ void space_text_balance_nested_parens(void)
 size_t space_needed(chunk_t *first, chunk_t *second)
 {
    LOG_FUNC_ENTRY();
-   LOG_FMT(LSPACE, "%s\n", __func__);
+   LOG_FMT(LSPACE, "%s(%d)\n", __func__, __LINE__);
 
    int min_sp;
    switch (do_space(first, second, min_sp))
@@ -2234,8 +2222,8 @@ int space_col_align(chunk_t *first, chunk_t *second)
 {
    LOG_FUNC_ENTRY();
 
-   LOG_FMT(LSPACE, "%s: %zu:%zu [%s/%s] '%s' <==> %zu:%zu [%s/%s] '%s'",
-           __func__, first->orig_line, first->orig_col,
+   LOG_FMT(LSPACE, "%s(%d): orig_line is %zu, orig_col is %zu, [%s/%s] '%s' <==> line is %zu, col is %zu [%s/%s] '%s'",
+           __func__, __LINE__, first->orig_line, first->orig_col,
            get_token_name(first->type), get_token_name(first->parent_type),
            first->text(),
            second->orig_line, second->orig_col,
@@ -2246,16 +2234,16 @@ int space_col_align(chunk_t *first, chunk_t *second)
    int      min_sp;
    argval_t av = do_space(first, second, min_sp);
 
-   LOG_FMT(LSPACE, "%s: av=%d, ", __func__, av);
+   LOG_FMT(LSPACE, "%s(%d): av is %d, ", __func__, __LINE__, av);
    size_t coldiff;
    if (first->nl_count)
    {
-      LOG_FMT(LSPACE, "nl_count=%zu, orig_col_end=%zu", first->nl_count, first->orig_col_end);
+      LOG_FMT(LSPACE, "nl_count is %zu, orig_col_end is %zu", first->nl_count, first->orig_col_end);
       coldiff = first->orig_col_end - 1;
    }
    else
    {
-      LOG_FMT(LSPACE, "len=%zu", first->len());
+      LOG_FMT(LSPACE, "len is %zu", first->len());
       coldiff = first->len();
    }
    switch (av)

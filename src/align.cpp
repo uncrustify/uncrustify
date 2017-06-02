@@ -252,15 +252,15 @@ static void align_stack(ChunkStack &cs, size_t col, bool align_single, log_sev_t
 
    if ((cs.Len() > 1) || (align_single && (cs.Len() == 1)))
    {
-      LOG_FMT(sev, "%s: max_col=%zu\n", __func__, col);
+      LOG_FMT(sev, "%s(%d): max_col=%zu\n", __func__, __LINE__, col);
       chunk_t *pc;
       while ((pc = cs.Pop_Back()) != nullptr)
       {
          align_to_column(pc, col);
          chunk_flags_set(pc, PCF_WAS_ALIGNED);
 
-         LOG_FMT(sev, "%s: indented [%s] on line %zu to %zu\n",
-                 __func__, pc->text(), pc->orig_line, pc->column);
+         LOG_FMT(sev, "%s(%d): indented [%s] on line %zu to %zu\n",
+                 __func__, __LINE__, pc->text(), pc->orig_line, pc->column);
       }
    }
    cs.Reset();
@@ -284,8 +284,8 @@ static void align_add(ChunkStack &cs, chunk_t *pc, size_t &max_col, size_t min_p
    if ((prev == nullptr) || chunk_is_newline(prev))
    {
       min_col = squeeze ? 1 : pc->column;
-      LOG_FMT(LALADD, "%s: pc->orig_line=%zu, pc->col=%zu max_col=%zu min_pad=%zu min_col=%zu\n",
-              __func__, pc->orig_line, pc->column, max_col, min_pad, min_col);
+      LOG_FMT(LALADD, "%s(%d): pc->orig_line=%zu, pc->col=%zu max_col=%zu min_pad=%zu min_col=%zu\n",
+              __func__, __LINE__, pc->orig_line, pc->column, max_col, min_pad, min_col);
    }
    else
    {
@@ -304,8 +304,8 @@ static void align_add(ChunkStack &cs, chunk_t *pc, size_t &max_col, size_t min_p
             min_col = pc->column;
          }
       }
-      LOG_FMT(LALADD, "%s: pc->orig_line=%zu, pc->col=%zu max_col=%zu min_pad=%zu min_col=%zu multi:%s prev->col=%zu prev->len()=%zu %s\n",
-              __func__, pc->orig_line, pc->column, max_col, min_pad, min_col, (prev->type == CT_COMMENT_MULTI) ? "Y" : "N",
+      LOG_FMT(LALADD, "%s(%d): pc->orig_line=%zu, pc->col=%zu max_col=%zu min_pad=%zu min_col=%zu multi:%s prev->col=%zu prev->len()=%zu %s\n",
+              __func__, __LINE__, pc->orig_line, pc->column, max_col, min_pad, min_col, (prev->type == CT_COMMENT_MULTI) ? "Y" : "N",
               (prev->type == CT_COMMENT_MULTI) ? prev->orig_col_end : (UINT32)prev->column, prev->len(), get_token_name(prev->type));
    }
 
@@ -325,7 +325,7 @@ static void align_add(ChunkStack &cs, chunk_t *pc, size_t &max_col, size_t min_p
 void quick_align_again(void)
 {
    LOG_FUNC_ENTRY();
-   LOG_FMT(LALAGAIN, "%s:\n", __func__);
+   LOG_FMT(LALAGAIN, "%s(%d):\n", __func__, __LINE__);
    for (chunk_t *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next(pc))
    {
       if ((pc->align.next != nullptr) && (pc->flags & PCF_ALIGN_START))
@@ -367,8 +367,8 @@ void quick_indent_again(void)
             size_t col = pc->indent.ref->column + pc->indent.delta;
 
             indent_to_column(pc, col);
-            LOG_FMT(LINDENTAG, "%s: [%zu] indent [%s] to %zu based on [%s] @ %zu:%zu\n",
-                    __func__, pc->orig_line, pc->text(), col,
+            LOG_FMT(LINDENTAG, "%s(%d): [%zu] indent [%s] to %zu based on [%s] @ %zu:%zu\n",
+                    __func__, __LINE__, pc->orig_line, pc->text(), col,
                     pc->indent.ref->text(),
                     pc->indent.ref->orig_line, pc->indent.ref->column);
          }
@@ -461,7 +461,7 @@ void align_all(void)
 static void align_oc_msg_spec(size_t span)
 {
    LOG_FUNC_ENTRY();
-   LOG_FMT(LALIGN, "%s\n", __func__);
+   LOG_FMT(LALIGN, "%s(%d)\n", __func__, __LINE__);
 
    AlignStack as;
    as.Start(span, 0);
@@ -612,8 +612,8 @@ void align_preprocessor(void)
          break;
       }
 
-      LOG_FMT(LALPP, "%s: define (%s) on line %zu col %zu\n",
-              __func__, pc->text(), pc->orig_line, pc->orig_col);
+      LOG_FMT(LALPP, "%s(%d): define (%s) on line %zu col %zu\n",
+              __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col);
 
       cur_as = &as;
       if (pc->type == CT_MACRO_FUNC)
@@ -627,8 +627,8 @@ void align_preprocessor(void)
          pc = chunk_get_next_nc(pc); // point to open (
          pc = chunk_get_next_type(pc, CT_FPAREN_CLOSE, pc->level);
 
-         LOG_FMT(LALPP, "%s: jumped to (%s) on line %zu col %zu\n",
-                 __func__, pc->text(), pc->orig_line, pc->orig_col);
+         LOG_FMT(LALPP, "%s(%d): jumped to (%s) on line %zu col %zu\n",
+                 __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col);
       }
 
       /* step to the value past the close paren or the macro name */
@@ -642,8 +642,8 @@ void align_preprocessor(void)
        * a value is given */
       if (!chunk_is_newline(pc))
       {
-         LOG_FMT(LALPP, "%s: align on '%s', line %zu col %zu\n",
-                 __func__, pc->text(), pc->orig_line, pc->orig_col);
+         LOG_FMT(LALPP, "%s(%d): align on '%s', line %zu col %zu\n",
+                 __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col);
 
          cur_as->Add(pc);
       }
@@ -664,8 +664,8 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
    }
    size_t my_level = first->level;
 
-   LOG_FMT(LALASS, "%s[%zu]: checking %s on line %zu - span=%zu thresh=%zu\n",
-           __func__, my_level, first->text(), first->orig_line, span, thresh);
+   LOG_FMT(LALASS, "%s(%d): [%zu]: checking %s on line %zu - span=%zu thresh=%zu\n",
+           __func__, __LINE__, my_level, first->text(), first->orig_line, span, thresh);
 
    /* If we are aligning on a tabstop, we shouldn't right-align */
    AlignStack as;    // regular assigns
@@ -783,12 +783,12 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
 
    if (pc != nullptr)
    {
-      LOG_FMT(LALASS, "%s: done on %s on line %zu\n",
-              __func__, pc->text(), pc->orig_line);
+      LOG_FMT(LALASS, "%s(%d): done on %s on line %zu\n",
+              __func__, __LINE__, pc->text(), pc->orig_line);
    }
    else
    {
-      LOG_FMT(LALASS, "%s: done on NULL\n", __func__);
+      LOG_FMT(LALASS, "%s(%d): done on NULL\n", __func__, __LINE__);
    }
 
    return(pc);
@@ -1090,7 +1090,7 @@ static void align_func_proto(size_t span)
 {
    LOG_FUNC_ENTRY();
 
-   LOG_FMT(LALIGN, "%s\n", __func__);
+   LOG_FMT(LALIGN, "%s(%d)\n", __func__, __LINE__);
 
    AlignStack as;
    as.Start(span, 0);
@@ -1181,15 +1181,15 @@ static chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_co
    chunk_t *prev = chunk_get_prev_ncnl(start);
    if ((prev != nullptr) && (prev->type == CT_ASSIGN))
    {
-      LOG_FMT(LAVDB, "%s: start=%s [%s] on line %zu (abort due to assign)\n", __func__,
-              start->text(), get_token_name(start->type), start->orig_line);
+      LOG_FMT(LAVDB, "%s(%d): start=%s [%s] on line %zu (abort due to assign)\n",
+              __func__, __LINE__, start->text(), get_token_name(start->type), start->orig_line);
 
       chunk_t *pc = chunk_get_next_type(start, CT_BRACE_CLOSE, start->level);
       return(chunk_get_next_ncnl(pc));
    }
 
-   LOG_FMT(LAVDB, "%s: start=%s [%s] on line %zu\n", __func__,
-           start->text(), get_token_name(start->type), start->orig_line);
+   LOG_FMT(LAVDB, "%s(%d): start=%s [%s] on line %zu\n",
+           __func__, __LINE__, start->text(), get_token_name(start->type), start->orig_line);
 
    UINT64 align_mask = PCF_IN_FCN_DEF | PCF_VAR_1ST;
    if (!cpd.settings[UO_align_var_def_inline].b)
@@ -1223,8 +1223,8 @@ static chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_co
    chunk_t *pc           = chunk_get_next(start);
    while ((pc != nullptr) && ((pc->level >= start->level) || (pc->level == 0)))
    {
-      LOG_FMT(LGUY, "%s: pc->text()=%s, pc->orig_line=%zu, pc->orig_col=%zu\n",
-              __func__, pc->text(), pc->orig_line, pc->orig_col);
+      LOG_FMT(LGUY, "%s(%d): %s orig_line is %zu, orig_col is %zu\n",
+              __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col);
       if (chunk_is_comment(pc))
       {
          if (pc->nl_count > 0)
@@ -1391,8 +1391,8 @@ chunk_t *align_nl_cont(chunk_t *start)
 {
    LOG_FUNC_ENTRY();
 
-   LOG_FMT(LALNLC, "%s: start on [%s] on line %zu\n", __func__,
-           get_token_name(start->type), start->orig_line);
+   LOG_FMT(LALNLC, "%s(%d): start on [%s] on line %zu\n",
+           __func__, __LINE__, get_token_name(start->type), start->orig_line);
 
    /* Find the max column */
    ChunkStack cs;
@@ -1466,8 +1466,8 @@ chunk_t *align_trailing_comments(chunk_t *start)
    comment_align_e cmt_type_cur;
    comment_align_e cmt_type_start = get_comment_align_type(pc);
 
-   LOG_FMT(LALADD, "%s: start on line=%zu\n",
-           __func__, pc->orig_line);
+   LOG_FMT(LALADD, "%s(%d): start on line=%zu\n",
+           __func__, __LINE__, pc->orig_line);
 
    /* Find the max column */
    while ((pc != nullptr) && (nl_count < cpd.settings[UO_align_right_cmt_span].u))
@@ -1479,8 +1479,8 @@ chunk_t *align_trailing_comments(chunk_t *start)
          if (cmt_type_cur == cmt_type_start)
          {
             col = 1 + (pc->brace_level * cpd.settings[UO_indent_columns].u);
-            LOG_FMT(LALADD, "%s: line=%zu col=%zu min_col=%zu pc->col=%zu pc->len=%zu %s\n",
-                    __func__, pc->orig_line, col, min_col, pc->column, pc->len(),
+            LOG_FMT(LALADD, "%s(%d): line=%zu col=%zu min_col=%zu pc->col=%zu pc->len=%zu %s\n",
+                    __func__, __LINE__, pc->orig_line, col, min_col, pc->column, pc->len(),
                     get_token_name(pc->type));
             if ((min_orig == 0) || (min_orig > pc->column))
             {
@@ -1518,8 +1518,8 @@ chunk_t *align_trailing_comments(chunk_t *start)
    {
       col = intended_col;
    }
-   LOG_FMT(LALADD, "%s:  -- min_orig=%zu intended_col=%zu min_allowed=%zu ==> col=%zu\n",
-           __func__, min_orig, intended_col, min_col, col);
+   LOG_FMT(LALADD, "%s(%d):  -- min_orig=%zu intended_col=%zu min_allowed=%zu ==> col=%zu\n",
+           __func__, __LINE__, min_orig, intended_col, min_col, col);
    if ((cpd.frag_cols > 0) && (cpd.frag_cols <= col))
    {
       col -= cpd.frag_cols;
@@ -1590,8 +1590,8 @@ static chunk_t *scan_ib_line(chunk_t *start, bool first_pass)
 
    if (pc != nullptr)
    {
-      LOG_FMT(LSIB, "%s: start=%s col %zu/%zu line %zu\n",
-              __func__, get_token_name(pc->type), pc->column, pc->orig_col, pc->orig_line);
+      LOG_FMT(LSIB, "%s(%d): start=%s col %zu/%zu line %zu\n",
+              __func__, __LINE__, get_token_name(pc->type), pc->column, pc->orig_col, pc->orig_line);
    }
 
    while ((pc != nullptr) && !chunk_is_newline(pc) &&
@@ -1672,8 +1672,8 @@ static void align_log_al(log_sev_t sev, size_t line)
 {
    if (log_sev_on(sev))
    {
-      log_fmt(sev, "%s: line %zu, %zu)",
-              __func__, line, cpd.al_cnt);
+      log_fmt(sev, "%s(%d): line %zu, %zu)",
+              __func__, __LINE__, line, cpd.al_cnt);
       for (size_t idx = 0; idx < cpd.al_cnt; idx++)
       {
          log_fmt(sev, " %zu/%zu=%s", cpd.al[idx].col, cpd.al[idx].len,
@@ -1693,7 +1693,8 @@ static void align_init_brace(chunk_t *start)
    cpd.al_cnt       = 0;
    cpd.al_c99_array = false;
 
-   LOG_FMT(LALBR, "%s: start @ %zu:%zu\n", __func__, start->orig_line, start->orig_col);
+   LOG_FMT(LALBR, "%s(%d): start @ %zu:%zu\n",
+           __func__, __LINE__, start->orig_line, start->orig_col);
 
    chunk_t *pc = chunk_get_next_ncnl(start);
    pc = scan_ib_line(pc, true);
@@ -1861,8 +1862,8 @@ static void align_typedefs(size_t span)
          if (pc->flags & PCF_ANCHOR)
          {
             as.Add(pc);
-            LOG_FMT(LALTD, "%s: typedef @ %zu:%zu, tag '%s' @ %zu:%zu\n",
-                    __func__, c_typedef->orig_line, c_typedef->orig_col,
+            LOG_FMT(LALTD, "%s(%d): typedef @ %zu:%zu, tag '%s' @ %zu:%zu\n",
+                    __func__, __LINE__, c_typedef->orig_line, c_typedef->orig_col,
                     pc->text(), pc->orig_line, pc->orig_col);
             c_typedef = nullptr;
          }
