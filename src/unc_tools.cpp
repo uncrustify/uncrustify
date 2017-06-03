@@ -15,6 +15,7 @@
 // prot_the_line(__LINE__, pc->orig_line);
 // prot_the_line(__LINE__, 6);
 // examine_Data(__func__, __LINE__, n);
+// log_pcf_flags(LSYS, pc->flags);
 
 
 // protocol of the line

@@ -327,8 +327,8 @@ static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
 
-   LOG_FMT(LTOK, "%s:%zu] %16s - tos:%zu/%16s TOS.stage:%u\n",
-           __func__, pc->orig_line, get_token_name(pc->type),
+   LOG_FMT(LTOK, "%s(%d): orig_line is %zu, type is %s, tos is %zu, type is %s, TOS.stage is %u\n",
+           __func__, __LINE__, pc->orig_line, get_token_name(pc->type),
            frm->pse_tos, get_token_name(frm->pse[frm->pse_tos].type),
            (unsigned int)frm->pse[frm->pse_tos].stage);
 
@@ -341,8 +341,8 @@ static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
        !chunk_is_str(pc, "]", 1))
    {
       chunk_flags_set(pc, PCF_EXPR_START | ((frm->stmt_count == 0) ? PCF_STMT_START : 0));
-      LOG_FMT(LSTMT, "%zu] 1.marked %s as %s start st:%d ex:%d\n",
-              pc->orig_line, pc->text(), (pc->flags & PCF_STMT_START) ? "stmt" : "expr",
+      LOG_FMT(LSTMT, "%s(%d): orig_line is %zu, 1.marked %s as %s, start st is %d, ex is %d\n",
+              __func__, __LINE__, pc->orig_line, pc->text(), (pc->flags & PCF_STMT_START) ? "stmt" : "expr",
               frm->stmt_count, frm->expr_count);
    }
    frm->stmt_count++;
@@ -429,8 +429,8 @@ static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
          if ((frm->pse[frm->pse_tos].type != CT_NONE) &&
              (frm->pse[frm->pse_tos].type != CT_PP_DEFINE))
          {
-            LOG_FMT(LWARN, "%s: %s:%zu Error: Unexpected '%s' for '%s', which was on line %zu\n",
-                    __func__, cpd.filename, pc->orig_line, pc->text(),
+            LOG_FMT(LWARN, "%s(%d): %s:%zu Error: Unexpected '%s' for '%s', which was on line %zu\n",
+                    __func__, __LINE__, cpd.filename, pc->orig_line, pc->text(),
                     get_token_name(frm->pse[frm->pse_tos].pc->type),
                     frm->pse[frm->pse_tos].pc->orig_line);
             print_stack(LBCSPOP, "=Error  ", frm, pc);
@@ -499,8 +499,8 @@ static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
          }
          else
          {
-            LOG_FMT(LWARN, "%s:%zu: Error: Expected a semicolon for WHILE_OF_DO, but got '%s'\n",
-                    cpd.filename, pc->orig_line, get_token_name(pc->type));
+            LOG_FMT(LWARN, "%s: %s(%d): %zu: Error: Expected a semicolon for WHILE_OF_DO, but got '%s'\n",
+                    cpd.filename, __func__, __LINE__, pc->orig_line, get_token_name(pc->type));
             cpd.error_count++;
          }
          handle_complex_close(frm, pc);
@@ -646,8 +646,8 @@ static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
         (frm->pse[frm->pse_tos].type != CT_FPAREN_OPEN) &&
         (frm->pse[frm->pse_tos].type != CT_SPAREN_OPEN)))
    {
-      LOG_FMT(LSTMT, "%s: %zu> reset1 stmt on %s\n",
-              __func__, pc->orig_line, pc->text());
+      LOG_FMT(LSTMT, "%s(%d): orig_line is %zu, reset1 stmt on %s\n",
+              __func__, __LINE__, pc->orig_line, pc->text());
       frm->stmt_count = 0;
       frm->expr_count = 0;
    }
@@ -681,8 +681,8 @@ static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
        (pc->type == CT_QUESTION))
    {
       frm->expr_count = 0;
-      LOG_FMT(LSTMT, "%s: %zu> reset expr on %s\n",
-              __func__, pc->orig_line, pc->text());
+      LOG_FMT(LSTMT, "%s(%d): %zu> reset expr on %s\n",
+              __func__, __LINE__, pc->orig_line, pc->text());
    }
    else if (pc->type == CT_BRACE_CLOSE)
    {
