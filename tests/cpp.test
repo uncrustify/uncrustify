@@ -436,3 +436,5 @@
 
 34170  empty.cfg                       cpp/i1082.cpp
 34171  i1181.cfg                       cpp/i1181.cpp
+
+34190 bug_1003.cfg                     cpp/bug_1003.cpp
