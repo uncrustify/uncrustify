@@ -41,11 +41,13 @@ Just in case I don't do a release for a while and forget what to do... =)
 3. Make sure there are no modified files in the workspace.
    Check in all the changes you just made.
    $ git commit <all the files created above>
-   $ git push
+   $ git push --repo=https://github.com/uncrustify/uncrustify.git
+     (use an admin)
 
 4. Create a GIT tag and push it
    $ git tag -a uncrustify-0.nn -m uncrustify-0.nn
-   $ git push --tags
+   $ git push --tags --repo=https://github.com/uncrustify/uncrustify.git
+     (use an admin)
 
 5. The source tarball is available from the release on GitHub, or use
    $ git archive -o uncrustify-0.nn.tar.gz uncrustify-0.nn
@@ -68,6 +70,28 @@ Just in case I don't do a release for a while and forget what to do... =)
 
 7. Update the web page files
    $ cd uncrustify-$UNC_REL/
+      Login as admin under:
+        https://sourceforge.net/projects/uncrustify/
+
+      change to "Files"
+        https://sourceforge.net/projects/uncrustify/files/?source=navbar
+
+      change to "uncrustify"
+        https://sourceforge.net/projects/uncrustify/files/uncrustify/
+
+      "Add Folder"
+        <Name of a new folder, i.e. uncrustify-0.nn>
+
+      change to "uncrustify-0.nn"
+        https://sourceforge.net/projects/uncrustify/files/uncrustify/uncrustify-0.nn/
+
+      "Add File"
+      Select files, or drag & drop files here.
+        README.md
+        uncrustify-0.nn.tar.gz
+        uncrustify-0.nn-win32.zip
+        uncrustify-0.nn-win64.zip
+
    $ scp -r documentation/htdocs/* ChangeLog USER,uncrustify@web.sourceforge.net:htdocs/
 
 8. Use the web interface (file manager) to create the release folder and
