@@ -160,7 +160,7 @@ void dump_out(unsigned int type)
          fprintf(D_file, "  orig_col %zu\n", pc->orig_col);
          fprintf(D_file, "  orig_col_end %zu\n", pc->orig_col_end);
          fprintf(D_file, (pc->orig_prev_sp != 0) ? "  orig_prev_sp %u\n" : "", pc->orig_prev_sp);
-         fprintf(D_file, (pc->flags != 0) ? "  flags %zu\n" : "", pc->flags);
+         fprintf(D_file, (pc->flags != 0) ? "  flags %" PRIu64 "\n" : "", pc->flags);
          fprintf(D_file, (pc->column != 0) ? "  column %zu\n" : "", pc->column);
          fprintf(D_file, (pc->column_indent != 0) ? "  column_indent %zu\n" : "", pc->column_indent);
          fprintf(D_file, (pc->nl_count != 0) ? "  nl_count %zu\n" : "", pc->nl_count);
