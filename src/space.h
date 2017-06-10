@@ -36,7 +36,7 @@ size_t space_needed(chunk_t *first, chunk_t *second);
  *
  * @return the column difference between the two chunks
  */
-int space_col_align(chunk_t *first, chunk_t *second);
+size_t space_col_align(chunk_t *first, chunk_t *second);
 
 
 void space_add_after(chunk_t *pc, size_t count);
