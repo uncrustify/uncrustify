@@ -14,7 +14,8 @@
 /**
  * Loads the defines from a file
  *
- * @param filename  The path to the file to load
+ * @param filename       path to the file to load
+ * @param max_line_size  maximal allowed characters per line
  *
  * @retval EX_OK     defines successfully loaded from file
  * @retval EX_IOERR  reading defines file failed
@@ -26,7 +27,7 @@ int load_define_file(const char *filename);
  * Adds an entry to the define list
  *
  * @param tag    The tag (string) must be zero terminated
- * @param value  NULL or the value of the define
+ * @param value  nullptr or the value of the define
  */
 void add_define(const char *tag, const char *value);
 

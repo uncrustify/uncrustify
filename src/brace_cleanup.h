@@ -25,7 +25,8 @@ void brace_cleanup(void);
  * - if the TOS is now VBRACE, insert a CT_VBRACE_CLOSE and recurse.
  * - if the TOS is a complex statement, call handle_complex_close()
  *
- * @return true - done with this chunk, false - keep processing
+ * @retval true   done with this chunk
+ * @retval false  keep processing
  */
 bool close_statement(parse_frame_t *frm, chunk_t *pc);
 

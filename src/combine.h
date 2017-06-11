@@ -70,7 +70,7 @@ chunk_t *set_paren_parent(chunk_t *start, c_token_t parent);
  * First on all non-preprocessor chunks and then on each preprocessor chunk.
  * It does all the detection and classifying.
  * This is only called by fix_symbols.
- * The three parameters never get the value NULL.
+ * The three parameters never get the value nullptr.
  * it is not necessary to test.
  */
 void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next);
@@ -115,7 +115,10 @@ chunk_t *skip_attribute_next(chunk_t *attr);
 chunk_t *skip_attribute_prev(chunk_t *fp_close);
 
 
-//! Remove 'return;' that appears as the last statement in a function
+/**
+ * @brief Remove unnecessary returns
+ * that is remove 'return;' that appears as the last statement in a function
+ */
 void remove_extra_returns(void);
 
 

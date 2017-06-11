@@ -26,11 +26,20 @@ void indent_text(void);
  */
 void indent_preproc(void);
 
-
+/**
+ *
+ * @param pc      chunk at the start of the line
+ * @param column  desired column
+ */
 void indent_to_column(chunk_t *pc, size_t column);
 
 
-//! Same as indent_to_column, except we can move both ways
+/**
+ * Same as indent_to_column, except we can move both ways
+ *
+ * @param pc      chunk at the start of the line
+ * @param column  desired column
+ */
 void align_to_column(chunk_t *pc, size_t column);
 
 

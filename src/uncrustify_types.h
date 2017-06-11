@@ -25,6 +25,15 @@ using namespace std;
 #include <utime.h>
 #endif
 
+/**
+ * abbreviations used:
+ *   SS = star style
+ */
+
+/**
+ * special strings to mark a part of the input file where
+ * uncrustify shall not change anything
+ */
 #define UNCRUSTIFY_OFF_TEXT    " *INDENT-OFF*"
 #define UNCRUSTIFY_ON_TEXT     " *INDENT-ON*"
 
@@ -67,12 +76,13 @@ enum class char_encoding_e : unsigned int
 {
    e_ASCII,     //! 0-127
    e_BYTE,      //! 0-255, not UTF-8
-   e_UTF8,
-   e_UTF16_LE,
-   e_UTF16_BE,
+   e_UTF8,      //! utf 8 bit wide
+   e_UTF16_LE,  //! utf 16 bit wide, little endian
+   e_UTF16_BE   //! utf 16 bit wide, big endian
 };
 
-struct chunk_t;
+
+struct chunk_t; //forward declaration
 
 
 /**
@@ -228,7 +238,7 @@ static const char *pcf_names[] =
 
 struct align_ptr_t
 {
-   chunk_t *next;       //! NULL or the chunk that should be under this one
+   chunk_t *next;       //! nullptr or the chunk that should be under this one
    bool    right_align; //! AlignStack.m_right_align
    size_t  star_style;  //! AlignStack.m_star_style
    size_t  amp_style;   //! AlignStack.m_amp_style
@@ -254,6 +264,7 @@ struct chunk_t
    }
 
 
+   //! sets all elements of the struct to their default value
    void reset()
    {
       memset(&align, 0, sizeof(align));
@@ -278,26 +289,28 @@ struct chunk_t
    }
 
 
+   //! provides the number of characters of string
    size_t len()
    {
       return(str.size());
    }
 
 
+   //! provides the content of a string a zero terminated character pointer
    const char *text()
    {
       return(str.c_str());
    }
 
-   chunk_t      *next;
-   chunk_t      *prev;
+   chunk_t      *next;            //! pointer to next chunk in list
+   chunk_t      *prev;            //! pointer to previous chunk in list
    align_ptr_t  align;
    indent_ptr_t indent;
-   c_token_t    type;
-   c_token_t    parent_type;      //! usually CT_NONE
-   size_t       orig_line;
-   size_t       orig_col;         //! is always > 0
-   size_t       orig_col_end;     //! is always > 1
+   c_token_t    type;             //! type of the chunk itself
+   c_token_t    parent_type;      //! type of the parent chunk usually CT_NONE
+   size_t       orig_line;        //! line number of chunk in input file
+   size_t       orig_col;         //! column where chunk started in the input file, is always > 0
+   size_t       orig_col_end;     //! column where chunk ended in the input file, is always > 1
    UINT32       orig_prev_sp;     //! whitespace before this token
    UINT64       flags;            //! see PCF_xxx
    size_t       column;           //! column of chunk
@@ -307,11 +320,13 @@ struct chunk_t
    size_t       nl_count;         //! number of newlines in CT_NEWLINE
    size_t       level;            //! nest level in {, (, or [
    size_t       brace_level;      //! nest level in braces only
-   size_t       pp_level;         //! nest level in #if stuff
+   size_t       pp_level;         //! nest level in preprocessor
    bool         after_tab;        //! whether this token was after a tab
    unc_text     str;              //! the token text
 };
 
+
+//! list of all programming languages Uncrustify supports
 enum lang_flag_e
 {
    LANG_C    = 0x0001,
@@ -319,14 +334,14 @@ enum lang_flag_e
    LANG_D    = 0x0004,
    LANG_CS   = 0x0008,     //! C# (C-Sharp)
    LANG_JAVA = 0x0010,
-   LANG_OC   = 0x0020,     //! Objective C
+   LANG_OC   = 0x0020,     //! Objective-C
    LANG_VALA = 0x0040,
    LANG_PAWN = 0x0080,
-   LANG_ECMA = 0x0100,
+   LANG_ECMA = 0x0100,     //! ECMA Script (JavaScript)
 
-   LANG_ALLC = 0x017f,     /** LANG_C     | LANG_CPP | LANG_D    | LANG_CS   |
+   LANG_ALLC = 0x017f,     /** LANG_C    | LANG_CPP | LANG_D    | LANG_CS   |
                             *  LANG_JAVA | LANG_OC  | LANG_VALA | LANG_ECMA   */
-   LANG_ALL  = 0x0fff,
+   LANG_ALL  = 0x0fff,     //! applies to all languages
 
    FLAG_DIG  = 0x4000,     //! digraph/trigraph
    FLAG_PP   = 0x8000,     //! only appears in a preprocessor
@@ -336,15 +351,15 @@ enum lang_flag_e
 enum class pattern_class_e : unsigned int
 {
    NONE,
-   BRACED,   /** keyword + braced stmt:
+   BRACED,   /** keyword + braced statement:
               *    do, try, finally, body, unittest, unsafe, volatile
               *    add, get, remove, set                                      */
-   PBRACED,  /** keyword + parens + braced stmt:
+   PBRACED,  /** keyword + parens + braced statement:
               *    if, elseif, switch, for, while, synchronized,
               *    using, lock, with, version, CT_D_SCOPE_IF                  */
-   OPBRACED, /** keyword + optional parens + braced stmt:
+   OPBRACED, /** keyword + optional parens + braced statement:
               *    catch, version, debug                                      */
-   VBRACED,  /** keyword + value + braced stmt:
+   VBRACED,  /** keyword + value + braced statement:
               *    namespace                                                  */
    PAREN,    /** keyword + parens:
               *    while-of-do                                                */
@@ -354,11 +369,12 @@ enum class pattern_class_e : unsigned int
               *    else                                                       */
 };
 
+//! used to link language keywords with some addition information
 struct chunk_tag_t
 {
-   const char *tag;
-   c_token_t  type;
-   size_t     lang_flags;
+   const char *tag;        //! name of the keyword e.g. "bool"
+   c_token_t  type;        //! uncrustify type assigned to that keyword
+   size_t     lang_flags;  //! programming language that uses this keyword
 };
 
 
@@ -369,12 +385,13 @@ struct align_t
    size_t    len;    //! length of the token + space
 };
 
+//! holds information and data of a file
 struct file_mem
 {
-   vector<UINT8>   raw;
-   deque<int>      data;
+   vector<UINT8>   raw;   //! raw content of file
+   deque<int>      data;  //! processed content of file
    bool            bom;
-   char_encoding_e enc;
+   char_encoding_e enc;   //! character encoding of file ASCII, utf, etc.
 #ifdef HAVE_UTIME_H
    struct utimbuf  utb;
 #endif
@@ -394,8 +411,7 @@ enum class unc_stage_e : unsigned int
    CLEANUP
 };
 
-// this set a limit to the name padding
-#define MAX_OPTION_NAME_LEN    32
+#define MAX_OPTION_NAME_LEN    32  // sets a limit to the name padding
 
 struct cp_data_t
 {
@@ -404,31 +420,31 @@ struct cp_data_t
    int             last_char;
    bool            do_check;
    unc_stage_e     unc_stage;
-   int             check_fail_cnt;    //! total failure count
+   int             check_fail_cnt;  //! total failure count
    bool            if_changed;
 
-   UINT32          error_count;
+   UINT32          error_count;     //! counts how many errors occurred so far
    const char      *filename;
 
-   file_mem        file_hdr;      // for cmt_insert_file_header
-   file_mem        file_ftr;      // for cmt_insert_file_footer
-   file_mem        func_hdr;      // for cmt_insert_func_header
-   file_mem        oc_msg_hdr;    // for cmt_insert_oc_msg_header
-   file_mem        class_hdr;     // for cmt_insert_class_header
+   file_mem        file_hdr;        // for cmt_insert_file_header
+   file_mem        file_ftr;        // for cmt_insert_file_footer
+   file_mem        func_hdr;        // for cmt_insert_func_header
+   file_mem        oc_msg_hdr;      // for cmt_insert_oc_msg_header
+   file_mem        class_hdr;       // for cmt_insert_class_header
 
-   size_t          lang_flags;    // LANG_xxx
-   bool            lang_forced;
+   size_t          lang_flags;      //! defines the language of the source input
+   bool            lang_forced;     //! overwrites automatic language detection
 
    bool            unc_off;
-   bool            unc_off_used;    // to check if "unc_off" is used
+   bool            unc_off_used;    //! to check if "unc_off" is used
    UINT32          line_number;
-   size_t          column;          // column for parsing
-   UINT16          spaces;          // space count on output
+   size_t          column;          //! column for parsing
+   UINT16          spaces;          //! space count on output
 
    int             ifdef_over_whole_file;
 
-   bool            frag;
-   UINT16          frag_cols;
+   bool            frag;            //! activates code fragment option
+   uint32_t        frag_cols;
 
    // stuff to auto-detect line endings
    UINT32          le_counts[LE_AUTO];
@@ -436,7 +452,7 @@ struct cp_data_t
 
    bool            consumed;
 
-   int             did_newline;
+   int             did_newline;     //! flag indicates if a newline was added or converted
    c_token_t       in_preproc;
    int             preproc_ncnl_count;
    bool            output_trailspace;
@@ -447,7 +463,7 @@ struct cp_data_t
 
    // bumped up when a line is split or indented
    int             changes;
-   int             pass_count;
+   int             pass_count;  //! indicates how often the chunk list shall be processed
 
    align_t         al[80];
    size_t          al_cnt;
@@ -455,12 +471,11 @@ struct cp_data_t
 
    bool            warned_unable_string_replace_tab_chars;
 
-   // Here are all the settings
-   op_val_t        settings[UO_option_count];
+   op_val_t        settings[UO_option_count];  //! array with all uncrustify option settings
 
    parse_frame_t   frames[16];
    int             frame_count;
-   int             pp_level;
+   int             pp_level; // TODO: can this ever be -1?
 
    // the default values for settings
    op_val_t        defaults[UO_option_count];

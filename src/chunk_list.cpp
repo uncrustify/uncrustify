@@ -80,8 +80,10 @@ static chunk_t *chunk_search(chunk_t *cur, const check_t check_fct, const scope_
 static void chunk_log(chunk_t *pc, const char *text);
 
 
-/* @todo if we use C++ we can overload the following two functions
- * and thus name them equally */
+/*
+ * TODO: if we use C++ we can overload the following two functions
+ * and thus name them equally
+ */
 
 /**
  * @brief search a chunk of a given category in a chunk list
@@ -91,27 +93,32 @@ static void chunk_log(chunk_t *pc, const char *text);
  *
  * This function is a specialization of chunk_search.
  *
- * @param  cur     chunk to start search at
- * @param  type    category to search for
- * @param  scope   code parts to consider for search
- * @param  dir     search direction
+ * @param cur    chunk to start search at
+ * @param type   category to search for
+ * @param scope  code parts to consider for search
+ * @param dir    search direction
  *
- * @retval NULL     no chunk found or invalid parameters provided
+ * @retval nullptr  no chunk found or invalid parameters provided
  * @retval chunk_t  pointer to the found chunk
  */
 static chunk_t *chunk_search_type(chunk_t *cur, const c_token_t type, const scope_e scope = scope_e::ALL, const direction_e dir = direction_e::FORWARD);
 
 
 /**
- * @brief search a chunk of a given category in a chunk list
+ * @brief search a chunk of a given type and level
  *
- * @param  cur    chunk to start search at
- * @param  type   category to search for
- * @param  scope  code parts to consider for search
- * @param  dir    search direction
- * @param  level  nesting level
+ * Traverses a chunk list in the specified direction until a chunk of a given type
+ * is found.
  *
- * @retval NULL     no chunk found or invalid parameters provided
+ * This function is a specialization of chunk_search.
+ *
+ * @param cur    chunk to start search at
+ * @param type   category to search for
+ * @param scope  code parts to consider for search
+ * @param dir    search direction
+ * @param level  nesting level to match or -1 / ANY_LEVEL
+ *
+ * @retval nullptr  no chunk found or invalid parameters provided
  * @retval chunk_t  pointer to the found chunk
  */
 static chunk_t *chunk_search_typelevel(chunk_t *cur, c_token_t type, scope_e scope = scope_e::ALL, direction_e dir = direction_e::FORWARD, int level = -1);
@@ -123,18 +130,18 @@ static chunk_t *chunk_search_typelevel(chunk_t *cur, c_token_t type, scope_e sco
  * Traverses a chunk list either in forward or backward direction.
  * The traversal continues until a chunk of a given category is found.
  *
- * @param  cur    chunk to start search at
- * @param  scope  code parts to consider for search
- * @param  dir    search direction
+ * @param cur    chunk to start search at
+ * @param scope  code parts to consider for search
+ * @param dir    search direction
  *
- * @retval NULL     no chunk found or invalid parameters provided
+ * @retval nullptr  no chunk found or invalid parameters provided
  * @retval chunk_t  pointer to the found chunk
  */
 static chunk_t *chunk_get_ncnlnp(chunk_t *cur, const scope_e scope = scope_e::ALL, const direction_e dir = direction_e::FORWARD);
 
 
 /**
- * @brief searches a chunk that has a specific string
+ * @brief searches a chunk that holds a specific string
  *
  * Traverses a chunk list either in forward or backward direction until a chunk
  * with the provided string was found. Additionally a nesting level can be
@@ -154,21 +161,21 @@ static chunk_t *chunk_search_str(chunk_t *cur, const char *str, size_t len, scop
 
 
 /**
- * @brief add a copy after the given chunk
+ * @brief Add a new chunk before/after the given position in a chunk list
  *
- * If ref is NULL, add either at the head or tail based on the specified pos
+ * If ref is nullptr, add either at the head or tail based on the specified pos
  *
  * @param  pc_in  chunk to add to list
  * @param  ref    insert position in list
  * @param  pos    insert before or after
  *
- * @return chunk_t  pointer to the copied chunk
+ * @return chunk_t  pointer to the added chunk
  */
 static chunk_t *chunk_add(const chunk_t *pc_in, chunk_t *ref, const direction_e pos = direction_e::FORWARD);
 
 
 /**
- * @brief determines which chunk search function to use
+ * @brief Determines which chunk search function to use
  *
  * Depending on the required search direction return a pointer
  * to the corresponding chunk search function.
@@ -309,7 +316,7 @@ chunk_t *chunk_get_next(chunk_t *cur, scope_e scope)
    }
    if (cur->flags & PCF_IN_PREPROC)
    {
-      // If in a preproc, return NULL if trying to leave
+      // If in a preproc, return nullptr if trying to leave
       if ((pc->flags & PCF_IN_PREPROC) == 0)
       {
          return(nullptr);
@@ -366,7 +373,7 @@ chunk_t *chunk_dup(const chunk_t *pc_in)
    }
 
    // Copy all fields and then init the entry
-   *pc = *pc_in;
+   *pc = *pc_in; // TODO: what happens if pc_in == nullptr?
    g_cl.InitEntry(pc);
 
    return(pc);
@@ -581,6 +588,7 @@ chunk_t *chunk_first_on_line(chunk_t *pc)
 // TODO: this function needs some cleanup
 void chunk_swap_lines(chunk_t *pc1, chunk_t *pc2)
 {
+   // to swap lines we need to find the first chunk of the lines
    pc1 = chunk_first_on_line(pc1);
    pc2 = chunk_first_on_line(pc2);
 

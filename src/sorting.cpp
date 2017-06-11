@@ -30,7 +30,13 @@ struct include_category
 include_category *include_categories[kIncludeCategoriesCount];
 
 
-//! Compare two series of chunks, starting with the given ones.
+/**
+ * Compare two series of chunks, starting with the given ones.
+ *
+ * @retval == 0  both text elements are equal
+ * @retval  > 0
+ * @retval  < 0
+ */
 static int compare_chunks(chunk_t *pc1, chunk_t *pc2);
 
 
@@ -90,12 +96,13 @@ static int get_chunk_priority(chunk_t *pc)
 }
 
 
+//! Compare two chunks
 static int compare_chunks(chunk_t *pc1, chunk_t *pc2)
 {
    LOG_FUNC_ENTRY();
    LOG_FMT(LSORT, "\n@begin pc1->len=%zu, line=%zu, column=%zu\n", pc1->len(), pc1->orig_line, pc1->orig_col);
    LOG_FMT(LSORT, "@begin pc2->len=%zu, line=%zu, column=%zu\n", pc2->len(), pc2->orig_line, pc2->orig_col);
-   if (pc1 == pc2)
+   if (pc1 == pc2) // same chunk is always identical thus return 0 differences
    {
       return(0);
    }
@@ -142,7 +149,7 @@ static int compare_chunks(chunk_t *pc1, chunk_t *pc2)
       LOG_FMT(LSORT, ">>>text=%s, pc1->len=%zu, line=%zu, column=%zu\n", pc1->text(), pc1->len(), pc1->orig_line, pc1->orig_col);
       LOG_FMT(LSORT, ">>>text=%s, pc2->len=%zu, line=%zu, column=%zu\n", pc2->text(), pc2->len(), pc2->orig_line, pc2->orig_col);
 
-      // If we hit a newline or NULL, we are done
+      // If we hit a newline or nullptr, we are done
       if ((pc1 == nullptr) || chunk_is_newline(pc1) ||
           (pc2 == nullptr) || chunk_is_newline(pc2))
       {
@@ -162,6 +169,11 @@ static int compare_chunks(chunk_t *pc1, chunk_t *pc2)
 } // compare_chunks
 
 
+/**
+ * Sorting should be pretty rare and should usually only include a few chunks.
+ * We need to minimize the number of swaps, as those are expensive.
+ * So, we do a min sort.
+ */
 static void do_the_sort(chunk_t **chunks, size_t num_chunks)
 {
    LOG_FUNC_ENTRY();

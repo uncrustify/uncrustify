@@ -42,6 +42,7 @@ chunk_t *pawn_check_vsemicolon(chunk_t *pc);
 void pawn_scrub_vsemi(void);
 
 
+//! add a semicolon after ...
 chunk_t *pawn_add_vsemi_after(chunk_t *pc);
 
 

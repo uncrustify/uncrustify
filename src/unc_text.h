@@ -16,10 +16,15 @@
 #include <string>
 using namespace std;
 
+/**
+ *  abbreviations used:
+ * - unc_text - uncrustify text
+ */
+
 class unc_text
 {
 public:
-   typedef deque<int> value_type;
+   typedef deque<int> value_type;   // double encoded list of int values
 
 public:
    unc_text()
@@ -131,15 +136,25 @@ public:
    void erase(size_t idx, size_t len = 1);
 
 
+   //! Add a unc_text character to an unc_text
    void append(int ch);
 
 
    void append(const unc_text &ref);
 
 
+   //! Add a string to an unc_text
    void append(const string &ascii_text);
 
 
+   /**
+    * Add a variable length string to an unc_text.
+    * The variable length string format is similar as for printf
+    *
+    * @note the overall length of the string must not exceed 256 characters
+    *
+    *	@param ascii_text  a variable length string
+    */
    void append(const char *ascii_text);
 
 
@@ -178,6 +193,17 @@ public:
    const char *c_str();
 
 
+   /**
+    * compares the content of two unc_text instances
+    *
+    * @param ref1  first  instance to compare
+    * @param ref2  second instance to compare
+    * @param len   number of character to compare
+    *
+    * @retval == 0  both text elements are equal
+    * @retval  > 0
+    * @retval  < 0
+    */
    static int compare(const unc_text &ref1, const unc_text &ref2, size_t len = 0);
 
 
@@ -222,7 +248,7 @@ public:
       return(m_chars.back());
    }
 
-
+   //! returns the last element of the character list
    int &back()
    {
       // TODO: returning a temporary via a reference this has to be checked and probably changed
@@ -264,7 +290,11 @@ public:
    /**
     * look for 'text', beginning with position 'sidx'
     *
-    * @return -1 if not found, the position: if found
+    * @param text  text to search for
+    * @param idx   position to start search
+    *
+    * @return == -1 if not found
+    * @return >=  0 the position
     */
    int find(const char *text, size_t idx = 0) const;
 

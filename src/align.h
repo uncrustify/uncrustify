@@ -51,6 +51,8 @@ chunk_t *align_nl_cont(chunk_t *start);
  * first.
  * For variable definitions, only consider the '=' for the first variable.
  * Otherwise, only look at the first '=' on the line.
+ *
+ * @param first  chunk pointing to the first assignment
  */
 chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_count);
 

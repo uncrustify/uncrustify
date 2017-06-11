@@ -6,7 +6,7 @@
  *
  * Equivalent code is available from RSA Data Security, Inc.
  * This code has been tested against that, and is equivalent,
- * except that you don't need to include two pages of legalese
+ * except that you don't need to include two pages of legales
  * with every copy.
  *
  * To compute the message digest of a chunk of bytes, declare an
@@ -77,6 +77,7 @@ MD5::MD5()
 }
 
 
+//! Start MD5 accumulation.
 void MD5::Init()
 {
    m_buf[0] = 0x67452301;
@@ -89,12 +90,12 @@ void MD5::Init()
 }
 
 
+//! Update context to reflect the concatenation of another buffer full of bytes.
 void MD5::Update(const void *data, UINT32 len)
 {
    const UINT8 *buf = (const UINT8 *)data;
 
-   // Update bitcount
-   UINT32 t = m_bits[0];
+   UINT32      t = m_bits[0]; // Update bitcount
 
    if ((m_bits[0] = t + ((UINT32)len << 3)) < t)
    {
@@ -124,8 +125,8 @@ void MD5::Update(const void *data, UINT32 len)
       buf += t;
       len -= t;
    }
-   // Process data in 64-byte chunks
 
+   // Process data in 64-byte chunks
    while (len >= 64)
    {
       memcpy(m_in, buf, 64);
@@ -145,7 +146,7 @@ void MD5::Update(const void *data, UINT32 len)
 
 void MD5::Final(UINT8 digest[16])
 {
-   // Compute number of bytes mod 64
+   // Compute number of bytes modulo 64
    UINT32 count = (m_bits[0] >> 3) & 0x3F;
 
    /*
@@ -159,7 +160,7 @@ void MD5::Final(UINT8 digest[16])
    // Bytes of padding needed to make 64 bytes
    count = 64 - 1 - count;
 
-   // Pad out to 56 mod 64
+   // Pad out to 56 modulo 64
    if (count < 8)
    {
       // Two lots of padding:  Pad the first block to 64 bytes

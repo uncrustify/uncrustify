@@ -16,6 +16,11 @@
 #include <cstdlib>
 
 
+/**
+ * abbreviations used:
+ * - fparen = function parenthesis
+ */
+
 struct cw_entry
 {
    chunk_t *pc;
@@ -74,8 +79,9 @@ static bool split_line(chunk_t *pc);
 /**
  * Figures out where to split a function def/proto/call
  *
- * For fcn protos and defs. Also fcn calls where level == brace_level:
- *   - find the open fparen
+ * For function prototypes and definition. Also function calls where
+ * level == brace_level:
+ *   - find the open function parenthesis
  *     + if it doesn't have a newline right after it
  *       * see if all parameters will fit individually after the paren
  *       * if not, throw a newline after the open paren & return
@@ -307,7 +313,7 @@ static bool split_line(chunk_t *start)
 
    /*
     * If this is in a function call or prototype, split on commas or right
-    * after the open paren
+    * after the open parenthesis
     */
    else if ((start->flags & PCF_IN_FCN_DEF) ||
             ((start->level == (start->brace_level + 1)) &&
@@ -432,9 +438,18 @@ static bool split_line(chunk_t *start)
 } // split_line
 
 
+/*
+ * The for statement split algorithm works as follows:
+ *   1. Step backwards and forwards to find the semicolons
+ *   2. Try splitting at the semicolons first.
+ *   3. If that doesn't work, then look for a comma at paren level.
+ *   4. If that doesn't work, then look for an assignment at paren level.
+ *   5. If that doesn't work, then give up.
+ */
 static void split_for_stmt(chunk_t *start)
 {
    LOG_FUNC_ENTRY();
+   // how many semicolons (1 or 2) do we need to find
    size_t  max_cnt     = cpd.settings[UO_ls_for_split_full].b ? 2 : 1;
    chunk_t *open_paren = nullptr;
    size_t  nl_cnt      = 0;
@@ -504,7 +519,7 @@ static void split_for_stmt(chunk_t *start)
       return;
    }
 
-   // Still past width, check for commas at paren level
+   // Still past width, check for commas at parenthese level
    pc = open_paren;
    while ((pc = chunk_get_next(pc)) != start)
    {
@@ -518,7 +533,7 @@ static void split_for_stmt(chunk_t *start)
       }
    }
 
-   // Still past width, check for a assignments at paren level
+   // Still past width, check for a assignments at parenthese level
    pc = open_paren;
    while ((pc = chunk_get_next(pc)) != start)
    {
@@ -543,7 +558,7 @@ static void split_fcn_params_full(chunk_t *start)
    LOG_FMT(LSPLIT, "\n");
 #endif // DEBUG
 
-   // Find the opening fparen
+   // Find the opening function parenthesis
    chunk_t *fpo = start;
    while ((fpo = chunk_get_prev(fpo)) != nullptr)
    {
@@ -554,8 +569,7 @@ static void split_fcn_params_full(chunk_t *start)
       if ((fpo->type == CT_FPAREN_OPEN) &&
           (fpo->level == start->level - 1))
       {
-         // opening parenthesis found. Issue #1020
-         break;
+         break;  // opening parenthesis found. Issue #1020
       }
    }
 
@@ -583,7 +597,7 @@ static void split_fcn_params(chunk_t *start)
    LOG_FMT(LSPLIT, "\n");
 #endif // DEBUG
 
-   // Find the opening fparen
+   // Find the opening function parenthesis
    chunk_t *fpo = start;
    while (((fpo = chunk_get_prev(fpo)) != nullptr) &&
           (fpo->type != CT_FPAREN_OPEN))
@@ -654,6 +668,7 @@ static void split_fcn_params(chunk_t *start)
                min_col += abs(cpd.settings[UO_indent_continue].n);
             }
          }
+
          // Don't split "()"
          if (pc->type != c_token_t(prev->type + 1))
          {

@@ -57,7 +57,7 @@
 #include <sys/stat.h>
 #endif
 #ifdef HAVE_STRINGS_H
-#include <strings.h>  // strcasecmp()
+#include <strings.h>    // provides strcasecmp()
 #endif
 #include <vector>
 #include <deque>
@@ -75,7 +75,7 @@ static size_t language_flags_from_name(const char *tag);
 
 /**
  * Find the language for the file extension
- * Default to C
+ * Defaults to C
  *
  * @param filename   The name of the file
  * @return           LANG_xxx
@@ -89,9 +89,6 @@ static bool read_stdin(file_mem &fm);
 static void uncrustify_start(const deque<int> &data);
 
 
-void uncrustify_end(void);
-
-
 static bool ends_with(const char *filename, const char *tag, bool case_sensitive);
 
 
@@ -99,8 +96,8 @@ static bool ends_with(const char *filename, const char *tag, bool case_sensitive
  * Does a source file.
  *
  * @param filename_in  the file to read
- * @param filename_out NULL (stdout) or the file to write
- * @param parsed_file  NULL or the filename for the parsed debug info
+ * @param filename_out nullptr (stdout) or the file to write
+ * @param parsed_file  nullptr or the filename for the parsed debug info
  * @param no_backup    don't create a backup, if filename_out == filename_in
  * @param keep_mtime   don't change the mtime (dangerous)
  */
@@ -125,7 +122,7 @@ static void process_source_list(const char *source_list, const char *prefix, con
 static const char *make_output_filename(char *buf, size_t buf_size, const char *filename, const char *prefix, const char *suffix);
 
 
-//! File comparison function
+//! compare the content of two files
 static bool file_content_matches(const string &filename1, const string &filename2);
 
 
@@ -135,12 +132,30 @@ static string fix_filename(const char *filename);
 static bool bout_content_matches(const file_mem &fm, bool report_status);
 
 
-//! Loads a file into memory
+/**
+ * Loads a file into memory
+ *
+ * @param filename  name of file to load
+ *
+ * @retval true   file was loaded successfully
+ * @retval false  file could not be loaded
+ */
 static int load_mem_file(const char *filename, file_mem &fm);
 
 
-//! Try to load the file from the config folder first and then by name
+/**
+ * Try to load the file from the config folder first and then by name
+ *
+ * @param filename  name of file to load
+ *
+ * @retval true   file was loaded successfully
+ * @retval false  file could not be loaded
+ */
 static int load_mem_file_config(const char *filename, file_mem &fm);
+
+
+//! print uncrustify version number and terminate
+static void version_exit(void);
 
 
 const char *path_basename(const char *path)
@@ -153,10 +168,10 @@ const char *path_basename(const char *path)
    const char *last_path = path;
    char       ch;
 
-   while ((ch = *path) != 0)
+   while ((ch = *path) != 0) // check for end of string
    {
       path++;
-      // Check both slash types to support windows
+      // Check both slash types to support Linux and Windows
       if ((ch == '/') || (ch == '\\'))
       {
          last_path = path;
@@ -172,6 +187,7 @@ int path_dirname_len(const char *filename)
    {
       return(0);
    }
+   // subtracting addresses like this works only on big endian systems
    return(static_cast<int>(path_basename(filename) - filename));
 }
 
@@ -282,8 +298,7 @@ static void version_exit(void)
 
 static void redir_stdout(const char *output_file)
 {
-   // Reopen stdout
-   FILE *my_stdout = stdout;
+   FILE *my_stdout = stdout;  // Reopen stdout
 
    if (output_file != nullptr)
    {
@@ -307,7 +322,8 @@ int main(int argc, char *argv[])
 
    // check keyword sort
    assert(keywords_are_sorted());
-   // If ran without options show the usage info
+
+   // If ran without options show the usage info and exit */
    if (argc == 1)
    {
       usage_exit(nullptr, argv[0], EXIT_SUCCESS);
@@ -410,7 +426,7 @@ int main(int argc, char *argv[])
       LOG_FMT(LNOTE, "Will export parsed data to: %s\n", parsed_file);
    }
 
-   // Enable log sevs?
+   // Enable log severities
    if (arg.Present("-s") || arg.Present("--show"))
    {
       log_show_sev(true);
@@ -470,14 +486,15 @@ int main(int argc, char *argv[])
    if (((source_file = arg.Param("--file")) == nullptr) &&
        ((source_file = arg.Param("-f")) == nullptr))
    {
-      // not using a single file, source_file is NULL
+      // not using a single file, source_file is nullptr
    }
 
+   // Get a source file list
    const char *source_list;
    if (((source_list = arg.Param("--files")) == nullptr) &&
        ((source_list = arg.Param("-F")) == nullptr))
    {
-      // not using a file list, source_list is NULL
+      // not using a file list, source_list is nullptr
    }
 
    const char *prefix = arg.Param("--prefix");
@@ -583,7 +600,8 @@ int main(int argc, char *argv[])
       token = strtok(nullptr, "=");
       const char *value = token;
 
-      if (option != nullptr && value != nullptr && strtok(nullptr, "=") == nullptr)
+      if (option != nullptr && value != nullptr
+          && strtok(nullptr, "=") == nullptr)  // end of argument reached
       {
          if (set_option_value(option, value) == -1)
          {
@@ -747,7 +765,7 @@ int main(int argc, char *argv[])
    }
    else
    {
-      // Doing multiple files
+      // Doing multiple files, TODO: multiple threads for parallel processing
       if (prefix != nullptr)
       {
          LOG_FMT(LSYS, "Output prefix: %s/\n", prefix);
@@ -886,10 +904,12 @@ static void make_folders(const string &filename)
          outname[idx] = PATH_SEP;
       }
 
+      // search until end of subpath is found
       if ((idx > last_idx) && (outname[idx] == PATH_SEP))
       {
-         outname[idx] = 0;
+         outname[idx] = 0; // mark the end of the subpath
 
+         // create subfolder if it is not the start symbol of a path
          if ((strcmp(&outname[last_idx], ".") != 0) &&
              (strcmp(&outname[last_idx], "..") != 0))
          {
@@ -904,7 +924,7 @@ static void make_folders(const string &filename)
                return;
             }
          }
-         outname[idx] = PATH_SEP;
+         outname[idx] = PATH_SEP; // reconstruct full path to search for next subpath
       }
 
       if (outname[idx] == PATH_SEP)
@@ -925,14 +945,14 @@ static int load_mem_file(const char *filename, file_mem &fm)
    fm.data.clear();
    fm.enc = char_encoding_e::e_ASCII;
 
-   // Grab the stat info for the file
+   // Grab the stat info for the file, return if it cannot be read
    if (stat(filename, &my_stat) < 0)
    {
       return(-1);
    }
 
 #ifdef HAVE_UTIME_H
-   // Save off mtime
+   // Save off modification time (mtime)
    fm.utb.modtime = my_stat.st_mtime;
 #endif
 
@@ -944,9 +964,8 @@ static int load_mem_file(const char *filename, file_mem &fm)
    }
 
    fm.raw.resize(my_stat.st_size);
-   if (my_stat.st_size == 0)
+   if (my_stat.st_size == 0) // check if file is empty
    {
-      // Empty file
       retval = 0;
       fm.bom = false;
       fm.enc = char_encoding_e::e_ASCII;
@@ -1009,9 +1028,10 @@ int load_header_files()
 {
    int retval = 0;
 
-   if ((cpd.settings[UO_cmt_insert_file_header].str != nullptr) &&
-       (cpd.settings[UO_cmt_insert_file_header].str[0] != 0))
+   if (cpd.settings[UO_cmt_insert_file_header].str != nullptr   // option holds a string
+       && cpd.settings[UO_cmt_insert_file_header].str[0] != 0)  // that is not empty
    {
+      // try to load the file referred to by the options string
       retval |= load_mem_file_config(cpd.settings[UO_cmt_insert_file_header].str,
                                      cpd.file_hdr);
    }
@@ -1067,7 +1087,7 @@ static bool file_content_matches(const string &filename1, const string &filename
    struct stat st1, st2;
    int         fd1, fd2;
 
-   // Check the sizes first
+   // Check the file sizes first
    if ((stat(filename1.c_str(), &st1) != 0) ||
        (stat(filename2.c_str(), &st2) != 0) ||
        (st1.st_size != st2.st_size))
@@ -1128,7 +1148,7 @@ static string fix_filename(const char *filename)
    string rv;
 
    // Create 'outfile.uncrustify'
-   tmp_file = new char[strlen(filename) + 16 + 1]; // + 1 for '/* + 1 for '\0' */'
+   tmp_file = new char[strlen(filename) + 16 + 1]; // + 1 for '//  + 1 for '/* + 1 for '\0' */' '
    if (tmp_file != nullptr)
    {
       sprintf(tmp_file, "%s.uncrustify", filename);
@@ -1213,8 +1233,9 @@ static void do_source_file(const char *filename_in,
    cpd.filename = filename_in;
 
    /*
-    * If we're only going to write on an actual change, then build the output buffer now
-    * and if there were changes, run it through the normal file write path.
+    * If we're only going to write on an actual change, then build the output
+    * buffer now and if there were changes, run it through the normal file
+    * write path.
     *
     * Future: many code paths could be simplified if 'bout' were always used and not
     * optionally selected in just for do_check and if_changed.
@@ -1222,8 +1243,8 @@ static void do_source_file(const char *filename_in,
    if (cpd.if_changed)
    {
       /*
-       * Cleanup is deferred because we need 'bout' preserved long enough to write it to
-       * a file (if it changed).
+       * Cleanup is deferred because we need 'bout' preserved long enough
+       * to write it to a file (if it changed).
        */
       uncrustify_file(fm, nullptr, parsed_file, true);
       if (bout_content_matches(fm, false))
@@ -1509,7 +1530,10 @@ static void add_msg_header(c_token_t type, file_mem &fm)
 
       do_insert = false;
 
-      // On a message decl. Back up to a Objective-C scope the same level
+      /*
+       * On a message declaration back up to a Objective-C scope
+       * the same level
+       */
       ref = pc;
       while ((ref = chunk_get_prev(ref)) != nullptr)
       {
@@ -1710,8 +1734,7 @@ void uncrustify_file(const file_mem &fm, FILE *pfout,
          add_msg_header(CT_OC_MSG_DECL, cpd.oc_msg_hdr);
       }
 
-      // Change virtual braces into real braces...
-      do_braces();
+      do_braces();  // Change virtual braces into real braces...
 
       // Scrub extra semicolons
       if (cpd.settings[UO_mod_remove_extra_semicolon].b)
@@ -2037,13 +2060,14 @@ const char *language_name_from_flags(size_t lang)
 }
 
 
+//! type to map a programming language to a typically used filename extension
 struct lang_ext_t
 {
-   const char *ext;
-   const char *name;
+   const char *ext;  //! filename extension typically used for ...
+   const char *name; //! a programming language
 };
 
-// maps file extensions to language names
+//! known filename extensions linked to the corresponding programming language
 struct lang_ext_t language_exts[] =
 {
    { ".c",    "C"    },
@@ -2136,6 +2160,7 @@ void print_extensions(FILE *pfile)
 }
 
 
+// TODO: better use enum lang_t for source file language
 static size_t language_flags_from_filename(const char *filename)
 {
    // check custom extensions first

@@ -49,8 +49,7 @@ void AlignStack::ReAddSkipped()
          Add(ce->m_pc, ce->m_seqnum);
       }
 
-      // Check to see if we need to flush right away
-      NewLines(0);
+      NewLines(0); // Check to see if we need to flush right away
    }
 }
 
@@ -67,8 +66,9 @@ void AlignStack::Add(chunk_t *start, size_t seqnum)
    m_last_added = 0;
 
    // Check threshold limits
-   if ((m_max_col == 0) || (m_thresh == 0) ||
-       (((start->column + m_gap) <= (m_max_col + m_thresh)) &&
+   if ((m_max_col == 0) ||
+       (m_thresh == 0) ||
+       (((start->column + m_gap) <= (m_thresh + m_max_col)) && // don't use subtraction here to prevent underflow
         (((start->column + m_gap + m_thresh) >= (m_max_col)) ||
          // change the expression to mind negative expression
          (start->column >= m_min_col))))
@@ -429,8 +429,8 @@ void AlignStack::Flush()
       last_seqnum = ce->m_seqnum;
       m_aligned.Reset();
    }
-   m_min_col = 9999;
-   m_max_col = 0;
+   m_min_col = 9999; // use unrealistic high numbers
+   m_max_col = 0;    // as start value
 
    if (m_skipped.Empty())
    {
@@ -449,8 +449,7 @@ void AlignStack::Flush()
       }
       m_skipped.Collapse();
 
-      // Add all items from the skipped list
-      ReAddSkipped();
+      ReAddSkipped(); // Add all items from the skipped list
    }
 } // AlignStack::Flush
 

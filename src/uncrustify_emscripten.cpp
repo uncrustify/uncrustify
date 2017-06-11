@@ -504,10 +504,10 @@ intptr_t _uncrustify(intptr_t _file, lang_flag_e langIDX, bool frag, bool defer)
    // need to accept a stream, FILE or a char array pointer in which the output
    // will be stored.
    // Another option would be to check, inside the uncrustify_file function,
-   // if the current filename sting matches stdout or stderr and use those as
+   // if the current filename string matches stdout or stderr and use those as
    // output locations. This is the easier fix but the debug info in the
    // browsers console is littered with other unneeded text.
-   // Finally, the ugliest solution, would be also possible to re route
+   // Finally, the ugliest solution, would be also possible to re-route
    // either stdout or stderr inside the Module var of emscripten to a js
    // function which passes the debug output into a dedicated output js target.
    // This therefore would introduce the dependency on the user to always have

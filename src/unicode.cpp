@@ -29,7 +29,12 @@ static bool decode_bytes(const vector<UINT8> &in_data, deque<int> &out_data);
 static bool decode_utf8(const vector<UINT8> &in_data, deque<int> &out_data);
 
 
-//! Extract 2 bytes from the stream and increment idx by 2
+/**
+ * Extract 2 bytes from the stream and increment idx by 2
+ *
+ * @param in   byte vector with input data
+ * @param idx  index points to working position in vector
+ */
 static int get_word(const vector<UINT8> &in_data, size_t &idx, bool be);
 
 
@@ -158,8 +163,7 @@ static bool decode_utf8(const vector<UINT8> &in_data, deque<int> &out_data)
           (in_data[1] == 0xbb) &&
           (in_data[2] == 0xbf))
       {
-         // skip it
-         idx = 3;
+         idx = 3;  // skip it
       }
    }
 
@@ -378,7 +382,7 @@ bool decode_unicode(const vector<UINT8> &in_data, deque<int> &out_data, char_enc
       return(decode_bytes(in_data, out_data));
    }
 
-   // There are alot of 0's in UTF-16 (~50%)
+   // There are a lot of 0's in UTF-16 (~50%)
    if ((zero_cnt > (in_data.size() / 4)) &&
        (zero_cnt <= (in_data.size() / 2)))
    {
@@ -496,6 +500,7 @@ void write_bom(void)
       break;
 
    default:
+      // do nothing
       break;
    }
 }

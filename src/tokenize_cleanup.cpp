@@ -26,6 +26,8 @@
 /**
  * If there is nothing but CT_WORD and CT_MEMBER, then it's probably a
  * template thingy.  Otherwise, it's likely a comparison.
+ *
+ * @param start  chunk to start check at
  */
 static void check_template(chunk_t *start);
 
@@ -33,6 +35,8 @@ static void check_template(chunk_t *start);
 /**
  * Convert '>' + '>' into '>>'
  * If we only have a single '>', then change it to CT_COMPARE.
+ *
+ * @param pc  chunk to start at
  */
 static chunk_t *handle_double_angle_close(chunk_t *pc);
 
@@ -135,9 +139,11 @@ void tokenize_cleanup(void)
             // Change '[' + ']' into '[]'
             set_chunk_type(pc, CT_TSQUARE);
             pc->str = "[]";
-            // bug # 664
-            // The original orig_col_end of CT_SQUARE_CLOSE is stored at orig_col_end of CT_TSQUARE.
-            // pc->orig_col_end += 1;
+            /*
+             * bug #664: The original orig_col_end of CT_SQUARE_CLOSE is
+             * stored at orig_col_end of CT_TSQUARE.
+             * pc->orig_col_end += 1;
+             */
             pc->orig_col_end = next->orig_col_end;
             chunk_del(next);
          }
@@ -200,8 +206,7 @@ void tokenize_cleanup(void)
 
       /*
        * Change CT_BASE before CT_PAREN_OPEN to CT_WORD.
-       * public myclass() : base() {
-       * }
+       * public myclass() : base() {}
        */
       if ((pc->type == CT_BASE) && (next->type == CT_PAREN_OPEN))
       {
@@ -234,7 +239,7 @@ void tokenize_cleanup(void)
 
       /*
        * change extern to qualifier if extern isn't followed by a string or
-       * an open paren
+       * an open parenthesis
        */
       if (pc->type == CT_EXTERN)
       {
@@ -260,7 +265,8 @@ void tokenize_cleanup(void)
       /*
        * Change CT_STAR to CT_PTR_TYPE if preceded by
        *     CT_TYPE, CT_QUALIFIER, or CT_PTR_TYPE
-       * or by a CT_WORD which is preceded by CT_DC_MEMBER: '::aaa *b'
+       * or by a
+       *     CT_WORD which is preceded by CT_DC_MEMBER: '::aaa *b'
        */
       if (next->type == CT_STAR)
       {
@@ -669,11 +675,13 @@ void tokenize_cleanup(void)
          }
       }
 
-      // Detect Objective-C categories and class extensions
-      // @interface ClassName (CategoryName)
-      // @implementation ClassName (CategoryName)
-      // @interface ClassName ()
-      // @implementation ClassName ()
+      /*
+       * Detect Objective-C categories and class extensions:
+       *   @interface ClassName (CategoryName)
+       *   @implementation ClassName (CategoryName)
+       *   @interface ClassName ()
+       *   @implementation ClassName ()
+       */
       if (((pc->parent_type == CT_OC_IMPL) ||
            (pc->parent_type == CT_OC_INTF) ||
            (pc->type == CT_OC_CLASS)) &&
@@ -704,9 +712,9 @@ void tokenize_cleanup(void)
       }
 
       /*
-       * Detect Objective C @property
-       *  @property NSString *stringProperty;
-       *  @property(nonatomic, retain) NSMutableDictionary *shareWith;
+       * Detect Objective C @property:
+       *   @property NSString *stringProperty;
+       *   @property(nonatomic, retain) NSMutableDictionary *shareWith;
        */
       if (pc->type == CT_OC_PROPERTY)
       {
@@ -721,10 +729,10 @@ void tokenize_cleanup(void)
       }
 
       /*
-       * Detect Objective C @selector
-       *  @selector(msgNameWithNoArg)
-       *  @selector(msgNameWith1Arg:)
-       *  @selector(msgNameWith2Args:arg2Name:)
+       * Detect Objective C @selector:
+       *   @selector(msgNameWithNoArg)
+       *   @selector(msgNameWith1Arg:)
+       *   @selector(msgNameWith2Args:arg2Name:)
        */
       if ((pc->type == CT_OC_SEL) && (next->type == CT_PAREN_OPEN))
       {
@@ -856,7 +864,6 @@ void tokenize_cleanup(void)
          set_chunk_type(pc, CT_QUALIFIER);
       }
 
-      // guy 2015-11-05
       // change CT_DC_MEMBER + CT_FOR into CT_DC_MEMBER + CT_FUNC_CALL
       if ((pc->type == CT_FOR) &&
           ((pc->prev != nullptr) && (pc->prev->type == CT_DC_MEMBER)))
@@ -960,7 +967,7 @@ static void check_template(chunk_t *start)
       LOG_FMT(LTEMPL, "\n");
 #endif
 
-      // Scan back and make sure we aren't inside square parens
+      // Scan back and make sure we aren't inside square parenthesis
       bool in_if = false;
       pc = start;
       while ((pc = chunk_get_prev_ncnl(pc, scope_e::PREPROC)) != nullptr)
@@ -1026,8 +1033,7 @@ static void check_template(chunk_t *start)
             }
             else if (tokens[num_tokens] != CT_ANGLE_OPEN)
             {
-               // unbalanced parens
-               break;
+               break; // unbalanced parentheses
             }
          }
          else if (in_if &&
@@ -1056,8 +1062,7 @@ static void check_template(chunk_t *start)
             num_tokens--;
             if (tokens[num_tokens] != CT_PAREN_OPEN)
             {
-               // unbalanced parens
-               break;
+               break;  // unbalanced parentheses
             }
          }
       }

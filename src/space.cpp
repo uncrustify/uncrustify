@@ -45,10 +45,11 @@ static void log_rule2(size_t line, const char *rule, chunk_t *first, chunk_t *se
 static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool complete);
 
 
+//! type that stores two chunks between those no space shall occur
 struct no_space_table_t
 {
-   c_token_t first;
-   c_token_t second;
+   c_token_t first;  //! first  chunk
+   c_token_t second; //! second chunk
 };
 
 
@@ -120,6 +121,10 @@ static void log_rule2(size_t line, const char *rule, chunk_t *first, chunk_t *se
 }
 
 
+/*
+ * this function is called for every chunk in the input file.
+ * Thus it is important to keep this function efficient
+ */
 static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool complete = true)
 {
    LOG_FUNC_ENTRY();
@@ -1908,8 +1913,7 @@ void space_text(void)
       {  // guy 2015-09-22
          LOG_FMT(LSPACE, "%s(%d): orig_col is %zu, type is %s SIGNAL/SLOT found\n",
                  __func__, __LINE__, pc->orig_line, get_token_name(pc->type));
-         // flag the chunk for a second processing
-         chunk_flags_set(pc, PCF_IN_QT_MACRO);
+         chunk_flags_set(pc, PCF_IN_QT_MACRO); // flag the chunk for a second processing
 
          // save the values
          save_set_options_for_QT(pc->level);
@@ -1943,8 +1947,7 @@ void space_text(void)
          if ((next->next != nullptr) &&
              (next->next->type == CT_SPACE))
          {
-            // remove the space
-            chunk_del(next->next);
+            chunk_del(next->next); // remove the space
          }
       }
 
@@ -1988,6 +1991,7 @@ void space_text(void)
          {
             // Find the next non-empty chunk on this line
             chunk_t *tmp = next;
+            // TODO: better use chunk_search here
             while ((tmp != nullptr) && (tmp->len() == 0) && !chunk_is_newline(tmp))
             {
                tmp = chunk_get_next(tmp);
@@ -2001,6 +2005,7 @@ void space_text(void)
                   // back-to-back words need a space
                   chunk_flags_set(pc, PCF_FORCE_SPACE);
                }
+               // TODO:  what is the meaning of 4
                else if (!kw1 && !kw2 && (pc->len() < 4) && (next->len() < 4))
                {
                   // We aren't dealing with keywords. concat and try punctuators
@@ -2055,8 +2060,7 @@ void space_text(void)
          switch (av)
          {
          case AV_FORCE:
-            // add exactly the specified # of spaces
-            column += min_sp;
+            column += min_sp;  // add exactly the specified number of spaces
             break;
 
          case AV_ADD:
@@ -2162,9 +2166,10 @@ void space_text_balance_nested_parens(void)
          break;
       }
 
+      // if there are two successive opening parenthesis
       if (chunk_is_str(first, "(", 1) && chunk_is_str(next, "(", 1))
       {
-         // insert a space between the two opening parens
+         // insert a space between them
          space_add_after(first, 1);
 
          /*
@@ -2173,11 +2178,11 @@ void space_text_balance_nested_parens(void)
           */
          chunk_t *cur  = next;
          chunk_t *prev = cur;
-         while ((cur = chunk_get_next(cur)) != nullptr)
-         {
-            if (cur->level == first->level)
+         while ((cur = chunk_get_next(cur)) != nullptr) // find the closing parenthesis
+         {                                              // that matches the
+            if (cur->level == first->level)             // first open parenthesis
             {
-               space_add_after(prev, 1);
+               space_add_after(prev, 1);                // and force a space before it
                break;
             }
             prev = cur;
@@ -2194,7 +2199,7 @@ void space_text_balance_nested_parens(void)
          ///* find the opening paren that matches the 'next' close paren and force
          // * a space after it */
          //cur = first;
-         //while ((cur = chunk_get_prev(cur)) != NULL)
+         //while ((cur = chunk_get_prev(cur)) != nullptr)
          //{
          //   if (cur->level == next->level)
          //   {

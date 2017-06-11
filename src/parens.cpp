@@ -15,7 +15,7 @@
 #include "uncrustify.h"
 
 
-//! Add an open paren after first and add a close paren before the last
+//! Add an open parenthesis after first and add a close parenthesis before the last
 static void add_parens_between(chunk_t *first, chunk_t *last);
 
 

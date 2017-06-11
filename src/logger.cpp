@@ -43,13 +43,13 @@ struct log_buf
    {
    }
 
-   FILE       *log_file;
-   log_sev_t  sev;
-   int        in_log;
-   char       buf[256];
-   size_t     buf_len;
+   FILE       *log_file;  //! file where the log messages are stored into
+   log_sev_t  sev;        //! log level determines which messages are logged
+   int        in_log;     //! flag indicates if a log operation is going on
+   char       buf[256];   //! buffer holds the log message
+   size_t     buf_len;    //! number of characters currently stored in buffer
    log_mask_t mask;
-   bool       show_hdr;
+   bool       show_hdr;   //! flag determine if a header gets added to log message
 };
 static struct log_buf g_log;
 
@@ -205,12 +205,14 @@ void log_fmt(log_sev_t sev, const char *fmt, ...)
     * Some implementation of vsnprintf() return the number of characters
     * that would have been stored if the buffer was large enough instead of
     * the number of characters actually stored.
+    *
+    * this gets the number of characters that fit into the log buffer
     */
    size_t cap = log_start(sev);
 
    // Add on the variable log parameters to the log string
-   va_list args;
-   va_start(args, fmt);
+   va_list args;        // determine list of arguments ...
+   va_start(args, fmt); //  ... that follow after parameter fmt
    size_t  len = static_cast<size_t>(vsnprintf(&g_log.buf[g_log.buf_len], cap, fmt, args));
    va_end(args);
 

@@ -11,7 +11,11 @@
 #include "uncrustify_types.h"
 #include "chunk_list.h"
 
-//! Remove all extra newlines.
+
+/**
+ * Remove all extra newlines.
+ * Modify line breaks as needed.
+ */
 void newlines_remove_newlines(void);
 
 
@@ -33,6 +37,7 @@ void newlines_functions_remove_extra_blank_lines(void);
 void newlines_squeeze_ifdef(void);
 
 
+//! removes unnecessary newlines at start and end of a file
 void newlines_eat_start_end(void);
 
 
@@ -142,17 +147,18 @@ void newline_del_between(chunk_t *start, chunk_t *end);
  */
 chunk_t *newline_add_between(chunk_t *start, chunk_t *end);
 
+
 /**
  * Counts newlines between two chunk elements
  *
- * @param  pc_start chunk from which the counting of newlines will start
- * @param  pc_end   chunk at which the counting of newlines will end
- * @param  newlines reference in which the amount of newlines will be written to
- *                  (will be initialized with 0)
- * @param  scope    specifies region chunks should/should not be considered.
+ * @param  pc_start  chunk from which the counting of newlines will start
+ * @param  pc_end    chunk at which the counting of newlines will end
+ * @param  newlines  reference in which the amount of newlines will be written to
+ *                   (will be initialized with 0)
+ * @param  scope     specifies region chunks should/should not be considered.
  *
- * @return false   if pc_start or pc_end are nullptr or if pc_end is not reached
- *         true    if above cases are not met
+ * @return false  if pc_start or pc_end are nullptr or if pc_end is not reached
+ * @return true   if above cases are not met
  */
 bool newlines_between(chunk_t *pc_start, chunk_t *pc_end, size_t &newlines, scope_e scope = scope_e::ALL);
 

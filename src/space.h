@@ -18,7 +18,7 @@
 void space_text(void);
 
 
-//! Marches through the whole file and adds spaces around nested parens
+//! Marches through the whole file and adds spaces around nested parenthesis
 void space_text_balance_nested_parens(void);
 
 

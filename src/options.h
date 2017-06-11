@@ -17,6 +17,16 @@
 #include <map>
 #include <string>
 
+/**
+ * abbreviations used
+ *
+ * av     = argument values
+ * bal    = balance, balanced
+ * pstart = pointer star
+ * rel    = relative
+ */
+
+
 enum argtype_e
 {
    AT_BOOL,    //! true / false
@@ -31,77 +41,83 @@ enum argtype_e
 //! Arg values - these are bit fields
 enum argval_t
 {
-   AV_IGNORE      = 0,
-   AV_ADD         = 1,
-   AV_REMOVE      = 2,
-   AV_FORCE       = 3, //! remove + add
-   AV_NOT_DEFINED = 4  //! to be used with QT, SIGNAL SLOT macros
+   AV_IGNORE      = 0,                    //! option ignores a given feature
+   AV_ADD         = (1u << 0),            //! option adds a given feature
+   AV_REMOVE      = (1u << 1),            //! option removes a given feature
+   AV_FORCE       = (AV_ADD | AV_REMOVE), //! option forces the usage of a given feature
+   AV_NOT_DEFINED = (1u << 2)             //! to be used with QT, SIGNAL SLOT macros
 };
 
 //! Line endings
 enum lineends_e
 {
-   LE_LF,      //! "\n"
-   LE_CRLF,    //! "\r\n"
-   LE_CR,      //! "\r"
-   LE_AUTO,    //! keep last
+   LE_LF,      //! "\n"   typically used on Unix/Linux system
+   LE_CRLF,    //! "\r\n" typically used on Windows systems
+   LE_CR,      //! "\r"   carriage return without newline
+   LE_AUTO     //! keep last
 };
 
 //! Token position - these are bit fields
 enum tokenpos_e
 {
-   TP_IGNORE      = 0,     //! don't change it
-   TP_BREAK       = 1,     //! add a newline before or after the if not present
-   TP_FORCE       = 2,     //! force a newline on one side and not the other
-   TP_LEAD        = 4,     //! at the start of a line or leading if wrapped line
+   TP_IGNORE      = 0,                        //! don't change it
+   TP_BREAK       = 1,                        //! add a newline before or after the if not present
+   TP_FORCE       = 2,                        //! force a newline on one side and not the other
+   TP_LEAD        = 4,                        //! at the start of a line or leading if wrapped line
    TP_LEAD_BREAK  = (TP_LEAD | TP_BREAK),
    TP_LEAD_FORCE  = (TP_LEAD | TP_FORCE),
-   TP_TRAIL       = 8,     //! at the end of a line or trailing if wrapped line
+   TP_TRAIL       = 8,                        //! at the end of a line or trailing if wrapped line
    TP_TRAIL_BREAK = (TP_TRAIL | TP_BREAK),
    TP_TRAIL_FORCE = (TP_TRAIL | TP_FORCE),
-   TP_JOIN        = 16,    //! remove newlines on both sides
+   TP_JOIN        = 16,                       //! remove newlines on both sides
 };
 
+
+/**
+ * Uncrustify options are configured with a parameter of this type.
+ * Depending on the option the meaning (and thus type) of the
+ * parameter varies. Therefore we use a union that provides all
+ * possible types.
+ */
 union op_val_t
 {
-   argval_t   a;
-   int        n;
-   bool       b;
-   lineends_e le;
-   tokenpos_e tp;
-   const char *str;
-   size_t     u;
+   argval_t   a;     //! ignore/add/remove/force
+   int        n;     //! a signed number
+   bool       b;     //! a bool flag
+   lineends_e le;    //! line ending type
+   tokenpos_e tp;    //! token position type
+   const char *str;  //! a string
+   size_t     u;     //! an unsigned number
 };
 
 /**
- * Groups for options
+ * list of all group identifiers that are used to group uncrustify options
  * The order here must be the same as in the file options.cpp
  */
 enum uncrustify_groups
 {
-   UG_general,
-   UG_space,
-   UG_indent,
-   UG_newline,
-   UG_blankline,
-   UG_position,
-   UG_linesplit,
-   UG_align,
-   UG_comment,
-   UG_codemodify,
-   UG_preprocessor,
-   UG_sort_includes,
+   UG_general,        //! group for options that do not fit into other groups
+   UG_space,          //! group for options that modify spaces
+   UG_indent,         //! group for options that handle indentation
+   UG_newline,        //! group for options that modify newlines
+   UG_blankline,      //! group for options that modify blank lines
+   UG_position,       //! group for options that modify positions
+   UG_linesplit,      //! group for options that split lines
+   UG_align,          //! group for alignment options
+   UG_comment,        //! group for comment related options
+   UG_codemodify,     //! group for options that modify the code
+   UG_preprocessor,   //! group for all preprocessor related options
+   UG_sort_includes,  //! group for all sorting options
    UG_Use_Ext,
    UG_warnlevels,
    UG_group_count
 };
 
-/**
- * Uncrustify Options
- * The order here must be the same as in the file options.cpp
- */
+//! lists all options that uncrustify has
 enum uncrustify_options
 {
+   // Keep this grouped by functionality
+
    // group: UG_general, "General options"                                         0
    UO_newlines,                 // Set to AUTO, LF, CRLF, or CR
 
@@ -879,12 +895,19 @@ struct option_map_value
 const char *get_argtype_name(argtype_e argtype);
 
 
+/**
+ * @brief defines a new group of uncrustify options
+ *
+ * The current group is stored as global variable which
+ * will be used whenever a new option is added.
+ */
 void unc_begin_group(uncrustify_groups id, const char *short_desc, const char *long_desc = NULL);
 
 
 const option_map_value *unc_find_option(const char *name);
 
 
+//! Add all uncrustify options to the global option list
 void register_options(void);
 
 
@@ -913,12 +936,29 @@ int load_option_file(const char *filename);
 int save_option_file(FILE *pfile, bool withDoc);
 
 
+/**
+ * save the used options into a text file
+ *
+ * @param pfile             file to print into
+ * @param withDoc           also print description
+ * @param only_not_default  print only options with non default value
+ */
 int save_option_file_kernel(FILE *pfile, bool withDoc, bool only_not_default);
 
 
+/**
+ * @return >= 0  entry was found
+ * @return   -1  entry was not found
+ */
 int set_option_value(const char *name, const char *value);
 
 
+/**
+ * check if a path/filename uses a relative or absolute path
+ *
+ * @retval false path is an absolute one
+ * @retval true  path is a  relative one
+ */
 bool is_path_relative(const char *path);
 
 
@@ -930,25 +970,54 @@ const option_map_value *get_option_name(uncrustify_options uo);
 
 void print_options(FILE *pfile);
 
-
+/**
+ * convert a argument type to a string
+ *
+ * @param val  argument type to convert
+ */
 string argtype_to_string(argtype_e argtype);
 
-
+/**
+ * convert a boolean to a string
+ *
+ * @param val  boolean to convert
+ */
 string bool_to_string(bool val);
 
-
+/**
+ * convert an argument value to a string
+ *
+ * @param val  argument value to convert
+ */
 string argval_to_string(argval_t argval);
 
-
+/**
+ * convert an integer number to a string
+ *
+ * @param val  integer number to convert
+ */
 string number_to_string(int number);
 
-
+/**
+ * convert a line ending type to a string
+ *
+ * @param val  line ending type to convert
+ */
 string lineends_to_string(lineends_e linends);
 
-
+/**
+ * convert a token to a string
+ *
+ * @param val  token to convert
+ */
 string tokenpos_to_string(tokenpos_e tokenpos);
 
-
+/**
+ * convert an argument of a given type to a string
+ *
+ * @param argtype   type of argument
+ * @param op_val_t  value of argument
+ */
 string op_val_to_string(argtype_e argtype, op_val_t op_val);
 
 

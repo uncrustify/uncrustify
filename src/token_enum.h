@@ -11,6 +11,12 @@
 #define TOKEN_ENUM_H_INCLUDED
 
 /**
+ * abbreviations used:
+ * CT = chunk type
+ */
+
+
+/**
  * This is an enum of all the different chunks/tokens/elements that the
  * program can work with.  The parser and scanner assigns one of these to
  * each chunk/token.

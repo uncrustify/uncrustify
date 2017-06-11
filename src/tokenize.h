@@ -12,6 +12,8 @@
 
 
 /**
+ * @brief Parse the text into chunks
+ *
  * This function parses or tokenizes the whole buffer into a list.
  * It has to do some tricks to parse preprocessors.
  *

@@ -178,6 +178,9 @@ static void indent_pse_pop(parse_frame_t &frm, chunk_t *pc);
 static size_t token_indent(c_token_t type);
 
 
+static size_t calc_indent_continue(parse_frame_t &frm, size_t pse_tos);
+
+
 /**
  * We are on a '{' that has parent = OC_BLOCK_EXPR
  * find the column of the param tag
@@ -1011,7 +1014,7 @@ void indent_text(void)
                indent_pse_pop(frm, pc);
             }
 
-            // Close out parens and squares
+            // Close out parenthesis and squares
             if ((frm.pse[frm.pse_tos].type == (pc->type - 1)) &&
                 ((pc->type == CT_PAREN_CLOSE) ||
                  (pc->type == CT_SPAREN_CLOSE) ||
@@ -1194,10 +1197,12 @@ void indent_text(void)
                   bool indent_from_caret   = cpd.settings[UO_indent_oc_block_msg_from_caret].b && in_oc_msg;
                   bool indent_from_brace   = cpd.settings[UO_indent_oc_block_msg_from_brace].b && in_oc_msg;
 
-                  // In "Xcode indent mode", we want to indent:
-                  //  - if the colon is aligned (namely, if a newline has been
-                  //    added before it), indent_from_brace
-                  //  - otherwise, indent from previous block (the "else" statement here)
+                  /*
+                   * In "Xcode indent mode", we want to indent:
+                   *  - if the colon is aligned (namely, if a newline has been
+                   *    added before it), indent_from_brace
+                   *  - otherwise, indent from previous block (the "else" statement here)
+                   */
                   if (cpd.settings[UO_indent_oc_block_msg_xcode_style].b)
                   {
                      chunk_t *colon        = oc_msg_prev_colon(pc);
@@ -1604,10 +1609,12 @@ void indent_text(void)
             }
             else if (cpd.settings[UO_indent_ctor_init].n != 0)
             {
-               // If the std::max() calls were specialized with size_t (the type of the underlying variable),
-               // they would never actually do their job, because size_t is unsigned and therefore even
-               // a "negative" result would be always greater than zero.
-               // Using ptrdiff_t (a standard signed type of the same size as size_t) in order to avoid that.
+               /*
+                * If the std::max() calls were specialized with size_t (the type of the underlying variable),
+                * they would never actually do their job, because size_t is unsigned and therefore even
+                * a "negative" result would be always greater than zero.
+                * Using ptrdiff_t (a standard signed type of the same size as size_t) in order to avoid that.
+                */
                frm.pse[frm.pse_tos].indent = std::max<ptrdiff_t>(frm.pse[frm.pse_tos].indent + cpd.settings[UO_indent_ctor_init].n, 0);
                log_indent();
                frm.pse[frm.pse_tos].indent_tmp = std::max<ptrdiff_t>(frm.pse[frm.pse_tos].indent_tmp + cpd.settings[UO_indent_ctor_init].n, 0);
@@ -1633,8 +1640,8 @@ void indent_text(void)
                (pc->type == CT_ANGLE_OPEN))
       {
          /*
-          * Open parens and squares - never update indent_column, unless right
-          * after a newline.
+          * Open parenthesis and squares - never update indent_column,
+          * unless right after a newline.
           */
          bool skipped = false;
 
@@ -1775,18 +1782,20 @@ void indent_text(void)
                    (frm.pse[frm.pse_tos].indent_cont) &&
                    (vardefcol != 0))
                {
-                  // The value of the indentation for a continuation line is calculate
-                  // differently if the line is:
-                  //   a declaration :your case with QString fileName ...
-                  //   an assignment  :your case with pSettings = new QSettings( ...
-                  // At the second case the option value might be used twice:
-                  //   at the assignment
-                  //   at the function call (if present)
-                  // If you want to prevent the double use of the option value
-                  // you may use the new option :
-                  //   use_indent_continue_only_once
-                  // with the value "true".
-                  // use/don't use indent_continue once Guy 2016-05-16
+                  /*
+                   * The value of the indentation for a continuation line is calculate
+                   * differently if the line is:
+                   *   a declaration :your case with QString fileName ...
+                   *   an assignment  :your case with pSettings = new QSettings( ...
+                   * At the second case the option value might be used twice:
+                   *   at the assignment
+                   *   at the function call (if present)
+                   * If you want to prevent the double use of the option value
+                   * you may use the new option :
+                   *   use_indent_continue_only_once
+                   * with the value "true".
+                   * use/don't use indent_continue once Guy 2016-05-16
+                   */
 
                   // if vardefcol isn't zero, use it
                   frm.pse[frm.pse_tos].indent = vardefcol;
@@ -2190,8 +2199,9 @@ void indent_text(void)
                chunk_t *ck2 = chunk_get_prev(ck1);
 
                /*
-                * If the open paren was the first thing on the line or we are
-                * doing mode 1, then put the close paren in the same column
+                * If the open parenthesis was the first thing on the line or we
+                * are doing mode 1, then put the close parenthesis in the same
+                * column
                 */
                if (chunk_is_newline(ck2) ||
                    (cpd.settings[UO_indent_paren_close].u == 1))
@@ -2602,7 +2612,7 @@ bool ifdef_over_whole_file(void)
 
       if (stage == 0)
       {
-         // Check the first PP, make sure it is an #if type
+         // Check the first preprocessor, make sure it is an #if type
          if (pc->type != CT_PREPROC)
          {
             break;
@@ -2616,7 +2626,7 @@ bool ifdef_over_whole_file(void)
       }
       else if (stage == 1)
       {
-         // Scan until a PP at level 0 is found - the close to the #if
+         // Scan until a preprocessor at level 0 is found - the close to the #if
          if ((pc->type == CT_PREPROC) &&
              (pc->pp_level == 0))
          {

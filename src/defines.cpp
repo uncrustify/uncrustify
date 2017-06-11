@@ -72,7 +72,7 @@ int load_define_file(const char *filename)
       char *ptr;
       if ((ptr = strchr(buf, '#')) != nullptr)
       {
-         *ptr = 0;
+         *ptr = 0; // set string end where comment begins
       }
 
       int argc = Args::SplitLine(buf, args, ARRAY_SIZE(args) - 1);

@@ -20,6 +20,9 @@ int load_header_files(void);
 void uncrustify_file(const file_mem &fm, FILE *pfout, const char *parsed_file, bool defer_uncrustify_end = false);
 
 
+void uncrustify_end();
+
+
 const char *get_token_name(c_token_t token);
 
 
@@ -40,16 +43,17 @@ const char *language_name_from_flags(size_t lang);
  */
 c_token_t find_token_name(const char *text);
 
+
 void log_pcf_flags(log_sev_t sev, UINT64 flags);
 
 
 /**
  * Replace the brain-dead and non-portable basename().
  * Returns a pointer to the character after the last '/'.
- * The returned value always points into path, unless path is NULL.
+ * The returned value always points into path, unless path is nullptr.
  *
  * Input            Returns
- * NULL          => ""
+ * nullptr       => ""
  * "/some/path/" => ""
  * "/some/path"  => "path"
  * "afile"       => "afile"
@@ -61,7 +65,13 @@ void log_pcf_flags(log_sev_t sev, UINT64 flags);
 const char *path_basename(const char *path);
 
 
-//! Returns the length of the directory part of the filename.
+/**
+ * Returns the length of the directory part of the filename.
+ *
+ * @param filename  filename including full path
+ *
+ * @return character size of path
+ */
 int path_dirname_len(const char *filename);
 
 
@@ -70,7 +80,7 @@ void usage_exit(const char *msg, const char *argv0, int code);
 
 /**
  * Set idx = 0 before the first call.
- * Done when returns NULL
+ * Done when returns nullptr
  */
 const char *get_file_extension(int &idx);
 

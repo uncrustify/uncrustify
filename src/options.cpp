@@ -81,7 +81,7 @@ static const char *DOC_TEXT_END = R"___(
 
 map<uncrustify_options, option_map_value> option_name_map;
 map<uncrustify_groups, group_map_value>   group_map;
-static uncrustify_groups                  current_group;
+static uncrustify_groups                  current_group; //defines the currently active options group
 #ifdef DEBUG
 static int                                checkGroupNumber  = -1;
 static int                                checkOptionNumber = -1;
@@ -96,6 +96,19 @@ static bool match_text(const char *str1, const char *str2);
 static void convert_value(const option_map_value *entry, const char *val, op_val_t *dest);
 
 
+/**
+ * @brief adds an uncrustify option to the global option list
+ *
+ * The option group is taken from the global 'current_group' variable
+ *
+ * @param name        name of the option, maximal 60 characters
+ * @param id          ENUM value of the option
+ * @param type        kind of option r.g. AT_IARF, AT_NUM, etc.
+ * @param short_desc  short human readable description
+ * @param long_desc   long  human readable description
+ * @param min_val     minimal value, only used for integer values
+ * @param max_val     maximal value, only used for integer values
+ */
 static void unc_add_option(const char *name, uncrustify_options id, argtype_e type, const char *short_desc = nullptr, const char *long_desc = nullptr, int min_val = 0, int max_val = 16);
 
 
@@ -103,10 +116,12 @@ void unc_begin_group(uncrustify_groups id, const char *short_desc,
                      const char *long_desc)
 {
 #ifdef DEBUG
-   // The order of the calls of 'unc_begin_group' in the function 'register_options'
-   // is the master over all.
-   // This order must be the same in the declaration of the enum uncrustify_groups
-   // This will be checked here
+   /*
+    * The order of the calls of 'unc_begin_group' in the function
+    * 'register_options' is the master over all.
+    * This order must be the same in the declaration of the enum uncrustify_groups
+    * This will be checked here
+    */
    checkGroupNumber++;
    if (checkGroupNumber != id)
    {
@@ -1876,7 +1891,6 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
    }
 
    // Must be AT_IARF
-
    if ((strcasecmp(val, "add") == 0) || (strcasecmp(val, "a") == 0))
    {
       dest->a = AV_ADD;
@@ -1926,20 +1940,29 @@ int set_option_value(const char *name, const char *value)
 bool is_path_relative(const char *path)
 {
 #ifdef WIN32
-   // X:\path\to\file style absolute disk path
+   /*
+    * Check for partition labels as indication for an absolute path
+    * X:\path\to\file style absolute disk path
+    */
    if (isalpha(path[0]) && (path[1] == ':'))
    {
       return(false);
    }
 
-   // \\server\path\to\file style absolute UNC path
+   /*
+    * Check for double backslashs as indication for a network path
+    * \\server\path\to\file style absolute UNC path
+    */
    if ((path[0] == '\\') && (path[1] == '\\'))
    {
       return(false);
    }
 #endif
 
-   // /path/to/file style absolute path
+   /*
+    * check fo a slash as indication for a filename with leading path
+    * /path/to/file style absolute path
+    */
    return(path[0] != '/');
 }
 
@@ -2218,14 +2241,10 @@ int save_option_file_kernel(FILE *pfile, bool withDoc, bool only_not_default)
       fprintf(pfile, "%s", DOC_TEXT_END);
    }
 
-   // Print custom keywords
-   print_keywords(pfile);
+   print_keywords(pfile);    // Print custom keywords
+   print_defines(pfile);     // Print custom defines
+   print_extensions(pfile);  // Print custom file extensions
 
-   // Print custom defines
-   print_defines(pfile);
-
-   // Print custom file extensions
-   print_extensions(pfile);
    fprintf(pfile, "# option(s) with 'not default' value: %d\n#\n", count_the_not_default_options);
 
    return(0);
@@ -2240,7 +2259,7 @@ int save_option_file(FILE *pfile, bool withDoc)
 
 void print_options(FILE *pfile)
 {
-   // TODO refactor to be undependent of type positioning
+   // TODO refactor to be independent of type positioning
    const char *names[] =
    {
       "{ False, True }",
@@ -2399,6 +2418,7 @@ void set_option_defaults(void)
    }
 #endif // DEBUG
 
+   // copy all the default values to settings array
    for (unsigned int count = 0; count < UO_option_count; count++)
    {
       cpd.settings[count].a = cpd.defaults[count].a;
@@ -2509,7 +2529,7 @@ string argval_to_string(argval_t argval)
 
 string number_to_string(int number)
 {
-   char buffer[12]; // 11 + 1
+   char buffer[12]; // 11 + 1 termination char
 
    sprintf(buffer, "%d", number);
 

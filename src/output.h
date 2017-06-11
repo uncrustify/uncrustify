@@ -12,6 +12,7 @@
 #include "unc_text.h"
 
 
+//! This renders the chunk list to a file.
 void output_parsed(FILE *pfile);
 
 

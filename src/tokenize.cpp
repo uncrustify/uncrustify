@@ -191,6 +191,8 @@ static bool tag_compare(const deque<int> &d, size_t a_idx, size_t b_idx, size_t 
 /**
  * Parses a C++0x 'R' string. R"( xxx )" R"tag(  )tag" u8R"(x)" uR"(x)"
  * Newlines may be in the string.
+ *
+ * @param pc  structure to update, str is an input.
  */
 static bool parse_cr_string(tok_ctx &ctx, chunk_t &pc, size_t q_idx);
 
@@ -209,6 +211,8 @@ static bool parse_whitespace(tok_ctx &ctx, chunk_t &pc);
  * Called when we hit a backslash.
  * If there is nothing but whitespace until the newline, then this is a
  * backslash newline
+ *
+ * @param pc  structure to update, str is an input
  */
 static bool parse_bs_newline(tok_ctx &ctx, chunk_t &pc);
 
@@ -228,6 +232,8 @@ static bool parse_newline(tok_ctx &ctx);
  * The PATTERN may not contain a space or '[' or ']'.
  * A generic whitespace check should be good enough.
  * Do not change the pattern.
+ *
+ * @param pc  structure to update, str is an input
  */
 static void parse_pawn_pattern(tok_ctx &ctx, chunk_t &pc, c_token_t tt);
 
@@ -309,12 +315,22 @@ static bool parse_code_placeholder(tok_ctx &ctx, chunk_t &pc);
 static void parse_suffix(tok_ctx &ctx, chunk_t &pc, bool forstring);
 
 
+//! check if a symbol holds a boolean value
 static bool is_bin(int ch);
 static bool is_bin_(int ch);
+
+
+//! check if a symbol holds a octal value
 static bool is_oct(int ch);
 static bool is_oct_(int ch);
+
+
+//! check if a symbol holds a decimal value;
 static bool is_dec(int ch);
 static bool is_dec_(int ch);
+
+
+//! check if a symbol holds a hexadecimal value
 static bool is_hex(int ch);
 static bool is_hex_(int ch);
 
@@ -331,7 +347,7 @@ static bool is_hex_(int ch);
  * For example, only D allows underscores in the numbers, but they are
  * allowed in all formats.
  *
- * @param pc  The structure to update, str is an input.
+ * @param[in,out] pc  The structure to update, str is an input.
  *
  * @return Whether a number was parsed
  */
@@ -358,8 +374,7 @@ static bool d_parse_string(tok_ctx &ctx, chunk_t &pc)
          // Check for end of file
          switch (ctx.peek())
          {
-         case 'x':
-            // \x HexDigit HexDigit
+         case 'x':  // \x HexDigit HexDigit
             cnt = 3;
             while (cnt--)
             {
@@ -367,8 +382,7 @@ static bool d_parse_string(tok_ctx &ctx, chunk_t &pc)
             }
             break;
 
-         case 'u':
-            // \u HexDigit HexDigit HexDigit HexDigit
+         case 'u':  // \u HexDigit (x4)
             cnt = 5;
             while (cnt--)
             {
@@ -376,8 +390,7 @@ static bool d_parse_string(tok_ctx &ctx, chunk_t &pc)
             }
             break;
 
-         case 'U':
-            // \U HexDigit (x8)
+         case 'U':  // \U HexDigit (x8)
             cnt = 9;
             while (cnt--)
             {
@@ -792,7 +805,10 @@ static bool is_hex_(int ch)
 
 static bool parse_number(tok_ctx &ctx, chunk_t &pc)
 {
-   // A number must start with a digit or a dot, followed by a digit (signs handled elsewhere)
+   /*
+    * A number must start with a digit or a dot, followed by a digit
+    * (signs handled elsewhere)
+    */
    if (!is_dec(ctx.peek()) && ((ctx.peek() != '.') || !is_dec(ctx.peek(1))))
    {
       return(false);
@@ -806,7 +822,7 @@ static bool parse_number(tok_ctx &ctx, chunk_t &pc)
 
    /*
     * Check for Hex, Octal, or Binary
-    * Note that only D, C++14 and Pawn support binary, but who cares?
+    * Note that only D, C++14 and Pawn support binary
     */
    bool did_hex = false;
    if (ctx.peek() == '0')
@@ -814,7 +830,7 @@ static bool parse_number(tok_ctx &ctx, chunk_t &pc)
       size_t  ch;
       chunk_t pc_temp;
 
-      pc.str.append(ctx.get());  /* store the '0' */
+      pc.str.append(ctx.get());  // store the '0'
       pc_temp.str.append('0');
 
       // MS constant might have an "h" at the end. Look for it
@@ -828,7 +844,7 @@ static bool parse_number(tok_ctx &ctx, chunk_t &pc)
       ctx.restore();
       LOG_FMT(LGUY, "%s(%d): pc_temp:%s\n", __func__, __LINE__, pc_temp.text());
 
-      if (ch == 'h')
+      if (ch == 'h') // TODO can we combine this in analyze_character
       {
          // we have an MS hexadecimal number with "h" at the end
          LOG_FMT(LGUY, "%s(%d): MS hexadecimal number\n", __func__, __LINE__);
@@ -1075,7 +1091,10 @@ static bool parse_cs_string(tok_ctx &ctx, chunk_t &pc)
 
             log_sev_t warnlevel = static_cast<log_sev_t>(cpd.settings[UO_warn_level_tabs_found_in_verbatim_string_literals].u);
 
-            // a tab char can't be replaced with \	 because escapes don't work in here-strings. best we can do is warn.
+            /*
+             * a tab char can't be replaced with \\t because escapes don't
+             * work in here-strings. best we can do is warn.
+             */
             LOG_FMT(warnlevel, "%s:%zu Detected non-replaceable tab char in literal string\n", cpd.filename, pc.orig_line);
             if (warnlevel < LWARN)
             {
@@ -1326,8 +1345,10 @@ static bool parse_word(tok_ctx &ctx, chunk_t &pc, bool skipcheck)
          pc.type = CT_MACRO;
          if (cpd.settings[UO_pp_ignore_define_body].b)
          {
-            // We are setting the PP_IGNORE preproc state because the following
-            // chunks are part of the macro body and will have to be ignored.
+            /*
+             * We are setting the PP_IGNORE preproc state because the following
+             * chunks are part of the macro body and will have to be ignored.
+             */
             cpd.in_preproc = CT_PP_IGNORE;
          }
       }
@@ -1529,6 +1550,7 @@ static bool parse_ignored(tok_ctx &ctx, chunk_t &pc)
       pc.str.clear();
       return(false);
    }
+   // Note that we aren't actually making sure this is in a comment, yet
    const char *ontext = cpd.settings[UO_enable_processing_cmt].str;
    if (ontext == nullptr)
    {
@@ -1983,6 +2005,7 @@ void tokenize(const deque<int> &data, chunk_t *ref)
          cpd.unc_off = true;
       }
 
+      // Special handling for preprocessor stuff
       if (cpd.in_preproc != CT_NONE)
       {
          chunk_flags_set(pc, PCF_IN_PREPROC);
@@ -2003,6 +2026,7 @@ void tokenize(const deque<int> &data, chunk_t *ref)
             }
          }
 
+         // Figure out the type of preprocessor for #include parsing
          if (cpd.in_preproc == CT_PREPROC)
          {
             if ((pc->type < CT_PP_DEFINE) || (pc->type > CT_PP_OTHER))

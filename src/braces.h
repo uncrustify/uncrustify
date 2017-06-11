@@ -11,6 +11,7 @@
 #include "uncrustify_types.h"
 
 
+//! Change virtual braces into real braces
 void do_braces(void);
 
 /**

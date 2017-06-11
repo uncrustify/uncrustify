@@ -133,6 +133,7 @@ void backup_create_md5_file(const char *filename)
       return;
    }
 
+   // read file chunk by chunk and calculate its MD5 checksum
    while ((len = fread(buf, 1, sizeof(buf), thefile)) > 0)
    {
       md5.Update(buf, len);

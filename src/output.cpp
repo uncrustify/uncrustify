@@ -19,9 +19,6 @@
 #include "helper_for_print.h"
 #include <cstdlib>
 
-static void output_comment_multi(chunk_t *pc);
-static void output_comment_multi_simple(chunk_t *pc, bool kw_subst);
-static void do_kw_subst(chunk_t *pc);
 
 struct cmt_reflow
 {
@@ -36,15 +33,196 @@ struct cmt_reflow
 };
 
 
+/**
+ * A multiline comment
+ * The only trick here is that we have to trim out whitespace characters
+ * to get the comment to line up.
+ */
+static void output_comment_multi(chunk_t *pc);
+
+
+static bool kw_fcn_filename(chunk_t *cmt, unc_text &out_txt);
+
+
+static bool kw_fcn_class(chunk_t *cmt, unc_text &out_txt);
+
+
+static bool kw_fcn_message(chunk_t *cmt, unc_text &out_txt);
+
+
+static bool kw_fcn_category(chunk_t *cmt, unc_text &out_txt);
+
+
+static bool kw_fcn_scope(chunk_t *cmt, unc_text &out_txt);
+
+
+static bool kw_fcn_function(chunk_t *cmt, unc_text &out_txt);
+
+
+/**
+ * Adds the javadoc-style @param and @return stuff, based on the params and
+ * return value for pc.
+ * If the arg list is '()' or '(void)', then no @params are added.
+ * Likewise, if the return value is 'void', then no @return is added.
+ */
+static bool kw_fcn_javaparam(chunk_t *cmt, unc_text &out_txt);
+
+
+static bool kw_fcn_fclass(chunk_t *cmt, unc_text &out_txt);
+
+
+/**
+ * Output a multiline comment without any reformatting other than shifting
+ * it left or right to get the column right.
+ * Trim trailing whitespace and do keyword substitution.
+ */
+static void output_comment_multi_simple(chunk_t *pc, bool kw_subst);
+
+
+/**
+ * This renders the #if condition to a string buffer.
+ *
+ * @param[out] dst    unc_text buffer to be filled
+ * @param[in]  ifdef  if conditional as chunk list
+ */
+static void generate_if_conditional_as_text(unc_text &dst, chunk_t *ifdef);
+
+
+/**
+ * Do keyword substitution on a comment.
+ * NOTE: it is assumed that a comment will contain at most one of each type
+ * of keyword.
+ */
+static void do_kw_subst(chunk_t *pc);
+
+
+//! All output text is sent here, one char at a time.
+static void add_char(UINT32 ch);
+
+
+static void add_text(const char *ascii_text);
+
+
+static void add_text(const unc_text &text, bool is_ignored);
+
+
+/**
+ * Count the number of characters to the end of the next chunk of text.
+ * If it exceeds the limit, return true.
+ */
+static bool next_word_exceeds_limit(const unc_text &text, size_t idx);
+
+
+/**
+ * Output a comment to the column using indent_with_tabs and
+ * indent_cmt_with_tabs as the rules.
+ * base_col is the indent of the first line of the comment.
+ * On the first line, column == base_col.
+ * On subsequent lines, column >= base_col.
+ *
+ * @param brace_col  the brace-level indent of the comment
+ * @param base_col   the indent of the start of the comment (multiline)
+ * @param column     the column that we should end up in
+ */
+static void cmt_output_indent(size_t brace_col, size_t base_col, size_t column);
+
+
+/**
+ * Checks for and updates the lead chars.
+ *
+ * @param line the comment line
+ *
+ * @return 0: not present, >0: number of chars that are part of the lead
+ */
+static size_t cmt_parse_lead(const unc_text &line, bool is_last);
+
+
+/**
+ * Scans a multiline comment to determine the following:
+ *  - the extra indent of the non-first line (0 or 1)
+ *  - the continuation text ('' or '* ')
+ *
+ * The decision is based on:
+ *  - cmt_indent_multi
+ *  - cmt_star_cont
+ *  - cmt_multi_first_len_minimum
+ *  - the first line length
+ *  - the second line leader length
+ *  - the last line length (without leading space/tab)
+ *
+ * If the first and last line are the same length and don't contain any alnum
+ * chars and (the first line len > 2 or the second leader is the same as the
+ * first line length), then the indent is 0.
+ *
+ * If the leader on the second line is 1 wide or missing, then the indent is 1.
+ *
+ * Otherwise, the indent is 0.
+ *
+ * @param str        The comment string
+ * @param len        Length of the comment
+ * @param start_col  Starting column
+ *
+ * @return cmt.xtra_indent is set to 0 or 1
+ */
+static void calculate_comment_body_indent(cmt_reflow &cmt, const unc_text &str);
+
+
+static int next_up(const unc_text &text, size_t idx, unc_text &tag);
+
+
+/**
+ * Outputs the C comment at pc.
+ * C comment combining is done here
+ *
+ * @return the last chunk output'd
+ */
 static chunk_t *output_comment_c(chunk_t *pc);
+
+
+/**
+ * Outputs the CPP comment at pc.
+ * CPP comment combining is done here
+ *
+ * @return the last chunk output'd
+ */
 static chunk_t *output_comment_cpp(chunk_t *pc);
+
+
+static void cmt_trim_whitespace(unc_text &line, bool in_preproc);
+
+
+/**
+ * Outputs a comment. The initial opening '//' may be included in the text.
+ * Subsequent openings (if combining comments), should not be included.
+ * The closing (for C/D comments) should not be included.
+ *
+ * TODO:
+ * If reflowing text, the comment should be added one word (or line) at a time.
+ * A newline should only be sent if a blank line is encountered or if the next
+ * line is indented beyond the current line (optional?).
+ * If the last char on a line is a ':' or '.', then the next line won't be
+ * combined.
+ */
 static void add_comment_text(const unc_text &text, cmt_reflow &cmt, bool esc_close);
+
+
+static void output_cmt_start(cmt_reflow &cmt, chunk_t *pc);
+
+
+/**
+ * Checks to see if the current comment can be combined with the next comment.
+ * The two can be combined if:
+ *  1. They are the same type
+ *  2. There is exactly one newline between then
+ *  3. They are indented to the same level
+ */
+static bool can_combine_comment(chunk_t *pc, cmt_reflow &cmt);
+
 
 #define LOG_CONTTEXT() \
    LOG_FMT(LCONTTEXT, "%s:%d set cont_text to '%s'\n", __func__, __LINE__, cmt.cont_text.c_str())
 
 
-//! All output text is sent here, one char at a time.
 static void add_char(UINT32 ch)
 {
    // If we did a '\r' and it isn't followed by a '\n', then output a newline
@@ -64,7 +242,7 @@ static void add_char(UINT32 ch)
       cpd.did_newline = 1;
       cpd.spaces      = 0;
    }
-   else if (ch == '\r')
+   else if (ch == '\r') // do not output the CARRIAGERETURN
    {
       // do not output '\r'
       cpd.column      = 1;
@@ -82,7 +260,7 @@ static void add_char(UINT32 ch)
    }
    else
    {
-      // Explicitly disallow a tab after a space
+      // explicitly disallow a tab after a space
       if ((ch == '\t') && (cpd.last_char == ' '))
       {
          size_t endcol = next_tab_column(cpd.column);
@@ -149,10 +327,6 @@ static void add_text(const unc_text &text, bool is_ignored = false)
 }
 
 
-/**
- * Count the number of characters to the end of the next chunk of text.
- * If it exceeds the limit, return true.
- */
 static bool next_word_exceeds_limit(const unc_text &text, size_t idx)
 {
    size_t length = 0;
@@ -201,17 +375,6 @@ static void output_to_column(size_t column, bool allow_tabs)
 }
 
 
-/**
- * Output a comment to the column using indent_with_tabs and
- * indent_cmt_with_tabs as the rules.
- * base_col is the indent of the first line of the comment.
- * On the first line, column == base_col.
- * On subsequent lines, column >= base_col.
- *
- * @param brace_col  the brace-level indent of the comment
- * @param base_col   the indent of the start of the comment (multiline)
- * @param column     the column that we should end up in
- */
 static void cmt_output_indent(size_t brace_col, size_t base_col, size_t column)
 {
    size_t iwt = cpd.settings[UO_indent_cmt_with_tabs].b ? 2 :
@@ -296,6 +459,7 @@ void output_text(FILE *pfile)
    {
       size_t indent = cpd.frag_cols - 1;
 
+      // loop over the whole chunk list
       for (pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next(pc))
       {
          pc->column        += indent;
@@ -304,6 +468,7 @@ void output_text(FILE *pfile)
       cpd.frag_cols = 0;
    }
 
+   // loop over the whole chunk list
    for (pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next(pc))
    {
       LOG_FMT(LOUTIND, "text() %s, type %s, col=%zu\n",
@@ -331,11 +496,16 @@ void output_text(FILE *pfile)
             }
             else
             {
+               // Try to keep the same relative spacing
                chunk_t *prev = chunk_get_prev(pc);
 
                if (prev && prev->type == CT_PP_IGNORE)
                {
-                  /* Want to completely leave alone PP_IGNORE'd blocks because they likely have special column aligned newline continuations (common in multiline macros) */
+                  /*
+                   * Want to completely leave alone PP_IGNORE'd blocks because
+                   * they likely have special column aligned newline
+                   * continuations (common in multiline macros)
+                   */
                   pc->column = pc->orig_col;
                }
                else
@@ -394,8 +564,11 @@ void output_text(FILE *pfile)
       else if (pc->type == CT_COMMENT_CPP)
       {
          bool tmp = cpd.output_trailspace;
-         // keep trailing spaces if they are still present in a chunk;
-         // note that tokenize() already strips spaces in comments, so if they made it up to here, they are to stay
+         /*
+          * keep trailing spaces if they are still present in a chunk;
+          * note that tokenize() already strips spaces in comments,
+          * so if they made it up to here, they are to stay
+          */
          cpd.output_trailspace = true;
          pc                    = output_comment_cpp(pc);
          cpd.output_trailspace = tmp;
@@ -495,18 +668,11 @@ void output_text(FILE *pfile)
 } // output_text
 
 
-/**
- * Checks for and updates the lead chars.
- *
- * @param line  the comment line
- *
- * @return 0=not present, >0=number of chars that are part of the lead
- */
 static size_t cmt_parse_lead(const unc_text &line, bool is_last)
 {
    size_t len = 0;
 
-   while ((len < 32) && (len < line.size()))
+   while ((len < 32) && (len < line.size())) // TODO what is the meaning of 32?
    {
       if ((len > 0) && (line[len] == '/'))
       {
@@ -524,12 +690,12 @@ static size_t cmt_parse_lead(const unc_text &line, bool is_last)
       }
       else if (strchr("*|\\#+", line[len]) == nullptr)
       {
-         break;
+         break;  // none of the characters '*|\#+' found in line
       }
       len++;
    }
 
-   if (len > 30)
+   if (len > 30)  // TODO: what is the meaning of 30?
    {
       return(1);
    }
@@ -552,33 +718,6 @@ static size_t cmt_parse_lead(const unc_text &line, bool is_last)
 } // cmt_parse_lead
 
 
-/**
- * Scans a multiline comment to determine the following:
- *  - the extra indent of the non-first line (0 or 1)
- *  - the continuation text ('' or '* ')
- *
- * The decision is based on:
- *  - cmt_indent_multi
- *  - cmt_star_cont
- *  - cmt_multi_first_len_minimum
- *  - the first line length
- *  - the second line leader length
- *  - the last line length (without leading space/tab)
- *
- * If the first and last line are the same length and don't contain any alnum
- * chars and (the first line len > 2 or the second leader is the same as the
- * first line length), then the indent is 0.
- *
- * If the leader on the second line is 1 wide or missing, then the indent is 1.
- *
- * Otherwise, the indent is 0.
- *
- * @param str        The comment string
- * @param len        Length of the comment
- * @param start_col  Starting column
- *
- * @return cmt.xtra_indent is set to 0 or 1
- */
 static void calculate_comment_body_indent(cmt_reflow &cmt, const unc_text &str)
 {
    cmt.xtra_indent = 0;
@@ -645,8 +784,7 @@ static void calculate_comment_body_indent(cmt_reflow &cmt, const unc_text &str)
       }
       if ((str[idx] == '\n') || (str[idx] == '\r'))
       {
-         // Done with second line
-         break;
+         break;  // Done with second line
       }
 
       // Count the leading chars
@@ -670,9 +808,12 @@ static void calculate_comment_body_indent(cmt_reflow &cmt, const unc_text &str)
 
    // LOG_FMT(LSYS, "%s: first=%d last=%d width=%d\n", __func__, first_len, last_len, width);
 
-   // If the first and last line are the same length and don't contain any alnum
-   // chars and (the first line len > cmt_multi_first_len_minimum or
-   // the second leader is the same as the first line length), then the indent is 0.
+   /*
+    * If the first and last line are the same length and don't contain any
+    * alphanumeric chars and (the first line len > cmt_multi_first_len_minimum
+    * or the second leader is the same as the first line length), then the
+    * indent is 0.
+    */
    if ((first_len == last_len) &&
        ((first_len > cpd.settings[UO_cmt_multi_first_len_minimum].u) ||
         (first_len == width)))
@@ -744,18 +885,6 @@ static int next_up(const unc_text &text, size_t idx, unc_text &tag)
 }
 
 
-/**
- * Outputs a comment. The initial opening '//' may be included in the text.
- * Subsequent openings (if combining comments), should not be included.
- * The closing (for C/D comments) should not be included.
- *
- * TODO:
- * If reflowing text, the comment should be added one word (or line) at a time.
- * A newline should only be sent if a blank line is encountered or if the next
- * line is indented beyond the current line (optional?).
- * If the last char on a line is a ':' or '.', then the next line won't be
- * combined.
- */
 static void add_comment_text(const unc_text &text,
                              cmt_reflow &cmt, bool esc_close)
 {
@@ -778,7 +907,7 @@ static void add_comment_text(const unc_text &text,
       }
    }
 
-   for ( ; idx < len; idx++)
+   for ( ; idx < len; idx++)  // TODO: avoid modifying idx in loop
    {
       // Split the comment
       if (text[idx] == '\n')
@@ -791,7 +920,7 @@ static void add_comment_text(const unc_text &text,
             add_char(' ');
          }
 
-         // hack to get escaped newlines to align and not dup the leading '//'
+         // hack to get escaped newlines to align and not duplicate the leading '//'
          int tmp = next_up(text, idx + 1, cmt.cont_text);
          if (tmp < 0)
          {
@@ -904,13 +1033,6 @@ static void output_cmt_start(cmt_reflow &cmt, chunk_t *pc)
 } // output_cmt_start
 
 
-/**
- * Checks to see if the current comment can be combined with the next comment.
- * The two can be combined if:
- *  1. They are the same type
- *  2. There is exactly one newline between then
- *  3. They are indented to the same level
- */
 static bool can_combine_comment(chunk_t *pc, cmt_reflow &cmt)
 {
    // We can't combine if there is something other than a newline next
@@ -938,12 +1060,6 @@ static bool can_combine_comment(chunk_t *pc, cmt_reflow &cmt)
 } // can_combine_comment
 
 
-/**
- * Outputs the C comment at pc.
- * C comment combining is done here
- *
- * @return the last chunk output'd
- */
 static chunk_t *output_comment_c(chunk_t *first)
 {
    cmt_reflow cmt;
@@ -1000,12 +1116,6 @@ static chunk_t *output_comment_c(chunk_t *first)
 } // output_comment_c
 
 
-/**
- * Outputs the CPP comment at pc.
- * CPP comment combining is done here
- *
- * @return the last chunk output'd
- */
 static chunk_t *output_comment_cpp(chunk_t *first)
 {
    cmt_reflow cmt;
@@ -1013,8 +1123,8 @@ static chunk_t *output_comment_cpp(chunk_t *first)
    output_cmt_start(cmt, first);
    cmt.reflow = (cpd.settings[UO_cmt_reflow_mode].u != 1);
 
-   unc_text leadin = "//";                              // default setting to keep previous behaviour
-   if (cpd.settings[UO_sp_cmt_cpp_doxygen].b)           // special treatment for doxygen style comments (treat as unity)
+   unc_text leadin = "//";                     // default setting to keep previous behaviour
+   if (cpd.settings[UO_sp_cmt_cpp_doxygen].b)  // special treatment for doxygen style comments (treat as unity)
    {
       const char *sComment = first->text();
       bool       grouping  = (sComment[2] == '@');
@@ -1028,7 +1138,7 @@ static chunk_t *output_comment_cpp(chunk_t *first)
          }
          else
          {
-            grouping = (sComment[3] == '@');            // or a further one (grouping)
+            grouping = (sComment[3] == '@');  // or a further one (grouping)
             brace    = 4;
          }
       }
@@ -1165,8 +1275,10 @@ static void cmt_trim_whitespace(unc_text &line, bool in_preproc)
       line.pop_back();
    }
 
-   // If in a preproc, shift any bs-nl back to the comment text
-   if (in_preproc && (line.size() > 1) && (line.back() == '\\'))
+   // Shift back to the comment text, ...
+   if (in_preproc                 // if in a preproc ...
+       && (line.size() > 1)       // with a line that holds ...
+       && (line.back() == '\\'))  // a backslash-newline ...
    {
       bool do_space = false;
 
@@ -1188,11 +1300,6 @@ static void cmt_trim_whitespace(unc_text &line, bool in_preproc)
 } // cmt_trim_whitespace
 
 
-/**
- * A multiline comment -- woopeee!
- * The only trick here is that we have to trim out whitespace characters
- * to get the comment to line up.
- */
 static void output_comment_multi(chunk_t *pc)
 {
    cmt_reflow cmt;
@@ -1276,18 +1383,18 @@ static void output_comment_multi(chunk_t *pc)
                 (line[nwidx] != '*') &&     // block comment: skip '*' at end of line
                 ((pc->flags & PCF_IN_PREPROC)
                  ? (line[nwidx] != '\\') ||
-                 ((line[nwidx + 1] != 'r') &&
+                 ((line[nwidx + 1] != 'r') && // TODO: should this be \r ?
                   (line[nwidx + 1] != '\n'))
                  : true))
             {
-               prev_nonempty_line = nwidx;      // last nonwhitespace char in the previous line
+               prev_nonempty_line = nwidx; // last non-whitespace char in the previous line
             }
          }
 
          size_t remaining = pc->len() - cmt_idx;
          for (size_t nxt_len = 0;
               (nxt_len <= remaining) &&
-              (pc->str[nxt_len] != 'r') &&
+              (pc->str[nxt_len] != 'r') && // TODO: should this be \r ?
               (pc->str[nxt_len] != '\n');
               nxt_len++)
          {
@@ -1297,11 +1404,11 @@ static void output_comment_multi(chunk_t *pc)
                 ((nxt_len == remaining) ||
                  ((pc->flags & PCF_IN_PREPROC)
                   ? (pc->str[nxt_len] != '\\') ||
-                  ((pc->str[nxt_len + 1] != 'r') &&
+                  ((pc->str[nxt_len + 1] != 'r') && // TODO: should this be \r ?
                    (pc->str[nxt_len + 1] != '\n'))
                   : true)))
             {
-               next_nonempty_line = nxt_len;      // first nonwhitespace char in the next line
+               next_nonempty_line = nxt_len;  // first non-whitespace char in the next line
             }
          }
 
@@ -1355,8 +1462,8 @@ static void output_comment_multi(chunk_t *pc)
 
       line.append(ch);
 
-      // If we just hit an end of line OR we just hit end-of-comment...
-      if ((ch == '\n') || (cmt_idx == pc->len()))
+      if (ch == '\n'                // If we hit an end of line sign
+          || cmt_idx == pc->len())  // or hit an end-of-comment
       {
          line_count++;
 
@@ -1629,12 +1736,6 @@ static bool kw_fcn_function(chunk_t *cmt, unc_text &out_txt)
 }
 
 
-/**
- * Adds the javadoc-style @param and @return stuff, based on the params and
- * return value for pc.
- * If the arg list is '()' or '(void)', then no @params are added.
- * Likewise, if the return value is 'void', then no @return is added.
- */
 static bool kw_fcn_javaparam(chunk_t *cmt, unc_text &out_txt)
 {
    chunk_t *fcn = get_next_function(cmt);
@@ -1831,11 +1932,6 @@ static const kw_subst_t kw_subst_table[] =
 };
 
 
-/**
- * Do keyword substitution on a comment.
- * NOTE: it is assumed that a comment will contain at most one of each type
- * of keyword.
- */
 static void do_kw_subst(chunk_t *pc)
 {
    for (const auto &kw : kw_subst_table)
@@ -1856,6 +1952,7 @@ static void do_kw_subst(chunk_t *pc)
             size_t nl_idx = pc->str.rfind("\n", idx);
             if (nl_idx > 0)
             {
+               // idx and nl_idx are both positive
                unc_text nl_txt;
                nl_txt.append("\n");
                nl_idx++;
@@ -1872,11 +1969,6 @@ static void do_kw_subst(chunk_t *pc)
 } // do_kw_subst
 
 
-/**
- * Output a multiline comment without any reformatting other than shifting
- * it left or right to get the column right.
- * Trim trailing whitespace and do keyword substitution.
- */
 static void output_comment_multi_simple(chunk_t *pc, bool kw_subst)
 {
    UNUSED(kw_subst);
@@ -1975,7 +2067,6 @@ static void output_comment_multi_simple(chunk_t *pc, bool kw_subst)
 } // output_comment_multi_simple
 
 
-//! This renders the #if condition to a string buffer.
 static void generate_if_conditional_as_text(unc_text &dst, chunk_t *ifdef)
 {
    int column = -1;

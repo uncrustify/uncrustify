@@ -90,8 +90,10 @@ void print_universal_indent_cfg(FILE *pfile)
       {
          const option_map_value *option = get_option_name(optionEnumVal);
 
-         // Create a better readable name from the options name
-         // by replacing '_' by a space and use some upper case characters.
+         /*
+          * Create a better readable name from the options name
+          * by replacing '_' by a space and use some upper case characters.
+          */
          char *optionNameReadable = new char[strlen(option->name) + 1];
          strcpy(optionNameReadable, option->name);
 

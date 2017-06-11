@@ -26,7 +26,8 @@
 /**
  * Flags everything from the open paren to the close paren.
  *
- * @param po  Pointer to the open parenthesis
+ * @param po     Pointer to the open parenthesis
+ * @param flags  flags to add
  *
  * @return The token after the close paren
  */
@@ -59,7 +60,7 @@ static chunk_t *skip_to_next_statement(chunk_t *pc);
 
 /**
  * Skips everything until a comma or semicolon at the same level.
- * Returns the semicolon, comma, or close brace/paren or NULL.
+ * Returns the semicolon, comma, or close brace/paren or nullptr.
  */
 static chunk_t *skip_expression(chunk_t *start);
 
@@ -344,7 +345,7 @@ static void handle_oc_block_type(chunk_t *pc);
  * Specs:
  * -(void) foo ARGS;
  *
- * Decl:
+ * Declaration:
  * -(void) foo ARGS {  }
  *
  * LABEL : (ARGTYPE) ARGNAME
@@ -378,7 +379,7 @@ static void handle_oc_property_decl(chunk_t *pc);
 
 
 /**
- * Process a type that is enclosed in parens in message decls.
+ * Process a type that is enclosed in parens in message declarations.
  * TODO: handle block types, which get special formatting
  *
  * @param pc  points to the open paren
@@ -1328,8 +1329,8 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
    }
 
    /*
-    * Check for a close paren followed by an open paren, which means that
-    * we are on a function type declaration (C/C++ only?).
+    * Check for a close parenthesis followed by an open parenthesis,
+    * which means that we are on a function type declaration (C/C++ only?).
     * Note that typedefs are already taken care of.
     */
    if (((pc->flags & (PCF_IN_TYPEDEF | PCF_IN_TEMPLATE)) == 0) &&
@@ -1377,7 +1378,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
    if ((cpd.lang_flags & LANG_D) == 0)
    {
       /*
-       * Check a paren pair to see if it is a cast.
+       * Check a parenthesis pair to see if it is a cast.
        * Note that SPAREN and FPAREN have already been marked.
        */
       if ((pc->type == CT_PAREN_OPEN) &&
@@ -1412,9 +1413,9 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
              && brace_open->parent_type != CT_ENUM
              && brace_open->parent_type != CT_CLASS
              && brace_open->parent_type != CT_NAMESPACE
-             && brace_open->parent_type != CT_FUNC_DEF                              // guard arrow return type
-             && brace_open->parent_type != CT_FUNC_PROTO                            // --||--
-             && brace_open->parent_type != CT_CPP_LAMBDA                            // --||--
+             && brace_open->parent_type != CT_FUNC_DEF    // guard arrow return type
+             && brace_open->parent_type != CT_FUNC_PROTO  // --||--
+             && brace_open->parent_type != CT_CPP_LAMBDA  // --||--
              )
          {
             auto brace_close = chunk_skip_to_match(next);
@@ -1428,7 +1429,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       }
    }
 
-
+   // Check for stuff that can only occur at the start of an expression
    if (pc->flags & PCF_EXPR_START)
    {
       // Change STAR, MINUS, and PLUS in the easy cases
@@ -1512,7 +1513,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
    }
 
    /*
-    * Change the paren pair after a function/macrofunc.
+    * Change the parenthesis pair after a function/macro-function
     * CT_PAREN_OPEN => CT_FPAREN_OPEN
     */
    if (pc->type == CT_MACRO_FUNC)
@@ -1571,6 +1572,11 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       else if (pc->type == CT_STAR)
       {
          /*
+          * A star can have three meanings
+          * 1. CT_DEREF    = pointer dereferencing
+          * 2. CT_PTR_TYPE = pointer definition
+          * 3. CT_ARITH    = arithmetic multiplication
+          *
           * most PCF_PUNCTUATOR chunks except a paren close would make this
           * a deref. A paren close may end a cast or may be part of a macro fcn.
           */
@@ -1663,6 +1669,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       {
          if (pc->next->type == CT_STAR) // here *
          {
+            // compare text with "C" to find extern "C" instructions
             if (pc->prev != nullptr)
             {
                if (pc->prev->type == CT_STRING)
@@ -1671,10 +1678,8 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
                   {
                      if (pc->prev->prev->type == CT_EXTERN)
                      {
-                        // change CT_WORD => CT_TYPE
-                        set_chunk_type(pc, CT_TYPE);
-                        // change CT_STAR => CT_PTR_TYPE
-                        set_chunk_type(pc->next, CT_PTR_TYPE);
+                        set_chunk_type(pc, CT_TYPE);            // change CT_WORD => CT_TYPE
+                        set_chunk_type(pc->next, CT_PTR_TYPE);  // change CT_STAR => CT_PTR_TYPE
                      }
                   }
                }
@@ -1727,7 +1732,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
                }
                if (tmp->flags & PCF_STMT_START)
                {
-                  // we are at beginnig of the line
+                  // we are at beginning of the line
                   break;
                }
                tmp = chunk_get_prev(tmp);
@@ -1736,8 +1741,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       }
    }
 
-   // Issue #548
-   // inline T && someFunc(foo * *p, bar && q) { }
+   // Issue #548: inline T && someFunc(foo * *p, bar && q) { }
    if ((pc->type == CT_BOOL) &&
        chunk_is_str(pc, "&&", 2) &&
        chunk_ends_type(pc->prev))
@@ -1980,7 +1984,7 @@ static void mark_function_return_type(chunk_t *fname, chunk_t *start, c_token_t 
             if ((pc->flags & PCF_IN_TEMPLATE) &&
                 (pc->type == CT_ANGLE_CLOSE))
             {
-               // look for the opening angle
+               // search the opening angle
                pc = chunk_get_prev_type(pc, CT_ANGLE_OPEN, save->level);
                if (pc != nullptr)
                {
@@ -2287,7 +2291,7 @@ static chunk_t *process_return(chunk_t *pc)
                temp->level--;
             }
 
-            // delete the parens
+            // delete the parenthesis
             chunk_del(next);
             chunk_del(cpar);
 
@@ -2327,7 +2331,7 @@ static chunk_t *process_return(chunk_t *pc)
    }
    if (chunk_is_semicolon(semi) && (pc->level == semi->level))
    {
-      // add the parens
+      // add the parenthesis
       chunk.type        = CT_PAREN_OPEN;
       chunk.str         = "(";
       chunk.level       = pc->level;
@@ -2524,7 +2528,7 @@ static void fix_casts(chunk_t *start)
       nope = false;
       if (chunk_is_ptr_operator(pc))
       {
-         // star (*) and addr (&) are ambiguous
+         // star (*) and address (&) are ambiguous
          if ((after->type == CT_NUMBER_FP) ||
              (after->type == CT_NUMBER) ||
              (after->type == CT_STRING) ||
@@ -2577,7 +2581,7 @@ static void fix_casts(chunk_t *start)
       }
    }
 
-   // if the 'cast' is followed by a semicolon, comma or close paren, it isn't
+   // if the 'cast' is followed by a semicolon, comma or close parenthesis, it isn't
    pc = chunk_get_next_ncnl(paren_close);
    if (pc == nullptr)
    {
@@ -2661,14 +2665,14 @@ static void fix_enum_struct_union(chunk_t *pc)
       return;
    }
 
+   // the next item is either a type or open brace
    next = chunk_get_next_ncnl(pc);
    // the enum-key might be enum, enum class or enum struct (TODO)
    if ((next != nullptr) && (next->type == CT_ENUM_CLASS))
    {
-      // get the next one
-      next = chunk_get_next_ncnl(next);
+      next = chunk_get_next_ncnl(next); // get the next one
    }
-   // the next item is either a type, an attribut (TODO), an identifier, a colon or open brace
+   // the next item is either a type, an attribute (TODO), an identifier, a colon or open brace
    if ((next != nullptr) && (next->type == CT_TYPE))
    {
       // i.e. "enum xyz : unsigned int { ... };"
@@ -2683,7 +2687,7 @@ static void fix_enum_struct_union(chunk_t *pc)
       }
       set_chunk_parent(next, pc->type);
 
-      // next up is either a colon, open brace, or open paren (pawn)
+      // next up is either a colon, open brace, or open parenthesis (pawn)
       if (!next)
       {
          return;
@@ -2772,7 +2776,7 @@ static void fix_enum_struct_union(chunk_t *pc)
          if (next->type == CT_WORD)
          {
             chunk_flags_set(next, flags);
-            flags &= ~PCF_VAR_1ST;       // clear the first flag for the next items
+            flags &= ~PCF_VAR_1ST;   // clear the first flag for the next items
          }
 
          if (next->type == CT_STAR || ((cpd.lang_flags & LANG_CPP) && (next->type == CT_CARET)))
@@ -2885,7 +2889,7 @@ static void fix_typedef(chunk_t *start)
       LOG_FMT(LTYPEDEF, "%s: fcn typedef [%s] on line %zu\n",
               __func__, the_type->text(), the_type->orig_line);
 
-      // If we are aligning on the open paren, grab that instead
+      // If we are aligning on the open parenthesis, grab that instead
       if (open_paren && (cpd.settings[UO_align_typedef_func].u == 1))
       {
          the_type = open_paren;
@@ -2981,7 +2985,7 @@ void combine_labels(void)
 
    cpd.unc_stage = unc_stage_e::COMBINE_LABELS;
 
-   // need a stack to handle nesting inside of OC messages, which reset the scope
+   // stack to handle nesting inside of OC messages, which reset the scope
    ChunkStack cs;
 
    prev = chunk_get_head();
@@ -3322,6 +3326,7 @@ static void fix_fcn_def_params(chunk_t *start)
    {
       return;
    }
+   // ensure start chunk holds a single '(' character
    assert((start->len() == 1) && (start->str[0] == '('));
 
    ChunkStack cs;
@@ -3855,7 +3860,7 @@ static void mark_function(chunk_t *pc)
             // Mark the return type
             while ((tmp = chunk_get_next_ncnl(tmp)) != pc && (tmp != nullptr))
             {
-               make_type(tmp);
+               make_type(tmp); // Mark the return type
             }
          }
       }
@@ -3909,7 +3914,7 @@ static void mark_function(chunk_t *pc)
       return;
    }
 
-   // Find the open and close paren
+   // Find the open and close parenthesis
    paren_open  = chunk_get_next_str(pc, "(", 1, pc->level);
    paren_close = chunk_get_next_str(paren_open, ")", 1, pc->level);
 
@@ -4223,7 +4228,7 @@ static void mark_function(chunk_t *pc)
 #endif
             LOG_FMT(LFCN, " --> Stopping on %s [%s]\n",
                     prev->text(), get_token_name(prev->type));
-            // certain tokens are unlikely to precede a proto or def
+            // certain tokens are unlikely to precede a prototype or definition
             if ((prev->type == CT_ARITH) ||
                 (prev->type == CT_ASSIGN) ||
                 (prev->type == CT_COMMA) ||
@@ -4303,7 +4308,7 @@ static void mark_function(chunk_t *pc)
 
    /*
     * We have a function definition or prototype
-    * Look for a semicolon or a brace open after the close paren to figure
+    * Look for a semicolon or a brace open after the close parenthesis to figure
     * out whether this is a prototype or definition
     */
 
@@ -4315,7 +4320,7 @@ static void mark_function(chunk_t *pc)
    tmp = paren_close;
    while ((tmp = chunk_get_next_ncnl(tmp)) != nullptr)
    {
-      // Only care about brace or semi on the same level
+      // Only care about brace or semicolon on the same level
       if (tmp->level < pc->level)
       {
          // No semicolon - guess that it is a prototype
@@ -4331,7 +4336,7 @@ static void mark_function(chunk_t *pc)
          }
          else if (chunk_is_semicolon(tmp))
          {
-            // Set the parent for the semi for later
+            // Set the parent for the semicolon for later
             semi = tmp;
             set_chunk_type(pc, CT_FUNC_PROTO);
 #ifdef DEBUG
@@ -5032,9 +5037,13 @@ static void handle_cpp_lambda(chunk_t *sq_o)
       nc = *sq_o;
       set_chunk_type(sq_o, CT_SQUARE_OPEN);
       sq_o->str.resize(1);
-      // bug # 664
-      // The original orig_col of CT_SQUARE_CLOSE is stored at orig_col_end of CT_TSQUARE.
-      // CT_SQUARE_CLOSE orig_col and orig_col_end values are calculate from orig_col_end of CT_TSQUARE.
+      /*
+       * bug # 664
+       *
+       * The original orig_col of CT_SQUARE_CLOSE is stored at orig_col_end
+       * of CT_TSQUARE. CT_SQUARE_CLOSE orig_col and orig_col_end values
+       * are calculate from orig_col_end of CT_TSQUARE.
+       */
       nc.orig_col        = sq_o->orig_col_end - 1;
       nc.column          = static_cast<int>(nc.orig_col);
       nc.orig_col_end    = sq_o->orig_col_end;
@@ -5516,7 +5525,7 @@ static void handle_oc_block_literal(chunk_t *pc)
    chunk_t *lbp; // last before paren - end of return type, if any
    if (apo)
    {
-      chunk_t *apc = chunk_skip_to_match(apo);  // arg paren close
+      chunk_t *apc = chunk_skip_to_match(apo);  // arg parenthesis close
       if (chunk_is_paren_close(apc))
       {
          LOG_FMT(LOCBLK, " -- marking parens @ %zu:%zu and %zu:%zu\n",
@@ -5574,9 +5583,11 @@ static void handle_oc_block_type(chunk_t *pc)
       chunk_t *apo = chunk_get_next_ncnl(tpc);  // arg open paren
       chunk_t *apc = chunk_skip_to_match(apo);  // arg close paren
 
-      // If this is a block literal instead of a block type, 'nam' will actually
-      // be the closing bracket of the block.
-      // We run into this situation if a block literal is enclosed in parentheses.
+      /*
+       * If this is a block literal instead of a block type, 'nam'
+       * will actually be the closing bracket of the block. We run into
+       * this situation if a block literal is enclosed in parentheses.
+       */
       if (chunk_is_closing_brace(nam))
       {
          return(handle_oc_block_literal(pc));
@@ -5703,7 +5714,7 @@ static void handle_oc_message_decl(chunk_t *pc)
    {
       LOG_FMT(LOCMSGD, " -- missing method name\n");
       return;
-   }
+   }  // expect the method name/label
 
    chunk_t *label = tmp;
    set_chunk_type(tmp, pt);
@@ -5771,7 +5782,7 @@ static void handle_oc_message_decl(chunk_t *pc)
    // Mark everything
    // 76020 Structurally dead code, 2016-03-16
    //tmp = pc;
-   //while ((tmp = chunk_get_next(tmp)) != NULL)
+   //while ((tmp = chunk_get_next(tmp)) != nullptr)
    //{
    //   LOG_FMT(LOCMSGD, " [%s]", tmp->text());
 
@@ -5828,7 +5839,7 @@ static void handle_oc_message_decl(chunk_t *pc)
    //   }
    //}
 
-   //if ((tmp != NULL) && (tmp->type == CT_BRACE_OPEN))
+   //if ((tmp != nullptr) && (tmp->type == CT_BRACE_OPEN))
    //{
    //   tmp = chunk_skip_to_match(tmp);
    //   if (tmp)
@@ -6015,11 +6026,13 @@ static void handle_oc_property_decl(chunk_t *os)
          open_paren = next;
          next       = chunk_get_next(next);
 
-         // Determine location of the property attributes
-         // NOTE: Did not do this in the combine.cpp do_symbol_check as I was not sure
-         // what the ramifications of adding a new type for each of the below types would
-         // be. It did break some items when I attempted to add them so this is my hack for
-         // now.
+         /*
+          * Determine location of the property attributes
+          * NOTE: Did not do this in the combine.cpp do_symbol_check as
+          * I was not sure what the ramifications of adding a new type
+          * for each of the below types would be. It did break some items
+          * when I attempted to add them so this is my hack for now.
+          */
          while (next != nullptr && next->type != CT_PAREN_CLOSE)
          {
             if (next->type == CT_OC_PROPERTY_ATTR)
@@ -6136,7 +6149,7 @@ static void handle_oc_property_decl(chunk_t *os)
                   }
                }
 
-               // add the parens
+               // add the parenthesis
                chunk_t endchunk;
                endchunk.type        = CT_COMMA;
                endchunk.str         = ",";

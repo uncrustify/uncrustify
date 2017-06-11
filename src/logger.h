@@ -23,7 +23,7 @@
  * Initializes the log subsystem - call this first.
  * This function sets the log stream and enables the top 3 sevs (0-2).
  *
- * @param log_file  NULL for stderr or the FILE stream for logs.
+ * @param log_file  nullptr for stderr or the FILE stream for logs.
  */
 void log_init(FILE *log_file);
 
@@ -39,7 +39,7 @@ void log_show_sev(bool show);
 /**
  * Returns whether a log severity is active.
  *
- * @param sev  The severity
+ * @param sev  severity log level
  *
  * @return true/false
  */
@@ -49,7 +49,8 @@ bool log_sev_on(log_sev_t sev);
 /**
  * Sets a log sev on or off
  *
- * @param sev  The severity
+ * @param sev  severity log level to modify
+ * @param val  new value for severity log level
  *
  * @return true/false
  */
@@ -78,6 +79,8 @@ void log_get_mask(log_mask_t &mask);
  * @param sev  The severity
  * @param str  The pointer to the string
  * @param len  The length of the string from strlen(str)
+ *
+ * TODO call strlen internally instead of providing len
  */
 void log_str(log_sev_t sev, const char *str, size_t len);
 
@@ -112,6 +115,7 @@ void log_flush(bool force_nl);
 
 #ifdef NO_MACRO_VARARG
 #define LOG_FMT    log_fmt
+// TODO during debugging add source file and line number
 #else
 #define LOG_FMT(sev, args...)                           \
    do { if (log_sev_on(sev)) { log_fmt(sev, ## args); } \

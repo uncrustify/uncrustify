@@ -72,9 +72,11 @@ int unc_text::compare(const unc_text &ref1, const unc_text &ref2, size_t len)
       int diff = unc_tolower(ref1.m_chars[idx]) - unc_tolower(ref2.m_chars[idx]);
       if (diff == 0)
       {
-         // if we're comparing the same character but in different case
-         // we want to favor lowercase before uppercase (e.g. a before A)
-         // so the order is the reverse of ASCII order (we negate).
+         /*
+          * if we're comparing the same character but in different case
+          * we want to favor lower case before upper case (e.g. a before A)
+          * so the order is the reverse of ASCII order (we negate).
+          */
          return(-(ref1.m_chars[idx] - ref2.m_chars[idx]));
       }
 
@@ -327,13 +329,12 @@ int unc_text::find(const char *text, size_t sidx) const
             break;
          }
       }
-      if (match) // found at position 'idx'
+      if (match) // 'text' found at position 'idx'
       {
          return(idx);
       }
    }
-   // 'text' not found
-   return(-1);
+   return(-1);  //  'text' not found
 }
 
 

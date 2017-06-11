@@ -113,11 +113,33 @@ static void align_stack(ChunkStack &cs, size_t col, bool align_single, log_sev_t
 
 
 /**
+ * Adds an item to the align stack and adjust the nl_count and max_col.
+ * Adjust max_col as needed
+ *
+ * @param pc         the item to add
+ * @param max_col    pointer to the column variable
+ * @param extra_pad  extra padding
+ */
+static void align_add(ChunkStack &cs, chunk_t *pc, size_t &max_col, size_t min_pad, bool squeeze);
+
+
+/**
  * Scan everything at the current level until the close brace and find the
  * variable def align column.  Also aligns bit-colons, but that assumes that
  * bit-types are the same! But that should always be the case...
  */
 static chunk_t *align_var_def_brace(chunk_t *pc, size_t span, size_t *nl_count);
+
+
+enum class comment_align_e : unsigned int
+{
+   REGULAR,
+   BRACE,
+   ENDIF,
+};
+
+
+static comment_align_e get_comment_align_type(chunk_t *cmt);
 
 
 /**
@@ -136,6 +158,38 @@ static chunk_t *align_var_def_brace(chunk_t *pc, size_t span, size_t *nl_count);
  * @return        pointer the last item looked at
  */
 static chunk_t *align_trailing_comments(chunk_t *start);
+
+
+/**
+ * @brief return the chunk the follows after a C array
+ *
+ * The provided chunk is considered an array if it is an opening square
+ * (CT_SQUARE_OPEN) and the matching close is followed by an equal sign '='
+ *
+ * Example:                  array[25] = 12;
+ *                               /|\     /|\
+ *                                |       |
+ * provided chunk has to point to [       |
+ * returned chunk points to              12
+ *
+ * @param chunk  chunk to operate on
+ *
+ * @return the chunk after the '=' if the check succeeds
+ * @return nullptr in all other cases
+ */
+static chunk_t *skip_c99_array(chunk_t *sq_open);
+
+
+/**
+ * Scans a line for stuff to align on.
+ *
+ * We trigger on BRACE_OPEN, FPAREN_OPEN, ASSIGN, and COMMA.
+ * We want to align the NEXT item.
+ */
+static chunk_t *scan_ib_line(chunk_t *start, bool first_pass);
+
+
+static void align_log_al(log_sev_t sev, size_t line);
 
 
 /**
@@ -198,7 +252,7 @@ static void align_oc_msg_spec(size_t span);
 static void align_typedefs(size_t span);
 
 
-//! Align '<<' (CT_ARITH?)
+//! Align left shift operators '<<' (CT_ARITH?)
 static void align_left_shift(void);
 
 
@@ -260,14 +314,6 @@ static void align_stack(ChunkStack &cs, size_t col, bool align_single, log_sev_t
 }
 
 
-/**
- * Adds an item to the align stack and adjust the nl_count and max_col.
- * Adjust max_col as needed
- *
- * @param pc         the item to add
- * @param max_col    pointer to the column variable
- * @param extra_pad  extra padding
- */
 static void align_add(ChunkStack &cs, chunk_t *pc, size_t &max_col, size_t min_pad, bool squeeze)
 {
    LOG_FUNC_ENTRY();
@@ -436,7 +482,7 @@ void align_all(void)
       align_asm_colon();
    }
 
-   // Align variable defs in function prototypes
+   // Align variable definitions in function prototypes
    if (cpd.settings[UO_align_func_params].b)
    {
       align_func_params();
@@ -616,7 +662,7 @@ void align_preprocessor(void)
             cur_as = &asf;
          }
 
-         // Skip to the close paren
+         // Skip to the close parenthesis
          pc = chunk_get_next_nc(pc); // point to open (
          pc = chunk_get_next_type(pc, CT_FPAREN_CLOSE, pc->level);
 
@@ -624,7 +670,7 @@ void align_preprocessor(void)
                  __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col);
       }
 
-      // step to the value past the close paren or the macro name
+      // step to the value past the close parenthesis or the macro name
       pc = chunk_get_next(pc);
       if (pc == nullptr)
       {
@@ -726,7 +772,7 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
          continue;
       }
 
-      /* Done with this brace set? */
+      // Done with this brace set?
       if ((pc->type == CT_BRACE_CLOSE) ||
           (pc->type == CT_VBRACE_CLOSE))
       {
@@ -864,7 +910,7 @@ static void align_func_params(void)
          continue;
       }
 
-      // We're on a open paren of a prototype
+      // We are on a open parenthesis of a prototype
       pc = align_func_param(pc);
    }
 }
@@ -1192,7 +1238,7 @@ static chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_co
       align_mask |= PCF_VAR_INLINE;
    }
 
-   // Set up the var/proto/def aligner
+   // Set up the variable/prototype/definition aligner
    AlignStack as;
    as.Start(myspan, mythresh);
    as.m_gap        = mygap;
@@ -1298,7 +1344,7 @@ static chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_co
          }
       }
 
-      // don't align stuff inside parens/squares/angles
+      // don't align stuff inside parenthesis/squares/angles
       if (pc->level > pc->brace_level)
       {
          pc = chunk_get_next(pc);
@@ -1416,14 +1462,6 @@ chunk_t *align_nl_cont(chunk_t *start)
 }
 
 
-enum class comment_align_e : unsigned int
-{
-   REGULAR,
-   BRACE,
-   ENDIF,
-};
-
-
 static comment_align_e get_comment_align_type(chunk_t *cmt)
 {
    chunk_t         *prev;
@@ -1437,7 +1475,7 @@ static comment_align_e get_comment_align_type(chunk_t *cmt)
           (prev->type == CT_ELSE) ||
           (prev->type == CT_BRACE_CLOSE))
       {
-         // REVISIT: someone may want this configurable
+         // TODO: make the magic 3 configurable
          if ((cmt->column - (prev->column + prev->len())) < 3)
          {
             cmt_type = (prev->type == CT_PP_ENDIF) ? comment_align_e::ENDIF : comment_align_e::BRACE;
@@ -1535,10 +1573,6 @@ void ib_shift_out(size_t idx, size_t num)
 }
 
 
-/**
- * If sq_open is CT_SQUARE_OPEN and the matching close is followed by '=',
- * then return the chunk after the '='.  Otherwise, return NULL.
- */
 static chunk_t *skip_c99_array(chunk_t *sq_open)
 {
    if (chunk_is_token(sq_open, CT_SQUARE_OPEN))
@@ -1554,12 +1588,6 @@ static chunk_t *skip_c99_array(chunk_t *sq_open)
 }
 
 
-/**
- * Scans a line for stuff to align on.
- *
- * We trigger on BRACE_OPEN, FPAREN_OPEN, ASSIGN, and COMMA.
- * We want to align the NEXT item.
- */
 static chunk_t *scan_ib_line(chunk_t *start, bool first_pass)
 {
    UNUSED(first_pass);
@@ -2126,7 +2154,7 @@ static void align_oc_decl_colon(void)
 
       while ((pc != nullptr) && (pc->level >= level))
       {
-         // The decl ends with an open brace or semicolon
+         // The declaration ends with an open brace or semicolon
          if ((pc->type == CT_BRACE_OPEN) || chunk_is_semicolon(pc))
          {
             break;

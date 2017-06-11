@@ -381,6 +381,7 @@ static chunk_t *pawn_process_func_def(chunk_t *pc)
       while (((last = chunk_get_next(last)) != nullptr) &&
              !chunk_is_str(last, ">", 1))
       {
+         // do nothing just search, TODO: use search_chunk
       }
 
       if (last != nullptr)

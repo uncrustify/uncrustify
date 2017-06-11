@@ -24,10 +24,33 @@
 #include "helper_for_print.h"
 
 
+/*
+ * abbreviations used:
+ * - sparen = tbd
+ * - PS     = Parenthesis Stack
+ * - pse    = Parenthesis Stack
+ */
+
+
+static size_t preproc_start(parse_frame_t *frm, chunk_t *pc);
+
+
+static void print_stack(log_sev_t logsev, const char *str, parse_frame_t *frm, chunk_t *pc);
+
+
 /**
- * the value of after determines:
- *   true:  insert_vbrace_close_after(pc, frm)
- *   false: insert_vbrace_open_before(pc, frm)
+ * pc is a CT_WHILE.
+ * Scan backwards to see if we find a brace/vbrace with the parent set to CT_DO
+ */
+static bool maybe_while_of_do(chunk_t *pc);
+
+
+static void push_fmr_pse(parse_frame_t *frm, chunk_t *pc, brace_stage_e stage, const char *logtext);
+
+
+/**
+ * @param after  determines: true  - insert_vbrace_close_after(pc, frm)
+ *                           false - insert_vbrace_open_before(pc, frm)
  */
 static chunk_t *insert_vbrace(chunk_t *pc, bool after, parse_frame_t *frm);
 
@@ -198,10 +221,6 @@ void brace_cleanup(void)
 } // brace_cleanup
 
 
-/**
- * pc is a CT_WHILE.
- * Scan backwards to see if we find a brace/vbrace with the parent set to CT_DO
- */
 static bool maybe_while_of_do(chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
@@ -345,7 +364,7 @@ static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
          }
       }
 
-      // Mark the parent on semicolons in for() stmts
+      // Mark the parent on semicolons in for() statements
       if ((pc->type == CT_SEMICOLON) &&
           (frm->pse_tos > 1) &&
           (frm->pse[frm->pse_tos - 1].type == CT_FOR))
@@ -385,7 +404,7 @@ static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
       }
    }
 
-   // Handle close paren, vbrace, brace, and square
+   // Handle close parenthesis, vbrace, brace, and square
    if ((pc->type == CT_PAREN_CLOSE) ||
        (pc->type == CT_BRACE_CLOSE) ||
        (pc->type == CT_VBRACE_CLOSE) ||
@@ -424,7 +443,7 @@ static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
       {
          cpd.consumed = true;
 
-         // Copy the parent, update the paren/brace levels
+         // Copy the parent, update the parenthesis/brace levels
          set_chunk_parent(pc, frm->pse[frm->pse_tos].parent);
          frm->level--;
          if ((pc->type == CT_BRACE_CLOSE) ||
@@ -492,7 +511,7 @@ static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
       }
    }
 
-   // Get the parent type for brace and paren open
+   // Get the parent type for brace and parenthesis open
    c_token_t parent = pc->parent_type;
    if ((pc->type == CT_PAREN_OPEN) ||
        (pc->type == CT_FPAREN_OPEN) ||
@@ -506,7 +525,7 @@ static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
              (pc->type == CT_FPAREN_OPEN) ||
              (pc->type == CT_SPAREN_OPEN))
          {
-            // Set the parent for parens and change paren type
+            // Set the parent for parenthesis and change parenthesis type
             if (frm->pse[frm->pse_tos].stage != brace_stage_e::NONE)
             {
                set_chunk_type(pc, CT_SPAREN_OPEN);
@@ -698,7 +717,7 @@ static bool check_complex_statements(parse_frame_t *frm, chunk_t *pc)
    LOG_FUNC_ENTRY();
    c_token_t parent;
 
-   // Turn an optional paren into either a real paren or a brace
+   // Turn an optional parenthesis into either a real parenthesis or a brace
    if (frm->pse[frm->pse_tos].stage == brace_stage_e::OP_PAREN1)
    {
       frm->pse[frm->pse_tos].stage = (pc->type != CT_PAREN_OPEN) ? brace_stage_e::BRACE2 : brace_stage_e::PAREN1;
@@ -766,7 +785,7 @@ static bool check_complex_statements(parse_frame_t *frm, chunk_t *pc)
       }
    }
 
-   // Check for optional paren and optional CT_WHEN after CT_CATCH
+   // Check for optional parenthesis and optional CT_WHEN after CT_CATCH
    if (frm->pse[frm->pse_tos].stage == brace_stage_e::CATCH_WHEN)
    {
       if (pc->type == CT_PAREN_OPEN) // this is for the paren after "catch"
@@ -848,7 +867,7 @@ static bool check_complex_statements(parse_frame_t *frm, chunk_t *pc)
       }
    }
 
-   // Verify open paren in complex statement
+   // Verify open parenthesis in complex statement
    if ((pc->type != CT_PAREN_OPEN) &&
        ((frm->pse[frm->pse_tos].stage == brace_stage_e::PAREN1) ||
         (frm->pse[frm->pse_tos].stage == brace_stage_e::WOD_PAREN)))

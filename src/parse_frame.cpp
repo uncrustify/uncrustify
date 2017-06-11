@@ -15,6 +15,13 @@
 #include <cstdlib>
 
 
+static void pf_log_frms(log_sev_t logsev, const char *txt, parse_frame_t *pf);
+
+
+//! Logs the entire parse frame stack
+static void pf_log_all(log_sev_t logsev);
+
+
 //! Logs one parse frame
 static void pf_log(log_sev_t logsev, parse_frame_t *pf)
 {
@@ -46,7 +53,6 @@ static void pf_log_frms(log_sev_t logsev, const char *txt, parse_frame_t *pf)
 }
 
 
-//! Logs the entire parse frame stack
 static void pf_log_all(log_sev_t logsev)
 {
    LOG_FMT(logsev, "##=- Parse Frame : %d entries\n", cpd.frame_count);

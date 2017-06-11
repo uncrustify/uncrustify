@@ -70,6 +70,7 @@ void sp_votes::vote(chunk_t *first, chunk_t *second)
 }
 
 
+//! Figure out the result of the vote and maybe update *m_av
 sp_votes::~sp_votes()
 {
    // no change if no items were added
@@ -93,6 +94,7 @@ sp_votes::~sp_votes()
 }
 
 
+// generates "vote_sp_xxx" variable name from uncrustify option name "UO_xxx"
 #define SP_VOTE_VAR(x)    sp_votes vote_ ## x(cpd.settings[UO_ ## x].a)
 
 

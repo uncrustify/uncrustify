@@ -23,7 +23,7 @@
 static void convert_brace(chunk_t *br);
 
 
-//! Converts a single virtual brace into a brace
+//! Converts a single virtual brace into a real brace
 static void convert_vbrace(chunk_t *br);
 
 
@@ -62,7 +62,8 @@ static bool can_remove_braces(chunk_t *bopen);
  * Checks to see if the virtual braces should be converted to real braces.
  *  - over a certain length
  *
- * @param vbopen Virtual Brace Open chunk
+ * @param vbopen  Virtual Brace Open chunk
+ *
  * @return true (convert to real braces) or false (leave alone)
  */
 static bool should_add_braces(chunk_t *vbopen);
@@ -83,7 +84,11 @@ static chunk_t *mod_case_brace_remove(chunk_t *br_open);
 static chunk_t *mod_case_brace_add(chunk_t *cl_colon);
 
 
-//! Traverse the if chain and see if all can be removed
+/**
+ * Traverse the if chain and see if all can be removed
+ *
+ * @param br_start  chunk pointing to opening brace of if clause
+ */
 static void process_if_chain(chunk_t *br_start);
 
 
@@ -120,7 +125,7 @@ static bool paren_multiline_before_brace(chunk_t *brace)
    }
    const auto paren_t = CT_SPAREN_CLOSE;
 
-   // find paren pair of the if/for/while/...
+   // find parenthesis pair of the if/for/while/...
    auto paren_close = chunk_get_prev_type(brace, paren_t, brace->level, scope_e::ALL);
    auto paren_open  = chunk_skip_to_match_rev(paren_close, scope_e::ALL);
 
@@ -130,7 +135,7 @@ static bool paren_multiline_before_brace(chunk_t *brace)
       return(false);
    }
 
-   // determine amount of lines in the paren pair spans
+   // determine number of lines in the parenthesis pair spans
    auto       nl_count = size_t {};
    const auto ret_flag = newlines_between(paren_open, paren_close, nl_count);
    if (!ret_flag)
@@ -183,10 +188,9 @@ void do_braces(void)
          continue;
       }
       chunk_t   *br_open = pc;
-      c_token_t brc_type = c_token_t(pc->type + 1);
-
+      c_token_t brc_type = c_token_t(pc->type + 1); // corresponds to closing type
       // Detect empty bodies
-      chunk_t *tmp = chunk_get_next_ncnl(pc);
+      chunk_t   *tmp = chunk_get_next_ncnl(pc);
       if ((tmp != nullptr) && (tmp->type == brc_type))
       {
          chunk_flags_set(br_open, PCF_EMPTY_BODY);
@@ -448,6 +452,7 @@ static void examine_brace(chunk_t *bopen)
    {
       if (pc->flags & PCF_IN_PREPROC)
       {
+         // Cannot remove braces that contain a preprocessor
          LOG_FMT(LBRDEL, " PREPROC\n");
          return;
       }
@@ -752,8 +757,9 @@ static void convert_vbrace_to_brace(void)
             continue;
          }
 
-         convert_vbrace(pc);
-         convert_vbrace(vbc);
+         // if we found a corresponding virtual closing brace
+         convert_vbrace(pc);   // convert both the opening
+         convert_vbrace(vbc);  // and closing brace
       }
    }
 } // convert_vbrace_to_brace
@@ -851,7 +857,7 @@ void add_long_closebrace_comment(void)
       }
       else if (pc->type == CT_SWITCH)
       {
-         // kinda pointless, since it always has the text "switch"
+         // pointless, since it always has the text "switch"
          sw_pc = pc;
       }
       else if (pc->type == CT_NAMESPACE)
@@ -947,7 +953,7 @@ void add_long_closebrace_comment(void)
 
                if ((nl_min > 0) && (nl_count >= nl_min) && (tag_pc != nullptr))
                {
-                  // determine the added comment style
+                  // use the comment style that fits to the selected language
                   c_token_t style = (cpd.lang_flags & (LANG_CPP | LANG_CS)) ?
                                     CT_COMMENT_CPP : CT_COMMENT;
 
@@ -1238,9 +1244,12 @@ static void process_if_chain(chunk_t *br_start)
    }
    else if (cpd.settings[UO_mod_full_brace_if_chain].b)
    {
-      // This might run because either UO_mod_full_brace_if_chain or UO_mod_full_brace_if_chain_only is used.
-      // We only want to remove braces if the first one is active.
-
+      /*
+       * This might run because either
+       * UO_mod_full_brace_if_chain or UO_mod_full_brace_if_chain_only
+       * is used.
+       * We only want to remove braces if the first one is active.
+       */
       const auto multiline_block = cpd.settings[UO_mod_full_brace_nl_block_rem_mlcond].b;
 
       LOG_FMT(LBRCH, "%s: remove braces on lines[%d]:", __func__, br_cnt);

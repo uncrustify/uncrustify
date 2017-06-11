@@ -29,13 +29,21 @@ static dkwmap dkwm;
 /**
  * Compares two chunk_tag_t entries using strcmp on the strings
  *
- * @param p1  The 'left' entry
- * @param p2  The 'right' entry
+ * @param the 'left' entry
+ * @param the 'right' entry
+ *
+ * @return == 0  if both keywords are equal
+ * @return  < 0  p1 is smaller than p2
+ * @return  > 0  p2 is smaller than p1
  */
 static int kw_compare(const void *p1, const void *p2);
 
 
-//! Backs up to the first string match in keywords.
+/**
+ * search in static keywords for first occurrence of a given tag
+ *
+ * @param tag/keyword to search for
+ */
 static const chunk_tag_t *kw_static_first(const chunk_tag_t *tag);
 
 
@@ -43,10 +51,11 @@ static const chunk_tag_t *kw_static_match(const chunk_tag_t *tag);
 
 /**
  * interesting static keywords - keep sorted.
- * Table should include the Name, Type, and Language flags.
+ * Table includes the Name, Type, and Language flags.
  */
 static const chunk_tag_t keywords[] =
 {
+   // TODO: it might be useful if users could add there custom keywords to this list
    { "@catch",           CT_CATCH,         LANG_OC | LANG_CPP | LANG_C                                                 },
    { "@dynamic",         CT_OC_DYNAMIC,    LANG_OC | LANG_CPP | LANG_C                                                 },
    { "@end",             CT_OC_END,        LANG_OC | LANG_CPP | LANG_C                                                 },
@@ -360,14 +369,14 @@ void remove_keyword(const string &tag)
       return;
    }
 
-   /* See if the keyword exists in the map */
+   // See if the keyword exists in the map
    dkwmap::iterator it = dkwm.find(tag);
    if (it == dkwm.end())
    {
       return;
    }
 
-   /* Remove the keyword */
+   // Remove the keyword
    dkwm.erase(it);
    LOG_FMT(LDYNKW, "%s: removed '%s'\n", __func__, tag.c_str());
 }
@@ -377,7 +386,10 @@ static const chunk_tag_t *kw_static_first(const chunk_tag_t *tag)
 {
    const chunk_tag_t *prev = tag - 1;
 
-   while ((prev >= &keywords[0]) && (strcmp(prev->tag, tag->tag) == 0))
+   // TODO: avoid pointer arithmetics
+   // loop over static keyword array
+   while (prev >= &keywords[0]                  // not at beginning of keyword array
+          && strcmp(prev->tag, tag->tag) == 0)  // tags match
    {
       tag = prev;
       prev--;
@@ -454,17 +466,17 @@ int load_keyword_file(const char *filename)
    char   buf[MAXLENGTHOFLINE];
    char   *args[NUMBEROFARGS];
    size_t line_no = 0;
+
+   // read file line by line
    while (fgets(buf, MAXLENGTHOFLINE, pf) != nullptr)
    {
       line_no++;
 
-      // remove comments
+      // remove comments after '#' sign
       char *ptr;
       if ((ptr = strchr(buf, '#')) != nullptr)
       {
-         // a comment line
-         *ptr = 0;
-         // don't use the rest of the line
+         *ptr = 0; // set string end where comment begins
       }
 
       size_t argc = Args::SplitLine(buf, args, NUMBEROFARGS);
@@ -484,8 +496,7 @@ int load_keyword_file(const char *filename)
       }
       else
       {
-         // the line is empty
-         continue;
+         continue; // the line is empty
       }
    }
 
@@ -538,6 +549,7 @@ void clear_keyword_file(void)
 
 pattern_class_e get_token_pattern_class(c_token_t tok)
 {
+   // TODO: instead of this switch better assign the pattern class to each statement
    switch (tok)
    {
    case CT_IF:

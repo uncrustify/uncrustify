@@ -40,7 +40,7 @@ char *make_message(const char *fmt, ...)
       }
 
       // Else try again with more space
-      size = n + 1;  // Precisely what is needed
+      size = n + 1;         // Precisely what is needed
 
       if ((np = (char *)realloc(p, size)) == NULL)
       {

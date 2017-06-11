@@ -19,9 +19,9 @@
 class Args
 {
 protected:
-   size_t m_count;
-   char   **m_values;
-   UINT8  *m_used;      // array of bits
+   size_t m_count;     //! number of command line arguments
+   char   **m_values;  //! pointer array to each argument
+   UINT8  *m_used;     //! bit array with one flag per argument
 
 public:
    /**
@@ -29,8 +29,8 @@ public:
     * Store the values and allocates enough memory for the 'used' flags.
     * This keeps a reference to argv, so don't change it.
     *
-    * @param argc  The argc that was passed to main()
-    * @param argv  The argv that was passed to main()
+    * @param argc  number of command line parameter passed to main()
+    * @param argv  pointer array to command line parameters
     */
    Args(int argc, char **argv);
 
@@ -68,9 +68,10 @@ public:
     *   "-c", "all" returns "all"
     *   "-c=", "all" returns ""
     *
-    * @param token    The token string to match
-    * @param[in, out] index search start position, in case that something is
-    *                 found, it will get the succeeding position number assigned
+    * @param          token  the token string to match
+    * @param[in, out] index  search start position, in case that something is
+    *                        found, it will get the succeeding position number
+    *                        assigned
     *
     * @return nullptr or the pointer to the string
     */
@@ -108,9 +109,9 @@ public:
     * If there are more than num_args, the remaining text is ignored.
     * Note that text is modified (zeroes are inserted)
     *
-    * @param text      The text to split (modified)
-    * @param args      The char * array to populate
-    * @param num_args  The number of items in args
+    * @param      text      the text to split (modified)
+    * @param[out] args      array of pointers to be populated
+    * @param      num_args  number of items in input string
     *
     * @return The number of arguments parsed (always <= num_args)
     */

@@ -12,14 +12,28 @@
 #ifndef LOG_LEVELS_H_INCLUDED
 #define LOG_LEVELS_H_INCLUDED
 
+/**
+ * list of available log levels
+ *
+ * The user defines which log level is active using the
+ * -L or -log option.
+ * All messages which have a level that is active will be stored to the log
+ * file.
+ * All other log messages will be discarded.
+ * Different parts of the software use different log levels.
+ * This allows to log only operations of a specific operation.
+ * This eases debugging.
+ * To get all log messages use the option -La
+ * By default only system messages (level=LSYS) are logged.
+ */
 enum log_sev_t
 {
-   LSYS      = 0,
-   LERR      = 1,
-   LWARN     = 2,
-   LNOTE     = 3,
-   LINFO     = 4,
-   LDATA     = 5,
+   LSYS      = 0,  //! system messages
+   LERR      = 1,  //! error messages
+   LWARN     = 2,  //! warnings
+   LNOTE     = 3,  //! user notifications
+   LINFO     = 4,  //! user informations
+   LDATA     = 5,  //! data logging
 
    LFILELIST = 8,  //! Files in the file list file
    LLINEENDS = 9,  //! Show which line endings are used
@@ -72,11 +86,11 @@ enum log_sev_t
    LPARADD2  = 56, //! adding parens in if/while - details
    LBLANKD   = 57, //! blank line details
    LTEMPFUNC = 58, //! Template function detection
-   LSCANSEMI = 59, //! scan semi colon removal
+   LSCANSEMI = 59, //! scan semicolon removal
    LDELSEMI  = 60, //! Removing semicolons
    LFPARAM   = 61, //! Testing for a full parameter
    LNL1LINE  = 62, //! NL check for 1 liners
-   LPFCHK    = 63, //! Parse Frame check fcn call
+   LPFCHK    = 63, //! Parse Frame check function call
    LAVDB     = 64, //! align var def braces
    LSORT     = 65, //! Sorting
    LSPACE    = 66, //! Space
@@ -108,7 +122,7 @@ enum log_sev_t
    LSETTYP   = 92, //! set_chunk_type()
    LSETFLG   = 93, //! set_chunk_flags()
    LNLFUNCT  = 94, //! newlines before function
-   LCHUNK    = 95, //! Add or del chunk
+   LCHUNK    = 95, //! Add or delete chunk
    LGUY98    = 98, //! for guy-test
    LGUY      = 99, //! for guy-test
 };

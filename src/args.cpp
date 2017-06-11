@@ -141,14 +141,19 @@ const char *Args::Unused(size_t &index)
 
 size_t Args::SplitLine(char *text, char *args[], size_t num_args)
 {
+   if (text == nullptr || num_args == 0)
+   {
+      return(0);
+   }
+
    char   cur_quote    = 0;
    bool   in_backslash = false;
    bool   in_arg       = false;
    size_t argc         = 0;
    char   *dest        = text;
 
-
-   while ((*text != 0) && (argc <= num_args))
+   while (argc <= num_args // maximal number of arguments not reached yet
+          && *text != 0)   // end of string not reached yet
    {
       // Detect the start of an arg
       if (!in_arg && !unc_isspace(*text))
@@ -190,7 +195,7 @@ size_t Args::SplitLine(char *text, char *args[], size_t num_args)
             in_arg = false;
             if (argc == num_args)
             {
-               break;
+               break; // all arguments found, we can stop
             }
          }
          else
@@ -199,7 +204,7 @@ size_t Args::SplitLine(char *text, char *args[], size_t num_args)
             dest++;
          }
       }
-      text++;
+      text++; // go on with next character
    }
    *dest = 0;
 

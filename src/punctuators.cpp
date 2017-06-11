@@ -1,6 +1,6 @@
 /**
  * @file punctuators.cpp
- * Manages the table of punctutators.
+ * Manages the table of punctuators.
  *
  * @author  Ben Gardner
  * @license GPL v2+

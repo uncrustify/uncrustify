@@ -33,8 +33,8 @@ public:
    size_t     m_gap;
    bool       m_right_align;
    StarStyle  m_star_style;
-   StarStyle  m_amp_style;
-   bool       m_skip_first;   //! do not include the first item if it causes it to be indented
+   StarStyle  m_amp_style;  //! do not include the first item if it causes it to be indented
+   bool       m_skip_first; //! do not include the first item if it causes it to be indented
 
 
    AlignStack()
@@ -89,8 +89,8 @@ public:
    /**
     * Adds an entry to the appropriate stack.
     *
-    * @param pc      The chunk
-    * @param seqnum  Optional seqnum (0=assign one)
+    * @param pc      the chunk
+    * @param seqnum  optional sequence number (0=assign one)
     */
    void Add(chunk_t *pc, size_t seqnum = 0);
 
