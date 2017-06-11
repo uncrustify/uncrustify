@@ -13,6 +13,8 @@
 
 #define MAX_NUMBER_TO_SORT    256
 
+
 void sort_imports(void);
+
 
 #endif /* SORTING_H_INCLUDED */

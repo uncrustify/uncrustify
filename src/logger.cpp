@@ -31,7 +31,7 @@ struct log_fcn_info
 };
 static std::deque<log_fcn_info> g_fq;
 
-/** Private log structure */
+//! Private log structure
 struct log_buf
 {
    log_buf()
@@ -58,7 +58,8 @@ static struct log_buf g_log;
  * Starts the log statement by flushing if needed and printing the header
  *
  * @param sev  The log severity
- * @return     The number of bytes available
+ *
+ * @return The number of bytes available
  */
 static size_t log_start(log_sev_t sev);
 
@@ -74,7 +75,7 @@ static void log_end(void);
  * Initializes the log subsystem - call this first.
  * This function sets the log stream and enables the top 3 sevs (0-2).
  *
- * @param log_file   NULL for stderr or the FILE stream for logs.
+ * @param log_file  NULL for stderr or the FILE stream for logs.
  */
 void log_init(FILE *log_file)
 {
@@ -88,57 +89,30 @@ void log_init(FILE *log_file)
 }
 
 
-/**
- * Show or hide the severity prefix "<1>"
- *
- * @param true=show  false=hide
- */
 void log_show_sev(bool show)
 {
    g_log.show_hdr = show;
 }
 
 
-/**
- * Returns whether a log severity is active.
- *
- * @param sev  The severity
- * @return     true/false
- */
 bool log_sev_on(log_sev_t sev)
 {
    return(logmask_test(g_log.mask, sev));
 }
 
 
-/**
- * Sets a log sev on or off
- *
- * @param sev  The severity
- * @return     true/false
- */
 void log_set_sev(log_sev_t sev, bool value)
 {
    logmask_set_sev(g_log.mask, sev, value);
 }
 
 
-/**
- * Sets the log mask
- *
- * @param mask The mask to copy
- */
 void log_set_mask(const log_mask_t &mask)
 {
    g_log.mask = mask;
 }
 
 
-/**
- * Gets the log mask
- *
- * @param mask Where to copy the mask
- */
 void log_get_mask(log_mask_t &mask)
 {
    mask = g_log.mask;
@@ -198,13 +172,6 @@ static void log_end(void)
 }
 
 
-/**
- * Logs a string of known length
- *
- * @param sev  The severity
- * @param str  The pointer to the string
- * @param len  The length of the string from strlen(str)
- */
 void log_str(log_sev_t sev, const char *str, size_t len)
 {
    if ((str == nullptr) || (len == 0) || !log_sev_on(sev))
@@ -227,13 +194,6 @@ void log_str(log_sev_t sev, const char *str, size_t len)
 }
 
 
-/**
- * Logs a formatted string -- similar to printf()
- *
- * @param sev     The severity
- * @param fmt     The format string
- * @param ...     Additional arguments
- */
 void log_fmt(log_sev_t sev, const char *fmt, ...)
 {
    if ((fmt == nullptr) || !log_sev_on(sev))
@@ -267,13 +227,6 @@ void log_fmt(log_sev_t sev, const char *fmt, ...)
 }
 
 
-/**
- * Dumps hex characters inline, no newlines inserted
- *
- * @param sev     The severity
- * @param data    The data to log
- * @param len     The number of bytes to log
- */
 void log_hex(log_sev_t sev, const void *vdata, size_t len)
 {
    if ((vdata == nullptr) || !log_sev_on(sev))
@@ -306,14 +259,6 @@ void log_hex(log_sev_t sev, const void *vdata, size_t len)
 }
 
 
-/**
- * Logs a block of data in a pretty hex format
- * Numbers on the left, characters on the right, just like I like it.
- *
- * @param sev     The severity
- * @param data    The data to log
- * @param len     The number of bytes to log
- */
 void log_hex_blk(log_sev_t sev, const void *data, size_t len)
 {
    if ((data == nullptr) || !log_sev_on(sev))

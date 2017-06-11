@@ -22,6 +22,7 @@ struct cw_entry
    size_t  pri;
 };
 
+
 struct token_pri
 {
    c_token_t tok;
@@ -32,9 +33,7 @@ struct token_pri
 static_inline bool is_past_width(chunk_t *pc);
 
 
-/**
- * Split right after the chunk
- */
+//! Split right after the chunk
 static void split_before_chunk(chunk_t *pc);
 
 
@@ -69,7 +68,6 @@ static void try_split_here(cw_entry &ent, chunk_t *pc);
  *
  * @param start The first chunk that exceeded the limit
  */
-
 static bool split_line(chunk_t *pc);
 
 
@@ -135,10 +133,6 @@ static void split_before_chunk(chunk_t *pc)
 }
 
 
-/**
- * Step forward until a token goes beyond the limit and then call split_line()
- * to split the line at or before that point.
- */
 void do_code_width(void)
 {
    LOG_FUNC_ENTRY();
@@ -287,9 +281,7 @@ static bool split_line(chunk_t *start)
    LOG_FMT(LSPLIT, "\n");
 #endif // DEBUG
 
-   /**
-    * break at maximum line length if ls_code_width is true
-    */
+   //! break at maximum line length if ls_code_width is true
    if (start->flags & PCF_ONE_LINER)
    {
       LOG_FMT(LSPLIT, " ** ONCE LINER SPLIT **\n");
@@ -334,9 +326,7 @@ static bool split_line(chunk_t *start)
       return(true);
    }
 
-   /**
-    * Try to find the best spot to split the line
-    */
+   //! Try to find the best spot to split the line
    cw_entry ent;
 
    memset(&ent, 0, sizeof(ent));

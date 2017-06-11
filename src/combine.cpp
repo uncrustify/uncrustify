@@ -26,8 +26,9 @@
 /**
  * Flags everything from the open paren to the close paren.
  *
- * @param po   Pointer to the open parenthesis
- * @return     The token after the close paren
+ * @param po  Pointer to the open parenthesis
+ *
+ * @return The token after the close paren
  */
 static chunk_t *flag_parens(chunk_t *po, UINT64 flags, c_token_t opentype, c_token_t parenttype, bool parent_all);
 
@@ -36,14 +37,12 @@ static chunk_t *flag_parens(chunk_t *po, UINT64 flags, c_token_t opentype, c_tok
  * Mark the parens and colons in:
  *   asm volatile ( "xx" : "xx" (l), "yy"(h) : ...  );
  *
- * @param pc the CT_ASM item
+ * @param pc  the CT_ASM item
  */
 static void flag_asm(chunk_t *pc);
 
 
-/**
- * Scan backwards to see if we might be on a type declaration
- */
+//! Scan backwards to see if we might be on a type declaration
 static bool chunk_ends_type(chunk_t *start);
 
 
@@ -54,9 +53,7 @@ static bool chunk_ends_type(chunk_t *start);
 static chunk_t *skip_dc_member(chunk_t *start);
 
 
-/**
- * Skips to the start of the next statement.
- */
+//! Skips to the start of the next statement.
 static chunk_t *skip_to_next_statement(chunk_t *pc);
 
 
@@ -84,7 +81,7 @@ static void check_double_brace_init(chunk_t *bo1);
 /**
  * Simply change any STAR to PTR_TYPE and WORD to TYPE
  *
- * @param start points to the open paren
+ * @param start  points to the open paren
  */
 static void fix_fcn_def_params(chunk_t *pc);
 
@@ -127,7 +124,7 @@ static void fix_enum_struct_union(chunk_t *pc);
  * We already verified that this doesn't follow function, TYPE, IF, FOR,
  * SWITCH, or WHILE and is followed by WORD, TYPE, STRUCT, ENUM, or UNION.
  *
- * @param start   Pointer to the open paren
+ * @param start  Pointer to the open paren
  */
 static void fix_casts(chunk_t *pc);
 
@@ -192,8 +189,8 @@ static void mark_function(chunk_t *pc);
  * "STRING"             ==> false
  * "OPEN PAREN"         ==> false
  *
- * @param start the first chunk to look at
- * @param end   the chunk after the last one to look at
+ * @param start  the first chunk to look at
+ * @param end    the chunk after the last one to look at
  */
 static bool can_be_full_param(chunk_t *start, chunk_t *end);
 
@@ -201,8 +198,8 @@ static bool can_be_full_param(chunk_t *start, chunk_t *end);
 /**
  * Changes the return type to type and set the parent.
  *
- * @param pc the last chunk of the return type
- * @param parent_type CT_NONE (no change) or the new parent type
+ * @param pc           the last chunk of the return type
+ * @param parent_type  CT_NONE (no change) or the new parent type
  */
 static void mark_function_return_type(chunk_t *fname, chunk_t *pc, c_token_t parent_type);
 
@@ -215,7 +212,8 @@ static void mark_function_return_type(chunk_t *fname, chunk_t *pc, c_token_t par
  * const char * (*func)(params);
  * const char * (^func)(params);   -- Objective C
  *
- * @param pc   Points to the first closing paren
+ * @param pc  Points to the first closing paren
+ *
  * @return whether a function type was processed
  */
 static bool mark_function_type(chunk_t *pc);
@@ -253,11 +251,12 @@ static void mark_define_expressions(void);
 
 static void process_returns(void);
 
+
 /**
  * Processes a return statement, labeling the parens and marking the parent.
  * May remove or add parens around the return statement
  *
- * @param pc   Pointer to the return chunk
+ * @param pc  Pointer to the return chunk
  */
 static chunk_t *process_return(chunk_t *pc);
 
@@ -269,9 +268,7 @@ static chunk_t *process_return(chunk_t *pc);
 static void mark_class_ctor(chunk_t *pclass);
 
 
-/**
- * We're on a 'namespace' skip the word and then set the parent of the braces.
- */
+//! We're on a 'namespace' skip the word and then set the parent of the braces.
 static void mark_namespace(chunk_t *pns);
 
 
@@ -321,7 +318,7 @@ static void handle_oc_class(chunk_t *pc);
  *  repeat(10, ^{ putc('0'+d); });
  *  typedef void (^workBlk_t)(void);
  *
- * @param pc points to the '^'
+ * @param pc  points to the '^'
  */
 static void handle_oc_block_literal(chunk_t *pc);
 
@@ -336,7 +333,7 @@ static void handle_oc_block_literal(chunk_t *pc);
  *
  * This is triggered when the sequence '(' '^' is found.
  *
- * @param pc points to the '^'
+ * @param pc  points to the '^'
  */
 static void handle_oc_block_type(chunk_t *pc);
 
@@ -371,14 +368,12 @@ static void handle_oc_message_decl(chunk_t *pc);
  *
  * Mainly find the matching ']' and ';' and mark the colons.
  *
- * @param os points to the open square '['
+ * @param pc  points to the open square '['
  */
 static void handle_oc_message_send(chunk_t *pc);
 
 
-/**
- * Process @Property values and re-arrange them if necessary
- */
+//! Process @Property values and re-arrange them if necessary
 static void handle_oc_property_decl(chunk_t *pc);
 
 
@@ -386,7 +381,8 @@ static void handle_oc_property_decl(chunk_t *pc);
  * Process a type that is enclosed in parens in message decls.
  * TODO: handle block types, which get special formatting
  *
- * @param pc points to the open paren
+ * @param pc  points to the open paren
+ *
  * @return the chunk after the type
  */
 static chunk_t *handle_oc_md_type(chunk_t *paren_open, c_token_t ptype, UINT64 flags, bool &did_it);
@@ -399,7 +395,7 @@ static chunk_t *handle_oc_md_type(chunk_t *paren_open, c_token_t ptype, UINT64 f
  *
  * Set the next chunk to a statement start after the close ']'
  *
- * @param os points to the open square '['
+ * @param pc  points to the open square '['
  */
 static void handle_cs_square_stmt(chunk_t *pc);
 
@@ -602,15 +598,6 @@ static chunk_t *flag_parens(chunk_t *po, UINT64 flags, c_token_t opentype,
 } // flag_parens
 
 
-/**
- * Sets the parent of the open paren/brace/square/angle and the closing.
- * Note - it is assumed that pc really does point to an open item and the
- * close must be open + 1.
- *
- * @param start   The open paren
- * @param parent  The type to assign as the parent
- * @return        The chunk after the close paren
- */
 chunk_t *set_paren_parent(chunk_t *start, c_token_t parent)
 {
    LOG_FUNC_ENTRY();
@@ -774,14 +761,6 @@ static chunk_t *skip_dc_member(chunk_t *start)
 }
 
 
-/**
- * This is called on every chunk.
- * First on all non-preprocessor chunks and then on each preprocessor chunk.
- * It does all the detection and classifying.
- * This is only called by fix_symbols.
- * The three parameters never get the value NULL.
- * it is not necessary to test.
- */
 void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
 {
    LOG_FUNC_ENTRY();
@@ -3519,9 +3498,7 @@ static chunk_t *fix_var_def(chunk_t *start)
    }
    LOG_FMT(LFVD2, "\n");
 
-   /**
-    * OK we have two or more items, mark types up to the end.
-    */
+   //! OK we have two or more items, mark types up to the end.
    mark_variable_definition(cs.Get(cs.Len() - 1)->m_pc);
    if (end->type == CT_COMMA)
    {
@@ -3548,9 +3525,6 @@ static chunk_t *skip_expression(chunk_t *start)
 }
 
 
-/**
- * help function for mark_variable_definition...
- */
 bool go_on(chunk_t *pc, chunk_t *start)
 {
    if ((pc == nullptr) || (pc->level != start->level))

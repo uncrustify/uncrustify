@@ -14,9 +14,7 @@
 #include <cctype>
 
 
-/**
- * Truncate anything except EOF (-1) to 0-255
- */
+//! Truncate anything except EOF (-1) to 0-255
 static inline int unc_fix_ctype(int ch)
 {
    return((ch == -1) ? -1 : (ch & 0xff));
@@ -75,5 +73,6 @@ static inline int unc_isupper(int ch)
 {
    return(isalpha(unc_fix_ctype(ch)) && (unc_toupper(unc_fix_ctype(ch)) == ch));
 }
+
 
 #endif /* UNC_CTYPE_H_INCLUDED */

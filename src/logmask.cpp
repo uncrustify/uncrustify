@@ -12,14 +12,6 @@
 #include "unc_ctype.h"
 
 
-/**
- * Convert a logmask into a string
- *
- * @param mask the mask to convert
- * @param buf  the buffer to hold the string
- * @param size the size of the buffer
- * @return     buf (pass through)
- */
 char *logmask_to_str(const log_mask_t &mask, char *buf, int size)
 {
    if ((buf == nullptr) || (size <= 0))
@@ -78,12 +70,6 @@ char *logmask_to_str(const log_mask_t &mask, char *buf, int size)
 } // logmask_to_str
 
 
-/**
- * Parses a string into a log severity
- *
- * @param str     The string to parse
- * @param mask    The mask to populate
- */
 void logmask_from_string(const char *str, log_mask_t &mask)
 {
    if (str == nullptr)

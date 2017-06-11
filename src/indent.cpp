@@ -185,9 +185,7 @@ static size_t token_indent(c_token_t type);
 static chunk_t *oc_msg_block_indent(chunk_t *pc, bool from_brace, bool from_caret, bool from_colon, bool from_keyword);
 
 
-/**
- * We are on a '{' that has parent = OC_BLOCK_EXPR
- */
+//! We are on a '{' that has parent = OC_BLOCK_EXPR
 static chunk_t *oc_msg_prev_colon(chunk_t *pc);
 
 
@@ -212,9 +210,9 @@ void indent_to_column(chunk_t *pc, size_t column)
 
 enum class align_mode_e : unsigned int
 {
-   SHIFT,     /* shift relative to the current column */
-   KEEP_ABS,  /* try to keep the original absolute column */
-   KEEP_REL,  /* try to keep the original gap */
+   SHIFT,     //! shift relative to the current column
+   KEEP_ABS,  //! try to keep the original absolute column
+   KEEP_REL,  //! try to keep the original gap
 };
 
 
@@ -867,9 +865,7 @@ void indent_text(void)
          }
       }
 
-      /**
-       * Handle non-brace closures
-       */
+      //! Handle non-brace closures
       log_indent_tmp();
 
       token_used = false;
@@ -1924,9 +1920,7 @@ void indent_text(void)
          /* anything else? */
       }
 
-      /**
-       * Handle shift expression continuation indenting
-       */
+      //! Handle shift expression continuation indenting
       shiftcontcol = 0;
       if (cpd.settings[UO_indent_shift].b && !(pc->flags & PCF_IN_ENUM) &&
           pc->parent_type != CT_OPERATOR && pc->type != CT_COMMENT &&
@@ -2022,9 +2016,7 @@ void indent_text(void)
          }
       }
 
-      /**
-       * Handle variable definition continuation indenting
-       */
+      //! Handle variable definition continuation indenting
       if ((vardefcol == 0) &&
           ((pc->type == CT_WORD) || (pc->type == CT_FUNC_CTOR_VAR)) &&
           ((pc->flags & PCF_IN_FCN_DEF) == 0) &&
@@ -2060,9 +2052,7 @@ void indent_text(void)
          vardefcol = 0;
       }
 
-      /**
-       * Indent the line if needed
-       */
+      //! Indent the line if needed
       if (did_newline && !chunk_is_newline(pc) && (pc->len() != 0))
       {
          pc->column_indent = frm.pse[frm.pse_tos].indent_tab;

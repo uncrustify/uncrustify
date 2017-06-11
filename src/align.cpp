@@ -111,6 +111,7 @@
  */
 static void align_stack(ChunkStack &cs, size_t col, bool align_single, log_sev_t sev);
 
+
 /**
  * Scan everything at the current level until the close brace and find the
  * variable def align column.  Also aligns bit-colons, but that assumes that
@@ -178,15 +179,11 @@ static void align_func_params(void);
 static void align_same_func_call_params(void);
 
 
-/**
- * Aligns all function prototypes in the file.
- */
+//! Aligns all function prototypes in the file.
 static void align_func_proto(size_t span);
 
 
-/**
- * Aligns all function prototypes in the file.
- */
+//! Aligns all function prototypes in the file.
 static void align_oc_msg_spec(size_t span);
 
 
@@ -201,15 +198,11 @@ static void align_oc_msg_spec(size_t span);
 static void align_typedefs(size_t span);
 
 
-/**
- * Align '<<' (CT_ARITH?)
- */
+//! Align '<<' (CT_ARITH?)
 static void align_left_shift(void);
 
 
-/**
- * Aligns OC messages
- */
+//! Aligns OC messages
 static void align_oc_msg_colons(void);
 
 
@@ -1530,12 +1523,6 @@ chunk_t *align_trailing_comments(chunk_t *start)
 } // align_trailing_comments
 
 
-/**
- * Shifts out all columns by a certain amount.
- *
- * @param idx  The index to start shifting
- * @param num  The number of columns to shift
- */
 void ib_shift_out(size_t idx, size_t num)
 {
    while (idx < cpd.al_cnt)

@@ -11,14 +11,12 @@
 #include "uncrustify.h"
 #include "args.h"
 
-// examples:
-// prot_the_line(__LINE__, pc->orig_line);
-// prot_the_line(__LINE__, 6);
-// examine_Data(__func__, __LINE__, n);
-// log_pcf_flags(LSYS, pc->flags);
-
 
 // protocol of the line
+// examples:
+//   prot_the_line(__LINE__, pc->orig_line);
+//	  prot_the_line(__LINE__, 6);
+// log_pcf_flags(LSYS, pc->flags);
 void prot_the_line(int theLine, unsigned int actual_line)
 {
    LOG_FMT(LGUY, "Prot_the_line:(%d) \n", theLine);
@@ -58,7 +56,9 @@ void prot_the_line(int theLine, unsigned int actual_line)
 }
 
 
-/* \todo examine_Data seems not to be used, is it still required? */
+// \todo examine_Data seems not to be used, is it still required?
+// examples:
+//   examine_Data(__func__, __LINE__, n);
 void examine_Data(const char *func_name, int theLine, int what)
 {
    LOG_FMT(LGUY, "\n%s:", func_name);
@@ -136,7 +136,6 @@ void examine_Data(const char *func_name, int theLine, int what)
 }    // examine_Data
 
 
-// dump the chunk list to a file
 void dump_out(unsigned int type)
 {
    char dumpFileName[300];
@@ -178,7 +177,6 @@ void dump_out(unsigned int type)
 }
 
 
-// create chunk list from a file
 void dump_in(unsigned int type)
 {
    char    buffer[256];

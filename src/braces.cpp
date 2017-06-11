@@ -19,24 +19,18 @@
 #include "chunk_list.h"
 
 
-/**
- * Converts a single brace into a virtual brace
- */
+//! Converts a single brace into a virtual brace
 static void convert_brace(chunk_t *br);
 
 
-/**
- * Converts a single virtual brace into a brace
- */
+//! Converts a single virtual brace into a brace
 static void convert_vbrace(chunk_t *br);
 
 
 static void convert_vbrace_to_brace(void);
 
 
-/**
- * Go backwards to honor brace newline removal limits
- */
+//! Go backwards to honor brace newline removal limits
 static void examine_braces(void);
 
 
@@ -81,21 +75,15 @@ static bool should_add_braces(chunk_t *vbopen);
 static void append_tag_name(unc_text &txt, chunk_t *pc);
 
 
-/**
- * Remove the case brace, if allowable.
- */
+//! Remove the case brace, if allowable.
 static chunk_t *mod_case_brace_remove(chunk_t *br_open);
 
 
-/**
- * Add the case brace, if allowable.
- */
+//! Add the case brace, if allowable.
 static chunk_t *mod_case_brace_add(chunk_t *cl_colon);
 
 
-/**
- * Traverse the if chain and see if all can be removed
- */
+//! Traverse the if chain and see if all can be removed
 static void process_if_chain(chunk_t *br_start);
 
 
@@ -769,10 +757,6 @@ static void convert_vbrace_to_brace(void)
 } // convert_vbrace_to_brace
 
 
-/**
- * Adds a comment after the ref chunk
- * Returns the added chunk or NULL
- */
 chunk_t *insert_comment_after(chunk_t *ref, c_token_t cmt_type,
                               const unc_text &cmt_text)
 {
@@ -845,11 +829,6 @@ static void append_tag_name(unc_text &txt, chunk_t *pc)
 }
 
 
-/*
- * See also it's preprocessor counterpart
- *   add_long_preprocessor_conditional_block_comment
- * in defines.cpp
- */
 void add_long_closebrace_comment(void)
 {
    LOG_FUNC_ENTRY();

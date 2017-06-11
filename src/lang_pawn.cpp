@@ -40,9 +40,7 @@ static bool pawn_continued(chunk_t *pc, size_t br_level);
 static chunk_t *pawn_process_line(chunk_t *start);
 
 
-/**
- * We are on a level 0 function proto of def
- */
+//! We are on a level 0 function proto of def
 static chunk_t *pawn_mark_function0(chunk_t *start, chunk_t *fcn);
 
 

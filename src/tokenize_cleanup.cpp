@@ -36,23 +36,26 @@ static void check_template(chunk_t *start);
  */
 static chunk_t *handle_double_angle_close(chunk_t *pc);
 
+
 /**
  * Marks ObjC specific chunks in propery declaration, by setting
  * parent types and chunk types.
  */
-void cleanup_objc_property(chunk_t *start);
+static void cleanup_objc_property(chunk_t *start);
+
 
 /**
  * Marks ObjC specific chunks in propery declaration (getter/setter attribute)
  * Will mark 'test4Setter'and ':' in '@property (setter=test4Setter:, strong) int test4;' as CT_OC_SEL_NAME
  */
-void mark_selectors_in_property_with_open_paren(chunk_t *open_paren);
+static void mark_selectors_in_property_with_open_paren(chunk_t *open_paren);
+
 
 /**
  * Marks ObjC specific chunks in propery declaration ( attributes)
  * Changes  all the CT_WORD to CT_OC_PROPERTY_ATTR
  */
-void mark_attributes_in_property_with_open_paren(chunk_t *open_paren);
+static void mark_attributes_in_property_with_open_paren(chunk_t *open_paren);
 
 
 static chunk_t *handle_double_angle_close(chunk_t *pc)
@@ -282,9 +285,7 @@ void tokenize_cleanup(void)
          in_type_cast = true;
       }
 
-      /**
-       * Change angle open/close to CT_COMPARE, if not a template thingy
-       */
+      //! Change angle open/close to CT_COMPARE, if not a template thingy
       if ((pc->type == CT_ANGLE_OPEN) && (pc->parent_type != CT_TYPE_CAST))
       {
          /* pretty much all languages except C use <> for something other than
@@ -1109,7 +1110,7 @@ static void check_template(chunk_t *start)
 } // check_template
 
 
-void cleanup_objc_property(chunk_t *start)
+static void cleanup_objc_property(chunk_t *start)
 {
    assert(start && start->type == CT_OC_PROPERTY);
 
@@ -1144,7 +1145,7 @@ void cleanup_objc_property(chunk_t *start)
 }
 
 
-void mark_selectors_in_property_with_open_paren(chunk_t *open_paren)
+static void mark_selectors_in_property_with_open_paren(chunk_t *open_paren)
 {
    assert(open_paren && open_paren->type == CT_PAREN_OPEN);
 
@@ -1175,7 +1176,7 @@ void mark_selectors_in_property_with_open_paren(chunk_t *open_paren)
 }
 
 
-void mark_attributes_in_property_with_open_paren(chunk_t *open_paren)
+static void mark_attributes_in_property_with_open_paren(chunk_t *open_paren)
 {
    assert(open_paren && open_paren->type == CT_PAREN_OPEN);
 

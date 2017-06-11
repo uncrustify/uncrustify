@@ -18,7 +18,8 @@
 template<class T> class ListManager
 {
 protected:
-   /* Pointers to the head and tail.
+   /**
+    * Pointers to the head and tail.
     * They are either both NULL or both non-NULL.
     */
    T *first;

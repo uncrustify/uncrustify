@@ -18,8 +18,11 @@
 
 typedef ListManager<chunk_t> ChunkList_t;
 
-/** use this enum to define in what direction or location an
- * operation shall be performed. */
+
+/**
+ * use this enum to define in what direction or location an
+ * operation shall be performed.
+ */
 enum class direction_e : unsigned int
 {
    FORWARD,
@@ -27,23 +30,23 @@ enum class direction_e : unsigned int
 };
 
 
-/***************************************************************************//**
+/**
  * @brief prototype for a function that checks a chunk to have a given type
  *
  * @note this typedef defines the function type "check_t"
  * for a function pointer of type
  * bool function(chunk_t *pc)
- ******************************************************************************/
+ */
 typedef bool (*check_t)(chunk_t *pc);
 
 
-/***************************************************************************//**
+/**
  * @brief prototype for a function that searches through a chunk list
  *
  * @note this typedef defines the function type "search_t"
  * for a function pointer of type
  * chunk_t *function(chunk_t *cur, nav_t scope)
- ******************************************************************************/
+ */
 typedef chunk_t * (*search_t)(chunk_t *cur, scope_e scope);
 
 
@@ -62,13 +65,14 @@ typedef chunk_t * (*search_t)(chunk_t *cur, scope_e scope);
  * If there are performance issues this function might be worth to
  * be optimized as it is heavily used.
  *
- * @param  cur       chunk to start search at
- * @param  check_fct compare function
- * @param  scope     code parts to consider for search
- * @param  dir       search direction
- * @param  cond      success condition
- * @retval NULL      no requested chunk was found or invalid parameters provided
- * @retval chunk_t   pointer to the found chunk
+ * @param  cur        chunk to start search at
+ * @param  check_fct  compare function
+ * @param  scope      code parts to consider for search
+ * @param  dir        search direction
+ * @param  cond       success condition
+ *
+ * @retval nullptr  no requested chunk was found or invalid parameters provided
+ * @retval chunk_t  pointer to the found chunk
  */
 static chunk_t *chunk_search(chunk_t *cur, const check_t check_fct, const scope_e scope = scope_e::ALL, const direction_e dir = direction_e::FORWARD, const bool cond = true);
 
@@ -87,12 +91,13 @@ static void chunk_log(chunk_t *pc, const char *text);
  *
  * This function is a specialization of chunk_search.
  *
- * @param  cur       chunk to start search at
- * @param  type      category to search for
- * @param  scope     code parts to consider for search
- * @param  dir       search direction
- * @retval NULL      no chunk found or invalid parameters provided
- * @retval chunk_t   pointer to the found chunk
+ * @param  cur     chunk to start search at
+ * @param  type    category to search for
+ * @param  scope   code parts to consider for search
+ * @param  dir     search direction
+ *
+ * @retval NULL     no chunk found or invalid parameters provided
+ * @retval chunk_t  pointer to the found chunk
  */
 static chunk_t *chunk_search_type(chunk_t *cur, const c_token_t type, const scope_e scope = scope_e::ALL, const direction_e dir = direction_e::FORWARD);
 
@@ -100,13 +105,14 @@ static chunk_t *chunk_search_type(chunk_t *cur, const c_token_t type, const scop
 /**
  * @brief search a chunk of a given category in a chunk list
  *
- * @param  cur       chunk to start search at
- * @param  type      category to search for
- * @param  scope     code parts to consider for search
- * @param  dir       search direction
- * @param  level     nesting level
- * @retval NULL      no chunk found or invalid parameters provided
- * @retval chunk_t   pointer to the found chunk
+ * @param  cur    chunk to start search at
+ * @param  type   category to search for
+ * @param  scope  code parts to consider for search
+ * @param  dir    search direction
+ * @param  level  nesting level
+ *
+ * @retval NULL     no chunk found or invalid parameters provided
+ * @retval chunk_t  pointer to the found chunk
  */
 static chunk_t *chunk_search_typelevel(chunk_t *cur, c_token_t type, scope_e scope = scope_e::ALL, direction_e dir = direction_e::FORWARD, int level = -1);
 
@@ -117,11 +123,12 @@ static chunk_t *chunk_search_typelevel(chunk_t *cur, c_token_t type, scope_e sco
  * Traverses a chunk list either in forward or backward direction.
  * The traversal continues until a chunk of a given category is found.
  *
- * @param  cur       chunk to start search at
- * @param  scope     code parts to consider for search
- * @param  dir       search direction
- * @retval NULL      no chunk found or invalid parameters provided
- * @retval chunk_t   pointer to the found chunk
+ * @param  cur    chunk to start search at
+ * @param  scope  code parts to consider for search
+ * @param  dir    search direction
+ *
+ * @retval NULL     no chunk found or invalid parameters provided
+ * @retval chunk_t  pointer to the found chunk
  */
 static chunk_t *chunk_get_ncnlnp(chunk_t *cur, const scope_e scope = scope_e::ALL, const direction_e dir = direction_e::FORWARD);
 
@@ -133,14 +140,15 @@ static chunk_t *chunk_get_ncnlnp(chunk_t *cur, const scope_e scope = scope_e::AL
  * with the provided string was found. Additionally a nesting level can be
  * provided to narrow down the search.
  *
- * @param  cur       chunk to start search at
- * @param  str       string that searched chunk needs to have
- * @param  len       length of the string
- * @param  scope     code parts to consider for search
- * @param  dir       search direction
- * @param  level     nesting level of the searched chunk, ignored when negative
- * @retval NULL      no chunk found or invalid parameters provided
- * @retval chunk_t   pointer to the found chunk
+ * @param  cur    chunk to start search at
+ * @param  str    string that searched chunk needs to have
+ * @param  len    length of the string
+ * @param  scope  code parts to consider for search
+ * @param  dir    search direction
+ * @param  level  nesting level of the searched chunk, ignored when negative
+ *
+ * @retval NULL     no chunk found or invalid parameters provided
+ * @retval chunk_t  pointer to the found chunk
  */
 static chunk_t *chunk_search_str(chunk_t *cur, const char *str, size_t len, scope_e scope, direction_e dir, int level);
 
@@ -150,10 +158,11 @@ static chunk_t *chunk_search_str(chunk_t *cur, const char *str, size_t len, scop
  *
  * If ref is NULL, add either at the head or tail based on the specified pos
  *
- * @param  pc_in     chunk to add to list
- * @param  ref       insert position in list
- * @param  pos       insert before or after
- * @return chunk_t   pointer to the copied chunk
+ * @param  pc_in  chunk to add to list
+ * @param  ref    insert position in list
+ * @param  pos    insert before or after
+ *
+ * @return chunk_t  pointer to the copied chunk
  */
 static chunk_t *chunk_add(const chunk_t *pc_in, chunk_t *ref, const direction_e pos = direction_e::FORWARD);
 
@@ -164,16 +173,14 @@ static chunk_t *chunk_add(const chunk_t *pc_in, chunk_t *ref, const direction_e 
  * Depending on the required search direction return a pointer
  * to the corresponding chunk search function.
  *
- * @param  dir       search direction
+ * @param dir  search direction
+ *
  * @return pointer to chunk search function
  */
 static search_t select_search_fct(const direction_e dir = direction_e::FORWARD);
 
 
-void set_chunk_real(chunk_t *pc, c_token_t token, log_sev_t what, const char *str);
-
-
-ChunkList_t g_cl; /** global chunk list */
+ChunkList_t g_cl; //! global chunk list
 
 
 chunk_t *chunk_get_head(void)
@@ -209,8 +216,10 @@ chunk_t *chunk_search_next_cat(chunk_t *pc, const c_token_t cat)
 static chunk_t *chunk_search_type(chunk_t *cur, const c_token_t type,
                                   const scope_e scope, const direction_e dir)
 {
-   /* Depending on the parameter dir the search function searches
-    * in forward or backward direction */
+   /*
+    * Depending on the parameter dir the search function searches
+    * in forward or backward direction
+    */
    search_t search_function = select_search_fct(dir);
    chunk_t  *pc             = cur;
 
@@ -223,19 +232,12 @@ static chunk_t *chunk_search_type(chunk_t *cur, const c_token_t type,
 }
 
 
-inline bool is_expected_type_and_level(chunk_t *pc, c_token_t type, int level)
-{
-   /* we don't care about the level (if it is negative) or it is as expected  */
-   /* and the type is as expected */
-   return((level < 0 || pc->level == static_cast<size_t>(level))
-          && pc->type == type);
-}
-
-
 static chunk_t *chunk_search_typelevel(chunk_t *cur, c_token_t type, scope_e scope, direction_e dir, int level)
 {
-   /* Depending on the parameter dir the search function searches
-    * in forward or backward direction */
+   /*
+    * Depending on the parameter dir the search function searches
+    * in forward or backward direction
+    */
    search_t search_function = select_search_fct(dir);
    chunk_t  *pc             = cur;
 
@@ -252,15 +254,6 @@ static chunk_t *chunk_search_typelevel(chunk_t *cur, c_token_t type, scope_e sco
    } while ((pc != nullptr) &&       /* the end of the list was not reached yet */
             (is_expected_type_and_level(pc, type, level) == false));
    return(pc);                       /* the latest chunk is the searched one */
-}
-
-
-inline bool is_expected_string_and_level(chunk_t *pc, const char *str, int level, size_t len)
-{
-   /* we don't care about the level (if it is negative) or it is as expected  */
-   return((level < 0 || pc->level == static_cast<size_t>(level))
-          && pc->len() == len                      /* and the length is as expected */
-          && memcmp(str, pc->text(), len) == 0);   /* and the strings are equal*/
 }
 
 
@@ -569,7 +562,7 @@ void chunk_swap(chunk_t *pc1, chunk_t *pc2)
 }
 
 
-/* @todo the following function shall be made similar to the search functions */
+// TODO: the following function shall be made similar to the search functions
 chunk_t *chunk_first_on_line(chunk_t *pc)
 {
    chunk_t *first = pc;
@@ -583,7 +576,7 @@ chunk_t *chunk_first_on_line(chunk_t *pc)
 }
 
 
-/* @todo this function needs some cleanup */
+// TODO: this function needs some cleanup
 void chunk_swap_lines(chunk_t *pc1, chunk_t *pc2)
 {
    pc1 = chunk_first_on_line(pc1);

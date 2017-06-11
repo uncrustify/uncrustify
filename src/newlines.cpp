@@ -31,6 +31,7 @@
 #include "space.h"
 #include "combine.h"
 #include "keywords.h"
+#include "options.h"
 
 
 static void mark_change(const char *func, size_t line);
@@ -46,9 +47,7 @@ static void mark_change(const char *func, size_t line);
 static bool can_increase_nl(chunk_t *nl);
 
 
-/**
- * Double the newline, if allowed.
- */
+//! Double the newline, if allowed.
 static void double_newline(chunk_t *nl);
 
 
@@ -65,15 +64,11 @@ static void double_newline(chunk_t *nl);
 static void setup_newline_add(chunk_t *prev, chunk_t *nl, chunk_t *next);
 
 
-/**
- * Make sure there is a blank line after a commented group of values
- */
+//! Make sure there is a blank line after a commented group of values
 static void newlines_double_space_struct_enum_union(chunk_t *open_brace);
 
 
-/**
- * If requested, make sure each entry in an enum is on its own line
- */
+//! If requested, make sure each entry in an enum is on its own line
 static void newlines_enum_entries(chunk_t *open_brace, argval_t av);
 
 
@@ -90,18 +85,16 @@ static bool one_liner_nl_ok(chunk_t *pc);
 static void nl_create_one_liner(chunk_t *vbrace_open);
 
 
-/**
- * Find the next newline or nl_cont
- */
+//! Find the next newline or nl_cont
 static void nl_handle_define(chunk_t *pc);
 
 
 /**
  * Does the Ignore, Add, Remove, or Force thing between two chunks
  *
- * @param before The first chunk
- * @param after  The second chunk
- * @param av     The IARF value
+ * @param before  The first chunk
+ * @param after   The second chunk
+ * @param av      The IARF value
  */
 static void newline_iarf_pair(chunk_t *before, chunk_t *after, argval_t av);
 
@@ -130,9 +123,7 @@ static void newline_func_def(chunk_t *start);
 static void newline_oc_msg(chunk_t *start);
 
 
-/**
- * Ensure that the next non-comment token after close brace is a newline
- */
+//! Ensure that the next non-comment token after close brace is a newline
 static void newline_end_newline(chunk_t *br_close);
 
 
@@ -208,7 +199,7 @@ static void newlines_enum(chunk_t *start);
  * "} while" vs "} \n while"
  * "} else" vs "} \n else"
  *
- * @param start   The chunk - should be CT_ELSE or CT_WHILE_OF_DO
+ * @param start  The chunk - should be CT_ELSE or CT_WHILE_OF_DO
  */
 static void newlines_cuddle_uncuddle(chunk_t *start, argval_t nl_opt);
 
@@ -220,9 +211,7 @@ static void newlines_cuddle_uncuddle(chunk_t *start, argval_t nl_opt);
 static void newlines_do_else(chunk_t *start, argval_t nl_opt);
 
 
-/**
- * Put a newline before and after a block of variable definitions
- */
+//! Put a newline before and after a block of variable definitions
 static chunk_t *newline_def_blk(chunk_t *start, bool fn_top);
 
 
@@ -261,9 +250,7 @@ static void newline_case(chunk_t *start);
 static void newline_case_colon(chunk_t *start);
 
 
-/**
- * Put a blank line before a return statement, unless it is after an open brace
- */
+//! Put a blank line before a return statement, unless it is after an open brace
 static void newline_before_return(chunk_t *start);
 
 
@@ -277,6 +264,7 @@ static void newline_after_return(chunk_t *start);
 
 
 static void _blank_line_max(chunk_t *pc, const char *text, uncrustify_options uo);
+
 
 #define MARK_CHANGE()    mark_change(__func__, __LINE__)
 
@@ -427,10 +415,6 @@ static void setup_newline_add(chunk_t *prev, chunk_t *nl, chunk_t *next)
 }
 
 
-/**
- * Add a newline before the chunk if there isn't already a newline present.
- * Virtual braces are skipped, as they do not contribute to the output.
- */
 chunk_t *newline_add_before(chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
@@ -470,10 +454,6 @@ chunk_t *newline_force_before(chunk_t *pc)
 }
 
 
-/**
- * Add a newline after the chunk if there isn't already a newline present.
- * Virtual braces are skipped, as they do not contribute to the output.
- */
 chunk_t *newline_add_after(chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
@@ -593,21 +573,6 @@ static void newline_min_after(chunk_t *ref, size_t count, UINT64 flag)
 } // newline_min_after
 
 
-/**
- * Add a newline between two tokens.
- * If there is already a newline between then, nothing is done.
- * Otherwise a newline is inserted.
- *
- * If end is CT_BRACE_OPEN and a comment and newline follow, then
- * the brace open is moved instead of inserting a newline.
- *
- * In this situation:
- *    if (...) { //comment
- *
- * you get:
- *    if (...)   //comment
- *    {
- */
 chunk_t *newline_add_between(chunk_t *start, chunk_t *end)
 {
    LOG_FUNC_ENTRY();
@@ -660,16 +625,6 @@ chunk_t *newline_add_between(chunk_t *start, chunk_t *end)
 } // newline_add_between
 
 
-/**
- * Removes any CT_NEWLINE or CT_NL_CONT between start and end.
- * Start must be before end on the chunk list.
- * If the 'PCF_IN_PREPROC' status differs between two tags, we can't remove
- * the newline.
- *
- * @param start   The starting chunk (if it is a newline, it will be removed!)
- * @param end     The ending chunk (will not be removed, even if it is a newline)
- * @return        true/false - removed something
- */
 void newline_del_between(chunk_t *start, chunk_t *end)
 {
    LOG_FUNC_ENTRY();
@@ -928,6 +883,7 @@ static void _blank_line_set(chunk_t *pc, const char *text, uncrustify_options uo
       MARK_CHANGE();
    }
 }
+
 
 #define blank_line_set(pc, op)    _blank_line_set(pc, #op, op)
 
@@ -2059,12 +2015,6 @@ static void newline_iarf_pair(chunk_t *before, chunk_t *after, argval_t av)
 }
 
 
-/**
- * Does a simple Ignore, Add, Remove, or Force after the given chunk
- *
- * @param pc   The chunk
- * @param av   The IARF value
- */
 void newline_iarf(chunk_t *pc, argval_t av)
 {
    LOG_FUNC_ENTRY();
@@ -2478,10 +2428,6 @@ static bool one_liner_nl_ok(chunk_t *pc)
 } // one_liner_nl_ok
 
 
-/**
- * Clears the PCF_ONE_LINER flag on the current line.
- * Done right before inserting a newline.
- */
 void undo_one_liner(chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
@@ -2553,9 +2499,6 @@ static void nl_create_one_liner(chunk_t *vbrace_open)
 }
 
 
-/**
- * Remove all extra newlines.
- */
 void newlines_remove_newlines(void)
 {
    LOG_FUNC_ENTRY();
@@ -2591,9 +2534,6 @@ void newlines_remove_newlines(void)
 }
 
 
-/**
- * Step through all chunks.
- */
 void newlines_cleanup_braces(bool first)
 {
    LOG_FUNC_ENTRY();
@@ -3347,9 +3287,6 @@ void newline_after_multiline_comment(void)
 }
 
 
-/**
- * Handle insertion of blank lines after label colons
- */
 void newline_after_label_colon(void)
 {
    LOG_FUNC_ENTRY();
@@ -3366,9 +3303,6 @@ void newline_after_label_colon(void)
 }
 
 
-/**
- * Handle insertion/removal of blank lines before if/for/while/do and functions
- */
 void newlines_insert_blank_lines(void)
 {
    LOG_FUNC_ENTRY();
@@ -3423,10 +3357,6 @@ void newlines_insert_blank_lines(void)
 } // newlines_insert_blank_lines
 
 
-/**
- * Handle removal of extra blank lines in functions
- * x <= 0: do nothing, x > 0: allow max x-1 blank lines
- */
 void newlines_functions_remove_extra_blank_lines(void)
 {
    LOG_FUNC_ENTRY();
@@ -3624,12 +3554,6 @@ void newlines_eat_start_end(void)
 } // newlines_eat_start_end
 
 
-/**
- * Searches for a chunk of type chunk_type and moves them, if needed.
- * Will not move tokens that are on their own line or have other than
- * exactly 1 newline before (UO_pos_comma == TRAIL) or after (UO_pos_comma == LEAD).
- * We can't remove a newline if it is right before a preprocessor.
- */
 void newlines_chunk_pos(c_token_t chunk_type, tokenpos_e mode)
 {
    LOG_FUNC_ENTRY();
@@ -3777,10 +3701,6 @@ void newlines_chunk_pos(c_token_t chunk_type, tokenpos_e mode)
 } // newlines_chunk_pos
 
 
-/**
- * Searches for CT_CLASS_COLON and moves them, if needed.
- * Also breaks up the args
- */
 void newlines_class_colon_pos(c_token_t tok)
 {
    LOG_FUNC_ENTRY();
@@ -3952,13 +3872,6 @@ static void _blank_line_max(chunk_t *pc, const char *text, uncrustify_options uo
 #define blank_line_max(pc, op)    _blank_line_max(pc, # op, op)
 
 
-/**
- * Scans for newline tokens and changes the nl_count.
- * A newline token has a minimum nl_count of 1.
- * Note that a blank line is actually 2 newlines, unless the newline is the
- * first chunk.
- * So, most comparisons have +1 below.
- */
 void do_blank_lines(void)
 {
    LOG_FUNC_ENTRY();

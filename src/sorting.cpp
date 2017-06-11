@@ -11,6 +11,12 @@
 #include <regex>
 
 
+enum
+{
+   kIncludeCategoriesCount = UO_include_category_last - UO_include_category_first + 1,
+};
+
+
 struct include_category
 {
    include_category(const char *pattern)
@@ -20,12 +26,20 @@ struct include_category
    std::regex regex;
 };
 
-enum
-{
-   kIncludeCategoriesCount = UO_include_category_last - UO_include_category_first + 1,
-};
 
 include_category *include_categories[kIncludeCategoriesCount];
+
+
+//! Compare two series of chunks, starting with the given ones.
+static int compare_chunks(chunk_t *pc1, chunk_t *pc2);
+
+
+/**
+ * Sorting should be pretty rare and should usually only include a few chunks.
+ * We need to minimize the number of swaps, as those are expensive.
+ * So, we do a min sort.
+ */
+static void do_the_sort(chunk_t **chunks, size_t num_chunks);
 
 
 static void prepare_categories()
@@ -74,20 +88,6 @@ static int get_chunk_priority(chunk_t *pc)
 
    return(kIncludeCategoriesCount);
 }
-
-
-/**
- * Compare two series of chunks, starting with the given ones.
- */
-static int compare_chunks(chunk_t *pc1, chunk_t *pc2);
-
-
-/**
- * Sorting should be pretty rare and should usually only include a few chunks.
- * We need to minimize the number of swaps, as those are expensive.
- * So, we do a min sort.
- */
-static void do_the_sort(chunk_t **chunks, size_t num_chunks);
 
 
 static int compare_chunks(chunk_t *pc1, chunk_t *pc2)

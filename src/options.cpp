@@ -87,17 +87,12 @@ static int                                checkGroupNumber  = -1;
 static int                                checkOptionNumber = -1;
 #endif // DEBUG
 
-const char *get_argtype_name(argtype_e argtype);
 
-/**
- *  only compare alpha-numeric characters
- */
+//!  only compare alpha-numeric characters
 static bool match_text(const char *str1, const char *str2);
 
 
-/**
- * Convert the value string to the correct type in dest.
- */
+//! Convert the value string to the correct type in dest.
 static void convert_value(const option_map_value *entry, const char *val, op_val_t *dest);
 
 
@@ -136,9 +131,9 @@ void unc_begin_group(uncrustify_groups id, const char *short_desc,
 }
 
 
-void unc_add_option(const char *name, uncrustify_options id, argtype_e type,
-                    const char *short_desc, const char *long_desc,
-                    int min_val, int max_val)
+static void unc_add_option(const char *name, uncrustify_options id, argtype_e type,
+                           const char *short_desc, const char *long_desc,
+                           int min_val, int max_val)
 {
 #ifdef DEBUG
    // The order of the calls of 'unc_add_option' in the function 'register_options'
@@ -1949,14 +1944,6 @@ bool is_path_relative(const char *path)
 }
 
 
-/**
- * processes a single line string to extract configuration settings
- * increments cpd.line_number and cpd.error_count, modifies configLine parameter
- *
- * @param configLine: single line string that will be processed
- * @param filename: for log messages, file from which the configLine param was
- *                  extracted
- */
 void process_option_line(char *configLine, const char *filename)
 {
    cpd.line_number++;
@@ -2304,11 +2291,6 @@ void print_options(FILE *pfile)
 } // print_options
 
 
-/**
- * Sets non-zero settings defaults
- *
- * TODO: select from various sets? - i.e., K&R, GNU, Linux, Ben
- */
 void set_option_defaults(void)
 {
    /* set all the default values to zero */

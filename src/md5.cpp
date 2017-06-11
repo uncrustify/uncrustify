@@ -18,16 +18,9 @@
  */
 
 #include "md5.h"
-#include <string.h>               /* memcpy, memset */
+#include <string.h>
 
 
-/**
- * Reverse the bytes in 32-bit chunks.
- * 'buf' might not be word-aligned.
- *
- * @param buf     The byte array to reverse
- * @param n_u32   The number of UINT32's in the data
- */
 void MD5::reverse_u32(UINT8 *buf, int n_u32)
 {
    UINT8 tmp;
@@ -84,10 +77,6 @@ MD5::MD5()
 }
 
 
-/**
- * Start MD5 accumulation.  Set bit count to 0 and buffer to mysterious
- * initialization constants.
- */
 void MD5::Init()
 {
    m_buf[0] = 0x67452301;
@@ -100,10 +89,6 @@ void MD5::Init()
 }
 
 
-/**
- * Update context to reflect the concatenation of another buffer full
- * of bytes.
- */
 void MD5::Update(const void *data, UINT32 len)
 {
    const UINT8 *buf = (const UINT8 *)data;
@@ -158,10 +143,6 @@ void MD5::Update(const void *data, UINT32 len)
 } // MD5::Update
 
 
-/**
- * Final wrapup - pad to 64-byte boundary with the bit pattern
- * 1 0* (64-bit count of bits processed, MSB-first)
- */
 void MD5::Final(UINT8 digest[16])
 {
    /* Compute number of bytes mod 64 */
@@ -213,24 +194,19 @@ void MD5::Final(UINT8 digest[16])
 } // MD5::Final
 
 
-/* The four core functions - F1 is optimized somewhat */
-
+// The four core functions - F1 is optimized somewhat
 /* #define F1(x, y, z) (x & y | ~x & z) */
 #define F1(x, y, z)    (z ^ (x & (y ^ z)))
 #define F2(x, y, z)    F1(z, x, y)
 #define F3(x, y, z)    (x ^ y ^ z)
 #define F4(x, y, z)    (y ^ (x | ~z))
 
-/* This is the central step in the MD5 algorithm. */
+
+// This is the central step in the MD5 algorithm.
 #define MD5STEP(f, w, x, y, z, data, s) \
    ((w) += f((x), (y), (z)) + (data), (w) = (w) << (s) | (w) >> (32 - (s)), (w) += (x))
 
 
-/*
- * The core of the MD5 algorithm, this alters an existing MD5 hash to
- * reflect the addition of 16 longwords of new data.  MD5::Update blocks
- * the data and converts bytes into longwords for this routine.
- */
 void MD5::Transform(UINT32 buf[4], UINT32 in_data[16])
 {
    UINT32 a = buf[0];

@@ -16,10 +16,9 @@
 #include "unc_ctype.h"
 
 
-/**
- * Detect spacing options
- */
+//! Detect spacing options
 static void detect_space_options(void);
+
 
 class sp_votes
 {
@@ -38,7 +37,10 @@ public:
       m_av     = &av;
    }
 
+
+   //! Figure out the result of the vote and maybe update *m_av
    ~sp_votes();
+
 
    void vote(chunk_t *first, chunk_t *second);
 };
@@ -68,9 +70,6 @@ void sp_votes::vote(chunk_t *first, chunk_t *second)
 }
 
 
-/**
- * Figure out the result of the vote and maybe update *m_av
- */
 sp_votes::~sp_votes()
 {
    /* no change if no items were added */

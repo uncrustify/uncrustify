@@ -30,13 +30,11 @@ void indent_preproc(void);
 void indent_to_column(chunk_t *pc, size_t column);
 
 
-/** Same as indent_to_column, except we can move both ways */
+//! Same as indent_to_column, except we can move both ways
 void align_to_column(chunk_t *pc, size_t column);
 
 
-/**
- * Scan to see if the whole file is covered by one #ifdef
- */
+//! Scan to see if the whole file is covered by one #ifdef
 bool ifdef_over_whole_file(void);
 
 
@@ -50,5 +48,6 @@ void reindent_line(chunk_t *pc, size_t column);
 
 
 void quick_indent_again(void);
+
 
 #endif /* INDENT_H_INCLUDED */

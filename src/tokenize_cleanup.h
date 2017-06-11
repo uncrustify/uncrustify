@@ -12,6 +12,9 @@
 
 
 void tokenize_cleanup(void);
+
+
 void split_off_angle_close(chunk_t *pc);
+
 
 #endif /* TOKENIZ_CLEANUP_H_INCLUDED */

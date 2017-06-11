@@ -14,15 +14,11 @@
 #include <cstdlib>
 
 
-/**
- * See if all characters are ASCII (0-127)
- */
+//! See if all characters are ASCII (0-127)
 static bool is_ascii(const vector<UINT8> &data, size_t &non_ascii_cnt, size_t &zero_cnt);
 
 
-/**
- * Convert the array of bytes into an array of ints
- */
+//! Convert the array of bytes into an array of ints
 static bool decode_bytes(const vector<UINT8> &in_data, deque<int> &out_data);
 
 
@@ -33,9 +29,7 @@ static bool decode_bytes(const vector<UINT8> &in_data, deque<int> &out_data);
 static bool decode_utf8(const vector<UINT8> &in_data, deque<int> &out_data);
 
 
-/**
- * Extract 2 bytes from the stream and increment idx by 2
- */
+//! Extract 2 bytes from the stream and increment idx by 2
 static int get_word(const vector<UINT8> &in_data, size_t &idx, bool be);
 
 
@@ -55,15 +49,11 @@ static bool decode_utf16(const vector<UINT8> &in_data, deque<int> &out_data, cha
 static bool decode_bom(const vector<UINT8> &in_data, char_encoding_e &enc);
 
 
-/**
- * Write for ASCII and BYTE encoding
- */
+//! Write for ASCII and BYTE encoding
 static void write_byte(int ch);
 
 
-/**
- * Writes a single character to a file using UTF-8 encoding
- */
+//! Writes a single character to a file using UTF-8 encoding
 static void write_utf8(int ch);
 
 

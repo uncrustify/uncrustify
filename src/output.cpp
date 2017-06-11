@@ -26,13 +26,13 @@ static void do_kw_subst(chunk_t *pc);
 struct cmt_reflow
 {
    chunk_t  *pc;
-   size_t   column;        /* Column of the comment start */
-   size_t   brace_col;     /* Brace column (for indenting with tabs) */
-   size_t   base_col;      /* Base column (for indenting with tabs) */
-   size_t   word_count;    /* number of words on this line */
-   size_t   xtra_indent;   /* extra indent of non-first lines (0 or 1) */
-   unc_text cont_text;     /* fixed text to output at the start of a line (0 to 3 chars) */
-   bool     reflow;        /* reflow the current line */
+   size_t   column;        //! Column of the comment start
+   size_t   brace_col;     //! Brace column (for indenting with tabs)
+   size_t   base_col;      //! Base column (for indenting with tabs)
+   size_t   word_count;    //! number of words on this line
+   size_t   xtra_indent;   //! extra indent of non-first lines (0 or 1)
+   unc_text cont_text;     //! fixed text to output at the start of a line (0 to 3 chars)
+   bool     reflow;        //! reflow the current line
 };
 
 
@@ -44,9 +44,7 @@ static void add_comment_text(const unc_text &text, cmt_reflow &cmt, bool esc_clo
    LOG_FMT(LCONTTEXT, "%s:%d set cont_text to '%s'\n", __func__, __LINE__, cmt.cont_text.c_str())
 
 
-/**
- * All output text is sent here, one char at a time.
- */
+//! All output text is sent here, one char at a time.
 static void add_char(UINT32 ch)
 {
    /* If we did a '\r' and it isn't followed by a '\n', then output a newline */
@@ -210,9 +208,9 @@ static void output_to_column(size_t column, bool allow_tabs)
  * On the first line, column == base_col.
  * On subsequent lines, column >= base_col.
  *
- * @param brace_col the brace-level indent of the comment
- * @param base_col  the indent of the start of the comment (multiline)
- * @param column    the column that we should end up in
+ * @param brace_col  the brace-level indent of the comment
+ * @param base_col   the indent of the start of the comment (multiline)
+ * @param column     the column that we should end up in
  */
 static void cmt_output_indent(size_t brace_col, size_t base_col, size_t column)
 {
@@ -498,7 +496,8 @@ void output_text(FILE *pfile)
 /**
  * Checks for and updates the lead chars.
  *
- * @param line the comment line
+ * @param line  the comment line
+ *
  * @return 0=not present, >0=number of chars that are part of the lead
  */
 static size_t cmt_parse_lead(const unc_text &line, bool is_last)
@@ -572,10 +571,11 @@ static size_t cmt_parse_lead(const unc_text &line, bool is_last)
  *
  * Otherwise, the indent is 0.
  *
- * @param str       The comment string
- * @param len       Length of the comment
- * @param start_col Starting column
- * @return          cmt.xtra_indent is set to 0 or 1
+ * @param str        The comment string
+ * @param len        Length of the comment
+ * @param start_col  Starting column
+ *
+ * @return cmt.xtra_indent is set to 0 or 1
  */
 static void calculate_comment_body_indent(cmt_reflow &cmt, const unc_text &str)
 {
@@ -1971,9 +1971,7 @@ static void output_comment_multi_simple(chunk_t *pc, bool kw_subst)
 } // output_comment_multi_simple
 
 
-/**
- * This renders the #if condition to a string buffer.
- */
+//! This renders the #if condition to a string buffer.
 static void generate_if_conditional_as_text(unc_text &dst, chunk_t *ifdef)
 {
    int column = -1;

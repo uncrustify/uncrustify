@@ -19,48 +19,47 @@
 
 enum argtype_e
 {
-   AT_BOOL,    /**< true / false */
-   AT_IARF,    /**< Ignore / Add / Remove / Force */
-   AT_NUM,     /**< Number */
-   AT_LINE,    /**< Line Endings */
-   AT_POS,     /**< start/end or Trail/Lead */
-   AT_STRING,  /**< string value */
-   AT_UNUM,    /**< unsigned Number */
+   AT_BOOL,    //! true / false
+   AT_IARF,    //! Ignore / Add / Remove / Force
+   AT_NUM,     //! Number
+   AT_LINE,    //! Line Endings
+   AT_POS,     //! start/end or Trail/Lead
+   AT_STRING,  //! string value
+   AT_UNUM,    //! unsigned Number
 };
 
-/** Arg values - these are bit fields*/
+//! Arg values - these are bit fields
 enum argval_t
 {
    AV_IGNORE      = 0,
    AV_ADD         = 1,
    AV_REMOVE      = 2,
-   AV_FORCE       = 3, /**< remove + add */
-   AV_NOT_DEFINED = 4  /* to be used with QT, SIGNAL SLOT macros */
+   AV_FORCE       = 3, //! remove + add
+   AV_NOT_DEFINED = 4  //! to be used with QT, SIGNAL SLOT macros
 };
 
-/** Line endings */
+//! Line endings
 enum lineends_e
 {
-   LE_LF,      /* "\n"   */
-   LE_CRLF,    /* "\r\n" */
-   LE_CR,      /* "\r"   */
-
-   LE_AUTO,    /* keep last */
+   LE_LF,      //! "\n"
+   LE_CRLF,    //! "\r\n"
+   LE_CR,      //! "\r"
+   LE_AUTO,    //! keep last
 };
 
-/** Token position - these are bit fields */
+//! Token position - these are bit fields
 enum tokenpos_e
 {
-   TP_IGNORE      = 0,     /* don't change it */
-   TP_BREAK       = 1,     /* add a newline before or after the if not present */
-   TP_FORCE       = 2,     /* force a newline on one side and not the other */
-   TP_LEAD        = 4,     /* at the start of a line or leading if wrapped line */
+   TP_IGNORE      = 0,     //! don't change it
+   TP_BREAK       = 1,     //! add a newline before or after the if not present
+   TP_FORCE       = 2,     //! force a newline on one side and not the other
+   TP_LEAD        = 4,     //! at the start of a line or leading if wrapped line
    TP_LEAD_BREAK  = (TP_LEAD | TP_BREAK),
    TP_LEAD_FORCE  = (TP_LEAD | TP_FORCE),
-   TP_TRAIL       = 8,     /* at the end of a line or trailing if wrapped line */
+   TP_TRAIL       = 8,     //! at the end of a line or trailing if wrapped line
    TP_TRAIL_BREAK = (TP_TRAIL | TP_BREAK),
    TP_TRAIL_FORCE = (TP_TRAIL | TP_FORCE),
-   TP_JOIN        = 16,    /* remove newlines on both sides */
+   TP_JOIN        = 16,    //! remove newlines on both sides
 };
 
 union op_val_t
@@ -74,7 +73,8 @@ union op_val_t
    size_t     u;
 };
 
-/** Groups for options
+/**
+ * Groups for options
  * The order here must be the same as in the file options.cpp
  */
 enum uncrustify_groups
@@ -97,7 +97,7 @@ enum uncrustify_groups
 };
 
 /**
- * Keep this grouped by functionality
+ * Uncrustify Options
  * The order here must be the same as in the file options.cpp
  */
 enum uncrustify_options
@@ -876,13 +876,81 @@ struct option_map_value
 };
 
 
+const char *get_argtype_name(argtype_e argtype);
+
+
+void unc_begin_group(uncrustify_groups id, const char *short_desc, const char *long_desc = NULL);
+
+
+const option_map_value *unc_find_option(const char *name);
+
+
+void register_options(void);
+
+
+/**
+ * Sets non-zero settings defaults
+ *
+ * TODO: select from various sets? - i.e., K&R, GNU, Linux, Ben
+ */
+void set_option_defaults(void);
+
+
+/**
+ * processes a single line string to extract configuration settings
+ * increments cpd.line_number and cpd.error_count, modifies configLine parameter
+ *
+ * @param configLine  single line string that will be processed
+ * @param filename    for log messages, file from which the configLine param
+ *                    was extracted
+ */
+void process_option_line(char *configLine, const char *filename);
+
+
+int load_option_file(const char *filename);
+
+
+int save_option_file(FILE *pfile, bool withDoc);
+
+
+int save_option_file_kernel(FILE *pfile, bool withDoc, bool only_not_default);
+
+
+int set_option_value(const char *name, const char *value);
+
+
+bool is_path_relative(const char *path);
+
+
+const group_map_value *get_group_name(size_t ug);
+
+
+const option_map_value *get_option_name(uncrustify_options uo);
+
+
+void print_options(FILE *pfile);
+
+
 string argtype_to_string(argtype_e argtype);
+
+
 string bool_to_string(bool val);
+
+
 string argval_to_string(argval_t argval);
+
+
 string number_to_string(int number);
+
+
 string lineends_to_string(lineends_e linends);
+
+
 string tokenpos_to_string(tokenpos_e tokenpos);
+
+
 string op_val_to_string(argtype_e argtype, op_val_t op_val);
+
 
 typedef map<uncrustify_options, option_map_value>::iterator   option_name_map_it;
 typedef map<uncrustify_groups, group_map_value>::iterator     group_map_it;

@@ -21,7 +21,7 @@
 
 using namespace std;
 
-/* Dynamic keyword map */
+// Dynamic keyword map
 typedef map<string, c_token_t> dkwmap;
 static dkwmap dkwm;
 
@@ -29,15 +29,13 @@ static dkwmap dkwm;
 /**
  * Compares two chunk_tag_t entries using strcmp on the strings
  *
- * @param p1   The 'left' entry
- * @param p2   The 'right' entry
+ * @param p1  The 'left' entry
+ * @param p2  The 'right' entry
  */
 static int kw_compare(const void *p1, const void *p2);
 
 
-/**
- * Backs up to the first string match in keywords.
- */
+//! Backs up to the first string match in keywords.
 static const chunk_tag_t *kw_static_first(const chunk_tag_t *tag);
 
 

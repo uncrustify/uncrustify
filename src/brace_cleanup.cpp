@@ -24,7 +24,7 @@
 #include "helper_for_print.h"
 
 
-/*
+/**
  * the value of after determines:
  *   true:  insert_vbrace_close_after(pc, frm)
  *   false: insert_vbrace_open_before(pc, frm)
@@ -38,18 +38,6 @@ static void parse_cleanup(parse_frame_t *frm, chunk_t *pc);
 
 
 /**
- * Called when a statement was just closed and the pse_tos was just
- * decremented.
- *
- * - if the TOS is now VBRACE, insert a CT_VBRACE_CLOSE and recurse.
- * - if the TOS is a complex statement, call handle_complex_close()
- *
- * @return     true - done with this chunk, false - keep processing
- */
-static bool close_statement(parse_frame_t *frm, chunk_t *pc);
-
-
-/**
  * Checks the progression of complex statements.
  * - checks for else after if
  * - checks for if after else
@@ -59,7 +47,8 @@ static bool close_statement(parse_frame_t *frm, chunk_t *pc);
  *
  * @param frm  The parse frame
  * @param pc   The current chunk
- * @return     true - done with this chunk, false - keep processing
+ *
+ * @return true - done with this chunk, false - keep processing
  */
 static bool check_complex_statements(parse_frame_t *frm, chunk_t *pc);
 
@@ -70,7 +59,8 @@ static bool check_complex_statements(parse_frame_t *frm, chunk_t *pc);
  *
  * @param frm  The parse frame
  * @param pc   The current chunk
- * @return     true - done with this chunk, false - keep processing
+ *
+ * @return true - done with this chunk, false - keep processing
  */
 static bool handle_complex_close(parse_frame_t *frm, chunk_t *pc);
 
@@ -87,9 +77,7 @@ static size_t preproc_start(parse_frame_t *frm, chunk_t *pc)
    {
       cpd.in_preproc = next->type;
 
-      /**
-       * If we are in a define, push the frame stack.
-       */
+      // If we are in a define, push the frame stack.
       if (cpd.in_preproc == CT_PP_DEFINE)
       {
          pf_push(frm);
@@ -140,12 +128,7 @@ static void print_stack(log_sev_t logsev, const char *str,
 }
 
 
-/**
- * Scans through the whole list and does stuff.
- * It has to do some tricks to parse preprocessors.
- *
- * TODO: This can be cleaned up and simplified - we can look both forward and backward!
- */
+//TODO: This can be cleaned up and simplified - we can look both forward and backward!
 void brace_cleanup(void)
 {
    LOG_FUNC_ENTRY();
@@ -352,7 +335,7 @@ static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
    {
       chunk_flags_set(pc, PCF_IN_SPAREN);
 
-      /* Mark everything in the a for statement */
+      // Mark everything in the for statement
       for (int tmp = frm->pse_tos - 1; tmp >= 0; tmp--)
       {
          if (frm->pse[tmp].type == CT_FOR)
@@ -402,7 +385,7 @@ static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
       }
    }
 
-   /* Handle close paren, vbrace, brace, and square */
+   // Handle close paren, vbrace, brace, and square
    if ((pc->type == CT_PAREN_CLOSE) ||
        (pc->type == CT_BRACE_CLOSE) ||
        (pc->type == CT_VBRACE_CLOSE) ||
@@ -410,7 +393,7 @@ static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
        (pc->type == CT_MACRO_CLOSE) ||
        (pc->type == CT_SQUARE_CLOSE))
    {
-      /* Change CT_PAREN_CLOSE into CT_SPAREN_CLOSE or CT_FPAREN_CLOSE */
+      // Change CT_PAREN_CLOSE into CT_SPAREN_CLOSE or CT_FPAREN_CLOSE
       if ((pc->type == CT_PAREN_CLOSE) &&
           ((frm->pse[frm->pse_tos].type == CT_FPAREN_OPEN) ||
            (frm->pse[frm->pse_tos].type == CT_SPAREN_OPEN)))
@@ -423,7 +406,7 @@ static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
          }
       }
 
-      /* Make sure the open / close match */
+      // Make sure the open / close match
       if (pc->type != (frm->pse[frm->pse_tos].type + 1))
       {
          if ((frm->pse[frm->pse_tos].type != CT_NONE) &&
@@ -465,7 +448,8 @@ static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
       }
    }
 
-   /* In this state, we expect a semicolon, but we'll also hit the closing
+   /*
+    * In this state, we expect a semicolon, but we'll also hit the closing
     * sparen, so we need to check cpd.consumed to see if the close sparen was
     * aleady handled.
     */
@@ -475,7 +459,8 @@ static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
 
       if (cpd.consumed)
       {
-         /* If consumed, then we are on the close sparen.
+         /*
+          * If consumed, then we are on the close sparen.
           * PAWN: Check the next chunk for a semicolon. If it isn't, then
           * add a virtual semicolon, which will get handled on the next pass.
           */
@@ -1060,7 +1045,7 @@ bool close_statement(parse_frame_t *frm, chunk_t *pc)
               __func__, pc->orig_line, pc->text());
    }
 
-   /**
+   /*
     * Insert a CT_VBRACE_CLOSE, if needed:
     * If we are in a virtual brace and we are not ON a CT_VBRACE_CLOSE add one
     */

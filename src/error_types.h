@@ -9,23 +9,23 @@
 #define ERROR_TYPES_H_INCLUDED
 
 #if 1
-#include <stdlib.h>      /* provides EXIT_SUCCESS and EXIT FAILURE */
+#include <stdlib.h>      // provides EXIT_SUCCESS and EXIT FAILURE
 
-/* \todo if we decided to only use EX_OK and EX_xxx we can
+/* TODO: if we decided to only use EX_OK and EX_xxx we can
  * avoid including stdlib.h here */
 
 #else
-/* \todo I left this to show my modifications
+/* TODO: I left this to show my modifications
  *       remove it after the PR was reviewed     */
 
-/* the good old SUCCESS/FAILURE */
-#define SUCCESS    0      /* same as EX_OK */
-#define FAILURE    -1     /* incompatible to EXIT_FAILURE */
+// the good old SUCCESS/FAILURE
+#define SUCCESS    0      //! same as EX_OK */
+#define FAILURE    -1     //! incompatible to EXIT_FAILURE
 #endif
 
 
 #ifdef WIN32
-/* Windows does not know sysexists.h. Thus define the error codes */
+// Windows does not know sysexists.h. Thus define the error codes
 
 #define EX_OK             0    /* successful termination */
 #define EX__BASE          64   /* base value for error messages */
@@ -47,7 +47,7 @@
 #define EX__MAX           78   /* maximum listed value */
 
 #else /* not WIN32 */
-/* \todo do all non windows systems know sysexits.h, Linux probably not? */
+/* TODO: do all non windows systems know sysexits.h, Linux probably not? */
 #include "sysexits.h"      /* comes from BSD */
 #endif
 

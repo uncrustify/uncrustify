@@ -29,6 +29,7 @@
 #include "lang_pawn.h"
 #include "md5.h"
 #include "newlines.h"
+#include "options.h"
 #include "output.h"
 #include "parens.h"
 #include "prototypes.h"
@@ -82,15 +83,6 @@ static size_t language_flags_from_name(const char *tag);
 static size_t language_flags_from_filename(const char *filename);
 
 
-/**
- * Gets the tag text for a language
- *
- * @param lang    The LANG_xxx enum
- * @return        A string
- */
-const char *language_name_from_flags(size_t lang);
-
-
 static bool read_stdin(file_mem &fm);
 
 
@@ -101,9 +93,6 @@ void uncrustify_end(void);
 
 
 static bool ends_with(const char *filename, const char *tag, bool case_sensitive);
-
-
-void uncrustify_file(const file_mem &fm, FILE *pfout, const char *parsed_file, bool defer_uncrustify_end = false);
 
 
 /**
@@ -133,14 +122,10 @@ static void add_msg_header(c_token_t type, file_mem &fm);
 static void process_source_list(const char *source_list, const char *prefix, const char *suffix, bool no_backup, bool keep_mtime);
 
 
-int load_header_files(void);
-
 static const char *make_output_filename(char *buf, size_t buf_size, const char *filename, const char *prefix, const char *suffix);
 
 
-/**
- * Reinvent the wheel with a file comparison function...
- */
+//! File comparison function
 static bool file_content_matches(const string &filename1, const string &filename2);
 
 
@@ -150,32 +135,14 @@ static string fix_filename(const char *filename);
 static bool bout_content_matches(const file_mem &fm, bool report_status);
 
 
-/**
- * Loads a file into memory
- */
+//! Loads a file into memory
 static int load_mem_file(const char *filename, file_mem &fm);
 
 
-/**
- * Try to load the file from the config folder first and then by name
- */
+//! Try to load the file from the config folder first and then by name
 static int load_mem_file_config(const char *filename, file_mem &fm);
 
 
-/**
- * Replace the brain-dead and non-portable basename().
- * Returns a pointer to the character after the last '/'.
- * The returned value always points into path, unless path is NULL.
- *
- * Input            Returns
- * NULL          => ""
- * "/some/path/" => ""
- * "/some/path"  => "path"
- * "afile"       => "afile"
- *
- * @param path The path to look at
- * @return     Pointer to the character after the last path seperator
- */
 const char *path_basename(const char *path)
 {
    if (path == nullptr)
@@ -1608,9 +1575,7 @@ static void add_msg_header(c_token_t type, file_mem &fm)
 
 static void uncrustify_start(const deque<int> &data)
 {
-   /**
-    * Parse the text into chunks
-    */
+   //! Parse the text into chunks
    tokenize(data, nullptr);
 
    cpd.unc_stage = unc_stage_e::HEADER;
@@ -1649,25 +1614,19 @@ static void uncrustify_start(const deque<int> &data)
     */
    brace_cleanup();
 
-   /**
-    * At this point, the level information is available and accurate.
-    */
+   //! At this point, the level information is available and accurate.
 
    if (cpd.lang_flags & LANG_PAWN)
    {
       pawn_prescan();
    }
 
-   /**
-    * Re-type chunks, combine chunks
-    */
+   //! Re-type chunks, combine chunks
    fix_symbols();
 
    mark_comments();
 
-   /**
-    * Look at all colons ':' and mark labels, :? sequences, etc.
-    */
+   //! Look at all colons ':' and mark labels, :? sequences, etc.
    combine_labels();
 } // uncrustify_start
 
@@ -1732,9 +1691,7 @@ void uncrustify_file(const file_mem &fm, FILE *pfout,
     * The detection code needs as few changes as possible.
     */
    {
-      /**
-       * Add comments before function defs and classes
-       */
+      //! Add comments before function defs and classes
       if (!cpd.func_hdr.data.empty())
       {
          add_func_header(CT_FUNC_DEF, cpd.func_hdr);
@@ -1752,9 +1709,7 @@ void uncrustify_file(const file_mem &fm, FILE *pfout,
          add_msg_header(CT_OC_MSG_DECL, cpd.oc_msg_hdr);
       }
 
-      /**
-       * Change virtual braces into real braces...
-       */
+      //! Change virtual braces into real braces...
       do_braces();
 
       /* Scrub extra semicolons */
@@ -1769,14 +1724,10 @@ void uncrustify_file(const file_mem &fm, FILE *pfout,
          remove_extra_returns();
       }
 
-      /**
-       * Add parens
-       */
+      //! Add parens
       do_parens();
 
-      /**
-       * Modify line breaks as needed
-       */
+      //! Modify line breaks as needed
       bool first = true;
       int  old_changes;
 
@@ -1845,9 +1796,7 @@ void uncrustify_file(const file_mem &fm, FILE *pfout,
 
       mark_comments();
 
-      /**
-       * Add balanced spaces around nested params
-       */
+      //! Add balanced spaces around nested params
       if (cpd.settings[UO_sp_balance_nested_parens].b)
       {
          space_text_balance_nested_parens();
@@ -1868,22 +1817,16 @@ void uncrustify_file(const file_mem &fm, FILE *pfout,
          sort_imports();
       }
 
-      /**
-       * Fix same-line inter-chunk spacing
-       */
+      //! Fix same-line inter-chunk spacing
       space_text();
 
-      /**
-       * Do any aligning of preprocessors
-       */
+      //! Do any aligning of preprocessors
       if (cpd.settings[UO_align_pp_define_span].u > 0)
       {
          align_preprocessor();
       }
 
-      /**
-       * Indent the text
-       */
+      //! Indent the text
       indent_preproc();
       indent_text();
 
@@ -1903,9 +1846,7 @@ void uncrustify_file(const file_mem &fm, FILE *pfout,
          add_long_preprocessor_conditional_block_comment();
       }
 
-      /**
-       * Align everything else, reindent and break at code_width
-       */
+      //! Align everything else, reindent and break at code_width
       first          = true;
       cpd.pass_count = 3;
       do
@@ -1927,18 +1868,14 @@ void uncrustify_file(const file_mem &fm, FILE *pfout,
          }
       } while ((old_changes != cpd.changes) && (cpd.pass_count-- > 0));
 
-      /**
-       * And finally, align the backslash newline stuff
-       */
+      //! And finally, align the backslash newline stuff
       align_right_comments();
       if (cpd.settings[UO_align_nl_cont].b)
       {
          align_backslash_newline();
       }
 
-      /**
-       * Now render it all to the output file
-       */
+      //! Now render it all to the output file
       output_text(pfout);
    }
 
@@ -2015,10 +1952,6 @@ const char *get_token_name(c_token_t token)
 }
 
 
-/**
- * Grab the token id for the text.
- * returns CT_NONE on failure to match
- */
 c_token_t find_token_name(const char *text)
 {
    if ((text != nullptr) && (*text != 0))
@@ -2067,7 +2000,7 @@ static lang_name_t language_names[] =
 };
 
 
-size_t language_flags_from_name(const char *name)
+static size_t language_flags_from_name(const char *name)
 {
    for (const auto &language : language_names)
    {
@@ -2152,9 +2085,13 @@ const char *get_file_extension(int &idx)
 }
 
 
-// maps a file extension to a language flag. include the ".", as in ".c".
-// These ARE case sensitive user file extensions.
 typedef std::map<string, string> extension_map_t;
+/**
+ * maps a file extension to a language flag.
+ *
+ * @note The "." need to be included, as in ".c". The file extensions
+ *       ARE case sensitive.
+ */
 static extension_map_t g_ext_map;
 
 

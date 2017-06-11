@@ -14,12 +14,6 @@
 #include "space.h"
 
 
-/**
- * Resets the two ChunkLists and zeroes local vars.
- *
- * @param span    The row span limit
- * @param thresh  The column threshold
- */
 void AlignStack::Start(size_t span, size_t thresh)
 {
    LOG_FMT(LAS, "Start(%zu, %zu)\n", span, thresh);
@@ -39,9 +33,6 @@ void AlignStack::Start(size_t span, size_t thresh)
 }
 
 
-/**
- * Calls Add on all the skipped items
- */
 void AlignStack::ReAddSkipped()
 {
    if (!m_skipped.Empty())
@@ -64,12 +55,6 @@ void AlignStack::ReAddSkipped()
 }
 
 
-/**
- * Adds an entry to the appropriate stack.
- *
- * @param pc      The chunk
- * @param seqnum  Optional seqnum (0=assign one)
- */
 void AlignStack::Add(chunk_t *start, size_t seqnum)
 {
    LOG_FUNC_ENTRY();
@@ -304,9 +289,6 @@ void AlignStack::Add(chunk_t *start, size_t seqnum)
 } // AlignStack::Add
 
 
-/**
- * Adds some newline and calls Flush() if needed
- */
 void AlignStack::NewLines(size_t cnt)
 {
    if (!m_aligned.Empty())
@@ -325,10 +307,6 @@ void AlignStack::NewLines(size_t cnt)
 }
 
 
-/**
- * Aligns all the stuff in m_aligned.
- * Re-adds 'newer' items in m_skipped.
- */
 void AlignStack::Flush()
 {
    size_t                  last_seqnum = 0;
@@ -477,9 +455,6 @@ void AlignStack::Flush()
 } // AlignStack::Flush
 
 
-/**
- * Resets the stack, discarding anything that was previously added
- */
 void AlignStack::Reset()
 {
    m_aligned.Reset();
@@ -487,9 +462,6 @@ void AlignStack::Reset()
 }
 
 
-/**
- * Aligns everything else and resets the lists.
- */
 void AlignStack::End()
 {
    if (!m_aligned.Empty())

@@ -6,6 +6,9 @@
 #ifndef PUNCTUATORS_H_INCLUDED
 #define PUNCTUATORS_H_INCLUDED
 
+#include "uncrustify_types.h"
+
+
 struct lookup_entry_t
 {
    char              ch;
@@ -33,6 +36,10 @@ struct lookup_entry_t
       }
    };
 };
+
+
+const chunk_tag_t *find_punctuator(const char *str, int lang_flags);
+
 
 static const lookup_entry_t punc_table[] =
 {
@@ -142,5 +149,6 @@ static const lookup_entry_t punc_table[] =
    { '=',   1,   0, &symbols2[30] }, // 103: '~='
    { '~',   0,   0, &symbols2[31] }, // 104: '~~'
 };
+
 
 #endif /* PUNCTUATORS_H_INCLUDED */

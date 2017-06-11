@@ -39,9 +39,11 @@ static void log_rule2(size_t line, const char *rule, chunk_t *first, chunk_t *se
  *
  * @param first   The first chunk
  * @param second  The second chunk
- * @return        AV_IGNORE, AV_ADD, AV_REMOVE or AV_FORCE
+ *
+ * @return AV_IGNORE, AV_ADD, AV_REMOVE or AV_FORCE
  */
 static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool complete);
+
 
 struct no_space_table_t
 {
@@ -49,7 +51,9 @@ struct no_space_table_t
    c_token_t second;
 };
 
-/** this table lists out all combos where a space should NOT be present
+
+/**
+ * this table lists out all combos where a space should NOT be present
  * CT_UNKNOWN is a wildcard.
  *
  * TODO: some of these are no longer needed.
