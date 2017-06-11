@@ -1594,13 +1594,13 @@ static bool parse_next(tok_ctx &ctx, chunk_t &pc)
       }
    }
 
-   //! Parse whitespace
+   // Parse whitespace
    if (parse_whitespace(ctx, pc))
    {
       return(true);
    }
 
-   //! Handle unknown/unhandled preprocessors
+   // Handle unknown/unhandled preprocessors
    if ((cpd.in_preproc > CT_PP_BODYCHUNK) &&
        (cpd.in_preproc <= CT_PP_OTHER))
    {
@@ -1641,13 +1641,13 @@ static bool parse_next(tok_ctx &ctx, chunk_t &pc)
       }
    }
 
-   //! Detect backslash-newline
+   // Detect backslash-newline
    if ((ctx.peek() == '\\') && parse_bs_newline(ctx, pc))
    {
       return(true);
    }
 
-   //! Parse comments
+   // Parse comments
    if (parse_comment(ctx, pc))
    {
       return(true);
@@ -1773,7 +1773,7 @@ static bool parse_next(tok_ctx &ctx, chunk_t &pc)
       }
    }
 
-   //! Parse strings and character constants
+   // Parse strings and character constants
 
 //parse_word(ctx, pc_temp, true);
 //ctx.restore(ctx.c);

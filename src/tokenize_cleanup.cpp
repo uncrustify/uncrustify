@@ -197,7 +197,7 @@ void tokenize_cleanup(void)
          }
       }
 
-      /**
+      /*
        * Change CT_BASE before CT_PAREN_OPEN to CT_WORD.
        * public myclass() : base() {
        * }
@@ -212,7 +212,7 @@ void tokenize_cleanup(void)
          set_chunk_type(next, CT_ENUM_CLASS);
       }
 
-      /**
+      /*
        * Change CT_WORD after CT_ENUM, CT_UNION, or CT_STRUCT to CT_TYPE
        * Change CT_WORD before CT_WORD to CT_TYPE
        */
@@ -255,7 +255,7 @@ void tokenize_cleanup(void)
          }
       }
 
-      /**
+      /*
        * Change CT_STAR to CT_PTR_TYPE if preceded by
        *     CT_TYPE, CT_QUALIFIER, or CT_PTR_TYPE
        * or by a CT_WORD which is preceded by CT_DC_MEMBER: '::aaa *b'
@@ -285,7 +285,7 @@ void tokenize_cleanup(void)
          in_type_cast = true;
       }
 
-      //! Change angle open/close to CT_COMPARE, if not a template thingy
+      // Change angle open/close to CT_COMPARE, if not a template thingy
       if ((pc->type == CT_ANGLE_OPEN) && (pc->parent_type != CT_TYPE_CAST))
       {
          /* pretty much all languages except C use <> for something other than

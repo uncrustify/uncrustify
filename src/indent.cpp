@@ -865,7 +865,7 @@ void indent_text(void)
          }
       }
 
-      //! Handle non-brace closures
+      // Handle non-brace closures
       log_indent_tmp();
 
       token_used = false;
@@ -1048,7 +1048,7 @@ void indent_text(void)
          }
       }
 
-      /**
+      /*
        * Handle stuff that can affect the current indent:
        *  - brace close
        *  - vbrace open
@@ -1353,7 +1353,7 @@ void indent_text(void)
          }
          else
          {
-            /**
+            /*
              * If there isn't a newline between the open brace and the next
              * item, just indent to wherever the next token is.
              * This covers this sort of stuff:
@@ -1801,7 +1801,7 @@ void indent_text(void)
                (pc->type == CT_IMPORT) ||
                (pc->type == CT_USING))
       {
-         /**
+         /*
           * if there is a newline after the '=' or the line starts with a '=',
           * just indent one level,
           * otherwise align on the '='.
@@ -1920,7 +1920,7 @@ void indent_text(void)
          /* anything else? */
       }
 
-      //! Handle shift expression continuation indenting
+      // Handle shift expression continuation indenting
       shiftcontcol = 0;
       if (cpd.settings[UO_indent_shift].b && !(pc->flags & PCF_IN_ENUM) &&
           pc->parent_type != CT_OPERATOR && pc->type != CT_COMMENT &&
@@ -2016,7 +2016,7 @@ void indent_text(void)
          }
       }
 
-      //! Handle variable definition continuation indenting
+      // Handle variable definition continuation indenting
       if ((vardefcol == 0) &&
           ((pc->type == CT_WORD) || (pc->type == CT_FUNC_CTOR_VAR)) &&
           ((pc->flags & PCF_IN_FCN_DEF) == 0) &&
@@ -2052,7 +2052,7 @@ void indent_text(void)
          vardefcol = 0;
       }
 
-      //! Indent the line if needed
+      // Indent the line if needed
       if (did_newline && !chunk_is_newline(pc) && (pc->len() != 0))
       {
          pc->column_indent = frm.pse[frm.pse_tos].indent_tab;
@@ -2066,7 +2066,7 @@ void indent_text(void)
          LOG_FMT(LINDENT2, "%s(%d): orig_line is %zu, %zu/%zu for %s\n",
                  __func__, __LINE__, pc->orig_line, pc->column_indent, indent_column, pc->text());
 
-         /**
+         /*
           * Check for special continuations.
           * Note that some of these could be done as a stack item like
           * everything else
@@ -2385,7 +2385,7 @@ void indent_text(void)
          frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
          log_indent_tmp();
 
-         /**
+         /*
           * Handle the case of a multi-line #define w/o anything on the
           * first line (indent_tmp will be 1 or 0)
           */

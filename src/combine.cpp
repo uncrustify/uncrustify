@@ -1150,7 +1150,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       set_paren_parent(next, pc->type);
    }
 
-   /**
+   /*
     * A word before an open paren is a function call or definition.
     * CT_WORD => CT_FUNC_CALL or CT_FUNC_DEF
     */
@@ -1173,7 +1173,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       }
       else if (pc->type == CT_TYPE)
       {
-         /**
+         /*
           * If we are on a type, then we are either on a C++ style cast, a
           * function or we are on a function type.
           * The only way to tell for sure is to find the close paren and see
@@ -1374,7 +1374,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
 
    if ((cpd.lang_flags & LANG_D) == 0)
    {
-      /**
+      /*
        * Check a paren pair to see if it is a cast.
        * Note that SPAREN and FPAREN have already been marked.
        */
@@ -1510,7 +1510,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       }
    }
 
-   /**
+   /*
     * Change the paren pair after a function/macrofunc.
     * CT_PAREN_OPEN => CT_FPAREN_OPEN
     */
@@ -1646,7 +1646,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       }
    }
 
-   /**
+   /*
     * Bug # 634
     * Check for extern "C" NSString* i;
     * NSString is a type
@@ -1695,7 +1695,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       }
    }
 
-   /**
+   /*
     * Bug # 634
     * Check for __attribute__((visibility ("default"))) NSString* i;
     * NSString is a type
@@ -1851,7 +1851,7 @@ void fix_symbols(void)
    pawn_add_virtual_semicolons();
    process_returns();
 
-   /**
+   /*
     * 2nd pass - handle variable definitions
     * REVISIT: We need function params marked to do this (?)
     */
@@ -1875,7 +1875,7 @@ void fix_symbols(void)
          }
       }
 
-      /**
+      /*
        * A variable definition is possible after at the start of a statement
        * that starts with: QUALIFIER, TYPE, or WORD
        */
@@ -2460,7 +2460,7 @@ static void fix_casts(chunk_t *start)
    }
    else if (count == 1)
    {
-      /**
+      /*
        * We are on a potential cast of the form "(word)".
        * We don't know if the word is a type. So lets guess based on some
        * simple rules:
@@ -2490,7 +2490,7 @@ static void fix_casts(chunk_t *start)
          doubtful_cast = true;
       }
 
-      /**
+      /*
        * If the next item is a * or &, the next item after that can't be a
        * number or string.
        *
@@ -2896,7 +2896,7 @@ static void fix_typedef(chunk_t *start)
       return;
    }
 
-   /**
+   /*
     * Skip over enum/struct/union stuff, as we know it isn't a return type
     * for a function type
     */
@@ -3498,7 +3498,7 @@ static chunk_t *fix_var_def(chunk_t *start)
    }
    LOG_FMT(LFVD2, "\n");
 
-   //! OK we have two or more items, mark types up to the end.
+   // OK we have two or more items, mark types up to the end.
    mark_variable_definition(cs.Get(cs.Len() - 1)->m_pc);
    if (end->type == CT_COMMA)
    {
@@ -3917,7 +3917,7 @@ static void mark_function(chunk_t *pc)
       return;
    }
 
-   /**
+   /*
     * This part detects either chained function calls or a function ptr definition.
     * MYTYPE (*func)(void);
     * mWriter( "class Clst_"c )( somestr.getText() )( " : Cluster {"c ).newline;
@@ -4108,7 +4108,7 @@ static void mark_function(chunk_t *pc)
       //    goto bad_ret_type;
       // }
 
-      /**
+      /*
        * REVISIT:
        * a function def can only occur at brace level, but not inside an
        * assignment, structure, enum, or union.
@@ -4154,7 +4154,7 @@ static void mark_function(chunk_t *pc)
             break;
          }
 
-         /** Skip the word/type before the '.' or '::' */
+         // Skip the word/type before the '.' or '::'
          if ((prev->type == CT_DC_MEMBER) ||
              (prev->type == CT_MEMBER))
          {
@@ -4346,7 +4346,7 @@ static void mark_function(chunk_t *pc)
       }
    }
 
-   /**
+   /*
     * C++ syntax is wacky. We need to check to see if a prototype is really a
     * variable definition with parameters passed into the constructor.
     * Unfortunately, the only mostly reliable way to do so is to guess that

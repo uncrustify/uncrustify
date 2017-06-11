@@ -79,7 +79,7 @@ void AlignStack::Add(chunk_t *start, size_t seqnum)
          m_nl_seqnum = seqnum;
       }
 
-      /**
+      /*
        * SS_IGNORE: no special handling of '*' or '&', only 'foo' is aligned
        *     void     foo;  // gap=5, 'foo' is aligned
        *     char *   foo;  // gap=3, 'foo' is aligned
@@ -260,7 +260,7 @@ void AlignStack::Add(chunk_t *start, size_t seqnum)
                  ali->orig_line, ali->column, m_max_col, endcol, m_min_col);
          m_max_col = endcol;
 
-         /**
+         /*
           * If there were any entries that were skipped, re-add them as they
           * may now be within the threshold
           */

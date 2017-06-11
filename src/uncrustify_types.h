@@ -244,7 +244,7 @@ struct align_ptr_t
 };
 
 
-//! This is the main type of this program
+// This is the main type of this program
 struct chunk_t
 {
    chunk_t()

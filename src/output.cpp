@@ -454,7 +454,7 @@ void output_text(FILE *pfile)
          }
          else
          {
-            /**
+            /*
              * Reformatting multi-line comments can screw up the column.
              * Make sure we don't mess up the spacing on this line.
              * This has to be done here because comments are not formatted

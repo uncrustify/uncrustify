@@ -1830,7 +1830,7 @@ static void newlines_brace_pair(chunk_t *br_open)
 
    if (!nl_close_brace)
    {
-      /**
+      /*
        * If the open brace hits a CT_NEWLINE, CT_NL_CONT, CT_COMMENT_MULTI, or
        * CT_COMMENT_CPP without hitting anything other than CT_COMMENT, then
        * there should be a newline before the close brace.

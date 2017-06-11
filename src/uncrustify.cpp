@@ -1575,7 +1575,7 @@ static void add_msg_header(c_token_t type, file_mem &fm)
 
 static void uncrustify_start(const deque<int> &data)
 {
-   //! Parse the text into chunks
+   // Parse the text into chunks
    tokenize(data, nullptr);
 
    cpd.unc_stage = unc_stage_e::HEADER;
@@ -1600,7 +1600,7 @@ static void uncrustify_start(const deque<int> &data)
       add_file_footer();
    }
 
-   /**
+   /*
     * Change certain token types based on simple sequence.
     * Example: change '[' + ']' to '[]'
     * Note that level info is not yet available, so it is OK to do all
@@ -1608,25 +1608,25 @@ static void uncrustify_start(const deque<int> &data)
     */
    tokenize_cleanup();
 
-   /**
+   /*
     * Detect the brace and paren levels and insert virtual braces.
     * This handles all that nasty preprocessor stuff
     */
    brace_cleanup();
 
-   //! At this point, the level information is available and accurate.
+   // At this point, the level information is available and accurate.
 
    if (cpd.lang_flags & LANG_PAWN)
    {
       pawn_prescan();
    }
 
-   //! Re-type chunks, combine chunks
+   // Re-type chunks, combine chunks
    fix_symbols();
 
    mark_comments();
 
-   //! Look at all colons ':' and mark labels, :? sequences, etc.
+   // Look at all colons ':' and mark labels, :? sequences, etc.
    combine_labels();
 } // uncrustify_start
 
@@ -1686,12 +1686,12 @@ void uncrustify_file(const file_mem &fm, FILE *pfout,
 
    cpd.unc_stage = unc_stage_e::OTHER;
 
-   /**
+   /*
     * Done with detection. Do the rest only if the file will go somewhere.
     * The detection code needs as few changes as possible.
     */
    {
-      //! Add comments before function defs and classes
+      // Add comments before function defs and classes
       if (!cpd.func_hdr.data.empty())
       {
          add_func_header(CT_FUNC_DEF, cpd.func_hdr);
@@ -1709,7 +1709,7 @@ void uncrustify_file(const file_mem &fm, FILE *pfout,
          add_msg_header(CT_OC_MSG_DECL, cpd.oc_msg_hdr);
       }
 
-      //! Change virtual braces into real braces...
+      // Change virtual braces into real braces...
       do_braces();
 
       /* Scrub extra semicolons */
@@ -1724,10 +1724,10 @@ void uncrustify_file(const file_mem &fm, FILE *pfout,
          remove_extra_returns();
       }
 
-      //! Add parens
+      // Add parens
       do_parens();
 
-      //! Modify line breaks as needed
+      // Modify line breaks as needed
       bool first = true;
       int  old_changes;
 
@@ -1796,7 +1796,7 @@ void uncrustify_file(const file_mem &fm, FILE *pfout,
 
       mark_comments();
 
-      //! Add balanced spaces around nested params
+      // Add balanced spaces around nested params
       if (cpd.settings[UO_sp_balance_nested_parens].b)
       {
          space_text_balance_nested_parens();
@@ -1817,16 +1817,16 @@ void uncrustify_file(const file_mem &fm, FILE *pfout,
          sort_imports();
       }
 
-      //! Fix same-line inter-chunk spacing
+      // Fix same-line inter-chunk spacing
       space_text();
 
-      //! Do any aligning of preprocessors
+      // Do any aligning of preprocessors
       if (cpd.settings[UO_align_pp_define_span].u > 0)
       {
          align_preprocessor();
       }
 
-      //! Indent the text
+      // Indent the text
       indent_preproc();
       indent_text();
 
@@ -1846,7 +1846,7 @@ void uncrustify_file(const file_mem &fm, FILE *pfout,
          add_long_preprocessor_conditional_block_comment();
       }
 
-      //! Align everything else, reindent and break at code_width
+      // Align everything else, reindent and break at code_width
       first          = true;
       cpd.pass_count = 3;
       do
@@ -1868,14 +1868,14 @@ void uncrustify_file(const file_mem &fm, FILE *pfout,
          }
       } while ((old_changes != cpd.changes) && (cpd.pass_count-- > 0));
 
-      //! And finally, align the backslash newline stuff
+      // And finally, align the backslash newline stuff
       align_right_comments();
       if (cpd.settings[UO_align_nl_cont].b)
       {
          align_backslash_newline();
       }
 
-      //! Now render it all to the output file
+      // Now render it all to the output file
       output_text(pfout);
    }
 

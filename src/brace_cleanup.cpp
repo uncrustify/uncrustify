@@ -181,7 +181,7 @@ void brace_cleanup(void)
       pc->pp_level    = pp_level;
 
 
-      /**
+      /*
        * #define bodies get the full formatting treatment
        * Also need to pass in the initial '#' to close out any virtual braces.
        */
@@ -363,7 +363,7 @@ static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
       }
    }
 
-   /**
+   /*
     * Check for a virtual brace statement close due to a semicolon.
     * The virtual brace will get handled the next time through.
     * The semicolon isn't handled at all.
@@ -561,7 +561,7 @@ static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
       }
    }
 
-   /**
+   /*
     * Adjust the level for opens & create a stack entry
     * Note that CT_VBRACE_OPEN has already been handled.
     */

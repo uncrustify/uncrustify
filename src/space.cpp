@@ -1968,7 +1968,7 @@ void space_text(void)
          }
          prev_column = column;
 
-         /**
+         /*
           * Apply a general safety check
           * If the two chunks combined will tokenize differently, then we
           * must force a space.

@@ -186,7 +186,7 @@ int pf_check(parse_frame_t *frm, chunk_t *pc)
       {
          pp_level--;
 
-         /**
+         /*
           * For #else of #elif, we want to keep the #if part and throw out the
           * else parts.
           * We check to see what the top type is to see if we just push or
@@ -206,7 +206,7 @@ int pf_check(parse_frame_t *frm, chunk_t *pc)
       }
       else if (pc->parent_type == CT_PP_ENDIF)
       {
-         /**
+         /*
           * we may have [...] [base] [if]-[else] or [...] [base]-[if].
           * Throw out the [else].
           */
@@ -215,7 +215,7 @@ int pf_check(parse_frame_t *frm, chunk_t *pc)
 
          if (frm->in_ifdef == CT_PP_ELSE)
          {
-            /**
+            /*
              * We have: [...] [base] [if]-[else]
              * We want: [...]-[if]
              */
@@ -228,7 +228,7 @@ int pf_check(parse_frame_t *frm, chunk_t *pc)
          }
          else if (frm->in_ifdef == CT_PP_IF)
          {
-            /**
+            /*
              * We have: [...] [base] [if]
              * We want: [...] [base]
              */

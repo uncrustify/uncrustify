@@ -281,7 +281,7 @@ static bool split_line(chunk_t *start)
    LOG_FMT(LSPLIT, "\n");
 #endif // DEBUG
 
-   //! break at maximum line length if ls_code_width is true
+   // break at maximum line length if ls_code_width is true
    if (start->flags & PCF_ONE_LINER)
    {
       LOG_FMT(LSPLIT, " ** ONCE LINER SPLIT **\n");
@@ -326,7 +326,7 @@ static bool split_line(chunk_t *start)
       return(true);
    }
 
-   //! Try to find the best spot to split the line
+   // Try to find the best spot to split the line
    cw_entry ent;
 
    memset(&ent, 0, sizeof(ent));

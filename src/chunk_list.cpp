@@ -587,7 +587,7 @@ void chunk_swap_lines(chunk_t *pc1, chunk_t *pc2)
       return;
    }
 
-   /**
+   /*
     * Example start:
     * ? - start1 - a1 - b1 - nl1 - ? - ref2 - start2 - a2 - b2 - nl2 - ?
     *      ^- pc1                              ^- pc2
@@ -603,7 +603,7 @@ void chunk_swap_lines(chunk_t *pc1, chunk_t *pc2)
       pc2 = tmp;
    }
 
-   /**
+   /*
     * Should now be:
     * ? - start2 - a2 - b2 - start1 - a1 - b1 - nl1 - ? - ref2 - nl2 - ?
     *                         ^- pc1                              ^- pc2
@@ -626,7 +626,7 @@ void chunk_swap_lines(chunk_t *pc1, chunk_t *pc2)
       pc1  = tmp;
    }
 
-   /**
+   /*
     * Should now be:
     * ? - start2 - a2 - b2 - nl1 - ? - ref2 - start1 - a1 - b1 - nl2 - ?
     *                         ^- pc1                              ^- pc2

@@ -470,7 +470,7 @@ chunk_t *pawn_check_vsemicolon(chunk_t *pc)
    /* Grab the open VBrace */
    chunk_t *vb_open = chunk_get_prev_type(pc, CT_VBRACE_OPEN, -1);
 
-   /**
+   /*
     * Grab the item before the newline
     * Don't do anything if:
     *  - the only thing previous is the V-Brace open
