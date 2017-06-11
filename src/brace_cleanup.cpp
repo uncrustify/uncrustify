@@ -71,7 +71,7 @@ static size_t preproc_start(parse_frame_t *frm, chunk_t *pc)
    chunk_t *next;
    size_t  pp_level = cpd.pp_level;
 
-   /* Get the type of preprocessor and handle it */
+   // Get the type of preprocessor and handle it
    next = chunk_get_next_ncnl(pc);
    if (next != nullptr)
    {
@@ -82,19 +82,19 @@ static size_t preproc_start(parse_frame_t *frm, chunk_t *pc)
       {
          pf_push(frm);
 
-         /* a preproc body starts a new, blank frame */
+         // a preproc body starts a new, blank frame
          memset(frm, 0, sizeof(*frm));
          frm->level       = 1;
          frm->brace_level = 1;
 
-         /*TODO: not sure about the next 3 lines */
+         // TODO: not sure about the next 3 lines
          frm->pse_tos                 = 1;
          frm->pse[frm->pse_tos].type  = CT_PP_DEFINE;
          frm->pse[frm->pse_tos].stage = brace_stage_e::NONE;
       }
       else
       {
-         /* Check for #if, #else, #endif, etc */
+         // Check for #if, #else, #endif, etc
          pp_level = pf_check(frm, pc);
       }
    }
@@ -146,26 +146,26 @@ void brace_cleanup(void)
    pc = chunk_get_head();
    while (pc != nullptr)
    {
-      /* Check for leaving a #define body */
+      // Check for leaving a #define body
       if ((cpd.in_preproc != CT_NONE) && ((pc->flags & PCF_IN_PREPROC) == 0))
       {
          if (cpd.in_preproc == CT_PP_DEFINE)
          {
-            /* out of the #define body, restore the frame */
+            // out of the #define body, restore the frame
             pf_pop(&frm);
          }
 
          cpd.in_preproc = CT_NONE;
       }
 
-      /* Check for a preprocessor start */
+      // Check for a preprocessor start
       size_t pp_level = cpd.pp_level;
       if (pc->type == CT_PREPROC)
       {
          pp_level = preproc_start(&frm, pc);
       }
 
-      /* Do before assigning stuff from the frame */
+      // Do before assigning stuff from the frame
       if (cpd.lang_flags & LANG_PAWN)
       {
          if ((frm.pse[frm.pse_tos].type == CT_VBRACE_OPEN) &&
@@ -175,7 +175,7 @@ void brace_cleanup(void)
          }
       }
 
-      /* Assume the level won't change */
+      // Assume the level won't change
       pc->level       = frm.level;
       pc->brace_level = frm.brace_level;
       pc->pp_level    = pp_level;
@@ -213,7 +213,7 @@ static bool maybe_while_of_do(chunk_t *pc)
       return(false);
    }
 
-   /* Find the chunk before the preprocessor */
+   // Find the chunk before the preprocessor
    while ((prev != nullptr) && (prev->flags & PCF_IN_PREPROC))
    {
       prev = chunk_get_prev_ncnl(prev);
@@ -315,7 +315,7 @@ static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
            frm->pse_tos, get_token_name(frm->pse[frm->pse_tos].type),
            (unsigned int)frm->pse[frm->pse_tos].stage);
 
-   /* Mark statement starts */
+   // Mark statement starts
    if (((frm->stmt_count == 0) || (frm->expr_count == 0)) &&
        !chunk_is_semicolon(pc) &&
        (pc->type != CT_BRACE_CLOSE) &&
@@ -345,7 +345,7 @@ static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
          }
       }
 
-      /* Mark the parent on semicolons in for() stmts */
+      // Mark the parent on semicolons in for() stmts
       if ((pc->type == CT_SEMICOLON) &&
           (frm->pse_tos > 1) &&
           (frm->pse[frm->pse_tos - 1].type == CT_FOR))
@@ -354,7 +354,7 @@ static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
       }
    }
 
-   /* Check the progression of complex statements */
+   // Check the progression of complex statements
    if (frm->pse[frm->pse_tos].stage != brace_stage_e::NONE)
    {
       if (check_complex_statements(frm, pc))
@@ -424,7 +424,7 @@ static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
       {
          cpd.consumed = true;
 
-         /* Copy the parent, update the paren/brace levels */
+         // Copy the parent, update the paren/brace levels
          set_chunk_parent(pc, frm->pse[frm->pse_tos].parent);
          frm->level--;
          if ((pc->type == CT_BRACE_CLOSE) ||
@@ -436,11 +436,11 @@ static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
          pc->level       = frm->level;
          pc->brace_level = frm->brace_level;
 
-         /* Pop the entry */
+         // Pop the entry
          frm->pse_tos--;
          print_stack(LBCSPOP, "-Close  ", frm, pc);
 
-         /* See if we are in a complex statement */
+         // See if we are in a complex statement
          if (frm->pse[frm->pse_tos].stage != brace_stage_e::NONE)
          {
             handle_complex_close(frm, pc);
@@ -476,7 +476,7 @@ static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
       }
       else
       {
-         /* Complain if this ISN'T a semicolon, but close out WHILE_OF_DO anyway */
+         // Complain if this ISN'T a semicolon, but close out WHILE_OF_DO anyway
          if ((pc->type == CT_SEMICOLON) || (pc->type == CT_VSEMICOLON))
          {
             cpd.consumed = true;
@@ -492,7 +492,7 @@ static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
       }
    }
 
-   /* Get the parent type for brace and paren open */
+   // Get the parent type for brace and paren open
    c_token_t parent = pc->parent_type;
    if ((pc->type == CT_PAREN_OPEN) ||
        (pc->type == CT_FPAREN_OPEN) ||
@@ -506,7 +506,7 @@ static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
              (pc->type == CT_FPAREN_OPEN) ||
              (pc->type == CT_SPAREN_OPEN))
          {
-            /* Set the parent for parens and change paren type */
+            // Set the parent for parens and change paren type
             if (frm->pse[frm->pse_tos].stage != brace_stage_e::NONE)
             {
                set_chunk_type(pc, CT_SPAREN_OPEN);
@@ -518,22 +518,22 @@ static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
                set_chunk_type(pc, CT_FPAREN_OPEN);
                parent = CT_FUNCTION;
             }
-            /* NS_ENUM and NS_OPTIONS are followed by a (type, name) pair */
+            // NS_ENUM and NS_OPTIONS are followed by a (type, name) pair
             else if ((prev->type == CT_ENUM) &&
                      (cpd.lang_flags & LANG_OC))
             {
-               /* Treat both as CT_ENUM since the syntax is identical */
+               // Treat both as CT_ENUM since the syntax is identical
                set_chunk_type(pc, CT_FPAREN_OPEN);
                parent = CT_ENUM;
             }
             else
             {
-               /* no need to set parent */
+               // no need to set parent
             }
          }
-         else  /* must be CT_BRACE_OPEN */
+         else  // must be CT_BRACE_OPEN
          {
-            /* Set the parent for open braces */
+            // Set the parent for open braces
             if (frm->pse[frm->pse_tos].stage != brace_stage_e::NONE)
             {
                parent = frm->pse[frm->pse_tos].type;
@@ -542,7 +542,7 @@ static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
             {
                parent = CT_ASSIGN;
             }
-            /*  Carry through CT_ENUM parent in NS_ENUM (type, name) { */
+            // Carry through CT_ENUM parent in NS_ENUM (type, name) {
             else if ((prev->type == CT_FPAREN_CLOSE) &&
                      (cpd.lang_flags & LANG_OC) &&
                      (prev->parent_type == CT_ENUM))
@@ -555,7 +555,7 @@ static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
             }
             else
             {
-               /* no need to set parent */
+               // no need to set parent
             }
          }
       }
@@ -637,7 +637,7 @@ static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
       frm->expr_count = 0;
    }
 
-   /* Mark expression starts */
+   // Mark expression starts
    chunk_t *tmp = chunk_get_next_ncnl(pc);
    if ((pc->type == CT_ARITH) ||
        (pc->type == CT_ASSIGN) ||
@@ -675,7 +675,7 @@ static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
       {
          if (!cpd.unc_off_used)
          {
-            /* fatal error */
+            // fatal error
             char *outputMessage;
             outputMessage = make_message("Unmatched BRACE_CLOSE\nat line=%zu, column=%zu\n",
                                          pc->orig_line, pc->orig_col);
@@ -694,25 +694,25 @@ static bool check_complex_statements(parse_frame_t *frm, chunk_t *pc)
    LOG_FUNC_ENTRY();
    c_token_t parent;
 
-   /* Turn an optional paren into either a real paren or a brace */
+   // Turn an optional paren into either a real paren or a brace
    if (frm->pse[frm->pse_tos].stage == brace_stage_e::OP_PAREN1)
    {
       frm->pse[frm->pse_tos].stage = (pc->type != CT_PAREN_OPEN) ? brace_stage_e::BRACE2 : brace_stage_e::PAREN1;
    }
 
-   /* Check for CT_ELSE after CT_IF */
+   // Check for CT_ELSE after CT_IF
    while (frm->pse[frm->pse_tos].stage == brace_stage_e::ELSE)
    {
       if (pc->type == CT_ELSE)
       {
-         /* Replace CT_IF with CT_ELSE on the stack & we are done */
+         // Replace CT_IF with CT_ELSE on the stack & we are done
          frm->pse[frm->pse_tos].type  = CT_ELSE;
          frm->pse[frm->pse_tos].stage = brace_stage_e::ELSEIF;
          print_stack(LBCSSWAP, "=Swap   ", frm, pc);
          return(true);
       }
 
-      /* Remove the CT_IF and close the statement */
+      // Remove the CT_IF and close the statement
       frm->pse_tos--;
       print_stack(LBCSPOP, "-IF-CCS ", frm, pc);
       if (close_statement(frm, pc))
@@ -721,7 +721,7 @@ static bool check_complex_statements(parse_frame_t *frm, chunk_t *pc)
       }
    }
 
-   /* Check for CT_IF after CT_ELSE */
+   // Check for CT_IF after CT_ELSE
    if (frm->pse[frm->pse_tos].stage == brace_stage_e::ELSEIF)
    {
       if (pc->type == CT_IF)
@@ -729,7 +729,7 @@ static bool check_complex_statements(parse_frame_t *frm, chunk_t *pc)
          if (!cpd.settings[UO_indent_else_if].b ||
              !chunk_is_newline(chunk_get_prev_nc(pc)))
          {
-            /* Replace CT_ELSE with CT_IF */
+            // Replace CT_ELSE with CT_IF
             set_chunk_type(pc, CT_ELSEIF);
             frm->pse[frm->pse_tos].type  = CT_ELSEIF;
             frm->pse[frm->pse_tos].stage = brace_stage_e::PAREN1;
@@ -737,23 +737,23 @@ static bool check_complex_statements(parse_frame_t *frm, chunk_t *pc)
          }
       }
 
-      /* Jump to the 'expecting brace' stage */
+      // Jump to the 'expecting brace' stage
       frm->pse[frm->pse_tos].stage = brace_stage_e::BRACE2;
    }
 
-   /* Check for CT_CATCH or CT_FINALLY after CT_TRY or CT_CATCH */
+   // Check for CT_CATCH or CT_FINALLY after CT_TRY or CT_CATCH
    while (frm->pse[frm->pse_tos].stage == brace_stage_e::CATCH)
    {
       if ((pc->type == CT_CATCH) || (pc->type == CT_FINALLY))
       {
-         /* Replace CT_TRY with CT_CATCH on the stack & we are done */
+         // Replace CT_TRY with CT_CATCH on the stack & we are done
          frm->pse[frm->pse_tos].type  = pc->type;
          frm->pse[frm->pse_tos].stage = (pc->type == CT_CATCH) ? brace_stage_e::CATCH_WHEN : brace_stage_e::BRACE2;
          print_stack(LBCSSWAP, "=Swap   ", frm, pc);
          return(true);
       }
 
-      /* Remove the CT_TRY and close the statement */
+      // Remove the CT_TRY and close the statement
       frm->pse_tos--;
       print_stack(LBCSPOP, "-TRY-CCS ", frm, pc);
       if (close_statement(frm, pc))
@@ -762,12 +762,12 @@ static bool check_complex_statements(parse_frame_t *frm, chunk_t *pc)
       }
    }
 
-   /* Check for optional paren and optional CT_WHEN after CT_CATCH */
+   // Check for optional paren and optional CT_WHEN after CT_CATCH
    if (frm->pse[frm->pse_tos].stage == brace_stage_e::CATCH_WHEN)
    {
       if (pc->type == CT_PAREN_OPEN) // this is for the paren after "catch"
       {
-         /* Replace CT_PAREN_OPEN with CT_SPAREN_OPEN */
+         // Replace CT_PAREN_OPEN with CT_SPAREN_OPEN
          set_chunk_type(pc, CT_SPAREN_OPEN);
          frm->pse[frm->pse_tos].type  = pc->type;
          frm->pse[frm->pse_tos].stage = brace_stage_e::PAREN1;
@@ -788,7 +788,7 @@ static bool check_complex_statements(parse_frame_t *frm, chunk_t *pc)
       }
    }
 
-   /* Check for CT_WHILE after the CT_DO */
+   // Check for CT_WHILE after the CT_DO
    if (frm->pse[frm->pse_tos].stage == brace_stage_e::WHILE)
    {
       if (pc->type == CT_WHILE)
@@ -806,7 +806,7 @@ static bool check_complex_statements(parse_frame_t *frm, chunk_t *pc)
       cpd.error_count++;
    }
 
-   /* Insert a CT_VBRACE_OPEN, if needed */
+   // Insert a CT_VBRACE_OPEN, if needed
    if ((pc->type != CT_BRACE_OPEN) &&
        ((frm->pse[frm->pse_tos].stage == brace_stage_e::BRACE2) ||
         (frm->pse[frm->pse_tos].stage == brace_stage_e::BRACE_DO)))
@@ -830,11 +830,11 @@ static bool check_complex_statements(parse_frame_t *frm, chunk_t *pc)
          push_fmr_pse(frm, vbrace, brace_stage_e::NONE, "+VBrace ");
          frm->pse[frm->pse_tos].parent = parent;
 
-         /* update the level of pc */
+         // update the level of pc
          pc->level       = frm->level;
          pc->brace_level = frm->brace_level;
 
-         /* Mark as a start of a statement */
+         // Mark as a start of a statement
          frm->stmt_count = 0;
          frm->expr_count = 0;
          pc->flags      |= PCF_STMT_START | PCF_EXPR_START;
@@ -844,7 +844,7 @@ static bool check_complex_statements(parse_frame_t *frm, chunk_t *pc)
       }
    }
 
-   /* Verify open paren in complex statement */
+   // Verify open paren in complex statement
    if ((pc->type != CT_PAREN_OPEN) &&
        ((frm->pse[frm->pse_tos].stage == brace_stage_e::PAREN1) ||
         (frm->pse[frm->pse_tos].stage == brace_stage_e::WOD_PAREN)))
@@ -853,7 +853,7 @@ static bool check_complex_statements(parse_frame_t *frm, chunk_t *pc)
               cpd.filename, pc->orig_line, pc->text(),
               get_token_name(frm->pse[frm->pse_tos].type));
 
-      /* Throw out the complex statement */
+      // Throw out the complex statement
       frm->pse_tos--;
       print_stack(LBCSPOP, "-Error  ", frm, pc);
       cpd.error_count++;
@@ -877,18 +877,18 @@ static bool handle_complex_close(parse_frame_t *frm, chunk_t *pc)
          return(true);
       }
 
-      /* PAREN1 always => BRACE2 */
+      // PAREN1 always => BRACE2
       frm->pse[frm->pse_tos].stage = brace_stage_e::BRACE2;
    }
    else if (frm->pse[frm->pse_tos].stage == brace_stage_e::BRACE2)
    {
-      /* BRACE2: IF => ELSE, anyting else => close */
+      // BRACE2: IF => ELSE, anyting else => close
       if ((frm->pse[frm->pse_tos].type == CT_IF) ||
           (frm->pse[frm->pse_tos].type == CT_ELSEIF))
       {
          frm->pse[frm->pse_tos].stage = brace_stage_e::ELSE;
 
-         /* If the next chunk isn't CT_ELSE, close the statement */
+         // If the next chunk isn't CT_ELSE, close the statement
          next = chunk_get_next_ncnl(pc);
          if ((next != nullptr) && (next->type != CT_ELSE))
          {
@@ -905,7 +905,7 @@ static bool handle_complex_close(parse_frame_t *frm, chunk_t *pc)
       {
          frm->pse[frm->pse_tos].stage = brace_stage_e::CATCH;
 
-         /* If the next chunk isn't CT_CATCH or CT_FINALLY, close the statement */
+         // If the next chunk isn't CT_CATCH or CT_FINALLY, close the statement
          next = chunk_get_next_ncnl(pc);
          if ((next != nullptr) &&
              (next->type != CT_CATCH) &&
@@ -956,7 +956,7 @@ static bool handle_complex_close(parse_frame_t *frm, chunk_t *pc)
    }
    else
    {
-      /* PROBLEM */
+      // PROBLEM
       LOG_FMT(LWARN, "%s:%zu Error: TOS.type='%s' TOS.stage=%u\n",
               cpd.filename, pc->orig_line,
               get_token_name(frm->pse[frm->pse_tos].type),
@@ -1000,7 +1000,7 @@ static chunk_t *insert_vbrace(chunk_t *pc, bool after, parse_frame_t *frm)
          ref = chunk_get_prev(ref);
       }
 
-      /* Don't back into a preprocessor */
+      // Don't back into a preprocessor
       if (((pc->flags & PCF_IN_PREPROC) == 0) &&
           (ref->flags & PCF_IN_PREPROC))
       {
@@ -1051,14 +1051,14 @@ bool close_statement(parse_frame_t *frm, chunk_t *pc)
     */
    if (frm->pse[frm->pse_tos].type == CT_VBRACE_OPEN)
    {
-      /* If the current token has already been consumed, then add after it */
+      // If the current token has already been consumed, then add after it
       if (cpd.consumed)
       {
          insert_vbrace_close_after(pc, frm);
       }
       else
       {
-         /* otherwise, add before it and consume the vbrace */
+         // otherwise, add before it and consume the vbrace
          vbc = chunk_get_prev_ncnl(pc);
          vbc = insert_vbrace_close_after(vbc, frm);
          set_chunk_parent(vbc, frm->pse[frm->pse_tos].parent);
@@ -1067,19 +1067,19 @@ bool close_statement(parse_frame_t *frm, chunk_t *pc)
          frm->brace_level--;
          frm->pse_tos--;
 
-         /* Update the token level */
+         // Update the token level
          pc->level       = frm->level;
          pc->brace_level = frm->brace_level;
 
          print_stack(LBCSPOP, "-CS VB  ", frm, pc);
 
-         /* And repeat the close */
+         // And repeat the close
          close_statement(frm, pc);
          return(true);
       }
    }
 
-   /* See if we are done with a complex statement */
+   // See if we are done with a complex statement
    if (frm->pse[frm->pse_tos].stage != brace_stage_e::NONE)
    {
       if (handle_complex_close(frm, vbc))

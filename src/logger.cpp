@@ -79,7 +79,7 @@ static void log_end(void);
  */
 void log_init(FILE *log_file)
 {
-   /* set the top 3 severities */
+   // set the top 3 severities
    logmask_set_all(g_log.mask, false);
    log_set_sev(LSYS, true);
    log_set_sev(LERR, true);
@@ -130,7 +130,7 @@ void log_flush(bool force_nl)
       }
       if (fwrite(g_log.buf, g_log.buf_len, 1, g_log.log_file) != 1)
       {
-         /* maybe we should log something to complain... =) */
+         // maybe we should log something to complain... =)
       }
 
       g_log.buf_len = 0;
@@ -150,7 +150,7 @@ static size_t log_start(log_sev_t sev)
       g_log.in_log = false;
    }
 
-   /* If not in a log, the buffer is empty. Add the header, if enabled. */
+   // If not in a log, the buffer is empty. Add the header, if enabled.
    if (!g_log.in_log && g_log.show_hdr)
    {
       g_log.buf_len = static_cast<size_t>(snprintf(g_log.buf, sizeof(g_log.buf), "<%d>", sev));
@@ -207,7 +207,7 @@ void log_fmt(log_sev_t sev, const char *fmt, ...)
     */
    size_t cap = log_start(sev);
 
-   /* Add on the variable log parameters to the log string */
+   // Add on the variable log parameters to the log string
    va_list args;
    va_start(args, fmt);
    size_t  len = static_cast<size_t>(vsnprintf(&g_log.buf[g_log.buf_len], cap, fmt, args));
@@ -276,7 +276,7 @@ void log_hex_blk(log_sev_t sev, const void *data, size_t len)
     * creating a string and then calling log_str()
     */
 
-   /* Loop through the data of the current iov */
+   // Loop through the data of the current iov
    int count = 0;
    int total = 0;
    for (size_t idx = 0; idx < len; idx++)
@@ -308,16 +308,14 @@ void log_hex_blk(log_sev_t sev, const void *data, size_t len)
       }
    }
 
-   /*
-   ** Print partial line if any
-   */
+   // Print partial line if any
    if (count != 0)
    {
-      /* Clear out any junk */
+      // Clear out any junk
       while (count < 16)
       {
-         buf[str_idx]     = ' ';   /* MSB hex */
-         buf[str_idx + 1] = ' ';   /* LSB hex */
+         buf[str_idx]     = ' ';   // MSB hex
+         buf[str_idx + 1] = ' ';   // LSB hex
          str_idx         += 3;
 
          buf[chr_idx++] = ' ';
@@ -343,7 +341,7 @@ log_func::~log_func()
 
 void log_func_call(int line)
 {
-   /* REVISIT: pass the __func__ and verify it matches the top entry? */
+   // REVISIT: pass the __func__ and verify it matches the top entry?
    if (!g_fq.empty())
    {
       g_fq.back().line = line;

@@ -337,7 +337,7 @@ void add_keyword(const char *tag, c_token_t type)
 {
    string ss = tag;
 
-   /* See if the keyword has already been added */
+   // See if the keyword has already been added
    dkwmap::iterator it = dkwm.find(ss);
 
    if (it != dkwm.end())
@@ -347,7 +347,7 @@ void add_keyword(const char *tag, c_token_t type)
       return;
    }
 
-   /* Insert the keyword */
+   // Insert the keyword
    dkwm.insert(dkwmap::value_type(ss, type));
    LOG_FMT(LDYNKW, "%s: added '%s' as %d\n", __func__, tag, type);
 }
@@ -413,7 +413,7 @@ c_token_t find_keyword_type(const char *word, size_t len)
       return(CT_NONE);
    }
 
-   /* check the dynamic word list first */
+   // check the dynamic word list first
    string           ss(word, len);
    dkwmap::iterator it = dkwm.find(ss);
    if (it != dkwm.end())
@@ -424,7 +424,7 @@ c_token_t find_keyword_type(const char *word, size_t len)
    chunk_tag_t key;
    key.tag = ss.c_str();
 
-   /* check the static word list */
+   // check the static word list
    const chunk_tag_t *p_ret = static_cast<const chunk_tag_t *>(
       bsearch(&key, keywords, ARRAY_SIZE(keywords), sizeof(keywords[0]), kw_compare));
 
@@ -458,7 +458,7 @@ int load_keyword_file(const char *filename)
    {
       line_no++;
 
-      /* remove comments */
+      // remove comments
       char *ptr;
       if ((ptr = strchr(buf, '#')) != nullptr)
       {

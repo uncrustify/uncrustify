@@ -34,7 +34,7 @@ void add_define(const char *tag, const char *value)
    }
    value = value ? value : "";
 
-   /* Try to update an existing entry first */
+   // Try to update an existing entry first
    defmap::iterator it = defines.find(tag);
    if (it != defines.end())
    {
@@ -43,7 +43,7 @@ void add_define(const char *tag, const char *value)
       return;
    }
 
-   /* Insert a new entry */
+   // Insert a new entry
    defines.insert(defmap::value_type(tag, value));
    LOG_FMT(LDEFVAL, "%s: added '%s' = '%s'\n", __func__, tag, value);
 }
@@ -68,7 +68,7 @@ int load_define_file(const char *filename)
    {
       line_no++;
 
-      /* remove comments */
+      // remove comments
       char *ptr;
       if ((ptr = strchr(buf, '#')) != nullptr)
       {

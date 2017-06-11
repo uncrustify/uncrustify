@@ -21,7 +21,7 @@ class Args
 protected:
    size_t m_count;
    char   **m_values;
-   UINT8  *m_used;      /* array of bits */
+   UINT8  *m_used;      // array of bits
 
 public:
    /**

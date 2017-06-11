@@ -94,29 +94,29 @@ void encode_utf8(int ch, vector<UINT8> &res)
 {
    if (ch < 0)
    {
-      /* illegal code - do not store */
+      // illegal code - do not store
    }
    else if (ch < 0x80)
    {
-      /* 0xxxxxxx */
+      // 0xxxxxxx
       res.push_back(ch);
    }
    else if (ch < 0x0800)
    {
-      /* 110xxxxx 10xxxxxx */
+      // 110xxxxx 10xxxxxx
       res.push_back(0xC0 | (ch >> 6));
       res.push_back(0x80 | (ch & 0x3f));
    }
    else if (ch < 0x10000)
    {
-      /* 1110xxxx 10xxxxxx 10xxxxxx */
+      // 1110xxxx 10xxxxxx 10xxxxxx
       res.push_back(0xE0 | (ch >> 12));
       res.push_back(0x80 | ((ch >> 6) & 0x3f));
       res.push_back(0x80 | (ch & 0x3f));
    }
    else if (ch < 0x200000)
    {
-      /* 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx */
+      // 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx
       res.push_back(0xF0 | (ch >> 18));
       res.push_back(0x80 | ((ch >> 12) & 0x3f));
       res.push_back(0x80 | ((ch >> 6) & 0x3f));
@@ -124,16 +124,16 @@ void encode_utf8(int ch, vector<UINT8> &res)
    }
    else if (ch < 0x4000000)
    {
-      /* 111110xx 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx */
+      // 111110xx 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx
       res.push_back(0xF8 | (ch >> 24));
       res.push_back(0x80 | ((ch >> 18) & 0x3f));
       res.push_back(0x80 | ((ch >> 12) & 0x3f));
       res.push_back(0x80 | ((ch >> 6) & 0x3f));
       res.push_back(0x80 | (ch & 0x3f));
    }
-   else /* (ch <= 0x7fffffff) */
+   else // (ch <= 0x7fffffff)
    {
-      /* 1111110x 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx */
+      // 1111110x 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx
       res.push_back(0xFC | (ch >> 30));
       res.push_back(0x80 | ((ch >> 24) & 0x3f));
       res.push_back(0x80 | ((ch >> 18) & 0x3f));
@@ -151,14 +151,14 @@ static bool decode_utf8(const vector<UINT8> &in_data, deque<int> &out_data)
 
    out_data.clear();
 
-   /* check for UTF-8 BOM silliness and skip */
+   // check for UTF-8 BOM silliness and skip
    if (in_data.size() >= 3)
    {
       if ((in_data[0] == 0xef) &&
           (in_data[1] == 0xbb) &&
           (in_data[2] == 0xbf))
       {
-         /* skip it */
+         // skip it
          idx = 3;
       }
    }
@@ -166,39 +166,39 @@ static bool decode_utf8(const vector<UINT8> &in_data, deque<int> &out_data)
    while (idx < in_data.size())
    {
       int ch = in_data[idx++];
-      if (ch < 0x80)                   /* 1-byte sequence */
+      if (ch < 0x80)                   // 1-byte sequence
       {
          out_data.push_back(ch);
          continue;
       }
-      else if ((ch & 0xE0) == 0xC0)    /* 2-byte sequence */
+      else if ((ch & 0xE0) == 0xC0)    // 2-byte sequence
       {
          ch &= 0x1F;
          cnt = 1;
       }
-      else if ((ch & 0xF0) == 0xE0)    /* 3-byte sequence */
+      else if ((ch & 0xF0) == 0xE0)    // 3-byte sequence
       {
          ch &= 0x0F;
          cnt = 2;
       }
-      else if ((ch & 0xF8) == 0xF0)    /* 4-byte sequence */
+      else if ((ch & 0xF8) == 0xF0)    // 4-byte sequence
       {
          ch &= 0x07;
          cnt = 3;
       }
-      else if ((ch & 0xFC) == 0xF8)    /* 5-byte sequence */
+      else if ((ch & 0xFC) == 0xF8)    // 5-byte sequence
       {
          ch &= 0x03;
          cnt = 4;
       }
-      else if ((ch & 0xFE) == 0xFC)    /* 6-byte sequence */
+      else if ((ch & 0xFE) == 0xFC)    // 6-byte sequence
       {
          ch &= 0x01;
          cnt = 5;
       }
       else
       {
-         /* invalid UTF-8 sequence */
+         // invalid UTF-8 sequence
          return(false);
       }
 
@@ -207,14 +207,14 @@ static bool decode_utf8(const vector<UINT8> &in_data, deque<int> &out_data)
          int tmp = in_data[idx++];
          if ((tmp & 0xC0) != 0x80)
          {
-            /* invalid UTF-8 sequence */
+            // invalid UTF-8 sequence
             return(false);
          }
          ch = (ch << 6) | (tmp & 0x3f);
       }
       if (cnt >= 0)
       {
-         /* short UTF-8 sequence */
+         // short UTF-8 sequence
          return(false);
       }
       out_data.push_back(ch);
@@ -250,13 +250,13 @@ static bool decode_utf16(const vector<UINT8> &in_data, deque<int> &out_data, cha
 
    if (in_data.size() & 1)
    {
-      /* can't have and odd length */
+      // can't have and odd length
       return(false);
    }
 
    if (in_data.size() < 2)
    {
-      /* we require the BOM or at least 1 char */
+      // we require the BOM or at least 1 char
       return(false);
    }
 
@@ -316,7 +316,7 @@ static bool decode_utf16(const vector<UINT8> &in_data, deque<int> &out_data, cha
       }
       else
       {
-         /* invalid character */
+         // invalid character
          return(false);
       }
    }
@@ -354,7 +354,7 @@ static bool decode_bom(const vector<UINT8> &in_data, char_encoding_e &enc)
 
 bool decode_unicode(const vector<UINT8> &in_data, deque<int> &out_data, char_encoding_e &enc, bool &has_bom)
 {
-   /* check for a BOM */
+   // check for a BOM
    if (decode_bom(in_data, enc))
    {
       has_bom = true;
@@ -367,7 +367,7 @@ bool decode_unicode(const vector<UINT8> &in_data, deque<int> &out_data, char_enc
    }
    has_bom = false;
 
-   /* Check for simple ASCII */
+   // Check for simple ASCII
    size_t non_ascii_cnt;
    size_t zero_cnt;
    if (is_ascii(in_data, non_ascii_cnt, zero_cnt))
@@ -376,11 +376,11 @@ bool decode_unicode(const vector<UINT8> &in_data, deque<int> &out_data, char_enc
       return(decode_bytes(in_data, out_data));
    }
 
-   /* There are alot of 0's in UTF-16 (~50%) */
+   // There are alot of 0's in UTF-16 (~50%)
    if ((zero_cnt > (in_data.size() / 4)) &&
        (zero_cnt <= (in_data.size() / 2)))
    {
-      /* likely is UTF-16 */
+      // likely is UTF-16
       if (decode_utf16(in_data, out_data, enc))
       {
          return(true);
@@ -393,7 +393,7 @@ bool decode_unicode(const vector<UINT8> &in_data, deque<int> &out_data, char_enc
       return(true);
    }
 
-   /* it is an unrecognized byte sequence */
+   // it is an unrecognized byte sequence
    enc = char_encoding_e::e_BYTE;
    return(decode_bytes(in_data, out_data));
 } // decode_unicode
@@ -414,7 +414,7 @@ static void write_byte(int ch)
    }
    else
    {
-      /* illegal code - do not store */
+      // illegal code - do not store
    }
 }
 
@@ -434,7 +434,7 @@ static void write_utf8(int ch)
 
 static void write_utf16(int ch, bool be)
 {
-   /* U+0000 to U+D7FF and U+E000 to U+FFFF */
+   // U+0000 to U+D7FF and U+E000 to U+FFFF
    if (((ch >= 0) && (ch < 0xD800)) || ((ch >= 0xE000) && (ch < 0x10000)))
    {
       if (be)
@@ -470,7 +470,7 @@ static void write_utf16(int ch, bool be)
    }
    else
    {
-      /* illegal code - do not store */
+      // illegal code - do not store
    }
 }
 

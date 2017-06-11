@@ -56,7 +56,9 @@ void prot_the_line(int theLine, unsigned int actual_line)
 }
 
 
-// \todo examine_Data seems not to be used, is it still required?
+// TODO: examine_Data seems not to be used, is it still required?
+
+
 // examples:
 //   examine_Data(__func__, __LINE__, n);
 void examine_Data(const char *func_name, int theLine, int what)

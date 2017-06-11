@@ -15,7 +15,7 @@ using namespace std;
 
 #include "base_types.h"
 #include "options.h"
-#include "token_enum.h"    /* c_token_t */
+#include "token_enum.h"    // c_token_t
 #include "log_levels.h"
 #include "logger.h"
 #include "unc_text.h"
@@ -108,7 +108,7 @@ struct paren_stack_entry_t
    indent_ptr_t  ip;
 };
 
-/* TODO: put this on a linked list */
+// TODO: put this on a linked list
 struct parse_frame_t
 {
    int                 ref_no;
@@ -132,7 +132,7 @@ struct parse_frame_t
 
 #define PCF_BIT(b)    (1ULL << b)
 
-/* Copy flags are in the lower 16 bits */
+// Copy flags are in the lower 16 bits
 #define PCF_COPY_FLAGS         0x0000ffff
 #define PCF_IN_PREPROC         PCF_BIT(0)  //! in a preprocessor
 #define PCF_IN_STRUCT          PCF_BIT(1)  //! in a struct
@@ -150,7 +150,7 @@ struct parse_frame_t
 #define PCF_IN_FOR             PCF_BIT(13)
 #define PCF_IN_OC_MSG          PCF_BIT(14)
 
-/* Non-Copy flags are in the upper 48 bits */
+// Non-Copy flags are in the upper 48 bits
 #define PCF_FORCE_SPACE        PCF_BIT(16)  //! must have a space after this token
 #define PCF_STMT_START         PCF_BIT(17)  //! marks the start of a statement
 #define PCF_EXPR_START         PCF_BIT(18)
@@ -393,7 +393,7 @@ enum class unc_stage_e : unsigned int
    CLEANUP
 };
 
-/* this set a limit to the name padding */
+// this set a limit to the name padding
 #define MAX_OPTION_NAME_LEN    32
 
 struct cp_data_t
@@ -467,6 +467,6 @@ struct cp_data_t
    const char      *dumped_file;
 };
 
-extern cp_data_t cpd;   /* TODO: can we avoid this external variable? */
+extern cp_data_t cpd;  // TODO: can we avoid this external variable?
 
 #endif /* UNCRUSTIFY_TYPES_H_INCLUDED */

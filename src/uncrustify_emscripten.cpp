@@ -405,7 +405,7 @@ int _loadConfig(intptr_t _cfg)
       return(EXIT_FAILURE);
    }
 
-   /* This relies on cpd.filename being the config file name */
+   // This relies on cpd.filename being the config file name
    load_header_files();
 
    LOG_FMT(LSYS, "finished loading config\n");
@@ -477,7 +477,7 @@ intptr_t _uncrustify(intptr_t _file, lang_flag_e langIDX, bool frag, bool defer)
       return(0);
    }
 
-   /* Done reading from stdin */
+   // Done reading from stdin
    LOG_FMT(LSYS, "Parsing: %d bytes (%d chars) from stdin as language %s\n",
            (int)fm.raw.size(), (int)fm.data.size(),
            language_name_from_flags(cpd.lang_flags));

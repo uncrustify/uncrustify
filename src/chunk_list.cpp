@@ -223,12 +223,12 @@ static chunk_t *chunk_search_type(chunk_t *cur, const c_token_t type,
    search_t search_function = select_search_fct(dir);
    chunk_t  *pc             = cur;
 
-   do                                  /* loop over the chunk list */
+   do                                  // loop over the chunk list
    {
-      pc = search_function(pc, scope); /* in either direction while */
-   } while ((pc != nullptr) &&         /* the end of the list was not reached yet */
-            (pc->type != type));       /* and the demanded chunk was not found either */
-   return(pc);                         /* the latest chunk is the searched one */
+      pc = search_function(pc, scope); // in either direction while
+   } while ((pc != nullptr) &&         // the end of the list was not reached yet
+            (pc->type != type));       // and the demanded chunk was not found either
+   return(pc);                         // the latest chunk is the searched one
 }
 
 
@@ -241,9 +241,9 @@ static chunk_t *chunk_search_typelevel(chunk_t *cur, c_token_t type, scope_e sco
    search_t search_function = select_search_fct(dir);
    chunk_t  *pc             = cur;
 
-   do                                  /* loop over the chunk list */
+   do                                  // loop over the chunk list
    {
-      pc = search_function(pc, scope); /* in either direction while */
+      pc = search_function(pc, scope); // in either direction while
 #if DEBUG
       if (pc != nullptr)
       {
@@ -251,9 +251,9 @@ static chunk_t *chunk_search_typelevel(chunk_t *cur, c_token_t type, scope_e sco
                  __func__, __LINE__, pc->text(), get_token_name(pc->type), pc->orig_line, pc->orig_col);
       }
 #endif
-   } while ((pc != nullptr) &&       /* the end of the list was not reached yet */
+   } while ((pc != nullptr) &&       // the end of the list was not reached yet
             (is_expected_type_and_level(pc, type, level) == false));
-   return(pc);                       /* the latest chunk is the searched one */
+   return(pc);                       // the latest chunk is the searched one
 }
 
 
@@ -264,12 +264,12 @@ static chunk_t *chunk_search_str(chunk_t *cur, const char *str, size_t len, scop
    search_t search_function = select_search_fct(dir);
    chunk_t  *pc             = cur;
 
-   do                                  /* loop over the chunk list */
+   do                                  // loop over the chunk list
    {
-      pc = search_function(pc, scope); /* in either direction while */
-   } while ((pc != nullptr) &&         /* the end of the list was not reached yet */
+      pc = search_function(pc, scope); // in either direction while
+   } while ((pc != nullptr) &&         // the end of the list was not reached yet
             (is_expected_string_and_level(pc, str, level, len) == false));
-   return(pc);                         /* the latest chunk is the searched one */
+   return(pc);                         // the latest chunk is the searched one
 }
 
 
@@ -281,12 +281,12 @@ static chunk_t *chunk_search(chunk_t *cur, const check_t check_fct, const scope_
    search_t search_function = select_search_fct(dir);
    chunk_t  *pc             = cur;
 
-   do                                  /* loop over the chunk list */
+   do                                  // loop over the chunk list
    {
-      pc = search_function(pc, scope); /* in either direction while */
-   } while ((pc != nullptr) &&         /* the end of the list was not reached yet */
-            (check_fct(pc) != cond));  /* and the demanded chunk was not found either */
-   return(pc);                         /* the latest chunk is the searched one */
+      pc = search_function(pc, scope); // in either direction while
+   } while ((pc != nullptr) &&         // the end of the list was not reached yet
+            (check_fct(pc) != cond));  // and the demanded chunk was not found either
+   return(pc);                         // the latest chunk is the searched one
 }
 
 
@@ -307,14 +307,14 @@ chunk_t *chunk_get_next(chunk_t *cur, scope_e scope)
    }
    if (cur->flags & PCF_IN_PREPROC)
    {
-      /* If in a preproc, return NULL if trying to leave */
+      // If in a preproc, return NULL if trying to leave
       if ((pc->flags & PCF_IN_PREPROC) == 0)
       {
          return(nullptr);
       }
       return(pc);
    }
-   /* Not in a preproc, skip any preproc */
+   // Not in a preproc, skip any preproc
    while ((pc != nullptr) && (pc->flags & PCF_IN_PREPROC))
    {
       pc = g_cl.GetNext(pc);
@@ -336,14 +336,14 @@ chunk_t *chunk_get_prev(chunk_t *cur, scope_e scope)
    }
    if (cur->flags & PCF_IN_PREPROC)
    {
-      /* If in a preproc, return NULL if trying to leave */
+      // If in a preproc, return NULL if trying to leave
       if ((pc->flags & PCF_IN_PREPROC) == 0)
       {
          return(nullptr);
       }
       return(pc);
    }
-   /* Not in a preproc, skip any preproc */
+   // Not in a preproc, skip any preproc
    while ((pc != nullptr) && (pc->flags & PCF_IN_PREPROC))
    {
       pc = g_cl.GetPrev(pc);
@@ -354,16 +354,16 @@ chunk_t *chunk_get_prev(chunk_t *cur, scope_e scope)
 
 chunk_t *chunk_dup(const chunk_t *pc_in)
 {
-   chunk_t *pc = new chunk_t; /* Allocate a new chunk */
+   chunk_t *pc = new chunk_t; // Allocate a new chunk
 
    if (pc == nullptr)
    {
-      /* @todo clean up properly before crashing */
+      // @todo clean up properly before crashing
       LOG_FMT(LERR, "Failed to allocate memory\n");
       exit(EXIT_FAILURE);
    }
 
-   /* Copy all fields and then init the entry */
+   // Copy all fields and then init the entry
    *pc = *pc_in;
    g_cl.InitEntry(pc);
 
@@ -434,7 +434,7 @@ void chunk_move_after(chunk_t *pc_in, chunk_t *ref)
    g_cl.Pop(pc_in);
    g_cl.AddAfter(pc_in, ref);
 
-   /* HACK: Adjust the original column */
+   // HACK: Adjust the original column
    pc_in->column       = ref->column + space_col_align(ref, pc_in);
    pc_in->orig_col     = static_cast<UINT32>(pc_in->column);
    pc_in->orig_col_end = pc_in->orig_col + pc_in->len();
@@ -594,7 +594,7 @@ void chunk_swap_lines(chunk_t *pc1, chunk_t *pc2)
     */
    chunk_t *ref2 = chunk_get_prev(pc2);
 
-   /* Move the line started at pc2 before pc1 */
+   // Move the line started at pc2 before pc1
    while ((pc2 != nullptr) && !chunk_is_newline(pc2))
    {
       chunk_t *tmp = chunk_get_next(pc2);
@@ -609,7 +609,7 @@ void chunk_swap_lines(chunk_t *pc1, chunk_t *pc2)
     *                         ^- pc1                              ^- pc2
     */
 
-   /* Now move the line started at pc1 after ref2 */
+   // Now move the line started at pc1 after ref2
    while ((pc1 != nullptr) && !chunk_is_newline(pc1))
    {
       chunk_t *tmp = chunk_get_next(pc1);
@@ -745,11 +745,11 @@ static chunk_t *chunk_add(const chunk_t *pc_in, chunk_t *ref, const direction_e 
 
    if (pc != nullptr)
    {
-      if (ref != nullptr) /* ref is a valid chunk */
+      if (ref != nullptr) // ref is a valid chunk
       {
          (pos == direction_e::FORWARD) ? g_cl.AddAfter(pc, ref) : g_cl.AddBefore(pc, ref);
       }
-      else /* ref == NULL */
+      else // ref == NULL
       {
          (pos == direction_e::FORWARD) ? g_cl.AddHead(pc) : g_cl.AddTail(pc);
       }

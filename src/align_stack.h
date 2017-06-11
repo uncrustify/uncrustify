@@ -17,9 +17,9 @@ class AlignStack
 public:
    enum StarStyle
    {
-      SS_IGNORE,  // don't look for prev stars
-      SS_INCLUDE, // include prev * before add
-      SS_DANGLE   // include prev * after add
+      SS_IGNORE,  //! don't look for prev stars
+      SS_INCLUDE, //! include prev * before add
+      SS_DANGLE   //! include prev * after add
    };
 
    ChunkStack m_aligned;      //! contains the token that is aligned

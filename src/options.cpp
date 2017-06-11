@@ -17,7 +17,7 @@
 #include "defines.h"
 #include <cstring>
 #ifdef HAVE_STRINGS_H
-#include <strings.h>  /* strcasecmp() */
+#include <strings.h>  // strcasecmp()
 #endif
 #include <cstdio>
 #include <cstdlib>
@@ -173,7 +173,7 @@ static void unc_add_option(const char *name, uncrustify_options id, argtype_e ty
    value.long_desc  = long_desc;
    value.min_val    = 0;
 
-   /* Calculate the max/min values */
+   // Calculate the max/min values
    switch (type)
    {
    case AT_BOOL:
@@ -1791,7 +1791,7 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
          return;
       }
 
-      /* Try to see if it is a variable */
+      // Try to see if it is a variable
       int mult = 1;
       if (*val == '-')
       {
@@ -1875,7 +1875,7 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
       return;
    }
 
-   /* Must be AT_IARF */
+   // Must be AT_IARF
 
    if ((strcasecmp(val, "add") == 0) || (strcasecmp(val, "a") == 0))
    {
@@ -1949,26 +1949,26 @@ void process_option_line(char *configLine, const char *filename)
    cpd.line_number++;
 
    char *ptr;
-   /* Chop off trailing comments */
+   // Chop off trailing comments
    if ((ptr = strchr(configLine, '#')) != nullptr)
    {
       *ptr = 0;
    }
 
-   /* Blow away the '=' to make things simple */
+   // Blow away the '=' to make things simple
    if ((ptr = strchr(configLine, '=')) != nullptr)
    {
       *ptr = ' ';
    }
 
-   /* Blow away all commas */
+   // Blow away all commas
    ptr = configLine;
    while ((ptr = strchr(ptr, ',')) != nullptr)
    {
       *ptr = ' ';
    }
 
-   /* Split the line */
+   // Split the line
    char *args[32];
    int  argc = Args::SplitLine(configLine, args, ARRAY_SIZE(args) - 1);
    if (argc < 2)
@@ -2042,7 +2042,7 @@ void process_option_line(char *configLine, const char *filename)
 
       if (is_path_relative(args[1]))
       {
-         /* include is a relative path to the current config file */
+         // include is a relative path to the current config file
          unc_text ut = filename;
          ut.resize(path_dirname_len(filename));
          ut.append(args[1]);
@@ -2050,7 +2050,7 @@ void process_option_line(char *configLine, const char *filename)
       }
       else
       {
-         /* include is an absolute Unix path */
+         // include is an absolute Unix path
          UNUSED(load_option_file(args[1]));
       }
 
@@ -2086,7 +2086,7 @@ void process_option_line(char *configLine, const char *filename)
    }
    else
    {
-      /* must be a regular option = value */
+      // must be a regular option = value
       const int id = set_option_value(args[0], args[1]);
       if (id < 0)
       {
@@ -2104,7 +2104,7 @@ int load_option_file(const char *filename)
    cpd.line_number = 0;
 
 #ifdef WIN32
-   /* "/dev/null" not understood by "fopen" in Windows */
+   // "/dev/null" not understood by "fopen" in Windows
    if (strcasecmp(filename, "/dev/null") == 0)
    {
       return(0);
@@ -2121,7 +2121,7 @@ int load_option_file(const char *filename)
       return(-1);
    }
 
-   /* Read in the file line by line */
+   // Read in the file line by line
    char buffer[256];
    while (fgets(buffer, sizeof(buffer), pfile) != nullptr)
    {
@@ -2139,7 +2139,7 @@ int save_option_file_kernel(FILE *pfile, bool withDoc, bool only_not_default)
 
    fprintf(pfile, "# %s\n", UNCRUSTIFY_VERSION);
 
-   /* Print the options by group */
+   // Print the options by group
    for (auto &jt : group_map)
    {
       bool first = true;
@@ -2218,13 +2218,13 @@ int save_option_file_kernel(FILE *pfile, bool withDoc, bool only_not_default)
       fprintf(pfile, "%s", DOC_TEXT_END);
    }
 
-   /* Print custom keywords */
+   // Print custom keywords
    print_keywords(pfile);
 
-   /* Print custom defines */
+   // Print custom defines
    print_defines(pfile);
 
-   /* Print custom file extensions */
+   // Print custom file extensions
    print_extensions(pfile);
    fprintf(pfile, "# option(s) with 'not default' value: %d\n#\n", count_the_not_default_options);
 
@@ -2254,7 +2254,7 @@ void print_options(FILE *pfile)
 
    fprintf(pfile, "# %s\n", UNCRUSTIFY_VERSION);
 
-   /* Print the all out */
+   // Print the all out
    for (auto &jt : group_map)
    {
       fprintf(pfile, "#\n# %s\n#\n\n", jt.second.short_desc);
@@ -2293,13 +2293,13 @@ void print_options(FILE *pfile)
 
 void set_option_defaults(void)
 {
-   /* set all the default values to zero */
+   // set all the default values to zero
    for (auto &count : cpd.defaults)
    {
       count.n = 0;
    }
 
-   /* the options with non-zero default values */
+   // the options with non-zero default values
    cpd.defaults[UO_align_left_shift].b                                  = true;
    cpd.defaults[UO_cmt_indent_multi].b                                  = true;
    cpd.defaults[UO_cmt_insert_before_inlines].b                         = true;
@@ -2399,7 +2399,6 @@ void set_option_defaults(void)
    }
 #endif // DEBUG
 
-   /* copy all the default values to settings array */
    for (unsigned int count = 0; count < UO_option_count; count++)
    {
       cpd.settings[count].a = cpd.defaults[count].a;

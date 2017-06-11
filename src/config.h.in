@@ -1,87 +1,87 @@
-/* Used by CMake to generate config.h. */
+// Used by CMake to generate config.h.
 
-/* Define to 1 if you have the <inttypes.h> header file. */
+// Define to 1 if you have the <inttypes.h> header file.
 #cmakedefine HAVE_INTTYPES_H 1
 
-/* Define to 1 if you have the <memory.h> header file. */
+// Define to 1 if you have the <memory.h> header file.
 #cmakedefine HAVE_MEMORY_H 1
 
-/* Define to 1 if you have the `memset' function. */
+// Define to 1 if you have the `memset' function.
 #cmakedefine HAVE_MEMSET 1
 
-/* Define to 1 if stdbool.h conforms to C99. */
+// Define to 1 if stdbool.h conforms to C99.
 #cmakedefine HAVE_STDBOOL_H 1
 
-/* Define to 1 if you have the <stdint.h> header file. */
+// Define to 1 if you have the <stdint.h> header file.
 #cmakedefine HAVE_STDINT_H 1
 
-/* Define to 1 if you have the <stdlib.h> header file. */
+// Define to 1 if you have the <stdlib.h> header file.
 #cmakedefine HAVE_STDLIB_H 1
 
-/* Define to 1 if you have the `strcasecmp' function. */
+// Define to 1 if you have the `strcasecmp' function.
 #cmakedefine HAVE_STRCASECMP 1
 
-/* Define to 1 if you have the `strchr' function. */
+// Define to 1 if you have the `strchr' function.
 #cmakedefine HAVE_STRCHR 1
 
-/* Define to 1 if you have the `strdup' function. */
+// Define to 1 if you have the `strdup' function.
 #cmakedefine HAVE_STRDUP 1
 
-/* Define to 1 if you have the `strerror' function. */
+// Define to 1 if you have the `strerror' function.
 #cmakedefine HAVE_STRERROR 1
 
-/* Define to 1 if you have the <strings.h> header file. */
+// Define to 1 if you have the <strings.h> header file.
 #cmakedefine HAVE_STRINGS_H 1
 
-/* Define to 1 if you have the <string.h> header file. */
+// Define to 1 if you have the <string.h> header file.
 #cmakedefine HAVE_STRING_H 1
 
-/* Define to 1 if you have the `strtol' function. */
+// Define to 1 if you have the `strtol' function.
 #cmakedefine HAVE_STRTOL 1
 
-/* Define to 1 if you have the `strtoul' function. */
+// Define to 1 if you have the `strtoul' function.
 #cmakedefine HAVE_STRTOUL 1
 
-/* Define to 1 if you have the <sys/stat.h> header file. */
+// Define to 1 if you have the <sys/stat.h> header file.
 #cmakedefine HAVE_SYS_STAT_H 1
 
-/* Define to 1 if you have the <sys/types.h> header file. */
+// Define to 1 if you have the <sys/types.h> header file.
 #cmakedefine HAVE_SYS_TYPES_H 1
 
-/* Define to 1 if you have the <unistd.h> header file. */
+// Define to 1 if you have the <unistd.h> header file.
 #cmakedefine HAVE_UNISTD_H 1
 
-/* Define to 1 if you have the <utime.h> header file. */
+// Define to 1 if you have the <utime.h> header file.
 #cmakedefine HAVE_UTIME_H 1
 
-/* Define to 1 if the system has the type `_Bool'. */
+// Define to 1 if the system has the type `_Bool'.
 #cmakedefine HAVE__BOOL 1
 
-/* Name of package */
+// Name of package
 #cmakedefine PACKAGE "@PACKAGE@"
 
-/* Define to the address where bug reports for this package should be sent. */
+// Define to the address where bug reports for this package should be sent.
 #cmakedefine PACKAGE_BUGREPORT "@PACKAGE_BUGREPORT@"
 
-/* Define to the full name of this package. */
+// Define to the full name of this package.
 #cmakedefine PACKAGE_NAME "@PACKAGE_NAME@"
 
-/* Define to the full name and version of this package. */
+// Define to the full name and version of this package.
 #cmakedefine PACKAGE_STRING "@PACKAGE_STRING@"
 
-/* Define to the one symbol short name of this package. */
+// Define to the one symbol short name of this package.
 #cmakedefine PACKAGE_TARNAME "@PACKAGE_TARNAME@"
 
-/* Define to the home page for this package. */
+// Define to the home page for this package.
 #cmakedefine PACKAGE_URL "@PACKAGE_URL@"
 
-/* Define to the version of this package. */
+// Define to the version of this package.
 #cmakedefine PACKAGE_VERSION "@PACKAGE_VERSION@"
 
-/* Define to 1 if you have the ANSI C header files. */
+// Define to 1 if you have the ANSI C header files.
 #cmakedefine STDC_HEADERS 1
 
-/* Version number of package */
+// Version number of package
 #cmakedefine VERSION "@VERSION@"
 
 /* Define to appropriate substitue if compiler doesnt have __func__ */

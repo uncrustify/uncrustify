@@ -150,7 +150,7 @@ size_t Args::SplitLine(char *text, char *args[], size_t num_args)
 
    while ((*text != 0) && (argc <= num_args))
    {
-      /* Detect the start of an arg */
+      // Detect the start of an arg
       if (!in_arg && !unc_isspace(*text))
       {
          in_arg     = true;

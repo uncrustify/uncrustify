@@ -7,8 +7,8 @@
  * @license GPL v2+
  */
 #include "logmask.h"
-#include <cstdio>      /* snprintf() */
-#include <cstdlib>     /* strtoul() */
+#include <cstdio>      // snprintf()
+#include <cstdlib>     // strtoul()
 #include "unc_ctype.h"
 
 
@@ -41,7 +41,7 @@ char *logmask_to_str(const log_mask_t &mask, char *buf, int size)
       {
          if (is_range)
          {
-            buf[len - 1] = '-';  /* change last comma to a dash */
+            buf[len - 1] = '-';  // change last comma to a dash
             len         += snprintf(&buf[len], size - len, "%d,", last_sev);
             is_range     = false;
          }
@@ -49,15 +49,15 @@ char *logmask_to_str(const log_mask_t &mask, char *buf, int size)
       }
    }
 
-   /* handle a range that ends on the last bit */
+   // handle a range that ends on the last bit
    if (is_range && (last_sev != -1))
    {
-      buf[len - 1] = '-';  /* change last comma to a dash */
+      buf[len - 1] = '-';  // change last comma to a dash
       len         += snprintf(&buf[len], size - len, "%d", last_sev);
    }
    else
    {
-      /* Eat the last comma */
+      // Eat the last comma
       if (len > 0)
       {
          len--;
@@ -77,10 +77,10 @@ void logmask_from_string(const char *str, log_mask_t &mask)
       return;
    }
 
-   /* Start with a clean mask */
+   // Start with a clean mask
    logmask_set_all(mask, false);
 
-   /* If the first character is 'A', set all sevs */
+   // If the first character is 'A', set all sevs
    if (unc_toupper(*str) == 'A')
    {
       logmask_set_all(mask, true);
@@ -120,7 +120,7 @@ void logmask_from_string(const char *str, log_mask_t &mask)
          was_dash = true;
          str++;
       }
-      else  /* probably a comma */
+      else  // probably a comma
       {
          last_level = -1;
          was_dash   = false;

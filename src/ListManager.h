@@ -26,7 +26,7 @@ protected:
    T *last;
 
 private:
-   /* Hide copy constructor */
+   // Hide copy constructor
    ListManager(const ListManager &ref)
    {
       first = NULL;

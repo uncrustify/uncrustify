@@ -124,7 +124,7 @@ static int compare_chunks(chunk_t *pc1, chunk_t *pc2)
          return(pc1->len() - pc2->len());
       }
 
-      /* Same word, same length. Step to the next chunk. */
+      // Same word, same length. Step to the next chunk.
       pc1 = chunk_get_next(pc1);
       LOG_FMT(LSORT, "text=%s, pc1->len=%zu, line=%zu, column=%zu\n", pc1->text(), pc1->len(), pc1->orig_line, pc1->orig_col);
       if (pc1->type == CT_MEMBER)
@@ -142,7 +142,7 @@ static int compare_chunks(chunk_t *pc1, chunk_t *pc2)
       LOG_FMT(LSORT, ">>>text=%s, pc1->len=%zu, line=%zu, column=%zu\n", pc1->text(), pc1->len(), pc1->orig_line, pc1->orig_col);
       LOG_FMT(LSORT, ">>>text=%s, pc2->len=%zu, line=%zu, column=%zu\n", pc2->text(), pc2->len(), pc2->orig_line, pc2->orig_col);
 
-      /* If we hit a newline or NULL, we are done */
+      // If we hit a newline or NULL, we are done
       if ((pc1 == nullptr) || chunk_is_newline(pc1) ||
           (pc2 == nullptr) || chunk_is_newline(pc2))
       {
@@ -176,7 +176,7 @@ static void do_the_sort(chunk_t **chunks, size_t num_chunks)
    size_t start_idx;
    for (start_idx = 0; start_idx < (num_chunks - 1); start_idx++)
    {
-      /* Find the index of the minimum value */
+      // Find the index of the minimum value
       size_t min_idx = start_idx;
       for (size_t idx = start_idx + 1; idx < num_chunks; idx++)
       {
@@ -186,12 +186,12 @@ static void do_the_sort(chunk_t **chunks, size_t num_chunks)
          }
       }
 
-      /* Swap the lines if the minimum isn't the first entry */
+      // Swap the lines if the minimum isn't the first entry
       if (min_idx != start_idx)
       {
          chunk_swap_lines(chunks[start_idx], chunks[min_idx]);
 
-         /* Don't need to swap, since we only want the side-effects */
+         // Don't need to swap, since we only want the side-effects
          chunks[min_idx] = chunks[start_idx];
       }
    }
@@ -201,7 +201,7 @@ static void do_the_sort(chunk_t **chunks, size_t num_chunks)
 void sort_imports(void)
 {
    LOG_FUNC_ENTRY();
-   chunk_t *chunks[MAX_NUMBER_TO_SORT];  /* MAX_NUMBER_TO_SORT should be enough, right? */
+   chunk_t *chunks[MAX_NUMBER_TO_SORT];  // MAX_NUMBER_TO_SORT should be enough, right?
    size_t  num_chunks = 0;
    chunk_t *p_last    = nullptr;
    chunk_t *p_imp     = nullptr;

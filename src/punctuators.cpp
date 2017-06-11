@@ -19,7 +19,7 @@
  */
 
 
-/* 6-char symbols */
+// 6-char symbols
 static const chunk_tag_t symbols6[] =
 {
    { R"_(??(??))_", CT_TSQUARE, LANG_C | LANG_CPP | FLAG_DIG }, // trigraph []
@@ -44,7 +44,7 @@ static const chunk_tag_t symbols4[] =
    { R"_(%:%:)_", CT_PP,      LANG_C | LANG_CPP | FLAG_DIG   }, // digraph ##
 };
 
-/* 3-char symbols */
+// 3-char symbols
 static const chunk_tag_t symbols3[] =
 {
    { "!<=",      CT_COMPARE,      LANG_D                                             },
@@ -71,7 +71,7 @@ static const chunk_tag_t symbols3[] =
 };
 // { R"_(??/)_", CT_UNKNOWN,      LANG_C | LANG_CPP | FLAG_DIG                       }, // trigraph '\'
 
-/* 2-char symbols */
+// 2-char symbols
 static const chunk_tag_t symbols2[] =
 {
    { "!<",      CT_COMPARE,      LANG_D                                           },
@@ -79,7 +79,7 @@ static const chunk_tag_t symbols2[] =
    { "!>",      CT_COMPARE,      LANG_D                                           },
    { "!~",      CT_COMPARE,      LANG_D                                           },
    { "##",      CT_PP,           LANG_C | LANG_CPP | LANG_OC                      },
-   { "#@",      CT_POUND,        LANG_C | LANG_CPP | LANG_OC                      },           /* MS extension */
+   { "#@",      CT_POUND,        LANG_C | LANG_CPP | LANG_OC                      },           // MS extension
    { "%=",      CT_ASSIGN,       LANG_ALL                                         },
    { "&&",      CT_BOOL,         LANG_ALL                                         },
    { "&=",      CT_ASSIGN,       LANG_ALL                                         },
@@ -115,7 +115,7 @@ static const chunk_tag_t symbols2[] =
    { R"_(%:)_", CT_POUND,        LANG_C | LANG_CPP | FLAG_DIG                     },           // digraph #
 };
 
-/* 1-char symbols */
+// 1-char symbols
 static const chunk_tag_t symbols1[] =
 {
    { "!", CT_NOT,          LANG_ALL                            },

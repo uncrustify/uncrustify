@@ -57,7 +57,7 @@ void do_parens(void)
             continue;
          }
 
-         /* Grab the close sparen */
+         // Grab the close sparen
          chunk_t *pclose = chunk_get_next_type(pc, CT_SPAREN_CLOSE, pc->level, scope_e::PREPROC);
          if (pclose != nullptr)
          {
@@ -78,7 +78,7 @@ static void add_parens_between(chunk_t *first, chunk_t *last)
            first->text(), first->level,
            last->text(), last->level);
 
-   /* Don't do anything if we have a bad sequence, ie "&& )" */
+   // Don't do anything if we have a bad sequence, ie "&& )"
    chunk_t *first_n = chunk_get_next_ncnl(first);
    if (first_n == last)
    {
@@ -173,7 +173,7 @@ static void check_bool_parens(chunk_t *popen, chunk_t *pclose, int nest)
                (pc->type == CT_SQUARE_OPEN) ||
                (pc->type == CT_ANGLE_OPEN))
       {
-         /* Skip [], {}, and <> */
+         // Skip [], {}, and <>
          pc = chunk_skip_to_match(pc);
       }
    }

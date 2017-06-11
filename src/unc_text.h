@@ -69,7 +69,7 @@ public:
    void clear();
 
 
-   /* grab the number of characters */
+   //! grab the number of characters
    size_t size() const
    {
       return(m_chars.size());
@@ -184,7 +184,7 @@ public:
    bool equals(const unc_text &ref) const;
 
 
-   /* grab the data as a series of ints for outputting to a file */
+   //! grab the data as a series of ints for outputting to a file
    value_type &get()
    {
       m_logok = false;
@@ -204,7 +204,7 @@ public:
    }
 
 
-   /* throws an exception if out of bounds */
+   // throws an exception if out of bounds
    int &at(size_t idx)
    {
       return(m_chars.at(idx));
@@ -225,8 +225,7 @@ public:
 
    int &back()
    {
-      /* TODO: returning a temporary via a reference
-       * this has to be checked and probably changed */
+      // TODO: returning a temporary via a reference this has to be checked and probably changed
       return(m_chars.back());
    }
 

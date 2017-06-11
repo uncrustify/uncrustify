@@ -7,7 +7,7 @@
  */
 #include "unc_text.h"
 #include "unc_ctype.h"
-#include "unicode.h" /* encode_utf8() */
+#include "unicode.h" // encode_utf8()
 
 
 static void fix_len_idx(size_t size, size_t &idx, size_t &len);
@@ -34,7 +34,7 @@ void unc_text::update_logtext()
 {
    if (!m_logok)
    {
-      /* make a pessimistic guess at the size */
+      // make a pessimistic guess at the size
       m_logtext.clear();
       m_logtext.reserve(m_chars.size() * 3);
       for (int m_char : m_chars)

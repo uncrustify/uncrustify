@@ -176,7 +176,7 @@ int pf_check(parse_frame_t *frm, chunk_t *pc)
 
       if (pc->parent_type == CT_PP_IF)
       {
-         /* An #if pushes a copy of the current frame on the stack */
+         // An #if pushes a copy of the current frame on the stack
          cpd.pp_level++;
          pf_push(frm);
          frm->in_ifdef = CT_PP_IF;
@@ -195,11 +195,11 @@ int pf_check(parse_frame_t *frm, chunk_t *pc)
           */
          if (frm->in_ifdef == CT_PP_IF)
          {
-            /* we have [...] [base]-[if], so push an [else] */
+            // we have [...] [base]-[if], so push an [else]
             pf_push(frm);
             frm->in_ifdef = CT_PP_ELSE;
          }
-         /* we have [...] [base] [if]-[else], copy [base] over [else] */
+         // we have [...] [base] [if]-[else], copy [base] over [else]
          pf_copy_2nd_tos(frm);
          frm->in_ifdef = CT_PP_ELSE;
          txt           = "else-push";
@@ -219,10 +219,10 @@ int pf_check(parse_frame_t *frm, chunk_t *pc)
              * We have: [...] [base] [if]-[else]
              * We want: [...]-[if]
              */
-            pf_copy_tos(frm);     /* [...] [base] [if]-[if] */
+            pf_copy_tos(frm);     // [...] [base] [if]-[if]
             frm->in_ifdef = cpd.frames[cpd.frame_count - 2].in_ifdef;
-            pf_trash_tos();       /* [...] [base]-[if] */
-            pf_trash_tos();       /* [...]-[if] */
+            pf_trash_tos();       // [...] [base]-[if]
+            pf_trash_tos();       // [...]-[if]
 
             txt = "endif-trash/pop";
          }

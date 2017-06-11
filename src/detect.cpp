@@ -72,7 +72,7 @@ void sp_votes::vote(chunk_t *first, chunk_t *second)
 
 sp_votes::~sp_votes()
 {
-   /* no change if no items were added */
+   // no change if no items were added
    if ((m_remove == 0) && (m_add == 0) && (m_force == 0))
    {
       return;
@@ -88,7 +88,7 @@ sp_votes::~sp_votes()
    }
    else
    {
-      /* nothing conclusive. do not alter. */
+      // nothing conclusive. do not alter.
    }
 }
 
@@ -307,12 +307,12 @@ static void detect_space_options(void)
          {
             if (prev->type == CT_SPAREN_OPEN)
             {
-               /* empty, ie for (;;) */
+               // empty, ie for (;;)
                vote_sp_before_semi_for_empty.vote(prev, pc);
             }
             else if (next->type == CT_SPAREN_CLOSE)
             {
-               /* empty, ie for (;;) */
+               // empty, ie for (;;)
                vote_sp_after_semi_for_empty.vote(pc, next);
             }
             else if (prev->type != CT_SEMICOLON)

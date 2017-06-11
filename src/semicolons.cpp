@@ -35,7 +35,7 @@ static void remove_semicolon(chunk_t *pc)
    LOG_FMT(LDELSEMI, "%s: Removed semicolon at line %zu, col %zu",
            __func__, pc->orig_line, pc->orig_col);
    log_func_stack_inline(LDELSEMI);
-   /* TODO: do we want to shift stuff back a column? */
+   // TODO: do we want to shift stuff back a column?
    chunk_del(pc);
 }
 
@@ -59,7 +59,7 @@ void remove_extra_semicolons(void)
 
          if (pc->parent_type == CT_TYPEDEF)
          {
-            /* keep it */
+            // keep it
          }
          else if ((prev->type == CT_BRACE_CLOSE) &&
                   ((prev->parent_type == CT_IF) ||
