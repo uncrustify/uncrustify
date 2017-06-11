@@ -842,7 +842,8 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
          }
       }
 
-      /* For a delegate, mark previous words as types and the item after the
+      /*
+       * For a delegate, mark previous words as types and the item after the
        * close paren as a variable def
        */
       if (pc->type == CT_DELEGATE)
@@ -1326,7 +1327,8 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       set_paren_parent(pc, CT_FUNC_CALL);
    }
 
-   /* Check for a close paren followed by an open paren, which means that
+   /*
+    * Check for a close paren followed by an open paren, which means that
     * we are on a function type declaration (C/C++ only?).
     * Note that typedefs are already taken care of.
     */
@@ -1542,8 +1544,10 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       }
       else if ((cpd.lang_flags & LANG_OC) && (next->type == CT_STAR))
       {
-         /* Change pointer-to-pointer types in OC_MSG_DECLs
-          * from ARITH <===> DEREF to PTR_TYPE <===> PTR_TYPE */
+         /*
+          * Change pointer-to-pointer types in OC_MSG_DECLs
+          * from ARITH <===> DEREF to PTR_TYPE <===> PTR_TYPE
+          */
          set_chunk_type(pc, CT_PTR_TYPE);
          set_chunk_parent(pc, prev->parent_type);
 
@@ -1566,7 +1570,8 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       }
       else if (pc->type == CT_STAR)
       {
-         /* most PCF_PUNCTUATOR chunks except a paren close would make this
+         /*
+          * most PCF_PUNCTUATOR chunks except a paren close would make this
           * a deref. A paren close may end a cast or may be part of a macro fcn.
           */
          if (prev->type == CT_TYPE)
@@ -2747,7 +2752,8 @@ static void fix_enum_struct_union(chunk_t *pc)
          return;
       }
 
-      /* D does not require a semicolon after an enum, but we add one to make
+      /*
+       * D does not require a semicolon after an enum, but we add one to make
        * other code happy.
        */
       if (cpd.lang_flags & LANG_D)
@@ -2808,7 +2814,8 @@ static void fix_typedef(chunk_t *start)
    chunk_t *open_paren;
    chunk_t *last_op = nullptr;
 
-   /* Mark everything in the typedef and scan for ")(", which makes it a
+   /*
+    * Mark everything in the typedef and scan for ")(", which makes it a
     * function type
     */
    chunk_t *next = start;
@@ -3153,8 +3160,10 @@ void combine_labels(void)
                          !(tmp->flags & (PCF_IN_STRUCT | PCF_IN_CLASS))) ||
                         (tmp->type == CT_NEWLINE))
                {
-                  /* the CT_SIZEOF isn't great - test 31720 happens to use a sizeof expr,
-                   * but this really should be able to handle any constant expr */
+                  /*
+                   * the CT_SIZEOF isn't great - test 31720 happens to use a sizeof expr,
+                   * but this really should be able to handle any constant expr
+                   */
                   set_chunk_type(cur, CT_LABEL);
                   set_chunk_type(next, CT_LABEL_COLON);
                }
@@ -4082,7 +4091,8 @@ static void mark_function(chunk_t *pc)
       }
    }
 
-   /* Determine if this is a function call or a function def/proto
+   /*
+    * Determine if this is a function call or a function def/proto
     * We check for level==1 to allow the case that a function prototype is
     * wrapped in a macro: "MACRO(void foo(void));"
     */
@@ -4291,7 +4301,8 @@ static void mark_function(chunk_t *pc)
       return;
    }
 
-   /* We have a function definition or prototype
+   /*
+    * We have a function definition or prototype
     * Look for a semicolon or a brace open after the close paren to figure
     * out whether this is a prototype or definition
     */
@@ -4364,7 +4375,8 @@ static void mark_function(chunk_t *pc)
               get_token_name(paren_open->type),
               get_token_name(paren_close->type));
 
-      /* Scan the parameters looking for:
+      /*
+       * Scan the parameters looking for:
        *  - constant strings
        *  - numbers
        *  - non-type fields
@@ -5175,7 +5187,8 @@ static void mark_template_func(chunk_t *pc, chunk_t *pc_next)
          }
          else
          {
-            /* Might be a function def. Must check what is before the template:
+            /*
+             * Might be a function def. Must check what is before the template:
              * Func call:
              *   BTree.Insert(std::pair<int, double>(*it, double(*it) + 1.0));
              *   a = Test<int>(j);
@@ -5450,7 +5463,8 @@ static void handle_oc_block_literal(chunk_t *pc)
       return; // let's be paranoid
    }
 
-   /* block literal: '^ RTYPE ( ARGS ) { }'
+   /*
+    * block literal: '^ RTYPE ( ARGS ) { }'
     * RTYPE and ARGS are optional
     */
    LOG_FMT(LOCBLK, "%s: block literal @ %zu:%zu\n", __func__, pc->orig_line, pc->orig_col);
@@ -5551,7 +5565,8 @@ static void handle_oc_block_type(chunk_t *pc)
    chunk_t *tpo = chunk_get_prev_ncnl(pc); // type paren open
    if (chunk_is_paren_open(tpo))
    {
-      /* block type: 'RTYPE (^LABEL)(ARGS)'
+      /*
+       * block type: 'RTYPE (^LABEL)(ARGS)'
        * LABEL is optional.
        */
       chunk_t *tpc = chunk_skip_to_match(tpo);  // type close paren (after '^')

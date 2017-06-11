@@ -37,7 +37,8 @@ typedef unsigned long long   UINT64;
 // eliminate GNU's attribute
 #define __attribute__(x)
 
-/* MSVC compilers before VC7 don't have __func__ at all; later ones call it
+/*
+ * MSVC compilers before VC7 don't have __func__ at all; later ones call it
  * __FUNCTION__.
  */
 #ifdef _MSC_VER

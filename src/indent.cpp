@@ -444,7 +444,8 @@ static void indent_pse_pop(parse_frame_t &frm, chunk_t *pc)
                  frm.pse[frm.pse_tos].open_line);
       }
 
-      /* Don't clear the stack entry because some code 'cheats' and uses the
+      /*
+       * Don't clear the stack entry because some code 'cheats' and uses the
        * just-popped indent values
        */
       frm.pse_tos--;
@@ -704,7 +705,8 @@ void indent_text(void)
             c_token_t type = frm.pse[frm.pse_tos].type;
             indent_pse_pop(frm, pc);
 
-            /* If we just removed an #endregion, then check to see if a
+            /*
+             * If we just removed an #endregion, then check to see if a
              * PP_REGION_INDENT entry is right below it
              */
             if ((type == CT_PP_ENDREGION) &&
@@ -981,8 +983,10 @@ void indent_text(void)
                indent_pse_pop(frm, pc);
             }
 
-            /* a typedef and an OC SCOPE ('-' or '+') ends with a semicolon or
-             * brace open */
+            /*
+             * a typedef and an OC SCOPE ('-' or '+') ends with a semicolon or
+             * brace open
+             */
             if ((frm.pse[frm.pse_tos].type == CT_TYPEDEF) &&
                 (chunk_is_semicolon(pc) ||
                  chunk_is_paren_open(pc) ||
@@ -1284,7 +1288,8 @@ void indent_text(void)
                                        - static_cast<int>(indent_size)
                                        + cpd.settings[UO_indent_case_brace].n;
 
-               /* An open brace with the parent of case does not indent by default
+               /*
+                * An open brace with the parent of case does not indent by default
                 * UO_indent_case_brace can be used to indent the brace.
                 * So we need to take the CASE indent, subtract off the
                 * indent_size that was added above and then add indent_case_brace.
@@ -1520,7 +1525,8 @@ void indent_text(void)
             frm.pse[frm.pse_tos].indent_tab = tmp;
             log_indent_tmp();
 
-            /* If we are indenting the body, then we must leave the access spec
+            /*
+             * If we are indenting the body, then we must leave the access spec
              * indented at brace level
              */
             indent_column_set(frm.pse[frm.pse_tos].indent_tmp);
@@ -1626,7 +1632,8 @@ void indent_text(void)
                (pc->type == CT_SQUARE_OPEN) ||
                (pc->type == CT_ANGLE_OPEN))
       {
-         /* Open parens and squares - never update indent_column, unless right
+         /*
+          * Open parens and squares - never update indent_column, unless right
           * after a newline.
           */
          bool skipped = false;
@@ -2168,8 +2175,10 @@ void indent_text(void)
          }
          else if (chunk_is_paren_close(pc) || (pc->type == CT_ANGLE_CLOSE))
          {
-            /* This is a big hack. We assume that since we hit a paren close,
-             * that we just removed a paren open */
+            /*
+             * This is a big hack. We assume that since we hit a paren close,
+             * that we just removed a paren open
+             */
             LOG_FMT(LINDLINE, "%s(%d): indent_column is %zu\n",
                     __func__, __LINE__, indent_column);
             if (frm.pse[frm.pse_tos + 1].type == c_token_t(pc->type - 1))
@@ -2180,8 +2189,10 @@ void indent_text(void)
                chunk_t *ck1 = frm.pse[frm.pse_tos + 1].pc;
                chunk_t *ck2 = chunk_get_prev(ck1);
 
-               /* If the open paren was the first thing on the line or we are
-               * doing mode 1, then put the close paren in the same column */
+               /*
+                * If the open paren was the first thing on the line or we are
+                * doing mode 1, then put the close paren in the same column
+                */
                if (chunk_is_newline(ck2) ||
                    (cpd.settings[UO_indent_paren_close].u == 1))
                {
@@ -2463,8 +2474,10 @@ static bool single_line_comment_indent_rule_applies(chunk_t *start)
       return(false);
    }
 
-   /* scan forward, if only single newlines and comments before next line of
-    * code, we want to apply */
+   /*
+    * scan forward, if only single newlines and comments before next line of
+    * code, we want to apply
+    */
    while ((pc = chunk_get_next(pc)) != nullptr)
    {
       if (chunk_is_newline(pc))
@@ -2481,7 +2494,8 @@ static bool single_line_comment_indent_rule_applies(chunk_t *start)
          nl_count = 0;
          if (!chunk_is_single_line_comment(pc))
          {
-            /* here we check for things to run into that we wouldn't want to
+            /*
+             * here we check for things to run into that we wouldn't want to
              * indent the comment for. for example, non-single line comment,
              * closing brace */
             if (chunk_is_comment(pc) || chunk_is_closing_brace(pc))
@@ -2538,8 +2552,10 @@ static void indent_comment(chunk_t *pc, size_t col)
       int     coldiff = prev->orig_col - pc->orig_col;
       chunk_t *pp     = chunk_get_prev(prev);
 
-      /* Here we want to align comments that are relatively close one to another
-       * but not when the previous comment is on the same line with a preproc */
+      /*
+       * Here we want to align comments that are relatively close one to another
+       * but not when the previous comment is on the same line with a preproc
+       */
       if ((coldiff <= 3) && (coldiff >= -3) &&
           !chunk_is_preproc(pp))
       {

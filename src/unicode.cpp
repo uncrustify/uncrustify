@@ -271,8 +271,10 @@ static bool decode_utf16(const vector<UINT8> &in_data, deque<int> &out_data, cha
    }
    else
    {
-      /* If we have a few words, we can take a guess, assuming the first few
-       * chars are ASCII */
+      /*
+       * If we have a few words, we can take a guess, assuming the first few
+       * chars are ASCII
+       */
       enc = char_encoding_e::e_ASCII;
       idx = 0;
       if (in_data.size() >= 6)

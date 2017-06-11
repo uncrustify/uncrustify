@@ -508,7 +508,8 @@ static bool parse_comment(tok_ctx &ctx, chunk_t &pc)
             pc.str.append(ctx.get());
          }
 
-         /* If we hit an odd number of backslashes right before the newline,
+         /*
+          * If we hit an odd number of backslashes right before the newline,
           * then we keep going.
           */
          if (((bs_cnt & 1) == 0) || !ctx.more())
@@ -803,7 +804,8 @@ static bool parse_number(tok_ctx &ctx, chunk_t &pc)
       return(false);
    }
 
-   /* Check for Hex, Octal, or Binary
+   /*
+    * Check for Hex, Octal, or Binary
     * Note that only D, C++14 and Pawn support binary, but who cares?
     */
    bool did_hex = false;
@@ -909,7 +911,8 @@ static bool parse_number(tok_ctx &ctx, chunk_t &pc)
       }
    }
 
-   /* Check exponent
+   /*
+    * Check exponent
     * Valid exponents per language (not that it matters):
     * C/C++/D/Java: eEpP
     * C#/Pawn:      eE
@@ -929,7 +932,8 @@ static bool parse_number(tok_ctx &ctx, chunk_t &pc)
       }
    }
 
-   /* Check the suffixes
+   /*
+    * Check the suffixes
     * Valid suffixes per language (not that it matters):
     *        Integer       Float
     * C/C++: uUlL64        lLfF
@@ -963,7 +967,8 @@ static bool parse_number(tok_ctx &ctx, chunk_t &pc)
 
    pc.type = is_float ? CT_NUMBER_FP : CT_NUMBER;
 
-   /* If there is anything left, then we are probably dealing with garbage or
+   /*
+    * If there is anything left, then we are probably dealing with garbage or
     * some sick macro junk. Eat it.
     */
    parse_suffix(ctx, pc);

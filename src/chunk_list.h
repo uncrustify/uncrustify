@@ -12,10 +12,11 @@
 #include "char_table.h"
 
 
-/* TODO: better use a class for all chunk related operations,
- *  then the following functions can be changed into member
- *  functions. The function  "chunk_is_comment" would for instance
- *  become "is_comment". This makes the usage of the chunks easier
+/*
+ * TODO: better use a class for all chunk related operations,
+ * then the following functions can be changed into member
+ * functions. The function  "chunk_is_comment" would for instance
+ * become "is_comment". This makes the usage of the chunks easier
  * and more intuitive like chunk.is_comment() */
 
 
@@ -254,13 +255,17 @@ chunk_t *chunk_search_prev_cat(chunk_t *pc, const c_token_t cat);
  */
 chunk_t *chunk_search_next_cat(chunk_t *pc, const c_token_t cat);
 
-/* TODO: better move the function implementations to the source file.
- * No need to make the implementation public. */
+/*
+ * TODO: better move the function implementations to the source file.
+ * No need to make the implementation public.
+ */
 
 
-/* TODO: I doubt that inline is required for the functions below.
+/*
+ * TODO: I doubt that inline is required for the functions below.
  * The compiler should know how to optimize the code itself.
- * To clarify do a profiling run with and without inline  */
+ * To clarify do a profiling run with and without inline
+ */
 static_inline bool is_expected_type_and_level(chunk_t *pc, c_token_t type, int level)
 {
    // we don't care about the level (if it is negative) or it is as expected
@@ -424,8 +429,10 @@ static_inline bool chunk_is_str(chunk_t *pc, const char *str, size_t len)
           (pc->len() == len) &&                 // token size equals size parameter
           (memcmp(pc->text(), str, len) == 0)); // token name is the same as str parameter
 
-   /* TODO: possible access beyond array for memcmp, check this
-    * why not use strncmp here?  */
+   /*
+    * TODO: possible access beyond array for memcmp, check this
+    * why not use strncmp here?
+    */
 }
 
 

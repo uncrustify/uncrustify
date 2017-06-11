@@ -305,7 +305,8 @@ static bool split_line(chunk_t *start)
       LOG_FMT(LSPLIT, "%s: for split didn't work\n", __func__);
    }
 
-   /* If this is in a function call or prototype, split on commas or right
+   /*
+    * If this is in a function call or prototype, split on commas or right
     * after the open paren
     */
    else if ((start->flags & PCF_IN_FCN_DEF) ||

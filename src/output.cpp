@@ -424,8 +424,10 @@ void output_text(FILE *pfile)
             if (cpd.settings[UO_indent_with_tabs].n == 1)
             {
                size_t lvlcol;
-               /* FIXME: it would be better to properly set column_indent in
-                * indent_text(), but this hack for '}' and ':' seems to work. */
+               /*
+                * FIXME: it would be better to properly set column_indent in
+                * indent_text(), but this hack for '}' and ':' seems to work.
+                */
                if ((pc->type == CT_BRACE_CLOSE) ||
                    chunk_is_str(pc, ":", 1) ||
                    (pc->type == CT_PREPROC))
@@ -1379,7 +1381,8 @@ static void output_comment_multi(chunk_t *pc)
          }
          else
          {
-            /* This is not the first line, so we need to indent to the
+            /*
+             * This is not the first line, so we need to indent to the
              * correct column. Each line is indented 0 or more spaces.
              */
             ccol -= col_diff;
@@ -1405,7 +1408,8 @@ static void output_comment_multi(chunk_t *pc)
             }
             else
             {
-               /* If this doesn't start with a '*' or '|'.
+               /*
+                * If this doesn't start with a '*' or '|'.
                 * '\name' is a common parameter documentation thing.
                 */
                if (cpd.settings[UO_cmt_indent_multi].b &&

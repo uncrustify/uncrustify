@@ -631,8 +631,10 @@ void align_preprocessor(void)
          break;
       }
 
-      /* don't align anything if the first line ends with a newline before
-       * a value is given */
+      /*
+       * don't align anything if the first line ends with a newline before
+       * a value is given
+       */
       if (!chunk_is_newline(pc))
       {
          LOG_FMT(LALPP, "%s(%d): align on '%s', line %zu col %zu\n",
@@ -1916,7 +1918,8 @@ static void align_left_shift(void)
          }
          else if (as.m_aligned.Empty())
          {
-            /* check if the first one is actually on a blank line and then
+            /*
+             * check if the first one is actually on a blank line and then
              * indent it. Eg:
              *
              *      cout
@@ -1942,7 +1945,8 @@ static void align_left_shift(void)
       }
       else if (!as.m_aligned.Empty())
       {
-         /* check if the given statement is on a line of its own, immediately following <<
+         /*
+          * check if the given statement is on a line of its own, immediately following <<
           * and then it. Eg:
           *
           *      cout <<

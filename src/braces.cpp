@@ -657,7 +657,8 @@ static void convert_vbrace(chunk_t *vbr)
       set_chunk_type(vbr, CT_BRACE_OPEN);
       vbr->str = "{";
 
-      /* If the next chunk is a preprocessor, then move the open brace after the
+      /*
+       * If the next chunk is a preprocessor, then move the open brace after the
        * preprocessor.
        */
       chunk_t *tmp = chunk_get_next(vbr);
@@ -673,7 +674,8 @@ static void convert_vbrace(chunk_t *vbr)
       set_chunk_type(vbr, CT_BRACE_CLOSE);
       vbr->str = "}";
 
-      /* If the next chunk is a comment, followed by a newline, then
+      /*
+       * If the next chunk is a comment, followed by a newline, then
        * move the brace after the newline and add another newline after
        * the close brace.
        */
@@ -923,8 +925,10 @@ void add_long_closebrace_comment(void)
                   // 76007 Explicit null dereferenced, 2016-03-17
                   tag_pc = ns_pc;
 
-                  /* obtain the next chunck, normally this is the name of the namespace
-                   * and append it to generate "namespace xyz" */
+                  /*
+                   * obtain the next chunk, normally this is the name of the namespace
+                   * and append it to generate "namespace xyz"
+                   */
                   xstr = ns_pc->str;
                   xstr.append(" ");
                   append_tag_name(xstr, chunk_get_next(ns_pc));

@@ -2513,8 +2513,9 @@ string number_to_string(int number)
 
    sprintf(buffer, "%d", number);
 
-   /*NOTE: this creates a std:string class from the char array.
-    *      It isn't returning a pointer to stack memory.
+   /*
+    * NOTE: this creates a std:string class from the char array.
+    *       It isn't returning a pointer to stack memory.
     */
    return(buffer);
 }

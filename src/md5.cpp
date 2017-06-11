@@ -148,8 +148,10 @@ void MD5::Final(UINT8 digest[16])
    // Compute number of bytes mod 64
    UINT32 count = (m_bits[0] >> 3) & 0x3F;
 
-   /* Set the first char of padding to 0x80.  This is safe since there is
-    * always at least one byte free */
+   /*
+    * Set the first char of padding to 0x80. This is safe since there is always
+    * at least one byte free
+    */
    UINT8 *p = m_in + count;
 
    *p++ = 0x80;

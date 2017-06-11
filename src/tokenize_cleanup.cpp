@@ -120,7 +120,8 @@ void tokenize_cleanup(void)
 
    cpd.unc_stage = unc_stage_e::TOKENIZE_CLEANUP;
 
-   /* Since [] is expected to be TSQUARE for the 'operator', we need to make
+   /*
+    * Since [] is expected to be TSQUARE for the 'operator', we need to make
     * this change in the first pass.
     */
    chunk_t *pc;
@@ -231,7 +232,8 @@ void tokenize_cleanup(void)
          }
       }
 
-      /* change extern to qualifier if extern isn't followed by a string or
+      /*
+       * change extern to qualifier if extern isn't followed by a string or
        * an open paren
        */
       if (pc->type == CT_EXTERN)
@@ -288,7 +290,8 @@ void tokenize_cleanup(void)
       // Change angle open/close to CT_COMPARE, if not a template thingy
       if ((pc->type == CT_ANGLE_OPEN) && (pc->parent_type != CT_TYPE_CAST))
       {
-         /* pretty much all languages except C use <> for something other than
+         /*
+          * pretty much all languages except C use <> for something other than
           * comparisons.  "#include<xxx>" is handled elsewhere.
           */
          if (cpd.lang_flags & (LANG_CPP | LANG_CS | LANG_JAVA | LANG_VALA | LANG_OC))
@@ -382,7 +385,8 @@ void tokenize_cleanup(void)
          }
       }
 
-      /* Interface is only a keyword in MS land if followed by 'class' or 'struct'
+      /*
+       * Interface is only a keyword in MS land if followed by 'class' or 'struct'
        * likewise, 'class' may be a member name in Java.
        */
       if ((pc->type == CT_CLASS) &&
@@ -392,7 +396,8 @@ void tokenize_cleanup(void)
          set_chunk_type(pc, CT_WORD);
       }
 
-      /* Change item after operator (>=, ==, etc) to a CT_OPERATOR_VAL
+      /*
+       * Change item after operator (>=, ==, etc) to a CT_OPERATOR_VAL
        * Usually the next item is part of the operator.
        * In a few cases the next few tokens are part of it:
        *  operator +       - common case
@@ -440,7 +445,8 @@ void tokenize_cleanup(void)
          {
             set_chunk_type(next, CT_TYPE);
 
-            /* Replace next with a collection of all tokens that are part of
+            /*
+             * Replace next with a collection of all tokens that are part of
              * the type.
              */
             tmp2 = next;
@@ -594,7 +600,8 @@ void tokenize_cleanup(void)
          }
       }
 
-      /* ObjectiveC allows keywords to be used as identifiers in some situations
+      /*
+       * ObjectiveC allows keywords to be used as identifiers in some situations
        * This is a dirty hack to allow some of the more common situations.
        */
       if (cpd.lang_flags & LANG_OC)
@@ -696,7 +703,8 @@ void tokenize_cleanup(void)
          }
       }
 
-      /* Detect Objective C @property
+      /*
+       * Detect Objective C @property
        *  @property NSString *stringProperty;
        *  @property(nonatomic, retain) NSMutableDictionary *shareWith;
        */
@@ -712,7 +720,8 @@ void tokenize_cleanup(void)
          }
       }
 
-      /* Detect Objective C @selector
+      /*
+       * Detect Objective C @selector
        *  @selector(msgNameWithNoArg)
        *  @selector(msgNameWith1Arg:)
        *  @selector(msgNameWith2Args:arg2Name:)
@@ -826,7 +835,8 @@ void tokenize_cleanup(void)
          }
       }
 
-      /* HACK: treat try followed by a colon as a qualifier to handle this:
+      /*
+       * HACK: treat try followed by a colon as a qualifier to handle this:
        *   A::A(int) try : B() { } catch (...) { }
        */
       if ((pc->type == CT_TRY) && chunk_is_str(pc, "try", 3) &&
@@ -835,8 +845,10 @@ void tokenize_cleanup(void)
          set_chunk_type(pc, CT_QUALIFIER);
       }
 
-      /* If Java's 'synchronized' is in a method declaration, it should be
-       * a qualifier. */
+      /*
+       * If Java's 'synchronized' is in a method declaration, it should be
+       * a qualifier.
+       */
       if ((cpd.lang_flags & LANG_JAVA) &&
           (pc->type == CT_SYNCHRONIZED) &&
           (next->type != CT_PAREN_OPEN))
@@ -920,7 +932,8 @@ static void check_template(chunk_t *start)
    }
    else
    {
-      /* We may have something like "a< ... >", which is a template where
+      /*
+       * We may have something like "a< ... >", which is a template where
        * '...' may consist of anything except braces {}, a semicolon, and
        * unbalanced parens.
        * if we are inside an 'if' statement and hit a CT_BOOL, then it isn't a
@@ -966,7 +979,8 @@ static void check_template(chunk_t *start)
          }
       }
 
-      /* Scan forward to the angle close
+      /*
+       * Scan forward to the angle close
        * If we have a comparison in there, then it can't be a template.
        */
 #define MAX_NUMBER_OF_TOKEN    1024

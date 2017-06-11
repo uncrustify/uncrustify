@@ -586,8 +586,11 @@ static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
 
    pattern_class_e patcls = get_token_pattern_class(pc->type);
 
-   /** Create a stack entry for complex statements: */
-   /** if, elseif, switch, for, while, synchronized, using, lock, with, version, CT_D_SCOPE_IF */
+   /*
+    * Create a stack entry for complex statements:
+    * if, elseif, switch, for, while, synchronized, using, lock, with,
+    * version, CT_D_SCOPE_IF
+    */
    if (patcls == pattern_class_e::BRACED)
    {
       push_fmr_pse(frm, pc,
@@ -614,7 +617,8 @@ static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
       push_fmr_pse(frm, pc, brace_stage_e::ELSEIF, "+ComplexElse");
    }
 
-   /* Mark simple statement/expression starts
+   /*
+    * Mark simple statement/expression starts
     *  - after { or }
     *  - after ';', but not if the paren stack top is a paren
     *  - after '(' that has a parent type of CT_FOR

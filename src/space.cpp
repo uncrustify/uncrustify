@@ -1325,7 +1325,8 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
       return(cpd.settings[UO_sp_after_oc_at_sel].a);
    }
 
-   /* C cast:   "(int)"      vs "( int )"
+   /*
+    * C cast:   "(int)"      vs "( int )"
     * D cast:   "cast(int)"  vs "cast( int )"
     * CPP cast: "int(a + 3)" vs "int( a + 3 )"
     */
@@ -1947,8 +1948,10 @@ void space_text(void)
          }
       }
 
-      /* If the current chunk contains a newline, do not change the column
-       * of the next item */
+      /*
+       * If the current chunk contains a newline, do not change the column
+       * of the next item
+       */
       if ((pc->type == CT_NEWLINE) ||
           (pc->type == CT_NL_CONT) ||
           (pc->type == CT_COMMENT_MULTI))
@@ -2012,7 +2015,8 @@ void space_text(void)
                   {
                      // punctuator parsed to a different size..
 
-                     /* C++11 allows '>>' to mean '> >' in templates:
+                     /*
+                      * C++11 allows '>>' to mean '> >' in templates:
                       *   some_func<vector<string>>();
                       */
                      if ((((cpd.lang_flags & LANG_CPP) && cpd.settings[UO_sp_permit_cpp11_shift].b) ||
@@ -2089,7 +2093,8 @@ void space_text(void)
              chunk_is_newline(chunk_get_next(next)) &&
              (column < next->orig_col))
          {
-            /* do some comment adjustments if sp_before_tr_emb_cmt and
+            /*
+             * do some comment adjustments if sp_before_tr_emb_cmt and
              * sp_endif_cmt did not apply.
              */
             if (((cpd.settings[UO_sp_before_tr_emb_cmt].a == AV_IGNORE) ||
@@ -2107,8 +2112,10 @@ void space_text(void)
                }
                else
                {
-                  /* If there was a space, we need to force one, otherwise
-                   * try to keep the comment in the same column. */
+                  /*
+                   * If there was a space, we need to force one, otherwise
+                   * try to keep the comment in the same column.
+                   */
                   size_t col_min = pc->column + pc->len() + ((next->orig_prev_sp > 0) ? 1 : 0);
                   column = next->orig_col;
                   if (column < col_min)
@@ -2160,8 +2167,10 @@ void space_text_balance_nested_parens(void)
          // insert a space between the two opening parens
          space_add_after(first, 1);
 
-         /* find the closing paren that matches the 'first' open paren and force
-          * a space before it */
+         /*
+          * find the closing paren that matches the 'first' open paren and force
+          * a space before it
+          */
          chunk_t *cur  = next;
          chunk_t *prev = cur;
          while ((cur = chunk_get_next(cur)) != nullptr)

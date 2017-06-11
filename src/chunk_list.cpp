@@ -259,7 +259,8 @@ static chunk_t *chunk_search_typelevel(chunk_t *cur, c_token_t type, scope_e sco
 
 static chunk_t *chunk_search_str(chunk_t *cur, const char *str, size_t len, scope_e scope, direction_e dir, int level)
 {
-   /* Depending on the parameter dir the search function searches
+   /*
+    * Depending on the parameter dir the search function searches
     * in forward or backward direction */
    search_t search_function = select_search_fct(dir);
    chunk_t  *pc             = cur;
@@ -276,7 +277,8 @@ static chunk_t *chunk_search_str(chunk_t *cur, const char *str, size_t len, scop
 static chunk_t *chunk_search(chunk_t *cur, const check_t check_fct, const scope_e scope,
                              const direction_e dir, const bool cond)
 {
-   /* Depending on the parameter dir the search function searches
+   /*
+    * Depending on the parameter dir the search function searches
     * in forward or backward direction */
    search_t search_function = select_search_fct(dir);
    chunk_t  *pc             = cur;
@@ -632,7 +634,8 @@ void chunk_swap_lines(chunk_t *pc1, chunk_t *pc2)
     *                         ^- pc1                              ^- pc2
     */
 
-   /* pc1 and pc2 should be the newlines for their lines.
+   /*
+    * pc1 and pc2 should be the newlines for their lines.
     * swap the chunks and the nl_count so that the spacing remains the same.
     */
    if ((pc1 != nullptr) && (pc2 != nullptr))

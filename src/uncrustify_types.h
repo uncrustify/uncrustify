@@ -234,7 +234,8 @@ struct align_ptr_t
    size_t  amp_style;   //! AlignStack.m_amp_style
    int     gap;         //! AlignStack.m_gap
 
-   /* col_adj is the amount to alter the column for the token.
+   /*
+    * col_adj is the amount to alter the column for the token.
     * For example, a dangling '*' would be set to -1.
     * A right-aligned word would be a positive value.
     */

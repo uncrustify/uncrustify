@@ -536,7 +536,8 @@ int main(int argc, char *argv[])
       }
    }
 
-   /* Try to load the config file, if available.
+   /*
+    * Try to load the config file, if available.
     * It is optional for "--universalindent" and "--detect", but required for
     * everything else.
     */
@@ -662,7 +663,8 @@ int main(int argc, char *argv[])
       return(EXIT_SUCCESS);
    }
 
-   /* Everything beyond this point requires a config file, so complain and
+   /*
+    * Everything beyond this point requires a config file, so complain and
     * bail if we don't have one.
     */
    if (cfg_file.empty())
@@ -1210,7 +1212,8 @@ static void do_source_file(const char *filename_in,
 
    cpd.filename = filename_in;
 
-   /* If we're only going to write on an actual change, then build the output buffer now
+   /*
+    * If we're only going to write on an actual change, then build the output buffer now
     * and if there were changes, run it through the normal file write path.
     *
     * Future: many code paths could be simplified if 'bout' were always used and not
@@ -1218,7 +1221,8 @@ static void do_source_file(const char *filename_in,
     */
    if (cpd.if_changed)
    {
-      /* Cleanup is deferred because we need 'bout' preserved long enough to write it to
+      /*
+       * Cleanup is deferred because we need 'bout' preserved long enough to write it to
        * a file (if it changed).
        */
       uncrustify_file(fm, nullptr, parsed_file, true);
@@ -1306,7 +1310,8 @@ static void do_source_file(const char *filename_in,
             // Change - rename filename_tmp to filename_out
 
 #ifdef WIN32
-            /* Atomic rename in windows can't go through stdio rename() func because underneath
+            /*
+             * Atomic rename in windows can't go through stdio rename() func because underneath
              * it calls MoveFileExW without MOVEFILE_REPLACE_EXISTING.
              */
             if (!MoveFileEx(filename_tmp.c_str(), filename_out, MOVEFILE_REPLACE_EXISTING | MOVEFILE_COPY_ALLOWED))
@@ -1423,7 +1428,8 @@ static void add_func_header(c_token_t type, file_mem &fm)
 
       do_insert = false;
 
-      /* On a function proto or def. Back up to a close brace or semicolon on
+      /*
+       * On a function proto or def. Back up to a close brace or semicolon on
        * the same level
        */
       ref = pc;
@@ -1503,9 +1509,7 @@ static void add_msg_header(c_token_t type, file_mem &fm)
 
       do_insert = false;
 
-      /* On a message decl. Back up to a Objective-C scope
-       * the same level
-       */
+      // On a message decl. Back up to a Objective-C scope the same level
       ref = pc;
       while ((ref = chunk_get_prev(ref)) != nullptr)
       {

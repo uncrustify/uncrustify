@@ -201,7 +201,8 @@ void log_fmt(log_sev_t sev, const char *fmt, ...)
       return;
    }
 
-   /* Some implementation of vsnprintf() return the number of characters
+   /*
+    * Some implementation of vsnprintf() return the number of characters
     * that would have been stored if the buffer was large enough instead of
     * the number of characters actually stored.
     */

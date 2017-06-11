@@ -603,7 +603,8 @@ chunk_t *newline_add_between(chunk_t *start, chunk_t *end)
       }
    }
 
-   /* If the second one is a brace open, then check to see
+   /*
+    * If the second one is a brace open, then check to see
     * if a comment + newline follows
     */
    if (end->type == CT_BRACE_OPEN)
@@ -1304,7 +1305,8 @@ static void newlines_struct_union(chunk_t *start, argval_t nl_opt, bool leave_tr
       return;
    }
 
-   /* step past any junk between the keyword and the open brace
+   /*
+    * step past any junk between the keyword and the open brace
     * Quit if we hit a semicolon or '=', which are not expected.
     */
    size_t level = start->level;
@@ -2175,7 +2177,8 @@ static void newline_func_def(chunk_t *start)
                prev = chunk_get_prev_ncnl(prev);
             }
 
-            /* If we are on a '::', step back two tokens
+            /*
+             * If we are on a '::', step back two tokens
              * TODO: do we also need to check for '.' ?
              */
             while ((prev != nullptr) && (prev->type == CT_DC_MEMBER))
@@ -3037,7 +3040,8 @@ void newlines_cleanup_braces(bool first)
          next = chunk_get_next_ncnl(pc);
          if ((next != nullptr) && (next->type == CT_BRACE_OPEN))
          {
-            /* TODO:
+            /*
+             * TODO:
              * this could be used to control newlines between the
              * the if/while/for/switch close paren and the open brace, but
              * that is currently handled elsewhere.
@@ -3175,8 +3179,10 @@ void newlines_cleanup_braces(bool first)
             }
             newline_iarf(pc, arg);
 
-            /* if there is a newline after the open, then force a newline
-             * before the close */
+            /*
+             * if there is a newline after the open, then force a newline
+             * before the close
+             */
             tmp = chunk_get_next_nc(pc);
             if (chunk_is_newline(tmp))
             {
@@ -4235,7 +4241,8 @@ static void newlines_double_space_struct_enum_union(chunk_t *open_brace)
          continue;
       }
 
-      /* If the newline is NOT after a comment or a brace open and
+      /*
+       * If the newline is NOT after a comment or a brace open and
        * it is before a comment, then make sure that the newline is
        * at least doubled
        */

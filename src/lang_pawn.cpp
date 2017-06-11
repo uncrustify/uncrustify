@@ -161,8 +161,10 @@ void pawn_prescan(void)
 {
    LOG_FUNC_ENTRY();
 
-   /* Start at the beginning and step through the entire file, and clean up
-    * any questionable stuff */
+   /*
+    * Start at the beginning and step through the entire file, and clean up
+    * any questionable stuff
+    */
    bool    did_nl = true;
    chunk_t *pc    = chunk_get_head();
    while (pc != nullptr)
@@ -355,7 +357,8 @@ static chunk_t *pawn_process_func_def(chunk_t *pc)
    LOG_FMT(LPFUNC, "%s: %zu:%zu %s\n",
            __func__, pc->orig_line, pc->orig_col, pc->text());
 
-   /* If we don't have a brace open right after the close fparen, then
+   /*
+    * If we don't have a brace open right after the close fparen, then
     * we need to add virtual braces around the function body.
     */
    chunk_t *clp  = chunk_get_next_str(pc, ")", 1, 0);
