@@ -30,6 +30,10 @@ typedef unsigned long long   UINT64;
 #define PRIx64    "llx"
 #endif
 
+#ifndef PRIu64
+#define PRIu64    "llu"
+#endif
+
 /* eliminate GNU's attribute */
 #define __attribute__(x)
 
