@@ -1700,10 +1700,11 @@ static bool parse_next(tok_ctx &ctx, chunk_t &pc)
    if ((cpd.lang_flags & LANG_CPP)
        && (ch == 'u' || ch == 'U' || ch == 'R' || ch == 'L'))
    {
-      auto idx = size_t {};
+      auto idx     = size_t {};
       auto is_real = false;
 
-      if (ch == 'u' && ctx.peek(1) == '8')      {
+      if (ch == 'u' && ctx.peek(1) == '8')
+      {
          idx = 2;
       }
       else if (unc_tolower(ch) == 'u' || ch == 'L')

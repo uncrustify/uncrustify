@@ -5,7 +5,7 @@
  * @author  Ben Gardner
  * @license GPL v2+
  */
-#include "uncrustify_types.h"
+#include "punctuators.h"
 #include "prototypes.h"
 #include <algorithm>
 
@@ -147,7 +147,8 @@ static const chunk_tag_t symbols1[] =
    { "~", CT_INV,          LANG_ALL                            },
 };
 
-#include "punctuators.h"
+// must be positioned here, after all symbolsX[], because punc_table uses them
+#include "punctuator_table.h"
 
 
 const chunk_tag_t *find_punctuator(const char *str, int lang_flags)
