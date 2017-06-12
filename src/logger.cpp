@@ -9,13 +9,15 @@
  * @author  Ben Gardner
  * @license GPL v2+
  */
+
+#include "compat.h"
 #include "logger.h"
 #include "uncrustify_types.h"
+#include "unc_ctype.h"
+#include "log_levels.h"
 #include <cstdio>
 #include <deque>
 #include <stdarg.h>
-#include "unc_ctype.h"
-#include "log_levels.h"
 
 
 struct log_fcn_info
@@ -241,6 +243,26 @@ void log_fmt(log_sev_t sev, const char *fmt, ...)
       return;
    }
 
+   // Issue #1203
+   if (strlen(fmt) == 0)
+   {
+      return;
+   }
+
+#define BUFFERLENGTH    200
+   char         buf[BUFFERLENGTH];
+   // it MUST be a 'unsigned int' variable to be runable under windows
+   unsigned int length = strlen(fmt);
+   if (length > BUFFERLENGTH)
+   {
+      fprintf(stderr, "FATAL: The variable 'buf' is not big enought:\n");
+      fprintf(stderr, "   it should be bigger as = %u\n", length);
+      exit(EX_SOFTWARE);
+   }
+   memcpy(buf, fmt, length);
+   buf[length] = 0;
+   convert_log_zu2lu(buf);
+
    /* Some implementation of vsnprintf() return the number of characters
     * that would have been stored if the buffer was large enough instead of
     * the number of characters actually stored.
@@ -250,7 +272,7 @@ void log_fmt(log_sev_t sev, const char *fmt, ...)
    /* Add on the variable log parameters to the log string */
    va_list args;
    va_start(args, fmt);
-   size_t  len = static_cast<size_t>(vsnprintf(&g_log.buf[g_log.buf_len], cap, fmt, args));
+   size_t  len = static_cast<size_t>(vsnprintf(&g_log.buf[g_log.buf_len], cap, buf, args));
    va_end(args);
 
    if (len > 0)
@@ -264,7 +286,7 @@ void log_fmt(log_sev_t sev, const char *fmt, ...)
    }
 
    log_end();
-}
+} // log_fmt
 
 
 /**
