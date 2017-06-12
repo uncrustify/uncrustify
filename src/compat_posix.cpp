@@ -29,4 +29,5 @@ bool unc_homedir(std::string &home)
    return(unc_getenv("HOME", home));
 }
 
+
 #endif /* ifndef WIN32 */

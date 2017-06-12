@@ -12,11 +12,13 @@
 #include "char_table.h"
 
 
-/* \todo better use a class for all chunk related operations,
- *  then the following functions can be changed into member
- *  functions. The function  "chunk_is_comment" would for instance
- *  become "is_comment". This makes the usage of the chunks easier
- * and more intuitive like chunk.is_comment() */
+/*
+ * TODO: better use a class for all chunk related operations,
+ * then the following functions can be changed into member
+ * functions. The function "chunk_is_comment(chunk)" would for instance
+ * become "chunk.is_comment()". This makes the usage of the chunks easier
+ * and more intuitive.
+ */
 
 
 #define ANY_LEVEL    -1
@@ -29,65 +31,106 @@
  *
  * PREPROC
  *  - If not in a preprocessor, skip over any encountered preprocessor stuff
- *  - If in a preprocessor, fail to leave (return NULL)
+ *  - If in a preprocessor, fail to leave (return nullptr)
  */
 enum class scope_e : unsigned int
 {
-   ALL,      /**< search in all kind of chunks */
-   PREPROC,  /**< search only in preprocessor chunks */
+   ALL,      //! search in all kind of chunks
+   PREPROC,  //! search only in preprocessor chunks
 };
 
 
-/* duplicate a chunk in a chunk list */
+void set_chunk_real(chunk_t *pc, c_token_t token, log_sev_t what, const char *str);
+
+
+/**
+ * duplicate a chunk in a chunk list
+ *
+ * @param pc_in  chunk to duplicate
+ */
 chunk_t *chunk_dup(const chunk_t *pc_in);
 
 
 /**
- * Add a copy after the given chunk.
- * If ref is NULL, add at the head.
- * \todo is ref=NULL really useful ?
+ * @brief Add a copy of a chunk to a chunk list after the given position.
+ *
+ * @note If ref is nullptr, add at the tail of the chunk list
+ *
+ * @todo is ref=nullptr really useful ?
+ *
+ * @param pc_in  pointer to chunk to add to list
+ * @param ref    position where insertion takes place
+ *
+ * @return pointer to the added chunk
  */
 chunk_t *chunk_add_after(const chunk_t *pc_in, chunk_t *ref);
 
 
 /**
- * Add a copy before the given chunk.
- * If ref is NULL, add at the head.
- * \todo is ref=NULL really useful ?
+ * @brief Add a copy of a chunk to a chunk list before the given position
+ *
+ * @note If ref is nullptr, add at the head of the chunk list
+ *
+ * @todo is ref=nullptr really useful ?
+ *
  * \bug code adds it before the tail, either code or comment is wrong
+ *
+ * @param pc_in  pointer to chunk to add to list
+ * @param ref    position where insertion takes place
+ *
+ * @retval pointer to the added chunk
  */
 chunk_t *chunk_add_before(const chunk_t *pc_in, chunk_t *ref);
 
 
 /**
  * delete a chunk from a chunk list
+ *
+ * @param pc  chunk to delete
  */
 void chunk_del(chunk_t *pc);
 
 
 /**
  * move a chunk to after the reference position in a chunk list
+ *
+ * @param pc_in  chunk to move
+ * @param ref    chunk after which to move
  */
 void chunk_move_after(chunk_t *pc_in, chunk_t *ref);
 
 
 /**
- * get the first chunk in a chunk list
+ * @brief returns the head of a chunk list
+ *
+ * @return pointer to the first chunk
  */
 chunk_t *chunk_get_head(void);
 
 
-/**
- * get the last chunk in a chunk list
- */
+//! get the last chunk in a chunk list
 chunk_t *chunk_get_tail(void);
 
 
-/** provide the next chunk in a chunk list */
+/**
+ * @brief returns the next chunk in a list of chunks
+ *
+ * @param cur    chunk to use as start point
+ * @param scope  code region to search in
+ *
+ * @return pointer to next chunk or nullptr if no chunk was found
+ */
 chunk_t *chunk_get_next(chunk_t *cur, scope_e scope = scope_e::ALL);
 
 
-/** provide the previous chunk in a chunk list */
+/**
+ * @brief returns the previous chunk in a list of chunks
+ *
+ * @param cur    chunk to use as start point
+ * @param scope  code region to search in
+ *
+ * @return pointer to previous chunk or nullptr if no chunk was found
+ */
 chunk_t *chunk_get_prev(chunk_t *cur, scope_e scope = scope_e::ALL);
 
 
@@ -111,41 +154,58 @@ void chunk_swap_lines(chunk_t *pc1, chunk_t *pc2);
 
 /**
  * Finds the first chunk on the line that pc is on.
- * This just backs up until a newline or NULL is hit.
+ * This just backs up until a newline or nullptr is hit.
  *
  * given: [ a - b - c - n1 - d - e - n2 ]
  * input: [ a | b | c | n1 ] => a
  * input: [ d | e | n2 ]     => d
+ *
+ * @param pc  chunk to start with
  */
 chunk_t *chunk_first_on_line(chunk_t *pc);
 
 
 /**
  * Gets the next NEWLINE chunk
+ *
+ * @param cur    chunk to use as start point
+ * @param scope  code region to search in
  */
 chunk_t *chunk_get_next_nl(chunk_t *cur, scope_e scope = scope_e::ALL);
 
 
 /**
  * Gets the next non-comment chunk
+ *
+ * @param cur    chunk to use as start point
+ * @param scope  code region to search in
  */
 chunk_t *chunk_get_next_nc(chunk_t *cur, scope_e scope = scope_e::ALL);
 
 
 /**
- * Gets the next non-NEWLINE chunk
+ * Gets the next non-NEWLINE and non-comment chunk
+ *
+ * @param cur    chunk to use as start point
+ * @param scope  code region to search in
  */
 chunk_t *chunk_get_next_nnl(chunk_t *cur, scope_e scope = scope_e::ALL);
 
 
 /**
- * Gets the next non-NEWLINE and non-comment chunk
+ * Gets the next non-NEWLINE and non-comment chunk, non-preprocessor chunk
+ *
+ * @param cur    chunk to use as start point
+ * @param scope  code region to search in
  */
 chunk_t *chunk_get_next_ncnl(chunk_t *cur, scope_e scope = scope_e::ALL);
 
 
 /**
  * Gets the next non-NEWLINE and non-comment chunk, non-preprocessor chunk
+ *
+ * @param cur    chunk to use as start point
+ * @param scope  code region to search in
  */
 chunk_t *chunk_get_next_ncnlnp(chunk_t *cur, scope_e scope = scope_e::ALL);
 
@@ -155,51 +215,73 @@ chunk_t *chunk_get_next_ncnlnp(chunk_t *cur, scope_e scope = scope_e::ALL);
  * brackets. This handles stacked [] instances to accommodate
  * multi-dimensional array declarations
  *
- * @param  cur     Starting chunk
- * @param  scope   chunk section to consider
- * @return         NULL or the next chunk not in or part of square brackets
+ * @param  cur    chunk to use as start point
+ * @param  scope  code region to search in
+ *
+ * @return nullptr or the next chunk not in or part of square brackets
  */
 chunk_t *chunk_get_next_nisq(chunk_t *cur, scope_e scope = scope_e::ALL);
 
 
 /**
  * Gets the next non-blank chunk
+ *
+ * @param cur    chunk to use as start point
+ * @param scope  code region to search in
  */
 chunk_t *chunk_get_next_nblank(chunk_t *cur, scope_e scope = scope_e::ALL);
 
 
 /**
  * Gets the prev non-blank chunk
+ *
+ * @param cur    chunk to use as start point
+ * @param scope  code region to search in
  */
 chunk_t *chunk_get_prev_nblank(chunk_t *cur, scope_e scope = scope_e::ALL);
 
 
 /**
  * Gets the prev NEWLINE chunk
+ *
+ * @param cur    chunk to use as start point
+ * @param scope  code region to search in
  */
 chunk_t *chunk_get_prev_nl(chunk_t *cur, scope_e scope = scope_e::ALL);
 
 
 /**
  * Gets the prev non-comment chunk
+ *
+ * @param cur    chunk to use as start point
+ * @param scope  code region to search in
  */
 chunk_t *chunk_get_prev_nc(chunk_t *cur, scope_e scope = scope_e::ALL);
 
 
 /**
  * Gets the prev non-NEWLINE chunk
+ *
+ * @param cur    chunk to use as start point
+ * @param scope  code region to search in
  */
 chunk_t *chunk_get_prev_nnl(chunk_t *cur, scope_e scope = scope_e::ALL);
 
 
 /**
  * Gets the prev non-NEWLINE and non-comment chunk
+ *
+ * @param cur    chunk to use as start point
+ * @param scope  code region to search in
  */
 chunk_t *chunk_get_prev_ncnl(chunk_t *cur, scope_e scope = scope_e::ALL);
 
 
 /**
  * Gets the prev non-NEWLINE and non-comment chunk, non-preprocessor chunk
+ *
+ * @param cur    chunk to use as start point
+ * @param scope  code region to search in
  */
 chunk_t *chunk_get_prev_ncnlnp(chunk_t *cur, scope_e scope = scope_e::ALL);
 
@@ -207,10 +289,12 @@ chunk_t *chunk_get_prev_ncnlnp(chunk_t *cur, scope_e scope = scope_e::ALL);
 /**
  * Grabs the next chunk of the given type at the level.
  *
- * @param cur     Starting chunk
- * @param type    The type to look for
- * @param level   -1 or ANY_LEVEL (any level) or the level to match
- * @return        NULL or the match
+ * @param cur    chunk to use as start point
+ * @param type   the type to look for
+ * @param level  -1 or ANY_LEVEL (any level) or the level to match
+ * @param scope  code region to search in
+ *
+ * @return nullptr or the match
  */
 chunk_t *chunk_get_next_type(chunk_t *cur, c_token_t type, int level, scope_e scope = scope_e::ALL);
 
@@ -218,75 +302,131 @@ chunk_t *chunk_get_next_type(chunk_t *cur, c_token_t type, int level, scope_e sc
 /**
  * Grabs the prev chunk of the given type at the level.
  *
- * @param cur     Starting chunk
- * @param type    The type to look for
- * @param level   -1 or ANY_LEVEL (any level) or the level to match
- * @return        NULL or the match
+ * @param cur    chunk to use as start point
+ * @param type   The type to look for
+ * @param level  -1 or ANY_LEVEL (any level) or the level to match
+ * @param scope  code region to search in
+ *
+ * @return nullptr or the match
  */
 chunk_t *chunk_get_prev_type(chunk_t *cur, c_token_t type, int level, scope_e scope = scope_e::ALL);
 
 
+/**
+ * @brief find a chunk that holds a given string
+ *
+ * Traverses a chunk list in forward direction until a chunk of a given category is found.
+ *
+ * @param cur    chunk to use as start point
+ * @param str    string to search for
+ * @param len    length of string
+ * @param level  the level to match or -1 or ANY_LEVEL
+ * @param scope  code region to search in
+ *
+ * @retval nullptr  no chunk found or invalid parameters provided
+ * @retval chunk_t  pointer to the found chunk
+ */
 chunk_t *chunk_get_next_str(chunk_t *cur, const char *str, size_t len, int level, scope_e scope = scope_e::ALL);
 
 
+/**
+ * @brief find a chunk that holds a given string
+ *
+ * Traverses a chunk list in backward direction until a chunk of a given category is found.
+ *
+ * @param cur    chunk to use as start point
+ * @param str    string to search for
+ * @param len    length of string
+ * @param level  the level to match or -1 or ANY_LEVEL
+ * @param scope  code region to search in
+ *
+ * @retval nullptr  no chunk found or invalid parameters provided
+ * @retval chunk_t  pointer to the found chunk
+ */
 chunk_t *chunk_get_prev_str(chunk_t *cur, const char *str, size_t len, int level, scope_e scope = scope_e::ALL);
 
 
 /**
- * \brief Gets the next non-vbrace chunk
+ * @brief Gets the next non-vbrace chunk
  *
  * @param  cur    chunk to start search
- * @param  scope    chunk section to consider
- * @return        pointer to found chunk or NULL if no chunk was found
+ * @param  scope  chunk section to consider
+ *
+ * @return pointer to found chunk or nullptr if no chunk was found
  */
 chunk_t *chunk_get_next_nvb(chunk_t *cur, const scope_e scope = scope_e::ALL);
 
 
 /**
- * \brief Gets the previous non-vbrace chunk
+ * @brief Gets the previous non-vbrace chunk
  *
  * @param  cur    chunk to start search
- * @param  scope    chunk section to consider
- * @return        pointer to found chunk or NULL if no chunk was found
+ * @param  scope  chunk section to consider
+ *
+ * @return pointer to found chunk or nullptr if no chunk was found
  */
 chunk_t *chunk_get_prev_nvb(chunk_t *cur, const scope_e scope = scope_e::ALL);
 
 
 /**
- * \brief reverse search a chunk of a given category in a chunk list
+ * @brief reverse search a chunk of a given category in a chunk list
  *
- * @param  pc      chunk list to search in
- * @param  cat     category to search for
- * @retval NULL    no object found, or invalid parameters provided
- * @retval chunk_t pointer to the found object
+ * @param  pc   chunk list to search in
+ * @param  cat  category to search for
+ *
+ * @retval nullptr  no object found, or invalid parameters provided
+ * @retval chunk_t  pointer to the found object
  */
 chunk_t *chunk_search_prev_cat(chunk_t *pc, const c_token_t cat);
 
 
 /**
- * \brief forward search a chunk of a given category in a chunk list
+ * @brief forward search a chunk of a given category in a chunk list
  *
- * @param  pc      chunk list to search in
- * @param  cat     category to search for
- * @retval NULL    no object found, or invalid parameters provided
- * @retval chunk_t pointer to the found object
+ * @param  pc   chunk list to search in
+ * @param  cat  category to search for
+ *
+ * @retval nullptr  no object found, or invalid parameters provided
+ * @retval chunk_t  pointer to the found object
  */
 chunk_t *chunk_search_next_cat(chunk_t *pc, const c_token_t cat);
 
-/* \todo better move the function implementations to the source file.
- * No need to make the implementation public. */
+/*
+ * TODO: better move the function implementations to the source file.
+ * No need to make the implementation public.
+ */
 
-/* \todo I doubt that inline is required for the functions below.
+
+/*
+ * TODO: I doubt that inline is required for the functions below.
  * The compiler should know how to optimize the code itself.
- * To clarify do a profiling run with and without inline  */
+ * To clarify do a profiling run with and without inline
+ */
+static_inline bool is_expected_type_and_level(chunk_t *pc, c_token_t type, int level)
+{
+   // we don't care about the level (if it is negative) or it is as expected
+   // and the type is as expected
+   return((level < 0 || pc->level == static_cast<size_t>(level))
+          && pc->type == type);
+}
+
+
+static_inline bool is_expected_string_and_level(chunk_t *pc, const char *str, int level, size_t len)
+{
+   // we don't care about the level (if it is negative) or it is as expected
+   return((level < 0 || pc->level == static_cast<size_t>(level))
+          && pc->len() == len                      // and the length is as expected
+          && memcmp(str, pc->text(), len) == 0);   // and the strings are equal
+}
 
 
 /**
  * Skips to the closing match for the current paren/brace/square.
  *
- * @param  cur     The opening or closing paren/brace/square
- * @param  scope   chunk section to consider
- * @return         NULL or the matching paren/brace/square
+ * @param  cur    The opening or closing paren/brace/square
+ * @param  scope  chunk section to consider
+ *
+ * @return nullptr or the matching paren/brace/square
  */
 static_inline chunk_t *chunk_skip_to_match(chunk_t *cur, scope_e scope = scope_e::ALL)
 {
@@ -324,6 +464,15 @@ static_inline chunk_t *chunk_skip_to_match_rev(chunk_t *cur, scope_e scope = sco
 }
 
 
+/**
+ * checks if a chunk is valid and is a comment
+ *
+ * comment means any kind of
+ * - single line comment
+ * - multiline comment
+ * - C comment
+ * - C++ comment
+ */
 static_inline bool chunk_is_comment(chunk_t *pc)
 {
    return((pc != NULL) && ((pc->type == CT_COMMENT) ||
@@ -353,12 +502,20 @@ static_inline bool chunk_is_semicolon(chunk_t *pc)
 }
 
 
+/**
+ * checks if a chunk is valid and is a blank character
+ *
+ * @note check compares if len == 0
+ *
+ * @todo rename function: blank is a space not an empty string
+ */
 static_inline bool chunk_is_blank(chunk_t *pc)
 {
    return((pc != NULL) && (pc->len() == 0));
 }
 
 
+//! checks if a chunk is valid and either a comment or newline
 static_inline bool chunk_is_comment_or_newline(chunk_t *pc)
 {
    return(chunk_is_comment(pc) || chunk_is_newline(pc));
@@ -421,12 +578,14 @@ static_inline bool chunk_is_token(chunk_t *pc, c_token_t c_token)
 
 static_inline bool chunk_is_str(chunk_t *pc, const char *str, size_t len)
 {
-   return((pc != NULL) &&                       /* valid pc pointer */
-          (pc->len() == len) &&                 /* token size equals size parameter */
-          (memcmp(pc->text(), str, len) == 0)); /* token name is the same as str parameter */
+   return((pc != NULL) &&                       // valid pc pointer
+          (pc->len() == len) &&                 // token size equals size parameter
+          (memcmp(pc->text(), str, len) == 0)); // token name is the same as str parameter
 
-   /* \todo possible access beyond array for memcmp, check this
-    * why not use strncmp here?  */
+   /*
+    * TODO: possible access beyond array for memcmp, check this
+    * why not use strncmp here?
+    */
 }
 
 
@@ -482,9 +641,7 @@ static_inline bool chunk_is_ptr_operator(chunk_t *pc)
 }
 
 
-/**
- * Check to see if there is a newline between the two chunks
- */
+//! Check to see if there is a newline between the two chunks
 bool chunk_is_newline_between(chunk_t *start, chunk_t *end);
 
 
@@ -558,9 +715,10 @@ static_inline bool chunk_safe_to_del_nl(chunk_t *nl)
 
 
 /**
- * Handle for (... in ...) in Objective-C.
- * Returns true if pc->prev points to a CT_FOR and we find a CT_IN before the
- * closing parenthesis.
+ * Checks if a chunk points to the opening parenthese of a
+ * for(...in...) loop in Objective-C.
+ *
+ * @return true  - the chunk is the opening parentheses of a for in loop
  */
 static_inline bool chunk_is_forin(chunk_t *pc)
 {
@@ -618,5 +776,6 @@ void chunk_flags_set_real(chunk_t *pc, UINT64 clr_bits, UINT64 set_bits);
       LOG_FUNC_CALL();                      \
       chunk_flags_set_real((pc), (cc), 0);  \
 } while (false)
+
 
 #endif /* CHUNK_LIST_H_INCLUDED */

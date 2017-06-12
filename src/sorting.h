@@ -13,6 +13,15 @@
 
 #define MAX_NUMBER_TO_SORT    256
 
+
+/**
+ * alphabetically sort the #include or #import
+ * statements of a file
+ *
+ * @todo better use a chunk pointer parameter
+ * instead of a global variable
+ */
 void sort_imports(void);
+
 
 #endif /* SORTING_H_INCLUDED */

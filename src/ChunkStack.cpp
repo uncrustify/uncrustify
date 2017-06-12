@@ -88,11 +88,6 @@ void ChunkStack::Push_Back(chunk_t *pc, size_t seqnum)
 }
 
 
-/**
- * Mark an entry to be removed by Collapse()
- *
- * @param idx  The item to remove
- */
 void ChunkStack::Zap(size_t idx)
 {
    if (idx < m_cse.size())
@@ -102,9 +97,6 @@ void ChunkStack::Zap(size_t idx)
 }
 
 
-/**
- * Compresses down the stack by removing dead entries
- */
 void ChunkStack::Collapse()
 {
    size_t wr_idx = 0;

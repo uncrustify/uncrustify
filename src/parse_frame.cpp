@@ -15,22 +15,15 @@
 #include <cstdlib>
 
 
-void pf_log_frms(log_sev_t logsev, const char *txt, struct parse_frame *pf);
+static void pf_log_frms(log_sev_t logsev, const char *txt, parse_frame_t *pf);
 
 
-/**
- * Copy the 2nd top item off the stack into pf.
- * This is called on #else and #elif.
- * The stack contains [...] [base] [if] at this point.
- * We want to copy [base].
- */
-void pf_copy_2nd_tos(parse_frame *pf);
+//! Logs the entire parse frame stack
+static void pf_log_all(log_sev_t logsev);
 
 
-/**
- * Logs one parse frame
- */
-void pf_log(log_sev_t logsev, parse_frame_t *pf)
+//! Logs one parse frame
+static void pf_log(log_sev_t logsev, parse_frame_t *pf)
 {
    LOG_FMT(logsev, "[%s] BrLevel=%d Level=%d PseTos=%zu\n",
            get_token_name(pf->in_ifdef),
@@ -47,7 +40,7 @@ void pf_log(log_sev_t logsev, parse_frame_t *pf)
 }
 
 
-void pf_log_frms(log_sev_t logsev, const char *txt, parse_frame_t *pf)
+static void pf_log_frms(log_sev_t logsev, const char *txt, parse_frame_t *pf)
 {
    LOG_FMT(logsev, "%s Parse Frames(%d):", txt, cpd.frame_count);
    for (int idx = 0; idx < cpd.frame_count; idx++)
@@ -60,10 +53,7 @@ void pf_log_frms(log_sev_t logsev, const char *txt, parse_frame_t *pf)
 }
 
 
-/**
- * Logs the entire parse frame stack
- */
-void pf_log_all(log_sev_t logsev)
+static void pf_log_all(log_sev_t logsev)
 {
    LOG_FMT(logsev, "##=- Parse Frame : %d entries\n", cpd.frame_count);
 
@@ -77,19 +67,12 @@ void pf_log_all(log_sev_t logsev)
 }
 
 
-/**
- * Copies src to dst.
- */
 void pf_copy(parse_frame_t *dst, const parse_frame_t *src)
 {
    memcpy(dst, src, sizeof(parse_frame_t));
 }
 
 
-/**
- * Push a copy of the parse frame onto the stack.
- * This is called on #if and #ifdef.
- */
 void pf_push(parse_frame_t *pf)
 {
    static int ref_no = 1;
@@ -105,11 +88,6 @@ void pf_push(parse_frame_t *pf)
 }
 
 
-/**
- * Push a copy of the parse frame onto the stack, under the tos.
- * If this were a linked list, just add before the last item.
- * This is called on the first #else and #elif.
- */
 void pf_push_under(parse_frame_t *pf)
 {
    LOG_FMT(LPF, "%s(%d): before count = %d\n", __func__, __LINE__, cpd.frame_count);
@@ -128,10 +106,6 @@ void pf_push_under(parse_frame_t *pf)
 }
 
 
-/**
- * Copy the top item off the stack into pf.
- * This is called on #else and #elif.
- */
 void pf_copy_tos(parse_frame_t *pf)
 {
    if (cpd.frame_count > 0)
@@ -152,9 +126,6 @@ void pf_copy_2nd_tos(parse_frame_t *pf)
 }
 
 
-/**
- * Deletes the top frame from the stack.
- */
 void pf_trash_tos(void)
 {
    if (cpd.frame_count > 0)
@@ -165,10 +136,6 @@ void pf_trash_tos(void)
 }
 
 
-/**
- * Pop the top item off the stack and copy into pf.
- * This is called on #endif
- */
 void pf_pop(parse_frame_t *pf)
 {
    if (cpd.frame_count > 0)
@@ -179,9 +146,6 @@ void pf_pop(parse_frame_t *pf)
 }
 
 
-/**
- * Returns the pp_indent to use for this line
- */
 int pf_check(parse_frame_t *frm, chunk_t *pc)
 {
    int in_ifdef = frm->in_ifdef;
@@ -218,7 +182,7 @@ int pf_check(parse_frame_t *frm, chunk_t *pc)
 
       if (pc->parent_type == CT_PP_IF)
       {
-         /* An #if pushes a copy of the current frame on the stack */
+         // An #if pushes a copy of the current frame on the stack
          cpd.pp_level++;
          pf_push(frm);
          frm->in_ifdef = CT_PP_IF;
@@ -228,7 +192,7 @@ int pf_check(parse_frame_t *frm, chunk_t *pc)
       {
          pp_level--;
 
-         /**
+         /*
           * For #else of #elif, we want to keep the #if part and throw out the
           * else parts.
           * We check to see what the top type is to see if we just push or
@@ -237,18 +201,18 @@ int pf_check(parse_frame_t *frm, chunk_t *pc)
           */
          if (frm->in_ifdef == CT_PP_IF)
          {
-            /* we have [...] [base]-[if], so push an [else] */
+            // we have [...] [base]-[if], so push an [else]
             pf_push(frm);
             frm->in_ifdef = CT_PP_ELSE;
          }
-         /* we have [...] [base] [if]-[else], copy [base] over [else] */
+         // we have [...] [base] [if]-[else], copy [base] over [else]
          pf_copy_2nd_tos(frm);
          frm->in_ifdef = CT_PP_ELSE;
          txt           = "else-push";
       }
       else if (pc->parent_type == CT_PP_ENDIF)
       {
-         /**
+         /*
           * we may have [...] [base] [if]-[else] or [...] [base]-[if].
           * Throw out the [else].
           */
@@ -257,20 +221,20 @@ int pf_check(parse_frame_t *frm, chunk_t *pc)
 
          if (frm->in_ifdef == CT_PP_ELSE)
          {
-            /**
+            /*
              * We have: [...] [base] [if]-[else]
              * We want: [...]-[if]
              */
-            pf_copy_tos(frm);     /* [...] [base] [if]-[if] */
+            pf_copy_tos(frm);     // [...] [base] [if]-[if]
             frm->in_ifdef = cpd.frames[cpd.frame_count - 2].in_ifdef;
-            pf_trash_tos();       /* [...] [base]-[if] */
-            pf_trash_tos();       /* [...]-[if] */
+            pf_trash_tos();       // [...] [base]-[if]
+            pf_trash_tos();       // [...]-[if]
 
             txt = "endif-trash/pop";
          }
          else if (frm->in_ifdef == CT_PP_IF)
          {
-            /**
+            /*
              * We have: [...] [base] [if]
              * We want: [...] [base]
              */

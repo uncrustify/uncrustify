@@ -7,19 +7,11 @@
  * @license GPL v2+
  */
 #include "logmask.h"
-#include <cstdio>      /* snprintf() */
-#include <cstdlib>     /* strtoul() */
+#include <cstdio>      // snprintf()
+#include <cstdlib>     // strtoul()
 #include "unc_ctype.h"
 
 
-/**
- * Convert a logmask into a string
- *
- * @param mask the mask to convert
- * @param buf  the buffer to hold the string
- * @param size the size of the buffer
- * @return     buf (pass through)
- */
 char *logmask_to_str(const log_mask_t &mask, char *buf, int size)
 {
    if ((buf == nullptr) || (size <= 0))
@@ -49,7 +41,7 @@ char *logmask_to_str(const log_mask_t &mask, char *buf, int size)
       {
          if (is_range)
          {
-            buf[len - 1] = '-';  /* change last comma to a dash */
+            buf[len - 1] = '-';  // change last comma to a dash
             len         += snprintf(&buf[len], size - len, "%d,", last_sev);
             is_range     = false;
          }
@@ -57,15 +49,15 @@ char *logmask_to_str(const log_mask_t &mask, char *buf, int size)
       }
    }
 
-   /* handle a range that ends on the last bit */
+   // handle a range that ends on the last bit
    if (is_range && (last_sev != -1))
    {
-      buf[len - 1] = '-';  /* change last comma to a dash */
+      buf[len - 1] = '-';  // change last comma to a dash
       len         += snprintf(&buf[len], size - len, "%d", last_sev);
    }
    else
    {
-      /* Eat the last comma */
+      // Eat the last comma
       if (len > 0)
       {
          len--;
@@ -78,12 +70,6 @@ char *logmask_to_str(const log_mask_t &mask, char *buf, int size)
 } // logmask_to_str
 
 
-/**
- * Parses a string into a log severity
- *
- * @param str     The string to parse
- * @param mask    The mask to populate
- */
 void logmask_from_string(const char *str, log_mask_t &mask)
 {
    if (str == nullptr)
@@ -91,10 +77,9 @@ void logmask_from_string(const char *str, log_mask_t &mask)
       return;
    }
 
-   /* Start with a clean mask */
-   logmask_set_all(mask, false);
+   logmask_set_all(mask, false);  // Start with a clean mask
 
-   /* If the first character is 'A', set all sevs */
+   // If the first character is 'a' or 'A', set all severities
    if (unc_toupper(*str) == 'A')
    {
       logmask_set_all(mask, true);
@@ -104,9 +89,9 @@ void logmask_from_string(const char *str, log_mask_t &mask)
    char *ptmp;
    bool was_dash   = false;
    int  last_level = -1;
-   while (*str != 0)
+   while (*str != 0)         // check string until termination character
    {
-      if (unc_isspace(*str))
+      if (unc_isspace(*str)) // ignore spaces and go on with next character
       {
          str++;
          continue;
@@ -129,12 +114,12 @@ void logmask_from_string(const char *str, log_mask_t &mask)
 
          last_level = level;
       }
-      else if (*str == '-')
+      else if (*str == '-') // a dash marks all bits until the next number
       {
          was_dash = true;
          str++;
       }
-      else  /* probably a comma */
+      else  // probably a comma
       {
          last_level = -1;
          was_dash   = false;

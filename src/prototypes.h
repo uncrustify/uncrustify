@@ -16,22 +16,6 @@
 
 
 /*
- *  options.cpp
- */
-void unc_begin_group(uncrustify_groups id, const char *short_desc, const char *long_desc = NULL);
-void register_options(void);
-void set_option_defaults(void);
-void process_option_line(char *configLine, const char *filename);
-int load_option_file(const char *filename);
-int save_option_file(FILE *pfile, bool withDoc);
-int save_option_file_kernel(FILE *pfile, bool withDoc, bool only_not_default);
-int set_option_value(const char *name, const char *value);
-const group_map_value *get_group_name(size_t ug);
-const option_map_value *get_option_name(uncrustify_options uo);
-void print_options(FILE *pfile);
-
-
-/*
  *  punctuators.cpp
  */
 
@@ -108,5 +92,6 @@ size_t align_tab_column(size_t col)
    }
    return(col);
 }
+
 
 #endif /* C_PARSE_PROTOTYPES_H_INCLUDED */

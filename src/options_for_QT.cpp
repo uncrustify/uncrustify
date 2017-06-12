@@ -11,7 +11,7 @@
 
 #include "options_for_QT.h"
 
-// for the modification of options within the SIGNAL/SLOT call. guy 2015-09-22
+// for the modification of options within the SIGNAL/SLOT call.
 bool     QT_SIGNAL_SLOT_found      = false;
 size_t   QT_SIGNAL_SLOT_level      = 0;
 bool     restoreValues             = false;

@@ -15,7 +15,7 @@
 char *make_message(const char *fmt, ...)
 {
    size_t  n;
-   size_t  size = 100;  /* Guess we need no more than 100 bytes */
+   size_t  size = 100;  // Guess we need no more than 100 bytes
    char    *p;
    char    *np;
    va_list ap;
@@ -27,20 +27,20 @@ char *make_message(const char *fmt, ...)
 
    while (1)
    {
-      /* Try to print in the allocated space */
+      // Try to print in the allocated space
 
       va_start(ap, fmt);
       n = static_cast<size_t>(vsnprintf(p, size, fmt, ap));
       va_end(ap);
 
-      /* If that worked, return the string */
+      // If that worked, return the string
       if (n < size)
       {
          return(p);
       }
 
-      /* Else try again with more space */
-      size = n + 1;         /* Precisely what is needed */
+      // Else try again with more space
+      size = n + 1;         // Precisely what is needed
 
       if ((np = (char *)realloc(p, size)) == NULL)
       {

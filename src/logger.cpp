@@ -31,7 +31,7 @@ struct log_fcn_info
 };
 static std::deque<log_fcn_info> g_fq;
 
-/** Private log structure */
+//! Private log structure
 struct log_buf
 {
    log_buf()
@@ -43,13 +43,13 @@ struct log_buf
    {
    }
 
-   FILE       *log_file;
-   log_sev_t  sev;
-   int        in_log;
-   char       buf[256];
-   size_t     buf_len;
+   FILE       *log_file;  //! file where the log messages are stored into
+   log_sev_t  sev;        //! log level determines which messages are logged
+   int        in_log;     //! flag indicates if a log operation is going on
+   char       buf[256];   //! buffer holds the log message
+   size_t     buf_len;    //! number of characters currently stored in buffer
    log_mask_t mask;
-   bool       show_hdr;
+   bool       show_hdr;   //! flag determine if a header gets added to log message
 };
 static struct log_buf g_log;
 
@@ -58,7 +58,8 @@ static struct log_buf g_log;
  * Starts the log statement by flushing if needed and printing the header
  *
  * @param sev  The log severity
- * @return     The number of bytes available
+ *
+ * @return The number of bytes available
  */
 static size_t log_start(log_sev_t sev);
 
@@ -74,11 +75,11 @@ static void log_end(void);
  * Initializes the log subsystem - call this first.
  * This function sets the log stream and enables the top 3 sevs (0-2).
  *
- * @param log_file   NULL for stderr or the FILE stream for logs.
+ * @param log_file  NULL for stderr or the FILE stream for logs.
  */
 void log_init(FILE *log_file)
 {
-   /* set the top 3 severities */
+   // set the top 3 severities
    logmask_set_all(g_log.mask, false);
    log_set_sev(LSYS, true);
    log_set_sev(LERR, true);
@@ -88,57 +89,30 @@ void log_init(FILE *log_file)
 }
 
 
-/**
- * Show or hide the severity prefix "<1>"
- *
- * @param true=show  false=hide
- */
 void log_show_sev(bool show)
 {
    g_log.show_hdr = show;
 }
 
 
-/**
- * Returns whether a log severity is active.
- *
- * @param sev  The severity
- * @return     true/false
- */
 bool log_sev_on(log_sev_t sev)
 {
    return(logmask_test(g_log.mask, sev));
 }
 
 
-/**
- * Sets a log sev on or off
- *
- * @param sev  The severity
- * @return     true/false
- */
 void log_set_sev(log_sev_t sev, bool value)
 {
    logmask_set_sev(g_log.mask, sev, value);
 }
 
 
-/**
- * Sets the log mask
- *
- * @param mask The mask to copy
- */
 void log_set_mask(const log_mask_t &mask)
 {
    g_log.mask = mask;
 }
 
 
-/**
- * Gets the log mask
- *
- * @param mask Where to copy the mask
- */
 void log_get_mask(log_mask_t &mask)
 {
    mask = g_log.mask;
@@ -156,7 +130,7 @@ void log_flush(bool force_nl)
       }
       if (fwrite(g_log.buf, g_log.buf_len, 1, g_log.log_file) != 1)
       {
-         /* maybe we should log something to complain... =) */
+         // maybe we should log something to complain... =)
       }
 
       g_log.buf_len = 0;
@@ -176,7 +150,7 @@ static size_t log_start(log_sev_t sev)
       g_log.in_log = false;
    }
 
-   /* If not in a log, the buffer is empty. Add the header, if enabled. */
+   // If not in a log, the buffer is empty. Add the header, if enabled.
    if (!g_log.in_log && g_log.show_hdr)
    {
       g_log.buf_len = static_cast<size_t>(snprintf(g_log.buf, sizeof(g_log.buf), "<%d>", sev));
@@ -198,13 +172,6 @@ static void log_end(void)
 }
 
 
-/**
- * Logs a string of known length
- *
- * @param sev  The severity
- * @param str  The pointer to the string
- * @param len  The length of the string from strlen(str)
- */
 void log_str(log_sev_t sev, const char *str, size_t len)
 {
    if ((str == nullptr) || (len == 0) || !log_sev_on(sev))
@@ -227,13 +194,6 @@ void log_str(log_sev_t sev, const char *str, size_t len)
 }
 
 
-/**
- * Logs a formatted string -- similar to printf()
- *
- * @param sev     The severity
- * @param fmt     The format string
- * @param ...     Additional arguments
- */
 void log_fmt(log_sev_t sev, const char *fmt, ...)
 {
    if ((fmt == nullptr) || !log_sev_on(sev))
@@ -241,15 +201,18 @@ void log_fmt(log_sev_t sev, const char *fmt, ...)
       return;
    }
 
-   /* Some implementation of vsnprintf() return the number of characters
+   /*
+    * Some implementation of vsnprintf() return the number of characters
     * that would have been stored if the buffer was large enough instead of
     * the number of characters actually stored.
+    *
+    * this gets the number of characters that fit into the log buffer
     */
    size_t cap = log_start(sev);
 
-   /* Add on the variable log parameters to the log string */
-   va_list args;
-   va_start(args, fmt);
+   // Add on the variable log parameters to the log string
+   va_list args;        // determine list of arguments ...
+   va_start(args, fmt); //  ... that follow after parameter fmt
    size_t  len = static_cast<size_t>(vsnprintf(&g_log.buf[g_log.buf_len], cap, fmt, args));
    va_end(args);
 
@@ -267,13 +230,6 @@ void log_fmt(log_sev_t sev, const char *fmt, ...)
 }
 
 
-/**
- * Dumps hex characters inline, no newlines inserted
- *
- * @param sev     The severity
- * @param data    The data to log
- * @param len     The number of bytes to log
- */
 void log_hex(log_sev_t sev, const void *vdata, size_t len)
 {
    if ((vdata == nullptr) || !log_sev_on(sev))
@@ -306,14 +262,6 @@ void log_hex(log_sev_t sev, const void *vdata, size_t len)
 }
 
 
-/**
- * Logs a block of data in a pretty hex format
- * Numbers on the left, characters on the right, just like I like it.
- *
- * @param sev     The severity
- * @param data    The data to log
- * @param len     The number of bytes to log
- */
 void log_hex_blk(log_sev_t sev, const void *data, size_t len)
 {
    if ((data == nullptr) || !log_sev_on(sev))
@@ -331,7 +279,7 @@ void log_hex_blk(log_sev_t sev, const void *data, size_t len)
     * creating a string and then calling log_str()
     */
 
-   /* Loop through the data of the current iov */
+   // Loop through the data of the current iov
    int count = 0;
    int total = 0;
    for (size_t idx = 0; idx < len; idx++)
@@ -363,16 +311,14 @@ void log_hex_blk(log_sev_t sev, const void *data, size_t len)
       }
    }
 
-   /*
-   ** Print partial line if any
-   */
+   // Print partial line if any
    if (count != 0)
    {
-      /* Clear out any junk */
+      // Clear out any junk
       while (count < 16)
       {
-         buf[str_idx]     = ' ';   /* MSB hex */
-         buf[str_idx + 1] = ' ';   /* LSB hex */
+         buf[str_idx]     = ' ';   // MSB hex
+         buf[str_idx + 1] = ' ';   // LSB hex
          str_idx         += 3;
 
          buf[chr_idx++] = ' ';
@@ -398,7 +344,7 @@ log_func::~log_func()
 
 void log_func_call(int line)
 {
-   /* REVISIT: pass the __func__ and verify it matches the top entry? */
+   // REVISIT: pass the __func__ and verify it matches the top entry?
    if (!g_fq.empty())
    {
       g_fq.back().line = line;

@@ -18,10 +18,12 @@
 void space_text(void);
 
 
-/**
- * Marches through the whole file and adds spaces around nested parens
- */
+//! Marches through the whole file and adds spaces around nested parenthesis
 void space_text_balance_nested_parens(void);
+
+
+//! Determines if a space is required between two chunks
+size_t space_needed(chunk_t *first, chunk_t *second);
 
 
 /**
@@ -31,17 +33,13 @@ void space_text_balance_nested_parens(void);
  *
  * @param first   The first chunk
  * @param second  The second chunk
- * @return        the column difference between the two chunks
+ *
+ * @return the column difference between the two chunks
  */
 int space_col_align(chunk_t *first, chunk_t *second);
 
 
-/**
- * Determines if a space is required between two chunks
- */
-size_t space_needed(chunk_t *first, chunk_t *second);
-
-
 void space_add_after(chunk_t *pc, size_t count);
+
 
 #endif /* SPACE_H_INCLUDED */

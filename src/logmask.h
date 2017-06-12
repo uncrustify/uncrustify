@@ -10,20 +10,22 @@
 #define LOGMASK_H_INCLUDED
 
 #include "base_types.h"
-#include <cstring>     /* memset() */
+#include <cstring>     // memset()
 #include <bitset>
 #include "log_levels.h"
 
 
-/** A simple array of 256 bits */
+//! A simple array of 256 bits
 typedef std::bitset<256> log_mask_t;
 
 
 /**
  * Tests whether a sev bit is set in the mask
  *
- * @param sev  The severity to check
- * @return     true (is set) or false (not set)
+ * @param mask  log mask to evaluate
+ * @param sev   severity bit to check
+ *
+ * @return true (is set) or false (not set)
  */
 static_inline bool logmask_test(const log_mask_t &mask, log_sev_t sev)
 {
@@ -34,8 +36,9 @@ static_inline bool logmask_test(const log_mask_t &mask, log_sev_t sev)
 /**
  * Sets a set bit in the mask
  *
- * @param sev     The severity to check
- * @param value   true (set bit) or false (clear bit)
+ * @param mask   log mask to modify
+ * @param sev    The severity to check
+ * @param value  true (set bit) or false (clear bit)
  */
 static_inline void logmask_set_sev(log_mask_t &mask, log_sev_t sev, bool value)
 {
@@ -46,7 +49,8 @@ static_inline void logmask_set_sev(log_mask_t &mask, log_sev_t sev, bool value)
 /**
  * Sets all bits to the same value
  *
- * @param value   true (set bit) or false (clear bit)
+ * @param mast   log mask to operate on
+ * @param value  true (set bit) or false (clear bit)
  */
 static_inline void logmask_set_all(log_mask_t &mask, bool value)
 {
@@ -66,10 +70,11 @@ static_inline void logmask_set_all(log_mask_t &mask, bool value)
  * The string is a comma-delimited list of severities.
  * Example: 1,3,5-10
  *
- * @param mask the mask to convert
- * @param buf  the buffer to hold the string
- * @param size the size of the buffer
- * @return     buf (pass through)
+ * @param mask  the mask to convert
+ * @param buf   the buffer to hold the string
+ * @param size  the size of the buffer
+ *
+ * @return buf (pass through)
  */
 char *logmask_to_str(const log_mask_t &mask, char *buf, int size);
 
@@ -77,9 +82,10 @@ char *logmask_to_str(const log_mask_t &mask, char *buf, int size);
 /**
  * Parses a string into a log severity
  *
- * @param str     The string to parse
- * @param mask    The mask to populate
+ * @param str   string to parse
+ * @param mask  bit mask to populate with log levels
  */
 void logmask_from_string(const char *str, log_mask_t &mask);
+
 
 #endif /* LOGMASK_H_INCLUDED */

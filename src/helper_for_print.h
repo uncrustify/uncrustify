@@ -17,9 +17,7 @@
  * "unknown conversion type character ‘z’ in format [-Werror=format]"
  */
 
-/*
- * helper function for fprintf
- */
+//! helper function for fprintf
 char *make_message(const char *fmt, ...);
 
 #endif /* HELPER_FOR_PRINT_H_INCLUDED */
