@@ -50,7 +50,7 @@ int backup_copy_file(const char *filename, const vector<UINT8> &data)
             dig[8], dig[9], dig[10], dig[11],
             dig[12], dig[13], dig[14], dig[15]);
 
-   /* Create the backup-md5 filename, open it and read the md5 */
+   // Create the backup-md5 filename, open it and read the md5
    snprintf(newpath, sizeof(newpath), "%s%s", filename, UNC_BACKUP_MD5_SUFFIX);
 
    FILE *thefile = fopen(newpath, "rb");
@@ -75,7 +75,7 @@ int backup_copy_file(const char *filename, const vector<UINT8> &data)
       fclose(thefile);
    }
 
-   /* if the MD5s match, then there is no need to back up the file */
+   // if the MD5s match, then there is no need to back up the file
    if (memcmp(md5_str, md5_str_in, 32) == 0)
    {
       LOG_FMT(LNOTE, "%s: MD5 match for %s\n", __func__, filename);
@@ -84,7 +84,7 @@ int backup_copy_file(const char *filename, const vector<UINT8> &data)
 
    LOG_FMT(LNOTE, "%s: MD5 mismatch - backing up %s\n", __func__, filename);
 
-   /* Create the backup file */
+   // Create the backup file
    snprintf(newpath, sizeof(newpath), "%s%s", filename, UNC_BACKUP_SUFFIX);
 
    thefile = fopen(newpath, "wb");
@@ -133,6 +133,7 @@ void backup_create_md5_file(const char *filename)
       return;
    }
 
+   // read file chunk by chunk and calculate its MD5 checksum
    while ((len = fread(buf, 1, sizeof(buf), thefile)) > 0)
    {
       md5.Update(buf, len);

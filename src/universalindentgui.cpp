@@ -22,10 +22,10 @@ void print_universal_indent_cfg(FILE *pfile)
    const group_map_value *p_grp;
    const char            *p_name;
 
-   /* Dump the header and the categories */
+   // Dump the header and the categories
    fprintf(pfile, "[header]\n");
 
-   /* Add all the categories */
+   // Add all the categories
    char   ch = '=';
    size_t idx;
 
@@ -46,7 +46,7 @@ void print_universal_indent_cfg(FILE *pfile)
            "configFilename=uncrustify.cfg\n");
 
 
-   /* Add all the recognized file extensions */
+   // Add all the recognized file extensions
    ch = '=';
    int fileIdx = 0;
    fprintf(pfile, "fileTypes");
@@ -57,7 +57,7 @@ void print_universal_indent_cfg(FILE *pfile)
    }
    fprintf(pfile, "\n");
 
-   /* Add the rest of the constant file header */
+   // Add the rest of the constant file header
    fprintf(pfile,
            "indenterFileName=uncrustify\n"
            "indenterName=Uncrustify (C, C++, C#, ObjectiveC, D, Java, Pawn, VALA)\n"
@@ -77,7 +77,7 @@ void print_universal_indent_cfg(FILE *pfile)
 #ifdef DEBUG
    size_t optionNumber = 0;
 #endif // DEBUG
-   /* Now add each option */
+   // Now add each option
    for (idx = 0; idx < UG_group_count; idx++)
    {
       p_grp = get_group_name(idx);
@@ -90,8 +90,10 @@ void print_universal_indent_cfg(FILE *pfile)
       {
          const option_map_value *option = get_option_name(optionEnumVal);
 
-         // Create a better readable name from the options name
-         // by replacing '_' by a space and use some upper case characters.
+         /*
+          * Create a better readable name from the options name
+          * by replacing '_' by a space and use some upper case characters.
+          */
          char *optionNameReadable = new char[strlen(option->name) + 1];
          strcpy(optionNameReadable, option->name);
 
@@ -122,12 +124,12 @@ void print_universal_indent_cfg(FILE *pfile)
          optionNumber++;
 #else    // DEBUG
          fprintf(pfile, "Description=\"<html>");
-#endif // DEBUG
+#endif
 
          const char *tmp = option->short_desc;
          ch = 0;
 
-         /* Output the description which may contain forbidden chars */
+         // Output the description which may contain forbidden chars
          while (*tmp != 0)
          {
             switch (*tmp)

@@ -12,13 +12,12 @@
 #include "unc_text.h"
 
 
-/**
- * This renders the chunk list to a file.
- */
-void output_text(FILE *pfile);
-
-
+//! This renders the chunk list to a file.
 void output_parsed(FILE *pfile);
+
+
+//! This renders the chunk list to a file.
+void output_text(FILE *pfile);
 
 
 /**
@@ -36,5 +35,6 @@ void output_parsed(FILE *pfile);
  * things a little bit, but not much.
  */
 void add_long_preprocessor_conditional_block_comment(void);
+
 
 #endif /* OUTPUT_H_INCLUDED */

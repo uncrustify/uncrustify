@@ -7,7 +7,7 @@
  */
 #include "unc_text.h"
 #include "unc_ctype.h"
-#include "unicode.h" /* encode_utf8() */
+#include "unicode.h" // encode_utf8()
 
 
 static void fix_len_idx(size_t size, size_t &idx, size_t &len);
@@ -34,7 +34,7 @@ void unc_text::update_logtext()
 {
    if (!m_logok)
    {
-      /* make a pessimistic guess at the size */
+      // make a pessimistic guess at the size
       m_logtext.clear();
       m_logtext.reserve(m_chars.size() * 3);
       for (int m_char : m_chars)
@@ -72,9 +72,11 @@ int unc_text::compare(const unc_text &ref1, const unc_text &ref2, size_t len)
       int diff = unc_tolower(ref1.m_chars[idx]) - unc_tolower(ref2.m_chars[idx]);
       if (diff == 0)
       {
-         // if we're comparing the same character but in different case
-         // we want to favor lowercase before uppercase (e.g. a before A)
-         // so the order is the reverse of ASCII order (we negate).
+         /*
+          * if we're comparing the same character but in different case
+          * we want to favor lower case before upper case (e.g. a before A)
+          * so the order is the reverse of ASCII order (we negate).
+          */
          return(-(ref1.m_chars[idx] - ref2.m_chars[idx]));
       }
 
@@ -305,12 +307,6 @@ bool unc_text::startswith(const unc_text &text, size_t idx) const
 }
 
 
-/*
- * look for 'text', beginning with position 'sidx'
- * return value:
- *           -1: if not found
- * the position: if found
- */
 int unc_text::find(const char *text, size_t sidx) const
 {
    size_t len = strlen(text); // the length of 'text' we are looking for
@@ -333,13 +329,12 @@ int unc_text::find(const char *text, size_t sidx) const
             break;
          }
       }
-      if (match) // found at position 'idx'
+      if (match) // 'text' found at position 'idx'
       {
          return(idx);
       }
    }
-   // 'text' not found
-   return(-1);
+   return(-1);  //  'text' not found
 }
 
 

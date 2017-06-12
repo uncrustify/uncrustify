@@ -28,8 +28,9 @@ void pawn_add_virtual_semicolons(void);
  * We are in a virtual brace and hit a newline.
  * If this should end the vbrace, then insert a VSEMICOLON and return that.
  *
- * @param pc   The newline (CT_NEWLINE)
- * @return     Either the newline or the newly inserted virtual semicolon
+ * @param pc  The newline (CT_NEWLINE)
+ *
+ * @return Either the newline or the newly inserted virtual semicolon
  */
 chunk_t *pawn_check_vsemicolon(chunk_t *pc);
 
@@ -41,6 +42,8 @@ chunk_t *pawn_check_vsemicolon(chunk_t *pc);
 void pawn_scrub_vsemi(void);
 
 
+//! add a semicolon after ...
 chunk_t *pawn_add_vsemi_after(chunk_t *pc);
+
 
 #endif /* LONG_PAWN_H_INCLUDED */

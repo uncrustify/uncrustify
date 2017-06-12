@@ -10,12 +10,6 @@
 #include "unc_ctype.h"
 
 
-/**
- * Store the values and allocate enough memory for the 'used' flags.
- *
- * @param argc The argc that was passed to main()
- * @param argv The argv that was passed to main()
- */
 Args::Args(int argc, char **argv)
 {
    m_count  = argc;
@@ -40,12 +34,6 @@ Args::~Args()
 }
 
 
-/**
- * Check for an exact match
- *
- * @param token   The token string to match
- * @return        true/false -- Whether the argument was present
- */
 bool Args::Present(const char *token)
 {
    if (token != nullptr)
@@ -63,12 +51,6 @@ bool Args::Present(const char *token)
 }
 
 
-/**
- * Just call arg_params() with an index of 0.
- *
- * @param token   The token string to match
- * @return        NULL or the pointer to the string
- */
 const char *Args::Param(const char *token)
 {
    size_t idx = 0;
@@ -77,12 +59,6 @@ const char *Args::Param(const char *token)
 }
 
 
-/**
- * Scan for a match
- *
- * @param token   The token string to match
- * @return        NULL or the pointer to the string
- */
 const char *Args::Params(const char *token, size_t &index)
 {
    if (token == nullptr)
@@ -124,11 +100,6 @@ const char *Args::Params(const char *token, size_t &index)
 } // Args::Params
 
 
-/**
- * Gets whether an argument has been used, by index.
- *
- * @param idx  The index of the argument
- */
 bool Args::GetUsed(size_t idx)
 {
    if ((m_used != nullptr) && (idx > 0) && (idx < m_count))
@@ -139,11 +110,6 @@ bool Args::GetUsed(size_t idx)
 }
 
 
-/**
- * Marks an argument as being used.
- *
- * @param idx  The index of the argument
- */
 void Args::SetUsed(size_t idx)
 {
    if ((m_used != nullptr) && (idx > 0) && (idx < m_count))
@@ -153,14 +119,6 @@ void Args::SetUsed(size_t idx)
 }
 
 
-/**
- * This function retrieves all unused parameters.
- * You must set the index before the first call.
- * Set the index to 1 to skip argv[0].
- *
- * @param idx  Pointer to the index
- * @return     NULL (done) or the pointer to the string
- */
 const char *Args::Unused(size_t &index)
 {
    if (m_used == nullptr)
@@ -181,30 +139,23 @@ const char *Args::Unused(size_t &index)
 }
 
 
-/**
- * Takes text and splits it into arguments.
- * args is an array of char * pointers that will get populated.
- * num_args is the maximum number of args split off.
- * If there are more than num_args, the remaining text is ignored.
- * Note that text is modified (zeroes are inserted)
- *
- * @param text       The text to split (modified)
- * @param args       The char * array to populate
- * @param num_args   The number of items in args
- * @return           The number of arguments parsed (always <= num_args)
- */
 size_t Args::SplitLine(char *text, char *args[], size_t num_args)
 {
+   if (text == nullptr || num_args == 0)
+   {
+      return(0);
+   }
+
    char   cur_quote    = 0;
    bool   in_backslash = false;
    bool   in_arg       = false;
    size_t argc         = 0;
    char   *dest        = text;
 
-
-   while ((*text != 0) && (argc <= num_args))
+   while (argc <= num_args // maximal number of arguments not reached yet
+          && *text != 0)   // end of string not reached yet
    {
-      /* Detect the start of an arg */
+      // Detect the start of an arg
       if (!in_arg && !unc_isspace(*text))
       {
          in_arg     = true;
@@ -244,7 +195,7 @@ size_t Args::SplitLine(char *text, char *args[], size_t num_args)
             in_arg = false;
             if (argc == num_args)
             {
-               break;
+               break; // all arguments found, we can stop
             }
          }
          else
@@ -253,7 +204,7 @@ size_t Args::SplitLine(char *text, char *args[], size_t num_args)
             dest++;
          }
       }
-      text++;
+      text++; // go on with next character
    }
    *dest = 0;
 

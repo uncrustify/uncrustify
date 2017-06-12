@@ -9,9 +9,8 @@
 #define DETECT_H_INCLUDED
 
 
-/**
- * Call all the detect_xxxx() functions
- */
+//! Call all the detect_xxxx() functions
 void detect_options(void);
+
 
 #endif /* DETECT_H_INCLUDED */

@@ -38,9 +38,11 @@ void fix_symbols(void);
 void combine_labels(void);
 
 
-/**
- * Sets the parent for comments.
- */
+//! help function for mark_variable_definition...
+bool go_on(chunk_t *pc, chunk_t *start);
+
+
+//! Sets the parent for comments.
 void mark_comments(void);
 
 
@@ -48,6 +50,30 @@ void make_type(chunk_t *pc);
 
 
 void flag_series(chunk_t *start, chunk_t *end, UINT64 set_flags, UINT64 clr_flags = 0, scope_e nav = scope_e::ALL);
+
+
+/**
+ * Sets the parent of the open paren/brace/square/angle and the closing.
+ * Note - it is assumed that pc really does point to an open item and the
+ * close must be open + 1.
+ *
+ * @param start   The open paren
+ * @param parent  The type to assign as the parent
+ *
+ * @return The chunk after the close paren
+ */
+chunk_t *set_paren_parent(chunk_t *start, c_token_t parent);
+
+
+/**
+ * This is called on every chunk.
+ * First on all non-preprocessor chunks and then on each preprocessor chunk.
+ * It does all the detection and classifying.
+ * This is only called by fix_symbols.
+ * The three parameters never get the value nullptr.
+ * it is not necessary to test.
+ */
+void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next);
 
 
 /**
@@ -90,8 +116,10 @@ chunk_t *skip_attribute_prev(chunk_t *fp_close);
 
 
 /**
- * Remove 'return;' that appears as the last statement in a function
+ * @brief Remove unnecessary returns
+ * that is remove 'return;' that appears as the last statement in a function
  */
 void remove_extra_returns(void);
+
 
 #endif /* COMBINE_H_INCLUDED */

@@ -14,12 +14,6 @@
 #include "space.h"
 
 
-/**
- * Resets the two ChunkLists and zeroes local vars.
- *
- * @param span    The row span limit
- * @param thresh  The column threshold
- */
 void AlignStack::Start(size_t span, size_t thresh)
 {
    LOG_FMT(LAS, "Start(%zu, %zu)\n", span, thresh);
@@ -39,18 +33,15 @@ void AlignStack::Start(size_t span, size_t thresh)
 }
 
 
-/**
- * Calls Add on all the skipped items
- */
 void AlignStack::ReAddSkipped()
 {
    if (!m_skipped.Empty())
    {
-      /* Make a copy of the ChunkStack and clear m_skipped */
+      // Make a copy of the ChunkStack and clear m_skipped
       m_scratch.Set(m_skipped);
       m_skipped.Reset();
 
-      /* Need to add them in order so that m_nl_seqnum is correct */
+      // Need to add them in order so that m_nl_seqnum is correct
       for (size_t idx = 0; idx < m_scratch.Len(); idx++)
       {
          const ChunkStack::Entry *ce = m_scratch.Get(idx);
@@ -58,22 +49,15 @@ void AlignStack::ReAddSkipped()
          Add(ce->m_pc, ce->m_seqnum);
       }
 
-      /* Check to see if we need to flush right away */
-      NewLines(0);
+      NewLines(0); // Check to see if we need to flush right away
    }
 }
 
 
-/**
- * Adds an entry to the appropriate stack.
- *
- * @param pc      The chunk
- * @param seqnum  Optional seqnum (0=assign one)
- */
 void AlignStack::Add(chunk_t *start, size_t seqnum)
 {
    LOG_FUNC_ENTRY();
-   /* Assign a seqnum if needed */
+   // Assign a seqnum if needed
    if (seqnum == 0)
    {
       seqnum = m_seqnum;
@@ -81,20 +65,21 @@ void AlignStack::Add(chunk_t *start, size_t seqnum)
 
    m_last_added = 0;
 
-   /* Check threshold limits */
-   if ((m_max_col == 0) || (m_thresh == 0) ||
-       (((start->column + m_gap) <= (m_max_col + m_thresh)) &&
+   // Check threshold limits
+   if ((m_max_col == 0) ||
+       (m_thresh == 0) ||
+       (((start->column + m_gap) <= (m_thresh + m_max_col)) && // don't use subtraction here to prevent underflow
         (((start->column + m_gap + m_thresh) >= (m_max_col)) ||
          // change the expression to mind negative expression
          (start->column >= m_min_col))))
    {
-      /* we are adding it, so update the newline seqnum */
+      // we are adding it, so update the newline seqnum
       if (seqnum > m_nl_seqnum)
       {
          m_nl_seqnum = seqnum;
       }
 
-      /**
+      /*
        * SS_IGNORE: no special handling of '*' or '&', only 'foo' is aligned
        *     void     foo;  // gap=5, 'foo' is aligned
        *     char *   foo;  // gap=3, 'foo' is aligned
@@ -155,13 +140,13 @@ void AlignStack::Add(chunk_t *start, size_t seqnum)
          m_star_style = SS_INCLUDE;
       }
 
-      /* Find ref. Back up to the real item that is aligned. */
+      // Find ref. Back up to the real item that is aligned.
       chunk_t *prev = start;
       while (((prev = chunk_get_prev(prev)) != nullptr) &&
              (chunk_is_ptr_operator(prev) ||
               (prev->type == CT_TPAREN_OPEN)))
       {
-         /* do nothing - we want prev when this exits */
+         // do nothing - we want prev when this exits
       }
       chunk_t *ref = prev;
       if (chunk_is_newline(ref))
@@ -169,11 +154,11 @@ void AlignStack::Add(chunk_t *start, size_t seqnum)
          ref = chunk_get_next(ref);
       }
 
-      /* Find the item that we are going to align. */
+      // Find the item that we are going to align.
       chunk_t *ali = start;
       if (m_star_style != SS_IGNORE)
       {
-         /* back up to the first '*' or '^' preceding the token */
+         // back up to the first '*' or '^' preceding the token
          prev = chunk_get_prev(ali);
          while (chunk_is_star(prev) || chunk_is_msref(prev))
          {
@@ -191,7 +176,7 @@ void AlignStack::Add(chunk_t *start, size_t seqnum)
       }
       if (m_amp_style != SS_IGNORE)
       {
-         /* back up to the first '&' preceding the token */
+         // back up to the first '&' preceding the token
          prev = chunk_get_prev(ali);
          while (chunk_is_addr(prev))
          {
@@ -201,7 +186,7 @@ void AlignStack::Add(chunk_t *start, size_t seqnum)
       }
 
       chunk_t *tmp;
-      /* Tighten down the spacing between ref and start */
+      // Tighten down the spacing between ref and start
       if (!cpd.settings[UO_align_keep_extra_space].b)
       {
          size_t tmp_col = ref->column;
@@ -218,8 +203,8 @@ void AlignStack::Add(chunk_t *start, size_t seqnum)
          }
       }
 
-      /* Set the column adjust and gap */
-      size_t col_adj = 0; /* Amount the column is shifted for 'dangle' mode */
+      // Set the column adjust and gap
+      size_t col_adj = 0; // Amount the column is shifted for 'dangle' mode
       size_t gap     = 0;
       if (ref != ali)
       {
@@ -238,7 +223,7 @@ void AlignStack::Add(chunk_t *start, size_t seqnum)
          gap     = start->column - (ref->column + ref->len());
       }
 
-      /* See if this pushes out the max_col */
+      // See if this pushes out the max_col
       size_t endcol = ali->column + col_adj;
       if (gap < m_gap)
       {
@@ -275,7 +260,7 @@ void AlignStack::Add(chunk_t *start, size_t seqnum)
                  ali->orig_line, ali->column, m_max_col, endcol, m_min_col);
          m_max_col = endcol;
 
-         /**
+         /*
           * If there were any entries that were skipped, re-add them as they
           * may now be within the threshold
           */
@@ -293,7 +278,7 @@ void AlignStack::Add(chunk_t *start, size_t seqnum)
    }
    else
    {
-      /* The threshold check failed, so add it to the skipped list */
+      // The threshold check failed, so add it to the skipped list
       m_skipped.Push_Back(start, seqnum);
       m_last_added = 2;
 
@@ -304,9 +289,6 @@ void AlignStack::Add(chunk_t *start, size_t seqnum)
 } // AlignStack::Add
 
 
-/**
- * Adds some newline and calls Flush() if needed
- */
 void AlignStack::NewLines(size_t cnt)
 {
    if (!m_aligned.Empty())
@@ -325,10 +307,6 @@ void AlignStack::NewLines(size_t cnt)
 }
 
 
-/**
- * Aligns all the stuff in m_aligned.
- * Re-adds 'newer' items in m_skipped.
- */
 void AlignStack::Flush()
 {
    size_t                  last_seqnum = 0;
@@ -355,12 +333,12 @@ void AlignStack::Flush()
    m_last_added = 0;
    m_max_col    = 0;
 
-   /* Recalculate the max_col - it may have shifted since the last Add() */
+   // Recalculate the max_col - it may have shifted since the last Add()
    for (size_t idx = 0; idx < m_aligned.Len(); idx++)
    {
       pc = m_aligned.Get(idx)->m_pc;
 
-      /* Set the column adjust and gap */
+      // Set the column adjust and gap
       size_t col_adj = 0;
       size_t gap     = 0;
       if (pc != pc->align.ref)
@@ -379,7 +357,7 @@ void AlignStack::Flush()
       }
       if (m_right_align)
       {
-         /* Adjust the width for signed numbers */
+         // Adjust the width for signed numbers
          size_t start_len = pc->align.start->len();
          if (pc->align.start->type == CT_NEG)
          {
@@ -394,7 +372,7 @@ void AlignStack::Flush()
 
       pc->align.col_adj = col_adj;
 
-      /* See if this pushes out the max_col */
+      // See if this pushes out the max_col
       size_t endcol = pc->column + col_adj;
       if (gap < m_gap)
       {
@@ -440,7 +418,7 @@ void AlignStack::Flush()
       pc->align.gap  = m_gap;
       pc->align.next = m_aligned.GetChunk(idx + 1);
 
-      /* Indent the token, taking col_adj into account */
+      // Indent the token, taking col_adj into account
       LOG_FMT(LAS, "%s: line %zu: '%s' to col %zu (adj=%d)\n",
               __func__, pc->orig_line, pc->text(), tmp_col, pc->align.col_adj);
       align_to_column(pc, tmp_col);
@@ -451,17 +429,17 @@ void AlignStack::Flush()
       last_seqnum = ce->m_seqnum;
       m_aligned.Reset();
    }
-   m_min_col = 9999;
-   m_max_col = 0;
+   m_min_col = 9999; // use unrealistic high numbers
+   m_max_col = 0;    // as start value
 
    if (m_skipped.Empty())
    {
-      /* Nothing was skipped, sync the seqnums */
+      // Nothing was skipped, sync the sequence numbers
       m_nl_seqnum = m_seqnum;
    }
    else
    {
-      /* Remove all items with seqnum < last_seqnum */
+      // Remove all items with seqnum < last_seqnum
       for (size_t idx = 0; idx < m_skipped.Len(); idx++)
       {
          if (m_skipped.Get(idx)->m_seqnum < last_seqnum)
@@ -471,15 +449,11 @@ void AlignStack::Flush()
       }
       m_skipped.Collapse();
 
-      /* Add all items from the skipped list */
-      ReAddSkipped();
+      ReAddSkipped(); // Add all items from the skipped list
    }
 } // AlignStack::Flush
 
 
-/**
- * Resets the stack, discarding anything that was previously added
- */
 void AlignStack::Reset()
 {
    m_aligned.Reset();
@@ -487,9 +461,6 @@ void AlignStack::Reset()
 }
 
 
-/**
- * Aligns everything else and resets the lists.
- */
 void AlignStack::End()
 {
    if (!m_aligned.Empty())

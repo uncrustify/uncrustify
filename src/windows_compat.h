@@ -34,10 +34,11 @@ typedef unsigned long long   UINT64;
 #define PRIu64    "llu"
 #endif
 
-/* eliminate GNU's attribute */
+// eliminate GNU's attribute
 #define __attribute__(x)
 
-/* MSVC compilers before VC7 don't have __func__ at all; later ones call it
+/*
+ * MSVC compilers before VC7 don't have __func__ at all; later ones call it
  * __FUNCTION__.
  */
 #ifdef _MSC_VER
@@ -46,7 +47,7 @@ typedef unsigned long long   UINT64;
 #else
 #define __func__    __FUNCTION__
 #endif
-#else /* _MSC_VER */
+#else // _MSC_VER
 #define __func__    "???"
 #endif
 
@@ -71,12 +72,12 @@ typedef unsigned long long   UINT64;
 #undef fileno
 #define fileno         _fileno
 
-/* includes for _setmode() */
+// includes for _setmode()
 #include <io.h>
 #include <fcntl.h>
 #include <direct.h>
 
-/* on windows the file permissions have no meaning thus neglect them */
+// on windows the file permissions have no meaning thus neglect them
 #define mkdir(x, y)    _mkdir(x)
 
 #define PATH_SEP    '\\'
