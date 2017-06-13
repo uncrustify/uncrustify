@@ -2566,9 +2566,20 @@ static void indent_comment(chunk_t *pc, size_t col)
        * Here we want to align comments that are relatively close one to another
        * but not when the previous comment is on the same line with a preproc
        */
+      // Issue #1134
+      //if ((coldiff <= 3) && (coldiff >= -3) &&
+      //    !chunk_is_preproc(pp))
+      //if ((coldiff <= 3) && (coldiff >= -3))
+      LOG_FMT(LCMTIND, "(%d): pc: %s, coldiff= %d/%s, chunk_is_preproc is %s, chunk_is_Doxygen %s\n",
+              __LINE__, pc->text(), coldiff, //pc->prev->text(), pc->prev->prev->text(),
+              ((coldiff <= 3) && (coldiff >= -3)) ? "JA" : "NEIN",
+              chunk_is_preproc(pp) ? "JA" : "NEIN",
+              chunk_is_Doxygen_comment(pc) ? "JA" : "NEIN");
       if ((coldiff <= 3) && (coldiff >= -3) &&
-          !chunk_is_preproc(pp))
+          //chunk_is_preproc(pp) &&
+          !chunk_is_Doxygen_comment(pc))
       {
+         LOG_FMT(LCMTIND, "JA fuer rule 3\n");
          reindent_line(pc, prev->column);
          LOG_FMT(LCMTIND, "rule 3 - prev comment, coldiff = %d, now in %zu\n",
                  coldiff, pc->column);
