@@ -2236,7 +2236,7 @@ size_t space_needed(chunk_t *first, chunk_t *second)
 }
 
 
-int space_col_align(chunk_t *first, chunk_t *second)
+size_t space_col_align(chunk_t *first, chunk_t *second)
 {
    LOG_FUNC_ENTRY();
 
@@ -2264,6 +2264,7 @@ int space_col_align(chunk_t *first, chunk_t *second)
       LOG_FMT(LSPACE, "len is %zu", first->len());
       coldiff = first->len();
    }
+
    switch (av)
    {
    case AV_ADD:

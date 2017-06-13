@@ -222,7 +222,7 @@ enum class align_mode_e : unsigned int
 void align_to_column(chunk_t *pc, size_t column)
 {
    LOG_FUNC_ENTRY();
-   if (column == pc->column)
+   if (pc == nullptr || column == pc->column)
    {
       return;
    }
@@ -231,59 +231,53 @@ void align_to_column(chunk_t *pc, size_t column)
            __func__, __LINE__, pc->orig_line, pc->column, pc->text(),
            get_token_name(pc->type), column);
 
-   size_t col_delta = column - pc->column;
-   size_t min_col   = column;
+   const auto col_delta = static_cast<int>(column) - static_cast<int>(pc->column);
+   size_t     min_col   = column;
 
    pc->column = column;
    do
    {
-      chunk_t      *next = chunk_get_next(pc);
-      chunk_t      *prev;
-      align_mode_e almod = align_mode_e::SHIFT;
-
+      auto *next = chunk_get_next(pc);
       if (next == nullptr)
       {
          break;
       }
-      int min_delta = space_col_align(pc, next);
+
+      auto         almod = align_mode_e::SHIFT;
+
+      const size_t min_delta = space_col_align(pc, next);
       min_col += min_delta;
-      prev     = pc;
-      pc       = next;
+
+      const auto *prev = pc;
+      pc = next;
 
       if (chunk_is_comment(pc) && (pc->parent_type != CT_COMMENT_EMBED))
       {
-         almod = (chunk_is_single_line_comment(pc) &&
-                  cpd.settings[UO_indent_relative_single_line_comments].b) ?
-                 align_mode_e::KEEP_REL : align_mode_e::KEEP_ABS;
+         almod = (chunk_is_single_line_comment(pc)
+                  && cpd.settings[UO_indent_relative_single_line_comments].b)
+                 ? align_mode_e::KEEP_REL : align_mode_e::KEEP_ABS;
       }
 
       if (almod == align_mode_e::KEEP_ABS)
       {
          // Keep same absolute column
-         pc->column = pc->orig_col;
-         if (pc->column < min_col)
-         {
-            pc->column = min_col;
-         }
+         pc->column = max(pc->orig_col, min_col);
       }
       else if (almod == align_mode_e::KEEP_REL)
       {
          // Keep same relative column
-         int orig_delta = pc->orig_col - prev->orig_col;
-         if (orig_delta < min_delta)
-         {
-            orig_delta = min_delta;
-         }
-         pc->column = prev->column + orig_delta;
+         auto orig_delta = static_cast<int>(pc->orig_col) - static_cast<int>(prev->orig_col);
+         orig_delta = max<int>(orig_delta, min_delta);  // keeps orig_delta positive
+
+         pc->column = prev->column + static_cast<size_t>(orig_delta);
       }
       else // SHIFT
       {
-         // Shift by the same amount
-         pc->column += col_delta;
-         if (pc->column < min_col)
-         {
-            pc->column = min_col;
-         }
+         // Shift by the same amount, keep above negative values
+         pc->column = (col_delta >= 0
+                       || cast_abs(pc->column, col_delta) < pc->column)
+                      ? pc->column + col_delta : 0;
+         pc->column = max(pc->column, min_col);
       }
       LOG_FMT(LINDLINED, "   %s set column of %s on line %zu to col %zu (orig %zu)\n",
               (almod == align_mode_e::KEEP_ABS) ? "abs" :
