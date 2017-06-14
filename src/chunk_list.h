@@ -561,10 +561,15 @@ static_inline bool chunk_is_Doxygen_comment(chunk_t *pc)
 {
    if (!chunk_is_comment(pc))
    {
-      return false;
+      return(false);
    }
    // check the third character
-   const char *sComment = pc->text();
+   const char   *sComment = pc->text();
+   const size_t len       = strlen(sComment);
+   if (len < 3)
+   {
+      return(false);
+   }
    return((sComment[2] == '/') || (sComment[2] == '!') || (sComment[2] == '@'));
 }
 
