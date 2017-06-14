@@ -5,6 +5,7 @@
  * @author  Ben Gardner
  * @license GPL v2+
  */
+
 #if defined (_WIN32) && !defined (__CYGWIN__)
 
 #include "windows_compat.h"
@@ -57,6 +58,20 @@ bool unc_homedir(std::string &home)
       return(true);
    }
    return(false);
+}
+
+
+void convert_log_zu2lu(char *fmt)
+{
+   for (size_t i = 0; i < strlen(fmt); i++)
+   {
+      if ((fmt[i] == '%') &&
+          (fmt[i + 1] == 'z') &&
+          (fmt[i + 2] == 'u'))
+      {
+         fmt[i + 1] = 'l';
+      }
+   }
 }
 
 #endif /* if defined(_WIN32) && !defined(__CYGWIN__) */
