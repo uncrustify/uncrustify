@@ -2553,15 +2553,15 @@ static void indent_comment(chunk_t *pc, size_t col)
    prev = chunk_get_prev(nl);
    if (chunk_is_comment(prev) && (nl->nl_count == 1))
    {
-      int     coldiff = prev->orig_col - pc->orig_col;
-      chunk_t *pp     = chunk_get_prev(prev);
+      int coldiff = prev->orig_col - pc->orig_col;
 
       /*
        * Here we want to align comments that are relatively close one to another
-       * but not when the previous comment is on the same line with a preproc
+       * but not when the comment is a Doxygen comment
        */
+      // Issue #1134
       if ((coldiff <= 3) && (coldiff >= -3) &&
-          !chunk_is_preproc(pp))
+          !chunk_is_Doxygen_comment(pc))
       {
          reindent_line(pc, prev->column);
          LOG_FMT(LCMTIND, "rule 3 - prev comment, coldiff = %d, now in %zu\n",
