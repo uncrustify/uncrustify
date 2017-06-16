@@ -748,6 +748,16 @@ void indent_text(void)
             log_indent_tmp();
          }
 
+         // If option set, remove indent inside switch statement
+         if (frm.pse[frm.pse_tos].type == CT_CASE &&
+             !cpd.settings[UO_indent_switch_pp].b)
+         {
+            indent_pse_push(frm, pc);
+
+            frm.pse[frm.pse_tos - 1].indent = frm.pse[frm.pse_tos].indent - indent_size;
+            log_indent();
+         }
+
          // Indent the body of a #if here
          if (cpd.settings[UO_pp_if_indent_code].b &&
              ((pc->parent_type == CT_PP_IF) ||
@@ -759,7 +769,7 @@ void indent_text(void)
                break;
             }
             int should_indent_preproc = true;
-            chunk_t* preproc_next = chunk_get_next_nl(pc);
+            chunk_t *preproc_next = chunk_get_next_nl(pc);
             preproc_next = chunk_get_next_nblank(preproc_next);
 
             /* Look ahead at what's on the line after the #if */

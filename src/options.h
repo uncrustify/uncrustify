@@ -382,6 +382,7 @@ enum uncrustify_options
    UO_indent_sing_line_comments,            // indent single line ('//') comments on lines before code
    UO_indent_relative_single_line_comments, // indent single line ('//') comments after code
    UO_indent_switch_case,                   // spaces to indent case from switch
+   UO_indent_switch_pp,                     // whether to indent preproccesor statements inside of switch statements
    UO_indent_case_shift,                    // spaces to shift the line with the 'case'
    UO_indent_case_brace,                    // spaces to indent '{' from case (usually 0 or indent_columns)
    UO_indent_col1_comment,                  // indent comments in column 1
