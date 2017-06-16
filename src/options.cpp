@@ -816,6 +816,8 @@ void register_options(void)
    unc_add_option("indent_switch_case", UO_indent_switch_case, AT_UNUM,
                   "Spaces to indent 'case' from 'switch'\n"
                   "Usually 0 or indent_columns.");
+   unc_add_option("indent_switch_pp", UO_indent_switch_pp, AT_BOOL,
+                  "Whether to indent preproccesor statements inside of switch statements");
    unc_add_option("indent_case_shift", UO_indent_case_shift, AT_UNUM,
                   "Spaces to shift the 'case' line, without affecting any other lines\n"
                   "Usually 0.");
@@ -1655,6 +1657,14 @@ void register_options(void)
                   "Whether to indent '#define' at the brace level (True) or from column 1 (false)");
    unc_add_option("pp_ignore_define_body", UO_pp_ignore_define_body, AT_BOOL,
                   "Whether to ignore the '#define' body while formatting.");
+   unc_add_option("pp_indent_case", UO_pp_indent_case, AT_BOOL,
+                  "Whether to indent case statements between #if, #else, and #endif");
+   unc_add_option("pp_indent_func_def", UO_pp_indent_func_def, AT_BOOL,
+                  "Whether to indent whole function definitions between #if, #else, and #endif");
+   unc_add_option("pp_indent_extern", UO_pp_indent_extern, AT_BOOL,
+                  "Whether to indent extern C blocks between #if, #else, and #endif");
+   unc_add_option("pp_indent_brace", UO_pp_indent_brace, AT_BOOL,
+                  "Whether to indent braces directly inside #if, #else, and #endif");
 
    unc_begin_group(UG_sort_includes, "Sort includes options");
    unc_add_option("include_category_0", UO_include_category_0, AT_STRING,
