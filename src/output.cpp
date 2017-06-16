@@ -1492,7 +1492,12 @@ static void output_comment_multi(chunk_t *pc)
              * This is not the first line, so we need to indent to the
              * correct column. Each line is indented 0 or more spaces.
              */
-            ccol -= col_diff;
+            // Ensure ccol is not negative
+            if (static_cast<int>(ccol) >= col_diff)
+            {
+               ccol -= col_diff;
+            }
+
             if (ccol < (cmt_col + 3))
             {
                ccol = cmt_col + 3;
