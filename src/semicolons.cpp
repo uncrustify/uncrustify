@@ -119,12 +119,13 @@ static void check_unknown_brace_close(chunk_t *semi, chunk_t *brace_close)
    LOG_FUNC_ENTRY();
    chunk_t *pc = chunk_get_prev_type(brace_close, CT_BRACE_OPEN, brace_close->level);
    pc = chunk_get_prev_ncnl(pc);
-   if (  (pc != nullptr)
-      && (pc->type != CT_RETURN)
-      && (pc->type != CT_WORD)
-      && (pc->type != CT_TYPE)
-      && (pc->type != CT_SQUARE_CLOSE)
-      && (pc->type != CT_TSQUARE)
+   if (  pc != nullptr
+      && pc->type != CT_RETURN
+      && pc->type != CT_WORD
+      && pc->type != CT_TYPE
+      && pc->type != CT_SQUARE_CLOSE
+      && pc->type != CT_ANGLE_CLOSE
+      && pc->type != CT_TSQUARE
       && !chunk_is_paren_close(pc))
    {
       remove_semicolon(semi);
