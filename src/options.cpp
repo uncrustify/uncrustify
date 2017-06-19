@@ -235,7 +235,8 @@ static bool match_text(const char *str1, const char *str2)
 {
    int matches = 0;
 
-   while ((*str1 != 0) && (*str2 != 0))
+   while ((*str1 != 0)
+          && (*str2 != 0))
    {
       if (!unc_isalnum(*str1))
       {
@@ -255,7 +256,9 @@ static bool match_text(const char *str1, const char *str2)
       str1++;
       str2++;
    }
-   return(matches && (*str1 == 0) && (*str2 == 0));
+   return(matches
+          && (*str1 == 0)
+          && (*str2 == 0));
 }
 
 
@@ -1789,12 +1792,16 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
    }
 
    const option_map_value *tmp;
-   if ((entry->type == AT_NUM) || (entry->type == AT_UNUM))
+   if ((entry->type == AT_NUM)
+       || (entry->type == AT_UNUM))
    {
       if (unc_isdigit(*val)
-          || (unc_isdigit(val[1]) && ((*val == '-') || (*val == '+'))))
+          || (unc_isdigit(val[1])
+              && ((*val == '-')
+                  || (*val == '+'))))
       {
-         if ((entry->type == AT_UNUM) && (*val == '-'))
+         if ((entry->type == AT_UNUM)
+             && (*val == '-'))
          {
             fprintf(stderr, "%s:%d\n  for the option '%s' is a negative value not possible: %s",
                     cpd.filename, cpd.line_number, entry->name, val);
@@ -1829,8 +1836,10 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
               entry->name, get_argtype_name(tmp->type), tmp->name);
 
       if ((tmp->type == entry->type)
-          || ((tmp->type == AT_UNUM) && (entry->type == AT_NUM))
-          || ((tmp->type == AT_NUM) && (entry->type == AT_UNUM)
+          || ((tmp->type == AT_UNUM)
+              && (entry->type == AT_NUM))
+          || ((tmp->type == AT_NUM)
+              && (entry->type == AT_UNUM)
               && (cpd.settings[tmp->id].n * mult) > 0))
       {
          dest->n = cpd.settings[tmp->id].n * mult;
@@ -1847,30 +1856,32 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
 
    if (entry->type == AT_BOOL)
    {
-      if ((strcasecmp(val, "true") == 0) ||
-          (strcasecmp(val, "t") == 0) ||
-          (strcmp(val, "1") == 0))
+      if ((strcasecmp(val, "true") == 0)
+          || (strcasecmp(val, "t") == 0)
+          || (strcmp(val, "1") == 0))
       {
          dest->b = true;
          return;
       }
 
-      if ((strcasecmp(val, "false") == 0) ||
-          (strcasecmp(val, "f") == 0) ||
-          (strcmp(val, "0") == 0))
+      if ((strcasecmp(val, "false") == 0)
+          || (strcasecmp(val, "f") == 0)
+          || (strcmp(val, "0") == 0))
       {
          dest->b = false;
          return;
       }
 
       bool btrue = true;
-      if ((*val == '-') || (*val == '~'))
+      if ((*val == '-')
+          || (*val == '~'))
       {
          btrue = false;
          val++;
       }
 
-      if (((tmp = unc_find_option(val)) != nullptr) && (tmp->type == entry->type))
+      if (((tmp = unc_find_option(val)) != nullptr)
+          && (tmp->type == entry->type))
       {
          dest->b = cpd.settings[tmp->id].b ? btrue : !btrue;
          return;
@@ -1891,27 +1902,32 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
    }
 
    // Must be AT_IARF
-   if ((strcasecmp(val, "add") == 0) || (strcasecmp(val, "a") == 0))
+   if ((strcasecmp(val, "add") == 0)
+       || (strcasecmp(val, "a") == 0))
    {
       dest->a = AV_ADD;
       return;
    }
-   if ((strcasecmp(val, "remove") == 0) || (strcasecmp(val, "r") == 0))
+   if ((strcasecmp(val, "remove") == 0)
+       || (strcasecmp(val, "r") == 0))
    {
       dest->a = AV_REMOVE;
       return;
    }
-   if ((strcasecmp(val, "force") == 0) || (strcasecmp(val, "f") == 0))
+   if ((strcasecmp(val, "force") == 0)
+       || (strcasecmp(val, "f") == 0))
    {
       dest->a = AV_FORCE;
       return;
    }
-   if ((strcasecmp(val, "ignore") == 0) || (strcasecmp(val, "i") == 0))
+   if ((strcasecmp(val, "ignore") == 0)
+       || (strcasecmp(val, "i") == 0))
    {
       dest->a = AV_IGNORE;
       return;
    }
-   if (((tmp = unc_find_option(val)) != nullptr) && (tmp->type == entry->type))
+   if (((tmp = unc_find_option(val)) != nullptr)
+       && (tmp->type == entry->type))
    {
       dest->a = cpd.settings[tmp->id].a;
       return;
@@ -1944,7 +1960,8 @@ bool is_path_relative(const char *path)
     * Check for partition labels as indication for an absolute path
     * X:\path\to\file style absolute disk path
     */
-   if (isalpha(path[0]) && (path[1] == ':'))
+   if (isalpha(path[0])
+       && (path[1] == ':'))
    {
       return(false);
    }
@@ -1953,7 +1970,8 @@ bool is_path_relative(const char *path)
     * Check for double backslashs as indication for a network path
     * \\server\path\to\file style absolute UNC path
     */
-   if ((path[0] == '\\') && (path[1] == '\\'))
+   if ((path[0] == '\\')
+       && (path[1] == '\\'))
    {
       return(false);
    }
@@ -2183,7 +2201,9 @@ int save_option_file_kernel(FILE *pfile, bool withDoc, bool only_not_default)
          }
          // ...................................................................
 
-         if (withDoc && (option->short_desc != nullptr) && (*option->short_desc != 0))
+         if (withDoc
+             && (option->short_desc != nullptr)
+             && (*option->short_desc != 0))
          {
             if (first)
             {
@@ -2382,8 +2402,8 @@ void set_option_defaults(void)
             log_flush(true);
             exit(EX_SOFTWARE);
          }
-         if ((min_value > 0) &&
-             (default_value < min_value))
+         if ((min_value > 0)
+             && (default_value < min_value))
          {
             fprintf(stderr, "option '%s' is not correctly set:\n", id.second.name);
             fprintf(stderr, "The default value '%zu' is less than the min value '%zu'.\n",

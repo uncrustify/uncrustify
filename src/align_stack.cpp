@@ -66,12 +66,12 @@ void AlignStack::Add(chunk_t *start, size_t seqnum)
    m_last_added = 0;
 
    // Check threshold limits
-   if ((m_max_col == 0) ||
-       (m_thresh == 0) ||
-       (((start->column + m_gap) <= (m_thresh + m_max_col)) && // don't use subtraction here to prevent underflow
-        (((start->column + m_gap + m_thresh) >= (m_max_col)) ||
-         // change the expression to mind negative expression
-         (start->column >= m_min_col))))
+   if ((m_max_col == 0)
+       || (m_thresh == 0)
+       || (((start->column + m_gap) <= (m_thresh + m_max_col)) // don't use subtraction here to prevent underflow
+           && (((start->column + m_gap + m_thresh) >= (m_max_col))
+               ||// change the expression to mind negative expression
+               (start->column >= m_min_col))))
    {
       // we are adding it, so update the newline seqnum
       if (seqnum > m_nl_seqnum)
@@ -135,16 +135,17 @@ void AlignStack::Add(chunk_t *start, size_t seqnum)
        * If align_on_tabstop=true, then SS_DANGLE is changed to SS_INCLUDE.
        */
 
-      if (cpd.settings[UO_align_on_tabstop].b && (m_star_style == SS_DANGLE))
+      if (cpd.settings[UO_align_on_tabstop].b
+          && (m_star_style == SS_DANGLE))
       {
          m_star_style = SS_INCLUDE;
       }
 
       // Find ref. Back up to the real item that is aligned.
       chunk_t *prev = start;
-      while (((prev = chunk_get_prev(prev)) != nullptr) &&
-             (chunk_is_ptr_operator(prev) ||
-              (prev->type == CT_TPAREN_OPEN)))
+      while (((prev = chunk_get_prev(prev)) != nullptr)
+             && (chunk_is_ptr_operator(prev)
+                 || (prev->type == CT_TPAREN_OPEN)))
       {
          // do nothing - we want prev when this exits
       }
@@ -160,7 +161,8 @@ void AlignStack::Add(chunk_t *start, size_t seqnum)
       {
          // back up to the first '*' or '^' preceding the token
          prev = chunk_get_prev(ali);
-         while (chunk_is_star(prev) || chunk_is_msref(prev))
+         while (chunk_is_star(prev)
+                || chunk_is_msref(prev))
          {
             ali  = prev;
             prev = chunk_get_prev(ali);
@@ -215,9 +217,12 @@ void AlignStack::Add(chunk_t *start, size_t seqnum)
       {
          tmp = chunk_get_next(tmp);
       }
-      if ((chunk_is_star(tmp) && (m_star_style == SS_DANGLE)) ||
-          (chunk_is_addr(tmp) && (m_amp_style == SS_DANGLE)) ||
-          (chunk_is_msref(tmp) && (m_star_style == SS_DANGLE))) // TODO: add m_msref_style
+      if ((chunk_is_star(tmp)
+           && (m_star_style == SS_DANGLE))
+          || (chunk_is_addr(tmp)
+              && (m_amp_style == SS_DANGLE))
+          || (chunk_is_msref(tmp)
+              && (m_star_style == SS_DANGLE)))                  // TODO: add m_msref_style
       {
          col_adj = start->column - ali->column;
          gap     = start->column - (ref->column + ref->len());
@@ -350,7 +355,8 @@ void AlignStack::Flush()
       {
          tmp = chunk_get_next(tmp);
       }
-      if (chunk_is_ptr_operator(tmp) && (m_star_style == SS_DANGLE))
+      if (chunk_is_ptr_operator(tmp)
+          && (m_star_style == SS_DANGLE))
       {
          col_adj = pc->align.start->column - pc->column;
          gap     = pc->align.start->column - (pc->align.ref->column + pc->align.ref->len());
@@ -362,7 +368,8 @@ void AlignStack::Flush()
          if (pc->align.start->type == CT_NEG)
          {
             tmp = chunk_get_next(pc->align.start);
-            if ((tmp != nullptr) && (tmp->type == CT_NUMBER))
+            if ((tmp != nullptr)
+                && (tmp->type == CT_NUMBER))
             {
                start_len += tmp->len();
             }
@@ -384,7 +391,8 @@ void AlignStack::Flush()
       }
    }
 
-   if (cpd.settings[UO_align_on_tabstop].b && (m_aligned.Len() > 1))
+   if (cpd.settings[UO_align_on_tabstop].b
+       && (m_aligned.Len() > 1))
    {
       m_max_col = align_tab_column(m_max_col);
    }
@@ -399,7 +407,8 @@ void AlignStack::Flush()
       size_t tmp_col = m_max_col - pc->align.col_adj;
       if (idx == 0)
       {
-         if (m_skip_first && (pc->column != tmp_col))
+         if (m_skip_first
+             && (pc->column != tmp_col))
          {
             LOG_FMT(LAS, "%s: %zu:%zu dropping first item due to skip_first\n",
                     __func__, pc->orig_line, pc->orig_col);

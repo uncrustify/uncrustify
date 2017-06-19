@@ -125,7 +125,8 @@ void log_flush(bool force_nl)
 {
    if (g_log.buf_len > 0)
    {
-      if (force_nl && (g_log.buf[g_log.buf_len - 1] != '\n'))
+      if (force_nl
+          && (g_log.buf[g_log.buf_len - 1] != '\n'))
       {
          g_log.buf[g_log.buf_len++] = '\n';
          g_log.buf[g_log.buf_len]   = 0;
@@ -153,7 +154,8 @@ static size_t log_start(log_sev_t sev)
    }
 
    // If not in a log, the buffer is empty. Add the header, if enabled.
-   if (!g_log.in_log && g_log.show_hdr)
+   if (!g_log.in_log
+       && g_log.show_hdr)
    {
       g_log.buf_len = static_cast<size_t>(snprintf(g_log.buf, sizeof(g_log.buf), "<%d>", sev));
    }
@@ -167,7 +169,8 @@ static size_t log_start(log_sev_t sev)
 static void log_end(void)
 {
    g_log.in_log = (g_log.buf[g_log.buf_len - 1] != '\n');
-   if (!g_log.in_log || (g_log.buf_len > static_cast<int>(sizeof(g_log.buf) / 2)))
+   if (!g_log.in_log
+       || (g_log.buf_len > static_cast<int>(sizeof(g_log.buf) / 2)))
    {
       log_flush(false);
    }
@@ -176,7 +179,9 @@ static void log_end(void)
 
 void log_str(log_sev_t sev, const char *str, size_t len)
 {
-   if ((str == nullptr) || (len == 0) || !log_sev_on(sev))
+   if ((str == nullptr)
+       || (len == 0)
+       || !log_sev_on(sev))
    {
       return;
    }
@@ -198,7 +203,8 @@ void log_str(log_sev_t sev, const char *str, size_t len)
 
 void log_fmt(log_sev_t sev, const char *fmt, ...)
 {
-   if ((fmt == nullptr) || !log_sev_on(sev))
+   if ((fmt == nullptr)
+       || !log_sev_on(sev))
    {
       return;
    }
@@ -253,7 +259,8 @@ void log_fmt(log_sev_t sev, const char *fmt, ...)
 
 void log_hex(log_sev_t sev, const void *vdata, size_t len)
 {
-   if ((vdata == nullptr) || !log_sev_on(sev))
+   if ((vdata == nullptr)
+       || !log_sev_on(sev))
    {
       return;
    }
@@ -285,7 +292,8 @@ void log_hex(log_sev_t sev, const void *vdata, size_t len)
 
 void log_hex_blk(log_sev_t sev, const void *data, size_t len)
 {
-   if ((data == nullptr) || !log_sev_on(sev))
+   if ((data == nullptr)
+       || !log_sev_on(sev))
    {
       return;
    }

@@ -72,8 +72,8 @@ const char *Args::Params(const char *token, size_t &index)
    {
       size_t arg_len = strlen(m_values[idx]);
 
-      if ((arg_len >= token_len) &&
-          (memcmp(token, m_values[idx], token_len) == 0))
+      if ((arg_len >= token_len)
+          && (memcmp(token, m_values[idx], token_len) == 0))
       {
          SetUsed(idx);
          if (arg_len > token_len)
@@ -102,7 +102,9 @@ const char *Args::Params(const char *token, size_t &index)
 
 bool Args::GetUsed(size_t idx)
 {
-   if ((m_used != nullptr) && (idx > 0) && (idx < m_count))
+   if ((m_used != nullptr)
+       && (idx > 0)
+       && (idx < m_count))
    {
       return((m_used[idx >> 3] & (1 << (idx & 0x07))) != 0);
    }
@@ -112,7 +114,9 @@ bool Args::GetUsed(size_t idx)
 
 void Args::SetUsed(size_t idx)
 {
-   if ((m_used != nullptr) && (idx > 0) && (idx < m_count))
+   if ((m_used != nullptr)
+       && (idx > 0)
+       && (idx < m_count))
    {
       m_used[idx >> 3] |= (1 << (idx & 0x07));
    }
@@ -141,7 +145,8 @@ const char *Args::Unused(size_t &index)
 
 size_t Args::SplitLine(char *text, char *args[], size_t num_args)
 {
-   if (text == nullptr || num_args == 0)
+   if (text == nullptr
+       || num_args == 0)
    {
       return(0);
    }
@@ -156,7 +161,8 @@ size_t Args::SplitLine(char *text, char *args[], size_t num_args)
           && *text != 0)   // end of string not reached yet
    {
       // Detect the start of an arg
-      if (!in_arg && !unc_isspace(*text))
+      if (!in_arg
+          && !unc_isspace(*text))
       {
          in_arg     = true;
          args[argc] = dest;
@@ -179,7 +185,9 @@ size_t Args::SplitLine(char *text, char *args[], size_t num_args)
          {
             cur_quote = 0;
          }
-         else if ((*text == '\'') || (*text == '"') || (*text == '`'))
+         else if ((*text == '\'')
+                  || (*text == '"')
+                  || (*text == '`'))
          {
             cur_quote = *text;
          }
