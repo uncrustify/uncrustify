@@ -1765,7 +1765,6 @@ void uncrustify_file(const file_mem &fm, FILE *pfout,
          old_changes = cpd.changes;
 
          LOG_FMT(LNEWLINE, "Newline loop start: %d\n", cpd.changes);
-         LOG_FMT(LGUY, "Newline loop start: %d\n", cpd.changes);
 
          annotations_newlines();
          newlines_cleanup_dup();
