@@ -266,13 +266,11 @@ static bool decode_utf16(const vector<UINT8> &in_data, deque<int> &out_data, cha
    }
 
    size_t idx = 2;
-   if ((in_data[0] == 0xfe)
-       && (in_data[1] == 0xff))
+   if ((in_data[0] == 0xfe) && (in_data[1] == 0xff))
    {
       enc = char_encoding_e::e_UTF16_BE;
    }
-   else if ((in_data[0] == 0xff)
-            && (in_data[1] == 0xfe))
+   else if ((in_data[0] == 0xff) && (in_data[1] == 0xfe))
    {
       enc = char_encoding_e::e_UTF16_LE;
    }
@@ -323,8 +321,7 @@ static bool decode_utf16(const vector<UINT8> &in_data, deque<int> &out_data, cha
          ch += 0x10000;
          out_data.push_back(ch);
       }
-      else if (((ch >= 0)
-                && (ch < 0xD800))
+      else if (((ch >= 0) && (ch < 0xD800))
                || (ch >= 0xE000))
       {
          out_data.push_back(ch);
@@ -344,15 +341,13 @@ static bool decode_bom(const vector<UINT8> &in_data, char_encoding_e &enc)
    enc = char_encoding_e::e_ASCII;
    if (in_data.size() >= 2)
    {
-      if ((in_data[0] == 0xfe)
-          && (in_data[1] == 0xff))
+      if ((in_data[0] == 0xfe) && (in_data[1] == 0xff))
       {
          enc = char_encoding_e::e_UTF16_BE;
          return(true);
       }
 
-      if ((in_data[0] == 0xff)
-          && (in_data[1] == 0xfe))
+      if ((in_data[0] == 0xff) && (in_data[1] == 0xfe))
       {
          enc = char_encoding_e::e_UTF16_LE;
          return(true);
@@ -454,10 +449,8 @@ static void write_utf8(int ch)
 static void write_utf16(int ch, bool be)
 {
    // U+0000 to U+D7FF and U+E000 to U+FFFF
-   if (((ch >= 0)
-        && (ch < 0xD800))
-       || ((ch >= 0xE000)
-           && (ch < 0x10000)))
+   if (((ch >= 0) && (ch < 0xD800))
+       || ((ch >= 0xE000) && (ch < 0x10000)))
    {
       if (be)
       {
@@ -470,8 +463,7 @@ static void write_utf16(int ch, bool be)
          write_byte(ch >> 8);
       }
    }
-   else if ((ch >= 0x10000)
-            && (ch < 0x110000))
+   else if ((ch >= 0x10000) && (ch < 0x110000))
    {
       int v1 = ch - 0x10000;
       int w1 = 0xD800 + (v1 >> 10);

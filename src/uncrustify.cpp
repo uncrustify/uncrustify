@@ -172,8 +172,7 @@ const char *path_basename(const char *path)
    {
       path++;
       // Check both slash types to support Linux and Windows
-      if ((ch == '/')
-          || (ch == '\\'))
+      if ((ch == '/') || (ch == '\\'))
       {
          last_path = path;
       }
@@ -200,8 +199,7 @@ void usage_exit(const char *msg, const char *argv0, int code)
       fprintf(stderr, "%s\n", msg);
       log_flush(true);
    }
-   if ((code != EXIT_SUCCESS)
-       || (argv0 == nullptr))
+   if ((code != EXIT_SUCCESS) || (argv0 == nullptr))
    {
       fprintf(stderr, "Try running with -h for usage information\n");
       log_flush(true);
@@ -338,8 +336,7 @@ int main(int argc, char *argv[])
    register_options();
 
    Args arg(argc, argv);
-   if (arg.Present("--version")
-       || arg.Present("-v"))
+   if (arg.Present("--version") || arg.Present("-v"))
    {
       version_exit();
    }
@@ -432,8 +429,7 @@ int main(int argc, char *argv[])
    }
 
    // Enable log severities
-   if (arg.Present("-s")
-       || arg.Present("--show"))
+   if (arg.Present("-s") || arg.Present("--show"))
    {
       log_show_sev(true);
    }
@@ -547,24 +543,20 @@ int main(int argc, char *argv[])
 
    if (!cpd.do_check)
    {
-      if (replace
-          || no_backup)
+      if (replace || no_backup)
       {
-         if ((prefix != nullptr)
-             || (suffix != nullptr))
+         if ((prefix != nullptr) || (suffix != nullptr))
          {
             usage_exit("Cannot use --replace with --prefix or --suffix", argv[0], EX_NOINPUT);
          }
-         if ((source_file != nullptr)
-             || (output_file != nullptr))
+         if ((source_file != nullptr) || (output_file != nullptr))
          {
             usage_exit("Cannot use --replace or --no-backup with -f or -o", argv[0], EX_NOINPUT);
          }
       }
       else
       {
-         if ((prefix == nullptr)
-             && (suffix == nullptr))
+         if ((prefix == nullptr) && (suffix == nullptr))
          {
             suffix = ".uncrustify";
          }
@@ -662,8 +654,7 @@ int main(int argc, char *argv[])
    {
       file_mem fm;
 
-      if ((source_file == nullptr)
-          || (source_list != nullptr))
+      if ((source_file == nullptr) || (source_list != nullptr))
       {
          fprintf(stderr, "The --detect option requires a single input file\n");
          log_flush(true);
@@ -671,8 +662,7 @@ int main(int argc, char *argv[])
       }
 
       // Do some simple language detection based on the filename extension
-      if (!cpd.lang_forced
-          || (cpd.lang_flags == 0))
+      if (!cpd.lang_forced || (cpd.lang_flags == 0))
       {
          cpd.lang_flags = language_flags_from_filename(source_file);
       }
@@ -694,8 +684,7 @@ int main(int argc, char *argv[])
       return(EXIT_SUCCESS);
    }
 
-   if (update_config
-       || update_config_wd)
+   if (update_config || update_config_wd)
    {
       // TODO: complain if file-processing related options are present
       redir_stdout(output_file);
@@ -720,8 +709,7 @@ int main(int argc, char *argv[])
    p_arg = arg.Unused(idx);
 
    // Check args - for multifile options
-   if ((source_list != nullptr)
-       || (p_arg != nullptr))
+   if ((source_list != nullptr) || (p_arg != nullptr))
    {
       if (source_file != nullptr)
       {
@@ -739,8 +727,7 @@ int main(int argc, char *argv[])
    // This relies on cpd.filename being the config file name
    load_header_files();
 
-   if (cpd.do_check
-       || cpd.if_changed)
+   if (cpd.do_check || cpd.if_changed)
    {
       cpd.bout = new deque<UINT8>();
    }
@@ -824,8 +811,7 @@ int main(int argc, char *argv[])
    {
       return(EXIT_FAILURE);
    }
-   if (cpd.do_check
-       && (cpd.check_fail_cnt != 0))
+   if (cpd.do_check && (cpd.check_fail_cnt != 0))
    {
       return(EXIT_FAILURE);
    }
@@ -857,14 +843,12 @@ static void process_source_list(const char *source_list,
       line++;
       char *fname = linebuf;
       int  len    = strlen(fname);
-      while ((len > 0)
-             && unc_isspace(*fname))
+      while ((len > 0) && unc_isspace(*fname))
       {
          fname++;
          len--;
       }
-      while ((len > 0)
-             && unc_isspace(fname[len - 1]))
+      while ((len > 0) && unc_isspace(fname[len - 1]))
       {
          len--;
       }
@@ -928,15 +912,13 @@ static void make_folders(const string &filename)
 
    for (int idx = 0; outname[idx] != 0; idx++)
    {
-      if ((outname[idx] == '/')
-          || (outname[idx] == '\\'))
+      if ((outname[idx] == '/') || (outname[idx] == '\\'))
       {
          outname[idx] = PATH_SEP;
       }
 
       // search until end of subpath is found
-      if ((idx > last_idx)
-          && (outname[idx] == PATH_SEP))
+      if ((idx > last_idx) && (outname[idx] == PATH_SEP))
       {
          outname[idx] = 0; // mark the end of the subpath
 
@@ -946,8 +928,7 @@ static void make_folders(const string &filename)
          {
             int status;    // Coverity CID 75999
             status = mkdir(outname, 0750);
-            if ((status != 0)
-                && (errno != EEXIST))
+            if ((status != 0) && (errno != EEXIST))
             {
                LOG_FMT(LERR, "%s: Unable to create %s: %s (%d)\n",
                        __func__, outname, strerror(errno), errno);
@@ -1153,8 +1134,7 @@ static bool file_content_matches(const string &filename1, const string &filename
       {
          len2 = read(fd2, buf2, sizeof(buf2));
       }
-      if ((len1 <= 0)
-          || (len2 <= 0))
+      if ((len1 <= 0) || (len2 <= 0))
       {
          break; // reached end of either files
          // TODO: what is if one file is longer than the other, do we miss that ?
@@ -1171,8 +1151,7 @@ static bool file_content_matches(const string &filename1, const string &filename
    close(fd1);
    close(fd2);
 
-   return((len1 == 0)
-          && (len2 == 0));
+   return((len1 == 0) && (len2 == 0));
 } // file_content_matches
 
 
@@ -1226,8 +1205,7 @@ static bool bout_content_matches(const file_mem &fm, bool report_status)
          }
       }
    }
-   if (is_same
-       && report_status)
+   if (is_same && report_status)
    {
       fprintf(stdout, "PASS: %s (%u bytes)\n", cpd.filename, static_cast<int>(fm.raw.size()));
    }
@@ -1249,8 +1227,7 @@ static void do_source_file(const char *filename_in,
    string   filename_tmp;
 
    // Do some simple language detection based on the filename extension
-   if (!cpd.lang_forced
-       || (cpd.lang_flags == 0))
+   if (!cpd.lang_forced || (cpd.lang_flags == 0))
    {
       cpd.lang_flags = language_flags_from_filename(filename_in);
    }
@@ -1357,8 +1334,7 @@ static void do_source_file(const char *filename_in,
       if (filename_tmp != filename_out)
       {
          // We need to compare and then do a rename (but avoid redundant test when if_changed set)
-         if (!cpd.if_changed
-             && file_content_matches(filename_tmp, filename_out))
+         if (!cpd.if_changed && file_content_matches(filename_tmp, filename_out))
          {
             // No change - remove tmp file
             UNUSED(unlink(filename_tmp.c_str()));
@@ -1411,14 +1387,12 @@ static void add_file_footer()
    chunk_t *pc = chunk_get_tail();
 
    // Back up if the file ends with a newline
-   if ((pc != nullptr)
-       && chunk_is_newline(pc))
+   if ((pc != nullptr) && chunk_is_newline(pc))
    {
       pc = chunk_get_prev(pc);
    }
    if ((pc != nullptr)
-       && (!chunk_is_comment(pc)
-           || !chunk_is_newline(chunk_get_prev(pc))))
+       && (!chunk_is_comment(pc) || !chunk_is_newline(chunk_get_prev(pc))))
    {
       pc = chunk_get_tail();
       if (!chunk_is_newline(pc))
@@ -1463,8 +1437,7 @@ static void add_func_header(c_token_t type, file_mem &fm)
              && ref->next)
          {
             ref = ref->next;
-            if (ref->type == CT_SEMICOLON
-                && ref->parent_type == CT_NONE)
+            if (ref->type == CT_SEMICOLON && ref->parent_type == CT_NONE)
             {
                continue;
             }
@@ -1479,8 +1452,7 @@ static void add_func_header(c_token_t type, file_mem &fm)
           && ref->next)
       {
          int found_brace = 0;                                   // Set if a close brace is found before a newline
-         while ((ref->type != CT_NEWLINE)
-                && (ref = ref->next))                           // TODO: is the assignment of ref wanted here?, better move it to the loop
+         while ((ref->type != CT_NEWLINE) && (ref = ref->next)) // TODO: is the assignment of ref wanted here?, better move it to the loop
          {
             if (ref->type == CT_BRACE_CLOSE)
             {
@@ -1504,8 +1476,7 @@ static void add_func_header(c_token_t type, file_mem &fm)
       while ((ref = chunk_get_prev(ref)) != nullptr)
       {
          // Bail if we change level or find an access specifier colon
-         if ((ref->level != pc->level)
-             || (ref->type == CT_PRIVATE_COLON))
+         if ((ref->level != pc->level) || (ref->type == CT_PRIVATE_COLON))
          {
             do_insert = true;
             break;
@@ -1522,8 +1493,7 @@ static void add_func_header(c_token_t type, file_mem &fm)
          if (ref->flags & PCF_IN_PREPROC)
          {
             tmp = chunk_get_prev_type(ref, CT_PREPROC, ref->level);
-            if ((tmp != nullptr)
-                && (tmp->parent_type == CT_PP_IF))
+            if ((tmp != nullptr) && (tmp->parent_type == CT_PP_IF))
             {
                tmp = chunk_get_prev_nnl(tmp);
                if (chunk_is_comment(tmp)
@@ -1535,8 +1505,7 @@ static void add_func_header(c_token_t type, file_mem &fm)
          }
 
          // Ignore 'right' comments
-         if (chunk_is_comment(ref)
-             && chunk_is_newline(chunk_get_prev(ref)))
+         if (chunk_is_comment(ref) && chunk_is_newline(chunk_get_prev(ref)))
          {
             break;
          }
@@ -1589,8 +1558,7 @@ static void add_msg_header(c_token_t type, file_mem &fm)
       {
          // ignore the CT_TYPE token that is the result type
          if ((ref->level != pc->level)
-             && ((ref->type == CT_TYPE)
-                 || (ref->type == CT_PTR_TYPE)))
+             && ((ref->type == CT_TYPE) || (ref->type == CT_PTR_TYPE)))
          {
             continue;
          }
@@ -1606,8 +1574,7 @@ static void add_msg_header(c_token_t type, file_mem &fm)
          if (ref->flags & PCF_IN_PREPROC)
          {
             tmp = chunk_get_prev_type(ref, CT_PREPROC, ref->level);
-            if ((tmp != nullptr)
-                && (tmp->parent_type == CT_PP_IF))
+            if ((tmp != nullptr) && (tmp->parent_type == CT_PP_IF))
             {
                tmp = chunk_get_prev_nnl(tmp);
                if (chunk_is_comment(tmp)
@@ -1618,15 +1585,13 @@ static void add_msg_header(c_token_t type, file_mem &fm)
             }
          }
          if ((ref->level == pc->level)
-             && ((ref->flags & PCF_IN_PREPROC)
-                 || (ref->type == CT_OC_SCOPE)))
+             && ((ref->flags & PCF_IN_PREPROC) || (ref->type == CT_OC_SCOPE)))
          {
             ref = chunk_get_prev(ref);
             if (ref != nullptr)
             {
                // Ignore 'right' comments
-               if (chunk_is_newline(ref)
-                   && chunk_is_comment(chunk_get_prev(ref)))
+               if (chunk_is_newline(ref) && chunk_is_comment(chunk_get_prev(ref)))
                {
                   break;
                }
@@ -1717,8 +1682,7 @@ void uncrustify_file(const file_mem &fm, FILE *pfout,
    cpd.bom = fm.bom;
    cpd.enc = fm.enc;
    if (cpd.settings[UO_utf8_force].b
-       || ((cpd.enc == char_encoding_e::e_BYTE)
-           && cpd.settings[UO_utf8_byte].b))
+       || ((cpd.enc == char_encoding_e::e_BYTE) && cpd.settings[UO_utf8_byte].b))
    {
       cpd.enc = char_encoding_e::e_UTF8;
    }
@@ -1844,8 +1808,7 @@ void uncrustify_file(const file_mem &fm, FILE *pfout,
             newlines_chunk_pos(CT_COND_COLON, cpd.settings[UO_pos_conditional].tp);
             newlines_chunk_pos(CT_QUESTION, cpd.settings[UO_pos_conditional].tp);
          }
-         if (cpd.settings[UO_pos_comma].tp != TP_IGNORE
-             || cpd.settings[UO_pos_enum_comma].tp != TP_IGNORE)
+         if (cpd.settings[UO_pos_comma].tp != TP_IGNORE || cpd.settings[UO_pos_enum_comma].tp != TP_IGNORE)
          {
             newlines_chunk_pos(CT_COMMA, cpd.settings[UO_pos_comma].tp);
          }
@@ -1869,8 +1832,7 @@ void uncrustify_file(const file_mem &fm, FILE *pfout,
          newlines_functions_remove_extra_blank_lines();
          newlines_cleanup_dup();
          first = false;
-      } while ((old_changes != cpd.changes)
-               && (cpd.pass_count-- > 0));
+      } while ((old_changes != cpd.changes) && (cpd.pass_count-- > 0));
 
       mark_comments();
 
@@ -1881,8 +1843,7 @@ void uncrustify_file(const file_mem &fm, FILE *pfout,
       }
 
       // Scrub certain added semicolons
-      if ((cpd.lang_flags & LANG_PAWN)
-          && cpd.settings[UO_mod_pawn_semicolon].b)
+      if ((cpd.lang_flags & LANG_PAWN) && cpd.settings[UO_mod_pawn_semicolon].b)
       {
          pawn_scrub_vsemi();
       }
@@ -1936,8 +1897,7 @@ void uncrustify_file(const file_mem &fm, FILE *pfout,
          {
             LOG_FMT(LNEWLINE, "Code_width loop start: %d\n", cpd.changes);
             do_code_width();
-            if ((old_changes != cpd.changes)
-                && first)
+            if ((old_changes != cpd.changes) && first)
             {
                // retry line breaks caused by splitting 1-liners
                newlines_cleanup_braces(false);
@@ -1945,8 +1905,7 @@ void uncrustify_file(const file_mem &fm, FILE *pfout,
                first = false;
             }
          }
-      } while ((old_changes != cpd.changes)
-               && (cpd.pass_count-- > 0));
+      } while ((old_changes != cpd.changes) && (cpd.pass_count-- > 0));
 
       // And finally, align the backslash newline stuff
       align_right_comments();
@@ -1976,8 +1935,7 @@ void uncrustify_file(const file_mem &fm, FILE *pfout,
       }
    }
 
-   if (cpd.do_check
-       && !bout_content_matches(fm, true))
+   if (cpd.do_check && !bout_content_matches(fm, true))
    {
       cpd.check_fail_cnt++;
    }
@@ -2036,8 +1994,7 @@ const char *get_token_name(c_token_t token)
 
 c_token_t find_token_name(const char *text)
 {
-   if ((text != nullptr)
-       && (*text != 0))
+   if ((text != nullptr) && (*text != 0))
    {
       for (int idx = 1; idx < static_cast<int> ARRAY_SIZE(token_names); idx++)
       {
@@ -2057,8 +2014,7 @@ static bool ends_with(const char *filename, const char *tag, bool case_sensitive
    int len2 = strlen(tag);
 
    return((len2 <= len1)
-          && ((case_sensitive
-               && (strcmp(&filename[len1 - len2], tag) == 0))
+          && ((case_sensitive && (strcmp(&filename[len1 - len2], tag) == 0))
               || (!case_sensitive
                   && (strcasecmp(&filename[len1 - len2], tag) == 0))));
 }

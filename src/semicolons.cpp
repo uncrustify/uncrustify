@@ -83,8 +83,7 @@ void remove_extra_semicolons(void)
          {
             check_unknown_brace_close(pc, prev);
          }
-         else if ((prev->type == CT_SEMICOLON)
-                  && (prev->parent_type != CT_FOR))
+         else if ((prev->type == CT_SEMICOLON) && (prev->parent_type != CT_FOR))
          {
             LOG_FUNC_CALL();
             remove_semicolon(pc);

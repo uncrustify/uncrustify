@@ -406,8 +406,7 @@ static_inline bool is_expected_type_and_level(chunk_t *pc, c_token_t type, int l
 {
    // we don't care about the level (if it is negative) or it is as expected
    // and the type is as expected
-   return((level < 0
-           || pc->level == static_cast<size_t>(level))
+   return((level < 0 || pc->level == static_cast<size_t>(level))
           && pc->type == type);
 }
 
@@ -415,8 +414,7 @@ static_inline bool is_expected_type_and_level(chunk_t *pc, c_token_t type, int l
 static_inline bool is_expected_string_and_level(chunk_t *pc, const char *str, int level, size_t len)
 {
    // we don't care about the level (if it is negative) or it is as expected
-   return((level < 0
-           || pc->level == static_cast<size_t>(level))
+   return((level < 0 || pc->level == static_cast<size_t>(level))
           && pc->len() == len                      // and the length is as expected
           && memcmp(str, pc->text(), len) == 0);   // and the strings are equal
 }
@@ -487,24 +485,21 @@ static_inline bool chunk_is_comment(chunk_t *pc)
 static_inline bool chunk_is_single_line_comment(chunk_t *pc)
 {
    return((pc != NULL)
-          && ((pc->type == CT_COMMENT)
-              || (pc->type == CT_COMMENT_CPP)));
+          && ((pc->type == CT_COMMENT) || (pc->type == CT_COMMENT_CPP)));
 }
 
 
 static_inline bool chunk_is_newline(chunk_t *pc)
 {
    return((pc != NULL)
-          && ((pc->type == CT_NEWLINE)
-              || (pc->type == CT_NL_CONT)));
+          && ((pc->type == CT_NEWLINE) || (pc->type == CT_NL_CONT)));
 }
 
 
 static_inline bool chunk_is_semicolon(chunk_t *pc)
 {
    return((pc != NULL)
-          && ((pc->type == CT_SEMICOLON)
-              || (pc->type == CT_VSEMICOLON)));
+          && ((pc->type == CT_SEMICOLON) || (pc->type == CT_VSEMICOLON)));
 }
 
 
@@ -517,16 +512,14 @@ static_inline bool chunk_is_semicolon(chunk_t *pc)
  */
 static_inline bool chunk_is_blank(chunk_t *pc)
 {
-   return((pc != NULL)
-          && (pc->len() == 0));
+   return((pc != NULL) && (pc->len() == 0));
 }
 
 
 //! checks if a chunk is valid and either a comment or newline
 static_inline bool chunk_is_comment_or_newline(chunk_t *pc)
 {
-   return(chunk_is_comment(pc)
-          || chunk_is_newline(pc));
+   return(chunk_is_comment(pc) || chunk_is_newline(pc));
 }
 
 
@@ -541,8 +534,7 @@ static_inline bool chunk_is_balanced_square(chunk_t *pc)
 
 static_inline bool chunk_is_preproc(chunk_t *pc)
 {
-   return((pc != NULL)
-          && (pc->flags & PCF_IN_PREPROC));
+   return((pc != NULL) && (pc->flags & PCF_IN_PREPROC));
 }
 
 
@@ -550,8 +542,7 @@ static_inline bool chunk_is_comment_or_newline_in_preproc(chunk_t *pc)
 {
    return((pc != NULL)
           && chunk_is_preproc(pc)
-          && (chunk_is_comment(pc)
-              || chunk_is_newline(pc)));
+          && (chunk_is_comment(pc) || chunk_is_newline(pc)));
 }
 
 
@@ -565,8 +556,7 @@ static_inline bool chunk_is_comment_newline_or_preproc(chunk_t *pc)
 
 static_inline bool chunk_is_comment_newline_or_blank(chunk_t *pc)
 {
-   return(chunk_is_comment_or_newline(pc)
-          || chunk_is_blank(pc));
+   return(chunk_is_comment_or_newline(pc) || chunk_is_blank(pc));
 }
 
 
@@ -605,8 +595,7 @@ static_inline bool chunk_is_type(chunk_t *pc)
 
 static_inline bool chunk_is_token(chunk_t *pc, c_token_t c_token)
 {
-   return((pc != NULL)
-          && (pc->type == c_token));
+   return((pc != NULL) && (pc->type == c_token));
 }
 
 
@@ -660,8 +649,7 @@ static_inline bool chunk_is_addr(chunk_t *pc)
 
       if ((pc->flags & PCF_IN_TEMPLATE)
           && ((prev != NULL)
-              && ((prev->type == CT_COMMA)
-                  || (prev->type == CT_ANGLE_OPEN))))
+              && ((prev->type == CT_COMMA) || (prev->type == CT_ANGLE_OPEN))))
       {
          return(false);
       }
@@ -698,24 +686,21 @@ bool chunk_is_newline_between(chunk_t *start, chunk_t *end);
 static_inline bool chunk_is_closing_brace(chunk_t *pc)
 {
    return((pc != NULL)
-          && ((pc->type == CT_BRACE_CLOSE)
-              || (pc->type == CT_VBRACE_CLOSE)));
+          && ((pc->type == CT_BRACE_CLOSE) || (pc->type == CT_VBRACE_CLOSE)));
 }
 
 
 static_inline bool chunk_is_opening_brace(chunk_t *pc)
 {
    return((pc != NULL)
-          && ((pc->type == CT_BRACE_OPEN)
-              || (pc->type == CT_VBRACE_OPEN)));
+          && ((pc->type == CT_BRACE_OPEN) || (pc->type == CT_VBRACE_OPEN)));
 }
 
 
 static_inline bool chunk_is_vbrace(chunk_t *pc)
 {
    return((pc != NULL)
-          && ((pc->type == CT_VBRACE_CLOSE)
-              || (pc->type == CT_VBRACE_OPEN)));
+          && ((pc->type == CT_VBRACE_CLOSE) || (pc->type == CT_VBRACE_OPEN)));
 }
 
 
@@ -760,8 +745,7 @@ static_inline bool chunk_safe_to_del_nl(chunk_t *nl)
 {
    chunk_t *tmp = chunk_get_prev(nl);
 
-   if ((tmp != NULL)
-       && (tmp->type == CT_COMMENT_CPP))
+   if ((tmp != NULL) && (tmp->type == CT_COMMENT_CPP))
    {
       return(false);
    }

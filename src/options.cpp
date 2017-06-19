@@ -235,8 +235,7 @@ static bool match_text(const char *str1, const char *str2)
 {
    int matches = 0;
 
-   while ((*str1 != 0)
-          && (*str2 != 0))
+   while ((*str1 != 0) && (*str2 != 0))
    {
       if (!unc_isalnum(*str1))
       {
@@ -1792,16 +1791,13 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
    }
 
    const option_map_value *tmp;
-   if ((entry->type == AT_NUM)
-       || (entry->type == AT_UNUM))
+   if ((entry->type == AT_NUM) || (entry->type == AT_UNUM))
    {
       if (unc_isdigit(*val)
           || (unc_isdigit(val[1])
-              && ((*val == '-')
-                  || (*val == '+'))))
+              && ((*val == '-') || (*val == '+'))))
       {
-         if ((entry->type == AT_UNUM)
-             && (*val == '-'))
+         if ((entry->type == AT_UNUM) && (*val == '-'))
          {
             fprintf(stderr, "%s:%d\n  for the option '%s' is a negative value not possible: %s",
                     cpd.filename, cpd.line_number, entry->name, val);
@@ -1836,8 +1832,7 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
               entry->name, get_argtype_name(tmp->type), tmp->name);
 
       if ((tmp->type == entry->type)
-          || ((tmp->type == AT_UNUM)
-              && (entry->type == AT_NUM))
+          || ((tmp->type == AT_UNUM) && (entry->type == AT_NUM))
           || ((tmp->type == AT_NUM)
               && (entry->type == AT_UNUM)
               && (cpd.settings[tmp->id].n * mult) > 0))
@@ -1873,8 +1868,7 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
       }
 
       bool btrue = true;
-      if ((*val == '-')
-          || (*val == '~'))
+      if ((*val == '-') || (*val == '~'))
       {
          btrue = false;
          val++;
@@ -1902,26 +1896,22 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
    }
 
    // Must be AT_IARF
-   if ((strcasecmp(val, "add") == 0)
-       || (strcasecmp(val, "a") == 0))
+   if ((strcasecmp(val, "add") == 0) || (strcasecmp(val, "a") == 0))
    {
       dest->a = AV_ADD;
       return;
    }
-   if ((strcasecmp(val, "remove") == 0)
-       || (strcasecmp(val, "r") == 0))
+   if ((strcasecmp(val, "remove") == 0) || (strcasecmp(val, "r") == 0))
    {
       dest->a = AV_REMOVE;
       return;
    }
-   if ((strcasecmp(val, "force") == 0)
-       || (strcasecmp(val, "f") == 0))
+   if ((strcasecmp(val, "force") == 0) || (strcasecmp(val, "f") == 0))
    {
       dest->a = AV_FORCE;
       return;
    }
-   if ((strcasecmp(val, "ignore") == 0)
-       || (strcasecmp(val, "i") == 0))
+   if ((strcasecmp(val, "ignore") == 0) || (strcasecmp(val, "i") == 0))
    {
       dest->a = AV_IGNORE;
       return;

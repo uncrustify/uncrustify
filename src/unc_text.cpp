@@ -61,9 +61,11 @@ int unc_text::compare(const unc_text &ref1, const unc_text &ref2, size_t len)
    size_t len1 = ref1.size();
    size_t len2 = ref2.size();
 
-   for (idx = 0; (idx < len1)
-        && (idx < len2)
-        && (idx < len); idx++)
+   for (idx = 0;
+        ((idx < len1)
+         && (idx < len2)
+         && (idx < len));
+        idx++)
    {
       // exactly the same character ?
       if (ref1.m_chars[idx] == ref2.m_chars[idx])
@@ -276,8 +278,7 @@ bool unc_text::startswith(const char *text, size_t idx) const
 {
    bool match = false;
 
-   while ((idx < size())
-          && *text)
+   while ((idx < size()) && *text)
    {
       if (*text != m_chars[idx])
       {
@@ -287,8 +288,7 @@ bool unc_text::startswith(const char *text, size_t idx) const
       text++;
       match = true;
    }
-   return(match
-          && (*text == 0));
+   return(match && (*text == 0));
 }
 
 
@@ -297,8 +297,7 @@ bool unc_text::startswith(const unc_text &text, size_t idx) const
    bool   match = false;
    size_t si    = 0;
 
-   while ((idx < size())
-          && (si < text.size()))
+   while ((idx < size()) && (si < text.size()))
    {
       if (text.m_chars[si] != m_chars[idx])
       {
@@ -308,8 +307,7 @@ bool unc_text::startswith(const unc_text &text, size_t idx) const
       si++;
       match = true;
    }
-   return(match
-          && (si == text.size()));
+   return(match && (si == text.size()));
 }
 
 
