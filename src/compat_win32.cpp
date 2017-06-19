@@ -53,8 +53,8 @@ bool unc_homedir(std::string &home)
       return(true);
    }
    std::string hd, hp;
-   if (unc_getenv("HOMEDRIVE", hd)
-       && unc_getenv("HOMEPATH", hp))
+   if (  unc_getenv("HOMEDRIVE", hd)
+      && unc_getenv("HOMEPATH", hp))
    {
       home = hd + hp;
       return(true);
@@ -67,9 +67,9 @@ void convert_log_zu2lu(char *fmt)
 {
    for (size_t i = 0; i < strlen(fmt); i++)
    {
-      if ((fmt[i] == '%')
-          && (fmt[i + 1] == 'z')
-          && (fmt[i + 2] == 'u'))
+      if (  (fmt[i] == '%')
+         && (fmt[i + 1] == 'z')
+         && (fmt[i + 2] == 'u'))
       {
          fmt[i + 1] = 'l';
       }

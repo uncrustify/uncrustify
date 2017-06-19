@@ -66,11 +66,11 @@ void AlignStack::Add(chunk_t *start, size_t seqnum)
    m_last_added = 0;
 
    // Check threshold limits
-   if ((m_max_col == 0)
-       || (m_thresh == 0)
-       || (((start->column + m_gap) <= (m_thresh + m_max_col))     // don't use subtraction here to prevent underflow
-           && (((start->column + m_gap + m_thresh) >= (m_max_col)) // change the expression to mind negative expression
-               || (start->column >= m_min_col))))
+   if (  (m_max_col == 0)
+      || (m_thresh == 0)
+      || (  ((start->column + m_gap) <= (m_thresh + m_max_col))    // don't use subtraction here to prevent underflow
+         && (  ((start->column + m_gap + m_thresh) >= (m_max_col)) // change the expression to mind negative expression
+            || (start->column >= m_min_col))))
    {
       // we are adding it, so update the newline seqnum
       if (seqnum > m_nl_seqnum)
@@ -141,8 +141,8 @@ void AlignStack::Add(chunk_t *start, size_t seqnum)
 
       // Find ref. Back up to the real item that is aligned.
       chunk_t *prev = start;
-      while (((prev = chunk_get_prev(prev)) != nullptr)
-             && (chunk_is_ptr_operator(prev) || (prev->type == CT_TPAREN_OPEN)))
+      while (  ((prev = chunk_get_prev(prev)) != nullptr)
+            && (chunk_is_ptr_operator(prev) || (prev->type == CT_TPAREN_OPEN)))
       {
          // do nothing - we want prev when this exits
       }
@@ -213,9 +213,9 @@ void AlignStack::Add(chunk_t *start, size_t seqnum)
       {
          tmp = chunk_get_next(tmp);
       }
-      if ((chunk_is_star(tmp) && (m_star_style == SS_DANGLE))
-          || (chunk_is_addr(tmp) && (m_amp_style == SS_DANGLE))
-          || (chunk_is_msref(tmp) && (m_star_style == SS_DANGLE))) // TODO: add m_msref_style
+      if (  (chunk_is_star(tmp) && (m_star_style == SS_DANGLE))
+         || (chunk_is_addr(tmp) && (m_amp_style == SS_DANGLE))
+         || (chunk_is_msref(tmp) && (m_star_style == SS_DANGLE)))  // TODO: add m_msref_style
       {
          col_adj = start->column - ali->column;
          gap     = start->column - (ref->column + ref->len());

@@ -82,8 +82,8 @@ static inline int unc_isdigit(int ch)
 //! check if a character is upper case
 static inline int unc_isupper(int ch)
 {
-   return(isalpha(unc_fix_ctype(ch))
-          && (unc_toupper(unc_fix_ctype(ch)) == ch));
+   return(  isalpha(unc_fix_ctype(ch))
+         && (unc_toupper(unc_fix_ctype(ch)) == ch));
 }
 
 
