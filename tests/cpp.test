@@ -182,6 +182,7 @@
 30818 bug_1169.cfg                     cpp/bug_1169.cpp
 
 30820 pp_define_at_level-1.cfg         cpp/pp-define-indent.cpp
+30821 pp_if_indent-5.cfg               cpp/pp-if-indent.cpp
 
 30830 kw_subst2.cfg                    cpp/kw_subst.cpp
 30831 kw_subst.cfg                     cpp/kw_subst2.cpp
