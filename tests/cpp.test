@@ -179,6 +179,7 @@
 30815 width-2.cfg                      cpp/cmt-reflow.cpp
 30816 cu.cfg                           cpp/for_long.cpp
 30817 ben.cfg                          cpp/cmt-cpp-cont.cpp
+30818 bug_1169.cfg                     cpp/bug_1169.cpp
 
 30820 pp_define_at_level-1.cfg         cpp/pp-define-indent.cpp
 

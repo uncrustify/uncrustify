@@ -15,41 +15,43 @@
 // protocol of the line
 // examples:
 //   prot_the_line(__LINE__, pc->orig_line);
-//	  prot_the_line(__LINE__, 6);
+//   prot_the_line(__LINE__, 6);
 // log_pcf_flags(LSYS, pc->flags);
 void prot_the_line(int theLine, unsigned int actual_line)
 {
-   LOG_FMT(LGUY, "Prot_the_line:(%d) \n", theLine);
+   LOG_FMT(LGUY, "Prot_the_line:(%d)\n", theLine);
    for (chunk_t *pc = chunk_get_head(); pc != nullptr; pc = pc->next)
    {
       if (pc->orig_line == actual_line)
       {
-         LOG_FMT(LGUY, "(%d) orig_line=%d, ", theLine, actual_line);
+         LOG_FMT(LGUY, " orig_line=%d, ", actual_line);
          if (pc->type == CT_VBRACE_OPEN)
          {
-            LOG_FMT(LGUY, "<VBRACE_OPEN>\n");
+            LOG_FMT(LGUY, "<VBRACE_OPEN>, ");
          }
          else if (pc->type == CT_NEWLINE)
          {
-            LOG_FMT(LGUY, "<NL>(%zu)\n", pc->nl_count);
+            LOG_FMT(LGUY, "<NL>(%zu), ", pc->nl_count);
          }
          else if (pc->type == CT_VBRACE_CLOSE)
          {
-            LOG_FMT(LGUY, "<CT_VBRACE_CLOSE>\n");
+            LOG_FMT(LGUY, "<CT_VBRACE_CLOSE>, ");
          }
          else if (pc->type == CT_VBRACE_OPEN)
          {
-            LOG_FMT(LGUY, "<CT_VBRACE_OPEN>\n");
+            LOG_FMT(LGUY, "<CT_VBRACE_OPEN>, ");
          }
          else if (pc->type == CT_SPACE)
          {
-            LOG_FMT(LGUY, "<CT_SPACE>\n");
+            LOG_FMT(LGUY, "<CT_SPACE>, ");
          }
          else
          {
-            LOG_FMT(LGUY, "text() %s, type %s, orig_col=%zu, column=%zu\n",
-                    pc->text(), get_token_name(pc->type), pc->orig_col, pc->column);
+            LOG_FMT(LGUY, "text() %s, type %s, parent_type %s, orig_col=%zu, ",
+                    pc->text(), get_token_name(pc->type), get_token_name(pc->parent_type), pc->orig_col);
          }
+         LOG_FMT(LGUY, "pc->flags:");
+         log_pcf_flags(LGUY, pc->flags);
       }
    }
    LOG_FMT(LGUY, "\n");
