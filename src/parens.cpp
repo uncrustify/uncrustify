@@ -129,8 +129,7 @@ static void check_bool_parens(chunk_t *popen, chunk_t *pclose, int nest)
            popen->level);
 
    chunk_t *pc = popen;
-   while (  ((pc = chunk_get_next_ncnl(pc)) != nullptr)
-         && (pc != pclose))
+   while ((pc = chunk_get_next_ncnl(pc)) != nullptr && pc != pclose)
    {
       if (pc->flags & PCF_IN_PREPROC)
       {
@@ -179,8 +178,7 @@ static void check_bool_parens(chunk_t *popen, chunk_t *pclose, int nest)
       }
    }
 
-   if (  hit_compare
-      && (ref != popen))
+   if (hit_compare && ref != popen)
    {
       add_parens_between(ref, pclose);
    }

@@ -870,8 +870,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
          }
       }
 
-      if (  (pc->type == CT_ALIGN)
-         && (tmp != nullptr))
+      if (pc->type == CT_ALIGN && tmp != nullptr)
       {
          if (tmp->type == CT_BRACE_OPEN)
          {
@@ -1192,8 +1191,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
             tmp = chunk_get_next(tmp);
             if ((tmp != nullptr) && (tmp->type == CT_PAREN_OPEN))
             {
-               if (  (tmpA != nullptr)
-                  && (tmpA->type == CT_ASSIGN))
+               if (tmpA != nullptr && tmpA->type == CT_ASSIGN)
                {
                   // we have "TYPE(...)(...) =" such as
                   // Issue #1041
@@ -1981,7 +1979,7 @@ static void mark_function_return_type(chunk_t *fname, chunk_t *start, c_token_t 
             log_pcf_flags(LFCNR, pc->flags);
             // Issue #1027
             if (  (pc->flags & PCF_IN_TEMPLATE)
-               && (pc->type == CT_ANGLE_CLOSE))
+               && pc->type == CT_ANGLE_CLOSE)
             {
                // search the opening angle
                pc = chunk_get_prev_type(pc, CT_ANGLE_OPEN, save->level);
@@ -2235,8 +2233,7 @@ static void process_returns(void)
    pc = chunk_get_head();
    while (pc != nullptr)
    {
-      if (  (pc->type != CT_RETURN)
-         || (pc->flags & PCF_IN_PREPROC))
+      if (pc->type != CT_RETURN || (pc->flags & PCF_IN_PREPROC))
       {
          pc = chunk_get_next_type(pc, CT_RETURN, -1);
          continue;
@@ -2258,8 +2255,7 @@ static chunk_t *process_return(chunk_t *pc)
 
    // grab next and bail if it is a semicolon
    next = chunk_get_next_ncnl(pc);
-   if (  (next == nullptr)
-      || chunk_is_semicolon(next))
+   if (next == nullptr || chunk_is_semicolon(next))
    {
       return(next);
    }
@@ -2608,8 +2604,9 @@ static void fix_casts(chunk_t *start)
 
    LOG_FMT(LCASTS, " -- %s c-cast: (", verb);
 
-   for (  pc = first; (pc != nullptr)
-       && (pc != paren_close); pc = chunk_get_next_ncnl(pc))
+   for (pc = first;
+        (pc != nullptr) && (pc != paren_close);
+        pc = chunk_get_next_ncnl(pc))
    {
       set_chunk_parent(pc, CT_C_CAST);
       make_type(pc);
@@ -2851,8 +2848,7 @@ static void fix_typedef(chunk_t *start)
          {
             break;
          }
-         if (  (cpd.lang_flags & LANG_D)
-            && (next->type == CT_ASSIGN))
+         if ((cpd.lang_flags & LANG_D) && next->type == CT_ASSIGN)
          {
             set_chunk_parent(next, CT_TYPEDEF);
             break;
@@ -2904,8 +2900,7 @@ static void fix_typedef(chunk_t *start)
               __func__, the_type->text(), the_type->orig_line);
 
       // If we are aligning on the open parenthesis, grab that instead
-      if (  open_paren
-         && (cpd.settings[UO_align_typedef_func].u == 1))
+      if (open_paren && cpd.settings[UO_align_typedef_func].u == 1)
       {
          the_type = open_paren;
       }
@@ -4570,8 +4565,7 @@ static void mark_cpp_constructor(chunk_t *pc)
    {
       chunk_flags_set(tmp, PCF_IN_CONST_ARGS);
       tmp = chunk_get_next_ncnl(tmp);
-      if (  chunk_is_str(tmp, ":", 1)
-         && (tmp->level == paren_open->level))
+      if (chunk_is_str(tmp, ":", 1) && tmp->level == paren_open->level)
       {
          set_chunk_type(tmp, CT_CONSTR_COLON);
          hit_colon = true;

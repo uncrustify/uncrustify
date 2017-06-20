@@ -170,8 +170,7 @@ void brace_cleanup(void)
    while (pc != nullptr)
    {
       // Check for leaving a #define body
-      if (  (cpd.in_preproc != CT_NONE)
-         && ((pc->flags & PCF_IN_PREPROC) == 0))
+      if (cpd.in_preproc != CT_NONE && (pc->flags & PCF_IN_PREPROC) == 0)
       {
          if (cpd.in_preproc == CT_PP_DEFINE)
          {

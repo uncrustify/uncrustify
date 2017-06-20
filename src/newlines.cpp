@@ -2518,8 +2518,7 @@ static void nl_create_one_liner(chunk_t *vbrace_open)
    // See if we get a newline between the next text and the vbrace_close
    chunk_t *tmp   = chunk_get_next_ncnl(vbrace_open);
    chunk_t *first = tmp;
-   if (  !first
-      || (get_token_pattern_class(first->type) != pattern_class_e::NONE))
+   if (!first || get_token_pattern_class(first->type) != pattern_class_e::NONE)
    {
       return;
    }
@@ -3808,15 +3807,13 @@ void newlines_class_colon_pos(c_token_t tok)
 
          if (anc == AV_REMOVE)
          {
-            if (  chunk_is_newline(prev)
-               && chunk_safe_to_del_nl(prev))
+            if (chunk_is_newline(prev) && chunk_safe_to_del_nl(prev))
             {
                chunk_del(prev);
                MARK_CHANGE();
                prev = chunk_get_prev_nc(pc);
             }
-            if (  chunk_is_newline(next)
-               && chunk_safe_to_del_nl(next))
+            if (chunk_is_newline(next) && chunk_safe_to_del_nl(next))
             {
                chunk_del(next);
                MARK_CHANGE();
@@ -3866,8 +3863,7 @@ void newlines_class_colon_pos(c_token_t tok)
                      newline_add_after(pc);
                   }
                   prev = chunk_get_prev_nc(pc);
-                  if (  chunk_is_newline(prev)
-                     && chunk_safe_to_del_nl(prev))
+                  if (chunk_is_newline(prev) && chunk_safe_to_del_nl(prev))
                   {
                      chunk_del(prev);
                      MARK_CHANGE();

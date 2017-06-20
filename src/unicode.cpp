@@ -206,8 +206,7 @@ static bool decode_utf8(const vector<UINT8> &in_data, deque<int> &out_data)
          return(false);
       }
 
-      while (  (cnt-- > 0)
-            && (idx < in_data.size()))
+      while (cnt-- > 0 && idx < in_data.size())
       {
          int tmp = in_data[idx++];
          if ((tmp & 0xC0) != 0x80)

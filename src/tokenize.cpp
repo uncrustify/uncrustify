@@ -740,8 +740,7 @@ static void parse_suffix(tok_ctx &ctx, chunk_t &pc, bool forstring = false)
 
       tok_info ss;
       ctx.save(ss);
-      while (  ctx.more()
-            && CharTable::IsKw2(ctx.peek()))
+      while (ctx.more() && CharTable::IsKw2(ctx.peek()))
       {
          slen++;
          pc.str.append(ctx.get());

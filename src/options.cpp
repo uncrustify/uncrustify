@@ -1968,8 +1968,7 @@ bool is_path_relative(const char *path)
     * Check for partition labels as indication for an absolute path
     * X:\path\to\file style absolute disk path
     */
-   if (  isalpha(path[0])
-      && (path[1] == ':'))
+   if (isalpha(path[0]) && path[1] == ':')
    {
       return(false);
    }
@@ -1978,8 +1977,7 @@ bool is_path_relative(const char *path)
     * Check for double backslashs as indication for a network path
     * \\server\path\to\file style absolute UNC path
     */
-   if (  (path[0] == '\\')
-      && (path[1] == '\\'))
+   if (path[0] == '\\' && path[1] == '\\')
    {
       return(false);
    }
@@ -2415,8 +2413,7 @@ void set_option_defaults(void)
             log_flush(true);
             exit(EX_SOFTWARE);
          }
-         if (  (min_value > 0)
-            && (default_value < min_value))
+         if (min_value > 0 && default_value < min_value)
          {
             fprintf(stderr, "option '%s' is not correctly set:\n", id.second.name);
             fprintf(stderr, "The default value '%zu' is less than the min value '%zu'.\n",

@@ -1990,8 +1990,7 @@ void space_text(void)
             {
                tmp = chunk_get_next(tmp);
             }
-            if (  (tmp != nullptr)
-               && (tmp->len() > 0))
+            if (tmp != nullptr && tmp->len() > 0)
             {
                bool kw1 = CharTable::IsKw2(pc->str[pc->len() - 1]);
                bool kw2 = CharTable::IsKw1(next->str[0]);
