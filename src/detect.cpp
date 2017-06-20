@@ -48,9 +48,9 @@ public:
 
 void sp_votes::vote(chunk_t *first, chunk_t *second)
 {
-   if (  (first == nullptr)
+   if (  first == nullptr
       || chunk_is_newline(first)
-      || (second == nullptr)
+      || second == nullptr
       || chunk_is_newline(second))
    {
       return;
@@ -76,9 +76,9 @@ void sp_votes::vote(chunk_t *first, chunk_t *second)
 sp_votes::~sp_votes()
 {
    // no change if no items were added
-   if (  (m_remove == 0)
-      && (m_add == 0)
-      && (m_force == 0))
+   if (  m_remove == 0
+      && m_add == 0
+      && m_force == 0)
    {
       return;
    }
@@ -87,7 +87,7 @@ sp_votes::~sp_votes()
    {
       *m_av = (m_force > m_add) ? AV_FORCE : AV_ADD;
    }
-   else if ((m_force == 0) && (m_add == 0))
+   else if (m_force == 0 && m_add == 0)
    {
       *m_av = AV_REMOVE;
    }
@@ -221,7 +221,7 @@ static void detect_space_options(void)
       {
          vote_sp_paren_paren.vote(pc, next);
       }
-      if (chunk_is_paren_close(pc) && (next->type == CT_BRACE_OPEN))
+      if (chunk_is_paren_close(pc) && next->type == CT_BRACE_OPEN)
       {
          vote_sp_paren_brace.vote(pc, next);
       }
@@ -256,8 +256,8 @@ static void detect_space_options(void)
          }
          vote_sp_after_byref.vote(pc, next);
       }
-      if (  (pc->type != CT_PTR_TYPE)
-         && ((prev->type == CT_QUALIFIER) || (prev->type == CT_TYPE)))
+      if (  pc->type != CT_PTR_TYPE
+         && (prev->type == CT_QUALIFIER || prev->type == CT_TYPE))
       {
          vote_sp_after_type.vote(prev, pc);
       }
@@ -280,7 +280,7 @@ static void detect_space_options(void)
          {
             vote_sp_angle_paren.vote(prev, pc);
          }
-         else if ((next->type == CT_WORD) || CharTable::IsKw1(next->str[0]))
+         else if (next->type == CT_WORD || CharTable::IsKw1(next->str[0]))
          {
             vote_sp_angle_word.vote(prev, pc);
          }

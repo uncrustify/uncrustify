@@ -73,7 +73,7 @@ void examine_Data(const char *func_name, int theLine, int what)
    case 1:
       for (pc = chunk_get_head(); pc != nullptr; pc = pc->next)
       {
-         if ((pc->type == CT_SQUARE_CLOSE) || (pc->type == CT_TSQUARE))
+         if (pc->type == CT_SQUARE_CLOSE || pc->type == CT_TSQUARE)
          {
             LOG_FMT(LGUY, "\n");
             LOG_FMT(LGUY, "1:(%d),", theLine);
