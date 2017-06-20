@@ -1449,8 +1449,8 @@ static void output_comment_multi(chunk_t *pc)
           * line didn't start with a '*' all of a sudden while the previous one didn't
           * (the ambiguous '*'-for-bullet case!)
           */
-         if (  (prev_nonempty_line >= 0)
-            && (next_nonempty_line >= 0)
+         if (  prev_nonempty_line >= 0
+            && next_nonempty_line >= 0
             && (  (  (  unc_isalnum(line[prev_nonempty_line])
                      || strchr(",)]", line[prev_nonempty_line]))
                   && (  unc_isalnum(pc->str[next_nonempty_line])

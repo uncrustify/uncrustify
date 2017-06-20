@@ -903,17 +903,17 @@ void indent_text(void)
             }
 
             // End any assign operations with a semicolon on the same level
-            if (  (  (frm.pse[frm.pse_tos].type == CT_ASSIGN_NL)
-                  || (frm.pse[frm.pse_tos].type == CT_ASSIGN))
+            if (  (  frm.pse[frm.pse_tos].type == CT_ASSIGN_NL
+                  || frm.pse[frm.pse_tos].type == CT_ASSIGN)
                && (  chunk_is_semicolon(pc)
-                  || (pc->type == CT_COMMA)
-                  || (pc->type == CT_BRACE_OPEN)
-                  || (pc->type == CT_SPAREN_CLOSE)
-                  || (  (pc->type == CT_SQUARE_OPEN)
-                     && (pc->parent_type == CT_OC_AT))
-                  || (  (pc->type == CT_SQUARE_OPEN)
-                     && (pc->parent_type == CT_ASSIGN)))
-               && (pc->parent_type != CT_CPP_LAMBDA))
+                  || pc->type == CT_COMMA
+                  || pc->type == CT_BRACE_OPEN
+                  || pc->type == CT_SPAREN_CLOSE
+                  || (  pc->type == CT_SQUARE_OPEN
+                     && pc->parent_type == CT_OC_AT)
+                  || (  pc->type == CT_SQUARE_OPEN
+                     && pc->parent_type == CT_ASSIGN))
+               && pc->parent_type != CT_CPP_LAMBDA)
             {
                indent_pse_pop(frm, pc);
             }
@@ -1269,17 +1269,17 @@ void indent_text(void)
                     __func__, __LINE__, frm.pse_tos, frm.pse[frm.pse_tos].indent);
 
             // If this brace is part of a statement, bump it out by indent_brace
-            if (  (pc->parent_type == CT_IF)
-               || (pc->parent_type == CT_ELSE)
-               || (pc->parent_type == CT_ELSEIF)
-               || (pc->parent_type == CT_TRY)
-               || (pc->parent_type == CT_CATCH)
-               || (pc->parent_type == CT_DO)
-               || (pc->parent_type == CT_WHILE)
-               || (pc->parent_type == CT_USING_STMT)
-               || (pc->parent_type == CT_SWITCH)
-               || (pc->parent_type == CT_SYNCHRONIZED)
-               || (pc->parent_type == CT_FOR))
+            if (  pc->parent_type == CT_IF
+               || pc->parent_type == CT_ELSE
+               || pc->parent_type == CT_ELSEIF
+               || pc->parent_type == CT_TRY
+               || pc->parent_type == CT_CATCH
+               || pc->parent_type == CT_DO
+               || pc->parent_type == CT_WHILE
+               || pc->parent_type == CT_USING_STMT
+               || pc->parent_type == CT_SWITCH
+               || pc->parent_type == CT_SYNCHRONIZED
+               || pc->parent_type == CT_FOR)
             {
                if (parent_token_indent != 0)
                {
@@ -1670,36 +1670,36 @@ void indent_text(void)
             frm.pse[frm.pse_tos].indent_tab = frm.pse[frm.pse_tos].indent;
          }
 
-         if (  ((pc->type == CT_FPAREN_OPEN) || (pc->type == CT_ANGLE_OPEN))
+         if (  (pc->type == CT_FPAREN_OPEN || pc->type == CT_ANGLE_OPEN)
             && (  (  cpd.settings[UO_indent_func_call_param].b
-                  && (  (pc->parent_type == CT_FUNC_CALL)
-                     || (pc->parent_type == CT_FUNC_CALL_USER)))
+                  && (  pc->parent_type == CT_FUNC_CALL
+                     || pc->parent_type == CT_FUNC_CALL_USER))
                || (  cpd.settings[UO_indent_func_proto_param].b
-                  && (  (pc->parent_type == CT_FUNC_PROTO)
-                     || (pc->parent_type == CT_FUNC_CLASS_PROTO)))
+                  && (  pc->parent_type == CT_FUNC_PROTO
+                     || pc->parent_type == CT_FUNC_CLASS_PROTO))
                || (  cpd.settings[UO_indent_func_class_param].b
-                  && (  (pc->parent_type == CT_FUNC_CLASS_DEF)
-                     || (pc->parent_type == CT_FUNC_CLASS_PROTO)))
+                  && (  pc->parent_type == CT_FUNC_CLASS_DEF
+                     || pc->parent_type == CT_FUNC_CLASS_PROTO))
                || (  cpd.settings[UO_indent_template_param].b
-                  && (pc->parent_type == CT_TEMPLATE))
+                  && pc->parent_type == CT_TEMPLATE)
                || (  cpd.settings[UO_indent_func_ctor_var_param].b
-                  && (pc->parent_type == CT_FUNC_CTOR_VAR))
+                  && pc->parent_type == CT_FUNC_CTOR_VAR)
                || (  cpd.settings[UO_indent_func_def_param].b
-                  && (pc->parent_type == CT_FUNC_DEF))))
+                  && pc->parent_type == CT_FUNC_DEF)))
          {
             // Skip any continuation indents
             idx = frm.pse_tos - 1;
             while (  (idx > 0)
-                  && (frm.pse[idx].type != CT_BRACE_OPEN)
-                  && (frm.pse[idx].type != CT_VBRACE_OPEN)
-                  && (frm.pse[idx].type != CT_PAREN_OPEN)
-                  && (frm.pse[idx].type != CT_FPAREN_OPEN)
-                  && (frm.pse[idx].type != CT_SPAREN_OPEN)
-                  && (frm.pse[idx].type != CT_SQUARE_OPEN)
-                  && (frm.pse[idx].type != CT_ANGLE_OPEN)
-                  && (frm.pse[idx].type != CT_CLASS_COLON)
-                  && (frm.pse[idx].type != CT_CONSTR_COLON)
-                  && (frm.pse[idx].type != CT_ASSIGN_NL))
+                  && frm.pse[idx].type != CT_BRACE_OPEN
+                  && frm.pse[idx].type != CT_VBRACE_OPEN
+                  && frm.pse[idx].type != CT_PAREN_OPEN
+                  && frm.pse[idx].type != CT_FPAREN_OPEN
+                  && frm.pse[idx].type != CT_SPAREN_OPEN
+                  && frm.pse[idx].type != CT_SQUARE_OPEN
+                  && frm.pse[idx].type != CT_ANGLE_OPEN
+                  && frm.pse[idx].type != CT_CLASS_COLON
+                  && frm.pse[idx].type != CT_CONSTR_COLON
+                  && frm.pse[idx].type != CT_ASSIGN_NL)
             {
                idx--;
                skipped = true;
@@ -2290,15 +2290,15 @@ void indent_text(void)
             reindent_line(pc, indent_column);
          }
          else if (  cpd.settings[UO_indent_func_const].u
-                 && (pc->type == CT_QUALIFIER)
-                 && (strncasecmp(pc->text(), "const", pc->len()) == 0)
-                 && (  (next == nullptr)
-                    || (next->type == CT_BRACED)
-                    || (next->type == CT_BRACE_OPEN)
-                    || (next->type == CT_NEWLINE)
-                    || (next->type == CT_SEMICOLON)
-                    || (next->type == CT_THROW)
-                    || (next->type == CT_VBRACE_OPEN)))
+                 && pc->type == CT_QUALIFIER
+                 && strncasecmp(pc->text(), "const", pc->len()) == 0
+                 && (  next == nullptr
+                    || next->type == CT_BRACED
+                    || next->type == CT_BRACE_OPEN
+                    || next->type == CT_NEWLINE
+                    || next->type == CT_SEMICOLON
+                    || next->type == CT_THROW
+                    || next->type == CT_VBRACE_OPEN))
          {
             // indent const - void GetFoo(void)\n const\n { return (m_Foo); }
             indent_column_set(cpd.settings[UO_indent_func_const].u);

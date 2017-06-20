@@ -119,31 +119,31 @@ static bool pawn_continued(chunk_t *pc, size_t br_level)
    {
       return(false);
    }
-   if (  (pc->level > br_level)
-      || (pc->type == CT_ARITH)
-      || (pc->type == CT_CARET)
-      || (pc->type == CT_QUESTION)
-      || (pc->type == CT_BOOL)
-      || (pc->type == CT_ASSIGN)
-      || (pc->type == CT_COMMA)
-      || (pc->type == CT_COMPARE)
-      || (pc->type == CT_IF)
-      || (pc->type == CT_ELSE)
-      || (pc->type == CT_DO)
-      || (pc->type == CT_SWITCH)
-      || (pc->type == CT_WHILE)
-      || (pc->type == CT_BRACE_OPEN)
-      || (pc->type == CT_VBRACE_OPEN)
-      || (pc->type == CT_FPAREN_OPEN)
-      || (pc->parent_type == CT_IF)
-      || (pc->parent_type == CT_ELSE)
-      || (pc->parent_type == CT_ELSEIF)
-      || (pc->parent_type == CT_DO)
-      || (pc->parent_type == CT_FOR)
-      || (pc->parent_type == CT_SWITCH)
-      || (pc->parent_type == CT_WHILE)
-      || (pc->parent_type == CT_FUNC_DEF)
-      || (pc->parent_type == CT_ENUM)
+   if (  pc->level > br_level
+      || pc->type == CT_ARITH
+      || pc->type == CT_CARET
+      || pc->type == CT_QUESTION
+      || pc->type == CT_BOOL
+      || pc->type == CT_ASSIGN
+      || pc->type == CT_COMMA
+      || pc->type == CT_COMPARE
+      || pc->type == CT_IF
+      || pc->type == CT_ELSE
+      || pc->type == CT_DO
+      || pc->type == CT_SWITCH
+      || pc->type == CT_WHILE
+      || pc->type == CT_BRACE_OPEN
+      || pc->type == CT_VBRACE_OPEN
+      || pc->type == CT_FPAREN_OPEN
+      || pc->parent_type == CT_IF
+      || pc->parent_type == CT_ELSE
+      || pc->parent_type == CT_ELSEIF
+      || pc->parent_type == CT_DO
+      || pc->parent_type == CT_FOR
+      || pc->parent_type == CT_SWITCH
+      || pc->parent_type == CT_WHILE
+      || pc->parent_type == CT_FUNC_DEF
+      || pc->parent_type == CT_ENUM
       || (pc->flags & (PCF_IN_ENUM | PCF_IN_STRUCT))
       || chunk_is_str(pc, ":", 1)
       || chunk_is_str(pc, "+", 1)

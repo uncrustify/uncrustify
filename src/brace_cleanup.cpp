@@ -640,17 +640,17 @@ static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
     *  - after ';', but not if the paren stack top is a paren
     *  - after '(' that has a parent type of CT_FOR
     */
-   if (  (pc->type == CT_SQUARE_OPEN)
-      || ((pc->type == CT_BRACE_OPEN) && (pc->parent_type != CT_ASSIGN))
-      || (pc->type == CT_BRACE_CLOSE)
-      || (pc->type == CT_VBRACE_CLOSE)
-      || ((pc->type == CT_SPAREN_OPEN) && (pc->parent_type == CT_FOR))
-      || (pc->type == CT_COLON)
-      || (pc->type == CT_OC_END)
+   if (  pc->type == CT_SQUARE_OPEN
+      || (pc->type == CT_BRACE_OPEN && pc->parent_type != CT_ASSIGN)
+      || pc->type == CT_BRACE_CLOSE
+      || pc->type == CT_VBRACE_CLOSE
+      || (pc->type == CT_SPAREN_OPEN && pc->parent_type == CT_FOR)
+      || pc->type == CT_COLON
+      || pc->type == CT_OC_END
       || (  chunk_is_semicolon(pc)
-         && (frm->pse[frm->pse_tos].type != CT_PAREN_OPEN)
-         && (frm->pse[frm->pse_tos].type != CT_FPAREN_OPEN)
-         && (frm->pse[frm->pse_tos].type != CT_SPAREN_OPEN)))
+         && frm->pse[frm->pse_tos].type != CT_PAREN_OPEN
+         && frm->pse[frm->pse_tos].type != CT_FPAREN_OPEN
+         && frm->pse[frm->pse_tos].type != CT_SPAREN_OPEN))
    {
       LOG_FMT(LSTMT, "%s(%d): orig_line is %zu, reset1 stmt on %s\n",
               __func__, __LINE__, pc->orig_line, pc->text());
@@ -660,32 +660,32 @@ static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
 
    // Mark expression starts
    chunk_t *tmp = chunk_get_next_ncnl(pc);
-   if (  (pc->type == CT_ARITH)
-      || (pc->type == CT_ASSIGN)
-      || (pc->type == CT_CASE)
-      || (pc->type == CT_COMPARE)
-      || (  (pc->type == CT_STAR)
-         && tmp != nullptr && (tmp->type != CT_STAR))
-      || (pc->type == CT_BOOL)
-      || (pc->type == CT_MINUS)
-      || (pc->type == CT_PLUS)
-      || (pc->type == CT_CARET)
-      || (pc->type == CT_ANGLE_OPEN)
-      || (pc->type == CT_ANGLE_CLOSE)
-      || (pc->type == CT_RETURN)
-      || (pc->type == CT_THROW)
-      || (pc->type == CT_GOTO)
-      || (pc->type == CT_CONTINUE)
-      || (pc->type == CT_PAREN_OPEN)
-      || (pc->type == CT_FPAREN_OPEN)
-      || (pc->type == CT_SPAREN_OPEN)
-      || (pc->type == CT_BRACE_OPEN)
+   if (  pc->type == CT_ARITH
+      || pc->type == CT_ASSIGN
+      || pc->type == CT_CASE
+      || pc->type == CT_COMPARE
+      || (  pc->type == CT_STAR
+         && tmp != nullptr && tmp->type != CT_STAR)
+      || pc->type == CT_BOOL
+      || pc->type == CT_MINUS
+      || pc->type == CT_PLUS
+      || pc->type == CT_CARET
+      || pc->type == CT_ANGLE_OPEN
+      || pc->type == CT_ANGLE_CLOSE
+      || pc->type == CT_RETURN
+      || pc->type == CT_THROW
+      || pc->type == CT_GOTO
+      || pc->type == CT_CONTINUE
+      || pc->type == CT_PAREN_OPEN
+      || pc->type == CT_FPAREN_OPEN
+      || pc->type == CT_SPAREN_OPEN
+      || pc->type == CT_BRACE_OPEN
       || chunk_is_semicolon(pc)
-      || (pc->type == CT_COMMA)
-      || (pc->type == CT_NOT)
-      || (pc->type == CT_INV)
-      || (pc->type == CT_COLON)
-      || (pc->type == CT_QUESTION))
+      || pc->type == CT_COMMA
+      || pc->type == CT_NOT
+      || pc->type == CT_INV
+      || pc->type == CT_COLON
+      || pc->type == CT_QUESTION)
    {
       frm->expr_count = 0;
       LOG_FMT(LSTMT, "%s(%d): %zu> reset expr on %s\n",

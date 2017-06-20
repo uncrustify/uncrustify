@@ -2933,15 +2933,15 @@ void newlines_cleanup_braces(bool first)
                  || (pc->parent_type == CT_OC_MSG_DECL))
          {
             next = chunk_get_next(pc);
-            if (  (next != nullptr)
-               && (next->type != CT_SEMICOLON)
-               && (next->type != CT_COMMA)
-               && (next->type != CT_SPAREN_CLOSE)    // Issue #664
-               && (next->type != CT_SQUARE_CLOSE)
-               && (next->type != CT_FPAREN_CLOSE)
-               && (next->type != CT_WHILE_OF_DO)
-               && (next->type != CT_VBRACE_CLOSE)   // Issue #666
-               && ((pc->flags & (PCF_IN_ARRAY_ASSIGN | PCF_IN_TYPEDEF)) == 0)
+            if (  next != nullptr
+               && next->type != CT_SEMICOLON
+               && next->type != CT_COMMA
+               && next->type != CT_SPAREN_CLOSE    // Issue #664
+               && next->type != CT_SQUARE_CLOSE
+               && next->type != CT_FPAREN_CLOSE
+               && next->type != CT_WHILE_OF_DO
+               && next->type != CT_VBRACE_CLOSE   // Issue #666
+               && (pc->flags & (PCF_IN_ARRAY_ASSIGN | PCF_IN_TYPEDEF)) == 0
                && !chunk_is_newline(next)
                && !chunk_is_comment(next))
             {
@@ -3130,36 +3130,36 @@ void newlines_cleanup_braces(bool first)
       }
       else if (pc->type == CT_FPAREN_OPEN)
       {
-         if (  (  (pc->parent_type == CT_FUNC_DEF)
-               || (pc->parent_type == CT_FUNC_PROTO)
-               || (pc->parent_type == CT_FUNC_CLASS_DEF)
-               || (pc->parent_type == CT_FUNC_CLASS_PROTO)
-               || (pc->parent_type == CT_OPERATOR))
-            && (  (cpd.settings[UO_nl_func_decl_start].a != AV_IGNORE)
-               || (cpd.settings[UO_nl_func_def_start].a != AV_IGNORE)
-               || (cpd.settings[UO_nl_func_decl_start_single].a != AV_IGNORE)
-               || (cpd.settings[UO_nl_func_def_start_single].a != AV_IGNORE)
-               || (cpd.settings[UO_nl_func_decl_start_multi_line].b)
-               || (cpd.settings[UO_nl_func_def_start_multi_line].b)
-               || (cpd.settings[UO_nl_func_decl_args].a != AV_IGNORE)
-               || (cpd.settings[UO_nl_func_def_args].a != AV_IGNORE)
-               || (cpd.settings[UO_nl_func_decl_args_multi_line].b)
-               || (cpd.settings[UO_nl_func_def_args_multi_line].b)
-               || (cpd.settings[UO_nl_func_decl_end].a != AV_IGNORE)
-               || (cpd.settings[UO_nl_func_def_end].a != AV_IGNORE)
-               || (cpd.settings[UO_nl_func_decl_end_single].a != AV_IGNORE)
-               || (cpd.settings[UO_nl_func_def_end_single].a != AV_IGNORE)
-               || (cpd.settings[UO_nl_func_decl_end_multi_line].b)
-               || (cpd.settings[UO_nl_func_def_end_multi_line].b)
-               || (cpd.settings[UO_nl_func_decl_empty].a != AV_IGNORE)
-               || (cpd.settings[UO_nl_func_def_empty].a != AV_IGNORE)
-               || (cpd.settings[UO_nl_func_type_name].a != AV_IGNORE)
-               || (cpd.settings[UO_nl_func_type_name_class].a != AV_IGNORE)
-               || (cpd.settings[UO_nl_func_class_scope].a != AV_IGNORE)
-               || (cpd.settings[UO_nl_func_scope_name].a != AV_IGNORE)
-               || (cpd.settings[UO_nl_func_proto_type_name].a != AV_IGNORE)
-               || (cpd.settings[UO_nl_func_paren].a != AV_IGNORE)
-               || (cpd.settings[UO_nl_func_def_paren].a != AV_IGNORE)))
+         if (  (  pc->parent_type == CT_FUNC_DEF
+               || pc->parent_type == CT_FUNC_PROTO
+               || pc->parent_type == CT_FUNC_CLASS_DEF
+               || pc->parent_type == CT_FUNC_CLASS_PROTO
+               || pc->parent_type == CT_OPERATOR)
+            && (  cpd.settings[UO_nl_func_decl_start].a != AV_IGNORE
+               || cpd.settings[UO_nl_func_def_start].a != AV_IGNORE
+               || cpd.settings[UO_nl_func_decl_start_single].a != AV_IGNORE
+               || cpd.settings[UO_nl_func_def_start_single].a != AV_IGNORE
+               || cpd.settings[UO_nl_func_decl_start_multi_line].b
+               || cpd.settings[UO_nl_func_def_start_multi_line].b
+               || cpd.settings[UO_nl_func_decl_args].a != AV_IGNORE
+               || cpd.settings[UO_nl_func_def_args].a != AV_IGNORE
+               || cpd.settings[UO_nl_func_decl_args_multi_line].b
+               || cpd.settings[UO_nl_func_def_args_multi_line].b
+               || cpd.settings[UO_nl_func_decl_end].a != AV_IGNORE
+               || cpd.settings[UO_nl_func_def_end].a != AV_IGNORE
+               || cpd.settings[UO_nl_func_decl_end_single].a != AV_IGNORE
+               || cpd.settings[UO_nl_func_def_end_single].a != AV_IGNORE
+               || cpd.settings[UO_nl_func_decl_end_multi_line].b
+               || cpd.settings[UO_nl_func_def_end_multi_line].b
+               || cpd.settings[UO_nl_func_decl_empty].a != AV_IGNORE
+               || cpd.settings[UO_nl_func_def_empty].a != AV_IGNORE
+               || cpd.settings[UO_nl_func_type_name].a != AV_IGNORE
+               || cpd.settings[UO_nl_func_type_name_class].a != AV_IGNORE
+               || cpd.settings[UO_nl_func_class_scope].a != AV_IGNORE
+               || cpd.settings[UO_nl_func_scope_name].a != AV_IGNORE
+               || cpd.settings[UO_nl_func_proto_type_name].a != AV_IGNORE
+               || cpd.settings[UO_nl_func_paren].a != AV_IGNORE
+               || cpd.settings[UO_nl_func_def_paren].a != AV_IGNORE))
          {
             newline_func_def(pc);
          }

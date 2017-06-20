@@ -519,14 +519,14 @@ static void examine_brace(chunk_t *bopen)
             was_fcn = (prev != nullptr) && (prev->type == CT_FPAREN_CLOSE);
 
             if (  chunk_is_semicolon(pc)
-               || (pc->type == CT_IF)
-               || (pc->type == CT_ELSEIF)
-               || (pc->type == CT_FOR)
-               || (pc->type == CT_DO)
-               || (pc->type == CT_WHILE)
-               || (pc->type == CT_SWITCH)
-               || (pc->type == CT_USING_STMT)
-               || ((pc->type == CT_BRACE_OPEN) && was_fcn))
+               || pc->type == CT_IF
+               || pc->type == CT_ELSEIF
+               || pc->type == CT_FOR
+               || pc->type == CT_DO
+               || pc->type == CT_WHILE
+               || pc->type == CT_SWITCH
+               || pc->type == CT_USING_STMT
+               || (pc->type == CT_BRACE_OPEN && was_fcn))
             {
                hit_semi |= chunk_is_semicolon(pc);
                if (++semi_count > 1)
@@ -717,20 +717,20 @@ static void convert_vbrace_to_brace(void)
 
       bool in_preproc = (pc->flags & PCF_IN_PREPROC);
 
-      if (  (  (  (pc->parent_type == CT_IF)
-               || (pc->parent_type == CT_ELSE)
-               || (pc->parent_type == CT_ELSEIF))
+      if (  (  (  pc->parent_type == CT_IF
+               || pc->parent_type == CT_ELSE
+               || pc->parent_type == CT_ELSEIF)
             && (cpd.settings[UO_mod_full_brace_if].a & AV_ADD)
             && !cpd.settings[UO_mod_full_brace_if_chain].b)
-         || (  (pc->parent_type == CT_FOR)
+         || (  pc->parent_type == CT_FOR
             && (cpd.settings[UO_mod_full_brace_for].a & AV_ADD))
-         || (  (pc->parent_type == CT_DO)
+         || (  pc->parent_type == CT_DO
             && (cpd.settings[UO_mod_full_brace_do].a & AV_ADD))
-         || (  (pc->parent_type == CT_WHILE)
+         || (  pc->parent_type == CT_WHILE
             && (cpd.settings[UO_mod_full_brace_while].a & AV_ADD))
-         || (  (pc->parent_type == CT_USING_STMT)
+         || (  pc->parent_type == CT_USING_STMT
             && (cpd.settings[UO_mod_full_brace_using].a & AV_ADD))
-         || (  (pc->parent_type == CT_FUNC_DEF)
+         || (  pc->parent_type == CT_FUNC_DEF
             && (cpd.settings[UO_mod_full_brace_function].a & AV_ADD)))
       {
          // Find the matching vbrace close

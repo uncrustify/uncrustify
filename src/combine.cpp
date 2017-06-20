@@ -1330,13 +1330,13 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
     * which means that we are on a function type declaration (C/C++ only?).
     * Note that typedefs are already taken care of.
     */
-   if (  ((pc->flags & (PCF_IN_TYPEDEF | PCF_IN_TEMPLATE)) == 0)
-      && (pc->parent_type != CT_CPP_CAST)
-      && (pc->parent_type != CT_C_CAST)
-      && ((pc->flags & PCF_IN_PREPROC) == 0)
-      && (!is_oc_block(pc))
-      && (pc->parent_type != CT_OC_MSG_DECL)
-      && (pc->parent_type != CT_OC_MSG_SPEC)
+   if (  (pc->flags & (PCF_IN_TYPEDEF | PCF_IN_TEMPLATE)) == 0
+      && pc->parent_type != CT_CPP_CAST
+      && pc->parent_type != CT_C_CAST
+      && (pc->flags & PCF_IN_PREPROC) == 0
+      && !is_oc_block(pc)
+      && pc->parent_type != CT_OC_MSG_DECL
+      && pc->parent_type != CT_OC_MSG_SPEC
       && chunk_is_str(pc, ")", 1)
       && chunk_is_str(next, "(", 1))
    {
@@ -1377,21 +1377,21 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
        * Check a parenthesis pair to see if it is a cast.
        * Note that SPAREN and FPAREN have already been marked.
        */
-      if (  (pc->type == CT_PAREN_OPEN)
-         && (  (pc->parent_type == CT_NONE)
-            || (pc->parent_type == CT_OC_MSG)
-            || (pc->parent_type == CT_OC_BLOCK_EXPR))
-         && (  (next->type == CT_WORD)
-            || (next->type == CT_TYPE)
-            || (next->type == CT_STRUCT)
-            || (next->type == CT_QUALIFIER)
-            || (next->type == CT_MEMBER)
-            || (next->type == CT_DC_MEMBER)
-            || (next->type == CT_ENUM)
-            || (next->type == CT_UNION))
-         && (prev->type != CT_SIZEOF)
-         && (prev->parent_type != CT_OPERATOR)
-         && ((pc->flags & PCF_IN_TYPEDEF) == 0))
+      if (  pc->type == CT_PAREN_OPEN
+         && (  pc->parent_type == CT_NONE
+            || pc->parent_type == CT_OC_MSG
+            || pc->parent_type == CT_OC_BLOCK_EXPR)
+         && (  next->type == CT_WORD
+            || next->type == CT_TYPE
+            || next->type == CT_STRUCT
+            || next->type == CT_QUALIFIER
+            || next->type == CT_MEMBER
+            || next->type == CT_DC_MEMBER
+            || next->type == CT_ENUM
+            || next->type == CT_UNION)
+         && prev->type != CT_SIZEOF
+         && prev->parent_type != CT_OPERATOR
+         && (pc->flags & PCF_IN_TYPEDEF) == 0)
       {
          fix_casts(pc);
       }
@@ -1401,7 +1401,7 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
    if ((cpd.lang_flags & LANG_CPP) != 0)
    {
       // check for type initializer list: auto a = ... int{0};
-      if ((pc->type == CT_WORD || pc->type == CT_TYPE))
+      if (pc->type == CT_WORD || pc->type == CT_TYPE)
       {
          auto brace_open = chunk_get_next_ncnl(pc);
          if (  brace_open != nullptr
@@ -1480,17 +1480,17 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
    }
 
    // Detect a variable definition that starts with struct/enum/union/class
-   if (  ((pc->flags & PCF_IN_TYPEDEF) == 0)
-      && (prev->parent_type != CT_CPP_CAST)
-      && ((prev->flags & PCF_IN_FCN_DEF) == 0)
-      && (  (pc->type == CT_STRUCT)
-         || (pc->type == CT_UNION)
-         || (pc->type == CT_CLASS)
-         || (pc->type == CT_ENUM)))
+   if (  (pc->flags & PCF_IN_TYPEDEF) == 0
+      && prev->parent_type != CT_CPP_CAST
+      && (prev->flags & PCF_IN_FCN_DEF) == 0
+      && (  pc->type == CT_STRUCT
+         || pc->type == CT_UNION
+         || pc->type == CT_CLASS
+         || pc->type == CT_ENUM))
    {
       tmp = skip_dc_member(next);
       if (  tmp
-         && ((tmp->type == CT_TYPE) || (tmp->type == CT_WORD)))
+         && (tmp->type == CT_TYPE || tmp->type == CT_WORD))
       {
          set_chunk_parent(tmp, pc->type);
          set_chunk_type(tmp, CT_TYPE);
@@ -2561,19 +2561,19 @@ static void fix_casts(chunk_t *start)
             nope = true;
          }
       }
-      else if (  (pc->type != CT_NUMBER_FP)
-              && (pc->type != CT_NUMBER)
-              && (pc->type != CT_WORD)
-              && (pc->type != CT_THIS)
-              && (pc->type != CT_TYPE)
-              && (pc->type != CT_PAREN_OPEN)
-              && (pc->type != CT_STRING)
-              && (pc->type != CT_SIZEOF)
-              && (pc->type != CT_FUNC_CALL)
-              && (pc->type != CT_FUNC_CALL_USER)
-              && (pc->type != CT_FUNCTION)
-              && (pc->type != CT_BRACE_OPEN)
-              && (!(  (pc->type == CT_SQUARE_OPEN)
+      else if (  pc->type != CT_NUMBER_FP
+              && pc->type != CT_NUMBER
+              && pc->type != CT_WORD
+              && pc->type != CT_THIS
+              && pc->type != CT_TYPE
+              && pc->type != CT_PAREN_OPEN
+              && pc->type != CT_STRING
+              && pc->type != CT_SIZEOF
+              && pc->type != CT_FUNC_CALL
+              && pc->type != CT_FUNC_CALL_USER
+              && pc->type != CT_FUNCTION
+              && pc->type != CT_BRACE_OPEN
+              && (!(  pc->type == CT_SQUARE_OPEN
                    && (cpd.lang_flags & LANG_OC))))
       {
          LOG_FMT(LCASTS, " -- not a cast - followed by '%s' %s\n",
@@ -4916,23 +4916,23 @@ static void mark_define_expressions(void)
          }
          else
          {
-            if (  (pc->type != CT_MACRO)
+            if (  pc->type != CT_MACRO
                && (  first
-                  || (prev->type == CT_PAREN_OPEN)
-                  || (prev->type == CT_ARITH)
-                  || (prev->type == CT_CARET)
-                  || (prev->type == CT_ASSIGN)
-                  || (prev->type == CT_COMPARE)
-                  || (prev->type == CT_RETURN)
-                  || (prev->type == CT_GOTO)
-                  || (prev->type == CT_CONTINUE)
-                  || (prev->type == CT_FPAREN_OPEN)
-                  || (prev->type == CT_SPAREN_OPEN)
-                  || (prev->type == CT_BRACE_OPEN)
+                  || prev->type == CT_PAREN_OPEN
+                  || prev->type == CT_ARITH
+                  || prev->type == CT_CARET
+                  || prev->type == CT_ASSIGN
+                  || prev->type == CT_COMPARE
+                  || prev->type == CT_RETURN
+                  || prev->type == CT_GOTO
+                  || prev->type == CT_CONTINUE
+                  || prev->type == CT_FPAREN_OPEN
+                  || prev->type == CT_SPAREN_OPEN
+                  || prev->type == CT_BRACE_OPEN
                   || chunk_is_semicolon(prev)
-                  || (prev->type == CT_COMMA)
-                  || (prev->type == CT_COLON)
-                  || (prev->type == CT_QUESTION)))
+                  || prev->type == CT_COMMA
+                  || prev->type == CT_COLON
+                  || prev->type == CT_QUESTION))
             {
                chunk_flags_set(pc, PCF_EXPR_START);
                first = false;

@@ -431,14 +431,14 @@ static_inline bool is_expected_string_and_level(chunk_t *pc, const char *str, in
 static_inline chunk_t *chunk_skip_to_match(chunk_t *cur, scope_e scope = scope_e::ALL)
 {
    if (  cur
-      && (  (cur->type == CT_PAREN_OPEN)
-         || (cur->type == CT_SPAREN_OPEN)
-         || (cur->type == CT_FPAREN_OPEN)
-         || (cur->type == CT_TPAREN_OPEN)
-         || (cur->type == CT_BRACE_OPEN)
-         || (cur->type == CT_VBRACE_OPEN)
-         || (cur->type == CT_ANGLE_OPEN)
-         || (cur->type == CT_SQUARE_OPEN)))
+      && (  cur->type == CT_PAREN_OPEN
+         || cur->type == CT_SPAREN_OPEN
+         || cur->type == CT_FPAREN_OPEN
+         || cur->type == CT_TPAREN_OPEN
+         || cur->type == CT_BRACE_OPEN
+         || cur->type == CT_VBRACE_OPEN
+         || cur->type == CT_ANGLE_OPEN
+         || cur->type == CT_SQUARE_OPEN))
    {
       return(chunk_get_next_type(cur, (c_token_t)(cur->type + 1), cur->level, scope));
    }
@@ -449,14 +449,14 @@ static_inline chunk_t *chunk_skip_to_match(chunk_t *cur, scope_e scope = scope_e
 static_inline chunk_t *chunk_skip_to_match_rev(chunk_t *cur, scope_e scope = scope_e::ALL)
 {
    if (  cur
-      && (  (cur->type == CT_PAREN_CLOSE)
-         || (cur->type == CT_SPAREN_CLOSE)
-         || (cur->type == CT_FPAREN_CLOSE)
-         || (cur->type == CT_TPAREN_CLOSE)
-         || (cur->type == CT_BRACE_CLOSE)
-         || (cur->type == CT_VBRACE_CLOSE)
-         || (cur->type == CT_ANGLE_CLOSE)
-         || (cur->type == CT_SQUARE_CLOSE)))
+      && (  cur->type == CT_PAREN_CLOSE
+         || cur->type == CT_SPAREN_CLOSE
+         || cur->type == CT_FPAREN_CLOSE
+         || cur->type == CT_TPAREN_CLOSE
+         || cur->type == CT_BRACE_CLOSE
+         || cur->type == CT_VBRACE_CLOSE
+         || cur->type == CT_ANGLE_CLOSE
+         || cur->type == CT_SQUARE_CLOSE))
    {
       return(chunk_get_prev_type(cur, (c_token_t)(cur->type - 1), cur->level, scope));
    }

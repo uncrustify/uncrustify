@@ -2183,15 +2183,15 @@ static void align_oc_decl_colon(void)
             chunk_t *tmp2 = chunk_get_prev_ncnl(tmp, scope_e::PREPROC);
 
             // Check for an un-labeled parameter
-            if (  (tmp != nullptr)
-               && (tmp2 != nullptr)
-               && (  (tmp->type == CT_WORD)
-                  || (tmp->type == CT_TYPE)
-                  || (tmp->type == CT_OC_MSG_DECL)
-                  || (tmp->type == CT_OC_MSG_SPEC))
-               && (  (tmp2->type == CT_WORD)
-                  || (tmp2->type == CT_TYPE)
-                  || (tmp2->type == CT_PAREN_CLOSE)))
+            if (  tmp != nullptr
+               && tmp2 != nullptr
+               && (  tmp->type == CT_WORD
+                  || tmp->type == CT_TYPE
+                  || tmp->type == CT_OC_MSG_DECL
+                  || tmp->type == CT_OC_MSG_SPEC)
+               && (  tmp2->type == CT_WORD
+                  || tmp2->type == CT_TYPE
+                  || tmp2->type == CT_PAREN_CLOSE))
             {
                nas.Add(tmp);
             }

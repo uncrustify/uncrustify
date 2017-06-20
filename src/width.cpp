@@ -434,18 +434,18 @@ static bool split_line(chunk_t *start)
    {
       pc = start;
       // Don't break before a close, comma, or colon
-      if (  (start->type == CT_PAREN_CLOSE)
-         || (start->type == CT_PAREN_OPEN)
-         || (start->type == CT_FPAREN_CLOSE)
-         || (start->type == CT_FPAREN_OPEN)
-         || (start->type == CT_SPAREN_CLOSE)
-         || (start->type == CT_SPAREN_OPEN)
-         || (start->type == CT_ANGLE_CLOSE)
-         || (start->type == CT_BRACE_CLOSE)
-         || (start->type == CT_COMMA)
-         || (start->type == CT_SEMICOLON)
-         || (start->type == CT_VSEMICOLON)
-         || (start->len() == 0))
+      if (  start->type == CT_PAREN_CLOSE
+         || start->type == CT_PAREN_OPEN
+         || start->type == CT_FPAREN_CLOSE
+         || start->type == CT_FPAREN_OPEN
+         || start->type == CT_SPAREN_CLOSE
+         || start->type == CT_SPAREN_OPEN
+         || start->type == CT_ANGLE_CLOSE
+         || start->type == CT_BRACE_CLOSE
+         || start->type == CT_COMMA
+         || start->type == CT_SEMICOLON
+         || start->type == CT_VSEMICOLON
+         || start->len() == 0)
       {
          LOG_FMT(LSPLIT, " ** NO GO **\n");
 
