@@ -2009,8 +2009,7 @@ void indent_text(void)
                in_shift = true;
 
                tmp = chunk_get_prev_ncnl(tmp);
-               if (  tmp
-                  && tmp->type == CT_OPERATOR)
+               if (tmp && tmp->type == CT_OPERATOR)
                {
                   is_operator = true;
                }

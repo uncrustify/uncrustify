@@ -261,8 +261,7 @@ static void add_char(UINT32 ch)
    else
    {
       // explicitly disallow a tab after a space
-      if (  (ch == '\t')
-         && (cpd.last_char == ' '))
+      if (ch == '\t' && cpd.last_char == ' ')
       {
          size_t endcol = next_tab_column(cpd.column);
          while (cpd.column < endcol)
@@ -740,8 +739,7 @@ static void calculate_comment_body_indent(cmt_reflow &cmt, const unc_text &str)
       // find the last line length
       for (idx = len - 1; idx > 0; idx--)
       {
-         if (  (str[idx] == '\n')
-            || (str[idx] == '\r'))
+         if (str[idx] == '\n' || str[idx] == '\r')
          {
             idx++;
             while (  (idx < len)
@@ -878,8 +876,7 @@ static int next_up(const unc_text &text, size_t idx, unc_text &tag)
 {
    size_t offs = 0;
 
-   while (  (idx < text.size())
-         && unc_isspace(text[idx]))
+   while (idx < text.size() && unc_isspace(text[idx]))
    {
       idx++;
       offs++;

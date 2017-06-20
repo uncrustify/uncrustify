@@ -106,8 +106,7 @@ static int compare_chunks(chunk_t *pc1, chunk_t *pc2)
    {
       return(0);
    }
-   while (  (pc1 != nullptr)
-         && (pc2 != nullptr))
+   while (pc1 != nullptr && pc2 != nullptr)
    {
       int ppc1 = get_chunk_priority(pc1);
       int ppc2 = get_chunk_priority(pc2);
@@ -160,8 +159,7 @@ static int compare_chunks(chunk_t *pc1, chunk_t *pc2)
       }
    }
 
-   if (  (pc1 == nullptr)
-      || !chunk_is_newline(pc2))
+   if (pc1 == nullptr || !chunk_is_newline(pc2))
    {
       return(-1);
    }

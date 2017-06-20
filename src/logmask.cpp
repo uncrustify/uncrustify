@@ -14,8 +14,7 @@
 
 char *logmask_to_str(const log_mask_t &mask, char *buf, int size)
 {
-   if (  (buf == nullptr)
-      || (size <= 0))
+   if (buf == nullptr || size <= 0)
    {
       return(buf);
    }
@@ -51,8 +50,7 @@ char *logmask_to_str(const log_mask_t &mask, char *buf, int size)
    }
 
    // handle a range that ends on the last bit
-   if (  is_range
-      && (last_sev != -1))
+   if (is_range && last_sev != -1)
    {
       buf[len - 1] = '-';  // change last comma to a dash
       len         += snprintf(&buf[len], size - len, "%d", last_sev);

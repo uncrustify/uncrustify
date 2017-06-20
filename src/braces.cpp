@@ -363,8 +363,7 @@ static bool can_remove_braces(chunk_t *bopen)
 
          if (pc->level == level)
          {
-            if (  (semi_count > 0)
-               && hit_semi)
+            if (semi_count > 0 && hit_semi)
             {
                // should have bailed due to close brace level drop
                LOG_FMT(LBRDEL, " no close brace\n");

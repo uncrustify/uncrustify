@@ -127,8 +127,7 @@ static void split_before_chunk(chunk_t *pc)
    LOG_FUNC_ENTRY();
    LOG_FMT(LSPLIT, "  %s: %s\n", __func__, pc->text());
 
-   if (  !chunk_is_newline(pc)
-      && !chunk_is_newline(chunk_get_prev(pc)))
+   if (!chunk_is_newline(pc) && !chunk_is_newline(chunk_get_prev(pc)))
    {
       newline_add_before(pc);
       // reindent needs to include the indent_continue value and was off by one

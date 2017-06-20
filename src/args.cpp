@@ -145,8 +145,7 @@ const char *Args::Unused(size_t &index)
 
 size_t Args::SplitLine(char *text, char *args[], size_t num_args)
 {
-   if (  text == nullptr
-      || num_args == 0)
+   if (text == nullptr || num_args == 0)
    {
       return(0);
    }
@@ -161,8 +160,7 @@ size_t Args::SplitLine(char *text, char *args[], size_t num_args)
          && *text != 0)      // end of string not reached yet
    {
       // Detect the start of an arg
-      if (  !in_arg
-         && !unc_isspace(*text))
+      if (!in_arg && !unc_isspace(*text))
       {
          in_arg     = true;
          args[argc] = dest;
