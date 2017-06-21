@@ -132,7 +132,7 @@ public:
    //! swap two elements of a list
    void Swap(T *obj1, T *obj2)
    {
-      if ((obj1 != NULL) && (obj2 != NULL))
+      if (obj1 != NULL && obj2 != NULL)
       {
          if (obj1->prev == obj2)
          {
@@ -167,7 +167,7 @@ public:
     */
    void AddAfter(T *obj, T *ref)
    {
-      if ((obj != NULL) && (ref != NULL))
+      if (obj != NULL && ref != NULL)
       {
          Pop(obj); // TODO: is this necessary?
          obj->next = ref->next;
@@ -193,7 +193,7 @@ public:
     */
    void AddBefore(T *obj, T *ref)
    {
-      if ((obj != NULL) && (ref != NULL))
+      if (obj != NULL && ref != NULL)
       {
          Pop(obj);
          obj->next = ref;

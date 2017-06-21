@@ -233,8 +233,8 @@ static chunk_t *chunk_search_type(chunk_t *cur, const c_token_t type,
    do                                  // loop over the chunk list
    {
       pc = search_function(pc, scope); // in either direction while
-   } while ((pc != nullptr) &&         // the end of the list was not reached yet
-            (pc->type != type));       // and the demanded chunk was not found either
+   } while (  (pc != nullptr)          // the end of the list was not reached yet
+           && (pc->type != type));     // and the demanded chunk was not found either
    return(pc);                         // the latest chunk is the searched one
 }
 
@@ -258,8 +258,8 @@ static chunk_t *chunk_search_typelevel(chunk_t *cur, c_token_t type, scope_e sco
                  __func__, __LINE__, pc->text(), get_token_name(pc->type), pc->orig_line, pc->orig_col);
       }
 #endif
-   } while ((pc != nullptr) &&       // the end of the list was not reached yet
-            (is_expected_type_and_level(pc, type, level) == false));
+   } while (  (pc != nullptr)        // the end of the list was not reached yet
+           && (is_expected_type_and_level(pc, type, level) == false));
    return(pc);                       // the latest chunk is the searched one
 }
 
@@ -275,8 +275,8 @@ static chunk_t *chunk_search_str(chunk_t *cur, const char *str, size_t len, scop
    do                                  // loop over the chunk list
    {
       pc = search_function(pc, scope); // in either direction while
-   } while ((pc != nullptr) &&         // the end of the list was not reached yet
-            (is_expected_string_and_level(pc, str, level, len) == false));
+   } while (  (pc != nullptr)          // the end of the list was not reached yet
+           && (is_expected_string_and_level(pc, str, level, len) == false));
    return(pc);                         // the latest chunk is the searched one
 }
 
@@ -290,12 +290,12 @@ static chunk_t *chunk_search(chunk_t *cur, const check_t check_fct, const scope_
    search_t search_function = select_search_fct(dir);
    chunk_t  *pc             = cur;
 
-   do                                  // loop over the chunk list
+   do                                    // loop over the chunk list
    {
-      pc = search_function(pc, scope); // in either direction while
-   } while ((pc != nullptr) &&         // the end of the list was not reached yet
-            (check_fct(pc) != cond));  // and the demanded chunk was not found either
-   return(pc);                         // the latest chunk is the searched one
+      pc = search_function(pc, scope);   // in either direction while
+   } while (  (pc != nullptr)            // the end of the list was not reached yet
+           && (check_fct(pc) != cond));  // and the demanded chunk was not found either
+   return(pc);                           // the latest chunk is the searched one
 }
 
 
@@ -310,7 +310,8 @@ chunk_t *chunk_get_next(chunk_t *cur, scope_e scope)
       return(nullptr);
    }
    chunk_t *pc = g_cl.GetNext(cur);
-   if ((pc == nullptr) || (scope == scope_e::ALL))
+   if (  (pc == nullptr)
+      || (scope == scope_e::ALL))
    {
       return(pc);
    }
@@ -324,7 +325,8 @@ chunk_t *chunk_get_next(chunk_t *cur, scope_e scope)
       return(pc);
    }
    // Not in a preproc, skip any preproc
-   while ((pc != nullptr) && (pc->flags & PCF_IN_PREPROC))
+   while (  (pc != nullptr)
+         && (pc->flags & PCF_IN_PREPROC))
    {
       pc = g_cl.GetNext(pc);
    }
@@ -339,7 +341,8 @@ chunk_t *chunk_get_prev(chunk_t *cur, scope_e scope)
       return(nullptr);
    }
    chunk_t *pc = g_cl.GetPrev(cur);
-   if ((pc == nullptr) || (scope == scope_e::ALL))
+   if (  (pc == nullptr)
+      || (scope == scope_e::ALL))
    {
       return(pc);
    }
@@ -353,7 +356,8 @@ chunk_t *chunk_get_prev(chunk_t *cur, scope_e scope)
       return(pc);
    }
    // Not in a preproc, skip any preproc
-   while ((pc != nullptr) && (pc->flags & PCF_IN_PREPROC))
+   while (  (pc != nullptr)
+         && (pc->flags & PCF_IN_PREPROC))
    {
       pc = g_cl.GetPrev(pc);
    }
@@ -390,7 +394,9 @@ static void chunk_log_msg(chunk_t *chunk, const log_sev_t log, const char *str)
 
 static void chunk_log(chunk_t *pc, const char *text)
 {
-   if ((pc != nullptr) && (cpd.unc_stage != unc_stage_e::TOKENIZE) && (cpd.unc_stage != unc_stage_e::CLEANUP))
+   if (  (pc != nullptr)
+      && (cpd.unc_stage != unc_stage_e::TOKENIZE)
+      && (cpd.unc_stage != unc_stage_e::CLEANUP))
    {
       const log_sev_t log   = LCHUNK;
       chunk_t         *prev = chunk_get_prev(pc);
@@ -398,7 +404,8 @@ static void chunk_log(chunk_t *pc, const char *text)
 
       chunk_log_msg(pc, log, text);
 
-      if (prev && next)
+      if (  prev
+         && next)
       {
          chunk_log_msg(prev, log, " @ between");
          chunk_log_msg(next, log, " and");
@@ -576,7 +583,8 @@ chunk_t *chunk_first_on_line(chunk_t *pc)
 {
    chunk_t *first = pc;
 
-   while (((pc = chunk_get_prev(pc)) != nullptr) && !chunk_is_newline(pc))
+   while (  ((pc = chunk_get_prev(pc)) != nullptr)
+         && !chunk_is_newline(pc))
    {
       first = pc;
    }
@@ -592,7 +600,9 @@ void chunk_swap_lines(chunk_t *pc1, chunk_t *pc2)
    pc1 = chunk_first_on_line(pc1);
    pc2 = chunk_first_on_line(pc2);
 
-   if ((pc1 == nullptr) || (pc2 == nullptr) || (pc1 == pc2))
+   if (  (pc1 == nullptr)
+      || (pc2 == nullptr)
+      || (pc1 == pc2))
    {
       return;
    }
@@ -605,7 +615,8 @@ void chunk_swap_lines(chunk_t *pc1, chunk_t *pc2)
    chunk_t *ref2 = chunk_get_prev(pc2);
 
    // Move the line started at pc2 before pc1
-   while ((pc2 != nullptr) && !chunk_is_newline(pc2))
+   while (  (pc2 != nullptr)
+         && !chunk_is_newline(pc2))
    {
       chunk_t *tmp = chunk_get_next(pc2);
       g_cl.Pop(pc2);
@@ -620,7 +631,8 @@ void chunk_swap_lines(chunk_t *pc1, chunk_t *pc2)
     */
 
    // Now move the line started at pc1 after ref2
-   while ((pc1 != nullptr) && !chunk_is_newline(pc1))
+   while (  (pc1 != nullptr)
+         && !chunk_is_newline(pc1))
    {
       chunk_t *tmp = chunk_get_next(pc1);
       g_cl.Pop(pc1);
@@ -646,7 +658,8 @@ void chunk_swap_lines(chunk_t *pc1, chunk_t *pc2)
     * pc1 and pc2 should be the newlines for their lines.
     * swap the chunks and the nl_count so that the spacing remains the same.
     */
-   if ((pc1 != nullptr) && (pc2 != nullptr))
+   if (  (pc1 != nullptr)
+      && (pc2 != nullptr))
    {
       size_t nl_count = pc1->nl_count;
 
@@ -727,7 +740,8 @@ void set_chunk_real(chunk_t *pc, c_token_t token, log_sev_t what, const char *st
       return;
    }
 
-   if ((pc != nullptr) && (*where != token))
+   if (  (pc != nullptr)
+      && (*where != token))
    {
       LOG_FMT(what, "%s(%d): orig_line is %zu, orig_col is %zu, '%s' %s:%s => %s:%s",
               str, __LINE__, pc->orig_line, pc->orig_col, pc->text(),

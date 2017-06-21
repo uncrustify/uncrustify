@@ -159,9 +159,9 @@ static bool decode_utf8(const vector<UINT8> &in_data, deque<int> &out_data)
    // check for UTF-8 BOM silliness and skip
    if (in_data.size() >= 3)
    {
-      if ((in_data[0] == 0xef) &&
-          (in_data[1] == 0xbb) &&
-          (in_data[2] == 0xbf))
+      if (  (in_data[0] == 0xef)
+         && (in_data[1] == 0xbb)
+         && (in_data[2] == 0xbf))
       {
          idx = 3;  // skip it
       }
@@ -206,7 +206,8 @@ static bool decode_utf8(const vector<UINT8> &in_data, deque<int> &out_data)
          return(false);
       }
 
-      while ((cnt-- > 0) && (idx < in_data.size()))
+      while (  (cnt-- > 0)
+            && (idx < in_data.size()))
       {
          int tmp = in_data[idx++];
          if ((tmp & 0xC0) != 0x80)
@@ -283,11 +284,15 @@ static bool decode_utf16(const vector<UINT8> &in_data, deque<int> &out_data, cha
       idx = 0;
       if (in_data.size() >= 6)
       {
-         if ((in_data[0] == 0) && (in_data[2] == 0) && (in_data[4] == 0))
+         if (  (in_data[0] == 0)
+            && (in_data[2] == 0)
+            && (in_data[4] == 0))
          {
             enc = char_encoding_e::e_UTF16_BE;
          }
-         else if ((in_data[1] == 0) && (in_data[3] == 0) && (in_data[5] == 0))
+         else if (  (in_data[1] == 0)
+                 && (in_data[3] == 0)
+                 && (in_data[5] == 0))
          {
             enc = char_encoding_e::e_UTF16_LE;
          }
@@ -316,7 +321,8 @@ static bool decode_utf16(const vector<UINT8> &in_data, deque<int> &out_data, cha
          ch += 0x10000;
          out_data.push_back(ch);
       }
-      else if (((ch >= 0) && (ch < 0xD800)) || (ch >= 0xE000))
+      else if (  ((ch >= 0) && (ch < 0xD800))
+              || (ch >= 0xE000))
       {
          out_data.push_back(ch);
       }
@@ -347,8 +353,10 @@ static bool decode_bom(const vector<UINT8> &in_data, char_encoding_e &enc)
          return(true);
       }
 
-      if ((in_data.size() >= 3) && (in_data[0] == 0xef) && (in_data[1] == 0xbb)
-          && (in_data[2] == 0xbf))
+      if (  (in_data.size() >= 3)
+         && (in_data[0] == 0xef)
+         && (in_data[1] == 0xbb)
+         && (in_data[2] == 0xbf))
       {
          enc = char_encoding_e::e_UTF8;
          return(true);
@@ -383,8 +391,8 @@ bool decode_unicode(const vector<UINT8> &in_data, deque<int> &out_data, char_enc
    }
 
    // There are a lot of 0's in UTF-16 (~50%)
-   if ((zero_cnt > (in_data.size() / 4)) &&
-       (zero_cnt <= (in_data.size() / 2)))
+   if (  (zero_cnt > (in_data.size() / 4))
+      && (zero_cnt <= (in_data.size() / 2)))
    {
       // likely is UTF-16
       if (decode_utf16(in_data, out_data, enc))
@@ -441,7 +449,8 @@ static void write_utf8(int ch)
 static void write_utf16(int ch, bool be)
 {
    // U+0000 to U+D7FF and U+E000 to U+FFFF
-   if (((ch >= 0) && (ch < 0xD800)) || ((ch >= 0xE000) && (ch < 0x10000)))
+   if (  ((ch >= 0) && (ch < 0xD800))
+      || ((ch >= 0xE000) && (ch < 0x10000)))
    {
       if (be)
       {
@@ -478,7 +487,7 @@ static void write_utf16(int ch, bool be)
    {
       // illegal code - do not store
    }
-}
+} // write_utf16
 
 
 void write_bom(void)

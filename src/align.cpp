@@ -297,7 +297,8 @@ static void align_stack(ChunkStack &cs, size_t col, bool align_single, log_sev_t
       col = align_tab_column(col);
    }
 
-   if ((cs.Len() > 1) || (align_single && (cs.Len() == 1)))
+   if (  (cs.Len() > 1)
+      || (align_single && (cs.Len() == 1)))
    {
       LOG_FMT(sev, "%s(%d): max_col=%zu\n", __func__, __LINE__, col);
       chunk_t *pc;
@@ -435,16 +436,16 @@ void align_all(void)
    }
 
    // Align variable definitions
-   if ((cpd.settings[UO_align_var_def_span].u > 0) ||
-       (cpd.settings[UO_align_var_struct_span].u > 0) ||
-       (cpd.settings[UO_align_var_class_span].u > 0))
+   if (  (cpd.settings[UO_align_var_def_span].u > 0)
+      || (cpd.settings[UO_align_var_struct_span].u > 0)
+      || (cpd.settings[UO_align_var_class_span].u > 0))
    {
       align_var_def_brace(chunk_get_head(), cpd.settings[UO_align_var_def_span].u, nullptr);
    }
 
    // Align assignments
-   if ((cpd.settings[UO_align_enum_equ_span].u > 0) ||
-       (cpd.settings[UO_align_assign_span].u > 0))
+   if (  (cpd.settings[UO_align_enum_equ_span].u > 0)
+      || (cpd.settings[UO_align_assign_span].u > 0))
    {
       align_assign(chunk_get_head(),
                    cpd.settings[UO_align_assign_span].u,
@@ -459,8 +460,8 @@ void align_all(void)
    }
 
    // Align function prototypes
-   if ((cpd.settings[UO_align_func_proto_span].u > 0) &&
-       !cpd.settings[UO_align_mix_var_proto].b)
+   if (  (cpd.settings[UO_align_func_proto_span].u > 0)
+      && !cpd.settings[UO_align_mix_var_proto].b)
    {
       align_func_proto(cpd.settings[UO_align_func_proto_span].u);
    }
@@ -542,9 +543,9 @@ void align_right_comments(void)
 
    for (chunk_t *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next(pc))
    {
-      if ((pc->type == CT_COMMENT) ||
-          (pc->type == CT_COMMENT_CPP) ||
-          (pc->type == CT_COMMENT_MULTI))
+      if (  (pc->type == CT_COMMENT)
+         || (pc->type == CT_COMMENT_CPP)
+         || (pc->type == CT_COMMENT_MULTI))
       {
          if (pc->parent_type == CT_COMMENT_END)
          {
@@ -603,9 +604,10 @@ void align_struct_initializers(void)
    while (pc != nullptr)
    {
       chunk_t *prev = chunk_get_prev_ncnl(pc);
-      if ((prev != nullptr) && (prev->type == CT_ASSIGN) &&
-          ((pc->type == CT_BRACE_OPEN) ||
-           ((cpd.lang_flags & LANG_D) && (pc->type == CT_SQUARE_OPEN))))
+      if (  (prev != nullptr)
+         && (prev->type == CT_ASSIGN)
+         && (  (pc->type == CT_BRACE_OPEN)
+            || ((cpd.lang_flags & LANG_D) && (pc->type == CT_SQUARE_OPEN))))
       {
          align_init_brace(pc);
       }
@@ -724,10 +726,10 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
    while (pc != nullptr)
    {
       // Don't check inside PAREN or SQUARE groups
-      if ((pc->type == CT_SPAREN_OPEN) ||
-          (pc->type == CT_FPAREN_OPEN) ||
-          (pc->type == CT_SQUARE_OPEN) ||
-          (pc->type == CT_PAREN_OPEN))
+      if (  (pc->type == CT_SPAREN_OPEN)
+         || (pc->type == CT_FPAREN_OPEN)
+         || (pc->type == CT_SQUARE_OPEN)
+         || (pc->type == CT_PAREN_OPEN))
       {
          tmp = pc->orig_line;
          pc  = chunk_skip_to_match(pc);
@@ -740,8 +742,8 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
       }
 
       // Recurse if a brace set is found
-      if ((pc->type == CT_BRACE_OPEN) ||
-          (pc->type == CT_VBRACE_OPEN))
+      if (  (pc->type == CT_BRACE_OPEN)
+         || (pc->type == CT_VBRACE_OPEN))
       {
          size_t myspan;
          size_t mythresh;
@@ -773,8 +775,8 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
       }
 
       // Done with this brace set?
-      if ((pc->type == CT_BRACE_CLOSE) ||
-          (pc->type == CT_VBRACE_CLOSE))
+      if (  (pc->type == CT_BRACE_CLOSE)
+         || (pc->type == CT_VBRACE_CLOSE))
       {
          pc = chunk_get_next(pc);
          break;
@@ -801,9 +803,9 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
          // we hit the second variable def - don't look for assigns, don't align
          vdas.Reset();
       }
-      else if ((equ_count == 0) &&
-               (pc->type == CT_ASSIGN) &&
-               ((pc->flags & PCF_IN_TEMPLATE) == 0)) // Issue #999
+      else if (  (equ_count == 0)
+              && (pc->type == CT_ASSIGN)
+              && ((pc->flags & PCF_IN_TEMPLATE) == 0))  // Issue #999
       {
          equ_count++;
          if (var_def_cnt != 0)
@@ -900,12 +902,12 @@ static void align_func_params(void)
    chunk_t *pc = chunk_get_head();
    while ((pc = chunk_get_next(pc)) != nullptr)
    {
-      if ((pc->type != CT_FPAREN_OPEN) ||
-          ((pc->parent_type != CT_FUNC_PROTO) &&
-           (pc->parent_type != CT_FUNC_DEF) &&
-           (pc->parent_type != CT_FUNC_CLASS_PROTO) &&
-           (pc->parent_type != CT_FUNC_CLASS_DEF) &&
-           (pc->parent_type != CT_TYPEDEF)))
+      if (  (pc->type != CT_FPAREN_OPEN)
+         || (  (pc->parent_type != CT_FUNC_PROTO)
+            && (pc->parent_type != CT_FUNC_DEF)
+            && (pc->parent_type != CT_FUNC_CLASS_PROTO)
+            && (pc->parent_type != CT_FUNC_CLASS_DEF)
+            && (pc->parent_type != CT_TYPEDEF)))
       {
          continue;
       }
@@ -926,9 +928,10 @@ static void align_params(chunk_t *start, deque<chunk_t *> &chunks)
    chunk_t *pc       = chunk_get_next_type(start, CT_FPAREN_OPEN, start->level);
    while ((pc = chunk_get_next(pc)) != nullptr)
    {
-      if (chunk_is_newline(pc) ||
-          (pc->type == CT_SEMICOLON) ||
-          ((pc->type == CT_FPAREN_CLOSE) && (pc->level == start->level)))
+      if (  chunk_is_newline(pc)
+         || (pc->type == CT_SEMICOLON)
+         || (  (pc->type == CT_FPAREN_CLOSE)
+            && (pc->level == start->level)))
       {
          break;
       }
@@ -999,7 +1002,8 @@ static void align_same_func_call_params(void)
 
       // Only align function calls that are right after a newline
       chunk_t *prev = chunk_get_prev(pc);
-      while (chunk_is_token(prev, CT_MEMBER) || chunk_is_token(prev, CT_DC_MEMBER))
+      while (  chunk_is_token(prev, CT_MEMBER)
+            || chunk_is_token(prev, CT_DC_MEMBER))
       {
          chunk_t *tprev = chunk_get_prev(prev);
          if (!chunk_is_token(tprev, CT_TYPE))
@@ -1036,8 +1040,8 @@ static void align_same_func_call_params(void)
       if (align_root != nullptr)
       {
          // can only align functions on the same brace level
-         if ((align_root->brace_level == pc->brace_level) &&
-             align_fcn_name.equals(align_root_name))
+         if (  (align_root->brace_level == pc->brace_level)
+            && align_fcn_name.equals(align_root_name))
          {
             fcn_as.Add(pc);
             align_cur->align.next = pc;
@@ -1085,10 +1089,10 @@ static void align_same_func_call_params(void)
                as[idx].Start(3);
                if (!cpd.settings[UO_align_number_left].b)
                {
-                  if ((chunks[idx]->type == CT_NUMBER_FP) ||
-                      (chunks[idx]->type == CT_NUMBER) ||
-                      (chunks[idx]->type == CT_POS) ||
-                      (chunks[idx]->type == CT_NEG))
+                  if (  (chunks[idx]->type == CT_NUMBER_FP)
+                     || (chunks[idx]->type == CT_NUMBER)
+                     || (chunks[idx]->type == CT_POS)
+                     || (chunks[idx]->type == CT_NEG))
                   {
                      as[idx].m_right_align = !cpd.settings[UO_align_on_tabstop].b;
                   }
@@ -1117,8 +1121,8 @@ chunk_t *step_back_over_member(chunk_t *pc)
    chunk_t *tmp;
 
    // Skip over any class stuff: bool CFoo::bar()
-   while (((tmp = chunk_get_prev_ncnl(pc)) != nullptr) &&
-          (tmp->type == CT_DC_MEMBER))
+   while (  ((tmp = chunk_get_prev_ncnl(pc)) != nullptr)
+         && (tmp->type == CT_DC_MEMBER))
    {
       // TODO: verify that we are pointing at something sane?
       pc = chunk_get_prev_ncnl(tmp);
@@ -1154,12 +1158,12 @@ static void align_func_proto(size_t span)
          as.NewLines(pc->nl_count);
          as_br.NewLines(pc->nl_count);
       }
-      else if ((pc->type == CT_FUNC_PROTO) ||
-               ((pc->type == CT_FUNC_DEF) &&
-                cpd.settings[UO_align_single_line_func].b))
+      else if (  (pc->type == CT_FUNC_PROTO)
+              || (  (pc->type == CT_FUNC_DEF)
+                 && cpd.settings[UO_align_single_line_func].b))
       {
-         if ((pc->parent_type == CT_OPERATOR) &&
-             cpd.settings[UO_align_on_operator].b)
+         if (  (pc->parent_type == CT_OPERATOR)
+            && cpd.settings[UO_align_on_operator].b)
          {
             toadd = chunk_get_prev_ncnl(pc);
          }
@@ -1168,12 +1172,12 @@ static void align_func_proto(size_t span)
             toadd = pc;
          }
          as.Add(step_back_over_member(toadd));
-         look_bro = (pc->type == CT_FUNC_DEF) &&
-                    cpd.settings[UO_align_single_line_brace].b;
+         look_bro = (pc->type == CT_FUNC_DEF)
+                    && cpd.settings[UO_align_single_line_brace].b;
       }
-      else if (look_bro &&
-               (pc->type == CT_BRACE_OPEN) &&
-               (pc->flags & PCF_ONE_LINER))
+      else if (  look_bro
+              && (pc->type == CT_BRACE_OPEN)
+              && (pc->flags & PCF_ONE_LINER))
       {
          as_br.Add(pc);
          look_bro = false;
@@ -1199,8 +1203,7 @@ static chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_co
    size_t  mygap    = 0;
 
    // Override the span, if this is a struct/union
-   if ((start->parent_type == CT_STRUCT) ||
-       (start->parent_type == CT_UNION))
+   if ((start->parent_type == CT_STRUCT) || (start->parent_type == CT_UNION))
    {
       myspan   = cpd.settings[UO_align_var_struct_span].u;
       mythresh = cpd.settings[UO_align_var_struct_thresh].u;
@@ -1262,7 +1265,8 @@ static chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_co
    bool    did_this_line = false;
    bool    fp_active     = cpd.settings[UO_align_mix_var_proto].b;
    chunk_t *pc           = chunk_get_next(start);
-   while ((pc != nullptr) && ((pc->level >= start->level) || (pc->level == 0)))
+   while (  (pc != nullptr)
+         && ((pc->level >= start->level) || (pc->level == 0)))
    {
       LOG_FMT(LGUY, "%s(%d): %s orig_line is %zu, orig_col is %zu\n",
               __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col);
@@ -1281,20 +1285,20 @@ static chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_co
 
       if (fp_active && !(pc->flags & PCF_IN_CLASS_BASE))
       {
-         if ((pc->type == CT_FUNC_PROTO) ||
-             ((pc->type == CT_FUNC_DEF) &&
-              cpd.settings[UO_align_single_line_func].b))
+         if (  (pc->type == CT_FUNC_PROTO)
+            || (  (pc->type == CT_FUNC_DEF)
+               && cpd.settings[UO_align_single_line_func].b))
          {
             LOG_FMT(LAVDB, "    add=[%s] line=%zu col=%zu level=%zu\n",
                     pc->text(), pc->orig_line, pc->orig_col, pc->level);
 
             as.Add(pc);
-            fp_look_bro = (pc->type == CT_FUNC_DEF) &&
-                          cpd.settings[UO_align_single_line_brace].b;
+            fp_look_bro = (pc->type == CT_FUNC_DEF)
+                          && cpd.settings[UO_align_single_line_brace].b;
          }
-         else if (fp_look_bro &&
-                  (pc->type == CT_BRACE_OPEN) &&
-                  (pc->flags & PCF_ONE_LINER))
+         else if (  fp_look_bro
+                 && (pc->type == CT_BRACE_OPEN)
+                 && (pc->flags & PCF_ONE_LINER))
          {
             as_br.Add(pc);
             fp_look_bro = false;
@@ -1352,23 +1356,23 @@ static chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_co
       }
 
       // If this is a variable def, update the max_col
-      if (!(pc->flags & PCF_IN_CLASS_BASE) &&
-          (pc->type != CT_FUNC_CLASS_DEF) &&
-          (pc->type != CT_FUNC_CLASS_PROTO) &&
-          ((pc->flags & align_mask) == PCF_VAR_1ST) &&
-          ((pc->level == (start->level + 1)) ||
-           (pc->level == 0)) &&
-          pc->prev && (pc->prev->type != CT_MEMBER))
+      if (  !(pc->flags & PCF_IN_CLASS_BASE)
+         && (pc->type != CT_FUNC_CLASS_DEF)
+         && (pc->type != CT_FUNC_CLASS_PROTO)
+         && ((pc->flags & align_mask) == PCF_VAR_1ST)
+         && ((pc->level == (start->level + 1)) || (pc->level == 0))
+         && pc->prev
+         && (pc->prev->type != CT_MEMBER))
       {
          if (!did_this_line)
          {
-            if ((start->parent_type == CT_STRUCT) &&
-                (as.m_star_style == AlignStack::SS_INCLUDE))
+            if (  (start->parent_type == CT_STRUCT)
+               && (as.m_star_style == AlignStack::SS_INCLUDE))
             {
                // we must look after the previous token
                chunk_t *prev_local = pc->prev;
-               while ((prev_local->type == CT_PTR_TYPE) ||
-                      (prev_local->type == CT_ADDR))
+               while (  (prev_local->type == CT_PTR_TYPE)
+                     || (prev_local->type == CT_ADDR))
                {
                   LOG_FMT(LAVDB, "    prev_local=%s, prev_local->type=%s\n",
                           prev_local->text(), get_token_name(prev_local->type));
@@ -1439,9 +1443,9 @@ chunk_t *align_nl_cont(chunk_t *start)
    ChunkStack cs;
    size_t     max_col = 0;
    chunk_t    *pc     = start;
-   while ((pc != nullptr) &&
-          (pc->type != CT_NEWLINE) &&
-          (pc->type != CT_COMMENT_MULTI))
+   while (  (pc != nullptr)
+         && (pc->type != CT_NEWLINE)
+         && (pc->type != CT_COMMENT_MULTI))
    {
       if (pc->type == CT_NL_CONT)
       {
@@ -1467,13 +1471,13 @@ static comment_align_e get_comment_align_type(chunk_t *cmt)
    chunk_t         *prev;
    comment_align_e cmt_type = comment_align_e::REGULAR;
 
-   if (!cpd.settings[UO_align_right_cmt_mix].b &&
-       ((prev = chunk_get_prev(cmt)) != nullptr))
+   if (  !cpd.settings[UO_align_right_cmt_mix].b
+      && ((prev = chunk_get_prev(cmt)) != nullptr))
    {
-      if ((prev->type == CT_PP_ENDIF) ||
-          (prev->type == CT_PP_ELSE) ||
-          (prev->type == CT_ELSE) ||
-          (prev->type == CT_BRACE_CLOSE))
+      if (  (prev->type == CT_PP_ENDIF)
+         || (prev->type == CT_PP_ELSE)
+         || (prev->type == CT_ELSE)
+         || (prev->type == CT_BRACE_CLOSE))
       {
          // TODO: make the magic 3 configurable
          if ((cmt->column - (prev->column + prev->len())) < 3)
@@ -1503,7 +1507,8 @@ chunk_t *align_trailing_comments(chunk_t *start)
            __func__, __LINE__, pc->orig_line);
 
    // Find the max column
-   while ((pc != nullptr) && (nl_count < cpd.settings[UO_align_right_cmt_span].u))
+   while (  (pc != nullptr)
+         && (nl_count < cpd.settings[UO_align_right_cmt_span].u))
    {
       if ((pc->flags & PCF_RIGHT_COMMENT) && (pc->column > 1))
       {
@@ -1611,8 +1616,9 @@ static chunk_t *scan_ib_line(chunk_t *start, bool first_pass)
               __func__, __LINE__, get_token_name(pc->type), pc->column, pc->orig_col, pc->orig_line);
    }
 
-   while ((pc != nullptr) && !chunk_is_newline(pc) &&
-          (pc->level >= start->level))
+   while (  (pc != nullptr)
+         && !chunk_is_newline(pc)
+         && (pc->level >= start->level))
    {
       //LOG_FMT(LSIB, "%s:     '%s'   col %d/%d line %zu\n", __func__,
       //        pc->text(), pc->column, pc->orig_col, pc->orig_line);
@@ -1622,10 +1628,10 @@ static chunk_t *scan_ib_line(chunk_t *start, bool first_pass)
       {
          // do nothing
       }
-      else if ((pc->type == CT_ASSIGN) ||
-               (pc->type == CT_BRACE_OPEN) ||
-               (pc->type == CT_BRACE_CLOSE) ||
-               (pc->type == CT_COMMA))
+      else if (  (pc->type == CT_ASSIGN)
+              || (pc->type == CT_BRACE_OPEN)
+              || (pc->type == CT_BRACE_CLOSE)
+              || (pc->type == CT_COMMA))
       {
          size_t token_width = space_col_align(pc, next);
 
@@ -1715,8 +1721,8 @@ static void align_init_brace(chunk_t *start)
 
    chunk_t *pc = chunk_get_next_ncnl(start);
    pc = scan_ib_line(pc, true);
-   if ((pc == nullptr) || ((pc->type == CT_BRACE_CLOSE) &&
-                           (pc->parent_type == CT_ASSIGN)))
+   if (  (pc == nullptr)
+      || ((pc->type == CT_BRACE_CLOSE) && (pc->parent_type == CT_ASSIGN)))
    {
       // single line - nothing to do
       return;
@@ -1738,8 +1744,9 @@ static void align_init_brace(chunk_t *start)
    // debug dump the current frame
    align_log_al(LALBR, start->orig_line);
 
-   if (cpd.settings[UO_align_on_tabstop].b && (cpd.al_cnt >= 1) &&
-       (cpd.al[0].type == CT_ASSIGN))
+   if (  cpd.settings[UO_align_on_tabstop].b
+      && (cpd.al_cnt >= 1)
+      && (cpd.al[0].type == CT_ASSIGN))
    {
       cpd.al[0].col = align_tab_column(cpd.al[0].col);
    }
@@ -1800,12 +1807,12 @@ static void align_init_brace(chunk_t *start)
                   //        next->orig_line,
                   //        next->text(), cpd.al[idx].col, cpd.al[idx].len);
 
-                  if ((idx < (cpd.al_cnt - 1)) &&
-                      cpd.settings[UO_align_number_left].b &&
-                      ((next->type == CT_NUMBER_FP) ||
-                       (next->type == CT_NUMBER) ||
-                       (next->type == CT_POS) ||
-                       (next->type == CT_NEG)))
+                  if (  (idx < (cpd.al_cnt - 1))
+                     && cpd.settings[UO_align_number_left].b
+                     && (  (next->type == CT_NUMBER_FP)
+                        || (next->type == CT_NUMBER)
+                        || (next->type == CT_POS)
+                        || (next->type == CT_NEG)))
                   {
                      // Need to wait until the next match to indent numbers
                      num_token = next;
@@ -1824,15 +1831,16 @@ static void align_init_brace(chunk_t *start)
                chunk_flags_set(pc, PCF_WAS_ALIGNED);
 
                // see if we need to right-align a number
-               if ((idx < (cpd.al_cnt - 1)) &&
-                   cpd.settings[UO_align_number_left].b)
+               if (  (idx < (cpd.al_cnt - 1))
+                  && cpd.settings[UO_align_number_left].b)
                {
                   next = chunk_get_next(pc);
-                  if ((next != nullptr) && !chunk_is_newline(next) &&
-                      ((next->type == CT_NUMBER_FP) ||
-                       (next->type == CT_NUMBER) ||
-                       (next->type == CT_POS) ||
-                       (next->type == CT_NEG)))
+                  if (  (next != nullptr)
+                     && !chunk_is_newline(next)
+                     && (  (next->type == CT_NUMBER_FP)
+                        || (next->type == CT_NUMBER)
+                        || (next->type == CT_POS)
+                        || (next->type == CT_NEG)))
                   {
                      // Need to wait until the next match to indent numbers
                      num_token = next;
@@ -1911,8 +1919,8 @@ static void align_left_shift(void)
    chunk_t *pc = chunk_get_head();
    while (pc != nullptr)
    {
-      if ((start != nullptr) &&
-          ((pc->flags & PCF_IN_PREPROC) != (start->flags & PCF_IN_PREPROC)))
+      if (  (start != nullptr)
+         && ((pc->flags & PCF_IN_PREPROC) != (start->flags & PCF_IN_PREPROC)))
       {
          // a change in preproc status restarts the aligning
          as.Flush();
@@ -2029,14 +2037,15 @@ static void align_oc_msg_colon(chunk_t *so)
          did_line  = false;
          has_colon = !has_colon;
       }
-      else if (!did_line && (lcnt < span + 1) && (pc->type == CT_OC_COLON))
+      else if (  !did_line
+              && (lcnt < span + 1)
+              && (pc->type == CT_OC_COLON))
       {
          has_colon = true;
          cas.Add(pc);
          chunk_t *tmp = chunk_get_prev(pc);
-         if ((tmp != nullptr) &&
-             ((tmp->type == CT_OC_MSG_FUNC) ||
-              (tmp->type == CT_OC_MSG_NAME)))
+         if (  (tmp != nullptr)
+            && ((tmp->type == CT_OC_MSG_FUNC) || (tmp->type == CT_OC_MSG_NAME)))
          {
             nas.Add(tmp);
             chunk_flags_set(tmp, PCF_DONT_INDENT);
@@ -2079,10 +2088,10 @@ static void align_oc_msg_colon(chunk_t *so)
    size_t len_diff    = mlen - first_len;
    size_t indent_size = cpd.settings[UO_indent_columns].u;
    // Align with first colon if possible by removing spaces
-   if (longest &&
-       cpd.settings[UO_indent_oc_msg_prioritize_first_colon].b &&
-       (len_diff > 0) &&
-       ((longest->column - len_diff) > (longest->brace_level * indent_size)))
+   if (  longest
+      && cpd.settings[UO_indent_oc_msg_prioritize_first_colon].b
+      && (len_diff > 0)
+      && ((longest->column - len_diff) > (longest->brace_level * indent_size)))
    {
       longest->column -= len_diff;
    }
@@ -2174,17 +2183,15 @@ static void align_oc_decl_colon(void)
             chunk_t *tmp2 = chunk_get_prev_ncnl(tmp, scope_e::PREPROC);
 
             // Check for an un-labeled parameter
-            if ((tmp != nullptr) &&
-                (tmp2 != nullptr)
-                &&
-                ((tmp->type == CT_WORD) ||
-                 (tmp->type == CT_TYPE) ||
-                 (tmp->type == CT_OC_MSG_DECL) ||
-                 (tmp->type == CT_OC_MSG_SPEC))
-                &&
-                ((tmp2->type == CT_WORD) ||
-                 (tmp2->type == CT_TYPE) ||
-                 (tmp2->type == CT_PAREN_CLOSE)))
+            if (  tmp != nullptr
+               && tmp2 != nullptr
+               && (  tmp->type == CT_WORD
+                  || tmp->type == CT_TYPE
+                  || tmp->type == CT_OC_MSG_DECL
+                  || tmp->type == CT_OC_MSG_SPEC)
+               && (  tmp2->type == CT_WORD
+                  || tmp2->type == CT_TYPE
+                  || tmp2->type == CT_PAREN_CLOSE))
             {
                nas.Add(tmp);
             }

@@ -106,7 +106,8 @@ static int compare_chunks(chunk_t *pc1, chunk_t *pc2)
    {
       return(0);
    }
-   while ((pc1 != nullptr) && (pc2 != nullptr))
+   while (  (pc1 != nullptr)
+         && (pc2 != nullptr))
    {
       int ppc1 = get_chunk_priority(pc1);
       int ppc2 = get_chunk_priority(pc2);
@@ -150,14 +151,17 @@ static int compare_chunks(chunk_t *pc1, chunk_t *pc2)
       LOG_FMT(LSORT, ">>>text=%s, pc2->len=%zu, line=%zu, column=%zu\n", pc2->text(), pc2->len(), pc2->orig_line, pc2->orig_col);
 
       // If we hit a newline or nullptr, we are done
-      if ((pc1 == nullptr) || chunk_is_newline(pc1) ||
-          (pc2 == nullptr) || chunk_is_newline(pc2))
+      if (  (pc1 == nullptr)
+         || chunk_is_newline(pc1)
+         || (pc2 == nullptr)
+         || chunk_is_newline(pc2))
       {
          break;
       }
    }
 
-   if ((pc1 == nullptr) || !chunk_is_newline(pc2))
+   if (  (pc1 == nullptr)
+      || !chunk_is_newline(pc2))
    {
       return(-1);
    }
@@ -229,9 +233,10 @@ void sort_imports(void)
       {
          bool did_import = false;
 
-         if ((p_imp != nullptr) && (p_last != nullptr) &&
-             ((p_last->type == CT_SEMICOLON) ||
-              (p_imp->flags & PCF_IN_PREPROC)))
+         if (  (p_imp != nullptr)
+            && (p_last != nullptr)
+            && (  (p_last->type == CT_SEMICOLON)
+               || (p_imp->flags & PCF_IN_PREPROC)))
          {
             if (num_chunks < MAX_NUMBER_TO_SORT)
             {
@@ -248,7 +253,9 @@ void sort_imports(void)
             }
             did_import = true;
          }
-         if (!did_import || (pc->nl_count > 1) || next == nullptr)
+         if (  !did_import
+            || (pc->nl_count > 1)
+            || next == nullptr)
          {
             if (num_chunks > 1)
             {
