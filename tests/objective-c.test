@@ -95,4 +95,5 @@
 
 50700  cmt_insert-0.cfg                             oc/cmt_insert.m
 
-50800  obj-c-properties.cfg                               oc/properties.m
+50800  obj-c-properties.cfg                         oc/properties.m
+50801  empty.cfg                                    oc/i1213.m
