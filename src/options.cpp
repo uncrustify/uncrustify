@@ -2344,6 +2344,7 @@ void set_option_defaults(void)
    cpd.defaults[UO_indent_token_after_brace].b                          = true;
    cpd.defaults[UO_indent_using_block].b                                = true;
    cpd.defaults[UO_indent_with_tabs].u                                  = 1;
+   cpd.defaults[UO_indent_switch_pp].b                                  = true;
    cpd.defaults[UO_input_tab_size].u                                    = 8;
    cpd.defaults[UO_newlines].le                                         = LE_AUTO;
    cpd.defaults[UO_output_tab_size].u                                   = 8;
@@ -2373,6 +2374,10 @@ void set_option_defaults(void)
    cpd.defaults[UO_use_indent_func_call_param].b                        = true;
    cpd.defaults[UO_use_options_overriding_for_qt_macros].b              = true;
    cpd.defaults[UO_warn_level_tabs_found_in_verbatim_string_literals].n = LWARN;
+   cpd.defaults[UO_pp_indent_case].b                                    = true;
+   cpd.defaults[UO_pp_indent_func_def].b                                = true;
+   cpd.defaults[UO_pp_indent_extern].b                                  = true;
+   cpd.defaults[UO_pp_indent_brace].b                                   = true;
 
 #ifdef DEBUG
    // test all the default values if they are in the allowed interval
