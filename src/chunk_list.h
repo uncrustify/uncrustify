@@ -165,6 +165,10 @@ void chunk_swap_lines(chunk_t *pc1, chunk_t *pc2);
 chunk_t *chunk_first_on_line(chunk_t *pc);
 
 
+//! check if a given chunk is the last on its line
+bool chunk_is_last_on_line(chunk_t &pc);
+
+
 /**
  * Gets the next NEWLINE chunk
  *
