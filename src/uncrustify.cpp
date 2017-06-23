@@ -277,7 +277,7 @@ void usage_exit(const char *msg, const char *argv0, int code)
            "uncrustify -c my.cfg --prefix=out -F files.txt\n"
            "\n"
            "Note: Use comments containing ' *INDENT-OFF*' and ' *INDENT-ON*' to disable\n"
-           "      processing of parts of the source file (these can be overridden with \n"
+           "      processing of parts of the source file (these can be overridden with\n"
            "      enable_processing_cmt and disable_processing_cmt).\n"
            "\n"
            "There are currently %d options and minimal documentation.\n"
