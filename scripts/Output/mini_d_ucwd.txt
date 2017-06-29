@@ -1975,16 +1975,20 @@ pp_define_at_level              = false    # false/true
 # Whether to ignore the '#define' body while formatting.
 pp_ignore_define_body           = false    # false/true
 
-# Whether to indent case statements between #if, #else, and #endif
+# Whether to indent case statements between #if, #else, and #endif.
+# Only applies to the indent of the preprocesser that the case statements directly inside of
 pp_indent_case                  = true     # false/true
 
-# Whether to indent whole function definitions between #if, #else, and #endif
+# Whether to indent whole function definitions between #if, #else, and #endif.
+# Only applies to the indent of the preprocesser that the function definition is directly inside of
 pp_indent_func_def              = true     # false/true
 
-# Whether to indent extern C blocks between #if, #else, and #endif
+# Whether to indent extern C blocks between #if, #else, and #endif.
+# Only applies to the indent of the preprocesser that the extern block is directly inside of
 pp_indent_extern                = true     # false/true
 
-# Whether to indent braces directly inside #if, #else, and #endif
+# Whether to indent braces directly inside #if, #else, and #endif.
+# Only applies to the indent of the preprocesser that the braces are directly inside of
 pp_indent_brace                 = true     # false/true
 
 #

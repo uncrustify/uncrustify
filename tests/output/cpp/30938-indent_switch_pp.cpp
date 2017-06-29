@@ -1,20 +1,20 @@
-//example for case in a switch statement
-switch( ... )
+// Example for not indenting preprocesser statements inside switch statements
+switch(...)
 {
 case 1:
 case 2:
 {
-    int v;
-    ...
+	int v;
+	...
 }
 break;
 
-#if ( USE_FIVE )
+#if (USE_FIVE)
 case 3:
-    doFive();
-    break;
+	doFive();
+	break;
 #endif
 
 default:
-    break;
+	break;
 }

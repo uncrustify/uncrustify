@@ -1660,13 +1660,17 @@ void register_options(void)
    unc_add_option("pp_ignore_define_body", UO_pp_ignore_define_body, AT_BOOL,
                   "Whether to ignore the '#define' body while formatting.");
    unc_add_option("pp_indent_case", UO_pp_indent_case, AT_BOOL,
-                  "Whether to indent case statements between #if, #else, and #endif");
+                  "Whether to indent case statements between #if, #else, and #endif.\n"
+                  "Only applies to the indent of the preprocesser that the case statements directly inside of");
    unc_add_option("pp_indent_func_def", UO_pp_indent_func_def, AT_BOOL,
-                  "Whether to indent whole function definitions between #if, #else, and #endif");
+                  "Whether to indent whole function definitions between #if, #else, and #endif.\n"
+                  "Only applies to the indent of the preprocesser that the function definition is directly inside of");
    unc_add_option("pp_indent_extern", UO_pp_indent_extern, AT_BOOL,
-                  "Whether to indent extern C blocks between #if, #else, and #endif");
+                  "Whether to indent extern C blocks between #if, #else, and #endif.\n"
+                  "Only applies to the indent of the preprocesser that the extern block is directly inside of");
    unc_add_option("pp_indent_brace", UO_pp_indent_brace, AT_BOOL,
-                  "Whether to indent braces directly inside #if, #else, and #endif");
+                  "Whether to indent braces directly inside #if, #else, and #endif.\n"
+                  "Only applies to the indent of the preprocesser that the braces are directly inside of");
 
    unc_begin_group(UG_sort_includes, "Sort includes options");
    unc_add_option("include_category_0", UO_include_category_0, AT_STRING,
