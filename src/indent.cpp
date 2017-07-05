@@ -752,8 +752,8 @@ void indent_text(void)
          }
 
          // If option set, remove indent inside switch statement
-         if (frm.pse[frm.pse_tos].type == CT_CASE &&
-             !cpd.settings[UO_indent_switch_pp].b)
+         if (  frm.pse[frm.pse_tos].type == CT_CASE
+            && !cpd.settings[UO_indent_switch_pp].b)
          {
             indent_pse_push(frm, pc);
 
@@ -777,18 +777,18 @@ void indent_text(void)
             preproc_next = chunk_get_next_nblank(preproc_next);
 
             /* Look ahead at what's on the line after the #if */
-            while ((preproc_next != NULL) &&
-                   (preproc_next->type != CT_NEWLINE))
+            while (  (preproc_next != NULL)
+                  && (preproc_next->type != CT_NEWLINE))
             {
-               if ((((preproc_next->type == CT_BRACE_OPEN) ||
-                     (preproc_next->type == CT_BRACE_CLOSE)) &&
-                    !cpd.settings[UO_pp_indent_brace].b) ||
-                   (preproc_next->type == CT_FUNC_DEF &&
-                    !cpd.settings[UO_pp_indent_func_def].b) ||
-                   (preproc_next->type == CT_CASE &&
-                    !cpd.settings[UO_pp_indent_case].b) ||
-                   (preproc_next->type == CT_EXTERN &&
-                    !cpd.settings[UO_pp_indent_extern].b))
+               if (  (  (  (preproc_next->type == CT_BRACE_OPEN)
+                        || (preproc_next->type == CT_BRACE_CLOSE))
+                     && !cpd.settings[UO_pp_indent_brace].b)
+                  || (  preproc_next->type == CT_FUNC_DEF
+                     && !cpd.settings[UO_pp_indent_func_def].b)
+                  || (  preproc_next->type == CT_CASE
+                     && !cpd.settings[UO_pp_indent_case].b)
+                  || (  preproc_next->type == CT_EXTERN
+                     && !cpd.settings[UO_pp_indent_extern].b))
                {
                   should_indent_preproc = false;
                   break;
