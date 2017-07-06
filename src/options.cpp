@@ -1072,8 +1072,12 @@ void register_options(void)
                   "Add or remove newline between return type and function name in a prototype");
    unc_add_option("nl_func_paren", UO_nl_func_paren, AT_IARF,
                   "Add or remove newline between a function name and the opening '(' in the declaration");
+   unc_add_option("nl_func_paren_empty", UO_nl_func_paren_empty, AT_IARF,
+                  "Overrides nl_func_paren for functions with no parameters");
    unc_add_option("nl_func_def_paren", UO_nl_func_def_paren, AT_IARF,
                   "Add or remove newline between a function name and the opening '(' in the definition");
+   unc_add_option("nl_func_def_paren_empty", UO_nl_func_def_paren_empty, AT_IARF,
+                  "Overrides nl_func_def_paren for functions with no parameters");
    unc_add_option("nl_func_decl_start", UO_nl_func_decl_start, AT_IARF,
                   "Add or remove newline after '(' in a function declaration");
    unc_add_option("nl_func_def_start", UO_nl_func_def_start, AT_IARF,
