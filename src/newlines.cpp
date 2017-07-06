@@ -2239,6 +2239,16 @@ static void newline_func_def(chunk_t *start)
       {
          newline_iarf(start, atmp);
       }
+
+      atmp = cpd.settings[is_def ? UO_nl_func_def_paren_empty : UO_nl_func_paren_empty].a;
+      if (atmp != AV_IGNORE)
+      {
+         prev = chunk_get_prev_ncnl(pc);
+         if (prev != NULL)
+         {
+            newline_iarf(prev, atmp);
+         }
+      }
       return;
    }
 
@@ -3159,7 +3169,9 @@ void newlines_cleanup_braces(bool first)
                || cpd.settings[UO_nl_func_scope_name].a != AV_IGNORE
                || cpd.settings[UO_nl_func_proto_type_name].a != AV_IGNORE
                || cpd.settings[UO_nl_func_paren].a != AV_IGNORE
-               || cpd.settings[UO_nl_func_def_paren].a != AV_IGNORE))
+               || cpd.settings[UO_nl_func_def_paren].a != AV_IGNORE
+               || cpd.settings[UO_nl_func_def_paren_empty].a != AV_IGNORE
+               || cpd.settings[UO_nl_func_paren_empty].a != AV_IGNORE))
          {
             newline_func_def(pc);
          }
@@ -3260,6 +3272,10 @@ void newlines_cleanup_braces(bool first)
       else if (  first
               && (cpd.settings[UO_nl_remove_extra_newlines].u == 1)
               && !(pc->flags & PCF_IN_PREPROC))
+      {
+         newline_iarf(pc, AV_REMOVE);
+      }
+      else if (pc->type == CT_BYREF)
       {
          newline_iarf(pc, AV_REMOVE);
       }
