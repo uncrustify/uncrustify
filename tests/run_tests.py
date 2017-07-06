@@ -17,8 +17,10 @@ import filecmp
 
 # OK, so I just had way too much fun with the colors..
 
-# windows doesn't support ansi sequences (unless using ConEmu and enabled)
-disablecolors = os.name == "nt" and os.environ.get('CONEMUANSI', '') != 'ON'
+# windows doesn't support ansi sequences (unless using ConEmu or VSCode)
+disablecolors = os.name == "nt" and \
+                os.environ.get('CONEMUANSI', '') != 'ON' and \
+                os.environ.get('VSCODE_PID', '') == ''
 
 if disablecolors:
     NORMAL      = ""
