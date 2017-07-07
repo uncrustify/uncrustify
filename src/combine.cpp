@@ -4523,8 +4523,8 @@ static void mark_function(chunk_t *pc)
        ((pc->type == CT_FUNC_DEF) || (pc->type == CT_FUNC_PROTO)))
    {
       tmp = chunk_get_next_ncnl(paren_close);
-      int in_where_spec_flags = 0;   int in_where_spec_flags = 0;
-      while ((tmp != NULL) &&   while ((tmp != NULL) &&
+      int in_where_spec_flags = 0;
+      while ((tmp != NULL) &&
          (tmp->type != CT_BRACE_OPEN) && (tmp->type != CT_SEMICOLON))
       {
          mark_where_chunk(tmp, pc->type, tmp->flags | in_where_spec_flags);
@@ -6341,12 +6341,13 @@ static void handle_cs_property(chunk_t *bro)
    {
       if (pc->level == bro->level)
       {
-        //prevent scanning back past 'new' in expressions like new List<int> {1,2,3}
-         if (  !did_prop
-            && ((pc->type == CT_NEW) || (pc->type == CT_WORD) || (pc->type == CT_THIS)))
+         //prevent scanning back past 'new' in expressions like new List<int> {1,2,3}
+         if (pc->type == CT_NEW)
          {
             break;
          }
+         if (  !did_prop
+            && ((pc->type == CT_WORD) || (pc->type == CT_THIS)))
          {
             set_chunk_type(pc, CT_CS_PROPERTY);
             did_prop = true;

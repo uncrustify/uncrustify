@@ -429,10 +429,11 @@ c_token_t find_keyword_type(const char *word, size_t len, bool enableDynamicSubs
       return(CT_NONE);
    }
 
+   string           ss(word, len);
+
    // check the dynamic word list first
    if (enableDynamicSubstitution)
    {
-      string           ss(word, len);
       dkwmap::iterator it = dkwm.find(ss);
       if (it != dkwm.end())
       {

@@ -112,9 +112,9 @@ static void log_rule2(size_t line, const char *rule, chunk_t *first, chunk_t *se
       LOG_FMT(LSPACE, "%s(%d): Spacing: line %zu [%s/%s] '%s' <===> [%s/%s] '%s' : %s[%zu]%s",
               __func__, __LINE__, first->orig_line,
               get_token_name(first->type), get_token_name(first->parent_type),
-              first->len(), first->text(),
+              first->text(),
               get_token_name(second->type), get_token_name(second->parent_type),
-              second->len(), second->text(),
+              second->text(),
               rule, line,
               complete ? "\n" : "");
    }

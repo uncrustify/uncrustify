@@ -27,10 +27,11 @@ int load_keyword_file(const char *filename);
  *
  * @param word  Pointer to the text -- NOT zero terminated
  * @param len   The length of the text
+ * @param TODO: (doc enableDynamicSubstitution)
  *
  * @return CT_WORD (no match) or the keyword token
  */
-c_token_t find_keyword_type(const char *word, size_t len);
+c_token_t find_keyword_type(const char *word, size_t len, bool enableDynamicSubstitution=true);
 
 
 /**

@@ -539,7 +539,6 @@ void output_text(FILE *pfile)
                      {
                         pc->column = cpd.column + 1;
                      }
-                     }
                   }
                }
             }
