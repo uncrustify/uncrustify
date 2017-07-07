@@ -1,0 +1,538 @@
+indent_text(): orig_line is , orig_col is , struct
+[x:IN_STRUCT,FORCE_SPACE,STMT_START,EXPR_START]
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is , orig_col is , TelegramIndex
+[x:IN_STRUCT]
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is  NEWLINE
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is , orig_col is , {
+[x:IN_STRUCT,PUNCTUATOR]
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_pse_push(): line is , pse_tos is , type is BRACE_OPEN
+indent_text(): frm.pse_tos=, ... indent=
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is  NEWLINE
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is , orig_col is , TelegramIndex
+[x:IN_STRUCT,IN_CLASS,STMT_START,EXPR_START]
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+reindent_line(): orig_line is , orig_col is , on 'TelegramIndex' [FUNC_CLASS_DEF/NONE] =>  [CallStack:-DEBUG NOT SET-]
+indent_text(): orig_line is , orig_col is , (
+[x:IN_STRUCT,IN_CONST_ARGS,IN_CLASS,PUNCTUATOR]
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_pse_push(): line is , pse_tos is , type is FPAREN_OPEN
+indent_text(): frm.pse_tos is , ...indent is 
+indent_text(): frm.pse_tos is , ...indent is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is , orig_col is , const
+[x:IN_STRUCT,IN_FCN_CALL,IN_CONST_ARGS,IN_CLASS,FORCE_SPACE,EXPR_START]
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is , orig_col is , char
+[x:IN_STRUCT,IN_FCN_CALL,IN_CONST_ARGS,IN_CLASS,VAR_TYPE]
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is , orig_col is , *
+[x:IN_STRUCT,IN_FCN_CALL,IN_CONST_ARGS,IN_CLASS,PUNCTUATOR]
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is , orig_col is , pN
+[x:IN_STRUCT,IN_FCN_CALL,IN_CONST_ARGS,IN_CLASS,VAR_DEF]
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is , orig_col is , ,
+[x:IN_STRUCT,IN_FCN_CALL,IN_CONST_ARGS,IN_CLASS,PUNCTUATOR]
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is , orig_col is , unsigned
+[x:IN_STRUCT,IN_FCN_CALL,IN_CONST_ARGS,IN_CLASS,FORCE_SPACE,EXPR_START,VAR_TYPE]
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is , orig_col is , long
+[x:IN_STRUCT,IN_FCN_CALL,IN_CONST_ARGS,IN_CLASS,FORCE_SPACE,VAR_TYPE]
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is , orig_col is , nI
+[x:IN_STRUCT,IN_FCN_CALL,IN_CONST_ARGS,IN_CLASS,VAR_DEF]
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is , orig_col is , )
+[x:IN_STRUCT,IN_CONST_ARGS,IN_CLASS,PUNCTUATOR]
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_pse_pop(): orig_line is , pse_tos is , type is FPAREN_CLOSE
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is , orig_col is , :
+[x:IN_STRUCT,IN_CONST_ARGS,IN_CLASS,PUNCTUATOR]
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_pse_push(): line is , pse_tos is , type is CONSTR_COLON
+indent_text(): frm.pse_tos is , ...indent is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is  NEWLINE
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is , orig_col is , pTelName
+[x:IN_STRUCT,IN_CONST_ARGS,IN_CLASS,STMT_START,EXPR_START]
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+reindent_line(): orig_line is , orig_col is , on 'pTelName' [FUNC_CTOR_VAR/NONE] =>  [CallStack:-DEBUG NOT SET-]
+indent_text(): orig_line is , orig_col is , (
+[x:IN_STRUCT,IN_CONST_ARGS,IN_CLASS,PUNCTUATOR]
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_pse_push(): line is , pse_tos is , type is FPAREN_OPEN
+indent_text(): frm.pse_tos is , ...indent is 
+indent_text(): frm.pse_tos is , ...indent is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is , orig_col is , pN
+[x:IN_STRUCT,IN_FCN_CALL,IN_CONST_ARGS,IN_CLASS,EXPR_START]
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is , orig_col is , )
+[x:IN_STRUCT,IN_CONST_ARGS,IN_CLASS,PUNCTUATOR]
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_pse_pop(): orig_line is , pse_tos is , type is FPAREN_CLOSE
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is , orig_col is , ,
+[x:IN_STRUCT,IN_CONST_ARGS,IN_CLASS,PUNCTUATOR]
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is  NEWLINE
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is , orig_col is , nTelIndex
+[x:IN_STRUCT,IN_CONST_ARGS,IN_CLASS,EXPR_START]
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+reindent_line(): orig_line is , orig_col is , on 'nTelIndex' [FUNC_CTOR_VAR/NONE] =>  [CallStack:-DEBUG NOT SET-]
+indent_text(): orig_line is , orig_col is , (
+[x:IN_STRUCT,IN_CONST_ARGS,IN_CLASS,PUNCTUATOR]
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_pse_push(): line is , pse_tos is , type is FPAREN_OPEN
+indent_text(): frm.pse_tos is , ...indent is 
+indent_text(): frm.pse_tos is , ...indent is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is , orig_col is , n
+[x:IN_STRUCT,IN_FCN_CALL,IN_CONST_ARGS,IN_CLASS,EXPR_START]
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is , orig_col is , )
+[x:IN_STRUCT,IN_CONST_ARGS,IN_CLASS,PUNCTUATOR]
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_pse_pop(): orig_line is , pse_tos is , type is FPAREN_CLOSE
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is  NEWLINE
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is , orig_col is , {
+[x:IN_STRUCT,IN_CLASS,EMPTY_BODY,PUNCTUATOR]
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_pse_pop(): orig_line is , pse_tos is , type is BRACE_OPEN
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_pse_push(): line is , pse_tos is , type is BRACE_OPEN
+indent_text(): frm.pse_tos=, ... indent=
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+reindent_line(): orig_line is , orig_col is , on '{' [BRACE_OPEN/FUNC_CLASS_DEF] =>  [CallStack:-DEBUG NOT SET-]
+indent_text(): orig_line is  NEWLINE
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is , orig_col is , }
+[x:IN_STRUCT,IN_CLASS,EMPTY_BODY,PUNCTUATOR]
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_pse_pop(): orig_line is , pse_tos is , type is BRACE_CLOSE
+reindent_line(): orig_line is , orig_col is , on '}' [BRACE_CLOSE/FUNC_CLASS_DEF] =>  [CallStack:-DEBUG NOT SET-]
+indent_text(): orig_line is  NEWLINE
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is , orig_col is , ~
+[x:IN_STRUCT,IN_CLASS,STMT_START,EXPR_START,PUNCTUATOR]
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+reindent_line(): orig_line is , orig_col is , on '~' [DESTRUCTOR/NONE] =>  [CallStack:-DEBUG NOT SET-]
+indent_text(): orig_line is , orig_col is , TelegramIndex
+[x:IN_STRUCT,IN_CLASS,EXPR_START]
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is , orig_col is , (
+[x:IN_STRUCT,IN_CONST_ARGS,IN_CLASS,PUNCTUATOR]
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_pse_push(): line is , pse_tos is , type is FPAREN_OPEN
+indent_text(): frm.pse_tos is , ...indent is 
+indent_text(): frm.pse_tos is , ...indent is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is , orig_col is , )
+[x:IN_STRUCT,IN_CONST_ARGS,IN_CLASS,PUNCTUATOR]
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_pse_pop(): orig_line is , pse_tos is , type is FPAREN_CLOSE
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is  NEWLINE
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is , orig_col is , {
+[x:IN_STRUCT,IN_CLASS,EMPTY_BODY,PUNCTUATOR]
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_pse_push(): line is , pse_tos is , type is BRACE_OPEN
+indent_text(): frm.pse_tos=, ... indent=
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+reindent_line(): orig_line is , orig_col is , on '{' [BRACE_OPEN/FUNC_CLASS_DEF] =>  [CallStack:-DEBUG NOT SET-]
+indent_text(): orig_line is  NEWLINE
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is , orig_col is , }
+[x:IN_STRUCT,IN_CLASS,EMPTY_BODY,PUNCTUATOR]
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_pse_pop(): orig_line is , pse_tos is , type is BRACE_CLOSE
+reindent_line(): orig_line is , orig_col is , on '}' [BRACE_CLOSE/FUNC_CLASS_DEF] =>  [CallStack:-DEBUG NOT SET-]
+indent_text(): orig_line is  NEWLINE
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is , orig_col is , const
+[x:IN_STRUCT,IN_CLASS,FORCE_SPACE,STMT_START,EXPR_START,VAR_TYPE]
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+reindent_line(): orig_line is , orig_col is , on 'const' [QUALIFIER/NONE] =>  [CallStack:-DEBUG NOT SET-]
+indent_text(): orig_line is , orig_col is , char
+[x:IN_STRUCT,IN_CLASS,VAR_TYPE]
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is , orig_col is , *
+[x:IN_STRUCT,IN_CLASS,VAR_TYPE,PUNCTUATOR]
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is , orig_col is , const
+[x:IN_STRUCT,IN_CLASS,FORCE_SPACE,VAR_TYPE]
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is , orig_col is , pTelName
+[x:IN_STRUCT,IN_CLASS,VAR_DEF,VAR_ST]
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is , orig_col is , ;
+[x:IN_STRUCT,IN_CLASS,PUNCTUATOR]
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is  NEWLINE
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is , orig_col is , unsigned
+[x:IN_STRUCT,IN_CLASS,FORCE_SPACE,STMT_START,EXPR_START,VAR_TYPE]
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+reindent_line(): orig_line is , orig_col is , on 'unsigned' [TYPE/NONE] =>  [CallStack:-DEBUG NOT SET-]
+indent_text(): orig_line is , orig_col is , long
+[x:IN_STRUCT,IN_CLASS,FORCE_SPACE,VAR_TYPE]
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is , orig_col is , nTelIndex
+[x:IN_STRUCT,IN_CLASS,VAR_DEF,VAR_ST]
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is , orig_col is , ;
+[x:IN_STRUCT,IN_CLASS,PUNCTUATOR]
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is  NEWLINE
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is , orig_col is , }
+[x:IN_CLASS,PUNCTUATOR]
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_pse_pop(): orig_line is , pse_tos is , type is BRACE_CLOSE
+indent_text(): orig_line is , orig_col is , ;
+[x:PUNCTUATOR]
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is  NEWLINE
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is , orig_col is , struct
+[x:IN_STRUCT,FORCE_SPACE,STMT_START,EXPR_START]
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is , orig_col is , TelegramIndex
+[x:IN_STRUCT]
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is  NEWLINE
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is , orig_col is , {
+[x:IN_STRUCT,PUNCTUATOR]
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_pse_push(): line is , pse_tos is , type is BRACE_OPEN
+indent_text(): frm.pse_tos=, ... indent=
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is  NEWLINE
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is , orig_col is , TelegramIndex
+[x:IN_STRUCT,IN_CLASS,STMT_START,EXPR_START]
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is , orig_col is , (
+[x:IN_STRUCT,IN_CONST_ARGS,IN_CLASS,PUNCTUATOR]
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_pse_push(): line is , pse_tos is , type is FPAREN_OPEN
+indent_text(): frm.pse_tos is , ...indent is 
+indent_text(): frm.pse_tos is , ...indent is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is , orig_col is , const
+[x:IN_STRUCT,IN_FCN_CALL,IN_CONST_ARGS,IN_CLASS,FORCE_SPACE,EXPR_START]
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is , orig_col is , char
+[x:IN_STRUCT,IN_FCN_CALL,IN_CONST_ARGS,IN_CLASS,VAR_TYPE]
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is , orig_col is , *
+[x:IN_STRUCT,IN_FCN_CALL,IN_CONST_ARGS,IN_CLASS,PUNCTUATOR]
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is , orig_col is , pN
+[x:IN_STRUCT,IN_FCN_CALL,IN_CONST_ARGS,IN_CLASS,VAR_DEF]
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is , orig_col is , ,
+[x:IN_STRUCT,IN_FCN_CALL,IN_CONST_ARGS,IN_CLASS,PUNCTUATOR]
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is , orig_col is , unsigned
+[x:IN_STRUCT,IN_FCN_CALL,IN_CONST_ARGS,IN_CLASS,FORCE_SPACE,EXPR_START,VAR_TYPE]
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is , orig_col is , long
+[x:IN_STRUCT,IN_FCN_CALL,IN_CONST_ARGS,IN_CLASS,FORCE_SPACE,VAR_TYPE]
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is , orig_col is , nI
+[x:IN_STRUCT,IN_FCN_CALL,IN_CONST_ARGS,IN_CLASS,VAR_DEF]
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is , orig_col is , )
+[x:IN_STRUCT,IN_CONST_ARGS,IN_CLASS,PUNCTUATOR]
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_pse_pop(): orig_line is , pse_tos is , type is FPAREN_CLOSE
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is , orig_col is , :
+[x:IN_STRUCT,IN_CONST_ARGS,IN_CLASS,PUNCTUATOR]
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_pse_push(): line is , pse_tos is , type is CONSTR_COLON
+indent_text(): frm.pse_tos is , ...indent is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is  NEWLINE
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is , orig_col is , pTelName
+[x:IN_STRUCT,IN_CONST_ARGS,IN_CLASS,STMT_START,EXPR_START]
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is , orig_col is , (
+[x:IN_STRUCT,IN_CONST_ARGS,IN_CLASS,PUNCTUATOR]
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_pse_push(): line is , pse_tos is , type is FPAREN_OPEN
+indent_text(): frm.pse_tos is , ...indent is 
+indent_text(): frm.pse_tos is , ...indent is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is , orig_col is , pN
+[x:IN_STRUCT,IN_FCN_CALL,IN_CONST_ARGS,IN_CLASS,EXPR_START]
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is , orig_col is , )
+[x:IN_STRUCT,IN_CONST_ARGS,IN_CLASS,PUNCTUATOR]
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_pse_pop(): orig_line is , pse_tos is , type is FPAREN_CLOSE
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is , orig_col is , ,
+[x:IN_STRUCT,IN_CONST_ARGS,IN_CLASS,PUNCTUATOR]
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is  NEWLINE
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is , orig_col is , nTelIndex
+[x:IN_STRUCT,IN_CONST_ARGS,IN_CLASS,EXPR_START]
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is , orig_col is , (
+[x:IN_STRUCT,IN_CONST_ARGS,IN_CLASS,PUNCTUATOR]
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_pse_push(): line is , pse_tos is , type is FPAREN_OPEN
+indent_text(): frm.pse_tos is , ...indent is 
+indent_text(): frm.pse_tos is , ...indent is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is , orig_col is , n
+[x:IN_STRUCT,IN_FCN_CALL,IN_CONST_ARGS,IN_CLASS,EXPR_START]
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is , orig_col is , )
+[x:IN_STRUCT,IN_CONST_ARGS,IN_CLASS,PUNCTUATOR]
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_pse_pop(): orig_line is , pse_tos is , type is FPAREN_CLOSE
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is  NEWLINE
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is , orig_col is , {
+[x:IN_STRUCT,IN_CLASS,EMPTY_BODY,PUNCTUATOR]
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_pse_pop(): orig_line is , pse_tos is , type is BRACE_OPEN
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_pse_push(): line is , pse_tos is , type is BRACE_OPEN
+indent_text(): frm.pse_tos=, ... indent=
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is  NEWLINE
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is , orig_col is , }
+[x:IN_STRUCT,IN_CLASS,EMPTY_BODY,PUNCTUATOR]
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_pse_pop(): orig_line is , pse_tos is , type is BRACE_CLOSE
+indent_text(): orig_line is  NEWLINE
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is , orig_col is , ~
+[x:IN_STRUCT,IN_CLASS,STMT_START,EXPR_START,PUNCTUATOR]
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is , orig_col is , TelegramIndex
+[x:IN_STRUCT,IN_CLASS,EXPR_START]
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is , orig_col is , (
+[x:IN_STRUCT,IN_CONST_ARGS,IN_CLASS,PUNCTUATOR]
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_pse_push(): line is , pse_tos is , type is FPAREN_OPEN
+indent_text(): frm.pse_tos is , ...indent is 
+indent_text(): frm.pse_tos is , ...indent is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is , orig_col is , )
+[x:IN_STRUCT,IN_CONST_ARGS,IN_CLASS,PUNCTUATOR]
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_pse_pop(): orig_line is , pse_tos is , type is FPAREN_CLOSE
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is  NEWLINE
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is , orig_col is , {
+[x:IN_STRUCT,IN_CLASS,EMPTY_BODY,PUNCTUATOR]
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_pse_push(): line is , pse_tos is , type is BRACE_OPEN
+indent_text(): frm.pse_tos=, ... indent=
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is  NEWLINE
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is , orig_col is , }
+[x:IN_STRUCT,IN_CLASS,EMPTY_BODY,PUNCTUATOR]
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_pse_pop(): orig_line is , pse_tos is , type is BRACE_CLOSE
+indent_text(): orig_line is  NEWLINE
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is , orig_col is , const
+[x:IN_STRUCT,IN_CLASS,FORCE_SPACE,STMT_START,EXPR_START,VAR_TYPE]
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is , orig_col is , char
+[x:IN_STRUCT,IN_CLASS,VAR_TYPE]
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is , orig_col is , *
+[x:IN_STRUCT,IN_CLASS,VAR_TYPE,PUNCTUATOR]
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is , orig_col is , const
+[x:IN_STRUCT,IN_CLASS,FORCE_SPACE,VAR_TYPE]
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is , orig_col is , pTelName
+[x:IN_STRUCT,IN_CLASS,VAR_DEF,VAR_ST]
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is , orig_col is , ;
+[x:IN_STRUCT,IN_CLASS,PUNCTUATOR]
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is  NEWLINE
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is , orig_col is , unsigned
+[x:IN_STRUCT,IN_CLASS,FORCE_SPACE,STMT_START,EXPR_START,VAR_TYPE]
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is , orig_col is , long
+[x:IN_STRUCT,IN_CLASS,FORCE_SPACE,VAR_TYPE]
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is , orig_col is , nTelIndex
+[x:IN_STRUCT,IN_CLASS,VAR_DEF,VAR_ST]
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is , orig_col is , ;
+[x:IN_STRUCT,IN_CLASS,PUNCTUATOR]
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is  NEWLINE
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is , orig_col is , }
+[x:IN_CLASS,PUNCTUATOR]
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_pse_pop(): orig_line is , pse_tos is , type is BRACE_CLOSE
+indent_text(): orig_line is , orig_col is , ;
+[x:PUNCTUATOR]
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): orig_line is  NEWLINE
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 
+indent_text(): frm.pse_tos is , ...indent_tmp is 

@@ -30,7 +30,7 @@ int this_works(int x);
 int bug(int); /* BUG: left-aligned */
 
 
-typedef int    fooman;
+typedef int fooman;
 enum FLAGS
 {
     FLAGS_decimal  = 1,    /* decimal */

@@ -23,6 +23,7 @@ include(CTest)
 if(MSVC)
   add_definitions(/D_CRT_SECURE_NO_WARNINGS /D_CRT_NONSTDC_NO_WARNINGS /wd4267)
 elseif(CMAKE_COMPILER_IS_GNUCXX)
+  add_definitions(-std=gnu++0x)
   set(gcc_warning_flags
     -Wall
     -Wextra
@@ -30,6 +31,7 @@ elseif(CMAKE_COMPILER_IS_GNUCXX)
     -Wpointer-arith
     -Wcast-qual
     -Wcast-align
+    -Wc++11-extensions
   )
   foreach(flag ${gcc_warning_flags})
     string(REGEX REPLACE "[^a-zA-Z0-9]+" "_" flag_var "CXXFLAG_${flag}")
@@ -41,6 +43,7 @@ elseif(CMAKE_COMPILER_IS_GNUCXX)
   endforeach()
   unset(gcc_warning_flags)
 elseif(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+  add_definitions(-std=gnu++0x)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
 endif()
 
@@ -54,16 +57,8 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
 # Determine config
 #
 if(WIN32)
-  # Windows builds use win32/windows_compat.h instead of config.h
-  include_directories(${PROJECT_SOURCE_DIR}/win32)
+  # Windows builds use src/windows_compat.h instead of config.h
 else()
-  # Generate CMake config.h.in
-  file(READ src/config.h.in config_lines)
-  string(REPLACE "#undef" "#cmakedefine" config_lines "${config_lines}")
-  file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/config.h.in ${config_lines})
-
-  unset(config_lines)
-
   # Generate config.h
   set(avail_headers "")
 
@@ -115,34 +110,43 @@ else()
 
   check_type_size(_Bool _BOOL LANGUAGE C)
 
-  configure_file(${CMAKE_CURRENT_BINARY_DIR}/config.h.in config.h @ONLY)
+  configure_file(src/config.h.in config.h @ONLY)
 endif()
 
 #
 # Generate uncrustify_version.h
 #
-set(PACKAGE_VERSION "0.63")
 
-if (MAKE_VERSION)
-  find_package(PythonInterp REQUIRED)
-  execute_process(
-    COMMAND ${PYTHON_EXECUTABLE} make_version.py
-    WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
-    RESULT_VARIABLE make_version_error
-    OUTPUT_VARIABLE make_version_output
-  )
+# FIXME: the version number should be automatically integrated
+set(CURRENT_VERSION "Uncrustify-0.65_f")
 
-  if (make_version_error)
-    message(WARNING ${make_version_output})
-  else()
-    if (${make_version_output} MATCHES "full version: (.*)\n tag version: (.*)")
-      set(full_version ${CMAKE_MATCH_1})
-      set(tag_version ${CMAKE_MATCH_2})
-      message(STATUS "Uncrustify full version: ${full_version}")
-      message(STATUS "Uncrustify  tag version: ${tag_version}")
+option(NoGitVersionString "Do not use make_version.py and git to build a version string" OFF)
+if(NOT NoGitVersionString)
+    find_package(PythonInterp)
+    if(PythonInterp_FOUND)
+        set(version_debug_flag "")
+        STRING(REGEX MATCH "-g[0-3]?" version_debug_flag ${CMAKE_CXX_FLAGS})
+
+        # checking for build type and passing it to make_version.py
+        # FIXME: does not work with VS .sln projects
+        if(NOT "${version_debug_flag}" STREQUAL "" OR "${CMAKE_BUILD_TYPE}" STREQUAL "Debug" )
+            set(version_debug_flag "Debug")
+        endif()
+
+        execute_process(
+            COMMAND ${PYTHON_EXECUTABLE} scripts/make_version.py ${version_debug_flag}
+            WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+            RESULT_VARIABLE make_version_error
+            OUTPUT_VARIABLE make_version_output
+        )
+
+        if (make_version_error)
+            message(STATUS "scripts/make_version.py exited with code ${make_version_error}: ${make_version_output}\n"
+                           "As a fallback, version '${CURRENT_VERSION}' will be used.")
+        else()
+            string(STRIP ${make_version_output} CURRENT_VERSION)
+        endif()
     endif()
-    set(PACKAGE_VERSION "${full_version}")
-  endif()
 endif()
 
 configure_file(src/uncrustify_version.h.in uncrustify_version.h @ONLY)
@@ -177,6 +181,7 @@ add_executable(uncrustify
   src/compat_win32.cpp
   src/defines.cpp
   src/detect.cpp
+  src/helper_for_print.cpp
   src/indent.cpp
   src/keywords.cpp
   src/lang_pawn.cpp
@@ -208,6 +213,7 @@ add_executable(uncrustify
   src/char_table.h
   src/ChunkStack.h
   src/chunk_list.h
+  src/helper_for_print.h
   src/ListManager.h
   src/logger.h
   src/logmask.h
@@ -259,7 +265,7 @@ endif()
 # Package
 #
 set(CPACK_PACKAGE_NAME "uncrustify")
-set(CPACK_PACKAGE_VERSION "${PACKAGE_VERSION}")
+set(CPACK_PACKAGE_VERSION "${CURRENT_VERSION}")
 set(CPACK_PACKAGE_VENDOR "Ben Gardner")
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Code beautifier")
 set(CPACK_PACKAGE_DESCRIPTION_FILE "${PROJECT_SOURCE_DIR}/README.md")
@@ -300,3 +306,8 @@ else()
     DESTINATION "${CMAKE_INSTALL_MANDIR}/man1"
   )
 endif()
+
+#
+# add to build the compile_commands.json file, to be used by clang-tidy
+#
+set(CMAKE_EXPORT_COMPILE_COMMANDS "ON" CACHE BOOL "to create the compile_commands.json file" FORCE)

@@ -1,0 +1,26 @@
+[//]: # "  If the issue is connected to existing Uncrustify options please, if possible, add the"
+[//]: # "  following information to ease up the process:"
+[//]: # "  • a link to a debug file:"
+[//]: # "      generated with: 'uncrustify -p debug.txt -c pathToUsedConfig.cfg -f toBeFormatedFile.cpp' "
+[//]: # "      Example: [debug.txt](https://linkToTheFile)"
+[//]: # "      Example hosters for debug files: pastbin.com, gist.github.com, ..."
+[//]: # "      The used config file is included in the debug file and does not need to be included here."
+[//]: # 
+[//]: # "  • include a small but complete test file that will be uncrustifyed"
+[//]: # "  • include the generated results"
+[//]: # "  • include the expected results"
+[//]: # 
+[//]: # "  ✋ please add a line containing ``` above and below of each of those three code sections"
+[//]: # 
+[//]: # "  • include the current version of your Uncrustify executable"
+[//]: # "      printout via 'uncrustify -v'"
+[//]: # "      Example: current version: uncrustify 0.63"
+[//]: # "      or if possible additionally with the git sha of the commit"
+[//]: # "                    current version: uncrustify 0.63 dc7b412"
+[//]: # 
+[//]: # "  • if possible include a version that worked"
+[//]: # "      Example: working version: uncrustify 0.63"
+[//]: # "      or"
+[//]: # "                    working version: uncrustify 0.63 2a5e88f"
+
+

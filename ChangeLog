@@ -1,4 +1,55 @@
-Change highlights in uncrustify-0.xx (xxx 2016)
+Change highlights in uncrustify-0.65 (May 2017)
+-------------------------------------------------------------------------------
+
+New options:
+  - nl_before_if_closing_paren                     May 12
+  - sp_after_type_brace_init_lst_open              May 09
+  - sp_before_type_brace_init_lst_close            May 09
+  - sp_inside_type_brace_init_lst                  May 09
+  - sp_type_brace_init_lst                         May 09
+  - nl_type_brace_init_lst                         May 09
+  - nl_type_brace_init_lst_open                    May 09
+  - nl_type_brace_init_lst_close                   May 09
+  - mod_sort_oc_property_class_weight              May 05
+  - mod_full_brace_nl_block_rem_mlcond             Mar 17
+  - sp_inside_newop_paren_open                     Mar 13
+  - sp_inside_newop_paren                          Mar 13
+  - sp_after_newop_paren                           Mar 13
+  - sp_inside_newop_paren_close                    Mar 13
+  - pp_ignore_define_body                          Feb 18
+  - sp_enum_colon                                  Feb 13
+  - nl_enum_class                                  Feb 13
+  - nl_enum_class_identifier                       Feb 13
+  - nl_enum_identifier_colon                       Feb 13
+  - nl_enum_colon_type                             Feb 13
+  - indent_param                                   Feb 01
+  - include_category_0                             Jan 24
+  - include_category_1                             Jan 24
+  - include_category_2                       2017  Jan 24
+  - force_tab_after_define                   2016  Dec 29
+  - nl_max_blank_in_func                           Nov 26
+  - indent_ternary_operator                        Nov 24
+  - indent_using_block                             Oct 20
+
+New:
+  - emscripten interface
+  - removal of autogen / configure build
+  - list options that are now AT_UNUM type
+
+Removed option:
+  - dont_protect_xcode_code_placeholders
+
+Removed MS calling convention keywords:
+  - __cdecl, __clrcall, __fastcall, __stdcall, __thiscall, __vectorcall
+
+Bugfix:
+ - Issue # 324, 398, 404, 497, 525, 575, 633, 638, 643, 646, 663, 666,
+     679, 682, 687, 726, 752, 753, 793, 815, 825, 842, 857, 859, 869, 870,
+     889, 902, 916, 917, 928, 935, 938, 940, 972, 1002, 1005, 1020, 1030,
+     1032, 1041, 1068, 1117, 1139 are fixed
+ - Proposal #381, 876 are adopted.
+
+Change highlights in uncrustify-0.64 (October 2016)
 -------------------------------------------------------------------------------
 
 New:
@@ -7,45 +58,50 @@ New:
     Null conditional operator (?.) is now supported.
 
 New options:
- - nl_func_class_scope option
- - indent_cs_delegate_brace
- - nl_enum_own_lines
- - cmt_multi_first_len_minimum
- - nl_func_class_scope
- - nl_squeeze_ifdef_top_level
- - sp_super_paren
- - sp_angle_paren_empty
- - sp_skip_vbrace_tokens
- - indent_token_after_brace
- - use_options_overriding_for_qt_macros
- - mod_full_brace_if_chain_only option
- - sp_func_[proto,def,class]_paren_empty
- - cmt_insert_before_inlines
- - cmt_insert_before_ctor_dtor
- - mod_full_brace_if_chain_only
- - nl_func_decl_start_multi_line
- - nl_func_def_start_multi_line
- - nl_func_decl_args_multi_line
- - nl_func_def_args_multi_line
- - nl_func_decl_end_multi_line
- - nl_func_def_end_multi_line
- - nl_func_call_start_multi_line
- - nl_func_call_args_multi_line
- - nl_func_call_end_multi_line
- - indent_cs_delegate_brace
- - nl_oc_block_brace
- - nl_split_if_one_liner
- - nl_split_for_one_liner
- - nl_split_while_one_liner
- - nl_after_func_class_proto
- - nl_after_func_class_proto_group
+ - align_var_class_span                             Aug 23
+ - align_var_class_thresh                           Aug 23
+ - align_var_class_gap                              Aug 23
+ - pos_enum_comma                                   Aug 14
+ - indent_token_after_brace                         Aug  3
+ - cmt_multi_first_len_minimum                      Aug  2
+ - nl_enum_own_lines                                Aug  1
+ - nl_func_class_scope                              Jul 26
+ - nl_squeeze_ifdef_top_level                       Jul 24
+ - sp_super_paren                                   Jul 21
+ - sp_this_paren                                    Jul 21
+ - sp_angle_paren_empty                             Jul 21
+ - sp_after_operator_sym_empty                      Jul 20
+ - sp_skip_vbrace_tokens                            Jul 13
+ - indent_cs_delegate_brace                         Jul  9
+ - cmt_insert_before_inlines                        Jun 29
+ - cmt_insert_before_ctor_dtor                      Jun 29
+ - mod_full_brace_if_chain_only                     Jun 28
+ - nl_func_decl_start_multi_line                    Jun 28
+ - nl_func_def_start_multi_line                     Jun 28
+ - nl_func_decl_args_multi_line                     Jun 28
+ - nl_func_def_args_multi_line                      Jun 28
+ - nl_func_decl_end_multi_line                      Jun 28
+ - nl_func_def_end_multi_line                       Jun 28
+ - nl_func_call_start_multi_line                    Jun 28
+ - nl_func_call_args_multi_line                     Jun 28
+ - nl_func_call_end_multi_line                      Jun 28
+ - use_options_overriding_for_qt_macros             Jun 16
+ - sp_func_def_paren_empty                          Jun 15
+ - sp_func_proto_paren_empty                        Jun 15
+ - sp_func_class_paren_empty                        Jun 15
+ - nl_oc_block_brace                                May 26
+ - nl_split_if_one_liner                            May 26
+ - nl_split_for_one_line                            May 24
+ - nl_split_while_one_liner                         May 24
+ - nl_after_func_class_proto                        May 12
+ - nl_after_func_class_proto_group                  May 12 2016
 
 Bugfix:
- - Bug #620 is fixed
+ - Bugs #620, #651, #654, #662, #663, #664, #670, #671, #672, #674 are fixed
  - Issues #322, #323, #359, #405, #408, #412, #478, #481, #495, #503, #509, #512, #513, #514,
     #518, #519, #520, #521, #522, #524, #529, #530, #533, #536, #539, #542,
     #543, #544, #546, #568 are fixed
- - Proposals #409 and #477 are implemented
+ - Proposals #409, #477 are implemented
  - Issue #411 is partialy fixed
 
 
@@ -67,11 +123,11 @@ New:
      https://msdn.microsoft.com/en-us/library/984x0h58.aspx
 
 New options:
- - nl_before_func_class_def
- - nl_before_func_class_proto
- - nl_before_func_body_def
- - nl_before_func_body_proto
- - use_indent_continue_only_once
+ - nl_before_func_class_def                         Apr 16
+ - nl_before_func_class_proto                       Apr 16
+ - nl_before_func_body_def                          Apr 25
+ - nl_before_func_body_proto                        Apr 25
+ - use_indent_continue_only_once                    Mar  7 2016
 
 Bugfix:
  - Simplify some more expressions.

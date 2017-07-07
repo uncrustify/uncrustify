@@ -1,0 +1,16 @@
+"pclint" is a static source code checker.
+It helps detecting programming errors during development.
+
+To run the check you need a license for pclint. The results can either be saved to a text file or be displayed on top of the source code when using Eclipse.
+The present configuration is ment for Windows using Mingw as toolchain. To run the check with another toolchain the paths in run-pclint-eclipse.bat need to be change. To run the check under Linux another tool called "flexelint" is required.
+
+Run the check from the top level directory of uncrustify by calling
+run-pclint-eclipse.bat
+
+To run the check from Eclipse create a new target and use the script
+as build command like that:
+${workspace_loc:/uncrustify}/scripts/pclint/run-pclint-eclipse.bat 
+
+The file policy.lnt determines which tests are performed.
+The more tests are used the longer it takes but the more 
+precise will be the results. 

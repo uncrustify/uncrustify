@@ -6,6 +6,10 @@
  * @author  Ben Gardner
  * @license GPL v2+
  */
+
+#ifndef ALIGN_STACK_H_INCLUDED
+#define ALIGN_STACK_H_INCLUDED
+
 #include "ChunkStack.h"
 
 class AlignStack
@@ -13,25 +17,24 @@ class AlignStack
 public:
    enum StarStyle
    {
-      SS_IGNORE,  // don't look for prev stars
-      SS_INCLUDE, // include prev * before add
-      SS_DANGLE   // include prev * after add
+      SS_IGNORE,  //! don't look for prev stars
+      SS_INCLUDE, //! include prev * before add
+      SS_DANGLE   //! include prev * after add
    };
 
-   ChunkStack m_aligned;   /* contains the token that is aligned */
-   ChunkStack m_skipped;   /* contains the tokens sent to Add() */
-   int        m_max_col;
-   int        m_min_col;
-   int        m_span;
-   int        m_thresh;
-   int        m_seqnum;
-   int        m_nl_seqnum;
-   int        m_gap;
+   ChunkStack m_aligned;      //! contains the token that is aligned
+   ChunkStack m_skipped;      //! contains the tokens sent to Add()
+   size_t     m_max_col;
+   size_t     m_min_col;
+   size_t     m_span;
+   size_t     m_thresh;
+   size_t     m_seqnum;
+   size_t     m_nl_seqnum;
+   size_t     m_gap;
    bool       m_right_align;
    StarStyle  m_star_style;
-   StarStyle  m_amp_style;
-   /* do not include the first item if it causes it to be indented */
-   bool       m_skip_first;
+   StarStyle  m_amp_style;  //! do not include the first item if it causes it to be indented
+   bool       m_skip_first; //! do not include the first item if it causes it to be indented
 
 
    AlignStack()
@@ -51,7 +54,7 @@ public:
    }
 
 
-   AlignStack(const AlignStack& ref)
+   AlignStack(const AlignStack &ref)
       : m_aligned(ref.m_aligned)
       , m_skipped(ref.m_skipped)
       , m_max_col(ref.m_max_col)
@@ -74,16 +77,50 @@ public:
    {
    }
 
-   void Start(int span, int threshold = 0);
-   void Add(chunk_t *pc, int seqnum = 0);
-   void NewLines(int cnt);
+   /**
+    * Resets the two ChunkLists and zeroes local vars.
+    *
+    * @param span       The row span limit
+    * @param threshold  The column threshold
+    */
+   void Start(size_t span, size_t threshold = 0);
+
+
+   /**
+    * Adds an entry to the appropriate stack.
+    *
+    * @param pc      the chunk
+    * @param seqnum  optional sequence number (0=assign one)
+    */
+   void Add(chunk_t *pc, size_t seqnum = 0);
+
+
+   //! Adds some newline and calls Flush() if needed
+   void NewLines(size_t cnt);
+
+
+   /**
+    * Aligns all the stuff in m_aligned.
+    * Re-adds 'newer' items in m_skipped.
+    */
    void Flush();
+
+
+   //! Resets the stack, discarding anything that was previously added
    void Reset();
+
+
+   //! Aligns everything else and resets the lists.
    void End();
 
 protected:
-   int m_last_added; /* 0=none, 1=aligned, 2=skipped */
-   void ReAddSkipped();
+   size_t     m_last_added; //! 0=none, 1=aligned, 2=skipped
+   ChunkStack m_scratch;    //! used in ReAddSkipped()
 
-   ChunkStack m_scratch; /* used in ReAddSkipped() */
+   //! Calls Add on all the skipped items
+   void   ReAddSkipped();
 };
+
+
+#endif /* ALIGN_STACK_H_INCLUDED */
+

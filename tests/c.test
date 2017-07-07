@@ -129,6 +129,7 @@
 00403   align-2.cfg            c/align-var.c
 00404   align-3.cfg            c/align-var.c
 00405   align-3.cfg            c/bits.c
+00406   bug_i_771.cfg          c/bug_i_771.c
 
 00411   ben.cfg                c/align-typedef.c
 00412   align_typedef_func-0.cfg c/align-typedef.c
@@ -303,6 +304,7 @@
 02504 align_keep_extra.cfg      c/align_keep_extra.c
 
 02510 ben.cfg                   c/asm.c
+10004 ben.cfg                   c/pragma_asm.c
 
 07630 indent-vbrace.cfg         c/indent-vbrace.c
 
@@ -314,3 +316,10 @@
 09601 sp_after_sparen.cfg       c/sp_after_sparen.c
 
 09602 bug_671.cfg               c/bug_671.c
+
+09603 indent_ternary-1.cfg      c/indent_ternary-1.c
+09604 indent_ternary-2.cfg      c/indent_ternary-2.c
+
+09610 bug_i_876.cfg             c/bug_i_876.c
+09611 bug_i_222.cfg             c/bug_i_222.c
+09612 bug_1041.cfg              c/bug_1041.c

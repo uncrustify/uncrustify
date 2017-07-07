@@ -33,4 +33,20 @@ namespace a::b
          break;
       } // switch
    } // foo::bar
+
+   class long_class
+   {
+ private:
+      int m_a;
+      int m_name;
+
+ public:
+      long_class(int a) {}
+
+      void f1() {}
+
+      void f2() {}
+
+      void f3() {}
+   }; // class long_class
 } // namespace a::b

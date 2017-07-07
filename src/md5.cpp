@@ -6,7 +6,7 @@
  *
  * Equivalent code is available from RSA Data Security, Inc.
  * This code has been tested against that, and is equivalent,
- * except that you don't need to include two pages of legalese
+ * except that you don't need to include two pages of legales
  * with every copy.
  *
  * To compute the message digest of a chunk of bytes, declare an
@@ -18,23 +18,16 @@
  */
 
 #include "md5.h"
-#include <string.h>               /* memcpy, memset */
+#include <string.h>
 
 
-/**
- * Reverse the bytes in 32-bit chunks.
- * 'buf' might not be word-aligned.
- *
- * @param buf     The byte array to reverse
- * @param n_u32   The number of UINT32's in the data
- */
 void MD5::reverse_u32(UINT8 *buf, int n_u32)
 {
    UINT8 tmp;
 
    if (m_big_endian)
    {
-      /* change { 4, 3, 2, 1 } => { 1, 2, 3, 4 } */
+      // change { 4, 3, 2, 1 } => { 1, 2, 3, 4 }
       while (n_u32-- > 0)
       {
          tmp    = buf[0];
@@ -50,7 +43,7 @@ void MD5::reverse_u32(UINT8 *buf, int n_u32)
    }
    else
    {
-      /* change { 4, 3, 2, 1 } => { 3, 4, 1, 2 } */
+      // change { 4, 3, 2, 1 } => { 3, 4, 1, 2 }
       while (n_u32-- > 0)
       {
          tmp    = buf[0];
@@ -84,10 +77,7 @@ MD5::MD5()
 }
 
 
-/**
- * Start MD5 accumulation.  Set bit count to 0 and buffer to mysterious
- * initialization constants.
- */
+//! Start MD5 accumulation.
 void MD5::Init()
 {
    m_buf[0] = 0x67452301;
@@ -100,26 +90,22 @@ void MD5::Init()
 }
 
 
-/**
- * Update context to reflect the concatenation of another buffer full
- * of bytes.
- */
+//! Update context to reflect the concatenation of another buffer full of bytes.
 void MD5::Update(const void *data, UINT32 len)
 {
    const UINT8 *buf = (const UINT8 *)data;
-   UINT32      t;
 
-   /* Update bitcount */
-   t = m_bits[0];
+   UINT32      t = m_bits[0]; // Update bitcount
+
    if ((m_bits[0] = t + ((UINT32)len << 3)) < t)
    {
-      m_bits[1]++;   /* Carry from low to high */
+      m_bits[1]++;   // Carry from low to high
    }
    m_bits[1] += len >> 29;
 
-   t = (t >> 3) & 0x3f;   /* Bytes already in shsInfo->data */
+   t = (t >> 3) & 0x3f;   // Bytes already in shsInfo->data
 
-   /* Handle any leading odd-sized chunks */
+   // Handle any leading odd-sized chunks
    if (t)
    {
       UINT8 *p = (UINT8 *)m_in + t;
@@ -139,8 +125,8 @@ void MD5::Update(const void *data, UINT32 len)
       buf += t;
       len -= t;
    }
-   /* Process data in 64-byte chunks */
 
+   // Process data in 64-byte chunks
    while (len >= 64)
    {
       memcpy(m_in, buf, 64);
@@ -149,39 +135,35 @@ void MD5::Update(const void *data, UINT32 len)
          reverse_u32(m_in, 16);
       }
       Transform(m_buf, (UINT32 *)m_in);
-      buf += 64;
+      buf += 64;  // TODO: possible creation of out-of-bounds pointer 64 beyond end of data
       len -= 64;
    }
 
-   /* Save off any remaining bytes of data */
-   memcpy(m_in, buf, len);
+   // Save off any remaining bytes of data
+   memcpy(m_in, buf, len); // TODO: possible access beyond array
 } // MD5::Update
 
 
-/**
- * Final wrapup - pad to 64-byte boundary with the bit pattern
- * 1 0* (64-bit count of bits processed, MSB-first)
- */
 void MD5::Final(UINT8 digest[16])
 {
-   UINT32 count;
-   UINT8  *p;
+   // Compute number of bytes modulo 64
+   UINT32 count = (m_bits[0] >> 3) & 0x3F;
 
-   /* Compute number of bytes mod 64 */
-   count = (m_bits[0] >> 3) & 0x3F;
+   /*
+    * Set the first char of padding to 0x80. This is safe since there is always
+    * at least one byte free
+    */
+   UINT8 *p = m_in + count;
 
-   /* Set the first char of padding to 0x80.  This is safe since there is
-    * always at least one byte free */
-   p    = m_in + count;
    *p++ = 0x80;
 
-   /* Bytes of padding needed to make 64 bytes */
+   // Bytes of padding needed to make 64 bytes
    count = 64 - 1 - count;
 
-   /* Pad out to 56 mod 64 */
+   // Pad out to 56 modulo 64
    if (count < 8)
    {
-      /* Two lots of padding:  Pad the first block to 64 bytes */
+      // Two lots of padding:  Pad the first block to 64 bytes
       memset(p, 0, count);
       if (m_need_byteswap)
       {
@@ -189,12 +171,12 @@ void MD5::Final(UINT8 digest[16])
       }
       Transform(m_buf, (UINT32 *)m_in);
 
-      /* Now fill the next block with 56 bytes */
+      // Now fill the next block with 56 bytes
       memset(m_in, 0, 56);
    }
    else
    {
-      /* Pad block to 56 bytes */
+      // Pad block to 56 bytes
       memset(p, 0, count - 8);
    }
    if (m_need_byteswap)
@@ -202,7 +184,7 @@ void MD5::Final(UINT8 digest[16])
       reverse_u32(m_in, 14);
    }
 
-   /* Append length in bits and transform */
+   // Append length in bits and transform
    memcpy(m_in + 56, &m_bits[0], 4);
    memcpy(m_in + 60, &m_bits[1], 4);
 
@@ -215,32 +197,25 @@ void MD5::Final(UINT8 digest[16])
 } // MD5::Final
 
 
-/* The four core functions - F1 is optimized somewhat */
-
-/* #define F1(x, y, z) (x & y | ~x & z) */
+// The four core functions - F1 is optimized somewhat
+// #define F1(x, y, z) (x & y | ~x & z)
 #define F1(x, y, z)    (z ^ (x & (y ^ z)))
 #define F2(x, y, z)    F1(z, x, y)
 #define F3(x, y, z)    (x ^ y ^ z)
 #define F4(x, y, z)    (y ^ (x | ~z))
 
-/* This is the central step in the MD5 algorithm. */
+
+// This is the central step in the MD5 algorithm.
 #define MD5STEP(f, w, x, y, z, data, s) \
-   (w += f(x, y, z) + data, w = w << s | w >> (32 - s), w += x)
+   ((w) += f((x), (y), (z)) + (data), (w) = (w) << (s) | (w) >> (32 - (s)), (w) += (x))
 
 
-/*
- * The core of the MD5 algorithm, this alters an existing MD5 hash to
- * reflect the addition of 16 longwords of new data.  MD5::Update blocks
- * the data and converts bytes into longwords for this routine.
- */
 void MD5::Transform(UINT32 buf[4], UINT32 in_data[16])
 {
-   UINT32 a, b, c, d;
-
-   a = buf[0];
-   b = buf[1];
-   c = buf[2];
-   d = buf[3];
+   UINT32 a = buf[0];
+   UINT32 b = buf[1];
+   UINT32 c = buf[2];
+   UINT32 d = buf[3];
 
    MD5STEP(F1, a, b, c, d, in_data[0] + 0xd76aa478, 7);
    MD5STEP(F1, d, a, b, c, in_data[1] + 0xe8c7b756, 12);

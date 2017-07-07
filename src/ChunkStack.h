@@ -23,25 +23,27 @@ public:
       }
 
 
-      Entry(const Entry& ref)
+      Entry(const Entry &ref)
          : m_seqnum(ref.m_seqnum)
          , m_pc(ref.m_pc)
       {
       }
 
 
-      Entry(int sn, chunk_t *pc)
+      Entry(size_t sn, chunk_t *pc)
          : m_seqnum(sn)
          , m_pc(pc)
       {
       }
-      int     m_seqnum;
+
+
+      size_t  m_seqnum;
       chunk_t *m_pc;
    };
 
 protected:
    deque<Entry> m_cse;
-   int          m_seqnum; // current seq num
+   size_t       m_seqnum; //! current sequence number
 
 public:
    ChunkStack()
@@ -50,7 +52,7 @@ public:
    }
 
 
-   ChunkStack(const ChunkStack& cs)
+   ChunkStack(const ChunkStack &cs)
    {
       Set(cs);
    }
@@ -60,7 +62,8 @@ public:
    {
    }
 
-   void Set(const ChunkStack& cs);
+
+   void Set(const ChunkStack &cs);
 
 
    void Push_Back(chunk_t *pc)
@@ -75,17 +78,26 @@ public:
    }
 
 
-   int Len() const
+   size_t Len() const
    {
       return(m_cse.size());
    }
 
+
    const Entry *Top() const;
-   const Entry *Get(int idx) const;
-   chunk_t *GetChunk(int idx) const;
+
+
+   const Entry *Get(size_t idx) const;
+
+
+   chunk_t *GetChunk(size_t idx) const;
+
 
    chunk_t *Pop_Back();
-   void Push_Back(chunk_t *pc, int seqnum);
+
+
+   void Push_Back(chunk_t *pc, size_t seqnum);
+
 
    chunk_t *Pop_Front();
 
@@ -95,8 +107,18 @@ public:
       m_cse.clear();
    }
 
-   void Zap(int idx);
+
+   /**
+    * Mark an entry to be removed by Collapse()
+    *
+    * @param idx  The item to remove
+    */
+   void Zap(size_t idx);
+
+
+   //! Compresses down the stack by removing dead entries
    void Collapse();
 };
+
 
 #endif   /* CHUNKSTACK_H_INCLUDED */

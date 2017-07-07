@@ -4,14 +4,16 @@ src/token_names.h
 src/uncrustify_version.h
 
 # Testing framework
-tests/results
+results/
+tests/results/
 tests/usage.txt
+tests/pclint/
 *.sh.trs
 *.sh.log
 test-suite.log
 
 # UNIX build artifacts
-*.o
+*.[oadisS]
 src/uncrustify
 
 # Gnu autotools
@@ -79,3 +81,13 @@ uncrustify-*-win32
 .*
 build*
 *.orig
+
+# Eclipse Build Directories
+Debug/
+Release/
+build/
+
+# Eclipse Configuration
+.cproject
+.project
+.settings

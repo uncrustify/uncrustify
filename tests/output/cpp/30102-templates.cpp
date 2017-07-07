@@ -36,7 +36,7 @@ void asd(void)
    {
    }
    a<up_lim() ? do_hi() : do_low;
-   a[ a<b>c] = d;
+   a[ a < b > c] = d;
 }
 
 template< typename T > class MyClass

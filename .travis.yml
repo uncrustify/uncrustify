@@ -1,58 +1,75 @@
 language: cpp
+sudo: false
 
-env:
-  matrix:
-    # - COMPILER=clang
-    # - COMPILER=clang-3.8
-    - COMPILER=gcc-5
-    - COMPILER=gcc-5 BUILD_TYPE=release
-    - COMPILER=gcc-5 BUILD_TYPE=asan
-    # - COMPILER=gcc-5 BUILD_TYPE=ubsan
-    # - BUILD_TYPE=coverage
+matrix:
+  include:
+    - env: BUILD_TYPE=debug
+    - env: BUILD_TYPE=release
+
+    # GCC 5
+    - env: C_COMPILER=gcc-5 CXX_COMPILER=g++-5
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - gcc-5
+            - g++-5
+
+    # Clang 3.8 address sanitizer
+    - env: BUILD_TYPE=asan C_COMPILER=clang-3.8 CXX_COMPILER=clang++-3.8
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+            - llvm-toolchain-precise-3.8
+          packages:
+            - clang-3.8
+
+    # mingw-w64 Win64 cross-compile
+    - env: BUILD_TYPE=cross C_COMPILER=x86_64-w64-mingw32-gcc CXX_COMPILER=x86_64-w64-mingw32-g++
+      addons:
+        apt:
+          packages:
+            - mingw-w64
+            - binutils-mingw-w64
+            - binutils-mingw-w64-i686
+            - binutils-mingw-w64-x86-64
+            - gcc-mingw-w64
+            - gcc-mingw-w64-i686
+            - gcc-mingw-w64-x86-64
+            - g++-mingw-w64
+            - g++-mingw-w64-i686
+            - g++-mingw-w64-x86-64
 
 branches:
   only:
   - master
 
-addons:
-  apt:
-    sources:
-    - ubuntu-toolchain-r-test
-    packages:
-    - gcc-5
-    - g++-5
-
 before_install:
-  - |-
-    case "${COMPILER}" in
-      "clang")
-        export CC=clang
-        export CXX=clang++
-        ;;
-      "clang-"*)
-        export CC=clang-${COMPILER#*-}
-        export CXX=clang++-${COMPILER#*-}
-        ;;
-      "gcc-"*)
-        export CC=gcc-${COMPILER#*-}
-        export CXX=g++-${COMPILER#*-}
-        ;;
-    esac
+  - if [ -n "${C_COMPILER}" ]; then export CC="${C_COMPILER}"; fi
+  - if [ -n "${CXX_COMPILER}" ]; then export CXX="${CXX_COMPILER}"; fi
   - ${CXX} --version
-
-before_script:
+  - cmake --version
   - mkdir build
   - cd build
+
+before_script:
+  # to stop the script after an error/warning
+  - set -e
   - |-
     case "${BUILD_TYPE}" in
       "coverage")
         cmake -DCMAKE_BUILD_TYPE=Debug -DBUILD_COVERAGE=ON ..
         ;;
       "asan")
-        cmake -DCMAKE_BUILD_TYPE=Debug -DENABLE_SANITIZER=address -DCMAKE_CXX_FLAGS="-fuse-ld=gold" ..
+        cmake -DCMAKE_BUILD_TYPE=Debug -DENABLE_SANITIZER=address ..
         ;;
       "ubsan")
-        cmake -DCMAKE_BUILD_TYPE=Debug -DENABLE_SANITIZER=undefined -DCMAKE_CXX_FLAGS="-fuse-ld=gold" ..
+        cmake -DCMAKE_BUILD_TYPE=Debug -DENABLE_SANITIZER=undefined ..
+        ;;
+      "cross")
+        cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=../cmake/Toolchain-mingw64.cmake -DCMAKE_EXE_LINKER_FLAGS="-static -s" ..
         ;;
       "release")
         cmake -DCMAKE_BUILD_TYPE=Release ..
@@ -65,4 +82,9 @@ before_script:
 
 script:
   - make VERBOSE=1
-  - ctest -V
+  - if [ "x${BUILD_TYPE}" != "xcross" ]; then ctest -V; fi
+    # test if all the sources are conform to the forUncrustifySources.cfg config file
+  - if [ "x${BUILD_TYPE}" == "xrelease" ]; then cd ../; ./scripts/Run_uncrustify_for_sources.sh; fi
+    # test if uncrustify runs for (some) command line options
+  - if [ "x${BUILD_TYPE}" == "xrelease" ]; then ./scripts/Test_more_Options.sh; fi
+#  - /home/travis/build/uncrustify/uncrustify/build/uncrustify -c /home/travis/build/uncrustify/uncrustify/tests/config/mono.cfg -f /home/travis/build/uncrustify/uncrustify/tests/input/cs/simple.cs -L A
