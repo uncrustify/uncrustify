@@ -5,23 +5,18 @@
 #
 
 10000 staging/621_this-spacing.cfg staging/621_this-spacing.cpp
-10003 staging/633_decl-in-func-typedef.cfg staging/633_decl-in-func-typedef.cpp
 10004 staging/634_extern-c-no-block.cfg staging/634_extern-c-no-block.cpp
-
 10012 staging/621_this-spacing.cfg staging/621_this-spacing.cs
 10014 staging/630_bad-new-init-semicolon-removal.cfg staging/630_bad-new-init-semicolon-removal.cs
 10016 staging/new-constraint-paren-space.cfg staging/new-constraint-paren-space.cs
 10017 empty.cfg staging/PR326_invalid-backslash-eol-csharp.cs
 10026 staging/Uncrustify.Cpp.cfg staging/ifoneliner.cpp
 10027 staging/Uncrustify.CSharp.cfg staging/oneline_property.cs
-
 10038 staging/614_multiple-passes.cfg staging/614_multiple-passes.cs
 10039 empty.cfg staging/615_nested-usings.cs
-
 10042 staging/Uncrustify.Cpp.cfg staging/indent-bad.mm
 10043 staging/Uncrustify.CSharp.cfg staging/nl-brace.cs
 10049 staging/Uncrustify.Cpp.cfg    staging/UNI-1336.cpp
-10050 staging/Uncrustify.Cpp.cfg    staging/UNI-1337.cpp
 10051 staging/Uncrustify.CSharp.cfg staging/UNI-1338.cs
 10053 staging/Uncrustify.Cpp.cfg    staging/UNI-1340.cpp
 10054 staging/Uncrustify.Cpp.cfg    staging/UNI-1344.cpp
