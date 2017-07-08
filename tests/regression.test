@@ -47,7 +47,6 @@
 10078 staging/Uncrustify.CSharp.cfg staging/UNI-3484.cs
 10079 staging/Uncrustify.Cpp.cfg    staging/UNI-9650.cpp
 10100 staging/issue_564.cfg staging/issue_564.cpp
-10101 staging/issue_574.cfg staging/issue_574.cpp
 10102 staging/Uncrustify.Cpp.cfg    staging/pp-ignore.mm
 10103 staging/Uncrustify.CSharp.cfg staging/UNI-2506.cs
 10104 staging/Uncrustify.CSharp.cfg staging/UNI-2505.cs
