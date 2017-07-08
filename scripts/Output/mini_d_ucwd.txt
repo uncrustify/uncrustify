@@ -876,7 +876,7 @@ indent_oc_block_msg_from_caret  = false    # false/true
 # If indent_oc_block_msg and this option are on, blocks will be indented from where the brace is.
 indent_oc_block_msg_from_brace  = false    # false/true
 
-# When identing after virtual brace open and newline add further spaces to reach this min. indent.
+# When indenting after virtual brace open and newline add further spaces to reach this min. indent.
 indent_min_vbrace_open          = 0        # unsigned number
 
 # True: When identing after virtual brace open and newline add further spaces after regular indent to reach next tabstop.
@@ -896,6 +896,12 @@ indent_using_block              = true     # false/true
 # 1: When the `if_false` is a continuation, indent it under `if_false`
 # 2: When the `:` is a continuation, indent it under `?`
 indent_ternary_operator         = 0        # unsigned number
+
+# If true, the indentation of the chunks after a `return new` sequence will be set at return indentation column.
+indent_off_after_return_new     = false    # false/true
+
+# If true, the tokens after return are indented with regular single indentation.By default (false) the indentation is after the return token.
+indent_single_after_return      = false    # false/true
 
 #
 # Newline adding and removing options

@@ -11,7 +11,7 @@ indent_text(): frm.pse_tos is , ...indent_tmp is
 indent_text(): frm.pse_tos is , ...indent_tmp is 
 indent_text(): frm.pse_tos is , ...indent_tmp is 
 indent_text(): orig_line is , orig_col is , {
-[x:IN_STRUCT,PUNCTUATOR]
+[x:IN_STRUCT,IN_CLASS,PUNCTUATOR]
 indent_text(): frm.pse_tos is , ...indent_tmp is 
 indent_text(): frm.pse_tos is , ...indent_tmp is 
 indent_pse_push(): line is , pse_tos is , type is BRACE_OPEN
@@ -285,7 +285,7 @@ indent_text(): frm.pse_tos is , ...indent_tmp is
 indent_text(): frm.pse_tos is , ...indent_tmp is 
 indent_text(): frm.pse_tos is , ...indent_tmp is 
 indent_text(): orig_line is , orig_col is , {
-[x:IN_STRUCT,PUNCTUATOR]
+[x:IN_STRUCT,IN_CLASS,PUNCTUATOR]
 indent_text(): frm.pse_tos is , ...indent_tmp is 
 indent_text(): frm.pse_tos is , ...indent_tmp is 
 indent_pse_push(): line is , pse_tos is , type is BRACE_OPEN
