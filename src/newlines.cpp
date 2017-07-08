@@ -1369,6 +1369,8 @@ static void newlines_struct_union(chunk_t *start, argval_t nl_opt, bool leave_tr
 // enum-key         - one of enum, enum class or enum struct  TODO
 // identifier       - the name of the enumeration that's being declared
 // enum-base(C++11) - colon (:), followed by a type-specifier-seq
+
+
 // enumerator-list  - comma-separated list of enumerator definitions
 static void newlines_enum(chunk_t *start)
 {

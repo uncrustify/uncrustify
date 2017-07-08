@@ -16,6 +16,8 @@
 // examples:
 //   prot_the_line(__LINE__, pc->orig_line);
 //   prot_the_line(__LINE__, 6);
+
+
 // log_pcf_flags(LSYS, pc->flags);
 void prot_the_line(int theLine, unsigned int actual_line)
 {
@@ -62,6 +64,8 @@ void prot_the_line(int theLine, unsigned int actual_line)
 
 
 // examples:
+
+
 //   examine_Data(__func__, __LINE__, n);
 void examine_Data(const char *func_name, int theLine, int what)
 {

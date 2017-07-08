@@ -636,11 +636,13 @@ static_inline bool chunk_is_star(chunk_t *pc)
          && (pc->type != CT_OPERATOR_VAL));
 }
 
+
 static_inline
 bool chunk_is_nullable(chunk_t *pc)
 {
-	return ((cpd.lang_flags & LANG_CS) && (pc != NULL) && (pc->len() == 1) && (pc->str[0] == '?'));
+   return((cpd.lang_flags & LANG_CS) && (pc != NULL) && (pc->len() == 1) && (pc->str[0] == '?'));
 }
+
 
 static_inline bool chunk_is_addr(chunk_t *pc)
 {
@@ -678,10 +680,10 @@ static_inline bool chunk_is_msref(chunk_t *pc) // ms compilers for C++/CLI and W
 
 static_inline bool chunk_is_ptr_operator(chunk_t *pc)
 {
-   return(  chunk_is_star(pc)
-         || chunk_is_addr(pc)
-         || chunk_is_msref(pc))
-         || chunk_is_nullable(pc);
+   return(  (  chunk_is_star(pc)
+            || chunk_is_addr(pc)
+            || chunk_is_msref(pc))
+         || chunk_is_nullable(pc));
 }
 
 

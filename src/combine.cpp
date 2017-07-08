@@ -864,19 +864,20 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
             }
          }
 
-         if (cpd.lang_flags & LANG_D) {
-         for (tmp = chunk_get_prev_ncnl(pc); tmp != nullptr; tmp = chunk_get_prev_ncnl(tmp))
+         if (cpd.lang_flags & LANG_D)
          {
-            if (  chunk_is_semicolon(tmp)
-               || (tmp->type == CT_BRACE_OPEN)
-               || (tmp->type == CT_VBRACE_OPEN))
+            for (tmp = chunk_get_prev_ncnl(pc); tmp != nullptr; tmp = chunk_get_prev_ncnl(tmp))
             {
-               break;
+               if (  chunk_is_semicolon(tmp)
+                  || (tmp->type == CT_BRACE_OPEN)
+                  || (tmp->type == CT_VBRACE_OPEN))
+               {
+                  break;
+               }
+               make_type(tmp);
             }
-            make_type(tmp);
          }
       }
-         }
 
       if (  (pc->type == CT_ALIGN)
          && (tmp != nullptr))
@@ -4525,7 +4526,7 @@ static void mark_function(chunk_t *pc)
       tmp = chunk_get_next_ncnl(paren_close);
       int in_where_spec_flags = 0;
       while ((tmp != NULL) &&
-         (tmp->type != CT_BRACE_OPEN) && (tmp->type != CT_SEMICOLON))
+             (tmp->type != CT_BRACE_OPEN) && (tmp->type != CT_SEMICOLON))
       {
          mark_where_chunk(tmp, pc->type, tmp->flags | in_where_spec_flags);
          in_where_spec_flags = tmp->flags & PCF_IN_WHERE_SPEC;
@@ -4648,7 +4649,7 @@ static void mark_cpp_constructor(chunk_t *pc)
 static UINT64 mark_where_chunk(chunk_t *pc, c_token_t parent_type, UINT64 flags)
 {
    /* TODO: should have options to control spacing around the ':' as well as newline ability for the
-      constraint clauses (should it break up a 'where A : B where C : D' on the same line? wrap? etc.) */
+    * constraint clauses (should it break up a 'where A : B where C : D' on the same line? wrap? etc.) */
 
    if (pc->type == CT_WHERE)
    {
@@ -4656,7 +4657,7 @@ static UINT64 mark_where_chunk(chunk_t *pc, c_token_t parent_type, UINT64 flags)
       set_chunk_parent(pc, parent_type);
       flags |= PCF_IN_WHERE_SPEC;
       LOG_FMT(LFTOR, "%s: where-spec on line %d\n",
-               __func__, pc->orig_line);
+              __func__, pc->orig_line);
    }
    else if (flags & PCF_IN_WHERE_SPEC)
    {
@@ -4664,7 +4665,7 @@ static UINT64 mark_where_chunk(chunk_t *pc, c_token_t parent_type, UINT64 flags)
       {
          set_chunk_type(pc, CT_WHERE_COLON);
          LOG_FMT(LFTOR, "%s: where-spec colon on line %d\n",
-                  __func__, pc->orig_line);
+                 __func__, pc->orig_line);
       }
       else if ((pc->type == CT_STRUCT) || (pc->type == CT_CLASS))
       {
@@ -4678,7 +4679,7 @@ static UINT64 mark_where_chunk(chunk_t *pc, c_token_t parent_type, UINT64 flags)
       pc->flags |= PCF_IN_WHERE_SPEC;
    }
 
-   return flags;
+   return(flags);
 }
 
 
@@ -4748,7 +4749,7 @@ static void mark_class_ctor(chunk_t *start)
          set_chunk_type(pc, CT_CLASS_COLON);
          flags |= PCF_IN_CLASS_BASE;
          LOG_FMT(LFTOR, "%s: class colon on line %zu\n",
-                  __func__, pc->orig_line);
+                 __func__, pc->orig_line);
       }
 
       if (chunk_is_semicolon(pc))

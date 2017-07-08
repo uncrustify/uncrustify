@@ -31,7 +31,7 @@ int load_keyword_file(const char *filename);
  *
  * @return CT_WORD (no match) or the keyword token
  */
-c_token_t find_keyword_type(const char *word, size_t len, bool enableDynamicSubstitution=true);
+c_token_t find_keyword_type(const char *word, size_t len, bool enableDynamicSubstitution = true);
 
 
 /**

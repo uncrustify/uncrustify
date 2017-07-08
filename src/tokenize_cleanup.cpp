@@ -270,7 +270,7 @@ void tokenize_cleanup(void)
        * or by a
        *     CT_WORD which is preceded by CT_DC_MEMBER: '::aaa *b'
        */
-      if ((next->type == CT_STAR)
+      if (  (next->type == CT_STAR)
          || ((cpd.lang_flags & LANG_CPP) && (next->type == CT_CARET))
          || ((cpd.lang_flags & LANG_CS) && (next->type == CT_QUESTION)))
       {
@@ -534,10 +534,10 @@ void tokenize_cleanup(void)
 
       // Look for <newline> 'EXEC' 'SQL'
       if (  (chunk_is_str_case(pc, "EXEC", 4) && chunk_is_str_case(next, "SQL", 3))
-            || ((*pc->str.c_str() == '$') && (pc->type != CT_SQL_WORD)
-            /* but avoid breaking tokenization for C# 6 interpolated strings. */
+         || (  (*pc->str.c_str() == '$') && (pc->type != CT_SQL_WORD)
+               /* but avoid breaking tokenization for C# 6 interpolated strings. */
             && ((cpd.lang_flags & LANG_CS) == 0 ||
-               ((pc->type == CT_STRING) && (!pc->str.startswith("$\"")) && (!pc->str.startswith("$@\""))))))
+                ((pc->type == CT_STRING) && (!pc->str.startswith("$\"")) && (!pc->str.startswith("$@\""))))))
       {
          chunk_t *tmp = chunk_get_prev(pc);
          if (chunk_is_newline(tmp))

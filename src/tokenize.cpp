@@ -1087,21 +1087,22 @@ static bool parse_string(tok_ctx &ctx, chunk_t &pc, size_t quote_idx, bool allow
 
 enum cs_string_t
 {
-   CS_STRING_NONE          = 0,
-   CS_STRING_STRING        = 1 << 0,   // is any kind of string
-   CS_STRING_VERBATIM      = 1 << 1,   // @"" style string
-   CS_STRING_INTERPOLATED  = 1 << 2,   // $"" or $@"" style string
+   CS_STRING_NONE         = 0,
+   CS_STRING_STRING       = 1 << 0,    // is any kind of string
+   CS_STRING_VERBATIM     = 1 << 1,    // @"" style string
+   CS_STRING_INTERPOLATED = 1 << 2,    // $"" or $@"" style string
 };
 
-static cs_string_t operator |= (cs_string_t& value, cs_string_t other)
+static cs_string_t operator |=(cs_string_t &value, cs_string_t other)
 {
-   return value = static_cast<cs_string_t>(value | other);
+   return(value = static_cast<cs_string_t>(value | other));
 }
 
-static cs_string_t parse_cs_string_start(tok_ctx& ctx, chunk_t& pc)
+
+static cs_string_t parse_cs_string_start(tok_ctx &ctx, chunk_t &pc)
 {
    cs_string_t stringType = CS_STRING_NONE;
-   int offset = 0;
+   int         offset     = 0;
 
    if (ctx.peek(offset) == '$')
    {
@@ -1122,25 +1123,28 @@ static cs_string_t parse_cs_string_start(tok_ctx& ctx, chunk_t& pc)
       pc.type = CT_STRING;
 
       for (int i = 0; i <= offset; ++i)
+      {
          pc.str.append(ctx.get());
+      }
    }
    else
    {
       stringType = CS_STRING_NONE;
    }
 
-   return stringType;
+   return(stringType);
 }
 
 
 struct CsStringParseState
 {
    cs_string_t type;
-   int braceDepth;
+   int         braceDepth;
+
 
    CsStringParseState(cs_string_t stringType)
    {
-      type = stringType;
+      type       = stringType;
       braceDepth = 0;
    }
 };
@@ -1149,11 +1153,14 @@ struct CsStringParseState
 /**
  * C# strings are complex enough (mostly due to interpolation and nesting) that they need a custom parser.
  */
-static bool parse_cs_string(tok_ctx& ctx, chunk_t& pc)
+static bool parse_cs_string(tok_ctx &ctx, chunk_t &pc)
 {
    cs_string_t stringType = parse_cs_string_start(ctx, pc);
+
    if (stringType == 0)
-      return false;
+   {
+      return(false);
+   }
 
    // an interpolated string can contain {expressions}, which can contain $"strings", which in turn
    // can contain {expressions}, so we must track both as they are interleaved, in order to properly
@@ -1177,9 +1184,13 @@ static bool parse_cs_string(tok_ctx& ctx, chunk_t& pc)
             pc.str.append(ctx.get());
 
             if (ctx.peek() == '}')
+            {
                pc.str.append(ctx.get()); // in interpolated string, `}}` is escape'd `}`
+            }
             else
+            {
                --parseState.top().braceDepth;
+            }
 
             continue;
          }
@@ -1193,7 +1204,7 @@ static bool parse_cs_string(tok_ctx& ctx, chunk_t& pc)
       }
 
       int lastcol = ctx.c.col;
-      int ch = ctx.get();
+      int ch      = ctx.get();
 
       pc.str.append(ch);
 
@@ -1241,7 +1252,9 @@ static bool parse_cs_string(tok_ctx& ctx, chunk_t& pc)
       {
          // catch escaped quote in order to avoid ending string (but also must handle \\ to avoid accidental 'escape' seq of `\\"`)
          if (ctx.peek() == '"' || ctx.peek() == '\\')
+         {
             pc.str.append(ctx.get());
+         }
       }
       else if (ch == '"')
       {
@@ -1255,7 +1268,9 @@ static bool parse_cs_string(tok_ctx& ctx, chunk_t& pc)
             // end of string
             parseState.pop();
             if (parseState.empty())
+            {
                break;
+            }
          }
       }
       else if (parseState.top().type & CS_STRING_INTERPOLATED)
@@ -1263,15 +1278,19 @@ static bool parse_cs_string(tok_ctx& ctx, chunk_t& pc)
          if (ch == '{')
          {
             if (ctx.peek() == '{')
+            {
                pc.str.append(ctx.get()); // in interpolated string, `{{` is escape'd `{`
+            }
             else
+            {
                ++parseState.top().braceDepth;
+            }
          }
       }
    }
 
-   return true;
-}
+   return(true);
+} // parse_cs_string
 
 
 static void parse_verbatim_string(tok_ctx &ctx, chunk_t &pc)
@@ -2131,10 +2150,12 @@ void tokenize(const deque<int> &data, chunk_t *ref)
          {
             // ASSERT(cpd.settings[UO_pp_ignore_define_body].b);
             if (pc->type != CT_NL_CONT && pc->type != CT_COMMENT_CPP)
+            {
                set_chunk_type(pc, CT_PP_IGNORE);
+            }
          }
-         else if (cpd.in_preproc == CT_PP_DEFINE && pc->type == CT_PAREN_CLOSE
-            && cpd.settings[UO_pp_ignore_define_body].b)
+         else if (  cpd.in_preproc == CT_PP_DEFINE && pc->type == CT_PAREN_CLOSE
+                 && cpd.settings[UO_pp_ignore_define_body].b)
          {
             // When we have a PAREN_CLOSE in a PP_DEFINE we should be terminating a MACRO_FUNC
             // arguments list. Therefore we can enter the PP_IGNORE state and ignore next chunks.

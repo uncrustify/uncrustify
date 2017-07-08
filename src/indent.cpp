@@ -1911,16 +1911,16 @@ void indent_text(void)
                {
                   // apply normal single indentation
                   frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent + indent_size;
-               log_indent();
+                  log_indent();
                }
                else
                {
                   // indent after the return token
                   frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent + pc->len() + 1;
-               log_indent();
+                  log_indent();
                }
                frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos - 1].indent;
-            log_indent_tmp();
+               log_indent_tmp();
             }
          }
       }

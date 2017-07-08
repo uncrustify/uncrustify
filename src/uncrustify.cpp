@@ -316,6 +316,7 @@ static void redir_stdout(const char *output_file)
 
 #ifdef WIN32
 
+
 void setup_crash_handling()
 {
    // prevent crash popup. uncrustify is a batch processing tool and a popup is unacceptable.
@@ -323,14 +324,14 @@ void setup_crash_handling()
 
    struct local
    {
-      static LONG WINAPI crash_filter(_In_ struct _EXCEPTION_POINTERS* exceptionInfo)
+      static LONG WINAPI crash_filter(_In_ struct _EXCEPTION_POINTERS *exceptionInfo)
       {
          __try
          {
             LOG_FMT(LERR, "crash_filter: exception 0x%08X at [%d:%d] (ip=%p)",
-               exceptionInfo->ExceptionRecord->ExceptionCode,
-               cpd.line_number, cpd.column,
-               exceptionInfo->ExceptionRecord->ExceptionAddress);
+                    exceptionInfo->ExceptionRecord->ExceptionCode,
+                    cpd.line_number, cpd.column,
+                    exceptionInfo->ExceptionRecord->ExceptionAddress);
             log_func_stack(LERR, " [CallStack:", "]\n", 0);
 
             // treat an exception the same as a parse failure. exceptions can result from parse failures where we
@@ -338,7 +339,7 @@ void setup_crash_handling()
             // won't care about the difference. they just want to know it failed.
             exit(EXIT_FAILURE);
          }
-         __except(EXCEPTION_EXECUTE_HANDLER)
+         __except (EXCEPTION_EXECUTE_HANDLER)
          {
             // have to be careful of crashes in crash handling code
          }
@@ -354,12 +355,14 @@ void setup_crash_handling()
 
 #else
 
+
 void setup_crash_handling()
 {
    // TODO: unixes
 }
 
 #endif
+
 
 int main(int argc, char *argv[])
 {
