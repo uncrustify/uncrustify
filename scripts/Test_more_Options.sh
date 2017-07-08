@@ -195,7 +195,7 @@ do
   fi
 done
 
-rmdir --ignore-fail-on-non-empty results
+rmdir results
 if [[ -d results ]]
 then
   echo

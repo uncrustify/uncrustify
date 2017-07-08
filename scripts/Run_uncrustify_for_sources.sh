@@ -34,7 +34,7 @@ do
     rm ${RESULTS}/${file}
   fi
 done
-rmdir --ignore-fail-on-non-empty ${RESULTS}
+rmdir ${RESULTS}
 if [[ -d ${RESULTS} ]]
 then
   echo "some problem(s) are still present"
