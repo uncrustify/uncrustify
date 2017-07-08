@@ -691,7 +691,7 @@ static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
       LOG_FMT(LSTMT, "%s(%d): %zu> reset expr on %s\n",
               __func__, __LINE__, pc->orig_line, pc->text());
    }
-   else if (pc->type == CT_BRACE_CLOSE)
+   else if (pc->type == CT_BRACE_CLOSE && pc->pp_level == 0)
    {
       if (!cpd.consumed)
       {
