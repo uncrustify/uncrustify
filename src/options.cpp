@@ -1857,7 +1857,7 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
          exit(EX_CONFIG);
       }
 
-      fprintf(stderr, "%s:%d\n  for the assigment: expected type for %s is %s, got %s\n",
+      fprintf(stderr, "%s:%d\n  for the assingment: expected type for %s is %s, got %s\n",
               cpd.filename, cpd.line_number,
               entry->name, get_argtype_name(entry->type), get_argtype_name(tmp->type));
       log_flush(true);
