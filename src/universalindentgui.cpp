@@ -186,7 +186,7 @@ void print_universal_indent_cfg(FILE *pfile)
                // TrueFalse="align_keep_tabs=true|align_keep_tabs=false"
                fprintf(pfile, "EditorType=boolean\n");
                fprintf(pfile, "TrueFalse=%s=true|%s=false\n", option->name, option->name);
-               fprintf(pfile, "ValueDefault=%d\n", cpd.settings[option->id].n);
+               fprintf(pfile, "ValueDefault=%d\n", cpd.settings[option->id].b);
                break;
 
             case AT_IARF:
@@ -195,7 +195,7 @@ void print_universal_indent_cfg(FILE *pfile)
                        option->name, option->name, option->name, option->name);
                fprintf(pfile, "ChoicesReadable=\"Ignore %s|Add %s|Remove %s|Force %s\"\n",
                        optionNameReadable, optionNameReadable, optionNameReadable, optionNameReadable);
-               fprintf(pfile, "ValueDefault=%d\n", cpd.settings[option->id].n);
+               fprintf(pfile, "ValueDefault=%d\n", cpd.settings[option->id].a);
                // [nl_after_switch]
                // Category=4
                // Description=<html>Add or remove newline after 'switch'</html>
@@ -256,7 +256,7 @@ void print_universal_indent_cfg(FILE *pfile)
                fprintf(pfile, "Choices=\"%s=lf|%s=crlf|%s=cr|%s=auto\"\n",
                        option->name, option->name, option->name, option->name);
                fprintf(pfile, "ChoicesReadable=\"Newlines Unix|Newlines Win|Newlines Mac|Newlines Auto\"\n");
-               fprintf(pfile, "ValueDefault=%d\n", cpd.settings[option->id].n);
+               fprintf(pfile, "ValueDefault=%d\n", cpd.settings[option->id].le);
                break;
 
             case AT_POS:
@@ -276,7 +276,7 @@ void print_universal_indent_cfg(FILE *pfile)
                        optionNameReadable, optionNameReadable, optionNameReadable,
                        optionNameReadable, optionNameReadable, optionNameReadable,
                        optionNameReadable);
-               fprintf(pfile, "ValueDefault=%d\n", cpd.settings[option->id].n);
+               fprintf(pfile, "ValueDefault=%d\n", cpd.settings[option->id].tp);
                break;
 
             case AT_STRING:
