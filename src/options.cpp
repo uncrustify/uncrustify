@@ -1822,8 +1822,14 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
             log_flush(true);
             exit(EX_CONFIG);
          }
-         dest->n = strtol(val, nullptr, 0);
-         // is the same as dest->u
+         if (entry->type == AT_NUM)
+         {
+            dest->n = strtol(val, nullptr, 0);
+         }
+         else
+         {
+            dest->u = strtoul(val, nullptr, 0);
+         }
          return;
       }
 
@@ -1849,15 +1855,32 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
               cpd.line_number, get_argtype_name(entry->type),
               entry->name, get_argtype_name(tmp->type), tmp->name);
 
-      if (  tmp->type == entry->type
-         || (tmp->type == AT_UNUM && entry->type == AT_NUM)
-         || (  tmp->type == AT_NUM
-            && entry->type == AT_UNUM
-            && (cpd.settings[tmp->id].n * mult) > 0))
+      if (tmp->type == AT_UNUM || tmp->type == AT_NUM)
       {
-         dest->n = cpd.settings[tmp->id].n * mult;
-         // is the same as dest->u
-         return;
+         long tmp_val;
+         if (tmp->type == AT_UNUM)
+         {
+            tmp_val = cpd.settings[tmp->id].u * mult;
+         }
+         else
+         {
+            tmp_val = cpd.settings[tmp->id].n * mult;
+         }
+
+         if (entry->type == AT_NUM)
+         {
+            dest->n = tmp_val;
+            return;
+         }
+         if (tmp_val >= 0) //dest->type == AT_UNUM
+         {
+            dest->u = tmp_val;
+            return;
+         }
+         fprintf(stderr, "%s:%d\n  for the assignment: option '%s' could not have negative value %ld",
+                 cpd.filename, cpd.line_number, entry->name, tmp_val);
+         log_flush(true);
+         exit(EX_CONFIG);
       }
 
       fprintf(stderr, "%s:%d\n  for the assignment: expected type for %s is %s, got %s\n",
