@@ -545,7 +545,7 @@ void output_text(FILE *pfile)
          }
          else
          {
-            output_to_column(pc->column, (cpd.settings[UO_indent_with_tabs].n == 2));
+            output_to_column(pc->column, (cpd.settings[UO_indent_with_tabs].u == 2));
          }
          add_char('\\');
          add_char('\n');
@@ -597,7 +597,7 @@ void output_text(FILE *pfile)
          // indent to the 'level' first
          if (cpd.did_newline)
          {
-            if (cpd.settings[UO_indent_with_tabs].n == 1)
+            if (cpd.settings[UO_indent_with_tabs].u == 1)
             {
                size_t lvlcol;
                /*
@@ -624,9 +624,9 @@ void output_text(FILE *pfile)
                   output_to_column(lvlcol, true);
                }
             }
-            allow_tabs = (cpd.settings[UO_indent_with_tabs].n == 2)
+            allow_tabs = (cpd.settings[UO_indent_with_tabs].u == 2)
                          || (  chunk_is_comment(pc)
-                            && cpd.settings[UO_indent_with_tabs].n != 0);
+                            && cpd.settings[UO_indent_with_tabs].u != 0);
 
             LOG_FMT(LOUTIND, "  %zu> col %zu/%zu/%zu - ", pc->orig_line, pc->column, pc->column_indent, cpd.column);
          }
