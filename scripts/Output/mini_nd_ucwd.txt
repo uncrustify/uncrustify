@@ -793,6 +793,9 @@ indent_relative_single_line_comments = false    # false/true
 # Usually 0 or indent_columns.
 indent_switch_case              = 0        # unsigned number
 
+# Whether to indent preproccesor statements inside of switch statements
+indent_switch_pp                = true     # false/true
+
 # Spaces to shift the 'case' line, without affecting any other lines
 # Usually 0.
 indent_case_shift               = 0        # unsigned number
@@ -1971,6 +1974,22 @@ pp_define_at_level              = false    # false/true
 
 # Whether to ignore the '#define' body while formatting.
 pp_ignore_define_body           = false    # false/true
+
+# Whether to indent case statements between #if, #else, and #endif.
+# Only applies to the indent of the preprocesser that the case statements directly inside of
+pp_indent_case                  = true     # false/true
+
+# Whether to indent whole function definitions between #if, #else, and #endif.
+# Only applies to the indent of the preprocesser that the function definition is directly inside of
+pp_indent_func_def              = true     # false/true
+
+# Whether to indent extern C blocks between #if, #else, and #endif.
+# Only applies to the indent of the preprocesser that the extern block is directly inside of
+pp_indent_extern                = true     # false/true
+
+# Whether to indent braces directly inside #if, #else, and #endif.
+# Only applies to the indent of the preprocesser that the braces are directly inside of
+pp_indent_brace                 = true     # false/true
 
 #
 # Sort includes options

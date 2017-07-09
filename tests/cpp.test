@@ -182,6 +182,11 @@
 30818 bug_1169.cfg                     cpp/bug_1169.cpp
 
 30820 pp_define_at_level-1.cfg         cpp/pp-define-indent.cpp
+30821 pp_indent_case.cfg               cpp/pp_indent_case.cpp
+30822 pp_indent_brace.cfg              cpp/pp_indent_brace.cpp
+30823 pp_indent_func_def.cfg           cpp/pp_indent_func_def.cpp
+30824 pp_indent_extern.cfg             cpp/pp_indent_extern.cpp
+
 
 30830 kw_subst2.cfg                    cpp/kw_subst.cpp
 30831 kw_subst.cfg                     cpp/kw_subst2.cpp
@@ -229,6 +234,7 @@
 30935 ben.cfg                          cpp/indent-misc.cpp
 30936 indent_braces_no.cfg             cpp/indent_braces_no.h
 30937 indent_param.cfg                 cpp/indent_param.cpp
+30938 indent_switch_pp.cfg             cpp/indent_switch_pp.cpp
 
 30940 mod_case_brace_rm.cfg            cpp/case-brace-remove.cpp
 

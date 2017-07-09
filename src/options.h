@@ -382,6 +382,7 @@ enum uncrustify_options
    UO_indent_sing_line_comments,            // indent single line ('//') comments on lines before code
    UO_indent_relative_single_line_comments, // indent single line ('//') comments after code
    UO_indent_switch_case,                   // spaces to indent case from switch
+   UO_indent_switch_pp,                     // whether to indent preproccesor statements inside of switch statements
    UO_indent_case_shift,                    // spaces to shift the line with the 'case'
    UO_indent_case_brace,                    // spaces to indent '{' from case (usually 0 or indent_columns)
    UO_indent_col1_comment,                  // indent comments in column 1
@@ -827,6 +828,14 @@ enum uncrustify_options
    UO_pp_if_indent_code,     //
    UO_pp_define_at_level,    // indent #define at brace level
    UO_pp_ignore_define_body, // "Whether to ignore the '#define' body while formatting."
+   UO_pp_indent_case,        // Whether to indent case statements between #if, #else, and #endif
+                             // Only applies to the indent of the preprocesser that the case statements directly inside of
+   UO_pp_indent_func_def,    // Whether to indent whole function definitions between #if, #else, and #endif
+                             // Only applies to the indent of the preprocesser that the function definition is directly inside of
+   UO_pp_indent_extern,      // Whether to indent extern C blocks between #if, #else, and #endif
+                             // Only applies to the indent of the preprocesser that the extern block is directly inside of
+   UO_pp_indent_brace,       // Whether to indent braces directly inside #if, #else, and #endif
+                             // Only applies to the indent of the preprocesser that the braces are directly inside of
 
    // group: UG_sort_includes, "Sort includes options"                                              11
    UO_include_category_0,  //
