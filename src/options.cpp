@@ -2333,12 +2333,12 @@ void set_option_defaults(void)
    cpd.defaults[UO_cmt_indent_multi].b                                  = true;
    cpd.defaults[UO_cmt_insert_before_inlines].b                         = true;
    cpd.defaults[UO_cmt_multi_check_last].b                              = true;
-   cpd.defaults[UO_cmt_multi_first_len_minimum].n                       = 4;
+   cpd.defaults[UO_cmt_multi_first_len_minimum].u                       = 4;
    cpd.defaults[UO_indent_access_spec].n                                = 1;
    cpd.defaults[UO_indent_align_assign].b                               = true;
    cpd.defaults[UO_indent_columns].u                                    = 8;
    cpd.defaults[UO_indent_cpp_lambda_body].b                            = false;
-   cpd.defaults[UO_indent_ctor_init_leading].n                          = 2;
+   cpd.defaults[UO_indent_ctor_init_leading].u                          = 2;
    cpd.defaults[UO_indent_label].n                                      = 1;
    cpd.defaults[UO_indent_oc_msg_prioritize_first_colon].b              = true;
    cpd.defaults[UO_indent_token_after_brace].b                          = true;
@@ -2347,7 +2347,7 @@ void set_option_defaults(void)
    cpd.defaults[UO_input_tab_size].u                                    = 8;
    cpd.defaults[UO_newlines].le                                         = LE_AUTO;
    cpd.defaults[UO_output_tab_size].u                                   = 8;
-   cpd.defaults[UO_pp_indent_count].n                                   = 1;
+   cpd.defaults[UO_pp_indent_count].u                                   = 1;
    cpd.defaults[UO_sp_addr].a                                           = AV_REMOVE;
    cpd.defaults[UO_sp_after_semi].a                                     = AV_ADD;
    cpd.defaults[UO_sp_after_semi_for].a                                 = AV_FORCE;
@@ -2369,10 +2369,10 @@ void set_option_defaults(void)
    cpd.defaults[UO_sp_this_paren].a                                     = AV_REMOVE;
    cpd.defaults[UO_sp_word_brace].a                                     = AV_ADD;
    cpd.defaults[UO_sp_word_brace_ns].a                                  = AV_ADD;
-   cpd.defaults[UO_string_escape_char].n                                = '\\';
+   cpd.defaults[UO_string_escape_char].u                                = '\\';
    cpd.defaults[UO_use_indent_func_call_param].b                        = true;
    cpd.defaults[UO_use_options_overriding_for_qt_macros].b              = true;
-   cpd.defaults[UO_warn_level_tabs_found_in_verbatim_string_literals].n = LWARN;
+   cpd.defaults[UO_warn_level_tabs_found_in_verbatim_string_literals].u = LWARN;
 
 #ifdef DEBUG
    // test all the default values if they are in the allowed interval
