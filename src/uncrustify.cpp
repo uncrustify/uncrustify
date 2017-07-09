@@ -314,7 +314,8 @@ static void redir_stdout(const char *output_file)
    }
 }
 
-#ifdef WIN32
+// Currently, the crash handler is only supported while building under MSVC
+#if defined (WIN32) && defined (_MSC_VER)
 
 
 void setup_crash_handling()
