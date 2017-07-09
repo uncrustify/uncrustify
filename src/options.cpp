@@ -2450,7 +2450,7 @@ void set_option_defaults(void)
       {
          int min_value     = value.min_val;
          int max_value     = value.max_val;
-         int default_value = cpd.defaults[id.first].u;
+         int default_value = cpd.defaults[id.first].n;
          if (default_value > max_value)
          {
             fprintf(stderr, "option '%s' is not correctly set:\n", id.second.name);
