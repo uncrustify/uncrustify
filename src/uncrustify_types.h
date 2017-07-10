@@ -113,7 +113,7 @@ struct paren_stack_entry_t
    c_token_t     parent;       //! if, for, function, etc
    brace_stage_e stage;
    bool          in_preproc;   //! whether this was created in a preprocessor
-   size_t        ns_cnt;
+   size_t        ns_cnt;       //! Number of consecutive namespace levels
    bool          non_vardef;   //! Hit a non-vardef line
    indent_ptr_t  ip;
 };
