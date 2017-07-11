@@ -397,7 +397,7 @@ void AlignStack::Flush()
       size_t tmp_col = m_max_col - pc->align.col_adj;
       if (idx == 0)
       {
-         if (m_skip_first && (pc->column != tmp_col))
+         if (m_skip_first && pc->column != tmp_col)
          {
             LOG_FMT(LAS, "%s: %zu:%zu dropping first item due to skip_first\n",
                     __func__, pc->orig_line, pc->orig_col);

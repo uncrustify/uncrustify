@@ -400,8 +400,8 @@ static const chunk_tag_t *kw_static_first(const chunk_tag_t *tag)
 
 static const chunk_tag_t *kw_static_match(const chunk_tag_t *tag)
 {
-   bool in_pp = (  (cpd.in_preproc != CT_NONE)
-                && (cpd.in_preproc != CT_PP_DEFINE));
+   bool in_pp = (  cpd.in_preproc != CT_NONE
+                && cpd.in_preproc != CT_PP_DEFINE);
 
    for (const chunk_tag_t *iter = kw_static_first(tag);
         iter < &keywords[ARRAY_SIZE(keywords)];
@@ -410,7 +410,7 @@ static const chunk_tag_t *kw_static_match(const chunk_tag_t *tag)
       bool pp_iter = (iter->lang_flags & FLAG_PP) != 0; // forcing value to bool
       if (  (strcmp(iter->tag, tag->tag) == 0)
          && (cpd.lang_flags & iter->lang_flags)
-         && (in_pp == pp_iter))
+         && in_pp == pp_iter)
       {
          return(iter);
       }
@@ -484,8 +484,7 @@ int load_keyword_file(const char *filename)
 
       if (argc > 0)
       {
-         if (  (argc == 1)
-            && CharTable::IsKw1(*args[0]))
+         if (argc == 1 && CharTable::IsKw1(*args[0]))
          {
             add_keyword(args[0], CT_TYPE);
          }

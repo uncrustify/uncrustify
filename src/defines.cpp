@@ -28,8 +28,7 @@ defmap defines;
 
 void add_define(const char *tag, const char *value)
 {
-   if (  (tag == nullptr)
-      || (*tag == 0))
+   if (tag == nullptr || *tag == 0)
    {
       return;
    }
@@ -81,8 +80,7 @@ int load_define_file(const char *filename)
 
       if (argc > 0)
       {
-         if (  (argc <= 2)
-            && CharTable::IsKw1(*args[0]))
+         if (argc <= 2 && CharTable::IsKw1(*args[0]))
          {
             LOG_FMT(LDEFVAL, "%s: line %zu - %s\n", filename, line_no, args[0]);
             add_define(args[0], args[1]);

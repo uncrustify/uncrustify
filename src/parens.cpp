@@ -49,10 +49,10 @@ void do_parens(void)
       chunk_t *pc = chunk_get_head();
       while ((pc = chunk_get_next_ncnl(pc)) != nullptr)
       {
-         if (  (pc->type != CT_SPAREN_OPEN)
-            || (  (pc->parent_type != CT_IF)
-               && (pc->parent_type != CT_ELSEIF)
-               && (pc->parent_type != CT_SWITCH)))
+         if (  pc->type != CT_SPAREN_OPEN
+            || (  pc->parent_type != CT_IF
+               && pc->parent_type != CT_ELSEIF
+               && pc->parent_type != CT_SWITCH))
          {
             continue;
          }
@@ -129,8 +129,7 @@ static void check_bool_parens(chunk_t *popen, chunk_t *pclose, int nest)
            popen->level);
 
    chunk_t *pc = popen;
-   while (  ((pc = chunk_get_next_ncnl(pc)) != nullptr)
-         && (pc != pclose))
+   while ((pc = chunk_get_next_ncnl(pc)) != nullptr && pc != pclose)
    {
       if (pc->flags & PCF_IN_PREPROC)
       {
@@ -140,10 +139,10 @@ static void check_bool_parens(chunk_t *popen, chunk_t *pclose, int nest)
          return;
       }
 
-      if (  (pc->type == CT_BOOL)
-         || (pc->type == CT_QUESTION)
-         || (pc->type == CT_COND_COLON)
-         || (pc->type == CT_COMMA))
+      if (  pc->type == CT_BOOL
+         || pc->type == CT_QUESTION
+         || pc->type == CT_COND_COLON
+         || pc->type == CT_COMMA)
       {
          LOG_FMT(LPARADD2, " -- %s [%s] at line %zu col %zu, level %zu\n",
                  get_token_name(pc->type),
@@ -170,17 +169,16 @@ static void check_bool_parens(chunk_t *popen, chunk_t *pclose, int nest)
             pc = next;
          }
       }
-      else if (  (pc->type == CT_BRACE_OPEN)
-              || (pc->type == CT_SQUARE_OPEN)
-              || (pc->type == CT_ANGLE_OPEN))
+      else if (  pc->type == CT_BRACE_OPEN
+              || pc->type == CT_SQUARE_OPEN
+              || pc->type == CT_ANGLE_OPEN)
       {
          // Skip [], {}, and <>
          pc = chunk_skip_to_match(pc);
       }
    }
 
-   if (  hit_compare
-      && (ref != popen))
+   if (hit_compare && ref != popen)
    {
       add_parens_between(ref, pclose);
    }
