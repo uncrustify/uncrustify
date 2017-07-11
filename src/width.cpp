@@ -151,6 +151,12 @@ void do_code_width(void)
          && (pc->type != CT_SPACE)
          && is_past_width(pc))
       {
+         if (  pc->type == CT_VBRACE_CLOSE // don't break if a vbrace close
+            && chunk_is_last_on_line(*pc)) // is the last chunk on its line
+         {
+            continue;
+         }
+
          bool split_OK = split_line(pc);
          if (split_OK)
          {

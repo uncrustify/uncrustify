@@ -593,6 +593,27 @@ chunk_t *chunk_first_on_line(chunk_t *pc)
 }
 
 
+bool chunk_is_last_on_line(chunk_t &pc)  //TODO: pc should be const here
+{
+   // check if pc is the very last chunk of the file
+   const auto *end = chunk_get_tail();
+
+   if (&pc == end)
+   {
+      return(true);
+   }
+
+   // if the next chunk is a newline then pc is the last chunk on its line
+   const auto *next = chunk_get_next(&pc);
+   if (next != nullptr && next->type == CT_NEWLINE)
+   {
+      return(true);
+   }
+
+   return(false);
+}
+
+
 // TODO: this function needs some cleanup
 void chunk_swap_lines(chunk_t *pc1, chunk_t *pc2)
 {
