@@ -11,7 +11,6 @@
 10039 empty.cfg staging/615_nested-usings.cs
 10042 staging/Uncrustify.Cpp.cfg staging/indent-bad.mm
 10043 staging/Uncrustify.CSharp.cfg staging/nl-brace.cs
-
 10049 staging/Uncrustify.Cpp.cfg    staging/UNI-1336.cpp
 10051 staging/Uncrustify.CSharp.cfg staging/UNI-1338.cs
 10053 staging/Uncrustify.Cpp.cfg    staging/UNI-1340.cpp
@@ -19,9 +18,7 @@
 10056 staging/UNI-1346.cfg          staging/UNI-1346.cpp
 10057 staging/Uncrustify.Cpp.cfg    staging/UNI-1347.cpp
 10058 staging/Uncrustify.Cpp.cfg    staging/UNI-1348.cpp
-10059 staging/UNI-1349.cfg          staging/UNI-1349.cpp
 10060 staging/UNI-1350.cfg          staging/UNI-1350.cpp
-10061 staging/Uncrustify.CSharp.cfg staging/UNI-1355.cs
 10062 staging/UNI-1356.cfg          staging/UNI-1356.cpp
 10063 staging/Uncrustify.Cpp.cfg    staging/UNI-1358.cpp
 10064 staging/Uncrustify.CSharp.cfg staging/UNI-1443.cs
@@ -42,14 +39,11 @@
 60007 staging/Uncrustify.CSharp.cfg staging/UNI-3083.cs
 60008 staging/Uncrustify.JamCS.cfg staging/UNI-17253.cs
 60009 staging/Uncrustify.CSharp.cfg staging/UNI-9917.cs
-60010 staging/Uncrustify.Cpp.cfg    staging/UNI-16283.cpp
 60011 staging/Uncrustify.Cpp.cfg    staging/UNI-11095.mm
 60012 staging/Uncrustify.CSharp.cfg staging/UNI-12303.cs
 60013 staging/Uncrustify.CSharp.cfg staging/UNI-13955.cs
 60014 staging/Uncrustify.Cpp.cfg    staging/UNI-14107.cpp
 60015 staging/Uncrustify.CSharp.cfg staging/UNI-14131.cs
-# Find a way to reproduce it
-60016 staging/Uncrustify.CSharp.cfg staging/UNI-11662.cs
 60018 staging/Uncrustify.CSharp.cfg staging/UNI-18777.cs
 60019 staging/Uncrustify.CSharp.cfg staging/UNI-18780.cs
 60020 staging/Uncrustify.CSharp.cfg staging/UNI-18829.cs

@@ -45,6 +45,8 @@
 10050 staging/Uncrustify.Cpp.cfg    staging/UNI-1337.cpp
 10052 staging/Uncrustify.Cpp.cfg    staging/UNI-1339.cpp
 10055 staging/Uncrustify.CSharp.cfg staging/UNI-1345.cs
+10059 staging/UNI-1349.cfg          staging/UNI-1349.cpp
+10061 staging/Uncrustify.CSharp.cfg staging/UNI-1355.cs
 10069 staging/Uncrustify.Cpp.cfg    staging/UNI-1980.cpp
 10070 staging/Uncrustify.Cpp.cfg    staging/UNI-1981.cpp
 10071 staging/Uncrustify.Cpp.cfg    staging/UNI-1983.cpp
@@ -57,4 +59,5 @@
 10102 staging/Uncrustify.Cpp.cfg    staging/pp-ignore.mm
 10103 staging/Uncrustify.CSharp.cfg staging/UNI-2506.cs
 10104 staging/Uncrustify.CSharp.cfg staging/UNI-2505.cs
+60016 staging/Uncrustify.CSharp.cfg staging/UNI-11662.cs
 60017 staging/Uncrustify.Cpp.cfg    staging/UNI-2683.cpp

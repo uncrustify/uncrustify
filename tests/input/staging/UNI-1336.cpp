@@ -22,5 +22,5 @@
 #endif
 
 #if WIN
-struct Foo;
+    struct Foo;
 #endif

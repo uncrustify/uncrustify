@@ -1,5 +1,5 @@
-// * detecting the * as a ARITH because MIDL_INTERFACE includes 'class' in its definition.
-// adding a 'class' before IFileDialogEvents 'resolves' the issue.
+// MIDL_INTERFACE includes 'class' in its definition but is not tokenised as such
+// A pretty common pattern would be nice to have proper formatting.
 
 EXTERN_C const IID IID_IFileDialogEvents;
 

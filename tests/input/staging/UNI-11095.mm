@@ -1,4 +1,4 @@
-// This is accepted
+// Create oneliners
 
 extern "C" NSBundle*            UnityGetMetalBundle()       {
     return _MetalBundle;
@@ -10,7 +10,7 @@ extern "C" EAGLContext*         UnityGetDataContextEAGL()   {
     return _GlesContext;
 }
 
-// But if I want to have them on the same line, it fails
+// Keep oneliners
 
 extern "C" NSBundle*            UnityGetMetalBundle()       { return _MetalBundle; }
 extern "C" MTLDeviceRef         UnityGetMetalDevice()       { return _MetalDevice; }
