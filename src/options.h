@@ -504,8 +504,10 @@ enum uncrustify_options
                                       // Controls the newline after '::' in 'void A::f() { }'
    UO_nl_func_proto_type_name,        // nl_func_type_name, but for prottypes
    UO_nl_func_paren,                  // newline between function and open paren
+   UO_nl_func_paren_empty,            // Overrides nl_func_paren for functions with no parameters
    UO_nl_func_def_paren,              // Add or remove newline between a function name and
                                       // the opening '(' in the definition
+   UO_nl_func_def_paren_empty,        // Overrides nl_func_def_paren for functions with no parameters
    UO_nl_func_decl_start,             // newline after the '(' in a function decl
    UO_nl_func_def_start,              // newline after the '(' in a function def
    UO_nl_func_decl_start_single,      // Overrides nl_func_decl_start when there is only one parameter

@@ -70,6 +70,6 @@ Note: Use comments containing ' *INDENT-OFF*' and ' *INDENT-ON*' to disable
       processing of parts of the source file (these can be overridden with
       enable_processing_cmt and disable_processing_cmt).
 
-There are currently 595 options and minimal documentation.
+There are currently 597 options and minimal documentation.
 Try UniversalIndentGUI and good luck.
 
