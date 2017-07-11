@@ -62,9 +62,9 @@ int unc_text::compare(const unc_text &ref1, const unc_text &ref2, size_t len)
    size_t len2 = ref2.size();
 
    for (idx = 0;
-        (  (idx < len1)
-        && (idx < len2)
-        && (idx < len));
+        (  idx < len1
+        && idx < len2
+        && idx < len);
         idx++)
    {
       // exactly the same character ?

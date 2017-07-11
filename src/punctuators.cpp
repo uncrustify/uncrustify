@@ -153,8 +153,7 @@ static const chunk_tag_t symbols1[] =
 
 const chunk_tag_t *find_punctuator(const char *str, int lang_flags)
 {
-   if (  str == nullptr
-      || str[0] == '\0')
+   if (str == nullptr || str[0] == '\0')
    {
       return(nullptr);
    }
@@ -172,8 +171,7 @@ const chunk_tag_t *find_punctuator(const char *str, int lang_flags)
    const auto        *parent = punc_table; //!< graph in table form, initially point at first entry
    auto              ch_idx  = int {};
 
-   while (  ch_idx < 6
-         && str[ch_idx] != '\0')             //!< symbols6: max punc len = 6
+   while (ch_idx < 6 && str[ch_idx] != '\0')  //!< symbols6: max punc len = 6
    {
       // search for next parent node in all current child nodes
       parent = binary_find(parent, next(parent, parent->left_in_group), str[ch_idx]);

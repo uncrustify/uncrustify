@@ -556,7 +556,7 @@ static bool parse_comment(tok_ctx &ctx, chunk_t &pc)
    {
       pc.type = CT_COMMENT;
       d_level++;
-      while ((d_level > 0) && ctx.more())
+      while (d_level > 0 && ctx.more())
       {
          if ((ctx.peek() == '+') && (ctx.peek(1) == '/'))
          {
@@ -658,7 +658,7 @@ static bool parse_comment(tok_ctx &ctx, chunk_t &pc)
    if (cpd.unc_off)
    {
       const char *ontext = cpd.settings[UO_enable_processing_cmt].str;
-      if ((ontext == nullptr) || !ontext[0])
+      if (ontext == nullptr || !ontext[0])
       {
          ontext = UNCRUSTIFY_ON_TEXT;
       }
@@ -672,7 +672,7 @@ static bool parse_comment(tok_ctx &ctx, chunk_t &pc)
    else
    {
       const char *offtext = cpd.settings[UO_disable_processing_cmt].str;
-      if ((offtext == nullptr) || !offtext[0])
+      if (offtext == nullptr || !offtext[0])
       {
          offtext = UNCRUSTIFY_OFF_TEXT;
       }
@@ -741,15 +741,14 @@ static void parse_suffix(tok_ctx &ctx, chunk_t &pc, bool forstring = false)
 
       tok_info ss;
       ctx.save(ss);
-      while (  ctx.more()
-            && CharTable::IsKw2(ctx.peek()))
+      while (ctx.more() && CharTable::IsKw2(ctx.peek()))
       {
          slen++;
          pc.str.append(ctx.get());
       }
 
       if (  forstring
-         && (slen >= 4)
+         && slen >= 4
          && (  pc.str.startswith("PRI", oldsize)
             || pc.str.startswith("SCN", oldsize)))
       {
@@ -1066,7 +1065,7 @@ static bool parse_string(tok_ctx &ctx, chunk_t &pc, size_t quote_idx, bool allow
          {
             escaped = (escape_char != 0);
          }
-         else if ((ch == escape_char2) && (ctx.peek() == end_ch))
+         else if (ch == escape_char2 && (ctx.peek() == end_ch))
          {
             escaped = allow_escape;
          }
@@ -1445,7 +1444,7 @@ static bool parse_word(tok_ctx &ctx, chunk_t &pc, bool skipcheck)
    }
 
    // Detect pre-processor functions now
-   if ((cpd.in_preproc == CT_PP_DEFINE) && (cpd.preproc_ncnl_count == 1))
+   if (cpd.in_preproc == CT_PP_DEFINE && cpd.preproc_ncnl_count == 1)
    {
       if (ctx.peek() == '(')
       {
@@ -1736,7 +1735,7 @@ static bool parse_next(tok_ctx &ctx, chunk_t &pc)
    }
 
    // Handle unknown/unhandled preprocessors
-   if ((cpd.in_preproc > CT_PP_BODYCHUNK) && (cpd.in_preproc <= CT_PP_OTHER))
+   if (cpd.in_preproc > CT_PP_BODYCHUNK && cpd.in_preproc <= CT_PP_OTHER)
    {
       pc.str.clear();
       tok_info ss;
@@ -1863,8 +1862,8 @@ static bool parse_next(tok_ctx &ctx, chunk_t &pc)
    // PAWN specific stuff
    if (cpd.lang_flags & LANG_PAWN)
    {
-      if (  (cpd.preproc_ncnl_count == 1)
-         && ((cpd.in_preproc == CT_PP_DEFINE) || (cpd.in_preproc == CT_PP_EMIT)))
+      if (  cpd.preproc_ncnl_count == 1
+         && (cpd.in_preproc == CT_PP_DEFINE || cpd.in_preproc == CT_PP_EMIT))
       {
          parse_pawn_pattern(ctx, pc, CT_MACRO);
          return(true);
@@ -1887,7 +1886,7 @@ static bool parse_next(tok_ctx &ctx, chunk_t &pc)
       }
 
       // handle PAWN preprocessor args %0 .. %9
-      if (  (cpd.in_preproc == CT_PP_DEFINE)
+      if (  cpd.in_preproc == CT_PP_DEFINE
          && (ctx.peek() == '%')
          && unc_isdigit(ctx.peek(1)))
       {
@@ -1927,13 +1926,13 @@ static bool parse_next(tok_ctx &ctx, chunk_t &pc)
             && ((ch1 == '"') || (ch1 == '\'')))
          || (ch == '"')
          || (ch == '\'')
-         || ((ch == '<') && (cpd.in_preproc == CT_PP_INCLUDE)))
+         || ((ch == '<') && cpd.in_preproc == CT_PP_INCLUDE))
       {
          parse_string(ctx, pc, unc_isalpha(ch) ? 1 : 0, true);
          return(true);
       }
 
-      if ((ch == '<') && (cpd.in_preproc == CT_PP_DEFINE))
+      if ((ch == '<') && cpd.in_preproc == CT_PP_DEFINE)
       {
          if (chunk_get_tail()->type == CT_MACRO)
          {
@@ -2103,7 +2102,7 @@ void tokenize(const deque<int> &data, chunk_t *ref)
       pc = chunk_add_before(&chunk, ref);
 
       // A newline marks the end of a preprocessor
-      if (pc->type == CT_NEWLINE) // || (pc->type == CT_COMMENT_MULTI))
+      if (pc->type == CT_NEWLINE) // || pc->type == CT_COMMENT_MULTI)
       {
          cpd.in_preproc         = CT_NONE;
          cpd.preproc_ncnl_count = 0;
@@ -2140,7 +2139,7 @@ void tokenize(const deque<int> &data, chunk_t *ref)
          // Figure out the type of preprocessor for #include parsing
          if (cpd.in_preproc == CT_PREPROC)
          {
-            if ((pc->type < CT_PP_DEFINE) || (pc->type > CT_PP_OTHER))
+            if (pc->type < CT_PP_DEFINE || pc->type > CT_PP_OTHER)
             {
                set_chunk_type(pc, CT_PP_OTHER);
             }
@@ -2181,8 +2180,8 @@ void tokenize(const deque<int> &data, chunk_t *ref)
       else
       {
          // Check for a preprocessor start
-         if (  (pc->type == CT_POUND)
-            && ((rprev == nullptr) || (rprev->type == CT_NEWLINE)))
+         if (  pc->type == CT_POUND
+            && (rprev == nullptr || rprev->type == CT_NEWLINE))
          {
             set_chunk_type(pc, CT_PREPROC);
             pc->flags     |= PCF_IN_PREPROC;
@@ -2202,8 +2201,8 @@ void tokenize(const deque<int> &data, chunk_t *ref)
    }
 
    // Set the cpd.newline string for this file
-   if (  (cpd.settings[UO_newlines].le == LE_LF)
-      || (  (cpd.settings[UO_newlines].le == LE_AUTO)
+   if (  cpd.settings[UO_newlines].le == LE_LF
+      || (  cpd.settings[UO_newlines].le == LE_AUTO
          && (cpd.le_counts[LE_LF] >= cpd.le_counts[LE_CRLF])
          && (cpd.le_counts[LE_LF] >= cpd.le_counts[LE_CR])))
    {
@@ -2211,8 +2210,8 @@ void tokenize(const deque<int> &data, chunk_t *ref)
       cpd.newline = "\n";
       LOG_FMT(LLINEENDS, "Using LF line endings\n");
    }
-   else if (  (cpd.settings[UO_newlines].le == LE_CRLF)
-           || (  (cpd.settings[UO_newlines].le == LE_AUTO)
+   else if (  cpd.settings[UO_newlines].le == LE_CRLF
+           || (  cpd.settings[UO_newlines].le == LE_AUTO
               && (cpd.le_counts[LE_CRLF] >= cpd.le_counts[LE_LF])
               && (cpd.le_counts[LE_CRLF] >= cpd.le_counts[LE_CR])))
    {

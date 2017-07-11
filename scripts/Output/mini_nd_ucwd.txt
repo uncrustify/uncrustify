@@ -1156,8 +1156,14 @@ nl_func_proto_type_name         = ignore   # ignore/add/remove/force
 # Add or remove newline between a function name and the opening '(' in the declaration
 nl_func_paren                   = ignore   # ignore/add/remove/force
 
+# Overrides nl_func_paren for functions with no parameters
+nl_func_paren_empty             = ignore   # ignore/add/remove/force
+
 # Add or remove newline between a function name and the opening '(' in the definition
 nl_func_def_paren               = ignore   # ignore/add/remove/force
+
+# Overrides nl_func_def_paren for functions with no parameters
+nl_func_def_paren_empty         = ignore   # ignore/add/remove/force
 
 # Add or remove newline after '(' in a function declaration
 nl_func_decl_start              = ignore   # ignore/add/remove/force

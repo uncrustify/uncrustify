@@ -170,8 +170,7 @@ void brace_cleanup(void)
    while (pc != nullptr)
    {
       // Check for leaving a #define body
-      if (  (cpd.in_preproc != CT_NONE)
-         && ((pc->flags & PCF_IN_PREPROC) == 0))
+      if (cpd.in_preproc != CT_NONE && (pc->flags & PCF_IN_PREPROC) == 0)
       {
          if (cpd.in_preproc == CT_PP_DEFINE)
          {
@@ -193,7 +192,7 @@ void brace_cleanup(void)
       if (cpd.lang_flags & LANG_PAWN)
       {
          if (  (frm.pse[frm.pse_tos].type == CT_VBRACE_OPEN)
-            && (pc->type == CT_NEWLINE))
+            && pc->type == CT_NEWLINE)
          {
             pc = pawn_check_vsemicolon(pc);
          }
@@ -211,7 +210,7 @@ void brace_cleanup(void)
        */
       if (  !chunk_is_comment(pc)
          && !chunk_is_newline(pc)
-         && ((cpd.in_preproc == CT_PP_DEFINE) || (cpd.in_preproc == CT_NONE)))
+         && (cpd.in_preproc == CT_PP_DEFINE || cpd.in_preproc == CT_NONE))
       {
          cpd.consumed = false;
          parse_cleanup(&frm, pc);
@@ -228,20 +227,20 @@ static bool maybe_while_of_do(chunk_t *pc)
    chunk_t *prev;
 
    prev = chunk_get_prev_ncnl(pc);
-   if ((prev == nullptr) || !(prev->flags & PCF_IN_PREPROC))
+   if (prev == nullptr || !(prev->flags & PCF_IN_PREPROC))
    {
       return(false);
    }
 
    // Find the chunk before the preprocessor
-   while ((prev != nullptr) && (prev->flags & PCF_IN_PREPROC))
+   while (prev != nullptr && (prev->flags & PCF_IN_PREPROC))
    {
       prev = chunk_get_prev_ncnl(prev);
    }
 
-   if (  (prev != nullptr)
-      && (prev->parent_type == CT_DO)
-      && ((prev->type == CT_VBRACE_CLOSE) || (prev->type == CT_BRACE_CLOSE)))
+   if (  prev != nullptr
+      && prev->parent_type == CT_DO
+      && (prev->type == CT_VBRACE_CLOSE || prev->type == CT_BRACE_CLOSE))
    {
       return(true);
    }
@@ -335,10 +334,10 @@ static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
            (unsigned int)frm->pse[frm->pse_tos].stage);
 
    // Mark statement starts
-   if (  ((frm->stmt_count == 0) || (frm->expr_count == 0))
+   if (  (frm->stmt_count == 0 || frm->expr_count == 0)
       && !chunk_is_semicolon(pc)
-      && (pc->type != CT_BRACE_CLOSE)
-      && (pc->type != CT_VBRACE_CLOSE)
+      && pc->type != CT_BRACE_CLOSE
+      && pc->type != CT_VBRACE_CLOSE
       && !chunk_is_str(pc, ")", 1)
       && !chunk_is_str(pc, "]", 1))
    {
@@ -365,8 +364,8 @@ static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
       }
 
       // Mark the parent on semicolons in for() statements
-      if (  (pc->type == CT_SEMICOLON)
-         && (frm->pse_tos > 1)
+      if (  pc->type == CT_SEMICOLON
+         && frm->pse_tos > 1
          && (frm->pse[frm->pse_tos - 1].type == CT_FOR))
       {
          set_chunk_parent(pc, CT_FOR);
@@ -405,15 +404,15 @@ static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
    }
 
    // Handle close parenthesis, vbrace, brace, and square
-   if (  (pc->type == CT_PAREN_CLOSE)
-      || (pc->type == CT_BRACE_CLOSE)
-      || (pc->type == CT_VBRACE_CLOSE)
-      || (pc->type == CT_ANGLE_CLOSE)
-      || (pc->type == CT_MACRO_CLOSE)
-      || (pc->type == CT_SQUARE_CLOSE))
+   if (  pc->type == CT_PAREN_CLOSE
+      || pc->type == CT_BRACE_CLOSE
+      || pc->type == CT_VBRACE_CLOSE
+      || pc->type == CT_ANGLE_CLOSE
+      || pc->type == CT_MACRO_CLOSE
+      || pc->type == CT_SQUARE_CLOSE)
    {
       // Change CT_PAREN_CLOSE into CT_SPAREN_CLOSE or CT_FPAREN_CLOSE
-      if (  (pc->type == CT_PAREN_CLOSE)
+      if (  pc->type == CT_PAREN_CLOSE
          && (  (frm->pse[frm->pse_tos].type == CT_FPAREN_OPEN)
             || (frm->pse[frm->pse_tos].type == CT_SPAREN_OPEN)))
       {
@@ -446,9 +445,9 @@ static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
          // Copy the parent, update the parenthesis/brace levels
          set_chunk_parent(pc, frm->pse[frm->pse_tos].parent);
          frm->level--;
-         if (  (pc->type == CT_BRACE_CLOSE)
-            || (pc->type == CT_VBRACE_CLOSE)
-            || (pc->type == CT_MACRO_CLOSE))
+         if (  pc->type == CT_BRACE_CLOSE
+            || pc->type == CT_VBRACE_CLOSE
+            || pc->type == CT_MACRO_CLOSE)
          {
             frm->brace_level--;
          }
@@ -487,7 +486,7 @@ static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
          {
             tmp = chunk_get_next_ncnl(pc);
 
-            if ((tmp->type != CT_SEMICOLON) && (tmp->type != CT_VSEMICOLON))
+            if (tmp->type != CT_SEMICOLON && tmp->type != CT_VSEMICOLON)
             {
                pawn_add_vsemi_after(pc);
             }
@@ -496,7 +495,7 @@ static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
       else
       {
          // Complain if this ISN'T a semicolon, but close out WHILE_OF_DO anyway
-         if ((pc->type == CT_SEMICOLON) || (pc->type == CT_VSEMICOLON))
+         if (pc->type == CT_SEMICOLON || pc->type == CT_VSEMICOLON)
          {
             cpd.consumed = true;
             set_chunk_parent(pc, CT_WHILE_OF_DO);
@@ -513,17 +512,17 @@ static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
 
    // Get the parent type for brace and parenthesis open
    c_token_t parent = pc->parent_type;
-   if (  (pc->type == CT_PAREN_OPEN)
-      || (pc->type == CT_FPAREN_OPEN)
-      || (pc->type == CT_SPAREN_OPEN)
-      || (pc->type == CT_BRACE_OPEN))
+   if (  pc->type == CT_PAREN_OPEN
+      || pc->type == CT_FPAREN_OPEN
+      || pc->type == CT_SPAREN_OPEN
+      || pc->type == CT_BRACE_OPEN)
    {
       chunk_t *prev = chunk_get_prev_ncnl(pc);
       if (prev != nullptr)
       {
-         if (  (pc->type == CT_PAREN_OPEN)
-            || (pc->type == CT_FPAREN_OPEN)
-            || (pc->type == CT_SPAREN_OPEN))
+         if (  pc->type == CT_PAREN_OPEN
+            || pc->type == CT_FPAREN_OPEN
+            || pc->type == CT_SPAREN_OPEN)
          {
             // Set the parent for parenthesis and change parenthesis type
             if (frm->pse[frm->pse_tos].stage != brace_stage_e::NONE)
@@ -538,7 +537,7 @@ static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
                parent = CT_FUNCTION;
             }
             // NS_ENUM and NS_OPTIONS are followed by a (type, name) pair
-            else if ((prev->type == CT_ENUM) && (cpd.lang_flags & LANG_OC))
+            else if (prev->type == CT_ENUM && (cpd.lang_flags & LANG_OC))
             {
                // Treat both as CT_ENUM since the syntax is identical
                set_chunk_type(pc, CT_FPAREN_OPEN);
@@ -556,14 +555,14 @@ static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
             {
                parent = frm->pse[frm->pse_tos].type;
             }
-            else if ((prev->type == CT_ASSIGN) && (prev->str[0] == '='))
+            else if (prev->type == CT_ASSIGN && (prev->str[0] == '='))
             {
                parent = CT_ASSIGN;
             }
             // Carry through CT_ENUM parent in NS_ENUM (type, name) {
-            else if (  (prev->type == CT_FPAREN_CLOSE)
+            else if (  prev->type == CT_FPAREN_CLOSE
                     && (cpd.lang_flags & LANG_OC)
-                    && (prev->parent_type == CT_ENUM))
+                    && prev->parent_type == CT_ENUM)
             {
                parent = CT_ENUM;
             }
@@ -583,16 +582,16 @@ static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
     * Adjust the level for opens & create a stack entry
     * Note that CT_VBRACE_OPEN has already been handled.
     */
-   if (  (pc->type == CT_BRACE_OPEN)
-      || (pc->type == CT_PAREN_OPEN)
-      || (pc->type == CT_FPAREN_OPEN)
-      || (pc->type == CT_SPAREN_OPEN)
-      || (pc->type == CT_ANGLE_OPEN)
-      || (pc->type == CT_MACRO_OPEN)
-      || (pc->type == CT_SQUARE_OPEN))
+   if (  pc->type == CT_BRACE_OPEN
+      || pc->type == CT_PAREN_OPEN
+      || pc->type == CT_FPAREN_OPEN
+      || pc->type == CT_SPAREN_OPEN
+      || pc->type == CT_ANGLE_OPEN
+      || pc->type == CT_MACRO_OPEN
+      || pc->type == CT_SQUARE_OPEN)
    {
       frm->level++;
-      if ((pc->type == CT_BRACE_OPEN) || (pc->type == CT_MACRO_OPEN))
+      if (pc->type == CT_BRACE_OPEN || pc->type == CT_MACRO_OPEN)
       {
          frm->brace_level++;
       }
@@ -618,7 +617,7 @@ static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
    {
       brace_stage_e bs = brace_stage_e::PAREN1;
 
-      if ((pc->type == CT_WHILE) && maybe_while_of_do(pc))
+      if (pc->type == CT_WHILE && maybe_while_of_do(pc))
       {
          set_chunk_type(pc, CT_WHILE_OF_DO);
          bs = brace_stage_e::WOD_PAREN;
@@ -766,7 +765,7 @@ static bool check_complex_statements(parse_frame_t *frm, chunk_t *pc)
    // Check for CT_CATCH or CT_FINALLY after CT_TRY or CT_CATCH
    while (frm->pse[frm->pse_tos].stage == brace_stage_e::CATCH)
    {
-      if ((pc->type == CT_CATCH) || (pc->type == CT_FINALLY))
+      if (pc->type == CT_CATCH || pc->type == CT_FINALLY)
       {
          // Replace CT_TRY with CT_CATCH on the stack & we are done
          frm->pse[frm->pse_tos].type  = pc->type;
@@ -829,12 +828,12 @@ static bool check_complex_statements(parse_frame_t *frm, chunk_t *pc)
    }
 
    // Insert a CT_VBRACE_OPEN, if needed
-   if (  (pc->type != CT_BRACE_OPEN)
+   if (  pc->type != CT_BRACE_OPEN
       && (  (frm->pse[frm->pse_tos].stage == brace_stage_e::BRACE2)
          || (frm->pse[frm->pse_tos].stage == brace_stage_e::BRACE_DO)))
    {
       if (  (cpd.lang_flags & LANG_CS)
-         && (pc->type == CT_USING_STMT)
+         && pc->type == CT_USING_STMT
          && (!cpd.settings[UO_indent_using_block].b))
       {
          // don't indent the using block
@@ -867,7 +866,7 @@ static bool check_complex_statements(parse_frame_t *frm, chunk_t *pc)
    }
 
    // Verify open parenthesis in complex statement
-   if (  (pc->type != CT_PAREN_OPEN)
+   if (  pc->type != CT_PAREN_OPEN
       && (  (frm->pse[frm->pse_tos].stage == brace_stage_e::PAREN1)
          || (frm->pse[frm->pse_tos].stage == brace_stage_e::WOD_PAREN)))
    {
@@ -892,7 +891,7 @@ static bool handle_complex_close(parse_frame_t *frm, chunk_t *pc)
 
    if (frm->pse[frm->pse_tos].stage == brace_stage_e::PAREN1)
    {
-      if ((pc->next != nullptr) && (pc->next->type == CT_WHEN))
+      if (pc->next != nullptr && pc->next->type == CT_WHEN)
       {
          frm->pse[frm->pse_tos].type  = pc->type;
          frm->pse[frm->pse_tos].stage = brace_stage_e::CATCH_WHEN;
@@ -912,7 +911,7 @@ static bool handle_complex_close(parse_frame_t *frm, chunk_t *pc)
 
          // If the next chunk isn't CT_ELSE, close the statement
          next = chunk_get_next_ncnl(pc);
-         if ((next != nullptr) && (next->type != CT_ELSE))
+         if (next != nullptr && next->type != CT_ELSE)
          {
             frm->pse_tos--;
             print_stack(LBCSPOP, "-IF-HCS ", frm, pc);
@@ -929,9 +928,9 @@ static bool handle_complex_close(parse_frame_t *frm, chunk_t *pc)
 
          // If the next chunk isn't CT_CATCH or CT_FINALLY, close the statement
          next = chunk_get_next_ncnl(pc);
-         if (  (next != nullptr)
-            && (next->type != CT_CATCH)
-            && (next->type != CT_FINALLY))
+         if (  next != nullptr
+            && next->type != CT_CATCH
+            && next->type != CT_FINALLY)
          {
             frm->pse_tos--;
             print_stack(LBCSPOP, "-TRY-HCS ", frm, pc);
@@ -1031,7 +1030,7 @@ static chunk_t *insert_vbrace(chunk_t *pc, bool after, parse_frame_t *frm)
             do
             {
                ref = chunk_get_prev(ref);
-            } while (  (ref != nullptr)
+            } while (  ref != nullptr
                     && (ref->flags & PCF_IN_PREPROC));
          }
          else
