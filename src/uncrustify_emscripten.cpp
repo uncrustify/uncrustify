@@ -641,6 +641,7 @@ string option_map_value_lDesc(const option_map_value &o)
 
 EMSCRIPTEN_BINDINGS(MainModule)
 {
+   // region enum bindings
    enum_<uncrustify_options>(STRINGIFY(uncrustify_options))
       .value(STRINGIFY(UO_newlines), UO_newlines)
       .value(STRINGIFY(UO_input_tab_size), UO_input_tab_size)
@@ -1653,6 +1654,7 @@ EMSCRIPTEN_BINDINGS(MainModule)
       .value(STRINGIFY(LANG_ALL), LANG_ALL)
       .value(STRINGIFY(FLAG_DIG), FLAG_DIG)
       .value(STRINGIFY(FLAG_PP), FLAG_PP);
+   // endregion enum bindings
 
 
    class_<option_map_value>(STRINGIFY(option_map_value))
