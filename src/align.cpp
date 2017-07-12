@@ -553,9 +553,9 @@ void align_right_comments(void)
 
             if (pc->orig_col < prev->orig_col_end + cpd.settings[UO_align_right_cmt_gap].u)
             {
-               LOG_FMT(LALTC, "NOT changing END comment on line %zu (%zu <= %zu + %d)\n",
+               LOG_FMT(LALTC, "NOT changing END comment on line %zu (%zu <= %zu + %zu)\n",
                        pc->orig_line, pc->orig_col, prev->orig_col_end,
-                       cpd.settings[UO_align_right_cmt_gap].n);
+                       cpd.settings[UO_align_right_cmt_gap].u);
             }
             else
             {
