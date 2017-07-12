@@ -59,6 +59,7 @@ declare namespace LibUncrustify
     // Example how to iterate below options : forin iterate Options,
     // skip 'values' key, [ s : Options_STRING ] : EmscriptenEnumTypeObject;
 
+    // region enum bindings
     //! Uncrustifys options enum
     export interface Option extends EmscriptenEnumType
     {
@@ -1089,7 +1090,7 @@ declare namespace LibUncrustify
         FLAG_DIG : EmscriptenEnumTypeObject;
         FLAG_PP : EmscriptenEnumTypeObject;
     }
-
+    // endregion enum bindings
     // </editor-fold>
 
     //! interface for Emscriptens group_map value pair
