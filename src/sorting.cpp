@@ -52,9 +52,11 @@ static void prepare_categories()
 {
    for (int i = 0; i < kIncludeCategoriesCount; i++)
    {
-      if (cpd.settings[UO_include_category_first + i].str != nullptr)
+      const auto *cat_pattern = cpd.settings[UO_include_category_first + i].str;
+
+      if (cat_pattern != nullptr && cat_pattern[0] != '\0')
       {
-         include_categories[i] = new include_category(cpd.settings[UO_include_category_first + i].str);
+         include_categories[i] = new include_category(cat_pattern);
       }
       else
       {
