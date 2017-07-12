@@ -1358,15 +1358,15 @@ nl_create_for_one_liner         = false    # false/true
 nl_create_while_one_liner       = false    # false/true
 
 #  Change a one-liner if statement into simple unbraced if
-# 'if(b) i++;' => 'if(b) i++;'
+# 'if(b) i++;' => 'if(b)\n i++;'
 nl_split_if_one_liner           = false    # false/true
 
 # Change a one-liner for statement into simple unbraced for
-# 'for (i=0;<5;i++) foo(i);' => 'for (i=0;<5;i++) foo(i);'
+# 'for (i=0;<5;i++) foo(i);' => 'for (i=0;<5;i++)\n foo(i);'
 nl_split_for_one_liner          = false    # false/true
 
-# Change simple unbraced while statements into a one-liner while
-# 'while (i<5)\n foo(i++);' => 'while (i<5) foo(i++);'
+# Change a one-liner while statement into simple unbraced while
+# 'while (i<5) foo(i++);' => 'while (i<5)\n foo(i++);'
 nl_split_while_one_liner        = false    # false/true
 
 #
