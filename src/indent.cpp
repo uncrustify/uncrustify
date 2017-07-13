@@ -1774,7 +1774,10 @@ void indent_text(void)
             {
                break;
             }
-            if (chunk_is_newline(next))
+            if (  chunk_is_newline(next)
+               && !cpd.settings[UO_indent_paren_after_func_def].b
+               && !cpd.settings[UO_indent_paren_after_func_decl].b
+               && !cpd.settings[UO_indent_paren_after_func_call].b)
             {
                size_t sub = 1;
                if (  (frm.pse[frm.pse_tos - 1].type == CT_ASSIGN)
@@ -1805,9 +1808,17 @@ void indent_text(void)
             }
          }
 
-         if (  pc->type == CT_FPAREN_OPEN
-            && chunk_is_newline(chunk_get_prev(pc))
-            && !chunk_is_newline(chunk_get_next(pc)))
+         if (  (  pc->type == CT_FPAREN_OPEN
+               && chunk_is_newline(chunk_get_prev(pc)))
+            && (  (  (  pc->parent_type == CT_FUNC_PROTO
+                     || pc->parent_type == CT_FUNC_CLASS_PROTO)
+                  && cpd.settings[UO_indent_paren_after_func_decl].b)
+               || (  pc->parent_type == CT_FUNC_DEF
+                  && cpd.settings[UO_indent_paren_after_func_def].b)
+               || (  (  pc->parent_type == CT_FUNC_CALL
+                     || pc->parent_type == CT_FUNC_CALL_USER)
+                  && cpd.settings[UO_indent_paren_after_func_call].b)
+               || !chunk_is_newline(chunk_get_next(pc))))
          {
             frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent + indent_size;
             log_indent();
