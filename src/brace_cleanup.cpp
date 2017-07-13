@@ -22,6 +22,7 @@
 #include "keywords.h"
 #include "logger.h"
 #include "helper_for_print.h"
+#include "indent.h"
 
 
 /*
@@ -690,11 +691,12 @@ static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
       LOG_FMT(LSTMT, "%s(%d): %zu> reset expr on %s\n",
               __func__, __LINE__, pc->orig_line, pc->text());
    }
-   else if (pc->type == CT_BRACE_CLOSE && pc->pp_level == 0)
+   else if (pc->type == CT_BRACE_CLOSE)
    {
       if (!cpd.consumed)
       {
-         if (!cpd.unc_off_used)
+         size_t file_pp_level = ifdef_over_whole_file() ? 1 : 0;
+         if (!cpd.unc_off_used && pc->pp_level == file_pp_level)
          {
             // fatal error
             char *outputMessage;
