@@ -22,6 +22,7 @@
 #include "keywords.h"
 #include "logger.h"
 #include "helper_for_print.h"
+#include "indent.h"
 
 
 /*
@@ -694,12 +695,12 @@ static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
    {
       if (!cpd.consumed)
       {
-         if (!cpd.unc_off_used)
-         {
-            // fatal error
+         size_t file_pp_level = ifdef_over_whole_file() ? 1 : 0;
+         if (!cpd.unc_off_used && pc->pp_level == file_pp_level)
+         {// fatal error
             char *outputMessage;
             outputMessage = make_message("Unmatched BRACE_CLOSE\nat line=%zu, column=%zu\n",
-                                         pc->orig_line, pc->orig_col);
+                                       pc->orig_line, pc->orig_col);
             fprintf(stderr, "%s", outputMessage);
             free(outputMessage);
             log_flush(true);
