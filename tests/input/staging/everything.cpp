@@ -177,3 +177,27 @@ static FORCE_INLINE DXGI_FORMAT GetD3D11VertexDeclType(const ChannelInfo& info)
 	Assert("No matching D3D11 vertex decl type!");
 	return DXGI_FORMAT_UNKNOWN;
 }
+
+/// new
+
+struct invoke_fptr<R(VKAPI_PTR*)(FArgs...)>
+{
+    
+}
+
+void foo()
+{
+#if defined(SUPPORT_FEATURE)
+    bar();
+#endif // SUPPORT_FEATURE
+    // Handle error
+    if (error != 0)
+    {
+    }
+}
+
+friend std::ostream& operator<<(std::ostream& os, const ScriptingObjectPtr& o);
+
+extern "C" void __declspec(dllexport) GetAccountNameAndDomain(HWND /*hwndParent*/, int string_size, TCHAR * variables, stack_t** stacktop, extra_parameters* /*extra*/)
+{
+}
