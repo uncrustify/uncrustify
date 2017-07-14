@@ -8,7 +8,6 @@
 10017 empty.cfg staging/PR326_invalid-backslash-eol-csharp.cs
 10026 staging/Uncrustify.Cpp.cfg staging/ifoneliner.cpp
 10038 staging/614_multiple-passes.cfg staging/614_multiple-passes.cs
-10039 empty.cfg staging/615_nested-usings.cs
 10042 staging/Uncrustify.Cpp.cfg staging/indent-bad.mm
 10043 staging/Uncrustify.CSharp.cfg staging/nl-brace.cs
 10049 staging/Uncrustify.Cpp.cfg    staging/UNI-1336.cpp

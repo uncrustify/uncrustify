@@ -37,6 +37,7 @@
 10034 staging/Uncrustify.Cpp.cfg staging/asm.h.mm
 10035 staging/Uncrustify.Cpp.cfg staging/definesalign.h.mm
 10036 staging/Uncrustify.Cpp.cfg staging/inttypes.h.mm
+10039 staging/615_nested_usings.cfg staging/615_nested-usings.cs
 10044 staging/Uncrustify.CSharp.cfg staging/ifcomment.cs
 10045 staging/Uncrustify.CSharp.cfg staging/UNI-1288.cs
 10046 staging/Uncrustify.Cpp.cfg    staging/UNI-1333.mm
