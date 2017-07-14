@@ -658,7 +658,7 @@ static bool parse_comment(tok_ctx &ctx, chunk_t &pc)
    if (cpd.unc_off)
    {
       const char *ontext = cpd.settings[UO_enable_processing_cmt].str;
-      if (ontext == nullptr || !ontext[0])
+      if (ontext == nullptr || ontext[0] == '\0')
       {
          ontext = UNCRUSTIFY_ON_TEXT;
       }
@@ -1663,7 +1663,7 @@ static bool parse_ignored(tok_ctx &ctx, chunk_t &pc)
    }
    // Note that we aren't actually making sure this is in a comment, yet
    const char *ontext = cpd.settings[UO_enable_processing_cmt].str;
-   if (ontext == nullptr)
+   if (ontext == nullptr || ontext[0] == '\0')
    {
       ontext = UNCRUSTIFY_ON_TEXT;
    }
