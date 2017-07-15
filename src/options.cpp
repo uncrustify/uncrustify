@@ -226,7 +226,7 @@ static void unc_add_option(const char *name, uncrustify_options id, argtype_e ty
       break;
 
    default:
-      fprintf(stderr, "FATAL: unc_add_option: Illegal option type %d for '%s'\n", type, name);
+      fprintf(stderr, "FATAL: %s(%d): Illegal option type %d for '%s'\n", __func__, __LINE__, type, name);
       log_flush(true);
       exit(EX_SOFTWARE);
    }
@@ -1966,8 +1966,8 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
          return;
       }
 
-      fprintf(stderr, "convert_value: %s:%d Expected 'True' or 'False' or 'Ignore' for %s, got '%s'\n",
-              cpd.filename, cpd.line_number, entry->name, val);
+      fprintf(stderr, "%s(%d): %s:%d Expected 'True' or 'False' or 'Ignore' for %s, got '%s'\n",
+              __func__, __LINE__, cpd.filename, cpd.line_number, entry->name, val);
       log_flush(true);
       cpd.error_count++;
       dest->tfi = TFI_FALSE;
@@ -2546,7 +2546,7 @@ string argtype_to_string(argtype_e argtype)
       return("false/true/ignore");
 
    default:
-      fprintf(stderr, "argtype_to_string: Unknown argtype '%d'\n", argtype);
+      fprintf(stderr, "%s(%d): Unknown argtype '%d'\n", __func__, __LINE__, argtype);
       log_flush(true);
       exit(EX_SOFTWARE);
    }
@@ -2582,7 +2582,7 @@ const char *get_argtype_name(argtype_e argtype)
       return("AT_TFI");
 
    default:
-      fprintf(stderr, "get_argtype_name: Unknown argtype '%d'\n", argtype);
+      fprintf(stderr, "%s(%d): Unknown argtype '%d'\n", __func__, __LINE__, argtype);
       log_flush(true);
       exit(EX_SOFTWARE);
    }
@@ -2614,7 +2614,7 @@ string tfi_to_string(TrueFalseIgnore_e val)
       return("ignore");
 
    default:
-      fprintf(stderr, "tfi_to_string: Unknown argval '%d'\n", val);
+      fprintf(stderr, "%s(%d): Unknown argval '%d'\n", __func__, __LINE__, val);
       log_flush(true);
       return("");
    }
@@ -2748,7 +2748,7 @@ string op_val_to_string(argtype_e argtype, op_val_t op_val)
       return(tfi_to_string(op_val.tfi));
 
    default:
-      fprintf(stderr, "op_val_to_string: Unknown argtype '%d'\n", argtype);
+      fprintf(stderr, "%s(%d): Unknown argtype '%d'\n", __func__, __LINE__, argtype);
       log_flush(true);
       exit(EX_SOFTWARE);
    }
