@@ -3,10 +3,13 @@
 public class Class
 {
     public string foo {get; set;}
+    public string foo { get; set; }
 
     bool HasBar() {return m_HasBar != 0;}
+    bool HasBar() { return m_HasBar != 0; }
 
     public Bar prop {get {return m_bar;} set {m_bar = value;}}
+    public Bar prop { get { return m_bar; } set { m_bar = value; } }
 
 // This seems to happen with no spaces on the interior. Opening brace doesn't get one, closing brace does.
 
