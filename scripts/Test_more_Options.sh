@@ -173,7 +173,7 @@ do
   fi
 done
 
-Liste_of_Error_Tests="I-842"
+Liste_of_Error_Tests="I-842 unmatched_close_pp"
 for Error_T in ${Liste_of_Error_Tests}
 do
   ConfigFile="${CONFIG}/${Error_T}.cfg"
