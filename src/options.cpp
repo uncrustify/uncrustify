@@ -221,8 +221,12 @@ static void unc_add_option(const char *name, uncrustify_options id, argtype_e ty
       value.max_val = 0;
       break;
 
+   case AT_TFI:
+      value.max_val = 2;
+      break;
+
    default:
-      fprintf(stderr, "FATAL: Illegal option type %d for '%s'\n", type, name);
+      fprintf(stderr, "FATAL: %s(%d): Illegal option type %d for '%s'\n", __func__, __LINE__, type, name);
       log_flush(true);
       exit(EX_SOFTWARE);
    }
@@ -1750,7 +1754,7 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
       }
       if (strcasecmp(val, "AUTO") != 0)
       {
-         fprintf(stderr, "%s:%d Expected AUTO, LF, CRLF, or CR for %s, got %s\n",
+         fprintf(stderr, "convert_value: %s:%d Expected 'Auto', 'LF', 'CRLF', or 'CR' for %s, got '%s'\n",
                  cpd.filename, cpd.line_number, entry->name, val);
          log_flush(true);
          cpd.error_count++;
@@ -1798,8 +1802,8 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
       }
       if (strcasecmp(val, "IGNORE") != 0)
       {
-         fprintf(stderr, "%s:%d Expected IGNORE, JOIN, LEAD, LEAD_BREAK, LEAD_FORCE, "
-                 "TRAIL, TRAIL_BREAK, TRAIL_FORCE for %s, got %s\n",
+         fprintf(stderr, "convert_value: %s:%d Expected 'Ignore', 'Join', 'Lead', 'Lead_Brake', "
+                 "'Lead_Force', 'Trail', 'Trail_Break', 'Trail_Force' for %s, got '%s'\n",
                  cpd.filename, cpd.line_number, entry->name, val);
          log_flush(true);
          cpd.error_count++;
@@ -1922,7 +1926,7 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
          return;
       }
 
-      fprintf(stderr, "%s:%d Expected 'True' or 'False' for %s, got %s\n",
+      fprintf(stderr, "convert_value: %s:%d Expected 'True' or 'False' for %s, got '%s'\n",
               cpd.filename, cpd.line_number, entry->name, val);
       log_flush(true);
       cpd.error_count++;
@@ -1933,6 +1937,40 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
    if (entry->type == AT_STRING)
    {
       dest->str = strdup(val);
+      return;
+   }
+
+   if (entry->type == AT_TFI)
+   {
+      if (  (strcasecmp(val, "true") == 0)
+         || (strcasecmp(val, "t") == 0)
+         || (strcmp(val, "1") == 0))
+      {
+         dest->tfi = TFI_TRUE;
+         return;
+      }
+
+      if (  (strcasecmp(val, "false") == 0)
+         || (strcasecmp(val, "f") == 0)
+         || (strcmp(val, "0") == 0))
+      {
+         dest->tfi = TFI_FALSE;
+         return;
+      }
+
+      if (  (strcasecmp(val, "ignore") == 0)
+         || (strcasecmp(val, "i") == 0)
+         || (strcmp(val, "2") == 0))
+      {
+         dest->tfi = TFI_IGNORE;
+         return;
+      }
+
+      fprintf(stderr, "%s(%d): %s:%d Expected 'True' or 'False' or 'Ignore' for %s, got '%s'\n",
+              __func__, __LINE__, cpd.filename, cpd.line_number, entry->name, val);
+      log_flush(true);
+      cpd.error_count++;
+      dest->tfi = TFI_FALSE;
       return;
    }
 
@@ -1963,7 +2001,7 @@ static void convert_value(const option_map_value *entry, const char *val, op_val
       dest->a = cpd.settings[tmp->id].a;
       return;
    }
-   fprintf(stderr, "%s:%d Expected 'Add', 'Remove', 'Force', or 'Ignore' for %s, got %s\n",
+   fprintf(stderr, "convert_value: %s:%d Expected 'Add', 'Remove', 'Force', or 'Ignore' for %s, got '%s'\n",
            cpd.filename, cpd.line_number, entry->name, val);
    log_flush(true);
    cpd.error_count++;
@@ -2504,8 +2542,11 @@ string argtype_to_string(argtype_e argtype)
    case AT_STRING:
       return("string");
 
+   case AT_TFI:
+      return("false/true/ignore");
+
    default:
-      fprintf(stderr, "Unknown argtype '%d'\n", argtype);
+      fprintf(stderr, "%s(%d): Unknown argtype '%d'\n", __func__, __LINE__, argtype);
       log_flush(true);
       exit(EX_SOFTWARE);
    }
@@ -2537,8 +2578,11 @@ const char *get_argtype_name(argtype_e argtype)
    case AT_STRING:
       return("AT_STRING");
 
+   case AT_TFI:
+      return("AT_TFI");
+
    default:
-      fprintf(stderr, "Unknown argtype '%d'\n", argtype);
+      fprintf(stderr, "%s(%d): Unknown argtype '%d'\n", __func__, __LINE__, argtype);
       log_flush(true);
       exit(EX_SOFTWARE);
    }
@@ -2553,6 +2597,27 @@ string bool_to_string(bool val)
    }
 
    return("false");
+}
+
+
+string tfi_to_string(TrueFalseIgnore_e val)
+{
+   switch (val)
+   {
+   case TFI_FALSE:
+      return("false");
+
+   case TFI_TRUE:
+      return("true");
+
+   case TFI_IGNORE:
+      return("ignore");
+
+   default:
+      fprintf(stderr, "%s(%d): Unknown argval '%d'\n", __func__, __LINE__, val);
+      log_flush(true);
+      return("");
+   }
 }
 
 
@@ -2573,7 +2638,7 @@ string argval_to_string(argval_t argval)
       return("force");
 
    default:
-      fprintf(stderr, "Unknown argval '%d'\n", argval);
+      fprintf(stderr, "argval_to_string: Unknown argval '%d'\n", argval);
       log_flush(true);
       return("");
    }
@@ -2679,8 +2744,11 @@ string op_val_to_string(argtype_e argtype, op_val_t op_val)
    case AT_STRING:
       return(op_val.str != nullptr ? op_val.str : "");
 
+   case AT_TFI:
+      return(tfi_to_string(op_val.tfi));
+
    default:
-      fprintf(stderr, "Unknown argtype '%d'\n", argtype);
+      fprintf(stderr, "%s(%d): Unknown argtype '%d'\n", __func__, __LINE__, argtype);
       log_flush(true);
       exit(EX_SOFTWARE);
    }
