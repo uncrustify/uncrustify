@@ -59,7 +59,7 @@ declare namespace LibUncrustify
     // Example how to iterate below options : forin iterate Options,
     // skip 'values' key, [ s : Options_STRING ] : EmscriptenEnumTypeObject;
 
-    //! Uncrustifys options enum
+    // region enum bindings
     export interface Option extends EmscriptenEnumType
     {
         UO_newlines : EmscriptenEnumTypeObject;
@@ -305,6 +305,7 @@ declare namespace LibUncrustify
         UO_indent_sing_line_comments : EmscriptenEnumTypeObject;
         UO_indent_relative_single_line_comments : EmscriptenEnumTypeObject;
         UO_indent_switch_case : EmscriptenEnumTypeObject;
+        UO_indent_switch_pp : EmscriptenEnumTypeObject;
         UO_indent_case_shift : EmscriptenEnumTypeObject;
         UO_indent_case_brace : EmscriptenEnumTypeObject;
         UO_indent_col1_comment : EmscriptenEnumTypeObject;
@@ -410,7 +411,9 @@ declare namespace LibUncrustify
         UO_nl_func_scope_name : EmscriptenEnumTypeObject;
         UO_nl_func_proto_type_name : EmscriptenEnumTypeObject;
         UO_nl_func_paren : EmscriptenEnumTypeObject;
+        UO_nl_func_paren_empty : EmscriptenEnumTypeObject;
         UO_nl_func_def_paren : EmscriptenEnumTypeObject;
+        UO_nl_func_def_paren_empty : EmscriptenEnumTypeObject;
         UO_nl_func_decl_start : EmscriptenEnumTypeObject;
         UO_nl_func_def_start : EmscriptenEnumTypeObject;
         UO_nl_func_decl_start_single : EmscriptenEnumTypeObject;
@@ -645,6 +648,10 @@ declare namespace LibUncrustify
         UO_pp_if_indent_code : EmscriptenEnumTypeObject;
         UO_pp_define_at_level : EmscriptenEnumTypeObject;
         UO_pp_ignore_define_body : EmscriptenEnumTypeObject;
+        UO_pp_indent_case : EmscriptenEnumTypeObject;
+        UO_pp_indent_func_def : EmscriptenEnumTypeObject;
+        UO_pp_indent_extern : EmscriptenEnumTypeObject;
+        UO_pp_indent_brace : EmscriptenEnumTypeObject;
         UO_include_category_0 : EmscriptenEnumTypeObject;
         UO_include_category_1 : EmscriptenEnumTypeObject;
         UO_include_category_2 : EmscriptenEnumTypeObject;
@@ -655,7 +662,6 @@ declare namespace LibUncrustify
         UO_option_count : EmscriptenEnumTypeObject;
     }
 
-    //! Uncrustifys group enum
     export interface Group extends EmscriptenEnumType
     {
         UG_general : EmscriptenEnumTypeObject;
@@ -675,7 +681,6 @@ declare namespace LibUncrustify
         UG_group_count : EmscriptenEnumTypeObject;
     }
 
-    //! Uncrustifys option argument type enum
     export interface Argtype extends EmscriptenEnumType
     {
         AT_BOOL : EmscriptenEnumTypeObject;
@@ -687,7 +692,6 @@ declare namespace LibUncrustify
         AT_UNUM : EmscriptenEnumTypeObject;
     }
 
-    //! Uncrustifys log severity enum
     export interface LogSev extends EmscriptenEnumType
     {
         LSYS : EmscriptenEnumTypeObject;
@@ -788,7 +792,6 @@ declare namespace LibUncrustify
         LGUY : EmscriptenEnumTypeObject;
     }
 
-    //! Uncrustifys token enum
     export interface Token extends EmscriptenEnumType
     {
         CT_NONE : EmscriptenEnumTypeObject;
@@ -1072,7 +1075,6 @@ declare namespace LibUncrustify
         CT_TOKEN_COUNT_ : EmscriptenEnumTypeObject;
     }
 
-    //! Uncrustifys language enum
     export interface LangFlag extends EmscriptenEnumType
     {
         LANG_C : EmscriptenEnumTypeObject;
@@ -1090,6 +1092,7 @@ declare namespace LibUncrustify
         FLAG_PP : EmscriptenEnumTypeObject;
     }
 
+    // endregion enum bindings
     // </editor-fold>
 
     //! interface for Emscriptens group_map value pair
