@@ -36,6 +36,7 @@ enum argtype_e
    AT_POS,     //! start/end or Trail/Lead
    AT_STRING,  //! string value
    AT_UNUM,    //! unsigned Number
+   AT_TFI,     //! false / true / ignore
 };
 
 //! Arg values - these are bit fields
@@ -72,6 +73,13 @@ enum tokenpos_e
    TP_JOIN        = 16,                       //! remove newlines on both sides
 };
 
+//! True, False or Ignore
+enum TrueFalseIgnore_e
+{
+   TFI_FALSE  = false,                    //! false
+   TFI_TRUE   = true,                     //! true
+   TFI_IGNORE = 2,                        //! ignore
+};
 
 /**
  * Uncrustify options are configured with a parameter of this type.
@@ -81,13 +89,14 @@ enum tokenpos_e
  */
 union op_val_t
 {
-   argval_t   a;     //! ignore/add/remove/force
-   int        n;     //! a signed number
-   bool       b;     //! a bool flag
-   lineends_e le;    //! line ending type
-   tokenpos_e tp;    //! token position type
-   const char *str;  //! a string
-   size_t     u;     //! an unsigned number
+   argval_t          a;    //! ignore / add / remove / force
+   int               n;    //! a signed number
+   bool              b;    //! a bool flag
+   lineends_e        le;   //! line ending type
+   tokenpos_e        tp;   //! token position type
+   const char        *str; //! a string
+   size_t            u;    //! an unsigned number
+   TrueFalseIgnore_e tfi;  //! false / true / ignore
 };
 
 /**
