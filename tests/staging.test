@@ -20,7 +20,6 @@
 10059 staging/UNI-1349.cfg          staging/UNI-1349.cpp
 10061 staging/Uncrustify.CSharp.cfg staging/UNI-1355.cs
 10060 staging/UNI-1350.cfg          staging/UNI-1350.cpp
-10062 staging/UNI-1356.cfg          staging/UNI-1356.cpp
 10063 staging/Uncrustify.Cpp.cfg    staging/UNI-1358.cpp
 10064 staging/Uncrustify.CSharp.cfg staging/UNI-1443.cs
 10065 staging/Uncrustify.CSharp.cfg staging/UNI-1975.cs
