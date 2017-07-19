@@ -387,8 +387,8 @@ static void indent_pse_push(parse_frame_t &frm, chunk_t *pc)
    {
       // Bump up the index and initialize it
       frm.pse_tos++;
-      LOG_FMT(LINDLINE, "%s(%d): line is %zu, pse_tos is %zu, type is %s\n",
-              __func__, __LINE__, pc->orig_line, frm.pse_tos, get_token_name(pc->type));
+      LOG_FMT(LINDLINE, "%s(%d): orig_line is %zu, pse_tos is %zu, type is %s, brace_level is %zu, pc->level is %zu\n",
+              __func__, __LINE__, pc->orig_line, frm.pse_tos, get_token_name(pc->type), pc->brace_level, pc->level);
       memset(&frm.pse[frm.pse_tos], 0, sizeof(frm.pse[frm.pse_tos]));
 
       //LOG_FMT(LINDPSE, "%s(%d):%d] (pp=%d) OPEN  [%d,%s] level=%d\n",
@@ -505,11 +505,11 @@ static size_t token_indent(c_token_t type)
 }
 
 
-#define indent_column_set(X)                                                \
-   do {                                                                     \
-      indent_column = (X);                                                  \
-      LOG_FMT(LINDENT2, "%s(%d): orig_line is %zu, indent_column is %zu\n", \
-              __func__, __LINE__, pc->orig_line, indent_column);            \
+#define indent_column_set(X)                                                                 \
+   do {                                                                                      \
+      LOG_FMT(LINDENT2, "%s(%d): orig_line is %zu, indent_column changed from %zu to %zu\n", \
+              __func__, __LINE__, pc->orig_line, indent_column, (size_t)X);                  \
+      indent_column = (X);                                                                   \
    } while (false)
 
 
@@ -614,8 +614,8 @@ void indent_text(void)
    size_t        shiftcontcol = 0;
    size_t        indent_size  = cpd.settings[UO_indent_columns].u;
    parse_frame_t frm;
-   bool          in_preproc = false;
-   size_t        indent_column;
+   bool          in_preproc          = false;
+   size_t        indent_column       = 0;
    size_t        parent_token_indent = 0;
    int           xml_indent          = 0;
    bool          token_used;
@@ -638,17 +638,17 @@ void indent_text(void)
    {
       if (pc->type == CT_NEWLINE)
       {
-         LOG_FMT(LINDLINE, "%s(%d): orig_line is %zu NEWLINE\n",
+         LOG_FMT(LINDLINE, "%s(%d): orig_line is %zu, NEWLINE\n",
                  __func__, __LINE__, pc->orig_line);
       }
       else if (pc->type == CT_NL_CONT)
       {
-         LOG_FMT(LINDLINE, "%s(%d): orig_line is %zu CT_NL_CONT\n",
+         LOG_FMT(LINDLINE, "%s(%d): orig_line is %zu, CT_NL_CONT\n",
                  __func__, __LINE__, pc->orig_line);
       }
       else
       {
-         LOG_FMT(LINDLINE, "%s(%d): orig_line is %zu, orig_col is %zu, %s\n",
+         LOG_FMT(LINDLINE, "%s(%d): orig_line is %zu, orig_col is %zu, for '%s'\n",
                  __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
          log_pcf_flags(LINDLINE, pc->flags);
       }
@@ -1172,8 +1172,8 @@ void indent_text(void)
             && pc->parent_type == CT_CPP_LAMBDA)
          {
             frm.pse[frm.pse_tos].brace_indent = frm.pse[frm.pse_tos - 1].indent;
-            indent_column                     = frm.pse[frm.pse_tos].brace_indent;
-            frm.pse[frm.pse_tos].indent       = indent_column + indent_size;
+            indent_column_set(frm.pse[frm.pse_tos].brace_indent);
+            frm.pse[frm.pse_tos].indent = indent_column + indent_size;
             log_indent();
             frm.pse[frm.pse_tos].indent_tab = frm.pse[frm.pse_tos].indent;
             frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
@@ -1188,8 +1188,8 @@ void indent_text(void)
                     || pc->parent_type == CT_DELEGATE))
          {
             frm.pse[frm.pse_tos].brace_indent = 1 + ((pc->brace_level + 1) * indent_size);
-            indent_column                     = frm.pse[frm.pse_tos].brace_indent;
-            frm.pse[frm.pse_tos].indent       = indent_column + indent_size;
+            indent_column_set(frm.pse[frm.pse_tos].brace_indent);
+            frm.pse[frm.pse_tos].indent = indent_column + indent_size;
             log_indent();
             frm.pse[frm.pse_tos].indent_tab = frm.pse[frm.pse_tos].indent;
             frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
@@ -1198,15 +1198,32 @@ void indent_text(void)
             frm.pse[frm.pse_tos - 1].indent_tmp = frm.pse[frm.pse_tos].indent_tmp;
             log_indent_tmp();
          }
+         else if (  !cpd.settings[UO_indent_paren_open_brace].b
+                 && ((cpd.lang_flags & LANG_CS) == 0)
+                 && pc->parent_type == CT_CPP_LAMBDA
+                 && pc->flags & PCF_IN_FCN_DEF
+                 && chunk_is_newline(chunk_get_next_nc(pc)))
+         {
+            // Issue #1165
+            log_pcf_flags(LINDENT2, pc->flags);
+            frm.pse[frm.pse_tos].brace_indent = 1 + ((pc->brace_level + 1) * indent_size);
+            indent_column_set(frm.pse[frm.pse_tos].brace_indent);
+            frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent_tmp;
+            log_indent();
+            frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
+            log_indent_tmp();
+         }
          // any '{' that is inside of a '(' overrides the '(' indent
          else if (  !cpd.settings[UO_indent_paren_open_brace].b
                  && chunk_is_paren_open(frm.pse[frm.pse_tos - 1].pc)
                  && chunk_is_newline(chunk_get_next_nc(pc)))
          {
             // FIXME: I don't know how much of this is necessary, but it seems to work
+            LOG_FMT(LINDENT2, "%s(%d): orig_line is %zu, pc->brace_level is %zu, for '%s', pc->level is %zu, pc(-1)->level is %zu\n",
+                    __func__, __LINE__, pc->orig_line, pc->brace_level, pc->text(), pc->level, frm.pse[frm.pse_tos - 1].pc->level);
             frm.pse[frm.pse_tos].brace_indent = 1 + (pc->brace_level * indent_size);
-            indent_column                     = frm.pse[frm.pse_tos].brace_indent;
-            frm.pse[frm.pse_tos].indent       = indent_column + indent_size;
+            indent_column_set(frm.pse[frm.pse_tos].brace_indent);
+            frm.pse[frm.pse_tos].indent = indent_column + indent_size;
             log_indent();
             frm.pse[frm.pse_tos].indent_tab = frm.pse[frm.pse_tos].indent;
             frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
@@ -2147,7 +2164,7 @@ void indent_text(void)
             pc->indent.delta = frm.pse[frm.pse_tos].ip.delta;
          }
 
-         LOG_FMT(LINDENT2, "%s(%d): orig_line is %zu, %zu/%zu for %s\n",
+         LOG_FMT(LINDENT2, "%s(%d): orig_line is %zu, pc->column_indent is %zu, indent_column is %zu, for '%s'\n",
                  __func__, __LINE__, pc->orig_line, pc->column_indent, indent_column, pc->text());
 
          /*
@@ -2417,7 +2434,7 @@ void indent_text(void)
             {
                if (use_ident && pc->type != CT_PP_IGNORE) // Leave indentation alone for PP_IGNORE tokens
                {
-                  LOG_FMT(LINDENT, "%s(%d): orig_line is %zu, indent => %zu [%s]\n",
+                  LOG_FMT(LINDENT, "%s(%d): orig_line is %zu, indent set to %zu, for '%s'\n",
                           __func__, __LINE__, pc->orig_line, indent_column, pc->text());
                   reindent_line(pc, indent_column);
                }

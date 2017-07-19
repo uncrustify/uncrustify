@@ -1,10 +1,10 @@
-indent_text(): orig_line is , indent =>  [TelegramIndex]
-indent_text(): orig_line is , indent =>  [pTelName]
-indent_text(): orig_line is , indent =>  [nTelIndex]
-indent_text(): orig_line is , indent =>  [{]
-indent_text(): orig_line is , indent =>  [}]
-indent_text(): orig_line is , indent =>  [~]
-indent_text(): orig_line is , indent =>  [{]
-indent_text(): orig_line is , indent =>  [}]
-indent_text(): orig_line is , indent =>  [const]
-indent_text(): orig_line is , indent =>  [unsigned]
+indent_text(): orig_line is , indent set to , for 'TelegramIndex'
+indent_text(): orig_line is , indent set to , for 'pTelName'
+indent_text(): orig_line is , indent set to , for 'nTelIndex'
+indent_text(): orig_line is , indent set to , for '{'
+indent_text(): orig_line is , indent set to , for '}'
+indent_text(): orig_line is , indent set to , for '~'
+indent_text(): orig_line is , indent set to , for '{'
+indent_text(): orig_line is , indent set to , for '}'
+indent_text(): orig_line is , indent set to , for 'const'
+indent_text(): orig_line is , indent set to , for 'unsigned'
