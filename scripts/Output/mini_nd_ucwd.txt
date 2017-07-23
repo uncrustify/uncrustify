@@ -831,6 +831,15 @@ indent_paren_nl                 = false    # false/true
 # 2: Indent to the brace level
 indent_paren_close              = 0        # unsigned number
 
+# Controls the indent of the open paren of a function definition, if on it's own line.If True, indents the open paren
+indent_paren_after_func_def     = false    # false/true
+
+# Controls the indent of the open paren of a function declaration, if on it's own line.If True, indents the open paren
+indent_paren_after_func_decl    = false    # false/true
+
+# Controls the indent of the open paren of a function call, if on it's own line.If True, indents the open paren
+indent_paren_after_func_call    = false    # false/true
+
 # Controls the indent of a comma when inside a paren.If True, aligns under the open paren
 indent_comma_paren              = false    # false/true
 
