@@ -234,10 +234,13 @@
 30931 indent_var_def_cont.cfg          cpp/indent_var_def_cont.cpp
 30932 empty.cfg                        cpp/indent_var_def_cont.cpp
 
+30933 indent_paren_after_func_def.cfg  cpp/indent_paren_after_func_def.cpp
+30934 indent_paren_after_func_decl.cfg cpp/indent_paren_after_func_decl.cpp
 30935 ben.cfg                          cpp/indent-misc.cpp
 30936 indent_braces_no.cfg             cpp/indent_braces_no.h
 30937 indent_param.cfg                 cpp/indent_param.cpp
 30938 indent_switch_pp.cfg             cpp/indent_switch_pp.cpp
+30939 indent_paren_after_func_call.cfg cpp/indent_paren_after_func_call.cpp
 
 30940 mod_case_brace_rm.cfg            cpp/case-brace-remove.cpp
 

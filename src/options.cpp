@@ -850,7 +850,16 @@ void register_options(void)
                   "Controls the indent of a close paren after a newline.\n"
                   "0: Indent to body level\n"
                   "1: Align under the open paren\n"
-                  "2: Indent to the brace level.", "", 0, 2);
+                  "2: Indent to the brace level", "", 0, 2);
+   unc_add_option("indent_paren_after_func_def", UO_indent_paren_after_func_def, AT_BOOL,
+                  "Controls the indent of the open paren of a function definition, if on it's own line."
+                  "If True, indents the open paren");
+   unc_add_option("indent_paren_after_func_decl", UO_indent_paren_after_func_decl, AT_BOOL,
+                  "Controls the indent of the open paren of a function declaration, if on it's own line."
+                  "If True, indents the open paren");
+   unc_add_option("indent_paren_after_func_call", UO_indent_paren_after_func_call, AT_BOOL,
+                  "Controls the indent of the open paren of a function call, if on it's own line."
+                  "If True, indents the open paren");
    unc_add_option("indent_comma_paren", UO_indent_comma_paren, AT_BOOL,
                   "Controls the indent of a comma when inside a paren."
                   "If True, aligns under the open paren.");
