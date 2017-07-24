@@ -520,6 +520,8 @@ enum uncrustify_options
    UO_nl_func_def_paren,              // Add or remove newline between a function name and
                                       // the opening '(' in the definition
    UO_nl_func_def_paren_empty,        // Overrides nl_func_def_paren for functions with no parameters
+   UO_nl_func_call_paren,             // Add or remove newline between a function name and
+                                      // the opening '(' in the call
    UO_nl_func_decl_start,             // newline after the '(' in a function decl
    UO_nl_func_def_start,              // newline after the '(' in a function def
    UO_nl_func_decl_start_single,      // Overrides nl_func_decl_start when there is only one parameter

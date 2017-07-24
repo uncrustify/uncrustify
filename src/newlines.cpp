@@ -2152,6 +2152,16 @@ static void newline_func_def(chunk_t *start)
       }
    }
 
+   atmp = cpd.settings[UO_nl_func_call_paren].a;
+   if (atmp != AV_IGNORE)
+   {
+      prev = chunk_get_prev_ncnl(start);
+      if (prev != nullptr)
+      {
+         newline_iarf(prev, atmp);
+      }
+   }
+
    // Handle break newlines type and function
    prev = chunk_get_prev_ncnl(start);
    prev = skip_template_prev(prev);
@@ -3178,8 +3188,13 @@ void newlines_cleanup_braces(bool first)
                     || pc->parent_type == CT_FUNC_CALL_USER)
                  && (  (cpd.settings[UO_nl_func_call_start_multi_line].b)
                     || (cpd.settings[UO_nl_func_call_args_multi_line].b)
-                    || (cpd.settings[UO_nl_func_call_end_multi_line].b)))
+                    || (cpd.settings[UO_nl_func_call_end_multi_line].b)
+                    || (cpd.settings[UO_nl_func_call_paren].a != AV_IGNORE)))
          {
+            if (cpd.settings[UO_nl_func_call_paren].a != AV_IGNORE)
+            {
+               newline_func_def(pc);
+            }
             newline_func_multi_line(pc);
          }
          else if (first && (cpd.settings[UO_nl_remove_extra_newlines].u == 1))
