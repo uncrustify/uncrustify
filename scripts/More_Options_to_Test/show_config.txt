@@ -827,7 +827,7 @@ indent_paren_close              Unsigned Number
   Controls the indent of a close paren after a newline.
   0: Indent to body level
   1: Align under the open paren
-  2: Indent to the brace level.
+  2: Indent to the brace level
 
 indent_paren_after_func_def     { False, True }
   Controls the indent of the open paren of a function definition, if on it's own line.If True, indents the open paren
