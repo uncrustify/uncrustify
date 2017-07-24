@@ -850,7 +850,7 @@ void register_options(void)
                   "Controls the indent of a close paren after a newline.\n"
                   "0: Indent to body level\n"
                   "1: Align under the open paren\n"
-                  "2: Indent to the brace level.", "", 0, 2);
+                  "2: Indent to the brace level", "", 0, 2);
    unc_add_option("indent_paren_after_func_def", UO_indent_paren_after_func_def, AT_BOOL,
                   "Controls the indent of the open paren of a function definition, if on it's own line."
                   "If True, indents the open paren");
