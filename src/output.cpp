@@ -472,8 +472,8 @@ void output_text(FILE *pfile)
    // loop over the whole chunk list
    for (pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next(pc))
    {
-      LOG_FMT(LOUTIND, "text() %s, type %s, col=%zu\n",
-              pc->text(), get_token_name(pc->type), pc->orig_col);
+      LOG_FMT(LOUTIND, "%s(%d): text() is %s, type is %s, orig_col is %zu, column is %zu\n",
+              __func__, __LINE__, pc->text(), get_token_name(pc->type), pc->orig_col, pc->column);
       cpd.output_tab_as_space = (  cpd.settings[UO_cmt_convert_tab_to_spaces].b
                                 && chunk_is_comment(pc));
       if (pc->type == CT_NEWLINE)
@@ -628,7 +628,8 @@ void output_text(FILE *pfile)
                          || (  chunk_is_comment(pc)
                             && cpd.settings[UO_indent_with_tabs].u != 0);
 
-            LOG_FMT(LOUTIND, "  %zu> col %zu/%zu/%zu - ", pc->orig_line, pc->column, pc->column_indent, cpd.column);
+            LOG_FMT(LOUTIND, "%s(%d): orig_line is %zu, column is %zu, column_indent is %zu, cpd.column is %zu\n",
+                    __func__, __LINE__, pc->orig_line, pc->column, pc->column_indent, cpd.column);
          }
          else
          {
@@ -652,7 +653,8 @@ void output_text(FILE *pfile)
             {
                allow_tabs |= pc->after_tab;
             }
-            LOG_FMT(LOUTIND, " %zu(%d) -", pc->column, allow_tabs);
+            LOG_FMT(LOUTIND, " %s(%d): at column %zu(%s)\n",
+                    __func__, __LINE__, pc->column, (allow_tabs ? "true" : "FALSE"));
          }
 
          output_to_column(pc->column, allow_tabs);

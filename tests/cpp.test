@@ -182,6 +182,7 @@
 30816 cu.cfg                           cpp/for_long.cpp
 30817 ben.cfg                          cpp/cmt-cpp-cont.cpp
 30818 bug_1169.cfg                     cpp/bug_1169.cpp
+30819 bug_1170.cfg                     cpp/bug_1170.cpp
 
 30820 pp_define_at_level-1.cfg         cpp/pp-define-indent.cpp
 30821 pp_indent_case.cfg               cpp/pp_indent_case.cpp

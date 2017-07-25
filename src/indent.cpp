@@ -365,7 +365,7 @@ void reindent_line(chunk_t *pc, size_t column)
          LOG_FMT(LINDLINED, "   set column of ");
          if (pc->type == CT_NEWLINE)
          {
-            LOG_FMT(LINDLINED, "newline");
+            LOG_FMT(LINDLINED, "NEWLINE");
          }
          else
          {
@@ -648,8 +648,8 @@ void indent_text(void)
       }
       else
       {
-         LOG_FMT(LINDLINE, "%s(%d): orig_line is %zu, orig_col is %zu, for '%s'\n",
-                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
+         LOG_FMT(LINDLINE, "%s(%d): orig_line is %zu, orig_col is %zu, column is %zu, for '%s'\n",
+                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->column, pc->text());
          log_pcf_flags(LINDLINE, pc->flags);
       }
       if (  (cpd.settings[UO_use_options_overriding_for_qt_macros].b)
@@ -1849,7 +1849,8 @@ void indent_text(void)
             log_indent();
             if (  pc->level == pc->brace_level
                && (  pc->type == CT_FPAREN_OPEN
-                  || pc->type == CT_SPAREN_OPEN))
+                  || pc->type == CT_SPAREN_OPEN
+                  || pc->type == CT_ANGLE_OPEN))     // Issue #1170
             {
                //frm.pse[frm.pse_tos].indent += abs(cpd.settings[UO_indent_continue].n);
                //   frm.pse[frm.pse_tos].indent      = calc_indent_continue(frm, frm.pse_tos);

@@ -187,149 +187,149 @@ space_text(): orig_line is , orig_col is , ; type is SEMICOLON
 do_space(): orig_line is , orig_col is , type is SEMICOLON, ;
  = REMOVE @  => 
 space_text(): orig_col is , orig_col is ,  type is NEWLINE
-space_col_align(): orig_line is , orig_col is , [FUNC_CLASS_DEF/NONE] 'TelegramIndex' <==> line is , col is  [FPAREN_OPEN/FUNC_CLASS_DEF] '(' [CallStack:-DEBUG NOT SET-]
+space_col_align(): orig_line is , orig_col is , [FUNC_CLASS_DEF/NONE] 'TelegramIndex' <==> orig_line is , orig_col is  [FPAREN_OPEN/FUNC_CLASS_DEF] '(' [CallStack:-DEBUG NOT SET-]
 do_space(): orig_line is , orig_col is , type is FUNC_CLASS_DEF, TelegramIndex
 log_rule(): Spacing: line  [FUNC_CLASS_DEF/NONE] 'TelegramIndex' <===> [FPAREN_OPEN/FUNC_CLASS_DEF] '(' : sp_func_class_paren[]
 space_col_align(): av is , len is  => 
-space_col_align(): orig_line is , orig_col is , [FPAREN_OPEN/FUNC_CLASS_DEF] '(' <==> line is , col is  [QUALIFIER/NONE] 'const' [CallStack:-DEBUG NOT SET-]
+space_col_align(): orig_line is , orig_col is , [FPAREN_OPEN/FUNC_CLASS_DEF] '(' <==> orig_line is , orig_col is  [QUALIFIER/NONE] 'const' [CallStack:-DEBUG NOT SET-]
 do_space(): orig_line is , orig_col is , type is FPAREN_OPEN, (
 log_rule(): Spacing: line  [FPAREN_OPEN/FUNC_CLASS_DEF] '(' <===> [QUALIFIER/NONE] 'const' : sp_inside_fparen[]
 space_col_align(): av is , len is  => 
-space_col_align(): orig_line is , orig_col is , [QUALIFIER/NONE] 'const' <==> line is , col is  [TYPE/NONE] 'char' [CallStack:-DEBUG NOT SET-]
+space_col_align(): orig_line is , orig_col is , [QUALIFIER/NONE] 'const' <==> orig_line is , orig_col is  [TYPE/NONE] 'char' [CallStack:-DEBUG NOT SET-]
 do_space(): orig_line is , orig_col is , type is QUALIFIER, const
 log_rule(): Spacing: line  [QUALIFIER/NONE] 'const' <===> [TYPE/NONE] 'char' : sp_after_type[]
 space_col_align(): av is , len is  => 
-space_col_align(): orig_line is , orig_col is , [TYPE/NONE] 'char' <==> line is , col is  [PTR_TYPE/NONE] '*' [CallStack:-DEBUG NOT SET-]
+space_col_align(): orig_line is , orig_col is , [TYPE/NONE] 'char' <==> orig_line is , orig_col is  [PTR_TYPE/NONE] '*' [CallStack:-DEBUG NOT SET-]
 do_space(): orig_line is , orig_col is , type is TYPE, char
 log_rule(): Spacing: line  [TYPE/NONE] 'char' <===> [PTR_TYPE/NONE] '*' : IGNORE[]
 space_col_align(): av is , len is  => 
-space_col_align(): orig_line is , orig_col is , [PTR_TYPE/NONE] '*' <==> line is , col is  [WORD/NONE] 'pN' [CallStack:-DEBUG NOT SET-]
+space_col_align(): orig_line is , orig_col is , [PTR_TYPE/NONE] '*' <==> orig_line is , orig_col is  [WORD/NONE] 'pN' [CallStack:-DEBUG NOT SET-]
 do_space(): orig_line is , orig_col is , type is PTR_TYPE, *
 log_rule(): Spacing: line  [PTR_TYPE/NONE] '*' <===> [WORD/NONE] 'pN' : IGNORE[]
 space_col_align(): av is , len is  => 
-space_col_align(): orig_line is , orig_col is , [WORD/NONE] 'pN' <==> line is , col is  [COMMA/NONE] ',' [CallStack:-DEBUG NOT SET-]
+space_col_align(): orig_line is , orig_col is , [WORD/NONE] 'pN' <==> orig_line is , orig_col is  [COMMA/NONE] ',' [CallStack:-DEBUG NOT SET-]
 do_space(): orig_line is , orig_col is , type is WORD, pN
 log_rule(): Spacing: line  [WORD/NONE] 'pN' <===> [COMMA/NONE] ',' : sp_before_comma[]
 space_col_align(): av is , len is  => 
-space_col_align(): orig_line is , orig_col is , [COMMA/NONE] ',' <==> line is , col is  [TYPE/NONE] 'unsigned' [CallStack:-DEBUG NOT SET-]
+space_col_align(): orig_line is , orig_col is , [COMMA/NONE] ',' <==> orig_line is , orig_col is  [TYPE/NONE] 'unsigned' [CallStack:-DEBUG NOT SET-]
 do_space(): orig_line is , orig_col is , type is COMMA, ,
 log_rule(): Spacing: line  [COMMA/NONE] ',' <===> [TYPE/NONE] 'unsigned' : sp_after_comma[]
 space_col_align(): av is , len is  => 
-space_col_align(): orig_line is , orig_col is , [TYPE/NONE] 'unsigned' <==> line is , col is  [TYPE/NONE] 'long' [CallStack:-DEBUG NOT SET-]
+space_col_align(): orig_line is , orig_col is , [TYPE/NONE] 'unsigned' <==> orig_line is , orig_col is  [TYPE/NONE] 'long' [CallStack:-DEBUG NOT SET-]
 do_space(): orig_line is , orig_col is , type is TYPE, unsigned
 log_rule(): Spacing: line  [TYPE/NONE] 'unsigned' <===> [TYPE/NONE] 'long' : sp_after_type[]
 space_col_align(): av is , len is  => 
-space_col_align(): orig_line is , orig_col is , [TYPE/NONE] 'long' <==> line is , col is  [WORD/NONE] 'nI' [CallStack:-DEBUG NOT SET-]
+space_col_align(): orig_line is , orig_col is , [TYPE/NONE] 'long' <==> orig_line is , orig_col is  [WORD/NONE] 'nI' [CallStack:-DEBUG NOT SET-]
 do_space(): orig_line is , orig_col is , type is TYPE, long
 log_rule(): Spacing: line  [TYPE/NONE] 'long' <===> [WORD/NONE] 'nI' : sp_after_type[]
 space_col_align(): av is , len is  => 
-space_col_align(): orig_line is , orig_col is , [WORD/NONE] 'nI' <==> line is , col is  [FPAREN_CLOSE/FUNC_CLASS_DEF] ')' [CallStack:-DEBUG NOT SET-]
+space_col_align(): orig_line is , orig_col is , [WORD/NONE] 'nI' <==> orig_line is , orig_col is  [FPAREN_CLOSE/FUNC_CLASS_DEF] ')' [CallStack:-DEBUG NOT SET-]
 do_space(): orig_line is , orig_col is , type is WORD, nI
 log_rule(): Spacing: line  [WORD/NONE] 'nI' <===> [FPAREN_CLOSE/FUNC_CLASS_DEF] ')' : sp_inside_fparen[]
 space_col_align(): av is , len is  => 
-space_col_align(): orig_line is , orig_col is , [FPAREN_CLOSE/FUNC_CLASS_DEF] ')' <==> line is , col is  [CONSTR_COLON/NONE] ':' [CallStack:-DEBUG NOT SET-]
+space_col_align(): orig_line is , orig_col is , [FPAREN_CLOSE/FUNC_CLASS_DEF] ')' <==> orig_line is , orig_col is  [CONSTR_COLON/NONE] ':' [CallStack:-DEBUG NOT SET-]
 do_space(): orig_line is , orig_col is , type is FPAREN_CLOSE, )
 log_rule(): Spacing: line  [FPAREN_CLOSE/FUNC_CLASS_DEF] ')' <===> [CONSTR_COLON/NONE] ':' : ADD as default value[]
 space_col_align(): av is , len is  => 
-space_col_align(): orig_line is , orig_col is , [CONSTR_COLON/NONE] ':' <==> line is , col is  [NEWLINE/NONE] '' [CallStack:-DEBUG NOT SET-]
+space_col_align(): orig_line is , orig_col is , [CONSTR_COLON/NONE] ':' <==> orig_line is , orig_col is  [NEWLINE/NONE] '' [CallStack:-DEBUG NOT SET-]
 do_space(): orig_line is , orig_col is , type is CONSTR_COLON, :
 space_col_align(): av is , len is  => 
-space_col_align(): orig_line is , orig_col is , [FUNC_CTOR_VAR/NONE] 'pTelName' <==> line is , col is  [FPAREN_OPEN/FUNC_CTOR_VAR] '(' [CallStack:-DEBUG NOT SET-]
+space_col_align(): orig_line is , orig_col is , [FUNC_CTOR_VAR/NONE] 'pTelName' <==> orig_line is , orig_col is  [FPAREN_OPEN/FUNC_CTOR_VAR] '(' [CallStack:-DEBUG NOT SET-]
 do_space(): orig_line is , orig_col is , type is FUNC_CTOR_VAR, pTelName
 log_rule(): Spacing: line  [FUNC_CTOR_VAR/NONE] 'pTelName' <===> [FPAREN_OPEN/FUNC_CTOR_VAR] '(' : sp_func_call_paren[]
 space_col_align(): av is , len is  => 
-space_col_align(): orig_line is , orig_col is , [FPAREN_OPEN/FUNC_CTOR_VAR] '(' <==> line is , col is  [WORD/NONE] 'pN' [CallStack:-DEBUG NOT SET-]
+space_col_align(): orig_line is , orig_col is , [FPAREN_OPEN/FUNC_CTOR_VAR] '(' <==> orig_line is , orig_col is  [WORD/NONE] 'pN' [CallStack:-DEBUG NOT SET-]
 do_space(): orig_line is , orig_col is , type is FPAREN_OPEN, (
 log_rule(): Spacing: line  [FPAREN_OPEN/FUNC_CTOR_VAR] '(' <===> [WORD/NONE] 'pN' : sp_inside_fparen[]
 space_col_align(): av is , len is  => 
-space_col_align(): orig_line is , orig_col is , [WORD/NONE] 'pN' <==> line is , col is  [FPAREN_CLOSE/FUNC_CTOR_VAR] ')' [CallStack:-DEBUG NOT SET-]
+space_col_align(): orig_line is , orig_col is , [WORD/NONE] 'pN' <==> orig_line is , orig_col is  [FPAREN_CLOSE/FUNC_CTOR_VAR] ')' [CallStack:-DEBUG NOT SET-]
 do_space(): orig_line is , orig_col is , type is WORD, pN
 log_rule(): Spacing: line  [WORD/NONE] 'pN' <===> [FPAREN_CLOSE/FUNC_CTOR_VAR] ')' : sp_inside_fparen[]
 space_col_align(): av is , len is  => 
-space_col_align(): orig_line is , orig_col is , [FPAREN_CLOSE/FUNC_CTOR_VAR] ')' <==> line is , col is  [COMMA/NONE] ',' [CallStack:-DEBUG NOT SET-]
+space_col_align(): orig_line is , orig_col is , [FPAREN_CLOSE/FUNC_CTOR_VAR] ')' <==> orig_line is , orig_col is  [COMMA/NONE] ',' [CallStack:-DEBUG NOT SET-]
 do_space(): orig_line is , orig_col is , type is FPAREN_CLOSE, )
 log_rule(): Spacing: line  [FPAREN_CLOSE/FUNC_CTOR_VAR] ')' <===> [COMMA/NONE] ',' : sp_before_comma[]
 space_col_align(): av is , len is  => 
-space_col_align(): orig_line is , orig_col is , [COMMA/NONE] ',' <==> line is , col is  [NEWLINE/NONE] '' [CallStack:-DEBUG NOT SET-]
+space_col_align(): orig_line is , orig_col is , [COMMA/NONE] ',' <==> orig_line is , orig_col is  [NEWLINE/NONE] '' [CallStack:-DEBUG NOT SET-]
 do_space(): orig_line is , orig_col is , type is COMMA, ,
 space_col_align(): av is , len is  => 
-space_col_align(): orig_line is , orig_col is , [FUNC_CTOR_VAR/NONE] 'nTelIndex' <==> line is , col is  [FPAREN_OPEN/FUNC_CTOR_VAR] '(' [CallStack:-DEBUG NOT SET-]
+space_col_align(): orig_line is , orig_col is , [FUNC_CTOR_VAR/NONE] 'nTelIndex' <==> orig_line is , orig_col is  [FPAREN_OPEN/FUNC_CTOR_VAR] '(' [CallStack:-DEBUG NOT SET-]
 do_space(): orig_line is , orig_col is , type is FUNC_CTOR_VAR, nTelIndex
 log_rule(): Spacing: line  [FUNC_CTOR_VAR/NONE] 'nTelIndex' <===> [FPAREN_OPEN/FUNC_CTOR_VAR] '(' : sp_func_call_paren[]
 space_col_align(): av is , len is  => 
-space_col_align(): orig_line is , orig_col is , [FPAREN_OPEN/FUNC_CTOR_VAR] '(' <==> line is , col is  [WORD/NONE] 'n' [CallStack:-DEBUG NOT SET-]
+space_col_align(): orig_line is , orig_col is , [FPAREN_OPEN/FUNC_CTOR_VAR] '(' <==> orig_line is , orig_col is  [WORD/NONE] 'n' [CallStack:-DEBUG NOT SET-]
 do_space(): orig_line is , orig_col is , type is FPAREN_OPEN, (
 log_rule(): Spacing: line  [FPAREN_OPEN/FUNC_CTOR_VAR] '(' <===> [WORD/NONE] 'n' : sp_inside_fparen[]
 space_col_align(): av is , len is  => 
-space_col_align(): orig_line is , orig_col is , [WORD/NONE] 'n' <==> line is , col is  [FPAREN_CLOSE/FUNC_CTOR_VAR] ')' [CallStack:-DEBUG NOT SET-]
+space_col_align(): orig_line is , orig_col is , [WORD/NONE] 'n' <==> orig_line is , orig_col is  [FPAREN_CLOSE/FUNC_CTOR_VAR] ')' [CallStack:-DEBUG NOT SET-]
 do_space(): orig_line is , orig_col is , type is WORD, n
 log_rule(): Spacing: line  [WORD/NONE] 'n' <===> [FPAREN_CLOSE/FUNC_CTOR_VAR] ')' : sp_inside_fparen[]
 space_col_align(): av is , len is  => 
-space_col_align(): orig_line is , orig_col is , [FPAREN_CLOSE/FUNC_CTOR_VAR] ')' <==> line is , col is  [NEWLINE/NONE] '' [CallStack:-DEBUG NOT SET-]
+space_col_align(): orig_line is , orig_col is , [FPAREN_CLOSE/FUNC_CTOR_VAR] ')' <==> orig_line is , orig_col is  [NEWLINE/NONE] '' [CallStack:-DEBUG NOT SET-]
 do_space(): orig_line is , orig_col is , type is FPAREN_CLOSE, )
 space_col_align(): av is , len is  => 
-space_col_align(): orig_line is , orig_col is , [BRACE_OPEN/FUNC_CLASS_DEF] '{' <==> line is , col is  [NEWLINE/NONE] '' [CallStack:-DEBUG NOT SET-]
+space_col_align(): orig_line is , orig_col is , [BRACE_OPEN/FUNC_CLASS_DEF] '{' <==> orig_line is , orig_col is  [NEWLINE/NONE] '' [CallStack:-DEBUG NOT SET-]
 do_space(): orig_line is , orig_col is , type is BRACE_OPEN, {
 space_col_align(): av is , len is  => 
-space_col_align(): orig_line is , orig_col is , [BRACE_CLOSE/FUNC_CLASS_DEF] '}' <==> line is , col is  [NEWLINE/NONE] '' [CallStack:-DEBUG NOT SET-]
+space_col_align(): orig_line is , orig_col is , [BRACE_CLOSE/FUNC_CLASS_DEF] '}' <==> orig_line is , orig_col is  [NEWLINE/NONE] '' [CallStack:-DEBUG NOT SET-]
 do_space(): orig_line is , orig_col is , type is BRACE_CLOSE, }
 space_col_align(): av is , len is  => 
-space_col_align(): orig_line is , orig_col is , [DESTRUCTOR/NONE] '~' <==> line is , col is  [FUNC_CLASS_DEF/DESTRUCTOR] 'TelegramIndex' [CallStack:-DEBUG NOT SET-]
+space_col_align(): orig_line is , orig_col is , [DESTRUCTOR/NONE] '~' <==> orig_line is , orig_col is  [FUNC_CLASS_DEF/DESTRUCTOR] 'TelegramIndex' [CallStack:-DEBUG NOT SET-]
 do_space(): orig_line is , orig_col is , type is DESTRUCTOR, ~
 log_rule(): Spacing: line  [DESTRUCTOR/NONE] '~' <===> [FUNC_CLASS_DEF/DESTRUCTOR] 'TelegramIndex' : REMOVE[]
 space_col_align(): av is , len is  => 
-space_col_align(): orig_line is , orig_col is , [FUNC_CLASS_DEF/DESTRUCTOR] 'TelegramIndex' <==> line is , col is  [FPAREN_OPEN/FUNC_CLASS_DEF] '(' [CallStack:-DEBUG NOT SET-]
+space_col_align(): orig_line is , orig_col is , [FUNC_CLASS_DEF/DESTRUCTOR] 'TelegramIndex' <==> orig_line is , orig_col is  [FPAREN_OPEN/FUNC_CLASS_DEF] '(' [CallStack:-DEBUG NOT SET-]
 do_space(): orig_line is , orig_col is , type is FUNC_CLASS_DEF, TelegramIndex
 log_rule(): Spacing: line  [FUNC_CLASS_DEF/DESTRUCTOR] 'TelegramIndex' <===> [FPAREN_OPEN/FUNC_CLASS_DEF] '(' : sp_func_class_paren[]
 space_col_align(): av is , len is  => 
-space_col_align(): orig_line is , orig_col is , [FPAREN_OPEN/FUNC_CLASS_DEF] '(' <==> line is , col is  [FPAREN_CLOSE/FUNC_CLASS_DEF] ')' [CallStack:-DEBUG NOT SET-]
+space_col_align(): orig_line is , orig_col is , [FPAREN_OPEN/FUNC_CLASS_DEF] '(' <==> orig_line is , orig_col is  [FPAREN_CLOSE/FUNC_CLASS_DEF] ')' [CallStack:-DEBUG NOT SET-]
 do_space(): orig_line is , orig_col is , type is FPAREN_OPEN, (
 log_rule(): Spacing: line  [FPAREN_OPEN/FUNC_CLASS_DEF] '(' <===> [FPAREN_CLOSE/FUNC_CLASS_DEF] ')' : sp_inside_fparens[]
 space_col_align(): av is , len is  => 
-space_col_align(): orig_line is , orig_col is , [FPAREN_CLOSE/FUNC_CLASS_DEF] ')' <==> line is , col is  [NEWLINE/NONE] '' [CallStack:-DEBUG NOT SET-]
+space_col_align(): orig_line is , orig_col is , [FPAREN_CLOSE/FUNC_CLASS_DEF] ')' <==> orig_line is , orig_col is  [NEWLINE/NONE] '' [CallStack:-DEBUG NOT SET-]
 do_space(): orig_line is , orig_col is , type is FPAREN_CLOSE, )
 space_col_align(): av is , len is  => 
-space_col_align(): orig_line is , orig_col is , [BRACE_OPEN/FUNC_CLASS_DEF] '{' <==> line is , col is  [NEWLINE/NONE] '' [CallStack:-DEBUG NOT SET-]
+space_col_align(): orig_line is , orig_col is , [BRACE_OPEN/FUNC_CLASS_DEF] '{' <==> orig_line is , orig_col is  [NEWLINE/NONE] '' [CallStack:-DEBUG NOT SET-]
 do_space(): orig_line is , orig_col is , type is BRACE_OPEN, {
 space_col_align(): av is , len is  => 
-space_col_align(): orig_line is , orig_col is , [BRACE_CLOSE/FUNC_CLASS_DEF] '}' <==> line is , col is  [NEWLINE/NONE] '' [CallStack:-DEBUG NOT SET-]
+space_col_align(): orig_line is , orig_col is , [BRACE_CLOSE/FUNC_CLASS_DEF] '}' <==> orig_line is , orig_col is  [NEWLINE/NONE] '' [CallStack:-DEBUG NOT SET-]
 do_space(): orig_line is , orig_col is , type is BRACE_CLOSE, }
 space_col_align(): av is , len is  => 
-space_col_align(): orig_line is , orig_col is , [QUALIFIER/NONE] 'const' <==> line is , col is  [TYPE/NONE] 'char' [CallStack:-DEBUG NOT SET-]
+space_col_align(): orig_line is , orig_col is , [QUALIFIER/NONE] 'const' <==> orig_line is , orig_col is  [TYPE/NONE] 'char' [CallStack:-DEBUG NOT SET-]
 do_space(): orig_line is , orig_col is , type is QUALIFIER, const
 log_rule(): Spacing: line  [QUALIFIER/NONE] 'const' <===> [TYPE/NONE] 'char' : sp_after_type[]
 space_col_align(): av is , len is  => 
-space_col_align(): orig_line is , orig_col is , [TYPE/NONE] 'char' <==> line is , col is  [PTR_TYPE/NONE] '*' [CallStack:-DEBUG NOT SET-]
+space_col_align(): orig_line is , orig_col is , [TYPE/NONE] 'char' <==> orig_line is , orig_col is  [PTR_TYPE/NONE] '*' [CallStack:-DEBUG NOT SET-]
 do_space(): orig_line is , orig_col is , type is TYPE, char
 log_rule(): Spacing: line  [TYPE/NONE] 'char' <===> [PTR_TYPE/NONE] '*' : IGNORE[]
 space_col_align(): av is , len is  => 
-space_col_align(): orig_line is , orig_col is , [PTR_TYPE/NONE] '*' <==> line is , col is  [QUALIFIER/NONE] 'const' [CallStack:-DEBUG NOT SET-]
+space_col_align(): orig_line is , orig_col is , [PTR_TYPE/NONE] '*' <==> orig_line is , orig_col is  [QUALIFIER/NONE] 'const' [CallStack:-DEBUG NOT SET-]
 do_space(): orig_line is , orig_col is , type is PTR_TYPE, *
 log_rule(): Spacing: line  [PTR_TYPE/NONE] '*' <===> [QUALIFIER/NONE] 'const' : IGNORE[]
 space_col_align(): av is , len is  => 
-space_col_align(): orig_line is , orig_col is , [QUALIFIER/NONE] 'const' <==> line is , col is  [WORD/NONE] 'pTelName' [CallStack:-DEBUG NOT SET-]
+space_col_align(): orig_line is , orig_col is , [QUALIFIER/NONE] 'const' <==> orig_line is , orig_col is  [WORD/NONE] 'pTelName' [CallStack:-DEBUG NOT SET-]
 do_space(): orig_line is , orig_col is , type is QUALIFIER, const
 log_rule(): Spacing: line  [QUALIFIER/NONE] 'const' <===> [WORD/NONE] 'pTelName' : sp_after_type[]
 space_col_align(): av is , len is  => 
-space_col_align(): orig_line is , orig_col is , [WORD/NONE] 'pTelName' <==> line is , col is  [SEMICOLON/NONE] ';' [CallStack:-DEBUG NOT SET-]
+space_col_align(): orig_line is , orig_col is , [WORD/NONE] 'pTelName' <==> orig_line is , orig_col is  [SEMICOLON/NONE] ';' [CallStack:-DEBUG NOT SET-]
 do_space(): orig_line is , orig_col is , type is WORD, pTelName
 log_rule(): Spacing: line  [WORD/NONE] 'pTelName' <===> [SEMICOLON/NONE] ';' : sp_before_semi[]
 space_col_align(): av is , len is  => 
-space_col_align(): orig_line is , orig_col is , [SEMICOLON/NONE] ';' <==> line is , col is  [NEWLINE/NONE] '' [CallStack:-DEBUG NOT SET-]
+space_col_align(): orig_line is , orig_col is , [SEMICOLON/NONE] ';' <==> orig_line is , orig_col is  [NEWLINE/NONE] '' [CallStack:-DEBUG NOT SET-]
 do_space(): orig_line is , orig_col is , type is SEMICOLON, ;
 space_col_align(): av is , len is  => 
-space_col_align(): orig_line is , orig_col is , [TYPE/NONE] 'unsigned' <==> line is , col is  [TYPE/NONE] 'long' [CallStack:-DEBUG NOT SET-]
+space_col_align(): orig_line is , orig_col is , [TYPE/NONE] 'unsigned' <==> orig_line is , orig_col is  [TYPE/NONE] 'long' [CallStack:-DEBUG NOT SET-]
 do_space(): orig_line is , orig_col is , type is TYPE, unsigned
 log_rule(): Spacing: line  [TYPE/NONE] 'unsigned' <===> [TYPE/NONE] 'long' : sp_after_type[]
 space_col_align(): av is , len is  => 
-space_col_align(): orig_line is , orig_col is , [TYPE/NONE] 'long' <==> line is , col is  [WORD/NONE] 'nTelIndex' [CallStack:-DEBUG NOT SET-]
+space_col_align(): orig_line is , orig_col is , [TYPE/NONE] 'long' <==> orig_line is , orig_col is  [WORD/NONE] 'nTelIndex' [CallStack:-DEBUG NOT SET-]
 do_space(): orig_line is , orig_col is , type is TYPE, long
 log_rule(): Spacing: line  [TYPE/NONE] 'long' <===> [WORD/NONE] 'nTelIndex' : sp_after_type[]
 space_col_align(): av is , len is  => 
-space_col_align(): orig_line is , orig_col is , [WORD/NONE] 'nTelIndex' <==> line is , col is  [SEMICOLON/NONE] ';' [CallStack:-DEBUG NOT SET-]
+space_col_align(): orig_line is , orig_col is , [WORD/NONE] 'nTelIndex' <==> orig_line is , orig_col is  [SEMICOLON/NONE] ';' [CallStack:-DEBUG NOT SET-]
 do_space(): orig_line is , orig_col is , type is WORD, nTelIndex
 log_rule(): Spacing: line  [WORD/NONE] 'nTelIndex' <===> [SEMICOLON/NONE] ';' : sp_before_semi[]
 space_col_align(): av is , len is  => 
-space_col_align(): orig_line is , orig_col is , [SEMICOLON/NONE] ';' <==> line is , col is  [NEWLINE/NONE] '' [CallStack:-DEBUG NOT SET-]
+space_col_align(): orig_line is , orig_col is , [SEMICOLON/NONE] ';' <==> orig_line is , orig_col is  [NEWLINE/NONE] '' [CallStack:-DEBUG NOT SET-]
 do_space(): orig_line is , orig_col is , type is SEMICOLON, ;
 space_col_align(): av is , len is  => 
