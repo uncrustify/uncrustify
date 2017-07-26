@@ -12,6 +12,9 @@
 #include "args.h"
 
 
+static size_t counter = 0;
+
+
 // protocol of the line
 // examples:
 //   prot_the_line(__LINE__, pc->orig_line);
@@ -19,7 +22,8 @@
 // log_pcf_flags(LSYS, pc->flags);
 void prot_the_line(int theLine, unsigned int actual_line)
 {
-   LOG_FMT(LGUY, "Prot_the_line:(%d)\n", theLine);
+   counter++;
+   LOG_FMT(LGUY, "Prot_the_line:(%d)(%zu)\n", theLine, counter);
    for (chunk_t *pc = chunk_get_head(); pc != nullptr; pc = pc->next)
    {
       if (pc->orig_line == actual_line)
@@ -47,8 +51,8 @@ void prot_the_line(int theLine, unsigned int actual_line)
          }
          else
          {
-            LOG_FMT(LGUY, "text() %s, type %s, parent_type %s, orig_col=%zu, ",
-                    pc->text(), get_token_name(pc->type), get_token_name(pc->parent_type), pc->orig_col);
+            LOG_FMT(LGUY, "text() %s, type is %s, parent_type is %s, orig_col is %zu, column is %zu, ",
+                    pc->text(), get_token_name(pc->type), get_token_name(pc->parent_type), pc->orig_col, pc->column);
          }
          LOG_FMT(LGUY, "pc->flags:");
          log_pcf_flags(LGUY, pc->flags);
