@@ -97,6 +97,15 @@ static void split_fcn_params(chunk_t *start);
 
 
 /**
+ * Figures out where to split a template
+ *
+ *
+ * @param start   the offending token
+ */
+static void split_template(chunk_t *start);
+
+
+/**
  * Splits the parameters at every comma that is at the fparen level.
  *
  * @param start   the offending token
@@ -311,7 +320,7 @@ static bool split_line(chunk_t *start)
    LOG_FUNC_ENTRY();
    LOG_FMT(LSPLIT, "%s(%d): start->flags ", __func__, __LINE__);
    log_pcf_flags(LSPLIT, start->flags);
-   LOG_FMT(LSPLIT, "%s(%d): orig_line=%zu, orig_col=%zu, token: '%s', type=%s,\n",
+   LOG_FMT(LSPLIT, "%s(%d): orig_line is %zu, orig_col is %zu, text() '%s', type is %s,\n",
            __func__, __LINE__, start->orig_line, start->column, start->text(),
            get_token_name(start->type));
    LOG_FMT(LSPLIT, "   parent_type %s, (PCF_IN_FCN_DEF is %s), (PCF_IN_FCN_CALL is %s),",
@@ -367,6 +376,16 @@ static bool split_line(chunk_t *start)
          }
       }
       split_fcn_params(start);
+      return(true);
+   }
+
+   /*
+    * If this is in a template, split on commas, Issue #1170
+    */
+   else if (start->flags & PCF_IN_TEMPLATE)
+   {
+      LOG_FMT(LSPLIT, " ** TEMPLATE SPLIT **\n");
+      split_template(start);
       return(true);
    }
 
@@ -733,3 +752,41 @@ static void split_fcn_params(chunk_t *start)
       cpd.changes++;
    }
 } // split_fcn_params
+
+
+static void split_template(chunk_t *start)
+{
+   LOG_FUNC_ENTRY();
+   LOG_FMT(LSPLIT, "  %s(%d): start %s\n", __func__, __LINE__, start->text());
+   LOG_FMT(LSPLIT, "  %s(%d): back up until the prev is a comma\n", __func__, __LINE__);
+
+   // back up until the prev is a comma
+   chunk_t *prev = start;
+   while ((prev = chunk_get_prev(prev)) != nullptr)
+   {
+      LOG_FMT(LSPLIT, "  %s(%d): prev '%s'\n", __func__, __LINE__, prev->text());
+      if (chunk_is_newline(prev) || prev->type == CT_COMMA)
+      {
+         break;
+      }
+   }
+
+   if (prev != nullptr && !chunk_is_newline(prev))
+   {
+      LOG_FMT(LSPLIT, "  %s(%d):", __func__, __LINE__);
+      LOG_FMT(LSPLIT, " -- ended on [%s] --\n", get_token_name(prev->type));
+      chunk_t *pc = chunk_get_next(prev);
+      newline_add_before(pc);
+      size_t  min_col = 1;
+      if (cpd.settings[UO_indent_continue].n == 0)
+      {
+         min_col += cpd.settings[UO_indent_columns].u;
+      }
+      else
+      {
+         min_col += abs(cpd.settings[UO_indent_continue].n);
+      }
+      reindent_line(pc, min_col);
+      cpd.changes++;
+   }
+} // split_templatefcn_params
