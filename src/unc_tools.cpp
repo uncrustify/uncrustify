@@ -161,15 +161,42 @@ void dump_out(unsigned int type)
          fprintf(D_file, "  orig_line %zu\n", pc->orig_line);
          fprintf(D_file, "  orig_col %zu\n", pc->orig_col);
          fprintf(D_file, "  orig_col_end %zu\n", pc->orig_col_end);
-         if (pc->orig_prev_sp != 0) fprintf(D_file, "  orig_prev_sp %u\n", pc->orig_prev_sp);
-         if (pc->flags != 0) fprintf(D_file, "  flags %" PRIu64 "\n", pc->flags);
-         if (pc->column != 0) fprintf(D_file, "  column %zu\n", pc->column);
-         if (pc->column_indent != 0) fprintf(D_file, "  column_indent %zu\n", pc->column_indent);
-         if (pc->nl_count != 0) fprintf(D_file, "  nl_count %zu\n", pc->nl_count);
-         if (pc->level != 0) fprintf(D_file, "  level %zu\n", pc->level);
-         if (pc->brace_level != 0) fprintf(D_file, "  brace_level %zu\n", pc->brace_level);
-         if (pc->pp_level != 0) fprintf(D_file, "  pp_level %zu\n", pc->pp_level);
-         if (pc->after_tab != 0) fprintf(D_file, "  after_tab %d\n", pc->after_tab);
+         if (pc->orig_prev_sp != 0)
+         {
+            fprintf(D_file, "  orig_prev_sp %u\n", pc->orig_prev_sp);
+         }
+         if (pc->flags != 0)
+         {
+            fprintf(D_file, "  flags %" PRIu64 "\n", pc->flags);
+         }
+         if (pc->column != 0)
+         {
+            fprintf(D_file, "  column %zu\n", pc->column);
+         }
+         if (pc->column_indent != 0)
+         {
+            fprintf(D_file, "  column_indent %zu\n", pc->column_indent);
+         }
+         if (pc->nl_count != 0)
+         {
+            fprintf(D_file, "  nl_count %zu\n", pc->nl_count);
+         }
+         if (pc->level != 0)
+         {
+            fprintf(D_file, "  level %zu\n", pc->level);
+         }
+         if (pc->brace_level != 0)
+         {
+            fprintf(D_file, "  brace_level %zu\n", pc->brace_level);
+         }
+         if (pc->pp_level != 0)
+         {
+            fprintf(D_file, "  pp_level %zu\n", pc->pp_level);
+         }
+         if (pc->after_tab != 0)
+         {
+            fprintf(D_file, "  after_tab %d\n", pc->after_tab);
+         }
          if (pc->type != CT_NEWLINE)
          {
             fprintf(D_file, "  text %s\n", pc->text());
@@ -177,7 +204,7 @@ void dump_out(unsigned int type)
       }
       fclose(D_file);
    }
-}
+} // dump_out
 
 
 void dump_in(unsigned int type)
