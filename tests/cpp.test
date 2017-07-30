@@ -48,6 +48,7 @@
 30046 nl_func_decl_2.cfg               cpp/nl_func_decl.cpp
 30047 nl_func_paren_empty.cfg          cpp/nl_func_paren_empty.cpp
 30048 nl_func_def_paren_empty.cfg      cpp/nl_func_def_paren_empty.cpp
+30049 nl_func_call_paren.cfg           cpp/nl_func_call_paren.cpp
 
 30050 nl_namespace-r.cfg               cpp/nl-namespace.h
 30051 nl_namespace-a.cfg               cpp/nl-namespace.h

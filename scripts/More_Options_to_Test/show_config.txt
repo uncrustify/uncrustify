@@ -1166,6 +1166,9 @@ nl_func_def_paren               { Ignore, Add, Remove, Force }
 nl_func_def_paren_empty         { Ignore, Add, Remove, Force }
   Overrides nl_func_def_paren for functions with no parameters.
 
+nl_func_call_paren              { Ignore, Add, Remove, Force }
+  Add or remove newline between a function name and the opening '(' in the call
+
 nl_func_decl_start              { Ignore, Add, Remove, Force }
   Add or remove newline after '(' in a function declaration.
 

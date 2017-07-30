@@ -355,6 +355,7 @@ nl_func_paren                   = ignore
 nl_func_paren_empty             = ignore
 nl_func_def_paren               = ignore
 nl_func_def_paren_empty         = ignore
+nl_func_call_paren              = ignore
 nl_func_decl_start              = ignore
 nl_func_def_start               = ignore
 nl_func_decl_start_single       = ignore
