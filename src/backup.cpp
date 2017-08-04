@@ -37,7 +37,7 @@ int backup_copy_file(const char *filename, const vector<UINT8> &data)
 {
    char  newpath[1024];
    char  md5_str_in[33];
-   char  md5_str[33];
+   char  md5_str[34];
    UINT8 dig[16];
 
    md5_str_in[0] = 0;
