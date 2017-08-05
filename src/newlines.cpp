@@ -432,12 +432,12 @@ chunk_t *newline_add_before(chunk_t *pc)
       return(prev);
    }
 
-   LOG_FMT(LNEWLINE, "%s(%d): '%s' on line %zu, col %zu, pc->column=%zu",
+   LOG_FMT(LNEWLINE, "%s(%d): '%s' on orig_line is %zu, orig_col is %zu, pc->column is %zu",
            __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col, pc->column);
    log_func_stack_inline(LNEWLINE);
 
    setup_newline_add(prev, &nl, pc);
-   LOG_FMT(LNEWLINE, "%s(%d): '%s' on line %zu, col %zu, nl.column=%zu\n",
+   LOG_FMT(LNEWLINE, "%s(%d): '%s' on nl.orig_line is %zu, nl.orig_col is %zu, nl.column is %zu\n",
            __func__, __LINE__, nl.text(), nl.orig_line, nl.orig_col, nl.column);
 
    MARK_CHANGE();

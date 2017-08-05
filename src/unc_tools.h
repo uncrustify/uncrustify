@@ -17,6 +17,9 @@
 void prot_the_line(int theLine, unsigned int actual_line);
 
 
+void prot_the_source(int theLine);
+
+
 void examine_Data(const char *func_name, int theLine, int what);
 
 

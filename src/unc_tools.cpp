@@ -10,25 +10,30 @@
 #include "unc_tools.h"
 #include "uncrustify.h"
 #include "args.h"
+#include "output.h"
 
 
 static size_t counter = 0;
+static size_t tokenCounter;
 
 
 // protocol of the line
 // examples:
 //   prot_the_line(__LINE__, pc->orig_line);
 //   prot_the_line(__LINE__, 6);
+//   prot_the_source(__LINE__);
 // log_pcf_flags(LSYS, pc->flags);
 void prot_the_line(int theLine, unsigned int actual_line)
 {
    counter++;
+   tokenCounter = 0;
    LOG_FMT(LGUY, "Prot_the_line:(%d)(%zu)\n", theLine, counter);
    for (chunk_t *pc = chunk_get_head(); pc != nullptr; pc = pc->next)
    {
       if (pc->orig_line == actual_line)
       {
-         LOG_FMT(LGUY, " orig_line=%d, ", actual_line);
+         tokenCounter++;
+         LOG_FMT(LGUY, " orig_line is %d, ", actual_line);
          if (pc->type == CT_VBRACE_OPEN)
          {
             LOG_FMT(LGUY, "<VBRACE_OPEN>, ");
@@ -51,14 +56,22 @@ void prot_the_line(int theLine, unsigned int actual_line)
          }
          else
          {
-            LOG_FMT(LGUY, "text() %s, type is %s, parent_type is %s, orig_col is %zu, column is %zu, ",
-                    pc->text(), get_token_name(pc->type), get_token_name(pc->parent_type), pc->orig_col, pc->column);
+            LOG_FMT(LGUY, "(%zu) text() %s, type is %s, parent_type is %s, orig_col is %zu, column is %zu, ",
+                    tokenCounter, pc->text(), get_token_name(pc->type), get_token_name(pc->parent_type), pc->orig_col, pc->column);
          }
          LOG_FMT(LGUY, "pc->flags:");
          log_pcf_flags(LGUY, pc->flags);
       }
    }
    LOG_FMT(LGUY, "\n");
+} // prot_the_line
+
+
+void prot_the_source(int theLine)
+{
+   counter++;
+   LOG_FMT(LGUY, "Prot_the_source:(%d)(%zu)\n", theLine, counter);
+   output_text(stderr);
 }
 
 
