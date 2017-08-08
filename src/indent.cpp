@@ -1835,7 +1835,8 @@ void indent_text(void)
                || (  (  pc->parent_type == CT_FUNC_CALL
                      || pc->parent_type == CT_FUNC_CALL_USER)
                   && cpd.settings[UO_indent_paren_after_func_call].b)
-               || !chunk_is_newline(chunk_get_next(pc))))
+               || !chunk_is_newline(chunk_get_next(pc)))
+            && (!cpd.settings[UO_use_indent_continue_only_once].b))     // Issue #1160
          {
             frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent + indent_size;
             log_indent();

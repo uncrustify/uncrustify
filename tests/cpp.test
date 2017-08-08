@@ -297,6 +297,7 @@
 33014 kdepim.cfg                       cpp/DB.cpp
 33015 kdepim.cfg                       cpp/Q_FOREACH.cpp
 33016 indent_once.cfg                  cpp/indent.cpp
+33017 bug_1160.cfg                     cpp/bug_1160.cpp
 33018 byref-2.cfg                      cpp/byref-2.cpp
 33019 bug_657.cfg                      cpp/bug_657.cpp
 33020 bug_662.cfg                      cpp/bug_662.cpp
