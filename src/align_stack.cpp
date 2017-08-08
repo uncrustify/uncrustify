@@ -242,8 +242,8 @@ void AlignStack::Add(chunk_t *start, size_t seqnum)
       m_aligned.Push_Back(ali, seqnum);
       m_last_added = 1;
 
-      LOG_FMT(LAS, "Add-[%s]: line %zu, col %zu, adj %d : ref=[%s] endcol=%zu\n",
-              ali->text(), ali->orig_line, ali->column, ali->align.col_adj,
+      LOG_FMT(LAS, "%s(%d): Add-[%s]: ali->orig_line is %zu, ali->column is %zu, ali->align.col_adj %d, ref [%s], endcol is %zu\n",
+              __func__, __LINE__, ali->text(), ali->orig_line, ali->column, ali->align.col_adj,
               ref->text(), endcol);
 
       if (m_min_col > endcol)
@@ -253,8 +253,8 @@ void AlignStack::Add(chunk_t *start, size_t seqnum)
 
       if (endcol > m_max_col)
       {
-         LOG_FMT(LAS, "Add-aligned [%zu/%zu/%zu]: line %zu, col %zu : max_col old %zu, new %zu - min_col %zu\n",
-                 seqnum, m_nl_seqnum, m_seqnum,
+         LOG_FMT(LAS, "%s(%d): Add-aligned [%zu/%zu/%zu]: ali->orig_line is %zu, ali->column is %zu, max_col old is %zu, new is %zu, m_min_col is %zu\n",
+                 __func__, __LINE__, seqnum, m_nl_seqnum, m_seqnum,
                  ali->orig_line, ali->column, m_max_col, endcol, m_min_col);
          m_max_col = endcol;
 
