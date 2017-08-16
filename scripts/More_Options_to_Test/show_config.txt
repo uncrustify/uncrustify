@@ -144,7 +144,7 @@ sp_before_byref                 { Ignore, Add, Remove, Force }
   Add or remove space before a reference sign '&'.
 
 sp_before_unnamed_byref         { Ignore, Add, Remove, Force }
-  Add or remove space before a reference sign '&' that isn't followed by a variable name
+  Add or remove space before a reference sign '&' that isn't followed by a variable name.
   If set to 'ignore', sp_before_byref is used instead.
 
 sp_after_byref                  { Ignore, Add, Remove, Force }
