@@ -432,12 +432,12 @@ chunk_t *newline_add_before(chunk_t *pc)
       return(prev);
    }
 
-   LOG_FMT(LNEWLINE, "%s(%d): '%s' on line %zu, col %zu, pc->column=%zu",
+   LOG_FMT(LNEWLINE, "%s(%d): '%s' on orig_line is %zu, orig_col is %zu, pc->column is %zu",
            __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col, pc->column);
    log_func_stack_inline(LNEWLINE);
 
    setup_newline_add(prev, &nl, pc);
-   LOG_FMT(LNEWLINE, "%s(%d): '%s' on line %zu, col %zu, nl.column=%zu\n",
+   LOG_FMT(LNEWLINE, "%s(%d): '%s' on nl.orig_line is %zu, nl.orig_col is %zu, nl.column is %zu\n",
            __func__, __LINE__, nl.text(), nl.orig_line, nl.orig_col, nl.column);
 
    MARK_CHANGE();
@@ -2154,6 +2154,16 @@ static void newline_func_def(chunk_t *start)
       }
    }
 
+   atmp = cpd.settings[UO_nl_func_call_paren].a;
+   if (atmp != AV_IGNORE)
+   {
+      prev = chunk_get_prev_ncnl(start);
+      if (prev != nullptr)
+      {
+         newline_iarf(prev, atmp);
+      }
+   }
+
    // Handle break newlines type and function
    prev = chunk_get_prev_ncnl(start);
    prev = skip_template_prev(prev);
@@ -3180,8 +3190,13 @@ void newlines_cleanup_braces(bool first)
                     || pc->parent_type == CT_FUNC_CALL_USER)
                  && (  (cpd.settings[UO_nl_func_call_start_multi_line].b)
                     || (cpd.settings[UO_nl_func_call_args_multi_line].b)
-                    || (cpd.settings[UO_nl_func_call_end_multi_line].b)))
+                    || (cpd.settings[UO_nl_func_call_end_multi_line].b)
+                    || (cpd.settings[UO_nl_func_call_paren].a != AV_IGNORE)))
          {
+            if (cpd.settings[UO_nl_func_call_paren].a != AV_IGNORE)
+            {
+               newline_func_def(pc);
+            }
             newline_func_multi_line(pc);
          }
          else if (first && (cpd.settings[UO_nl_remove_extra_newlines].u == 1))

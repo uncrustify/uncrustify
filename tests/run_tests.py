@@ -5,8 +5,8 @@
 #
 # This could all be done with bash, but I wanted to use python. =)
 # Anyway, this was all done while waiting in the Denver airport.
-# * @author  Guy Maurel since version 0.62 for uncrustify4Qt
-# *          October 2015
+# * @author  Ben Gardner October 2009
+# * @author  Guy Maurel  October 2015
 #
 
 import argparse

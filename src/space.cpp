@@ -2257,7 +2257,7 @@ size_t space_col_align(chunk_t *first, chunk_t *second)
 {
    LOG_FUNC_ENTRY();
 
-   LOG_FMT(LSPACE, "%s(%d): orig_line is %zu, orig_col is %zu, [%s/%s] '%s' <==> line is %zu, col is %zu [%s/%s] '%s'",
+   LOG_FMT(LSPACE, "%s(%d): orig_line is %zu, orig_col is %zu, [%s/%s] '%s' <==> orig_line is %zu, orig_col is %zu [%s/%s] '%s'",
            __func__, __LINE__, first->orig_line, first->orig_col,
            get_token_name(first->type), get_token_name(first->parent_type),
            first->text(),
@@ -2270,15 +2270,24 @@ size_t space_col_align(chunk_t *first, chunk_t *second)
    argval_t av = do_space(first, second, min_sp);
 
    LOG_FMT(LSPACE, "%s(%d): av is %d, ", __func__, __LINE__, av);
+#ifdef DEBUG
+   LOG_FMT(LSPACE, "\n");
+#endif
    size_t coldiff;
    if (first->nl_count)
    {
       LOG_FMT(LSPACE, "nl_count is %zu, orig_col_end is %zu", first->nl_count, first->orig_col_end);
+#ifdef DEBUG
+      LOG_FMT(LSPACE, "\n");
+#endif
       coldiff = first->orig_col_end - 1;
    }
    else
    {
       LOG_FMT(LSPACE, "len is %zu", first->len());
+#ifdef DEBUG
+      LOG_FMT(LSPACE, "\n");
+#endif
       coldiff = first->len();
    }
 

@@ -1287,8 +1287,8 @@ static chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_co
             || (  pc->type == CT_FUNC_DEF
                && cpd.settings[UO_align_single_line_func].b))
          {
-            LOG_FMT(LAVDB, "    add=[%s] line=%zu col=%zu level=%zu\n",
-                    pc->text(), pc->orig_line, pc->orig_col, pc->level);
+            LOG_FMT(LAVDB, "%s(%d): add=[%s], orig_line is %zu, orig_col is %zu, level is %zu\n",
+                    __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col, pc->level);
 
             as.Add(pc);
             fp_look_bro = (pc->type == CT_FUNC_DEF)
@@ -1372,14 +1372,14 @@ static chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_co
                while (  prev_local->type == CT_PTR_TYPE
                      || prev_local->type == CT_ADDR)
                {
-                  LOG_FMT(LAVDB, "    prev_local=%s, prev_local->type=%s\n",
-                          prev_local->text(), get_token_name(prev_local->type));
+                  LOG_FMT(LAVDB, "%s(%d): prev_local %s, prev_local->type %s\n",
+                          __func__, __LINE__, prev_local->text(), get_token_name(prev_local->type));
                   prev_local = prev_local->prev;
                }
                pc = prev_local->next;
             }
-            LOG_FMT(LAVDB, "    add=[%s] line=%zu col=%zu level=%zu\n",
-                    pc->text(), pc->orig_line, pc->orig_col, pc->level);
+            LOG_FMT(LAVDB, "%s(%d): add=[%s], orig_line is %zu, orig_col is %zu, level is %zu\n",
+                    __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col, pc->level);
 
             as.Add(step_back_over_member(pc));
 

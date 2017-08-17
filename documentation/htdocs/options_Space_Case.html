@@ -1,0 +1,44 @@
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+   <title>Uncrustify: where do the Spaces options work</title>
+</head>
+<body lang="en-US">
+<h1><a href="https://github.com/uncrustify/uncrustify">Uncrustify</a>:
+Where do the options work?</h1>
+<h2>Spaces for case</h2>
+<p> 
+</p>
+<table border="1", width="100%">
+<tr>
+<td>
+<pre>
+{
+   switch (a)
+   {<a name="sp_case_label"></a><a name="sp_before_case_colon"></a>
+   case<a title="sp_case_label"><font color="red">█████</font></a>1<a title="sp_before_case_colon"><font color="red">█</font></a>:
+      b = 5;<a name="sp_before_case_colon"></a>
+   case 2<a title="sp_before_case_colon"><font color="red">█</font></a>:
+      b = 7;
+   default<a title="sp_before_case_colon"><font color="red">█</font></a>:
+      b = 0;
+   }
+}
+</pre>
+</td>
+</tr>
+</table>
+<p></p>
+<h1>Register</h1>
+<table border="0", width="100%">
+<tr>
+   <td><a href="#sp_before_case_colon"></a>sp_before_case_colon</td>
+   <td>Add or remove space before case ':'. Default=Remove.</td>
+</tr>
+<tr>
+   <td><a href="#sp_case_label"></a>sp_case_label</td>
+   <td>Fix the spacing between 'case' and the label. Only 'ignore' and 'force' make sense here.</td>
+</tr>
+</table>
+</body>
+</html>

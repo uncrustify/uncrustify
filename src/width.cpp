@@ -13,6 +13,7 @@
 #include "uncrustify.h"
 #include "indent.h"
 #include "newlines.h"
+
 #include <cstdlib>
 
 
@@ -94,6 +95,15 @@ static bool split_line(chunk_t *pc);
  *                inserted before it
  */
 static void split_fcn_params(chunk_t *start);
+
+
+/**
+ * Figures out where to split a template
+ *
+ *
+ * @param start   the offending token
+ */
+static void split_template(chunk_t *start);
 
 
 /**
@@ -311,7 +321,7 @@ static bool split_line(chunk_t *start)
    LOG_FUNC_ENTRY();
    LOG_FMT(LSPLIT, "%s(%d): start->flags ", __func__, __LINE__);
    log_pcf_flags(LSPLIT, start->flags);
-   LOG_FMT(LSPLIT, "%s(%d): orig_line=%zu, orig_col=%zu, token: '%s', type=%s,\n",
+   LOG_FMT(LSPLIT, "%s(%d): orig_line is %zu, column is %zu, text() '%s', type is %s,\n",
            __func__, __LINE__, start->orig_line, start->column, start->text(),
            get_token_name(start->type));
    LOG_FMT(LSPLIT, "   parent_type %s, (PCF_IN_FCN_DEF is %s), (PCF_IN_FCN_CALL is %s),",
@@ -367,6 +377,16 @@ static bool split_line(chunk_t *start)
          }
       }
       split_fcn_params(start);
+      return(true);
+   }
+
+   /*
+    * If this is in a template, split on commas, Issue #1170
+    */
+   else if (start->flags & PCF_IN_TEMPLATE)
+   {
+      LOG_FMT(LSPLIT, " ** TEMPLATE SPLIT **\n");
+      split_template(start);
       return(true);
    }
 
@@ -597,17 +617,18 @@ static void split_for_stmt(chunk_t *start)
 static void split_fcn_params_full(chunk_t *start)
 {
    LOG_FUNC_ENTRY();
-   LOG_FMT(LSPLIT, "%s", __func__);
+   LOG_FMT(LSPLIT, "%s(%d): %s", __func__, __LINE__, start->text());
 #ifdef DEBUG
    LOG_FMT(LSPLIT, "\n");
 #endif // DEBUG
 
    // Find the opening function parenthesis
    chunk_t *fpo = start;
+   LOG_FMT(LSPLIT, "  %s(%d): Find the opening function parenthesis\n", __func__, __LINE__);
    while ((fpo = chunk_get_prev(fpo)) != nullptr)
    {
-      LOG_FMT(LSPLIT, "%s: %s, orig_col=%zu, Level=%zu\n",
-              __func__, fpo->text(), fpo->orig_col, fpo->level);
+      LOG_FMT(LSPLIT, "%s(%d): %s, orig_col is %zu, level is %zu\n",
+              __func__, __LINE__, fpo->text(), fpo->orig_col, fpo->level);
       if (fpo->type == CT_FPAREN_OPEN && (fpo->level == start->level - 1))
       {
          break;  // opening parenthesis found. Issue #1020
@@ -633,32 +654,35 @@ static void split_fcn_params_full(chunk_t *start)
 static void split_fcn_params(chunk_t *start)
 {
    LOG_FUNC_ENTRY();
-   LOG_FMT(LSPLIT, "  %s(%d): %s", __func__, __LINE__, start->text());
+   LOG_FMT(LSPLIT, "%s(%d): '%s'", __func__, __LINE__, start->text());
 #ifdef DEBUG
    LOG_FMT(LSPLIT, "\n");
 #endif // DEBUG
 
    // Find the opening function parenthesis
    chunk_t *fpo = start;
-   LOG_FMT(LSPLIT, "  %s(%d):", __func__, __LINE__);
+   LOG_FMT(LSPLIT, "%s(%d): Find the opening function parenthesis\n", __func__, __LINE__);
    while (  ((fpo = chunk_get_prev(fpo)) != nullptr)
          && fpo->type != CT_FPAREN_OPEN)
    {
       // do nothing
+      LOG_FMT(LSPLIT, "%s(%d): '%s', orig_col is %zu, level is %zu\n",
+              __func__, __LINE__, fpo->text(), fpo->orig_col, fpo->level);
    }
 
    chunk_t *pc     = chunk_get_next_ncnl(fpo);
    size_t  min_col = pc->column;
 
-   LOG_FMT(LSPLIT, " mincol=%zu, max_width=%zu ",
+   LOG_FMT(LSPLIT, "    mincol is %zu, max_width is %zu\n",
            min_col, cpd.settings[UO_code_width].u - min_col);
 
    int cur_width = 0;
    int last_col  = -1;
-   LOG_FMT(LSPLIT, "  %s(%d):", __func__, __LINE__);
+   LOG_FMT(LSPLIT, "%s(%d):look forward until CT_COMMA or CT_FPAREN_CLOSE\n", __func__, __LINE__);
    while (pc != nullptr)
    {
-      LOG_FMT(LSPLIT, "  %s(%d):", __func__, __LINE__);
+      LOG_FMT(LSPLIT, "%s(%d): pc->text() '%s', type is %s\n",
+              __func__, __LINE__, pc->text(), get_token_name(pc->type));
       if (chunk_is_newline(pc))
       {
          cur_width = 0;
@@ -669,14 +693,19 @@ static void split_fcn_params(chunk_t *start)
          if (last_col < 0)
          {
             last_col = pc->column;
+            LOG_FMT(LSPLIT, "%s(%d): last_col is %d\n",
+                    __func__, __LINE__, last_col);
          }
          cur_width += (pc->column - last_col) + pc->len();
          last_col   = pc->column + pc->len();
 
+         LOG_FMT(LSPLIT, "%s(%d): last_col is %d\n",
+                 __func__, __LINE__, last_col);
          if (pc->type == CT_COMMA || pc->type == CT_FPAREN_CLOSE)
          {
             cur_width--;
-            LOG_FMT(LSPLIT, " width=%d ", cur_width);
+            LOG_FMT(LSPLIT, "%s(%d): cur_width is %d\n",
+                    __func__, __LINE__, cur_width);
             if (  ((last_col - 1) > static_cast<int>(cpd.settings[UO_code_width].u))
                || pc->type == CT_FPAREN_CLOSE)
             {
@@ -687,23 +716,32 @@ static void split_fcn_params(chunk_t *start)
       pc = chunk_get_next(pc);
    }
 
-   LOG_FMT(LSPLIT, "  %s(%d):", __func__, __LINE__);
    // back up until the prev is a comma
    chunk_t *prev = pc;
+   LOG_FMT(LSPLIT, "  %s(%d): back up until the prev is a comma\n", __func__, __LINE__);
    while ((prev = chunk_get_prev(prev)) != nullptr)
    {
-      LOG_FMT(LSPLIT, "  %s(%d):", __func__, __LINE__);
+      LOG_FMT(LSPLIT, "%s(%d): pc '%s', pc->level is %zu, prev '%s', prev->type is %s\n",
+              __func__, __LINE__, pc->text(), pc->level, prev->text(), get_token_name(prev->type));
       if (chunk_is_newline(prev) || prev->type == CT_COMMA)
       {
+         LOG_FMT(LSPLIT, "%s(%d): found at %zu\n",
+                 __func__, __LINE__, prev->orig_col);
          break;
       }
+      LOG_FMT(LSPLIT, "%s(%d): last_col is %d\n",
+              __func__, __LINE__, last_col);
       last_col -= pc->len();
+      LOG_FMT(LSPLIT, "%s(%d): last_col is %d\n",
+              __func__, __LINE__, last_col);
       if (prev->type == CT_FPAREN_OPEN)
       {
          pc = chunk_get_next(prev);
          if (!cpd.settings[UO_indent_paren_nl].b)
          {
             min_col = pc->brace_level * cpd.settings[UO_indent_columns].u + 1;
+            LOG_FMT(LSPLIT, "%s(%d): min_col is %zu\n",
+                    __func__, __LINE__, min_col);
             if (cpd.settings[UO_indent_continue].n == 0)
             {
                min_col += cpd.settings[UO_indent_columns].u;
@@ -712,6 +750,8 @@ static void split_fcn_params(chunk_t *start)
             {
                min_col += abs(cpd.settings[UO_indent_continue].n);
             }
+            LOG_FMT(LSPLIT, "%s(%d): min_col is %zu\n",
+                    __func__, __LINE__, min_col);
          }
 
          // Don't split "()"
@@ -723,13 +763,51 @@ static void split_fcn_params(chunk_t *start)
    }
    if (prev != nullptr && !chunk_is_newline(prev))
    {
-      LOG_FMT(LSPLIT, "  %s(%d):", __func__, __LINE__);
-      LOG_FMT(LSPLIT, " -- ended on [%s] --\n", get_token_name(prev->type));
+      LOG_FMT(LSPLIT, "%s(%d): -- ended on [%s] --\n",
+              __func__, __LINE__, get_token_name(prev->type));
+      LOG_FMT(LSPLIT, "%s(%d): min_col is %zu\n",
+              __func__, __LINE__, min_col);
       pc = chunk_get_next(prev);
-      LOG_FMT(LSPLIT, "  %s(%d):", __func__, __LINE__);
       newline_add_before(pc);
-      LOG_FMT(LSPLIT, "  %s(%d):", __func__, __LINE__);
       reindent_line(pc, min_col);
       cpd.changes++;
    }
 } // split_fcn_params
+
+
+static void split_template(chunk_t *start)
+{
+   LOG_FUNC_ENTRY();
+   LOG_FMT(LSPLIT, "  %s(%d): start %s\n", __func__, __LINE__, start->text());
+   LOG_FMT(LSPLIT, "  %s(%d): back up until the prev is a comma\n", __func__, __LINE__);
+
+   // back up until the prev is a comma
+   chunk_t *prev = start;
+   while ((prev = chunk_get_prev(prev)) != nullptr)
+   {
+      LOG_FMT(LSPLIT, "  %s(%d): prev '%s'\n", __func__, __LINE__, prev->text());
+      if (chunk_is_newline(prev) || prev->type == CT_COMMA)
+      {
+         break;
+      }
+   }
+
+   if (prev != nullptr && !chunk_is_newline(prev))
+   {
+      LOG_FMT(LSPLIT, "  %s(%d):", __func__, __LINE__);
+      LOG_FMT(LSPLIT, " -- ended on [%s] --\n", get_token_name(prev->type));
+      chunk_t *pc = chunk_get_next(prev);
+      newline_add_before(pc);
+      size_t  min_col = 1;
+      if (cpd.settings[UO_indent_continue].n == 0)
+      {
+         min_col += cpd.settings[UO_indent_columns].u;
+      }
+      else
+      {
+         min_col += abs(cpd.settings[UO_indent_continue].n);
+      }
+      reindent_line(pc, min_col);
+      cpd.changes++;
+   }
+} // split_templatefcn_params

@@ -48,6 +48,7 @@
 30046 nl_func_decl_2.cfg               cpp/nl_func_decl.cpp
 30047 nl_func_paren_empty.cfg          cpp/nl_func_paren_empty.cpp
 30048 nl_func_def_paren_empty.cfg      cpp/nl_func_def_paren_empty.cpp
+30049 nl_func_call_paren.cfg           cpp/nl_func_call_paren.cpp
 
 30050 nl_namespace-r.cfg               cpp/nl-namespace.h
 30051 nl_namespace-a.cfg               cpp/nl-namespace.h
@@ -182,6 +183,7 @@
 30816 cu.cfg                           cpp/for_long.cpp
 30817 ben.cfg                          cpp/cmt-cpp-cont.cpp
 30818 bug_1169.cfg                     cpp/bug_1169.cpp
+30819 bug_1170.cfg                     cpp/bug_1170.cpp
 
 30820 pp_define_at_level-1.cfg         cpp/pp-define-indent.cpp
 30821 pp_indent_case.cfg               cpp/pp_indent_case.cpp
@@ -234,10 +236,13 @@
 30931 indent_var_def_cont.cfg          cpp/indent_var_def_cont.cpp
 30932 empty.cfg                        cpp/indent_var_def_cont.cpp
 
+30933 indent_paren_after_func_def.cfg  cpp/indent_paren_after_func_def.cpp
+30934 indent_paren_after_func_decl.cfg cpp/indent_paren_after_func_decl.cpp
 30935 ben.cfg                          cpp/indent-misc.cpp
 30936 indent_braces_no.cfg             cpp/indent_braces_no.h
 30937 indent_param.cfg                 cpp/indent_param.cpp
 30938 indent_switch_pp.cfg             cpp/indent_switch_pp.cpp
+30939 indent_paren_after_func_call.cfg cpp/indent_paren_after_func_call.cpp
 
 30940 mod_case_brace_rm.cfg            cpp/case-brace-remove.cpp
 
@@ -292,6 +297,7 @@
 33014 kdepim.cfg                       cpp/DB.cpp
 33015 kdepim.cfg                       cpp/Q_FOREACH.cpp
 33016 indent_once.cfg                  cpp/indent.cpp
+33017 bug_1160.cfg                     cpp/bug_1160.cpp
 33018 byref-2.cfg                      cpp/byref-2.cpp
 33019 bug_657.cfg                      cpp/bug_657.cpp
 33020 bug_662.cfg                      cpp/bug_662.cpp
@@ -445,6 +451,7 @@
 
 34170  empty.cfg                       cpp/i1082.cpp
 34171  i1181.cfg                       cpp/i1181.cpp
+34172  i1165.cfg                       cpp/i1165.cpp
 
 34190 bug_1003.cfg                     cpp/bug_1003.cpp
 

@@ -402,6 +402,9 @@ enum uncrustify_options
                                             // (overrides indent_access_spec)
    UO_indent_paren_nl,                      // indent-align under paren for open followed by nl
    UO_indent_paren_close,                   // indent of close paren after a newline
+   UO_indent_paren_after_func_def,          // indent of open paren for a function definition
+   UO_indent_paren_after_func_decl,         // indent of open paren for a function declaration
+   UO_indent_paren_after_func_call,         // indent of open paren for a function call
    UO_indent_comma_paren,                   // indent of comma if inside a paren
    UO_indent_bool_paren,                    // indent of bool if inside a paren
    UO_indent_first_bool_expr,               // if UO_indent_bool_paren == true, aligns the first
@@ -520,6 +523,8 @@ enum uncrustify_options
    UO_nl_func_def_paren,              // Add or remove newline between a function name and
                                       // the opening '(' in the definition
    UO_nl_func_def_paren_empty,        // Overrides nl_func_def_paren for functions with no parameters
+   UO_nl_func_call_paren,             // Add or remove newline between a function name and
+                                      // the opening '(' in the call
    UO_nl_func_decl_start,             // newline after the '(' in a function decl
    UO_nl_func_def_start,              // newline after the '(' in a function def
    UO_nl_func_decl_start_single,      // Overrides nl_func_decl_start when there is only one parameter

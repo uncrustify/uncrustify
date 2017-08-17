@@ -10,23 +10,31 @@
 #include "unc_tools.h"
 #include "uncrustify.h"
 #include "args.h"
+#include "output.h"
+
+
+static size_t counter = 0;
+static size_t tokenCounter;
 
 
 // protocol of the line
 // examples:
 //   prot_the_line(__LINE__, pc->orig_line);
 //   prot_the_line(__LINE__, 6);
-
+//   prot_the_source(__LINE__);
 
 // log_pcf_flags(LSYS, pc->flags);
 void prot_the_line(int theLine, unsigned int actual_line)
 {
-   LOG_FMT(LGUY, "Prot_the_line:(%d)\n", theLine);
+   counter++;
+   tokenCounter = 0;
+   LOG_FMT(LGUY, "Prot_the_line:(%d)(%zu)\n", theLine, counter);
    for (chunk_t *pc = chunk_get_head(); pc != nullptr; pc = pc->next)
    {
       if (pc->orig_line == actual_line)
       {
-         LOG_FMT(LGUY, " orig_line=%d, ", actual_line);
+         tokenCounter++;
+         LOG_FMT(LGUY, " orig_line is %d, ", actual_line);
          if (pc->type == CT_VBRACE_OPEN)
          {
             LOG_FMT(LGUY, "<VBRACE_OPEN>, ");
@@ -49,14 +57,22 @@ void prot_the_line(int theLine, unsigned int actual_line)
          }
          else
          {
-            LOG_FMT(LGUY, "text() %s, type %s, parent_type %s, orig_col=%zu, ",
-                    pc->text(), get_token_name(pc->type), get_token_name(pc->parent_type), pc->orig_col);
+            LOG_FMT(LGUY, "(%zu) text() %s, type is %s, parent_type is %s, orig_col is %zu, column is %zu, ",
+                    tokenCounter, pc->text(), get_token_name(pc->type), get_token_name(pc->parent_type), pc->orig_col, pc->column);
          }
          LOG_FMT(LGUY, "pc->flags:");
          log_pcf_flags(LGUY, pc->flags);
       }
    }
    LOG_FMT(LGUY, "\n");
+} // prot_the_line
+
+
+void prot_the_source(int theLine)
+{
+   counter++;
+   LOG_FMT(LGUY, "Prot_the_source:(%d)(%zu)\n", theLine, counter);
+   output_text(stderr);
 }
 
 
@@ -165,15 +181,42 @@ void dump_out(unsigned int type)
          fprintf(D_file, "  orig_line %zu\n", pc->orig_line);
          fprintf(D_file, "  orig_col %zu\n", pc->orig_col);
          fprintf(D_file, "  orig_col_end %zu\n", pc->orig_col_end);
-         fprintf(D_file, (pc->orig_prev_sp != 0) ? "  orig_prev_sp %u\n" : "", pc->orig_prev_sp);
-         fprintf(D_file, (pc->flags != 0) ? "  flags %" PRIu64 "\n" : "", pc->flags);
-         fprintf(D_file, (pc->column != 0) ? "  column %zu\n" : "", pc->column);
-         fprintf(D_file, (pc->column_indent != 0) ? "  column_indent %zu\n" : "", pc->column_indent);
-         fprintf(D_file, (pc->nl_count != 0) ? "  nl_count %zu\n" : "", pc->nl_count);
-         fprintf(D_file, (pc->level != 0) ? "  level %zu\n" : "", pc->level);
-         fprintf(D_file, (pc->brace_level != 0) ? "  brace_level %zu\n" : "", pc->brace_level);
-         fprintf(D_file, (pc->pp_level != 0) ? "  pp_level %zu\n" : "", pc->pp_level);
-         fprintf(D_file, (pc->after_tab != 0) ? "  after_tab %d\n" : "", pc->after_tab);
+         if (pc->orig_prev_sp != 0)
+         {
+            fprintf(D_file, "  orig_prev_sp %u\n", pc->orig_prev_sp);
+         }
+         if (pc->flags != 0)
+         {
+            fprintf(D_file, "  flags %" PRIu64 "\n", pc->flags);
+         }
+         if (pc->column != 0)
+         {
+            fprintf(D_file, "  column %zu\n", pc->column);
+         }
+         if (pc->column_indent != 0)
+         {
+            fprintf(D_file, "  column_indent %zu\n", pc->column_indent);
+         }
+         if (pc->nl_count != 0)
+         {
+            fprintf(D_file, "  nl_count %zu\n", pc->nl_count);
+         }
+         if (pc->level != 0)
+         {
+            fprintf(D_file, "  level %zu\n", pc->level);
+         }
+         if (pc->brace_level != 0)
+         {
+            fprintf(D_file, "  brace_level %zu\n", pc->brace_level);
+         }
+         if (pc->pp_level != 0)
+         {
+            fprintf(D_file, "  pp_level %zu\n", pc->pp_level);
+         }
+         if (pc->after_tab != 0)
+         {
+            fprintf(D_file, "  after_tab %d\n", pc->after_tab);
+         }
          if (pc->type != CT_NEWLINE)
          {
             fprintf(D_file, "  text %s\n", pc->text());
@@ -181,7 +224,7 @@ void dump_out(unsigned int type)
       }
       fclose(D_file);
    }
-}
+} // dump_out
 
 
 void dump_in(unsigned int type)
