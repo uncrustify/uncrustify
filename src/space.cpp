@@ -1060,12 +1060,12 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
       {
          if (cpd.settings[UO_sp_before_type_brace_init_lst_close].a != AV_IGNORE)
          {
-            log_rule("sp_before_init_braces_close");
+            log_rule("sp_before_type_brace_init_lst_close");
             return(cpd.settings[UO_sp_before_type_brace_init_lst_close].a);
          }
          if (cpd.settings[UO_sp_inside_type_brace_init_lst].a != AV_IGNORE)
          {
-            log_rule("sp_inside_init_braces");
+            log_rule("sp_inside_type_brace_init_lst");
             return(cpd.settings[UO_sp_inside_type_brace_init_lst].a);
          }
       }
@@ -1633,25 +1633,24 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
          log_rule("sp_inside_braces_enum");
          return(cpd.settings[UO_sp_inside_braces_enum].a);
       }
-
-      if (first->parent_type == CT_UNION || first->parent_type == CT_STRUCT)
+      if (first->parent_type == CT_STRUCT || first->parent_type == CT_UNION)
       {
          log_rule("sp_inside_braces_struct");
          return(cpd.settings[UO_sp_inside_braces_struct].a);
       }
-
       if (first->parent_type == CT_TYPE)
       {
          if (cpd.settings[UO_sp_after_type_brace_init_lst_open].a != AV_IGNORE)
          {
-            log_rule("sp_after_init_braces_open");
+            log_rule("sp_after_type_brace_init_lst_open");
             return(cpd.settings[UO_sp_after_type_brace_init_lst_open].a);
          }
-
-         log_rule("sp_inside_braces_struct");
-         return(cpd.settings[UO_sp_inside_type_brace_init_lst].a);
+         if (cpd.settings[UO_sp_inside_type_brace_init_lst].a != AV_IGNORE)
+         {
+            log_rule("sp_inside_type_brace_init_lst");
+            return(cpd.settings[UO_sp_inside_type_brace_init_lst].a);
+         }
       }
-
       if (!chunk_is_comment(second))
       {
          log_rule("sp_inside_braces");
