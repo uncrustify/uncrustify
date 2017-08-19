@@ -1,0 +1,59 @@
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+   <title>Uncrustify: where do the Spaces options work</title>
+</head>
+<body lang="en-US">
+<h1><a href="https://github.com/uncrustify/uncrustify">Uncrustify</a>:
+Where do the options work?</h1>
+<h2>Spaces for class</h2>
+<p> 
+</p>
+<table border="1", width="100%">
+<tr>
+<td>
+<pre>
+{<a name="sp_before_class_colon"></a><a name="sp_after_class_colon"></a>
+   class my_class<a title="sp_before_class_colon"><font color="red">█</font></a>:<a title="sp_after_class_colon"><font color="red">█</font></a>baseclass1, baseclass2
+{
+public:<a name="sp_func_class_paren"></a><a name="sp_before_constr_colon"></a><a name="sp_after_constr_colon"></a>
+        my_class<a title="sp_func_class_paren"><font color="red">█</font></a>(int b)<a title="sp_before_constr_colon"><font color="red">█</font></a>:<a title="sp_after_constr_colon"><font color="red">█</font></a>x(b);
+<a name="sp_func_class_paren_empty"></a>
+        my_class<a title="sp_func_class_paren_empty"><font color="red">█</font></a>() : c(2)
+        {
+        }
+}
+</pre>
+</td>
+</tr>
+</table>
+<p></p>
+<h1>Register</h1>
+<table border="0", width="100%">
+<tr>
+   <td valign="top"><a href="#sp_after_class_colon">sp_after_class_colon</a></td>
+   <td>Add or remove space after class ':'</td>
+</tr>
+<tr>
+   <td valign="top"><a href="#sp_before_class_colon">sp_before_class_colon</a></td>
+   <td>Add or remove space before class ':'</td>
+</tr>
+<tr>
+   <td valign="top"><a href="#sp_after_constr_colon">sp_after_constr_colon</a></td>
+   <td>Add or remove space after class constructor ':'.</td>
+</tr>
+<tr>
+   <td valign="top"><a href="#sp_before_constr_colon">sp_before_constr_colon</a></td>
+   <td>Add or remove space before class constructor ':'.</td>
+</tr>
+<tr>
+   <td valign="top"><a href="#sp_func_class_paren">sp_func_class_paren</a></td>
+   <td>Add or remove space between a constructor/destructor and the open paren.</td>
+</tr>
+<tr>
+   <td valign="top"><a href="#sp_func_class_paren_empty">sp_func_class_paren_empty</a></td>
+   <td>Add or remove space between a constructor without parameters or destructor and '()'.</td>
+</tr>
+</table>
+</body>
+</html>
