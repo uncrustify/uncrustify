@@ -1,0 +1,52 @@
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+   <title>Uncrustify: where do the Spaces options work</title>
+</head>
+<body lang="en-US">
+<h1><a href="https://github.com/uncrustify/uncrustify">Uncrustify</a>:
+Where do the options work?</h1>
+<h2>Spaces for for</h2>
+<p> 
+</p>
+<table border="1", width="100%">
+<tr>
+<td>
+<pre>
+{<a name="sp_before_semi_for"></a><a name="sp_after_semi_for"></a>
+        for (i = 0<a title="sp_before_semi_for"><font color="red">█</font></a>;<a title="sp_after_semi_for"><font color="red">█</font></a>i < 10<a title="sp_before_semi_for"><font color="red">█</font></a>;<a title="sp_after_semi_for"><font color="red">█</font></a>i++)
+        {
+                b = i + 1;
+        }
+<a name="sp_before_semi_for_empty"></a><a name="sp_after_semi_for_empty"></a>
+        for (<a title="sp_before_semi_for_empty"><font color="red">█</font></a>;<a title="sp_before_semi_for_empty"><font color="red">█</font></a>;<a title="sp_after_semi_for_empty"><font color="red">█</font></a>)
+        {
+                b = b + 1;
+        }
+}
+</pre>
+</td>
+</tr>
+</table>
+<p></p>
+<h1>Register</h1>
+<table border="0", width="100%">
+<tr>
+   <td valign="top"><a href="#sp_before_semi_for">sp_before_semi_for</a></td>
+   <td>Add or remove space before ';' in non-empty 'for' statements.</td>
+</tr>
+<tr>
+   <td valign="top"><a href="#sp_before_semi_for_empty">sp_before_semi_for_empty</a></td>
+   <td>Add or remove space before a semicolon of an empty part of a for statement.</td>
+</tr>
+<tr>
+   <td valign="top"><a href="#sp_after_semi_for">sp_after_semi_for</a></td>
+   <td>Add or remove space after ';' in non-empty 'for' statements. Default=Force.</td>
+</tr>
+<tr>
+   <td valign="top"><a href="#sp_after_semi_for_empty">sp_after_semi_for_empty</a></td>
+   <td>Add or remove space after the final semicolon of an empty part of a for statement: for ( ; ; &lt;here&gt; ).</td>
+</tr>
+</table>
+</body>
+</html>
