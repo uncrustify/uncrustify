@@ -231,6 +231,7 @@
 30926 sp_func_class_empty.cfg          cpp/function-def.cpp
 30927 sp_func_def_empty.cfg            cpp/function-def.cpp
 30928 sp_func_proto_empty.cfg          cpp/function-def.cpp
+30929 bug_1324.cfg                     cpp/bug_1324.cpp
 
 30930 indent_var_def.cfg               cpp/indent_var_def.cpp
 30931 indent_var_def_cont.cfg          cpp/indent_var_def_cont.cpp
