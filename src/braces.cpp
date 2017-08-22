@@ -231,7 +231,7 @@ static void examine_braces(void)
 
    const auto multiline_block = cpd.settings[UO_mod_full_brace_nl_block_rem_mlcond].b;
 
-   for (auto pc = chunk_get_tail(); pc != nullptr; )
+   for (auto pc = chunk_get_tail(); pc != nullptr;)
    {
       auto prev = chunk_get_prev_type(pc, CT_BRACE_OPEN, -1);
 

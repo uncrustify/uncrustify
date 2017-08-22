@@ -1045,7 +1045,7 @@ static chunk_t *get_closing_brace(chunk_t *start)
    chunk_t *pc;
    size_t  level = start->level;
 
-   for (pc = start; (pc = chunk_get_next(pc)) != nullptr; )
+   for (pc = start; (pc = chunk_get_next(pc)) != nullptr;)
    {
       if (  (pc->type == CT_BRACE_CLOSE || pc->type == CT_VBRACE_CLOSE)
          && pc->level == level)

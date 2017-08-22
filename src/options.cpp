@@ -677,9 +677,9 @@ void register_options(void)
    unc_add_option("sp_range", UO_sp_range, AT_IARF,
                   "Control the space around the D '..' operator.");
    unc_add_option("sp_after_for_colon", UO_sp_after_for_colon, AT_IARF,
-                  "Control the spacing after ':' in 'for (TYPE VAR : EXPR)'.");
+                  "Control the spacing after ':' in 'for (TYPE VAR : EXPR)'. Only JAVA.");
    unc_add_option("sp_before_for_colon", UO_sp_before_for_colon, AT_IARF,
-                  "Control the spacing before ':' in 'for (TYPE VAR : EXPR)'.");
+                  "Control the spacing before ':' in 'for (TYPE VAR : EXPR)'. Only JAVA.");
    unc_add_option("sp_extern_paren", UO_sp_extern_paren, AT_IARF,
                   "Control the spacing in 'extern (C)' (D).");
    unc_add_option("sp_cmt_cpp_start", UO_sp_cmt_cpp_start, AT_IARF,

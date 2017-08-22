@@ -214,11 +214,13 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
 
    if (first->type == CT_FOR_COLON)
    {
+      // java
       log_rule("sp_after_for_colon");
       return(cpd.settings[UO_sp_after_for_colon].a);
    }
    if (second->type == CT_FOR_COLON)
    {
+      // java
       log_rule("sp_before_for_colon");
       return(cpd.settings[UO_sp_before_for_colon].a);
    }
@@ -392,7 +394,8 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
             log_rule("sp_after_semi_for_empty");
             return(cpd.settings[UO_sp_after_semi_for_empty].a);
          }
-         if (cpd.settings[UO_sp_after_semi_for].a != AV_IGNORE)
+         if (  (cpd.settings[UO_sp_after_semi_for].a != AV_IGNORE)
+            && second->type != CT_SPAREN_CLOSE)  // Issue 1324
          {
             log_rule("sp_after_semi_for");
             return(cpd.settings[UO_sp_after_semi_for].a);

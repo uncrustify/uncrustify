@@ -583,10 +583,10 @@ sp_case_label                   = ignore   # ignore/add/remove/force
 # Control the space around the D '..' operator.
 sp_range                        = ignore   # ignore/add/remove/force
 
-# Control the spacing after ':' in 'for (TYPE VAR : EXPR)'.
+# Control the spacing after ':' in 'for (TYPE VAR : EXPR)'. Only JAVA.
 sp_after_for_colon              = ignore   # ignore/add/remove/force
 
-# Control the spacing before ':' in 'for (TYPE VAR : EXPR)'.
+# Control the spacing before ':' in 'for (TYPE VAR : EXPR)'. Only JAVA.
 sp_before_for_colon             = ignore   # ignore/add/remove/force
 
 # Control the spacing in 'extern (C)' (D).
