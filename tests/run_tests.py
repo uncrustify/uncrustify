@@ -205,7 +205,7 @@ def process_test_file(args, filename):
 # entry point
 #
 def main(argv):
-    all_tests = "c-sharp c cpp d java pawn objective-c vala ecma".split()
+    all_tests = "c-sharp c cpp d java pawn objective-c vala ecma imported".split()
 
     parser = argparse.ArgumentParser(description='Run uncrustify tests')
     parser.add_argument('-c', help='show commands', action='store_true')
