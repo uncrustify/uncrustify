@@ -2682,17 +2682,37 @@ static void indent_comment(chunk_t *pc, size_t col)
 
       /*
        * Here we want to align comments that are relatively close one to another
-       * but not when the comment is a Doxygen comment
+       * but not when the comment is a Doxygen comment nor when the previous
+       * token is an pp statement because that can lead to an unfortunate mix of
+       * tokens for this rule to work properly and it breaks the indentation.
        */
-      // Issue #1134
+      // Issue #1134, #1287.
       if (  coldiff <= 3
          && coldiff >= -3
          && !chunk_is_Doxygen_comment(pc))
       {
-         reindent_line(pc, prev->column);
-         LOG_FMT(LCMTIND, "rule 3 - prev comment, coldiff = %d, now in %zu\n",
-                 coldiff, pc->column);
-         return;
+         bool indent = true;
+         if (prev->flags & PCF_IN_PREPROC)
+         {
+            chunk_t *pp = chunk_search_prev_cat(prev, CT_PREPROC);
+            indent = pp == NULL
+                     || !(  pp->next->type == CT_PP_IF
+                         || pp->next->type == CT_PP_ELSE
+                         || pp->next->type == CT_PP_ENDIF);
+
+            if (indent && pp)
+            {
+               LOG_FMT(LCMTIND, "rule 3 - prev comment in preproc %s\n",
+                       get_token_name(pp->next->type));
+            }
+         }
+         if (indent)
+         {
+            reindent_line(pc, prev->column);
+            LOG_FMT(LCMTIND, "rule 3 - prev comment, coldiff = %d, now in %zu\n",
+                    coldiff, pc->column);
+            return;
+         }
       }
    }
 
