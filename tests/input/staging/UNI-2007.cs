@@ -24,5 +24,11 @@ class Dictionary<TKey, TVal>
     }
 }
 
+class List<T>
+{
+    void Add<U>(List<U> items) where U: T { /*...*/ }
+    void Add<U>(List<U> items) where U : T { /*...*/ }
+}
+
 extern T GetNodeFromGuid<T>(Guid guid) where T : INode;
 extern T GetNodeFromGuid<T>(Guid guid) where T: INode;
