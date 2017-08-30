@@ -3219,7 +3219,11 @@ void newlines_cleanup_braces(bool first)
       }
       else if (pc->type == CT_NAMESPACE)
       {
-         newlines_struct_union(pc, cpd.settings[UO_nl_namespace_brace].a, false);
+         // Issue #1235
+         if ((pc->next->next->flags & PCF_ONE_LINER) == 0)
+         {
+            newlines_struct_union(pc, cpd.settings[UO_nl_namespace_brace].a, false);
+         }
       }
       else if (pc->type == CT_SQUARE_OPEN)
       {
@@ -3377,8 +3381,8 @@ void newlines_insert_blank_lines(void)
 
    for (chunk_t *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next_ncnl(pc))
    {
-      LOG_FMT(LNEWLINE, "%s(%d): orig_line is %zu, orig_col is %zu, %s type is %s\n",
-              __func__, __LINE__, pc->orig_line, pc->orig_col,
+      LOG_FMT(LNEWLINE, "%s(%d): text() '%s', orig_line is %zu, orig_col is %zu, %s type is %s\n",
+              __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col,
               pc->text(), get_token_name(pc->type));
       if (pc->type == CT_IF)
       {
@@ -3420,6 +3424,7 @@ void newlines_insert_blank_lines(void)
       else
       {
          // ignore it
+         LOG_FMT(LNEWLINE, "%s(%d): ignore it\n", __func__, __LINE__);
       }
    }
 } // newlines_insert_blank_lines
@@ -3988,10 +3993,12 @@ void do_blank_lines(void)
          blank_line_max(pc, UO_nl_max);
       }
 
+      LOG_FMT(LBLANKD, "%s(%d): text() '%s', orig_line is %zu, orig_col is %zu\n",
+              __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col);
       if (!can_increase_nl(pc))
       {
-         LOG_FMT(LBLANKD, "%s(%d): do_blank_lines: force to 1 line %zu\n",
-                 __func__, __LINE__, pc->orig_line);
+         LOG_FMT(LBLANKD, "%s(%d): force to 1 orig_line is %zu, orig_col is %zu\n",
+                 __func__, __LINE__, pc->orig_line, pc->orig_col);
          if (pc->nl_count != 1)
          {
             pc->nl_count = 1;
