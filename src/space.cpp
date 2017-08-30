@@ -554,6 +554,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
    {
       if (first->type == CT_SQUARE_OPEN && first->parent_type == CT_TYPE)
       {
+         // Only for C#.
          log_rule("sp_before_mdatype_commas");
          return(cpd.settings[UO_sp_before_mdatype_commas].a);
       }
