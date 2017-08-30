@@ -247,19 +247,19 @@ sp_before_squares               = ignore   # ignore/add/remove/force
 # Add or remove space inside a non-empty '[' and ']'.
 sp_inside_square                = ignore   # ignore/add/remove/force
 
-# Add or remove space after ','.
+# Add or remove space after ',', 'a,b' vs 'a, b'.
 sp_after_comma                  = ignore   # ignore/add/remove/force
 
 # Add or remove space before ','. Default=Remove.
 sp_before_comma                 = remove   # ignore/add/remove/force
 
-# Add or remove space between ',' and ']' in multidimensional array type 'int[,,]'.
+# Add or remove space between ',' and ']' in multidimensional array type 'int[,,]'. Only for C#.
 sp_after_mdatype_commas         = ignore   # ignore/add/remove/force
 
-# Add or remove space between '[' and ',' in multidimensional array type 'int[,,]'.
+# Add or remove space between '[' and ',' in multidimensional array type 'int[,,]'. Only for C#.
 sp_before_mdatype_commas        = ignore   # ignore/add/remove/force
 
-# Add or remove space between ',' in multidimensional array type 'int[,,]'.
+# Add or remove space between ',' in multidimensional array type 'int[,,]'. Only for C#.
 sp_between_mdatype_commas       = ignore   # ignore/add/remove/force
 
 # Add or remove space between an open paren and comma: '(,' vs '( ,'. Default=Force.
