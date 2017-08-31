@@ -2523,7 +2523,7 @@ void set_option_defaults(void)
    // copy all the default values to settings array
    for (unsigned int count = 0; count < UO_option_count; count++)
    {
-      cpd.settings[count].a = cpd.defaults[count].a;
+      cpd.settings[count] = cpd.defaults[count];
    }
 } // set_option_defaults
 
