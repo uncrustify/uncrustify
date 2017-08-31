@@ -473,7 +473,9 @@ void register_options(void)
    unc_add_option("sp_after_operator_sym", UO_sp_after_operator_sym, AT_IARF,
                   "Add or remove space between the operator symbol and the open paren, as in 'operator ++('.");
    unc_add_option("sp_after_operator_sym_empty", UO_sp_after_operator_sym_empty, AT_IARF,
-                  "Add or remove space between the operator symbol and the open paren when the operator has no arguments, as in 'operator *()'.");
+                  "Add or remove space between the operator symbol and the open paren when the operator\n"
+                  "has no arguments, as in 'operator *()'.\n"
+                  "Have precedence of sp_after_operator_sym.");
    unc_add_option("sp_after_cast", UO_sp_after_cast, AT_IARF,
                   "Add or remove space after C/D cast, i.e. 'cast(int)a' vs 'cast(int) a' or '(int)a' vs '(int) a'.");
    unc_add_option("sp_inside_paren_cast", UO_sp_inside_paren_cast, AT_IARF,

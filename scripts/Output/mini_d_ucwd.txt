@@ -289,7 +289,9 @@ sp_after_operator               = ignore   # ignore/add/remove/force
 # Add or remove space between the operator symbol and the open paren, as in 'operator ++('.
 sp_after_operator_sym           = ignore   # ignore/add/remove/force
 
-# Add or remove space between the operator symbol and the open paren when the operator has no arguments, as in 'operator *()'.
+# Add or remove space between the operator symbol and the open paren when the operator
+# has no arguments, as in 'operator *()'.
+# Have precedence of sp_after_operator_sym.
 sp_after_operator_sym_empty     = ignore   # ignore/add/remove/force
 
 # Add or remove space after C/D cast, i.e. 'cast(int)a' vs 'cast(int) a' or '(int)a' vs '(int) a'.
