@@ -699,9 +699,11 @@ void register_options(void)
    unc_add_option("sp_inside_newop_paren", UO_sp_inside_newop_paren, AT_IARF,
                   "Controls the spaces inside paren of the new operator: 'new(foo) BAR'.");
    unc_add_option("sp_inside_newop_paren_open", UO_sp_inside_newop_paren_open, AT_IARF,
-                  "Controls the space after open paren of the new operator: 'new(foo) BAR'.");
+                  "Controls the space after open paren of the new operator: 'new(foo) BAR'.\n"
+                  "Have precedence of sp_inside_newop_paren.");
    unc_add_option("sp_inside_newop_paren_close", UO_sp_inside_newop_paren_close, AT_IARF,
-                  "Controls the space before close paren of the new operator: 'new(foo) BAR'.");
+                  "Controls the space before close paren of the new operator: 'new(foo) BAR'.\n"
+                  "Have precedence of sp_inside_newop_paren.");
    unc_add_option("sp_before_tr_emb_cmt", UO_sp_before_tr_emb_cmt, AT_IARF,
                   "Controls the spaces before a trailing or embedded comment.");
    unc_add_option("sp_num_before_tr_emb_cmt", UO_sp_num_before_tr_emb_cmt, AT_UNUM,

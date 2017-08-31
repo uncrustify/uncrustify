@@ -1,4 +1,5 @@
 space_text(): orig_col is , orig_col is , struct type is STRUCT
+space_text(): back-to-back words need a space: pc->text() is struct, next->text() is TelegramIndex
 space_text(): orig_line is , orig_col is , struct type is STRUCT
 do_space(): orig_line is , orig_col is , type is STRUCT, struct
 log_rule(): Spacing: line  [STRUCT/NONE] 'struct' <===> [TYPE/STRUCT] 'TelegramIndex' : ADD as default value[] <force between 'struct' and 'TelegramIndex'> = ADD @  => 
@@ -21,6 +22,7 @@ space_text(): orig_line is , orig_col is , ( type is FPAREN_OPEN
 do_space(): orig_line is , orig_col is , type is FPAREN_OPEN, (
 log_rule(): Spacing: line  [FPAREN_OPEN/FUNC_CLASS_DEF] '(' <===> [QUALIFIER/NONE] 'const' : sp_inside_fparen[] = IGNORE @  => 
 space_text(): orig_col is , orig_col is , const type is QUALIFIER
+space_text(): back-to-back words need a space: pc->text() is const, next->text() is char
 space_text(): orig_line is , orig_col is , const type is QUALIFIER
 do_space(): orig_line is , orig_col is , type is QUALIFIER, const
 log_rule(): Spacing: line  [QUALIFIER/NONE] 'const' <===> [TYPE/NONE] 'char' : sp_after_type[] <force between 'const' and 'char'> = FORCE @  => 
@@ -41,10 +43,12 @@ space_text(): orig_line is , orig_col is , , type is COMMA
 do_space(): orig_line is , orig_col is , type is COMMA, ,
 log_rule(): Spacing: line  [COMMA/NONE] ',' <===> [TYPE/NONE] 'unsigned' : sp_after_comma[] = IGNORE @  => 
 space_text(): orig_col is , orig_col is , unsigned type is TYPE
+space_text(): back-to-back words need a space: pc->text() is unsigned, next->text() is long
 space_text(): orig_line is , orig_col is , unsigned type is TYPE
 do_space(): orig_line is , orig_col is , type is TYPE, unsigned
 log_rule(): Spacing: line  [TYPE/NONE] 'unsigned' <===> [TYPE/NONE] 'long' : sp_after_type[] <force between 'unsigned' and 'long'> = FORCE @  => 
 space_text(): orig_col is , orig_col is , long type is TYPE
+space_text(): back-to-back words need a space: pc->text() is long, next->text() is nI
 space_text(): orig_line is , orig_col is , long type is TYPE
 do_space(): orig_line is , orig_col is , type is TYPE, long
 log_rule(): Spacing: line  [TYPE/NONE] 'long' <===> [WORD/NONE] 'nI' : sp_after_type[] <force between 'long' and 'nI'> = FORCE @  => 
@@ -137,6 +141,7 @@ do_space(): orig_line is , orig_col is , type is BRACE_CLOSE, }
  = REMOVE @  => 
 space_text(): orig_col is , orig_col is ,  type is NEWLINE
 space_text(): orig_col is , orig_col is , const type is QUALIFIER
+space_text(): back-to-back words need a space: pc->text() is const, next->text() is char
 space_text(): orig_line is , orig_col is , const type is QUALIFIER
 do_space(): orig_line is , orig_col is , type is QUALIFIER, const
 log_rule(): Spacing: line  [QUALIFIER/NONE] 'const' <===> [TYPE/NONE] 'char' : sp_after_type[] <force between 'const' and 'char'> = FORCE @  => 
@@ -149,6 +154,7 @@ space_text(): orig_line is , orig_col is , * type is PTR_TYPE
 do_space(): orig_line is , orig_col is , type is PTR_TYPE, *
 log_rule(): Spacing: line  [PTR_TYPE/NONE] '*' <===> [QUALIFIER/NONE] 'const' : IGNORE[] = IGNORE @  => 
 space_text(): orig_col is , orig_col is , const type is QUALIFIER
+space_text(): back-to-back words need a space: pc->text() is const, next->text() is pTelName
 space_text(): orig_line is , orig_col is , const type is QUALIFIER
 do_space(): orig_line is , orig_col is , type is QUALIFIER, const
 log_rule(): Spacing: line  [QUALIFIER/NONE] 'const' <===> [WORD/NONE] 'pTelName' : sp_after_type[] <force between 'const' and 'pTelName'> = FORCE @  => 
@@ -162,10 +168,12 @@ do_space(): orig_line is , orig_col is , type is SEMICOLON, ;
  = REMOVE @  => 
 space_text(): orig_col is , orig_col is ,  type is NEWLINE
 space_text(): orig_col is , orig_col is , unsigned type is TYPE
+space_text(): back-to-back words need a space: pc->text() is unsigned, next->text() is long
 space_text(): orig_line is , orig_col is , unsigned type is TYPE
 do_space(): orig_line is , orig_col is , type is TYPE, unsigned
 log_rule(): Spacing: line  [TYPE/NONE] 'unsigned' <===> [TYPE/NONE] 'long' : sp_after_type[] <force between 'unsigned' and 'long'> = FORCE @  => 
 space_text(): orig_col is , orig_col is , long type is TYPE
+space_text(): back-to-back words need a space: pc->text() is long, next->text() is nTelIndex
 space_text(): orig_line is , orig_col is , long type is TYPE
 do_space(): orig_line is , orig_col is , type is TYPE, long
 log_rule(): Spacing: line  [TYPE/NONE] 'long' <===> [WORD/NONE] 'nTelIndex' : sp_after_type[] <force between 'long' and 'nTelIndex'> = FORCE @  => 

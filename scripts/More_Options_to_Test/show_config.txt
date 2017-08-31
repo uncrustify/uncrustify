@@ -616,9 +616,11 @@ sp_inside_newop_paren           { Ignore, Add, Remove, Force }
 
 sp_inside_newop_paren_open      { Ignore, Add, Remove, Force }
   Controls the space after open paren of the new operator: 'new(foo) BAR'.
+  Have precedence of sp_inside_newop_paren.
 
 sp_inside_newop_paren_close     { Ignore, Add, Remove, Force }
   Controls the space before close paren of the new operator: 'new(foo) BAR'.
+  Have precedence of sp_inside_newop_paren.
 
 sp_before_tr_emb_cmt            { Ignore, Add, Remove, Force }
   Controls the spaces before a trailing or embedded comment.
