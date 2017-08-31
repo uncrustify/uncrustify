@@ -44,6 +44,7 @@
 60013 staging/Uncrustify.CSharp.cfg staging/UNI-13955.cs
 60014 staging/Uncrustify.Cpp.cfg    staging/UNI-14107.cpp
 60015 staging/Uncrustify.CSharp.cfg staging/UNI-14131.cs
+60016 staging/Uncrustify.CSharp.cfg staging/UNI-11662.cs
 60018 staging/Uncrustify.CSharp.cfg staging/UNI-18777.cs
 60019 staging/Uncrustify.CSharp.cfg staging/UNI-18780.cs
 60020 staging/Uncrustify.CSharp.cfg staging/UNI-18829.cs
