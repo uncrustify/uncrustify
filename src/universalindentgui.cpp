@@ -7,9 +7,13 @@
  *          October 2015, 2016
  * @license GPL v2+
  */
+#include "universalindentgui.h"
 #include "prototypes.h"
 #include "uncrustify_version.h"
 #include "unc_ctype.h"
+#include "uncrustify.h"
+#include "error_types.h"
+#include "helper_for_print.h"
 #include <stdio.h>
 
 
@@ -18,18 +22,18 @@ void print_universal_indent_cfg(FILE *pfile)
    const group_map_value *p_grp;
    const char            *p_name;
 
-   /* Dump the header and the categories */
+   // Dump the header and the categories
    fprintf(pfile, "[header]\n");
 
-   /* Add all the categories */
-   char ch = '=';
-   int  idx;
+   // Add all the categories
+   char   ch = '=';
+   size_t idx;
 
    fprintf(pfile, "categories");
    for (idx = 0; idx < UG_group_count; idx++)
    {
       p_grp = get_group_name(idx);
-      if (p_grp != NULL)
+      if (p_grp != nullptr)
       {
          fprintf(pfile, "%c%s", ch, p_grp->short_desc);
          ch = '|';
@@ -42,18 +46,18 @@ void print_universal_indent_cfg(FILE *pfile)
            "configFilename=uncrustify.cfg\n");
 
 
-   /* Add all the recognized file extensions */
-   ch  = '=';
-   idx = 0;
+   // Add all the recognized file extensions
+   ch = '=';
+   int fileIdx = 0;
    fprintf(pfile, "fileTypes");
-   while ((p_name = get_file_extension(idx)) != NULL)
+   while ((p_name = get_file_extension(fileIdx)) != nullptr)
    {
       fprintf(pfile, "%c*%s", ch, p_name);
       ch = '|';
    }
    fprintf(pfile, "\n");
 
-   /* Add the rest of the constant file header */
+   // Add the rest of the constant file header
    fprintf(pfile,
            "indenterFileName=uncrustify\n"
            "indenterName=Uncrustify (C, C++, C#, ObjectiveC, D, Java, Pawn, VALA)\n"
@@ -66,25 +70,30 @@ void print_universal_indent_cfg(FILE *pfile)
            "parameterOrder=ipo\n"
            "showHelpParameter=-h\n"
            "stringparaminquotes=false\n"
-           "useCfgFileParameter=\"-c \"\n"
-           "version=%s\n",
-           UNCRUSTIFY_VERSION);
+           "useCfgFileParameter=\"-c \"\n");
 
-   /* Now add each option */
+   fprintf(pfile, "version=%s\n", UNCRUSTIFY_VERSION);
+
+#ifdef DEBUG
+   size_t optionNumber = 0;
+#endif // DEBUG
+   // Now add each option
    for (idx = 0; idx < UG_group_count; idx++)
    {
       p_grp = get_group_name(idx);
-      if (p_grp == NULL)
+      if (p_grp == nullptr)
       {
          continue;
       }
 
-      for (option_list_cit it = p_grp->options.begin(); it != p_grp->options.end(); it++)
+      for (auto optionEnumVal : p_grp->options)
       {
-         const option_map_value *option = get_option_name(*it);
+         const option_map_value *option = get_option_name(optionEnumVal);
 
-         // Create a better readable name from the options name
-         // by replacing '_' by a space and use some upper case characters.
+         /*
+          * Create a better readable name from the options name
+          * by replacing '_' by a space and use some upper case characters.
+          */
          char *optionNameReadable = new char[strlen(option->name) + 1];
          strcpy(optionNameReadable, option->name);
 
@@ -104,17 +113,23 @@ void print_universal_indent_cfg(FILE *pfile)
          }
 
          fprintf(pfile, "\n[%s]\n", optionNameReadable);
-         fprintf(pfile, "Category=%d\n", idx);
-         fprintf(pfile, "Description=\"<html>(123)");
-         // (123) is a placeholder to be changed with the vim command:
-         // :%s/(\(\d\)\+)/\=printf('(%d)', line('.'))
-         // to the real line number
-         // guy 2016-03-07
+         char *outputMessage;
+         outputMessage = make_message("Category=%zu\n", idx);
+         fprintf(pfile, "%s", outputMessage);
+         free(outputMessage);
+#ifdef DEBUG
+         outputMessage = make_message("Description=\"<html>(%zu)", optionNumber);
+         fprintf(pfile, "%s", outputMessage);
+         free(outputMessage);
+         optionNumber++;
+#else    // DEBUG
+         fprintf(pfile, "Description=\"<html>");
+#endif
 
          const char *tmp = option->short_desc;
          ch = 0;
 
-         /* Output the decription which may contain forbidden chars */
+         // Output the description which may contain forbidden chars
          while (*tmp != 0)
          {
             switch (*tmp)
@@ -153,7 +168,7 @@ void print_universal_indent_cfg(FILE *pfile)
             fprintf(pfile, "EditorType=multiple\n");
             fprintf(pfile, "Choices=\"%s=0|%s=1|%s=2\"\n", option->name, option->name, option->name);
             fprintf(pfile, "ChoicesReadable=\"Spaces only|Indent with tabs, align with spaces|Indent and align with tabs\"\n");
-            fprintf(pfile, "ValueDefault=%d\n", cpd.settings[option->id].n);
+            fprintf(pfile, "ValueDefault=%zu\n", cpd.settings[option->id].u);
             break;
 
          // All not specially handled options are created only dependent by their type.
@@ -209,6 +224,25 @@ void print_universal_indent_cfg(FILE *pfile)
                fprintf(pfile, "ValueDefault=%d\n", cpd.settings[option->id].n);
                break;
 
+            case AT_UNUM:
+               // [input_tab_size]
+               // CallName="input_tab_size="
+               // Category=3
+               // Description="<html>The original size of tabs in the input. Default=8</html>"
+               // EditorType=numeric
+               // Enabled=false
+               // MaxVal=32
+               // MinVal=1
+               // ValueDefault=8
+               fprintf(pfile, "EditorType=numeric\n");
+               fprintf(pfile, "CallName=\"%s=\"\n", option->name);
+               fprintf(pfile, "MinVal=%d\n", option->min_val);
+               fprintf(pfile, "MaxVal=%d\n", option->max_val);
+               outputMessage = make_message("ValueDefault=%zu\n", cpd.settings[option->id].u);
+               fprintf(pfile, "%s", outputMessage);
+               free(outputMessage);
+               break;
+
             case AT_LINE:
                // [newlines]
                // Category=0
@@ -254,10 +288,24 @@ void print_universal_indent_cfg(FILE *pfile)
                val_string = op_val_to_string(option->type, cpd.settings[option->id]);
                val_str    = val_string.c_str();
                fprintf(pfile, "ValueDefault=%s\n", val_str);
+               break;
             }
-            break;
+
+            case AT_TFI:
+            {
+               fprintf(pfile, "EditorType=multiple\n");
+               fprintf(pfile, "Choices=\"%s=false|%s=true|%s=ignore\"\n",
+                       option->name, option->name, option->name);
+               fprintf(pfile, "ChoicesReadable=\"False %s|True %s|Ignore %s\"\n",
+                       optionNameReadable, optionNameReadable, optionNameReadable);
+               fprintf(pfile, "ValueDefault=%d\n", cpd.settings[option->id].tfi);
+               break;
+            }
 
             default:
+               fprintf(stderr, "FATAL: Illegal option type %d for '%s'\n", option->type, option->name);
+               log_flush(true);
+               exit(EX_SOFTWARE);
                break;
             } // switch
          }    // switch

@@ -1,2 +1,2 @@
-result = (Foo) this;
+result = (Foo)this;
 result = (Foo)foo;

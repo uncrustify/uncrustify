@@ -8,6 +8,7 @@
  * @author  Ben Gardner
  * @license GPL v2+
  */
+#include "defines.h"
 #include "uncrustify_types.h"
 #include "char_table.h"
 #include "args.h"
@@ -21,25 +22,19 @@
 
 using namespace std;
 
-typedef map<string, string>   defmap;
+typedef map<string, string> defmap;
 defmap defines;
 
 
-/**
- * Adds an entry to the define list
- *
- * @param tag        The tag (string) must be zero terminated
- * @param value      NULL or the value of the define
- */
 void add_define(const char *tag, const char *value)
 {
-   if ((tag == NULL) || (*tag == 0))
+   if (tag == nullptr || *tag == 0)
    {
       return;
    }
    value = value ? value : "";
 
-   /* Try to update an existing entry first */
+   // Try to update an existing entry first
    defmap::iterator it = defines.find(tag);
    if (it != defines.end())
    {
@@ -48,59 +43,51 @@ void add_define(const char *tag, const char *value)
       return;
    }
 
-   /* Insert a new entry */
+   // Insert a new entry
    defines.insert(defmap::value_type(tag, value));
    LOG_FMT(LDEFVAL, "%s: added '%s' = '%s'\n", __func__, tag, value);
 }
 
 
-/**
- * Loads the defines from a file
- *
- * @param filename   The path to the file to load
- * @return           SUCCESS or FAILURE
- */
 int load_define_file(const char *filename)
 {
-   FILE *pf;
-   char buf[160];
-   char *ptr;
-   char *args[3];
-   int  argc;
-   int  line_no = 0;
+   FILE *pf = fopen(filename, "r");
 
-   pf = fopen(filename, "r");
-   if (pf == NULL)
+   if (pf == nullptr)
    {
       LOG_FMT(LERR, "%s: fopen(%s) failed: %s (%d)\n",
               __func__, filename, strerror(errno), errno);
       cpd.error_count++;
-      return(FAILURE);
+      return(EX_IOERR);
    }
 
-   while (fgets(buf, sizeof(buf), pf) != NULL)
+   char   buf[160];
+   char   *args[3];
+   size_t line_no = 0;
+   while (fgets(buf, sizeof(buf), pf) != nullptr)
    {
       line_no++;
 
-      /* remove comments */
-      if ((ptr = strchr(buf, '#')) != NULL)
+      // remove comments
+      char *ptr;
+      if ((ptr = strchr(buf, '#')) != nullptr)
       {
-         *ptr = 0;
+         *ptr = 0; // set string end where comment begins
       }
 
-      argc       = Args::SplitLine(buf, args, ARRAY_SIZE(args) - 1);
-      args[argc] = 0;
+      int argc = Args::SplitLine(buf, args, ARRAY_SIZE(args) - 1);
+      args[argc] = nullptr;
 
       if (argc > 0)
       {
-         if ((argc <= 2) && CharTable::IsKw1(*args[0]))
+         if (argc <= 2 && CharTable::IsKw1(*args[0]))
          {
-            LOG_FMT(LDEFVAL, "%s: line %d - %s\n", filename, line_no, args[0]);
+            LOG_FMT(LDEFVAL, "%s: line %zu - %s\n", filename, line_no, args[0]);
             add_define(args[0], args[1]);
          }
          else
          {
-            LOG_FMT(LWARN, "%s: line %d invalid (starts with '%s')\n",
+            LOG_FMT(LWARN, "%s: line %zu invalid (starts with '%s')\n",
                     filename, line_no, args[0]);
             cpd.error_count++;
          }
@@ -108,7 +95,7 @@ int load_define_file(const char *filename)
    }
 
    fclose(pf);
-   return(SUCCESS);
+   return(EX_OK);
 } // load_define_file
 
 
@@ -119,7 +106,7 @@ void print_defines(FILE *pfile)
    for (it = defines.begin(); it != defines.end(); ++it)
    {
       fprintf(pfile, "define %*.s%s \"%s\"\n",
-              cpd.max_option_name_len - 6, " ", (*it).first.c_str(), (*it).second.c_str());
+              MAX_OPTION_NAME_LEN - 6, " ", (*it).first.c_str(), (*it).second.c_str());
    }
 }
 

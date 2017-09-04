@@ -1,0 +1,51 @@
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+   <title>Uncrustify: where do the Spaces options work</title>
+</head>
+<body lang="en-US">
+<h1><a href="https://github.com/uncrustify/uncrustify">Uncrustify</a>:
+Where do the options work?</h1>
+<h2>Spaces for byref</h2>
+<p> 
+</p>
+<table border="1", width="100%">
+<tr>
+<td>
+<pre>
+<a name="sp_before_byref"></a><a name="sp_before_byref"></a><a name="sp_after_byref"></a>
+   bool<a title="sp_before_byref_func"><font color="red">█</font>&amp;<a title="sp_after_byref_func"><font color="red">█</font>foo(int<a title="sp_before_byref"><font color="red">█</font>&amp;<a title="sp_after_byref"><font color="red">█</font>idx);
+<a name="sp_before_unnamed_byref"></a><a name="sp_after_byref_func"></a>
+   MyType<a title="sp_before_unnamed_byref"><font color="red">█</font>&amp;<a title="sp_after_byref_func"><font color="red">█</font>MyClass::myMethode() {
+      const MyType&amp; t = getSomewhere();
+</pre>
+</td>
+</tr>
+</table>
+<p></p>
+<h1>Register</h1>
+<table border="0", width="100%">
+<tr>
+   <td valign="top"><a href="#sp_before_byref">sp_before_byref</a></td>
+   <td>Add or remove space before a reference sign '&amp;'</td>
+</tr>
+<tr>
+   <td valign="top"><a href="#sp_before_unnamed_byref">sp_before_unnamed_byref</a></td>
+   <td>Add or remove space before a reference sign '&amp;' that isn't followed by a variable name.<BR>If set to 'ignore', sp_before_byref is used instead.</td>
+</tr>
+<tr>
+   <td valign="top"><a href="#sp_after_byref">sp_after_byref</a></td>
+   <td>Add or remove space after reference sign '&amp;', if followed by a word.</td>
+</tr>
+<tr>
+   <td valign="top"><a href="#sp_after_byref_func">sp_after_byref_func</a></td>
+   <td>Add or remove space after a reference sign '&amp;', if followed by a func proto/def.</td>
+</tr>
+<tr>
+   <td valign="top"><a href="#sp_before_byref_func">sp_before_byref_func</a></td>
+   <td>Add or remove space before a reference sign '&amp;', if followed by a func proto/def.</td>
+</tr>
+</tr>
+</table>
+</body>
+</html>

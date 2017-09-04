@@ -1,4 +1,5 @@
-struct MyClass {
+struct MyClass : public Foo,
+                 private Bar {
   MyClass(
       int a,
       int b,
@@ -10,3 +11,7 @@ struct MyClass {
  private:
   int m_a, m_b, m_c;
 };
+
+struct TheirClass
+  : public Foo,
+    private Bar {};

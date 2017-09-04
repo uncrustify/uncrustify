@@ -39,6 +39,9 @@ bool foo(char c)
    sass.asdfvas->asdfasd[asdfasdf].
        asdfasdf = 5;
 
+   ::asdasda::adasd::
+       asdfasdf = 5;
+
    dookie::wookie << "asd"
       << "bag"
       << "sag";

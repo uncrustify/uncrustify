@@ -1,4 +1,4 @@
-typedef std::list<StreamedData *>::iterator   iterator;
+typedef std::list<StreamedData *>::iterator iterator;
 double foo()
 {
    if (a<bar()> c)

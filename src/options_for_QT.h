@@ -5,7 +5,7 @@
  * http://doc.qt.io/qt-4.8/qtglobal.html
  *
  * @author  Guy Maurel since version 0.62 for uncrustify4Qt
- *          Januar 2016
+ *          January 2016
  * @license GPL v2+
  */
 
@@ -14,13 +14,16 @@
 
 #include "uncrustify_types.h"
 
-extern struct cp_data cpd;
+// TODO can we avoid those extern variables?
+extern bool   QT_SIGNAL_SLOT_found;
+extern size_t QT_SIGNAL_SLOT_level;
+extern bool   restoreValues;
 
-extern bool           QT_SIGNAL_SLOT_found;
-extern int            QT_SIGNAL_SLOT_level;
-extern bool           restoreValues;
 
-void save_set_options_for_QT(int level);
-void restore_options_for_QT();
+void save_set_options_for_QT(size_t level);
+
+
+void restore_options_for_QT(void);
+
 
 #endif /* OPTIONS_FOR_QT_H_INCLUDED */

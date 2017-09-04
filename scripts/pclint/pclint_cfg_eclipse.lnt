@@ -1,0 +1,58 @@
+// These are generale configuration options used for pcLint
+// throughout all kind of projects. 
+// This was adjusted to nuinno policy.
+// See  manual (chapter LIVING WITH LINT) for further details.
+// 
+// Project specific settings shall be included from a separate file
+// at the end of this file
+
+//-i"%PCLINT_HOME%"		// add pclint home directory to include path
+
+//-p					// only run preprocessor (use this for debugging pclint test)
+//+source				// print source code  (use this for debugging pclint test)
+-v  					// be not verbose (standard setting for normal operation)
+//-voif					// show the options that pclint uses (only for debugging pclint)
+//+v					// be verbose  (use this for debugging pclint test)
+//-v*					// be more verbose (use this for debugging pclint)
+//-vf					// print included files (useful for debugging pclint test)
+-summary				// prints a summary of all pclint results (useful for debugging pclint test)
+//-format_summary=.
+//-format_template=
+//-format_verbosity=.
+
++fan					// allow anonymous unions
+++fim					// use multiple include directories
++fus					// automatically recognize std namespace 
++fbo					// activate keyword bool, true, false
+-fkp					// allow ANSI/ISO standard do not insist on Kernighan Richy style  
+-fdh					// do not append a .h to header names                                   
+-ffb					// do not establish a separate scope for declares within for clauses
++fsv					// track static variables
++fll					// enable long long types
++fqb					// expect const and volatile before type
++e900					// print total number of errors/warnings
+
+-d__USE_GNU=1
+scripts\pclint\lint_cfg.lnt	// include project specific settings
+scripts\pclint\policy.lnt	// pclint rules from nuinno
+
+-esym(123,min,max)  		// allows users to use min, max as variables
+
+// Disable unwanted warnings
+//-strong(AB,bool)
+//-strong(AB,boolean)
+//-strong(AJX)			// all typedef must match exactly
+
+// create output that is understood from Jenkins
++ffn 					// force full path names
+-width(0) 				// don't insert line breaks (unlimited output width).
+-hF1 					// set message height one
++program_info(output_prefix = "tests\pclint\pclint_")  
+
+// make error format same as GCC to display it in Eclipse
+-"format=%(%f:%l:%C:%) %t %n: %m"
+-frl	// Enable warning 831
++flm	// make sure no foreign includes change the format
+// env-xml.lnt 			// create output in xml format 
+// -"format_stack=%-20f %5a %-20t %5n %c %e"
+// +stack( &file=test\pclint\pclint-stack-report.txt )

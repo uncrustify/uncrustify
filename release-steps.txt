@@ -1,74 +1,102 @@
-2016-05-10
+2017-05-05
 
 Release steps.
 Just in case I don't do a release for a while and forget what to do... =)
 
-1. Make sure all tests pass
+1. Make sure CI (continuous integration - Travis and AppVeyor) has passed.
+   This should ensure all tests pass and building
+   (including cross-compiling) for Windows works.
 
-   Run all tests (requires python):
+2. Update documentation for the release
 
-     make check
-     or
-     cd tests && ./run_tests.py
-
-2. Make sure it builds for Windows via mingw (under Ubuntu)
-
-    sh make_win32.sh
-
-3. Update documentation for the release
-
-3a. Update the version number and rebuild.
-Replace the old version with the new version everywhere except in ChangeLog.
-Specific files to update:
-    configure.ac
+2a. Update the version number and rebuild (make sure the option CMAKE_BUILD_TYPE is set to Release).
+   Replace the old version with the new version everywhere except in ChangeLog.
+   Specific files to update:
+    ChangeLog
+    CMakeLists.txt
+      At lines under "# Generate uncrustify_version.h"
+      (Check the value of "FALLBACK_VERSION")
     documentation/htdocs/index.html
+      At line <li>Highly configurable
+      TODO: (automat for this) Change the values of <options> and version.
+    package.json
+      At line "version" the number
+      At line "preinstall"
+      At line "url"
 
-Run "sh autogen.sh" and then "./configure".
-Rebuild from scratch (make clean && make)
+2b. Update the option count in documentation/htdocs/index.html
+   Use script/count_the_options.sh to count the options.
+   Check the number of options at ./scripts/More_Options_to_Test/help.txt
 
-3b. Update the option count in documentation/htdocs/index.html
+2c. Update the config files
+   $ scripts/update-defaults.sh
 
-3c. Update the config files
-$ scripts/update-defaults.sh
+2d. Update the man file, if any command-line options have changed.
 
-3d. Update the man file, if any command-line options have changed.
+2e. Update the ChangeLog to indicate the release date
 
-3e. Update the ChangeLog to indicate the release date
+2f. (optional) Generate a commit.log
+   $ git log > commit.log
 
-3f. Generate a commit.log
-$ git log > commit.log
-
-4. Make sure there are no modified files in the workspace.
+3. Make sure there are no modified files in the workspace.
    Check in all the changes you just made.
+   $ git commit <all the files created above>
+   $ git push --repo=https://github.com/uncrustify/uncrustify.git
+     (use an admin)
 
-5. Create a dist tarball and win32 package
+4. Create a GIT tag and push it
+   $ git tag -a uncrustify-0.nn -m uncrustify-0.nn
+   $ git push --tags --repo=https://github.com/uncrustify/uncrustify.git
+     (use an admin)
 
-$ make dist
-Untar the file in a temporary folder and run './configure && make && make check'
-Run tests/run_tests.py
-Then, in that new folder, run 'sh make_win32.sh'.
+5. The source tarball is available from the release on GitHub, or use
+   $ git archive -o uncrustify-0.nn.tar.gz uncrustify-0.nn
+   Test it somewhere else
 
-NOTE: "make distcheck" doesn't work, as it doesn't copy over the test script.
-No idea why.
+6. Build for windows via mingw (save the zip file)
+   Make sure the compiler mingw-w64 is installed.
 
-6. Create a GIT tag and push it
-$ git tag -a uncrustify-0.63 -m uncrustify-0.63
-$ git push --tags
+   $ mkdir buildwin-32
+   $ cd buildwin-32
+   $ cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=../cmake/Toolchain-mingw32.cmake -DCMAKE_EXE_LINKER_FLAGS="-static -s" ..
+   $ make
+   $ cpack
 
-7. Re-run 'make dist' and copy out the release tarball.
+   $ mkdir buildwin-64
+   $ cd buildwin-64
+   $ cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=../cmake/Toolchain-mingw64.cmake -DCMAKE_EXE_LINKER_FLAGS="-static -s" ..
+   $ make
+   $ cpack
 
-8. Update and build for windows via mingw (save the zip file this time)
+7. Update the web page files
+   $ cd uncrustify-$UNC_REL/
+      Login as admin under:
+        https://sourceforge.net/projects/uncrustify/
 
-    sh make_win32.sh
+      change to "Files"
+        https://sourceforge.net/projects/uncrustify/files/?source=navbar
 
-9. Update the web page files
-$ cd uncrustify-$UNC_REL/
-$ scp -r documentation/htdocs/* ChangeLog USER,uncrustify@web.sourceforge.net:htdocs/
+      change to "uncrustify"
+        https://sourceforge.net/projects/uncrustify/files/uncrustify/
 
-10. Use the web interface (file manager) to create the release folder and
-upload the files to sourceforge.
+      "Add Folder"
+        <Name of a new folder, i.e. uncrustify-0.nn>
 
-11. (optional) Create a news item
+      change to "uncrustify-0.nn"
+        https://sourceforge.net/projects/uncrustify/files/uncrustify/uncrustify-0.nn/
 
-12. (optional) Update freshmeat.net project
+      "Add File"
+      Select files, or drag & drop files here.
+        README.md
+        uncrustify-0.nn.tar.gz
+        uncrustify-0.nn-win32.zip
+        uncrustify-0.nn-win64.zip
 
+   $ scp -r documentation/htdocs/* ChangeLog USER,uncrustify@web.sourceforge.net:htdocs/
+
+8. Use the web interface (file manager) to create the release folder and
+   upload the files to sourceforge.
+
+9. (optional) Create a news item
+
+10. (optional) Update freshmeat.net project

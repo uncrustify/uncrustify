@@ -1,0 +1,64 @@
+
+newlines                        = crlf
+# option(s) with 'not default' value: 1
+#
+# -=====-
+# Line              Tag           Parent          Columns Br/Lvl/pp     Flag   Nl  Text
+#   1>           STRUCT[            NONE][  1/  1/  7/  0][0/0/0][     70002][0-0] struct
+#   1>             TYPE[          STRUCT][  8/  8/ 21/  1][0/0/0][         2][0-0]        TelegramIndex
+#   1>          NEWLINE[            NONE][ 21/ 21/  1/  0][0/0/0][         2][1-0]
+#   2>       BRACE_OPEN[          STRUCT][  1/  1/  2/  0][0/0/0][ 100000402][0-0] {
+#   2>          NEWLINE[            NONE][  2/  2/  1/  0][1/1/0][         2][1-0]
+#   3>   FUNC_CLASS_DEF[            NONE][  9/  1/ 14/  0][1/1/0][     60402][0-0]         TelegramIndex
+#   3>      FPAREN_OPEN[  FUNC_CLASS_DEF][ 22/ 14/ 15/  0][1/1/0][ 100000502][0-0]                      (
+#   3>        QUALIFIER[            NONE][ 23/ 15/ 20/  0][1/2/0][     50512][0-0]                       const
+#   3>             TYPE[            NONE][ 29/ 21/ 25/  1][1/2/0][    400512][0-0]                             char
+#   3>         PTR_TYPE[            NONE][ 33/ 25/ 26/  0][1/2/0][ 100000512][0-0]                                 *
+#   3>             WORD[            NONE][ 35/ 27/ 29/  1][1/2/0][    800512][0-0]                                   pN
+#   3>            COMMA[            NONE][ 37/ 29/ 30/  0][1/2/0][ 100000512][0-0]                                     ,
+#   3>             TYPE[            NONE][ 39/ 31/ 39/  1][1/2/0][    450512][0-0]                                       unsigned
+#   3>             TYPE[            NONE][ 48/ 40/ 44/  1][1/2/0][    410512][0-0]                                                long
+#   3>             WORD[            NONE][ 53/ 45/ 47/  1][1/2/0][    800512][0-0]                                                     nI
+#   3>     FPAREN_CLOSE[  FUNC_CLASS_DEF][ 55/ 47/ 48/  0][1/1/0][ 100000502][0-0]                                                       )
+#   3>     CONSTR_COLON[            NONE][ 57/ 49/ 50/  1][1/1/0][ 100000502][0-0]                                                         :
+#   3>          NEWLINE[            NONE][ 58/ 50/  1/  0][1/1/0][         2][1-0]
+#   4>    FUNC_CTOR_VAR[            NONE][ 17/  1/  9/  0][1/1/0][     60502][0-0]                 pTelName
+#   4>      FPAREN_OPEN[   FUNC_CTOR_VAR][ 25/  9/ 10/  0][1/1/0][ 100000502][0-0]                         (
+#   4>             WORD[            NONE][ 26/ 10/ 12/  0][1/2/0][     40512][0-0]                          pN
+#   4>     FPAREN_CLOSE[   FUNC_CTOR_VAR][ 28/ 12/ 13/  0][1/1/0][ 100000502][0-0]                            )
+#   4>            COMMA[            NONE][ 29/ 13/ 14/  0][1/1/0][ 100000502][0-0]                             ,
+#   4>          NEWLINE[            NONE][ 30/ 14/  1/  0][1/1/0][         2][1-0]
+#   5>    FUNC_CTOR_VAR[            NONE][ 17/  1/ 10/  0][1/1/0][     40502][0-0]                 nTelIndex
+#   5>      FPAREN_OPEN[   FUNC_CTOR_VAR][ 26/ 10/ 11/  0][1/1/0][ 100000502][0-0]                          (
+#   5>             WORD[            NONE][ 27/ 11/ 12/  0][1/2/0][     40512][0-0]                           n
+#   5>     FPAREN_CLOSE[   FUNC_CTOR_VAR][ 28/ 12/ 13/  0][1/1/0][ 100000502][0-0]                            )
+#   5>          NEWLINE[            NONE][ 29/ 13/  1/  0][1/1/0][         2][1-0]
+#   6>       BRACE_OPEN[  FUNC_CLASS_DEF][  9/  1/  2/  0][1/1/0][ 140000402][0-0]         {
+#   6>          NEWLINE[            NONE][ 10/  2/  1/  0][2/2/0][         2][1-0]
+#   7>      BRACE_CLOSE[  FUNC_CLASS_DEF][  9/  1/  2/  0][1/1/0][ 140000402][0-0]         }
+#   7>          NEWLINE[            NONE][ 10/  2/  1/  0][1/1/0][         2][2-0]
+#   9>       DESTRUCTOR[            NONE][  9/  1/  2/  0][1/1/0][ 100060402][0-0]         ~
+#   9>   FUNC_CLASS_DEF[      DESTRUCTOR][ 10/  2/ 15/  0][1/1/0][     40402][0-0]          TelegramIndex
+#   9>      FPAREN_OPEN[  FUNC_CLASS_DEF][ 23/ 15/ 16/  0][1/1/0][ 100000502][0-0]                       (
+#   9>     FPAREN_CLOSE[  FUNC_CLASS_DEF][ 24/ 16/ 17/  0][1/1/0][ 100000502][0-0]                        )
+#   9>          NEWLINE[            NONE][ 25/ 17/  1/  0][1/1/0][         2][1-0]
+#  10>       BRACE_OPEN[  FUNC_CLASS_DEF][  9/  1/  2/  0][1/1/0][ 140000402][0-0]         {
+#  10>          NEWLINE[            NONE][ 10/  2/  1/  0][2/2/0][         2][1-0]
+#  11>      BRACE_CLOSE[  FUNC_CLASS_DEF][  9/  1/  2/  0][1/1/0][ 140000402][0-0]         }
+#  11>          NEWLINE[            NONE][ 10/  2/  1/  0][1/1/0][         2][2-0]
+#  13>        QUALIFIER[            NONE][  9/  1/  6/  0][1/1/0][    470402][0-0]         const
+#  13>             TYPE[            NONE][ 15/  7/ 11/  1][1/1/0][    400402][0-0]               char
+#  13>         PTR_TYPE[            NONE][ 19/ 11/ 12/  0][1/1/0][ 100400402][0-0]                   *
+#  13>        QUALIFIER[            NONE][ 21/ 13/ 18/  1][1/1/0][    410402][0-0]                     const
+#  13>             WORD[            NONE][ 27/ 19/ 27/  1][1/1/0][   1800402][0-0]                           pTelName
+#  13>        SEMICOLON[            NONE][ 35/ 27/ 28/  0][1/1/0][ 100000402][0-0]                                   ;
+#  13>          NEWLINE[            NONE][ 36/ 28/  1/  0][1/1/0][         2][1-0]
+#  14>             TYPE[            NONE][  9/  1/  9/  0][1/1/0][    470402][0-0]         unsigned
+#  14>             TYPE[            NONE][ 18/ 10/ 14/  1][1/1/0][    410402][0-0]                  long
+#  14>             WORD[            NONE][ 23/ 15/ 24/  1][1/1/0][   1800402][0-0]                       nTelIndex
+#  14>        SEMICOLON[            NONE][ 32/ 24/ 25/  0][1/1/0][ 100000402][0-0]                                ;
+#  14>          NEWLINE[            NONE][ 33/ 25/  1/  0][1/1/0][         2][1-0]
+#  15>      BRACE_CLOSE[          STRUCT][  1/  1/  2/  0][0/0/0][ 100000400][0-0] }
+#  15>        SEMICOLON[          STRUCT][  2/  2/  3/  0][0/0/0][ 100000000][0-0]  ;
+#  15>          NEWLINE[            NONE][  3/  3/  1/  0][0/0/0][         0][2-0]
+# -=====-

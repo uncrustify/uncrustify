@@ -10,10 +10,10 @@
 #include <cstdlib>
 
 
-void ChunkStack::Set(const ChunkStack& cs)
+void ChunkStack::Set(const ChunkStack &cs)
 {
    m_cse.resize(cs.m_cse.size());
-   for (int idx = 0; idx < (int)m_cse.size(); idx++)
+   for (size_t idx = 0; idx < m_cse.size(); idx++)
    {
       m_cse[idx].m_pc     = cs.m_cse[idx].m_pc;
       m_cse[idx].m_seqnum = cs.m_cse[idx].m_seqnum;
@@ -24,39 +24,39 @@ void ChunkStack::Set(const ChunkStack& cs)
 
 const ChunkStack::Entry *ChunkStack::Top() const
 {
-   if (m_cse.size() > 0)
+   if (!m_cse.empty())
    {
       return(&m_cse[m_cse.size() - 1]);
    }
-   return(NULL);
+   return(nullptr);
 }
 
 
-const ChunkStack::Entry *ChunkStack::Get(int idx) const
+const ChunkStack::Entry *ChunkStack::Get(size_t idx) const
 {
-   if ((idx >= 0) && (idx < (int)m_cse.size()))
+   if (idx < m_cse.size())
    {
       return(&m_cse[idx]);
    }
-   return(NULL);
+   return(nullptr);
 }
 
 
-chunk_t *ChunkStack::GetChunk(int idx) const
+chunk_t *ChunkStack::GetChunk(size_t idx) const
 {
-   if ((idx >= 0) && (idx < (int)m_cse.size()))
+   if (idx < m_cse.size())
    {
       return(m_cse[idx].m_pc);
    }
-   return(NULL);
+   return(nullptr);
 }
 
 
 chunk_t *ChunkStack::Pop_Front()
 {
-   chunk_t *pc = NULL;
+   chunk_t *pc = nullptr;
 
-   if (m_cse.size() > 0)
+   if (!m_cse.empty())
    {
       pc = m_cse[0].m_pc;
       m_cse.pop_front();
@@ -67,9 +67,9 @@ chunk_t *ChunkStack::Pop_Front()
 
 chunk_t *ChunkStack::Pop_Back()
 {
-   chunk_t *pc = NULL;
+   chunk_t *pc = nullptr;
 
-   if (m_cse.size() > 0)
+   if (!m_cse.empty())
    {
       pc = m_cse[m_cse.size() - 1].m_pc;
       m_cse.pop_back();
@@ -78,7 +78,7 @@ chunk_t *ChunkStack::Pop_Back()
 }
 
 
-void ChunkStack::Push_Back(chunk_t *pc, int seqnum)
+void ChunkStack::Push_Back(chunk_t *pc, size_t seqnum)
 {
    m_cse.push_back(Entry(seqnum, pc));
    if (m_seqnum < seqnum)
@@ -88,31 +88,22 @@ void ChunkStack::Push_Back(chunk_t *pc, int seqnum)
 }
 
 
-/**
- * Mark an entry to be removed by Collapse()
- *
- * @param idx  The item to remove
- */
-void ChunkStack::Zap(int idx)
+void ChunkStack::Zap(size_t idx)
 {
-   if ((idx >= 0) && (idx < (int)m_cse.size()))
+   if (idx < m_cse.size())
    {
-      m_cse[idx].m_pc = NULL;
+      m_cse[idx].m_pc = nullptr;
    }
 }
 
 
-/**
- * Compresses down the stack by removing dead entries
- */
 void ChunkStack::Collapse()
 {
-   int wr_idx = 0;
-   int rd_idx;
+   size_t wr_idx = 0;
 
-   for (rd_idx = 0; rd_idx < (int)m_cse.size(); rd_idx++)
+   for (size_t rd_idx = 0; rd_idx < m_cse.size(); rd_idx++)
    {
-      if (m_cse[rd_idx].m_pc != NULL)
+      if (m_cse[rd_idx].m_pc != nullptr)
       {
          if (rd_idx != wr_idx)
          {

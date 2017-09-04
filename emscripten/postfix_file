@@ -1,0 +1,2 @@
+if (typeof module !== 'undefined') module.exports = libUncrustify;
+if (typeof define === 'function') define(libUncrustify);

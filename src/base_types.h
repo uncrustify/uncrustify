@@ -9,11 +9,13 @@
 #ifndef BASE_TYPES_H_INCLUDED
 #define BASE_TYPES_H_INCLUDED
 
+#include "error_types.h"
+
 #ifdef WIN32
 
 #include "windows_compat.h"
 
-#else /* not WIN32 */
+#else // not WIN32
 
 #include "config.h"
 
@@ -28,7 +30,7 @@
 #endif
 
 
-/* some of my favorite aliases */
+// some of my favorite aliases
 
 typedef char       CHAR;
 
@@ -42,19 +44,14 @@ typedef uint32_t   UINT32;
 typedef uint64_t   UINT64;
 #endif   /* ifdef WIN32 */
 
-/* and the good old SUCCESS/FAILURE */
 
-#define SUCCESS    0
-#define FAILURE    -1
-
-
-/* and a nice macro to keep SlickEdit happy */
-
+// and a nice macro to keep SlickEdit happy
 #define static_inline    static inline
 
-/* and the ever-so-important array size macro */
+// and the ever-so-important array size macro
 #ifndef ARRAY_SIZE
 #define ARRAY_SIZE(x)    (sizeof(x) / sizeof((x)[0]))
 #endif
+
 
 #endif /* BASE_TYPES_H_INCLUDED */

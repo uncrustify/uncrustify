@@ -1,5 +1,4 @@
 // This has to do with the @" that opens a literal string getting aligned when we don't want it to.
-//  (click for more details)
 // Test code:
 
 void Func()
@@ -19,7 +18,6 @@ line");
 }
 
 // (This also happens with var x = \n@"" and probably a few other scenarios.)
-// Example: Tests\Unity.RuntimeTests\EditorUITests\MaterialPropertyDrawers\MatertialPropertyDrawerApplyIsCalled.cs
 // There's no way to keep it from indenting the first line of the string literal. We want to leave it at column 1 because it's being used for a "here doc" that doesn't want leading spaces from indentation. It's weird looking for just the first line to be indented.
 // This likely requires a new Uncrustify feature to support.
 // Workaround: start the @" on the previous line and permit the string to have an extra empty first line, like this:

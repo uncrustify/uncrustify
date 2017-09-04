@@ -6,7 +6,7 @@ typedef enum foo *(*my_fcn_ptr)(char *, int);
 typedef const struct foo *(*my_fcn_ptr)(char *, int);
 typedef BOOL (my_fcn_ptr)(char *, int);
 typedef INT32 (*my_fcn_ptr)(char *, int);
-typedef int   INT32;
+typedef int INT32;
 typedef struct foo
 {
    int a;

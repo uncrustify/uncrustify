@@ -4,27 +4,39 @@
    <title>Uncrustify: where do the Spaces options work</title>
 </head>
 <body lang="en-US">
-<h1><a href="https://github.com/gmaurel/uncrustify4Qt">Uncrustify4Qt</a>:
+<h1><a href="https://github.com/uncrustify/uncrustify">Uncrustify</a>:
 Where do the options work?</h1>
+
+<p>
+</p>
 <h2>Spaces</h2>
+You want to "add/ force/ ignore/ remove" a
+<ul>
+  <li><a href="options_Space_Assign.html">space for assign</a></li>
+  <li><a href="options_Space_Byref.html">space for byref</a></li>
+  <li><a href="options_Space_Case.html">space for case</a></li>
+  <li><a href="options_Space_Cast.html">space for cast</a></li>
+  <li><a href="options_Space_Class.html">space for class</a></li>
+  <li><a href="options_Space_Enum.html">space for enum</a></li>
+  <li><a href="options_Space_Template.html">space for template</a></li>
+</ul>
+at some places.
+<p>
+</p>
+Some more options...
+<p>
+</p>
 <p> 
 </p>
-<table border="1">
+<table border="1", width="100%">
 <tr>
 <td>
 <pre>
-enum FLAGS {<a name="sp_enum_assign"></a><a name="sp_enum_before_assign"></a><a name="sp_enum_after_assign"></a>
-    FLAGS_decimal = 1,
-    <a title="sp_enum_assign"><strong><font color="red">             ^ ^</font></strong></a>
-    <a title="sp_enum_before_assign"><strong><font color="red">             ^ </a><a title="sp_enum_after_assign">^</font></strong></a>
-    FLAGS_unsigned = 2,
-<a name="sp_cmt_cpp_start"></a>
 // Comments
 <a title="sp_cmt_cpp_start"><strong><font color="red">  ^</font></strong></a><a name="sp_before_tr_emb_cmt"></a><a name="sp_num_before_tr_emb_cmt"></a>
 int a;            /* emb cmt */ int b;            // trailing cmt
-<a title="sp_before_tr_emb_cmt"><strong><font color="red">      ^</a><a title="sp_num_before_tr_emb_cmt">..........^                    ^..........^</font></strong></a><a name="sp_inside_braces_enum"></a>
-enum Status { Unknown, Success, Error };
-<a title="sp_inside_braces_enum"><strong><font color="red">             ^                       ^</font></strong></a>
+<a title="sp_before_tr_emb_cmt"><strong><font color="red">      ^</a><a title="sp_num_before_tr_emb_cmt">..........^                    ^..........^</font></strong></a>
+
     union {
         uint maxChars;
         uint maxBytes;

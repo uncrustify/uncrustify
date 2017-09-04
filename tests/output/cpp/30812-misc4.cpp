@@ -10,7 +10,7 @@ struct X
 
 int f(bool b)
 {
-   typedef int   mytype;
+   typedef int mytype;
    if (b)
    {
       return(int(42.0));

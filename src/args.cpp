@@ -10,19 +10,13 @@
 #include "unc_ctype.h"
 
 
-/**
- * Store the values and allocate enough memory for the 'used' flags.
- *
- * @param argc The argc that was passed to main()
- * @param argv The argv that was passed to main()
- */
 Args::Args(int argc, char **argv)
 {
    m_count  = argc;
    m_values = argv;
-   int len = (argc >> 3) + 1;
+   size_t len = (argc >> 3) + 1;
    m_used = new UINT8[len];
-   if (m_used != NULL)
+   if (m_used != nullptr)
    {
       memset(m_used, 0, len);
    }
@@ -31,28 +25,20 @@ Args::Args(int argc, char **argv)
 
 Args::~Args()
 {
-   if (m_used != NULL)
+   if (m_used != nullptr)
    {
       delete[] m_used;
-      m_used = NULL;
+      m_used = nullptr;
    }
    m_count = 0;
 }
 
 
-/**
- * Check for an exact match
- *
- * @param token   The token string to match
- * @return        true/false -- Whether the argument was present
- */
 bool Args::Present(const char *token)
 {
-   int idx;
-
-   if (token != NULL)
+   if (token != nullptr)
    {
-      for (idx = 0; idx < m_count; idx++)
+      for (size_t idx = 0; idx < m_count; idx++)
       {
          if (strcmp(token, m_values[idx]) == 0)
          {
@@ -61,50 +47,33 @@ bool Args::Present(const char *token)
          }
       }
    }
-
    return(false);
 }
 
 
-/**
- * Just call arg_params() with an index of 0.
- *
- * @param token   The token string to match
- * @return        NULL or the pointer to the string
- */
 const char *Args::Param(const char *token)
 {
-   int idx = 0;
+   size_t idx = 0;
 
    return(Params(token, idx));
 }
 
 
-/**
- * Scan for a match
- *
- * @param token   The token string to match
- * @return        NULL or the pointer to the string
- */
-const char *Args::Params(const char *token, int& index)
+const char *Args::Params(const char *token, size_t &index)
 {
-   int idx;
-   int token_len;
-   int arg_len;
-
-   if (token == NULL)
+   if (token == nullptr)
    {
-      return(NULL);
+      return(nullptr);
    }
 
-   token_len = (int)strlen(token);
+   size_t token_len = strlen(token);
 
-   for (idx = index; idx < m_count; idx++)
+   for (size_t idx = index; idx < m_count; idx++)
    {
-      arg_len = (int)strlen(m_values[idx]);
+      size_t arg_len = strlen(m_values[idx]);
 
-      if ((arg_len >= token_len) &&
-          (memcmp(token, m_values[idx], token_len) == 0))
+      if (  arg_len >= token_len
+         && (memcmp(token, m_values[idx], token_len) == 0))
       {
          SetUsed(idx);
          if (arg_len > token_len)
@@ -127,18 +96,15 @@ const char *Args::Params(const char *token, int& index)
       }
    }
 
-   return(NULL);
+   return(nullptr);
 } // Args::Params
 
 
-/**
- * Gets whether an argument has been used, by index.
- *
- * @param idx  The index of the argument
- */
-bool Args::GetUsed(int idx)
+bool Args::GetUsed(size_t idx)
 {
-   if ((m_used != NULL) && (idx >= 0) && (idx < m_count))
+   if (  m_used != nullptr
+      && idx > 0
+      && idx < m_count)
    {
       return((m_used[idx >> 3] & (1 << (idx & 0x07))) != 0);
    }
@@ -146,38 +112,25 @@ bool Args::GetUsed(int idx)
 }
 
 
-/**
- * Marks an argument as being used.
- *
- * @param idx  The index of the argument
- */
-void Args::SetUsed(int idx)
+void Args::SetUsed(size_t idx)
 {
-   if ((m_used != NULL) && (idx >= 0) && (idx < m_count))
+   if (  m_used != nullptr
+      && idx > 0
+      && idx < m_count)
    {
       m_used[idx >> 3] |= (1 << (idx & 0x07));
    }
 }
 
 
-/**
- * This function retrieves all unused parameters.
- * You must set the index before the first call.
- * Set the index to 1 to skip argv[0].
- *
- * @param idx  Pointer to the index
- * @return     NULL (done) or the pointer to the string
- */
-const char *Args::Unused(int& index)
+const char *Args::Unused(size_t &index)
 {
-   int idx;
-
-   if (m_used == NULL)
+   if (m_used == nullptr)
    {
-      return(NULL);
+      return(nullptr);
    }
 
-   for (idx = index; idx < m_count; idx++)
+   for (size_t idx = index; idx < m_count; idx++)
    {
       if (!GetUsed(idx))
       {
@@ -186,34 +139,27 @@ const char *Args::Unused(int& index)
       }
    }
    index = m_count;
-   return(NULL);
+   return(nullptr);
 }
 
 
-/**
- * Takes text and splits it into arguments.
- * args is an array of char * pointers that will get populated.
- * num_args is the maximum number of args split off.
- * If there are more than num_args, the remaining text is ignored.
- * Note that text is modified (zeroes are inserted)
- *
- * @param text       The text to split (modified)
- * @param args       The char * array to populate
- * @param num_args   The number of items in args
- * @return           The number of arguments parsed (always <= num_args)
- */
-int Args::SplitLine(char *text, char *args[], int num_args)
+size_t Args::SplitLine(char *text, char *args[], size_t num_args)
 {
-   char cur_quote    = 0;
-   bool in_backslash = false;
-   bool in_arg       = false;
-   int  argc         = 0;
-   char *dest        = text;
-
-
-   while ((*text != 0) && (argc <= num_args))
+   if (text == nullptr || num_args == 0)
    {
-      /* Detect the start of an arg */
+      return(0);
+   }
+
+   char   cur_quote    = 0;
+   bool   in_backslash = false;
+   bool   in_arg       = false;
+   size_t argc         = 0;
+   char   *dest        = text;
+
+   while (  argc <= num_args // maximal number of arguments not reached yet
+         && *text != 0)      // end of string not reached yet
+   {
+      // Detect the start of an arg
       if (!in_arg && !unc_isspace(*text))
       {
          in_arg     = true;
@@ -237,7 +183,9 @@ int Args::SplitLine(char *text, char *args[], int num_args)
          {
             cur_quote = 0;
          }
-         else if ((*text == '\'') || (*text == '"') || (*text == '`'))
+         else if (  (*text == '\'')
+                 || (*text == '"')
+                 || (*text == '`'))
          {
             cur_quote = *text;
          }
@@ -253,7 +201,7 @@ int Args::SplitLine(char *text, char *args[], int num_args)
             in_arg = false;
             if (argc == num_args)
             {
-               break;
+               break; // all arguments found, we can stop
             }
          }
          else
@@ -262,7 +210,7 @@ int Args::SplitLine(char *text, char *args[], int num_args)
             dest++;
          }
       }
-      text++;
+      text++; // go on with next character
    }
    *dest = 0;
 

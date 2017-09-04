@@ -1,0 +1,74 @@
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+   <title>Uncrustify: where do the Spaces options work</title>
+</head>
+<body lang="en-US">
+<h1><a href="https://github.com/uncrustify/uncrustify">Uncrustify</a>:
+Where do the options work?</h1>
+<h2>Spaces for template</h2>
+<p> 
+</p>
+<table border="1", width="100%">
+<tr>
+<td>
+<pre>
+{<a name="sp_template_angle"></a><a name="sp_before_angle"></a><a name="sp_inside_angle"></a><a name="sp_after_angle"></a>
+   template<a title="sp_template_angle, sp_before_angle"><font color="red">█</font></a>&lt;<a title="sp_inside_angle"><font color="red">█</font></a>bool a<a title="sp_inside_angle"><font color="red">█</font></a>&gt;<a title="sp_after_angle"><font color="red">█</font></a>void f();
+<a name="sp_angle_paren"></a>
+   new List<byte><a title="sp_angle_paren"><font color="red">█</font></a>(foo);
+<a name="sp_angle_paren_empty"></a>
+   new List<byte>(<a title="sp_angle_paren_empty"><font color="red">█</font></a>);
+<a name="sp_angle_word"></a>
+   List&lt;byte&gt;<a title="sp_angle_word"><font color="red">█</font></a>m;
+   template &lt;typename T&gt;<a title="sp_angle_word"><font color="red">█</font></a>static ...;
+<a name="sp_angle_shift"></a>
+   template&lt;typename T&gt; class Foo&lt;Bar&lt;T&gt;<a title="sp_angle_shift"><font color="red">█</font></a>&gt; { };
+}
+</pre>
+</td>
+</tr>
+</table>
+<p></p>
+<h1>Register</h1>
+<table border="0", width="100%">
+<tr>
+   <td valign="top"><a href="#sp_template_angle">sp_template_angle</a></td>
+   <td>Add or remove space in 'template &lt;' vs 'template&lt;'.<BR>If set to ignore, sp_before_angle is used.</td>
+</tr>
+<tr>
+   <td valign="top"><a href="#sp_before_angle">sp_before_angle</a></td>
+   <td>Add or remove space before '&lt;&gt;'</td>
+</tr>
+<tr>
+   <td valign="top"><a href="#sp_inside_angle">sp_inside_angle</a></td>
+   <td>Add or remove space inside '&lt;' and '&gt;'</td>
+</tr>
+<tr>
+   <td valign="top"><a href="#sp_after_angle">sp_after_angle</a></td>
+   <td>Add or remove space after '&lt;&gt;'</td>
+</tr>
+<tr>
+   <td valign="top"><a href="#sp_angle_paren">sp_angle_paren</a></td>
+   <td>Add or remove space between '&lt;&gt;' and '(' as found in 'new List&lt;byte&gt;(foo);'</td>
+</tr>
+<tr>
+   <td valign="top"><a href="#sp_angle_paren_empty">sp_angle_paren_empty</a></td>
+   <td>Add or remove space between '&lt;&gt;' and '()' as found in 'new List&lt;byte&gt;();'</td>
+</tr>
+<tr>
+   <td valign="top"><a href="#sp_angle_word">sp_angle_word</a></td>
+   <td>Add or remove space between '&lt;&gt;' and a word as in 'List&lt;byte&gt; m;' or 'template &lt;typename T&gt; static ...'
+</td>
+</tr>
+<tr>
+   <td valign="top"><a href="#sp_angle_shift">sp_angle_shift</a></td>
+   <td>Add or remove space between '&gt;' and '&gt;' in '&gt;&gt;'</td>
+</tr>
+<tr>
+   <td valign="top"><a href="#sp_permit_cpp11_shift">sp_permit_cpp11_shift</a></td>
+   <td>Permit removal of the space between '&gt;&gt;' in 'foo&lt;bar&lt;int&gt; &gt;' (C++11 only). Default=False.<BR>sp_angle_shift cannot remove the space without this option.</td>
+</tr>
+</table>
+</body>
+</html>
