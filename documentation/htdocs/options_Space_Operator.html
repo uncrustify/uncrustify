@@ -1,0 +1,47 @@
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+   <title>Uncrustify: where do the Spaces options work</title>
+</head>
+<body lang="en-US">
+<h1><a href="https://github.com/uncrustify/uncrustify">Uncrustify</a>:
+Where do the options work?</h1>
+<h2>Spaces for operator</h2>
+<p> 
+</p>
+<table border="1", width="100%">
+<tr>
+<td>
+<pre>
+{<a name="sp_after_operator"></a><a name="sp_after_operator_sym"></a>
+   bool operator<a title="sp_after_operator"><font color="red">█</font></a>()<a title="sp_after_operator_sym"><font color="red">█</font></a>(T1 const t1, T2 const t2)
+   {
+      ...
+   }<a name="sp_after_operator_sym_empty"></a>
+   unc_text operator =<a title="sp_after_operator_sym, sp_after_operator_sym_empty"><font color="red">█</font></a>()
+   {
+      ...
+   }
+}
+</pre>
+</td>
+</tr>
+</table>
+<p></p>
+<h1>Register</h1>
+<table border="0", width="100%">
+<tr>
+   <td valign="top"><a href="#sp_after_operator">sp_after_operator</a></td>
+   <td>Add or remove space between 'operator' and operator sign.</td>
+</tr>
+<tr>
+   <td valign="top"><a href="#sp_after_operator_sym">sp_after_operator_sym</a></td>
+   <td>Add or remove space between the operator symbol and the open paren, as in 'operator ++('.</td>
+</tr>
+<tr>
+   <td valign="top"><a href="#sp_after_operator_sym_empty">sp_after_operator_sym_empty</a></td>
+   <td>Add or remove space between the operator symbol and the open paren when the operator<BR>has no arguments, as in 'operator *()'.<BR>Have precedence of sp_after_operator_sym.</td>
+</tr>
+</table>
+</body>
+</html>
