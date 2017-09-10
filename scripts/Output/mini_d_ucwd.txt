@@ -617,9 +617,11 @@ sp_after_newop_paren            = ignore   # ignore/add/remove/force
 sp_inside_newop_paren           = ignore   # ignore/add/remove/force
 
 # Controls the space after open paren of the new operator: 'new(foo) BAR'.
+# Have precedence of sp_inside_newop_paren.
 sp_inside_newop_paren_open      = ignore   # ignore/add/remove/force
 
 # Controls the space before close paren of the new operator: 'new(foo) BAR'.
+# Have precedence of sp_inside_newop_paren.
 sp_inside_newop_paren_close     = ignore   # ignore/add/remove/force
 
 # Controls the spaces before a trailing or embedded comment.

@@ -2000,6 +2000,8 @@ void space_text(void)
                if (kw1 && kw2)
                {
                   // back-to-back words need a space
+                  LOG_FMT(LSPACE, "%s(%d): back-to-back words need a space: pc->text() is %s, next->text() is %s\n",
+                          __func__, __LINE__, pc->text(), next->text());
                   chunk_flags_set(pc, PCF_FORCE_SPACE);
                }
                // TODO:  what is the meaning of 4
@@ -2039,6 +2041,8 @@ void space_text(void)
                      }
                      else
                      {
+                        LOG_FMT(LSPACE, "%s(%d): : pc->text() is %s, next->text() is %s\n",
+                                __func__, __LINE__, pc->text(), next->text());
                         chunk_flags_set(pc, PCF_FORCE_SPACE);
                      }
                   }
