@@ -125,6 +125,8 @@
 30270 const_throw.cfg                  cpp/const_throw.cpp
 30271 sp_throw_paren-r.cfg             cpp/sp_throw_paren.cpp
 30272 sp_throw_paren-f.cfg             cpp/sp_throw_paren.cpp
+30273 sp_cparen_oparen-f.cfg           cpp/sp_cparen_oparen.cpp
+30274 sp_cparen_oparen-r.cfg           cpp/sp_cparen_oparen.cpp
 
 30280 sf557.cfg                        cpp/sf557.cpp
 
