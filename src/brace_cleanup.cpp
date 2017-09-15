@@ -700,8 +700,16 @@ static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
          {
             // fatal error
             char *outputMessage;
-            outputMessage = make_message("Unmatched BRACE_CLOSE\nat line=%zu, column=%zu\n",
-                                         pc->orig_line, pc->orig_col);
+            if (cpd.settings[UO_tok_split_gte].b)
+            {
+               outputMessage = make_message("Unmatched BRACE_CLOSE\nat line=%zu, column=%zu\n",
+                                            pc->orig_line, pc->orig_col);
+            }
+            else
+            {
+               outputMessage = make_message("Unmatched BRACE_CLOSE\nat line=%zu, column=%zu\nTry the option 'tok_split_gte = true'\n",
+                                            pc->orig_line, pc->orig_col);
+            }
             fprintf(stderr, "%s", outputMessage);
             free(outputMessage);
             log_flush(true);
