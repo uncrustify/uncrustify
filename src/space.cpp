@@ -1263,6 +1263,15 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
       }
    }
 
+   /* "((" vs "( (" or "))" vs ") )" */
+   // Issue #1342
+   if (  (chunk_is_str(first, "(", 1) && chunk_is_str(second, "(", 1))
+      || (chunk_is_str(first, ")", 1) && chunk_is_str(second, ")", 1)))
+   {
+      log_rule("sp_paren_paren");
+      return(cpd.settings[UO_sp_paren_paren].a);
+   }
+
    // "foo(...)" vs "foo( ... )"
    if (first->type == CT_FPAREN_OPEN || second->type == CT_FPAREN_CLOSE)
    {
@@ -1840,14 +1849,6 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
    {
       log_rule("sp_extern_paren");
       return(cpd.settings[UO_sp_extern_paren].a);
-   }
-
-   /* "((" vs "( (" or "))" vs ") )" */
-   if (  (chunk_is_str(first, "(", 1) && chunk_is_str(second, "(", 1))
-      || (chunk_is_str(first, ")", 1) && chunk_is_str(second, ")", 1)))
-   {
-      log_rule("sp_paren_paren");
-      return(cpd.settings[UO_sp_paren_paren].a);
    }
 
    // this table lists out all combos where a space should NOT be present
