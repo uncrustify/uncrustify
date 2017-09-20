@@ -1175,6 +1175,9 @@ nl_func_def_paren_empty         = ignore   # ignore/add/remove/force
 # Add or remove newline between a function name and the opening '(' in the call
 nl_func_call_paren              = ignore   # ignore/add/remove/force
 
+# Overrides nl_func_call_paren for functions with no parameters.
+nl_func_call_paren_empty        = ignore   # ignore/add/remove/force
+
 # Add or remove newline after '(' in a function declaration.
 nl_func_decl_start              = ignore   # ignore/add/remove/force
 
@@ -1228,6 +1231,9 @@ nl_func_decl_empty              = ignore   # ignore/add/remove/force
 
 # Add or remove newline between '()' in a function definition.
 nl_func_def_empty               = ignore   # ignore/add/remove/force
+
+# Add or remove newline between '()' in a function call.
+nl_func_call_empty              = ignore   # ignore/add/remove/force
 
 # Whether to add newline after '(' in a function call if '(' and ')' are in different lines.
 nl_func_call_start_multi_line   = false    # false/true

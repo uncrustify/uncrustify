@@ -1,6 +1,7 @@
 void LocalClass::LocalClass()
 {
-	int Function()
+	int Function(
+		)
 	{
 		return 0;
 	}
