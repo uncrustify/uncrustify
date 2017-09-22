@@ -1,0 +1,211 @@
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+   <title>Uncrustify: where do the Spaces options work</title>
+</head>
+<body lang="en-US">
+<h1><a href="https://github.com/uncrustify/uncrustify">Uncrustify</a>:
+Where do the options work?</h1>
+<h2>Spaces for Parenthesis</h2>
+<p> 
+</p>
+<table border="1", width="100%">
+<tr>
+<td>
+<pre>
+<a name="sp_inside_fparens"></a>void f1(<a title="sp_inside_fparens"><font color="red">█</font></a>)
+{
+    auto a =<a name="sp_cpp_lambda_paren"></a><a name="sp_inside_fparen"></a>
+    [=]<a title="sp_cpp_lambda_paren"><font color="red">█</font></a>(<a title="sp_inside_fparen"><font color="red">█</font></a>int *a, Something b<a title="sp_inside_fparen"><font color="red">█</font></a>)
+    {
+        // ...
+    };
+}
+void foo(<a title="sp_inside_fparen"><font color="red">█</font></a>int key, int value<a title="sp_inside_fparen"><font color="red">█</font></a>)
+{<a name="sp_inside_paren"></a>
+    a = (<a title="sp_inside_paren"><font color="red">█</font></a>b + c<a title="sp_inside_paren"><font color="red">█</font></a>);<a name="sp_balance_nested_parens"></a>
+    a = B(<a title="sp_balance_nested_parens"><font color="red">█</font></a>(c) + (d)<a title="sp_balance_nested_parens"><font color="red">█</font></a>);
+    return A(<a title="sp_inside_fparen"><font color="red">█</font></a>key, value<a title="sp_inside_fparen"><font color="red">█</font></a>) + B(<a title="sp_inside_fparens"><font color="red">█</font></a>);
+}
+}<a name="sp_cparen_oparen"></a>
+class STDMETHOD
+{
+   STDMETHOD(GetValues)<a title="sp_cparen_oparen"><font color="red">█</font></a>(BSTR bsName, REFDATA** pData);
+};
+</pre>
+</td>
+</tr>
+</table>
+<p></p>
+<h1>Register (part 1)</h1>
+<table border="0", width="100%">
+<tr>
+   <td valign="top"><a href="#sp_cpp_lambda_paren">sp_cpp_lambda_paren</a></td>
+   <td>Add or remove space after the capture specification in C++11 lambda.</td>
+</tr>
+<tr>
+   <td valign="top"><a href="#sp_inside_paren">sp_inside_paren</a></td>
+   <td>Add or remove space inside '(' and ')'.</td>
+</tr>
+<tr>
+   <td valign="top"><a href="#sp_cparen_oparen">sp_cparen_oparen</a></td>
+   <td>Add or remove space between back-to-back parens: ')(' vs ') ('.</td>
+</tr>
+<tr>
+   <td valign="top"><a href="#sp_balance_nested_parens">sp_balance_nested_parens</a></td>
+   <td>Whether to balance spaces inside nested parens.</td>
+</tr>
+</table>
+<h1>Register (part 2) TODO</h1>
+<table border="0", width="100%">
+<tr>
+   <td valign="top"><a href="#sp_paren_paren">sp_paren_paren</a></td>
+   <td>Add or remove space between nested parens: '((' vs ') )'.</td>
+</tr>
+<tr>
+   <td valign="top"><a href="#sp_paren_brace">sp_paren_brace</a></td>
+   <td>#(34)Add or remove space between ')' and '{'.</td>
+</tr>
+<tr>
+   <td valign="top"><a href="#sp_ptr_star_paren">sp_ptr_star_paren</a></td>
+   <td>#(41)Add or remove space after a pointer star '*', if followed by an open paren (function types).</td>
+</tr>
+<tr>
+   <td valign="top"><a href="#sp_before_template_paren">sp_before_template_paren</a></td>
+   <td>#(49)Add or remove space before the paren in the D constructs 'template Foo(' and 'class Foo('.</td>
+</tr>
+<tr>
+   <td valign="top"><a href="#sp_before_sparen">sp_before_sparen</a></td>
+   <td>#(59)Add or remove space before '(' of 'if', 'for', 'switch', 'while', etc.</td>
+</tr>
+<tr>
+   <td valign="top"><a href="#sp_inside_sparen">sp_inside_sparen</a></td>
+   <td>#(60)Add or remove space inside if-condition '(' and ')'.</td>
+</tr>
+<tr>
+   <td valign="top"><a href="#sp_inside_sparen_close">sp_inside_sparen_close</a></td>
+   <td>#(61)Add or remove space before if-condition ')'. Overrides sp_inside_sparen.</td>
+</tr>
+<tr>
+   <td valign="top"><a href="#sp_inside_sparen_open">sp_inside_sparen_open</a></td>
+   <td>#(62)Add or remove space after if-condition '('. Overrides sp_inside_sparen.</td>
+</tr>
+<tr>
+   <td valign="top"><a href="#sp_after_sparen">sp_after_sparen</a></td>
+   <td>#(63)Add or remove space after ')' of 'if', 'for', 'switch', and 'while', etc.</td>
+</tr>
+<tr>
+   <td valign="top"><a href="#sp_sparen_brace">sp_sparen_brace</a></td>
+   <td>#(64)Add or remove space between ')' and '{' of 'if', 'for', 'switch', and 'while', etc.</td>
+</tr>
+<tr>
+   <td valign="top"><a href="#sp_invariant_paren">sp_invariant_paren</a></td>
+   <td>#(65)Add or remove space between 'invariant' and '(' in the D language.</td>
+</tr>
+<tr>
+   <td valign="top"><a href="#sp_after_invariant_paren">sp_after_invariant_paren</a></td>
+   <td>#(66)Add or remove space after the ')' in 'invariant (C) c' in the D language.</td>
+</tr>
+<tr>
+   <td valign="top"><a href="#sp_sizeof_paren">sp_sizeof_paren</a></td>
+   <td>#(95)Add or remove space between 'sizeof' and '('.</td>
+</tr>
+<tr>
+   <td valign="top"><a href="#sp_func_proto_paren">sp_func_proto_paren</a></td>
+   <td>#(106)Add or remove space between function name and '(' on function declaration.</td>
+</tr>
+<tr>
+   <td valign="top"><a href="#sp_func_proto_paren_empty">sp_func_proto_paren_empty</a></td>
+   <td>#(107)Add or remove space between function name and '()' on function declaration without parameters.</td>
+</tr>
+<tr>
+   <td valign="top"><a href="#sp_func_def_paren">sp_func_def_paren</a></td>
+   <td>#(108)Add or remove space between function name and '(' on function definition.</td>
+</tr>
+<tr>
+   <td valign="top"><a href="#sp_func_def_paren_empty">sp_func_def_paren_empty</a></td>
+   <td>#(109)Add or remove space between function name and '()' on function definition without parameters.</td>
+</tr>
+<tr>
+   <td valign="top"><a href="#sp_inside_fparens">sp_inside_fparens</a></td>
+   <td>Add or remove space inside function '()'.</td>
+</tr>
+<tr>
+   <td valign="top"><a href="#sp_inside_fparen">sp_inside_fparen</a></td>
+   <td>Add or remove space inside function '(' and ')'.</td>
+</tr>
+<tr>
+   <td valign="top"><a href="#sp_inside_tparen">sp_inside_tparen</a></td>
+   <td>#(112)Add or remove space inside the first parens in the function type: 'void (*x)(...)'.</td>
+</tr>
+<tr>
+   <td valign="top"><a href="#sp_after_tparen_close">sp_after_tparen_close</a></td>
+   <td>#(113)Add or remove between the parens in the function type: 'void (*x)(...)'.</td>
+</tr>
+<tr>
+   <td valign="top"><a href="#sp_fparen_brace">sp_fparen_brace</a></td>
+   <td>#(115)Add or remove space between ')' and '{' of function.</td>
+</tr>
+<tr>
+   <td valign="top"><a href="#sp_fparen_dbrace">sp_fparen_dbrace</a></td>
+   <td>#(116)Java: Add or remove space between ')' and '{{' of double brace initializer.</td>
+</tr>
+<tr>
+   <td valign="top"><a href="#sp_func_call_paren">sp_func_call_paren</a></td>
+   <td>#(117)Add or remove space between function name and '(' on function calls.</td>
+</tr>
+<tr>
+   <td valign="top"><a href="#sp_func_call_paren_empty">sp_func_call_paren_empty</a></td>
+   <td>#(118)Add or remove space between function name and '()' on function calls without parameters.</td>
+</tr>
+<tr>
+   <td valign="top"><a href="#sp_func_call_user_paren">sp_func_call_user_paren</a></td>
+   <td>(119)Add or remove space between the user function name and '(' on function calls<BR>You need to set a keyword to be a user function, like this: 'set func_call_user _' in the config file.</td>
+</tr>
+<tr>
+   <td valign="top"><a href="#sp_return_paren">sp_return_paren</a></td>
+   <td>#(122)Add or remove space between 'return' and '('.</td>
+</tr>
+<tr>
+   <td valign="top"><a href="#sp_attribute_paren">sp_attribute_paren</a></td>
+   <td>#(123)Add or remove space between '__attribute__' and '('.</td>
+</tr>
+<tr>
+   <td valign="top"><a href="#sp_defined_paren">sp_defined_paren</a></td>
+   <td>#(124)Add or remove space between 'defined' and '(' in '#if defined (FOO)'.</td>
+</tr>
+<tr>
+   <td valign="top"><a href="#sp_throw_paren">sp_throw_paren</a></td>
+   <td>#(125)Add or remove space between 'throw' and '(' in 'throw (something)'.</td>
+</tr>
+<tr>
+   <td valign="top"><a href="#sp_catch_paren">sp_catch_paren</a></td>
+   <td>#(127)Add or remove space between 'catch' and '(' in 'catch (something) { }'<BR>If set to ignore, sp_before_sparen is used.</td>
+</tr>
+<tr>
+   <td valign="top"><a href="#sp_version_paren">sp_version_paren</a></td>
+   <td>#(128)Add or remove space between 'version' and '(' in 'version (something) { }' (D language)<BR>If set to ignore, sp_before_sparen is used.</td>
+</tr>
+<tr>
+   <td valign="top"><a href="#sp_scope_paren">sp_scope_paren</a></td>
+   <td>#(129)Add or remove space between 'scope' and '(' in 'scope (something) { }' (D language)<BR>If set to ignore, sp_before_sparen is used.</td>
+</tr>
+<tr>
+   <td valign="top"><a href="#sp_super_paren">sp_super_paren</a></td>
+   <td>#(130)Add or remove space between 'super' and '(' in 'super (something)'. Default=Remove.</td>
+</tr>
+<tr>
+   <td valign="top"><a href="#sp_this_paren">sp_this_paren</a></td>
+   <td>#(131)Add or remove space between 'this' and '(' in 'this (something)'. Default=Remove.</td>
+</tr>
+<tr>
+   <td valign="top"><a href="#sp_extern_paren">sp_extern_paren</a></td>
+   <td>#(183)Control the spacing in 'extern (C)' (D).</td>
+</tr>
+<tr>
+   <td valign="top"><a href="#sp_annotation_paren">sp_annotation_paren</a></td>
+   <td>#(196)Control space between a Java annotation and the open paren.</td>
+</tr>
+</table>
+</body>
+</html>
