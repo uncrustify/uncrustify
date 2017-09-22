@@ -1494,11 +1494,11 @@ static void newlines_do_else(chunk_t *start, argval_t nl_opt)
    {
       if (!one_liner_nl_ok(next))
       {
-         LOG_FMT(LNL1LINE, "a new line may NOT be added\n");
+         LOG_FMT(LNL1LINE, "%s(%d): a new line may NOT be added\n", __func__, __LINE__);
          return;
       }
 
-      LOG_FMT(LNL1LINE, "a new line may be added\n");
+      LOG_FMT(LNL1LINE, "%s(%d): a new line may be added\n", __func__, __LINE__);
 
       if (next->type == CT_VBRACE_OPEN)
       {
@@ -1753,15 +1753,17 @@ static void newlines_brace_pair(chunk_t *br_open)
    // Make sure we don't break a one-liner
    if (!one_liner_nl_ok(br_open))
    {
-      LOG_FMT(LNL1LINE, "a new line may NOT be added\n");
+      LOG_FMT(LNL1LINE, "%s(%d): a new line may NOT be added\n", __func__, __LINE__);
       return;
    }
 
-   LOG_FMT(LNL1LINE, "a new line may be added\n");
+   LOG_FMT(LNL1LINE, "%s(%d): a new line may be added\n", __func__, __LINE__);
 
    next = chunk_get_next_nc(br_open);
    chunk_t *prev;
    // Insert a newline between the '=' and open brace, if needed
+   LOG_FMT(LNL1LINE, "%s(%d): br_open->text() '%s', br_open->type [%s], br_open->parent_type [%s]\n",
+           __func__, __LINE__, br_open->text(), get_token_name(br_open->type), get_token_name(br_open->parent_type));
    if (br_open->parent_type == CT_ASSIGN)
    {
       // Only mess with it if the open brace is followed by a newline
@@ -2369,13 +2371,13 @@ static void newline_oc_msg(chunk_t *start)
 static bool one_liner_nl_ok(chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
-   LOG_FMT(LNL1LINE, "%s(%d): check [%s] parent=[%s] flg=%" PRIx64 ", on line %zu, col %zu - ",
-           __func__, __LINE__, get_token_name(pc->type), get_token_name(pc->parent_type),
+   LOG_FMT(LNL1LINE, "%s(%d): check '%s' [%s], parent=[%s], flg=%" PRIx64 ", on line %zu, column %zu - ",
+           __func__, __LINE__, pc->text(), get_token_name(pc->type), get_token_name(pc->parent_type),
            pc->flags, pc->orig_line, pc->orig_col);
 
    if (!(pc->flags & PCF_ONE_LINER))
    {
-      LOG_FMT(LNL1LINE, "true (not 1-liner), a new line may be added\n");
+      LOG_FMT(LNL1LINE, " true (not 1-liner), a new line may be added\n");
       return(true);
    }
 
@@ -2489,36 +2491,45 @@ void undo_one_liner(chunk_t *pc)
 
    if (pc && (pc->flags & PCF_ONE_LINER))
    {
-      LOG_FMT(LNL1LINE, "%s(%d): [%s]", __func__, __LINE__, pc->text());
+      LOG_FMT(LNL1LINE, "%s(%d): pc->text() '%s', orig_line is %zu, orig_col is %zu",
+              __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col);
       chunk_flags_clr(pc, PCF_ONE_LINER);
 
       // scan backward
+      LOG_FMT(LNL1LINE, "%s(%d): scan backward\n", __func__, __LINE__);
       chunk_t *tmp = pc;
       while ((tmp = chunk_get_prev(tmp)) != nullptr)
       {
          if (!(tmp->flags & PCF_ONE_LINER))
          {
+            LOG_FMT(LNL1LINE, "%s(%d): tmp->text() '%s', orig_line is %zu, orig_col is %zu, --> break\n",
+                    __func__, __LINE__, tmp->text(), tmp->orig_line, tmp->orig_col);
             break;
          }
-         LOG_FMT(LNL1LINE, " %s", tmp->text());
+         LOG_FMT(LNL1LINE, "%s(%d): clear for tmp->text() '%s', orig_line is %zu, orig_col is %zu",
+                 __func__, __LINE__, tmp->text(), tmp->orig_line, tmp->orig_col);
          chunk_flags_clr(tmp, PCF_ONE_LINER);
       }
 
       // scan forward
+      LOG_FMT(LNL1LINE, "%s(%d): scan forward\n", __func__, __LINE__);
       tmp = pc;
-      LOG_FMT(LNL1LINE, " -");
+      LOG_FMT(LNL1LINE, "%s(%d): - \n", __func__, __LINE__);
       while ((tmp = chunk_get_next(tmp)) != nullptr)
       {
          if (!(tmp->flags & PCF_ONE_LINER))
          {
+            LOG_FMT(LNL1LINE, "%s(%d): tmp->text() '%s', orig_line is %zu, orig_col is %zu, --> break\n",
+                    __func__, __LINE__, tmp->text(), tmp->orig_line, tmp->orig_col);
             break;
          }
-         LOG_FMT(LNL1LINE, " %s", tmp->text());
+         LOG_FMT(LNL1LINE, "%s(%d): clear for tmp->text() '%s', orig_line is %zu, orig_col is %zu",
+                 __func__, __LINE__, tmp->text(), tmp->orig_line, tmp->orig_col);
          chunk_flags_clr(tmp, PCF_ONE_LINER);
       }
       LOG_FMT(LNL1LINE, "\n");
    }
-}
+} // undo_one_liner
 
 
 static void nl_create_one_liner(chunk_t *vbrace_open)
@@ -3130,12 +3141,12 @@ void newlines_cleanup_braces(bool first)
             {
                if (one_liner_nl_ok(next))
                {
-                  LOG_FMT(LNL1LINE, "a new line may be added\n");
+                  LOG_FMT(LNL1LINE, "%s(%d): a new line may be added\n", __func__, __LINE__);
                   newline_iarf(pc, AV_ADD);
                }
                else
                {
-                  LOG_FMT(LNL1LINE, "a new line may NOT be added\n");
+                  LOG_FMT(LNL1LINE, "%s(%d): a new line may NOT be added\n", __func__, __LINE__);
                }
             }
          }

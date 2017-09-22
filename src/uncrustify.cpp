@@ -1894,7 +1894,8 @@ void uncrustify_file(const file_mem &fm, FILE *pfout,
          old_changes = cpd.changes;
          if (cpd.settings[UO_code_width].u > 0)
          {
-            LOG_FMT(LNEWLINE, "Code_width loop start: %d\n", cpd.changes);
+            LOG_FMT(LNEWLINE, "%s(%d): Code_width loop start: %d\n",
+                    __func__, __LINE__, cpd.changes);
             do_code_width();
             if (old_changes != cpd.changes && first)
             {
