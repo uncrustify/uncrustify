@@ -334,6 +334,8 @@ static bool split_line(chunk_t *start)
       LOG_FMT(LSPLIT, "%s(%d): ** ONCE LINER SPLIT **\n", __func__, __LINE__);
       undo_one_liner(start);
       newlines_cleanup_braces(false);
+      // Issue #1352
+      cpd.changes++;
       return(false);
    }
 
