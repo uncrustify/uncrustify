@@ -1,2 +1,3 @@
-int Function(
+int Function
+	(
 	);
