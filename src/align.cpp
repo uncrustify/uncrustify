@@ -1946,6 +1946,8 @@ static void align_left_shift(void)
       }
       else if (!(pc->flags & PCF_IN_ENUM) && chunk_is_str(pc, "<<", 2))
       {
+         LOG_FMT(LGUY, "%s(%d): TEST GUY\n", __func__, __LINE__);
+         log_pcf_flags(LINDLINE, pc->flags);
          if (pc->parent_type == CT_OPERATOR)
          {
             // Ignore operator<<
@@ -1960,7 +1962,7 @@ static void align_left_shift(void)
              *          << "something";
              */
             chunk_t *prev = chunk_get_prev(pc);
-            if (prev && chunk_is_newline(prev))
+            if (prev != nullptr && chunk_is_newline(prev))
             {
                indent_to_column(pc, pc->column_indent + cpd.settings[UO_indent_columns].u);
                pc->column_indent = pc->column;
@@ -1987,7 +1989,7 @@ static void align_left_shift(void)
           *          "something";
           */
          chunk_t *prev = chunk_get_prev(pc);
-         if (prev && chunk_is_newline(prev))
+         if (prev != nullptr && chunk_is_newline(prev))
          {
             indent_to_column(pc, pc->column_indent + cpd.settings[UO_indent_columns].u);
             pc->column_indent = pc->column;

@@ -2371,13 +2371,14 @@ static void newline_oc_msg(chunk_t *start)
 static bool one_liner_nl_ok(chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
-   LOG_FMT(LNL1LINE, "%s(%d): check '%s' [%s], parent=[%s], flg=%" PRIx64 ", on line %zu, column %zu - ",
-           __func__, __LINE__, pc->text(), get_token_name(pc->type), get_token_name(pc->parent_type),
+   LOG_FMT(LNL1LINE, "%s(%d): check type is %s, parent is %s, flag is %" PRIx64 ", orig_line is %zu, orig_col is %zu\n",
+           __func__, __LINE__, get_token_name(pc->type), get_token_name(pc->parent_type),
            pc->flags, pc->orig_line, pc->orig_col);
+
 
    if (!(pc->flags & PCF_ONE_LINER))
    {
-      LOG_FMT(LNL1LINE, " true (not 1-liner), a new line may be added\n");
+      LOG_FMT(LNL1LINE, "%s(%d): true (not 1-liner), a new line may be added\n", __func__, __LINE__);
       return(true);
    }
 
@@ -2410,28 +2411,28 @@ static bool one_liner_nl_ok(chunk_t *pc)
       if (  cpd.settings[UO_nl_class_leave_one_liners].b
          && (pc->flags & PCF_IN_CLASS))
       {
-         LOG_FMT(LNL1LINE, "false (class)\n");
+         LOG_FMT(LNL1LINE, "%s(%d): false (class)\n", __func__, __LINE__);
          return(false);
       }
 
       if (  cpd.settings[UO_nl_assign_leave_one_liners].b
          && pc->parent_type == CT_ASSIGN)
       {
-         LOG_FMT(LNL1LINE, "false (assign)\n");
+         LOG_FMT(LNL1LINE, "%s(%d): false (assign)\n", __func__, __LINE__);
          return(false);
       }
 
       if (  cpd.settings[UO_nl_enum_leave_one_liners].b
          && pc->parent_type == CT_ENUM)
       {
-         LOG_FMT(LNL1LINE, "false (enum)\n");
+         LOG_FMT(LNL1LINE, "%s(%d): false (enum)\n", __func__, __LINE__);
          return(false);
       }
 
       if (  cpd.settings[UO_nl_getset_leave_one_liners].b
          && pc->parent_type == CT_GETSET)
       {
-         LOG_FMT(LNL1LINE, "false (get/set), a new line may NOT be added\n");
+         LOG_FMT(LNL1LINE, "%s(%d): false (get/set), a new line may NOT be added\n", __func__, __LINE__);
          return(false);
       }
 
@@ -2439,28 +2440,28 @@ static bool one_liner_nl_ok(chunk_t *pc)
          && (  pc->parent_type == CT_FUNC_DEF
             || pc->parent_type == CT_FUNC_CLASS_DEF))
       {
-         LOG_FMT(LNL1LINE, "false (func def)\n");
+         LOG_FMT(LNL1LINE, "%s(%d): false (func def)\n", __func__, __LINE__);
          return(false);
       }
 
       if (  cpd.settings[UO_nl_func_leave_one_liners].b
          && pc->parent_type == CT_OC_MSG_DECL)
       {
-         LOG_FMT(LNL1LINE, "false (method def)\n");
+         LOG_FMT(LNL1LINE, "%s(%d): false (method def)\n", __func__, __LINE__);
          return(false);
       }
 
       if (  cpd.settings[UO_nl_cpp_lambda_leave_one_liners].b
          && ((pc->parent_type == CT_CPP_LAMBDA)))
       {
-         LOG_FMT(LNL1LINE, "false (lambda)\n");
+         LOG_FMT(LNL1LINE, "%s(%d): false (lambda)\n", __func__, __LINE__);
          return(false);
       }
 
       if (  cpd.settings[UO_nl_oc_msg_leave_one_liner].b
          && (pc->flags & PCF_IN_OC_MSG))
       {
-         LOG_FMT(LNL1LINE, "false (message)\n");
+         LOG_FMT(LNL1LINE, "%s(%d): false (message)\n", __func__, __LINE__);
          return(false);
       }
 
@@ -2469,18 +2470,18 @@ static bool one_liner_nl_ok(chunk_t *pc)
             || pc->parent_type == CT_ELSEIF
             || pc->parent_type == CT_ELSE))
       {
-         LOG_FMT(LNL1LINE, "false (if/else)\n");
+         LOG_FMT(LNL1LINE, "%s(%d): false (if/else)\n", __func__, __LINE__);
          return(false);
       }
 
       if (  cpd.settings[UO_nl_while_leave_one_liners].b
          && pc->parent_type == CT_WHILE)
       {
-         LOG_FMT(LNL1LINE, "false (while)\n");
+         LOG_FMT(LNL1LINE, "%s(%d): false (while)\n", __func__, __LINE__);
          return(false);
       }
    }
-   LOG_FMT(LNL1LINE, "true, a new line may be added\n");
+   LOG_FMT(LNL1LINE, "%s(%d): true, a new line may be added\n", __func__, __LINE__);
    return(true);
 } // one_liner_nl_ok
 
@@ -3392,9 +3393,8 @@ void newlines_insert_blank_lines(void)
 
    for (chunk_t *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next_ncnl(pc))
    {
-      LOG_FMT(LNEWLINE, "%s(%d): text() '%s', orig_line is %zu, orig_col is %zu, %s type is %s\n",
-              __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col,
-              pc->text(), get_token_name(pc->type));
+      LOG_FMT(LNEWLINE, "%s(%d): orig_line is %zu, orig_col is %zu, text() '%s', type is %s\n",
+              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
       if (pc->type == CT_IF)
       {
          newlines_if_for_while_switch_pre_blank_lines(pc, cpd.settings[UO_nl_before_if].a);
@@ -3980,7 +3980,7 @@ void do_blank_lines(void)
       size_t  old_nl = pc->nl_count;
       if (next != nullptr && prev != nullptr)
       {
-         LOG_FMT(LBLANK, "%s(%d): line is %zu [%s][%s] vs [%s][%s] nl=%zu\n",
+         LOG_FMT(LBLANK, "%s(%d): orig_line is %zu, prev->text() '%s', prev->type is %s, vs. next->text() '%s', next->type is %s, nl is %zu\n",
                  __func__, __LINE__, pc->orig_line,
                  prev->text(), get_token_name(prev->type),
                  next->text(), get_token_name(next->type),
@@ -4004,8 +4004,16 @@ void do_blank_lines(void)
          blank_line_max(pc, UO_nl_max);
       }
 
-      LOG_FMT(LBLANKD, "%s(%d): text() '%s', orig_line is %zu, orig_col is %zu\n",
-              __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col);
+      if (pc->type == CT_NEWLINE)
+      {
+         LOG_FMT(LBLANKD, "%s(%d): orig_line is %zu, orig_col is %zu, NEWLINE\n",
+                 __func__, __LINE__, pc->orig_line, pc->orig_col);
+      }
+      else
+      {
+         LOG_FMT(LBLANKD, "%s(%d): text() '%s', orig_line is %zu, orig_col is %zu\n",
+                 __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col);
+      }
       if (!can_increase_nl(pc))
       {
          LOG_FMT(LBLANKD, "%s(%d): force to 1 orig_line is %zu, orig_col is %zu\n",

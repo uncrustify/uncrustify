@@ -254,8 +254,16 @@ static chunk_t *chunk_search_typelevel(chunk_t *cur, c_token_t type, scope_e sco
 #if DEBUG
       if (pc != nullptr)
       {
-         LOG_FMT(LCHUNK, "%s(%d): pc->text() '%s' type is %s, orig_line is %zu, orig_col is %zu\n",
-                 __func__, __LINE__, pc->text(), get_token_name(pc->type), pc->orig_line, pc->orig_col);
+         if (pc->type == CT_NEWLINE)
+         {
+            LOG_FMT(LCHUNK, "%s(%d): orig_line is %zu, orig_col is %zu, NEWLINE\n",
+                    __func__, __LINE__, pc->orig_line, pc->orig_col);
+         }
+         else
+         {
+            LOG_FMT(LCHUNK, "%s(%d): orig_line is %zu, orig_col is %zu, pc->text() '%s', type is %s\n",
+                    __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
+         }
       }
 #endif
    } while (  pc != nullptr        // the end of the list was not reached yet
@@ -754,8 +762,9 @@ void set_chunk_real(chunk_t *pc, c_token_t token, log_sev_t what, const char *st
 
    if (pc != nullptr && *where != token)
    {
-      LOG_FMT(what, "%s(%d): orig_line is %zu, orig_col is %zu, '%s' %s:%s => %s:%s",
-              str, __LINE__, pc->orig_line, pc->orig_col, pc->text(),
+      LOG_FMT(what, "%s(%d): orig_line is %zu, orig_col is %zu, pc->text() '%s'\n",
+              str, __LINE__, pc->orig_line, pc->orig_col, pc->text());
+      LOG_FMT(what, "   pc->type is %s, pc->parent_type is %s => *type is %s, *parent_type is %s",
               get_token_name(pc->type), get_token_name(pc->parent_type),
               get_token_name(*type), get_token_name(*parent_type));
       log_func_stack_inline(what);
