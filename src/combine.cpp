@@ -769,19 +769,22 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
 
    if (pc->type == CT_NEWLINE)
    {
-      LOG_FMT(LGUY, "%s(%d): %zu:%zu CT_NEWLINE\n", __func__, __LINE__, pc->orig_line, pc->orig_col);
+      LOG_FMT(LGUY, "%s(%d): orig_line is %zu, orig_col is %zu, CT_NEWLINE\n",
+              __func__, __LINE__, pc->orig_line, pc->orig_col);
    }
    else if (pc->type == CT_VBRACE_OPEN)
    {
-      LOG_FMT(LGUY, "%s(%d): %zu:%zu CT_VBRACE_OPEN\n", __func__, __LINE__, pc->orig_line, pc->orig_col);
+      LOG_FMT(LGUY, "%s(%d): orig_line is %zu, orig_col is %zu, CT_VBRACE_OPEN\n",
+              __func__, __LINE__, pc->orig_line, pc->orig_col);
    }
    else if (pc->type == CT_VBRACE_CLOSE)
    {
-      LOG_FMT(LGUY, "%s(%d): %zu:%zu CT_VBRACE_CLOSE\n", __func__, __LINE__, pc->orig_line, pc->orig_col);
+      LOG_FMT(LGUY, "%s(%d): orig_line is %zu, orig_col is %zu, CT_VBRACE_CLOSE\n",
+              __func__, __LINE__, pc->orig_line, pc->orig_col);
    }
    else
    {
-      LOG_FMT(LGUY, "%s(%d): %zu:%zu %s:%s\n",
+      LOG_FMT(LGUY, "%s(%d): orig_line is %zu, orig_col is %zu, pc->text() '%s', pc->type is %s\n",
               __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
    }
    // LOG_FMT(LSYS, " %3d > ['%s' %s] ['%s' %s] ['%s' %s]\n",
@@ -3017,19 +3020,23 @@ void combine_labels(void)
    {
       if (cur->type == CT_NEWLINE)
       {
-         LOG_FMT(LGUY, "%s(%d): %zu:%zu CT_NEWLINE\n", __func__, __LINE__, cur->orig_line, cur->orig_col);
+         LOG_FMT(LGUY, "%s(%d): orig_line is %zu, orig_col is %zu, NEWLINE\n",
+                 __func__, __LINE__, cur->orig_line, cur->orig_col);
       }
       else if (cur->type == CT_VBRACE_OPEN)
       {
-         LOG_FMT(LGUY, "%s(%d): %zu:%zu CT_VBRACE_OPEN\n", __func__, __LINE__, cur->orig_line, cur->orig_col);
+         LOG_FMT(LGUY, "%s(%d): orig_line is %zu, orig_col is %zu, VBRACE_OPEN\n",
+                 __func__, __LINE__, cur->orig_line, cur->orig_col);
       }
       else if (cur->type == CT_VBRACE_CLOSE)
       {
-         LOG_FMT(LGUY, "%s(%d): %zu:%zu CT_VBRACE_CLOSE\n", __func__, __LINE__, cur->orig_line, cur->orig_col);
+         LOG_FMT(LGUY, "%s(%d): orig_line is %zu, orig_col is %zu, VBRACE_CLOSE\n",
+                 __func__, __LINE__, cur->orig_line, cur->orig_col);
       }
       else
       {
-         LOG_FMT(LGUY, "%s(%d): %zu:%zu %s\n", __func__, __LINE__, cur->orig_line, cur->orig_col, cur->text());
+         LOG_FMT(LGUY, "%s(%d): orig_line is %zu, orig_col is %zu, text() '%s'\n",
+                 __func__, __LINE__, cur->orig_line, cur->orig_col, cur->text());
       }
       if (  !(next->flags & PCF_IN_OC_MSG)  // filter OC case of [self class] msg send
          && (  next->type == CT_CLASS
@@ -3419,7 +3426,8 @@ static chunk_t *fix_var_def(chunk_t *start)
    int        idx;
    int        ref_idx;
 
-   LOG_FMT(LFVD, "%s: start[%zu:%zu]", __func__, pc->orig_line, pc->orig_col);
+   LOG_FMT(LFVD, "%s(%d): start at [pc->orig_line is %zu, pc->orig_col is %zu]",
+           __func__, __LINE__, pc->orig_line, pc->orig_col);
 
    // Scan for words and types and stars oh my!
    while (  pc != nullptr
@@ -3431,7 +3439,7 @@ static chunk_t *fix_var_def(chunk_t *start)
             || pc->type == CT_MEMBER
             || chunk_is_ptr_operator(pc)))
    {
-      LOG_FMT(LFVD, " %s[%s]", pc->text(), get_token_name(pc->type));
+      LOG_FMT(LFVD, ", pc->text() '%s', type is %s", pc->text(), get_token_name(pc->type));
       cs.Push_Back(pc);
       pc = chunk_get_next_ncnl(pc);
       if (pc == nullptr)
@@ -3457,7 +3465,7 @@ static chunk_t *fix_var_def(chunk_t *start)
    }
    end = pc;
 
-   LOG_FMT(LFVD, " end=[%s]\n", (end != NULL) ? get_token_name(end->type) : "NULL");
+   LOG_FMT(LFVD, ", end->type is %s\n", (end != NULL) ? get_token_name(end->type) : "NULL");
 
    if (end == nullptr)
    {
