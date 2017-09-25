@@ -254,7 +254,7 @@ static chunk_t *chunk_search_typelevel(chunk_t *cur, c_token_t type, scope_e sco
 #if DEBUG
       if (pc != nullptr)
       {
-         LOG_FMT(LCHUNK, "%s(%d): %s type is %s, orig_line is %zu, orig_col is %zu\n",
+         LOG_FMT(LCHUNK, "%s(%d): pc->text() '%s' type is %s, orig_line is %zu, orig_col is %zu\n",
                  __func__, __LINE__, pc->text(), get_token_name(pc->type), pc->orig_line, pc->orig_col);
       }
 #endif
