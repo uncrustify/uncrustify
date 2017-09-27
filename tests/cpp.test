@@ -120,6 +120,7 @@
 30258 ben.cfg                          cpp/casts.cpp
 
 30260 var_def_gap.cfg                  cpp/var_def_gap.cpp
+30261 align_var_def_thresh.cfg         cpp/align_var_def_thresh.cpp
 
 30265 long_br_cmt.cfg                  cpp/long_br_cmt.cpp
 
