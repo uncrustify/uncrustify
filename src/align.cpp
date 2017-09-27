@@ -1917,6 +1917,9 @@ static void align_left_shift(void)
    chunk_t *pc = chunk_get_head();
    while (pc != nullptr)
    {
+      LOG_FMT(LGUY, "%s(%d): pc->text() %s\n",
+              __func__, __LINE__, pc->text());
+      log_pcf_flags(LINDLINE, pc->flags);
       if (  start != nullptr
          && ((pc->flags & PCF_IN_PREPROC) != (start->flags & PCF_IN_PREPROC)))
       {
@@ -1944,7 +1947,8 @@ static void align_left_shift(void)
          as.Flush();
          start = nullptr;
       }
-      else if (!(pc->flags & PCF_IN_ENUM) && chunk_is_str(pc, "<<", 2))
+      else if (  (!(pc->flags & PCF_IN_ENUM) && !(pc->flags & PCF_IN_TYPEDEF))
+              && chunk_is_str(pc, "<<", 2))
       {
          LOG_FMT(LGUY, "%s(%d): TEST GUY\n", __func__, __LINE__);
          log_pcf_flags(LINDLINE, pc->flags);
