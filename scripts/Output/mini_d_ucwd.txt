@@ -1584,6 +1584,15 @@ align_keep_extra_space          = false    # false/true
 # Align variable definitions in prototypes and functions.
 align_func_params               = false    # false/true
 
+# The span for aligning parameter definitions in function on parameter name (0=don't align).
+align_func_params_span          = 0        # unsigned number
+
+# The threshold for aligning function parameter definitions (0=no limit).
+align_func_params_thresh        = 0        # unsigned number
+
+# The gap for aligning function parameter definitions.
+align_func_params_gap           = 0        # unsigned number
+
 # Align parameters in single-line functions that have the same name.
 # The function names must already be aligned with each other.
 align_same_func_call_params     = false    # false/true
