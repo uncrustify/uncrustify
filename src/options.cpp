@@ -1386,6 +1386,12 @@ void register_options(void)
                   "Whether to keep whitespace not required for alignment.");
    unc_add_option("align_func_params", UO_align_func_params, AT_BOOL,
                   "Align variable definitions in prototypes and functions.");
+   unc_add_option("align_func_params_span", UO_align_func_params_span, AT_UNUM,
+                  "The span for aligning parameter definitions in function on parameter name (0=don't align).");
+   unc_add_option("align_func_params_thresh", UO_align_func_params_thresh, AT_UNUM,
+                  "The threshold for aligning function parameter definitions (0=no limit).", "", 0, 5000);
+   unc_add_option("align_func_params_gap", UO_align_func_params_gap, AT_UNUM,
+                  "The gap for aligning function parameter definitions.");
    unc_add_option("align_same_func_call_params", UO_align_same_func_call_params, AT_BOOL,
                   "Align parameters in single-line functions that have the same name.\n"
                   "The function names must already be aligned with each other.");

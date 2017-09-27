@@ -484,7 +484,8 @@ void align_all(void)
    }
 
    // Align variable definitions in function prototypes
-   if (cpd.settings[UO_align_func_params].b)
+   if (  cpd.settings[UO_align_func_params].b
+      || cpd.settings[UO_align_func_params_span].u > 0)
    {
       align_func_params();
    }
@@ -840,8 +841,21 @@ static chunk_t *align_func_param(chunk_t *start)
 {
    LOG_FUNC_ENTRY();
 
+   // Defaults, if the align_func_params = true
+   size_t myspan   = 2;
+   size_t mythresh = 0;
+   size_t mygap    = 0;
+   // Override, if the align_func_params_span > 0
+   if (cpd.settings[UO_align_func_params_span].u > 0)
+   {
+      myspan   = cpd.settings[UO_align_func_params_span].u;
+      mythresh = cpd.settings[UO_align_func_params_thresh].u;
+      mygap    = cpd.settings[UO_align_func_params_gap].u;
+   }
+
    AlignStack as;
-   as.Start(2, 0);
+   as.Start(myspan, mythresh);
+   as.m_gap        = mygap;
    as.m_star_style = static_cast<AlignStack::StarStyle>(cpd.settings[UO_align_var_def_star_style].u);
    as.m_amp_style  = static_cast<AlignStack::StarStyle>(cpd.settings[UO_align_var_def_amp_style].u);
 
@@ -858,6 +872,7 @@ static chunk_t *align_func_param(chunk_t *start)
          did_this_line = false;
          comma_count   = 0;
          chunk_count   = 0;
+         as.NewLines(pc->nl_count);
       }
       else if (pc->level <= start->level)
       {

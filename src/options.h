@@ -704,6 +704,9 @@ enum uncrustify_options
    UO_align_number_left,           // left-align numbers (not fully supported, yet)
    UO_align_keep_extra_space,      // don't squash extra whitespace
    UO_align_func_params,           // align prototype variable defs on variable
+   UO_align_func_params_span,      // align parameter defs in function on parameter name
+   UO_align_func_params_thresh,    // align function parameter defs threshold
+   UO_align_func_params_gap,       // align function parameter defs gap
    UO_align_same_func_call_params, //
    UO_align_var_def_span,          // align variable defs on variable (span for regular stuff)
    UO_align_var_def_star_style,    // see UO_align_typedef_star_style
