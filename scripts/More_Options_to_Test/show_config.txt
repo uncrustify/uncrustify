@@ -288,9 +288,7 @@ sp_after_operator_sym           { Ignore, Add, Remove, Force }
   Add or remove space between the operator symbol and the open paren, as in 'operator ++('.
 
 sp_after_operator_sym_empty     { Ignore, Add, Remove, Force }
-  Add or remove space between the operator symbol and the open paren when the operator
-  has no arguments, as in 'operator *()'.
-  Have precedence of sp_after_operator_sym.
+  Overrides sp_after_operator_sym when the operator has no arguments, as in 'operator *()'.
 
 sp_after_cast                   { Ignore, Add, Remove, Force }
   Add or remove space after C/D cast, i.e. 'cast(int)a' vs 'cast(int) a' or '(int)a' vs '(int) a'.
@@ -618,11 +616,11 @@ sp_inside_newop_paren           { Ignore, Add, Remove, Force }
 
 sp_inside_newop_paren_open      { Ignore, Add, Remove, Force }
   Controls the space after open paren of the new operator: 'new(foo) BAR'.
-  Have precedence of sp_inside_newop_paren.
+  Overrides sp_inside_newop_paren.
 
 sp_inside_newop_paren_close     { Ignore, Add, Remove, Force }
   Controls the space before close paren of the new operator: 'new(foo) BAR'.
-  Have precedence of sp_inside_newop_paren.
+  Overrides sp_inside_newop_paren.
 
 sp_before_tr_emb_cmt            { Ignore, Add, Remove, Force }
   Controls the spaces before a trailing or embedded comment.
@@ -976,7 +974,7 @@ nl_func_var_def_blk             Unsigned Number
 nl_typedef_blk_start            Unsigned Number
   The number of newlines before a block of typedefs
   0 = No change (default)
-  the option 'nl_after_access_spec' takes preference over 'nl_typedef_blk_start'.
+  is overridden by the option 'nl_after_access_spec'.
 
 nl_typedef_blk_end              Unsigned Number
   The number of newlines after a block of typedefs
@@ -989,7 +987,7 @@ nl_typedef_blk_in               Unsigned Number
 nl_var_def_blk_start            Unsigned Number
   The number of newlines before a block of variable definitions not at the top of a function body
   0 = No change (default)
-  the option 'nl_after_access_spec' takes preference over 'nl_var_def_blk_start'.
+  is overridden by the option 'nl_after_access_spec'.
 
 nl_var_def_blk_end              Unsigned Number
   The number of newlines after a block of variable definitions not at the top of a function body
@@ -1455,7 +1453,7 @@ nl_before_access_spec           Unsigned Number
 nl_after_access_spec            Unsigned Number
   The number of newlines after a 'private:', 'public:', 'protected:', 'signals:' or 'slots:' label.
   0 = No change.
-  the option 'nl_after_access_spec' takes preference over 'nl_typedef_blk_start' and 'nl_var_def_blk_start'.
+  Overrides 'nl_typedef_blk_start' and 'nl_var_def_blk_start'.
 
 nl_comment_func_def             Unsigned Number
   The number of newlines between a function def and the function comment.
