@@ -1,17 +1,47 @@
-void test1()
+void testShortTypes()
 {
+// No stars
 float   a;
 double       b;
 
-float & c;
-double &     d;
+// All stars
+float& a;
+double&      b;
+
+float * a;
+double    *      b;
+
+float &a;
+double       &b;
+
+// One star before
+double&       a;
+float b;
+
+double        &    a;
+float b;
+
+double            &a;
+float b;
+
+// One star after
+float b;
+double&       a;
+
+float b;
+double        &    a;
+
+float b;
+double            &a;
 }
 
-void test2()
+void testLongTypes()
 {
 int     int_var;
 int   * int_ptr_var;
+int    *int_ptr_var;
 float float_var;
+float   &float_ref_var;
 float & float_ref_var;
 double    &     double_var;
                      SomeLongNamespace::SomeLongType       long_var;
@@ -25,5 +55,9 @@ float float_var;
 float & float_ref_var;
 double    &     double_var;
                      SomeLongNamespace::SomeLongType       long_var;
-                     int *                             other_int_var;
+float float_var;
+    int *                             other_int_var;
+               int                               other_int_var;
+                     int                              *other_int_var;
+ int&                              other_int_var;
 }
