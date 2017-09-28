@@ -136,6 +136,7 @@
 
 30300 ben.cfg                          cpp/enum_shr.cpp
 30301 al.cfg                           cpp/enum_class.h
+30302 bug_1315.cfg                     cpp/bug_1315.cpp
 
 # TODO find a better example for 30310, 30311
 #30310 sp_word_brace_force.cfg          cpp/uniform_initialization.cpp
