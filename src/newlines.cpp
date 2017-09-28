@@ -3305,10 +3305,6 @@ void newlines_cleanup_braces(bool first)
       {
          newline_iarf(pc, AV_REMOVE);
       }
-      else if (pc->type == CT_BYREF)
-      {
-         newline_iarf(pc, AV_REMOVE);
-      }
       else
       {
          // ignore it
