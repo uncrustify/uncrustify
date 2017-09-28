@@ -2255,7 +2255,7 @@ static void newline_func_def(chunk_t *start)
       atmp = cpd.settings[is_def ? UO_nl_func_def_paren_empty : UO_nl_func_paren_empty].a;
       if (atmp != AV_IGNORE)
       {
-         prev = chunk_get_prev_ncnl(pc);
+         prev = chunk_get_prev_ncnl(start);
          if (prev != NULL)
          {
             newline_iarf(prev, atmp);
