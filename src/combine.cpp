@@ -3895,11 +3895,8 @@ static void mark_function(chunk_t *pc)
       }
    }
 
-#ifdef DEBUG
-   LOG_FMT(LFCN, "\n(%d) ", __LINE__);
-#endif
-   LOG_FMT(LFCN, "%s: orig_line=%zu] %s[%s] - parent=%s level=%zu/%zu, next=%s[%s] - level=%zu\n",
-           __func__, pc->orig_line, pc->text(),
+   LOG_FMT(LFCN, "%s(%d): orig_line=%zu] %s[%s] - parent=%s level=%zu/%zu, next=%s[%s] - level=%zu\n",
+           __func__, __LINE__, pc->orig_line, pc->text(),
            get_token_name(pc->type), get_token_name(pc->parent_type),
            pc->level, pc->brace_level,
            next->text(), get_token_name(next->type), next->level);
@@ -4046,17 +4043,14 @@ static void mark_function(chunk_t *pc)
    // Assume it is a function call if not already labeled
    if (pc->type == CT_FUNCTION)
    {
-#ifdef DEBUG
-      LOG_FMT(LFCN, "(%d) ", __LINE__);
-#endif
-      LOG_FMT(LFCN, "%s: examine [%zu.%zu] [%s], type %s\n",
-              __func__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
+      LOG_FMT(LFCN, "%s(%d): examine [%zu.%zu] [%s], type %s\n",
+              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
       // look for an assigment. Issue 575
       chunk_t *temp = chunk_get_next_type(pc, CT_ASSIGN, pc->level);
       if (temp != nullptr)
       {
-         LOG_FMT(LFCN, "%s: assigment found [%zu.%zu] [%s]\n",
-                 __func__, temp->orig_line, temp->orig_col, temp->text());
+         LOG_FMT(LFCN, "%s(%d): assigment found [%zu.%zu] [%s]\n",
+                 __func__, __LINE__, temp->orig_line, temp->orig_col, temp->text());
          set_chunk_type(pc, CT_FUNC_CALL);
       }
       else
@@ -4099,10 +4093,8 @@ static void mark_function(chunk_t *pc)
             if (pc->str.equals(prev->str))
             {
                set_chunk_type(pc, CT_FUNC_CLASS_DEF);
-#ifdef DEBUG
-               LOG_FMT(LFCN, "(%d) ", __LINE__);
-#endif
-               LOG_FMT(LFCN, "(%d) %zu:%zu - FOUND %sSTRUCTOR for %s[%s]\n", __LINE__,
+               LOG_FMT(LFCN, "%s(%d) %zu:%zu - FOUND %sSTRUCTOR for %s[%s]\n",
+                       __func__, __LINE__,
                        prev->orig_line, prev->orig_col,
                        (destr != NULL) ? "DE" : "CON",
                        prev->text(), get_token_name(prev->type));
@@ -4129,7 +4121,7 @@ static void mark_function(chunk_t *pc)
       bool isa_def  = false;
       bool hit_star = false;
 #ifdef DEBUG
-      LOG_FMT(LFCN, "(%d) ", __LINE__);
+      LOG_FMT(LFCN, "%s(%d):", __func__, __LINE__);
 #endif
       LOG_FMT(LFCN, "  Checking func call: prev=%s", (prev == NULL) ? "<null>" : get_token_name(prev->type));
 #ifdef DEBUG
@@ -4179,7 +4171,7 @@ static void mark_function(chunk_t *pc)
          if (prev->type == CT_PAREN_CLOSE && prev->parent_type == CT_D_CAST)
          {
 #ifdef DEBUG
-            LOG_FMT(LFCN, "(%d) ", __LINE__);
+            LOG_FMT(LFCN, "%s(%d):", __func__, __LINE__);
 #endif
             LOG_FMT(LFCN, " --> For sure a prototype or definition\n");
             isa_def = true;
@@ -4196,7 +4188,7 @@ static void mark_function(chunk_t *pc)
                   && prev->type != CT_THIS))
             {
 #ifdef DEBUG
-               LOG_FMT(LFCN, "(%d) ", __LINE__);
+               LOG_FMT(LFCN, "%s(%d):", __func__, __LINE__);
 #endif
                LOG_FMT(LFCN, " --? Skipped MEMBER and landed on %s\n",
                        (prev == NULL) ? "<null>" : get_token_name(prev->type));
@@ -4215,14 +4207,14 @@ static void mark_function(chunk_t *pc)
             if (!hit_star)
             {
 #ifdef DEBUG
-               LOG_FMT(LFCN, "\n(%d) ", __LINE__);
+               LOG_FMT(LFCN, "\n%s(%d) ", __func__, __LINE__);
 #endif
                LOG_FMT(LFCN, " --> For sure a prototype or definition\n");
                isa_def = true;
                break;
             }
 #ifdef DEBUG
-            LOG_FMT(LFCN, "(%d) ", __LINE__);
+            LOG_FMT(LFCN, "%s(%d) ", __func__, __LINE__);
 #endif
             LOG_FMT(LFCN, " --> maybe a proto/def\n");
             isa_def = true;
@@ -4242,7 +4234,7 @@ static void mark_function(chunk_t *pc)
             && !chunk_is_ptr_operator(prev))
          {
 #ifdef DEBUG
-            LOG_FMT(LFCN, "\n(%d) ", __LINE__);
+            LOG_FMT(LFCN, "\n%s(%d) ", __func__, __LINE__);
 #endif
             LOG_FMT(LFCN, " --> Stopping on %s [%s]\n",
                     prev->text(), get_token_name(prev->type));
@@ -4281,7 +4273,7 @@ static void mark_function(chunk_t *pc)
             || prev->type == CT_RETURN))
       {
 #ifdef DEBUG
-         LOG_FMT(LFCN, "(%d) ", __LINE__);
+         LOG_FMT(LFCN, "%s(%d):", __func__, __LINE__);
 #endif
          LOG_FMT(LFCN, " -- overriding DEF due to %s [%s]\n",
                  prev->text(), get_token_name(prev->type));
@@ -4291,9 +4283,9 @@ static void mark_function(chunk_t *pc)
       {
          set_chunk_type(pc, CT_FUNC_DEF);
 #ifdef DEBUG
-         LOG_FMT(LFCN, "(%d) ", __LINE__);
+         LOG_FMT(LFCN, "%s(%d):", __func__, __LINE__);
 #endif
-         LOG_FMT(LFCN, "%s: '%s' is FCN_DEF:", __func__, pc->text());
+         LOG_FMT(LFCN, " '%s' is FCN_DEF:", pc->text());
          if (prev == nullptr)
          {
             prev = chunk_get_head();
@@ -4312,7 +4304,7 @@ static void mark_function(chunk_t *pc)
    if (pc->type != CT_FUNC_DEF)
    {
 #ifdef DEBUG
-      LOG_FMT(LFCN, "(%d) ", __LINE__);
+      LOG_FMT(LFCN, "%s(%d) ", __func__, __LINE__);
 #endif
       LOG_FMT(LFCN, "  Detected %s '%s' on line %zu col %zu\n",
               get_token_name(pc->type),
@@ -4362,7 +4354,7 @@ static void mark_function(chunk_t *pc)
             semi = tmp;
             set_chunk_type(pc, CT_FUNC_PROTO);
 #ifdef DEBUG
-            LOG_FMT(LFCN, "(%d) ", __LINE__);
+            LOG_FMT(LFCN, "%s(%d) ", __func__, __LINE__);
 #endif
             LOG_FMT(LFCN, "  2) Marked [%s] as FUNC_PROTO on line %zu col %zu\n",
                     pc->text(), pc->orig_line, pc->orig_col);
@@ -4372,7 +4364,7 @@ static void mark_function(chunk_t *pc)
          {
             set_chunk_type(pc, CT_FUNC_CTOR_VAR);
 #ifdef DEBUG
-            LOG_FMT(LFCN, "(%d) ", __LINE__);
+            LOG_FMT(LFCN, "%s(%d) ", __func__, __LINE__);
 #endif
             LOG_FMT(LFCN, "  2) Marked [%s] as FUNC_CTOR_VAR on line %zu col %zu\n",
                     pc->text(), pc->orig_line, pc->orig_col);
@@ -4395,10 +4387,10 @@ static void mark_function(chunk_t *pc)
       && pc->parent_type != CT_OPERATOR)
    {
 #ifdef DEBUG
-      LOG_FMT(LFPARAM, "(%d) ", __LINE__);
+      LOG_FMT(LFPARAM, "%s(%d):", __func__, __LINE__);
 #endif
-      LOG_FMT(LFPARAM, "%s :: checking '%s' for constructor variable %s %s\n",
-              __func__, pc->text(),
+      LOG_FMT(LFPARAM, "  checking '%s' for constructor variable %s %s\n",
+              pc->text(),
               get_token_name(paren_open->type),
               get_token_name(paren_close->type));
 
@@ -4438,7 +4430,7 @@ static void mark_function(chunk_t *pc)
       {
          set_chunk_type(pc, CT_FUNC_CTOR_VAR);
 #ifdef DEBUG
-         LOG_FMT(LFCN, "(%d) ", __LINE__);
+         LOG_FMT(LFCN, "%s(%d) ", __func__, __LINE__);
 #endif
          LOG_FMT(LFCN, "  3) Marked [%s] as FUNC_CTOR_VAR on line %zu col %zu\n",
                  pc->text(), pc->orig_line, pc->orig_col);
@@ -4463,7 +4455,7 @@ static void mark_function(chunk_t *pc)
                {
                   set_chunk_type(pc, CT_FUNC_CTOR_VAR);
 #ifdef DEBUG
-                  LOG_FMT(LFCN, "(%d) ", __LINE__);
+                  LOG_FMT(LFCN, "%s(%d) ", __func__, __LINE__);
 #endif
                   LOG_FMT(LFCN, "  4) Marked [%s] as FUNC_CTOR_VAR on line %zu col %zu\n",
                           pc->text(), pc->orig_line, pc->orig_col);
@@ -4543,8 +4535,8 @@ static void mark_cpp_constructor(chunk_t *pc)
       is_destr = true;
    }
 
-   LOG_FMT(LFTOR, "(%d) %zu:%zu FOUND %sSTRUCTOR for %s[%s] prev=%s[%s]",
-           __LINE__, pc->orig_line, pc->orig_col,
+   LOG_FMT(LFTOR, "%s(%d): %zu:%zu FOUND %sSTRUCTOR for %s[%s] prev=%s[%s]",
+           __func__, __LINE__, pc->orig_line, pc->orig_col,
            is_destr ? "DE" : "CON",
            pc->text(), get_token_name(pc->type),
            tmp->text(), get_token_name(tmp->type));
