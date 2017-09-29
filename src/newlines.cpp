@@ -110,7 +110,7 @@ static void newline_func_multi_line(chunk_t *start);
  * Formats a function declaration
  * Start points to the open paren
  */
-static void newline_func_def(chunk_t *start);
+static void newline_func_def_or_call(chunk_t *start);
 
 
 /**
@@ -2133,7 +2133,7 @@ static void newline_func_multi_line(chunk_t *start)
 } // newline_func_multi_line
 
 
-static void newline_func_def(chunk_t *start)
+static void newline_func_def_or_call(chunk_t *start)
 {
    LOG_FUNC_ENTRY();
 
@@ -2347,7 +2347,7 @@ static void newline_func_def(chunk_t *start)
 
       newline_func_multi_line(start);
    }
-} // newline_func_def
+} // newline_func_def_or_call
 
 
 static void newline_oc_msg(chunk_t *start)
@@ -3226,7 +3226,7 @@ void newlines_cleanup_braces(bool first)
                || cpd.settings[UO_nl_func_def_paren_empty].a != AV_IGNORE
                || cpd.settings[UO_nl_func_paren_empty].a != AV_IGNORE))
          {
-            newline_func_def(pc);
+            newline_func_def_or_call(pc);
          }
          else if (  (  pc->parent_type == CT_FUNC_CALL
                     || pc->parent_type == CT_FUNC_CALL_USER)
@@ -3241,7 +3241,7 @@ void newlines_cleanup_braces(bool first)
                || cpd.settings[UO_nl_func_call_paren_empty].a != AV_IGNORE
                || cpd.settings[UO_nl_func_call_empty].a != AV_IGNORE)
             {
-               newline_func_def(pc);
+               newline_func_def_or_call(pc);
             }
             newline_func_multi_line(pc);
          }
