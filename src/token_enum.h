@@ -151,6 +151,7 @@ enum c_token_t
    CT_PRIVATE,
    CT_PRIVATE_COLON,
    CT_THROW,
+   CT_NOEXCEPT,
    CT_TRY,
    CT_USING,
    CT_USING_STMT,       // using (xxx) ...

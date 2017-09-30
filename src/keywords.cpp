@@ -219,6 +219,7 @@ static const chunk_tag_t keywords[] =
    { "native",           CT_NATIVE,        LANG_PAWN                                                                   }, // PAWN
    { "native",           CT_QUALIFIER,     LANG_JAVA | LANG_ECMA                                                       },
    { "new",              CT_NEW,           LANG_CPP | LANG_CS | LANG_D | LANG_JAVA | LANG_PAWN | LANG_VALA | LANG_ECMA }, // PAWN
+   { "noexcept",         CT_NOEXCEPT,      LANG_CPP                                                                    },
    { "not",              CT_SARITH,        LANG_C | LANG_CPP                                                           },
    { "not_eq",           CT_SCOMPARE,      LANG_C | LANG_CPP                                                           },
    { "null",             CT_TYPE,          LANG_CS | LANG_D | LANG_JAVA | LANG_VALA                                    },
