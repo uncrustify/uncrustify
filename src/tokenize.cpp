@@ -1974,18 +1974,22 @@ void tokenize(const deque<int> &data, chunk_t *ref)
          last_was_tab    = false;
       }
 
-      // Strip trailing whitespace (for CPP comments and PP blocks)
-      while (  (chunk.str.size() > 0)
-            && (  (chunk.str[chunk.str.size() - 1] == ' ')
-               || (chunk.str[chunk.str.size() - 1] == '\t')))
+      if (chunk.type != CT_IGNORED)
       {
-         // If comment contains backslash '\' followed by whitespace chars, keep last one;
-         // this will prevent it from turning '\' into line continuation.
-         if ((chunk.str.size() > 1) && (chunk.str[chunk.str.size() - 2] == '\\'))
+         // Issue #1338
+         // Strip trailing whitespace (for CPP comments and PP blocks)
+         while (  (chunk.str.size() > 0)
+               && (  (chunk.str[chunk.str.size() - 1] == ' ')
+                  || (chunk.str[chunk.str.size() - 1] == '\t')))
          {
-            break;
+            // If comment contains backslash '\' followed by whitespace chars, keep last one;
+            // this will prevent it from turning '\' into line continuation.
+            if ((chunk.str.size() > 1) && (chunk.str[chunk.str.size() - 2] == '\\'))
+            {
+               break;
+            }
+            chunk.str.pop_back();
          }
-         chunk.str.pop_back();
       }
 
       // Store off the end column

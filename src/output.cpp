@@ -582,6 +582,8 @@ void output_text(FILE *pfile)
       }
       else if (pc->type == CT_JUNK || pc->type == CT_IGNORED)
       {
+         LOG_FMT(LOUTIND, "%s(%d): orig_line is %zu, orig_col is %zu,\npc->text() >%s<, pc->str.size() is %zu\n",
+                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), pc->str.size());
          // do not adjust the column for junk
          add_text(pc->str, true);
       }

@@ -109,6 +109,7 @@
 30207 cmt_indent_pp.cfg                cpp/cmt_indent_pp.h
 30208 bug_1108.cfg                     cpp/bug_1108.cpp
 30209 empty.cfg                        cpp/bug_1134.cpp
+30210 bug_1338.cfg                     cpp/bug_1338.cpp
 
 30240 align_func_params.cfg            cpp/align_func_params.cpp
 30241 align_func_params_span.cfg       cpp/align_func_params.cpp
