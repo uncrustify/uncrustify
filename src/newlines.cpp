@@ -3963,6 +3963,16 @@ void do_blank_lines(void)
 
    for (chunk_t *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next(pc))
    {
+      if (pc->type == CT_NEWLINE)
+      {
+         LOG_FMT(LBLANKD, "%s(%d): orig_line is %zu, orig_col is %zu, NEWLINE, nl is %zu\n",
+                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->nl_count);
+      }
+      else
+      {
+         LOG_FMT(LBLANKD, "%s(%d): orig_line is %zu, orig_col is %zu, text() '%s', type is %s\n",
+                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
+      }
       bool line_added = false;
 
       if (pc->type != CT_NEWLINE)
@@ -3970,18 +3980,21 @@ void do_blank_lines(void)
          continue;
       }
 
+      chunk_t *prev = chunk_get_prev_nc(pc);
+      if (prev != nullptr)
+      {
+         LOG_FMT(LBLANK, "%s(%d): prev->orig_line is %zu, prev->text() '%s', prev->type is %s\n",
+                 __func__, __LINE__, pc->orig_line,
+                 prev->text(), get_token_name(prev->type));
+         if (prev->type == CT_IGNORED)
+         {
+            continue;
+         }
+      }
+
       chunk_t *next  = chunk_get_next(pc);
-      chunk_t *prev  = chunk_get_prev_nc(pc);
       chunk_t *pcmt  = chunk_get_prev(pc);
       size_t  old_nl = pc->nl_count;
-      if (next != nullptr && prev != nullptr)
-      {
-         LOG_FMT(LBLANK, "%s(%d): orig_line is %zu, prev->text() '%s', prev->type is %s, vs. next->text() '%s', next->type is %s, nl is %zu\n",
-                 __func__, __LINE__, pc->orig_line,
-                 prev->text(), get_token_name(prev->type),
-                 next->text(), get_token_name(next->type),
-                 pc->nl_count);
-      }
 
       /*
        * If this is the first or the last token, pretend that there is an extra
@@ -4000,16 +4013,6 @@ void do_blank_lines(void)
          blank_line_max(pc, UO_nl_max);
       }
 
-      if (pc->type == CT_NEWLINE)
-      {
-         LOG_FMT(LBLANKD, "%s(%d): orig_line is %zu, orig_col is %zu, NEWLINE\n",
-                 __func__, __LINE__, pc->orig_line, pc->orig_col);
-      }
-      else
-      {
-         LOG_FMT(LBLANKD, "%s(%d): text() '%s', orig_line is %zu, orig_col is %zu\n",
-                 __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col);
-      }
       if (!can_increase_nl(pc))
       {
          LOG_FMT(LBLANKD, "%s(%d): force to 1 orig_line is %zu, orig_col is %zu\n",
