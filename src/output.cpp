@@ -472,8 +472,8 @@ void output_text(FILE *pfile)
    // loop over the whole chunk list
    for (pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next(pc))
    {
-      LOG_FMT(LOUTIND, "%s(%d): text() is %s, type is %s, orig_col is %zu, column is %zu\n",
-              __func__, __LINE__, pc->text(), get_token_name(pc->type), pc->orig_col, pc->column);
+      LOG_FMT(LOUTIND, "%s(%d): text() is %s, type is %s, orig_col is %zu, column is %zu, nl is %zu\n",
+              __func__, __LINE__, pc->text(), get_token_name(pc->type), pc->orig_col, pc->column, pc->nl_count);
       cpd.output_tab_as_space = (  cpd.settings[UO_cmt_convert_tab_to_spaces].b
                                 && chunk_is_comment(pc));
       if (pc->type == CT_NEWLINE)
@@ -582,6 +582,8 @@ void output_text(FILE *pfile)
       }
       else if (pc->type == CT_JUNK || pc->type == CT_IGNORED)
       {
+         LOG_FMT(LOUTIND, "%s(%d): orig_line is %zu, orig_col is %zu,\npc->text() >%s<, pc->str.size() is %zu\n",
+                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), pc->str.size());
          // do not adjust the column for junk
          add_text(pc->str, true);
       }
