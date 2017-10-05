@@ -923,8 +923,10 @@ static void make_folders(const string &filename)
          outname[idx] = 0; // mark the end of the subpath
 
          // create subfolder if it is not the start symbol of a path
+         // and not a Windows drive letter
          if (  (strcmp(&outname[last_idx], ".") != 0)
-            && (strcmp(&outname[last_idx], "..") != 0))
+            && (strcmp(&outname[last_idx], "..") != 0)
+            && (!(last_idx == 0 && idx == 2 && outname[1] == ':')))
          {
             int status;    // Coverity CID 75999
             status = mkdir(outname, 0750);
