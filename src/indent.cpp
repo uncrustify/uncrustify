@@ -1547,10 +1547,17 @@ void indent_text(void)
             && prev->type == CT_BRACE_CLOSE
             && prev->parent_type == CT_CASE)
          {
-            // issue #663
-            chunk_t *temp = chunk_get_prev_type(pc, CT_BRACE_OPEN, pc->level);
-            // This only affects the 'break', so no need for a stack entry
-            indent_column_set(temp->column);
+            // issue #663 + issue #1366
+            chunk_t *prev_newline = chunk_get_prev_nl(pc);
+            if (prev_newline != nullptr)
+            {
+               chunk_t *prev_prev_newline = chunk_get_prev_nl(prev_newline);
+               if (prev_prev_newline != nullptr)
+               {
+                  // This only affects the 'break', so no need for a stack entry
+                  indent_column_set(prev_prev_newline->next->column);
+               }
+            }
          }
       }
       else if (pc->type == CT_LABEL)
