@@ -44,6 +44,17 @@ static void log_rule2(size_t line, const char *rule, chunk_t *first, chunk_t *se
  */
 static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool complete);
 
+/**
+ * Ensure to force the space between the \a first and the \a second chunks
+ * if the PCF_FORCE_SPACE flag is set in the \a first.
+ *
+ * @param first   The first chunk
+ * @param second  The second chunk
+ * @param av      Av from the do_space()
+ *
+ * @return AV_IGNORE, AV_ADD, AV_REMOVE or AV_FORCE
+ */
+static argval_t ensure_force_space(chunk_t *first, chunk_t *second, argval_t av);
 
 //! type that stores two chunks between those no space shall occur
 struct no_space_table_t
@@ -1889,6 +1900,27 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
 } // do_space
 
 
+static argval_t ensure_force_space(chunk_t *first, chunk_t *second, argval_t av)
+{
+   if (first->flags & PCF_FORCE_SPACE)
+   {
+      int av_int = av;
+      LOG_FMT(LSPACE, " <force between '%s' and '%s'>",
+              first->text(), second->text());
+      av_int |= AV_ADD;
+      return(static_cast<argval_t>(av_int));
+   }
+
+   return(av);
+}
+
+
+static argval_t do_space_ensured(chunk_t *first, chunk_t *second, int &min_sp, bool complete = true)
+{
+   return(ensure_force_space(first, second, do_space(first, second, min_sp, complete)));
+}
+
+
 void space_text(void)
 {
    LOG_FUNC_ENTRY();
@@ -2064,15 +2096,7 @@ void space_text(void)
          int min_sp;
          LOG_FMT(LSPACE, "%s(%d): orig_line is %zu, orig_col is %zu, pc-text() '%s', type is %s\n",
                  __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
-         argval_t av = do_space(pc, next, min_sp, false);
-         if (pc->flags & PCF_FORCE_SPACE)
-         {
-            int av_int = av;
-            LOG_FMT(LSPACE, " <force between '%s' and '%s'>",
-                    pc->text(), next->text());
-            av_int |= AV_ADD;
-            av      = static_cast<argval_t>(av_int);
-         }
+         argval_t av = do_space_ensured(pc, next, min_sp, false);
          min_sp = max(1, min_sp);
          switch (av)
          {
@@ -2237,7 +2261,7 @@ size_t space_needed(chunk_t *first, chunk_t *second)
    LOG_FMT(LSPACE, "%s(%d)\n", __func__, __LINE__);
 
    int min_sp;
-   switch (do_space(first, second, min_sp))
+   switch (do_space_ensured(first, second, min_sp))
    {
    case AV_ADD:
    case AV_FORCE:
@@ -2267,7 +2291,7 @@ size_t space_col_align(chunk_t *first, chunk_t *second)
    log_func_stack_inline(LSPACE);
 
    int      min_sp;
-   argval_t av = do_space(first, second, min_sp);
+   argval_t av = do_space_ensured(first, second, min_sp);
 
    LOG_FMT(LSPACE, "%s(%d): av is %s\n", __func__, __LINE__, argval_to_string(av).c_str());
    size_t coldiff;
