@@ -40,6 +40,10 @@
 30033 op-space-remove.cfg              cpp/operator.cpp
 30034 op-space-force.cfg               cpp/operator_proto.cpp
 30035 op-space-remove.cfg              cpp/operator_proto.cpp
+30036 op-space-remove-align-1.cfg      cpp/operator.cpp
+30037 op-space-remove-align-1.cfg      cpp/operator_proto.cpp
+30038 op-space-remove-align-2.cfg      cpp/operator.cpp
+30039 op-space-remove-align-2.cfg      cpp/operator_proto.cpp
 
 30040 nl_class-r.cfg                   cpp/nl-class.h
 30041 nl_class-a.cfg                   cpp/nl-class.h
