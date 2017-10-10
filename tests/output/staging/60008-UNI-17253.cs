@@ -1,4 +1,4 @@
-// It adds an extra newline after each case 
+// It adds an extra newline after each case
 switch (someString)
 {
     case "a":
