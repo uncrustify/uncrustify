@@ -2269,25 +2269,16 @@ size_t space_col_align(chunk_t *first, chunk_t *second)
    int      min_sp;
    argval_t av = do_space(first, second, min_sp);
 
-   LOG_FMT(LSPACE, "%s(%d): av is %d, ", __func__, __LINE__, av);
-#ifdef DEBUG
-   LOG_FMT(LSPACE, "\n");
-#endif
+   LOG_FMT(LSPACE, "%s(%d): av is %s\n", __func__, __LINE__, argval_to_string(av).c_str());
    size_t coldiff;
    if (first->nl_count)
    {
-      LOG_FMT(LSPACE, "   nl_count is %zu, orig_col_end is %zu", first->nl_count, first->orig_col_end);
-#ifdef DEBUG
-      LOG_FMT(LSPACE, "\n");
-#endif
+      LOG_FMT(LSPACE, "   nl_count is %zu, orig_col_end is %zu\n", first->nl_count, first->orig_col_end);
       coldiff = first->orig_col_end - 1;
    }
    else
    {
-      LOG_FMT(LSPACE, "   len is %zu", first->len());
-#ifdef DEBUG
-      LOG_FMT(LSPACE, "\n");
-#endif
+      LOG_FMT(LSPACE, "   len is %zu\n", first->len());
       coldiff = first->len();
    }
 

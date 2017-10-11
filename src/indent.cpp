@@ -279,10 +279,11 @@ void align_to_column(chunk_t *pc, size_t column)
                       ? pc->column + col_delta : 0;
          pc->column = max(pc->column, min_col);
       }
-      LOG_FMT(LINDLINED, "   %s set column of %s on line %zu to col %zu (orig %zu)\n",
+      LOG_FMT(LINDLINED, "%s(%d):   %s set column of '%s', type is %s, orig_line is %zu, to col %zu (orig_col was %zu)\n",
+              __func__, __LINE__,
               (almod == align_mode_e::KEEP_ABS) ? "abs" :
               (almod == align_mode_e::KEEP_REL) ? "rel" : "sft",
-              get_token_name(pc->type), pc->orig_line, pc->column, pc->orig_col);
+              pc->text(), get_token_name(pc->type), pc->orig_line, pc->column, pc->orig_col);
    } while (pc != nullptr && pc->nl_count == 0);
 } // align_to_column
 
