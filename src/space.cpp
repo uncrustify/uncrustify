@@ -579,6 +579,13 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
          log_rule("FORCE");
          return(AV_FORCE);
       }
+      // U0_sp-before_ellipsis = AV_IGNORE returning AV_ADD which is causing issue 1291.
+      // To fix issue 1291
+      if (first->type == CT_WORD)
+      {
+         log_rule("IGNORE");
+         return(AV_IGNORE);
+      }
    }
    if (first->type == CT_ELLIPSIS && CharTable::IsKw1(second->str[0]))
    {
