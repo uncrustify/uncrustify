@@ -297,13 +297,17 @@ void AlignStack::NewLines(size_t cnt)
       m_seqnum += cnt;
       if (m_seqnum > (m_nl_seqnum + m_span))
       {
-         LOG_FMT(LAS, "Newlines<%zu>-", cnt);
+         LOG_FMT(LAS, "Newlines(%d): cnt is %zu, -\n", __LINE__, cnt);
          Flush();
       }
       else
       {
-         LOG_FMT(LAS, "Newlines<%zu>\n", cnt);
+         LOG_FMT(LAS, "Newlines(%d): cnt is %zu\n", __LINE__, cnt);
       }
+   }
+   else
+   {
+      LOG_FMT(LAS, "Newlines(%d): is empty\n", __LINE__);
    }
 }
 
@@ -314,8 +318,9 @@ void AlignStack::Flush()
    const ChunkStack::Entry *ce         = nullptr;
    chunk_t                 *pc;
 
-   LOG_FMT(LAS, "%s: m_aligned.Len()=%zu\n", __func__, m_aligned.Len());
-   LOG_FMT(LAS, "Flush (min=%zu, max=%zu)\n", m_min_col, m_max_col);
+   LOG_FMT(LAS, "%s(%d): m_aligned.Len() is %zu\n", __func__, __LINE__, m_aligned.Len());
+   LOG_FMT(LAS, "   (min is %zu, max is %zu)\n", m_min_col, m_max_col);
+
    if (m_aligned.Len() == 1)
    {
       // check if we have *one* typedef in the line
@@ -390,8 +395,8 @@ void AlignStack::Flush()
       m_max_col = align_tab_column(m_max_col);
    }
 
-   LOG_FMT(LAS, "%s: m_aligned.Len()=%zu\n",
-           __func__, m_aligned.Len());
+   LOG_FMT(LAS, "%s(%d): m_aligned.Len() is %zu\n",
+           __func__, __LINE__, m_aligned.Len());
    for (size_t idx = 0; idx < m_aligned.Len(); idx++)
    {
       ce = m_aligned.Get(idx);
@@ -402,8 +407,8 @@ void AlignStack::Flush()
       {
          if (m_skip_first && pc->column != tmp_col)
          {
-            LOG_FMT(LAS, "%s: %zu:%zu dropping first item due to skip_first\n",
-                    __func__, pc->orig_line, pc->orig_col);
+            LOG_FMT(LAS, "%s(%d): orig_line is %zu, orig_col is %zu, dropping first item due to skip_first\n",
+                    __func__, __LINE__, pc->orig_line, pc->orig_col);
             m_skip_first = false;
             m_aligned.Pop_Front();
             Flush();
@@ -420,8 +425,8 @@ void AlignStack::Flush()
       pc->align.next = m_aligned.GetChunk(idx + 1);
 
       // Indent the token, taking col_adj into account
-      LOG_FMT(LAS, "%s: line %zu: '%s' to col %zu (adj=%d)\n",
-              __func__, pc->orig_line, pc->text(), tmp_col, pc->align.col_adj);
+      LOG_FMT(LAS, "%s(%d): orig_line is %zu, text() '%s', to col %zu (adj is %d)\n",
+              __func__, __LINE__, pc->orig_line, pc->text(), tmp_col, pc->align.col_adj);
       align_to_column(pc, tmp_col);
    }
 
