@@ -358,6 +358,9 @@ enum c_token_t
    CT_NOTHROW,      // guy 2016-03-11
    CT_WORD_,        // guy 2016-03-11
 
+   // Token to ignore the content of a block
+   CT_IGNORE_CONTENT,
+
    CT_TOKEN_COUNT_  // NOTE: Keep this the last entry because it's used as a counter.
 };
 
