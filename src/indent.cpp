@@ -2629,6 +2629,33 @@ static bool single_line_comment_indent_rule_applies(chunk_t *start)
 } // single_line_comment_indent_rule_applies
 
 
+static size_t calc_comment_next_col_diff(chunk_t *pc)
+{
+   chunk_t *next = pc;
+
+   do
+   {
+      chunk_t *next_nl = chunk_get_next(next);
+
+      if (next_nl == NULL || next_nl->nl_count > 1)
+      {
+         // FIXME: Max thresh magic number 5000
+         return(5000);
+      }
+
+      next = chunk_get_next(next_nl);
+   } while (chunk_is_comment(next));
+
+   if (next != NULL)
+   {
+      return(abs(int(next->orig_col - pc->orig_col)));
+   }
+
+   // FIXME: Max thresh magic number 5000
+   return(5000);
+}
+
+
 static void indent_comment(chunk_t *pc, size_t col)
 {
    LOG_FUNC_ENTRY();
@@ -2664,24 +2691,33 @@ static void indent_comment(chunk_t *pc, size_t col)
       }
    }
 
-   prev = chunk_get_prev(nl);
-   if (chunk_is_comment(prev) && nl->nl_count == 1)
+   // TODO: Add an indent_comment_align_thresh option?
+   const size_t indent_comment_align_thresh = 3;
+   if (pc->orig_col > 1)
    {
-      int coldiff = prev->orig_col - pc->orig_col;
-
-      /*
-       * Here we want to align comments that are relatively close one to another
-       * but not when the comment is a Doxygen comment
-       */
-      // Issue #1134
-      if (  coldiff <= 3
-         && coldiff >= -3
-         && !chunk_is_Doxygen_comment(pc))
+      prev = chunk_get_prev(nl);
+      if (chunk_is_comment(prev) && nl->nl_count == 1)
       {
-         reindent_line(pc, prev->column);
-         LOG_FMT(LCMTIND, "rule 3 - prev comment, coldiff = %d, now in %zu\n",
-                 coldiff, pc->column);
-         return;
+         size_t prev_col_diff = abs(int(prev->orig_col - pc->orig_col));
+
+         /*
+          * Here we want to align comments that are relatively close one to another
+          * but not when the comment is a Doxygen comment (Issue #1134)
+          */
+         if (  prev_col_diff <= indent_comment_align_thresh
+            && !chunk_is_Doxygen_comment(pc))
+         {
+            size_t next_col_diff = calc_comment_next_col_diff(pc);
+            // Align to the previous comment or to the next token?
+            if (  prev_col_diff <= next_col_diff
+               || next_col_diff == 5000) // FIXME: Max thresh magic number 5000
+            {
+               reindent_line(pc, prev->column);
+               LOG_FMT(LCMTIND, "rule 3 - prev comment, coldiff = %d, now in %zu\n",
+                       prev_col_diff, pc->column);
+               return;
+            }
+         }
       }
    }
 
