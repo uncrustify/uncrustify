@@ -110,7 +110,7 @@ static void newline_func_multi_line(chunk_t *start);
  * Formats a function declaration
  * Start points to the open paren
  */
-static void newline_func_def(chunk_t *start);
+static void newline_func_def_or_call(chunk_t *start);
 
 
 /**
@@ -2133,7 +2133,7 @@ static void newline_func_multi_line(chunk_t *start)
 } // newline_func_multi_line
 
 
-static void newline_func_def(chunk_t *start)
+static void newline_func_def_or_call(chunk_t *start)
 {
    LOG_FUNC_ENTRY();
 
@@ -2141,131 +2141,162 @@ static void newline_func_def(chunk_t *start)
            __func__, __LINE__, start->orig_line, start->orig_col,
            start->text(), get_token_name(start->type), get_token_name(start->parent_type));
 
-   chunk_t  *prev  = nullptr;
-   bool     is_def = (start->parent_type == CT_FUNC_DEF)
-                     || start->parent_type == CT_FUNC_CLASS_DEF;
-   argval_t atmp = cpd.settings[is_def ? UO_nl_func_def_paren : UO_nl_func_paren].a;
-   if (atmp != AV_IGNORE)
+   chunk_t *prev  = nullptr;
+   bool    is_def = (start->parent_type == CT_FUNC_DEF)
+                    || start->parent_type == CT_FUNC_CLASS_DEF;
+   bool    is_call = (start->parent_type == CT_FUNC_CALL)
+                     || start->parent_type == CT_FUNC_CALL_USER;
+
+   if (is_call)
    {
-      prev = chunk_get_prev_ncnl(start);
-      if (prev != nullptr)
-      {
-         newline_iarf(prev, atmp);
-      }
-   }
-
-   atmp = cpd.settings[UO_nl_func_call_paren].a;
-   if (atmp != AV_IGNORE)
-   {
-      prev = chunk_get_prev_ncnl(start);
-      if (prev != nullptr)
-      {
-         newline_iarf(prev, atmp);
-      }
-   }
-
-   // Handle break newlines type and function
-   prev = chunk_get_prev_ncnl(start);
-   prev = skip_template_prev(prev);
-   // Don't split up a function variable
-   prev = chunk_is_paren_close(prev) ? nullptr : chunk_get_prev_ncnl(prev);
-
-   if (  prev != nullptr
-      && prev->type == CT_DC_MEMBER
-      && (cpd.settings[UO_nl_func_class_scope].a != AV_IGNORE))
-   {
-      newline_iarf(chunk_get_prev_ncnl(prev), cpd.settings[UO_nl_func_class_scope].a);
-   }
-
-   chunk_t *tmp;
-   if (prev != nullptr && prev->type != CT_PRIVATE_COLON)
-   {
-      if (prev->type == CT_OPERATOR)
-      {
-         tmp  = prev;
-         prev = chunk_get_prev_ncnl(prev);
-      }
-      else
-      {
-         tmp = start;
-      }
-      if (prev != nullptr && prev->type == CT_DC_MEMBER)
-      {
-         if (cpd.settings[UO_nl_func_scope_name].a != AV_IGNORE)
-         {
-            newline_iarf(prev, cpd.settings[UO_nl_func_scope_name].a);
-         }
-      }
-
-      if (chunk_get_next_ncnl(prev)->type != CT_FUNC_CLASS_DEF)
-      {
-         argval_t a = (tmp->parent_type == CT_FUNC_PROTO) ?
-                      cpd.settings[UO_nl_func_proto_type_name].a :
-                      cpd.settings[UO_nl_func_type_name].a;
-         if (  (tmp->flags & PCF_IN_CLASS)
-            && (cpd.settings[UO_nl_func_type_name_class].a != AV_IGNORE))
-         {
-            a = cpd.settings[UO_nl_func_type_name_class].a;
-         }
-
-         if (a != AV_IGNORE)
-         {
-            LOG_FMT(LNFD, "%s(%d): prev %zu:%zu '%s' [%s/%s]\n",
-                    __func__, __LINE__, prev->orig_line, prev->orig_col,
-                    prev->text(), get_token_name(prev->type), get_token_name(prev->parent_type));
-
-            if (prev != nullptr && prev->type == CT_DESTRUCTOR)
-            {
-               prev = chunk_get_prev_ncnl(prev);
-            }
-
-            /*
-             * If we are on a '::', step back two tokens
-             * TODO: do we also need to check for '.' ?
-             */
-            while (prev != nullptr && prev->type == CT_DC_MEMBER)
-            {
-               prev = chunk_get_prev_ncnl(prev);
-               prev = skip_template_prev(prev);
-               prev = chunk_get_prev_ncnl(prev);
-            }
-
-            if (  prev != nullptr
-               && prev->type != CT_BRACE_CLOSE
-               && prev->type != CT_VBRACE_CLOSE
-               && prev->type != CT_BRACE_OPEN
-               && prev->type != CT_SEMICOLON
-               && prev->type != CT_PRIVATE_COLON)
-            {
-               newline_iarf(prev, a);
-            }
-         }
-      }
-   }
-
-   chunk_t *pc = chunk_get_next_ncnl(start);
-   if (chunk_is_str(pc, ")", 1))
-   {
-      atmp = cpd.settings[is_def ? UO_nl_func_def_empty : UO_nl_func_decl_empty].a;
-      if (atmp != AV_IGNORE)
-      {
-         newline_iarf(start, atmp);
-      }
-
-      atmp = cpd.settings[is_def ? UO_nl_func_def_paren_empty : UO_nl_func_paren_empty].a;
+      argval_t atmp = cpd.settings[UO_nl_func_call_paren].a;
       if (atmp != AV_IGNORE)
       {
          prev = chunk_get_prev_ncnl(start);
-         if (prev != NULL)
+         if (prev != nullptr)
          {
             newline_iarf(prev, atmp);
          }
       }
-      return;
+
+      chunk_t *pc = chunk_get_next_ncnl(start);
+      if (chunk_is_str(pc, ")", 1))
+      {
+         atmp = cpd.settings[UO_nl_func_call_paren_empty].a;
+         if (atmp != AV_IGNORE)
+         {
+            prev = chunk_get_prev_ncnl(start);
+            if (prev != nullptr)
+            {
+               newline_iarf(prev, atmp);
+            }
+         }
+
+         atmp = cpd.settings[UO_nl_func_call_empty].a;
+         if (atmp != AV_IGNORE)
+         {
+            newline_iarf(start, atmp);
+         }
+         return;
+      }
+   }
+   else
+   {
+      argval_t atmp = cpd.settings[is_def ? UO_nl_func_def_paren : UO_nl_func_paren].a;
+      if (atmp != AV_IGNORE)
+      {
+         prev = chunk_get_prev_ncnl(start);
+         if (prev != nullptr)
+         {
+            newline_iarf(prev, atmp);
+         }
+      }
+
+      // Handle break newlines type and function
+      prev = chunk_get_prev_ncnl(start);
+      prev = skip_template_prev(prev);
+      // Don't split up a function variable
+      prev = chunk_is_paren_close(prev) ? nullptr : chunk_get_prev_ncnl(prev);
+
+      if (  prev != nullptr
+         && prev->type == CT_DC_MEMBER
+         && (cpd.settings[UO_nl_func_class_scope].a != AV_IGNORE))
+      {
+         newline_iarf(chunk_get_prev_ncnl(prev), cpd.settings[UO_nl_func_class_scope].a);
+      }
+
+      if (prev != nullptr && prev->type != CT_PRIVATE_COLON)
+      {
+         chunk_t *tmp;
+         if (prev->type == CT_OPERATOR)
+         {
+            tmp  = prev;
+            prev = chunk_get_prev_ncnl(prev);
+         }
+         else
+         {
+            tmp = start;
+         }
+         if (prev != nullptr && prev->type == CT_DC_MEMBER)
+         {
+            if (cpd.settings[UO_nl_func_scope_name].a != AV_IGNORE)
+            {
+               newline_iarf(prev, cpd.settings[UO_nl_func_scope_name].a);
+            }
+         }
+
+         if (chunk_get_next_ncnl(prev)->type != CT_FUNC_CLASS_DEF)
+         {
+            argval_t a = (tmp->parent_type == CT_FUNC_PROTO) ?
+                         cpd.settings[UO_nl_func_proto_type_name].a :
+                         cpd.settings[UO_nl_func_type_name].a;
+            if (  (tmp->flags & PCF_IN_CLASS)
+               && (cpd.settings[UO_nl_func_type_name_class].a != AV_IGNORE))
+            {
+               a = cpd.settings[UO_nl_func_type_name_class].a;
+            }
+
+            if (a != AV_IGNORE)
+            {
+               LOG_FMT(LNFD, "%s(%d): prev %zu:%zu '%s' [%s/%s]\n",
+                       __func__, __LINE__, prev->orig_line, prev->orig_col,
+                       prev->text(), get_token_name(prev->type), get_token_name(prev->parent_type));
+
+               if (prev != nullptr && prev->type == CT_DESTRUCTOR)
+               {
+                  prev = chunk_get_prev_ncnl(prev);
+               }
+
+               /*
+                * If we are on a '::', step back two tokens
+                * TODO: do we also need to check for '.' ?
+                */
+               while (prev != nullptr && prev->type == CT_DC_MEMBER)
+               {
+                  prev = chunk_get_prev_ncnl(prev);
+                  prev = skip_template_prev(prev);
+                  prev = chunk_get_prev_ncnl(prev);
+               }
+
+               if (  prev != nullptr
+                  && prev->type != CT_BRACE_CLOSE
+                  && prev->type != CT_VBRACE_CLOSE
+                  && prev->type != CT_BRACE_OPEN
+                  && prev->type != CT_SEMICOLON
+                  && prev->type != CT_PRIVATE_COLON)
+               {
+                  newline_iarf(prev, a);
+               }
+            }
+         }
+      }
+
+      chunk_t *pc = chunk_get_next_ncnl(start);
+      if (chunk_is_str(pc, ")", 1))
+      {
+         atmp = cpd.settings[is_def ? UO_nl_func_def_empty : UO_nl_func_decl_empty].a;
+         if (atmp != AV_IGNORE)
+         {
+            newline_iarf(start, atmp);
+         }
+
+         atmp = cpd.settings[is_def ? UO_nl_func_def_paren_empty : UO_nl_func_paren_empty].a;
+         if (atmp != AV_IGNORE)
+         {
+            prev = chunk_get_prev_ncnl(start);
+            if (prev != NULL)
+            {
+               newline_iarf(prev, atmp);
+            }
+         }
+         return;
+      }
    }
 
    // Now scan for commas
-   size_t comma_count = 0;
+   size_t  comma_count = 0;
+   chunk_t *tmp;
+   chunk_t *pc;
    for (pc = chunk_get_next_ncnl(start);
         pc != nullptr && pc->level > start->level;
         pc = chunk_get_next_ncnl(pc))
@@ -2289,6 +2320,7 @@ static void newline_func_def(chunk_t *start)
    argval_t ae = cpd.settings[is_def ? UO_nl_func_def_end : UO_nl_func_decl_end].a;
    if (comma_count == 0)
    {
+      argval_t atmp;
       atmp = cpd.settings[is_def ? UO_nl_func_def_start_single :
                           UO_nl_func_decl_start_single].a;
       if (atmp != AV_IGNORE)
@@ -2315,7 +2347,7 @@ static void newline_func_def(chunk_t *start)
 
       newline_func_multi_line(start);
    }
-} // newline_func_def
+} // newline_func_def_or_call
 
 
 static void newline_oc_msg(chunk_t *start)
@@ -3194,18 +3226,22 @@ void newlines_cleanup_braces(bool first)
                || cpd.settings[UO_nl_func_def_paren_empty].a != AV_IGNORE
                || cpd.settings[UO_nl_func_paren_empty].a != AV_IGNORE))
          {
-            newline_func_def(pc);
+            newline_func_def_or_call(pc);
          }
          else if (  (  pc->parent_type == CT_FUNC_CALL
                     || pc->parent_type == CT_FUNC_CALL_USER)
                  && (  (cpd.settings[UO_nl_func_call_start_multi_line].b)
                     || (cpd.settings[UO_nl_func_call_args_multi_line].b)
                     || (cpd.settings[UO_nl_func_call_end_multi_line].b)
-                    || (cpd.settings[UO_nl_func_call_paren].a != AV_IGNORE)))
+                    || (cpd.settings[UO_nl_func_call_paren].a != AV_IGNORE)
+                    || (cpd.settings[UO_nl_func_call_paren_empty].a != AV_IGNORE)
+                    || (cpd.settings[UO_nl_func_call_empty].a != AV_IGNORE)))
          {
-            if (cpd.settings[UO_nl_func_call_paren].a != AV_IGNORE)
+            if (  cpd.settings[UO_nl_func_call_paren].a != AV_IGNORE
+               || cpd.settings[UO_nl_func_call_paren_empty].a != AV_IGNORE
+               || cpd.settings[UO_nl_func_call_empty].a != AV_IGNORE)
             {
-               newline_func_def(pc);
+               newline_func_def_or_call(pc);
             }
             newline_func_multi_line(pc);
          }

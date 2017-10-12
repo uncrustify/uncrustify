@@ -1099,6 +1099,8 @@ void register_options(void)
                   "Overrides nl_func_def_paren for functions with no parameters.");
    unc_add_option("nl_func_call_paren", UO_nl_func_call_paren, AT_IARF,
                   "Add or remove newline between a function name and the opening '(' in the call");
+   unc_add_option("nl_func_call_paren_empty", UO_nl_func_call_paren_empty, AT_IARF,
+                  "Overrides nl_func_call_paren for functions with no parameters.");
    unc_add_option("nl_func_decl_start", UO_nl_func_decl_start, AT_IARF,
                   "Add or remove newline after '(' in a function declaration.");
    unc_add_option("nl_func_def_start", UO_nl_func_def_start, AT_IARF,
@@ -1135,6 +1137,8 @@ void register_options(void)
                   "Add or remove newline between '()' in a function declaration.");
    unc_add_option("nl_func_def_empty", UO_nl_func_def_empty, AT_IARF,
                   "Add or remove newline between '()' in a function definition.");
+   unc_add_option("nl_func_call_empty", UO_nl_func_call_empty, AT_IARF,
+                  "Add or remove newline between '()' in a function call.");
    unc_add_option("nl_func_call_start_multi_line", UO_nl_func_call_start_multi_line, AT_BOOL,
                   "Whether to add newline after '(' in a function call if '(' and ')' are in different lines.");
    unc_add_option("nl_func_call_args_multi_line", UO_nl_func_call_args_multi_line, AT_BOOL,

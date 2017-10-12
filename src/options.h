@@ -522,6 +522,7 @@ enum uncrustify_options
    UO_nl_func_def_paren_empty,        // Overrides nl_func_def_paren for functions with no parameters
    UO_nl_func_call_paren,             // Add or remove newline between a function name and
                                       // the opening '(' in the call
+   UO_nl_func_call_paren_empty,       // Overrides nl_func_call_paren for functions with no parameters
    UO_nl_func_decl_start,             // newline after the '(' in a function decl
    UO_nl_func_def_start,              // newline after the '(' in a function def
    UO_nl_func_decl_start_single,      // Overrides nl_func_decl_start when there is only one parameter
@@ -546,6 +547,7 @@ enum uncrustify_options
                                       // are on different lines
    UO_nl_func_decl_empty,             // as above, but for empty parens '()'
    UO_nl_func_def_empty,              // as above, but for empty parens '()'
+   UO_nl_func_call_empty,             // as above, but for empty parens '()'
    UO_nl_func_call_start_multi_line,  // newline after the '(' in a function call if '(' and ')'
                                       // are on different lines
    UO_nl_func_call_args_multi_line,   // newline after each ',' in a function call if '(' and ')'

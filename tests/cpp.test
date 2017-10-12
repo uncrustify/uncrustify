@@ -44,6 +44,8 @@
 30040 nl_class-r.cfg                   cpp/nl-class.h
 30041 nl_class-a.cfg                   cpp/nl-class.h
 
+30043 nl_func_call_empty.cfg           cpp/nl_func_call_empty.cpp
+30044 nl_func_call_paren_empty.cfg     cpp/nl_func_call_paren_empty.cpp
 30045 nl_func_decl_1.cfg               cpp/nl_func_decl.cpp
 30046 nl_func_decl_2.cfg               cpp/nl_func_decl.cpp
 30047 nl_func_paren_empty.cfg          cpp/nl_func_paren_empty.cpp
