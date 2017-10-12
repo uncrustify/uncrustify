@@ -111,6 +111,8 @@
 30209 empty.cfg                        cpp/bug_1134.cpp
 30210 bug_1338.cfg                     cpp/bug_1338.cpp
 
+30220 bug_1340.cfg                     cpp/bug_1340.cpp
+
 30240 align_func_params.cfg            cpp/align_func_params.cpp
 30241 align_func_params_span.cfg       cpp/align_func_params.cpp
 30242 align_func_params_gap.cfg        cpp/align_func_params.cpp
