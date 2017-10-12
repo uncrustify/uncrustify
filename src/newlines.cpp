@@ -1962,7 +1962,7 @@ static void newline_before_return(chunk_t *start)
 
    chunk_t *pc = chunk_get_prev(nl);
    if (  !pc
-      || (pc->type == CT_BRACE_OPEN || pc->type == CT_VBRACE_OPEN || pc->type == CT_CASE_COLON))
+      || (pc->type == CT_BRACE_OPEN || pc->type == CT_VBRACE_OPEN || start->parent_type == CT_CASE))
    {
       return;
    }
