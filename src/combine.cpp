@@ -927,6 +927,30 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       flag_asm(pc);
    }
 
+   if (pc->type == CT_IGNORE_CONTENT)
+   {
+      chunk_t *po = chunk_get_next_ncnl(pc);
+      if (!chunk_is_paren_open(po))
+      {
+         return;
+      }
+
+      chunk_t *end = chunk_skip_to_match(po);
+      if (!end)
+      {
+         return;
+      }
+      pc = chunk_get_next_ncnl(po);
+      while (pc != end)
+      {
+         set_chunk_type(pc, CT_IGNORE_CONTENT);
+         pc = chunk_get_next_ncnl(pc);
+      }
+
+      set_chunk_parent(po, CT_IGNORE_CONTENT);
+      set_chunk_parent(end, CT_IGNORE_CONTENT);
+   }
+
    // Objective C stuff
    if (cpd.lang_flags & LANG_OC)
    {
