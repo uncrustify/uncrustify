@@ -1849,6 +1849,22 @@ void fix_symbols(void)
    bool is_java = (cpd.lang_flags & LANG_JAVA) != 0;   // forcing value to bool
    for (pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next_ncnl(pc))
    {
+      //To Avoid new lines in swith case before return - setting parent type of return to CT_CASE inside switch
+      //So while adding new lines before return, will check the parent_type and add the new lines
+      if (pc->type == CT_BRACE_OPEN && pc->parent_type == CT_SWITCH)
+      {
+         chunk_t *temp = pc;
+         chunk_t *bc   = chunk_skip_to_match(temp);
+         while (temp != bc)
+         {
+            temp = chunk_get_next_ncnl(temp);
+            if (temp->type == CT_RETURN)
+            {
+               set_chunk_parent(temp, CT_CASE);
+            }
+         }
+      }
+
       if (pc->type == CT_FUNC_WRAP || pc->type == CT_TYPE_WRAP)
       {
          handle_wrap(pc);
