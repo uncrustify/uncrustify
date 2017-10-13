@@ -473,9 +473,7 @@ void register_options(void)
    unc_add_option("sp_after_operator_sym", UO_sp_after_operator_sym, AT_IARF,
                   "Add or remove space between the operator symbol and the open paren, as in 'operator ++('.");
    unc_add_option("sp_after_operator_sym_empty", UO_sp_after_operator_sym_empty, AT_IARF,
-                  "Add or remove space between the operator symbol and the open paren when the operator\n"
-                  "has no arguments, as in 'operator *()'.\n"
-                  "Have precedence of sp_after_operator_sym.");
+                  "Overrides sp_after_operator_sym when the operator has no arguments, as in 'operator *()'.");
    unc_add_option("sp_after_cast", UO_sp_after_cast, AT_IARF,
                   "Add or remove space after C/D cast, i.e. 'cast(int)a' vs 'cast(int) a' or '(int)a' vs '(int) a'.");
    unc_add_option("sp_inside_paren_cast", UO_sp_inside_paren_cast, AT_IARF,
@@ -702,10 +700,10 @@ void register_options(void)
                   "Controls the spaces inside paren of the new operator: 'new(foo) BAR'.");
    unc_add_option("sp_inside_newop_paren_open", UO_sp_inside_newop_paren_open, AT_IARF,
                   "Controls the space after open paren of the new operator: 'new(foo) BAR'.\n"
-                  "Have precedence of sp_inside_newop_paren.");
+                  "Overrides sp_inside_newop_paren.");
    unc_add_option("sp_inside_newop_paren_close", UO_sp_inside_newop_paren_close, AT_IARF,
                   "Controls the space before close paren of the new operator: 'new(foo) BAR'.\n"
-                  "Have precedence of sp_inside_newop_paren.");
+                  "Overrides sp_inside_newop_paren.");
    unc_add_option("sp_before_tr_emb_cmt", UO_sp_before_tr_emb_cmt, AT_IARF,
                   "Controls the spaces before a trailing or embedded comment.");
    unc_add_option("sp_num_before_tr_emb_cmt", UO_sp_num_before_tr_emb_cmt, AT_UNUM,
@@ -963,7 +961,7 @@ void register_options(void)
    unc_add_option("nl_typedef_blk_start", UO_nl_typedef_blk_start, AT_UNUM,
                   "The number of newlines before a block of typedefs\n"
                   "0 = No change (default)\n"
-                  "the option 'nl_after_access_spec' takes preference over 'nl_typedef_blk_start'.");
+                  "is overridden by the option 'nl_after_access_spec'.");
    unc_add_option("nl_typedef_blk_end", UO_nl_typedef_blk_end, AT_UNUM,
                   "The number of newlines after a block of typedefs\n"
                   "0 = No change (default).");
@@ -973,7 +971,7 @@ void register_options(void)
    unc_add_option("nl_var_def_blk_start", UO_nl_var_def_blk_start, AT_UNUM,
                   "The number of newlines before a block of variable definitions not at the top of a function body\n"
                   "0 = No change (default)\n"
-                  "the option 'nl_after_access_spec' takes preference over 'nl_var_def_blk_start'.");
+                  "is overridden by the option 'nl_after_access_spec'.");
    unc_add_option("nl_var_def_blk_end", UO_nl_var_def_blk_end, AT_UNUM,
                   "The number of newlines after a block of variable definitions not at the top of a function body\n"
                   "0 = No change (default).");
@@ -1303,7 +1301,7 @@ void register_options(void)
    unc_add_option("nl_after_access_spec", UO_nl_after_access_spec, AT_UNUM,
                   "The number of newlines after a 'private:', 'public:', 'protected:', 'signals:' or 'slots:' label.\n"
                   "0 = No change.\n"
-                  "the option 'nl_after_access_spec' takes preference over 'nl_typedef_blk_start' and 'nl_var_def_blk_start'.");
+                  "Overrides 'nl_typedef_blk_start' and 'nl_var_def_blk_start'.");
    unc_add_option("nl_comment_func_def", UO_nl_comment_func_def, AT_UNUM,
                   "The number of newlines between a function def and the function comment.\n"
                   "0 = No change.");
