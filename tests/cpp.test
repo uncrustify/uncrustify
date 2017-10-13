@@ -115,6 +115,8 @@
 30211 indent_comment_align_thresh_1.cfg cpp/indent_comment_align_thresh.cpp
 30212 indent_comment_align_thresh_2.cfg cpp/indent_comment_align_thresh.cpp
 
+30220 bug_1340.cfg                     cpp/bug_1340.cpp
+
 30240 align_func_params.cfg            cpp/align_func_params.cpp
 30241 align_func_params_span.cfg       cpp/align_func_params.cpp
 30242 align_func_params_gap.cfg        cpp/align_func_params.cpp

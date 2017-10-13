@@ -2091,13 +2091,13 @@ void tokenize(const deque<int> &data, chunk_t *ref)
       }
       if (pc->type == CT_NEWLINE)
       {
-         LOG_FMT(LGUY, "%s(%d): orig_line is %zu <NewLine> orig_col is %zu\n",
+         LOG_FMT(LGUY, "%s(%d): orig_line is %zu, orig_col is %zu, <NewLine>\n",
                  __func__, __LINE__, pc->orig_line, pc->orig_col);
       }
       else
       {
-         LOG_FMT(LGUY, "%s(%d): orig_line is %zu %s, type is %s, orig_col is %zu, orig_col_end is %zu\n",
-                 __func__, __LINE__, pc->orig_line, pc->text(), get_token_name(pc->type), pc->orig_col, pc->orig_col_end);
+         LOG_FMT(LGUY, "%s(%d): orig_line is %zu, orig_col is %zu, text() '%s', type is %s, orig_col_end is %zu\n",
+                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type), pc->orig_col_end);
       }
    }
 

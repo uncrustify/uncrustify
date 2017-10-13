@@ -708,7 +708,7 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
    }
    size_t my_level = first->level;
 
-   LOG_FMT(LALASS, "%s(%d): [%zu]: checking %s on line %zu - span=%zu thresh=%zu\n",
+   LOG_FMT(LALASS, "%s(%d): [my_level is %zu]: start checking with '%s', on orig_line %zu, span is %zu, thresh is %zu\n",
            __func__, __LINE__, my_level, first->text(), first->orig_line, span, thresh);
 
    // If we are aligning on a tabstop, we shouldn't right-align
@@ -726,12 +726,16 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
    chunk_t *pc = first;
    while (pc != nullptr)
    {
+      LOG_FMT(LALASS, "%s(%d): orig_line is %zu, check pc->text() '%s'\n",
+              __func__, __LINE__, pc->orig_line, pc->text());
       // Don't check inside PAREN or SQUARE groups
       if (  pc->type == CT_SPAREN_OPEN
-         || pc->type == CT_FPAREN_OPEN
+            // || pc->type == CT_FPAREN_OPEN Issue #1340
          || pc->type == CT_SQUARE_OPEN
          || pc->type == CT_PAREN_OPEN)
       {
+         LOG_FMT(LALASS, "%s(%d): Don't check inside PAREN or SQUARE groups, type is %s\n",
+                 __func__, __LINE__, get_token_name(pc->type));
          tmp = pc->orig_line;
          pc  = chunk_skip_to_match(pc);
          if (pc != nullptr)
@@ -825,7 +829,7 @@ chunk_t *align_assign(chunk_t *first, size_t span, size_t thresh, size_t *p_nl_c
 
    if (pc != nullptr)
    {
-      LOG_FMT(LALASS, "%s(%d): done on %s on line %zu\n",
+      LOG_FMT(LALASS, "%s(%d): done on '%s' on orig_line %zu\n",
               __func__, __LINE__, pc->text(), pc->orig_line);
    }
    else
@@ -1238,14 +1242,14 @@ static chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_co
    chunk_t *prev = chunk_get_prev_ncnl(start);
    if (prev != nullptr && prev->type == CT_ASSIGN)
    {
-      LOG_FMT(LAVDB, "%s(%d): start=%s [%s] on line %zu (abort due to assign)\n",
+      LOG_FMT(LAVDB, "%s(%d): start->text() '%s', type is %s, on orig_line %zu (abort due to assign)\n",
               __func__, __LINE__, start->text(), get_token_name(start->type), start->orig_line);
 
       chunk_t *pc = chunk_get_next_type(start, CT_BRACE_CLOSE, start->level);
       return(chunk_get_next_ncnl(pc));
    }
 
-   LOG_FMT(LAVDB, "%s(%d): start=%s [%s] on line %zu\n",
+   LOG_FMT(LAVDB, "%s(%d): start->text() '%s', type is %s, on orig_line %zu\n",
            __func__, __LINE__, start->text(), get_token_name(start->type), start->orig_line);
 
    UINT64 align_mask = PCF_IN_FCN_DEF | PCF_VAR_1ST;
@@ -1281,8 +1285,16 @@ static chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_co
    while (  pc != nullptr
          && (pc->level >= start->level || pc->level == 0))
    {
-      LOG_FMT(LGUY, "%s(%d): %s orig_line is %zu, orig_col is %zu\n",
-              __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col);
+      if (pc->type == CT_NEWLINE)
+      {
+         LOG_FMT(LAVDB, "%s(%d): orig_line is %zu, orig_col is %zu, NEWLINE\n",
+                 __func__, __LINE__, pc->orig_line, pc->orig_col);
+      }
+      else
+      {
+         LOG_FMT(LAVDB, "%s(%d): orig_line is %zu, orig_col is %zu, text() '%s'\n",
+                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
+      }
       if (chunk_is_comment(pc))
       {
          if (pc->nl_count > 0)
@@ -1361,10 +1373,14 @@ static chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_co
          }
       }
 
+      LOG_FMT(LAVDB, "%s(%d): pc->level is %zu, pc->brace_level is %zu\n",
+              __func__, __LINE__, pc->level, pc->brace_level);
       // don't align stuff inside parenthesis/squares/angles
       if (pc->level > pc->brace_level)
       {
          pc = chunk_get_next(pc);
+         LOG_FMT(LAVDB, "%s(%d): pc->orig_line is %zu, pc->orig_col is %zu, pc->text() '%s'\n",
+                 __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
          continue;
       }
 
@@ -1374,7 +1390,7 @@ static chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_co
          && pc->type != CT_FUNC_CLASS_PROTO
          && ((pc->flags & align_mask) == PCF_VAR_1ST)
          && ((pc->level == (start->level + 1)) || pc->level == 0)
-         && pc->prev
+         && pc->prev != nullptr
          && pc->prev->type != CT_MEMBER)
       {
          if (!did_this_line)
@@ -1393,7 +1409,7 @@ static chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_co
                }
                pc = prev_local->next;
             }
-            LOG_FMT(LAVDB, "%s(%d): add=[%s], orig_line is %zu, orig_col is %zu, level is %zu\n",
+            LOG_FMT(LAVDB, "%s(%d): add='%s', orig_line is %zu, orig_col is %zu, level is %zu\n",
                     __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col, pc->level);
 
             as.Add(step_back_over_member(pc));
@@ -1932,9 +1948,16 @@ static void align_left_shift(void)
    chunk_t *pc = chunk_get_head();
    while (pc != nullptr)
    {
-      LOG_FMT(LGUY, "%s(%d): pc->text() %s\n",
-              __func__, __LINE__, pc->text());
-      log_pcf_flags(LINDLINE, pc->flags);
+      if (pc->type == CT_NEWLINE)
+      {
+         LOG_FMT(LAVDB, "%s(%d): NEWLINE\n", __func__, __LINE__);
+      }
+      else
+      {
+         LOG_FMT(LAVDB, "%s(%d): pc->text() '%s'\n",
+                 __func__, __LINE__, pc->text());
+         log_pcf_flags(LINDLINE, pc->flags);
+      }
       if (  start != nullptr
          && ((pc->flags & PCF_IN_PREPROC) != (start->flags & PCF_IN_PREPROC)))
       {
@@ -1965,7 +1988,6 @@ static void align_left_shift(void)
       else if (  (!(pc->flags & PCF_IN_ENUM) && !(pc->flags & PCF_IN_TYPEDEF))
               && chunk_is_str(pc, "<<", 2))
       {
-         LOG_FMT(LGUY, "%s(%d): TEST GUY\n", __func__, __LINE__);
          log_pcf_flags(LINDLINE, pc->flags);
          if (pc->parent_type == CT_OPERATOR)
          {
