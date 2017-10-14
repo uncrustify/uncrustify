@@ -2714,7 +2714,7 @@ static void indent_comment(chunk_t *pc, size_t col)
                || next_col_diff == 5000) // FIXME: Max thresh magic number 5000
             {
                reindent_line(pc, prev->column);
-               LOG_FMT(LCMTIND, "rule 3 - prev comment, coldiff = %d, now in %zu\n",
+               LOG_FMT(LCMTIND, "rule 3 - prev comment, coldiff = %zu, now in %zu\n",
                        prev_col_diff, pc->column);
                return;
             }
