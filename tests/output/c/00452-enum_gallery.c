@@ -4,7 +4,8 @@ enum one {
 
 enum not {
 
-	a, one
+	a,
+	one,
 
 	liner
 };
