@@ -177,12 +177,8 @@ The codebase has to be formatted by the options set up in
 cause TravisCI build failures.
 
 The Command line interface (CLI) output is tested by the
-`scripts/Test_more_Options.sh` script. It operates on the files inside
-this directories:
-- `scripts/Config/`
-- `scripts/Output/`
-- `scripts/Input/`
-- `scripts/More_Options_to_Test/`
+`test_cli_options.sh` script. It is located inside of `tests/cli/` and operates
+on the subdirectories of that folder.
 
 If a PR is altering the CLI output, files inside those directories might
 need to be manually updated. This often happens when options are

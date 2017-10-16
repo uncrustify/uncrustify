@@ -1,11 +1,6 @@
 enum one { liner };
 
-enum not {
-
-	a, one
-
-	liner
-};
+enum not {a, one,liner };
 
 enum foo { bar, baz, quux };
 

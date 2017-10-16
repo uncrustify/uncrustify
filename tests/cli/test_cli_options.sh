@@ -9,13 +9,16 @@
 # So it is necessary to test some more.
 # It might be usefull to complete the list below.
 #
+
+
+# jump into the script dir so that printed paths are always the same
+script_dir=$(dirname "$(readlink -f "$0")")
+cd $script_dir
+
 #set -x
 #exit 0
-SCRIPTS="./scripts"
-RESULTS="./results"
-#
 # control the CMAKE_BUILD_TYPE
-CMAKE_BUILD_TYPE=`grep -i CMAKE_BUILD_TYPE:STRING=release ./build/CMakeCache.txt`
+CMAKE_BUILD_TYPE=`grep -i CMAKE_BUILD_TYPE:STRING=release ../../build/CMakeCache.txt`
 how_different=${?}
 if [ ${how_different} == "0" ] ;
 then
@@ -24,30 +27,34 @@ else
   echo "CMAKE_BUILD_TYPE must be 'Release' to test"
   exit 1
 fi
-#
+
+
+INPUT="./Input"
+OUTPUT="./Output"
+CONFIG="./Config"
+RESULTS="./Results"
+
 rm -rf ${RESULTS}
 mkdir ${RESULTS}
 
-INPUT="scripts/Input"
-OUTPUT="scripts/Output"
-CONFIG="scripts/Config"
 
 #
 # Test help
 #   -h -? --help --usage
 file="help.txt"
 
-./build/uncrustify > "${RESULTS}/${file}"
-cmp -s "${RESULTS}/${file}" "${SCRIPTS}/More_Options_to_Test/${file}"
+../../build/uncrustify > "${RESULTS}/${file}"
+cmp -s "${RESULTS}/${file}" "${OUTPUT}/${file}"
 how_different=${?}
 if [ ${how_different} != "0" ] ;
 then
   echo
   echo "Problem with "${file}
-  echo "use: diff ${RESULTS}/${file} ${SCRIPTS}/More_Options_to_Test/${file} to find why"
-  diff --unified=5 "${RESULTS}/${file}" "${SCRIPTS}/More_Options_to_Test/${file}"
+  echo "use: diff ${RESULTS}/${file} ${OUTPUT}/${file} to find why"
+  diff --unified=5 "${RESULTS}/${file}" "${OUTPUT}/${file}"
+  echo
 else
-  rm "results/${file}"
+  rm "${RESULTS}/${file}"
 fi
 
 #
@@ -55,19 +62,20 @@ fi
 #
 file="show_config.txt"
 
-./build/uncrustify --show-config > "${RESULTS}/${file}"
+../../build/uncrustify --show-config > "${RESULTS}/${file}"
 sed 's/# Uncrustify.*//g' "${RESULTS}/${file}" > "${RESULTS}/${file}.sed"
-cmp -s "${RESULTS}/${file}.sed" "${SCRIPTS}/More_Options_to_Test/${file}"
+cmp -s "${RESULTS}/${file}.sed" "${OUTPUT}/${file}"
 how_different=${?}
 if [ ${how_different} != "0" ] ;
 then
   echo
   echo "Problem with ${RESULTS}/${file}.sed"
-  echo "use: diff ${RESULTS}/${file}.sed ${SCRIPTS}/More_Options_to_Test/${file} to find why"
-  diff "${RESULTS}/${file}.sed" "${SCRIPTS}/More_Options_to_Test/${file}"
+  echo "use: diff ${RESULTS}/${file}.sed ${OUTPUT}/${file} to find why"
+  diff "${RESULTS}/${file}.sed" "${OUTPUT}/${file}"
+  echo
 else
-  rm "results/${file}"
-  rm "results/${file}.sed"
+  rm "${RESULTS}/${file}"
+  rm "${RESULTS}/${file}.sed"
 fi
 
 #
@@ -80,7 +88,7 @@ do
   OutputFile="${OUTPUT}/${ConfigFileName}_uc.txt"
   ConfigFile="${CONFIG}/${ConfigFileName}.cfg"
 
-  ./build/uncrustify -c "${ConfigFile}" --update-config &> "${ResultsFile}"
+  ../../build/uncrustify -c "${ConfigFile}" --update-config &> "${ResultsFile}"
   sed 's/# Uncrustify.*//g' "${ResultsFile}" > "${ResultsFile}.sed"
   cmp -s "${ResultsFile}.sed" "${OutputFile}"
   how_different=${?}
@@ -90,6 +98,7 @@ do
     echo "Problem with ${ResultsFile}.sed"
     echo "use: diff ${ResultsFile}.sed ${OutputFile} to find why"
     diff "${ResultsFile}.sed" "${OutputFile}"
+    echo
   else
     rm "${ResultsFile}"
     rm "${ResultsFile}.sed"
@@ -106,7 +115,7 @@ do
   OutputFile="${OUTPUT}/${ConfigFileName}_ucwd.txt"
   ConfigFile="${CONFIG}/${ConfigFileName}.cfg"
 
-  ./build/uncrustify -c "${ConfigFile}" --update-config-with-doc &> "${ResultsFile}"
+  ../../build/uncrustify -c "${ConfigFile}" --update-config-with-doc &> "${ResultsFile}"
   sed 's/# Uncrustify.*//g' "${ResultsFile}" > "${ResultsFile}.sed"
   cmp -s "${ResultsFile}.sed" "${OutputFile}"
   how_different=${?}
@@ -115,6 +124,7 @@ do
     echo "Problem with ${ResultsFile}.sed"
     echo "use: diff ${ResultsFile}.sed ${OutputFile} to find why"
     diff "${ResultsFile}.sed" "${OutputFile}"
+    echo
   else
     rm "${ResultsFile}"
     rm "${ResultsFile}.sed"
@@ -129,7 +139,7 @@ InputFile="${INPUT}/28.cpp"
 OutputFile="${OUTPUT}/p.txt"
 ConfigFile="${CONFIG}/mini_nd.cfg"
 
-./build/uncrustify -c "${ConfigFile}" -f "${InputFile}" -p "${ResultsFile}" &> /dev/null
+../../build/uncrustify -c "${ConfigFile}" -f "${InputFile}" -p "${ResultsFile}" &> /dev/null
 sed 's/# Uncrustify.*//g' "${ResultsFile}" > "${ResultsFile}.sed"
 cmp -s "${ResultsFile}.sed" "${OutputFile}"
 how_different=${?}
@@ -138,6 +148,7 @@ then
   echo "Problem with ${ResultsFile}.sed"
   echo "use: diff ${ResultsFile}.sed ${OutputFile} to find why"
   diff "${ResultsFile}.sed" "${OutputFile}"
+  echo
 else
   rm "${ResultsFile}"
   rm "${ResultsFile}.sed"
@@ -154,7 +165,7 @@ do
   InputFile="${INPUT}/${L_Value}.cpp"
   OutputFile="${OUTPUT}/${L_Value}.txt"
   LFile="${RESULTS}/${L_Value}.txt"
-  ./build/uncrustify -c /dev/null -f "${InputFile}" -o /dev/null -L "${L_Value}" 2> "${LFile}"
+  ../../build/uncrustify -c /dev/null -f "${InputFile}" -o /dev/null -L "${L_Value}" 2> "${LFile}"
   sed 's/[0-9]//g' "${LFile}" > "${LFile}.sed"
   cmp -s "${LFile}.sed" "${OutputFile}"
   how_different=${?}
@@ -166,6 +177,7 @@ do
     echo "use: diff ${LFile}.sed ${OutputFile} to find why"
     diff "${LFile}.sed" "${OutputFile}"
     diff "${LFile}" "${OutputFile}"
+    echo
     break
   else
     rm "${LFile}"
@@ -180,7 +192,7 @@ do
   InputFile="${INPUT}/${Error_T}.cpp"
   OutputFile="${OUTPUT}/${Error_T}.txt"
   ErrFile="${RESULTS}/${Error_T}.txt"
-  ./build/uncrustify -q -c "${ConfigFile}" -f "${InputFile}" -o /dev/null 2> "${ErrFile}"
+  ../../build/uncrustify -q -c "${ConfigFile}" -f "${InputFile}" -o /dev/null 2> "${ErrFile}"
   cmp -s "${ErrFile}" "${OutputFile}"
   how_different=${?}
   if [ ${how_different} != "0" ] ;
@@ -189,14 +201,15 @@ do
     echo "Problem with "${Error_T}
     echo "use: diff ${ErrFile} ${OutputFile} to find why"
     diff "${ErrFile}" "${OutputFile}"
+    echo
     break
   else
     rm "${ErrFile}"
   fi
 done
 
-rmdir --ignore-fail-on-non-empty results
-if [[ -d results ]]
+rmdir --ignore-fail-on-non-empty ${RESULTS}
+if [[ -d ${RESULTS} ]]
 then
   echo
   echo "some problem(s) are still present"

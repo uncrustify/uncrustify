@@ -1,4 +1,4 @@
-scripts/Config/mini_d.cfg:2 Unknown symbol 'not_existing_option'
+./Config/mini_d.cfg:2 Unknown symbol 'not_existing_option'
 
 
 #
