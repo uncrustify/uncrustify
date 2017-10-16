@@ -57,7 +57,7 @@ static void mark_selectors_in_property_with_open_paren(chunk_t *open_paren);
 
 /**
  * Marks ObjC specific chunks in propery declaration ( attributes)
- * Changes  all the CT_WORD to CT_OC_PROPERTY_ATTR
+ * Changes all the CT_WORD and CT_TYPE to CT_OC_PROPERTY_ATTR
  */
 static void mark_attributes_in_property_with_open_paren(chunk_t *open_paren);
 
@@ -1244,7 +1244,7 @@ static void mark_attributes_in_property_with_open_paren(chunk_t *open_paren)
    {
       if (  (tmp->type == CT_COMMA || tmp->type == CT_PAREN_OPEN)
          && tmp->next
-         && tmp->next->type == CT_WORD)
+         && (tmp->next->type == CT_WORD || tmp->next->type == CT_TYPE))
       {
          tmp->next->type = CT_OC_PROPERTY_ATTR;
       }
