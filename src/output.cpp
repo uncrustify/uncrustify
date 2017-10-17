@@ -607,6 +607,7 @@ void output_text(FILE *pfile)
                 * indent_text(), but this hack for '}' and '#' seems to work.
                 */
                if (  pc->type == CT_BRACE_CLOSE
+                  || pc->type == CT_CASE_COLON
                   || pc->type == CT_PREPROC)
                {
                   lvlcol = pc->column;
