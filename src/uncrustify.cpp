@@ -1887,8 +1887,7 @@ void uncrustify_file(const file_mem &fm, FILE *pfout,
       }
 
       // Align everything else, reindent and break at code_width
-      first          = true;
-      cpd.pass_count = 3;
+      first = true;
       do
       {
          align_all();
@@ -1907,7 +1906,7 @@ void uncrustify_file(const file_mem &fm, FILE *pfout,
                first = false;
             }
          }
-      } while (old_changes != cpd.changes && cpd.pass_count-- > 0);
+      } while (old_changes != cpd.changes);
 
       // And finally, align the backslash newline stuff
       align_right_comments();
