@@ -240,8 +240,11 @@ static void try_split_here(cw_entry &ent, chunk_t *pc)
    if (  prev == nullptr
       || (chunk_is_newline(prev) && pc->type != CT_STRING))
    {
-      LOG_FMT(LSPLIT, "%s(%d): Can't split after a newline, orig_line=%zu, return\n",
-              __func__, __LINE__, prev->orig_line);
+      if (prev != nullptr)
+      {
+         LOG_FMT(LSPLIT, "%s(%d): Can't split after a newline, orig_line=%zu, return\n",
+                 __func__, __LINE__, prev->orig_line);
+      }
       return;
    }
 

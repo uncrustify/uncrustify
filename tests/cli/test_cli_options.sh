@@ -135,7 +135,7 @@ done
 # Test -p
 #
 ResultsFile="${RESULTS}/p.txt"
-InputFile="${INPUT}/28.cpp"
+InputFile="${INPUT}/testSrc.cpp"
 OutputFile="${OUTPUT}/p.txt"
 ConfigFile="${CONFIG}/mini_nd.cfg"
 
@@ -162,7 +162,7 @@ fi
 Liste_of_Ls_A="9 21 25 28 31 36 66 92"
 for L_Value in ${Liste_of_Ls_A}
 do
-  InputFile="${INPUT}/${L_Value}.cpp"
+  InputFile="${INPUT}/testSrc.cpp"
   OutputFile="${OUTPUT}/${L_Value}.txt"
   LFile="${RESULTS}/${L_Value}.txt"
   ../../build/uncrustify -c /dev/null -f "${InputFile}" -o /dev/null -L "${L_Value}" 2> "${LFile}"
