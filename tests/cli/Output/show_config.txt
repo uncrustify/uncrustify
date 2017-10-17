@@ -172,6 +172,9 @@ sp_before_angle                 { Ignore, Add, Remove, Force }
 sp_inside_angle                 { Ignore, Add, Remove, Force }
   Add or remove space inside '<' and '>'.
 
+sp_angle_colon                  { Ignore, Add, Remove, Force }
+  Add or remove space between '<>' and ':'.
+
 sp_after_angle                  { Ignore, Add, Remove, Force }
   Add or remove space after '<>'.
 

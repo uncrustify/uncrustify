@@ -833,6 +833,12 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
       }
       if (second->type != CT_BYREF && second->type != CT_PTR_TYPE)
       {
+         if (  second->type == CT_CLASS_COLON
+            && cpd.settings[UO_sp_angle_colon].a != AV_IGNORE)
+         {
+            log_rule("sp_angle_colon");
+            return(cpd.settings[UO_sp_angle_colon].a);
+         }
          log_rule("sp_after_angle");
          return(cpd.settings[UO_sp_after_angle].a);
       }

@@ -401,6 +401,8 @@
 33101 enum_comma-5.cfg                 cpp/enum_comma.h
 33102 enum_comma-6.cfg                 cpp/enum_comma.h
 
+33105 bug_1001.cfg                     cpp/bug_1001.cpp
+
 33110 enum.cfg                         cpp/enum.cpp
 
 33150 bug_i_753.cfg                    cpp/bug_i_753.cpp
