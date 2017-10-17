@@ -477,7 +477,7 @@ def main(args):
     #
     if not check_output(uncr_bin,
                         args_arr=['-c', './Config/mini_nd.cfg',
-                                  '-f', './Input/28.cpp',
+                                  '-f', './Input/testSrc.cpp',
                                   '-p', "./Results/p.txt"],
                         gen_expected_path='./Output/p.txt',
                         gen_result_path='./Results/p.txt',
@@ -492,7 +492,7 @@ def main(args):
         if not check_output(uncr_bin,
                             args_arr=[
                                         '-c', NULL_DEVICE,
-                                        '-f', './Input/%s.cpp' % L,
+                                        '-f', './Input/testSrc.cpp',
                                         '-o', NULL_DEVICE,
                                         '-L', L],
                             combine=False,
