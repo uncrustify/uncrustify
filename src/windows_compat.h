@@ -48,8 +48,10 @@ typedef unsigned long long   UINT64;
 #define __func__    __FUNCTION__
 #endif
 #else // _MSC_VER
+#ifndef __GNUC__
 #define __func__    "???"
-#endif
+#endif // __GNUC__
+#endif // _MSC_VER
 
 #include "stdio.h"
 #include "string.h"
