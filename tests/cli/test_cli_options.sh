@@ -44,17 +44,20 @@ mkdir ${RESULTS}
 file="help.txt"
 
 ../../build/uncrustify > "${RESULTS}/${file}"
-cmp -s "${RESULTS}/${file}" "${OUTPUT}/${file}"
+
+sed -e ':a' -e 'N' -e '$!ba' -e 's| --mtime      : Preserve mtime on replaced files.\n||g' "${RESULTS}/${file}" > "${RESULTS}/${file}.sed"
+cmp -s "${RESULTS}/${file}.sed" "${OUTPUT}/${file}"
 how_different=${?}
 if [ ${how_different} != "0" ] ;
 then
   echo
   echo "Problem with "${file}
-  echo "use: diff ${RESULTS}/${file} ${OUTPUT}/${file} to find why"
-  diff --unified=5 "${RESULTS}/${file}" "${OUTPUT}/${file}"
+  echo "use: diff ${RESULTS}/${file}.sed ${OUTPUT}/${file} to find why"
+  diff "${RESULTS}/${file}.sed" "${OUTPUT}/${file}"
   echo
 else
   rm "${RESULTS}/${file}"
+  rm "${RESULTS}/${file}.sed"
 fi
 
 #
