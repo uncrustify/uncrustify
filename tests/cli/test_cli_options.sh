@@ -29,10 +29,10 @@ else
 fi
 
 
-INPUT="./Input"
-OUTPUT="./Output"
-CONFIG="./Config"
-RESULTS="./Results"
+INPUT="Input"
+OUTPUT="Output"
+CONFIG="Config"
+RESULTS="Results"
 
 rm -rf ${RESULTS}
 mkdir ${RESULTS}
