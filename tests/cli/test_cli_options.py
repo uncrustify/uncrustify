@@ -34,7 +34,7 @@ def eprint(*args, **kwargs):
     print(*args, file=stderr, **kwargs)
 
 
-def proc(bin_path, args_arr=(), combine=True):
+def proc(bin_path, args_arr=()):
     """
     simple Popen wrapper to return std out/err utf8 strings
 
@@ -46,9 +46,6 @@ def proc(bin_path, args_arr=(), combine=True):
 
     args_arr : list/tuple
         all needed arguments
-
-    :param combine: bool
-        whether or not to merge stderr into stdout
 
 
     :return: string, string
@@ -63,16 +60,13 @@ def proc(bin_path, args_arr=(), combine=True):
         return False
 
     # call uncrustify, hold output in memory
-    stdout_f = PIPE
-    stderr_f = PIPE if not combine else STDOUT
-
     call_arr = [bin_path]
     call_arr.extend(args_arr)
-    proc = Popen(call_arr, stdout=stdout_f, stderr=stderr_f)
+    proc = Popen(call_arr, stdout=PIPE, stderr=PIPE)
 
     out_b, err_b = proc.communicate()
     out_txt = out_b.decode("UTF-8")
-    err_txt = err_b.decode("UTF-8") if not combine else None
+    err_txt = err_b.decode("UTF-8")
 
     return out_txt, err_txt
 
@@ -208,7 +202,7 @@ def check_std_output(expected_path, result_path, result_str, result_manip=None):
 
 
 def check_output(
-        uncr_bin, args_arr=(), combine=True,
+        uncr_bin, args_arr=(),
         out_expected_path=None, out_result_manip=None, out_result_path=None,
         err_expected_path=None, err_result_manip=None, err_result_path=None,
         gen_expected_path=None, gen_result_path=None, gen_result_manip=None):
@@ -223,13 +217,8 @@ def check_output(
     :param args_arr: list/tuple
         Uncrustify commandline arguments
 
-    :param combine: bool
-        whether or not to merge stderr into stdout, (use ony if
-        out_expected_path) is set
-
     :param out_expected_path: string
         file that will be compared with Uncrustifys stdout output
-        (or combined with stderr if combine is True)
 
     :param out_result_manip: string
         lambda function that will be applied to Uncrustifys stdout output
@@ -269,11 +258,6 @@ def check_output(
         eprint("No expected comparison file provided")
         return False
 
-    if combine and (err_result_path or err_expected_path):
-        eprint("If combine=True don't set either of err_result_path or "
-               "err_expected_path")
-        return False
-
     if bool(gen_expected_path) != bool(gen_result_path):
         eprint("'gen_expected_path' and 'gen_result_path' must be used in "
                "combination")
@@ -282,7 +266,7 @@ def check_output(
     if gen_result_manip and not gen_result_path:
         eprint("Set up 'gen_result_path' if 'gen_result_manip' is used")
 
-    out_res_txt, err_res_txt = proc(uncr_bin, args_arr, combine=combine)
+    out_res_txt, err_res_txt = proc(uncr_bin, args_arr)
     out_res_txt = None if out_res_txt is None else out_res_txt.replace('\r', '')
     err_res_txt = None if err_res_txt is None else err_res_txt.replace('\r', '')
 
@@ -293,7 +277,7 @@ def check_output(
             result_manip=out_result_manip):
         ret_flag = False
 
-    if not combine and err_expected_path and not check_std_output(
+    if err_expected_path and not check_std_output(
             err_expected_path, err_result_path, err_res_txt,
             result_manip=err_result_manip):
         ret_flag = False
@@ -450,7 +434,9 @@ def main(args):
                       '--update-config'],
             out_expected_path=path_join(sc_dir, 'Output/mini_d_uc.txt'),
             out_result_path=path_join(sc_dir, 'Results/mini_d_uc.txt'),
-            out_result_manip=reg_replace(r'\# Uncrustify.+', '')):
+            out_result_manip=reg_replace(r'\# Uncrustify.+', ''),
+            err_expected_path=path_join(sc_dir, 'Output/mini_d_error.txt'),
+            err_result_path=path_join(sc_dir, 'Results/mini_d_error0.txt')):
         return_flag = False
 
     if not check_output(
@@ -459,7 +445,9 @@ def main(args):
                       '--update-config'],
             out_expected_path=path_join(sc_dir, 'Output/mini_nd_uc.txt'),
             out_result_path=path_join(sc_dir, 'Results/mini_nd_uc.txt'),
-            out_result_manip=reg_replace(r'\# Uncrustify.+', '')):
+            out_result_manip=reg_replace(r'\# Uncrustify.+', ''),
+            err_expected_path=path_join(sc_dir, 'Output/mini_d_error.txt'),
+            err_result_path=path_join(sc_dir, 'Results/mini_d_error1.txt')):
         return_flag = False
 
     #
@@ -471,7 +459,9 @@ def main(args):
                       '--update-config-with-doc'],
             out_expected_path=path_join(sc_dir, 'Output/mini_d_ucwd.txt'),
             out_result_path=path_join(sc_dir, 'Results/mini_d_ucwd.txt'),
-            out_result_manip=reg_replace(r'\# Uncrustify.+', '')):
+            out_result_manip=reg_replace(r'\# Uncrustify.+', ''),
+            err_expected_path=path_join(sc_dir, 'Output/mini_d_error.txt'),
+            err_result_path=path_join(sc_dir, 'Results/mini_d_error2.txt')):
         return_flag = False
 
     if not check_output(
@@ -480,7 +470,9 @@ def main(args):
                       '--update-config-with-doc'],
             out_expected_path=path_join(sc_dir, 'Output/mini_nd_ucwd.txt'),
             out_result_path=path_join(sc_dir, 'Results/mini_nd_ucwd.txt'),
-            out_result_manip=reg_replace(r'\# Uncrustify.+', '')):
+            out_result_manip=reg_replace(r'\# Uncrustify.+', ''),
+            err_expected_path=path_join(sc_dir, 'Output/mini_d_error.txt'),
+            err_result_path=path_join(sc_dir, 'Results/mini_d_error3.txt')):
         return_flag = False
 
     #
@@ -505,7 +497,6 @@ def main(args):
                 uncr_bin,
                 args_arr=['-c', NULL_DEVICE, '-L', L, '-o', NULL_DEVICE,
                           '-f', path_join(sc_dir, 'Input/testSrc.cpp')],
-                combine=False,
                 err_expected_path=path_join(sc_dir, 'Output/%s.txt' % L),
                 err_result_path=path_join(sc_dir, 'Results/%s.txt' % L),
                 err_result_manip=reg_replace(r'[0-9]', '')):
@@ -518,7 +509,6 @@ def main(args):
                 args_arr=['-q', '-c', path_join(sc_dir, 'Config/%s.cfg' % test),
                           '-f', path_join(sc_dir, 'Input/%s.cpp' % test),
                           '-o', NULL_DEVICE],
-                combine=False,
                 err_expected_path=path_join(sc_dir, 'Output/%s.txt' % test),
                 err_result_path=path_join(sc_dir, 'Results/%s.txt' % test)):
             return_flag = False
