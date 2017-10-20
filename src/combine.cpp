@@ -4100,8 +4100,15 @@ static void mark_function(chunk_t *pc)
 #ifdef DEBUG
       LOG_FMT(LFCN, "%s(%d):", __func__, __LINE__);
 #endif
-      LOG_FMT(LFCN, "  Checking func call: prev->text() '%s', prev->type is %s",
-              prev->text(), (prev == NULL) ? "<null>" : get_token_name(prev->type));
+      if (prev == NULL)
+      {
+         LOG_FMT(LFCN, "  Checking func call: prev->type is NULL");
+      }
+      else
+      {
+         LOG_FMT(LFCN, "  Checking func call: prev->text() '%s', prev->type is %s",
+                 prev->text(), get_token_name(prev->type));
+      }
 #ifdef DEBUG
       LOG_FMT(LFCN, "\n");
 #endif
