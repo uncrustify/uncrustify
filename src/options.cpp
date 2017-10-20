@@ -395,6 +395,8 @@ void register_options(void)
                   "Add or remove space before '<>'.");
    unc_add_option("sp_inside_angle", UO_sp_inside_angle, AT_IARF,
                   "Add or remove space inside '<' and '>'.");
+   unc_add_option("sp_angle_colon", UO_sp_angle_colon, AT_IARF,
+                  "Add or remove space between '<>' and ':'.");
    unc_add_option("sp_after_angle", UO_sp_after_angle, AT_IARF,
                   "Add or remove space after '<>'.");
    unc_add_option("sp_angle_paren", UO_sp_angle_paren, AT_IARF,

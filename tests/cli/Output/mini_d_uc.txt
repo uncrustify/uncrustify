@@ -53,6 +53,7 @@ sp_before_template_paren        = ignore
 sp_template_angle               = ignore
 sp_before_angle                 = ignore
 sp_inside_angle                 = ignore
+sp_angle_colon                  = ignore
 sp_after_angle                  = ignore
 sp_angle_paren                  = ignore
 sp_angle_paren_empty            = ignore
