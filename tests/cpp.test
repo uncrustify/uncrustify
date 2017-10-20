@@ -409,6 +409,8 @@
 33151 bug_i_752.cfg                    cpp/bug_i_752.cpp
 33152 bug_1004.cfg                     cpp/bug_1004.cpp
 
+33160 bug_1112.cfg                     cpp/bug_1112.cpp
+
 33200 first_len_minimum.cfg            cpp/first_len_minimum.cpp
 
 33201 indent_ctor_members_twice.cfg    cpp/indent_ctor_members_twice.cpp

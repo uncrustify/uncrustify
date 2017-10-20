@@ -140,6 +140,9 @@ static chunk_t *chunk_search_typelevel(chunk_t *cur, c_token_t type, scope_e sco
 static chunk_t *chunk_get_ncnlnp(chunk_t *cur, const scope_e scope = scope_e::ALL, const direction_e dir = direction_e::FORWARD);
 
 
+static chunk_t *chunk_get_ncnlnpnd(chunk_t *cur, const scope_e scope = scope_e::ALL, const direction_e dir = direction_e::FORWARD);
+
+
 /**
  * @brief searches a chunk that holds a specific string
  *
@@ -502,6 +505,12 @@ chunk_t *chunk_get_prev_ncnlnp(chunk_t *cur, scope_e scope)
 }
 
 
+chunk_t *chunk_get_prev_ncnlnpnd(chunk_t *cur, scope_e scope)
+{
+   return(chunk_get_ncnlnpnd(cur, scope, direction_e::BACKWARD));
+}
+
+
 chunk_t *chunk_get_next_nblank(chunk_t *cur, scope_e scope)
 {
    return(chunk_search(cur, chunk_is_comment_newline_or_blank, scope, direction_e::FORWARD, false));
@@ -780,6 +789,22 @@ static chunk_t *chunk_get_ncnlnp(chunk_t *cur, const scope_e scope, const direct
    pc = (chunk_is_preproc(pc) == true) ?
         chunk_search(pc, chunk_is_comment_or_newline_in_preproc, scope, dir, false) :
         chunk_search(pc, chunk_is_comment_newline_or_preproc, scope, dir, false);
+   return(pc);
+}
+
+
+static chunk_t *chunk_get_ncnlnpnd(chunk_t *cur, const scope_e scope, const direction_e dir)
+{
+   search_t search_function = select_search_fct(dir);
+   chunk_t  *pc             = cur;
+
+   do                                   // loop over the chunk list
+   {
+      pc = search_function(pc, scope);  // in either direction while
+   } while (  pc != nullptr             // the end of the list was not reached yet
+           && !chunk_is_comment_or_newline(pc)
+           && !chunk_is_preproc(pc)
+           && (pc->type == CT_DC_MEMBER));
    return(pc);
 }
 

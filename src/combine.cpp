@@ -767,32 +767,6 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
    LOG_FUNC_ENTRY();
    chunk_t *tmp;
 
-   if (pc->type == CT_NEWLINE)
-   {
-      LOG_FMT(LGUY, "%s(%d): orig_line is %zu, orig_col is %zu, CT_NEWLINE\n",
-              __func__, __LINE__, pc->orig_line, pc->orig_col);
-   }
-   else if (pc->type == CT_VBRACE_OPEN)
-   {
-      LOG_FMT(LGUY, "%s(%d): orig_line is %zu, orig_col is %zu, CT_VBRACE_OPEN\n",
-              __func__, __LINE__, pc->orig_line, pc->orig_col);
-   }
-   else if (pc->type == CT_VBRACE_CLOSE)
-   {
-      LOG_FMT(LGUY, "%s(%d): orig_line is %zu, orig_col is %zu, CT_VBRACE_CLOSE\n",
-              __func__, __LINE__, pc->orig_line, pc->orig_col);
-   }
-   else
-   {
-      LOG_FMT(LGUY, "%s(%d): orig_line is %zu, orig_col is %zu, pc->text() '%s', pc->type is %s\n",
-              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
-   }
-   // LOG_FMT(LSYS, " %3d > ['%s' %s] ['%s' %s] ['%s' %s]\n",
-   //         pc->orig_line,
-   //         prev->text(), get_token_name(prev->type),
-   //         pc->text(), get_token_name(pc->type),
-   //         next->text(), get_token_name(next->type));
-
    if (pc->type == CT_OC_AT)
    {
       if (  next->type == CT_PAREN_OPEN
@@ -3815,6 +3789,8 @@ static void mark_function(chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
 
+   LOG_FMT(LFCN, "%s(%d): orig_line is %zu, orig_col is %zu, text() '%s'\n",
+           __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
    chunk_t *prev = chunk_get_prev_ncnlnp(pc);
    chunk_t *next = chunk_get_next_ncnlnp(pc);
    if (next == nullptr)
@@ -3895,9 +3871,10 @@ static void mark_function(chunk_t *pc)
       }
    }
 
-   LOG_FMT(LFCN, "%s(%d): orig_line=%zu] %s[%s] - parent=%s level=%zu/%zu, next=%s[%s] - level=%zu\n",
-           __func__, __LINE__, pc->orig_line, pc->text(),
-           get_token_name(pc->type), get_token_name(pc->parent_type),
+   LOG_FMT(LFCN, "%s(%d): orig_line is %zu, orig_col is %zu, text() '%s, type is %s, parent_type is %s\n",
+           __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(),
+           get_token_name(pc->type), get_token_name(pc->parent_type));
+   LOG_FMT(LFCN, "   level is %zu, brace_level is %zu, next->text() '%s', next->type is %s, next->level is %zu\n",
            pc->level, pc->brace_level,
            next->text(), get_token_name(next->type), next->level);
 
@@ -4043,13 +4020,13 @@ static void mark_function(chunk_t *pc)
    // Assume it is a function call if not already labeled
    if (pc->type == CT_FUNCTION)
    {
-      LOG_FMT(LFCN, "%s(%d): examine [%zu.%zu] [%s], type is %s\n",
+      LOG_FMT(LFCN, "%s(%d): examine: orig_line is %zu, orig_col is %zu, text() '%s', type is %s\n",
               __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
       // look for an assigment. Issue 575
       chunk_t *temp = chunk_get_next_type(pc, CT_ASSIGN, pc->level);
       if (temp != nullptr)
       {
-         LOG_FMT(LFCN, "%s(%d): assigment found [%zu.%zu] [%s]\n",
+         LOG_FMT(LFCN, "%s(%d): assigment found, orig_line is %zu, orig_col is %zu, text() '%s'\n",
                  __func__, __LINE__, temp->orig_line, temp->orig_col, temp->text());
          set_chunk_type(pc, CT_FUNC_CALL);
       }
@@ -4123,7 +4100,8 @@ static void mark_function(chunk_t *pc)
 #ifdef DEBUG
       LOG_FMT(LFCN, "%s(%d):", __func__, __LINE__);
 #endif
-      LOG_FMT(LFCN, "  Checking func call: prev=%s", (prev == NULL) ? "<null>" : get_token_name(prev->type));
+      LOG_FMT(LFCN, "  Checking func call: prev->text() '%s', prev->type is %s",
+              prev->text(), (prev == NULL) ? "<null>" : get_token_name(prev->type));
 #ifdef DEBUG
       LOG_FMT(LFCN, "\n");
 #endif
@@ -4153,6 +4131,11 @@ static void mark_function(chunk_t *pc)
        */
       while (prev != nullptr)
       {
+#ifdef DEBUG
+         LOG_FMT(LFCN, "%s(%d): next step with: ", __func__, __LINE__);
+#endif
+         LOG_FMT(LFCN, "orig_line is %zu, orig_col is %zu, text() '%s'\n",
+                 prev->orig_line, prev->orig_col, prev->text());
          if (prev->flags & PCF_IN_PREPROC)
          {
             prev = chunk_get_prev_ncnlnp(prev);
@@ -4196,8 +4179,24 @@ static void mark_function(chunk_t *pc)
                isa_def = false;
                break;
             }
-            LOG_FMT(LFCN, " <skip %s>", prev->text());
-            prev = chunk_get_prev_ncnlnp(prev);
+#ifdef DEBUG
+            LOG_FMT(LFCN, "%s(%d):", __func__, __LINE__);
+#endif
+            LOG_FMT(LFCN, " <skip '%s'>", prev->text());
+#ifdef DEBUG
+            LOG_FMT(LFCN, "\n");
+#endif
+            // Issue #1112
+            prev = chunk_get_prev_ncnlnpnd(prev);
+            if (prev == nullptr)
+            {
+               LOG_FMT(LFCN, "nullptr\n");
+            }
+            else
+            {
+               LOG_FMT(LFCN, "orig_line is %zu, orig_col is %zu, text() '%s'\n",
+                       prev->orig_line, prev->orig_col, prev->text());
+            }
             continue;
          }
 
@@ -4207,7 +4206,7 @@ static void mark_function(chunk_t *pc)
             if (!hit_star)
             {
 #ifdef DEBUG
-               LOG_FMT(LFCN, "\n%s(%d) ", __func__, __LINE__);
+               LOG_FMT(LFCN, "%s(%d) ", __func__, __LINE__);
 #endif
                LOG_FMT(LFCN, " --> For sure a prototype or definition\n");
                isa_def = true;
@@ -4234,7 +4233,7 @@ static void mark_function(chunk_t *pc)
             && !chunk_is_ptr_operator(prev))
          {
 #ifdef DEBUG
-            LOG_FMT(LFCN, "\n%s(%d) ", __func__, __LINE__);
+            LOG_FMT(LFCN, "%s(%d) ", __func__, __LINE__);
 #endif
             LOG_FMT(LFCN, " --> Stopping on %s [%s]\n",
                     prev->text(), get_token_name(prev->type));
@@ -4535,7 +4534,7 @@ static void mark_cpp_constructor(chunk_t *pc)
       is_destr = true;
    }
 
-   LOG_FMT(LFTOR, "%s(%d): %zu:%zu FOUND %sSTRUCTOR for '%s'[%s] prev=%s[%s]",
+   LOG_FMT(LFTOR, "%s(%d): orig_line is %zu, orig_col is %zu, FOUND %sSTRUCTOR for '%s'[%s] prev '%s'[%s]",
            __func__, __LINE__, pc->orig_line, pc->orig_col,
            is_destr ? "DE" : "CON",
            pc->text(), get_token_name(pc->type),
@@ -4554,7 +4553,7 @@ static void mark_cpp_constructor(chunk_t *pc)
    fix_fcn_def_params(paren_open);
    after = flag_parens(paren_open, PCF_IN_FCN_CALL, CT_FPAREN_OPEN, CT_FUNC_CLASS_PROTO, false);
 
-   LOG_FMT(LFTOR, "[%s]\n", after->text());
+   LOG_FMT(LFTOR, "%s(%d): text() '%s'\n", __func__, __LINE__, after->text());
 
    // Scan until the brace open, mark everything
    tmp = paren_open;
@@ -4593,8 +4592,8 @@ static void mark_cpp_constructor(chunk_t *pc)
       {
          set_chunk_parent(tmp, CT_FUNC_CLASS_PROTO);
          set_chunk_type(pc, CT_FUNC_CLASS_PROTO);
-         LOG_FMT(LFCN, "  2) Marked [%s] as FUNC_CLASS_PROTO on line %zu col %zu\n",
-                 pc->text(), pc->orig_line, pc->orig_col);
+         LOG_FMT(LFCN, "%s(%d):  2) Marked '%s' as FUNC_CLASS_PROTO on orig_line %zu, orig_col %zu\n",
+                 __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col);
       }
    }
 } // mark_cpp_constructor
@@ -4626,7 +4625,7 @@ static void mark_class_ctor(chunk_t *start)
 
    if (pc == nullptr)
    {
-      LOG_FMT(LFTOR, "%s(%d): Called on %s on line %zu. Bailed on NULL\n",
+      LOG_FMT(LFTOR, "%s(%d): Called on %s on orig_line %zu. Bailed on NULL\n",
               __func__, __LINE__, pclass->text(), pclass->orig_line);
       return;
    }
@@ -4635,7 +4634,7 @@ static void mark_class_ctor(chunk_t *start)
    ChunkStack cs;
    cs.Push_Back(pclass);
 
-   LOG_FMT(LFTOR, "%s(%d): Called on %s on line %zu (next='%s')\n",
+   LOG_FMT(LFTOR, "%s(%d): Called on %s on orig_line %zu (next='%s')\n",
            __func__, __LINE__, pclass->text(), pclass->orig_line, pc->text());
 
    // detect D template class: "class foo(x) { ... }"

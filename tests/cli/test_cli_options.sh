@@ -49,7 +49,7 @@ how_different=${?}
 if [ ${how_different} != "0" ] ;
 then
   echo
-  echo "Problem with "${file}
+  echo "1Problem with "${file}
   echo "use: diff ${RESULTS}/${file} ${OUTPUT}/${file} to find why"
   diff --unified=5 "${RESULTS}/${file}" "${OUTPUT}/${file}"
   echo
@@ -69,7 +69,7 @@ how_different=${?}
 if [ ${how_different} != "0" ] ;
 then
   echo
-  echo "Problem with ${RESULTS}/${file}.sed"
+  echo "2Problem with ${RESULTS}/${file}.sed"
   echo "use: diff ${RESULTS}/${file}.sed ${OUTPUT}/${file} to find why"
   diff "${RESULTS}/${file}.sed" "${OUTPUT}/${file}"
   echo
@@ -95,7 +95,7 @@ do
   if [ ${how_different} != "0" ] ;
   then
     echo
-    echo "Problem with ${ResultsFile}.sed"
+    echo "3Problem with ${ResultsFile}.sed"
     echo "use: diff ${ResultsFile}.sed ${OutputFile} to find why"
     diff "${ResultsFile}.sed" "${OutputFile}"
     echo
@@ -121,7 +121,7 @@ do
   how_different=${?}
   if [ ${how_different} != "0" ] ;
   then
-    echo "Problem with ${ResultsFile}.sed"
+    echo "4Problem with ${ResultsFile}.sed"
     echo "use: diff ${ResultsFile}.sed ${OutputFile} to find why"
     diff "${ResultsFile}.sed" "${OutputFile}"
     echo
@@ -145,7 +145,7 @@ cmp -s "${ResultsFile}.sed" "${OutputFile}"
 how_different=${?}
 if [ ${how_different} != "0" ] ;
 then
-  echo "Problem with ${ResultsFile}.sed"
+  echo "5Problem with ${ResultsFile}.sed"
   echo "use: diff ${ResultsFile}.sed ${OutputFile} to find why"
   diff "${ResultsFile}.sed" "${OutputFile}"
   echo
@@ -173,7 +173,7 @@ do
   if [ ${how_different} != "0" ] ;
   then
     echo
-    echo "Problem with "${InputFile}
+    echo "6Problem with "${InputFile}
     echo "use: diff ${LFile}.sed ${OutputFile} to find why"
     diff "${LFile}.sed" "${OutputFile}"
     diff "${LFile}" "${OutputFile}"
@@ -198,7 +198,7 @@ do
   if [ ${how_different} != "0" ] ;
   then
     echo
-    echo "Problem with "${Error_T}
+    echo "7Problem with "${Error_T}
     echo "use: diff ${ErrFile} ${OutputFile} to find why"
     diff "${ErrFile}" "${OutputFile}"
     echo
