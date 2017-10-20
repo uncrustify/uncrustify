@@ -244,7 +244,7 @@ space_col_align(): orig_line is , orig_col is , [QUALIFIER/NONE] 'const' <==> or
 do_space(): orig_line is , orig_col is , first->text() 'const', type is QUALIFIER
 log_rule(): Spacing: first->orig_line is , first->text() is 'const', [QUALIFIER/NONE] <===>
    second->text() 'char', [TYPE/NONE] : rule sp_after_type[line ]
-space_col_align(): av is force
+ <force between 'const' and 'char'>space_col_align(): av is force
    len is 
    => coldiff is 
 space_col_align(): orig_line is , orig_col is , [TYPE/NONE] 'char' <==> orig_line is , orig_col is  [PTR_TYPE/NONE] '*' [CallStack:-DEBUG NOT SET-]
@@ -279,14 +279,14 @@ space_col_align(): orig_line is , orig_col is , [TYPE/NONE] 'unsigned' <==> orig
 do_space(): orig_line is , orig_col is , first->text() 'unsigned', type is TYPE
 log_rule(): Spacing: first->orig_line is , first->text() is 'unsigned', [TYPE/NONE] <===>
    second->text() 'long', [TYPE/NONE] : rule sp_after_type[line ]
-space_col_align(): av is force
+ <force between 'unsigned' and 'long'>space_col_align(): av is force
    len is 
    => coldiff is 
 space_col_align(): orig_line is , orig_col is , [TYPE/NONE] 'long' <==> orig_line is , orig_col is  [WORD/NONE] 'nI' [CallStack:-DEBUG NOT SET-]
 do_space(): orig_line is , orig_col is , first->text() 'long', type is TYPE
 log_rule(): Spacing: first->orig_line is , first->text() is 'long', [TYPE/NONE] <===>
    second->text() 'nI', [WORD/NONE] : rule sp_after_type[line ]
-space_col_align(): av is force
+ <force between 'long' and 'nI'>space_col_align(): av is force
    len is 
    => coldiff is 
 space_col_align(): orig_line is , orig_col is , [WORD/NONE] 'nI' <==> orig_line is , orig_col is  [FPAREN_CLOSE/FUNC_CLASS_DEF] ')' [CallStack:-DEBUG NOT SET-]
@@ -417,7 +417,7 @@ space_col_align(): orig_line is , orig_col is , [QUALIFIER/NONE] 'const' <==> or
 do_space(): orig_line is , orig_col is , first->text() 'const', type is QUALIFIER
 log_rule(): Spacing: first->orig_line is , first->text() is 'const', [QUALIFIER/NONE] <===>
    second->text() 'char', [TYPE/NONE] : rule sp_after_type[line ]
-space_col_align(): av is force
+ <force between 'const' and 'char'>space_col_align(): av is force
    len is 
    => coldiff is 
 space_col_align(): orig_line is , orig_col is , [TYPE/NONE] 'char' <==> orig_line is , orig_col is  [PTR_TYPE/NONE] '*' [CallStack:-DEBUG NOT SET-]
@@ -438,7 +438,7 @@ space_col_align(): orig_line is , orig_col is , [QUALIFIER/NONE] 'const' <==> or
 do_space(): orig_line is , orig_col is , first->text() 'const', type is QUALIFIER
 log_rule(): Spacing: first->orig_line is , first->text() is 'const', [QUALIFIER/NONE] <===>
    second->text() 'pTelName', [WORD/NONE] : rule sp_after_type[line ]
-space_col_align(): av is force
+ <force between 'const' and 'pTelName'>space_col_align(): av is force
    len is 
    => coldiff is 
 space_col_align(): orig_line is , orig_col is , [WORD/NONE] 'pTelName' <==> orig_line is , orig_col is  [SEMICOLON/NONE] ';' [CallStack:-DEBUG NOT SET-]
@@ -457,14 +457,14 @@ space_col_align(): orig_line is , orig_col is , [TYPE/NONE] 'unsigned' <==> orig
 do_space(): orig_line is , orig_col is , first->text() 'unsigned', type is TYPE
 log_rule(): Spacing: first->orig_line is , first->text() is 'unsigned', [TYPE/NONE] <===>
    second->text() 'long', [TYPE/NONE] : rule sp_after_type[line ]
-space_col_align(): av is force
+ <force between 'unsigned' and 'long'>space_col_align(): av is force
    len is 
    => coldiff is 
 space_col_align(): orig_line is , orig_col is , [TYPE/NONE] 'long' <==> orig_line is , orig_col is  [WORD/NONE] 'nTelIndex' [CallStack:-DEBUG NOT SET-]
 do_space(): orig_line is , orig_col is , first->text() 'long', type is TYPE
 log_rule(): Spacing: first->orig_line is , first->text() is 'long', [TYPE/NONE] <===>
    second->text() 'nTelIndex', [WORD/NONE] : rule sp_after_type[line ]
-space_col_align(): av is force
+ <force between 'long' and 'nTelIndex'>space_col_align(): av is force
    len is 
    => coldiff is 
 space_col_align(): orig_line is , orig_col is , [WORD/NONE] 'nTelIndex' <==> orig_line is , orig_col is  [SEMICOLON/NONE] ';' [CallStack:-DEBUG NOT SET-]
