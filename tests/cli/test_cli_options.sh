@@ -29,10 +29,10 @@ else
 fi
 
 
-INPUT="./Input"
-OUTPUT="./Output"
-CONFIG="./Config"
-RESULTS="./Results"
+INPUT="Input"
+OUTPUT="Output"
+CONFIG="Config"
+RESULTS="Results"
 
 rm -rf ${RESULTS}
 mkdir ${RESULTS}
@@ -44,17 +44,20 @@ mkdir ${RESULTS}
 file="help.txt"
 
 ../../build/uncrustify > "${RESULTS}/${file}"
-cmp -s "${RESULTS}/${file}" "${OUTPUT}/${file}"
+
+sed -e ':a' -e 'N' -e '$!ba' -e 's| --mtime      : Preserve mtime on replaced files.\n||g' "${RESULTS}/${file}" > "${RESULTS}/${file}.sed"
+cmp -s "${RESULTS}/${file}.sed" "${OUTPUT}/${file}"
 how_different=${?}
 if [ ${how_different} != "0" ] ;
 then
   echo
   echo "Problem with "${file}
-  echo "use: diff ${RESULTS}/${file} ${OUTPUT}/${file} to find why"
-  diff --unified=5 "${RESULTS}/${file}" "${OUTPUT}/${file}"
+  echo "use: diff ${RESULTS}/${file}.sed ${OUTPUT}/${file} to find why"
+  diff "${RESULTS}/${file}.sed" "${OUTPUT}/${file}"
   echo
 else
   rm "${RESULTS}/${file}"
+  rm "${RESULTS}/${file}.sed"
 fi
 
 #
@@ -81,14 +84,19 @@ fi
 #
 # Test --update-config
 #
+G_ErrorFile="mini_d_error"
+E_ErrorFile="${OUTPUT}/${G_ErrorFile}.txt"
+
 ConfigFileNames="mini_d mini_nd"
+IDX=0
 for ConfigFileName in ${ConfigFileNames}
 do
   ResultsFile="${RESULTS}/${ConfigFileName}_uc.txt"
   OutputFile="${OUTPUT}/${ConfigFileName}_uc.txt"
   ConfigFile="${CONFIG}/${ConfigFileName}.cfg"
+  R_ErrorFile="${RESULTS}/${G_ErrorFile}${IDX}.txt"
 
-  ../../build/uncrustify -c "${ConfigFile}" --update-config &> "${ResultsFile}"
+  ../../build/uncrustify -c "${ConfigFile}" --update-config > "${ResultsFile}" 2> "${R_ErrorFile}"
   sed 's/# Uncrustify.*//g' "${ResultsFile}" > "${ResultsFile}.sed"
   cmp -s "${ResultsFile}.sed" "${OutputFile}"
   how_different=${?}
@@ -103,6 +111,20 @@ do
     rm "${ResultsFile}"
     rm "${ResultsFile}.sed"
   fi
+
+  cmp -s "${R_ErrorFile}" "${E_ErrorFile}"
+  how_different=${?}
+  if [ ${how_different} != "0" ] ;
+  then
+    echo
+    echo "Problem with ${R_ErrorFile}"
+    echo "use: diff ${R_ErrorFile} ${E_ErrorFile} to find why"
+    diff "${R_ErrorFile}" "${E_ErrorFile}"
+    echo
+  else
+    rm "${R_ErrorFile}"
+  fi
+  IDX=`expr $IDX + 1` 
 done
 
 #
@@ -113,9 +135,10 @@ for ConfigFileName in ${ConfigFileNames}
 do
   ResultsFile="${RESULTS}/${ConfigFileName}_ucwd.txt"
   OutputFile="${OUTPUT}/${ConfigFileName}_ucwd.txt"
-  ConfigFile="${CONFIG}/${ConfigFileName}.cfg"
+  ConfigFile="${CONFIG}/${ConfigFileName}.cfg"  
+  R_ErrorFile="${RESULTS}/${G_ErrorFile}${IDX}.txt"
 
-  ../../build/uncrustify -c "${ConfigFile}" --update-config-with-doc &> "${ResultsFile}"
+  ../../build/uncrustify -c "${ConfigFile}" --update-config-with-doc > "${ResultsFile}" 2> "${R_ErrorFile}"
   sed 's/# Uncrustify.*//g' "${ResultsFile}" > "${ResultsFile}.sed"
   cmp -s "${ResultsFile}.sed" "${OutputFile}"
   how_different=${?}
@@ -129,6 +152,20 @@ do
     rm "${ResultsFile}"
     rm "${ResultsFile}.sed"
   fi
+
+  cmp -s "${R_ErrorFile}" "${E_ErrorFile}"
+  how_different=${?}
+  if [ ${how_different} != "0" ] ;
+  then
+    echo
+    echo "Problem with ${R_ErrorFile}"
+    echo "use: diff ${R_ErrorFile} ${E_ErrorFile} to find why"
+    diff "${R_ErrorFile}" "${E_ErrorFile}"
+    echo
+  else
+    rm "${R_ErrorFile}"
+  fi
+  IDX=`expr $IDX + 1` 
 done
 
 #

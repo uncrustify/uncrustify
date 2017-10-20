@@ -1310,6 +1310,7 @@ static chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_co
 
       if (fp_active && !(pc->flags & PCF_IN_CLASS_BASE))
       {
+         // WARNING: Duplicate from the align_func_proto()
          if (  pc->type == CT_FUNC_PROTO
             || (  pc->type == CT_FUNC_DEF
                && cpd.settings[UO_align_single_line_func].b))
@@ -1317,7 +1318,17 @@ static chunk_t *align_var_def_brace(chunk_t *start, size_t span, size_t *p_nl_co
             LOG_FMT(LAVDB, "%s(%d): add=[%s], orig_line is %zu, orig_col is %zu, level is %zu\n",
                     __func__, __LINE__, pc->text(), pc->orig_line, pc->orig_col, pc->level);
 
-            as.Add(pc);
+            chunk_t *toadd;
+            if (  pc->parent_type == CT_OPERATOR
+               && cpd.settings[UO_align_on_operator].b)
+            {
+               toadd = chunk_get_prev_ncnl(pc);
+            }
+            else
+            {
+               toadd = pc;
+            }
+            as.Add(step_back_over_member(toadd));
             fp_look_bro = (pc->type == CT_FUNC_DEF)
                           && cpd.settings[UO_align_single_line_brace].b;
          }
