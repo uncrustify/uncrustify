@@ -12,8 +12,12 @@
 
 
 # jump into the script dir so that printed paths are always the same
+init_pwd=$PWD
 script_dir=$(dirname "$(readlink -f "$0")")
 cd $script_dir
+
+RELATIVE=$(perl -MFile::Spec -e "print File::Spec->abs2rel(q(${script_dir}),q(${init_pwd}))")
+
 
 #set -x
 #exit 0
@@ -52,7 +56,7 @@ if [ ${how_different} != "0" ] ;
 then
   echo
   echo "Problem with "${file}
-  echo "use: diff ${RESULTS}/${file}.sed ${OUTPUT}/${file} to find why"
+  echo "use: diff ${RELATIVE}/${RESULTS}/${file}.sed ${RELATIVE}/${OUTPUT}/${file} to find why"
   diff "${RESULTS}/${file}.sed" "${OUTPUT}/${file}"
   echo
 else
@@ -73,7 +77,7 @@ if [ ${how_different} != "0" ] ;
 then
   echo
   echo "Problem with ${RESULTS}/${file}.sed"
-  echo "use: diff ${RESULTS}/${file}.sed ${OUTPUT}/${file} to find why"
+  echo "use: diff ${RELATIVE}/${RESULTS}/${file}.sed ${RELATIVE}/${OUTPUT}/${file} to find why"
   diff "${RESULTS}/${file}.sed" "${OUTPUT}/${file}"
   echo
 else
@@ -104,7 +108,7 @@ do
   then
     echo
     echo "Problem with ${ResultsFile}.sed"
-    echo "use: diff ${ResultsFile}.sed ${OutputFile} to find why"
+    echo "use: diff ${RELATIVE}/${ResultsFile}.sed ${RELATIVE}/${OutputFile} to find why"
     diff "${ResultsFile}.sed" "${OutputFile}"
     echo
   else
@@ -118,7 +122,7 @@ do
   then
     echo
     echo "Problem with ${R_ErrorFile}"
-    echo "use: diff ${R_ErrorFile} ${E_ErrorFile} to find why"
+    echo "use: diff ${RELATIVE}/${R_ErrorFile} ${RELATIVE}/${E_ErrorFile} to find why"
     diff "${R_ErrorFile}" "${E_ErrorFile}"
     echo
   else
@@ -145,7 +149,7 @@ do
   if [ ${how_different} != "0" ] ;
   then
     echo "Problem with ${ResultsFile}.sed"
-    echo "use: diff ${ResultsFile}.sed ${OutputFile} to find why"
+    echo "use: diff ${RELATIVE}/${ResultsFile}.sed ${RELATIVE}/${OutputFile} to find why"
     diff "${ResultsFile}.sed" "${OutputFile}"
     echo
   else
@@ -159,7 +163,7 @@ do
   then
     echo
     echo "Problem with ${R_ErrorFile}"
-    echo "use: diff ${R_ErrorFile} ${E_ErrorFile} to find why"
+    echo "use: diff ${RELATIVE}/${R_ErrorFile} ${RELATIVE}/${E_ErrorFile} to find why"
     diff "${R_ErrorFile}" "${E_ErrorFile}"
     echo
   else
@@ -183,7 +187,7 @@ how_different=${?}
 if [ ${how_different} != "0" ] ;
 then
   echo "Problem with ${ResultsFile}.sed"
-  echo "use: diff ${ResultsFile}.sed ${OutputFile} to find why"
+  echo "use: diff ${RELATIVE}/${ResultsFile}.sed ${RELATIVE}/${OutputFile} to find why"
   diff "${ResultsFile}.sed" "${OutputFile}"
   echo
 else
@@ -211,7 +215,7 @@ do
   then
     echo
     echo "Problem with "${InputFile}
-    echo "use: diff ${LFile}.sed ${OutputFile} to find why"
+    echo "use: diff ${RELATIVE}/${LFile}.sed ${RELATIVE}/${OutputFile} to find why"
     diff "${LFile}.sed" "${OutputFile}"
     diff "${LFile}" "${OutputFile}"
     echo
@@ -236,7 +240,7 @@ do
   then
     echo
     echo "Problem with "${Error_T}
-    echo "use: diff ${ErrFile} ${OutputFile} to find why"
+    echo "use: diff ${RELATIVE}/${ErrFile} ${RELATIVE}/${OutputFile} to find why"
     diff "${ErrFile}" "${OutputFile}"
     echo
     break
