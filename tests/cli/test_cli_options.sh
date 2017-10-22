@@ -24,8 +24,7 @@ RELATIVE=$(perl -MFile::Spec -e "print File::Spec->abs2rel(q(${script_dir}),q(${
 # control the CMAKE_BUILD_TYPE
 CMAKE_BUILD_TYPE=`grep -i CMAKE_BUILD_TYPE:STRING=release ../../build/CMakeCache.txt`
 how_different=${?}
-if [ ${how_different} == "0" ] ;
-then
+if [ ${how_different} == "0" ]; then
   echo "CMAKE_BUILD_TYPE is correct"
 else
   echo "CMAKE_BUILD_TYPE must be 'Release' to test"
@@ -46,43 +45,48 @@ mkdir ${RESULTS}
 # Test help
 #   -h -? --help --usage
 file="help.txt"
+ResultsFile="${RESULTS}/${file}"
+OutputFile="${OUTPUT}/${file}"
 
-../../build/uncrustify > "${RESULTS}/${file}"
+../../build/uncrustify > "${ResultsFile}"
+sed -e ':a' -e 'N' -e '$!ba' -e 's| --mtime      : Preserve mtime on replaced files.\n||g' "${ResultsFile}" > "${ResultsFile}.sed"
 
-sed -e ':a' -e 'N' -e '$!ba' -e 's| --mtime      : Preserve mtime on replaced files.\n||g' "${RESULTS}/${file}" > "${RESULTS}/${file}.sed"
-cmp -s "${RESULTS}/${file}.sed" "${OUTPUT}/${file}"
+cmp -s "${ResultsFile}.sed" "${OutputFile}"
 how_different=${?}
 if [ ${how_different} != "0" ] ;
 then
   echo
-  echo "Problem with "${file}
-  echo "use: diff ${RELATIVE}/${RESULTS}/${file}.sed ${RELATIVE}/${OUTPUT}/${file} to find why"
-  diff "${RESULTS}/${file}.sed" "${OUTPUT}/${file}"
+  echo "Problem with ${ResultsFile}.sed"
+  echo "use: diff ${RELATIVE}/${ResultsFile}.sed ${RELATIVE}/${OutputFile} to find out why"
+  diff "${ResultsFile}.sed" "${OutputFile}"
   echo
 else
-  rm "${RESULTS}/${file}"
-  rm "${RESULTS}/${file}.sed"
+  rm "${ResultsFile}"
+  rm "${ResultsFile}.sed"
 fi
 
 #
 # Test --show-config
 #
 file="show_config.txt"
+ResultsFile="${RESULTS}/${file}"
+OutputFile="${OUTPUT}/${file}"
 
-../../build/uncrustify --show-config > "${RESULTS}/${file}"
-sed 's/# Uncrustify.*//g' "${RESULTS}/${file}" > "${RESULTS}/${file}.sed"
-cmp -s "${RESULTS}/${file}.sed" "${OUTPUT}/${file}"
+../../build/uncrustify --show-config > "${ResultsFile}"
+sed 's/# Uncrustify.*//g' "${ResultsFile}" > "${ResultsFile}.sed"
+
+cmp -s "${ResultsFile}.sed" "${OutputFile}"
 how_different=${?}
 if [ ${how_different} != "0" ] ;
 then
   echo
-  echo "Problem with ${RESULTS}/${file}.sed"
-  echo "use: diff ${RELATIVE}/${RESULTS}/${file}.sed ${RELATIVE}/${OUTPUT}/${file} to find why"
-  diff "${RESULTS}/${file}.sed" "${OUTPUT}/${file}"
+  echo "Problem with ${ResultsFile}.sed"
+  echo "use: diff ${RELATIVE}/${ResultsFile}.sed ${RELATIVE}/${OutputFile} to find out why"
+  diff "${ResultsFile}.sed" "${OutputFile}"
   echo
 else
-  rm "${RESULTS}/${file}"
-  rm "${RESULTS}/${file}.sed"
+  rm "${ResultsFile}"
+  rm "${ResultsFile}.sed"
 fi
 
 #
@@ -93,8 +97,7 @@ E_ErrorFile="${OUTPUT}/${G_ErrorFile}.txt"
 
 ConfigFileNames="mini_d mini_nd"
 IDX=0
-for ConfigFileName in ${ConfigFileNames}
-do
+for ConfigFileName in ${ConfigFileNames}; do
   ResultsFile="${RESULTS}/${ConfigFileName}_uc.txt"
   OutputFile="${OUTPUT}/${ConfigFileName}_uc.txt"
   ConfigFile="${CONFIG}/${ConfigFileName}.cfg"
@@ -108,7 +111,7 @@ do
   then
     echo
     echo "Problem with ${ResultsFile}.sed"
-    echo "use: diff ${RELATIVE}/${ResultsFile}.sed ${RELATIVE}/${OutputFile} to find why"
+    echo "use: diff ${RELATIVE}/${ResultsFile}.sed ${RELATIVE}/${OutputFile} to find out why"
     diff "${ResultsFile}.sed" "${OutputFile}"
     echo
   else
@@ -122,7 +125,7 @@ do
   then
     echo
     echo "Problem with ${R_ErrorFile}"
-    echo "use: diff ${RELATIVE}/${R_ErrorFile} ${RELATIVE}/${E_ErrorFile} to find why"
+    echo "use: diff ${RELATIVE}/${R_ErrorFile} ${RELATIVE}/${E_ErrorFile} to find out why"
     diff "${R_ErrorFile}" "${E_ErrorFile}"
     echo
   else
@@ -135,8 +138,7 @@ done
 # Test --update-config-with-doc
 #
 ConfigFileNames="mini_d mini_nd"
-for ConfigFileName in ${ConfigFileNames}
-do
+for ConfigFileName in ${ConfigFileNames}; do
   ResultsFile="${RESULTS}/${ConfigFileName}_ucwd.txt"
   OutputFile="${OUTPUT}/${ConfigFileName}_ucwd.txt"
   ConfigFile="${CONFIG}/${ConfigFileName}.cfg"  
@@ -149,7 +151,7 @@ do
   if [ ${how_different} != "0" ] ;
   then
     echo "Problem with ${ResultsFile}.sed"
-    echo "use: diff ${RELATIVE}/${ResultsFile}.sed ${RELATIVE}/${OutputFile} to find why"
+    echo "use: diff ${RELATIVE}/${ResultsFile}.sed ${RELATIVE}/${OutputFile} to find out why"
     diff "${ResultsFile}.sed" "${OutputFile}"
     echo
   else
@@ -159,11 +161,10 @@ do
 
   cmp -s "${R_ErrorFile}" "${E_ErrorFile}"
   how_different=${?}
-  if [ ${how_different} != "0" ] ;
-  then
+  if [ ${how_different} != "0" ]; then
     echo
     echo "Problem with ${R_ErrorFile}"
-    echo "use: diff ${RELATIVE}/${R_ErrorFile} ${RELATIVE}/${E_ErrorFile} to find why"
+    echo "use: diff ${RELATIVE}/${R_ErrorFile} ${RELATIVE}/${E_ErrorFile} to find out why"
     diff "${R_ErrorFile}" "${E_ErrorFile}"
     echo
   else
@@ -182,12 +183,14 @@ ConfigFile="${CONFIG}/mini_nd.cfg"
 
 ../../build/uncrustify -c "${ConfigFile}" -f "${InputFile}" -p "${ResultsFile}" &> /dev/null
 sed 's/# Uncrustify.*//g' "${ResultsFile}" > "${ResultsFile}.sed"
+
 cmp -s "${ResultsFile}.sed" "${OutputFile}"
 how_different=${?}
 if [ ${how_different} != "0" ] ;
 then
+  echo
   echo "Problem with ${ResultsFile}.sed"
-  echo "use: diff ${RELATIVE}/${ResultsFile}.sed ${RELATIVE}/${OutputFile} to find why"
+  echo "use: diff ${RELATIVE}/${ResultsFile}.sed ${RELATIVE}/${OutputFile} to find out why"
   diff "${ResultsFile}.sed" "${OutputFile}"
   echo
 else
@@ -195,27 +198,26 @@ else
   rm "${ResultsFile}.sed"
 fi
 
-
 # Debug Options:
 #   -L
 # look at src/log_levels.h
-
 Liste_of_Ls_A="9 21 25 28 31 36 66 92"
-for L_Value in ${Liste_of_Ls_A}
-do
+for L_Value in ${Liste_of_Ls_A}; do
   InputFile="${INPUT}/testSrc.cpp"
   OutputFile="${OUTPUT}/${L_Value}.txt"
   LFile="${RESULTS}/${L_Value}.txt"
+
   ../../build/uncrustify -c /dev/null -f "${InputFile}" -o /dev/null -L "${L_Value}" 2> "${LFile}"
   sed 's/[0-9]//g' "${LFile}" > "${LFile}.sed"
+
   cmp -s "${LFile}.sed" "${OutputFile}"
   how_different=${?}
   #echo "the status of is "${how_different}
   if [ ${how_different} != "0" ] ;
   then
     echo
-    echo "Problem with "${InputFile}
-    echo "use: diff ${RELATIVE}/${LFile}.sed ${RELATIVE}/${OutputFile} to find why"
+    echo "Problem with ${LFile}.sed"
+    echo "use: diff ${RELATIVE}/${LFile}.sed ${RELATIVE}/${OutputFile} to find out why"
     diff "${LFile}.sed" "${OutputFile}"
     diff "${LFile}" "${OutputFile}"
     echo
@@ -227,20 +229,21 @@ do
 done
 
 Liste_of_Error_Tests="I-842 unmatched_close_pp"
-for Error_T in ${Liste_of_Error_Tests}
-do
+for Error_T in ${Liste_of_Error_Tests}; do
   ConfigFile="${CONFIG}/${Error_T}.cfg"
   InputFile="${INPUT}/${Error_T}.cpp"
   OutputFile="${OUTPUT}/${Error_T}.txt"
   ErrFile="${RESULTS}/${Error_T}.txt"
+
   ../../build/uncrustify -q -c "${ConfigFile}" -f "${InputFile}" -o /dev/null 2> "${ErrFile}"
+
   cmp -s "${ErrFile}" "${OutputFile}"
   how_different=${?}
   if [ ${how_different} != "0" ] ;
   then
     echo
-    echo "Problem with "${Error_T}
-    echo "use: diff ${RELATIVE}/${ErrFile} ${RELATIVE}/${OutputFile} to find why"
+    echo "Problem with ${ErrFile}"
+    echo "use: diff ${RELATIVE}/${ErrFile} ${RELATIVE}/${OutputFile} to find out why"
     diff "${ErrFile}" "${OutputFile}"
     echo
     break
@@ -248,6 +251,7 @@ do
     rm "${ErrFile}"
   fi
 done
+
 
 rmdir --ignore-fail-on-non-empty ${RESULTS}
 if [[ -d ${RESULTS} ]]
