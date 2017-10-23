@@ -1,9 +1,9 @@
 // Change in Configuration\UnityConfigure.h:
 
-    #define CHECK_SERIALIZE_ALIGNMENT 0 /////@TODO: WHY IS THIS NOT ENABLED?????
+    #define FOO_MACRO 0 /////@TODO: COMMENT?????
 // ^^^ space removed after 0
 
-// PlatformDependent\PS4\Source\Proxies\Video.cpp
+// Foo\Bar\Baz\Fizz\Test.cpp
 
-    #define PS4_VIDEO_SCE_DEBUG_LEVEL   SCE_AVPLAYER_DBG_ALL //SCE_AVPLAYER_DBG_NONE
-// ^^^ space removed after _ALL
+    #define BAR_MACRO   FOO_BAR_MACRO //FOO_BAR_BAZ_NONE
+// ^^^ space removed after _MACRO
