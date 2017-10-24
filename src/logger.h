@@ -113,6 +113,12 @@ void log_fmt(log_sev_t sev, const char *fmt, ...) __attribute__((format(printf, 
 void log_flush(bool force_nl);
 
 
+// it is necessary to make at least one time pro change a check of all the
+// uses of the MACRO LOG_FMT under Linux. This to detect all the used pointers,
+// which might be nullptr.
+// uncomment the define to do that.
+// #define NO_MACRO_VARARG
+
 #ifdef NO_MACRO_VARARG
 #define LOG_FMT    log_fmt
 // TODO during debugging add source file and line number

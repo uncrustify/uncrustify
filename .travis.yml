@@ -6,6 +6,7 @@ matrix:
   include:
     - env: BUILD_TYPE=debug
     - env: BUILD_TYPE=release
+    - env: BUILD_TYPE=release NO_MACRO_VARARG=1
 
     # GCC 6
     - env: C_COMPILER=gcc-6 CXX_COMPILER=g++-6
