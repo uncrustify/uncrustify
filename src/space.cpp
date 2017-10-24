@@ -120,11 +120,12 @@ static void log_rule2(size_t line, const char *rule, chunk_t *first, chunk_t *se
    LOG_FUNC_ENTRY();
    if (second->type != CT_NEWLINE)
    {
-      LOG_FMT(LSPACE, "%s(%d): Spacing: first->orig_line is %zu, first->text() is '%s', [%s/%s] <===>\n",
-              __func__, __LINE__, first->orig_line, first->text(),
+      LOG_FMT(LSPACE, "%s(%d): Spacing: first->orig_line is %zu, first->orig_col is %zu, first->text() is '%s', [%s/%s] <===>\n",
+              __func__, __LINE__, first->orig_line, first->orig_col, first->text(),
               get_token_name(first->type), get_token_name(first->parent_type));
-      LOG_FMT(LSPACE, "   second->text() '%s', [%s/%s] : rule %s[line %zu]%s",
-              second->text(), get_token_name(second->type), get_token_name(second->parent_type),
+      LOG_FMT(LSPACE, "   second->orig_line is %zu, second->orig_col is %zu, second->text() '%s', [%s/%s] : rule %s[line %zu]%s",
+              second->orig_line, second->orig_col, second->text(),
+              get_token_name(second->type), get_token_name(second->parent_type),
               rule, line,
               complete ? "\n" : "");
    }
@@ -183,7 +184,9 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
       log_rule("REMOVE");
       return(AV_REMOVE);
    }
-   if (first->type == CT_VBRACE_OPEN && second->type != CT_NL_CONT)
+   if (  first->type == CT_VBRACE_OPEN
+      && second->type != CT_NL_CONT
+      && second->type != CT_SEMICOLON) // # Issue 1158
    {
       log_rule("FORCE");
       return(AV_FORCE);
@@ -909,6 +912,12 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
          log_rule("sp_after_sparen");
          return(cpd.settings[UO_sp_after_sparen].a);
       }
+   }
+   if (  first->type == CT_VBRACE_OPEN
+      && second->type == CT_SEMICOLON) // Issue # 1158
+   {
+      log_rule("sp_before_semi");
+      return(cpd.settings[UO_sp_before_semi].a);
    }
 
    if (  second->type == CT_FPAREN_OPEN
@@ -1944,12 +1953,12 @@ void space_text(void)
    {
       if (pc->type == CT_NEWLINE)
       {
-         LOG_FMT(LSPACE, "%s(%d): orig_col is %zu, orig_col is %zu, NEWLINE\n",
+         LOG_FMT(LSPACE, "%s(%d): orig_line is %zu, orig_col is %zu, NEWLINE\n",
                  __func__, __LINE__, pc->orig_line, pc->orig_col);
       }
       else
       {
-         LOG_FMT(LSPACE, "%s(%d): orig_col is %zu, orig_col is %zu, '%s' type is %s\n",
+         LOG_FMT(LSPACE, "%s(%d): orig_line is %zu, orig_col is %zu, '%s' type is %s\n",
                  __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text(), get_token_name(pc->type));
       }
       if (  (cpd.settings[UO_use_options_overriding_for_qt_macros].b)
