@@ -5,14 +5,14 @@ void Func()
 line");
 }
 
-x = o.Func(
-        y);
-x = o.Func2(a, b,
-        y);
+variablex = o.Func(
+    variabley);
+variablex = o.Func2(a, b,
+    variabley);
 o.Func(
-    y);
+    variabley);
 o.Func2(a, b,
-    y);
+    variabley);
 
 
 AnimatorStateMachine rootStateMachine = syncedIndex == -1

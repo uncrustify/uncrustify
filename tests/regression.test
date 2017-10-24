@@ -61,6 +61,9 @@
 10103 staging/Uncrustify.CSharp.cfg staging/UNI-2506.cs
 10104 staging/Uncrustify.CSharp.cfg staging/UNI-2505.cs
 60008 staging/Uncrustify.JamCS.cfg staging/UNI-17253.cs
+60012 staging/Uncrustify.CSharp.cfg staging/UNI-12303.cs
 60017 staging/Uncrustify.Cpp.cfg    staging/UNI-2683.cpp
+60022 staging/Uncrustify.Cpp.cfg staging/UNI-18439.cpp
+60025 staging/Uncrustify.Cpp.cfg staging/UNI-19894.cpp
 60030 staging/Uncrustify.Cpp.cfg staging/UNI-21727.cpp
 60034 staging/Uncrustify.Cpp.cfg staging/UNI-21731.cpp
