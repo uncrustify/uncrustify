@@ -157,8 +157,8 @@ def check_generated_output(gen_expected_path, gen_result_path, result_manip=None
                 f.write(gen_res_txt)
 
         print("\nProblem with %s" % gen_result_path)
-        print("use: 'diff %s %s' to find why" % (gen_result_path,
-                                                 gen_expected_path))
+        print("use: 'diff %s %s' to find out why" % (gen_result_path,
+                                                     gen_expected_path))
         return False
 
     remove(gen_result_path)
@@ -207,7 +207,7 @@ def check_std_output(expected_path, result_path, result_str, result_manip=None):
             f.write(result_str)
 
         print("\nProblem with %s" % result_path)
-        print("use: 'diff %s %s' to find why" % (result_path, expected_path))
+        print("use: 'diff %s %s' to find out why" % (result_path, expected_path))
         return False
     return True
 
