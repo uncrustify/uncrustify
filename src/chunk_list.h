@@ -291,6 +291,15 @@ chunk_t *chunk_get_prev_ncnlnp(chunk_t *cur, scope_e scope = scope_e::ALL);
 
 
 /**
+ * Gets the prev non-NEWLINE and non-comment chunk, non-preprocessor chunk, non-DC_MEMBER chunk
+ *
+ * @param cur    chunk to use as start point
+ * @param scope  code region to search in
+ */
+chunk_t *chunk_get_prev_ncnlnpnd(chunk_t *cur, scope_e scope = scope_e::ALL);
+
+
+/**
  * Grabs the next chunk of the given type at the level.
  *
  * @param cur    chunk to use as start point
