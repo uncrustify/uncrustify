@@ -2058,7 +2058,8 @@ static void mark_function_return_type(chunk_t *fname, chunk_t *start, c_token_t 
       {
          LOG_FMT(LFCNR, " [%s|%s]", pc->text(), get_token_name(pc->type));
 
-         if (parent_type != CT_NONE)
+         if (  parent_type != CT_NONE
+            && pc->parent_type != CT_FUNC_START)
          {
             set_chunk_parent(pc, parent_type);
          }
@@ -4239,7 +4240,17 @@ static void mark_function(chunk_t *pc)
          // Skip the word/type before the '.' or '::'
          if (prev->type == CT_DC_MEMBER || prev->type == CT_MEMBER)
          {
+            chunk_t *tmp = prev;
             prev = chunk_get_prev_ncnlnp(prev);
+
+            // fixes issues 1005, 1288 and 1249
+            // should not remove space between '::' and keyword, since it is a return type.
+            if (chunk_is_keyword(prev) && tmp->type == CT_DC_MEMBER)
+            {
+               isa_def = true;
+               set_chunk_parent(tmp, CT_FUNC_START);
+               break;
+            }
             if (  prev == nullptr
                || (  prev->type != CT_WORD
                   && prev->type != CT_TYPE
