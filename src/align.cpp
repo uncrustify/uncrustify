@@ -1104,7 +1104,7 @@ static void align_same_func_call_params(void)
             {
                as.resize(idx + 1);
                as[idx].Start(3);
-               if (!cpd.settings[UO_align_number_left].b)
+               if (!cpd.settings[UO_align_number_right].b)
                {
                   if (  (chunks[idx]->type == CT_NUMBER_FP)
                      || (chunks[idx]->type == CT_NUMBER)
@@ -1848,7 +1848,7 @@ static void align_init_brace(chunk_t *start)
                   //        next->text(), cpd.al[idx].col, cpd.al[idx].len);
 
                   if (  (idx < (cpd.al_cnt - 1))
-                     && cpd.settings[UO_align_number_left].b
+                     && cpd.settings[UO_align_number_right].b
                      && (  next->type == CT_NUMBER_FP
                         || next->type == CT_NUMBER
                         || next->type == CT_POS
@@ -1872,7 +1872,7 @@ static void align_init_brace(chunk_t *start)
 
                // see if we need to right-align a number
                if (  (idx < (cpd.al_cnt - 1))
-                  && cpd.settings[UO_align_number_left].b)
+                  && cpd.settings[UO_align_number_right].b)
                {
                   next = chunk_get_next(pc);
                   if (  next != nullptr
