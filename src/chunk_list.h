@@ -10,6 +10,7 @@
 
 #include "uncrustify_types.h"
 #include "char_table.h"
+#include "keywords.h"
 
 
 /*
@@ -796,6 +797,16 @@ static_inline bool chunk_is_forin(chunk_t *pc)
    return(false);
 }
 
+
+/**
+ * Checks if a chunk is a keyword
+ *
+ * @return true  - the chunk is keyword
+ */
+static_inline bool chunk_is_keyword(chunk_t *pc)
+{
+   return(find_keyword_type(pc->text(), strlen(pc->text())) != CT_WORD);
+}
 
 void set_chunk_type_real(chunk_t *pc, c_token_t tt);
 
