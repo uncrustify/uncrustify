@@ -495,13 +495,8 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
          break;
       }
 
-      // Issue #1005
-      /* '::' at the start of an identifier is not member access, but global scope operator.
-       * Detect if previous chunk is a type and previous-previous is "friend"
-       */
-      if (  first->type == CT_TYPE
-         && first->prev != nullptr
-         && first->prev->type == CT_FRIEND)
+      // force space between '::' and keyword, since it is a return type.
+      if (second->parent_type == CT_FUNC_START)
       {
          log_rule("FORCE");
          return(AV_FORCE);
@@ -770,7 +765,7 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
    }
 
    // "a [x]" vs "a[x]"
-   if (second->type == CT_SQUARE_OPEN && second->parent_type != CT_OC_MSG)
+   if (second->type == CT_SQUARE_OPEN && (second->parent_type != CT_OC_MSG && second->parent_type != CT_CS_SQ_STMT))
    {
       log_rule("sp_before_square");
       return(cpd.settings[UO_sp_before_square].a);
