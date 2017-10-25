@@ -1933,6 +1933,16 @@ void indent_text(void)
          next = chunk_get_next(pc);
          if (next != nullptr)
          {
+            /*
+             * fixes  1260 , 1268 , 1277 (Extra indentation after line with multiple assignments)
+             * For multiple consecutive assignments in single line , the indent of all these
+             * assignments should be same and one more than this line's indent.
+             * so poping the previous assign and pushing the new one
+             */
+            if ((frm.pse[frm.pse_tos].type == CT_ASSIGN || frm.pse[frm.pse_tos].type == CT_ASSIGN_NL) && pc->type == CT_ASSIGN)
+            {
+               indent_pse_pop(frm, pc);
+            }
             indent_pse_push(frm, pc);
             if (cpd.settings[UO_indent_continue].n != 0)
             {
@@ -1968,7 +1978,7 @@ void indent_text(void)
             {
                frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent_tmp + indent_size;
                log_indent();
-               if (pc->type == CT_ASSIGN)
+               if (pc->type == CT_ASSIGN && chunk_is_newline(next))
                {
                   frm.pse[frm.pse_tos].type       = CT_ASSIGN_NL;
                   frm.pse[frm.pse_tos].indent_tab = frm.pse[frm.pse_tos].indent;
