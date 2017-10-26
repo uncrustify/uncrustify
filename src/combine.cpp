@@ -1220,10 +1220,10 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
          tmp = chunk_get_next_type(next, CT_PAREN_CLOSE, next->level);
          if (tmp != nullptr)
          {
-            chunk_t *tmpA = chunk_get_next_type(tmp, CT_ASSIGN, pc->level);
             tmp = chunk_get_next(tmp);
             if (tmp != nullptr && tmp->type == CT_PAREN_OPEN)
             {
+               chunk_t *tmpA = chunk_get_next_ncnl(chunk_get_next_type(tmp, CT_PAREN_CLOSE, tmp->level));
                if (tmpA != nullptr && tmpA->type == CT_ASSIGN)
                {
                   // we have "TYPE(...)(...) =" such as

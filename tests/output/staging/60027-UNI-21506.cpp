@@ -9,5 +9,5 @@ void Class::Foo(void (*callback)(const Class& entry))
 
 void foo()
 {
-    bool a = 1;  // if you comment this out, the bug stops reproducing
+    int a = 1;  // if you comment this out, the bug stops reproducing
 }
