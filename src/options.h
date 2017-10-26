@@ -149,6 +149,7 @@ enum uncrustify_options
    // group: UG_space, "Spacing options"                                                        1
    UO_sp_arith,                    // space around + - / * etc
                                    // also ">>>" "<<" ">>" "%" "|"
+   UO_sp_arith_additive,           // space around + or -
    UO_sp_assign,                   // space around =, +=, etc
    UO_sp_cpp_lambda_assign,        // space around the capture spec [=](...){...}
    UO_sp_cpp_lambda_paren,         // space after the capture spec [] (...){...}

@@ -1246,6 +1246,17 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
       // Arith after a cast comes first
       if (second->type == CT_ARITH || second->type == CT_CARET)
       {
+         if (cpd.settings[UO_sp_arith_additive].a != AV_IGNORE)
+         {
+            auto arith_char = (first->type == CT_ARITH || first->type == CT_CARET)
+                              ? first->str[0] : second->str[0];
+            if (arith_char == '+' || arith_char == '-')
+            {
+               log_rule("sp_arith_additive");
+               return(cpd.settings[UO_sp_arith_additive].a);
+            }
+         }
+
          log_rule("sp_arith");
          return(cpd.settings[UO_sp_arith].a);
       }
@@ -1496,6 +1507,17 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
       || second->type == CT_ARITH
       || second->type == CT_CARET)
    {
+      if (cpd.settings[UO_sp_arith_additive].a != AV_IGNORE)
+      {
+         auto arith_char = (first->type == CT_ARITH || first->type == CT_CARET)
+                           ? first->str[0] : second->str[0];
+         if (arith_char == '+' || arith_char == '-')
+         {
+            log_rule("sp_arith_additive");
+            return(cpd.settings[UO_sp_arith_additive].a);
+         }
+      }
+
       log_rule("sp_arith");
       return(cpd.settings[UO_sp_arith].a);
    }

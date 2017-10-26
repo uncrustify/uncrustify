@@ -53,6 +53,9 @@ utf8_force                      = false    # false/true
 # also '>>>' '<<' '>>' '%' '|'.
 sp_arith                        = ignore   # ignore/add/remove/force
 
+# Add or remove space around arithmetic operator '+' and '-'. Overrides sp_arith
+sp_arith_additive               = ignore   # ignore/add/remove/force
+
 # Add or remove space around assignment operator '=', '+=', etc.
 sp_assign                       = ignore   # ignore/add/remove/force
 

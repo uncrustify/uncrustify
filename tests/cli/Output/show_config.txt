@@ -52,6 +52,9 @@ sp_arith                        { Ignore, Add, Remove, Force }
   Add or remove space around arithmetic operator '+', '-', '/', '*', etc
   also '>>>' '<<' '>>' '%' '|'.
 
+sp_arith_additive               { Ignore, Add, Remove, Force }
+  Add or remove space around arithmetic operator '+' and '-'. Overrides sp_arith
+
 sp_assign                       { Ignore, Add, Remove, Force }
   Add or remove space around assignment operator '=', '+=', etc.
 

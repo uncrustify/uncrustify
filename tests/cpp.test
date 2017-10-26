@@ -496,3 +496,6 @@
 34191 empty.cfg                        cpp/comment-align-multiline.cpp
 34192  mod_remove_extra_semicolon-t.cfg    cpp/i1207.cpp
 34193  code_width-25.cfg               cpp/i1218.cpp
+
+34194  sp_arith_additive-f.cfg         cpp/sp_arith_additive.cpp
+34195  sp_arith_additive-r.cfg         cpp/sp_arith_additive.cpp

@@ -314,6 +314,8 @@ void register_options(void)
    unc_add_option("sp_arith", UO_sp_arith, AT_IARF,
                   "Add or remove space around arithmetic operator '+', '-', '/', '*', etc\n"
                   "also '>>>' '<<' '>>' '%' '|'.");
+   unc_add_option("sp_arith_additive", UO_sp_arith_additive, AT_IARF,
+                  "Add or remove space around arithmetic operator '+' and '-'. Overrides sp_arith");
    unc_add_option("sp_assign", UO_sp_assign, AT_IARF,
                   "Add or remove space around assignment operator '=', '+=', etc.");
    unc_add_option("sp_cpp_lambda_assign", UO_sp_cpp_lambda_assign, AT_IARF,
