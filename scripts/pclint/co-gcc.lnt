@@ -78,10 +78,10 @@
 
 // Begin: System Dependent Options
 // -------------------------------
--a#machine(i386)  	// #assert's machine(i386)  (SVR4 facility).
-+fdi              	// Use the directory of the including file
--si4           		// size of int
--sp4				// size of pointer
+-a#machine(i386)  // #assert's machine(i386)  (SVR4 facility).
++fdi              // Use the directory of the including file
+-si4              // size of int
+-sp4              // size of pointer
 
 // -----------------------------
 // End: System Dependent Options
