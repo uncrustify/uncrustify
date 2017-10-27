@@ -93,7 +93,7 @@
 
 // =========================================================
 // +rw and -d options to cope with GNU syntax:
-+ppw(ident)                 // Tolerate #ident
++ppw(ident)                 // Tolerate #ident keyword definitions for SCCS/RCS
 +ppw(warning)
 
 // GCC provides alternative spellings of certain keywords:
