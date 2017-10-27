@@ -2432,8 +2432,8 @@ void indent_text(void)
          }
          else
          {
-            bool   use_ident = true;
-            size_t ttidx     = frm.pse_tos;
+            bool   use_indent = true;
+            size_t ttidx      = frm.pse_tos;
             if (ttidx > 0)
             {
                //if (strcasecmp(get_token_name(frm.pse[ttidx].pc->parent_type), "FUNC_CALL") == 0)
@@ -2447,13 +2447,13 @@ void indent_text(void)
                   else
                   {
                      LOG_FMT(LINDPC, "use is false [%d]\n", __LINE__);
-                     use_ident = false;
+                     use_indent = false;
                   }
                }
             }
             if (pc->column != indent_column)
             {
-               if (use_ident && pc->type != CT_PP_IGNORE) // Leave indentation alone for PP_IGNORE tokens
+               if (use_indent && pc->type != CT_PP_IGNORE) // Leave indentation alone for PP_IGNORE tokens
                {
                   LOG_FMT(LINDENT, "%s(%d): orig_line is %zu, indent set to %zu, for '%s'\n",
                           __func__, __LINE__, pc->orig_line, indent_column, pc->text());
