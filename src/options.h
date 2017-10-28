@@ -412,6 +412,7 @@ enum uncrustify_options
    UO_indent_square_nl,                     // indent-align under square for open followed by nl
    UO_indent_preserve_sql,                  // preserve indent of EXEC SQL statement body
    UO_indent_align_assign,                  //
+   UO_indent_align_paren,                   //  Align continued statements at the '(', to the next line is indent one tab.
    UO_indent_oc_block,                      //
    UO_indent_oc_block_msg,                  //
    UO_indent_oc_msg_colon,                  //

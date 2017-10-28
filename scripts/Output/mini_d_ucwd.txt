@@ -859,6 +859,10 @@ indent_preserve_sql             = false    # false/true
 # If False or the '=' is followed by a newline, the next line is indent one tab.
 indent_align_assign             = true     # false/true
 
+# Align continued statements at the '('. Default=True
+# If FALSE or the '(' is not followed by a newline, the next line indent is one tab.
+indent_align_paren              = true     # false/true
+
 # Indent OC blocks at brace level instead of usual rules.
 indent_oc_block                 = false    # false/true
 
