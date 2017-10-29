@@ -1375,26 +1375,39 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
 
    if ((cpd.lang_flags & LANG_CPP) != 0)
    {
-      // check for type initializer list: auto a = ... int{0};
-      if (pc->type == CT_WORD || pc->type == CT_TYPE)
+      // Detect a braced-init-list
+      if (  pc->type == CT_WORD
+         || pc->type == CT_TYPE
+         || pc->type == CT_ASSIGN
+         || pc->type == CT_COMMA
+         || pc->type == CT_ANGLE_CLOSE
+         || pc->type == CT_SQUARE_CLOSE
+         || pc->type == CT_TSQUARE
+         || (  pc->type == CT_BRACE_OPEN
+            && (  pc->parent_type == CT_NONE
+               || pc->parent_type == CT_BRACED_INIT_LIST)))
       {
          auto brace_open = chunk_get_next_ncnl(pc);
          if (  brace_open != nullptr
             && brace_open->type == CT_BRACE_OPEN
-            && brace_open->parent_type != CT_STRUCT
-            && brace_open->parent_type != CT_ENUM
-            && brace_open->parent_type != CT_CLASS
-            && brace_open->parent_type != CT_NAMESPACE
-            && brace_open->parent_type != CT_FUNC_DEF     // guard arrow return type
-            && brace_open->parent_type != CT_FUNC_PROTO   // --||--
-            && brace_open->parent_type != CT_CPP_LAMBDA)  // --||--
+            && (  brace_open->parent_type == CT_NONE
+               || brace_open->parent_type == CT_ASSIGN
+               || brace_open->parent_type == CT_BRACED_INIT_LIST))
          {
             auto brace_close = chunk_skip_to_match(next);
             if (brace_close != nullptr && brace_close->type == CT_BRACE_CLOSE)
             {
-               pc->type                 = CT_TYPE;
-               brace_close->parent_type = CT_TYPE;
-               brace_open->parent_type  = CT_TYPE;
+               set_chunk_parent(brace_open, CT_BRACED_INIT_LIST);
+               set_chunk_parent(brace_close, CT_BRACED_INIT_LIST);
+
+               // TODO: Change pc->type CT_WORD -> CT_TYPE
+               // for the case CT_ASSIGN (and others).
+
+               // TODO: Move this block to the fix_fcn_call_args function.
+               if (pc->type == CT_WORD && (pc->flags & PCF_IN_FCN_CALL))
+               {
+                  set_chunk_type(pc, CT_TYPE);
+               }
             }
          }
       }
@@ -3453,6 +3466,12 @@ static chunk_t *fix_var_def(chunk_t *start)
    if (end == nullptr)
    {
       return(nullptr);
+   }
+
+   if (  cs.Len() == 1
+      && end->type == CT_BRACE_OPEN && end->parent_type == CT_BRACED_INIT_LIST)
+   {
+      set_chunk_type(cs.Get(0)->m_pc, CT_TYPE);
    }
 
    // Function defs are handled elsewhere
