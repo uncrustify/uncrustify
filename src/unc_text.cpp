@@ -30,26 +30,28 @@ static size_t fix_len_idx(size_t size, size_t idx, size_t len)
 
 void unc_text::update_logtext()
 {
-   if (!m_logok)
+   if (m_logok)
    {
-      // make a pessimistic guess at the size
-      m_logtext.clear();
-      m_logtext.reserve(m_chars.size() * 3);
-      for (int m_char : m_chars)
-      {
-         if (m_char == '\n')
-         {
-            m_char = 0x2424;
-         }
-         else if (m_char == '\r')
-         {
-            m_char = 0x240d;
-         }
-         encode_utf8(m_char, m_logtext);
-      }
-      m_logtext.push_back(0);
-      m_logok = true;
+      return;
    }
+
+   // make a pessimistic guess at the size
+   m_logtext.clear();
+   m_logtext.reserve(m_chars.size() * 3);
+   for (int m_char : m_chars)
+   {
+      if (m_char == '\n')
+      {
+         m_char = 0x2424; // NL symbol
+      }
+      else if (m_char == '\r')
+      {
+         m_char = 0x240d; // CR symbol
+      }
+      encode_utf8(m_char, m_logtext);
+   }
+   m_logtext.push_back(0);
+   m_logok = true;
 }
 
 
