@@ -13,23 +13,18 @@
 using namespace std;
 
 
-static void fix_len_idx(size_t size, size_t &idx, size_t &len);
+static size_t fix_len_idx(size_t size, size_t idx, size_t len);
 
 
-static void fix_len_idx(size_t size, size_t &idx, size_t &len)
+static size_t fix_len_idx(size_t size, size_t idx, size_t len)
 {
    if (idx >= size)
    {
-      len = 0;
+      return(0);
    }
-   else
-   {
-      size_t left = size - idx;
-      if (len > left)
-      {
-         len = left;
-      }
-   }
+
+   const size_t left = size - idx;
+   return((len > left) ? left : len);
 }
 
 
@@ -145,7 +140,7 @@ void unc_text::set(const unc_text &ref, size_t idx, size_t len)
 {
    size_t ref_size = ref.size();
 
-   fix_len_idx(ref_size, idx, len);
+   len = fix_len_idx(ref_size, idx, len);
    m_logok = false;
    if (len == ref_size)
    {
@@ -195,7 +190,7 @@ void unc_text::set(const value_type &data, size_t idx, size_t len)
 {
    size_t data_size = data.size();
 
-   fix_len_idx(data_size, idx, len);
+   len = fix_len_idx(data_size, idx, len);
    m_chars.resize(len);
    size_t di = 0;
    while (len-- > 0)
