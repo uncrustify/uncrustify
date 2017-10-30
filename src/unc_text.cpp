@@ -97,12 +97,13 @@ int unc_text::compare(const unc_text &ref1, const unc_text &ref2, size_t len)
 
 bool unc_text::equals(const unc_text &ref) const
 {
-   size_t len = size();
+   const size_t len = size();
 
    if (ref.size() != len)
    {
       return(false);
    }
+
    for (size_t idx = 0; idx < len; idx++)
    {
       if (m_chars[idx] != ref.m_chars[idx])
