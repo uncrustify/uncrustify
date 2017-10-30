@@ -8,7 +8,7 @@
 #include "unc_text.h"
 #include "unc_ctype.h"
 #include "unicode.h" // encode_utf8()
-
+#include <algorithm>
 
 using namespace std;
 
@@ -55,15 +55,12 @@ void unc_text::update_logtext()
 
 int unc_text::compare(const unc_text &ref1, const unc_text &ref2, size_t len)
 {
-   size_t idx;
-   size_t len1 = ref1.size();
-   size_t len2 = ref2.size();
+   const size_t len1    = ref1.size();
+   const size_t len2    = ref2.size();
+   const auto   max_idx = std::min({ len, len1, len2 });
+   size_t       idx     = 0;
 
-   for (idx = 0;
-        (  idx < len1
-        && idx < len2
-        && idx < len);
-        idx++)
+   for ( ; idx < max_idx; idx++)
    {
       // exactly the same character ?
       if (ref1.m_chars[idx] == ref2.m_chars[idx])
@@ -91,7 +88,8 @@ int unc_text::compare(const unc_text &ref1, const unc_text &ref2, size_t len)
       return(0);
    }
 
-   return(len1 - len2);
+   // underflow save: return(len1 - len2);
+   return((len1 > len2) ? (len1 - len2) : -static_cast<int>(len2 - len1));
 }
 
 
