@@ -5024,6 +5024,13 @@ static void handle_cpp_lambda(chunk_t *sq_o)
 
    chunk_t *ret = nullptr;
 
+   // make sure there isn't an array with braced-init-list: int a[]{};
+   chunk_t *prev = chunk_get_prev_ncnl(sq_o);
+   if (prev && prev->type == CT_WORD)
+   {
+      return;
+   }
+
    chunk_t *sq_c = sq_o; // assuming '[]'
    if (sq_o->type == CT_SQUARE_OPEN)
    {
@@ -5035,21 +5042,25 @@ static void handle_cpp_lambda(chunk_t *sq_o)
       }
    }
 
-   // Make sure a '(' is next
+   // lambda-declarator '( params )' is optional
    chunk_t *pa_o = chunk_get_next_ncnl(sq_c);
-   if (!pa_o || pa_o->type != CT_PAREN_OPEN)
+   if (!pa_o)
    {
       return;
    }
-   // and now find the ')'
-   chunk_t *pa_c = chunk_skip_to_match(pa_o);
-   if (!pa_c)
+   chunk_t *pa_c = nullptr;
+   if (pa_o->type == CT_PAREN_OPEN)
    {
-      return;
+      // and now find the ')'
+      pa_c = chunk_skip_to_match(pa_o);
+      if (!pa_c)
+      {
+         return;
+      }
    }
 
    // Check if keyword 'mutable' is before '->'
-   chunk_t *br_o = chunk_get_next_ncnl(pa_c);
+   chunk_t *br_o = pa_c ? chunk_get_next_ncnl(pa_c) : pa_o;
    if (chunk_is_str(br_o, "mutable", 7))
    {
       br_o = chunk_get_next_ncnl(br_o);
@@ -5100,10 +5111,13 @@ static void handle_cpp_lambda(chunk_t *sq_o)
    }
    set_chunk_parent(sq_o, CT_CPP_LAMBDA);
    set_chunk_parent(sq_c, CT_CPP_LAMBDA);
-   set_chunk_type(pa_o, CT_FPAREN_OPEN);
-   set_chunk_parent(pa_o, CT_CPP_LAMBDA);
-   set_chunk_type(pa_c, CT_FPAREN_CLOSE);
-   set_chunk_parent(pa_c, CT_CPP_LAMBDA);
+   if (pa_c)
+   {
+      set_chunk_type(pa_o, CT_FPAREN_OPEN);
+      set_chunk_parent(pa_o, CT_CPP_LAMBDA);
+      set_chunk_type(pa_c, CT_FPAREN_CLOSE);
+      set_chunk_parent(pa_c, CT_CPP_LAMBDA);
+   }
    set_chunk_parent(br_o, CT_CPP_LAMBDA);
    set_chunk_parent(br_c, CT_CPP_LAMBDA);
 
@@ -5118,7 +5132,10 @@ static void handle_cpp_lambda(chunk_t *sq_o)
       }
    }
 
-   fix_fcn_def_params(pa_o);
+   if (pa_c)
+   {
+      fix_fcn_def_params(pa_o);
+   }
 } // handle_cpp_lambda
 
 
