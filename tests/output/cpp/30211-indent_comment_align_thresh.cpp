@@ -74,9 +74,9 @@ namespace FooNamespace
 class FooClass
 {
     using FooUsing = FooTemplate<
-              param1,
-              param2
-              >; // FooTemplate
+        param1,
+        param2
+        >; // FooTemplate
     // Foo description
     void foo()
     {

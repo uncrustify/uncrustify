@@ -1901,7 +1901,7 @@ void indent_text(void)
       }
       else if (  pc->type == CT_ASSIGN
               || pc->type == CT_IMPORT
-              || pc->type == CT_USING)
+              || (pc->type == CT_USING && (cpd.lang_flags & LANG_CS)))
       {
          /*
           * if there is a newline after the '=' or the line starts with a '=',
