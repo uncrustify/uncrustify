@@ -239,7 +239,7 @@ static const chunk_tag_t keywords[] =
    { "or",                 CT_SBOOL,            LANG_CPP                                                                    },
    { "or_eq",              CT_SASSIGN,          LANG_CPP                                                                    },
    { "out",                CT_QUALIFIER,        LANG_CS | LANG_D | LANG_VALA                                                },
-   { "override",           CT_QUALIFIER,        LANG_CS | LANG_D | LANG_VALA                                                },
+   { "override",           CT_QUALIFIER,        LANG_CPP | LANG_CS | LANG_D | LANG_VALA                                     },
    { "package",            CT_PRIVATE,          LANG_D                                                                      },
    { "package",            CT_PACKAGE,          LANG_ECMA | LANG_JAVA                                                       },
    { "params",             CT_TYPE,             LANG_CS | LANG_VALA                                                         },
