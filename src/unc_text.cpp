@@ -15,6 +15,23 @@ using namespace std;
 
 static size_t fix_len_idx(size_t size, size_t idx, size_t len);
 
+//! converts \n and \r chars are into NL and CR UTF8 symbols before encode_utf8 is called
+static void toLogTextUtf8(int m_char, vector<UINT8> &container);
+
+
+static void toLogTextUtf8(int m_char, vector<UINT8> &container)
+{
+   if (m_char == '\n')
+   {
+      m_char = 0x2424; // NL symbol
+   }
+   else if (m_char == '\r')
+   {
+      m_char = 0x240d; // CR symbol
+   }
+   encode_utf8(m_char, container);
+}
+
 
 static size_t fix_len_idx(size_t size, size_t idx, size_t len)
 {
@@ -40,15 +57,7 @@ void unc_text::update_logtext()
    m_logtext.reserve(m_chars.size() * 3);
    for (int m_char : m_chars)
    {
-      if (m_char == '\n')
-      {
-         m_char = 0x2424; // NL symbol
-      }
-      else if (m_char == '\r')
-      {
-         m_char = 0x240d; // CR symbol
-      }
-      encode_utf8(m_char, m_logtext);
+      toLogTextUtf8(m_char, m_logtext);
    }
    m_logtext.push_back(0);
    m_logok = true;
