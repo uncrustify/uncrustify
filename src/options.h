@@ -704,7 +704,7 @@ enum uncrustify_options
    UO_align_keep_tabs,             // keep non-indenting tabs
    UO_align_with_tabs,             // use tabs for aligning (0/1)
    UO_align_on_tabstop,            // always align on tabstops
-   UO_align_number_left,           // left-align numbers (not fully supported, yet)
+   UO_align_number_right,          // right-align numbers (not fully supported, yet)
    UO_align_keep_extra_space,      // don't squash extra whitespace
    UO_align_func_params,           // align prototype variable defs on variable
    UO_align_func_params_span,      // align parameter defs in function on parameter name

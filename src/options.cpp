@@ -1384,8 +1384,8 @@ void register_options(void)
                   "Whether to use tabs for aligning.");
    unc_add_option("align_on_tabstop", UO_align_on_tabstop, AT_BOOL,
                   "Whether to bump out to the next tab when aligning.");
-   unc_add_option("align_number_left", UO_align_number_left, AT_BOOL,
-                  "Whether to left-align numbers.");
+   unc_add_option("align_number_right", UO_align_number_right, AT_BOOL,
+                  "Whether to right-align numbers.");
    unc_add_option("align_keep_extra_space", UO_align_keep_extra_space, AT_BOOL,
                   "Whether to keep whitespace not required for alignment.");
    unc_add_option("align_func_params", UO_align_func_params, AT_BOOL,

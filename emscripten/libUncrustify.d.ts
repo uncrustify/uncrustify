@@ -529,7 +529,7 @@ declare namespace LibUncrustify
         UO_align_keep_tabs : EmscriptenEnumTypeObject;
         UO_align_with_tabs : EmscriptenEnumTypeObject;
         UO_align_on_tabstop : EmscriptenEnumTypeObject;
-        UO_align_number_left : EmscriptenEnumTypeObject;
+        UO_align_number_right : EmscriptenEnumTypeObject;
         UO_align_keep_extra_space : EmscriptenEnumTypeObject;
         UO_align_func_params : EmscriptenEnumTypeObject;
         UO_align_same_func_call_params : EmscriptenEnumTypeObject;
