@@ -276,38 +276,34 @@ void unc_text::append(const value_type &data, size_t idx, size_t len)
 
 bool unc_text::startswith(const char *text, size_t idx) const
 {
-   bool match = false;
+   const auto orig_idx = idx;
 
-   while ((idx < size()) && *text)
+   for ( ; idx < size() && *text; idx++, text++)
    {
       if (*text != m_chars[idx])
       {
          return(false);
       }
-      idx++;
-      text++;
-      match = true;
    }
-   return(match && (*text == 0));
+
+   return(idx != orig_idx && (*text == 0));
 }
 
 
 bool unc_text::startswith(const unc_text &text, size_t idx) const
 {
-   bool   match = false;
-   size_t si    = 0;
+   size_t     si       = 0;
+   const auto orig_idx = idx;
 
-   while ((idx < size()) && (si < text.size()))
+   for ( ; idx < size() && si < text.size(); idx++, si++)
    {
       if (text.m_chars[si] != m_chars[idx])
       {
          return(false);
       }
-      idx++;
-      si++;
-      match = true;
    }
-   return(match && (si == text.size()));
+
+   return(idx != orig_idx && (si == text.size()));
 }
 
 
