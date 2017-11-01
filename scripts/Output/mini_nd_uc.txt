@@ -261,6 +261,7 @@ indent_first_bool_expr          = false
 indent_square_nl                = false
 indent_preserve_sql             = false
 indent_align_assign             = true
+indent_align_paren              = true
 indent_oc_block                 = false
 indent_oc_block_msg             = 0
 indent_oc_msg_colon             = 0

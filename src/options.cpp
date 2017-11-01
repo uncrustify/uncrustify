@@ -876,6 +876,9 @@ void register_options(void)
    unc_add_option("indent_align_assign", UO_indent_align_assign, AT_BOOL,
                   "Align continued statements at the '='. Default=True\n"
                   "If False or the '=' is followed by a newline, the next line is indent one tab.");
+   unc_add_option("indent_align_paren", UO_indent_align_paren, AT_BOOL,
+                  "Align continued statements at the '('. Default=True\n"
+                  "If FALSE or the '(' is not followed by a newline, the next line indent is one tab.");
    unc_add_option("indent_oc_block", UO_indent_oc_block, AT_BOOL,
                   "Indent OC blocks at brace level instead of usual rules.");
    unc_add_option("indent_oc_block_msg", UO_indent_oc_block_msg, AT_UNUM,
@@ -2429,6 +2432,7 @@ void set_option_defaults(void)
    cpd.defaults[UO_cmt_multi_first_len_minimum].u                       = 4;
    cpd.defaults[UO_indent_access_spec].n                                = 1;
    cpd.defaults[UO_indent_align_assign].b                               = true;
+   cpd.defaults[UO_indent_align_paren].b                                = true;
    cpd.defaults[UO_indent_columns].u                                    = 8;
    cpd.defaults[UO_indent_cpp_lambda_body].b                            = false;
    cpd.defaults[UO_indent_ctor_init_leading].u                          = 2;

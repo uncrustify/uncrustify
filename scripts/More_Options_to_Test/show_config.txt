@@ -857,6 +857,10 @@ indent_align_assign             { False, True }
   Align continued statements at the '='. Default=True
   If False or the '=' is followed by a newline, the next line is indent one tab.
 
+indent_align_paren              { False, True }
+  Align continued statements at the '('. Default=True
+  If FALSE or the '(' is not followed by a newline, the next line indent is one tab.
+
 indent_oc_block                 { False, True }
   Indent OC blocks at brace level instead of usual rules.
 
