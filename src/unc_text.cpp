@@ -224,14 +224,14 @@ void unc_text::clear()
 
 void unc_text::insert(size_t idx, int ch)
 {
-   m_chars.insert(m_chars.begin() + static_cast<int>(idx), ch);
+   m_chars.insert(m_chars.begin() + idx, ch);
    m_logok = false;
 }
 
 
 void unc_text::insert(size_t idx, const unc_text &ref)
 {
-   m_chars.insert(m_chars.begin() + static_cast<int>(idx), ref.m_chars.begin(), ref.m_chars.end());
+   m_chars.insert(m_chars.begin() + idx, ref.m_chars.begin(), ref.m_chars.end());
    m_logok = false;
 }
 
