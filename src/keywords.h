@@ -47,7 +47,7 @@ void add_keyword(const char *tag, c_token_t type);
  *
  * @param tag        The tag (string)
  */
-void remove_keyword(const string &tag);
+void remove_keyword(const std::string &tag);
 
 
 void print_keywords(FILE *pfile);

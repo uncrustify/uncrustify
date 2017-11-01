@@ -22,6 +22,9 @@
 #include "space.h"
 
 
+using namespace std;
+
+
 /*
  *   Here are the items aligned:
  *

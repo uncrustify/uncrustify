@@ -11,7 +11,6 @@
 
 #include <vector>
 #include <deque>
-using namespace std;
 
 #include "base_types.h"
 #include "options.h"
@@ -24,6 +23,7 @@ using namespace std;
 #ifdef HAVE_UTIME_H
 #include <utime.h>
 #endif
+
 
 /**
  * abbreviations used:
@@ -38,7 +38,7 @@ using namespace std;
 #define UNCRUSTIFY_ON_TEXT     " *INDENT-ON*"
 
 //! returns type (with removed reference) of a variable
-#define noref_decl_t(X)              remove_reference<decltype((X))>::type
+#define noref_decl_t(X)              std::remove_reference<decltype((X))>::type
 
 //! static casts Y to the type (with removed reference) of X
 #define s_cast_noref_decl_t(X, Y)    static_cast<noref_decl_t(X)>(Y)
@@ -388,8 +388,8 @@ struct align_t
 //! holds information and data of a file
 struct file_mem
 {
-   vector<UINT8>   raw;   //! raw content of file
-   deque<int>      data;  //! processed content of file
+   std::vector<UINT8>   raw;   //! raw content of file
+   std::deque<int>      data;  //! processed content of file
    bool            bom;
    char_encoding_e enc;   //! character encoding of file ASCII, utf, etc.
 #ifdef HAVE_UTIME_H
@@ -415,7 +415,7 @@ enum class unc_stage_e : unsigned int
 
 struct cp_data_t
 {
-   deque<UINT8>    *bout;
+   std::deque<UINT8>    *bout;
    FILE            *fout;
    int             last_char;
    bool            do_check;

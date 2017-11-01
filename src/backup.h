@@ -42,7 +42,7 @@
  * @retval EX_OK     successfully created backup file
  * @retval EX_IOERR  could not create backup file
  */
-int backup_copy_file(const char *filename, const vector<UINT8> &data);
+int backup_copy_file(const char *filename, const std::vector<UINT8> &data);
 
 
 /**

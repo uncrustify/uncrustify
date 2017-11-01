@@ -33,6 +33,9 @@
 #include "uncrustify.h"
 
 
+using namespace std;
+
+
 int backup_copy_file(const char *filename, const vector<UINT8> &data)
 {
    char  newpath[1024];

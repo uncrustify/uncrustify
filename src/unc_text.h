@@ -1,8 +1,8 @@
 /**
  * @file unc_text.h
  * A simple class that handles the chunk text.
- * At the start of processing, the entire file is decoded into a vector of ints.
- * This class is intended to hold sections of that large vector.
+ * At the start of processing, the entire file is decoded into a std::vector of ints.
+ * This class is intended to hold sections of that large std::vector.
  *
  * @author  Ben Gardner
  * @license GPL v2+
@@ -14,7 +14,6 @@
 #include <vector>
 #include <deque>
 #include <string>
-using namespace std;
 
 /**
  *  abbreviations used:
@@ -24,7 +23,7 @@ using namespace std;
 class unc_text
 {
 public:
-   typedef deque<int> value_type;   // double encoded list of int values
+   typedef std::deque<int> value_type;   // double encoded list of int values
 
 public:
    unc_text()
@@ -56,7 +55,7 @@ public:
    }
 
 
-   unc_text(const string &ascii_text)
+   unc_text(const std::string &ascii_text)
    {
       set(ascii_text);
    }
@@ -90,7 +89,7 @@ public:
    void set(const unc_text &ref, size_t idx, size_t len = 0);
 
 
-   void set(const string &ascii_text);
+   void set(const std::string &ascii_text);
 
 
    void set(const char *ascii_text);
@@ -113,7 +112,7 @@ public:
    }
 
 
-   unc_text &operator =(const string &ascii_text)
+   unc_text &operator =(const std::string &ascii_text)
    {
       set(ascii_text);
       return(*this);
@@ -144,7 +143,7 @@ public:
 
 
    //! Add a string to an unc_text
-   void append(const string &ascii_text);
+   void append(const std::string &ascii_text);
 
 
    /**
@@ -175,7 +174,7 @@ public:
    }
 
 
-   unc_text &operator +=(const string &ascii_text)
+   unc_text &operator +=(const std::string &ascii_text)
    {
       append(ascii_text);
       return(*this);
@@ -310,7 +309,7 @@ protected:
 
 
    value_type    m_chars;   //! this contains the non-encoded 31-bit chars
-   vector<UINT8> m_logtext; //! logging text, utf8 encoded - updated in c_str()
+   std::vector<UINT8> m_logtext; //! logging text, utf8 encoded - updated in c_str()
    bool          m_logok;
 };
 

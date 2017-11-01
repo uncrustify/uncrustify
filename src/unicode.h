@@ -25,10 +25,10 @@ void write_string(const unc_text &text);
 
 
 //! Figure out the encoding and convert to an int sequence
-bool decode_unicode(const vector<UINT8> &in_data, deque<int> &out_data, char_encoding_e &enc, bool &has_bom);
+bool decode_unicode(const std::vector<UINT8> &in_data, std::deque<int> &out_data, char_encoding_e &enc, bool &has_bom);
 
 
-void encode_utf8(int ch, vector<UINT8> &res);
+void encode_utf8(int ch, std::vector<UINT8> &res);
 
 
 #endif /* UNICODE_H_INCLUDED */
