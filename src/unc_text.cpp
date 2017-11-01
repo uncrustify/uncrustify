@@ -139,33 +139,33 @@ void unc_text::set(const unc_text &ref)
 
 void unc_text::set(const unc_text &ref, size_t idx, size_t len)
 {
-   size_t ref_size = ref.size();
-
-   len = fix_len_idx(ref_size, idx, len);
    m_logok = false;
+
+   const auto ref_size = ref.size();
+
    if (len == ref_size)
    {
       m_chars = ref.m_chars;
+      return;
    }
-   else
+
+   m_chars.resize(len);
+
+   len = fix_len_idx(ref_size, idx, len);
+   for (size_t di = 0;
+        len > 0;
+        di++, idx++, len--)
    {
-      m_chars.resize(len);
-      size_t di = 0;
-      while (len-- > 0)
-      {
-         m_chars[di] = ref.m_chars[idx];
-         di++;
-         idx++;
-      }
+      m_chars[di] = ref.m_chars[idx];
    }
 }
 
 
 void unc_text::set(const string &ascii_text)
 {
-   size_t len = ascii_text.size();
+   const size_t len = ascii_text.size();
 
-   m_chars.resize((size_t)len);
+   m_chars.resize(len);
    for (size_t idx = 0; idx < len; idx++)
    {
       m_chars[idx] = ascii_text[idx];
@@ -176,9 +176,9 @@ void unc_text::set(const string &ascii_text)
 
 void unc_text::set(const char *ascii_text)
 {
-   size_t len = strlen(ascii_text);
+   const size_t len = strlen(ascii_text);
 
-   m_chars.resize((size_t)len);
+   m_chars.resize(len);
    for (size_t idx = 0; idx < len; idx++)
    {
       m_chars[idx] = *ascii_text++;
@@ -189,17 +189,16 @@ void unc_text::set(const char *ascii_text)
 
 void unc_text::set(const value_type &data, size_t idx, size_t len)
 {
-   size_t data_size = data.size();
-
-   len = fix_len_idx(data_size, idx, len);
    m_chars.resize(len);
-   size_t di = 0;
-   while (len-- > 0)
+
+   len = fix_len_idx(data.size(), idx, len);
+   for (size_t di = 0;
+        len > 0;
+        di++, idx++, len--)
    {
       m_chars[di] = data[idx];
-      di++;
-      idx++;
    }
+
    m_logok = false;
 }
 
