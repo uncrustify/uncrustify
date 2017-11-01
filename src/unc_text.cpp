@@ -205,11 +205,13 @@ void unc_text::set(const value_type &data, size_t idx, size_t len)
 
 void unc_text::resize(size_t new_size)
 {
-   if (size() != new_size)
+   if (size() == new_size)
    {
-      m_chars.resize(new_size);
-      m_logok = false;
+      return;
    }
+
+   m_chars.resize(new_size);
+   m_logok = false;
 }
 
 
