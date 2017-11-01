@@ -1774,6 +1774,7 @@ void indent_text(void)
                   && frm.pse[idx].type != CT_ANGLE_OPEN
                   && frm.pse[idx].type != CT_CLASS_COLON
                   && frm.pse[idx].type != CT_CONSTR_COLON
+                  && frm.pse[idx].type != CT_CASE
                   && frm.pse[idx].type != CT_ASSIGN_NL)
             {
                idx--;
@@ -1930,21 +1931,6 @@ void indent_text(void)
               || pc->type == CT_IMPORT
               || pc->type == CT_USING)
       {
-         /*
-          * if there is a newline after the '=' or the line starts with a '=',
-          * just indent one level,
-          * otherwise align on the '='.
-          */
-         if (pc->type == CT_ASSIGN && chunk_is_newline(chunk_get_prev(pc)))
-         {
-            frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent + indent_size;
-            log_indent_tmp();
-            indent_column_set(frm.pse[frm.pse_tos].indent_tmp);
-            LOG_FMT(LINDENT, "%s(%d): %zu] assign => %zu [%s]\n",
-                    __func__, __LINE__, pc->orig_line, indent_column, pc->text());
-            reindent_line(pc, frm.pse[frm.pse_tos].indent_tmp);
-         }
-
          next = chunk_get_next(pc);
          if (next != nullptr)
          {
@@ -1954,11 +1940,29 @@ void indent_text(void)
              * assignments should be same and one more than this line's indent.
              * so poping the previous assign and pushing the new one
              */
-            if ((frm.pse[frm.pse_tos].type == CT_ASSIGN || frm.pse[frm.pse_tos].type == CT_ASSIGN_NL) && pc->type == CT_ASSIGN)
+            if (frm.pse[frm.pse_tos].type == CT_ASSIGN && pc->type == CT_ASSIGN)
             {
                indent_pse_pop(frm, pc);
             }
             indent_pse_push(frm, pc);
+
+            /*
+             * if there is a newline after the '=' or the line starts with a '=',
+             * just indent one level,
+             * otherwise align on the '='.
+             */
+
+            if (pc->type == CT_ASSIGN && chunk_is_newline(chunk_get_prev(pc)))
+            {
+               frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos - 1].indent + indent_size;
+               log_indent_tmp();
+               indent_column_set(frm.pse[frm.pse_tos].indent_tmp);
+               LOG_FMT(LINDENT, "%s(%d): %zu] assign => %zu [%s]\n",
+                       __func__, __LINE__, pc->orig_line, indent_column, pc->text());
+               reindent_line(pc, frm.pse[frm.pse_tos].indent_tmp);
+               frm.pse[frm.pse_tos].type = CT_ASSIGN_NL;
+            }
+
             if (cpd.settings[UO_indent_continue].n != 0)
             {
                frm.pse[frm.pse_tos].indent = frm.pse[frm.pse_tos - 1].indent;

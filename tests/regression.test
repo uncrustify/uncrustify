@@ -73,3 +73,5 @@
 60030 staging/Uncrustify.Cpp.cfg staging/UNI-21727.cpp
 60031 staging/Uncrustify.Cpp.cfg staging/UNI-21728.cpp
 60034 staging/Uncrustify.Cpp.cfg staging/UNI-21731.cpp
+60037 staging/UNI-29933.cfg staging/UNI-29933.cs
+60038 staging/UNI-30088.cfg staging/UNI-30088.cpp
