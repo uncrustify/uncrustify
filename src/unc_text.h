@@ -23,9 +23,10 @@
 class unc_text
 {
 public:
-   typedef std::deque<int> value_type;   // double encoded list of int values
+   typedef std::deque<int>      value_type; // double encoded list of int values
+   typedef std::vector<UINT8>   log_type;
 
-public:
+
    unc_text();
 
    unc_text(const unc_text &ref);
@@ -113,7 +114,7 @@ public:
 
 
    //! Returns the UTF-8 string for logging
-   const char *c_str();
+   const char *c_str() const;
 
 
    /**
@@ -134,8 +135,6 @@ public:
 
 
    //! grab the data as a series of ints for outputting to a file
-   value_type &      get();
-
    const value_type &get() const;
 
 
@@ -143,15 +142,11 @@ public:
 
 
    // throws an exception if out of bounds
-   int &at(size_t idx);
-
    const int &at(size_t idx) const;
 
 
-   const int &back() const;
-
    //! returns the last element of the character list
-   int &back();
+   const int &back() const;
 
 
    void push_back(int ch);
@@ -189,10 +184,8 @@ public:
 protected:
    void update_logtext();
 
-
-   value_type         m_chars;   //! this contains the non-encoded 31-bit chars
-   std::vector<UINT8> m_logtext; //! logging text, utf8 encoded - updated in c_str()
-   bool               m_logok;
+   value_type m_chars;           //! this contains the non-encoded 31-bit chars
+   log_type   m_logtext;         //! logging text, utf8 encoded - updated in c_str()
 };
 
 
