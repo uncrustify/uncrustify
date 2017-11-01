@@ -385,10 +385,11 @@ void unc_text::erase(size_t idx, size_t len)
 
 int unc_text::replace(const char *oldtext, const unc_text &newtext)
 {
-   int    fidx         = find(oldtext);
-   size_t olen         = strlen(oldtext);
-   size_t rcnt         = 0;
-   size_t newtext_size = newtext.size();
+   const size_t olen         = strlen(oldtext);
+   const size_t newtext_size = newtext.size();
+
+   int          fidx = find(oldtext);
+   int          rcnt = 0;
 
    while (fidx >= 0)
    {
