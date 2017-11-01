@@ -2805,7 +2805,7 @@ void newlines_cleanup_braces(bool first)
             break;
          }
 
-         case CT_TYPE:
+         case CT_BRACED_INIT_LIST:
          {
             newline_iarf_pair(chunk_get_prev_nnl(pc), pc, cpd.settings[UO_nl_type_brace_init_lst].a);
             break;
@@ -2851,8 +2851,7 @@ void newlines_cleanup_braces(bool first)
             next = chunk_get_next_ncnl(pc);
 
             // Handle unnamed temporary direct-list-initialization
-            if (  pc->parent_type == CT_TYPE
-               && cpd.settings[UO_nl_type_brace_init_lst_open].a != AV_IGNORE)
+            if (pc->parent_type == CT_BRACED_INIT_LIST)
             {
                newline_iarf_pair(pc, chunk_get_next_nnl(pc),
                                  cpd.settings[UO_nl_type_brace_init_lst_open].a);
@@ -2932,7 +2931,7 @@ void newlines_cleanup_braces(bool first)
          }
 
          // newline before a close brace
-         if (  pc->parent_type == CT_TYPE
+         if (  pc->parent_type == CT_BRACED_INIT_LIST
             && cpd.settings[UO_nl_type_brace_init_lst_close].a != AV_IGNORE)
          {
             // Handle unnamed temporary direct-list-initialization

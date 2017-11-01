@@ -161,7 +161,8 @@
 30301 al.cfg                           cpp/enum_class.h
 30302 bug_1315.cfg                     cpp/bug_1315.cpp
 
-# TODO find a better example for 30310, 30311
+# TODO: Make a tests for a braced_init_list. See also 34153-34166.
+#30310 sp_word_brace_force.cfg          cpp/braced_init_list.cpp
 #30310 sp_word_brace_force.cfg          cpp/uniform_initialization.cpp
 #30311 sp_word_brace_remove.cfg         cpp/uniform_initialization.cpp
 
