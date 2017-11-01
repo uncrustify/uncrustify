@@ -374,10 +374,12 @@ int unc_text::rfind(const char *text, size_t sidx) const
 
 void unc_text::erase(size_t idx, size_t len)
 {
-   if (len >= 1)
+   if (len == 0)
    {
-      m_chars.erase(m_chars.begin() + static_cast<int>(idx), m_chars.begin() + static_cast<int>(idx) + static_cast<int>(len));
+      return;
    }
+
+   m_chars.erase(m_chars.begin() + idx, m_chars.begin() + idx + len);
 }
 
 
