@@ -13,6 +13,7 @@ utf8_bom                        = ignore
 utf8_byte                       = false
 utf8_force                      = false
 sp_arith                        = ignore
+sp_arith_additive               = ignore
 sp_assign                       = ignore
 sp_cpp_lambda_assign            = ignore
 sp_cpp_lambda_paren             = ignore
