@@ -1055,8 +1055,8 @@ std::string op_val_to_string(argtype_e argtype, op_val_t op_val);
 
 typedef std::map<uncrustify_options, option_map_value>::iterator   option_name_map_it;
 typedef std::map<uncrustify_groups, group_map_value>::iterator     group_map_it;
-typedef group_map_value_options_t::iterator                   option_list_it;
-typedef group_map_value_options_t::const_iterator             option_list_cit;
+typedef group_map_value_options_t::iterator                        option_list_it;
+typedef group_map_value_options_t::const_iterator                  option_list_cit;
 
 
 #endif /* OPTIONS_H_INCLUDED */

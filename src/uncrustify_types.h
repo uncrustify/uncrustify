@@ -388,12 +388,12 @@ struct align_t
 //! holds information and data of a file
 struct file_mem
 {
-   std::vector<UINT8>   raw;   //! raw content of file
-   std::deque<int>      data;  //! processed content of file
-   bool            bom;
-   char_encoding_e enc;   //! character encoding of file ASCII, utf, etc.
+   std::vector<UINT8> raw;  //! raw content of file
+   std::deque<int>    data; //! processed content of file
+   bool               bom;
+   char_encoding_e    enc;  //! character encoding of file ASCII, utf, etc.
 #ifdef HAVE_UTIME_H
-   struct utimbuf  utb;
+   struct utimbuf     utb;
 #endif
 };
 
@@ -415,72 +415,72 @@ enum class unc_stage_e : unsigned int
 
 struct cp_data_t
 {
-   std::deque<UINT8>    *bout;
-   FILE            *fout;
-   int             last_char;
-   bool            do_check;
-   unc_stage_e     unc_stage;
-   int             check_fail_cnt;  //! total failure count
-   bool            if_changed;
+   std::deque<UINT8> *bout;
+   FILE              *fout;
+   int               last_char;
+   bool              do_check;
+   unc_stage_e       unc_stage;
+   int               check_fail_cnt; //! total failure count
+   bool              if_changed;
 
-   UINT32          error_count;     //! counts how many errors occurred so far
-   const char      *filename;
+   UINT32            error_count;   //! counts how many errors occurred so far
+   const char        *filename;
 
-   file_mem        file_hdr;        // for cmt_insert_file_header
-   file_mem        file_ftr;        // for cmt_insert_file_footer
-   file_mem        func_hdr;        // for cmt_insert_func_header
-   file_mem        oc_msg_hdr;      // for cmt_insert_oc_msg_header
-   file_mem        class_hdr;       // for cmt_insert_class_header
+   file_mem          file_hdr;      // for cmt_insert_file_header
+   file_mem          file_ftr;      // for cmt_insert_file_footer
+   file_mem          func_hdr;      // for cmt_insert_func_header
+   file_mem          oc_msg_hdr;    // for cmt_insert_oc_msg_header
+   file_mem          class_hdr;     // for cmt_insert_class_header
 
-   size_t          lang_flags;      //! defines the language of the source input
-   bool            lang_forced;     //! overwrites automatic language detection
+   size_t            lang_flags;    //! defines the language of the source input
+   bool              lang_forced;   //! overwrites automatic language detection
 
-   bool            unc_off;
-   bool            unc_off_used;    //! to check if "unc_off" is used
-   UINT32          line_number;
-   size_t          column;          //! column for parsing
-   UINT16          spaces;          //! space count on output
+   bool              unc_off;
+   bool              unc_off_used;  //! to check if "unc_off" is used
+   UINT32            line_number;
+   size_t            column;        //! column for parsing
+   UINT16            spaces;        //! space count on output
 
-   int             ifdef_over_whole_file;
+   int               ifdef_over_whole_file;
 
-   bool            frag;            //! activates code fragment option
-   uint32_t        frag_cols;
+   bool              frag;          //! activates code fragment option
+   uint32_t          frag_cols;
 
    // stuff to auto-detect line endings
-   UINT32          le_counts[LE_AUTO];
-   unc_text        newline;
+   UINT32            le_counts[LE_AUTO];
+   unc_text          newline;
 
-   bool            consumed;
+   bool              consumed;
 
-   int             did_newline;     //! flag indicates if a newline was added or converted
-   c_token_t       in_preproc;
-   int             preproc_ncnl_count;
-   bool            output_trailspace;
-   bool            output_tab_as_space;
+   int               did_newline;   //! flag indicates if a newline was added or converted
+   c_token_t         in_preproc;
+   int               preproc_ncnl_count;
+   bool              output_trailspace;
+   bool              output_tab_as_space;
 
-   bool            bom;
-   char_encoding_e enc;
+   bool              bom;
+   char_encoding_e   enc;
 
    // bumped up when a line is split or indented
-   int             changes;
-   int             pass_count;  //! indicates how often the chunk list shall be processed
+   int               changes;
+   int               pass_count; //! indicates how often the chunk list shall be processed
 
-   align_t         al[80];
-   size_t          al_cnt;
-   bool            al_c99_array;
+   align_t           al[80];
+   size_t            al_cnt;
+   bool              al_c99_array;
 
-   bool            warned_unable_string_replace_tab_chars;
+   bool              warned_unable_string_replace_tab_chars;
 
-   op_val_t        settings[UO_option_count];  //! array with all uncrustify option settings
+   op_val_t          settings[UO_option_count]; //! array with all uncrustify option settings
 
-   parse_frame_t   frames[16];
-   int             frame_count;
-   int             pp_level; // TODO: can this ever be -1?
+   parse_frame_t     frames[16];
+   int               frame_count;
+   int               pp_level; // TODO: can this ever be -1?
 
    // the default values for settings
-   op_val_t        defaults[UO_option_count];
-   const char      *phase_name;
-   const char      *dumped_file;
+   op_val_t          defaults[UO_option_count];
+   const char        *phase_name;
+   const char        *dumped_file;
 };
 
 extern cp_data_t cpd;  // TODO: can we avoid this external variable?

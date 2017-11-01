@@ -308,9 +308,9 @@ protected:
    void update_logtext();
 
 
-   value_type    m_chars;   //! this contains the non-encoded 31-bit chars
+   value_type         m_chars;   //! this contains the non-encoded 31-bit chars
    std::vector<UINT8> m_logtext; //! logging text, utf8 encoded - updated in c_str()
-   bool          m_logok;
+   bool               m_logok;
 };
 
 

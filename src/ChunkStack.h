@@ -43,7 +43,7 @@ public:
 
 protected:
    std::deque<Entry> m_cse;
-   size_t       m_seqnum; //! current sequence number
+   size_t            m_seqnum; //! current sequence number
 
 public:
    ChunkStack()
