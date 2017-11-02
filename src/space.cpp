@@ -29,6 +29,8 @@
 #include "unc_ctype.h"
 #include "uncrustify.h"
 
+#include <algorithm>
+
 
 using namespace std;
 

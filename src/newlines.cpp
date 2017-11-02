@@ -33,6 +33,8 @@
 #include "keywords.h"
 #include "options.h"
 
+#include <algorithm>
+
 
 using namespace std;
 
