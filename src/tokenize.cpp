@@ -20,6 +20,9 @@
 #include "keywords.h"
 
 
+using namespace std;
+
+
 struct tok_info
 {
    tok_info()

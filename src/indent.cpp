@@ -24,6 +24,9 @@
 #include "helper_for_print.h"
 
 
+using namespace std;
+
+
 /**
  * General indenting approach:
  * Indenting levels are put into a stack.

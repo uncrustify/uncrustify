@@ -898,9 +898,9 @@ enum uncrustify_options
 
 
 #ifdef EMSCRIPTEN
-#define group_map_value_options_t    vector<uncrustify_options>
+#define group_map_value_options_t    std::vector<uncrustify_options>
 #else
-#define group_map_value_options_t    list<uncrustify_options>
+#define group_map_value_options_t    std::list<uncrustify_options>
 #endif
 
 struct group_map_value
@@ -1007,42 +1007,42 @@ void print_options(FILE *pfile);
  *
  * @param val  argument type to convert
  */
-string argtype_to_string(argtype_e argtype);
+std::string argtype_to_string(argtype_e argtype);
 
 /**
  * convert a boolean to a string
  *
  * @param val  boolean to convert
  */
-string bool_to_string(bool val);
+std::string bool_to_string(bool val);
 
 /**
  * convert an argument value to a string
  *
  * @param val  argument value to convert
  */
-string argval_to_string(argval_t argval);
+std::string argval_to_string(argval_t argval);
 
 /**
  * convert an integer number to a string
  *
  * @param val  integer number to convert
  */
-string number_to_string(int number);
+std::string number_to_string(int number);
 
 /**
  * convert a line ending type to a string
  *
  * @param val  line ending type to convert
  */
-string lineends_to_string(lineends_e linends);
+std::string lineends_to_string(lineends_e linends);
 
 /**
  * convert a token to a string
  *
  * @param val  token to convert
  */
-string tokenpos_to_string(tokenpos_e tokenpos);
+std::string tokenpos_to_string(tokenpos_e tokenpos);
 
 /**
  * convert an argument of a given type to a string
@@ -1050,13 +1050,13 @@ string tokenpos_to_string(tokenpos_e tokenpos);
  * @param argtype   type of argument
  * @param op_val_t  value of argument
  */
-string op_val_to_string(argtype_e argtype, op_val_t op_val);
+std::string op_val_to_string(argtype_e argtype, op_val_t op_val);
 
 
-typedef map<uncrustify_options, option_map_value>::iterator   option_name_map_it;
-typedef map<uncrustify_groups, group_map_value>::iterator     group_map_it;
-typedef group_map_value_options_t::iterator                   option_list_it;
-typedef group_map_value_options_t::const_iterator             option_list_cit;
+typedef std::map<uncrustify_options, option_map_value>::iterator   option_name_map_it;
+typedef std::map<uncrustify_groups, group_map_value>::iterator     group_map_it;
+typedef group_map_value_options_t::iterator                        option_list_it;
+typedef group_map_value_options_t::const_iterator                  option_list_cit;
 
 
 #endif /* OPTIONS_H_INCLUDED */

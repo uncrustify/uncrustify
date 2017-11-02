@@ -66,6 +66,9 @@
 #endif
 
 
+using namespace std;
+
+
 // Global data
 cp_data_t cpd;
 

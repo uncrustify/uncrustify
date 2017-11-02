@@ -24,6 +24,10 @@
 #include <cerrno>
 #include "unc_ctype.h"
 
+
+using namespace std;
+
+
 static const char *DOC_TEXT_END = R"___(
 # Meaning of the settings:
 #   Ignore - do not do any changes

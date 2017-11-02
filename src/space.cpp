@@ -30,6 +30,9 @@
 #include "uncrustify.h"
 
 
+using namespace std;
+
+
 static void log_rule2(size_t line, const char *rule, chunk_t *first, chunk_t *second, bool complete);
 
 

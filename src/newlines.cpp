@@ -34,6 +34,9 @@
 #include "options.h"
 
 
+using namespace std;
+
+
 static void mark_change(const char *func, size_t line);
 
 

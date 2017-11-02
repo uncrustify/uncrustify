@@ -10,6 +10,9 @@
 #include "unicode.h" // encode_utf8()
 
 
+using namespace std;
+
+
 static void fix_len_idx(size_t size, size_t &idx, size_t &len);
 
 
