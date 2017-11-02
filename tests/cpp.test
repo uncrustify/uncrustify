@@ -186,6 +186,8 @@
 30741 al.cfg                           cpp/al.cpp
 30742 delete.cfg                       cpp/delete.cpp
 
+# TODO: Reduce the number of options, leave only those that affect lambda.
+# TODO: Add tests for nested lambdas.
 30750 ben.cfg                          cpp/lambda.cpp
 30751 lambda1.cfg                      cpp/lambda.cpp
 30752 lambda2.cfg                      cpp/lambda.cpp
