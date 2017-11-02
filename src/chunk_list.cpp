@@ -714,13 +714,13 @@ chunk_t *chunk_get_prev_nvb(chunk_t *cur, const scope_e scope)
 
 void set_chunk_type_real(chunk_t *pc, c_token_t tt)
 {
-   set_chunk_real(pc, tt, LSETTYP, "set_chunk_type");
+   set_chunk_real(pc, tt, LSETTYP);
 }
 
 
 void set_chunk_parent_real(chunk_t *pc, c_token_t pt)
 {
-   set_chunk_real(pc, pt, LSETPAR, "set_chunk_parent");
+   set_chunk_real(pc, pt, LSETPAR);
 }
 
 
@@ -732,8 +732,8 @@ void chunk_flags_set_real(chunk_t *pc, UINT64 clr_bits, UINT64 set_bits)
       UINT64 nflags = (pc->flags & ~clr_bits) | set_bits;
       if (pc->flags != nflags)
       {
-         LOG_FMT(LSETFLG, "set_chunk_flags(%d): %016" PRIx64 "^%016" PRIx64 "=%016" PRIx64 " %zu:%zu '%s' %s:%s",
-                 __LINE__, pc->flags, pc->flags ^ nflags, nflags,
+         LOG_FMT(LSETFLG, "%s(%d): %016" PRIx64 "^%016" PRIx64 "=%016" PRIx64 " orig_line is %zu, orig_col is %zu, text() '%s', type is %s, parent_type is %s",
+                 __func__, __LINE__, pc->flags, pc->flags ^ nflags, nflags,
                  pc->orig_line, pc->orig_col, pc->text(),
                  get_token_name(pc->type), get_token_name(pc->parent_type));
          log_func_stack_inline(LSETFLG);
@@ -743,7 +743,7 @@ void chunk_flags_set_real(chunk_t *pc, UINT64 clr_bits, UINT64 set_bits)
 }
 
 
-void set_chunk_real(chunk_t *pc, c_token_t token, log_sev_t what, const char *str)
+void set_chunk_real(chunk_t *pc, c_token_t token, log_sev_t what)
 {
    LOG_FUNC_ENTRY();
 
@@ -772,7 +772,7 @@ void set_chunk_real(chunk_t *pc, c_token_t token, log_sev_t what, const char *st
    if (pc != nullptr && *where != token)
    {
       LOG_FMT(what, "%s(%d): orig_line is %zu, orig_col is %zu, pc->text() '%s'\n",
-              str, __LINE__, pc->orig_line, pc->orig_col, pc->text());
+              __func__, __LINE__, pc->orig_line, pc->orig_col, pc->text());
       LOG_FMT(what, "   pc->type is %s, pc->parent_type is %s => *type is %s, *parent_type is %s",
               get_token_name(pc->type), get_token_name(pc->parent_type),
               get_token_name(*type), get_token_name(*parent_type));
