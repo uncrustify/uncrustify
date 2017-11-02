@@ -47,7 +47,7 @@ typedef bool (*check_t)(chunk_t *pc);
  * for a function pointer of type
  * chunk_t *function(chunk_t *cur, nav_t scope)
  */
-typedef chunk_t * (*search_t)(chunk_t *cur, scope_e scope);
+typedef chunk_t * (*search_t)(const chunk_t *cur, scope_e scope);
 
 
 /**
@@ -77,7 +77,7 @@ typedef chunk_t * (*search_t)(chunk_t *cur, scope_e scope);
 static chunk_t *chunk_search(chunk_t *cur, const check_t check_fct, const scope_e scope = scope_e::ALL, const direction_e dir = direction_e::FORWARD, const bool cond = true);
 
 
-static void chunk_log(chunk_t *pc, const char *text);
+static void chunk_log(const chunk_t *pc, const char *text);
 
 
 /*
@@ -314,7 +314,7 @@ static chunk_t *chunk_search(chunk_t *cur, const check_t check_fct, const scope_
  * into a common function However this should be done with the preprocessor
  * to avoid addition check conditions that would be evaluated in the
  * while loop of the calling function */
-chunk_t *chunk_get_next(chunk_t *cur, scope_e scope)
+chunk_t *chunk_get_next(const chunk_t *cur, scope_e scope)
 {
    if (cur == nullptr)
    {
@@ -343,7 +343,7 @@ chunk_t *chunk_get_next(chunk_t *cur, scope_e scope)
 }
 
 
-chunk_t *chunk_get_prev(chunk_t *cur, scope_e scope)
+chunk_t *chunk_get_prev(const chunk_t *cur, scope_e scope)
 {
    if (cur == nullptr)
    {
@@ -391,7 +391,7 @@ chunk_t *chunk_dup(const chunk_t *pc_in)
 }
 
 
-static void chunk_log_msg(chunk_t *chunk, const log_sev_t log, const char *str)
+static void chunk_log_msg(const chunk_t *chunk, const log_sev_t log, const char *str)
 {
    LOG_FMT(log, "%s %zu:%zu '%s' [%s]",
            str, chunk->orig_line, chunk->orig_col, chunk->text(),
@@ -399,7 +399,7 @@ static void chunk_log_msg(chunk_t *chunk, const log_sev_t log, const char *str)
 }
 
 
-static void chunk_log(chunk_t *pc, const char *text)
+static void chunk_log(const chunk_t *pc, const char *text)
 {
    if (  pc != nullptr
       && (cpd.unc_stage != unc_stage_e::TOKENIZE)
@@ -604,24 +604,17 @@ chunk_t *chunk_first_on_line(chunk_t *pc)
 }
 
 
-bool chunk_is_last_on_line(chunk_t &pc)  //TODO: pc should be const here
+bool chunk_is_last_on_line(const chunk_t &pc)
 {
    // check if pc is the very last chunk of the file
-   const auto *end = chunk_get_tail();
-
-   if (&pc == end)
+   if (&pc == chunk_get_tail())
    {
       return(true);
    }
 
    // if the next chunk is a newline then pc is the last chunk on its line
    const auto *next = chunk_get_next(&pc);
-   if (next != nullptr && next->type == CT_NEWLINE)
-   {
-      return(true);
-   }
-
-   return(false);
+   return((next != nullptr && next->type == CT_NEWLINE) ? true : false);
 }
 
 
