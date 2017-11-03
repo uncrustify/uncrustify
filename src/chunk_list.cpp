@@ -583,9 +583,14 @@ chunk_t *chunk_get_prev_str(const chunk_t *cur, const char *str, size_t len, int
 }
 
 
-bool chunk_is_newline_between(chunk_t *start, chunk_t *end)
+bool chunk_is_newline_between(const chunk_t *start, const chunk_t *end)
 {
-   for (chunk_t *pc = start; pc != end; pc = chunk_get_next(pc))
+   if (chunk_is_newline(start))
+   {
+      return(true);
+   }
+
+   for (chunk_t *pc = chunk_get_next(start); pc != end; pc = chunk_get_next(pc))
    {
       if (chunk_is_newline(pc))
       {

@@ -693,7 +693,7 @@ static_inline bool chunk_is_ptr_operator(const chunk_t *pc)
 
 
 //! Check to see if there is a newline between the two chunks
-bool chunk_is_newline_between(chunk_t *start, chunk_t *end);
+bool chunk_is_newline_between(const chunk_t *start, const chunk_t *end);
 
 
 static_inline bool chunk_is_closing_brace(const chunk_t *pc)
