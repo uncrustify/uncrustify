@@ -211,7 +211,7 @@ chunk_t *chunk_get_next_ncnl(const chunk_t *cur, scope_e scope = scope_e::ALL);
  * @param cur    chunk to use as start point
  * @param scope  code region to search in
  */
-chunk_t *chunk_get_next_ncnlnp(chunk_t *cur, scope_e scope = scope_e::ALL);
+chunk_t *chunk_get_next_ncnlnp(const chunk_t *cur, scope_e scope = scope_e::ALL);
 
 
 /**
@@ -287,7 +287,7 @@ chunk_t *chunk_get_prev_ncnl(const chunk_t *cur, scope_e scope = scope_e::ALL);
  * @param cur    chunk to use as start point
  * @param scope  code region to search in
  */
-chunk_t *chunk_get_prev_ncnlnp(chunk_t *cur, scope_e scope = scope_e::ALL);
+chunk_t *chunk_get_prev_ncnlnp(const chunk_t *cur, scope_e scope = scope_e::ALL);
 
 
 /**

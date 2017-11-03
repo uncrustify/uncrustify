@@ -137,7 +137,7 @@ static chunk_t *chunk_search_typelevel(chunk_t *cur, c_token_t type, scope_e sco
  * @retval nullptr  no chunk found or invalid parameters provided
  * @retval chunk_t  pointer to the found chunk
  */
-static chunk_t *chunk_get_ncnlnp(chunk_t *cur, const scope_e scope = scope_e::ALL, const direction_e dir = direction_e::FORWARD);
+static chunk_t *chunk_get_ncnlnp(const chunk_t *cur, const scope_e scope = scope_e::ALL, const direction_e dir = direction_e::FORWARD);
 
 
 static chunk_t *chunk_get_ncnlnpnd(chunk_t *cur, const scope_e scope = scope_e::ALL, const direction_e dir = direction_e::FORWARD);
@@ -499,13 +499,13 @@ chunk_t *chunk_get_next_ncnl(const chunk_t *cur, scope_e scope)
 }
 
 
-chunk_t *chunk_get_next_ncnlnp(chunk_t *cur, scope_e scope)
+chunk_t *chunk_get_next_ncnlnp(const chunk_t *cur, scope_e scope)
 {
    return(chunk_get_ncnlnp(cur, scope, direction_e::FORWARD));
 }
 
 
-chunk_t *chunk_get_prev_ncnlnp(chunk_t *cur, scope_e scope)
+chunk_t *chunk_get_prev_ncnlnp(const chunk_t *cur, scope_e scope)
 {
    return(chunk_get_ncnlnp(cur, scope, direction_e::BACKWARD));
 }
@@ -781,14 +781,11 @@ void set_chunk_real(chunk_t *pc, c_token_t token, log_sev_t what)
 }
 
 
-static chunk_t *chunk_get_ncnlnp(chunk_t *cur, const scope_e scope, const direction_e dir)
+static chunk_t *chunk_get_ncnlnp(const chunk_t *cur, const scope_e scope, const direction_e dir)
 {
-   chunk_t *pc = cur;
-
-   pc = (chunk_is_preproc(pc) == true) ?
-        chunk_search(pc, chunk_is_comment_or_newline_in_preproc, scope, dir, false) :
-        chunk_search(pc, chunk_is_comment_newline_or_preproc, scope, dir, false);
-   return(pc);
+   return(chunk_is_preproc(cur) == true
+          ? chunk_search(cur, chunk_is_comment_or_newline_in_preproc, scope, dir, false)
+          : chunk_search(cur, chunk_is_comment_newline_or_preproc, scope, dir, false));
 }
 
 
