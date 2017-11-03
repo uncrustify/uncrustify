@@ -296,7 +296,7 @@ chunk_t *chunk_get_prev_ncnlnp(const chunk_t *cur, scope_e scope = scope_e::ALL)
  * @param cur    chunk to use as start point
  * @param scope  code region to search in
  */
-chunk_t *chunk_get_prev_ncnlnpnd(chunk_t *cur, scope_e scope = scope_e::ALL);
+chunk_t *chunk_get_prev_ncnlnpnd(const chunk_t *cur, scope_e scope = scope_e::ALL);
 
 
 /**
