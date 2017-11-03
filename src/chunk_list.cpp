@@ -608,16 +608,23 @@ void chunk_swap(chunk_t *pc1, chunk_t *pc2)
 
 
 // TODO: the following function shall be made similar to the search functions
-chunk_t *chunk_first_on_line(chunk_t *pc)
+chunk_t *chunk_first_on_line(const chunk_t *start)
 {
-   chunk_t *first = pc;
+   chunk_t *prev = chunk_get_prev(start);
 
-   while ((pc = chunk_get_prev(pc)) != nullptr && !chunk_is_newline(pc))
+   if (prev == nullptr || chunk_is_newline(prev))
    {
-      first = pc;
+      return(const_cast<chunk_t *>(start));  // can be nullptr
    }
 
-   return(first);
+   chunk_t *out = prev;
+   while (prev != nullptr && !chunk_is_newline(prev))
+   {
+      out  = prev;
+      prev = chunk_get_prev(out);
+   }
+
+   return(out);
 }
 
 
