@@ -168,6 +168,11 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
       return(AV_REMOVE);
    }
 
+   if (first->type == CT_DECLSPEC)
+   {
+      log_rule("IGNORE");
+      return(AV_IGNORE);
+   }
    if (second->type == CT_NEWLINE || second->type == CT_VBRACE_OPEN)
    {
       log_rule("REMOVE");

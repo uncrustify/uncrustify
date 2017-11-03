@@ -544,6 +544,10 @@ static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
                set_chunk_type(pc, CT_FPAREN_OPEN);
                parent = CT_ENUM;
             }
+            else if (prev->type == CT_DECLSPEC)
+            {
+               parent = CT_DECLSPEC;
+            }
             else
             {
                // no need to set parent

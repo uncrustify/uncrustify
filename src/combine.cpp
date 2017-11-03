@@ -4209,6 +4209,7 @@ static void mark_function(chunk_t *pc)
        * a = FOO * bar();                  -- fcn call
        * a.y = foo() * bar();              -- fcn call
        * static const char * const fizz(); -- fcn def
+       * static foo();                     -- fcn proto
        */
       while (prev != nullptr)
       {
@@ -4235,6 +4236,16 @@ static void mark_function(chunk_t *pc)
             LOG_FMT(LFCN, " --> For sure a prototype or definition\n");
             isa_def = true;
             break;
+         }
+
+         if (prev->parent_type == CT_DECLSPEC)
+         {
+            prev = chunk_skip_to_match_rev(prev);
+            prev = chunk_get_prev(prev);
+            if (prev->type == CT_DECLSPEC)
+            {
+               prev = chunk_get_prev(prev);
+            }
          }
 
          // Skip the word/type before the '.' or '::'
@@ -4271,7 +4282,7 @@ static void mark_function(chunk_t *pc)
          }
 
          // If we are on a TYPE or WORD, then we must be on a proto or def
-         if (prev->type == CT_TYPE || prev->type == CT_WORD)
+         if (prev->type == CT_TYPE || prev->type == CT_WORD || prev->type == CT_QUALIFIER)
          {
             if (!hit_star)
             {
