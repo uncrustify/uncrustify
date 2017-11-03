@@ -384,6 +384,12 @@ void reindent_line(chunk_t *pc, size_t column)
 static void indent_pse_push(parse_frame_t &frm, chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
+   if (pc == nullptr)
+   {
+      throw std::invalid_argument(
+               string(__func__) + ":" + std::to_string(__LINE__)
+               + " - pc cannot be nullptr");
+   }
    static size_t ref = 0;
 
    // check the stack depth
@@ -417,7 +423,7 @@ static void indent_pse_push(parse_frame_t &frm, chunk_t *pc)
       log_flush(true);
       exit(EXIT_FAILURE);
    }
-}
+} // indent_pse_push
 
 
 static void indent_pse_pop(parse_frame_t &frm, chunk_t *pc)
@@ -821,7 +827,12 @@ void indent_text(void)
 
          // Transition into a preproc by creating a dummy indent
          frm.level++;
-         indent_pse_push(frm, chunk_get_next(pc));
+         chunk_t *pp_next = chunk_get_next(pc);
+         if (pp_next == nullptr)
+         {
+            return;
+         }
+         indent_pse_push(frm, pp_next);
 
          if (  pc->parent_type == CT_PP_DEFINE
             || pc->parent_type == CT_PP_UNDEF)
