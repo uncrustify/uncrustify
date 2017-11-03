@@ -121,7 +121,7 @@ static chunk_t *chunk_search_type(const chunk_t *cur, const c_token_t type, cons
  * @retval nullptr  no chunk found or invalid parameters provided
  * @retval chunk_t  pointer to the found chunk
  */
-static chunk_t *chunk_search_typelevel(chunk_t *cur, c_token_t type, scope_e scope = scope_e::ALL, direction_e dir = direction_e::FORWARD, int level = -1);
+static chunk_t *chunk_search_typelevel(const chunk_t *cur, c_token_t type, scope_e scope = scope_e::ALL, direction_e dir = direction_e::FORWARD, int level = -1);
 
 
 /**
@@ -245,18 +245,23 @@ static chunk_t *chunk_search_type(const chunk_t *cur, const c_token_t type,
 }
 
 
-static chunk_t *chunk_search_typelevel(chunk_t *cur, c_token_t type, scope_e scope, direction_e dir, int level)
+static chunk_t *chunk_search_typelevel(const chunk_t *cur, c_token_t type,
+                                       scope_e scope, direction_e dir, int level)
 {
    /*
     * Depending on the parameter dir the search function searches
     * in forward or backward direction
     */
    search_t search_function = select_search_fct(dir);
-   chunk_t  *pc             = cur;
 
-   do                                  // loop over the chunk list
+
+   // loop over the chunk list
+   chunk_t *pc = search_function(cur, scope);
+
+   while (  pc != nullptr        // the end of the list was not reached
+         && !is_expected_type_and_level(pc, type, level))
    {
-      pc = search_function(pc, scope); // in either direction while
+      pc = search_function(pc, scope);
 #if DEBUG
       if (pc != nullptr)
       {
@@ -272,9 +277,8 @@ static chunk_t *chunk_search_typelevel(chunk_t *cur, c_token_t type, scope_e sco
          }
       }
 #endif
-   } while (  pc != nullptr        // the end of the list was not reached yet
-           && (is_expected_type_and_level(pc, type, level) == false));
-   return(pc);                     // the latest chunk is the searched one
+   }
+   return(pc);  // the latest chunk is the searched one or nullptr
 }
 
 
@@ -553,7 +557,7 @@ chunk_t *chunk_get_prev_nc(const chunk_t *cur, scope_e scope)
 }
 
 
-chunk_t *chunk_get_next_type(chunk_t *cur, c_token_t type, int level, scope_e scope)
+chunk_t *chunk_get_next_type(const chunk_t *cur, c_token_t type, int level, scope_e scope)
 {
    return(chunk_search_typelevel(cur, type, scope, direction_e::FORWARD, level));
 }
@@ -565,7 +569,7 @@ chunk_t *chunk_get_next_str(chunk_t *cur, const char *str, size_t len, int level
 }
 
 
-chunk_t *chunk_get_prev_type(chunk_t *cur, c_token_t type, int level, scope_e scope)
+chunk_t *chunk_get_prev_type(const chunk_t *cur, c_token_t type, int level, scope_e scope)
 {
    return(chunk_search_typelevel(cur, type, scope, direction_e::BACKWARD, level));
 }

@@ -309,7 +309,7 @@ chunk_t *chunk_get_prev_ncnlnpnd(chunk_t *cur, scope_e scope = scope_e::ALL);
  *
  * @return nullptr or the match
  */
-chunk_t *chunk_get_next_type(chunk_t *cur, c_token_t type, int level, scope_e scope = scope_e::ALL);
+chunk_t *chunk_get_next_type(const chunk_t *cur, c_token_t type, int level, scope_e scope = scope_e::ALL);
 
 
 /**
@@ -322,7 +322,7 @@ chunk_t *chunk_get_next_type(chunk_t *cur, c_token_t type, int level, scope_e sc
  *
  * @return nullptr or the match
  */
-chunk_t *chunk_get_prev_type(chunk_t *cur, c_token_t type, int level, scope_e scope = scope_e::ALL);
+chunk_t *chunk_get_prev_type(const chunk_t *cur, c_token_t type, int level, scope_e scope = scope_e::ALL);
 
 
 /**
