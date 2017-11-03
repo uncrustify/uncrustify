@@ -573,7 +573,7 @@ static_inline bool chunk_is_comment_newline_or_blank(const chunk_t *pc)
 }
 
 
-static_inline bool chunk_is_Doxygen_comment(chunk_t *pc)
+static_inline bool chunk_is_Doxygen_comment(const chunk_t *pc)
 {
    if (!chunk_is_comment(pc))
    {
