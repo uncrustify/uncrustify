@@ -443,7 +443,7 @@ static_inline bool is_expected_string_and_level(const chunk_t *pc, const char *s
  */
 static_inline chunk_t *chunk_skip_to_match(chunk_t *cur, scope_e scope = scope_e::ALL)
 {
-   if (  cur
+   if (  cur != nullptr
       && (  cur->type == CT_PAREN_OPEN
          || cur->type == CT_SPAREN_OPEN
          || cur->type == CT_FPAREN_OPEN
@@ -453,15 +453,17 @@ static_inline chunk_t *chunk_skip_to_match(chunk_t *cur, scope_e scope = scope_e
          || cur->type == CT_ANGLE_OPEN
          || cur->type == CT_SQUARE_OPEN))
    {
-      return(chunk_get_next_type(cur, (c_token_t)(cur->type + 1), cur->level, scope));
+      //TODO remove dirty enum value hack
+      return(chunk_get_next_type(cur, static_cast<c_token_t>(cur->type + 1),
+                                 cur->level, scope));
    }
-   return(cur);
+   return(const_cast<chunk_t *>(cur));
 }
 
 
 static_inline chunk_t *chunk_skip_to_match_rev(chunk_t *cur, scope_e scope = scope_e::ALL)
 {
-   if (  cur
+   if (  cur != nullptr
       && (  cur->type == CT_PAREN_CLOSE
          || cur->type == CT_SPAREN_CLOSE
          || cur->type == CT_FPAREN_CLOSE
@@ -471,9 +473,11 @@ static_inline chunk_t *chunk_skip_to_match_rev(chunk_t *cur, scope_e scope = sco
          || cur->type == CT_ANGLE_CLOSE
          || cur->type == CT_SQUARE_CLOSE))
    {
-      return(chunk_get_prev_type(cur, (c_token_t)(cur->type - 1), cur->level, scope));
+      //TODO remove dirty enum value hack
+      return(chunk_get_prev_type(cur, static_cast<c_token_t>(cur->type - 1),
+                                 cur->level, scope));
    }
-   return(cur);
+   return(const_cast<chunk_t *>(cur));
 }
 
 
