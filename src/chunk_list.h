@@ -175,7 +175,7 @@ bool chunk_is_last_on_line(const chunk_t &pc);
  * @param cur    chunk to use as start point
  * @param scope  code region to search in
  */
-chunk_t *chunk_get_next_nl(chunk_t *cur, scope_e scope = scope_e::ALL);
+chunk_t *chunk_get_next_nl(const chunk_t *cur, scope_e scope = scope_e::ALL);
 
 
 /**
@@ -184,7 +184,7 @@ chunk_t *chunk_get_next_nl(chunk_t *cur, scope_e scope = scope_e::ALL);
  * @param cur    chunk to use as start point
  * @param scope  code region to search in
  */
-chunk_t *chunk_get_next_nc(chunk_t *cur, scope_e scope = scope_e::ALL);
+chunk_t *chunk_get_next_nc(const chunk_t *cur, scope_e scope = scope_e::ALL);
 
 
 /**
@@ -193,7 +193,7 @@ chunk_t *chunk_get_next_nc(chunk_t *cur, scope_e scope = scope_e::ALL);
  * @param cur    chunk to use as start point
  * @param scope  code region to search in
  */
-chunk_t *chunk_get_next_nnl(chunk_t *cur, scope_e scope = scope_e::ALL);
+chunk_t *chunk_get_next_nnl(const chunk_t *cur, scope_e scope = scope_e::ALL);
 
 
 /**
@@ -202,7 +202,7 @@ chunk_t *chunk_get_next_nnl(chunk_t *cur, scope_e scope = scope_e::ALL);
  * @param cur    chunk to use as start point
  * @param scope  code region to search in
  */
-chunk_t *chunk_get_next_ncnl(chunk_t *cur, scope_e scope = scope_e::ALL);
+chunk_t *chunk_get_next_ncnl(const chunk_t *cur, scope_e scope = scope_e::ALL);
 
 
 /**
@@ -224,7 +224,7 @@ chunk_t *chunk_get_next_ncnlnp(chunk_t *cur, scope_e scope = scope_e::ALL);
  *
  * @return nullptr or the next chunk not in or part of square brackets
  */
-chunk_t *chunk_get_next_nisq(chunk_t *cur, scope_e scope = scope_e::ALL);
+chunk_t *chunk_get_next_nisq(const chunk_t *cur, scope_e scope = scope_e::ALL);
 
 
 /**
@@ -233,7 +233,7 @@ chunk_t *chunk_get_next_nisq(chunk_t *cur, scope_e scope = scope_e::ALL);
  * @param cur    chunk to use as start point
  * @param scope  code region to search in
  */
-chunk_t *chunk_get_next_nblank(chunk_t *cur, scope_e scope = scope_e::ALL);
+chunk_t *chunk_get_next_nblank(const chunk_t *cur, scope_e scope = scope_e::ALL);
 
 
 /**
@@ -242,7 +242,7 @@ chunk_t *chunk_get_next_nblank(chunk_t *cur, scope_e scope = scope_e::ALL);
  * @param cur    chunk to use as start point
  * @param scope  code region to search in
  */
-chunk_t *chunk_get_prev_nblank(chunk_t *cur, scope_e scope = scope_e::ALL);
+chunk_t *chunk_get_prev_nblank(const chunk_t *cur, scope_e scope = scope_e::ALL);
 
 
 /**
@@ -251,7 +251,7 @@ chunk_t *chunk_get_prev_nblank(chunk_t *cur, scope_e scope = scope_e::ALL);
  * @param cur    chunk to use as start point
  * @param scope  code region to search in
  */
-chunk_t *chunk_get_prev_nl(chunk_t *cur, scope_e scope = scope_e::ALL);
+chunk_t *chunk_get_prev_nl(const chunk_t *cur, scope_e scope = scope_e::ALL);
 
 
 /**
@@ -260,7 +260,7 @@ chunk_t *chunk_get_prev_nl(chunk_t *cur, scope_e scope = scope_e::ALL);
  * @param cur    chunk to use as start point
  * @param scope  code region to search in
  */
-chunk_t *chunk_get_prev_nc(chunk_t *cur, scope_e scope = scope_e::ALL);
+chunk_t *chunk_get_prev_nc(const chunk_t *cur, scope_e scope = scope_e::ALL);
 
 
 /**
@@ -269,7 +269,7 @@ chunk_t *chunk_get_prev_nc(chunk_t *cur, scope_e scope = scope_e::ALL);
  * @param cur    chunk to use as start point
  * @param scope  code region to search in
  */
-chunk_t *chunk_get_prev_nnl(chunk_t *cur, scope_e scope = scope_e::ALL);
+chunk_t *chunk_get_prev_nnl(const chunk_t *cur, scope_e scope = scope_e::ALL);
 
 
 /**
@@ -278,7 +278,7 @@ chunk_t *chunk_get_prev_nnl(chunk_t *cur, scope_e scope = scope_e::ALL);
  * @param cur    chunk to use as start point
  * @param scope  code region to search in
  */
-chunk_t *chunk_get_prev_ncnl(chunk_t *cur, scope_e scope = scope_e::ALL);
+chunk_t *chunk_get_prev_ncnl(const chunk_t *cur, scope_e scope = scope_e::ALL);
 
 
 /**
@@ -367,7 +367,7 @@ chunk_t *chunk_get_prev_str(chunk_t *cur, const char *str, size_t len, int level
  *
  * @return pointer to found chunk or nullptr if no chunk was found
  */
-chunk_t *chunk_get_next_nvb(chunk_t *cur, const scope_e scope = scope_e::ALL);
+chunk_t *chunk_get_next_nvb(const chunk_t *cur, const scope_e scope = scope_e::ALL);
 
 
 /**
@@ -378,7 +378,7 @@ chunk_t *chunk_get_next_nvb(chunk_t *cur, const scope_e scope = scope_e::ALL);
  *
  * @return pointer to found chunk or nullptr if no chunk was found
  */
-chunk_t *chunk_get_prev_nvb(chunk_t *cur, const scope_e scope = scope_e::ALL);
+chunk_t *chunk_get_prev_nvb(const chunk_t *cur, const scope_e scope = scope_e::ALL);
 
 
 /**
