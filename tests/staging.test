@@ -52,3 +52,4 @@
 60036 staging/Uncrustify.Cpp.cfg staging/UNI-2680.cpp
 60037 staging/UNI-29933.cfg staging/UNI-29933.cs
 60038 staging/UNI-30088.cfg staging/UNI-30088.cpp
+60039 staging/Uncrustify.Cpp.cfg staging/UNI-30628.cpp
