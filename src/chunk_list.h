@@ -339,7 +339,7 @@ chunk_t *chunk_get_prev_type(const chunk_t *cur, c_token_t type, int level, scop
  * @retval nullptr  no chunk found or invalid parameters provided
  * @retval chunk_t  pointer to the found chunk
  */
-chunk_t *chunk_get_next_str(chunk_t *cur, const char *str, size_t len, int level, scope_e scope = scope_e::ALL);
+chunk_t *chunk_get_next_str(const chunk_t *cur, const char *str, size_t len, int level, scope_e scope = scope_e::ALL);
 
 
 /**
@@ -356,7 +356,7 @@ chunk_t *chunk_get_next_str(chunk_t *cur, const char *str, size_t len, int level
  * @retval nullptr  no chunk found or invalid parameters provided
  * @retval chunk_t  pointer to the found chunk
  */
-chunk_t *chunk_get_prev_str(chunk_t *cur, const char *str, size_t len, int level, scope_e scope = scope_e::ALL);
+chunk_t *chunk_get_prev_str(const chunk_t *cur, const char *str, size_t len, int level, scope_e scope = scope_e::ALL);
 
 
 /**
