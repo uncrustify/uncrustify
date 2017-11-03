@@ -390,7 +390,7 @@ chunk_t *chunk_get_prev_nvb(const chunk_t *cur, const scope_e scope = scope_e::A
  * @retval nullptr  no object found, or invalid parameters provided
  * @retval chunk_t  pointer to the found object
  */
-chunk_t *chunk_search_prev_cat(chunk_t *pc, const c_token_t cat);
+chunk_t *chunk_search_prev_cat(const chunk_t *pc, const c_token_t cat);
 
 
 /**
@@ -402,7 +402,7 @@ chunk_t *chunk_search_prev_cat(chunk_t *pc, const c_token_t cat);
  * @retval nullptr  no object found, or invalid parameters provided
  * @retval chunk_t  pointer to the found object
  */
-chunk_t *chunk_search_next_cat(chunk_t *pc, const c_token_t cat);
+chunk_t *chunk_search_next_cat(const chunk_t *pc, const c_token_t cat);
 
 /*
  * TODO: better move the function implementations to the source file.

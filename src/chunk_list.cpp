@@ -101,7 +101,7 @@ static void chunk_log(const chunk_t *pc, const char *text);
  * @retval nullptr  no chunk found or invalid parameters provided
  * @retval chunk_t  pointer to the found chunk
  */
-static chunk_t *chunk_search_type(chunk_t *cur, const c_token_t type, const scope_e scope = scope_e::ALL, const direction_e dir = direction_e::FORWARD);
+static chunk_t *chunk_search_type(const chunk_t *cur, const c_token_t type, const scope_e scope = scope_e::ALL, const direction_e dir = direction_e::FORWARD);
 
 
 /**
@@ -211,19 +211,19 @@ static search_t select_search_fct(const direction_e dir)
 }
 
 
-chunk_t *chunk_search_prev_cat(chunk_t *pc, const c_token_t cat)
+chunk_t *chunk_search_prev_cat(const chunk_t *pc, const c_token_t cat)
 {
    return(chunk_search_type(pc, cat, scope_e::ALL, direction_e::BACKWARD));
 }
 
 
-chunk_t *chunk_search_next_cat(chunk_t *pc, const c_token_t cat)
+chunk_t *chunk_search_next_cat(const chunk_t *pc, const c_token_t cat)
 {
    return(chunk_search_type(pc, cat, scope_e::ALL, direction_e::FORWARD));
 }
 
 
-static chunk_t *chunk_search_type(chunk_t *cur, const c_token_t type,
+static chunk_t *chunk_search_type(const chunk_t *cur, const c_token_t type,
                                   const scope_e scope, const direction_e dir)
 {
    /*
@@ -231,14 +231,17 @@ static chunk_t *chunk_search_type(chunk_t *cur, const c_token_t type,
     * in forward or backward direction
     */
    search_t search_function = select_search_fct(dir);
-   chunk_t  *pc             = cur;
 
-   do                                  // loop over the chunk list
+   // loop over the chunk list
+   chunk_t *pc = search_function(cur, scope);
+
+   while (  pc != nullptr           // the end of the list was not reached
+         && pc->type != type)       // and the demanded chunk was not found
    {
-      pc = search_function(pc, scope); // in either direction while
-   } while (  pc != nullptr            // the end of the list was not reached yet
-           && pc->type != type);       // and the demanded chunk was not found either
-   return(pc);                         // the latest chunk is the searched one
+      pc = search_function(pc, scope);
+   }
+
+   return(pc);  // the latest chunk is the searched one or nullptr
 }
 
 
