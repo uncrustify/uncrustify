@@ -1,3 +1,29 @@
+Change highlights in uncrustify-0.66 (November 2017)
+-------------------------------------------------------------------------------
+
+New options:
+  - sp_angle_colon                       Oct 17
+  - nl_func_call_empty                   Sep 30
+  - nl_func_call_paren_empty             Sep 30
+  - align_func_params_span               Sep 29
+  - align_func_params_thresh             Sep 29
+  - align_func_params_gap                Sep 29
+  - nl_func_call_paren                   Jul 25
+  - indent_paren_after_func_def          Jul 21
+  - indent_paren_after_func_decl         Jul 21
+  - indent_paren_after_func_call         Jul 21
+  - nl_func_paren_empty                  Jul 07
+  - nl_func_def_paren_empty              Jul 07
+  - indent_switch_pp                     Jun 22
+  - pp_indent_case                       Jun 22
+  - pp_indent_func_def                   Jun 22
+  - pp_indent_extern                     Jun 22
+  - pp_indent_brace                      Jun 22
+
+Bugfix:
+ - Issue # 548, 1098, 1103, 1108, 1112, 1127, 1134, 1158, 1165, 1170, 1187,
+     1200, 1203, 1310, 1315, 1340, 1349, 1352, 1366 are fixed
+
 Change highlights in uncrustify-0.65 (May 2017)
 -------------------------------------------------------------------------------
 

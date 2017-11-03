@@ -15,7 +15,7 @@ Just in case I don't do a release for a while and forget what to do... =)
     ChangeLog
     CMakeLists.txt
       At lines under "# Generate uncrustify_version.h"
-      (Check the value of "FALLBACK_VERSION")
+      (Check the value of "CURRENT_VERSION", such as "Uncrustify-0.66_f")
     documentation/htdocs/index.html
       At line <li>Highly configurable
       TODO: (automat for this) Change the values of <options> and version.
@@ -23,6 +23,9 @@ Just in case I don't do a release for a while and forget what to do... =)
       At line "version" the number
       At line "preinstall"
       At line "url"
+    README.md
+      At line * highly configurable
+      TODO: (automat for this) Change the values of options and version.
 
 2b. Update the option count in documentation/htdocs/index.html
    Use script/count_the_options.sh to count the options.
