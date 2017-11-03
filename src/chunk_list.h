@@ -776,29 +776,28 @@ static_inline bool chunk_safe_to_del_nl(const chunk_t *nl)
  *
  * @return true  - the chunk is the opening parentheses of a for in loop
  */
-static_inline bool chunk_is_forin(chunk_t *pc)
+static_inline bool chunk_is_forin(const chunk_t *pc)
 {
-   if (  (cpd.lang_flags & LANG_OC)
-      && pc
-      && pc->type == CT_SPAREN_OPEN)
+   chunk_t *prev = chunk_get_prev_ncnl(pc);
+
+   if (  !(cpd.lang_flags & LANG_OC)
+      || prev == nullptr
+      || pc == nullptr
+      || prev->type != CT_FOR
+      || pc->type != CT_SPAREN_OPEN)
    {
-      chunk_t *prev = chunk_get_prev_ncnl(pc);
-      if (prev->type == CT_FOR)
-      {
-         chunk_t *next = pc;
-         while (  next
-               && next->type != CT_SPAREN_CLOSE
-               && next->type != CT_IN)
-         {
-            next = chunk_get_next_ncnl(next);
-         }
-         if (next->type == CT_IN)
-         {
-            return(true);
-         }
-      }
+      return(false);
    }
-   return(false);
+
+   // search CT_IN token between the two 'for' parenthesis
+   chunk_t *next = chunk_get_next_ncnl(pc);
+   for ( ; (  next != nullptr
+           && next->type != CT_IN
+           && next->type != CT_SPAREN_CLOSE)
+         ; next = chunk_get_next_ncnl(next))
+   {
+   }
+   return((next != nullptr && next->type == CT_IN) ? true : false);
 }
 
 
