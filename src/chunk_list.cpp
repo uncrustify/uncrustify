@@ -793,3 +793,31 @@ static chunk_t *chunk_add(const chunk_t *pc_in, chunk_t *ref, const direction_e 
    }
    return(pc);
 }
+
+
+chunk_t *chunk_get_next_ssq(chunk_t *cur)
+{
+   while (cur->type == CT_TSQUARE || cur->type == CT_SQUARE_OPEN)
+   {
+      if (cur->type == CT_SQUARE_OPEN)
+      {
+         cur = chunk_skip_to_match(cur);
+      }
+      cur = chunk_get_next_ncnl(cur);
+   }
+   return(cur);
+}
+
+
+chunk_t *chunk_get_prev_ssq(chunk_t *cur)
+{
+   while (cur->type == CT_TSQUARE || cur->type == CT_SQUARE_CLOSE)
+   {
+      if (cur->type == CT_SQUARE_CLOSE)
+      {
+         cur = chunk_skip_to_match_rev(cur);
+      }
+      cur = chunk_get_prev_ncnl(cur);
+   }
+   return(cur);
+}
