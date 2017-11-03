@@ -37,7 +37,7 @@ enum class direction_e : unsigned int
  * for a function pointer of type
  * bool function(chunk_t *pc)
  */
-typedef bool (*check_t)(chunk_t *pc);
+typedef bool (*check_t)(const chunk_t *pc);
 
 
 /**

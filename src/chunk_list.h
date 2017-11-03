@@ -486,7 +486,7 @@ static_inline chunk_t *chunk_skip_to_match_rev(chunk_t *cur, scope_e scope = sco
  * - C comment
  * - C++ comment
  */
-static_inline bool chunk_is_comment(chunk_t *pc)
+static_inline bool chunk_is_comment(const chunk_t *pc)
 {
    return(  pc != NULL
          && (  pc->type == CT_COMMENT
@@ -502,7 +502,7 @@ static_inline bool chunk_is_single_line_comment(const chunk_t *pc)
 }
 
 
-static_inline bool chunk_is_newline(chunk_t *pc)
+static_inline bool chunk_is_newline(const chunk_t *pc)
 {
    return(  pc != NULL
          && (pc->type == CT_NEWLINE || pc->type == CT_NL_CONT));
@@ -530,13 +530,13 @@ static_inline bool chunk_is_blank(const chunk_t *pc)
 
 
 //! checks if a chunk is valid and either a comment or newline
-static_inline bool chunk_is_comment_or_newline(chunk_t *pc)
+static_inline bool chunk_is_comment_or_newline(const chunk_t *pc)
 {
    return(chunk_is_comment(pc) || chunk_is_newline(pc));
 }
 
 
-static_inline bool chunk_is_balanced_square(chunk_t *pc)
+static_inline bool chunk_is_balanced_square(const chunk_t *pc)
 {
    return(  pc != NULL
          && (  pc->type == CT_SQUARE_OPEN
@@ -551,7 +551,7 @@ static_inline bool chunk_is_preproc(const chunk_t *pc)
 }
 
 
-static_inline bool chunk_is_comment_or_newline_in_preproc(chunk_t *pc)
+static_inline bool chunk_is_comment_or_newline_in_preproc(const chunk_t *pc)
 {
    return(  pc != NULL
          && chunk_is_preproc(pc)
@@ -559,7 +559,7 @@ static_inline bool chunk_is_comment_or_newline_in_preproc(chunk_t *pc)
 }
 
 
-static_inline bool chunk_is_comment_newline_or_preproc(chunk_t *pc)
+static_inline bool chunk_is_comment_newline_or_preproc(const chunk_t *pc)
 {
    return(  chunk_is_comment(pc)
          || chunk_is_newline(pc)
@@ -567,7 +567,7 @@ static_inline bool chunk_is_comment_newline_or_preproc(chunk_t *pc)
 }
 
 
-static_inline bool chunk_is_comment_newline_or_blank(chunk_t *pc)
+static_inline bool chunk_is_comment_newline_or_blank(const chunk_t *pc)
 {
    return(chunk_is_comment_or_newline(pc) || chunk_is_blank(pc));
 }
@@ -710,7 +710,7 @@ static_inline bool chunk_is_opening_brace(const chunk_t *pc)
 }
 
 
-static_inline bool chunk_is_vbrace(chunk_t *pc)
+static_inline bool chunk_is_vbrace(const chunk_t *pc)
 {
    return(  pc != NULL
          && (pc->type == CT_VBRACE_CLOSE || pc->type == CT_VBRACE_OPEN));
