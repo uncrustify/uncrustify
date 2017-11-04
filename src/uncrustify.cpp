@@ -1716,15 +1716,25 @@ void uncrustify_file(const file_mem &fm, FILE *pfout,
    }
 
    // Check for embedded 0's (represents a decoding failure or corrupt file)
+   size_t count_line   = 1;
+   size_t count_column = 1;
    for (int idx = 0; idx < static_cast<int>(data.size()) - 1; idx++)
    {
       if (data[idx] == 0)
       {
-         LOG_FMT(LERR, "An embedded 0 was found in '%s'.\n", cpd.filename);
+         LOG_FMT(LERR, "An embedded 0 was found in '%s' %zu:%zu.\n",
+                 cpd.filename, count_line, count_column);
          LOG_FMT(LERR, "The file may be encoded in an unsupported Unicode format.\n");
          LOG_FMT(LERR, "Aborting.\n");
          cpd.error_count++;
          return;
+      }
+
+      count_column++;
+      if (data[idx] == '\n')
+      {
+         count_line++;
+         count_column = 1;
       }
    }
 
