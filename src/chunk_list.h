@@ -40,7 +40,7 @@ enum class scope_e : unsigned int
 };
 
 
-void set_chunk_real(chunk_t *pc, c_token_t token, log_sev_t what, const char *str);
+void set_chunk_real(chunk_t *pc, c_token_t token, log_sev_t what);
 
 
 /**
