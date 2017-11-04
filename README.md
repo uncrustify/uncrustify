@@ -133,6 +133,10 @@ More about this is in the [ISSUE_TEMPLATE](https://github.com/uncrustify/uncrust
 [Look at the Wiki](https://github.com/uncrustify/uncrustify/wiki/Known-Problems)
 
 
+## Which repositories have uncrustify?
+[Look here](https://repology.org/metapackage/uncrustify/versions)
+
+
 ## Contribute
 If you want to add a feature, fix a bug, or implement missing
 functionality, feel free to do so! Patches are welcome!

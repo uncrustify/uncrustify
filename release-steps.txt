@@ -1,7 +1,8 @@
-2017-05-05
+2017-11-05
 
 Release steps.
 Just in case I don't do a release for a while and forget what to do... =)
+Change the date at the first line of this document.
 
 1. Make sure CI (continuous integration - Travis and AppVeyor) has passed.
    This should ensure all tests pass and building
