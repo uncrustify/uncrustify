@@ -324,5 +324,6 @@
 09610 bug_i_876.cfg             c/bug_i_876.c
 09611 bug_i_222.cfg             c/bug_i_222.c
 09612 bug_1041.cfg              c/bug_1041.c
+09613  empty.cfg                c/i1413.c
 
 10005  enable_processing_cmt-empty.cfg    c/i1270.c
