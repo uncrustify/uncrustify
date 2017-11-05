@@ -1720,6 +1720,28 @@ void indent_text(void)
          }
       }
       else if (  pc->type == CT_PAREN_OPEN
+              && (pc->parent_type == CT_ASM || chunk_get_prev_ncnl(pc)->type == CT_ASM)
+              && cpd.settings[UO_indent_ignore_asm_block].b)
+      {
+         int     move = 0;
+         chunk_t *tmp = chunk_skip_to_match(pc);
+         if (  chunk_is_newline(chunk_get_prev(pc))
+            && pc->column != indent_column)
+         {
+            move = indent_column - pc->column;
+         }
+         else
+         {
+            move = pc->column - pc->orig_col;
+         }
+         do
+         {
+            pc->column = pc->orig_col + move;
+            pc         = chunk_get_next(pc);
+         } while (pc != tmp);
+         reindent_line(pc, indent_column);
+      }
+      else if (  pc->type == CT_PAREN_OPEN
               || pc->type == CT_SPAREN_OPEN
               || pc->type == CT_FPAREN_OPEN
               || pc->type == CT_SQUARE_OPEN

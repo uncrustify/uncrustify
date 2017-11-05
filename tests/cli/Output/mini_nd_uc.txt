@@ -277,6 +277,7 @@ indent_token_after_brace        = true
 indent_cpp_lambda_body          = false
 indent_using_block              = true
 indent_ternary_operator         = 0
+indent_ignore_asm_block         = false
 nl_collapse_empty_body          = false
 nl_assign_leave_one_liners      = false
 nl_class_leave_one_liners       = false

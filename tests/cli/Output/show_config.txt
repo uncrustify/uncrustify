@@ -915,6 +915,9 @@ indent_ternary_operator         Unsigned Number
   1: When the `if_false` is a continuation, indent it under `if_false`
   2: When the `:` is a continuation, indent it under `?`
 
+indent_ignore_asm_block         { False, True }
+  If true, ignore indent and align for asm blocks as they have their own indentation.
+
 #
 # Newline adding and removing options
 #
