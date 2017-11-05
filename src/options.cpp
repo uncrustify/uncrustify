@@ -925,6 +925,8 @@ void register_options(void)
                   "0: (Default) off\n"
                   "1: When the `if_false` is a continuation, indent it under `if_false`\n"
                   "2: When the `:` is a continuation, indent it under `?`", "", 0, 2);
+   unc_add_option("indent_ignore_asm_block", UO_indent_ignore_asm_block, AT_BOOL,
+                  "If true, ignore indent and align for asm blocks as they have their own indentation.");
 
    unc_begin_group(UG_newline, "Newline adding and removing options");
    unc_add_option("nl_collapse_empty_body", UO_nl_collapse_empty_body, AT_BOOL,

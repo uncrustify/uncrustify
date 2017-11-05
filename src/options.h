@@ -429,6 +429,7 @@ enum uncrustify_options
    UO_indent_cpp_lambda_body,               // indent cpp lambda or not
    UO_indent_using_block,                   // indent (or not) an using block if no braces are used,
    UO_indent_ternary_operator,              // indent continuation of ternary operator
+   UO_indent_ignore_asm_block,              // ignore indent and align for asm blocks as they have their own indentation
    // UO_indent_brace_struct,      TODO: spaces to indent brace after struct/enum/union def
    // UO_indent_paren,             TODO: indent for open paren on next line (1)
    // UO_indent,                   TODO: 0=don't change indentation, 1=change indentation

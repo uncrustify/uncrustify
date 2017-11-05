@@ -916,6 +916,9 @@ indent_using_block              = true     # false/true
 # 2: When the `:` is a continuation, indent it under `?`
 indent_ternary_operator         = 0        # unsigned number
 
+# If true, ignore indent and align for asm blocks as they have their own indentation.
+indent_ignore_asm_block         = false    # false/true
+
 #
 # Newline adding and removing options
 #
