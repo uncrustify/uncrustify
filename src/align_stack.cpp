@@ -13,6 +13,11 @@
 #include "indent.h"
 #include "space.h"
 
+#include <limits>
+
+
+using std::numeric_limits;
+
 
 void AlignStack::Start(size_t span, size_t thresh)
 {
@@ -22,7 +27,7 @@ void AlignStack::Start(size_t span, size_t thresh)
    m_skipped.Reset();
    m_span        = span;
    m_thresh      = thresh;
-   m_min_col     = 9999;
+   m_min_col     = numeric_limits<size_t>::max();
    m_max_col     = 0;
    m_nl_seqnum   = 0;
    m_seqnum      = 0;
@@ -422,8 +427,8 @@ void AlignStack::Flush()
       last_seqnum = ce->m_seqnum;
       m_aligned.Reset();
    }
-   m_min_col = 9999; // use unrealistic high numbers
-   m_max_col = 0;    // as start value
+   m_min_col = numeric_limits<size_t>::max(); // use unrealistic high numbers
+   m_max_col = 0;                             // as start value
 
    if (m_skipped.Empty())
    {
