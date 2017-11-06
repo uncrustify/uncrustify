@@ -1,4 +1,4 @@
-2017-11-05
+2017-11-08 for Version 0.66
 
 Release steps.
 Just in case I don't do a release for a while and forget what to do... =)

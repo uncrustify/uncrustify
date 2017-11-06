@@ -2,6 +2,7 @@ Change highlights in uncrustify-0.66 (November 2017)
 -------------------------------------------------------------------------------
 
 New options:
+  - indent_ignore_asm_block              Nov 05
   - sp_angle_colon                       Oct 17
   - nl_func_call_empty                   Sep 30
   - nl_func_call_paren_empty             Sep 30
@@ -22,7 +23,7 @@ New options:
 
 Bugfix:
  - Issue # 548, 1098, 1103, 1108, 1112, 1127, 1134, 1158, 1165, 1170, 1187,
-     1200, 1203, 1310, 1315, 1340, 1349, 1352, 1366 are fixed
+     1200, 1203, 1236, 1310, 1315, 1340, 1349, 1352, 1366 are fixed
 
 Change highlights in uncrustify-0.65 (May 2017)
 -------------------------------------------------------------------------------
