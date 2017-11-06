@@ -35,22 +35,24 @@ void AlignStack::Start(size_t span, size_t thresh)
 
 void AlignStack::ReAddSkipped()
 {
-   if (!m_skipped.Empty())
+   if (m_skipped.Empty())
    {
-      // Make a copy of the ChunkStack and clear m_skipped
-      m_scratch.Set(m_skipped);
-      m_skipped.Reset();
-
-      // Need to add them in order so that m_nl_seqnum is correct
-      for (size_t idx = 0; idx < m_scratch.Len(); idx++)
-      {
-         const ChunkStack::Entry *ce = m_scratch.Get(idx);
-         LOG_FMT(LAS, "ReAddSkipped [%zu] - ", ce->m_seqnum);
-         Add(ce->m_pc, ce->m_seqnum);
-      }
-
-      NewLines(0); // Check to see if we need to flush right away
+      return;
    }
+
+   // Make a copy of the ChunkStack and clear m_skipped
+   m_scratch.Set(m_skipped);
+   m_skipped.Reset();
+
+   // Need to add them in order so that m_nl_seqnum is correct
+   for (size_t idx = 0; idx < m_scratch.Len(); idx++)
+   {
+      const ChunkStack::Entry *ce = m_scratch.Get(idx);
+      LOG_FMT(LAS, "ReAddSkipped [%zu] - ", ce->m_seqnum);
+      Add(ce->m_pc, ce->m_seqnum);
+   }
+
+   NewLines(0); // Check to see if we need to flush right away
 }
 
 
