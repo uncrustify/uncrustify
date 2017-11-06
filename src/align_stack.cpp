@@ -149,16 +149,16 @@ void AlignStack::Add(chunk_t *start, size_t seqnum)
    if (m_star_style != SS_IGNORE)
    {
       // back up to the first '*' or '^' preceding the token
-      prev = chunk_get_prev(ali);
-      while (chunk_is_star(prev) || chunk_is_msref(prev))
+      chunk_t *tmp_prev = chunk_get_prev(ali);
+      while (chunk_is_star(tmp_prev) || chunk_is_msref(tmp_prev))
       {
-         ali  = prev;
-         prev = chunk_get_prev(ali);
+         ali      = tmp_prev;
+         tmp_prev = chunk_get_prev(ali);
       }
-      if (chunk_is_token(prev, CT_TPAREN_OPEN))
+      if (chunk_is_token(tmp_prev, CT_TPAREN_OPEN))
       {
-         ali  = prev;
-         prev = chunk_get_prev(ali);
+         ali      = tmp_prev;
+         tmp_prev = chunk_get_prev(ali);
          // this is correct, even Coverity says:
          // CID 76021 (#1 of 1): Unused value (UNUSED_VALUE)returned_pointer: Assigning value from
          // chunk_get_prev(ali, nav_e::ALL) to prev here, but that stored value is overwritten before it can be used.
@@ -167,20 +167,20 @@ void AlignStack::Add(chunk_t *start, size_t seqnum)
    if (m_amp_style != SS_IGNORE)
    {
       // back up to the first '&' preceding the token
-      prev = chunk_get_prev(ali);
-      while (chunk_is_addr(prev))
+      chunk_t *tmp_prev = chunk_get_prev(ali);
+      while (chunk_is_addr(tmp_prev))
       {
-         ali  = prev;
-         prev = chunk_get_prev(ali);
+         ali      = tmp_prev;
+         tmp_prev = chunk_get_prev(ali);
       }
    }
 
-   chunk_t *tmp;
+
    // Tighten down the spacing between ref and start
    if (!cpd.settings[UO_align_keep_extra_space].b)
    {
-      size_t tmp_col = ref->column;
-      tmp = ref;
+      size_t  tmp_col = ref->column;
+      chunk_t *tmp    = ref;
       while (tmp != start)
       {
          chunk_t *next = chunk_get_next(tmp);
@@ -213,7 +213,8 @@ void AlignStack::Add(chunk_t *start, size_t seqnum)
       {
          gap = ali->column - (ref->column + ref->len());
       }
-      tmp = ali;
+
+      chunk_t *tmp = ali;
       if (chunk_is_token(tmp, CT_TPAREN_OPEN))
       {
          tmp = chunk_get_next(tmp);
@@ -227,19 +228,8 @@ void AlignStack::Add(chunk_t *start, size_t seqnum)
       }
 
       // See if this pushes out the max_col
-      size_t endcol = ali->column + col_adj;
-      if (gap < m_gap)
-      {
-         endcol += m_gap - gap;
-      }
-
-      // LOG_FMT(LSYS, "[%p] line %d pc='%s' [%s] col:%d ali='%s' [%s] col:%d ref='%s' [%s] col:%d  col_adj=%d  endcol=%d, ss=%d as=%d, gap=%d\n",
-      //         this,
-      //         start->orig_line,
-      //         start->text(), get_token_name(start->type), start->column,
-      //         ali->text(), get_token_name(ali->type), ali->column,
-      //         ref->text(), get_token_name(ref->type), ref->column,
-      //         col_adj, endcol, m_star_style, m_amp_style, gap);
+      const size_t endcol = ali->column + col_adj
+                            + (gap < m_gap ? m_gap - gap : 0);
 
       ali->align.col_adj = col_adj;
       ali->align.ref     = ref;
@@ -248,8 +238,8 @@ void AlignStack::Add(chunk_t *start, size_t seqnum)
       m_last_added = 1;
 
       LOG_FMT(LAS, "%s(%d): Add-[%s]: ali->orig_line is %zu, ali->column is %zu, ali->align.col_adj %d, ref [%s], endcol is %zu\n",
-              __func__, __LINE__, ali->text(), ali->orig_line, ali->column, ali->align.col_adj,
-              ref->text(), endcol);
+              __func__, __LINE__, ali->text(), ali->orig_line, ali->column,
+              ali->align.col_adj, ref->text(), endcol);
 
       if (m_min_col > endcol)
       {
