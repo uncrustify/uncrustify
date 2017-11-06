@@ -21,7 +21,7 @@ class Foo
 with multiple
 lines
 ",
-                    type));
+                        type));
                 break;
         }
     }

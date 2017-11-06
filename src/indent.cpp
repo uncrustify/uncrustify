@@ -1764,18 +1764,19 @@ void indent_text(void)
          {
             // Skip any continuation indents
             idx = frm.pse_tos - 1;
-            while (  idx > 0
-                  && frm.pse[idx].type != CT_BRACE_OPEN
-                  && frm.pse[idx].type != CT_VBRACE_OPEN
-                  && frm.pse[idx].type != CT_PAREN_OPEN
-                  && frm.pse[idx].type != CT_FPAREN_OPEN
-                  && frm.pse[idx].type != CT_SPAREN_OPEN
-                  && frm.pse[idx].type != CT_SQUARE_OPEN
-                  && frm.pse[idx].type != CT_ANGLE_OPEN
-                  && frm.pse[idx].type != CT_CLASS_COLON
-                  && frm.pse[idx].type != CT_CONSTR_COLON
-                  && frm.pse[idx].type != CT_CASE
-                  && frm.pse[idx].type != CT_ASSIGN_NL)
+            while (  (  (  idx > 0
+                        && frm.pse[idx].type != CT_BRACE_OPEN
+                        && frm.pse[idx].type != CT_VBRACE_OPEN
+                        && frm.pse[idx].type != CT_PAREN_OPEN
+                        && frm.pse[idx].type != CT_FPAREN_OPEN
+                        && frm.pse[idx].type != CT_SPAREN_OPEN
+                        && frm.pse[idx].type != CT_SQUARE_OPEN
+                        && frm.pse[idx].type != CT_ANGLE_OPEN
+                        && frm.pse[idx].type != CT_CASE
+                        && frm.pse[idx].type != CT_ASSIGN_NL)
+                     || frm.pse[idx].open_line == frm.pse[frm.pse_tos].open_line)
+                  && (  frm.pse[idx].type != CT_CLASS_COLON
+                     && frm.pse[idx].type != CT_CONSTR_COLON))
             {
                idx--;
                skipped = true;
@@ -1931,6 +1932,28 @@ void indent_text(void)
               || pc->type == CT_IMPORT
               || pc->type == CT_USING)
       {
+         /*
+          * if there is a newline after the '=' or the line starts with a '=',
+          * just indent one level,
+          * otherwise align on the '='.
+          */
+
+         if (pc->type == CT_ASSIGN && chunk_is_newline(chunk_get_prev(pc)))
+         {
+            if (frm.pse[frm.pse_tos].type == CT_ASSIGN_NL)
+            {
+               frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent;
+            }
+            else
+            {
+               frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos].indent + indent_size;
+            }
+            log_indent_tmp();
+            indent_column_set(frm.pse[frm.pse_tos].indent_tmp);
+            LOG_FMT(LINDENT, "%s(%d): %zu] assign => %zu [%s]\n",
+                    __func__, __LINE__, pc->orig_line, indent_column, pc->text());
+            reindent_line(pc, frm.pse[frm.pse_tos].indent_tmp);
+         }
          next = chunk_get_next(pc);
          if (next != nullptr)
          {
@@ -1946,20 +1969,8 @@ void indent_text(void)
             }
             indent_pse_push(frm, pc);
 
-            /*
-             * if there is a newline after the '=' or the line starts with a '=',
-             * just indent one level,
-             * otherwise align on the '='.
-             */
-
             if (pc->type == CT_ASSIGN && chunk_is_newline(chunk_get_prev(pc)))
             {
-               frm.pse[frm.pse_tos].indent_tmp = frm.pse[frm.pse_tos - 1].indent + indent_size;
-               log_indent_tmp();
-               indent_column_set(frm.pse[frm.pse_tos].indent_tmp);
-               LOG_FMT(LINDENT, "%s(%d): %zu] assign => %zu [%s]\n",
-                       __func__, __LINE__, pc->orig_line, indent_column, pc->text());
-               reindent_line(pc, frm.pse[frm.pse_tos].indent_tmp);
                frm.pse[frm.pse_tos].type = CT_ASSIGN_NL;
             }
 
