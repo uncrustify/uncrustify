@@ -294,22 +294,21 @@ void AlignStack::Add(chunk_t *start, size_t seqnum)
 
 void AlignStack::NewLines(size_t cnt)
 {
-   if (!m_aligned.Empty())
+   if (m_aligned.Empty())
    {
-      m_seqnum += cnt;
-      if (m_seqnum > (m_nl_seqnum + m_span))
-      {
-         LOG_FMT(LAS, "Newlines(%d): cnt is %zu, -\n", __LINE__, cnt);
-         Flush();
-      }
-      else
-      {
-         LOG_FMT(LAS, "Newlines(%d): cnt is %zu\n", __LINE__, cnt);
-      }
+      LOG_FMT(LAS, "Newlines(%d): is empty\n", __LINE__);
+      return;
+   }
+
+   m_seqnum += cnt;
+   if (m_seqnum > (m_nl_seqnum + m_span))
+   {
+      LOG_FMT(LAS, "Newlines(%d): cnt is %zu, -\n", __LINE__, cnt);
+      Flush();
    }
    else
    {
-      LOG_FMT(LAS, "Newlines(%d): is empty\n", __LINE__);
+      LOG_FMT(LAS, "Newlines(%d): cnt is %zu\n", __LINE__, cnt);
    }
 }
 
