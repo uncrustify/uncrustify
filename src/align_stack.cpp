@@ -315,17 +315,13 @@ void AlignStack::NewLines(size_t cnt)
 
 void AlignStack::Flush()
 {
-   size_t                  last_seqnum = 0;
-   const ChunkStack::Entry *ce         = nullptr;
-   chunk_t                 *pc;
-
    LOG_FMT(LAS, "%s(%d): m_aligned.Len() is %zu\n", __func__, __LINE__, m_aligned.Len());
    LOG_FMT(LAS, "   (min is %zu, max is %zu)\n", m_min_col, m_max_col);
 
    if (m_aligned.Len() == 1)
    {
       // check if we have *one* typedef in the line
-      pc = m_aligned.Get(0)->m_pc;
+      chunk_t *pc   = m_aligned.Get(0)->m_pc;
       chunk_t *temp = chunk_get_prev_type(pc, CT_TYPEDEF, pc->level);
       if (temp != nullptr)
       {
@@ -343,7 +339,7 @@ void AlignStack::Flush()
    // Recalculate the max_col - it may have shifted since the last Add()
    for (size_t idx = 0; idx < m_aligned.Len(); idx++)
    {
-      pc = m_aligned.Get(idx)->m_pc;
+      chunk_t *pc = m_aligned.Get(idx)->m_pc;
 
       // Set the column adjust and gap
       size_t col_adj = 0;
@@ -352,15 +348,15 @@ void AlignStack::Flush()
       {
          gap = pc->column - (pc->align.ref->column + pc->align.ref->len());
       }
-      chunk_t *tmp = pc;
-      if (tmp->type == CT_TPAREN_OPEN)
+
+      if (m_star_style == SS_DANGLE)
       {
-         tmp = chunk_get_next(tmp);
-      }
-      if (chunk_is_ptr_operator(tmp) && m_star_style == SS_DANGLE)
-      {
-         col_adj = pc->align.start->column - pc->column;
-         gap     = pc->align.start->column - (pc->align.ref->column + pc->align.ref->len());
+         chunk_t *tmp = (pc->type == CT_TPAREN_OPEN) ? chunk_get_next(pc) : pc;
+         if (chunk_is_ptr_operator(tmp))
+         {
+            col_adj = pc->align.start->column - pc->column;
+            gap     = pc->align.start->column - (pc->align.ref->column + pc->align.ref->len());
+         }
       }
       if (m_right_align)
       {
@@ -368,10 +364,10 @@ void AlignStack::Flush()
          size_t start_len = pc->align.start->len();
          if (pc->align.start->type == CT_NEG)
          {
-            tmp = chunk_get_next(pc->align.start);
-            if (chunk_is_token(tmp, CT_NUMBER))
+            chunk_t *next = chunk_get_next(pc->align.start);
+            if (chunk_is_token(next, CT_NUMBER))
             {
-               start_len += tmp->len();
+               start_len += next->len();
             }
          }
          col_adj += start_len;
@@ -380,11 +376,8 @@ void AlignStack::Flush()
       pc->align.col_adj = col_adj;
 
       // See if this pushes out the max_col
-      size_t endcol = pc->column + col_adj;
-      if (gap < m_gap)
-      {
-         endcol += m_gap - gap;
-      }
+      const size_t endcol = pc->column + col_adj
+                            + (gap < m_gap ? m_gap - gap : 0);
       if (endcol > m_max_col)
       {
          m_max_col = endcol;
@@ -398,12 +391,14 @@ void AlignStack::Flush()
 
    LOG_FMT(LAS, "%s(%d): m_aligned.Len() is %zu\n",
            __func__, __LINE__, m_aligned.Len());
+
+   const ChunkStack::Entry *ce = nullptr;
    for (size_t idx = 0; idx < m_aligned.Len(); idx++)
    {
       ce = m_aligned.Get(idx);
-      pc = ce->m_pc;
+      chunk_t      *pc = ce->m_pc;
 
-      size_t tmp_col = m_max_col - pc->align.col_adj;
+      const size_t tmp_col = m_max_col - pc->align.col_adj;
       if (idx == 0)
       {
          if (m_skip_first && pc->column != tmp_col)
@@ -431,6 +426,7 @@ void AlignStack::Flush()
       align_to_column(pc, tmp_col);
    }
 
+   size_t last_seqnum = 0;
    if (ce != nullptr)
    {
       last_seqnum = ce->m_seqnum;
