@@ -374,6 +374,28 @@ chunk_t *chunk_get_prev_nvb(chunk_t *cur, const scope_e scope = scope_e::ALL);
 
 
 /**
+ * Gets the next chunk not in or part of balanced square
+ * brackets.This handles stacked[] instances to accommodate
+ * multi - dimensional array declarations
+ *
+ * @param  cur    chunk to use as start point
+ *
+ * @return nullptr or the next chunk not in or part of square brackets
+ */
+chunk_t *chunk_get_next_ssq(chunk_t *cur);
+
+/**
+ * Gets the prev chunk not in or part of balanced square
+ * brackets.This handles stacked[] instances to accommodate
+ * multi - dimensional array declarations
+ *
+ * @param  cur    chunk to use as start point
+ *
+ * @return nullptr or the prev chunk not in or part of square brackets
+ */
+chunk_t *chunk_get_prev_ssq(chunk_t *cur);
+
+/**
  * @brief reverse search a chunk of a given category in a chunk list
  *
  * @param  pc   chunk list to search in
