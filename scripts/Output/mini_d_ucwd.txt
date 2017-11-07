@@ -974,6 +974,9 @@ nl_assign_brace                 = ignore   # ignore/add/remove/force
 # Add or remove newline between '=' and '[' (D only).
 nl_assign_square                = ignore   # ignore/add/remove/force
 
+# Add or remove newline between '[]' and '{'.
+nl_tsquare_brace                = ignore   # ignore/add/remove/force
+
 # Add or remove newline after '= [' (D only). Will also affect the newline before the ']'.
 nl_after_square_assign          = ignore   # ignore/add/remove/force
 
