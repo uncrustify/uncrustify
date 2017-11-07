@@ -1,4 +1,4 @@
-#!/bin/python
+#!/usr/bin/python
 """
 option_reducer.py
 
