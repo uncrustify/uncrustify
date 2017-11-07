@@ -968,6 +968,10 @@ nl_end_of_file_min              Unsigned Number
 
 nl_assign_brace                 { Ignore, Add, Remove, Force }
   Add or remove newline between '=' and '{'.
+  
+nl_tsquare_brace                 { Ignore, Add, Remove, Force }
+  Add or remove newline between '[]' and '{'.
+
 
 nl_assign_square                { Ignore, Add, Remove, Force }
   Add or remove newline between '=' and '[' (D only).
