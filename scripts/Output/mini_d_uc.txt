@@ -296,6 +296,7 @@ nl_end_of_file                  = ignore
 nl_end_of_file_min              = 0
 nl_assign_brace                 = ignore
 nl_assign_square                = ignore
+nl_tsquare_brace                = ignore
 nl_after_square_assign          = ignore
 nl_func_var_def_blk             = 0
 nl_typedef_blk_start            = 0
