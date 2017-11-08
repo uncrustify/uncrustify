@@ -55,7 +55,7 @@ static void mod_full_brace_if_chain(void);
  *  - less than a certain length
  *  - doesn't mess up if/else stuff
  */
-static bool can_remove_braces(chunk_t *bopen);
+static bool can_remove_braces(chunk_t &bopen);
 
 
 /**
@@ -297,13 +297,13 @@ static bool should_add_braces(chunk_t &vbopen)
 }
 
 
-static bool can_remove_braces(chunk_t *bopen)
+static bool can_remove_braces(chunk_t &bopen)
 {
    LOG_FUNC_ENTRY();
 
    chunk_t *prev      = nullptr;
    size_t  semi_count = 0;
-   size_t  level      = bopen->level + 1;
+   size_t  level      = bopen.level + 1;
    bool    hit_semi   = false;
    bool    was_fcn    = false;
    size_t  nl_max     = cpd.settings[UO_mod_full_brace_nl].u;
@@ -312,20 +312,20 @@ static bool can_remove_braces(chunk_t *bopen)
    int     br_count   = 0;
 
    // Cannot remove braces inside a preprocessor
-   if (bopen->flags & PCF_IN_PREPROC)
+   if (bopen.flags & PCF_IN_PREPROC)
    {
       return(false);
    }
-   chunk_t *pc = chunk_get_next_ncnl(bopen, scope_e::PREPROC);
+   chunk_t *pc = chunk_get_next_ncnl(&bopen, scope_e::PREPROC);
    if (pc != nullptr && pc->type == CT_BRACE_CLOSE)
    {
       // Can't remove empty statement
       return(false);
    }
 
-   LOG_FMT(LBRDEL, "%s: start on %zu : ", __func__, bopen->orig_line);
+   LOG_FMT(LBRDEL, "%s: start on %zu : ", __func__, bopen.orig_line);
 
-   pc = chunk_get_next_nc(bopen, scope_e::ALL);
+   pc = chunk_get_next_nc(&bopen, scope_e::ALL);
    while (pc != nullptr && pc->level >= level)
    {
       if (pc->flags & PCF_IN_PREPROC)
@@ -394,7 +394,7 @@ static bool can_remove_braces(chunk_t *bopen)
                if (++semi_count > 1)
                {
                   LOG_FMT(LBRDEL, " bailed on %zu because of %s on line %zu\n",
-                          bopen->orig_line, pc->text(), pc->orig_line);
+                          bopen.orig_line, pc->text(), pc->orig_line);
                   return(false);
                }
             }
@@ -431,7 +431,7 @@ static bool can_remove_braces(chunk_t *bopen)
    LOG_FMT(LBRDEL, " - end on '%s' on line %zu. if_count=%zu semi_count=%zu\n",
            get_token_name(pc->type), pc->orig_line, if_count, semi_count);
 
-   return(pc->type == CT_BRACE_CLOSE && pc->pp_level == bopen->pp_level);
+   return(pc->type == CT_BRACE_CLOSE && pc->pp_level == bopen.pp_level);
 } // can_remove_braces
 
 
@@ -1195,7 +1195,7 @@ static void process_if_chain(chunk_t &br_start)
    {
       if (pc->type == CT_BRACE_OPEN)
       {
-         bool tmp = can_remove_braces(pc);
+         bool tmp = can_remove_braces(*pc);
          LOG_FMT(LBRCH, "  [%d] line %zu - can%s remove %s\n",
                  br_cnt, pc->orig_line, tmp ? "" : "not",
                  get_token_name(pc->type));
