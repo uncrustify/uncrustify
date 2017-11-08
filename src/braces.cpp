@@ -18,6 +18,11 @@
 #include "newlines.h"
 #include "chunk_list.h"
 
+#include <vector>
+
+
+using std::vector;
+
 
 //! Converts a single brace into a virtual brace
 static void convert_brace(chunk_t *br);
@@ -1062,11 +1067,11 @@ static chunk_t *mod_case_brace_remove(chunk_t *br_open)
 static chunk_t *mod_case_brace_add(chunk_t *cl_colon)
 {
    LOG_FUNC_ENTRY();
+   LOG_FMT(LMCB, "%s: line %zu", __func__, cl_colon->orig_line);
+
    chunk_t *pc   = cl_colon;
    chunk_t *last = nullptr;
    chunk_t *next = chunk_get_next_ncnl(cl_colon, scope_e::PREPROC);
-
-   LOG_FMT(LMCB, "%s: line %zu", __func__, pc->orig_line);
 
    while ((pc = chunk_get_next_ncnl(pc, scope_e::PREPROC)) != nullptr)
    {
@@ -1080,11 +1085,6 @@ static chunk_t *mod_case_brace_add(chunk_t *cl_colon)
          && (pc->type == CT_CASE || pc->type == CT_BREAK))
       {
          last = pc;
-         //if (pc->type == CT_BREAK)
-         //{
-         //   // Step past the semicolon
-         //   last = chunk_get_next_ncnl(chunk_get_next_ncnl(last));
-         //}
          break;
       }
    }
@@ -1165,21 +1165,21 @@ static void mod_case_brace(void)
 static void process_if_chain(chunk_t *br_start)
 {
    LOG_FUNC_ENTRY();
-   chunk_t *braces[256];
-   int     br_cnt           = 0;
+   LOG_FMT(LBRCH, "%s: if starts on line %zu\n", __func__, br_start->orig_line);
+
+   vector<chunk_t *> braces;
+   braces.reserve(16);
+
    bool    must_have_braces = false;
 
    chunk_t *pc = br_start;
-
-   LOG_FMT(LBRCH, "%s: if starts on line %zu\n", __func__, br_start->orig_line);
-
    while (pc != nullptr)
    {
       if (pc->type == CT_BRACE_OPEN)
       {
-         bool tmp = can_remove_braces(pc);
-         LOG_FMT(LBRCH, "  [%d] line %zu - can%s remove %s\n",
-                 br_cnt, pc->orig_line, tmp ? "" : "not",
+         const bool tmp = can_remove_braces(pc);
+         LOG_FMT(LBRCH, "  [%zu] line %zu - can%s remove %s\n",
+                 braces.size(), pc->orig_line, tmp ? "" : "not",
                  get_token_name(pc->type));
          if (!tmp)
          {
@@ -1188,23 +1188,23 @@ static void process_if_chain(chunk_t *br_start)
       }
       else
       {
-         bool tmp = should_add_braces(pc);
+         const bool tmp = should_add_braces(pc);
          if (tmp)
          {
             must_have_braces = true;
          }
-         LOG_FMT(LBRCH, "  [%d] line %zu - %s %s\n",
-                 br_cnt, pc->orig_line, tmp ? "should add" : "ignore",
+         LOG_FMT(LBRCH, "  [%zu] line %zu - %s %s\n",
+                 braces.size(), pc->orig_line, tmp ? "should add" : "ignore",
                  get_token_name(pc->type));
       }
 
-      braces[br_cnt++] = pc;
+      braces.push_back(pc);
       chunk_t *br_close = chunk_skip_to_match(pc, scope_e::PREPROC);
       if (br_close == nullptr)
       {
          break;
       }
-      braces[br_cnt++] = br_close;
+      braces.push_back(br_close);
 
       pc = chunk_get_next_ncnl(br_close, scope_e::PREPROC);
       if (pc == nullptr || pc->type != CT_ELSE)
@@ -1240,26 +1240,30 @@ static void process_if_chain(chunk_t *br_start)
 
    if (must_have_braces)
    {
-      LOG_FMT(LBRCH, "%s: add braces on lines[%d]:", __func__, br_cnt);
-      while (--br_cnt >= 0)
+      LOG_FMT(LBRCH, "%s: add braces on lines[%zu]:", __func__, braces.size());
+
+      const auto ite = braces.rend();
+      for (auto itc = braces.rbegin(); itc != ite; ++itc)
       {
-         chunk_flags_set(braces[br_cnt], PCF_KEEP_BRACE);
-         if (  (braces[br_cnt]->type == CT_VBRACE_OPEN)
-            || (braces[br_cnt]->type == CT_VBRACE_CLOSE))
+         const auto brace = *itc;
+
+         chunk_flags_set(brace, PCF_KEEP_BRACE);
+         if (brace->type == CT_VBRACE_OPEN || brace->type == CT_VBRACE_CLOSE)
          {
-            LOG_FMT(LBRCH, " %zu", braces[br_cnt]->orig_line);
-            convert_vbrace(braces[br_cnt]);
+            LOG_FMT(LBRCH, " %zu", brace->orig_line);
+            convert_vbrace(brace);
          }
          else
          {
-            LOG_FMT(LBRCH, " {%zu}", braces[br_cnt]->orig_line);
+            LOG_FMT(LBRCH, " {%zu}", brace->orig_line);
          }
-         braces[br_cnt] = nullptr;
       }
       LOG_FMT(LBRCH, "\n");
    }
    else if (cpd.settings[UO_mod_full_brace_if_chain].b)
    {
+      LOG_FMT(LBRCH, "%s: remove braces on lines[%zu]:", __func__, braces.size());
+
       /*
        * This might run because either
        * UO_mod_full_brace_if_chain or UO_mod_full_brace_if_chain_only
@@ -1268,21 +1272,21 @@ static void process_if_chain(chunk_t *br_start)
        */
       const auto multiline_block = cpd.settings[UO_mod_full_brace_nl_block_rem_mlcond].b;
 
-      LOG_FMT(LBRCH, "%s: remove braces on lines[%d]:", __func__, br_cnt);
-      while (--br_cnt >= 0)
+      const auto ite = braces.rend();
+      for (auto itc = braces.rbegin(); itc != ite; ++itc)
       {
-         if (  (  braces[br_cnt]->type == CT_BRACE_OPEN
-               || braces[br_cnt]->type == CT_BRACE_CLOSE)
-            && ((multiline_block) ? !paren_multiline_before_brace(braces[br_cnt]) : true))
+         const auto brace = *itc;
+
+         if (  (brace->type == CT_BRACE_OPEN || brace->type == CT_BRACE_CLOSE)
+            && (multiline_block ? !paren_multiline_before_brace(brace) : true))
          {
-            LOG_FMT(LBRCH, " {%zu}", braces[br_cnt]->orig_line);
-            convert_brace(braces[br_cnt]);
+            LOG_FMT(LBRCH, " {%zu}", brace->orig_line);
+            convert_brace(brace);
          }
          else
          {
-            LOG_FMT(LBRCH, " %zu", braces[br_cnt]->orig_line);
+            LOG_FMT(LBRCH, " %zu", brace->orig_line);
          }
-         braces[br_cnt] = nullptr;
       }
       LOG_FMT(LBRCH, "\n");
    }
