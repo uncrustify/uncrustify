@@ -924,7 +924,6 @@ static bool check_complex_statements(parse_frame_t *frm, chunk_t *pc)
 static bool handle_complex_close(parse_frame_t *frm, chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
-   chunk_t *next;
 
    if (frm->pse[frm->pse_tos].stage == brace_stage_e::PAREN1)
    {
@@ -932,6 +931,7 @@ static bool handle_complex_close(parse_frame_t *frm, chunk_t *pc)
       {
          frm->pse[frm->pse_tos].type  = pc->type;
          frm->pse[frm->pse_tos].stage = brace_stage_e::CATCH_WHEN;
+
          return(true);
       }
 
@@ -940,22 +940,20 @@ static bool handle_complex_close(parse_frame_t *frm, chunk_t *pc)
    }
    else if (frm->pse[frm->pse_tos].stage == brace_stage_e::BRACE2)
    {
-      // BRACE2: IF => ELSE, anyting else => close
+      // BRACE2: IF => ELSE, anything else => close
       if (  (frm->pse[frm->pse_tos].type == CT_IF)
          || (frm->pse[frm->pse_tos].type == CT_ELSEIF))
       {
          frm->pse[frm->pse_tos].stage = brace_stage_e::ELSE;
 
          // If the next chunk isn't CT_ELSE, close the statement
-         next = chunk_get_next_ncnl(pc);
+         chunk_t *next = chunk_get_next_ncnl(pc);
          if (next != nullptr && next->type != CT_ELSE)
          {
             frm->pse_tos--;
             print_stack(LBCSPOP, "-IF-HCS ", *frm);
-            if (close_statement(frm, pc))
-            {
-               return(true);
-            }
+
+            return(close_statement(frm, pc));
          }
       }
       else if (  (frm->pse[frm->pse_tos].type == CT_TRY)
@@ -964,17 +962,15 @@ static bool handle_complex_close(parse_frame_t *frm, chunk_t *pc)
          frm->pse[frm->pse_tos].stage = brace_stage_e::CATCH;
 
          // If the next chunk isn't CT_CATCH or CT_FINALLY, close the statement
-         next = chunk_get_next_ncnl(pc);
+         chunk_t *next = chunk_get_next_ncnl(pc);
          if (  next != nullptr
             && next->type != CT_CATCH
             && next->type != CT_FINALLY)
          {
             frm->pse_tos--;
             print_stack(LBCSPOP, "-TRY-HCS ", *frm);
-            if (close_statement(frm, pc))
-            {
-               return(true);
-            }
+
+            return(close_statement(frm, pc));
          }
       }
       else
@@ -983,10 +979,8 @@ static bool handle_complex_close(parse_frame_t *frm, chunk_t *pc)
                  __func__, __LINE__, get_token_name(frm->pse[frm->pse_tos].type));
          frm->pse_tos--;
          print_stack(LBCSPOP, "-HCC B2 ", *frm);
-         if (close_statement(frm, pc))
-         {
-            return(true);
-         }
+
+         return(close_statement(frm, pc));
       }
    }
    else if (frm->pse[frm->pse_tos].stage == brace_stage_e::BRACE_DO)
@@ -1007,10 +1001,7 @@ static bool handle_complex_close(parse_frame_t *frm, chunk_t *pc)
       frm->pse_tos--;
       print_stack(LBCSPOP, "-HCC WoDS ", *frm);
 
-      if (close_statement(frm, pc))
-      {
-         return(true);
-      }
+      return(close_statement(frm, pc));
    }
    else
    {
