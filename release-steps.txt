@@ -32,9 +32,6 @@ Change the date at the first line of this document.
    Use script/count_the_options.sh to count the options.
    Check the number of options at ./tests/cli/Output/help.txt
 
-2c. Update the config files
-   $ scripts/update-defaults.sh
-
 2d. Update the man file, if any command-line options have changed.
 
 2e. Update the ChangeLog to indicate the release date
@@ -52,6 +49,9 @@ Change the date at the first line of this document.
    $ git tag -a uncrustify-0.nn -m uncrustify-0.nn
    $ git push --tags --repo=https://github.com/uncrustify/uncrustify.git
      (use an admin)
+
+4b. Update the config files
+   $ scripts/update-defaults.sh
 
 5. The source tarball is available from the release on GitHub, or use
    $ git archive -o uncrustify-0.nn.tar.gz uncrustify-0.nn
