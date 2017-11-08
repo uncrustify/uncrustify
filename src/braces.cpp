@@ -77,7 +77,7 @@ static void append_tag_name(unc_text &txt, chunk_t *pc);
 
 
 //! Remove the case brace, if allowable.
-static chunk_t *mod_case_brace_remove(chunk_t *br_open);
+static chunk_t *mod_case_brace_remove(chunk_t &br_open);
 
 
 //! Add the case brace, if allowable.
@@ -999,15 +999,15 @@ static void move_case_break(void)
 }
 
 
-static chunk_t *mod_case_brace_remove(chunk_t *br_open)
+static chunk_t *mod_case_brace_remove(chunk_t &br_open)
 {
    LOG_FUNC_ENTRY();
-   chunk_t *next = chunk_get_next_ncnl(br_open, scope_e::PREPROC);
+   chunk_t *next = chunk_get_next_ncnl(&br_open, scope_e::PREPROC);
 
-   LOG_FMT(LMCB, "%s: line %zu", __func__, br_open->orig_line);
+   LOG_FMT(LMCB, "%s: line %zu", __func__, br_open.orig_line);
 
    // Find the matching brace close
-   chunk_t *br_close = chunk_get_next_type(br_open, CT_BRACE_CLOSE, br_open->level, scope_e::PREPROC);
+   chunk_t *br_close = chunk_get_next_type(&br_open, CT_BRACE_CLOSE, br_open.level, scope_e::PREPROC);
    if (br_close == nullptr)
    {
       LOG_FMT(LMCB, " - no close\n");
@@ -1029,24 +1029,24 @@ static chunk_t *mod_case_brace_remove(chunk_t *br_open)
    }
 
    // scan to make sure there are no definitions at brace level between braces
-   for (pc = br_open; pc != br_close; pc = chunk_get_next_ncnl(pc, scope_e::PREPROC))
+   for (pc = &br_open; pc != br_close; pc = chunk_get_next_ncnl(pc, scope_e::PREPROC))
    {
-      if ((pc->level == (br_open->level + 1)) && (pc->flags & PCF_VAR_DEF))
+      if ((pc->level == (br_open.level + 1)) && (pc->flags & PCF_VAR_DEF))
       {
          LOG_FMT(LMCB, " - vardef on line %zu: '%s'\n", pc->orig_line, pc->text());
          return(next);
       }
    }
    LOG_FMT(LMCB, " - removing braces on lines %zu and %zu\n",
-           br_open->orig_line, br_close->orig_line);
+           br_open.orig_line, br_close->orig_line);
 
-   for (pc = br_open; pc != br_close; pc = chunk_get_next_ncnl(pc, scope_e::PREPROC))
+   for (pc = &br_open; pc != br_close; pc = chunk_get_next_ncnl(pc, scope_e::PREPROC))
    {
       pc->brace_level--;
       pc->level--;
    }
-   next = chunk_get_prev(br_open, scope_e::PREPROC);
-   chunk_del(br_open);
+   next = chunk_get_prev(&br_open, scope_e::PREPROC);
+   chunk_del(&br_open);
    chunk_del(br_close);
    return(chunk_get_next(next, scope_e::PREPROC));
 } // mod_case_brace_remove
@@ -1137,7 +1137,7 @@ static void mod_case_brace(void)
          && pc->type == CT_BRACE_OPEN
          && pc->parent_type == CT_CASE)
       {
-         pc = mod_case_brace_remove(pc);
+         pc = mod_case_brace_remove(*pc);
       }
       else if (  (cpd.settings[UO_mod_case_brace].a & AV_ADD)
               && pc->type == CT_CASE_COLON
