@@ -24,7 +24,7 @@ static void convert_brace(chunk_t *br);
 
 
 //! Converts a single virtual brace into a real brace
-static void convert_vbrace(chunk_t *br);
+static void convert_vbrace(chunk_t &br);
 
 
 static void convert_vbrace_to_brace(void);
@@ -658,49 +658,45 @@ static void convert_brace(chunk_t *br)
 } // convert_brace
 
 
-static void convert_vbrace(chunk_t *vbr)
+static void convert_vbrace(chunk_t &vbr)
 {
    LOG_FUNC_ENTRY();
-   if (vbr == nullptr)
-   {
-      return;
-   }
 
-   if (vbr->type == CT_VBRACE_OPEN)
+   if (vbr.type == CT_VBRACE_OPEN)
    {
-      set_chunk_type(vbr, CT_BRACE_OPEN);
-      vbr->str = "{";
+      set_chunk_type(&vbr, CT_BRACE_OPEN);
+      vbr.str = "{";
 
       /*
        * If the next chunk is a preprocessor, then move the open brace after the
        * preprocessor.
        */
-      chunk_t *tmp = chunk_get_next(vbr);
+      chunk_t *tmp = chunk_get_next(&vbr);
       if (tmp != nullptr && tmp->type == CT_PREPROC)
       {
-         tmp = chunk_get_next(vbr, scope_e::PREPROC);
-         chunk_move_after(vbr, tmp);
-         newline_add_after(vbr);
+         tmp = chunk_get_next(&vbr, scope_e::PREPROC);
+         chunk_move_after(&vbr, tmp);
+         newline_add_after(&vbr);
       }
    }
-   else if (vbr->type == CT_VBRACE_CLOSE)
+   else if (vbr.type == CT_VBRACE_CLOSE)
    {
-      set_chunk_type(vbr, CT_BRACE_CLOSE);
-      vbr->str = "}";
+      set_chunk_type(&vbr, CT_BRACE_CLOSE);
+      vbr.str = "}";
 
       /*
        * If the next chunk is a comment, followed by a newline, then
        * move the brace after the newline and add another newline after
        * the close brace.
        */
-      chunk_t *tmp = chunk_get_next(vbr);
+      chunk_t *tmp = chunk_get_next(&vbr);
       if (chunk_is_comment(tmp))
       {
          tmp = chunk_get_next(tmp);
          if (chunk_is_newline(tmp))
          {
-            chunk_move_after(vbr, tmp);
-            newline_add_after(vbr);
+            chunk_move_after(&vbr, tmp);
+            newline_add_after(&vbr);
          }
       }
    }
@@ -762,8 +758,8 @@ static void convert_vbrace_to_brace(void)
          }
 
          // if we found a corresponding virtual closing brace
-         convert_vbrace(pc);   // convert both the opening
-         convert_vbrace(vbc);  // and closing brace
+         convert_vbrace(*pc);   // convert both the opening
+         convert_vbrace(*vbc);  // and closing brace
       }
    }
 } // convert_vbrace_to_brace
@@ -1270,7 +1266,7 @@ static void process_if_chain(chunk_t &br_start)
             || (braces[br_cnt]->type == CT_VBRACE_CLOSE))
          {
             LOG_FMT(LBRCH, " %zu", braces[br_cnt]->orig_line);
-            convert_vbrace(braces[br_cnt]);
+            convert_vbrace(*braces[br_cnt]);
          }
          else
          {
