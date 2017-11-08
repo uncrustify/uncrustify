@@ -809,38 +809,45 @@ chunk_t *insert_comment_after(chunk_t *ref, c_token_t cmt_type,
 static void append_tag_name(unc_text &txt, chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
-   chunk_t *tmp = pc;
+   chunk_t *cur = pc;
 
    // step backwards over all a::b stuff
-   while ((tmp = chunk_get_prev_ncnl(tmp)) != nullptr)
+   for (chunk_t *tmp = chunk_get_prev_ncnl(pc)
+        ; (  tmp != nullptr
+          && (tmp->type == CT_DC_MEMBER || tmp->type == CT_MEMBER))
+        ; tmp = chunk_get_prev_ncnl(tmp))
    {
-      if (tmp->type != CT_DC_MEMBER && tmp->type != CT_MEMBER)
-      {
-         break;
-      }
       tmp = chunk_get_prev_ncnl(tmp);
-      pc  = tmp;
+      cur = tmp;
+
       if (!chunk_is_word(tmp))
       {
          break;
       }
    }
 
-   txt += pc->str;
-   while ((pc = chunk_get_next_ncnl(pc)) != nullptr)
+   if (cur == nullptr)
    {
-      if (pc->type != CT_DC_MEMBER && pc->type != CT_MEMBER)
+      return;
+   }
+
+   txt += cur->str;
+   cur  = chunk_get_next_ncnl(cur);
+
+   for (chunk_t *tmp = cur, *tmp_next = chunk_get_next_ncnl(cur)
+        ; (  tmp != nullptr
+          && (tmp->type == CT_DC_MEMBER || tmp->type == CT_MEMBER))
+        ; tmp = chunk_get_next_ncnl(tmp), tmp_next = chunk_get_next_ncnl(tmp))
+   {
+      txt += tmp->str;
+
+      if (tmp_next == nullptr)
       {
          break;
       }
-      txt += pc->str;
-      pc   = chunk_get_next_ncnl(pc);
-      if (pc)
-      {
-         txt += pc->str;
-      }
+      txt += tmp_next->str;
    }
-}
+} // append_tag_name
 
 
 void add_long_closebrace_comment(void)
