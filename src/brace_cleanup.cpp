@@ -169,18 +169,14 @@ static void print_stack(log_sev_t logsev, const char *str,
 void brace_cleanup(void)
 {
    LOG_FUNC_ENTRY();
-   chunk_t       *pc;
-   parse_frame_t frm;
 
-   cpd.unc_stage = unc_stage_e::BRACE_CLEANUP;
-
-   memset(&frm, 0, sizeof(frm));
-
+   cpd.unc_stage   = unc_stage_e::BRACE_CLEANUP;
    cpd.frame_count = 0;
    cpd.in_preproc  = CT_NONE;
    cpd.pp_level    = 0;
 
-   pc = chunk_get_head();
+   parse_frame_t frm{};
+   chunk_t       *pc = chunk_get_head();
    while (pc != nullptr)
    {
       // Check for leaving a #define body
@@ -196,20 +192,20 @@ void brace_cleanup(void)
       }
 
       // Check for a preprocessor start
-      size_t pp_level = cpd.pp_level;
-      if (pc->type == CT_PREPROC)
-      {
-         pp_level = preproc_start(&frm, pc);
-      }
+      const size_t pp_level = (pc->type == CT_PREPROC)
+                              ? preproc_start(&frm, pc)
+                              : cpd.pp_level;
 
       // Do before assigning stuff from the frame
-      if (cpd.lang_flags & LANG_PAWN)
+      controlPSECount(frm.pse_tos);
+      if (  (cpd.lang_flags & LANG_PAWN)
+         && frm.pse[frm.pse_tos].type == CT_VBRACE_OPEN
+         && pc->type == CT_NEWLINE)
       {
-         controlPSECount(frm.pse_tos);
-         if (  (frm.pse[frm.pse_tos].type == CT_VBRACE_OPEN)
-            && pc->type == CT_NEWLINE)
+         pc = pawn_check_vsemicolon(pc);
+         if (pc == nullptr)
          {
-            pc = pawn_check_vsemicolon(pc);
+            return;
          }
       }
 
@@ -217,7 +213,6 @@ void brace_cleanup(void)
       pc->level       = frm.level;
       pc->brace_level = frm.brace_level;
       pc->pp_level    = pp_level;
-
 
       /*
        * #define bodies get the full formatting treatment
