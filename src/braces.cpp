@@ -73,7 +73,7 @@ static bool should_add_braces(chunk_t *vbopen);
  * Collect the text into txt that contains the full tag name.
  * Mainly for collecting namespace 'a.b.c' or function 'foo::bar()' names.
  */
-static void append_tag_name(unc_text &txt, chunk_t *pc);
+static void append_tag_name(unc_text &txt, chunk_t &pc);
 
 
 //! Remove the case brace, if allowable.
@@ -804,10 +804,11 @@ chunk_t *insert_comment_after(chunk_t *ref, c_token_t cmt_type,
 }
 
 
-static void append_tag_name(unc_text &txt, chunk_t *pc)
+static void append_tag_name(unc_text &txt, chunk_t &pc)
 {
    LOG_FUNC_ENTRY();
-   chunk_t *tmp = pc;
+   chunk_t *tmp  = &pc;
+   chunk_t *tmp2 = &pc;
 
    // step backwards over all a::b stuff
    while ((tmp = chunk_get_prev_ncnl(tmp)) != nullptr)
@@ -816,29 +817,38 @@ static void append_tag_name(unc_text &txt, chunk_t *pc)
       {
          break;
       }
-      tmp = chunk_get_prev_ncnl(tmp);
-      pc  = tmp;
+
+      tmp  = chunk_get_prev_ncnl(tmp);
+      tmp2 = tmp;
+
       if (!chunk_is_word(tmp))
       {
          break;
       }
    }
 
-   txt += pc->str;
-   while ((pc = chunk_get_next_ncnl(pc)) != nullptr)
+   if (tmp2 != nullptr)
    {
-      if (pc->type != CT_DC_MEMBER && pc->type != CT_MEMBER)
+      txt += tmp2->str;
+   }
+
+   tmp = tmp2;
+   while ((tmp = chunk_get_next_ncnl(tmp)) != nullptr)
+   {
+      if (tmp->type != CT_DC_MEMBER && tmp->type != CT_MEMBER)
       {
          break;
       }
-      txt += pc->str;
-      pc   = chunk_get_next_ncnl(pc);
-      if (pc)
+
+      txt += tmp->str;
+
+      const chunk_t *tmp_next = chunk_get_next_ncnl(tmp);
+      if (tmp_next)
       {
-         txt += pc->str;
+         txt += tmp_next->str;
       }
    }
-}
+} // append_tag_name
 
 
 void add_long_closebrace_comment(void)
@@ -927,7 +937,11 @@ void add_long_closebrace_comment(void)
                   // 76006 Explicit null dereferenced, 2016-03-17
                   tag_pc = fcn_pc;
                   xstr.clear();
-                  append_tag_name(xstr, tag_pc);
+
+                  if (tag_pc != nullptr)
+                  {
+                     append_tag_name(xstr, *tag_pc);
+                  }
                }
                else if (br_open->parent_type == CT_NAMESPACE)
                {
@@ -941,7 +955,12 @@ void add_long_closebrace_comment(void)
                    */
                   xstr = ns_pc->str;
                   xstr.append(" ");
-                  append_tag_name(xstr, chunk_get_next(ns_pc));
+
+                  chunk_t *tmp_next = chunk_get_next(ns_pc);
+                  if (tag_pc != nullptr)
+                  {
+                     append_tag_name(xstr, *tmp_next);
+                  }
                }
                else if (  br_open->parent_type == CT_CLASS
                        && cl_semi_pc
@@ -951,7 +970,13 @@ void add_long_closebrace_comment(void)
                   tag_pc = cl_pc;
                   xstr   = tag_pc->str;
                   xstr.append(" ");
-                  append_tag_name(xstr, chunk_get_next(cl_pc));
+
+                  chunk_t *tmp_next = chunk_get_next(cl_pc);
+                  if (tag_pc != nullptr)
+                  {
+                     append_tag_name(xstr, *tmp_next);
+                  }
+
                   br_close   = cl_semi_pc;
                   cl_semi_pc = nullptr;
                   cl_pc      = nullptr;
