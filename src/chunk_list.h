@@ -612,7 +612,7 @@ static_inline bool chunk_is_type(const chunk_t *pc)
 
 static_inline bool chunk_is_token(const chunk_t *pc, c_token_t c_token)
 {
-   return(pc != NULL && pc->type == c_token);
+   return(pc != nullptr && pc->type == c_token);
 }
 
 
