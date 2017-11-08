@@ -73,7 +73,7 @@ static bool should_add_braces(const chunk_t &vbopen);
  * Collect the text into txt that contains the full tag name.
  * Mainly for collecting namespace 'a.b.c' or function 'foo::bar()' names.
  */
-static void append_tag_name(unc_text &txt, chunk_t &pc);
+static void append_tag_name(unc_text &txt, const chunk_t &pc);
 
 
 //! Remove the case brace, if allowable.
@@ -800,22 +800,19 @@ chunk_t *insert_comment_after(chunk_t &ref, c_token_t cmt_type,
 }
 
 
-static void append_tag_name(unc_text &txt, chunk_t &pc)
+static void append_tag_name(unc_text &txt, const chunk_t &pc)
 {
    LOG_FUNC_ENTRY();
-   chunk_t *tmp  = &pc;
-   chunk_t *tmp2 = &pc;
+   const chunk_t *cur = &pc;
 
    // step backwards over all a::b stuff
-   while ((tmp = chunk_get_prev_ncnl(tmp)) != nullptr)
+   for (const chunk_t *tmp = chunk_get_prev_ncnl(&pc)
+        ; (  tmp != nullptr
+          && (tmp->type == CT_DC_MEMBER || tmp->type == CT_MEMBER))
+        ; tmp = chunk_get_prev_ncnl(tmp))
    {
-      if (tmp->type != CT_DC_MEMBER && tmp->type != CT_MEMBER)
-      {
-         break;
-      }
-
-      tmp  = chunk_get_prev_ncnl(tmp);
-      tmp2 = tmp;
+      tmp = chunk_get_prev_ncnl(tmp);
+      cur = tmp;
 
       if (!chunk_is_word(tmp))
       {
@@ -823,23 +820,21 @@ static void append_tag_name(unc_text &txt, chunk_t &pc)
       }
    }
 
-   if (tmp2 != nullptr)
+   if (cur == nullptr)
    {
-      txt += tmp2->str;
+      return;
    }
 
-   tmp = tmp2;
-   while ((tmp = chunk_get_next_ncnl(tmp)) != nullptr)
+   txt += cur->str;
+   cur  = chunk_get_next_ncnl(cur);
+
+   for (const chunk_t *tmp = cur, *tmp_next = chunk_get_next_ncnl(cur)
+        ; (  tmp != nullptr
+          && (tmp->type == CT_DC_MEMBER || tmp->type == CT_MEMBER))
+        ; tmp = chunk_get_next_ncnl(tmp), tmp_next = chunk_get_next_ncnl(tmp))
    {
-      if (tmp->type != CT_DC_MEMBER && tmp->type != CT_MEMBER)
-      {
-         break;
-      }
-
       txt += tmp->str;
-
-      const chunk_t *tmp_next = chunk_get_next_ncnl(tmp);
-      if (tmp_next)
+      if (tmp_next != nullptr)
       {
          txt += tmp_next->str;
       }
