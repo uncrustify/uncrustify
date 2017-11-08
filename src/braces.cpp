@@ -109,29 +109,28 @@ static void process_if_chain(chunk_t &br_start);
  *                 parenthesis or
  *                 when no newlines are found between the parenthesis
  */
-static bool paren_multiline_before_brace(chunk_t *brace)
+static bool paren_multiline_before_brace(chunk_t &brace)
 {
-   if (  brace == nullptr
-      || (brace->type != CT_BRACE_OPEN && brace->type != CT_BRACE_CLOSE)
-      || (  brace->parent_type != CT_IF
-         && brace->parent_type != CT_ELSEIF
-         && brace->parent_type != CT_FOR
-         && brace->parent_type != CT_USING_STMT
-         && brace->parent_type != CT_WHILE
-         && brace->parent_type != CT_FUNC_CLASS_DEF
-         && brace->parent_type != CT_FUNC_DEF))
+   if (  (brace.type != CT_BRACE_OPEN && brace.type != CT_BRACE_CLOSE)
+      || (  brace.parent_type != CT_IF
+         && brace.parent_type != CT_ELSEIF
+         && brace.parent_type != CT_FOR
+         && brace.parent_type != CT_USING_STMT
+         && brace.parent_type != CT_WHILE
+         && brace.parent_type != CT_FUNC_CLASS_DEF
+         && brace.parent_type != CT_FUNC_DEF))
    {
       return(false);
    }
    const auto paren_t = CT_SPAREN_CLOSE;
 
    // find parenthesis pair of the if/for/while/...
-   auto paren_close = chunk_get_prev_type(brace, paren_t, brace->level, scope_e::ALL);
+   auto paren_close = chunk_get_prev_type(&brace, paren_t, brace.level, scope_e::ALL);
    auto paren_open  = chunk_skip_to_match_rev(paren_close, scope_e::ALL);
 
    if (  paren_close == nullptr
       || paren_open == nullptr
-      || paren_close == brace
+      || paren_close == &brace
       || paren_open == paren_close)
    {
       return(false);
@@ -250,7 +249,7 @@ static void examine_braces(void)
             || (  pc->parent_type == CT_WHILE
                && cpd.settings[UO_mod_full_brace_while].a == AV_REMOVE)))
       {
-         if (multiline_block && paren_multiline_before_brace(pc))
+         if (multiline_block && paren_multiline_before_brace(*pc))
          {
             pc = prev;
             continue;
@@ -1291,7 +1290,7 @@ static void process_if_chain(chunk_t &br_start)
       {
          if (  (  braces[br_cnt]->type == CT_BRACE_OPEN
                || braces[br_cnt]->type == CT_BRACE_CLOSE)
-            && ((multiline_block) ? !paren_multiline_before_brace(braces[br_cnt]) : true))
+            && ((multiline_block) ? !paren_multiline_before_brace(*braces[br_cnt]) : true))
          {
             LOG_FMT(LBRCH, " {%zu}", braces[br_cnt]->orig_line);
             convert_brace(*braces[br_cnt]);
