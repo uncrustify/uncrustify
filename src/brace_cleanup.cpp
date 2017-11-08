@@ -739,12 +739,13 @@ static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
 static bool check_complex_statements(parse_frame_t *frm, chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
-   c_token_t parent;
 
    // Turn an optional parenthesis into either a real parenthesis or a brace
    if (frm->pse[frm->pse_tos].stage == brace_stage_e::OP_PAREN1)
    {
-      frm->pse[frm->pse_tos].stage = (pc->type != CT_PAREN_OPEN) ? brace_stage_e::BRACE2 : brace_stage_e::PAREN1;
+      frm->pse[frm->pse_tos].stage = (pc->type != CT_PAREN_OPEN)
+                                     ? brace_stage_e::BRACE2
+                                     : brace_stage_e::PAREN1;
    }
 
    // Check for CT_ELSE after CT_IF
@@ -756,6 +757,7 @@ static bool check_complex_statements(parse_frame_t *frm, chunk_t *pc)
          frm->pse[frm->pse_tos].type  = CT_ELSE;
          frm->pse[frm->pse_tos].stage = brace_stage_e::ELSEIF;
          print_stack(LBCSSWAP, "=Swap   ", *frm);
+
          return(true);
       }
 
@@ -771,17 +773,15 @@ static bool check_complex_statements(parse_frame_t *frm, chunk_t *pc)
    // Check for CT_IF after CT_ELSE
    if (frm->pse[frm->pse_tos].stage == brace_stage_e::ELSEIF)
    {
-      if (pc->type == CT_IF)
+      if (  pc->type == CT_IF
+         && (  !cpd.settings[UO_indent_else_if].b
+            || !chunk_is_newline(chunk_get_prev_nc(pc))))
       {
-         if (  !cpd.settings[UO_indent_else_if].b
-            || !chunk_is_newline(chunk_get_prev_nc(pc)))
-         {
-            // Replace CT_ELSE with CT_IF
-            set_chunk_type(pc, CT_ELSEIF);
-            frm->pse[frm->pse_tos].type  = CT_ELSEIF;
-            frm->pse[frm->pse_tos].stage = brace_stage_e::PAREN1;
-            return(true);
-         }
+         // Replace CT_ELSE with CT_IF
+         set_chunk_type(pc, CT_ELSEIF);
+         frm->pse[frm->pse_tos].type  = CT_ELSEIF;
+         frm->pse[frm->pse_tos].stage = brace_stage_e::PAREN1;
+         return(true);
       }
 
       // Jump to the 'expecting brace' stage
@@ -797,12 +797,14 @@ static bool check_complex_statements(parse_frame_t *frm, chunk_t *pc)
          frm->pse[frm->pse_tos].type  = pc->type;
          frm->pse[frm->pse_tos].stage = (pc->type == CT_CATCH) ? brace_stage_e::CATCH_WHEN : brace_stage_e::BRACE2;
          print_stack(LBCSSWAP, "=Swap   ", *frm);
+
          return(true);
       }
 
       // Remove the CT_TRY and close the statement
       frm->pse_tos--;
       print_stack(LBCSPOP, "-TRY-CCS ", *frm);
+
       if (close_statement(frm, pc))
       {
          return(true);
@@ -818,6 +820,7 @@ static bool check_complex_statements(parse_frame_t *frm, chunk_t *pc)
          set_chunk_type(pc, CT_SPAREN_OPEN);
          frm->pse[frm->pse_tos].type  = pc->type;
          frm->pse[frm->pse_tos].stage = brace_stage_e::PAREN1;
+
          return(false);
       }
 
@@ -825,12 +828,14 @@ static bool check_complex_statements(parse_frame_t *frm, chunk_t *pc)
       {
          frm->pse[frm->pse_tos].type  = pc->type;
          frm->pse[frm->pse_tos].stage = brace_stage_e::OP_PAREN1;
+
          return(true);
       }
 
       if (pc->type == CT_BRACE_OPEN)
       {
          frm->pse[frm->pse_tos].stage = brace_stage_e::BRACE2;
+
          return(false);
       }
    }
@@ -843,6 +848,7 @@ static bool check_complex_statements(parse_frame_t *frm, chunk_t *pc)
          set_chunk_type(pc, CT_WHILE_OF_DO);
          frm->pse[frm->pse_tos].type  = CT_WHILE_OF_DO; //CT_WHILE;
          frm->pse[frm->pse_tos].stage = brace_stage_e::WOD_PAREN;
+
          return(true);
       }
 
@@ -867,9 +873,9 @@ static bool check_complex_statements(parse_frame_t *frm, chunk_t *pc)
       }
       else
       {
-         parent = frm->pse[frm->pse_tos].type;
+         const c_token_t parent = frm->pse[frm->pse_tos].type;
 
-         chunk_t *vbrace = insert_vbrace_open_before(pc, *frm);
+         chunk_t         *vbrace = insert_vbrace_open_before(pc, *frm);
          set_chunk_parent(vbrace, parent);
 
          frm->level++;
