@@ -1774,7 +1774,8 @@ void indent_text(void)
                         && frm.pse[idx].type != CT_ANGLE_OPEN
                         && frm.pse[idx].type != CT_CASE
                         && frm.pse[idx].type != CT_ASSIGN_NL)
-                     || frm.pse[idx].open_line == frm.pse[frm.pse_tos].open_line)
+                     || are_chunks_in_same_line(frm.pse[idx].pc, frm.pse[frm.pse_tos].pc)
+                        )
                   && (  frm.pse[idx].type != CT_CLASS_COLON
                      && frm.pse[idx].type != CT_CONSTR_COLON))
             {
