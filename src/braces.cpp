@@ -81,7 +81,7 @@ static chunk_t *mod_case_brace_remove(chunk_t *br_open);
 
 
 //! Add the case brace, if allowable.
-static chunk_t *mod_case_brace_add(chunk_t *cl_colon);
+static chunk_t *mod_case_brace_add(chunk_t &cl_colon);
 
 
 /**
@@ -1052,24 +1052,24 @@ static chunk_t *mod_case_brace_remove(chunk_t *br_open)
 } // mod_case_brace_remove
 
 
-static chunk_t *mod_case_brace_add(chunk_t *cl_colon)
+static chunk_t *mod_case_brace_add(chunk_t &cl_colon)
 {
    LOG_FUNC_ENTRY();
-   chunk_t *pc   = cl_colon;
+   chunk_t *pc   = &cl_colon;
    chunk_t *last = nullptr;
-   chunk_t *next = chunk_get_next_ncnl(cl_colon, scope_e::PREPROC);
+   chunk_t *next = chunk_get_next_ncnl(&cl_colon, scope_e::PREPROC);
 
    LOG_FMT(LMCB, "%s: line %zu", __func__, pc->orig_line);
 
    while ((pc = chunk_get_next_ncnl(pc, scope_e::PREPROC)) != nullptr)
    {
-      if (pc->level < cl_colon->level)
+      if (pc->level < cl_colon.level)
       {
          LOG_FMT(LMCB, " - level drop\n");
          return(next);
       }
 
-      if (  pc->level == cl_colon->level
+      if (  pc->level == cl_colon.level
          && (pc->type == CT_CASE || pc->type == CT_BREAK))
       {
          last = pc;
@@ -1092,14 +1092,14 @@ static chunk_t *mod_case_brace_add(chunk_t *cl_colon)
 
    chunk_t chunk;
    chunk.type        = CT_BRACE_OPEN;
-   chunk.orig_line   = cl_colon->orig_line;
+   chunk.orig_line   = cl_colon.orig_line;
    chunk.parent_type = CT_CASE;
-   chunk.level       = cl_colon->level;
-   chunk.brace_level = cl_colon->brace_level;
+   chunk.level       = cl_colon.level;
+   chunk.brace_level = cl_colon.brace_level;
    chunk.flags       = pc->flags & PCF_COPY_FLAGS;
    chunk.str         = "{";
 
-   chunk_t *br_open = chunk_add_after(&chunk, cl_colon);
+   chunk_t *br_open = chunk_add_after(&chunk, &cl_colon);
 
    chunk.type      = CT_BRACE_CLOSE;
    chunk.orig_line = last->orig_line;
@@ -1145,7 +1145,7 @@ static void mod_case_brace(void)
               && next->type != CT_BRACE_CLOSE
               && next->type != CT_CASE)
       {
-         pc = mod_case_brace_add(pc);
+         pc = mod_case_brace_add(*pc);
       }
       else
       {
