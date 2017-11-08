@@ -1151,7 +1151,7 @@ static void mod_case_brace(void)
    chunk_t *pc = chunk_get_head();
    while (pc != nullptr)
    {
-      chunk_t *next = chunk_get_next_ncnl(pc, scope_e::PREPROC);
+      const chunk_t *next = chunk_get_next_ncnl(pc, scope_e::PREPROC);
       if (next == nullptr)
       {
          return;
