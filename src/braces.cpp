@@ -89,7 +89,7 @@ static chunk_t *mod_case_brace_add(chunk_t *cl_colon);
  *
  * @param br_start  chunk pointing to opening brace of if clause
  */
-static void process_if_chain(chunk_t *br_start);
+static void process_if_chain(chunk_t &br_start);
 
 
 /**
@@ -1155,16 +1155,16 @@ static void mod_case_brace(void)
 }
 
 
-static void process_if_chain(chunk_t *br_start)
+static void process_if_chain(chunk_t &br_start)
 {
    LOG_FUNC_ENTRY();
    chunk_t *braces[256];
    int     br_cnt           = 0;
    bool    must_have_braces = false;
 
-   chunk_t *pc = br_start;
+   chunk_t *pc = &br_start;
 
-   LOG_FMT(LBRCH, "%s: if starts on line %zu\n", __func__, br_start->orig_line);
+   LOG_FMT(LBRCH, "%s: if starts on line %zu\n", __func__, br_start.orig_line);
 
    while (pc != nullptr)
    {
@@ -1291,7 +1291,7 @@ static void mod_full_brace_if_chain(void)
       if (  (pc->type == CT_BRACE_OPEN || pc->type == CT_VBRACE_OPEN)
          && pc->parent_type == CT_IF)
       {
-         process_if_chain(pc);
+         process_if_chain(*pc);
       }
    }
 }
