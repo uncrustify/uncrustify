@@ -528,10 +528,11 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
          return(AV_FORCE);
       }
 
-      if (  first->type == CT_WORD
-         || first->type == CT_TYPE
-         || first->type == CT_PAREN_CLOSE
-         || CharTable::IsKw1(first->str[0]))
+      if (  (  first->type == CT_WORD
+            || first->type == CT_TYPE
+            || first->type == CT_PAREN_CLOSE
+            || CharTable::IsKw1(first->str[0]))
+         && (strcmp(first->text(), "void") != 0)) // Issue 1249
       {
          log_rule("sp_before_dc");
          return(cpd.settings[UO_sp_before_dc].a);
