@@ -55,7 +55,7 @@ static void mod_full_brace_if_chain(void);
  *  - less than a certain length
  *  - doesn't mess up if/else stuff
  */
-static bool can_remove_braces(chunk_t &bopen);
+static bool can_remove_braces(const chunk_t &bopen);
 
 
 /**
@@ -66,7 +66,7 @@ static bool can_remove_braces(chunk_t &bopen);
  *
  * @return true (convert to real braces) or false (leave alone)
  */
-static bool should_add_braces(chunk_t &vbopen);
+static bool should_add_braces(const chunk_t &vbopen);
 
 
 /**
@@ -109,7 +109,7 @@ static void process_if_chain(chunk_t &br_start);
  *                 parenthesis or
  *                 when no newlines are found between the parenthesis
  */
-static bool paren_multiline_before_brace(chunk_t &brace)
+static bool paren_multiline_before_brace(const chunk_t &brace)
 {
    if (  (brace.type != CT_BRACE_OPEN && brace.type != CT_BRACE_CLOSE)
       || (  brace.parent_type != CT_IF
@@ -263,7 +263,7 @@ static void examine_braces(void)
 }
 
 
-static bool should_add_braces(chunk_t &vbopen)
+static bool should_add_braces(const chunk_t &vbopen)
 {
    LOG_FUNC_ENTRY();
    size_t nl_max = cpd.settings[UO_mod_full_brace_nl].u;
@@ -296,7 +296,7 @@ static bool should_add_braces(chunk_t &vbopen)
 }
 
 
-static bool can_remove_braces(chunk_t &bopen)
+static bool can_remove_braces(const chunk_t &bopen)
 {
    LOG_FUNC_ENTRY();
 
