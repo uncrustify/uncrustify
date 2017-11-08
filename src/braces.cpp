@@ -66,7 +66,7 @@ static bool can_remove_braces(chunk_t *bopen);
  *
  * @return true (convert to real braces) or false (leave alone)
  */
-static bool should_add_braces(chunk_t *vbopen);
+static bool should_add_braces(chunk_t &vbopen);
 
 
 /**
@@ -264,7 +264,7 @@ static void examine_braces(void)
 }
 
 
-static bool should_add_braces(chunk_t *vbopen)
+static bool should_add_braces(chunk_t &vbopen)
 {
    LOG_FUNC_ENTRY();
    size_t nl_max = cpd.settings[UO_mod_full_brace_nl].u;
@@ -273,12 +273,12 @@ static bool should_add_braces(chunk_t *vbopen)
       return(false);
    }
 
-   LOG_FMT(LBRDEL, "%s: start on %zu : ", __func__, vbopen->orig_line);
+   LOG_FMT(LBRDEL, "%s: start on %zu : ", __func__, vbopen.orig_line);
    chunk_t *pc;
    size_t  nl_count = 0;
 
-   for (pc = chunk_get_next_nc(vbopen, scope_e::PREPROC);
-        pc != nullptr && pc->level > vbopen->level;
+   for (pc = chunk_get_next_nc(&vbopen, scope_e::PREPROC);
+        pc != nullptr && pc->level > vbopen.level;
         pc = chunk_get_next_nc(pc, scope_e::PREPROC))
    {
       if (chunk_is_newline(pc))
@@ -288,7 +288,7 @@ static bool should_add_braces(chunk_t *vbopen)
    }
    if (  pc != nullptr
       && nl_count > nl_max
-      && vbopen->pp_level == pc->pp_level)
+      && vbopen.pp_level == pc->pp_level)
    {
       LOG_FMT(LBRDEL, " exceeded %zu newlines\n", nl_max);
       return(true);
@@ -1206,7 +1206,7 @@ static void process_if_chain(chunk_t &br_start)
       }
       else
       {
-         bool tmp = should_add_braces(pc);
+         bool tmp = should_add_braces(*pc);
          if (tmp)
          {
             must_have_braces = true;
