@@ -1595,6 +1595,12 @@ void do_symbol_check(chunk_t *prev, chunk_t *pc, chunk_t *next)
       {
          set_chunk_type(pc, CT_PTR_TYPE);
       }
+      // Fix Issue #1286
+      else if (  pc->type == CT_STAR
+              && (prev->type == CT_QUALIFIER || next->type == CT_QUALIFIER))
+      {
+         set_chunk_type(pc, CT_PTR_TYPE);
+      }
       else if (pc->type == CT_STAR)
       {
          /*
