@@ -769,17 +769,18 @@ static void convert_vbrace_to_brace(void)
 } // convert_vbrace_to_brace
 
 
-chunk_t *insert_comment_after(chunk_t *ref, c_token_t cmt_type,
+chunk_t *insert_comment_after(chunk_t &ref, c_token_t cmt_type,
                               const unc_text &cmt_text)
 {
    LOG_FUNC_ENTRY();
 
-   chunk_t new_cmt = *ref;
+   chunk_t new_cmt = chunk_t(ref);
    new_cmt.prev  = nullptr;
    new_cmt.next  = nullptr;
-   new_cmt.flags = (ref->flags & PCF_COPY_FLAGS);
+   new_cmt.flags = (ref.flags & PCF_COPY_FLAGS);
    new_cmt.type  = cmt_type;
    new_cmt.str.clear();
+
    if (cmt_type == CT_COMMENT_CPP)
    {
       new_cmt.str.append("// ");
@@ -787,7 +788,7 @@ chunk_t *insert_comment_after(chunk_t *ref, c_token_t cmt_type,
    }
    else
    {
-      if (ref->type == CT_PP_ELSE)
+      if (ref.type == CT_PP_ELSE)
       {  // make test c/ 02501 stable
          new_cmt.str.append(" ");
       }
@@ -797,10 +798,10 @@ chunk_t *insert_comment_after(chunk_t *ref, c_token_t cmt_type,
    }
    // TODO: expand comment type to cover other comment styles?
 
-   new_cmt.column   = ref->column + ref->len() + 1;
+   new_cmt.column   = ref.column + ref.len() + 1;
    new_cmt.orig_col = new_cmt.column;
 
-   return(chunk_add_after(&new_cmt, ref));
+   return(chunk_add_after(&new_cmt, &ref));
 }
 
 
@@ -991,7 +992,10 @@ void add_long_closebrace_comment(void)
                                     CT_COMMENT_CPP : CT_COMMENT;
 
                   // Add a comment after the close brace
-                  insert_comment_after(br_close, style, xstr);
+                  if (br_close != nullptr)
+                  {
+                     insert_comment_after(*br_close, style, xstr);
+                  }
                }
             }
             break;

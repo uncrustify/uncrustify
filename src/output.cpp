@@ -2212,7 +2212,7 @@ void add_long_preprocessor_conditional_block_comment(void)
                           txt, nl_min, nl_count, txt, str.c_str());
 
                   // Add a comment after the close brace
-                  insert_comment_after(br_close, style, str);
+                  insert_comment_after(*br_close, style, str);
                }
             }
 
