@@ -20,7 +20,7 @@
 
 
 //! Converts a single brace into a virtual brace
-static void convert_brace(chunk_t *br);
+static void convert_brace(chunk_t &br);
 
 
 //! Converts a single virtual brace into a real brace
@@ -596,8 +596,8 @@ static void examine_brace(chunk_t &bopen)
          }
 
          // we have a pair of braces with only 1 statement inside
-         convert_brace(&bopen);
-         convert_brace(pc);
+         convert_brace(bopen);
+         convert_brace(*pc);
 
          LOG_FMT(LBRDEL, " removing braces on line %zu and %zu\n",
                  bopen.orig_line, pc->orig_line);
@@ -614,27 +614,27 @@ static void examine_brace(chunk_t &bopen)
 } // examine_brace
 
 
-static void convert_brace(chunk_t *br)
+static void convert_brace(chunk_t &br)
 {
    LOG_FUNC_ENTRY();
    chunk_t *tmp;
 
-   if (!br || (br->flags & PCF_KEEP_BRACE))
+   if ((br.flags & PCF_KEEP_BRACE))
    {
       return;
    }
 
-   if (br->type == CT_BRACE_OPEN)
+   if (br.type == CT_BRACE_OPEN)
    {
-      set_chunk_type(br, CT_VBRACE_OPEN);
-      br->str.clear();
-      tmp = chunk_get_prev(br);
+      set_chunk_type(&br, CT_VBRACE_OPEN);
+      br.str.clear();
+      tmp = chunk_get_prev(&br);
    }
-   else if (br->type == CT_BRACE_CLOSE)
+   else if (br.type == CT_BRACE_CLOSE)
    {
-      set_chunk_type(br, CT_VBRACE_CLOSE);
-      br->str.clear();
-      tmp = chunk_get_next(br);
+      set_chunk_type(&br, CT_VBRACE_CLOSE);
+      br.str.clear();
+      tmp = chunk_get_next(&br);
    }
    else
    {
@@ -1294,7 +1294,7 @@ static void process_if_chain(chunk_t &br_start)
             && ((multiline_block) ? !paren_multiline_before_brace(braces[br_cnt]) : true))
          {
             LOG_FMT(LBRCH, " {%zu}", braces[br_cnt]->orig_line);
-            convert_brace(braces[br_cnt]);
+            convert_brace(*braces[br_cnt]);
          }
          else
          {
