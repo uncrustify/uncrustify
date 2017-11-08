@@ -774,8 +774,8 @@ void tokenize_cleanup(void)
       // Detect "pragma region" and "pragma endregion"
       if (pc->type == CT_PP_PRAGMA && next->type == CT_PREPROC_BODY)
       {
-         if (  (memcmp(next->str.c_str(), "region", 6) == 0)
-            || (memcmp(next->str.c_str(), "endregion", 9) == 0))
+         if (  (strncmp(next->str.c_str(), "region", 6) == 0)
+            || (strncmp(next->str.c_str(), "endregion", 9) == 0))
          // TODO: probably better use strncmp
          {
             set_chunk_type(pc, (*next->str.c_str() == 'r') ? CT_PP_REGION : CT_PP_ENDREGION);
