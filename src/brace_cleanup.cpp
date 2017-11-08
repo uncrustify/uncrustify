@@ -26,11 +26,14 @@
 #include "controlPSECount.h"
 
 #include <stdexcept>
+#include <iostream>
 
 
 using std::invalid_argument;
 using std::string;
 using std::to_string;
+using std::stringstream;
+using std::cerr;
 
 
 /*
@@ -366,7 +369,7 @@ static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
       chunk_flags_set(pc, PCF_IN_SPAREN);
 
       // Mark everything in the for statement
-      for (int tmp = frm->pse_tos - 1; tmp >= 0; tmp--)
+      for (int tmp = static_cast<int>(frm->pse_tos) - 1; tmp >= 0; tmp--)
       {
          if (frm->pse[tmp].type == CT_FOR)
          {
@@ -385,12 +388,10 @@ static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
    }
 
    // Check the progression of complex statements
-   if (frm->pse[frm->pse_tos].stage != brace_stage_e::NONE)
+   if (  frm->pse[frm->pse_tos].stage != brace_stage_e::NONE
+      && check_complex_statements(frm, pc))
    {
-      if (check_complex_statements(frm, pc))
-      {
-         return;
-      }
+      return;
    }
 
    /*
@@ -406,12 +407,9 @@ static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
          cpd.consumed = true;
          close_statement(frm, pc);
       }
-      else if (cpd.lang_flags & LANG_PAWN)
+      else if ((cpd.lang_flags & LANG_PAWN) && pc->type == CT_BRACE_CLOSE)
       {
-         if (pc->type == CT_BRACE_CLOSE)
-         {
-            close_statement(frm, pc);
-         }
+         close_statement(frm, pc);
       }
    }
 
@@ -428,7 +426,8 @@ static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
          && (  (frm->pse[frm->pse_tos].type == CT_FPAREN_OPEN)
             || (frm->pse[frm->pse_tos].type == CT_SPAREN_OPEN)))
       {
-         set_chunk_type(pc, (c_token_t)(frm->pse[frm->pse_tos].type + 1));
+         // TODO: fix enum hack
+         set_chunk_type(pc, static_cast<c_token_t>(frm->pse[frm->pse_tos].type + 1));
          if (pc->type == CT_SPAREN_CLOSE)
          {
             frm->sparen_count--;
@@ -485,8 +484,6 @@ static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
     */
    if (frm->pse[frm->pse_tos].stage == brace_stage_e::WOD_SEMI)
    {
-      chunk_t *tmp = pc;
-
       if (cpd.consumed)
       {
          /*
@@ -496,9 +493,11 @@ static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
           */
          if (cpd.lang_flags & LANG_PAWN)
          {
-            tmp = chunk_get_next_ncnl(pc);
+            chunk_t *tmp = chunk_get_next_ncnl(pc);
 
-            if (tmp->type != CT_SEMICOLON && tmp->type != CT_VSEMICOLON)
+            if (  tmp != nullptr
+               && tmp->type != CT_SEMICOLON
+               && tmp->type != CT_VSEMICOLON)
             {
                pawn_add_vsemi_after(pc);
             }
@@ -560,10 +559,7 @@ static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
             {
                parent = CT_DECLSPEC;
             }
-            else
-            {
-               // no need to set parent
-            }
+            // else: no need to set parent
          }
          else  // must be CT_BRACE_OPEN
          {
@@ -587,10 +583,7 @@ static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
             {
                parent = CT_FUNCTION;
             }
-            else
-            {
-               // no need to set parent
-            }
+            // else: no need to set parent
          }
       }
    }
@@ -617,7 +610,7 @@ static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
       set_chunk_parent(pc, parent);
    }
 
-   pattern_class_e patcls = get_token_pattern_class(pc->type);
+   const pattern_class_e patcls = get_token_pattern_class(pc->type);
 
    /*
     * Create a stack entry for complex statements:
@@ -707,30 +700,19 @@ static void parse_cleanup(parse_frame_t *frm, chunk_t *pc)
       LOG_FMT(LSTMT, "%s(%d): orig_line is %zu, reset expr on '%s'\n",
               __func__, __LINE__, pc->orig_line, pc->text());
    }
-   else if (pc->type == CT_BRACE_CLOSE)
+   else if (pc->type == CT_BRACE_CLOSE && !cpd.consumed)
    {
-      if (!cpd.consumed)
+      size_t file_pp_level = ifdef_over_whole_file() ? 1 : 0;
+      if (!cpd.unc_off_used && pc->pp_level == file_pp_level)
       {
-         size_t file_pp_level = ifdef_over_whole_file() ? 1 : 0;
-         if (!cpd.unc_off_used && pc->pp_level == file_pp_level)
+         // fatal error
+         cerr << "Unmatched BRACE_CLOSE\nat orig_line="
+              << pc->orig_line << ", orig_col=" << pc->orig_col << "\n";
+         if (!cpd.settings[UO_tok_split_gte].b)
          {
-            // fatal error
-            char *outputMessage;
-            if (cpd.settings[UO_tok_split_gte].b)
-            {
-               outputMessage = make_message("Unmatched BRACE_CLOSE\nat orig_line=%zu, orig_col=%zu\n",
-                                            pc->orig_line, pc->orig_col);
-            }
-            else
-            {
-               outputMessage = make_message("Unmatched BRACE_CLOSE\nat orig_line=%zu, orig_col=%zu\nTry the option 'tok_split_gte = true'\n",
-                                            pc->orig_line, pc->orig_col);
-            }
-            fprintf(stderr, "%s", outputMessage);
-            free(outputMessage);
-            log_flush(true);
-            exit(EXIT_FAILURE);
+            cerr << "Try the option 'tok_split_gte = true'\n";
          }
+         exit(EXIT_FAILURE);
       }
    }
 } // parse_cleanup
