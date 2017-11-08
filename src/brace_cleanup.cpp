@@ -103,36 +103,40 @@ static bool handle_complex_close(parse_frame_t *frm, chunk_t *pc);
 static size_t preproc_start(parse_frame_t *frm, chunk_t *pc)
 {
    LOG_FUNC_ENTRY();
-   chunk_t *next;
+   if (frm == nullptr)
+   {
+      throw invalid_argument(string(__func__) + ":" + to_string(__LINE__)
+                             + "frm cannot be nullptr");
+   }
    size_t  pp_level = cpd.pp_level;
 
-   // Get the type of preprocessor and handle it
-   next = chunk_get_next_ncnl(pc);
-   if (next != nullptr)
+   chunk_t *next = chunk_get_next_ncnl(pc);
+   if (next == nullptr)
    {
-      cpd.in_preproc = next->type;
-
-      // If we are in a define, push the frame stack.
-      if (cpd.in_preproc == CT_PP_DEFINE)
-      {
-         pf_push(frm);
-
-         // a preproc body starts a new, blank frame
-         memset(frm, 0, sizeof(*frm));
-         frm->level       = 1;
-         frm->brace_level = 1;
-
-         // TODO: not sure about the next 3 lines
-         frm->pse_tos                 = 1;
-         frm->pse[frm->pse_tos].type  = CT_PP_DEFINE;
-         frm->pse[frm->pse_tos].stage = brace_stage_e::NONE;
-      }
-      else
-      {
-         // Check for #if, #else, #endif, etc
-         pp_level = pf_check(frm, pc);
-      }
+      return(pp_level);
    }
+
+   // Get the type of preprocessor and handle it
+   cpd.in_preproc = next->type;
+   // If we are not in a define, check for #if, #else, #endif, etc
+   if (cpd.in_preproc != CT_PP_DEFINE)
+   {
+      return(pf_check(frm, pc));
+   }
+
+   // else push the frame stack
+   pf_push(frm);
+
+   // a preproc body starts a new, blank frame
+   *frm             = {};
+   frm->level       = 1;
+   frm->brace_level = 1;
+
+   // TODO: not sure about the next 3 lines
+   frm->pse_tos                 = 1;
+   frm->pse[frm->pse_tos].type  = CT_PP_DEFINE;
+   frm->pse[frm->pse_tos].stage = brace_stage_e::NONE;
+
    return(pp_level);
 }
 
