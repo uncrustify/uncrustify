@@ -9,7 +9,7 @@
 A source code beautifier for C, C++, C#, ObjectiveC, D, Java, Pawn and VALA
 
 ## Features
-* highly configurable - __590__ configurable options as of version 0.65
+* highly configurable - __608 configurable options as of version 0.66
 - <details><summary>add/remove spaces</summary>
 
   - `sp_before_sparen`: _Add or remove space before '(' of 'if', 'for', 'switch', 'while', etc._
@@ -131,6 +131,10 @@ More about this is in the [ISSUE_TEMPLATE](https://github.com/uncrustify/uncrust
 
 ### Known problems
 [Look at the Wiki](https://github.com/uncrustify/uncrustify/wiki/Known-Problems)
+
+
+## Which repositories have uncrustify?
+[Look here](https://repology.org/metapackage/uncrustify/versions)
 
 
 ## Contribute

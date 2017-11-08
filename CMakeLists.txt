@@ -121,7 +121,7 @@ endif()
 #
 
 # FIXME: the version number should be automatically integrated
-set(CURRENT_VERSION "Uncrustify-0.65_f")
+set(CURRENT_VERSION "Uncrustify-0.66_f")
 
 option(NoGitVersionString "Do not use make_version.py and git to build a version string" OFF)
 if(NOT NoGitVersionString)
