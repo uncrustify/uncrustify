@@ -267,21 +267,20 @@ static void push_fmr_pse(parse_frame_t *frm, chunk_t *pc,
                          brace_stage_e stage, const char *logtext)
 {
    LOG_FUNC_ENTRY();
-   if (frm->pse_tos < ((int)ARRAY_SIZE(frm->pse) - 1))
-   {
-      frm->pse_tos++;
-      frm->pse[frm->pse_tos].type  = pc->type;
-      frm->pse[frm->pse_tos].stage = stage;
-      frm->pse[frm->pse_tos].pc    = pc;
-
-      print_stack(LBCSPUSH, logtext, *frm);
-   }
-   else
+   if (frm->pse_tos >= (static_cast<int>(ARRAY_SIZE(frm->pse)) - 1))
    {
       LOG_FMT(LWARN, "%s:%d Error: Frame stack overflow,  Unable to properly process this file.\n",
               cpd.filename.c_str(), cpd.line_number);
       cpd.error_count++;
+      return;
    }
+
+   frm->pse_tos++;
+   frm->pse[frm->pse_tos].type  = pc->type;
+   frm->pse[frm->pse_tos].stage = stage;
+   frm->pse[frm->pse_tos].pc    = pc;
+
+   print_stack(LBCSPUSH, logtext, *frm);
 }
 
 
