@@ -193,10 +193,10 @@ void do_braces(void)
       {
          continue;
       }
-      chunk_t   *br_open = pc;
-      c_token_t brc_type = c_token_t(pc->type + 1); // corresponds to closing type
+      chunk_t         *br_open = pc;
+      const c_token_t brc_type = c_token_t(pc->type + 1); // corresponds to closing type
       // Detect empty bodies
-      chunk_t   *tmp = chunk_get_next_ncnl(pc);
+      chunk_t         *tmp = chunk_get_next_ncnl(pc);
       if (chunk_is_token(tmp, brc_type))
       {
          chunk_flags_set(br_open, PCF_EMPTY_BODY);
