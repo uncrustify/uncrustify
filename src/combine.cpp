@@ -3755,10 +3755,6 @@ static bool can_be_full_param(chunk_t *start, chunk_t *end)
          {
             return(false);
          }
-         if (tmp2 == nullptr)
-         {
-            return(false);
-         }
          if (chunk_is_str(tmp1, "(", 1))
          {
             tmp3 = chunk_skip_to_match(tmp1, scope_e::PREPROC);
