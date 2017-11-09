@@ -998,13 +998,11 @@ static void move_case_break(void)
    {
       if (  pc->type == CT_BREAK
          && chunk_is_token(prev, CT_BRACE_CLOSE)
-         && prev->parent_type == CT_CASE)
+         && prev->parent_type == CT_CASE
+         && chunk_is_newline(chunk_get_prev(pc))
+         && chunk_is_newline(chunk_get_prev(prev)))
       {
-         if (  chunk_is_newline(chunk_get_prev(pc))
-            && chunk_is_newline(chunk_get_prev(prev)))
-         {
-            chunk_swap_lines(prev, pc);
-         }
+         chunk_swap_lines(prev, pc);
       }
       prev = pc;
    }
