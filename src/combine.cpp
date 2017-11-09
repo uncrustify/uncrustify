@@ -1956,13 +1956,27 @@ static void mark_function_return_type(chunk_t *fname, chunk_t *start, c_token_t 
 #endif
 
       chunk_t *first = pc;
-      chunk_t *save;
       while (pc != nullptr)
       {
          LOG_FMT(LFCNR, "%s(%d): pc: %s, type is %s\n", __func__, __LINE__, pc->text(), get_token_name(pc->type));
 #ifdef DEBUG
          log_pcf_flags(LFCNR, pc->flags);
 #endif
+         if (pc->type == CT_ANGLE_CLOSE)
+         {
+             pc = skip_template_prev(pc);
+             if (pc == nullptr || pc->type == CT_TEMPLATE)
+             {
+                 //either expression is not complete or this is smth like 'template<T> void func()'
+                 //  - we are not interested in 'template<T>' part
+                 break;
+             }
+             else
+             {
+                 //this is smth like 'vector<int> func()' and 'pc' is currently on 'vector' - just proceed
+             }
+         }
+         
          if (  (  !chunk_is_type(pc)
                && pc->type != CT_OPERATOR
                && pc->type != CT_WORD
@@ -1975,32 +1989,8 @@ static void mark_function_return_type(chunk_t *fname, chunk_t *start, c_token_t 
          {
             first = pc;
          }
-         save = pc; // keep a copy
-         pc   = chunk_get_prev_ncnl(pc);
-         if (pc != nullptr)
-         {
-            log_pcf_flags(LFCNR, pc->flags);
-            // Issue #1027
-            if (  (pc->flags & PCF_IN_TEMPLATE)
-               && pc->type == CT_ANGLE_CLOSE)
-            {
-               // search the opening angle
-               pc = chunk_get_prev_type(pc, CT_ANGLE_OPEN, save->level);
-               if (pc != nullptr)
-               {
-                  // get the prev
-                  pc = chunk_get_prev(pc);
-                  if (pc != nullptr)
-                  {
-                     if (pc->type == CT_TYPE)
-                     {
-                        first = save;
-                        break;
-                     }
-                  }
-               }
-            }
-         }
+
+         pc = chunk_get_prev_ncnl(pc);
       }
 
       pc = first;
@@ -2018,6 +2008,17 @@ static void mark_function_return_type(chunk_t *fname, chunk_t *start, c_token_t 
             break;
          }
          pc = chunk_get_next_ncnl(pc);
+         
+         //template angles should keep parent type CT_TEMPLATE
+         if (pc != nullptr && pc->type == CT_ANGLE_OPEN)
+         {
+            pc = chunk_get_next_type(pc, CT_ANGLE_CLOSE, pc->level);
+            if (pc == start)
+            {
+               break;
+            }
+            pc = chunk_get_next_ncnl(pc);
+         }
       }
       LOG_FMT(LFCNR, "\n");
    }
