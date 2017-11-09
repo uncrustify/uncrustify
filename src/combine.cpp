@@ -5227,10 +5227,10 @@ static void handle_d_template(chunk_t *pc)
          set_chunk_type(tmp, CT_TYPE);
       }
    }
-   if (tmp->type != CT_BRACE_CLOSE)
-   {
-      // TODO: log an error, expected '}'
-   }
+//   if (!chunk_is_token(tmp, CT_BRACE_CLOSE))
+//   {
+//      // TODO: log an error, expected '}'
+//   }
    set_chunk_parent(tmp, CT_TEMPLATE);
 } // handle_d_template
 
