@@ -6157,7 +6157,7 @@ static void handle_oc_property_decl(chunk_t *os)
                   } while (  next
                           && next->type != CT_COMMA
                           && next->type != CT_PAREN_CLOSE);
-                  next = next->prev;
+                  next = chunk_get_prev(next);
                   if (next == nullptr)
                   {
                      break;
