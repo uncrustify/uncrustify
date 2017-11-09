@@ -305,16 +305,6 @@ static bool should_add_braces(chunk_t *vbopen)
 static bool can_remove_braces(chunk_t *bopen)
 {
    LOG_FUNC_ENTRY();
-
-   chunk_t *prev      = nullptr;
-   size_t  semi_count = 0;
-   size_t  level      = bopen->level + 1;
-   bool    hit_semi   = false;
-   size_t  nl_max     = cpd.settings[UO_mod_full_brace_nl].u;
-   size_t  nl_count   = 0;
-   size_t  if_count   = 0;
-   int     br_count   = 0;
-
    // Cannot remove braces inside a preprocessor
    if (bopen->flags & PCF_IN_PREPROC)
    {
@@ -326,8 +316,18 @@ static bool can_remove_braces(chunk_t *bopen)
       // Can't remove empty statement
       return(false);
    }
-
    LOG_FMT(LBRDEL, "%s: start on %zu : ", __func__, bopen->orig_line);
+
+
+   const size_t level  = bopen->level + 1;
+   const size_t nl_max = cpd.settings[UO_mod_full_brace_nl].u;
+   chunk_t      *prev  = nullptr;
+
+   size_t       semi_count = 0;
+   bool         hit_semi   = false;
+   size_t       nl_count   = 0;
+   size_t       if_count   = 0;
+   int          br_count   = 0;
 
    pc = chunk_get_next_nc(bopen, scope_e::ALL);
    while (pc != nullptr && pc->level >= level)
@@ -364,12 +364,10 @@ static bool can_remove_braces(chunk_t *bopen)
                hit_semi = true;
             }
          }
-         else if (pc->type == CT_IF || pc->type == CT_ELSEIF)
+         else if (  (pc->type == CT_IF || pc->type == CT_ELSEIF)
+                 && br_count == 0)
          {
-            if (br_count == 0)
-            {
-               if_count++;
-            }
+            if_count++;
          }
 
          if (pc->level == level)
@@ -422,13 +420,12 @@ static bool can_remove_braces(chunk_t *bopen)
 
    if (pc->type == CT_BRACE_CLOSE && pc->parent_type == CT_IF)
    {
-      chunk_t *next = chunk_get_next_ncnl(pc, scope_e::PREPROC);
-
-      prev = chunk_get_prev_ncnl(pc, scope_e::PREPROC);
+      chunk_t *next     = chunk_get_next_ncnl(pc, scope_e::PREPROC);
+      chunk_t *tmp_prev = chunk_get_prev_ncnl(pc, scope_e::PREPROC);
 
       if (  chunk_is_token(next, CT_ELSE)
-         && (prev->type == CT_BRACE_CLOSE || prev->type == CT_VBRACE_CLOSE)
-         && prev->parent_type == CT_IF)
+         && (tmp_prev->type == CT_BRACE_CLOSE || tmp_prev->type == CT_VBRACE_CLOSE)
+         && tmp_prev->parent_type == CT_IF)
       {
          LOG_FMT(LBRDEL, " - bailed on '%s'[%s] on line %zu due to 'if' and 'else' sequence\n",
                  get_token_name(pc->type), get_token_name(pc->parent_type),
