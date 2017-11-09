@@ -9,7 +9,9 @@
 #ifndef WINDOWS_COMPAT_H_INCLUDED
 #define WINDOWS_COMPAT_H_INCLUDED
 
+#ifndef NOMINMAX
 #define NOMINMAX
+#endif
 #include "windows.h"
 
 #define HAVE_SYS_STAT_H
