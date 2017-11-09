@@ -1026,11 +1026,10 @@ static void move_case_break(void)
 static chunk_t *mod_case_brace_remove(chunk_t &br_open)
 {
    LOG_FUNC_ENTRY();
-   chunk_t *next = chunk_get_next_ncnl(&br_open, scope_e::PREPROC);
-
    LOG_FMT(LMCB, "%s: line %zu", __func__, br_open.orig_line);
 
    // Find the matching brace close
+   chunk_t *next     = chunk_get_next_ncnl(&br_open, scope_e::PREPROC);
    chunk_t *br_close = chunk_get_next_type(&br_open, CT_BRACE_CLOSE, br_open.level, scope_e::PREPROC);
    if (br_close == nullptr)
    {
@@ -1039,7 +1038,7 @@ static chunk_t *mod_case_brace_remove(chunk_t &br_open)
    }
 
    // Make sure 'break', 'return', 'goto', 'case' or '}' is after the close brace
-   chunk_t *pc = chunk_get_next_ncnl(br_close, scope_e::PREPROC);
+   const chunk_t *pc = chunk_get_next_ncnl(br_close, scope_e::PREPROC);
    if (  pc == nullptr
       || (  pc->type != CT_BREAK
          && pc->type != CT_RETURN
@@ -1048,30 +1047,36 @@ static chunk_t *mod_case_brace_remove(chunk_t &br_open)
          && pc->type != CT_BRACE_CLOSE))
    {
       LOG_FMT(LMCB, " - after '%s'\n",
-              (pc == NULL) ? "<null>" : get_token_name(pc->type));
+              (pc == nullptr) ? "<null>" : get_token_name(pc->type));
       return(next);
    }
 
    // scan to make sure there are no definitions at brace level between braces
-   for (pc = &br_open; pc != br_close; pc = chunk_get_next_ncnl(pc, scope_e::PREPROC))
+   for (const chunk_t *tmp_pc = &br_open;
+        tmp_pc != br_close;
+        tmp_pc = chunk_get_next_ncnl(tmp_pc, scope_e::PREPROC))
    {
-      if ((pc->level == (br_open.level + 1)) && (pc->flags & PCF_VAR_DEF))
+      if (tmp_pc->level == (br_open.level + 1) && (tmp_pc->flags & PCF_VAR_DEF))
       {
-         LOG_FMT(LMCB, " - vardef on line %zu: '%s'\n", pc->orig_line, pc->text());
+         LOG_FMT(LMCB, " - vardef on line %zu: '%s'\n", tmp_pc->orig_line, pc->text());
          return(next);
       }
    }
    LOG_FMT(LMCB, " - removing braces on lines %zu and %zu\n",
            br_open.orig_line, br_close->orig_line);
 
-   for (pc = &br_open; pc != br_close; pc = chunk_get_next_ncnl(pc, scope_e::PREPROC))
+   for (chunk_t *tmp_pc = &br_open;
+        tmp_pc != br_close;
+        tmp_pc = chunk_get_next_ncnl(tmp_pc, scope_e::PREPROC))
    {
-      pc->brace_level--;
-      pc->level--;
+      tmp_pc->brace_level--;
+      tmp_pc->level--;
    }
    next = chunk_get_prev(&br_open, scope_e::PREPROC);
+
    chunk_del(&br_open);
    chunk_del(br_close);
+
    return(chunk_get_next(next, scope_e::PREPROC));
 } // mod_case_brace_remove
 
