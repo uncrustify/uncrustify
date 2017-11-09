@@ -1079,11 +1079,11 @@ static chunk_t *mod_case_brace_remove(chunk_t &br_open)
 static chunk_t *mod_case_brace_add(chunk_t &cl_colon)
 {
    LOG_FUNC_ENTRY();
+   LOG_FMT(LMCB, "%s: line %zu", __func__, cl_colon.orig_line);
+
    chunk_t *pc   = &cl_colon;
    chunk_t *last = nullptr;
    chunk_t *next = chunk_get_next_ncnl(&cl_colon, scope_e::PREPROC);
-
-   LOG_FMT(LMCB, "%s: line %zu", __func__, pc->orig_line);
 
    while ((pc = chunk_get_next_ncnl(pc, scope_e::PREPROC)) != nullptr)
    {
@@ -1097,11 +1097,6 @@ static chunk_t *mod_case_brace_add(chunk_t &cl_colon)
          && (pc->type == CT_CASE || pc->type == CT_BREAK))
       {
          last = pc;
-         //if (pc->type == CT_BREAK)
-         //{
-         //   // Step past the semicolon
-         //   last = chunk_get_next_ncnl(chunk_get_next_ncnl(last));
-         //}
          break;
       }
    }
