@@ -646,10 +646,6 @@ static void flag_asm(chunk_t *pc)
         tmp != nullptr && tmp != end;
         tmp = chunk_get_next_ncnl(tmp, scope_e::PREPROC))
    {
-      if (tmp == nullptr)
-      {
-         return;
-      }
       if (tmp->type == CT_COLON)
       {
          set_chunk_type(tmp, CT_ASM_COLON);
