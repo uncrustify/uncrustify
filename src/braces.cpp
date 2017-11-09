@@ -271,16 +271,16 @@ static void examine_braces(void)
 static bool should_add_braces(const chunk_t &vbopen)
 {
    LOG_FUNC_ENTRY();
-   size_t nl_max = cpd.settings[UO_mod_full_brace_nl].u;
+   const size_t nl_max = cpd.settings[UO_mod_full_brace_nl].u;
    if (nl_max == 0)
    {
       return(false);
    }
-
    LOG_FMT(LBRDEL, "%s: start on %zu : ", __func__, vbopen.orig_line);
-   chunk_t *pc;
-   size_t  nl_count = 0;
 
+   size_t        nl_count = 0;
+
+   const chunk_t *pc = nullptr;
    for (pc = chunk_get_next_nc(&vbopen, scope_e::PREPROC);
         pc != nullptr && pc->level > vbopen.level;
         pc = chunk_get_next_nc(pc, scope_e::PREPROC))
@@ -290,6 +290,7 @@ static bool should_add_braces(const chunk_t &vbopen)
          nl_count += pc->nl_count;
       }
    }
+
    if (  pc != nullptr
       && nl_count > nl_max
       && vbopen.pp_level == pc->pp_level)
