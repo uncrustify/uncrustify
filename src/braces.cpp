@@ -866,7 +866,7 @@ void add_long_closebrace_comment(void)
    chunk_t  *cl_semi_pc = nullptr;
    unc_text xstr;
 
-   for (chunk_t *pc = chunk_get_head(); pc; pc = chunk_get_next_ncnl(pc))
+   for (chunk_t *pc = chunk_get_head(); pc != nullptr; pc = chunk_get_next_ncnl(pc))
    {
       if (pc->type == CT_FUNC_DEF || pc->type == CT_OC_MSG_DECL)
       {
@@ -885,6 +885,7 @@ void add_long_closebrace_comment(void)
       {
          cl_pc = pc;
       }
+
       if (pc->type != CT_BRACE_OPEN || (pc->flags & PCF_IN_PREPROC))
       {
          continue;
@@ -940,21 +941,32 @@ void add_long_closebrace_comment(void)
                   // 76006 Explicit null dereferenced, 2016-03-17
                   tag_pc = fcn_pc;
                   xstr.clear();
-                  append_tag_name(xstr, tag_pc);
+
+                  if (tag_pc != nullptr)
+                  {
+                     append_tag_name(xstr, tag_pc);
+                  }
                }
                else if (br_open->parent_type == CT_NAMESPACE)
                {
                   nl_min = cpd.settings[UO_mod_add_long_namespace_closebrace_comment].u;
-                  // 76007 Explicit null dereferenced, 2016-03-17
-                  tag_pc = ns_pc;
+                  if (ns_pc != nullptr)
+                  {
+                     tag_pc = ns_pc;
 
-                  /*
-                   * obtain the next chunk, normally this is the name of the namespace
-                   * and append it to generate "namespace xyz"
-                   */
-                  xstr = ns_pc->str;
-                  xstr.append(" ");
-                  append_tag_name(xstr, chunk_get_next(ns_pc));
+                     /*
+                      * obtain the next chunk, normally this is the name of the namespace
+                      * and append it to generate "namespace xyz"
+                      */
+                     xstr = tag_pc->str;
+                     xstr.append(" ");
+
+                     chunk_t *tmp_next = chunk_get_next(tag_pc);
+                     if (tmp_next != nullptr)
+                     {
+                        append_tag_name(xstr, tmp_next);
+                     }
+                  }
                }
                else if (  br_open->parent_type == CT_CLASS
                        && cl_semi_pc
@@ -964,7 +976,13 @@ void add_long_closebrace_comment(void)
                   tag_pc = cl_pc;
                   xstr   = tag_pc->str;
                   xstr.append(" ");
-                  append_tag_name(xstr, chunk_get_next(cl_pc));
+
+                  chunk_t *tmp_next = chunk_get_next(cl_pc);
+                  if (tag_pc != nullptr)
+                  {
+                     append_tag_name(xstr, tmp_next);
+                  }
+
                   br_close   = cl_semi_pc;
                   cl_semi_pc = nullptr;
                   cl_pc      = nullptr;
@@ -975,8 +993,8 @@ void add_long_closebrace_comment(void)
                   && tag_pc != nullptr)
                {
                   // use the comment style that fits to the selected language
-                  c_token_t style = (cpd.lang_flags & (LANG_CPP | LANG_CS)) ?
-                                    CT_COMMENT_CPP : CT_COMMENT;
+                  const c_token_t style = (cpd.lang_flags & (LANG_CPP | LANG_CS))
+                                          ? CT_COMMENT_CPP : CT_COMMENT;
 
                   // Add a comment after the close brace
                   insert_comment_after(br_close, style, xstr);
