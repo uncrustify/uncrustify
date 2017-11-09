@@ -413,32 +413,34 @@ static void chunk_log_msg(const chunk_t *chunk, const log_sev_t log, const char 
 
 static void chunk_log(const chunk_t *pc, const char *text)
 {
-   if (  pc != nullptr
-      && (cpd.unc_stage != unc_stage_e::TOKENIZE)
-      && (cpd.unc_stage != unc_stage_e::CLEANUP))
+   if (  pc == nullptr
+      || cpd.unc_stage == unc_stage_e::TOKENIZE
+      || cpd.unc_stage == unc_stage_e::CLEANUP)
    {
-      const log_sev_t log   = LCHUNK;
-      chunk_t         *prev = chunk_get_prev(pc);
-      chunk_t         *next = chunk_get_next(pc);
-
-      chunk_log_msg(pc, log, text);
-
-      if (prev && next)
-      {
-         chunk_log_msg(prev, log, " @ between");
-         chunk_log_msg(next, log, " and");
-      }
-      else if (next)
-      {
-         chunk_log_msg(next, log, " @ before");
-      }
-      else if (prev)
-      {
-         chunk_log_msg(prev, log, " @ after");
-      }
-      LOG_FMT(log, " stage=%d", (int)cpd.unc_stage);
-      log_func_stack_inline(log);
+      return;
    }
+
+   const log_sev_t log   = LCHUNK;
+   chunk_t         *prev = chunk_get_prev(pc);
+   chunk_t         *next = chunk_get_next(pc);
+
+   chunk_log_msg(pc, log, text);
+
+   if (prev && next)
+   {
+      chunk_log_msg(prev, log, " @ between");
+      chunk_log_msg(next, log, " and");
+   }
+   else if (next)
+   {
+      chunk_log_msg(next, log, " @ before");
+   }
+   else if (prev)
+   {
+      chunk_log_msg(prev, log, " @ after");
+   }
+   LOG_FMT(log, " stage=%d", (int)cpd.unc_stage);
+   log_func_stack_inline(log);
 }
 
 
