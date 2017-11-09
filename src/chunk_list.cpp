@@ -230,7 +230,7 @@ static chunk_t *chunk_search_type(const chunk_t *cur, const c_token_t type,
     * Depending on the parameter dir the search function searches
     * in forward or backward direction
     */
-   search_t search_function = select_search_fct(dir);
+   const search_t search_function = select_search_fct(dir);
 
    // loop over the chunk list
    chunk_t *pc = search_function(cur, scope);
@@ -252,7 +252,7 @@ static chunk_t *chunk_search_typelevel(const chunk_t *cur, c_token_t type,
     * Depending on the parameter dir the search function searches
     * in forward or backward direction
     */
-   search_t search_function = select_search_fct(dir);
+   const search_t search_function = select_search_fct(dir);
 
 
    // loop over the chunk list
@@ -287,7 +287,7 @@ static chunk_t *chunk_search_str(const chunk_t *cur, const char *str, size_t len
    /*
     * Depending on the parameter dir the search function searches
     * in forward or backward direction */
-   search_t search_function = select_search_fct(dir);
+   const search_t search_function = select_search_fct(dir);
 
    // loop over the chunk list
    chunk_t *pc = search_function(cur, scope);
@@ -308,7 +308,7 @@ static chunk_t *chunk_search(const chunk_t *cur, const check_t check_fct,
    /*
     * Depending on the parameter dir the search function searches
     * in forward or backward direction */
-   search_t search_function = select_search_fct(dir);
+   const search_t search_function = select_search_fct(dir);
 
    // loop over the chunk list
    chunk_t *pc = search_function(cur, scope);
@@ -707,7 +707,7 @@ void chunk_swap_lines(chunk_t *pc1, chunk_t *pc2)
     */
    if (pc1 != nullptr && pc2 != nullptr)
    {
-      size_t nl_count = pc1->nl_count;
+      const size_t nl_count = pc1->nl_count;
 
       pc1->nl_count = pc2->nl_count;
       pc2->nl_count = nl_count;
@@ -810,7 +810,7 @@ static chunk_t *chunk_get_ncnlnp(const chunk_t *cur, const scope_e scope, const 
 static chunk_t *chunk_get_ncnlnpnd(const chunk_t *cur, const scope_e scope,
                                    const direction_e dir)
 {
-   search_t search_function = select_search_fct(dir);
+   const search_t search_function = select_search_fct(dir);
 
    // loop over the chunk list
    chunk_t *pc = search_function(cur, scope);
