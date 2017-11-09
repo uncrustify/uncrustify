@@ -621,13 +621,12 @@ static void examine_brace(chunk_t &bopen)
 static void convert_brace(chunk_t &br)
 {
    LOG_FUNC_ENTRY();
-   chunk_t *tmp;
-
    if ((br.flags & PCF_KEEP_BRACE))
    {
       return;
    }
 
+   chunk_t *tmp;
    if (br.type == CT_BRACE_OPEN)
    {
       set_chunk_type(&br, CT_VBRACE_OPEN);
@@ -651,12 +650,9 @@ static void convert_brace(chunk_t &br)
       {
          tmp->nl_count--;
       }
-      else
+      else if (chunk_safe_to_del_nl(tmp))
       {
-         if (chunk_safe_to_del_nl(tmp))
-         {
-            chunk_del(tmp);
-         }
+         chunk_del(tmp);
       }
    }
 } // convert_brace
