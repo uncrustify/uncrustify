@@ -290,14 +290,14 @@ struct chunk_t
 
 
    //! provides the number of characters of string
-   size_t len()
+   size_t len() const
    {
       return(str.size());
    }
 
 
    //! provides the content of a string a zero terminated character pointer
-   const char *text()
+   const char *text() const
    {
       return(str.c_str());
    }
