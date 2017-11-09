@@ -453,6 +453,7 @@ enum uncrustify_options
    UO_nl_end_of_file_min,             // min number of newlines at the end of the file
    UO_nl_assign_brace,                // newline between '=' and '{'
    UO_nl_assign_square,               // newline between '=' and '['
+   UO_nl_tsquare_brace,               // newline between '[]' and '{'
    UO_nl_after_square_assign,         // newline after '= ['
    UO_nl_func_var_def_blk,            // newline after first block of func variable defs
    UO_nl_typedef_blk_start,           // newline before typedef block

@@ -1775,6 +1775,26 @@ static void newlines_brace_pair(chunk_t *br_open)
       }
    }
 
+   //fixes #1245 will add new line between tsquare and brace open based on UO_nl_tsquare_brace
+
+   if (br_open->type == CT_BRACE_OPEN)
+   {
+      chunk_t *chunk_closeing_brace = chunk_skip_to_match(br_open, scope_e::ALL);
+      if (chunk_closeing_brace != nullptr)
+      {
+         if (chunk_closeing_brace->orig_line > br_open->orig_line)
+         {
+            prev = chunk_get_prev_nc(br_open);
+            if (  prev != nullptr
+               && prev->type == CT_TSQUARE
+               && chunk_is_newline(next))
+            {
+               newline_iarf_pair(prev, br_open, cpd.settings[UO_nl_tsquare_brace].a);
+            }
+         }
+      }
+   }
+
    // Eat any extra newlines after the brace open
    if (cpd.settings[UO_eat_blanks_after_open_brace].b)
    {
