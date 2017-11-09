@@ -3260,7 +3260,7 @@ void combine_labels(void)
                else
                {
                   LOG_FMT(LWARN, "%s:%zu unexpected colon in col %zu n-parent=%s c-parent=%s l=%zu bl=%zu\n",
-                          cpd.filename, next->orig_line, next->orig_col,
+                          cpd.filename.c_str(), next->orig_line, next->orig_col,
                           get_token_name(next->parent_type),
                           get_token_name(cur->parent_type),
                           next->level, next->brace_level);
@@ -4584,7 +4584,7 @@ static void mark_cpp_constructor(chunk_t *pc)
    if (!chunk_is_str(paren_open, "(", 1))
    {
       LOG_FMT(LWARN, "%s:%zu Expected '(', got: [%s]\n",
-              cpd.filename, paren_open->orig_line,
+              cpd.filename.c_str(), paren_open->orig_line,
               paren_open->text());
       return;
    }
