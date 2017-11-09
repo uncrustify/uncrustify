@@ -2699,11 +2699,6 @@ static void fix_enum_struct_union(chunk_t *pc)
       set_chunk_parent(next, pc->type);
 
       // next up is either a colon, open brace, or open parenthesis (pawn)
-      if (!next)
-      {
-         return;
-      }
-
       if ((cpd.lang_flags & LANG_PAWN) && next->type == CT_PAREN_OPEN)
       {
          next = set_paren_parent(next, CT_ENUM);
