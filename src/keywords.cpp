@@ -88,7 +88,7 @@ static const chunk_tag_t keywords[] =
    { "__attribute__",      CT_ATTRIBUTE,     LANG_C | LANG_CPP                                                           },
    { "__block",            CT_QUALIFIER,     LANG_OC                                                                     },
    { "__const__",          CT_QUALIFIER,     LANG_C | LANG_CPP                                                           },
-   { "__declspec",         CT_DECLSPEC,      LANG_C | LANG_CPP | LANG_CS                                                 },
+   { "__declspec",         CT_DECLSPEC,      LANG_C | LANG_CPP                                                           },
    { "__except",           CT_CATCH,         LANG_C | LANG_CPP                                                           },
    { "__finally",          CT_FINALLY,       LANG_C | LANG_CPP                                                           },
    { "__has_include",      CT_CNG_HASINC,    LANG_C | LANG_CPP | FLAG_PP                                                 }, // clang

@@ -4209,7 +4209,6 @@ static void mark_function(chunk_t *pc)
        * a = FOO * bar();                  -- fcn call
        * a.y = foo() * bar();              -- fcn call
        * static const char * const fizz(); -- fcn def
-       * static foo();                     -- fcn proto
        */
       while (prev != nullptr)
       {
@@ -4282,7 +4281,7 @@ static void mark_function(chunk_t *pc)
          }
 
          // If we are on a TYPE or WORD, then we must be on a proto or def
-         if (prev->type == CT_TYPE || prev->type == CT_WORD || prev->type == CT_QUALIFIER)
+         if (prev->type == CT_TYPE || prev->type == CT_WORD)
          {
             if (!hit_star)
             {
@@ -4745,6 +4744,15 @@ static void mark_class_ctor(chunk_t *start)
    LOG_FUNC_ENTRY();
 
    chunk_t *pclass = chunk_get_next_ncnl(start, scope_e::PREPROC);
+   if (pclass != nullptr && pclass->type == CT_DECLSPEC)
+   {
+      pclass = chunk_get_next_ncnl(pclass);
+      if (pclass != nullptr && pclass->type == CT_PAREN_OPEN)
+      {
+         pclass = chunk_get_next_ncnl(chunk_skip_to_match(pclass));
+      }
+   }
+
    if (  pclass == nullptr
       || (pclass->type != CT_TYPE && pclass->type != CT_WORD))
    {

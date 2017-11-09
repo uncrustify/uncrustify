@@ -170,7 +170,12 @@ static argval_t do_space(chunk_t *first, chunk_t *second, int &min_sp, bool comp
 
    if (first->type == CT_DECLSPEC)
    {
-      log_rule("IGNORE");
+      log_rule("Remove");
+      return(AV_REMOVE);
+   }
+   if (first->type == CT_PAREN_CLOSE && first->parent_type == CT_DECLSPEC)
+   {
+      log_rule("Ignore");
       return(AV_IGNORE);
    }
    if (second->type == CT_NEWLINE || second->type == CT_VBRACE_OPEN)
