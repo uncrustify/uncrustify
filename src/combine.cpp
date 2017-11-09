@@ -3800,7 +3800,8 @@ static bool can_be_full_param(chunk_t *start, chunk_t *end)
               || (word_cnt == 1 && type_count == 1));
 
    LOG_FMT(LFPARAM, " <== [%s] %s!\n",
-           get_token_name(pc->type), ret ? "Yup" : "Unlikely");
+           (pc == nullptr ? "nullptr" : get_token_name(pc->type)),
+           ret ? "Yup" : "Unlikely");
    return(ret);
 } // can_be_full_param
 
